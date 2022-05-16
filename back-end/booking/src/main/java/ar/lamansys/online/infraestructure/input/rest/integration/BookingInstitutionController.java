@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import ar.lamansys.online.application.integration.FetchBookingInstitutions;
-import ar.lamansys.online.infraestructure.input.rest.integration.dto.BookingInstitutionDto;
+import ar.lamansys.sgh.shared.infrastructure.input.service.booking.BookingInstitutionDto;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
@@ -25,7 +25,7 @@ public class BookingInstitutionController {
     @GetMapping("/institution")
     public List<BookingInstitutionDto> getAllBookingInstitutions() {
         return fetchBookingInstitutions.run().stream()
-				.map(institution -> new BookingInstitutionDto(institution))
+				.map(institution -> new BookingInstitutionDto(institution.getId(), institution.getDescription()))
 				.collect(Collectors.toList());
     }
 }

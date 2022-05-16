@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.RestController;
 import ar.lamansys.sgh.shared.infrastructure.input.service.appointment.SharedAppointmentPort;
 import ar.lamansys.sgh.shared.infrastructure.input.service.appointment.dto.PublicAppointmentListDto;
 import ar.lamansys.sgh.shared.infrastructure.input.service.booking.BookingDto;
+import ar.lamansys.sgh.shared.infrastructure.input.service.booking.BookingInstitutionDto;
 import ar.lamansys.sgh.shared.infrastructure.input.service.booking.SharedBookingPort;
 import ar.lamansys.sgx.shared.dates.configuration.LocalDateMapper;
 import lombok.extern.slf4j.Slf4j;
@@ -65,5 +66,9 @@ public class BookingPublicController {
 		return appointmentPort.fetchAppointments(sisaCode, identificationNumber, List.of((short)6), startDate, endDate);
 	}
 
+	@GetMapping("/institution")
+	public List<BookingInstitutionDto> getAllBookingInstitutions() {
+		return bookAppointmentPort.fetchAllBookingInstitutions();
+	}
 
 }

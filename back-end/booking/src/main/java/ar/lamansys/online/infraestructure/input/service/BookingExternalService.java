@@ -1,15 +1,20 @@
 package ar.lamansys.online.infraestructure.input.service;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 import org.springframework.stereotype.Service;
 
 import ar.lamansys.online.application.booking.BookAppointment;
 import ar.lamansys.online.application.booking.CancelBooking;
 import ar.lamansys.online.application.booking.CheckIfMailExists;
+import ar.lamansys.online.application.integration.FetchBookingInstitutions;
 import ar.lamansys.online.domain.booking.BookingAppointmentBo;
 import ar.lamansys.online.domain.booking.BookingBo;
 import ar.lamansys.online.domain.booking.BookingPersonBo;
 import ar.lamansys.sgh.shared.infrastructure.input.service.booking.BookingAppointmentDto;
 import ar.lamansys.sgh.shared.infrastructure.input.service.booking.BookingDto;
+import ar.lamansys.sgh.shared.infrastructure.input.service.booking.BookingInstitutionDto;
 import ar.lamansys.sgh.shared.infrastructure.input.service.booking.BookingPersonDto;
 import ar.lamansys.sgh.shared.infrastructure.input.service.booking.SharedBookingPort;
 import lombok.extern.slf4j.Slf4j;
@@ -20,14 +25,15 @@ import lombok.extern.slf4j.Slf4j;
 public class BookingExternalService implements SharedBookingPort {
 	private final BookAppointment bookAppointment;
 	private final CancelBooking cancelBooking;
-
+	private final FetchBookingInstitutions fetchBookingInstitutions;
 	public BookingExternalService(
 			BookAppointment bookAppointment,
 			CheckIfMailExists checkIfMailExists,
-			CancelBooking cancelBooking
-	) {
+			CancelBooking cancelBooking,
+			FetchBookingInstitutions fetchBookingInstitutions) {
 		this.bookAppointment = bookAppointment;
 		this.cancelBooking = cancelBooking;
+		this.fetchBookingInstitutions = fetchBookingInstitutions;
 	}
 
 	public String makeBooking(BookingDto bookingDto) {
@@ -42,6 +48,13 @@ public class BookingExternalService implements SharedBookingPort {
 	public void cancelBooking(String uuid) {
 		cancelBooking.run(uuid);
 		log.debug("cancel booking {}", uuid);
+	}
+
+	@Override
+	public List<BookingInstitutionDto> fetchAllBookingInstitutions() {
+		return fetchBookingInstitutions.run().stream()
+				.map(institution -> new BookingInstitutionDto(institution.getId(), institution.getDescription()))
+				.collect(Collectors.toList());
 	}
 
 	private static BookingAppointmentBo mapToAppointment(BookingAppointmentDto bookingAppointmentDto) {
