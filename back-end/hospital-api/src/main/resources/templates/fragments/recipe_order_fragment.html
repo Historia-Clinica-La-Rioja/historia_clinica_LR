@@ -112,10 +112,10 @@
         </div>
         <footer>
             <div class="footer-left">
-                <div th:if="${nameSelfDeterminationFF and !professional.getNameSelfDetermination().isEmpty()}">
+                <div th:if="${nameSelfDeterminationFF && professional.getNameSelfDetermination() != null && !professional.getNameSelfDetermination().isEmpty()}">
                     <strong >Profesional: </strong><label th:text="${professional.getCompleteName(professional.getNameSelfDetermination())}"></label>
                 </div>
-                <div th:if="${!nameSelfDeterminationFF or professional.getNameSelfDetermination().isEmpty()}">
+                <div th:if="${!nameSelfDeterminationFF || professional.getNameSelfDetermination() == null || professional.getNameSelfDetermination().isEmpty()}">
                     <strong >Profesional: </strong><label th:text="${professional.getCompleteName(professional.getFirstName())}"></label>
                 </div>
                 <p><strong>Matrícula: </strong><label th:text="${professional.licenceNumber}"></label></p>
