@@ -1,4 +1,4 @@
-package ar.lamansys.online.infraestructure.input.rest.professional;
+package ar.lamansys.sgh.publicapi.infrastructure.input.rest.appointment;
 
 import java.util.List;
 
@@ -9,20 +9,20 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import ar.lamansys.online.infraestructure.input.service.BookingExternalService;
 import ar.lamansys.sgh.shared.infrastructure.input.service.booking.BookingProfessionalDto;
 import ar.lamansys.sgh.shared.infrastructure.input.service.booking.ProfessionalAvailabilityDto;
+import ar.lamansys.sgh.shared.infrastructure.input.service.booking.SharedBookingPort;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 @RestController
-@RequestMapping("/booking/professional")
-public class BookingProfessionalController {
+@RequestMapping("/public-api/institution/{sisaCode}/appointment/booking/professional")
+public class BookingProfessionalPublicController {
 
-	private final BookingExternalService bookingExternalService;
+	private final SharedBookingPort bookAppointmentPort;
 
-	public BookingProfessionalController(BookingExternalService bookingExternalService) {
-		this.bookingExternalService = bookingExternalService;
+	public BookingProfessionalPublicController(SharedBookingPort bookAppointmentPort) {
+		this.bookAppointmentPort = bookAppointmentPort;
 	}
 
 
@@ -32,7 +32,7 @@ public class BookingProfessionalController {
             @PathVariable(name = "healthInsuranceId") Integer medicalCoverageId,
             @RequestParam(name = "all", required = false, defaultValue = "true") boolean all
     ) {
-        var result = bookingExternalService.fetchBookingProfessionals(institutionId,medicalCoverageId, all);
+        var result = bookAppointmentPort.fetchBookingProfessionals(institutionId,medicalCoverageId, all);
         log.debug("Get all booking institutions => {}", result);
         return ResponseEntity.ok(result);
     }
@@ -44,7 +44,7 @@ public class BookingProfessionalController {
             @PathVariable(name="clinicalSpecialtyId") Integer clinicalSpecialtyId,
             @PathVariable(name="practiceId") Integer practiceId
     ) {
-        var result = bookingExternalService.fetchAvailabilityByPracticeAndProfessional(
+        var result = bookAppointmentPort.fetchAvailabilityByPracticeAndProfessional(
 				institutionId,
 				professionalId,
 				clinicalSpecialtyId,
@@ -61,7 +61,7 @@ public class BookingProfessionalController {
             @PathVariable(name="clinicalSpecialtyId") Integer clinicalSpecialtyId,
             @PathVariable(name="institutionId") Integer institutionId
     ) {
-        var result = bookingExternalService.fetchAvailabilityByPractice(institutionId,
+        var result = bookAppointmentPort.fetchAvailabilityByPractice(institutionId,
 				clinicalSpecialtyId, practiceId, medicalCoverageId);
         log.debug("Get availability by practiceId{} => {}", practiceId, result);
         return ResponseEntity.ok(result);
