@@ -1,4 +1,4 @@
-package ar.lamansys.sgh.publicapi.infrastructure.input.rest.appointment.dto;
+package ar.lamansys.sgh.shared.infrastructure.input.service.appointment.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -19,11 +19,6 @@ public class PublicAppointmentPersonDto {
 
     private String identificationNumber;
 
-    private Short identificationTypeId;
-
     private Short genderId;
 
-    private String nameSelfDetermination;
-
-	private String email;
 }

@@ -3,7 +3,7 @@ package ar.lamansys.sgh.publicapi.infrastructure.input.rest.appointment;
 
 import java.time.LocalDate;
 import java.util.Collection;
-import java.util.Collections;
+import java.util.List;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -16,8 +16,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
-import ar.lamansys.sgh.publicapi.infrastructure.input.rest.appointment.dto.PublicAppointmentListDto;
 import ar.lamansys.sgh.shared.infrastructure.input.service.appointment.SharedAppointmentPort;
+import ar.lamansys.sgh.shared.infrastructure.input.service.appointment.dto.PublicAppointmentListDto;
 import ar.lamansys.sgh.shared.infrastructure.input.service.booking.BookingDto;
 import ar.lamansys.sgh.shared.infrastructure.input.service.booking.SharedBookingPort;
 import ar.lamansys.sgx.shared.dates.configuration.LocalDateMapper;
@@ -55,27 +55,28 @@ public class AppointmentPublicController {
 	@ResponseStatus(HttpStatus.OK)
 	public Collection<PublicAppointmentListDto> getList(
 			@PathVariable(name = "sisaCode") String sisaCode,
-			@RequestParam(name = "specialtySctid") String specialtySctid,
-			@RequestParam(name = "startDate") String startDateStr,
-			@RequestParam(name = "endDate") String endDateStr
+			@RequestParam(name = "identificationNumber", required = false) String identificationNumber,
+			@RequestParam(name = "startDate", required = false) String startDateStr,
+			@RequestParam(name = "endDate", required = false) String endDateStr
 	) {
 		LocalDate startDate = localDateMapper.fromStringToLocalDate(startDateStr);
 		LocalDate endDate = localDateMapper.fromStringToLocalDate(endDateStr);
-		appointmentPort.fetchAppointments(sisaCode, specialtySctid, startDate, endDate);
-		return Collections.emptyList();
+		return appointmentPort.fetchAppointments(sisaCode, identificationNumber,
+				List.of((short)1, (short)2, (short)3, (short)4,(short)5, (short)7, (short)8), startDate, endDate);
+	}
+
+	@GetMapping("/booking")
+	@ResponseStatus(HttpStatus.OK)
+	public Collection<PublicAppointmentListDto> getBookingList(
+			@PathVariable(name = "sisaCode") String sisaCode,
+			@RequestParam(name = "identificationNumber", required = false) String identificationNumber,
+			@RequestParam(name = "startDate", required = false) String startDateStr,
+			@RequestParam(name = "endDate", required = false) String endDateStr
+	) {
+		LocalDate startDate = localDateMapper.fromStringToLocalDate(startDateStr);
+		LocalDate endDate = localDateMapper.fromStringToLocalDate(endDateStr);
+		return appointmentPort.fetchAppointments(sisaCode, identificationNumber, List.of((short)6), startDate, endDate);
 	}
 
 
-
-
 }
-
-/*
-/api/public-api/institution/{institutionId}/appointments?specialtyId=Snomed?&startDate=YYYY-MM-DD&endDate=YYYY-MM-DD
-Method: GET
-Params:
-specialtyId = id de la especialidad, supongo que snomed para poder mapear?
-startDate= fecha de comienzo de la ventana de tiempo
-endDate= fecha fin de la ventana de tiempo
-
- */

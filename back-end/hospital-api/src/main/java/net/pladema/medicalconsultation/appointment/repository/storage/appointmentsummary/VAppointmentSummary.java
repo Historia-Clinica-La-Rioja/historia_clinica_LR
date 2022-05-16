@@ -42,7 +42,7 @@ public class VAppointmentSummary {
 	private AppointmentStatusSummary status;
 
 	@Column(name = "is_overturn", nullable = false)
-	private Boolean isOverturn;
+	private boolean overturn;
 
 	@Column(name = "phone_number", length = 20)
 	private String phoneNumber;

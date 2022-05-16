@@ -3,8 +3,10 @@ package net.pladema.medicalconsultation.appointment.controller.service.impl;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.Collections;
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 import javax.validation.ConstraintViolationException;
 import javax.validation.constraints.NotNull;
@@ -12,8 +14,16 @@ import javax.validation.constraints.NotNull;
 import org.springframework.stereotype.Service;
 
 import ar.lamansys.sgh.shared.infrastructure.input.service.appointment.SharedAppointmentPort;
+import ar.lamansys.sgh.shared.infrastructure.input.service.appointment.dto.PublicAppointmentClinicalSpecialty;
+import ar.lamansys.sgh.shared.infrastructure.input.service.appointment.dto.PublicAppointmentDoctorDto;
+import ar.lamansys.sgh.shared.infrastructure.input.service.appointment.dto.PublicAppointmentInstitution;
+import ar.lamansys.sgh.shared.infrastructure.input.service.appointment.dto.PublicAppointmentListDto;
+import ar.lamansys.sgh.shared.infrastructure.input.service.appointment.dto.PublicAppointmentMedicalCoverage;
+import ar.lamansys.sgh.shared.infrastructure.input.service.appointment.dto.PublicAppointmentPatientDto;
+import ar.lamansys.sgh.shared.infrastructure.input.service.appointment.dto.PublicAppointmentStatus;
 import ar.lamansys.sgh.shared.infrastructure.input.service.booking.BookingAppointmentDto;
 import ar.lamansys.sgh.shared.infrastructure.input.service.booking.BookingPersonDto;
+import ar.lamansys.sgx.shared.dates.configuration.LocalDateMapper;
 import ar.lamansys.sgx.shared.security.UserInfo;
 import lombok.extern.slf4j.Slf4j;
 import net.pladema.medicalconsultation.appointment.controller.service.AppointmentExternalService;
@@ -25,6 +35,15 @@ import net.pladema.medicalconsultation.appointment.service.CreateAppointmentServ
 import net.pladema.medicalconsultation.appointment.service.booking.BookingPersonService;
 import net.pladema.medicalconsultation.appointment.service.booking.CreateBookingAppointmentService;
 import net.pladema.medicalconsultation.appointment.service.domain.AppointmentBo;
+import net.pladema.medicalconsultation.appointment.service.fetchappointments.FetchAppointments;
+import net.pladema.medicalconsultation.appointment.service.fetchappointments.domain.AppointmentFilterBo;
+import net.pladema.medicalconsultation.appointment.service.fetchappointments.domain.AppointmentInfoBo;
+import net.pladema.medicalconsultation.appointment.service.fetchappointments.domain.AppointmentStatusBo;
+import net.pladema.medicalconsultation.appointment.service.fetchappointments.domain.ClinicalSpecialtyBo;
+import net.pladema.medicalconsultation.appointment.service.fetchappointments.domain.DoctorBo;
+import net.pladema.medicalconsultation.appointment.service.fetchappointments.domain.InstitutionBo;
+import net.pladema.medicalconsultation.appointment.service.fetchappointments.domain.MedicalCoverageBo;
+import net.pladema.medicalconsultation.appointment.service.fetchappointments.domain.PatientBo;
 
 @Slf4j
 @Service
@@ -37,15 +56,21 @@ public class AppointmentExternalServiceImpl implements AppointmentExternalServic
 	private final CreateAppointmentService createAppointmentService;
 	private final BookingPersonService bookingPersonService;
 	private final CreateBookingAppointmentService createBookingAppointmentService;
+	private final FetchAppointments fetchAppointments;
+
+	private final LocalDateMapper localDateMapper;
 
 	public AppointmentExternalServiceImpl(AppointmentService appointmentService,
 										  CreateAppointmentService createAppointmentService,
 										  BookingPersonService bookingPersonService,
-										  CreateBookingAppointmentService createBookingAppointmentService) {
+										  CreateBookingAppointmentService createBookingAppointmentService,
+										  FetchAppointments fetchAppointments, LocalDateMapper localDateMapper) {
 		this.appointmentService = appointmentService;
 		this.createAppointmentService = createAppointmentService;
 		this.bookingPersonService = bookingPersonService;
 		this.createBookingAppointmentService = createBookingAppointmentService;
+		this.fetchAppointments = fetchAppointments;
+		this.localDateMapper = localDateMapper;
 	}
 
 	@Override
@@ -125,6 +150,51 @@ public class AppointmentExternalServiceImpl implements AppointmentExternalServic
 		return bookingPersonService.getProfessionalName(diaryId);
 	}
 
+	@Override
+	public List<PublicAppointmentListDto> fetchAppointments(String sisaCode, String identificationNumber,
+															List<Short> includeAppointmentStatus,
+															LocalDate startDate, LocalDate endDate) {
+		return fetchAppointments.run(new AppointmentFilterBo(sisaCode, identificationNumber, includeAppointmentStatus, startDate, endDate))
+				.stream()
+				.map(this::mapToFromAppointmentInfoBo)
+				.collect(Collectors.toList());
+	}
+
+	private PublicAppointmentListDto mapToFromAppointmentInfoBo(AppointmentInfoBo appointmentInfoBo) {
+		return new PublicAppointmentListDto(appointmentInfoBo.getId(),
+				localDateMapper.fromLocalDateToString(appointmentInfoBo.getDateTypeId()),
+				localDateMapper.fromLocalTimeToString(appointmentInfoBo.getHour()),
+				appointmentInfoBo.isOverturn(), appointmentInfoBo.getPhone(),
+				buildPatientDto(appointmentInfoBo.getPatient()),
+				buildDoctorDto(appointmentInfoBo.getDoctor()),
+				buildStatus(appointmentInfoBo.getStatus()),
+				buildMedicalCoverage(appointmentInfoBo.getMedicalCoverage()),
+				buildInstitution(appointmentInfoBo.getInstitution()),
+				buildClinicalSpecialty(appointmentInfoBo.getClinicalSpecialty()));
+	}
+
+	private PublicAppointmentDoctorDto buildDoctorDto(DoctorBo doctor) {
+		return new PublicAppointmentDoctorDto(doctor.getLicenseNumber(),
+				doctor.getFirstName(), doctor.getLastName(),
+				doctor.getIdentificationNumber());
+	}
+
+	private PublicAppointmentPatientDto buildPatientDto(PatientBo patient) {
+		return new PublicAppointmentPatientDto(patient.getId(), patient.getFirstName(), patient.getLastName(),
+				patient.getIdentificationNumber(), patient.getGenderId());
+	}
+	private PublicAppointmentClinicalSpecialty buildClinicalSpecialty(ClinicalSpecialtyBo clinicalSpecialty) {
+		return new PublicAppointmentClinicalSpecialty(clinicalSpecialty.getSctid(), clinicalSpecialty.getName());
+	}
+	private PublicAppointmentInstitution buildInstitution(InstitutionBo institution) {
+		return new PublicAppointmentInstitution(institution.getId(), institution.getCuit(), institution.getSisaCode());
+	}
+	private PublicAppointmentStatus buildStatus(AppointmentStatusBo status) {
+		return new PublicAppointmentStatus(status.getId(), status.getDescription());
+	}
+	private PublicAppointmentMedicalCoverage buildMedicalCoverage(MedicalCoverageBo medicalCoverage) {
+		return new PublicAppointmentMedicalCoverage(medicalCoverage.getCuit(), medicalCoverage.getName(), medicalCoverage.getAffiliateNumber());
+	}
 
 	@NotNull
 	private BookingAppointmentBo getBookingAppointmentBo(Integer appointmentId, Integer bookingPersonId) {
