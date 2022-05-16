@@ -6,19 +6,14 @@ import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
-import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Collectors;
-
-import ar.lamansys.sgx.shared.featureflags.AppFeature;
-import ar.lamansys.sgx.shared.featureflags.application.FeatureFlagsService;
 
 import ar.lamansys.sgx.shared.dates.configuration.DateTimeProvider;
 import ar.lamansys.sgx.shared.security.UserInfo;
 import net.pladema.establishment.controller.service.InstitutionExternalService;
 
 import net.pladema.establishment.repository.MedicalCoveragePlanRepository;
-import net.pladema.patient.controller.dto.EMedicalCoverageType;
 import net.pladema.patient.controller.dto.PatientMedicalCoverageDto;
 import net.pladema.patient.controller.service.PatientExternalMedicalCoverageService;
 

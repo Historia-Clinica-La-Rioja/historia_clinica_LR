@@ -6,14 +6,11 @@ import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.e
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.hospitalizationState.entity.*;
 import ar.lamansys.sgx.shared.auditable.entity.Updateable;
 import ar.lamansys.sgx.shared.exceptions.NotFoundException;
-import ar.lamansys.sgx.shared.security.UserInfo;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;

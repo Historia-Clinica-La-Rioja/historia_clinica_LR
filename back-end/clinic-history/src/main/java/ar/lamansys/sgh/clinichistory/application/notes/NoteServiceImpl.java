@@ -2,7 +2,7 @@ package ar.lamansys.sgh.clinichistory.application.notes;
 
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.NoteRepository;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.entity.Note;
-import ar.lamansys.sgx.shared.strings.StringValidator;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
