@@ -33,10 +33,12 @@ public class DocumentSearchVo {
 
     private String documentType;
 
+	private Long initDocumentId;
+
 
     public DocumentSearchVo(Long id, DocumentObservationsVo notes, LocalDateTime createdOn, Integer creatorUserId,
                             String firstName, String lastName, List<String> diagnosis, String mainDiagnosis,
-							String documentType, String nameSelfDetermination){
+							String documentType, String nameSelfDetermination, Long initDocumentId){
         this.id = id;
         this.notes = notes;
         this.createdOn = createdOn;
@@ -44,6 +46,6 @@ public class DocumentSearchVo {
         this.diagnosis = diagnosis;
         this.mainDiagnosis = mainDiagnosis;
         this.documentType = documentType;
-
+		this.initDocumentId = initDocumentId;
     }
 }

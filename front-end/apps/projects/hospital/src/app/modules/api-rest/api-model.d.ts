@@ -962,6 +962,7 @@ export interface EpicrisisDto extends Serializable {
     immunizations: ImmunizationDto[];
     mainDiagnosis: DiagnosisDto;
     medications: MedicationDto[];
+    modificationReason?: string;
     notes?: EpicrisisObservationsDto;
     personalHistories: HealthHistoryConditionDto[];
 }

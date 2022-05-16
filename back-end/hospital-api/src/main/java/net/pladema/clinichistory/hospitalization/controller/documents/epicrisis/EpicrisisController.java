@@ -12,6 +12,7 @@ import net.pladema.clinichistory.hospitalization.controller.documents.epicrisis.
 import net.pladema.clinichistory.hospitalization.controller.documents.epicrisis.dto.ResponseEpicrisisDto;
 import net.pladema.clinichistory.hospitalization.controller.documents.epicrisis.mapper.EpicrisisMapper;
 import net.pladema.clinichistory.hospitalization.service.InternmentEpisodeService;
+import net.pladema.clinichistory.hospitalization.service.epicrisis.UpdateEpicrisisService;
 import net.pladema.clinichistory.hospitalization.service.epicrisis.CreateEpicrisisService;
 import net.pladema.clinichistory.hospitalization.service.epicrisis.DeleteEpicrisisService;
 import net.pladema.clinichistory.hospitalization.service.epicrisis.EpicrisisService;
@@ -51,6 +52,8 @@ public class EpicrisisController {
 
     private final DeleteEpicrisisService deleteEpicrisisService;
 
+	private final UpdateEpicrisisService updateEpicrisisService;
+
     public EpicrisisController(
 			InternmentEpisodeService internmentEpisodeService,
 			CreateEpicrisisService createEpicrisisService,
@@ -58,7 +61,8 @@ public class EpicrisisController {
 			EpicrisisMapper epicrisisMapper,
 			FetchHospitalizationGeneralState fetchHospitalizationGeneralState,
 			PatientExternalService patientExternalService,
-			DeleteEpicrisisService deleteEpicrisisService
+			DeleteEpicrisisService deleteEpicrisisService,
+			UpdateEpicrisisService updateEpicrisisService
     ) {
         this.internmentEpisodeService = internmentEpisodeService;
         this.createEpicrisisService = createEpicrisisService;
@@ -67,6 +71,7 @@ public class EpicrisisController {
         this.fetchHospitalizationGeneralState = fetchHospitalizationGeneralState;
         this.patientExternalService = patientExternalService;
         this.deleteEpicrisisService = deleteEpicrisisService;
+		this.updateEpicrisisService = updateEpicrisisService;
     }
 
 
@@ -130,4 +135,28 @@ public class EpicrisisController {
 		LOG.debug(OUTPUT, Boolean.TRUE);
 		return  ResponseEntity.ok().body(Boolean.TRUE);
 	}
+
+	@PutMapping("/{epicrisisId}")
+	@Transactional
+	@PreAuthorize("hasPermission(#institutionId, 'ESPECIALISTA_MEDICO, ENFERMERO_ADULTO_MAYOR')")
+	public ResponseEntity<Long> updateEpicrisis(
+			@PathVariable(name = "institutionId") Integer institutionId,
+			@PathVariable(name = "internmentEpisodeId") Integer internmentEpisodeId,
+			@PathVariable(name = "epicrisisId") Long epicrisisId,
+			@RequestBody EpicrisisDto epicrisisDto) {
+		LOG.debug("Input parameters -> institutionId {}, internmentEpisodeId {}, epicrisisId {}, newEpicrisis {}",
+				institutionId, internmentEpisodeId, epicrisisId, epicrisisDto);
+		EpicrisisBo newEpicrisis = epicrisisMapper.fromEpicrisisDto(epicrisisDto);
+		internmentEpisodeService.getPatient(internmentEpisodeId)
+				.map(patientExternalService::getBasicDataFromPatient)
+				.map(patientDto -> new PatientInfoBo(patientDto.getId(), patientDto.getPerson().getGender().getId(), patientDto.getPerson().getAge()))
+				.ifPresentOrElse(newEpicrisis::setPatientInfo, () -> new NotFoundException("El paciente no existe", "El paciente no existe"));
+		newEpicrisis.setPatientId(newEpicrisis.getPatientInfo().getId());
+		newEpicrisis.setInstitutionId(institutionId);
+		newEpicrisis.setEncounterId(internmentEpisodeId);
+		Long result = updateEpicrisisService.execute(internmentEpisodeId, epicrisisId, newEpicrisis);
+		LOG.debug(OUTPUT, result);
+		return  ResponseEntity.ok().body(result);
+	}
+    
 }

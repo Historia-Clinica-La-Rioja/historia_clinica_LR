@@ -22,6 +22,7 @@ public class EpicrisisServiceImpl implements EpicrisisService {
 
     private final NoteService noteService;
 
+
     public EpicrisisServiceImpl(DocumentService documentService, NoteService noteService) {
         this.documentService = documentService;
         this.noteService = noteService;
@@ -33,8 +34,8 @@ public class EpicrisisServiceImpl implements EpicrisisService {
         EpicrisisBo result = new EpicrisisBo();
         documentService.findById(documentId).ifPresent( document -> {
             result.setId(document.getId());
-
-            GeneralHealthConditionBo generalHealthConditionBo = documentService.getHealthConditionFromDocument(document.getId());
+			result.setInitialDocumentId(document.getInitialDocumentId());
+			GeneralHealthConditionBo generalHealthConditionBo = documentService.getHealthConditionFromDocument(document.getId());
             result.setMainDiagnosis(generalHealthConditionBo.getMainDiagnosis());
             result.setDiagnosis(generalHealthConditionBo.getDiagnosis());
             result.setFamilyHistories(generalHealthConditionBo.getFamilyHistories());
@@ -43,7 +44,7 @@ public class EpicrisisServiceImpl implements EpicrisisService {
             result.setAllergies(documentService.getAllergyIntoleranceStateFromDocument(document.getId()));
             result.setAnthropometricData(documentService.getAnthropometricDataStateFromDocument(document.getId()));
             result.setRiskFactors(documentService.getRiskFactorStateFromDocument(document.getId()));
-            
+			result.setMedications(documentService.getMedicationStateFromDocument(document.getId()));
             result.setNotes(loadNotes(document));
         });
         LOG.debug(OUTPUT, result);
