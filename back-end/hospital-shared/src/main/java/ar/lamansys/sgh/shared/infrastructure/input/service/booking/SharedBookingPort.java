@@ -10,4 +10,6 @@ public interface SharedBookingPort {
 	void cancelBooking(String uuid);
 
 	List<BookingInstitutionDto> fetchAllBookingInstitutions();
+
+	List<BookingHealthInsuranceDto> fetchAllMedicalCoverages();
 }

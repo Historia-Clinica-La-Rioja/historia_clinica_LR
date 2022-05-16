@@ -6,6 +6,7 @@ import java.util.Collection;
 import java.util.List;
 
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -19,6 +20,7 @@ import org.springframework.web.bind.annotation.RestController;
 import ar.lamansys.sgh.shared.infrastructure.input.service.appointment.SharedAppointmentPort;
 import ar.lamansys.sgh.shared.infrastructure.input.service.appointment.dto.PublicAppointmentListDto;
 import ar.lamansys.sgh.shared.infrastructure.input.service.booking.BookingDto;
+import ar.lamansys.sgh.shared.infrastructure.input.service.booking.BookingHealthInsuranceDto;
 import ar.lamansys.sgh.shared.infrastructure.input.service.booking.BookingInstitutionDto;
 import ar.lamansys.sgh.shared.infrastructure.input.service.booking.SharedBookingPort;
 import ar.lamansys.sgx.shared.dates.configuration.LocalDateMapper;
@@ -71,4 +73,10 @@ public class BookingPublicController {
 		return bookAppointmentPort.fetchAllBookingInstitutions();
 	}
 
+	@GetMapping("/medicalCoverages")
+	public ResponseEntity<List<BookingHealthInsuranceDto>> fetchAllMedicalCoverages() {
+		List<BookingHealthInsuranceDto> result = bookAppointmentPort.fetchAllMedicalCoverages();
+		log.debug("Get all booking institutions => {}", result);
+		return ResponseEntity.ok(result);
+	}
 }

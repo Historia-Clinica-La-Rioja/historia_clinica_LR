@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import ar.lamansys.online.application.insurance.FetchHealthcareInsurances;
-import ar.lamansys.online.infraestructure.input.rest.insurance.dto.BookingHealthInsuranceDto;
+import ar.lamansys.sgh.shared.infrastructure.input.service.booking.BookingHealthInsuranceDto;
 
 @RestController
 @RequestMapping("/booking")
@@ -28,7 +28,7 @@ public class BookingHealthInsuranceController {
     public ResponseEntity<List<BookingHealthInsuranceDto>> getAllHealthInsurances() {
         List<BookingHealthInsuranceDto> result = new ArrayList<>();
         var insuranceBo = fetchHealthcareInsurances.run();
-        insuranceBo.forEach(insurance -> result.add(new BookingHealthInsuranceDto(insurance)));
+        insuranceBo.forEach(insurance -> result.add(new BookingHealthInsuranceDto(insurance.getId(), insurance.getName())));
         LOG.debug("Get all booking institutions => {}", result);
         return ResponseEntity.ok(result);
     }
