@@ -11,7 +11,7 @@ import lombok.ToString;
 public class AppointmentFilterBo {
 
 	@ToString.Include
-	private final String sisaCode;
+	private final Integer institutionId;
 	@ToString.Include
 	private final String identificationNumber;
 
@@ -22,9 +22,9 @@ public class AppointmentFilterBo {
 	@ToString.Include
 	private final LocalDate endDate;
 
-	public AppointmentFilterBo(String sisaCode, String identificationNumber, List<Short> includeAppointmentStatus,
+	public AppointmentFilterBo(Integer institutionId, String identificationNumber, List<Short> includeAppointmentStatus,
 							   LocalDate startDate, LocalDate endDate) {
-		this.sisaCode = sisaCode;
+		this.institutionId = institutionId;
 		this.identificationNumber = identificationNumber;
 		this.includeAppointmentStatus = includeAppointmentStatus;
 		this.startDate = startDate;

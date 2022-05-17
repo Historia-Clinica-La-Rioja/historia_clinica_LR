@@ -34,13 +34,13 @@ public class AppointmentStorageImpl implements AppointmentStorage {
 		String sqlString =
 		"SELECT vs " +
 		"FROM VAppointmentSummary AS vs " +
-		"WHERE vs.institution.sisaCode = :sisaCode " +
+		"WHERE vs.institution.id = :institutionId " +
 				(filter.getIdentificationNumber() != null ? " AND vs.patient.identificationNumber = :identificationNumber " : "") +
 				(filter.getStartDate() != null ? " AND vs.dateTypeId >= :startDate " : "") +
 				(filter.getEndDate() != null ? " AND vs.dateTypeId <= :endDate " : "") +
 				(filter.hasAppointmentStatus() ? " AND vs.status.id IN (:appointmentStatusId) " : "");
 		Query query = entityManager.createQuery(sqlString, VAppointmentSummary.class)
-				.setParameter("sisaCode", filter.getSisaCode());
+				.setParameter("institutionId", filter.getInstitutionId());
 		if (filter.getIdentificationNumber() != null)
 			query.setParameter("identificationNumber", filter.getIdentificationNumber());
 		if (filter.getStartDate() != null)

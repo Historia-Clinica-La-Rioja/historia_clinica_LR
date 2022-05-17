@@ -160,10 +160,10 @@ public class AppointmentExternalServiceImpl implements AppointmentExternalServic
 	}
 
 	@Override
-	public List<PublicAppointmentListDto> fetchAppointments(String sisaCode, String identificationNumber,
+	public List<PublicAppointmentListDto> fetchAppointments(Integer institutionId, String identificationNumber,
 															List<Short> includeAppointmentStatus,
 															LocalDate startDate, LocalDate endDate) {
-		return fetchAppointments.run(new AppointmentFilterBo(sisaCode, identificationNumber, includeAppointmentStatus, startDate, endDate))
+		return fetchAppointments.run(new AppointmentFilterBo(institutionId, identificationNumber, includeAppointmentStatus, startDate, endDate))
 				.stream()
 				.map(this::mapToFromAppointmentInfoBo)
 				.collect(Collectors.toList());

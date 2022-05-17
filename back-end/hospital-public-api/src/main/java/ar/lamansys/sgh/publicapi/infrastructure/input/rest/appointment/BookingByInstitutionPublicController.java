@@ -25,7 +25,7 @@ import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 @RestController
-@RequestMapping("/public-api/institution/{sisaCode}/appointment/booking")
+@RequestMapping("/public-api/institution/{institutionId}/appointment/booking")
 public class BookingByInstitutionPublicController {
 	private final SharedBookingPort bookAppointmentPort;
 	private final SharedAppointmentPort appointmentPort;
@@ -55,14 +55,14 @@ public class BookingByInstitutionPublicController {
 	@GetMapping
 	@ResponseStatus(HttpStatus.OK)
 	public Collection<PublicAppointmentListDto> getBookingList(
-			@PathVariable(name = "sisaCode") String sisaCode,
+			@PathVariable(name = "institutionId") Integer institutionId,
 			@RequestParam(name = "identificationNumber", required = false) String identificationNumber,
 			@RequestParam(name = "startDate", required = false) String startDateStr,
 			@RequestParam(name = "endDate", required = false) String endDateStr
 	) {
 		LocalDate startDate = localDateMapper.fromStringToLocalDate(startDateStr);
 		LocalDate endDate = localDateMapper.fromStringToLocalDate(endDateStr);
-		return appointmentPort.fetchAppointments(sisaCode, identificationNumber, List.of((short)6), startDate, endDate);
+		return appointmentPort.fetchAppointments(institutionId, identificationNumber, List.of((short)6), startDate, endDate);
 	}
 
 }

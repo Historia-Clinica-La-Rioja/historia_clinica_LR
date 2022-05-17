@@ -29,7 +29,7 @@ public interface SharedAppointmentPort {
 
 	Optional<String> getProfessionalName(Integer diaryId);
 
-	List<PublicAppointmentListDto> fetchAppointments(String sisaCode, String identificationNumber,
+	List<PublicAppointmentListDto> fetchAppointments(Integer institutionId, String identificationNumber,
 													 List<Short> includeAppointmentStatus,
 													 LocalDate startDate,
 													 LocalDate endDate);
