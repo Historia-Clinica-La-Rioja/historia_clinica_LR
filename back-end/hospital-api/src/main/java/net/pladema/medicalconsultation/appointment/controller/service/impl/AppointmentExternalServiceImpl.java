@@ -104,10 +104,10 @@ public class AppointmentExternalServiceImpl implements AppointmentExternalServic
 	}
 
 	@Override
-	public void cancelAppointment(Integer institutionId, Integer appointmentId) {
+	public void cancelAppointment(Integer institutionId, Integer appointmentId, String reason) {
 		log.debug("CancelAppointment -> institutionId {}, appointmentId {}", institutionId, appointmentId);
-		appointmentValidatorService.validateStateUpdate(institutionId, appointmentId, AppointmentState.CANCELLED, null);
-		appointmentService.updateState(appointmentId, AppointmentState.CANCELLED, UserInfo.getCurrentAuditor(), null);
+		appointmentValidatorService.validateStateUpdate(institutionId, appointmentId, AppointmentState.CANCELLED, reason);
+		appointmentService.updateState(appointmentId, AppointmentState.CANCELLED, UserInfo.getCurrentAuditor(), reason);
 	}
 
 	@Override

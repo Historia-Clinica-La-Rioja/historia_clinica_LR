@@ -15,22 +15,20 @@ import org.springframework.web.bind.annotation.RestController;
 
 import ar.lamansys.sgh.shared.infrastructure.input.service.appointment.SharedAppointmentPort;
 import ar.lamansys.sgh.shared.infrastructure.input.service.appointment.dto.PublicAppointmentListDto;
-import ar.lamansys.sgh.shared.infrastructure.input.service.institution.SharedInstitutionPort;
 import ar.lamansys.sgx.shared.dates.configuration.LocalDateMapper;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 @RestController
 @RequestMapping("/public-api/institution/{institutionId}/appointment")
+@Tag(name = "Public Api", description = "Appointment by institution")
 public class AppointmentByInstitutionPublicController {
 	private final SharedAppointmentPort appointmentPort;
-	private final SharedInstitutionPort sharedInstitutionPort;
 	private final LocalDateMapper localDateMapper;
 	public AppointmentByInstitutionPublicController(SharedAppointmentPort appointmentPort,
-													SharedInstitutionPort sharedInstitutionPort,
 													LocalDateMapper localDateMapper) {
 		this.appointmentPort = appointmentPort;
-		this.sharedInstitutionPort = sharedInstitutionPort;
 		this.localDateMapper = localDateMapper;
 	}
 
@@ -50,7 +48,8 @@ public class AppointmentByInstitutionPublicController {
 	@PutMapping("/{appointmentId}/cancel")
 	public void cancelAppointment(
 			@PathVariable(name = "institutionId") Integer institutionId,
-			@PathVariable(name = "appointmentId") Integer appointmentId) {
-		appointmentPort.cancelAppointment(institutionId, appointmentId);
+			@PathVariable(name = "appointmentId") Integer appointmentId,
+			@RequestParam(name = "reason") String reason) {
+		appointmentPort.cancelAppointment(institutionId, appointmentId, reason);
 	}
 }

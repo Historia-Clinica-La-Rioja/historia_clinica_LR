@@ -17,7 +17,7 @@ public interface SharedAppointmentPort {
 
 	Integer getMedicalCoverage(Integer patientId, Integer healthcareProfessionalId);
 
-	void cancelAppointment(Integer institutionId, Integer appointmentId);
+	void cancelAppointment(Integer institutionId, Integer appointmentId, String reason);
 
 	String saveBooking(BookingAppointmentDto bookingAppointmentDto, BookingPersonDto bookingPersonDto, String email);
 
