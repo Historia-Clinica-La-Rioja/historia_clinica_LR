@@ -12,12 +12,14 @@ import org.springframework.web.bind.annotation.RestController;
 import ar.lamansys.sgh.shared.infrastructure.input.service.booking.BookingProfessionalDto;
 import ar.lamansys.sgh.shared.infrastructure.input.service.booking.ProfessionalAvailabilityDto;
 import ar.lamansys.sgh.shared.infrastructure.input.service.booking.SharedBookingPort;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.extern.slf4j.Slf4j;
 
 
+@Slf4j
 @RestController
 @RequestMapping("/public-api/institution/{institutionId}/appointment/booking/professional")
-@Slf4j
+@Tag(name = "Public Api", description = "Booking by professional")
 public class BookingProfessionalPublicController {
 
 	private final SharedBookingPort bookAppointmentPort;
@@ -55,17 +57,6 @@ public class BookingProfessionalPublicController {
         return ResponseEntity.ok(result);
     }
 
-    @GetMapping("/specialty/{clinicalSpecialtyId}/practice/{practiceId}/medicalCoverages/{medicalCoverageId}/availability")
-    public ResponseEntity<List<ProfessionalAvailabilityDto>> getProfessionalsAvailability(
-            @PathVariable(name="medicalCoverageId") Integer medicalCoverageId,
-            @PathVariable(name="practiceId") Integer practiceId,
-            @PathVariable(name="clinicalSpecialtyId") Integer clinicalSpecialtyId,
-            @PathVariable(name="institutionId") Integer institutionId
-    ) {
-        var result = bookAppointmentPort.fetchAvailabilityByPractice(institutionId,
-				clinicalSpecialtyId, practiceId, medicalCoverageId);
-        log.debug("Get availability by practiceId{} => {}", practiceId, result);
-        return ResponseEntity.ok(result);
-    }
+
 
 }

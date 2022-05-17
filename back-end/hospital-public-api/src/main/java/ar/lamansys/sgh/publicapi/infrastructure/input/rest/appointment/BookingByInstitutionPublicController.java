@@ -6,6 +6,7 @@ import java.util.Collection;
 import java.util.List;
 
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -19,13 +20,16 @@ import org.springframework.web.bind.annotation.RestController;
 import ar.lamansys.sgh.shared.infrastructure.input.service.appointment.SharedAppointmentPort;
 import ar.lamansys.sgh.shared.infrastructure.input.service.appointment.dto.PublicAppointmentListDto;
 import ar.lamansys.sgh.shared.infrastructure.input.service.booking.BookingDto;
+import ar.lamansys.sgh.shared.infrastructure.input.service.booking.ProfessionalAvailabilityDto;
 import ar.lamansys.sgh.shared.infrastructure.input.service.booking.SharedBookingPort;
 import ar.lamansys.sgx.shared.dates.configuration.LocalDateMapper;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 @RestController
 @RequestMapping("/public-api/institution/{institutionId}/appointment/booking")
+@Tag(name = "Public Api", description = "Booking by institution")
 public class BookingByInstitutionPublicController {
 	private final SharedBookingPort bookAppointmentPort;
 	private final SharedAppointmentPort appointmentPort;
@@ -63,6 +67,19 @@ public class BookingByInstitutionPublicController {
 		LocalDate startDate = localDateMapper.fromStringToLocalDate(startDateStr);
 		LocalDate endDate = localDateMapper.fromStringToLocalDate(endDateStr);
 		return appointmentPort.fetchAppointments(institutionId, identificationNumber, List.of((short)6), startDate, endDate);
+	}
+
+	@GetMapping("/specialty/{clinicalSpecialtyId}/practice/{practiceId}/medicalCoverages/{medicalCoverageId}/availability")
+	public ResponseEntity<List<ProfessionalAvailabilityDto>> getProfessionalsAvailability(
+			@PathVariable(name="medicalCoverageId") Integer medicalCoverageId,
+			@PathVariable(name="practiceId") Integer practiceId,
+			@PathVariable(name="clinicalSpecialtyId") Integer clinicalSpecialtyId,
+			@PathVariable(name="institutionId") Integer institutionId
+	) {
+		var result = bookAppointmentPort.fetchAvailabilityByPractice(institutionId,
+				clinicalSpecialtyId, practiceId, medicalCoverageId);
+		log.debug("Get availability by practiceId{} => {}", practiceId, result);
+		return ResponseEntity.ok(result);
 	}
 
 }

@@ -15,11 +15,13 @@ import ar.lamansys.sgh.shared.infrastructure.input.service.booking.BookingInstit
 import ar.lamansys.sgh.shared.infrastructure.input.service.booking.BookingSpecialtyDto;
 import ar.lamansys.sgh.shared.infrastructure.input.service.booking.PracticeDto;
 import ar.lamansys.sgh.shared.infrastructure.input.service.booking.SharedBookingPort;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 @RestController
 @RequestMapping("/public-api/appointment/booking")
+@Tag(name = "Public Api", description = "Bookings")
 public class BookingPublicController {
 	private final SharedBookingPort bookAppointmentPort;
 	public BookingPublicController(SharedBookingPort bookAppointmentPort) {
@@ -58,7 +60,7 @@ public class BookingPublicController {
 		return ResponseEntity.ok(result);
 	}
 
-	@GetMapping("/professional/{healthcareProfessionalId}/medicalCoverages/{medicalCoverageId}/specialty/{clinicalSpecialtyId}/practices")
+	@GetMapping("/professional/{healthcareProfessionalId}/specialty/{clinicalSpecialtyId}/medicalCoverages/{medicalCoverageId}/practices")
 	public ResponseEntity<List<PracticeDto>> getAllPracticesByProfessionalAndMedicalCoverage(
 			@PathVariable(name = "healthcareProfessionalId") Integer healthcareProfessionalId,
 			@PathVariable(name = "medicalCoverageId") Integer medicalCoverageId,
