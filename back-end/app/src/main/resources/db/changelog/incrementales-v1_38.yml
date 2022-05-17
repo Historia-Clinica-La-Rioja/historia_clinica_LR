@@ -179,3 +179,48 @@ databaseChangeLog:
               referencedTableName: healthcare_professional
               validate: true
 
+    - changeSet:
+        id: appointment_observation-createTable
+        comment: Create table appointment_observation
+        author: flizalde
+        changes:
+          - createTable:
+              tableName: appointment_observation
+              columns:
+                - column:
+                    constraints:
+                      primaryKey: true
+                      primaryKeyName: PK_appointment_observation
+                    name: appointment_id
+                    type: int
+                - column:
+                    constraints:
+                      nullable: true
+                    name: observation
+                    type: text
+                - column:
+                    constraints:
+                      nullable: false
+                    name: created_by
+                    type: int
+
+          - addForeignKeyConstraint:
+              baseColumnNames: appointment_id
+              baseTableName: appointment_observation
+              constraintName: FK_appointment_observation_appointment_id
+              onDelete: NO ACTION
+              onUpdate: NO ACTION
+              referencedColumnNames: id
+              referencedTableName: appointment
+              validate: true
+
+          - addForeignKeyConstraint:
+              baseColumnNames: created_by
+              baseTableName: appointment_observation
+              constraintName: FK_appointment_observation_created_by
+              onDelete: NO ACTION
+              onUpdate: NO ACTION
+              referencedColumnNames: id
+              referencedTableName: healthcare_professional
+              validate: true
+
