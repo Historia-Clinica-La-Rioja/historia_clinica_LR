@@ -14,9 +14,10 @@ import ar.lamansys.sgh.shared.infrastructure.input.service.booking.ProfessionalA
 import ar.lamansys.sgh.shared.infrastructure.input.service.booking.SharedBookingPort;
 import lombok.extern.slf4j.Slf4j;
 
-@Slf4j
+
 @RestController
-@RequestMapping("/public-api/institution/{sisaCode}/appointment/booking/professional")
+@RequestMapping("/public-api/institution/{institutionId}/appointment/booking/professional")
+@Slf4j
 public class BookingProfessionalPublicController {
 
 	private final SharedBookingPort bookAppointmentPort;
@@ -26,10 +27,10 @@ public class BookingProfessionalPublicController {
 	}
 
 
-	@GetMapping("/institution/{institutionId}/healthinsurance/{healthInsuranceId}")
+	@GetMapping("/medicalCoverages/{medicalCoverageId}")
     public ResponseEntity<List<BookingProfessionalDto>> getAllBookingProfessionals(
             @PathVariable(name = "institutionId") Integer institutionId,
-            @PathVariable(name = "healthInsuranceId") Integer medicalCoverageId,
+            @PathVariable(name = "medicalCoverageId") Integer medicalCoverageId,
             @RequestParam(name = "all", required = false, defaultValue = "true") boolean all
     ) {
         var result = bookAppointmentPort.fetchBookingProfessionals(institutionId,medicalCoverageId, all);
@@ -37,7 +38,7 @@ public class BookingProfessionalPublicController {
         return ResponseEntity.ok(result);
     }
 
-    @GetMapping("{professionalId}/institution/{institutionId}/specialty/{clinicalSpecialtyId}/practice/{practiceId}/availability")
+    @GetMapping("/{professionalId}/specialty/{clinicalSpecialtyId}/practice/{practiceId}/availability")
     public ResponseEntity<ProfessionalAvailabilityDto> getProfessionalAvailability(
             @PathVariable(name="institutionId") Integer institutionId,
             @PathVariable(name="professionalId") Integer professionalId,
@@ -54,9 +55,9 @@ public class BookingProfessionalPublicController {
         return ResponseEntity.ok(result);
     }
 
-    @GetMapping("institution/{institutionId}/specialty/{clinicalSpecialtyId}/practice/{practiceId}/healthinsurance/{healthInsuranceId}/availability")
+    @GetMapping("/specialty/{clinicalSpecialtyId}/practice/{practiceId}/medicalCoverages/{medicalCoverageId}/availability")
     public ResponseEntity<List<ProfessionalAvailabilityDto>> getProfessionalsAvailability(
-            @PathVariable(name="healthInsuranceId") Integer medicalCoverageId,
+            @PathVariable(name="medicalCoverageId") Integer medicalCoverageId,
             @PathVariable(name="practiceId") Integer practiceId,
             @PathVariable(name="clinicalSpecialtyId") Integer clinicalSpecialtyId,
             @PathVariable(name="institutionId") Integer institutionId

@@ -82,10 +82,10 @@ public class BookingPublicController {
 		return ResponseEntity.ok(result);
 	}
 
-	@GetMapping("/specialty/{clinicalSpecialtyId}/practices/healthinsurance/{healthInsuranceId}")
-	public ResponseEntity<List<PracticeDto>> getAllPracticesBySpecialtyAndHealthInsurance(
+	@GetMapping("/specialty/{clinicalSpecialtyId}/practices/medicalCoverages/{medicalCoverageId}")
+	public ResponseEntity<List<PracticeDto>> getAllPracticesBySpecialtyAndMedicalCoverage(
 			@PathVariable(name = "clinicalSpecialtyId") Integer clinicalSpecialtyId,
-			@PathVariable(name = "healthInsuranceId") Integer medicalCoverageId,
+			@PathVariable(name = "medicalCoverageId") Integer medicalCoverageId,
 			@RequestParam(name = "all", required = false, defaultValue = "true") boolean all
 	) {
 		List<PracticeDto> result =  bookAppointmentPort.fetchPracticesBySpecialtyAndHealthInsurance(clinicalSpecialtyId, medicalCoverageId, all);
@@ -95,10 +95,10 @@ public class BookingPublicController {
 		return ResponseEntity.ok(result);
 	}
 
-	@GetMapping("/practices/professional/{healthcareProfessionalId}/healthinsurance/{healthInsuranceId}/specialty/{clinicalSpecialtyId}")
-	public ResponseEntity<List<PracticeDto>> getAllPracticesByProfessionalAndHealthInsurance(
+	@GetMapping("/practices/professional/{healthcareProfessionalId}/medicalCoverages/{medicalCoverageId}/specialty/{clinicalSpecialtyId}")
+	public ResponseEntity<List<PracticeDto>> getAllPracticesByProfessionalAndMedicalCoverage(
 			@PathVariable(name = "healthcareProfessionalId") Integer healthcareProfessionalId,
-			@PathVariable(name = "healthInsuranceId") Integer medicalCoverageId,
+			@PathVariable(name = "medicalCoverageId") Integer medicalCoverageId,
 			@PathVariable(name = "clinicalSpecialtyId") Integer clinicalSpecialtyId,
 			@RequestParam(name = "all", required = false, defaultValue = "true") boolean all) {
 		List<PracticeDto> result = bookAppointmentPort.fetchPracticesByProfessionalAndHealthInsurance(healthcareProfessionalId, medicalCoverageId, clinicalSpecialtyId, all);
