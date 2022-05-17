@@ -270,6 +270,11 @@ export interface AuthorDto extends Serializable {
     nameSelfDetermination: string;
 }
 
+export interface AvailabilityDto {
+    date: Date;
+    slots: string[];
+}
+
 export interface BMPatientDto extends APatientDto {
     id: number;
 }
@@ -421,6 +426,34 @@ export interface BookingAppointmentDto {
     specialtyId: number;
 }
 
+export interface BookingDiaryDto {
+    appointmentDuration: number;
+    doctorsOfficeDescription: string;
+    doctorsOfficeId: number;
+    endDate: Date;
+    from: Date;
+    id: number;
+    openingHoursId: number;
+    startDate: Date;
+    to: Date;
+}
+
+export interface BookingDto {
+    appointmentDataEmail: string;
+    bookingAppointmentDto: BookingAppointmentDto;
+    bookingPersonDto: BookingPersonDto;
+}
+
+export interface BookingHealthInsuranceDto {
+    description: string;
+    id: number;
+}
+
+export interface BookingInstitutionDto {
+    description: string;
+    id: number;
+}
+
 export interface BookingPersonDto {
     birthDate: string;
     email: string;
@@ -428,6 +461,17 @@ export interface BookingPersonDto {
     genderId: number;
     idNumber: string;
     lastName: string;
+}
+
+export interface BookingProfessionalDto {
+    coverage: boolean;
+    id: number;
+    name: string;
+}
+
+export interface BookingSpecialtyDto {
+    description: string;
+    id: number;
 }
 
 export interface BreathingDto extends Serializable {
@@ -673,6 +717,11 @@ export interface DiaryADto {
     includeHoliday?: boolean;
     professionalAssignShift?: boolean;
     startDate: string;
+}
+
+export interface DiaryAvailabilityDto {
+    diary: BookingDiaryDto;
+    slots: AvailabilityDto;
 }
 
 export interface DiaryDto extends DiaryADto {
@@ -2110,6 +2159,14 @@ export interface PoliceInterventionDetailsDto extends Serializable {
     plateNumber: string;
 }
 
+export interface PracticeDto {
+    coverage: boolean;
+    coverageText: string;
+    description: string;
+    id: number;
+    snomedId: number;
+}
+
 export interface PreferredTermDto {
     lang: string;
     term: string;
@@ -2161,6 +2218,11 @@ export interface ProcedureReduced {
     procedure: string;
 }
 
+export interface ProfessionalAvailabilityDto {
+    availability: DiaryAvailabilityDto[];
+    professional: BookingProfessionalDto;
+}
+
 export interface ProfessionalDto {
     firstName: string;
     id: number;
@@ -2199,6 +2261,59 @@ export interface ProfessionalsByClinicalSpecialtyDto {
 }
 
 export interface ProvinceDto extends AbstractMasterdataDto<number> {
+    id: number;
+}
+
+export interface PublicAppointmentClinicalSpecialty {
+    name: string;
+    sctid: string;
+}
+
+export interface PublicAppointmentDoctorDto {
+    licenseNumber: string;
+    person: PublicAppointmentPersonDto;
+}
+
+export interface PublicAppointmentInstitution {
+    cuit: string;
+    id: number;
+    sisaCode: string;
+}
+
+export interface PublicAppointmentListDto {
+    clinicalSpecialty: PublicAppointmentClinicalSpecialty;
+    date: string;
+    doctor: PublicAppointmentDoctorDto;
+    hour: string;
+    id: number;
+    institution: PublicAppointmentInstitution;
+    medicalCoverage: PublicAppointmentMedicalCoverage;
+    overturn: boolean;
+    patient: PublicAppointmentPatientDto;
+    phone: string;
+    status: PublicAppointmentStatus;
+}
+
+export interface PublicAppointmentMedicalCoverage {
+    affiliateNumber: string;
+    cuit: string;
+    name: string;
+}
+
+export interface PublicAppointmentPatientDto {
+    id: number;
+    person: PublicAppointmentPersonDto;
+}
+
+export interface PublicAppointmentPersonDto {
+    firstName: string;
+    genderId: number;
+    identificationNumber: string;
+    lastName: string;
+}
+
+export interface PublicAppointmentStatus extends Serializable {
+    description: string;
     id: number;
 }
 
@@ -2705,6 +2820,7 @@ export const enum AppFeature {
     HABILITAR_VISUALIZACION_PROPIEDADES_SISTEMA = "HABILITAR_VISUALIZACION_PROPIEDADES_SISTEMA",
     HABILITAR_GENERACION_ASINCRONICA_DOCUMENTOS_PDF = "HABILITAR_GENERACION_ASINCRONICA_DOCUMENTOS_PDF",
     HABILITAR_BUSQUEDA_LOCAL_CONCEPTOS = "HABILITAR_BUSQUEDA_LOCAL_CONCEPTOS",
+    HABILITAR_MAIL_RESERVA_TURNO = "HABILITAR_MAIL_RESERVA_TURNO",
 }
 
 export const enum EDocumentSearch {
