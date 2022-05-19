@@ -23,6 +23,7 @@ import javax.validation.ConstraintViolationException;
 
 import java.time.LocalDateTime;
 import java.util.Collections;
+import java.util.Optional;
 
 @Service
 public class CreateAnamnesisServiceImpl implements CreateAnamnesisService {
@@ -53,8 +54,8 @@ public class CreateAnamnesisServiceImpl implements CreateAnamnesisService {
     @Transactional
     public AnamnesisBo execute(AnamnesisBo anamnesis) {
         LOG.debug("Input parameters -> anamnesis {}", anamnesis);
-
         anamnesisValidator.assertContextValid(anamnesis);
+		Optional.ofNullable(anamnesis.getDiagnosis()).ifPresent(list -> list.forEach(d -> d.setId(null)));
         var internmentEpisode = internmentEpisodeService
                 .getInternmentEpisode(anamnesis.getEncounterId(), anamnesis.getInstitutionId());
 

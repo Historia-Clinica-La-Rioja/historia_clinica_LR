@@ -1,6 +1,7 @@
 package net.pladema.clinichistory.hospitalization.service.epicrisis.impl;
 
 import java.time.LocalDateTime;
+import java.util.Optional;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -38,7 +39,6 @@ public class CreateEpicrisisServiceImpl implements CreateEpicrisisService {
     @Override
     public EpicrisisBo execute(EpicrisisBo epicrisis) {
         LOG.debug("Input parameters -> epicrisis {}", epicrisis);
-
 		epicrisisValidator.assertContextValid(epicrisis);
         var internmentEpisode = internmentEpisodeService.getInternmentEpisode(epicrisis.getEncounterId(), epicrisis.getInstitutionId());
         epicrisis.setPatientId(internmentEpisode.getPatientId());
@@ -47,6 +47,13 @@ public class CreateEpicrisisServiceImpl implements CreateEpicrisisService {
 		epicrisisValidator.assertEpicrisisValid(epicrisis);
 		epicrisisValidator.assertEffectiveRiskFactorTimeValid(epicrisis, internmentEpisode.getEntryDate());
 		epicrisisValidator.assertAnthropometricData(epicrisis);
+
+		epicrisis.getMainDiagnosis().setId(null);
+		Optional.ofNullable(epicrisis.getDiagnosis()).ifPresent(list->list.forEach(d->d.setId(null)));
+		Optional.ofNullable(epicrisis.getPersonalHistories()).ifPresent(list->list.forEach(d->d.setId(null)));
+		Optional.ofNullable(epicrisis.getFamilyHistories()).ifPresent(list->list.forEach(d->d.setId(null)));
+		Optional.ofNullable(epicrisis.getAllergies()).ifPresent(list->list.forEach(d->d.setId(null)));
+		Optional.ofNullable(epicrisis.getImmunizations()).ifPresent(list->list.forEach(d->d.setId(null)));
 
         LocalDateTime now = dateTimeProvider.nowDateTime();
         epicrisis.setPerformedDate(now);

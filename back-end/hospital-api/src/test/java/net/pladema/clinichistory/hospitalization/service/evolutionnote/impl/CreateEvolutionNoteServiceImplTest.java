@@ -85,7 +85,6 @@ class CreateEvolutionNoteServiceImplTest extends UnitRepository {
 	@Mock
 	private FeatureFlagsService featureFlagsService;
 
-	@Mock
 	private EvolutionNoteValidator evolutionNoteValidator;
 
     @BeforeEach
@@ -102,7 +101,7 @@ class CreateEvolutionNoteServiceImplTest extends UnitRepository {
                 documentFactory,
                 internmentEpisodeService,
                 fetchHospitalizationHealthConditionState,
-                dateTimeProvider, evolutionNoteValidator);
+                dateTimeProvider, new EvolutionNoteValidator(fetchLoggedUserRolesExternalService));
     }
 
     @Test

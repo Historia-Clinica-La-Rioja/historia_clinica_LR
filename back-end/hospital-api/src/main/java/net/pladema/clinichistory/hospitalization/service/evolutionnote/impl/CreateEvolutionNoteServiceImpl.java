@@ -13,6 +13,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.Optional;
 
 @Service
 public class CreateEvolutionNoteServiceImpl implements CreateEvolutionNoteService {
@@ -46,7 +47,8 @@ public class CreateEvolutionNoteServiceImpl implements CreateEvolutionNoteServic
     @Override
     public EvolutionNoteBo execute(EvolutionNoteBo evolutionNote) {
         LOG.debug("Input parameters -> evolutionNote {}", evolutionNote);
-
+		Optional.ofNullable(evolutionNote.getMainDiagnosis()).ifPresent(md -> md.setId(null));
+		Optional.ofNullable(evolutionNote.getDiagnosis()).ifPresent(diagnosis->diagnosis.forEach(d->d.setId(null)));
 		evolutionNoteValidator.assertContextValid(evolutionNote);
 		evolutionNoteValidator.validateNursePermissionToLoadProcedures(evolutionNote);
 

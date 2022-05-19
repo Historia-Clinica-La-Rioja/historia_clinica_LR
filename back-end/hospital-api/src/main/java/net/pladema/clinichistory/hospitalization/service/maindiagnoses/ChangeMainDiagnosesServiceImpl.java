@@ -19,6 +19,7 @@ import javax.validation.ConstraintViolationException;
 import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.Optional;
 
 @Service
 public class ChangeMainDiagnosesServiceImpl implements ChangeMainDiagnosesService {
@@ -59,7 +60,7 @@ public class ChangeMainDiagnosesServiceImpl implements ChangeMainDiagnosesServic
 
         assertDoesNotHaveEpicrisis(internmentEpisode);
         mainDiagnosisBo.validateSelf();
-
+		mainDiagnosisBo.getMainDiagnosis().setId(null);
         HealthConditionBo currentMainDiagnose = fetchHospitalizationHealthConditionState.
                 getMainDiagnosisGeneralState(internmentEpisode.getId());
         if (!currentMainDiagnose.getSnomed().equals(mainDiagnosisBo.getMainDiagnosis().getSnomed()))

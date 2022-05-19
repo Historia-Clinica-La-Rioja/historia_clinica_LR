@@ -241,7 +241,8 @@ public class OutpatientConsultationController implements OutpatientConsultationA
         outpatient.setPatientInfo(new PatientInfoBo(patientDto.getId(), patientDto.getPerson().getGender().getId(), patientDto.getPerson().getAge()));
 
         outpatient.setProblems(Collections.singletonList(outpatientConsultationMapper.fromHealthConditionNewConsultationDto(solvedProblemDto)));
-        createOutpatientDocumentService.execute(outpatient);
+        outpatient.getProblems().forEach(p->p.setId(null));
+		createOutpatientDocumentService.execute(outpatient);
 
         return ResponseEntity.ok().body(true);
     }
