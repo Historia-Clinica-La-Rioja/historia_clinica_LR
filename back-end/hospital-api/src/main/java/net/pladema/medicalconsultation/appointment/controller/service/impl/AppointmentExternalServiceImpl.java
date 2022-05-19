@@ -202,7 +202,9 @@ public class AppointmentExternalServiceImpl implements AppointmentExternalServic
 		return new PublicAppointmentStatus(status.getId(), status.getDescription());
 	}
 	private PublicAppointmentMedicalCoverage buildMedicalCoverage(MedicalCoverageBo medicalCoverage) {
-		return new PublicAppointmentMedicalCoverage(medicalCoverage.getCuit(), medicalCoverage.getName(), medicalCoverage.getAffiliateNumber());
+		return medicalCoverage != null ?
+				new PublicAppointmentMedicalCoverage(medicalCoverage.getCuit(), medicalCoverage.getName(), medicalCoverage.getAffiliateNumber())
+				: null ;
 	}
 
 	@NotNull
@@ -216,7 +218,7 @@ public class AppointmentExternalServiceImpl implements AppointmentExternalServic
 
 	private BookingPersonBo mapToBookingPerson(BookingPersonDto bookingPersonDto) {
 		return new BookingPersonBo(
-				bookingPersonDto.getBirthDate(),
+				localDateMapper.fromStringToLocalDate(bookingPersonDto.getBirthDate()),
 				bookingPersonDto.getEmail(),
 				bookingPersonDto.getFirstName(),
 				bookingPersonDto.getGenderId(),

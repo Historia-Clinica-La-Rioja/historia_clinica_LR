@@ -72,15 +72,15 @@ public class AppointmentStorageImpl implements AppointmentStorage {
 	}
 
 	private MedicalCoverageBo buildMedicalCoverage(MedicalCoverageInfoSummary medicalCoverage) {
-		return new MedicalCoverageBo(medicalCoverage.getName(), medicalCoverage.getCuit(), medicalCoverage.getAffiliateNumber());
+		return medicalCoverage != null ? new MedicalCoverageBo(medicalCoverage.getName(), medicalCoverage.getCuit(), medicalCoverage.getAffiliateNumber()) : null;
 	}
 
 	private ClinicalSpecialtyBo buildClinicalSpecialty(ClinicalSpecialtySummary clinicalSpecialty) {
-		return new ClinicalSpecialtyBo(clinicalSpecialty.getSctid(), clinicalSpecialty.getName());
+		return clinicalSpecialty != null ? new ClinicalSpecialtyBo(clinicalSpecialty.getSctid(), clinicalSpecialty.getName()) : null;
 	}
 
 	private InstitutionBo buildInstitution(InstitutionSummary institution) {
-		return new InstitutionBo(institution.getId(), institution.getCuit(), institution.getSisaCode());
+		return institution != null ?  new InstitutionBo(institution.getId(), institution.getCuit(), institution.getSisaCode()) : null;
 	}
 
 	private DoctorBo buildDoctor(DoctorInfoSummary doctor) {

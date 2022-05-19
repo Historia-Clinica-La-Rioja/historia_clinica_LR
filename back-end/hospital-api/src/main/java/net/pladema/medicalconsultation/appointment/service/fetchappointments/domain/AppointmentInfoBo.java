@@ -34,6 +34,12 @@ public class AppointmentInfoBo {
 
 	private InstitutionBo institution;
 	public String getPhone() {
-		return "Sin información".equals(phoneNumber) ? phoneNumber : String.format("%s-%s",phonePrefix, phoneNumber);
+		if ("Sin información".equals(phoneNumber))
+			return phoneNumber;
+		if (phonePrefix == null)
+			return String.format("%s", phoneNumber);
+		if (phoneNumber == null)
+			return  String.format("%s",phonePrefix);
+		return String.format("%s-%s",phonePrefix, phoneNumber);
 	}
 }
