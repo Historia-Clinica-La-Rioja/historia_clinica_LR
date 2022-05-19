@@ -65,6 +65,8 @@ public class EpicrisisBo extends SelfValidating<EpicrisisBo> implements IDocumen
 	private Long initialDocumentId;
 
 	private String modificationReason;
+	
+	private boolean confirmed;
 
 	@Override
     public Integer getPatientId() {

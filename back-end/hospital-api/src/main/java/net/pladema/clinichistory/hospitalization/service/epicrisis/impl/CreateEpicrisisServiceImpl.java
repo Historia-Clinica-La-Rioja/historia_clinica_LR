@@ -37,7 +37,7 @@ public class CreateEpicrisisServiceImpl implements CreateEpicrisisService {
     }
 
     @Override
-    public EpicrisisBo execute(EpicrisisBo epicrisis) {
+    public EpicrisisBo execute(EpicrisisBo epicrisis, boolean draft) {
         LOG.debug("Input parameters -> epicrisis {}", epicrisis);
 		epicrisisValidator.assertContextValid(epicrisis);
         var internmentEpisode = internmentEpisodeService.getInternmentEpisode(epicrisis.getEncounterId(), epicrisis.getInstitutionId());
@@ -57,8 +57,8 @@ public class CreateEpicrisisServiceImpl implements CreateEpicrisisService {
 
         LocalDateTime now = dateTimeProvider.nowDateTime();
         epicrisis.setPerformedDate(now);
-
-        epicrisis.setId(documentFactory.run(epicrisis, true));
+		epicrisis.setConfirmed(!draft);
+        epicrisis.setId(documentFactory.run(epicrisis, epicrisis.isConfirmed()));
         internmentEpisodeService.updateEpicrisisDocumentId(internmentEpisode.getId(), epicrisis.getId());
 
         LOG.debug(OUTPUT, epicrisis);

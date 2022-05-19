@@ -90,13 +90,35 @@ public class EpicrisisController {
                 .ifPresentOrElse(epicrisis::setPatientInfo,() -> new NotFoundException("El paciente no existe", "El paciente no existe"));
         epicrisis.setEncounterId(internmentEpisodeId);
         epicrisis.setInstitutionId(institutionId);
-        createEpicrisisService.execute(epicrisis);
+        createEpicrisisService.execute(epicrisis, false);
 
         LOG.debug(OUTPUT, Boolean.TRUE);
         return  ResponseEntity.ok().body(Boolean.TRUE);
     }
 
-    @GetMapping("/{epicrisisId}")
+	@PostMapping("/draft")
+	@Transactional
+	public ResponseEntity<Boolean> createDraft(
+			@PathVariable(name = "institutionId") Integer institutionId,
+			@PathVariable(name = "internmentEpisodeId") Integer internmentEpisodeId,
+			@RequestBody EpicrisisDto epicrisisDto) {
+		LOG.debug("Input parameters -> institutionId {}, internmentEpisodeId {}, ananmnesis {}",
+				institutionId, internmentEpisodeId, epicrisisDto);
+		EpicrisisBo epicrisis = epicrisisMapper.fromEpicrisisDto(epicrisisDto);
+		internmentEpisodeService.getPatient(internmentEpisodeId)
+				.map(patientExternalService::getBasicDataFromPatient)
+				.map(patientDto -> new PatientInfoBo(patientDto.getId(), patientDto.getPerson().getGender().getId(), patientDto.getPerson().getAge()))
+				.ifPresentOrElse(epicrisis::setPatientInfo,() -> new NotFoundException("El paciente no existe", "El paciente no existe"));
+		epicrisis.setEncounterId(internmentEpisodeId);
+		epicrisis.setInstitutionId(institutionId);
+		createEpicrisisService.execute(epicrisis, true);
+
+		LOG.debug(OUTPUT, Boolean.TRUE);
+		return  ResponseEntity.ok().body(Boolean.TRUE);
+	}
+
+
+	@GetMapping("/{epicrisisId}")
     @InternmentValid
     @DocumentValid(isConfirmed = true, documentType = DocumentType.EPICRISIS)
     public ResponseEntity<ResponseEpicrisisDto> getDocument(
