@@ -9,6 +9,9 @@ const healthcareprofessionalhealthinsurances = {
     create: HealthcareProfessionalHealthInsuranceCreate,
     list: HealthcareProfessionalHealthInsuranceList,
     edit: HealthcareProfessionalHealthInsuranceEdit,
+    options: {
+        submenu: 'booking'
+    }
 };
 
 export default healthcareprofessionalhealthinsurances;

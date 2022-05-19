@@ -8,7 +8,10 @@ const mandatorymedicalpractices = {
     show: MandatoryMedicalPracticesShow,
     list: MandatoryMedicalPracticesList,
     create: MandatoryMedicalPracticeCreate,
-    edit: MandatoryMedicalPracticeEdit
+    edit: MandatoryMedicalPracticeEdit,
+    options: {
+        submenu: 'booking'
+    }
 };
 
 export default mandatorymedicalpractices;

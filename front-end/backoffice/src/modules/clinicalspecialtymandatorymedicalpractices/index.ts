@@ -8,7 +8,11 @@ const clinicalspecialtymandatorymedicalpractices = {
     edit: ClinicalSpecialtyMandatoryMedicalPracticeEdit,
     show: ClinicalSpecialtyMandatoryMedicalPracticeShow,
     list: ClinicalSpecialtyMandatoryMedicalPracticeList,
-    create: ClinicalSpecialtyMandatoryMedicalPracticeCreate
+    create: ClinicalSpecialtyMandatoryMedicalPracticeCreate,
+    options: {
+        submenu: 'booking'
+    }
+
 };
 
 export default clinicalspecialtymandatorymedicalpractices;

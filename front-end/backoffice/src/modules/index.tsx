@@ -42,15 +42,18 @@ import mandatorymedicalpractices from './mandatorymedicalpractices';
 import clinicalspecialtymandatorymedicalpractices from './clinicalspecialtymandatorymedicalpractices';
 import healthinsurancepractices from './healthinsurancepractices';
 import mandatoryprofessionalpracticefreedays from './mandatoryprofessionalpracticefreedays';
+import bookingInstitutions from "./booking-institutions";
 //
 
-const resourcesAdminInstitucional = [
+const resourcesAdminInstitucional = (permissions: SGXPermissions) => [
     <Resource name="medicalCoverages" {...medicalCoverage}/>,
     <Resource name="healthcareprofessionals" />,
+    <Resource name="booking-institution" {...bookingInstitutions(permissions)}/>,
     <Resource name="healthcareprofessionalhealthinsurances"  {...healthcareprofessionalhealthinsurances}/>,
     <Resource name="mandatorymedicalpractices"  {...mandatorymedicalpractices}/>,
     <Resource name="clinicalspecialtymandatorymedicalpractices"  {...clinicalspecialtymandatorymedicalpractices}/>,
     <Resource name="healthinsurancepractices"  {...healthinsurancepractices}/>,
+    <Resource name="mandatoryprofessionalpracticefreedays"  {...mandatoryprofessionalpracticefreedays}/>,
     <Resource name="mandatoryprofessionalpracticefreedays"  {...mandatoryprofessionalpracticefreedays}/>,
     <Resource name="users" />,
 ];
@@ -73,7 +76,7 @@ const resourcesAdminRoot = (permissions: SGXPermissions) => [
 const resourcesFor = (permissions: SGXPermissions) =>
     permissions.hasAnyAssignment(
         ROOT, ADMINISTRADOR
-    ) ? resourcesAdminRoot(permissions): resourcesAdminInstitucional;
+    ) ? resourcesAdminRoot(permissions): resourcesAdminInstitucional(permissions);
 
 const resources = (permissions: SGXPermissions) => [
     // staff

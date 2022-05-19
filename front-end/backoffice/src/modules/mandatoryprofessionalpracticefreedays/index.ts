@@ -8,7 +8,10 @@ const mandatoryprofessionalpracticefreedays = {
     create: MandatoryProfessionalPracticeFreeDaysCreate,
     edit: MandatoryProfessionalPracticeFreeDaysEdit,
     list: MandatoryProfessionalPracticeFreeDaysList,
-    show: MandatoryProfessionalPracticeFreeDaysShow
+    show: MandatoryProfessionalPracticeFreeDaysShow,
+    options: {
+        submenu: 'booking'
+    }
 };
 
 export default mandatoryprofessionalpracticefreedays;

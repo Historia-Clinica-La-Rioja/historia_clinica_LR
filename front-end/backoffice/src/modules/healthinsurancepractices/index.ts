@@ -8,6 +8,9 @@ const healthinsurancepractices = {
     create: HealthInsurancePracticeCreate,
     edit: HealthInsurancePracticeEdit,
     list: HealthInsurancePracticeList,
+    options: {
+        submenu: 'booking'
+    }
 };
 
 export default healthinsurancepractices;
