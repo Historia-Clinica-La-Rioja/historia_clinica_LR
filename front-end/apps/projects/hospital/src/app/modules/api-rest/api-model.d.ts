@@ -1009,6 +1009,7 @@ export interface EvolutionNoteDto extends Serializable {
     diagnosis?: DiagnosisDto[];
     immunizations?: ImmunizationDto[];
     mainDiagnosis?: HealthConditionDto;
+    modificationReason?: string;
     notes?: DocumentObservationsDto;
     procedures?: HospitalizationProcedureDto[];
     riskFactors?: RiskFactorDto;

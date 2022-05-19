@@ -30,7 +30,7 @@ public class InternmentDocumentValidator {
 		validator.isValid(documentBo, entryDate);
 	}
 
-	public void assertDiagnosisValid(IDocumentBo documentBo, InternmentEpisode internmentEpisode, HealthConditionBo mainDiagnosis) {
+	public void assertDiagnosisValid(IDocumentBo documentBo, HealthConditionBo mainDiagnosis) {
 		if (documentBo.getMainDiagnosis() != null && (documentBo.getDiagnosis() == null || documentBo.getDiagnosis().isEmpty() || !documentBo.getMainDiagnosis().getSnomed().equals(mainDiagnosis.getSnomed())))
 			return;
 		if (documentBo.getDiagnosis().stream()

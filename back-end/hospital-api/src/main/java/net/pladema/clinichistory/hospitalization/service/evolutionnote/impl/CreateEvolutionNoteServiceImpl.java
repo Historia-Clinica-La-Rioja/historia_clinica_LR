@@ -66,7 +66,7 @@ public class CreateEvolutionNoteServiceImpl implements CreateEvolutionNoteServic
 
 		HealthConditionBo mainDiagnosis = fetchHospitalizationHealthConditionState.getMainDiagnosisGeneralState(internmentEpisode.getId());
 		if (mainDiagnosis != null)
-			evolutionNoteValidator.assertDiagnosisValid(evolutionNote, internmentEpisode, mainDiagnosis);
+			evolutionNoteValidator.assertDiagnosisValid(evolutionNote, mainDiagnosis);
 
 		evolutionNote = evolutionNoteValidator.verifyEvolutionNoteDiagnosis(evolutionNote, mainDiagnosis);
 
