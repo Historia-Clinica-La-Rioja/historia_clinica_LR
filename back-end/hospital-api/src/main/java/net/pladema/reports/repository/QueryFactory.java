@@ -45,7 +45,13 @@ public class QueryFactory {
 		odontologyQuery.setParameter("endDate", endDate);
 		List<ConsultationDetail> odontologyData = formatProblems(odontologyQuery.getResultList());
 
+		Query nursingQuery = entityManager.createNamedQuery("Reports.NursingConsultationDetail");
+		nursingQuery.setParameter("institutionId", institutionId);
+		nursingQuery.setParameter("startDate", startDate);
+		nursingQuery.setParameter("endDate", endDate);
+
 		data.addAll(odontologyData);
+		data.addAll(nursingQuery.getResultList());
 		data.sort(Comparator.comparing(ConsultationDetail::getPatientSurname));
 
         //Optional filter: by specialty or professional if specified
@@ -92,6 +98,11 @@ public class QueryFactory {
 				.setParameter("to", endDate)
 				.getResultList());
 		result.addAll(entityManager.createNamedQuery("Reports.OdontologyConsultationSummary")
+				.setParameter("institutionId", institutionId)
+				.setParameter("from", startDate)
+				.setParameter("to", endDate)
+				.getResultList());
+		result.addAll(entityManager.createNamedQuery("Reports.NursingConsultationSummary")
 				.setParameter("institutionId", institutionId)
 				.setParameter("from", startDate)
 				.setParameter("to", endDate)
