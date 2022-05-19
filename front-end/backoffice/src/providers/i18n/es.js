@@ -8,6 +8,7 @@ const messages = {
             facilities: 'Instalaciones',
             debug: 'Inspeccionar',
             masterData: 'Datos maestros',
+            booking: 'Reservas online',
             more: 'Mas',
 
         },
@@ -168,6 +169,12 @@ const messages = {
                 sectors: 'Sectores',
                 dependencyId: 'Dependencia',
                 provinceCode: 'Código de provincia'
+            },
+        },
+        "booking-institution": {
+            name: 'Institución |||| Instituciones',
+            fields: {
+                id: 'Nombre',
             },
         },
         snvs: {

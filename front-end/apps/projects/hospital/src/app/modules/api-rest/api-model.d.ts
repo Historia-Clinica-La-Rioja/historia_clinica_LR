@@ -283,6 +283,10 @@ export interface BMPersonDto extends APersonDto {
     id: number;
 }
 
+export interface BackofficeBookingInstitutionDto extends Serializable {
+    id: number;
+}
+
 export interface BackofficeClinicalSpecialtyMandatoryMedicalPracticeDto {
     clinicalSpecialtyId: number;
     id: number;
