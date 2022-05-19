@@ -19,6 +19,8 @@ export class NewAttentionComponent implements OnInit {
 	possibleStartingScheduleHours: Date[];
 	possibleEndingScheduleHours: Date[];
 
+	availableForBooking: boolean;
+
 	constructor(
 		public dialogRef: MatDialogRef<NewAttentionComponent>,
 		private readonly formBuilder: FormBuilder,
@@ -40,11 +42,16 @@ export class NewAttentionComponent implements OnInit {
 			startingHour: [this.data.start, Validators.required],
 			endingHour: [this.data.end, Validators.required],
 			overturnCount: [this.data.overturnCount, Validators.min(0)],
-			medicalAttentionType: [null, Validators.required]
+			medicalAttentionType: [null, Validators.required],
+			availableForBooking: [this.data.availableForBooking],
 		});
+
+
+		this.availableForBooking = this.data.availableForBooking;
 
 		this.possibleStartingScheduleHours = this.data.possibleScheduleHours.slice(0, this.data.possibleScheduleHours.length - 1);
 		this.filterAppointmentEndingHours();
+
 	}
 
 	onSelectionChanged(): void {
@@ -52,13 +59,17 @@ export class NewAttentionComponent implements OnInit {
 
 		if (medicalAttentionType.description === MEDICAL_ATTENTION.SPONTANEOUS) {
 			this.form.controls.overturnCount.disable();
+			this.form.controls.availableForBooking.disable();
+
 		} else {
 			this.form.controls.overturnCount.enable();
+			this.form.controls.availableForBooking.enable();
 		}
 	}
 
 	submit() {
 		if (this.form.valid) {
+			this.form.value.availableForBooking = this.availableForBooking;
 			this.dialogRef.close(this.form.value);
 		}
 	}
@@ -78,6 +89,9 @@ export class NewAttentionComponent implements OnInit {
 			this.form.patchValue({ endingHour: this.possibleEndingScheduleHours[0] });
 	}
 
+	changeAvailableForBooking(): void {
+		this.availableForBooking = !this.availableForBooking;
+	}
 }
 
 export interface NewAttentionElements{
@@ -86,5 +100,6 @@ export interface NewAttentionElements{
 	overturnCount?: number,
 	medicalAttentionTypeId?: number,
 	isEdit?: boolean,
-	possibleScheduleHours: Date[]
+	possibleScheduleHours: Date[],
+	availableForBooking: boolean,
 }

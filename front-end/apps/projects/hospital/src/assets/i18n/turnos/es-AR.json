@@ -26,7 +26,8 @@
 			"SELECT_DAYS_TYPE_SUBTITLE": "Seleccione tipos de consulta para cada día",
 			"dialog": {
 				"TITLE": "Nueva atención",
-				"EDIT": "Editar atención"
+				"EDIT": "Editar atención",
+				"BOOKING": "Disponible para turnos online"
 			},
 			"messages": {
 				"SUCCESS": "La agenda se guardó exitosamente",
