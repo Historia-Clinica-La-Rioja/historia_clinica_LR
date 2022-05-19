@@ -12,11 +12,13 @@ import org.springframework.web.bind.annotation.RestController;
 import ar.lamansys.online.infraestructure.input.service.BookingExternalService;
 import ar.lamansys.sgh.shared.infrastructure.input.service.booking.BookingSpecialtyDto;
 import ar.lamansys.sgh.shared.infrastructure.input.service.booking.PracticeDto;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 @RestController
 @RequestMapping("/booking")
+@Tag(name = "Booking", description = "Booking practices")
 public class BookingSpecialtyController {
 
     private final BookingExternalService bookingExternalService;

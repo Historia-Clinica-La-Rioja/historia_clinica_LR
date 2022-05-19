@@ -19,11 +19,13 @@ import ar.lamansys.online.domain.booking.BookingPersonBo;
 import ar.lamansys.sgh.shared.infrastructure.input.service.booking.BookingAppointmentDto;
 import ar.lamansys.sgh.shared.infrastructure.input.service.booking.BookingDto;
 import ar.lamansys.sgh.shared.infrastructure.input.service.booking.BookingPersonDto;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 @RestController
 @RequestMapping("/booking")
+@Tag(name = "Booking", description = "Booking")
 public class BookingController {
 
 	private final BookAppointment bookAppointment;

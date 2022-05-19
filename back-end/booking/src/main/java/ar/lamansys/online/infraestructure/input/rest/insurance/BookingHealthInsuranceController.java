@@ -12,9 +12,11 @@ import org.springframework.web.bind.annotation.RestController;
 
 import ar.lamansys.online.application.insurance.FetchHealthcareInsurances;
 import ar.lamansys.sgh.shared.infrastructure.input.service.booking.BookingHealthInsuranceDto;
+import io.swagger.v3.oas.annotations.tags.Tag;
 
 @RestController
 @RequestMapping("/booking")
+@Tag(name = "Booking", description = "Booking health insurance")
 public class BookingHealthInsuranceController {
     private static final Logger LOG = LoggerFactory.getLogger(BookingHealthInsuranceController.class);
 
