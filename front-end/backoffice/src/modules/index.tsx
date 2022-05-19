@@ -37,10 +37,21 @@ import snomedrelatedgroups from './snomedrelatedgroups';
 import medicalcoverageplans from "./medicalcoverageplans";
 
 // Ampliación
+import healthcareprofessionalhealthinsurances from './healthcareprofessionalhealthinsurances';
+import mandatorymedicalpractices from './mandatorymedicalpractices';
+import clinicalspecialtymandatorymedicalpractices from './clinicalspecialtymandatorymedicalpractices';
+import healthinsurancepractices from './healthinsurancepractices';
+import mandatoryprofessionalpracticefreedays from './mandatoryprofessionalpracticefreedays';
 //
 
 const resourcesAdminInstitucional = [
+    <Resource name="medicalCoverages" {...medicalCoverage}/>,
     <Resource name="healthcareprofessionals" />,
+    <Resource name="healthcareprofessionalhealthinsurances"  {...healthcareprofessionalhealthinsurances}/>,
+    <Resource name="mandatorymedicalpractices"  {...mandatorymedicalpractices}/>,
+    <Resource name="clinicalspecialtymandatorymedicalpractices"  {...clinicalspecialtymandatorymedicalpractices}/>,
+    <Resource name="healthinsurancepractices"  {...healthinsurancepractices}/>,
+    <Resource name="mandatoryprofessionalpracticefreedays"  {...mandatoryprofessionalpracticefreedays}/>,
     <Resource name="users" />,
 ];
 

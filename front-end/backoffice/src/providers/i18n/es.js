@@ -222,6 +222,14 @@ const messages = {
             },
             createRelated: 'Crear Especialidad | Sector',
         },
+        clinicalspecialtymandatorymedicalpractices: {
+            name: 'Especialidad | PMO',
+            fields: {
+                practiceRecommendations: 'Recomendaciones',
+                clinicalSpecialtyId: 'Especialidad',
+                mandatoryMedicalPracticeId: 'PMO',
+            }
+        },
         professionalspecialties: {
             name: 'Profesión |||| Profesiones',
             fields: {
@@ -233,6 +241,7 @@ const messages = {
         },
         healthcareprofessionals: {
             name: 'Profesional |||| Profesionales',
+            license: 'Nro. de licencia del profesional',
             fields: {
                 personId: 'Persona',
                 licenseNumber: 'Nro. Licencia',
@@ -253,6 +262,14 @@ const messages = {
                 description: 'Descripción',
             },
             createRelated: 'Crear Profesión | Especialidad',
+        },
+        mandatorymedicalpractices: {
+            name: 'PMO',
+            fields: {
+                description: 'Nombre',
+                mmpCode: 'Código PMO',
+                snomedId: 'Id Snomed'
+            }
         },
         users: {
             name: 'Usuario |||| Usuarios',
@@ -451,7 +468,46 @@ const messages = {
                 description: 'Descripción',
             }
         },
-    },
+        "healthinsurances": {
+            name: 'Obras sociales |||| Obras sociales',
+            fields: {
+                name: 'Nombre',
+                acronym: 'Acrónimo',
+                id: 'Obra social',
+                healthinsurances: 'Obra social',
+            }
+        },
+        "healthcareprofessionalhealthinsurances": {
+            name: 'Profesional | Obra social |||| Profesional | Obra social',
+            fields: {
+                acronym: 'Acrónimo',
+                medicalCoverageId: 'Cobertura médica',
+                healthcareProfessionalId: 'Profesional',
+                licenseNumber: 'Nro. Licencia de profesional',
+                person: 'Profesional',
+                personId: 'Profesional',
+                medicalcoverages: 'Cobertura médica',
+            }
+        },
+        "healthinsurancepractices": {
+            name: 'Obra social | PMO |||| Obra social | PMO',
+            fields: {
+                healthInsuranceId: 'Obra social',
+                clinicalSpecialtyId: 'Especialidad',
+                mandatoryMedicalPracticeId: 'PMO',
+                coverageInformation: 'Información de cobertura'
+            }
+        },
+        "mandatoryprofessionalpracticefreedays": {
+            name: 'Días de atención',
+            fields: {
+                clinicalSpecialtyId: 'Especialidad',
+                days: 'Días',
+                healthcareProfessionalId: 'Profesional',
+                mandatoryMedicalPracticeId: 'PMO',
+            }
+        },
+    }
 };
 
 export default messages;
