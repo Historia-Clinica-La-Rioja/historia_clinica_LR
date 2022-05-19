@@ -1,11 +1,21 @@
 package net.pladema.medicalconsultation.appointment.repository.entity;
 
-import lombok.*;
-import net.pladema.medicalconsultation.appointment.repository.domain.BookingPersonBo;
-
-import javax.persistence.*;
 import java.io.Serializable;
 import java.time.LocalDate;
+
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.Table;
+
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.ToString;
+import net.pladema.medicalconsultation.appointment.repository.domain.BookingPersonBo;
 
 @Entity
 @Table(name = "booking_person")
@@ -41,7 +51,7 @@ public class BookingPerson implements Serializable {
 
     public static BookingPerson fromBookingPersonBo(BookingPersonBo person) {
         BookingPerson b = new BookingPerson();
-        b.setBirthDate(LocalDate.parse(person.getBirthDate()));
+        b.setBirthDate(person.getBirthDate());
         b.setEmail(person.getEmail());
         b.setFirstName(person.getFirstName());
         b.setLastName(person.getLastName());
