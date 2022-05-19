@@ -207,6 +207,33 @@
 		</query>
 	</named-native-query>
 
+	<named-native-query name="Reports.NursingConsultationSummary" result-set-mapping="Reports.OutpatientSummaryResult">
+		<query>
+			SELECT nc.doctor_id as professional_id,
+			cs.id as specialty_id, cs."name" as specialty, cs.clinical_specialty_type_id as specialtyType,
+			extract(year from (age(nc.created_on, per.birth_date))) as "age", per.gender_id,
+			CASE WHEN nc.patient_medical_coverage_id is null THEN false ELSE true END as "OS"
+			FROM nursing_consultation nc
+			LEFT JOIN clinical_specialty cs on (nc.clinical_specialty_id = cs.id)
+			JOIN patient pat on (nc.patient_id = pat.id)
+			JOIN person per on (pat.person_id = per.id)
+			WHERE nc.institution_id = :institutionId
+			AND nc.created_on between :from and :to
+			UNION ALL
+			SELECT vc.doctor_id as professional_id,
+			cs.id as specialty_id, cs."name" as specialty, cs.clinical_specialty_type_id as specialtyType,
+			extract(year from (age(vc.performed_date, per.birth_date))) as "age", per.gender_id,
+			CASE WHEN vc.patient_medical_coverage_id is null THEN false ELSE true END as "OS"
+			FROM vaccine_consultation vc
+			LEFT JOIN clinical_specialty cs on (vc.clinical_specialty_id = cs.id)
+			JOIN patient pat on (vc.patient_id = pat.id)
+			JOIN person per on (pat.person_id = per.id)
+			WHERE vc.institution_id = :institutionId
+			AND vc.performed_date between :from and :to
+			AND vc.billable
+		</query>
+	</named-native-query>
+
     <named-native-query name="Reports.ConsultationDetail" result-set-mapping="Reports.ConsultationDetailResult">
         <query>WITH consultation AS (
             SELECT  oc.institution_id, oc.patient_id, oc.patient_medical_coverage_id, oc.clinical_specialty_id,
