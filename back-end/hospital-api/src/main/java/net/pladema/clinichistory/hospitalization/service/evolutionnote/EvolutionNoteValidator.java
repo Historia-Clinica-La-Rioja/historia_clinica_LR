@@ -3,6 +3,7 @@ package net.pladema.clinichistory.hospitalization.service.evolutionnote;
 import ar.lamansys.sgh.clinichistory.domain.ips.DiagnosisBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.HealthConditionBo;
 import net.pladema.clinichistory.hospitalization.repository.domain.InternmentEpisode;
+import net.pladema.clinichistory.hospitalization.service.InternmentEpisodeService;
 import net.pladema.clinichistory.hospitalization.service.documents.validation.InternmentDocumentValidator;
 import net.pladema.clinichistory.hospitalization.service.evolutionnote.domain.EvolutionNoteBo;
 import net.pladema.permissions.repository.enums.ERole;
@@ -19,6 +20,8 @@ import java.util.stream.Collectors;
 public class EvolutionNoteValidator extends InternmentDocumentValidator {
 
 	private final FetchLoggedUserRolesExternalService fetchLoggedUserRolesExternalService;
+
+	private final InternmentEpisodeService internmentEpisodeService;
 
 	public void validateNursePermissionToLoadProcedures(EvolutionNoteBo evolutionNote) {
 		var institutionId = evolutionNote.getInstitutionId();
@@ -43,11 +46,12 @@ public class EvolutionNoteValidator extends InternmentDocumentValidator {
 		}
 	}
 
-	public void assertDoesNotHaveEpicrisis(InternmentEpisode internmentEpisode) {
-		if(internmentEpisode.getEpicrisisDocId() != null) {
-			throw new ConstraintViolationException("Esta internación ya posee una epicrisis", Collections.emptySet());
+	public void assertDoesNotHaveEpicrisis(Integer internmentEpisodeId) {
+		if(internmentEpisodeService.haveEpicrisis(internmentEpisodeId)){
+				throw new ConstraintViolationException("Esta internación ya posee una epicrisis", Collections.emptySet());
 		}
 	}
+
 
 	public void assertEvolutionNoteValid(EvolutionNoteBo evolutionNote) {
 		evolutionNote.validateSelf();

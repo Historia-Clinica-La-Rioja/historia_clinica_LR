@@ -12,6 +12,10 @@ import ar.lamansys.sgh.clinichistory.domain.ips.ImmunizationBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.ProcedureBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.RiskFactorBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.SnomedBo;
+import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.DocumentStatus;
+import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.DocumentType;
+import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.SourceType;
+import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.entity.Document;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.ips.Snomed;
 import ar.lamansys.sgx.shared.dates.configuration.DateTimeProvider;
 import ar.lamansys.sgx.shared.exceptions.NotFoundException;
@@ -101,7 +105,7 @@ class CreateEvolutionNoteServiceImplTest extends UnitRepository {
                 documentFactory,
                 internmentEpisodeService,
                 fetchHospitalizationHealthConditionState,
-                dateTimeProvider, new EvolutionNoteValidator(fetchLoggedUserRolesExternalService));
+                dateTimeProvider, new EvolutionNoteValidator(fetchLoggedUserRolesExternalService, internmentEpisodeService));
     }
 
     @Test
@@ -147,10 +151,11 @@ class CreateEvolutionNoteServiceImplTest extends UnitRepository {
 
     @Test
     void createDocumentWithEpicrisis() {
-        var internmentEpisode = save(newInternmentEpisodeWithEpicrisis(1l));
-        Exception exception = Assertions.assertThrows(ConstraintViolationException.class, () ->
-                createEvolutionNoteService.execute(validEvolutionNote(8, internmentEpisode.getId()))
-        );
+		var epicrisisDoc = save (new Document(1, DocumentStatus.FINAL, DocumentType.EPICRISIS, SourceType.HOSPITALIZATION));
+		var internmentEpisode = save(newInternmentEpisodeWithEpicrisis(epicrisisDoc.getId()));
+		Exception exception = Assertions.assertThrows(ConstraintViolationException.class, () ->
+		        createEvolutionNoteService.execute(validEvolutionNote(8, internmentEpisode.getId()))
+		);
         String expectedMessage = "Esta internación ya posee una epicrisis";
         String actualMessage = exception.getMessage();
         assertEquals(actualMessage,expectedMessage);

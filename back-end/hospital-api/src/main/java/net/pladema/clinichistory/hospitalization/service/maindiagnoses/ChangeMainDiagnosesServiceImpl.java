@@ -96,7 +96,7 @@ public class ChangeMainDiagnosesServiceImpl implements ChangeMainDiagnosesServic
     }
 
     private void assertDoesNotHaveEpicrisis(InternmentEpisode internmentEpisode) {
-        if(internmentEpisode.getEpicrisisDocId() != null) {
+        if(internmentEpisodeService.haveEpicrisis(internmentEpisode.getId())) {
             throw new ConstraintViolationException("Esta internación ya posee una epicrisis", Collections.emptySet());
         }
     }

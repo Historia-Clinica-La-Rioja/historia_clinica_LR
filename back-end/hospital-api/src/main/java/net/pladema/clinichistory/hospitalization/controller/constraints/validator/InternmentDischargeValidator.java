@@ -40,7 +40,7 @@ public class InternmentDischargeValidator implements ConstraintValidator<Internm
         boolean valid = true;
 
         if (!featureFlagService.isOn(AppFeature.HABILITAR_ALTA_SIN_EPICRISIS)) {
-            valid = internmentEpisodeRepository.haveEpicrisis(internmentEpisodeId);
+            valid = internmentEpisodeRepository.hasFinalEpicrisis(internmentEpisodeId);
         }
         if (!valid) {
             setResponse(context, "{internmentdischarge.invalid}", INTERNMENT_EPISODE_PROPERTY);

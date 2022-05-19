@@ -75,7 +75,7 @@ class UpdateEvolutionNoteServiceImplTest extends UnitRepository {
 
 	@BeforeEach
 	public void setUp() {
-		evolutionNoteValidator = new EvolutionNoteValidator(fetchLoggedUserRolesExternalService);
+		evolutionNoteValidator = new EvolutionNoteValidator(fetchLoggedUserRolesExternalService, internmentEpisodeService);
 		documentModificationValidator = new InternmentDocumentModificationValidatorImpl(sharedDocumentPort, internmentEpisodeService);
 		updateEvolutionNoteService = new UpdateEvolutionNoteServiceImpl(documentModificationValidator, sharedDocumentPort, internmentEpisodeService, dateTimeProvider, documentFactory, evolutionNoteService, evolutionNoteValidator);
 	}

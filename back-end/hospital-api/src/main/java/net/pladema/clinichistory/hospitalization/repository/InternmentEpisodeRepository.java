@@ -124,9 +124,10 @@ public interface InternmentEpisodeRepository extends JpaRepository<InternmentEpi
     @Transactional(readOnly = true)
     @Query("SELECT (case when count(ie.id)> 0 then true else false end) " +
             "FROM InternmentEpisode ie " +
-            "WHERE ie.id = :internmentEpisodeId " +
+			"JOIN Document d ON (ie.epicrisisDocId = d.id) " +
+            "WHERE ie.id = :internmentEpisodeId AND d.statusId = '" + DocumentStatus.FINAL + "'" +
             "AND ie.epicrisisDocId IS NOT NULL")
-    boolean haveEpicrisis(@Param("internmentEpisodeId") Integer internmentEpisodeId);
+    boolean hasFinalEpicrisis(@Param("internmentEpisodeId") Integer internmentEpisodeId);
 
     @Transactional(readOnly = true)
     @Query(" SELECT NEW net.pladema.clinichistory.hospitalization.repository.domain.processepisode.InternmentEpisodeProcessVo(ie.id, ie.institutionId) " +

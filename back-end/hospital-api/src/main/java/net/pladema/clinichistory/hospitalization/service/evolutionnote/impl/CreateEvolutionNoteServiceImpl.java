@@ -59,7 +59,7 @@ public class CreateEvolutionNoteServiceImpl implements CreateEvolutionNoteServic
         LocalDateTime now = dateTimeProvider.nowDateTime();
         evolutionNote.setPerformedDate(now);
 
-		evolutionNoteValidator.assertDoesNotHaveEpicrisis(internmentEpisode);
+		evolutionNoteValidator.assertDoesNotHaveEpicrisis(internmentEpisode.getId());
 		evolutionNoteValidator.assertEvolutionNoteValid(evolutionNote);
 		evolutionNoteValidator.assertEffectiveRiskFactorTimeValid(evolutionNote, internmentEpisode.getEntryDate());
 		evolutionNoteValidator.assertAnthropometricData(evolutionNote);

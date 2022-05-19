@@ -181,7 +181,7 @@ public class InternmentEpisodeServiceImpl implements InternmentEpisodeService {
 	@Override
 	public boolean haveEpicrisis(Integer internmentEpisodeId) {
 		LOG.debug(INPUT_PARAMETERS_INTERNMENT_EPISODE, internmentEpisodeId);
-		boolean result = internmentEpisodeRepository.haveEpicrisis(internmentEpisodeId);
+		boolean result = internmentEpisodeRepository.hasFinalEpicrisis(internmentEpisodeId);
 		LOG.debug(LOGGING_OUTPUT, result);
 		return result;
 	}
