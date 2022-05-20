@@ -83,4 +83,7 @@ public class EpicrisisBo extends SelfValidating<EpicrisisBo> implements IDocumen
     public Short getDocumentSource() {
         return SourceType.HOSPITALIZATION;
     }
+
+	public Long getPreviousDocumentId () { return getInitialDocumentId() == null ? getId() : getInitialDocumentId(); }
+
 }
