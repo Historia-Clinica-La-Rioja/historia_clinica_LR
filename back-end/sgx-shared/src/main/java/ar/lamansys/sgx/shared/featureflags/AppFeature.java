@@ -95,6 +95,9 @@ public enum AppFeature implements Feature {
 
 	@Label("Indica si la api publica de reserva de turnos es abierta sin la necesidad de usar api-key")
 	LIBERAR_API_RESERVA_TURNOS,
+
+	@Label("Muestra los menus en backoffice para la administración de turnos online de la institución (Solo para administradores institucionales)")
+	BACKOFFICE_MOSTRAR_ABM_RESERVA_TURNOS,
     ;
 
     public boolean isActive() {

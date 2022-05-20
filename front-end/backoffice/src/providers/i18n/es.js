@@ -172,7 +172,7 @@ const messages = {
             },
         },
         "booking-institution": {
-            name: 'Institución |||| Instituciones',
+            name: 'Instituciones turnos online |||| Instituciones turnos online',
             fields: {
                 id: 'Nombre',
             },
@@ -485,7 +485,7 @@ const messages = {
             }
         },
         "healthcareprofessionalhealthinsurances": {
-            name: 'Profesional | Obra social |||| Profesional | Obra social',
+            name: 'Profesional | Cobertura médica |||| Profesional | Cobertura médica',
             fields: {
                 acronym: 'Acrónimo',
                 medicalCoverageId: 'Cobertura médica',

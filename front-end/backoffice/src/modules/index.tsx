@@ -1,5 +1,5 @@
 import React from 'react';
-import { Resource } from 'react-admin';
+import {Resource} from 'react-admin';
 import SGXPermissions from "../libs/sgx/auth/SGXPermissions";
 
 import cities from './cities';
@@ -45,18 +45,27 @@ import mandatoryprofessionalpracticefreedays from './mandatoryprofessionalpracti
 import bookingInstitutions from "./booking-institutions";
 //
 
-const resourcesAdminInstitucional = (permissions: SGXPermissions) => [
-    <Resource name="medicalCoverages" {...medicalCoverage}/>,
-    <Resource name="healthcareprofessionals" />,
-    <Resource name="booking-institution" {...bookingInstitutions(permissions)}/>,
-    <Resource name="healthcareprofessionalhealthinsurances"  {...healthcareprofessionalhealthinsurances}/>,
-    <Resource name="mandatorymedicalpractices"  {...mandatorymedicalpractices}/>,
-    <Resource name="clinicalspecialtymandatorymedicalpractices"  {...clinicalspecialtymandatorymedicalpractices}/>,
-    <Resource name="healthinsurancepractices"  {...healthinsurancepractices}/>,
-    <Resource name="mandatoryprofessionalpracticefreedays"  {...mandatoryprofessionalpracticefreedays}/>,
-    <Resource name="mandatoryprofessionalpracticefreedays"  {...mandatoryprofessionalpracticefreedays}/>,
-    <Resource name="users" />,
-];
+
+const resourcesAdminInstitucional = (permissions: SGXPermissions) =>
+    permissions.isOn('BACKOFFICE_MOSTRAR_ABM_RESERVA_TURNOS') ?
+        [
+        <Resource name="users" {...users}/>,
+        <Resource name="healthcareprofessionals" {...healthcareprofessionals}/>,
+        <Resource name="medicalCoverages" {...medicalCoverage}/>,
+        <Resource name="booking-institution" {...bookingInstitutions(permissions)}/>,
+        <Resource name="healthcareprofessionalhealthinsurances"  {...healthcareprofessionalhealthinsurances}/>,
+        <Resource name="mandatorymedicalpractices"  {...mandatorymedicalpractices}/>,
+        <Resource name="clinicalspecialtymandatorymedicalpractices"  {...clinicalspecialtymandatorymedicalpractices}/>,
+        <Resource name="healthinsurancepractices"  {...healthinsurancepractices}/>,
+        <Resource name="mandatoryprofessionalpracticefreedays"  {...mandatoryprofessionalpracticefreedays}/>,
+        <Resource name="mandatoryprofessionalpracticefreedays"  {...mandatoryprofessionalpracticefreedays}/>
+        ] :
+        [
+            <Resource name="healthcareprofessionals" {...healthcareprofessionals} />,
+            <Resource name="users" {...users} />,
+        ]
+
+;
 
 const resourcesAdminRoot = (permissions: SGXPermissions) => [
     <Resource name="healthcareprofessionals" {...healthcareprofessionals} />,
