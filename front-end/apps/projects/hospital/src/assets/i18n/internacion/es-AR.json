@@ -300,7 +300,8 @@
 				"WITHOUT_DIAGNOSIS": "Sin diagnóstico definido"
 			},
 			"WITHOUT_OBSERVATIONS": "No hay observaciones para mostrar",
-			"CLINICAL_EVALUATION": "Evaluación clínica"
+			"CLINICAL_EVALUATION": "Evaluación clínica",
+			"EDITED_DOCUMENT": "(Editado)"
 		},
 		"nota-evolucion": {
 			"TITLE": "Nota de evolución",
@@ -473,7 +474,8 @@
 		"dialogs": {
 			"actions-document": {
 				"DELETE_TITLE": "Aclarar motivo de eliminación",
-				"SUBTITLE": "Para confirmar los cambios por favor especifique el motivo por el cual edita este documento.",
+				"EDIT_TITLE": "Aclarar motivo de edición",
+				"SUBTITLE": "Para confirmar los cambios por favor especifique el motivo por el cuál edita este documento.",
 				"REASON": "Motivo"
 			}
 		}

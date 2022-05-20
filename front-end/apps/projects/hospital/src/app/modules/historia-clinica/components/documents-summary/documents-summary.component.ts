@@ -101,7 +101,8 @@ export class DocumentsSummaryComponent implements OnInit, OnChanges {
 				delete: this.documentActions.canDeleteDocument(d.document),
 				edit: this.documentActions.canEditDocument(d.document)
 			},
-			createdOn: d.createdOn
+			createdOn: d.createdOn,
+			editedOn: d.document.editedOn ? this.documentActions.loadTime(d.document.editedOn) : null
 		};
 	}
 

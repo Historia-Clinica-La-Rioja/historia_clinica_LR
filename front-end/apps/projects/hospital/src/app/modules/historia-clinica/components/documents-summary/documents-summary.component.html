@@ -169,6 +169,13 @@
 							</div>
 						</div>
 					</section>
+
+					<section *ngIf="activeDocument.editedOn">
+						<div fxLayoutGap="5px" fxLayoutAlign="start center" class="grey">
+							<span [translate]="'internaciones.documents-summary.EDITED_DOCUMENT'"></span>
+							<span>{{ activeDocument.editedOn }}</span>
+						</div>
+					</section>
 				</div>
 
 				<div>
@@ -182,7 +189,15 @@
 			</div>
 
 			<div *ngIf="(activeDocument && !viewEvolutionNote() )" class="no-notes content mat-body-strong" fxLayout="row" fxLayoutAlign="space-between center">
-				<span>{{"internaciones.documents-summary.WITHOUT_OBSERVATIONS" | translate}}</span>
+				<div fxLayout="column" fxLayoutGap="10px">
+					<span>{{"internaciones.documents-summary.WITHOUT_OBSERVATIONS" | translate}}</span>
+					<section *ngIf="activeDocument.editedOn">
+						<div fxLayoutGap="5px" fxLayoutAlign="start center" class="grey">
+							<span [translate]="'internaciones.documents-summary.EDITED_DOCUMENT'"></span>
+							<span>{{ activeDocument.editedOn }}</span>
+						</div>
+					</section>
+				</div>
 				<div>
 					<button type="button" mat-button color="primary" *ngIf="activeDocument.canDoAction.edit" (click)="edit(activeDocument.document)">
 						<mat-icon>edit</mat-icon>

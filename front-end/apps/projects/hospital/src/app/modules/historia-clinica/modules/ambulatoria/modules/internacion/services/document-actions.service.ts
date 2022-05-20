@@ -94,6 +94,7 @@ export interface DocumentSearch {
 	document: DocumentSearchDto;
 	canDoAction?: DocumentAction;
 	createdOn: string;
+	editedOn?: string;
 }
 
 interface DocumentAction {
