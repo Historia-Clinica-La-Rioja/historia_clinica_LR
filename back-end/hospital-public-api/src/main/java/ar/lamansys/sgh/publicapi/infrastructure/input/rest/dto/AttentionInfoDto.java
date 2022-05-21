@@ -1,12 +1,12 @@
 package ar.lamansys.sgh.publicapi.infrastructure.input.rest.dto;
 
+import java.io.Serializable;
+
 import ar.lamansys.sgx.shared.dates.controller.dto.DateDto;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
-
-import java.io.Serializable;
 
 @Getter
 @Setter
@@ -14,7 +14,7 @@ import java.io.Serializable;
 @Builder
 public class AttentionInfoDto implements Serializable {
 
-    private Integer id;
+    private Long id;
     private DateDto attentionDate;
     private ClinicalSpecialityDto speciality;
     private PersonInfoDto patient;
