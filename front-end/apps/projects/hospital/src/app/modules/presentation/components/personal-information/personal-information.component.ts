@@ -54,6 +54,10 @@ export class PersonalInformationComponent implements OnChanges {
 		this.goToMedicalHistory.emit(true);
 	}
 
+	getMedicalCoveragePlanText(patientMedicalCoverage: PatientMedicalCoverageDto): string {
+		return [patientMedicalCoverage.privateHealthInsuranceDetails?.planName, patientMedicalCoverage?.condition].filter(Boolean).join(' | ');
+	}
+
 }
 
 export class PersonalInformation {

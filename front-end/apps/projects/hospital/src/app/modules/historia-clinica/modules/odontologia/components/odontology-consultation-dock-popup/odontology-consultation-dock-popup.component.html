@@ -28,10 +28,21 @@
 
 				<ng-container concept-form>
 
-					<app-concepts-search
-						*ngIf="!reasonNewConsultationService.getSnomedConcept() else mainReasonConsultation"
-						label="Motivo" (search)="reasonNewConsultationService.openSearchDialog($event)">
-					</app-concepts-search>
+					<ng-container *ngIf="!reasonNewConsultationService.getSnomedConcept() else mainReasonConsultation">
+						<app-concepts-search
+							*ngIf="!searchConceptsLocallyFFIsOn else mainReasonTypeaheadSearch"
+							label="Motivo"
+							(search)="reasonNewConsultationService.openSearchDialog($event)">
+						</app-concepts-search>
+
+						<ng-template #mainReasonTypeaheadSearch>
+							<app-concept-typeahead-search
+								[ecl]="reasonNewConsultationService.getECL()"
+								placeholder="Buscar motivo"
+								(conceptSelected)="reasonNewConsultationService.setConcept($event)">
+							</app-concept-typeahead-search>
+						</ng-template>
+					</ng-container>
 
 					<ng-template #mainReasonConsultation>
 						<form [formGroup]="reasonNewConsultationService.getForm()"
@@ -67,17 +78,29 @@
 		<div id="other_procedures">
 			<app-new-document-section sectionTitle="Otros procedimientos">
 				<ng-container concept-form>
-					<app-concepts-search *ngIf="!otherProceduresService.getSnomedConcept() else otherProceduresForm"
-						[label]="'Procedimiento'" (search)="otherProceduresService.openSearchDialog($event)">
-					</app-concepts-search>
+					<ng-container *ngIf="!otherProceduresService.getSnomedConcept() else otherProceduresForm">
+						<app-concepts-search
+							*ngIf="!searchConceptsLocallyFFIsOn else otherProceduresTypeaheadSearch"
+							label="Procedimiento"
+							(search)="otherProceduresService.openSearchDialog($event)">
+						</app-concepts-search>
+
+						<ng-template #otherProceduresTypeaheadSearch>
+							<app-concept-typeahead-search
+								[ecl]="otherProceduresService.getECL()"
+								placeholder="Buscar procedimiento"
+								(conceptSelected)="otherProceduresService.setConcept($event)">
+							</app-concept-typeahead-search>
+						</ng-template>
+					</ng-container>
 
 					<ng-template #otherProceduresForm>
 						<form [formGroup]="otherProceduresService.getForm()"
 							(ngSubmit)="otherProceduresService.addToList()">
 							<mat-form-field appearance="outline">
 								<mat-label> Tipo de procedimiento </mat-label>
-								<input id="input_procedure" matInput type="text" formControlName="snomed" 
-								name="snomed" readonly 
+								<input id="input_procedure" matInput type="text" formControlName="snomed"
+								name="snomed" readonly
 								matTooltip="{{otherProceduresService.getSnomedConcept().pt }}">
 								<button id="clear_procedure" mat-button matSuffix color="warn" mat-icon-button
 									(click)="otherProceduresService.resetForm()">
@@ -114,10 +137,22 @@
 		<div id="other-diagnostics">
 			<app-new-document-section sectionTitle="Otros diagnósticos">
 				<ng-container concept-form>
-					<app-concepts-search
-						*ngIf="!otherDiagnosticsNewConsultationService.getSnomedConcept() else otherDiagnosticForm"
-						label="Problema" (search)="otherDiagnosticsNewConsultationService.openSearchDialog($event)">
-					</app-concepts-search>
+
+					<ng-container *ngIf="!otherDiagnosticsNewConsultationService.getSnomedConcept() else otherDiagnosticForm">
+						<app-concepts-search
+							*ngIf="!searchConceptsLocallyFFIsOn else otherDiagnosticTypeaheadSearch"
+							label="Problema"
+							(search)="otherDiagnosticsNewConsultationService.openSearchDialog($event)">
+						</app-concepts-search>
+
+						<ng-template #otherDiagnosticTypeaheadSearch>
+							<app-concept-typeahead-search
+								[ecl]="otherDiagnosticsNewConsultationService.getECL()"
+								placeholder="Buscar problema"
+								(conceptSelected)="otherDiagnosticsNewConsultationService.setConcept($event)">
+							</app-concept-typeahead-search>
+						</ng-template>
+					</ng-container>
 
 					<ng-template #otherDiagnosticForm>
 						<form [formGroup]="otherDiagnosticsNewConsultationService.getForm()"
@@ -211,9 +246,23 @@
 			<app-new-document-section sectionTitle="Alergias">
 
 				<ng-container concept-form>
-					<app-concepts-search *ngIf="!allergiesNewConsultationService.getSnomedConcept() else allergiesForm"
-						label="Alergia" (search)="allergiesNewConsultationService.openSearchDialog($event)">
-					</app-concepts-search>
+
+					<ng-container *ngIf="!allergiesNewConsultationService.getSnomedConcept() else allergiesForm">
+						<app-concepts-search
+							*ngIf="!searchConceptsLocallyFFIsOn else allergyTypeaheadSearch"
+							label="Alergia"
+							(search)="allergiesNewConsultationService.openSearchDialog($event)">
+						</app-concepts-search>
+
+						<ng-template #allergyTypeaheadSearch>
+							<app-concept-typeahead-search
+								[ecl]="allergiesNewConsultationService.getECL()"
+								placeholder="Buscar Alergia"
+								(conceptSelected)="allergiesNewConsultationService.setConcept($event)">
+							</app-concept-typeahead-search>
+						</ng-template>
+					</ng-container>
+
 					<ng-template #allergiesForm>
 						<form [formGroup]="allergiesNewConsultationService.getForm()"
 							(ngSubmit)="allergiesNewConsultationService.addToList()">
@@ -262,11 +311,23 @@
 			<app-new-document-section sectionTitle="Antecedentes personales">
 
 				<ng-container concept-form>
-					<app-concepts-search
-						*ngIf="!personalHistoriesNewConsultationService.getSnomedConcept() else personalHistoriesForm"
-						label="Antecedentes personales"
-						(search)="personalHistoriesNewConsultationService.openSearchDialog($event)">
-					</app-concepts-search>
+
+					<ng-container *ngIf="!personalHistoriesNewConsultationService.getSnomedConcept() else personalHistoriesForm">
+						<app-concepts-search
+							*ngIf="!searchConceptsLocallyFFIsOn else personalHistoriesTypeaheadSearch"
+							label="Antecedentes personales"
+							(search)="personalHistoriesNewConsultationService.openSearchDialog($event)">
+						</app-concepts-search>
+
+						<ng-template #personalHistoriesTypeaheadSearch>
+							<app-concept-typeahead-search
+								[ecl]="personalHistoriesNewConsultationService.getECL()"
+								placeholder="Buscar antecedentes personales"
+								(conceptSelected)="personalHistoriesNewConsultationService.setConcept($event)">
+							</app-concept-typeahead-search>
+						</ng-template>
+					</ng-container>
+
 					<ng-template #personalHistoriesForm>
 						<form [formGroup]="personalHistoriesNewConsultationService.getForm()"
 							(ngSubmit)="personalHistoriesNewConsultationService.addToList()">
@@ -285,7 +346,7 @@
 							<mat-form-field appearance="outline">
 								<mat-label> Fecha de registro </mat-label>
 								<input matInput id="history_date" [matDatepicker]="historyDatePicker"
-									formControlName="fecha" 
+									formControlName="fecha"
 									[min]="minDate"
 									[max]="personalHistoriesNewConsultationService.getMaxDate()">
 								<mat-datepicker-toggle matSuffix [for]="historyDatePicker"></mat-datepicker-toggle>
@@ -317,11 +378,21 @@
 
 			<app-new-document-section sectionTitle="Medicación habitual">
 				<div concept-form>
-					<app-concepts-search
-						*ngIf="!medicationsNewConsultationService.getSnomedConcept() else medicationForm"
-						label="Medicación habitual"
-						(search)="medicationsNewConsultationService.openSearchDialog($event)">
-					</app-concepts-search>
+					<ng-container *ngIf="!medicationsNewConsultationService.getSnomedConcept() else medicationForm">
+						<app-concepts-search
+							*ngIf="!searchConceptsLocallyFFIsOn else medicationTypeaheadSearch"
+							label="Medicación habitual"
+							(search)="medicationsNewConsultationService.openSearchDialog($event)">
+						</app-concepts-search>
+
+						<ng-template #medicationTypeaheadSearch>
+							<app-concept-typeahead-search
+								[ecl]="medicationsNewConsultationService.getECL()"
+								placeholder="Buscar medicación habitual"
+								(conceptSelected)="medicationsNewConsultationService.setConcept($event)">
+							</app-concept-typeahead-search>
+						</ng-template>
+					</ng-container>
 				</div>
 
 				<ng-template #medicationForm>
@@ -421,7 +492,7 @@
 						</mat-form-field>
 						<mat-error *ngIf="hasError(form, 'pattern', 'permanentTeethPresent')">Solo se puede ingresar valores
 							numéricos</mat-error>
-						<mat-error *ngIf="hasError(form, 'maxlength', 'permanentTeethPresent')">Solo se puede ingresar números de dos dígitos</mat-error>	
+						<mat-error *ngIf="hasError(form, 'maxlength', 'permanentTeethPresent')">Solo se puede ingresar números de dos dígitos</mat-error>
 					</div>
 					<div fxLayout="column" style="width: 50%">
 						<span>Presentes temporales:</span>
@@ -430,7 +501,7 @@
 						</mat-form-field>
 						<mat-error *ngIf="hasError(form, 'pattern', 'temporaryTeethPresent')">Solo se puede ingresar valores
 							numéricos</mat-error>
-						<mat-error *ngIf="hasError(form, 'maxlength', 'temporaryTeethPresent')">Solo se puede ingresar números de dos dígitos</mat-error>	
+						<mat-error *ngIf="hasError(form, 'maxlength', 'temporaryTeethPresent')">Solo se puede ingresar números de dos dígitos</mat-error>
 					</div>
 				</div>
 			</form>

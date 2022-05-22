@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import net.pladema.patient.controller.dto.EPatientMedicalCoverageCondition;
 import net.pladema.patient.repository.domain.PatientMedicalCoverageVo;
 
 import java.time.LocalDate;
@@ -26,6 +27,8 @@ public class PatientMedicalCoverageBo {
 
     private PrivateHealthInsuranceDetailsBo privateHealthInsuranceDetails;
 
+	private EPatientMedicalCoverageCondition condition;
+
     public PatientMedicalCoverageBo(PatientMedicalCoverageVo patientMedicalCoverageVo) {
         this.id = patientMedicalCoverageVo.getId();
         this.vigencyDate = patientMedicalCoverageVo.getVigencyDate();
@@ -33,5 +36,7 @@ public class PatientMedicalCoverageBo {
         this.affiliateNumber = patientMedicalCoverageVo.getAffiliateNumber();
         this.medicalCoverage = patientMedicalCoverageVo.getMedicalCoverage().newInstance();
         this.privateHealthInsuranceDetails = new PrivateHealthInsuranceDetailsBo(patientMedicalCoverageVo.getPrivateHealthInsuranceDetails());
-    }
+    	if(patientMedicalCoverageVo.getConditionId()!=null)
+			this.condition = EPatientMedicalCoverageCondition.map(patientMedicalCoverageVo.getConditionId());
+	}
 }

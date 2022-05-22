@@ -33,8 +33,8 @@ public class ToothStorageImpl implements ToothStorage {
         logger.debug("No input parameters");
 
         String sqlString = "SELECT bp.sctid, bp.pt, t.code, t.quadrant_code, t.posterior " +
-                "FROM tooth t " +
-                "JOIN body_part bp ON bp.sctid = t.sctid";
+                "FROM {h-schema}tooth t " +
+                "JOIN {h-schema}body_part bp ON bp.sctid = t.sctid";
         Query query = entityManager.createNativeQuery(sqlString);
 
         List<Object[]> resultSearch = query.getResultList();
@@ -48,8 +48,8 @@ public class ToothStorageImpl implements ToothStorage {
         logger.debug("Input -> {}", toothId);
 
         String sqlString = "SELECT bp.sctid, bp.pt, t.code, t.quadrant_code, t.posterior " +
-                "FROM tooth t " +
-                "JOIN body_part bp ON bp.sctid = t.sctid " +
+                "FROM {h-schema}tooth t " +
+                "JOIN {h-schema}body_part bp ON bp.sctid = t.sctid " +
                 "WHERE t.sctid = :toothId ";
         Query query = entityManager.createNativeQuery(sqlString);
         query.setParameter("toothId", toothId);

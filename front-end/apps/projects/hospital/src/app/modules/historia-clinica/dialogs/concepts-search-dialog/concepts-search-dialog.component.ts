@@ -16,6 +16,7 @@ export class ConceptsSearchDialogComponent implements OnInit {
 	conceptsResultsTable: TableModel<any>;
 	conceptsResultsLength: number;
 	snowstormServiceNotAvailable = false;
+	snowstormServiceErrorMessage: string;
 	readonly SNOMED_RESULTS_LIMIT: number = +SNOMED_RESULTS_LIMIT;
 
 	constructor(
@@ -33,6 +34,7 @@ export class ConceptsSearchDialogComponent implements OnInit {
 			},
 			error => {
 				this.snackBarService.showError('historia-clinica.snowstorm.CONCEPTS_COULD_NOT_BE_OBTAINED');
+				this.snowstormServiceErrorMessage = error.text ? error.text : error.message;
 				this.snowstormServiceNotAvailable = true;
 			}
 		);

@@ -3,6 +3,7 @@ import { Component, OnInit, Inject, ViewChild, ElementRef } from '@angular/core'
 import { AbstractControl, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { ClinicalTermDto, ClinicalSpecialtyDto, NursingConsultationDto, HCEPersonalHistoryDto } from '@api-rest/api-model';
+import { AppFeature } from '@api-rest/api-model';
 import { ClinicalSpecialtyService } from '@api-rest/services/clinical-specialty.service';
 import { HceGeneralStateService } from '@api-rest/services/hce-general-state.service';
 import { InternacionMasterDataService } from '@api-rest/services/internacion-master-data.service';
@@ -26,6 +27,7 @@ import { MotivoNuevaConsultaService } from '../../services/motivo-nueva-consulta
 import { NewNurseConsultationSuggestedFieldsService } from '../../services/new-nurse-consultation-suggested-fields.service';
 import { FactoresDeRiesgoFormService } from '../../../../services/factores-de-riesgo-form.service';
 import { NuevaConsultaData } from '../nueva-consulta-dock-popup/nueva-consulta-dock-popup.component';
+import { FeatureFlagService } from "@core/services/feature-flag.service";
 
 export interface FieldsToUpdate {
 	riskFactors: boolean;
@@ -62,6 +64,7 @@ export class NuevaConsultaDockPopupEnfermeriaComponent implements OnInit {
 	defaultProblem: HCEPersonalHistoryDto;
 	specialties: ClinicalSpecialtyDto[];
 	problems: ClinicalTermDto[];
+	searchConceptsLocallyFFIsOn = false;
 	@ViewChild('errorsView') errorsView: ElementRef;
 
 
@@ -84,6 +87,7 @@ export class NuevaConsultaDockPopupEnfermeriaComponent implements OnInit {
 		private readonly clinicalSpecialtyService: ClinicalSpecialtyService,
 		private readonly dialog: MatDialog,
 		private readonly translateService: TranslateService,
+		private readonly featureFlagService: FeatureFlagService,
 	) {
 		this.motivoNuevaConsultaService = new MotivoNuevaConsultaService(formBuilder, this.snomedService, this.snackBarService);
 		this.medicacionesNuevaConsultaService = new MedicacionesNuevaConsultaService(formBuilder, this.snomedService, this.snackBarService);
@@ -162,7 +166,7 @@ export class NuevaConsultaDockPopupEnfermeriaComponent implements OnInit {
 		this.setProblem();
 
 		this.formEvolucion = this.formBuilder.group({
-			evolucion: [null, [Validators.maxLength(this.TEXT_AREA_MAX_LENGTH)]],
+			evolucion: [null, null],
 			clinicalSpecialty: [],
 			clinicalProblem: []
 		});
@@ -212,6 +216,7 @@ export class NuevaConsultaDockPopupEnfermeriaComponent implements OnInit {
 			this.problemasService.setSeverityTypes(healthConditionSeverities);
 		});
 
+		this.featureFlagService.isActive(AppFeature.HABILITAR_BUSQUEDA_LOCAL_CONCEPTOS).subscribe(isOn => this.searchConceptsLocallyFFIsOn = isOn);
 	}
 
 	save(): void {

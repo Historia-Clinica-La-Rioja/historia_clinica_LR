@@ -20,8 +20,6 @@ public class InternmentEpisodeADto {
 
     private Integer bedId;
 
-    private Integer clinicalSpecialtyId;
-
     private Long noteId;
 
     private LocalDateTime entryDate;

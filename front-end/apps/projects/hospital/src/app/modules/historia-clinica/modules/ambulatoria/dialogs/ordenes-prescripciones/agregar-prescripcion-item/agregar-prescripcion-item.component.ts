@@ -21,6 +21,7 @@ export class AgregarPrescripcionItemComponent implements OnInit, AfterViewInit {
 	loading = false;
 	searching = false;
 	snowstormServiceNotAvailable = false;
+	snowstormServiceErrorMessage: string;
 	snomedConcept: SnomedDto;
 	prescriptionItemForm: FormGroup;
 	conceptsResultsTable: TableModel<any>;
@@ -145,6 +146,7 @@ export class AgregarPrescripcionItemComponent implements OnInit, AfterViewInit {
 					},
 					error => {
 						this.snackBarService.showError('historia-clinica.snowstorm.CONCEPTS_COULD_NOT_BE_OBTAINED');
+						this.snowstormServiceErrorMessage = error.text ? error.text : error.message;
 						this.snowstormServiceNotAvailable = true;
 					}
 				);

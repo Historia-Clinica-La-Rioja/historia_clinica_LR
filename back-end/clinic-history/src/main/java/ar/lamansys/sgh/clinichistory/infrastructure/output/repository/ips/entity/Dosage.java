@@ -4,6 +4,7 @@ import lombok.*;
 
 import javax.persistence.*;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "dosage")
@@ -44,10 +45,10 @@ public class Dosage {
 	private Boolean chronic = false;
 
 	@Column(name = "start_date", nullable = false)
-	private LocalDate startDate;
+	private LocalDateTime startDate;
 
 	@Column(name = "end_date")
-	private LocalDate endDate;
+	private LocalDateTime endDate;
 
 	@Column(name = "suspended_start_date")
 	private LocalDate suspendedStartDate;
@@ -55,11 +56,14 @@ public class Dosage {
 	@Column(name = "suspended_end_date")
 	private LocalDate suspendedEndDate;
 
+	@Column(name = "event", length = 100)
+	private String event;
+
 
 	public Dosage(Double duration, String durationUnit,
 				  Integer frequency, String periodUnit, Boolean chronic,
-				  LocalDate startDate, LocalDate endDate,
-				  LocalDate suspendedStartDate, LocalDate suspendedEndDate) {
+				  LocalDateTime startDate, LocalDateTime endDate,
+				  LocalDate suspendedStartDate, LocalDate suspendedEndDate, String event) {
 		this.duration = duration;
 		this.durationUnit = durationUnit;
 		this.frequency = frequency;
@@ -69,5 +73,6 @@ public class Dosage {
 		this.endDate = endDate;
 		this.suspendedStartDate = suspendedStartDate;
 		this.suspendedEndDate = suspendedEndDate;
+		this.event = event;
 	}
 }

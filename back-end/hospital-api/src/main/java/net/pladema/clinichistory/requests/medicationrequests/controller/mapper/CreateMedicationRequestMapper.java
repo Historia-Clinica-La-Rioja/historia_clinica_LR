@@ -10,14 +10,14 @@ import ar.lamansys.sgh.clinichistory.infrastructure.input.rest.ips.dto.SnomedDto
 import ar.lamansys.sgh.shared.infrastructure.input.service.BasicPatientDto;
 import net.pladema.clinichistory.requests.controller.dto.PrescriptionDto;
 import net.pladema.clinichistory.requests.controller.dto.PrescriptionItemDto;
-import net.pladema.clinichistory.requests.medicationrequests.controller.dto.NewDosageDto;
+import ar.lamansys.sgh.shared.infrastructure.input.service.NewDosageDto;
 import net.pladema.clinichistory.requests.medicationrequests.service.domain.MedicationRequestBo;
 import org.mapstruct.Mapper;
 import org.mapstruct.Named;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.stream.Collectors;
 
 @Mapper
@@ -70,7 +70,7 @@ public class CreateMedicationRequestMapper {
         if (dosage == null)
             return null;
         DosageBo result = new DosageBo();
-        result.setStartDate(LocalDate.now());
+        result.setStartDate(LocalDateTime.now());
         result.setFrequency(dosage.getFrequency());
         result.setDuration(dosage.getDuration());
         result.setPeriodUnit(dosage.isDiary() ? EUnitsOfTimeBo.DAY : EUnitsOfTimeBo.HOUR);

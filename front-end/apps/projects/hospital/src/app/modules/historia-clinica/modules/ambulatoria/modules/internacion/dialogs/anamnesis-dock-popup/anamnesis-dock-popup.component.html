@@ -1,13 +1,7 @@
 <app-dock-popup [dockPopupRef]="dockPopupRef" [title]="'internaciones.anamnesis.TITLE'">
 	<form body id="anamnesis-form" (keydown.enter)="false" [formGroup]="form">
-		<ng-container *appHasRole="['ESPECIALISTA_MEDICO']">
-			<div id="diagnostico-principal">
-				<app-diagnostico-principal [diagnosis]="mainDiagnosis" (changeMainDiagnosis)="setMainDiagnosis($event)">
-				</app-diagnostico-principal>
-			</div>
-		</ng-container>
 		<div id="diagnosticos">
-			<app-diagnosticos [(diagnosis)]="diagnosticos"></app-diagnosticos>
+			<app-diagnosticos [(mainDiagnosis)]="mainDiagnosis" [(diagnosticos)]="diagnosticos" [type]="'ANAMNESIS'"></app-diagnosticos>
 		</div>
 
 		<div id="procedimientos"

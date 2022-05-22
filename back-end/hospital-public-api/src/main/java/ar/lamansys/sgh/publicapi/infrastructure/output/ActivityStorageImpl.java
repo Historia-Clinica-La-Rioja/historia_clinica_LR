@@ -34,20 +34,20 @@ public class ActivityStorageImpl implements ActivityStorage {
                     "va.scope_id, " +
                     "pd.administrative_discharge_date, " +
                     "d.doctor_id, d.first_name as doctor_name, d.last_name as doctor_last_name, d.birth_date as doctor_birth_date, d.gender_id as doctor_gender_id, d.identification_number as doctor_identification_number " +
-                    "FROM v_attention va " +
-                    "JOIN attention_reads ar ON (%s ar.attention_id = va.id) " +
-                    "JOIN institution i ON (i.sisa_code = :refsetCode AND i.province_code = :provinceCode AND va.institution_id = i.id) " +
+                    "FROM {h-schema}v_attention va " +
+                    "JOIN {h-schema}attention_reads ar ON (%s ar.attention_id = va.id) " +
+                    "JOIN {h-schema}institution i ON (i.sisa_code = :refsetCode AND i.province_code = :provinceCode AND va.institution_id = i.id) " +
                     "JOIN (SELECT pat.id as patient_id, pp.first_name, pp.last_name, pp.identification_number , pp.gender_id, pp.birth_date " +
-                            "FROM patient pat " +
-                            "JOIN person pp on pp.id = pat.person_id) AS p ON (p.patient_id = va.patient_id) " +
+                            "FROM {h-schema}patient pat " +
+                            "JOIN {h-schema}person pp on pp.id = pat.person_id) AS p ON (p.patient_id = va.patient_id) " +
                     "JOIN (SELECT hp.id as doctor_id, dp.first_name, dp.last_name, dp.birth_date, dp.gender_id, dp.identification_number " +
-                            "FROM healthcare_professional hp " +
-                            "JOIN person dp on hp.person_id = dp.id) AS d ON (d.doctor_id = va.doctor_id) " +
+                            "FROM {h-schema}healthcare_professional hp " +
+                            "JOIN {h-schema}person dp on hp.person_id = dp.id) AS d ON (d.doctor_id = va.doctor_id) " +
                     "LEFT JOIN (SELECT cs.clinical_specialty_type_id, s.sctid, s.pt " +
-                                "FROM clinical_specialty cs " +
-                                "JOIN snomed s on s.sctid = cs.sctid_code) snm ON (va.clinical_speciality_id = snm.clinical_specialty_type_id) " +
-                    "LEFT JOIN patient_discharge pd ON (va.scope_id = 0 AND pd.internment_episode_id = va.encounter_id) " +
-                    "LEFT JOIN patient_medical_coverage pmc ON (pmc.patient_id = va.patient_id)" +
+                                "FROM {h-schema}clinical_specialty cs " +
+                                "JOIN {h-schema}snomed s on s.sctid = cs.sctid_code) snm ON (va.clinical_speciality_id = snm.clinical_specialty_type_id) " +
+                    "LEFT JOIN {h-schema}patient_discharge pd ON (va.scope_id = 0 AND pd.internment_episode_id = va.encounter_id) " +
+                    "LEFT JOIN {h-schema}patient_medical_coverage pmc ON (pmc.patient_id = va.patient_id)" +
                     "WHERE %s ";
 
     @Override

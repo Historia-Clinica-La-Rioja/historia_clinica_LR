@@ -10,6 +10,7 @@ import { AntecedentesFamiliaresSummaryComponent } from './components/antecedente
 import { AntecedentesPersonalesSummaryComponent } from './components/antecedentes-personales-summary/antecedentes-personales-summary.component';
 import { AntropometricosSummaryComponent } from './components/antropometricos-summary/antropometricos-summary.component';
 import { ConceptsSearchComponent } from './components/concepts-search/concepts-search.component';
+import { ConceptTypeaheadSearchComponent } from './components/concept-typeahead-search/concept-typeahead-search.component';
 import { DocumentsSummaryComponent } from './components/documents-summary/documents-summary.component';
 import { EffectiveTimeComponent } from './components/effective-time/effective-time.component';
 import { InternacionAntecedentesPersonalesSummaryComponent } from './components/internacion-antecedentes-personales-summary/internacion-antecedentes-personales-summary.component';
@@ -51,6 +52,7 @@ import { BedAssignmentComponent } from './dialogs/bed-assignment/bed-assignment.
 		RemoveDiagnosisComponent,
 		ProbableDischargeDialogComponent,
 		BedAssignmentComponent,
+		ConceptTypeaheadSearchComponent,
 	],
 	imports: [
 		CommonModule,
@@ -74,6 +76,7 @@ import { BedAssignmentComponent } from './dialogs/bed-assignment/bed-assignment.
 		FactoresDeRiesgoFormComponent,
 		// dialogs
 		ConceptsSearchDialogComponent,
+		ConceptTypeaheadSearchComponent,
 	]
 })
 export class HistoriaClinicaModule {

@@ -12,6 +12,9 @@ const clinicalspecialties = (permissions: SGXPermissions) => ({
     list: permissions.hasAnyAssignment(ROOT, ADMINISTRADOR) ? ClinicalSpecialtyList : undefined,
     create: permissions.hasAnyAssignment(ROOT, ADMINISTRADOR) ? ClinicalSpecialtyCreate : undefined,
     edit: permissions.hasAnyAssignment(ROOT, ADMINISTRADOR) ? ClinicalSpecialtyEdit : undefined,
+    options: {
+        submenu: 'facilities'
+    }
 });
 
 export default clinicalspecialties;

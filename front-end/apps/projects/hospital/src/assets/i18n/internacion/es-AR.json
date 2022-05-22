@@ -56,8 +56,22 @@
 				"TITLE_PRINCIPAL": "Diagnóstico principal",
 				"TITLE": "Otros Diagnósticos",
 				"ADD": "Agregar diagnóstico",
+				"EDIT": "Editar Diagnóstico",
 				"DIAGNOSIS": "Diagnóstico",
+				"CONFIRMED": "Confirmado",
 				"PRESUMPTIVE": "Presuntivo",
+				"ANAMNESIS_SUBTITLE": "Agregue los diagnósticos detectados",
+				"EVOLUTION_NOTE_SUBTITLE": "Seleccione los diagnósticos que desea evolucionar o agregue nuevos",
+				"VERIFICATION": "Verificación",
+				"SAVE": "Guardar cambios",
+				"ACTIVE": "Activo",
+				"ADD_MAIN_DIAGNOSIS": "+ Agregar diagnóstico principal",
+				"ADD_OTHER_DIAGNOSIS": "+ Agregar otro diagnóstico",
+				"CHANGE_MAIN_DIAGNOSIS": "Cambiar diagnóstico principal",
+				"messages": {
+					"ERROR": "Ha ingresado un diagnóstico duplicado",
+					"SNOMED_DIALOG_ERROR": "Por favor busque un diagnóstico para continuar"
+				},
 				"table": {
 					"TITLE": "Diagnósticos seleccionados",
 					"columns": {

@@ -27,15 +27,15 @@ public class GetDiagnosticReportInfoRepositoryImpl implements GetDiagnosticRepor
                 "h.id AS hid, h.s_id AS h_id, h.pt AS h_pt, h.sctid AS h_sctid, " +
                 "n.description, dr.status_id, d.source_id, dr.effective_time," +
                 "d.created_by " +
-                "FROM diagnostic_report dr " +
-                "JOIN snomed s ON (dr.snomed_id = s.id) " +
-                "LEFT JOIN note n ON (dr.note_id = n.id) " +
+                "FROM {h-schema}diagnostic_report dr " +
+                "JOIN {h-schema}snomed s ON (dr.snomed_id = s.id) " +
+                "LEFT JOIN {h-schema}note n ON (dr.note_id = n.id) " +
                 "JOIN ( SELECT h1.id, s1.id as s_id, s1.pt, s1.sctid " +
-                "            FROM health_condition h1 " +
-                "            JOIN snomed s1 ON (h1.snomed_id = s1.id) " +
+                "            FROM {h-schema}health_condition h1 " +
+                "            JOIN {h-schema}snomed s1 ON (h1.snomed_id = s1.id) " +
                 "          ) AS h ON (h.id = dr.health_condition_id) " +
-                "JOIN document_diagnostic_report ddr ON (dr.id = ddr.diagnostic_report_id) " +
-                "JOIN document d ON (d.id = ddr.document_id) " +
+                "JOIN {h-schema}document_diagnostic_report ddr ON (dr.id = ddr.diagnostic_report_id) " +
+                "JOIN {h-schema}document d ON (d.id = ddr.document_id) " +
                 "WHERE dr.id = :drId ";
 
 

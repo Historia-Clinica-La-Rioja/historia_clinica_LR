@@ -31,10 +31,10 @@ public class ListDiagnosticReportRepositoryImpl implements ListDiagnosticReportR
                 "dr.id, dr.snomed_id, dr.status_id, dr.health_condition_id, dr.note_id, " +
                 "dr.effective_time, d.source_id, d.created_by, dr.updated_on, sr.category_id AS sr_categoryId, " +
                 "row_number() OVER (PARTITION by sr.id, dr.snomed_id, dr.health_condition_id ORDER BY dr.updated_on desc) AS rw " +
-                "FROM document d " +
-                "JOIN document_diagnostic_report ddr ON d.id = ddr.document_id " +
-                "JOIN diagnostic_report dr ON ddr.diagnostic_report_id = dr.id " +
-                "JOIN service_request sr ON d.source_id = sr.id " +
+                "FROM {h-schema}document d " +
+                "JOIN {h-schema}document_diagnostic_report ddr ON d.id = ddr.document_id " +
+                "JOIN {h-schema}diagnostic_report dr ON ddr.diagnostic_report_id = dr.id " +
+                "JOIN {h-schema}service_request sr ON d.source_id = sr.id " +
                 "WHERE dr.patient_id = :patientId " +
                 "AND d.type_id = :documentType " +
                 "AND d.status_id = :documentStatusId " +
@@ -45,12 +45,12 @@ public class ListDiagnosticReportRepositoryImpl implements ListDiagnosticReportR
                 ", t.source_id AS sr_id, t.created_by AS user_id, s.sctid AS d_sctid, " +
                 "h.sctid AS h_sctid, t.effective_time " +
                 "FROM temporal t " +
-                "JOIN snomed s ON (t.snomed_id = s.id) " +
-                "JOIN diagnostic_report_status drs ON (drs.id = t.status_id) " +
-                "LEFT JOIN note n ON (t.note_id = n.id) " +
+                "JOIN {h-schema}snomed s ON (t.snomed_id = s.id) " +
+                "JOIN {h-schema}diagnostic_report_status drs ON (drs.id = t.status_id) " +
+                "LEFT JOIN {h-schema}note n ON (t.note_id = n.id) " +
                 "JOIN ( SELECT h1.id, s1.id as s_id, s1.pt, s1.sctid " +
-                "            FROM health_condition h1 " +
-                "            JOIN snomed s1 ON (h1.snomed_id = s1.id) " +
+                "            FROM {h-schema}health_condition h1 " +
+                "            JOIN {h-schema}snomed s1 ON (h1.snomed_id = s1.id) " +
                 "          ) AS h ON (h.id = t.health_condition_id) " +
                 "WHERE rw = 1 " +
                 "AND NOT t.status_id = :invalidStatus "+

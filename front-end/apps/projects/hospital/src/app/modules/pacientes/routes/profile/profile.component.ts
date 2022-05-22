@@ -58,6 +58,7 @@ const ROUTE_NEW_INTERNMENT = 'internaciones/internacion/new';
 const ROUTE_EDIT_PATIENT = 'pacientes/edit';
 const ROUTE_EMERGENCY_CARE_EPISODE_PREFIX = 'guardia/episodio/';
 const ROLES_TO_VIEW_USER_DATA: ERole[] = [ERole.ADMINISTRADOR_INSTITUCIONAL_BACKOFFICE];
+const ROLES_TO_VIEW_CLINIC_HISTORY_DATA: ERole[] = [ERole.ADMINISTRATIVO];
 const DIALOG_SIZE = '30%';
 
 export interface ProfessionAndSpecialtyDto {
@@ -153,85 +154,94 @@ export class ProfileComponent implements OnInit {
 						this.patientTypeData = this.mapperService.toPatientTypeData(completeData.patientType);
 						this.patientBasicData = this.mapperService.toPatientBasicData(completeData);
 						this.personId = completeData.person.id;
-						this.checkIfProfessional();
+						this.patientMedicalCoverageService.getActivePatientMedicalCoverages(this.patientId)
+							.subscribe(patientMedicalCoverageDto => this.patientMedicalCoverage = patientMedicalCoverageDto);
 						this.personService.getPersonalInformation<PersonalInformationDto>(completeData.person.id)
 							.subscribe(personInformationData => {
 								this.personalInformation = this.mapperService.toPersonalInformationData(completeData, personInformationData);
 							});
-						this.patientMedicalCoverageService.getActivePatientMedicalCoverages(this.patientId)
-							.subscribe(patientMedicalCoverageDto => this.patientMedicalCoverage = patientMedicalCoverageDto);
-
 						this.permissionService.hasContextAssignments$(ROLES_TO_VIEW_USER_DATA).subscribe(hasRoleToViewUserData => {
-							if (this.createUsersIsEnable && hasRoleToViewUserData) {
-								this.userService.getUserData(this.personId)
-									.subscribe(userDataDto => {
-										this.userData = userDataDto
-										this.form.controls.enable.setValue(this.userData.enable);
-									});
+							if (hasRoleToViewUserData) {
+								this.checkIfProfessional();
+								if (this.createUsersIsEnable) {
+									this.userService.getUserData(this.personId)
+										.subscribe(userDataDto => {
+											this.userData = userDataDto
+											this.form.controls.enable.setValue(this.userData.enable);
+										});
+								}
+								this.userService.getUserData(completeData.person.id).subscribe((userData: UserDataDto) => {
+									this.userData = userData;
+									if (userData?.id) {
+										this.rolesService.getRolesByUser(this.userData?.id).subscribe((roles: UserRoleDto[]) => {
+											this.rolesByUser = roles;
+											roles.forEach(e => this.userRoles.push(e.roleDescription));
+										})
+										this.rolesService.hasBackofficeRole(userData?.id).subscribe((hasRolesAdmin: boolean) => {
+											this.rolesAdmin = hasRolesAdmin;
+										});
+									}
+								});
+								this.rolesService.getAllInstitutionalRoles().subscribe((roles: RoleDto[]) => {
+									this.roles = roles;
+								});
+
+								this.institution.push(this.contextService.institutionId);
+								this.institutionService.getInstitutions(this.institution).subscribe((institutions: InstitutionDto[]) => {
+									this.institutionName = institutions[0].name;
+								});
+
+								this.professionalService.getList().subscribe((allProfessions: ProfessionDto[]) => {
+									this.allProfessions = allProfessions;
+								});
+
+								this.specialtyService.getAll().subscribe((allSpecialties: ClinicalSpecialtyDto[]) => {
+									this.allSpecialties = allSpecialties;
+								});
 							}
 						})
 
-						this.userService.getUserData(completeData.person.id).subscribe((userData: UserDataDto) => {
-							this.userData = userData;
-							if (userData?.id) {
-								this.rolesService.getRolesByUser(this.userData?.id).subscribe((roles: UserRoleDto[]) => {
-									this.rolesByUser = roles;
-									roles.forEach(e => this.userRoles.push(e.roleDescription));
-								})
-								this.rolesService.hasBackofficeRole(userData?.id).subscribe((hasRolesAdmin: boolean) => {
-									this.rolesAdmin = hasRolesAdmin;
-								});
-							}
-						});
-
-						this.rolesService.getAllInstitutionalRoles().subscribe((roles: RoleDto[]) => {
-							this.roles = roles;
-						});
-
-						this.institution.push(this.contextService.institutionId);
-						this.institutionService.getInstitutions(this.institution).subscribe((institutions: InstitutionDto[]) => {
-							this.institutionName = institutions[0].name;
-						});
-
-						this.professionalService.getList().subscribe((allProfessions: ProfessionDto[]) => { this.allProfessions = allProfessions; });
-
-						this.specialtyService.getAll().subscribe((allSpecialties: ClinicalSpecialtyDto[]) => { this.allSpecialties = allSpecialties; });
 					});
 				this.featureFlagService.isActive(AppFeature.HABILITAR_CARGA_FECHA_PROBABLE_ALTA).subscribe(isOn => {
 					this.canLoadProbableDischargeDate = isOn;
 				});
-				this.internmentPatientService.internmentEpisodeIdInProcess(this.patientId)
-					.subscribe(internmentEpisodeProcessDto => {
-						if (internmentEpisodeProcessDto) {
-							this.internmentEpisode = internmentEpisodeProcessDto;
-							if (internmentEpisodeProcessDto.id) {
-								this.internmentService.getInternmentEpisodeSummary(internmentEpisodeProcessDto.id)
-									.subscribe((internmentEpisode: InternmentSummaryDto) => {
-										this.internmentEpisodeSummary = this.mapperService.toInternmentEpisodeSummary(internmentEpisode)
-										this.epicrisisDoc = internmentEpisode.documents?.epicrisis;
-									});
-								this.internmentEpisodeService.getPatientDischarge(internmentEpisodeProcessDto.id)
-									.subscribe((patientDischarge: PatientDischargeDto) => {
-										this.featureFlagService.isActive(AppFeature.HABILITAR_ALTA_SIN_EPICRISIS).subscribe(isOn => {
-											this.showDischarge = isOn || (patientDischarge.dischargeTypeId !== 0);
-										});
-									});
-							}
-						}
-					});
+				this.permissionService.hasContextAssignments$(ROLES_TO_VIEW_CLINIC_HISTORY_DATA).subscribe(hasRoleToViewClinicHistoryData => {
+					if (hasRoleToViewClinicHistoryData) {
+						this.internmentPatientService.internmentEpisodeIdInProcess(this.patientId)
+							.subscribe(internmentEpisodeProcessDto => {
+								if (internmentEpisodeProcessDto) {
+									this.internmentEpisode = internmentEpisodeProcessDto;
+									if (internmentEpisodeProcessDto.id) {
+										this.internmentService.getInternmentEpisodeSummary(internmentEpisodeProcessDto.id)
+											.subscribe((internmentEpisode: InternmentSummaryDto) => {
+												this.internmentEpisodeSummary = this.mapperService.toInternmentEpisodeSummary(internmentEpisode)
+												this.epicrisisDoc = internmentEpisode.documents?.epicrisis;
+											});
+										this.internmentEpisodeService.getPatientDischarge(internmentEpisodeProcessDto.id)
+											.subscribe((patientDischarge: PatientDischargeDto) => {
+												this.featureFlagService.isActive(AppFeature.HABILITAR_ALTA_SIN_EPICRISIS).subscribe(isOn => {
+													this.showDischarge = isOn || (patientDischarge.dischargeTypeId !== 0);
+												});
+											});
+									}
+								}
+							});
 
+
+						this.emergencyCareEpisodeSummaryService.getEmergencyCareEpisodeInProgress(this.patientId)
+							.subscribe(emergencyCareEpisodeInProgressDto => {
+								this.emergencyCareEpisodeInProgress = emergencyCareEpisodeInProgressDto
+								if (this.emergencyCareEpisodeInProgress?.inProgress) {
+									this.emergencyCareEpisodeSummaryService.getEmergencyCareEpisodeSummary(this.emergencyCareEpisodeInProgress.id)
+										.subscribe(emergencyCareEpisodeListDto => this.emergencyCareEpisodeSummary = emergencyCareEpisodeListDto);
+								}
+							});
+					}
+				})
 				this.patientService.getPatientPhoto(this.patientId)
-					.subscribe((personPhotoDto: PersonPhotoDto) => { this.personPhoto = personPhotoDto; });
-
-				this.emergencyCareEpisodeSummaryService.getEmergencyCareEpisodeInProgress(this.patientId)
-					.subscribe( emergencyCareEpisodeInProgressDto => {
-						this.emergencyCareEpisodeInProgress = emergencyCareEpisodeInProgressDto
-						if (this.emergencyCareEpisodeInProgress?.inProgress) {
-							this.emergencyCareEpisodeSummaryService.getEmergencyCareEpisodeSummary(this.emergencyCareEpisodeInProgress.id)
-								.subscribe(emergencyCareEpisodeListDto => this.emergencyCareEpisodeSummary = emergencyCareEpisodeListDto);
-						}
+					.subscribe((personPhotoDto: PersonPhotoDto) => {
+						this.personPhoto = personPhotoDto;
 					});
-
 			});
 
 		this.form = this.formBuilder.group({
@@ -430,6 +440,11 @@ export class ProfileComponent implements OnInit {
 	goToEmergencyCareEpisode(): void {
 		const url = `${AppRoutes.Institucion}/${this.contextService.institutionId}/${ROUTE_EMERGENCY_CARE_EPISODE_PREFIX}/${this.emergencyCareEpisodeSummary.id}`;
 		this.router.navigate([url]);
+	}
+
+	newAppointment() {
+		const url = `${AppRoutes.Institucion}/${this.contextService.institutionId}/turnos`;
+		this.router.navigate([url], { queryParams: { idPaciente: this.patientId } });
 	}
 
 }

@@ -1,0 +1,43 @@
+<div fxLayout="column" fxLayoutAlign="center" fxFlexFill>
+    <div fxLayout="row" fxLayoutGap="2px">
+        <mat-icon class="color-primary" fontSet="material-icons-outlined">
+            health_and_safety
+        </mat-icon>
+        <div fxLayout="column" fxLayoutGap="6px">
+            <span class="color-primary bold line-height"> {{ title | translate }} </span>
+            <div fxLayout="column" *ngIf="thereIsCoverageInfo() else noCoverage">
+                <span class="bold"> {{ coverageInfo?.name }} </span>
+                <span *ngIf="coverageInfo?.plan && coverageInfo?.condition else showPlanOrCondition"
+                    class="lowercase capitalize-first-letter">
+                    {{ coverageInfo.plan }} | {{ coverageInfo.condition }}
+                </span>
+                <span>
+                    {{ 'ambulatoria.medical-coverage-summary-view.AFFILIATE_NUMBER' | translate }}
+                    <ng-container *ngIf="coverageInfo?.affiliateNumber else noInfo">
+                        {{ coverageInfo.affiliateNumber }}
+                    </ng-container>
+                    <ng-template #noInfo>
+                        <span class="color-grey">
+                            {{ 'ambulatoria.medical-coverage-summary-view.NO_INFO' | translate }}
+                        </span>
+                    </ng-template>
+                </span>
+            </div>
+        </div>
+    </div>
+</div>
+
+<ng-template #showPlanOrCondition>
+    <span *ngIf="coverageInfo?.plan" class="lowercase capitalize-first-letter">
+        {{ coverageInfo.plan }}
+    </span>
+    <span *ngIf="coverageInfo?.condition" class="lowercase capitalize-first-letter">
+        {{ coverageInfo.condition }}
+    </span>
+</ng-template>
+
+<ng-template #noCoverage>
+    <span class="color-grey">
+        {{ 'ambulatoria.medical-coverage-summary-view.WITHOUT_COVERAGE' | translate }}
+    </span>
+</ng-template>

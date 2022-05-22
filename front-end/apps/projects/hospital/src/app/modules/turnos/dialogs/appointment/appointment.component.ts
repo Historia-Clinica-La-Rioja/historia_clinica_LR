@@ -5,7 +5,7 @@ import { AppointmentsService } from '@api-rest/services/appointments.service';
 import { SnackBarService } from '@presentation/services/snack-bar.service';
 import { APPOINTMENT_STATES_ID, getAppointmentState, MAX_LENGTH_MOTIVO } from '../../constants/appointment';
 import { ContextService } from '@core/services/context.service';
-import { FormBuilder, FormGroup, Validators} from '@angular/forms';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { AppFeature, AppointmentDto, ERole, IdentificationTypeDto, PatientMedicalCoverageDto } from '@api-rest/api-model.d';
 import { CancelAppointmentComponent } from '../cancel-appointment/cancel-appointment.component';
 import { getError, hasError, processErrors, updateControlValidator } from '@core/utils/form.utils';
@@ -25,6 +25,7 @@ import { Observable } from 'rxjs';
 import { FeatureFlagService } from "@core/services/feature-flag.service";
 import { PatientNameService } from "@core/services/patient-name.service";
 import { PersonMasterDataService } from "@api-rest/services/person-master-data.service";
+import { SummaryCoverageInformation } from '@historia-clinica/modules/ambulatoria/components/medical-coverage-summary-view/medical-coverage-summary-view.component';
 
 const TEMPORARY_PATIENT = 3;
 const BELL_LABEL = 'Llamar paciente'
@@ -55,14 +56,16 @@ export class AppointmentComponent implements OnInit {
 	institutionId = this.contextService.institutionId;
 	coverageText: string;
 	coverageNumber: any;
+	coverageCondition: string;
 	coverageData: PatientMedicalCoverage;
+	summaryCoverageData: SummaryCoverageInformation = {};
 	hasRoleToChangeState$: Observable<boolean>;
 	hasRoleToEditPhoneNumber$: Observable<boolean>;
 	hasRoleToDownloadReports$: Observable<boolean>;
 	patientMedicalCoverages: PatientMedicalCoverage[];
 	identificationType: IdentificationTypeDto;
 
-	public hideFilterPanel = false;
+	hideFilterPanel = false;
 
 	isCheckedDownloadAnexo = false;
 	isCheckedDownloadFormulario = false;
@@ -70,7 +73,7 @@ export class AppointmentComponent implements OnInit {
 	isMqttCallEnabled: boolean = false;
 
 	constructor(
-		@Inject(MAT_DIALOG_DATA) public params : { appointmentData: PatientAppointmentInformation, hasPermissionToAssignShift: boolean },
+		@Inject(MAT_DIALOG_DATA) public params: { appointmentData: PatientAppointmentInformation, hasPermissionToAssignShift: boolean },
 		public dialogRef: MatDialogRef<NewAttentionComponent>,
 		private readonly dialog: MatDialog,
 		private readonly appointmentService: AppointmentsService,
@@ -121,6 +124,7 @@ export class AppointmentComponent implements OnInit {
 						.subscribe(coverageData => {
 							if (coverageData) {
 								this.coverageData = this.mapperService.toPatientMedicalCoverage(coverageData);
+								this.updateSummaryCoverageData();
 								this.formEdit.controls.newCoverageData.setValue(coverageData.id);
 								this.setCoverageText(coverageData);
 							}
@@ -136,7 +140,7 @@ export class AppointmentComponent implements OnInit {
 
 		this.personMasterDataService.getIdentificationTypes()
 			.subscribe(identificationTypes => {
-				this.identificationType = identificationTypes.find(identificationType => identificationType.id==this.params.appointmentData.patient.identificationTypeId);
+				this.identificationType = identificationTypes.find(identificationType => identificationType.id == this.params.appointmentData.patient.identificationTypeId);
 			});
 	}
 
@@ -158,7 +162,7 @@ export class AppointmentComponent implements OnInit {
 	}
 
 	private setMedicalCoverages(): void {
-		if(this.params.appointmentData.patient?.id) {
+		if (this.params.appointmentData.patient?.id) {
 			this.patientMedicalCoverageService.getActivePatientMedicalCoverages(Number(this.params.appointmentData.patient.id))
 				.pipe(
 					map(
@@ -208,19 +212,22 @@ export class AppointmentComponent implements OnInit {
 		if (this.formEdit.valid) {
 			if (this.isAssigned()) {
 				if (this.formEdit.controls.newCoverageData.value) {
-					this.coverageData = this.patientMedicalCoverages.find(mc=>this.formEdit.controls.newCoverageData.value==mc.id);
+					this.coverageData = this.patientMedicalCoverages.find(mc => this.formEdit.controls.newCoverageData.value == mc.id);
+					this.updateSummaryCoverageData();
 					this.updateCoverageData(this.coverageData.id);
 					this.setCoverageText(this.coverageData);
 				} else {
 					this.coverageData = null;
 					this.coverageNumber = null;
+					this.coverageCondition = null;
+					this.updateSummaryCoverageData();
 					this.updateCoverageData(null);
 				}
 			}
-			if (this.formEdit.controls.phoneNumber.dirty||this.formEdit.controls.phonePrefix.dirty){
-				this.updatePhoneNumber(this.formEdit.controls.phonePrefix.value,this.formEdit.controls.phoneNumber.value);
-		}
-		this.hideFilters();
+			if (this.formEdit.controls.phoneNumber.dirty || this.formEdit.controls.phonePrefix.dirty) {
+				this.updatePhoneNumber(this.formEdit.controls.phonePrefix.value, this.formEdit.controls.phoneNumber.value);
+			}
+			this.hideFilters();
 		}
 	}
 
@@ -246,7 +253,7 @@ export class AppointmentComponent implements OnInit {
 	private submitNewState(newStateId: APPOINTMENT_STATES_ID, motivo?: string): void {
 		this.appointmentFacade.changeState(this.params.appointmentData.appointmentId, newStateId, motivo)
 			.subscribe(() => {
-				const appointmentInformation = {id: this.params.appointmentData.appointmentId, stateId: newStateId};
+				const appointmentInformation = { id: this.params.appointmentData.appointmentId, stateId: newStateId };
 				this.dialogRef.close(appointmentInformation);
 				this.snackBarService.showSuccess(`Estado de turno actualizado a ${getAppointmentState(newStateId).description} exitosamente`);
 			}, _ => {
@@ -274,6 +281,7 @@ export class AppointmentComponent implements OnInit {
 
 	private setCoverageText(coverageData) {
 		this.coverageNumber = coverageData.affiliateNumber;
+		this.coverageCondition = coverageData.condition;
 		const isHealthInsurance = determineIfIsHealthInsurance(coverageData.medicalCoverage);
 		if (isHealthInsurance) {
 			let healthInsurance: HealthInsurance;
@@ -325,7 +333,8 @@ export class AppointmentComponent implements OnInit {
 	}
 
 	getFullMedicalCoverageText(patientMedicalCoverage): string {
-		const medicalCoverageText = [patientMedicalCoverage.medicalCoverage.acronym, patientMedicalCoverage.medicalCoverage.name, patientMedicalCoverage.affiliateNumber]
+		const condition = (patientMedicalCoverage.condition) ? patientMedicalCoverage.condition.toLowerCase() : null;
+		const medicalCoverageText = [patientMedicalCoverage.medicalCoverage.acronym, patientMedicalCoverage.medicalCoverage.name, patientMedicalCoverage.affiliateNumber, condition]
 			.filter(Boolean).join(' - ');
 		return [medicalCoverageText].filter(Boolean).join(' / ');
 	}
@@ -360,6 +369,26 @@ export class AppointmentComponent implements OnInit {
 	clear(): void {
 		this.formEdit.controls.newCoverageData.setValue(null);
 	}
+
+	private updateSummaryCoverageData(): void {
+		let summaryInfo: SummaryCoverageInformation = {};
+		if (this.coverageData) {
+			if (this.coverageData.medicalCoverage.name) {
+				summaryInfo.name = this.coverageData.medicalCoverage.name;
+			}
+			if (this.coverageData.affiliateNumber) {
+				summaryInfo.affiliateNumber = this.coverageData.affiliateNumber;
+			}
+			if (this.coverageData?.privateHealthInsuranceDetails?.planName) {
+				summaryInfo.plan = this.coverageData?.privateHealthInsuranceDetails?.planName;
+			}
+			if(this.coverageData.condition) {
+				summaryInfo.condition = this.coverageData.condition;
+			}
+		}
+		this.summaryCoverageData = summaryInfo;
+	}
+
 }
 
 export interface PatientAppointmentInformation {

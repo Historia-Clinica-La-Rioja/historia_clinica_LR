@@ -34,7 +34,8 @@ export class MapperService {
 			privateHealthInsuranceDetails,
 			vigencyDate: momentFormat(s.validDate, DateFormat.API_DATE),
 			id: s.id,
-			active: s.active
+			active: s.active,
+			condition: s.condition
 		};
 	}
 
@@ -48,6 +49,7 @@ export class MapperService {
 			medicalCoverage: toMedicalCoverage(s.medicalCoverage),
 			privateHealthInsuranceDetails: mapDetails(),
 			active: s.active,
+			condition: s.condition
 		};
 
 		// TODO ver la posibilidad de quitar ese if

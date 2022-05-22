@@ -73,11 +73,17 @@ export class MotivoNuevaConsultaService {
 		this.form.controls.snomed.setValue(pt);
 	}
 
+	private readonly ECL = SnomedECL.CONSULTATION_REASON;
+
+	getECL(): SnomedECL {
+		return this.ECL;
+	}
+
 	openSearchDialog(searchValue: string): void {
 		if (searchValue) {
 			const search: SnomedSemanticSearch = {
 				searchValue,
-				eclFilter: SnomedECL.CONSULTATION_REASON
+				eclFilter: this.ECL
 			};
 			this.snomedService.openConceptsSearchDialog(search)
 				.subscribe((selectedConcept: SnomedDto) => this.setConcept(selectedConcept));

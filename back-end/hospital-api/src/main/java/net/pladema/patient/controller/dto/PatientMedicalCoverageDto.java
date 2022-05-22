@@ -31,4 +31,6 @@ public class PatientMedicalCoverageDto {
 
     @Nullable
     private PrivateHealthInsuranceDetailsDto privateHealthInsuranceDetails;
+
+	private EPatientMedicalCoverageCondition condition;
 }

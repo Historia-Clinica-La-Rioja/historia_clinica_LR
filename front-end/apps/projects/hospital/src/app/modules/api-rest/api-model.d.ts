@@ -908,6 +908,7 @@ export interface ExternalCoverageDto {
 export interface ExternalPatientCoverageDto {
     active: boolean;
     affiliateNumber: string;
+    condition?: number;
     medicalCoverage: ExternalCoverageDto;
     vigencyDate?: Date;
 }
@@ -945,6 +946,14 @@ export interface FormVDto {
     problems: string;
     reportDate: Date;
     sisaCode: string;
+}
+
+export interface FrequencyDto {
+    dailyVolume?: number;
+    duration?: TimeDto;
+    flowDropsHour: number;
+    flowMlHour: number;
+    id?: number;
 }
 
 export interface FullySpecifiedNamesDto {
@@ -1120,6 +1129,7 @@ export interface HealthCareProfessionalGroupDto {
 }
 
 export interface HealthConditionDto extends ClinicalTermDto {
+    isAdded?: boolean;
     verificationId?: string;
 }
 
@@ -1293,7 +1303,6 @@ export interface InstitutionInfoDto extends Serializable {
 
 export interface InternmentEpisodeADto {
     bedId: number;
-    clinicalSpecialtyId: number;
     dischargeDate: Date;
     entryDate: Date;
     institutionId: number;
@@ -1313,7 +1322,6 @@ export interface InternmentEpisodeDto {
     doctor: ResponsibleDoctorDto;
     id: number;
     patient: PatientDto;
-    specialty: ClinicalSpecialtyDto;
 }
 
 export interface InternmentEpisodeProcessDto {
@@ -1493,7 +1501,11 @@ export interface NewDosageDto extends Serializable {
     chronic: boolean;
     diary: boolean;
     duration?: number;
+    event?: string;
     frequency?: number;
+    periodUnit?: string;
+    quantity?: QuantityDto;
+    startDateTime?: DateTimeDto;
 }
 
 export interface NewEffectiveClinicalObservationDto extends ClinicalObservationDto {
@@ -1709,6 +1721,18 @@ export interface OrganizationDto extends Serializable {
     phoneNumber: string;
 }
 
+export interface OtherIndicationDto extends IndicationDto {
+    description: string;
+    dosage?: NewDosageDto;
+    otherIndicationTypeId: number;
+    otherType?: string;
+}
+
+export interface OtherPharmacoDto {
+    dosage: NewDosageDto;
+    snomed: SharedSnomedDto;
+}
+
 export interface OutpatientAllergyConditionDto {
     categoryId: string;
     criticalityId: number;
@@ -1825,6 +1849,14 @@ export interface OutpatientUpdateImmunizationDto {
 export interface Overlapping<T> {
 }
 
+export interface ParenteralPlanDto extends IndicationDto {
+    dosage: NewDosageDto;
+    frequency: FrequencyDto;
+    pharmacos: OtherPharmacoDto[];
+    snomed: SharedSnomedDto;
+    via?: number;
+}
+
 export interface PasswordResetDto {
     password: string;
     token: string;
@@ -1878,6 +1910,7 @@ export interface PatientInteroperabilityDto {
 export interface PatientMedicalCoverageDto {
     active: boolean;
     affiliateNumber?: string;
+    condition: EPatientMedicalCoverageCondition;
     id?: number;
     medicalCoverage: CoverageDtoUnion;
     privateHealthInsuranceDetails?: PrivateHealthInsuranceDetailsDto;
@@ -1954,6 +1987,23 @@ export interface PersonalInformationDto {
     identificationType: IdentificationTypeDto;
     phoneNumber: string;
     phonePrefix: string;
+}
+
+export interface PharmacoDto extends IndicationDto {
+    dosage: NewDosageDto;
+    foodRelationId: number;
+    healthConditionId: number;
+    note?: string;
+    patientProvided: boolean;
+    snomed: SharedSnomedDto;
+    solvent?: OtherPharmacoDto;
+    viaId: number;
+}
+
+export interface PharmacoSummaryDto extends IndicationDto, Serializable {
+    dosage: NewDosageDto;
+    snomed: SharedSnomedDto;
+    via: string;
 }
 
 export interface PoliceInterventionDetailsDto extends Serializable {
@@ -2065,6 +2115,11 @@ export interface ProvinceDto extends AbstractMasterdataDto<number> {
 export interface PublicInfoDto {
     features: AppFeature[];
     flavor: string;
+}
+
+export interface QuantityDto extends Serializable {
+    unit: string;
+    value: number;
 }
 
 export interface ReasonDto {
@@ -2539,6 +2594,7 @@ export const enum AppFeature {
     HABILITAR_DATOS_AUTOPERCIBIDOS = "HABILITAR_DATOS_AUTOPERCIBIDOS",
     HABILITAR_VISUALIZACION_PROPIEDADES_SISTEMA = "HABILITAR_VISUALIZACION_PROPIEDADES_SISTEMA",
     HABILITAR_GENERACION_ASINCRONICA_DOCUMENTOS_PDF = "HABILITAR_GENERACION_ASINCRONICA_DOCUMENTOS_PDF",
+    HABILITAR_BUSQUEDA_LOCAL_CONCEPTOS = "HABILITAR_BUSQUEDA_LOCAL_CONCEPTOS",
 }
 
 export const enum EDocumentSearch {
@@ -2566,6 +2622,11 @@ export const enum EMedicalCoverageTypeDto {
 
 export const enum EOdontologyTopicDto {
     NUEVA_CONSULTA = "NUEVA_CONSULTA",
+}
+
+export const enum EPatientMedicalCoverageCondition {
+    VOLUNTARIA = "VOLUNTARIA",
+    OBLIGATORIA = "OBLIGATORIA",
 }
 
 export const enum ERole {

@@ -1,9 +1,9 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { DiagnosisDto, SnomedDto } from '@api-rest/api-model';
-import { SnomedECL } from '@api-rest/api-model';
-import { pushTo, removeFrom } from '@core/utils/array.utils';
-import { SnomedSemanticSearch, SnomedService } from '@historia-clinica/services/snomed.service';
+import { MatDialog } from '@angular/material/dialog';
+import { DiagnosisDto, HealthConditionDto } from '@api-rest/api-model';
+import { SnackBarService } from '@presentation/services/snack-bar.service';
+import { DiagnosisCreationEditionComponent } from '../../dialogs/diagnosis-creation-edition/diagnosis-creation-edition.component';
+import { SelectMainDiagnosisComponent } from '../../dialogs/select-main-diagnosis/select-main-diagnosis.component';
 
 @Component({
 	selector: 'app-diagnosticos',
@@ -12,91 +12,77 @@ import { SnomedSemanticSearch, SnomedService } from '@historia-clinica/services/
 })
 export class DiagnosticosComponent implements OnInit {
 
-	private diagnosisValue: DiagnosisDto[];
-
 	@Output() diagnosisChange = new EventEmitter();
+	@Output() mainDiagnosisChange = new EventEmitter();
 
 	@Input()
-	set diagnosis(newDiagnosis: DiagnosisDto[]) {
-		this.diagnosisValue = newDiagnosis;
-		this.diagnosisChange.emit(this.diagnosisValue);
+	diagnosticos: DiagnosisDto[];
+	_mainDiagnosis: HealthConditionDto;
+
+	@Input()
+	set mainDiagnosis(newMainDiagnosis: HealthConditionDto) {
+		this._mainDiagnosis = newMainDiagnosis;
+		this.mainDiagnosisChange.emit(this._mainDiagnosis)
 	}
 
-	get diagnosis(): DiagnosisDto[] {
-		return this.diagnosisValue;
-	}
-
-	snomedConcept: SnomedDto;
-
-	form: FormGroup;
-	// Mat table
-	columns = [
-		{
-			def: 'diagnosis',
-			header: 'internaciones.anamnesis.diagnosticos.table.columns.DIAGNOSIS',
-			text: ap => ap.snomed.pt
-		},
-		{
-			def: 'status',
-			header: 'internaciones.anamnesis.diagnosticos.table.columns.STATUS',
-			text: ap => ap.presumptive ? 'Presuntivo' : 'Confirmado'
-		}
-	];
-	displayedColumns: string[] = [];
+	@Input()
+	type: string;
 
 	constructor(
-		private formBuilder: FormBuilder,
-		private snomedService: SnomedService
-	) {
-		this.displayedColumns = this.columns?.map(c => c.def).concat(['remove']);
-	}
+		public dialog: MatDialog,
+		private snackBarService: SnackBarService
+	) { }
 
 	ngOnInit(): void {
-		this.form = this.formBuilder.group({
-			snomed: [null, Validators.required],
-			presumptive: [false]
+	}
+
+	openCreationDialog(isMainDiagnosis: boolean) {
+		const dialogRef = this.dialog.open(DiagnosisCreationEditionComponent, {
+			width: '450px',
+			data: {
+				type: 'CREATION'
+			}
+		});
+
+		dialogRef.afterClosed().subscribe(diagnosis => {
+			if (diagnosis) {
+				if (!this.diagnosticos.find(currentDiagnosis => currentDiagnosis.snomed.pt === diagnosis.snomed.pt) && diagnosis.snomed.pt!=this._mainDiagnosis?.snomed.pt)
+					if (isMainDiagnosis){
+						diagnosis.presumptive = false;
+						this.mainDiagnosis = diagnosis;
+					}
+					else {
+						this.diagnosticos.push(diagnosis);
+						this.diagnosisChange.emit(this.diagnosticos);
+					}
+				else
+					this.snackBarService.showError('internaciones.anamnesis.diagnosticos.messages.ERROR');
+			}
 		});
 	}
 
-	addToList() {
-		if (this.form.valid && this.snomedConcept) {
-			const diagnostico: DiagnosisDto = {
-				statusId: this.form.value.statusId,
-				presumptive: this.form.value.presumptive,
-				snomed: this.snomedConcept
-			};
-			this.add(diagnostico);
-			this.resetForm();
-		}
+	openModifyMainDiagnosisDialog() {
+		const dialogRef = this.dialog.open(SelectMainDiagnosisComponent, {
+			width: '450px',
+			data: {
+				currentMainDiagnosis: this._mainDiagnosis,
+				otherDiagnoses: this.diagnosticos
+			}
+		});
+
+		dialogRef.afterClosed().subscribe(potentialNewMainDiagnosis => {
+			if (potentialNewMainDiagnosis) {
+				if (potentialNewMainDiagnosis != this._mainDiagnosis) {
+					let oldMainDiagnosis = this._mainDiagnosis;
+					this.diagnosticos.push(oldMainDiagnosis);
+					this.diagnosticos.splice(this.diagnosticos.indexOf(potentialNewMainDiagnosis), 1);
+					this.mainDiagnosis = potentialNewMainDiagnosis;
+					this._mainDiagnosis.isAdded = true;
+					this._mainDiagnosis.verificationId = '59156000';
+					(<DiagnosisDto>this._mainDiagnosis).presumptive = false;
+				}
+			}
+		});
 	}
 
-	setConcept(selectedConcept: SnomedDto): void {
-		this.snomedConcept = selectedConcept;
-		const pt = selectedConcept ? selectedConcept.pt : '';
-		this.form.controls.snomed.setValue(pt);
-	}
-
-	resetForm(): void {
-		delete this.snomedConcept;
-		this.form.reset();
-	}
-
-	add(diagnostico: DiagnosisDto): void {
-		this.diagnosis = pushTo<DiagnosisDto>(this.diagnosis, diagnostico);
-	}
-
-	remove(index: number): void {
-		this.diagnosis = removeFrom<DiagnosisDto>(this.diagnosis, index);
-	}
-
-	openSearchDialog(searchValue: string): void {
-		if (searchValue) {
-			const search: SnomedSemanticSearch = {
-				searchValue,
-				eclFilter: SnomedECL.DIAGNOSIS
-			};
-			this.snomedService.openConceptsSearchDialog(search)
-				.subscribe((selectedConcept: SnomedDto) => this.setConcept(selectedConcept));
-		}
-	}
 }

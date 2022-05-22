@@ -27,11 +27,11 @@ public class DocumentAuthorFinder {
         logger.debug("Get author from document -> documentId={}", documentId);
 
         String sqlString = "" +
-                "SELECT hp.id, p.first_name, p.last_name, hp.license_number " +
-                "FROM document AS d " +
-                "JOIN user_person AS up ON (d.created_by = up.user_id) " +
-                "JOIN healthcare_professional hp ON (up.person_id = hp.person_id) " +
-                "JOIN person p ON (hp.person_id = p.id) " +
+                "SELECT hp.id, p.firstName, p.lastName, hp.licenseNumber " +
+                "FROM Document AS d " +
+                "JOIN UserPerson AS up ON (d.creationable.createdBy = up.pk.userId) " +
+                "JOIN HealthcareProfessional hp ON (up.pk.personId = hp.personId) " +
+                "JOIN Person p ON (hp.personId = p.id) " +
                 "WHERE d.id = :documentId" +
                 "";
 
@@ -40,7 +40,7 @@ public class DocumentAuthorFinder {
         Query query;
 
 		while (rows.isEmpty() && (searchTries < 10)){
-			query = entityManager.createNativeQuery(sqlString);
+			query = entityManager.createQuery(sqlString);
 			query.setParameter("documentId", documentId);
 			rows = query.getResultList();
 			searchTries++;

@@ -17,7 +17,12 @@ public class PrivateHealthInsuranceDto extends CoverageDto {
         setCuit(cuit);
     }
 
-    @Override
+	@Override
+	public String obtainCoverageType() {
+		return "PREPAGA";
+	}
+
+	@Override
     public MedicalCoverageBo newInstance() {
         return new PrivateHealthInsuranceBo(getId(), getName(),getCuit());
     }

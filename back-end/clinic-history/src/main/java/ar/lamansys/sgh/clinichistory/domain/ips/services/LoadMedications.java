@@ -112,7 +112,7 @@ public class LoadMedications {
         newDosage.setChronic(dosage.isChronic());
         newDosage.setStartDate(dosage.getStartDate());
         newDosage.setEndDate(dosage.getEndDate());
-        newDosage.setSuspendedStartDate(dosage.getStartDate());
+        newDosage.setSuspendedStartDate(dosage.getStartDate().toLocalDate());
         newDosage.setSuspendedEndDate(dosage.getSuspendedEndDate());
         newDosage.setDuration(!dosage.isChronic() ? dosage.getDuration() : null);
         newDosage.setDurationUnit(EUnitsOfTimeBo.DAY.getValue());

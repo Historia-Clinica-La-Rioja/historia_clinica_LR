@@ -43,9 +43,9 @@ public class CreateOutpatientDocumentServiceImpl implements CreateOutpatientDocu
         LOG.debug("Input parameters -> outpatient {}", outpatient);
 
         assertContextValid(outpatient);
+		LocalDateTime now = dateTimeProvider.nowDateTime();
+		outpatient.setPerformedDate(now);
         outpatient.setId(documentFactory.run(outpatient, true));
-        LocalDateTime now = dateTimeProvider.nowDateTime();
-        outpatient.setPerformedDate(now);
 
         updateOutpatientConsultationService.updateOutpatientDocId(outpatient.getEncounterId(), outpatient.getId());
         LOG.debug(OUTPUT, outpatient);

@@ -156,9 +156,10 @@ export class AdmisionAdministrativaComponent implements OnInit {
 	}
 
 	getFullMedicalCoverageText(patientMedicalCoverage): string {
+		const condition = (patientMedicalCoverage.condition) ? patientMedicalCoverage.condition.toLowerCase() : null;
 		const medicalCoverageText = [patientMedicalCoverage.medicalCoverage.acronym, patientMedicalCoverage.medicalCoverage.name]
 			.filter(Boolean).join(' - ');
-		return [medicalCoverageText, patientMedicalCoverage.affiliateNumber].filter(Boolean).join(' / ');
+		return [medicalCoverageText, patientMedicalCoverage.affiliateNumber,condition].filter(Boolean).join(' / ');
 	}
 
 	continue(): void {

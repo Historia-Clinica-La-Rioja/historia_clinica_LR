@@ -1,5 +1,10 @@
 package net.pladema.snowstorm.services.searchCachedConcepts;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
+import org.springframework.stereotype.Service;
+
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import net.pladema.snowstorm.repository.SnomedConceptsRepository;
@@ -8,10 +13,6 @@ import net.pladema.snowstorm.services.domain.SnomedSearchBo;
 import net.pladema.snowstorm.services.domain.SnomedSearchItemBo;
 import net.pladema.snowstorm.services.domain.semantics.SnomedECL;
 import net.pladema.snowstorm.services.domain.semantics.SnomedSemantics;
-import org.springframework.stereotype.Service;
-
-import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor

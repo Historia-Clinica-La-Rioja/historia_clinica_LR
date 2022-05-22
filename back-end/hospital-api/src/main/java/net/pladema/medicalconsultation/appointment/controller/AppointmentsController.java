@@ -11,6 +11,9 @@ import javax.validation.Valid;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.Size;
 
+import ar.lamansys.sgh.shared.infrastructure.input.service.ExternalPatientCoverageDto;
+import net.pladema.medicalconsultation.appointment.controller.mapper.ExternalPatientCoverageMapper;
+
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -273,5 +276,20 @@ public class AppointmentsController {
         log.trace(OUTPUT, result);
         return ResponseEntity.ok(result);
     }
+
+	@GetMapping("/patient/{patientId}/get-medical-coverage")
+	@PreAuthorize("hasPermission(#institutionId, 'ESPECIALISTA_MEDICO, PROFESIONAL_DE_SALUD, ESPECIALISTA_EN_ODONTOLOGIA, ENFERMERO')")
+	public ResponseEntity<ExternalPatientCoverageDto> getCurrentAppointmentMedicalCoverage(
+			@PathVariable(name = "institutionId") Integer institutionId,
+			@PathVariable(name = "patientId") Integer patientId) {
+		log.debug("Input parameters -> institutionId {}, patientId {}", institutionId, patientId);
+		var pmcBo = appointmentService.getCurrentAppointmentMedicalCoverage(patientId, institutionId);
+		if(pmcBo != null){
+			var result = ExternalPatientCoverageMapper.mapToExternalPatientCoverageDto(pmcBo);
+			log.trace(OUTPUT, result);
+			return ResponseEntity.ok(result);
+		}
+		return ResponseEntity.ok(null);
+	}
 
 }

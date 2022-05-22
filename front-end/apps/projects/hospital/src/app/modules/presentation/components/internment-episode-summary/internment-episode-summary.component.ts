@@ -42,7 +42,6 @@ export interface InternmentEpisodeSummary {
 	roomNumber: string;
 	bedNumber: string;
 	sectorDescription: string;
-	episodeSpecialtyName: string;
 	doctor: {
 		firstName: string;
 		lastName: string;

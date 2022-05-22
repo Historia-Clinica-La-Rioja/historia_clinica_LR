@@ -32,14 +32,12 @@ public interface InternmentEpisodeRepository extends JpaRepository<InternmentEpi
             "ie.epicrisisDocId, de.statusId as epicrisisStatusId, " +
             "b.id as bedId, b.bedNumber, " +
             "r.id as roomId, r.roomNumber, sector.description, " +
-            "cs as clinicalSpecialty, " +
             "hpg.pk.healthcareProfessionalId, hp.licenseNumber, p.firstName, p.lastName," +
             "rc, ie.probableDischargeDate, pd.administrativeDischargeDate, ie.statusId) " +
             "FROM InternmentEpisode ie " +
             "JOIN Bed b ON (b.id = ie.bedId) " +
             "JOIN Room r ON (r.id = b.roomId) " +
             "JOIN Sector sector ON (sector.id = r.sectorId) " +
-            "LEFT JOIN ClinicalSpecialty cs ON (cs.id = ie.clinicalSpecialtyId) " +
             "LEFT JOIN Document da ON (da.id = ie.anamnesisDocId) " +
             "LEFT JOIN Document de ON (de.id = ie.epicrisisDocId) " +
             "LEFT JOIN HealthcareProfessionalGroup hpg ON (hpg.pk.internmentEpisodeId = ie.id and hpg.responsible = true) " +
@@ -101,7 +99,6 @@ public interface InternmentEpisodeRepository extends JpaRepository<InternmentEpi
             "pt.id as patientId, ps.firstName, ps.lastName, petd.nameSelfDetermination, " +
             "b.id as bedId, b.bedNumber, " +
             "r.id as roomId, r.roomNumber, " +
-            "cs as clinicalSpecialtyId, " +
             "s.id as sectorId, s.description) " +
             "FROM InternmentEpisode ie " +
             "JOIN Patient pt ON (ie.patientId = pt.id) " +
@@ -110,7 +107,6 @@ public interface InternmentEpisodeRepository extends JpaRepository<InternmentEpi
             "JOIN Bed b ON (ie.bedId = b.id) " +
             "JOIN Room r ON (b.roomId = r.id) " +
             "JOIN Sector s ON (r.sectorId = s.id) " +
-            "JOIN ClinicalSpecialty cs ON (ie.clinicalSpecialtyId = cs.id) " +
             "WHERE ie.institutionId = :institutionId " +
             "AND NOT EXISTS (select pd.id " +
             "                FROM PatientDischarge pd" +
@@ -188,7 +184,7 @@ public interface InternmentEpisodeRepository extends JpaRepository<InternmentEpi
 	@Transactional(readOnly = true)
 	@Query("SELECT NEW net.pladema.patient.repository.domain.PatientMedicalCoverageVo" +
 			"(pmc.id, pmc.affiliateNumber, pmc.vigencyDate, pmc.active, mc.id, mc.name, " +
-			"mc.cuit, hi.rnos, hi.acronym, phi.id, phid) " +
+			"mc.cuit, hi.rnos, hi.acronym, phi.id, phid, pmc.conditionId) " +
 			"FROM PatientMedicalCoverageAssn pmc " +
 			"JOIN InternmentEpisode ie ON (ie.patientMedicalCoverageId = pmc.id) " +
 			"JOIN MedicalCoverage mc ON (pmc.medicalCoverageId = mc.id) " +

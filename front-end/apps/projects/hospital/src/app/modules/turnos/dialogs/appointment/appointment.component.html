@@ -5,20 +5,31 @@
 			<div class="header-content" fxLayout="row" fxLayoutAlign="center">
 				<mat-icon fxFlex="10%" fontSet="material-icons-outlined" color="primary">person</mat-icon>
 				<div fxLayout="column" fxLayoutAlign="center start">
-					<span class="mat-body-strong capitalize patient-name-title" *ngIf="params.appointmentData.patient.fullName"> {{ viewPatientName(params.appointmentData) | uppercase }}</span>
+					<span class="mat-body-strong capitalize patient-name-title"
+						*ngIf="params.appointmentData.patient.fullName">
+						{{ viewPatientName(params.appointmentData) | uppercase }}
+					</span>
 					<div>
-						<span style="font-size: 16px;" id="patient_id" class="mat-body-strong">ID {{params.appointmentData.patient.id}}</span> •
-						<span style="font-size: 16px;" class="mat-body-strong" *ngIf="params.appointmentData.patient.identificationNumber">
+						<span style="font-size: 16px;" id="patient_id" class="mat-body-strong">ID
+							{{params.appointmentData.patient.id}}
+						</span> •
+						<span style="font-size: 16px;" class="mat-body-strong"
+							*ngIf="params.appointmentData.patient.identificationNumber">
 							{{identificationType?.description}}
-							{{params.appointmentData.patient.identificationNumber}}</span>
+							{{params.appointmentData.patient.identificationNumber}}
+						</span>
 					</div>
 					<div>
-						<a class="mat-body" *appHasRole="['ESPECIALISTA_MEDICO','PROFESIONAL_DE_SALUD','ENFERMERO', 'ESPECIALISTA_EN_ODONTOLOGIA']"
+						<a class="mat-body"
+							*appHasRole="['ESPECIALISTA_MEDICO','PROFESIONAL_DE_SALUD','ENFERMERO', 'ESPECIALISTA_EN_ODONTOLOGIA']"
 							[routerLink]="'/institucion/' + institutionId + '/ambulatoria/paciente/' + params.appointmentData?.patient?.id"
-							(click)="closeDialog()">Ver historia clínica</a>
+							[state]="{ appointmentCoverageInfo: summaryCoverageData }" (click)="closeDialog()">
+							Ver historia clínica
+						</a>
 					</div>
 				</div>
-				<button type="button" mat-icon-button color="primary"  fxFlex="10%" *ngIf="( hasRoleToEditPhoneNumber$ | async )" (click)="hideFilters()">
+				<button type="button" mat-icon-button color="primary" fxFlex="10%"
+					*ngIf="( hasRoleToEditPhoneNumber$ | async )" (click)="hideFilters()">
 					<mat-icon>edit</mat-icon>
 				</button>
 			</div>
@@ -26,11 +37,18 @@
 			<ng-container *ngIf="!hideFilterPanel else editAppointment">
 				<div fxLayout="column" fxLayoutGap="5px">
 					<span class="mat-caption">{{'turnos.appointment.coverageData.COVERAGE_DATA' | translate}}</span>
-					<div fxLayout= "row" fxLayoutGap="5px">
+					<div fxLayout="row" fxLayoutGap="5px">
 						<span class="mat-body patient-info coverage-text" *ngIf="coverageData"
 							matTooltip="{{coverageData.medicalCoverage.name}}">{{coverageText}}</span>
-						<span class="mat-body patient-info coverage-text" *ngIf="!coverageData">{{"Sin información"}} </span>
-						<span class="mat-body patient-info coverage-text" *ngIf="coverageNumber">/ {{coverageNumber}}</span>
+						<span class="mat-body patient-info coverage-text" *ngIf="!coverageData">
+							{{"Sin información"}}
+						</span>
+						<span class="mat-body patient-info coverage-text" *ngIf="coverageNumber">/
+							{{coverageNumber}}
+						</span>
+						<span class="mat-body patient-info coverage-text lowercase" *ngIf="coverageCondition">/
+							{{coverageCondition}}
+						</span>
 					</div>
 				</div>
 				<div fxLayout="column" fxLayoutGap="5px">
@@ -43,24 +61,26 @@
 				<form [formGroup]="formEdit" fxLayout="column" fxLayoutGap="5px" (ngSubmit)="edit()">
 					<mat-form-field appearance="outline" *ngIf="isAssigned()">
 						<button type="button" mat-button matSuffix color="warn" mat-icon-button
-								*ngIf="formEdit.value.newCoverageData" (click)="clear(); $event.stopPropagation()">
+							*ngIf="formEdit.value.newCoverageData" (click)="clear(); $event.stopPropagation()">
 							<mat-icon>close</mat-icon>
 						</button>
 						<mat-label>{{'pacientes.form.MEDICAL_COVERAGE' | translate}}</mat-label>
 						<mat-select formControlName="newCoverageData">
-							<mat-option
-								*ngFor="let patientMedicalCoverage of patientMedicalCoverages" [value]="patientMedicalCoverage.id">
+							<mat-option *ngFor="let patientMedicalCoverage of patientMedicalCoverages"
+								[value]="patientMedicalCoverage.id">
 								{{getFullMedicalCoverageText(patientMedicalCoverage)}}
 							</mat-option>
 							<mat-divider></mat-divider>
 							<mat-option (click)="openMedicalCoverageDialog()">
-								<span class="color-primary" [translate]="'ambulatoria.paciente.ordenes_prescripciones.new_prescription_dialog.UPDATE_COVERAGE'"></span>
+								<span class="color-primary"
+									[translate]="'ambulatoria.paciente.ordenes_prescripciones.new_prescription_dialog.UPDATE_COVERAGE'">
+								</span>
 							</mat-option>
 						</mat-select>
 					</mat-form-field>
 					<div fxLayout="row" fxLayoutGap="10px" fxLayout.xs="column">
 						<mat-form-field fxFlex="30%" appearance="outline">
-						<mat-label [translate]="'turnos.appointment.phoneNumber.PHONE_PREFIX'"></mat-label>
+							<mat-label [translate]="'turnos.appointment.phoneNumber.PHONE_PREFIX'"></mat-label>
 							<input matInput type="text" id="phonePrefix" name="phonePrefix"
 								formControlName="phonePrefix"
 								placeholder="{{'turnos.appointment.phoneNumber.PHONE_PREFIX' | translate }}"
@@ -71,9 +91,9 @@
 							<mat-error *ngIf="hasError(formEdit, 'maxlength', 'phonePrefix')"
 								translate="forms.MAX_LENGTH_ERROR" [translateParams]="{max: 10}">
 							</mat-error>
-					</mat-form-field>
+						</mat-form-field>
 						<mat-form-field fxFlex="70%" appearance="outline">
-						<mat-label [translate]="'turnos.appointment.phoneNumber.PHONE_NUMBER'"></mat-label>
+							<mat-label [translate]="'turnos.appointment.phoneNumber.PHONE_NUMBER'"></mat-label>
 							<input matInput type="text" id="phoneNumber" name="phoneNumber"
 								formControlName="phoneNumber"
 								placeholder="{{'turnos.appointment.phoneNumber.PHONE_NUMBER' | translate }}"
@@ -84,7 +104,7 @@
 							<mat-error *ngIf="hasError(formEdit, 'maxlength', 'phoneNumber')"
 								translate="forms.MAX_LENGTH_ERROR" [translateParams]="{max: 20}">
 							</mat-error>
-					</mat-form-field>
+						</mat-form-field>
 					</div>
 					<div align="end">
 						<button mat-flat-button color="primary" type="submit">
@@ -100,7 +120,8 @@
 			<span class="mat-body-strong">Turno</span>
 			<div fxLayout="column" fxLayoutGap="5px">
 				<div fxLayout="row" fxLayoutGap="5px" fxLayoutAlign="start">
-					<mat-icon fontSet="material-icons-outlined" color="primary" mat-list-icon [inline]="true" id="full-date">
+					<mat-icon fontSet="material-icons-outlined" color="primary" mat-list-icon [inline]="true"
+						id="full-date">
 						calendar_today
 					</mat-icon>
 					<span class="mat-body"> {{params.appointmentData.date | date:"fullDate"}}</span>
@@ -134,11 +155,10 @@
 				</button>
 
 				<button type="button" [disabled]="(hasRoleToChangeState$ | async) === false"
-						[ngClass]="{ 'assigned': estadoSelected === appointmentStatesIds.CONFIRMED }"
-						(click)="callPatient()"
-						*ngIf="isMqttCallEnabled && estadoSelected === appointmentStatesIds.CONFIRMED" mat-stroked-button>
-					<mat-icon matTooltip="{{BELL_LABEL}}"
-							  color="primary" svgIcon="bell_appointment_call">
+					[ngClass]="{ 'assigned': estadoSelected === appointmentStatesIds.CONFIRMED }"
+					(click)="callPatient()"
+					*ngIf="isMqttCallEnabled && estadoSelected === appointmentStatesIds.CONFIRMED" mat-stroked-button>
+					<mat-icon matTooltip="{{BELL_LABEL}}" color="primary" svgIcon="bell_appointment_call">
 					</mat-icon>
 				</button>
 
@@ -173,15 +193,19 @@
 			</div>
 		</section>
 
-		<ng-container *appHasRole="['ADMINISTRATIVO', 'ENFERMERO', 'ESPECIALISTA_MEDICO', 'PROFESIONAL_DE_SALUD', 'ESPECIALISTA_EN_ODONTOLOGIA']">
-			<ng-container *ngIf="downloadReportIsEnabled && !isAbsent() && ((hasRoleToDownloadReports$ | async) === true || params.hasPermissionToAssignShift)">
+		<ng-container
+			*appHasRole="['ADMINISTRATIVO', 'ENFERMERO', 'ESPECIALISTA_MEDICO', 'PROFESIONAL_DE_SALUD', 'ESPECIALISTA_EN_ODONTOLOGIA']">
+			<ng-container
+				*ngIf="downloadReportIsEnabled && !isAbsent() && ((hasRoleToDownloadReports$ | async) === true || params.hasPermissionToAssignShift)">
 				<section id="report" fxLayout="column">
 					<span class="mat-body-strong" fxLayout="row">Descargar informes</span>
 					<section class="example-section">
-						<mat-checkbox class="example-margin" fxLayout="row" (change)="enableDowndloadAnexo($event.checked)">
+						<mat-checkbox class="example-margin" fxLayout="row"
+							(change)="enableDowndloadAnexo($event.checked)">
 							<span class="mat-body">Anexo II</span>
 						</mat-checkbox>
-						<mat-checkbox class="example-margin" fxLayout="row" (change)="enableDowndloadFormulario($event.checked)">
+						<mat-checkbox class="example-margin" fxLayout="row"
+							(change)="enableDowndloadFormulario($event.checked)">
 							<span class="mat-body">Formulario V</span>
 						</mat-checkbox>
 					</section>
@@ -190,11 +214,13 @@
 		</ng-container>
 	</div>
 
-	<mat-dialog-actions *appHasRole="['ADMINISTRATIVO', 'ENFERMERO', 'ESPECIALISTA_MEDICO', 'PROFESIONAL_DE_SALUD', 'ESPECIALISTA_EN_ODONTOLOGIA']"
+	<mat-dialog-actions
+		*appHasRole="['ADMINISTRATIVO', 'ENFERMERO', 'ESPECIALISTA_MEDICO', 'PROFESIONAL_DE_SALUD', 'ESPECIALISTA_EN_ODONTOLOGIA']"
 		align="end">
-		<ng-container *ngIf="downloadReportIsEnabled && !isAbsent() && ((hasRoleToDownloadReports$ | async) === true || params.hasPermissionToAssignShift)">
-			<button type="button" mat-flat-button color="primary" id="report-appointment"
-					name="report-appointment" (click)="getReportAppointment()" [disabled]="!isCheckedDownloadAnexo && !isCheckedDownloadFormulario">
+		<ng-container
+			*ngIf="downloadReportIsEnabled && !isAbsent() && ((hasRoleToDownloadReports$ | async) === true || params.hasPermissionToAssignShift)">
+			<button type="button" mat-flat-button color="primary" id="report-appointment" name="report-appointment"
+				(click)="getReportAppointment()" [disabled]="!isCheckedDownloadAnexo && !isCheckedDownloadFormulario">
 				<span class="uppercase" [translate]="'turnos.report.TITLE'"></span>
 			</button>
 		</ng-container>

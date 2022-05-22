@@ -1,0 +1,275 @@
+databaseChangeLog: 
+    - logicalFilePath: incrementales-v1_36 
+
+    - changeSet:
+        id: add-other_indication_type-options
+        comment: Agregar opciones de tipos de otras indicaciones
+        author: mvenere
+        context: "!schema-only"
+        dbms: postgresql
+        changes:
+          - sql:
+              sql: |-
+                INSERT INTO other_indication_type(description) VALUES ('Control de signos vitales') ON CONFLICT DO NOTHING;
+                INSERT INTO other_indication_type(description) VALUES ('Diuresis') ON CONFLICT DO NOTHING;
+                INSERT INTO other_indication_type(description) VALUES ('Balance hídrico') ON CONFLICT DO NOTHING;
+                INSERT INTO other_indication_type(description) VALUES ('Alimentación enteral') ON CONFLICT DO NOTHING;
+                INSERT INTO other_indication_type(description) VALUES ('Alimentación parenteral') ON CONFLICT DO NOTHING;
+                INSERT INTO other_indication_type(description) VALUES ('Oxigenoterapia') ON CONFLICT DO NOTHING;
+                INSERT INTO other_indication_type(description) VALUES ('Control de glucemia') ON CONFLICT DO NOTHING;
+                INSERT INTO other_indication_type(description) VALUES ('Nebulizaciones') ON CONFLICT DO NOTHING;
+                INSERT INTO other_indication_type(description) VALUES ('Resumen') ON CONFLICT DO NOTHING;
+                INSERT INTO other_indication_type(description) VALUES ('Otro') ON CONFLICT DO NOTHING;
+
+    - changeSet:
+        id: other_indication-add-other_type
+        comment: Create column other_type to other_indication
+        author: mvenere
+        changes:
+          - addColumn:
+              columns:
+                - column:
+                    name: other_type
+                    type: varchar(255)
+              tableName: other_indication
+
+    - changeSet:
+        id: dropNotNullConstraint-other_indication-dosage_id
+        author: mvenere
+        changes:
+          - dropNotNullConstraint:
+              columnDataType: int
+              columnName: dosage_id
+              tableName: other_indication
+
+    - changeSet:
+        id: update-dosage-start_date-type
+        author: mvenere
+        changes:
+          - modifyDataType:
+              columnName: start_date
+              newDataType: datetime
+              tableName: dosage
+
+    - changeSet:
+        id: update-dosage-end_date-type
+        author: mvenere
+        changes:
+          - modifyDataType:
+              columnName: end_date
+              newDataType: datetime
+              tableName: dosage
+
+    - changeSet:
+        id: update-pharmaco-via-type
+        comment: Actualiza tipo de dato de la columna via en pharmaco
+        author: bchacon
+        changes:
+          - modifyDataType:
+              columnName: via
+              newDataType: smallint
+              tableName: pharmaco
+
+
+    - changeSet:
+        id: addNotNullConstraint-via-pharmaco
+        author: bchacon
+        changes:
+          - addNotNullConstraint:
+              columnDataType: smallint
+              columnName: via
+              tableName: pharmaco
+              validate: true
+
+    - changeSet:
+        id: delete-other_indication_type-concepts
+        comment: Borrado de tipos de indicacion
+        author: mvenere
+        context: "!schema-only"
+        changes:
+          - sql:
+              sql: |-
+                DELETE FROM other_indication_type WHERE id='4';
+                DELETE FROM other_indication_type WHERE id='5';
+                DELETE FROM other_indication_type WHERE id='6';
+                DELETE FROM other_indication_type WHERE id='7';
+                DELETE FROM other_indication_type WHERE id='8';
+                DELETE FROM other_indication_type WHERE id='9';
+                DELETE FROM other_indication_type WHERE id='10';
+
+    - changeSet:
+        id: add-mising-other_indication_type-concepts
+        comment: Agrega tipos de indicacion
+        author: mvenere
+        context: "!schema-only"
+        dbms: postgresql
+        changes:
+          - sql:
+              sql: |-
+                INSERT INTO other_indication_type(id,description) VALUES ('4','Peso') ON CONFLICT DO NOTHING;
+                INSERT INTO other_indication_type(id,description) VALUES ('5','Alimentación enteral') ON CONFLICT DO NOTHING;
+                INSERT INTO other_indication_type(id,description) VALUES ('6','Alimentación parenteral') ON CONFLICT DO NOTHING;
+                INSERT INTO other_indication_type(id,description) VALUES ('7','Oxigenoterapia') ON CONFLICT DO NOTHING;
+                INSERT INTO other_indication_type(id,description) VALUES ('8','Control de glucemia') ON CONFLICT DO NOTHING;
+                INSERT INTO other_indication_type(id,description) VALUES ('9','Nebulizaciones') ON CONFLICT DO NOTHING;
+                INSERT INTO other_indication_type(id,description) VALUES ('10','Resumen') ON CONFLICT DO NOTHING;
+                INSERT INTO other_indication_type(id,description) VALUES ('11','Otro') ON CONFLICT DO NOTHING;
+
+    - changeSet:
+        id: frequency-createTable
+        author: fsimaro
+        comment: Create table Frequency
+        changes:
+          - createTable:
+              tableName: frequency
+              columns:
+                - column:
+                    autoIncrement: true
+                    constraints:
+                      primaryKey: true
+                      primaryKeyName: PK_frequency
+                      references: frequency(id)
+                      foreignKeyName: FK_frequency
+                      nullable: false
+                    name: id
+                    type: int
+                - column:
+                    name: duration
+                    type: time
+                - column:
+                    constraints:
+                      nullable: false
+                    name: flow_ml_hour
+                    type: int
+                - column:
+                    constraints:
+                      nullable: false
+                    name: flow_drops_hour
+                    type: float
+                - column:
+                    name: daily_volume
+                    type: float
+
+    - changeSet:
+        id: update-parenteral_plan-via-type
+        author: fsimaro
+        changes:
+          - modifyDataType:
+              columnName: via
+              newDataType: smallint
+              tableName: parenteral_plan
+
+    - changeSet:
+        id: update-parenteral_plan-frequency-type
+        author: fsimaro
+        changes:
+          - modifyDataType:
+              columnName: frequency
+              newDataType: int
+              tableName: parenteral_plan
+
+    - changeSet:
+        id: update-parenteral_plan-frequency-name
+        author: fsimaro
+        changes:
+          - renameColumn:
+              columnDataType:
+              oldColumnName: frequency
+              newColumnName: frequency_id
+              tableName: parenteral_plan
+
+    - changeSet:
+        id: addNotNullConstraint-parenteral_plan-frequency_id
+        comment: Add not null constraint for column frequency_id in parenteral_plan
+        author: fsimaro
+        changes:
+          - addNotNullConstraint:
+              columnDataType: int
+              columnName: frequency_id
+              tableName: parenteral_plan
+              validate: true
+
+    - changeSet:
+        id: addForeignKeyConstraint-parenteral_plan-frequency_id
+        comment: Add foreign key constraint for column frequency_id in parenteral_plan to table frequency
+        author: fsimaro
+        changes:
+          - addForeignKeyConstraint:
+              baseColumnNames: frequency_id
+              baseTableName: parenteral_plan
+              constraintName: FK_parenteral_plan_frequency_id
+              referencedColumnNames: id
+              referencedTableName: frequency
+              validate: true
+
+    - changeSet:
+        id: dropView-v_nomivac_immunization_data
+        author: fsimaro
+        dbms: "postgresql"
+        changes:
+          - dropView:
+              viewName: v_nomivac_immunization_data
+
+    - changeSet:
+        id: update-note-description-type
+        author: fsimaro
+        changes:
+          - modifyDataType:
+              columnName: description
+              newDataType: text
+              tableName: note
+
+    - changeSet:
+        id: createView-v_nomivac_immunization_data
+        comment: Create v_nomivac_immunization_data
+        author: fsimaro
+        changes:
+          - createView:
+              viewName: v_nomivac_immunization_data
+              fullDefinition: false
+              replaceIfExists: true
+              selectQuery: |-
+                WITH t AS (
+                	SELECT inm.id, inm.patient_id, inm.snomed_id, inm.status_id, inm.administration_date, inm.expiration_date,
+                    inm.condition_id, inm.scheme_id, inm.dose, inm.dose_order, inm.institution_id, inm.lot_number,
+                    inm.note_id, inm.billable, inm.updated_on, inm.updated_by,
+                    row_number() over (partition by inm.patient_id, inm.snomed_id, inm.condition_id, inm.scheme_id, inm.dose,
+                    inm.dose_order, inm.administration_date, inm.institution_id order by inm.updated_on desc) as rw
+                    FROM document d
+                    JOIN document_inmunization di on d.id = di.document_id
+                    JOIN inmunization inm on di.inmunization_id = inm.id
+                    WHERE d.status_id = '445665009'
+                    AND d.type_id IN (4,8)
+                    AND inm.billable = true
+                    AND inm.condition_id IS NOT NULL
+                    AND inm.scheme_id IS NOT NULL
+                    AND inm.dose IS NOT NULL
+                    AND inm.dose_order IS NOT NULL
+                    AND inm.institution_id IS NOT NULL
+                )
+                SELECT t.id as id, t.patient_id, s.sctid as vaccine_sctid, s.pt as vaccine_pt, t.status_id,
+                administration_date, expiration_date, t.institution_id,
+                t.condition_id, vca.description as condition_description,
+                t.scheme_id, vs.description as scheme_description,
+                t.dose as dose, t.dose_order,  t.lot_number, n.description as note,
+                t.billable, t.updated_on, t.updated_by
+                FROM t
+                JOIN snomed s ON snomed_id = s.id
+                LEFT JOIN note n ON (n.id = t.note_id)
+                JOIN vaccine_condition_application vca on (t.condition_id = vca.id)
+                JOIN vaccine_scheme as vs on (t.scheme_id = vs.id)
+                WHERE rw = 1
+                AND status_id <> '723510000'
+                ORDER BY t.updated_on DESC;
+    
+    - changeSet:
+        id: patient_medical_coverage-addConditionColumn
+        comment: Create column condition to patient_medical_coverage
+        author: mvenere
+        changes:
+          - addColumn:
+              columns:
+                - column:
+                    name: condition_id
+                    type: smallint
+              tableName: patient_medical_coverage

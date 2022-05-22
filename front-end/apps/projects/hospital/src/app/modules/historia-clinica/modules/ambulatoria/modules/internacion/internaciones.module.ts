@@ -14,11 +14,11 @@ import { AlergiasComponent } from './components/alergias/alergias.component';
 // components
 import { AntecedentesFamiliaresComponent } from './components/antecedentes-familiares/antecedentes-familiares.component';
 import { AntecedentesPersonalesComponent } from './components/antecedentes-personales/antecedentes-personales.component';
-import { DiagnosticoPrincipalComponent } from './components/diagnostico-principal/diagnostico-principal.component';
 import { DiagnosticosComponent } from './components/diagnosticos/diagnosticos.component';
 import { InternacionesTableComponent } from './components/internaciones-table/internaciones-table.component';
 import { MedicacionComponent } from './components/medicacion/medicacion.component';
 import { VacunasComponent } from './components/vacunas/vacunas.component';
+import { ElementoDiagnosticoComponent } from './components/elemento-diagnostico/elemento-diagnostico.component';
 // dialogs
 import { AnamnesisDockPopupComponent } from "@historia-clinica/modules/ambulatoria/modules/internacion/dialogs/anamnesis-dock-popup/anamnesis-dock-popup.component";
 import { ChangeMainDiagnosisDockPopupComponent } from './dialogs/change-main-diagnosis-dock-popup/change-main-diagnosis-dock-popup.component';
@@ -26,6 +26,8 @@ import { DiagnosisClinicalEvaluationDockPopupComponent } from './dialogs/diagnos
 import { EpicrisisDockPopupComponent } from './dialogs/epicrisis-dock-popup/epicrisis-dock-popup.component';
 import { EvolutionNoteDockPopupComponent } from './dialogs/evolution-note-dock-popup/evolution-note-dock-popup.component';
 import { MedicalDischargeComponent } from './dialogs/medical-discharge/medical-discharge.component';
+import { DiagnosisCreationEditionComponent } from './dialogs/diagnosis-creation-edition/diagnosis-creation-edition.component';
+import { SelectMainDiagnosisComponent } from './dialogs/select-main-diagnosis/select-main-diagnosis.component';
 
 @NgModule({
 	declarations: [
@@ -38,7 +40,6 @@ import { MedicalDischargeComponent } from './dialogs/medical-discharge/medical-d
 		AlergiasComponent,
 		AntecedentesFamiliaresComponent,
 		AntecedentesPersonalesComponent,
-		DiagnosticoPrincipalComponent,
 		DiagnosticosComponent,
 		InternacionesTableComponent,
 		MedicacionComponent,
@@ -50,6 +51,9 @@ import { MedicalDischargeComponent } from './dialogs/medical-discharge/medical-d
 		EpicrisisDockPopupComponent,
 		EvolutionNoteDockPopupComponent,
 		MedicalDischargeComponent,
+  		ElementoDiagnosticoComponent,
+    	DiagnosisCreationEditionComponent,
+		SelectMainDiagnosisComponent,
 	],
 	imports: [
 		CommonModule,

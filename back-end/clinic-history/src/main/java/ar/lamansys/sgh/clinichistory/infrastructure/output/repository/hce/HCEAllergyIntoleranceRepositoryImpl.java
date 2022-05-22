@@ -38,16 +38,16 @@ public class HCEAllergyIntoleranceRepositoryImpl implements HCEAllergyIntoleranc
                 "ai.start_date, " +
                 "ai.updated_on, " +
                 "row_number() over (partition by ai.snomed_id order by ai.updated_on desc) as rw " +
-                "FROM document d " +
-                "JOIN document_allergy_intolerance dai ON d.id = dai.document_id " +
-                "JOIN allergy_intolerance ai ON dai.allergy_intolerance_id = ai.id " +
+                "FROM {h-schema}document d " +
+                "JOIN {h-schema}document_allergy_intolerance dai ON d.id = dai.document_id " +
+                "JOIN {h-schema}allergy_intolerance ai ON dai.allergy_intolerance_id = ai.id " +
                 "WHERE d.type_id IN (:documentTypes) "+
                 "AND d.status_id = :documentStatusId " +
                 "AND ai.patient_id = :patientId " +
                 ") " +
                 "SELECT t.id AS id, s.sctid AS sctid, s.pt, t.status_id, t.verification_status_id, t.category_id, t.criticality, t.start_date " +
                 "FROM temporal t " +
-                "JOIN snomed s ON t.snomed_id = s.id " +
+                "JOIN {h-schema}snomed s ON t.snomed_id = s.id " +
                 "WHERE rw = 1 AND NOT status_id = :allergyIntoleranceStatus " +
                 "ORDER BY t.updated_on desc ";
 
@@ -87,14 +87,14 @@ public class HCEAllergyIntoleranceRepositoryImpl implements HCEAllergyIntoleranc
 				"ai.start_date, " +
 				"ai.updated_on, " +
 				"row_number() over (partition by ai.snomed_id order by ai.updated_on desc) as rw " +
-				"FROM document d " +
-				"JOIN document_allergy_intolerance dai ON d.id = dai.document_id " +
-				"JOIN allergy_intolerance ai ON dai.allergy_intolerance_id = ai.id " +
+				"FROM {h-schema}document d " +
+				"JOIN {h-schema}document_allergy_intolerance dai ON d.id = dai.document_id " +
+				"JOIN {h-schema}allergy_intolerance ai ON dai.allergy_intolerance_id = ai.id " +
 				"WHERE ai.id IN (:allergyId) "+
 				") " +
 				"SELECT t.id AS id, s.sctid AS sctid, s.pt, t.status_id, t.verification_status_id, t.category_id, t.criticality, t.start_date " +
 				"FROM temporal t " +
-				"JOIN snomed s ON t.snomed_id = s.id " +
+				"JOIN {h-schema}snomed s ON t.snomed_id = s.id " +
 				"WHERE rw = 1 AND NOT status_id = :allergyIntoleranceStatus " +
 				"ORDER BY t.updated_on desc ";
 

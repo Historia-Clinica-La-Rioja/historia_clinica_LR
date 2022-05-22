@@ -3,7 +3,8 @@
 	<div id="layout_header" fxLayout="row" fxLayoutAlign="space-between" fxLayoutGap="5px" fxLayout.lt-md="column">
 		<div fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="5px">
 			<mat-card-header>
-				<img mat-card-md-image mat-card-avatar class="mat-card-patient-image" [src]="decodedPhoto$ | async" onerror="this.src='../../../../../assets/images/empty-profile.png'">
+				<img mat-card-md-image mat-card-avatar class="mat-card-patient-image" [src]="decodedPhoto$ | async"
+					onerror="this.src='../../../../../assets/images/empty-profile.png'">
 				<mat-card-title class="card-style-1">
 					<span id="title" class="mat-card-patient-name">
 						{{viewPatientName()}} {{patient?.lastName}} {{patient?.otherLastNames}}
@@ -15,15 +16,17 @@
 				<mat-card-subtitle>
 					<span id="gender_age" [translate]=viewGenderAge()></span>
 				</mat-card-subtitle>
-				<mat-card-subtitle class="interment-episode" *ngIf="internmentEpisodeProcess?.id && internmentEpisodeProcess?.inProgress">
+				<mat-card-subtitle class="interment-episode"
+					*ngIf="internmentEpisodeProcess?.id && internmentEpisodeProcess?.inProgress">
 					<div class="label-episodes label-internment-episode uppercase">
-						<span class="uppercase" [translate]="'ambulatoria.paciente.card.INTERNMENT_EPISODE_ACTIVE'"></span>
+						<span class="uppercase" [translate]="'ambulatoria.paciente.card.INTERNMENT_EPISODE_ACTIVE'">
+						</span>
 					</div>
 				</mat-card-subtitle>
 				<mat-card-subtitle *ngIf="emergencyCareEpisodeInProgress">
 					<div class="label-episodes label-emergency-care-episode">
-						<span class="uppercase"
-							[translate]="'ambulatoria.paciente.card.EMERGENCY_CARE_EPISODE_ACTIVE'"></span>
+						<span class="uppercase" [translate]="'ambulatoria.paciente.card.EMERGENCY_CARE_EPISODE_ACTIVE'">
+						</span>
 					</div>
 				</mat-card-subtitle>
 			</mat-card-header>

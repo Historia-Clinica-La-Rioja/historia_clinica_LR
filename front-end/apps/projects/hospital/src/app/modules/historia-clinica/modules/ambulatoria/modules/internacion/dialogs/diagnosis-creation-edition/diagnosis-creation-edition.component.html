@@ -1,0 +1,34 @@
+<h2 mat-dialog-title *ngIf="type==='CREATION' else editDiagnosisTitle" [translate]="'internaciones.anamnesis.diagnosticos.ADD'"></h2>
+<ng-template #editDiagnosisTitle>
+	<h2 mat-dialog-title [translate]="'internaciones.anamnesis.diagnosticos.EDIT'"></h2>
+</ng-template>
+<app-concepts-search *ngIf="!diagnosis else completedDiagnosis"
+	[label]="'internaciones.anamnesis.diagnosticos.DIAGNOSIS'" (search)="openSearchDialog($event)">
+</app-concepts-search>
+<form [formGroup]="form">
+	<ng-template #completedDiagnosis>
+		<mat-form-field appearance="outline">
+			<mat-label [translate]="'internaciones.anamnesis.diagnosticos.DIAGNOSIS'">
+			</mat-label>
+			<input matInput type="text" formControlName="snomed" name="snomed" readonly
+				matTooltip="{{ diagnosis.snomed.pt }}" [disabled]="type==='EDITION'">
+			<button *ngIf="type==='CREATION'" id="clear" mat-button matSuffix color="warn" mat-icon-button (click)="resetForm()">
+				<mat-icon>close</mat-icon>
+			</button>
+		</mat-form-field>
+	</ng-template>
+	<div *ngIf="snomedError && !form.valid">
+		<mat-error class="error_message" [translate]="'internaciones.anamnesis.diagnosticos.messages.SNOMED_DIALOG_ERROR'"></mat-error>
+		<br>
+	</div>
+	<mat-form-field appearance="fill">
+		<mat-label [translate]="'internaciones.anamnesis.diagnosticos.VERIFICATION'"></mat-label>
+		<mat-select formControlName="validation" [(value)]="selection">
+			<mat-option [value]="false">{{ 'internaciones.anamnesis.diagnosticos.CONFIRMED' | translate }}</mat-option>
+			<mat-option [value]="true">{{ 'internaciones.anamnesis.diagnosticos.PRESUMPTIVE' | translate }}</mat-option>
+		</mat-select>
+	</mat-form-field>
+</form>
+<div fxLayoutAlign="end center">
+	<button class="uppercase" mat-raised-button color="primary" (click)="saveDiagnosis()">{{ 'internaciones.anamnesis.diagnosticos.SAVE' | translate }}</button>
+</div>

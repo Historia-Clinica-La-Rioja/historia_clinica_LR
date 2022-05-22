@@ -21,6 +21,7 @@ export class ProcedimientosService {
 	private readonly columns: ColumnConfig[];
 	private readonly tableColumnConfig: TableColumnConfig[];
 	private data: any[];
+	private readonly ECL = SnomedECL.PROCEDURE;
 
 	constructor(
 		private readonly formBuilder: FormBuilder,
@@ -118,7 +119,7 @@ export class ProcedimientosService {
 		if (searchValue) {
 			const search: SnomedSemanticSearch = {
 				searchValue,
-				eclFilter: SnomedECL.PROCEDURE
+				eclFilter: this.ECL
 			};
 			this.snomedService.openConceptsSearchDialog(search)
 				.subscribe((selectedConcept: SnomedDto) => this.setConcept(selectedConcept));
@@ -151,6 +152,10 @@ export class ProcedimientosService {
 
 	getTableColumnConfig(): TableColumnConfig[] {
 		return this.tableColumnConfig;
+	}
+
+	getECL(): SnomedECL {
+		return this.ECL;
 	}
 
 }

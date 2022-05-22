@@ -24,6 +24,7 @@ export class AddInmunizationComponent implements OnInit {
 
 	searching = false;
 	snowstormServiceNotAvailable = false;
+	snowstormServiceErrorMessage: string;
 	conceptsResultsTable: TableModel<any>;
 
 	minDate = MIN_DATE;
@@ -88,6 +89,7 @@ export class AddInmunizationComponent implements OnInit {
 					},
 					error => {
 						this.snackBarService.showError('historia-clinica.snowstorm.CONCEPTS_COULD_NOT_BE_OBTAINED');
+						this.snowstormServiceErrorMessage = error.text ? error.text : error.message;
 						this.snowstormServiceNotAvailable = true;
 					}
 				);

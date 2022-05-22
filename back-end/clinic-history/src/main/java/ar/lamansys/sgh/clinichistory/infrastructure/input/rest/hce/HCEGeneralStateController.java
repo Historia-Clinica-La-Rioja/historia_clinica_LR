@@ -263,7 +263,8 @@ public class HCEGeneralStateController {
             @PathVariable(name = "institutionId") Integer institutionId,
             @PathVariable(name = "patientId") Integer patientId) {
         LOG.debug(LOGGING_INPUT, institutionId, patientId);
-        List<HCEPersonalHistoryBo> resultService = hceHealthConditionsService.getActiveProblems(patientId);
+		List<HCEPersonalHistoryBo> activeProblems = hceHealthConditionsService.getActiveProblems(patientId);
+		List<HCEPersonalHistoryBo> resultService = activeProblems;
         List<HCEPersonalHistoryDto> result = hceGeneralStateMapper.toListHCEPersonalHistoryDto(resultService);
         LOG.debug(LOGGING_OUTPUT, result);
         return ResponseEntity.ok().body(result);

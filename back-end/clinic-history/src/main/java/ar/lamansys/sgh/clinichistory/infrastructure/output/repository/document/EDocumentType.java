@@ -16,6 +16,7 @@ public enum EDocumentType {
     ODONTOLOGY(9, "odontología", "odontology_consultation"),
     NURSING(10, "enfermería", "nursing_consultation"),
     COUNTER_REFERENCE(11, "contrarreferencia", "counter_reference"),
+    INDICATION(12,"indicación","indication"),
     NURSING_EVOLUTION_NOTE(13, "nursingEvolutionNote", "nursing_evolution_note");
 
     private Short id;

@@ -54,8 +54,9 @@ public class UserRoleController {
 
     @GetMapping("/has-backoffice-role")
     public ResponseEntity<Boolean> hasBackofficeRole(
+			@PathVariable(name = "institutionId") Integer institutionId,
             @PathVariable(name = "userId") Integer userId){
-        log.debug("Input parameters -> userId={}",userId);
+        log.debug("Input parameters -> institutionId {}, userId {}",institutionId,userId);
         Boolean result = hasBackofficeRole.execute(userId);
         log.debug("Output -> {}", result);
         return ResponseEntity.ok().body(result);

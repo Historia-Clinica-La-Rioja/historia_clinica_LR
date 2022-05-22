@@ -35,17 +35,17 @@ public class HCHMedicationStatementRepositoryImpl implements HCHMedicationStatem
                 "ms.note_id, " +
                 "ms.updated_on, " +
                 "row_number() over (partition by ms.snomed_id order by ms.updated_on desc) as rw " +
-                "from document d " +
-                "join document_medicamention_statement dms on d.id = dms.document_id " +
-                "join medication_statement ms on dms.medication_statement_id = ms.id " +
+                "from {h-schema}document d " +
+                "join {h-schema}document_medicamention_statement dms on d.id = dms.document_id " +
+                "join {h-schema}medication_statement ms on dms.medication_statement_id = ms.id " +
                 "where d.source_id = :internmentEpisodeId " +
                 "and d.source_type_id = " + SourceType.HOSPITALIZATION +" "+
                 "and d.status_id = :documentStatusId " +
                 ") " +
                 "select t.id as id, s.sctid as sctid, s.pt, status_id, n.id as note_id, n.description as note " +
                 "from temporal t " +
-                "left join note n on t.note_id = n.id " +
-                "join snomed s on t.snomed_id = s.id " +
+                "left join {h-schema}note n on t.note_id = n.id " +
+                "join {h-schema}snomed s on t.snomed_id = s.id " +
                 "where rw = 1 and not status_id = :medicationStatusId " +
                 "order by t.updated_on";
 

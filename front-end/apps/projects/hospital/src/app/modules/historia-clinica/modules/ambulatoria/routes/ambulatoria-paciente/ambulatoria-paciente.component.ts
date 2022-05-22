@@ -10,7 +10,7 @@ import { PatientBasicData } from '@presentation/components/patient-card/patient-
 import { MapperService } from '@presentation/services/mapper.service';
 import { DockPopupService } from '@presentation/services/dock-popup.service';
 import { UIPageDto } from '@extensions/extensions-model';
-
+import { EPatientMedicalCoverageCondition } from "@api-rest/api-model";
 import { NuevaConsultaDockPopupComponent } from '../../dialogs/nueva-consulta-dock-popup/nueva-consulta-dock-popup.component';
 import { NuevaConsultaDockPopupEnfermeriaComponent } from '../../dialogs/nueva-consulta-dock-popup-enfermeria/nueva-consulta-dock-popup-enfermeria.component';
 import { DockPopupRef } from '@presentation/services/dock-popup-ref';
@@ -24,7 +24,7 @@ import { ExtensionPatientService } from '@extensions/services/extension-patient.
 import { AdditionalInfo } from '@pacientes/pacientes.model';
 import { OdontogramService } from '@historia-clinica/modules/odontologia/services/odontogram.service';
 import { FieldsToUpdate } from "@historia-clinica/modules/odontologia/components/odontology-consultation-dock-popup/odontology-consultation-dock-popup.component";
-import { anyMatch, pushIfNotExists } from '@core/utils/array.utils';
+import { anyMatch } from '@core/utils/array.utils';
 import { PermissionsService } from '@core/services/permissions.service';
 import { ReferenceService } from '@api-rest/services/reference.service';
 import { MatDialog } from '@angular/material/dialog';
@@ -42,8 +42,12 @@ import { RequestMasterDataService } from '@api-rest/services/request-masterdata.
 import { InternacionPacienteComponent } from "@historia-clinica/modules/ambulatoria/modules/internacion/routes/internacion-paciente/internacion-paciente.component";
 import { InternmentSummaryFacadeService } from "@historia-clinica/modules/ambulatoria/modules/internacion/services/internment-summary-facade.service";
 import { PatientAllergiesService } from '../../services/patient-allergies.service';
+import { AppointmentsService } from '@api-rest/services/appointments.service';
+import { SummaryCoverageInformation } from '../../components/medical-coverage-summary-view/medical-coverage-summary-view.component';
+import { InternmentStateService } from '@api-rest/services/internment-state.service';
 
 const RESUMEN_INDEX = 0;
+const VOLUNTARY_ID = 1;
 
 @Component({
 	selector: 'app-ambulatoria-paciente',
@@ -89,6 +93,11 @@ export class AmbulatoriaPacienteComponent implements OnInit {
 	currentUserIsAllowedToDoAConsultation = false;
 	hasMedicalRole = false;
 	internmentAction: InternmentActions;
+	appointmentConfirmedCoverageInfo: ExternalPatientCoverageDto;
+	private summaryCoverageInfo: SummaryCoverageInformation;
+
+	private mainDiagnosis: any;
+	private diagnosticos: any[];
 	constructor(
 		private readonly route: ActivatedRoute,
 		private readonly patientService: PatientService,
@@ -114,10 +123,14 @@ export class AmbulatoriaPacienteComponent implements OnInit {
 		private viewContainerRef: ViewContainerRef,
 		readonly internmentSummaryFacadeService: InternmentSummaryFacadeService,
 		readonly patientAllergies: PatientAllergiesService,
-
+		private readonly appointmentsService: AppointmentsService,
+		private readonly internmentStateService: InternmentStateService,
 		private readonly requestMasterDataService: RequestMasterDataService,
 
 	) {
+		if (this.router.getCurrentNavigation()?.extras?.state?.appointmentCoverageInfo) {
+			this.summaryCoverageInfo = this.router.getCurrentNavigation().extras.state.appointmentCoverageInfo;
+		}
 		this.route.paramMap.subscribe(
 			(params) => {
 				this.patientId = Number(params.get('idPaciente'));
@@ -145,6 +158,15 @@ export class AmbulatoriaPacienteComponent implements OnInit {
 					(internmentEpisodeProcess: InternmentEpisodeProcessDto) => {
 						this.internmentEpisodeProcess = internmentEpisodeProcess
 						if (this.internmentEpisodeProcess.id && this.internmentEpisodeProcess.inProgress) {
+							if (!this.summaryCoverageInfo) {
+								this.hceGeneralStateService.getInternmentEpisodeMedicalCoverage(this.patientId, this.internmentEpisodeProcess.id).subscribe(
+									(data: ExternalPatientCoverageDto) => this.internmentEpisodeCoverageInfo = data
+								);
+							}
+							this.internmentStateService.getDiagnosesGeneralState(this.internmentEpisodeProcess.id).subscribe(diagnoses => {
+								this.mainDiagnosis = diagnoses.filter(diagnosis => diagnosis.main)[0];
+								this.diagnosticos = diagnoses.filter(diagnosis => !diagnosis.main);
+							});
 							this.hceGeneralStateService.getInternmentEpisodeMedicalCoverage(this.patientId, this.internmentEpisodeProcess.id).subscribe(
 								(data: ExternalPatientCoverageDto) => this.internmentEpisodeCoverageInfo = data);
 							this.internmentSummaryFacadeService.setInternmentEpisodeInformation(internmentEpisodeProcess.id, false);
@@ -167,7 +189,14 @@ export class AmbulatoriaPacienteComponent implements OnInit {
 
 				this.emergencyCareEpisodeSummaryService.getEmergencyCareEpisodeInProgress(this.patientId)
 					.subscribe(emergencyCareEpisodeInProgressDto => this.emergencyCareEpisodeInProgress = emergencyCareEpisodeInProgressDto);
-			});
+
+				if (!this.summaryCoverageInfo) {
+					this.appointmentsService.getCurrentAppointmentMedicalCoverage(this.patientId).subscribe(
+						(info: ExternalPatientCoverageDto) => this.appointmentConfirmedCoverageInfo = info
+					);
+				}
+			}
+		);
 	}
 
 	ngOnInit(): void {
@@ -357,12 +386,23 @@ export class AmbulatoriaPacienteComponent implements OnInit {
 		internmentComponent.instance.patientId = this.patientId;
 
 		if (InternmentActions.anamnesis === internmentActionId) {
-			internmentComponent.instance.openAnamnesis();
+			this.internmentStateService.getDiagnosesGeneralState(this.internmentEpisodeProcess.id).subscribe(diagnoses => {
+				diagnoses.forEach(modifiedDiagnosis => modifiedDiagnosis.presumptive = modifiedDiagnosis.verificationId==='76104008');
+				internmentComponent.instance.diagnosticos = diagnoses;
+				internmentComponent.instance.openAnamnesis();
+			});
 			return;
 		}
 
 		if (InternmentActions.evolutionNote === internmentActionId) {
-			internmentComponent.instance.openEvolutionNote();
+			this.internmentStateService.getDiagnosesGeneralState(this.internmentEpisodeProcess.id).subscribe(diagnoses => {
+				diagnoses.forEach(modifiedDiagnosis => modifiedDiagnosis.presumptive = modifiedDiagnosis.verificationId==='76104008');
+				internmentComponent.instance.mainDiagnosis = diagnoses.filter(diagnosis => diagnosis.main)[0];
+				if (internmentComponent.instance.mainDiagnosis)
+					internmentComponent.instance.mainDiagnosis.isAdded = true;
+				internmentComponent.instance.diagnosticos = diagnoses.filter(diagnosis => !diagnosis.main);
+				internmentComponent.instance.openEvolutionNote();
+			});
 			return;
 		}
 
@@ -374,6 +414,51 @@ export class AmbulatoriaPacienteComponent implements OnInit {
 		if (InternmentActions.medicalDischarge === internmentActionId) {
 			internmentComponent.instance.openMedicalDischarge();
 		}
+	}
+
+	getSummaryCoverageInfo(): SummaryCoverageInformation {
+		if (this.summaryCoverageInfo) {
+			return this.summaryCoverageInfo;
+		}
+
+		let summaryInfo: SummaryCoverageInformation =
+			this.appointmentConfirmedCoverageInfo ?
+				this.mapToSummaryCoverage(this.appointmentConfirmedCoverageInfo) :
+				this.mapToSummaryCoverage(this.internmentEpisodeCoverageInfo);
+
+		return summaryInfo;
+	}
+
+	private mapToSummaryCoverage(patientCoverage: ExternalPatientCoverageDto): SummaryCoverageInformation {
+		if (!patientCoverage) {
+			return null;
+		}
+
+		let summaryInfo: SummaryCoverageInformation = {};
+
+		if (patientCoverage?.medicalCoverage?.name) {
+			summaryInfo.name = patientCoverage.medicalCoverage.name;
+		}
+
+		if (patientCoverage?.affiliateNumber) {
+			summaryInfo.affiliateNumber = patientCoverage.affiliateNumber;
+		}
+
+		if (patientCoverage.medicalCoverage?.plan) {
+			summaryInfo.plan = patientCoverage.medicalCoverage.plan;
+		}
+
+		if (patientCoverage.condition) {
+			summaryInfo.condition = (patientCoverage.condition === VOLUNTARY_ID) ? EPatientMedicalCoverageCondition.VOLUNTARIA : EPatientMedicalCoverageCondition.OBLIGATORIA;
+		}
+
+		return summaryInfo;
+	}
+
+	thereIsAppointmentCovarageInformation(): boolean {
+		if (this.summaryCoverageInfo || this.appointmentConfirmedCoverageInfo)
+			return true;
+		return false;
 	}
 }
 

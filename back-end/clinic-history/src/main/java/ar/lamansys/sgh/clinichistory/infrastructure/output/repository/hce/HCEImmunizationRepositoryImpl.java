@@ -37,9 +37,9 @@ public class HCEImmunizationRepositoryImpl implements HCEImmunizationRepository 
                 "   inm.condition_id, inm.scheme_id, inm.dose, inm.dose_order, inm.institution_id, inm.lot_number, " +
                 "   inm.note_id, inm.institution_info, inm.doctor_info, inm.updated_on, inm.created_by, inm.billable, " +
                 "   row_number() over (partition by inm.snomed_id, inm.condition_id, inm.scheme_id, inm.dose, inm.dose_order, inm.administration_date order by inm.updated_on desc) as rw  " +
-                "   FROM document d " +
-                "   JOIN document_inmunization di on d.id = di.document_id " +
-                "   JOIN inmunization inm on di.inmunization_id = inm.id " +
+                "   FROM {h-schema}document d " +
+                "   JOIN {h-schema}document_inmunization di on d.id = di.document_id " +
+                "   JOIN {h-schema}inmunization inm on di.inmunization_id = inm.id " +
                 "   WHERE d.status_id = :docStatusId " +
                 "   AND d.type_id IN :documentType " +
                 "   AND inm.patient_id = :patientId " +
@@ -49,7 +49,7 @@ public class HCEImmunizationRepositoryImpl implements HCEImmunizationRepository 
                 "t.institution_id, t.condition_id, t.scheme_id, t.dose, t.dose_order,  t.lot_number, n.description, t.created_by," +
                 "t.institution_info, t.doctor_info, t.billable " +
                 "FROM t " +
-                "JOIN snomed s ON snomed_id = s.id " +
+                "JOIN {h-schema}snomed s ON snomed_id = s.id " +
                 "LEFT JOIN note n ON (n.id = t.note_id)" +
                 "WHERE rw = 1 " +
                 "AND status_id <> :immunizationStatusId " +

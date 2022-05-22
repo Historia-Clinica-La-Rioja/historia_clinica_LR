@@ -1,0 +1,56 @@
+@import "projects/hospital/src/assets/styles/mixins";
+
+.title {
+	@include general-font;
+	font-weight: 500;
+	font-size: 16px;
+	line-height: 18.75px;
+	white-space: nowrap;
+}
+
+.no-data {
+	font-weight: 400;
+	font-size: 16px;
+	padding-bottom: 20px;
+}
+
+.label {
+	border-radius: 6px;
+	padding: 3px 8px;
+	font-size: 12px;
+	line-height: 19px;
+	width: 100px;
+	text-align: center;
+}
+
+.blue {
+	background-color: #b0d2f0;
+	color: #1A73E8;
+}
+
+.red {
+	background-color: rgba(255, 163, 163, 0.93);
+	color: #EB5757;
+}
+
+.professional-elapsed-time {
+	font-weight: 400;
+	font-size: 12px;
+}
+
+.extra-info {
+	font-size: 14px;
+	line-height: 22px;
+	.extra-info-title {
+		font-weight: 500;
+	}
+}
+
+.color-grey {
+	color: #a8a8a8;
+}
+
+.content {
+	height: auto;
+	word-break: break-word;
+}

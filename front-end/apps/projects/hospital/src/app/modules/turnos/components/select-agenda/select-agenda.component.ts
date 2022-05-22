@@ -19,7 +19,6 @@ import { DatePickerComponent } from '@presentation/dialogs/date-picker/date-pick
 import { AgendaSearchService, AgendaFilters, AgendaOptionsData } from '../../services/agenda-search.service';
 import { isAfter, parseISO, startOfToday } from 'date-fns';
 import { DatePipeFormat } from '@core/utils/date.utils';
-import { AbstractControl } from '@angular/forms';
 
 @Component({
 	selector: 'app-select-agenda',
@@ -40,6 +39,7 @@ export class SelectAgendaComponent implements OnInit, OnDestroy {
 	filters: AgendaFilters;
 
 	private readonly routePrefix = 'institucion/' + this.contextService.institutionId;
+	private patientId: number;
 
 	constructor(
 		private readonly router: Router,
@@ -61,6 +61,9 @@ export class SelectAgendaComponent implements OnInit, OnDestroy {
 				this.filters = data.filteredBy;
 			}
 		});
+
+		this.route.queryParams.subscribe(qp => this.patientId = Number(qp.idPaciente));
+
 	}
 
 	ngOnDestroy() {
@@ -70,7 +73,11 @@ export class SelectAgendaComponent implements OnInit, OnDestroy {
 	changeAgendaSelected(event: MatOptionSelectionChange, agenda: DiaryListDto): void {
 		if (event.isUserInput) {
 			this.agendaSelected = agenda;
-			this.router.navigate([`agenda/${agenda.id}`], { relativeTo: this.route });
+			if (this.patientId) {
+				this.router.navigate([`agenda/${agenda.id}`], { relativeTo: this.route, queryParams: { idPaciente: this.patientId } });
+			} else {
+				this.router.navigate([`agenda/${agenda.id}`], { relativeTo: this.route });
+			}
 		}
 	}
 
@@ -92,12 +99,12 @@ export class SelectAgendaComponent implements OnInit, OnDestroy {
 		this.activeAgendas = [];
 		if (diaries?.length)
 			diaries.forEach(diary =>
-				isAfter(startOfToday(),parseISO(diary.endDate)) ? this.expiredAgendas.push(diary) : this.activeAgendas.push(diary)
+				isAfter(startOfToday(), parseISO(diary.endDate)) ? this.expiredAgendas.push(diary) : this.activeAgendas.push(diary)
 			);
 	}
 
 	goToEditAgenda(): void {
-		this.router.navigate([`${this.router.url}/editar`]);
+		this.router.navigate([`institucion/${this.contextService.institutionId}/turnos/agenda/${this.agendaSelected.id}/editar`]);
 	}
 
 	deleteAgenda(): void {
@@ -156,6 +163,11 @@ export class SelectAgendaComponent implements OnInit, OnDestroy {
 
 	clear(control: any): void {
 		this.agendaSelected = null;
-		this.router.navigate([`${this.routePrefix}/turnos`]);
+		if (this.patientId) {
+			this.router.navigate([`${this.routePrefix}/turnos`], { queryParams: { idPaciente: this.patientId } });
+		} else {
+			this.router.navigate([`${this.routePrefix}/turnos`]);
+		}
+
 	}
 }

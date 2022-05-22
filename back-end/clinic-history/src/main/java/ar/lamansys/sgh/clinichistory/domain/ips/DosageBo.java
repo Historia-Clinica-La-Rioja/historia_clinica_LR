@@ -3,9 +3,9 @@ package ar.lamansys.sgh.clinichistory.domain.ips;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import ar.lamansys.sgh.clinichistory.domain.ips.EUnitsOfTimeBo;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 @Getter
 @Setter
@@ -20,9 +20,9 @@ public class DosageBo {
 
     private EUnitsOfTimeBo periodUnit;
 
-    private LocalDate startDate;
+    private LocalDateTime startDate;
 
-    private LocalDate endDate;
+    private LocalDateTime endDate;
 
     private LocalDate suspendedStartDate;
 
@@ -30,11 +30,15 @@ public class DosageBo {
 
     private boolean chronic = false;
 
+	private String event;
+
+	private QuantityBo quantity;
+
     public String getPeriodUnit(){
         return periodUnit != null ? periodUnit.getValue() : null;
     }
 
-    public LocalDate getEndDate() {
+    public LocalDateTime getEndDate() {
         if  (endDate != null)
             return endDate;
         return startDate != null && duration != null ?
@@ -42,6 +46,6 @@ public class DosageBo {
     }
 
     public boolean isExpired(){
-        return getEndDate() != null && LocalDate.now().isBefore(getEndDate());
+        return getEndDate() != null && LocalDate.now().isBefore(getEndDate().toLocalDate());
     }
 }

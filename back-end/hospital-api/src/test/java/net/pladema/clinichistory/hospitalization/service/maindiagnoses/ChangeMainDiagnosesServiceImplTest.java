@@ -68,7 +68,8 @@ class ChangeMainDiagnosesServiceImplTest extends UnitRepository {
         changeMainDiagnosesService = new ChangeMainDiagnosesServiceImpl(
                 documentFactory,
                 internmentEpisodeService,
-                fetchHospitalizationHealthConditionState);
+                fetchHospitalizationHealthConditionState,
+				dateTimeProvider);
     }
 
     @Test

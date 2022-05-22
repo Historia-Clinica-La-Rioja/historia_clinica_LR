@@ -24,8 +24,6 @@ public interface InternmentEpisodeMapper {
     @Mapping(target = "bed.room.id", source = "bedId")
     @Mapping(target = "bed.room.roomNumber", source = "roomNumber")
     @Mapping(target = "bed.room.sector.description", source = "sectorDescription")
-    @Mapping(target = "specialty.id", source = "clinicalSpecialtyId")
-    @Mapping(target = "specialty.name", source = "specialty")
     InternmentSummaryDto toInternmentSummaryDto(InternmentSummaryBo internmentSummaryBo);
 
     @Named("toInternmentEpisode")
@@ -34,7 +32,6 @@ public interface InternmentEpisodeMapper {
     @Named("toInternmentEpisodeDto")
     @Mapping(target = "patient.id", source = "patientId")
     @Mapping(target = "bed.id", source = "bedId")
-    @Mapping(target = "specialty.id", source = "clinicalSpecialtyId")
     InternmentEpisodeDto toInternmentEpisodeDto(InternmentEpisode internmentEpisode);
 
     @Named("toInternmentPatientDto")

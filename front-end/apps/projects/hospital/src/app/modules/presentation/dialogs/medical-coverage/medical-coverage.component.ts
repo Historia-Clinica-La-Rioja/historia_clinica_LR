@@ -14,8 +14,9 @@ import { DateFormat, momentFormat, momentParse, newMoment } from '@core/utils/mo
 import { Moment } from 'moment';
 import { MIN_DATE } from "@core/utils/date.utils";
 import { PrivateHealthInsuranceService } from "@api-rest/services/private-health-insurance.service";
-
+import { EPatientMedicalCoverageCondition } from '@api-rest/api-model';
 const DNI_TYPE_ID = 1;
+const VOLUNTARIA = 1;
 @Component({
 	selector: 'app-medical-coverage',
 	templateUrl: './medical-coverage.component.html',
@@ -93,7 +94,8 @@ export class MedicalCoverageComponent implements OnInit {
 		})
 		this.healthInsuranceForm = this.formBuilder.group({
 			healthInsurance: [null, Validators.required],
-			affiliateNumber: []
+			affiliateNumber: [],
+			condition: VOLUNTARIA
 		});
 
 		this.prepagaForm = this.formBuilder.group({
@@ -102,7 +104,8 @@ export class MedicalCoverageComponent implements OnInit {
 			affiliateNumber: [],
 			plan: [],
 			startDate: [],
-			endDate: []
+			endDate: [],
+			condition: VOLUNTARIA
 		});
 		this.prepagaForm.controls.cuit.disable();
 		this.healthInsuranceForm.controls.healthInsurance.valueChanges.subscribe((newValue: string) => {
@@ -152,8 +155,8 @@ export class MedicalCoverageComponent implements OnInit {
 		return [healthInsurance.acronym, healthInsurance.name].filter(Boolean).join(' - ');
 	}
 
-	getPrivateHealthInsuranceText(patientMedicalCoverage: PatientMedicalCoverage): string {
-		return [patientMedicalCoverage.medicalCoverage.name, patientMedicalCoverage.privateHealthInsuranceDetails?.planName].filter(Boolean).join(' / ');
+	getPrivateHealthInsurancePlanText(patientMedicalCoverage: PatientMedicalCoverage): string {
+		return [patientMedicalCoverage.privateHealthInsuranceDetails?.planName, patientMedicalCoverage?.condition].filter(Boolean).join(' | ');
 	}
 
 	getDatesText(patientMedicalCoverage: PatientMedicalCoverage): string {
@@ -173,6 +176,7 @@ export class MedicalCoverageComponent implements OnInit {
 			this.patientMedicalCoverages = this.patientMedicalCoverages.concat(toAdd);
 			formDirective.resetForm();
 			this.healthInsuranceForm.reset();
+			this.healthInsuranceForm.controls.condition.setValue(VOLUNTARIA);
 			this.healthInsuranceToAdd = null;
 		}
 	}
@@ -183,6 +187,7 @@ export class MedicalCoverageComponent implements OnInit {
 			this.patientMedicalCoverages = this.patientMedicalCoverages.concat(toAdd);
 			formDirective.resetForm();
 			this.prepagaForm.reset();
+			this.prepagaForm.controls.condition.setValue(VOLUNTARIA);
 			this.privateHealthInsuranceToAdd = null;
 		}
 	}
@@ -226,7 +231,8 @@ export class MedicalCoverageComponent implements OnInit {
 			affiliateNumber: this.prepagaForm.value.affiliateNumber,
 			validDate: newMoment(),
 			privateHealthInsuranceDetails,
-			active: true
+			active: true,
+			condition: (this.prepagaForm.value.condition == VOLUNTARIA) ? EPatientMedicalCoverageCondition.VOLUNTARIA : EPatientMedicalCoverageCondition.OBLIGATORIA
 		};
 		return toAdd;
 	}
@@ -236,7 +242,8 @@ export class MedicalCoverageComponent implements OnInit {
 			medicalCoverage: this.healthInsuranceToAdd,
 			affiliateNumber: this.healthInsuranceForm.value.affiliateNumber,
 			validDate: newMoment(),
-			active: true
+			active: true,
+			condition: (this.healthInsuranceForm.value.condition == VOLUNTARIA) ? EPatientMedicalCoverageCondition.VOLUNTARIA : EPatientMedicalCoverageCondition.OBLIGATORIA
 		};
 		return toAdd;
 	}
@@ -291,6 +298,7 @@ export interface PatientMedicalCoverage {
 		planName?: string;
 	};
 	active: boolean;
+	condition?: EPatientMedicalCoverageCondition;
 }
 export abstract class MedicalCoverage {
 	id?: number;

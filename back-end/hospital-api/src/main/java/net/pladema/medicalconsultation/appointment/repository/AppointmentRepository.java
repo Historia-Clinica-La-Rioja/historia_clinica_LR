@@ -7,6 +7,7 @@ import net.pladema.medicalconsultation.appointment.repository.domain.Appointment
 import net.pladema.medicalconsultation.appointment.repository.domain.NotifyPatientVo;
 import net.pladema.medicalconsultation.appointment.repository.entity.Appointment;
 import net.pladema.medicalconsultation.appointment.repository.entity.AppointmentState;
+
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -115,6 +116,12 @@ public interface AppointmentRepository extends SGXAuditableEntityJPARepository<A
                                      @Param("appointmentState") Short appointmentState,
                                      @Param("professionalId") Integer professionalId);
 
+	@Transactional(readOnly = true)
+	@Query("SELECT a.patientMedicalCoverageId " +
+			"FROM Appointment AS a " +
+			"WHERE a.id = :appointmentId ")
+	Optional<Integer> getAppointmentMedicalCoverageId(@Param("appointmentId") Integer appointmentId);
+
     @Transactional(readOnly = true)
     @Query( "SELECT NEW net.pladema.medicalconsultation.appointment.repository.domain.NotifyPatientVo(a.id, pp.lastName, pp.firstName, css.sectorId, php.lastName,php.firstName, do.description, do.topic)" +
             "FROM Appointment AS a " +
@@ -141,5 +148,26 @@ public interface AppointmentRepository extends SGXAuditableEntityJPARepository<A
 			"WHERE a.patientId = :patientId AND (d.deleteable.deleted = false OR d.deleteable.deleted is null )" +
 			"AND a.appointmentStateId = " + AppointmentState.ASSIGNED)
 	List<AppointmentAssignedForPatientVo> getAssignedAppointmentsByPatient(@Param("patientId") Integer patientId);
+
+	@Transactional(readOnly = true)
+	@Query( "SELECT a.id " +
+			"FROM Appointment AS a " +
+			"JOIN AppointmentAssn AS aa ON (a.id = aa.pk.appointmentId) " +
+			"JOIN Diary AS d ON (d.id = aa.pk.diaryId )" +
+			"JOIN DoctorsOffice AS do ON (do.id = d.doctorsOfficeId ) " +
+			"JOIN HealthcareProfessional AS hcp ON(d.healthcareProfessionalId = hcp.id) " +
+			"JOIN UserPerson AS up ON(hcp.personId = up.pk.personId) " +
+			"WHERE a.patientId = :patientId " +
+			"AND do.institutionId = :institutionId " +
+			"AND up.pk.userId = :userId " +
+			"AND a.appointmentStateId = " + AppointmentState.CONFIRMED + " " +
+			"AND a.dateTypeId = :currentDate " +
+			"AND a.hour >= :currentTime " +
+			"ORDER BY a.dateTypeId, a.hour ASC ")
+	List<Integer> getConfirmedAppointmentsByPatient(@Param("patientId") Integer patientId,
+													@Param("institutionId") Integer institutionId,
+													@Param("userId") Integer userId,
+													@Param("currentDate") LocalDate currentDate,
+													@Param("currentTime") LocalTime currentTime);
 
 }
