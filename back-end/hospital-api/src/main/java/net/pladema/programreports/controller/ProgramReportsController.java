@@ -3,9 +3,9 @@ package net.pladema.programreports.controller;
 import ar.lamansys.sgx.shared.dates.configuration.LocalDateMapper;
 import ar.lamansys.sgx.shared.reports.util.struct.IWorkbook;
 import net.pladema.programreports.repository.QueryFactoryPR;
-import net.pladema.programreports.service.ExcelServiceEpiI;
+import net.pladema.programreports.service.ExcelServiceEpidemiologiaI;
 
-import net.pladema.programreports.service.ExcelServiceEpiII;
+import net.pladema.programreports.service.ExcelServiceEpidemiologiaII;
 
 import net.pladema.programreports.service.ExcelServiceRecupero;
 
@@ -14,14 +14,12 @@ import org.slf4j.LoggerFactory;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpServletResponse;
 
 import java.io.OutputStream;
-import java.time.LocalDate;
 
 @RestController
 @RequestMapping("programreports")
@@ -31,9 +29,9 @@ public class ProgramReportsController {
 
 	private static final String OUTPUT = "Output -> {}";
 
-	private final ExcelServiceEpiI excelServiceEpiI;
+	private final ExcelServiceEpidemiologiaI excelServiceEpidemiologiaI;
 
-	private final ExcelServiceEpiII excelServiceEpiII;
+	private final ExcelServiceEpidemiologiaII excelServiceEpidemiologiaII;
 
 	private final ExcelServiceRecupero excelServiceRecupero;
 
@@ -42,9 +40,9 @@ public class ProgramReportsController {
 	private final LocalDateMapper localDateMapper;
 
 
-	public ProgramReportsController(ExcelServiceEpiI excelServiceEpiI, ExcelServiceEpiII excelServiceEpiII, ExcelServiceRecupero excelServiceRecupero, QueryFactoryPR queryFactoryPR, LocalDateMapper localDateMapper) {
-		this.excelServiceEpiI = excelServiceEpiI;
-		this.excelServiceEpiII = excelServiceEpiII;
+	public ProgramReportsController(ExcelServiceEpidemiologiaI excelServiceEpiI, ExcelServiceEpidemiologiaII excelServiceEpiII, ExcelServiceEpidemiologiaI excelServiceEpidemiologiaI, ExcelServiceEpidemiologiaII excelServiceEpidemiologiaII, ExcelServiceRecupero excelServiceRecupero, QueryFactoryPR queryFactoryPR, LocalDateMapper localDateMapper) {
+		this.excelServiceEpidemiologiaI = excelServiceEpidemiologiaI;
+		this.excelServiceEpidemiologiaII = excelServiceEpidemiologiaII;
 		this.excelServiceRecupero = excelServiceRecupero;
 		this.queryFactoryPR = queryFactoryPR;
 		this.localDateMapper = localDateMapper;
@@ -54,22 +52,15 @@ public class ProgramReportsController {
 	public @ResponseBody
 	void getMonthlyEpiIExcelReport(
 			@PathVariable Integer institutionId,
-			@RequestParam(value = "fromDate", required = false) String fromDate,
-			@RequestParam(value = "toDate", required = false) String toDate,
-			@RequestParam(value = "clinicalSpecialtyId", required = false) Integer clinicalSpecialtyId,
-			@RequestParam(value = "doctorId", required = false) Integer doctorId,
 			HttpServletResponse response
 	) throws Exception {
 		LOG.debug("Se creará el excel {}", institutionId);
-		LOG.debug("Inputs parameters -> institutionId {}, fromDate {}, toDate{}", institutionId, fromDate, toDate);
+		LOG.debug("Inputs parameters -> institutionId {}, fromDate {}, toDate{}", institutionId);
 
 		String tittle = "Epidemiologia I";
 		String [] headers = new String[]{"Apellido y Nombre", "Codificación", "Fecha de nacimiento", "Sexo", "Fecha", "Departamento", "Domicilio", "CIE10", "Documento", "Diagnóstico"};
 
-		LocalDate startDate = localDateMapper.fromStringToLocalDate(fromDate);
-		LocalDate endDate = localDateMapper.fromStringToLocalDate(toDate);
-
-		IWorkbook wb = this.excelServiceEpiI.buildExcelFromQuery(tittle, headers, this.queryFactoryPR.query(institutionId));
+		IWorkbook wb = this.excelServiceEpidemiologiaI.buildExcelFromQuery(tittle, headers, this.queryFactoryPR.queryEpidemiologiaI(institutionId));
 
 		String filename = tittle + "." + wb.getExtension();
 		response.addHeader("Content-disposition", "attachment;filename=" + filename);
@@ -86,22 +77,15 @@ public class ProgramReportsController {
 	public @ResponseBody
 	void getMonthlyEpiIIExcelReport(
 			@PathVariable Integer institutionId,
-			@RequestParam(value = "fromDate", required = false) String fromDate,
-			@RequestParam(value = "toDate", required = false) String toDate,
-			@RequestParam(value = "clinicalSpecialtyId", required = false) Integer clinicalSpecialtyId,
-			@RequestParam(value = "doctorId", required = false) Integer doctorId,
 			HttpServletResponse response
 	) throws Exception {
 		LOG.debug("Se creará el excel {}", institutionId);
-		LOG.debug("Inputs parameters -> institutionId {}, fromDate {}, toDate{}", institutionId, fromDate, toDate);
+		LOG.debug("Inputs parameters -> institutionId {}, fromDate {}, toDate{}", institutionId);
 
 		String tittle = "Epidemiologia II";
 		String [] headers = new String[]{"Diagnostico/Codigo", "Grupo", "Total"};
 
-		LocalDate startDate = localDateMapper.fromStringToLocalDate(fromDate);
-		LocalDate endDate = localDateMapper.fromStringToLocalDate(toDate);
-
-		IWorkbook wb = this.excelServiceEpiII.buildExcelFromQuery(tittle, headers, this.queryFactoryPR.queryII(institutionId));
+		IWorkbook wb = this.excelServiceEpidemiologiaII.buildExcelFromQuery(tittle, headers, this.queryFactoryPR.queryEpidemiologiaII(institutionId));
 
 		String filename = tittle + "." + wb.getExtension();
 		response.addHeader("Content-disposition", "attachment;filename=" + filename);
@@ -118,14 +102,10 @@ public class ProgramReportsController {
 	public @ResponseBody
 	void getMonthlyRecuperoExcelReport(
 			@PathVariable Integer institutionId,
-			@RequestParam(value = "fromDate", required = false) String fromDate,
-			@RequestParam(value = "toDate", required = false) String toDate,
-			@RequestParam(value = "clinicalSpecialtyId", required = false) Integer clinicalSpecialtyId,
-			@RequestParam(value = "doctorId", required = false) Integer doctorId,
 			HttpServletResponse response
 	) throws Exception {
 		LOG.debug("Se creará el excel {}", institutionId);
-		LOG.debug("Inputs parameters -> institutionId {}, fromDate {}, toDate{}", institutionId, fromDate, toDate);
+		LOG.debug("Inputs parameters -> institutionId {}, fromDate {}, toDate{}", institutionId);
 
 		String tittle = "Recupero";
 		String [] headers = new String[]{"Unidad Operativa", "Prestador", "DNI", "Fecha de atención", "Cons.N°", "DNI Paciente", "Nombre Paciente", "Sexo", "Genero",
@@ -134,10 +114,7 @@ public class ProgramReportsController {
 				"Frecuencia cardíaca", "Presión respiratoria", "Saturación de hemoglobina con oxígeno", "Altura", "Peso", "Indice de masa corporal", "Motivos",
 				"Procedimientos", "Problemas", "Medicación", "Evolución"};
 
-		LocalDate startDate = localDateMapper.fromStringToLocalDate(fromDate);
-		LocalDate endDate = localDateMapper.fromStringToLocalDate(toDate);
-
-		IWorkbook wb = this.excelServiceRecupero.buildExcelFromQuery(tittle, headers, this.queryFactoryPR.queryIII(institutionId));
+		IWorkbook wb = this.excelServiceRecupero.buildExcelFromQuery(tittle, headers, this.queryFactoryPR.queryRecupero(institutionId));
 
 		String filename = tittle + "." + wb.getExtension();
 		response.addHeader("Content-disposition", "attachment;filename=" + filename);
@@ -154,14 +131,10 @@ public class ProgramReportsController {
 	public @ResponseBody
 	void getMonthlySumarExcelReport(
 			@PathVariable Integer institutionId,
-			@RequestParam(value = "fromDate", required = false) String fromDate,
-			@RequestParam(value = "toDate", required = false) String toDate,
-			@RequestParam(value = "clinicalSpecialtyId", required = false) Integer clinicalSpecialtyId,
-			@RequestParam(value = "doctorId", required = false) Integer doctorId,
 			HttpServletResponse response
 	) throws Exception {
 		LOG.debug("Se creará el excel {}", institutionId);
-		LOG.debug("Inputs parameters -> institutionId {}, fromDate {}, toDate{}", institutionId, fromDate, toDate);
+		LOG.debug("Inputs parameters -> institutionId {}, fromDate {}, toDate{}", institutionId);
 
 		String tittle = "Recupero - Sumar";
 		String [] headers = new String[]{"Unidad Operativa", "Prestador", "DNI", "Fecha de atención", "Cons.N°", "DNI Paciente", "Nombre Paciente", "Sexo", "Genero",
@@ -170,10 +143,7 @@ public class ProgramReportsController {
 				"Frecuencia cardíaca", "Presión respiratoria", "Saturación de hemoglobina con oxígeno", "Altura", "Peso", "Indice de masa corporal", "Motivos",
 				"Procedimientos", "Problemas", "Medicación", "Evolución"};
 
-		LocalDate startDate = localDateMapper.fromStringToLocalDate(fromDate);
-		LocalDate endDate = localDateMapper.fromStringToLocalDate(toDate);
-
-		IWorkbook wb = this.excelServiceRecupero.buildExcelFromQuery(tittle, headers, this.queryFactoryPR.queryIV(institutionId));
+		IWorkbook wb = this.excelServiceRecupero.buildExcelFromQuery(tittle, headers, this.queryFactoryPR.querySumar(institutionId));
 
 		String filename = tittle + "." + wb.getExtension();
 		response.addHeader("Content-disposition", "attachment;filename=" + filename);

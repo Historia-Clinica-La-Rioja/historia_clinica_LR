@@ -8,7 +8,7 @@ import ar.lamansys.sgx.shared.reports.util.struct.IRow;
 import ar.lamansys.sgx.shared.reports.util.struct.ISheet;
 import ar.lamansys.sgx.shared.reports.util.struct.IWorkbook;
 import net.pladema.programreports.repository.ConsultationDetailEpiII;
-import net.pladema.programreports.service.ExcelServiceEpiII;
+import net.pladema.programreports.service.ExcelServiceEpidemiologiaII;
 
 import org.springframework.stereotype.Service;
 
@@ -19,7 +19,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
 
 @Service
-public class EpiIIExcelServiceImpl implements ExcelServiceEpiII {
+public class EpiIIExcelServiceImpl implements ExcelServiceEpidemiologiaII {
 
 	private ICellStyle basicStyle;
 	private ICellStyle titleStyle;
