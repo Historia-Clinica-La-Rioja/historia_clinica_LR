@@ -834,6 +834,7 @@ export interface DocumentSearchDto extends Serializable {
     creator: ResponsibleDoctorDto;
     diagnosis: string[];
     documentType: string;
+    editedOn: DateTimeDto;
     id: number;
     mainDiagnosis: string;
     message: string;

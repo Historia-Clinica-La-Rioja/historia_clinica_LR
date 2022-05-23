@@ -12,6 +12,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import javax.validation.constraints.Null;
+
+import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -59,8 +61,9 @@ public class DocumentSearchServiceImpl implements DocumentSearchService {
         //No results Message
         String infoMessage = allDocuments.isEmpty() ? structuredQuery.noResultMessage() : Strings.EMPTY;
         List<DocumentSearchBo> documentsBo = allDocuments.stream().map(DocumentSearchBo::new).collect(Collectors.toList());
-
-        DocumentHistoricBo result = new DocumentHistoricBo(documentsBo, infoMessage);
+		setEditedOn(documentsBo);
+		documentsBo.sort(Comparator.comparing(DocumentSearchBo::getCreatedOn).reversed());
+		DocumentHistoricBo result = new DocumentHistoricBo(documentsBo, infoMessage);
         LOG.debug(OUTPUT, result);
         return result;
     }
@@ -71,4 +74,15 @@ public class DocumentSearchServiceImpl implements DocumentSearchService {
         }
         return documents;
     }
+
+	private void setEditedOn(List<DocumentSearchBo> documentsBo) {
+		documentsBo.forEach(d -> {
+			if (d.getInitialDocumentId() != null) {
+				d.setEditedOn(d.getCreatedOn());
+				documentRepository.findById(d.getInitialDocumentId()).ifPresent(old -> d.setCreatedOn(old.getCreatedOn()));
+			}
+		});
+	}
+
+
  }
