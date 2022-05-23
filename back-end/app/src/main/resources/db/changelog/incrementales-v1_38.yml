@@ -103,5 +103,16 @@ databaseChangeLog:
                 SET identification_number = TRIM('0' FROM identification_number)
                 WHERE identification_number LIKE '0%'
 
+    - changeSet:
+        id: add-new-gender_indication_type-concepts
+        comment: Agrega género no binario
+        author: lbergottini
+        context: "!schema-only"
+        changes:
+          - sql:
+              sql: |-
+                INSERT INTO gender(id,description) VALUES ('3','X') ON CONFLICT DO NOTHING;
+
+
 
 
