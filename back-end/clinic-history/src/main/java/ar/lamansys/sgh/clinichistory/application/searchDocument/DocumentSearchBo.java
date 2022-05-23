@@ -1,6 +1,7 @@
 package ar.lamansys.sgh.clinichistory.application.searchDocument;
 
 import ar.lamansys.sgh.clinichistory.domain.document.AuthorBo;
+import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.DocumentStatus;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.ProcedureReduced;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.searchdocuments.DocumentSearchVo;
 import lombok.*;
@@ -35,6 +36,8 @@ public class DocumentSearchBo {
 	private Long initialDocumentId;
 
 	private LocalDateTime editedOn;
+    
+	private boolean confirmed;
 
     public DocumentSearchBo(DocumentSearchVo source) {
         this.id = source.getId();
@@ -47,5 +50,6 @@ public class DocumentSearchBo {
         this.createdOn = source.getCreatedOn();
         this.documentType = source.getDocumentType();
 		this.initialDocumentId = source.getInitDocumentId();
+		this.confirmed = source.isFinal();
     }
 }

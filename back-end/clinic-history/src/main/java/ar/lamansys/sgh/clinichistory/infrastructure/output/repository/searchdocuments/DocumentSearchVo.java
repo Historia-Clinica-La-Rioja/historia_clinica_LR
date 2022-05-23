@@ -1,5 +1,6 @@
 package ar.lamansys.sgh.clinichistory.infrastructure.output.repository.searchdocuments;
 
+import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.DocumentStatus;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.ProcedureReduced;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -35,10 +36,12 @@ public class DocumentSearchVo {
 
 	private Long initDocumentId;
 
+	private String statusId;
+
 
     public DocumentSearchVo(Long id, DocumentObservationsVo notes, LocalDateTime createdOn, Integer creatorUserId,
                             String firstName, String lastName, List<String> diagnosis, String mainDiagnosis,
-							String documentType, String nameSelfDetermination, Long initDocumentId){
+							String documentType, String nameSelfDetermination, Long initDocumentId, String statusId){
         this.id = id;
         this.notes = notes;
         this.createdOn = createdOn;
@@ -47,5 +50,11 @@ public class DocumentSearchVo {
         this.mainDiagnosis = mainDiagnosis;
         this.documentType = documentType;
 		this.initDocumentId = initDocumentId;
+		this.statusId = statusId;
     }
+
+	public boolean isFinal () {
+		return statusId.equals(DocumentStatus.FINAL);
+	}
+
 }

@@ -51,7 +51,8 @@ public class DocumentSearchQuery {
                 "illnessnote.description as illnessNote, \n" +
                 "indicationnote.description as indicationNote, \n" +
 				"personextended.nameSelfDetermination, \n" +
-				"document.initialDocumentId as initialDocumentId \n");
+				"document.initialDocumentId as initialDocumentId, \n" +
+				"document.statusId as statusId \n");
     }
 
     public QueryPart from() {
@@ -120,7 +121,8 @@ public class DocumentSearchQuery {
                     mapMainDiagnosis(v),
 					(String)tuple[9],
 					(String)tuple[17],
-					(Long) tuple[18]));
+					(Long) tuple[18],
+					(String)tuple[19]));
 
         });
         return result;

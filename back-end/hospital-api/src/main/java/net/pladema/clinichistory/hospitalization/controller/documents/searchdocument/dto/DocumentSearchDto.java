@@ -35,5 +35,7 @@ public class DocumentSearchDto implements Serializable {
     private String documentType;
 
 	private DateTimeDto editedOn;
+    
+	private boolean confirmed;
 
 }

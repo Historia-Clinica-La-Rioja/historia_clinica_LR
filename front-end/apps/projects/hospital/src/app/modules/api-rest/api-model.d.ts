@@ -832,6 +832,7 @@ export interface DocumentReduceInfoDto extends Serializable {
 }
 
 export interface DocumentSearchDto extends Serializable {
+    confirmed: boolean;
     createdOn: DateTimeDto;
     creator: ResponsibleDoctorDto;
     diagnosis: string[];
