@@ -19,7 +19,7 @@ public class QueryFactoryPR {
 	}
 
 	@SuppressWarnings("unchecked")
-	public List<ConsultationDetailEpiI> query(Integer institutionId){
+	public List<ConsultationDetailEpiI> queryEpidemiologiaI(Integer institutionId){
 		Query query = entityManager.createNamedQuery("ProgramReports.ConsultationDetailEpiI");
 		query.setParameter("institutionId", institutionId);
 		List<ConsultationDetailEpiI> data = query.getResultList();
@@ -27,7 +27,7 @@ public class QueryFactoryPR {
 	}
 
 	@SuppressWarnings("unchecked")
-	public List<ConsultationDetailEpiII> queryII(Integer institutionId){
+	public List<ConsultationDetailEpiII> queryEpidemiologiaII(Integer institutionId){
 		Query query = entityManager.createNamedQuery("ProgramReports.ConsultationDetailEpiII");
 		query.setParameter("institutionId", institutionId);
 		List<ConsultationDetailEpiII> data = query.getResultList();
@@ -35,7 +35,7 @@ public class QueryFactoryPR {
 	}
 
 	@SuppressWarnings("unchecked")
-	public List<ConsultationDetailRecupero> queryIII(Integer institutionId){
+	public List<ConsultationDetailRecupero> queryRecupero(Integer institutionId){
 		Query query = entityManager.createNamedQuery("ProgramReports.ConsultationDetailRecupero");
 		query.setParameter("institutionId", institutionId);
 		List<ConsultationDetailRecupero> data = query.getResultList();
@@ -43,7 +43,7 @@ public class QueryFactoryPR {
 	}
 
 	@SuppressWarnings("unchecked")
-	public List<ConsultationDetailRecupero> queryIV(Integer institutionId){
+	public List<ConsultationDetailRecupero> querySumar(Integer institutionId){
 		Query query = entityManager.createNamedQuery("ProgramReports.ConsultationDetailSumar");
 		query.setParameter("institutionId", institutionId);
 		List<ConsultationDetailRecupero> data = query.getResultList();
