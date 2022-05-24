@@ -37,9 +37,10 @@ public interface AppointmentRepository extends SGXAuditableEntityJPARepository<A
     List<AppointmentDiaryVo> getAppointmentsByDiaries(@Param("diaryIds") List<Integer> diaryIds);
     
     @Transactional(readOnly = true)
-    @Query( "SELECT NEW net.pladema.medicalconsultation.appointment.repository.domain.AppointmentVo(aa.pk.diaryId, a, doh.medicalAttentionTypeId, has.reason )" +
+    @Query( "SELECT NEW net.pladema.medicalconsultation.appointment.repository.domain.AppointmentVo(aa.pk.diaryId, a, doh.medicalAttentionTypeId, has.reason, ao.observation, ao.createdBy)" +
             "FROM Appointment AS a " +
             "JOIN AppointmentAssn AS aa ON (a.id = aa.pk.appointmentId) " +
+			"LEFT JOIN AppointmentObservation AS ao ON (a.id = ao.appointmentId) " +
             "LEFT JOIN HistoricAppointmentState AS has ON (a.id = has.pk.appointmentId) " +
             "JOIN Diary d ON (d.id = aa.pk.diaryId )" +
 			"JOIN DiaryOpeningHours  AS doh ON (doh.pk.diaryId = d.id) " +
@@ -111,6 +112,16 @@ public interface AppointmentRepository extends SGXAuditableEntityJPARepository<A
 						   @Param("phonePrefix") String phonePrefix,
                            @Param("phoneNumber") String phoneNumber,
                            @Param("userId") Integer userId);
+
+	@Transactional
+	@Modifying
+	@Query( "UPDATE AppointmentObservation  AS ao " +
+			"SET ao.observation = :observation, " +
+			"ao.createdBy = :observationBy " +
+			"WHERE ao.appointmentId = :appointmentId ")
+	void updateObservation(@Param("appointmentId") Integer appointmentId,
+						   @Param("observation") String observation,
+						   @Param("observationBy") Integer observationBy);
 
     @Transactional(readOnly = true)
     @Query(name = "Appointment.medicalCoverage")
