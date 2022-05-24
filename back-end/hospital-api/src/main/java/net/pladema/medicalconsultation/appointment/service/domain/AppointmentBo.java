@@ -50,6 +50,10 @@ public class AppointmentBo {
 
 	private Integer snomedId;
 
+	private String observation;
+
+	private Integer observationBy;
+
 	public static AppointmentBo fromAppointmentDiaryVo(AppointmentDiaryVo appointmentDiaryVo) {
 		return AppointmentBo.builder()
 				.id(appointmentDiaryVo.getId())
@@ -78,6 +82,8 @@ public class AppointmentBo {
 				.medicalAttentionTypeId(appointmentVo.getMedicalAttentionTypeId())
 				.stateChangeReason(appointmentVo.getStateChangeReason())
 				.diaryId(appointmentVo.getDiaryId())
+				.observation(appointmentVo.getObservation())
+				.observationBy(appointmentVo.getObservationBy())
 				.build();
 	}
 
