@@ -34,7 +34,7 @@ export class CreateOutpatientOrderComponent implements OnInit {
 	orderStudiesService: OrderStudiesService;
 
 	constructor(
-		@Inject(MAT_DIALOG_DATA) public data: { patientId: number },
+		@Inject(MAT_DIALOG_DATA) public data: { patientId: number, healthProblems },
 		public dialogRef: MatDialogRef<CreateOutpatientOrderComponent>,
 		private readonly formBuilder: FormBuilder,
 		private readonly requestMasterDataService: RequestMasterDataService,
@@ -58,15 +58,7 @@ export class CreateOutpatientOrderComponent implements OnInit {
 			this.studyCategoryOptions = categories;
 		});
 
-		this.hceGeneralStateService.getActiveProblems(this.data.patientId).subscribe((activeProblems: HCEPersonalHistoryDto[]) => {
-			const activeProblemsList = activeProblems.map(problem => ({id: problem.id, description: problem.snomed.pt, sctId: problem.snomed.sctid}));
-
-			this.hceGeneralStateService.getChronicConditions(this.data.patientId).subscribe((chronicProblems: HCEPersonalHistoryDto[]) => {
-				const chronicProblemsList = chronicProblems.map(problem => ({id: problem.id, description: problem.snomed.pt,  sctId: problem.snomed.sctid}));
-				this.healthProblemOptions = activeProblemsList.concat(chronicProblemsList);
-			});
-
-		});
+		this.healthProblemOptions = this.data.healthProblems;
 	}
 
 	handleStudySelected(study) {

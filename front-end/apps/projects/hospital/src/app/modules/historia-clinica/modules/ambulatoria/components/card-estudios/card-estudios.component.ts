@@ -1,7 +1,7 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { AbstractControl, FormBuilder, FormGroup } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
-import { DiagnosticReportInfoDto } from '@api-rest/api-model';
+import { DiagnosticReportInfoDto, HCEPersonalHistoryDto } from '@api-rest/api-model';
 import { RequestMasterDataService } from '@api-rest/services/request-masterdata.service';
 import { ESTUDIOS } from '@historia-clinica/constants/summaries';
 import { STUDY_STATUS } from '../../constants/prescripciones-masterdata';
@@ -12,9 +12,10 @@ import { pushIfNotExists } from '@core/utils/array.utils';
 import { PrescripcionesService, PrescriptionTypes } from '../../services/prescripciones.service';
 import { CreateInternmentOrderComponent, NewInternmentOrder } from "@historia-clinica/modules/ambulatoria/dialogs/create-internment-order/create-internment-order.component";
 import { InternmentPatientService } from "@api-rest/services/internment-patient.service";
-import { DiagnosisRequiredComponent } from "@historia-clinica/modules/ambulatoria/dialogs/diagnosis-required/diagnosis-required.component";
+import { OperationDeniedComponent } from "@historia-clinica/modules/ambulatoria/dialogs/diagnosis-required/operation-denied.component";
 import { InternmentStateService } from "@api-rest/services/internment-state.service";
 import { CreateOutpatientOrderComponent, NewOutpatientOrder } from "@historia-clinica/modules/ambulatoria/dialogs/create-outpatient-order/create-outpatient-order.component";
+import { HceGeneralStateService } from "@api-rest/services/hce-general-state.service";
 
 @Component({
 	selector: 'app-card-estudios',
@@ -64,7 +65,8 @@ export class CardEstudiosComponent implements OnInit {
 		private readonly formBuilder: FormBuilder,
 		private readonly internmentPatientService: InternmentPatientService,
 		private readonly internmentStateService: InternmentStateService,
-		private readonly translateService: TranslateService
+		private readonly translateService: TranslateService,
+		private readonly hceGeneralStateService: HceGeneralStateService,
 	) { }
 
 	ngOnInit(): void {
@@ -108,7 +110,10 @@ export class CardEstudiosComponent implements OnInit {
 				this.openCreateInternmentOrderDialog();
 			}
 			else {
-				this.dialog.open(DiagnosisRequiredComponent, { width: '35%' });
+				this.dialog.open(OperationDeniedComponent, {
+					width: '35%',
+					data: { message : 'ambulatoria.paciente.internment-order.diagnosis-required-dialog.MESSAGE' }
+				});
 			}
 		})
 	}
@@ -127,11 +132,35 @@ export class CardEstudiosComponent implements OnInit {
 		});
 	}
 
-	openCreateOutpatientOrderDialog() {
+	openNewOutpatientOrderDialog() {
+		this.hceGeneralStateService.getActiveProblems(this.patientId).subscribe((activeProblems: HCEPersonalHistoryDto[]) => {
+			const activeProblemsList = activeProblems.map(problem => ({id: problem.id, description: problem.snomed.pt, sctId: problem.snomed.sctid}));
+
+			this.hceGeneralStateService.getChronicConditions(this.patientId).subscribe((chronicProblems: HCEPersonalHistoryDto[]) => {
+				const chronicProblemsList = chronicProblems.map(problem => ({id: problem.id, description: problem.snomed.pt,  sctId: problem.snomed.sctid}));
+				const healthProblems = activeProblemsList.concat(chronicProblemsList);
+
+				if (healthProblems.length) {
+					this.openCreateOutpatientOrderDialog(healthProblems);
+				}
+				else {
+					this.dialog.open(OperationDeniedComponent, {
+						width: '35%',
+						data: { message : 'ambulatoria.paciente.outpatient-order.problem-required-dialog.MESSAGE' }
+					});
+				}
+
+			});
+
+		});
+
+	}
+
+	openCreateOutpatientOrderDialog(healthProblems) {
 		const newOrderComponent = this.dialog.open(CreateOutpatientOrderComponent,
 			{
 				width: '28%',
-				data: { patientId: this.patientId },
+				data: { patientId: this.patientId, healthProblems },
 			});
 
 		newOrderComponent.afterClosed().subscribe((newOutpatientOrder: NewOutpatientOrder) => {
