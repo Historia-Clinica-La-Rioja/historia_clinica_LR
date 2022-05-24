@@ -551,7 +551,7 @@
 					"MESSAGE" : "El episodio de internación debe tener un diagnóstico asociado"
 				},
 				"create-order-dialog" : {
-					"TITLE": "Nueva orden",
+					"TITLE": "Nueva orden de Internación",
 					"CATEGORY": "Categoría del estudio",
 					"STUDY": "Nombre del estudio",
 					"HEALTH_PROBLEM": "Diagnóstico asociado",
@@ -561,7 +561,25 @@
 					"ADD_STUDY": "+ Agregar otro estudio",
 					"ADD_STUDY_DIALOG_TITLE": "Agregar otro estudio",
 					"STUDY_REPEATED": "El estudio seleccionado ya está presente en la orden",
-                    "CONFIRM_ORDER": "Finalizar orden"
+					"CONFIRM_ORDER": "Finalizar orden"
+				}
+			},
+			"outpatient-order" : {
+				"problem-required-dialog" : {
+					"MESSAGE" : "El paciente debe poseer un problema activo o crónico al cual asociar la orden"
+				},
+				"create-order-dialog" : {
+					"TITLE": "Nueva orden de Ambulatorio",
+					"CATEGORY": "Categoría del estudio",
+					"STUDY": "Nombre del estudio",
+					"HEALTH_PROBLEM": "Problema",
+					"NOTES": "Observaciones",
+					"NEXT_BUTTON": "Agregar",
+					"TEMPLATE_DETAIL": "Incluye: {{concepts}}.",
+					"ADD_STUDY": "+ Agregar otro estudio",
+					"ADD_STUDY_DIALOG_TITLE": "Agregar otro estudio",
+					"STUDY_REPEATED": "El estudio seleccionado ya está presente en la orden",
+					"CONFIRM_ORDER": "Finalizar orden"
 				}
 			}
 		},

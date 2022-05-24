@@ -1,5 +1,5 @@
 <div mat-dialog-title fxLayout="row" fxLayoutAlign="space-between">
-	<div class="mat-h2"> {{'ambulatoria.paciente.internment-order.create-order-dialog.TITLE' | translate}} </div>
+	<div class="mat-h2"> {{'ambulatoria.paciente.outpatient-order.create-order-dialog.TITLE' | translate}} </div>
 	<button mat-icon-button (click)="dialogRef.close();">
 		<mat-icon>close</mat-icon>
 	</button>
@@ -11,7 +11,7 @@
 		<!-- CATEGORY SELECTION -->
 
 		<mat-form-field appearance="outline" class="full-width">
-			<mat-label>{{'ambulatoria.paciente.internment-order.create-order-dialog.CATEGORY' | translate}}</mat-label>
+			<mat-label>{{'ambulatoria.paciente.outpatient-order.create-order-dialog.CATEGORY' | translate}}</mat-label>
 			<mat-select formControlName="studyCategory">
 				<mat-option *ngFor="let studyCategory of studyCategoryOptions" [value]="studyCategory.id">
 					{{studyCategory.description | translate}}
@@ -23,9 +23,9 @@
 
 		<app-template-concept-typeahead-search
 			*ngIf="!selectedStudy else studySelectedField"
-			placeholder="{{'ambulatoria.paciente.internment-order.create-order-dialog.STUDY' | translate}}"
-			[ecl]="this.ecl"
+			placeholder="{{'ambulatoria.paciente.outpatient-order.create-order-dialog.STUDY' | translate}}"
 			[debounceTime]="0"
+			[ecl]="this.ecl"
 			(optionSelected)="handleStudySelected($event)">
 		</app-template-concept-typeahead-search>
 
@@ -33,7 +33,7 @@
 
 			<mat-form-field appearance="outline" class="full-width">
 				<mat-label>
-					{{'ambulatoria.paciente.internment-order.create-order-dialog.STUDY' | translate}}
+					{{'ambulatoria.paciente.outpatient-order.create-order-dialog.STUDY' | translate}}
 				</mat-label>
 				<input formControlName="studySelection" matInput type="text" readonly matTooltip="{{ this.getStudyDisplayName() }}">
 				<button mat-button matSuffix color="warn" mat-icon-button (click)="resetStudySelector()">
@@ -43,17 +43,17 @@
 
 			<div id="template-included-concepts" *ngIf="selectedStudyIsTemplate()">
 				<mat-label class="detail-text"
-						   translate="ambulatoria.paciente.internment-order.create-order-dialog.TEMPLATE_DETAIL"
+						   translate="ambulatoria.paciente.outpatient-order.create-order-dialog.TEMPLATE_DETAIL"
 						   [translateParams]="{concepts: getTemplateIncludedConceptsDisplayText()}">
 				</mat-label>
 			</div>
 
 		</ng-template>
 
-		<!-- DIAGNOSIS SELECTION -->
+		<!-- HEALTH PROBLEM SELECTION -->
 
 		<mat-form-field appearance="outline" class="full-width">
-			<mat-label> {{'ambulatoria.paciente.internment-order.create-order-dialog.HEALTH_PROBLEM' | translate}} </mat-label>
+			<mat-label> {{'ambulatoria.paciente.outpatient-order.create-order-dialog.HEALTH_PROBLEM' | translate}} </mat-label>
 			<mat-select formControlName="healthProblem">
 				<mat-option *ngFor="let healthProblem of healthProblemOptions" [value]="healthProblem">
 					{{ healthProblem.description | translate }}
@@ -64,7 +64,7 @@
 		<!-- NOTES TEXT FIELD -->
 
 		<mat-form-field appearance="outline" class="full-width">
-			<mat-label> {{'ambulatoria.paciente.internment-order.create-order-dialog.NOTES' | translate}} </mat-label>
+			<mat-label> {{'ambulatoria.paciente.outpatient-order.create-order-dialog.NOTES' | translate}} </mat-label>
 			<textarea matInput type="text" id="notes" formControlName="notes"></textarea>
 			<mat-error *ngIf="hasError(this.form, 'maxlength', 'notes')" translate="forms.MAX_LENGTH_ERROR"
 					   [translateParams]="{max: TEXT_AREA_MAX_LENGTH}">
@@ -75,7 +75,7 @@
 
 		<mat-dialog-actions class="dialog-actions" fxLayout="row" fxLayoutAlign="end start">
 			<button mat-flat-button color="primary" [disabled]="!this.form.valid" (click)="goToConfirmationStep()">
-				<span class="uppercase"> {{'ambulatoria.paciente.internment-order.create-order-dialog.NEXT_BUTTON' | translate}} </span>
+				<span class="uppercase"> {{'ambulatoria.paciente.outpatient-order.create-order-dialog.NEXT_BUTTON' | translate}} </span>
 			</button>
 		</mat-dialog-actions>
 
@@ -102,7 +102,7 @@
 
 	<div>
 		<button class="color-primary bold" mat-button type="button" (click)="openAddAnotherStudyDialog()">
-			{{'ambulatoria.paciente.internment-order.create-order-dialog.ADD_STUDY' | translate}}
+			{{'ambulatoria.paciente.outpatient-order.create-order-dialog.ADD_STUDY' | translate}}
 		</button>
 	</div>
 
@@ -119,11 +119,9 @@
 	<mat-dialog-actions class="dialog-actions" fxLayout="row" fxLayoutAlign="end start">
 
 		<button mat-flat-button color="primary" (click)="confirmOrder()">
-			<span class="uppercase"> {{'ambulatoria.paciente.internment-order.create-order-dialog.CONFIRM_ORDER' | translate}} </span>
+			<span class="uppercase"> {{'ambulatoria.paciente.outpatient-order.create-order-dialog.CONFIRM_ORDER' | translate}} </span>
 		</button>
 
 	</mat-dialog-actions>
 
 </ng-template>
-
-

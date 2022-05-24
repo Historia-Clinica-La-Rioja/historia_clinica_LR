@@ -3,7 +3,7 @@ import { SnomedECL } from "@api-rest/api-model";
 import { FormControl } from "@angular/forms";
 import { Observable, of } from "rxjs";
 import { SnowstormService } from "@api-rest/services/snowstorm.service";
-import { debounceTime, distinctUntilChanged, map, startWith, switchMap } from "rxjs/operators";
+import { debounceTime, distinctUntilChanged, map, mergeMap, startWith } from "rxjs/operators";
 import { ContextService } from "@core/services/context.service";
 
 @Component({
@@ -36,7 +36,7 @@ export class TemplateConceptTypeaheadSearchComponent implements OnInit {
 			startWith(''),
 			debounceTime(this.debounceTime),
 			distinctUntilChanged(),
-			switchMap(searchValue => {
+			mergeMap(searchValue => {
 				return this.searchConcepts(searchValue || '')
 			})
 		);
@@ -44,7 +44,7 @@ export class TemplateConceptTypeaheadSearchComponent implements OnInit {
 			startWith(''),
 			debounceTime(this.debounceTime),
 			distinctUntilChanged(),
-			switchMap(searchValue => {
+			mergeMap(searchValue => {
 				return this.searchTemplates(searchValue || '')
 			})
 		);

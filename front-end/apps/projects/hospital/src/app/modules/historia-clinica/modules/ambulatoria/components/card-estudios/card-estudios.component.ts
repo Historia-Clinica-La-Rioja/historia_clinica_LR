@@ -2,26 +2,19 @@ import { Component, Input, OnInit } from '@angular/core';
 import { AbstractControl, FormBuilder, FormGroup } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { DiagnosticReportInfoDto } from '@api-rest/api-model';
-import { SnomedECL } from '@api-rest/api-model';
 import { RequestMasterDataService } from '@api-rest/services/request-masterdata.service';
 import { ESTUDIOS } from '@historia-clinica/constants/summaries';
 import { STUDY_STATUS } from '../../constants/prescripciones-masterdata';
 import { ConfirmarPrescripcionComponent } from '../../dialogs/ordenes-prescripciones/confirmar-prescripcion/confirmar-prescripcion.component';
-import {
-	NewPrescription,
-	NuevaPrescripcionComponent
-} from '../../modules/indicacion/dialogs/nueva-prescripcion/nueva-prescripcion.component';
-import { PrescripcionesService, PrescriptionTypes } from '../../services/prescripciones.service';
-import {
-	CreateInternmentOrderComponent,
-	NewInternmentOrder
-} from "@historia-clinica/modules/ambulatoria/dialogs/create-internment-order/create-internment-order.component";
-import { InternmentPatientService } from "@api-rest/services/internment-patient.service";
-import { DiagnosisRequiredComponent } from "@historia-clinica/modules/ambulatoria/dialogs/diagnosis-required/diagnosis-required.component";
-import { InternmentStateService } from "@api-rest/services/internment-state.service";
 import { StudyCategories } from '../../modules/estudio/constants/internment-studies';
 import { TranslateService } from '@ngx-translate/core';
 import { pushIfNotExists } from '@core/utils/array.utils';
+import { PrescripcionesService, PrescriptionTypes } from '../../services/prescripciones.service';
+import { CreateInternmentOrderComponent, NewInternmentOrder } from "@historia-clinica/modules/ambulatoria/dialogs/create-internment-order/create-internment-order.component";
+import { InternmentPatientService } from "@api-rest/services/internment-patient.service";
+import { DiagnosisRequiredComponent } from "@historia-clinica/modules/ambulatoria/dialogs/diagnosis-required/diagnosis-required.component";
+import { InternmentStateService } from "@api-rest/services/internment-state.service";
+import { CreateOutpatientOrderComponent, NewOutpatientOrder } from "@historia-clinica/modules/ambulatoria/dialogs/create-outpatient-order/create-outpatient-order.component";
 
 @Component({
 	selector: 'app-card-estudios',
@@ -129,62 +122,40 @@ export class CardEstudiosComponent implements OnInit {
 
 		newOrderComponent.afterClosed().subscribe((newInternmentOrder: NewInternmentOrder) => {
 			if (newInternmentOrder) {
-				this.dialog.open(ConfirmarPrescripcionComponent,
-					{
-						disableClose: true,
-						data: {
-							titleLabel: 'ambulatoria.paciente.ordenes_prescripciones.confirm_prescription_dialog.STUDY_TITLE',
-							downloadButtonLabel: 'ambulatoria.paciente.ordenes_prescripciones.confirm_prescription_dialog.DOWNLOAD_BUTTON_STUDY',
-							successLabel: 'ambulatoria.paciente.ordenes_prescripciones.toast_messages.POST_STUDY_SUCCESS',
-							prescriptionType: PrescriptionTypes.STUDY,
-							patientId: this.patientId,
-							prescriptionRequest: newInternmentOrder.prescriptionRequestResponse,
-						},
-						width: '35%',
-					});
-				this.getStudy();
+				this.openNewStudyConfirmationDialog(newInternmentOrder);
 			}
 		});
 	}
 
-	openDialogNewStudy() {
-		const newStudyDialog = this.dialog.open(NuevaPrescripcionComponent,
+	openCreateOutpatientOrderDialog() {
+		const newOrderComponent = this.dialog.open(CreateOutpatientOrderComponent,
 			{
+				width: '28%',
+				data: { patientId: this.patientId },
+			});
+
+		newOrderComponent.afterClosed().subscribe((newOutpatientOrder: NewOutpatientOrder) => {
+			if (newOutpatientOrder) {
+				this.openNewStudyConfirmationDialog(newOutpatientOrder);
+			}
+		});
+	}
+
+	private openNewStudyConfirmationDialog(newOutpatientOrder: NewOutpatientOrder) {
+		this.dialog.open(ConfirmarPrescripcionComponent,
+			{
+				disableClose: true,
 				data: {
-					patientId: this.patientId,
-					titleLabel: 'ambulatoria.paciente.ordenes_prescripciones.new_prescription_dialog.STUDY_TITLE',
-					addLabel: 'ambulatoria.paciente.ordenes_prescripciones.new_prescription_dialog.ADD_STUDY_LABEL',
+					titleLabel: 'ambulatoria.paciente.ordenes_prescripciones.confirm_prescription_dialog.STUDY_TITLE',
+					downloadButtonLabel: 'ambulatoria.paciente.ordenes_prescripciones.confirm_prescription_dialog.DOWNLOAD_BUTTON_STUDY',
+					successLabel: 'ambulatoria.paciente.ordenes_prescripciones.toast_messages.POST_STUDY_SUCCESS',
 					prescriptionType: PrescriptionTypes.STUDY,
-					prescriptionItemList: undefined,
-					addPrescriptionItemDialogData: {
-						titleLabel: 'ambulatoria.paciente.ordenes_prescripciones.add_prescription_item_dialog.STUDY_TITLE',
-						searchSnomedLabel: 'ambulatoria.paciente.ordenes_prescripciones.add_prescription_item_dialog.STUDY',
-						showDosage: false,
-						showStudyCategory: true,
-						eclTerm: SnomedECL.PROCEDURE,
-					}
+					patientId: this.patientId,
+					prescriptionRequest: newOutpatientOrder.prescriptionRequestResponse,
 				},
 				width: '35%',
 			});
-
-		newStudyDialog.afterClosed().subscribe((newPrescription: NewPrescription) => {
-			if (newPrescription) {
-				this.dialog.open(ConfirmarPrescripcionComponent,
-					{
-						disableClose: true,
-						data: {
-							titleLabel: 'ambulatoria.paciente.ordenes_prescripciones.confirm_prescription_dialog.STUDY_TITLE',
-							downloadButtonLabel: 'ambulatoria.paciente.ordenes_prescripciones.confirm_prescription_dialog.DOWNLOAD_BUTTON_STUDY',
-							successLabel: 'ambulatoria.paciente.ordenes_prescripciones.toast_messages.POST_STUDY_SUCCESS',
-							prescriptionType: PrescriptionTypes.STUDY,
-							patientId: this.patientId,
-							prescriptionRequest: newPrescription.prescriptionRequestResponse,
-						},
-						width: '35%',
-					});
-				this.getStudy();
-			}
-		});
+		this.getStudy();
 	}
 
 	hideFilters() {

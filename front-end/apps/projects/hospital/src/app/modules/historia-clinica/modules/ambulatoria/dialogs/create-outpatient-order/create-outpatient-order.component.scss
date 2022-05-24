@@ -1,0 +1,38 @@
+.full-width {
+	width: 100%;
+}
+
+.detail-text {
+	color: gray;
+	font-size: 13px;
+	font-weight: lighter;
+}
+
+
+.template-name {
+	color: gray;
+	font-size: 13px;
+	padding-bottom: 1em;
+}
+
+.dialog-actions {
+	padding-bottom: 30px
+}
+
+#order-detail {
+	padding-top: 1em;
+	padding-bottom: 1em;
+}
+
+#order-detail-category, #order-detail-health-problem, #template-included-concepts {
+	padding-bottom: 1em;
+}
+
+#selected-study-row {
+	padding: 0 15px;
+}
+
+#selected-study-name {
+	display:flex;
+	align-items: center;
+}
