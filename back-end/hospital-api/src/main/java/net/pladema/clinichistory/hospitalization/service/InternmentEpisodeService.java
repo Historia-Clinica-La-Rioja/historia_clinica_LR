@@ -32,6 +32,8 @@ public interface InternmentEpisodeService {
 
     boolean haveEvolutionNoteAfterAnamnesis(Integer internmentEpisodeId);
 
+	boolean haveUpdatesAfterEpicrisis(Integer internmentEpisodeId);
+
     boolean havePhysicalDischarge(Integer internmentEpisodeId);
 
     LocalDateTime getEntryDate(Integer internmentEpisodeId);

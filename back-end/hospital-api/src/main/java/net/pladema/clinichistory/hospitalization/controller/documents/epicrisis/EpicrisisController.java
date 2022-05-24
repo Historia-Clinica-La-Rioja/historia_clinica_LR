@@ -158,5 +158,18 @@ public class EpicrisisController {
 		LOG.debug(OUTPUT, result);
 		return  ResponseEntity.ok().body(result);
 	}
+
+	@GetMapping("/existUpdates")
+	@InternmentValid
+	public ResponseEntity<Boolean> existUpdatesAfterEpicrisis(
+			@PathVariable(name = "institutionId") Integer institutionId,
+			@PathVariable(name = "internmentEpisodeId") Integer internmentEpisodeId) {
+		LOG.debug("Input parameters -> institutionId {}, internmentEpisodeId {}", institutionId, internmentEpisodeId);
+
+		Boolean result = internmentEpisodeService.haveUpdatesAfterEpicrisis(internmentEpisodeId);
+
+		LOG.debug(OUTPUT, result);
+		return  ResponseEntity.ok().body(result);
+	}
     
 }
