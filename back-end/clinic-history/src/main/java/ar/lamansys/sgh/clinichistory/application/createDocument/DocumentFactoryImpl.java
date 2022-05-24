@@ -116,6 +116,7 @@ public class DocumentFactoryImpl implements DocumentFactory {
             document.setEvolutionNoteId(noteService.createNote(notes.getEvolutionNote()));
             document.setClinicalImpressionNoteId(noteService.createNote(notes.getClinicalImpressionNote()));
             document.setOtherNoteId(noteService.createNote(notes.getOtherNote()));
+			document.setIndicationsNoteId(noteService.createNote(notes.getIndicationsNote()));
         });
         return document;
     }
