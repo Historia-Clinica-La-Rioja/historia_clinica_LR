@@ -32,7 +32,7 @@ export class HomeComponent implements OnInit {
 
 		this.patientPortalService.getLast2AnthropometricData().subscribe(
 			list => {
-				if (list?.length > 0 && list[0]?.bloodType?.value) {
+				if (list.length && list[0].bloodType?.value) {
 					this.bloodType = list[0].bloodType.value
 				}
 			}

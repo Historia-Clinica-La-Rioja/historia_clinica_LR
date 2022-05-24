@@ -153,7 +153,7 @@ export class AnamnesisDockPopupComponent implements OnInit {
 		if (this.form.valid) {
 			const anamnesis: AnamnesisDto = this.buildAnamnesisDto();
 			this.anamnesisService.createAnamnesis(anamnesis, this.data.patientInfo.internmentEpisodeId)
-				.subscribe((anamnesisResponse: ResponseAnamnesisDto) => {
+				.subscribe(_ => {
 					this.snackBarService.showSuccess('internaciones.anamnesis.messages.SUCCESS');
 					this.dockPopupRef.close(fieldsToUpdate(anamnesis));
 				}, responseErrors => {

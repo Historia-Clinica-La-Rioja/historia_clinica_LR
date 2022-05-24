@@ -12,7 +12,6 @@ import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { InternacionMasterDataService } from '@api-rest/services/internacion-master-data.service';
 import { EvolutionNoteService } from '@api-rest/services/evolution-note.service';
 import { SnackBarService } from '@presentation/services/snack-bar.service';
-import { Moment } from 'moment';
 import { getError, hasError } from '@core/utils/form.utils';
 import { SnomedService } from '@historia-clinica/services/snomed.service';
 import { TEXT_AREA_MAX_LENGTH } from '@core/constants/validation-constants';
@@ -69,7 +68,7 @@ export class EvolutionNoteDockPopupComponent implements OnInit {
 		this.procedimientosService = new ProcedimientosService(formBuilder, this.snomedService, this.snackBarService);
 		this.factoresDeRiesgoFormService = new FactoresDeRiesgoFormService(formBuilder);
 		this.permissionsService.contextAssignments$().subscribe((userRoles: ERole[]) => {
-			this.wasMadeByProfessionalNursing = !anyMatch<ERole>(userRoles,[ERole.ESPECIALISTA_MEDICO, ERole.ESPECIALISTA_EN_ODONTOLOGIA, ERole.PROFESIONAL_DE_SALUD]) && anyMatch<ERole>(userRoles,[ERole.ENFERMERO])  ;
+			this.wasMadeByProfessionalNursing = !anyMatch<ERole>(userRoles, [ERole.ESPECIALISTA_MEDICO, ERole.ESPECIALISTA_EN_ODONTOLOGIA, ERole.PROFESIONAL_DE_SALUD]) && anyMatch<ERole>(userRoles, [ERole.ENFERMERO]);
 		})
 	}
 
