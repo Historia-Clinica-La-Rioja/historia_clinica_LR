@@ -17,6 +17,7 @@ import javax.persistence.Table;
 @Table(name = "appointment_observation")
 @Getter
 @Setter
+@ToString
 @AllArgsConstructor
 @Builder
 @NoArgsConstructor
