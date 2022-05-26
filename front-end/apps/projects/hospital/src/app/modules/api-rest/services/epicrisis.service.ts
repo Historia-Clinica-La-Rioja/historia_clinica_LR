@@ -39,4 +39,14 @@ export class EpicrisisService {
 			body: reason
 		});
 	}
+
+	getEpicrisis(epicrisisId: number, internmentEpisodeId: number): Observable<ResponseEpicrisisDto>{
+		const url = `${environment.apiBase}/institutions/${this.contextService.institutionId}/internments/${internmentEpisodeId}/epicrisis/${epicrisisId}`;
+		return this.http.get<ResponseEpicrisisDto>(url);
+	}
+
+	editEpicrsis(epicrisis: EpicrisisDto, epicrisisId: number, internmentEpisodeId: number): Observable<number> {
+		const url = `${environment.apiBase}/institutions/${this.contextService.institutionId}/internments/${internmentEpisodeId}/epicrisis/${epicrisisId}`;
+		return this.http.put<number>(url, epicrisis);
+	}
 }
