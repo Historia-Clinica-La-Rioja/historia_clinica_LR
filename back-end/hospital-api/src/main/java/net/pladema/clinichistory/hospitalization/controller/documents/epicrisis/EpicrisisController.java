@@ -139,6 +139,21 @@ public class EpicrisisController {
         return  ResponseEntity.ok().body(result);
     }
 
+	@GetMapping("/draft/{epicrisisId}")
+	@InternmentValid
+	@DocumentValid(isConfirmed= false, documentType = DocumentType.EPICRISIS)
+	public ResponseEntity<ResponseEpicrisisDto> getDraft(
+			@PathVariable(name = "institutionId") Integer institutionId,
+			@PathVariable(name = "internmentEpisodeId") Integer internmentEpisodeId,
+			@PathVariable(name = "epicrisisId") Long epicrisisId){
+		LOG.debug("Input parameters -> institutionId {}, internmentEpisodeId {}, epicrisisId {}",
+				institutionId, internmentEpisodeId, epicrisisId);
+		EpicrisisBo epicrisis = epicrisisService.getDocument(epicrisisId);
+		ResponseEpicrisisDto result = epicrisisMapper.fromEpicrisis(epicrisis);
+		LOG.debug(OUTPUT, result);
+		return  ResponseEntity.ok().body(result);
+	}
+
     @GetMapping("/general")
     @InternmentValid
     public ResponseEntity<EpicrisisGeneralStateDto> internmentGeneralState(
