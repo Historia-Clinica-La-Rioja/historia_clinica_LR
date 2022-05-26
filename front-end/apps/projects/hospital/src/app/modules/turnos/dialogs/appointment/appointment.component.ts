@@ -77,7 +77,7 @@ export class AppointmentComponent implements OnInit {
 	
 	hasObservations: boolean = false;
 	hideObservationForm: boolean = true;
-	observations: String;
+	observation: String;
 
 	constructor(
 		@Inject(MAT_DIALOG_DATA) public params: { appointmentData: PatientAppointmentInformation, hasPermissionToAssignShift: boolean },
@@ -390,7 +390,7 @@ export class AppointmentComponent implements OnInit {
 	}
 
 	addObservation(): void{
-		this.observations = this.formObservations.get('observations').value;
+		this.observation = this.formObservations.get('observations').value;
 		this.observationToggle();
 	}
 

@@ -83,6 +83,14 @@
 			"coverageData": {
 				"COVERAGE_DATA": "Cobertura Médica",
 				"UPDATE_SUCCESS": "Los datos se han modificado correctamente"
+			},
+			"observations": {
+				"OBSERVATIONS": "Observaciones",
+				"UPDATE_SUCCESS": "Las observaciones se han modificado correctamente",
+				"ADD_OBSERVATION": "+ Agregar observaciones",
+				"ADD_OBSERVATION_SUBTITLE": "Ingrese observaciones...",
+				"SAVE": "Guardar",
+				"CANCEL": "Cancelar"
 			}
 		},
 		"report": {

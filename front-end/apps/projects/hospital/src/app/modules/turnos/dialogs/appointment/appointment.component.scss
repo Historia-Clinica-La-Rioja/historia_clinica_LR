@@ -130,4 +130,10 @@ section {
 	button{
 		margin: -10px 10px;
 	}
+	
+	.observation-buttons{
+		display: flex;
+		justify-content: flex-end;
+		margin-bottom: 10px;
+	}	
 }

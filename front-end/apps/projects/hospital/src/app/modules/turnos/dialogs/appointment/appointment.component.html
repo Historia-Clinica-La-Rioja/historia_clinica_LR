@@ -175,7 +175,6 @@
 					<mat-icon color="primary" svgIcon="person_check_outlined"
 						matTooltip="{{getAppointmentState(appointmentStatesIds.SERVED).description}}"></mat-icon>
 				</button>
-
 			</div>
 
 			<div style="margin-top: 10px" *ngIf="isMotivoRequired()">
@@ -194,37 +193,38 @@
 		</section>
 
 		<section id="observations" class="observations">
-			<div *ngIf="!observations && hideObservationForm">
-				<a class="mat-body" *appHasRole="['ADMINISTRATIVO','ESPECIALISTA_MEDICO']" (click)="observationToggle()">
-					+ Agregar observaciones
+			<div *ngIf="!observation && hideObservationForm">
+				<a class="mat-body" *appHasRole="['ADMINISTRATIVO','ESPECIALISTA_MEDICO']" (click)="observationToggle()"
+					[translate]="'turnos.appointment.observations.ADD_OBSERVATION'">
 				</a>
 			</div>
 			
 			<div class="observation-details">
-				<span class="mat-body-strong" *ngIf="(observations && hideObservationForm) || (!observations && !hideObservationForm)" >
-					Observaciones
+				<span class="mat-body-strong" *ngIf="(observation && hideObservationForm) || (!observation && !hideObservationForm)" 
+					[translate]="'turnos.appointment.observations.OBSERVATIONS'">
 				</span>
-				<p *ngIf="observations && hideObservationForm"> 
-					{{observations}}
+				<p *ngIf="observation && hideObservationForm"> 
+					{{observation}}
 				</p>
 				<form [formGroup]="formObservations" fxLayout="column" fxLayoutGap="5px" (ngSubmit)="addObservation()" *ngIf="!hideObservationForm">
 					<mat-form-field appearance="outline">
-						<mat-label>Observaciones</mat-label>
-						<textarea formControlName="observations" placeholder="Ingrese observaciones..." matInput type="text"
+						<textarea formControlName="observation" placeholder="Ingrese observaciones..." matInput type="text"
 						id="observation"></textarea>
 					</mat-form-field>
-					<div align="end">
-						<button mat-stroked-button color="primary" btn-block (click)="observationToggle()">
-							Cancelar
+
+					<div class="observation-buttons">
+						<button mat-stroked-button color="primary" btn-block type="button" (click)="observationToggle()">
+							<span [translate]="'turnos.appointment.observations.CANCEL'"></span>
 						</button>
 						<button mat-flat-button color="primary" type="submit" [disabled]="formObservations.invalid">
-							Guardar
+							<span [translate]="'turnos.appointment.observations.SAVE'"></span>
 						</button>
 					</div>
 				</form>
 			</div>	
 		</section>
 
+		<mat-divider></mat-divider>
 		<ng-container
 			*appHasRole="['ADMINISTRATIVO', 'ENFERMERO', 'ESPECIALISTA_MEDICO', 'PROFESIONAL_DE_SALUD', 'ESPECIALISTA_EN_ODONTOLOGIA']">
 			<ng-container
@@ -244,7 +244,7 @@
 				</section>
 			</ng-container>
 		</ng-container>
-	</div>
+	</div> 
 
 	<mat-dialog-actions
 		*appHasRole="['ADMINISTRATIVO', 'ENFERMERO', 'ESPECIALISTA_MEDICO', 'PROFESIONAL_DE_SALUD', 'ESPECIALISTA_EN_ODONTOLOGIA']"
