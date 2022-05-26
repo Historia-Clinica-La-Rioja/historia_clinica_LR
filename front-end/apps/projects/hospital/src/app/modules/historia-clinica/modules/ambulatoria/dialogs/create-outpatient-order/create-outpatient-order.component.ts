@@ -1,7 +1,7 @@
 import { Component, Inject, OnInit } from '@angular/core';
-import { ApiErrorDto, HCEPersonalHistoryDto, PrescriptionDto } from "@api-rest/api-model";
+import { ApiErrorDto, BasicPatientDto, PatientMedicalCoverageDto, PrescriptionDto } from "@api-rest/api-model";
 import { SnomedECL } from "@api-rest/api-model";
-import { FormBuilder, FormGroup, Validators } from "@angular/forms";
+import { AbstractControl, FormBuilder, FormGroup, Validators } from "@angular/forms";
 import { TemplateOrConceptOption, TemplateOrConceptType } from "@historia-clinica/components/template-concept-typeahead-search/template-concept-typeahead-search.component";
 import { OrderStudiesService, Study } from "@historia-clinica/services/order-studies.service";
 import { MAT_DIALOG_DATA, MatDialog, MatDialogRef } from "@angular/material/dialog";
@@ -12,6 +12,11 @@ import { TEXT_AREA_MAX_LENGTH } from '@core/constants/validation-constants';
 import { hasError } from '@core/utils/form.utils';
 import { HceGeneralStateService } from "@api-rest/services/hce-general-state.service";
 import { OutpatientOrderService } from "@api-rest/services/outpatient-order.service";
+import { MedicalCoverageComponent, PatientMedicalCoverage } from "@pacientes/dialogs/medical-coverage/medical-coverage.component";
+import { map } from "rxjs/operators";
+import { PatientMedicalCoverageService } from "@api-rest/services/patient-medical-coverage.service";
+import { MapperService } from "@core/services/mapper.service";
+import { PatientService } from "@api-rest/services/patient.service";
 
 @Component({
   selector: 'app-create-outpatient-order',
@@ -27,6 +32,8 @@ export class CreateOutpatientOrderComponent implements OnInit {
 	form: FormGroup;
 	firstStepCompleted = false;
 
+	private patientData: BasicPatientDto;
+	patientMedicalCoverages: PatientMedicalCoverage[];
 	studyCategoryOptions = [];
 	healthProblemOptions = [];
 	selectedStudy: TemplateOrConceptOption = null;
@@ -37,9 +44,12 @@ export class CreateOutpatientOrderComponent implements OnInit {
 		@Inject(MAT_DIALOG_DATA) public data: { patientId: number, healthProblems },
 		public dialogRef: MatDialogRef<CreateOutpatientOrderComponent>,
 		private readonly formBuilder: FormBuilder,
+		private readonly mapperService: MapperService,
 		private readonly requestMasterDataService: RequestMasterDataService,
 		private readonly hceGeneralStateService: HceGeneralStateService,
 		private readonly outpatientOrderService: OutpatientOrderService,
+		private readonly patientMedicalCoverageService: PatientMedicalCoverageService,
+		private readonly patientService: PatientService,
 		private readonly snackBarService: SnackBarService,
 		private readonly dialog: MatDialog,
 	) {
@@ -48,10 +58,17 @@ export class CreateOutpatientOrderComponent implements OnInit {
 
 	ngOnInit(): void {
 		this.form = this.formBuilder.group({
+			patientMedicalCoverage: [null],
 			studyCategory: [null, Validators.required],
 			studySelection: [null, Validators.required],
 			healthProblem: [null, Validators.required],
 			notes: [null, [Validators.maxLength(this.TEXT_AREA_MAX_LENGTH)]]
+		});
+
+		this.setMedicalCoverages();
+
+		this.patientService.getPatientBasicData(Number(this.data.patientId)).subscribe((basicData: BasicPatientDto) => {
+			this.patientData = basicData;
 		});
 
 		this.requestMasterDataService.categories().subscribe(categories => {
@@ -59,6 +76,52 @@ export class CreateOutpatientOrderComponent implements OnInit {
 		});
 
 		this.healthProblemOptions = this.data.healthProblems;
+	}
+
+	private setMedicalCoverages(): void {
+		this.patientMedicalCoverageService.getActivePatientMedicalCoverages(this.data.patientId)
+			.pipe(
+				map(
+					patientMedicalCoveragesDto =>
+						patientMedicalCoveragesDto.map(s => this.mapperService.toPatientMedicalCoverage(s))
+				)
+			)
+			.subscribe((patientMedicalCoverages: PatientMedicalCoverage[]) => this.patientMedicalCoverages = patientMedicalCoverages);
+	}
+
+	getFullMedicalCoverageText(patientMedicalCoverage): string {
+		const condition = (patientMedicalCoverage.condition) ? patientMedicalCoverage.condition.toLowerCase() : null;
+		const medicalCoverageText = [patientMedicalCoverage.medicalCoverage.acronym, patientMedicalCoverage.medicalCoverage.name]
+			.filter(Boolean).join(' - ');
+		return [medicalCoverageText, patientMedicalCoverage.affiliateNumber,condition].filter(Boolean).join(' / ');
+	}
+
+	openMedicalCoverageDialog(): void {
+		const dialogRef = this.dialog.open(MedicalCoverageComponent, {
+			data: {
+				genderId: this.patientData.person.gender.id,
+				identificationNumber: this.patientData.person.identificationNumber,
+				identificationTypeId: this.patientData.person.identificationTypeId,
+				initValues: this.patientMedicalCoverages,
+			}
+		});
+
+		dialogRef.afterClosed().subscribe(
+			values => {
+				if (values) {
+					const patientCoverages: PatientMedicalCoverageDto[] =
+						values.patientMedicalCoverages.map(s => this.mapperService.toPatientMedicalCoverageDto(s));
+
+					this.patientMedicalCoverageService.addPatientMedicalCoverages(Number(this.data.patientId), patientCoverages).subscribe(
+						_ => {
+							this.setMedicalCoverages();
+							this.snackBarService.showSuccess('ambulatoria.paciente.ordenes_prescripciones.toast_messages.POST_UPDATE_COVERAGE_SUCCESS');
+						},
+						_ => this.snackBarService.showError('ambulatoria.paciente.ordenes_prescripciones.toast_messages.POST_UPDATE_COVERAGE_ERROR')
+					);
+				}
+			}
+		);
 	}
 
 	handleStudySelected(study) {
@@ -128,8 +191,8 @@ export class CreateOutpatientOrderComponent implements OnInit {
 	}
 
 	confirmOrder() {
-		const newInternmentOrder: PrescriptionDto = {
-			medicalCoverageId: null,
+		const newOutpatientOrder: PrescriptionDto = {
+			medicalCoverageId: this.form.controls.patientMedicalCoverage.value?.id,
 			hasRecipe: true,
 			items: this.orderStudiesService.getStudies().map(study => {
 				return {
@@ -140,12 +203,12 @@ export class CreateOutpatientOrderComponent implements OnInit {
 				};
 			})
 		};
-		this.saveInternmentOrder(newInternmentOrder);
+		this.saveOutpatientOrder(newOutpatientOrder);
 	}
 
-	private saveInternmentOrder(newInternmentOrder: PrescriptionDto) {
-		this.outpatientOrderService.create(this.data.patientId, newInternmentOrder).subscribe(prescriptionRequestResponse => {
-				this.closeModal({ prescriptionDto: newInternmentOrder, prescriptionRequestResponse: prescriptionRequestResponse });
+	private saveOutpatientOrder(newOutpatientOrder: PrescriptionDto) {
+		this.outpatientOrderService.create(this.data.patientId, newOutpatientOrder).subscribe(prescriptionRequestResponse => {
+				this.closeModal({ prescriptionDto: newOutpatientOrder, prescriptionRequestResponse: prescriptionRequestResponse });
 			},
 			(err: ApiErrorDto) => {
 				this.snackBarService.showError(err.errors[0]);
@@ -173,6 +236,10 @@ export class CreateOutpatientOrderComponent implements OnInit {
 					this.snackBarService.showError('ambulatoria.paciente.outpatient-order.create-order-dialog.STUDY_REPEATED')
 			}
 		})
+	}
+
+	clear(control: AbstractControl): void {
+		control.reset();
 	}
 
 }
