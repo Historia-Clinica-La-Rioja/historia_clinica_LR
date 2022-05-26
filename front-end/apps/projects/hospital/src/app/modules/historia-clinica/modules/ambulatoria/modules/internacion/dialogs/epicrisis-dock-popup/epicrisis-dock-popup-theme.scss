@@ -1,0 +1,7 @@
+@mixin background-primary($theme) {
+    $palette-primary: map-get($theme, primary);
+
+    .background-primary {
+        background-color: mat-color($palette-primary, 50);
+    }
+}

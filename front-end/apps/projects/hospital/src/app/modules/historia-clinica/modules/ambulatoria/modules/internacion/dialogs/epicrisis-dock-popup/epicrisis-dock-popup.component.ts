@@ -55,7 +55,7 @@ export class EpicrisisDockPopupComponent implements OnInit {
 	anamnesis: ResponseAnamnesisDto;
 	form: FormGroup;
 	formDiagnosis: FormGroup;
-
+	showWarning: boolean=false;
 	medications: MedicationDto[] = [];
 	personalHistories: TableCheckbox<HealthHistoryConditionDto> = {
 		data: [],
@@ -206,6 +206,7 @@ export class EpicrisisDockPopupComponent implements OnInit {
 				})
 			}
 		});
+		this.epicrisisService.existUpdatesAfterEpicrisis(this.data.patientInfo.internmentEpisodeId).subscribe((showWarning:boolean)=>this.showWarning=showWarning);
 
 		function isEqualsThenSelect(sctid1: string, sctid2: string, tableConcept: TableCheckbox<any>, concept: any) {
 			if (sctid1 === sctid2)

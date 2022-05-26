@@ -222,6 +222,10 @@
 				"INDICATIONS_NOTE": "Indicaciones al alta",
 				"OTHERS": "Otras observaciones",
 				"DESCRIPTION": "Descripción"
+			},
+			"warning-dialog": {
+				"FIRST_TEXT": "Se han realizado evoluciones sobre el episodio de internación posteriores a la última versión del borrador.",
+				"SECOND_TEXT": "Por favor, revise los últimos datos cargados."
 			}
 		},
 		"clinical-assessment-diagnosis": {

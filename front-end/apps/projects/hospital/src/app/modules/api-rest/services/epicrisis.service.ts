@@ -49,4 +49,9 @@ export class EpicrisisService {
 		const url = `${environment.apiBase}/institutions/${this.contextService.institutionId}/internments/${internmentEpisodeId}/epicrisis/${epicrisisId}`;
 		return this.http.put<number>(url, epicrisis);
 	}
+
+	existUpdatesAfterEpicrisis(internmentEpisodeId: number): Observable<boolean> {
+		const url = `${environment.apiBase}/institutions/${this.contextService.institutionId}/internments/${internmentEpisodeId}/epicrisis/existUpdates`;
+		return this.http.get<boolean>(url);
+	}
 }
