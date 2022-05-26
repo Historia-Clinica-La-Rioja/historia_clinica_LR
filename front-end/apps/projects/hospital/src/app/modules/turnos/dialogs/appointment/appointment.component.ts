@@ -33,6 +33,7 @@ const ROLES_TO_CHANGE_STATE: ERole[] = [ERole.ADMINISTRATIVO, ERole.ESPECIALISTA
 const ROLES_TO_EDIT: ERole[]
 	= [ERole.ADMINISTRATIVO, ERole.ESPECIALISTA_MEDICO, ERole.PROFESIONAL_DE_SALUD, ERole.ENFERMERO, ERole.ESPECIALISTA_EN_ODONTOLOGIA];
 const ROLE_TO_DOWNDLOAD_REPORTS: ERole[] = [ERole.ADMINISTRATIVO];
+const ROLE_TO_ADD_OBSERVATION: ERole[] = [ERole.ADMINISTRATIVO];
 
 @Component({
 	selector: 'app-appointment',
@@ -53,6 +54,7 @@ export class AppointmentComponent implements OnInit {
 	estadoSelected: APPOINTMENT_STATES_ID;
 	formMotivo: FormGroup;
 	formEdit: FormGroup;
+	formObservations: FormGroup;
 	institutionId = this.contextService.institutionId;
 	coverageText: string;
 	coverageNumber: any;
@@ -62,6 +64,7 @@ export class AppointmentComponent implements OnInit {
 	hasRoleToChangeState$: Observable<boolean>;
 	hasRoleToEditPhoneNumber$: Observable<boolean>;
 	hasRoleToDownloadReports$: Observable<boolean>;
+	hasRoleToAddObservations$: Observable<boolean>;
 	patientMedicalCoverages: PatientMedicalCoverage[];
 	identificationType: IdentificationTypeDto;
 
@@ -71,6 +74,10 @@ export class AppointmentComponent implements OnInit {
 	isCheckedDownloadFormulario = false;
 	downloadReportIsEnabled: boolean;
 	isMqttCallEnabled: boolean = false;
+	
+	hasObservations: boolean = false;
+	hideObservationForm: boolean = true;
+	observations: String;
 
 	constructor(
 		@Inject(MAT_DIALOG_DATA) public params: { appointmentData: PatientAppointmentInformation, hasPermissionToAssignShift: boolean },
@@ -105,6 +112,11 @@ export class AppointmentComponent implements OnInit {
 			phonePrefix: null,
 			phoneNumber: null
 		});
+
+		this.formObservations = this.formBuilder.group({
+			observations: ['',[Validators.required]]
+		});
+
 		this.setMedicalCoverages();
 		this.formEdit.controls.phoneNumber.setValue(this.params.appointmentData.phoneNumber);
 		this.formEdit.controls.phonePrefix.setValue(this.params.appointmentData.phonePrefix);
@@ -137,6 +149,8 @@ export class AppointmentComponent implements OnInit {
 		this.hasRoleToEditPhoneNumber$ = this.permissionsService.hasContextAssignments$(ROLES_TO_EDIT).pipe(take(1));
 
 		this.hasRoleToDownloadReports$ = this.permissionsService.hasContextAssignments$(ROLE_TO_DOWNDLOAD_REPORTS).pipe(take(1));
+		
+		this.hasRoleToAddObservations$ = this.permissionsService.hasContextAssignments$(ROLE_TO_ADD_OBSERVATION).pipe(take(1));
 
 		this.personMasterDataService.getIdentificationTypes()
 			.subscribe(identificationTypes => {
@@ -369,6 +383,15 @@ export class AppointmentComponent implements OnInit {
 
 	clear(): void {
 		this.formEdit.controls.newCoverageData.setValue(null);
+	}
+
+	observationToggle(): void{
+		this.hideObservationForm = !this.hideObservationForm;
+	}
+
+	addObservation(): void{
+		this.observations = this.formObservations.get('observations').value;
+		this.observationToggle();
 	}
 
 	private updateSummaryCoverageData(): void {

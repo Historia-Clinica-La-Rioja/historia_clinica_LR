@@ -115,3 +115,19 @@ section {
     overflow: hidden;
     text-overflow: ellipsis;
 }
+
+.observations{
+	margin: 15px 0;
+	
+	a{
+		cursor: pointer;
+	}
+
+	p{
+		margin-left: 3px;
+	}
+
+	button{
+		margin: -10px 10px;
+	}
+}

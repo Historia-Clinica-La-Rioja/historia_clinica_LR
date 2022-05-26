@@ -193,6 +193,38 @@
 			</div>
 		</section>
 
+		<section id="observations" class="observations">
+			<div *ngIf="!observations && hideObservationForm">
+				<a class="mat-body" *appHasRole="['ADMINISTRATIVO','ESPECIALISTA_MEDICO']" (click)="observationToggle()">
+					+ Agregar observaciones
+				</a>
+			</div>
+			
+			<div class="observation-details">
+				<span class="mat-body-strong" *ngIf="(observations && hideObservationForm) || (!observations && !hideObservationForm)" >
+					Observaciones
+				</span>
+				<p *ngIf="observations && hideObservationForm"> 
+					{{observations}}
+				</p>
+				<form [formGroup]="formObservations" fxLayout="column" fxLayoutGap="5px" (ngSubmit)="addObservation()" *ngIf="!hideObservationForm">
+					<mat-form-field appearance="outline">
+						<mat-label>Observaciones</mat-label>
+						<textarea formControlName="observations" placeholder="Ingrese observaciones..." matInput type="text"
+						id="observation"></textarea>
+					</mat-form-field>
+					<div align="end">
+						<button mat-stroked-button color="primary" btn-block (click)="observationToggle()">
+							Cancelar
+						</button>
+						<button mat-flat-button color="primary" type="submit" [disabled]="formObservations.invalid">
+							Guardar
+						</button>
+					</div>
+				</form>
+			</div>	
+		</section>
+
 		<ng-container
 			*appHasRole="['ADMINISTRATIVO', 'ENFERMERO', 'ESPECIALISTA_MEDICO', 'PROFESIONAL_DE_SALUD', 'ESPECIALISTA_EN_ODONTOLOGIA']">
 			<ng-container
