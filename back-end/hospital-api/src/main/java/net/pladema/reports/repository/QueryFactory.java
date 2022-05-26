@@ -2,8 +2,11 @@ package net.pladema.reports.repository;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Comparator;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 import javax.persistence.EntityManager;
@@ -40,8 +43,9 @@ public class QueryFactory {
 		odontologyQuery.setParameter("institutionId", institutionId);
 		odontologyQuery.setParameter("startDate", startDate);
 		odontologyQuery.setParameter("endDate", endDate);
+		List<ConsultationDetail> odontologyData = formatProblems(odontologyQuery.getResultList());
 
-		data.addAll(odontologyQuery.getResultList());
+		data.addAll(odontologyData);
 		data.sort(Comparator.comparing(ConsultationDetail::getPatientSurname));
 
         //Optional filter: by specialty or professional if specified
@@ -50,6 +54,33 @@ public class QueryFactory {
                 .filter(clinicalSpecialtyId != null ? oc -> oc.getClinicalSpecialtyId().equals(clinicalSpecialtyId) : c -> true)
                 .collect(Collectors.toList());
     }
+
+	private List<ConsultationDetail> formatProblems(List<ConsultationDetail> list){
+		for(ConsultationDetail fila : list){
+			if(fila.getProblems() != null) {
+				List withRepeated = List.of(fila.getProblems().split("/split/"));
+				Set<String> noRepeated = new HashSet<String>(withRepeated);
+				String result = "";
+				for (String problem : noRepeated) {
+					int repetitions = Collections.frequency(withRepeated, problem);
+					if (result.equals("")) {
+						if(repetitions > 1)
+							result += "(" + repetitions + ") " + problem;
+						else
+							result += problem;
+					}
+					else {
+						if (repetitions > 1)
+							result += ", (" + repetitions + ") " + problem;
+						else
+							result += ", " + problem;
+					}
+				}
+				fila.setProblems(result);
+			}
+		}
+		return list;
+	}
 
     @SuppressWarnings("unchecked")
     @Transactional(readOnly = true)
