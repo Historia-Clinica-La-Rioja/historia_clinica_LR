@@ -148,7 +148,12 @@ public interface InternmentEpisodeRepository extends JpaRepository<InternmentEpi
             "FROM InternmentEpisode ie " +
             "JOIN Document da ON (da.id = ie.anamnesisDocId and da.statusId = '"+ DocumentStatus.FINAL + "') " +
             "WHERE ie.id = :internmentEpisodeId " +
-            "AND ie.epicrisisDocId IS NULL " +
+            "AND (ie.epicrisisDocId IS NULL " +
+			"	OR NOT EXISTS (" +
+			"					SELECT doc.id " +
+			"					FROM Document doc " +
+			"					WHERE doc.id = ie.epicrisisDocId " +
+			"					AND doc.statusId = '" + DocumentStatus.FINAL + "'))" +
             "AND EXISTS (" +
             "               SELECT d.id " +
             "               FROM EvolutionNoteDocument evnd " +
