@@ -14,11 +14,16 @@ import ar.lamansys.sgx.shared.security.UserInfo;
 import net.pladema.establishment.controller.service.InstitutionExternalService;
 
 import net.pladema.establishment.repository.MedicalCoveragePlanRepository;
+import net.pladema.medicalconsultation.appointment.repository.AppointmentObservationRepository;
+import net.pladema.medicalconsultation.appointment.repository.entity.AppointmentObservation;
 import net.pladema.patient.controller.dto.PatientMedicalCoverageDto;
 import net.pladema.patient.controller.service.PatientExternalMedicalCoverageService;
 
+import net.pladema.patient.repository.PatientRepository;
 import net.pladema.patient.service.domain.PatientCoverageInsuranceDetailsBo;
 import net.pladema.patient.service.domain.PatientMedicalCoverageBo;
+
+import net.pladema.staff.repository.HealthcareProfessionalRepository;
 
 import org.springframework.stereotype.Service;
 
@@ -43,6 +48,8 @@ public class AppointmentServiceImpl implements AppointmentService {
 
 	private final AppointmentRepository appointmentRepository;
 
+	private final AppointmentObservationRepository appointmentObservationRepository;
+
 	private final HistoricAppointmentStateRepository historicAppointmentStateRepository;
 
 	private final SharedStaffPort sharedStaffPort;
@@ -57,15 +64,11 @@ public class AppointmentServiceImpl implements AppointmentService {
 
 	private final MedicalCoveragePlanRepository medicalCoveragePlanRepository;
 
-	public AppointmentServiceImpl(AppointmentRepository appointmentRepository,
-								  HistoricAppointmentStateRepository historicAppointmentStateRepository,
-								  SharedStaffPort sharedStaffPort,
-								  DateTimeProvider dateTimeProvider,
-								  PatientExternalMedicalCoverageService patientExternalMedicalCoverageService,
-								  InstitutionExternalService institutionExternalService,
-								  MedicalCoveragePlanRepository medicalCoveragePlanRepository,
-								  FeatureFlagsService featureFlagsService) {
+	private final HealthcareProfessionalRepository healthcareProfessionalRepository;
+
+	public AppointmentServiceImpl(AppointmentRepository appointmentRepository, AppointmentObservationRepository appointmentObservationRepository, HistoricAppointmentStateRepository historicAppointmentStateRepository, SharedStaffPort sharedStaffPort, DateTimeProvider dateTimeProvider, PatientExternalMedicalCoverageService patientExternalMedicalCoverageService, InstitutionExternalService institutionExternalService, MedicalCoveragePlanRepository medicalCoveragePlanRepository, FeatureFlagsService featureFlagsService, HealthcareProfessionalRepository healthcareProfessionalRepository) {
 		this.appointmentRepository = appointmentRepository;
+		this.appointmentObservationRepository = appointmentObservationRepository;
 		this.historicAppointmentStateRepository = historicAppointmentStateRepository;
 		this.sharedStaffPort = sharedStaffPort;
 		this.featureFlagsService = featureFlagsService;
@@ -73,6 +76,7 @@ public class AppointmentServiceImpl implements AppointmentService {
 		this.patientExternalMedicalCoverageService = patientExternalMedicalCoverageService;
 		this.institutionExternalService = institutionExternalService;
 		this.medicalCoveragePlanRepository = medicalCoveragePlanRepository;
+		this.healthcareProfessionalRepository = healthcareProfessionalRepository;
 	}
 
 	@Override
@@ -147,6 +151,20 @@ public class AppointmentServiceImpl implements AppointmentService {
 		appointmentRepository.updatePhoneNumber(appointmentId,phonePrefix,phoneNumber,userId);
 		log.debug(OUTPUT, Boolean.TRUE);
 		return Boolean.TRUE;
+	}
+
+	@Override
+	public boolean saveObservation(Integer appointmentId, String observation) {
+		AppointmentObservation appointmentObservation = AppointmentObservation.builder()
+				.appointmentId(appointmentId)
+				.observation(observation)
+				.createdBy(healthcareProfessionalRepository.getProfessionalId(UserInfo.getCurrentAuditor()))
+				.build();
+		appointmentObservationRepository.save(appointmentObservation);
+		log.debug(OUTPUT, Boolean.TRUE);
+		return Boolean.TRUE;
+
+
 	}
 
 	@Override

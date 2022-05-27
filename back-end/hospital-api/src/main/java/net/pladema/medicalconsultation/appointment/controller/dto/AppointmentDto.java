@@ -22,4 +22,10 @@ public class AppointmentDto extends CreateAppointmentDto {
 
     @Nullable
     private String stateChangeReason;
+
+	@Nullable
+	private String observation;
+
+	@Nullable
+	private String observationBy;
 }

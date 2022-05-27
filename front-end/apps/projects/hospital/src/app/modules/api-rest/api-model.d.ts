@@ -214,6 +214,8 @@ export interface AppointmentDailyAmountDto {
 
 export interface AppointmentDto extends CreateAppointmentDto {
     appointmentStateId: number;
+    observation?: string;
+    observationBy?: string;
     stateChangeReason?: string;
 }
 
