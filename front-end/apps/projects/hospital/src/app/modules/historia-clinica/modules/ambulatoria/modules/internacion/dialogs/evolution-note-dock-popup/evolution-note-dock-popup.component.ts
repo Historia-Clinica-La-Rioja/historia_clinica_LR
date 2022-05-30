@@ -208,7 +208,8 @@ export class EvolutionNoteDockPopupComponent implements OnInit {
 		});
 		procedure.forEach(p => this.procedimientosService.add(p));
 		this.mainDiagnosis = this.evolutionNote.mainDiagnosis;
-		this.mainDiagnosis.isAdded = true;
+		if (this.mainDiagnosis)
+			this.mainDiagnosis.isAdded = true;
 		if (this.evolutionNote.anthropometricData) {
 			const findBloodTypeValue = findBloodType(this.bloodTypes, this.evolutionNote.anthropometricData.bloodType?.value)
 			this.form.controls.anthropometricData.setValue({
