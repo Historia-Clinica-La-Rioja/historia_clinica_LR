@@ -12,7 +12,7 @@ import org.springframework.transaction.annotation.Transactional;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.masterdata.entity.ProblemType;
 import net.pladema.reports.repository.FormReportRepository;
 import net.pladema.reports.repository.entity.FormVAppointmentVo;
-import net.pladema.reports.repository.entity.FormVOdontologyVo;
+import net.pladema.reports.repository.entity.FormVReportDataVo;
 import net.pladema.reports.repository.entity.FormVOutpatientVo;
 
 @Repository
@@ -172,8 +172,8 @@ public class FormReportRepositoryImpl implements FormReportRepository {
     }
 
     @Override
-    public List<FormVOdontologyVo> getOdontologyConsultationFormVDataInfo(Long documentId) {
-        String query = "SELECT NEW net.pladema.reports.repository.entity.FormVOdontologyVo(s.pt, od.cie10Codes) " +
+    public List<FormVReportDataVo> getOdontologyConsultationFormVDataInfo(Long documentId) {
+        String query = "SELECT NEW net.pladema.reports.repository.entity.FormVReportDataVo(s.pt, od.cie10Codes) " +
                 "		FROM Document AS d " +
                 "			JOIN OdontologyConsultation AS oc ON (d.sourceId = oc.id) " +
                 "			LEFT JOIN DocumentOdontologyDiagnostic AS dod ON (d.id = dod.pk.documentId) " +
@@ -188,8 +188,8 @@ public class FormReportRepositoryImpl implements FormReportRepository {
     }
 
     @Override
-    public List<FormVOdontologyVo> getOdontologyConsultationFormVOtherDataInfo(Long documentId) {
-        String query = "SELECT NEW net.pladema.reports.repository.entity.FormVOdontologyVo(s.pt, hc.cie10Codes) " +
+    public List<FormVReportDataVo> getOdontologyConsultationFormVOtherDataInfo(Long documentId) {
+        String query = "SELECT NEW net.pladema.reports.repository.entity.FormVReportDataVo(s.pt, hc.cie10Codes) " +
                 "		FROM Document AS d " +
                 "			JOIN OdontologyConsultation AS oc ON (d.sourceId = oc.id AND d.sourceTypeId = 6) " +
                 "			LEFT JOIN DocumentHealthCondition AS dhc ON (d.id = dhc.pk.documentId) " +
@@ -202,5 +202,72 @@ public class FormReportRepositoryImpl implements FormReportRepository {
                 .setParameter("documentId", documentId)
                 .getResultList();
     }
+
+	@Override
+	public Optional<FormVOutpatientVo> getNursingConsultationFormVGeneralInfo(Long documentId) {
+		String query = "WITH t AS (" +
+				"       SELECT d.id as doc_id, nc.performed_date, nc.institution_id, nc.patient_id, nc.clinical_specialty_id " +
+				"       FROM {h-schema}document AS d " +
+				"       JOIN {h-schema}nursing_consultation AS nc ON (d.source_id = nc.id  AND d.source_type_id = 7)" +
+				"       WHERE d.id = :documentId)" +
+				"       SELECT i.name, pe.first_name, pe.middle_names, pe.last_name, pe.other_last_names, " +
+				"              g.description, pe.birth_date, it.description as idType, pe.identification_number, " +
+				"              t.performed_date, null as problems, "+
+				"              ad.street, ad.number, ci.description as city, i.sisa_code, null as cie10Codes"+
+				"       FROM t "+
+				"           JOIN {h-schema}Institution AS i ON (t.institution_id = i.id) " +
+				"           JOIN {h-schema}Patient AS pa ON (t.patient_id = pa.id) " +
+				"           LEFT JOIN {h-schema}Person AS pe ON (pe.id = pa.person_id) " +
+				"           LEFT JOIN {h-schema}Person_extended AS pex ON (pe.id = pex.person_id) " +
+				"           LEFT JOIN {h-schema}Address AS ad ON (pex.address_id = ad.id) " +
+				"           LEFT JOIN {h-schema}City AS ci ON (ad.city_id = ci.id) " +
+				"           LEFT JOIN {h-schema}Identification_type AS it ON (it.id = pe.identification_type_id) " +
+				"           LEFT JOIN {h-schema}Gender AS g ON (pe.gender_id = g.id)";
+		Optional<Object[]> queryResult =  entityManager.createNativeQuery(query)
+				.setParameter("documentId", documentId)
+				.setMaxResults(1)
+				.getResultList().stream().findFirst();
+
+		Optional<FormVOutpatientVo> result = queryResult.map(a -> new FormVOutpatientVo(
+				(String) a[0],
+				(String) a[1],
+				(String) a[2],
+				(String) a[3],
+				(String) a[4],
+				(String) a[5],
+				a[6] != null ? ((Date) a[6]).toLocalDate() : null,
+				(String) a[7],
+				(String) a[8],
+				a[9] != null ? ((Date) a[9]).toLocalDate() : null,
+				(String) a[10],
+				(String) a[11],
+				(String) a[12],
+				(String) a[13],
+				(String) a[14],
+				(String) a[15]
+
+		));
+		return result;
+	}
+
+	@Override
+	public Optional<FormVReportDataVo> getNursingConsultationFormVDataInfo(Long documentId) {
+		String query = "SELECT NEW net.pladema.reports.repository.entity.FormVReportDataVo(s.pt, hc.cie10Codes) " +
+				"		FROM Document AS d " +
+				"			JOIN NursingConsultation AS nc ON (d.sourceId = nc.id) " +
+				"			JOIN DocumentHealthCondition AS dhc ON (d.id = dhc.pk.documentId) " +
+				"			JOIN HealthCondition AS hc ON (dhc.pk.healthConditionId = hc.id) " +
+				"			JOIN Snomed AS s ON (s.id = hc.snomedId) " +
+				"		WHERE d.id = :documentId " +
+				"		GROUP BY s.pt, hc.cie10Codes ";
+
+
+		return entityManager.createQuery(query)
+				.setParameter("documentId", documentId)
+				.setMaxResults(1)
+				.getResultList().stream().findFirst();
+	}
+
+
 
 }
