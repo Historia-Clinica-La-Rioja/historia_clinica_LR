@@ -514,20 +514,25 @@
 			</div>
 		</app-new-consultation-expansion-section>
 
-		<div id="evolucion">
-			<app-document-section [sectionTitle]="'ambulatoria.paciente.nueva-consulta.evolucion.TITLE'">
-				<ng-container concept-form>
-					<form [formGroup]="formEvolucion">
-						<mat-form-field appearance="outline">
-							<textarea matInput type="text" id="evolucion-input" name="evolucion"
-								formControlName="evolucion"
-								placeholder="{{'ambulatoria.paciente.nueva-consulta.evolucion.DESCRIPCION' | translate }}">
+
+		<app-new-consultation-expansion-section
+			[title]="'ambulatoria.paciente.nueva-consulta.evolucion.TITLE' | translate" icon="chat"
+			[isEmpty]="!this.formEvolucion.value.evolucion" [collapsed]="false">
+			<div id="evolucion">
+				<app-document-section>
+					<ng-container concept-form>
+						<form [formGroup]="formEvolucion">
+							<mat-form-field appearance="outline">
+								<textarea matInput type="text" id="evolucion-input" name="evolucion"
+									formControlName="evolucion"
+									placeholder="{{'ambulatoria.paciente.nueva-consulta.evolucion.DESCRIPCION' | translate }}">
 							</textarea>
-						</mat-form-field>
-					</form>
-				</ng-container>
-			</app-document-section>
-		</div>
+							</mat-form-field>
+						</form>
+					</ng-container>
+				</app-document-section>
+			</div>
+		</app-new-consultation-expansion-section>
 
 		<div #errorsView>
 			<div id="validations" *ngIf="!isValidConsultation() || apiErrors.length > 0">

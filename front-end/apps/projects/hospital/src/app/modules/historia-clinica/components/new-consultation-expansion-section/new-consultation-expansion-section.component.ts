@@ -8,7 +8,7 @@ import { Component, Input } from '@angular/core';
 export class NewConsultationExpansionSectionComponent {
 
   private _fixedExpanded = false;
-  collapsed = true;
+  @Input() collapsed = true;
   @Input() icon: string;
   @Input() title: string;
   @Input() isEmpty = true;
