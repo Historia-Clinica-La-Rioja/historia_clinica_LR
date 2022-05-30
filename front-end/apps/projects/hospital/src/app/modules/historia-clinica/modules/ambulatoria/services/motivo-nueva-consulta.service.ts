@@ -114,7 +114,7 @@ export class MotivoNuevaConsultaService {
 	add(motivo: MotivoConsulta): boolean {
 		const currentItems = this.motivoConsulta.length;
 		this.motivoConsulta = pushIfNotExists<MotivoConsulta>(this.motivoConsulta, motivo, this.compareSpeciality);
-	 	return currentItems === this.motivoConsulta.length;
+		return currentItems === this.motivoConsulta.length;
 	}
 
 	addControl(motivo: MotivoConsulta): void {
@@ -144,5 +144,9 @@ export class MotivoNuevaConsultaService {
 
 	remove(index: number): void {
 		this.motivoConsulta = removeFrom<MotivoConsulta>(this.motivoConsulta, index);
+	}
+
+	isEmpty(): boolean {
+		return (!this.motivoConsulta || this.motivoConsulta.length === 0);
 	}
 }
