@@ -1,5 +1,14 @@
 package ar.lamansys.sgh.clinichistory.infrastructure.output.repository.hce.summary;
 
+import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
+
+import javax.persistence.EntityManager;
+
+import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
+
 import ar.lamansys.sgh.clinichistory.application.ports.OdontologyConsultationSummaryStorage;
 import ar.lamansys.sgh.clinichistory.domain.hce.summary.ClinicalSpecialtyBo;
 import ar.lamansys.sgh.clinichistory.domain.hce.summary.DocumentDataBo;
@@ -14,13 +23,6 @@ import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.D
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.DocumentType;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.SourceType;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.masterdata.entity.ProblemType;
-import org.springframework.stereotype.Repository;
-import org.springframework.transaction.annotation.Transactional;
-
-import javax.persistence.EntityManager;
-import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.List;
 
 @Repository
 public class OdontologyConsultationSummaryStorageImpl implements OdontologyConsultationSummaryStorage {
@@ -46,7 +48,7 @@ public class OdontologyConsultationSummaryStorageImpl implements OdontologyConsu
                 + " LEFT JOIN Note n ON (n.id = doc.otherNoteId)"
                 + " JOIN HealthcareProfessional hp ON (hp.id = oc.doctorId)"
                 + " JOIN Person p ON (p.id = hp.personId)"
-		+ " LEFT JOIN PersonExtended pe ON (p.id = pe.id)"
+				+ " LEFT JOIN PersonExtended pe ON (p.id = pe.id)"
                 + " LEFT JOIN DocumentFile docFile ON (doc.id = docFile.id)"
                 + " WHERE oc.billable = TRUE "
                 + " AND oc.patientId = :patientId"
@@ -64,7 +66,7 @@ public class OdontologyConsultationSummaryStorageImpl implements OdontologyConsu
                         new HealthcareProfessionalBo((Integer) a[2], (String) a[3], (Integer) a[4], (String) a[5], (String) a[6], (String) a[7], (String) a[8]),
                         a[9] != null ? new ClinicalSpecialtyBo((Integer)a[9], (String)a[10], (Short) a[11]) : null,
                         (String)a[12],
-                        a[13] != null ? new DocumentDataBo((Long)a[14], (String)a[15]) : null))
+                        a[13] != null ? new DocumentDataBo((Long)a[13], (String)a[14]) : null))
         );
         return result;
     }
