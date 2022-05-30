@@ -6,7 +6,7 @@ import { SnackBarService } from '@presentation/services/snack-bar.service';
 import { APPOINTMENT_STATES_ID, getAppointmentState, MAX_LENGTH_MOTIVO } from '../../constants/appointment';
 import { ContextService } from '@core/services/context.service';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { AppFeature, AppointmentDto, ERole, IdentificationTypeDto, PatientMedicalCoverageDto } from '@api-rest/api-model.d';
+import { AppFeature, AppointmentDto, ERole, IdentificationTypeDto, LoggedUserDto, PatientMedicalCoverageDto } from '@api-rest/api-model.d';
 import { CancelAppointmentComponent } from '../cancel-appointment/cancel-appointment.component';
 import { getError, hasError, processErrors, updateControlValidator } from '@core/utils/form.utils';
 import { AppointmentsFacadeService } from '../../services/appointments-facade.service';
@@ -26,6 +26,7 @@ import { FeatureFlagService } from "@core/services/feature-flag.service";
 import { PatientNameService } from "@core/services/patient-name.service";
 import { PersonMasterDataService } from "@api-rest/services/person-master-data.service";
 import { SummaryCoverageInformation } from '@historia-clinica/modules/ambulatoria/components/medical-coverage-summary-view/medical-coverage-summary-view.component';
+import { AccountService } from '@api-rest/services/account.service';
 
 const TEMPORARY_PATIENT = 3;
 const BELL_LABEL = 'Llamar paciente'
@@ -33,7 +34,6 @@ const ROLES_TO_CHANGE_STATE: ERole[] = [ERole.ADMINISTRATIVO, ERole.ESPECIALISTA
 const ROLES_TO_EDIT: ERole[]
 	= [ERole.ADMINISTRATIVO, ERole.ESPECIALISTA_MEDICO, ERole.PROFESIONAL_DE_SALUD, ERole.ENFERMERO, ERole.ESPECIALISTA_EN_ODONTOLOGIA];
 const ROLE_TO_DOWNDLOAD_REPORTS: ERole[] = [ERole.ADMINISTRATIVO];
-const ROLE_TO_ADD_OBSERVATION: ERole[] = [ERole.ADMINISTRATIVO];
 
 @Component({
 	selector: 'app-appointment',
@@ -75,7 +75,6 @@ export class AppointmentComponent implements OnInit {
 	downloadReportIsEnabled: boolean;
 	isMqttCallEnabled: boolean = false;
 	
-	hasObservations: boolean = false;
 	hideObservationForm: boolean = true;
 	observation: String;
 
@@ -94,6 +93,7 @@ export class AppointmentComponent implements OnInit {
 		private readonly featureFlagService: FeatureFlagService,
 		private readonly patientNameService: PatientNameService,
 		private readonly personMasterDataService: PersonMasterDataService,
+		private readonly accountService: AccountService,
 
 	) {
 		this.featureFlagService.isActive(AppFeature.HABILITAR_INFORMES).subscribe(isOn => this.downloadReportIsEnabled = isOn);
@@ -114,7 +114,7 @@ export class AppointmentComponent implements OnInit {
 		});
 
 		this.formObservations = this.formBuilder.group({
-			observations: ['',[Validators.required]]
+			observation: ['',[Validators.required]]
 		});
 
 		this.setMedicalCoverages();
@@ -127,6 +127,7 @@ export class AppointmentComponent implements OnInit {
 		this.appointmentService.get(this.params.appointmentData.appointmentId)
 			.subscribe(appointment => {
 				this.appointment = appointment;
+				this.observation = appointment.observation;
 				this.estadoSelected = this.appointment?.appointmentStateId;
 				if (this.appointment.stateChangeReason) {
 					this.formMotivo.controls.motivo.setValue(this.appointment.stateChangeReason);
@@ -149,8 +150,6 @@ export class AppointmentComponent implements OnInit {
 		this.hasRoleToEditPhoneNumber$ = this.permissionsService.hasContextAssignments$(ROLES_TO_EDIT).pipe(take(1));
 
 		this.hasRoleToDownloadReports$ = this.permissionsService.hasContextAssignments$(ROLE_TO_DOWNDLOAD_REPORTS).pipe(take(1));
-		
-		this.hasRoleToAddObservations$ = this.permissionsService.hasContextAssignments$(ROLE_TO_ADD_OBSERVATION).pipe(take(1));
 
 		this.personMasterDataService.getIdentificationTypes()
 			.subscribe(identificationTypes => {
@@ -390,7 +389,12 @@ export class AppointmentComponent implements OnInit {
 	}
 
 	addObservation(): void{
-		this.observation = this.formObservations.get('observations').value;
+		this.observation = this.formObservations.get('observation').value;
+		this.appointmentFacade.updateObservation(this.params.appointmentData.appointmentId, this.formObservations.controls.observation.value).subscribe(() => {
+			this.snackBarService.showSuccess('turnos.appointment.observations.UPDATE_SUCCESS');
+		}, error => {
+			processErrors(error, (msg) => this.snackBarService.showError(msg));
+		});
 		this.observationToggle();
 	}
 

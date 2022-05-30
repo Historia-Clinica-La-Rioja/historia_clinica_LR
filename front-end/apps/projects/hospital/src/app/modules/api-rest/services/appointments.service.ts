@@ -99,6 +99,14 @@ export class AppointmentsService {
 		return this.http.put<boolean>(url, {}, { params: queryParams });
 	}
 
+	updateObservation(appointmentId: number, observation: string): Observable<boolean> {
+		let queryParams: HttpParams = new HttpParams();
+		queryParams = (observation) ? queryParams.append('observation', observation): queryParams;
+
+		const url = `${this.BASE_URL}/${appointmentId}/update-observation`;
+		return this.http.put<boolean>(url, {}, { params: queryParams });
+	}
+
 	mqttCall(appointmentId: number): Observable<any> {
 		const url = `${this.BASE_URL}/${appointmentId}/notifyPatient`;
 		return this.http.post(url, {});
