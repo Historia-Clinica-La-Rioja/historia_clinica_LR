@@ -10,7 +10,7 @@ import {
 	UserDataDto,
 	UserRoleDto,
 	RoleDto,
-    InternmentSummaryDto,
+	InternmentSummaryDto,
 	PatientDischargeDto,
 	EpicrisisSummaryDto,
 	InstitutionDto,
@@ -47,12 +47,12 @@ import { EditRolesComponent } from '@pacientes/dialogs/edit-roles/edit-roles.com
 import { RolesService } from '@api-rest/services/roles.service';
 import { InstitutionService } from '@api-rest/services/institution.service';
 import { INTERNACION } from "@historia-clinica/constants/summaries";
-import { InternmentEpisodeSummary } from "@presentation/components/internment-episode-summary/internment-episode-summary.component";
 import { InternacionService } from "@api-rest/services/internacion.service";
 import { InternmentEpisodeService } from "@api-rest/services/internment-episode.service";
 import { EstadosEpisodio, Triages } from "@historia-clinica/modules/guardia/constants/masterdata";
 import { EmergencyCareEpisodeSummaryService } from "@api-rest/services/emergency-care-episode-summary.service";
 import { AppRoutes } from "../../../../app-routing.module";
+import { InternmentDocuments, InternmentEpisodeSummary } from "@historia-clinica/modules/ambulatoria/modules/internacion/components/internment-episode-summary/internment-episode-summary.component";
 
 const ROUTE_NEW_INTERNMENT = 'internaciones/internacion/new';
 const ROUTE_EDIT_PATIENT = 'pacientes/edit';
@@ -80,7 +80,7 @@ export class ProfileComponent implements OnInit {
 	rolesByUser: UserRoleDto[] = [];
 	patientId: number;
 	showDischarge = false;
-	epicrisisDoc: EpicrisisSummaryDto;
+	internmentDocuments: InternmentDocuments;
 	canLoadProbableDischargeDate: boolean;
 	allProfessions: ProfessionDto[] = [];
 	allSpecialties: ClinicalSpecialtyDto[] = [];
@@ -88,6 +88,7 @@ export class ProfileComponent implements OnInit {
 	isProfessional = false;
 	institutionName: string;
 	license: string = '';
+	hasPhysicalDischarge = false;
 	private institution: number[] = [];
 	private rolesAdmin = false;
 	public patientBasicData: PatientBasicData;
@@ -215,13 +216,17 @@ export class ProfileComponent implements OnInit {
 										this.internmentService.getInternmentEpisodeSummary(internmentEpisodeProcessDto.id)
 											.subscribe((internmentEpisode: InternmentSummaryDto) => {
 												this.internmentEpisodeSummary = this.mapperService.toInternmentEpisodeSummary(internmentEpisode)
-												this.epicrisisDoc = internmentEpisode.documents?.epicrisis;
+												this.internmentDocuments = {
+													hasAnamnesis: !!internmentEpisode.documents?.anamnesis,
+													hasEpicrisis: !!internmentEpisode.documents?.epicrisis,
+												}
 											});
 										this.internmentEpisodeService.getPatientDischarge(internmentEpisodeProcessDto.id)
 											.subscribe((patientDischarge: PatientDischargeDto) => {
 												this.featureFlagService.isActive(AppFeature.HABILITAR_ALTA_SIN_EPICRISIS).subscribe(isOn => {
-													this.showDischarge = isOn || (patientDischarge.dischargeTypeId !== 0);
+													this.showDischarge = !!(isOn || (patientDischarge.medicalDischargeDate));
 												});
+												this.hasPhysicalDischarge = !!patientDischarge.physicalDischargeDate;
 											});
 									}
 								}

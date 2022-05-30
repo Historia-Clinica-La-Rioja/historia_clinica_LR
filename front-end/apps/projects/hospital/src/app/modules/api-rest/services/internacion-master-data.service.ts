@@ -3,6 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { environment } from '@environments/environment';
 import { MasterDataInterface } from '@api-rest/api-model';
+import { OtherIndicationTypeDto } from './internment-indication.service';
 
 @Injectable({
 	providedIn: 'root'
@@ -84,6 +85,16 @@ export class InternacionMasterDataService {
 
 	getVias(): Observable<any[]> {
 		const url = `${environment.apiBase}/internments/masterdata/vias`;
+		return this.http.get<any[]>(url);
+	}
+
+	getOtherIndicationTypes(): Observable<OtherIndicationTypeDto[]> {
+		const url = `${environment.apiBase}/internments/masterdata/other-indication-type`;
+		return this.http.get<OtherIndicationTypeDto[]>(url);
+	}
+
+	getUnits(): Observable<any[]> {
+		const url = `${environment.apiBase}/internments/masterdata/units`;
 		return this.http.get<any[]>(url);
 	}
 }

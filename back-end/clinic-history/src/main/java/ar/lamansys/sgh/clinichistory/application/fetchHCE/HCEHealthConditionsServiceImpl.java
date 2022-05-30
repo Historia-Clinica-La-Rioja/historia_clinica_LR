@@ -40,6 +40,7 @@ public class HCEHealthConditionsServiceImpl implements HCEHealthConditionsServic
         List<HCEPersonalHistoryBo> result = resultQuery.stream()
                 .map(HCEPersonalHistoryBo::new)
                 .filter(HCEPersonalHistoryBo::isActive)
+				.sorted(Comparator.comparing(HCEPersonalHistoryBo::getStartDate, Comparator.nullsFirst(Comparator.naturalOrder())).reversed())
                 .collect(Collectors.toList());
         LOG.debug(LOGGING_OUTPUT, result);
         return result;

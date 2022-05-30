@@ -155,7 +155,6 @@ public class SharedIndicationPortImpl implements SharedIndicationPort {
 
 	private PharmacoBo mapToPharmacoBo(PharmacoDto dto) {
 		DosageBo dosageBo = toDosageBo(dto.getDosage(), dto.getIndicationDate());
-		OtherPharmacoBo solventBo = toOtherPharmacoBo(dto.getSolvent(), dto.getIndicationDate());
 
 		return new PharmacoBo(dto.getId(),
 				dto.getPatientId(),
@@ -167,7 +166,7 @@ public class SharedIndicationPortImpl implements SharedIndicationPort {
 				null,
 				dto.getSnomed() != null ? new SnomedBo(dto.getSnomed().getSctid(), dto.getSnomed().getPt()) : null,
 				dosageBo,
-				solventBo,
+				dto.getSolvent() != null ? toOtherPharmacoBo(dto.getSolvent(), dto.getIndicationDate()) : null,
 				dto.getHealthConditionId(),
 				dto.getFoodRelationId(),
 				dto.getPatientProvided(),
@@ -291,6 +290,7 @@ public class SharedIndicationPortImpl implements SharedIndicationPort {
 		result.setFrequency(bo.getFrequency());
 		result.setPeriodUnit(bo.getPeriodUnit());
 		result.setEvent(bo.getEvent());
+		result.setStartDateTime(localDateMapper.toDateTimeDto(bo.getStartDate()));
 		if(bo.getQuantity() != null)
 			result.setQuantity(new QuantityDto(bo.getQuantity().getValue(), bo.getQuantity().getUnit()));
 		return result;

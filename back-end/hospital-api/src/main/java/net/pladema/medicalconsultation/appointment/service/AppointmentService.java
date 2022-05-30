@@ -9,6 +9,7 @@ import java.util.Optional;
 import net.pladema.medicalconsultation.appointment.service.domain.AppointmentAssignedBo;
 import net.pladema.medicalconsultation.appointment.service.domain.AppointmentBo;
 import net.pladema.patient.service.domain.PatientMedicalCoverageBo;
+import net.pladema.medicalconsultation.appointment.service.domain.UpdateAppointmentBo;
 
 public interface AppointmentService {
 
@@ -35,5 +36,9 @@ public interface AppointmentService {
 	PatientMedicalCoverageBo getCurrentAppointmentMedicalCoverage(Integer patientId, Integer institutionId);
 
 	Collection<AppointmentAssignedBo> getCompleteAssignedAppointmentInfo(Integer patientId);
+
+    AppointmentBo updateAppointment(UpdateAppointmentBo appointmentDto);
+
+    void delete(AppointmentBo appointmentBo);
 
 }

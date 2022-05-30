@@ -24,12 +24,12 @@ public class ExternalCoverageDto {
 
     private EMedicalCoverageTypeDto type;
 
-    public ExternalCoverageDto(@Nullable Integer id, String cuit, @Nullable String plan, String name, String type) {
+    public ExternalCoverageDto(@Nullable Integer id, String cuit, @Nullable String plan, String name, Short type) {
         this.id = id;
         this.cuit = cuit;
         this.plan = plan;
         this.name = name;
-        this.type = EMedicalCoverageTypeDto.map(type.toUpperCase());
+        this.type = EMedicalCoverageTypeDto.map(type);
     }
 
     public void setType(String type) {

@@ -1,49 +1,18 @@
-.dialog {
-	display: flex;
-}
-
-.info-text{
-	flex-direction: column;
-	font-family: Roboto;
-	font-size: 14px;
-	padding: 20px 10px 20px 16px;
-
-	.text{
-		padding: 0px 0px 0px 0px;
-		text-align:right;
-	}
-
-	.question {
-		display: block;
-		font-weight: 500;
-	}
-
-	.button{
-		padding: 0px 16px 0px 0px;
-		font-size: 16px;
-	}
-}
-
-.margin-bottom {
-	margin-bottom: 3vh;
-}
-
 .factores-de-riesgo-field {
 	display: flex;
 	flex-direction: column;
+
 	.mat-form-field {
 		width: 50%;
+
 		::ng-deep .mat-form-field-wrapper {
 			padding-bottom: 0;
 		}
+
 		margin-bottom: -5px;
 	}
 }
 
-.field-icon-risk-factor{
+.field-icon-risk-factor {
 	padding: 25px 15px 20px 5px;
-}
-
-.icon {
-	padding: 20px 0px 20px 10px;
 }

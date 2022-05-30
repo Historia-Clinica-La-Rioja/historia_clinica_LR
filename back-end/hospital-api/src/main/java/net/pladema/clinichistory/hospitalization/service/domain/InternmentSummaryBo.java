@@ -60,15 +60,12 @@ public class InternmentSummaryBo {
             this.responsibleContact = new ResponsibleContactBo(internmentSummaryVo.getResponsibleContact());
         this.probableDischargeDate = internmentSummaryVo.getProbableDischargeDate();
         this.dischargeDate = internmentSummaryVo.getDischargeDate();
-        this.totalInternmentDays = totalInternmentDays(internmentSummaryVo.getActive());
+        this.totalInternmentDays = totalInternmentDays(internmentSummaryVo.getActive(), internmentSummaryVo.getPhysicalDischargeDate());
     }
 
-    private int totalInternmentDays(boolean active){
-        if (active) {
-            return (int) ChronoUnit.DAYS.between(getEntryDate(), LocalDateTime.now());
-        }
-        else {
-            return (int) ChronoUnit.DAYS.between(getEntryDate(), getDischargeDate());
-        }
+    private int totalInternmentDays(boolean active, LocalDateTime physicalDischargeDate){
+		var validDate = physicalDischargeDate != null ? physicalDischargeDate : active ? LocalDateTime.now() : getDischargeDate();
+		return (int)ChronoUnit.DAYS.between(getEntryDate(), validDate);
     }
+
 }

@@ -27,7 +27,7 @@ export class ConfirmDialogComponent implements OnInit {
 			title: string,
 			content: string,
 			okButtonLabel: string,
-			cancelButtonLabel: string,
+			cancelButtonLabel?: string,
 			okBottonColor?: ThemePalette,
 			showMatIconError: boolean,
 		}

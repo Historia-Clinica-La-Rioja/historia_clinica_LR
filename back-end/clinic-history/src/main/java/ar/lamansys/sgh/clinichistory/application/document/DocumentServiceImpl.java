@@ -5,10 +5,15 @@ import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.*
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.entity.*;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.hospitalizationState.entity.*;
 import ar.lamansys.sgx.shared.auditable.entity.Updateable;
+import ar.lamansys.sgx.shared.exceptions.NotFoundException;
+import ar.lamansys.sgx.shared.security.UserInfo;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -23,6 +28,8 @@ public class  DocumentServiceImpl implements DocumentService {
     private static final String LOGGING_DOCUMENT_ID = "Input parameters -> documentId {}";
     
     private static final String LOGGING_DELETE_SUCCESS = "Delete success";
+
+	private static final String LOGGING_UPDATE_MODIFICATION_REASON_SUCCESS = "Update modificaton reason success";
 
     private final DocumentRepository documentRepository;
 
@@ -46,7 +53,7 @@ public class  DocumentServiceImpl implements DocumentService {
 
     private final DocumentOdontologyDiagnosticRepository documentOdontologyDiagnosticRepository;
 
-    public DocumentServiceImpl(DocumentRepository documentRepository,
+	public DocumentServiceImpl(DocumentRepository documentRepository,
                                DocumentHealthConditionRepository documentHealthConditionRepository,
                                DocumentImmunizationRepository documentImmunizationRepository,
                                DocumentProcedureRepository documentProcedureRepository,
@@ -55,7 +62,8 @@ public class  DocumentServiceImpl implements DocumentService {
                                DocumentAllergyIntoleranceRepository documentAllergyIntoleranceRepository,
                                DocumentMedicamentionStatementRepository documentMedicamentionStatementRepository,
                                DocumentDiagnosticReportRepository documentDiagnosticReportRepository,
-                               DocumentOdontologyProcedureRepository documentOdontologyProcedureRepository, DocumentOdontologyDiagnosticRepository documentOdontologyDiagnosticRepository) {
+                               DocumentOdontologyProcedureRepository documentOdontologyProcedureRepository,
+							   DocumentOdontologyDiagnosticRepository documentOdontologyDiagnosticRepository) {
         this.documentRepository = documentRepository;
         this.documentHealthConditionRepository = documentHealthConditionRepository;
         this.documentImmunizationRepository = documentImmunizationRepository;
@@ -232,7 +240,16 @@ public class  DocumentServiceImpl implements DocumentService {
         return result;
     }
 
-    @Override
+	@Override
+	public List<ProcedureBo> getProcedureStateFromDocument(Long documentId) {
+		LOG.debug(LOGGING_DOCUMENT_ID, documentId);
+		List<ProcedureVo> resultQuery = documentProcedureRepository.getProcedureStateFromDocument(documentId);
+		List<ProcedureBo> result = resultQuery.stream().map(ProcedureBo::new).collect(Collectors.toList());
+		LOG.debug(OUTPUT, result);
+		return result;
+	}
+
+	@Override
     public List<Updateable> getUpdatableDocuments(Integer internmentEpisodeId) {
         return documentRepository.getUpdatablesDocuments(internmentEpisodeId);
     }
@@ -261,37 +278,64 @@ public class  DocumentServiceImpl implements DocumentService {
     @Override
     public void deleteHealthConditionHistory(Long documentId) {
         LOG.debug(LOGGING_DOCUMENT_ID, documentId);
-        LOG.debug(LOGGING_DELETE_SUCCESS);
-    }
+		LOG.debug(LOGGING_DELETE_SUCCESS);
+	}
 
     @Override
     public void deleteAllergiesHistory(Long documentId) {
         LOG.debug(LOGGING_DOCUMENT_ID, documentId);
-        LOG.debug(LOGGING_DELETE_SUCCESS);
-    }
+		LOG.debug(LOGGING_DELETE_SUCCESS);
+	}
 
     @Override
     public void deleteImmunizationsHistory(Long documentId) {
-        LOG.debug(LOGGING_DOCUMENT_ID, documentId);
-        LOG.debug(LOGGING_DELETE_SUCCESS);
-    }
+		LOG.debug(LOGGING_DOCUMENT_ID, documentId);
+		LOG.debug(LOGGING_DELETE_SUCCESS);
+	}
 
     @Override
     public void deleteMedicationsHistory(Long documentId) {
         LOG.debug(LOGGING_DOCUMENT_ID, documentId);
-        LOG.debug(LOGGING_DELETE_SUCCESS);
-    }
+		LOG.debug(LOGGING_DELETE_SUCCESS);
+	}
 
     @Override
     public void deleteObservationsRiskFactorsHistory(Long documentId) {
         LOG.debug(LOGGING_DOCUMENT_ID, documentId);
-        LOG.debug(LOGGING_DELETE_SUCCESS);
-    }
+		LOG.debug(LOGGING_DELETE_SUCCESS);
+	}
 
     @Override
     public void deleteObservationsLabHistory(Long documentId) {
         LOG.debug(LOGGING_DOCUMENT_ID, documentId);
-        LOG.debug(LOGGING_DELETE_SUCCESS);
-    }
+		LOG.debug(LOGGING_DELETE_SUCCESS);
+	}
+
+	@Override
+	public void deleteProceduresHistory(Long documentId) {
+		LOG.debug(LOGGING_DOCUMENT_ID, documentId);
+		LOG.debug(LOGGING_DELETE_SUCCESS);
+	}
+
+	@Override
+	public void deleteById(Long documentId, String documentStatus) {
+		LOG.debug("Input parameters -> documentId {}, documentStatus {}", documentId, documentStatus);
+		documentRepository.findById(documentId).ifPresentOrElse((document) -> {
+			document.setStatusId(documentStatus);
+			documentRepository.save(document);
+			documentRepository.deleteById(documentId);
+		},() -> new NotFoundException("document-not-exists", String.format("No existe el documento con id %s", documentId)));
+		LOG.debug(LOGGING_DELETE_SUCCESS);
+	}
+
+	@Override
+	public void updateDocumentModificationReason(Long documentId, String reason) {
+		LOG.debug("Input parameters -> documentId {}, reason {}", documentId, reason);
+		documentRepository.findById(documentId).ifPresentOrElse((document) -> {
+			document.setModificationReason(reason);
+			documentRepository.save(document);
+			},() -> new NotFoundException("document-not-exists", String.format("No existe el documento con id %s", documentId)));
+		LOG.debug(LOGGING_UPDATE_MODIFICATION_REASON_SUCCESS);
+	}
 
 }

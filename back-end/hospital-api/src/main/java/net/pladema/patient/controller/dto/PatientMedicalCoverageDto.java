@@ -29,8 +29,19 @@ public class PatientMedicalCoverageDto {
 
     private CoverageDto medicalCoverage;
 
-    @Nullable
-    private PrivateHealthInsuranceDetailsDto privateHealthInsuranceDetails;
+    private EPatientMedicalCoverageCondition condition;
+    
+	@Nullable
+	@JsonFormat(pattern = JacksonDateFormatConfig.DATE_FORMAT)
+	private String startDate;
 
-	private EPatientMedicalCoverageCondition condition;
+	@Nullable
+	@JsonFormat(pattern = JacksonDateFormatConfig.DATE_FORMAT)
+	private String endDate;
+
+	@Nullable
+	private Integer planId;
+
+	@Nullable
+	private String planName;
 }

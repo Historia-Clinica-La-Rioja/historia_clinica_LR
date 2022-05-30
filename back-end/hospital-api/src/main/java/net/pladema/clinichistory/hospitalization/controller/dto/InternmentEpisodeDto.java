@@ -18,4 +18,6 @@ public class InternmentEpisodeDto {
 
     private ResponsibleDoctorDto doctor;
 
+	private boolean hasPhysicalDischarge;
+
 }

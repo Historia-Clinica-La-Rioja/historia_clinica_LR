@@ -43,7 +43,7 @@ public class BackofficeMedicalCoverageStore implements BackofficeStore<Backoffic
     public Page<BackofficeCoverageDto> findAll(BackofficeCoverageDto coverage, Pageable pageable) {
         ExampleMatcher customExampleMatcher = ExampleMatcher.matchingAny()
                 .withMatcher("name", ExampleMatcher.GenericPropertyMatchers.contains().ignoreCase());
-        List<BackofficeCoverageDto> result = medicalCoverageRepository.findAll(Example.of(new MedicalCoverage(coverage.getId(), coverage.getName(),coverage.getCuit()), customExampleMatcher)).stream()
+        List<BackofficeCoverageDto> result = medicalCoverageRepository.findAll(Example.of(new MedicalCoverage(coverage.getId(), coverage.getName(),coverage.getCuit(), coverage.getType()), customExampleMatcher)).stream()
                 .map(this::mapToDto)
                 .collect(Collectors.toList());
         if(coverage.getType()!=null)
@@ -84,38 +84,64 @@ public class BackofficeMedicalCoverageStore implements BackofficeStore<Backoffic
         return create(dto);
     }
 
-    private BackofficeCoverageDto update(BackofficeCoverageDto dto) {
-        if (dto.getRnos() != null && healthInsuranceRepository.existsByRnosAndDiferentId(dto.getRnos(),dto.getId()))
-            throw new BackofficeValidationException("medical-coverage.rnos-duplicated");
-        if(medicalCoverageRepository.existsByCUITandDiferentId(dto.getCuit(),dto.getId()))
-                throw new BackofficeValidationException("medical-coverage.cuit-duplicated");
-        String cuit = setAndValidateCuit(dto.getCuit());
-        return medicalCoverageRepository.findById(dto.getId())
-                .map(medicalCoverage -> privateHealthInsuranceRepository.findById(medicalCoverage.getId())
-                        .map(privateHealthInsurance -> {
-                            privateHealthInsurance.setName(dto.getName());
-                            privateHealthInsurance.setCuit(cuit);
-                            return (MedicalCoverage) medicalCoverageRepository.save(privateHealthInsurance);
-                        })
-                        .orElseGet(() -> {
-                            HealthInsurance healthInsurance = (HealthInsurance) medicalCoverage;
-                            healthInsurance.setAcronym(dto.getAcronym());
-                            healthInsurance.setRnos(dto.getRnos());
-                            healthInsurance.setName(dto.getName());
-                            healthInsurance.setCuit(cuit);
-                            return medicalCoverageRepository.save(healthInsurance);
-                        })).map(this::mapToDto)
-                .orElseThrow(() -> new BackofficeMedicalCoverageException(BackofficeMedicalCoverageEnumException.UNEXISTED_MEDICAL_COVERAGE, String.format("La cobertura medica con id %s no existe", dto.getId())));
+	private BackofficeCoverageDto update(BackofficeCoverageDto dto) {
+		if (dto.getRnos() != null && healthInsuranceRepository.existsByRnosAndDiferentId(dto.getRnos(),dto.getId()))
+			throw new BackofficeValidationException("medical-coverage.rnos-duplicated");
+		if(medicalCoverageRepository.existsByCUITandDiferentId(dto.getCuit(),dto.getId()))
+			throw new BackofficeValidationException("medical-coverage.cuit-duplicated");
+		dto.setCuit(setAndValidateCuit(dto.getCuit()));
+		BackofficeCoverageDto result = null;
+		switch (EMedicalCoverageType.map(dto.getType())){
+			case PREPAGA: result =  mapToDto(updatePrivateHealthInsurance(dto));
+				break;
+			case OBRASOCIAL: result = mapToDto(updateHealthInsurance(dto));
+				break;
+			case ART: result = mapToDto(updateART(dto));
+		}
+		return result;
+	}
+
+	private MedicalCoverage updatePrivateHealthInsurance(BackofficeCoverageDto dto) {
+		return privateHealthInsuranceRepository.findById(dto.getId()).map(privateHealthInsurance -> {
+			privateHealthInsurance.setName(dto.getName());
+			privateHealthInsurance.setCuit(dto.getCuit());
+			return (MedicalCoverage) medicalCoverageRepository.save(privateHealthInsurance);
+		}).orElseThrow(() -> new BackofficeMedicalCoverageException(BackofficeMedicalCoverageEnumException.UNEXISTED_MEDICAL_COVERAGE, String.format("La prepaga con id %s no existe", dto.getId())));
+	}
+
+	private MedicalCoverage updateHealthInsurance(BackofficeCoverageDto dto) {
+		return medicalCoverageRepository.findById(dto.getId()).map(medicalCoverage -> {
+            HealthInsurance healthInsurance = (HealthInsurance) medicalCoverage;
+            healthInsurance.setAcronym(dto.getAcronym());
+            healthInsurance.setRnos(dto.getRnos());
+            healthInsurance.setName(dto.getName());
+            healthInsurance.setCuit(dto.getCuit());
+            return medicalCoverageRepository.save(healthInsurance);
+        }).orElseThrow(() -> new BackofficeMedicalCoverageException(BackofficeMedicalCoverageEnumException.UNEXISTED_MEDICAL_COVERAGE, String.format("La obra social con id %s no existe", dto.getId())));
     }
+
+	private MedicalCoverage updateART(BackofficeCoverageDto dto) {
+		return medicalCoverageRepository.findById(dto.getId()).map(medicalCoverage -> {
+			medicalCoverage.setName(dto.getName());
+			medicalCoverage.setCuit(dto.getCuit());
+			return medicalCoverageRepository.save(medicalCoverage);
+		}).orElseThrow(() -> new BackofficeMedicalCoverageException(BackofficeMedicalCoverageEnumException.UNEXISTED_MEDICAL_COVERAGE, String.format("La cobertura ART con id %s no existe", dto.getId())));
+	}
+
     private BackofficeCoverageDto create(BackofficeCoverageDto dto) {
         if (dto.getRnos() != null && healthInsuranceRepository.existsByRnos(dto.getRnos()))
             throw new BackofficeValidationException("medical-coverage.rnos-duplicated");
         if (medicalCoverageRepository.existsByCUIT(dto.getCuit()))
             throw new BackofficeValidationException("medical-coverage.cuit-duplicated");
-        String cuit = setAndValidateCuit(dto.getCuit());
-        MedicalCoverage entity = (dto.getType()== EMedicalCoverageType.OBRASOCIAL.getId())
-                ? new HealthInsurance(dto.getId(),dto.getName(), cuit,dto.getRnos(),dto.getAcronym())
-                : new PrivateHealthInsurance(dto.getId(),dto.getName(), cuit);
+        dto.setCuit(setAndValidateCuit(dto.getCuit()));
+        MedicalCoverage entity = null;
+		switch (EMedicalCoverageType.map(dto.getType())){
+			case PREPAGA: entity =  new PrivateHealthInsurance(dto.getId(),dto.getName(), dto.getCuit(), dto.getType());
+				break;
+			case OBRASOCIAL: entity = new HealthInsurance(dto.getId(),dto.getName(), dto.getCuit(),dto.getRnos(),dto.getAcronym(), dto.getType());
+				break;
+			case ART : entity = new MedicalCoverage(dto.getId(), dto.getName(), dto.getCuit(), dto.getType());
+        }
         entity = medicalCoverageRepository.save(entity);
         return mapToDto(entity);
     }
@@ -138,10 +164,15 @@ public class BackofficeMedicalCoverageStore implements BackofficeStore<Backoffic
     }
 
     private BackofficeCoverageDto mapToDto(MedicalCoverage entity) {
-        return privateHealthInsuranceRepository.findById(entity.getId()).map(insurance -> new BackofficeCoverageDto(entity.getId(), entity.getName(), entity.getCuit(),EMedicalCoverageType.PREPAGA.getId(), null, null, !insurance.isDeleted()))
-                .orElseGet(() -> healthInsuranceRepository.findById(entity.getId())
-                        .map(healthInsurance -> new BackofficeCoverageDto(entity.getId(), entity.getName(), entity.getCuit(),EMedicalCoverageType.OBRASOCIAL.getId(), healthInsurance.getRnos(), healthInsurance.getAcronym(), !healthInsurance.isDeleted()))
-                        .orElse(new BackofficeCoverageDto(entity.getId(), entity.getName(), entity.getCuit(),EMedicalCoverageType.OBRASOCIAL.getId(), null,null, true)));
+		switch (EMedicalCoverageType.map(entity.getType())) {
+			case PREPAGA:
+				return privateHealthInsuranceRepository.findById(entity.getId()).map(insurance -> new BackofficeCoverageDto(entity.getId(), entity.getName(), entity.getCuit(), EMedicalCoverageType.PREPAGA.getId(), null, null, !insurance.isDeleted())).get();
+			case OBRASOCIAL:
+				return healthInsuranceRepository.findById(entity.getId()).map(healthInsurance -> new BackofficeCoverageDto(entity.getId(), entity.getName(), entity.getCuit(), EMedicalCoverageType.OBRASOCIAL.getId(), healthInsurance.getRnos(), healthInsurance.getAcronym(), !healthInsurance.isDeleted()))
+						.orElse(new BackofficeCoverageDto(entity.getId(), entity.getName(), entity.getCuit(),EMedicalCoverageType.OBRASOCIAL.getId(), null,null, true));
+			default:
+				return medicalCoverageRepository.findById(entity.getId()).map(medicalCoverage -> new BackofficeCoverageDto(entity.getId(), entity.getName(), entity.getCuit(), EMedicalCoverageType.ART.getId(), null, null, !medicalCoverage.isDeleted())).get();
+        }
     }
 
 }

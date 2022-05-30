@@ -60,8 +60,8 @@
 					<mat-expansion-panel-header>
 						<mat-panel-title>
 							<div fxLayout="row">
-								<span class="info-content medical-coverage-acronym-name">{{ patientMC.medicalCoverage?.acronym ?
-									patientMC.medicalCoverage?.acronym : patientMC.medicalCoverage?.name }}</span>
+								<span class="info-content medical-coverage-acronym-name">{{ patientMC.medicalCoverage?.type==typeObraSocial ?
+									getAcronym(patientMC) : patientMC.medicalCoverage?.name }}</span>
 								<span>&nbsp;{{ patientMC.affiliateNumber }}</span>
 							</div>
 						</mat-panel-title>
@@ -69,15 +69,22 @@
 					<span>
 						{{ patientMC.medicalCoverage?.name}}
 					</span>
-					<span class="lowercase capitalize-first-letter">
+					<span class="capitalize">
 						{{getMedicalCoveragePlanText(patientMC)}}
 					</span>
-					<span fxLayout="row" fxLayoutGap="10px">
+					<span *ngIf="patientMC.medicalCoverage.type!=typeART" fxLayout="row" fxLayoutGap="10px">
 						<span>{{ 'Nro afiliado/credencial:' }}</span>
 						<span *ngIf="patientMC.affiliateNumber; else noInformation">
 							{{ patientMC.affiliateNumber }}
 						</span>
 					</span>
+					<div *ngIf="patientMC.medicalCoverage.type==typeART">
+					<span fxLayout="row" fxLayoutGap="10px" translate="medical-coverage.ART">
+					</span>
+						<span fxLayout="row" fxLayoutGap="10px" translate="medical-coverage.CUIT_VIEW"
+							  [translateParams]="{cuit: patientMC.medicalCoverage.cuit}">
+					</span>
+					</div>
 				</mat-expansion-panel>
 			</div>
 		</span>

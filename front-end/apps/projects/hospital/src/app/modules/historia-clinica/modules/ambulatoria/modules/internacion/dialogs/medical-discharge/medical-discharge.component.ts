@@ -24,7 +24,6 @@ export class MedicalDischargeComponent implements OnInit {
 	TIME_PATTERN = TIME_PATTERN;
 	hasError = hasError;
 	todayDate = new Date();
-	today = moment();
 	minTime: string;
 	minDate: string;
 	public dischargeForm: FormGroup;
@@ -47,7 +46,7 @@ export class MedicalDischargeComponent implements OnInit {
 			.subscribe(dischargeTypes => this.dischargeTypes = dischargeTypes);
 
 		this.dischargeForm = this.formBuilder.group({
-			date: [newMoment(), [Validators.required]],
+			date: [moment(), [Validators.required]],
 			time: [this.datePipe.transform(this.todayDate, DatePipeFormat.SHORT_TIME)],
 			dischargeTypeId: [null, [Validators.required]]
 		});

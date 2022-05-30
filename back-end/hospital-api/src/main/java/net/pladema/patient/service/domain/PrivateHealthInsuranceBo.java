@@ -12,24 +12,20 @@ import net.pladema.patient.repository.entity.PrivateHealthInsurance;
 @NoArgsConstructor
 public class PrivateHealthInsuranceBo extends MedicalCoverageBo {
 
-    public PrivateHealthInsuranceBo(Integer id, String name, String cuit){
+    public PrivateHealthInsuranceBo(Integer id, String name, String cuit, Short type){
         setId(id);
         setName(name);
         setCuit(cuit);
+		setType(type);
     }
 
 	@Override
-	public String obtainCoverageType() {
-		return "PREPAGA";
-	}
-
-	@Override
     public CoverageDto newInstance() {
-        return new PrivateHealthInsuranceDto(getId(), getName(), getCuit());
+        return new PrivateHealthInsuranceDto(getId(), getName(), getCuit(), getType());
     }
 
     @Override
     public PrivateHealthInsurance mapToEntity() {
-        return new PrivateHealthInsurance(getId(), getName(), getCuit());
+        return new PrivateHealthInsurance(getId(), getName(), getCuit(), getType());
     }
 }

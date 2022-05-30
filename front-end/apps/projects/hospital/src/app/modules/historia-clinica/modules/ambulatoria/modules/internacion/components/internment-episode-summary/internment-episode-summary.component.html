@@ -1,0 +1,91 @@
+<mat-list content>
+	<mat-list-item id="bed">
+		<div class="flex-container">
+			<mat-icon color="primary" mat-list-icon fontSet="material-icons-outlined" [inline]="true">meeting_room
+			</mat-icon>
+			<span class="mat-body-2" *ngIf="!physicalDischargeDate else noInfo">{{internmentEpisode?.roomNumber}}</span>
+			<mat-icon color="primary" mat-list-icon [inline]="true">single_bed</mat-icon>
+			<span class="mat-body-2" *ngIf="!physicalDischargeDate else noInfo">{{internmentEpisode?.bedNumber}}</span>
+			<span class="mat-body-2" *ngIf="!physicalDischargeDate">{{internmentEpisode?.sectorDescription}}</span>
+			<div *ngIf="physicalDischargeDate" fxLayoutAlign="start center" fxLayout.xs="column" fxLayoutGap="10px" fxLayoutGap.xs="2px">
+				<div fxLayout="row" fxLayoutGap="5px" fxLayoutAlign="start center">
+					<mat-icon class="green">check_circle_outline</mat-icon>
+					<span class="green">{{'internaciones.discharge.HAS_PHYSICAL_DISCHARGE' | translate}}</span>
+				</div>
+				<div>
+					<span class="date">{{physicalDischargeDate}}</span>
+				</div>
+			</div>
+		</div>
+	</mat-list-item>
+	<div fxLayout="row">
+		<div *ngIf="patientDocuments.hasAnamnesis && !physicalDischargeDate && currentUserIsAllowToDoAPhysicalDischarge">
+			<button mat-flat-button color="primary" id="physical-discharge" (click)="physicalDischarge()">
+				<span class="uppercase" [translate]="'internaciones.discharge.PHYSICAL_DISCHARGE'"></span>
+			</button>
+		</div>
+		<div *ngIf="!patientDocuments.hasEpicrisis && !physicalDischargeDate">
+			<button id="btnPaseCama" name="btnPaseCama" mat-flat-button color="primary" *appHasRole="['ADMINISTRATIVO']"
+					(click)="goToPaseCama()">
+							<span class="uppercase"
+								  [translate]="'internaciones.internacion-paciente.actions.RELOCATE_PATIENT_BED'"></span>
+			</button>
+		</div>
+	</div>
+	<mat-divider inset></mat-divider>
+
+	<mat-list-item id="doctor" *ngIf="internmentEpisode?.doctor">
+		<mat-icon color="primary" mat-list-icon>medical_services</mat-icon>
+		<span class="mat-body-2">
+			{{internmentEpisode?.doctor.firstName}} {{internmentEpisode?.doctor.lastName}}
+		</span>
+		<span class="mat-caption"> {{internmentEpisode?.doctor.license}}</span>
+	</mat-list-item>
+
+	<mat-divider inset></mat-divider>
+
+	<mat-list-item id="days">
+		<div mat-line>
+			<span *ngIf="internmentEpisode?.totalInternmentDays === 1 else multipleDays" class="mat-body-2"
+				  [translate]="'internaciones.internacion-paciente.card.ONE_DAY'">
+			</span>
+			<ng-template #multipleDays>
+				<span class="mat-body-2"
+					  [translate]="'internaciones.internacion-paciente.card.DAYS_INTERNED'"
+					  [translateParams]="{ days: internmentEpisode?.totalInternmentDays }">
+				</span>
+			</ng-template>
+		</div>
+		<div mat-line>
+			<span 	[translate]="'internaciones.internacion-paciente.card.ADMISSION'"
+					 [translateParams]="{ datetime: internmentEpisode?.admissionDatetime }">
+			</span>
+		</div>
+		<div mat-line *ngIf="canLoadProbableDischargeDate">
+			<span 	[translate]="'internaciones.internacion-paciente.card.PROBABLE_DISCHARGE'"
+					 [translateParams]="{ datetime: internmentEpisode?.probableDischargeDate }">
+			</span>
+		</div>
+	</mat-list-item>
+
+	<div *ngIf="internmentEpisode?.responsibleContact">
+		<mat-divider inset></mat-divider>
+		<mat-list-item id="responsibleContact">
+			<mat-icon color="primary" mat-list-icon [inline]="true" >supervised_user_circle</mat-icon>
+			<span>{{internmentEpisode?.responsibleContact?.fullName || '' }}
+				{{internmentEpisode?.responsibleContact?.relationship ? '(' + internmentEpisode.responsibleContact.relationship + ')' : '' }}
+				{{internmentEpisode?.responsibleContact?.phoneNumber ? ' - ' + internmentEpisode.responsibleContact.phoneNumber : '' }}
+			</span>
+		</mat-list-item>
+	</div>
+	<ng-container *ngIf="showDischarge">
+		<button mat-flat-button id="administrative_discharge_button" color="primary" *appHasRole="['ADMINISTRATIVO']"
+				(click)="goToAdministrativeDischarge()">
+						<span class="uppercase"
+							  [translate]="'internaciones.internacion-paciente.actions.ADMINISTRATIVE_DISCHARGE'"></span>
+		</button>
+	</ng-container>
+</mat-list>
+<ng-template #noInfo>
+	<span class="mat-body-2">-</span>
+</ng-template>

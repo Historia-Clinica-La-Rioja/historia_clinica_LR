@@ -41,6 +41,10 @@ public interface HCEGeneralStateMapper {
     @Named("toHCEAnthropometricDataDto")
     HCEAnthropometricDataDto toHCEAnthropometricDataDto(HCEAnthropometricDataBo resultService);
 
+	@Named("toListHCEAnthropometricDataDto")
+	@IterableMapping(qualifiedByName = "toHCEAnthropometricDataDto")
+	List<HCEAnthropometricDataDto> toListHCEAnthropometricDataDto(List<HCEAnthropometricDataBo> resultService);
+
     @Named("toHCEMedicationDto")
     HCEMedicationDto toHCEMedicationDto(HCEMedicationBo source);
 

@@ -77,12 +77,18 @@
                     <span *ngIf="!bedInfo.probableDischargeDate" class="mat-body-2" [translate]="'gestion-camas.detail.NO_DISCHARGE_DATE'"></span>
                 </div>
             </mat-list-item>
-        </mat-list>
-
-        <div fxLayout="row" fxLayoutAlign="end">
-            <button mat-raised-button color="primary" (click)="assignBed()" *ngIf="bedAssign && bedInfo && bedInfo.bed.free">
-                <span [translate]="'internaciones.new-internment.BED_ASSIGNMENT_BUTTON'"></span>
-            </button>
-        </div>
+			<mat-list-item>
+				<div mat-line *ngIf="!bedInfo.bed.free && patientHasAnamnesis">
+					<button mat-raised-button color="primary" (click)="physicalDischarge()" *appHasRole="['ADMINISTRADOR_DE_CAMAS']" id="physical-discharge">
+						<span class="uppercase" [translate]="'internaciones.discharge.PHYSICAL_DISCHARGE'"></span>
+					</button>
+				</div>
+				<div mat-line>
+					<button mat-raised-button color="primary" (click)="assignBed()" *ngIf="bedAssign && bedInfo && bedInfo.bed.free">
+						<span [translate]="'internaciones.new-internment.BED_ASSIGNMENT_BUTTON'"></span>
+					</button>
+				</div>
+			</mat-list-item>
+		</mat-list>
     </mat-card>
 </section>

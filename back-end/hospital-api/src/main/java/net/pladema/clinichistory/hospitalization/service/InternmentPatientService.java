@@ -15,5 +15,5 @@ public interface InternmentPatientService {
 
     InternmentEpisodeProcessBo internmentEpisodeInProcess(Integer institutionId, Integer patientId);
 
-	Optional<Integer> getInternmentEpisodeInProcessAnyInstitution(Integer patientId);
+	Optional<Integer> getInternmentEpisodeIdInProcess(Integer institutionId, Integer patientId);
 }

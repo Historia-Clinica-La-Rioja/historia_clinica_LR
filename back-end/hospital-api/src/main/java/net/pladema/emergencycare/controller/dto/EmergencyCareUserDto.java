@@ -15,4 +15,6 @@ public class EmergencyCareUserDto {
     private String firstName;
 
     private String lastName;
+
+	private String nameSelfDetermination;
 }

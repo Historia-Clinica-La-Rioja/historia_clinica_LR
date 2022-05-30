@@ -104,19 +104,19 @@ public class MapClinicalObservationVo {
     }
 
     public Optional<AnthropometricDataBo> getLastAnthropometricData() {
-        return getLastNAnthropometricData(0);
+        return getNAnthropometricData(0);
     }
 
-    public Optional<AnthropometricDataBo> getLastNAnthropometricData(int i) {
-        LOG.debug("Input parameters -> pos {}", i);
+    public Optional<AnthropometricDataBo> getNAnthropometricData(int n) {
+        LOG.debug("Input parameters -> pos {}", n);
         AnthropometricDataBo result = new AnthropometricDataBo();
-        getLastNClinicalObservationByCode(ERiskFactor.HEIGHT.getSctidCode(),i).ifPresent(v ->
+        getLastNClinicalObservationByCode(ERiskFactor.HEIGHT.getSctidCode(),n).ifPresent(v ->
             result.setHeight(new ClinicalObservationBo(v))
         );
-        getLastNClinicalObservationByCode(ERiskFactor.WEIGHT.getSctidCode(),i).ifPresent(v ->
+        getLastNClinicalObservationByCode(ERiskFactor.WEIGHT.getSctidCode(),n).ifPresent(v ->
             result.setWeight(new ClinicalObservationBo(v))
         );
-        getLastNClinicalObservationByCode(EObservationLab.BLOOD_TYPE.getSctidCode(),i).ifPresent(v ->
+        getLastNClinicalObservationByCode(EObservationLab.BLOOD_TYPE.getSctidCode(),n).ifPresent(v ->
             result.setBloodType(new ClinicalObservationBo(v))
         );
         LOG.debug(OUTPUT, result);
@@ -124,5 +124,16 @@ public class MapClinicalObservationVo {
             return Optional.of(result);
         return Optional.empty();
     }
+
+	public List<AnthropometricDataBo> getLastNAnthropometricData(int last){
+		LOG.debug("Input parameter -> last {}", last);
+		List<AnthropometricDataBo> result = new ArrayList<>();
+		for (int i=0; i<last; i++) {
+			result.add(getNAnthropometricData(i).orElse(null));
+		}
+		LOG.debug(OUTPUT, result);
+		return result;
+	}
+
 
 }

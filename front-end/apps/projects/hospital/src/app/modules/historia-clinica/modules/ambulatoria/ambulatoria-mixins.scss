@@ -1,7 +1,5 @@
 @import "./components/vacunas/vacunas.component.scss-theme.scss";
-@import "./components/datos-antropometricos-nueva-consulta/datos-antropometricos-nueva-consulta-theme.scss";
 
 @mixin ambulatoria-mixins($theme) {
 	@include app-vacunas($theme);
-	@include app-datos-antropometricos-nueva-consulta($theme);
 }

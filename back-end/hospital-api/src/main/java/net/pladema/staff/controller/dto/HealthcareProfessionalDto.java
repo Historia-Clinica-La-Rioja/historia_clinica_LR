@@ -13,5 +13,6 @@ public class HealthcareProfessionalDto {
 	// Se utiliza para filtro de historico de evoluciones
 	private Integer personId;
 	private PersonBasicDataResponseDto person;
+	private String nameSelfDetermination;
 	
 }

@@ -3,7 +3,7 @@ package ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.entity.Document;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.searchdocuments.DocumentRepositoryCustom;
 import ar.lamansys.sgx.shared.auditable.entity.Updateable;
-import org.springframework.data.jpa.repository.JpaRepository;
+import ar.lamansys.sgx.shared.auditable.repository.SGXAuditableEntityJPARepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
@@ -12,7 +12,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 
 @Repository
-public interface DocumentRepository extends JpaRepository<Document, Long>, DocumentRepositoryCustom {
+public interface DocumentRepository extends SGXAuditableEntityJPARepository<Document, Long>, DocumentRepositoryCustom {
 
     @Query(value = "SELECT d.updateable " +
             "FROM Document d " +

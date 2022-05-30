@@ -8,7 +8,9 @@
 	</div>
 </div>
 <div mat-dialog-actions align="end">
-	<button mat-button [mat-dialog-close]=false class="uppercase" id="cancel-button" name="cancel-button" mat-stroked-button [color]='okBottonColor'>
+
+	<button *ngIf="data?.cancelButtonLabel" mat-button [mat-dialog-close]=false class="uppercase" id="cancel-button"
+		name="cancel-button" mat-stroked-button [color]='okBottonColor'>
 		{{(data.cancelButtonLabel? data.cancelButtonLabel : 'buttons.CANCEL') | translate}}</button>
 	<button mat-raised-button [mat-dialog-close]=true cdkFocusInitial [color]='okBottonColor' class="uppercase"
 		id="okButton-button" name="okButton-button">

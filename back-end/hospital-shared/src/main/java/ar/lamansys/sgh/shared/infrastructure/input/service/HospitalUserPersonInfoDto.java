@@ -20,4 +20,6 @@ public class HospitalUserPersonInfoDto {
 	private String firstName;
 
 	private String lastName;
+
+	private String nameSelfDetermination;
 }

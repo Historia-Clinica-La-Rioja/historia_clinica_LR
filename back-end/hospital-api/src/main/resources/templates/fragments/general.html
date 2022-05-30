@@ -524,7 +524,13 @@
 
 </body>
 <footer class="footer-dark" th:fragment="footer" th:if="${author != null}">
-    <div th:replace="fragments/author.html :: author(firstName=${author.firstName}, lastName=${author.lastName},licenseNumber=${author.licence})">
+    <div th:if="${nameSelfDeterminationFF}">
+        <div th:replace="fragments/author.html :: author(firstName=${author.nameSelfDetermination}, lastName=${author.lastName},licenseNumber=${author.licence})">
+        </div>
+    </div>
+    <div th:if="${!nameSelfDeterminationFF}">
+        <div th:replace="fragments/author.html :: author(firstName=${author.firstName}, lastName=${author.lastName},licenseNumber=${author.licence})">
+        </div>
     </div>
     <div class="col-12">
         <strong>Fecha consulta: </strong><label  th:text="${#temporals.format(performedDate, 'dd/MM/yyyy HH:mm') + ' hs'}"></label>

@@ -1,0 +1,22 @@
+<form class="full-width">
+	<mat-form-field class="full-width" appearance="outline">
+		<input type="text" placeholder="{{ this.placeholder | translate }}" aria-label="Number" matInput [formControl]="myControl" [matAutocomplete]="auto">
+		<mat-autocomplete #auto="matAutocomplete" (optionSelected)="handleOptionSelected($event)" [displayWith]="getDisplayName">
+
+			<ng-container *ngIf="initialOptionsLoaded">
+				<mat-optgroup *ngIf="((templateOptions$ | async)?.length)" label="{{ 'historia-clinica.template-concept-search.TEMPLATE_OPTION_GROUP' | translate }}" >
+					<mat-option *ngFor="let option of templateOptions$ | async" [value]="option">
+						{{option.data.description}}
+					</mat-option>
+				</mat-optgroup>
+
+				<mat-optgroup *ngIf="((conceptOptions$ | async)?.length)" label="{{ 'historia-clinica.template-concept-search.CONCEPT_OPTION_GROUP' | translate }}">
+					<mat-option *ngFor="let option of conceptOptions$ | async" [value]="option">
+						{{option.data.pt.term}}
+					</mat-option>
+				</mat-optgroup>
+			</ng-container>
+
+		</mat-autocomplete>
+	</mat-form-field>
+</form>

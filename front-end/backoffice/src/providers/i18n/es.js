@@ -387,10 +387,10 @@ const messages = {
             createRelated: 'Crear Cobertura médica'
 
         },
-        privatehealthinsuranceplans: {
+        medicalcoverageplans: {
             name: 'Plan |||| Planes',
             fields: {
-                privateHealthInsuranceId: 'Prepaga',
+                medicalCoverageId: 'Cobertura médica',
                 plan: 'Plan',
             },
             addRelated: 'Agregar plan',

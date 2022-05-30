@@ -1,5 +1,5 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { AppointmentDailyAmountDto, CompleteDiaryDto, DiaryOpeningHoursDto, MedicalCoverageDto } from '@api-rest/api-model';
+import { AppointmentDailyAmountDto, AppointmentListDto, CompleteDiaryDto, DiaryOpeningHoursDto, MedicalCoverageDto } from '@api-rest/api-model';
 import { ERole } from '@api-rest/api-model';
 import { CalendarMonthViewBeforeRenderEvent, CalendarView, CalendarWeekViewBeforeRenderEvent, DAYS_OF_WEEK } from 'angular-calendar';
 import {
@@ -20,8 +20,10 @@ import { CalendarEvent, MonthViewDay, WeekViewHourSegment } from 'calendar-utils
 import { MEDICAL_ATTENTION } from '../../constants/descriptions';
 import { AppointmentComponent } from '../../dialogs/appointment/appointment.component';
 import { SnackBarService } from '@presentation/services/snack-bar.service';
-import { MINUTES_IN_HOUR } from '../../constants/appointment';
-import { AppointmentsFacadeService, getColor, getSpanColor } from '@turnos/services/appointments-facade.service';
+
+import { AppointmentsFacadeService, getColor, getSpanColor, toCalendarEvent } from '@turnos/services/appointments-facade.service';
+
+import { APPOINTMENT_STATES_ID, MINUTES_IN_HOUR } from '../../constants/appointment';
 import { map, take } from 'rxjs/operators';
 import { forkJoin, Observable, of, Subject, Subscription } from 'rxjs';
 import { PermissionsService } from '@core/services/permissions.service';
@@ -29,6 +31,7 @@ import { HealthInsuranceService } from '@api-rest/services/health-insurance.serv
 import { AppointmentsService } from '@api-rest/services/appointments.service';
 import { AgendaSearchService } from '../../services/agenda-search.service';
 import { ContextService } from '@core/services/context.service';
+import { ConfirmBookingComponent } from '@turnos/dialogs/confirm-booking/confirm-booking.component';
 
 const ASIGNABLE_CLASS = 'cursor-pointer';
 const AGENDA_PROGRAMADA_CLASS = 'bg-green';
@@ -81,8 +84,9 @@ export class AgendaComponent implements OnInit, OnDestroy {
 
 	ngOnInit(): void {
 		this.route.queryParams.subscribe(qp => this.patientId = Number(qp.idPaciente));
-
 		this.route.paramMap.subscribe((params: ParamMap) => {
+			this.dayStartHour = 8;
+			this.dayEndHour = 21;
 			this.loading = true;
 			this.appointmentSubscription?.unsubscribe();
 			this.appointmentFacade.clear();
@@ -183,80 +187,120 @@ export class AgendaComponent implements OnInit, OnDestroy {
 	}
 
 	onClickedSegment(event) {
-		if (this.getOpeningHoursId(event.date) && this.enableAppointmentScheduling) {
-			const clickedDate: Moment = dateToMomentTimeZone(event.date);
-			const openingHourId: number = this.getOpeningHoursId(event.date);
-			const diaryOpeningHourDto: DiaryOpeningHoursDto =
-				this.diaryOpeningHours.find(diaryOpeningHour => diaryOpeningHour.openingHours.id === openingHourId);
+		this.appointmentsService.getList([this.agenda.id])
+			.subscribe((appointments: AppointmentListDto[]) => {
+				const appointmentsCalendarEvents: CalendarEvent[] = appointments
+					.map(appointment => {
+						const from = momentParseTime(appointment.hour).format(DateFormat.HOUR_MINUTE);
+						const to = momentParseTime(from).add(this.agenda.appointmentDuration, 'minutes').format(DateFormat.HOUR_MINUTE);
+						return toCalendarEvent(from, to, momentParseDate(appointment.date), appointment, '');
+					});
 
-			forkJoin([
-				this.existsAppointmentAt(event.date).pipe(take(1)),
-				this.allOverturnsAssignedForDiaryOpeningHour(diaryOpeningHourDto, clickedDate).pipe(take(1))
-			]).subscribe(([addingOverturn, numberOfOverturnsAssigned]) => {
-				if (addingOverturn && (numberOfOverturnsAssigned === diaryOpeningHourDto.overturnCount)) {
-					if (diaryOpeningHourDto.medicalAttentionTypeId !== MEDICAL_ATTENTION.SPONTANEOUS_ID) {
-						this.snackBarService.showError('turnos.overturns.messages.ERROR');
-					}
-				} else {
-					this.dialog.open(NewAppointmentComponent, {
-						width: '35%',
-						data: {
-							date: clickedDate.format(DateFormat.API_DATE),
-							diaryId: this.agenda.id,
-							hour: clickedDate.format(DateFormat.HOUR_MINUTE_SECONDS),
-							openingHoursId: openingHourId,
-							overturnMode: addingOverturn,
-							patientId: this.patientId
+				this.appointmentFacade.loadAppointments();
+
+				if (this.getOpeningHoursId(event.date) && this.enableAppointmentScheduling) {
+					const clickedDate: Moment = dateToMomentTimeZone(event.date);
+					const openingHourId: number = this.getOpeningHoursId(event.date);
+					const diaryOpeningHourDto: DiaryOpeningHoursDto =
+						this.diaryOpeningHours.find(diaryOpeningHour => diaryOpeningHour.openingHours.id === openingHourId);
+
+					forkJoin([
+						this.getAppointmentAt(event.date).pipe(take(1)),
+						this.allOverturnsAssignedForDiaryOpeningHour(diaryOpeningHourDto, clickedDate).pipe(take(1))
+					]).subscribe(([busySlot, numberOfOverturnsAssigned]) => {
+
+						if (busySlot && busySlot.meta.appointmentStateId === APPOINTMENT_STATES_ID.BLOCKED) {
+							this.snackBarService.showError('No es posible agragar un turno en un horario bloqueado');
+							return;
+						}
+						const addingOverturn = !!busySlot;
+
+						if (addingOverturn && (numberOfOverturnsAssigned === diaryOpeningHourDto.overturnCount)) {
+							if (diaryOpeningHourDto.medicalAttentionTypeId !== MEDICAL_ATTENTION.SPONTANEOUS_ID) {
+								this.snackBarService.showError('turnos.overturns.messages.ERROR');
+							}
+						} else {
+							this.dialog.open(NewAppointmentComponent, {
+								width: '35%',
+								data: {
+									date: clickedDate.format(DateFormat.API_DATE),
+									diaryId: this.agenda.id,
+									hour: clickedDate.format(DateFormat.HOUR_MINUTE_SECONDS),
+									openingHoursId: openingHourId,
+									overturnMode: addingOverturn,
+									patientId: this.patientId,
+								}
+							});
 						}
 					});
 				}
+
 			});
-		}
+
 	}
 
 	viewAppointment(event: CalendarEvent): void {
-
-		if (event.meta.rnos) {
-			this.healthInsuranceService.get(event.meta.rnos)
-				.subscribe((medicalCoverageDto: MedicalCoverageDto) => {
-					event.meta.healthInsurance = medicalCoverageDto;
-					const dialogRef = this.dialog.open(AppointmentComponent, {
-						data: {
-							appointmentData: event.meta,
-							professionalPermissions: this.agenda.professionalAssignShift
-						}
-					});
-					dialogRef.afterClosed().subscribe(appointmentInformation => {
-						if (appointmentInformation?.id) {
-							this.updateAppoinment(appointmentInformation);
-						}
-					});
-				});
-		} else {
-			const dialogRef = this.dialog.open(AppointmentComponent, {
+		if (event.meta.appointmentStateId === APPOINTMENT_STATES_ID.BLOCKED) {
+			return;
+		}
+		if (!event.meta.patient?.id) {
+			this.dialog.open(ConfirmBookingComponent, {
+				width: '30%',
 				data: {
-					appointmentData: event.meta,
-					hasPermissionToAssignShift: this.agenda.professionalAssignShift
-				},
-			});
-			dialogRef.afterClosed().subscribe(appointmentInformation => {
-				if (appointmentInformation?.id) {
-					this.updateAppoinment(appointmentInformation);
+					date: event.meta.date.format(DateFormat.API_DATE),
+					diaryId: this.agenda.id,
+					hour: event.meta.date.format(DateFormat.HOUR_MINUTE_SECONDS),
+					openingHoursId: this.getOpeningHoursId(event.meta.date.toDate()),
+					overturnMode: false,
+					identificationTypeId: event.meta.patient.typeId ? event.meta.patient.typeId : 1,
+					idNumber: event.meta.patient.identificationNumber,
+					appointmentId: event.meta.appointmentId,
+					phoneNumber: event.meta.phoneNumber
 				}
 			});
+		} else {
+			if (event.meta.rnos) {
+				this.healthInsuranceService.get(event.meta.rnos)
+					.subscribe((medicalCoverageDto: MedicalCoverageDto) => {
+						event.meta.healthInsurance = medicalCoverageDto;
+						const dialogRef = this.dialog.open(AppointmentComponent, {
+							data: {
+								appointmentData: event.meta,
+								professionalPermissions: this.agenda.professionalAssignShift
+							}
+						});
+						dialogRef.afterClosed().subscribe(appointmentInformation => {
+							if (appointmentInformation?.id) {
+								this.updateAppoinment(appointmentInformation);
+							}
+						});
+					});
+			} else {
+				const dialogRef = this.dialog.open(AppointmentComponent, {
+					data: {
+						appointmentData: event.meta,
+						hasPermissionToAssignShift: this.agenda.professionalAssignShift
+					},
+				});
+				dialogRef.afterClosed().subscribe(appointmentInformation => {
+					if (appointmentInformation?.id) {
+						this.updateAppoinment(appointmentInformation);
+					}
+				});
+			}
 		}
 	}
 
 	setAgenda(agenda: CompleteDiaryDto): void {
-		delete this.dayEndHour;
-		delete this.dayStartHour;
+		//delete this.dayEndHour;
+		//delete this.dayStartHour;
 		this.agenda = agenda;
 		this.setEnableAppointmentScheduling();
 		this.viewDate = this._getViewDate();
 		this.hourSegments = MINUTES_IN_HOUR / agenda.appointmentDuration;
 		this.appointmentFacade.setValues(agenda.id, agenda.appointmentDuration);
 		this.diaryOpeningHours = agenda.diaryOpeningHours;
-		this.setDayStartHourAndEndHour(agenda.diaryOpeningHours);
+		//this.setDayStartHourAndEndHour(agenda.diaryOpeningHours);
 
 	}
 
@@ -318,6 +362,13 @@ export class AgendaComponent implements OnInit, OnDestroy {
 			})
 		);
 	}
+	private getAppointmentAt(date: Date): Observable<CalendarEvent> {
+		return this.appointmentFacade.getAppointments().pipe(
+			map(array => {
+				return array.find(appointment => appointment.start.getTime() === date.getTime());
+			})
+		);
+	}
 
 	private allOverturnsAssignedForDiaryOpeningHour(diaryOpeningHourDto: DiaryOpeningHoursDto, clickedDate: Moment): Observable<number> {
 
@@ -366,7 +417,7 @@ export class AgendaComponent implements OnInit, OnDestroy {
 	private updateAppoinment(appointmentInformation) {
 		const appointment = this.appointments.find(appointment => appointment.meta.appointmentId === appointmentInformation?.id);
 		appointment.meta.appointmentStateId = appointmentInformation.stateId;
-		const color = getColor(appointmentInformation.stateId);
+		const color = getColor(appointmentInformation);
 		appointment.color.primary = color;
 		appointment.color.secondary = color;
 		appointment.cssClass = getSpanColor(appointmentInformation.stateId);

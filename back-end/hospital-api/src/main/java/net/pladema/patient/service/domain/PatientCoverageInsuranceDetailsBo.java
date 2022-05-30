@@ -8,17 +8,10 @@ import net.pladema.patient.repository.entity.MedicalCoverage;
 
 @Getter
 @Setter
-@AllArgsConstructor
 public class PatientCoverageInsuranceDetailsBo extends MedicalCoverageBo{
 
-	private Integer id;
-	private String name;
-	private String cuit;
-	private String coverageType;
-
-	@Override
-	public String obtainCoverageType() {
-		return this.coverageType;
+	public PatientCoverageInsuranceDetailsBo(Integer id, String name, String cuit, Short type){
+		super(id,name,cuit,type);
 	}
 
 	@Override

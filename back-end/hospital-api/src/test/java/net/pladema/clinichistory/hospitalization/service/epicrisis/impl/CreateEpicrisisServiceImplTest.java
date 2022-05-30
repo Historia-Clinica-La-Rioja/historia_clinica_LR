@@ -18,6 +18,7 @@ import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.S
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.entity.Document;
 import ar.lamansys.sgx.shared.dates.configuration.DateTimeProvider;
 import ar.lamansys.sgx.shared.exceptions.NotFoundException;
+import ar.lamansys.sgx.shared.featureflags.application.FeatureFlagsService;
 import net.pladema.UnitRepository;
 import net.pladema.clinichistory.hospitalization.repository.EvolutionNoteDocumentRepository;
 import net.pladema.clinichistory.hospitalization.repository.InternmentEpisodeRepository;
@@ -27,7 +28,7 @@ import net.pladema.clinichistory.hospitalization.repository.domain.InternmentEpi
 import net.pladema.clinichistory.hospitalization.service.epicrisis.CreateEpicrisisService;
 import net.pladema.clinichistory.hospitalization.service.epicrisis.domain.EpicrisisBo;
 import net.pladema.clinichistory.hospitalization.service.impl.InternmentEpisodeServiceImpl;
-import net.pladema.establishment.repository.PrivateHealthInsurancePlanRepository;
+import net.pladema.establishment.repository.MedicalCoveragePlanRepository;
 
 import org.assertj.core.util.Lists;
 import org.junit.jupiter.api.Assertions;
@@ -61,7 +62,7 @@ class CreateEpicrisisServiceImplTest extends UnitRepository {
     private DocumentRepository documentRepository;
 
 	@Autowired
-	private PrivateHealthInsurancePlanRepository privateHealthInsurancePlanRepository;
+	private MedicalCoveragePlanRepository medicalCoveragePlanRepository;
 
 	@Mock
 	private DateTimeProvider dateTimeProvider;
@@ -72,6 +73,9 @@ class CreateEpicrisisServiceImplTest extends UnitRepository {
     @Mock
     private DocumentFactory documentFactory;
 
+	@Mock
+	private FeatureFlagsService featureFlagsService;
+
     @BeforeEach
     void setUp(){
         var internmentEpisodeService = new InternmentEpisodeServiceImpl(
@@ -79,8 +83,8 @@ class CreateEpicrisisServiceImplTest extends UnitRepository {
                 dateTimeProvider, evolutionNoteDocumentRepository,
                 patientDischargeRepository,
                 documentService,
-				privateHealthInsurancePlanRepository
-        );
+                medicalCoveragePlanRepository,
+				featureFlagsService);
         createEpicrisisService = new CreateEpicrisisServiceImpl(
                 documentFactory,
                 internmentEpisodeService,

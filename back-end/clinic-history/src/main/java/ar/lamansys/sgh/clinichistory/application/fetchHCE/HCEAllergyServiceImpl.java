@@ -42,9 +42,9 @@ public class HCEAllergyServiceImpl implements HCEAllergyService {
     }
 
 	@Override
-	public List<HCEAllergyBo> getActiveInternmentEpisodeAllergies(Integer patientId) {
+	public List<HCEAllergyBo> getActiveInternmentEpisodeAllergies(Integer institutionId, Integer patientId) {
 		LOG.debug(LOGGING_INPUT, patientId);
-		List<HCEAllergyVo> allergies = sharedHospitalizationPort.getInternmenEpisodeId(patientId)
+		List<HCEAllergyVo> allergies = sharedHospitalizationPort.getInternmentEpisodeId(institutionId, patientId)
 				.map(ie -> sharedHospitalizationPort.getInternmentEpisodeAllergies(ie)
 						.stream().map(hceAllergyIntoleranceRepository::findHCEAllergy)
 						.collect(Collectors.toList()))

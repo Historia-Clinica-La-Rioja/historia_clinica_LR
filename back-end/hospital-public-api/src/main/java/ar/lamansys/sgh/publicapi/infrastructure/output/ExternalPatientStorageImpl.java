@@ -82,7 +82,7 @@ public class ExternalPatientStorageImpl implements ExternalPatientStorage {
                                 mc.getMedicalCoverage().getCuit(),
                                 mc.getMedicalCoverage().getPlan(),
                                 mc.getMedicalCoverage().getName(),
-                                mc.getMedicalCoverage().getType().toString()),
+                                mc.getMedicalCoverage().getType().getId()),
                         mc.getAffiliateNumber(),
                         mc.getActive(),
                         mc.getVigencyDate(),

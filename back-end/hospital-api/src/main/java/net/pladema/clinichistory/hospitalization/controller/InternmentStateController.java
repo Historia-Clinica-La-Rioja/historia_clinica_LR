@@ -170,6 +170,18 @@ public class InternmentStateController {
         return  ResponseEntity.ok().body(result);
     }
 
+	@InternmentValid
+	@GetMapping("/{internmentEpisodeId}/general/last-2-anthropometric-data")
+	public ResponseEntity<List<AnthropometricDataDto>> getLast2AnthropometricDataGeneralState(
+			@PathVariable(name = "institutionId") Integer institutionId,
+			@PathVariable(name = "internmentEpisodeId") Integer internmentEpisodeId){
+		LOG.debug(LOGGING_INSTITUTION_AND_INTERNMENT_EPISODE, institutionId, internmentEpisodeId);
+		List<AnthropometricDataBo> anthropometricData = fetchHospitalizationClinicalObservationState.getLast2AnthropometricDataGeneralState(internmentEpisodeId);
+		List<AnthropometricDataDto> result = internmentStateMapper.toListAnthropometricDataDto(anthropometricData);
+		LOG.debug(LOGGING_OUTPUT, result);
+		return  ResponseEntity.ok().body(result);
+	}
+
     @InternmentValid
     @GetMapping("/{internmentEpisodeId}/general/riskFactors")
     public ResponseEntity<Last2RiskFactorsDto> riskFactorsGeneralState(

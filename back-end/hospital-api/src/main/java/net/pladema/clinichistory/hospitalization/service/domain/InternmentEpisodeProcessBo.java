@@ -14,4 +14,6 @@ public class InternmentEpisodeProcessBo {
 
     private boolean inProgress;
 
+	private boolean patientHospitalized;
+
 }

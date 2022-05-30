@@ -1,0 +1,23 @@
+<div mat-dialog-title fxLayoutAlign="space-between">
+	<div class="mat-h2">{{data.title | translate}}</div>
+	<button mat-icon-button mat-dialog-close>
+		<mat-icon>close</mat-icon>
+	</button>
+</div>
+<mat-dialog-content>
+	<div fxLayout="column" fxLayoutGap="20px">
+		<span [translate]="'internaciones.dialogs.actions-document.SUBTITLE'"></span>
+		<form [formGroup]="form" (ngSubmit)="save()">
+			<mat-form-field appearance="outline">
+				<mat-label [translate]="'internaciones.dialogs.actions-document.REASON'"></mat-label>
+				<textarea matInput type="text" id="note-input" formControlName="reason"></textarea>
+				<mat-error *ngIf="form.hasError('required', 'reason')" [translate]="'forms.REQUIRED'"></mat-error>
+			</mat-form-field>
+			<div actions id="buttons" fxLayoutAlign="end end">
+				<button type="submit" mat-raised-button color="primary" id="confirm_button">
+					<span class="uppercase" [translate]="'buttons.CONFIRM'"></span>
+				</button>
+			</div>
+		</form>
+	</div>
+</mat-dialog-content>

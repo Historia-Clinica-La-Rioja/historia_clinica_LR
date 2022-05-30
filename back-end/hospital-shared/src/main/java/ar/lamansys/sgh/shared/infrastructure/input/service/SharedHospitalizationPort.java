@@ -9,6 +9,6 @@ public interface SharedHospitalizationPort {
 
 	List<Integer> getInternmentEpisodeAllergies(Integer internmentEpisodeId);
 
-	Optional<Integer> getInternmenEpisodeId(Integer patientId);
+	Optional<Integer> getInternmentEpisodeId(Integer institutionId, Integer patientId);
 
 }

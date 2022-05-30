@@ -1,5 +1,7 @@
 package ar.lamansys.sgh.clinichistory.infrastructure.output.repository.searchdocuments;
 
+import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.DocumentType;
+import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.DocumentStatus;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.masterdata.entity.ConditionVerificationStatus;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.masterdata.entity.ProblemType;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.SourceType;
@@ -33,7 +35,8 @@ public class DocumentSearchQuery {
     public QueryPart select() {
         return new QueryPart("document.id, \n" +
                 "document.creationable.createdOn, \n" +
-                "creator.firstName, \n" +
+				"userperson.pk.userId as creatorUserId, \n" +
+				"creator.firstName, \n" +
                 "creator.lastName, \n" +
                 "snomed.pt as diagnosis, \n" +
                 "hc.main, \n" +
@@ -46,7 +49,8 @@ public class DocumentSearchQuery {
                 "evolutionnote.description as evolutionNote,\n" +
                 "clinicalnote.description as clinicalNote, \n" +
                 "illnessnote.description as illnessNote, \n" +
-                "indicationnote.description as indicationNote \n");
+                "indicationnote.description as indicationNote, \n" +
+				"personextended.nameSelfDetermination \n");
     }
 
     public QueryPart from() {
@@ -55,6 +59,7 @@ public class DocumentSearchQuery {
         //Creator
                 "join UserPerson as userperson on (document.creationable.createdBy = userperson.pk.userId) \n" +
                 "join Person as creator on (userperson.pk.personId = creator.id) \n" +
+				"left join PersonExtended as personextended on (creator.id = personextended.id) \n" +
         //Notes
                 "left join Note othernote on (document.otherNoteId = othernote.id) \n" +
                 "left join Note physicalnote on (document.physicalExamNoteId = physicalnote.id) \n" +
@@ -74,6 +79,8 @@ public class DocumentSearchQuery {
     public QueryPart where() {
         return new QueryPart("document.sourceId = :internmentEpisodeId \n" +
                 "and document.sourceTypeId = " + SourceType.HOSPITALIZATION +" \n"+
+				"and document.typeId != " + DocumentType.INDICATION +" \n"+
+				"and not document.statusId = '" + DocumentStatus.ERROR +"' \n"+
 				"and not exists (select 1 \n" +
 				"					from HealthCondition hc2 \n" +
 				"					where hc.id = hc2.id \n" +
@@ -105,17 +112,20 @@ public class DocumentSearchQuery {
             result.add(new DocumentSearchVo(k,
                     mapNotes(tuple),
                     (LocalDateTime)tuple[1],
-                    (String)tuple[2],
+					(Integer)tuple[2],
                     (String)tuple[3],
+                    (String)tuple[4],
                     mapDiagnosis(v),
                     mapMainDiagnosis(v),
-					(String)tuple[8]));
+					(String)tuple[9],
+					(String)tuple[17]));
+
         });
         return result;
     }
 
     private DocumentObservationsVo mapNotes(Object[] tuple){
-        int index = 9;
+        int index = 10;
         String otherNote = (String) tuple[index++];
         String physicalExam = (String)tuple[index++];
         String studiesSummary = (String)tuple[index++];
@@ -139,13 +149,13 @@ public class DocumentSearchQuery {
 
     private String mapMainDiagnosis(List<Object[]> tuples){
         return tuples.stream()
-                .filter((Object[]t) -> t[5] != null && (Boolean)t[5])
-                .map((Object[]t) -> (String)t[4]).collect(Collectors.joining());
+                .filter((Object[]t) -> t[6] != null && (Boolean)t[6])
+                .map((Object[]t) -> (String)t[5]).collect(Collectors.joining());
     }
 
     private List<String> mapDiagnosis(List<Object[]> tuples){
         return tuples.stream()
-                .filter((Object[]t) -> t[5] != null && !(Boolean)t[5])
-                .map((Object[]t) -> (String)t[4]).collect(Collectors.toList());
+                .filter((Object[]t) -> t[6] != null && !(Boolean)t[6])
+                .map((Object[]t) -> (String)t[5]).collect(Collectors.toList());
     }
 }

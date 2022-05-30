@@ -15,27 +15,23 @@ public class HealthInsuranceBo extends MedicalCoverageBo {
     private Integer rnos;
     private String acronym;
 
-    public HealthInsuranceBo(Integer id, String name, String cuit, Integer rnos, String acronym){
+    public HealthInsuranceBo(Integer id, String name, String cuit, Integer rnos, String acronym, Short type){
         setId(id);
         setName(name);
         setCuit(cuit);
+		setType(type);
         this.rnos = rnos;
         this.acronym = acronym;
     }
 
 	@Override
-	public String obtainCoverageType() {
-		return "OBRASOCIAL";
-	}
-
-	@Override
     public CoverageDto newInstance() {
-        return new HealthInsuranceDto(getId(), getName(), getCuit(), getRnos(), getAcronym());
+        return new HealthInsuranceDto(getId(), getName(), getCuit(), getRnos(), getAcronym(), getType());
     }
 
     @Override
     public HealthInsurance mapToEntity() {
-        return new HealthInsurance(getId(), getName(), getCuit(), getRnos(), getAcronym());
+        return new HealthInsurance(getId(), getName(), getCuit(), getRnos(), getAcronym(), getType());
     }
 
 }

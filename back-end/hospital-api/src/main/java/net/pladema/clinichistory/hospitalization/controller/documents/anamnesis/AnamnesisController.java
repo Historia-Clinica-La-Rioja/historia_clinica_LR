@@ -1,7 +1,7 @@
 package net.pladema.clinichistory.hospitalization.controller.documents.anamnesis;
 
-import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.DocumentType;
 import ar.lamansys.sgh.clinichistory.domain.document.PatientInfoBo;
+import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.DocumentType;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import net.pladema.clinichistory.hospitalization.controller.constraints.DocumentValid;
 import net.pladema.clinichistory.hospitalization.controller.constraints.InternmentValid;
@@ -11,6 +11,7 @@ import net.pladema.clinichistory.hospitalization.controller.documents.anamnesis.
 import net.pladema.clinichistory.hospitalization.service.InternmentEpisodeService;
 import net.pladema.clinichistory.hospitalization.service.anamnesis.AnamnesisService;
 import net.pladema.clinichistory.hospitalization.service.anamnesis.CreateAnamnesisService;
+import net.pladema.clinichistory.hospitalization.service.anamnesis.DeleteAnamnesisService;
 import net.pladema.clinichistory.hospitalization.service.anamnesis.domain.AnamnesisBo;
 import net.pladema.patient.controller.service.PatientExternalService;
 import ar.lamansys.sgx.shared.exceptions.NotFoundException;
@@ -45,18 +46,22 @@ public class AnamnesisController {
 
     private final PatientExternalService patientExternalService;
 
+    private final DeleteAnamnesisService deleteAnamnesisService;
+
     public AnamnesisController(InternmentEpisodeService internmentEpisodeService,
-                               CreateAnamnesisService createAnamnesisService,
-                               AnamnesisService anamnesisService,
-                               AnamnesisMapper anamnesisMapper,
-                               MessageSource messageSource,
-                               PatientExternalService patientExternalService) {
+							   CreateAnamnesisService createAnamnesisService,
+							   AnamnesisService anamnesisService,
+							   AnamnesisMapper anamnesisMapper,
+							   MessageSource messageSource,
+							   PatientExternalService patientExternalService,
+							   DeleteAnamnesisService deleteAnamnesisService) {
         this.internmentEpisodeService = internmentEpisodeService;
         this.createAnamnesisService = createAnamnesisService;
         this.anamnesisService = anamnesisService;
         this.anamnesisMapper = anamnesisMapper;
         this.messageSource = messageSource;
         this.patientExternalService = patientExternalService;
+        this.deleteAnamnesisService = deleteAnamnesisService;
     }
 
     @PostMapping
@@ -99,5 +104,20 @@ public class AnamnesisController {
         LOG.debug(OUTPUT, result);
         return  ResponseEntity.ok().body(result);
     }
+
+	@DeleteMapping("/{anamnesisId}")
+	@PreAuthorize("hasPermission(#institutionId, 'ESPECIALISTA_MEDICO, ENFERMERO_ADULTO_MAYOR')")
+	public ResponseEntity<Boolean> deleteAnamnesis(
+			@PathVariable(name = "institutionId") Integer institutionId,
+			@PathVariable(name = "internmentEpisodeId") Integer internmentEpisodeId,
+			@PathVariable(name = "anamnesisId") Long anamnesisId,
+			@RequestBody String reason) {
+		LOG.debug("Input parameters -> institutionId {}, internmentEpisodeId {}, " +
+						"anamnesisId {}, reason {}",
+				institutionId, internmentEpisodeId, anamnesisId, reason);
+		deleteAnamnesisService.execute(internmentEpisodeId, anamnesisId, reason);
+		LOG.debug(OUTPUT, Boolean.TRUE);
+		return  ResponseEntity.ok().body(Boolean.TRUE);
+	}
 
 }

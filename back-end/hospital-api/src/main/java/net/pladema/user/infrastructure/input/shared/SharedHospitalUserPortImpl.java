@@ -25,6 +25,6 @@ public class SharedHospitalUserPortImpl implements SharedHospitalUserPort {
 	}
 
 	private HospitalUserPersonInfoDto toHospitalUserPersonInfoDto(UserPersonInfoBo bo) {
-		return new HospitalUserPersonInfoDto(bo.getId(), bo.getEmail(), bo.getPersonId(), bo.getFirstName(), bo.getLastName());
+		return new HospitalUserPersonInfoDto(bo.getId(), bo.getEmail(), bo.getPersonId(), bo.getFirstName(), bo.getLastName(), bo.getNameSelfDetermination());
 	}
 }

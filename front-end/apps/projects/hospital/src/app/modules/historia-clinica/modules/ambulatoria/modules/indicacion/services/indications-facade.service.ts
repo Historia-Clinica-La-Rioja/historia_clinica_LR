@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, Subject, Observable } from "rxjs";
-import { DietDto, OtherIndicationDto, ParenteralPlanDto } from "@api-rest/api-model";
+import { DietDto, OtherIndicationDto, ParenteralPlanDto, PharmacoDto } from "@api-rest/api-model";
 import { InternmentIndicationService } from "@api-rest/services/internment-indication.service";
 
 @Injectable({
@@ -13,10 +13,11 @@ export class IndicationsFacadeService {
 
 	private otherIndecationsSubject: Subject<any> = new BehaviorSubject<OtherIndicationDto[]>([]);
 	readonly diets$ = this.dietsSubject.asObservable();
-
 	readonly otherIndications$ = this.otherIndecationsSubject.asObservable();
 	private parenteralPlansSubject = new BehaviorSubject<ParenteralPlanDto[]>([]);
 	readonly parenteralPlans$ = this.parenteralPlansSubject.asObservable();
+	private pharmacoSubject = new BehaviorSubject<PharmacoDto[]>([]);
+	readonly pharmacos$ = this.pharmacoSubject.asObservable();
 
 	constructor(
 		private readonly internmentIndicationService: InternmentIndicationService
@@ -33,7 +34,11 @@ export class IndicationsFacadeService {
 	addParenteralPlan(parenteralPlan: ParenteralPlanDto): Observable<any> {
 		return this.internmentIndicationService.addParenteralPlan(parenteralPlan, this.internmentEpisodeId);
 	}
-	
+
+	addPharmaco(pharmaco: PharmacoDto): Observable<any> {
+		return this.internmentIndicationService.addPharamaco(pharmaco, this.internmentEpisodeId);
+	}
+
 	updateIndication(updateIndication: UpdateIndication) {
 		if (updateIndication.diets) {
 			this.internmentIndicationService.getInternmentEpisodeDiets(this.internmentEpisodeId).subscribe(d => this.dietsSubject.next(d));
@@ -45,6 +50,9 @@ export class IndicationsFacadeService {
 		if (updateIndication.parenteralPlan) {
 			this.internmentIndicationService.getInternmentEpisodeParenteralPlan(this.internmentEpisodeId).subscribe(p => this.parenteralPlansSubject.next(p));
 		}
+		if (updateIndication.pharmaco) {
+			this.internmentIndicationService.getInternmentEpisodePharmaco(this.internmentEpisodeId).subscribe(p => this.pharmacoSubject.next(p));
+		}
 	}
 
 	setInternmentEpisodeId(id: number) {
@@ -52,7 +60,8 @@ export class IndicationsFacadeService {
 		this.updateIndication({
 			diets: true,
 			otherIndication: true,
-			parenteralPlan: true
+			parenteralPlan: true,
+			pharmaco: true
 		})
 	}
 }

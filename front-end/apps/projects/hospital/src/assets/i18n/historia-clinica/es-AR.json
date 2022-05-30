@@ -30,6 +30,7 @@
 		},
 		"factores-de-riesgo-form": {
 			"TITLE": "Factores de Riesgo",
+			"NAME": "factores de riesgo",
 			"HEART_RATE": "Frecuencia cardíaca (/min)",
 			"RESPIRATORY_RATE": "Frecuencia respiratoria (/min)",
 			"TEMPERATURE": "Temperatura corporal",
@@ -40,6 +41,16 @@
 			"GLYCOSYLATED_HEMOGLOBIN": "Hemoglobina glicosilada (%)",
 			"CARDIOVASCULAR_RISK": "Riesgo cardiovascular (%)",
 			"MAX_TWO_DECIMAL_DIGITS": "El valor debe tener máximo 2 cifras decimales"
+		},
+		"include-previous-data-question": {
+			"DESCRIPTION": "Últimos {{dataName}} cargados previamente el {{date}}",
+			"QUESTION": "¿Desea incluirlos en la consulta?",
+			"ADD": "SI, INCLUIRLOS",
+			"DISCARD": "NO, DESCARTARLOS"
+		},
+		"template-concept-search": {
+			"TEMPLATE_OPTION_GROUP": "Plantillas",
+			"CONCEPT_OPTION_GROUP": "Conceptos"
 		}
 	}
 }

@@ -27,9 +27,9 @@ export class InternmentSummaryComponent implements OnInit {
 
 	ngOnInit(): void {
 		this.route.paramMap.subscribe(params => {
-			this.internmentEpisodeInfo = { id: Number(params.get('idInternacion')), inProgress: false };
+			this.internmentEpisodeInfo = { id: Number(params.get('idInternacion')), inProgress: false, patientHospitalized: false };
 			this.patientId = Number(params.get('idPaciente'));
-			this.internmentSummaryFacadeService.setInternmentEpisodeInformation(this.internmentEpisodeInfo.id, true);
+			this.internmentSummaryFacadeService.setInternmentEpisodeInformation(this.internmentEpisodeInfo.id, true, true);
 		})
 	}
 

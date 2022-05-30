@@ -1,0 +1,845 @@
+databaseChangeLog: 
+    - logicalFilePath: incrementales-v1_37 
+
+    - changeSet:
+        id: update-external_clinical_history-notes-type
+        author: fsimaro
+        changes:
+          - modifyDataType:
+              columnName: notes
+              newDataType: text
+              tableName: external_clinical_history
+    
+    - changeSet:    
+        id: add-private_health_insurance_details-columns-patient_medical_coverage
+        author: mvenere
+        changes:
+          - addColumn:
+              tableName: patient_medical_coverage
+              columns:
+                - column:
+                    name: start_date
+                    type: date
+          - addColumn:
+              tableName: patient_medical_coverage
+              columns:
+                - column:
+                    name: end_date
+                    type: date
+          - addColumn:
+              tableName: patient_medical_coverage
+              columns:
+                - column:
+                    name: plan_id
+                    type: int
+                - addForeignKeyConstraint:
+                    baseColumnNames: plan_id
+                    baseTableName: patient_medical_coverage
+                    constraintName: FK_patient_medical_coverage_plan_id
+                    onDelete: NO ACTION
+                    onUpdate: NO ACTION
+                    referencedColumnNames: id
+                    referencedTableName: private_health_insurance_plan
+                    validate: true
+
+    - changeSet:
+        id: patient_medical_coverage-update-start_date-data
+        comment: Actualizar datos start_date en patient_medical_coverage
+        author: mvenere
+        context: "!schema-only"
+        changes:
+          - sql:
+              sql: |-
+                UPDATE patient_medical_coverage pmc SET start_date = phid.start_date FROM private_health_insurance_details phid WHERE pmc.private_health_insurance_details_id  = phid.id;
+
+    - changeSet:
+        id: patient_medical_coverage-update-end_date-data
+        comment: Actualizar datos end_date en patient_medical_coverage
+        author: mvenere
+        context: "!schema-only"
+        changes:
+          - sql:
+              sql: |-
+                UPDATE patient_medical_coverage pmc SET end_date = phid.end_date FROM private_health_insurance_details phid WHERE pmc.private_health_insurance_details_id  = phid.id;
+
+    - changeSet:
+        id: patient_medical_coverage-update-plan-data
+        comment: Actualizar datos plan en patient_medical_coverage
+        author: mvenere
+        context: "!schema-only"
+        changes:
+          - sql:
+              sql: |-
+                UPDATE patient_medical_coverage pmc SET plan_id = phid.private_health_insurance_plan_id FROM private_health_insurance_details phid WHERE pmc.private_health_insurance_details_id  = phid.id;
+
+    - changeSet:
+        id: renameTable-private_health_insurance_plan
+        author: mvenere
+        changes:
+          - renameTable:
+              newTableName: medical_coverage_plan
+              oldTableName: private_health_insurance_plan
+
+    - changeSet:
+        id: renameColumn-medical_coverage_plan-private_health_insurance_id
+        author: mvenere
+        changes:
+          - dropForeignKeyConstraint:
+              baseTableName: medical_coverage_plan
+              constraintName: FK_private_health_insurance_id
+          - renameColumn:
+              columnDataType: int
+              newColumnName: medical_coverage_id
+              oldColumnName: private_health_insurance_id
+              tableName: medical_coverage_plan
+          - addForeignKeyConstraint:
+              baseColumnNames: medical_coverage_id
+              baseTableName: medical_coverage_plan
+              constraintName: FK_medical_coverage_plan_medical_coverage_id
+              onDelete: NO ACTION
+              onUpdate: NO ACTION
+              referencedColumnNames: id
+              referencedTableName: medical_coverage
+              validate: true
+
+    - changeSet:
+        id: add-auditable-columns-medical_coverage_plan
+        author: mvenere
+        changes:
+          - addColumn:
+              tableName: medical_coverage_plan
+              columns:
+                - column:
+                    constraints:
+                      nullable: false
+                    name: created_by
+                    type: int
+                    defaultValue: -1
+                - column:
+                    constraints:
+                      nullable: false
+                    name: created_on
+                    type: datetime
+                    defaultValueDate: ${date.now}
+                - column:
+                    constraints:
+                      nullable: false
+                    name: updated_by
+                    type: int
+                    defaultValue: -1
+                - column:
+                    constraints:
+                      nullable: false
+                    name: updated_on
+                    type: datetime
+                    defaultValueDate: ${date.now}
+                - column:
+                    constraints:
+                      nullable: false
+                    name: deleted
+                    type: BOOLEAN
+                    defaultValue: ${boolean.false}
+                - column:
+                    name: deleted_by
+                    type: int
+                - column:
+                    name: deleted_on
+                    type: datetime
+
+    - changeSet:
+        id: dropNotNullConstraint-patient_id-appointment
+        comment: drop NotNullConstraint patient_id-appointment
+        author: lmanterola
+        changes:
+          - dropNotNullConstraint:
+              tableName: appointment
+              columnName: patient_id
+              columnDataType: int
+
+    - changeSet:
+        id: addColumn-snomed_id-appointment
+        comment: addColumn snomed_id appointment
+        author: lmanterola
+        changes:
+          - addColumn:
+              tableName: appointment
+              columns:
+                - column:
+                    name: snomed_id
+                    type: int
+
+    - changeSet:
+        id: diary_opening_hours-addColumn-external_appointments
+        comment: add column external_appointments diary_opening_hours
+        author: lmanterola
+        changes:
+          - addColumn:
+              tableName: diary_opening_hours
+              columns:
+                - column:
+                    name: external_appointments_allowed
+                    type: bool
+
+    - changeSet:
+        id: mandatory_medical_practice-createTable
+        comment: Create table mandatory_medical_practice
+        author: lmanterola
+        changes:
+          - createTable:
+              tableName: mandatory_medical_practice
+              columns:
+                - column:
+                    constraints:
+                      primaryKey: true
+                      primaryKeyName: PK_mandatory_medical_practice
+                    name: mandatory_medical_practice_id
+                    type: int
+                - column:
+                    name: description
+                    type: varchar(255)
+                - column:
+                    name: mmp_code
+                    type: varchar(255)
+                - column:
+                    name: snomed_id
+                    type: int
+
+    - changeSet:
+        id: clinical_specialty_mandatory_medical_practice-createTable
+        comment: Create table clinical_specialty_mandatory_medical_practice
+        author: lmanterola
+        changes:
+          - createTable:
+              tableName: clinical_specialty_mandatory_medical_practice
+              columns:
+                - column:
+                    autoIncrement: true
+                    constraints:
+                      primaryKey: true
+                      primaryKeyName: PK_clinical_specialty_mandatory_medical_practice_rule
+                    name: id
+                    type: int
+                - column:
+                    name: clinical_specialty_id
+                    type: int
+                - column:
+                    name: mandatory_medical_practice_id
+                    type: int
+                - column:
+                    name: practice_recommendations
+                    type: varchar(255)
+
+          - addForeignKeyConstraint:
+              baseColumnNames: clinical_specialty_id
+              baseTableName: clinical_specialty_mandatory_medical_practice
+              constraintName: FK_clinical_specialty_mandatory_medical_practice_rule_clinical_specialty_id
+              referencedColumnNames: id
+              referencedTableName: clinical_specialty
+          - addForeignKeyConstraint:
+              baseColumnNames: mandatory_medical_practice_id
+              baseTableName: clinical_specialty_mandatory_medical_practice
+              constraintName: FK_clinical_specialty_mandatory_medical_practice_rule_mandatory_medical_practice_id
+              referencedColumnNames: mandatory_medical_practice_id
+              referencedTableName: mandatory_medical_practice                
+
+    - changeSet:
+        id: health_insurance_practice-createTable
+        comment: Create table health_insurance_practice
+        author: lmanterola
+        changes:
+          - createTable:
+              tableName: health_insurance_practice
+              columns:
+                - column:
+                    autoIncrement: true
+                    constraints:
+                      primaryKey: true
+                      primaryKeyName: PK_health_insurance_practice
+                    name: id
+                    type: int
+                - column:
+                    name: medical_coverage_id
+                    type: int
+                - column:
+                    name: coverage_information
+                    type: varchar(255)
+                - column:
+                    constraints:
+                      foreignKeyName: FK_clinical_specialty_mandatory_medical_practice_health_insurance_practice
+                      references: clinical_specialty_mandatory_medical_practice(id)
+                    name: clinical_specialty_mandatory_medical_practice_id
+                    type: int
+
+    - changeSet:
+        id: healthcare_professional_health_insurance-createTable
+        comment: Create table healthcare_professional_health_insurance
+        author: lmanterola
+        changes:
+          - createTable:
+              tableName: healthcare_professional_health_insurance
+              columns:
+                - column:
+                    autoIncrement: true
+                    constraints:
+                      primaryKey: true
+                      primaryKeyName: PK_healthcare_professional_health_insurance
+                    name: id
+                    type: int
+                - column:
+                    name: healthcare_professional_id
+                    type: int
+                - column:
+                    name: medical_coverage_id
+                    type: int
+
+          - addForeignKeyConstraint:
+              baseColumnNames: healthcare_professional_id
+              baseTableName: healthcare_professional_health_insurance
+              constraintName: FK_healthcare_professional_health_insurance_rule_healthcare_professional_id
+              referencedColumnNames: id
+              referencedTableName: healthcare_professional
+          - addUniqueConstraint:
+              columnNames: healthcare_professional_id, medical_coverage_id
+              constraintName: unique_constraint_healthcare_professional_health_insurance
+              tableName: healthcare_professional_health_insurance
+
+    
+
+    - changeSet:
+        id: mandatory_professional_practice_free_days-createTable
+        comment: Create table mandatory_professional_practice_free_days
+        author: lmanterola
+        changes:
+          - createTable:
+              tableName: mandatory_professional_practice_free_days
+              columns:
+                - column:
+                    autoIncrement: true
+                    constraints:
+                      primaryKey: true
+                      primaryKeyName: PK_mandatory_professional_practice_free_days
+                    name: id
+                    type: int
+                - column:
+                    name: clinical_specialty_mandatory_medical_practice_id
+                    type: int
+                - column:
+                    name: healthcare_professional_id
+                    type: int
+                - column:
+                    name: day
+                    type: smallint
+
+          - addForeignKeyConstraint:
+              baseColumnNames: healthcare_professional_id
+              baseTableName: mandatory_professional_practice_free_days
+              constraintName: FK_mandatory_professional_practice_free_days_rule_healthcare_professional_id
+              referencedColumnNames: id
+              referencedTableName: healthcare_professional
+          - addUniqueConstraint:
+              columnNames: healthcare_professional_id, clinical_specialty_mandatory_medical_practice_id, day
+              constraintName: unique_constraint_mandatory_professional_practice_free_days
+              tableName: mandatory_professional_practice_free_days
+
+    - changeSet:
+        id: booking_institution-createTable
+        comment: Create table booking_institution
+        author: lmanterola
+        changes:
+          - createTable:
+              tableName: booking_institution
+              columns:
+                - column:
+                    name: institution_id
+                    type: int
+
+          - addPrimaryKey:
+              columnNames: institution_id
+              constraintName: PK_institution_rule
+              tableName: booking_institution
+          - addForeignKeyConstraint:
+              baseColumnNames: institution_id
+              baseTableName: booking_institution
+              constraintName: FK_institution_rule_institution_id
+              referencedColumnNames: id
+              referencedTableName: institution
+
+    - changeSet:
+        id: booking_person-createTable
+        comment: Create table booking_person
+        author: lmanterola
+        changes:
+          - createTable:
+              tableName: booking_person
+              columns:
+                - column:
+                    name: id
+                    type: int
+                - column:
+                    name: email
+                    type: varchar(255)
+                - column:
+                    name: first_name
+                    type: varchar(255)
+                - column:
+                    name: last_name
+                    type: varchar(255)
+                - column:
+                    name: identification_number
+                    type: varchar(11)
+                - column:
+                    name: gender_id
+                    type: smallint
+                - column:
+                    name: birth_date
+                    type: date
+
+          - addPrimaryKey:
+              columnNames: id
+              constraintName: PK_booking_person_rule
+              tableName: booking_person
+          - addForeignKeyConstraint:
+              baseColumnNames: gender_id
+              baseTableName: booking_person
+              constraintName: FK_gender_rule_gender_id
+              referencedColumnNames: id
+              referencedTableName: gender
+          - addAutoIncrement:
+              columnDataType: int
+              columnName: id
+              defaultOnNull: false
+              generationType: ALWAYS
+              incrementBy: 1
+              tableName: booking_person
+
+    - changeSet:
+        id: booking_appointment-createTable
+        comment: Create table booking_appointment
+        author: lmanterola
+        changes:
+          - createTable:
+              tableName: booking_appointment
+              columns:
+                - column:
+                    name: uuid
+                    type: varchar(36)
+                - column:
+                    name: booking_person_id
+                    type: int
+                - column:
+                    name: appointment_id
+                    type: int
+                    constraints:
+                      foreignKeyName: FK_appointment-booking_appointment
+                      references: appointment(id)
+
+          - addPrimaryKey:
+              tableName: booking_appointment
+              constraintName: PK_booking_appointment
+              columnNames: booking_person_id, uuid, appointment_id
+          - addForeignKeyConstraint:
+              baseColumnNames: booking_person_id
+              baseTableName: booking_appointment
+              constraintName: FK_booking_person_rule_booking_person_id
+              referencedColumnNames: id
+              referencedTableName: booking_person
+
+    - changeSet:
+        id: createView-v_booking_health_insurance_prod_ordered_with_right_join_without_deleted
+        comment: Create view v_booking_health_insurance para prod ordenado por descripcion sin obras sociales borradas
+        author: lmanterola
+        changes:
+          - createView:
+              viewName: v_booking_health_insurance
+              fullDefinition: false
+              replaceIfExists: true
+              selectQuery: |-
+                SELECT mc.id,
+                CASE WHEN hi.acronym IS NULL OR hi.acronym LIKE '' THEN CAST (mc.name AS VARCHAR(255))
+                ELSE CAST (hi.acronym AS VARCHAR(255)) END as description
+                FROM health_insurance hi
+                RIGHT OUTER JOIN medical_coverage mc ON mc.id = hi.id
+                WHERE mc.deleted = false
+                ORDER BY description
+
+    - changeSet:
+        id: createView-v_booking_mock_clinical_specialty_prod
+        comment: Create view v_booking_mock_clinical_specialty para prod
+        author: lmanterola
+        changes:
+          - createView:
+              viewName: v_booking_mock_clinical_specialty
+              fullDefinition: false
+              replaceIfExists: true
+              selectQuery: |-
+                SELECT id, name, sctid_code,
+                       clinical_specialty_type_id
+                FROM clinical_specialty
+
+    - changeSet:
+        id: createView-v_booking_clinical_specialty_prod
+        comment: Create view v_booking_clinical_specialty para prod
+        author: lmanterola
+        changes:
+          - createView:
+              viewName: v_booking_clinical_specialty
+              fullDefinition: false
+              replaceIfExists: true
+              selectQuery: |-
+                SELECT id, name, sctid_code, clinical_specialty_type_id
+                FROM clinical_specialty
+
+    - changeSet:
+        id: createView-v_booking_healthcare_professional_prod
+        comment: Create view v_booking_healthcare_professional para prod
+        author: lmanterola
+        changes:
+          - createView:
+              viewName: v_booking_healthcare_professional
+              fullDefinition: false
+              replaceIfExists: true
+              selectQuery: |-
+                SELECT id, CAST(license_number AS VARCHAR(255)), person_id
+                FROM healthcare_professional
+
+    - changeSet:
+        id: createView-v_booking_person_prod
+        comment: Create view v_booking_person para prod
+        author: lmanterola
+        changes:
+          - createView:
+              viewName: v_booking_person
+              fullDefinition: false
+              replaceIfExists: true
+              selectQuery: |-
+                SELECT id, CAST(first_name AS VARCHAR(255)), CAST(last_name AS VARCHAR(255)),
+                       identification_type_id, identification_number,
+                       gender_id, birth_date
+                FROM person
+
+    - changeSet:
+        id: createView-v_booking_appointment_prod
+        comment: Create view v_booking_appointment para prod
+        author: lmanterola
+        changes:
+          - createView:
+              viewName: v_booking_appointment
+              fullDefinition: false
+              replaceIfExists: true
+              selectQuery: |-
+                SELECT id, date_type_id, hour, appointment_state_id, patient_id,
+                       is_overturn, created_by, created_on, updated_by,
+                       updated_on, phone_number, patient_medical_coverage_id,
+                       deleted, deleted_by, deleted_on, snomed_id
+                FROM appointment
+
+    - changeSet:
+        id: createView-v_booking_diary_prod
+        comment: Create view v_booking_diary para prod
+        author: lmanterola
+        changes:
+          - createView:
+              viewName: v_booking_diary
+              fullDefinition: false
+              replaceIfExists: true
+              selectQuery: |-
+                SELECT id, healthcare_professional_id, doctors_office_id,
+                       start_date, end_date, appointment_duration, automatic_renewal,
+                       days_before_renew, professional_asign_shift AS professional_assign_shift, include_holiday,
+                       active, created_by, created_on, updated_by, updated_on,
+                       deleted, deleted_by, deleted_on
+                FROM diary
+
+    - changeSet:
+        id: createView-v_booking_doctors_office_prod
+        comment: Create view v_booking_doctors_office para prod
+        author: lmanterola
+        changes:
+          - createView:
+              viewName: v_booking_doctors_office
+              fullDefinition: false
+              replaceIfExists: true
+              selectQuery: |-
+                SELECT id, institution_id, clinical_specialty_sector_id,
+                       description, opening_time, closing_time, topic
+                FROM doctors_office
+
+    - changeSet:
+        id: createView-v_booking_opening_hours_prod
+        comment: Create view v_booking_opening_hours para prod
+        author: lmanterola
+        changes:
+          - createView:
+              viewName: v_booking_opening_hours
+              fullDefinition: false
+              replaceIfExists: true
+              selectQuery: |-
+                SELECT oh.id, oh.day_week_id, oh.from, oh.to
+                FROM opening_hours oh
+
+    - changeSet:
+        id: createView-v_booking_diary_opening_hours_prod
+        comment: Create view v_booking_diary_opening_hours para prod
+        author: lmanterola
+        changes:
+          - createView:
+              viewName: v_booking_diary_opening_hours
+              fullDefinition: false
+              replaceIfExists: true
+              selectQuery: |-
+                SELECT diary_id, opening_hours_id, medical_attention_type_id, overturn_count
+                FROM diary_opening_hours
+
+    - changeSet:
+        id: createView-v_booking_user_person_prod
+        comment: Create view v_booking_user_person para prod
+        author: lmanterola
+        changes:
+          - createView:
+              viewName: v_booking_user_person
+              fullDefinition: false
+              replaceIfExists: true
+              selectQuery: |-
+                SELECT user_id, person_id
+                FROM user_person
+
+    - changeSet:
+        id: createView-v_booking_user_role_prod
+        comment: Create view v_booking_user_role para prod
+        author: lmanterola
+        changes:
+          - createView:
+              viewName: v_booking_user_role
+              fullDefinition: false
+              replaceIfExists: true
+              selectQuery: |-
+                SELECT CAST (role_id AS INT), user_id, institution_id
+                FROM user_role
+
+    - changeSet:
+        id: createView-v_booking_appointment_assn_prod
+        comment: Create view v_booking_appointment_assn para prod
+        author: lmanterola
+        changes:
+          -  createView:
+               viewName: v_booking_appointment_assn
+               fullDefinition: false
+               replaceIfExists: true
+               selectQuery: |-
+                 SELECT diary_id, opening_hours_id, appointment_id
+                 FROM appointment_assn
+
+    - changeSet:
+        id: createView-v_booking_healthcare_professional_specialty_prod_without_deleted
+        comment: Create view v_booking_healthcare_professional_specialty para prod sin especialidades borradas
+        author: lmanterola
+        changes:
+          -  createView:
+                viewName: v_booking_healthcare_professional_specialty
+                fullDefinition: false
+                replaceIfExists: true
+                selectQuery: |-
+                  SELECT id, healthcare_professional_id, clinical_specialty_id
+                  FROM healthcare_professional_specialty
+                  WHERE deleted = false OR deleted IS NULL
+
+    - changeSet:
+        id: loadNewAppointmentState-appointment_state
+        comment: load new appointment state
+        author: lmanterola
+        context: "!schema-only"
+        changes:
+          - sql:
+              sql: |-
+                INSERT INTO appointment_state VALUES (6, 'Reserva');
+
+    - changeSet:
+        id: loadNewAppointmentState-appointment_state-bloqueo
+        comment: load new appointment state
+        author: lmanterola
+        context: "!schema-only"
+        changes:
+          - sql:
+              sql: |-
+                INSERT INTO appointment_state VALUES (7, 'Bloqueo');
+
+    - changeSet:
+        id: loadNewAppointmentState-appointment_state-fuera-de-agenda
+        comment: load new appointment state out_of_diary
+        author: lmanterola
+        context: "!schema-only"
+        changes:
+          - sql:
+              sql: |-
+                INSERT INTO appointment_state VALUES (8, 'Fuera');
+
+    - changeSet:
+        id: addForeignKey-healthcare_professional_health_insurance-medical_coverage
+        author: lmanterola
+        changes:
+          - addForeignKeyConstraint:
+              baseColumnNames: medical_coverage_id
+              baseTableName: healthcare_professional_health_insurance
+              constraintName: fk_healthcare_professional_health_insurance-medical_coverage
+              referencedColumnNames: id
+              referencedTableName: medical_coverage
+              validate: true
+
+    - changeSet:
+        id: addForeignKey-health_insurance_practice-medical_coverage
+        author: lmanterola
+        changes:
+          - addForeignKeyConstraint:
+              baseColumnNames: medical_coverage_id
+              baseTableName: health_insurance_practice
+              constraintName: fk_health_insurance_practice-medical_coverage
+              referencedColumnNames: id
+              referencedTableName: medical_coverage
+              validate: true
+
+    - changeSet:
+        id: medical_coverage-addColumn-type
+        author: mvenere
+        changes:
+          - addColumn:
+              columns:
+                - column:
+                    name: type
+                    type: smallint
+              tableName: medical_coverage
+
+    - changeSet:
+        id: medical_coverage-update-private_health_insurance-type
+        comment: Actualizar dato type en medical_coverage
+        author: mvenere
+        context: "!schema-only"
+        changes:
+          - sql:
+              sql: |-
+                UPDATE medical_coverage mc SET type = 1 FROM private_health_insurance phi WHERE mc.id = phi.id;
+                UPDATE medical_coverage SET type = 2 WHERE type is null;
+
+    - changeSet:
+        id: addNotNullConstraint-medical_coverage-type
+        author: mvenere
+        changes:
+          - addNotNullConstraint:
+              columnDataType: smallint
+              columnName: type
+              tableName: medical_coverage
+              validate: true
+
+    - changeSet:
+        id: add-source-columns-service_request
+        author: tmedina
+        changes:
+          - addColumn:
+              tableName: service_request
+              columns:
+                - column:
+                    name: source_type_id
+                    type: smallint
+                - column:
+                    name: source_id
+                    type: int
+          - addForeignKeyConstraint:
+              baseColumnNames: source_type_id
+              baseTableName: service_request
+              constraintName: FK_service_request_source_type_id
+              onDelete: NO ACTION
+              onUpdate: NO ACTION
+              referencedColumnNames: id
+              referencedTableName: source_type
+              validate: true
+
+    - changeSet:
+        id: set-default-value-service_request-source_type_id
+        author: tmedina
+        comment: The source type 'outpatient' is set to all existing service requests
+        context: "!schema-only"
+        changes:
+          - sql:
+              sql: |-
+                UPDATE service_request SET source_type_id = 1;
+
+    - changeSet:
+        id: modify-datatype-request_date-service_request
+        author: tmedina
+        changes:
+          - modifyDataType:
+              columnName: request_date
+              newDataType: datetime
+              tableName: service_request
+
+    - changeSet:
+        id: insert-service_request_category-values
+        author: tmedina
+        context: "!schema-only"
+        changes:
+          - sql:
+              sql: |-
+                INSERT INTO service_request_category(id, description) VALUES ('108257001', 'Anatomía patológica');
+                INSERT INTO service_request_category(id, description) VALUES ('305393003', 'Hemoterapia');
+                INSERT INTO service_request_category(id, description) VALUES ('71388002', 'Otros procedimientos y prácticas');
+
+    - changeSet:
+        id: add-orden-column-service_request_category
+        author: tmedina
+        changes:
+          - addColumn:
+              tableName: service_request_category
+              columns:
+                - column:
+                    name: orden
+                    type: smallint
+
+    - changeSet:
+        id: set-orden-values-service_request_category
+        author: tmedina
+        context: "!schema-only"
+        changes:
+          - sql:
+              sql: |-
+                UPDATE service_request_category SET orden = 1 WHERE id = '363679005';
+                UPDATE service_request_category SET orden = 2 WHERE id = '108252007';
+                UPDATE service_request_category SET orden = 3 WHERE id = '108257001';
+                UPDATE service_request_category SET orden = 4 WHERE id = '305393003';
+                UPDATE service_request_category SET orden = 5 WHERE id = '387713003';
+                UPDATE service_request_category SET orden = 6 WHERE id = '71388002';
+                UPDATE service_request_category SET orden = 7 WHERE id = '409063005';
+                UPDATE service_request_category SET orden = 8 WHERE id = '409073007';
+
+    - changeSet:
+        id: set-description-values-service_request_category
+        author: tmedina
+        context: "!schema-only"
+        changes:
+          - sql:
+              sql: |-
+                UPDATE service_request_category SET description = 'Diagnóstico por imágenes' WHERE id = '363679005';
+                UPDATE service_request_category SET description = 'Laboratorio' WHERE id = '108252007';
+                UPDATE service_request_category SET description = 'Procedimientos quirúrgicos' WHERE id = '387713003';
+
+    - changeSet:  
+        id: add-column-modification_reason-document
+        comment: Add modification_reason column in document table
+        author: bchacon
+        changes:
+          - addColumn:
+              columns:
+                - column:              
+                    name: modification_reason
+                    type: text
+              tableName: document
+
+    - changeSet:
+        id: patient_discharge-addColumn-physical_discharge_date
+        comment: Add column physical_discharge_date to patient_discharge
+        author: fsimaro
+        changes:
+          - addColumn:
+              columns:
+                - column:
+                    name: physical_discharge_date
+                    type: timestamp
+              tableName: patient_discharge

@@ -1,6 +1,34 @@
-<mat-card class="flex-column">
-	<div>
-		<span class="mat-body-1">{{ detail.description }}</span>
+<mat-card fxLayout="column" fxLayoutAlign="space-between">
+	<div fxLayout="column" fxLayoutAlign="space-evenly" fxFlex>
+		<div fxLayout="row" fxLayoutAlign="center">
+			<span fxFlex="80">{{ detail.description }}</span>
+		</div>
+		<div fxLayout="row" fxLayoutAlign="center center" fxLayoutGap="5px">
+			<span class="value">{{ detail.registeredValues[0].value }}</span>
+			<mat-icon color="primary" matTooltip="{{ detail.registeredValues[0].date | date: 'short' }}">
+				error_outline
+			</mat-icon>
+		</div>
 	</div>
-	<span class="value">{{ detail.value }}</span>
+	<div fxLayout="column" fxLayoutGap="8px">
+		<div>
+			<mat-divider></mat-divider>
+		</div>
+		<div fxLayout="row" fxLayoutAlign="space-between center">
+			<span>{{ 'presentation.detail-box.PREVIOUS' | translate }}</span>
+			<ng-container *ngIf="detail.registeredValues.length > 1 else noPreviousValue">
+				<div fxLayout="row" fxLayoutAlign="center center" fxLayoutGap="2px" class="color-primary">
+					<span id="previous-value">
+						{{ detail.registeredValues[1].value }}
+					</span>
+					<mat-icon id="previous-icon" matTooltip="{{ detail.registeredValues[1].date | date: 'short' }}">
+						error_outline
+					</mat-icon>
+				</div>
+			</ng-container>
+			<ng-template #noPreviousValue>
+				<strong class="color-primary">-</strong>
+			</ng-template>
+		</div>
+	</div>
 </mat-card>

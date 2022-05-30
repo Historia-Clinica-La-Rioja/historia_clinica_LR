@@ -29,15 +29,20 @@ public class DiaryOpeningHours implements Serializable {
     @Column(name = "overturn_count", columnDefinition = "smallint default 0", nullable = false)
     private Short overturnCount;
 
+    @Column(name = "external_appointments_allowed")
+    private Boolean externalAppointmentsAllowed;
+
     public DiaryOpeningHours(
             Integer diaryId,
             Integer openingHoursId,
             Short medicalAttentionTypeId,
-            Short overturnCount
+            Short overturnCount,
+            Boolean externalAppointmentsAllowed
     ) {
         this.pk = new DiaryOpeningHoursPK(diaryId, openingHoursId);
         this.medicalAttentionTypeId = medicalAttentionTypeId;
         this.overturnCount = overturnCount;
+        this.externalAppointmentsAllowed = externalAppointmentsAllowed;
     }
 
     public void plusOverTurnCount() {

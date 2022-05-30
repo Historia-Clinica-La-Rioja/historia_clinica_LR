@@ -11,6 +11,7 @@ import ar.lamansys.immunization.EnableImmunization;
 import ar.lamansys.mqtt.EnableMqttCall;
 import ar.lamansys.nursing.EnableNursing;
 import ar.lamansys.odontology.EnableOdontology;
+import ar.lamansys.online.EnableBooking;
 import ar.lamansys.refcounterref.EnableReferenceCounterReference;
 import ar.lamansys.sgh.publicapi.EnableHospitalPublicApi;
 import ar.lamansys.sgx.auth.EnableAuth;
@@ -19,6 +20,7 @@ import ar.lamansys.sgx.shared.EnableSharedLibrary;
 import net.pladema.EnableHospitalLib;
 
 @Configuration
+@EnableBooking
 @EnableCubeJs
 @EnableOdontology
 @EnableImmunization

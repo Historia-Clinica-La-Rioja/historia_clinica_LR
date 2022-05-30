@@ -1,0 +1,39 @@
+@import '../../../../../assets/styles/mixins';
+
+::ng-deep .mat-form-field-wrapper {
+	margin: 0;
+}
+
+.mat-card{
+	max-width: 800px;
+}
+
+.form{
+	display: grid;
+	grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+
+	button {
+		margin-top: 4px;
+		height: 58px;
+	}
+}
+
+.spinner {
+	@include centered-spinner;
+}
+
+.coverages{
+	margin: 0.3vh;
+}
+
+.medical-coverage-name{
+	font-weight: 500;
+}
+
+.mat-form-field{
+	margin-top: 5px;
+}
+
+.coverage-summary-info {
+	width: 40vw;
+}

@@ -1,5 +1,5 @@
 import { Component, Input, OnInit } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute } from '@angular/router';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { MatDialog } from '@angular/material/dialog';
@@ -7,7 +7,6 @@ import { MatDialog } from '@angular/material/dialog';
 import { FeatureFlagService } from '@core/services/feature-flag.service';
 import { PermissionsService } from '@core/services/permissions.service';
 
-import { InternmentEpisodeSummary } from '@presentation/components/internment-episode-summary/internment-episode-summary.component';
 import { MapperService } from '@presentation/services/mapper.service';
 import { PatientBasicData } from '@presentation/components/patient-card/patient-card.component';
 
@@ -28,21 +27,18 @@ import { AppFeature } from '@api-rest/api-model';
 import { InternacionService } from '@api-rest/services/internacion.service';
 import { INTERNACION, ANTECEDENTES_FAMILIARES, ANTECEDENTES_PERSONALES, MEDICACION } from '../../../../../../constants/summaries';
 import { ROLES_FOR_EDIT_DIAGNOSIS } from '../../../internacion/constants/permissions';
-import { InternmentStateService } from '@api-rest/services/internment-state.service';
 import { ProbableDischargeDialogComponent } from '../../../../../../dialogs/probable-discharge-dialog/probable-discharge-dialog.component';
 import { Moment } from 'moment';
-import { ContextService } from '@core/services/context.service';
 import { InternmentFields, InternmentSummaryFacadeService } from "@historia-clinica/modules/ambulatoria/modules/internacion/services/internment-summary-facade.service";
 import { DockPopupRef } from '@presentation/services/dock-popup-ref';
 import { EvolutionNoteDockPopupComponent } from '../../dialogs/evolution-note-dock-popup/evolution-note-dock-popup.component';
 import { DockPopupService } from '@presentation/services/dock-popup.service';
 import { AnamnesisDockPopupComponent } from "@historia-clinica/modules/ambulatoria/modules/internacion/dialogs/anamnesis-dock-popup/anamnesis-dock-popup.component";
-import {
-	EpicrisisDockPopupComponent
-} from "@historia-clinica/modules/ambulatoria/modules/internacion/dialogs/epicrisis-dock-popup/epicrisis-dock-popup.component";
+import { EpicrisisDockPopupComponent } from "@historia-clinica/modules/ambulatoria/modules/internacion/dialogs/epicrisis-dock-popup/epicrisis-dock-popup.component";
 import { MedicalDischargeComponent } from "@historia-clinica/modules/ambulatoria/modules/internacion/dialogs/medical-discharge/medical-discharge.component";
 import { PatientAllergiesService } from "@historia-clinica/modules/ambulatoria/services/patient-allergies.service";
 import { InternmentPatientService } from '@api-rest/services/internment-patient.service';
+import { InternmentEpisodeSummary } from "@historia-clinica/modules/ambulatoria/modules/internacion/components/internment-episode-summary/internment-episode-summary.component";
 
 @Component({
 	selector: 'app-internacion-paciente',
@@ -51,29 +47,28 @@ import { InternmentPatientService } from '@api-rest/services/internment-patient.
 })
 export class InternacionPacienteComponent implements OnInit {
 
-	public patient$: Observable<PatientBasicData>;
-
-	public personPhoto: PersonPhotoDto;
-	public internacionSummary = INTERNACION;
-	public anamnesisDoc: AnamnesisSummaryDto;
-	public epicrisisDoc: EpicrisisSummaryDto;
-	public lastProbableDischargeDate: Moment;
-	public internmentEpisodeSummary$: Observable<InternmentEpisodeSummary>;
-	public showDischarge: boolean;
-	public editDiagnosisSummary$: boolean;
-	public hasMedicalDischarge: boolean;
-	public canLoadProbableDischargeDate: boolean;
-	public showPatientCard = false;
+	patient$: Observable<PatientBasicData>;
+	personPhoto: PersonPhotoDto;
+	anamnesisDoc: AnamnesisSummaryDto;
+	epicrisisDoc: EpicrisisSummaryDto;
+	lastProbableDischargeDate: Moment;
+	internmentEpisodeSummary$: Observable<InternmentEpisodeSummary>;
+	showDischarge: boolean;
+	editDiagnosisSummary$: boolean;
+	patientDischarge: PatientDischarge = { medicalDischarge: null, physicalDischarge: null };
+	canLoadProbableDischargeDate: boolean;
+	showPatientCard = false;
 	patientId: number;
-	public readonly familyHistoriesHeader = ANTECEDENTES_FAMILIARES;
-	public readonly personalHistoriesHeader = ANTECEDENTES_PERSONALES;
-	public readonly medicationsHeader = MEDICACION;
 	dialogRef: DockPopupRef;
-	private routePrefix;
-	@Input() internmentEpisodeInfo: InternmentEpisodeProcessDto;
 	internmentEpisodeId: number;
 	mainDiagnosis: HealthConditionDto;
 	diagnosticos: DiagnosisDto[];
+	readonly internacionSummary = INTERNACION;
+	readonly familyHistoriesHeader = ANTECEDENTES_FAMILIARES;
+	readonly personalHistoriesHeader = ANTECEDENTES_PERSONALES;
+	readonly medicationsHeader = MEDICACION;
+
+	@Input() internmentEpisodeInfo: InternmentEpisodeProcessDto;
 
 	constructor(
 		private patientService: PatientService,
@@ -83,12 +78,10 @@ export class InternacionPacienteComponent implements OnInit {
 		private featureFlagService: FeatureFlagService,
 		private readonly permissionService: PermissionsService,
 		private readonly internmentPatientService: InternmentPatientService,
-		private contextService: ContextService,
-		public readonly internmentSummaryFacadeService: InternmentSummaryFacadeService,
-		private readonly internmentStateService: InternmentStateService,
 		private readonly dockPopupService: DockPopupService,
 		private readonly dialog: MatDialog,
 		private readonly patientAllergies: PatientAllergiesService,
+		readonly internmentSummaryFacadeService: InternmentSummaryFacadeService,
 	) {
 	}
 
@@ -102,7 +95,6 @@ export class InternacionPacienteComponent implements OnInit {
 				} else {
 					this.internmentEpisodeId = this.internmentEpisodeInfo?.id;
 				}
-				this.routePrefix = 'institucion/' + this.contextService.institutionId + '/internaciones/internacion/' + this.internmentEpisodeId + '/paciente/' + this.patientId;
 
 				this.patient$ = this.patientService.getPatientBasicData<BasicPatientDto>(this.patientId).pipe(
 					map(patient => this.mapperService.toPatientBasicData(patient))
@@ -116,7 +108,7 @@ export class InternacionPacienteComponent implements OnInit {
 		this.internmentSummaryFacadeService.epicrisis$.subscribe(e => this.epicrisisDoc = e);
 		this.internmentPatientService.internmentEpisodeIdInProcess(this.patientId).subscribe(internmentEpisode => {
 			this.internmentSummaryFacadeService.hasMedicalDischarge$.subscribe(h => {
-				this.hasMedicalDischarge = h
+				this.patientDischarge.medicalDischarge = h;
 				// La alta administrativa está disponible cuando existe el alta medica
 				// o el flag de alta sin epicrisis está activa
 				this.featureFlagService.isActive(AppFeature.HABILITAR_ALTA_SIN_EPICRISIS).subscribe(isOn => {
@@ -125,6 +117,7 @@ export class InternacionPacienteComponent implements OnInit {
 			})
 		});
 		this.internmentSummaryFacadeService.lastProbableDischargeDate$.subscribe(l => this.lastProbableDischargeDate = l);
+		this.internmentSummaryFacadeService.hasPhysicalDischarge$.subscribe(p => this.patientDischarge.physicalDischarge = p);
 
 		this.internmentEpisodeSummary$ = this.internmentService.getInternmentEpisodeSummary(this.internmentEpisodeId).pipe(
 			map((internmentEpisode: InternmentSummaryDto) => this.mapperService.toInternmentEpisodeSummary(internmentEpisode))
@@ -138,7 +131,7 @@ export class InternacionPacienteComponent implements OnInit {
 
 	}
 
-	openDialog() {
+	openDialog(): void {
 		const dialogRef = this.dialog.open(ProbableDischargeDialogComponent, {
 			disableClose: true,
 			width: '35%',
@@ -158,7 +151,7 @@ export class InternacionPacienteComponent implements OnInit {
 		);
 	}
 
-	openAnamnesis() {
+	openAnamnesis(): void {
 		if (!this.dialogRef) {
 			this.dialogRef = this.dockPopupService.open(AnamnesisDockPopupComponent, {
 				patientInfo: {
@@ -183,7 +176,7 @@ export class InternacionPacienteComponent implements OnInit {
 		}
 	}
 
-	openEvolutionNote() {
+	openEvolutionNote(): void {
 		if (!this.dialogRef) {
 			this.dialogRef = this.dockPopupService.open(EvolutionNoteDockPopupComponent, {
 				internmentEpisodeId: this.internmentEpisodeId,
@@ -204,7 +197,7 @@ export class InternacionPacienteComponent implements OnInit {
 		}
 	}
 
-	openEpicrisis() {
+	openEpicrisis(): void {
 		if (!this.dialogRef) {
 			this.dialogRef = this.dockPopupService.open(EpicrisisDockPopupComponent, {
 				patientInfo: {
@@ -226,7 +219,7 @@ export class InternacionPacienteComponent implements OnInit {
 		}
 	}
 
-	updateInternmentSummary(fieldsToUpdate: InternmentFields) {
+	updateInternmentSummary(fieldsToUpdate: InternmentFields): void {
 		const fields = {
 			personalHistories: fieldsToUpdate?.personalHistories,
 			riskFactors: fieldsToUpdate?.riskFactors,
@@ -248,7 +241,7 @@ export class InternacionPacienteComponent implements OnInit {
 		this.internmentSummaryFacadeService.updateInternmentEpisode();
 	}
 
-	openMedicalDischarge() {
+	openMedicalDischarge(): void {
 		const dialogRef = this.dialog.open(MedicalDischargeComponent, {
 			data: {
 				patientId: this.patientId,
@@ -263,4 +256,9 @@ export class InternacionPacienteComponent implements OnInit {
 			}
 		});
 	}
+}
+
+export interface PatientDischarge {
+	medicalDischarge?: Date;
+	physicalDischarge?: Date;
 }

@@ -45,7 +45,8 @@ public class AnamnesisServiceImpl implements AnamnesisService {
             result.setAllergies(documentService.getAllergyIntoleranceStateFromDocument(document.getId()));
             result.setAnthropometricData(documentService.getAnthropometricDataStateFromDocument(document.getId()));
             result.setRiskFactors(documentService.getRiskFactorStateFromDocument(document.getId()));
-            
+            result.setProcedures(documentService.getProcedureStateFromDocument(document.getId()));
+
             result.setNotes(loadNotes(document));
         });
         LOG.debug(OUTPUT, result);

@@ -1,7 +1,9 @@
 import { Component, Input, OnChanges } from '@angular/core';
-import { OTHER_INDICATION, showFrequency, showTimeElapsed } from "@historia-clinica/modules/ambulatoria/modules/indicacion/constants/internment-indications";
+import { OTHER_INDICATION, OTHER_INDICATION_ID, showFrequency, showTimeElapsed } from "@historia-clinica/modules/ambulatoria/modules/indicacion/constants/internment-indications";
 import { Content } from '@presentation/components/indication/indication.component';
 import { OtherIndicationDto } from '@api-rest/api-model';
+import { OtherIndicationTypeDto } from '@api-rest/services/internment-indication.service';
+import { InternacionMasterDataService } from '@api-rest/services/internacion-master-data.service';
 
 @Component({
 	selector: 'app-internment-other-indication-card',
@@ -12,15 +14,24 @@ export class InternmentOtherIndicationCardComponent implements OnChanges {
 
 	OTHER_INDICATION = OTHER_INDICATION;
 
+	OTHER_INDICATION_ID = OTHER_INDICATION_ID;
+
 	indicationContent: Content[] = [];
+
+	othersIndicatiosType: OtherIndicationTypeDto[] = [];
 
 	@Input() otherIndications: OtherIndicationDto[];
 
 
-	constructor() { }
+	constructor(
+		private readonly internacionMasterdataService: InternacionMasterDataService,
+
+	) { }
 
 	ngOnChanges() {
-		this.indicationContent = this.mapToIndicationContent();
+		this.internacionMasterdataService.getOtherIndicationTypes().subscribe(i => {
+			this.othersIndicatiosType = i; this.indicationContent = this.mapToIndicationContent();
+		});
 	}
 
 
@@ -31,11 +42,18 @@ export class InternmentOtherIndicationCardComponent implements OnChanges {
 					description: otherIndication.status === "INDICATED" ? 'indicacion.internment-card.sections.label.INDICATED' : 'indicacion.internment-card.sections.label.SUSPENDED',
 					cssClass: otherIndication.status === "INDICATED" ? 'blue' : 'red'
 				},
-				description: otherIndication.description,
+				description: indication(otherIndication, this.othersIndicatiosType),
 				createdBy: otherIndication.createdBy,
 				timeElapsed: showTimeElapsed(otherIndication.createdOn),
 				extra_info: otherIndication?.dosage ? showFrequency(otherIndication.dosage) : [],
 			}
+
 		});
+
+		function indication(otherIndication: OtherIndicationDto, othersIndicatiosType: OtherIndicationTypeDto[]): string {
+			const result = othersIndicatiosType.find(i => i.id === otherIndication.otherIndicationTypeId);
+			return (result.id === OTHER_INDICATION_ID) ? otherIndication.otherType : result.description;
+		}
+
 	}
 }

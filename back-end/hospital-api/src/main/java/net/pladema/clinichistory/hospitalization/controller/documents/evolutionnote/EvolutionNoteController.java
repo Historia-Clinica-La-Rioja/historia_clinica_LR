@@ -12,6 +12,7 @@ import net.pladema.clinichistory.hospitalization.controller.documents.evolutionn
 import net.pladema.clinichistory.hospitalization.controller.documents.evolutionnote.mapper.EvolutionNoteMapper;
 import net.pladema.clinichistory.hospitalization.service.InternmentEpisodeService;
 import net.pladema.clinichistory.hospitalization.service.evolutionnote.CreateEvolutionNoteService;
+import net.pladema.clinichistory.hospitalization.service.evolutionnote.DeleteEvolutionNoteService;
 import net.pladema.clinichistory.hospitalization.service.evolutionnote.EvolutionDiagnosesService;
 import net.pladema.clinichistory.hospitalization.service.evolutionnote.EvolutionNoteService;
 import net.pladema.clinichistory.hospitalization.service.evolutionnote.domain.EvolutionNoteBo;
@@ -55,18 +56,22 @@ public class EvolutionNoteController {
 
     private final PatientExternalService patientExternalService;
 
+	private final DeleteEvolutionNoteService deleteEvolutionNoteService;
+
     public EvolutionNoteController(InternmentEpisodeService internmentEpisodeService,
                                    CreateEvolutionNoteService createEvolutionNoteService,
                                    EvolutionNoteService evolutionNoteService,
                                    EvolutionDiagnosesService evolutionDiagnosesService,
                                    EvolutionNoteMapper evolutionNoteMapper,
-                                   PatientExternalService patientExternalService) {
+                                   PatientExternalService patientExternalService,
+								   DeleteEvolutionNoteService deleteEvolutionNoteService) {
         this.internmentEpisodeService = internmentEpisodeService;
         this.createEvolutionNoteService = createEvolutionNoteService;
         this.evolutionNoteService = evolutionNoteService;
         this.evolutionDiagnosesService = evolutionDiagnosesService;
         this.evolutionNoteMapper = evolutionNoteMapper;
         this.patientExternalService = patientExternalService;
+        this.deleteEvolutionNoteService = deleteEvolutionNoteService;
     }
 
     @PostMapping
@@ -125,4 +130,20 @@ public class EvolutionNoteController {
         LOG.debug(OUTPUT, result);
         return  ResponseEntity.ok().body(result);
     }
+
+
+	@DeleteMapping("/{evolutionNoteId}")
+	public ResponseEntity<Boolean> deleteEvolutionNote(
+			@PathVariable(name = "institutionId") Integer institutionId,
+			@PathVariable(name = "internmentEpisodeId") Integer internmentEpisodeId,
+			@PathVariable(name = "evolutionNoteId")  Long evolutionNoteId,
+			@RequestBody String reason) {
+		LOG.debug("Input parameters -> institutionId {}, internmentEpisodeId {}, " +
+						"evolutionNoteId {}, reason {}",
+				institutionId, internmentEpisodeId, evolutionNoteId, reason);
+		deleteEvolutionNoteService.execute(internmentEpisodeId, evolutionNoteId, reason);
+		LOG.debug(OUTPUT, Boolean.TRUE);
+		return  ResponseEntity.ok().body(Boolean.TRUE);
+	}
+
 }

@@ -1,0 +1,133 @@
+<h1 mat-dialog-title>Cobertura médica</h1>
+<div mat-dialog-content fxLayout="column" fxLayoutGap="10px">
+
+	<mat-card fxLayout="column" fxLayoutGap="10px">
+		<strong translate="medical-coverage.ACTIVES_HEALTH_INSURANCES"></strong>
+		<div fxLayout="column">
+			<div class="spinner" *ngIf="loading else viewPatientHealthInsurances" fxLayout="column" fxLayoutGap="25px">
+				<mat-spinner color="primary"></mat-spinner>
+				<span class="color-primary">Consultando cobertura</span>
+			</div>
+			<ng-template #viewPatientHealthInsurances>
+				<mat-card *ngFor="let patientMedicalCoverage of getPatientHealthInsurances()" class="coverages">
+					<mat-card-content fxLayout="row" fxLayoutAlign="space-between start">
+						<div fxLayout="column" fxLayoutAlign="space-between" class="coverage-summary-info">
+							<span
+								class="medical-coverage-name">{{getFullHealthInsuranceText(patientMedicalCoverage.medicalCoverage)}}</span>
+							<span class="capitalize">{{getMedicalCoveragePlanText(patientMedicalCoverage)}}</span>
+							<span *ngIf="patientMedicalCoverage.affiliateNumber">
+								{{ 'medical-coverage.AFFILIATE_NUMBER_LABEL' | translate }}:
+								{{patientMedicalCoverage.affiliateNumber}}
+							</span>
+						</div>
+						<div>Vig. {{patientMedicalCoverage.validDate | date: 'dd/MM/yyyy'}}</div>
+						<div>
+							<button mat-icon-button color="primary" (click)="openAddHealthInsurance(patientMedicalCoverage)">
+								<mat-icon>edit</mat-icon>
+							</button>
+							<button mat-icon-button color="warn" (click)="patientMedicalCoverage.active = false">
+								<mat-icon>delete_outline</mat-icon>
+							</button>
+						</div>
+					</mat-card-content>
+				</mat-card>
+			</ng-template>
+		</div>
+		<div aling="start">
+			<button mat-button id="add-health-insurance" type="button" color="primary" class="text-button"
+					onclick="this.blur()" (click)="openAddHealthInsurance()" >
+				<span [translate]="'medical-coverage.buttons.NEW_HEALTH_INSURANCE'"></span>
+			</button>
+		</div>
+	</mat-card>
+
+
+	<mat-card fxLayout="column" fxLayoutGap="10px">
+		<strong translate="medical-coverage.ACTIVES_PRIVATE_HEALTH_INSURANCES"></strong>
+		<div fxLayout="column">
+			<div class="spinner" *ngIf="loading else viewPatientPrivateHealthInsurances" fxLayout="column"
+				 fxLayoutGap="25px">
+				<mat-spinner color="primary"></mat-spinner>
+				<span class="color-primary" class="color-primary">Consultando cobertura</span>
+			</div>
+			<ng-template #viewPatientPrivateHealthInsurances>
+				<mat-card *ngFor="let patientPrivateHealthInsurance of getPatientPrivateHealthInsurances()"
+						  class="coverages">
+					<mat-card-content fxLayout="row" fxLayoutAlign="space-between start">
+
+						<div fxLayout="column">
+							<span
+								class="medical-coverage-name">{{patientPrivateHealthInsurance.medicalCoverage.name}}</span>
+							<span
+								class="capitalize">{{getMedicalCoveragePlanText(patientPrivateHealthInsurance)}}</span>
+							<span *ngIf="patientPrivateHealthInsurance.affiliateNumber">
+								{{ 'medical-coverage.CREDENTIAL_NUMBER_LABEL' | translate }}:
+								{{patientPrivateHealthInsurance.affiliateNumber}}
+							</span>
+						</div>
+						<div fxLayout="row">
+							<div fxLayout="column" fxLayoutAlign="space-between center">
+								<span>Vig. {{patientPrivateHealthInsurance.validDate | date: 'dd/MM/yyyy'}}</span>
+								<div class="capitalize-first-letter">
+									{{getDatesText(patientPrivateHealthInsurance)}}
+								</div>
+							</div>
+							<button mat-icon-button color="primary" (click)="openAddPrivateHealthInsurance(patientPrivateHealthInsurance)">
+								<mat-icon>edit</mat-icon>
+							</button>
+							<button mat-icon-button color="warn" (click)="patientPrivateHealthInsurance.active = false">
+								<mat-icon>delete_outline</mat-icon>
+							</button>
+						</div>
+					</mat-card-content>
+				</mat-card>
+			</ng-template>
+		</div>
+		<div fxLayout="row" fxLayoutAlign="start center">
+			<button mat-button id="add-private-health-insurance" type="button" color="primary" class="text-button"
+					onclick="this.blur()" (click)="openAddPrivateHealthInsurance()" >
+				<span [translate]="'medical-coverage.buttons.NEW_PRIVATE_HEALTH_INSURANCE'"></span>
+			</button>
+		</div>
+	</mat-card>
+
+	<mat-card fxLayout="column" fxLayoutGap="10px">
+		<strong translate="medical-coverage.ACTIVES_ART_COVERAGES"></strong>
+		<div fxLayout="column">
+			<div class="spinner" *ngIf="loading else viewPatientARTCoverages" fxLayout="column" fxLayoutGap="25px">
+				<mat-spinner color="primary"></mat-spinner>
+				<span class="color-primary">Consultando cobertura</span>
+			</div>
+			<ng-template #viewPatientARTCoverages>
+				<mat-card *ngFor="let patientMedicalCoverage of getPatientARTCoverages()" class="coverages">
+					<mat-card-content fxLayout="row" fxLayoutAlign="space-between start">
+						<div fxLayout="column" fxLayoutAlign="space-between">
+							<span
+								class="medical-coverage-name">{{patientMedicalCoverage.medicalCoverage.name}}</span>
+							<span translate="medical-coverage.CUIT_VIEW" [translateParams]="{cuit: patientMedicalCoverage.medicalCoverage.cuit}" ></span>
+						</div>
+						<button mat-icon-button color="warn" (click)="patientMedicalCoverage.active = false">
+							<mat-icon>delete_outline</mat-icon>
+						</button>
+					</mat-card-content>
+				</mat-card>
+			</ng-template>
+		</div>
+		<div fxLayout="row" fxLayoutAlign="start center">
+			<button mat-button id="add-art" type="button" color="primary" class="text-button"
+					onclick="this.blur()" (click)="openAddArt()" >
+				<span [translate]="'medical-coverage.buttons.NEW_ART_COVERAGE'"></span>
+			</button>
+		</div>
+	</mat-card>
+
+
+</div>
+<div mat-dialog-actions align="end">
+	<button mat-stroked-button color="primary" [mat-dialog-close]=true class="uppercase" id="cancel-button"
+			name="cancel-button" (click)="close()">
+		Cancelar</button>
+	<button mat-flat-button color="primary" [mat-dialog-close]=true cdkFocusInitial class="uppercase"
+			id="okButton-button" name="okButton-button" (click)="save()">
+		Guardar</button>
+</div>

@@ -16,5 +16,7 @@ public abstract class MedicalCoverageVo {
 
     private String cuit;
 
+	private Short type;
+
     public abstract MedicalCoverageBo newInstance();
 }

@@ -59,6 +59,7 @@ class DiaryEmptyAppointmentsValidatorTest extends ValidationContextSetup {
 				.medicalAttentionTypeId((short) 1)
 				.phonePrefix("011")
 				.phoneNumber("429784")
+				.snomedId(55)
 				.build();
 		List<AppointmentBo> returnFutureAppmets = Stream.of(apb1).collect(Collectors.toList());
 		when(appointmentService.getFutureActiveAppointmentsByDiary(anyInt())).thenReturn(returnFutureAppmets);

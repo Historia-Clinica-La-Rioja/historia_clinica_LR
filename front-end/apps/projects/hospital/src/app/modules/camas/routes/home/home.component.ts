@@ -14,6 +14,7 @@ export class HomeComponent implements OnInit, OnDestroy {
 	public selectedBed: number;
 	public bedsAmount: number;
 	public existBedManagementList = false;
+	updateMappingBed = false;
 
 	private managementBed$: Subscription;
 
@@ -29,6 +30,11 @@ export class HomeComponent implements OnInit, OnDestroy {
 
 	onSelectBed(bedId): void {
 		this.selectedBed = bedId;
+	}
+
+	updateMapping(event) {
+		this.updateMappingBed = event;
+		delete this.selectedBed;
 	}
 
 	ngOnDestroy(): void {

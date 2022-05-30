@@ -8,7 +8,6 @@ import {
 	HCEMedicationDto,
 	HCEPersonalHistoryDto,
 	MedicationInteroperabilityDto,
-	OutpatientFamilyHistoryDto,
 	PatientSummaryDto
 } from '@api-rest/api-model';
 import { ActivatedRoute } from '@angular/router';
@@ -25,20 +24,20 @@ import { SnackBarService } from '@presentation/services/snack-bar.service';
 })
 export class ResumenComponent implements OnInit, OnChanges {
 
-	public allergies$: Observable<HCEAllergyDto[]>;
-	public patientId: number;
-	public familyHistories$: Observable<HCEPersonalHistoryDto[]>;
-	public personalHistory$: Observable<HCEPersonalHistoryDto[]>;
-	public medications$: Observable<HCEMedicationDto[]>;
-	public riskFactors$: Observable<HCELast2RiskFactorsDto>;
-	public anthropometricData$: Observable<HCEAnthropometricDataDto>;
-	public readonly familyHistoriesHeader = ANTECEDENTES_FAMILIARES;
-	public readonly personalProblemsHeader = PROBLEMAS_ANTECEDENTES;
-	public readonly medicationsHeader = MEDICACION_HABITUAL;
-	public loadExternal = false;
-	public healthConditionsTable: TableModel<ConditionDto>;
-	public allergiesTable: TableModel<AllergyIntoleranceDto>;
-	public medicationsTable: TableModel<MedicationInteroperabilityDto>;
+	readonly familyHistoriesHeader = ANTECEDENTES_FAMILIARES;
+	readonly personalProblemsHeader = PROBLEMAS_ANTECEDENTES;
+	readonly medicationsHeader = MEDICACION_HABITUAL;
+	allergies$: Observable<HCEAllergyDto[]>;
+	patientId: number;
+	familyHistories$: Observable<HCEPersonalHistoryDto[]>;
+	personalHistory$: Observable<HCEPersonalHistoryDto[]>;
+	medications$: Observable<HCEMedicationDto[]>;
+	riskFactors$: Observable<HCELast2RiskFactorsDto>;
+	anthropometricDataList$: Observable<HCEAnthropometricDataDto[]>;
+	loadExternal = false;
+	healthConditionsTable: TableModel<ConditionDto>;
+	allergiesTable: TableModel<AllergyIntoleranceDto>;
+	medicationsTable: TableModel<MedicationInteroperabilityDto>;
 	@Input() patientExternalSummary: PatientSummaryDto;
 
 	constructor(
@@ -57,22 +56,22 @@ export class ResumenComponent implements OnInit, OnChanges {
 			});
 	}
 
-	ngOnChanges(changes: SimpleChanges) {
+	ngOnChanges(changes: SimpleChanges): void {
 		if (!changes.patientExternalSummary.isFirstChange()) {
 			this.loadExternalTables(false);
 		}
 	}
 
-	initSummaries() {
+	initSummaries(): void {
 		this.allergies$ = this.ambulatoriaSummaryFacadeService.allergies$;
 		this.familyHistories$ = this.ambulatoriaSummaryFacadeService.familyHistories$;
 		this.personalHistory$ = this.ambulatoriaSummaryFacadeService.personalHistories$;
 		this.medications$ = this.ambulatoriaSummaryFacadeService.medications$;
 		this.riskFactors$ = this.ambulatoriaSummaryFacadeService.riskFactors$;
-		this.anthropometricData$ = this.ambulatoriaSummaryFacadeService.anthropometricData$;
+		this.anthropometricDataList$ = this.ambulatoriaSummaryFacadeService.anthropometricDataList$;
 	}
 
-	loadExternalTables(fromInit: boolean) {
+	loadExternalTables(fromInit: boolean): void {
 		if (this.externalSummaryIsLoaded()) {
 			this.loadExternal = true;
 			this.healthConditionsTable = this.buildHealthConditionTable(this.patientExternalSummary.conditions);

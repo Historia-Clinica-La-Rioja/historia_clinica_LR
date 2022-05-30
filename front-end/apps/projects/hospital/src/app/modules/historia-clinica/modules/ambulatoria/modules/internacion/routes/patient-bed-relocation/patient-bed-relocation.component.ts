@@ -1,7 +1,6 @@
 import { Component, OnInit, ElementRef } from '@angular/core';
 import { Observable } from 'rxjs';
 import { PatientBasicData } from '@presentation/components/patient-card/patient-card.component';
-import { InternmentEpisodeSummary } from '@presentation/components/internment-episode-summary/internment-episode-summary.component';
 import { PatientService } from '@api-rest/services/patient.service';
 import { InternacionService } from '@api-rest/services/internacion.service';
 import { MapperService } from '@presentation/services/mapper.service';
@@ -30,6 +29,7 @@ import { Moment } from 'moment';
 import { PersonService } from '@api-rest/services/person.service';
 import { BedAssignmentComponent } from '@historia-clinica/dialogs/bed-assignment/bed-assignment.component';
 import { PatientMedicalCoverageService } from '@api-rest/services/patient-medical-coverage.service';
+import { InternmentEpisodeSummary } from "@historia-clinica/modules/ambulatoria/modules/internacion/components/internment-episode-summary/internment-episode-summary.component";
 
 
 const ROUTE_PROFILE = 'pacientes/profile/';
@@ -91,8 +91,9 @@ export class PatientBedRelocationComponent implements OnInit {
 				);
 
 				this.patientService.getPatientPhoto(this.patientId)
-					.subscribe((personPhotoDto: PersonPhotoDto) => {this.personPhoto = personPhotoDto;
-				});
+					.subscribe((personPhotoDto: PersonPhotoDto) => {
+						this.personPhoto = personPhotoDto;
+					});
 
 				this.internmentService.getInternmentEpisodeSummary(this.internmentId).subscribe(ies => {
 					this.internmentEpisode = ies;

@@ -11,7 +11,11 @@
                     class="lowercase capitalize-first-letter">
                     {{ coverageInfo.plan }} | {{ coverageInfo.condition }}
                 </span>
+<<<<<<< HEAD
                 <span>
+=======
+                <span *ngIf="coverageInfo?.type!=typeART">
+>>>>>>> v1.37.0
                     {{ 'ambulatoria.medical-coverage-summary-view.AFFILIATE_NUMBER' | translate }}
                     <ng-container *ngIf="coverageInfo?.affiliateNumber else noInfo">
                         {{ coverageInfo.affiliateNumber }}
@@ -22,6 +26,11 @@
                         </span>
                     </ng-template>
                 </span>
+				<div *ngIf="coverageInfo?.type==typeART" fxLayout="column">
+					<span translate="medical-coverage.ART"></span>
+					<span *ngIf="coverageInfo?.cuit" translate="medical-coverage.CUIT_VIEW"
+						  [translateParams]="{cuit: coverageInfo.cuit}"></span>
+				</div>
             </div>
         </div>
     </div>
@@ -40,4 +49,8 @@
     <span class="color-grey">
         {{ 'ambulatoria.medical-coverage-summary-view.WITHOUT_COVERAGE' | translate }}
     </span>
+<<<<<<< HEAD
 </ng-template>
+=======
+</ng-template>
+>>>>>>> v1.37.0

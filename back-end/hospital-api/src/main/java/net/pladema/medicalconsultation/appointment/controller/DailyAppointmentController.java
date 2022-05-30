@@ -93,6 +93,7 @@ public class DailyAppointmentController {
         ProfessionalDto professionalDto = healthcareProfessionalExternalService.findActiveProfessionalById(healthCareProfessionalId);
         Map<String, Object> context = createContext(professionalDto, attentionTypeReportDtos, consultedDate, now);
         String outputFileName = createOutputFileName(professionalDto, consultedDate);
+		System.out.println("outputFileName " + outputFileName);
         ResponseEntity<InputStreamResource> response = generatePdfResponse(context, outputFileName);
         LOG.debug(OUTPUT, response);
         return response;
@@ -163,7 +164,11 @@ public class DailyAppointmentController {
         LOG.debug("Input parameters -> professionalDto {}, attentionTypeReportDtos {}, consultedDate {}, actualDateTime {}",
                 professionalDto, attentionTypeReportDtos, consultedDate, actualDateTime);
         Map<String, Object> ctx = new HashMap<>();
-        ctx.put("professionalName", professionalDto.getCompleteName());
+		if(featureFlagsService.isOn(AppFeature.HABILITAR_DATOS_AUTOPERCIBIDOS) && professionalDto.getNameSelfDetermination() != null && !professionalDto.getNameSelfDetermination().isEmpty()){
+			ctx.put("professionalName", professionalDto.getCompleteName(professionalDto.getNameSelfDetermination()));
+		}else {
+			ctx.put("professionalName", professionalDto.getCompleteName(professionalDto.getFirstName()));
+		}
         ctx.put("consultedDate", consultedDate.format(DateTimeFormatter.ofPattern("dd/MM/yyyy")));
         ctx.put("actualDateTime", actualDateTime.format(DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm")));
         ctx.put("attentionTypes", attentionTypeReportDtos);
@@ -176,7 +181,13 @@ public class DailyAppointmentController {
     private String createOutputFileName(ProfessionalDto professionalDto, LocalDate consultedDate){
         LOG.debug("Input parameters -> professionalDto {}, consultedDate {}", professionalDto, consultedDate);
         String formattedDate = consultedDate.format(DateTimeFormatter.ofPattern("dd-MM-yyyy"));
-        String outputFileName = String.format("%s. Turnos %s", professionalDto.getCompleteName(), formattedDate);
+		String name = " ";
+		if(featureFlagsService.isOn(AppFeature.HABILITAR_DATOS_AUTOPERCIBIDOS) && professionalDto.getNameSelfDetermination() != null && !professionalDto.getNameSelfDetermination().isEmpty()){
+			name = professionalDto.getCompleteName(professionalDto.getNameSelfDetermination());
+		}else {
+			name = professionalDto.getCompleteName(professionalDto.getFirstName());
+		}
+		String outputFileName = String.format("%s. Turnos %s", name, formattedDate);
         LOG.debug(OUTPUT, outputFileName);
         return outputFileName;
     }

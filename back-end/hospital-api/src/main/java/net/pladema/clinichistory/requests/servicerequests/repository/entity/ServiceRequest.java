@@ -9,7 +9,7 @@ import net.pladema.clinichistory.requests.repository.entity.RequestIntentStatus;
 import ar.lamansys.sgx.shared.auditable.entity.SGXAuditableEntity;
 
 import javax.persistence.*;
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "service_request")
@@ -47,10 +47,16 @@ public class ServiceRequest extends SGXAuditableEntity<Integer> {
 	private Integer doctorId;
 
 	@Column(name = "request_date")
-	private LocalDate requestDate = LocalDate.now();
+	private LocalDateTime requestDate = LocalDateTime.now();
 
 	@Column(name = "note_id")
 	private Long noteId;
+
+	@Column(name = "source_type_id")
+	private Short sourceTypeId;
+
+	@Column(name = "source_id")
+	private Integer sourceId;
 
 	public ServiceRequest(Integer institutionId,
 						  Integer patientId,

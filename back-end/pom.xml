@@ -33,6 +33,7 @@
 		<module>hospital-public-api</module>
 		<module>nursing</module>
 		<module>reference-counter-ref</module>
+		<module>booking</module>
 	</modules>
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>

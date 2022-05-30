@@ -17,8 +17,8 @@ import {
 import SectionTitle from "../components/SectionTitle";
 import CreateRelatedButton from "../components/CreateRelatedButton";
 
-const PREPAGA = 1;
 const OBRA_SOCIAL = 2;
+const ART = 3;
 
 const MedicalCoverageShowActions = ({data}) => {
     return (!data || !data.id) ? <TopToolbar/> :
@@ -29,31 +29,6 @@ const MedicalCoverageShowActions = ({data}) => {
             </TopToolbar>
         )
 };
-
-const PrivateHealthInsurancePlanComponent = (props) => {
-    const record = useRecordContext(props);
-    return record && record.type === PREPAGA
-        ?
-        <Fragment>
-            <SectionTitle label="resources.medicalcoverages.fields.plans"/>
-            <CreateRelatedButton
-                reference="privatehealthinsuranceplans"
-                refFieldName="privateHealthInsuranceId"
-                label="resources.privatehealthinsuranceplans.addRelated"
-                {...props}/>
-            <ReferenceManyField
-                addLabel={false}
-                reference="privatehealthinsuranceplans"
-                target="privateHealthInsuranceId"
-                {...props}>
-                <Datagrid>
-                    <TextField source="plan"/>
-                    <DeleteButton redirect="/medicalcoverages"/>
-                </Datagrid>
-            </ReferenceManyField>
-        </Fragment>
-        : null;
-}
 
 const MedicalCoverageAcronymField = (props) => {
     const record = useRecordContext(props);
@@ -75,6 +50,31 @@ const MedicalCoverageRnosField = (props) => {
         : null;
 }
 
+const MedicalCoveragePlans = (props) => {
+    const record = useRecordContext(props);
+    return record && record.type !== ART
+        ?
+        <Fragment>
+            <SectionTitle label="resources.medicalcoverages.fields.plans"/>
+            <CreateRelatedButton
+                reference="medicalcoverageplans"
+                refFieldName="medicalCoverageId"
+                label="resources.medicalcoverageplans.addRelated"
+                {...props}/>
+            <ReferenceManyField
+                addLabel={false}
+                reference="medicalcoverageplans"
+                target="medicalCoverageId"
+                {...props}>
+                <Datagrid>
+                    <TextField source="plan"/>
+                    <DeleteButton redirect="/medicalcoverages"/>
+                </Datagrid>
+            </ReferenceManyField>
+        </Fragment>
+        : null;
+}
+
 const MedicalCoverageShow = props => (
     <Show actions={<MedicalCoverageShowActions/>} {...props}>
         <SimpleShowLayout>
@@ -86,7 +86,7 @@ const MedicalCoverageShow = props => (
             <MedicalCoverageRnosField/>
             <MedicalCoverageAcronymField/>
             <BooleanField source="enabled" />
-            <PrivateHealthInsurancePlanComponent/>
+            <MedicalCoveragePlans/>
         </SimpleShowLayout>
     </Show>
 );

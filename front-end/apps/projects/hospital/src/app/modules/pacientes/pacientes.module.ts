@@ -12,7 +12,6 @@ import { NewTemporaryPatientComponent } from './routes/new-temporary-patient/new
 import { ProfileComponent } from './routes/profile/profile.component';
 import { SearchComponent } from './routes/search/search.component';
 // components
-import { PacientesTableComponent } from './component/pacientes-table/pacientes-table.component';
 import { SearchCreateComponent } from './component/search-create/search-create.component';
 import { ViewPatientDetailComponent } from './component/view-patient-detail/view-patient-detail.component';
 import { AssignedAppointmentsComponent } from './component/assigned-appointments/assigned-appointments.component';
@@ -24,6 +23,11 @@ import { EditProfessionsComponent } from './dialogs/edit-professions/edit-profes
 import { EditRolesComponent } from './dialogs/edit-roles/edit-roles.component';
 import { CardRolesComponent } from './component/card-roles/card-roles.component';
 import { AssignedAppointmentComponent } from './component/assigned-appointment/assigned-appointment.component';
+import { InternacionesModule } from "@historia-clinica/modules/ambulatoria/modules/internacion/internaciones.module";
+import { MedicalCoverageComponent } from "@pacientes/dialogs/medical-coverage/medical-coverage.component";
+import { HealthInsuranceComponent } from './dialogs/health-insurance/health-insurance.component';
+import { PrivateHealthInsuranceComponent } from './dialogs/private-health-insurance/private-health-insurance.component';
+import { ArtComponent } from './dialogs/art/art.component';
 
 @NgModule({
 	declarations: [
@@ -35,7 +39,6 @@ import { AssignedAppointmentComponent } from './component/assigned-appointment/a
 		ProfileComponent,
 		SearchComponent,
 		// components
-		PacientesTableComponent,
 		SearchCreateComponent,
 		ViewPatientDetailComponent,
 		AssignedAppointmentsComponent,
@@ -49,16 +52,21 @@ import { AssignedAppointmentComponent } from './component/assigned-appointment/a
 		CardProfessionsComponent,
 		ScanPatientComponent,
 		AssignedAppointmentComponent,
+		MedicalCoverageComponent,
+	  	HealthInsuranceComponent,
+		PrivateHealthInsuranceComponent,
+  		ArtComponent
 	],
-	imports: [
-		FormsModule,
-		ReactiveFormsModule,
-		// routing
-		PacientesRoutingModule,
-		// deps
-		LazyMaterialModule,
-		PresentationModule,
-	]
+    imports: [
+        FormsModule,
+        ReactiveFormsModule,
+        // routing
+        PacientesRoutingModule,
+        // deps
+        LazyMaterialModule,
+        PresentationModule,
+        InternacionesModule,
+    ]
 })
 export class PacientesModule {
 }

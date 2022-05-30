@@ -138,6 +138,7 @@ public class HospitalUserStorageImpl implements HospitalUserStorage {
                     userPersonInfoBo.setPersonId(basicDataPersonDto.getId());
                     userPersonInfoBo.setFirstName(basicDataPersonDto.getFirstName());
                     userPersonInfoBo.setLastName(basicDataPersonDto.getLastName());
+					userPersonInfoBo.setNameSelfDetermination(basicDataPersonDto.getNameSelfDetermination());
                 });
         return userPersonInfoBo;
     }

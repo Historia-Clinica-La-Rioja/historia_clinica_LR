@@ -1,0 +1,18 @@
+<div fxLayout="column" fxLayoutGap="20px">
+    <div fxLayout="column" fxLayoutGap="20px" (click)="toggle()" [ngClass]="{'pointer' : !fixedExpanded}">
+        <mat-divider></mat-divider>
+        <div fxLayout="row" fxLayoutAlign="space-between center"
+            [ngClass]="{'closed-panel' : isEmpty && collapsed && !fixedExpanded}">
+            <div fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="5px">
+                <mat-icon>{{ icon }}</mat-icon>
+                <span class="title">{{ title }}</span>
+            </div>
+            <mat-icon *ngIf="isEmpty && collapsed && !fixedExpanded">add</mat-icon>
+            <mat-icon *ngIf="!isEmpty && collapsed && !fixedExpanded">expand_more</mat-icon>
+            <mat-icon *ngIf="!collapsed || fixedExpanded">expand_less</mat-icon>
+        </div>
+    </div>
+    <ng-container *ngIf="!collapsed || fixedExpanded">
+        <ng-content></ng-content>
+    </ng-container>
+</div>

@@ -110,6 +110,7 @@ public interface EmergencyCareMapper {
     @Named("toEmergencyCareUserDto")
     @Mapping(target = "firstName", source = "personDto.firstName")
     @Mapping(target = "lastName", source = "personDto.lastName")
+	@Mapping(target = "nameSelfDetermination", source = "personDto.nameSelfDetermination")
     EmergencyCareUserDto toEmergencyCareUserDto(UserDto userDto);
 
 	@Named("toEmergencyCareEpisodeInProgressDto")
