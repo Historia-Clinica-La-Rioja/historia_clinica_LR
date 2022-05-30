@@ -5,6 +5,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -13,7 +14,7 @@ import org.springframework.stereotype.Service;
 import ar.lamansys.sgx.shared.exceptions.NotFoundException;
 import net.pladema.reports.controller.dto.FormVDto;
 import net.pladema.reports.repository.FormReportRepository;
-import net.pladema.reports.repository.entity.FormVOdontologyVo;
+import net.pladema.reports.repository.entity.FormVReportDataVo;
 import net.pladema.reports.service.FormReportService;
 import net.pladema.reports.service.domain.FormVBo;
 
@@ -54,22 +55,41 @@ public class FormReportServiceImpl implements FormReportService {
 		var odontologyResultOpt = formReportRepository.getOdontologyConsultationFormVGeneralInfo(documentId);
 		if(odontologyResultOpt.isPresent()) {
 			result = new FormVBo(odontologyResultOpt.get());
-			List<FormVOdontologyVo> odontologyListData = formReportRepository.getOdontologyConsultationFormVDataInfo(documentId);
+			List<FormVReportDataVo> odontologyListData = formReportRepository.getOdontologyConsultationFormVDataInfo(documentId);
 			odontologyListData.addAll(formReportRepository.getOdontologyConsultationFormVOtherDataInfo(documentId));
 			var completeResult = completeFormVBo(result, odontologyListData);
 			LOG.debug("Output -> {}", completeResult);
 			return completeResult;
 		}
 
+		var nursingResultOpt = formReportRepository.getNursingConsultationFormVGeneralInfo(documentId);
+		if(nursingResultOpt.isPresent()) {
+			result = new FormVBo(nursingResultOpt.get());
+			Optional<FormVReportDataVo> nursingListData = formReportRepository.getNursingConsultationFormVDataInfo(documentId);
+			var completeResult = completeFormVBo(result, nursingListData);
+			LOG.debug("Output -> {}", completeResult);
+			return completeResult;
+		}
+
+
 		throw new NotFoundException("bad-consultation-id", CONSULTATION_NOT_FOUND);
 	}
 
-	private FormVBo completeFormVBo(FormVBo result, List<FormVOdontologyVo> listData) {
+	private FormVBo completeFormVBo(FormVBo result, List<FormVReportDataVo> listData) {
 		if(!listData.isEmpty()){
-			for(FormVOdontologyVo reportData : listData){
+			for(FormVReportDataVo reportData : listData){
 				result = this.setProblems(result, reportData.getDiagnostics());
 				result = this.setCie10Codes(result, reportData.getCie10Codes());
 			}
+		}
+		return result;
+	}
+
+	private FormVBo completeFormVBo(FormVBo result, Optional<FormVReportDataVo> dataOpt) {
+		if(dataOpt.isPresent()){
+			var data = dataOpt.get();
+			result = this.setProblems(result, data.getDiagnostics());
+			result = this.setCie10Codes(result, data.getCie10Codes());
 		}
 		return result;
 	}

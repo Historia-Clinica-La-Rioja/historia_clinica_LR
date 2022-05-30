@@ -16,6 +16,7 @@ import net.pladema.reports.controller.dto.AnnexIIDto;
 import net.pladema.reports.repository.AnnexReportRepository;
 import net.pladema.reports.repository.entity.AnnexIIOdontologyDataVo;
 import net.pladema.reports.repository.entity.AnnexIIOdontologyVo;
+import net.pladema.reports.repository.entity.AnnexIIReportDataVo;
 import net.pladema.reports.service.AnnexReportService;
 import net.pladema.reports.service.domain.AnnexIIBo;
 
@@ -58,9 +59,18 @@ public class AnnexReportServiceImpl implements AnnexReportService {
 			result = new AnnexIIBo(odontologyResultOpt.get());
 			Optional<AnnexIIOdontologyVo> consultationSpecialityandHasProcedures = annexReportRepository
 					.getOdontologyConsultationAnnexSpecialityAndHasProcedures(documentId);
-			var completeResult = completeAnnexIIBo(result, consultationSpecialityandHasProcedures);
-			completeResult = completeAnnexIIBo(completeResult, annexReportRepository.getOdontologyConsultationAnnexDataInfo(documentId));
-			completeResult = completeAnnexIIBo(completeResult, annexReportRepository.getOdontologyConsultationAnnexOtherDataInfo(documentId));
+			var completeResult = completeAnnexIIOdontologyBo(result, consultationSpecialityandHasProcedures);
+			completeResult = completeAnnexIIOdontologyBo(completeResult, annexReportRepository.getOdontologyConsultationAnnexDataInfo(documentId));
+			completeResult = completeAnnexIIOdontologyBo(completeResult, annexReportRepository.getOdontologyConsultationAnnexOtherDataInfo(documentId));
+			LOG.debug("Output -> {}", completeResult);
+			return completeResult;
+		}
+
+		var nursingResultOpt = annexReportRepository.getNursingConsultationAnnexGeneralInfo(documentId);
+		if(nursingResultOpt.isPresent()) {
+			result = new AnnexIIBo(nursingResultOpt.get());
+			Optional<AnnexIIReportDataVo> nursingData = annexReportRepository.getNursingConsultationAnnexDataInfo(documentId);
+			var completeResult = completeAnnexIINursingBo(result, nursingData);
 			LOG.debug("Output -> {}", completeResult);
 			return completeResult;
 		}
@@ -68,7 +78,19 @@ public class AnnexReportServiceImpl implements AnnexReportService {
 		throw new NotFoundException("bad-consultation-id", CONSULTATION_NOT_FOUND);
 	}
 
-	private AnnexIIBo completeAnnexIIBo(AnnexIIBo result, Optional<AnnexIIOdontologyVo> odontologyDataOpt) {
+	private AnnexIIBo completeAnnexIINursingBo(AnnexIIBo result, Optional<AnnexIIReportDataVo> nursingDataOpt) {
+		if(nursingDataOpt.isPresent()){
+			result.setExistsConsultation(true);
+			var nursingData = nursingDataOpt.get();
+			result.setSpecialty(nursingData.getSpeciality());
+			result.setProblems(nursingData.getDiagnostics());
+			result.setHasProcedures(nursingData.getHasProcedures());
+		}
+		LOG.debug("Output -> {}", result);
+		return result;
+	}
+
+	private AnnexIIBo completeAnnexIIOdontologyBo(AnnexIIBo result, Optional<AnnexIIOdontologyVo> odontologyDataOpt) {
 		if(odontologyDataOpt.isPresent()){
 			result.setExistsConsultation(true);
 			var odontologyData = odontologyDataOpt.get();
@@ -79,7 +101,7 @@ public class AnnexReportServiceImpl implements AnnexReportService {
 		return result;
 	}
 
-	private AnnexIIBo completeAnnexIIBo(AnnexIIBo result, List<AnnexIIOdontologyDataVo> listData){
+	private AnnexIIBo completeAnnexIIOdontologyBo(AnnexIIBo result, List<AnnexIIOdontologyDataVo> listData){
 		if(!listData.isEmpty()){
 			if(result.getProblems() == null)
 				result.setProblems("");
