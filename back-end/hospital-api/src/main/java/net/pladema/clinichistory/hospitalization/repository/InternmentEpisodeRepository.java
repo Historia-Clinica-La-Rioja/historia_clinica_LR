@@ -78,7 +78,9 @@ public interface InternmentEpisodeRepository extends JpaRepository<InternmentEpi
 
     @Transactional(readOnly = true)
     @Query("SELECT NEW net.pladema.clinichistory.hospitalization.service.domain.BasicListedPatientBo(pa.id, pe.identificationTypeId, " +
-            "pe.identificationNumber, pe.firstName, pe.lastName, petd.nameSelfDetermination, pe.birthDate, pe.genderId, ie.id, b.bedNumber, r.roomNumber, s.description, CASE when pd.physicalDischargeDate is not null then true else false end) " +
+            "pe.identificationNumber, pe.firstName, pe.lastName, petd.nameSelfDetermination, pe.birthDate, pe.genderId, ie.id, b.bedNumber, r.roomNumber, s.description, " +
+			"CASE when pd.physicalDischargeDate is not null then true else false end, CASE when pd.administrativeDischargeDate is not null then true else false end," +
+			"CASE when pd.medicalDischargeDate is not null then true else false end) " +
             " FROM InternmentEpisode as ie " +
 			" LEFT JOIN PatientDischarge as pd ON (ie.id = pd.internmentEpisodeId) " +
             " JOIN Patient as pa ON (ie.patientId = pa.id) " +

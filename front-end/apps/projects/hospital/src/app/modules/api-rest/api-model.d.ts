@@ -1458,6 +1458,7 @@ export interface InternmentEpisodeBMDto extends InternmentEpisodeADto {
 export interface InternmentEpisodeDto {
     bed: BedDto;
     doctor: ResponsibleDoctorDto;
+    documentsSummary: DocumentsSummaryDto;
     hasPhysicalDischarge: boolean;
     id: number;
     patient: PatientDto;
@@ -1483,8 +1484,11 @@ export interface InternmentGeneralStateDto extends Serializable {
 export interface InternmentPatientDto {
     bedNumber: string;
     birthDate: Date;
+    documentsSummary: DocumentsSummaryDto;
     firstName: string;
     genderId: number;
+    hasAdministrativeDischarge: boolean;
+    hasMedicalDischarge: boolean;
     hasPhysicalDischarge: boolean;
     identificationNumber: string;
     identificationTypeId: number;
