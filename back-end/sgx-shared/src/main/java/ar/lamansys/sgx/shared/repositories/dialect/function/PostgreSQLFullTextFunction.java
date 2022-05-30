@@ -26,7 +26,10 @@ public class PostgreSQLFullTextFunction implements SQLFunction {
         String value = (String) args.get(1);
         String fragment = "";
         fragment += "to_tsvector( '" + DEFAULT_LANGUAGE + "', " + field + ") @@ ";
-        fragment += "plainto_tsquery( '" + DEFAULT_LANGUAGE + "', " + value + ")";
+
+        String plainto_tsquery = "plainto_tsquery( '" + DEFAULT_LANGUAGE + "', " + value + ")";
+		String regex_replace = "regexp_replace(cast(" + plainto_tsquery + " as text), E'(\\'\\\\w+\\')', E'\\\\1:*', 'g')"; // adds :* to each search term
+		fragment += "to_tsquery( '" + DEFAULT_LANGUAGE + "', " + regex_replace + " )";
         log.trace("fragment: " + fragment);
         return fragment;
 
