@@ -23,14 +23,26 @@ public class ConsultationsBo {
 
     private String completeProfessionalName;
 
+	private String completeProfessionalNameSelfDetermination;
+
     public ConsultationsBo(ConsultationsVo consultationsVo){
         this.id = consultationsVo.getId();
         this.documentId = consultationsVo.getDocumentId();
         this.consultationDate = consultationsVo.getConsultationDate();
         this.specialty = consultationsVo.getSpecialty();
         this.completeProfessionalName = Stream.of(consultationsVo.getFirstName(), consultationsVo.getMiddleNames(), consultationsVo.getLastName(), consultationsVo.getOtherLastNames())
-                .filter(Objects::nonNull)
-                .collect(Collectors.joining(" "));
-    }
+				.filter(Objects::nonNull)
+				.collect(Collectors.joining(" "));
+		this.completeProfessionalNameSelfDetermination = getNameSelfDetermination(consultationsVo);
+	}
+
+	private String getNameSelfDetermination(ConsultationsVo consultationsVo){
+		if(consultationsVo.getNameSelfDetermination() == null || consultationsVo.getNameSelfDetermination().isEmpty()) {
+			return null;
+		}
+		return Stream.of(consultationsVo.getNameSelfDetermination(), consultationsVo.getLastName(), consultationsVo.getOtherLastNames())
+				.filter(Objects::nonNull)
+				.collect(Collectors.joining(" "));
+	}
 
 }

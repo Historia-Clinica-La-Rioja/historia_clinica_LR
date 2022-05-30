@@ -82,6 +82,7 @@ export function createTranslateLoader(http: HttpClient): TranslateLoader {
 			{ prefix: './assets/i18n/portal-paciente/', suffix: '.json' },
 			{ prefix: './assets/i18n/reportes/', suffix: '.json' },
 			{ prefix: './assets/i18n/configuracion/', suffix: '.json' },
+			{ prefix: './assets/i18n/presentation/', suffix: '.json' },
 			{ prefix: './assets/i18n/indicacion/', suffix: '.json' }
 		]
 	);

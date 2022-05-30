@@ -1,0 +1,394 @@
+<ng-container *ngIf="searchSnomedConcept.pharmacoSnomedConcept else SearchPharmacoSnomedConcept">
+
+	<div mat-dialog-title fxLayoutAlign="space-between">
+		<div class="mat-h2" [translate]="'indicacion.internment-card.dialogs.pharmaco.TITLE'"></div>
+		<button type="button" mat-icon-button (click)="close()">
+			<mat-icon>close</mat-icon>
+		</button>
+	</div>
+
+	<mat-dialog-content fxLayout="column" fxLayoutGap="20px">
+
+		<div fxLayout="row" fxFlex="50%">
+			<div fxLayout="column">
+				<form [formGroup]="searchSnomedConcept.pharmacoForm" fxLayout="column">
+
+					<mat-form-field appearance="outline">
+
+						<mat-label>{{'indicacion.internment-card.dialogs.pharmaco.add-snomed-concept.SEARCH' |
+							translate | titlecase}}</mat-label>
+
+						<input matInput type="text" formControlName="pharmaco" id="pharmaco" readonly>
+
+						<button id="clear" mat-button matSuffix color="warn" mat-icon-button
+							*ngIf="searchSnomedConcept.pharmacoForm.value.pharmaco" (click)="resetForm()">
+							<mat-icon>close</mat-icon>
+						</button>
+
+						<mat-error *ngIf="searchSnomedConcept.pharmacoForm.hasError('required', 'pharmaco')"
+							[translate]="'forms.REQUIRED'"></mat-error>
+
+					</mat-form-field>
+
+				</form>
+
+				<form [formGroup]="form" fxLayout="column" fxLayoutGap="20px">
+
+					<div fxLayout="row" fxLayoutGap="15px">
+
+						<mat-form-field fxFlex="25%" appearance="outline">
+
+							<mat-label>{{'indicacion.internment-card.dialogs.pharmaco.DOSAGE' | translate | titlecase}}
+							</mat-label>
+
+							<input matInput id="dosage" type="number" formControlName="dosage"
+								(keypress)="isNumberOrDot($event.key)" [min]=DOSE_MIN>
+
+							<mat-error [translate]="'forms.REQUIRED'"></mat-error>
+
+						</mat-form-field>
+
+						<mat-form-field fxFlex="20%" appearance="outline">
+
+							<mat-select id="unit" formControlName="unit">
+								<mat-option *ngFor="let type of units" [value]="type.description">
+									{{type.description | translate}}
+								</mat-option>
+							</mat-select>
+
+							<mat-error [translate]="'forms.REQUIRED'"></mat-error>
+
+						</mat-form-field>
+
+						<mat-form-field fxFlex="45%" appearance="outline">
+
+							<mat-label>{{'indicacion.internment-card.dialogs.pharmaco.VIA' | translate | titlecase}}
+							</mat-label>
+
+							<mat-select id="via" formControlName="via">
+								<mat-option *ngFor="let type of vias" [value]="type.id">
+									{{type.description | translate}}
+								</mat-option>
+							</mat-select>
+
+							<mat-error [translate]="'forms.REQUIRED'"></mat-error>
+
+						</mat-form-field>
+
+					</div>
+
+					<mat-checkbox formControlName="hasSolvent" class="example-margin">
+						{{'indicacion.internment-card.dialogs.pharmaco.SOLVENT' | translate | titlecase}}</mat-checkbox>
+
+					<div *ngIf="form.value.hasSolvent">
+						<form [formGroup]="searchSnomedConcept.solventForm" fxLayout="column">
+
+							<div fxLayout="50%" *ngIf="!searchSnomedConcept.solventForm.value.solvent">
+								<ng-container *ngTemplateOutlet="searchSolventSnomed"></ng-container>
+							</div>
+
+
+							<ng-container *ngIf="searchSnomedConcept.solventForm.value.solvent">
+								<div fxLayout="row" fxLayoutGap="15px">
+
+									<mat-form-field appearance="outline">
+
+										<mat-label>
+											{{'indicacion.internment-card.dialogs.pharmaco.add-snomed-concept.SEARCH' |
+											translate | titlecase}}</mat-label>
+
+										<input matInput type="text" formControlName="solvent" id="solvent"  [min]=DOSE_MIN readonly>
+
+										<mat-error *ngIf="searchSnomedConcept.solventForm.hasError('required', 'solvent')"
+										[translate]="'forms.REQUIRED'"></mat-error>
+
+										<button id="clear" mat-button matSuffix color="warn" mat-icon-button
+											*ngIf="searchSnomedConcept.solventForm.value.solvent"
+											(click)="resetSolventForm()">
+											<mat-icon>close</mat-icon>
+										</button>
+
+									</mat-form-field>
+									<form [formGroup]="form">
+										<mat-form-field appearance="outline">
+
+											<mat-label>
+												{{'indicacion.internment-card.dialogs.pharmaco.DOSAGE' |
+												translate | titlecase}}</mat-label>
+
+											<input id="dosageSolvent" matInput formControlName="dosageSolvent"
+												(keypress)="isNumberOrDot($event.key)">
+											<mat-error [translate]="'forms.REQUIRED'"></mat-error>
+										</mat-form-field>
+									</form>
+
+									<span
+										fxLayoutAlign="center center">{{'indicacion.internment-card.dialogs.pharmaco.MILLILITERS'
+										|translate}}.</span>
+								</div>
+
+							</ng-container>
+
+						</form>
+
+					</div>
+
+					<mat-card-title>
+						<span translate="indicacion.internment-card.dialogs.pharmaco.frequencyOption.TITLE"></span>
+					</mat-card-title>
+
+					<mat-radio-group formControlName="frequencyOption" fxLayoutGap="10px"
+						aria-label="Select an frequencyOption" class="radio-group">
+						<mat-radio-button [value]=FREQUENCY_OPTION_INTERVAL>
+							{{'indicacion.internment-card.dialogs.pharmaco.frequencyOption.INTERVALS' |
+							translate | titlecase}}</mat-radio-button>
+						<mat-radio-button [value]=FREQUENCY_OPTION_START_TIME>
+							{{'indicacion.internment-card.dialogs.pharmaco.frequencyOption.ONCE' |
+							translate | titlecase}}
+						</mat-radio-button>
+						<mat-radio-button [value]=FREQUENCY_OPTION_EVENT>
+							{{'indicacion.internment-card.dialogs.pharmaco.frequencyOption.AFTER-EVENT' |
+							translate | titlecase}}
+						</mat-radio-button>
+
+					</mat-radio-group>
+
+					<div class="container" [ngSwitch]="form.controls.frequencyOption.value">
+
+						<div *ngSwitchCase="FREQUENCY_OPTION_INTERVAL" fxLayout="column" fxLayoutGap="15px">
+
+							<div fxLayout="row" appearance="outline" fxLayoutGap="15px">
+
+								<mat-form-field fxFlex="40%" appearance="outline">
+									<mat-label>
+										{{'indicacion.internment-card.dialogs.pharmaco.frequencyOption.INTERVALS' |
+										translate | titlecase}}</mat-label>
+
+									<mat-select id="interval" formControlName="interval">
+
+										<mat-option *ngFor="let interval of intervals" [value]="interval">
+											<ng-container *ngIf="interval==otherFrequency.value; else other">
+												<span>
+													{{'indicacion.internment-card.dialogs.pharmaco.frequencyOption.OTHER-FREQUENCY'
+													| translate | titlecase}}</span>
+											</ng-container>
+
+											<ng-template #other>
+												<span>
+													{{'indicacion.internment-card.dialogs.pharmaco.frequencyOption.EVERY'
+													| translate | titlecase}} </span>
+												{{interval | translate}} hs.
+											</ng-template>
+										</mat-option>
+									</mat-select>
+
+									<mat-error [translate]="'forms.REQUIRED'"></mat-error>
+
+								</mat-form-field>
+
+								<ng-container *ngIf="form.controls.interval.value==otherFrequency.value">
+
+									<span fxFlex="20%" fxLayoutAlign="end center">
+										{{'indicacion.internment-card.dialogs.pharmaco.frequencyOption.EVERY' |
+										translate | titlecase}} </span>
+
+									<mat-form-field fxFlex="20%" appearance="outline">
+
+										<mat-select id="frequencyHour" formControlName="frequencyHour">
+
+											<mat-option *ngFor="let hour of hoursList" [value]="hour">
+												{{hour | translate}} hs.
+											</mat-option>
+										</mat-select>
+
+										<mat-error [translate]="'forms.REQUIRED'"></mat-error>
+
+										<button id="clear-frequency-hour" type="button" mat-button matSuffix
+											*ngIf="form.controls.frequencyHour.value" color="warn" mat-icon-button
+											(click)="clearFilterField(form.controls.frequencyHour); $event.stopPropagation()">
+											<mat-icon>close</mat-icon>
+										</button>
+
+										<div fxLayout="column">
+											{{form.controls.frequency.value.frequencyHour | json}}
+										</div>
+
+									</mat-form-field>
+
+								</ng-container>
+
+							</div>
+
+							<div fxLayout="row">
+								<mat-form-field fxFlex="40%" appearance="outline">
+
+									<mat-label
+										[translate]="'indicacion.internment-card.dialogs.pharmaco.START-TIME'">
+									</mat-label>
+									<mat-select id="start-time" formControlName="startTime">
+										<mat-option *ngFor="let time of hoursList" [value]="time">
+											{{time | translate}} hs
+										</mat-option>
+									</mat-select>
+
+									<mat-error [translate]="'forms.REQUIRED'"></mat-error>
+
+								</mat-form-field>
+							</div>
+						</div>
+						<div *ngSwitchCase="FREQUENCY_OPTION_START_TIME" fxLayout="row" fxLayoutGap="15px">
+							<mat-form-field fxFlex="40%" appearance="outline">
+
+								<mat-label
+									[translate]="'indicacion.internment-card.dialogs.pharmaco.START-TIME'">
+								</mat-label>
+								<mat-select id="start-time" formControlName="startTime">
+									<mat-option *ngFor="let time of hoursList" [value]="time">
+										{{time | translate}} hs
+									</mat-option>
+								</mat-select>
+
+								<mat-error [translate]="'forms.REQUIRED'"></mat-error>
+
+							</mat-form-field>
+						</div>
+
+						<div *ngSwitchCase="FREQUENCY_OPTION_EVENT" fxLayoutGap="15px">
+							<mat-form-field appearance="outline">
+								<textarea matInput id="event-input" type="text" formControlName="event"
+									placeholder="{{'indicacion.internment-card.dialogs.pharmaco.frequencyOption.DETAIL-EVENT' | translate }}">
+												</textarea>
+								<mat-error [translate]="'forms.REQUIRED'"></mat-error>
+							</mat-form-field>
+						</div>
+
+					</div>
+
+					<span class="sub-title">{{'indicacion.internment-card.dialogs.pharmaco.foodRelation.TITLE' |
+						translate}}</span>
+
+					<mat-radio-group formControlName="foodRelation" fxLayoutGap="10px"
+						aria-label="Select an frequencyOption" fxLayout="row" class="radio-group">
+						<mat-radio-button [value]=NEGATIVE_OPTION>
+							{{'indicacion.internment-card.dialogs.pharmaco.foodRelation.NEGATIVE'| translate |
+							titlecase}}
+						</mat-radio-button>
+						<mat-radio-button [value]=FAR_OPTION>
+							{{'indicacion.internment-card.dialogs.pharmaco.foodRelation.FAR' | translate | titlecase}}
+						</mat-radio-button>
+						<mat-radio-button [value]=FAST_OPTION>
+							{{'indicacion.internment-card.dialogs.pharmaco.foodRelation.FAST' | translate | titlecase}}
+						</mat-radio-button>
+					</mat-radio-group>
+
+
+				</form>
+
+			</div>
+
+			<mat-divider [vertical]="true"></mat-divider>
+
+			<div fxLayout="column" fxLayoutAlign="space-between start">
+
+				<form [formGroup]="form" fxLayout="column" fxLayoutGap="20px">
+
+					<mat-card-title>
+						<span translate="indicacion.internment-card.dialogs.pharmaco.othersDetails.TITLE"></span>
+					</mat-card-title>
+
+					<mat-form-field appearance="outline">
+
+						<mat-label
+							[translate]="'indicacion.internment-card.dialogs.pharmaco.othersDetails.ASSOCIATED_DIAGNOSIS'">
+						</mat-label>
+						<mat-select id="diagnoses" formControlName="diagnoses">
+							<mat-option *ngFor="let diagnoses of diagnostics" [value]="diagnoses.id">
+								{{diagnoses.snomed.pt | translate | titlecase}}
+							</mat-option>
+						</mat-select>
+
+						<mat-error [translate]="'forms.REQUIRED'"></mat-error>
+
+					</mat-form-field>
+
+					<span class="sub-title">{{'indicacion.internment-card.dialogs.pharmaco.patientProvided.TITLE' |
+						translate }}</span>
+
+					<mat-radio-group formControlName="patientProvided" fxLayoutGap="10px"
+						aria-label="Select an patientProvided" fxLayout="row" class="radio-group">
+						<mat-radio-button [value]=false>
+							{{'indicacion.internment-card.dialogs.pharmaco.foodRelation.NEGATIVE'| translate |
+							titlecase}}
+						</mat-radio-button>
+						<mat-radio-button [value]=true>
+							{{'indicacion.internment-card.dialogs.pharmaco.patientProvided.POSITIVE' |
+							translate | titlecase}}
+						</mat-radio-button>
+					</mat-radio-group>
+
+				</form>
+
+				<app-datepicker [title]="'indicacion.internment-card.INDICATION_DATE'" [minDate]="this.data.entryDate"
+					[dateToSetInDatepicker]="this.data.actualDate" (selectDate)="setIndicationDate($event)">
+				</app-datepicker>
+
+			</div>
+		</div>
+
+		<form [formGroup]="form" fxLayout="column">
+
+			<mat-form-field appearance="outline">
+
+				<textarea matInput type="text" id="note-input" formControlName="note"
+					placeholder="{{'indicacion.internment-card.dialogs.pharmaco.OBSERVATIONS' | translate }}">
+					</textarea>
+				<mat-error [translate]="'forms.REQUIRED'"></mat-error>
+
+			</mat-form-field>
+
+		</form>
+
+		<div actions id="buttons" fxLayoutAlign="end end">
+			<button mat-raised-button color="primary" id="confirm_button" (click)="save()">
+				<span [translate]="'buttons.CONFIRM'"></span>
+			</button>
+		</div>
+
+	</mat-dialog-content>
+
+</ng-container>
+
+<ng-template #SearchPharmacoSnomedConcept>
+
+	<div mat-dialog-title fxLayoutAlign="space-between">
+		<span [translate]="'indicacion.internment-card.dialogs.pharmaco.add-snomed-concept.TITLE'"></span>
+		<button type="button" mat-icon-button (click)="close()">
+			<mat-icon>close</mat-icon>
+		</button>
+	</div>
+
+	<app-concepts-search [label]="'indicacion.internment-card.dialogs.pharmaco.PHARMACO'"
+		(search)="searchSnomedConcept.searchPharmacoConcept($event)">
+	</app-concepts-search>
+
+	<div class="spinner">
+		<mat-spinner diameter="70" color="primary"
+			*ngIf="searchSnomedConcept.searching && !searchSnomedConcept.snowstormServiceNotAvailable"></mat-spinner>
+	</div>
+
+	<div *ngIf="searchSnomedConcept.snowstormServiceNotAvailable">
+		<span [translate]="'historia-clinica.snowstorm.SERVICE_NOT_AVAILABLE'"> </span>
+	</div>
+
+	<app-table *ngIf="!searchSnomedConcept.searching && !searchSnomedConcept.pharmacoSnomedConcept"
+		[model]="searchSnomedConcept.conceptsResultsTable" [mainStyle]="'secondary'">
+	</app-table>
+</ng-template>
+
+<ng-template #searchSolventSnomed>
+	<ng-container *ngIf="!searchSnomedConcept.showSolventTitle">
+		<app-concepts-search [label]="'indicacion.internment-card.dialogs.pharmaco.PHARMACO'" [hideIcon]="true"
+			(search)="searchSnomedConcept.searchSolventConcept($event)">
+		</app-concepts-search>
+	</ng-container>
+</ng-template>

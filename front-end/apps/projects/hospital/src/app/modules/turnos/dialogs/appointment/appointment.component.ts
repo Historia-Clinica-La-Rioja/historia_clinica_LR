@@ -17,7 +17,7 @@ import {
 	MedicalCoverageComponent,
 	PatientMedicalCoverage,
 	PrivateHealthInsurance
-} from '@presentation/dialogs/medical-coverage/medical-coverage.component';
+} from '@pacientes/dialogs/medical-coverage/medical-coverage.component';
 import { map, take } from 'rxjs/operators';
 import { PatientMedicalCoverageService } from '@api-rest/services/patient-medical-coverage.service';
 import { PermissionsService } from '@core/services/permissions.service';
@@ -243,7 +243,8 @@ export class AppointmentComponent implements OnInit {
 		return (this.estadoSelected === APPOINTMENT_STATES_ID.ASSIGNED &&
 			this.appointment?.appointmentStateId === APPOINTMENT_STATES_ID.ASSIGNED) ||
 			(this.estadoSelected === APPOINTMENT_STATES_ID.CONFIRMED &&
-				this.appointment?.appointmentStateId === APPOINTMENT_STATES_ID.CONFIRMED);
+				this.appointment?.appointmentStateId === APPOINTMENT_STATES_ID.CONFIRMED) ||
+				this.appointment?.appointmentStateId === APPOINTMENT_STATES_ID.OUT_OF_DIARY;
 	}
 
 	isAbsent(): boolean {
@@ -379,11 +380,17 @@ export class AppointmentComponent implements OnInit {
 			if (this.coverageData.affiliateNumber) {
 				summaryInfo.affiliateNumber = this.coverageData.affiliateNumber;
 			}
-			if (this.coverageData?.privateHealthInsuranceDetails?.planName) {
-				summaryInfo.plan = this.coverageData?.privateHealthInsuranceDetails?.planName;
+			if (this.coverageData?.planName) {
+				summaryInfo.plan = this.coverageData?.planName;
 			}
 			if(this.coverageData.condition) {
 				summaryInfo.condition = this.coverageData.condition;
+			}
+			if(this.coverageData.medicalCoverage.cuit) {
+				summaryInfo.cuit = this.coverageData.medicalCoverage.cuit;
+			}
+			if(this.coverageData.medicalCoverage.type) {
+				summaryInfo.type = this.coverageData.medicalCoverage.type;
 			}
 		}
 		this.summaryCoverageData = summaryInfo;

@@ -1,5 +1,6 @@
 package net.pladema.clinichistory.requests.medicationrequests.controller;
 
+import ar.lamansys.sgx.shared.featureflags.application.FeatureFlagsService;
 import ar.lamansys.sgx.shared.pdf.PdfService;
 import net.pladema.IntegrationController;
 import net.pladema.clinichistory.requests.medicationrequests.controller.mapper.CreateMedicationRequestMapper;
@@ -56,6 +57,9 @@ class MedicationRequestControllerIntegrationTest extends IntegrationController {
 
     @MockBean
     private PdfService pdfService;
+
+	@MockBean
+	private FeatureFlagsService featureFlagsService;
 
     @BeforeEach
     void setup() {

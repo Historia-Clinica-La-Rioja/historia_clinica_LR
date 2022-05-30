@@ -16,9 +16,10 @@ import java.util.Optional;
 public interface HealthcareProfessionalRepository extends SGXAuditableEntityJPARepository<HealthcareProfessional, Integer> {
 
 	@Transactional(readOnly = true)
-	@Query(value = " SELECT new net.pladema.staff.service.domain.HealthcarePersonBo(hp.id, hp.licenseNumber,p.id, p)"
+	@Query(value = " SELECT new net.pladema.staff.service.domain.HealthcarePersonBo(hp.id, hp.licenseNumber,p.id, p, pe.nameSelfDetermination)"
 			+ " FROM  HealthcareProfessional hp "
 			+ " INNER JOIN Person p ON hp.personId = p.id"
+			+ " LEFT JOIN PersonExtended pe ON p.id = pe.id"
 			+ " INNER JOIN UserPerson up ON up.pk.personId = p.id"
 			+ " INNER JOIN UserRole ur ON up.pk.userId = ur.userRolePK.userId"
 			+ " WHERE ur.userRolePK.roleId = 3 " // Role 'Especialista Medico'
@@ -37,9 +38,10 @@ public interface HealthcareProfessionalRepository extends SGXAuditableEntityJPAR
 
 	@Transactional(readOnly = true)
 	@Query(value = " SELECT DISTINCT new net.pladema.staff.repository.domain.HealthcareProfessionalVo("
-			+ " hp.id, hp.licenseNumber, p.firstName, p.lastName, p.identificationNumber,p.id)"
+			+ " hp.id, hp.licenseNumber, p.firstName, p.lastName, p.identificationNumber,p.id, pe.nameSelfDetermination)"
 			+ " FROM  HealthcareProfessional hp "
 			+ " INNER JOIN Person p ON hp.personId = p.id"
+			+ " LEFT JOIN PersonExtended pe ON (p.id = pe.id)"
 			+ " INNER JOIN UserPerson up ON up.pk.personId = p.id"
 			+ " INNER JOIN UserRole ur ON up.pk.userId = ur.userRolePK.userId"
 			+ " WHERE ur.userRolePK.institutionId = :institutionId "
@@ -49,18 +51,20 @@ public interface HealthcareProfessionalRepository extends SGXAuditableEntityJPAR
 
 	@Transactional(readOnly = true)
 	@Query(value = " SELECT DISTINCT new net.pladema.staff.repository.domain.HealthcareProfessionalVo("
-			+ " hp.id, hp.licenseNumber, p.firstName, p.lastName, p.identificationNumber,p.id)"
+			+ " hp.id, hp.licenseNumber, p.firstName, p.lastName, p.identificationNumber,p.id, pe.nameSelfDetermination)"
 			+ " FROM  HealthcareProfessional hp "
 			+ " INNER JOIN Person p ON (hp.personId = p.id)"
+			+ " LEFT JOIN PersonExtended pe ON (p.id = pe.id)"
 			+ " WHERE hp.id = :id"
 			+ " AND hp.deleteable.deleted = false")
 	Optional<HealthcareProfessionalVo> findActiveProfessionalById(@Param("id") Integer id);
 
 	@Transactional(readOnly = true)
 	@Query(value = " SELECT DISTINCT new net.pladema.staff.repository.domain.HealthcareProfessionalVo("
-			+ " hp.id, hp.licenseNumber, p.firstName, p.lastName, p.identificationNumber,p.id)"
+			+ " hp.id, hp.licenseNumber, p.firstName, p.lastName, p.identificationNumber,p.id, pe.nameSelfDetermination)"
 			+ " FROM  HealthcareProfessional hp "
 			+ " INNER JOIN Person p ON (hp.personId = p.id)"
+			+ " LEFT JOIN PersonExtended pe ON (p.id = pe.id)"
 			+ " WHERE hp.id = :id")
 	Optional<HealthcareProfessionalVo> findFromAllProfessionalsById(@Param("id") Integer id);
 
@@ -71,9 +75,10 @@ public interface HealthcareProfessionalRepository extends SGXAuditableEntityJPAR
 
 	@Transactional(readOnly = true)
 	@Query(value = " SELECT DISTINCT new net.pladema.staff.repository.domain.HealthcareProfessionalVo("
-			+ " hp.id, hp.licenseNumber, p.firstName, p.lastName, p.identificationNumber,p.id)"
+			+ " hp.id, hp.licenseNumber, p.firstName, p.lastName, p.identificationNumber,p.id, pe.nameSelfDetermination)"
 			+ " FROM  HealthcareProfessional hp "
 			+ " INNER JOIN Person p ON hp.personId = p.id"
+			+ " LEFT JOIN PersonExtended pe ON (p.id = pe.id)"
 			+ " AND hp.deleteable.deleted = false "
 			+ " ORDER BY p.lastName, p.firstName")
 	List<HealthcareProfessionalVo> getAllProfessional();

@@ -19,11 +19,14 @@ public class UserPersonInfoBo {
 
     private String lastName;
 
-    public UserPersonInfoBo(Integer id, String email, Integer personId, String firstName, String lastName) {
+	private  String nameSelfDetermination;
+
+    public UserPersonInfoBo(Integer id, String email, Integer personId, String firstName, String lastName, String nameSelfDetermination) {
         this.id = id;
         this.email = email;
         this.personId = personId;
         this.firstName = firstName;
         this.lastName = lastName;
+		this.nameSelfDetermination = nameSelfDetermination;
     }
 }

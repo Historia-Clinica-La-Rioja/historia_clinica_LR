@@ -16,4 +16,6 @@ public class ResponsibleDoctorVo {
     private String lastName;
 
     private String licence;
+
+	private String nameSelfDetermination;
 }

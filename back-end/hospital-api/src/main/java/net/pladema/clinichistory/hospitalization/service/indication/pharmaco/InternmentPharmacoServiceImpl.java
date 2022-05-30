@@ -65,7 +65,6 @@ public class InternmentPharmacoServiceImpl implements InternmentPharmacoService 
 
 	private PharmacoDto toPharmacoDto(InternmentPharmacoBo bo) {
 		NewDosageDto dosageDto = toDosageDto(bo.getDosage());
-		OtherPharmacoDto solventDto = toOtherPharmacoDto(bo.getSolvent());
 
 		return new PharmacoDto(null,
 				bo.getPatientId(),
@@ -77,7 +76,7 @@ public class InternmentPharmacoServiceImpl implements InternmentPharmacoService 
 				localDateMapper.toDateTimeDto(bo.getCreatedOn()),
 				bo.getSnomed() != null ? new SharedSnomedDto(bo.getSnomed().getSctid(), bo.getSnomed().getPt()) : null,
 				dosageDto,
-				solventDto,
+				bo.getSolvent() != null ? toOtherPharmacoDto(bo.getSolvent()) : null,
 				bo.getHealthConditionId(),
 				bo.getFoodRelationId(),
 				bo.getPatientProvided(),

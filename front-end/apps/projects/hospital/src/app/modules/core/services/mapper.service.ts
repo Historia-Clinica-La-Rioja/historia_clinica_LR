@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { DateFormat, momentFormat, momentParse, momentParseDate, newMoment } from '@core/utils/moment.utils';
-import { HealthInsurance, PatientMedicalCoverage, PrivateHealthInsurance } from '@presentation/dialogs/medical-coverage/medical-coverage.component';
-import { CoverageDtoUnion, PatientMedicalCoverageDto } from '@api-rest/api-model';
+import { EMedicalCoverageType, HealthInsurance, PatientMedicalCoverage, PrivateHealthInsurance } from '@pacientes/dialogs/medical-coverage/medical-coverage.component';
+import { HealthInsuranceDto, PatientMedicalCoverageDto, PrivateHealthInsuranceDto } from '@api-rest/api-model';
 
 @Injectable({
 	providedIn: 'root'
@@ -15,24 +15,14 @@ export class MapperService {
 
 
 	private static _toPatientMedicalCoverageDto(s: PatientMedicalCoverage): PatientMedicalCoverageDto {
-		let privateHealthInsuranceDetails;
-		if (s.privateHealthInsuranceDetails?.startDate
-			|| s.privateHealthInsuranceDetails?.endDate
-			|| s.privateHealthInsuranceDetails?.planId) {
-			privateHealthInsuranceDetails = {
-				startDate: s.privateHealthInsuranceDetails.startDate ?
-					momentFormat(s.privateHealthInsuranceDetails.startDate, DateFormat.API_DATE) : null,
-				endDate: s.privateHealthInsuranceDetails.endDate ?
-					momentFormat(s.privateHealthInsuranceDetails.endDate, DateFormat.API_DATE) : null,
-				planId: s.privateHealthInsuranceDetails.planId,
-				planName: s.privateHealthInsuranceDetails.planName
-			};
-		}
 		return {
 			affiliateNumber: s.affiliateNumber,
 			medicalCoverage: s.medicalCoverage.toMedicalCoverageDto(),
-			privateHealthInsuranceDetails,
-			vigencyDate: momentFormat(s.validDate, DateFormat.API_DATE),
+			startDate: s.startDate ? momentFormat(s.startDate, DateFormat.API_DATE) : null,
+			endDate: s.endDate ? momentFormat(s.endDate, DateFormat.API_DATE) : null,
+			planId: s.planId,
+			planName: s.planName,
+			vigencyDate: s.validDate ? momentFormat(s.validDate, DateFormat.API_DATE) : null,
 			id: s.id,
 			active: s.active,
 			condition: s.condition
@@ -47,28 +37,19 @@ export class MapperService {
 			validDate: s.vigencyDate ?
 				momentParse(s.vigencyDate, DateFormat.API_DATE) : newMoment(),
 			medicalCoverage: toMedicalCoverage(s.medicalCoverage),
-			privateHealthInsuranceDetails: mapDetails(),
+			startDate: s.startDate ? momentParseDate(s.startDate) : undefined,
+			endDate: s.endDate ? momentParseDate(s.endDate) : undefined,
+			planId: s.planId,
+			planName: s.planName,
 			active: s.active,
 			condition: s.condition
 		};
 
 		// TODO ver la posibilidad de quitar ese if
-		function toMedicalCoverage(dto: CoverageDtoUnion): HealthInsurance | PrivateHealthInsurance {
-			return dto.type === 'HealthInsuranceDto' ? new HealthInsurance((dto.rnos) ? dto.rnos.toString() : null, dto.acronym, dto.id, dto.name, dto.type)
+		function toMedicalCoverage(dto: HealthInsuranceDto | PrivateHealthInsuranceDto ): HealthInsurance | PrivateHealthInsurance {
+			return dto.type === EMedicalCoverageType.OBRASOCIAL ? new HealthInsurance(("rnos" in dto && dto.rnos) ? dto.rnos.toString() : null, ("acronym" in dto && dto.acronym) ? dto.acronym.toString() : null, dto.id, dto.name, dto.type)
 				: new PrivateHealthInsurance(dto.id, dto.name, dto.type,dto.cuit);
 		}
 
-		function mapDetails() {
-			let privateHealthInsuranceDetails;
-			if (s.privateHealthInsuranceDetails) {
-				privateHealthInsuranceDetails = {
-					startDate: s.privateHealthInsuranceDetails.startDate ? momentParseDate(s.privateHealthInsuranceDetails.startDate) : undefined,
-					endDate: s.privateHealthInsuranceDetails.endDate ? momentParseDate(s.privateHealthInsuranceDetails.endDate) : undefined,
-					planId: s.privateHealthInsuranceDetails.planId,
-					planName: s.privateHealthInsuranceDetails.planName
-				};
-			}
-			return privateHealthInsuranceDetails;
-		}
 	}
 }

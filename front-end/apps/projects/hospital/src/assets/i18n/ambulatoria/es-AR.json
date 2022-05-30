@@ -115,7 +115,7 @@
                     "CONCEPT_LABEL": "Medicación habitual",
                     "DESCRIPCION": "Descripción",
                     "NOMBRE_MEDICACION": "Nombre de medicación",
-					"SEARCH_PLACEHOLDER": "Buscar medicación",
+                    "SEARCH_PLACEHOLDER": "Buscar medicación",
                     "OBSERVACIONES": "Observaciones",
                     "SUSPENDIDO": "Suspendido",
                     "TABLE_TITLE": "Medicaciones registradas",
@@ -161,8 +161,8 @@
                     "TABLE_TITLE": "Procedimientos registrados",
                     "TITLE": "Procedimiento",
                     "TIPO": "Tipo de procedimiento",
-					"PROCEDIMIENTO": "Procedimiento",
-					"SEARCH_PLACEHOLDER": "Buscar procedimiento"
+                    "PROCEDIMIENTO": "Procedimiento",
+                    "SEARCH_PLACEHOLDER": "Buscar procedimiento"
                 },
                 "antecedentes-familiares": {
                     "buttons": {
@@ -177,7 +177,7 @@
                     },
                     "TITLE": "Antecedentes familiares",
                     "ANTECEDENTES_FAMILIARES": "Antecedentes familiares",
-					"SEARCH_PLACEHOLDER": "Buscar antecedentes familiares",
+                    "SEARCH_PLACEHOLDER": "Buscar antecedentes familiares",
                     "FECHA": "Fecha de registro"
                 },
                 "antecedentes-personales": {
@@ -198,6 +198,7 @@
                 },
                 "datos-antropometricos": {
                     "TITLE": "Datos antropométricos",
+                    "NAME": "datos antropométricos",
                     "BLOOD_TYPE": "Grupo y factor sanguíneo",
                     "HEAD_CIRCUNFERENCE": "Perímetro cefálico (cm)",
                     "HEIGHT": "Talla (cm)",
@@ -214,10 +215,10 @@
                 "alergias": {
                     "TITLE": "Alergias",
                     "ADD": "Agregar alergia",
-					"ALLERGY": "Alergia",
+                    "ALLERGY": "Alergia",
                     "CRITICALITY": "Criticidad",
-					"SEARCH_PLACEHOLDER": "Buscar alergia",
-					"form": {
+                    "SEARCH_PLACEHOLDER": "Buscar alergia",
+                    "form": {
                         "REGISTRY_DATE": "Fecha registro"
                     },
                     "table": {
@@ -228,18 +229,6 @@
                             "REGISTRY_DATE": "Fecha registro"
                         }
                     }
-                },
-                "anthropometric_dialog": {
-                    "ADD": "SI, INCLUIRLOS",
-                    "DISCARD": "NO, DESCARTARLOS",
-                    "DESCRIPTION": "Últimos datos antropométricos cargados previamente el {{date}} hs",
-                    "QUESTION": "¿Desea incluirlos en la consulta? "
-                },
-                "risk_factors_dialog": {
-                    "ADD": "SI, INCLUIRLOS",
-                    "DISCARD": "NO, DESCARTARLOS",
-                    "DESCRIPTION": "Últimos factores de riesgo cargados previamente el {{date}} hs",
-                    "QUESTION": "¿Desea incluirlos en la consulta? "
                 },
                 "solicitud-referencia": {
                     "TITLE": "Solicitud de referencia",
@@ -387,6 +376,10 @@
                 "UN_DIA": "Hace 1 día",
                 "APLICACION_DIARIA": "Una aplicación por día",
                 "USO_CRONICO": "Uso crónico",
+				"new_prescription_menu": {
+					"NEW_OUTPATIENT_PRESCRIPTION": "Nueva orden de Ambulatorio",
+					"NEW_INTERNMENT_PRESCRIPTION": "Nueva orden de Internación"
+				},
                 "add_prescription_item_dialog": {
                     "MEDICATION": "Medicación",
                     "MEDICATION_TITLE": "Agregar medicación",
@@ -537,17 +530,32 @@
             },
             "allergies": {
                 "TITLE": "Alergias críticas"
-            }
-        },
+            },
+			"internment-order" : {
+				"diagnosis-required-dialog" : {
+					"MESSAGE" : "El episodio de internación debe tener un diagnóstico asociado"
+				},
+				"create-order-dialog" : {
+					"TITLE": "Nueva orden",
+					"CATEGORY": "Categoría del estudio",
+					"STUDY": "Nombre del estudio",
+					"HEALTH_PROBLEM": "Diagnóstico asociado",
+					"NOTES": "Observaciones",
+					"NEXT_BUTTON": "Agregar",
+					"TEMPLATE_DETAIL": "Incluye: {{concepts}}.",
+                    "CONFIRM_ORDER": "Finalizar orden"
+				}
+			}
+		},
         "screen_change_warning_dialog": {
             "CONTENT": "Usted ha iniciado una consulta, si cambia de pantalla la información cargada se perderá.",
             "ANSWER_CONTENT": "¿Desea continuar de todos modos?",
             "CONFIRM_BUTTON": "Si, descartar y continuar",
             "CANCEL_BUTTON": "No, regresar y completar"
         },
-		"dialog-title":{
-			"OTHER-INDICATION": "Otra indicación",
-			"DIET": "Dieta"
-		}
+        "dialog-title": {
+            "OTHER-INDICATION": "Otra indicación",
+            "DIET": "Dieta"
+        }
     }
 }

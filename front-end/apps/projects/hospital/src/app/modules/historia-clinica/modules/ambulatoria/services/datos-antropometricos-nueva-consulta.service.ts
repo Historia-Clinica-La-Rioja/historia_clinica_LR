@@ -8,6 +8,7 @@ import { DatePipeFormat } from '@core/utils/date.utils';
 import { DatePipe } from '@angular/common';
 import { PATTERN_INTEGER_NUMBER, PATTERN_NUMBER_WITH_DECIMALS } from '@core/utils/pattern.utils';
 import { DATOS_ANTROPOMETRICOS } from '@historia-clinica/constants/validation-constants';
+import { atLeastOneValueInFormGroup } from '@core/utils/form.utils';
 
 export interface DatosAntropometricos {
 	bloodType?: ClinicalObservationDto;
@@ -27,8 +28,10 @@ export class DatosAntropometricosNuevaConsultaService {
 	private _weightError$: Observable<string>;
 	private headCircumferenceErrorSource = new Subject<string>();
 	private _headCircumferenceError$: Observable<string>;
-	private notShowPreloadedAnthropometricData = true;
+	private notShowPreloadedAnthropometricData = false;
 	private dateList: string[] = [];
+	private readonly atLeastOneValueInFormGroup = atLeastOneValueInFormGroup;
+
 
 	constructor(
 		private readonly formBuilder: FormBuilder,
@@ -122,6 +125,7 @@ export class DatosAntropometricosNuevaConsultaService {
 				if (anthropometricData === null)
 					this.notShowPreloadedAnthropometricData = false;
 				else {
+					this.notShowPreloadedAnthropometricData = true;
 					this.setAnthropometric(anthropometricData.weight?.value, anthropometricData.height?.value, anthropometricData.bloodType?.value, anthropometricData.headCircumference?.value);
 					Object.keys(anthropometricData).forEach((key: string) => {
 						if (anthropometricData[key].effectiveTime != undefined) {
@@ -159,5 +163,9 @@ export class DatosAntropometricosNuevaConsultaService {
 
 	getDate(): string {
 		return this.datePipe.transform(Math.max.apply(null, this.dateList.map((date) => new Date(date))), DatePipeFormat.SHORT);
+	}
+
+	hasAtLeastOneValueLoaded(): boolean {
+		return this.atLeastOneValueInFormGroup(this.form);
 	}
 }

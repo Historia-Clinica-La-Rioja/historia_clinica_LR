@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, forkJoin, Subject } from "rxjs";
 import { InternmentStateService } from "@api-rest/services/internment-state.service";
-import { DocumentSearchFilterDto, HCEAllergyDto, HCEPersonalHistoryDto, InternmentSummaryDto, PatientDischargeDto } from "@api-rest/api-model";
+import { AllergyConditionDto, AnthropometricDataDto, DocumentSearchFilterDto, HCEAllergyDto, HCEPersonalHistoryDto, HealthHistoryConditionDto, InternmentSummaryDto, PatientDischargeDto } from "@api-rest/api-model";
 import { DocumentSearchService } from "@api-rest/services/document-search.service";
 import { InternacionService } from "@api-rest/services/internacion.service";
 import { momentParseDateTime } from "@core/utils/moment.utils";
@@ -20,8 +20,8 @@ export class InternmentSummaryFacadeService {
 	private personalHistorySubject: Subject<any> = new BehaviorSubject<any>([]);
 	private medicationsSubject: Subject<any> = new BehaviorSubject<any>([]);
 	private riskFactorsSubject: Subject<any> = new BehaviorSubject<any>([]);
-	private heightAndWeightDataSubject: Subject<any> = new BehaviorSubject<any>([]);
-	private bloodTypeDataSubject: Subject<any> = new BehaviorSubject<any>([]);
+	private heightAndWeightDataListSubject: Subject<AnthropometricDataDto[]> = new BehaviorSubject<AnthropometricDataDto[]>([]);
+	private bloodTypeDataSubject: Subject<string> = new BehaviorSubject<string>(null);
 	private immunizationsSubject: Subject<any> = new BehaviorSubject<any>([]);
 	private mainDiagnosisSubject: Subject<any> = new BehaviorSubject<any>([]);
 	private diagnosisSubject: Subject<any> = new BehaviorSubject<any>([]);
@@ -32,6 +32,7 @@ export class InternmentSummaryFacadeService {
 	private evolutionNoteSubject: Subject<any> = new BehaviorSubject<any>([]);
 	private hasMedicalDischargeSubject: Subject<any> = new BehaviorSubject<any>([]);
 	private lastProbableDischargeDateSubject: Subject<any> = new BehaviorSubject<any>([]);
+	private hasPhysicalDischargeSubject = new BehaviorSubject<any>("");
 
 	searchFilter: DocumentSearchFilterDto;
 	readonly allergies$ = this.allergiesSubject.asObservable();
@@ -39,7 +40,7 @@ export class InternmentSummaryFacadeService {
 	readonly personalHistory$ = this.personalHistorySubject.asObservable();
 	readonly medications$ = this.medicationsSubject.asObservable();
 	readonly riskFactors$ = this.riskFactorsSubject.asObservable();
-	readonly heightAndWeightData$ = this.heightAndWeightDataSubject.asObservable();
+	readonly heightAndWeightDataList$ = this.heightAndWeightDataListSubject.asObservable();
 
 	readonly bloodTypeData$ = this.bloodTypeDataSubject.asObservable();
 	readonly immunizations$ = this.immunizationsSubject.asObservable();
@@ -51,6 +52,7 @@ export class InternmentSummaryFacadeService {
 	readonly evolutionNote$ = this.evolutionNoteSubject.asObservable();
 	readonly hasMedicalDischarge$ = this.hasMedicalDischargeSubject.asObservable();
 	readonly lastProbableDischargeDate$ = this.lastProbableDischargeDateSubject.asObservable();
+	readonly hasPhysicalDischarge$ = this.hasPhysicalDischargeSubject.asObservable();
 
 	constructor(
 		private readonly internmentStateService: InternmentStateService,
@@ -60,26 +62,33 @@ export class InternmentSummaryFacadeService {
 		private readonly hceGeneralStateService: HceGeneralStateService
 	) { }
 
-	setInternmentEpisodeInformation(internmentEpisodeId: number, bloodType: boolean) {
+	initDischargeObservable() {
+		this.hasPhysicalDischargeSubject.next("");
+	}
+
+	setInternmentEpisodeInformation(internmentEpisodeId: number, bloodType: boolean, updateData: boolean): void {
 		if (!bloodType) {
 			this.bloodTypeDataSubject.next();
 		}
 		this.internmentEpisodeId = internmentEpisodeId;
+		this.initDischargeObservable();
 		this.updateInternmentEpisode();
-		this.setFieldsToUpdate({
-			allergies: true,
-			familyHistories: true,
-			personalHistories: true,
-			riskFactors: true,
-			medications: true,
-			heightAndWeight: true,
-			bloodType: bloodType,
-			immunizations: true,
-			evolutionClinical: true,
-		});
+		if (updateData) {
+			this.setFieldsToUpdate({
+				allergies: true,
+				familyHistories: true,
+				personalHistories: true,
+				riskFactors: true,
+				medications: true,
+				heightAndWeight: true,
+				bloodType: bloodType,
+				immunizations: true,
+				evolutionClinical: true,
+			});
+		}
 	}
 
-	setFieldsToUpdate(fieldsToUpdate: InternmentFields) {
+	setFieldsToUpdate(fieldsToUpdate: InternmentFields): void {
 		if (fieldsToUpdate.allergies) {
 			this.internmentStateService.getAllergies(this.internmentEpisodeId).subscribe(a => this.allergiesSubject.next(a));
 		}
@@ -100,16 +109,15 @@ export class InternmentSummaryFacadeService {
 
 		}
 
-		if (fieldsToUpdate.heightAndWeight) {
-			this.internmentStateService.getAnthropometricData(this.internmentEpisodeId).subscribe(a => {
-				const heightAndWeight = { height: a?.height, weight: a?.weight }
-				this.heightAndWeightDataSubject.next(heightAndWeight);
-			});
-		}
+		if (fieldsToUpdate.heightAndWeight || fieldsToUpdate.bloodType) {
+			this.internmentStateService.getLast2AnthropometricData(this.internmentEpisodeId).subscribe(aD => {
+				if (fieldsToUpdate.heightAndWeight) {
+					this.heightAndWeightDataListSubject.next(aD);
+				}
 
-		if (fieldsToUpdate.bloodType) {
-			this.internmentStateService.getAnthropometricData(this.internmentEpisodeId).subscribe(a => {
-				this.bloodTypeDataSubject.next(a?.bloodType);
+				if (fieldsToUpdate.bloodType) {
+					this.bloodTypeDataSubject.next(aD[0]?.bloodType?.value);
+				}
 			});
 		}
 
@@ -130,25 +138,21 @@ export class InternmentSummaryFacadeService {
 		}
 	}
 
-	setSerchFilter(searchFilter: DocumentSearchFilterDto) {
+	setSerchFilter(searchFilter: DocumentSearchFilterDto): void {
 		this.searchFilter = searchFilter;
 		this.loadHistoric();
 	}
 
-	loadEvolutionNotes() {
+	loadEvolutionNotes(): void {
 		this.loadHistoric();
 	}
 
-	initializeEvolutionNoteFilterResult(internmentEpisodeId: number) {
+	initializeEvolutionNoteFilterResult(internmentEpisodeId: number): void {
 		this.internmentEpisodeId = internmentEpisodeId;
 		this.setSerchFilter(null);
 	}
 
-	private loadHistoric(): void {
-		this.documentSearchService.getHistoric(this.internmentEpisodeId, this.searchFilter).subscribe(historicalData => this.clinicalEvaluationSubject.next(historicalData));
-	}
-
-	updateInternmentEpisode() {
+	updateInternmentEpisode(): void {
 		this.internmentService.getInternmentEpisodeSummary(this.internmentEpisodeId).subscribe(
 			(internmentEpisode: InternmentSummaryDto) => {
 				this.anamnesisSubject.next(internmentEpisode.documents?.anamnesis);
@@ -158,11 +162,12 @@ export class InternmentSummaryFacadeService {
 			});
 		this.internmentEpisodeService.getPatientDischarge(this.internmentEpisodeId)
 			.subscribe((patientDischarge: PatientDischargeDto) => {
-				this.hasMedicalDischargeSubject.next(patientDischarge.dischargeTypeId !== 0);
+				this.hasMedicalDischargeSubject.next(patientDischarge.medicalDischargeDate);
+				this.hasPhysicalDischargeSubject.next(patientDischarge.physicalDischargeDate)
 			});
 	}
 
-	unifyAllergies(patientId: number) {
+	unifyAllergies(patientId: number): void {
 		forkJoin([this.internmentStateService.getAllergies(this.internmentEpisodeId), this.hceGeneralStateService.getAllergies(patientId)])
 			.subscribe(([allergiesI, allergiesHCE]) => {
 				allergiesHCE.forEach(e => allergiesI.push(this.mapToAllergyConditionDto(e)));
@@ -170,7 +175,7 @@ export class InternmentSummaryFacadeService {
 			});
 	}
 
-	unifyFamilyHistories(patientId: number) {
+	unifyFamilyHistories(patientId: number): void {
 		forkJoin([this.internmentStateService.getFamilyHistories(this.internmentEpisodeId), this.hceGeneralStateService.getFamilyHistories(patientId)])
 			.subscribe(([familyHistoriesI, familyHistoriesHCE]) => {
 				familyHistoriesHCE.forEach(e => familyHistoriesI.push(this.mapToHealthHistoryConditionDto(e)));
@@ -178,7 +183,7 @@ export class InternmentSummaryFacadeService {
 			});
 	}
 
-	mapToHealthHistoryConditionDto(familyHistory: HCEPersonalHistoryDto) {
+	private mapToHealthHistoryConditionDto(familyHistory: HCEPersonalHistoryDto): HealthHistoryConditionDto {
 		return {
 			date: familyHistory.startDate,
 			note: null,
@@ -188,7 +193,7 @@ export class InternmentSummaryFacadeService {
 		}
 	}
 
-	mapToAllergyConditionDto(allergie: HCEAllergyDto) {
+	private mapToAllergyConditionDto(allergie: HCEAllergyDto): AllergyConditionDto {
 		return {
 			categoryId: allergie.categoryId,
 			criticalityId: allergie.criticalityId,
@@ -197,6 +202,10 @@ export class InternmentSummaryFacadeService {
 			snomed: allergie.snomed,
 			statusId: allergie.statusId
 		}
+	}
+
+	private loadHistoric(): void {
+		this.documentSearchService.getHistoric(this.internmentEpisodeId, this.searchFilter).subscribe(historicalData => this.clinicalEvaluationSubject.next(historicalData));
 	}
 }
 

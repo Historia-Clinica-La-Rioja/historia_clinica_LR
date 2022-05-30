@@ -51,7 +51,7 @@ export class SearchCreateComponent implements OnInit {
 
 	ngOnInit(): void {
 		this.formSearch = this.formBuilder.group({
-			identifType: [null, Validators.required],
+			identifType: [IDENTIFICATION_TYPE_IDS.DNI, Validators.required],
 			identifNumber: [null, [Validators.required, Validators.maxLength(VALIDATIONS.MAX_LENGTH.identif_number), Validators.pattern(/^\S*$/)]],
 			gender: [null, Validators.required],
 			IdentityVerificationStatus: [null],

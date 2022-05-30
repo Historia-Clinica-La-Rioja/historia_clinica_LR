@@ -6,7 +6,8 @@ import {
 	AppointmentListDto,
 	AssignedAppointmentDto,
 	CreateAppointmentDto,
-	ExternalPatientCoverageDto
+	ExternalPatientCoverageDto,
+	UpdateAppointmentDto,
 } from '@api-rest/api-model';
 
 import { HttpClient, HttpParams } from '@angular/common/http';
@@ -57,6 +58,11 @@ export class AppointmentsService {
 
 		const url = `${environment.apiBase}/institutions/${this.contextService.institutionId}/medicalConsultations/appointments/${appointmentId}/change-state`;
 		return this.http.put<boolean>(url, {}, { params: queryParams });
+	}
+
+	updateAppointment(appointment: UpdateAppointmentDto) {
+		const url = `${environment.apiBase}/institutions/${this.contextService.institutionId}/medicalConsultations/appointments/update`;
+		return this.http.post<number>(url, appointment);
 	}
 
 	get(appoinmentId: number): Observable<AppointmentDto> {

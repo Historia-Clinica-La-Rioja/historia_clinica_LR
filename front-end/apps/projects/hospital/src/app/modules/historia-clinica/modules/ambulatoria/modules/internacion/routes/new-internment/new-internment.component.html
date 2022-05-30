@@ -120,7 +120,7 @@
 							            placeholder="{{'pacientes.form.SELECT' | translate}}">
 								<mat-option *ngFor="let doctor of doctors"
 								            [value]="doctor.id">
-									{{ doctor.person.firstName + ' ' + doctor.person.lastName }}
+									{{ getFullName(doctor.person.firstName, doctor.nameSelfDetermination) + ' ' + doctor.person.lastName }}
 								</mat-option>
 							</mat-select>
 							<mat-error [translate]="'pacientes.form.REQUIRED'"></mat-error>

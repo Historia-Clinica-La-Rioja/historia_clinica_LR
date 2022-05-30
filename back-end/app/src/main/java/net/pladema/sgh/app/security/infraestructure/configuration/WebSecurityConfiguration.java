@@ -87,6 +87,7 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
 				.antMatchers(HttpMethod.GET, "/assets/**").permitAll()
 				.antMatchers("/public-api/**").hasAnyAuthority(ERole.API_CONSUMER.getValue())
 				.antMatchers("/fhir/**").permitAll()
+				.antMatchers("/booking/**").permitAll()
 				.antMatchers("/**").authenticated()
 		.anyRequest().authenticated();
 

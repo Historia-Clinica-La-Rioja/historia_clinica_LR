@@ -5,9 +5,27 @@
     <app-no-data></app-no-data>
 </ng-template>
 <app-summary-card id="estudios" [header]="estudios"
+<<<<<<< HEAD
                                 [editable]="true"
                                 [canEdit]="['ESPECIALISTA_MEDICO', 'ENFERMERO', 'PROFESIONAL_DE_SALUD', 'ESPECIALISTA_EN_ODONTOLOGIA']"
 								(openInNew)="openDialogNewStudy()">
+=======
+                                [canEdit]="['ESPECIALISTA_MEDICO', 'ESPECIALISTA_EN_ODONTOLOGIA']"
+								[matMenu]="newPrescriptionMenu"
+								[menu]="true">
+
+	<mat-menu #newPrescriptionMenu="matMenu">
+		<ng-container>
+			<button mat-menu-item (click)="openDialogNewStudy()">
+				{{ 'ambulatoria.paciente.ordenes_prescripciones.new_prescription_menu.NEW_OUTPATIENT_PRESCRIPTION'  | translate }}
+			</button>
+
+			<button *ngIf="this.patientHasInternmentEpisodeInProgress()" mat-menu-item (click)="openNewInternmentOrderDialog()">
+				{{ 'ambulatoria.paciente.ordenes_prescripciones.new_prescription_menu.NEW_INTERNMENT_PRESCRIPTION'  | translate }}
+			</button>
+		</ng-container>
+	</mat-menu>
+>>>>>>> v1.37.0
 
 	<div class="header-filters" fxLayout="row" fxLayoutGap="15px">
 		<button mat-button class="filter-button" color="primary" (click)="hideFilters(); clear()">
@@ -17,23 +35,19 @@
 
 	<div id="filter" *ngIf="hideFilterPanel" >
 		<form id="filter-form" [formGroup]="formFilter" (ngSubmit)="filter()" fxLayout="row wrap" fxLayoutAlign="center center" fxLayoutGap="15px" style="margin: 15px" >
-			<mat-form-field appearance="outline">
-				<mat-label [translate]="'ambulatoria.paciente.ordenes_prescripciones.filter.STATE'"></mat-label>
-				<mat-select id="statusId"
-							name="statusId"
-							formControlName="statusId">
-					<mat-option *ngFor="let diagnosticReportStatus of diagnosticReportsStatus" [value]="diagnosticReportStatus.id">
-							{{diagnosticReportStatus.description | translate}}
-						</mat-option>
-				</mat-select>
-				<button id="clear-status-study" type="button" mat-button *ngIf="formFilter.controls.statusId.value" matSuffix
-						color="warn"
-						mat-icon-button
-						(click)="clearFilterField(formFilter.controls.statusId); $event.stopPropagation()">
-					<mat-icon>close</mat-icon>
-				</button>
-			</mat-form-field>
-
+				<mat-form-field appearance="outline">
+					<mat-label [translate]="'ambulatoria.paciente.ordenes_prescripciones.filter.STUDY'"></mat-label>
+					<input matInput type="text"
+									id="study"
+									name="study"
+									formControlName="study">
+					<button id="clear-study" type="button" mat-button *ngIf="formFilter.controls.study.value" matSuffix
+							color="warn"
+							mat-icon-button
+							(click)="clearFilterField(formFilter.controls.study); $event.stopPropagation()">
+						<mat-icon>close</mat-icon>
+					</button>
+				</mat-form-field>
 				<mat-form-field appearance="outline">
 					<mat-label [translate]="'ambulatoria.paciente.ordenes_prescripciones.filter.CATEGORY'"></mat-label>
 					<mat-select id="categories"
@@ -51,15 +65,18 @@
 					</button>
 				</mat-form-field>
 				<mat-form-field appearance="outline">
-					<mat-label [translate]="'ambulatoria.paciente.ordenes_prescripciones.filter.STUDY'"></mat-label>
-					<input matInput type="text"
-									id="study"
-									name="study"
-									formControlName="study">
-					<button id="clear-study" type="button" mat-button *ngIf="formFilter.controls.study.value" matSuffix
+					<mat-label [translate]="'ambulatoria.paciente.ordenes_prescripciones.filter.STATE'"></mat-label>
+					<mat-select id="statusId"
+								name="statusId"
+								formControlName="statusId">
+						<mat-option *ngFor="let diagnosticReportStatus of diagnosticReportsStatus" [value]="diagnosticReportStatus.id">
+								{{diagnosticReportStatus.description | translate}}
+							</mat-option>
+					</mat-select>
+					<button id="clear-status-study" type="button" mat-button *ngIf="formFilter.controls.statusId.value" matSuffix
 							color="warn"
 							mat-icon-button
-							(click)="clearFilterField(formFilter.controls.study); $event.stopPropagation()">
+							(click)="clearFilterField(formFilter.controls.statusId); $event.stopPropagation()">
 						<mat-icon>close</mat-icon>
 					</button>
 				</mat-form-field>

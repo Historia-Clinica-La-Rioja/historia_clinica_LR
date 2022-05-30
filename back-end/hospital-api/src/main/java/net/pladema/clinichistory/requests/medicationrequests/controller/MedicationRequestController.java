@@ -4,6 +4,8 @@ import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.masterdata
 import ar.lamansys.sgh.clinichistory.domain.document.PatientInfoBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.MedicationBo;
 import ar.lamansys.sgh.shared.infrastructure.input.service.BasicPatientDto;
+import ar.lamansys.sgx.shared.featureflags.AppFeature;
+import ar.lamansys.sgx.shared.featureflags.application.FeatureFlagsService;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import net.pladema.clinichistory.requests.controller.dto.PrescriptionDto;
 import net.pladema.clinichistory.requests.medicationrequests.controller.dto.ChangeStateMedicationRequestDto;
@@ -75,15 +77,19 @@ public class MedicationRequestController {
 
     private final PdfService pdfService;
 
+	private final FeatureFlagsService featureFlagsService;
+
     public MedicationRequestController(CreateMedicationRequestService createMedicationRequestService,
-                                       HealthcareProfessionalExternalService healthcareProfessionalExternalService,
-                                       CreateMedicationRequestMapper createMedicationRequestMapper,
-                                       ListMedicationInfoService listMedicationInfoService,
-                                       ListMedicationInfoMapper listMedicationInfoMapper,
-                                       ChangeStateMedicationService changeStateMedicationService,
-                                       PatientExternalService patientExternalService,
-                                       GetMedicationRequestInfoService getMedicationRequestInfoService,
-                                       PatientExternalMedicalCoverageService patientExternalMedicalCoverageService, PdfService pdfService) {
+									   HealthcareProfessionalExternalService healthcareProfessionalExternalService,
+									   CreateMedicationRequestMapper createMedicationRequestMapper,
+									   ListMedicationInfoService listMedicationInfoService,
+									   ListMedicationInfoMapper listMedicationInfoMapper,
+									   ChangeStateMedicationService changeStateMedicationService,
+									   PatientExternalService patientExternalService,
+									   GetMedicationRequestInfoService getMedicationRequestInfoService,
+									   PatientExternalMedicalCoverageService patientExternalMedicalCoverageService,
+									   PdfService pdfService,
+									   FeatureFlagsService featureFlagsService) {
         this.createMedicationRequestService = createMedicationRequestService;
         this.healthcareProfessionalExternalService = healthcareProfessionalExternalService;
         this.createMedicationRequestMapper = createMedicationRequestMapper;
@@ -94,7 +100,8 @@ public class MedicationRequestController {
         this.getMedicationRequestInfoService = getMedicationRequestInfoService;
         this.patientExternalMedicalCoverageService = patientExternalMedicalCoverageService;
         this.pdfService = pdfService;
-    }
+		this.featureFlagsService = featureFlagsService;
+	}
 
 
     @PostMapping
@@ -219,6 +226,7 @@ public class MedicationRequestController {
         ctx.put("professional", professionalDto);
         ctx.put("patientCoverage", patientCoverageDto);
         var date = medicationRequestBo.getRequestDate().format(DateTimeFormatter.ofPattern("dd-MM-yyyy"));
+		ctx.put("nameSelfDeterminationFF", featureFlagsService.isOn(AppFeature.HABILITAR_DATOS_AUTOPERCIBIDOS));
         ctx.put("requestDate", date); LOG.debug("Output -> {}", ctx);
         return ctx;
     }

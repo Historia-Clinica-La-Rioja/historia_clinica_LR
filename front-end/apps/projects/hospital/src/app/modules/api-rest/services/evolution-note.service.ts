@@ -7,7 +7,7 @@ import { DownloadService } from '@core/services/download.service';
 import { ContextService } from '@core/services/context.service';
 
 @Injectable({
-  providedIn: 'root'
+	providedIn: 'root'
 })
 export class EvolutionNoteService {
 
@@ -33,4 +33,10 @@ export class EvolutionNoteService {
 		return this.downloadService.downloadPdf(url, fileName);
 	}
 
+	deleteEvolutionDiagnosis(evolutionNoteId: number, internmentEpisodeId: number, reason: string): Observable<boolean> {
+		const url = `${environment.apiBase}/institutions/${this.contextService.institutionId}/internments/${internmentEpisodeId}/evolutionNote/${evolutionNoteId}`;
+		return this.http.delete<boolean>(url, {
+			body: reason
+		});
+	}
 }

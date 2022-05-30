@@ -8,8 +8,10 @@ import net.pladema.snowstorm.controller.dto.PreferredTermDto;
 import net.pladema.snowstorm.controller.dto.SnomedEclDto;
 import net.pladema.snowstorm.controller.dto.SnomedSearchItemDto;
 import net.pladema.snowstorm.controller.dto.SnomedSearchDto;
+import net.pladema.snowstorm.controller.dto.SnomedTemplateDto;
 import net.pladema.snowstorm.controller.dto.UpdateConceptsResultDto;
 import net.pladema.snowstorm.services.SnowstormService;
+import net.pladema.snowstorm.services.domain.SnomedTemplateSearchItemBo;
 import net.pladema.snowstorm.services.loadCsv.UpdateConceptsResultBo;
 import net.pladema.snowstorm.services.loadCsv.UpdateSnomedConceptsByCsv;
 import net.pladema.snowstorm.services.domain.FetchAllSnomedEcl;
@@ -20,6 +22,8 @@ import net.pladema.snowstorm.services.domain.SnowstormSearchResponse;
 import net.pladema.snowstorm.services.exceptions.SnowstormApiException;
 import net.pladema.snowstorm.services.searchCachedConcepts.SearchCachedConcepts;
 import net.pladema.snowstorm.services.searchCachedConcepts.SearchCachedConceptsWithResultCount;
+import net.pladema.snowstorm.services.searchTemplates.SearchTemplates;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -54,19 +58,23 @@ public class SnowstormController {
 
 	private final FeatureFlagsService featureFlagsService;
 
+	private final SearchTemplates searchTemplates;
+
     public SnowstormController(SnowstormService snowstormService,
 							   FetchAllSnomedEcl fetchAllSnomedEcl,
 							   SearchCachedConceptsWithResultCount searchCachedConceptsWithResultCount,
 							   SearchCachedConcepts searchCachedConcepts,
 							   UpdateSnomedConceptsByCsv updateSnomedConceptsByCsv,
-							   FeatureFlagsService featureFlagsService) {
+							   FeatureFlagsService featureFlagsService,
+							   SearchTemplates searchTemplates) {
 		this.snowstormService = snowstormService;
         this.fetchAllSnomedEcl = fetchAllSnomedEcl;
         this.searchCachedConceptsWithResultCount = searchCachedConceptsWithResultCount;
 		this.searchCachedConcepts = searchCachedConcepts;
         this.updateSnomedConceptsByCsv = updateSnomedConceptsByCsv;
 		this.featureFlagsService = featureFlagsService;
-    }
+		this.searchTemplates = searchTemplates;
+	}
 
     @GetMapping(value = CONCEPTS)
     public SnomedSearchDto getConceptsWithResultCount(
@@ -149,6 +157,29 @@ public class SnowstormController {
                         new PreferredTermDto(i.getPt().get("term").textValue(), i.getFsn().get("lang").textValue())))
                 .collect(Collectors.toList());
     }
+
+	@GetMapping(value = "/search-templates")
+	public List<SnomedTemplateDto> searchSnomedTemplates(
+			@RequestParam(value = "term", required = false) String term,
+			@RequestParam(value = "ecl") String eclKey,
+			@RequestParam(value = "institutionId") Integer institutionId) {
+		LOG.debug("Input data -> term: {} , eclKey: {}, institutionId: {}", term, eclKey, institutionId);
+		List<SnomedTemplateDto> result = searchTemplates.run(term, eclKey, institutionId)
+				.stream()
+				.map(this::mapToSnomedTemplateDto)
+				.collect(Collectors.toList());
+		LOG.debug("Output size -> {}", result.size());
+		LOG.trace("Output -> {}", result);
+		return result;
+	}
+
+	private SnomedTemplateDto mapToSnomedTemplateDto(SnomedTemplateSearchItemBo snomedTemplateSearchItemBo) {
+		List<SnomedSearchItemDto> items = snomedTemplateSearchItemBo.getConcepts()
+				.stream()
+				.map(this::mapToSnomedSearchItemDto)
+				.collect(Collectors.toList());
+		return new SnomedTemplateDto(snomedTemplateSearchItemBo.getDescription(), items);
+	}
 
     @GetMapping(value = "/ecl")
     public List<SnomedEclDto> getEcls() {

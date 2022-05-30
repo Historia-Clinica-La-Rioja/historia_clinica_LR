@@ -28,10 +28,11 @@ public class HealthInsurance extends MedicalCoverage {
     @Column(name = "acronym", length = 18)
     private String acronym;
 
-    public HealthInsurance(Integer id, String name, String cuit, Integer rnos, String acronym){
+    public HealthInsurance(Integer id, String name, String cuit, Integer rnos, String acronym, Short type){
         setId(id);
         setName(name);
         setCuit(cuit);
+		setType(type);
         this.rnos = rnos;
         this.acronym = acronym;
     }
@@ -45,10 +46,12 @@ public class HealthInsurance extends MedicalCoverage {
                            Boolean deleted,
                            Integer deletedBy,
                            Timestamp deletedOn,
-                           String cuit){
+                           String cuit,
+						   Short type){
         setId(id);
         setName(name);
         setCuit(cuit);
+		setType(type);
         setCreatedBy(createBy);
         setCreatedOn(createOn.toLocalDateTime());
         setUpdatedBy(updateBy);

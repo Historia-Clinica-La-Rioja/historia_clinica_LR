@@ -10,6 +10,7 @@ import net.pladema.medicalconsultation.diary.repository.entity.DiaryOpeningHours
 import net.pladema.medicalconsultation.diary.repository.entity.OpeningHours;
 import net.pladema.medicalconsultation.doctorsoffice.repository.entity.DoctorsOffice;
 import net.pladema.medicalconsultation.repository.entity.MedicalAttentionType;
+import net.pladema.patient.controller.dto.EMedicalCoverageType;
 import net.pladema.patient.repository.entity.MedicalCoverage;
 import net.pladema.person.repository.entity.HealthInsurance;
 import org.junit.jupiter.api.BeforeEach;
@@ -50,8 +51,8 @@ class DailyAppointmentRepositoryTest extends UnitRepository {
         OpeningHours ohProgrammed = save(new OpeningHours(dayWeekId, LocalTime.of(10, 0), LocalTime.of(12, 0)));
         OpeningHours ohSpontaneous = save(new OpeningHours(dayWeekId, LocalTime.of(15, 0), LocalTime.of(18, 0)));
 
-        save(new DiaryOpeningHours(diaryId, ohProgrammed.getId(), MedicalAttentionType.PROGRAMMED, (short) 10));
-        save(new DiaryOpeningHours(diaryId, ohSpontaneous.getId(), MedicalAttentionType.SPONTANEOUS, (short) 0));
+        save(new DiaryOpeningHours(diaryId, ohProgrammed.getId(), MedicalAttentionType.PROGRAMMED, (short) 10, false));
+        save(new DiaryOpeningHours(diaryId, ohSpontaneous.getId(), MedicalAttentionType.SPONTANEOUS, (short) 0, false));
 
         save(new AppointmentState((short) AppointmentState.ASSIGNED, "Asignado"));
         save(new AppointmentState((short) AppointmentState.CONFIRMED, "Confirmado"));
@@ -59,9 +60,9 @@ class DailyAppointmentRepositoryTest extends UnitRepository {
         AppointmentState cancelledAppointmentState = save(new AppointmentState((short) AppointmentState.CANCELLED, "Cancelado"));
         save(new AppointmentState((short) AppointmentState.SERVED, "Atendido"));
 
-        MedicalCoverage coverage = new MedicalCoverage( "OSDE","30265659988");
+        MedicalCoverage coverage = new MedicalCoverage( "OSDE","30265659988", EMedicalCoverageType.OBRASOCIAL.getId());
         coverage = save(coverage);
-        HealthInsurance hi = new HealthInsurance(coverage.getId(), coverage.getName(),"30265659988", 1, "OSDE");
+        HealthInsurance hi = new HealthInsurance(coverage.getId(), coverage.getName(),"30265659988", 1, "OSDE", coverage.getType());
         merge(hi);
 
         // programmed appointments
@@ -114,8 +115,8 @@ class DailyAppointmentRepositoryTest extends UnitRepository {
         OpeningHours ohProgrammed = save(new OpeningHours(dayWeekId, LocalTime.of(10, 0), LocalTime.of(12, 0)));
         OpeningHours ohSpontaneous = save(new OpeningHours(dayWeekId, LocalTime.of(15, 0), LocalTime.of(18, 0)));
 
-        save(new DiaryOpeningHours(diaryId, ohProgrammed.getId(), MedicalAttentionType.PROGRAMMED, (short) 10));
-        save(new DiaryOpeningHours(diaryId, ohSpontaneous.getId(), MedicalAttentionType.SPONTANEOUS, (short) 0));
+        save(new DiaryOpeningHours(diaryId, ohProgrammed.getId(), MedicalAttentionType.PROGRAMMED, (short) 10, false));
+        save(new DiaryOpeningHours(diaryId, ohSpontaneous.getId(), MedicalAttentionType.SPONTANEOUS, (short) 0, false));
 
         save(new AppointmentState((short) AppointmentState.ASSIGNED, "Asignado"));
         save(new AppointmentState((short) AppointmentState.CONFIRMED, "Confirmado"));
@@ -123,9 +124,9 @@ class DailyAppointmentRepositoryTest extends UnitRepository {
         AppointmentState cancelledAppointmentState = save(new AppointmentState((short) AppointmentState.CANCELLED, "Cancelado"));
         save(new AppointmentState((short) AppointmentState.SERVED, "Atendido"));
 
-        MedicalCoverage coverage = new MedicalCoverage( "OSDE","30265659988");
+        MedicalCoverage coverage = new MedicalCoverage( "OSDE","30265659988", EMedicalCoverageType.OBRASOCIAL.getId());
         coverage = save(coverage);
-        HealthInsurance hi = new HealthInsurance(coverage.getId(), coverage.getName(),"30265659988", 1, "OSDE");
+        HealthInsurance hi = new HealthInsurance(coverage.getId(), coverage.getName(),"30265659988", 1, "OSDE", coverage.getType());
         merge(hi);
 
         // programmed appointments

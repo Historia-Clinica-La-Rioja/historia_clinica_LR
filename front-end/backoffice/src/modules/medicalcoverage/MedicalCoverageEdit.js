@@ -18,8 +18,8 @@ import SectionTitle from "../components/SectionTitle";
 import CreateRelatedButton from "../components/CreateRelatedButton";
 import MergeButton from "../../libs/sgx/components/MergeButton";
 
-const PREPAGA = 1;
 const OBRA_SOCIAL = 2;
+const ART = 3;
 
 const MedicalCoverageRnosField = ({formData}) => {
     return formData.type !== OBRA_SOCIAL ? null : (
@@ -35,32 +35,9 @@ const MedicalCoverageAcronymField = ({formData}) => {
     )
 }
 
-const PrivateHealthInsurancePlanComponent = ({formData}) => {
-    return formData.type === PREPAGA ?  (
-        <Fragment>
-        <SectionTitle label="resources.medicalcoverages.fields.plans"/>
-        <CreateRelatedButton
-            reference="privatehealthinsuranceplans"
-            refFieldName="privateHealthInsuranceId"
-            label="resources.privatehealthinsuranceplans.addRelated"/>
-        <ReferenceManyField
-            addLabel={false}
-            reference="privatehealthinsuranceplans"
-            target="privateHealthInsuranceId">
-            <Datagrid>
-                <TextField source="plan"/>
-                <DeleteButton redirect="/medicalcoverages"/>
-            </Datagrid>
-        </ReferenceManyField>
-    </Fragment>
-
-    ) : null
-}
-
-
 const MedicalCoverageMergeComponent = (props) => {
     const record = useRecordContext(props);
-    return record && record.cuit && record.enabled
+    return record && record.cuit && record.enabled && record.type!== ART
         ?
         <Fragment>
             <SectionTitle label="resources.medicalcoverages.fields.merge"/>
@@ -75,6 +52,31 @@ const MedicalCoverageMergeComponent = (props) => {
                 </Datagrid>
             </ReferenceManyField>
 
+        </Fragment>
+        : null;
+}
+
+const MedicalCoveragePlans = (props) => {
+    const record = useRecordContext(props);
+    return record && record.type !== ART
+        ?
+        <Fragment>
+            <SectionTitle label="resources.medicalcoverages.fields.plans"/>
+            <CreateRelatedButton
+                reference="medicalcoverageplans"
+                refFieldName="medicalCoverageId"
+                label="resources.medicalcoverageplans.addRelated"
+                {...props}/>
+            <ReferenceManyField
+                addLabel={false}
+                reference="medicalcoverageplans"
+                target="medicalCoverageId"
+                {...props}>
+                <Datagrid>
+                    <TextField source="plan"/>
+                    <DeleteButton redirect="/medicalcoverages"/>
+                </Datagrid>
+            </ReferenceManyField>
         </Fragment>
         : null;
 }
@@ -99,9 +101,9 @@ const MedicalCoverageEdit = props => (
                     {formDataProps => (<MedicalCoverageAcronymField {...formDataProps} source="acronym"/>)}
                 </FormDataConsumer>
 
-                {/*Plan private health insurance*/}
+                {/*Plan medical coverage*/}
                 <FormDataConsumer>
-                    {formDataProps => (<PrivateHealthInsurancePlanComponent {...formDataProps}/>)}
+                    {formDataProps => (<MedicalCoveragePlans {...formDataProps}/>)}
                 </FormDataConsumer>
                 <div className="height-30" />
                 <MedicalCoverageMergeComponent  />

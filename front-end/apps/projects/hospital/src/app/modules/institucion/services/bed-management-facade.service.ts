@@ -1,5 +1,5 @@
 import { tap } from 'rxjs/operators';
-import { BedSummaryDto, SectorSummaryDto} from '@api-rest/api-model';
+import { BedSummaryDto, SectorSummaryDto } from '@api-rest/api-model';
 import { BedService } from '@api-rest/services/bed.service';
 import { Observable, ReplaySubject } from 'rxjs';
 import { Injectable } from '@angular/core';
@@ -10,7 +10,7 @@ import { pushIfNotExists } from '@core/utils/array.utils';
 @Injectable()
 export class BedManagementFacadeService {
 
-  	public sectors: Sector[] = [];
+	public sectors: Sector[] = [];
 	public specialities: Speciality[] = [];
 	public categories: Category[] = [];
 
@@ -23,7 +23,7 @@ export class BedManagementFacadeService {
 
 	constructor(
 		private bedService: BedService
-  	) {
+	) {
 		this.bedSummary$ = this.bedSummarySubject.asObservable();
 		this.bedManagementFilter$ = this.bedManagementFilterSubject.asObservable();
 	}
@@ -34,14 +34,12 @@ export class BedManagementFacadeService {
 	}
 
 	public getBedManagement(): Observable<BedSummaryDto[]> {
-		if (!this.originalBedManagement.length) {
-			this.bedService.getBedsSummary().pipe(
-				tap((bedsSummary: BedSummaryDto[]) => this.filterOptions(bedsSummary))
-			).subscribe(data => {
-				this.originalBedManagement = data;
-				this.initialFilters ? this.sendBedManagementFilter(this.initialFilters) : this.sendBedManagement(this.originalBedManagement);
-			});
-		}
+		this.bedService.getBedsSummary().pipe(
+			tap((bedsSummary: BedSummaryDto[]) => this.filterOptions(bedsSummary))
+		).subscribe(data => {
+			this.originalBedManagement = data;
+			this.initialFilters ? this.sendBedManagementFilter(this.initialFilters) : this.sendBedManagement(this.originalBedManagement);
+		});
 		return this.bedSummary$;
 	}
 
@@ -55,11 +53,12 @@ export class BedManagementFacadeService {
 
 	public sendBedManagementFilter(newFilter: BedManagementFilter) {
 		const bedManagementCopy = [...this.originalBedManagement];
-		const result = bedManagementCopy.filter(bedManagement => (this.filterBySector(newFilter, bedManagement)
-																	&& this.filterBySpeciality(newFilter, bedManagement)
-																	&& this.filterByCategory(newFilter, bedManagement)
-																	&& this.filterByProbableDischargeDate(newFilter, bedManagement)
-																	&& this.filterByFreeBed(newFilter, bedManagement)));
+		const result = bedManagementCopy.filter(bedManagement => (
+			this.filterBySector(newFilter, bedManagement)
+			&& this.filterBySpeciality(newFilter, bedManagement)
+			&& this.filterByCategory(newFilter, bedManagement)
+			&& this.filterByProbableDischargeDate(newFilter, bedManagement)
+			&& this.filterByFreeBed(newFilter, bedManagement)));
 		this.bedSummarySubject.next(result);
 		this.bedManagementFilterSubject.next(newFilter);
 	}
@@ -96,16 +95,16 @@ export class BedManagementFacadeService {
 		bedsSummary.forEach(bedSummary => {
 
 			this.sectors = pushIfNotExists(this.sectors,
-				{sectorId: bedSummary.sector.id, sectorDescription: bedSummary.sector.description}, this.compareSector);
+				{ sectorId: bedSummary.sector.id, sectorDescription: bedSummary.sector.description }, this.compareSector);
 
 			bedSummary.sector.clinicalSpecialties.forEach(clinicalSpecialty => {
 				this.specialities = pushIfNotExists(this.specialities,
-					{specialityId: clinicalSpecialty.id, specialityDescription: clinicalSpecialty.name}, this.compareSpeciality);
-				}
+					{ specialityId: clinicalSpecialty.id, specialityDescription: clinicalSpecialty.name }, this.compareSpeciality);
+			}
 			);
 
 			this.categories = pushIfNotExists(this.categories,
-				{categoryId: bedSummary.bed.bedCategory.id, categoryDescription: bedSummary.bed.bedCategory.description}, this.compareCategory);
+				{ categoryId: bedSummary.bed.bedCategory.id, categoryDescription: bedSummary.bed.bedCategory.description }, this.compareCategory);
 		});
 	}
 
@@ -127,6 +126,10 @@ export class BedManagementFacadeService {
 
 	public getBedSummary(): Observable<BedSummaryDto[]> {
 		return this.bedSummary$;
+	}
+
+	updateBeds() {
+		this.getBedManagement();
 	}
 }
 

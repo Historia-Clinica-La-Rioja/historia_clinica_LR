@@ -1,6 +1,7 @@
 package ar.lamansys.sgh.clinichistory.domain.ips;
 
 import ar.lamansys.sgh.clinichistory.domain.hce.summary.ProcedureSummaryBo;
+import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.hospitalizationState.entity.ProcedureVo;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -24,4 +25,12 @@ public class ProcedureBo extends ClinicalTerm {
     public ProcedureBo(SnomedBo snomed) {
         super(snomed);
     }
+
+	public ProcedureBo(ProcedureVo procedureVo) {
+		super();
+		setId(procedureVo.getId());
+		setSnomed(new SnomedBo(procedureVo.getSnomed()));
+		setStatus(procedureVo.getStatusId());
+		setPerformedDate(procedureVo.getPerformedDate());
+	}
 }

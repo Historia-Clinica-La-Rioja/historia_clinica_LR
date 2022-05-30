@@ -16,6 +16,7 @@ import { DietComponent } from "@historia-clinica/modules/ambulatoria/modules/ind
 import { OtherIndicationComponent } from './dialogs/other-indication/other-indication.component';
 import { ParenteralPlanComponent } from './dialogs/parenteral-plan/parenteral-plan.component';
 import { HistoriaClinicaModule } from '@historia-clinica/historia-clinica.module';
+import { PharmacoComponent } from './dialogs/pharmaco/pharmaco.component';
 
 @NgModule({
 	declarations: [
@@ -31,6 +32,7 @@ import { HistoriaClinicaModule } from '@historia-clinica/historia-clinica.module
 		DietComponent,
 		OtherIndicationComponent,
   		ParenteralPlanComponent,
+   		PharmacoComponent,
 	],
 	exports: [
 		CardMedicacionesComponent,

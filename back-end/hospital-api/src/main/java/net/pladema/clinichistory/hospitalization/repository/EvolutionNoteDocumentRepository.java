@@ -1,5 +1,6 @@
 package net.pladema.clinichistory.hospitalization.repository;
 
+import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.DocumentStatus;
 import net.pladema.clinichistory.hospitalization.repository.domain.EvolutionNoteDocument;
 import net.pladema.clinichistory.hospitalization.repository.domain.EvolutionNoteDocumentPK;
 import net.pladema.clinichistory.hospitalization.repository.domain.summary.EvaluationNoteSummaryVo;
@@ -19,6 +20,7 @@ public interface EvolutionNoteDocumentRepository extends JpaRepository<Evolution
             "FROM EvolutionNoteDocument evnd " +
             "JOIN Document d ON (d.id = evnd.pk.documentId) " +
             "WHERE evnd.pk.internmentEpisodeId = :internmentEpisodeId " +
+			"AND d.statusId = '" + DocumentStatus.FINAL + "' " +
             "ORDER BY d.updateable.updatedOn DESC")
     Page<EvaluationNoteSummaryVo> getLastEvaluationNoteSummary(@Param("internmentEpisodeId") Integer internmentEpisodeId, Pageable pageable);
 }

@@ -21,6 +21,8 @@ import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.ips.entity
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.ips.entity.indication.Pharmaco;
 import ar.lamansys.sgh.shared.infrastructure.input.service.HospitalUserPersonInfoDto;
 import ar.lamansys.sgh.shared.infrastructure.input.service.SharedHospitalUserPort;
+import ar.lamansys.sgx.shared.featureflags.AppFeature;
+import ar.lamansys.sgx.shared.featureflags.application.FeatureFlagsService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -40,6 +42,7 @@ public class PharmacoStorageImpl implements PharmacoStorage {
 	private final OtherPharmacoRepository otherPharmacoRepository;
 	private final SnomedService snomedService;
 	private final SharedHospitalUserPort sharedHospitalUserPort;
+	private final FeatureFlagsService featureFlagsService;
 
 
 	@Override
@@ -49,8 +52,10 @@ public class PharmacoStorageImpl implements PharmacoStorage {
 		Integer dosageId = dosageRepository.save(mapToDosage(pharmacoBo.getDosage(), quantity)).getId();
 		pharmacoBo.getDosage().setId(dosageId);
 		Integer pharmacoId = pharmacoRepository.save(mapToEntity(pharmacoBo)).getId();
-		Integer solventId = saveSolvent(pharmacoBo.getSolvent(), pharmacoId);
-		log.debug("pharmacoId {}, solventId {} -> ", pharmacoId, solventId);
+		if (pharmacoBo.getSolvent() != null) {
+			Integer solventId = saveSolvent(pharmacoBo.getSolvent(), pharmacoId);
+			log.debug("pharmacoId {}, solventId {} -> ", pharmacoId, solventId);
+		}
 		log.debug("Output -> {}", pharmacoId);
 		return pharmacoId;
 	}
@@ -131,7 +136,10 @@ public class PharmacoStorageImpl implements PharmacoStorage {
 		result.setPatientId(entity.getPatientId());
 		result.setStatusId(entity.getStatusId());
 		result.setTypeId(entity.getTypeId());
-		result.setCreatedByName(p.getFirstName() + " " + p.getLastName());
+		if(featureFlagsService.isOn(AppFeature.HABILITAR_DATOS_AUTOPERCIBIDOS) && p.getNameSelfDetermination() != null)
+			result.setCreatedByName(p.getNameSelfDetermination() + " " + p.getLastName());
+		else
+			result.setCreatedByName(p.getFirstName() + " " + p.getLastName());
 		result.setIndicationDate(entity.getIndicationDate());
 		result.setCreatedOn(entity.getCreatedOn());
 		result.setSnomed(snomedBo);

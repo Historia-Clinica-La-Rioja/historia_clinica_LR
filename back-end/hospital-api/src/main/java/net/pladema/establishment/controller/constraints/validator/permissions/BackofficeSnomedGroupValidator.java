@@ -64,9 +64,10 @@ public class BackofficeSnomedGroupValidator implements BackofficePermissionValid
 	public void assertUpdate(Integer id, SnomedGroup entity) {
 		if (authoritiesValidator.hasRole(ERole.ADMINISTRADOR))
 			return;
-		SnomedGroup snomedGroup = snomedGroupRepository.getById(id);
+		SnomedGroup snomedGroup = snomedGroupRepository.findById(id).orElse(null);
 		// has permission in the current institution of the group
-		hasPermissionByInstitution(snomedGroup.getInstitutionId());
+		if (snomedGroup != null)
+			hasPermissionByInstitution(snomedGroup.getInstitutionId());
 		// has permission in the new institution of the group
 		hasPermissionByInstitution(entity.getInstitutionId());
 	}
@@ -76,9 +77,10 @@ public class BackofficeSnomedGroupValidator implements BackofficePermissionValid
 	public void assertDelete(Integer id) {
 		if (authoritiesValidator.hasRole(ERole.ADMINISTRADOR))
 			return;
-		SnomedGroup snomedGroup = snomedGroupRepository.getById(id);
+		SnomedGroup snomedGroup = snomedGroupRepository.findById(id).orElse(null);
 		// has permission in the institution of the group
-		hasPermissionByInstitution(snomedGroup.getInstitutionId());
+		if (snomedGroup != null)
+			hasPermissionByInstitution(snomedGroup.getInstitutionId());
 	}
 
 	@Override

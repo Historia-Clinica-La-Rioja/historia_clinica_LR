@@ -39,11 +39,15 @@ public class PatientDischarge extends SGXAuditableEntity<Integer> {
 	@Column(name = "discharge_type_id", nullable = false)
 	private Short dischargeTypeId;
 
+	@Column(name = "physical_discharge_date")
+	private LocalDateTime physicalDischargeDate;
+
 	public PatientDischarge(PatientDischargeBo patientDischargeBo){
 		this.internmentEpisodeId = patientDischargeBo.getInternmentEpisodeId();
 		this.administrativeDischargeDate = patientDischargeBo.getAdministrativeDischargeDate();
 		this.medicalDischargeDate = patientDischargeBo.getMedicalDischargeDate();
 		this.dischargeTypeId = patientDischargeBo.getDischargeTypeId();
+		this.physicalDischargeDate = patientDischargeBo.getPhysicalDischargeDate();
 	}
 
 	public Integer getId() {

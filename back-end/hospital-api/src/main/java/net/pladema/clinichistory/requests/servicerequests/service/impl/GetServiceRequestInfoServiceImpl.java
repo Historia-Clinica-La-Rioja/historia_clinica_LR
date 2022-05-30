@@ -11,7 +11,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
 
-import java.sql.Date;
+import java.sql.Timestamp;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -40,7 +40,7 @@ public class GetServiceRequestInfoServiceImpl implements GetServiceRequestInfoSe
             return result;
         result.setServiceRequestId((Integer) resultQuery.get(0)[0]);
         result.setDoctorId((Integer) resultQuery.get(0)[1]);
-        result.setRequestDate(resultQuery.get(0)[2] != null ? ((Date) resultQuery.get(0)[2]).toLocalDate() : null);
+        result.setRequestDate((resultQuery.get(0)[2] != null) ? ((Timestamp) resultQuery.get(0)[2]).toLocalDateTime() : null);
         result.setMedicalCoverageId((Integer) resultQuery.get(0)[3]);
         result.setDiagnosticReports(
                 resultQuery.stream()

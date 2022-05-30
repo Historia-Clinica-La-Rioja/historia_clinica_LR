@@ -52,7 +52,7 @@ class NotifyPatientTest {
         verify(mqttCallExternalService, times(1)).publish(mqttMetadataDtoArgCaptor.capture());
         assertThat(mqttMetadataDtoArgCaptor.getValue().getTopic()).isEqualTo("TOPIC");
         assertThat(mqttMetadataDtoArgCaptor.getValue().getMessage()).isEqualTo("\"data\":{\"appointmentId\":1,\"patient\":\"PATIENT_LASTNAME, PATIENT_FIRSTNAME\",\"sector\":1,\"doctor\":\"DOCTOR_LASTNAME, DOCTOR_FIRSTNAME\",\"doctorsOffice\":\"OFFICE_NAME\"}");
-        assertThat(mqttMetadataDtoArgCaptor.getValue().isRetained()).isFalse();
+        assertThat(mqttMetadataDtoArgCaptor.getValue().isRetained()).isTrue();
         assertThat(mqttMetadataDtoArgCaptor.getValue().getQos()).isEqualTo(2);
         assertThat(mqttMetadataDtoArgCaptor.getValue().getType()).isEqualTo("add");
     }

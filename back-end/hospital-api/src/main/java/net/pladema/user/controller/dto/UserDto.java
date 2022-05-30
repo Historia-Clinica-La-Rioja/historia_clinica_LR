@@ -19,10 +19,10 @@ public class UserDto extends AbstractUserDto {
 
 	private UserPersonDto personDto;
 
-	public UserDto(String email, Integer id, Integer personId, String firstName, String lastName) {
+	public UserDto(String email, Integer id, Integer personId, String firstName, String lastName, String nameSelfDetermination) {
 		this.email = email;
 		this.id = id;
-		this.personDto = new UserPersonDto(personId, firstName, lastName);
+		this.personDto = new UserPersonDto(personId, firstName, lastName, nameSelfDetermination);
 	}
 
 	public Integer getPersonId() {
@@ -41,5 +41,11 @@ public class UserDto extends AbstractUserDto {
 		if (personDto == null)
 			return null;
 		return personDto.getLastName();
+	}
+
+	public String getNameSelfDetermination() {
+		if (personDto == null)
+			return null;
+		return personDto.getNameSelfDetermination();
 	}
 }

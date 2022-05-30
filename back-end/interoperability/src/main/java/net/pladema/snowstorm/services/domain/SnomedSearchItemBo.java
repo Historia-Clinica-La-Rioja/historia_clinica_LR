@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.ToString;
 import net.pladema.snowstorm.repository.domain.SnomedSearchItemVo;
+import net.pladema.snowstorm.repository.domain.SnomedTemplateSearchVo;
 
 @AllArgsConstructor
 @Getter
@@ -21,5 +22,11 @@ public class SnomedSearchItemBo {
         this.sctid = snomedSearchVo.getSctid();
         this.pt = snomedSearchVo.getPt();
     }
+
+	public SnomedSearchItemBo(SnomedTemplateSearchVo snomedSearchVo) {
+		this.snomedId = snomedSearchVo.getSnomedId();
+		this.sctid = snomedSearchVo.getSctid();
+		this.pt = snomedSearchVo.getPt();
+	}
 
 }

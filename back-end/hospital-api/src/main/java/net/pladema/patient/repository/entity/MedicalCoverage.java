@@ -46,8 +46,14 @@ public class MedicalCoverage extends SGXAuditableEntity<Integer> implements Seri
     @Column(name = "cuit", length = 20)
     private String cuit;
 
-    public MedicalCoverage(String name, String cuit){
+	@Getter
+	@Setter
+	@Column(name = "type")
+	private Short type;
+
+    public MedicalCoverage(String name, String cuit, Short type){
         this.name = name;
         this.cuit = cuit;
+		this.type = type;
     }
 }

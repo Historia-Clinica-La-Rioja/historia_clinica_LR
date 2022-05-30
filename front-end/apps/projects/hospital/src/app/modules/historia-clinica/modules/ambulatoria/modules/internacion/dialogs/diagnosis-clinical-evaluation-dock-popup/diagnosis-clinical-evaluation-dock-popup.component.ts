@@ -10,7 +10,6 @@ import { PermissionsService } from '@core/services/permissions.service';
 
 import { MapperService } from '@presentation/services/mapper.service';
 import { SnackBarService } from '@presentation/services/snack-bar.service';
-import { InternmentEpisodeSummary } from '@presentation/components/internment-episode-summary/internment-episode-summary.component';
 import { TEXT_AREA_MAX_LENGTH } from '@core/constants/validation-constants';
 import { hasError } from '@core/utils/form.utils';
 
@@ -30,6 +29,7 @@ import { ROLES_FOR_ACCESS_MAIN } from '../../constants/permissions';
 import { OVERLAY_DATA } from "@presentation/presentation-model";
 import { DockPopupRef } from "@presentation/services/dock-popup-ref";
 import { InternmentFields } from "@historia-clinica/modules/ambulatoria/modules/internacion/services/internment-summary-facade.service";
+import { InternmentEpisodeSummary } from "@historia-clinica/modules/ambulatoria/modules/internacion/components/internment-episode-summary/internment-episode-summary.component";
 
 @Component({
 	selector: 'app-diagnosis-clinical-evaluation-dock-popup',

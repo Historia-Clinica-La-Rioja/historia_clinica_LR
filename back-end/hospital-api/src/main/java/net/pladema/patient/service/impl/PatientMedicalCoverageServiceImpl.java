@@ -1,13 +1,11 @@
 package net.pladema.patient.service.impl;
 
 import ar.lamansys.sgx.shared.exceptions.NotFoundException;
-import net.pladema.establishment.repository.PrivateHealthInsurancePlanRepository;
+import net.pladema.establishment.repository.MedicalCoveragePlanRepository;
 import net.pladema.patient.repository.PatientMedicalCoverageRepository;
-import net.pladema.patient.repository.PrivateHealthInsuranceDetailsRepository;
 import net.pladema.patient.repository.domain.PatientMedicalCoverageVo;
 import net.pladema.patient.repository.entity.MedicalCoverage;
 import net.pladema.patient.repository.entity.PatientMedicalCoverageAssn;
-import net.pladema.patient.repository.entity.PrivateHealthInsuranceDetails;
 import net.pladema.patient.service.PatientMedicalCoverageService;
 import net.pladema.patient.service.domain.PatientMedicalCoverageBo;
 import net.pladema.patient.repository.MedicalCoverageRepository;
@@ -34,15 +32,12 @@ public class PatientMedicalCoverageServiceImpl implements PatientMedicalCoverage
 
 	private final MedicalCoverageRepository medicalCoverageRepository;
 
-	private final PrivateHealthInsuranceDetailsRepository privateHealthInsuranceDetailsRepository;
+	private final MedicalCoveragePlanRepository medicalCoveragePlanRepository;
 
-	private final PrivateHealthInsurancePlanRepository privateHealthInsurancePlanRepository;
-
-	public PatientMedicalCoverageServiceImpl(PatientMedicalCoverageRepository patientMedicalCoverageRepository, MedicalCoverageRepository medicalCoverageRepository, PrivateHealthInsuranceDetailsRepository privateHealthInsuranceDetailsRepository, PrivateHealthInsurancePlanRepository privateHealthInsurancePlanRepository) {
+	public PatientMedicalCoverageServiceImpl(PatientMedicalCoverageRepository patientMedicalCoverageRepository, MedicalCoverageRepository medicalCoverageRepository, MedicalCoveragePlanRepository medicalCoveragePlanRepository) {
 		this.patientMedicalCoverageRepository = patientMedicalCoverageRepository;
 		this.medicalCoverageRepository = medicalCoverageRepository;
-		this.privateHealthInsuranceDetailsRepository = privateHealthInsuranceDetailsRepository;
-		this.privateHealthInsurancePlanRepository = privateHealthInsurancePlanRepository;
+		this.medicalCoveragePlanRepository = medicalCoveragePlanRepository;
 	}
 
 	@Override
@@ -51,9 +46,9 @@ public class PatientMedicalCoverageServiceImpl implements PatientMedicalCoverage
 		List<PatientMedicalCoverageVo> queryResult = patientMedicalCoverageRepository.getActivePatientCoverages(patientId);
 		List<PatientMedicalCoverageBo> result = queryResult.stream().map(PatientMedicalCoverageBo::new).collect(Collectors.toList());
 		result.forEach(mc ->{
-			if(mc.getPrivateHealthInsuranceDetails().getPlanId()!=null)
-				this.privateHealthInsurancePlanRepository.findById(mc.getPrivateHealthInsuranceDetails().getPlanId())
-					.ifPresent(plan -> mc.getPrivateHealthInsuranceDetails().setPlanName(plan.getPlan()));
+			if(mc.getPlanId()!=null)
+				this.medicalCoveragePlanRepository.findById(mc.getPlanId())
+					.ifPresent(plan -> mc.setPlanName(plan.getPlan()));
 		});
 		LOG.debug(OUTPUT, result);
 		return result;
@@ -62,13 +57,14 @@ public class PatientMedicalCoverageServiceImpl implements PatientMedicalCoverage
 	@Override
 	public Optional<PatientMedicalCoverageBo> getCoverage(Integer patientMedicalCoverageId) {
 		LOG.debug(INPUT_DATA, patientMedicalCoverageId);
-		Optional<PatientMedicalCoverageVo> queryResult = patientMedicalCoverageRepository.getPatientCoverage(patientMedicalCoverageId);
-		AtomicReference<Optional<PatientMedicalCoverageBo>> result = new AtomicReference<>(Optional.empty());
-		queryResult.ifPresent(r -> {
-			result.set(Optional.of(new PatientMedicalCoverageBo(r)));
-		});
+		Optional<PatientMedicalCoverageBo> result = patientMedicalCoverageRepository.getPatientCoverage(patientMedicalCoverageId)
+				.map(PatientMedicalCoverageBo::new).map(bo -> {
+					if (bo.getPlanId() != null)
+						bo.setPlanName(medicalCoveragePlanRepository.findById(bo.getPlanId()).get().getPlan());
+					return bo;
+				});
 		LOG.debug(OUTPUT, result);
-		return result.get();
+		return result;
 	}
 
 	@Override
@@ -86,8 +82,8 @@ public class PatientMedicalCoverageServiceImpl implements PatientMedicalCoverage
 		List<PatientMedicalCoverageVo> queryResult = patientMedicalCoverageRepository.getActivePatientPrivateHealthInsurances(patientId);
 		List<PatientMedicalCoverageBo> result = queryResult.stream().map(PatientMedicalCoverageBo::new).collect(Collectors.toList());
 		result.forEach(mc ->{
-			this.privateHealthInsurancePlanRepository.findById(mc.getPrivateHealthInsuranceDetails().getPlanId())
-					.ifPresent(plan -> mc.getPrivateHealthInsuranceDetails().setPlanName(plan.getPlan()));
+			this.medicalCoveragePlanRepository.findById(mc.getPlanId())
+					.ifPresent(plan -> mc.setPlanName(plan.getPlan()));
 		});
 		LOG.debug(OUTPUT, result);
 		return result;
@@ -100,10 +96,6 @@ public class PatientMedicalCoverageServiceImpl implements PatientMedicalCoverage
 		List<Integer> result = new ArrayList<>();
 		coverages.forEach((coverage) -> {
 			coverage.getMedicalCoverage().setId(coverage.getMedicalCoverage().getId());
-			if (coverage.getPrivateHealthInsuranceDetails() != null) {
-				PrivateHealthInsuranceDetails phidSaved = privateHealthInsuranceDetailsRepository.save(new PrivateHealthInsuranceDetails(coverage.getPrivateHealthInsuranceDetails()));
-				coverage.getPrivateHealthInsuranceDetails().setId(phidSaved.getId());
-			}
 			PatientMedicalCoverageAssn pmcToSave = new PatientMedicalCoverageAssn(coverage, patientId);
 			PatientMedicalCoverageAssn pmcSaved = patientMedicalCoverageRepository.save(pmcToSave);
 			result.add(pmcSaved.getId());
@@ -120,10 +112,6 @@ public class PatientMedicalCoverageServiceImpl implements PatientMedicalCoverage
 							.orElse(null))
 					.orElseGet(() -> medicalCoverageRepository.findByCUIT(coverage.getMedicalCoverage().getCuit())
 							.orElseThrow(() -> new NotFoundException("medical-coverage-not-exists", String.format("La cobertura médica con cuit %s no existe", coverage.getMedicalCoverage().getCuit()))));
-			if (coverage.getPrivateHealthInsuranceDetails() != null) {
-				PrivateHealthInsuranceDetails phidSaved = privateHealthInsuranceDetailsRepository.save(new PrivateHealthInsuranceDetails(coverage.getPrivateHealthInsuranceDetails()));
-				coverage.getPrivateHealthInsuranceDetails().setId(phidSaved.getId());
-			}
 			coverage.getMedicalCoverage().setId(medicalCoverageSaved.getId());
 			Integer pmcId = patientMedicalCoverageRepository.getByPatientAndMedicalCoverage(patientId, coverage.getMedicalCoverage().getId())
 					.map(PatientMedicalCoverageAssn::getId)

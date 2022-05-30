@@ -17,6 +17,7 @@ import { InternacionAntecedentesPersonalesSummaryComponent } from './components/
 import { MedicacionSummaryComponent } from './components/medicacion-summary/medicacion-summary.component';
 import { FactoresDeRiesgoSummaryComponent } from './components/factores-de-riesgo-summary/factores-de-riesgo-summary.component';
 import { FactoresDeRiesgoFormComponent } from './components/factores-de-riesgo-form/factores-de-riesgo-form.component';
+import { NewConsultationExpansionSectionComponent } from './components/new-consultation-expansion-section/new-consultation-expansion-section.component';
 // dialogs
 import { AddAllergyComponent } from './dialogs/add-allergy/add-allergy.component';
 import { AddAnthropometricComponent } from './dialogs/add-anthropometric/add-anthropometric.component';
@@ -27,6 +28,8 @@ import { EffectiveTimeDialogComponent } from './dialogs/effective-time-dialog/ef
 import { ProbableDischargeDialogComponent } from './dialogs/probable-discharge-dialog/probable-discharge-dialog.component';
 import { RemoveDiagnosisComponent } from './dialogs/remove-diagnosis/remove-diagnosis.component';
 import { BedAssignmentComponent } from './dialogs/bed-assignment/bed-assignment.component';
+import { IncludePreviousDataQuestionComponent } from './components/include-previous-data-question/include-previous-data-question.component';
+import { TemplateConceptTypeaheadSearchComponent } from './components/template-concept-typeahead-search/template-concept-typeahead-search.component';
 
 @NgModule({
 	declarations: [
@@ -42,6 +45,10 @@ import { BedAssignmentComponent } from './dialogs/bed-assignment/bed-assignment.
 		MedicacionSummaryComponent,
 		FactoresDeRiesgoSummaryComponent,
 		FactoresDeRiesgoFormComponent,
+		IncludePreviousDataQuestionComponent,
+		ConceptTypeaheadSearchComponent,
+		TemplateConceptTypeaheadSearchComponent,
+		NewConsultationExpansionSectionComponent,
 		// dialogs
 		AddAllergyComponent,
 		AddAnthropometricComponent,
@@ -52,7 +59,6 @@ import { BedAssignmentComponent } from './dialogs/bed-assignment/bed-assignment.
 		RemoveDiagnosisComponent,
 		ProbableDischargeDialogComponent,
 		BedAssignmentComponent,
-		ConceptTypeaheadSearchComponent,
 	],
 	imports: [
 		CommonModule,
@@ -74,9 +80,12 @@ import { BedAssignmentComponent } from './dialogs/bed-assignment/bed-assignment.
 		FactoresDeRiesgoSummaryComponent,
 		InternacionAntecedentesPersonalesSummaryComponent,
 		FactoresDeRiesgoFormComponent,
+		IncludePreviousDataQuestionComponent,
+		ConceptTypeaheadSearchComponent,
+		TemplateConceptTypeaheadSearchComponent,
+		NewConsultationExpansionSectionComponent,
 		// dialogs
 		ConceptsSearchDialogComponent,
-		ConceptTypeaheadSearchComponent,
 	]
 })
 export class HistoriaClinicaModule {

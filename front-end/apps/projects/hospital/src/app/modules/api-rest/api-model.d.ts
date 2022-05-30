@@ -69,6 +69,9 @@ export interface APersonDto {
     street: string;
 }
 
+export interface ARTCoverageDto extends CoverageDto {
+}
+
 export interface AbstractMasterdataDto<T> extends MasterDataInterface<T>, Serializable {
 }
 
@@ -264,6 +267,7 @@ export interface AuthorDto extends Serializable {
     id: number;
     lastName: string;
     licence: string;
+    nameSelfDetermination: string;
 }
 
 export interface BMPatientDto extends APatientDto {
@@ -272,6 +276,13 @@ export interface BMPatientDto extends APatientDto {
 
 export interface BMPersonDto extends APersonDto {
     id: number;
+}
+
+export interface BackofficeClinicalSpecialtyMandatoryMedicalPracticeDto {
+    clinicalSpecialtyId: number;
+    id: number;
+    mandatoryMedicalPracticeId: number;
+    practiceRecommendations: string;
 }
 
 export interface BackofficeCoverageDto extends Serializable {
@@ -284,6 +295,14 @@ export interface BackofficeCoverageDto extends Serializable {
     type: number;
 }
 
+export interface BackofficeHealthInsurancePracticeDto {
+    clinicalSpecialtyId: number;
+    coverageInformation: string;
+    id: number;
+    mandatoryMedicalPracticeId: number;
+    medicalCoverageId: number;
+}
+
 export interface BackofficeHealthcareProfessionalCompleteDto {
     clinicalSpecialtyId: number;
     deleted: boolean;
@@ -291,6 +310,21 @@ export interface BackofficeHealthcareProfessionalCompleteDto {
     licenseNumber: string;
     personId: number;
     professionalSpecialtyId: number;
+}
+
+export interface BackofficeMandatoryMedicalPracticeDto {
+    description: string;
+    id: number;
+    mmpCode: string;
+    snomedId: number;
+}
+
+export interface BackofficeMandatoryProfessionalPracticeFreeDaysDto {
+    clinicalSpecialtyId: number;
+    days: number[];
+    healthcareProfessionalId: number;
+    id: number;
+    mandatoryMedicalPracticeId: number;
 }
 
 export interface BackofficeUserDto {
@@ -368,6 +402,32 @@ export interface BedSummaryDto {
     bed: BedDto;
     probableDischargeDate?: string;
     sector: SectorSummaryDto;
+}
+
+export interface BlockDto {
+    dateDto: DateDto;
+    end: TimeDto;
+    init: TimeDto;
+}
+
+export interface BookingAppointmentDto {
+    coverageId: number;
+    day: string;
+    diaryId: number;
+    hour: string;
+    openingHoursId: number;
+    phoneNumber: string;
+    snomedId: number;
+    specialtyId: number;
+}
+
+export interface BookingPersonDto {
+    birthDate: string;
+    email: string;
+    firstName: string;
+    genderId: number;
+    idNumber: string;
+    lastName: string;
 }
 
 export interface BreathingDto extends Serializable {
@@ -501,7 +561,7 @@ export interface CoverageDto extends Serializable {
     cuit: string;
     id: number;
     name: string;
-    type: "HealthInsuranceDto" | "PrivateHealthInsuranceDto";
+    type: number;
 }
 
 export interface CreateAppointmentDto {
@@ -630,6 +690,7 @@ export interface DiaryListDto {
 }
 
 export interface DiaryOpeningHoursDto extends Overlapping<DiaryOpeningHoursDto> {
+    externalAppointmentsAllowed: boolean;
     medicalAttentionTypeId: number;
     openingHours: OpeningHoursDto;
     overturnCount?: number;
@@ -643,6 +704,7 @@ export interface DoctorInfoDto {
     firstName: string;
     id: number;
     lastName: string;
+    nameSelfDetermination: string;
 }
 
 export interface DoctorsOfficeDto {
@@ -704,8 +766,15 @@ export interface DocumentObservationsDto extends Serializable {
     studiesSummaryNote?: string;
 }
 
-export interface DocumentSearchDto extends Serializable {
+export interface DocumentReduceInfoDto extends Serializable {
+    createdBy: number;
     createdOn: Date;
+    sourceId: number;
+    typeId: number;
+}
+
+export interface DocumentSearchDto extends Serializable {
+    createdOn: DateTimeDto;
     creator: ResponsibleDoctorDto;
     diagnosis: string[];
     documentType: string;
@@ -826,6 +895,7 @@ export interface EmergencyCareUserDto {
     firstName: string;
     id: number;
     lastName: string;
+    nameSelfDetermination: string;
 }
 
 export interface EpicrisisDto extends Serializable {
@@ -1162,7 +1232,6 @@ export interface HealthHistoryConditionDto extends HealthConditionDto {
 export interface HealthInsuranceDto extends CoverageDto {
     acronym: string;
     rnos: number;
-    type: "HealthInsuranceDto";
 }
 
 export interface HealthcareProfessionalCompleteDto {
@@ -1175,8 +1244,15 @@ export interface HealthcareProfessionalCompleteDto {
 export interface HealthcareProfessionalDto {
     id: number;
     licenseNumber: string;
+    nameSelfDetermination: string;
     person: PersonBasicDataResponseDto;
     personId: number;
+}
+
+export interface HealthcareProfessionalHealthInsuranceDto extends Serializable {
+    healthcareProfessionalId: number;
+    id: number;
+    medicalCoverageId: number;
 }
 
 export interface HealthcareProfessionalSpecialtyDto {
@@ -1191,6 +1267,7 @@ export interface HospitalUserPersonInfoDto {
     firstName: string;
     id: number;
     lastName: string;
+    nameSelfDetermination: string;
     personId: number;
 }
 
@@ -1320,6 +1397,7 @@ export interface InternmentEpisodeBMDto extends InternmentEpisodeADto {
 export interface InternmentEpisodeDto {
     bed: BedDto;
     doctor: ResponsibleDoctorDto;
+    hasPhysicalDischarge: boolean;
     id: number;
     patient: PatientDto;
 }
@@ -1327,6 +1405,7 @@ export interface InternmentEpisodeDto {
 export interface InternmentEpisodeProcessDto {
     id?: number;
     inProgress: boolean;
+    patientHospitalized: boolean;
 }
 
 export interface InternmentGeneralStateDto extends Serializable {
@@ -1341,15 +1420,19 @@ export interface InternmentGeneralStateDto extends Serializable {
 }
 
 export interface InternmentPatientDto {
+    bedNumber: string;
     birthDate: Date;
     firstName: string;
     genderId: number;
+    hasPhysicalDischarge: boolean;
     identificationNumber: string;
     identificationTypeId: number;
     internmentId: number;
     lastName: string;
     nameSelfDetermination: string;
     patientId: number;
+    roomNumber: string;
+    sectorDescription: string;
 }
 
 export interface InternmentSummaryDto {
@@ -1422,6 +1505,12 @@ export interface MedicalCoverageDto {
     name: string;
     rnos: string;
     service: string;
+}
+
+export interface MedicalCoveragePlanDto {
+    id: number;
+    medicalCoverageId: number;
+    plan: string;
 }
 
 export interface MedicalCoverageTypeDto extends Serializable {
@@ -1878,12 +1967,16 @@ export interface PatientDischargeDto {
     administrativeDischargeDate: Date;
     dischargeTypeId: number;
     medicalDischargeDate: Date;
+    physicalDischargeDate: Date;
 }
 
 export interface PatientDto {
+    birthDate: Date;
     firstName: string;
     fullName: string;
     id: number;
+    identificationNumber: string;
+    identificationTypeId: number;
     lastName: string;
     nameSelfDetermination: string;
 }
@@ -1911,9 +2004,12 @@ export interface PatientMedicalCoverageDto {
     active: boolean;
     affiliateNumber?: string;
     condition: EPatientMedicalCoverageCondition;
+    endDate?: string;
     id?: number;
-    medicalCoverage: CoverageDtoUnion;
-    privateHealthInsuranceDetails?: PrivateHealthInsuranceDetailsDto;
+    medicalCoverage: CoverageDto;
+    planId?: number;
+    planName?: string;
+    startDate?: string;
     vigencyDate?: string;
 }
 
@@ -2042,13 +2138,6 @@ export interface PrivateHealthInsuranceDetailsDto {
 }
 
 export interface PrivateHealthInsuranceDto extends CoverageDto {
-    type: "PrivateHealthInsuranceDto";
-}
-
-export interface PrivateHealthInsurancePlanDto {
-    id: number;
-    plan: string;
-    privateHealthInsuranceId: number;
 }
 
 export interface ProbableDischargeDateDto {
@@ -2073,12 +2162,12 @@ export interface ProcedureReduced {
 }
 
 export interface ProfessionalDto {
-    completeName: string;
     firstName: string;
     id: number;
     identificationNumber: string;
     lastName: string;
     licenceNumber: string;
+    nameSelfDetermination: string;
     phoneNumber: string;
 }
 
@@ -2089,6 +2178,7 @@ export interface ProfessionalInfoDto {
     identificationNumber: string;
     lastName: string;
     licenceNumber: string;
+    nameSelfDetermination: string;
     phoneNumber: string;
 }
 
@@ -2222,6 +2312,7 @@ export interface ResponsibleDoctorDto extends Serializable {
     id: number;
     lastName: string;
     licence: string;
+    nameSelfDetermination: string;
 }
 
 export interface RiskFactorDto extends Serializable {
@@ -2304,6 +2395,11 @@ export interface SelfPerceivedGenderDto extends AbstractMasterdataDto<number> {
 export interface Serializable {
 }
 
+export interface ServiceRequestCategoryDto {
+    description: string;
+    id: string;
+}
+
 export interface SharedSnomedDto extends Serializable {
     parentFsn: string;
     parentId: string;
@@ -2339,6 +2435,11 @@ export interface SnomedSearchItemDto {
     fsn: FullySpecifiedNamesDto;
     id: string;
     pt: PreferredTermDto;
+}
+
+export interface SnomedTemplateDto {
+    concepts: SnomedSearchItemDto[];
+    description: string;
 }
 
 export interface SnvsEventDto {
@@ -2476,6 +2577,15 @@ export interface TriagePediatricDto extends TriageNoAdministrativeDto {
     circulation?: CirculationDto;
 }
 
+export interface UpdateAppointmentDto {
+    appointmentId: number;
+    appointmentStateId: number;
+    overturn: boolean;
+    patientId: number;
+    patientMedicalCoverageId?: number;
+    phoneNumber?: string;
+}
+
 export interface UpdateConceptsResultDto {
     conceptsLoaded: number;
     eclKey: string;
@@ -2495,6 +2605,7 @@ export interface UserDto extends AbstractUserDto {
     firstName: string;
     id: number;
     lastName: string;
+    nameSelfDetermination: string;
     personDto: UserPersonDto;
     personId: number;
 }
@@ -2510,6 +2621,7 @@ export interface UserPersonDto extends Serializable {
     firstName: string;
     id?: number;
     lastName: string;
+    nameSelfDetermination: string;
 }
 
 export interface UserRoleDto {
@@ -2564,8 +2676,6 @@ export interface VaccineSchemeInfoDto extends AbstractMasterdataDto<number> {
     id: number;
 }
 
-export type CoverageDtoUnion = HealthInsuranceDto | PrivateHealthInsuranceDto;
-
 export const enum AppFeature {
     HABILITAR_ALTA_SIN_EPICRISIS = "HABILITAR_ALTA_SIN_EPICRISIS",
     MAIN_DIAGNOSIS_REQUIRED = "MAIN_DIAGNOSIS_REQUIRED",
@@ -2616,8 +2726,9 @@ export const enum EIndicationType {
 }
 
 export const enum EMedicalCoverageTypeDto {
-    OBRASOCIAL = "OBRASOCIAL",
     PREPAGA = "PREPAGA",
+    OBRASOCIAL = "OBRASOCIAL",
+    ART = "ART",
 }
 
 export const enum EOdontologyTopicDto {
@@ -2628,6 +2739,7 @@ export const enum EPatientMedicalCoverageCondition {
     VOLUNTARIA = "VOLUNTARIA",
     OBLIGATORIA = "OBLIGATORIA",
 }
+
 
 export const enum ERole {
     ROOT = "ROOT",
@@ -2641,6 +2753,7 @@ export const enum ERole {
     ADMINISTRADOR_AGENDA = "ADMINISTRADOR_AGENDA",
     API_CONSUMER = "API_CONSUMER",
     ESPECIALISTA_EN_ODONTOLOGIA = "ESPECIALISTA_EN_ODONTOLOGIA",
+    ADMINISTRADOR_DE_CAMAS = "ADMINISTRADOR_DE_CAMAS",
 }
 
 export const enum ESurfacePositionDto {

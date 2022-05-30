@@ -31,9 +31,17 @@ public class BasicListedPatientBo {
 
     private String nameSelfDetermination;
 
+	private String bedNumber;
+
+	private String roomNumber;
+
+	private String sectorDescription;
+
+	private boolean hasPhysicalDischarge;
+
     public BasicListedPatientBo(Integer patientId, Short identificationTypeId, String identificationNumber,
                                 String firstName, String lastName, String nameSelfDetermination, LocalDate birthDate,
-                                Short genderId, Integer internmentId){
+                                Short genderId, Integer internmentId, String bedNumber, String roomNumber, String sectorDescription, boolean hasPhysicalDischarge){
         this.internmentId = internmentId;
         this.patientId = patientId;
         this.identificationTypeId = identificationTypeId;
@@ -43,5 +51,9 @@ public class BasicListedPatientBo {
         this.birthDate = birthDate;
         this.genderId = genderId;
         this.nameSelfDetermination = nameSelfDetermination;
+		this.bedNumber = bedNumber;
+		this.roomNumber = roomNumber;
+		this.sectorDescription = sectorDescription;
+		this.hasPhysicalDischarge = hasPhysicalDischarge;
     }
 }

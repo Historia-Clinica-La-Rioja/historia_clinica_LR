@@ -48,14 +48,15 @@ public class SnomedGroup {
 	private Integer groupId;
 
 	@Column(name = "template", nullable = false)
-	private Boolean template = false;
+	private Boolean template;
 
-	public SnomedGroup(Integer id, String description, String ecl, String customId, LocalDate lastUpdate) {
+	public SnomedGroup(Integer id, String description, String ecl, String customId, LocalDate lastUpdate, Boolean isTemplate) {
 		this.id = id;
 		this.description = description;
 		this.ecl = ecl;
 		this.customId = customId;
 		this.lastUpdate = lastUpdate;
+		this.template = isTemplate;
 	}
 
 }

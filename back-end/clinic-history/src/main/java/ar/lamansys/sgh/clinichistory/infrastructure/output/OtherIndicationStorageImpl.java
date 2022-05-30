@@ -11,6 +11,8 @@ import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.ips.entity
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.ips.entity.indication.OtherIndication;
 import ar.lamansys.sgh.shared.infrastructure.input.service.HospitalUserPersonInfoDto;
 import ar.lamansys.sgh.shared.infrastructure.input.service.SharedHospitalUserPort;
+import ar.lamansys.sgx.shared.featureflags.AppFeature;
+import ar.lamansys.sgx.shared.featureflags.application.FeatureFlagsService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -30,6 +32,8 @@ public class OtherIndicationStorageImpl implements OtherIndicationStorage {
 
 	private final DosageRepository dosageRepository;
 
+	private final FeatureFlagsService featureFlagsService;
+
 
 	@Override
 	public List<OtherIndicationBo> getInternmentEpisodeOtherIndications(Integer internmentEpisodeId) {
@@ -39,7 +43,10 @@ public class OtherIndicationStorageImpl implements OtherIndicationStorage {
 				.map(entity -> {
 					OtherIndicationBo oiBo = mapToBo(entity);
 					HospitalUserPersonInfoDto p = sharedHospitalUserPort.getUserCompleteInfo(oiBo.getCreatedBy());
-					oiBo.setCreatedByName(p.getFirstName() + " " + p.getLastName());
+					if(featureFlagsService.isOn(AppFeature.HABILITAR_DATOS_AUTOPERCIBIDOS) && p.getNameSelfDetermination() != null)
+						oiBo.setCreatedByName(p.getNameSelfDetermination() + " " + p.getLastName());
+					else
+						oiBo.setCreatedByName(p.getFirstName() + " " + p.getLastName());
 					DosageBo  dosageBo = dosageRepository.findById(entity.getDosageId()).
 							map(this::mapToDosageBo).orElse(null);
 					oiBo.setDosage(dosageBo);

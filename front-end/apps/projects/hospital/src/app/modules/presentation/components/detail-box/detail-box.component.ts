@@ -9,11 +9,14 @@ export class DetailBoxComponent {
 
 	@Input() detail: DetailBox;
 
-	constructor() { }
-
 }
 
 export interface DetailBox {
 	description: string;
+	registeredValues: RegisteredValue[];
+}
+
+interface RegisteredValue {
 	value: string | number;
+	date: string;
 }

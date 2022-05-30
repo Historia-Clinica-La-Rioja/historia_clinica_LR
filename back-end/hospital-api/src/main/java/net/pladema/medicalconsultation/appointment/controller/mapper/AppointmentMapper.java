@@ -13,8 +13,10 @@ import net.pladema.medicalconsultation.appointment.controller.dto.AppointmentDai
 import net.pladema.medicalconsultation.appointment.controller.dto.AppointmentDto;
 import net.pladema.medicalconsultation.appointment.controller.dto.AppointmentListDto;
 import net.pladema.medicalconsultation.appointment.controller.dto.CreateAppointmentDto;
+import net.pladema.medicalconsultation.appointment.controller.dto.UpdateAppointmentDto;
 import net.pladema.medicalconsultation.appointment.service.domain.AppointmentBo;
 import net.pladema.medicalconsultation.appointment.service.domain.AppointmentDailyAmountBo;
+import net.pladema.medicalconsultation.appointment.service.domain.UpdateAppointmentBo;
 
 @Mapper(uses = {LocalDateMapper.class})
 public interface AppointmentMapper {
@@ -41,4 +43,6 @@ public interface AppointmentMapper {
 	@Named("toAssignedAppointmentDto")
 	AssignedAppointmentDto toAssignedAppointmentDto(AppointmentAssignedBo appointmentAssignedBo);
 
+	@Named("toUpdateAppointmentBo")
+	UpdateAppointmentBo toUpdateAppointmentBo(UpdateAppointmentDto updateAppointmentDto);
 }

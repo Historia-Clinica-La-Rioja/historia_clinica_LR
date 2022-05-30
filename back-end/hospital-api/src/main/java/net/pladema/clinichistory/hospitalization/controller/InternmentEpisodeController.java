@@ -6,6 +6,7 @@ import ar.lamansys.sgx.shared.exceptions.NotFoundException;
 import ar.lamansys.sgx.shared.featureflags.AppFeature;
 import ar.lamansys.sgx.shared.featureflags.application.FeatureFlagsService;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import net.pladema.clinichistory.hospitalization.controller.constraints.InternmentPhysicalDischargeValid;
 import net.pladema.events.EHospitalApiTopicDto;
 import net.pladema.events.HospitalApiPublisher;
 import net.pladema.clinichistory.hospitalization.controller.constraints.InternmentDischargeValid;
@@ -97,7 +98,7 @@ public class InternmentEpisodeController {
 
 	@InternmentValid
 	@GetMapping("/{internmentEpisodeId}/summary")
-	@PreAuthorize("hasPermission(#institutionId, 'ESPECIALISTA_MEDICO, PROFESIONAL_DE_SALUD, ESPECIALISTA_EN_ODONTOLOGIA, ADMINISTRATIVO, ENFERMERO_ADULTO_MAYOR, ENFERMERO')")
+	@PreAuthorize("hasPermission(#institutionId, 'ESPECIALISTA_MEDICO, PROFESIONAL_DE_SALUD, ESPECIALISTA_EN_ODONTOLOGIA, ADMINISTRATIVO, ENFERMERO_ADULTO_MAYOR, ENFERMERO, ADMINISTRADOR_DE_CAMAS')")
 	public ResponseEntity<InternmentSummaryDto> internmentEpisodeSummary(
 			@PathVariable(name = "institutionId") Integer institutionId,
 			@PathVariable(name = "internmentEpisodeId") Integer internmentEpisodeId) {
@@ -128,35 +129,57 @@ public class InternmentEpisodeController {
     }
 
 	@Transactional
+	@PreAuthorize("hasPermission(#institutionId, 'ESPECIALISTA_MEDICO')")
 	@PostMapping("/{internmentEpisodeId}/medicaldischarge")
 	public ResponseEntity<PatientDischargeDto> medicalDischargeInternmentEpisode(
+			@PathVariable(name = "institutionId") Integer institutionId,
 			@InternmentDischargeValid @PathVariable(name = "internmentEpisodeId") Integer internmentEpisodeId,
 			@RequestBody PatientDischargeDto patientDischargeDto) {
 		LOG.debug("Input parameters -> internmentEpisodeId {}, PatientDischargeDto {} ", internmentEpisodeId, patientDischargeDto);
 		PatientDischargeBo patientDischarge = patientDischargeMapper.toPatientDischargeBo(patientDischargeDto);
 		patientDischarge.setInternmentEpisodeId(internmentEpisodeId);
-		PatientDischargeBo patientDischargeSaved = internmentEpisodeService.savePatientDischarge(patientDischarge);
+		PatientDischargeBo patientDischargeSaved = internmentEpisodeService.saveMedicalDischarge(patientDischarge);
 		PatientDischargeDto result = patientDischargeMapper.toPatientDischargeDto(patientDischargeSaved);
 		internmentEpisodeService.getPatient(patientDischargeSaved.getInternmentEpisodeId())
 				.ifPresent( patientId -> hospitalApiPublisher.publish(patientId, EHospitalApiTopicDto.ALTA_MEDICA) );
 		LOG.debug(OUTPUT, result);
 		return ResponseEntity.ok(result);
 	}
-    
+
 	@Transactional
+	@PreAuthorize("hasPermission(#institutionId, 'ADMINISTRATIVO')")
 	@PostMapping("/{internmentEpisodeId}/administrativedischarge")
 	public ResponseEntity<PatientDischargeDto> dischargeInternmentEpisode(
+			@PathVariable(name = "institutionId") Integer institutionId,
 			@InternmentDischargeValid @PathVariable(name = "internmentEpisodeId") Integer internmentEpisodeId,
 			@RequestBody PatientDischargeDto patientDischargeDto) {
 		LOG.debug("Input parameters -> internmentEpisodeId {}, PatientDischargeDto {} ", internmentEpisodeId, patientDischargeDto);
 		PatientDischargeBo patientDischarge = patientDischargeMapper.toPatientDischargeBo(patientDischargeDto);
 		InternmentSummaryBo internmentEpisodeSummary = internmentEpisodeService.getIntermentSummary(internmentEpisodeId)
 				.orElseThrow(() -> new NotFoundException("bad-episode-id", INTERNMENT_NOT_FOUND));
+		if (patientDischarge.getPhysicalDischargeDate()==null)
+			patientDischarge.setPhysicalDischargeDate(patientDischarge.getAdministrativeDischargeDate());
 		patientDischarge.setInternmentEpisodeId(internmentEpisodeId);
-		PatientDischargeBo patientDischargeSaved = internmentEpisodeService.savePatientDischarge(patientDischarge);
+		PatientDischargeBo patientDischargeSaved = internmentEpisodeService.saveAdministrativeDischarge(patientDischarge);
 		bedExternalService.freeBed(internmentEpisodeSummary.getBedId());
 		internmentEpisodeService.updateInternmentEpisodeStatus(internmentEpisodeId,
 				Short.valueOf(InternmentEpisodeStatus.INACTIVE));
+		PatientDischargeDto result = patientDischargeMapper.toPatientDischargeDto(patientDischargeSaved);
+		LOG.debug(OUTPUT, result);
+		return ResponseEntity.ok(result);
+	}
+
+	@Transactional
+	@PostMapping("/{internmentEpisodeId}/physicaldischarge")
+	@PreAuthorize("hasPermission(#institutionId, 'ADMINISTRADOR_DE_CAMAS')")
+	public ResponseEntity<PatientDischargeDto> physicalDischargeInternmentEpisode(
+			@PathVariable(name="institutionId") Integer institutionId,
+			@InternmentPhysicalDischargeValid @PathVariable(name = "internmentEpisodeId") Integer internmentEpisodeId) {
+		LOG.debug("Input parameters -> internmentEpisodeId {} ", internmentEpisodeId);
+		InternmentSummaryBo internmentEpisodeSummary = internmentEpisodeService.getIntermentSummary(internmentEpisodeId)
+				.orElseThrow(() -> new NotFoundException("bad-episode-id", INTERNMENT_NOT_FOUND));
+		PatientDischargeBo patientDischargeSaved = internmentEpisodeService.savePatientPhysicalDischarge(internmentEpisodeId);
+		bedExternalService.freeBed(internmentEpisodeSummary.getBedId());
 		PatientDischargeDto result = patientDischargeMapper.toPatientDischargeDto(patientDischargeSaved);
 		LOG.debug(OUTPUT, result);
 		return ResponseEntity.ok(result);

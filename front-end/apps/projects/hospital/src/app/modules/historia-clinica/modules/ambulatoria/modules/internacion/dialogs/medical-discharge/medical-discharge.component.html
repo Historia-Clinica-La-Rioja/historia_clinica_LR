@@ -6,7 +6,7 @@
 			<div class="form-row" fxLayoutGap="5px">
 				<mat-form-field appearance="outline">
 					<input formControlName="date" id="date" matInput [matDatepicker]="datePicker"
-						[value]="today" [max]="today" [min]="minMedicalDischargeDate"
+						[value]="todayDate" [max]="todayDate" [min]="minMedicalDischargeDate"
 						placeholder="{{'internaciones.discharge.DATE' | translate}}">
 
 					<mat-datepicker-toggle matSuffix [for]="datePicker"></mat-datepicker-toggle>

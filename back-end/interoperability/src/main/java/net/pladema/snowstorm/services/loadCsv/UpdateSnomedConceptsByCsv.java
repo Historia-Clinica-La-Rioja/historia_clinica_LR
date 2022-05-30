@@ -139,7 +139,7 @@ public class UpdateSnomedConceptsByCsv {
         String ecl = snomedSemantics.getEcl(SnomedECL.map(eclKey));
         Integer snomedGroupId = snomedGroupRepository.getBaseGroupIdByEclAndDescription(ecl, eclKey);
         String customId = "1";
-        SnomedGroup toSave = new SnomedGroup(snomedGroupId, eclKey, ecl, customId, date);
+        SnomedGroup toSave = new SnomedGroup(snomedGroupId, eclKey, ecl, customId, date, false);
 		Integer result = snomedGroupRepository.save(toSave).getId();
 		log.debug("Output -> {}", result);
         return result;

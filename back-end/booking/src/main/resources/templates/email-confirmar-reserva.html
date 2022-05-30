@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <title>Reserva</title>
+
+    <meta name="description" content="Source code generated using layoutit.com">
+    <meta name="author" content="LayoutIt!">
+    <style type="text/css">
+
+			.gralinfo h3{
+				text-align: center;
+				color: #9c9c9c;
+				margin-top: 0px;
+				margin-bottom: 0px;
+				padding-bottom: 0px;
+			}
+
+			.gralinfo h4{
+				text-align: center;
+				color: black;
+				font: 180% sans-seri;
+				margin-top: 0px;
+				margin-bottom: 0px;
+				padding-bottom: 0px;
+			}
+
+			.headercolor{
+				background-color: #F7F7F7;
+			}
+			.indicacionesColor{
+				background-color: #bcdaff;
+			}
+
+			h3 {
+				color: #444444;
+				font-family: Helvetica;
+				font-size: 22px;
+				font-weight: bold;
+				text-align: left;
+			}
+
+			.centerstyle{
+				text-align: center;
+		       	display: block;
+			}
+
+			body {
+				background-color: #333333;
+			}
+
+			.mail-button {
+				border-collapse: separate !important;
+				border-radius: 3px;
+				background-color: #ffffff;
+				text-align: center;
+				border-color: #CA2E2E;
+				font-family: Helvetica;
+			    font-size: 18px;
+				color: #fff;
+				font-weight: bold;
+			}
+
+		</style>
+</head>
+<body>
+<div class="container-fluid">
+    <div class="row headercolor">
+        <div class="col-12">
+            <h2 style="text-align: center; color: #1A73E8; font-size: xx-large;">
+                Recordatorio de turno
+            </h2>
+
+            <h3 style="text-align: center; margin-top: 10px;">
+                Tu turno ha sido confirmado correctamente.
+            </h3>
+        </div>
+    </div>
+    <hr>
+    <div class="row">
+        <div class="gralinfo">
+            <h3>Paciente:</h3>
+            <h4 th:text="${namePatient}"></h4>
+            <br>
+            <h3>Fecha:</h3>
+            <h4 th:text="${date}"></h4>
+            <br>
+            <h3>Profesional:</h3>
+            <h4 th:text="${nameProfessional}"></h4>
+            <br>
+            <h3>Especialidad:</h3>
+            <h4 th:text="${specialty}"></h4>
+            <br>
+            <h3>Institucion:</h3>
+            <h4 th:text="${institution}"></h4>
+            <br>
+        </div>
+    </div>
+    <hr>
+    <div class="row indicacionesColor">
+        <div class="col-12">
+            <h3 style="text-align: center; margin-top: 0px;  margin-bottom: 0px;  padding-bottom: 5px;  color: #1A73E8;">
+                INDICACIONES:
+            </h3>
+            <pre style="font: 150% sans-serif; text-align: center; color: black;" th:text="${recomendation}">
+					</pre>
+        </div>
+    </div>
+    <br>
+
+    <h3 style="text-align: center; margin-top: 0px;  margin-bottom: 0px;  padding-bottom: 5px;">
+        Para cancelar su turno presione el siguiente botón:
+    </h3>
+    <div class="row">
+        <div class="col-12 centerstyle">
+            <button type="button" class="btn btn-success mail-button" >
+                <a th:href="${cancelationLink}" class="nodecor" style="color: #CA2E2E; text-decoration:none !important">Cancelar turno</a>
+            </button>
+        </div>
+    </div>
+</div>
+</body>
+</html>

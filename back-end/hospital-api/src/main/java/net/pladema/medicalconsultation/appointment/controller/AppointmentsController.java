@@ -13,6 +13,7 @@ import javax.validation.constraints.Size;
 
 import ar.lamansys.sgh.shared.infrastructure.input.service.ExternalPatientCoverageDto;
 import net.pladema.medicalconsultation.appointment.controller.mapper.ExternalPatientCoverageMapper;
+import net.pladema.medicalconsultation.appointment.controller.dto.AssignedAppointmentDto;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
@@ -43,15 +44,18 @@ import net.pladema.medicalconsultation.appointment.controller.dto.AppointmentBas
 import net.pladema.medicalconsultation.appointment.controller.dto.AppointmentDailyAmountDto;
 import net.pladema.medicalconsultation.appointment.controller.dto.AppointmentDto;
 import net.pladema.medicalconsultation.appointment.controller.dto.AppointmentListDto;
-import net.pladema.medicalconsultation.appointment.controller.dto.AssignedAppointmentDto;
 import net.pladema.medicalconsultation.appointment.controller.dto.CreateAppointmentDto;
+import net.pladema.medicalconsultation.appointment.controller.dto.UpdateAppointmentDto;
 import net.pladema.medicalconsultation.appointment.controller.mapper.AppointmentMapper;
+import net.pladema.medicalconsultation.appointment.repository.domain.BookingPersonBo;
 import net.pladema.medicalconsultation.appointment.service.AppointmentDailyAmountService;
 import net.pladema.medicalconsultation.appointment.service.AppointmentService;
 import net.pladema.medicalconsultation.appointment.service.AppointmentValidatorService;
 import net.pladema.medicalconsultation.appointment.service.CreateAppointmentService;
+import net.pladema.medicalconsultation.appointment.service.booking.BookingPersonService;
 import net.pladema.medicalconsultation.appointment.service.domain.AppointmentBo;
 import net.pladema.medicalconsultation.appointment.service.domain.AppointmentDailyAmountBo;
+import net.pladema.medicalconsultation.appointment.service.domain.UpdateAppointmentBo;
 import net.pladema.medicalconsultation.appointment.service.notifypatient.NotifyPatient;
 import net.pladema.patient.controller.service.PatientExternalService;
 import net.pladema.person.controller.dto.BasicPersonalDataDto;
@@ -84,6 +88,8 @@ public class AppointmentsController {
 
     private final NotifyPatient notifyPatient;
 
+    private final BookingPersonService bookingPersonService;
+
     @Value("${test.stress.disable.validation:false}")
     private boolean disableValidation;
 
@@ -99,7 +105,8 @@ public class AppointmentsController {
             PatientExternalService patientExternalService,
             HealthcareProfessionalExternalService healthcareProfessionalExternalService,
             DateTimeProvider dateTimeProvider,
-            NotifyPatient notifyPatient
+            NotifyPatient notifyPatient,
+            BookingPersonService bookingPersonService
     ) {
         this.appointmentDailyAmountService = appointmentDailyAmountService;
         this.appointmentService = appointmentService;
@@ -110,6 +117,7 @@ public class AppointmentsController {
         this.healthcareProfessionalExternalService = healthcareProfessionalExternalService;
         this.dateTimeProvider = dateTimeProvider;
         this.notifyPatient = notifyPatient;
+        this.bookingPersonService = bookingPersonService;
     }
 
     @Transactional
@@ -124,6 +132,19 @@ public class AppointmentsController {
         AppointmentBo newAppointmentBo = appointmentMapper.toAppointmentBo(createAppointmentDto);
         newAppointmentBo = createAppointmentService.execute(newAppointmentBo);
         Integer result = newAppointmentBo.getId();
+        log.debug(OUTPUT, result);
+        return ResponseEntity.ok().body(result);
+    }
+
+    @Transactional
+    @PostMapping(value = "/update")
+    @PreAuthorize("hasPermission(#institutionId, 'ADMINISTRATIVO, ESPECIALISTA_MEDICO, PROFESIONAL_DE_SALUD, ESPECIALISTA_EN_ODONTOLOGIA, ENFERMERO')")
+    public ResponseEntity<Integer> update(
+            @PathVariable(name = "institutionId") Integer institutionId,
+            @RequestBody UpdateAppointmentDto appointmentDto) {
+        log.debug("Input parameters -> institutionId {}, appointmentDto {}", institutionId, appointmentDto);
+        UpdateAppointmentBo updateAppointmentBo = appointmentMapper.toUpdateAppointmentBo(appointmentDto);
+        Integer result = appointmentService.updateAppointment(updateAppointmentBo).getId();
         log.debug(OUTPUT, result);
         return ResponseEntity.ok().body(result);
     }
@@ -147,13 +168,71 @@ public class AppointmentsController {
     ) {
         log.debug("Input parameters -> institutionId {}, diaryIds {}", institutionId, diaryIds);
         Collection<AppointmentBo> resultService = appointmentService.getAppointmentsByDiaries(diaryIds);
-        Set<Integer> patientsIds = resultService.stream().map(AppointmentBo::getPatientId).collect(Collectors.toSet());
+        Set<Integer> patientsIds = resultService.stream().
+                filter(appointmentBo -> appointmentBo.getPatientId() != null).
+				map(AppointmentBo::getPatientId).collect(Collectors.toSet());
+        Set<Integer> bookingAppointmentsIds = resultService.stream().
+                filter(appointmentBo -> appointmentBo.getPatientId() == null).
+                map(AppointmentBo::getId).collect(Collectors.toSet());
 
+        var bookingPeople = bookingPersonService.getBookingPeople(bookingAppointmentsIds);
         var basicPatientDtoMap = patientExternalService.getBasicDataFromPatientsId(patientsIds);
-        Collection<AppointmentListDto> result = resultService.stream().parallel().map(a -> mapData(a, basicPatientDtoMap)).collect(Collectors.toList());
-        log.debug("Result size {}", result.size());
+
+        Collection<AppointmentListDto> result = resultService.stream()
+                .filter(appointmentDto -> appointmentDto.getPatientId() != null)
+                .parallel()
+                .map(a -> mapData(a, basicPatientDtoMap))
+                .collect(Collectors.toList());
+
+        Collection<AppointmentListDto> resultBooking = resultService.stream()
+                .filter(appointmentDto -> appointmentDto.getPatientId() == null)
+                .parallel()
+                .map(a -> mapDataBooking(a, bookingPeople))
+                .collect(Collectors.toList());
+        log.debug("Result size {}", result.size() + resultBooking.size());
+        result.addAll(resultBooking);
         log.trace(OUTPUT, result);
         return ResponseEntity.ok(result);
+    }
+
+    private AppointmentListDto mapDataBooking(AppointmentBo appointmentBo, Map<Integer, BookingPersonBo> bookingPeople) {
+        var bookingPersonBo = bookingPeople.get(appointmentBo.getId());
+        return new AppointmentListDto(
+                appointmentBo.getId(),
+                mapTo(bookingPersonBo),
+                appointmentBo.getDate().toString(),
+                appointmentBo.getHour().toString(),
+                appointmentBo.isOverturn(),
+                null,
+                null,
+                null,
+                appointmentBo.getMedicalAttentionTypeId(),
+                appointmentBo.getAppointmentStateId(),
+                appointmentBo.getPhonePrefix(),
+                appointmentBo.getPhoneNumber()
+        );
+    }
+
+    private AppointmentBasicPatientDto mapTo(BookingPersonBo bookingPersonBo) {
+        if (bookingPersonBo == null)
+        	return null;
+    	final String PHONE_PREFIX = null;
+        final String PHONE_NUMBER = null;
+        final String NAME_SELFDETERMINATION = null;
+
+        return new AppointmentBasicPatientDto(
+                null,
+                new BasicPersonalDataDto(
+                        bookingPersonBo.getFirstName(),
+                        bookingPersonBo.getLastName(),
+                        bookingPersonBo.getIdNumber(),
+                        (short) 1,
+                        PHONE_PREFIX,
+                        PHONE_NUMBER,
+                        bookingPersonBo.getGenderId(),
+                        NAME_SELFDETERMINATION
+                ),
+                null);
     }
 
     private AppointmentListDto mapData(AppointmentBo appointmentBo, Map<Integer, BasicPatientDto> patientData) {
@@ -231,15 +310,21 @@ public class AppointmentsController {
 
     @GetMapping("/getDailyAmounts")
     @PreAuthorize("hasPermission(#institutionId, 'ADMINISTRATIVO, ESPECIALISTA_MEDICO, PROFESIONAL_DE_SALUD, ESPECIALISTA_EN_ODONTOLOGIA, ADMINISTRADOR_AGENDA, ENFERMERO')")
-    public ResponseEntity<List<AppointmentDailyAmountDto>> getDailyAmounts(@PathVariable(name = "institutionId") Integer institutionId, @RequestParam(name = "diaryId") String diaryId) {
+	public ResponseEntity<List<AppointmentDailyAmountDto>> getDailyAmounts(
+            @PathVariable(name = "institutionId") Integer institutionId,
+            @RequestParam(name = "diaryId") String diaryId) {
         log.debug("Input parameters -> diaryId {}", diaryId);
 
         Integer diaryIdParam = Integer.parseInt(diaryId);
 
-        Collection<AppointmentDailyAmountBo> resultService = appointmentDailyAmountService.getDailyAmounts(diaryIdParam);
-        List<AppointmentDailyAmountDto> result = resultService.stream().parallel().map(appointmentMapper::toAppointmentDailyAmountDto).collect(Collectors.toList());
-        log.debug(OUTPUT, result);
-        return ResponseEntity.ok().body(result);
+		Collection<AppointmentDailyAmountBo> resultService = appointmentDailyAmountService
+				.getDailyAmounts(diaryIdParam);
+		List<AppointmentDailyAmountDto> result = resultService.stream()
+				.parallel()
+				.map(appointmentMapper::toAppointmentDailyAmountDto)
+				.collect(Collectors.toList());
+		log.debug(OUTPUT, result);
+		return ResponseEntity.ok().body(result);
     }
 
     @PostMapping("/{appointmentId}/notifyPatient")

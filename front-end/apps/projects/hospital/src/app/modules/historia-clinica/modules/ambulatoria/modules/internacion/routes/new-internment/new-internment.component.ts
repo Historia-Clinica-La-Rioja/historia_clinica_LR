@@ -33,13 +33,15 @@ import { MapperService as CoreMapperService } from '@core/services/mapper.servic
 import { SnackBarService } from '@presentation/services/snack-bar.service';
 import { PatientMedicalCoverageService } from '@api-rest/services/patient-medical-coverage.service';
 
-import { MedicalCoverageComponent, PatientMedicalCoverage } from '@presentation/dialogs/medical-coverage/medical-coverage.component';
+import { MedicalCoverageComponent, PatientMedicalCoverage } from '@pacientes/dialogs/medical-coverage/medical-coverage.component';
 import { DatePipe } from '@angular/common';
 import { DatePipeFormat } from '@core/utils/date.utils';
 import { newMoment } from '@core/utils/moment.utils';
 import { Moment } from 'moment';
+import * as moment from 'moment';
 import { map } from 'rxjs/operators';
 import { BedAssignmentComponent } from '@historia-clinica/dialogs/bed-assignment/bed-assignment.component';
+import {PatientNameService} from "@core/services/patient-name.service";
 
 const ROUTE_PROFILE = 'pacientes/profile/';
 
@@ -91,7 +93,8 @@ export class NewInternmentComponent implements OnInit {
 		private readonly contextService: ContextService,
 		private readonly featureFlagService: FeatureFlagService,
 		private readonly datePipe: DatePipe,
-		private readonly patientMedicalCoverageService: PatientMedicalCoverageService) {
+		private readonly patientMedicalCoverageService: PatientMedicalCoverageService,
+		private readonly patientNameService: PatientNameService,) {
 		this.routePrefix = `institucion/${this.contextService.institutionId}/`;
 	}
 
@@ -119,7 +122,7 @@ export class NewInternmentComponent implements OnInit {
 
 		this.form = this.formBuilder.group({
 			dateTime: this.formBuilder.group({
-				date: [newMoment(), [Validators.required]],
+				date: [moment(), [Validators.required]],
 				time: [this.datePipe.transform(this.today, DatePipeFormat.SHORT_TIME), [Validators.required, futureTimeValidation,
 				Validators.pattern(TIME_PATTERN)]]
 			}),
@@ -289,6 +292,10 @@ export class NewInternmentComponent implements OnInit {
 				}
 			}
 		);
+	}
+
+	getFullName(firstName: string, nameSelfDetermination: string): string {
+		return `${this.patientNameService.getPatientName(firstName, nameSelfDetermination)}`;
 	}
 
 }

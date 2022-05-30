@@ -12,6 +12,7 @@ import { ContextService } from '@core/services/context.service';
 import { futureTimeValidation, hasError, beforeTimeValidation, TIME_PATTERN } from '@core/utils/form.utils';
 import { DateFormat, dateToMoment, momentFormat, newMoment } from '@core/utils/moment.utils';
 import { SnackBarService } from '@presentation/services/snack-bar.service';
+import * as moment from 'moment';
 import { Moment } from 'moment';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
@@ -33,7 +34,7 @@ export class AdministrativeDischargeComponent implements OnInit {
 	hospitalTransports$: Observable<MasterDataInterface<number>[]>;
 	administrativeDischarge$: Observable<VMedicalDischargeDto>;
 	medicalDischargeOn: Moment;
-	today = newMoment();
+	today = new Date();
 
 	private episodeId: number;
 	constructor(
@@ -54,7 +55,7 @@ export class AdministrativeDischargeComponent implements OnInit {
 
 		this.form = this.formBuilder.group({
 			dateTime: this.formBuilder.group({
-				date: [newMoment(), Validators.required],
+				date: [moment(), Validators.required],
 				time: [momentFormat(newMoment(), DateFormat.HOUR_MINUTE)],
 			}),
 			hospitalTransportId: [null],

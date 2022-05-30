@@ -28,13 +28,13 @@ import documentFiles from './documentfiles';
 import properties from './properties';
 import restClientMeasures from './rest-client-measures';
 import medicalCoverage from './medicalcoverage';
-import privatehealthinsuranceplans from './privatehealthinsuranceplans';
 import snomedgroups from './snomedgroups';
 
 
 import { ROOT, ADMINISTRADOR } from './roles';
 import snomedconcepts from './snomedconcepts';
 import snomedrelatedgroups from './snomedrelatedgroups';
+import medicalcoverageplans from "./medicalcoverageplans";
 
 // Ampliación
 //
@@ -53,7 +53,7 @@ const resourcesAdminRoot = (permissions: SGXPermissions) => [
     
     <Resource name="users" {...users} />,
     <Resource name="medicalcoveragetypes" />,
-    <Resource name="privatehealthinsuranceplans" {...privatehealthinsuranceplans} />,
+    <Resource name="medicalcoverageplans" {...medicalcoverageplans} />,
     <Resource name="medicalcoveragesmerge" />,
     // Ampliación
     // 

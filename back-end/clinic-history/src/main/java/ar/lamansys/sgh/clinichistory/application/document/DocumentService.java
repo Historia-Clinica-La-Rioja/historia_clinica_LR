@@ -45,7 +45,9 @@ public interface DocumentService {
 
     RiskFactorBo getRiskFactorStateFromDocument(Long documentId);
 
-    List<Updateable> getUpdatableDocuments(Integer internmentEpisodeId);
+	List<ProcedureBo> getProcedureStateFromDocument(Long documentId);
+
+	List<Updateable> getUpdatableDocuments(Integer internmentEpisodeId);
 
     DocumentMedicamentionStatement getDocumentFromMedication(Integer mid);
 
@@ -64,5 +66,11 @@ public interface DocumentService {
     void deleteObservationsRiskFactorsHistory(Long documentId);
 
     void deleteObservationsLabHistory(Long documentId);
+
+    void deleteProceduresHistory(Long documentId);
+
+    void deleteById(Long documentId, String documentStatus);
+
+    void updateDocumentModificationReason(Long documentId, String reason);
 }
 

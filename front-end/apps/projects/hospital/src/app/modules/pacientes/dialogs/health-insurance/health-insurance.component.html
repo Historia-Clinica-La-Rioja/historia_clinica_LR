@@ -1,0 +1,72 @@
+<div id="health-insurance-dialog" class="health-insurance-dialog">
+	<div fxLayout="row" fxLayoutAlign="space-between center" class="health-insurance-dialog-header">
+		<h1 class="health-insurance-dialog-title" mat-dialog-title *ngIf="isHealthInsuranceToAdd else titletHealthInsuraceToUpdate" [translate]="'medical-coverage.NEW_HEALTH_INSURANCE'"></h1>
+		<ng-template #titletHealthInsuraceToUpdate>
+			<h1 class="health-insurance-dialog-title" mat-dialog-title [translate]="'medical-coverage.UPDATE_HEALTH_INSURANCE'"></h1>
+		</ng-template>
+		<button class="close-health-insurance-dialog" mat-button mat-icon-button aria-label="close" (click)="closeModal()">
+			<mat-icon>close</mat-icon>
+		</button>
+	</div>
+	<div mat-dialog-content fxLayout="row" fxLayoutGap="10px">
+		<form [formGroup]="healthInsuranceForm" class="form" (ngSubmit)="addHealthInsurance()">
+			<div fxLayout="column" id="search-health-insurance">
+				<mat-form-field appearance="outline">
+					<mat-label [translate]="'medical-coverage.HEALTH_INSURANCE'"></mat-label>
+					<input type="text" placeholder="{{ 'medical-coverage.SEARCH_HEALTH_INSURANCE' | translate }}" aria-label="Number"
+						   formControlName="healthInsurance" matInput [matAutocomplete]="auto">
+					<mat-autocomplete autoActiveFirstOption #auto="matAutocomplete">
+						<mat-option *ngFor="let healthInsurance of healthInsuranceFilteredMasterData"
+									(onSelectionChange)="selectHealthInsurance($event, healthInsurance)"
+									[value]="getFullHealthInsuranceText(healthInsurance)">
+							<span class="mat-body">{{getFullHealthInsuranceText(healthInsurance)}}</span>
+						</mat-option>
+					</mat-autocomplete>
+					<mat-error translate="forms.REQUIRED"></mat-error>
+				</mat-form-field>
+			</div>
+			<div fxLayout="row" fxLayoutGap="6px" fxLayout.lt-sm="column">
+				<div fxLayout="column" id="healthInsurancePlan">
+					<mat-form-field appearance="outline">
+						<mat-label [translate]="'medical-coverage.PLAN_LABEL'"></mat-label>
+						<mat-select formControlName="plan">
+							<mat-option
+								name="healthInsurancePlan"
+								*ngFor="let healthInsurancePlan of plans" [value]="healthInsurancePlan.id">
+								{{healthInsurancePlan.plan}}
+							</mat-option>
+						</mat-select>
+					</mat-form-field>
+				</div>
+				<div fxLayout="column" id="healthInsuranceAffiliateNumber" >
+					<mat-form-field appearance="outline">
+						<mat-label [translate]="'medical-coverage.AFFILIATE_NUMBER_LABEL'"></mat-label>
+						<input name="healthInsuranceAffiliateNumber"
+							   formControlName="affiliateNumber" placeholder="{{'medical-coverage.AFFILIATE_NUMBER_LABEL' | translate}}"
+							   matInput>
+					</mat-form-field>
+				</div>
+			</div>
+			<div fxLayout="column" fxLayoutGap="6px" id="health-insurance-condition" class="health-insurance-condition">
+				<mat-radio-group fxLayout="row" fxLayoutGap="6px" name="condition" formControlName="condition" fxLayoutGap="20px">
+					<mat-radio-button *ngFor="let condition of conditions"
+									  [value]="condition">
+						<span>{{condition.toLocaleLowerCase() | titlecase}}</span>
+					</mat-radio-button>
+				</mat-radio-group>
+			</div>
+			<div fxLayoutAlign="end center" id="add-health-insurance" *ngIf="isHealthInsuranceToAdd else confirmUpdateHealthInsurance">
+				<button mat-flat-button class="uppercase" type="submit" color="primary">
+					<span [translate]="'medical-coverage.buttons.ADD_HEALTH_INSURANCE'"></span>
+				</button>
+			</div>
+			<ng-template #confirmUpdateHealthInsurance>
+				<div fxLayoutAlign="end center" id="update-health-insurance">
+					<button mat-flat-button class="uppercase" type="submit" color="primary">
+						<span [translate]="'buttons.CONFIRM'"></span>
+					</button>
+				</div>
+			</ng-template>
+		</form>
+	</div>
+</div>

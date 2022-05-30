@@ -61,6 +61,7 @@ export const SIDEBAR_MENU: MenuItemDef[] = [
 		permissions: [
 			ERole.ADMINISTRATIVO,
 			ERole.ENFERMERO,
+			ERole.ADMINISTRADOR_DE_CAMAS
 		],
 	},
 	{
