@@ -7,6 +7,7 @@ import net.pladema.reports.repository.entity.AnnexIIAppointmentVo;
 import net.pladema.reports.repository.entity.AnnexIIOdontologyDataVo;
 import net.pladema.reports.repository.entity.AnnexIIOdontologyVo;
 import net.pladema.reports.repository.entity.AnnexIIOutpatientVo;
+import net.pladema.reports.repository.entity.AnnexIIReportDataVo;
 
 public interface AnnexReportRepository {
 
@@ -21,4 +22,8 @@ public interface AnnexReportRepository {
 	List<AnnexIIOdontologyDataVo> getOdontologyConsultationAnnexDataInfo(Long documentId);
 
 	List<AnnexIIOdontologyDataVo> getOdontologyConsultationAnnexOtherDataInfo(Long documentId);
+
+	Optional<AnnexIIOutpatientVo> getNursingConsultationAnnexGeneralInfo(Long documentId);
+
+	Optional<AnnexIIReportDataVo> getNursingConsultationAnnexDataInfo(Long documentId);
 }
