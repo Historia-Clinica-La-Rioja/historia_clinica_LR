@@ -9,7 +9,7 @@ import {
 	BedSummaryDto,
 	InternmentPatientDto,
 	HCEEvolutionSummaryDto,
-	InternmentEpisodeDto,
+	InternmentEpisodeDto, DocumentsSummaryDto,
 } from '@api-rest/api-model';
 import { PatientBasicData } from '../components/patient-card/patient-card.component';
 import { PersonalInformation } from '@presentation/components/personal-information/personal-information.component';
@@ -122,7 +122,9 @@ export class MapperService {
 					roomNumber: patient.roomNumber,
 					bedNumber: patient.bedNumber
 				},
-				hasPhysicalDischarge: patient.hasPhysicalDischarge
+				hasPhysicalDischarge: patient.hasPhysicalDischarge,
+				documentsSummary: patient.documentsSummary,
+				hasMedicalDischarge: patient.hasMedicalDischarge
 			}
 		}
 
@@ -141,7 +143,8 @@ export class MapperService {
 					roomNumber: info.bed.room.roomNumber,
 					bedNumber: info.bed.bedNumber
 				},
-				hasPhysicalDischarge: info.hasPhysicalDischarge
+				hasPhysicalDischarge: info.hasPhysicalDischarge,
+				documentsSummary: info.documentsSummary
 			}
 		}
 	}

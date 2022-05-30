@@ -6,6 +6,7 @@ import { PatientNameService } from "@core/services/patient-name.service";
 import { ContextService } from '@core/services/context.service';
 import { InternmentPatientService } from "@api-rest/services/internment-patient.service";
 import { MapperService } from "@presentation/services/mapper.service";
+import { DocumentsSummaryDto, DocumentSummaryDto } from '@api-rest/api-model';
 
 @Component({
 	selector: 'app-internment-patient-table',
@@ -61,17 +62,27 @@ export class InternmentPatientTableComponent {
 				{
 					columnDef: 'sectorName',
 					header: 'Sector',
-					text: (row) => row.hasPhysicalDischarge ?  '-' : row.bedInfo.sector
+					text: (row) => row.hasPhysicalDischarge ? '-' : row.bedInfo.sector
 				},
 				{
 					columnDef: 'roomNumber',
 					header: 'Nro. Habitación',
-					text: (row) =>  row.hasPhysicalDischarge ?  '-' : row.bedInfo.roomNumber
+					text: (row) => row.hasPhysicalDischarge ? '-' : row.bedInfo.roomNumber
 				},
 				{
 					columnDef: 'bedNumber',
 					header: 'Nro. Cama',
-					text: (row) =>  row.hasPhysicalDischarge ?  '-' : row.bedInfo.bedNumber
+					text: (row) => row.hasPhysicalDischarge ? '-' : row.bedInfo.bedNumber
+				},
+				{
+					columnDef: 'physicalDischarge',
+					header: 'Alta física',
+					text: (row) => row.hasPhysicalDischarge ? 'Si' : 'No'
+				},
+				{
+					columnDef: 'missingDocuments',
+					header: 'Doc. Pendiente',
+					text: (row) => row.hasPhysicalDischarge ? this.missingDocument(row.documentsSummary, row.hasMedicalDischarge) : null
 				},
 				{
 					columnDef: 'action',
@@ -97,6 +108,18 @@ export class InternmentPatientTableComponent {
 			enablePagination: true
 		};
 	}
+
+	private missingDocument(document: DocumentsSummaryDto, hasMedicalDischarge: boolean): string {
+		if (!document.anamnesis.confirmed)
+			return "Evaluación de Ingreso";
+		if (!document.lastEvaluationNote.confirmed)
+			return "Nota de Evolucion";
+		if (!document.epicrisis.confirmed)
+			return "Epicrisis";
+		if (!hasMedicalDischarge)
+			return "Alta médica"
+		return "Alta Administrativa"
+	}
 }
 
 export interface InternmentPatientTableData {
@@ -114,6 +137,8 @@ export interface InternmentPatientTableData {
 		bedNumber: string;
 	}
 	hasPhysicalDischarge: boolean;
+	hasMedicalDischarge?: boolean;
+	documentsSummary: DocumentsSummaryDto;
 }
 
 export enum Redirect {
