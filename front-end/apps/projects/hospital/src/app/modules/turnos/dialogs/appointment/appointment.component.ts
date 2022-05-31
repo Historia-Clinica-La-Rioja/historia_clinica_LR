@@ -76,7 +76,8 @@ export class AppointmentComponent implements OnInit {
 	isMqttCallEnabled: boolean = false;
 	
 	hideObservationForm: boolean = true;
-	observation: String;
+	hideObservationTittle: boolean = true;
+	observation: string;
 
 	constructor(
 		@Inject(MAT_DIALOG_DATA) public params: { appointmentData: PatientAppointmentInformation, hasPermissionToAssignShift: boolean },
@@ -93,7 +94,6 @@ export class AppointmentComponent implements OnInit {
 		private readonly featureFlagService: FeatureFlagService,
 		private readonly patientNameService: PatientNameService,
 		private readonly personMasterDataService: PersonMasterDataService,
-		private readonly accountService: AccountService,
 
 	) {
 		this.featureFlagService.isActive(AppFeature.HABILITAR_INFORMES).subscribe(isOn => this.downloadReportIsEnabled = isOn);
@@ -128,6 +128,9 @@ export class AppointmentComponent implements OnInit {
 			.subscribe(appointment => {
 				this.appointment = appointment;
 				this.observation = appointment.observation;
+				if(this.observation){
+					this.hideObservationTittle = false;
+				}
 				this.estadoSelected = this.appointment?.appointmentStateId;
 				if (this.appointment.stateChangeReason) {
 					this.formMotivo.controls.motivo.setValue(this.appointment.stateChangeReason);
@@ -384,18 +387,22 @@ export class AppointmentComponent implements OnInit {
 		this.formEdit.controls.newCoverageData.setValue(null);
 	}
 
-	observationToggle(): void{
+	hideObservationTittleToggle(): void{
+		this.hideObservationTittle = !this.hideObservationTittle;
+	}
+
+	hideObservationFormToggle(): void{
 		this.hideObservationForm = !this.hideObservationForm;
 	}
 
-	addObservation(): void{
+	updateObservation(): void{
 		this.observation = this.formObservations.get('observation').value;
 		this.appointmentFacade.updateObservation(this.params.appointmentData.appointmentId, this.formObservations.controls.observation.value).subscribe(() => {
 			this.snackBarService.showSuccess('turnos.appointment.observations.UPDATE_SUCCESS');
 		}, error => {
 			processErrors(error, (msg) => this.snackBarService.showError(msg));
 		});
-		this.observationToggle();
+		this.hideObservationFormToggle();
 	}
 
 	private updateSummaryCoverageData(): void {

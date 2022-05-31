@@ -116,7 +116,7 @@ section {
     text-overflow: ellipsis;
 }
 
-.observations{
+.observation-section{
 	margin: 15px 0;
 	
 	a{
@@ -125,10 +125,16 @@ section {
 
 	p{
 		margin-left: 3px;
+		white-space: pre;
 	}
 
 	button{
 		margin: -10px 10px;
+	}
+	
+	.observation{
+		display: flex;
+		justify-content: space-between;
 	}
 	
 	.observation-buttons{
