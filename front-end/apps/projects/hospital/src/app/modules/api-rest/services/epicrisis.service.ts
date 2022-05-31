@@ -17,6 +17,8 @@ export class EpicrisisService {
 		private contextService: ContextService,
 	) { }
 
+	private readonly  BASIC_URL=`${environment.apiBase}/institutions/${this.contextService.institutionId}/internments/`;
+
 	getInternmentGeneralState(internmentEpisodeId: number): Observable<EpicrisisGeneralStateDto> {
 		const url = `${environment.apiBase}/institutions/${this.contextService.institutionId}/internments/${internmentEpisodeId}/epicrisis/general`;
 		return this.http.get<EpicrisisGeneralStateDto>(url);
@@ -55,8 +57,18 @@ export class EpicrisisService {
 		return this.http.put<number>(url, epicrisis);
 	}
 
+	updateDraft(epicrisis: EpicrisisDto, epicrisisId: number, internmentEpisodeId: number): Observable<number> {
+		const url = `${this.BASIC_URL}${internmentEpisodeId}/epicrisis/draft/${epicrisisId}`;
+		return this.http.put<number>(url, epicrisis);
+	}
+
 	existUpdatesAfterEpicrisis(internmentEpisodeId: number): Observable<boolean> {
 		const url = `${environment.apiBase}/institutions/${this.contextService.institutionId}/internments/${internmentEpisodeId}/epicrisis/existUpdates`;
 		return this.http.get<boolean>(url);
+	}
+
+	getDraft(epicrisisId: number, internmentEpisodeId: number): Observable<ResponseEpicrisisDto>{
+		const url = `${this.BASIC_URL}${internmentEpisodeId}/epicrisis/draft/${epicrisisId}`;
+		return this.http.get<ResponseEpicrisisDto>(url);
 	}
 }
