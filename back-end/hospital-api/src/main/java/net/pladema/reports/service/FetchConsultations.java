@@ -27,7 +27,7 @@ public class FetchConsultations {
         logger.debug("Input parameter -> patientId {}", patientId);
         List<ConsultationsBo> result = consultationStorage.fetchAllByPatientId(patientId).stream().map(consultationsVo -> new ConsultationsBo(consultationsVo))
                 .collect(Collectors.toList());
-		result.sort(Comparator.comparing(ConsultationsBo::getConsultationDate).reversed());
+		result.sort(Comparator.comparing(ConsultationsBo::getDocumentId).reversed());
         logger.debug("Output -> {}", result);
         return result;
     }

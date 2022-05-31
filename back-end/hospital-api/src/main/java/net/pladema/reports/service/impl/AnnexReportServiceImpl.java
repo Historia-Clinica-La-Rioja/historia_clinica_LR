@@ -3,6 +3,7 @@ package net.pladema.reports.service.impl;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
@@ -13,6 +14,7 @@ import org.springframework.stereotype.Service;
 import ar.lamansys.sgx.shared.exceptions.NotFoundException;
 import net.pladema.reports.controller.dto.AnnexIIDto;
 import net.pladema.reports.repository.AnnexReportRepository;
+import net.pladema.reports.repository.entity.AnnexIIOdontologyDataVo;
 import net.pladema.reports.repository.entity.AnnexIIOdontologyVo;
 import net.pladema.reports.service.AnnexReportService;
 import net.pladema.reports.service.domain.AnnexIIBo;
@@ -54,8 +56,11 @@ public class AnnexReportServiceImpl implements AnnexReportService {
 		var odontologyResultOpt = annexReportRepository.getOdontologyConsultationAnnexGeneralInfo(documentId);
 		if(odontologyResultOpt.isPresent()) {
 			result = new AnnexIIBo(odontologyResultOpt.get());
-			Optional<AnnexIIOdontologyVo> odontologyData = annexReportRepository.getOdontologyConsultationAnnexDataInfo(documentId);
-			var completeResult = completeAnnexIIBo(result, odontologyData);
+			Optional<AnnexIIOdontologyVo> consultationSpecialityandHasProcedures = annexReportRepository
+					.getOdontologyConsultationAnnexSpecialityAndHasProcedures(documentId);
+			var completeResult = completeAnnexIIBo(result, consultationSpecialityandHasProcedures);
+			completeResult = completeAnnexIIBo(completeResult, annexReportRepository.getOdontologyConsultationAnnexDataInfo(documentId));
+			completeResult = completeAnnexIIBo(completeResult, annexReportRepository.getOdontologyConsultationAnnexOtherDataInfo(documentId));
 			LOG.debug("Output -> {}", completeResult);
 			return completeResult;
 		}
@@ -68,10 +73,25 @@ public class AnnexReportServiceImpl implements AnnexReportService {
 			result.setExistsConsultation(true);
 			var odontologyData = odontologyDataOpt.get();
 			result.setSpecialty(odontologyData.getSpeciality());
-			result.setProblems(odontologyData.getDiagnostics());
 			result.setHasProcedures(odontologyData.getHasProcedures());
 		}
 		LOG.debug("Output -> {}", result);
+		return result;
+	}
+
+	private AnnexIIBo completeAnnexIIBo(AnnexIIBo result, List<AnnexIIOdontologyDataVo> listData){
+		if(!listData.isEmpty()){
+			if(result.getProblems() == null)
+				result.setProblems("");
+			for(AnnexIIOdontologyDataVo i : listData){
+				String annexDiagnostic = i.getDiagnostic();
+				if(i.getCie10Code() != null)
+					annexDiagnostic += "(" + i.getCie10Code() + ")| ";
+				else
+					annexDiagnostic += "| ";
+				result.setProblems(result.getProblems() + annexDiagnostic);
+			}
+		}
 		return result;
 	}
 

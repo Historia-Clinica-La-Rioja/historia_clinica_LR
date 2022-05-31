@@ -12,6 +12,7 @@ import org.springframework.transaction.annotation.Transactional;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.masterdata.entity.ProblemType;
 import net.pladema.reports.repository.AnnexReportRepository;
 import net.pladema.reports.repository.entity.AnnexIIAppointmentVo;
+import net.pladema.reports.repository.entity.AnnexIIOdontologyDataVo;
 import net.pladema.reports.repository.entity.AnnexIIOdontologyVo;
 import net.pladema.reports.repository.entity.AnnexIIOutpatientVo;
 
@@ -156,20 +157,12 @@ public class AnnexReportRepositoryImpl implements AnnexReportRepository {
 	}
 
 	@Override
-	public Optional<AnnexIIOdontologyVo> getOdontologyConsultationAnnexDataInfo(Long documentId) {
+	public Optional<AnnexIIOdontologyVo> getOdontologyConsultationAnnexSpecialityAndHasProcedures(Long documentId) {
 		String query = "select cs.name, " +
-				"			concat(string_agg(case when hc.cie10_codes is not null then concat(s2.pt, ' (', hc.cie10_codes , ')') else s2.pt end, '| '), '| ', " +
-				"			string_agg(case when od.cie10_codes is not null then concat(sno.pt, ' (', od.cie10_codes , ')') else sno.pt end, '| '))," +
-				"			case when count(s3.pt) > 0 or count(s4.pt) > 0 then true else false end " +
+				"		case when count(s3.pt) > 0 or count(s4.pt) > 0 then true else false end " +
 				"		from {h-schema}document doc " +
 				"			join {h-schema}odontology_consultation oc ON (oc.id = doc.source_id) " +
 				"			left join {h-schema}clinical_specialty cs on(oc.clinical_specialty_id = cs.id) " +
-				"			left join {h-schema}document_odontology_diagnostic dod ON (doc.id = dod.document_id) " +
-				"			left join {h-schema}odontology_diagnostic od ON (dod.odontology_diagnostic_id = od.id) " +
-				"			left join {h-schema}snomed sno ON (od.snomed_id = sno.id) " +
-				"			left join {h-schema}document_health_condition dhc on(doc.id = dhc.document_id) " +
-				"			left join {h-schema}health_condition hc on(dhc.health_condition_id = hc.id) " +
-				"			left join {h-schema}snomed s2 on(hc.snomed_id = s2.id) " +
 				"			left join {h-schema}document_procedure dp on(doc.id = dp.document_id) " +
 				"			left join {h-schema}procedures p on(dp.procedure_id = p.id) " +
 				"			left join {h-schema}snomed s3 on(p.snomed_id = s3.id) " +
@@ -177,19 +170,49 @@ public class AnnexReportRepositoryImpl implements AnnexReportRepository {
 				"			left join {h-schema}odontology_procedure op on(op.id = dop.odontology_procedure_id) " +
 				"			left join {h-schema}snomed s4 on(s4.id = op.snomed_id) " +
 				"		where doc.id = :documentId and doc.source_type_id = 6 " +
-				"		group by cs.name, sno.pt, s2.pt, od.cie10_codes, hc.cie10_codes, s3.pt ";
+				"		group by cs.name, s3.pt, s4.pt ";
 
 		Optional<Object[]> queryResult =  entityManager.createNativeQuery(query)
 				.setParameter("documentId", documentId)
 				.setMaxResults(1)
 				.getResultList().stream().findFirst();
 
-		Optional<AnnexIIOdontologyVo> result = queryResult.map(a -> new AnnexIIOdontologyVo(
-				(String) a[0],
-				(String) a[1],
-				(Boolean) a[2]
-		));
+		return queryResult
+				.map(a -> new AnnexIIOdontologyVo(
+						(String) a[0],
+						(Boolean) a[1]
+				));
+	}
 
-		return result;
+	@Override
+	public List<AnnexIIOdontologyDataVo> getOdontologyConsultationAnnexDataInfo(Long documentId) {
+		String query = "SELECT NEW net.pladema.reports.repository.entity.AnnexIIOdontologyDataVo(s.pt, od.cie10Codes) " +
+				"		FROM Document AS d " +
+				"			JOIN OdontologyConsultation AS oc ON (d.sourceId = oc.id) " +
+				"			LEFT JOIN DocumentOdontologyDiagnostic AS dod ON (d.id = dod.pk.documentId) " +
+				"			JOIN OdontologyDiagnostic AS od ON (dod.pk.odontologyDiagnosticId = od.id) " +
+				"			JOIN Snomed AS s ON (s.id = od.snomedId) " +
+				"		WHERE d.id = :documentId " +
+				"		GROUP BY s.pt, od.cie10Codes ";
+
+		return entityManager.createQuery(query)
+				.setParameter("documentId", documentId)
+				.getResultList();
+	}
+
+	@Override
+	public List<AnnexIIOdontologyDataVo> getOdontologyConsultationAnnexOtherDataInfo(Long documentId) {
+		String query = "SELECT NEW net.pladema.reports.repository.entity.AnnexIIOdontologyDataVo(s.pt, hc.cie10Codes) " +
+				"		FROM Document AS d " +
+				"			JOIN OdontologyConsultation AS oc ON (d.sourceId = oc.id AND d.sourceTypeId = 6) " +
+				"			LEFT JOIN DocumentHealthCondition AS dhc ON (d.id = dhc.pk.documentId) " +
+				"			JOIN HealthCondition AS hc ON (dhc.pk.healthConditionId = hc.id) " +
+				"			JOIN Snomed AS s ON (s.id = hc.snomedId) " +
+				"		WHERE d.id = :documentId " +
+				"		GROUP BY s.pt, hc.cie10Codes ";
+
+		return entityManager.createQuery(query)
+				.setParameter("documentId", documentId)
+				.getResultList();
 	}
 }
