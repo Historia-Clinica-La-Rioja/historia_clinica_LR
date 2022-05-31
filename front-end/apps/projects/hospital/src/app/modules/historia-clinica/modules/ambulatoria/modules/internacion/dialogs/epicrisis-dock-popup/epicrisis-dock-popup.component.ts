@@ -32,6 +32,7 @@ import { DockPopupRef } from "@presentation/services/dock-popup-ref";
 import { OVERLAY_DATA } from "@presentation/presentation-model";
 import { InternmentFields } from "@historia-clinica/modules/ambulatoria/modules/internacion/services/internment-summary-facade.service";
 import { EditDocumentActionService } from "@historia-clinica/modules/ambulatoria/modules/internacion/services/edit-document-action.service";
+import { Observable } from 'rxjs';
 
 @Component({
 	selector: 'app-epicrisis-dock-popup',
@@ -55,7 +56,8 @@ export class EpicrisisDockPopupComponent implements OnInit {
 	anamnesis: ResponseAnamnesisDto;
 	form: FormGroup;
 	formDiagnosis: FormGroup;
-	showWarning: boolean=false;
+	showWarning: boolean = false;
+	isDraft = false;
 	medications: MedicationDto[] = [];
 	personalHistories: TableCheckbox<HealthHistoryConditionDto> = {
 		data: [],
@@ -137,6 +139,7 @@ export class EpicrisisDockPopupComponent implements OnInit {
 
 	ngOnInit(): void {
 
+		this.isDraft = this.data.patientInfo.isDraft;
 		this.diagnosticsEpicrisisService = new DiagnosisEpicrisisService(this.internacionMasterDataService, this.internmentStateService, this.tableService, this.data.patientInfo.internmentEpisodeId);
 
 		this.formDiagnosis = this.formBuilder.group({
@@ -215,33 +218,9 @@ export class EpicrisisDockPopupComponent implements OnInit {
 
 	}
 
-	save(isDraft: boolean): void {
+	save(): void {
 		if (this.form.valid) {
-			const epicrisis: EpicrisisDto = {
-				confirmed: true,
-				notes: epicrisisObservationsDto(this.form),
-				mainDiagnosis: this.form.value.mainDiagnosis,
-				diagnosis: this.diagnosticsEpicrisisService.getSelectedAlternativeDiagnostics(),
-				familyHistories: this.familyHistories.selection.selected,
-				personalHistories: this.personalHistories.selection.selected,
-				medications: this.medications,
-				immunizations: this.immunizations.selection.selected,
-				allergies: this.allergies.selection.selected
-			};
-			if (isDraft){
-				if (this.data.patientInfo.epicrisisId)
-					this.epicrisisService.createDraftDocument(epicrisis, this.data.patientInfo.internmentEpisodeId)
-						.subscribe((epicrisisResponse: ResponseEpicrisisDto) => {
-							this.snackBarService.showSuccess('internaciones.epicrisis.messages.SUCCESS');
-							this.dockPopupRef.close(this.fieldsToUpdate(epicrisis));
-						}, _ => this.snackBarService.showError('internaciones.epicrisis.messages.ERROR'));
-				else
-					this.epicrisisService.createDocument(epicrisis, this.data.patientInfo.internmentEpisodeId)
-						.subscribe((epicrisisResponse: ResponseEpicrisisDto) => {
-							this.snackBarService.showSuccess('internaciones.epicrisis.messages.SUCCESS');
-							this.dockPopupRef.close(this.fieldsToUpdate(epicrisis));
-						}, _ => this.snackBarService.showError('internaciones.epicrisis.messages.ERROR'));
-					}
+			const epicrisis = this.getEpicrisis();
 			if (this.data.patientInfo.epicrisisId) {
 				this.editDocumentAction.openEditReason().subscribe(reason => {
 					if (reason) {
@@ -253,25 +232,63 @@ export class EpicrisisDockPopupComponent implements OnInit {
 				})
 				return;
 			}
-			this.epicrisisService.createDocument(epicrisis, this.data.patientInfo.internmentEpisodeId)
-				.subscribe((epicrisisResponse: ResponseEpicrisisDto) => this.showSuccesAndClosePopup(epicrisis)
-					, _ => this.snackBarService.showError('internaciones.epicrisis.messages.ERROR'));
-		}else {
+			else
+				this.epicrisisService.createDocument(epicrisis, this.data.patientInfo.internmentEpisodeId)
+					.subscribe((epicrisisResponse: ResponseEpicrisisDto) => {
+						this.snackBarService.showSuccess('internaciones.epicrisis.messages.SUCCESS');
+						this.dockPopupRef.close(this.fieldsToUpdate(epicrisis));
+					}, _ => this.snackBarService.showError('internaciones.epicrisis.messages.ERROR'));
+		} else {
 			this.snackBarService.showError('internaciones.epicrisis.messages.ERROR');
 			this.form.markAllAsTouched();
 
 		}
 
-		function epicrisisObservationsDto(form: FormGroup): EpicrisisObservationsDto {
-			return {
-				evolutionNote: form.value.evolutionNote,
-				indicationsNote: form.value.indicationsNote,
-				otherNote: form.value.otherNote,
-				physicalExamNote: form.value.physicalExamNote,
-				studiesSummaryNote: form.value.studiesSummaryNote
-			}
 
+	}
+
+	saveDraft(): void {
+		if (this.form.valid) {
+			const epicrisis = this.getEpicrisis();
+			let obs$;
+			if (this.data.patientInfo.epicrisisId) {
+				obs$ = this.epicrisisService.
+					updateDraft(epicrisis, this.data.patientInfo.epicrisisId, this.data.patientInfo.internmentEpisodeId)
+			} else
+				obs$ = this.epicrisisService.createDraftDocument(epicrisis, this.data.patientInfo.internmentEpisodeId)
+
+			this.closeEpicrisis(obs$, epicrisis);
+		} else {
+			this.snackBarService.showError('internaciones.epicrisis.messages.ERROR');
+			this.form.markAllAsTouched();
 		}
+	}
+
+	private getEpicrisis(): EpicrisisDto {
+		return {
+			confirmed: this.isDraft ? false : true,
+			notes: this.toEpicrisisObservationsDto(this.form),
+			mainDiagnosis: this.form.value.mainDiagnosis,
+			diagnosis: this.diagnosticsEpicrisisService.getSelectedAlternativeDiagnostics(),
+			familyHistories: this.familyHistories.selection.selected,
+			personalHistories: this.personalHistories.selection.selected,
+			medications: this.medications,
+			immunizations: this.immunizations.selection.selected,
+			allergies: this.allergies.selection.selected
+		}
+	}
+
+
+
+	private toEpicrisisObservationsDto(form: FormGroup): EpicrisisObservationsDto {
+		return {
+			evolutionNote: form.value.evolutionNote,
+			indicationsNote: form.value.indicationsNote,
+			otherNote: form.value.otherNote,
+			physicalExamNote: form.value.physicalExamNote,
+			studiesSummaryNote: form.value.studiesSummaryNote
+		}
+
 	}
 
 	private fieldsToUpdate(epicrisis: EpicrisisDto): InternmentFields {
@@ -325,5 +342,14 @@ export class EpicrisisDockPopupComponent implements OnInit {
 		this.snackBarService.showSuccess('internaciones.epicrisis.messages.SUCCESS');
 		this.dockPopupRef.close(this.fieldsToUpdate(epicrisis));
 	}
+
+	private closeEpicrisis(obs: Observable<any>, epicrisis:EpicrisisDto) {
+		obs
+			.subscribe(r => {
+				this.snackBarService.showSuccess('internaciones.epicrisis.messages.SUCCESS');
+				this.dockPopupRef.close(this.fieldsToUpdate(epicrisis));
+			}, _ => this.snackBarService.showError('internaciones.epicrisis.messages.ERROR'));
+	}
+
 
 }

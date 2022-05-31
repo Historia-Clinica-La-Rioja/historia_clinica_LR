@@ -27,6 +27,11 @@ export class EditDocumentActionService {
 			this.internmentActions.openEpicrisis(document.id)
 	}
 
+	editDraftEpicrisis(document: DocumentSearchDto) {
+		const isDraft = true;
+		this.internmentActions.openEpicrisis(document.id, isDraft);
+	}
+
 	openEditReason(): Observable<string> {
 		const dialogRef = this.dialog.open(DocumentActionReasonComponent, {
 			data: {

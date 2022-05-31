@@ -88,6 +88,10 @@ export class DocumentActionsService {
 		this.editDocumentAction.editDocument(document)
 	}
 
+	editEpicrisisDraft(document: DocumentSearchDto) {
+		this.editDocumentAction.editDraftEpicrisis(document);
+	}
+
 }
 
 export interface DocumentSearch {

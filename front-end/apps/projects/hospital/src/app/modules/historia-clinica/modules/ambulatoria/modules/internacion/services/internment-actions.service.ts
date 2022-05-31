@@ -86,13 +86,14 @@ export class InternmentActionsService {
 		}
 	}
 
-	openEpicrisis(id?: number): void {
+	openEpicrisis(id?: number, isDraft?: boolean): void {
 		if (!this.dialogRef) {
 			this.dialogRef = this.dockPopupService.open(EpicrisisDockPopupComponent, {
 				patientInfo: {
 					patientId: this.patientId,
 					internmentEpisodeId: this.internmentEpisodeId,
 					epicrisisId: id,
+					isDraft: !!isDraft
 				},
 				autoFocus: false,
 				disableClose: true,

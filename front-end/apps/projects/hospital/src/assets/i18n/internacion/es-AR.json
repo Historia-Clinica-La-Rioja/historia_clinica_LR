@@ -175,6 +175,7 @@
 			},
 			"buttons": {
 				"ATTACH_SIGNATURE": "Adjuntar firma digital",
+				"EDIT_DRAFT": "Seguir editando",
 				"SAVE_DRAFT": "Guardar borrador",
 				"CONFIRM": "Confirmar"
 			},

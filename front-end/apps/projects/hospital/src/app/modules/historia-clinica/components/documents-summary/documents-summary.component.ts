@@ -163,6 +163,12 @@ export class DocumentsSummaryComponent implements OnInit, OnChanges {
 		this.activeDocument = undefined;
 	}
 
+	editDraftEpicrisis(document: DocumentSearchDto) {
+
+		this.documentActions.editEpicrisisDraft(document);
+		this.activeDocument = undefined;
+	}
+
 	private setInputResetBehaviour() {
 		this.form.controls.field.valueChanges.pipe(
 			startWith(null as string),

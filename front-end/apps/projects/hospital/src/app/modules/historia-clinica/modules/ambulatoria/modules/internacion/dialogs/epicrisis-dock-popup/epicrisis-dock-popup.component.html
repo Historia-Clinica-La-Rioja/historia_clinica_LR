@@ -318,13 +318,15 @@
 	</div>
 
 	<div actions id="buttons" fxLayoutGap="10px" fxLayoutAlign="end">
-		<button id="sign-draft" type="button"  mat-stroked-button color="primary"
-				*appHasRole="['ESPECIALISTA_MEDICO']" (click)="save(true)">
+			<button id="sign-draft" type="button"  mat-stroked-button color="primary"
+				*appHasRole="['ESPECIALISTA_MEDICO']" (click)="saveDraft()">
 			<span class="uppercase" [translate]="'internaciones.epicrisis.buttons.SAVE_DRAFT'"></span>
-		</button>
-		<button id="sign-confirm" type="button" mat-raised-button color="primary"
-				*appHasRole="['ESPECIALISTA_MEDICO']" (click)="save(false)">
-			<span class="uppercase" [translate]="'internaciones.epicrisis.buttons.CONFIRM'"></span>
-		</button>
+			</button>
+		<div *ngIf="!isDraft">
+			<button id="sign-confirm" type="button" mat-raised-button color="primary"
+					*appHasRole="['ESPECIALISTA_MEDICO']" (click)="save()">
+				<span class="uppercase" [translate]="'internaciones.epicrisis.buttons.CONFIRM'"></span>
+			</button>
+		</div>
 	</div>
 </app-dock-popup>
