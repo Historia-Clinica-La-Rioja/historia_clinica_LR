@@ -341,6 +341,7 @@ export interface AppointmentDto extends CreateAppointmentDto {
     recurringTypeDto: RecurringTypeDto;
     stateChangeReason?: string;
     transcribedOrderData?: TranscribedServiceRequestSummaryDto;
+    updatedOn: DateTimeDto;
 }
 
 export interface AppointmentEquipmentShortSummaryDto {
@@ -370,6 +371,7 @@ export interface AppointmentListDto {
     phonePrefix: string;
     professionalPersonDto: ProfessionalPersonDto;
     protected: boolean;
+    updatedOn: DateTimeDto;
 }
 
 export interface AppointmentOrderDetailImageDto {

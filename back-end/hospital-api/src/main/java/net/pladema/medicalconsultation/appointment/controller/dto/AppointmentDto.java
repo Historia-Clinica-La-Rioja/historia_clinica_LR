@@ -3,6 +3,7 @@ package net.pladema.medicalconsultation.appointment.controller.dto;
 
 import ar.lamansys.refcounterref.domain.enums.EReferenceClosureType;
 import javax.annotation.Nullable;
+import ar.lamansys.sgx.shared.dates.controller.dto.DateTimeDto;
 import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
@@ -55,4 +56,6 @@ public class AppointmentDto extends CreateAppointmentDto {
 
 	@Nullable
 	private TranscribedServiceRequestSummaryDto transcribedOrderData;
+	
+	private DateTimeDto updatedOn;
 }

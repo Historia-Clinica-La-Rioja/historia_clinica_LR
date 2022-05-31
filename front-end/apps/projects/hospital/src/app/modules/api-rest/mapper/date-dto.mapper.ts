@@ -23,8 +23,8 @@ export const dateTimeDtoToDate = (dateTimeDto: DateTimeDto): Date => {
 
 export const convertDateTimeDtoToDate = (dateTimeDto: DateTimeDto): Date => {
 	const { day, month, year } = dateTimeDto.date;
-	const { hours, minutes = 0 } = dateTimeDto.time;
-	return new Date(Date.UTC(year, month - 1, day, hours, minutes));
+	const { hours, minutes = 0, seconds = 0 } = dateTimeDto.time;
+	return new Date(Date.UTC(year, month - 1, day, hours, minutes, seconds));
 }
 
 

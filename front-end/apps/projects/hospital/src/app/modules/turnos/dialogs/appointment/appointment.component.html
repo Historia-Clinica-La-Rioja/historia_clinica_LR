@@ -381,6 +381,10 @@
 					</form>
 				</div>
 
+				<div style="margin-top: 10px" *ngIf="selectedState === appointmentStatesIds.CONFIRMED">
+					<span class="waiting-time">{{waitingTime}}</span>
+				</div>
+
 			</section>
 
 			<section id="observation-section" class="observation-section">

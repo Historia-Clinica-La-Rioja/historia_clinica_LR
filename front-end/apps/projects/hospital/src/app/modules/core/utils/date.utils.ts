@@ -7,6 +7,8 @@ import {
 	format
 } from 'date-fns'
 
+const WAITING_TIME = 'En espera desde hace';
+
 const MIN_YEAR = 1900;
 const MIN_MONTH = 0;
 const MIN_DAY = 1;
@@ -99,10 +101,9 @@ export function dateMinusDays(date: Date, days: number): Date {
 
 export function timeDifference(createdOn: Date) {
 	const mins = differenceInMinutes(new Date(), createdOn);
-	if (mins < 60) {
-		return `${mins} mins en espera`
-	}
-	return `${differenceInHours(new Date(), createdOn)}.${mins % 60} hs en espera`
+	if (mins === 0) return `${WAITING_TIME} unos segundos`;
+	if (mins < 60) return `${WAITING_TIME} ${mins} minuto/s`
+	return `${WAITING_TIME} ${differenceInHours(new Date(), createdOn)} hora/s`
 }
 
 export function fromStringToDateByDelimeter(date: string, delimeter: string): Date {

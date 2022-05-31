@@ -50,7 +50,6 @@ import net.pladema.medicalconsultation.appointment.controller.dto.UpdateAppointm
 import net.pladema.medicalconsultation.appointment.service.domain.AppointmentBo;
 import net.pladema.medicalconsultation.appointment.service.domain.AppointmentDailyAmountBo;
 import net.pladema.medicalconsultation.appointment.service.domain.UpdateAppointmentBo;
-
 import java.util.List;
 
 @Mapper(uses = {LocalDateMapper.class, EAppointmentModality.class, EReferenceClosureType.class, SnomedMapper.class, StudyMapper.class})
@@ -94,6 +93,7 @@ public interface AppointmentMapper {
 	@Mapping(target = "recurringTypeDto", source = "appointmentBo.recurringTypeBo")
 	@Mapping(target = "hasAppointmentChilds", source = "appointmentBo.hasAppointmentChilds")
 	@Mapping(target = "parentAppointmentId", source = "appointmentBo.parentAppointmentId")
+	@Mapping(target = "updatedOn", source = "appointmentBo.updatedOn")
 	AppointmentDto toAppointmentDto(AppointmentBo appointmentBo);
 
 	@Named("generateCallLink")

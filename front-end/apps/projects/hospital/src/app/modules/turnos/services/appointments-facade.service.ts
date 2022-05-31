@@ -3,6 +3,7 @@ import { CalendarEvent } from 'angular-calendar';
 import { ReplaySubject, Observable, forkJoin, BehaviorSubject } from 'rxjs';
 import { AppointmentsService } from '@api-rest/services/appointments.service';
 import {
+	AppointmentListDto,
 	AppointmentShortSummaryDto,
 	BasicPersonalDataDto,
 	CreateAppointmentDto,
@@ -22,10 +23,31 @@ import { PatientNameService } from "@core/services/patient-name.service";
 import { AppointmentBlockMotivesFacadeService } from './appointment-block-motives-facade.service';
 import { HolidaysService } from '@api-rest/services/holidays.service';
 import { dateDtoToDate } from '@api-rest/mapper/date-dto.mapper';
-import { toCalendarEvent } from '@turnos/utils/appointment.utils';
 import { TranslateService } from '@ngx-translate/core';
 import { DatePipe } from '@angular/common';
 import { DatePipeFormat } from '@core/utils/date.utils';
+import { toCalendarEvent } from '@turnos/utils/appointment.utils';
+
+const enum COLORES {
+	ASSIGNED = '#4187FF',
+	SOBRETURNO_ASSIGNED = '#5B40FD',
+	CONFIRMED = '#FFA500',
+	ABSENT = '#D5E0D5',
+	BLOCKED = '#7D807D',
+	SERVED = '#A3EBAF',
+	PROGRAMADA = '#7FC681',
+	ESPONTANEA = '#2687C5',
+	SOBRETURNO = '#E3A063',
+	RESERVA_ALTA = '#FFFFFF',
+	RESERVA_VALIDACION = '#EB5757',
+	FUERA_DE_AGENDA = '#FF0000',
+	PROTECTED = '#AF26C5'
+}
+
+const GREY_TEXT = 'calendar-event-grey-text';
+const WHITE_TEXT = 'calendar-event-white-text';
+const BLUE_TEXT = 'calendar-event-blue-text';
+const PURPLE_TEXT = 'calendar-event-purple-text';
 
 @Injectable({
 	providedIn: 'root'
@@ -287,4 +309,67 @@ export class AppointmentsFacadeService {
 	}
 
 	
+}
+
+export function getColor(appointment: AppointmentListDto): COLORES {
+	if (appointment.appointmentStateId === APPOINTMENT_STATES_ID.BLOCKED) {
+		return COLORES.BLOCKED
+	}
+
+	if(appointment.appointmentStateId === APPOINTMENT_STATES_ID.OUT_OF_DIARY) {
+		return COLORES.FUERA_DE_AGENDA;
+	}
+
+
+
+	if (appointment.overturn) {
+		return COLORES.SOBRETURNO;
+	}
+
+	if (appointment.appointmentStateId === APPOINTMENT_STATES_ID.BOOKED) {
+		return COLORES.RESERVA_VALIDACION;
+	}
+
+	if (appointment.appointmentStateId === APPOINTMENT_STATES_ID.CONFIRMED) {
+		return COLORES.CONFIRMED;
+	}
+
+	if(appointment.appointmentStateId === APPOINTMENT_STATES_ID.ABSENT) {
+		return COLORES.ABSENT;
+	}
+
+	if(appointment.appointmentStateId === APPOINTMENT_STATES_ID.SERVED) {
+		return COLORES.SERVED;
+	}
+
+	if(showProtectedAppointment(appointment)) {
+		return COLORES.PROTECTED;
+	}
+
+	if (!appointment?.patient?.id) {
+		return COLORES.RESERVA_ALTA;
+	}
+
+	const assigned = appointment.overturn ? COLORES.SOBRETURNO_ASSIGNED : COLORES.ASSIGNED;
+	return assigned;
+}
+
+export function getSpanColor(appointment: AppointmentListDto): string {
+	if (appointment.appointmentStateId === APPOINTMENT_STATES_ID.ABSENT || appointment.appointmentStateId === APPOINTMENT_STATES_ID.SERVED) {
+		return GREY_TEXT;
+	}
+
+	if (appointment.appointmentStateId === APPOINTMENT_STATES_ID.BOOKED) {
+		return BLUE_TEXT;
+	}
+
+	if (showProtectedAppointment(appointment)) {
+		return PURPLE_TEXT;
+	}
+
+	return WHITE_TEXT;
+}
+
+function showProtectedAppointment(appointment: AppointmentListDto) {
+	return appointment.appointmentStateId === APPOINTMENT_STATES_ID.ASSIGNED && appointment.protected
 }

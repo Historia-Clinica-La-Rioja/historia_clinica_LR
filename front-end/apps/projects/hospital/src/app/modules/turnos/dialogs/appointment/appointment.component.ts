@@ -82,7 +82,7 @@ import { JitsiCallService } from '../../../jitsi/jitsi-call.service';
 import { Router } from '@angular/router';
 import { AppRoutes } from 'projects/hospital/src/app/app-routing.module';
 import { HealthcareProfessionalService } from '@api-rest/services/healthcare-professional.service';
-import { dateDtoToDate, dateTimeDtoToDate, dateToDateDto, dateToTimeDto, timeDtoToDate } from '@api-rest/mapper/date-dto.mapper';
+import { convertDateTimeDtoToDate, dateDtoToDate, dateTimeDtoToDate, dateToDateDto, dateToTimeDto, timeDtoToDate } from '@api-rest/mapper/date-dto.mapper';
 import { DiaryService } from '@api-rest/services/diary.service';
 
 import { PatientNameService } from '@core/services/patient-name.service';
@@ -91,7 +91,7 @@ import { RecurringCustomizePopupComponent } from '../recurring-customize-popup/r
 import { RecurringCancelPopupComponent } from '../recurring-cancel-popup/recurring-cancel-popup.component';
 import { ConfirmDialogComponent } from '@presentation/dialogs/confirm-dialog/confirm-dialog.component';
 import { toApiFormat } from '@api-rest/mapper/date.mapper';
-import { toHourMinuteSecond } from '@core/utils/date.utils';
+import { timeDifference, toHourMinuteSecond } from '@core/utils/date.utils';
 import { ButtonType } from '@presentation/components/button/button.component';
 
 const TEMPORARY_PATIENT = 3;
@@ -209,6 +209,7 @@ export class AppointmentComponent implements OnInit {
 	isSaveLoading: boolean = false;
 	coverage: Coverage;
 	HABILITAR_VISTA_COBERTURA_TURNOS: boolean = false;
+	waitingTime: string;
 
 	constructor(
 		@Inject(MAT_DIALOG_DATA) public data: {
@@ -283,14 +284,12 @@ export class AppointmentComponent implements OnInit {
 			.subscribe(appointment => {
 				if (this.isHabilitarRecurrencia) {
 					this.recurringTypeSelected = appointment?.recurringTypeDto;
-
 					this.changeRecurringTypeText(appointment);
-
 					this.formDate.get('recurringType').setValue(this.recurringTypeSelected?.id);
 					this.isAppointmentAfterToday = this.data.appointmentData.date >= new Date();
 					this.setParentAppointment(appointment.parentAppointmentId);
 				}
-
+				this.waitingTime = timeDifference(convertDateTimeDtoToDate(appointment.updatedOn));
 				this.appointment = appointment;
 				this.observation = appointment.observation;
 				if (this.observation) {
@@ -1369,6 +1368,7 @@ export interface PatientAppointmentInformation {
 	affiliateNumber: string;
 	overturn: boolean;
 	createdOn: Date;
+	updatedOn: Date;
 	professionalPersonDto: ProfessionalPersonDto;
 }
 

@@ -63,6 +63,8 @@ public class AppointmentBo {
 
 	private Short appointmentBlockMotiveId;
 
+	private LocalDateTime updatedOn;
+
 	private boolean isProtected;
 
 	private LocalDateTime createdOn;
@@ -146,6 +148,7 @@ public class AppointmentBo {
 				.phoneNumber(appointmentDiaryVo.getPhoneNumber())
 				.appointmentBlockMotiveId(appointmentDiaryVo.getAppointmentBlockMotiveId())
 				.createdOn(appointmentDiaryVo.getCreatedOn())
+				.updatedOn(appointmentDiaryVo.getUpdatedOn())
 				.professionalPersonBo(appointmentDiaryVo.getProfessionalPersonVo() != null ? new ProfessionalPersonBo(appointmentDiaryVo.getProfessionalPersonVo()) : null)
 				.patientEmail(appointmentDiaryVo.getEmail())
 				.diaryLabelBo(appointmentDiaryVo.getDiaryLabel() != null ? new DiaryLabelBo(appointmentDiaryVo.getDiaryLabel()): null)
@@ -178,6 +181,7 @@ public class AppointmentBo {
 						: null
 				)
 				.parentAppointmentId(appointmentVo.getAppointment().getParentAppointmentId())
+				.updatedOn(appointmentVo.getAppointment().getUpdatedOn())
 				.build();
 	}
 
@@ -193,6 +197,7 @@ public class AppointmentBo {
 				.phonePrefix(appointment.getPhonePrefix())
 				.phoneNumber(appointment.getPhoneNumber())
 				.snomedId(appointment.getSnomedId())
+				.updatedOn(appointment.getUpdatedOn())
 				.build();
     }
 

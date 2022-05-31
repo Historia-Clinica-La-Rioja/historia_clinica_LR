@@ -5,10 +5,8 @@ import {
 	AppointmentListDto, DiaryLabelDto,
 } from '@api-rest/api-model';
 import {
-    DateFormat,
     buildFullDate,
     momentParseDate,
-    momentParseTime,
 } from '@core/utils/moment.utils';
 import {
 	APPOINTMENT_STATES_ID,
@@ -24,6 +22,8 @@ import {
 import {
 	AppointmentBlockMotivesFacadeService,
 } from '@turnos/services/appointment-block-motives-facade.service';
+import { timeDifference } from '@core/utils/date.utils';
+import { convertDateTimeDtoToDate, stringToTimeDto, timeDtotoString } from '@api-rest/mapper/date-dto.mapper';
 
 function setDiaryLabelColor(diaryLabelDto: DiaryLabelDto): string {
     if (!diaryLabelDto) return '';
@@ -39,13 +39,13 @@ function setDiaryLabelDescription(diaryLabelDto: DiaryLabelDto): string {
 }
 
 function defaultHtml(from: string, appointment: AppointmentListDto, viewName?: string): string {
-    return `<div class="appointment-description">
-                ${setDiaryLabelColor(appointment?.diaryLabelDto)}
-                <article>
-                    ${momentParseTime(from).format(DateFormat.HOUR_MINUTE)} ${viewName}.
-                    ${setDiaryLabelDescription(appointment?.diaryLabelDto)}
-                </article>
-            </div>`
+    return `${setDiaryLabelColor(appointment?.diaryLabelDto)} 
+			<article>
+				${timeDtotoString(stringToTimeDto(from))} ${viewName}. 
+				${setDiaryLabelDescription(appointment?.diaryLabelDto)}
+			</article>
+			<div class="appointment-aside"></div>`
+
 }
 
 export function toCalendarEvent(from: string, to: string, date: Moment, appointment: AppointmentListDto, viewName?: string, appointmentBlockMotivesFacadeService?: AppointmentBlockMotivesFacadeService): CalendarEvent {
@@ -94,6 +94,7 @@ export function toCalendarEvent(from: string, to: string, date: Moment, appointm
             medicalCoverageName: appointment.medicalCoverageName,
             affiliateNumber: appointment.medicalCoverageAffiliateNumber,
             createdOn: appointment.createdOn,
+			updatedOn: appointment.updatedOn,
             professionalPersonDto: appointment.professionalPersonDto,
         }
     };
@@ -107,8 +108,25 @@ export function toCalendarEvent(from: string, to: string, date: Moment, appointm
             viewName = '(Temporal)';
         }
 
+        if(appointment.appointmentStateId === APPOINTMENT_STATES_ID.CONFIRMED) {
+			return getConfirmedTitle();
+		}
+
         return defaultHtml(from, appointment, viewName);
     }
+
+	function getConfirmedTitle(): string {
+		return `${setDiaryLabelColor(appointment?.diaryLabelDto)} 
+				<article>
+					${timeDtotoString(stringToTimeDto(from))}
+					${viewName}.
+					${setDiaryLabelDescription(appointment?.diaryLabelDto)}
+				</article>
+				<div class="appointment-aside">
+					<span class='material-icons-outlined'>hourglass_empty</span>
+					${timeDifference(convertDateTimeDtoToDate(appointment.updatedOn))}
+				</div>`;
+	}
 }
 
 export function getColor(appointment: AppointmentListDto): COLORES {

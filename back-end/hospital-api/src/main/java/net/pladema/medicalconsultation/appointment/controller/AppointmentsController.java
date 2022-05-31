@@ -464,6 +464,7 @@ public class AppointmentsController {
 				appointmentBo.getAppointmentBlockMotiveId(),
 				appointmentBo.isProtected(),
 				appointmentBo.getCreatedOn(),
+				localDateMapper.toDateTimeDto(appointmentBo.getUpdatedOn()),
 				appointmentBo.getProfessionalPersonBo() != null
 						? new ProfessionalPersonDto(
 						appointmentBo.getProfessionalPersonBo().getId(),
