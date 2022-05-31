@@ -59,14 +59,14 @@
 					<ng-container
 						*appHasRole="['ESPECIALISTA_MEDICO','PROFESIONAL_DE_SALUD','ENFERMERO', 'ESPECIALISTA_EN_ODONTOLOGIA']">
 						<app-main-diagnosis-summary [internmentEpisodeId]="internmentEpisodeId"
-							[editable]="!epicrisisDoc"
+							[editable]="!epicrisisDoc?.confirmed"
 							[mainDiagnosis]="internmentSummaryFacadeService.mainDiagnosis$ | async">
 						</app-main-diagnosis-summary>
 					</ng-container>
 					<ng-container
 						*appHasRole="['ESPECIALISTA_MEDICO', 'ENFERMERO_ADULTO_MAYOR','ENFERMERO','PROFESIONAL_DE_SALUD', 'ESPECIALISTA_EN_ODONTOLOGIA']">
 						<app-diagnosis-summary [internmentEpisodeId]="internmentEpisodeId"
-							[editable]="!epicrisisDoc && editDiagnosisSummary$"
+							[editable]="!epicrisisDoc?.confirmed && editDiagnosisSummary$"
 							[diagnosis]="internmentSummaryFacadeService.diagnosis$ | async">
 						</app-diagnosis-summary>
 					</ng-container>
