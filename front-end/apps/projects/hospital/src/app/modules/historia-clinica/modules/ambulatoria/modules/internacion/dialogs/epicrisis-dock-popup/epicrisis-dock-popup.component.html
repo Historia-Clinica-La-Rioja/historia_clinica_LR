@@ -316,9 +316,14 @@
 			</div>
 		</form>
 	</div>
-	<div actions id="buttons" align="end">
+
+	<div actions id="buttons" fxLayoutGap="10px" fxLayoutAlign="end">
+		<button id="sign-draft" type="button"  mat-stroked-button color="primary"
+				*appHasRole="['ESPECIALISTA_MEDICO']" (click)="save(true)">
+			<span class="uppercase" [translate]="'internaciones.epicrisis.buttons.SAVE_DRAFT'"></span>
+		</button>
 		<button id="sign-confirm" type="button" mat-raised-button color="primary"
-				*appHasRole="['ESPECIALISTA_MEDICO']" (click)="save()">
+				*appHasRole="['ESPECIALISTA_MEDICO']" (click)="save(false)">
 			<span class="uppercase" [translate]="'internaciones.epicrisis.buttons.CONFIRM'"></span>
 		</button>
 	</div>

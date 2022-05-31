@@ -215,7 +215,7 @@ export class EpicrisisDockPopupComponent implements OnInit {
 
 	}
 
-	save(): void {
+	save(isDraft: boolean): void {
 		if (this.form.valid) {
 			const epicrisis: EpicrisisDto = {
 				confirmed: true,
@@ -228,6 +228,20 @@ export class EpicrisisDockPopupComponent implements OnInit {
 				immunizations: this.immunizations.selection.selected,
 				allergies: this.allergies.selection.selected
 			};
+			if (isDraft){
+				if (this.data.patientInfo.epicrisisId)
+					this.epicrisisService.createDraftDocument(epicrisis, this.data.patientInfo.internmentEpisodeId)
+						.subscribe((epicrisisResponse: ResponseEpicrisisDto) => {
+							this.snackBarService.showSuccess('internaciones.epicrisis.messages.SUCCESS');
+							this.dockPopupRef.close(this.fieldsToUpdate(epicrisis));
+						}, _ => this.snackBarService.showError('internaciones.epicrisis.messages.ERROR'));
+				else
+					this.epicrisisService.createDocument(epicrisis, this.data.patientInfo.internmentEpisodeId)
+						.subscribe((epicrisisResponse: ResponseEpicrisisDto) => {
+							this.snackBarService.showSuccess('internaciones.epicrisis.messages.SUCCESS');
+							this.dockPopupRef.close(this.fieldsToUpdate(epicrisis));
+						}, _ => this.snackBarService.showError('internaciones.epicrisis.messages.ERROR'));
+					}
 			if (this.data.patientInfo.epicrisisId) {
 				this.editDocumentAction.openEditReason().subscribe(reason => {
 					if (reason) {
@@ -242,7 +256,7 @@ export class EpicrisisDockPopupComponent implements OnInit {
 			this.epicrisisService.createDocument(epicrisis, this.data.patientInfo.internmentEpisodeId)
 				.subscribe((epicrisisResponse: ResponseEpicrisisDto) => this.showSuccesAndClosePopup(epicrisis)
 					, _ => this.snackBarService.showError('internaciones.epicrisis.messages.ERROR'));
-		} else {
+		}else {
 			this.snackBarService.showError('internaciones.epicrisis.messages.ERROR');
 			this.form.markAllAsTouched();
 

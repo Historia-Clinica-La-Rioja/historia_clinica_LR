@@ -27,6 +27,11 @@ export class EpicrisisService {
 		return this.http.post<ResponseEpicrisisDto>(url, epicrisis);
 	}
 
+	createDraftDocument(epicrisis: EpicrisisDto, internmentEpisodeId: number): Observable<ResponseEpicrisisDto> {
+		const url = `${environment.apiBase}/institutions/${this.contextService.institutionId}/internments/${internmentEpisodeId}/epicrisis/draft`;
+		return this.http.post<ResponseEpicrisisDto>(url, epicrisis);
+	}
+
 	getPDF(epicrisisId: number, internmentEpisodeId: number): Observable<any> {
 		const url = `${environment.apiBase}/institutions/${this.contextService.institutionId}/internments/${internmentEpisodeId}/epicrisis/${epicrisisId}/report`;
 		const fileName = `Epicrisis_internacion_${internmentEpisodeId}`;
