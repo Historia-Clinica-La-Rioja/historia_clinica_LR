@@ -32,6 +32,7 @@ public class PatientMedicalCoverageRepositoryImpl implements PatientMedicalCover
 				"LEFT JOIN HealthInsurance hi ON (mc.id = hi.id) " +
 				"LEFT JOIN PrivateHealthInsurance phi ON (mc.id = phi.id) "+
 				"WHERE pmc.active = true " +
+				"AND mc.deleteable.deleted = false " +
 				"AND pmc.patientId = :patientId ";
 
 		List<Object[]> queryResult = entityManager.createQuery(sqlString)
