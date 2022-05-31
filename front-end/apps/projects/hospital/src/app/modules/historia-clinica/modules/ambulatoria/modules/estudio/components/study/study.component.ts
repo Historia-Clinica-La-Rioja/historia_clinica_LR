@@ -34,6 +34,7 @@ export class StudyComponent implements OnInit {
 	ngOnInit(): void {
 		this.sameOrderStudies = new Map();
 		this.studies = this.classifyStudiesWithTheSameOrder(this.studies);
+		this.studies.sort((studyA, studyB) => studyB.creationDate.getTime() - studyA.creationDate.getTime())
 	}
 
 	contentBuilder(diagnosticReport: DiagnosticReportInfoDto): Content {
