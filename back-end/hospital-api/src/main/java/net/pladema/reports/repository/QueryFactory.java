@@ -1,6 +1,8 @@
 package net.pladema.reports.repository;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -29,8 +31,11 @@ public class QueryFactory {
     }
 
     @SuppressWarnings("unchecked")
-    public List<ConsultationDetail> query(Integer institutionId, LocalDate startDate, LocalDate endDate,
+    public List<ConsultationDetail> query(Integer institutionId, LocalDate start, LocalDate end,
                                           Integer clinicalSpecialtyId, Integer doctorId) {
+
+		var startDate = LocalDateTime.of(start.getYear(), start.getMonth(), start.getDayOfMonth(), 0,0);
+		var endDate = LocalDateTime.of(end.getYear(), end.getMonth(), end.getDayOfMonth(), 23,59,59, LocalTime.MAX.getNano());
 
         Query outpatientQuery = entityManager.createNamedQuery("Reports.ConsultationDetail");
         outpatientQuery.setParameter("institutionId", institutionId);
