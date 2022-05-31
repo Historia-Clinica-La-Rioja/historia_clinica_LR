@@ -78,7 +78,7 @@ export class AppointmentComponent implements OnInit {
 	hideObservationForm: boolean = true;
 	hideObservationTittle: boolean = true;
 	observation: string;
-	
+
 	constructor(
 		@Inject(MAT_DIALOG_DATA) public params: { appointmentData: PatientAppointmentInformation, hasPermissionToAssignShift: boolean },
 		public dialogRef: MatDialogRef<NewAttentionComponent>,
@@ -130,6 +130,7 @@ export class AppointmentComponent implements OnInit {
 				this.observation = appointment.observation;
 				if(this.observation){
 					this.hideObservationTittle = false;
+					this.formObservations.controls.observation.setValue(this.observation);
 				}
 				this.estadoSelected = this.appointment?.appointmentStateId;
 				if (this.appointment.stateChangeReason) {

@@ -208,13 +208,14 @@
 					<p> 
 						{{observation}}
 					</p>
-					<button type="button" mat-icon-button color="primary" fxFlex="10%" (click)="hideObservationFormToggle()">
+					<button type="button" mat-icon-button color="primary" fxFlex="10%" 
+						(click)="hideObservationFormToggle()">
 						<mat-icon>edit</mat-icon>
 					</button>
 				</div>
 				<form [formGroup]="formObservations" *ngIf="!hideObservationForm" fxLayout="column" fxLayoutGap="5px" (ngSubmit)="updateObservation()">
 					<mat-form-field appearance="outline">
-						<textarea formControlName="observation" placeholder="Ingrese observaciones..." matInput type="text"></textarea>
+						<textarea formControlName="observation" placeholder="Ingrese observaciones..." rows="4" matInput type="text"></textarea>
 					</mat-form-field>
 
 					<div class="observation-buttons">

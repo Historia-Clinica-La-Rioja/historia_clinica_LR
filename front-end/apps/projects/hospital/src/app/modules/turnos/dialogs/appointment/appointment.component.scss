@@ -117,22 +117,22 @@ section {
 }
 
 .observation-section{
+	width: 600px;
 	margin: 15px 0;
-	
+
 	a{
 		cursor: pointer;
 	}
 
-	p{
+	p{		
+		margin: auto;
 		margin-left: 3px;
-		white-space: pre;
+		white-space: pre-line;
+    	overflow-wrap: break-word;
 	}
 
-	button{
-		margin: -10px 10px;
-	}
-	
 	.observation{
+		
 		display: flex;
 		justify-content: space-between;
 	}
@@ -141,5 +141,9 @@ section {
 		display: flex;
 		justify-content: flex-end;
 		margin-bottom: 10px;
+		
+		button{
+			margin: -10px 10px;
+		}
 	}	
 }
