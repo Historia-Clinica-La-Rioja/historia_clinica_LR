@@ -187,7 +187,7 @@
 				</div>
 
 				<div>
-					<button type="button" mat-button color="primary" *ngIf="activeDocument.canDoAction.edit" (click)="edit(activeDocument.document)">
+					<button type="button" mat-button color="primary" *ngIf="activeDocument.canDoAction.edit && activeDocument.document.confirmed" (click)="edit(activeDocument.document)">
 						<mat-icon>edit</mat-icon>
 					</button>
 					<button type="button" mat-button color="warn" *ngIf="activeDocument.canDoAction.delete" (click)="delete(activeDocument.document)">
