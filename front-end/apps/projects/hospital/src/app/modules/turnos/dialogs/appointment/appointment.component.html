@@ -228,13 +228,12 @@
 				</form>
 			</div>	
 		</section>
-
-		<mat-divider></mat-divider>
 				
 		<ng-container
 			*appHasRole="['ADMINISTRATIVO', 'ENFERMERO', 'ESPECIALISTA_MEDICO', 'PROFESIONAL_DE_SALUD', 'ESPECIALISTA_EN_ODONTOLOGIA']">
 			<ng-container
 				*ngIf="downloadReportIsEnabled && !isAbsent() && ((hasRoleToDownloadReports$ | async) === true || params.hasPermissionToAssignShift)">
+				<mat-divider></mat-divider>
 				<section id="report" fxLayout="column">
 					<span class="mat-body-strong" fxLayout="row">Descargar informes</span>
 					<section class="example-section">

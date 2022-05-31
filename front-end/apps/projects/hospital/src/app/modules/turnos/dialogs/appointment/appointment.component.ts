@@ -26,7 +26,7 @@ import { FeatureFlagService } from "@core/services/feature-flag.service";
 import { PatientNameService } from "@core/services/patient-name.service";
 import { PersonMasterDataService } from "@api-rest/services/person-master-data.service";
 import { SummaryCoverageInformation } from '@historia-clinica/modules/ambulatoria/components/medical-coverage-summary-view/medical-coverage-summary-view.component';
-import { AccountService } from '@api-rest/services/account.service';
+
 
 const TEMPORARY_PATIENT = 3;
 const BELL_LABEL = 'Llamar paciente'
@@ -78,7 +78,7 @@ export class AppointmentComponent implements OnInit {
 	hideObservationForm: boolean = true;
 	hideObservationTittle: boolean = true;
 	observation: string;
-
+	
 	constructor(
 		@Inject(MAT_DIALOG_DATA) public params: { appointmentData: PatientAppointmentInformation, hasPermissionToAssignShift: boolean },
 		public dialogRef: MatDialogRef<NewAttentionComponent>,
