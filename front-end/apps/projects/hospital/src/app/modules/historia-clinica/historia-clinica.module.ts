@@ -31,6 +31,7 @@ import { BedAssignmentComponent } from './dialogs/bed-assignment/bed-assignment.
 import { IncludePreviousDataQuestionComponent } from './components/include-previous-data-question/include-previous-data-question.component';
 import { TemplateConceptTypeaheadSearchComponent } from './components/template-concept-typeahead-search/template-concept-typeahead-search.component';
 import { ConceptsTypeaheadSearchDialogComponent } from './dialogs/concepts-typeahead-search-dialog/concepts-typeahead-search-dialog.component';
+import { NewConsultationAddProblemFormComponent } from './dialogs/new-consultation-add-problem-form/new-consultation-add-problem-form.component';
 
 @NgModule({
 	declarations: [
@@ -60,7 +61,8 @@ import { ConceptsTypeaheadSearchDialogComponent } from './dialogs/concepts-typea
 		RemoveDiagnosisComponent,
 		ProbableDischargeDialogComponent,
 		BedAssignmentComponent,
-  		ConceptsTypeaheadSearchDialogComponent,
+		ConceptsTypeaheadSearchDialogComponent,
+		NewConsultationAddProblemFormComponent,
 	],
 	imports: [
 		CommonModule,
@@ -89,6 +91,7 @@ import { ConceptsTypeaheadSearchDialogComponent } from './dialogs/concepts-typea
 		// dialogs
 		ConceptsSearchDialogComponent,
 		ConceptsTypeaheadSearchDialogComponent,
+		NewConsultationAddProblemFormComponent,
 	]
 })
 export class HistoriaClinicaModule {

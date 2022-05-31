@@ -45,6 +45,7 @@ import { SnvsReportsResultComponent } from '../snvs-reports-result/snvs-reports-
 import { HCEPersonalHistory } from '../reference/reference.component';
 import { DATOS_ANTROPOMETRICOS, FACTORES_DE_RIESGO } from '@historia-clinica/constants/validation-constants';
 import { hasMaxTwoDecimalDigits, PATTERN_INTEGER_NUMBER } from '@core/utils/pattern.utils';
+import { NewConsultationAddProblemFormComponent } from '@historia-clinica/dialogs/new-consultation-add-problem-form/new-consultation-add-problem-form.component';
 
 const TIME_OUT = 5000;
 
@@ -503,12 +504,6 @@ export class NuevaConsultaDockPopupComponent implements OnInit {
 		};
 	}
 
-	editProblema() {
-		if (this.ambulatoryConsultationProblemsService.editProblem()) {
-			this.readOnlyProblema = false;
-		}
-	}
-
 	setDefaultSpecialty() {
 		this.defaultSpecialty = this.formEvolucion.controls.clinicalSpecialty.value;
 	}
@@ -593,6 +588,21 @@ export class NuevaConsultaDockPopupComponent implements OnInit {
 
 	clear(control: AbstractControl): void {
 		control.reset();
+	}
+
+	addProblem() {
+		this.dialog.open(NewConsultationAddProblemFormComponent, {
+			data: {
+				readOnlyProblem: this.readOnlyProblema,
+				ambulatoryConsultationProblemsService: this.ambulatoryConsultationProblemsService,
+				severityTypes: this.severityTypes,
+				epidemiologicalReportFF: this.reportFFIsOn,
+				searchConceptsLocallyFF: this.searchConceptsLocallyFFIsOn,
+			},
+			autoFocus: false,
+			width: '35%',
+			disableClose: true,
+		});
 	}
 
 }

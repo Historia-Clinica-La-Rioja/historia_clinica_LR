@@ -285,5 +285,9 @@ export class AmbulatoryConsultationProblemsService {
 	private saveGroupEventInformation(snvsClassificationsList: SnvsEventManualClassificationsDto[]): void {
 		snvsClassificationsList.forEach((snvsClassification: SnvsEventManualClassificationsDto) => this.snvsEvents.push(snvsClassification.snvsEvent))
 	}
+
+	isEmpty(): boolean {
+		return (!this.data || this.data.length === 0);
+	}
 }
 
