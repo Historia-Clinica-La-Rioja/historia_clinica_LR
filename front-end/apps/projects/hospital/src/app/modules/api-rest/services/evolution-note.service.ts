@@ -45,6 +45,11 @@ export class EvolutionNoteService {
 		return this.http.get<ResponseEvolutionNoteDto>(url);
 	}
 
+	getEvolutionDiagnosisNursing(evolutionNoteId: number, internmentEpisodeId: number): Observable<ResponseEvolutionNoteDto> {
+		const url = `${environment.apiBase}/institutions/${this.contextService.institutionId}/internments/${internmentEpisodeId}/evolutionNote/nursing/${evolutionNoteId}`;
+		return this.http.get<ResponseEvolutionNoteDto>(url);
+	}
+
 	editEvolutionDiagnosis(evolutionNote: EvolutionDiagnosisDto, evolutionNoteId: number, internmentEpisodeId: number): Observable<number> {
 		const url = `${environment.apiBase}/institutions/${this.contextService.institutionId}/internments/${internmentEpisodeId}/evolutionNote/${evolutionNoteId}`;
 		return this.http.put<number>(url, evolutionNote);

@@ -96,10 +96,18 @@ export class EvolutionNoteDockPopupComponent implements OnInit {
 
 
 		if (this.data.evolutionNoteId) {
-			this.evolutionNoteService.getEvolutionDiagnosis(this.data.evolutionNoteId, this.data.internmentEpisodeId).subscribe(e => {
-				this.evolutionNote = e;
-				this.loadEvolutionNoteInfo();
-			})
+			if (this.data.documentType === "Nota de evolución") {
+				this.evolutionNoteService.getEvolutionDiagnosis(this.data.evolutionNoteId, this.data.internmentEpisodeId).subscribe(e => {
+					this.evolutionNote = e;
+					this.loadEvolutionNoteInfo();
+				});
+			}
+			else {
+				this.evolutionNoteService.getEvolutionDiagnosisNursing(this.data.evolutionNoteId, this.data.internmentEpisodeId).subscribe(e => {
+					this.evolutionNote = e;
+					this.loadEvolutionNoteInfo();
+				});
+			}
 		}
 	}
 
@@ -244,7 +252,7 @@ export class EvolutionNoteDockPopupComponent implements OnInit {
 	}
 
 	showError(error) {
-		error.errors.forEach(val => {
+		error.errors?.forEach(val => {
 			this.apiErrors.push(val);
 		});
 		this.snackBarService.showError('internaciones.nota-evolucion.messages.ERROR');
