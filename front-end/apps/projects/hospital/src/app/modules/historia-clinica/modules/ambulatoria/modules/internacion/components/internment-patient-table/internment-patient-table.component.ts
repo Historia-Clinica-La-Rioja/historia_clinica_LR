@@ -111,14 +111,14 @@ export class InternmentPatientTableComponent {
 
 	private missingDocument(document: DocumentsSummaryDto, hasMedicalDischarge: boolean): string {
 		if (!document.anamnesis.confirmed)
-			return "Evaluación de Ingreso";
+			return "Evaluación de ingreso";
 		if (!document.lastEvaluationNote.confirmed)
-			return "Nota de Evolucion";
+			return "Nota de evolución";
 		if (!document.epicrisis.confirmed)
 			return "Epicrisis";
 		if (!hasMedicalDischarge)
 			return "Alta médica"
-		return "Alta Administrativa"
+		return "Alta administrativa"
 	}
 }
 
