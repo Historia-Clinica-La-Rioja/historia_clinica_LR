@@ -397,7 +397,6 @@ export interface BedCategoryDto extends AbstractMasterdataDto<number> {
 }
 
 export interface BedDto extends Serializable {
-    bedCategory: BedCategoryDto;
     bedNumber: string;
     free: boolean;
     id: number;
