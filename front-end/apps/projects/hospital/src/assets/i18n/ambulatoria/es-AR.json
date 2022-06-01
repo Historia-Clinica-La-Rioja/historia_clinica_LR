@@ -231,7 +231,7 @@
                 },
                 "solicitud-referencia": {
                     "TITLE": "Solicitud de referencia",
-                    "ADD_REQUEST": "+ Agregar solicitud",
+                    "ADD_REQUEST": "Agregar solicitud",
                     "REQUESTED_REFERENCE": "Referencias solicitadas",
                     "table": {
                         "columns": {

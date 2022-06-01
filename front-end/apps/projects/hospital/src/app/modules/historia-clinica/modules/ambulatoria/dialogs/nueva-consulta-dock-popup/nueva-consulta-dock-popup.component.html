@@ -23,76 +23,76 @@
 			</div>
 		</div>
 
-		<app-new-consultation-expansion-section [title]="'ambulatoria.paciente.nueva-consulta.motivo.TITLE' | translate"
-			icon="sms_failed" [isEmpty]="motivoNuevaConsultaService.isEmpty()">
-			<div id="motivo">
-				<app-new-document-section sectionImportance="ambulatoria.paciente.nueva-consulta.RECOMENDADO">
+		<app-new-consultation-expansion-section id="motivo"
+			[title]="'ambulatoria.paciente.nueva-consulta.motivo.TITLE' | translate" icon="sms_failed"
+			[isEmpty]="motivoNuevaConsultaService.isEmpty()">
 
-					<ng-container concept-form>
-						<ng-container *ngIf="!motivoNuevaConsultaService.getSnomedConcept() else mainMotivoConsulta">
-							<app-concepts-search *ngIf="!searchConceptsLocallyFFIsOn else motivoTypeaheadSearch"
-								[label]="'ambulatoria.paciente.nueva-consulta.motivo.MOTIVO'"
-								(search)="motivoNuevaConsultaService.openSearchDialog($event)">
-							</app-concepts-search>
+			<app-new-document-section sectionImportance="ambulatoria.paciente.nueva-consulta.RECOMENDADO">
 
-							<ng-template #motivoTypeaheadSearch>
-								<app-concept-typeahead-search [ecl]="motivoNuevaConsultaService.getECL()"
-									[placeholder]="'ambulatoria.paciente.nueva-consulta.motivo.SEARCH_PLACEHOLDER'"
-									(conceptSelected)="motivoNuevaConsultaService.setConcept($event)">
-								</app-concept-typeahead-search>
-							</ng-template>
-						</ng-container>
+				<ng-container concept-form>
+					<ng-container *ngIf="!motivoNuevaConsultaService.getSnomedConcept() else mainMotivoConsulta">
+						<app-concepts-search *ngIf="!searchConceptsLocallyFFIsOn else motivoTypeaheadSearch"
+							[label]="'ambulatoria.paciente.nueva-consulta.motivo.MOTIVO'"
+							(search)="motivoNuevaConsultaService.openSearchDialog($event)">
+						</app-concepts-search>
 
-						<ng-template #mainMotivoConsulta>
-							<form [formGroup]="motivoNuevaConsultaService.getForm()"
-								(ngSubmit)="motivoNuevaConsultaService.addToList()">
-								<mat-form-field appearance="outline">
-									<mat-label [translate]="'internaciones.anamnesis.diagnosticos.DIAGNOSIS'">
-									</mat-label>
-									<input id="motivo-input" matInput type="text" formControlName="snomed" name="snomed"
-										readonly matTooltip="{{motivoNuevaConsultaService.getSnomedConcept().pt }}">
-									<button id="clear-motivo" mat-button matSuffix color="warn" mat-icon-button
-										(click)="motivoNuevaConsultaService.resetForm()">
-										<mat-icon>close</mat-icon>
-									</button>
-								</mat-form-field>
-								<div align="end">
-									<button id="submit_motivos" class="uppercase" mat-raised-button color="primary"
-										type="submit">
-										<span class="uppercase"
-											[translate]="'ambulatoria.paciente.nueva-consulta.motivo.ADD'"></span>
-									</button>
-								</div>
-							</form>
+						<ng-template #motivoTypeaheadSearch>
+							<app-concept-typeahead-search [ecl]="motivoNuevaConsultaService.getECL()"
+								[placeholder]="'ambulatoria.paciente.nueva-consulta.motivo.SEARCH_PLACEHOLDER'"
+								(conceptSelected)="motivoNuevaConsultaService.setConcept($event)">
+							</app-concept-typeahead-search>
 						</ng-template>
 					</ng-container>
-					<app-document-section-table data-display
-						[tableTitle]="'ambulatoria.paciente.nueva-consulta.motivo.table.TITLE'"
-						[columns]="motivoNuevaConsultaService.getTableColumnConfig()"
-						[data]="motivoNuevaConsultaService.getMotivosConsulta()">
-					</app-document-section-table>
-				</app-new-document-section>
-			</div>
+
+					<ng-template #mainMotivoConsulta>
+						<form [formGroup]="motivoNuevaConsultaService.getForm()"
+							(ngSubmit)="motivoNuevaConsultaService.addToList()">
+							<mat-form-field appearance="outline">
+								<mat-label [translate]="'internaciones.anamnesis.diagnosticos.DIAGNOSIS'">
+								</mat-label>
+								<input id="motivo-input" matInput type="text" formControlName="snomed" name="snomed"
+									readonly matTooltip="{{motivoNuevaConsultaService.getSnomedConcept().pt }}">
+								<button id="clear-motivo" mat-button matSuffix color="warn" mat-icon-button
+									(click)="motivoNuevaConsultaService.resetForm()">
+									<mat-icon>close</mat-icon>
+								</button>
+							</mat-form-field>
+							<div align="end">
+								<button id="submit_motivos" class="uppercase" mat-raised-button color="primary"
+									type="submit">
+									<span class="uppercase"
+										[translate]="'ambulatoria.paciente.nueva-consulta.motivo.ADD'"></span>
+								</button>
+							</div>
+						</form>
+					</ng-template>
+				</ng-container>
+				<app-document-section-table data-display
+					[tableTitle]="'ambulatoria.paciente.nueva-consulta.motivo.table.TITLE'"
+					[columns]="motivoNuevaConsultaService.getTableColumnConfig()"
+					[data]="motivoNuevaConsultaService.getMotivosConsulta()">
+				</app-document-section-table>
+			</app-new-document-section>
 		</app-new-consultation-expansion-section>
 
-		<app-new-consultation-expansion-section
+		<app-new-consultation-expansion-section id="problemas"
 			[title]="'ambulatoria.paciente.nueva-consulta.problemas.TITLE' | translate" icon="error_outlined"
 			[isEmpty]="ambulatoryConsultationProblemsService.isEmpty()" [collapsed]="false">
-			<div id="problemas">
+			<div>
 				<h5 class="recomendado" [translate]="'ambulatoria.paciente.nueva-consulta.RECOMENDADO'"></h5>
 
 				<app-document-section-table [columns]="ambulatoryConsultationProblemsService.getColumns()"
 					[data]="ambulatoryConsultationProblemsService.getProblemas()">
 				</app-document-section-table>
 
-				<button mat-button type="button" (click)="addProblem()" color="primary" id="add-problem-button">
+				<button mat-button type="button" id="add-problem-button" color="primary" class="add-button"
+					(click)="addProblem()">
 					+ {{ 'ambulatoria.paciente.nueva-consulta.problemas.buttons.ADD' | translate }}
 				</button>
-
 			</div>
 		</app-new-consultation-expansion-section>
 
-		<app-new-consultation-expansion-section
+		<app-new-consultation-expansion-section id="datos_antropometricos"
 			[title]="'ambulatoria.paciente.nueva-consulta.datos-antropometricos.TITLE' | translate" icon="accessibility"
 			[fixedExpanded]="datosAntropometricosNuevaConsultaService.getShowPreloadedAnthropometricData()"
 			[isEmpty]="!datosAntropometricosNuevaConsultaService.hasAtLeastOneValueLoaded()">
@@ -105,225 +105,215 @@
 
 		</app-new-consultation-expansion-section>
 
-
-		<app-new-consultation-expansion-section
+		<app-new-consultation-expansion-section id="antecedentes-familiares"
 			[title]="'ambulatoria.paciente.nueva-consulta.antecedentes-familiares.TITLE' | translate" icon="report"
 			[isEmpty]="antecedentesFamiliaresNuevaConsultaService.isEmpty()">
-			<div id="antecedentes-familiares">
-				<app-new-document-section>
-					<ng-container concept-form>
+			<app-new-document-section>
+				<ng-container concept-form>
 
-						<ng-container
-							*ngIf="!antecedentesFamiliaresNuevaConsultaService.getSnomedConcept() else antecedentesPersonalesForm">
-							<app-concepts-search
-								*ngIf="!searchConceptsLocallyFFIsOn else antecedentesFamiliaresTypeaheadSearch"
-								[label]="'ambulatoria.paciente.nueva-consulta.antecedentes-familiares.ANTECEDENTES_FAMILIARES'"
-								(search)="antecedentesFamiliaresNuevaConsultaService.openSearchDialog($event)">
-							</app-concepts-search>
+					<ng-container
+						*ngIf="!antecedentesFamiliaresNuevaConsultaService.getSnomedConcept() else antecedentesPersonalesForm">
+						<app-concepts-search
+							*ngIf="!searchConceptsLocallyFFIsOn else antecedentesFamiliaresTypeaheadSearch"
+							[label]="'ambulatoria.paciente.nueva-consulta.antecedentes-familiares.ANTECEDENTES_FAMILIARES'"
+							(search)="antecedentesFamiliaresNuevaConsultaService.openSearchDialog($event)">
+						</app-concepts-search>
 
-							<ng-template #antecedentesFamiliaresTypeaheadSearch>
-								<app-concept-typeahead-search
-									[ecl]="antecedentesFamiliaresNuevaConsultaService.getECL()"
-									[placeholder]="'ambulatoria.paciente.nueva-consulta.antecedentes-familiares.SEARCH_PLACEHOLDER'"
-									(conceptSelected)="antecedentesFamiliaresNuevaConsultaService.setConcept($event)">
-								</app-concept-typeahead-search>
-							</ng-template>
-						</ng-container>
-
-						<ng-template #antecedentesPersonalesForm>
-							<form [formGroup]="antecedentesFamiliaresNuevaConsultaService.getForm()"
-								(ngSubmit)="antecedentesFamiliaresNuevaConsultaService.addToList()">
-
-								<mat-form-field appearance="outline">
-									<mat-label
-										[translate]="'ambulatoria.paciente.nueva-consulta.antecedentes-familiares.ANTECEDENTES_FAMILIARES'">
-									</mat-label>
-									<input id="antecedentes-familiares-input" matInput type="text"
-										formControlName="snomed" readonly
-										matTooltip="{{antecedentesFamiliaresNuevaConsultaService.getSnomedConcept().pt }}">
-									<button id="clear-antecedente" mat-button matSuffix color="warn" mat-icon-button
-										(click)="antecedentesFamiliaresNuevaConsultaService.resetForm()">
-										<mat-icon>close</mat-icon>
-									</button>
-								</mat-form-field>
-
-								<mat-form-field appearance="outline">
-									<mat-label
-										[translate]="'ambulatoria.paciente.nueva-consulta.antecedentes-familiares.FECHA'">
-									</mat-label>
-									<input matInput id="fecha_antecedente" [matDatepicker]="antecedenteDatePicker"
-										formControlName="fecha" [min]="minDate"
-										[max]="antecedentesFamiliaresNuevaConsultaService.getMaxFecha()">
-									<mat-datepicker-toggle matSuffix [for]="antecedenteDatePicker">
-									</mat-datepicker-toggle>
-									<mat-datepicker #antecedenteDatePicker></mat-datepicker>
-								</mat-form-field>
-
-								<div align="end">
-									<button id="submit_antecedentes_familiares" class="uppercase" mat-raised-button
-										color="primary" type="submit">
-										<span class="uppercase"
-											[translate]="'ambulatoria.paciente.nueva-consulta.antecedentes-familiares.buttons.ADD'"></span>
-									</button>
-								</div>
-							</form>
+						<ng-template #antecedentesFamiliaresTypeaheadSearch>
+							<app-concept-typeahead-search [ecl]="antecedentesFamiliaresNuevaConsultaService.getECL()"
+								[placeholder]="'ambulatoria.paciente.nueva-consulta.antecedentes-familiares.SEARCH_PLACEHOLDER'"
+								(conceptSelected)="antecedentesFamiliaresNuevaConsultaService.setConcept($event)">
+							</app-concept-typeahead-search>
 						</ng-template>
 					</ng-container>
-					<app-document-section-table data-display
-						[tableTitle]="'ambulatoria.paciente.nueva-consulta.antecedentes-familiares.table.TITLE'"
-						[columns]="antecedentesFamiliaresNuevaConsultaService.getTableColumnConfig()"
-						[data]="antecedentesFamiliaresNuevaConsultaService.getAntecedentesFamiliares()">
-					</app-document-section-table>
 
-				</app-new-document-section>
-			</div>
-		</app-new-consultation-expansion-section>
+					<ng-template #antecedentesPersonalesForm>
+						<form [formGroup]="antecedentesFamiliaresNuevaConsultaService.getForm()"
+							(ngSubmit)="antecedentesFamiliaresNuevaConsultaService.addToList()">
 
-		<app-new-consultation-expansion-section
-			[title]="'ambulatoria.paciente.nueva-consulta.medicaciones.TITLE' | translate" icon="event_available"
-			[isEmpty]="medicacionesNuevaConsultaService.isEmpty()">
-			<div id="medications">
-				<app-new-document-section>
-					<div concept-form>
-
-						<ng-container *ngIf="!medicacionesNuevaConsultaService.getSnomedConcept() else medicationForm">
-							<app-concepts-search *ngIf="!searchConceptsLocallyFFIsOn else medicationTypeaheadSearch"
-								[label]="'ambulatoria.paciente.nueva-consulta.medicaciones.CONCEPT_LABEL'"
-								(search)="medicacionesNuevaConsultaService.openSearchDialog($event)">
-							</app-concepts-search>
-
-							<ng-template #medicationTypeaheadSearch>
-								<app-concept-typeahead-search [ecl]="medicacionesNuevaConsultaService.getECL()"
-									[placeholder]="'ambulatoria.paciente.nueva-consulta.medicaciones.SEARCH_PLACEHOLDER'"
-									(conceptSelected)="medicacionesNuevaConsultaService.setConcept($event)">
-								</app-concept-typeahead-search>
-							</ng-template>
-						</ng-container>
-
-					</div>
-					<ng-template #medicationForm>
-						<form [formGroup]="medicacionesNuevaConsultaService.getForm()"
-							(ngSubmit)="medicacionesNuevaConsultaService.addToList()">
 							<mat-form-field appearance="outline">
-								<mat-label [translate]="'ambulatoria.paciente.nueva-consulta.medicaciones.MEDICATION'">
+								<mat-label
+									[translate]="'ambulatoria.paciente.nueva-consulta.antecedentes-familiares.ANTECEDENTES_FAMILIARES'">
 								</mat-label>
-								<input matInput type="text" formControlName="snomed" name="snomed" readonly
-									matTooltip="{{ medicacionesNuevaConsultaService.getSnomedConcept().pt }}">
-								<button id="clear_medication" mat-button matSuffix color="warn" mat-icon-button
-									(click)="medicacionesNuevaConsultaService.resetForm()">
+								<input id="antecedentes-familiares-input" matInput type="text" formControlName="snomed"
+									readonly
+									matTooltip="{{antecedentesFamiliaresNuevaConsultaService.getSnomedConcept().pt }}">
+								<button id="clear-antecedente" mat-button matSuffix color="warn" mat-icon-button
+									(click)="antecedentesFamiliaresNuevaConsultaService.resetForm()">
 									<mat-icon>close</mat-icon>
 								</button>
 							</mat-form-field>
 
 							<mat-form-field appearance="outline">
 								<mat-label
-									[translate]="'ambulatoria.paciente.nueva-consulta.medicaciones.OBSERVACIONES'">
+									[translate]="'ambulatoria.paciente.nueva-consulta.antecedentes-familiares.FECHA'">
 								</mat-label>
-								<textarea matInput type="text" id="observations" name="observaciones"
-									formControlName="observaciones" placeholder="Descripción">
-							</textarea>
-								<mat-error
-									*ngIf="hasError(medicacionesNuevaConsultaService.getForm(), 'maxlength', 'observaciones')"
-									translate="forms.MAX_LENGTH_ERROR" [translateParams]="{max: TEXT_AREA_MAX_LENGTH}">
-								</mat-error>
+								<input matInput id="fecha_antecedente" [matDatepicker]="antecedenteDatePicker"
+									formControlName="fecha" [min]="minDate"
+									[max]="antecedentesFamiliaresNuevaConsultaService.getMaxFecha()">
+								<mat-datepicker-toggle matSuffix [for]="antecedenteDatePicker">
+								</mat-datepicker-toggle>
+								<mat-datepicker #antecedenteDatePicker></mat-datepicker>
 							</mat-form-field>
 
-							<div class="margin-checkbox">
-								<mat-checkbox formControlName="suspendido">
-									<span [translate]="'ambulatoria.paciente.nueva-consulta.medicaciones.SUSPENDIDO'">
-									</span>
-								</mat-checkbox>
-							</div>
-
 							<div align="end">
-								<button id="submit_procedimiento" class="uppercase" mat-raised-button color="primary"
-									type="submit">
-									<span [translate]="'ambulatoria.paciente.nueva-consulta.medicaciones.ADD'"> </span>
+								<button id="submit_antecedentes_familiares" class="uppercase" mat-raised-button
+									color="primary" type="submit">
+									<span class="uppercase"
+										[translate]="'ambulatoria.paciente.nueva-consulta.antecedentes-familiares.buttons.ADD'"></span>
 								</button>
 							</div>
 						</form>
 					</ng-template>
+				</ng-container>
+				<app-document-section-table data-display
+					[tableTitle]="'ambulatoria.paciente.nueva-consulta.antecedentes-familiares.table.TITLE'"
+					[columns]="antecedentesFamiliaresNuevaConsultaService.getTableColumnConfig()"
+					[data]="antecedentesFamiliaresNuevaConsultaService.getAntecedentesFamiliares()">
+				</app-document-section-table>
 
-					<app-document-section-table data-display
-						[tableTitle]="'ambulatoria.paciente.nueva-consulta.medicaciones.TABLE_TITLE'"
-						[columns]="medicacionesNuevaConsultaService.getTableColumnConfig()"
-						[data]="medicacionesNuevaConsultaService.getMedicaciones()">
-					</app-document-section-table>
-
-				</app-new-document-section>
-			</div>
+			</app-new-document-section>
 		</app-new-consultation-expansion-section>
 
-		<app-new-consultation-expansion-section
-			[title]="'ambulatoria.paciente.nueva-consulta.procedimientos.TITLE' | translate" icon="library_add"
-			[isEmpty]="procedimientoNuevaConsultaService.isEmpty()">
-			<div id="procedimientos">
-				<app-new-document-section>
-					<ng-container concept-form>
+		<app-new-consultation-expansion-section id="medications"
+			[title]="'ambulatoria.paciente.nueva-consulta.medicaciones.TITLE' | translate" icon="event_available"
+			[isEmpty]="medicacionesNuevaConsultaService.isEmpty()">
+			<app-new-document-section>
+				<div concept-form>
 
-						<ng-container
-							*ngIf="!procedimientoNuevaConsultaService.getSnomedConcept() else procedimientoForm">
-							<app-concepts-search *ngIf="!searchConceptsLocallyFFIsOn else procedimientoTypeaheadSearch"
-								[label]="'ambulatoria.paciente.nueva-consulta.procedimientos.PROCEDIMIENTO'"
-								(search)="procedimientoNuevaConsultaService.openSearchDialog($event)">
-							</app-concepts-search>
+					<ng-container *ngIf="!medicacionesNuevaConsultaService.getSnomedConcept() else medicationForm">
+						<app-concepts-search *ngIf="!searchConceptsLocallyFFIsOn else medicationTypeaheadSearch"
+							[label]="'ambulatoria.paciente.nueva-consulta.medicaciones.CONCEPT_LABEL'"
+							(search)="medicacionesNuevaConsultaService.openSearchDialog($event)">
+						</app-concepts-search>
 
-							<ng-template #procedimientoTypeaheadSearch>
-								<app-concept-typeahead-search [ecl]="procedimientoNuevaConsultaService.getECL()"
-									[placeholder]="'ambulatoria.paciente.nueva-consulta.procedimientos.SEARCH_PLACEHOLDER'"
-									(conceptSelected)="procedimientoNuevaConsultaService.setConcept($event)">
-								</app-concept-typeahead-search>
-							</ng-template>
-						</ng-container>
-
-						<ng-template #procedimientoForm>
-							<form [formGroup]="procedimientoNuevaConsultaService.getForm()"
-								(ngSubmit)="procedimientoNuevaConsultaService.addToList()">
-								<mat-form-field appearance="outline">
-									<mat-label [translate]="'ambulatoria.paciente.nueva-consulta.procedimientos.TIPO'">
-									</mat-label>
-									<input id="procedimiento-input" matInput type="text" formControlName="snomed"
-										name="snomed" readonly
-										matTooltip="{{procedimientoNuevaConsultaService.getSnomedConcept().pt }}">
-									<button id="clear-procedimiento" mat-button matSuffix color="warn" mat-icon-button
-										(click)="procedimientoNuevaConsultaService.resetForm()">
-										<mat-icon>close</mat-icon>
-									</button>
-								</mat-form-field>
-
-								<mat-form-field appearance="outline">
-									<mat-label [translate]="'ambulatoria.paciente.nueva-consulta.procedimientos.FECHA'">
-									</mat-label>
-									<input matInput id="fecha_procedimiento" [matDatepicker]="datePicker"
-										formControlName="performedDate" [min]="minDate"
-										[max]="procedimientoNuevaConsultaService.getFechaMax()">
-									<mat-datepicker-toggle matSuffix [for]="datePicker"></mat-datepicker-toggle>
-									<mat-datepicker #datePicker></mat-datepicker>
-								</mat-form-field>
-
-								<div align="end">
-									<button id="submit_procedimiento" class="uppercase" mat-raised-button
-										color="primary" type="submit">
-										<span
-											[translate]="'ambulatoria.paciente.nueva-consulta.procedimientos.buttons.ADD'"></span>
-									</button>
-								</div>
-
-							</form>
+						<ng-template #medicationTypeaheadSearch>
+							<app-concept-typeahead-search [ecl]="medicacionesNuevaConsultaService.getECL()"
+								[placeholder]="'ambulatoria.paciente.nueva-consulta.medicaciones.SEARCH_PLACEHOLDER'"
+								(conceptSelected)="medicacionesNuevaConsultaService.setConcept($event)">
+							</app-concept-typeahead-search>
 						</ng-template>
 					</ng-container>
-					<app-document-section-table data-display
-						[tableTitle]="'ambulatoria.paciente.nueva-consulta.procedimientos.TABLE_TITLE'"
-						[columns]="procedimientoNuevaConsultaService.getTableColumnConfig()"
-						[data]="procedimientoNuevaConsultaService.getProcedimientos()">
-					</app-document-section-table>
 
-				</app-new-document-section>
-			</div>
+				</div>
+				<ng-template #medicationForm>
+					<form [formGroup]="medicacionesNuevaConsultaService.getForm()"
+						(ngSubmit)="medicacionesNuevaConsultaService.addToList()">
+						<mat-form-field appearance="outline">
+							<mat-label [translate]="'ambulatoria.paciente.nueva-consulta.medicaciones.MEDICATION'">
+							</mat-label>
+							<input matInput type="text" formControlName="snomed" name="snomed" readonly
+								matTooltip="{{ medicacionesNuevaConsultaService.getSnomedConcept().pt }}">
+							<button id="clear_medication" mat-button matSuffix color="warn" mat-icon-button
+								(click)="medicacionesNuevaConsultaService.resetForm()">
+								<mat-icon>close</mat-icon>
+							</button>
+						</mat-form-field>
+
+						<mat-form-field appearance="outline">
+							<mat-label [translate]="'ambulatoria.paciente.nueva-consulta.medicaciones.OBSERVACIONES'">
+							</mat-label>
+							<textarea matInput type="text" id="observations" name="observaciones"
+								formControlName="observaciones" placeholder="Descripción">
+							</textarea>
+							<mat-error
+								*ngIf="hasError(medicacionesNuevaConsultaService.getForm(), 'maxlength', 'observaciones')"
+								translate="forms.MAX_LENGTH_ERROR" [translateParams]="{max: TEXT_AREA_MAX_LENGTH}">
+							</mat-error>
+						</mat-form-field>
+
+						<div class="margin-checkbox">
+							<mat-checkbox formControlName="suspendido">
+								<span [translate]="'ambulatoria.paciente.nueva-consulta.medicaciones.SUSPENDIDO'">
+								</span>
+							</mat-checkbox>
+						</div>
+
+						<div align="end">
+							<button id="submit_procedimiento" class="uppercase" mat-raised-button color="primary"
+								type="submit">
+								<span [translate]="'ambulatoria.paciente.nueva-consulta.medicaciones.ADD'"> </span>
+							</button>
+						</div>
+					</form>
+				</ng-template>
+
+				<app-document-section-table data-display
+					[tableTitle]="'ambulatoria.paciente.nueva-consulta.medicaciones.TABLE_TITLE'"
+					[columns]="medicacionesNuevaConsultaService.getTableColumnConfig()"
+					[data]="medicacionesNuevaConsultaService.getMedicaciones()">
+				</app-document-section-table>
+
+			</app-new-document-section>
 		</app-new-consultation-expansion-section>
 
-		<app-new-consultation-expansion-section icon="favorite_outlined"
-			[title]="'historia-clinica.factores-de-riesgo-form.TITLE' | translate"
+		<app-new-consultation-expansion-section id="procedimientos"
+			[title]="'ambulatoria.paciente.nueva-consulta.procedimientos.TITLE' | translate" icon="library_add"
+			[isEmpty]="procedimientoNuevaConsultaService.isEmpty()">
+			<app-new-document-section>
+				<ng-container concept-form>
+
+					<ng-container *ngIf="!procedimientoNuevaConsultaService.getSnomedConcept() else procedimientoForm">
+						<app-concepts-search *ngIf="!searchConceptsLocallyFFIsOn else procedimientoTypeaheadSearch"
+							[label]="'ambulatoria.paciente.nueva-consulta.procedimientos.PROCEDIMIENTO'"
+							(search)="procedimientoNuevaConsultaService.openSearchDialog($event)">
+						</app-concepts-search>
+
+						<ng-template #procedimientoTypeaheadSearch>
+							<app-concept-typeahead-search [ecl]="procedimientoNuevaConsultaService.getECL()"
+								[placeholder]="'ambulatoria.paciente.nueva-consulta.procedimientos.SEARCH_PLACEHOLDER'"
+								(conceptSelected)="procedimientoNuevaConsultaService.setConcept($event)">
+							</app-concept-typeahead-search>
+						</ng-template>
+					</ng-container>
+
+					<ng-template #procedimientoForm>
+						<form [formGroup]="procedimientoNuevaConsultaService.getForm()"
+							(ngSubmit)="procedimientoNuevaConsultaService.addToList()">
+							<mat-form-field appearance="outline">
+								<mat-label [translate]="'ambulatoria.paciente.nueva-consulta.procedimientos.TIPO'">
+								</mat-label>
+								<input id="procedimiento-input" matInput type="text" formControlName="snomed"
+									name="snomed" readonly
+									matTooltip="{{procedimientoNuevaConsultaService.getSnomedConcept().pt }}">
+								<button id="clear-procedimiento" mat-button matSuffix color="warn" mat-icon-button
+									(click)="procedimientoNuevaConsultaService.resetForm()">
+									<mat-icon>close</mat-icon>
+								</button>
+							</mat-form-field>
+
+							<mat-form-field appearance="outline">
+								<mat-label [translate]="'ambulatoria.paciente.nueva-consulta.procedimientos.FECHA'">
+								</mat-label>
+								<input matInput id="fecha_procedimiento" [matDatepicker]="datePicker"
+									formControlName="performedDate" [min]="minDate"
+									[max]="procedimientoNuevaConsultaService.getFechaMax()">
+								<mat-datepicker-toggle matSuffix [for]="datePicker"></mat-datepicker-toggle>
+								<mat-datepicker #datePicker></mat-datepicker>
+							</mat-form-field>
+
+							<div align="end">
+								<button id="submit_procedimiento" class="uppercase" mat-raised-button color="primary"
+									type="submit">
+									<span
+										[translate]="'ambulatoria.paciente.nueva-consulta.procedimientos.buttons.ADD'"></span>
+								</button>
+							</div>
+
+						</form>
+					</ng-template>
+				</ng-container>
+				<app-document-section-table data-display
+					[tableTitle]="'ambulatoria.paciente.nueva-consulta.procedimientos.TABLE_TITLE'"
+					[columns]="procedimientoNuevaConsultaService.getTableColumnConfig()"
+					[data]="procedimientoNuevaConsultaService.getProcedimientos()">
+				</app-document-section-table>
+
+			</app-new-document-section>
+		</app-new-consultation-expansion-section>
+
+		<app-new-consultation-expansion-section id="factores_de_riesgo"
+			[title]="'historia-clinica.factores-de-riesgo-form.TITLE' | translate" icon="favorite_outlined"
 			[fixedExpanded]="factoresDeRiesgoFormService.getShowPreloadedRiskFactorsData()"
 			[isEmpty]="!factoresDeRiesgoFormService.hasAtLeastOneValueLoaded()">
 
@@ -335,82 +325,82 @@
 
 		</app-new-consultation-expansion-section>
 
-		<app-new-consultation-expansion-section
+		<app-new-consultation-expansion-section id="alergias"
 			[title]="'ambulatoria.paciente.nueva-consulta.alergias.TITLE' | translate" icon="cancel"
 			[isEmpty]="alergiasNuevaConsultaService.isEmpty()">
-			<div id="alergias">
-				<app-new-document-section>
-					<ng-container concept-form>
+			<app-new-document-section>
+				<ng-container concept-form>
 
-						<ng-container *ngIf="!alergiasNuevaConsultaService.getSnomedConcept() else alergiasForm">
-							<app-concepts-search *ngIf="!searchConceptsLocallyFFIsOn else alergiaTypeaheadSearch"
-								[label]="'ambulatoria.paciente.nueva-consulta.alergias.ALLERGY'"
-								(search)="alergiasNuevaConsultaService.openSearchDialog($event)">
-							</app-concepts-search>
+					<ng-container *ngIf="!alergiasNuevaConsultaService.getSnomedConcept() else alergiasForm">
+						<app-concepts-search *ngIf="!searchConceptsLocallyFFIsOn else alergiaTypeaheadSearch"
+							[label]="'ambulatoria.paciente.nueva-consulta.alergias.ALLERGY'"
+							(search)="alergiasNuevaConsultaService.openSearchDialog($event)">
+						</app-concepts-search>
 
-							<ng-template #alergiaTypeaheadSearch>
-								<app-concept-typeahead-search [ecl]="alergiasNuevaConsultaService.getECL()"
-									[placeholder]="'ambulatoria.paciente.nueva-consulta.alergias.SEARCH_PLACEHOLDER'"
-									(conceptSelected)="alergiasNuevaConsultaService.setConcept($event)">
-								</app-concept-typeahead-search>
-							</ng-template>
-						</ng-container>
-
-						<ng-template #alergiasForm>
-							<form [formGroup]="alergiasNuevaConsultaService.getForm()"
-								(ngSubmit)="alergiasNuevaConsultaService.addToList()">
-								<mat-form-field appearance="outline">
-									<mat-label [translate]="'ambulatoria.paciente.nueva-consulta.alergias.ALLERGY'">
-									</mat-label>
-									<input id="alergias-input" matInput type="text" formControlName="snomed"
-										name="snomed" readonly
-										matTooltip="{{alergiasNuevaConsultaService.getSnomedConcept().pt }}">
-									<button id="clear-alergias" mat-button matSuffix color="warn" mat-icon-button
-										(click)="alergiasNuevaConsultaService.resetForm()">
-										<mat-icon>close</mat-icon>
-									</button>
-								</mat-form-field>
-
-								<mat-form-field appearance="outline">
-									<mat-label [translate]="'ambulatoria.paciente.nueva-consulta.alergias.CRITICALITY'">
-									</mat-label>
-									<mat-select id="criticality-select" formControlName="criticality">
-										<mat-option *ngFor="let criticalityType of criticalityTypes"
-											[value]="criticalityType.id">
-											{{criticalityType.display}}
-										</mat-option>
-									</mat-select>
-									<mat-error translate="forms.REQUIRED"></mat-error>
-								</mat-form-field>
-
-								<div align="end">
-									<button id="submit_alergias" class="uppercase" mat-raised-button color="primary"
-										type="submit">
-										<span class="uppercase"
-											[translate]="'ambulatoria.paciente.nueva-consulta.alergias.ADD'"></span>
-									</button>
-								</div>
-							</form>
+						<ng-template #alergiaTypeaheadSearch>
+							<app-concept-typeahead-search [ecl]="alergiasNuevaConsultaService.getECL()"
+								[placeholder]="'ambulatoria.paciente.nueva-consulta.alergias.SEARCH_PLACEHOLDER'"
+								(conceptSelected)="alergiasNuevaConsultaService.setConcept($event)">
+							</app-concept-typeahead-search>
 						</ng-template>
 					</ng-container>
 
-					<app-document-section-table data-display
-						[tableTitle]="'ambulatoria.paciente.nueva-consulta.alergias.table.TITLE'"
-						[columns]="alergiasNuevaConsultaService.getTableColumnConfig()"
-						[data]="alergiasNuevaConsultaService.getAlergias()">
-					</app-document-section-table>
+					<ng-template #alergiasForm>
+						<form [formGroup]="alergiasNuevaConsultaService.getForm()"
+							(ngSubmit)="alergiasNuevaConsultaService.addToList()">
+							<mat-form-field appearance="outline">
+								<mat-label [translate]="'ambulatoria.paciente.nueva-consulta.alergias.ALLERGY'">
+								</mat-label>
+								<input id="alergias-input" matInput type="text" formControlName="snomed" name="snomed"
+									readonly matTooltip="{{alergiasNuevaConsultaService.getSnomedConcept().pt }}">
+								<button id="clear-alergias" mat-button matSuffix color="warn" mat-icon-button
+									(click)="alergiasNuevaConsultaService.resetForm()">
+									<mat-icon>close</mat-icon>
+								</button>
+							</mat-form-field>
 
-				</app-new-document-section>
-			</div>
+							<mat-form-field appearance="outline">
+								<mat-label [translate]="'ambulatoria.paciente.nueva-consulta.alergias.CRITICALITY'">
+								</mat-label>
+								<mat-select id="criticality-select" formControlName="criticality">
+									<mat-option *ngFor="let criticalityType of criticalityTypes"
+										[value]="criticalityType.id">
+										{{criticalityType.display}}
+									</mat-option>
+								</mat-select>
+								<mat-error translate="forms.REQUIRED"></mat-error>
+							</mat-form-field>
+
+							<div align="end">
+								<button id="submit_alergias" class="uppercase" mat-raised-button color="primary"
+									type="submit">
+									<span class="uppercase"
+										[translate]="'ambulatoria.paciente.nueva-consulta.alergias.ADD'"></span>
+								</button>
+							</div>
+						</form>
+					</ng-template>
+				</ng-container>
+
+				<app-document-section-table data-display
+					[tableTitle]="'ambulatoria.paciente.nueva-consulta.alergias.table.TITLE'"
+					[columns]="alergiasNuevaConsultaService.getTableColumnConfig()"
+					[data]="alergiasNuevaConsultaService.getAlergias()">
+				</app-document-section-table>
+
+			</app-new-document-section>
 		</app-new-consultation-expansion-section>
 
-		<app-new-consultation-expansion-section
+		<app-new-consultation-expansion-section id="solicitud-referencia"
 			[title]="'ambulatoria.paciente.nueva-consulta.solicitud-referencia.TITLE' | translate" icon="forum"
 			[isEmpty]="ambulatoryConsultationReferenceService.isEmpty()">
-			<div id="solicitud-referencia" class="referencia" fxLayout="column" fxLayoutGap="10px">
-				<span class="primary"
-					[translate]="'ambulatoria.paciente.nueva-consulta.solicitud-referencia.ADD_REQUEST'"
-					(click)="ambulatoryConsultationReferenceService.openReferenceDialog()"></span>
+			<div fxLayout="column" fxLayoutGap="10px">
+				<div>
+					<button mat-button type="button" id="add-request-button" color="primary" class="add-button"
+						(click)="ambulatoryConsultationReferenceService.openReferenceDialog()">
+						+ {{ 'ambulatoria.paciente.nueva-consulta.solicitud-referencia.ADD_REQUEST' | translate }}
+					</button>
+				</div>
 				<app-document-section-table data-display [columns]="ambulatoryConsultationReferenceService.getColumns()"
 					[data]="ambulatoryConsultationReferenceService.getData()">
 				</app-document-section-table>
@@ -418,23 +408,21 @@
 		</app-new-consultation-expansion-section>
 
 
-		<app-new-consultation-expansion-section
+		<app-new-consultation-expansion-section id="evolucion"
 			[title]="'ambulatoria.paciente.nueva-consulta.evolucion.TITLE' | translate" icon="chat"
 			[isEmpty]="!this.formEvolucion.value.evolucion" [collapsed]="false">
-			<div id="evolucion">
-				<app-document-section>
-					<ng-container concept-form>
-						<form [formGroup]="formEvolucion">
-							<mat-form-field appearance="outline">
-								<textarea matInput type="text" id="evolucion-input" name="evolucion"
-									formControlName="evolucion"
-									placeholder="{{'ambulatoria.paciente.nueva-consulta.evolucion.DESCRIPCION' | translate }}">
+			<app-document-section>
+				<ng-container concept-form>
+					<form [formGroup]="formEvolucion">
+						<mat-form-field appearance="outline">
+							<textarea matInput type="text" id="evolucion-input" name="evolucion"
+								formControlName="evolucion"
+								placeholder="{{'ambulatoria.paciente.nueva-consulta.evolucion.DESCRIPCION' | translate }}">
 							</textarea>
-							</mat-form-field>
-						</form>
-					</ng-container>
-				</app-document-section>
-			</div>
+						</mat-form-field>
+					</form>
+				</ng-container>
+			</app-document-section>
 		</app-new-consultation-expansion-section>
 
 		<div #errorsView>
