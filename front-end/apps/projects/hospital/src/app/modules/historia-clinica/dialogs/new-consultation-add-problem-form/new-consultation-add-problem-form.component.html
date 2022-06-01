@@ -6,7 +6,7 @@
 </div>
 
 <div mat-dialog-content>
-    <div *ngIf="!data.readOnlyProblem else problemForm">
+    <div *ngIf="!data?.editing else problemForm">
         <ng-container *ngIf="!data.ambulatoryConsultationProblemsService.getSnomedConcept() else problemForm">
             <app-concepts-search *ngIf="!data.searchConceptsLocallyFF else problemTypeaheadSearch"
                 [label]="'ambulatoria.paciente.nueva-consulta.problemas.CONCEPT_LABEL'"
@@ -25,7 +25,7 @@
 
 <ng-template #problemForm>
     <form [formGroup]="data.ambulatoryConsultationProblemsService.getForm()"
-        (ngSubmit)="this.data.readOnlyProblem ? this.editProblema() : this.addProblem()">
+        (ngSubmit)="data?.editing ? this.editProblem() : this.addProblem()">
 
         <div fxLayout="column" fxLayoutGap="5px">
             <mat-form-field appearance="outline">
@@ -33,11 +33,11 @@
                 </mat-label>
                 <input id="snomed-input" matInput type="text" formControlName="snomed" name="snomed" readonly
                     matTooltip="{{ data.ambulatoryConsultationProblemsService.getSnomedConcept().pt }}"
-                    *ngIf="!this.data.readOnlyProblem">
+                    *ngIf="!data?.editing">
                 <input id="snomed-input-new-consultation" matInput type="text" formControlName="snomed" name="snomed"
-                    readonly *ngIf="this.data.readOnlyProblem">
+                    readonly *ngIf="data?.editing">
                 <button id="clear" mat-button matSuffix color="warn" mat-icon-button
-                    (click)="data.ambulatoryConsultationProblemsService.resetForm()" *ngIf="!this.data.readOnlyProblem">
+                    (click)="data.ambulatoryConsultationProblemsService.resetForm()" *ngIf="!data?.editing">
                     <mat-icon>close</mat-icon>
                 </button>
             </mat-form-field>
@@ -87,13 +87,13 @@
                 </mat-error>
             </mat-form-field>
 
-            <div align="end" *ngIf="!data.readOnlyProblem">
+            <div align="end" *ngIf="!data?.editing">
                 <button id="submit_problema" class="uppercase" mat-raised-button color="primary" type="submit">
                     <span [translate]="'ambulatoria.paciente.nueva-consulta.problemas.buttons.ADD'"></span>
                 </button>
             </div>
 
-            <div align="end" *ngIf="data.readOnlyProblem">
+            <div align="end" *ngIf="data?.editing">
                 <button id="edit_problema" class="uppercase" mat-raised-button color="primary" type="submit">
                     <span [translate]="'ambulatoria.paciente.nueva-consulta.problemas.buttons.SAVE'"></span>
                 </button>

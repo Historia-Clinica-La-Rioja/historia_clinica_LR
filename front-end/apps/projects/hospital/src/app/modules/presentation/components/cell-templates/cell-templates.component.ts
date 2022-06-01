@@ -6,8 +6,8 @@ import {
 	TemplateRef,
 	ViewChildren
 } from '@angular/core';
-import {DateFormat, momentFormat} from '@core/utils/moment.utils';
-import {CtrlTemplateDirective} from '@presentation/directives/ctrl-template.directive';
+import { DateFormat, momentFormat } from '@core/utils/moment.utils';
+import { CtrlTemplateDirective } from '@presentation/directives/ctrl-template.directive';
 
 @Component({
 	selector: 'app-cell-templates',
@@ -21,13 +21,13 @@ export class CellTemplatesComponent {
 
 	constructor() { }
 
-	 getTemplate(templateName: string): TemplateRef<any> {
+	getTemplate(templateName: string): TemplateRef<any> {
 		return this.templateRefs.toArray().find(x => x.name.toLowerCase() === templateName.toLowerCase()).template;
-	 }
+	}
 
-	 formatDate(date): string {
-		 return date ? momentFormat(date, DateFormat.VIEW_DATE) : '';
-	 }
+	formatDate(date): string {
+		return date ? momentFormat(date, DateFormat.VIEW_DATE) : '';
+	}
 }
 
 export enum CellTemplates {
@@ -39,4 +39,5 @@ export enum CellTemplates {
 	ALLERGY_CRITICALITY = 'allergyCriticalityTemplate',
 	START_AND_END_DATE = 'startAndEndDateTemplate',
 	REFERENCE = 'referenceTemplate',
+	EDIT_BUTTON = 'editButtonTemplate',
 }

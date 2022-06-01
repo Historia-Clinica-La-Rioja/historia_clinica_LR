@@ -102,3 +102,11 @@
 		<span class="mat-small grayText">{{rowData.note}}</span>
 	</div>
 </ng-template>
+
+<ng-template #editButtonTemplate let-action="action" let-rowIndex="rowIndex" appCtrlTemplate="editButtonTemplate">
+	<div align="end">
+		<button type="button" mat-icon-button color="primary" (click)="action(rowIndex)">
+			<mat-icon>edit</mat-icon>
+		</button>
+	</div>
+</ng-template>

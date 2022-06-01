@@ -1,4 +1,4 @@
-import { Component, Inject } from '@angular/core';
+import { Component, Inject, OnInit } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { MIN_DATE } from '@core/utils/date.utils';
 import { AmbulatoryConsultationProblemsService } from '@historia-clinica/services/ambulatory-consultation-problems.service';
@@ -8,7 +8,7 @@ import { AmbulatoryConsultationProblemsService } from '@historia-clinica/service
   templateUrl: './new-consultation-add-problem-form.component.html',
   styleUrls: ['./new-consultation-add-problem-form.component.scss']
 })
-export class NewConsultationAddProblemFormComponent {
+export class NewConsultationAddProblemFormComponent implements OnInit {
 
   today = new Date();
   minDate = MIN_DATE;
@@ -16,7 +16,8 @@ export class NewConsultationAddProblemFormComponent {
   constructor(
     public dialogRef: MatDialogRef<NewConsultationAddProblemFormComponent>,
     @Inject(MAT_DIALOG_DATA) public data: {
-      readOnlyProblem: boolean,
+      editing?: boolean,
+      editIndex?: number,
       ambulatoryConsultationProblemsService: AmbulatoryConsultationProblemsService,
       severityTypes: any[],
       epidemiologicalReportFF: boolean,
@@ -24,10 +25,14 @@ export class NewConsultationAddProblemFormComponent {
     },
   ) { }
 
-  editProblema(): void {
-    if (this.data.ambulatoryConsultationProblemsService.editProblem()) {
-      this.data.readOnlyProblem = false;
+  ngOnInit(): void {
+    if (this.data?.editing) {
+      this.data.ambulatoryConsultationProblemsService.loadForm(this.data.editIndex);
     }
+  }
+
+  editProblem(): void {
+    this.data.ambulatoryConsultationProblemsService.editProblem(this.data.editIndex);
     this.dialogRef.close();
   }
 
@@ -37,9 +42,7 @@ export class NewConsultationAddProblemFormComponent {
   }
 
   close(): void {
-    if (!this.data.readOnlyProblem) {
-      this.data.ambulatoryConsultationProblemsService.resetForm()
-    }
+    this.data.ambulatoryConsultationProblemsService.resetForm();
     this.dialogRef.close()
   }
 

@@ -13,6 +13,7 @@ import { SnackBarService } from '@presentation/services/snack-bar.service';
 import { MatDialog } from '@angular/material/dialog';
 import { SnvsMasterDataService } from "@api-rest/services/snvs-masterdata.service";
 import { EpidemiologicalManualClassificationResult, EpidemiologicalReport, EpidemiologicalReportComponent } from '@historia-clinica/modules/ambulatoria/dialogs/epidemiological-report/epidemiological-report.component';
+import { NewConsultationAddProblemFormComponent } from '@historia-clinica/dialogs/new-consultation-add-problem-form/new-consultation-add-problem-form.component';
 
 export interface AmbulatoryConsultationProblem {
 	snomed: SnomedDto;
@@ -36,6 +37,8 @@ export class AmbulatoryConsultationProblemsService {
 	private severityTypes: any[];
 	private snvsEvents: SnvsEventDto[] = [];
 	private readonly ECL = SnomedECL.DIAGNOSIS;
+	searchConceptsLocallyFF = false;
+	reportFF = false;
 
 	constructor(
 		private readonly formBuilder: FormBuilder,
@@ -71,6 +74,11 @@ export class AmbulatoryConsultationProblemsService {
 				template: CellTemplates.START_AND_END_DATE
 			},
 			{
+				def: 'editar',
+				template: CellTemplates.EDIT_BUTTON,
+				action: (rowIndex) => this.openEditDialog(rowIndex)
+			},
+			{
 				def: 'eliminar',
 				template: CellTemplates.REMOVE_BUTTON,
 				action: (rowIndex) => this.remove(rowIndex)
@@ -78,6 +86,30 @@ export class AmbulatoryConsultationProblemsService {
 		];
 
 		this.data = [];
+	}
+
+	setReportFF(value: boolean): void {
+		this.reportFF = value;
+	}
+
+	setSearchConceptsLocallyFF(value: boolean): void {
+		this.searchConceptsLocallyFF = value;
+	}
+
+	openEditDialog(index: number): void {
+		this.dialog.open(NewConsultationAddProblemFormComponent, {
+			data: {
+				editing: true,
+				editIndex: index,
+				ambulatoryConsultationProblemsService: this,
+				severityTypes: this.severityTypes,
+				epidemiologicalReportFF: this.reportFF,
+				searchConceptsLocallyFF: this.searchConceptsLocallyFF,
+			},
+			autoFocus: false,
+			width: '35%',
+			disableClose: true,
+		});
 	}
 
 	getSeverityDisplayName(codigoSeveridad) {
@@ -161,12 +193,15 @@ export class AmbulatoryConsultationProblemsService {
 
 	addProblemToList(problema: AmbulatoryConsultationProblem): void {
 		this.add(problema);
-		this.form.controls.severidad.setValue(problema.codigoSeveridad);
-		this.form.controls.cronico.setValue(problema.cronico);
-		this.form.controls.fechaInicio.setValue(problema.fechaInicio);
-		this.form.controls.fechaFin?.setValue(problema.fechaFin);
-		this.form.controls.snomed.setValue(problema.snomed.pt);
-		this.snomedConcept = problema.snomed;
+	}
+
+	loadForm(index: number): void {
+		this.form.controls.severidad.setValue(this.data[index].codigoSeveridad);
+		this.form.controls.cronico.setValue(this.data[index].cronico);
+		this.form.controls.fechaInicio.setValue(this.data[index].fechaInicio);
+		this.form.controls.fechaFin?.setValue(this.data[index].fechaFin);
+		this.form.controls.snomed.setValue(this.data[index].snomed.pt);
+		this.snomedConcept = this.data[index].snomed;
 	}
 
 	resetForm(): void {
@@ -244,19 +279,15 @@ export class AmbulatoryConsultationProblemsService {
 		this.errorSource.next(errorMsg);
 	}
 
-	editProblem(): boolean {
-		// tg-1302
-		// in this case, there's one and only one health condition
+	editProblem(index: number): void {
 		if (this.form.valid) {
-			this.getProblemas()[0].snomed.pt = this.form.controls.snomed.value;
-			this.getProblemas()[0].cronico = this.form.controls.cronico.value;
-			this.getProblemas()[0].codigoSeveridad = this.form.controls.severidad.value;
-			this.getProblemas()[0].fechaInicio = this.form.controls.fechaInicio.value;
-			this.getProblemas()[0].fechaFin = this.form.controls.fechaFin.value;
+			this.getProblemas()[index].snomed.pt = this.form.controls.snomed.value;
+			this.getProblemas()[index].cronico = this.form.controls.cronico.value;
+			this.getProblemas()[index].codigoSeveridad = this.form.controls.severidad.value;
+			this.getProblemas()[index].fechaInicio = this.form.controls.fechaInicio.value;
+			this.getProblemas()[index].fechaFin = this.form.controls.fechaFin.value;
 			this.resetForm();
-			return true;
 		}
-		return false;
 	}
 
 	getSnvsEventsInformation(): SnvsEventDto[] {

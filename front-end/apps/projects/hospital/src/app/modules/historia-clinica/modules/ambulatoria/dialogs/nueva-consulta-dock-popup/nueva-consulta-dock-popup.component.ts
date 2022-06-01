@@ -66,7 +66,6 @@ export class NuevaConsultaDockPopupComponent implements OnInit {
 	factoresDeRiesgoFormService: FactoresDeRiesgoFormService;
 	antecedentesFamiliaresNuevaConsultaService: AntecedentesFamiliaresNuevaConsultaService;
 	alergiasNuevaConsultaService: AlergiasNuevaConsultaService;
-	readOnlyProblema = false;
 	apiErrors: string[] = [];
 	public today = newMoment();
 	fixedSpecialty = true;
@@ -133,7 +132,6 @@ export class NuevaConsultaDockPopupComponent implements OnInit {
 		this.setProfessionalSpecialties();
 
 		if (this.data.idProblema) {
-			this.readOnlyProblema = true;
 			this.healthConditionService.getHealthCondition(this.data.idProblema).subscribe(p => {
 				this.ambulatoryConsultationProblemsService.addProblemToList(this.buildProblema(p));
 			});
@@ -201,8 +199,15 @@ export class NuevaConsultaDockPopupComponent implements OnInit {
 			this.alergiasNuevaConsultaService.setCriticalityTypes(allergyCriticalities);
 		});
 
-		this.featureFlagService.isActive(AppFeature.HABILITAR_REPORTE_EPIDEMIOLOGICO).subscribe(isOn => this.reportFFIsOn = isOn);
-		this.featureFlagService.isActive(AppFeature.HABILITAR_BUSQUEDA_LOCAL_CONCEPTOS).subscribe(isOn => this.searchConceptsLocallyFFIsOn = isOn);
+		this.featureFlagService.isActive(AppFeature.HABILITAR_REPORTE_EPIDEMIOLOGICO).subscribe(isOn => {
+			this.reportFFIsOn = isOn;
+			this.ambulatoryConsultationProblemsService.setReportFF(isOn);
+		});
+		this.featureFlagService.isActive(AppFeature.HABILITAR_BUSQUEDA_LOCAL_CONCEPTOS).subscribe(isOn => {
+			this.searchConceptsLocallyFFIsOn = isOn;
+			this.ambulatoryConsultationProblemsService.setSearchConceptsLocallyFF(isOn);
+
+		});
 	}
 
 
@@ -593,7 +598,6 @@ export class NuevaConsultaDockPopupComponent implements OnInit {
 	addProblem() {
 		this.dialog.open(NewConsultationAddProblemFormComponent, {
 			data: {
-				readOnlyProblem: this.readOnlyProblema,
 				ambulatoryConsultationProblemsService: this.ambulatoryConsultationProblemsService,
 				severityTypes: this.severityTypes,
 				epidemiologicalReportFF: this.reportFFIsOn,
