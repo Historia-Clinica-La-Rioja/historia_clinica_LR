@@ -12,7 +12,6 @@ export class BedManagementFacadeService {
 
 	public sectors: Sector[] = [];
 	public specialities: Speciality[] = [];
-	public categories: Category[] = [];
 
 	private bedSummarySubject = new ReplaySubject<BedSummaryDto[]>(1);
 	private bedSummary$: Observable<BedSummaryDto[]>;
@@ -56,7 +55,6 @@ export class BedManagementFacadeService {
 		const result = bedManagementCopy.filter(bedManagement => (
 			this.filterBySector(newFilter, bedManagement)
 			&& this.filterBySpeciality(newFilter, bedManagement)
-			&& this.filterByCategory(newFilter, bedManagement)
 			&& this.filterByProbableDischargeDate(newFilter, bedManagement)
 			&& this.filterByFreeBed(newFilter, bedManagement)));
 		this.bedSummarySubject.next(result);
@@ -71,10 +69,6 @@ export class BedManagementFacadeService {
 		return (filter.speciality ? this.sectorHasSpecialty(bedSummary.sector, filter.speciality) : true);
 	}
 
-	private filterByCategory(filter: BedManagementFilter, bedSummary: BedSummaryDto): boolean {
-		return (filter.category ? bedSummary.bed.bedCategory.id === filter.category : true);
-	}
-
 	private filterByProbableDischargeDate(filter: BedManagementFilter, bed: BedSummaryDto): boolean {
 		return (filter.probableDischargeDate ? bed.probableDischargeDate ? momentParseDateTime(bed.probableDischargeDate).isSameOrBefore(momentParseDate(filter.probableDischargeDate)) : false : true);
 	}
@@ -86,8 +80,7 @@ export class BedManagementFacadeService {
 	public getFilterOptions() {
 		return {
 			sectors: this.sectors,
-			specialities: this.specialities,
-			categories: this.categories
+			specialities: this.specialities
 		};
 	}
 
@@ -102,9 +95,6 @@ export class BedManagementFacadeService {
 					{ specialityId: clinicalSpecialty.id, specialityDescription: clinicalSpecialty.name }, this.compareSpeciality);
 			}
 			);
-
-			this.categories = pushIfNotExists(this.categories,
-				{ categoryId: bedSummary.bed.bedCategory.id, categoryDescription: bedSummary.bed.bedCategory.description }, this.compareCategory);
 		});
 	}
 
@@ -114,10 +104,6 @@ export class BedManagementFacadeService {
 
 	private compareSpeciality(speciality: Speciality, speciality2: Speciality): boolean {
 		return speciality.specialityId === speciality2.specialityId;
-	}
-
-	private compareCategory(category: Category, category2: Category): boolean {
-		return category.categoryId === category2.categoryId;
 	}
 
 	private sectorHasSpecialty(sector: SectorSummaryDto, specialtyId: number): boolean {
@@ -141,10 +127,5 @@ export class Sector {
 export class Speciality {
 	specialityId: number;
 	specialityDescription: string;
-}
-
-export class Category {
-	categoryId: number;
-	categoryDescription: string;
 }
 

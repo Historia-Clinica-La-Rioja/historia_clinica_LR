@@ -28,7 +28,6 @@ export class BedAssignmentComponent implements OnInit, OnDestroy {
 		this.bedManagementFacadeService.setInitialFilters({
 			sector: null,
 			speciality: null,
-			category: null,
 			probableDischargeDate: null,
 			filled: false
 		});

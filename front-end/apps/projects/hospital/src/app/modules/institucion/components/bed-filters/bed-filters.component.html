@@ -31,19 +31,6 @@
     </mat-form-field>
 
     <mat-form-field appearance="outline">
-        <mat-label [translate]="'gestion-camas.filters.BED_CATEGORY'"></mat-label>
-        <mat-select formControlName="category" (selectionChange)="sendAllFiltersOnFilterChange()" name="category">
-            <mat-option *ngFor="let category of categories" [value]="category.categoryId">
-                {{category.categoryDescription | translate}}
-            </mat-option>
-        </mat-select>
-        <button id="clear-specialty" type="button" mat-button *ngIf="form.controls.category.value" matSuffix color="warn"
-            mat-icon-button (click)="clear(form.controls.category); $event.stopPropagation()">
-            <mat-icon>close</mat-icon>
-        </button>
-    </mat-form-field>
-
-    <mat-form-field appearance="outline">
         <mat-label [translate]="'gestion-camas.filters.PROBABLE_DISCHARGE_DATE'"></mat-label>
         <input matInput id="date" [matDatepicker]="myDatepicker" formControlName="probableDischargeDate" (dateChange)="sendAllFiltersOnFilterChange()">
         <mat-icon id="clear-probable-discharge-date" *ngIf="form.controls.probableDischargeDate.value" matDatepickerToggleIcon 
