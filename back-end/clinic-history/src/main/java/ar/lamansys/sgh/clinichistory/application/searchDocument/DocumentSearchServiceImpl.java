@@ -2,6 +2,7 @@ package ar.lamansys.sgh.clinichistory.application.searchDocument;
 
 import ar.lamansys.sgh.clinichistory.application.searchDocument.domain.DocumentSearchFilterBo;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.DocumentRepository;
+import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.masterdata.entity.ProceduresStatus;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.searchdocuments.*;
 import ar.lamansys.sgx.shared.featureflags.AppFeature;
 import ar.lamansys.sgx.shared.featureflags.application.FeatureFlagsService;
@@ -70,7 +71,7 @@ public class DocumentSearchServiceImpl implements DocumentSearchService {
 
     private List<DocumentSearchVo> addProcedures(List<DocumentSearchVo> documents){
         for (DocumentSearchVo d : documents){
-            d.setProcedures(documentRepository.getProceduresByDocuments(d.getId()));
+            d.setProcedures(documentRepository.getProceduresByDocuments(d.getId(), ProceduresStatus.ERROR));
         }
         return documents;
     }

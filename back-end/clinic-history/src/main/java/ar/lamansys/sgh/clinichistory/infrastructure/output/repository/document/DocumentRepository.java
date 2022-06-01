@@ -4,6 +4,8 @@ import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.e
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.searchdocuments.DocumentRepositoryCustom;
 import ar.lamansys.sgx.shared.auditable.entity.Updateable;
 import ar.lamansys.sgx.shared.auditable.repository.SGXAuditableEntityJPARepository;
+
+import org.hl7.fhir.r4.model.codesystems.ExProcedureType;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
@@ -24,8 +26,9 @@ public interface DocumentRepository extends SGXAuditableEntityJPARepository<Docu
             "FROM DocumentProcedure AS dp " +
             "JOIN Procedure AS pr ON (pr.id = dp.pk.procedureId) " +
             "JOIN Snomed AS snomedPr ON (pr.snomedId = snomedPr.id) " +
-            "WHERE dp.pk.documentId = :documentId")
-    List<ProcedureReduced> getProceduresByDocuments(@Param("documentId") Long documentId);
+            "WHERE dp.pk.documentId = :documentId " +
+			"AND pr.statusId != :errorStatus")
+    List<ProcedureReduced> getProceduresByDocuments(@Param("documentId") Long documentId, @Param("errorStatus") String errorStatus);
 
     @Transactional(readOnly = true)
     @Query(value = "SELECT d.id " +
