@@ -91,3 +91,13 @@ databaseChangeLog:
               JOIN clinical_specialty_sector css 
               ON doff.clinical_specialty_sector_id = css.id
               WHERE doctors_office_id = doff.id
+    
+    - changeSet:
+        id: dropNotNullConstraint-bed_category_id
+        author: mvenere
+        changes:
+          - dropNotNullConstraint:
+              columnDataType: smallint
+              columnName: bed_category_id
+              tableName: bed
+              validate: true
