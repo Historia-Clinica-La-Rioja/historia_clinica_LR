@@ -192,18 +192,6 @@
 			WHERE oc.institution_id = :institutionId
 			AND oc.created_on between :from and :to
 			AND oc.billable
-			UNION ALL
-			SELECT vc.doctor_id as professional_id,
-			cs.id as specialty_id, cs."name" as specialty, cs.clinical_specialty_type_id as specialtyType,
-			extract(year from (age(vc.performed_date, per.birth_date))) as "age", per.gender_id,
-			CASE WHEN vc.patient_medical_coverage_id is null THEN false ELSE true END as "OS"
-			FROM vaccine_consultation vc
-			LEFT JOIN clinical_specialty cs on (vc.clinical_specialty_id = cs.id)
-			JOIN patient pat on (vc.patient_id = pat.id)
-			JOIN person per on (pat.person_id = per.id)
-			WHERE vc.institution_id = :institutionId
-			AND vc.performed_date between :from and :to
-			AND vc.billable
 		</query>
 	</named-native-query>
 
@@ -219,18 +207,6 @@
 			JOIN person per on (pat.person_id = per.id)
 			WHERE nc.institution_id = :institutionId
 			AND nc.created_on between :from and :to
-			UNION ALL
-			SELECT vc.doctor_id as professional_id,
-			cs.id as specialty_id, cs."name" as specialty, cs.clinical_specialty_type_id as specialtyType,
-			extract(year from (age(vc.performed_date, per.birth_date))) as "age", per.gender_id,
-			CASE WHEN vc.patient_medical_coverage_id is null THEN false ELSE true END as "OS"
-			FROM vaccine_consultation vc
-			LEFT JOIN clinical_specialty cs on (vc.clinical_specialty_id = cs.id)
-			JOIN patient pat on (vc.patient_id = pat.id)
-			JOIN person per on (pat.person_id = per.id)
-			WHERE vc.institution_id = :institutionId
-			AND vc.performed_date between :from and :to
-			AND vc.billable
 		</query>
 	</named-native-query>
 
@@ -426,15 +402,6 @@
 			) vs ON (oc.id = vs.id)
 			WHERE oc.institution_id = :institutionId
 			AND oc.created_on BETWEEN :startDate AND :endDate
-			UNION ALL
-			SELECT vc.institution_id, vc.patient_id, vc.patient_medical_coverage_id, vc.clinical_specialty_id,
-			vc.doctor_id, vc.performed_date as start_date, NULL AS reasons,  NULL AS problems,
-			NULL AS weight, NULL AS height, NULL AS systolicBloodPressure, NULL AS diastolicBloodPressure,
-			'vaccine' as consultation_type
-			FROM vaccine_consultation vc
-			WHERE vc.institution_id = :institutionId
-			AND vc.billable = true
-			AND vc.performed_date BETWEEN :startDate AND :endDate
 			)
 			SELECT p.description as province, d.description as department, i.sisa_code as sisaCode, i.name as institution,
 			CONCAT(pe.last_name, ' ', pe.other_last_names) as patientSurname,
