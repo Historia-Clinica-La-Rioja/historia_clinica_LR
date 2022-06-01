@@ -5,7 +5,6 @@ import {
     DateInput,
     Edit,
     EditButton,
-    ReferenceField,
     ReferenceInput,
     ReferenceManyField,
     required,
@@ -49,9 +48,6 @@ const RoomEdit = props => (
             >
                 <Datagrid rowClick="show">
                     <TextField source="bedNumber" />
-                    <ReferenceField source="bedCategoryId" reference="bedcategories" link={false}>
-                        <TextField source="description" />
-                    </ReferenceField>
                     <EditButton />
                 </Datagrid>
             </ReferenceManyField>

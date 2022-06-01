@@ -3,7 +3,6 @@ import {
     Create,
     TextInput,
     ReferenceInput,
-    SelectInput,
     AutocompleteInput,
     SimpleForm,
     required,
@@ -25,14 +24,6 @@ const BedCreate = props => (
                 filterToQuery={searchText => ({description: searchText ? searchText : -1})}                
             >
                 <AutocompleteInput optionText="description" optionValue="id" options={{ disabled: true }} />
-            </ReferenceInput>
-            <ReferenceInput
-                source="bedCategoryId"
-                reference="bedcategories"
-                sort={{ field: 'description', order: 'ASC' }}
-                validate={[required()]}
-            >
-                <SelectInput optionText="description" optionValue="id"/>
             </ReferenceInput>
             <BooleanInput source="enabled" validate={[required()]} disabled={false} initialValue={true}/>
             <BooleanInput source="available" validate={[required()]} disabled={false} initialValue={true}/>
