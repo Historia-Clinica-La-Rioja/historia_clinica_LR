@@ -7,7 +7,7 @@ import net.pladema.programreports.repository.ConsultationDetailRecupero;
 
 import java.util.List;
 
-public interface ExcelService {
+public interface ExcelServicePR {
 
 	IWorkbook buildExcelEpidemiologiaI(String tittle, String[] headers, List<ConsultationDetailEpiI> query);
 

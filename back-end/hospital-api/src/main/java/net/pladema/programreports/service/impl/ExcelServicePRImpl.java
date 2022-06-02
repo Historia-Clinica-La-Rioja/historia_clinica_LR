@@ -10,7 +10,7 @@ import ar.lamansys.sgx.shared.reports.util.struct.IWorkbook;
 import net.pladema.programreports.repository.ConsultationDetailEpiI;
 import net.pladema.programreports.repository.ConsultationDetailEpiII;
 import net.pladema.programreports.repository.ConsultationDetailRecupero;
-import net.pladema.programreports.service.ExcelService;
+import net.pladema.programreports.service.ExcelServicePR;
 
 import org.springframework.stereotype.Service;
 
@@ -21,7 +21,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
 
 @Service
-public class ExcelServiceImpl implements ExcelService {
+public class ExcelServicePRImpl implements ExcelServicePR {
 
 	private ICellStyle basicStyle;
 	private ICellStyle titleStyle;
