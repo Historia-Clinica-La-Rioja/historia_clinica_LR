@@ -7,8 +7,10 @@ import ar.lamansys.sgx.shared.reports.util.struct.ICellStyle;
 import ar.lamansys.sgx.shared.reports.util.struct.IRow;
 import ar.lamansys.sgx.shared.reports.util.struct.ISheet;
 import ar.lamansys.sgx.shared.reports.util.struct.IWorkbook;
+import net.pladema.programreports.repository.ConsultationDetailEpiI;
+import net.pladema.programreports.repository.ConsultationDetailEpiII;
 import net.pladema.programreports.repository.ConsultationDetailRecupero;
-import net.pladema.programreports.service.ExcelServiceRecupero;
+import net.pladema.programreports.service.ExcelService;
 
 import org.springframework.stereotype.Service;
 
@@ -19,7 +21,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
 
 @Service
-public class RecuperoExcelServiceImpl implements ExcelServiceRecupero {
+public class ExcelServiceImpl implements ExcelService {
 
 	private ICellStyle basicStyle;
 	private ICellStyle titleStyle;
@@ -27,7 +29,7 @@ public class RecuperoExcelServiceImpl implements ExcelServiceRecupero {
 	private ICellStyle subTitleStyle;
 
 	@Override
-	public IWorkbook buildExcelFromQuery(String tittle, String[] headers, List<ConsultationDetailRecupero> result) {
+	public IWorkbook buildExcelEpidemiologiaI(String tittle, String[] headers, List<ConsultationDetailEpiI> result) {
 		IWorkbook wb = WorkbookCreator.createExcelWorkbook();
 		createCellStyle(wb);
 
@@ -42,7 +44,55 @@ public class RecuperoExcelServiceImpl implements ExcelServiceRecupero {
 		result.forEach(
 				resultData -> {
 					IRow newDataRow = sheet.createRow(rowNumber.getAndIncrement());
-					fillRowContent(newDataRow, resultData, styleDataRow);
+					fillRowContentEpidemiologiaI(newDataRow, resultData, styleDataRow);
+				}
+		);
+
+		setDimensions(sheet);
+		return wb;
+	}
+
+	@Override
+	public IWorkbook buildExcelEpidemiologiaII(String tittle, String[] headers, List<ConsultationDetailEpiII> result) {
+		IWorkbook wb = WorkbookCreator.createExcelWorkbook();
+		createCellStyle(wb);
+
+		ISheet sheet = wb.createSheet(tittle);
+
+		fillRow(sheet, getHeaderData(headers));
+
+		AtomicInteger rowNumber = new AtomicInteger(sheet.getCantRows());
+
+		ICellStyle styleDataRow = createDataRowStyle(wb);
+
+		result.forEach(
+				resultData -> {
+					IRow newDataRow = sheet.createRow(rowNumber.getAndIncrement());
+					fillRowContentEpidemiologiaII(newDataRow, resultData, styleDataRow);
+				}
+		);
+
+		setDimensions(sheet);
+		return wb;
+	}
+
+	@Override
+	public IWorkbook buildExcelRecupero(String tittle, String[] headers, List<ConsultationDetailRecupero> result) {
+		IWorkbook wb = WorkbookCreator.createExcelWorkbook();
+		createCellStyle(wb);
+
+		ISheet sheet = wb.createSheet(tittle);
+
+		fillRow(sheet, getHeaderData(headers));
+
+		AtomicInteger rowNumber = new AtomicInteger(sheet.getCantRows());
+
+		ICellStyle styleDataRow = createDataRowStyle(wb);
+
+		result.forEach(
+				resultData -> {
+					IRow newDataRow = sheet.createRow(rowNumber.getAndIncrement());
+					fillRowContentRecupero(newDataRow, resultData, styleDataRow);
 				}
 		);
 
@@ -91,7 +141,7 @@ public class RecuperoExcelServiceImpl implements ExcelServiceRecupero {
 
 		data.add(new CellContent(nRow, 0, 1, 2, "", basicStyle));
 		data.add(new CellContent(nRow, 2, 2, 1, "2", titleStyle));
-		data.add(new CellContent(nRow, 3, 2, 16, "Recupero", titleStyle));
+		data.add(new CellContent(nRow, 3, 2, 16, "Epidemiología 1", titleStyle));
 		data.add(new CellContent(nRow, 19, 1, 3, "1. Hoja N°", fieldStyle));
 		data.add(new CellContent(nRow, 22, 1, 1, "", basicStyle));
 		data.add(new CellContent(nRow, 23, 1, 1, "", basicStyle));
@@ -166,7 +216,66 @@ public class RecuperoExcelServiceImpl implements ExcelServiceRecupero {
 			sheet.addMergedRegion(nRow, data.lastRow(), nColumn, data.lastCol(), true);
 	}
 
-	private void fillRowContent(IRow row, ConsultationDetailRecupero content, ICellStyle style){
+	private void fillRowContentEpidemiologiaI(IRow row, ConsultationDetailEpiI content, ICellStyle style){
+		AtomicInteger rowNumber = new AtomicInteger(0);
+		ICell cell = row.createCell(rowNumber.getAndIncrement());
+		cell.setCellValue(content.getPatientFullName());
+		cell.setCellStyle(style);
+
+		ICell cell2 = row.createCell(rowNumber.getAndIncrement());
+		cell2.setCellValue(content.getCoding());
+		cell2.setCellStyle(style);
+
+		ICell cell3 = row.createCell(rowNumber.getAndIncrement());
+		cell3.setCellValue(content.getBirthDate());
+		cell3.setCellStyle(style);
+
+		ICell cell4 = row.createCell(rowNumber.getAndIncrement());
+		cell4.setCellValue(content.getGender());
+		cell4.setCellStyle(style);
+
+		ICell cell5 = row.createCell(rowNumber.getAndIncrement());
+		cell5.setCellValue(content.getStartDate());
+		cell5.setCellStyle(style);
+
+		ICell cell6 = row.createCell(rowNumber.getAndIncrement());
+		cell6.setCellValue(content.getDepartment());
+		cell6.setCellStyle(style);
+
+		ICell cell7 = row.createCell(rowNumber.getAndIncrement());
+		cell7.setCellValue(content.getAddress());
+		cell7.setCellStyle(style);
+
+		ICell cell8 = row.createCell(rowNumber.getAndIncrement());
+		cell8.setCellValue(content.getCie10Codes());
+		cell8.setCellStyle(style);
+
+		ICell cell9 = row.createCell(rowNumber.getAndIncrement());
+		cell9.setCellValue(content.getIdentificationNumber());
+		cell9.setCellStyle(style);
+
+		ICell cell10 = row.createCell(rowNumber.getAndIncrement());
+		cell10.setCellValue(content.getProblems());
+		cell10.setCellStyle(style);
+	}
+
+	private void fillRowContentEpidemiologiaII(IRow row, ConsultationDetailEpiII content, ICellStyle style){
+		AtomicInteger rowNumber = new AtomicInteger(0);
+
+		ICell cell = row.createCell(rowNumber.getAndIncrement());
+		cell.setCellValue(content.getDiagnostic());
+		cell.setCellStyle(style);
+
+		ICell cell2 = row.createCell(rowNumber.getAndIncrement());
+		cell2.setCellValue(content.getRango());
+		cell2.setCellStyle(style);
+
+		ICell cell3 = row.createCell(rowNumber.getAndIncrement());
+		cell3.setCellValue(content.getContador());
+		cell3.setCellStyle(style);
+	}
+
+	private void fillRowContentRecupero(IRow row, ConsultationDetailRecupero content, ICellStyle style){
 		AtomicInteger rowNumber = new AtomicInteger(0);
 
 		ICell cell = row.createCell(rowNumber.getAndIncrement());
