@@ -290,3 +290,17 @@ databaseChangeLog:
           - dropColumn:
               columnName: clinical_specialty_sector_id
               tableName: doctors_office
+       
+    - changeSet:
+        id: add_sector_type-metadata
+        author: mvenere
+        context: "!schema-only"
+        changes:
+          - sql:
+              sql: |-
+                INSERT INTO sector_type (id,description) VALUES (3,'Guardia');
+                INSERT INTO sector_type (id,description) VALUES (4,'Diagnóstico por imagen');
+                INSERT INTO sector_type (id,description) VALUES (5,'Hospital de día');
+                INSERT INTO sector_type (id,description) VALUES (6,'Sin tipo');
+                INSERT INTO sector_type (id,description) VALUES (7,'Laboratorio');
+

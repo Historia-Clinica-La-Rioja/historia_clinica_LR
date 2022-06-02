@@ -21,6 +21,12 @@ public class SectorType {
 
     public static final Short OUTPATIENT_ID = 1;
     public static final Short INTERNMENT_ID = 2;
+	public static final Short EMERGENCY_CARE_ID = 3;
+	public static final Short DIAGNOSIS_IMAGES_ID = 4;
+	public static final Short DAY_HOSPITAL = 5;
+	public static final Short TYPELESS = 6;
+    public static final Short LABORATORY = 7;
+
 
     @Id
     @Column(name = "id")
