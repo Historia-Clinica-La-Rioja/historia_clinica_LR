@@ -157,19 +157,19 @@ export class EvolutionNoteDockPopupComponent implements OnInit {
 			anthropometricData: isNull(formValues.anthropometricData) ? undefined : {
 				bloodType: formValues.anthropometricData.bloodType ? {
 					id: this.evolutionNote ?
-						(formValues.anthropometricData.bloodType.description === this.evolutionNote.anthropometricData?.bloodType.value) ? this.evolutionNote.anthropometricData.bloodType.id : null
+						(formValues.anthropometricData.bloodType.description === this.evolutionNote.anthropometricData?.bloodType?.value) ? this.evolutionNote.anthropometricData.bloodType.id : null
 						: null,
 					value: formValues.anthropometricData.bloodType.description
 				} : undefined,
 				height: formValues.anthropometricData.height ? {
 					id: this.evolutionNote ?
-						(formValues.anthropometricData.height === this.evolutionNote.anthropometricData?.height.value) ? this.evolutionNote.anthropometricData.height.id : null
+						(formValues.anthropometricData.height === this.evolutionNote.anthropometricData?.height?.value) ? this.evolutionNote.anthropometricData.height.id : null
 						: null,
 					value: formValues.anthropometricData.height
 				} : undefined,
 				weight: formValues.anthropometricData.weight ? {
 					id: this.evolutionNote ?
-						(formValues.anthropometricData.weight === this.evolutionNote.anthropometricData?.weight.value) ? this.evolutionNote.anthropometricData.weight.id : null
+						(formValues.anthropometricData.weight === this.evolutionNote.anthropometricData?.weight?.value) ? this.evolutionNote.anthropometricData.weight.id : null
 						: null,
 					value: formValues.anthropometricData.weight
 				} : undefined,

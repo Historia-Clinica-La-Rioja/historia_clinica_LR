@@ -162,7 +162,7 @@ export class AnamnesisDockPopupComponent implements OnInit {
 			anthropometricData: isNull(formValues.anthropometricData) ? undefined : {
 				bloodType: formValues.anthropometricData.bloodType ? {
 					id: this.anamnesis ?
-						(formValues.anthropometricData.bloodType.description === this.anamnesis.anthropometricData?.bloodType.value) ? this.anamnesis.anthropometricData.bloodType.id : null
+						(formValues.anthropometricData.bloodType.description === this.anamnesis.anthropometricData?.bloodType?.value) ? this.anamnesis.anthropometricData.bloodType.id : null
 						: null,
 					value: formValues.anthropometricData.bloodType.description
 				} : undefined,
