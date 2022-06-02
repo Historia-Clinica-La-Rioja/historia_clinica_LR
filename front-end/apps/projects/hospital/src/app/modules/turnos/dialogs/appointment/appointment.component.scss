@@ -15,6 +15,14 @@
 	}
 }
 
+.historia-clinica{
+	display: flex;
+
+	a{
+		margin-right: 7px;
+	}
+}
+
 .appointment-information {
 	height: auto;
 }
@@ -136,14 +144,14 @@ section {
 		display: flex;
 		justify-content: space-between;
 	}
-	
-	.observation-buttons{
-		display: flex;
-		justify-content: flex-end;
-		margin-bottom: 10px;
-		
-		button{
-			margin: -10px 10px;
-		}
-	}	
 }
+
+.confirm-buttons{
+	display: flex;
+	justify-content: flex-end;
+	margin-bottom: 20px;
+	
+	button{
+		margin: -10px 10px;
+	}
+}	

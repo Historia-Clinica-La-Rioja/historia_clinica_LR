@@ -75,6 +75,13 @@
 			}
 		},
 		"appointment": {
+			"TITLE": "Turno",
+			"BUTTON_HISTORIA_CLINICA": "Ver historia clínica",
+			"EDIT_PACIENT_INFO": "Editar información del paciente",
+			"APPOINTMENT_STATE": "Estado de turno",
+			"MOTIVE": "Motivo",
+			"SAVE": "Guardar",
+			"CANCEL": "Cancelar",
 			"phoneNumber": {
 				"SUCCESS": "El teléfono se modificó correctamente",
 				"PHONE_NUMBER": "Teléfono",
@@ -88,13 +95,18 @@
 				"OBSERVATIONS": "Observaciones",
 				"UPDATE_SUCCESS": "Las observaciones se han modificado correctamente",
 				"ADD_OBSERVATION": "+ Agregar observaciones",
-				"ADD_OBSERVATION_SUBTITLE": "Ingrese observaciones...",
-				"SAVE": "Guardar",
-				"CANCEL": "Cancelar"
+				"ADD_OBSERVATION_SUBTITLE": "Ingrese observaciones..."
+			},
+			"reports":{
+				"DOWNLOAD_REPORT": "Descargar informe",
+				"ANEXO": "Anexo II",
+				"FORM": "Formulario V"
 			}
 		},
 		"report": {
-			"TITLE": "Descargar informes"
+			"TITLE": "Descargar informes",
+			"ANEXO": "Anexo II",
+			"FORM": "Formulario V"
 		}
 	}
 }

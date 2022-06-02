@@ -76,7 +76,7 @@ export class AppointmentComponent implements OnInit {
 	isMqttCallEnabled: boolean = false;
 	
 	hideObservationForm: boolean = true;
-	hideObservationTittle: boolean = true;
+	hideObservationTitle: boolean = true;
 	observation: string;
 
 	constructor(
@@ -129,7 +129,7 @@ export class AppointmentComponent implements OnInit {
 				this.appointment = appointment;
 				this.observation = appointment.observation;
 				if(this.observation){
-					this.hideObservationTittle = false;
+					this.hideObservationTitle = false;
 					this.formObservations.controls.observation.setValue(this.observation);
 				}
 				this.estadoSelected = this.appointment?.appointmentStateId;
@@ -163,7 +163,7 @@ export class AppointmentComponent implements OnInit {
 
 	formatPhonePrefixAndNumber(): string {
 		return this.params.appointmentData.phoneNumber ? this.params.appointmentData.phonePrefix
-			? this.params.appointmentData.phonePrefix + "-" + this.params.appointmentData.phoneNumber
+			? "(" + this.params.appointmentData.phonePrefix + ") " + this.params.appointmentData.phoneNumber
 			: this.params.appointmentData.phoneNumber
 			: "Sin información";
 	}
@@ -389,7 +389,7 @@ export class AppointmentComponent implements OnInit {
 	}
 
 	setHideObservationTittle(value: boolean): void{
-		this.hideObservationTittle = value;
+		this.hideObservationTitle = value;
 	}
 
 	setHideObservationForm(value: boolean): void{
@@ -409,9 +409,9 @@ export class AppointmentComponent implements OnInit {
 	cancelObservation(): void{
 		this.hideObservationForm = true;
 		if(!this.observation)
-			this.hideObservationTittle = true;
+			this.hideObservationTitle = true;
 		else
-			this.hideObservationTittle = false;
+			this.hideObservationTitle = false;
 	}
 
 	private updateSummaryCoverageData(): void {
