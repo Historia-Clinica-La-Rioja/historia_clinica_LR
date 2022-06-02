@@ -1,6 +1,6 @@
 import spanishMessages from '@blackbox-vision/ra-language-spanish';
 
-const sectorsData = {
+const sectorMessages = {
     name: 'Sector |||| Sectores',
     fields: {
         institutionId: 'Institución',
@@ -211,8 +211,8 @@ const messages = {
                 lastUpdate: 'Última actualización'
             },
         },
-        sectors: sectorsData,
-        rootsectors: sectorsData,
+        sectors: sectorMessages,
+        rootsectors: sectorMessages,
 
         clinicalspecialties: {
             name: 'Especialidad |||| Especialidades',

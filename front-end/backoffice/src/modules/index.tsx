@@ -8,6 +8,7 @@ import institutions from './institutions';
 import snvs from './snvs';
 import addresses from './addresses';
 import sectors from './sectors';
+import rootSectors from './root-sectors';
 import clinicalspecialties from './clinicalspecialties';
 import clinicalspecialtysectors from './clinicalspecialtysectors';
 import rooms from './rooms';
@@ -95,7 +96,7 @@ const resources = (permissions: SGXPermissions) => [
     // facilities
     <Resource name="institutions" {...institutions(permissions)} />,
     <Resource name="sectors" {...sectors} />,
-    <Resource name="rootsectors" {...sectors} />,
+    <Resource name="rootsectors" {...rootSectors} />,
     <Resource name="clinicalspecialties" {...clinicalspecialties(permissions)} />,
     <Resource name="clinicalspecialtysectors" {...clinicalspecialtysectors} />,
     <Resource name="doctorsoffices" {...doctorsoffices} />,

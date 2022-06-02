@@ -13,6 +13,16 @@ import CreateRelatedButton from '../components/CreateRelatedButton';
 import SectionTitle from '../components/SectionTitle';
 import SgxDateField from "../../dateComponents/sgxDateField";
 
+const CreateSector = ({ record }) => {
+    return (
+        <CreateRelatedButton
+                customRecord={{ sectorId: record.id, institutionId: record.institutionId}}
+                reference="sectors"
+                label="resources.sectors.createRelated"
+        />
+    )
+}
+
 const SectorShow = props => (
     <Show {...props}>
         <SimpleShowLayout>
@@ -22,6 +32,7 @@ const SectorShow = props => (
             </ReferenceField>
 
             <SectionTitle label="resources.sectors.fields.childSectors" />
+            <CreateSector />
             <ReferenceManyField
                 addLabel={false}
                 reference="sectors"

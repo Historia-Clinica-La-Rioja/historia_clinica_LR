@@ -101,3 +101,16 @@ databaseChangeLog:
               columnName: bed_category_id
               tableName: bed
               validate: true
+
+    - changeSet:
+        id: create-root-sector-view
+        comment: Crea la vista RootSector para aquellos sectores sin padre
+        author: mmalyvarni
+        changes:
+          - createView:
+              - viewName: v_root_sector
+              - fullDefinition: false
+              - selectQuery: |-
+                  (SELECT *
+                   FROM sector AS s
+                   WHERE s.sector_id IS NULL)

@@ -35,18 +35,6 @@ const HospitalizationField = ({formData, ...rest}) => {
     )
 }
 
-const Sector = ({ formData, ...rest }) => {
-    return (
-        <ReferenceInput
-            {...rest}
-            reference="sectors"
-            sort={{ field: 'description', order: 'ASC' }}
-            filter={{institutionId: formData.institutionId}}
-        >
-            <SelectInput optionText="description" optionValue="id" />
-        </ReferenceInput>);
-};
-
 const SectorCreate = props => (
     <Create {...props}>
         <SimpleForm redirect={redirect} toolbar={<CustomToolbar />} >
@@ -60,9 +48,13 @@ const SectorCreate = props => (
             </ReferenceInput>
 
             {/*Parent Sector*/}
-            <FormDataConsumer>
-                {formDataProps => ( <Sector {...formDataProps} source="sectorId" />)}
-            </FormDataConsumer>
+            <ReferenceInput
+                source="sectorId"
+                reference="sectors"
+                sort={{ field: 'description', order: 'ASC' }}
+            >
+                <AutocompleteInput optionText="description" optionValue="id" options={{ disabled: true }}/>
+            </ReferenceInput>
 
             {/*Sector Type*/}
             <SectorType source="sectorTypeId"/>
