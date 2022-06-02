@@ -176,7 +176,7 @@ export class AnamnesisDockPopupComponent implements OnInit {
 					id: this.anamnesis ?
 						(formValues.anthropometricData.weight === this.anamnesis.anthropometricData?.weight?.value) ? this.anamnesis.anthropometricData.weight.id : null
 						: null,
-					value: formValues.anthropometricData.height
+					value: formValues.anthropometricData.weight
 				} : undefined,
 			},
 			mainDiagnosis: this.mainDiagnosis?.isAdded ? this.mainDiagnosis : null,
@@ -242,9 +242,9 @@ export class AnamnesisDockPopupComponent implements OnInit {
 		if (this.anamnesis.anthropometricData) {
 			const findBloodTypeValue = findBloodType(this.bloodTypes, this.anamnesis.anthropometricData.bloodType?.value)
 			this.form.controls.anthropometricData.setValue({
-				bloodType: findBloodTypeValue,
-				height: this.anamnesis.anthropometricData.height?.value,
-				weight: this.anamnesis.anthropometricData.weight?.value
+				bloodType: findBloodTypeValue ? findBloodTypeValue : null,
+				height: this.anamnesis.anthropometricData.height?.value ? this.anamnesis.anthropometricData.height.value : null,
+				weight: this.anamnesis.anthropometricData.weight?.value ? this.anamnesis.anthropometricData.weight.value : null
 			});
 		}
 		if (this.anamnesis.riskFactors) {
