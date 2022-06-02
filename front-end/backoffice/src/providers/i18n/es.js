@@ -6,6 +6,7 @@ const sectorsData = {
         institutionId: 'Institución',
         description: 'Nombre',
         clinicalspecialtysectors: 'Especialidad | Sector',
+        childSectors: 'Sectores Hijos',
         ageGroupId: 'Grupo de edad',
         sectorTypeId: 'Tipo de sector',
         sectorOrganizationId: 'Organización',

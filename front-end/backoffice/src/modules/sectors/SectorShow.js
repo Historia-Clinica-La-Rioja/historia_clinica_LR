@@ -20,6 +20,20 @@ const SectorShow = props => (
             <ReferenceField source="institutionId" reference="institutions">
                 <TextField source="name"/>
             </ReferenceField>
+
+            <SectionTitle label="resources.sectors.fields.childSectors" />
+            <ReferenceManyField
+                addLabel={false}
+                reference="sectors"
+                target= { "sectorId" }
+                sort={{ field: 'description', order: 'DESC' }}
+            >
+                <Datagrid rowClick="show">
+                    <TextField source="description" />
+                    <EditButton />
+                </Datagrid>
+            </ReferenceManyField>
+
             <SectionTitle label="resources.sectors.fields.clinicalspecialtysectors"/>
             <CreateRelatedButton
                 reference="clinicalspecialtysectors"
