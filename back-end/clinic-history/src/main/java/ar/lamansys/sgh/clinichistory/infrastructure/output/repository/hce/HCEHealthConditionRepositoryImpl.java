@@ -46,7 +46,7 @@ public class HCEHealthConditionRepositoryImpl implements HCEHealthConditionRepos
                 "   FROM {h-schema}document d " +
                 "   JOIN {h-schema}document_health_condition dhc on d.id = dhc.document_id " +
                 "   JOIN {h-schema}health_condition hc on dhc.health_condition_id = hc.id " +
-                "   WHERE d.status_id = :docStatusId " +
+                "   WHERE d.status_id IN (:docStatusId) " +
                 "   AND d.type_id in (:documentTypes) "+
                 "   AND hc.patient_id = :patientId " +
                 "   AND hc.problem_id IN (:validProblemTypes) " +
@@ -60,7 +60,7 @@ public class HCEHealthConditionRepositoryImpl implements HCEHealthConditionRepos
                 "ORDER BY t.updated_on DESC";
 
         List<Object[]> queryResult = entityManager.createNativeQuery(sqlString)
-                .setParameter("docStatusId", DocumentStatus.FINAL)
+                .setParameter("docStatusId", List.of(DocumentStatus.FINAL, DocumentStatus.DRAFT))
                 .setParameter("verificationId", ConditionVerificationStatus.ERROR)
                 .setParameter("patientId", patientId)
                 .setParameter("validProblemTypes", Arrays.asList(ProblemType.PROBLEM, ProblemType.CHRONIC))
@@ -97,7 +97,7 @@ public class HCEHealthConditionRepositoryImpl implements HCEHealthConditionRepos
                 "   FROM {h-schema}document d " +
                 "   JOIN {h-schema}document_health_condition dhc on d.id = dhc.document_id " +
                 "   JOIN {h-schema}health_condition hc on dhc.health_condition_id = hc.id " +
-                "   WHERE d.status_id = :docStatusId " +
+                "   WHERE d.status_id IN (:docStatusId) " +
                 "   AND d.type_id NOT IN :invalidDocumentTypes "+
                 "   AND hc.patient_id = :patientId " +
                 "   AND hc.problem_id = :problemType " +
@@ -113,7 +113,7 @@ public class HCEHealthConditionRepositoryImpl implements HCEHealthConditionRepos
                 "ORDER BY t.updated_on DESC";
 
         List<Object[]> queryResult = entityManager.createNativeQuery(sqlString)
-                .setParameter("docStatusId", DocumentStatus.FINAL)
+                .setParameter("docStatusId", List.of(DocumentStatus.FINAL, DocumentStatus.DRAFT))
                 .setParameter("verificationId", ConditionVerificationStatus.ERROR)
                 .setParameter("hcStatusId", ConditionClinicalStatus.ACTIVE)
                 .setParameter("patientId", patientId)
@@ -168,7 +168,7 @@ public class HCEHealthConditionRepositoryImpl implements HCEHealthConditionRepos
                 "ORDER BY t.updated_on DESC";
 
         List<Object[]> queryResult = entityManager.createNativeQuery(sqlString)
-                .setParameter("docStatusId", DocumentStatus.FINAL)
+                .setParameter("docStatusId", List.of(DocumentStatus.FINAL, DocumentStatus.DRAFT))
                 .setParameter("verificationId", ConditionVerificationStatus.ERROR)
                 .setParameter("sourceType", SourceType.HOSPITALIZATION)
                 .setParameter("patientId", patientId)
