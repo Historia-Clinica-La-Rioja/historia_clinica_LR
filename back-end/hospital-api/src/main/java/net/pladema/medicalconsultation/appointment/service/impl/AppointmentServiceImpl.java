@@ -19,7 +19,6 @@ import net.pladema.medicalconsultation.appointment.repository.entity.Appointment
 import net.pladema.patient.controller.dto.PatientMedicalCoverageDto;
 import net.pladema.patient.controller.service.PatientExternalMedicalCoverageService;
 
-import net.pladema.patient.repository.PatientRepository;
 import net.pladema.patient.service.domain.PatientCoverageInsuranceDetailsBo;
 import net.pladema.patient.service.domain.PatientMedicalCoverageBo;
 

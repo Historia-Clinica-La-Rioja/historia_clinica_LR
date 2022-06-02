@@ -329,14 +329,14 @@ public class AppointmentsController {
 
         Integer diaryIdParam = Integer.parseInt(diaryId);
 
-		Collection<AppointmentDailyAmountBo> resultService = appointmentDailyAmountService
-				.getDailyAmounts(diaryIdParam);
-		List<AppointmentDailyAmountDto> result = resultService.stream()
-				.parallel()
-				.map(appointmentMapper::toAppointmentDailyAmountDto)
-				.collect(Collectors.toList());
-		log.debug(OUTPUT, result);
-		return ResponseEntity.ok().body(result);
+        Collection<AppointmentDailyAmountBo> resultService = appointmentDailyAmountService
+                .getDailyAmounts(diaryIdParam);
+        List<AppointmentDailyAmountDto> result = resultService.stream()
+                .parallel()
+                .map(appointmentMapper::toAppointmentDailyAmountDto)
+                .collect(Collectors.toList());
+        log.debug(OUTPUT, result);
+        return ResponseEntity.ok().body(result);
     }
 
     @PostMapping("/{appointmentId}/notifyPatient")

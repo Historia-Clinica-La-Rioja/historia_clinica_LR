@@ -2,7 +2,6 @@ package ar.lamansys.sgh.publicapi.infrastructure.input.rest.dto;
 
 import java.io.Serializable;
 
-import ar.lamansys.sgx.shared.dates.controller.dto.DateDto;
 import ar.lamansys.sgx.shared.dates.controller.dto.DateTimeDto;
 import lombok.Builder;
 import lombok.Getter;

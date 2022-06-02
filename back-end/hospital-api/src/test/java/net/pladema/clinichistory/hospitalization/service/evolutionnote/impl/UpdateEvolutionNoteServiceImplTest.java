@@ -12,7 +12,6 @@ import ar.lamansys.sgx.shared.featureflags.application.FeatureFlagsService;
 import net.pladema.UnitRepository;
 import net.pladema.clinichistory.hospitalization.service.InternmentDocumentModificationValidator;
 import net.pladema.clinichistory.hospitalization.service.InternmentEpisodeService;
-import net.pladema.clinichistory.hospitalization.service.anamnesis.domain.AnamnesisBo;
 import net.pladema.clinichistory.hospitalization.service.evolutionnote.EvolutionNoteService;
 import net.pladema.clinichistory.hospitalization.service.evolutionnote.EvolutionNoteValidator;
 import net.pladema.clinichistory.hospitalization.service.evolutionnote.UpdateEvolutionNoteService;
@@ -22,7 +21,6 @@ import net.pladema.clinichistory.hospitalization.service.impl.exceptions.Internm
 
 import net.pladema.sgx.session.infrastructure.input.service.FetchLoggedUserRolesExternalService;
 
-import org.assertj.core.util.Arrays;
 import org.assertj.core.util.Lists;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;

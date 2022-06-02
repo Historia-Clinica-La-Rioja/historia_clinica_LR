@@ -11,10 +11,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
-import java.time.LocalDateTime;
-
-import static java.time.temporal.ChronoUnit.DAYS;
-
 @Component
 public class DiagnosticReportInfoMapper {
 

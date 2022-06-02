@@ -1,14 +1,11 @@
 package net.pladema.clinichistory.hospitalization.service.epicrisis.impl;
 
-import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import ar.lamansys.sgh.clinichistory.application.createDocument.DocumentFactory;
-import ar.lamansys.sgh.clinichistory.domain.ips.ClinicalTerm;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.DocumentStatus;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.EDocumentType;
 import ar.lamansys.sgh.shared.infrastructure.input.service.SharedDocumentPort;
@@ -17,7 +14,6 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import net.pladema.clinichistory.hospitalization.service.InternmentDocumentModificationValidator;
 import net.pladema.clinichistory.hospitalization.service.InternmentEpisodeService;
-import net.pladema.clinichistory.hospitalization.service.anamnesis.domain.AnamnesisBo;
 import net.pladema.clinichistory.hospitalization.service.epicrisis.EpicrisisService;
 import net.pladema.clinichistory.hospitalization.service.epicrisis.EpicrisisValidator;
 import net.pladema.clinichistory.hospitalization.service.epicrisis.UpdateEpicrisisService;

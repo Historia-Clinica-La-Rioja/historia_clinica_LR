@@ -1,28 +1,18 @@
 package net.pladema.clinichistory.hospitalization.service.anamnesis.impl;
 
 import ar.lamansys.sgh.clinichistory.application.createDocument.DocumentFactory;
-import ar.lamansys.sgh.clinichistory.domain.ips.ClinicalTermsValidatorUtils;
-import ar.lamansys.sgh.clinichistory.domain.ips.DiagnosisBo;
-import ar.lamansys.sgh.clinichistory.domain.ips.SnomedBo;
 import ar.lamansys.sgx.shared.dates.configuration.DateTimeProvider;
-import ar.lamansys.sgx.shared.featureflags.AppFeature;
-import net.pladema.clinichistory.hospitalization.repository.domain.InternmentEpisode;
 import net.pladema.clinichistory.hospitalization.service.InternmentEpisodeService;
 import net.pladema.clinichistory.hospitalization.service.anamnesis.AnamnesisValidator;
 import net.pladema.clinichistory.hospitalization.service.anamnesis.CreateAnamnesisService;
 import net.pladema.clinichistory.hospitalization.service.anamnesis.domain.AnamnesisBo;
-import net.pladema.clinichistory.hospitalization.service.documents.validation.AnthropometricDataValidator;
-import net.pladema.clinichistory.hospitalization.service.documents.validation.EffectiveRiskFactorTimeValidator;
-import ar.lamansys.sgx.shared.featureflags.application.FeatureFlagsService;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.validation.ConstraintViolationException;
-
 import java.time.LocalDateTime;
-import java.util.Collections;
 import java.util.Optional;
 
 @Service

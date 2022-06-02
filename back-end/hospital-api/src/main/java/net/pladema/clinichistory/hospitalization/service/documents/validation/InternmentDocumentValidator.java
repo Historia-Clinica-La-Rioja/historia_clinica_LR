@@ -4,7 +4,6 @@ import ar.lamansys.sgh.clinichistory.domain.document.IDocumentBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.ClinicalTermsValidatorUtils;
 import ar.lamansys.sgh.clinichistory.domain.ips.DiagnosisBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.HealthConditionBo;
-import net.pladema.clinichistory.hospitalization.repository.domain.InternmentEpisode;
 
 import javax.validation.ConstraintViolationException;
 

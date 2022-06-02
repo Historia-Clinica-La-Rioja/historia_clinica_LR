@@ -25,7 +25,7 @@ export class NewAttentionComponent implements OnInit {
 		public dialogRef: MatDialogRef<NewAttentionComponent>,
 		private readonly formBuilder: FormBuilder,
 		private readonly medicalConsultationMasterdataService: MedicalConsultationMasterdataService,
-		@Inject(MAT_DIALOG_DATA) public data: NewAttentionElements
+		@Inject(MAT_DIALOG_DATA) public data: NewAttentionElements,
 	) { }
 
 
@@ -46,7 +46,6 @@ export class NewAttentionComponent implements OnInit {
 			availableForBooking: [this.data.availableForBooking],
 		});
 
-
 		this.availableForBooking = this.data.availableForBooking;
 
 		this.possibleStartingScheduleHours = this.data.possibleScheduleHours.slice(0, this.data.possibleScheduleHours.length - 1);
@@ -60,7 +59,6 @@ export class NewAttentionComponent implements OnInit {
 		if (medicalAttentionType.description === MEDICAL_ATTENTION.SPONTANEOUS) {
 			this.form.controls.overturnCount.disable();
 			this.form.controls.availableForBooking.disable();
-
 		} else {
 			this.form.controls.overturnCount.enable();
 			this.form.controls.availableForBooking.enable();

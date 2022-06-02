@@ -5,7 +5,6 @@ import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.searchdocu
 import ar.lamansys.sgx.shared.auditable.entity.Updateable;
 import ar.lamansys.sgx.shared.auditable.repository.SGXAuditableEntityJPARepository;
 
-import org.hl7.fhir.r4.model.codesystems.ExProcedureType;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;

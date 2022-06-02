@@ -15,11 +15,11 @@ import { SelectAgendaComponent } from './components/select-agenda/select-agenda.
 // dialogs
 import { AppointmentComponent } from './dialogs/appointment/appointment.component';
 import { CancelAppointmentComponent } from './dialogs/cancel-appointment/cancel-appointment.component';
+import { ConfirmBookingComponent } from './dialogs/confirm-booking/confirm-booking.component';
 import { NewAppointmentComponent } from './dialogs/new-appointment/new-appointment.component';
 import { NewAttentionComponent } from './dialogs/new-attention/new-attention.component';
 // services
 import { CustomDateFormatter } from './services/custom-date-formatter.service';
-import { ConfirmBookingComponent } from './dialogs/confirm-booking/confirm-booking.component';
 
 
 @NgModule({
@@ -33,9 +33,9 @@ import { ConfirmBookingComponent } from './dialogs/confirm-booking/confirm-booki
 		// dialogs
 		AppointmentComponent,
 		CancelAppointmentComponent,
+		ConfirmBookingComponent,
 		NewAppointmentComponent,
 		NewAttentionComponent,
-  		ConfirmBookingComponent,
 	],
 	imports: [
 		CommonModule,
