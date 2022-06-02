@@ -54,7 +54,7 @@ const InstitutionShow = props => (
             {/*TODO: Aislar esto en un componente. También se usa en edit.js*/}
             <ReferenceManyField
                 addLabel={false}
-                reference="sectors"
+                reference="rootsectors"
                 target="institutionId"
                 sort={{ field: 'description', order: 'DESC' }}
             >

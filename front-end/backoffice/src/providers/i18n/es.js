@@ -1,5 +1,21 @@
 import spanishMessages from '@blackbox-vision/ra-language-spanish';
 
+const sectorsData = {
+    name: 'Sector |||| Sectores',
+    fields: {
+        institutionId: 'Institución',
+        description: 'Nombre',
+        clinicalspecialtysectors: 'Especialidad | Sector',
+        ageGroupId: 'Grupo de edad',
+        sectorTypeId: 'Tipo de sector',
+        sectorOrganizationId: 'Organización',
+        careTypeId: 'Tipo de cuidado',
+        hospitalizationTypeId: 'Permanencia',
+        sectorId: 'Sector padre'
+    },
+    createRelated: 'Crear Sector'
+}
+
 const messages = {
     ...spanishMessages,
     app: {
@@ -194,21 +210,8 @@ const messages = {
                 lastUpdate: 'Última actualización'
             },
         },
-        sectors: {
-            name: 'Sector |||| Sectores',
-            fields: {
-                institutionId: 'Institución',
-                description: 'Nombre',
-                clinicalspecialtysectors: 'Especialidad | Sector',
-                ageGroupId: 'Grupo de edad',
-                sectorTypeId: 'Tipo de sector',
-                sectorOrganizationId: 'Organización',
-                careTypeId: 'Tipo de cuidado',
-                hospitalizationTypeId: 'Permanencia',
-                sectorId: 'Sector padre'
-            },
-            createRelated: 'Crear Sector'
-        },
+        sectors: sectorsData,
+        rootsectors: sectorsData,
 
         clinicalspecialties: {
             name: 'Especialidad |||| Especialidades',

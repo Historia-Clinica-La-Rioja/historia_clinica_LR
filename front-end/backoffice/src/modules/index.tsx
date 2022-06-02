@@ -95,6 +95,7 @@ const resources = (permissions: SGXPermissions) => [
     // facilities
     <Resource name="institutions" {...institutions(permissions)} />,
     <Resource name="sectors" {...sectors} />,
+    <Resource name="rootsectors" {...sectors} />,
     <Resource name="clinicalspecialties" {...clinicalspecialties(permissions)} />,
     <Resource name="clinicalspecialtysectors" {...clinicalspecialtysectors} />,
     <Resource name="doctorsoffices" {...doctorsoffices} />,
