@@ -2,16 +2,19 @@ import React from 'react';
 import {
     Datagrid,
     DeleteButton,
-    EditButton,
+    EditButton, Labeled,
     ReferenceField,
     ReferenceManyField,
     Show,
     SimpleShowLayout,
-    TextField
+    TextField, useRecordContext
 } from 'react-admin';
 import CreateRelatedButton from '../components/CreateRelatedButton';
 import SectionTitle from '../components/SectionTitle';
 import SgxDateField from "../../dateComponents/sgxDateField";
+
+
+const INTERNACION = 2;
 
 const CreateSector = ({ record }) => {
     return (
@@ -33,6 +36,44 @@ const CreateDoctorsOffice = ({ record }) => {
     )
 };
 
+const SectorTypeField = (props) => {
+    const record = useRecordContext(props);
+    return record && record.sectorTypeId != null
+        ?
+        <Labeled label="resources.sectors.fields.sectorTypeId">
+        <ReferenceField link={false} source="sectorTypeId" reference="sectortypes"
+                        {...props}>
+            <TextField source="description"/>
+        </ReferenceField>
+        </Labeled>
+        : null;
+}
+
+const RootSectorField = (props) => {
+    const record = useRecordContext(props);
+    return record && record.sectorTypeId != null
+        ?
+        <Labeled label="resources.sectors.fields.sectorId">
+            <ReferenceField source="sectorId" reference="sectors"
+                            {...props}>
+                <TextField source="description"/>
+            </ReferenceField>
+        </Labeled>
+        : null;
+}
+
+const HospitalizationField = (props) => {
+    const record = useRecordContext(props);
+    const label = "resources.sectors.fields." + props.source;
+    return record.sectorTypeId !== INTERNACION ? null : (
+        <Labeled label={label}>
+            <ReferenceField link={false} {...props}>
+                <TextField source="description"/>
+            </ReferenceField>
+        </Labeled>
+    )
+}
+
 const SectorShow = props => (
     <Show {...props}>
         <SimpleShowLayout>
@@ -40,7 +81,13 @@ const SectorShow = props => (
             <ReferenceField source="institutionId" reference="institutions">
                 <TextField source="name"/>
             </ReferenceField>
-
+            <RootSectorField/>
+            <SectorTypeField/>
+            <HospitalizationField {...props} reference="agegroups" source="ageGroupId"/>
+            <HospitalizationField {...props} reference="sectororganizations" source="sectorOrganizationId"/>
+            <HospitalizationField {...props} reference="caretypes" source="careTypeId"/>
+            <HospitalizationField {...props} reference="hospitalizationtypes" source="hospitalizationTypeId"/>
+            
             <SectionTitle label="resources.sectors.fields.childSectors" />
             <CreateSector />
             <ReferenceManyField
@@ -54,7 +101,6 @@ const SectorShow = props => (
                     <EditButton />
                 </Datagrid>
             </ReferenceManyField>
-
             <SectionTitle label="resources.sectors.fields.clinicalspecialtysectors"/>
             <CreateRelatedButton
                 reference="clinicalspecialtysectors"
