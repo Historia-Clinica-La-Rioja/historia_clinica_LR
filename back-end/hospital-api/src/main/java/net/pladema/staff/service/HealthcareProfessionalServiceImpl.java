@@ -1,5 +1,13 @@
 package net.pladema.staff.service;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Collectors;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Service;
+
 import ar.lamansys.sgx.shared.exceptions.NotFoundException;
 import net.pladema.clinichistory.hospitalization.repository.HealthcareProfessionalGroupRepository;
 import net.pladema.clinichistory.hospitalization.repository.domain.HealthcareProfessionalGroup;
@@ -11,14 +19,6 @@ import net.pladema.staff.service.domain.HealthcareProfessionalBo;
 import net.pladema.staff.service.domain.HealthcareProfessionalCompleteBo;
 import net.pladema.staff.service.exceptions.HealthcareProfessionalEnumException;
 import net.pladema.staff.service.exceptions.HealthcareProfessionalException;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.stereotype.Service;
-
-import java.util.ArrayList;
-import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 public class HealthcareProfessionalServiceImpl implements  HealthcareProfessionalService {

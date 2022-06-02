@@ -1,5 +1,7 @@
 package net.pladema.staff.application.createprofessional;
 
+import org.springframework.stereotype.Service;
+
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import net.pladema.staff.application.createprofessional.exceptions.CreateHealthcareProfessionalSpecialtyEnumException;
@@ -9,7 +11,6 @@ import net.pladema.staff.service.HealthcareProfessionalService;
 import net.pladema.staff.service.HealthcareProfessionalSpecialtyService;
 import net.pladema.staff.service.domain.HealthcareProfessionalCompleteBo;
 import net.pladema.staff.service.domain.HealthcareProfessionalSpecialtyBo;
-import org.springframework.stereotype.Service;
 
 @Slf4j
 @Service
@@ -46,6 +47,6 @@ public class CreateHealthcareProfessionalImpl implements CreateHealthcareProfess
         return new HealthcareProfessionalCompleteBo(
                 professionalDto.getId(),
                 professionalDto.getPersonId(),
-                professionalDto.getLicenseNumber());
+				professionalDto.getLicenseNumber());
     }
 }

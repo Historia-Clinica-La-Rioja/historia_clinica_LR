@@ -1,14 +1,15 @@
 package net.pladema.staff.repository;
 
-import net.pladema.staff.service.domain.ClinicalSpecialtyBo;
-import net.pladema.staff.repository.entity.ClinicalSpecialty;
+import java.util.List;
+
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.List;
+import net.pladema.staff.repository.entity.ClinicalSpecialty;
+import net.pladema.staff.service.domain.ClinicalSpecialtyBo;
 
 @Repository
 public interface ClinicalSpecialtyRepository extends JpaRepository<ClinicalSpecialty, Integer>{
@@ -16,7 +17,8 @@ public interface ClinicalSpecialtyRepository extends JpaRepository<ClinicalSpeci
     @Transactional(readOnly = true)
     @Query(value = " SELECT cs FROM HealthcareProfessionalSpecialty hps "
             + "INNER JOIN ClinicalSpecialty cs ON hps.clinicalSpecialtyId = cs.id "
-            + "WHERE hps.healthcareProfessionalId = :professionalId")
+			+ "INNER JOIN ProfessionalProfessions pp ON hps.professionalProfessionsId = pp.id "
+            + "WHERE pp.healthcareProfessionalId = :professionalId")
     List<ClinicalSpecialty> getAllByProfessional(@Param("professionalId") Integer professionalId);
 
     @Transactional(readOnly = true)

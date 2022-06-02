@@ -1,17 +1,23 @@
 package net.pladema.staff.controller.mapper;
 
+import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
+
+import org.springframework.data.domain.Example;
+import org.springframework.data.domain.ExampleMatcher;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.stereotype.Service;
+
 import net.pladema.sgx.backoffice.repository.BackofficeStore;
 import net.pladema.staff.controller.dto.BackofficeHealthcareProfessionalCompleteDto;
 import net.pladema.staff.repository.HealthcareProfessionalRepository;
 import net.pladema.staff.repository.HealthcareProfessionalSpecialtyRepository;
 import net.pladema.staff.repository.entity.HealthcareProfessional;
 import net.pladema.staff.repository.entity.HealthcareProfessionalSpecialty;
-import org.springframework.data.domain.*;
-import org.springframework.stereotype.Service;
-
-import java.util.List;
-import java.util.Optional;
-import java.util.stream.Collectors;
 
 @Service
 public class BackofficeHealthcareProfessionalStore implements BackofficeStore<BackofficeHealthcareProfessionalCompleteDto, Integer> {
@@ -104,8 +110,7 @@ public class BackofficeHealthcareProfessionalStore implements BackofficeStore<Ba
     private HealthcareProfessionalSpecialty buildHealthcareProfessionalSpecialty(BackofficeHealthcareProfessionalCompleteDto dto){
         HealthcareProfessionalSpecialty hps = new HealthcareProfessionalSpecialty();
         hps.setClinicalSpecialtyId(dto.getClinicalSpecialtyId());
-        hps.setHealthcareProfessionalId(dto.getId());
-        hps.setProfessionalSpecialtyId(dto.getProfessionalSpecialtyId());
+        hps.setProfessionalProfessionsId(dto.getId());
         return hps;
     }
 

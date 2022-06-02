@@ -1,5 +1,12 @@
 package net.pladema.staff.service;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
+
+import org.springframework.stereotype.Service;
+
 import lombok.RequiredArgsConstructor;
 import net.pladema.staff.repository.DeletedHealthcareProfessionalSpecialtyRepositoryImpl;
 import net.pladema.staff.repository.HealthcareProfessionalSpecialtyRepository;
@@ -9,12 +16,6 @@ import net.pladema.staff.repository.entity.ClinicalSpecialty;
 import net.pladema.staff.repository.entity.HealthcareProfessionalSpecialty;
 import net.pladema.staff.service.domain.HealthcareProfessionalSpecialtyBo;
 import net.pladema.staff.service.domain.ProfessionalsByClinicalSpecialtyBo;
-import org.springframework.stereotype.Service;
-
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
-import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -66,7 +67,6 @@ public class HealthcareProfessionalSpecialtyServiceImpl implements HealthcarePro
             //The professional Specialty has to be created
             HealthcareProfessionalSpecialty entity = healthcareProfessionalSpecialtyRepository.save(new HealthcareProfessionalSpecialty(
                     professionalSpecialtyBo.getHealthcareProfessionalId(),
-                    professionalSpecialtyBo.getProfessionalSpecialtyId(),
                     professionalSpecialtyBo.getClinicalSpecialtyId()));
             if (professionalSpecialtyBo.getId() != null)
                 //The old professional specialty must be deleted

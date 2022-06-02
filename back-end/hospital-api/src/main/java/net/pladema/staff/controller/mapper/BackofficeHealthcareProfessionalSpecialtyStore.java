@@ -1,8 +1,8 @@
 package net.pladema.staff.controller.mapper;
 
-import net.pladema.sgx.backoffice.repository.BackofficeStore;
-import net.pladema.staff.repository.HealthcareProfessionalSpecialtyRepository;
-import net.pladema.staff.repository.entity.HealthcareProfessionalSpecialty;
+import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
 
 import org.springframework.data.domain.Example;
 import org.springframework.data.domain.ExampleMatcher;
@@ -12,9 +12,9 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
-import java.util.Optional;
-import java.util.stream.Collectors;
+import net.pladema.sgx.backoffice.repository.BackofficeStore;
+import net.pladema.staff.repository.HealthcareProfessionalSpecialtyRepository;
+import net.pladema.staff.repository.entity.HealthcareProfessionalSpecialty;
 
 @Service
 public class BackofficeHealthcareProfessionalSpecialtyStore
@@ -61,7 +61,7 @@ public class BackofficeHealthcareProfessionalSpecialtyStore
 
 	@Override
 	public HealthcareProfessionalSpecialty save(HealthcareProfessionalSpecialty entity) {
-		return healthcareProfessionalSpecialtyRepository.findByUniqueKey(entity.getHealthcareProfessionalId(), entity.getClinicalSpecialtyId(), entity.getProfessionalSpecialtyId()).
+		return healthcareProfessionalSpecialtyRepository.findByUniqueKey(entity.getProfessionalProfessionsId(), entity.getClinicalSpecialtyId()).
 				map(healthcareProfessionalSpecialty -> {
 					if (healthcareProfessionalSpecialty.isDeleted())
 						healthcareProfessionalSpecialty.setDeleted(false);

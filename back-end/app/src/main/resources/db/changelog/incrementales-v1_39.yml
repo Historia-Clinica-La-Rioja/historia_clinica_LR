@@ -312,6 +312,7 @@ databaseChangeLog:
                 - column:
                     name: previous_login
                     type: datetime
+
     - changeSet:
         id: dropFK_appointment_observation_created_by
         comment: drop FK constraint from appointment_observation table
@@ -386,3 +387,4 @@ databaseChangeLog:
                 FROM clinical_specialty_sector CSS
                 JOIN clinical_specialty CS ON (CS.id = CSS.clinical_specialty_id)
                 WHERE CS.clinical_specialty_type_id = 1
+

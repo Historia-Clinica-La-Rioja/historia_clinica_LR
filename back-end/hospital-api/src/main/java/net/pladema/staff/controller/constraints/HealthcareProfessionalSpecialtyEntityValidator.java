@@ -1,10 +1,11 @@
 package net.pladema.staff.controller.constraints;
 
+import org.springframework.stereotype.Component;
+
 import net.pladema.sgx.backoffice.rest.BackofficeEntityValidatorAdapter;
 import net.pladema.sgx.exceptions.BackofficeValidationException;
 import net.pladema.staff.repository.HealthcareProfessionalSpecialtyRepository;
 import net.pladema.staff.repository.entity.HealthcareProfessionalSpecialty;
-import org.springframework.stereotype.Component;
 
 @Component
 public class HealthcareProfessionalSpecialtyEntityValidator extends BackofficeEntityValidatorAdapter<HealthcareProfessionalSpecialty, Integer> {
@@ -17,7 +18,7 @@ public class HealthcareProfessionalSpecialtyEntityValidator extends BackofficeEn
 
 	@Override
 	public void assertCreate(HealthcareProfessionalSpecialty entity) {
-		healthcareProfessionalSpecialtyRepository.findByUniqueKey(entity.getHealthcareProfessionalId(), entity.getClinicalSpecialtyId(), entity.getProfessionalSpecialtyId()).
+		healthcareProfessionalSpecialtyRepository.findByUniqueKey(entity.getProfessionalProfessionsId(), entity.getClinicalSpecialtyId()).
 		ifPresent(healthcareProfessionalSpecialty -> {
 			if (!healthcareProfessionalSpecialty.isDeleted()) {
 				throw new BackofficeValidationException("healthcare-professional.specialty-profession-exists");
@@ -27,8 +28,8 @@ public class HealthcareProfessionalSpecialtyEntityValidator extends BackofficeEn
 
 	@Override
 	public void assertUpdate(Integer id, HealthcareProfessionalSpecialty entity) {
-		if (!healthcareProfessionalSpecialtyRepository.existsValues(entity.getHealthcareProfessionalId(),
-				entity.getClinicalSpecialtyId(), entity.getProfessionalSpecialtyId()))
+		if (!healthcareProfessionalSpecialtyRepository.existsValues(entity.getProfessionalProfessionsId(),
+				entity.getClinicalSpecialtyId()))
 			throw new BackofficeValidationException("healthcare-professional.specialty-profession-not-assigned");
 	}
 
@@ -38,9 +39,9 @@ public class HealthcareProfessionalSpecialtyEntityValidator extends BackofficeEn
 		HealthcareProfessionalSpecialty specialty = healthcareProfessionalSpecialtyRepository.findById(id)
 				.orElseThrow(() -> new BackofficeValidationException("healthcare-professional.specialty-profession-not-exists"));
 
-		Integer professionalId = specialty.getHealthcareProfessionalId();
+		Integer professionalProfessionsId = specialty.getProfessionalProfessionsId();
 		
-		if (healthcareProfessionalSpecialtyRepository.hasOnlyOneSpecialty(professionalId))
+		if (healthcareProfessionalSpecialtyRepository.hasOnlyOneSpecialty(professionalProfessionsId))
 			throw new BackofficeValidationException("healthcare-professional.only-one-specialty");
 	}
 

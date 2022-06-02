@@ -1,3 +1,217 @@
 databaseChangeLog: 
     - logicalFilePath: incrementales-v1_40 
 
+
+    - changeSet:
+        id: 1.40.0-1
+        comment: drop NotNullConstraint healthcare_professional-licence_number
+        author: etrapani
+        changes:
+          - dropNotNullConstraint:
+              tableName: healthcare_professional
+              columnName: license_number
+              columnDataType: varchar(512)
+
+    - changeSet:
+        id: 1.40.0-2
+        comment: create table professional_professions
+        author: etrapani
+        changes:
+          - createTable:
+              tableName: professional_professions
+              columns:
+                - column:
+                    autoIncrement: true
+                    constraints:
+                      primaryKey: true
+                      primaryKeyName: PK_professional_professions
+                    name: id
+                    type: int
+                - column:
+                    constraints:
+                      nullable: false
+                    name: healthcare_professional_id
+                    type: int
+                - column:
+                    constraints:
+                      nullable: false
+                    name: professional_specialty_id
+                    type: int
+                - column:
+                    constraints:
+                      nullable: false
+                    name: created_by
+                    type: int
+                    defaultValue: -1
+                - column:
+                    constraints:
+                      nullable: false
+                    name: created_on
+                    type: datetime
+                    defaultValueDate: ${date.now}
+                - column:
+                    constraints:
+                      nullable: false
+                    name: updated_by
+                    type: int
+                    defaultValue: -1
+                - column:
+                    constraints:
+                      nullable: false
+                    name: updated_on
+                    type: datetime
+                    defaultValueDate: ${date.now}
+                - column:
+                    constraints:
+                      nullable: false
+                    name: deleted
+                    type: BOOLEAN
+                    defaultValue: ${boolean.false}
+                - column:
+                    name: deleted_by
+                    type: int
+                - column:
+                    name: deleted_on
+                    type: datetime
+          - addForeignKeyConstraint:
+              baseColumnNames: professional_specialty_id
+              baseTableName: professional_professions
+              constraintName: FK_professional_professions_professional_specialty_id
+              onDelete: NO ACTION
+              onUpdate: NO ACTION
+              referencedColumnNames: id
+              referencedTableName: professional_specialty
+              validate: true
+          - addForeignKeyConstraint:
+              baseColumnNames: healthcare_professional_id
+              baseTableName: professional_professions
+              constraintName: FK_professional_professions_healthcare_professional_id
+              onDelete: NO ACTION
+              onUpdate: NO ACTION
+              referencedColumnNames: id
+              referencedTableName: healthcare_professional
+              validate: true
+
+    - changeSet:
+        id: 1.40.0-3
+        author: etrapani
+        changes:
+          - addUniqueConstraint:
+              columnNames: professional_specialty_id, healthcare_professional_id
+              constraintName: UQ_professional_specialty_id_healthcare_professional_id
+              tableName: professional_professions
+
+
+    - changeSet:
+        id: 1.40.0-4
+        comment: Agrega  columna professional_profession_id
+        author: etrapani
+        changes:
+          - addColumn:
+              tableName: healthcare_professional_specialty
+              columns:
+                - column:
+                    constraints:
+                      foreignKeyName: FK_healthcare_professional_specialty_professional_profession_id
+                      references: professional_professions(id)
+                    name: professional_profession_id
+                    type: int
+
+    - changeSet:
+        id: 1.40.0-5
+        author: etrapani
+        changes:
+          - createProcedure:
+              dbms: postgresql
+              encoding: UTF-8
+              procedureBody: |-
+                DROP PROCEDURE IF EXISTS fill_professional_professions;
+                CREATE PROCEDURE fill_professional_professions()
+                    language plpgsql
+                as
+                $$
+                DECLARE
+                    temprow RECORD;
+                    last_id INTEGER;
+                    Query VARCHAR(5000);
+                    professional_professions_id INTEGER;
+                BEGIN
+                    last_id := null;
+                    FOR temprow IN EXECUTE 'SELECT hps.id, hps.healthcare_professional_id, hps.professional_specialty_id, hps.clinical_specialty_id, ' ||
+                                           'hps.deleted, hps.deleted_on, hps.deleted_by, hps.created_on, hps.created_by, hps.updated_on, ' ||
+                                           'hps.updated_by ' ||
+                                           'FROM healthcare_professional_specialty AS hps ' ||
+                                           'ORDER BY hps.id, hps.healthcare_professional_id, hps.deleted'
+                    LOOP
+                        query := 'SELECT hp.id
+                                  FROM professional_professions AS hp
+                                  WHERE hp.healthcare_professional_id = '|| temprow.healthcare_professional_id ||
+                                 ' AND hp.professional_specialty_id = '|| temprow.professional_specialty_id || ';';
+
+                        EXECUTE (query) INTO professional_professions_id;
+
+                        IF (professional_professions_id IS NULL)
+                        THEN
+                            EXECUTE format('INSERT INTO professional_professions (healthcare_professional_id, professional_specialty_id, ' ||
+                                       'deleted, deleted_by, deleted_on, created_on, updated_on, created_by, updated_by)
+                                        VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9)') USING
+                             temprow.healthcare_professional_id, temprow.professional_specialty_id, temprow.deleted,
+                             temprow.deleted_by, temprow.deleted_on, NOW(),  NOW(),  -1, -1;
+
+                            EXECUTE (query) INTO professional_professions_id;
+
+                            EXECUTE format('UPDATE healthcare_professional_specialty ' ||
+                                           'SET professional_profession_id = $1 ' ||
+                                           'WHERE id = $2 ')
+                            USING professional_professions_id, temprow.id;
+                        ELSE
+                             EXECUTE format('UPDATE healthcare_professional_specialty ' ||
+                                               'SET professional_profession_id = $1 ' ||
+                                               'WHERE id = $2 ')
+                                USING professional_professions_id, temprow.id;
+                        END IF;
+                    END LOOP;
+                END;
+                $$;
+
+    - changeSet:
+        id: 1.40.0-6
+        author: etrapani
+        changes:
+          - sql:
+              dbms: postgresql
+              sql: |-
+                CALL fill_professional_professions();
+                DROP PROCEDURE IF EXISTS fill_professional_professions;
+
+    - changeSet:
+        id: 1.40.0-7
+        author: etrapani
+        changes:
+          - dropColumn:
+              columnName: professional_specialty_id
+              tableName: healthcare_professional_specialty
+
+    - changeSet:
+        id: 1.40.0-8
+        comment: Update view v_booking_healthcare_professional_specialty
+        author: etrapani
+        changes:
+          -  createView:
+               viewName: v_booking_healthcare_professional_specialty
+               fullDefinition: false
+               replaceIfExists: true
+               selectQuery: |-
+                 SELECT hps.id, pp.healthcare_professional_id, hps.clinical_specialty_id
+                 FROM healthcare_professional_specialty AS hps
+                 INNER JOIN professional_professions AS pp on (hps.professional_profession_id = pp.id)
+                 WHERE hps.deleted = false OR hps.deleted IS NULL
+
+    - changeSet:
+        id: 1.40.0-9
+        author: etrapani
+        changes:
+          - dropColumn:
+              columnName: healthcare_professional_id
+              tableName: healthcare_professional_specialty
+
