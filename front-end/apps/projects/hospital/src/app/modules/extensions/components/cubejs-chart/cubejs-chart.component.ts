@@ -1,5 +1,5 @@
-import { Component, Input } from '@angular/core';
-import { ReplaySubject } from 'rxjs';
+import { Component, Input, OnDestroy } from '@angular/core';
+import { ReplaySubject, Subscription } from 'rxjs';
 import { ChartDefinitionService } from '@extensions/services/chart-definition.service';
 import { ChartDefinitionDto, UIComponentDto } from '@extensions/extensions-model';
 
@@ -15,13 +15,15 @@ const toUIComponentDto = (error: any): UIComponentDto => ({
 	templateUrl: './cubejs-chart.component.html',
 	styleUrls: ['./cubejs-chart.component.scss']
 })
-export class CubejsChartComponent {
+export class CubejsChartComponent implements OnDestroy {
 
 	@Input() dateFormat?: string;
 	error: UIComponentDto = undefined;
 	chartType = new ReplaySubject<any>(1);
 	cubeQuery = new ReplaySubject<any>(1);
 	pivotConfig = new ReplaySubject<any>(1);
+
+	private chartDefinitionSubscription: Subscription;
 
 	constructor(
 		private chartDefinitionService: ChartDefinitionService,
@@ -34,7 +36,7 @@ export class CubejsChartComponent {
 			return;
 		}
 
-		this.chartDefinitionService.queryStream$(queryName).subscribe(
+		this.chartDefinitionSubscription = this.chartDefinitionService.queryStream$(queryName).subscribe(
 			(queryStream: ChartDefinitionDto) => {
 				this.error = undefined;
 				this.chartType.next(queryStream.chartType);
@@ -45,6 +47,10 @@ export class CubejsChartComponent {
 		);
 
 
+	}
+
+	ngOnDestroy() {
+		this.chartDefinitionSubscription?.unsubscribe();
 	}
 
 }
