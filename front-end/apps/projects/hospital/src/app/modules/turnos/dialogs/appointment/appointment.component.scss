@@ -1,5 +1,13 @@
 @import "../../../../../assets/styles/mixins.scss";
 
+.appointment-body{
+	margin: 0 15px;
+
+	.icon-grey{
+		color: #A8A8A8;
+	}
+}
+
 .patient-name-title {
 	font-size: 18px;
 }
@@ -38,7 +46,6 @@
 }
 
 .patient-info {
-	color: #545454;
 	line-height: 17px;
 	max-height: 24px;
 }

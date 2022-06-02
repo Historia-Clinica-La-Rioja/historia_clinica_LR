@@ -1,4 +1,4 @@
-<form [formGroup]="formMotivo" (ngSubmit)="saveAbsent()">
+<form class="appointment-body" [formGroup]="formMotivo" (ngSubmit)="saveAbsent()">
 	<div mat-dialog-content>
 		<section id="personal-data" fxLayout="column" fxLayoutGap="5px">
 			<div class="header-content" fxLayout="row" fxLayoutAlign="start">
@@ -130,19 +130,19 @@
 
 		<section id="appointment" class="appointment-details" fxLayout="column">
 			<span class="mat-body-strong">{{'turnos.appointment.TITLE' | translate}}</span>
-			<div fxLayout="column" fxLayoutGap="5px">
+			<div fxLayout="row" fxLayoutGap="30px">
 				<div fxLayout="row" fxLayoutGap="5px" fxLayoutAlign="start">
-					<mat-icon fontSet="material-icons-outlined" color="primary" mat-list-icon [inline]="true"
-						id="full-date">
+					<mat-icon fontSet="material-icons-outlined" mat-list-icon [inline]="true"
+						id="full-date" class="icon-grey">
 						calendar_today
 					</mat-icon>
-					<span class="mat-body"> {{params.appointmentData.date | date:"fullDate"}}</span>
+					<span class="mat-body"> {{params.appointmentData.date | date:"fullDate" | titlecase}}</span>
 				</div>
 				<div fxLayout="row" fxLayoutGap="5px" fxLayoutAlign="start">
-					<mat-icon fontSet="material-icons-outlined" color="primary" mat-list-icon [inline]="true" id="hour">
+					<mat-icon fontSet="material-icons-outlined" mat-list-icon [inline]="true" id="hour" class="icon-grey">
 						access_time
 					</mat-icon>
-					<span class="mat-body"> {{params.appointmentData.date | date:"HH:mm"}} hs</span>
+					 <span class="mat-body"> {{params.appointmentData.date | date:"HH:mm"}} hs</span> 
 				</div>
 			</div>
 		</section>
