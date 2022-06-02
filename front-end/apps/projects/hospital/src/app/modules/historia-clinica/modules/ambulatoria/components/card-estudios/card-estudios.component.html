@@ -5,12 +5,7 @@
     <app-no-data></app-no-data>
 </ng-template>
 <app-summary-card id="estudios" [header]="estudios"
-<<<<<<< HEAD
-                                [editable]="true"
                                 [canEdit]="['ESPECIALISTA_MEDICO', 'ENFERMERO', 'PROFESIONAL_DE_SALUD', 'ESPECIALISTA_EN_ODONTOLOGIA']"
-								(openInNew)="openDialogNewStudy()">
-=======
-                                [canEdit]="['ESPECIALISTA_MEDICO', 'ESPECIALISTA_EN_ODONTOLOGIA']"
 								[matMenu]="newPrescriptionMenu"
 								[menu]="true">
 
@@ -25,7 +20,6 @@
 			</button>
 		</ng-container>
 	</mat-menu>
->>>>>>> v1.37.0
 
 	<div class="header-filters" fxLayout="row" fxLayoutGap="15px">
 		<button mat-button class="filter-button" color="primary" (click)="hideFilters(); clear()">
