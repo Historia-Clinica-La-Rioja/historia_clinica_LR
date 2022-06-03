@@ -304,3 +304,15 @@ databaseChangeLog:
                 INSERT INTO sector_type (id,description) VALUES (6,'Sin tipo');
                 INSERT INTO sector_type (id,description) VALUES (7,'Laboratorio');
 
+    - changeSet:
+        id: sector_types-update-nulls
+        comment: Set default null values to sector_types
+        author: mvenere
+        context: "!schema-only"
+        changes:
+          - sql:
+              sql: |-
+                UPDATE sector
+                SET sector_type_id = 6 
+                WHERE sector_type_id IS NULL;
+
