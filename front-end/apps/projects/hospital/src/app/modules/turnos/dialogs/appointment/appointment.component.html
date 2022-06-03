@@ -1,5 +1,5 @@
 <form class="appointment-body" [formGroup]="formMotivo" (ngSubmit)="saveAbsent()">
-	<div mat-dialog-content>
+	<div mat-dialog-content class="ventana">
 		<section id="personal-data" fxLayout="column" fxLayoutGap="5px">
 			<div class="header-content" fxLayout="row" fxLayoutAlign="start">
 				<mat-icon fxFlex="10%" fontSet="material-icons-outlined" color="primary">person</mat-icon>
@@ -248,13 +248,13 @@
 				*ngIf="downloadReportIsEnabled && !isAbsent() && ((hasRoleToDownloadReports$ | async) === true || params.hasPermissionToAssignShift)">
 				<mat-divider></mat-divider>
 				<section id="report" fxLayout="column">
-					<span class="mat-body-strong" fxLayout="row">{{'turnos.report.TITLE' | translate}}</span>
-					<section class="example-section">
-						<mat-checkbox class="example-margin" fxLayout="row"
+					<span class="mat-body-strong">{{'turnos.report.TITLE' | translate}}</span>
+					<section class="example-section" fxLayout="row" fxLayoutGap="30px">
+						<mat-checkbox color="primary" fxLayout="row"
 							(change)="enableDowndloadAnexo($event.checked)">
 							<span class="mat-body">{{'turnos.report.ANEXO' | translate}}</span>
 						</mat-checkbox>
-						<mat-checkbox class="example-margin" fxLayout="row"
+						<mat-checkbox color="primary" fxLayout="row"
 							(change)="enableDowndloadFormulario($event.checked)">
 							<span class="mat-body">{{'turnos.report.FORM' | translate}}</span>
 						</mat-checkbox>
@@ -269,8 +269,9 @@
 		align="end">
 		<ng-container
 			*ngIf="downloadReportIsEnabled && !isAbsent() && ((hasRoleToDownloadReports$ | async) === true || params.hasPermissionToAssignShift)">
-			<button type="button" mat-flat-button color="primary" id="report-appointment" name="report-appointment"
+			<button id="report-appointment" name="report-appointment" mat-stroked-button color="primary" btn-block type="button" 
 				(click)="getReportAppointment()" [disabled]="!isCheckedDownloadAnexo && !isCheckedDownloadFormulario">
+				<mat-icon fontSet="material-icons-outlined" >download</mat-icon>
 				<span class="uppercase" [translate]="'turnos.report.TITLE'"></span>
 			</button>
 		</ng-container>
@@ -280,7 +281,7 @@
 		</button>
 
 		<button type="submit" *ngIf="isMotivoRequired()" mat-flat-button color="primary" id="save">
-			<span class="uppercase">Guardar</span>
+			<span class="uppercase">{{'turnos.appointment.SAVE' | translate}}</span>
 		</button>
 	</mat-dialog-actions>
 </form>
