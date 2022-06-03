@@ -72,7 +72,7 @@ const PersonShow = props =>{
                 customRecord={{personId: personId}}
                 reference="professionalprofessions"
                 refFieldName="personId"
-                label="resources.professionalprofessions.linkProfession"/>
+                label="resources.person.buttons.linkProfession"/>
             </Tab>
 
         </TabbedShowLayout>

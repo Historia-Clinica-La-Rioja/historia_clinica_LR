@@ -20,7 +20,7 @@ public interface HealthcareProfessionalSpecialtyRepository extends SGXAuditableE
 	@Transactional(readOnly = true)
 	@Query( value = "SELECT (CASE WHEN COUNT(hps.id)> 0 THEN TRUE ELSE FALSE END) " +
 			"FROM {h-schema}healthcare_professional_specialty hps " +
-			"WHERE hps.professional_professions_id = :professionalProfessionsId " +
+			"WHERE hps.professional_profession_id = :professionalProfessionsId " +
 			"AND hps.clinical_specialty_id = :clinicalSpecialtyId ", nativeQuery = true)
 	boolean existsValues(@Param("professionalProfessionsId") Integer professionalProfessionsId,
 						 @Param("clinicalSpecialtyId")  Integer clinicalSpecialtyId);
@@ -28,7 +28,8 @@ public interface HealthcareProfessionalSpecialtyRepository extends SGXAuditableE
     @Transactional(readOnly = true)
     @Query( "SELECT (CASE WHEN COUNT(hps.id) = 1 THEN TRUE ELSE FALSE END) " +
             "FROM HealthcareProfessionalSpecialty AS hps " +
-            "WHERE hps.professionalProfessionsId = :professionalProfessionsId ")
+            "WHERE hps.professionalProfessionId = :professionalProfessionsId " +
+			"AND hps.deleteable.deleted = false ")
     boolean hasOnlyOneSpecialty(@Param("professionalProfessionsId") Integer professionalProfessionsId);
 
     @Transactional(readOnly = true)
@@ -41,10 +42,10 @@ public interface HealthcareProfessionalSpecialtyRepository extends SGXAuditableE
 
     @Transactional(readOnly = true)
     @Query(value = "SELECT NEW net.pladema.staff.repository.domain.ProfessionalClinicalSpecialtyVo" +
-            "(hps.professionalProfessionsId, cs) " +
+            "(hps.professionalProfessionId, cs) " +
             "FROM HealthcareProfessionalSpecialty hps "
             + "INNER JOIN ClinicalSpecialty cs ON hps.clinicalSpecialtyId = cs.id "
-			+ "INNER JOIN ProfessionalProfessions pp ON pp.id = hps.professionalProfessionsId "
+			+ "INNER JOIN ProfessionalProfessions pp ON pp.id = hps.professionalProfessionId "
             + "WHERE pp.healthcareProfessionalId IN :professionalsIds "
             + "AND hps.deleteable.deleted = false")
     List<ProfessionalClinicalSpecialtyVo> getAllByProfessionals(@Param("professionalsIds") List<Integer> professionalsIds);
@@ -53,7 +54,7 @@ public interface HealthcareProfessionalSpecialtyRepository extends SGXAuditableE
     @Query(value = "SELECT NEW net.pladema.staff.repository.domain.HealthcareProfessionalSpecialtyVo" +
             "(hps.id,pp.healthcareProfessionalId, pp.professionalSpecialtyId, hps.clinicalSpecialtyId) " +
             "FROM HealthcareProfessionalSpecialty hps "
-			+ "INNER JOIN ProfessionalProfessions pp ON pp.id = hps.professionalProfessionsId "
+			+ "INNER JOIN ProfessionalProfessions pp ON pp.id = hps.professionalProfessionId "
 			+ "JOIN HealthcareProfessional hp ON (pp.healthcareProfessionalId = hp.id)"
             + "WHERE hps.id =:professionalId "
             + "AND hps.deleteable.deleted = false")
@@ -69,7 +70,7 @@ public interface HealthcareProfessionalSpecialtyRepository extends SGXAuditableE
 	@Transactional(readOnly = true)
 	@Query(value = "SELECT * " +
 			"FROM {h-schema} healthcare_professional_specialty hps " +
-			"WHERE hps.professional_professions_id = :professionalProfessionsId " +
+			"WHERE hps.professional_profession_id = :professionalProfessionsId " +
 			"AND hps.clinical_specialty_id = :clinicalSpecialtyId ", nativeQuery = true)
 	Optional<HealthcareProfessionalSpecialty> findByUniqueKey(@Param("professionalProfessionsId") Integer professionalProfessionsId,
 															  @Param("clinicalSpecialtyId")  Integer clinicalSpecialtyId);
@@ -80,6 +81,6 @@ public interface HealthcareProfessionalSpecialtyRepository extends SGXAuditableE
 			+ "SET e.deleteable.deleted = true "
 			+ ", e.deleteable.deletedOn = CURRENT_TIMESTAMP "
 			+ ", e.deleteable.deletedBy = ?#{ principal.userId } "
-			+ "WHERE e.professionalProfessionsId = :professionalProfessionsId ")
-    void deleteByProfessionalProfessionId(@Param("professionalProfessionsId") Integer professionalProfessionsId);
+			+ "WHERE e.professionalProfessionId = :professionalProfessionId ")
+    void deleteByProfessionalProfessionId(@Param("professionalProfessionId") Integer professionalProfessionId);
 }

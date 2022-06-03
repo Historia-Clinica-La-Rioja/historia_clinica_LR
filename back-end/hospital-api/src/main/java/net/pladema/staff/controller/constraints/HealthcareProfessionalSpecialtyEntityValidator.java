@@ -18,7 +18,7 @@ public class HealthcareProfessionalSpecialtyEntityValidator extends BackofficeEn
 
 	@Override
 	public void assertCreate(HealthcareProfessionalSpecialty entity) {
-		healthcareProfessionalSpecialtyRepository.findByUniqueKey(entity.getProfessionalProfessionsId(), entity.getClinicalSpecialtyId()).
+		healthcareProfessionalSpecialtyRepository.findByUniqueKey(entity.getProfessionalProfessionId(), entity.getClinicalSpecialtyId()).
 		ifPresent(healthcareProfessionalSpecialty -> {
 			if (!healthcareProfessionalSpecialty.isDeleted()) {
 				throw new BackofficeValidationException("healthcare-professional.specialty-profession-exists");
@@ -28,7 +28,7 @@ public class HealthcareProfessionalSpecialtyEntityValidator extends BackofficeEn
 
 	@Override
 	public void assertUpdate(Integer id, HealthcareProfessionalSpecialty entity) {
-		if (!healthcareProfessionalSpecialtyRepository.existsValues(entity.getProfessionalProfessionsId(),
+		if (!healthcareProfessionalSpecialtyRepository.existsValues(entity.getProfessionalProfessionId(),
 				entity.getClinicalSpecialtyId()))
 			throw new BackofficeValidationException("healthcare-professional.specialty-profession-not-assigned");
 	}
@@ -39,7 +39,7 @@ public class HealthcareProfessionalSpecialtyEntityValidator extends BackofficeEn
 		HealthcareProfessionalSpecialty specialty = healthcareProfessionalSpecialtyRepository.findById(id)
 				.orElseThrow(() -> new BackofficeValidationException("healthcare-professional.specialty-profession-not-exists"));
 
-		Integer professionalProfessionsId = specialty.getProfessionalProfessionsId();
+		Integer professionalProfessionsId = specialty.getProfessionalProfessionId();
 		
 		if (healthcareProfessionalSpecialtyRepository.hasOnlyOneSpecialty(professionalProfessionsId))
 			throw new BackofficeValidationException("healthcare-professional.only-one-specialty");

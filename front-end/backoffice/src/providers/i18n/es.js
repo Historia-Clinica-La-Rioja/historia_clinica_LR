@@ -280,11 +280,12 @@ const messages = {
                 personId: 'Persona',
                 licenseNumber: 'Nro. Licencia',
                 isMedicalDoctor: 'Es médico?',
-                healthcareprofessionalspecialties: 'Profesional | Especialidad',
-                professionalSpecialtyId: 'Profesión',
-                clinicalSpecialtyId: 'Especialidad'
+                healthcareprofessionalspecialties: 'Especialidades',
+                professionalSpecialtyId: 'Profesión'
             },
-            linkProfession: 'Asociar profesión',
+            buttons: {
+                linkSpecialities: 'Asociar especialidades'
+            }
         },
         healthcareprofessionalspecialties: {
             name: 'Profesión | Especialidad',
@@ -360,6 +361,9 @@ const messages = {
                 details: 'Datos personales',
                 users: 'Usuario'
             },
+            buttons: {
+                linkProfession: 'Asociar profesión'
+            }
         },
         carelines: {
             name: 'Línea de cuidado |||| Líneas de cuidado',

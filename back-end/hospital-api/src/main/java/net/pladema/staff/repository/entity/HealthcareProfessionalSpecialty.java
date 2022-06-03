@@ -36,15 +36,15 @@ public class HealthcareProfessionalSpecialty extends SGXAuditableEntity<Integer>
 	@EqualsAndHashCode.Include
 	private Integer id;
 	
-	@Column(name = "professional_professions_id", nullable = false)
-	private Integer professionalProfessionsId;
+	@Column(name = "professional_profession_id", nullable = false)
+	private Integer professionalProfessionId;
 	
 	@Column(name = "clinical_specialty_id", nullable = false)
 	private Integer clinicalSpecialtyId;
 
-	public HealthcareProfessionalSpecialty(Integer professionalProfessionsId,
+	public HealthcareProfessionalSpecialty(Integer professionalProfessionId,
 										   Integer clinicalSpecialtyId){
-		this.professionalProfessionsId = professionalProfessionsId;
+		this.professionalProfessionId = professionalProfessionId;
 		this.clinicalSpecialtyId = clinicalSpecialtyId;
 	}
 }

@@ -17,7 +17,7 @@ public interface ClinicalSpecialtyRepository extends JpaRepository<ClinicalSpeci
     @Transactional(readOnly = true)
     @Query(value = " SELECT cs FROM HealthcareProfessionalSpecialty hps "
             + "INNER JOIN ClinicalSpecialty cs ON hps.clinicalSpecialtyId = cs.id "
-			+ "INNER JOIN ProfessionalProfessions pp ON hps.professionalProfessionsId = pp.id "
+			+ "INNER JOIN ProfessionalProfessions pp ON hps.professionalProfessionId = pp.id "
             + "WHERE pp.healthcareProfessionalId = :professionalId")
     List<ClinicalSpecialty> getAllByProfessional(@Param("professionalId") Integer professionalId);
 

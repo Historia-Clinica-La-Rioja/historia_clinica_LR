@@ -10,7 +10,6 @@ import {
 import CreateRelatedButton from '../components/CreateRelatedButton';
 import SectionTitle from '../components/SectionTitle';
 import ProfessionalSpecialtiesSection from "./ProfessionalSpecialtiesSection";
-import ProfessionalLicenseNumbersSection from "./ProfessionalLicenseNumbersSection";
 
 const redirect = (basePath, id, data) => `/person/${data.personId}/show/2`;
 
@@ -25,18 +24,11 @@ const ProfessionalProfessionShow = props => (
                 <TextField source="description" />
             </ReferenceField>
 
-            <SectionTitle label="resources.professionalprofessions.fields.professionalLicenseNumbers"/>
-            <CreateRelatedButton
-                reference="healthcareprofessionallicensenumbers"
-                refFieldName="professionalProfessionId"
-                label="resources.professionalprofessions.buttons.linkProfessionalLicenseNumbers"
-            />
-            <ProfessionalLicenseNumbersSection/>
             <SectionTitle label="resources.professionalprofessions.fields.healthcareprofessionalspecialties"/>
             <CreateRelatedButton
                 reference="healthcareprofessionalspecialties"
-                refFieldName="professionalProfessionId"
-                label="resources.professionalprofessions.buttons.linkSpecialities"
+                refFieldName="professionProfessionalId"
+                label="resources.healthcareprofessionals.buttons.linkSpecialities"
             />
             <ProfessionalSpecialtiesSection/>
         </SimpleShowLayout>

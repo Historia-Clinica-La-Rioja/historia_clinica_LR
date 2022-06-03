@@ -5,7 +5,6 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 import org.springframework.data.domain.Example;
-import org.springframework.data.domain.ExampleMatcher;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -29,11 +28,9 @@ public class BackofficeHealthcareProfessionalSpecialtyStore
 	@Override
 	public Page<HealthcareProfessionalSpecialty> findAll(HealthcareProfessionalSpecialty entity, Pageable pageable) {
 
-		ExampleMatcher customExampleMatcher = ExampleMatcher.matching().
-				withMatcher("licenseNumber", ExampleMatcher.GenericPropertyMatchers.contains().ignoreCase());
-
+		entity.setDeleted(false);
 		return healthcareProfessionalSpecialtyRepository.findAll(
-				Example.of(entity, customExampleMatcher),
+				Example.of(entity),
 				PageRequest.of(
 						pageable.getPageNumber(),
 						pageable.getPageSize(),
@@ -44,13 +41,15 @@ public class BackofficeHealthcareProfessionalSpecialtyStore
 
 	@Override
 	public List<HealthcareProfessionalSpecialty> findAll() {
-		return healthcareProfessionalSpecialtyRepository.findAll().stream().
-				collect(Collectors.toList());
+		return healthcareProfessionalSpecialtyRepository.findAll().stream()
+				.filter(healthcareProfessionalSpecialty -> !healthcareProfessionalSpecialty.isDeleted())
+				.collect(Collectors.toList());
 	}
 
 	@Override
 	public List<HealthcareProfessionalSpecialty> findAllById(List<Integer> ids) {
 		return healthcareProfessionalSpecialtyRepository.findAllById(ids).stream()
+				.filter(healthcareProfessionalSpecialty -> !healthcareProfessionalSpecialty.isDeleted())
 				.collect(Collectors.toList());
 	}
 
@@ -61,12 +60,19 @@ public class BackofficeHealthcareProfessionalSpecialtyStore
 
 	@Override
 	public HealthcareProfessionalSpecialty save(HealthcareProfessionalSpecialty entity) {
-		return healthcareProfessionalSpecialtyRepository.findByUniqueKey(entity.getProfessionalProfessionsId(), entity.getClinicalSpecialtyId()).
-				map(healthcareProfessionalSpecialty -> {
-					if (healthcareProfessionalSpecialty.isDeleted())
-						healthcareProfessionalSpecialty.setDeleted(false);
-					return healthcareProfessionalSpecialtyRepository.save(healthcareProfessionalSpecialty);
-				}).orElseGet(()-> healthcareProfessionalSpecialtyRepository.save(entity));
+		return healthcareProfessionalSpecialtyRepository
+				.findByUniqueKey(entity.getProfessionalProfessionId(), entity.getClinicalSpecialtyId())
+				.map(this::reactivate)
+				.orElseGet( () -> healthcareProfessionalSpecialtyRepository.save(entity));
+	}
+
+
+	private HealthcareProfessionalSpecialty reactivate(HealthcareProfessionalSpecialty healthcareProfessionalSpecialty) {
+		if (healthcareProfessionalSpecialty.isDeleted()) {
+			healthcareProfessionalSpecialty.reactivate();
+			return healthcareProfessionalSpecialtyRepository.save(healthcareProfessionalSpecialty);
+		}
+		return healthcareProfessionalSpecialty;
 	}
 
 	@Override
