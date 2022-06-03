@@ -20,13 +20,15 @@ import {
 	DiaryDto,
 	DoctorsOfficeDto,
 	OccupationDto,
-	ProfessionalDto
+	ProfessionalDto,
+	ProfessionalsByClinicalSpecialtyDto
 } from '@api-rest/api-model';
 import { DiaryOpeningHoursService } from '@api-rest/services/diary-opening-hours.service';
 import { DiaryService } from '@api-rest/services/diary.service';
 import { APPOINTMENT_DURATIONS, MINUTES_IN_HOUR } from '../../constants/appointment';
 import { AgendaHorarioService } from '../../services/agenda-horario.service';
 import {PatientNameService} from "@core/services/patient-name.service";
+import { SpecialtyService } from '@api-rest/services/specialty.service';
 
 const ROUTE_APPOINTMENT = 'turnos';
 
@@ -59,6 +61,7 @@ export class AgendaSetupComponent implements OnInit {
 	sectors;
 	agendaHorarioService: AgendaHorarioService;
 	professionalId: string;
+	professionalSpecialties: ProfessionalsByClinicalSpecialtyDto[];
 
 	private editingDiaryId = null;
 	private readonly routePrefix;
@@ -80,6 +83,7 @@ export class AgendaSetupComponent implements OnInit {
 		private readonly diaryOpeningHoursService: DiaryOpeningHoursService,
 		private readonly route: ActivatedRoute,
 		private readonly patientNameService: PatientNameService,
+		private readonly specialtyService: SpecialtyService
 
 	) {
 		this.route.paramMap.subscribe(params => this.professionalId = params.get("idProfessional"));
@@ -296,6 +300,11 @@ export class AgendaSetupComponent implements OnInit {
 
 		const scrollbar = document.getElementsByClassName('cal-time-events')[0];
 		scrollbar?.scrollTo(0, this.PIXEL_SIZE_HEIGHT * this.TURN_STARTING_HOUR * this.hourSegments);
+	}
+
+	getProfessionalSpecialties() {
+		this.specialtyService.getAllSpecialtyByProfessional(this.contextService.institutionId, this.form.value.healthcareProfessionalId)
+			.subscribe(response => this.professionalSpecialties = response)
 	}
 
 }
