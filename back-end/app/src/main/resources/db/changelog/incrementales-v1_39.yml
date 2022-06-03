@@ -63,3 +63,29 @@ databaseChangeLog:
                   LEFT join patient_discharge As pd ON (ie.id = pd.internment_episode_id)
                   WHERE ie.status_id = 2
                   AND pd.administrative_discharge_date is null)
+        
+    - changeSet:    
+        id: add_clinical_specialty_id_diary
+        comment: Agraga a las agendas una especialidad
+        author: mmalyvarni
+        changes:
+          - addColumn:
+              tableName: diary
+              columns:
+                - column:
+                    constraints:
+                      foreignKeyName: FK_diary_clinical_specialty_id
+                      references: clinical_specialty(id)
+                    name: clinical_specialty_id
+                    type: int
+
+    - changeSet:
+        id: set_clinical_specialty_id_on_existing_diaries
+        comment: Establece la especialidad de agendas ya existentes
+        author: mmalyvarni
+        context: "!schema-only"
+        changes:
+          - sql: |-
+              UPDATE diary SET clinical_specialty_id = css.clinical_specialty_id 
+              FROM doctors_office dro, clinical_specialty_sector css 
+              WHERE doctors_office_id = dro.id AND dro.clinical_specialty_sector_id = css.id
