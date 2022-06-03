@@ -176,46 +176,52 @@ export class EpicrisisDockPopupComponent implements OnInit {
 			this.allergies.data = response.allergies;
 			this.immunizations.data = response.immunizations;
 
-			const epicrisis$ = this.epicrisisService.getEpicrisis(this.data.patientInfo.epicrisisId, this.data.patientInfo.internmentEpisodeId);
-			if (this.data.patientInfo.epicrisisId) {
-				epicrisis$.subscribe(e => {
-					this.personalHistories.data.forEach(ph => {
-						const existEqual= !!e.personalHistories.find((p) => ph.snomed.sctid === p.snomed.sctid);
-						if (existEqual)
-							this.personalHistories.selection.select(ph);
-					});
-					this.familyHistories.data.forEach(fh => {
-						const existEqual= !!e.familyHistories.find((f) => fh.snomed.sctid === f.snomed.sctid);
-						if (existEqual)
-							this.familyHistories.selection.select(fh);
-					});
-					this.allergies.data.forEach(all => {
-						const existEqual= !!e.allergies.find((a) => a.snomed.sctid === all.snomed.sctid);
-						if (existEqual)
-							this.allergies.selection.select(all);
-					});
-					this.immunizations.data.forEach(imm => {
-						const existEqual= !!e.immunizations.find((i) => i.snomed.sctid === imm.snomed.sctid);
-						if (existEqual)
-							this.immunizations.selection.select(imm);
-					});
-					Object.keys(e.notes).forEach((key: string) => {
-						if (e.notes[key]) {
-							this.form.patchValue({ [key]: e.notes[key] })
-						}
-					});
-					this.medications = e.medications;
-					this.diagnosticsEpicrisisService.checkDiagnosis(e.diagnosis);
-				})
-			}
+			let epicrisis$;
+			if (this.data.patientInfo.isDraft) {
+				epicrisis$ = this.epicrisisService.getDraft(this.data.patientInfo.epicrisisId, this.data.patientInfo.internmentEpisodeId);
+			} else
+				if (this.data.patientInfo.epicrisisId) {
+					epicrisis$ = this.epicrisisService.getEpicrisis(this.data.patientInfo.epicrisisId, this.data.patientInfo.internmentEpisodeId);
+				}
+			epicrisis$?.subscribe((epicrisis: ResponseEpicrisisDto) => this.setValues(epicrisis))
 		});
-		this.epicrisisService.existUpdatesAfterEpicrisis(this.data.patientInfo.internmentEpisodeId).subscribe((showWarning:boolean)=>this.showWarning=showWarning);
+		this.epicrisisService.existUpdatesAfterEpicrisis(this.data.patientInfo.internmentEpisodeId).subscribe((showWarning: boolean) => this.showWarning = showWarning);
 
 		function isEqualsThenSelect(sctid1: string, sctid2: string, tableConcept: TableCheckbox<any>, concept: any) {
 			if (sctid1 === sctid2)
 				tableConcept.selection.select(concept)
 		}
 
+	}
+
+	private setValues(e: ResponseEpicrisisDto): void {
+		this.personalHistories.data.forEach(ph => {
+			const existEqual = !!e.personalHistories.find((p) => ph.snomed.sctid === p.snomed.sctid);
+			if (existEqual)
+				this.personalHistories.selection.select(ph);
+		});
+		this.familyHistories.data.forEach(fh => {
+			const existEqual = !!e.familyHistories.find((f) => fh.snomed.sctid === f.snomed.sctid);
+			if (existEqual)
+				this.familyHistories.selection.select(fh);
+		});
+		this.allergies.data.forEach(all => {
+			const existEqual = !!e.allergies.find((a) => a.snomed.sctid === all.snomed.sctid);
+			if (existEqual)
+				this.allergies.selection.select(all);
+		});
+		this.immunizations.data.forEach(imm => {
+			const existEqual = !!e.immunizations.find((i) => i.snomed.sctid === imm.snomed.sctid);
+			if (existEqual)
+				this.immunizations.selection.select(imm);
+		});
+		Object.keys(e.notes).forEach((key: string) => {
+			if (e.notes[key]) {
+				this.form.patchValue({ [key]: e.notes[key] })
+			}
+		});
+		this.medications = e.medications;
+		this.diagnosticsEpicrisisService.checkDiagnosis(e.diagnosis);
 	}
 
 	save(): void {
