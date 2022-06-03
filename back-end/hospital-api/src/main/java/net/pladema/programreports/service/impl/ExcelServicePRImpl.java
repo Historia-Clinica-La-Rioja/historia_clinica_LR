@@ -35,7 +35,7 @@ public class ExcelServicePRImpl implements ExcelServicePR {
 
 		ISheet sheet = wb.createSheet(tittle);
 
-		fillRow(sheet, getHeaderData(headers));
+		fillRow(sheet, getHeaderData(headers, tittle));
 
 		AtomicInteger rowNumber = new AtomicInteger(sheet.getCantRows());
 
@@ -59,7 +59,7 @@ public class ExcelServicePRImpl implements ExcelServicePR {
 
 		ISheet sheet = wb.createSheet(tittle);
 
-		fillRow(sheet, getHeaderData(headers));
+		fillRow(sheet, getHeaderData(headers, tittle));
 
 		AtomicInteger rowNumber = new AtomicInteger(sheet.getCantRows());
 
@@ -83,7 +83,7 @@ public class ExcelServicePRImpl implements ExcelServicePR {
 
 		ISheet sheet = wb.createSheet(tittle);
 
-		fillRow(sheet, getHeaderData(headers));
+		fillRow(sheet, getHeaderData(headers, tittle));
 
 		AtomicInteger rowNumber = new AtomicInteger(sheet.getCantRows());
 
@@ -134,14 +134,14 @@ public class ExcelServicePRImpl implements ExcelServicePR {
 		subTitleStyle.setVAlign(ICellStyle.VALIGNMENT.BOTTOM);
 	}
 
-	private List<CellContent> getHeaderData(String[] subtitles){
+	private List<CellContent> getHeaderData(String[] subtitles, String title){
 		List<CellContent> data = new ArrayList<>();
 
 		int nRow = 0;
 
 		data.add(new CellContent(nRow, 0, 1, 2, "", basicStyle));
 		data.add(new CellContent(nRow, 2, 2, 1, "2", titleStyle));
-		data.add(new CellContent(nRow, 3, 2, 16, "Epidemiología 1", titleStyle));
+		data.add(new CellContent(nRow, 3, 2, 16, title, titleStyle));
 		data.add(new CellContent(nRow, 19, 1, 3, "1. Hoja N°", fieldStyle));
 		data.add(new CellContent(nRow, 22, 1, 1, "", basicStyle));
 		data.add(new CellContent(nRow, 23, 1, 1, "", basicStyle));
