@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Observable } from 'rxjs';
 import { MatTabChangeEvent } from '@angular/material/tabs';
-import {AppFeature, EMedicalCoverageTypeDto, ERole} from '@api-rest/api-model';
+import { AppFeature, EMedicalCoverageTypeDto, ERole } from '@api-rest/api-model';
 import { EvaluationNoteSummaryDto, AnamnesisSummaryDto, EpicrisisSummaryDto, BasicPatientDto, OrganizationDto, PatientSummaryDto, PersonPhotoDto, InternmentEpisodeProcessDto, ExternalPatientCoverageDto, EmergencyCareEpisodeInProgressDto } from '@api-rest/api-model';
 import { PatientService } from '@api-rest/services/patient.service';
 import { InteroperabilityBusService } from '@api-rest/services/interoperability-bus.service';
@@ -46,6 +46,7 @@ import { SummaryCoverageInformation } from '../../components/medical-coverage-su
 import { InternmentStateService } from '@api-rest/services/internment-state.service';
 import { EMedicalCoverageType } from "@pacientes/dialogs/medical-coverage/medical-coverage.component";
 import { InternmentActionsService } from "@historia-clinica/modules/ambulatoria/modules/internacion/services/internment-actions.service";
+import { HEALTH_VERIFICATIONS } from '../../modules/internacion/constants/ids';
 
 const RESUMEN_INDEX = 0;
 const VOLUNTARY_ID = 1;
@@ -95,6 +96,7 @@ export class AmbulatoriaPacienteComponent implements OnInit {
 	hasHealthProfessionalRole = false;
 	internmentAction: InternmentActions;
 	appointmentConfirmedCoverageInfo: ExternalPatientCoverageDto;
+	PRESUMPTIVE = HEALTH_VERIFICATIONS.PRESUNTIVO;
 
 	private timeOut = 15000;
 	private isOpenOdontologyConsultation = false;
@@ -380,7 +382,7 @@ export class AmbulatoriaPacienteComponent implements OnInit {
 
 		if (InternmentActions.anamnesis === internmentActionId) {
 			this.internmentStateService.getDiagnosesGeneralState(this.internmentEpisodeProcess.id).subscribe(diagnoses => {
-				diagnoses.forEach(modifiedDiagnosis => modifiedDiagnosis.presumptive = modifiedDiagnosis.verificationId === '76104008');
+				diagnoses.forEach(modifiedDiagnosis => modifiedDiagnosis.presumptive = modifiedDiagnosis.verificationId === this.PRESUMPTIVE);
 				this.internmentActionsService.mainDiagnosis = diagnoses.filter(diagnosis => diagnosis.main)[0];
 				if (this.internmentActionsService.mainDiagnosis)
 					this.internmentActionsService.mainDiagnosis.isAdded = true;
@@ -392,7 +394,7 @@ export class AmbulatoriaPacienteComponent implements OnInit {
 
 		if (InternmentActions.evolutionNote === internmentActionId) {
 			this.internmentStateService.getDiagnosesGeneralState(this.internmentEpisodeProcess.id).subscribe(diagnoses => {
-				diagnoses.forEach(modifiedDiagnosis => modifiedDiagnosis.presumptive = modifiedDiagnosis.verificationId === '76104008');
+				diagnoses.forEach(modifiedDiagnosis => modifiedDiagnosis.presumptive = modifiedDiagnosis.verificationId === this.PRESUMPTIVE);
 				this.internmentActionsService.mainDiagnosis = diagnoses.filter(diagnosis => diagnosis.main)[0];
 				if (this.internmentActionsService.mainDiagnosis)
 					this.internmentActionsService.mainDiagnosis.isAdded = true;
@@ -458,8 +460,8 @@ export class AmbulatoriaPacienteComponent implements OnInit {
 		return summaryInfo;
 	}
 
-	getMedicalCoverageType(type : EMedicalCoverageTypeDto){
-		switch (type){
+	getMedicalCoverageType(type: EMedicalCoverageTypeDto) {
+		switch (type) {
 			case EMedicalCoverageTypeDto.OBRASOCIAL: return EMedicalCoverageType.OBRASOCIAL;
 			case EMedicalCoverageTypeDto.PREPAGA: return EMedicalCoverageType.PREPAGA;
 			case EMedicalCoverageTypeDto.ART: return EMedicalCoverageType.ART;
@@ -472,9 +474,9 @@ export class AmbulatoriaPacienteComponent implements OnInit {
 		return false;
 	}
 
-	isNewConsultationButtonEnabled(): boolean{
+	isNewConsultationButtonEnabled(): boolean {
 		return (this.hasNewConsultationEnabled$ && (!((this.hasInternmentEpisodeInThisInstitution && !this.hasMedicalDischarge && this.hasMedicalRole) ||
-		(this.hasInternmentEpisodeInThisInstitution && !this.epicrisisDoc?.confirmed && !this.hasMedicalRole))) && !this.CurrentUserIsAllowedToMakeBothQueries);
+			(this.hasInternmentEpisodeInThisInstitution && !this.epicrisisDoc?.confirmed && !this.hasMedicalRole))) && !this.CurrentUserIsAllowedToMakeBothQueries);
 	}
 }
 
