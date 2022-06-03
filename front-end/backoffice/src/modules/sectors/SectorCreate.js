@@ -12,6 +12,7 @@ import {
 import CustomToolbar from "../components/CustomToolbar";
 
 const INTERNACION = 2;
+const SIN_TIPO = 6;
 
 const redirect = (basePath, id, data) => `/institutions/${data.institutionId}/show`;
 
@@ -21,8 +22,9 @@ const SectorType = (sourceId) => {
             {...sourceId}
             reference="sectortypes"
             sort={{ field: 'description', order: 'ASC' }}
+            defaultValue={SIN_TIPO}
         >
-            <SelectInput optionText="description" optionValue="id" />
+            <SelectInput optionText="description" optionValue="id"/>
         </ReferenceInput>);
 
 };
