@@ -105,10 +105,11 @@ public interface DiaryRepository extends SGXAuditableEntityJPARepository<Diary, 
     
     @Transactional(readOnly = true)
     @Query("SELECT NEW net.pladema.medicalconsultation.diary.repository.domain.CompleteDiaryListVo( " +
-            "d, do.description, css.sectorId, css.clinicalSpecialtyId, d.healthcareProfessionalId) " +
+            "d, do.description, css.sectorId, d.healthcareProfessionalId, cs.name) " +
             "FROM Diary d " +
             "JOIN DoctorsOffice do ON do.id = d.doctorsOfficeId " +
             "JOIN ClinicalSpecialtySector css ON css.id = do.clinicalSpecialtySectorId " +
+			"JOIN ClinicalSpecialty cs ON cs.id = d.clinicalSpecialtyId " +
             "WHERE d.id = :diaryId ")
     Optional<CompleteDiaryListVo> getDiary(@Param("diaryId") Integer diaryId);
     

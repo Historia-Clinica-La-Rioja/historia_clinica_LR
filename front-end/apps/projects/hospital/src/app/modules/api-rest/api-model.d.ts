@@ -525,8 +525,8 @@ export interface ClinicalTermDto extends Serializable {
 }
 
 export interface CompleteDiaryDto extends DiaryDto {
-    clinicalSpecialtyId: number;
     sectorId: number;
+    specialtyName: string;
 }
 
 export interface CompletePatientDto extends BasicPatientDto {
@@ -719,6 +719,7 @@ export interface DiagnosticReportInfoWithFilesDto extends DiagnosticReportInfoDt
 export interface DiaryADto {
     appointmentDuration: number;
     automaticRenewal?: boolean;
+    clinicalSpecialtyId: number;
     diaryOpeningHours: DiaryOpeningHoursDto[];
     doctorsOfficeId: number;
     endDate: string;

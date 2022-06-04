@@ -87,5 +87,7 @@ databaseChangeLog:
         changes:
           - sql: |-
               UPDATE diary SET clinical_specialty_id = css.clinical_specialty_id 
-              FROM doctors_office dro, clinical_specialty_sector css 
-              WHERE doctors_office_id = dro.id AND dro.clinical_specialty_sector_id = css.id
+              FROM doctors_office doff
+              JOIN clinical_specialty_sector css 
+              ON doff.clinical_specialty_sector_id = css.id
+              WHERE doctors_office_id = doff.id

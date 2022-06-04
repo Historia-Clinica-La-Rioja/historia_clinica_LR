@@ -21,7 +21,6 @@ import {
 	DoctorsOfficeDto,
 	OccupationDto,
 	ProfessionalDto,
-	ProfessionalsByClinicalSpecialtyDto
 } from '@api-rest/api-model';
 import { DiaryOpeningHoursService } from '@api-rest/services/diary-opening-hours.service';
 import { DiaryService } from '@api-rest/services/diary.service';
@@ -61,7 +60,7 @@ export class AgendaSetupComponent implements OnInit {
 	sectors;
 	agendaHorarioService: AgendaHorarioService;
 	professionalId: string;
-	professionalSpecialties: ProfessionalsByClinicalSpecialtyDto[];
+	professionalSpecialties: any[];
 
 	private editingDiaryId = null;
 	private readonly routePrefix;
@@ -104,7 +103,11 @@ export class AgendaSetupComponent implements OnInit {
 			startDate: [null, [Validators.required]],
 			endDate: [null, [Validators.required]],
 			appointmentDuration: [null, [Validators.required]],
+			healthcareProfessionalSpecialtyId: [null, [Validators.required]]
 		});
+
+		if (this.professionalId)
+			this.getProfessionalSpecialties();
 
 		this.form.controls.appointmentDuration.valueChanges
 			.subscribe(newDuration => this.hourSegments = MINUTES_IN_HOUR / newDuration);
@@ -150,10 +153,16 @@ export class AgendaSetupComponent implements OnInit {
 
 		});
 
+		this.professionalSpecialties = [{
+			id: diary.clinicalSpecialtyId,
+			name: diary.specialtyName,
+		}];
+
 		this.form.controls.healthcareProfessionalId.setValue(diary.healthcareProfessionalId);
 		this.form.controls.startDate.setValue(momentParseDate(diary.startDate));
 		this.form.controls.endDate.setValue(momentParseDate(diary.endDate));
 		this.form.controls.appointmentDuration.setValue(diary.appointmentDuration);
+		this.form.controls.healthcareProfessionalSpecialtyId.setValue(diary.clinicalSpecialtyId);
 		this.agendaHorarioService.setAppointmentDuration(diary.appointmentDuration);
 
 		this.appointmentManagement = diary.professionalAssignShift;
@@ -291,7 +300,8 @@ export class AgendaSetupComponent implements OnInit {
 			includeHoliday: this.holidayWork,
 			professionalAssignShift: this.appointmentManagement,
 
-			diaryOpeningHours: this.agendaHorarioService.getDiaryOpeningHours()
+			diaryOpeningHours: this.agendaHorarioService.getDiaryOpeningHours(),
+			clinicalSpecialtyId: this.form.value.healthcareProfessionalSpecialtyId
 		};
 	}
 

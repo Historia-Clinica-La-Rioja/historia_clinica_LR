@@ -156,6 +156,7 @@ class DailyAppointmentRepositoryTest extends UnitRepository {
         diary.setStartDate(LocalDate.of(2020, 9, 1));
         diary.setEndDate(LocalDate.of(2020, 11, 1));
         diary.setAppointmentDuration((short) 30);
+		diary.setClinicalSpecialtyId(1);
         return diary;
     }
 
