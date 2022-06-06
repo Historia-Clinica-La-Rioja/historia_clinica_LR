@@ -194,8 +194,7 @@
 
 		<section id="observation-section" class="observation-section">
 			<div *ngIf="!observation && hideObservationForm && hideObservationTittle">
-				<a class="mat-body" *appHasRole="['ADMINISTRATIVO','ESPECIALISTA_MEDICO']"
-					(click)="hideObservationFormToggle(); hideObservationTittleToggle()" 
+				<a class="mat-body"	(click)="setHideObservationForm(false); setHideObservationTittle(false)" 
 					[translate]="'turnos.appointment.observations.ADD_OBSERVATION'">
 				</a>
 			</div>
@@ -209,7 +208,7 @@
 						{{observation}}
 					</p>
 					<button type="button" mat-icon-button color="primary" fxFlex="10%" 
-						(click)="hideObservationFormToggle()">
+						(click)="setHideObservationForm(false)">
 						<mat-icon>edit</mat-icon>
 					</button>
 				</div>
@@ -219,7 +218,8 @@
 					</mat-form-field>
 
 					<div class="observation-buttons">
-						<button mat-stroked-button color="primary" btn-block type="button" (click)="hideObservationFormToggle()">
+						<button mat-stroked-button color="primary" btn-block type="button" 
+							(click)="cancelObservation()">
 							<span [translate]="'turnos.appointment.observations.CANCEL'"></span>
 						</button>
 						<button mat-flat-button color="primary" type="submit" [disabled]="formObservations.invalid">

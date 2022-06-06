@@ -388,12 +388,12 @@ export class AppointmentComponent implements OnInit {
 		this.formEdit.controls.newCoverageData.setValue(null);
 	}
 
-	hideObservationTittleToggle(): void{
-		this.hideObservationTittle = !this.hideObservationTittle;
+	setHideObservationTittle(value: boolean): void{
+		this.hideObservationTittle = value;
 	}
 
-	hideObservationFormToggle(): void{
-		this.hideObservationForm = !this.hideObservationForm;
+	setHideObservationForm(value: boolean): void{
+		this.hideObservationForm = value;
 	}
 
 	updateObservation(): void{
@@ -403,7 +403,15 @@ export class AppointmentComponent implements OnInit {
 		}, error => {
 			processErrors(error, (msg) => this.snackBarService.showError(msg));
 		});
-		this.hideObservationFormToggle();
+		this.setHideObservationForm(true);
+	}
+
+	cancelObservation(): void{
+		this.hideObservationForm = true;
+		if(!this.observation)
+			this.hideObservationTittle = true;
+		else
+			this.hideObservationTittle = false;
 	}
 
 	private updateSummaryCoverageData(): void {
