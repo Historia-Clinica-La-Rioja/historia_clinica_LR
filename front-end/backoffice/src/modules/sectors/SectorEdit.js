@@ -19,7 +19,7 @@ import SectionTitle from '../components/SectionTitle';
 import SgxSelectInput from "../../sgxSelectInput/SgxSelectInput";
 import CustomToolbar from "../components/CustomToolbar";
 import SgxDateField from "../../dateComponents/sgxDateField";
-import { CreateSector, CreateDoctorsOffice } from './SectorShow';
+import { CreateSector, CreateDoctorsOffice, CreateRooms } from './SectorShow';
 
 const redirect = (basePath, id, data) => `/sectors/${data.id}/show`;
 
@@ -122,7 +122,7 @@ const SectorEdit = props => (
                         <TextField source="name" />
                     </ReferenceField>
                     <DeleteButton />
-                </Datagrid>
+                    </Datagrid>
             </ReferenceManyField>
 
             <SectionTitle label="resources.clinicalspecialtysectors.fields.doctorsoffices"/>
@@ -139,24 +139,20 @@ const SectorEdit = props => (
                 </Datagrid>
             </ReferenceManyField>
 
+            {/*Rooms*/}
             <SectionTitle label="resources.clinicalspecialtysectors.fields.rooms"/>
-            <CreateRelatedButton
-                reference="rooms"
-                refFieldName="sectorId"
-                label="resources.rooms.createRelated"
-            />
+            <CreateRooms />
             <ReferenceManyField
                 addLabel={false}
                 reference="rooms"
                 target="sectorId"
-                sort={{ field: 'description', order: 'DESC' }}
-            >
+                sort={{ field: 'description', order: 'DESC' }}>
                 <Datagrid rowClick="show">
                     <TextField source="roomNumber" />
                     <TextField source="description"/>
                     <TextField source="type" />
                     <SgxDateField source="dischargeDate" />
-                    <EditButton />
+                    <EditButton/>
                 </Datagrid>
             </ReferenceManyField>
         </SimpleForm>

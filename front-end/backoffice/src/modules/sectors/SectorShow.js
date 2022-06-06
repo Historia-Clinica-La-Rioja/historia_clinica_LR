@@ -15,6 +15,7 @@ import SgxDateField from "../../dateComponents/sgxDateField";
 
 
 const INTERNACION = 2;
+const GUARDIA = 3;
 
 const CreateSector = ({ record }) => {
     return (
@@ -35,6 +36,19 @@ const CreateDoctorsOffice = ({ record }) => {
         label="resources.doctorsoffices.createRelated"/>
     )
 };
+
+const CreateRooms = ({ record }) => {
+    const customRecord = {sectorId: record.id, institutionId: record.institutionId};
+    return record.sectorTypeId === INTERNACION ||
+    record.sectorTypeId === GUARDIA ? (
+        <CreateRelatedButton
+            customRecord={customRecord}
+            reference="rooms"
+            refFieldName="sectorId"
+            label="resources.rooms.createRelated"
+        />
+    ) : null;
+}
 
 const SectorTypeField = (props) => {
     const record = useRecordContext(props);
@@ -137,11 +151,7 @@ const SectorShow = props => (
             </ReferenceManyField>
 
             <SectionTitle label="resources.clinicalspecialtysectors.fields.rooms"/>
-            <CreateRelatedButton
-                reference="rooms"
-                refFieldName="sectorId"
-                label="resources.rooms.createRelated"
-            />
+            <CreateRooms/>
             <ReferenceManyField
                 addLabel={false}
                 reference="rooms"
@@ -162,4 +172,4 @@ const SectorShow = props => (
 );
 
 export default SectorShow;
-export { CreateSector, CreateDoctorsOffice };
+export { CreateSector, CreateDoctorsOffice, CreateRooms };
