@@ -33,7 +33,7 @@ const SectorType = (sourceId) => {
             perPage={100}
             sort={{ field: 'description', order: 'ASC' }}
         >
-            <SelectInput optionText="description" optionValue="id" />
+            <SelectInput optionText="description" optionValue="id" options={{ disabled: true }}/>
         </ReferenceInput>);
 
 };
