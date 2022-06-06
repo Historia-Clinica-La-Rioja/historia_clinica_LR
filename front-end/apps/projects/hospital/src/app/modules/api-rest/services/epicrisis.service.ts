@@ -71,4 +71,9 @@ export class EpicrisisService {
 		const url = `${this.BASIC_URL}${internmentEpisodeId}/epicrisis/draft/${epicrisisId}`;
 		return this.http.get<ResponseEpicrisisDto>(url);
 	}
+
+	closeDraft(internmentEpisodeId: number, epicrisisId: number, epicrisis: EpicrisisDto): Observable<ResponseEpicrisisDto> {
+		const url = `${this.BASIC_URL}${internmentEpisodeId}/epicrisis/draft/final/${epicrisisId}`;
+		return this.http.put<ResponseEpicrisisDto>(url, epicrisis);
+	}
 }
