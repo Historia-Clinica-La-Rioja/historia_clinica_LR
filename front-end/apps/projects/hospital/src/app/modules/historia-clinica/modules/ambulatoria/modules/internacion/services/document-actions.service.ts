@@ -40,7 +40,7 @@ export class DocumentActionsService {
 	}
 
 	canEditDocument(document: DocumentSearchDto): boolean {
-		if (document.creator.id !== this.userId)
+		if (!this.isCreatorDocumnt(document))
 			return false;
 		const createdOn = dateTimeDtoToDate(document.createdOn);
 		if (differenceInHours(new Date(), (new Date(createdOn))) > 24)
@@ -48,6 +48,10 @@ export class DocumentActionsService {
 		if (this.hasMedicalDischarge)
 			return false;
 		return true;
+	}
+
+	isCreatorDocumnt(document: DocumentSearchDto): boolean {
+		return (document.creator.id === this.userId);
 	}
 
 	canDeleteDocument(document: DocumentSearchDto): boolean {
@@ -89,7 +93,7 @@ export class DocumentActionsService {
 	}
 
 	editEpicrisisDraft(document: DocumentSearchDto) {
-		this.editDocumentAction.editDraftEpicrisis(document);
+		this.editDocumentAction.editDraftEpicrisis(document,this.isCreatorDocumnt(document));
 	}
 
 }

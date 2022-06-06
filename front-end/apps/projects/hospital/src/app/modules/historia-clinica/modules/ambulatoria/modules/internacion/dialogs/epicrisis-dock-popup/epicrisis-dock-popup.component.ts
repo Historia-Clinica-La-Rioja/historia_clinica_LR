@@ -59,6 +59,7 @@ export class EpicrisisDockPopupComponent implements OnInit {
 	showWarning: boolean = false;
 	isDraft = false;
 	medications: MedicationDto[] = [];
+	canConfirmedDocument = false;
 	personalHistories: TableCheckbox<HealthHistoryConditionDto> = {
 		data: [],
 		columns: [
@@ -140,6 +141,7 @@ export class EpicrisisDockPopupComponent implements OnInit {
 	ngOnInit(): void {
 
 		this.isDraft = this.data.patientInfo.isDraft;
+		this.canConfirmedDocument = this.editDocumentAction.canConfirmedDocument;
 		this.diagnosticsEpicrisisService = new DiagnosisEpicrisisService(this.internacionMasterDataService, this.internmentStateService, this.tableService, this.data.patientInfo.internmentEpisodeId);
 
 		this.formDiagnosis = this.formBuilder.group({
@@ -226,7 +228,7 @@ export class EpicrisisDockPopupComponent implements OnInit {
 
 	save(): void {
 		if (this.form.valid) {
-			const epicrisis = this.getEpicrisis();
+			const epicrisis = this.getEpicrisis(true);
 			if (this.data.patientInfo.epicrisisId) {
 				this.editDocumentAction.openEditReason().subscribe(reason => {
 					if (reason) {
@@ -255,7 +257,7 @@ export class EpicrisisDockPopupComponent implements OnInit {
 
 	saveDraft(): void {
 		if (this.form.valid) {
-			const epicrisis = this.getEpicrisis();
+			const epicrisis = this.getEpicrisis(false);
 			let obs$;
 			if (this.data.patientInfo.epicrisisId) {
 				obs$ = this.epicrisisService.
@@ -270,9 +272,22 @@ export class EpicrisisDockPopupComponent implements OnInit {
 		}
 	}
 
-	private getEpicrisis(): EpicrisisDto {
+	saveConfirmedDraft(): void {
+		if (this.form.valid) {
+			const epicrisis = this.getEpicrisis(true);
+			let obs$ = this.epicrisisService.
+				closeDraft(this.data.patientInfo.internmentEpisodeId, this.data.patientInfo.epicrisisId, epicrisis)
+			this.closeEpicrisis(obs$, epicrisis);
+		} else {
+			this.snackBarService.showError('internaciones.epicrisis.messages.ERROR');
+			this.form.markAllAsTouched();
+		}
+	}
+
+	private getEpicrisis(confirmed?: boolean): EpicrisisDto {
 		return {
-			confirmed: this.isDraft ? false : true,
+
+			confirmed: confirmed,
 			notes: this.toEpicrisisObservationsDto(this.form),
 			mainDiagnosis: this.form.value.mainDiagnosis,
 			diagnosis: this.diagnosticsEpicrisisService.getSelectedAlternativeDiagnostics(),
@@ -349,7 +364,7 @@ export class EpicrisisDockPopupComponent implements OnInit {
 		this.dockPopupRef.close(this.fieldsToUpdate(epicrisis));
 	}
 
-	private closeEpicrisis(obs: Observable<any>, epicrisis:EpicrisisDto) {
+	private closeEpicrisis(obs: Observable<any>, epicrisis: EpicrisisDto) {
 		obs
 			.subscribe(r => {
 				this.snackBarService.showSuccess('internaciones.epicrisis.messages.SUCCESS');

@@ -328,5 +328,11 @@
 				<span class="uppercase" [translate]="'internaciones.epicrisis.buttons.CONFIRM'"></span>
 			</button>
 		</div>
+		<div *ngIf="isDraft && canConfirmedDocument">
+			<button id="sign-confirm-draft" type="button" mat-raised-button color="primary"
+					*appHasRole="['ESPECIALISTA_MEDICO']" (click)="saveConfirmedDraft()">
+				<span class="uppercase"  [translate]="'internaciones.epicrisis.buttons.FINALIZE'"></span>
+			</button>
+		</div>
 	</div>
 </app-dock-popup>

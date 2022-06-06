@@ -177,6 +177,7 @@
 				"ATTACH_SIGNATURE": "Adjuntar firma digital",
 				"EDIT_DRAFT": "Seguir editando",
 				"SAVE_DRAFT": "Guardar borrador",
+				"FINALIZE": "Finalizar y dar alta medica",
 				"CONFIRM": "Confirmar"
 			},
 			"diagnosticos": {

@@ -8,7 +8,7 @@ import { MatDialog } from "@angular/material/dialog";
 	providedIn: 'root'
 })
 export class EditDocumentActionService {
-
+	canConfirmedDocument = false;
 	constructor(
 		private readonly internmentActions: InternmentActionsService,
 		private readonly dialog: MatDialog
@@ -27,9 +27,9 @@ export class EditDocumentActionService {
 			this.internmentActions.openEpicrisis(document.id)
 	}
 
-	editDraftEpicrisis(document: DocumentSearchDto) {
-		const isDraft = true;
-		this.internmentActions.openEpicrisis(document.id, isDraft);
+	editDraftEpicrisis(document: DocumentSearchDto, canConfirmedDocument: boolean) {
+		this.canConfirmedDocument = canConfirmedDocument;
+		this.internmentActions.openEpicrisis(document.id, true);
 	}
 
 	openEditReason(): Observable<string> {
