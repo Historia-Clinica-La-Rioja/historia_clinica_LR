@@ -254,7 +254,7 @@ export class EditProfessionsComponent implements OnInit {
 
 	private isEqual(e1: HealthcareProfessionalSpecialtyDto, e2: HealthcareProfessionalSpecialtyDto): boolean {
 		return ((e1.clinicalSpecialtyId === e2.clinicalSpecialtyId) &&
-			(e1.healthcareProfessionalId === e2.healthcareProfessionalId));
+			(e1.professionalSpecialtyId === e2.professionalSpecialtyId));
 	}
 	private isNotInArray(elem: HealthcareProfessionalSpecialtyDto): boolean {
 		let a = true;
