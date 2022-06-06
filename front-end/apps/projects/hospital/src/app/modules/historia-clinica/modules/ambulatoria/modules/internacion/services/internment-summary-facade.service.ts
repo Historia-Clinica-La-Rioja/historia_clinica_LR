@@ -65,7 +65,7 @@ export class InternmentSummaryFacadeService {
 	initDischargeObservable() {
 		this.hasPhysicalDischargeSubject.next("");
 	}
-		
+
 	setInternmentEpisodeId(internmentEpisodeId: number): void {
 		this.internmentEpisodeId = internmentEpisodeId;
 		this.initDischargeObservable();
@@ -225,4 +225,5 @@ export interface InternmentFields {
 	mainDiagnosis?: boolean;
 	diagnosis?: boolean;
 	evolutionClinical?: boolean;
+
 }

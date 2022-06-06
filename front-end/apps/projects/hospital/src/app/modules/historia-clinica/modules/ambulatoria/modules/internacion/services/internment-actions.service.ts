@@ -98,10 +98,12 @@ export class InternmentActionsService {
 				autoFocus: false,
 				disableClose: true,
 			});
-			this.dialogRef.afterClosed().subscribe((fieldsToUpdate: InternmentFields) => {
+			this.dialogRef.afterClosed().subscribe((epicrisisClose: EpicrisisClose) => {
 				delete this.dialogRef;
-				if (fieldsToUpdate)
-					this.updateInternmentSummary(fieldsToUpdate);
+				if (epicrisisClose.fieldsToUpdate)
+					this.updateInternmentSummary(epicrisisClose.fieldsToUpdate);
+				if (epicrisisClose.openMedicalDischarge)
+					this.openMedicalDischarge();
 			});
 		} else {
 			if (this.dialogRef.isMinimized()) {
@@ -148,3 +150,5 @@ export class InternmentActionsService {
 		});
 	}
 }
+
+export interface EpicrisisClose { fieldsToUpdate: InternmentFields, openMedicalDischarge: boolean };

@@ -33,6 +33,7 @@ import { OVERLAY_DATA } from "@presentation/presentation-model";
 import { InternmentFields } from "@historia-clinica/modules/ambulatoria/modules/internacion/services/internment-summary-facade.service";
 import { EditDocumentActionService } from "@historia-clinica/modules/ambulatoria/modules/internacion/services/edit-document-action.service";
 import { Observable } from 'rxjs';
+import { EpicrisisClose } from '../../services/internment-actions.service';
 
 @Component({
 	selector: 'app-epicrisis-dock-popup',
@@ -265,7 +266,7 @@ export class EpicrisisDockPopupComponent implements OnInit {
 			} else
 				obs$ = this.epicrisisService.createDraftDocument(epicrisis, this.data.patientInfo.internmentEpisodeId)
 
-			this.closeEpicrisis(obs$, epicrisis);
+			this.closeEpicrisis(obs$, epicrisis, false);
 		} else {
 			this.snackBarService.showError('internaciones.epicrisis.messages.ERROR');
 			this.form.markAllAsTouched();
@@ -277,7 +278,7 @@ export class EpicrisisDockPopupComponent implements OnInit {
 			const epicrisis = this.getEpicrisis(true);
 			let obs$ = this.epicrisisService.
 				closeDraft(this.data.patientInfo.internmentEpisodeId, this.data.patientInfo.epicrisisId, epicrisis)
-			this.closeEpicrisis(obs$, epicrisis);
+			this.closeEpicrisis(obs$, epicrisis, true);
 		} else {
 			this.snackBarService.showError('internaciones.epicrisis.messages.ERROR');
 			this.form.markAllAsTouched();
@@ -364,11 +365,12 @@ export class EpicrisisDockPopupComponent implements OnInit {
 		this.dockPopupRef.close(this.fieldsToUpdate(epicrisis));
 	}
 
-	private closeEpicrisis(obs: Observable<any>, epicrisis: EpicrisisDto) {
+	private closeEpicrisis(obs: Observable<any>, epicrisis: EpicrisisDto, openMedicalDischarge: boolean) {
+		let fieldsToUpdate = this.fieldsToUpdate(epicrisis);
 		obs
 			.subscribe(r => {
 				this.snackBarService.showSuccess('internaciones.epicrisis.messages.SUCCESS');
-				this.dockPopupRef.close(this.fieldsToUpdate(epicrisis));
+				this.dockPopupRef.close({ fieldsToUpdate, openMedicalDischarge });
 			}, _ => this.snackBarService.showError('internaciones.epicrisis.messages.ERROR'));
 	}
 
