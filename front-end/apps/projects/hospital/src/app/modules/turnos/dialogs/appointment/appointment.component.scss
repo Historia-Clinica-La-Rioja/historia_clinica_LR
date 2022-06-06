@@ -9,7 +9,7 @@
 }
 
 .ventana{
-	min-height: 500px;
+	min-height: 530px;
 }
 
 .patient-name-title {
@@ -17,6 +17,7 @@
 }
 
 .header-content {
+
 	@media screen and (min-width: 959px) {
 		width: 380px;
 	}
@@ -136,7 +137,7 @@ section {
 }
 
 .observation-section{
-	width: 600px;
+	width: 550px;
 	margin: 15px 0;
 
 	a{
@@ -151,7 +152,6 @@ section {
 	}
 
 	.observation{
-		
 		display: flex;
 		justify-content: space-between;
 	}

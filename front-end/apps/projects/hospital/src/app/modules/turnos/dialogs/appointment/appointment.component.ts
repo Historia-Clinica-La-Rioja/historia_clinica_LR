@@ -1,4 +1,4 @@
-import { Component, Inject, OnInit } from '@angular/core';
+import { Component, HostListener, Inject, OnInit } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { NewAttentionComponent } from '../new-attention/new-attention.component';
 import { AppointmentsService } from '@api-rest/services/appointments.service';
@@ -96,6 +96,7 @@ export class AppointmentComponent implements OnInit {
 		private readonly personMasterDataService: PersonMasterDataService,
 
 	) {
+		dialogRef.disableClose = true;
 		this.featureFlagService.isActive(AppFeature.HABILITAR_INFORMES).subscribe(isOn => this.downloadReportIsEnabled = isOn);
 		this.featureFlagService.isActive(AppFeature.HABILITAR_LLAMADO).subscribe(isEnabled => this.isMqttCallEnabled = isEnabled);
 	}
@@ -161,6 +162,10 @@ export class AppointmentComponent implements OnInit {
 			});
 	}
 
+	@HostListener('window:keyup.esc') onKeyUp() {
+		this.dialogRef.close();
+	}
+	
 	formatPhonePrefixAndNumber(): string {
 		return this.params.appointmentData.phoneNumber ? this.params.appointmentData.phonePrefix
 			? "(" + this.params.appointmentData.phonePrefix + ") " + this.params.appointmentData.phoneNumber
