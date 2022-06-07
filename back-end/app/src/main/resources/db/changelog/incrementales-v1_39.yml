@@ -349,7 +349,7 @@ databaseChangeLog:
               referencedColumnNames: id
               referencedTableName: users
               validate: true
-              
+
     - changeSet:
         id: modifying-sector_organization-data
         comment: Actualizacion de datos sector_organization
@@ -359,4 +359,15 @@ databaseChangeLog:
           - sql:
               sql: |-
                 UPDATE sector_organization SET description = 'Servicios' WHERE id=1;
-    
+
+    - changeSet:
+        id: upate-clinical_specialty-name-erronea
+        comment: Edita servicios existentes ingresados con palabra ERRÓNEA.
+        author: mvenere
+        context: "!schema-only"
+        changes:
+          - sql:
+              sql: |-
+                UPDATE clinical_specialty
+                SET name = substring(name,9)
+                WHERE name LIKE 'ERRÓNEA%'
