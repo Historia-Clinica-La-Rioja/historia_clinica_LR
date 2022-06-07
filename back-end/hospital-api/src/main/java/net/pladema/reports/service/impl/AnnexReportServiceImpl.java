@@ -11,7 +11,11 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
+import ar.lamansys.sgh.clinichistory.application.document.DocumentService;
+import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.SourceType;
 import ar.lamansys.sgx.shared.exceptions.NotFoundException;
+import net.pladema.medicalconsultation.appointment.service.DocumentAppointmentService;
+import net.pladema.medicalconsultation.appointment.service.domain.DocumentAppointmentBo;
 import net.pladema.reports.controller.dto.AnnexIIDto;
 import net.pladema.reports.repository.AnnexReportRepository;
 import net.pladema.reports.repository.entity.AnnexIIOdontologyDataVo;
@@ -29,16 +33,68 @@ public class AnnexReportServiceImpl implements AnnexReportService {
     public static final String CONSULTATION_NOT_FOUND = "consultation.not.found";
 
     private final AnnexReportRepository annexReportRepository;
+	private final DocumentAppointmentService documentAppointmentService;
+	private final DocumentService documentService;
 
-    public AnnexReportServiceImpl(AnnexReportRepository annexReportRepository){
+    public AnnexReportServiceImpl(AnnexReportRepository annexReportRepository, DocumentAppointmentService documentAppointmentService, DocumentService documentService){
         this.annexReportRepository = annexReportRepository;
-    }
+		this.documentAppointmentService = documentAppointmentService;
+		this.documentService = documentService;
+	}
 
     @Override
     public AnnexIIBo getAppointmentData(Integer appointmentId) {
         LOG.debug("Input parameter -> appointmentId {}", appointmentId);
         AnnexIIBo result = annexReportRepository.getAppointmentAnnexInfo(appointmentId).map(AnnexIIBo::new)
                 .orElseThrow(() ->new NotFoundException("bad-appointment-id", APPOINTMENT_NOT_FOUND));
+
+		Optional<DocumentAppointmentBo> documentAppointmentOpt = this.documentAppointmentService.getDocumentAppointment(appointmentId);
+		if(documentAppointmentOpt.isPresent()){
+
+			DocumentAppointmentBo documentAppointment = documentAppointmentOpt.get();
+			Long documentId = documentAppointment.getDocumentId();
+
+			switch (this.documentService.getSourceType(documentId)){
+
+				case SourceType.OUTPATIENT: {
+					var outpatientConsultationData = annexReportRepository.getConsultationAnnexInfo(documentId);
+					if (outpatientConsultationData.isPresent()) {
+						var outpatientconsultationData = outpatientConsultationData.get();
+						result.setSpecialty(outpatientconsultationData.getSpecialty());
+						result.setProblems(outpatientconsultationData.getProblems());
+						result.setHasProcedures(outpatientconsultationData.getHasProcedures());
+						result.setExistsConsultation(outpatientconsultationData.getExistsConsultation());
+						LOG.debug("Output -> {}", result);
+						return result;
+					}
+				}
+				break;
+
+				case SourceType.ODONTOLOGY: {
+					var odontologyConsultationGeneralData = annexReportRepository
+							.getOdontologyConsultationAnnexSpecialityAndHasProcedures(documentId);
+					if(odontologyConsultationGeneralData.isPresent()){
+						var completeResult = completeAnnexIIOdontologyBo(result, odontologyConsultationGeneralData);
+						completeResult = completeAnnexIIOdontologyBo(completeResult, annexReportRepository.getOdontologyConsultationAnnexDataInfo(documentId));
+						completeResult = completeAnnexIIOdontologyBo(completeResult, annexReportRepository.getOdontologyConsultationAnnexOtherDataInfo(documentId));
+						LOG.debug("Output -> {}", completeResult);
+						return completeResult;
+					}
+				}
+				break;
+
+				case SourceType.NURSING: {
+					var nursingConsultationGeneralData = annexReportRepository.getNursingConsultationAnnexDataInfo(documentId);
+					if(nursingConsultationGeneralData.isPresent()){
+						var completeResult = completeAnnexIINursingBo(result, nursingConsultationGeneralData);
+						LOG.debug("Output -> {}", completeResult);
+						return completeResult;
+					}
+				}
+				break;
+			}
+		}
+
 		return result;
 	}
 
@@ -47,32 +103,44 @@ public class AnnexReportServiceImpl implements AnnexReportService {
         LOG.debug("Input parameter -> documentId {}", documentId);
 		AnnexIIBo result;
 
-		var outpatientResultOpt = annexReportRepository.getConsultationAnnexInfo(documentId);
-		if(outpatientResultOpt.isPresent()) {
-			result = new AnnexIIBo(outpatientResultOpt.get());
-			LOG.debug("Output -> {}", result);
-			return result;
-		}
+		switch (this.documentService.getSourceType(documentId)) {
 
-		var odontologyResultOpt = annexReportRepository.getOdontologyConsultationAnnexGeneralInfo(documentId);
-		if(odontologyResultOpt.isPresent()) {
-			result = new AnnexIIBo(odontologyResultOpt.get());
-			Optional<AnnexIIOdontologyVo> consultationSpecialityandHasProcedures = annexReportRepository
-					.getOdontologyConsultationAnnexSpecialityAndHasProcedures(documentId);
-			var completeResult = completeAnnexIIOdontologyBo(result, consultationSpecialityandHasProcedures);
-			completeResult = completeAnnexIIOdontologyBo(completeResult, annexReportRepository.getOdontologyConsultationAnnexDataInfo(documentId));
-			completeResult = completeAnnexIIOdontologyBo(completeResult, annexReportRepository.getOdontologyConsultationAnnexOtherDataInfo(documentId));
-			LOG.debug("Output -> {}", completeResult);
-			return completeResult;
-		}
+			case SourceType.OUTPATIENT: {
+				var outpatientResultOpt = annexReportRepository.getConsultationAnnexInfo(documentId);
+				if(outpatientResultOpt.isPresent()) {
+					result = new AnnexIIBo(outpatientResultOpt.get());
+					LOG.debug("Output -> {}", result);
+					return result;
+				}
+			}
+			break;
 
-		var nursingResultOpt = annexReportRepository.getNursingConsultationAnnexGeneralInfo(documentId);
-		if(nursingResultOpt.isPresent()) {
-			result = new AnnexIIBo(nursingResultOpt.get());
-			Optional<AnnexIIReportDataVo> nursingData = annexReportRepository.getNursingConsultationAnnexDataInfo(documentId);
-			var completeResult = completeAnnexIINursingBo(result, nursingData);
-			LOG.debug("Output -> {}", completeResult);
-			return completeResult;
+			case SourceType.ODONTOLOGY: {
+				var odontologyResultOpt = annexReportRepository.getOdontologyConsultationAnnexGeneralInfo(documentId);
+				if(odontologyResultOpt.isPresent()) {
+					result = new AnnexIIBo(odontologyResultOpt.get());
+					Optional<AnnexIIOdontologyVo> consultationSpecialityandHasProcedures = annexReportRepository
+							.getOdontologyConsultationAnnexSpecialityAndHasProcedures(documentId);
+					var completeResult = completeAnnexIIOdontologyBo(result, consultationSpecialityandHasProcedures);
+					completeResult = completeAnnexIIOdontologyBo(completeResult, annexReportRepository.getOdontologyConsultationAnnexDataInfo(documentId));
+					completeResult = completeAnnexIIOdontologyBo(completeResult, annexReportRepository.getOdontologyConsultationAnnexOtherDataInfo(documentId));
+					LOG.debug("Output -> {}", completeResult);
+					return completeResult;
+				}
+			}
+			break;
+
+			case SourceType.NURSING: {
+				var nursingResultOpt = annexReportRepository.getNursingConsultationAnnexGeneralInfo(documentId);
+				if(nursingResultOpt.isPresent()) {
+					result = new AnnexIIBo(nursingResultOpt.get());
+					Optional<AnnexIIReportDataVo> nursingData = annexReportRepository.getNursingConsultationAnnexDataInfo(documentId);
+					var completeResult = completeAnnexIINursingBo(result, nursingData);
+					LOG.debug("Output -> {}", completeResult);
+					return completeResult;
+				}
+			}
+			break;
 		}
 
 		throw new NotFoundException("bad-consultation-id", CONSULTATION_NOT_FOUND);

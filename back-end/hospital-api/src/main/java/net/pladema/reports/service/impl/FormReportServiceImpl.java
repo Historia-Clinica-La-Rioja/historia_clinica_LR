@@ -11,7 +11,11 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
+import ar.lamansys.sgh.clinichistory.application.document.DocumentService;
+import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.SourceType;
 import ar.lamansys.sgx.shared.exceptions.NotFoundException;
+import net.pladema.medicalconsultation.appointment.service.DocumentAppointmentService;
+import net.pladema.medicalconsultation.appointment.service.domain.DocumentAppointmentBo;
 import net.pladema.reports.controller.dto.FormVDto;
 import net.pladema.reports.repository.FormReportRepository;
 import net.pladema.reports.repository.entity.FormVReportDataVo;
@@ -27,16 +31,64 @@ public class FormReportServiceImpl implements FormReportService {
     public static final String CONSULTATION_NOT_FOUND = "consultation.not.found";
 
     private final FormReportRepository formReportRepository;
+	private final DocumentAppointmentService documentAppointmentService;
+	private final DocumentService documentService;
 
-    public FormReportServiceImpl(FormReportRepository formReportRepository){
+    public FormReportServiceImpl(FormReportRepository formReportRepository, DocumentAppointmentService documentAppointmentService, DocumentService documentService){
         this.formReportRepository = formReportRepository;
-    }
+		this.documentAppointmentService = documentAppointmentService;
+		this.documentService = documentService;
+	}
 
     @Override
     public FormVBo getAppointmentData(Integer appointmentId) {
         LOG.debug("Input parameter -> appointmentId {}", appointmentId);
         FormVBo result = formReportRepository.getAppointmentFormVInfo(appointmentId).map(FormVBo::new)
                 .orElseThrow(() ->new NotFoundException("bad-appointment-id", APPOINTMENT_NOT_FOUND));
+
+		Optional<DocumentAppointmentBo> documentAppointmentOpt = this.documentAppointmentService.getDocumentAppointment(appointmentId);
+		if(documentAppointmentOpt.isPresent()){
+
+			DocumentAppointmentBo documentAppointment = documentAppointmentOpt.get();
+			Long documentId = documentAppointment.getDocumentId();
+
+			switch (this.documentService.getSourceType(documentId)){
+
+				case SourceType.OUTPATIENT: {
+					var outpatientResultOpt = formReportRepository.getConsultationFormVInfo(documentId);
+					if(outpatientResultOpt.isPresent()) {
+						var outpatientconsultationData = outpatientResultOpt.get();
+						result.setProblems(outpatientconsultationData.getProblems());
+						result.setCie10Codes(outpatientconsultationData.getCie10Codes());
+						LOG.debug("Output -> {}", result);
+						return result;
+					}
+				}
+				break;
+
+				case SourceType.ODONTOLOGY: {
+					List<FormVReportDataVo> odontologyListData = formReportRepository.getOdontologyConsultationFormVDataInfo(documentId);
+					odontologyListData.addAll(formReportRepository.getOdontologyConsultationFormVOtherDataInfo(documentId));
+					if(!odontologyListData.isEmpty()) {
+						var completeResult = completeFormVBo(result, odontologyListData);
+						LOG.debug("Output -> {}", completeResult);
+						return completeResult;
+					}
+				}
+				break;
+
+				case SourceType.NURSING: {
+					Optional<FormVReportDataVo> nursingListData = formReportRepository.getNursingConsultationFormVDataInfo(documentId);
+					if(nursingListData.isPresent()){
+						var completeResult = completeFormVBo(result, nursingListData);
+						LOG.debug("Output -> {}", completeResult);
+						return completeResult;
+					}
+				}
+				break;
+			}
+		}
+
 		return result;
 	}
 
@@ -45,32 +97,43 @@ public class FormReportServiceImpl implements FormReportService {
 		LOG.debug("Input parameter -> documentId {}", documentId);
 		FormVBo result;
 
-		var outpatientResultOpt = formReportRepository.getConsultationFormVInfo(documentId);
-		if(outpatientResultOpt.isPresent()) {
-			result = new FormVBo(outpatientResultOpt.get());
-			LOG.debug("Output -> {}", result);
-			return result;
-		}
+		switch (this.documentService.getSourceType(documentId)){
 
-		var odontologyResultOpt = formReportRepository.getOdontologyConsultationFormVGeneralInfo(documentId);
-		if(odontologyResultOpt.isPresent()) {
-			result = new FormVBo(odontologyResultOpt.get());
-			List<FormVReportDataVo> odontologyListData = formReportRepository.getOdontologyConsultationFormVDataInfo(documentId);
-			odontologyListData.addAll(formReportRepository.getOdontologyConsultationFormVOtherDataInfo(documentId));
-			var completeResult = completeFormVBo(result, odontologyListData);
-			LOG.debug("Output -> {}", completeResult);
-			return completeResult;
-		}
+			case SourceType.OUTPATIENT: {
+				var outpatientResultOpt = formReportRepository.getConsultationFormVInfo(documentId);
+				if(outpatientResultOpt.isPresent()) {
+					result = new FormVBo(outpatientResultOpt.get());
+					LOG.debug("Output -> {}", result);
+					return result;
+				}
+			}
+			break;
 
-		var nursingResultOpt = formReportRepository.getNursingConsultationFormVGeneralInfo(documentId);
-		if(nursingResultOpt.isPresent()) {
-			result = new FormVBo(nursingResultOpt.get());
-			Optional<FormVReportDataVo> nursingListData = formReportRepository.getNursingConsultationFormVDataInfo(documentId);
-			var completeResult = completeFormVBo(result, nursingListData);
-			LOG.debug("Output -> {}", completeResult);
-			return completeResult;
-		}
+			case SourceType.ODONTOLOGY: {
+				var odontologyResultOpt = formReportRepository.getOdontologyConsultationFormVGeneralInfo(documentId);
+				if(odontologyResultOpt.isPresent()) {
+					result = new FormVBo(odontologyResultOpt.get());
+					List<FormVReportDataVo> odontologyListData = formReportRepository.getOdontologyConsultationFormVDataInfo(documentId);
+					odontologyListData.addAll(formReportRepository.getOdontologyConsultationFormVOtherDataInfo(documentId));
+					var completeResult = completeFormVBo(result, odontologyListData);
+					LOG.debug("Output -> {}", completeResult);
+					return completeResult;
+				}
+			}
+			break;
 
+			case SourceType.NURSING: {
+				var nursingResultOpt = formReportRepository.getNursingConsultationFormVGeneralInfo(documentId);
+				if(nursingResultOpt.isPresent()) {
+					result = new FormVBo(nursingResultOpt.get());
+					Optional<FormVReportDataVo> nursingListData = formReportRepository.getNursingConsultationFormVDataInfo(documentId);
+					var completeResult = completeFormVBo(result, nursingListData);
+					LOG.debug("Output -> {}", completeResult);
+					return completeResult;
+				}
+			}
+			break;
+		}
 
 		throw new NotFoundException("bad-consultation-id", CONSULTATION_NOT_FOUND);
 	}
