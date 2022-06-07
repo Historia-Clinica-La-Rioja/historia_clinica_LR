@@ -215,3 +215,73 @@ databaseChangeLog:
               columnName: healthcare_professional_id
               tableName: healthcare_professional_specialty
 
+    - changeSet:
+        id: 1.40.0-10
+        comment: Create table professional_license_numbers
+        author: etrapani
+        changes:
+          - createTable:
+              tableName: professional_license_numbers
+              columns:
+                - column:
+                    autoIncrement: true
+                    constraints:
+                      primaryKey: true
+                      primaryKeyName: PK_professional_license_numbers
+                    name: id
+                    type: int
+                - column:
+                    constraints:
+                      nullable: false
+                    name: type_license_number
+                    type: smallint
+                - column:
+                    constraints:
+                      nullable: false
+                    name: license_number
+                    type: varchar(100)
+                - column:
+                    constraints:
+                      nullable: true
+                    name: professional_profession_id
+                    type: int
+                - column:
+                    constraints:
+                      nullable: true
+                    name: healthcare_professional_specialty_id
+                    type: int
+          - addForeignKeyConstraint:
+              baseColumnNames: professional_profession_id
+              baseTableName: professional_license_numbers
+              constraintName: FK_professional_license_numbers_professional_profession_id
+              onDelete: NO ACTION
+              onUpdate: NO ACTION
+              referencedColumnNames: id
+              referencedTableName: professional_professions
+              validate: true
+          - addForeignKeyConstraint:
+              baseColumnNames: healthcare_professional_specialty_id
+              baseTableName: professional_license_numbers
+              constraintName: FK_professional_license_numbers_healthcare_professional_specialty_id
+              onDelete: NO ACTION
+              onUpdate: NO ACTION
+              referencedColumnNames: id
+              referencedTableName: healthcare_professional_specialty
+              validate: true
+
+
+    - changeSet:
+        id: 1.40.0-11
+        comment: Actualizar tabla de licencias
+        author: etrapani
+        context: "!schema-only"
+        changes:
+          - sql:
+              sql: |-
+                INSERT INTO professional_license_numbers(type_license_number, license_number, professional_profession_id, healthcare_professional_specialty_id) 
+                SELECT 1, hp.license_number, pp.id, NULL 
+                FROM professional_professions AS pp 
+                INNER JOIN healthcare_professional AS hp ON (pp.healthcare_professional_id = hp.id)
+                WHERE hp.license_number IS NOT NULL 
+                ORDER BY pp.id;
+                
