@@ -23,6 +23,16 @@ const CreateSector = ({ record }) => {
     )
 }
 
+const CreateDoctorsOffice = ({ record }) => {
+    const customRecord = {sectorId: record.id, institutionId: record.institutionId};
+    return (<CreateRelatedButton
+        customRecord={customRecord}
+        reference="doctorsoffices"
+        refFieldName="sectorId"
+        label="resources.doctorsoffices.createRelated"/>
+    )
+};
+
 const SectorShow = props => (
     <Show {...props}>
         <SimpleShowLayout>
@@ -66,6 +76,20 @@ const SectorShow = props => (
                 </Datagrid>
             </ReferenceManyField>
 
+            <SectionTitle label="resources.clinicalspecialtysectors.fields.doctorsoffices"/>
+            <CreateDoctorsOffice />
+            <ReferenceManyField
+                addLabel={false}
+                reference="doctorsoffices"
+                target="sectorId"
+                sort={{ field: 'description', order: 'DESC' }}
+            >
+                <Datagrid rowClick="show">
+                    <TextField source="description"/>
+                    <EditButton />
+                </Datagrid>
+            </ReferenceManyField>
+
             <SectionTitle label="resources.clinicalspecialtysectors.fields.rooms"/>
             <CreateRelatedButton
                 reference="rooms"
@@ -92,4 +116,4 @@ const SectorShow = props => (
 );
 
 export default SectorShow;
-export { CreateSector };
+export { CreateSector, CreateDoctorsOffice };

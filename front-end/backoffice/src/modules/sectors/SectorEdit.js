@@ -19,7 +19,7 @@ import SectionTitle from '../components/SectionTitle';
 import SgxSelectInput from "../../sgxSelectInput/SgxSelectInput";
 import CustomToolbar from "../components/CustomToolbar";
 import SgxDateField from "../../dateComponents/sgxDateField";
-import { CreateSector } from './SectorShow';
+import { CreateSector, CreateDoctorsOffice } from './SectorShow';
 
 const redirect = (basePath, id, data) => `/sectors/${data.id}/show`;
 
@@ -122,6 +122,20 @@ const SectorEdit = props => (
                         <TextField source="name" />
                     </ReferenceField>
                     <DeleteButton />
+                </Datagrid>
+            </ReferenceManyField>
+
+            <SectionTitle label="resources.clinicalspecialtysectors.fields.doctorsoffices"/>
+            <CreateDoctorsOffice />
+            <ReferenceManyField
+                addLabel={false}
+                reference="doctorsoffices"
+                target="sectorId"
+                sort={{ field: 'description', order: 'DESC' }}
+            >
+                <Datagrid rowClick="show">
+                    <TextField source="description"/>
+                    <EditButton />
                 </Datagrid>
             </ReferenceManyField>
 

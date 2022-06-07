@@ -9,8 +9,8 @@ const DoctorsOfficeEdit = (props) => {
         <Edit {...props}>
             <SimpleForm redirect="show" toolbar={<CustomToolbar isEdit={true} />}>
                 <TextInput source="description" validate={[required()]} />
-                <SgxSelectInput source="clinicalSpecialtySectorId"
-                    element="clinicalspecialtysectors"
+                <SgxSelectInput source="sectorId"
+                    element="sectors"
                     optionText="description"
                     alwaysOn
                     allowEmpty={false} />

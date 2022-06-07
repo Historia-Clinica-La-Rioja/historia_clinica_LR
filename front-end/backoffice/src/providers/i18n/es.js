@@ -153,7 +153,7 @@ const messages = {
                 description: 'Nombre',
                 openingTime: 'Horario de apertura',
                 closingTime: 'Horario de cierre',
-                clinicalSpecialtySectorId: 'Especialidad | Sector',
+                sectorId: 'Sector',
                 institutionId: 'Institución',
                 topic: 'Tópico'
             },
