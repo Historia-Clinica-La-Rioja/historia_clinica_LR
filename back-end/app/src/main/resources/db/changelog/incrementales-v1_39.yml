@@ -349,3 +349,14 @@ databaseChangeLog:
               referencedColumnNames: id
               referencedTableName: users
               validate: true
+              
+    - changeSet:
+        id: modifying-sector_organization-data
+        comment: Actualizacion de datos sector_organization
+        author: mvenere
+        context: "!schema-only"
+        changes:
+          - sql:
+              sql: |-
+                UPDATE sector_organization SET description = 'Servicios' WHERE id=1;
+    
