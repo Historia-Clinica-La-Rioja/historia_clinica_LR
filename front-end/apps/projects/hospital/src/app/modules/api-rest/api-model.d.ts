@@ -1531,8 +1531,15 @@ export interface Last2RiskFactorsDto extends Serializable {
     previous: RiskFactorDto;
 }
 
+export interface LicenseNumberDto {
+    id: number;
+    info: string;
+    number: string;
+    type: string;
+}
+
 export interface LicenseNumberTypeDto extends Serializable {
-    descripcion: string;
+    description: string;
     id: number;
 }
 
@@ -2250,9 +2257,25 @@ export interface ProcedureReduced {
     procedure: string;
 }
 
+export interface ProfessionCompleteDto {
+    description: string;
+    id: number;
+    licenses: LicenseNumberDto[];
+    professionId: number;
+}
+
 export interface ProfessionalAvailabilityDto {
     availability: DiaryAvailabilityDto[];
     professional: BookingProfessionalDto;
+}
+
+export interface ProfessionalCompleteDto {
+    completeLicenseInfo: string;
+    firstName: string;
+    lastName: string;
+    nameSelfDetermination: string;
+    personId: number;
+    professions: ProfessionCompleteDto[];
 }
 
 export interface ProfessionalDto {
@@ -2277,10 +2300,10 @@ export interface ProfessionalInfoDto {
 }
 
 export interface ProfessionalLicenseNumberDto extends Serializable {
-    healthcareProfessionalId: number;
     healthcareProfessionalSpecialtyId: number;
     id: number;
     licenseNumber: string;
+    professionalProfessionId: number;
     typeId: number;
 }
 
@@ -2873,6 +2896,7 @@ export const enum AppFeature {
     HABILITAR_MAIL_RESERVA_TURNO = "HABILITAR_MAIL_RESERVA_TURNO",
     LIBERAR_API_RESERVA_TURNOS = "LIBERAR_API_RESERVA_TURNOS",
     BACKOFFICE_MOSTRAR_ABM_RESERVA_TURNOS = "BACKOFFICE_MOSTRAR_ABM_RESERVA_TURNOS",
+    OCULTAR_LISTADO_PROFESIONES_WEBAPP = "OCULTAR_LISTADO_PROFESIONES_WEBAPP",
 }
 
 export const enum EDocumentSearch {

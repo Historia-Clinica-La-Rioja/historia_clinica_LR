@@ -26,6 +26,10 @@ const HealthcareProfessionalsLicenseNumbersShow = props => (
                     <TextField source="description" />
                 </ReferenceField>
             </ReferenceField>
+            <TextField source="licenseNumber" />
+            <ReferenceField source="typeId" reference="licensenumbertypes" link={false}>
+                <TextField source="description" />
+            </ReferenceField>
         </SimpleShowLayout>
     </Show>
 );

@@ -51,12 +51,12 @@ public class ProfessionalLicenseNumber implements Serializable {
 	@Column(name = "healthcare_professional_specialty_id")
 	private Integer healthcareProfessionalSpecialtyId;
 
-	public ProfessionalLicenseNumber(Integer id, String licenseNumber, Short typeId, Integer healthcareProfessionalId,
+	public ProfessionalLicenseNumber(Integer id, String licenseNumber, Short typeId, Integer professionalProfessionId,
 									 Integer healthcareProfessionalSpecialtyId) {
 		this.id = id;
 		this.licenseNumber = licenseNumber;
 		this.type = typeId != null ? ELicenseNumberTypeBo.map(typeId) : null;
-		this.healthcareProfessionalId = healthcareProfessionalId;
+		this.professionalProfessionId = professionalProfessionId;
 		this.healthcareProfessionalSpecialtyId = healthcareProfessionalSpecialtyId;
 	}
 }

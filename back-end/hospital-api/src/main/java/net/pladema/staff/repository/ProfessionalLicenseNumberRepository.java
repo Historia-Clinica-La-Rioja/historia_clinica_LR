@@ -14,7 +14,7 @@ public interface ProfessionalLicenseNumberRepository extends JpaRepository<Profe
 	@Transactional(readOnly = true)
 	@Query(value = "SELECT pln " +
 			"FROM ProfessionalLicenseNumber pln " +
-			"WHERE pln.healthcareProfessionalId IS NOT NULL " +
+			"WHERE pln.professionalProfessionId IS NOT NULL " +
 			"AND pln.healthcareProfessionalSpecialtyId IS NULL ")
 	List<ProfessionalLicenseNumber> findAllHealthProfessionalRegistrationNumbers();
 }

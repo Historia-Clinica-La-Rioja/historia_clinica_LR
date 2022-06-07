@@ -79,11 +79,11 @@ public class BackofficeHealthcareProfessionalLicenseNumbersStore implements Back
 
 	private ProfessionalLicenseNumberDto fromEntity(ProfessionalLicenseNumber entity) {
 		return new ProfessionalLicenseNumberDto(entity.getId(), entity.getLicenseNumber(), entity.getType().getId(),
-				entity.getHealthcareProfessionalId(), entity.getHealthcareProfessionalSpecialtyId());
+				entity.getProfessionalProfessionId(), entity.getHealthcareProfessionalSpecialtyId());
 	}
 
 	private ProfessionalLicenseNumber fromDto(ProfessionalLicenseNumberDto entity) {
 		return new ProfessionalLicenseNumber(entity.getId(), entity.getLicenseNumber(), entity.getTypeId(),
-				entity.getHealthcareProfessionalId(), entity.getHealthcareProfessionalSpecialtyId());
+				entity.getProfessionalProfessionId(), entity.getHealthcareProfessionalSpecialtyId());
 	}
 }

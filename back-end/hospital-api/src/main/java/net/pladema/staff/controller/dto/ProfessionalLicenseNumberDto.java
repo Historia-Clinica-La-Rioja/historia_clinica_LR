@@ -23,7 +23,7 @@ public class ProfessionalLicenseNumberDto implements Serializable {
 
 	private Short typeId;
 
-	private Integer healthcareProfessionalId;
+	private Integer professionalProfessionId;
 
 	private Integer healthcareProfessionalSpecialtyId;
 

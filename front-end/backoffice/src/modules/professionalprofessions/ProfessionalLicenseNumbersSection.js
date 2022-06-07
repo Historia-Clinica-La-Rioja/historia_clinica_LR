@@ -14,6 +14,9 @@ const ProfessionalLicenseNumbersSection = props => (
     >
         <Datagrid rowClick="show" {...props}>
             <TextField source="licenseNumber" />
+            <ReferenceField source="typeId" reference="licensenumbertypes" link={false}>
+                <TextField source="description" />
+            </ReferenceField>
             <DeleteButton redirect={redirect(props)}/>
         </Datagrid>
     </ReferenceManyField>
