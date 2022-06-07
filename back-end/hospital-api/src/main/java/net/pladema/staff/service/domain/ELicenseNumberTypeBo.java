@@ -26,6 +26,6 @@ public enum ELicenseNumberTypeBo {
         for(ELicenseNumberTypeBo e : values()) {
             if(e.id.equals(id)) return e;
         }
-        throw new NotFoundException("role-not-exists", String.format("El rol %s no existe", id));
+        throw new NotFoundException("license-number-type-not-exists", String.format("El tipo de licencia %s no existe", id));
     }
 }

@@ -1,4 +1,5 @@
 import spanishMessages from '@blackbox-vision/ra-language-spanish';
+import healthcareprofessionallicensenumbers from "../../modules/healthcareprofessionallicensenumbers";
 
 const sectorMessages = {
     name: 'Sector |||| Sectores',
@@ -281,10 +282,22 @@ const messages = {
                 licenseNumber: 'Nro. Licencia',
                 isMedicalDoctor: 'Es médico?',
                 healthcareprofessionalspecialties: 'Especialidades',
-                professionalSpecialtyId: 'Profesión'
+                professionalSpecialtyId: 'Profesión',
+                professionalLicenseNumbers: 'Matriculas'
             },
             buttons: {
-                linkSpecialities: 'Asociar especialidades'
+                linkSpecialities: 'Asociar especialidades',
+                linkProfessionalLicenseNumbers: 'Asociar matricula'
+            }
+        },
+        healthcareprofessionallicensenumbers: {
+            name: 'Matricula || Matriculas',
+            fields: {
+                licenseNumber: 'Nro. de matricula',
+                typeId: 'Tipo de matricula',
+                description: 'Descripción',
+                professionalSpecialtyId: 'Profesión',
+                personId: 'Persona',
             }
         },
         healthcareprofessionalspecialties: {

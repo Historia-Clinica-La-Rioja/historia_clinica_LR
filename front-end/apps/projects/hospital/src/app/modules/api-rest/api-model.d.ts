@@ -1531,6 +1531,11 @@ export interface Last2RiskFactorsDto extends Serializable {
     previous: RiskFactorDto;
 }
 
+export interface LicenseNumberTypeDto extends Serializable {
+    descripcion: string;
+    id: number;
+}
+
 export interface LimitedPatientSearchDto {
     actualPatientSearchSize: number;
     patientList: PatientSearchDto[];
@@ -2269,6 +2274,14 @@ export interface ProfessionalInfoDto {
     licenceNumber: string;
     nameSelfDetermination: string;
     phoneNumber: string;
+}
+
+export interface ProfessionalLicenseNumberDto extends Serializable {
+    healthcareProfessionalId: number;
+    healthcareProfessionalSpecialtyId: number;
+    id: number;
+    licenseNumber: string;
+    typeId: number;
 }
 
 export interface ProfessionalPersonDto extends Serializable {

@@ -44,11 +44,19 @@ public class ProfessionalLicenseNumber implements Serializable {
 	private ELicenseNumberTypeBo type;
 
 	@ToString.Include
-	@Column(name = "professional_professional_id")
+	@Column(name = "professional_profession_id")
 	private Integer professionalProfessionId;
 
 	@ToString.Include
 	@Column(name = "healthcare_professional_specialty_id")
 	private Integer healthcareProfessionalSpecialtyId;
 
+	public ProfessionalLicenseNumber(Integer id, String licenseNumber, Short typeId, Integer healthcareProfessionalId,
+									 Integer healthcareProfessionalSpecialtyId) {
+		this.id = id;
+		this.licenseNumber = licenseNumber;
+		this.type = typeId != null ? ELicenseNumberTypeBo.map(typeId) : null;
+		this.healthcareProfessionalId = healthcareProfessionalId;
+		this.healthcareProfessionalSpecialtyId = healthcareProfessionalSpecialtyId;
+	}
 }
