@@ -1,5 +1,24 @@
 package net.pladema.clinichistory.outpatient.createoutpatient.controller;
 
+import java.util.Collections;
+import java.util.List;
+import java.util.Objects;
+import java.util.stream.Collectors;
+
+import javax.validation.Valid;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
 import ar.lamansys.sgh.clinichistory.domain.document.PatientInfoBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.ImmunizationBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.ReasonBo;
@@ -7,6 +26,8 @@ import ar.lamansys.sgh.clinichistory.infrastructure.input.rest.ips.dto.HealthCon
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.SourceType;
 import ar.lamansys.sgh.shared.infrastructure.input.service.BasicPatientDto;
 import ar.lamansys.sgh.shared.infrastructure.input.service.SharedReferenceCounterReference;
+import ar.lamansys.sgh.shared.infrastructure.input.service.appointment.SharedAppointmentPort;
+import ar.lamansys.sgh.shared.infrastructure.input.service.appointment.dto.DocumentAppointmentDto;
 import ar.lamansys.sgx.shared.dates.configuration.DateTimeProvider;
 import ar.lamansys.sgx.shared.security.UserInfo;
 import net.pladema.clinichistory.outpatient.createoutpatient.controller.dto.CreateOutpatientDto;
@@ -24,23 +45,6 @@ import net.pladema.clinichistory.outpatient.createoutpatient.service.outpatientR
 import net.pladema.medicalconsultation.appointment.controller.service.AppointmentExternalService;
 import net.pladema.patient.controller.service.PatientExternalService;
 import net.pladema.staff.controller.service.HealthcareProfessionalExternalServiceImpl;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.transaction.annotation.Transactional;
-import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
-
-import javax.validation.Valid;
-import java.util.Collections;
-import java.util.List;
-import java.util.Objects;
-import java.util.stream.Collectors;
 
 @RestController
 @Validated
@@ -71,6 +75,8 @@ public class OutpatientConsultationController implements OutpatientConsultationA
     
     private final OutpatientSummaryService outpatientSummaryService;
 
+	private final SharedAppointmentPort sharedAppointmentPort;
+
     private final SharedReferenceCounterReference sharedReferenceCounterReference;
 
     public OutpatientConsultationController(CreateOutpatientConsultationService createOutpatientConsultationService,
@@ -82,6 +88,7 @@ public class OutpatientConsultationController implements OutpatientConsultationA
                                             DateTimeProvider dateTimeProvider,
                                             OutpatientSummaryService outpatientSummaryService,
                                             PatientExternalService patientExternalService,
+											SharedAppointmentPort sharedAppointmentPort,
                                             SharedReferenceCounterReference sharedReferenceCounterReference) {
         this.createOutpatientConsultationService = createOutpatientConsultationService;
         this.createOutpatientDocumentService = createOutpatientDocumentService;
@@ -92,6 +99,7 @@ public class OutpatientConsultationController implements OutpatientConsultationA
         this.dateTimeProvider = dateTimeProvider;
         this.outpatientSummaryService = outpatientSummaryService;
         this.patientExternalService = patientExternalService;
+		this.sharedAppointmentPort = sharedAppointmentPort;
         this.sharedReferenceCounterReference = sharedReferenceCounterReference;
     }
 
@@ -122,10 +130,13 @@ public class OutpatientConsultationController implements OutpatientConsultationA
         outpatient.setReasons(reasons);
         outpatientReasonService.addReasons(newOutPatient.getId(), reasons);
 
-        createOutpatientDocumentService.execute(outpatient);
-
-        if (!disableValidation && appointmentExternalService.hasConfirmedAppointment(patientId,doctorId,dateTimeProvider.nowDate()))
-            appointmentExternalService.serveAppointment(patientId, doctorId, dateTimeProvider.nowDate());
+        Long documentId = createOutpatientDocumentService.execute(outpatient).getId();
+		Integer appointmentId = null;
+        if (!disableValidation && appointmentExternalService.hasConfirmedAppointment(patientId,doctorId,dateTimeProvider.nowDate())) {
+			appointmentId = appointmentExternalService.serveAppointment(patientId, doctorId, dateTimeProvider.nowDate());
+		}
+		if(appointmentId != null)
+			this.sharedAppointmentPort.saveDocumentAppointment(new DocumentAppointmentDto(documentId, appointmentId));
 
         if(!createOutpatientDto.getReferences().isEmpty()) {
             sharedReferenceCounterReference.saveReferences(newOutPatient.getId(), (int)SourceType.OUTPATIENT, createOutpatientDto.getReferences());

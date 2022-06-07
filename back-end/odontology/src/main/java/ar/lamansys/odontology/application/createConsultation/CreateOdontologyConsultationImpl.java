@@ -37,6 +37,8 @@ import ar.lamansys.odontology.domain.consultation.OdontologyAppointmentStorage;
 import ar.lamansys.odontology.domain.consultation.OdontologyConsultationStorage;
 import ar.lamansys.odontology.domain.consultation.OdontologyDoctorStorage;
 import ar.lamansys.odontology.domain.consultation.OdontologyDocumentBo;
+import ar.lamansys.sgh.shared.infrastructure.input.service.appointment.SharedAppointmentPort;
+import ar.lamansys.sgh.shared.infrastructure.input.service.appointment.dto.DocumentAppointmentDto;
 import ar.lamansys.sgx.shared.dates.configuration.DateTimeProvider;
 
 @Service
@@ -67,6 +69,8 @@ public class CreateOdontologyConsultationImpl implements CreateOdontologyConsult
 
     private final DrawOdontogramService drawOdontogramService;
 
+	private final SharedAppointmentPort sharedAppointmentPort;
+
     private final CpoCeoIndicesCalculator cpoCeoIndicesCalculator;
 
     private final GetToothSurfacesService getToothSurfacesService;
@@ -77,7 +81,7 @@ public class CreateOdontologyConsultationImpl implements CreateOdontologyConsult
 
     private final Publisher publisher;
 
-    public CreateOdontologyConsultationImpl(DiagnosticStorage diagnosticStorage, ProcedureStorage proceduresStorage, OdontologyConsultationStorage odontologyConsultationStorage, DateTimeProvider dateTimeProvider, OdontologyDoctorStorage odontologyDoctorStorage, OdontologyDocumentStorage odontologyDocumentStorage, DrawOdontogramService drawOdontogramService, CpoCeoIndicesCalculator cpoCeoIndicesCalculator, GetToothSurfacesService getToothSurfacesService, OdontologyAppointmentStorage odontologyAppointmentStorage, GetToothService getToothService, Publisher publisher) {
+    public CreateOdontologyConsultationImpl(DiagnosticStorage diagnosticStorage, ProcedureStorage proceduresStorage, OdontologyConsultationStorage odontologyConsultationStorage, DateTimeProvider dateTimeProvider, OdontologyDoctorStorage odontologyDoctorStorage, OdontologyDocumentStorage odontologyDocumentStorage, DrawOdontogramService drawOdontogramService, SharedAppointmentPort sharedAppointmentPort, CpoCeoIndicesCalculator cpoCeoIndicesCalculator, GetToothSurfacesService getToothSurfacesService, OdontologyAppointmentStorage odontologyAppointmentStorage, GetToothService getToothService, Publisher publisher) {
         this.diagnosticStorage = diagnosticStorage;
         this.proceduresStorage = proceduresStorage;
         this.odontologyConsultationStorage = odontologyConsultationStorage;
@@ -85,7 +89,8 @@ public class CreateOdontologyConsultationImpl implements CreateOdontologyConsult
         this.odontologyDoctorStorage = odontologyDoctorStorage;
         this.odontologyDocumentStorage = odontologyDocumentStorage;
         this.drawOdontogramService = drawOdontogramService;
-        this.cpoCeoIndicesCalculator = cpoCeoIndicesCalculator;
+		this.sharedAppointmentPort = sharedAppointmentPort;
+		this.cpoCeoIndicesCalculator = cpoCeoIndicesCalculator;
         this.getToothSurfacesService = getToothSurfacesService;
         this.odontologyAppointmentStorage = odontologyAppointmentStorage;
         this.getToothService = getToothService;
@@ -123,8 +128,11 @@ public class CreateOdontologyConsultationImpl implements CreateOdontologyConsult
         consultationBo.setConsultationId(encounterId);
         cpoCeoIndicesCalculator.run(consultationBo);
 
-        odontologyDocumentStorage.save(new OdontologyDocumentBo(null, consultationBo, encounterId, doctorInfoBo.getId(), now));
-        odontologyAppointmentStorage.serveAppointment(consultationBo.getPatientId(), doctorInfoBo.getId(), now);
+        Long documentId = odontologyDocumentStorage.save(new OdontologyDocumentBo(null, consultationBo, encounterId, doctorInfoBo.getId(), now));
+        Integer appointmentId = odontologyAppointmentStorage.serveAppointment(consultationBo.getPatientId(), doctorInfoBo.getId(), now);
+		if(appointmentId != null)
+			this.sharedAppointmentPort.saveDocumentAppointment(new DocumentAppointmentDto(documentId, appointmentId));
+
 		publisher.run(consultationBo.getPatientId(), EOdontologyTopicDto.NUEVA_CONSULTA);
         LOG.debug("Output -> encounterId {}", encounterId);
 

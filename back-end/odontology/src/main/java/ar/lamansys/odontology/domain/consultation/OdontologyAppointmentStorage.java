@@ -6,6 +6,6 @@ public interface OdontologyAppointmentStorage {
 
     Integer getPatientMedicalCoverageId(Integer patientId, Integer doctorId);
 
-    void serveAppointment(Integer patientId, Integer doctorId, LocalDate date);
+    Integer serveAppointment(Integer patientId, Integer doctorId, LocalDate date);
 
 }
