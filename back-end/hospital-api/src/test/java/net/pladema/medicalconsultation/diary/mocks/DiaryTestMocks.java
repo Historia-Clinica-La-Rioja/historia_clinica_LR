@@ -27,11 +27,11 @@ public class DiaryTestMocks {
         return result;
     }
 
-    public static DoctorsOffice createDoctorsOffice(Integer institutionId, Integer clinicalSpecialtySectorId,
+    public static DoctorsOffice createDoctorsOffice(Integer institutionId, Integer sectorId,
                                                     String description, LocalTime openingTime, LocalTime closingTime) {
         DoctorsOffice result = new DoctorsOffice();
         result.setInstitutionId(institutionId);
-        result.setClinicalSpecialtySectorId(clinicalSpecialtySectorId);
+        result.setSectorId(sectorId);
         result.setDescription(description);
         result.setOpeningTime(openingTime);
         result.setClosingTime(closingTime);

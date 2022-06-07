@@ -137,14 +137,13 @@ public interface AppointmentRepository extends SGXAuditableEntityJPARepository<A
 	Optional<Integer> getAppointmentMedicalCoverageId(@Param("appointmentId") Integer appointmentId);
 
     @Transactional(readOnly = true)
-    @Query( "SELECT NEW net.pladema.medicalconsultation.appointment.repository.domain.NotifyPatientVo(a.id, pp.lastName, pp.firstName, css.sectorId, php.lastName,php.firstName, do.description, do.topic)" +
+    @Query( "SELECT NEW net.pladema.medicalconsultation.appointment.repository.domain.NotifyPatientVo(a.id, pp.lastName, pp.firstName, do.sectorId, php.lastName,php.firstName, do.description, do.topic)" +
             "FROM Appointment AS a " +
             "JOIN Patient AS p ON (p.id = a.patientId) " +
             "JOIN Person AS pp ON (pp.id = p.personId) " +
             "JOIN AppointmentAssn AS aa ON (a.id = aa.pk.appointmentId) " +
             "JOIN Diary d ON (d.id = aa.pk.diaryId) " +
             "JOIN DoctorsOffice AS do ON (do.id = d.doctorsOfficeId) " +
-            "JOIN ClinicalSpecialtySector AS css ON (do.clinicalSpecialtySectorId = css.id) " +
             "JOIN HealthcareProfessional AS hp ON (d.healthcareProfessionalId = hp.id)" +
             "JOIN Person AS php ON (php.id = hp.personId)" +
             "WHERE a.id = :appointmentId ")
