@@ -14,6 +14,7 @@ import javax.validation.constraints.NotNull;
 import org.springframework.stereotype.Service;
 
 import ar.lamansys.sgh.shared.infrastructure.input.service.appointment.SharedAppointmentPort;
+import ar.lamansys.sgh.shared.infrastructure.input.service.appointment.dto.DocumentAppointmentDto;
 import ar.lamansys.sgh.shared.infrastructure.input.service.appointment.dto.PublicAppointmentClinicalSpecialty;
 import ar.lamansys.sgh.shared.infrastructure.input.service.appointment.dto.PublicAppointmentDoctorDto;
 import ar.lamansys.sgh.shared.infrastructure.input.service.appointment.dto.PublicAppointmentInstitution;
@@ -33,9 +34,11 @@ import net.pladema.medicalconsultation.appointment.repository.entity.Appointment
 import net.pladema.medicalconsultation.appointment.service.AppointmentService;
 import net.pladema.medicalconsultation.appointment.service.AppointmentValidatorService;
 import net.pladema.medicalconsultation.appointment.service.CreateAppointmentService;
+import net.pladema.medicalconsultation.appointment.service.DocumentAppointmentService;
 import net.pladema.medicalconsultation.appointment.service.booking.BookingPersonService;
 import net.pladema.medicalconsultation.appointment.service.booking.CreateBookingAppointmentService;
 import net.pladema.medicalconsultation.appointment.service.domain.AppointmentBo;
+import net.pladema.medicalconsultation.appointment.service.domain.DocumentAppointmentBo;
 import net.pladema.medicalconsultation.appointment.service.fetchappointments.FetchAppointments;
 import net.pladema.medicalconsultation.appointment.service.fetchappointments.domain.AppointmentFilterBo;
 import net.pladema.medicalconsultation.appointment.service.fetchappointments.domain.AppointmentInfoBo;
@@ -57,20 +60,17 @@ public class AppointmentExternalServiceImpl implements AppointmentExternalServic
 	private final CreateAppointmentService createAppointmentService;
 	private final BookingPersonService bookingPersonService;
 	private final CreateBookingAppointmentService createBookingAppointmentService;
+	private final DocumentAppointmentService documentAppointmentService;
 	private final FetchAppointments fetchAppointments;
 	private final LocalDateMapper localDateMapper;
 
-	public AppointmentExternalServiceImpl(AppointmentService appointmentService,
-										  AppointmentValidatorService appointmentValidatorService,
-										  CreateAppointmentService createAppointmentService,
-										  BookingPersonService bookingPersonService,
-										  CreateBookingAppointmentService createBookingAppointmentService,
-										  FetchAppointments fetchAppointments, LocalDateMapper localDateMapper) {
+	public AppointmentExternalServiceImpl(AppointmentService appointmentService, AppointmentValidatorService appointmentValidatorService, CreateAppointmentService createAppointmentService, BookingPersonService bookingPersonService, CreateBookingAppointmentService createBookingAppointmentService, DocumentAppointmentService documentAppointmentService, FetchAppointments fetchAppointments, LocalDateMapper localDateMapper) {
 		this.appointmentService = appointmentService;
 		this.appointmentValidatorService = appointmentValidatorService;
 		this.createAppointmentService = createAppointmentService;
 		this.bookingPersonService = bookingPersonService;
 		this.createBookingAppointmentService = createBookingAppointmentService;
+		this.documentAppointmentService = documentAppointmentService;
 		this.fetchAppointments = fetchAppointments;
 		this.localDateMapper = localDateMapper;
 	}
@@ -84,11 +84,12 @@ public class AppointmentExternalServiceImpl implements AppointmentExternalServic
 	}
 
 	@Override
-	public void serveAppointment(Integer patientId, Integer healthcareProfessionalId, LocalDate date) {
+	public Integer serveAppointment(Integer patientId, Integer healthcareProfessionalId, LocalDate date) {
 		log.debug("Input parameters -> patientId {}, healthcareProfessionalId {}, date {}", patientId, healthcareProfessionalId, date);
 		Integer appointmentId = appointmentService.getAppointmentsId(patientId, healthcareProfessionalId, date).get(0);
 		appointmentService.updateState(appointmentId, AppointmentState.SERVED, UserInfo.getCurrentAuditor(), null);
 		log.debug(OUTPUT, Boolean.TRUE);
+		return appointmentId;
 	}
 
 	@Override
@@ -167,6 +168,16 @@ public class AppointmentExternalServiceImpl implements AppointmentExternalServic
 				.stream()
 				.map(this::mapToFromAppointmentInfoBo)
 				.collect(Collectors.toList());
+	}
+
+	@Override
+	public void saveDocumentAppointment(DocumentAppointmentDto documentAppointmentDto) {
+		this.documentAppointmentService.save(DocumentAppointmentBo.makeTo(documentAppointmentDto));
+	}
+
+	@Override
+	public void deleteDocumentAppointment(DocumentAppointmentDto documentAppointmentDto) {
+		this.documentAppointmentService.delete(DocumentAppointmentBo.makeTo(documentAppointmentDto));
 	}
 
 	private PublicAppointmentListDto mapToFromAppointmentInfoBo(AppointmentInfoBo appointmentInfoBo) {

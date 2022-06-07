@@ -5,6 +5,7 @@ import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
+import ar.lamansys.sgh.shared.infrastructure.input.service.appointment.dto.DocumentAppointmentDto;
 import ar.lamansys.sgh.shared.infrastructure.input.service.appointment.dto.PublicAppointmentListDto;
 import ar.lamansys.sgh.shared.infrastructure.input.service.booking.BookingAppointmentDto;
 import ar.lamansys.sgh.shared.infrastructure.input.service.booking.BookingPersonDto;
@@ -13,7 +14,7 @@ public interface SharedAppointmentPort {
 
 	boolean hasConfirmedAppointment(Integer patientId, Integer doctorId, LocalDate date);
 
-	void serveAppointment(Integer patientId, Integer doctorId, LocalDate date);
+	Integer serveAppointment(Integer patientId, Integer doctorId, LocalDate date);
 
 	Integer getMedicalCoverage(Integer patientId, Integer healthcareProfessionalId);
 
@@ -33,4 +34,8 @@ public interface SharedAppointmentPort {
 													 List<Short> includeAppointmentStatus,
 													 LocalDate startDate,
 													 LocalDate endDate);
+
+	void saveDocumentAppointment(DocumentAppointmentDto documentAppointmentDto);
+
+	void deleteDocumentAppointment(DocumentAppointmentDto documentAppointmentDto);
 }
