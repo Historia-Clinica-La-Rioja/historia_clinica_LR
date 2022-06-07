@@ -1,6 +1,6 @@
 <div fxLayout="row" fxLayoutAlign="end">
 	<button mat-icon-button mat-dialog-close>
-		<mat-icon style="font-size: 24px; color: rgba(0, 0, 0, 0.54)">close</mat-icon>
+		<mat-icon class="icon-close">close</mat-icon>
 	</button>
 </div>
 <form class="appointment-body" [formGroup]="formMotivo" (ngSubmit)="saveAbsent()">
@@ -9,22 +9,22 @@
 			<div class="header-content" fxLayout="row" fxLayoutAlign="start">
 				<mat-icon fxFlex="10%" fontSet="material-icons-outlined" color="primary">person</mat-icon>
 				<div fxLayout="column" fxLayoutAlign="center start">
-					<span class="mat-body-strong capitalize patient-name-title"
+					<span class="mat-body-strong capitalize title-size"
 						*ngIf="params.appointmentData.patient.fullName">
 						{{ viewPatientName(params.appointmentData) | uppercase }}
 					</span>
 					<div>
-						<span style="font-size: 16px; font-weight: 300px;" id="patient_id" class="mat-body-strong">ID
+						<span id="patient_id" class="mat-body-strong subtitle-size">ID
 							{{params.appointmentData.patient.id}}
-						</span> •
-						<span style="font-size: 16px; font-weight: 300px" class="mat-body-strong"
+						</span>•
+						<span class="mat-body-strong subtitle-size"
 							*ngIf="params.appointmentData.patient.identificationNumber">
 							{{identificationType?.description}}
-							{{params.appointmentData.patient.identificationNumber}}
+							{{params.appointmentData.patient.identificationNumber | number:'3.0-0'}}
 						</span>
 					</div>
 					<div class="historia-clinica">
-						<a class="mat-body"
+						<a class="mat-body subtitle-size"
 							*appHasRole="['ESPECIALISTA_MEDICO','PROFESIONAL_DE_SALUD','ENFERMERO', 'ESPECIALISTA_EN_ODONTOLOGIA']"
 							[routerLink]="'/institucion/' + institutionId + '/ambulatoria/paciente/' + params.appointmentData?.patient?.id"
 							[state]="{ appointmentCoverageInfo: summaryCoverageData }" (click)="closeDialog()">
@@ -43,29 +43,29 @@
 
 			<ng-container *ngIf="!hideFilterPanel else editAppointment">
 				<div fxLayout="column" fxLayoutGap="5px">
-					<span class="mat-caption">{{'turnos.appointment.coverageData.COVERAGE_DATA' | translate}}</span>
+					<span class="mat-caption normal-size">{{'turnos.appointment.coverageData.COVERAGE_DATA' | translate}}</span>
 					<div fxLayout="row" fxLayoutGap="5px">
-						<span class="mat-body patient-info coverage-text" *ngIf="coverageData"
+						<span class="mat-body patient-info coverage-text subtitle-size" *ngIf="coverageData"
 							matTooltip="{{coverageData.medicalCoverage.name}}">{{coverageText}}</span>
-						<span class="mat-body patient-info coverage-text" *ngIf="!coverageData">
+						<span class="mat-body patient-info coverage-text subtitle-size" *ngIf="!coverageData">
 							{{"Sin información"}}
 						</span>
-						<span class="mat-body patient-info coverage-text" *ngIf="coverageNumber">/
+						<span class="mat-body patient-info coverage-text subtitle-size" *ngIf="coverageNumber">/
 							{{coverageNumber}}
 						</span>
-						<span class="mat-body patient-info coverage-text lowercase" *ngIf="coverageCondition">/
+						<span class="mat-body patient-info coverage-text lowercase subtitle-size" *ngIf="coverageCondition">/
 							{{coverageCondition}}
 						</span>
 					</div>
 				</div>
 				<div fxLayout="column" fxLayoutGap="5px">
-					<span class="mat-caption" [translate]="'turnos.appointment.phoneNumber.PHONE_NUMBER'">:</span>
-					<span class="mat-body patient-info coverage-text">{{formatPhonePrefixAndNumber()}}</span>
+					<span class="mat-caption normal-size" [translate]="'turnos.appointment.phoneNumber.PHONE_NUMBER'">:</span>
+					<span class="mat-body patient-info coverage-text subtitle-size">{{formatPhonePrefixAndNumber()}}</span>
 				</div>
 				<button type="button" mat-icon-button color="primary" fxFlex="10%"
 					*ngIf="( hasRoleToEditPhoneNumber$ | async )" (click)="hideFilters()">
 					<mat-icon class="material-icons-outlined">edit</mat-icon>
-					<a class="mat-body">
+					<a class="mat-body strong-size">
 						{{'turnos.appointment.EDIT_PACIENT_INFO' | translate}}
 					</a>
 				</button>
@@ -133,27 +133,31 @@
 			<mat-divider></mat-divider>
 		</section>
 
-		<section id="appointment" class="appointment-details" fxLayout="column">
-			<span class="mat-body-strong">{{'turnos.appointment.TITLE' | translate}}</span>
+		<section id="appointment" class="appointment-details section" fxLayout="column">
+			<span class="mat-body-strong title-size appointment-title">{{'turnos.appointment.TITLE' | translate}}</span>
 			<div fxLayout="row" fxLayoutGap="30px">
 				<div fxLayout="row" fxLayoutGap="5px" fxLayoutAlign="start">
 					<mat-icon fontSet="material-icons-outlined" mat-list-icon [inline]="true"
 						id="full-date" class="icon-grey">
 						calendar_today
 					</mat-icon>
-					<span class="mat-body"> {{params.appointmentData.date | date:"fullDate" | titlecase}}</span>
+					<div >		
+						<span class="mat-body subtitle-size"> {{params.appointmentData.date | date:"EEEE, d " | titlecase }} de</span>
+						<span class="mat-body subtitle-size"> {{params.appointmentData.date | date:"MMMM " | titlecase}} de</span>
+						<span class="mat-body subtitle-size"> {{params.appointmentData.date | date:"y " | titlecase}}</span>
+					</div>
 				</div>
 				<div fxLayout="row" fxLayoutGap="5px" fxLayoutAlign="start">
 					<mat-icon fontSet="material-icons-outlined" mat-list-icon [inline]="true" id="hour" class="icon-grey">
 						access_time
 					</mat-icon>
-					 <span class="mat-body"> {{params.appointmentData.date | date:"HH:mm"}} hs</span> 
+					 <span class="mat-body subtitle-size"> {{params.appointmentData.date | date:"H:mm"}} hs</span> 
 				</div>
 			</div>
 		</section>
 
 		<section id="state">
-			<span class="mat-body-strong">{{'turnos.appointment.APPOINTMENT_STATE' | translate}}</span>
+			<span class="mat-body-strong strong-size">{{'turnos.appointment.APPOINTMENT_STATE' | translate}}</span>
 			<div class="appointment-actions" fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="8px">
 
 				<button type="button" [disabled]="(hasRoleToChangeState$ | async) === false"
@@ -217,11 +221,11 @@
 			</div>
 			
 			<div class="observation-details">
-				<span class="mat-body-strong" *ngIf="!hideObservationTitle" 
+				<span class="mat-body-strong strong-size" *ngIf="!hideObservationTitle" 
 					[translate]="'turnos.appointment.observations.OBSERVATIONS'">
 				</span>
 				<div class="observation" *ngIf="observation && hideObservationForm">
-					<p> 
+					<p  class="mat-body strong-size"> 
 						{{observation}}
 					</p>
 					<button type="button" mat-icon-button color="primary" fxFlex="10%" 
@@ -253,15 +257,15 @@
 				*ngIf="downloadReportIsEnabled && !isAbsent() && ((hasRoleToDownloadReports$ | async) === true || params.hasPermissionToAssignShift)">
 				<mat-divider></mat-divider>
 				<section id="report" fxLayout="column">
-					<span class="mat-body-strong">{{'turnos.report.TITLE' | translate}}</span>
+					<span class="mat-body-strong strong-size">{{'turnos.report.TITLE' | translate}}</span>
 					<section class="example-section" fxLayout="row" fxLayoutGap="30px">
 						<mat-checkbox color="primary" fxLayout="row"
 							(change)="enableDowndloadAnexo($event.checked)">
-							<span class="mat-body">{{'turnos.report.ANEXO' | translate}}</span>
+							<span class="mat-body strong-size">{{'turnos.report.ANEXO' | translate}}</span>
 						</mat-checkbox>
 						<mat-checkbox color="primary" fxLayout="row"
 							(change)="enableDowndloadFormulario($event.checked)">
-							<span class="mat-body">{{'turnos.report.FORM' | translate}}</span>
+							<span class="mat-body strong-size">{{'turnos.report.FORM' | translate}}</span>
 						</mat-checkbox>
 					</section>
 				</section>

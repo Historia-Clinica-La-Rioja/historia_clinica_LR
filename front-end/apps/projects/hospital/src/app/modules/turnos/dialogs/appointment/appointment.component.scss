@@ -6,16 +6,34 @@
 	.icon-grey{
 		color: #A8A8A8;
 	}
+
+	.icon-close{
+		font-size: 24px;
+		color: rgba(0, 0, 0, 0.54);
+	}
+
+	.title-size{
+		font-size: 18px;
+	}
+
+	.subtitle-size{
+		font-size: 16px;
+	}
+
+	.strong-size{
+		font-size: 14px;
+	}
+
+	.normal-size{
+		font-size: 12px;
+	}
 }
 
 .ventana{
-	min-height: 530px;
+	min-height: 540px;
+	overflow: visible;
+	margin-top: -25px;
 }
-
-.patient-name-title {
-	font-size: 18px;
-}
-
 .header-content {
 
 	@media screen and (min-width: 959px) {
@@ -42,6 +60,10 @@
 
 .appointment-details {
 	margin: 10px 0;
+
+	.appointment-title{
+		margin-bottom: 10px;
+	}
 }
 
 .assigned-appointment {
@@ -108,7 +130,7 @@ mat-form-field {
 
 section {
 	margin: 0;
-	margin-top: 5px;
+	margin-top: 10px;
 }
 
 
