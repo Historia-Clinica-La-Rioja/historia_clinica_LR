@@ -1,3 +1,48 @@
 databaseChangeLog: 
-    - logicalFilePath: incrementales-v1_39 
+    - logicalFilePath: incrementales-v1_39
 
+    - changeSet:
+        id: document_appointment-createTable
+        comment: Create table document_appointment
+        author: tcepeda
+        changes:
+          - createTable:
+              tableName: document_appointment
+              columns:
+                - column:
+                    constraints:
+                      nullable: false
+                    name: document_id
+                    type: bigint
+                - column:
+                    constraints:
+                      nullable: false
+                    name: appointment_id
+                    type: int
+
+          - addPrimaryKey:
+              clustered: true
+              columnNames: document_id, appointment_id
+              constraintName: PK_document_appointment
+              tableName: document_appointment
+              validate: true
+
+          - addForeignKeyConstraint:
+              baseColumnNames: document_id
+              baseTableName: document_appointment
+              constraintName: FK_document_appointment_document_id
+              onDelete: NO ACTION
+              onUpdate: NO ACTION
+              referencedColumnNames: id
+              referencedTableName: document
+              validate: true
+
+          - addForeignKeyConstraint:
+              baseColumnNames: appointment_id
+              baseTableName: document_appointment
+              constraintName: FK_document_appointment_appointment_id
+              onDelete: NO ACTION
+              onUpdate: NO ACTION
+              referencedColumnNames: id
+              referencedTableName: appointment
+              validate: true
