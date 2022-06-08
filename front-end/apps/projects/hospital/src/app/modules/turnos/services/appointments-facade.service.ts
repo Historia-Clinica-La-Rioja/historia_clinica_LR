@@ -268,8 +268,8 @@ export function getColor(appointment: AppointmentListDto): COLORES {
 	if(appointment.appointmentStateId === APPOINTMENT_STATES_ID.OUT_OF_DIARY) {
 		return COLORES.FUERA_DE_AGENDA;
 	}
-	
-	if (!appointment?.patient.id) {
+
+	if (!appointment?.patient?.id) {
 		return COLORES.RESERVA_ALTA;
 	}
 
