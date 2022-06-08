@@ -1,6 +1,7 @@
 package net.pladema.establishment.repository;
 
 import net.pladema.establishment.repository.entity.ClinicalSpecialtySector;
+
 import net.pladema.staff.repository.entity.ClinicalSpecialty;
 
 import org.springframework.data.domain.Example;
@@ -16,16 +17,16 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 
 @Repository
-public interface ClinicalSpecialtySectorRepository extends JpaRepository<ClinicalSpecialtySector, Integer> {
+public interface ClinicalServiceSectorRepository extends JpaRepository<ClinicalSpecialtySector, Integer> {
 
 	@Transactional(readOnly = true)
 	@Query(value = " SELECT cs FROM  ClinicalSpecialtySector css "
 			+ " INNER JOIN ClinicalSpecialty cs ON cs.id = css.clinicalSpecialtyId "
 			+ " INNER JOIN Sector s ON css.sectorId = s.id "
 			+ " WHERE css.sectorId = :idSector AND s.institutionId = :institutionId"
-			+ " AND cs.clinicalSpecialtyTypeId = 2")
+			+ " AND cs.clinicalSpecialtyTypeId = 1")
 	List<ClinicalSpecialty> getAllBySectorAndInstitution(@Param("idSector") Integer idSector,
-			@Param("institutionId") Integer institutionId);
+														 @Param("institutionId") Integer institutionId);
 
 
 	@Transactional(readOnly = true)
@@ -33,14 +34,14 @@ public interface ClinicalSpecialtySectorRepository extends JpaRepository<Clinica
 			"FROM  ClinicalSpecialtySector css " +
 			"INNER JOIN Sector s ON (css.sectorId = s.id) " +
 			"WHERE css.id = :id")
-    Integer getInstitutionId(@Param("id") Integer id);
+	Integer getInstitutionId(@Param("id") Integer id);
 
 	@Transactional(readOnly = true)
 	@Query(value = "SELECT css.id " +
 			"FROM  ClinicalSpecialtySector css " +
 			"INNER JOIN ClinicalSpecialty cs ON (css.clinicalSpecialtyId = cs.id) " +
-			"WHERE cs.clinicalSpecialtyTypeId = 2")
-    List<Integer> getAllIds();
+			"WHERE cs.clinicalSpecialtyTypeId = 1")
+	List<Integer> getAllIds();
 
 	@Transactional(readOnly = true)
 	@Query(value = " SELECT css.id " +
@@ -48,14 +49,14 @@ public interface ClinicalSpecialtySectorRepository extends JpaRepository<Clinica
 			"INNER JOIN Sector s ON (css.sectorId = s.id) " +
 			"INNER JOIN ClinicalSpecialty cs ON (css.clinicalSpecialtyId = cs.id) " +
 			"WHERE s.institutionId IN :institutionsIds " +
-			"AND cs.clinicalSpecialtyTypeId = 2")
+			"AND cs.clinicalSpecialtyTypeId = 1")
 	List<Integer> getAllIdsByInstitutionsId(@Param("institutionsIds") List<Integer> institutionsIds);
 
 	@Transactional(readOnly = true)
 	@Query(value = "SELECT css " +
-				"FROM ClinicalSpecialtySector css " +
-				"INNER JOIN ClinicalSpecialty cs ON (css.clinicalSpecialtyId = cs.id) " +
-				"WHERE cs.clinicalSpecialtyTypeId = 2")
+			"FROM ClinicalSpecialtySector css " +
+			"INNER JOIN ClinicalSpecialty cs ON (css.clinicalSpecialtyId = cs.id) " +
+			"WHERE cs.clinicalSpecialtyTypeId = 1")
 	Page<ClinicalSpecialtySector> findAll(@NonNull Example clinicalSpecialtySector, @NonNull Pageable pageable);
 
 }

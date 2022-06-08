@@ -52,7 +52,6 @@ public class BackofficeClinicalServiceStore implements BackofficeStore<ClinicalS
 	@Override
 	public List<ClinicalSpecialty> findAllById(List<Integer> ids) {
 		List<ClinicalSpecialty> specialties = repository.findAllById(ids);
-		specialties.forEach(ClinicalSpecialty::fixSpecialtyType);
 		specialties.sort(Comparator.comparing(ClinicalSpecialty::getName, String::compareTo));
 		return specialties;
 	}
