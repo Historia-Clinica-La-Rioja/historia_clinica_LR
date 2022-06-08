@@ -61,7 +61,7 @@ const messages = {
         },
         "doctorsoffices": {
             "closingBeforeOpening": "La hora de apertura no puede ser posterior a la hora de cierre",
-            "matchingIds": "Esa Especialidad | Sector no pertenece a esa institución"
+            "matchingIds": "Ese Sector no pertenece a esa institución"
         },
         "healthcareprofessional": {
             "exists": "Esta persona ya está registrada como profesional en el sistema",

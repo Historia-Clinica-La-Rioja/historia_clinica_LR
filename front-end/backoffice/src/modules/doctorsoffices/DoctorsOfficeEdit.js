@@ -1,7 +1,29 @@
 import React from 'react';
-import { Edit, required, SimpleForm, TextInput, usePermissions } from 'react-admin';
+import {
+    AutocompleteInput,
+    Edit, FormDataConsumer,
+    ReferenceInput,
+    required,
+    SimpleForm,
+    TextInput,
+    usePermissions
+} from 'react-admin';
 import SgxSelectInput from '../../sgxSelectInput/SgxSelectInput';
 import CustomToolbar from '../components/CustomToolbar';
+
+const AMBULATORIA = 1;
+
+const SectorField = ({formData}) => {
+    return   <ReferenceInput
+    source="sectorId"
+    reference="sectors"
+    sort={{ field: 'description', order: 'ASC' }}
+    filterToQuery={searchText => ({description: searchText})}
+    filter={{sectorTypeId: AMBULATORIA, institutionId: formData.institutionId}}
+>
+<AutocompleteInput optionText="description" optionValue="id" />
+        </ReferenceInput>
+}
 
 const DoctorsOfficeEdit = (props) => {
     const { permissions } = usePermissions();
@@ -9,17 +31,15 @@ const DoctorsOfficeEdit = (props) => {
         <Edit {...props}>
             <SimpleForm redirect="show" toolbar={<CustomToolbar isEdit={true} />}>
                 <TextInput source="description" validate={[required()]} />
-                <SgxSelectInput source="sectorId"
-                    element="sectors"
-                    optionText="description"
-                    alwaysOn
-                    allowEmpty={false} />
-
                 <SgxSelectInput source="institutionId"
                     element="institutions"
                     optionText="name"
                     alwaysOn
-                    allowEmpty={false} />
+                    allowEmpty={false}
+                                options={{ disabled: true }}/>
+                <FormDataConsumer>
+                    {formDataProps => (<SectorField {...formDataProps} source="sectorId"/>)}
+                </FormDataConsumer>
 
                 {permissions && permissions.isOn('HABILITAR_LLAMADO') && <TextInput source="topic" />}
 
