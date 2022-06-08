@@ -30,7 +30,7 @@ const RoomEdit = props => (
                 sort={{ field: 'description', order: 'ASC' }}
                 filterToQuery={searchText => ({description: searchText})}
             >
-                <AutocompleteInput optionText="description" optionValue="id" options={{ disabled: true }} />
+                <AutocompleteInput optionText="description" optionValue="id" />
             </ReferenceInput>
 
             <SectionTitle label="resources.rooms.fields.beds"/>
