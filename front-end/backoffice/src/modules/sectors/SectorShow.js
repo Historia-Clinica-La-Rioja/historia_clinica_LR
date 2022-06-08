@@ -13,7 +13,7 @@ import CreateRelatedButton from '../components/CreateRelatedButton';
 import SectionTitle from '../components/SectionTitle';
 import SgxDateField from "../../dateComponents/sgxDateField";
 
-
+const AMBULATORIA = 1;
 const INTERNACION = 2;
 const GUARDIA = 3;
 
@@ -29,12 +29,13 @@ const CreateSector = ({ record }) => {
 
 const CreateDoctorsOffice = ({ record }) => {
     const customRecord = {sectorId: record.id, institutionId: record.institutionId};
-    return (<CreateRelatedButton
+    return record.sectorTypeId === AMBULATORIA ||
+        record.sectorTypeId === GUARDIA ?(<CreateRelatedButton
         customRecord={customRecord}
         reference="doctorsoffices"
         refFieldName="sectorId"
         label="resources.doctorsoffices.createRelated"/>
-    )
+    ) : null;
 };
 
 const CreateRooms = ({ record }) => {
