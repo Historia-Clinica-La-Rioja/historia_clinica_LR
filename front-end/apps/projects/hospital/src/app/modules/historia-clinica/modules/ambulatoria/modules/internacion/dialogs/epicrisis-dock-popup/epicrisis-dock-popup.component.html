@@ -1,4 +1,4 @@
-<app-dock-popup [dockPopupRef]="dockPopupRef" [title]="'internaciones.epicrisis.TITLE'" *ngIf="waitToResponse">
+<app-dock-popup [dockPopupRef]="dockPopupRef" [header]="{ title:'internaciones.epicrisis.TITLE'} " *ngIf="waitToResponse">
 	<div body fxLayout="column" fxLayoutGap="20px">
 		<div *ngIf="showWarning">
 			<mat-card class="background-primary">

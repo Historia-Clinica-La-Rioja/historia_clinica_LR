@@ -1,4 +1,4 @@
-<app-dock-popup [dockPopupRef]="dockPopupRef" [title]="'internaciones.change-main-diagnosis.TITLE'">
+<app-dock-popup [dockPopupRef]="dockPopupRef" [header]="{ title: 'internaciones.change-main-diagnosis.TITLE' }">
 	<div body fxLayout="column" fxLayoutGap="20px">
 		<div id="main-diagnosis" *ngIf="currentMainDiagnosis">
 			<h2 [translate]="'internaciones.change-main-diagnosis.current-main.TITLE'"></h2>

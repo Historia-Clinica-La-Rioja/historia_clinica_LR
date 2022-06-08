@@ -6,6 +6,7 @@ export class DockPopupRef {
 	private minimized = false;
 	private openedHeight: number | string;
 	private afterClosedSubject: Subject<any> = new Subject<any>();
+	private toggleWithoutHeaderPopUp = false;
 
 	constructor(private overlayRef: OverlayRef) {
 		this.openedHeight = overlayRef.getConfig().height;
@@ -48,6 +49,17 @@ export class DockPopupRef {
 
 	isMinimized(): boolean {
 		return this.minimized;
+	}
+
+	toggleWithoutHeader() {
+		this.overlayRef.addPanelClass('minimized');
+		this.overlayRef.removePanelClass('maximized');
+		this.minimized = true;
+		this.toggleWithoutHeaderPopUp = true;
+	}
+
+	istoggleWithoutHeader(): boolean {
+		return this.toggleWithoutHeaderPopUp;
 	}
 
 }
