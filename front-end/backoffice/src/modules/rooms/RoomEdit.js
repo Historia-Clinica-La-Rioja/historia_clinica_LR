@@ -10,11 +10,28 @@ import {
     required,
     SimpleForm,
     TextField,
-    TextInput,
+    TextInput, useGetOne,
 } from 'react-admin';
 import CreateRelatedButton from '../components/CreateRelatedButton';
 import SectionTitle from '../components/SectionTitle';
 import CustomToolbar from "../components/CustomToolbar";
+
+const INTERNACION = 2;
+
+const SectorField = ({ record }) => {
+    const sector = useGetOne('sectors',  record.sectorId );
+        return sector.data ? (
+            <ReferenceInput
+                source="sectorId"
+                reference="sectors"
+                sort={{ field: 'description', order: 'ASC' }}
+                filterToQuery={searchText => ({description: searchText})}
+                filter={{sectorTypeId: INTERNACION, institutionId: sector.data.institutionId}}>
+                <AutocompleteInput optionText="description" optionValue="id" />
+            </ReferenceInput>
+        ) : null;
+}
+
 
 const RoomEdit = props => (
     <Edit {...props}>
@@ -23,15 +40,8 @@ const RoomEdit = props => (
             <TextInput source="description" validate={[required()]} />
             <TextInput source="type" validate={[required()]} />
             <DateInput source="dischargeDate" />
+            <SectorField/>
 
-            <ReferenceInput
-                source="sectorId"
-                reference="sectors"
-                sort={{ field: 'description', order: 'ASC' }}
-                filterToQuery={searchText => ({description: searchText})}
-            >
-                <AutocompleteInput optionText="description" optionValue="id" />
-            </ReferenceInput>
 
             <SectionTitle label="resources.rooms.fields.beds"/>
             <CreateRelatedButton
