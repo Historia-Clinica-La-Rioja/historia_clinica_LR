@@ -12,6 +12,7 @@ import rootSectors from './root-sectors';
 import clinicalspecialties from './clinicalspecialties';
 import clinicalservices from './clinicalservices';
 import clinicalspecialtysectors from './clinicalspecialtysectors';
+import clinicalservicesectors from './clinicalservicesectors';
 import rooms from './rooms';
 import beds from './beds';
 import healthcareprofessionals from './healthcareprofessionals';
@@ -101,6 +102,7 @@ const resources = (permissions: SGXPermissions) => [
     <Resource name="clinicalspecialties" {...clinicalspecialties(permissions)} />,
     <Resource name="clinicalspecialtysectors" {...clinicalspecialtysectors} />,
     <Resource name="clinicalservices" {...clinicalservices(permissions)} />,
+    <Resource name="clinicalservicesectors" {...clinicalservicesectors} />,
     <Resource name="doctorsoffices" {...doctorsoffices} />,
     <Resource name="rooms" {...rooms} />,
     <Resource name="beds" {...beds} />,

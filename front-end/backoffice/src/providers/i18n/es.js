@@ -241,6 +241,17 @@ const messages = {
             },
             createRelated: 'Crear Especialidad | Sector',
         },
+        clinicalservicesectors: {
+            name: 'Servicio | Sector',
+            fields: {
+                description: 'Descripción',
+                sectorId: 'Sector',
+                clinicalSpecialtyId: 'Servicio',
+                rooms: 'Habitaciones',
+                doctorsoffices: 'Consultorios',
+            },
+            createRelated: 'Crear Servicio | Sector',
+        },
         clinicalspecialtymandatorymedicalpractices: {
             name: 'Especialidad | PMO',
             fields: {
