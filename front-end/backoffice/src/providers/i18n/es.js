@@ -222,6 +222,14 @@ const messages = {
                 sctidCode: 'Código SNOMED',
             },
         },
+        clinicalservices: {
+            name: 'Servicio |||| Servicios',
+            fields: {
+                name: 'Nombre',
+                description: 'Descripción',
+                sctidCode: 'Código SNOMED'
+            }
+        },
         clinicalspecialtysectors: {
             name: 'Especialidad | Sector',
             fields: {

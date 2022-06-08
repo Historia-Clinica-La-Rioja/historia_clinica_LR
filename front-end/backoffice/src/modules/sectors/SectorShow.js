@@ -102,6 +102,9 @@ const SectorShow = props => (
             <HospitalizationField {...props} reference="caretypes" source="careTypeId"/>
             <HospitalizationField {...props} reference="hospitalizationtypes" source="hospitalizationTypeId"/>
             
+            <ReferenceField source="sectorOrganizationId" reference="sectororganizations" link={ false }>
+                <TextField source="description" />
+            </ReferenceField>
             <SectionTitle label="resources.sectors.fields.childSectors" />
             <CreateSector />
             <ReferenceManyField
