@@ -141,7 +141,7 @@ const sgxDataProvider = (apiUrl, mappers) => {
         jsonResponse => convertHTTPResponse(jsonResponse, type, resource, params),
         ({ status, statusText, body }) => {
           return Promise.reject(new HttpError(
-            (body && body.code && `error.${body.code}`) || statusText,
+              (body && body.text && `${body.text}`) || (body && body.code && `error.${body.code}`) || statusText,
             status,
             body,
           ));
