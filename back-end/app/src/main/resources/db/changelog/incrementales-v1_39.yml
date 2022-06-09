@@ -371,3 +371,33 @@ databaseChangeLog:
                 UPDATE clinical_specialty
                 SET name = substring(name,9)
                 WHERE name LIKE 'ERRÓNEA%'
+
+    - changeSet:
+        id: createView-v-clinical-specialty-sector
+        comment: Crea la vista v_clinical_specialty_sector
+        author: mmalyvarni
+        changes:
+          - createView:
+              viewName: v_clinical_specialty_sector
+              fullDefinition: false
+              replaceIfExists: true
+              selectQuery: |- 
+                SELECT CSS.id, CSS.description, CSS.clinical_specialty_id, CSS.sector_id
+                FROM clinical_specialty_sector CSS
+                JOIN clinical_specialty CS ON (CS.id = CSS.clinical_specialty_id)
+                WHERE CS.clinical_specialty_type_id = 2
+
+    - changeSet:
+        id: createView-v-clinical-service-sector
+        comment: Crea la vista v_clinical_service_sector
+        author: mmalyvarni
+        changes:
+          - createView:
+              viewName: v_clinical_service_sector
+              fullDefinition: false
+              replaceIfExists: true
+              selectQuery: |-
+                SELECT CSS.id, CSS.description, CSS.clinical_specialty_id, CSS.sector_id
+                FROM clinical_specialty_sector CSS
+                JOIN clinical_specialty CS ON (CS.id = CSS.clinical_specialty_id)
+                WHERE CS.clinical_specialty_type_id = 1

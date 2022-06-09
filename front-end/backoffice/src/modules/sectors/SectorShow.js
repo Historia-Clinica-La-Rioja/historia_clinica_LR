@@ -88,6 +88,36 @@ const HospitalizationField = (props) => {
     )
 }
 
+const ShowServiceSectorData = ({ record }) => {
+    if (record?.sectorOrganizationId === 1 && record?.sectorTypeId === 2)
+        return (
+            <>
+                <SectionTitle label="resources.clinicalservicesectors.name"/>
+                <CreateRelatedButton
+                    reference="clinicalservicesectors"
+                    refFieldName="sectorId"
+                    label="resources.clinicalservicesectors.createRelated"
+                    record={ record }
+                />
+                <ReferenceManyField
+                    addLabel={false}
+                    reference="clinicalservicesectors"
+                    target="sectorId"
+                    sort={{ field: 'description', order: 'DESC' }}
+                >
+                    <Datagrid rowClick="show">
+                        <TextField source="description" />
+                        <ReferenceField source="clinicalSpecialtyId" reference="clinicalservices">
+                            <TextField source="name" />
+                        </ReferenceField>
+                        <DeleteButton />
+                    </Datagrid>
+                </ReferenceManyField>
+            </>
+        )
+    return null;
+}
+
 const SectorShow = props => (
     <Show {...props}>
         <SimpleShowLayout>
@@ -136,6 +166,8 @@ const SectorShow = props => (
                     <EditButton />
                 </Datagrid>
             </ReferenceManyField>
+
+            <ShowServiceSectorData />
 
             <SectionTitle label="resources.clinicalspecialtysectors.fields.rooms"/>
             <CreateRooms/>

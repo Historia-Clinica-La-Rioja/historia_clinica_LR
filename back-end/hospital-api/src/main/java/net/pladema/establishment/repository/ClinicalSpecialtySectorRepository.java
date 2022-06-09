@@ -3,13 +3,9 @@ package net.pladema.establishment.repository;
 import net.pladema.establishment.repository.entity.ClinicalSpecialtySector;
 import net.pladema.staff.repository.entity.ClinicalSpecialty;
 
-import org.springframework.data.domain.Example;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
-import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -50,12 +46,5 @@ public interface ClinicalSpecialtySectorRepository extends JpaRepository<Clinica
 			"WHERE s.institutionId IN :institutionsIds " +
 			"AND cs.clinicalSpecialtyTypeId = 2")
 	List<Integer> getAllIdsByInstitutionsId(@Param("institutionsIds") List<Integer> institutionsIds);
-
-	@Transactional(readOnly = true)
-	@Query(value = "SELECT css " +
-				"FROM ClinicalSpecialtySector css " +
-				"INNER JOIN ClinicalSpecialty cs ON (css.clinicalSpecialtyId = cs.id) " +
-				"WHERE cs.clinicalSpecialtyTypeId = 2")
-	Page<ClinicalSpecialtySector> findAll(@NonNull Example clinicalSpecialtySector, @NonNull Pageable pageable);
 
 }
