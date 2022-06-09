@@ -23,4 +23,11 @@ public interface DocumentAppointmentRepository extends JpaRepository<DocumentApp
 	)
 	Optional<DocumentAppointmentBo> getDocumentAppointmentByAppointmentId(@Param("appointmentId") Integer appointmentId);
 
+	@Transactional(readOnly = true)
+	@Query( "SELECT NEW net.pladema.medicalconsultation.appointment.service.domain.DocumentAppointmentBo(" +
+			"da.pk.documentId, da.pk.appointmentId) " +
+			"FROM DocumentAppointment da " +
+			"WHERE da.pk.documentId = :documentId "
+	)
+	Optional<DocumentAppointmentBo> getDocumentAppointmentByDocumentId(@Param("documentId")	Long documentId);
 }

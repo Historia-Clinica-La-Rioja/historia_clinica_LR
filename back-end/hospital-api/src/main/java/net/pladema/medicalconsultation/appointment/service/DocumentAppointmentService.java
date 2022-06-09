@@ -10,5 +10,7 @@ public interface DocumentAppointmentService {
 
 	void delete(DocumentAppointmentBo documentAppointmentBo);
 
-	Optional<DocumentAppointmentBo> getDocumentAppointment(Integer appointmentId);
+	Optional<DocumentAppointmentBo> getDocumentAppointmentForAppointment(Integer appointmentId);
+
+	Optional<DocumentAppointmentBo> getDocumentAppointmentForDocument(Long documentId);
 }

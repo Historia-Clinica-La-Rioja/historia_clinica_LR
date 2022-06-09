@@ -33,7 +33,12 @@ public class DocumentAppointmentServiceImpl implements DocumentAppointmentServic
 	}
 
 	@Override
-	public Optional<DocumentAppointmentBo> getDocumentAppointment(Integer appointmentId) {
+	public Optional<DocumentAppointmentBo> getDocumentAppointmentForAppointment(Integer appointmentId) {
 		return this.documentAppointmentRepository.getDocumentAppointmentByAppointmentId(appointmentId);
+	}
+
+	@Override
+	public Optional<DocumentAppointmentBo> getDocumentAppointmentForDocument(Long documentId) {
+		return this.documentAppointmentRepository.getDocumentAppointmentByDocumentId(documentId);
 	}
 }

@@ -46,7 +46,7 @@ public class FormReportServiceImpl implements FormReportService {
         FormVBo result = formReportRepository.getAppointmentFormVInfo(appointmentId).map(FormVBo::new)
                 .orElseThrow(() ->new NotFoundException("bad-appointment-id", APPOINTMENT_NOT_FOUND));
 
-		Optional<DocumentAppointmentBo> documentAppointmentOpt = this.documentAppointmentService.getDocumentAppointment(appointmentId);
+		Optional<DocumentAppointmentBo> documentAppointmentOpt = this.documentAppointmentService.getDocumentAppointmentForAppointment(appointmentId);
 		if(documentAppointmentOpt.isPresent()){
 
 			DocumentAppointmentBo documentAppointment = documentAppointmentOpt.get();
@@ -94,6 +94,12 @@ public class FormReportServiceImpl implements FormReportService {
 
 	@Override
 	public FormVBo getConsultationData(Long documentId) {
+
+		Optional<DocumentAppointmentBo> documentAppointmentOpt = this.documentAppointmentService.getDocumentAppointmentForDocument(documentId);
+		if(documentAppointmentOpt.isPresent()){
+			return this.getAppointmentData(documentAppointmentOpt.get().getAppointmentId());
+		}
+
 		LOG.debug("Input parameter -> documentId {}", documentId);
 		FormVBo result;
 
@@ -188,11 +194,10 @@ public class FormReportServiceImpl implements FormReportService {
 
     @Override
     public Map<String, Object> createConsultationContext(FormVDto reportDataDto){
-        LOG.debug("Input parameter -> reportDataDto {}", reportDataDto);
-        Map<String, Object> ctx = loadBasicContext(reportDataDto);
-        ctx.put("consultationDate", reportDataDto.getConsultationDate().format(DateTimeFormatter.ofPattern("dd/MM/yyyy")));
-        ctx.put("problems", reportDataDto.getProblems());
-        ctx.put("cie10Codes", reportDataDto.getCie10Codes());
+        Map<String, Object> ctx = this.createAppointmentContext(reportDataDto);
+		ctx.put("consultationDate",
+				reportDataDto.getConsultationDate() != null ? reportDataDto.getConsultationDate().format(DateTimeFormatter.ofPattern("dd/MM/yyyy"))
+						: null);
         return ctx;
     }
 

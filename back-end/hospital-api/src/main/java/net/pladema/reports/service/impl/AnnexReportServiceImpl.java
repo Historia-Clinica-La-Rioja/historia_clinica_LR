@@ -48,7 +48,7 @@ public class AnnexReportServiceImpl implements AnnexReportService {
         AnnexIIBo result = annexReportRepository.getAppointmentAnnexInfo(appointmentId).map(AnnexIIBo::new)
                 .orElseThrow(() ->new NotFoundException("bad-appointment-id", APPOINTMENT_NOT_FOUND));
 
-		Optional<DocumentAppointmentBo> documentAppointmentOpt = this.documentAppointmentService.getDocumentAppointment(appointmentId);
+		Optional<DocumentAppointmentBo> documentAppointmentOpt = this.documentAppointmentService.getDocumentAppointmentForAppointment(appointmentId);
 		if(documentAppointmentOpt.isPresent()){
 
 			DocumentAppointmentBo documentAppointment = documentAppointmentOpt.get();
@@ -100,6 +100,12 @@ public class AnnexReportServiceImpl implements AnnexReportService {
 
     @Override
     public AnnexIIBo getConsultationData(Long documentId) {
+
+		Optional<DocumentAppointmentBo> documentAppointmentOpt = this.documentAppointmentService.getDocumentAppointmentForDocument(documentId);
+		if(documentAppointmentOpt.isPresent()){
+			return this.getAppointmentData(documentAppointmentOpt.get().getAppointmentId());
+		}
+
         LOG.debug("Input parameter -> documentId {}", documentId);
 		AnnexIIBo result;
 
@@ -190,7 +196,9 @@ public class AnnexReportServiceImpl implements AnnexReportService {
         LOG.debug("Input parameter -> reportDataDto {}", reportDataDto);
         Map<String, Object> ctx = loadBasicContext(reportDataDto);
         ctx.put("appointmentState", reportDataDto.getAppointmentState());
-        ctx.put("attentionDate", reportDataDto.getAttentionDate().format(DateTimeFormatter.ofPattern("dd/MM/yyyy")));
+        ctx.put("attentionDate",
+				reportDataDto.getAttentionDate() != null ? reportDataDto.getAttentionDate().format(DateTimeFormatter.ofPattern("dd/MM/yyyy"))
+					: null);
         ctx.put("medicalCoverage", reportDataDto.getMedicalCoverage());
         ctx.put("affiliateNumber", reportDataDto.getAffiliateNumber());
 		ctx.put("existsConsultation", reportDataDto.getExistsConsultation());
@@ -202,13 +210,10 @@ public class AnnexReportServiceImpl implements AnnexReportService {
 
     @Override
     public Map<String, Object> createConsultationContext(AnnexIIDto reportDataDto){
-        LOG.debug("Input parameter -> reportDataDto {}", reportDataDto);
-        Map<String, Object> ctx = loadBasicContext(reportDataDto);
-        ctx.put("consultationDate", reportDataDto.getConsultationDate().format(DateTimeFormatter.ofPattern("dd/MM/yyyy")));
-        ctx.put("hasProcedures", reportDataDto.getHasProcedures());
-        ctx.put("existsConsultation", reportDataDto.getExistsConsultation());
-        ctx.put("specialty", reportDataDto.getSpecialty());
-        ctx.put("problems", reportDataDto.getProblems());
+        Map<String, Object> ctx = this.createAppointmentContext(reportDataDto);
+        ctx.put("consultationDate",
+				reportDataDto.getConsultationDate() != null ? reportDataDto.getConsultationDate().format(DateTimeFormatter.ofPattern("dd/MM/yyyy"))
+						: null);
         return ctx;
     }
 
