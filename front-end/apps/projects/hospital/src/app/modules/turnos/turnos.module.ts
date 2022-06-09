@@ -11,6 +11,7 @@ import { AgendaComponent } from './routes/agenda/agenda.component';
 import { AgendaSetupComponent } from './routes/agenda-setup/agenda-setup.component';
 import { HomeComponent } from './routes/home/home.component';
 // components
+import { CalendarProfessionalViewComponent } from '@turnos/components/calendar-professional-view/calendar-professional-view.component';
 import { SelectAgendaComponent } from './components/select-agenda/select-agenda.component';
 // dialogs
 import { AppointmentComponent } from './dialogs/appointment/appointment.component';
@@ -29,6 +30,7 @@ import { CustomDateFormatter } from './services/custom-date-formatter.service';
 		AgendaSetupComponent,
 		HomeComponent,
 		// components
+		CalendarProfessionalViewComponent,
 		SelectAgendaComponent,
 		// dialogs
 		AppointmentComponent,
@@ -45,6 +47,9 @@ import { CustomDateFormatter } from './services/custom-date-formatter.service';
 		// deps
 		PresentationModule,
 		LazyMaterialModule,
+	],
+	exports: [
+		CalendarProfessionalViewComponent
 	],
 	providers: [
 		{
