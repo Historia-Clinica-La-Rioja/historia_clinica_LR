@@ -13,7 +13,7 @@
 			<div fxLayout="column" id="search-private-health-insurance">
 				<mat-form-field appearance="outline">
 					<mat-label [translate]="'medical-coverage.PRIVATE_HEALTH_INSURANCE'"></mat-label>
-					<input type="text" placeholder="{{ 'medical-coverage.PRIVATE_SEARCH_HEALTH_INSURANCE' | translate }}" aria-label="Number"
+					<input type="text" placeholder="{{ 'medical-coverage.SEARCH_PRIVATE_HEALTH_INSURANCE' | translate }}" aria-label="Number"
 						   formControlName="name" matInput [matAutocomplete]="autoPrivate">
 					<mat-autocomplete autoActiveFirstOption #autoPrivate="matAutocomplete">
 						<mat-option *ngFor="let privateHealthInsurance of privateHealthInsuranceFilteredMasterData"
