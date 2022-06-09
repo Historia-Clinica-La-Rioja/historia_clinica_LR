@@ -28,14 +28,14 @@ const ProfessionalProfessionShow = props => (
             <SectionTitle label="resources.professionalprofessions.fields.professionalLicenseNumbers"/>
             <CreateRelatedButton
                 reference="healthcareprofessionallicensenumbers"
-                refFieldName="professionProfessionalId"
+                refFieldName="professionalProfessionId"
                 label="resources.professionalprofessions.buttons.linkProfessionalLicenseNumbers"
             />
             <ProfessionalLicenseNumbersSection/>
             <SectionTitle label="resources.professionalprofessions.fields.healthcareprofessionalspecialties"/>
             <CreateRelatedButton
                 reference="healthcareprofessionalspecialties"
-                refFieldName="professionProfessionalId"
+                refFieldName="professionalProfessionId"
                 label="resources.professionalprofessions.buttons.linkSpecialities"
             />
             <ProfessionalSpecialtiesSection/>

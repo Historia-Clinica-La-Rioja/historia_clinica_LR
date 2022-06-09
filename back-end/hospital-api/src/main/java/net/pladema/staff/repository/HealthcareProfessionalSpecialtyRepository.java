@@ -68,10 +68,10 @@ public interface HealthcareProfessionalSpecialtyRepository extends SGXAuditableE
     void setDeletedFalse(@Param("healthcareProfessionalSpecialtyId") Integer healthcareProfessionalSpecialtyId);
 
 	@Transactional(readOnly = true)
-	@Query(value = "SELECT * " +
-			"FROM {h-schema} healthcare_professional_specialty hps " +
-			"WHERE hps.professional_profession_id = :professionalProfessionsId " +
-			"AND hps.clinical_specialty_id = :clinicalSpecialtyId ", nativeQuery = true)
+	@Query(value = "SELECT hps " +
+			"FROM HealthcareProfessionalSpecialty hps " +
+			"WHERE hps.professionalProfessionId = :professionalProfessionsId " +
+			"AND hps.clinicalSpecialtyId = :clinicalSpecialtyId ")
 	Optional<HealthcareProfessionalSpecialty> findByUniqueKey(@Param("professionalProfessionsId") Integer professionalProfessionsId,
 															  @Param("clinicalSpecialtyId")  Integer clinicalSpecialtyId);
 

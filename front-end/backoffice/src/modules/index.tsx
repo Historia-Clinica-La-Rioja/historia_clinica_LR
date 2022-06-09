@@ -48,6 +48,7 @@ import mandatoryprofessionalpracticefreedays from './mandatoryprofessionalpracti
 import bookingInstitutions from "./booking-institutions";
 import healthcareprofessionallicensenumbers from "./healthcareprofessionallicensenumbers";
 import licensenumbertypes from "./licensenumbertypes";
+import healthcareprofessionalspecialtylicensenumbers from "./healthcareprofessionalspecialtylicensenumbers";
 //
 
 
@@ -132,6 +133,7 @@ const resources = (permissions: SGXPermissions) => [
     <Resource name="bedcategories" />,
     <Resource name="educationtypes" />,
     <Resource name="healthcareprofessionallicensenumbers" {...healthcareprofessionallicensenumbers} />,
+    <Resource name="healthcareprofessionalspecialtylicensenumbers" {...healthcareprofessionalspecialtylicensenumbers} />,
     <Resource name="licensenumbertypes" {...licensenumbertypes} />,
 
     <Resource name="snomedgroupconcepts" />,

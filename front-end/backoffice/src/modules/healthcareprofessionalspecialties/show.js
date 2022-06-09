@@ -6,6 +6,9 @@ import {
     FunctionField,
     TextField,
 } from 'react-admin';
+import CreateRelatedButton from "../components/CreateRelatedButton";
+import ProfessionalSpecialtyLicenseNumbersSection from "./ProfessionalSpecialtyLicenseNumbersSection";
+import SectionTitle from "../components/SectionTitle";
 
 const renderPerson = (choice) => `${choice.identificationNumber} ${choice.lastName} ${choice.firstName}`;
 const HealthcareProfessionalSpecialtyShow = props => (
@@ -26,6 +29,13 @@ const HealthcareProfessionalSpecialtyShow = props => (
             <ReferenceField source="clinicalSpecialtyId" reference="clinicalspecialties">
                 <TextField source="name" />
             </ReferenceField>
+            <SectionTitle label="resources.healthcareprofessionalspecialties.title.professionalSpecialtyLicenseNumbers"/>
+            <CreateRelatedButton
+                reference="healthcareprofessionalspecialtylicensenumbers"
+                refFieldName="healthcareProfessionalSpecialtyId"
+                label="resources.healthcareprofessionalspecialties.buttons.linkProfessionalSpecialtyLicenseNumbers"
+            />
+            <ProfessionalSpecialtyLicenseNumbersSection/>
         </SimpleShowLayout>
     </Show>
 );
