@@ -100,9 +100,9 @@ export class InternmentActionsService {
 			});
 			this.dialogRef.afterClosed().subscribe((epicrisisClose: EpicrisisClose) => {
 				delete this.dialogRef;
-				if (epicrisisClose.fieldsToUpdate)
+				if (epicrisisClose?.fieldsToUpdate)
 					this.updateInternmentSummary(epicrisisClose.fieldsToUpdate);
-				if (epicrisisClose.openMedicalDischarge)
+				if (epicrisisClose?.openMedicalDischarge)
 					this.openMedicalDischarge();
 			});
 		} else {
