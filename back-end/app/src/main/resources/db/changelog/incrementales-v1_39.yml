@@ -46,3 +46,20 @@ databaseChangeLog:
               referencedColumnNames: id
               referencedTableName: appointment
               validate: true
+
+    - changeSet:
+        id: fix-internment-episode-status-administrative-discharge-date-null-1.39
+        comment: Corrige bug sobre el estado de internación cuando no se tiene alta adminsitrativa.
+        author: etrapani
+        context: "!schema-only"
+        changes:
+          - sql:
+              sql: |-
+                UPDATE internment_episode
+                SET status_id = 1
+                WHERE id IN (
+                  SELECT id
+                  FROM internment_episode AS ie
+                  LEFT join patient_discharge As pd ON (ie.id = pd.internment_episode_id)
+                  WHERE ie.status_id = 2
+                  AND pd.administrative_discharge_date is null)
