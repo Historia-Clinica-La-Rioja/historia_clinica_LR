@@ -8,7 +8,6 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 import javax.validation.Valid;
-import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.Size;
 
 import ar.lamansys.sgh.shared.infrastructure.input.service.ExternalPatientCoverageDto;
@@ -160,14 +159,17 @@ public class AppointmentsController {
     }
 
 
-    @GetMapping
+	@GetMapping(value="/list/{healthcareProfessionalId}")
     @PreAuthorize("hasPermission(#institutionId, 'ADMINISTRATIVO, ESPECIALISTA_MEDICO, PROFESIONAL_DE_SALUD, ESPECIALISTA_EN_ODONTOLOGIA, ADMINISTRADOR_AGENDA, ENFERMERO')")
     public ResponseEntity<Collection<AppointmentListDto>> getList(
             @PathVariable(name = "institutionId") Integer institutionId,
-            @RequestParam(name = "diaryIds") @NotEmpty List<Integer> diaryIds
+			@PathVariable(name = "healthcareProfessionalId") Integer healthcareProfessionalId,
+            @RequestParam(name = "diaryIds", defaultValue = "") List<Integer> diaryIds
     ) {
         log.debug("Input parameters -> institutionId {}, diaryIds {}", institutionId, diaryIds);
-        Collection<AppointmentBo> resultService = appointmentService.getAppointmentsByDiaries(diaryIds);
+		Collection<AppointmentBo> resultService = diaryIds.isEmpty() ?
+				appointmentService.getAppointmentsByProfessionalInInstitution(healthcareProfessionalId, institutionId) :
+				appointmentService.getAppointmentsByDiaries(diaryIds);
         Set<Integer> patientsIds = resultService.stream().
                 filter(appointmentBo -> appointmentBo.getPatientId() != null).
 				map(AppointmentBo::getPatientId).collect(Collectors.toSet());

@@ -92,6 +92,20 @@ public class AppointmentServiceImpl implements AppointmentService {
 		return result;
 	}
 
+	@Override
+	public Collection<AppointmentBo> getAppointmentsByProfessionalInInstitution(Integer healthcareProfessionalId, Integer institutionId) {
+		log.debug("Input parameters -> diaryIds {}", healthcareProfessionalId);
+		Collection<AppointmentBo> result = new ArrayList<>();
+		if (healthcareProfessionalId!=null)
+			result = appointmentRepository.getAppointmentsByProfessionalInInstitution(healthcareProfessionalId, institutionId).stream()
+					.map(AppointmentBo::fromAppointmentDiaryVo)
+					.distinct()
+					.collect(Collectors.toList());
+		log.debug("Result size {}", result.size());
+		log.trace(OUTPUT, result);
+		return result;
+	}
+
 
 	@Override
 	public Collection<AppointmentBo> getFutureActiveAppointmentsByDiary(Integer diaryId) {

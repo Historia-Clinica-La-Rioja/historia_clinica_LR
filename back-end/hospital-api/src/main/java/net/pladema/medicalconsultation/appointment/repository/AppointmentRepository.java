@@ -35,6 +35,24 @@ public interface AppointmentRepository extends SGXAuditableEntityJPARepository<A
 			"AND a.deleteable.deleted = FALSE OR a.deleteable.deleted IS NULL " +
             "ORDER BY d.id,a.isOverturn")
     List<AppointmentDiaryVo> getAppointmentsByDiaries(@Param("diaryIds") List<Integer> diaryIds);
+
+	@Transactional(readOnly = true)
+	@Query( "SELECT NEW net.pladema.medicalconsultation.appointment.repository.domain.AppointmentDiaryVo(" +
+			"aa.pk.diaryId, a.id, a.patientId, a.dateTypeId, a.hour, a.appointmentStateId, a.isOverturn, " +
+			"a.patientMedicalCoverageId,a.phonePrefix, a.phoneNumber, doh.medicalAttentionTypeId)" +
+			"FROM Appointment AS a " +
+			"JOIN AppointmentAssn AS aa ON (a.id = aa.pk.appointmentId) " +
+			"JOIN Diary d ON (d.id = aa.pk.diaryId )" +
+			"JOIN DiaryOpeningHours AS doh ON (doh.pk.diaryId = d.id) " +
+			"JOIN DoctorsOffice AS do ON (do.id = d.doctorsOfficeId) " +
+			"WHERE d.healthcareProfessionalId = :healthcareProfessionalId " +
+			"AND do.institutionId = :institutionId " +
+			"AND d.active = true " +
+			"AND (d.deleteable.deleted = false OR d.deleteable.deleted is null) " +
+			"AND NOT a.appointmentStateId = " + AppointmentState.CANCELLED_STR +
+			"AND (a.deleteable.deleted = FALSE OR a.deleteable.deleted IS NULL) " +
+			"ORDER BY d.id, a.isOverturn")
+	List<AppointmentDiaryVo> getAppointmentsByProfessionalInInstitution(@Param("healthcareProfessionalId") Integer healthcareProfessionalId, @Param("institutionId") Integer institutionId);
     
     @Transactional(readOnly = true)
     @Query( "SELECT NEW net.pladema.medicalconsultation.appointment.repository.domain.AppointmentVo(aa.pk.diaryId, a, doh.medicalAttentionTypeId, has.reason, ao.observation, ao.createdBy)" +
