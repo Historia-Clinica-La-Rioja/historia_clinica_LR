@@ -1,27 +1,27 @@
 <app-dock-popup [dockPopupRef]="dockPopupRef" [title]="'ambulatoria.paciente.nueva-consulta.TITLE'">
 	<div body fxLayout="column" fxLayoutGap="20px">
 
-		<div id="especialidad">
-			<div class="margin-bottom">
-				<app-document-section [sectionTitle]="'Especialidad'">
-					<ng-container concept-form>
-						<div fxLayout="row" [formGroup]="formEvolucion">
-							<mat-form-field appearance="outline">
-								<mat-select id="clinicalSpecialtyId" name="clinicalSpecialty"
-									formControlName="clinicalSpecialty" (selectionChange)="setDefaultSpecialty()"
-									[attr.disabled]="fixedSpecialty">
-									<mat-option *ngFor="let clinicalSpecialty of this.specialties"
-										[value]="clinicalSpecialty">
-										<span class="mat-body">{{clinicalSpecialty.name}}</span>
-									</mat-option>
-								</mat-select>
-								<mat-error [translate]="'forms.REQUIRED'"></mat-error>
-							</mat-form-field>
-						</div>
-					</ng-container>
-				</app-document-section>
-			</div>
-		</div>
+		<app-new-consultation-expansion-section id="specialty"
+			[title]="'ambulatoria.paciente.nueva-consulta.SPECIALTY' | translate" icon="medical_services"
+			[isEmpty]="!formEvolucion.value.clinicalSpecialty" [collapsed]="false">
+			<app-document-section>
+				<ng-container concept-form>
+					<div fxLayout="row" [formGroup]="formEvolucion">
+						<mat-form-field appearance="outline">
+							<mat-select id="clinicalSpecialtyId" name="clinicalSpecialty"
+								formControlName="clinicalSpecialty" (selectionChange)="setDefaultSpecialty()"
+								[attr.disabled]="fixedSpecialty">
+								<mat-option *ngFor="let clinicalSpecialty of this.specialties"
+									[value]="clinicalSpecialty">
+									<span class="mat-body">{{clinicalSpecialty.name}}</span>
+								</mat-option>
+							</mat-select>
+							<mat-error [translate]="'forms.REQUIRED'"></mat-error>
+						</mat-form-field>
+					</div>
+				</ng-container>
+			</app-document-section>
+		</app-new-consultation-expansion-section>
 
 		<app-new-consultation-expansion-section id="motivo"
 			[title]="'ambulatoria.paciente.nueva-consulta.motivo.TITLE' | translate" icon="sms_failed"

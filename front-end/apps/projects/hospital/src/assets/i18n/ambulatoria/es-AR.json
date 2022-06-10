@@ -60,7 +60,7 @@
             },
             "nueva-consulta": {
                 "TITLE": "Nueva consulta",
-                "SUBTITLE": "Completa los siguientes datos.",
+                "SPECIALTY": "Especialidad",
                 "TITLE_MENU": "Consulta",
                 "TENSION_SISTOLICA": "Tensión sistólica",
                 "TENSION_DIASTOLICA": "Tensión diastólica",

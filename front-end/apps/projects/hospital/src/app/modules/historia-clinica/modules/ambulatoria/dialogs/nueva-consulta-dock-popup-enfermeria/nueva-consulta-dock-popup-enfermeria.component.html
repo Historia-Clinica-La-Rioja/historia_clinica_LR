@@ -1,8 +1,10 @@
 <app-dock-popup [dockPopupRef]="dockPopupRef" [title]="'ambulatoria.paciente.new-nursing-consultation.TITLE'">
 	<div body fxLayout="column" fxLayoutGap="20px">
 
-		<div id="specialty">
-			<app-document-section [sectionTitle]="'ambulatoria.paciente.new-nursing-consultation.SPECIALTY'">
+		<app-new-consultation-expansion-section id="specialty"
+			[title]="'ambulatoria.paciente.new-nursing-consultation.SPECIALTY' | translate" icon="medical_services"
+			[isEmpty]="!formEvolucion.value.clinicalSpecialty" [collapsed]="false">
+			<app-document-section>
 				<ng-container concept-form>
 					<div fxLayout="row" [formGroup]="formEvolucion">
 						<mat-form-field appearance="outline">
@@ -18,7 +20,7 @@
 					</div>
 				</ng-container>
 			</app-document-section>
-		</div>
+		</app-new-consultation-expansion-section>
 
 		<app-new-consultation-expansion-section id="datos_antropometricos"
 			[title]="'ambulatoria.paciente.nueva-consulta.datos-antropometricos.TITLE' | translate" icon="accessibility"
