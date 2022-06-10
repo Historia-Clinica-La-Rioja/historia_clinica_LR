@@ -117,4 +117,15 @@ public interface DiaryRepository extends SGXAuditableEntityJPARepository<Diary, 
             "JOIN AppointmentAssn aa ON aa.pk.diaryId = d.id " +
             "WHERE aa.pk.appointmentId = :appointmentId ")
     Optional<Diary> getDiaryByAppointment(@Param("appointmentId") Integer appointmentId);
+
+	@Transactional(readOnly = true)
+	@Query("SELECT (case when count(d.id)> 0 then true else false end) " +
+			"FROM Diary d " +
+			"JOIN DoctorsOffice AS do ON (do.id = d.doctorsOfficeId) " +
+			"WHERE d.healthcareProfessionalId = :healthcareProfessionalId " +
+			"AND do.institutionId = :institutionId " +
+			"AND d.active = true " +
+			"AND d.endDate >= current_date() " +
+			"AND (d.deleteable.deleted = false OR d.deleteable.deleted is null)")
+	boolean hasActiveDiariesInInstitution(@Param("healthcareProfessionalId")Integer healthcareProfessionalId, @Param("institutionId") Integer institutionId);
 }

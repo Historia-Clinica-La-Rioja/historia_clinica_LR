@@ -300,4 +300,12 @@ public class DiaryServiceImpl implements DiaryService {
 		return result;
 	}
 
+	@Override
+	public Boolean hasActiveDiariesInInstitution(Integer healthcareProfessionalId, Integer institutionId){
+		LOG.debug("Input parameters -> healthcareProfessionalId {}, institutionId {}", healthcareProfessionalId, institutionId);
+		Boolean result = diaryRepository.hasActiveDiariesInInstitution(healthcareProfessionalId, institutionId);
+		LOG.debug(OUTPUT, result);
+		return result;
+	}
+
 }

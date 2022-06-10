@@ -237,6 +237,19 @@ public class DiaryController {
 		return ResponseEntity.ok(Boolean.TRUE);
 	}
 
+	@GetMapping("/hasActiveDiaries/{healthcareProfessionalId}")
+	@PreAuthorize("hasPermission(#institutionId, 'ADMINISTRATIVO, ESPECIALISTA_MEDICO, PROFESIONAL_DE_SALUD, ESPECIALISTA_EN_ODONTOLOGIA, ENFERMERO, ADMINISTRADOR_AGENDA')")
+	public ResponseEntity<Boolean> hasActiveDiaries(@PathVariable(name = "institutionId") Integer institutionId,
+													@PathVariable(name = "healthcareProfessionalId") Integer healthcareProfessionalId) {
+		log.debug("Input parameters -> institutionId {}, healthcareProfessionalId {}", institutionId, healthcareProfessionalId);
+
+		Boolean result = diaryService.hasActiveDiariesInInstitution(healthcareProfessionalId, institutionId);
+
+		log.debug(OUTPUT, result);
+		return ResponseEntity.ok(result);
+
+	}
+
 	private void assertTimeLimits(LocalTime localTimeInit, LocalTime localTimeEnd, Short appointmentDuration) {
     	if (localTimeEnd.isBefore(localTimeInit) || localTimeEnd.equals(localTimeInit))
     		throw new ConstraintViolationException("La segunda hora seleccionada debe ser posterior a la primera.",
