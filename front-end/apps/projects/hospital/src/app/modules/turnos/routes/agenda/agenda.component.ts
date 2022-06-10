@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { AppointmentDailyAmountDto, AppointmentListDto, CompleteDiaryDto, DiaryOpeningHoursDto, MedicalCoverageDto } from '@api-rest/api-model';
 import { ERole } from '@api-rest/api-model';
 import { CalendarMonthViewBeforeRenderEvent, CalendarView, CalendarWeekViewBeforeRenderEvent, DAYS_OF_WEEK } from 'angular-calendar';
@@ -32,6 +32,7 @@ import { AppointmentsService } from '@api-rest/services/appointments.service';
 import { AgendaSearchService } from '../../services/agenda-search.service';
 import { ContextService } from '@core/services/context.service';
 import { ConfirmBookingComponent } from '@turnos/dialogs/confirm-booking/confirm-booking.component';
+import { DatePipeFormat } from '@core/utils/date.utils';
 
 const ASIGNABLE_CLASS = 'cursor-pointer';
 const AGENDA_PROGRAMADA_CLASS = 'bg-green';
@@ -45,8 +46,8 @@ const ROLES_TO_CREATE: ERole[] = [ERole.ADMINISTRATIVO, ERole.ESPECIALISTA_MEDIC
 export class AgendaComponent implements OnInit, OnDestroy {
 
 	readonly calendarViewEnum = CalendarView;
-	view: CalendarView = CalendarView.Week;
 	readonly MONDAY = DAYS_OF_WEEK.MONDAY;
+	readonly dateFormats = DatePipeFormat;
 	hasRoleToCreate: boolean;
 
 	hourSegments: number;
@@ -67,6 +68,11 @@ export class AgendaComponent implements OnInit, OnDestroy {
 
 	private readonly routePrefix = 'institucion/' + this.contextService.institutionId;
 	private patientId: number;
+	@Input() canCreateAppoinment = true;
+	@Input() idAgenda: number;
+	@Input() showAll = true;
+	@Input() view: CalendarView = CalendarView.Week;
+
 	constructor(
 		private readonly dialog: MatDialog,
 		private readonly diaryService: DiaryService,
@@ -84,27 +90,25 @@ export class AgendaComponent implements OnInit, OnDestroy {
 
 	ngOnInit(): void {
 		this.route.queryParams.subscribe(qp => this.patientId = Number(qp.idPaciente));
-		this.route.paramMap.subscribe((params: ParamMap) => {
-			this.dayStartHour = 8;
-			this.dayEndHour = 21;
-			this.loading = true;
-			this.appointmentSubscription?.unsubscribe();
-			this.appointmentFacade.clear();
-			const idAgenda = Number(params.get('idAgenda'));
-			this.diaryService.get(idAgenda).subscribe(agenda => {
-				this.setAgenda(agenda);
-				this.agendaSearchService.setAgendaSelected(agenda);
-			}, _ => {
-				this.snackBarService.showError('turnos.home.AGENDA_NOT_FOUND');
-				this.router.navigateByUrl(`${this.routePrefix}/turnos`);
+		this.dayStartHour = 8;
+		this.dayEndHour = 21;
+		this.loading = true;
+		this.appointmentSubscription?.unsubscribe();
+		this.appointmentFacade.clear();
+		if (!this.idAgenda)
+			this.route.paramMap.subscribe((params: ParamMap) => {
+				this.idAgenda = Number(params.get('idAgenda'));
+				this.getAgenda();
 			});
-			this.appointmentSubscription = this.appointmentFacade.getAppointments().subscribe(appointments => {
-				if (appointments) {
-					this.appointments = appointments;
-					this.dailyAmounts$ = this.appointmentsService.getDailyAmounts(idAgenda);
-					this.loading = false;
-				}
-			});
+		else
+			this.getAgenda();
+
+		this.appointmentSubscription = this.appointmentFacade.getAppointments().subscribe(appointments => {
+			if (appointments) {
+				this.appointments = appointments;
+				this.dailyAmounts$ = this.appointmentsService.getDailyAmounts(this.idAgenda);
+				this.loading = false;
+			}
 		});
 
 		this.permissionsService.hasContextAssignments$(ROLES_TO_CREATE).subscribe(hasRole => this.hasRoleToCreate = hasRole);
@@ -183,6 +187,16 @@ export class AgendaComponent implements OnInit, OnDestroy {
 						return dateToMoment(date).isSame(momentParseDate(dailyAmount.date), 'days');
 					});
 			}
+		});
+	}
+
+	private getAgenda() {
+		this.diaryService.get(this.idAgenda).subscribe(agenda => {
+			this.setAgenda(agenda);
+			this.agendaSearchService.setAgendaSelected(agenda);
+		}, _ => {
+			this.snackBarService.showError('turnos.home.AGENDA_NOT_FOUND');
+			this.router.navigateByUrl(`${this.routePrefix}/turnos`);
 		});
 	}
 
@@ -309,6 +323,11 @@ export class AgendaComponent implements OnInit, OnDestroy {
 	goToDayViewOn(date: Date) {
 		this.viewDate = date;
 		this.view = this.calendarViewEnum.Day;
+	}
+
+	goToDiary(){
+		const url = `institucion/${this.contextService.institutionId}/turnos/agenda/${this.idAgenda}`;
+		this.router.navigate([url]);
 	}
 
 	private setDayStartHourAndEndHour(openingHours: DiaryOpeningHoursDto[]) {

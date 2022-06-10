@@ -1,0 +1,19 @@
+@import '../../../../../assets/styles/variables.scss';
+::ng-deep .cdk-overlay-pane {
+	app-calendar-professional-view-dock-popup {
+		width: 100%;
+		margin: 65px 0 0 0;
+
+		@media (max-width: $mobile-popups) {
+			margin: 0;
+		}
+	}
+}
+
+::ng-deep .cdk-overlay-pane.dock-popup-overlay {
+	background-color: white;
+}
+
+.agenda {
+	padding: 0 20px 0 20px;
+}

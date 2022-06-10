@@ -15,6 +15,7 @@ import { CalendarProfessionalViewComponent } from '@turnos/components/calendar-p
 import { SelectAgendaComponent } from './components/select-agenda/select-agenda.component';
 // dialogs
 import { AppointmentComponent } from './dialogs/appointment/appointment.component';
+import { CalendarProfessionalViewDockPopupComponent } from './dialogs/calendar-professional-view-dock-popup/calendar-professional-view-dock-popup.component';
 import { CancelAppointmentComponent } from './dialogs/cancel-appointment/cancel-appointment.component';
 import { ConfirmBookingComponent } from './dialogs/confirm-booking/confirm-booking.component';
 import { NewAppointmentComponent } from './dialogs/new-appointment/new-appointment.component';
@@ -34,6 +35,7 @@ import { CustomDateFormatter } from './services/custom-date-formatter.service';
 		SelectAgendaComponent,
 		// dialogs
 		AppointmentComponent,
+		CalendarProfessionalViewDockPopupComponent,
 		CancelAppointmentComponent,
 		ConfirmBookingComponent,
 		NewAppointmentComponent,

@@ -4,36 +4,13 @@
 
 <ng-template #calendar>
 	<section class="turnos" id="calendar">
-		<div class="header" id="header" fxLayout="row wrap" fxLayoutAlign="space-between center" fxLayout.xs="column">
-			<mat-button-toggle-group>
-				<mat-button-toggle id="previous" class="navigation"
-								   mwlCalendarPreviousView
-								   [view]=view
-								   [(viewDate)]="viewDate"
-				>
-					Anterior
-				</mat-button-toggle>
-				<mat-button-toggle id="today" class="today"
-								   mwlCalendarToday
-								   [(viewDate)]="viewDate"
-				>
-					Hoy
-				</mat-button-toggle>
-				<mat-button-toggle id="next" class="navigation"
-								   mwlCalendarNextView
-								   [view]=view
-								   [(viewDate)]="viewDate"
-				>
-					Próximo
-				</mat-button-toggle>
-			</mat-button-toggle-group>
-
+		<div class="header" id="header" *ngIf="showAll else loadDaysAndTitle" fxLayout="row wrap" fxLayoutAlign="space-between center" fxLayout.xs="column">
+			<div *ngTemplateOutlet="navigation"></div>
 			<div id="view_date">
 				<span class="mat-h2">
 					{{ viewDate | calendarDate:(view + 'ViewTitle'): undefined : MONDAY }}
 				</span>
 			</div>
-
 			<div>
 				<mat-button-toggle-group class="toggle-view" [(value)]="view">
 					<mat-button-toggle value="{{calendarViewEnum.Month}}">Mes</mat-button-toggle>
@@ -41,7 +18,6 @@
 					<mat-button-toggle value="{{calendarViewEnum.Day}}">Día</mat-button-toggle>
 				</mat-button-toggle-group>
 			</div>
-
 		</div>
 
 		<div [ngSwitch]="view">
@@ -83,7 +59,7 @@
 								   [hourSegmentTemplate]="hourSegmentTemplate"
 								   [dayStartHour]="dayStartHour" [dayEndHour]="dayEndHour"
 								   (beforeViewRender)="loadCalendar($event)"
-								   (hourSegmentClicked)="hasRoleToCreate ? onClickedSegment($event) : null"
+								   (hourSegmentClicked)="hasRoleToCreate && canCreateAppoinment ? onClickedSegment($event) : null"
 								   (eventClicked)="viewAppointment($event.event)"
 			>
 			</mwl-calendar-day-view>
@@ -153,5 +129,45 @@
 			</div>
 		</ng-template>
 
+		<ng-template #loadDaysAndTitle>
+			<div fxLayout="column" fxLayoutGap="10px">
+				<div *ngTemplateOutlet="navigation"></div>
+				<div fxLayout="row" fxLayoutAlign="space-between center" class="title">
+					<div id="view_date">
+						<span class="mat-h2">
+							{{ viewDate | date:dateFormats.LONG_DATE }}
+						</span>
+					</div>
+					<button mat-button color="primary" onclick="this.blur()" (click)="goToDiary()">
+						<span>{{"turnos.calendar-view-professional.GO_TO_DIARY" | translate}}</span>
+					</button>
+				</div>
+			</div>
+		</ng-template>
+		
+		<ng-template #navigation>
+			<mat-button-toggle-group>
+				<mat-button-toggle id="previous" class="navigation"
+								mwlCalendarPreviousView
+								[view]=view
+								[(viewDate)]="viewDate"
+				>
+					Anterior
+				</mat-button-toggle>
+				<mat-button-toggle id="today" class="today"
+								mwlCalendarToday
+								[(viewDate)]="viewDate"
+				>
+					Hoy
+				</mat-button-toggle>
+				<mat-button-toggle id="next" class="navigation"
+								mwlCalendarNextView
+								[view]=view
+								[(viewDate)]="viewDate"
+				>
+					Próximo
+				</mat-button-toggle>
+			</mat-button-toggle-group>
+		</ng-template>
 	</section>
 </ng-template>

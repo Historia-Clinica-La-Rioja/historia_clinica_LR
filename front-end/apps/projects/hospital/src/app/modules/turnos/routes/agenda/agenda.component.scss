@@ -13,6 +13,10 @@ div.spinner {
 .turnos {
 	background-color: white;
 
+	.title {
+		padding: 20px;
+	}
+
 	::ng-deep {
 		.cal-week-view .cal-day-columns {
 			.bg-green {

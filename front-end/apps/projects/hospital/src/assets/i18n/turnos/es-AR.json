@@ -107,6 +107,10 @@
 			"TITLE": "Descargar informes",
 			"ANEXO": "Anexo II",
 			"FORM": "Formulario V"
+		},
+		"calendar-view-professional": {
+			"TITLE": "Agenda de turnos",
+			"GO_TO_DIARY": "Ir a turnos"
 		}
 	}
 }
