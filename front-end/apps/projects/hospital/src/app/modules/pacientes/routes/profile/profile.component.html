@@ -126,7 +126,7 @@
 								</div>
 							</div>
 							<mat-divider inset></mat-divider>
-							<div fxLayout="column" fxLayoutGap="10px">
+							<div *ngIf="!hideProfessions" fxLayout="column" fxLayoutGap="10px">
 								<div content>
 										<app-card-professions [license]="license"
 											[ownProfessionsAndSpecialties]="ownProfessionsAndSpecialties">
