@@ -314,7 +314,8 @@
 			},
 			"WITHOUT_OBSERVATIONS": "No hay observaciones para mostrar",
 			"CLINICAL_EVALUATION": "Evaluación clínica",
-			"EDITED_DOCUMENT": "(Editado)"
+			"EDITED_DOCUMENT": "(Editado)",
+			"NO_FILTERED_PROBLEMS": "No hay resultados para la búsqueda seleccionada"
 		},
 		"nota-evolucion": {
 			"TITLE": "Nota de evolución",

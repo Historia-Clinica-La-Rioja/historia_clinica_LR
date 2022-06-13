@@ -216,6 +216,12 @@
 				</div>
 			</div>
 		</div>
+		<div
+			*ngIf="this.documentHistoric && !this.documentHistoric.documents.length">
+			<div class="no-data-styles">
+				<span [translate]="'internaciones.documents-summary.NO_FILTERED_PROBLEMS'"></span>
+			</div>
+		</div>
 	</ng-container>
 
 	<ng-template #noData>

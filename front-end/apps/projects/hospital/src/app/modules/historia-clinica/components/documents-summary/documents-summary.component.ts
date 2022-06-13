@@ -56,7 +56,7 @@ export class DocumentsSummaryComponent implements OnInit, OnChanges {
 
 	ngOnChanges() {
 		this.documentHistoric = this.clinicalEvaluation;
-		if (this.documentHistoric?.documents.length) {
+		if (this.documentHistoric) {
 			this.updateDocuments();
 		}
 		this.activeDocument = undefined;
