@@ -1,57 +1,27 @@
 package ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.generateFile;
 
-import ar.lamansys.sgh.clinichistory.domain.document.AuthorBo;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
-import javax.persistence.EntityManager;
-import javax.persistence.Query;
-
-import java.util.ArrayList;
-import java.util.List;
+import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.DocumentRepository;
+import ar.lamansys.sgh.shared.infrastructure.input.service.SharedStaffPort;
+import ar.lamansys.sgh.shared.infrastructure.input.service.staff.ProfessionalCompleteDto;
+import lombok.extern.slf4j.Slf4j;
 
 @Service
+@Slf4j
 public class DocumentAuthorFinder {
 
-    private final Logger logger;
+    private final SharedStaffPort sharedStaffPort;
 
-    private final EntityManager entityManager;
+	private final DocumentRepository documentRepository;
 
-    public DocumentAuthorFinder(EntityManager entityManager) {
-        logger = LoggerFactory.getLogger(this.getClass());
-        this.entityManager = entityManager;
-    }
-
-    public AuthorBo getAuthor(Long documentId) {
-        logger.debug("Get author from document -> documentId={}", documentId);
-
-        String sqlString = "" +
-                "SELECT hp.id, p.firstName, p.lastName, hp.licenseNumber, pe.nameSelfDetermination " +
-                "FROM Document AS d " +
-                "JOIN UserPerson AS up ON (d.creationable.createdBy = up.pk.userId) " +
-                "JOIN HealthcareProfessional hp ON (up.pk.personId = hp.personId) " +
-                "JOIN Person p ON (hp.personId = p.id) " +
-				"JOIN PersonExtended pe ON (p.id = pe.id) " +
-                "WHERE d.id = :documentId" +
-                "";
-
-		List<Object[]> rows = new ArrayList<>();
-		Integer searchTries = 0;
-        Query query;
-
-		while (rows.isEmpty() && (searchTries < 10)){
-			query = entityManager.createQuery(sqlString);
-			query.setParameter("documentId", documentId);
-			rows = query.getResultList();
-			searchTries++;
-		}
-
-        if (rows.isEmpty())
-            return null;
-        Object[] row = rows.get(0);
-        AuthorBo result =  new AuthorBo((Integer) row[0], (String) row[1], (String) row[2], (String) row[3], (String) row[4]);
-        logger.trace("execute result query -> {}", result);
-        return result;
-    }
+    public DocumentAuthorFinder(SharedStaffPort sharedStaffPort, DocumentRepository documentRepository) {
+		this.sharedStaffPort = sharedStaffPort;
+		this.documentRepository = documentRepository;
+	}
+    public ProfessionalCompleteDto getAuthor(Long documentId) {
+		return documentRepository.findById(documentId)
+				.map(document -> sharedStaffPort.getProfessionalComplete(document.getCreatedBy()))
+				.orElseGet(null);
+	}
 }

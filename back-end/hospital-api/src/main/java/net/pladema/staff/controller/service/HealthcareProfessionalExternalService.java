@@ -1,5 +1,6 @@
 package net.pladema.staff.controller.service;
 
+import ar.lamansys.sgh.shared.infrastructure.input.service.staff.ProfessionalCompleteDto;
 import net.pladema.clinichistory.hospitalization.controller.dto.HealthCareProfessionalGroupDto;
 import net.pladema.staff.controller.dto.ProfessionalDto;
 
@@ -14,4 +15,6 @@ public interface HealthcareProfessionalExternalService {
 	ProfessionalDto findFromAllProfessionalsById(Integer healthCareProfessionalId);
 
     ProfessionalDto findProfessionalByUserId(Integer userId);
+
+	ProfessionalCompleteDto getProfessionalComplete(Integer userId);
 }

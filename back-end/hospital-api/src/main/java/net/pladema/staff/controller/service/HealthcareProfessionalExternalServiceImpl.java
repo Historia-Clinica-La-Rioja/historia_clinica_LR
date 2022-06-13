@@ -1,15 +1,18 @@
 package net.pladema.staff.controller.service;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Service;
+
+import ar.lamansys.sgh.shared.infrastructure.input.service.staff.ProfessionalCompleteDto;
 import net.pladema.clinichistory.hospitalization.controller.dto.HealthCareProfessionalGroupDto;
 import net.pladema.clinichistory.hospitalization.controller.mapper.HealthCareProfessionalGroupMapper;
 import net.pladema.clinichistory.hospitalization.repository.domain.HealthcareProfessionalGroup;
+import net.pladema.staff.application.fetchprofessionalbyuser.FetchProfessionalByUser;
 import net.pladema.staff.controller.dto.ProfessionalDto;
 import net.pladema.staff.controller.mapper.HealthcareProfessionalMapper;
 import net.pladema.staff.service.HealthcareProfessionalService;
 import net.pladema.staff.service.domain.HealthcareProfessionalBo;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.stereotype.Service;
 
 @Service
 public class HealthcareProfessionalExternalServiceImpl implements HealthcareProfessionalExternalService {
@@ -22,14 +25,15 @@ public class HealthcareProfessionalExternalServiceImpl implements HealthcareProf
 
     private final HealthcareProfessionalMapper healthcareProfessionalMapper;
 
-
+	private final FetchProfessionalByUser fetchProfessionalByUser;
     public HealthcareProfessionalExternalServiceImpl(HealthcareProfessionalService healthcareProfessionalService,
-                                                     HealthCareProfessionalGroupMapper healthCareProfessionalGroupMapper,
-                                                     HealthcareProfessionalMapper healthcareProfessionalMapper){
+													 HealthCareProfessionalGroupMapper healthCareProfessionalGroupMapper,
+													 HealthcareProfessionalMapper healthcareProfessionalMapper, FetchProfessionalByUser fetchProfessionalByUser){
         this.healthcareProfessionalService = healthcareProfessionalService;
         this.healthCareProfessionalGroupMapper = healthCareProfessionalGroupMapper;
         this.healthcareProfessionalMapper = healthcareProfessionalMapper;
-    }
+		this.fetchProfessionalByUser = fetchProfessionalByUser;
+	}
 
     @Override
     public HealthCareProfessionalGroupDto addHealthcareProfessionalGroup(Integer internmentEpisodeId, Integer healthcareProfessionalId) {
@@ -69,12 +73,16 @@ public class HealthcareProfessionalExternalServiceImpl implements HealthcareProf
 	@Override
     public ProfessionalDto findProfessionalByUserId(Integer userId) {
         LOG.debug("Input parameters -> userId {}", userId);
-        Integer professionalId = healthcareProfessionalService.getProfessionalId(userId);
+		Integer professionalId = healthcareProfessionalService.getProfessionalId(userId);
         HealthcareProfessionalBo healthcareProfessionalBo = healthcareProfessionalService.findActiveProfessionalById(professionalId);
         ProfessionalDto result = healthcareProfessionalMapper.fromProfessionalBo(healthcareProfessionalBo);
         LOG.debug("Output -> {}", result);
         return result;
     }
 
+	@Override
+	public ProfessionalCompleteDto getProfessionalComplete(Integer userId) {
+		return healthcareProfessionalMapper.fromProfessionalCompleteBo(fetchProfessionalByUser.execute(userId));
+	}
 
 }

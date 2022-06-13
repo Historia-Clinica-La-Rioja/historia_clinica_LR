@@ -3,6 +3,8 @@ package ar.lamansys.sgh.shared.infrastructure.input.service;
 
 import java.util.Optional;
 
+import ar.lamansys.sgh.shared.infrastructure.input.service.staff.ProfessionalCompleteDto;
+
 public interface SharedStaffPort {
 
     Integer getProfessionalId(Integer userId);
@@ -10,4 +12,6 @@ public interface SharedStaffPort {
     Optional<ClinicalSpecialtyDto> getClinicalSpecialty(Integer clinicalSpecialtyId);
 
     ProfessionalInfoDto getProfessionalCompleteInfo(Integer userId);
+
+	ProfessionalCompleteDto getProfessionalComplete(Integer userId);
 }

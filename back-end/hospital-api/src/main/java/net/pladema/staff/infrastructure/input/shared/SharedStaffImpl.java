@@ -1,14 +1,16 @@
 package net.pladema.staff.infrastructure.input.shared;
 
-import ar.lamansys.sgh.shared.infrastructure.input.service.ClinicalSpecialtyDto;
-import ar.lamansys.sgh.shared.infrastructure.input.service.ProfessionalInfoDto;
-import net.pladema.staff.controller.mapper.ClinicalSpecialtyMapper;
-import net.pladema.staff.controller.service.HealthcareProfessionalExternalService;
-import ar.lamansys.sgh.shared.infrastructure.input.service.SharedStaffPort;
-import net.pladema.staff.service.ClinicalSpecialtyService;
+import java.util.Optional;
+
 import org.springframework.stereotype.Service;
 
-import java.util.Optional;
+import ar.lamansys.sgh.shared.infrastructure.input.service.ClinicalSpecialtyDto;
+import ar.lamansys.sgh.shared.infrastructure.input.service.ProfessionalInfoDto;
+import ar.lamansys.sgh.shared.infrastructure.input.service.SharedStaffPort;
+import ar.lamansys.sgh.shared.infrastructure.input.service.staff.ProfessionalCompleteDto;
+import net.pladema.staff.controller.mapper.ClinicalSpecialtyMapper;
+import net.pladema.staff.controller.service.HealthcareProfessionalExternalService;
+import net.pladema.staff.service.ClinicalSpecialtyService;
 
 @Service
 public class SharedStaffImpl implements SharedStaffPort {
@@ -49,4 +51,9 @@ public class SharedStaffImpl implements SharedStaffPort {
                 })
                 .get();
     }
+
+	@Override
+	public ProfessionalCompleteDto getProfessionalComplete(Integer userId) {
+		return healthcareProfessionalExternalService.getProfessionalComplete(userId);
+	}
 }

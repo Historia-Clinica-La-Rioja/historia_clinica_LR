@@ -1,27 +1,23 @@
 package net.pladema.staff.service.domain;
 
 import ar.lamansys.sgx.shared.exceptions.NotFoundException;
+import lombok.Getter;
 
+@Getter
 public enum ELicenseNumberTypeBo {
 
-	NATIONAL(1, "Nacional"),
-	PROVINCE(2, "Provincial"),
+	NATIONAL(1, "Nacional", "MN"),
+	PROVINCE(2, "Provincial", "MP"),
 	;
 
-    private Short id;
-    private String value;
-    ELicenseNumberTypeBo(Number id, String value) {
+    private final Short id;
+    private final String value;
+	private final String acronym;
+    ELicenseNumberTypeBo(Number id, String value, String acronym) {
         this.id = id.shortValue();
         this.value = value;
+		this.acronym = acronym;
     }
- 
-    public String getValue() {
-        return value;
-    }
-    public Short getId() {
-        return id;
-    }
-
 	public static ELicenseNumberTypeBo map(Short id) {
         for(ELicenseNumberTypeBo e : values()) {
             if(e.id.equals(id)) return e;

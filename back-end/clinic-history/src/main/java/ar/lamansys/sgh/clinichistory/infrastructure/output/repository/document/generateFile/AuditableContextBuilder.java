@@ -1,5 +1,16 @@
 package ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.generateFile;
 
+import java.time.ZoneId;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.function.Function;
+import java.util.stream.Collectors;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Service;
+
 import ar.lamansys.sgh.clinichistory.domain.document.IDocumentBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.DentalActionBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.ImmunizationBo;
@@ -10,28 +21,17 @@ import ar.lamansys.sgh.shared.infrastructure.input.service.ClinicalSpecialtyDto;
 import ar.lamansys.sgh.shared.infrastructure.input.service.SharedPatientPort;
 import ar.lamansys.sgh.shared.infrastructure.input.service.immunization.SharedImmunizationPort;
 import ar.lamansys.sgh.shared.infrastructure.input.service.immunization.VaccineDoseInfoDto;
+import ar.lamansys.sgh.shared.infrastructure.input.service.staff.ProfessionalCompleteDto;
 import ar.lamansys.sgx.shared.dates.configuration.LocalDateMapper;
 import ar.lamansys.sgx.shared.featureflags.AppFeature;
-
 import ar.lamansys.sgx.shared.featureflags.application.FeatureFlagsService;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.stereotype.Service;
-
-import java.time.ZoneId;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.function.Function;
-import java.util.stream.Collectors;
 
 @Service
 public class AuditableContextBuilder {
 
 	private final Logger logger;
 	private final Function<Integer, BasicPatientDto> basicDataFromPatientLoader;
-	private final Function<Long, AuthorDto> authorFromDocumentFunction;
+	private final Function<Long, ProfessionalCompleteDto> authorFromDocumentFunction;
 	private final Function<Integer, ClinicalSpecialtyDto> clinicalSpecialtyDtoFunction;
 	private final SharedImmunizationPort sharedImmunizationPort;
 	private final RiskFactorMapper riskFactorMapper;
@@ -42,7 +42,6 @@ public class AuditableContextBuilder {
 			SharedPatientPort sharedPatientPort,
 			DocumentAuthorFinder documentAuthorFinder,
 			ClinicalSpecialtyFinder clinicalSpecialtyFinder,
-			AuthorMapper authorMapper,
 			SharedImmunizationPort sharedImmunizationPort,
 			RiskFactorMapper riskFactorMapper,
 			LocalDateMapper localDateMapper,
@@ -51,9 +50,7 @@ public class AuditableContextBuilder {
 		this.localDateMapper = localDateMapper;
 		this.logger = LoggerFactory.getLogger(getClass());
 		this.basicDataFromPatientLoader = sharedPatientPort::getBasicDataFromPatient;
-		this.authorFromDocumentFunction = (Long documentId) -> authorMapper.toAuthorDto(
-				documentAuthorFinder.getAuthor(documentId)
-		);
+		this.authorFromDocumentFunction = (Long documentId) -> documentAuthorFinder.getAuthor(documentId);
 		this.clinicalSpecialtyDtoFunction = (Integer specialtyId) ->
 				clinicalSpecialtyFinder.getClinicalSpecialty(specialtyId);
 		this.riskFactorMapper = riskFactorMapper;
