@@ -5,11 +5,17 @@
 
 	.icon-grey{
 		color: #A8A8A8;
+		font-size: 20px;
 	}
 
 	.icon-close{
-		font-size: 24px;
-		color: rgba(0, 0, 0, 0.54);
+		margin-right: -25px;
+    	margin-top: -15px;
+
+		mat-icon{
+			font-size: 24px;
+			color: rgba(0, 0, 0, 0.54);
+		}
 	}
 
 	.title-size{
@@ -30,9 +36,8 @@
 }
 
 .ventana{
-	min-height: 540px;
-	overflow: visible;
-	margin-top: -25px;
+	min-height: 555px;
+	margin-top: -30px;
 }
 .header-content {
 
@@ -43,6 +48,12 @@
 	button mat-icon {
 		margin-top: -4px;
 		vertical-align: top;
+	}
+
+	.mat-card-patient-image{
+		width: 60px;
+		height: 60px;
+		border-radius: 50%;
 	}
 }
 

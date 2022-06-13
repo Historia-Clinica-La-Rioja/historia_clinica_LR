@@ -1,14 +1,15 @@
-<div fxLayout="row" fxLayoutAlign="end">
-	<button mat-icon-button mat-dialog-close>
-		<mat-icon class="icon-close">close</mat-icon>
-	</button>
-</div>
 <form class="appointment-body" [formGroup]="formMotivo" (ngSubmit)="saveAbsent()">
+	<div fxLayout="row" fxLayoutAlign="end">
+		<button mat-icon-button mat-dialog-close class="icon-close">
+			<mat-icon>close</mat-icon>
+		</button>
+	</div>
 	<div mat-dialog-content class="ventana">
 		<section id="personal-data" fxLayout="column" fxLayoutGap="5px">
-			<div class="header-content" fxLayout="row" fxLayoutAlign="start">
-				<mat-icon fxFlex="10%" fontSet="material-icons-outlined" color="primary">person</mat-icon>
-				<div fxLayout="column" fxLayoutAlign="center start">
+			<div class="header-content" fxLayout="row" fxLayoutAlign="start" fxLayoutGap="20px">
+				<img mat-card-md-image mat-card-avatar class="mat-card-patient-image" [src]="decodedPhoto$ | async"
+					onerror="this.src='../../../../../assets/images/empty-profile.png'">
+				<div fxLayout="column" fxLayoutAlign="center start">	
 					<span class="mat-body-strong capitalize title-size"
 						*ngIf="params.appointmentData.patient.fullName">
 						{{ viewPatientName(params.appointmentData) | uppercase }}
@@ -16,7 +17,7 @@
 					<div>
 						<span id="patient_id" class="mat-body-strong subtitle-size">ID
 							{{params.appointmentData.patient.id}}
-						</span>•
+						</span>• 
 						<span class="mat-body-strong subtitle-size"
 							*ngIf="params.appointmentData.patient.identificationNumber">
 							{{identificationType?.description}}
@@ -214,8 +215,8 @@
 		</section>
 
 		<section id="observation-section" class="observation-section">
-			<div *ngIf="!observation && hideObservationForm && hideObservationTittle">
-				<a class="mat-body"	(click)="setHideObservationForm(false); setHideObservationTittle(false)" 
+			<div *ngIf="!observation && hideObservationForm && hideObservationTitle">
+				<a class="mat-body"	(click)="setHideObservationForm(false); setHideObservationTitle(false)" 
 					[translate]="'turnos.appointment.observations.ADD_OBSERVATION'">
 				</a>
 			</div>

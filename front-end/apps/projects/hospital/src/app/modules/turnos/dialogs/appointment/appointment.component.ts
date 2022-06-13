@@ -6,7 +6,7 @@ import { SnackBarService } from '@presentation/services/snack-bar.service';
 import { APPOINTMENT_STATES_ID, getAppointmentState, MAX_LENGTH_MOTIVO } from '../../constants/appointment';
 import { ContextService } from '@core/services/context.service';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { AppFeature, AppointmentDto, ERole, IdentificationTypeDto, LoggedUserDto, PatientMedicalCoverageDto } from '@api-rest/api-model.d';
+import { AppFeature, AppointmentDto, CompletePatientDto, ERole, IdentificationTypeDto, LoggedUserDto, PatientMedicalCoverageDto, PersonPhotoDto } from '@api-rest/api-model.d';
 import { CancelAppointmentComponent } from '../cancel-appointment/cancel-appointment.component';
 import { getError, hasError, processErrors, updateControlValidator } from '@core/utils/form.utils';
 import { AppointmentsFacadeService } from '../../services/appointments-facade.service';
@@ -26,6 +26,8 @@ import { FeatureFlagService } from "@core/services/feature-flag.service";
 import { PatientNameService } from "@core/services/patient-name.service";
 import { PersonMasterDataService } from "@api-rest/services/person-master-data.service";
 import { SummaryCoverageInformation } from '@historia-clinica/modules/ambulatoria/components/medical-coverage-summary-view/medical-coverage-summary-view.component';
+import { PatientService } from '@api-rest/services/patient.service';
+import { ImageDecoderService } from '@presentation/services/image-decoder.service';
 
 
 const TEMPORARY_PATIENT = 3;
@@ -50,6 +52,9 @@ export class AppointmentComponent implements OnInit {
 	hasError = hasError;
 	medicalCoverageId: number;
 
+	personPhoto: PersonPhotoDto;
+	decodedPhoto$: Observable<string>;
+	
 	appointment: AppointmentDto;
 	estadoSelected: APPOINTMENT_STATES_ID;
 	formMotivo: FormGroup;
@@ -94,6 +99,8 @@ export class AppointmentComponent implements OnInit {
 		private readonly featureFlagService: FeatureFlagService,
 		private readonly patientNameService: PatientNameService,
 		private readonly personMasterDataService: PersonMasterDataService,
+		private readonly patientService: PatientService,
+		private readonly imageDecoderService: ImageDecoderService,
 
 	) {
 		dialogRef.disableClose = true;
@@ -129,6 +136,7 @@ export class AppointmentComponent implements OnInit {
 			.subscribe(appointment => {
 				this.appointment = appointment;
 				this.observation = appointment.observation;
+
 				if(this.observation){
 					this.hideObservationTitle = false;
 					this.formObservations.controls.observation.setValue(this.observation);
@@ -159,6 +167,14 @@ export class AppointmentComponent implements OnInit {
 		this.personMasterDataService.getIdentificationTypes()
 			.subscribe(identificationTypes => {
 				this.identificationType = identificationTypes.find(identificationType => identificationType.id == this.params.appointmentData.patient.identificationTypeId);
+			});
+
+		this.patientService.getPatientPhoto(this.params.appointmentData.patient.id)
+			.subscribe((personPhotoDto: PersonPhotoDto) => { 
+				this.personPhoto = personPhotoDto; 
+				if (personPhotoDto?.imageData) {
+					this.decodedPhoto$ = this.imageDecoderService.decode(personPhotoDto.imageData);
+				}
 			});
 	}
 
@@ -393,7 +409,7 @@ export class AppointmentComponent implements OnInit {
 		this.formEdit.controls.newCoverageData.setValue(null);
 	}
 
-	setHideObservationTittle(value: boolean): void{
+	setHideObservationTitle(value: boolean): void{
 		this.hideObservationTitle = value;
 	}
 
