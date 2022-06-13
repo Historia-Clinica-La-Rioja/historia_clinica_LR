@@ -156,7 +156,7 @@
 								<div class="mat-body" [translate]="'internaciones.anamnesis.observations.OTHERS'"></div>
 								<div class="mat-body-strong">{{activeDocument.document.notes.otherNote}}</div>
 							</section>
-							<button *ngIf="!activeDocument.document.confirmed" id="edit-draft-button" type="button" mat-flat-button color="primary" (click)="editDraftEpicrisis(activeDocument.document)">
+							<button *ngIf="!activeDocument.document.confirmed" id="edit-draft-button" type="button"  class="edit-draft-button" mat-flat-button color="primary" (click)="editDraftEpicrisis(activeDocument.document)">
 								<span [translate]="'internaciones.epicrisis.buttons.EDIT_DRAFT'">
 								</span>
 							</button>
