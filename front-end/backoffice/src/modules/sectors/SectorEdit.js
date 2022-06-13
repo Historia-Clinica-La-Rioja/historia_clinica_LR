@@ -19,6 +19,9 @@ import SectionTitle from '../components/SectionTitle';
 import SgxSelectInput from "../../sgxSelectInput/SgxSelectInput";
 import CustomToolbar from "../components/CustomToolbar";
 import SgxDateField from "../../dateComponents/sgxDateField";
+import { CreateSector } from './SectorShow';
+
+const redirect = (basePath, id, data) => `/sectors/${data.id}/show`;
 
 const INTERNACION = 2;
 
@@ -58,7 +61,7 @@ const Sector = ({ formData, ...rest }) => {
 
 const SectorEdit = props => (
     <Edit {...props}>
-        <SimpleForm redirect="show" toolbar={<CustomToolbar isEdit={true}/>}>
+        <SimpleForm redirect={ redirect } toolbar={<CustomToolbar isEdit={true}/>}>
             <TextInput source="description" validate={[required()]} />
 
             <SgxSelectInput source="institutionId" element="institutions" optionText="name" alwaysOn allowEmpty={false}/>
@@ -86,6 +89,20 @@ const SectorEdit = props => (
                 {formDataProps => ( <HospitalizationField {...formDataProps} reference="hospitalizationtypes" source="hospitalizationTypeId"/>)}
             </FormDataConsumer>
 
+            <SectionTitle label="resources.sectors.fields.childSectors" />
+            <CreateSector />
+            <ReferenceManyField
+                addLabel={false}
+                reference="sectors"
+                target= { "sectorId" }
+                sort={{ field: 'description', order: 'DESC' }}
+            >
+                <Datagrid rowClick="show">
+                    <TextField source="description" />
+                    <EditButton />
+                </Datagrid>
+            </ReferenceManyField>
+            
             <SectionTitle label="resources.sectors.fields.clinicalspecialtysectors"/>
             <CreateRelatedButton
                 reference="clinicalspecialtysectors"

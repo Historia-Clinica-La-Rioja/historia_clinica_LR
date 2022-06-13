@@ -92,3 +92,4 @@ const SectorShow = props => (
 );
 
 export default SectorShow;
+export { CreateSector };
