@@ -19,6 +19,7 @@ export class DiagnosisCreationEditionComponent implements OnInit {
 	type: string;
 	selection = false;
 	diagnosis: DiagnosisDto;
+	hasPresumptiveOption: boolean;
 	ACTIVE = HEALTH_CLINICAL_STATUS.ACTIVO;
 	CONFIRMED = HEALTH_VERIFICATIONS.CONFIRMADO;
 	PRESUMPTIVE = HEALTH_VERIFICATIONS.PRESUNTIVO;
@@ -29,6 +30,7 @@ export class DiagnosisCreationEditionComponent implements OnInit {
 		private snomedService: SnomedService) {
 		this.type = data.type;
 		this.diagnosis = data.diagnosis;
+		this.hasPresumptiveOption = ! data?.isMainDiagnosis;
 	}
 
 	ngOnInit(): void {

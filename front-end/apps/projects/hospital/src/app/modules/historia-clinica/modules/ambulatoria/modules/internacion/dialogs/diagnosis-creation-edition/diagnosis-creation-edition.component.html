@@ -25,7 +25,9 @@
 		<mat-label [translate]="'internaciones.anamnesis.diagnosticos.VERIFICATION'"></mat-label>
 		<mat-select formControlName="validation" [(value)]="selection">
 			<mat-option [value]="false">{{ 'internaciones.anamnesis.diagnosticos.CONFIRMED' | translate }}</mat-option>
-			<mat-option [value]="true">{{ 'internaciones.anamnesis.diagnosticos.PRESUMPTIVE' | translate }}</mat-option>
+			<ng-container *ngIf="hasPresumptiveOption">
+				<mat-option [value]="true">{{ 'internaciones.anamnesis.diagnosticos.PRESUMPTIVE' | translate }}</mat-option>
+			</ng-container>
 		</mat-select>
 	</mat-form-field>
 </form>

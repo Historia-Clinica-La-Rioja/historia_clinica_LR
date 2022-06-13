@@ -42,7 +42,8 @@ export class DiagnosticosComponent {
 		const dialogRef = this.dialog.open(DiagnosisCreationEditionComponent, {
 			width: '450px',
 			data: {
-				type: 'CREATION'
+				type: 'CREATION',
+				isMainDiagnosis: isMainDiagnosis
 			}
 		});
 
