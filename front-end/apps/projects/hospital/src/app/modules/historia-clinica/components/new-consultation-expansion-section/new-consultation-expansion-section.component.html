@@ -1,6 +1,6 @@
 <div fxLayout="column" fxLayoutGap="20px">
     <div fxLayout="column" fxLayoutGap="20px" (click)="toggle()" [ngClass]="{'pointer' : !fixedExpanded}">
-        <mat-divider></mat-divider>
+        <mat-divider *ngIf="!hideBorder"></mat-divider>
         <div fxLayout="row" fxLayoutAlign="space-between center"
             [ngClass]="{'closed-panel' : isEmpty && collapsed && !fixedExpanded}">
             <div fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="5px">

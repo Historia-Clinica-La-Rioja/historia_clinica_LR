@@ -3,7 +3,7 @@
 
 		<app-new-consultation-expansion-section id="specialty"
 			[title]="'ambulatoria.paciente.nueva-consulta.SPECIALTY' | translate" icon="medical_services"
-			[isEmpty]="!formEvolucion.value.clinicalSpecialty" [collapsed]="false">
+			[isEmpty]="!formEvolucion.value.clinicalSpecialty" [collapsed]="false" [hideBorder]="true">
 			<app-document-section>
 				<ng-container concept-form>
 					<div fxLayout="row" [formGroup]="formEvolucion">
