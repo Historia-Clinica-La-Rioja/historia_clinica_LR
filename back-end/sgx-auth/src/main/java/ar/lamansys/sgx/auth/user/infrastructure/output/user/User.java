@@ -39,6 +39,9 @@ public class User extends SGXAuditableEntity<Integer> {
 	@Column(name = "last_login")
 	private LocalDateTime lastLogin;
 
+	@Column(name = "previous_login")
+	private LocalDateTime previousLogin;
+
 	@Override
 	public String toString() {
 		return "User{" +
@@ -46,6 +49,7 @@ public class User extends SGXAuditableEntity<Integer> {
 				", username='" + username + '\'' +
 				", enable=" + enable +
 				", lastLogin=" + lastLogin +
+				", previousLogin=" + previousLogin +
 				'}';
 	}
 
