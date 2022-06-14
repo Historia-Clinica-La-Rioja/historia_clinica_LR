@@ -72,7 +72,7 @@ public class UserExternalServiceImpl implements UserExternalService {
     }
 
     private UserInfoDto mapUserDto(UserBo userBo) {
-        return new UserInfoDto(userBo.getId(), userBo.getUsername(), userBo.getPassword(), userBo.isEnable());
+        return new UserInfoDto(userBo.getId(), userBo.getUsername(), userBo.getPassword(), userBo.isEnable(), userBo.getPreviousLogin());
     }
 
     @Override

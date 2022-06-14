@@ -1,5 +1,6 @@
 package net.pladema.authorization.domain;
 
+import java.time.LocalDateTime;
 import java.util.function.Supplier;
 
 public class UserPersonaBo {
@@ -11,8 +12,9 @@ public class UserPersonaBo {
 	public final String lastName;
 	public final Supplier<String> avatar;
 	public final String nameSelfDetermination;
+	public final LocalDateTime previousLogin;
 
-	public UserPersonaBo(String email, Integer id, Integer personId, String firstName, String lastName, Supplier<String> avatar, String nameSelfDetermination) {
+	public UserPersonaBo(String email, Integer id, Integer personId, String firstName, String lastName, Supplier<String> avatar, String nameSelfDetermination, LocalDateTime previousLogin) {
 		this.email = email;
 		this.id = id;
 		this.personId = personId;
@@ -20,6 +22,7 @@ public class UserPersonaBo {
 		this.lastName = lastName;
 		this.avatar = avatar;
 		this.nameSelfDetermination = nameSelfDetermination;
+		this.previousLogin = previousLogin;
 	}
 
 }
