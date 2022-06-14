@@ -122,7 +122,7 @@ export class OdontologyReferenceService {
 			reference.referenceIds = referenceFilesIds;
 		});
 	}
-	
+
 	getReferenceProblems(referenceId: number): HCEPersonalHistory[] {
 		return this.references[referenceId].referenceProblems
 	}
