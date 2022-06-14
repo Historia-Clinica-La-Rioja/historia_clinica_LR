@@ -584,10 +584,13 @@
 		<app-new-consultation-expansion-section id="reference_request"
 			[title]="'odontologia.odontology-consultation-dock-popup.REFERENCE_REQUEST' | translate" icon="forum"
 			[isEmpty]="odontologyReferenceService.isEmpty()">
-			<div class="reference" fxLayout="column" fxLayoutGap="10px">
-				<span class="primary" (click)="odontologyReferenceService.openReferenceDialog()">
-					+ {{ 'odontologia.odontology-consultation-dock-popup.ADD_REQUEST' | translate }}
-				</span>
+			<div fxLayout="column" fxLayoutGap="10px">
+				<div>
+					<button mat-button type="button" id="add-request-button" color="primary" class="add-button"
+						(click)="odontologyReferenceService.openReferenceDialog()">
+						+ {{ 'odontologia.odontology-consultation-dock-popup.ADD_REQUEST' | translate }}
+					</button>
+				</div>
 				<app-document-section-table data-display [columns]="odontologyReferenceService.getColumns()"
 					[data]="odontologyReferenceService.getData()">
 				</app-document-section-table>
