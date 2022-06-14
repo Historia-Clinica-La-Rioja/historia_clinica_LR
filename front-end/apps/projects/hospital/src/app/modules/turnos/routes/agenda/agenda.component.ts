@@ -33,6 +33,7 @@ import { AgendaSearchService } from '../../services/agenda-search.service';
 import { ContextService } from '@core/services/context.service';
 import { ConfirmBookingComponent } from '@turnos/dialogs/confirm-booking/confirm-booking.component';
 import { DatePipeFormat } from '@core/utils/date.utils';
+import { HealthcareProfessionalService } from '@api-rest/services/healthcare-professional.service';
 
 const ASIGNABLE_CLASS = 'cursor-pointer';
 const AGENDA_PROGRAMADA_CLASS = 'bg-green';
@@ -68,6 +69,7 @@ export class AgendaComponent implements OnInit, OnDestroy {
 
 	private readonly routePrefix = 'institucion/' + this.contextService.institutionId;
 	private patientId: number;
+	private professionalId: number;
 	@Input() canCreateAppoinment = true;
 	@Input() idAgenda: number;
 	@Input() showAll = true;
@@ -84,7 +86,8 @@ export class AgendaComponent implements OnInit, OnDestroy {
 		private readonly appointmentsService: AppointmentsService,
 		private readonly healthInsuranceService: HealthInsuranceService,
 		private readonly agendaSearchService: AgendaSearchService,
-		private readonly contextService: ContextService
+		private readonly contextService: ContextService,
+		private readonly healthcareProfessional: HealthcareProfessionalService,
 	) {
 	}
 
@@ -112,6 +115,7 @@ export class AgendaComponent implements OnInit, OnDestroy {
 		});
 
 		this.permissionsService.hasContextAssignments$(ROLES_TO_CREATE).subscribe(hasRole => this.hasRoleToCreate = hasRole);
+		this.healthcareProfessional.getHealthcareProfessionalByUserId().subscribe( professionalId => this.professionalId = professionalId);
 	}
 
 	ngOnDestroy() {
@@ -201,7 +205,7 @@ export class AgendaComponent implements OnInit, OnDestroy {
 	}
 
 	onClickedSegment(event) {
-		this.appointmentsService.getList([this.agenda.id])
+		this.appointmentsService.getList([this.agenda.id], this.professionalId)
 			.subscribe((appointments: AppointmentListDto[]) => {
 				const appointmentsCalendarEvents: CalendarEvent[] = appointments
 					.map(appointment => {

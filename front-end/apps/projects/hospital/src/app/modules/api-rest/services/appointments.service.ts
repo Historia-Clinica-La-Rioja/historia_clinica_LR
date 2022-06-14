@@ -37,11 +37,12 @@ export class AppointmentsService {
 		return this.http.post<number>(this.BASE_URL, appointment);
 	}
 
-	getList(diaryIds: number[]): Observable<AppointmentListDto[]> {
+	getList(diaryIds: number[], healthcareProfessionalId: number): Observable<AppointmentListDto[]> {
+		const url = this.BASE_URL +  `/list/${healthcareProfessionalId}`;
 		if (!diaryIds || diaryIds.length === 0) {
 			return of([]);
 		}
-		return this.http.get<AppointmentListDto[]>(this.BASE_URL, {
+		return this.http.get<AppointmentListDto[]>(url, {
 			params: {
 				diaryIds: `${diaryIds.join(',')}`
 			}

@@ -13,6 +13,7 @@ import { Moment } from 'moment';
 import { map, first } from 'rxjs/operators';
 import { CANCEL_STATE_ID, APPOINTMENT_STATES_ID } from '../constants/appointment';
 import { PatientNameService } from "@core/services/patient-name.service";
+import { HealthcareProfessionalService } from '@api-rest/services/healthcare-professional.service';
 
 const enum COLORES {
 	ASSIGNED = '#4187FF',
@@ -64,11 +65,16 @@ export class AppointmentsFacadeService {
 	private appointmenstEmitter = new ReplaySubject<CalendarEvent[]>(1);
 	private appointments$: Observable<CalendarEvent[]>;
 
+	private professionalId: number;
+
 	constructor(
 		private readonly appointmentService: AppointmentsService,
 		private readonly patientNameService: PatientNameService,
+		private readonly healthcareProfessional: HealthcareProfessionalService,
+
 	) {
 		this.appointments$ = this.appointmenstEmitter.asObservable();
+		this.healthcareProfessional.getHealthcareProfessionalByUserId().subscribe( professionalId => this.professionalId = professionalId);
 	}
 
 	setValues(agendaId, appointmentDuration): void {
@@ -83,7 +89,7 @@ export class AppointmentsFacadeService {
 
 	public loadAppointments(): void {
 
-		this.appointmentService.getList([this.agendaId])
+		this.appointmentService.getList([this.agendaId], this.professionalId)
 			.subscribe((appointments: AppointmentListDto[]) => {
 				const appointmentsCalendarEvents: CalendarEvent[] = appointments
 					.map(appointment => {
