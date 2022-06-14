@@ -1,15 +1,16 @@
 package ar.lamansys.sgx.shared.auditable.entity;
 
+import java.io.Serializable;
+import java.time.LocalDateTime;
+
+import javax.persistence.Embedded;
+import javax.persistence.MappedSuperclass;
+
 import ar.lamansys.sgx.shared.auditable.CreationableEntity;
 import ar.lamansys.sgx.shared.auditable.DeleteableEntity;
 import ar.lamansys.sgx.shared.auditable.UpdateableEntity;
 import lombok.Getter;
 import lombok.ToString;
-
-import javax.persistence.Embedded;
-import javax.persistence.MappedSuperclass;
-import java.io.Serializable;
-import java.time.LocalDateTime;
 
 @MappedSuperclass
 @ToString
@@ -140,4 +141,9 @@ public abstract class SGXAuditableEntity<ID> implements CreationableEntity<Integ
 		this.deleteable = new Deleteable();
 	}
 
+	public void reactivate() {
+		deleteable.setDeleted(false);
+		deleteable.setDeletedBy(null);
+		deleteable.setDeletedOn(null);
+	}
 }

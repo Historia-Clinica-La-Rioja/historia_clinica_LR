@@ -1,21 +1,22 @@
 import {Datagrid, DeleteButton, ReferenceField, ReferenceManyField, TextField} from "react-admin";
 import React from "react";
 
+const redirect = (basePath) => {
+    return `/professionalprofessions/${basePath.record.id}/show`;
+};
+
 const ProfessionalSpecialtiesSection = props => (
     <ReferenceManyField
         addLabel={false}
         reference="healthcareprofessionalspecialties"
-        target="healthcareProfessionalId"
+        target="professionalProfessionId"
         {...props}
     >
-        <Datagrid rowClick="show">
-            <ReferenceField source="professionalSpecialtyId" reference="professionalspecialties">
-                <TextField source="description"/>
-            </ReferenceField>
-            <ReferenceField source="clinicalSpecialtyId" reference="clinicalspecialties">
+        <Datagrid rowClick="show" {...props}>
+            <ReferenceField source="clinicalSpecialtyId" reference="clinicalspecialties" link={false}>
                 <TextField source="name"/>
             </ReferenceField>
-            <DeleteButton/>
+            <DeleteButton redirect={redirect(props)}/>
         </Datagrid>
     </ReferenceManyField>
 );

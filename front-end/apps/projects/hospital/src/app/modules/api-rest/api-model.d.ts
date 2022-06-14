@@ -2277,6 +2277,14 @@ export interface ProfessionalPersonDto extends Serializable {
     lastName: string;
 }
 
+export interface ProfessionalProfessionBackofficeDto {
+    deleted: boolean;
+    healthcareProfessionalId: number;
+    id: number;
+    personId: number;
+    professionalSpecialtyId: number;
+}
+
 export interface ProfessionalSpecialtyDto {
     description: string;
     id: number;

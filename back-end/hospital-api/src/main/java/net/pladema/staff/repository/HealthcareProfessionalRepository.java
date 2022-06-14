@@ -1,16 +1,17 @@
 package net.pladema.staff.repository;
 
-import ar.lamansys.sgx.shared.auditable.repository.SGXAuditableEntityJPARepository;
-import net.pladema.staff.repository.domain.HealthcareProfessionalVo;
-import net.pladema.staff.repository.entity.HealthcareProfessional;
-import net.pladema.staff.service.domain.HealthcarePersonBo;
+import java.util.List;
+import java.util.Optional;
+
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.List;
-import java.util.Optional;
+import ar.lamansys.sgx.shared.auditable.repository.SGXAuditableEntityJPARepository;
+import net.pladema.staff.repository.domain.HealthcareProfessionalVo;
+import net.pladema.staff.repository.entity.HealthcareProfessional;
+import net.pladema.staff.service.domain.HealthcarePersonBo;
 
 @Repository
 public interface HealthcareProfessionalRepository extends SGXAuditableEntityJPARepository<HealthcareProfessional, Integer> {
@@ -82,4 +83,17 @@ public interface HealthcareProfessionalRepository extends SGXAuditableEntityJPAR
 			+ " AND hp.deleteable.deleted = false "
 			+ " ORDER BY p.lastName, p.firstName")
 	List<HealthcareProfessionalVo> getAllProfessional();
+	@Transactional(readOnly = true)
+	@Query(value = " SELECT count(DISTINCT hp.id) " +
+			"FROM HealthcareProfessional hp " +
+			"WHERE hp.personId = :personId " +
+			"AND hp.deleteable.deleted = false")
+	int countActiveByPersonId(@Param("personId") Integer personId);
+
+	@Transactional(readOnly = true)
+	@Query(value = " SELECT hp " +
+			"FROM HealthcareProfessional hp " +
+			"WHERE hp.personId = :personId " +
+			"AND hp.deleteable.deleted = false")
+	Optional<HealthcareProfessional> findByPersonId(@Param("personId") Integer personId);
 }

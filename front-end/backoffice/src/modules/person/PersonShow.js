@@ -1,7 +1,7 @@
 import React, {Fragment} from 'react';
 import {
     BooleanField,
-    Datagrid,
+    Datagrid, DeleteButton,
     ReferenceField,
     ReferenceManyField,
     Show,
@@ -10,8 +10,11 @@ import {
     TextField
 } from 'react-admin';
 import CreateRelatedButton from '../components/CreateRelatedButton';
-import HealthcareProfessionalSpecialtiesTab from './HealthcareProfessionalSpecialitiesTab';
 import SgxDateField from "../../dateComponents/sgxDateField";
+
+const redirect = (personId) => {
+    return `/person/${personId}/show/2`;
+};
 
 const UserTab = ({ personId, loaded, total, ...props }) => (
     <Fragment>
@@ -30,8 +33,6 @@ const UserTab = ({ personId, loaded, total, ...props }) => (
         }
     </Fragment>
 );
-
-
 const PersonShow = props =>{ 
     let personId = props.id;
     return (
@@ -58,8 +59,20 @@ const PersonShow = props =>{
                 </ReferenceManyField>
             </Tab>
             
-            <Tab label="resources.healthcareprofessionalspecialties.name">
-                <HealthcareProfessionalSpecialtiesTab />
+            <Tab label="resources.professionalprofessions.tab.title">
+                <ReferenceManyField label="resources.professionalprofessions.tab.subtitle" reference="professionalprofessions" target="personId">
+                    <Datagrid rowClick="show">
+                        <ReferenceField source="professionalSpecialtyId" reference="professionalspecialties" link={false}>
+                            <TextField source="description" />
+                        </ReferenceField>
+                        <DeleteButton redirect={redirect(personId)}/>
+                    </Datagrid>
+                </ReferenceManyField>
+                <CreateRelatedButton
+                customRecord={{personId: personId}}
+                reference="professionalprofessions"
+                refFieldName="personId"
+                label="resources.professionalprofessions.linkProfession"/>
             </Tab>
 
         </TabbedShowLayout>

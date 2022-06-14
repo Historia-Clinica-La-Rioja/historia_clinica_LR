@@ -74,5 +74,12 @@ public interface HealthcareProfessionalSpecialtyRepository extends SGXAuditableE
 	Optional<HealthcareProfessionalSpecialty> findByUniqueKey(@Param("professionalProfessionsId") Integer professionalProfessionsId,
 															  @Param("clinicalSpecialtyId")  Integer clinicalSpecialtyId);
 
-
+	@Transactional
+	@Modifying(clearAutomatically = true)
+	@Query("UPDATE HealthcareProfessionalSpecialty e  "
+			+ "SET e.deleteable.deleted = true "
+			+ ", e.deleteable.deletedOn = CURRENT_TIMESTAMP "
+			+ ", e.deleteable.deletedBy = ?#{ principal.userId } "
+			+ "WHERE e.professionalProfessionsId = :professionalProfessionsId ")
+    void deleteByProfessionalProfessionId(@Param("professionalProfessionsId") Integer professionalProfessionsId);
 }

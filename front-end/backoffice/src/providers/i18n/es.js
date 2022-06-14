@@ -269,8 +269,12 @@ const messages = {
                 educationTypeId: 'Formación',
             }
         },
-        healthcareprofessionals: {
-            name: 'Profesional |||| Profesionales',
+        professionalprofessions: {
+            name: 'Profesional || Profesionales',
+            tab: {
+                title: 'Profesión | Especialidad',
+                subtitle: 'Profesiones'
+            },
             license: 'Nro. de licencia del profesional',
             fields: {
                 personId: 'Persona',
@@ -280,7 +284,7 @@ const messages = {
                 professionalSpecialtyId: 'Profesión',
                 clinicalSpecialtyId: 'Especialidad'
             },
-            createRelated: 'Crear Profesional',
+            linkProfession: 'Asociar profesión',
         },
         healthcareprofessionalspecialties: {
             name: 'Profesión | Especialidad',

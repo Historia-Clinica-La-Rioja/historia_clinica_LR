@@ -10,8 +10,6 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
-import org.hibernate.annotations.Where;
-
 import ar.lamansys.sgx.shared.auditable.entity.SGXAuditableEntity;
 import ar.lamansys.sgx.shared.auditable.listener.SGXAuditListener;
 import lombok.EqualsAndHashCode;
@@ -28,7 +26,6 @@ import lombok.ToString;
 @NoArgsConstructor
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
 @EntityListeners(SGXAuditListener.class)
-@Where(clause = "deleted=false")
 public class HealthcareProfessionalSpecialty extends SGXAuditableEntity<Integer> implements Serializable {
 	
 	private static final long serialVersionUID = -5292560767942911734L;
