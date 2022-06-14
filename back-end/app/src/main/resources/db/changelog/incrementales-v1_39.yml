@@ -316,3 +316,14 @@ databaseChangeLog:
                 SET sector_type_id = 6 
                 WHERE sector_type_id IS NULL;
 
+
+    - changeSet:
+        id: add-column-previous_login-users
+        author: flizalde
+        changes:
+          - addColumn:
+              tableName: users
+              columns:
+                - column:
+                    name: previous_login
+                    type: datetime
