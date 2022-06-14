@@ -14,14 +14,16 @@ export const timeDtoToDate = (timeDto: TimeDto): Date => {
 export const dateTimeDtoToDate = (dateTimeDto: DateTimeDto): Date => {
 	const timeMapped: Date = timeDtoToDate(dateTimeDto.time);
 	const dateMapped: Date = dateDtoToDate(dateTimeDto.date);
-
 	const dateTimeMapped: Date = dateMapped;
 	dateTimeMapped.setHours(timeMapped.getHours());
 	dateTimeMapped.setMinutes(timeMapped.getMinutes());
 	dateTimeMapped.setSeconds(timeMapped.getSeconds());
-
 	return dateTimeMapped;
 };
+
+export const dateTimeDtotoLocalDate = (dateTimeDto: DateTimeDto): Date => {
+	return new Date(dateTimeDtoToStringDate(dateTimeDto));
+}
 
 export const dateTimeDtoToStringDate = (dateTimeDto: DateTimeDto): string => {
 	const date=formatDateOnlyISO(dateDtoToDate(dateTimeDto.date));

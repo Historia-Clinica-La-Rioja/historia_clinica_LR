@@ -1541,6 +1541,7 @@ export interface LoggedUserDto {
     email: string;
     id: number;
     personDto: LoggedPersonDto;
+    previousLogin: DateTimeDto;
 }
 
 export interface LoginDto extends Serializable {
@@ -2743,12 +2744,14 @@ export interface UserDto extends AbstractUserDto {
     nameSelfDetermination: string;
     personDto: UserPersonDto;
     personId: number;
+    previousLogin: Date;
 }
 
 export interface UserInfoDto {
     enabled: boolean;
     id: number;
     password: string;
+    previousLogin: Date;
     username: string;
 }
 

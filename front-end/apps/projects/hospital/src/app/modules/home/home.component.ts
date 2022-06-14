@@ -64,7 +64,7 @@ export class HomeComponent implements OnInit {
 
 		this.accountService.getInfo()
 			.subscribe(
-				userInfo => this.userInfo = mapToUserInfo(userInfo.email, userInfo.personDto, this.nameSelfDeterminationFF)
+				userInfo => this.userInfo = mapToUserInfo(userInfo.email, userInfo.personDto, this.nameSelfDeterminationFF, userInfo.previousLogin)
 			);
 	}
 

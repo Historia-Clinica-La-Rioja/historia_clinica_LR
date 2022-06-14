@@ -1,4 +1,5 @@
 import { Component, Input } from '@angular/core';
+import {DateTimeDto} from "@api-rest/api-model";
 
 @Component({
 	selector: 'app-user-badge',
@@ -20,4 +21,5 @@ export class UserInfo {
 	userName: string;
 	fullName?: string;
 	avatar?: string;
+	previousLogin?: DateTimeDto;
 }

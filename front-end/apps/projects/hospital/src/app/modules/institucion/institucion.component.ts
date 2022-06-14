@@ -71,7 +71,7 @@ export class InstitucionComponent implements OnInit {
 				);
 			this.accountService.getInfo()
 				.subscribe(userInfo => {
-					this.userInfo = mapToUserInfo(userInfo.email, userInfo.personDto, this.nameSelfDeterminationFF)
+					this.userInfo = mapToUserInfo(userInfo.email, userInfo.personDto, this.nameSelfDeterminationFF, userInfo.previousLogin)
 				})
 		});
 		this.permissionsService.contextRoleAssignments$.subscribe(
