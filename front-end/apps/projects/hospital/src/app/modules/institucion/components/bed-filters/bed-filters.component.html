@@ -18,14 +18,14 @@
     </mat-form-field>
 
     <mat-form-field appearance="outline">
-        <mat-label [translate]="'gestion-camas.filters.SPECIALITY'"></mat-label>
-        <mat-select formControlName="speciality" (selectionChange)="sendAllFiltersOnFilterChange()" name="speciality">
-            <mat-option *ngFor="let speciality of specialities" [value]="speciality.specialityId">
-                {{speciality.specialityDescription | translate}}
+        <mat-label [translate]="'gestion-camas.filters.SERVICE'"></mat-label>
+        <mat-select formControlName="service" (selectionChange)="sendAllFiltersOnFilterChange()" name="service">
+            <mat-option *ngFor="let service of services" [value]="service.serviceId">
+                {{service.serviceDescription | translate}}
             </mat-option>
         </mat-select>
-        <button id="clear-specialty" type="button" mat-button *ngIf="form.controls.speciality.value" matSuffix
-            color="warn" mat-icon-button (click)="clear(form.controls.speciality); $event.stopPropagation()">
+        <button id="clear-specialty" type="button" mat-button *ngIf="form.controls.service.value" matSuffix
+            color="warn" mat-icon-button (click)="clear(form.controls.service); $event.stopPropagation()">
             <mat-icon>close</mat-icon>
         </button>
     </mat-form-field>
@@ -33,7 +33,7 @@
     <mat-form-field appearance="outline">
         <mat-label [translate]="'gestion-camas.filters.PROBABLE_DISCHARGE_DATE'"></mat-label>
         <input matInput id="date" [matDatepicker]="myDatepicker" formControlName="probableDischargeDate" (dateChange)="sendAllFiltersOnFilterChange()">
-        <mat-icon id="clear-probable-discharge-date" *ngIf="form.controls.probableDischargeDate.value" matDatepickerToggleIcon 
+        <mat-icon id="clear-probable-discharge-date" *ngIf="form.controls.probableDischargeDate.value" matDatepickerToggleIcon
             (click)="clear(form.controls.probableDischargeDate); $event.stopPropagation()" color="warn">close</mat-icon>
         <mat-datepicker-toggle matSuffix [for]="myDatepicker"></mat-datepicker-toggle>
         <mat-datepicker #myDatepicker></mat-datepicker>
