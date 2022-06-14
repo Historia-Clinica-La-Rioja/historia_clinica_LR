@@ -157,7 +157,7 @@ public class AppointmentServiceImpl implements AppointmentService {
 		AppointmentObservation appointmentObservation = AppointmentObservation.builder()
 				.appointmentId(appointmentId)
 				.observation(observation)
-				.createdBy(healthcareProfessionalRepository.getProfessionalId(UserInfo.getCurrentAuditor()))
+				.createdBy(UserInfo.getCurrentAuditor())
 				.build();
 		appointmentObservationRepository.save(appointmentObservation);
 		log.debug(OUTPUT, Boolean.TRUE);
