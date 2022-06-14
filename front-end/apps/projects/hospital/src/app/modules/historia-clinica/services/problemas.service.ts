@@ -220,4 +220,8 @@ export class ProblemasService {
 	getECL(): SnomedECL {
 		return this.ECL;
 	}
+
+	isEmpty(): boolean {
+		return (!this.data || this.data.length === 0);
+	}
 }

@@ -126,6 +126,10 @@ export class OdontologyReferenceService {
 	getReferenceProblems(referenceId: number): HCEPersonalHistory[] {
 		return this.references[referenceId].referenceProblems
 	}
+
+	isEmpty(): boolean {
+		return (!this.odontologyReferences || this.odontologyReferences.length === 0);
+	}
 }
 
 export interface Reference {

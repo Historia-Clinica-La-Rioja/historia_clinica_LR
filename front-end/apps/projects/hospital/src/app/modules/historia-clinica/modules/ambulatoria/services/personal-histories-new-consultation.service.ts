@@ -134,4 +134,8 @@ export class PersonalHistoriesNewConsultationService {
 		return this.ECL;
 	}
 
+	isEmpty(): boolean {
+		return (!this.data || this.data.length === 0);
+	}
+
 }
