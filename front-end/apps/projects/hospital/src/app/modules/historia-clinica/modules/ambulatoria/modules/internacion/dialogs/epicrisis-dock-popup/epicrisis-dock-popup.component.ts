@@ -268,7 +268,7 @@ export class EpicrisisDockPopupComponent implements OnInit {
 
 			this.closeEpicrisis(obs$, epicrisis, false);
 		} else {
-			this.snackBarService.showError('internaciones.epicrisis.messages.ERROR');
+			this.snackBarService.showError('internaciones.epicrisis.messages-draft.ERROR');
 			this.form.markAllAsTouched();
 		}
 	}
@@ -280,7 +280,7 @@ export class EpicrisisDockPopupComponent implements OnInit {
 				closeDraft(this.data.patientInfo.internmentEpisodeId, this.data.patientInfo.epicrisisId, epicrisis)
 			this.closeEpicrisis(obs$, epicrisis, true);
 		} else {
-			this.snackBarService.showError('internaciones.epicrisis.messages.ERROR');
+			this.snackBarService.showError('internaciones.epicrisis.messages-draft.ERROR');
 			this.form.markAllAsTouched();
 		}
 	}
@@ -369,9 +369,9 @@ export class EpicrisisDockPopupComponent implements OnInit {
 		let fieldsToUpdate = this.fieldsToUpdate(epicrisis);
 		obs
 			.subscribe(r => {
-				this.snackBarService.showSuccess('internaciones.epicrisis.messages.SUCCESS');
+				this.snackBarService.showSuccess('internaciones.epicrisis.messages-draft.SUCCESS');
 				this.dockPopupRef.close({ fieldsToUpdate, openMedicalDischarge });
-			}, _ => this.snackBarService.showError('internaciones.epicrisis.messages.ERROR'));
+			}, _ => this.snackBarService.showError('internaciones.epicrisis.messages-draft.ERROR'));
 	}
 
 

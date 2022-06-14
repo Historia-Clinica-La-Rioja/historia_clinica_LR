@@ -219,6 +219,10 @@
 				"ERROR": "Error al guardar documento de epicrisis",
 				"SUCCESS": "El documento de epicrisis se guardó exitosamente"
 			},
+			"messages-draft": {
+				"ERROR": "Error al guardar borrador de epicrisis",
+				"SUCCESS": "El borrador de epicrisis se guardó exitosamente"
+			},
 			"observations": {
 				"TITLE": "Evaluación clínica",
 				"EVOLUTION_NOTE": "Evolución",
