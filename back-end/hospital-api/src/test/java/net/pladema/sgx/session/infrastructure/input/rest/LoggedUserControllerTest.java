@@ -10,6 +10,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 import java.util.stream.Stream;
 
+import ar.lamansys.sgx.shared.dates.configuration.LocalDateMapper;
+
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
@@ -33,6 +35,9 @@ class LoggedUserControllerIntegrationTest extends IntegrationController {
 
 	@MockBean
 	private RoleNameMapper roleNameMapper;
+
+	@MockBean
+	private LocalDateMapper localDateMapper;
 
 	@Test
 	@WithMockUser
