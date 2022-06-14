@@ -54,6 +54,7 @@ export class AnamnesisDockPopupComponent implements OnInit {
 	apiErrors: string[] = [];
 	procedimientosService: ProcedimientosService;
 	factoresDeRiesgoFormService: FactoresDeRiesgoFormService;
+	isDisableConfirmButton = false;
 
 	minDate = MIN_DATE;
 	@ViewChild('errorsView') errorsView: ElementRef;
@@ -116,6 +117,8 @@ export class AnamnesisDockPopupComponent implements OnInit {
 			return;
 		}
 		if (this.form.valid) {
+			this.isDisableConfirmButton = true;
+
 			const anamnesis: AnamnesisDto = this.buildAnamnesisDto();
 			if (this.data.patientInfo.anamnesisId) {
 				this.editDocumentAction.openEditReason().subscribe(reason => {
@@ -273,6 +276,7 @@ export class AnamnesisDockPopupComponent implements OnInit {
 	}
 
 	showError(responseErrors) {
+		this.isDisableConfirmButton = false;
 		this.apiErrorsProcess(responseErrors);
 		this.snackBarService.showError('internaciones.anamnesis.messages.ERROR');
 	}

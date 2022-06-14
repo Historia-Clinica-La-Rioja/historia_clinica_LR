@@ -53,6 +53,7 @@ export class EvolutionNoteDockPopupComponent implements OnInit {
 
 	minDate = MIN_DATE;
 	evolutionNote: ResponseEvolutionNoteDto;
+	isDisableConfirmButton = false;
 
 	constructor(
 		@Inject(OVERLAY_DATA) public data: any,
@@ -113,6 +114,8 @@ export class EvolutionNoteDockPopupComponent implements OnInit {
 
 	save(): void {
 		if (this.form.valid) {
+			this.isDisableConfirmButton = true;
+
 			this.apiErrors = [];
 			const evolutionNote = this.buildEvolutionNoteDto();
 			if (this.data.evolutionNoteId) {
@@ -121,7 +124,10 @@ export class EvolutionNoteDockPopupComponent implements OnInit {
 						evolutionNote.modificationReason = reason;
 						this.evolutionNoteService.editEvolutionDiagnosis(evolutionNote, this.data.evolutionNoteId, this.data.internmentEpisodeId).subscribe(
 							success => this.showSuccesAndClosePopup(evolutionNote),
-							error => this.showError(error));
+							error => {
+								this.isDisableConfirmButton = false;
+								this.showError(error);
+							});
 					}
 				});
 				return;
@@ -129,7 +135,10 @@ export class EvolutionNoteDockPopupComponent implements OnInit {
 			this.evolutionNoteService.createDocument(evolutionNote, this.data.internmentEpisodeId)
 				.subscribe(
 					() => this.showSuccesAndClosePopup(evolutionNote),
-					error => this.showError(error));
+					error => {
+						this.isDisableConfirmButton = false;
+						this.showError(error);
+					});
 		} else {
 			this.snackBarService.showError('internaciones.nota-evolucion.messages.ERROR');
 			this.form.markAllAsTouched();

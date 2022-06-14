@@ -59,6 +59,7 @@ export class EpicrisisDockPopupComponent implements OnInit {
 	formDiagnosis: FormGroup;
 	showWarning: boolean = false;
 	isDraft = false;
+	isDisableConfirmButton = false;
 	medications: MedicationDto[] = [];
 	canConfirmedDocument = false;
 	personalHistories: TableCheckbox<HealthHistoryConditionDto> = {
@@ -232,21 +233,30 @@ export class EpicrisisDockPopupComponent implements OnInit {
 			const epicrisis = this.getEpicrisis(true);
 			if (this.data.patientInfo.epicrisisId) {
 				this.editDocumentAction.openEditReason().subscribe(reason => {
+					this.isDisableConfirmButton = true;
 					if (reason) {
 						epicrisis.modificationReason = reason;
 						this.epicrisisService.editEpicrsis(epicrisis, this.data.patientInfo.epicrisisId, this.data.patientInfo.internmentEpisodeId).subscribe(
 							success => this.showSuccesAndClosePopup(epicrisis),
-							_ => this.snackBarService.showError('internaciones.epicrisis.messages.ERROR'));
+							_ => {
+								this.isDisableConfirmButton = false;
+								this.snackBarService.showError('internaciones.epicrisis.messages.ERROR')
+							});
 					}
 				})
 				return;
 			}
-			else
+			else {
+				this.isDisableConfirmButton = true;
 				this.epicrisisService.createDocument(epicrisis, this.data.patientInfo.internmentEpisodeId)
 					.subscribe((epicrisisResponse: ResponseEpicrisisDto) => {
 						this.snackBarService.showSuccess('internaciones.epicrisis.messages.SUCCESS');
 						this.dockPopupRef.close(this.fieldsToUpdate(epicrisis));
-					}, _ => this.snackBarService.showError('internaciones.epicrisis.messages.ERROR'));
+					}, _ => {
+						this.isDisableConfirmButton = false;
+						this.snackBarService.showError('internaciones.epicrisis.messages.ERROR')
+					});
+			}
 		} else {
 			this.snackBarService.showError('internaciones.epicrisis.messages.ERROR');
 			this.form.markAllAsTouched();
@@ -366,12 +376,16 @@ export class EpicrisisDockPopupComponent implements OnInit {
 	}
 
 	private closeEpicrisis(obs: Observable<any>, epicrisis: EpicrisisDto, openMedicalDischarge: boolean) {
+		this.isDisableConfirmButton = true;
 		let fieldsToUpdate = this.fieldsToUpdate(epicrisis);
 		obs
 			.subscribe(r => {
 				this.snackBarService.showSuccess('internaciones.epicrisis.messages-draft.SUCCESS');
 				this.dockPopupRef.close({ fieldsToUpdate, openMedicalDischarge });
-			}, _ => this.snackBarService.showError('internaciones.epicrisis.messages-draft.ERROR'));
+			}, _ => {
+				this.isDisableConfirmButton = false;
+				this.snackBarService.showError('internaciones.epicrisis.messages.ERROR')
+			});
 	}
 
 
