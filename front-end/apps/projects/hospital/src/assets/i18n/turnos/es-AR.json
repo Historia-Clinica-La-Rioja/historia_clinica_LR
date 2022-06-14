@@ -76,7 +76,7 @@
 		},
 		"appointment": {
 			"TITLE": "Turno",
-			"BUTTON_HISTORIA_CLINICA": "Ver historia clínica",
+			"BUTTON_CLINICAL_HISTORY": "Ver historia clínica",
 			"EDIT_PACIENT_INFO": "Editar información del paciente",
 			"APPOINTMENT_STATE": "Estado de turno",
 			"MOTIVE": "Motivo",

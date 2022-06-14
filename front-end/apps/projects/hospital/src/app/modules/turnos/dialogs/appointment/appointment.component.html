@@ -24,21 +24,15 @@
 							{{params.appointmentData.patient.identificationNumber | number:'3.0-0'}}
 						</span>
 					</div>
-					<div class="historia-clinica">
-						<a class="mat-body subtitle-size"
-							*appHasRole="['ESPECIALISTA_MEDICO','PROFESIONAL_DE_SALUD','ENFERMERO', 'ESPECIALISTA_EN_ODONTOLOGIA']"
-							[routerLink]="'/institucion/' + institutionId + '/ambulatoria/paciente/' + params.appointmentData?.patient?.id"
-							[state]="{ appointmentCoverageInfo: summaryCoverageData }" (click)="closeDialog()">
-							{{'turnos.appointment.BUTTON_HISTORIA_CLINICA' | translate}}
-							
-						</a>
-						<a *appHasRole="['ESPECIALISTA_MEDICO','PROFESIONAL_DE_SALUD','ENFERMERO', 'ESPECIALISTA_EN_ODONTOLOGIA']"
-							[routerLink]="'/institucion/' + institutionId + '/ambulatoria/paciente/' + params.appointmentData?.patient?.id"
-							[state]="{ appointmentCoverageInfo: summaryCoverageData }"
-							target="_blank">
-							<mat-icon color="primary" fxFlex="10%" >open_in_new</mat-icon>
-						</a>
-					</div>
+					<button type="button" mat-icon-button color="primary"
+						*appHasRole="['ESPECIALISTA_MEDICO','PROFESIONAL_DE_SALUD','ENFERMERO', 'ESPECIALISTA_EN_ODONTOLOGIA']"
+						[routerLink]="'/institucion/' + institutionId + '/ambulatoria/paciente/' + params.appointmentData?.patient?.id"
+						[state]="{ appointmentCoverageInfo: summaryCoverageData }" (click)="closeDialog()">
+						<span class="mat-body subtitle-size">
+							{{'turnos.appointment.BUTTON_CLINICAL_HISTORY' | translate}}
+						</span>
+						<mat-icon color="primary">open_in_new</mat-icon>
+					</button>
 				</div>
 			</div>
 
@@ -63,12 +57,12 @@
 					<span class="mat-caption normal-size" [translate]="'turnos.appointment.phoneNumber.PHONE_NUMBER'">:</span>
 					<span class="mat-body patient-info coverage-text subtitle-size">{{formatPhonePrefixAndNumber()}}</span>
 				</div>
-				<button type="button" mat-icon-button color="primary" fxFlex="10%"
+				<button type="button" mat-icon-button color="primary"
 					*ngIf="( hasRoleToEditPhoneNumber$ | async )" (click)="hideFilters()">
 					<mat-icon class="material-icons-outlined">edit</mat-icon>
-					<a class="mat-body strong-size">
+					<span class="mat-body strong-size">
 						{{'turnos.appointment.EDIT_PACIENT_INFO' | translate}}
-					</a>
+					</span>
 				</button>
 			</ng-container>
 
@@ -121,7 +115,7 @@
 							</mat-error>
 						</mat-form-field>
 					</div>
-					<div class="confirm-buttons">
+					<div class="confirm-buttons" fxLayout="row" fxLayoutAlign="end" fxLayoutGap="15px">
 						<button mat-stroked-button color="primary" btn-block type="button" (click)="hideFilters()">
 							<span [translate]="'turnos.appointment.CANCEL'"></span>
 						</button>
@@ -199,7 +193,7 @@
 				</button>
 			</div>
 
-			<div style="margin-top: 10px" *ngIf="isMotivoRequired()">
+			<div class="motivo" *ngIf="isMotivoRequired()">
 				<mat-form-field [floatLabel]="'never'" appearance="outline">
 					<mat-label>{{'turnos.appointment.MOTIVE' | translate}}</mat-label>
 					<textarea formControlName="motivo" placeholder="Describa el motivo" matInput type="text"
@@ -225,13 +219,13 @@
 				<span class="mat-body-strong strong-size" *ngIf="!hideObservationTitle" 
 					[translate]="'turnos.appointment.observations.OBSERVATIONS'">
 				</span>
-				<div class="observation" *ngIf="observation && hideObservationForm">
+				<div class="observation" *ngIf="observation && hideObservationForm" fxLayout="row" fxLayoutAlign="space-between" fxLayoutGap="20px">
 					<p  class="mat-body strong-size"> 
 						{{observation}}
 					</p>
-					<button type="button" mat-icon-button color="primary" fxFlex="10%" 
+					<button type="button" mat-icon-button color="primary" 
 						(click)="setHideObservationForm(false)">
-						<mat-icon>edit</mat-icon>
+						<mat-icon class="material-icons-outlined">edit</mat-icon>
 					</button>
 				</div>
 				<form [formGroup]="formObservations" *ngIf="!hideObservationForm" fxLayout="column" fxLayoutGap="5px" (ngSubmit)="updateObservation()">
@@ -239,10 +233,10 @@
 						<textarea formControlName="observation" placeholder="Ingrese observaciones..." rows="4" matInput type="text"></textarea>
 					</mat-form-field>
 
-					<div class="observation-buttons">
+					<div class="observation-buttons" fxLayout="row" fxLayoutAlign="end" fxLayoutGap="15px">
 						<button mat-stroked-button color="primary" btn-block type="button" 
 							(click)="cancelObservation()">
-							<span [translate]="'turnos.appointment.observations.CANCEL'"></span>
+							<span [translate]="'turnos.appointment.CANCEL'"></span>
 						</button>
 						<button mat-flat-button color="primary" type="submit" [disabled]="formObservations.invalid">
 							<span [translate]="'turnos.appointment.SAVE'"></span>
@@ -259,7 +253,7 @@
 				<mat-divider></mat-divider>
 				<section id="report" fxLayout="column">
 					<span class="mat-body-strong strong-size">{{'turnos.report.TITLE' | translate}}</span>
-					<section class="example-section" fxLayout="row" fxLayoutGap="30px">
+					<section fxLayout="row" fxLayoutGap="30px">
 						<mat-checkbox color="primary" fxLayout="row"
 							(change)="enableDowndloadAnexo($event.checked)">
 							<span class="mat-body strong-size">{{'turnos.report.ANEXO' | translate}}</span>

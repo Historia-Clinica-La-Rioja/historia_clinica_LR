@@ -1,67 +1,57 @@
 @import "../../../../../assets/styles/mixins.scss";
 
-.appointment-body{
+.appointment-body {
 	margin: 0 15px;
 
-	.icon-grey{
+	.icon-grey {
 		color: #A8A8A8;
 		font-size: 20px;
 	}
 
-	.icon-close{
-		margin-right: -25px;
-    	margin-top: -15px;
-
-		mat-icon{
+	.icon-close {
+		height: 10px;
+		mat-icon {
 			font-size: 24px;
 			color: rgba(0, 0, 0, 0.54);
 		}
 	}
 
-	.title-size{
+	.title-size {
 		font-size: 18px;
 	}
 
-	.subtitle-size{
+	.subtitle-size {
 		font-size: 16px;
 	}
 
-	.strong-size{
+	.strong-size {
 		font-size: 14px;
 	}
 
-	.normal-size{
+	.normal-size {
 		font-size: 12px;
 	}
 }
 
-.ventana{
-	min-height: 555px;
-	margin-top: -30px;
+.ventana {
+	min-height: 570px;
 }
+
 .header-content {
 
 	@media screen and (min-width: 959px) {
 		width: 380px;
 	}
 
-	button mat-icon {
-		margin-top: -4px;
-		vertical-align: top;
+	button {
+		padding: 0;
+		height: fit-content;
 	}
 
-	.mat-card-patient-image{
+	.mat-card-patient-image {
 		width: 60px;
 		height: 60px;
 		border-radius: 50%;
-	}
-}
-
-.historia-clinica{
-	display: flex;
-
-	a{
-		margin-right: 7px;
 	}
 }
 
@@ -72,7 +62,7 @@
 .appointment-details {
 	margin: 10px 0;
 
-	.appointment-title{
+	.appointment-title {
 		margin-bottom: 10px;
 	}
 }
@@ -135,6 +125,10 @@ a {
 
 }
 
+.motivo {
+	margin-top: 10px;
+}
+
 mat-form-field {
 	width: 100%;
 }
@@ -145,7 +139,7 @@ section {
 }
 
 
-.hide-borders{
+.hide-borders {
 	border-top-style: hidden;
 	border-left-style: hidden;
 	border-right-style: hidden;
@@ -153,7 +147,7 @@ section {
 	margin-left: 3px;
 }
 
-.phone-text{
+.phone-text {
 	margin-left: 3px;
 }
 
@@ -169,33 +163,22 @@ section {
     text-overflow: ellipsis;
 }
 
-.observation-section{
+.observation-section {
 	width: 550px;
 	margin: 15px 0;
 
-	a{
+	a {
 		cursor: pointer;
 	}
 
-	p{		
+	p {		
 		margin: auto;
 		margin-left: 3px;
 		white-space: pre-line;
     	overflow-wrap: break-word;
 	}
-
-	.observation{
-		display: flex;
-		justify-content: space-between;
-	}
 }
 
-.confirm-buttons{
-	display: flex;
-	justify-content: flex-end;
-	margin-bottom: 20px;
-	
-	button{
-		margin: -10px 10px;
-	}
+.confirm-buttons {
+	margin-bottom: 15px;
 }	

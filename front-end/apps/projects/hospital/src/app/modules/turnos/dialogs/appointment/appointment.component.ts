@@ -1,4 +1,4 @@
-import { Component, HostListener, Inject, OnInit } from '@angular/core';
+import { Component, Inject, OnInit } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { NewAttentionComponent } from '../new-attention/new-attention.component';
 import { AppointmentsService } from '@api-rest/services/appointments.service';
@@ -103,7 +103,6 @@ export class AppointmentComponent implements OnInit {
 		private readonly imageDecoderService: ImageDecoderService,
 
 	) {
-		dialogRef.disableClose = true;
 		this.featureFlagService.isActive(AppFeature.HABILITAR_INFORMES).subscribe(isOn => this.downloadReportIsEnabled = isOn);
 		this.featureFlagService.isActive(AppFeature.HABILITAR_LLAMADO).subscribe(isEnabled => this.isMqttCallEnabled = isEnabled);
 	}
@@ -176,10 +175,6 @@ export class AppointmentComponent implements OnInit {
 					this.decodedPhoto$ = this.imageDecoderService.decode(personPhotoDto.imageData);
 				}
 			});
-	}
-
-	@HostListener('window:keyup.esc') onKeyUp() {
-		this.dialogRef.close();
 	}
 	
 	formatPhonePrefixAndNumber(): string {
