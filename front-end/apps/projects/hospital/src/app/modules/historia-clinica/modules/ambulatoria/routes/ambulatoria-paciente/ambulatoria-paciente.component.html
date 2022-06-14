@@ -1,6 +1,7 @@
 <app-content width="full">
-	<section id="title">
+	<section id="title" fxLayout="row" fxLayoutAlign="space-between">
 		<h2 class="page-title" [translate]="'ambulatoria.paciente.TITLE'"></h2>
+		<app-calendar-professional-view *appHasRole="['ESPECIALISTA_MEDICO', 'PROFESIONAL_DE_SALUD', 'ESPECIALISTA_EN_ODONTOLOGIA', 'ENFERMERO']"></app-calendar-professional-view>
 	</section>
 
 	<section id="content" fxLayout="column" fxLayoutGap="20px">

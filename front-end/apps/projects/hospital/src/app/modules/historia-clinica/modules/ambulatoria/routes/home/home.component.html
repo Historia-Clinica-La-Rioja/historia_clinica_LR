@@ -1,138 +1,141 @@
-<app-content >
-    <section>
-		<h2 class="page-title" [translate]="'ambulatoria.home.TITLE'"></h2>
-		<h4 class="page-title" [translate]="'ambulatoria.home.SUBTITLE'"></h4>
-		<em class="text-danger" *ngIf="requiringValues" translate="forms.REQUIRING_FIELD_FOR_SEARCH"></em>
-		<em class="text-danger" *ngIf="requiringAtLeastOneMoreValue" translate="forms.REQUIRING_OTHER_FIELD_MORE_FOR_SEARCH"></em>
-		<form id="personalInformationForm" [formGroup]="personalInformationForm" (ngSubmit)="save()" fxLayout="column" fxLayoutGap="20px">
-			<div fxLayout="row" fxLayoutGap="10px" fxLayout.lt-sm="column" fxLayoutGap.lt-sm="0">
-				<div fxFlex="30" fxFlex.lt-md="100">
-					<span [translate]="'pacientes.form.IDENTIFICATION_TYPE'"></span>
-					<br>
-					<mat-form-field appearance="outline">
-						<mat-select id="identificationTypeId"
-									name="identificationTypeId"
-									formControlName="identificationTypeId"
-									placeholder="{{'pacientes.form.SELECT' | translate}}">
-							<mat-option *ngFor="let identificationType of identificationTypeList"
-										[value]="identificationType.id">
-								{{identificationType.description}}
-							</mat-option>
-						</mat-select>
-						<button id="clear_identification_type" type="button" mat-button *ngIf="personalInformationForm.value.identificationTypeId" matSuffix
-							color="warn" mat-icon-button (click)="clear(personalInformationForm.controls.identificationTypeId); $event.stopPropagation()">
-							<mat-icon>close</mat-icon>
-						</button>
-					</mat-form-field>
-				</div>
-				<div fxFlex="30" fxFlex.lt-md="100">
-					<span [translate]="'pacientes.form.IDENTIFICATION_NUMBER'"></span>
-					<br>
-					<mat-form-field appearance="outline">
-						<input id="identificationNumber"
-								name="identificationNumber"
-								formControlName="identificationNumber"
-								placeholder="{{'pacientes.form.ONLY_NUMBERS' | translate}}"
-								matInput>
-						<mat-error *ngIf="hasError(personalInformationForm, 'maxlength', 'identificationNumber')"
-							translate="forms.MAX_LENGTH_ERROR" [translateParams]="{max: validations.MAX_LENGTH.identificationNumber}">
-						</mat-error>
-					</mat-form-field>
-				</div>
-			</div>
+<app-content>
+	<div fxLayout="row-reverse" fxLayoutAlign="space-between">
+		<app-calendar-professional-view *appHasRole="['ESPECIALISTA_MEDICO', 'PROFESIONAL_DE_SALUD', 'ESPECIALISTA_EN_ODONTOLOGIA', 'ENFERMERO']"></app-calendar-professional-view>
 
-			<div *ngIf="!nameSelfDeterminationEnabled">
-				<div>
-					<span [translate]="'pacientes.form.GENDER'"></span>
-				</div>
-				<mat-radio-group formControlName="genderId">
-					<mat-radio-button *ngFor="let gender of genders"
-										[value]="gender.id">{{gender.description}}</mat-radio-button>
-				</mat-radio-group>
-			</div>
-			<br *ngIf="!nameSelfDeterminationEnabled">
-
-			<div>
-				<div>
-					<span [translate]="'pacientes.form.FIRST_NAMES_TITLE'"></span>
-				</div>
+		<section>
+			<h2 class="page-title" [translate]="'ambulatoria.home.TITLE'"></h2>
+			<h4 class="page-title" [translate]="'ambulatoria.home.SUBTITLE'"></h4>
+			<em class="text-danger" *ngIf="requiringValues" translate="forms.REQUIRING_FIELD_FOR_SEARCH"></em>
+			<em class="text-danger" *ngIf="requiringAtLeastOneMoreValue" translate="forms.REQUIRING_OTHER_FIELD_MORE_FOR_SEARCH"></em>
+			<form id="personalInformationForm" [formGroup]="personalInformationForm" (ngSubmit)="save()" fxLayout="column" fxLayoutGap="20px">
 				<div fxLayout="row" fxLayoutGap="10px" fxLayout.lt-sm="column" fxLayoutGap.lt-sm="0">
 					<div fxFlex="30" fxFlex.lt-md="100">
+						<span [translate]="'pacientes.form.IDENTIFICATION_TYPE'"></span>
+						<br>
 						<mat-form-field appearance="outline">
-							<input id="firstName"
-									name="firstName"
-									formControlName="firstName"
-									placeholder="{{'pacientes.form.FIRST_NAME' | translate}}"
+							<mat-select id="identificationTypeId"
+										name="identificationTypeId"
+										formControlName="identificationTypeId"
+										placeholder="{{'pacientes.form.SELECT' | translate}}">
+								<mat-option *ngFor="let identificationType of identificationTypeList"
+											[value]="identificationType.id">
+									{{identificationType.description}}
+								</mat-option>
+							</mat-select>
+							<button id="clear_identification_type" type="button" mat-button *ngIf="personalInformationForm.value.identificationTypeId" matSuffix
+								color="warn" mat-icon-button (click)="clear(personalInformationForm.controls.identificationTypeId); $event.stopPropagation()">
+								<mat-icon>close</mat-icon>
+							</button>
+						</mat-form-field>
+					</div>
+					<div fxFlex="30" fxFlex.lt-md="100">
+						<span [translate]="'pacientes.form.IDENTIFICATION_NUMBER'"></span>
+						<br>
+						<mat-form-field appearance="outline">
+							<input id="identificationNumber"
+									name="identificationNumber"
+									formControlName="identificationNumber"
+									placeholder="{{'pacientes.form.ONLY_NUMBERS' | translate}}"
 									matInput>
-							<mat-error *ngIf="hasError(personalInformationForm, 'maxlength', 'firstName')"
-								translate="forms.MAX_LENGTH_ERROR" [translateParams]="{max: validations.MAX_LENGTH.firstName}">
-							</mat-error>
-						</mat-form-field>
-					</div>
-
-					<div fxFlex="30" fxFlex.lt-md="100">
-						<mat-form-field appearance="outline">
-							<input id="middleNames"
-							name="middleNames"
-							formControlName="middleNames"
-							placeholder="{{'pacientes.form.MIDDLE_NAMES' | translate}}"
-							matInput>
-							<mat-error *ngIf="hasError(personalInformationForm, 'maxlength', 'middleNames')"
-							translate="forms.MAX_LENGTH_ERROR" [translateParams]="{max: validations.MAX_LENGTH.middleNames}">
+							<mat-error *ngIf="hasError(personalInformationForm, 'maxlength', 'identificationNumber')"
+								translate="forms.MAX_LENGTH_ERROR" [translateParams]="{max: validations.MAX_LENGTH.identificationNumber}">
 							</mat-error>
 						</mat-form-field>
 					</div>
 				</div>
-			</div>
 
-			<div>
+				<div *ngIf="!nameSelfDeterminationEnabled">
+					<div>
+						<span [translate]="'pacientes.form.GENDER'"></span>
+					</div>
+					<mat-radio-group formControlName="genderId">
+						<mat-radio-button *ngFor="let gender of genders"
+											[value]="gender.id">{{gender.description}}</mat-radio-button>
+					</mat-radio-group>
+				</div>
+				<br *ngIf="!nameSelfDeterminationEnabled">
+
 				<div>
-					<span [translate]="'pacientes.form.LAST_NAME_TITLE'"></span>
-				</div>
-				<div fxLayout="row" fxLayoutGap="10px" fxLayout.lt-sm="column" fxLayoutGap.lt-sm="0">
-					<mat-form-field appearance="outline" fxFlex="30" fxFlex.lt-md="100">
-						<input id="lastName"
-								name="lastName"
-								formControlName="lastName"
-								placeholder="{{'pacientes.form.LAST_NAME' | translate}}"
+					<div>
+						<span [translate]="'pacientes.form.FIRST_NAMES_TITLE'"></span>
+					</div>
+					<div fxLayout="row" fxLayoutGap="10px" fxLayout.lt-sm="column" fxLayoutGap.lt-sm="0">
+						<div fxFlex="30" fxFlex.lt-md="100">
+							<mat-form-field appearance="outline">
+								<input id="firstName"
+										name="firstName"
+										formControlName="firstName"
+										placeholder="{{'pacientes.form.FIRST_NAME' | translate}}"
+										matInput>
+								<mat-error *ngIf="hasError(personalInformationForm, 'maxlength', 'firstName')"
+									translate="forms.MAX_LENGTH_ERROR" [translateParams]="{max: validations.MAX_LENGTH.firstName}">
+								</mat-error>
+							</mat-form-field>
+						</div>
+
+						<div fxFlex="30" fxFlex.lt-md="100">
+							<mat-form-field appearance="outline">
+								<input id="middleNames"
+								name="middleNames"
+								formControlName="middleNames"
+								placeholder="{{'pacientes.form.MIDDLE_NAMES' | translate}}"
 								matInput>
-						<mat-error *ngIf="hasError(personalInformationForm, 'maxlength', 'lastName')"
-							translate="forms.MAX_LENGTH_ERROR" [translateParams]="{max: validations.MAX_LENGTH.lastName}">
-						</mat-error>
-					</mat-form-field>
+								<mat-error *ngIf="hasError(personalInformationForm, 'maxlength', 'middleNames')"
+								translate="forms.MAX_LENGTH_ERROR" [translateParams]="{max: validations.MAX_LENGTH.middleNames}">
+								</mat-error>
+							</mat-form-field>
+						</div>
+					</div>
+				</div>
+
+				<div>
+					<div>
+						<span [translate]="'pacientes.form.LAST_NAME_TITLE'"></span>
+					</div>
+					<div fxLayout="row" fxLayoutGap="10px" fxLayout.lt-sm="column" fxLayoutGap.lt-sm="0">
+						<mat-form-field appearance="outline" fxFlex="30" fxFlex.lt-md="100">
+							<input id="lastName"
+									name="lastName"
+									formControlName="lastName"
+									placeholder="{{'pacientes.form.LAST_NAME' | translate}}"
+									matInput>
+							<mat-error *ngIf="hasError(personalInformationForm, 'maxlength', 'lastName')"
+								translate="forms.MAX_LENGTH_ERROR" [translateParams]="{max: validations.MAX_LENGTH.lastName}">
+							</mat-error>
+						</mat-form-field>
+						<mat-form-field appearance="outline" fxFlex="30" fxFlex.lt-md="100">
+							<input id="otherLastNames"
+									name="otherLastNames"
+									formControlName="otherLastNames"
+									placeholder="{{'pacientes.form.OTHER_LAST_NAMES' | translate}}"
+									matInput>
+							<mat-error *ngIf="hasError(personalInformationForm, 'maxlength', 'otherLastNames')"
+								translate="forms.MAX_LENGTH_ERROR" [translateParams]="{max: validations.MAX_LENGTH.otherLastNames}">
+							</mat-error>
+						</mat-form-field>
+					</div>
+				</div>
+
+				<div fxLayout="row">
 					<mat-form-field appearance="outline" fxFlex="30" fxFlex.lt-md="100">
-						<input id="otherLastNames"
-								name="otherLastNames"
-								formControlName="otherLastNames"
-								placeholder="{{'pacientes.form.OTHER_LAST_NAMES' | translate}}"
-								matInput>
-						<mat-error *ngIf="hasError(personalInformationForm, 'maxlength', 'otherLastNames')"
-							translate="forms.MAX_LENGTH_ERROR" [translateParams]="{max: validations.MAX_LENGTH.otherLastNames}">
-						</mat-error>
+						<mat-label [translate]="'pacientes.form.BIRTH_DATE'"></mat-label>
+						<input formControlName="birthDate" id="birthDate" matInput [min]="minDate" [max]="today"
+								[matDatepicker]="picker2">
+						<mat-datepicker-toggle matSuffix [for]="picker2"></mat-datepicker-toggle>
+						<mat-datepicker #picker2></mat-datepicker>
+						<mat-error translate="forms.INVALID_DATE"></mat-error>
 					</mat-form-field>
 				</div>
-			</div>
 
-			<div fxLayout="row">
-				<mat-form-field appearance="outline" fxFlex="30" fxFlex.lt-md="100">
-					<mat-label [translate]="'pacientes.form.BIRTH_DATE'"></mat-label>
-					<input formControlName="birthDate" id="birthDate" matInput [min]="minDate" [max]="today"
-							[matDatepicker]="picker2">
-					<mat-datepicker-toggle matSuffix [for]="picker2"></mat-datepicker-toggle>
-					<mat-datepicker #picker2></mat-datepicker>
-					<mat-error translate="forms.INVALID_DATE"></mat-error>
-				</mat-form-field>
-			</div>
+				<div>
+					<button mat-raised-button color="primary" type="submit">
+						<span [translate]="'buttons.SEARCH'"></span>
+					</button>
+				</div>
 
-			<div>
-				<button mat-raised-button color="primary" type="submit">
-					<span [translate]="'buttons.SEARCH'"></span>
-				</button>
-			</div>
-
-		</form>
-	</section>
-
+			</form>
+		</section>
+	</div>
 	<section id="searchResults" *ngIf="formSubmitted">
 		<h2 class="page-title" translate="forms.SEARCH_RESULTS"></h2>
 

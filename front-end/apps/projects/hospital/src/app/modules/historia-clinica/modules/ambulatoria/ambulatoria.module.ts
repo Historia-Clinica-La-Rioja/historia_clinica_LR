@@ -1,3 +1,4 @@
+import { TurnosModule } from './../../../turnos/turnos.module';
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
@@ -110,22 +111,23 @@ import { NewConsultationAllergyFormComponent } from './dialogs/new-consultation-
 		NewConsultationProcedureFormComponent,
 		NewConsultationAllergyFormComponent,
 	],
-	imports: [
-		CommonModule,
-		FormsModule,
-		OverlayModule,
-		PortalModule,
-		PresentationModule,
-		ExtensionsModule,
-		HistoriaClinicaModule,
-		AmbulatoriaRoutingModule,
-		PacientesModule,
-		OdontologiaModule,
-		ClipboardModule,
-		IndicacionModule,
-		InternacionesModule,
-		EstudioModule
-	]
+    imports: [
+        CommonModule,
+        FormsModule,
+        OverlayModule,
+        PortalModule,
+        PresentationModule,
+        ExtensionsModule,
+        HistoriaClinicaModule,
+        AmbulatoriaRoutingModule,
+        PacientesModule,
+        OdontologiaModule,
+        ClipboardModule,
+        IndicacionModule,
+        InternacionesModule,
+		EstudioModule,
+		TurnosModule
+    ]
 })
 export class AmbulatoriaModule {
 }

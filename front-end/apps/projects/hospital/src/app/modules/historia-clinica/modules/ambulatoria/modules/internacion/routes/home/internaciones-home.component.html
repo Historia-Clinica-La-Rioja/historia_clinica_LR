@@ -1,6 +1,9 @@
 <app-content width="full">
 	<section>
-		<h2 class="page-title" [translate]="'internaciones.internados-table.TITLE'"></h2>
+		<div fxLayout="row" fxLayoutAlign="space-between">
+			<h2 class="page-title" [translate]="'internaciones.internados-table.TITLE'"></h2>
+			<app-calendar-professional-view *appHasRole="['ESPECIALISTA_MEDICO', 'PROFESIONAL_DE_SALUD', 'ESPECIALISTA_EN_ODONTOLOGIA', 'ENFERMERO']"></app-calendar-professional-view>
+		</div>
 		<app-internment-patient-table [redirect]="redirect"></app-internment-patient-table>
 	</section>
 </app-content>
