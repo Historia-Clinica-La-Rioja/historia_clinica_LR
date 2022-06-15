@@ -135,7 +135,7 @@ export class HomeComponent implements OnInit, OnDestroy {
 	}
 
 	getFullNameLicence(profesional: ProfessionalDto): string {
-		return `${this.getFullName(profesional)} - ${profesional.licenceNumber}`;
+		return `${this.getFullName(profesional)}`;
 	}
 
 	private getProfesionalesFilteredBy(especialidad: ProfessionalsByClinicalSpecialtyDto): ProfessionalDto[] {
