@@ -483,7 +483,7 @@
 
 		<app-new-consultation-expansion-section id="diagnoses"
 			[title]="'odontologia.odontology-consultation-dock-popup.FINDINGS_ON_DENTAL_TISSUES' | translate"
-			icon="crop_free" [isEmpty]="diagnosticsNewConsultationService.tableData.length === 0" [collapsed]="false">
+			icon="crop_free" [isEmpty]="false" [collapsed]="false">
 			<section *ngIf="diagnosticsNewConsultationService.columns && diagnosticsNewConsultationService.tableData">
 				<table mat-table [dataSource]="diagnosticsNewConsultationService.tableData" class="secondary">
 
@@ -504,7 +504,7 @@
 
 		<app-new-consultation-expansion-section id="procedures"
 			[title]="'odontologia.odontology-consultation-dock-popup.PROCEDURES_ON_DENTAL_TISSUES' | translate"
-			icon="border_outer" [isEmpty]="proceduresNewConsultationService.tableData.length === 0" [collapsed]="false">
+			icon="border_outer" [isEmpty]="false" [collapsed]="false">
 			<section *ngIf="proceduresNewConsultationService.columns && proceduresNewConsultationService.tableData">
 				<table mat-table [dataSource]="proceduresNewConsultationService.tableData" class="secondary">
 
