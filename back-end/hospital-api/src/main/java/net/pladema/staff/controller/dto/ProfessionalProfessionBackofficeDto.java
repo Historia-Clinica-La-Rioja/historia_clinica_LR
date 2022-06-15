@@ -19,5 +19,15 @@ public class ProfessionalProfessionBackofficeDto {
 
 	private Integer professionalSpecialtyId;
 
+	private Integer clinicalSpecialtyId;
+
 	private boolean deleted;
+
+	public ProfessionalProfessionBackofficeDto(Integer id, Integer healthcareProfessionalId, Integer personId, Integer professionalSpecialtyId, boolean deleted) {
+		this.id = id;
+		this.healthcareProfessionalId = healthcareProfessionalId;
+		this.personId = personId;
+		this.professionalSpecialtyId = professionalSpecialtyId;
+		this.deleted = deleted;
+	}
 }

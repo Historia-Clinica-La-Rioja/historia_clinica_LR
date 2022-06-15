@@ -45,6 +45,8 @@ public class BackofficeProfessionalProfessionEntityValidator extends BackofficeE
 
     @Override
     public void assertCreate(ProfessionalProfessionBackofficeDto entity) {
+		if (entity.getClinicalSpecialtyId() == null)
+			throw new BackofficeValidationException("healthcareprofessional.linkprofession");
     }
 
     @Override

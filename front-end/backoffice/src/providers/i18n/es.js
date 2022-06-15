@@ -270,7 +270,7 @@ const messages = {
             }
         },
         professionalprofessions: {
-            name: 'Profesional || Profesionales',
+            name: 'Profesión',
             tab: {
                 title: 'Profesión | Especialidad',
                 subtitle: 'Profesiones'
@@ -282,7 +282,8 @@ const messages = {
                 isMedicalDoctor: 'Es médico?',
                 healthcareprofessionalspecialties: 'Especialidades',
                 professionalSpecialtyId: 'Profesión',
-                professionalLicenseNumbers: 'Matriculas'
+                professionalLicenseNumbers: 'Matriculas',
+                clinicalSpecialtyId: 'Especialidad'
             },
             buttons: {
                 linkSpecialities: 'Asociar especialidades',

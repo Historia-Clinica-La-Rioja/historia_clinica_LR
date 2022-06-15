@@ -19,6 +19,7 @@ import net.pladema.staff.repository.HealthcareProfessionalRepository;
 import net.pladema.staff.repository.HealthcareProfessionalSpecialtyRepository;
 import net.pladema.staff.repository.ProfessionalProfessionRepository;
 import net.pladema.staff.repository.entity.HealthcareProfessional;
+import net.pladema.staff.repository.entity.HealthcareProfessionalSpecialty;
 import net.pladema.staff.repository.entity.ProfessionalProfessions;
 
 @Service
@@ -95,14 +96,28 @@ public class BackofficeProfessionalProfessionStore implements BackofficeStore<Pr
     }
 
     private ProfessionalProfessionBackofficeDto create(ProfessionalProfessionBackofficeDto dto) {
-		if (dto.getHealthcareProfessionalId() == null)
-			return createAll(dto);
-		return professionalProfessionRepository
-				.findById(dto.getHealthcareProfessionalId())
+		var result = (dto.getHealthcareProfessionalId() == null) ?
+				createAll(dto) :
+				professionalProfessionRepository
+						.findById(dto.getHealthcareProfessionalId())
+						.map(this::reactivate)
+						.map(this::buildDto)
+						.orElseGet( () -> createAll(dto));
+
+		healthcareProfessionalSpecialtyRepository.findByUniqueKey(result.getId(), dto.getClinicalSpecialtyId())
 				.map(this::reactivate)
-				.map(this::buildDto)
-				.orElseGet( () -> createAll(dto));
+				.orElseGet( () -> healthcareProfessionalSpecialtyRepository
+						.save(new HealthcareProfessionalSpecialty(result.getId(), dto.getClinicalSpecialtyId())));
+		return result;
     }
+
+	private HealthcareProfessionalSpecialty reactivate(HealthcareProfessionalSpecialty professionalProfessions) {
+		if (professionalProfessions.isDeleted()) {
+			professionalProfessions.reactivate();
+			return healthcareProfessionalSpecialtyRepository.save(professionalProfessions);
+		}
+		return professionalProfessions;
+	}
 
 	private ProfessionalProfessionBackofficeDto createAll(ProfessionalProfessionBackofficeDto dto) {
 		var hp = healthcareProfessionalRepository.findByPersonId(dto.getPersonId())
@@ -114,6 +129,7 @@ public class BackofficeProfessionalProfessionStore implements BackofficeStore<Pr
 				.orElseGet(() -> professionalProfessionRepository.save(buildEntity(dto))));
 
 	}
+
 
 	private ProfessionalProfessions reactivate(ProfessionalProfessions professionalProfessions) {
 		if (professionalProfessions.isDeleted()) {
