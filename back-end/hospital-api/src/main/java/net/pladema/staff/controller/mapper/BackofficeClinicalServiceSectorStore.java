@@ -42,7 +42,7 @@ public class BackofficeClinicalServiceSectorStore implements BackofficeStore<Cli
 
 	@Override
 	public List<ClinicalSpecialtySector> findAllById(List<Integer> ids) {
-		return clinicalServiceSectorRepository.findAllById(ids);
+		return vClinicalServiceSectorRepository.findAllById(ids).stream().map(VClinicalServiceSector::parseToClinicalSpecialtySector).collect(Collectors.toList());
 	}
 
 	@Override

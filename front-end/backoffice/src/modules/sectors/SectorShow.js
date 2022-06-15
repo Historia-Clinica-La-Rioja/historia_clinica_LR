@@ -1,6 +1,7 @@
 import React from 'react';
 import {
     Datagrid,
+    DeleteButton,
     EditButton, Labeled,
     ReferenceField,
     ReferenceManyField,
@@ -115,7 +116,25 @@ const ShowServiceSectorData = ({ record }) => {
                 </ReferenceManyField>
             </>
         )
-    return null;
+    return (
+        <>
+            <SectionTitle label="resources.clinicalservicesectors.name"/>
+            <ReferenceManyField
+                    addLabel={false}
+                    reference="clinicalservicesectors"
+                    target="sectorId"
+                    sort={{ field: 'description', order: 'DESC' }}
+            >
+                <Datagrid rowClick="show">
+                    <TextField source="description" />
+                    <ReferenceField source="clinicalSpecialtyId" reference="clinicalservices">
+                        <TextField source="name" />
+                    </ReferenceField>
+                    <DeleteButton />
+                </Datagrid>
+            </ReferenceManyField>
+        </>
+    );
 }
 
 const SectorShow = props => (
@@ -135,6 +154,11 @@ const SectorShow = props => (
             <ReferenceField source="sectorOrganizationId" reference="sectororganizations" link={ false }>
                 <TextField source="description" />
             </ReferenceField>
+            
+            <ReferenceField source="sectorId" reference="sectors">
+                <TextField source="description"/>
+            </ReferenceField>
+            
             <SectionTitle label="resources.sectors.fields.childSectors" />
             <CreateSector />
             <ReferenceManyField
@@ -192,4 +216,4 @@ const SectorShow = props => (
 );
 
 export default SectorShow;
-export { CreateSector, CreateDoctorsOffice, CreateRooms };
+export { CreateSector, CreateDoctorsOffice, CreateRooms, ShowServiceSectorData};

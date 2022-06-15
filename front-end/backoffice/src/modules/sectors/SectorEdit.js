@@ -16,7 +16,7 @@ import SectionTitle from '../components/SectionTitle';
 import SgxSelectInput from "../../sgxSelectInput/SgxSelectInput";
 import CustomToolbar from "../components/CustomToolbar";
 import SgxDateField from "../../dateComponents/sgxDateField";
-import { CreateSector, CreateDoctorsOffice, CreateRooms } from './SectorShow';
+import { CreateSector, CreateDoctorsOffice, CreateRooms, ShowServiceSectorData } from './SectorShow';
 
 const redirect = (basePath, id, data) => `/sectors/${data.id}/show`;
 
@@ -117,6 +117,8 @@ const SectorEdit = props => (
                     <EditButton />
                 </Datagrid>
             </ReferenceManyField>
+
+            <ShowServiceSectorData />
 
             {/*Rooms*/}
             <SectionTitle label="resources.clinicalspecialtysectors.fields.rooms"/>
