@@ -1,11 +1,9 @@
 import React from 'react';
 import {
     Datagrid,
-    DeleteButton,
     Edit,
     EditButton,
     FormDataConsumer,
-    ReferenceField,
     ReferenceInput,
     ReferenceManyField,
     required,
@@ -14,7 +12,6 @@ import {
     TextField,
     TextInput,
 } from 'react-admin';
-import CreateRelatedButton from '../components/CreateRelatedButton';
 import SectionTitle from '../components/SectionTitle';
 import SgxSelectInput from "../../sgxSelectInput/SgxSelectInput";
 import CustomToolbar from "../components/CustomToolbar";
@@ -102,28 +99,6 @@ const SectorEdit = props => (
                     <EditButton />
                 </Datagrid>
             </ReferenceManyField>
-            
-            <SectionTitle label="resources.sectors.fields.clinicalspecialtysectors"/>
-            <CreateRelatedButton
-                reference="clinicalspecialtysectors"
-                refFieldName="sectorId"
-                label="resources.clinicalspecialtysectors.createRelated"
-            />
-            {/*TODO: Aislar esto en un componente. También se usa en show.js*/}
-            <ReferenceManyField
-                addLabel={false}
-                reference="clinicalspecialtysectors"
-                target="sectorId"
-                sort={{ field: 'description', order: 'DESC' }}
-            >
-                <Datagrid rowClick="show">
-                    <TextField source="description" />
-                    <ReferenceField source="clinicalSpecialtyId" reference="clinicalspecialties">
-                        <TextField source="name" />
-                    </ReferenceField>
-                    <DeleteButton />
-                    </Datagrid>
-            </ReferenceManyField>
 
             <SectionTitle label="resources.clinicalspecialtysectors.fields.doctorsoffices"/>
             <CreateDoctorsOffice />
@@ -133,7 +108,8 @@ const SectorEdit = props => (
                 target="sectorId"
                 sort={{ field: 'description', order: 'DESC' }}
             >
-                <Datagrid rowClick="show">
+                <Datagrid rowClick="show"
+                          empty={<p style={{paddingLeft:10, marginTop:0, color:'#8c8c8c'}} >Sin consultorios definidos</p>}>
                     <TextField source="description"/>
                     <EditButton />
                 </Datagrid>
@@ -147,7 +123,8 @@ const SectorEdit = props => (
                 reference="rooms"
                 target="sectorId"
                 sort={{ field: 'description', order: 'DESC' }}>
-                <Datagrid rowClick="show">
+                <Datagrid rowClick="show"
+                          empty={<p style={{paddingLeft:10, marginTop:0, color:'#8c8c8c'}} >Sin habitaciones definidas</p>}>
                     <TextField source="roomNumber" />
                     <TextField source="description"/>
                     <TextField source="type" />

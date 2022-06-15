@@ -1,7 +1,6 @@
 import React from 'react';
 import {
     Datagrid,
-    DeleteButton,
     EditButton, Labeled,
     ReferenceField,
     ReferenceManyField,
@@ -116,26 +115,6 @@ const SectorShow = props => (
                     <EditButton />
                 </Datagrid>
             </ReferenceManyField>
-            <SectionTitle label="resources.sectors.fields.clinicalspecialtysectors"/>
-            <CreateRelatedButton
-                reference="clinicalspecialtysectors"
-                refFieldName="sectorId"
-                label="resources.clinicalspecialtysectors.createRelated"
-            />
-            <ReferenceManyField
-                addLabel={false}
-                reference="clinicalspecialtysectors"
-                target="sectorId"
-                sort={{ field: 'description', order: 'DESC' }}
-            >
-                <Datagrid rowClick="show">
-                    <TextField source="description" />
-                    <ReferenceField source="clinicalSpecialtyId" reference="clinicalspecialties">
-                        <TextField source="name" />
-                    </ReferenceField>
-                    <DeleteButton />
-                </Datagrid>
-            </ReferenceManyField>
 
             <SectionTitle label="resources.clinicalspecialtysectors.fields.doctorsoffices"/>
             <CreateDoctorsOffice />
@@ -145,7 +124,8 @@ const SectorShow = props => (
                 target="sectorId"
                 sort={{ field: 'description', order: 'DESC' }}
             >
-                <Datagrid rowClick="show">
+                <Datagrid rowClick="show"
+                          empty={<p style={{paddingLeft:10, marginTop:0, color:'#8c8c8c'}} >Sin consultorios definidos</p>}>
                     <TextField source="description"/>
                     <EditButton />
                 </Datagrid>
@@ -159,7 +139,8 @@ const SectorShow = props => (
                 target="sectorId"
                 sort={{ field: 'description', order: 'DESC' }}
             >
-                <Datagrid rowClick="show">
+                <Datagrid rowClick="show"
+                          empty={<p style={{paddingLeft:10, marginTop:0, color:'#8c8c8c'}}>Sin habitaciones definidas</p>}>
                     <TextField source="roomNumber" />
                     <TextField source="description"/>
                     <TextField source="type" />
@@ -167,7 +148,7 @@ const SectorShow = props => (
                     <EditButton />
                 </Datagrid>
             </ReferenceManyField>
-
+            
         </SimpleShowLayout>
     </Show>
 );
