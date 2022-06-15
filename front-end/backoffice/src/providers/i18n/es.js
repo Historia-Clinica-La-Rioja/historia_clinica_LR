@@ -272,7 +272,7 @@ const messages = {
         professionalprofessions: {
             name: 'Profesión',
             tab: {
-                title: 'Profesión | Especialidad',
+                title: 'Profesiones',
                 subtitle: 'Profesiones'
             },
             license: 'Nro. de licencia del profesional',

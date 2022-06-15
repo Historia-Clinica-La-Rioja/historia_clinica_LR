@@ -60,7 +60,7 @@ const PersonShow = props =>{
             </Tab>
             
             <Tab label="resources.professionalprofessions.tab.title">
-                <ReferenceManyField label="resources.professionalprofessions.tab.subtitle" reference="professionalprofessions" target="personId">
+                <ReferenceManyField addLabel={false} reference="professionalprofessions" target="personId">
                     <Datagrid rowClick="show">
                         <ReferenceField source="professionalSpecialtyId" reference="professionalspecialties" link={false}>
                             <TextField source="description" />
