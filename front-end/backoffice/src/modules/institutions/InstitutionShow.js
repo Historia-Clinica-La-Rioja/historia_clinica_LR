@@ -60,6 +60,9 @@ const InstitutionShow = props => (
             >
                 <Datagrid rowClick="show">
                     <TextField source="description" />
+                    <ReferenceField source="sectorTypeId"  link={false}  reference="sectortypes">
+                        <TextField source="description" />
+                    </ReferenceField>
                     <EditButton />
                 </Datagrid>
             </ReferenceManyField>

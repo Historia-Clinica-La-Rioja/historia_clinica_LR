@@ -3,7 +3,7 @@ import {
     Datagrid,
     Edit,
     EditButton,
-    FormDataConsumer,
+    FormDataConsumer, ReferenceField,
     ReferenceInput,
     ReferenceManyField,
     required,
@@ -96,6 +96,9 @@ const SectorEdit = props => (
             >
                 <Datagrid rowClick="show">
                     <TextField source="description" />
+                    <ReferenceField source="sectorTypeId"  link={false}  reference="sectortypes">
+                        <TextField source="description" />
+                    </ReferenceField>
                     <EditButton />
                 </Datagrid>
             </ReferenceManyField>
