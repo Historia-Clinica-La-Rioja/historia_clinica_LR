@@ -2272,6 +2272,7 @@ export interface ProfessionalAvailabilityDto {
 export interface ProfessionalCompleteDto {
     completeLicenseInfo: string;
     firstName: string;
+    id: number;
     lastName: string;
     nameSelfDetermination: string;
     personId: number;

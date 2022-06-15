@@ -17,6 +17,7 @@ import lombok.ToString;
 @AllArgsConstructor
 public class ProfessionalCompleteDto {
 
+	private Integer id;
 	private Integer personId;
     private String firstName;
     private String lastName;
@@ -24,7 +25,6 @@ public class ProfessionalCompleteDto {
 	private List<ProfessionCompleteDto> professions;
 
 	public String getCompleteLicenseInfo() {
-		StringBuilder result = new StringBuilder();
 		List<LicenseNumberDto> licenses = new ArrayList<>();
 		professions.forEach(professionCompleteDto -> {
 			licenses.addAll(professionCompleteDto.getLicenses());

@@ -30,17 +30,19 @@ public class HealthcareProfessionalStorageImpl implements HealthcareProfessional
 	public ProfessionalCompleteBo fetchProfessionalByUserId(Integer userId) {
 		log.debug("fetchProfessionalByUserId -> userId={}", userId);
 		String sqlString = "" +
-				"SELECT p.id, p.firstName, p.lastName, pe.nameSelfDetermination " +
-				"FROM UserPerson AS up " +
-				"JOIN Person p ON (up.pk.personId = p.id) " +
+				"SELECT hp.id, p.id, p.firstName, p.lastName, pe.nameSelfDetermination " +
+				"FROM HealthcareProfessional AS hp " +
+				"JOIN UserPerson AS up ON (up.pk.personId = hp.personId) " +
+				"JOIN Person p ON (hp.personId = p.id) " +
 				"JOIN PersonExtended pe ON (p.id = pe.id) " +
 				"WHERE up.pk.userId = :userId " +
+				"AND hp.deleteable.deleted = false " +
 				"";
 		Query query = entityManager.createQuery(sqlString);
 		query.setParameter("userId", userId);
 		Object[] authorInfo = (Object[]) query.getSingleResult();
-		ProfessionalCompleteBo result = new ProfessionalCompleteBo((Integer) authorInfo[0], (String) authorInfo[1],
-				(String) authorInfo[2], (String) authorInfo[3]);
+		ProfessionalCompleteBo result = new ProfessionalCompleteBo((Integer) authorInfo[0], (Integer) authorInfo[1],
+				(String) authorInfo[2], (String) authorInfo[3], (String) authorInfo[4]);
 
 		result.setProfessions(buildProfessions(result.getPersonId()));
 		log.trace("execute result query -> {}", result);
@@ -51,7 +53,7 @@ public class HealthcareProfessionalStorageImpl implements HealthcareProfessional
 	public ProfessionalCompleteBo fetchProfessionalById(Integer professionalId) {
 		log.debug("fetchProfessionalById -> professionalId={}", professionalId);
 		String sqlString = "" +
-				"SELECT p.id, p.firstName, p.lastName, pe.nameSelfDetermination " +
+				"SELECT hp.id, p.id, p.firstName, p.lastName, pe.nameSelfDetermination " +
 				"FROM HealthcareProfessional AS hp " +
 				"JOIN Person p ON (hp.personId = p.id) " +
 				"JOIN PersonExtended pe ON (p.id = pe.id) " +
@@ -60,8 +62,8 @@ public class HealthcareProfessionalStorageImpl implements HealthcareProfessional
 		Query query = entityManager.createQuery(sqlString);
 		query.setParameter("professionalId", professionalId);
 		Object[] authorInfo = (Object[]) query.getSingleResult();
-		ProfessionalCompleteBo result = new ProfessionalCompleteBo((Integer) authorInfo[0], (String) authorInfo[1],
-				(String) authorInfo[2], (String) authorInfo[3]);
+		ProfessionalCompleteBo result = new ProfessionalCompleteBo((Integer) authorInfo[0], (Integer) authorInfo[1],
+				(String) authorInfo[2], (String) authorInfo[3], (String) authorInfo[4]);
 
 		result.setProfessions(buildProfessions(result.getPersonId()));
 		log.trace("execute result query -> {}", result);
@@ -119,18 +121,4 @@ public class HealthcareProfessionalStorageImpl implements HealthcareProfessional
 		return new LicenseNumberBo((Integer) row[0], (String) row[1], (ELicenseNumberTypeBo) row[2]);
 	}
 
-	private ProfessionalCompleteBo buildProfessionalCompleteBo(Integer userId) {
-		String sqlString = "" +
-				"SELECT p.id, p.firstName, p.lastName, pe.nameSelfDetermination " +
-				"FROM UserPerson AS up " +
-				"JOIN Person p ON (up.pk.personId = p.id) " +
-				"JOIN PersonExtended pe ON (p.id = pe.id) " +
-				"WHERE up.pk.userId = :userId " +
-				"";
-		Query query = entityManager.createQuery(sqlString);
-		query.setParameter("userId", userId);
-		Object[] authorInfo = (Object[]) query.getSingleResult();
-		return new ProfessionalCompleteBo((Integer) authorInfo[0], (String) authorInfo[1],
-				(String) authorInfo[2], (String) authorInfo[3]);
-	}
 }

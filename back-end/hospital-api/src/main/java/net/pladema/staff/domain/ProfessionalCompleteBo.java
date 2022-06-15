@@ -15,13 +15,15 @@ import lombok.ToString;
 @AllArgsConstructor
 public class ProfessionalCompleteBo {
 
+	private Integer id;
 	private Integer personId;
     private String firstName;
     private String lastName;
 	private String nameSelfDetermination;
 
 	private List<ProfessionBo> professions;
-	public ProfessionalCompleteBo(Integer personId, String firstName, String lastName, String nameSelfDetermination){
+	public ProfessionalCompleteBo(Integer id, Integer personId, String firstName, String lastName, String nameSelfDetermination){
+		this.id = id;
 		this.personId = personId;
 		this.firstName = firstName;
         this.lastName = lastName;

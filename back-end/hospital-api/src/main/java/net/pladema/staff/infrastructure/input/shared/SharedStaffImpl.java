@@ -54,11 +54,11 @@ public class SharedStaffImpl implements SharedStaffPort {
 
 	@Override
 	public ProfessionalCompleteDto getProfessionalComplete(Integer userId) {
-		return healthcareProfessionalExternalService.getProfessionalComplete(userId);
+		return healthcareProfessionalExternalService.getProfessionalCompleteInfoByUser(userId);
 	}
 
 	@Override
 	public ProfessionalCompleteDto getProfessionalCompleteById(Integer professionalId) {
-		return healthcareProfessionalExternalService.getProfessionalCompleteById(professionalId);
+		return healthcareProfessionalExternalService.getProfessionalCompleteInfoById(professionalId);
 	}
 }

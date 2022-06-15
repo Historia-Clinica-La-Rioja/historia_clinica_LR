@@ -53,7 +53,7 @@ public interface HealthcareProfessionalMapper {
 	}
 	@Name("fromProfessionalCompleteBo")
 	default ProfessionalCompleteDto fromProfessionalCompleteBo(ProfessionalCompleteBo professionalCompleteBo) {
-		return new ProfessionalCompleteDto(professionalCompleteBo.getPersonId(), professionalCompleteBo.getFirstName(),
+		return new ProfessionalCompleteDto(professionalCompleteBo.getId(), professionalCompleteBo.getPersonId(), professionalCompleteBo.getFirstName(),
 				professionalCompleteBo.getLastName(), professionalCompleteBo.getNameSelfDetermination(),
 				mapProfessions(professionalCompleteBo.getProfessions()));
 	}

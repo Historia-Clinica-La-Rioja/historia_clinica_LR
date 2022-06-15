@@ -87,12 +87,12 @@ public class HealthcareProfessionalExternalServiceImpl implements HealthcareProf
     }
 
 	@Override
-	public ProfessionalCompleteDto getProfessionalComplete(Integer userId) {
+	public ProfessionalCompleteDto getProfessionalCompleteInfoByUser(Integer userId) {
 		return healthcareProfessionalMapper.fromProfessionalCompleteBo(fetchProfessionalByUser.execute(userId));
 	}
 
 	@Override
-	public ProfessionalCompleteDto getProfessionalCompleteById(Integer professionalId) {
+	public ProfessionalCompleteDto getProfessionalCompleteInfoById(Integer professionalId) {
 		return healthcareProfessionalMapper.fromProfessionalCompleteBo(fetchProfessionalById.execute(professionalId));
 	}
 
