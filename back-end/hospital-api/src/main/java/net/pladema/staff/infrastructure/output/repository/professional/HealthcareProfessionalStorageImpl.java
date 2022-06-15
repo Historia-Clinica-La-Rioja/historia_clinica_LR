@@ -47,6 +47,27 @@ public class HealthcareProfessionalStorageImpl implements HealthcareProfessional
 		return result;
 	}
 
+	@Override
+	public ProfessionalCompleteBo fetchProfessionalById(Integer professionalId) {
+		log.debug("fetchProfessionalById -> professionalId={}", professionalId);
+		String sqlString = "" +
+				"SELECT p.id, p.firstName, p.lastName, pe.nameSelfDetermination " +
+				"FROM HealthcareProfessional AS hp " +
+				"JOIN Person p ON (hp.personId = p.id) " +
+				"JOIN PersonExtended pe ON (p.id = pe.id) " +
+				"WHERE hp.id = :professionalId " +
+				"";
+		Query query = entityManager.createQuery(sqlString);
+		query.setParameter("professionalId", professionalId);
+		Object[] authorInfo = (Object[]) query.getSingleResult();
+		ProfessionalCompleteBo result = new ProfessionalCompleteBo((Integer) authorInfo[0], (String) authorInfo[1],
+				(String) authorInfo[2], (String) authorInfo[3]);
+
+		result.setProfessions(buildProfessions(result.getPersonId()));
+		log.trace("execute result query -> {}", result);
+		return result;
+	}
+
 	private List<ProfessionBo> buildProfessions(Integer personId) {
 		String sqlString = "" +
 				"SELECT hp.id, " +

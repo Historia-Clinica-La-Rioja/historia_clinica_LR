@@ -1,5 +1,22 @@
 package net.pladema.clinichistory.hospitalization.service.epicrisis.impl;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
+import java.util.Collections;
+import java.util.List;
+
+import javax.validation.ConstraintViolationException;
+
+import org.assertj.core.util.Lists;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.mockito.Mock;
+import org.springframework.beans.factory.annotation.Autowired;
+
 import ar.lamansys.sgh.clinichistory.application.createDocument.DocumentFactory;
 import ar.lamansys.sgh.clinichistory.application.document.DocumentService;
 import ar.lamansys.sgh.clinichistory.domain.ips.AnthropometricDataBo;
@@ -22,6 +39,7 @@ import ar.lamansys.sgx.shared.featureflags.application.FeatureFlagsService;
 import net.pladema.UnitRepository;
 import net.pladema.clinichistory.hospitalization.repository.EvolutionNoteDocumentRepository;
 import net.pladema.clinichistory.hospitalization.repository.InternmentEpisodeRepository;
+import net.pladema.clinichistory.hospitalization.repository.InternmentEpisodeStorage;
 import net.pladema.clinichistory.hospitalization.repository.PatientDischargeRepository;
 import net.pladema.clinichistory.hospitalization.repository.domain.EvolutionNoteDocument;
 import net.pladema.clinichistory.hospitalization.repository.domain.InternmentEpisode;
@@ -31,21 +49,6 @@ import net.pladema.clinichistory.hospitalization.service.epicrisis.EpicrisisVali
 import net.pladema.clinichistory.hospitalization.service.epicrisis.domain.EpicrisisBo;
 import net.pladema.clinichistory.hospitalization.service.impl.InternmentEpisodeServiceImpl;
 import net.pladema.establishment.repository.MedicalCoveragePlanRepository;
-
-import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
-import org.mockito.Mock;
-import org.springframework.beans.factory.annotation.Autowired;
-
-import javax.validation.ConstraintViolationException;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.LocalTime;
-import java.util.Collections;
-import java.util.List;
-
-import static org.junit.jupiter.api.Assertions.assertEquals;
 
 class CreateEpicrisisServiceImplTest extends UnitRepository {
 
@@ -78,8 +81,10 @@ class CreateEpicrisisServiceImplTest extends UnitRepository {
 	@Mock
 	private FeatureFlagsService featureFlagsService;
 
-	@Mock
 	private InternmentEpisodeService internmentEpisodeService;
+
+	@Mock
+	private InternmentEpisodeStorage internmentEpisodeStorage;
 
     @BeforeEach
     void setUp(){
@@ -89,7 +94,7 @@ class CreateEpicrisisServiceImplTest extends UnitRepository {
                 patientDischargeRepository,
                 documentService,
                 medicalCoveragePlanRepository,
-				featureFlagsService);
+                internmentEpisodeStorage, featureFlagsService);
         createEpicrisisService = new CreateEpicrisisServiceImpl(
                 documentFactory,
                 internmentEpisodeService,

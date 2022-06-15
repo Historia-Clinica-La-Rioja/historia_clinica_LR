@@ -17,4 +17,6 @@ public interface HealthcareProfessionalExternalService {
     ProfessionalDto findProfessionalByUserId(Integer userId);
 
 	ProfessionalCompleteDto getProfessionalComplete(Integer userId);
+
+	ProfessionalCompleteDto getProfessionalCompleteById(Integer professionalId);
 }

@@ -1,5 +1,24 @@
 package net.pladema.clinichistory.hospitalization.service.documents.anamnesis.impl;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.when;
+
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
+import java.util.Collections;
+import java.util.List;
+
+import javax.validation.ConstraintViolationException;
+
+import org.assertj.core.util.Lists;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.mockito.Mock;
+import org.springframework.beans.factory.annotation.Autowired;
+
 import ar.lamansys.sgh.clinichistory.application.createDocument.DocumentFactory;
 import ar.lamansys.sgh.clinichistory.application.createDocumentFile.CreateDocumentFile;
 import ar.lamansys.sgh.clinichistory.application.document.DocumentService;
@@ -15,34 +34,18 @@ import ar.lamansys.sgh.clinichistory.domain.ips.RiskFactorBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.SnomedBo;
 import ar.lamansys.sgx.shared.dates.configuration.DateTimeProvider;
 import ar.lamansys.sgx.shared.exceptions.NotFoundException;
+import ar.lamansys.sgx.shared.featureflags.application.FeatureFlagsService;
 import net.pladema.UnitRepository;
 import net.pladema.clinichistory.hospitalization.repository.EvolutionNoteDocumentRepository;
 import net.pladema.clinichistory.hospitalization.repository.InternmentEpisodeRepository;
+import net.pladema.clinichistory.hospitalization.repository.InternmentEpisodeStorage;
 import net.pladema.clinichistory.hospitalization.repository.PatientDischargeRepository;
 import net.pladema.clinichistory.hospitalization.repository.domain.InternmentEpisode;
 import net.pladema.clinichistory.hospitalization.service.anamnesis.AnamnesisValidator;
 import net.pladema.clinichistory.hospitalization.service.anamnesis.domain.AnamnesisBo;
 import net.pladema.clinichistory.hospitalization.service.anamnesis.impl.CreateAnamnesisServiceImpl;
 import net.pladema.clinichistory.hospitalization.service.impl.InternmentEpisodeServiceImpl;
-import ar.lamansys.sgx.shared.featureflags.application.FeatureFlagsService;
 import net.pladema.establishment.repository.MedicalCoveragePlanRepository;
-
-import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
-import org.mockito.Mock;
-import org.springframework.beans.factory.annotation.Autowired;
-
-import javax.validation.ConstraintViolationException;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.LocalTime;
-import java.util.Collections;
-import java.util.List;
-
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.when;
 
 
 class CreateAnamnesisServiceImplTest extends UnitRepository {
@@ -73,6 +76,7 @@ class CreateAnamnesisServiceImplTest extends UnitRepository {
 	@Mock
 	private CreateDocumentFile createDocumentFile;
 
+	private InternmentEpisodeStorage internmentEpisodeStorage;
 	@Mock
 	private FeatureFlagsService featureFlagsService;
 
@@ -86,7 +90,7 @@ class CreateAnamnesisServiceImplTest extends UnitRepository {
 				patientDischargeRepository,
 				documentService,
                 medicalCoveragePlanRepository,
-				featureFlagsService);
+                internmentEpisodeStorage, featureFlagsService);
 		createAnamnesisServiceImpl =
 				new CreateAnamnesisServiceImpl(documentFactory, internmentEpisodeService, dateTimeProvider,
 						new AnamnesisValidator(featureFlagsService));

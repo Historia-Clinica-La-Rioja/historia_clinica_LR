@@ -8,6 +8,7 @@ import ar.lamansys.sgh.shared.infrastructure.input.service.staff.ProfessionalCom
 import net.pladema.clinichistory.hospitalization.controller.dto.HealthCareProfessionalGroupDto;
 import net.pladema.clinichistory.hospitalization.controller.mapper.HealthCareProfessionalGroupMapper;
 import net.pladema.clinichistory.hospitalization.repository.domain.HealthcareProfessionalGroup;
+import net.pladema.staff.application.fetchprofessionalbyid.FetchProfessionalById;
 import net.pladema.staff.application.fetchprofessionalbyuser.FetchProfessionalByUser;
 import net.pladema.staff.controller.dto.ProfessionalDto;
 import net.pladema.staff.controller.mapper.HealthcareProfessionalMapper;
@@ -26,13 +27,18 @@ public class HealthcareProfessionalExternalServiceImpl implements HealthcareProf
     private final HealthcareProfessionalMapper healthcareProfessionalMapper;
 
 	private final FetchProfessionalByUser fetchProfessionalByUser;
+
+	private final FetchProfessionalById fetchProfessionalById;
     public HealthcareProfessionalExternalServiceImpl(HealthcareProfessionalService healthcareProfessionalService,
 													 HealthCareProfessionalGroupMapper healthCareProfessionalGroupMapper,
-													 HealthcareProfessionalMapper healthcareProfessionalMapper, FetchProfessionalByUser fetchProfessionalByUser){
+													 HealthcareProfessionalMapper healthcareProfessionalMapper,
+													 FetchProfessionalByUser fetchProfessionalByUser,
+													 FetchProfessionalById fetchProfessionalById){
         this.healthcareProfessionalService = healthcareProfessionalService;
         this.healthCareProfessionalGroupMapper = healthCareProfessionalGroupMapper;
         this.healthcareProfessionalMapper = healthcareProfessionalMapper;
 		this.fetchProfessionalByUser = fetchProfessionalByUser;
+		this.fetchProfessionalById = fetchProfessionalById;
 	}
 
     @Override
@@ -83,6 +89,11 @@ public class HealthcareProfessionalExternalServiceImpl implements HealthcareProf
 	@Override
 	public ProfessionalCompleteDto getProfessionalComplete(Integer userId) {
 		return healthcareProfessionalMapper.fromProfessionalCompleteBo(fetchProfessionalByUser.execute(userId));
+	}
+
+	@Override
+	public ProfessionalCompleteDto getProfessionalCompleteById(Integer professionalId) {
+		return healthcareProfessionalMapper.fromProfessionalCompleteBo(fetchProfessionalById.execute(professionalId));
 	}
 
 }
