@@ -96,26 +96,26 @@ import { CreateOutpatientOrderComponent } from './dialogs/create-outpatient-orde
 		DiagnosisSummaryComponent,
 		InternmentSummaryComponent,
 		MedicalCoverageSummaryViewComponent,
-  		CreateInternmentOrderComponent,
-    	OperationDeniedComponent,
-     	CreateOutpatientOrderComponent,
+		CreateInternmentOrderComponent,
+		OperationDeniedComponent,
+		CreateOutpatientOrderComponent,
 	],
-    imports: [
-        CommonModule,
-        FormsModule,
-        OverlayModule,
-        PortalModule,
-        PresentationModule,
-        ExtensionsModule,
-        HistoriaClinicaModule,
-        AmbulatoriaRoutingModule,
-        PacientesModule,
-        OdontologiaModule,
-        ClipboardModule,
-        IndicacionModule,
-        InternacionesModule,
+	imports: [
+		CommonModule,
+		FormsModule,
+		OverlayModule,
+		PortalModule,
+		PresentationModule,
+		ExtensionsModule,
+		HistoriaClinicaModule,
+		AmbulatoriaRoutingModule,
+		PacientesModule,
+		OdontologiaModule,
+		ClipboardModule,
+		IndicacionModule,
+		InternacionesModule,
 		EstudioModule
-    ]
+	]
 })
 export class AmbulatoriaModule {
 }
