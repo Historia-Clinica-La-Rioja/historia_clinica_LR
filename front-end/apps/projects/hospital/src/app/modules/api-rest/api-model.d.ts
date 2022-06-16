@@ -2802,6 +2802,10 @@ export interface TwoFactorAuthenticationDto {
     sharedSecretBarCode: string;
 }
 
+export interface TwoFactorAuthenticationLoginDto {
+    code: string;
+}
+
 export interface UpdateAppointmentDto {
     appointmentId: number;
     appointmentStateId: number;

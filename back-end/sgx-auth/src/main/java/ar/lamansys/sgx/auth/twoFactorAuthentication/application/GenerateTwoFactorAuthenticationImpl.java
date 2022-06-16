@@ -3,25 +3,31 @@ package ar.lamansys.sgx.auth.twoFactorAuthentication.application;
 import ar.lamansys.sgx.auth.twoFactorAuthentication.domain.SetTwoFactorAuthenticationBo;
 import ar.lamansys.sgx.shared.security.UserInfo;
 
-import lombok.RequiredArgsConstructor;
-
 import lombok.extern.slf4j.Slf4j;
 
 import org.apache.commons.codec.binary.Base32;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.security.SecureRandom;
 
-@RequiredArgsConstructor
 @Service
 @Slf4j
 public class GenerateTwoFactorAuthenticationImpl implements GenerateTwoFactorAuthentication {
 
-	public static final String ISSUER = "Historia de Salud Integrada";
 	private final UserAuthenticationStorage userAuthenticationStorage;
 	private final TwoFactorAuthenticationCypher cypher;
+	private final String issuer;
+
+	public GenerateTwoFactorAuthenticationImpl(UserAuthenticationStorage userAuthenticationStorage,
+											   TwoFactorAuthenticationCypher cypher,
+											   @Value("${auth.2fa.issuer:HSI}") String issuer) {
+		this.userAuthenticationStorage = userAuthenticationStorage;
+		this.cypher = cypher;
+		this.issuer = issuer;
+	}
 
 	private String generateSecretKey() {
 		SecureRandom random = new SecureRandom();
@@ -33,9 +39,9 @@ public class GenerateTwoFactorAuthenticationImpl implements GenerateTwoFactorAut
 
 	private String getAuthenticatorBarCode(String secretKey, String account) {
 		return "otpauth://totp/"
-				+ URLEncoder.encode(GenerateTwoFactorAuthenticationImpl.ISSUER + ":" + account, StandardCharsets.UTF_8).replace("+", "%20")
+				+ URLEncoder.encode(this.issuer + ":" + account, StandardCharsets.UTF_8).replace("+", "%20")
 				+ "?secret=" + URLEncoder.encode(secretKey, StandardCharsets.UTF_8).replace("+", "%20")
-				+ "&issuer=" + URLEncoder.encode(GenerateTwoFactorAuthenticationImpl.ISSUER, StandardCharsets.UTF_8).replace("+", "%20");
+				+ "&issuer=" + URLEncoder.encode(this.issuer, StandardCharsets.UTF_8).replace("+", "%20");
 	}
 
 	@Override

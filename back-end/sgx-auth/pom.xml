@@ -51,6 +51,12 @@
 			<scope>test</scope>
 		</dependency>
 
+		<dependency>
+			<groupId>de.taimos</groupId>
+			<artifactId>totp</artifactId>
+			<version>1.0</version>
+		</dependency>
+
 		<!-- https://mvnrepository.com/artifact/org.junit.jupiter/junit-jupiter -->
 		<!-- Provides everything you need to write JUnit 5 Jupiter tests. -->
 		<dependency>
