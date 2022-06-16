@@ -2797,6 +2797,11 @@ export interface TriagePediatricDto extends TriageNoAdministrativeDto {
     circulation?: CirculationDto;
 }
 
+export interface TwoFactorAuthenticationDto {
+    sharedSecret: string;
+    sharedSecretBarCode: string;
+}
+
 export interface UpdateAppointmentDto {
     appointmentId: number;
     appointmentStateId: number;
