@@ -25,10 +25,8 @@
 
 		<app-new-consultation-expansion-section id="motivo"
 			[title]="'ambulatoria.paciente.nueva-consulta.motivo.TITLE' | translate" icon="sms_failed"
-			[isEmpty]="motivoNuevaConsultaService.isEmpty()">
+			[isEmpty]="motivoNuevaConsultaService.isEmpty()" [recommend]="true">
 			<div>
-				<h5 class="recomendado" [translate]="'ambulatoria.paciente.nueva-consulta.RECOMENDADO'"></h5>
-
 				<app-document-section-table [columns]="motivoNuevaConsultaService.getTableColumnConfig()"
 					[data]="motivoNuevaConsultaService.getMotivosConsulta()">
 				</app-document-section-table>
@@ -42,10 +40,8 @@
 
 		<app-new-consultation-expansion-section id="problemas"
 			[title]="'ambulatoria.paciente.nueva-consulta.problemas.TITLE' | translate" icon="error_outlined"
-			[isEmpty]="ambulatoryConsultationProblemsService.isEmpty()" [collapsed]="false">
+			[isEmpty]="ambulatoryConsultationProblemsService.isEmpty()" [collapsed]="false" [recommend]="true">
 			<div>
-				<h5 class="recomendado" [translate]="'ambulatoria.paciente.nueva-consulta.RECOMENDADO'"></h5>
-
 				<app-document-section-table [columns]="ambulatoryConsultationProblemsService.getColumns()"
 					[data]="ambulatoryConsultationProblemsService.getProblemas()">
 				</app-document-section-table>

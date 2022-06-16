@@ -25,8 +25,8 @@
 
 		<app-new-consultation-expansion-section id="reasons"
 			[title]="'odontologia.odontology-consultation-dock-popup.REASON_TITLE' | translate" icon="sms_failed"
-			[isEmpty]="reasonNewConsultationService.isEmpty()">
-			<app-new-document-section sectionImportance="odontologia.odontology-consultation-dock-popup.RECOMMENDED">
+			[isEmpty]="reasonNewConsultationService.isEmpty()" [recommend]="true">
+			<app-new-document-section>
 
 				<ng-container concept-form>
 
