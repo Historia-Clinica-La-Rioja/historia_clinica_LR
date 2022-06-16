@@ -327,3 +327,25 @@ databaseChangeLog:
                 - column:
                     name: previous_login
                     type: datetime
+    - changeSet:
+        id: dropFK_appointment_observation_created_by
+        comment: drop FK constraint from appointment_observation table
+        author: flizalde
+        changes:
+          - dropForeignKeyConstraint:
+              baseTableName: appointment_observation
+              constraintName: FK_appointment_observation_created_by
+
+    - changeSet:
+        id: FK_appointment_observation_created_by
+        author: flizalde
+        changes:
+          - addForeignKeyConstraint:
+              baseColumnNames: created_by
+              baseTableName: appointment_observation
+              constraintName: FK_appointment_observation_created_by
+              onDelete: NO ACTION
+              onUpdate: NO ACTION
+              referencedColumnNames: id
+              referencedTableName: users
+              validate: true
