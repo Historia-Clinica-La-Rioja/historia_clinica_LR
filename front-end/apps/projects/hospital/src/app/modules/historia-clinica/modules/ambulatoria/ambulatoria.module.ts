@@ -56,6 +56,7 @@ import { CreateInternmentOrderComponent } from './dialogs/create-internment-orde
 import { EstudioModule } from './modules/estudio/estudio.module';
 import { OperationDeniedComponent } from './dialogs/diagnosis-required/operation-denied.component';
 import { CreateOutpatientOrderComponent } from './dialogs/create-outpatient-order/create-outpatient-order.component';
+import { NewConsultationAddReasonFormComponent } from './dialogs/new-consultation-add-reason-form/new-consultation-add-reason-form.component';
 
 @NgModule({
 	declarations: [
@@ -99,6 +100,7 @@ import { CreateOutpatientOrderComponent } from './dialogs/create-outpatient-orde
 		CreateInternmentOrderComponent,
 		OperationDeniedComponent,
 		CreateOutpatientOrderComponent,
+		NewConsultationAddReasonFormComponent,
 	],
 	imports: [
 		CommonModule,

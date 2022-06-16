@@ -46,6 +46,7 @@ import { HCEPersonalHistory } from '../reference/reference.component';
 import { DATOS_ANTROPOMETRICOS, FACTORES_DE_RIESGO } from '@historia-clinica/constants/validation-constants';
 import { hasMaxTwoDecimalDigits, PATTERN_INTEGER_NUMBER } from '@core/utils/pattern.utils';
 import { NewConsultationAddProblemFormComponent } from '@historia-clinica/dialogs/new-consultation-add-problem-form/new-consultation-add-problem-form.component';
+import { NewConsultationAddReasonFormComponent } from '../new-consultation-add-reason-form/new-consultation-add-reason-form.component';
 
 const TIME_OUT = 5000;
 
@@ -595,7 +596,7 @@ export class NuevaConsultaDockPopupComponent implements OnInit {
 		control.reset();
 	}
 
-	addProblem() {
+	addProblem(): void {
 		this.dialog.open(NewConsultationAddProblemFormComponent, {
 			data: {
 				ambulatoryConsultationProblemsService: this.ambulatoryConsultationProblemsService,
@@ -609,6 +610,17 @@ export class NuevaConsultaDockPopupComponent implements OnInit {
 		});
 	}
 
+	addReason(): void {
+		this.dialog.open(NewConsultationAddReasonFormComponent, {
+			data: {
+				reasonService: this.motivoNuevaConsultaService,
+				searchConceptsLocallyFF: this.searchConceptsLocallyFFIsOn,
+			},
+			autoFocus: false,
+			width: '35%',
+			disableClose: true,
+		});
+	}
 }
 
 export interface NuevaConsultaData {

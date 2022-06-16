@@ -105,7 +105,6 @@
                     "SEARCH_PLACEHOLDER": "Buscar motivo",
                     "ADD": "Agregar motivo",
                     "table": {
-                        "TITLE": "Motivos registrados",
                         "columns": {
                             "MOTIVO": "Motivos"
                         }
