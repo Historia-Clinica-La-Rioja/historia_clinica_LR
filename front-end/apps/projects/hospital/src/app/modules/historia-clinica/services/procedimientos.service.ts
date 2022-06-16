@@ -95,7 +95,7 @@ export class ProcedimientosService {
 		return data.snomed.sctid === data1.snomed.sctid;
 	}
 
-	addToList() {
+	addToList(): boolean {
 		if (this.form.valid && this.snomedConcept) {
 			const nuevoProcedimiento: Procedimiento = {
 				snomed: this.snomedConcept,
@@ -103,7 +103,9 @@ export class ProcedimientosService {
 			};
 			this.addControl(nuevoProcedimiento);
 			this.resetForm();
+			return true;
 		}
+		return false;
 	}
 
 	removeProcedimiento(index: number): void {

@@ -27,7 +27,6 @@ import { SuggestedFieldsPopupComponent } from '../../../../../presentation/compo
 import { hasError } from '@core/utils/form.utils';
 import { NewConsultationSuggestedFieldsService } from '../../services/new-consultation-suggested-fields.service';
 import { TranslateService } from '@ngx-translate/core';
-import { MIN_DATE } from "@core/utils/date.utils";
 import { AmbulatoryConsultationProblem, AmbulatoryConsultationProblemsService } from '@historia-clinica/services/ambulatory-consultation-problems.service';
 import { FeatureFlagService } from '@core/services/feature-flag.service';
 import { AmbulatoryConsultationReferenceService, Reference } from '../../services/ambulatory-consultation-reference.service';
@@ -48,6 +47,7 @@ import { NewConsultationAddProblemFormComponent } from '@historia-clinica/dialog
 import { NewConsultationAddReasonFormComponent } from '../new-consultation-add-reason-form/new-consultation-add-reason-form.component';
 import { NewConsultationFamilyHistoryFormComponent } from '../new-consultation-family-history-form/new-consultation-family-history-form.component';
 import { NewConsultationMedicationFormComponent } from '../new-consultation-medication-form/new-consultation-medication-form.component';
+import { NewConsultationProcedureFormComponent } from '../new-consultation-procedure-form/new-consultation-procedure-form.component';
 
 const TIME_OUT = 5000;
 
@@ -76,7 +76,6 @@ export class NuevaConsultaDockPopupComponent implements OnInit {
 	public hasError = hasError;
 	severityTypes: any[];
 	criticalityTypes: any[];
-	minDate = MIN_DATE;
 	public reportFFIsOn: boolean;
 	searchConceptsLocallyFFIsOn = false;
 	ambulatoryConsultationReferenceService: AmbulatoryConsultationReferenceService;
@@ -638,6 +637,18 @@ export class NuevaConsultaDockPopupComponent implements OnInit {
 		this.dialog.open(NewConsultationMedicationFormComponent, {
 			data: {
 				medicationService: this.medicacionesNuevaConsultaService,
+				searchConceptsLocallyFF: this.searchConceptsLocallyFFIsOn,
+			},
+			autoFocus: false,
+			width: '35%',
+			disableClose: true,
+		});
+	}
+
+	addProcedure(): void {
+		this.dialog.open(NewConsultationProcedureFormComponent, {
+			data: {
+				procedureService: this.procedimientoNuevaConsultaService,
 				searchConceptsLocallyFF: this.searchConceptsLocallyFFIsOn,
 			},
 			autoFocus: false,
