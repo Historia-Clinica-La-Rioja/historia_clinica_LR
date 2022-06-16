@@ -3,9 +3,14 @@
         <mat-divider *ngIf="!hideBorder"></mat-divider>
         <div fxLayout="row" fxLayoutAlign="space-between center"
             [ngClass]="{'closed-panel' : isEmpty && collapsed && !fixedExpanded}">
-            <div fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="5px">
-                <mat-icon fontSet="material-icons-outlined">{{ icon }}</mat-icon>
-                <span class="title">{{ title }}</span>
+            <div fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="10px">
+                <div fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="5px">
+                    <mat-icon fontSet="material-icons-outlined">{{ icon }}</mat-icon>
+                    <span class="title">{{ title }}</span>
+                </div>
+                <span *ngIf="recommend" class="recommend">
+                    *{{ 'historia-clinica.new-consultation-expansion-section.RECOMMEND' | translate }}
+                </span>
             </div>
             <mat-icon *ngIf="isEmpty && collapsed && !fixedExpanded">add</mat-icon>
             <mat-icon *ngIf="!isEmpty && collapsed && !fixedExpanded">expand_more</mat-icon>

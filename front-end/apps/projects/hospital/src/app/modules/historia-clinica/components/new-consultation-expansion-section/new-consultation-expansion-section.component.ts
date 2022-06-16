@@ -11,6 +11,7 @@ export class NewConsultationExpansionSectionComponent {
   @Input() icon: string;
   @Input() title: string;
   @Input() hideBorder = false;
+  @Input() recommend = false;
   @Input() collapsed = true;
   @Input() isEmpty = true;
   @Input() set fixedExpanded(value: boolean) {
