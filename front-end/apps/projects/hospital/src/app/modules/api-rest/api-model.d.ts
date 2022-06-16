@@ -2258,10 +2258,18 @@ export interface ProcedureReduced {
 }
 
 export interface ProfessionCompleteDto {
+    allLicenses: LicenseNumberDto[];
     description: string;
     id: number;
     licenses: LicenseNumberDto[];
     professionId: number;
+    specialties: ProfessionSpecialtyDto[];
+}
+
+export interface ProfessionSpecialtyDto {
+    id: number;
+    licenses: LicenseNumberDto[];
+    specialty: ClinicalSpecialtyDto;
 }
 
 export interface ProfessionalAvailabilityDto {
@@ -2315,6 +2323,7 @@ export interface ProfessionalPersonDto extends Serializable {
 }
 
 export interface ProfessionalProfessionBackofficeDto {
+    clinicalSpecialtyId: number;
     deleted: boolean;
     healthcareProfessionalId: number;
     id: number;

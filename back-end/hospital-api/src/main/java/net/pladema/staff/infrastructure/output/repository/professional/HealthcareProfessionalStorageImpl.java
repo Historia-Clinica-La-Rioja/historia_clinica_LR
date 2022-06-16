@@ -13,7 +13,9 @@ import lombok.extern.slf4j.Slf4j;
 import net.pladema.staff.application.ports.HealthcareProfessionalStorage;
 import net.pladema.staff.domain.LicenseNumberBo;
 import net.pladema.staff.domain.ProfessionBo;
+import net.pladema.staff.domain.ProfessionSpecialtyBo;
 import net.pladema.staff.domain.ProfessionalCompleteBo;
+import net.pladema.staff.service.domain.ClinicalSpecialtyBo;
 import net.pladema.staff.service.domain.ELicenseNumberTypeBo;
 
 @Service
@@ -72,13 +74,14 @@ public class HealthcareProfessionalStorageImpl implements HealthcareProfessional
 
 	private List<ProfessionBo> buildProfessions(Integer personId) {
 		String sqlString = "" +
-				"SELECT hp.id, " +
+				"SELECT pp.id, " +
 				"		ps.id as professionalId, ps.description " +
 				"FROM HealthcareProfessional hp " +
 				"INNER JOIN ProfessionalProfessions pp ON (pp.healthcareProfessionalId = hp.id) " +
 				"INNER JOIN ProfessionalSpecialty ps ON (pp.professionalSpecialtyId = ps.id) " +
 				"WHERE hp.personId = :personId " +
 				"AND hp.deleteable.deleted = false " +
+				"AND pp.deleteable.deleted = false " +
 				"";
 
 		List<Object[]> rows = new ArrayList<>();
@@ -97,11 +100,49 @@ public class HealthcareProfessionalStorageImpl implements HealthcareProfessional
 
 	private ProfessionBo buildProfession(Object[]  row) {
 		var result = new ProfessionBo((Integer) row[0], (Integer) row[1],(String) row[2]);
-		result.setLicenses(buildLicenses(result.getId()));
+		result.setLicenses(buildProfessionalLicenses(result.getId()));
+		result.setSpecialties(buildSpecialties(result.getId()));
 		return result;
 	}
 
-	private List<LicenseNumberBo> buildLicenses(Integer professionalProfessionId) {
+	private List<ProfessionSpecialtyBo> buildSpecialties(Integer professionalProfessionId) {
+		String sqlString = "" +
+				"SELECT hps.id, " +
+				"		cs.id, cs.name " +
+				"FROM HealthcareProfessionalSpecialty hps " +
+				"INNER JOIN ClinicalSpecialty cs ON (cs.id = hps.clinicalSpecialtyId) " +
+				"WHERE hps.professionalProfessionId = :professionalProfessionId " +
+				"AND hps.deleteable.deleted = false " +
+				"";
+
+		Query query = entityManager.createQuery(sqlString);
+		query.setParameter("professionalProfessionId", professionalProfessionId);
+		List<Object[]> rows = query.getResultList();
+		return rows.stream()
+				.map(this::buildProfessionalSpecialty)
+				.collect(Collectors.toList());
+	}
+
+	private ProfessionSpecialtyBo buildProfessionalSpecialty(Object[] row) {
+		List<LicenseNumberBo> licenses =  buildSpecialtyLicenses((Integer) row[0]);
+		return new ProfessionSpecialtyBo((Integer) row[0], new ClinicalSpecialtyBo((Integer) row[1], (String) row[2]), licenses);
+	}
+	private List<LicenseNumberBo> buildSpecialtyLicenses(Integer healthcareProfessionalSpecialtyId) {
+		String sqlString = "" +
+				"SELECT pln.id, " +
+				"		pln.licenseNumber, pln.type " +
+				"FROM ProfessionalLicenseNumber pln " +
+				"WHERE pln.healthcareProfessionalSpecialtyId = :healthcareProfessionalSpecialtyId " +
+				"";
+
+		Query query = entityManager.createQuery(sqlString);
+		query.setParameter("healthcareProfessionalSpecialtyId", healthcareProfessionalSpecialtyId);
+		List<Object[]> rows = query.getResultList();
+		return rows.stream()
+				.map(this::buildLicense)
+				.collect(Collectors.toList());
+	}
+	private List<LicenseNumberBo> buildProfessionalLicenses(Integer professionalProfessionId) {
 		String sqlString = "" +
 				"SELECT pln.id, " +
 				"		pln.licenseNumber, pln.type " +

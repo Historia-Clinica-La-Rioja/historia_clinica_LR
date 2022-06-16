@@ -8,15 +8,19 @@ import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.Named;
 
+import ar.lamansys.sgh.shared.infrastructure.input.service.ClinicalSpecialtyDto;
 import ar.lamansys.sgh.shared.infrastructure.input.service.staff.LicenseNumberDto;
 import ar.lamansys.sgh.shared.infrastructure.input.service.staff.ProfessionCompleteDto;
+import ar.lamansys.sgh.shared.infrastructure.input.service.staff.ProfessionSpecialtyDto;
 import ar.lamansys.sgh.shared.infrastructure.input.service.staff.ProfessionalCompleteDto;
 import jdk.jfr.Name;
 import net.pladema.staff.controller.dto.HealthcareProfessionalDto;
 import net.pladema.staff.controller.dto.ProfessionalDto;
 import net.pladema.staff.domain.LicenseNumberBo;
 import net.pladema.staff.domain.ProfessionBo;
+import net.pladema.staff.domain.ProfessionSpecialtyBo;
 import net.pladema.staff.domain.ProfessionalCompleteBo;
+import net.pladema.staff.service.domain.ClinicalSpecialtyBo;
 import net.pladema.staff.service.domain.HealthcarePersonBo;
 import net.pladema.staff.service.domain.HealthcareProfessionalBo;
 
@@ -68,7 +72,24 @@ public interface HealthcareProfessionalMapper {
 		return new ProfessionCompleteDto(professionBo.getId(),
 				professionBo.getProfessionId(),
 				professionBo.getDescription(),
-				mapLicenses(professionBo.getLicenses()));
+				mapLicenses(professionBo.getLicenses()),
+				mapProfessionalSpecialties(professionBo.getSpecialties()));
+	}
+
+	private List<ProfessionSpecialtyDto> mapProfessionalSpecialties(List<ProfessionSpecialtyBo> specialties) {
+		return specialties.stream().map(this::mapProfessionalSpecialty).collect(Collectors.toList());
+	}
+
+	private ProfessionSpecialtyDto mapProfessionalSpecialty(ProfessionSpecialtyBo professionSpecialtyBo){
+		return new ProfessionSpecialtyDto(professionSpecialtyBo.getId(),
+				mapClinicalSpecialty(professionSpecialtyBo.getSpecialty()),
+				mapLicenses(professionSpecialtyBo.getLicenses()));
+	}
+
+	private ClinicalSpecialtyDto mapClinicalSpecialty(ClinicalSpecialtyBo specialty){
+		return specialty != null ?
+				new ClinicalSpecialtyDto(specialty.getId(), specialty.getName()) :
+				null;
 	}
 
 	private List<LicenseNumberDto> mapLicenses(List<LicenseNumberBo> licenses) {
@@ -78,8 +99,9 @@ public interface HealthcareProfessionalMapper {
 	}
 
 	private LicenseNumberDto mapLicense(LicenseNumberBo licenseNumberBo) {
-		return new LicenseNumberDto(licenseNumberBo.getId(),
+		return licenseNumberBo != null ?
+				new LicenseNumberDto(licenseNumberBo.getId(),
 				licenseNumberBo.getNumber(),
-				licenseNumberBo.getType().getAcronym());
+				licenseNumberBo.getType().getAcronym()) : null;
 	}
 }

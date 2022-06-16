@@ -27,7 +27,7 @@ public class ProfessionalCompleteDto {
 	public String getCompleteLicenseInfo() {
 		List<LicenseNumberDto> licenses = new ArrayList<>();
 		professions.forEach(professionCompleteDto -> {
-			licenses.addAll(professionCompleteDto.getLicenses());
+			licenses.addAll(professionCompleteDto.getAllLicenses());
 		});
 		return licenses.stream()
 				.map(LicenseNumberDto::getInfo)
