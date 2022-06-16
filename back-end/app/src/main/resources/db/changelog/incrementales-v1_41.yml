@@ -41,3 +41,15 @@ databaseChangeLog:
                     name: alias
                     type: varchar(100)
 
+    - changeSet:       
+        id: add-column-two_factor_authentication_secret-user
+        comment: Add two_factor_authentication_secret column in users table
+        author: tmedina
+        changes:
+          - addColumn:
+              columns:
+                - column:
+                    name: two_factor_authentication_secret
+                    type: varchar(64)
+              tableName: users
+

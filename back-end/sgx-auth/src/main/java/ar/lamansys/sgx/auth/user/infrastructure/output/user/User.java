@@ -41,6 +41,9 @@ public class User extends SGXAuditableEntity<Integer> {
 
 	@Column(name = "previous_login")
 	private LocalDateTime previousLogin;
+	
+	@Column(name = "two_factor_authentication_secret", length = 64)
+	private String twoFactorAuthenticationSecret;
 
 	@Override
 	public String toString() {
