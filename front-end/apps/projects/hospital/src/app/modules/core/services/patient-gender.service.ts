@@ -7,23 +7,14 @@ import {AppFeature} from "@api-rest/api-model";
 })
 export class PatientGenderService {
 
-	private selfPerceivedGenderEnabled;
+	private selfPerceivedGenderEnabled = false;
 
 	constructor(private readonly featureFlagService: FeatureFlagService) {
-
-	}
-
-	private selfPerceivedGenderIsEnabled(): boolean {
-		if ((this.selfPerceivedGenderEnabled === null) || (this.selfPerceivedGenderEnabled === undefined))
-			this.featureFlagService.isActive(AppFeature.HABILITAR_DATOS_AUTOPERCIBIDOS).subscribe(isOn =>{
-				this.selfPerceivedGenderEnabled = isOn});
-		return this.selfPerceivedGenderEnabled;
+		this.featureFlagService.isActive(AppFeature.HABILITAR_DATOS_AUTOPERCIBIDOS).subscribe(isOn =>{
+			this.selfPerceivedGenderEnabled = isOn});
 	}
 
 	getPatientGender(patientGender: string, patientSelfPerceivedGender: string): string {
-		const nameSelfDetermination = patientSelfPerceivedGender ? patientSelfPerceivedGender : null;
-		if (this.selfPerceivedGenderIsEnabled() && (patientSelfPerceivedGender != undefined && nameSelfDetermination != null))
-			return nameSelfDetermination;
-		return patientGender;
+		return this.selfPerceivedGenderEnabled && patientSelfPerceivedGender ? patientSelfPerceivedGender : patientGender
 	}
 }
