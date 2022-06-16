@@ -142,7 +142,10 @@ Este documento detalla las propiedades configurables del sistema.
 | snomed-semantics.procedureGroup.ecl |   | < 71388002 &#124;procedimiento (procedimiento)&#124; | Opcional |  Ecl para búsqueda de procedimientos | v1.27.0  |
 | snomed-semantics.consultationReason.ecl |   | << 404684003 &#124;hallazgo clínico (hallazgo)&#124; OR << 71388002 &#124;procedimiento (procedimiento)&#124; OR << 243796009 &#124;situación con contexto explícito (situación)&#124; OR << 272379006 &#124; evento (evento)&#124;  | Opcional |  Ecl para búsqueda de motivos de consulta | v1.27.0  |
 
-
+#### Actualización de caché de Snomed
+| Propiedad | Variable de ambiente | Valor por defecto | Condición | Descripcion | Desde |
+| ---------- | ------ | -------- | -------- | ------------ | ---- |
+| snomed-cache-update.batch-size |   | 1000 | Opcional |  Tamaño de batch de guardado de conceptos Snomed para la actualización de caché mediante archivo .CSV  | v1.38.3  |
 
 ### Nomivac sincronización de datos
 
