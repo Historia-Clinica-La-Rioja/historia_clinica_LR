@@ -62,19 +62,9 @@ public class BackofficeHealthcareProfessionalSpecialtyStore
 	public HealthcareProfessionalSpecialty save(HealthcareProfessionalSpecialty entity) {
 		return healthcareProfessionalSpecialtyRepository
 				.findByUniqueKey(entity.getProfessionalProfessionId(), entity.getClinicalSpecialtyId())
-				.map(this::reactivate)
+				.map(healthcareProfessionalSpecialtyRepository::reactivate)
 				.orElseGet( () -> healthcareProfessionalSpecialtyRepository.save(entity));
 	}
-
-
-	private HealthcareProfessionalSpecialty reactivate(HealthcareProfessionalSpecialty healthcareProfessionalSpecialty) {
-		if (healthcareProfessionalSpecialty.isDeleted()) {
-			healthcareProfessionalSpecialty.reactivate();
-			return healthcareProfessionalSpecialtyRepository.save(healthcareProfessionalSpecialty);
-		}
-		return healthcareProfessionalSpecialty;
-	}
-
 	@Override
 	public void deleteById(Integer id) {
 		healthcareProfessionalSpecialtyRepository.deleteById(id);

@@ -105,19 +105,11 @@ public class BackofficeProfessionalProfessionStore implements BackofficeStore<Pr
 						.orElseGet( () -> createAll(dto));
 
 		healthcareProfessionalSpecialtyRepository.findByUniqueKey(result.getId(), dto.getClinicalSpecialtyId())
-				.map(this::reactivate)
+				.map(healthcareProfessionalSpecialtyRepository::reactivate)
 				.orElseGet( () -> healthcareProfessionalSpecialtyRepository
 						.save(new HealthcareProfessionalSpecialty(result.getId(), dto.getClinicalSpecialtyId())));
 		return result;
     }
-
-	private HealthcareProfessionalSpecialty reactivate(HealthcareProfessionalSpecialty professionalProfessions) {
-		if (professionalProfessions.isDeleted()) {
-			professionalProfessions.reactivate();
-			return healthcareProfessionalSpecialtyRepository.save(professionalProfessions);
-		}
-		return professionalProfessions;
-	}
 
 	private ProfessionalProfessionBackofficeDto createAll(ProfessionalProfessionBackofficeDto dto) {
 		var hp = healthcareProfessionalRepository.findByPersonId(dto.getPersonId())
@@ -132,22 +124,12 @@ public class BackofficeProfessionalProfessionStore implements BackofficeStore<Pr
 
 
 	private ProfessionalProfessions reactivate(ProfessionalProfessions professionalProfessions) {
-		if (professionalProfessions.isDeleted()) {
-			professionalProfessions.reactivate();
-			return professionalProfessionRepository.save(professionalProfessions);
-		}
+		if (professionalProfessions.isDeleted())
+			return professionalProfessionRepository.reactivate(professionalProfessions);
 		healthcareProfessionalRepository
 				.findById(professionalProfessions.getHealthcareProfessionalId())
-				.map(this::reactivate);
+				.map(healthcareProfessionalRepository::reactivate);
 		return professionalProfessions;
-	}
-
-	private HealthcareProfessional reactivate(HealthcareProfessional healthcareProfessional) {
-		if (healthcareProfessional.isDeleted()) {
-			healthcareProfessional.reactivate();
-			return healthcareProfessionalRepository.save(healthcareProfessional);
-		}
-		return healthcareProfessional;
 	}
 
 	@Override
