@@ -96,7 +96,7 @@ export class AntecedentesFamiliaresNuevaConsultaService {
 		return data.snomed.sctid === data1.snomed.sctid;
 	}
 
-	addToList() {
+	addToList(): boolean {
 		if (this.form.valid && this.snomedConcept) {
 			const antecedente: AntecedenteFamiliar = {
 				snomed: this.snomedConcept,
@@ -105,7 +105,9 @@ export class AntecedentesFamiliaresNuevaConsultaService {
 			if (this.add(antecedente))
 				this.snackBarService.showError("Antecedente familiar duplicado");
 			this.resetForm();
+			return true;
 		}
+		return false;
 	}
 
 	remove(index: number): void {

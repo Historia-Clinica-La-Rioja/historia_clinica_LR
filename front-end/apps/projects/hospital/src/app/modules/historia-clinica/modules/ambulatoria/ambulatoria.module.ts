@@ -57,6 +57,7 @@ import { EstudioModule } from './modules/estudio/estudio.module';
 import { OperationDeniedComponent } from './dialogs/diagnosis-required/operation-denied.component';
 import { CreateOutpatientOrderComponent } from './dialogs/create-outpatient-order/create-outpatient-order.component';
 import { NewConsultationAddReasonFormComponent } from './dialogs/new-consultation-add-reason-form/new-consultation-add-reason-form.component';
+import { NewConsultationFamilyHistoryFormComponent } from './dialogs/new-consultation-family-history-form/new-consultation-family-history-form.component';
 
 @NgModule({
 	declarations: [
@@ -101,6 +102,7 @@ import { NewConsultationAddReasonFormComponent } from './dialogs/new-consultatio
 		OperationDeniedComponent,
 		CreateOutpatientOrderComponent,
 		NewConsultationAddReasonFormComponent,
+		NewConsultationFamilyHistoryFormComponent,
 	],
 	imports: [
 		CommonModule,

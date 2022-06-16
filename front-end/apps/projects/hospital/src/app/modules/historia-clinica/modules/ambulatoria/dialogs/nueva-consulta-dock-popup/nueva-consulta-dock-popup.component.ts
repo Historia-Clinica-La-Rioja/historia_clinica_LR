@@ -47,6 +47,7 @@ import { DATOS_ANTROPOMETRICOS, FACTORES_DE_RIESGO } from '@historia-clinica/con
 import { hasMaxTwoDecimalDigits, PATTERN_INTEGER_NUMBER } from '@core/utils/pattern.utils';
 import { NewConsultationAddProblemFormComponent } from '@historia-clinica/dialogs/new-consultation-add-problem-form/new-consultation-add-problem-form.component';
 import { NewConsultationAddReasonFormComponent } from '../new-consultation-add-reason-form/new-consultation-add-reason-form.component';
+import { NewConsultationFamilyHistoryFormComponent } from '../new-consultation-family-history-form/new-consultation-family-history-form.component';
 
 const TIME_OUT = 5000;
 
@@ -614,6 +615,18 @@ export class NuevaConsultaDockPopupComponent implements OnInit {
 		this.dialog.open(NewConsultationAddReasonFormComponent, {
 			data: {
 				reasonService: this.motivoNuevaConsultaService,
+				searchConceptsLocallyFF: this.searchConceptsLocallyFFIsOn,
+			},
+			autoFocus: false,
+			width: '35%',
+			disableClose: true,
+		});
+	}
+
+	addFamilyHistory(): void {
+		this.dialog.open(NewConsultationFamilyHistoryFormComponent, {
+			data: {
+				familyHistoryService: this.antecedentesFamiliaresNuevaConsultaService,
 				searchConceptsLocallyFF: this.searchConceptsLocallyFFIsOn,
 			},
 			autoFocus: false,

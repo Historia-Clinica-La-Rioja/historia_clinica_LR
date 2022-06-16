@@ -167,7 +167,6 @@
                         "ADD": "Agregar antecedente familiar"
                     },
                     "table": {
-                        "TITLE": "Antecedentes familiares seleccionados",
                         "columns": {
                             "ANTECEDENTE_FAMILIAR": "Antecedente familiar",
                             "FECHA": "Fecha de registro"
