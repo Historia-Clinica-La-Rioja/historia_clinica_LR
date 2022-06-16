@@ -48,6 +48,7 @@ import { NewConsultationAddReasonFormComponent } from '../new-consultation-add-r
 import { NewConsultationFamilyHistoryFormComponent } from '../new-consultation-family-history-form/new-consultation-family-history-form.component';
 import { NewConsultationMedicationFormComponent } from '../new-consultation-medication-form/new-consultation-medication-form.component';
 import { NewConsultationProcedureFormComponent } from '../new-consultation-procedure-form/new-consultation-procedure-form.component';
+import { NewConsultationAllergyFormComponent } from '../new-consultation-allergy-form/new-consultation-allergy-form.component';
 
 const TIME_OUT = 5000;
 
@@ -649,6 +650,18 @@ export class NuevaConsultaDockPopupComponent implements OnInit {
 		this.dialog.open(NewConsultationProcedureFormComponent, {
 			data: {
 				procedureService: this.procedimientoNuevaConsultaService,
+				searchConceptsLocallyFF: this.searchConceptsLocallyFFIsOn,
+			},
+			autoFocus: false,
+			width: '35%',
+			disableClose: true,
+		});
+	}
+
+	addAllergy(): void {
+		this.dialog.open(NewConsultationAllergyFormComponent, {
+			data: {
+				allergyService: this.alergiasNuevaConsultaService,
 				searchConceptsLocallyFF: this.searchConceptsLocallyFFIsOn,
 			},
 			autoFocus: false,

@@ -131,67 +131,16 @@
 		<app-new-consultation-expansion-section id="alergias"
 			[title]="'ambulatoria.paciente.nueva-consulta.alergias.TITLE' | translate" icon="cancel"
 			[isEmpty]="alergiasNuevaConsultaService.isEmpty()">
-			<app-new-document-section>
-				<ng-container concept-form>
-
-					<ng-container *ngIf="!alergiasNuevaConsultaService.getSnomedConcept() else alergiasForm">
-						<app-concepts-search *ngIf="!searchConceptsLocallyFFIsOn else alergiaTypeaheadSearch"
-							[label]="'ambulatoria.paciente.nueva-consulta.alergias.ALLERGY'"
-							(search)="alergiasNuevaConsultaService.openSearchDialog($event)">
-						</app-concepts-search>
-
-						<ng-template #alergiaTypeaheadSearch>
-							<app-concept-typeahead-search [ecl]="alergiasNuevaConsultaService.getECL()"
-								[placeholder]="'ambulatoria.paciente.nueva-consulta.alergias.SEARCH_PLACEHOLDER'"
-								(conceptSelected)="alergiasNuevaConsultaService.setConcept($event)">
-							</app-concept-typeahead-search>
-						</ng-template>
-					</ng-container>
-
-					<ng-template #alergiasForm>
-						<form [formGroup]="alergiasNuevaConsultaService.getForm()"
-							(ngSubmit)="alergiasNuevaConsultaService.addToList()">
-							<mat-form-field appearance="outline">
-								<mat-label [translate]="'ambulatoria.paciente.nueva-consulta.alergias.ALLERGY'">
-								</mat-label>
-								<input id="alergias-input" matInput type="text" formControlName="snomed" name="snomed"
-									readonly matTooltip="{{alergiasNuevaConsultaService.getSnomedConcept().pt }}">
-								<button id="clear-alergias" mat-button matSuffix color="warn" mat-icon-button
-									(click)="alergiasNuevaConsultaService.resetForm()">
-									<mat-icon>close</mat-icon>
-								</button>
-							</mat-form-field>
-
-							<mat-form-field appearance="outline">
-								<mat-label [translate]="'ambulatoria.paciente.nueva-consulta.alergias.CRITICALITY'">
-								</mat-label>
-								<mat-select id="criticality-select" formControlName="criticality">
-									<mat-option *ngFor="let criticalityType of criticalityTypes"
-										[value]="criticalityType.id">
-										{{criticalityType.display}}
-									</mat-option>
-								</mat-select>
-								<mat-error translate="forms.REQUIRED"></mat-error>
-							</mat-form-field>
-
-							<div align="end">
-								<button id="submit_alergias" class="uppercase" mat-raised-button color="primary"
-									type="submit">
-									<span class="uppercase"
-										[translate]="'ambulatoria.paciente.nueva-consulta.alergias.ADD'"></span>
-								</button>
-							</div>
-						</form>
-					</ng-template>
-				</ng-container>
-
-				<app-document-section-table data-display
-					[tableTitle]="'ambulatoria.paciente.nueva-consulta.alergias.table.TITLE'"
-					[columns]="alergiasNuevaConsultaService.getTableColumnConfig()"
+			<div>
+				<app-document-section-table [columns]="alergiasNuevaConsultaService.getTableColumnConfig()"
 					[data]="alergiasNuevaConsultaService.getAlergias()">
 				</app-document-section-table>
 
-			</app-new-document-section>
+				<button mat-button type="button" id="add-allergies-button" color="primary" class="add-button"
+					(click)="addAllergy()">
+					+ {{ 'ambulatoria.paciente.nueva-consulta.alergias.ADD' | translate }}
+				</button>
+			</div>
 		</app-new-consultation-expansion-section>
 
 		<app-new-consultation-expansion-section id="solicitud-referencia"
