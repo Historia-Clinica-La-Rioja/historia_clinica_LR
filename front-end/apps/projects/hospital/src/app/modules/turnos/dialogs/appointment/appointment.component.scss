@@ -34,11 +34,12 @@
 }
 
 .ventana {
-	min-height: 570px;
+	@media (min-height: 680px) {
+		min-height: 570px;
+	}
 }
 
 .header-content {
-
 	@media screen and (min-width: 959px) {
 		width: 380px;
 	}
@@ -164,7 +165,7 @@ section {
 }
 
 .observation-section {
-	width: 550px;
+	min-width: 550px;
 	margin: 15px 0;
 
 	a {
