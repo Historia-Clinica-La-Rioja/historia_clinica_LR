@@ -97,7 +97,7 @@ export class MedicacionesNuevaConsultaService {
 		return data.snomed.sctid === data1.snomed.sctid;
 	}
 
-	addToList() {
+	addToList(): boolean {
 		if (this.form.valid && this.snomedConcept) {
 			const nuevaMedicacion: Medicacion = {
 				snomed: this.snomedConcept,
@@ -106,7 +106,9 @@ export class MedicacionesNuevaConsultaService {
 			};
 			this.addControl(nuevaMedicacion);
 			this.resetForm();
+			return true;
 		}
+		return false;
 	}
 
 	remove(index: number): void {

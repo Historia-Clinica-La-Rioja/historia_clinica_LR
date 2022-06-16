@@ -58,6 +58,7 @@ import { OperationDeniedComponent } from './dialogs/diagnosis-required/operation
 import { CreateOutpatientOrderComponent } from './dialogs/create-outpatient-order/create-outpatient-order.component';
 import { NewConsultationAddReasonFormComponent } from './dialogs/new-consultation-add-reason-form/new-consultation-add-reason-form.component';
 import { NewConsultationFamilyHistoryFormComponent } from './dialogs/new-consultation-family-history-form/new-consultation-family-history-form.component';
+import { NewConsultationMedicationFormComponent } from './dialogs/new-consultation-medication-form/new-consultation-medication-form.component';
 
 @NgModule({
 	declarations: [
@@ -103,6 +104,7 @@ import { NewConsultationFamilyHistoryFormComponent } from './dialogs/new-consult
 		CreateOutpatientOrderComponent,
 		NewConsultationAddReasonFormComponent,
 		NewConsultationFamilyHistoryFormComponent,
+		NewConsultationMedicationFormComponent,
 	],
 	imports: [
 		CommonModule,

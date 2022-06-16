@@ -24,7 +24,6 @@ import { HealthConditionService } from '@api-rest/services/healthcondition.servi
 import { ClinicalSpecialtyService } from '@api-rest/services/clinical-specialty.service';
 import { MatDialog } from '@angular/material/dialog';
 import { SuggestedFieldsPopupComponent } from '../../../../../presentation/components/suggested-fields-popup/suggested-fields-popup.component';
-import { TEXT_AREA_MAX_LENGTH } from '@core/constants/validation-constants';
 import { hasError } from '@core/utils/form.utils';
 import { NewConsultationSuggestedFieldsService } from '../../services/new-consultation-suggested-fields.service';
 import { TranslateService } from '@ngx-translate/core';
@@ -48,6 +47,7 @@ import { hasMaxTwoDecimalDigits, PATTERN_INTEGER_NUMBER } from '@core/utils/patt
 import { NewConsultationAddProblemFormComponent } from '@historia-clinica/dialogs/new-consultation-add-problem-form/new-consultation-add-problem-form.component';
 import { NewConsultationAddReasonFormComponent } from '../new-consultation-add-reason-form/new-consultation-add-reason-form.component';
 import { NewConsultationFamilyHistoryFormComponent } from '../new-consultation-family-history-form/new-consultation-family-history-form.component';
+import { NewConsultationMedicationFormComponent } from '../new-consultation-medication-form/new-consultation-medication-form.component';
 
 const TIME_OUT = 5000;
 
@@ -73,7 +73,6 @@ export class NuevaConsultaDockPopupComponent implements OnInit {
 	fixedSpecialty = true;
 	defaultSpecialty: ClinicalSpecialtyDto;
 	specialties: ClinicalSpecialtyDto[];
-	public readonly TEXT_AREA_MAX_LENGTH = TEXT_AREA_MAX_LENGTH;
 	public hasError = hasError;
 	severityTypes: any[];
 	criticalityTypes: any[];
@@ -627,6 +626,18 @@ export class NuevaConsultaDockPopupComponent implements OnInit {
 		this.dialog.open(NewConsultationFamilyHistoryFormComponent, {
 			data: {
 				familyHistoryService: this.antecedentesFamiliaresNuevaConsultaService,
+				searchConceptsLocallyFF: this.searchConceptsLocallyFFIsOn,
+			},
+			autoFocus: false,
+			width: '35%',
+			disableClose: true,
+		});
+	}
+
+	addMedication(): void {
+		this.dialog.open(NewConsultationMedicationFormComponent, {
+			data: {
+				medicationService: this.medicacionesNuevaConsultaService,
 				searchConceptsLocallyFF: this.searchConceptsLocallyFFIsOn,
 			},
 			autoFocus: false,

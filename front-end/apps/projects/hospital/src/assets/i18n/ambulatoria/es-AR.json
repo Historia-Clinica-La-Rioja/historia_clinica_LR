@@ -121,7 +121,7 @@
                     "TITLE": "Medicación habitual",
                     "STATE": "Estado",
                     "MEDICATION": "Medicación",
-                    "ADD": "Agregar Medicación"
+                    "ADD": "Agregar medicación"
                 },
                 "messages": {
                     "ERROR": "Error al guardar documento de nueva consulta ambulatoria",
