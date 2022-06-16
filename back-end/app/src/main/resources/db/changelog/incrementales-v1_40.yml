@@ -284,4 +284,206 @@ databaseChangeLog:
                 INNER JOIN healthcare_professional AS hp ON (pp.healthcare_professional_id = hp.id)
                 WHERE hp.license_number IS NOT NULL 
                 ORDER BY pp.id;
-                
+
+
+    - changeSet:
+        id: 1.39.0-12
+        author: etrapani
+        changes:
+          - createProcedure:
+              dbms: postgresql
+              encoding: UTF-8
+              procedureBody: |-
+                DROP PROCEDURE IF EXISTS fix_healthcare_professional_references;
+                CREATE PROCEDURE fix_healthcare_professional_references()
+                language plpgsql
+                as
+                $$
+                BEGIN
+                    CREATE TEMP TABLE tmp_active_healthcare_professional ON COMMIT DROP AS
+                    (
+                      WITH summary AS (
+                      SELECT id, person_id, deleted, ROW_NUMBER() OVER(PARTITION BY person_id ORDER BY deleted ASC, id) AS rank
+                      FROM healthcare_professional
+                      )
+                      SELECT id, person_id
+                      FROM summary
+                      WHERE rank = 1
+                    );
+
+                    UPDATE diary
+                    SET healthcare_professional_id = tahp.id
+                    FROM diary d
+                    JOIN healthcare_professional hp ON (hp.id = d.healthcare_professional_id)
+                    JOIN tmp_active_healthcare_professional tahp ON (tahp.person_id = hp.person_id);
+
+                    UPDATE service_request
+                    SET doctor_id = tahp.id
+                    FROM service_request d
+                    JOIN healthcare_professional hp ON (hp.id = d.doctor_id)
+                    JOIN tmp_active_healthcare_professional tahp ON (tahp.person_id = hp.person_id);
+
+                    UPDATE medical_request
+                    SET doctor_id = tahp.id
+                    FROM medical_request d
+                    JOIN healthcare_professional hp ON (hp.id = d.doctor_id)
+                    JOIN tmp_active_healthcare_professional tahp ON (tahp.person_id = hp.person_id);
+
+                    UPDATE healthcare_professional_group
+                    SET healthcare_professional_id = tahp.id
+                    FROM healthcare_professional_group d
+                    JOIN healthcare_professional hp ON (hp.id = d.healthcare_professional_id)
+                    JOIN tmp_active_healthcare_professional tahp ON (tahp.person_id = hp.person_id);
+
+                    UPDATE medication_request
+                    SET doctor_id = tahp.id
+                    FROM medication_request d
+                    JOIN healthcare_professional hp ON (hp.id = d.doctor_id)
+                    JOIN tmp_active_healthcare_professional tahp ON (tahp.person_id = hp.person_id);
+
+                    UPDATE vaccine_consultation
+                    SET doctor_id = tahp.id
+                    FROM vaccine_consultation d
+                    JOIN healthcare_professional hp ON (hp.id = d.doctor_id)
+                    JOIN tmp_active_healthcare_professional tahp ON (tahp.person_id = hp.person_id);
+
+                    UPDATE nursing_consultation
+                    SET doctor_id = tahp.id
+                    FROM nursing_consultation d
+                    JOIN healthcare_professional hp ON (hp.id = d.doctor_id)
+                    JOIN tmp_active_healthcare_professional tahp ON (tahp.person_id = hp.person_id);
+
+                    UPDATE outpatient_consultation
+                    SET doctor_id = tahp.id
+                    FROM outpatient_consultation d
+                    JOIN healthcare_professional hp ON (hp.id = d.doctor_id)
+                    JOIN tmp_active_healthcare_professional tahp ON (tahp.person_id = hp.person_id);
+
+                    UPDATE odontology_consultation
+                    SET doctor_id = tahp.id
+                    FROM odontology_consultation d
+                    JOIN healthcare_professional hp ON (hp.id = d.doctor_id)
+                    JOIN tmp_active_healthcare_professional tahp ON (tahp.person_id = hp.person_id);
+
+                    UPDATE indication
+                    SET professional_id = tahp.id
+                    FROM indication d
+                    JOIN healthcare_professional hp ON (hp.id = d.professional_id)
+                    JOIN tmp_active_healthcare_professional tahp ON (tahp.person_id = hp.person_id);
+
+                    UPDATE counter_reference
+                    SET doctor_id = tahp.id
+                    FROM counter_reference d
+                    JOIN healthcare_professional hp ON (hp.id = d.doctor_id)
+                    JOIN tmp_active_healthcare_professional tahp ON (tahp.person_id = hp.person_id);
+
+                    UPDATE snvs_report
+                    SET professional_id = tahp.id
+                    FROM snvs_report d
+                    JOIN healthcare_professional hp ON (hp.id = d.professional_id)
+                    JOIN tmp_active_healthcare_professional tahp ON (tahp.person_id = hp.person_id);
+
+                    -------------------------------- problematicos --------------
+
+                    UPDATE mandatory_professional_practice_free_days
+                    SET healthcare_professional_id = tahp.id
+                    FROM mandatory_professional_practice_free_days d
+                    JOIN healthcare_professional hp ON (hp.id = d.healthcare_professional_id)
+                    JOIN tmp_active_healthcare_professional tahp ON (tahp.person_id = hp.person_id)
+                    WHERE NOT EXISTS (SELECT id
+                    FROM mandatory_professional_practice_free_days as hphi1
+                    WHERE d.healthcare_professional_id = hphi1.healthcare_professional_id
+                    AND   d.clinical_specialty_mandatory_medical_practice_id = hphi1.clinical_specialty_mandatory_medical_practice_id);
+
+                    DELETE FROM mandatory_professional_practice_free_days
+                    WHERE healthcare_professional_id NOT IN (SELECT id FROM tmp_active_healthcare_professional);
+
+
+                    UPDATE healthcare_professional_health_insurance
+                    SET healthcare_professional_id = tahp.id
+                    FROM healthcare_professional_health_insurance d
+                    JOIN healthcare_professional hp ON (hp.id = d.healthcare_professional_id)
+                    JOIN tmp_active_healthcare_professional tahp ON (tahp.person_id = hp.person_id)
+                    WHERE NOT EXISTS (SELECT id
+                    FROM healthcare_professional_health_insurance as hphi1
+                    WHERE d.healthcare_professional_id = hphi1.healthcare_professional_id
+                    AND   d.medical_coverage_id = hphi1.medical_coverage_id);
+
+                    DELETE FROM healthcare_professional_health_insurance
+                    WHERE healthcare_professional_id NOT IN (SELECT id FROM tmp_active_healthcare_professional);
+
+                    UPDATE professional_professions
+                    SET healthcare_professional_id = tahp.id
+                    FROM professional_professions d
+                    JOIN healthcare_professional hp ON (hp.id = d.healthcare_professional_id)
+                    JOIN tmp_active_healthcare_professional tahp ON (tahp.person_id = hp.person_id)
+                    WHERE NOT EXISTS (SELECT id
+                    FROM professional_professions as hphi1
+                    WHERE d.healthcare_professional_id = hphi1.healthcare_professional_id
+                    AND   d.professional_specialty_id = hphi1.professional_specialty_id);
+
+                    INSERT INTO healthcare_professional_specialty (clinical_specialty_id, professional_profession_id,
+                            deleted, deleted_by, deleted_on, created_on, updated_on, created_by, updated_by)
+                      SELECT s.clinical_specialty_id, pp0.id, s.deleted, s.deleted_by, s.deleted_on, s.created_on, s.updated_on, s.created_by, s.updated_by
+                      FROM professional_professions as pp0
+                      JOIN tmp_active_healthcare_professional tahp ON (tahp.id = pp0.healthcare_professional_id)
+                      JOIN (SELECT hp.person_id, clinical_specialty_id, hps1.deleted, hps1.deleted_by, hps1.deleted_on, hps1.created_on, hps1.updated_on, hps1.created_by, hps1.updated_by
+                            FROM healthcare_professional_specialty hps1
+                            JOIN professional_professions pp2 ON (hps1.professional_profession_id = pp2.id)
+                            JOIN healthcare_professional hp ON (hp.id = pp2.healthcare_professional_id)
+                            WHERE clinical_specialty_id NOT IN (SELECT hps.clinical_specialty_id
+                                                                FROM healthcare_professional_specialty hps
+                                                                JOIN professional_professions pp  ON (hps.professional_profession_id = pp.id)
+                                                                JOIN tmp_active_healthcare_professional tahp ON (tahp.id = pp.healthcare_professional_id))
+                            ) AS s ON (s.person_id = tahp.person_id);
+
+
+                    DELETE FROM healthcare_professional_specialty
+                    WHERE professional_profession_id NOT IN (SELECT p.id
+                    FROM tmp_active_healthcare_professional as tahp2
+                    JOIN professional_professions p on tahp2.id = p.healthcare_professional_id);
+
+
+                    DELETE FROM professional_license_numbers
+                    WHERE professional_profession_id NOT IN (SELECT p.id
+                                    FROM tmp_active_healthcare_professional as tahp2
+                                    JOIN professional_professions p on tahp2.id = p.healthcare_professional_id);
+
+                    DELETE FROM professional_professions
+                    WHERE healthcare_professional_id NOT IN (SELECT id FROM tmp_active_healthcare_professional);
+
+                    -------------------------------- problematicos --------------
+
+                    DELETE FROM healthcare_professional_health_insurance
+                    WHERE id NOT IN (SELECT id FROM tmp_active_healthcare_professional);
+
+                    DELETE FROM healthcare_professional
+                    WHERE id NOT IN (SELECT id FROM tmp_active_healthcare_professional);
+
+                    UPDATE healthcare_professional
+                    SET deleted = false,
+                    deleted_by = null,
+                    deleted_on = NULL
+                    WHERE id IN (SELECT id FROM tmp_active_healthcare_professional);
+                END;
+                $$;
+
+    - changeSet:
+        id: 1.39.0-13
+        author: etrapani
+        changes:
+          - sql:
+              dbms: postgresql
+              sql: |-
+                CALL fix_healthcare_professional_references();
+                DROP PROCEDURE IF EXISTS fix_healthcare_professional_references;
+
+
+    - changeSet:
+        id: 1.39.0-14
+        author: etrapani
+        changes:
+          - addUniqueConstraint:
+              columnNames: person_id
+              constraintName: UQ_person_id
+              tableName: healthcare_professional
