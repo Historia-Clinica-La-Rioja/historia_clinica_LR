@@ -2278,6 +2278,7 @@ export interface ProfessionalAvailabilityDto {
 }
 
 export interface ProfessionalCompleteDto {
+    allLicenses: LicenseNumberDto[];
     completeLicenseInfo: string;
     firstName: string;
     id: number;
@@ -2507,7 +2508,7 @@ export interface ResponsibleDoctorDto extends Serializable {
     firstName: string;
     id: number;
     lastName: string;
-    licence: string;
+    licenses: string[];
     nameSelfDetermination: string;
 }
 

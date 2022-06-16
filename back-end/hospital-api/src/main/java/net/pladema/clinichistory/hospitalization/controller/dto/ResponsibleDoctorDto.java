@@ -1,10 +1,11 @@
 package net.pladema.clinichistory.hospitalization.controller.dto;
 
+import java.io.Serializable;
+import java.util.List;
+
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
-
-import java.io.Serializable;
 
 @Getter
 @Setter
@@ -17,7 +18,7 @@ public class ResponsibleDoctorDto implements Serializable {
 
     private String lastName;
 
-    private String licence;
+    private List<String> licenses;
 
 	private String nameSelfDetermination;
 }

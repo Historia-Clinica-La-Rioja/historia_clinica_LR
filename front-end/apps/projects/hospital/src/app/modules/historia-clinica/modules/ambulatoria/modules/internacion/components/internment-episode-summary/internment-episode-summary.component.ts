@@ -123,7 +123,7 @@ export interface InternmentEpisodeSummary {
 	doctor: {
 		firstName: string;
 		lastName: string;
-		license: string;
+		licenses: string[];
 	};
 	totalInternmentDays: number;
 	admissionDatetime: string;

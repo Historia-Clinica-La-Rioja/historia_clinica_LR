@@ -1,13 +1,14 @@
 package net.pladema.clinichistory.hospitalization.controller.mocks;
 
+import java.time.LocalDate;
+import java.util.List;
+
 import ar.lamansys.sgh.shared.infrastructure.input.service.ClinicalSpecialtyDto;
 import net.pladema.clinichistory.hospitalization.controller.dto.InternmentSummaryDto;
 import net.pladema.clinichistory.hospitalization.controller.dto.ResponsibleDoctorDto;
 import net.pladema.establishment.controller.dto.BedDto;
 import net.pladema.establishment.controller.dto.RoomDto;
 import net.pladema.establishment.controller.dto.SectorDto;
-
-import java.time.LocalDate;
 
 
 public class MocksInternmentPatient {
@@ -22,7 +23,7 @@ public class MocksInternmentPatient {
         result.setId(i);
         result.setFirstName("Doctor name " + i);
         result.setLastName("Doctor surname " +i);
-        result.setLicence("ABJ2132");
+        result.setLicenses(List.of("ABJ2132"));
         return result;
     }
 

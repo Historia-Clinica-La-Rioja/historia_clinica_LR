@@ -2,6 +2,7 @@ package net.pladema.clinichistory.hospitalization.repository;
 
 import java.time.LocalDateTime;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import javax.persistence.EntityManager;
 import javax.persistence.Query;
@@ -10,6 +11,7 @@ import org.springframework.stereotype.Service;
 
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.ResponsibleDoctorVo;
 import ar.lamansys.sgh.shared.infrastructure.input.service.SharedStaffPort;
+import ar.lamansys.sgh.shared.infrastructure.input.service.staff.LicenseNumberDto;
 import lombok.extern.slf4j.Slf4j;
 import net.pladema.clinichistory.hospitalization.repository.domain.ResponsibleContact;
 import net.pladema.clinichistory.hospitalization.repository.domain.summary.InternmentSummaryVo;
@@ -85,7 +87,9 @@ public class InternmentEpisodeStorageImpl implements InternmentEpisodeStorage {
 		return new ResponsibleDoctorVo(professionalId,
 				professional.getFirstName(),
 				professional.getLastName(),
-				professional.getCompleteLicenseInfo(),
+				professional.getAllLicenses().stream()
+						.map(LicenseNumberDto::getInfo)
+						.collect(Collectors.toList()),
 				professional.getNameSelfDetermination());
 	}
 }

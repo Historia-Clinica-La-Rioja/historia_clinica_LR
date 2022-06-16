@@ -1,6 +1,5 @@
 package ar.lamansys.sgh.shared.infrastructure.input.service.staff;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -25,12 +24,16 @@ public class ProfessionalCompleteDto {
 	private List<ProfessionCompleteDto> professions;
 
 	public String getCompleteLicenseInfo() {
-		List<LicenseNumberDto> licenses = new ArrayList<>();
-		professions.forEach(professionCompleteDto -> {
-			licenses.addAll(professionCompleteDto.getAllLicenses());
-		});
-		return licenses.stream()
-				.map(LicenseNumberDto::getInfo)
+		return professions.stream()
+				.flatMap(professionCompleteDto ->
+						professionCompleteDto.getAllLicenses().stream()
+								.map(LicenseNumberDto::getInfo))
 				.collect(Collectors.joining(","));
+	}
+
+	public List<LicenseNumberDto> getAllLicenses() {
+		return professions.stream()
+				.flatMap(professionCompleteDto -> professionCompleteDto.getAllLicenses().stream())
+				.collect(Collectors.toList());
 	}
 }
