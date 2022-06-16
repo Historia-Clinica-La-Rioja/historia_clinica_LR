@@ -1,6 +1,6 @@
 import React from 'react';
 import {
-    AutocompleteInput,
+    SelectInput,
     Edit, FormDataConsumer,
     ReferenceInput,
     required,
@@ -14,14 +14,13 @@ import CustomToolbar from '../components/CustomToolbar';
 const AMBULATORIA = 1;
 
 const SectorField = ({formData}) => {
-    return   <ReferenceInput
+    return   <ReferenceInput 
     source="sectorId"
     reference="sectors"
     sort={{ field: 'description', order: 'ASC' }}
-    filterToQuery={searchText => ({description: searchText})}
     filter={{sectorTypeId: AMBULATORIA, institutionId: formData.institutionId}}
 >
-<AutocompleteInput optionText="description" optionValue="id" />
+<SelectInput optionText="description" optionValue="id" />
         </ReferenceInput>
 }
 

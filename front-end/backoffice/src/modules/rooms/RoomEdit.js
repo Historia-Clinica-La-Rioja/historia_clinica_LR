@@ -1,13 +1,12 @@
 import React from 'react';
 import {
-    AutocompleteInput,
     Datagrid,
     DateInput,
     Edit,
     EditButton,
     ReferenceInput,
     ReferenceManyField,
-    required,
+    required, SelectInput,
     SimpleForm,
     TextField,
     TextInput, useGetOne,
@@ -25,9 +24,8 @@ const SectorField = ({ record }) => {
                 source="sectorId"
                 reference="sectors"
                 sort={{ field: 'description', order: 'ASC' }}
-                filterToQuery={searchText => ({description: searchText})}
                 filter={{sectorTypeId: INTERNACION, institutionId: sector.data.institutionId}}>
-                <AutocompleteInput optionText="description" optionValue="id" />
+                <SelectInput optionText="description" optionValue="id" />
             </ReferenceInput>
         ) : null;
 }
