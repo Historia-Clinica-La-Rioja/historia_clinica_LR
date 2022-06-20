@@ -65,6 +65,7 @@ export class AppointmentComponent implements OnInit {
 	coverageNumber: any;
 	coverageCondition: string;
 	coverageData: PatientMedicalCoverage;
+	phoneNumber: string;
 	summaryCoverageData: SummaryCoverageInformation = {};
 	hasRoleToChangeState$: Observable<boolean>;
 	hasRoleToEditPhoneNumber$: Observable<boolean>;
@@ -155,6 +156,7 @@ export class AppointmentComponent implements OnInit {
 							}
 						});
 				}
+				this.phoneNumber = this.formatPhonePrefixAndNumber(this.params.appointmentData.phonePrefix,this.params.appointmentData.phoneNumber);
 			});
 
 		this.hasRoleToChangeState$ = this.permissionsService.hasContextAssignments$(ROLES_TO_CHANGE_STATE).pipe(take(1));
@@ -177,10 +179,10 @@ export class AppointmentComponent implements OnInit {
 			});
 	}
 	
-	formatPhonePrefixAndNumber(): string {
-		return this.params.appointmentData.phoneNumber ? this.params.appointmentData.phonePrefix
-			? "(" + this.params.appointmentData.phonePrefix + ") " + this.params.appointmentData.phoneNumber
-			: this.params.appointmentData.phoneNumber
+	formatPhonePrefixAndNumber(phonePrefix: string, phoneNumber: string): string {
+		return phoneNumber ? phonePrefix
+			? "(" + phonePrefix + ") " + phoneNumber
+			: phoneNumber
 			: "Sin información";
 	}
 
@@ -259,6 +261,7 @@ export class AppointmentComponent implements OnInit {
 			}
 			if (this.formEdit.controls.phoneNumber.dirty || this.formEdit.controls.phonePrefix.dirty) {
 				this.updatePhoneNumber(this.formEdit.controls.phonePrefix.value, this.formEdit.controls.phoneNumber.value);
+				this.phoneNumber = this.formatPhonePrefixAndNumber(this.formEdit.controls.phonePrefix.value ,this.formEdit.controls.phoneNumber.value);
 			}
 			this.hideFilters();
 		}

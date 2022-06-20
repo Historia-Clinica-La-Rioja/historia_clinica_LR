@@ -54,8 +54,8 @@
 					</div>
 				</div>
 				<div fxLayout="column" fxLayoutGap="5px">
-					<span class="mat-caption normal-size" [translate]="'turnos.appointment.phoneNumber.PHONE_NUMBER'">:</span>
-					<span class="mat-body patient-info coverage-text subtitle-size">{{formatPhonePrefixAndNumber()}}</span>
+					<span class="mat-caption normal-size" [translate]="'turnos.appointment.phoneNumber.PHONE_NUMBER'">:asd</span>
+					<span class="mat-body patient-info coverage-text subtitle-size">{{phoneNumber}}</span>
 				</div>
 				<button type="button" mat-icon-button color="primary"
 					*ngIf="( hasRoleToEditPhoneNumber$ | async )" (click)="hideFilters()">
