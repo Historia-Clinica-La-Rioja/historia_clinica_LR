@@ -16,10 +16,7 @@ export class NewConsultationMedicationFormComponent {
 
   constructor(
     public dialogRef: MatDialogRef<NewConsultationMedicationFormComponent>,
-    @Inject(MAT_DIALOG_DATA) public data: {
-      medicationService: MedicacionesNuevaConsultaService,
-      searchConceptsLocallyFF: boolean,
-    },
+    @Inject(MAT_DIALOG_DATA) public readonly data: MedicationData,
   ) { }
 
   addMedication(): void {
@@ -33,4 +30,9 @@ export class NewConsultationMedicationFormComponent {
     this.dialogRef.close()
   }
 
+}
+
+interface MedicationData {
+  medicationService: MedicacionesNuevaConsultaService,
+  searchConceptsLocallyFF: boolean,
 }

@@ -15,14 +15,7 @@ export class NewConsultationAddProblemFormComponent implements OnInit {
 
   constructor(
     public dialogRef: MatDialogRef<NewConsultationAddProblemFormComponent>,
-    @Inject(MAT_DIALOG_DATA) public data: {
-      editing?: boolean,
-      editIndex?: number,
-      ambulatoryConsultationProblemsService: AmbulatoryConsultationProblemsService,
-      severityTypes: any[],
-      epidemiologicalReportFF: boolean,
-      searchConceptsLocallyFF: boolean,
-    },
+    @Inject(MAT_DIALOG_DATA) public readonly data: ProblemData,
   ) { }
 
   ngOnInit(): void {
@@ -46,4 +39,13 @@ export class NewConsultationAddProblemFormComponent implements OnInit {
     this.dialogRef.close()
   }
 
+}
+
+interface ProblemData {
+  editing?: boolean,
+  editIndex?: number,
+  ambulatoryConsultationProblemsService: AmbulatoryConsultationProblemsService,
+  severityTypes: any[],
+  epidemiologicalReportFF: boolean,
+  searchConceptsLocallyFF: boolean,
 }

@@ -14,10 +14,7 @@ export class NewConsultationProcedureFormComponent {
 
   constructor(
     public dialogRef: MatDialogRef<NewConsultationProcedureFormComponent>,
-    @Inject(MAT_DIALOG_DATA) public data: {
-      procedureService: ProcedimientosService,
-      searchConceptsLocallyFF: boolean,
-    },
+    @Inject(MAT_DIALOG_DATA) public readonly data: ProcedureData,
   ) { }
 
   addProcedure(): void {
@@ -31,4 +28,9 @@ export class NewConsultationProcedureFormComponent {
     this.dialogRef.close()
   }
 
+}
+
+interface ProcedureData {
+  procedureService: ProcedimientosService,
+  searchConceptsLocallyFF: boolean,
 }

@@ -14,10 +14,7 @@ export class NewConsultationFamilyHistoryFormComponent {
 
   constructor(
     public dialogRef: MatDialogRef<NewConsultationFamilyHistoryFormComponent>,
-    @Inject(MAT_DIALOG_DATA) public data: {
-      familyHistoryService: AntecedentesFamiliaresNuevaConsultaService,
-      searchConceptsLocallyFF: boolean,
-    },
+    @Inject(MAT_DIALOG_DATA) public readonly data: FamilyHistoryData,
   ) { }
 
   addFamilyHistory(): void {
@@ -31,4 +28,9 @@ export class NewConsultationFamilyHistoryFormComponent {
     this.dialogRef.close()
   }
 
+}
+
+interface FamilyHistoryData {
+  familyHistoryService: AntecedentesFamiliaresNuevaConsultaService,
+  searchConceptsLocallyFF: boolean,
 }

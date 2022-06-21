@@ -11,10 +11,7 @@ export class NewConsultationAddReasonFormComponent {
 
   constructor(
     public dialogRef: MatDialogRef<NewConsultationAddReasonFormComponent>,
-    @Inject(MAT_DIALOG_DATA) public data: {
-      reasonService: MotivoNuevaConsultaService,
-      searchConceptsLocallyFF: boolean,
-    },
+    @Inject(MAT_DIALOG_DATA) public readonly data: ReasonData,
   ) { }
 
   addReason(): void {
@@ -27,4 +24,9 @@ export class NewConsultationAddReasonFormComponent {
     this.dialogRef.close()
   }
 
+}
+
+interface ReasonData {
+  reasonService: MotivoNuevaConsultaService,
+  searchConceptsLocallyFF: boolean,
 }

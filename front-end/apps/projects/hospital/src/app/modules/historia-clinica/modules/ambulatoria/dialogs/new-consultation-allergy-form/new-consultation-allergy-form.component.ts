@@ -11,10 +11,7 @@ export class NewConsultationAllergyFormComponent {
 
   constructor(
     public dialogRef: MatDialogRef<NewConsultationAllergyFormComponent>,
-    @Inject(MAT_DIALOG_DATA) public data: {
-      allergyService: AlergiasNuevaConsultaService,
-      searchConceptsLocallyFF: boolean,
-    },
+    @Inject(MAT_DIALOG_DATA) public readonly data: AllergyData,
   ) { }
 
   addAllergy(): void {
@@ -28,4 +25,9 @@ export class NewConsultationAllergyFormComponent {
     this.dialogRef.close()
   }
 
+}
+
+interface AllergyData {
+  allergyService: AlergiasNuevaConsultaService,
+  searchConceptsLocallyFF: boolean,
 }
