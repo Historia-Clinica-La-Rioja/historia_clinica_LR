@@ -35,6 +35,8 @@ public class CreatePharmaco {
 			throw new ConstraintViolationException("La unidad es un dato obligatorio", Collections.emptySet());
 		if (pharmacoBo.getViaId() == null)
 			throw new ConstraintViolationException("La vía es un dato obligatorio", Collections.emptySet());
+		if (pharmacoBo.getSolvent() != null && pharmacoBo.getSolvent().getDosage().getQuantity().getValue() == null)
+			throw new ConstraintViolationException("La dosis del diluyente es un dato obligatorio", Collections.emptySet());
 		if (pharmacoBo.getIndicationDate() == null)
 			throw new ConstraintViolationException("La fecha de la indicación es un dato obligatorio", Collections.emptySet());
 

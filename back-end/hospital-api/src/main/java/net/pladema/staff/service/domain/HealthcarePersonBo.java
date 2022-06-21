@@ -16,5 +16,6 @@ public class HealthcarePersonBo {
 	private String licenceNumber;
 	private Integer personId;
 	private Person person;
+	private String nameSelfDetermination;
 	
 }

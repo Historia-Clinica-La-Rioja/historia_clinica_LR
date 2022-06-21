@@ -1,12 +1,5 @@
 package net.pladema.medicalconsultation.appointment.service.impl;
 
-import static net.pladema.medicalconsultation.appointment.repository.entity.AppointmentState.ABSENT;
-import static net.pladema.medicalconsultation.appointment.repository.entity.AppointmentState.ASSIGNED;
-import static net.pladema.medicalconsultation.appointment.repository.entity.AppointmentState.BOOKED;
-import static net.pladema.medicalconsultation.appointment.repository.entity.AppointmentState.CANCELLED;
-import static net.pladema.medicalconsultation.appointment.repository.entity.AppointmentState.CONFIRMED;
-import static net.pladema.medicalconsultation.appointment.repository.entity.AppointmentState.SERVED;
-
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
@@ -29,6 +22,8 @@ import net.pladema.medicalconsultation.diary.service.domain.DiaryBo;
 import net.pladema.permissions.controller.external.LoggedUserExternalService;
 import net.pladema.permissions.repository.enums.ERole;
 import net.pladema.staff.service.HealthcareProfessionalService;
+
+import static net.pladema.medicalconsultation.appointment.repository.entity.AppointmentState.*;
 
 @Service
 public class AppointmentValidatorServiceImpl implements AppointmentValidatorService {
@@ -85,11 +80,11 @@ public class AppointmentValidatorServiceImpl implements AppointmentValidatorServ
 
     private void validateRole(Integer institutionId, Optional<AppointmentBo> apmtOpt) {
 
-		if (apmtOpt.isPresent() && !hasAdministrativeRole.apply(institutionId)) {
+        if (apmtOpt.isPresent() && Boolean.FALSE.equals(hasAdministrativeRole.apply(institutionId))) {
             DiaryBo diary = diaryService.getDiaryById(apmtOpt.get().getDiaryId());
 
             Integer professionalId = healthcareProfessionalService.getProfessionalId(UserInfo.getCurrentAuditor());
-			if (hasProfessionalRole.apply(institutionId) && !diary.getHealthcareProfessionalId().equals(professionalId)) {
+            if (Boolean.TRUE.equals(hasProfessionalRole.apply(institutionId)) && !diary.getHealthcareProfessionalId().equals(professionalId)) {
                 throw new ValidationException("appointment.new.professional.id.invalid}");
             }
         }
@@ -100,17 +95,18 @@ public class AppointmentValidatorServiceImpl implements AppointmentValidatorServ
     }
 
     private boolean validStateTransition(short appointmentStateId, AppointmentBo apmt) {
-		return validStates.get(apmt.getAppointmentStateId()).contains(Short.valueOf(appointmentStateId));
+        return validStates.get(apmt.getAppointmentStateId()).contains(appointmentStateId);
     }
 
     private static Map<Short, Collection<Short>> buildValidStates() {
         return Map.of(
                 BOOKED, Arrays.asList(ASSIGNED, CONFIRMED, CANCELLED),
                 ASSIGNED, Arrays.asList(CONFIRMED, CANCELLED),
-                CONFIRMED, Arrays.asList(ABSENT, CANCELLED),
+                CONFIRMED, Arrays.asList(ABSENT, CANCELLED, SERVED),
                 ABSENT, Arrays.asList(CONFIRMED,ABSENT),
                 SERVED, Collections.emptyList(),
-                CANCELLED, Collections.singletonList(CANCELLED)
+                CANCELLED, Collections.singletonList(CANCELLED),
+				OUT_OF_DIARY, Arrays.asList(CANCELLED, ASSIGNED, BOOKED)
         );
     }
 

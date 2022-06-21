@@ -28,7 +28,7 @@
 
 <div fxLayout="column" fxLayout.gt-sm="row" fxLayoutAlign="space-between start">
     <span mat-line class="mat-body capitalize-first-letter element-light-color">
-        {{prescriptionItemData.doctor.firstName }} {{prescriptionItemData.doctor.lastName }}
+        {{getFullName(prescriptionItemData.doctor.firstName, prescriptionItemData.doctor.nameSelfDetermination)}} {{prescriptionItemData.doctor.lastName }}
     </span>
     <span mat-line class="mat-body capitalize-first-letter element-light-color" *ngIf="prescriptionItemData.totalDays == 0"
         [translate]="'ambulatoria.paciente.ordenes_prescripciones.DESDE_HOY'">

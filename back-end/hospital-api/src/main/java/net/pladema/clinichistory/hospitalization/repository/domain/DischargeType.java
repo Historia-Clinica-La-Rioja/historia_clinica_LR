@@ -20,6 +20,7 @@ import java.io.Serializable;
 public class DischargeType implements Serializable {
 
 	public static final Short RETIRO_VOLUNTARIO = 4;
+	public static final Short OTRO = 5;
 	/**
 	 * 
 	 */

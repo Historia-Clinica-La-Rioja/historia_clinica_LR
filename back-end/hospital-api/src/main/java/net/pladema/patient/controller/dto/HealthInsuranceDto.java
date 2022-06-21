@@ -15,21 +15,21 @@ public class HealthInsuranceDto extends CoverageDto {
 
     String acronym;
 
-    public HealthInsuranceDto(Integer id, String name, String cuit, Integer rnos, String acronym) {
+    public HealthInsuranceDto(Integer id, String name, String cuit, Integer rnos, String acronym, Short type) {
         setId(id);
         setName(name);
         setCuit(cuit);
+		setType(type);
         this.rnos = rnos;
         this.acronym = acronym;
     }
 
-	@Override
-	public String obtainCoverageType() {
-		return "OBRASOCIAL";
+	public Short getType(){
+		return EMedicalCoverageType.OBRASOCIAL.getId();
 	}
 
 	@Override
     public MedicalCoverageBo newInstance() {
-        return new HealthInsuranceBo(getId(), getName(), getCuit(), getRnos(), getAcronym());
+        return new HealthInsuranceBo(getId(), getName(), getCuit(), getRnos(), getAcronym(), getType());
     }
 }

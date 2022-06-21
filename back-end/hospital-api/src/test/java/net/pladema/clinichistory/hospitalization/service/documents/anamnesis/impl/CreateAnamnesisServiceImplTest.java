@@ -24,7 +24,7 @@ import net.pladema.clinichistory.hospitalization.service.anamnesis.domain.Anamne
 import net.pladema.clinichistory.hospitalization.service.anamnesis.impl.CreateAnamnesisServiceImpl;
 import net.pladema.clinichistory.hospitalization.service.impl.InternmentEpisodeServiceImpl;
 import ar.lamansys.sgx.shared.featureflags.application.FeatureFlagsService;
-import net.pladema.establishment.repository.PrivateHealthInsurancePlanRepository;
+import net.pladema.establishment.repository.MedicalCoveragePlanRepository;
 
 import org.assertj.core.util.Lists;
 import org.junit.jupiter.api.Assertions;
@@ -61,7 +61,7 @@ class CreateAnamnesisServiceImplTest extends UnitRepository {
 	private PatientDischargeRepository patientDischargeRepository;
 
 	@Autowired
-	private PrivateHealthInsurancePlanRepository privateHealthInsurancePlanRepository;
+	private MedicalCoveragePlanRepository medicalCoveragePlanRepository;
 
 	@Mock
 	private DocumentService documentService;
@@ -82,8 +82,8 @@ class CreateAnamnesisServiceImplTest extends UnitRepository {
                 dateTimeProvider, evolutionNoteDocumentRepository,
 				patientDischargeRepository,
 				documentService,
-				privateHealthInsurancePlanRepository
-		);
+                medicalCoveragePlanRepository,
+				featureFlagsService);
 		createAnamnesisServiceImpl =
 				new CreateAnamnesisServiceImpl(documentFactory, internmentEpisodeService, featureFlagsService, dateTimeProvider);
 	}

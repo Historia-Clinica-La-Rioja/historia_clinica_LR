@@ -23,7 +23,7 @@ public class FetchConsultations {
 
     public List<ConsultationsBo> run(Integer patientId) {
         logger.debug("Input parameter -> patientId {}", patientId);
-        List<ConsultationsBo> result = consultationStorage.fetchAllByPatientId(patientId).stream().map(ConsultationsBo::new)
+        List<ConsultationsBo> result = consultationStorage.fetchAllByPatientId(patientId).stream().map(consultationsVo -> new ConsultationsBo(consultationsVo))
                 .collect(Collectors.toList());
         logger.debug("Output -> {}", result);
         return result;

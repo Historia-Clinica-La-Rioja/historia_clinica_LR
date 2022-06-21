@@ -3,6 +3,9 @@ package ar.lamansys.sgh.clinichistory.application.searchDocument;
 import ar.lamansys.sgh.clinichistory.application.searchDocument.domain.DocumentSearchFilterBo;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.DocumentRepository;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.searchdocuments.*;
+import ar.lamansys.sgx.shared.featureflags.AppFeature;
+import ar.lamansys.sgx.shared.featureflags.application.FeatureFlagsService;
+
 import org.apache.logging.log4j.util.Strings;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -21,9 +24,12 @@ public class DocumentSearchServiceImpl implements DocumentSearchService {
 
     private final DocumentRepository documentRepository;
 
-    public DocumentSearchServiceImpl(DocumentRepository documentRepository){
+	private final FeatureFlagsService featureFlagsService;
+
+    public DocumentSearchServiceImpl(DocumentRepository documentRepository, FeatureFlagsService featureFlagsService){
         this.documentRepository = documentRepository;
-    }
+		this.featureFlagsService = featureFlagsService;
+	}
 
     @Override
     public DocumentHistoricBo historicalListDocuments(Integer internmentEpisodeId, @Null DocumentSearchFilterBo searchFilter){
@@ -33,7 +39,7 @@ public class DocumentSearchServiceImpl implements DocumentSearchService {
             String plainText = searchFilter.getPlainText();
             switch(searchFilter.getSearchType()){
                 case DOCTOR:
-                    structuredQuery = new DocumentDoctorSearchQuery(plainText);
+                    structuredQuery = new DocumentDoctorSearchQuery(plainText, featureFlagsService.isOn(AppFeature.HABILITAR_DATOS_AUTOPERCIBIDOS));
                     break;
                 case DIAGNOSIS:
                     structuredQuery = new DocumentDiagnosisSearchQuery(plainText);

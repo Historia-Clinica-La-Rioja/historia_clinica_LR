@@ -6,6 +6,7 @@ import lombok.Setter;
 import lombok.ToString;
 
 import java.io.Serializable;
+import java.time.LocalDate;
 
 @Getter
 @Setter
@@ -20,4 +21,11 @@ public class PatientBo implements Serializable {
     private String lastName;
 
     private String nameSelfDetermination;
+
+	private Short identificationTypeId;
+
+	private String identificationNumber;
+
+	private LocalDate birthDate;
+
 }

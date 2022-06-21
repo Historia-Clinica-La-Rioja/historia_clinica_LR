@@ -31,4 +31,7 @@ public class ServiceRequestCategory {
 	@Column(name = "description", nullable = false, length = 50)
 	private String description;
 
+	@Column(name = "orden")
+	private Short orden;
+
 }

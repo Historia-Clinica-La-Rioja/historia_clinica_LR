@@ -19,4 +19,6 @@ public class BasicPersonalDataVo {
 
     private String identificationNumber;
 
+	private String nameSelfDetermination;
+
 }

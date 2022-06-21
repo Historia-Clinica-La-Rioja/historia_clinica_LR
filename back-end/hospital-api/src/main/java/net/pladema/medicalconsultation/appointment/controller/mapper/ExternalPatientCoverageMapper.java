@@ -1,5 +1,6 @@
 package net.pladema.medicalconsultation.appointment.controller.mapper;
 
+import ar.lamansys.sgh.shared.infrastructure.input.service.EMedicalCoverageTypeDto;
 import ar.lamansys.sgh.shared.infrastructure.input.service.ExternalCoverageDto;
 import ar.lamansys.sgh.shared.infrastructure.input.service.ExternalPatientCoverageDto;
 import net.pladema.patient.service.domain.PatientMedicalCoverageBo;
@@ -8,14 +9,12 @@ public class ExternalPatientCoverageMapper {
 
 	public static ExternalPatientCoverageDto mapToExternalPatientCoverageDto(PatientMedicalCoverageBo bo){
 		if(bo.getId() != null) {
-			var phid = bo.getPrivateHealthInsuranceDetails();
 			var medicalCoverageDetails = bo.getMedicalCoverage();
-			var type = bo.getMedicalCoverage().obtainCoverageType();
+			var type = EMedicalCoverageTypeDto.map(bo.getMedicalCoverage().getType()).getValue();
 			var medicalCoverage = new ExternalCoverageDto();
 			medicalCoverage.setId(medicalCoverageDetails.getId());
 			medicalCoverage.setCuit(medicalCoverageDetails.getCuit());
-			var planName = phid.getPlanName();
-			if (planName != null) medicalCoverage.setPlan(planName);
+			medicalCoverage.setPlan(bo.getPlanName());
 			medicalCoverage.setName(medicalCoverageDetails.getName());
 			medicalCoverage.setType(type);
 			var conditionId = bo.getCondition() == null ? null : bo.getCondition().getId();

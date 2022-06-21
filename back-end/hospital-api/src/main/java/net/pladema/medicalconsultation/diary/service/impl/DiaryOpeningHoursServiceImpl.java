@@ -81,6 +81,7 @@ public class DiaryOpeningHoursServiceImpl implements DiaryOpeningHoursService {
         diaryOpeningHours.setPk(new DiaryOpeningHoursPK(diaryId, openingHoursId));
         diaryOpeningHours.setMedicalAttentionTypeId(doh.getMedicalAttentionTypeId());
         diaryOpeningHours.setOverturnCount((doh.getOverturnCount() != null) ? doh.getOverturnCount() : 0);
+        diaryOpeningHours.setExternalAppointmentsAllowed(doh.getExternalAppointmentsAllowed());
         return diaryOpeningHours;
     }
 
@@ -152,6 +153,7 @@ public class DiaryOpeningHoursServiceImpl implements DiaryOpeningHoursService {
         result.setMedicalAttentionTypeId(diaryOpeningHoursVo.getMedicalAttentionTypeId());
         result.setOverturnCount(diaryOpeningHoursVo.getOverturnCount());
         result.setOpeningHours(new OpeningHoursBo(diaryOpeningHoursVo.getOpeningHours()));
+        result.setExternalAppointmentsAllowed(diaryOpeningHoursVo.getExternalAppointmentsAllowed());
         LOG.debug(OUTPUT, result);
         return result;
     }

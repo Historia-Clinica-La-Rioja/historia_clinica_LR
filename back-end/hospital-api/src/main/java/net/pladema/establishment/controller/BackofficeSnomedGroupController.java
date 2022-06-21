@@ -7,7 +7,6 @@ import net.pladema.sgx.exceptions.BackofficeValidationException;
 import net.pladema.snowstorm.repository.SnomedGroupRepository;
 import net.pladema.snowstorm.repository.entity.SnomedGroup;
 
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -42,9 +41,4 @@ public class BackofficeSnomedGroupController extends AbstractBackofficeControlle
 		return super.create(entity);
 	}
 
-	@Override
-	public SnomedGroup update(@PathVariable("id") Integer id, @Valid @RequestBody SnomedGroup entity) {
-		entity.setLastUpdate(dateTimeProvider.nowDate());
-		return super.update(id, entity);
-	}
 }

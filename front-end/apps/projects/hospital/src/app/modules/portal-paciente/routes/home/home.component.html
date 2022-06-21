@@ -5,7 +5,28 @@
 	</section>
 
 	<section id="content" fxLayout="column" fxLayoutGap="20px">
-		<app-patient-card *ngIf="personPhoto" [patient]="patient$ | async" [personPhoto]="personPhoto"></app-patient-card>
+		<app-patient-card *ngIf="personPhoto" [patient]="patient$ | async" [personPhoto]="personPhoto">
+			<div info-content fxLayout="row">
+				<mat-divider class="header-divider" vertical></mat-divider>
+				<div class="sided-spaced-content" *ngIf="bloodType?.length" fxLayout="column"
+					fxLayoutAlign="center center" fxLayoutGap="3px">
+					<span class="group-and-factor-properties">
+						{{ 'ambulatoria.paciente.card.GROUP_AND_FACTOR' | translate }}
+					</span>
+					<span class="group-and-factor-properties">
+						{{ 'ambulatoria.paciente.card.SANGUINEOUS' | translate }}
+					</span>
+					<h1 class="color-primary bold top-padded-content" id="blood-type">{{ bloodType }}</h1>
+				</div>
+				<div *ngIf="!bloodType" fxLayout="column" fxLayoutAlign="center center">
+					<span class="color-disabled no-blood-data">
+						{{ 'ambulatoria.paciente.card.WITHOUT_BLOOD_DATA' | translate }}
+					</span>
+					<h1 class="color-disabled bold top-padded-content">-</h1>
+				</div>
+				<mat-divider class="header-divider" vertical></mat-divider>
+			</div>
+		</app-patient-card>
 
 		<mat-card id="tab_container" class="mat-typography">
 			<app-resumen-historia-clinica></app-resumen-historia-clinica>

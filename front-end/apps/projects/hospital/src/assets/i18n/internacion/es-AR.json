@@ -298,7 +298,9 @@
 			},
 			"info": {
 				"WITHOUT_DIAGNOSIS": "Sin diagnóstico definido"
-			}
+			},
+			"WITHOUT_OBSERVATIONS": "No hay observaciones para mostrar",
+			"CLINICAL_EVALUATION": "Evaluación clínica"
 		},
 		"nota-evolucion": {
 			"TITLE": "Nota de evolución",
@@ -433,11 +435,15 @@
 			"REQUIRED": "El campo es requerido",
 			"TIME_FORMAT": "La hora debe cumplir con el formato de 24 hs y tener dos dígitos para la hora y los minutos respectivamente",
 			"TIME": "Hora",
+			"PHYSICAL_DISCHARGE": "alta física",
+			"HAS_PHYSICAL_DISCHARGE": "Alta física realizada",
 			"messages": {
 				"ERROR": "No se pudo dar el alta administrativa del paciente",
 				"SUCCESS": "El alta administrativa se guardó exitosamente",
 				"MEDICAL_DISCHARGE_ERROR": "No se pudo dar el alta médica del paciente",
-				"MEDICAL_DISCHARGE_SUCCESS": "El alta médica se guardó exitosamente"
+				"MEDICAL_DISCHARGE_SUCCESS": "El alta médica se guardó exitosamente",
+				"PHYSICAL_DISCHARGE_ERROR": "No se pudo dar el alta física del paciente",
+				"PHYSICAL_DISCHARGE_SUCCESS": "El alta física se guardó exitosamente"
 			}
 		},
 		"bed-relocation": {
@@ -455,6 +461,19 @@
 				"CONFIRMACION": "¿Está seguro que desea realizar el pase de cama? ",
 				"ERROR": "Error al generar pase de cama",
 				"SUCCESS": "El pase de cama se guardó exitosamente"
+			}
+		},
+		"delete-document": {
+			"messages": {
+				"ERROR": "Error al eliminar el documento",
+				"SUCCESS": "El documento se eliminó exitosamente"
+			}
+		},
+		"dialogs": {
+			"actions-document": {
+				"DELETE_TITLE": "Aclarar motivo de eliminación",
+				"SUBTITLE": "Para confirmar los cambios por favor especifique el motivo por el cual edita este documento.",
+				"REASON": "Motivo"
 			}
 		}
 	}

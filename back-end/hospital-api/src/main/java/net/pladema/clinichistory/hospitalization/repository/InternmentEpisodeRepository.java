@@ -32,8 +32,8 @@ public interface InternmentEpisodeRepository extends JpaRepository<InternmentEpi
             "ie.epicrisisDocId, de.statusId as epicrisisStatusId, " +
             "b.id as bedId, b.bedNumber, " +
             "r.id as roomId, r.roomNumber, sector.description, " +
-            "hpg.pk.healthcareProfessionalId, hp.licenseNumber, p.firstName, p.lastName," +
-            "rc, ie.probableDischargeDate, pd.administrativeDischargeDate, ie.statusId) " +
+			"hpg.pk.healthcareProfessionalId, hp.licenseNumber, p.firstName, p.lastName, pe.nameSelfDetermination," +
+            "rc, ie.probableDischargeDate, pd.administrativeDischargeDate, ie.statusId, pd.physicalDischargeDate) " +
             "FROM InternmentEpisode ie " +
             "JOIN Bed b ON (b.id = ie.bedId) " +
             "JOIN Room r ON (r.id = b.roomId) " +
@@ -43,6 +43,7 @@ public interface InternmentEpisodeRepository extends JpaRepository<InternmentEpi
             "LEFT JOIN HealthcareProfessionalGroup hpg ON (hpg.pk.internmentEpisodeId = ie.id and hpg.responsible = true) " +
             "LEFT JOIN HealthcareProfessional hp ON (hpg.pk.healthcareProfessionalId = hp.id) " +
             "LEFT JOIN Person p ON (hp.personId = p.id) " +
+			"LEFT JOIN PersonExtended pe ON (p.id = pe.id) " +
             "LEFT JOIN ResponsibleContact rc ON (ie.id = rc.internmentEpisodeId) " +
             "LEFT JOIN PatientDischarge pd ON (ie.id = pd.internmentEpisodeId) " +
             "WHERE ie.id = :internmentEpisodeId")
@@ -77,11 +78,15 @@ public interface InternmentEpisodeRepository extends JpaRepository<InternmentEpi
 
     @Transactional(readOnly = true)
     @Query("SELECT NEW net.pladema.clinichistory.hospitalization.service.domain.BasicListedPatientBo(pa.id, pe.identificationTypeId, " +
-            "pe.identificationNumber, pe.firstName, pe.lastName, petd.nameSelfDetermination, pe.birthDate, pe.genderId, ie.id ) " +
+            "pe.identificationNumber, pe.firstName, pe.lastName, petd.nameSelfDetermination, pe.birthDate, pe.genderId, ie.id, b.bedNumber, r.roomNumber, s.description, CASE when pd.physicalDischargeDate is not null then true else false end) " +
             " FROM InternmentEpisode as ie " +
+			" LEFT JOIN PatientDischarge as pd ON (ie.id = pd.internmentEpisodeId) " +
             " JOIN Patient as pa ON (ie.patientId = pa.id) " +
             " JOIN Person as pe ON (pa.personId = pe.id) " +
             " JOIN PersonExtended petd ON (pe.id = petd.id)"+
+			" JOIN Bed b ON (ie.bedId = b.id)" +
+			" JOIN Room r ON (b.roomId = r.id)" +
+			" JOIN Sector s ON (r.sectorId = s.id)" +
             " WHERE ie.institutionId = :institutionId "+
             " AND ie.statusId <> " + InternmentEpisodeStatus.INACTIVE)
     List<BasicListedPatientBo> findAllPatientsListedData(@Param("institutionId") Integer institutionId);
@@ -96,22 +101,22 @@ public interface InternmentEpisodeRepository extends JpaRepository<InternmentEpi
     @Transactional(readOnly = true)
     @Query("SELECT NEW net.pladema.clinichistory.hospitalization.service.domain.InternmentEpisodeBo(" +
             "ie.id as internmentEpisodeId, " +
-            "pt.id as patientId, ps.firstName, ps.lastName, petd.nameSelfDetermination, " +
+            "pt.id as patientId, ps.firstName, ps.lastName, petd.nameSelfDetermination, ps.identificationTypeId, ps.identificationNumber, ps.birthDate, " +
             "b.id as bedId, b.bedNumber, " +
             "r.id as roomId, r.roomNumber, " +
-            "s.id as sectorId, s.description) " +
+            "s.id as sectorId, s.description, " +
+			"CASE when pd.physicalDischargeDate is not null then true else false end) " +
             "FROM InternmentEpisode ie " +
-            "JOIN Patient pt ON (ie.patientId = pt.id) " +
+			"LEFT JOIN PatientDischarge pd ON (ie.id = pd.internmentEpisodeId) " +
+			"JOIN Patient pt ON (ie.patientId = pt.id) " +
             "JOIN Person ps ON (pt.personId = ps.id) " +
             "JOIN PersonExtended petd ON (pt.personId = petd.id) " +
             "JOIN Bed b ON (ie.bedId = b.id) " +
             "JOIN Room r ON (b.roomId = r.id) " +
             "JOIN Sector s ON (r.sectorId = s.id) " +
             "WHERE ie.institutionId = :institutionId " +
-            "AND NOT EXISTS (select pd.id " +
-            "                FROM PatientDischarge pd" +
-            "                WHERE pd.internmentEpisodeId = ie.id) " +
-            " ORDER BY ps.firstName ASC, ps.lastName ASC")
+			"AND pd.medicalDischargeDate is NULL AND pd.administrativeDischargeDate is NULL " +
+            "ORDER BY ps.firstName ASC, ps.lastName ASC")
     List<InternmentEpisodeBo> getAllInternmentPatient(@Param("institutionId") Integer institutionId);
 
     @Transactional(readOnly = true)
@@ -124,8 +129,9 @@ public interface InternmentEpisodeRepository extends JpaRepository<InternmentEpi
     @Transactional(readOnly = true)
     @Query(" SELECT NEW net.pladema.clinichistory.hospitalization.repository.domain.processepisode.InternmentEpisodeProcessVo(ie.id, ie.institutionId) " +
             "FROM InternmentEpisode  ie " +
-            "WHERE  ie.patientId = :patientId and ie.statusId <> " + InternmentEpisodeStatus.INACTIVE)
-    Optional<InternmentEpisodeProcessVo> internmentEpisodeInProcess(@Param("patientId") Integer patientId);
+            "WHERE  ie.patientId = :patientId and ie.statusId <> " + InternmentEpisodeStatus.INACTIVE +
+            " ORDER BY ie.creationable.createdOn DESC")
+    List<InternmentEpisodeProcessVo> internmentEpisodeInProcess(@Param("patientId") Integer patientId);
 
     @Transactional(readOnly = true)
     @Query("SELECT ie.entryDate " +
@@ -184,15 +190,61 @@ public interface InternmentEpisodeRepository extends JpaRepository<InternmentEpi
 	@Transactional(readOnly = true)
 	@Query("SELECT NEW net.pladema.patient.repository.domain.PatientMedicalCoverageVo" +
 			"(pmc.id, pmc.affiliateNumber, pmc.vigencyDate, pmc.active, mc.id, mc.name, " +
-			"mc.cuit, hi.rnos, hi.acronym, phi.id, phid, pmc.conditionId) " +
+			"mc.cuit, mc.type, hi.rnos, hi.acronym, pmc.conditionId, pmc.startDate, pmc.endDate, pmc.planId) " +
 			"FROM PatientMedicalCoverageAssn pmc " +
 			"JOIN InternmentEpisode ie ON (ie.patientMedicalCoverageId = pmc.id) " +
 			"JOIN MedicalCoverage mc ON (pmc.medicalCoverageId = mc.id) " +
 			"LEFT JOIN HealthInsurance hi ON (mc.id = hi.id) " +
 			"LEFT JOIN PrivateHealthInsurance phi ON (mc.id = phi.id) " +
-			"LEFT JOIN PrivateHealthInsuranceDetails phid ON (pmc.privateHealthInsuranceDetailsId = phid.id) " +
 			"WHERE pmc.id = ie.patientMedicalCoverageId " +
 			"AND ie.id = :internmentEpisodeId")
 	Optional<PatientMedicalCoverageVo> getInternmentEpisodeMedicalCoverage(@Param("internmentEpisodeId")  Integer internmentEpisodeId);
 
+	@Transactional
+	@Modifying
+	@Query("UPDATE InternmentEpisode AS ie " +
+			"SET ie.epicrisisDocId = null, " +
+			"ie.updateable.updatedOn = :today, " +
+			"ie.updateable.updatedBy = :currentUser " +
+			"WHERE ie.id = :internmentEpisodeId")
+	void deleteEpicrisisDocumentId(@Param("internmentEpisodeId") Integer internmentEpisodeId,
+								   @Param("currentUser") Integer currentUser,
+								   @Param("today") LocalDateTime today);
+
+	@Transactional
+	@Modifying
+	@Query("UPDATE InternmentEpisode AS ie " +
+			"SET ie.anamnesisDocId = null, " +
+			"ie.updateable.updatedOn = :today, " +
+			"ie.updateable.updatedBy = :currentUser " +
+			"WHERE ie.id = :internmentEpisodeId")
+	void deleteAnamnesisDocumentId(@Param("internmentEpisodeId") Integer internmentEpisodeId,
+								   @Param("currentUser") Integer currentUser,
+								   @Param("today") LocalDateTime today);
+
+	@Transactional(readOnly = true)
+	@Query("SELECT (case when count(dc.id) > 0 then true else false end) " +
+			"FROM Document dc " +
+			"WHERE dc.id = :anamnesisDocId " +
+			"AND dc.statusId = '"+ DocumentStatus.FINAL + "' " +
+			"AND EXISTS (" +
+			"           SELECT d.id " +
+			"           FROM EvolutionNoteDocument evnd " +
+			"           JOIN Document d ON (d.id = evnd.pk.documentId) " +
+			"           WHERE evnd.pk.internmentEpisodeId = :internmentEpisodeId " +
+			"           AND d.statusId = '"+ DocumentStatus.FINAL + "' " +
+			"           AND d.creationable.createdOn > dc.creationable.createdOn " +
+			"        )")
+	boolean haveEvolutionNoteAfterAnamnesis(@Param("internmentEpisodeId") Integer internmentEpisodeId,
+											@Param("anamnesisDocId") Long anamnesisDocId);
+
+	@Transactional(readOnly = true)
+	@Query("SELECT (case when count(ie.id)> 0 then true else false end) "+
+			" FROM InternmentEpisode ie " +
+			" LEFT JOIN PatientDischarge pd ON (ie.id = pd.internmentEpisodeId)" +
+			" WHERE ie.patientId = :patientId " +
+			" AND ie.statusId = " +InternmentEpisodeStatus.ACTIVE+" " +
+			" AND pd.physicalDischargeDate is NULL and pd.medicalDischargeDate is NULL")
+	boolean isPatientHospitalized (@Param("patientId") Integer patientId);
+	
 }

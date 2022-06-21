@@ -39,6 +39,12 @@
 				"SUCCESS": "La agenda se eliminó exitosamente"
 			}
 		},
+		"booking": {
+			"VALIDATE":"Validar",
+			"BOOKING": "Turno online",
+			"SLOT_NOT_AVAILABLE": "Este turno fue ocupado por una reserva online",
+			"CANCEL_BOOKING": "Cancelar turno"
+		},
 		"new-appointment": {
 			"NEW_APPOINTMENT": "Nuevo turno",
 			"BUTTON_ADD_PATIENT": "Crear paciente",

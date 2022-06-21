@@ -17,9 +17,12 @@ public class UserPersonDto implements Serializable {
 
     private String lastName;
 
-    public UserPersonDto(Integer id, String firstName, String lastName) {
+	private String nameSelfDetermination;
+
+    public UserPersonDto(Integer id, String firstName, String lastName, String nameSelfDetermination) {
         this.id = id;
         this.firstName = firstName;
         this.lastName = lastName;
+		this.nameSelfDetermination = nameSelfDetermination;
     }
 }

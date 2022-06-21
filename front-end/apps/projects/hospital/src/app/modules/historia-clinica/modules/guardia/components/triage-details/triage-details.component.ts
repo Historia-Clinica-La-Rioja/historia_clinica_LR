@@ -2,6 +2,7 @@ import { Component, Input, OnChanges } from '@angular/core';
 import { EmergencyCareTypes, Triages } from '../../constants/masterdata';
 import { TriageCategory } from '../triage-chip/triage-chip.component';
 import { RiskFactor } from '@presentation/components/factor-de-riesgo-current/factor-de-riesgo.component';
+import {PatientNameService} from "@core/services/patient-name.service";
 
 @Component({
 	selector: 'app-triage-details',
@@ -19,7 +20,7 @@ export class TriageDetailsComponent implements OnChanges {
 
 	riskFactors: { description: string, value: RiskFactor }[];
 
-	constructor() {
+	constructor(private readonly patientNameService: PatientNameService,) {
 	}
 
 	ngOnChanges() {
@@ -78,6 +79,10 @@ export class TriageDetailsComponent implements OnChanges {
 		}
 	}
 
+	getFullName(triage: Triage): string {
+		return `${this.patientNameService.getPatientName(triage.createdBy.firstName, triage.createdBy.nameSelfDetermination)}, ${triage.createdBy.lastName}`;
+	}
+
 }
 
 export interface Triage {
@@ -85,7 +90,8 @@ export interface Triage {
 	category: TriageCategory;
 	createdBy: {
 		firstName: string,
-		lastName: string
+		lastName: string,
+		nameSelfDetermination: string
 	};
 	doctorsOfficeDescription?: string;
 	riskFactors?: {

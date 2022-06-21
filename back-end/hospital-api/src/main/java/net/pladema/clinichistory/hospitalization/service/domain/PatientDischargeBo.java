@@ -20,10 +20,15 @@ public class PatientDischargeBo {
 
     private Short dischargeTypeId;
 
-    public PatientDischargeBo(PatientDischarge patientDischarge) {
+	private LocalDateTime physicalDischargeDate;
+
+
+	public PatientDischargeBo(PatientDischarge patientDischarge) {
         this.internmentEpisodeId = patientDischarge.getInternmentEpisodeId();
         this.administrativeDischargeDate = patientDischarge.getAdministrativeDischargeDate();
         this.medicalDischargeDate = patientDischarge.getMedicalDischargeDate();
         this.dischargeTypeId = patientDischarge.getDischargeTypeId();
+		this.physicalDischargeDate = patientDischarge.getPhysicalDischargeDate();
     }
+
 }

@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import { Redirect } from "@historia-clinica/modules/ambulatoria/modules/internacion/components/internment-patient-table/internment-patient-table.component";
 
 @Component({
 	selector: 'app-home',
@@ -7,8 +8,8 @@ import { Component } from '@angular/core';
 })
 export class HomeComponent {
 
-
-	constructor() {
-	}
+	redirect = Redirect.patientCard;
+	constructor() { }
 
 }
+

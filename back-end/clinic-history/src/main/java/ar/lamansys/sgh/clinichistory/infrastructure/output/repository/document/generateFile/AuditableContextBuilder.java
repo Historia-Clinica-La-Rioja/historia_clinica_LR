@@ -11,6 +11,10 @@ import ar.lamansys.sgh.shared.infrastructure.input.service.SharedPatientPort;
 import ar.lamansys.sgh.shared.infrastructure.input.service.immunization.SharedImmunizationPort;
 import ar.lamansys.sgh.shared.infrastructure.input.service.immunization.VaccineDoseInfoDto;
 import ar.lamansys.sgx.shared.dates.configuration.LocalDateMapper;
+import ar.lamansys.sgx.shared.featureflags.AppFeature;
+
+import ar.lamansys.sgx.shared.featureflags.application.FeatureFlagsService;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -32,6 +36,7 @@ public class AuditableContextBuilder {
 	private final SharedImmunizationPort sharedImmunizationPort;
 	private final RiskFactorMapper riskFactorMapper;
 	private final LocalDateMapper localDateMapper;
+	private final FeatureFlagsService featureFlagsService;
 
 	public AuditableContextBuilder(
 			SharedPatientPort sharedPatientPort,
@@ -40,7 +45,8 @@ public class AuditableContextBuilder {
 			AuthorMapper authorMapper,
 			SharedImmunizationPort sharedImmunizationPort,
 			RiskFactorMapper riskFactorMapper,
-			LocalDateMapper localDateMapper) {
+			LocalDateMapper localDateMapper,
+			FeatureFlagsService featureFlagsService) {
 		this.sharedImmunizationPort = sharedImmunizationPort;
 		this.localDateMapper = localDateMapper;
 		this.logger = LoggerFactory.getLogger(getClass());
@@ -51,6 +57,7 @@ public class AuditableContextBuilder {
 		this.clinicalSpecialtyDtoFunction = (Integer specialtyId) ->
 				clinicalSpecialtyFinder.getClinicalSpecialty(specialtyId);
 		this.riskFactorMapper = riskFactorMapper;
+		this.featureFlagsService = featureFlagsService;
 	}
 
 	public <T extends IDocumentBo> Map<String,Object> buildContext(T document, Integer patientId){
@@ -88,6 +95,7 @@ public class AuditableContextBuilder {
 		contextMap.put("author", authorFromDocumentFunction.apply(document.getId()));
 		contextMap.put("clinicalSpecialty", clinicalSpecialtyDtoFunction.apply(document.getClinicalSpecialtyId()));
 		contextMap.put("performedDate", document.getPerformedDate().atZone(ZoneId.of("UTC")).withZoneSameInstant(ZoneId.of("UTC-3")));
+		contextMap.put("nameSelfDeterminationFF", featureFlagsService.isOn(AppFeature.HABILITAR_DATOS_AUTOPERCIBIDOS));
 	}
 
 	private List<ImmunizationInfoDto> mapImmunizations(List<ImmunizationBo> immunizations) {

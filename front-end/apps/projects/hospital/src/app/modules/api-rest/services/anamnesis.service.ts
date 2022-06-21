@@ -33,4 +33,10 @@ export class AnamnesisService {
 		return this.downloadService.downloadPdf(url, fileName);
 	}
 
+	deleteAnamnesis(anamnesisId: number, internmentEpisodeId: number, reason: string): Observable<boolean> {
+		const url = `${environment.apiBase}/institutions/${this.contextService.institutionId}/internments/${internmentEpisodeId}/anamnesis/${anamnesisId}`;
+		return this.http.delete<boolean>(url, {
+			body: reason
+		});
+	}
 }

@@ -23,6 +23,9 @@ public class PatientDischargeDto {
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = JacksonDateFormatConfig.DATE_TIME_FORMAT)
     private LocalDateTime administrativeDischargeDate;
 
+	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = JacksonDateFormatConfig.DATE_TIME_FORMAT)
+	private LocalDateTime physicalDischargeDate;
+
     private short dischargeTypeId;
 
 }

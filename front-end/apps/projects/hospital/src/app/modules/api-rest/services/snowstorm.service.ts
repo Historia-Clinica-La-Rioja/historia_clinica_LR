@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { environment } from '@environments/environment';
 import { map } from 'rxjs/operators';
-import { SnomedDto, SnomedResponseDto } from '@api-rest/api-model';
+import { SnomedDto, SnomedResponseDto, SnomedTemplateDto } from '@api-rest/api-model';
 import { Observable } from 'rxjs';
 
 export const SNOMED_RESULTS_LIMIT = '30';
@@ -41,6 +41,11 @@ export class SnowstormService {
 	searchSNOMEDConcepts(params): Observable<SnomedDto[]> {
 		const url = `${environment.apiBase}/snowstorm/search-concepts`;
 		return this.http.get<SnomedDto[]>(url, { params });
+	}
+
+	searchTemplates(params): Observable<SnomedTemplateDto[]> {
+		const url = `${environment.apiBase}/snowstorm/search-templates`;
+		return this.http.get<SnomedTemplateDto[]>(url, { params });
 	}
 }
 

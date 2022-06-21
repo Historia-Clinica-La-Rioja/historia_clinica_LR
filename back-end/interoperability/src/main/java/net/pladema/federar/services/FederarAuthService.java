@@ -33,7 +33,7 @@ public class FederarAuthService extends AuthService<FederarLoginResponse> {
 							federarWSConfig.getClientAssertionType(), generateClientAssertion()),
 					FederarLoginResponse.class);
 		} catch (Exception e) {
-			throw new WSResponseException("Error al codificar SignKey -> " + e.getMessage() ) ;
+			throw new WSResponseException("Error al intentar federar un paciente -> " + e.getMessage() ) ;
 		}
 		return result;
 	}

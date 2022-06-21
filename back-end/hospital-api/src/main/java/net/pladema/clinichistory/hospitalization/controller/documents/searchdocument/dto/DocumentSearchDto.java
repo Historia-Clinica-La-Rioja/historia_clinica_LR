@@ -1,6 +1,7 @@
 package net.pladema.clinichistory.hospitalization.controller.documents.searchdocument.dto;
 
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.ProcedureReduced;
+import ar.lamansys.sgx.shared.dates.controller.dto.DateTimeDto;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
@@ -9,6 +10,7 @@ import net.pladema.clinichistory.hospitalization.controller.dto.ResponsibleDocto
 
 import java.io.Serializable;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Getter
@@ -28,7 +30,7 @@ public class DocumentSearchDto implements Serializable {
 
     private ResponsibleDoctorDto creator;
 
-    private LocalDate createdOn;
+    private DateTimeDto createdOn;
 
     private String message;
 

@@ -18,4 +18,6 @@ public class AuthorDto implements Serializable {
     private String lastName;
 
     private String licence;
+
+	private String nameSelfDetermination;
 }

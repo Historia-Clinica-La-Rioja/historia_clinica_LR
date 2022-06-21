@@ -1,11 +1,11 @@
 package net.pladema.sgx.healthinsurance.service.impl;
 
-import net.pladema.establishment.repository.PrivateHealthInsurancePlanRepository;
-import net.pladema.establishment.repository.entity.PrivateHealthInsurancePlan;
+import net.pladema.establishment.repository.MedicalCoveragePlanRepository;
+import net.pladema.establishment.repository.entity.MedicalCoveragePlan;
 import net.pladema.patient.repository.PrivateHealthInsuranceRepository;
 import net.pladema.patient.repository.domain.PrivateHealthInsuranceVo;
+import net.pladema.patient.service.domain.MedicalCoveragePlanBo;
 import net.pladema.patient.service.domain.PrivateHealthInsuranceBo;
-import net.pladema.patient.service.domain.PrivateHealthInsurancePlanBo;
 import net.pladema.sgx.healthinsurance.service.PrivateHealthInsuranceService;
 import net.pladema.sgx.healthinsurance.service.exceptions.PrivateHealthInsuranceServiceEnumException;
 import net.pladema.sgx.healthinsurance.service.exceptions.PrivateHealthInsuranceServiceException;
@@ -26,39 +26,39 @@ public class PrivateHealthInsuranceServiceImpl implements PrivateHealthInsurance
 
     private final PrivateHealthInsuranceRepository privateHealthInsuranceRepository;
 
-    private final PrivateHealthInsurancePlanRepository privateHealthInsurancePlanRepository;
+    private final MedicalCoveragePlanRepository medicalCoveragePlanRepository;
 
     public PrivateHealthInsuranceServiceImpl(PrivateHealthInsuranceRepository privateHealthInsuranceRepository,
-                                             PrivateHealthInsurancePlanRepository privateHealthInsurancePlanRepository) {
+                                             MedicalCoveragePlanRepository medicalCoveragePlanRepository) {
         super();
         this.privateHealthInsuranceRepository = privateHealthInsuranceRepository;
-        this.privateHealthInsurancePlanRepository = privateHealthInsurancePlanRepository;
+        this.medicalCoveragePlanRepository = medicalCoveragePlanRepository;
     }
 
     @Override
     public Collection<PrivateHealthInsuranceBo> getAll() {
         Collection<PrivateHealthInsuranceVo> medicalCoveragedata = privateHealthInsuranceRepository.getAllWithNames(Sort.by(Sort.Direction.ASC, "name"));
         Collection<PrivateHealthInsuranceBo> result = medicalCoveragedata.stream()
-                .map(mc -> new PrivateHealthInsuranceBo(mc.getId(), mc.getName(), mc.getCuit()))
+                .map(mc -> new PrivateHealthInsuranceBo(mc.getId(), mc.getName(), mc.getCuit(), mc.getType()))
                 .collect(Collectors.toList());
         LOG.debug(OUTPUT, result);
         return result;
     }
 
     @Override
-    public Collection<PrivateHealthInsurancePlanBo> getAllPlansById(Integer id) {
-        Collection<PrivateHealthInsurancePlan> plansData = privateHealthInsurancePlanRepository.findByPrivateHealthInsuranceId(id);
-        Collection<PrivateHealthInsurancePlanBo> result = plansData.stream()
-                .map(plan -> new PrivateHealthInsurancePlanBo(plan.getId(), plan.getPrivateHealthInsuranceId(), plan.getPlan()))
+    public Collection<MedicalCoveragePlanBo> getAllPlansByMedicalCoverageId(Integer id) {
+        Collection<MedicalCoveragePlan> plansData = medicalCoveragePlanRepository.findAllActiveByMedicalCoverageId(id);
+        Collection<MedicalCoveragePlanBo> result = plansData.stream()
+                .map(plan -> new MedicalCoveragePlanBo(plan.getId(), plan.getMedicalCoverageId(), plan.getPlan()))
                 .collect(Collectors.toList());
         LOG.debug(OUTPUT, result);
         return result;
     }
 
     @Override
-    public PrivateHealthInsurancePlanBo getPlanById(Integer id) {
-        PrivateHealthInsurancePlanBo result = privateHealthInsurancePlanRepository.findById(id)
-                .map(plan -> new PrivateHealthInsurancePlanBo(plan.getId(),plan.getPrivateHealthInsuranceId(),plan.getPlan()))
+    public MedicalCoveragePlanBo getPlanById(Integer id) {
+        MedicalCoveragePlanBo result = medicalCoveragePlanRepository.findById(id)
+                .map(plan -> new MedicalCoveragePlanBo(plan.getId(),plan.getMedicalCoverageId(),plan.getPlan()))
                         .orElseThrow(()->new PrivateHealthInsuranceServiceException(PrivateHealthInsuranceServiceEnumException.PRIVATE_HEALTH_INSURANCE_PLAN_NOT_EXISTS, String.format("El plan con id %s no existe",id)));
         LOG.debug(OUTPUT, result);
         return result;

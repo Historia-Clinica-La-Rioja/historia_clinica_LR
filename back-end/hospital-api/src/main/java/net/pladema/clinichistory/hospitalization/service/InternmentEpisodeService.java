@@ -28,11 +28,19 @@ public interface InternmentEpisodeService {
 
     boolean haveEpicrisis(Integer internmentEpisodeId);
 
+    boolean haveMedicalDischarge(Integer internmentEpisodeId);
+
+    boolean haveEvolutionNoteAfterAnamnesis(Integer internmentEpisodeId);
+
+    boolean havePhysicalDischarge(Integer internmentEpisodeId);
+
     LocalDateTime getEntryDate(Integer internmentEpisodeId);
 
     boolean canCreateEpicrisis(Integer internmentEpisodeId);
+
+	PatientDischargeBo saveMedicalDischarge(PatientDischargeBo patientDischargeBo);
  
-    PatientDischargeBo savePatientDischarge(PatientDischargeBo patientDischarge);
+    PatientDischargeBo saveAdministrativeDischarge(PatientDischargeBo patientDischarge);
     
     void updateInternmentEpisodeStatus(Integer internmentEpisodeId, Short statusId);
 
@@ -49,5 +57,11 @@ public interface InternmentEpisodeService {
 	Integer updateInternmentEpisodeBed(Integer internmentEpisode, Integer newBedId);
 
 	Optional<PatientMedicalCoverageBo> getMedicalCoverage(Integer internmentEpisode);
+
+	void deleteAnamnesisDocumentId(Integer internmentEpisodeId);
+
+	void deleteEpicrisisDocumentId(Integer internmentEpisodeId);
 	
+	PatientDischargeBo savePatientPhysicalDischarge(Integer internmentEpisodeId);
+
 }

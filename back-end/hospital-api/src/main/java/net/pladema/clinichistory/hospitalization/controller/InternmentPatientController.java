@@ -68,7 +68,7 @@ public class InternmentPatientController {
             @PathVariable(name = "patientId") Integer patientId){
         LOG.debug("Input parameters -> institutionId {}, patientId {}", institutionId, patientId);
         InternmentEpisodeProcessBo serviceResult = internmentPatientService.internmentEpisodeInProcess(institutionId,patientId);
-        InternmentEpisodeProcessDto result = new InternmentEpisodeProcessDto(serviceResult.getId(), serviceResult.isInProgress());
+        InternmentEpisodeProcessDto result = new InternmentEpisodeProcessDto(serviceResult.getId(), serviceResult.isInProgress(), serviceResult.isPatientHospitalized());
         LOG.debug(OUTPUT, result);
         return ResponseEntity.ok().body(result);
     }

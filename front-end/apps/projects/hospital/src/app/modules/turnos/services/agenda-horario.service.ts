@@ -225,7 +225,8 @@ export class AgendaHorarioService {
 					to: momentFormat(dateToMoment(event.end), DateFormat.HOUR_MINUTE_SECONDS),
 				},
 				medicalAttentionTypeId: event.meta.medicalAttentionType.id,
-				overturnCount: event.meta.overturnCount
+				overturnCount: event.meta.overturnCount,
+				externalAppointmentsAllowed: event.meta.availableForBooking
 			};
 		}
 	}

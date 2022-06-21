@@ -16,8 +16,8 @@ import java.io.Serializable;
 @AllArgsConstructor
 @JsonTypeInfo(use=JsonTypeInfo.Id.NAME, include= JsonTypeInfo.As.PROPERTY, property="type")
 @JsonSubTypes({
-        @JsonSubTypes.Type(value= HealthInsuranceDto.class, name="HealthInsuranceDto"),
-        @JsonSubTypes.Type(value= PrivateHealthInsuranceDto.class, name="PrivateHealthInsuranceDto")
+        @JsonSubTypes.Type(value= HealthInsuranceDto.class, name="2"),
+        @JsonSubTypes.Type(value= PrivateHealthInsuranceDto.class, name="1")
 })
 public abstract class CoverageDto implements Serializable {
 
@@ -27,7 +27,7 @@ public abstract class CoverageDto implements Serializable {
 
     private String cuit;
 
-	public abstract String obtainCoverageType();
+	private Short type;
 
     public abstract MedicalCoverageBo newInstance();
 }

@@ -37,6 +37,7 @@
 				}
 			},
 			"menu-items": {
+				"PHARMACO": "Fármaco",
 				"DIET": "Dieta",
 				"PARENTERAL_PLAN": "Plan parenteral"
 			},
@@ -97,6 +98,53 @@
 					"ADD_PHARMACO": "Agregar fármaco",
 					"PHARMACO": "fármaco",
 					"DOSE": "dosis"
+				},
+				"pharmaco":{
+					"TITLE": "Agregar fármaco",
+					"PHARMACO": "Fármaco",
+					"DOSAGE": "Dosis",
+					"VIA": "Via",
+					"SOLVENT": "Diluyente",
+					"MILLILITERS": "ml",
+					"START-TIME": "Hora de inicio",
+					"OBSERVATIONS": "Observaciones",
+					"add-snomed-concept":{
+						"TITLE": "Agregar fármaco",
+						"SEARCH": "Fármaco"
+					},
+					"foodRelation":{
+						"TITLE": "Relación con las comidas",
+						"NEGATIVE": "No",
+						"FAR": "Lejos",
+						"FAST": "Ayuno"
+					},
+					"othersDetails":{
+						"TITLE": "Otros detalles",
+						"ASSOCIATED_DIAGNOSIS": "Diagnóstico asociado",
+						"POSITIVE": "Si"
+					},
+					"patientProvided":{
+						"TITLE": "Medicación aportada por el paciente",
+						"NEGATIVE": "No",
+						"POSITIVE": "Si"
+					},
+					"frequencyOption": {
+						"TITLE": "Administración",
+						"EVERY":"Cada",
+						"OTHER-FREQUENCY": "Otra frecuencia",
+						"UNSPECIFIED": "Sin especificar",
+						"INTERVALS": "Intervalo",
+						"ONCE": "Unica vez",
+						"DETAIL-EVENT": "Detalle evento",
+						"AFTER-EVENT":" Ante un evento"
+					},
+					"messages": {
+						"TITLE": "Para realizar una indicación el episodio debe tener un diagnóstico asociado.",
+						"CONTENT": "Por favor, agregué primero un diagnóstico en la evolución del episodio y luego realice la indicación.",
+						"OK_BUTTON": "Aceptar",
+						"ERROR": "Error al guardar un nuevo fármaco",
+						"SUCCESS": "El fármaco se guardó exitosamente"
+					}
 				}
 			}
 		}

@@ -77,7 +77,7 @@ public class UpdateSnomedGroup {
         Integer snomedGroupId = snomedGroupRepository.getBaseGroupIdByEclAndDescription(ecl, eclKey);
         String customId = "1";
 
-        SnomedGroup toSave = new SnomedGroup(snomedGroupId, eclKey, ecl, customId, date);
+        SnomedGroup toSave = new SnomedGroup(snomedGroupId, eclKey, ecl, customId, date, false);
         return snomedGroupRepository.save(toSave).getId();
     }
 

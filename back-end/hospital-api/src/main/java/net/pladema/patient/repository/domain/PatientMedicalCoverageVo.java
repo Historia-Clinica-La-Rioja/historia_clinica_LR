@@ -2,6 +2,7 @@ package net.pladema.patient.repository.domain;
 
 
 import lombok.*;
+import net.pladema.patient.controller.dto.EMedicalCoverageType;
 import net.pladema.patient.controller.dto.EPatientMedicalCoverageCondition;
 import net.pladema.patient.repository.entity.PrivateHealthInsuranceDetails;
 
@@ -24,43 +25,52 @@ public class PatientMedicalCoverageVo {
 
     private MedicalCoverageVo medicalCoverage;
 
-    private PrivateHealthInsuranceDetailsVo privateHealthInsuranceDetails;
+	private LocalDate startDate;
+
+	private LocalDate endDate;
+
+	private Integer planId;
 
 	private Short conditionId;
 
     public PatientMedicalCoverageVo(Integer id, String affiliateNumber, LocalDate vigencyDate, Boolean active, Integer medicalCoverageId, String name,
-                                    String cuit, Integer rnos, String acronym, Integer privateHealthInsuranceId, PrivateHealthInsuranceDetails privateHealthInsuranceDetails,
-									Short conditionId) {
+                                    String cuit, Short type, Integer rnos, String acronym, Short conditionId, LocalDate startDate, LocalDate endDate, Integer planId) {
         this.id = id;
         this.affiliateNumber = affiliateNumber;
         this.vigencyDate = vigencyDate;
         this.active = active;
-        if (privateHealthInsuranceId == null)
-            this.medicalCoverage = new HealthInsuranceVo(medicalCoverageId, name,cuit, rnos, acronym);
-        else{
-            this.medicalCoverage = new PrivateHealthInsuranceVo(medicalCoverageId, name,cuit);
-            if  (privateHealthInsuranceDetails != null)
-                this.privateHealthInsuranceDetails = new PrivateHealthInsuranceDetailsVo(privateHealthInsuranceDetails);
+		this.startDate = startDate;
+		this.endDate = endDate;
+		this.planId = planId;
+		switch (EMedicalCoverageType.map(type)){
+			case PREPAGA: this.medicalCoverage =  new PrivateHealthInsuranceVo(medicalCoverageId, name, cuit, type);
+				break;
+			case OBRASOCIAL: this.medicalCoverage = new HealthInsuranceVo(medicalCoverageId, name,cuit, rnos, acronym, type);
+				break;
+			case ART: this.medicalCoverage = new ARTCoverageVo(medicalCoverageId, name,cuit, type);
 		}
-		this.conditionId = conditionId;
+        this.conditionId = conditionId;
     }
 
-       public PatientMedicalCoverageVo(Integer id, String affiliateNumber, LocalDate vigencyDate, Boolean active, Integer medicalCoverageId, String name, String cuit, Integer rnos, String acronym, Short conditionId){
+       public PatientMedicalCoverageVo(Integer id, String affiliateNumber, LocalDate vigencyDate, Boolean active, Integer medicalCoverageId, String name, String cuit, Short type, Integer rnos, String acronym, Short conditionId, Integer planId){
         this.id = id;
         this.affiliateNumber = affiliateNumber;
         this.vigencyDate = vigencyDate;
         this.active = active;
-        this.medicalCoverage = new HealthInsuranceVo(medicalCoverageId, name,cuit, rnos, acronym);
+        this.medicalCoverage = new HealthInsuranceVo(medicalCoverageId, name,cuit, rnos, acronym, type);
 		this.conditionId = conditionId;
-	   }
+        this.planId = planId;
+    }
 
-    public PatientMedicalCoverageVo(Integer id, String affiliateNumber, LocalDate vigencyDate, Boolean active, Integer medicalCoverageId, String name, String cuit, PrivateHealthInsuranceDetails privateHealthInsuranceDetails, Short conditionId){
+    public PatientMedicalCoverageVo(Integer id, String affiliateNumber, LocalDate vigencyDate, Boolean active, Integer medicalCoverageId, String name, String cuit, Short type, Short conditionId, LocalDate startDate, LocalDate endDate, Integer planId){
         this.id = id;
         this.affiliateNumber = affiliateNumber;
         this.vigencyDate = vigencyDate;
         this.active = active;
-        this.medicalCoverage = new PrivateHealthInsuranceVo(medicalCoverageId, name, cuit);
-        this.privateHealthInsuranceDetails = new PrivateHealthInsuranceDetailsVo(privateHealthInsuranceDetails.getId(), privateHealthInsuranceDetails.getStartDate(), privateHealthInsuranceDetails.getEndDate(), privateHealthInsuranceDetails.getPlanId());
+        this.medicalCoverage = new PrivateHealthInsuranceVo(medicalCoverageId, name, cuit, type);
 		this.conditionId = conditionId;
-	}
+        this.startDate = startDate;
+		this.endDate = endDate;
+		this.planId = planId;
+    }
 }

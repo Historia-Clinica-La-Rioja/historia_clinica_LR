@@ -58,4 +58,12 @@ public interface PersonRepository extends JpaRepository<Person, Integer> {
             "WHERE p.id = :personId ")
     Optional<CompletePersonVo> getCompletePerson(@Param("personId") Integer personId);
 
+    @Transactional(readOnly = true)
+    @Query("SELECT p " +
+    "FROM Diary d " +
+    "JOIN HealthcareProfessional hp ON d.healthcareProfessionalId = hp.id " +
+    "JOIN Person p ON hp.personId = p.id " +
+    "WHERE d.id = :diaryId")
+    Optional<Person> findProfessionalNameByDiaryId(@Param("diaryId") Integer diaryId);
+    
 }

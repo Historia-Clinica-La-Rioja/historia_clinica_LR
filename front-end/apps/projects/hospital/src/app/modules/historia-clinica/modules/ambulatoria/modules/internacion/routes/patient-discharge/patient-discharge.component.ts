@@ -42,7 +42,6 @@ export class PatientDischargeComponent implements OnInit {
 	minTime: string;
 	minDate: string;
 	public dischargeForm: FormGroup;
-	public today: Moment = moment();
 	public minDischargeDate: Date;
 	public patientBasicData: PatientBasicData;
 	public personalInformation: PersonalInformation;
@@ -120,7 +119,7 @@ export class PatientDischargeComponent implements OnInit {
 
 	private loadForm() {
 		this.dischargeForm = this.formBuilder.group({
-			date: [newMoment(), [Validators.required]],
+			date: [moment(), [Validators.required]],
 			time: [this.datePipe.transform(this.todayDate, DatePipeFormat.SHORT_TIME)],
 			dischargeTypeId: [null, [Validators.required]]
 		});

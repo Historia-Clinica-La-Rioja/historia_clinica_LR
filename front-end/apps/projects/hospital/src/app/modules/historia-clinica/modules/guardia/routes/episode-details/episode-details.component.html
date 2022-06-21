@@ -141,7 +141,7 @@
 
 									<div id="right-side">
 										<span>
-											{{ triage.createdBy?.firstName }} {{ triage.createdBy?.lastName }}
+											{{getFullName(triage)}}
 										</span>
 										<span *ngIf="triage.doctorsOfficeDescription">
 											• {{ triage.doctorsOfficeDescription }}

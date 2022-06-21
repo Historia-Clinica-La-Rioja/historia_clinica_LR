@@ -185,7 +185,7 @@
 			</div>
 
 		</div>
-		<app-datepicker [title]="'indicacion.internment-card.INDICATION_DATE'" [minDate]="this.data.entryDate"
+		<app-datepicker fxLayout="50%" [title]="'indicacion.internment-card.INDICATION_DATE'" [minDate]="this.data.entryDate"
 		[dateToSetInDatepicker]="this.data.actualDate" (selectDate)="setIndicationDate($event)"></app-datepicker>
 		<div actions id="button-confirm" fxLayoutAlign="end end">
 			<button mat-raised-button color="primary" id="confirm_button">

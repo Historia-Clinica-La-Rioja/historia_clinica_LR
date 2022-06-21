@@ -3,6 +3,7 @@ import { HceGeneralStateService } from '@api-rest/services/hce-general-state.ser
 import { BehaviorSubject, Subject } from 'rxjs';
 import { HistoricalProblemsFacadeService } from './historical-problems-facade.service';
 import { AppointmentsService } from '@api-rest/services/appointments.service';
+import { HCEAnthropometricDataDto } from '@api-rest/api-model';
 
 @Injectable()
 export class AmbulatoriaSummaryFacadeService {
@@ -14,7 +15,8 @@ export class AmbulatoriaSummaryFacadeService {
 	private personalHistoriesSubject: Subject<any> = new BehaviorSubject<any>([]);
 	private medicationsSubject: Subject<any> = new BehaviorSubject<any>([]);
 	private riskFactorsSubject: Subject<any> = new BehaviorSubject<any>([]);
-	private anthropometricDataSubject: Subject<any> = new BehaviorSubject<any>([]);
+	private bloodTypeSubject: Subject<string> = new BehaviorSubject<string>(null);
+	private anthropometricDataListSubject: Subject<HCEAnthropometricDataDto[]> = new BehaviorSubject<HCEAnthropometricDataDto[]>([]);
 	private activeProblemsSubject: Subject<any> = new BehaviorSubject<any>([]);
 	private chronicProblemsSubject: Subject<any> = new BehaviorSubject<any>([]);
 	private solvedProblemsSubject: Subject<any> = new BehaviorSubject<any>([]);
@@ -25,7 +27,8 @@ export class AmbulatoriaSummaryFacadeService {
 	public readonly personalHistories$ = this.personalHistoriesSubject.asObservable();
 	public readonly medications$ = this.medicationsSubject.asObservable();
 	public readonly riskFactors$ = this.riskFactorsSubject.asObservable();
-	public readonly anthropometricData$ = this.anthropometricDataSubject.asObservable();
+	public readonly bloodType$ = this.bloodTypeSubject.asObservable();
+	public readonly anthropometricDataList$ = this.anthropometricDataListSubject.asObservable();
 	public readonly activeProblems$ = this.activeProblemsSubject.asObservable();
 	public readonly chronicProblems$ = this.chronicProblemsSubject.asObservable();
 	public readonly solvedProblems$ = this.solvedProblemsSubject.asObservable();
@@ -73,7 +76,16 @@ export class AmbulatoriaSummaryFacadeService {
 		}
 
 		if (fieldsToUpdate.anthropometricData) {
-			this.hceGeneralStateService.getAnthropometricData(this.idPaciente).subscribe(aD => this.anthropometricDataSubject.next(aD));
+			this.hceGeneralStateService.getLast2AnthropometricData(this.idPaciente).subscribe(
+				(aD: HCEAnthropometricDataDto[]) => {
+					if (aD?.length > 0) {
+						if (aD[0]?.bloodType?.value) {
+							this.bloodTypeSubject.next(aD[0].bloodType.value);
+						}
+						this.anthropometricDataListSubject.next(aD);
+					}
+				}
+			);
 		}
 
 		if (fieldsToUpdate.problems) {

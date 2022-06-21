@@ -70,7 +70,8 @@
 				"ENFERMERO": "Enfermero",
 				"ADMINISTRADOR_INSTITUCIONAL_BACKOFFICE":  "Administrador institucional",
 				"ADMINISTRADOR_AGENDA": "Administrador de agenda",
-				"ESPECIALISTA_EN_ODONTOLOGIA": "Especialista en Odontología"
+				"ESPECIALISTA_EN_ODONTOLOGIA": "Especialista en Odontología",
+				"ADMINISTRADOR_DE_CAMAS": "Administrador de camas"
 			}
 		}
 	}

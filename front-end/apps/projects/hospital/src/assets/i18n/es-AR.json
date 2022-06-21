@@ -37,7 +37,8 @@
 		"SKIP": "Omitir",
 		"RESET": "Restablecer",
 		"SELECT": "Seleccionar",
-		"APPLY": "Aplicar"
+		"APPLY": "Aplicar",
+		"ACCEPT": "Aceptar"
 	},
 	"forms": {
 		"REQUIRED": "El campo es requerido",
@@ -69,17 +70,36 @@
 		"sponsor_logo": "Sponsor logo"
 	},
 	"medical-coverage": {
+		"HEALTH_INSURANCE": "Obra social",
+		"PRIVATE_HEALTH_INSURANCE": "Prepaga",
 		"ACTIVES_HEALTH_INSURANCES": "Obras sociales activas",
 		"ACTIVES_PRIVATE_HEALTH_INSURANCES": "Prepagas activas",
-		"ADD_HEALTH_INSURANCES": "Agregar obra social",
+		"ACTIVES_ART_COVERAGES": "ART activas",
 		"ADD_PRIVATE_HEALTH_INSURANCES": "Agregar prepaga",
-		"NEW_HEALTH_INSURANCES": "Agregar nueva obra social",
-		"NEW_PRIVATE_HEALTH_INSURANCES": "Agregar nueva prepaga",
+		"NEW_HEALTH_INSURANCE": "Agregar nueva Obra social",
+		"NEW_PRIVATE_HEALTH_INSURANCE": "Agregar nueva Prepaga",
+		"NEW_ART_COVERAGE": "Agregar nueva ART",
+		"UPDATE_HEALTH_INSURANCE": "Editar Obra Social",
+		"UPDATE_PRIVATE_HEALTH_INSURANCE": "Editar Prepaga",
+		"buttons": {
+			"NEW_HEALTH_INSURANCE": "+ Agregar nueva Obra social",
+			"NEW_PRIVATE_HEALTH_INSURANCE": "+ Agregar nueva Prepaga",
+			"NEW_ART_COVERAGE": "+ Agregar nueva ART",
+			"ADD_HEALTH_INSURANCE": "Agregar obra social",
+			"ADD_PRIVATE_HEALTH_INSURANCE": "Agregar prepaga",
+			"ADD_ART_COVERAGE": "Agregar ART"
+		},
 		"CUIT_LABEL": "CUIT",
 		"PLAN_LABEL": "Plan",
-		"AFFILIATE_NUMBER_LABEL": "Nro de afiliado",
+		"AFFILIATE_NUMBER_LABEL": "N° de afiliado",
+		"CREDENTIAL_NUMBER_LABEL": "N° de credencial",
 		"VOLUNTARY": "Voluntaria",
-		"MANDATORY": "Obligatoria"
+		"MANDATORY": "Obligatoria",
+		"CUIT_VIEW" : "CUIT: {{cuit}}",
+		"SEARCH_HEALTH_INSURANCE": "Buscar obra social",
+		"SEARCH_PRIVATE_HEALTH_INSURANCE": "Buscar prepaga",
+		"SEARCH_ART": "Buscar ART",
+		"ART": "ART"
 	},
 	"messages": {
 		"NO_DATA": "No hay información para mostrar"

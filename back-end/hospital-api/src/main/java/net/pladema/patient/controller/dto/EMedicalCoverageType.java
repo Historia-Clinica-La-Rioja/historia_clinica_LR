@@ -6,7 +6,8 @@ import lombok.Getter;
 @Getter
 public enum EMedicalCoverageType {
     PREPAGA((short)1,"Prepaga"),
-    OBRASOCIAL((short)2,"Obra social");
+    OBRASOCIAL((short)2,"Obra social"),
+	ART((short)3, "ART");
 
     private Short id;
     private String value;

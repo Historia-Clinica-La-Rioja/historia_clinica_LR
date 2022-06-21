@@ -16,12 +16,11 @@ public interface PatientMedicalCoverageRepository extends JpaRepository<PatientM
 
 	@Transactional(readOnly = true)
 	@Query(value = "SELECT NEW net.pladema.patient.repository.domain.PatientMedicalCoverageVo(pmc.id as pmcid, pmc.affiliateNumber, " +
-			"pmc.vigencyDate, pmc.active, mc.id, mc.name, mc.cuit, hi.rnos, hi.acronym, phi.id, phid as phid, pmc.conditionId)"+
+			"pmc.vigencyDate, pmc.active, mc.id, mc.name, mc.cuit, mc.type, hi.rnos, hi.acronym, pmc.conditionId, pmc.startDate, pmc.endDate, pmc.planId)"+
 			"FROM PatientMedicalCoverageAssn pmc " +
 			"JOIN MedicalCoverage mc ON (pmc.medicalCoverageId = mc.id) " +
 			"LEFT JOIN HealthInsurance hi ON (mc.id = hi.id) " +
 			"LEFT JOIN PrivateHealthInsurance phi ON (mc.id = phi.id) "+
-			"LEFT JOIN PrivateHealthInsuranceDetails phid ON (pmc.privateHealthInsuranceDetailsId = phid.id) "+
 			"WHERE pmc.id = :patientMedicalCoverageId ")
 	Optional<PatientMedicalCoverageVo> getPatientCoverage(@Param("patientMedicalCoverageId") Integer patientMedicalCoverageId);
 
@@ -33,5 +32,8 @@ public interface PatientMedicalCoverageRepository extends JpaRepository<PatientM
 	@Query(value = "SELECT pmc FROM PatientMedicalCoverageAssn pmc WHERE pmc.medicalCoverageId =:medicalCoverageId")
 	List<PatientMedicalCoverageAssn> getByMedicalCoverageId(@Param("medicalCoverageId") Integer medicalCoverageId);
 
+	@Transactional(readOnly = true)
+	@Query(value = "SELECT pmc FROM PatientMedicalCoverageAssn pmc WHERE pmc.planId =:planId")
+	List<PatientMedicalCoverageAssn> findByPlanId(@Param("planId") Integer planId);
 
 }

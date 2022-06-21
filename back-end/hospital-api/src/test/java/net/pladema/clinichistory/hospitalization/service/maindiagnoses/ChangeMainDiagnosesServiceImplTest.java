@@ -8,6 +8,7 @@ import ar.lamansys.sgh.clinichistory.domain.ips.HealthConditionBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.SnomedBo;
 import ar.lamansys.sgx.shared.dates.configuration.DateTimeProvider;
 import ar.lamansys.sgx.shared.exceptions.NotFoundException;
+import ar.lamansys.sgx.shared.featureflags.application.FeatureFlagsService;
 import net.pladema.UnitRepository;
 import net.pladema.clinichistory.hospitalization.repository.EvolutionNoteDocumentRepository;
 import net.pladema.clinichistory.hospitalization.repository.InternmentEpisodeRepository;
@@ -15,7 +16,7 @@ import net.pladema.clinichistory.hospitalization.repository.PatientDischargeRepo
 import net.pladema.clinichistory.hospitalization.repository.domain.InternmentEpisode;
 import net.pladema.clinichistory.hospitalization.service.impl.InternmentEpisodeServiceImpl;
 import net.pladema.clinichistory.hospitalization.service.maindiagnoses.domain.MainDiagnosisBo;
-import net.pladema.establishment.repository.PrivateHealthInsurancePlanRepository;
+import net.pladema.establishment.repository.MedicalCoveragePlanRepository;
 
 import org.assertj.core.util.Lists;
 import org.junit.jupiter.api.Assertions;
@@ -42,7 +43,7 @@ class ChangeMainDiagnosesServiceImplTest extends UnitRepository {
     private PatientDischargeRepository patientDischargeRepository;
 
 	@Autowired
-	private PrivateHealthInsurancePlanRepository privateHealthInsurancePlanRepository;
+	private MedicalCoveragePlanRepository medicalCoveragePlanRepository;
 
 	@Mock
 	private DateTimeProvider dateTimeProvider;
@@ -56,6 +57,9 @@ class ChangeMainDiagnosesServiceImplTest extends UnitRepository {
     @Mock
     private FetchHospitalizationHealthConditionState fetchHospitalizationHealthConditionState;
 
+	@Mock
+	private FeatureFlagsService featureFlagsService;
+
     @BeforeEach
     void setUp(){
         var internmentEpisodeService = new InternmentEpisodeServiceImpl(
@@ -63,8 +67,8 @@ class ChangeMainDiagnosesServiceImplTest extends UnitRepository {
                 dateTimeProvider, evolutionNoteDocumentRepository,
                 patientDischargeRepository,
                 documentService,
-				privateHealthInsurancePlanRepository
-        );
+				medicalCoveragePlanRepository,
+				featureFlagsService);
         changeMainDiagnosesService = new ChangeMainDiagnosesServiceImpl(
                 documentFactory,
                 internmentEpisodeService,

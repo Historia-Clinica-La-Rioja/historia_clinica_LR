@@ -111,7 +111,10 @@ public class DiaryServiceImpl implements DiaryService {
 		LOG.debug("Input parameters -> diaryToUpdate {}", diaryToUpdate);
 		Diary savedDiary = diaryRepository.getOne(diaryToUpdate.getId());
 		HashMap<DiaryOpeningHoursBo, List<AppointmentBo>> apmtsByNewDOH = new HashMap<>();
-		diaryToUpdate.getDiaryOpeningHours().stream().forEach(doh -> apmtsByNewDOH.put(doh, new ArrayList<>()));
+		diaryToUpdate.getDiaryOpeningHours().forEach( doh -> {
+					doh.setDiaryId(savedDiary.getId());
+					apmtsByNewDOH.put(doh, new ArrayList<>());
+				});
 		Collection<AppointmentBo> apmts = appointmentService.getFutureActiveAppointmentsByDiary(diaryToUpdate.getId());
 		adjustExistingAppointmentsOpeningHours(apmtsByNewDOH, apmts);
 		persistDiary(diaryToUpdate, mapDiaryBo(diaryToUpdate, savedDiary));
@@ -122,12 +125,14 @@ public class DiaryServiceImpl implements DiaryService {
 
 	private void adjustExistingAppointmentsOpeningHours(HashMap<DiaryOpeningHoursBo, List<AppointmentBo>> apmtsByNewDOH,
 			Collection<AppointmentBo> apmts) {
+
 		apmtsByNewDOH.forEach((doh, apmtsList) -> {
 			apmtsList.addAll(apmts.stream().filter(apmt -> belong(apmt, doh)).collect(toList()));
 			if (overturnsOutOfLimit(doh, apmtsList)) {
 				throw new OverturnsLimitException();
 			}
 		});
+
 	}
 
 	private void updatedExistingAppointments(DiaryBo diaryToUpdate,
@@ -138,8 +143,13 @@ public class DiaryServiceImpl implements DiaryService {
 				savedDoh -> apmts.forEach(apmt -> apmt.setOpeningHoursId(savedDoh.getOpeningHours().getId()))));
 		List<AppointmentBo> apmtsToUpdate = apmtsByNewDOH.values().stream().flatMap(Collection::stream)
 				.collect(toList());
-		apmtsToUpdate.stream().forEach(updateApmtOHService::execute);
+		apmtsToUpdate = apmtsToUpdate.stream().filter(this::inTheFuture).collect(Collectors.toList());
+		apmtsToUpdate.forEach(updateApmtOHService::execute);
 
+	}
+
+	private boolean inTheFuture(AppointmentBo appointmentBo) {
+		return appointmentBo.getDate().isAfter(LocalDate.now());
 	}
 
 	private boolean overturnsOutOfLimit(DiaryOpeningHoursBo doh, List<AppointmentBo> apmtsList) {
@@ -248,7 +258,7 @@ public class DiaryServiceImpl implements DiaryService {
 		return completeDiary -> {
 			Collection<DiaryOpeningHoursBo> diaryOpeningHours = diaryOpeningHoursService
 					.getDiariesOpeningHours(Stream.of(completeDiary.getId()).collect(toList()));
-			completeDiary.setDiaryOpeningHours(diaryOpeningHours.stream().collect(toList()));
+			completeDiary.setDiaryOpeningHours(new ArrayList<>(diaryOpeningHours));
 			return completeDiary;
 		};
 	}

@@ -26,6 +26,7 @@ import { DiaryOpeningHoursService } from '@api-rest/services/diary-opening-hours
 import { DiaryService } from '@api-rest/services/diary.service';
 import { APPOINTMENT_DURATIONS, MINUTES_IN_HOUR } from '../../constants/appointment';
 import { AgendaHorarioService } from '../../services/agenda-horario.service';
+import {PatientNameService} from "@core/services/patient-name.service";
 
 const ROUTE_APPOINTMENT = 'turnos';
 
@@ -78,6 +79,7 @@ export class AgendaSetupComponent implements OnInit {
 		private readonly snackBarService: SnackBarService,
 		private readonly diaryOpeningHoursService: DiaryOpeningHoursService,
 		private readonly route: ActivatedRoute,
+		private readonly patientNameService: PatientNameService,
 
 	) {
 		this.route.paramMap.subscribe(params => this.professionalId = params.get("idProfessional"));
@@ -184,7 +186,7 @@ export class AgendaSetupComponent implements OnInit {
 	}
 
 	getFullNameLicence(professional: ProfessionalDto): string {
-		return `${professional.lastName}, ${professional.firstName} - ${professional.licenceNumber}`;
+		return `${professional.lastName}, ${this.patientNameService.getPatientName(professional.firstName, professional.nameSelfDetermination)} - ${professional.licenceNumber}`;
 	}
 
 	appointmentManagementChange(): void {

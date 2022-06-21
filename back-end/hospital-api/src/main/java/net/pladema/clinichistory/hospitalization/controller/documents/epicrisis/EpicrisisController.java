@@ -13,6 +13,7 @@ import net.pladema.clinichistory.hospitalization.controller.documents.epicrisis.
 import net.pladema.clinichistory.hospitalization.controller.documents.epicrisis.mapper.EpicrisisMapper;
 import net.pladema.clinichistory.hospitalization.service.InternmentEpisodeService;
 import net.pladema.clinichistory.hospitalization.service.epicrisis.CreateEpicrisisService;
+import net.pladema.clinichistory.hospitalization.service.epicrisis.DeleteEpicrisisService;
 import net.pladema.clinichistory.hospitalization.service.epicrisis.EpicrisisService;
 import net.pladema.clinichistory.hospitalization.service.epicrisis.domain.EpicrisisBo;
 import net.pladema.patient.controller.service.PatientExternalService;
@@ -48,13 +49,16 @@ public class EpicrisisController {
 
     private final PatientExternalService patientExternalService;
 
+    private final DeleteEpicrisisService deleteEpicrisisService;
+
     public EpicrisisController(
-            InternmentEpisodeService internmentEpisodeService,
-            CreateEpicrisisService createEpicrisisService,
-            EpicrisisService epicrisisService,
-            EpicrisisMapper epicrisisMapper,
-            FetchHospitalizationGeneralState fetchHospitalizationGeneralState,
-            PatientExternalService patientExternalService
+			InternmentEpisodeService internmentEpisodeService,
+			CreateEpicrisisService createEpicrisisService,
+			EpicrisisService epicrisisService,
+			EpicrisisMapper epicrisisMapper,
+			FetchHospitalizationGeneralState fetchHospitalizationGeneralState,
+			PatientExternalService patientExternalService,
+			DeleteEpicrisisService deleteEpicrisisService
     ) {
         this.internmentEpisodeService = internmentEpisodeService;
         this.createEpicrisisService = createEpicrisisService;
@@ -62,6 +66,7 @@ public class EpicrisisController {
         this.epicrisisMapper = epicrisisMapper;
         this.fetchHospitalizationGeneralState = fetchHospitalizationGeneralState;
         this.patientExternalService = patientExternalService;
+        this.deleteEpicrisisService = deleteEpicrisisService;
     }
 
 
@@ -112,4 +117,17 @@ public class EpicrisisController {
         LOG.debug(OUTPUT, result);
         return  ResponseEntity.ok().body(result);
     }
+
+	@DeleteMapping("/{epicrisisId}")
+	public ResponseEntity<Boolean> deleteEpicrisis(
+			@PathVariable(name = "institutionId") Integer institutionId,
+			@PathVariable(name = "internmentEpisodeId") Integer internmentEpisodeId,
+			@PathVariable(name = "epicrisisId") Long epicrisisId,
+			@RequestBody String reason) {
+		LOG.debug("Input parameters -> institutionId {}, internmentEpisodeId {}, epicrisisId {}, reason {}",
+				institutionId, internmentEpisodeId, epicrisisId, reason);
+		deleteEpicrisisService.execute(internmentEpisodeId, epicrisisId, reason);
+		LOG.debug(OUTPUT, Boolean.TRUE);
+		return  ResponseEntity.ok().body(Boolean.TRUE);
+	}
 }

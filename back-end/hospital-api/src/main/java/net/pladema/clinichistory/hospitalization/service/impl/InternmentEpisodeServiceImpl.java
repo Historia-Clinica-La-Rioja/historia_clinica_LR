@@ -2,9 +2,12 @@ package net.pladema.clinichistory.hospitalization.service.impl;
 
 import ar.lamansys.sgh.clinichistory.application.document.DocumentService;
 import ar.lamansys.sgx.shared.dates.configuration.DateTimeProvider;
+import ar.lamansys.sgx.shared.featureflags.AppFeature;
+import ar.lamansys.sgx.shared.featureflags.application.FeatureFlagsService;
 import net.pladema.clinichistory.hospitalization.repository.EvolutionNoteDocumentRepository;
 import net.pladema.clinichistory.hospitalization.repository.InternmentEpisodeRepository;
 import net.pladema.clinichistory.hospitalization.repository.PatientDischargeRepository;
+import net.pladema.clinichistory.hospitalization.repository.domain.DischargeType;
 import net.pladema.clinichistory.hospitalization.repository.domain.EvolutionNoteDocument;
 import net.pladema.clinichistory.hospitalization.repository.domain.InternmentEpisode;
 import net.pladema.clinichistory.hospitalization.repository.domain.PatientDischarge;
@@ -18,10 +21,11 @@ import ar.lamansys.sgx.shared.exceptions.NotFoundException;
 import ar.lamansys.sgx.shared.security.UserInfo;
 import net.pladema.clinichistory.hospitalization.service.impl.exceptions.CreateInternmentEpisodeEnumException;
 import net.pladema.clinichistory.hospitalization.service.impl.exceptions.CreateInternmentEpisodeException;
-import net.pladema.establishment.repository.PrivateHealthInsurancePlanRepository;
+import net.pladema.clinichistory.hospitalization.service.impl.exceptions.SaveMedicalDischargeException;
+import net.pladema.clinichistory.hospitalization.service.impl.exceptions.SaveMedicalDischargeExceptionEnum;
+import net.pladema.establishment.repository.MedicalCoveragePlanRepository;
 import net.pladema.patient.service.domain.PatientMedicalCoverageBo;
 
-import net.pladema.patient.service.domain.PrivateHealthInsuranceDetailsBo;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -56,17 +60,20 @@ public class InternmentEpisodeServiceImpl implements InternmentEpisodeService {
 
     private final PatientDischargeRepository patientDischargeRepository;
 
-	private final PrivateHealthInsurancePlanRepository privateHealthInsurancePlanRepository;
+	private final MedicalCoveragePlanRepository medicalCoveragePlanRepository;
 
     private final DocumentService documentService;
 
-    public InternmentEpisodeServiceImpl(InternmentEpisodeRepository internmentEpisodeRepository, DateTimeProvider dateTimeProvider, EvolutionNoteDocumentRepository evolutionNoteDocumentRepository, PatientDischargeRepository patientDischargeRepository, DocumentService documentService, PrivateHealthInsurancePlanRepository privateHealthInsurancePlanRepository) {
+	private final FeatureFlagsService featureFlagsService;
+
+	public InternmentEpisodeServiceImpl(InternmentEpisodeRepository internmentEpisodeRepository, DateTimeProvider dateTimeProvider, EvolutionNoteDocumentRepository evolutionNoteDocumentRepository, PatientDischargeRepository patientDischargeRepository, DocumentService documentService, MedicalCoveragePlanRepository medicalCoveragePlanRepository, FeatureFlagsService featureFlagsService) {
         this.internmentEpisodeRepository = internmentEpisodeRepository;
         this.dateTimeProvider = dateTimeProvider;
         this.evolutionNoteDocumentRepository = evolutionNoteDocumentRepository;
         this.patientDischargeRepository = patientDischargeRepository;
         this.documentService = documentService;
-		this.privateHealthInsurancePlanRepository = privateHealthInsurancePlanRepository;
+		this.medicalCoveragePlanRepository = medicalCoveragePlanRepository;
+		this.featureFlagsService = featureFlagsService;
 	}
 
     @Override
@@ -120,6 +127,44 @@ public class InternmentEpisodeServiceImpl implements InternmentEpisodeService {
 	}
 
 	@Override
+	public boolean havePhysicalDischarge(Integer internmentEpisodeId) {
+		LOG.debug(INPUT_PARAMETERS_INTERNMENT_EPISODE, internmentEpisodeId);
+		boolean result = patientDischargeRepository.findById(internmentEpisodeId).map(pd -> {
+			if (pd.getPhysicalDischargeDate() != null)
+				return true;
+			return false;
+		}).orElse(false);
+		LOG.debug(LOGGING_OUTPUT, result);
+		return result;
+	}
+
+	@Override
+	public boolean haveMedicalDischarge(Integer internmentEpisodeId) {
+		LOG.debug(INPUT_PARAMETERS_INTERNMENT_EPISODE, internmentEpisodeId);
+		boolean result =  patientDischargeRepository.findById(internmentEpisodeId).map(pd -> {
+			if (pd.getMedicalDischargeDate() != null)
+				return true;
+			return false;
+		}).orElse(false);
+		LOG.debug(LOGGING_OUTPUT, result);
+		return result;
+	}
+
+	@Override
+	public boolean haveEvolutionNoteAfterAnamnesis(Integer internmentEpisodeId) {
+		LOG.debug(INPUT_PARAMETERS_INTERNMENT_EPISODE, internmentEpisodeId);
+		InternmentEpisode intermentEpisode = internmentEpisodeRepository.findById(internmentEpisodeId)
+				.orElseThrow(() -> new NotFoundException("internment-episode-not-exists",
+						String.format("No existe el episodio de internación con id %s", internmentEpisodeId)));
+		Long anamnesisDocId = intermentEpisode.getAnamnesisDocId();
+		if (anamnesisDocId == null)
+			return false;
+		boolean result = internmentEpisodeRepository.haveEvolutionNoteAfterAnamnesis(internmentEpisodeId, anamnesisDocId);
+		LOG.debug(LOGGING_OUTPUT, result);
+		return result;
+	}
+
+	@Override
 	public boolean haveEpicrisis(Integer internmentEpisodeId) {
 		LOG.debug(INPUT_PARAMETERS_INTERNMENT_EPISODE, internmentEpisodeId);
 		boolean result = internmentEpisodeRepository.haveEpicrisis(internmentEpisodeId);
@@ -153,6 +198,9 @@ public class InternmentEpisodeServiceImpl implements InternmentEpisodeService {
 			result.set(Optional.of(new InternmentSummaryBo(r)));
 
 		});
+		var nameSelfDetermination = resultQuery.get().getDoctor().getNameSelfDetermination();
+		if(featureFlagsService.isOn(AppFeature.HABILITAR_DATOS_AUTOPERCIBIDOS) && nameSelfDetermination != null && !nameSelfDetermination.isEmpty())
+			result.get().get().getDoctor().setFirstName(nameSelfDetermination);
 		LOG.debug(LOGGING_OUTPUT, result);
 		return result.get();
 	}
@@ -174,13 +222,18 @@ public class InternmentEpisodeServiceImpl implements InternmentEpisodeService {
 	}
 
 	@Override
-	public PatientDischargeBo savePatientDischarge(PatientDischargeBo patientDischargeBo) {
+	public PatientDischargeBo saveMedicalDischarge(PatientDischargeBo patientDischargeBo){
 		LOG.debug(INPUT_PARAMETERS, patientDischargeBo);
 		return patientDischargeRepository.findById(patientDischargeBo.getInternmentEpisodeId()).map(pd -> {
-			PatientDischargeBo result = new PatientDischargeBo(updatePatientDischarge(pd, patientDischargeBo));
+			if (pd.getMedicalDischargeDate() != null)
+				throw new SaveMedicalDischargeException(SaveMedicalDischargeExceptionEnum.MEDICAL_DISCHARGE_ALREADY_EXISTS, String.format("Ya existe un alta medica correspondiente a la internacion %s", patientDischargeBo.getInternmentEpisodeId()));
+			pd.setMedicalDischargeDate(patientDischargeBo.getMedicalDischargeDate());
+			pd.setDischargeTypeId(patientDischargeBo.getDischargeTypeId());
+			PatientDischargeBo result = new PatientDischargeBo(patientDischargeRepository.save(pd));
 			LOG.debug(LOGGING_OUTPUT, result);
 			return result;
-		}).orElseGet(() -> {
+		}).orElseGet(()->
+		{
 			PatientDischarge entityResult = patientDischargeRepository.save(new PatientDischarge(patientDischargeBo));
 			PatientDischargeBo result = new PatientDischargeBo(entityResult);
 			LOG.debug(LOGGING_OUTPUT, result);
@@ -188,11 +241,25 @@ public class InternmentEpisodeServiceImpl implements InternmentEpisodeService {
 		});
 	}
 
+	@Override
+	public PatientDischargeBo saveAdministrativeDischarge(PatientDischargeBo patientDischargeBo) {
+		LOG.debug(INPUT_PARAMETERS, patientDischargeBo);
+		return patientDischargeRepository.findById(patientDischargeBo.getInternmentEpisodeId()).map(pd -> {
+			PatientDischargeBo result = new PatientDischargeBo(updatePatientDischarge(pd, patientDischargeBo));
+			LOG.debug(LOGGING_OUTPUT, result);
+			return result;
+		}).orElseThrow(() -> new NotFoundException("medical-discharge-not-exists",
+				String.format("No existe alta medica para el episodio %s", patientDischargeBo.getInternmentEpisodeId()))
+		);
+	}
+
 	private PatientDischarge updatePatientDischarge(PatientDischarge patientDischarge, PatientDischargeBo patientDischargeBo) {
 		LOG.debug("Input parameters -> patientDischargeBo {} , patientDischarge {}", patientDischargeBo, patientDischarge);
 		patientDischarge.setInternmentEpisodeId(patientDischargeBo.getInternmentEpisodeId());
 		patientDischarge.setDischargeTypeId(patientDischargeBo.getDischargeTypeId());
 		patientDischarge.setAdministrativeDischargeDate(patientDischargeBo.getAdministrativeDischargeDate());
+		patientDischarge.setMedicalDischargeDate(patientDischargeBo.getMedicalDischargeDate());
+		patientDischarge.setPhysicalDischargeDate(patientDischargeBo.getPhysicalDischargeDate());
 		patientDischarge = patientDischargeRepository.save(patientDischarge);
 		LOG.debug(LOGGING_OUTPUT, patientDischarge);
 		return patientDischarge;
@@ -206,7 +273,7 @@ public class InternmentEpisodeServiceImpl implements InternmentEpisodeService {
 		internmentEpisode.setStatusId(statusId);
 		internmentEpisodeRepository.save(internmentEpisode);
 	}
-	
+
 	@Override
 	public List<InternmentEpisode> findByBedId(Integer bedId) {
 		LOG.debug("Input parameters -> bedId {} ", bedId);
@@ -224,7 +291,7 @@ public class InternmentEpisodeServiceImpl implements InternmentEpisodeService {
 		LOG.debug(LOGGING_OUTPUT, internmentEpisode);
 		return internmentEpisode;
 	}
-	
+
 	@Override
 	public boolean existsActiveForBedId(Integer bedId) {
 		LOG.debug("Input parameters -> bedId {} ", bedId);
@@ -280,13 +347,44 @@ public class InternmentEpisodeServiceImpl implements InternmentEpisodeService {
 	public Optional<PatientMedicalCoverageBo> getMedicalCoverage(Integer internmentEpisodeId) {
 		LOG.debug("Input parameters -> internmentEpisodeId {}", internmentEpisodeId);
 		Optional<PatientMedicalCoverageBo> result = internmentEpisodeRepository.getInternmentEpisodeMedicalCoverage(internmentEpisodeId).map(PatientMedicalCoverageBo::new).map(bo -> {
-			PrivateHealthInsuranceDetailsBo phid = bo.getPrivateHealthInsuranceDetails();
-			if (phid != null && phid.getPlanId() != null)
-				bo.getPrivateHealthInsuranceDetails().setPlanName(privateHealthInsurancePlanRepository.findById(phid.getPlanId()).get().getPlan());
+			if (bo.getPlanId() != null)
+				bo.setPlanName(medicalCoveragePlanRepository.findById(bo.getPlanId()).get().getPlan());
 			return bo;
 		});
 		LOG.debug(LOGGING_OUTPUT, result);
 		return result;
+	}
+
+	@Override
+	public void deleteAnamnesisDocumentId(Integer internmentEpisodeId) {
+		LOG.debug("Input parameters -> internmentEpisodeId {}", internmentEpisodeId);
+		Integer currentUser = UserInfo.getCurrentAuditor();
+		internmentEpisodeRepository.deleteAnamnesisDocumentId(internmentEpisodeId, currentUser, LocalDateTime.now());
+	}
+
+	@Override
+	public void deleteEpicrisisDocumentId(Integer internmentEpisodeId) {
+		LOG.debug("Input parameters -> internmentEpisodeId {}", internmentEpisodeId);
+		Integer currentUser = UserInfo.getCurrentAuditor();
+		internmentEpisodeRepository.deleteEpicrisisDocumentId(internmentEpisodeId, currentUser, LocalDateTime.now());
+	}
+
+	@Override
+	public PatientDischargeBo savePatientPhysicalDischarge(Integer internmentEpisodeId) {
+		LOG.debug(INPUT_PARAMETERS, internmentEpisodeId);
+		return patientDischargeRepository.findById(internmentEpisodeId).map(patientDischarge -> {
+				patientDischarge.setPhysicalDischargeDate(LocalDateTime.now());
+				PatientDischarge entityResult = patientDischargeRepository.save(patientDischarge);
+				PatientDischargeBo result = new PatientDischargeBo(entityResult);
+				LOG.debug(LOGGING_OUTPUT, result);
+				return result;
+			}).orElseGet(() -> {
+				PatientDischargeBo patientDischargeBo = new PatientDischargeBo(internmentEpisodeId, null, null, DischargeType.OTRO, LocalDateTime.now() );
+				PatientDischarge entityResult = patientDischargeRepository.save(new PatientDischarge(patientDischargeBo));
+				PatientDischargeBo result = new PatientDischargeBo(entityResult);
+				LOG.debug(LOGGING_OUTPUT, result);
+				return result;
+			});
 	}
 
 }
