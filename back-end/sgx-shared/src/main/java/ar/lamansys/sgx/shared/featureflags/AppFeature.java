@@ -104,6 +104,9 @@ public enum AppFeature implements Feature {
     
 	@Label("Muestra en HC la seccion de Enfermeria")
 	HABILITAR_MODULO_ENFERMERIA,
+
+    @Label("Indica si está habilitado el doble factor de autenticación")
+	HABILITAR_2FA,
     ;
 
     public boolean isActive() {
