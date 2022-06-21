@@ -61,7 +61,7 @@
 					*ngIf="( hasRoleToEditPhoneNumber$ | async )" (click)="hideFilters()">
 					<mat-icon class="material-icons-outlined">edit</mat-icon>
 					<span class="mat-body strong-size">
-						{{'turnos.appointment.EDIT_PACIENT_INFO' | translate}}
+						{{'turnos.appointment.EDIT_PATIENT_INFO' | translate}}
 					</span>
 				</button>
 			</ng-container>
@@ -149,6 +149,12 @@
 					 <span class="mat-body subtitle-size"> {{params.appointmentData.date | date:"H:mm"}} hs</span>
 				</div>
 			</div>
+			<button type="button" mat-icon-button color="primary">
+				<mat-icon class="material-icons-outlined">edit</mat-icon>
+				<span class="mat-body strong-size">
+					{{'turnos.appointment.EDIT_DATE_TIME' | translate}}
+				</span>
+			</button>
 		</section>
 
 		<section id="state">
