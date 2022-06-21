@@ -251,7 +251,8 @@ export class EpicrisisDockPopupComponent implements OnInit {
 				this.epicrisisService.createDocument(epicrisis, this.data.patientInfo.internmentEpisodeId)
 					.subscribe((epicrisisResponse: ResponseEpicrisisDto) => {
 						this.snackBarService.showSuccess('internaciones.epicrisis.messages.SUCCESS');
-						this.dockPopupRef.close(this.fieldsToUpdate(epicrisis));
+						let fieldsToUpdate = this.fieldsToUpdate(epicrisis);
+						this.dockPopupRef.close({ fieldsToUpdate });
 					}, _ => {
 						this.isDisableConfirmButton = false;
 						this.snackBarService.showError('internaciones.epicrisis.messages.ERROR')
