@@ -11,4 +11,6 @@ public interface UserStorage {
     UserBo getUser(Integer userId);
 
     UserBo getUser(String username);
+
+	void resetTwoFactorAuthentication(Integer userId);
 }
