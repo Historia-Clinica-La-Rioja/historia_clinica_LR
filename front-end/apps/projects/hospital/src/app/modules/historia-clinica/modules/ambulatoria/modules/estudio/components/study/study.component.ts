@@ -1,6 +1,7 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { DiagnosticReportInfoDto } from '@api-rest/api-model';
+import { ERole } from '@api-rest/api-model';
 import { STUDY_STATUS } from '@historia-clinica/modules/ambulatoria/constants/prescripciones-masterdata';
 import { CompletarEstudioComponent } from '@historia-clinica/modules/ambulatoria/dialogs/ordenes-prescripciones/completar-estudio/completar-estudio.component';
 import { VerResultadosEstudioComponent } from '@historia-clinica/modules/ambulatoria/dialogs/ordenes-prescripciones/ver-resultados-estudio/ver-resultados-estudio.component';
@@ -9,6 +10,8 @@ import { TranslateService } from '@ngx-translate/core';
 import { Content, Title } from '@presentation/components/indication/indication.component';
 import { SnackBarService } from '@presentation/services/snack-bar.service';
 import { forkJoin } from 'rxjs';
+import { anyMatch } from "@core/utils/array.utils";
+import { PermissionsService } from "@core/services/permissions.service";
 
 @Component({
 	selector: 'app-study',
@@ -23,15 +26,20 @@ export class StudyComponent implements OnInit {
 	@Output() updateCurrentReportsEventEmitter = new EventEmitter<void>();
 	STUDY_STATUS = STUDY_STATUS;
 	private sameOrderStudies: Map<Number, DiagnosticReportInfoDto[]>;
+	hasPicturesStaffRole = false;
+	hasLaboratoryStaffRole = false;
+	hasPharmacyStaffRole = false;
 
 	constructor(
 		private readonly prescripcionesService: PrescripcionesService,
 		private readonly translateService: TranslateService,
 		private snackBarService: SnackBarService,
-		private readonly dialog: MatDialog
+		private readonly dialog: MatDialog,
+		private readonly permissionsService: PermissionsService,
 	) { }
 
 	ngOnInit(): void {
+		this.setActionsLayout();
 		this.sameOrderStudies = new Map();
 		this.studies = this.classifyStudiesWithTheSameOrder(this.studies);
 		this.studies.sort((studyA, studyB) => studyB.creationDate.getTime() - studyA.creationDate.getTime())
@@ -53,6 +61,14 @@ export class StudyComponent implements OnInit {
 			createdBy: diagnosticReport.doctor.firstName + " " + diagnosticReport.doctor.lastName,
 			timeElapsed: updateDate.toLocaleDateString('es-AR') + ' - ' + updateDate.toLocaleTimeString('es-AR', {hour: '2-digit', minute:'2-digit'})
 		}
+	}
+
+	setActionsLayout(): void {
+		this.permissionsService.contextAssignments$().subscribe((userRoles: ERole[]) => {
+			this.hasPicturesStaffRole = anyMatch<ERole>(userRoles, [ERole.PERSONAL_DE_IMAGENES]);
+			this.hasLaboratoryStaffRole = anyMatch<ERole>(userRoles, [ERole.PERSONAL_DE_LABORATORIO]);
+			this.hasPharmacyStaffRole = anyMatch<ERole>(userRoles, [ERole.PERSONAL_DE_FARMACIA]);
+		});
 	}
 
 	completeStudy(diagnosticReport: DiagnosticReportInfoDto) {
