@@ -346,6 +346,7 @@ export interface BackofficeUserDto {
     lastLogin: Date;
     personId: number;
     roles: BackofficeUserRoleDto[];
+    twoFactorAuthenticationEnabled: boolean;
     username: string;
 }
 

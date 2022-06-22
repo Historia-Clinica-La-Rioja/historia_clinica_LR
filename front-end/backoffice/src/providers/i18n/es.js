@@ -349,11 +349,13 @@ const messages = {
                 email: "E-mail"
             },
             fieldGroups: {
-                passwordResets: 'Establecer clave de acceso'
+                passwordResets: 'Establecer clave de acceso',
+                twoFactorAuthenticationReset: 'Deshabilitar doble factor de autenticación'
             },
             action: {
                 reset: 'Visitar link',
                 newReset: 'Generar link',
+                twoFactorAuthenticationResetSuccess: 'Doble factor de autenticación deshabilitado',
             },
             createRelated: 'Crear Usuario',
             noEmail: "Sin información",

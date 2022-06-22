@@ -21,6 +21,7 @@ public class BackofficeUserDto {
 	private String username;
 	private Boolean enable;
 	private LocalDateTime lastLogin;
+	private Boolean twoFactorAuthenticationEnabled;
 	private List<BackofficeUserRoleDto> roles;
 	
 	@JsonIgnore

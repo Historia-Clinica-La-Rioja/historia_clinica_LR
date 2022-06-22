@@ -3,6 +3,7 @@ import {
     useMutation,
     useTranslate,
     useGetList,
+    useNotify,
 } from 'react-admin';
 
 import PropTypes from 'prop-types';
@@ -16,12 +17,15 @@ import {
 } from '@material-ui/core';
 
 import LaunchIcon from '@material-ui/icons/Launch';
+import BlockIcon from '@material-ui/icons/Block';
 import { makeStyles } from '@material-ui/core/styles';
 
 import { parseISO, isFuture } from 'date-fns';
 
 import LockIcon from '@material-ui/icons/Lock';
+import twoFactorAuthentication from '../twofactorauthentication-reset';
 import { openPasswordReset } from '../../providers/utils/webappLink';
+import { sgxFetchApiWithToken } from "../../libs/sgx/api/fetch";
 
 const useAsideStyles = makeStyles(theme => ({
     root: {
@@ -39,6 +43,7 @@ const Aside = ({ record, basePath }) => {
     return (
         <div className={classes.root}>
             {record && <PasswordResetList record={record} basePath={basePath} />}
+            {record && record.twoFactorAuthenticationEnabled && <TwoFactorAuthenticationList record={record} /> }
         </div>
     );
 };
@@ -131,6 +136,62 @@ const OpenPageButton = ({ actionClick }) => {
                 <LaunchIcon />
             </IconButton>
         </Tooltip>
+    );
+};
+
+const TwoFactorAuthenticationList = ({ record }) => {
+    const notify = useNotify();
+    const handleResponse = () => {
+        notify('resources.users.action.twoFactorAuthenticationResetSuccess');
+    }
+    const disableTwoFactorAuthenticationAction = () => {
+        sgxFetchApiWithToken(
+            `backoffice/users/${record.id}/reset-2fa`,
+            {method: 'PUT'}
+        ).then(() => handleResponse())
+    };
+    return (
+        <>
+            <ResetTwoFactorAuthenticationCard actionClick={disableTwoFactorAuthenticationAction} />
+        </>
+    );
+};
+
+const ResetTwoFactorAuthenticationCard = ({ actionClick }) => {
+    const translate = useTranslate();
+    const classes = useEventStyles();
+    return (
+        <Card className={classes.card}>
+            <CardHeader
+                className={classes.cardHeader}
+                avatar={
+                    <Avatar
+                        className={classes.avatar}
+                    >
+                        <twoFactorAuthentication.icon />
+                    </Avatar>
+                }
+                action={<ResetTwoFactorAuthenticationButton actionClick={actionClick}/>}
+                title={translate('resources.users.fieldGroups.twoFactorAuthenticationReset')}
+                subheader={
+                    <>
+                        <Typography variant="body2">Puede deshabilitar el doble factor de autenticación para el usuario</Typography>
+                    </>
+                }
+            />
+        </Card>
+    );
+};
+
+const ResetTwoFactorAuthenticationButton = ({ actionClick }) => {
+    const translate = useTranslate();
+    return (
+        <IconButton
+            aria-label={translate('resources.users.action.reset')}
+            onClick={actionClick}
+        >
+            <BlockIcon />
+        </IconButton>
     );
 };
 

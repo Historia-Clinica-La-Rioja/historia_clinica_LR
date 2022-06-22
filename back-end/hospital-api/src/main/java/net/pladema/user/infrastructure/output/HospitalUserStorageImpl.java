@@ -128,6 +128,11 @@ public class HospitalUserStorageImpl implements HospitalUserStorage {
 		return jwtExternalService.fetchUserIdFromNormalToken(token);
 	}
 
+    @Override
+	public void resetTwoFactorAuthentication(Integer userId) {
+		userExternalService.resetTwoFactorAuthentication(userId);
+	}
+
 	private PersonDataBo mapPersonDataBo(BasicDataPersonDto person, VHospitalUser user) {
         return new PersonDataBo(
                 person.getFirstName(),
