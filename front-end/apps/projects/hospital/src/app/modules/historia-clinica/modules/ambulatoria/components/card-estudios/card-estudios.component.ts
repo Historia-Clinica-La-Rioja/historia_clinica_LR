@@ -2,13 +2,14 @@ import { Component, Input, OnInit } from '@angular/core';
 import { AbstractControl, FormBuilder, FormGroup } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { DiagnosticReportInfoDto, HCEPersonalHistoryDto } from '@api-rest/api-model';
+import { ERole } from '@api-rest/api-model';
 import { RequestMasterDataService } from '@api-rest/services/request-masterdata.service';
 import { ESTUDIOS } from '@historia-clinica/constants/summaries';
 import { STUDY_STATUS } from '../../constants/prescripciones-masterdata';
 import { ConfirmarPrescripcionComponent } from '../../dialogs/ordenes-prescripciones/confirmar-prescripcion/confirmar-prescripcion.component';
 import { StudyCategories } from '../../modules/estudio/constants/internment-studies';
 import { TranslateService } from '@ngx-translate/core';
-import { pushIfNotExists } from '@core/utils/array.utils';
+import { anyMatch, pushIfNotExists } from '@core/utils/array.utils';
 import { PrescripcionesService, PrescriptionTypes } from '../../services/prescripciones.service';
 import { CreateInternmentOrderComponent, NewInternmentOrder } from "@historia-clinica/modules/ambulatoria/dialogs/create-internment-order/create-internment-order.component";
 import { InternmentPatientService } from "@api-rest/services/internment-patient.service";
@@ -16,6 +17,7 @@ import { OperationDeniedComponent } from "@historia-clinica/modules/ambulatoria/
 import { InternmentStateService } from "@api-rest/services/internment-state.service";
 import { CreateOutpatientOrderComponent, NewOutpatientOrder } from "@historia-clinica/modules/ambulatoria/dialogs/create-outpatient-order/create-outpatient-order.component";
 import { HceGeneralStateService } from "@api-rest/services/hce-general-state.service";
+import { PermissionsService } from "@core/services/permissions.service";
 
 @Component({
 	selector: 'app-card-estudios',
@@ -37,6 +39,9 @@ export class CardEstudiosComponent implements OnInit {
 	public hideFilterPanel = false;
 	public formFilter: FormGroup;
 	private internmentEpisodeInProgressId;
+	hasPicturesStaffRole = false;
+	hasLaboratoryStaffRole = false;
+	hasPharmacyStaffRole = false;
 
 	@Input() patientId: number;
 
@@ -67,6 +72,7 @@ export class CardEstudiosComponent implements OnInit {
 		private readonly internmentStateService: InternmentStateService,
 		private readonly translateService: TranslateService,
 		private readonly hceGeneralStateService: HceGeneralStateService,
+		private readonly permissionsService: PermissionsService,
 	) { }
 
 	ngOnInit(): void {
@@ -79,6 +85,8 @@ export class CardEstudiosComponent implements OnInit {
 
 		this.getStudy();
 
+		this.setActionsLayout();
+
 		this.requestMasterDataService.categories().subscribe(categories => {
 			this.categories = categories;
 		});
@@ -86,6 +94,14 @@ export class CardEstudiosComponent implements OnInit {
 		this.internmentPatientService.internmentEpisodeIdInProcess(this.patientId).subscribe(internmentEpisodeInProgress => {
 			this.internmentEpisodeInProgressId = internmentEpisodeInProgress.id;
 		})
+	}
+
+	setActionsLayout(): void {
+		this.permissionsService.contextAssignments$().subscribe((userRoles: ERole[]) => {
+			this.hasPicturesStaffRole = anyMatch<ERole>(userRoles, [ERole.PERSONAL_DE_IMAGENES]);
+			this.hasLaboratoryStaffRole = anyMatch<ERole>(userRoles, [ERole.PERSONAL_DE_LABORATORIO]);
+			this.hasPharmacyStaffRole = anyMatch<ERole>(userRoles, [ERole.PERSONAL_DE_FARMACIA]);
+		});
 	}
 
 	private getStudy(): void {
