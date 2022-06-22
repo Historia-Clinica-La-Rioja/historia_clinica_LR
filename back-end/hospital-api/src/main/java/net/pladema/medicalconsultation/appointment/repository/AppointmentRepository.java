@@ -45,9 +45,11 @@ public interface AppointmentRepository extends SGXAuditableEntityJPARepository<A
             "JOIN Diary d ON (d.id = aa.pk.diaryId )" +
 			"JOIN DiaryOpeningHours  AS doh ON (doh.pk.diaryId = d.id) " +
             "WHERE a.id = :appointmentId " +
+			"AND doh.pk.openingHoursId = aa.pk.openingHoursId " +
 			"AND a.deleteable.deleted = FALSE OR a.deleteable.deleted IS NULL " +
             "AND ( has.pk.changedStateDate IS NULL OR has.pk.changedStateDate = " +
-            "   ( SELECT MAX (subHas.pk.changedStateDate) FROM HistoricAppointmentState subHas WHERE subHas.pk.appointmentId = a.id) ) ")
+            "   ( SELECT MAX (subHas.pk.changedStateDate) FROM HistoricAppointmentState subHas WHERE subHas.pk.appointmentId = a.id) ) " +
+			"ORDER BY has.pk.changedStateDate DESC")
     List<AppointmentVo> getAppointment(@Param("appointmentId") Integer appointmentId);
 
     @Transactional(readOnly = true)
