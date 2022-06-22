@@ -60,6 +60,7 @@ export class AppointmentComponent implements OnInit {
 	estadoSelected: APPOINTMENT_STATES_ID;
 	formMotivo: FormGroup;
 	formEdit: FormGroup;
+	formDate: FormGroup;
 	formObservations: FormGroup;
 	institutionId = this.contextService.institutionId;
 	coverageText: string;
@@ -77,13 +78,15 @@ export class AppointmentComponent implements OnInit {
 
 	hideFilterPanel = false;
 
+	isDateFormVisible = false;
+
 	isCheckedDownloadAnexo = false;
 	isCheckedDownloadFormulario = false;
 	downloadReportIsEnabled: boolean;
-	isMqttCallEnabled: boolean = false;
-
-	hideObservationForm: boolean = true;
-	hideObservationTitle: boolean = true;
+	isMqttCallEnabled = false;
+	
+	hideObservationForm = true;
+	hideObservationTitle = true;
 	observation: string;
 
 	constructor(
@@ -123,6 +126,11 @@ export class AppointmentComponent implements OnInit {
 			phoneNumber: null
 		});
 
+		this.formDate = this.formBuilder.group({
+			date: [this.params.appointmentData.date,[Validators.required]],
+			hour: ['',[Validators.required]]
+		});
+
 		this.formObservations = this.formBuilder.group({
 			observation: ['',[Validators.required]]
 		});
@@ -134,6 +142,9 @@ export class AppointmentComponent implements OnInit {
 			updateControlValidator(this.formEdit, 'phoneNumber', [Validators.required, Validators.maxLength(20)]);
 			updateControlValidator(this.formEdit, 'phonePrefix', [Validators.required, Validators.maxLength(10)]);
 		}
+
+		this.formDate.controls.hour.setValue(this.params.appointmentData.date);
+
 		this.appointmentService.get(this.params.appointmentData.appointmentId)
 			.subscribe(appointment => {
 				this.appointment = appointment;
@@ -409,6 +420,10 @@ export class AppointmentComponent implements OnInit {
 
 	clear(): void {
 		this.formEdit.controls.newCoverageData.setValue(null);
+	}
+
+	dateFormToggle(): void{
+		this.isDateFormVisible = !this.isDateFormVisible;
 	}
 
 	setHideObservationTitle(value: boolean): void{

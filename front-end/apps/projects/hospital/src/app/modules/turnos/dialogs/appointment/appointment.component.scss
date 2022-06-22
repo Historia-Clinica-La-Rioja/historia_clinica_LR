@@ -164,8 +164,27 @@ section {
     text-overflow: ellipsis;
 }
 
+.dateForm{
+	.date{
+		width: 276px;
+	}
+	
+	.hour{
+		width: 99px;
+	}
+	
+	.hs{
+		height: fit-content;
+		margin-top: 20px;
+		margin-left: 5px;
+	}
+	.confirm-buttons{
+		margin-top: 15px;
+	}
+}
+
 .observation-section {
-	min-width: 550px;
+	width: 550px;
 	margin: 15px 0;
 
 	a {
@@ -182,4 +201,5 @@ section {
 
 .confirm-buttons {
 	margin-bottom: 15px;
+	height: 38px;
 }	

@@ -130,31 +130,63 @@
 
 		<section id="appointment" class="appointment-details section" fxLayout="column">
 			<span class="mat-body-strong title-size appointment-title">{{'turnos.appointment.TITLE' | translate}}</span>
-			<div fxLayout="row" fxLayoutGap="30px">
-				<div fxLayout="row" fxLayoutGap="5px" fxLayoutAlign="start">
-					<mat-icon fontSet="material-icons-outlined" mat-list-icon [inline]="true"
-						id="full-date" class="icon-grey">
-						calendar_today
-					</mat-icon>
-					<div >
-						<span class="mat-body subtitle-size"> {{params.appointmentData.date | date:"EEEE, d " | titlecase }} de</span>
-						<span class="mat-body subtitle-size"> {{params.appointmentData.date | date:"MMMM " | titlecase}} de</span>
-						<span class="mat-body subtitle-size"> {{params.appointmentData.date | date:"y " | titlecase}}</span>
+			<div *ngIf="!isDateFormVisible">
+				<div fxLayout="row" fxLayoutGap="30px">
+					<div fxLayout="row" fxLayoutGap="5px" fxLayoutAlign="start">
+						<mat-icon fontSet="material-icons-outlined" mat-list-icon [inline]="true"
+							id="full-date" class="icon-grey">
+							calendar_today
+						</mat-icon>
+						<div >		
+							<span class="mat-body subtitle-size"> {{params.appointmentData.date | date:"EEEE, d " | titlecase }} de</span>
+							<span class="mat-body subtitle-size"> {{params.appointmentData.date | date:"MMMM " | titlecase}} de</span>
+							<span class="mat-body subtitle-size"> {{params.appointmentData.date | date:"y " | titlecase}}</span>
+						</div>
+					</div>
+					<div fxLayout="row" fxLayoutGap="5px" fxLayoutAlign="start">
+						<mat-icon fontSet="material-icons-outlined" mat-list-icon [inline]="true" id="hour" class="icon-grey">
+							access_time
+						</mat-icon>
+						 <span class="mat-body subtitle-size"> {{params.appointmentData.date | date:"H:mm"}} hs</span> 
 					</div>
 				</div>
-				<div fxLayout="row" fxLayoutGap="5px" fxLayoutAlign="start">
-					<mat-icon fontSet="material-icons-outlined" mat-list-icon [inline]="true" id="hour" class="icon-grey">
-						access_time
-					</mat-icon>
-					 <span class="mat-body subtitle-size"> {{params.appointmentData.date | date:"H:mm"}} hs</span>
-				</div>
+				<button type="button" mat-icon-button color="primary" (click)="dateFormToggle()">
+					<mat-icon class="material-icons-outlined">edit</mat-icon>
+					<span class="mat-body strong-size">
+						{{'turnos.appointment.EDIT_DATE_TIME' | translate}}
+					</span>
+				</button>
 			</div>
-			<button type="button" mat-icon-button color="primary">
-				<mat-icon class="material-icons-outlined">edit</mat-icon>
-				<span class="mat-body strong-size">
-					{{'turnos.appointment.EDIT_DATE_TIME' | translate}}
-				</span>
-			</button>
+
+			<form [formGroup]="formDate" *ngIf="isDateFormVisible" fxLayout="column" fxLayoutGap="5px" class="dateForm">
+				<mat-form-field appearance="outline" class="date">
+					<input matInput [matDatepicker]="picker" formControlName="date">
+					<mat-datepicker-toggle matSuffix [for]="picker">
+						<mat-icon matDatepickerToggleIcon class="icon-grey" fontSet="material-icons-outlined">calendar_today</mat-icon>
+					</mat-datepicker-toggle>
+					<mat-datepicker #picker></mat-datepicker>
+				</mat-form-field>
+
+				<div fxLayout="row" >
+					<mat-form-field appearance="outline" class="hour">
+						<mat-select formControlName="hour">
+							<mat-option [value]="params.appointmentData.date | date:'H:mm'">
+							</mat-option>
+						</mat-select>
+					</mat-form-field>
+
+					<span class="hs"> hs.</span>
+	
+					<div class="confirm-buttons" fxLayout="row" fxLayoutAlign="end" fxLayoutGap="15px" fxFlex="60%">
+						<button mat-stroked-button color="primary" btn-block type="button" (click)="dateFormToggle()">
+							<span [translate]="'turnos.appointment.CANCEL'"></span>
+						</button>
+						<button mat-flat-button color="primary" type="submit">
+							<span [translate]="'turnos.appointment.SAVE'"></span>
+						</button>
+					</div>
+				</div>
+			</form>
 		</section>
 
 		<section id="state">
