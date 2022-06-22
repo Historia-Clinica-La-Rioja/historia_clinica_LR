@@ -92,6 +92,10 @@ export class AmbulatoriaPacienteComponent implements OnInit, OnDestroy {
 	hasMedicalRole = false;
 	hasNurseRole = false;
 	hasHealthProfessionalRole = false;
+	hasOdontologyRole = false;
+	hasPicturesStaffRole = false;
+	hasLaboratoryStaffRole = false;
+	hasPharmacyStaffRole = false;
 	internmentAction: InternmentActions;
 	PRESUMPTIVE = HEALTH_VERIFICATIONS.PRESUNTIVO;
 
@@ -335,6 +339,10 @@ export class AmbulatoriaPacienteComponent implements OnInit, OnDestroy {
 			this.hasMedicalRole = anyMatch<ERole>(userRoles, [ERole.ESPECIALISTA_MEDICO]);
 			this.hasNurseRole = anyMatch<ERole>(userRoles, [ERole.ENFERMERO]);
 			this.hasHealthProfessionalRole = anyMatch<ERole>(userRoles, [ERole.PROFESIONAL_DE_SALUD]);
+			this.hasOdontologyRole = anyMatch<ERole>(userRoles, [ERole.ESPECIALISTA_EN_ODONTOLOGIA]);
+			this.hasPicturesStaffRole = anyMatch<ERole>(userRoles, [ERole.PERSONAL_DE_IMAGENES]);
+			this.hasLaboratoryStaffRole = anyMatch<ERole>(userRoles, [ERole.PERSONAL_DE_LABORATORIO]);
+			this.hasPharmacyStaffRole = anyMatch<ERole>(userRoles, [ERole.PERSONAL_DE_FARMACIA]);
 		});
 	}
 
