@@ -35,4 +35,7 @@ public class VHospitalUser {
 	@Column(name = "person_id")
 	private Integer personId;
 
+	@Column(name = "two_factor_authentication_enabled")
+	private Boolean twoFactorAuthenticationEnabled = false;
+
 }
