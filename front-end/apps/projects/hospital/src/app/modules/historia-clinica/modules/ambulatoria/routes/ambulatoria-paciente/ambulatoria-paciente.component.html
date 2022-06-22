@@ -109,7 +109,7 @@
 				<ng-template #hasOdontologyRole>
 					<button id="acciones_odontologo" mat-flat-button color="primary" mat-button
 						[matMenuTriggerFor]="menu"
-						*ngIf="hasInternmentEpisodeInThisInstitution && !epicrisisDoc?.confirmed">
+						*ngIf="hasInternmentEpisodeInThisInstitution && !epicrisisDoc?.confirmed && !(hasPicturesStaffRole || hasLaboratoryStaffRole || hasPharmacyStaffRole)">
 						{{ 'ambulatoria.paciente.card.buttons.actions.ACTIONS' | translate | uppercase }}
 					</button>
 				</ng-template>
