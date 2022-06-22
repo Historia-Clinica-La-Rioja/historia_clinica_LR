@@ -10,10 +10,6 @@ import java.util.stream.Collectors;
 import javax.validation.Valid;
 import javax.validation.constraints.Size;
 
-import ar.lamansys.sgh.shared.infrastructure.input.service.ExternalPatientCoverageDto;
-import net.pladema.medicalconsultation.appointment.controller.mapper.ExternalPatientCoverageMapper;
-import net.pladema.medicalconsultation.appointment.controller.dto.AssignedAppointmentDto;
-
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -32,6 +28,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import ar.lamansys.sgh.shared.infrastructure.input.service.BasicDataPersonDto;
 import ar.lamansys.sgh.shared.infrastructure.input.service.BasicPatientDto;
+import ar.lamansys.sgh.shared.infrastructure.input.service.ExternalPatientCoverageDto;
 import ar.lamansys.sgx.shared.dates.configuration.DateTimeProvider;
 import ar.lamansys.sgx.shared.security.UserInfo;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -43,9 +40,11 @@ import net.pladema.medicalconsultation.appointment.controller.dto.AppointmentBas
 import net.pladema.medicalconsultation.appointment.controller.dto.AppointmentDailyAmountDto;
 import net.pladema.medicalconsultation.appointment.controller.dto.AppointmentDto;
 import net.pladema.medicalconsultation.appointment.controller.dto.AppointmentListDto;
+import net.pladema.medicalconsultation.appointment.controller.dto.AssignedAppointmentDto;
 import net.pladema.medicalconsultation.appointment.controller.dto.CreateAppointmentDto;
 import net.pladema.medicalconsultation.appointment.controller.dto.UpdateAppointmentDto;
 import net.pladema.medicalconsultation.appointment.controller.mapper.AppointmentMapper;
+import net.pladema.medicalconsultation.appointment.controller.mapper.ExternalPatientCoverageMapper;
 import net.pladema.medicalconsultation.appointment.repository.domain.BookingPersonBo;
 import net.pladema.medicalconsultation.appointment.service.AppointmentDailyAmountService;
 import net.pladema.medicalconsultation.appointment.service.AppointmentService;
@@ -264,7 +263,7 @@ public class AppointmentsController {
 
 
     @GetMapping("/confirmed-appointment")
-    @PreAuthorize("hasPermission(#institutionId, 'ESPECIALISTA_MEDICO, PROFESIONAL_DE_SALUD, ESPECIALISTA_EN_ODONTOLOGIA, ENFERMERO')")
+    @PreAuthorize("hasPermission(#institutionId, 'ESPECIALISTA_MEDICO, PROFESIONAL_DE_SALUD, ESPECIALISTA_EN_ODONTOLOGIA, ENFERMERO, PERSONAL_DE_IMAGENES, PERSONAL_DE_LABORATORIO, PERSONAL_DE_FARMACIA')")
     public ResponseEntity<Boolean> hasNewConsultationEnabled(
             @PathVariable(name = "institutionId") Integer institutionId,
             @RequestParam(name = "patientId") Integer patientId
@@ -377,7 +376,7 @@ public class AppointmentsController {
     }
 
 	@GetMapping("/patient/{patientId}/get-medical-coverage")
-	@PreAuthorize("hasPermission(#institutionId, 'ESPECIALISTA_MEDICO, PROFESIONAL_DE_SALUD, ESPECIALISTA_EN_ODONTOLOGIA, ENFERMERO')")
+	@PreAuthorize("hasPermission(#institutionId, 'ESPECIALISTA_MEDICO, PROFESIONAL_DE_SALUD, ESPECIALISTA_EN_ODONTOLOGIA, ENFERMERO, PERSONAL_DE_IMAGENES, PERSONAL_DE_LABORATORIO, PERSONAL_DE_FARMACIA')")
 	public ResponseEntity<ExternalPatientCoverageDto> getCurrentAppointmentMedicalCoverage(
 			@PathVariable(name = "institutionId") Integer institutionId,
 			@PathVariable(name = "patientId") Integer patientId) {

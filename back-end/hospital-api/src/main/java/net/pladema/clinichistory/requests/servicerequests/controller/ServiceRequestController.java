@@ -1,42 +1,5 @@
 package net.pladema.clinichistory.requests.servicerequests.controller;
 
-import ar.lamansys.sgh.clinichistory.domain.document.PatientInfoBo;
-import ar.lamansys.sgh.shared.infrastructure.input.service.BasicPatientDto;
-import ar.lamansys.sgx.shared.featureflags.AppFeature;
-import ar.lamansys.sgx.shared.featureflags.application.FeatureFlagsService;
-import io.swagger.v3.oas.annotations.tags.Tag;
-import net.pladema.clinichistory.requests.controller.dto.PrescriptionDto;
-import net.pladema.clinichistory.requests.controller.dto.PrescriptionItemDto;
-import net.pladema.clinichistory.requests.servicerequests.controller.dto.*;
-import net.pladema.clinichistory.requests.servicerequests.controller.mapper.*;
-import net.pladema.clinichistory.requests.servicerequests.service.*;
-import ar.lamansys.sgh.clinichistory.domain.ips.DiagnosticReportBo;
-import net.pladema.clinichistory.requests.servicerequests.service.domain.DiagnosticReportFilterBo;
-import net.pladema.clinichistory.requests.servicerequests.service.domain.ServiceRequestBo;
-import net.pladema.clinichistory.requests.servicerequests.service.domain.StoredFileBo;
-import net.pladema.events.EHospitalApiTopicDto;
-import net.pladema.events.HospitalApiPublisher;
-import net.pladema.patient.controller.dto.PatientMedicalCoverageDto;
-import net.pladema.patient.controller.service.PatientExternalMedicalCoverageService;
-import net.pladema.patient.controller.service.PatientExternalService;
-import ar.lamansys.sgx.shared.exceptions.dto.ApiErrorDto;
-import ar.lamansys.sgx.shared.pdf.PDFDocumentException;
-import ar.lamansys.sgx.shared.pdf.PdfService;
-import ar.lamansys.sgx.shared.security.UserInfo;
-import net.pladema.staff.controller.dto.ProfessionalDto;
-import net.pladema.staff.controller.service.HealthcareProfessionalExternalService;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.core.io.InputStreamResource;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
-
-import javax.validation.Valid;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.time.format.DateTimeFormatter;
@@ -45,6 +8,70 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
+
+import javax.validation.Valid;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.core.io.InputStreamResource;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RequestPart;
+import org.springframework.web.bind.annotation.ResponseStatus;
+import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
+
+import ar.lamansys.sgh.clinichistory.domain.document.PatientInfoBo;
+import ar.lamansys.sgh.clinichistory.domain.ips.DiagnosticReportBo;
+import ar.lamansys.sgh.shared.infrastructure.input.service.BasicPatientDto;
+import ar.lamansys.sgx.shared.exceptions.dto.ApiErrorDto;
+import ar.lamansys.sgx.shared.featureflags.AppFeature;
+import ar.lamansys.sgx.shared.featureflags.application.FeatureFlagsService;
+import ar.lamansys.sgx.shared.pdf.PDFDocumentException;
+import ar.lamansys.sgx.shared.pdf.PdfService;
+import ar.lamansys.sgx.shared.security.UserInfo;
+import io.swagger.v3.oas.annotations.tags.Tag;
+import net.pladema.clinichistory.requests.controller.dto.PrescriptionDto;
+import net.pladema.clinichistory.requests.controller.dto.PrescriptionItemDto;
+import net.pladema.clinichistory.requests.servicerequests.controller.dto.CompleteRequestDto;
+import net.pladema.clinichistory.requests.servicerequests.controller.dto.DiagnosticReportInfoDto;
+import net.pladema.clinichistory.requests.servicerequests.controller.dto.DiagnosticReportInfoWithFilesDto;
+import net.pladema.clinichistory.requests.servicerequests.controller.mapper.CompleteDiagnosticReportMapper;
+import net.pladema.clinichistory.requests.servicerequests.controller.mapper.CreateServiceRequestMapper;
+import net.pladema.clinichistory.requests.servicerequests.controller.mapper.DiagnosticReportInfoMapper;
+import net.pladema.clinichistory.requests.servicerequests.controller.mapper.FileMapper;
+import net.pladema.clinichistory.requests.servicerequests.controller.mapper.StudyMapper;
+import net.pladema.clinichistory.requests.servicerequests.service.CompleteDiagnosticReportService;
+import net.pladema.clinichistory.requests.servicerequests.service.CreateServiceRequestService;
+import net.pladema.clinichistory.requests.servicerequests.service.DeleteDiagnosticReportService;
+import net.pladema.clinichistory.requests.servicerequests.service.DiagnosticReportInfoService;
+import net.pladema.clinichistory.requests.servicerequests.service.GetServiceRequestInfoService;
+import net.pladema.clinichistory.requests.servicerequests.service.ListDiagnosticReportInfoService;
+import net.pladema.clinichistory.requests.servicerequests.service.ServeDiagnosticReportFileService;
+import net.pladema.clinichistory.requests.servicerequests.service.UpdateDiagnosticReportFileService;
+import net.pladema.clinichistory.requests.servicerequests.service.UploadDiagnosticReportCompletedFileService;
+import net.pladema.clinichistory.requests.servicerequests.service.domain.DiagnosticReportFilterBo;
+import net.pladema.clinichistory.requests.servicerequests.service.domain.ServiceRequestBo;
+import net.pladema.clinichistory.requests.servicerequests.service.domain.StoredFileBo;
+import net.pladema.events.EHospitalApiTopicDto;
+import net.pladema.events.HospitalApiPublisher;
+import net.pladema.patient.controller.dto.PatientMedicalCoverageDto;
+import net.pladema.patient.controller.service.PatientExternalMedicalCoverageService;
+import net.pladema.patient.controller.service.PatientExternalService;
+import net.pladema.staff.controller.dto.ProfessionalDto;
+import net.pladema.staff.controller.service.HealthcareProfessionalExternalService;
 
 @RestController
 @Tag(name = "Service request", description = "Service request")
@@ -153,7 +180,7 @@ public class ServiceRequestController {
     @PutMapping("/{diagnosticReportId}/complete")
     @Transactional
     @ResponseStatus(code = HttpStatus.OK)
-    @PreAuthorize("hasPermission(#institutionId, 'ESPECIALISTA_MEDICO, ESPECIALISTA_EN_ODONTOLOGIA')")
+    @PreAuthorize("hasPermission(#institutionId, 'ESPECIALISTA_MEDICO, ESPECIALISTA_EN_ODONTOLOGIA, PERSONAL_DE_IMAGENES, PERSONAL_DE_LABORATORIO')")
     public void complete(@PathVariable(name = "institutionId") Integer institutionId,
                          @PathVariable(name = "patientId") Integer patientId,
                          @PathVariable(name = "diagnosticReportId") Integer diagnosticReportId,
@@ -223,7 +250,7 @@ public class ServiceRequestController {
     }
 
     @GetMapping
-    @PreAuthorize("hasPermission(#institutionId, 'ESPECIALISTA_MEDICO, PROFESIONAL_DE_SALUD, ESPECIALISTA_EN_ODONTOLOGIA, ENFERMERO')")
+    @PreAuthorize("hasPermission(#institutionId, 'ESPECIALISTA_MEDICO, PROFESIONAL_DE_SALUD, ESPECIALISTA_EN_ODONTOLOGIA, ENFERMERO, PERSONAL_DE_IMAGENES, PERSONAL_DE_LABORATORIO')")
     public List<DiagnosticReportInfoDto> getList(@PathVariable(name = "institutionId") Integer institutionId,
                                                  @PathVariable(name = "patientId") Integer patientId,
                                                  @RequestParam(value = "statusId", required = false) String status,
