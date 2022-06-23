@@ -1,4 +1,4 @@
-import { Component, Input, OnDestroy, OnInit } from '@angular/core';
+import { Component, Input, OnChanges, OnDestroy, OnInit, SimpleChanges } from '@angular/core';
 import { AppointmentDailyAmountDto, AppointmentListDto, CompleteDiaryDto, DiaryOpeningHoursDto, MedicalCoverageDto } from '@api-rest/api-model';
 import { ERole } from '@api-rest/api-model';
 import { CalendarMonthViewBeforeRenderEvent, CalendarView, CalendarWeekViewBeforeRenderEvent, DAYS_OF_WEEK } from 'angular-calendar';
@@ -44,7 +44,7 @@ const ROLES_TO_CREATE: ERole[] = [ERole.ADMINISTRATIVO, ERole.ESPECIALISTA_MEDIC
 	templateUrl: './agenda.component.html',
 	styleUrls: ['./agenda.component.scss'],
 })
-export class AgendaComponent implements OnInit, OnDestroy {
+export class AgendaComponent implements OnInit, OnDestroy, OnChanges {
 
 	readonly calendarViewEnum = CalendarView;
 	readonly MONDAY = DAYS_OF_WEEK.MONDAY;
@@ -115,11 +115,16 @@ export class AgendaComponent implements OnInit, OnDestroy {
 		});
 
 		this.permissionsService.hasContextAssignments$(ROLES_TO_CREATE).subscribe(hasRole => this.hasRoleToCreate = hasRole);
-		this.healthcareProfessional.getHealthcareProfessionalByUserId().subscribe( professionalId => this.professionalId = professionalId);
+		this.healthcareProfessional.getHealthcareProfessionalByUserId().subscribe(professionalId => this.professionalId = professionalId);
 	}
 
 	ngOnDestroy() {
 		this.agendaSearchService.setAgendaSelected(undefined);
+	}
+
+	ngOnChanges(changes: SimpleChanges) {
+		if (changes.idAgenda.currentValue)
+			this.getAgenda();
 	}
 
 	loadCalendar(renderEvent: CalendarWeekViewBeforeRenderEvent) {
@@ -329,7 +334,7 @@ export class AgendaComponent implements OnInit, OnDestroy {
 		this.view = this.calendarViewEnum.Day;
 	}
 
-	goToDiary(){
+	goToDiary() {
 		const url = `institucion/${this.contextService.institutionId}/turnos/agenda/${this.idAgenda}`;
 		this.router.navigate([url]);
 	}
