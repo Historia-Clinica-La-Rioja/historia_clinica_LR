@@ -38,8 +38,8 @@ export class AppointmentsService {
 	}
 
 	getList(diaryIds: number[], healthcareProfessionalId: number): Observable<AppointmentListDto[]> {
-		const url = this.BASE_URL +  `/list/${healthcareProfessionalId}`;
-		if (!diaryIds || diaryIds.length === 0) {
+		const url = this.BASE_URL + `/list/${healthcareProfessionalId}`;
+		if (!diaryIds || diaryIds.length === 0 || !healthcareProfessionalId) {
 			return of([]);
 		}
 		return this.http.get<AppointmentListDto[]>(url, {
@@ -102,7 +102,7 @@ export class AppointmentsService {
 
 	updateObservation(appointmentId: number, observation: string): Observable<boolean> {
 		let queryParams: HttpParams = new HttpParams();
-		queryParams = (observation) ? queryParams.append('observation', observation): queryParams;
+		queryParams = (observation) ? queryParams.append('observation', observation) : queryParams;
 
 		const url = `${this.BASE_URL}/${appointmentId}/update-observation`;
 		return this.http.put<boolean>(url, {}, { params: queryParams });

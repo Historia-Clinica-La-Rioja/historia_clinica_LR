@@ -13,7 +13,6 @@ import { Moment } from 'moment';
 import { map, first } from 'rxjs/operators';
 import { CANCEL_STATE_ID, APPOINTMENT_STATES_ID } from '../constants/appointment';
 import { PatientNameService } from "@core/services/patient-name.service";
-import { HealthcareProfessionalService } from '@api-rest/services/healthcare-professional.service';
 
 const enum COLORES {
 	ASSIGNED = '#4187FF',
@@ -70,11 +69,12 @@ export class AppointmentsFacadeService {
 	constructor(
 		private readonly appointmentService: AppointmentsService,
 		private readonly patientNameService: PatientNameService,
-		private readonly healthcareProfessional: HealthcareProfessionalService,
-
 	) {
 		this.appointments$ = this.appointmenstEmitter.asObservable();
-		this.healthcareProfessional.getHealthcareProfessionalByUserId().subscribe( professionalId => this.professionalId = professionalId);
+	}
+
+	setProfessionalId(id: number) {
+		this.professionalId = id;
 	}
 
 	setValues(agendaId, appointmentDuration): void {

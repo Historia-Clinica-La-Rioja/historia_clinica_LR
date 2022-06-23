@@ -23,7 +23,8 @@
                 </button>
             </mat-form-field>
         </div>
-        <app-agenda *ngIf="agendaSelected" class="agenda" [canCreateAppoinment]="false" [idAgenda]="agendaSelected.id" [showAll]="false" [view]="calendarViewEnum.Day">
+        <app-agenda *ngIf="agendaSelected" class="agenda" [canCreateAppoinment]="false" [idAgenda]="agendaSelected.id"
+            [showAll]="false" [view]="calendarViewEnum.Day" [professionalId]="this.professionalId">
         </app-agenda>
     </div>
 </app-dock-popup>

@@ -1,3 +1,4 @@
+import { AppointmentsFacadeService } from '@turnos/services/appointments-facade.service';
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Observable, Subscription } from 'rxjs';
@@ -45,6 +46,7 @@ export class HomeComponent implements OnInit, OnDestroy {
 		private readonly agendaSearchService: AgendaSearchService,
 		private readonly snackBarService: SnackBarService,
 		private readonly patientNameService: PatientNameService,
+		private readonly appointmentFacadeService: AppointmentsFacadeService
 
 	) {
 		this.routePrefix = `institucion/${this.contextService.institutionId}/turnos`;
@@ -83,6 +85,7 @@ export class HomeComponent implements OnInit, OnDestroy {
 		const profesional: ProfessionalDto = this.profesionales.find(p => p.id === idProfesional);
 		this.idProfesional = idProfesional;
 		if (profesional) {
+			this.appointmentFacadeService.setProfessionalId(idProfesional);
 			this.profesionalInitValue = this.toProfessionalTypeahead(profesional);
 			this.agendaSearchService.search(idProfesional);
 		} else {
@@ -100,6 +103,7 @@ export class HomeComponent implements OnInit, OnDestroy {
 		this.profesionalesTypeahead = profesionalesFilteredBy.map(d => this.toProfessionalTypeahead(d));
 
 		if (!professionalsByClinicalSpecialtyDto || especialidadContainsProfesional(this.idProfesional)) {
+			this.appointmentFacadeService.setProfessionalId(this.idProfesional);
 			this.agendaSearchService.search(this.idProfesional);
 		}
 
@@ -110,6 +114,7 @@ export class HomeComponent implements OnInit, OnDestroy {
 
 	setProfesional(result: ProfessionalDto) {
 		this.idProfesional = result?.id;
+		this.appointmentFacadeService.setProfessionalId(this.idProfesional);
 		this.agendaSearchService.search(this.idProfesional);
 		if (!result) {
 			if (this.patientId) {

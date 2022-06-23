@@ -33,7 +33,6 @@ import { AgendaSearchService } from '../../services/agenda-search.service';
 import { ContextService } from '@core/services/context.service';
 import { ConfirmBookingComponent } from '@turnos/dialogs/confirm-booking/confirm-booking.component';
 import { DatePipeFormat } from '@core/utils/date.utils';
-import { HealthcareProfessionalService } from '@api-rest/services/healthcare-professional.service';
 
 const ASIGNABLE_CLASS = 'cursor-pointer';
 const AGENDA_PROGRAMADA_CLASS = 'bg-green';
@@ -69,7 +68,7 @@ export class AgendaComponent implements OnInit, OnDestroy, OnChanges {
 
 	private readonly routePrefix = 'institucion/' + this.contextService.institutionId;
 	private patientId: number;
-	private professionalId: number;
+	@Input() professionalId: number;
 	@Input() canCreateAppoinment = true;
 	@Input() idAgenda: number;
 	@Input() showAll = true;
@@ -87,12 +86,16 @@ export class AgendaComponent implements OnInit, OnDestroy, OnChanges {
 		private readonly healthInsuranceService: HealthInsuranceService,
 		private readonly agendaSearchService: AgendaSearchService,
 		private readonly contextService: ContextService,
-		private readonly healthcareProfessional: HealthcareProfessionalService,
 	) {
 	}
 
 	ngOnInit(): void {
-		this.route.queryParams.subscribe(qp => this.patientId = Number(qp.idPaciente));
+		this.route.queryParams.subscribe(qp => {
+			this.patientId = Number(qp.idPaciente);
+			if (!this.professionalId)
+				this.professionalId = Number(qp.idProfessional);
+			this.appointmentFacade.setProfessionalId(this.professionalId);
+		});
 		this.dayStartHour = 8;
 		this.dayEndHour = 21;
 		this.loading = true;
@@ -115,7 +118,6 @@ export class AgendaComponent implements OnInit, OnDestroy, OnChanges {
 		});
 
 		this.permissionsService.hasContextAssignments$(ROLES_TO_CREATE).subscribe(hasRole => this.hasRoleToCreate = hasRole);
-		this.healthcareProfessional.getHealthcareProfessionalByUserId().subscribe(professionalId => this.professionalId = professionalId);
 	}
 
 	ngOnDestroy() {

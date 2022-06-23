@@ -28,6 +28,7 @@ export class CalendarProfessionalViewDockPopupComponent implements OnInit {
 	HEADER = HEADER_CALENDAR_PROFESSIONAL_VIEW;
 	STYLE = STYLE;
 	showButtonToClear =true;
+	professionalId: number;
 	readonly calendarViewEnum = CalendarView;
 	readonly dateFormats = DatePipeFormat;
 
@@ -40,6 +41,7 @@ export class CalendarProfessionalViewDockPopupComponent implements OnInit {
 
 	ngOnInit(): void {
 		this.healthcareProfessional.getHealthcareProfessionalByUserId().subscribe( professionalId => {
+			this.professionalId = professionalId;
 			this.agendaSearchService.search(professionalId);
 			this.agendaFiltersSubscription = this.agendaSearchService.getAgendas$().subscribe((data: AgendaOptionsData) => {
 				if (data) {

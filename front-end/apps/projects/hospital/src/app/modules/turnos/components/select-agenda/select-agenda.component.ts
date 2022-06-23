@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { DatePipe } from '@angular/common';
 import { MatOptionSelectionChange } from '@angular/material/core';
@@ -40,6 +40,7 @@ export class SelectAgendaComponent implements OnInit, OnDestroy {
 
 	private readonly routePrefix = 'institucion/' + this.contextService.institutionId;
 	private patientId: number;
+	@Input() professionalId: number;
 
 	constructor(
 		private readonly router: Router,
@@ -50,7 +51,7 @@ export class SelectAgendaComponent implements OnInit, OnDestroy {
 		private snackBarService: SnackBarService,
 		private contextService: ContextService,
 		private readonly dailyAppointmentService: DailyAppointmentService,
-		private readonly agendaSearchService: AgendaSearchService
+		private readonly agendaSearchService: AgendaSearchService,
 	) {
 	}
 
@@ -74,9 +75,9 @@ export class SelectAgendaComponent implements OnInit, OnDestroy {
 		if (event.isUserInput) {
 			this.agendaSelected = agenda;
 			if (this.patientId) {
-				this.router.navigate([`agenda/${agenda.id}`], { relativeTo: this.route, queryParams: { idPaciente: this.patientId } });
+				this.router.navigate([`agenda/${agenda.id}`], { relativeTo: this.route, queryParams: { idPaciente: this.patientId, idProfessional: this.professionalId } });
 			} else {
-				this.router.navigate([`agenda/${agenda.id}`], { relativeTo: this.route });
+				this.router.navigate([`agenda/${agenda.id}`], { relativeTo: this.route , queryParams: { idProfessional: this.professionalId } });
 			}
 		}
 	}
