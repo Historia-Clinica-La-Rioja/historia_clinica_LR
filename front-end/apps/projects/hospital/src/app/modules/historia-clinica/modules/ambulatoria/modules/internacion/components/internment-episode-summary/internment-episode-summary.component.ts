@@ -48,7 +48,7 @@ export class InternmentEpisodeSummaryComponent implements OnInit {
 		private readonly snackBarService: SnackBarService,
 		private readonly dialog: MatDialog,
 		private readonly permissionsService: PermissionsService,
-		private readonly internmentService: InternmentEpisodeService,		
+		private readonly internmentService: InternmentEpisodeService,
 		readonly internmentSummaryFacadeService: InternmentSummaryFacadeService,
 	) {
 		this.routePrefix = 'institucion/' + this.contextService.institutionId + '/';
@@ -102,7 +102,7 @@ export class InternmentEpisodeSummaryComponent implements OnInit {
 
 	loadPhysicalDischarge() {
 		this.internmentService.getPatientDischarge(this.internmentEpisode.id).subscribe(patientDischarge => {
-			if (patientDischarge.physicalDischargeDate) {
+			if (patientDischarge.physicalDischargeDate && !patientDischarge?.administrativeDischargeDate) {
 				const date = new Date(patientDischarge.physicalDischargeDate);
 				let minutes: number | string = date.getMinutes();
 				if (minutes < 10) {
