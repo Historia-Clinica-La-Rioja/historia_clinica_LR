@@ -57,6 +57,7 @@ export class BedManagementFacadeService {
 			&& this.filterByService(newFilter, bedManagement)
 			&& this.filterByProbableDischargeDate(newFilter, bedManagement)
 			&& this.filterByFreeBed(newFilter, bedManagement)));
+		this.initialFilters = newFilter;
 		this.bedSummarySubject.next(result);
 		this.bedManagementFilterSubject.next(newFilter);
 	}
