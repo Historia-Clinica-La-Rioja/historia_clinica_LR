@@ -44,7 +44,7 @@ public class ExcelServicePRImpl implements ExcelServicePR {
 		result.forEach(
 				resultData -> {
 					IRow newDataRow = sheet.createRow(rowNumber.getAndIncrement());
-					fillRowContentEpidemiologiaI(newDataRow, resultData, styleDataRow);
+					fillRowContent(newDataRow, resultData, styleDataRow);
 				}
 		);
 
@@ -68,7 +68,7 @@ public class ExcelServicePRImpl implements ExcelServicePR {
 		result.forEach(
 				resultData -> {
 					IRow newDataRow = sheet.createRow(rowNumber.getAndIncrement());
-					fillRowContentEpidemiologiaII(newDataRow, resultData, styleDataRow);
+					fillRowContent(newDataRow, resultData, styleDataRow);
 				}
 		);
 
@@ -92,7 +92,7 @@ public class ExcelServicePRImpl implements ExcelServicePR {
 		result.forEach(
 				resultData -> {
 					IRow newDataRow = sheet.createRow(rowNumber.getAndIncrement());
-					fillRowContentRecupero(newDataRow, resultData, styleDataRow);
+					fillRowContent(newDataRow, resultData, styleDataRow);
 				}
 		);
 
@@ -216,7 +216,7 @@ public class ExcelServicePRImpl implements ExcelServicePR {
 			sheet.addMergedRegion(nRow, data.lastRow(), nColumn, data.lastCol(), true);
 	}
 
-	private void fillRowContentEpidemiologiaI(IRow row, ConsultationDetailEpiI content, ICellStyle style){
+	private void fillRowContent(IRow row, ConsultationDetailEpiI content, ICellStyle style){
 		AtomicInteger rowNumber = new AtomicInteger(0);
 		ICell cell = row.createCell(rowNumber.getAndIncrement());
 		cell.setCellValue(content.getPatientFullName());
@@ -259,7 +259,7 @@ public class ExcelServicePRImpl implements ExcelServicePR {
 		cell10.setCellStyle(style);
 	}
 
-	private void fillRowContentEpidemiologiaII(IRow row, ConsultationDetailEpiII content, ICellStyle style){
+	private void fillRowContent(IRow row, ConsultationDetailEpiII content, ICellStyle style){
 		AtomicInteger rowNumber = new AtomicInteger(0);
 
 		ICell cell = row.createCell(rowNumber.getAndIncrement());
@@ -275,7 +275,7 @@ public class ExcelServicePRImpl implements ExcelServicePR {
 		cell3.setCellStyle(style);
 	}
 
-	private void fillRowContentRecupero(IRow row, ConsultationDetailRecupero content, ICellStyle style){
+	private void fillRowContent(IRow row, ConsultationDetailRecupero content, ICellStyle style){
 		AtomicInteger rowNumber = new AtomicInteger(0);
 
 		ICell cell = row.createCell(rowNumber.getAndIncrement());
