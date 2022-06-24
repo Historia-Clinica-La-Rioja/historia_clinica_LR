@@ -1,4 +1,4 @@
-package ar.lamansys.sgx.auth.twoFactorAuthentication.application;
+package ar.lamansys.sgx.auth.twoFactorAuthentication.application.generateTwoFactorAuthentication;
 
 import ar.lamansys.sgx.auth.twoFactorAuthentication.domain.SetTwoFactorAuthenticationBo;
 

@@ -1,6 +1,6 @@
 package ar.lamansys.sgx.auth.twoFactorAuthentication.infrastructure.input;
 
-import ar.lamansys.sgx.auth.twoFactorAuthentication.application.GenerateTwoFactorAuthentication;
+import ar.lamansys.sgx.auth.twoFactorAuthentication.application.generateTwoFactorAuthentication.GenerateTwoFactorAuthentication;
 import ar.lamansys.sgx.auth.twoFactorAuthentication.domain.SetTwoFactorAuthenticationBo;
 import ar.lamansys.sgx.auth.twoFactorAuthentication.infrastructure.input.dto.TwoFactorAuthenticationDto;
 import io.swagger.v3.oas.annotations.tags.Tag;

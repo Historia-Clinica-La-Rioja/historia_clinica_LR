@@ -1,5 +1,7 @@
-package ar.lamansys.sgx.auth.twoFactorAuthentication.application;
+package ar.lamansys.sgx.auth.twoFactorAuthentication.application.validateTwoFactorAuthentication;
 
+import ar.lamansys.sgx.auth.twoFactorAuthentication.application.TwoFactorAuthenticationCypher;
+import ar.lamansys.sgx.auth.twoFactorAuthentication.application.UserAuthenticationStorage;
 import ar.lamansys.sgx.shared.security.UserInfo;
 import de.taimos.totp.TOTP;
 import lombok.RequiredArgsConstructor;
