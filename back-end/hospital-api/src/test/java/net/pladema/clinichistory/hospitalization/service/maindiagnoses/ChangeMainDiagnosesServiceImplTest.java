@@ -22,7 +22,6 @@ import net.pladema.clinichistory.hospitalization.service.impl.InternmentEpisodeS
 import net.pladema.clinichistory.hospitalization.service.maindiagnoses.domain.MainDiagnosisBo;
 import net.pladema.establishment.repository.MedicalCoveragePlanRepository;
 
-import org.assertj.core.util.Lists;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -32,6 +31,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import javax.validation.ConstraintViolationException;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+
+import java.util.Collections;
 
 class ChangeMainDiagnosesServiceImplTest extends UnitRepository {
 
@@ -154,7 +155,7 @@ class ChangeMainDiagnosesServiceImplTest extends UnitRepository {
         result.setEncounterId(encounterId);
         result.setNotes(new DocumentObservationsBo());
         result.setMainDiagnosis(new HealthConditionBo(new SnomedBo("MAIN", "MAIN")));
-        result.setDiagnosis(Lists.emptyList());
+        result.setDiagnosis(Collections.emptyList());
         return result;
     }
 

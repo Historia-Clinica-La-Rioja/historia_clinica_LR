@@ -6,12 +6,12 @@ import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.Mockito.when;
 
 import java.time.LocalDateTime;
+import java.util.Collections;
 
 import javax.validation.ConstraintViolationException;
 
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.DocumentType;
 
-import org.assertj.core.util.Lists;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -168,12 +168,12 @@ class UpdateAnamnesisServiceImplTest extends UnitRepository {
 		anamnesis.setInstitutionId(institutionId);
 		anamnesis.setEncounterId(encounterId);
 		anamnesis.setMainDiagnosis(new HealthConditionBo(new SnomedBo("MAIN", "MAIN")));
-		anamnesis.setDiagnosis(Lists.emptyList());
-		anamnesis.setPersonalHistories(Lists.emptyList());
-		anamnesis.setFamilyHistories(Lists.emptyList());
-		anamnesis.setMedications(Lists.emptyList());
-		anamnesis.setImmunizations(Lists.emptyList());
-		anamnesis.setAllergies(Lists.emptyList());
+		anamnesis.setDiagnosis(Collections.emptyList());
+		anamnesis.setPersonalHistories(Collections.emptyList());
+		anamnesis.setFamilyHistories(Collections.emptyList());
+		anamnesis.setMedications(Collections.emptyList());
+		anamnesis.setImmunizations(Collections.emptyList());
+		anamnesis.setAllergies(Collections.emptyList());
 		return anamnesis;
 	}
 

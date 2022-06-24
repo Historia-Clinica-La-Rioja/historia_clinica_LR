@@ -32,7 +32,6 @@ import net.pladema.clinichistory.hospitalization.service.epicrisis.domain.Epicri
 import net.pladema.clinichistory.hospitalization.service.impl.InternmentEpisodeServiceImpl;
 import net.pladema.establishment.repository.MedicalCoveragePlanRepository;
 
-import org.assertj.core.util.Lists;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -43,6 +42,7 @@ import javax.validation.ConstraintViolationException;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.util.Collections;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -352,12 +352,12 @@ class CreateEpicrisisServiceImplTest extends UnitRepository {
         result.setInstitutionId(institutionId);
         result.setEncounterId(encounterId);
         result.setMainDiagnosis(new HealthConditionBo(new SnomedBo("MAIN", "MAIN")));
-        result.setPersonalHistories(Lists.emptyList());
-        result.setFamilyHistories(Lists.emptyList());
-        result.setMedications(Lists.emptyList());
-        result.setDiagnosis(Lists.emptyList());
-        result.setImmunizations(Lists.emptyList());
-        result.setAllergies(Lists.emptyList());
+        result.setPersonalHistories(Collections.emptyList());
+        result.setFamilyHistories(Collections.emptyList());
+        result.setMedications(Collections.emptyList());
+        result.setDiagnosis(Collections.emptyList());
+        result.setImmunizations(Collections.emptyList());
+        result.setAllergies(Collections.emptyList());
         return result;
     }
 

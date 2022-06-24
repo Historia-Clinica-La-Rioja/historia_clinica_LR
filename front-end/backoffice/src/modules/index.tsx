@@ -52,32 +52,21 @@ import bookingInstitutions from "./booking-institutions";
 const resourcesAdminInstitucional = (permissions: SGXPermissions) =>
     permissions.isOn('BACKOFFICE_MOSTRAR_ABM_RESERVA_TURNOS') ?
         [
-        <Resource name="users" {...users}/>,
-        <Resource name="healthcareprofessionals" {...healthcareprofessionals}/>,
-        <Resource name="medicalCoverages" {...medicalCoverage}/>,
         <Resource name="booking-institution" {...bookingInstitutions(permissions)}/>,
         <Resource name="healthcareprofessionalhealthinsurances"  {...healthcareprofessionalhealthinsurances}/>,
         <Resource name="mandatorymedicalpractices"  {...mandatorymedicalpractices}/>,
         <Resource name="clinicalspecialtymandatorymedicalpractices"  {...clinicalspecialtymandatorymedicalpractices}/>,
         <Resource name="healthinsurancepractices"  {...healthinsurancepractices}/>,
         <Resource name="mandatoryprofessionalpracticefreedays"  {...mandatoryprofessionalpracticefreedays}/>,
-        <Resource name="mandatoryprofessionalpracticefreedays"  {...mandatoryprofessionalpracticefreedays}/>
-        ] :
-        [
-            <Resource name="healthcareprofessionals" {...healthcareprofessionals} />,
-            <Resource name="users" {...users} />,
-        ]
-
+        ] : []
 ;
 
 const resourcesAdminRoot = (permissions: SGXPermissions) => [
-    <Resource name="healthcareprofessionals" {...healthcareprofessionals} />,
     <Resource name="healthcareprofessionalspecialties" {...healthcareprofessionalspecialties} />,
     <Resource name="password-reset" {...passwordReset} />,
     <Resource name="roles" />,
     <Resource name="addresses" {...addresses} />,
     
-    <Resource name="users" {...users} />,
     <Resource name="medicalcoveragetypes" />,
     <Resource name="medicalcoverageplans" {...medicalcoverageplans} />,
     <Resource name="medicalcoveragesmerge" />,
@@ -94,6 +83,8 @@ const resources = (permissions: SGXPermissions) => [
     // staff
     <Resource name="person" {...person(permissions)} />,
     <Resource name="admin" {...admin(permissions)}/>,
+    <Resource name="users" {...users}/>,
+    <Resource name="healthcareprofessionals" {...healthcareprofessionals} />,
     ...resourcesFor(permissions),
     // facilities
     <Resource name="institutions" {...institutions(permissions)} />,

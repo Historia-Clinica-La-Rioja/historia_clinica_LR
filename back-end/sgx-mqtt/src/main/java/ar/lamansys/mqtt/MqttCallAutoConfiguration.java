@@ -4,6 +4,7 @@ import org.eclipse.paho.client.mqttv3.IMqttClient;
 import org.eclipse.paho.client.mqttv3.MqttClient;
 import org.eclipse.paho.client.mqttv3.MqttConnectOptions;
 import org.eclipse.paho.client.mqttv3.MqttException;
+import org.eclipse.paho.client.mqttv3.persist.MemoryPersistence;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.domain.EntityScan;
 import org.springframework.context.annotation.Bean;
@@ -12,6 +13,9 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 
+import lombok.extern.slf4j.Slf4j;
+
+@Slf4j
 @Configuration
 @ComponentScan(basePackages = "ar.lamansys.mqtt")
 @EnableJpaRepositories(basePackages = {"ar.lamansys.mqtt"})
@@ -32,7 +36,8 @@ public class MqttCallAutoConfiguration {
     public IMqttClient connect() {
         MqttClient client = null;
         try {
-            client = new MqttClient(mqttServerAddress, mqttPublisherId);
+            MemoryPersistence persistence = new MemoryPersistence();
+            client = new MqttClient(mqttServerAddress, mqttPublisherId, persistence);
             MqttConnectOptions options = new MqttConnectOptions();
             options.setAutomaticReconnect(true);
             options.setCleanSession(true);
@@ -42,7 +47,7 @@ public class MqttCallAutoConfiguration {
                 client.connect(options);
             }
         } catch (MqttException e) {
-            e.printStackTrace();
+            log.error(e.getMessage(), e);
         }
         return client;
     }

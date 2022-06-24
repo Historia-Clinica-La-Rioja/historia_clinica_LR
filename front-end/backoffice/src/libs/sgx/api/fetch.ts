@@ -5,7 +5,7 @@
  */
 import { configureRefreshFetch } from 'refresh-fetch';
 import { retrieveToken, retrieveRefreshToken, saveTokens, clearTokens } from './tokenStorage';
-import { safeParseJson } from '../shared/json';
+import { safeParseJson, safeStringifyJson } from '../shared/json';
 import { JWTokenDto } from './model';
 import { saveAs } from 'file-saver';
 
@@ -57,7 +57,7 @@ const mapToApiHttpError = (defaultValue = { code: 'error.generic.title' }) => (b
     );
 };
 
-const doRefreshToken = () => {
+const doRefreshToken = (): Promise<void> => {
     const refreshToken = retrieveRefreshToken();
     const options = jsonPayload('POST', { refreshToken });
     return sgxFetchApi<JWTokenDto>('auth/refresh', options)
@@ -108,7 +108,7 @@ const addAuth = (options: any = {}) => {
     return (!token) ? options : withHeader(options, 'Authorization', token);
 };
 
-const jsonPayload = (method: string, body: any) => ({ method, body: JSON.stringify(body) });
+const jsonPayload = (method: string, body: any) => ({ method, body: safeStringifyJson(body) });
 
 export { 
     sgxFetch, 

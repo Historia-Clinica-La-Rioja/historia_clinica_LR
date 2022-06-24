@@ -27,7 +27,6 @@ import net.pladema.clinichistory.hospitalization.service.impl.InternmentEpisodeS
 import ar.lamansys.sgx.shared.featureflags.application.FeatureFlagsService;
 import net.pladema.establishment.repository.MedicalCoveragePlanRepository;
 
-import org.assertj.core.util.Lists;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -38,6 +37,7 @@ import javax.validation.ConstraintViolationException;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.util.Collections;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -408,12 +408,12 @@ class CreateAnamnesisServiceImplTest extends UnitRepository {
 		anamnesis.setInstitutionId(institutionId);
 		anamnesis.setEncounterId(encounterId);
 		anamnesis.setMainDiagnosis(new HealthConditionBo(new SnomedBo("MAIN", "MAIN")));
-		anamnesis.setDiagnosis(Lists.emptyList());
-		anamnesis.setPersonalHistories(Lists.emptyList());
-		anamnesis.setFamilyHistories(Lists.emptyList());
-		anamnesis.setMedications(Lists.emptyList());
-		anamnesis.setImmunizations(Lists.emptyList());
-		anamnesis.setAllergies(Lists.emptyList());
+		anamnesis.setDiagnosis(Collections.emptyList());
+		anamnesis.setPersonalHistories(Collections.emptyList());
+		anamnesis.setFamilyHistories(Collections.emptyList());
+		anamnesis.setMedications(Collections.emptyList());
+		anamnesis.setImmunizations(Collections.emptyList());
+		anamnesis.setAllergies(Collections.emptyList());
 		return anamnesis;
 	}
 

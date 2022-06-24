@@ -21,7 +21,6 @@ import net.pladema.clinichistory.hospitalization.service.impl.exceptions.Internm
 
 import net.pladema.sgx.session.infrastructure.input.service.FetchLoggedUserRolesExternalService;
 
-import org.assertj.core.util.Lists;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -31,6 +30,7 @@ import javax.validation.ConstraintViolationException;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -175,9 +175,9 @@ class UpdateEvolutionNoteServiceImplTest extends UnitRepository {
 		evolutionBo.setInstitutionId(institutionId);
 		evolutionBo.setEncounterId(encounterId);
 		evolutionBo.setMainDiagnosis(new HealthConditionBo(new SnomedBo("MAIN", "MAIN")));
-		evolutionBo.setDiagnosis(Lists.emptyList());
-		evolutionBo.setImmunizations(Lists.emptyList());
-		evolutionBo.setAllergies(Lists.emptyList());
+		evolutionBo.setDiagnosis(Collections.emptyList());
+		evolutionBo.setImmunizations(Collections.emptyList());
+		evolutionBo.setAllergies(Collections.emptyList());
 		evolutionBo.setWasMadeByProfessionalNursing(false);
 		return evolutionBo;
 	}

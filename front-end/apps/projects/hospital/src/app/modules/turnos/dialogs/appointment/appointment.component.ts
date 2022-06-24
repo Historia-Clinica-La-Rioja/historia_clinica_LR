@@ -54,7 +54,7 @@ export class AppointmentComponent implements OnInit {
 
 	personPhoto: PersonPhotoDto;
 	decodedPhoto$: Observable<string>;
-	
+
 	appointment: AppointmentDto;
 	estadoSelected: APPOINTMENT_STATES_ID;
 	formMotivo: FormGroup;
@@ -80,7 +80,7 @@ export class AppointmentComponent implements OnInit {
 	isCheckedDownloadFormulario = false;
 	downloadReportIsEnabled: boolean;
 	isMqttCallEnabled: boolean = false;
-	
+
 	hideObservationForm: boolean = true;
 	hideObservationTitle: boolean = true;
 	observation: string;
@@ -171,14 +171,14 @@ export class AppointmentComponent implements OnInit {
 			});
 
 		this.patientService.getPatientPhoto(this.params.appointmentData.patient.id)
-			.subscribe((personPhotoDto: PersonPhotoDto) => { 
-				this.personPhoto = personPhotoDto; 
+			.subscribe((personPhotoDto: PersonPhotoDto) => {
+				this.personPhoto = personPhotoDto;
 				if (personPhotoDto?.imageData) {
 					this.decodedPhoto$ = this.imageDecoderService.decode(personPhotoDto.imageData);
 				}
 			});
 	}
-	
+
 	formatPhonePrefixAndNumber(phonePrefix: string, phoneNumber: string): string {
 		return phoneNumber ? phonePrefix
 			? "(" + phonePrefix + ") " + phoneNumber
