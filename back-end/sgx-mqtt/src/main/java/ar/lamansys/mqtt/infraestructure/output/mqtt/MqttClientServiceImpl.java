@@ -19,7 +19,6 @@ import lombok.extern.slf4j.Slf4j;
 public class MqttClientServiceImpl implements MqttClientService {
     private final IMqttClient mqttClient;
 	private final SgxMqttCallback callback;
-
 	private List<String> topicRegistered;
 
     public MqttClientServiceImpl(String mqttServerAddress, String mqttPublisherId, String username, String password) {
@@ -35,7 +34,7 @@ public class MqttClientServiceImpl implements MqttClientService {
 			MqttMessage mqttMessage = new MqttMessage(mqttMetadataBo.getMessageBytes());
 			mqttMessage.setQos(mqttMetadataBo.getQos());
 			mqttMessage.setRetained(mqttMetadataBo.isRetained());
-			mqttClient.publish(mqttMetadataBo.getTopic(), mqttMessage);
+			mqttClient.publish(mqttMetadataBo.getTopic().toUpperCase(), mqttMessage);
 		} catch (MqttException exc) {
 			return false;
 		}

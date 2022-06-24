@@ -1,11 +1,11 @@
 package ar.lamansys.odontology.infrastructure.publisher;
 
+import org.springframework.stereotype.Service;
+
 import ar.lamansys.odontology.domain.EOdontologyTopicDto;
 import ar.lamansys.odontology.domain.Publisher;
 import ar.lamansys.sgh.shared.infrastructure.input.service.events.PublisherFactory;
 import ar.lamansys.sgh.shared.infrastructure.input.service.events.SimplePublishService;
-
-import org.springframework.stereotype.Service;
 
 @Service
 public class OdontologySimplePublisherImpl implements Publisher {
@@ -13,7 +13,7 @@ public class OdontologySimplePublisherImpl implements Publisher {
 	private SimplePublishService simplePublishService;
 
 	public OdontologySimplePublisherImpl(PublisherFactory publisherFactory) {
-		simplePublishService = publisherFactory.getPublisher("odontology");
+		simplePublishService = publisherFactory.getPublisher("ODONTOLOGY");
 	}
 
 	@Override

@@ -12,7 +12,7 @@ public class HospitalApiPublisher {
 	private final SimplePublishService simplePublishService;
 
 	public HospitalApiPublisher(PublisherFactory publisherFactory) {
-		simplePublishService = publisherFactory.getPublisher("hospitalApi");
+		simplePublishService = publisherFactory.getPublisher("HOSPITAL_API");
 	}
 
 	public void publish(Integer patientId, EHospitalApiTopicDto eHospitalApiTopicDto) {
