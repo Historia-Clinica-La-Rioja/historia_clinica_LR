@@ -21,18 +21,18 @@ public class SimplePublishService {
 		mqttCallExternalService.publish(mqttMetadataDto);
 	}
 
-	public void llamadorPublish(String topic, NotifyPatientBo notifyPatientBo) {
-		String fullTopic = "HSI/" + namePrefix + "/" + topic + "/" +notifyPatientBo.getTopic();
-		notifyPatientBo.setTopic(fullTopic);
-		mqttCallExternalService.publish(mapTo(notifyPatientBo));
+	public void appointmentCallerPublish(String topic, NotifyPatientDto notifyPatientDto) {
+		String fullTopic = "HSI/" + namePrefix + "/" + topic + "/" + notifyPatientDto.getTopic();
+		notifyPatientDto.setTopic(fullTopic);
+		mqttCallExternalService.publish(mapTo(notifyPatientDto));
 	}
 
-	private MqttMetadataDto mapTo(NotifyPatientBo notifyPatientBo) {
-		return new MqttMetadataDto(notifyPatientBo.getTopic(), getMessage(notifyPatientBo), false, 2, "add");
+	private MqttMetadataDto mapTo(NotifyPatientDto notifyPatientDto) {
+		return new MqttMetadataDto(notifyPatientDto.getTopic(), getMessage(notifyPatientDto), false, 2, "add");
 	}
 
-	protected String getMessage(NotifyPatientBo notifyPatientBo) {
-		return String.format("\"data\":{\"appointmentId\":%s,\"patient\":\"%s\",\"sector\":%s,\"doctor\":\"%s\",\"doctorsOffice\":\"%s\"}", notifyPatientBo.getAppointmentId(), notifyPatientBo.getPatientName(), notifyPatientBo.getSectorId(), notifyPatientBo.getDoctorName(), notifyPatientBo.getDoctorsOfficeName());
+	protected String getMessage(NotifyPatientDto notifyPatientDto) {
+		return String.format("\"data\":{\"appointmentId\":%s,\"patient\":\"%s\",\"sector\":%s,\"doctor\":\"%s\",\"doctorsOffice\":\"%s\"}", notifyPatientDto.getAppointmentId(), notifyPatientDto.getPatientName(), notifyPatientDto.getSectorId(), notifyPatientDto.getDoctorName(), notifyPatientDto.getDoctorsOfficeName());
 	}
 
 

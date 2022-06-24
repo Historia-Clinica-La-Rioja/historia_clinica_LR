@@ -20,4 +20,8 @@ public class NotifyPatientBo {
         this.topic = topic;
     }
 
+	public boolean hasTopic() {
+		return topic != null;
+	}
+
 }

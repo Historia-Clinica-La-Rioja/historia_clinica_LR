@@ -6,7 +6,7 @@ import lombok.Setter;
 @Getter
 @Setter
 
-public class NotifyPatientBo {
+public class NotifyPatientDto {
     private final Integer appointmentId;
     private final String patientName;
     private final Integer sectorId;
@@ -14,7 +14,7 @@ public class NotifyPatientBo {
     private final String doctorsOfficeName;
     private String topic;
 
-    public NotifyPatientBo(Integer appointmentId, String patientName, Integer sectorId, String doctorName, String doctorsOfficeName, String topic) {
+    public NotifyPatientDto(Integer appointmentId, String patientName, Integer sectorId, String doctorName, String doctorsOfficeName, String topic) {
         this.appointmentId = appointmentId;
         this.patientName = patientName;
         this.sectorId = sectorId;
