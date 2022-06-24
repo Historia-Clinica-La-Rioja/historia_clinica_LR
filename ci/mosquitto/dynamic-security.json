@@ -6,7 +6,7 @@
 		"unsubscribe":	true
 	},
 	"clients":	[{
-			"username":	"cedalo",
+			"username":	"CEDALO_BROKER_USER",
 			"textname":	"Admin user",
 			"roles":	[{
 					"rolename":	"dynsec-admin"
@@ -15,41 +15,22 @@
 				}, {
 					"rolename":	"topic-observe"
 				}],
-			"password":	"UlumsKJGGmZGYmM/7aGUubyS7SfkS87TXtPsdr6jeDlx15Pwmyt009f/M9dF6NX1E+WzKi0vG+ZDHtwrWIrTWQ==",
-			"salt":	"b0VSqBo0uiQnlS9Y",
+			"password":	"7aBnJFBqdGwZgKVUFcLSosN2XgZIpyiAPESYplz89D3nwyrXFhfEhLsUEXTxDKfsp0cE7DB5LDF7UR+dBEz7qQ==",
+			"salt":	"dHBvXoD+FZyCK/w7",
 			"iterations":	101
 		}, {
-			"username":	"hsi",
-			"textname":	"",
+			"username":	"HSI",
+			"textname":	"Usuario de hsi",
 			"textdescription":	"",
 			"roles":	[{
 					"rolename":	"PublicadorHSI"
 				}],
-			"password":	"07EPZtnUNSis8Allidg6bacUOeSFgpbhHpUy/2TqwhqiojLazCJJewLGyXoO6umu67/1aWEapK+jVS0Y6IOFng==",
-			"salt":	"sXtwby6m3YhQDBWM",
+			"password":	"ZO/H6Gn9dqC0u12CryvlWHBEnsvwOd1jjU1QaKoQF0C+OEQeXKvRxbImzvhdJC93MgTU/Tsxo6L2+A5h3zbJZg==",
+			"salt":	"YHWSHcOnlNh4UHbz",
 			"iterations":	101
 		}, {
-			"username":	"llamador",
-			"textname":	"",
-			"textdescription":	"",
-			"roles":	[{
-					"rolename":	"R_LlamadoTurno"
-				}],
-			"password":	"ZfWM16TP+nD7sdPfjkSv3Ew5XiB56fTof3A/+9YakPV1tWw5JDaFaMWTtjWfN+zD0i9rB/C5bzwWU86RLQqu/w==",
-			"salt":	"BKW8PdirYUq2puGA",
-			"iterations":	101
-		}, {
-			"username":	"streamsheets",
-			"textname":	"Streamsheets User",
-			"roles":	[{
-					"rolename":	"client"
-				}],
-			"password":	"JYNxiUk080yOJRY1ouK/8KXX8z4Su7Izp4LIfIHBXSFuVbkiAEsiQixJWaH2/FyCJyMW9rgWX3nl1zQk1Irnzg==",
-			"salt":	"2usWJu+zfRRk67ev",
-			"iterations":	101
-		}, {
-			"username":	"tareas",
-			"textname":	"",
+			"username":	"HSI_ADDONS",
+			"textname":	"Usuario de hsi addons",
 			"textdescription":	"",
 			"roles":	[{
 					"rolename":	"R_AltaMedicaInternacion"
@@ -58,8 +39,18 @@
 				}, {
 					"rolename":	"R_SolicitudEstudio"
 				}],
-			"password":	"wLG5+jSubntJHSD8a7gTFv7H0ah/Ovdidm3bJw9mJQOpIKGkNV4KhnLMUl8G52U9AWJsGZf+ntwkh58S/JDM5A==",
-			"salt":	"k3Z/QT1YYRb6ADGz",
+			"password":	"vSF1LCDn76H5bJC2px6KQZE5Sc/JVRCRa6jkQviHYWjVtojk1kEDZZrRs+AgJBDxiWOQU6bYQna5FNvp/soPVA==",
+			"salt":	"3rOyaOx3lfbNMZ53",
+			"iterations":	101
+		}, {
+			"username":	"LLAMADOR_TURNOS",
+			"textname":	"Usuario llamador de turnos",
+			"textdescription":	"",
+			"roles":	[{
+					"rolename":	"R_LlamadoTurno"
+				}],
+			"password":	"5m1+EQRGbBLNCoNCTHVUDwYVSIEHroxvUpZhBDFAfqpItvF42LWkttOPI7dtaMCzKx9rrEDnPdxayZ2TkvkXdA==",
+			"salt":	"gIF5/gPo5POdUYyC",
 			"iterations":	101
 		}],
 	"groups":	[],
@@ -79,7 +70,7 @@
 			"textdescription":	"",
 			"acls":	[{
 					"acltype":	"publishClientReceive",
-					"topic":	"HSI/hospitalApi/ALTA_MEDICA",
+					"topic":	"HSI/HOSPITAL_API/ALTA_MEDICA",
 					"priority":	0,
 					"allow":	true
 				}]
@@ -89,7 +80,7 @@
 			"textdescription":	"",
 			"acls":	[{
 					"acltype":	"publishClientReceive",
-					"topic":	"HSI/hospitalApi/PACIENTE_LLAMADO/#",
+					"topic":	"HSI/HOSPITAL_API/PACIENTE_LLAMADO/#",
 					"priority":	0,
 					"allow":	true
 				}]
@@ -99,7 +90,7 @@
 			"textdescription":	"",
 			"acls":	[{
 					"acltype":	"publishClientReceive",
-					"topic":	"HSI/odontology/NUEVA_CONSULTA",
+					"topic":	"HSI/ODONTOLOGY/NUEVA_CONSULTA",
 					"priority":	0,
 					"allow":	true
 				}]
@@ -109,7 +100,7 @@
 			"textdescription":	"",
 			"acls":	[{
 					"acltype":	"publishClientReceive",
-					"topic":	"HSI/hospitalApi/SOLICITUD_ESTUDIO",
+					"topic":	"HSI/HOSPITAL_API/SOLICITUD_ESTUDIO",
 					"priority":	0,
 					"allow":	true
 				}]

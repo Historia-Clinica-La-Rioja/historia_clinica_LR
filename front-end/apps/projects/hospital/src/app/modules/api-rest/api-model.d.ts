@@ -1735,6 +1735,15 @@ export interface NewServiceRequestListDto extends Serializable {
     studiesDto: StudyDto[];
 }
 
+export interface NotifyPatientDto {
+    appointmentId: number;
+    doctorName: string;
+    doctorsOfficeName: string;
+    patientName: string;
+    sectorId: number;
+    topic: string;
+}
+
 export interface NursingAnthropometricDataDto extends Serializable {
     bloodType?: ClinicalObservationDto;
     bmi?: ClinicalObservationDto;

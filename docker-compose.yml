@@ -1,4 +1,4 @@
-version: '3'
+version: '3.6'
 services:
   hsi-db:
     image: postgres:11
@@ -49,3 +49,40 @@ services:
     ports:
       - "1025:1025"
       - "8025:8025"
+
+  hsi-mosquitto:
+    image: eclipse-mosquitto:2-openssl
+    container_name: hsi-mosquitto
+    ports:
+      - 1883:1883 #over tcp
+      - 9001:9001 #over websocket
+    networks:
+      - cedalo-platform
+    volumes:
+      - ./ci/mosquitto:/mosquitto/config
+      - ./.docker-data/mosquitto:/mosquitto/data
+
+  hsi-mosquitto-management-center:
+    image: cedalo/management-center:2
+    container_name: hsi-mosquitto-management-center
+    ports:
+      - 8088:8088
+    depends_on:
+      - hsi-mosquitto
+    networks:
+      - cedalo-platform
+    environment:
+      CEDALO_MC_BROKER_ID: mosquitto-2.0
+      CEDALO_MC_BROKER_NAME: Mosquitto 2.0
+      CEDALO_MC_BROKER_URL: mqtt://hsi-mosquitto:1883
+      CEDALO_MC_BROKER_USERNAME: CEDALO_BROKER_USER
+      CEDALO_MC_BROKER_PASSWORD: cedaloBrokerPassword
+      CEDALO_MC_USERNAME: cedaloadmin
+      CEDALO_MC_PASSWORD: cedaloadminPassword
+
+networks:
+  cedalo-platform:
+    name: cedalo-platform
+    driver: bridge
+
+
