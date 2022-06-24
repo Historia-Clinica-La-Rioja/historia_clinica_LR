@@ -33,7 +33,7 @@ public interface UserRepository extends JpaRepository<User, Integer> {
 
 	@Transactional
 	@Modifying
-	@Query("UPDATE User AS u SET u.twoFactorAuthenticationSecret = NULL WHERE u.id = :id")
+	@Query("UPDATE User AS u SET u.twoFactorAuthenticationSecret = NULL, u.twoFactorAuthenticationEnabled = false WHERE u.id = :id")
 	void resetTwoFactorAuthentication(@Param("id") Integer id);
 	
 }

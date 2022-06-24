@@ -73,3 +73,39 @@ databaseChangeLog:
                   CASE WHEN u.two_factor_authentication_secret IS NOT NULL THEN true ELSE false END as two_factor_authentication_enabled
                 FROM users u
                 WHERE u.id NOT IN (SELECT up.user_id FROM user_person as up)
+
+    - changeSet:
+        id: add-column-two_factor_authentication_enabled-users
+        comment: Add two_factor_authentication_enabled column in users table
+        author: tmedina
+        changes:
+          - addColumn:
+              columns:
+                constraints:
+                  nullable: false
+                name: two_factor_authentication_enabled
+                type: boolean
+                defaultValue: ${boolean.false}
+              tableName: users
+
+    - changeSet:
+        id: new-update-v_hospital_users-add-two_factor_authentication_enabled-column
+        author: tmedina
+        dbms: postgresql
+        changes:
+          - createView:
+              viewName: v_hospital_users
+              fullDefinition: false
+              replaceIfExists: true
+              schemaName: public
+              selectQuery: |-
+                SELECT u.id as user_id, u.username, u.enable, u.last_login, up.person_id,
+                  CASE WHEN (u.two_factor_authentication_secret IS NOT NULL AND u.two_factor_authentication_enabled = true) THEN true
+                    ELSE false END as two_factor_authentication_enabled
+                FROM users u
+                INNER JOIN user_person as up ON (u.id = up.user_id)
+                UNION
+                SELECT u.id as user_id, u.username, u.enable, u.last_login, -1,
+                  CASE WHEN u.two_factor_authentication_secret IS NOT NULL THEN true ELSE false END as two_factor_authentication_enabled
+                FROM users u
+                WHERE u.id NOT IN (SELECT up.user_id FROM user_person as up)
