@@ -1,9 +1,7 @@
 package ar.lamansys.mqtt;
 
-import org.eclipse.paho.client.mqttv3.IMqttClient;
-import org.eclipse.paho.client.mqttv3.MqttClient;
-import org.eclipse.paho.client.mqttv3.MqttConnectOptions;
-import org.eclipse.paho.client.mqttv3.MqttException;
+import java.util.UUID;
+
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.domain.EntityScan;
 import org.springframework.context.annotation.Bean;
@@ -12,7 +10,9 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 
-import java.util.UUID;
+import ar.lamansys.mqtt.application.ports.MqttClientService;
+import ar.lamansys.mqtt.infraestructure.output.mqtt.MqttClientServiceImpl;
+import ar.lamansys.mqtt.infraestructure.output.mqtt.MqttClientServiceVoid;
 
 @Configuration
 @ComponentScan(basePackages = "ar.lamansys.mqtt")
@@ -21,38 +21,15 @@ import java.util.UUID;
 @PropertySource(value = "classpath:sgx-mqtt.properties", ignoreResourceNotFound = true)
 public class MqttCallAutoConfiguration {
 
-    private String mqttPublisherId = UUID.randomUUID().toString();
-
-    @Value("${mqtt.server_address}")
-    private String mqttServerAddress;
-
-    @Value("${mqtt.client_connection}")
-    private boolean mqttClientConnection;
-
-	@Value("${mqtt.client_username}")
-	private String mqttClientUsername;
-
-	@Value("${mqtt.client_password}")
-	private String mqttClientPassword;
-
-    @Bean
-    public IMqttClient connect() {
-        MqttClient client = null;
-        try {
-            client = new MqttClient(mqttServerAddress, mqttPublisherId);
-            MqttConnectOptions options = new MqttConnectOptions();
-            options.setAutomaticReconnect(true);
-            options.setCleanSession(true);
-            options.setConnectionTimeout(1000);
-            options.setAutomaticReconnect(true);
-            options.setUserName(mqttClientUsername);
-            options.setPassword(mqttClientPassword.toCharArray());
-            if(mqttClientConnection) {
-                client.connect(options);
-            }
-        } catch (MqttException e) {
-            e.printStackTrace();
-        }
-        return client;
-    }
+	@Bean
+	public MqttClientService connect(
+			@Value("${mqtt.server_address}") String mqttServerAddress,
+			@Value("${mqtt.client_connection}") boolean mqttClientConnection,
+			@Value("${mqtt.client_username}") String mqttClientUsername,
+			@Value("${mqtt.client_password}") String mqttClientPassword
+	) {
+		String mqttPublisherId = "HSI-"+UUID.randomUUID();
+		return mqttClientConnection ? new MqttClientServiceImpl(mqttServerAddress, mqttPublisherId, mqttClientUsername, mqttClientPassword)
+				: new MqttClientServiceVoid();
+	}
 }
