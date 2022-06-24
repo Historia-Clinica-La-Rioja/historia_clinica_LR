@@ -11,7 +11,7 @@ import {
   HttpError,
 } from "react-admin";
 
-import apiRest from '../../../providers/utils/sgxApiRest';
+import { sgxFetchApiWithToken } from './fetch';
 
 /**
  * Maps react-admin queries to a REST API implemented using Java Spring Boot and Swagger
@@ -136,7 +136,7 @@ const sgxDataProvider = (apiUrl, mappers) => {
      */
   return (type, resource, params) => {
     const { url, options } = convertDataRequestToHTTP(type, resource, params);
-    return apiRest.fetch(url, options)
+    return sgxFetchApiWithToken(url, options)
       .then(
         jsonResponse => convertHTTPResponse(jsonResponse, type, resource, params),
         ({ status, statusText, body }) => {

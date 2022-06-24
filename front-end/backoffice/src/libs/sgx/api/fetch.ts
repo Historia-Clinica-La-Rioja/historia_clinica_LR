@@ -6,7 +6,7 @@
 import { configureRefreshFetch } from 'refresh-fetch';
 import { retrieveToken, retrieveRefreshToken, saveTokens, clearTokens } from './tokenStorage';
 import { safeParseJson, safeStringifyJson } from '../shared/json';
-import { JWTokenDto } from './model';
+import { JWTokenDto, FileInputData } from './model';
 import { saveAs } from 'file-saver';
 
 import { HttpError } from 'react-admin';
@@ -110,12 +110,21 @@ const addAuth = (options: any = {}) => {
 
 const jsonPayload = (method: string, body: any) => ({ method, body: safeStringifyJson(body) });
 
+const formDataPayload = (method: string, body: any) => ({ method, body: formData(body) });
+
+const formData = ({file, ...data}: FileInputData) => {
+    let formData = new FormData();
+    formData.append("data", new Blob([JSON.stringify(data)], {type: "application/json"}));
+    formData.append("file", file.rawFile, file.title);
+    return formData;
+};
+
 export { 
-    sgxFetch, 
-    sgxFetchApi, 
-    jsonPayload, 
-    withHeader, 
-    sgxFetchApiWithToken, 
-    sgxDownload, 
-    safeParseJson,
+    formDataPayload,
+    jsonPayload,
+    sgxDownload,
+    sgxFetch,
+    sgxFetchApi,
+    sgxFetchApiWithToken,
+    withHeader,
 };

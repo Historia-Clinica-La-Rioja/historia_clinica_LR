@@ -5,14 +5,14 @@ import {
     SelectInput
  } from 'react-admin';
 
-import apiRest from '../providers/utils/sgxApiRest';
+ import { sgxFetchApiWithToken } from '../libs/sgx/api/fetch';
 
 const backofficeUrl = '/backoffice';
 const SgxSelectInput = ({ element, ...props})  =>{   
     const [elements, setElements] = useState([]);
     useEffect(() => {
         const url = `${backofficeUrl}/${element}/elements`;
-        apiRest.fetch(url)
+        sgxFetchApiWithToken(url)
             .then(json => {
                 setElements(json);
             }, ({ status }) => {

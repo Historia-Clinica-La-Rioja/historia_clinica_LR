@@ -26,3 +26,7 @@ export interface OauthConfigDto {
     issuerUrl: string;
     logoutUrl: string;
 }
+
+export interface FileInputData {
+    file: {rawFile: File, title: string},
+}
