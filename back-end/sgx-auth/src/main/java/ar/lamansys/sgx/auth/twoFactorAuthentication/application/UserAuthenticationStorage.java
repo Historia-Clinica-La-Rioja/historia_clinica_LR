@@ -10,4 +10,6 @@ public interface UserAuthenticationStorage {
 
 	Optional<String> getTwoFactorAuthenticationSecret(Integer userId);
 
+	void enableTwoFactorAuthentication(Integer userId);
+
 }
