@@ -1,14 +1,12 @@
-<section id="select-agenda"
-         *ngIf="agendas?.length"
-         fxLayout="row" fxLayoutAlign="space-between center"
-         fxLayout.xs="column" fxLayoutAlign.xs="space-between center">
+<section id="select-agenda" *ngIf="agendas?.length" fxLayout="row" fxLayoutAlign="space-between center"
+	fxLayout.xs="column" fxLayoutAlign.xs="space-between center">
 	<mat-form-field fxFlex.gt-xs="30%" appearance="outline">
 		<mat-label [translate]="'turnos.home.SELECT_AGENDA'"></mat-label>
 		<mat-select [(value)]="agendaSelected">
 			<mat-optgroup *ngIf="activeAgendas?.length">
 				<mat-label><strong>{{ 'turnos.home.ACTIVES_AGENDAS_LABEL' | translate }}</strong></mat-label>
 				<mat-option *ngFor="let agenda of activeAgendas" [value]="agenda"
-							(onSelectionChange)="changeAgendaSelected($event, agenda)">
+					(onSelectionChange)="changeAgendaSelected($event, agenda)">
 					<span class="mat-body-strong">
 						{{agenda.doctorsOfficeDescription}}
 					</span>
@@ -20,7 +18,7 @@
 			<mat-optgroup id="expired-agendas" *ngIf="expiredAgendas?.length">
 				<mat-label><strong>{{ 'turnos.home.EXPIRED_AGENDAS_LABEL' | translate }}</strong></mat-label>
 				<mat-option *ngFor="let agenda of expiredAgendas" [value]="agenda"
-							(onSelectionChange)="changeAgendaSelected($event, agenda)">
+					(onSelectionChange)="changeAgendaSelected($event, agenda)">
 					<span class="mat-body-strong">
 						{{agenda.doctorsOfficeDescription}}
 					</span>
@@ -30,23 +28,22 @@
 				</mat-option>
 			</mat-optgroup>
 		</mat-select>
-		<button id="clear_agenda_selected" type="button" mat-button *ngIf="agendaSelected" matSuffix
-			color="warn" mat-icon-button (click)="clear(agendaSelected); $event.stopPropagation()">
+		<button id="clear_agenda_selected" type="button" mat-button *ngIf="agendaSelected" matSuffix color="warn"
+			mat-icon-button (click)="clear(agendaSelected); $event.stopPropagation()">
 			<mat-icon>close</mat-icon>
 		</button>
 	</mat-form-field>
 
 	<div class="actions" *ngIf="agendaSelected" fxLayout="row" fxLayoutGap="3px">
-		<button mat-flat-button color="primary" id="print_agenda" name="print_agenda"
-		        (click)="printAgenda()">
+		<button mat-flat-button color="primary" id="print_agenda" name="print_agenda" (click)="printAgenda()">
 			<mat-icon>print</mat-icon>
 		</button>
-		<button mat-flat-button color="primary" *appHasRole="['ADMINISTRADOR_AGENDA']" id="edit_agenda" name="edit_agenda"
-		        (click)="goToEditAgenda()">
+		<button mat-flat-button color="primary" *appHasRole="['ADMINISTRADOR_AGENDA']" id="edit_agenda"
+			name="edit_agenda" (click)="goToEditAgenda()">
 			<mat-icon>edit</mat-icon>
 		</button>
-		<button mat-flat-button color="warn" *appHasRole="['ADMINISTRADOR_AGENDA']" id="delete_agenda" name="delete_agenda"
-		        (click)="deleteAgenda()">
+		<button mat-flat-button color="warn" *appHasRole="['ADMINISTRADOR_AGENDA']" id="delete_agenda"
+			name="delete_agenda" (click)="deleteAgenda()">
 			<mat-icon>delete</mat-icon>
 		</button>
 	</div>
@@ -62,7 +59,7 @@
 			</mat-card-header>
 			<mat-card-content>
 				<button mat-flat-button color="primary" id="goToNewAgendaButton" *appHasRole="['ADMINISTRADOR_AGENDA']"
-				        (click)="goToNewAgenda()" fxFlexFill.xs>
+					(click)="goToNewAgenda()" fxFlexFill.xs>
 					<span class="uppercase" [translate]="'turnos.home.actions.CREATE_AGENDA'"></span>
 				</button>
 			</mat-card-content>

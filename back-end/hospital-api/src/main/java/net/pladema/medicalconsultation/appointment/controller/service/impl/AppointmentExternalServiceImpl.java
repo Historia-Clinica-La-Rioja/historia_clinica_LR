@@ -21,6 +21,7 @@ import ar.lamansys.sgh.shared.infrastructure.input.service.appointment.dto.Publi
 import ar.lamansys.sgh.shared.infrastructure.input.service.appointment.dto.PublicAppointmentListDto;
 import ar.lamansys.sgh.shared.infrastructure.input.service.appointment.dto.PublicAppointmentMedicalCoverage;
 import ar.lamansys.sgh.shared.infrastructure.input.service.appointment.dto.PublicAppointmentPatientDto;
+import ar.lamansys.sgh.shared.infrastructure.input.service.appointment.dto.PublicAppointmentPersonDto;
 import ar.lamansys.sgh.shared.infrastructure.input.service.appointment.dto.PublicAppointmentStatus;
 import ar.lamansys.sgh.shared.infrastructure.input.service.booking.BookingAppointmentDto;
 import ar.lamansys.sgh.shared.infrastructure.input.service.booking.BookingPersonDto;
@@ -194,14 +195,26 @@ public class AppointmentExternalServiceImpl implements AppointmentExternalServic
 	}
 
 	private PublicAppointmentDoctorDto buildDoctorDto(DoctorBo doctor) {
-		return new PublicAppointmentDoctorDto(doctor.getLicenseNumber(),
-				doctor.getFirstName(), doctor.getLastName(),
-				doctor.getIdentificationNumber());
+		return new PublicAppointmentDoctorDto(
+				doctor.getLicenseNumber(),
+				PublicAppointmentPersonDto.builder()
+						.firstName(doctor.getFirstName())
+						.lastName(doctor.getLastName())
+						.identificationNumber(doctor.getIdentificationNumber())
+						.build()
+		);
 	}
 
 	private PublicAppointmentPatientDto buildPatientDto(PatientBo patient) {
-		return new PublicAppointmentPatientDto(patient.getId(), patient.getFirstName(), patient.getLastName(),
-				patient.getIdentificationNumber(), patient.getGenderId());
+		return new PublicAppointmentPatientDto(
+				patient.getId(),
+				PublicAppointmentPersonDto.builder()
+						.firstName(patient.getFirstName())
+						.lastName(patient.getLastName())
+						.identificationNumber(patient.getIdentificationNumber())
+						.genderId(patient.getGenderId())
+					.build()
+		);
 	}
 	private PublicAppointmentClinicalSpecialty buildClinicalSpecialty(ClinicalSpecialtyBo clinicalSpecialty) {
 		return new PublicAppointmentClinicalSpecialty(clinicalSpecialty.getSctid(), clinicalSpecialty.getName());
@@ -228,14 +241,14 @@ public class AppointmentExternalServiceImpl implements AppointmentExternalServic
 	}
 
 	private BookingPersonBo mapToBookingPerson(BookingPersonDto bookingPersonDto) {
-		return new BookingPersonBo(
-				localDateMapper.fromStringToLocalDate(bookingPersonDto.getBirthDate()),
-				bookingPersonDto.getEmail(),
-				bookingPersonDto.getFirstName(),
-				bookingPersonDto.getGenderId(),
-				bookingPersonDto.getIdNumber(),
-				bookingPersonDto.getLastName()
-		);
+		return BookingPersonBo.builder()
+				.birthDate(localDateMapper.fromStringToLocalDate(bookingPersonDto.getBirthDate()))
+				.email(bookingPersonDto.getEmail())
+				.firstName(bookingPersonDto.getFirstName())
+				.genderId(bookingPersonDto.getGenderId())
+				.idNumber(bookingPersonDto.getIdNumber())
+				.lastName(bookingPersonDto.getLastName())
+				.build();
 	}
 
 	private AppointmentBo mapTo(BookingAppointmentDto bookingAppointmentDto) {

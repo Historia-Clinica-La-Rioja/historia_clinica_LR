@@ -4,6 +4,7 @@ package ar.lamansys.sgh.publicapi.infrastructure.input.rest.appointment;
 import java.time.LocalDate;
 import java.util.Collection;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -45,8 +46,8 @@ public class BookingByInstitutionPublicController {
 
 	@PostMapping
 	@ResponseStatus(HttpStatus.CREATED)
-	public String bookPreappointment(@RequestBody BookingDto bookingDto) {
-		return bookAppointmentPort.makeBooking(bookingDto);
+	public Map<String,String> bookPreappointment(@RequestBody BookingDto bookingDto) {
+		return Map.of("uuid", bookAppointmentPort.makeBooking(bookingDto));
 	}
 
 

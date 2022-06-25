@@ -2,7 +2,7 @@ import React from 'react';
 import {useState, useEffect} from 'react';
 
 import {
-    SelectInput
+    SelectInput,
  } from 'react-admin';
 
  import { sgxFetchApiWithToken } from '../libs/sgx/api/fetch';

@@ -97,13 +97,14 @@ public class BookingPersonServiceImpl implements BookingPersonService {
     }
 
     private BookingPersonBo mapToBookingPersonBo(BookingPerson bookingPerson) {
-        return new BookingPersonBo(
-                bookingPerson.getBirthDate(),
-                bookingPerson.getEmail(),
-                bookingPerson.getFirstName(),
-                bookingPerson.getGenderId(),
-                bookingPerson.getIdentificationNumber(),
-                bookingPerson.getLastName()
-        );
+        return BookingPersonBo.builder()
+				.birthDate(bookingPerson.getBirthDate())
+				.email(bookingPerson.getEmail())
+				.firstName(bookingPerson.getFirstName())
+				.genderId(bookingPerson.getGenderId())
+				.idNumber(bookingPerson.getIdentificationNumber())
+				.lastName(bookingPerson.getLastName())
+				.build();
+
     }
 }

@@ -14,6 +14,16 @@
 	width: 50%;
 }
 
+@mixin space-between {
+    display: flex;
+    justify-content: space-between;
+}
+
+@mixin align-center {
+    display: flex;
+    align-items: center;
+}
+
 @mixin card-centered {
 	max-width: 400px;
 	margin: 15vh auto;

@@ -40,7 +40,7 @@ const ROLES_TO_CREATE: ERole[] = [ERole.ADMINISTRATIVO, ERole.ESPECIALISTA_MEDIC
 @Component({
 	selector: 'app-agenda',
 	templateUrl: './agenda.component.html',
-	styleUrls: ['./agenda.component.scss'] 
+	styleUrls: ['./agenda.component.scss'],
 })
 export class AgendaComponent implements OnInit, OnDestroy {
 

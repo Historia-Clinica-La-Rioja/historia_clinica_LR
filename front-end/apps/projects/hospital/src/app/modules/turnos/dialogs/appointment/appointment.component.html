@@ -9,7 +9,7 @@
 			<div class="header-content" fxLayout="row" fxLayoutAlign="start" fxLayoutGap="20px">
 				<img mat-card-md-image mat-card-avatar class="mat-card-patient-image" [src]="decodedPhoto$ | async"
 					onerror="this.src='../../../../../assets/images/empty-profile.png'">
-				<div fxLayout="column" fxLayoutAlign="center start">	
+				<div fxLayout="column" fxLayoutAlign="center start">
 					<span class="mat-body-strong capitalize title-size"
 						*ngIf="params.appointmentData.patient.fullName">
 						{{ viewPatientName(params.appointmentData) | uppercase }}
@@ -17,7 +17,7 @@
 					<div>
 						<span id="patient_id" class="mat-body-strong subtitle-size">ID
 							{{params.appointmentData.patient.id}}
-						</span>• 
+						</span>•
 						<span class="mat-body-strong subtitle-size"
 							*ngIf="params.appointmentData.patient.identificationNumber">
 							{{identificationType?.description}}
@@ -136,7 +136,7 @@
 						id="full-date" class="icon-grey">
 						calendar_today
 					</mat-icon>
-					<div >		
+					<div >
 						<span class="mat-body subtitle-size"> {{params.appointmentData.date | date:"EEEE, d " | titlecase }} de</span>
 						<span class="mat-body subtitle-size"> {{params.appointmentData.date | date:"MMMM " | titlecase}} de</span>
 						<span class="mat-body subtitle-size"> {{params.appointmentData.date | date:"y " | titlecase}}</span>
@@ -146,7 +146,7 @@
 					<mat-icon fontSet="material-icons-outlined" mat-list-icon [inline]="true" id="hour" class="icon-grey">
 						access_time
 					</mat-icon>
-					 <span class="mat-body subtitle-size"> {{params.appointmentData.date | date:"H:mm"}} hs</span> 
+					 <span class="mat-body subtitle-size"> {{params.appointmentData.date | date:"H:mm"}} hs</span>
 				</div>
 			</div>
 		</section>
@@ -210,20 +210,20 @@
 
 		<section id="observation-section" class="observation-section">
 			<div *ngIf="!observation && hideObservationForm && hideObservationTitle">
-				<a class="mat-body"	(click)="setHideObservationForm(false); setHideObservationTitle(false)" 
+				<a class="mat-body"	(click)="setHideObservationForm(false); setHideObservationTitle(false)"
 					[translate]="'turnos.appointment.observations.ADD_OBSERVATION'">
 				</a>
 			</div>
-			
+
 			<div class="observation-details">
-				<span class="mat-body-strong strong-size" *ngIf="!hideObservationTitle" 
+				<span class="mat-body-strong strong-size" *ngIf="!hideObservationTitle"
 					[translate]="'turnos.appointment.observations.OBSERVATIONS'">
 				</span>
 				<div class="observation" *ngIf="observation && hideObservationForm" fxLayout="row" fxLayoutAlign="space-between" fxLayoutGap="20px">
-					<p  class="mat-body strong-size"> 
+					<p  class="mat-body strong-size">
 						{{observation}}
 					</p>
-					<button type="button" mat-icon-button color="primary" 
+					<button type="button" mat-icon-button color="primary"
 						(click)="setHideObservationForm(false)">
 						<mat-icon class="material-icons-outlined">edit</mat-icon>
 					</button>
@@ -234,7 +234,7 @@
 					</mat-form-field>
 
 					<div class="observation-buttons" fxLayout="row" fxLayoutAlign="end" fxLayoutGap="15px">
-						<button mat-stroked-button color="primary" btn-block type="button" 
+						<button mat-stroked-button color="primary" btn-block type="button"
 							(click)="cancelObservation()">
 							<span [translate]="'turnos.appointment.CANCEL'"></span>
 						</button>
@@ -243,9 +243,9 @@
 						</button>
 					</div>
 				</form>
-			</div>	
+			</div>
 		</section>
-				
+
 		<ng-container
 			*appHasRole="['ADMINISTRATIVO', 'ENFERMERO', 'ESPECIALISTA_MEDICO', 'PROFESIONAL_DE_SALUD', 'ESPECIALISTA_EN_ODONTOLOGIA']">
 			<ng-container
@@ -266,14 +266,14 @@
 				</section>
 			</ng-container>
 		</ng-container>
-	</div> 
+	</div>
 
 	<mat-dialog-actions
 		*appHasRole="['ADMINISTRATIVO', 'ENFERMERO', 'ESPECIALISTA_MEDICO', 'PROFESIONAL_DE_SALUD', 'ESPECIALISTA_EN_ODONTOLOGIA']"
 		align="end">
 		<ng-container
 			*ngIf="downloadReportIsEnabled && !isAbsent() && ((hasRoleToDownloadReports$ | async) === true || params.hasPermissionToAssignShift)">
-			<button id="report-appointment" name="report-appointment" mat-stroked-button color="primary" btn-block type="button" 
+			<button id="report-appointment" name="report-appointment" mat-stroked-button color="primary" btn-block type="button"
 				(click)="getReportAppointment()" [disabled]="!isCheckedDownloadAnexo && !isCheckedDownloadFormulario">
 				<mat-icon fontSet="material-icons-outlined" >download</mat-icon>
 				<span class="uppercase" [translate]="'turnos.report.TITLE'"></span>

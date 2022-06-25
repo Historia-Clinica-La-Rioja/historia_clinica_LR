@@ -3,7 +3,12 @@ import { CalendarEvent } from 'angular-calendar';
 import { ReplaySubject, Observable } from 'rxjs';
 import { AppointmentsService } from '@api-rest/services/appointments.service';
 import { AppointmentListDto, BasicPersonalDataDto, CreateAppointmentDto, UpdateAppointmentDto } from '@api-rest/api-model';
-import { momentParseTime, DateFormat, momentParseDate, buildFullDate } from '@core/utils/moment.utils';
+import {
+	momentParseTime,
+	DateFormat,
+	momentParseDate,
+	buildFullDate,
+} from '@core/utils/moment.utils';
 import { Moment } from 'moment';
 import { map, first } from 'rxjs/operators';
 import { CANCEL_STATE_ID, APPOINTMENT_STATES_ID } from '../constants/appointment';
@@ -22,6 +27,7 @@ const enum COLORES {
 	RESERVA_VALIDACION = '#EB5757',
 	FUERA_DE_AGENDA = '#FF0000'
 }
+
 const TEMPORARY_PATIENT = 3;
 const GREY_TEXT = 'calendar-event-grey-text';
 const WHITE_TEXT = 'calendar-event-white-text';
@@ -61,7 +67,6 @@ export class AppointmentsFacadeService {
 	constructor(
 		private readonly appointmentService: AppointmentsService,
 		private readonly patientNameService: PatientNameService,
-
 	) {
 		this.appointments$ = this.appointmenstEmitter.asObservable();
 	}
@@ -254,7 +259,7 @@ export function toCalendarEvent(from: string, to: string, date: Moment, appointm
 			return 'Horario bloqueado'
 		}
 		if (appointment.patient?.typeId === TEMPORARY_PATIENT) {
-			return `${momentParseTime(from).format(DateFormat.HOUR_MINUTE_12)} ${viewName} (Temporal)`;
+			return `${momentParseTime(from).format(DateFormat.HOUR_MINUTE_12)} ${viewName ? viewName : ''} (Temporal)`;
 		}
 		return `${momentParseTime(from).format(DateFormat.HOUR_MINUTE_12)}	 ${viewName}`;
 	}
