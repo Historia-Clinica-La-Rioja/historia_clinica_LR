@@ -126,21 +126,6 @@ databaseChangeLog:
                 UPDATE sector SET sector_id = NULL WHERE id = 604;
 
     - changeSet:
-        id: addForeignKeyConstraint-sector-sector-id
-        comment: Crea la clave extranjera que referencia el sector_id con el id del sector
-        author: mmalyvarni
-        changes:
-          - addForeignKeyConstraint:
-              baseColumnNames: sector_id
-              baseTableName: sector
-              constraintName: FK_sector_sector_id
-              onDelete: NO ACTION
-              onUpdate: NO ACTION
-              referencedColumnNames: id
-              referencedTableName: sector
-              validate: true
-
-    - changeSet:
         id: add_to_doctors_office_sector_id
         comment: Se agrega la columna sector_id al consultorio
         author: mmalyarni
