@@ -1,15 +1,12 @@
 package ar.lamansys.sgx.cubejs.application.charts;
 
-import java.nio.charset.StandardCharsets;
+import static ar.lamansys.sgx.shared.templating.SpringTemplateUtils.createJsonTemplateEngine;
+
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Service;
-import org.thymeleaf.extras.java8time.dialect.Java8TimeDialect;
-import org.thymeleaf.spring5.SpringTemplateEngine;
-import org.thymeleaf.spring5.templateresolver.SpringResourceTemplateResolver;
-import org.thymeleaf.templatemode.TemplateMode;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -32,11 +29,9 @@ public class FetchChartDefinitionServiceImpl implements FetchChartDefinitionServ
 	) {
 		this.chartDefinitionEngine = new JSONTemplateEngine<>(
 				chartNames,
-				springTemplateEngine(
-						jsonTemplateResolver(
-								templatePrefix,
-								applicationContext
-						)
+				createJsonTemplateEngine(
+					templatePrefix,
+					applicationContext
 				),
 				new ObjectMapper(),
 				new TypeReference<>() {}
@@ -53,29 +48,4 @@ public class FetchChartDefinitionServiceImpl implements FetchChartDefinitionServ
 		}
 	}
 
-	private static SpringTemplateEngine springTemplateEngine(
-			SpringResourceTemplateResolver chartsTemplateResolver
-	) {
-		SpringTemplateEngine templateEngine = new SpringTemplateEngine();
-		templateEngine.addTemplateResolver(chartsTemplateResolver);
-		templateEngine.addDialect(new Java8TimeDialect());
-		return templateEngine;
-	}
-
-	private static SpringResourceTemplateResolver jsonTemplateResolver(
-			String prefix,
-			ApplicationContext applicationContext
-	) {
-
-		SpringResourceTemplateResolver jsonTemplateResolver = new SpringResourceTemplateResolver();
-		jsonTemplateResolver.setPrefix(prefix);
-		jsonTemplateResolver.setSuffix(".json");
-		jsonTemplateResolver.setTemplateMode(TemplateMode.JAVASCRIPT);
-		jsonTemplateResolver.setCharacterEncoding(StandardCharsets.UTF_8.name());
-		jsonTemplateResolver.setCheckExistence(true);
-		jsonTemplateResolver.setCacheable(false);
-		jsonTemplateResolver.setApplicationContext(applicationContext);
-
-		return jsonTemplateResolver;
-	}
 }

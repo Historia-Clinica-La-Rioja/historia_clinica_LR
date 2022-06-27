@@ -12,6 +12,7 @@ import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Service;
 
 import ar.lamansys.sgx.shared.emails.configuration.EmailConfiguration;
+import ar.lamansys.sgx.shared.emails.domain.EmailMessageBo;
 import ar.lamansys.sgx.shared.emails.domain.MailMessageBo;
 import ar.lamansys.sgx.shared.notifications.application.NotificationChannel;
 import ar.lamansys.sgx.shared.notifications.domain.RecipientBo;
@@ -31,7 +32,7 @@ public class EmailNotificationChannel implements NotificationChannel<MailMessage
 		this.emailSender = mailSender;
 	}
 
-	private void sendImpl(String to, String toFullname, String subject, String html) throws MessagingException, UnsupportedEncodingException {
+	private void sendImpl(EmailMessageBo emailMessage) throws MessagingException, UnsupportedEncodingException {
 		MimeMessage message = emailSender.createMimeMessage();
 		MimeMessageHelper helper = new MimeMessageHelper(
 				message,
@@ -40,10 +41,10 @@ public class EmailNotificationChannel implements NotificationChannel<MailMessage
 		);
 
 		helper.setFrom(configuration.getFrom(), configuration.getFromFullname());
-		helper.setTo(new InternetAddress(to, toFullname));
+		helper.setTo(new InternetAddress(emailMessage.to, emailMessage.toFullname));
 
-		helper.setSubject(subject);
-		helper.setText(html, true);
+		helper.setSubject(emailMessage.subject);
+		helper.setText(emailMessage.html, true);
 
 		emailSender.send(message);
 	}
@@ -52,12 +53,12 @@ public class EmailNotificationChannel implements NotificationChannel<MailMessage
 	public void send(RecipientBo recipient, MailMessageBo message) {
 		log.debug("Sending email to <{}> '{}': {}", recipient.email, message.subject, message.body);
 		try {
-			sendImpl(
+			sendImpl(new EmailMessageBo(
 					recipient.email,
 					fullname(recipient),
 					message.subject,
 					message.body
-			);
+			));
 		} catch (MessagingException | UnsupportedEncodingException e) {
 			log.error("Sending email fail: {}", e.getMessage(), e);
 		}

@@ -39,7 +39,8 @@ public class AuthenticationController {
 	public JWTokenDto login(
 			@Valid @RequestBody LoginDto loginDto,
 			@RequestHeader("Origin") String frontUrl,
-			@RequestHeader(value = "recaptcha", required = false) String recaptcha) throws BadLoginException {
+			@RequestHeader(value = "recaptcha", required = false) String recaptcha
+	) throws BadLoginException {
 		if (captchaService.isRecaptchaEnable()) {
 			captchaService.validRecaptcha(frontUrl, recaptcha);
 		}
