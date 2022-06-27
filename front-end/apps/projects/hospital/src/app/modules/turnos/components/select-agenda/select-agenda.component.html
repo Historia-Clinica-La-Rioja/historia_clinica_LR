@@ -42,8 +42,12 @@
 			name="edit_agenda" (click)="goToEditAgenda()">
 			<mat-icon>edit</mat-icon>
 		</button>
-		<button mat-flat-button color="warn" *appHasRole="['ADMINISTRADOR_AGENDA']" id="delete_agenda"
-			name="delete_agenda" (click)="deleteAgenda()">
+		<button mat-flat-button color="warn" *appHasRole="['ADMINISTRADOR_AGENDA', 'ADMINISTRATIVO']" id="block_agenda"
+			(click)="blockAgenda()">
+			<mat-icon>block</mat-icon>
+		</button>
+		<button mat-flat-button color="warn" *appHasRole="['ADMINISTRADOR_AGENDA']" id="delete_agenda" name="delete_agenda"
+		        (click)="deleteAgenda()">
 			<mat-icon>delete</mat-icon>
 		</button>
 	</div>

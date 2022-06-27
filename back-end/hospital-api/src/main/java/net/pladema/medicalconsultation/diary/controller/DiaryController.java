@@ -219,14 +219,7 @@ public class DiaryController {
 		log.debug("Input parameters -> institutionId {}, diaryId {}, blockDto {}", institutionId, diaryId, blockDto);
 		DiaryBo diaryBo = diaryService.getDiary(diaryId).orElseThrow();
 
-		var appointmentDuration = diaryBo.getAppointmentDuration();
-		var localTimeInit = LocalTime.of(blockDto.getInit().getHours(), blockDto.getInit().getMinutes());
-		var localTimeEnd = LocalTime.of(blockDto.getEnd().getHours(), blockDto.getEnd().getMinutes());
-
-		assertTimeLimits(localTimeInit, localTimeEnd, appointmentDuration);
-
-		var slots = Stream.iterate(localTimeInit, d -> d.plusMinutes(appointmentDuration))
-				.limit(ChronoUnit.MINUTES.between(localTimeInit, localTimeEnd)/appointmentDuration);
+		Stream<LocalTime> slots = getSlots(blockDto, diaryBo);
 
 		var listAppointments = slots.map(slot -> mapTo(blockDto, diaryBo, slot)).collect(Collectors.toList());
 
@@ -248,6 +241,49 @@ public class DiaryController {
 		log.debug(OUTPUT, result);
 		return ResponseEntity.ok(result);
 
+	@PostMapping("/{diaryId}/unblock")
+	@PreAuthorize("hasPermission(#institutionId, 'ADMINISTRATIVO, ADMINISTRADOR_AGENDA')")
+	public ResponseEntity<Boolean> unblock(
+			@PathVariable(name = "institutionId") Integer institutionId,
+			@PathVariable(name = "diaryId") Integer diaryId,
+			@RequestBody BlockDto unblockDto) {
+		log.debug("Unblock -> Input parameters -> institutionId {}, diaryId {}, blockDto {}", institutionId, diaryId, unblockDto);
+		DiaryBo diaryBo = diaryService.getDiary(diaryId).orElseThrow();
+
+		Stream<LocalTime> slots = getSlots(unblockDto, diaryBo);
+
+		var listAppointments = slots.map(slot -> findAppointment(unblockDto, diaryBo, slot))
+				.filter(Optional::isPresent)
+				.map(Optional::get)
+				.filter(this::isBlocked)
+				.collect(Collectors.toList());
+
+		listAppointments.forEach(appointmentService::delete);
+
+		return ResponseEntity.ok(Boolean.TRUE);
+	}
+
+	private Optional<AppointmentBo> findAppointment(BlockDto unblockDto, DiaryBo diaryBo, LocalTime slot) {
+		return appointmentService.findAppointmentBy(diaryBo.getId(),
+				LocalDate.of(unblockDto.getDateDto().getYear(), unblockDto.getDateDto().getMonth(), unblockDto.getDateDto().getDay()),
+				slot);
+	}
+
+	private Stream<LocalTime> getSlots(BlockDto blockDto, DiaryBo diaryBo) {
+		var appointmentDuration = diaryBo.getAppointmentDuration();
+		var localTimeInit = LocalTime.of(blockDto.getInit().getHours(), blockDto.getInit().getMinutes());
+		var localTimeEnd = LocalTime.of(blockDto.getEnd().getHours(), blockDto.getEnd().getMinutes());
+
+		assertTimeLimits(localTimeInit, localTimeEnd, appointmentDuration);
+
+		return Stream.iterate(localTimeInit, d -> d.plusMinutes(appointmentDuration))
+				.limit(ChronoUnit.MINUTES.between(localTimeInit, localTimeEnd) / appointmentDuration);
+	}
+
+	private boolean isBlocked(AppointmentBo ap) {
+		return appointmentService.getAppointment(ap.getId())
+				.map(appointmentBo -> appointmentBo.getAppointmentStateId()
+						.equals(AppointmentState.BLOCKED)).orElse(false);
 	}
 
 	private void assertTimeLimits(LocalTime localTimeInit, LocalTime localTimeEnd, Short appointmentDuration) {

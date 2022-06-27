@@ -1,0 +1,29 @@
+<h1 mat-dialog-title>Bloquear/Desbloquear agenda</h1>
+
+<div mat-dialog-content>
+
+	<mat-tab-group>
+
+		<mat-tab label="BLOQUEAR">
+			<form [formGroup]="blockForm">
+				<app-date-range-time-form formControlName="control"></app-date-range-time-form>
+				<div align="end">
+					<button mat-flat-button color="primary" class="uppercase" [disabled]="!blockForm.valid"
+						(click)="block()" id="confirm-button">CONFIRMAR</button>
+				</div>
+			</form>
+		</mat-tab>
+
+		<mat-tab label="DESBLOQUEAR">
+			<form [formGroup]="unblockForm">
+				<app-date-range-time-form formControlName="control"></app-date-range-time-form>
+				<div align="end">
+					<button mat-flat-button color="primary" class="uppercase" [disabled]="!unblockForm.valid"
+						(click)="unblock()" id="confirm-button">CONFIRMAR</button>
+				</div>
+			</form>
+		</mat-tab>
+
+	</mat-tab-group>
+
+</div>

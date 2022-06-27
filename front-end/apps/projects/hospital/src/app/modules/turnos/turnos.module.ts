@@ -22,6 +22,7 @@ import { NewAppointmentComponent } from './dialogs/new-appointment/new-appointme
 import { NewAttentionComponent } from './dialogs/new-attention/new-attention.component';
 // services
 import { CustomDateFormatter } from './services/custom-date-formatter.service';
+import { BlockAgendaRangeComponent } from './dialogs/block-agenda-range/block-agenda-range.component';
 
 
 @NgModule({
@@ -40,6 +41,7 @@ import { CustomDateFormatter } from './services/custom-date-formatter.service';
 		ConfirmBookingComponent,
 		NewAppointmentComponent,
 		NewAttentionComponent,
+  BlockAgendaRangeComponent,
 	],
 	imports: [
 		CommonModule,

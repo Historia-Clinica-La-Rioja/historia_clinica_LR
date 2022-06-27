@@ -123,6 +123,14 @@ public class AppointmentServiceImpl implements AppointmentService {
 	}
 
 	@Override
+	public Optional<AppointmentBo> findAppointmentBy(Integer diaryId, LocalDate date, LocalTime hour) {
+		log.debug("Input parameters -> diaryId {}, date {}, hour {}", diaryId, date, hour);
+		var res = appointmentRepository.findAppointmentBy(diaryId, date, hour);
+		log.debug(OUTPUT, res);
+		return res.map(AppointmentBo::newFromAppointment);
+	}
+
+	@Override
 	public boolean updateState(Integer appointmentId, short appointmentStateId, Integer userId, String reason) {
 		log.debug("Input parameters -> appointmentId {}, appointmentStateId {}, userId {}, reason {}", appointmentId, appointmentStateId, userId, reason);
 		appointmentRepository.updateState(appointmentId, appointmentStateId, userId);

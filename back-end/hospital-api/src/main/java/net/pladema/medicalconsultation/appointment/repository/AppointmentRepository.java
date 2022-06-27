@@ -82,17 +82,18 @@ public interface AppointmentRepository extends SGXAuditableEntityJPARepository<A
             " AND a.dateTypeId >= CURRENT_DATE ")
     List<AppointmentDiaryVo> getFutureActiveAppointmentsByDiary(@Param("diaryId") Integer diaryId);
 
-    @Transactional(readOnly = true)
-    @Query( "SELECT (case when count(a.id)> 0 then true else false end) " +
-            "FROM Appointment AS a " +
-            "JOIN AppointmentAssn AS aa ON (a.id = aa.pk.appointmentId) " +
-            "WHERE aa.pk.diaryId = :diaryId " +
-            "AND aa.pk.openingHoursId = :openingHoursId " +
-            "AND a.dateTypeId = :date " +
-            "AND a.hour = :hour " +
-            "AND NOT a.appointmentStateId = " + AppointmentState.CANCELLED_STR)
-    boolean existAppointment(@Param("diaryId") Integer diaryId, @Param("openingHoursId") Integer openingHoursId,
-                             @Param("date") LocalDate date, @Param("hour") LocalTime hour);
+	@Transactional(readOnly = true)
+	@Query( "SELECT (case when count(a.id)> 0 then true else false end) " +
+			"FROM Appointment AS a " +
+			"JOIN AppointmentAssn AS aa ON (a.id = aa.pk.appointmentId) " +
+			"WHERE aa.pk.diaryId = :diaryId " +
+			"AND aa.pk.openingHoursId = :openingHoursId " +
+			"AND a.dateTypeId = :date " +
+			"AND a.hour = :hour " +
+			"AND NOT a.appointmentStateId = " + AppointmentState.CANCELLED_STR +
+			"AND (a.deleteable.deleted = false OR a.deleteable.deleted is null )")
+	boolean existAppointment(@Param("diaryId") Integer diaryId, @Param("openingHoursId") Integer openingHoursId,
+							 @Param("date") LocalDate date, @Param("hour") LocalTime hour);
 
     @Transactional
     @Modifying
@@ -201,4 +202,15 @@ public interface AppointmentRepository extends SGXAuditableEntityJPARepository<A
 													@Param("userId") Integer userId,
 													@Param("currentDate") LocalDate currentDate);
 
+	@Transactional(readOnly = true)
+	@Query( "SELECT a " +
+			"FROM Appointment AS a " +
+			"JOIN AppointmentAssn AS aa ON (a.id = aa.pk.appointmentId) " +
+			"WHERE aa.pk.diaryId = :diaryId " +
+			"AND a.dateTypeId = :date " +
+			"AND a.hour = :hour " +
+			"AND NOT a.appointmentStateId = " + AppointmentState.CANCELLED_STR +
+			"AND (a.deleteable.deleted = false OR a.deleteable.deleted is null)")
+	Optional<Appointment> findAppointmentBy(@Param("diaryId") Integer diaryId,
+											@Param("date") LocalDate date, @Param("hour") LocalTime hour);
 }

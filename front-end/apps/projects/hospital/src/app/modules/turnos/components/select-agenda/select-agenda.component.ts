@@ -17,6 +17,8 @@ import { SnackBarService } from '@presentation/services/snack-bar.service';
 import { DatePickerComponent } from '@presentation/dialogs/date-picker/date-picker.component';
 
 import { AgendaSearchService, AgendaFilters, AgendaOptionsData } from '../../services/agenda-search.service';
+import { AppointmentsFacadeService } from '@turnos/services/appointments-facade.service';
+import { BlockAgendaRangeComponent } from '@turnos/dialogs/block-agenda-range/block-agenda-range.component';
 import { isAfter, parseISO, startOfToday } from 'date-fns';
 import { DatePipeFormat } from '@core/utils/date.utils';
 
@@ -52,6 +54,7 @@ export class SelectAgendaComponent implements OnInit, OnDestroy {
 		private contextService: ContextService,
 		private readonly dailyAppointmentService: DailyAppointmentService,
 		private readonly agendaSearchService: AgendaSearchService,
+		private readonly appointmentsFacadeService: AppointmentsFacadeService,
 	) {
 	}
 
@@ -106,6 +109,21 @@ export class SelectAgendaComponent implements OnInit, OnDestroy {
 
 	goToEditAgenda(): void {
 		this.router.navigate([`institucion/${this.contextService.institutionId}/turnos/agenda/${this.agendaSelected.id}/editar`]);
+	}
+
+	blockAgenda() {
+		const dialogRef = this.dialog.open(BlockAgendaRangeComponent, {
+			data: {
+				appointmentDuration: this.agendaSelected.appointmentDuration,
+				agendaId: this.agendaSelected.id
+			}
+		})
+
+		dialogRef.afterClosed().subscribe(response => {
+			if (response) {
+				this.appointmentsFacadeService.loadAppointments();
+			}
+		});
 	}
 
 	deleteAgenda(): void {
