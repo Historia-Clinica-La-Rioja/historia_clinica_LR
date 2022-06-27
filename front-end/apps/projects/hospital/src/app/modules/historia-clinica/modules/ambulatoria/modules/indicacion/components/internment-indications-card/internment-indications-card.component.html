@@ -1,5 +1,5 @@
 <app-content width="full">
-	<app-summary-card id="internment-indications"	[header]="internmentIndication"
+	<app-summary-card id="internment-indications" [header]="internmentIndication"
 		[editable]="false"
 		[canEdit]="['ESPECIALISTA_MEDICO', 'ESPECIALISTA_EN_ODONTOLOGIA', 'PROFESIONAL_DE_SALUD', 'ENFERMERO']"
 		[menu]="!epicrisisConfirmed" [matMenu]="menu">
@@ -19,24 +19,7 @@
 				</button>
 			</ng-container>
 		</mat-menu>
-		<div class="content" fxLayout="row" fxLayoutAlign="left center" fxLayoutGap="10px">
-			<button mat-icon-button (click)="viewAnotherDay(-1)" [disabled]="this.currentViewIsEntryDate">
-				<mat-icon [ngClass]="{ 'disabled': this.currentViewIsEntryDate, 'color-primary': !this.currentViewIsEntryDate}">chevron_left</mat-icon>
-			</button>
-			<div *ngIf="isToday || isYesterday || isTomorrow">
-				<ng-container *ngIf="isToday; else yesterday">
-					<span class="actual-date" [translate]="'indicacion.internment-card.TODAY'"></span>
-				</ng-container>
-			</div>
-			<div *ngIf="viewDay" fxLayout="row" fxLayoutGap="4px" fxLayoutAlign="left center" class="actual-date">
-				<span>{{ viewDay.nameDay }}</span>
-				<span>{{ viewDay.numberDay }}</span>
-				<span>{{ viewDay.month }}</span>
-			</div>
-			<button mat-icon-button (click)="viewAnotherDay(1)">
-				<mat-icon class="color-primary">chevron_right</mat-icon>
-			</button>
-		</div>
+		<app-day-display [minDate]="entryDate" (actualDateEmmiter)="loadActualDateAndFilter($event)"></app-day-display>
 		<div id="sections">
 			<app-internment-diet-card [diets]="diets"></app-internment-diet-card>
 			<app-internment-parenteral-plan-card [parenteralPlans]="parenteralPlan"></app-internment-parenteral-plan-card>
@@ -45,13 +28,3 @@
 		</div>
 	</app-summary-card>
 </app-content>
-
-<ng-template #yesterday>
-	<ng-container *ngIf="isYesterday else tomorrow">
-		<span class="actual-date" [translate]="'indicacion.internment-card.YESTERDAY'"></span>
-	</ng-container>
-</ng-template>
-<ng-template #tomorrow>
-	<span class="actual-date" [translate]="'indicacion.internment-card.TOMORROW'"></span>
-</ng-template>
-

@@ -4,6 +4,7 @@ import { FormsModule } from "@angular/forms";
 import { PresentationModule } from "@presentation/presentation.module";
 
 import { CardMedicacionesComponent } from "@historia-clinica/modules/ambulatoria/modules/indicacion/components/card-medicaciones/card-medicaciones.component";
+import { DayDisplayComponent } from './components/day-display/day-display.component';
 import { InternmentIndicationsCardComponent } from "@historia-clinica/modules/ambulatoria/modules/indicacion/components/internment-indications-card/internment-indications-card.component";
 import { ItemPrescripcionesComponent } from "@historia-clinica/modules/ambulatoria/modules/indicacion/components/item-prescripciones/item-prescripciones.component";
 import { InternmentDietCardComponent } from './components/internment-diet-card/internment-diet-card.component';
@@ -21,6 +22,7 @@ import { PharmacoComponent } from './dialogs/pharmaco/pharmaco.component';
 @NgModule({
 	declarations: [
 		CardMedicacionesComponent,
+		DayDisplayComponent,
 		ItemPrescripcionesComponent,
 		InternmentIndicationsCardComponent,
 		InternmentDietCardComponent,
