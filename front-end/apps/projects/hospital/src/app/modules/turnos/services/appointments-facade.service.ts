@@ -280,9 +280,7 @@ export function getColor(appointment: AppointmentListDto): COLORES {
 		return COLORES.FUERA_DE_AGENDA;
 	}
 
-	if (!appointment?.patient?.id) {
-		return COLORES.RESERVA_ALTA;
-	}
+
 
 	if (appointment.overturn) {
 		return COLORES.SOBRETURNO;
@@ -302,6 +300,9 @@ export function getColor(appointment: AppointmentListDto): COLORES {
 
 	if(appointment.appointmentStateId === APPOINTMENT_STATES_ID.SERVED) {
 		return COLORES.SERVED;
+	}
+	if (!appointment?.patient?.id) {
+		return COLORES.RESERVA_ALTA;
 	}
 
 	return COLORES.ASSIGNED;

@@ -288,31 +288,20 @@ export class AgendaComponent implements OnInit, OnDestroy, OnChanges {
 				this.healthInsuranceService.get(event.meta.rnos)
 					.subscribe((medicalCoverageDto: MedicalCoverageDto) => {
 						event.meta.healthInsurance = medicalCoverageDto;
-						const dialogRef = this.dialog.open(AppointmentComponent, {
-							disableClose: true,
+						this.dialog.open(AppointmentComponent, {
 							data: {
 								appointmentData: event.meta,
 								professionalPermissions: this.agenda.professionalAssignShift
 							}
 						});
-						dialogRef.afterClosed().subscribe(appointmentInformation => {
-							if (appointmentInformation?.id) {
-								this.updateAppoinment(appointmentInformation);
-							}
-						});
+
 					});
 			} else {
-				const dialogRef = this.dialog.open(AppointmentComponent, {
-					disableClose: true,
+				this.dialog.open(AppointmentComponent, {
 					data: {
 						appointmentData: event.meta,
 						hasPermissionToAssignShift: this.agenda.professionalAssignShift
 					},
-				});
-				dialogRef.afterClosed().subscribe(appointmentInformation => {
-					if (appointmentInformation?.id) {
-						this.updateAppoinment(appointmentInformation);
-					}
 				});
 			}
 		}
@@ -446,13 +435,4 @@ export class AgendaComponent implements OnInit, OnDestroy, OnChanges {
 		}
 	}
 
-	private updateAppoinment(appointmentInformation) {
-		const appointment = this.appointments.find(appointment => appointment.meta.appointmentId === appointmentInformation?.id);
-		appointment.meta.appointmentStateId = appointmentInformation.stateId;
-		const color = getColor(appointmentInformation);
-		appointment.color.primary = color;
-		appointment.color.secondary = color;
-		appointment.cssClass = getSpanColor(appointmentInformation.stateId);
-		this.refreshCalendar.next();
-	}
 }
