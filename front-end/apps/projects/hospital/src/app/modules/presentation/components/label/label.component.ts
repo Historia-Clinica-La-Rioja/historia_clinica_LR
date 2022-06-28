@@ -6,13 +6,13 @@ export interface Label {
 };
 
 @Component({
-  selector: 'app-label',
-  templateUrl: './label.component.html',
-  styleUrls: ['./label.component.scss']
+	selector: 'app-label',
+	templateUrl: './label.component.html',
+	styleUrls: ['./label.component.scss']
 })
 export class LabelComponent {
 	@Input() label: Label;
-
+	@Input() collapsed = false;
 	constructor() { }
 
 }

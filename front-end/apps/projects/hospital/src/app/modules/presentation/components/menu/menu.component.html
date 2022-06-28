@@ -6,6 +6,6 @@
 			[id]="menuItem.id"
 			*ngFor="let menuItem of menuItems">
 		<mat-icon matListIcon fontSet="material-icons-outlined">{{menuItem.icon}}</mat-icon>
-		<app-label [label]="menuItem.label"></app-label>
+		<app-label [hidden]="isCollapsed"  [label]="menuItem.label"></app-label>
 	</mat-list-item>
 </mat-nav-list>

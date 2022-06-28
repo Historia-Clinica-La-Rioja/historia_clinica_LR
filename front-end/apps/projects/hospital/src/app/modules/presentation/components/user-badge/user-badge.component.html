@@ -1,12 +1,13 @@
-
 <div *ngIf="userInfo?.fullName; else userName" class="badge">
 	<img class="picture" [src]="avatar" [alt]="'profile.PICTURE' | translate">
-	<h1 class="fullName">{{userInfo.fullName}}</h1>
+	<div [hidden]="collapsed">
+		<h1 class="fullName">{{userInfo.fullName}}</h1>
+	</div>
 </div>
 
 <ng-template #userName>
 	<div *ngIf="userInfo?.userName; else loading" class="badge warn-background">
-		<h1 class="userName">{{userInfo?.userName}}</h1>
+		<h1 [hidden]="collapsed" class="userName">{{userInfo?.userName}}</h1>
 		<p class="info">Este usuario no está asociado a una persona real</p>
 	</div>
 </ng-template>

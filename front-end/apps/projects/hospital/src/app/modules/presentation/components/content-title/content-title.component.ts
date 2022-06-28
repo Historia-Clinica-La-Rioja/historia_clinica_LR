@@ -13,6 +13,7 @@ export interface Title {
 })
 export class ContentTitleComponent {
 	@Input() title: Title;
+	@Input() collapsed = false;
 
 	constructor() { }
 

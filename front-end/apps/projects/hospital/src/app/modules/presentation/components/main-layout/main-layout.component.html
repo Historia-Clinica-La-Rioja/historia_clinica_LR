@@ -1,32 +1,50 @@
 <div class="layout-container" [class.layout-is-mobile]="mobileQuery.matches">
-	<app-bar [position]="mobileQuery.matches ? 'fixed' : 'static'">
-		<button mat-icon-button (click)="sidenav.toggle()" *ngIf="menuItems">
-			<mat-icon color="primary">menu</mat-icon>
-		</button>
+	<app-bar *ngIf="menuItems" [position]="mobileQuery.matches ? 'fixed' : 'static'">
+		<ng-container *ngIf="mobileQuery.matches else menuDesktop">
+			<button id="menu" mat-icon-button (click)="sidenav.toggle()">
+				<mat-icon color="primary">menu</mat-icon>
+			</button>
+		</ng-container>
+		<ng-template #menuDesktop>
+			<button id="menuDesktop" mat-icon-button (click)="toggleSidebar()">
+				<mat-icon color="primary">menu</mat-icon>
+			</button>
+		</ng-template>
 	</app-bar>
+
 	<mat-sidenav-container class="layout-sidenav-container" [style.marginTop.px]="mobileQuery.matches ? 57 : 0">
+
 		<mat-sidenav #sidenav [(opened)]="opened" [mode]="mobileQuery.matches ? 'over' : 'side'"
-		             [fixedInViewport]="mobileQuery.matches" fixedTopGap="57">
+			[fixedInViewport]="mobileQuery.matches" fixedTopGap="57">
+
 			<div class="custom-container">
+
 				<div class="top">
-					<ng-content select="[location-info]"></ng-content>
-					<app-menu [menuItems]="menuItems"></app-menu>
+					<div [hidden]="isCollapsed">
+						<ng-content select="[location-info]"></ng-content>
+					</div>
+					<app-menu [menuItems]="menuItems" [isCollapsed]="isCollapsed"></app-menu>
 				</div>
+
 				<div class="bottom">
 
 					<div class="informative-items">
-						<ng-content select="[account-info]"></ng-content>
+						<ng-content *ngIf="isCollapsed else accountInfo" select="[account-info-min]"></ng-content>
+						<ng-template #accountInfo>
+							<ng-content select="[account-info]"></ng-content>
+						</ng-template>
 						<mat-divider></mat-divider>
 						<button mat-button id="logout" (click)="logout()">
 							<mat-icon>logout</mat-icon>
-							<span translate="app.menu.LOGOUT"></span>
+							<span [hidden]="isCollapsed" translate="app.menu.LOGOUT"></span>
 						</button>
 					</div>
 				</div>
 			</div>
+
 		</mat-sidenav>
 
-		<mat-sidenav-content>
+		<mat-sidenav-content [style.margin-left.px]="!mobileQuery.matches && menuItems ? marginLeft : 0">
 			<div class="panel">
 				<router-outlet></router-outlet>
 			</div>

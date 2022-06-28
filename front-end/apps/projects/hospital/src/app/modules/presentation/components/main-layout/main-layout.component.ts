@@ -5,6 +5,9 @@ import { AuthenticationService } from '../../../auth/services/authentication.ser
 import { MenuItem } from '../menu/menu.component';
 import { OauthAuthenticationService } from "../../../auth/services/oauth-authentication.service";
 
+const MARGIN_LEFT_COLLAPSED = 94;
+const MARGIN_LEFT_NOT_COLLAPSED = 204;
+
 @Component({
 	selector: 'app-main-layout',
 	templateUrl: './main-layout.component.html',
@@ -15,10 +18,13 @@ export class MainLayoutComponent implements OnDestroy {
 	mobileQuery: MediaQueryList;
 	private _mobileQueryListener: () => void;
 	private _menuItems: MenuItem[];
+	isCollapsed = false;
+	marginLeft = MARGIN_LEFT_NOT_COLLAPSED;
+
 
 	constructor(changeDetectorRef: ChangeDetectorRef, media: MediaMatcher,
-				private authenticationService: AuthenticationService,
-				private oauthAuthenticationService: OauthAuthenticationService,
+		private authenticationService: AuthenticationService,
+		private oauthAuthenticationService: OauthAuthenticationService,
 	) {
 		this.mobileQuery = media.matchMedia('(max-width: 600px)');
 		this._mobileQueryListener = () => changeDetectorRef.detectChanges();
@@ -42,4 +48,10 @@ export class MainLayoutComponent implements OnDestroy {
 		this.authenticationService.logout();
 		this.oauthAuthenticationService.logout();
 	}
+
+	toggleSidebar() {
+		this.isCollapsed = !this.isCollapsed;
+		this.marginLeft = this.isCollapsed ? MARGIN_LEFT_COLLAPSED : MARGIN_LEFT_NOT_COLLAPSED;
+	}
+
 }
