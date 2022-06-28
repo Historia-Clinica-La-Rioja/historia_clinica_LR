@@ -571,6 +571,9 @@
                     "STUDY_REPEATED": "El estudio seleccionado ya está presente en la orden",
                     "CONFIRM_ORDER": "Finalizar orden"
                 }
+            },
+            "nursing": {
+                "TAB_LABEL": "enfermería"
             }
         },
         "screen_change_warning_dialog": {
