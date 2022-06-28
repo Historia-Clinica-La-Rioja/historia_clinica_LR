@@ -13,6 +13,8 @@ import { HomeComponent } from './routes/home/home.component';
 // components
 import { CalendarProfessionalViewComponent } from '@turnos/components/calendar-professional-view/calendar-professional-view.component';
 import { SelectAgendaComponent } from './components/select-agenda/select-agenda.component';
+import { BlockAgendaRangeComponent } from './dialogs/block-agenda-range/block-agenda-range.component';
+import { DateRangeTimeFormComponent } from './components/date-range-time-form/date-range-time-form.component';
 // dialogs
 import { AppointmentComponent } from './dialogs/appointment/appointment.component';
 import { CalendarProfessionalViewDockPopupComponent } from './dialogs/calendar-professional-view-dock-popup/calendar-professional-view-dock-popup.component';
@@ -22,7 +24,6 @@ import { NewAppointmentComponent } from './dialogs/new-appointment/new-appointme
 import { NewAttentionComponent } from './dialogs/new-attention/new-attention.component';
 // services
 import { CustomDateFormatter } from './services/custom-date-formatter.service';
-import { BlockAgendaRangeComponent } from './dialogs/block-agenda-range/block-agenda-range.component';
 
 
 @NgModule({
@@ -34,6 +35,8 @@ import { BlockAgendaRangeComponent } from './dialogs/block-agenda-range/block-ag
 		// components
 		CalendarProfessionalViewComponent,
 		SelectAgendaComponent,
+		BlockAgendaRangeComponent,
+		DateRangeTimeFormComponent,
 		// dialogs
 		AppointmentComponent,
 		CalendarProfessionalViewDockPopupComponent,
@@ -41,7 +44,6 @@ import { BlockAgendaRangeComponent } from './dialogs/block-agenda-range/block-ag
 		ConfirmBookingComponent,
 		NewAppointmentComponent,
 		NewAttentionComponent,
-  BlockAgendaRangeComponent,
 	],
 	imports: [
 		CommonModule,

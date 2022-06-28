@@ -1,0 +1,32 @@
+<form fxLayout="column">
+	<div appearance="outline" style="margin-top: 16px;">
+		<div fxLayout="row" fxLayoutGap="20px">
+			<mat-form-field class="dateSelector" appearance="outline">
+				<mat-label>Fecha inicio</mat-label>
+				<input matInput id="initDate" [matDatepicker]="startDatePicker" [formControl]="form.controls.initDate"
+				[matDatepickerFilter]="initDateFilter" (dateChange)="updateEndDate()">
+				<mat-error>Seleccione una fecha</mat-error>
+				<mat-datepicker-toggle matSuffix [for]="startDatePicker"></mat-datepicker-toggle>
+				<mat-datepicker #startDatePicker></mat-datepicker>
+			</mat-form-field>
+			<mat-form-field class="dateSelector" appearance="outline">
+				<mat-label>Fecha fin</mat-label>
+				<input matInput id="endDate" [matDatepicker]="endDatePicker" [formControl]="form.controls.endDate" [matDatepickerFilter]="endDateFilter">
+				<mat-error>Seleccione una fecha</mat-error>
+				<mat-datepicker-toggle matSuffix [for]="endDatePicker"></mat-datepicker-toggle>
+				<mat-datepicker #endDatePicker></mat-datepicker>
+			</mat-form-field>
+		</div>
+	</div>
+
+	<div fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="5px">
+		<mat-form-field appearance="outline">
+			<input matInput type="time" id="init_time" name="input" [formControl]="form.controls.init" />
+		</mat-form-field>
+		<span>hs. a</span>
+		<mat-form-field appearance="outline">
+			<input matInput type="time" id="end_time" name="end" [formControl]="form.controls.end" />
+		</mat-form-field>
+		<span>hs.</span>
+	</div>
+</form>

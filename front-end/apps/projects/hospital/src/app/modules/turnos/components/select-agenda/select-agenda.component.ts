@@ -112,18 +112,19 @@ export class SelectAgendaComponent implements OnInit, OnDestroy {
 	}
 
 	blockAgenda() {
-		const dialogRef = this.dialog.open(BlockAgendaRangeComponent, {
-			data: {
-				appointmentDuration: this.agendaSelected.appointmentDuration,
-				agendaId: this.agendaSelected.id
-			}
-		})
+		this.diaryService.get(this.agendaSelected.id).subscribe(result => {
+			const dialogRef = this.dialog.open(BlockAgendaRangeComponent, {
+				data: {
+					selectedAgenda: result
+				}
+			})
 
-		dialogRef.afterClosed().subscribe(response => {
-			if (response) {
-				this.appointmentsFacadeService.loadAppointments();
-			}
-		});
+			dialogRef.afterClosed().subscribe(response => {
+				if (response) {
+					this.appointmentsFacadeService.loadAppointments();
+				}
+			});
+		})
 	}
 
 	deleteAgenda(): void {

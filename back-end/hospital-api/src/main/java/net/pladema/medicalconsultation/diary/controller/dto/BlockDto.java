@@ -12,7 +12,8 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 public class BlockDto {
-	private DateDto dateDto;
+	private DateDto initDateDto;
+	private DateDto endDateDto;
 	private TimeDto init;
 	private TimeDto end;
 }

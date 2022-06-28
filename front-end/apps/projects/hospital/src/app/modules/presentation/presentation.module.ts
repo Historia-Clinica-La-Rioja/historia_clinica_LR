@@ -37,7 +37,6 @@ import { SummaryCardComponent } from './components/summary-card/summary-card.com
 import { TableComponent } from './components/table/table.component';
 import { TypeaheadComponent } from './components/typeahead/typeahead.component';
 import { UserBadgeComponent } from './components/user-badge/user-badge.component';
-import { DateRangeTimeFormComponent } from './date-range-time-form/date-range-time-form.component';
 // dialogs
 import { DatePickerComponent } from './dialogs/date-picker/date-picker.component';
 import { DiscardWarningComponent } from './dialogs/discard-warning/discard-warning.component';
@@ -88,7 +87,6 @@ import { ViewHourMinutePipe } from './pipes/view-hour-minute.pipe';
 		TableComponent,
 		TypeaheadComponent,
 		UserBadgeComponent,
-		DateRangeTimeFormComponent,
 		// dialogs
 		ConfirmDialogComponent,
 		DatePickerComponent,
@@ -148,7 +146,6 @@ import { ViewHourMinutePipe } from './pipes/view-hour-minute.pipe';
 		TableComponent,
 		TypeaheadComponent,
 		UserBadgeComponent,
-		DateRangeTimeFormComponent,
 		// dialogs
 		// directives
 		CtrlTemplateDirective,

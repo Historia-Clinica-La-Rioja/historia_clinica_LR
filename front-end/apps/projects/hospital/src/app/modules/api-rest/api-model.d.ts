@@ -416,9 +416,10 @@ export interface BedSummaryDto {
 }
 
 export interface BlockDto {
-    dateDto: DateDto;
     end: TimeDto;
+    endDateDto: DateDto;
     init: TimeDto;
+    initDateDto: DateDto;
 }
 
 export interface BookingAppointmentDto {

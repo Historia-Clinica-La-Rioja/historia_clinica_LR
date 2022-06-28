@@ -38,7 +38,7 @@ export class BlockAgendaRangeComponent implements OnInit {
 
 	block() {
 		const values = this.getValues(this.blockForm);
-		this.diaryService.blockAgendaRangeDateTime(this.data.agendaId, values)
+		this.diaryService.blockAgendaRangeDateTime(this.data.selectedAgenda.id, values)
 			.subscribe(_ => {
 				this.snackBarService.showSuccess('Rango horario bloqueado');
 				this.dialogRef.close(true);
@@ -52,7 +52,7 @@ export class BlockAgendaRangeComponent implements OnInit {
 
 	unblock() {
 		const values = this.getValues(this.unblockForm);
-		this.diaryService.unblock(this.data.agendaId, values)
+		this.diaryService.unblock(this.data.selectedAgenda.id, values)
 			.subscribe(_ => {
 				this.snackBarService.showSuccess('Rango horario desbloqueado');
 				this.dialogRef.close(true);
@@ -65,11 +65,11 @@ export class BlockAgendaRangeComponent implements OnInit {
 
 	private getValues(form) {
 		const value = form.value.control;
-		const date = value.date.toDate();
-		const dateDto: DateDto = dateToDateDto(date);
+		const initDateDto: DateDto = dateToDateDto(value.initDate.toDate());
+		const endDateDto: DateDto = dateToDateDto(value.endDate.toDate());
 		const init = this.toTimeDto(value.init);
 		const end = this.toTimeDto(value.end);
-		return { dateDto, init, end };
+		return { initDateDto, endDateDto, init, end };
 	}
 
 	private toTimeDto(time: string): TimeDto {

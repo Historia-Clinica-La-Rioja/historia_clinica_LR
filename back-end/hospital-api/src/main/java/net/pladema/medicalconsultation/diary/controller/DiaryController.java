@@ -6,6 +6,7 @@ import static java.util.stream.Collectors.groupingBy;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.time.temporal.ChronoUnit;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
@@ -219,9 +220,25 @@ public class DiaryController {
 		log.debug("Input parameters -> institutionId {}, diaryId {}, blockDto {}", institutionId, diaryId, blockDto);
 		DiaryBo diaryBo = diaryService.getDiary(diaryId).orElseThrow();
 
-		Stream<LocalTime> slots = getSlots(blockDto, diaryBo);
+		List<LocalTime> slots = getSlots(blockDto, diaryBo).collect(Collectors.toList());
 
-		var listAppointments = slots.map(slot -> mapTo(blockDto, diaryBo, slot)).collect(Collectors.toList());
+		LocalDate startingBlockingDate = localDateMapper.fromDateDto(blockDto.getInitDateDto());
+		LocalDate endingBlockingDate = localDateMapper.fromDateDto(blockDto.getEndDateDto());
+
+		List<LocalDate> blockedDates = startingBlockingDate.datesUntil(endingBlockingDate).collect(Collectors.toList());
+		blockedDates.add(endingBlockingDate);
+		blockedDates = blockedDates.stream().filter(potentialBlockedDay -> diaryBo.getDiaryOpeningHours()
+				.stream().anyMatch(diaryOpeningHours -> {
+						if (potentialBlockedDay.getDayOfWeek().getValue() == 7)
+							return diaryOpeningHours.getOpeningHours().getDayWeekId() == 0;
+						return diaryOpeningHours.getOpeningHours().getDayWeekId() == potentialBlockedDay.getDayOfWeek().getValue();
+					}))
+				.collect(Collectors.toList());
+
+		List<AppointmentBo> listAppointments = new ArrayList<>();
+
+		blockedDates.forEach(date -> listAppointments.addAll(slots.stream().map(slot -> mapTo(date, diaryBo, slot, blockDto))
+				.collect(Collectors.toList())));
 
 		assertNoAppointments(diaryId, listAppointments);
 
@@ -250,22 +267,30 @@ public class DiaryController {
 		log.debug("Unblock -> Input parameters -> institutionId {}, diaryId {}, blockDto {}", institutionId, diaryId, unblockDto);
 		DiaryBo diaryBo = diaryService.getDiary(diaryId).orElseThrow();
 
-		Stream<LocalTime> slots = getSlots(unblockDto, diaryBo);
+		List<LocalTime> slots = getSlots(unblockDto, diaryBo).collect(Collectors.toList());
 
-		var listAppointments = slots.map(slot -> findAppointment(unblockDto, diaryBo, slot))
+		LocalDate startingBlockingDate = localDateMapper.fromDateDto(unblockDto.getInitDateDto());
+		LocalDate endingBlockingDate = localDateMapper.fromDateDto(unblockDto.getEndDateDto());
+
+		List<LocalDate> blockedDates = startingBlockingDate.datesUntil(endingBlockingDate).collect(Collectors.toList());
+		blockedDates.add(endingBlockingDate);
+
+		List<AppointmentBo> listAppointments = new ArrayList<>();
+
+		blockedDates.forEach(date -> listAppointments.addAll(slots.stream().map(slot -> findAppointment(date, diaryBo, slot))
 				.filter(Optional::isPresent)
 				.map(Optional::get)
 				.filter(this::isBlocked)
-				.collect(Collectors.toList());
+				.collect(Collectors.toList())));
 
 		listAppointments.forEach(appointmentService::delete);
 
 		return ResponseEntity.ok(Boolean.TRUE);
 	}
 
-	private Optional<AppointmentBo> findAppointment(BlockDto unblockDto, DiaryBo diaryBo, LocalTime slot) {
+	private Optional<AppointmentBo> findAppointment(LocalDate date, DiaryBo diaryBo, LocalTime slot) {
 		return appointmentService.findAppointmentBy(diaryBo.getId(),
-				LocalDate.of(unblockDto.getDateDto().getYear(), unblockDto.getDateDto().getMonth(), unblockDto.getDateDto().getDay()),
+				LocalDate.of(date.getYear(), date.getMonth(), date.getDayOfMonth()),
 				slot);
 	}
 
@@ -311,23 +336,23 @@ public class DiaryController {
 				new HashSet(Collections.singleton("Algún horario de la franja horaria seleccionada tiene un turno o ya está bloqueado.")));
 	}
 
-	private AppointmentBo mapTo(BlockDto blockDto, DiaryBo diaryBo, LocalTime hour) {
+	private AppointmentBo mapTo(LocalDate date, DiaryBo diaryBo, LocalTime hour, BlockDto blockDto) {
 		var openingHours = diaryBo.getDiaryOpeningHours();
 		AppointmentBo appointmentBo = new AppointmentBo();
 		appointmentBo.setDiaryId(diaryBo.getId());
-		appointmentBo.setDate(LocalDate.of(blockDto.getDateDto().getYear(), blockDto.getDateDto().getMonth(), blockDto.getDateDto().getDay()));
+		appointmentBo.setDate(LocalDate.of(date.getYear(), date.getMonth(), date.getDayOfMonth()));
 		appointmentBo.setHour(hour);
 		appointmentBo.setAppointmentStateId(AppointmentState.BLOCKED);
 		appointmentBo.setOverturn(false);
-		appointmentBo.setOpeningHoursId(getOpeningHourId(openingHours, blockDto).getOpeningHours().getId());
+		appointmentBo.setOpeningHoursId(getOpeningHourId(openingHours, date, blockDto).getOpeningHours().getId());
 		return appointmentBo;
 	}
 
-	private DiaryOpeningHoursBo getOpeningHourId(List<DiaryOpeningHoursBo> openingHours, BlockDto blockDto) {
+	private DiaryOpeningHoursBo getOpeningHourId(List<DiaryOpeningHoursBo> openingHours, LocalDate date, BlockDto blockDto) {
 		var dayOfWeek =
-				(short)LocalDate.of(blockDto.getDateDto().getYear(),
-						blockDto.getDateDto().getMonth(),
-						blockDto.getDateDto().getDay()).getDayOfWeek().getValue();
+				(short)LocalDate.of(date.getYear(),
+						date.getMonth(),
+						date.getDayOfMonth()).getDayOfWeek().getValue();
 		var localTimeInit = LocalTime.of(blockDto.getInit().getHours(), blockDto.getInit().getMinutes());
 		var localTimeEnd = LocalTime.of(blockDto.getEnd().getHours(), blockDto.getEnd().getMinutes());
 
