@@ -1,6 +1,31 @@
 databaseChangeLog: 
     - logicalFilePath: incrementales-v1_40
 
+    - changeSet:
+        id: extension_definition_path-createTable
+        comment: Create table extension_definition_path
+        author: jlardapide
+        changes:
+          - createTable:
+              tableName: extension_definition_path
+              columns:
+                - column:
+                    constraints:
+                      nullable: false
+                    name: id
+                    autoIncrement: true
+                    type: smallint
+                - column:
+                    constraints:
+                      nullable: false
+                    name: path
+                    type: varchar
+                - column:
+                    constraints:
+                      nullable: false
+                    name: name
+                    type: varchar
+
 
     - changeSet:
         id: 1.40.0-1
