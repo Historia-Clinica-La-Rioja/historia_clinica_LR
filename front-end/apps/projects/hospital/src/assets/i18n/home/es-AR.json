@@ -3,5 +3,23 @@
 		"instituciones": {
 			"PREVIOUS_LOGIN" : "Inicio de sesión anterior"
 		}
+	},
+	"profile": {
+		"two-factor-authentication": {
+			"ENABLE_2FA": "Activar autenticacion por doble factor",
+			"enable-dialog": {
+				"TITLE": "Activar autenticación por doble factor",
+				"2FA_DESCRIPTION": "Utilizando una aplicación de autenticación en su móvil (por ejemplo Google Authenticator o FreeOTP) deberá elegir la opción “Añadir nueva cuenta” y proceder con alguna de las siguientes opciones",
+				"QR_CODE_DESCRIPTION": "Escaneo de código QR",
+				"CODE_DESCRIPTION": "Ingreso de código manual",
+				"CONFIRMATION_STEP_TITLE": "Ingrese código de confirmación",
+				"CONFIRMATION_STEP_DESCRIPTION": "Ingrese el código de confirmación que aparece en la aplicación de autenticación",
+				"VERIFICATION_CODE_MINIMUM_LENGTH": "El código debe contener 6 dígitos",
+				"VERIFICATION_CODE_INVALID": "Código incorrecto",
+				"NEXT_STEP": "Continuar",
+				"PREVIOUS_STEP": "Volver",
+				"CONFIRM": "Confirmar"
+			}
+		}
 	}
 }

@@ -1,0 +1,94 @@
+<div fxLayout="row" fxLayoutAlign="space-between">
+	<div mat-dialog-title class="mat-h3"> {{ 'profile.two-factor-authentication.enable-dialog.TITLE' | translate }} </div>
+	<button mat-icon-button mat-dialog-close>
+		<mat-icon>close</mat-icon>
+	</button>
+</div>
+
+<ng-container *ngIf="!firstStepCompleted else secondStep">
+	<mat-dialog-content>
+
+		<span>
+			{{ 'profile.two-factor-authentication.enable-dialog.2FA_DESCRIPTION' | translate }}:
+		</span>
+
+		<div id="scan-options-container" fxLayout="row" fxLayoutAlign="space-between">
+
+			<!-- QR CODE -->
+			<div id="qr-code-container">
+				<mat-label class="centered-element">
+					<strong> {{ 'profile.two-factor-authentication.enable-dialog.QR_CODE_DESCRIPTION' | translate }} </strong>
+				</mat-label>
+				<qrcode *ngIf="sharedSecretBarCode"
+						class="centered-element" width="256" errorCorrectionLevel="'M'"
+						[qrdata]="sharedSecretBarCode">
+				</qrcode>
+			</div>
+
+			<mat-divider vertical="true"></mat-divider>
+
+			<!-- MANUALLY ADD CODE  -->
+			<div class="scan-option">
+				<mat-label class="centered-element">
+					<strong> {{ 'profile.two-factor-authentication.enable-dialog.CODE_DESCRIPTION' | translate }} </strong>
+				</mat-label>
+				<div id="shared-secret" class="centered-element">
+					{{ sharedSecret }}
+				</div>
+			</div>
+		</div>
+
+	</mat-dialog-content>
+
+	<mat-dialog-actions class="dialog-actions" fxLayout="row" fxLayoutAlign="end start">
+		<button mat-flat-button color="primary" (click)="goToNextStep()">
+			<span class="uppercase"> {{ 'profile.two-factor-authentication.enable-dialog.NEXT_STEP' | translate }} </span>
+		</button>
+	</mat-dialog-actions>
+
+</ng-container>
+
+<ng-template #secondStep>
+
+	<mat-dialog-content>
+
+		<mat-label>
+			<strong> {{ 'profile.two-factor-authentication.enable-dialog.CONFIRMATION_STEP_TITLE' | translate }} </strong>
+		</mat-label>
+		<div id="confirmation-step-description">
+			{{ 'profile.two-factor-authentication.enable-dialog.CONFIRMATION_STEP_DESCRIPTION' | translate }}
+		</div>
+
+		<!-- 6-DIGIT VERIFICATION CODE INPUT -->
+		<div id="otp-input">
+			<code-input [codeLength]="VERIFICATION_CODE_LENGTH"
+						(codeChanged)="onCodeChange($event)"
+						(codeCompleted)="onCodeCompleted($event)">
+			</code-input>
+		</div>
+
+		<mat-error *ngIf="verificationCodeTooShort">
+			{{ 'profile.two-factor-authentication.enable-dialog.VERIFICATION_CODE_MINIMUM_LENGTH' | translate }}
+		</mat-error>
+
+		<mat-error *ngIf="verificationCodeInvalid">
+			{{ 'profile.two-factor-authentication.enable-dialog.VERIFICATION_CODE_INVALID' | translate }}
+		</mat-error>
+
+	</mat-dialog-content>
+
+	<mat-dialog-actions class="dialog-actions" fxLayout="row" fxLayoutAlign="end start">
+		<button mat-stroked-button color="primary" (click)="goToPreviousStep()">
+			<span class="uppercase"> {{ 'profile.two-factor-authentication.enable-dialog.PREVIOUS_STEP' | translate }} </span>
+		</button>
+		<button mat-flat-button color="primary" (click)="confirm()">
+			<span class="uppercase"> {{ 'profile.two-factor-authentication.enable-dialog.CONFIRM' | translate }} </span>
+		</button>
+	</mat-dialog-actions>
+
+</ng-template>
+
+
+
+
+

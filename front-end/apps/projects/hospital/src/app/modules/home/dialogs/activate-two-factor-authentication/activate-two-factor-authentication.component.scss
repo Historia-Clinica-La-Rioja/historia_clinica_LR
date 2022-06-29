@@ -1,0 +1,53 @@
+.mat-dialog-content {
+	max-height: initial;
+}
+
+#scan-options-container {
+	padding-top: 1em;
+}
+
+.scan-option {
+	float: left;
+	display: inline;
+	width: 49%;
+}
+
+.centered-element {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+}
+
+#qr-code-container {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	float:left; display:inline; width: 49%;
+}
+
+#shared-secret {
+	padding-top: 118px;
+}
+
+#confirmation-step-description {
+	padding-top: 0.5em
+}
+
+#otp-input {
+	max-width: 30em;
+	margin-left: auto;
+	margin-right: auto;
+	padding: 2vh;
+}
+
+code-input {
+	--item-spacing: 10px;
+	--item-height: 3em;
+	--item-border: 1px solid #dddddd;
+	--item-border-has-value: 1px solid #2687C580;
+	--item-border-bottom-has-value: 1px solid #2687C580;
+}
+
+.dialog-actions {
+	padding-bottom: 1em;
+}
