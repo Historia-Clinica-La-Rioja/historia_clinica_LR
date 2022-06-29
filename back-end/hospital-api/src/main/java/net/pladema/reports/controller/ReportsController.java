@@ -1,25 +1,17 @@
 package net.pladema.reports.controller;
 
-import ar.lamansys.sgx.shared.dates.configuration.JacksonDateFormatConfig;
-import ar.lamansys.sgx.shared.dates.configuration.LocalDateMapper;
-import ar.lamansys.sgx.shared.featureflags.AppFeature;
-import ar.lamansys.sgx.shared.featureflags.application.FeatureFlagsService;
-import ar.lamansys.sgx.shared.pdf.PDFDocumentException;
-import ar.lamansys.sgx.shared.pdf.PdfService;
-import ar.lamansys.sgx.shared.reports.util.struct.IWorkbook;
-import net.pladema.reports.controller.dto.ConsultationsDto;
-import net.pladema.reports.service.domain.ConsultationsBo;
-import net.pladema.reports.controller.dto.AnnexIIDto;
-import net.pladema.reports.controller.dto.FormVDto;
-import net.pladema.reports.controller.mapper.ReportsMapper;
-import net.pladema.reports.repository.QueryFactory;
-import net.pladema.reports.service.AnnexReportService;
-import net.pladema.reports.service.ExcelService;
-import net.pladema.reports.service.FetchConsultations;
-import net.pladema.reports.service.FormReportService;
-import net.pladema.reports.service.domain.AnnexIIBo;
-import net.pladema.reports.service.domain.ConsultationSummaryReport;
-import net.pladema.reports.service.domain.FormVBo;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.OutputStream;
+import java.time.LocalDate;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
+
+import javax.servlet.http.HttpServletResponse;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.core.io.InputStreamResource;
@@ -34,16 +26,26 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
-import javax.servlet.http.HttpServletResponse;
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.OutputStream;
-import java.time.LocalDate;
-import java.time.ZoneId;
-import java.time.ZonedDateTime;
-import java.util.List;
-import java.util.Map;
-import java.util.stream.Collectors;
+import ar.lamansys.sgx.shared.dates.configuration.JacksonDateFormatConfig;
+import ar.lamansys.sgx.shared.dates.configuration.LocalDateMapper;
+import ar.lamansys.sgx.shared.featureflags.AppFeature;
+import ar.lamansys.sgx.shared.featureflags.application.FeatureFlagsService;
+import ar.lamansys.sgx.shared.pdf.PDFDocumentException;
+import ar.lamansys.sgx.shared.pdf.PdfService;
+import ar.lamansys.sgx.shared.reports.util.struct.IWorkbook;
+import net.pladema.reports.controller.dto.AnnexIIDto;
+import net.pladema.reports.controller.dto.ConsultationsDto;
+import net.pladema.reports.controller.dto.FormVDto;
+import net.pladema.reports.controller.mapper.ReportsMapper;
+import net.pladema.reports.repository.QueryFactory;
+import net.pladema.reports.service.AnnexReportService;
+import net.pladema.reports.service.ExcelService;
+import net.pladema.reports.service.FetchConsultations;
+import net.pladema.reports.service.FormReportService;
+import net.pladema.reports.service.domain.AnnexIIBo;
+import net.pladema.reports.service.domain.ConsultationSummaryReport;
+import net.pladema.reports.service.domain.ConsultationsBo;
+import net.pladema.reports.service.domain.FormVBo;
 
 @RestController
 @RequestMapping("reports")
@@ -100,9 +102,10 @@ public class ReportsController {
         LOG.debug("Input parameters -> institutionId {}, fromDate {}, toDate {}", institutionId, fromDate, toDate);
 
         String title = "DNCE-Hoja 2";
-        String[] headers = new String[]{"Provincia", "Municipio", "Cod_Estable", "Establecimiento", "Apellidos paciente", "Nombres paciente", "Tipo documento",
+        String[] headers = new String[]{"Provincia", "Municipio", "Cod_Estable", "Establecimiento", "Apellidos paciente", "Nombres paciente", "Nombre autopercibido", "Tipo documento",
                 "Nro documento", "Fecha de nacimiento", "Género autopercibido", "Domicilio", "Teléfono", "Mail", "Obra social/Prepaga", "Nro de afiliado",
-                "Fecha de atención", "Especialidad", "Profesional", "Motivo de consulta", "Problemas de Salud/Diagnóstico", "Peso", "Talla", "Tensión sistólica", "Tensión diastólica"};
+                "Fecha de atención", "Especialidad", "Profesional", "Motivo de consulta", "Problemas de Salud / Diagnóstico", "Procedimientos", "Peso", "Talla", "Tensión sistólica",
+				"Tensión diastólica", "Riesgo cardiovascular", "Hemoglobina glicosilada", "Perímetro cefálico", "CPO", "ceo"};
 
         LocalDate startDate = localDateMapper.fromStringToLocalDate(fromDate);
         LocalDate endDate = localDateMapper.fromStringToLocalDate(toDate);
