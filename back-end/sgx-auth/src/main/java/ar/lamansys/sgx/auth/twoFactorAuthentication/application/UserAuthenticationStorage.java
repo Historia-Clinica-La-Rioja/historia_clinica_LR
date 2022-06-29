@@ -12,4 +12,6 @@ public interface UserAuthenticationStorage {
 
 	void enableTwoFactorAuthentication(Integer userId);
 
+	Boolean userHasTwoFactorAuthenticationEnabled(Integer userId);
+
 }

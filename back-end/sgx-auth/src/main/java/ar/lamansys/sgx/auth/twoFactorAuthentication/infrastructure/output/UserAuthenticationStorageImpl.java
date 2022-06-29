@@ -43,4 +43,10 @@ public class UserAuthenticationStorageImpl implements UserAuthenticationStorage 
 		log.debug("Input parameters -> userId {}", userId);
 		userRepository.enableTwoFactorAuthentication(userId);
 	}
+
+	@Override
+	public Boolean userHasTwoFactorAuthenticationEnabled(Integer userId) {
+		log.debug("Input parameters -> userId {}", userId);
+		return userRepository.userHasTwoFactorAuthenticationEnabled(userId);
+	}
 }
