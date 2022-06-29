@@ -580,6 +580,166 @@
 		</query>
 	</named-native-query>
 
+	<named-native-query name="GeneralReports.ConsultationDetailEmergencias" result-set-mapping="GeneralReports.ConsultationDetailEmergenciasResult">
+		<query>
+			SELECT source.institution AS institution,
+			source.ambulance AS ambulance,
+			source.office AS office,
+			source.sector AS sector,
+			source.police_intervention AS policeIntervention,
+			source.attention_date AS attentionDate,
+			source.identification AS identification,
+			source.last_name AS lastName,
+			source.names AS names,
+			source.medical_coverage AS medicalCoverage,
+			source.emergency_care_entrance AS emergencyCareEntrance,
+			source.situation AS situation,
+			source.emergency_care_type AS emergencyCareType,
+			source.triage_note AS triageNote,
+			source.triage_level AS triageLevel,
+			source.date_discharge AS dateDischarge,
+			source.ambulance_discharge AS ambulanceDischarge,
+			source.discharge_type AS typeDischarge,
+			source.patient_exit AS patientExit
+			FROM (SELECT ece.created_on, ins.id as institution_id,  concat(ins.name, ' ', ins.sisa_code) AS institution,
+			ece.ambulance_company_id as ambulance,
+			d_of.description as office,
+			css.description as sector,
+			CASE
+			WHEN ece.has_police_intervention=true THEN
+			concat('Sí')
+			ELSE concat('No')
+			END AS police_intervention,
+			ece.updated_on as attention_date,
+			concat(it.description, ' ', pe.identification_number) as identification,
+			concat(pe.last_name, ' ', pe.other_last_names) as last_name,
+			concat(pe.first_name, ' ', pe.middle_names) as names,
+			concat(mc.name, '(', hi.rnos, ')', pmc.affiliate_number) as medical_coverage,
+			ec_in_t.description AS emergency_care_entrance,
+			ec_st.description AS situation,
+			ec_t.description AS emergency_care_type,
+			(SELECT string_agg(tr.notes, ', ') FROM triage tr
+			WHERE tr.emergency_care_episode_id=ece.id) AS triage_note,
+			concat(tr_cat.name, ' Codigo: ', tr_cat.color_name) as triage_level,
+			ec_dis.administrative_discharge_on as date_discharge,
+			ec_dis.ambulance_company_id AS ambulance_discharge,
+			dis.description as discharge_type,
+			dis_out.description as patient_exit
+			FROM emergency_care_episode ece
+			INNER JOIN institution ins ON ece.institution_id = ins.id
+			INNER JOIN emergency_care_state ec_st ON ece.emergency_care_state_id = ec_st.id
+			INNER JOIN patient pa ON ece.patient_id = pa.id
+			INNER JOIN person pe ON pa.person_id = pe.id
+			INNER JOIN identification_type it ON pe.identification_type_id=it.id
+			LEFT JOIN patient_medical_coverage pmc on ece.patient_medical_coverage_id=pmc.id
+			LEFT JOIN medical_coverage mc ON pmc.medical_coverage_id=mc.id
+			LEFT JOIN health_insurance hi ON hi.id=mc.id
+			LEFT JOIN emergency_care_entrance_type ec_in_t ON ece.emergency_care_entrance_type_id = ec_in_t.id
+			LEFT JOIN emergency_care_type ec_t ON ece.emergency_care_type_id = ec_t.id
+			LEFT JOIN emergency_care_discharge ec_dis ON ece.id = ec_dis.emergency_care_episode_id
+			LEFT JOIN discharge_type dis ON ec_dis.discharge_type_id = dis.id
+			LEFT JOIN emergency_care_entrance_type dis_out ON ec_dis.hospital_transport_id=dis_out.id
+			LEFT JOIN doctors_office d_of ON ece.doctors_office_id=d_of.id
+			LEFT JOIN clinical_specialty_sector css ON d_of.clinical_specialty_sector_id=css.id
+			LEFT JOIN triage_category tr_cat  ON ece.triage_category_id=tr_cat.id
+			) source
+			WHERE (source.created_on >= date_trunc('hour', (now() + (INTERVAL '-24 hour')))
+			AND source.created_on &lt; date_trunc('hour', now()))
+			AND institution_id= :institutionId
+			LIMIT 1048575
+		</query>
+	</named-native-query>
+
+	<named-native-query name="GeneralReports.ConsultationDetailDiabeticos" result-set-mapping="GeneralReports.ConsultationDetailDiabeticosResult">
+		<query>
+			WITH signos_vitales as(
+			SELECT d.id as id_doc,
+			s.id, s.pt as name,
+			CAST(ovs.value AS decimal) as value
+			FROM document d INNER JOIN document_vital_sign dvs on dvs.document_id=d.id
+			INNER JOIN observation_vital_sign ovs on dvs.observation_vital_sign_id=ovs.id
+			INNER JOIN snomed s on ovs.snomed_id=s.id
+			), medicacion as (
+			SELECT dms.document_id, s.pt, s.sctid FROM document_medicamention_statement dms
+			INNER JOIN medication_statement ms on dms.medication_statement_id=ms.id
+			INNER JOIN medication_statement_status mss on ms.status_id=mss.id
+			INNER JOIN snomed s on ms.snomed_id=s.id
+			), motivos_list as(
+			SELECT string_agg(rr.description, ', ') as descriptions, ocrr.outpatient_consultation_id
+			FROM outpatient_consultation_reasons ocrr
+			INNER JOIN reasons rr on ocrr.reason_id=rr.id
+			GROUP BY outpatient_consultation_id
+			)
+			SELECT oc.id as id,
+			concat(ins.name, ' (SISA: ', ins.sisa_code, ')') as institution,
+			oc.created_on as attentionDate,
+			concat(p.first_name, ' ', p.middle_names, ' ', p.last_name, ' ', p.other_last_names) as lender,
+			p.identification_number as identificationLender,
+			concat(pp.first_name, ' ', pp.middle_names , ' ', pp.last_name, ' ', pp.other_last_names) as patient,
+			pp.identification_number as identificationPatient,
+			s_hc.pt as problem,
+			mo.descriptions as reasons,
+			sv_hg.value as glycosylatedHemoglobinBloodPressure,
+			(SELECT string_agg(concat(med.pt, '(SNOMED:', med.sctid, ')'), ', ') FROM medicacion med where med.document_id=d.id) as medication
+			FROM outpatient_consultation oc
+			LEFT JOIN institution ins ON oc.institution_id=ins.id
+			LEFT JOIN motivos_list mo on mo.outpatient_consultation_id=oc.id
+			LEFT JOIN healthcare_professional hp ON oc.doctor_id=hp.id
+			INNER JOIN person p on hp.person_id=p.id
+			INNER JOIN identification_type itp ON p.identification_type_id=itp.id
+			LEFT JOIN patient pa on oc.patient_id=pa.id
+			INNER JOIN person pp on pa.person_id=pp.id
+			INNER JOIN identification_type itpp ON pp.identification_type_id=itpp.id
+			INNER JOIN document d on oc.document_id=d.id
+			INNER JOIN document_health_condition dhc on dhc.document_id=d.id INNER JOIN health_condition hc on dhc.health_condition_id=hc.id INNER JOIN snomed s_hc on hc.snomed_id=s_hc.id
+			LEFT JOIN signos_vitales sv_hg on sv_hg.id_doc=oc.document_id and sv_hg.id=1411
+			where (s_hc.pt like '%diabetes%')
+			AND ins.id= :institutionId
+		</query>
+	</named-native-query>
+
+	<named-native-query name="GeneralReports.ConsultationDetailHipertensos" result-set-mapping="GeneralReports.ConsultationDetailHipertensosResult">
+		<query>
+			with signos_vitales as(
+			SELECT d.id as id_doc, s.id, s.pt as name, CAST(ovs.value AS decimal) as value
+			FROM document d INNER JOIN document_vital_sign dvs on dvs.document_id=d.id INNER JOIN observation_vital_sign ovs on dvs.observation_vital_sign_id=ovs.id
+			INNER JOIN snomed s on ovs.snomed_id=s.id
+			), medicacion as (
+			SELECT dms.document_id, s.pt, s.sctid FROM document_medicamention_statement dms
+			INNER JOIN medication_statement ms on dms.medication_statement_id=ms.id
+			INNER JOIN medication_statement_status mss on ms.status_id=mss.id
+			INNER JOIN snomed s on ms.snomed_id=s.id
+			), motivos_list as(
+			SELECT string_agg(rr.description, ', ') as descriptions, ocrr.outpatient_consultation_id FROM outpatient_consultation_reasons ocrr INNER JOIN reasons rr on ocrr.reason_id=rr.id group by outpatient_consultation_id
+			)
+			SELECT oc.id as id,
+			concat(ins.name, ' (SISA: ', ins.sisa_code, ')') as institution,
+			oc.created_on as attentionDate,
+			concat(p.first_name, ' ', p.middle_names, ' ', p.last_name, ' ', p.other_last_names) as lender,
+			p.identification_number as identificationLender,
+			concat(pp.first_name, ' ', pp.middle_names , ' ', pp.last_name, ' ', pp.other_last_names) as patient,
+			pp.identification_number as identificationPatient,
+			s_hc.pt as problem,
+			mo.descriptions as reasons,
+			concat(sv_ps.value, '/',sv_pd.value) as glycosylatedHemoglobinBloodPressure,
+			(SELECT string_agg(concat(med.pt, '(SNOMED:', med.sctid, ')'), ', ') FROM medicacion med WHERE med.document_id=d.id) as medication
+			FROM outpatient_consultation oc
+			LEFT JOIN institution ins ON oc.institution_id=ins.id
+			LEFT JOIN motivos_list mo on mo.outpatient_consultation_id=oc.id
+			LEFT JOIN healthcare_professional hp ON oc.doctor_id=hp.id
+			INNER JOIN person p on hp.person_id=p.id
+			INNER JOIN identification_type itp ON p.identification_type_id=itp.id
+			LEFT JOIN patient pa on oc.patient_id=pa.id
+			INNER JOIN person pp on pa.person_id=pp.id
+			INNER JOIN identification_type itpp ON pp.identification_type_id=itpp.id
+			INNER JOIN document d on oc.document_id=d.id
+			INNER JOIN document_health_condition dhc on dhc.document_id=d.id INNER JOIN health_condition hc on dhc.health_condition_id=hc.id INNER JOIN snomed s_hc on hc.snomed_id=s_hc.id
+			LEFT JOIN signos_vitales sv_ps on sv_ps.id_doc=oc.document_id and sv_ps.id=1
+			LEFT JOIN signos_vitales sv_pd on sv_pd.id_doc=oc.document_id and sv_pd.id=2
+			WHERE (s_hc.pt like '%hipertensión arterial%' or mo.descriptions like '%hipertensión%') AND oc.created_on>= timestamp with time zone '2022-01-02 00:00:00.000Z'
+			AND ins.id= :institutionId
+		</query>
+	</named-native-query>
 
     <!-- ========================================== -->
     <!-- ============== Appointment =============== -->
@@ -785,6 +945,59 @@
 			<column name="problems" class="java.lang.String"/>
 			<column name="medication" class="java.lang.String"/>
 			<column name="evolution" class="java.lang.String"/>
+		</constructor-result>
+	</sql-result-set-mapping>
+	<sql-result-set-mapping name="GeneralReports.ConsultationDetailEmergenciasResult">
+		<constructor-result target-class="net.pladema.generalreports.repository.ConsultationDetailEmergencias">
+			<column name="institution" class="java.lang.String"/>
+			<column name="ambulance" class="java.lang.String"/>
+			<column name="office" class="java.lang.String"/>
+			<column name="sector" class="java.lang.String"/>
+			<column name="policeIntervention" class="java.lang.String"/>
+			<column name="attentionDate" class="java.lang.String"/>
+			<column name="identification" class="java.lang.String"/>
+			<column name="lastName" class="java.lang.String"/>
+			<column name="names" class="java.lang.String"/>
+			<column name="medicalCoverage" class="java.lang.String"/>
+			<column name="emergencyCareEntrance" class="java.lang.String"/>
+			<column name="situation" class="java.lang.String"/>
+			<column name="emergencyCareType" class="java.lang.String"/>
+			<column name="triageNote" class="java.lang.String"/>
+			<column name="triageLevel" class="java.lang.String"/>
+			<column name="dateDischarge" class="java.lang.String"/>
+			<column name="ambulanceDischarge" class="java.lang.String"/>
+			<column name="typeDischarge" class="java.lang.String"/>
+			<column name="patientExit" class="java.lang.String"/>
+		</constructor-result>
+	</sql-result-set-mapping>
+	<sql-result-set-mapping name="GeneralReports.ConsultationDetailDiabeticosResult">
+		<constructor-result target-class="net.pladema.generalreports.repository.ConsultationDetailDiabeticosHipertensos">
+			<column name="id" class="java.lang.String"/>
+			<column name="institution" class="java.lang.String"/>
+			<column name="attentionDate" class="java.lang.String"/>
+			<column name="lender" class="java.lang.String"/>
+			<column name="identificationLender" class="java.lang.String"/>
+			<column name="patient" class="java.lang.String"/>
+			<column name="identificationPatient" class="java.lang.String"/>
+			<column name="problem" class="java.lang.String"/>
+			<column name="reasons" class="java.lang.String"/>
+			<column name="glycosylatedHemoglobinBloodPressure" class="java.lang.String"/>
+			<column name="medication" class="java.lang.String"/>
+		</constructor-result>
+	</sql-result-set-mapping>
+	<sql-result-set-mapping name="GeneralReports.ConsultationDetailHipertensosResult">
+		<constructor-result target-class="net.pladema.generalreports.repository.ConsultationDetailDiabeticosHipertensos">
+			<column name="id" class="java.lang.String"/>
+			<column name="institution" class="java.lang.String"/>
+			<column name="attentionDate" class="java.lang.String"/>
+			<column name="lender" class="java.lang.String"/>
+			<column name="identificationLender" class="java.lang.String"/>
+			<column name="patient" class="java.lang.String"/>
+			<column name="identificationPatient" class="java.lang.String"/>
+			<column name="problem" class="java.lang.String"/>
+			<column name="reasons" class="java.lang.String"/>
+			<column name="glycosylatedHemoglobinBloodPressure" class="java.lang.String"/>
+			<column name="medication" class="java.lang.String"/>
 		</constructor-result>
 	</sql-result-set-mapping>
 
