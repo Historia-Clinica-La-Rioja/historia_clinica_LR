@@ -15,6 +15,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -48,7 +49,7 @@ public class QueryFactory {
 		odontologyQuery.setParameter("institutionId", institutionId);
 		odontologyQuery.setParameter("startDate", startDate);
 		odontologyQuery.setParameter("endDate", endDate);
-		List<ConsultationDetail> odontologyData = formatProblems(odontologyQuery.getResultList());
+		List<ConsultationDetail> odontologyData = formatProblemsAndProcedures(odontologyQuery.getResultList());
 
 		Query nursingQuery = entityManager.createNamedQuery("Reports.NursingConsultationDetail");
 		nursingQuery.setParameter("institutionId", institutionId);
@@ -66,31 +67,42 @@ public class QueryFactory {
                 .collect(Collectors.toList());
     }
 
-	private List<ConsultationDetail> formatProblems(List<ConsultationDetail> list){
+	private List<ConsultationDetail> formatProblemsAndProcedures(List<ConsultationDetail> list){
 		for(ConsultationDetail fila : list){
 			if(fila.getProblems() != null) {
-				List withRepeated = List.of(fila.getProblems().split("/split/"));
+				String problems = StringUtils.stripAccents(fila.getProblems());
+				List withRepeated = List.of(problems.split("/split/"));
 				Set<String> noRepeated = new HashSet<String>(withRepeated);
-				String result = "";
-				for (String problem : noRepeated) {
-					int repetitions = Collections.frequency(withRepeated, problem);
-					if (result.equals("")) {
-						if(repetitions > 1)
-							result += "(" + repetitions + ") " + problem;
-						else
-							result += problem;
-					}
-					else {
-						if (repetitions > 1)
-							result += ", (" + repetitions + ") " + problem;
-						else
-							result += ", " + problem;
-					}
-				}
-				fila.setProblems(result);
+				fila.setProblems(this.reduceAndFormat(withRepeated, noRepeated));
+			}
+			if(fila.getProcedures() != null) {
+				String procedures = StringUtils.stripAccents(fila.getProcedures());
+				List withRepeated = List.of(procedures.split("/split/"));
+				Set<String> noRepeated = new HashSet<String>(withRepeated);
+				fila.setProcedures(this.reduceAndFormat(withRepeated, noRepeated));
 			}
 		}
 		return list;
+	}
+
+	private String reduceAndFormat(List withRepeated, Set<String> noRepeated){
+		String result = "";
+		for (String item : noRepeated) {
+			int repetitions = Collections.frequency(withRepeated, item);
+			if (result.equals("")) {
+				if(repetitions > 1)
+					result += "(" + repetitions + ") " + item;
+				else
+					result += item;
+			}
+			else {
+				if (repetitions > 1)
+					result += ", (" + repetitions + ") " + item;
+				else
+					result += ", " + item;
+			}
+		}
+		return result;
 	}
 
     @SuppressWarnings("unchecked")

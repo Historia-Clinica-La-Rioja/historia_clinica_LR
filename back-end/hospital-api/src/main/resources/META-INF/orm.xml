@@ -211,88 +211,105 @@
 	</named-native-query>
 
     <named-native-query name="Reports.ConsultationDetail" result-set-mapping="Reports.ConsultationDetailResult">
-        <query>WITH consultation AS (
-            SELECT  oc.institution_id, oc.patient_id, oc.patient_medical_coverage_id, oc.clinical_specialty_id,
-            oc.doctor_id, oc.start_date as start_date, ocr.reasons as reasons,  prob.descriptions as problems,
-            vs.weight, vs.height, vs.systolic as systolicBloodPressure, vs.diastolic as diastolicBloodPressure,
-            'outpatient' as consultation_type
-            FROM outpatient_consultation oc
-            LEFT JOIN (
-            SELECT ocr.outpatient_consultation_id as id, STRING_AGG(r.description, ', ') as reasons
-            FROM outpatient_consultation_reasons ocr
-            JOIN reasons r ON (ocr.reason_id = r.id)
-            GROUP BY ocr.outpatient_consultation_id
-            ) ocr ON (oc.id = ocr.id )
-            LEFT JOIN (
-            SELECT oc.id, STRING_AGG(sno.pt, ', ') as descriptions
-            FROM outpatient_consultation oc
-            JOIN document doc ON (oc.document_id = doc.id)
-            JOIN document_health_condition dhc ON (doc.id = dhc.document_id)
-            JOIN health_condition hc ON (dhc.health_condition_id = hc.id)
-            JOIN snomed sno ON (hc.snomed_id = sno.id)
-            WHERE hc.problem_id IN (:problemTypes)
-            GROUP BY oc.id
-            ) prob ON (oc.id = prob.id)
-            LEFT JOIN (
-            SELECT oc.id,
-            MAX(CASE WHEN ovs.loinc_code='8480-6' THEN ovs.value END) as systolic,
-            MAX(CASE WHEN ovs.loinc_code='8462-4' THEN ovs.value END) as diastolic,
-            MAX(CASE WHEN ovs.loinc_code='8302-2' THEN ovs.value END) as height,
-            MAX(CASE WHEN ovs.loinc_code='29463-7' THEN ovs.value END) as weight
-            FROM outpatient_consultation oc
-            LEFT JOIN document_vital_sign dvs ON (oc.document_id = dvs.document_id)
-            LEFT JOIN observation_vital_sign ovs ON (dvs.observation_vital_sign_id = ovs.id)
-            GROUP BY oc.id
-            ORDER BY oc.id
-            ) vs ON (oc.id = vs.id)
-            WHERE oc.institution_id = :institutionId
-            AND oc.billable = true
-            AND oc.start_date BETWEEN :startDate AND :endDate
-            UNION ALL
-            SELECT vc.institution_id, vc.patient_id, vc.patient_medical_coverage_id, vc.clinical_specialty_id,
-            vc.doctor_id, vc.performed_date as start_date, NULL AS reasons,  NULL AS problems,
-            NULL AS weight, NULL AS height, NULL AS systolicBloodPressure, NULL AS diastolicBloodPressure,
-            'vaccine' as consultation_type
-            FROM vaccine_consultation vc
-            WHERE vc.institution_id = :institutionId
-            AND vc.billable = true
-            AND vc.performed_date BETWEEN :startDate AND :endDate
-            )
-            SELECT p.description as province, d.description as department, i.sisa_code as sisaCode, i.name as institution,
-            CONCAT(pe.last_name, ' ', pe.other_last_names) as patientSurname,
-            CONCAT(pe.first_name, ' ', pe.middle_names) as patientFirstName,
-            it.description as identificationType, pe.identification_number as identificationNumber,
-            to_char(pe.birth_date,'DD/MM/YYYY') as birthDate,  g.description as gender,
-            CONCAT(a2.street, ' ', a2.number, ' ', a2.floor, ' ', a2.apartment, ' ', c2.description) as address,
-            px.phone_number as phoneNumber, px.email as email,
-            coverage.coverageName, coverage.affiliateNumber,
-            to_char(cst.start_date,'DD/MM/YYYY') as startDate,
-            cs.id as clinicalSpecialtyId, cs.name as clinicalSpecialty,
-            hp.id as professionalId,
-            CONCAT(p2.last_name, ' ', p2.other_last_names, ' ',p2.first_name, ' ', p2.middle_names) as professionalName,
-            cst.reasons as reasons,  cst.problems,
-            cst.weight, cst.height, cst.systolicBloodPressure, cst.diastolicBloodPressure
-            FROM consultation cst
-            JOIN institution i ON (cst.institution_id = i.id)
-            JOIN address a ON (i.address_id = a.id)
-            LEFT JOIN city c ON (a.city_id = c.id)
-            JOIN department d ON (c.department_id = d.id)
-            JOIN province p ON (d.province_id = p.id)
-            JOIN patient pa ON (cst.patient_id = pa.id)
-            JOIN person pe ON (pa.person_id = pe.id)
-            LEFT JOIN identification_type it ON (pe.identification_type_id = it.id)
-            LEFT JOIN person_extended px ON (px.person_id = pe.id)
-            LEFT JOIN gender g ON (px.gender_self_determination = g.id)
-            LEFT JOIN address a2 ON (px.address_id = a2.id)
-            LEFT JOIN city c2 ON (a2.city_id = c2.id)
-            LEFT JOIN (
-            select pmc.id, mc."name" AS coverageName, affiliate_number AS affiliateNumber
-            from patient_medical_coverage pmc
-            join medical_coverage mc on (pmc.medical_coverage_id = mc.id)
-            ) coverage ON (cst.patient_medical_coverage_id = coverage.id)
-            LEFT JOIN clinical_specialty cs ON (cst.clinical_specialty_id = cs.id)
-            JOIN healthcare_professional hp ON (cst.doctor_id = hp.id)
-            JOIN person p2 ON (hp.person_id = p2.id)
+        <query>
+			WITH consultation AS (
+			SELECT  oc.institution_id, oc.patient_id, oc.patient_medical_coverage_id, oc.clinical_specialty_id,
+			oc.doctor_id, oc.start_date as start_date, ocr.reasons as reasons,  prob.descriptions as problems, proced.cst_procedures as procedures,
+			vs.weight, vs.height, vs.systolic as systolicBloodPressure, vs.diastolic as diastolicBloodPressure,
+			vs.cardiovascular_risk as cardiovascularRisk, vs.glycosylated as glycosylatedHemoglobin, vs.head_circunference as headCircunference,
+			'outpatient' as consultation_type
+			FROM outpatient_consultation oc
+			LEFT JOIN (
+			SELECT ocr.outpatient_consultation_id as id, STRING_AGG(r.description, ', ') as reasons
+			FROM outpatient_consultation_reasons ocr
+			JOIN reasons r ON (ocr.reason_id = r.id)
+			GROUP BY ocr.outpatient_consultation_id
+			) ocr ON (oc.id = ocr.id )
+			LEFT JOIN (
+			SELECT oc.id, STRING_AGG(sno.pt, ', ') as descriptions
+			FROM outpatient_consultation oc
+			JOIN document doc ON (oc.document_id = doc.id)
+			JOIN document_health_condition dhc ON (doc.id = dhc.document_id)
+			JOIN health_condition hc ON (dhc.health_condition_id = hc.id)
+			JOIN snomed sno ON (hc.snomed_id = sno.id)
+			WHERE hc.problem_id IN (:problemTypes)
+			GROUP BY oc.id
+			) prob ON (oc.id = prob.id)
+			LEFT JOIN (
+			SELECT oc.id,
+			MAX(CASE WHEN ovs.loinc_code='8480-6' THEN ovs.value END) as systolic,
+			MAX(CASE WHEN ovs.loinc_code='8462-4' THEN ovs.value END) as diastolic,
+			MAX(CASE WHEN ovs.loinc_code='8302-2' THEN ovs.value END) as height,
+			MAX(CASE WHEN ovs.loinc_code='29463-7' THEN ovs.value END) as weight,
+			MAX(CASE WHEN ovs.loinc_code='65853-4' THEN ovs.value END) as cardiovascular_risk,
+			MAX(CASE WHEN ovs.loinc_code='62854-5' THEN ovs.value END) as glycosylated,
+			MAX(CASE WHEN ovs.loinc_code='11947-9' THEN ovs.value END) as head_circunference
+			FROM outpatient_consultation oc
+			LEFT JOIN document_vital_sign dvs ON (oc.document_id = dvs.document_id)
+			LEFT JOIN observation_vital_sign ovs ON (dvs.observation_vital_sign_id = ovs.id)
+			GROUP BY oc.id
+			ORDER BY oc.id
+			) vs ON (oc.id = vs.id)
+			left join (
+			select oc.id, string_agg(s.pt, ', ') as cst_procedures
+			from outpatient_consultation oc
+			join document d on(d.source_id = oc.id and d.source_type_id = 1)
+			join document_procedure dp on(d.id = dp.document_id)
+			join "procedures" p on(dp.procedure_id = p.id)
+			join snomed s on(p.snomed_id = s.id)
+			group by oc.id
+			) proced on(proced.id = oc.id)
+			WHERE oc.institution_id = :institutionId
+			AND oc.billable = true
+			AND oc.start_date BETWEEN :startDate AND :endDate
+			UNION ALL
+			SELECT vc.institution_id, vc.patient_id, vc.patient_medical_coverage_id, vc.clinical_specialty_id,
+			vc.doctor_id, vc.performed_date as start_date, NULL AS reasons,  NULL AS problems, null as procedures,
+			NULL AS weight, NULL AS height, NULL AS systolicBloodPressure, NULL AS diastolicBloodPressure,
+			null as cardiovascularRisk, null as glycosylatedHemoglobin, null as headCircunference,
+			'vaccine' as consultation_type
+			FROM vaccine_consultation vc
+			WHERE vc.institution_id = :institutionId
+			AND vc.billable = true
+			AND vc.performed_date BETWEEN :startDate AND :endDate
+			)
+			SELECT p.description as province, d.description as department, i.sisa_code as sisaCode, i.name as institution,
+			CONCAT(pe.last_name, ' ', pe.other_last_names) as patientSurname,
+			CONCAT(pe.first_name, ' ', pe.middle_names) as patientFirstName,
+			px.name_self_determination as selfPerceivedName,
+			it.description as identificationType, pe.identification_number as identificationNumber,
+			to_char(pe.birth_date,'DD/MM/YYYY') as birthDate,  g.description as gender,
+			CONCAT(a2.street, ' ', a2.number, ' ', a2.floor, ' ', a2.apartment, ' ', c2.description) as address,
+			px.phone_number as phoneNumber, px.email as email,
+			coverage.coverageName, coverage.affiliateNumber,
+			to_char(cst.start_date,'DD/MM/YYYY') as startDate,
+			cs.id as clinicalSpecialtyId, cs.name as clinicalSpecialty,
+			hp.id as professionalId,
+			CONCAT(p2.last_name, ' ', p2.other_last_names, ' ',p2.first_name, ' ', p2.middle_names) as professionalName,
+			cst.reasons as reasons,  cst.problems, cst.procedures,
+			cst.weight, cst.height, cst.systolicBloodPressure, cst.diastolicBloodPressure,
+			cst.cardiovascularRisk, cst.glycosylatedHemoglobin, cst.headCircunference, null as cpo, null as ceo
+			FROM consultation cst
+			JOIN institution i ON (cst.institution_id = i.id)
+			JOIN address a ON (i.address_id = a.id)
+			LEFT JOIN city c ON (a.city_id = c.id)
+			JOIN department d ON (c.department_id = d.id)
+			JOIN province p ON (d.province_id = p.id)
+			JOIN patient pa ON (cst.patient_id = pa.id)
+			JOIN person pe ON (pa.person_id = pe.id)
+			LEFT JOIN identification_type it ON (pe.identification_type_id = it.id)
+			LEFT JOIN person_extended px ON (px.person_id = pe.id)
+			LEFT JOIN gender g ON (px.gender_self_determination = g.id)
+			LEFT JOIN address a2 ON (px.address_id = a2.id)
+			LEFT JOIN city c2 ON (a2.city_id = c2.id)
+			LEFT JOIN (
+			select pmc.id, mc."name" AS coverageName, affiliate_number AS affiliateNumber
+			from patient_medical_coverage pmc
+			join medical_coverage mc on (pmc.medical_coverage_id = mc.id)
+			) coverage ON (cst.patient_medical_coverage_id = coverage.id)
+			LEFT JOIN clinical_specialty cs ON (cst.clinical_specialty_id = cs.id)
+			JOIN healthcare_professional hp ON (cst.doctor_id = hp.id)
+			JOIN person p2 ON (hp.person_id = p2.id)
         </query>
     </named-native-query>
 
@@ -300,8 +317,10 @@
 		<query>
 			WITH consultation AS (
 			SELECT oc.institution_id, oc.patient_id, oc.patient_medical_coverage_id, oc.clinical_specialty_id,
-			oc.doctor_id, oc.created_on as start_date, ocr.reasons as reasons,  CONCAT(otherprob.descriptions, '/split/', prob.descriptions) as problems,
+			oc.doctor_id, oc.created_on as start_date, ocr.reasons as reasons,  concat_ws('/split/', otherprob.descriptions, prob.descriptions) as problems,
+			concat_ws('/split/', proced.cst_procedures, otherproced.cst_procedures) as procedures,
 			null as weight, null as height, null as systolicBloodPressure, null as diastolicBloodPressure,
+			null as cardiovascularRisk, null as glycosylatedHemoglobin, null as headCircunference, indexs.cpo, indexs.ceo,
 			'odontology' as consultation_type
 			FROM odontology_consultation oc
 			LEFT JOIN (
@@ -328,6 +347,30 @@
 			JOIN snomed sno ON (od.snomed_id = sno.id)
 			GROUP BY oc.id
 			) prob ON (oc.id = prob.id)
+			left join (
+			select oc.id, string_agg(s.pt, '/split/') as cst_procedures
+			from odontology_consultation oc
+			join document d on(d.source_id = oc.id)
+			join document_procedure dp on(d.id = dp.document_id and d.source_type_id = 6)
+			join "procedures" p on(dp.procedure_id = p.id)
+			join snomed s on(p.snomed_id = s.id)
+			group by oc.id
+			) proced on(proced.id = oc.id)
+			left join (
+			select oc.id, string_agg(s.pt, '/split/') as cst_procedures
+			from odontology_consultation oc
+			join document d on(d.source_id = oc.id)
+			join document_odontology_procedure dop on(dop.document_id = d.id)
+			join odontology_procedure op on(dop.odontology_procedure_id = op.id)
+			join snomed s on(op.snomed_id = s.id)
+			group by oc.id
+			) otherproced on(otherproced.id = oc.id)
+			left join (
+			select oc.id, sum(oci.permanent_c + oci.permanent_p + oci.permanent_o) as cpo, sum(oci.temporary_c + oci.temporary_e + oci.temporary_o) as ceo
+			from odontology_consultation oc
+			join odontology_consultation_indices oci on(oc.id = oci.odontology_consultation_id)
+			group by oc.id
+			) indexs on(indexs.id = oc.id)
 			WHERE oc.institution_id = :institutionId
 			AND oc.billable = true
 			AND oc.created_on BETWEEN :startDate AND :endDate
@@ -335,6 +378,7 @@
 			SELECT p.description as province, d.description as department, i.sisa_code as sisaCode, i.name as institution,
 			CONCAT(pe.last_name, ' ', pe.other_last_names) as patientSurname,
 			CONCAT(pe.first_name, ' ', pe.middle_names) as patientFirstName,
+			px.name_self_determination as selfPerceivedName,
 			it.description as identificationType, pe.identification_number as identificationNumber,
 			to_char(pe.birth_date,'DD/MM/YYYY') as birthDate,  g.description as gender,
 			CONCAT(a2.street, ' ', a2.number, ' ', a2.floor, ' ', a2.apartment, ' ', c2.description) as address,
@@ -344,8 +388,9 @@
 			cs.id as clinicalSpecialtyId, cs.name as clinicalSpecialty,
 			hp.id as professionalId,
 			CONCAT(p2.last_name, ' ', p2.other_last_names, ' ',p2.first_name, ' ', p2.middle_names) as professionalName,
-			cst.reasons as reasons,  cst.problems,
-			cst.weight, cst.height, cst.systolicBloodPressure, cst.diastolicBloodPressure
+			cst.reasons as reasons,  cst.problems, cst.procedures,
+			cst.weight, cst.height, cst.systolicBloodPressure, cst.diastolicBloodPressure,
+			cst.cardiovascularRisk, cst.glycosylatedHemoglobin, cst.headCircunference, cst.cpo, cst.ceo
 			FROM consultation cst
 			JOIN institution i ON (cst.institution_id = i.id)
 			JOIN address a ON (i.address_id = a.id)
@@ -374,8 +419,9 @@
 		<query>
 			WITH consultation AS (
 			SELECT  oc.institution_id, oc.patient_id, oc.patient_medical_coverage_id, oc.clinical_specialty_id,
-			oc.doctor_id, oc.created_on as start_date, null as reasons,  prob.descriptions as problems,
+			oc.doctor_id, oc.created_on as start_date, null as reasons,  prob.descriptions as problems, proced.cst_procedures as procedures,
 			vs.weight, vs.height, vs.systolic as systolicBloodPressure, vs.diastolic as diastolicBloodPressure,
+			vs.cardiovascular_risk as cardiovascularRisk, vs.glycosylated as glycosylatedHemoglobin, vs.head_circunference as headCircunference,
 			'nursing' as consultation_type
 			FROM nursing_consultation oc
 			LEFT JOIN (
@@ -392,7 +438,10 @@
 			MAX(CASE WHEN ovs.loinc_code='8480-6' THEN ovs.value END) as systolic,
 			MAX(CASE WHEN ovs.loinc_code='8462-4' THEN ovs.value END) as diastolic,
 			MAX(CASE WHEN ovs.loinc_code='8302-2' THEN ovs.value END) as height,
-			MAX(CASE WHEN ovs.loinc_code='29463-7' THEN ovs.value END) as weight
+			MAX(CASE WHEN ovs.loinc_code='29463-7' THEN ovs.value END) as weight,
+			MAX(CASE WHEN ovs.loinc_code='65853-4' THEN ovs.value END) as cardiovascular_risk,
+			MAX(CASE WHEN ovs.loinc_code='62854-5' THEN ovs.value END) as glycosylated,
+			MAX(CASE WHEN ovs.loinc_code='11947-9' THEN ovs.value END) as head_circunference
 			FROM nursing_consultation oc
 			join document d on(oc.id = d.source_id and d.source_type_id = 7)
 			LEFT JOIN document_vital_sign dvs ON (d.id = dvs.document_id)
@@ -400,12 +449,22 @@
 			GROUP BY oc.id
 			ORDER BY oc.id
 			) vs ON (oc.id = vs.id)
+			left join (
+			select oc.id, string_agg(s.pt, ', ') as cst_procedures
+			from nursing_consultation oc
+			join document d on(d.source_id = oc.id)
+			join document_procedure dp on(d.id = dp.document_id and d.source_type_id = 7)
+			join "procedures" p on(dp.procedure_id = p.id)
+			join snomed s on(p.snomed_id = s.id)
+			group by oc.id
+			) proced on(proced.id = oc.id)
 			WHERE oc.institution_id = :institutionId
 			AND oc.created_on BETWEEN :startDate AND :endDate
 			)
 			SELECT p.description as province, d.description as department, i.sisa_code as sisaCode, i.name as institution,
 			CONCAT(pe.last_name, ' ', pe.other_last_names) as patientSurname,
 			CONCAT(pe.first_name, ' ', pe.middle_names) as patientFirstName,
+			px.name_self_determination as selfPerceivedName,
 			it.description as identificationType, pe.identification_number as identificationNumber,
 			to_char(pe.birth_date,'DD/MM/YYYY') as birthDate,  g.description as gender,
 			CONCAT(a2.street, ' ', a2.number, ' ', a2.floor, ' ', a2.apartment, ' ', c2.description) as address,
@@ -415,8 +474,9 @@
 			cs.id as clinicalSpecialtyId, cs.name as clinicalSpecialty,
 			hp.id as professionalId,
 			CONCAT(p2.last_name, ' ', p2.other_last_names, ' ',p2.first_name, ' ', p2.middle_names) as professionalName,
-			cst.reasons as reasons,  cst.problems,
-			cst.weight, cst.height, cst.systolicBloodPressure, cst.diastolicBloodPressure
+			cst.reasons as reasons,  cst.problems, cst.procedures,
+			cst.weight, cst.height, cst.systolicBloodPressure, cst.diastolicBloodPressure,
+			cst.cardiovascularRisk, cst.glycosylatedHemoglobin, cst.headCircunference, null as cpo, null as ceo
 			FROM consultation cst
 			JOIN institution i ON (cst.institution_id = i.id)
 			JOIN address a ON (i.address_id = a.id)
@@ -566,6 +626,7 @@
             <column name="institution" class="java.lang.String"/>
             <column name="patientSurname" class="java.lang.String"/>
             <column name="patientFirstName" class="java.lang.String"/>
+			<column name="selfPerceivedName" class="java.lang.String"/>
             <column name="identificationType" class="java.lang.String"/>
             <column name="identificationNumber" class="java.lang.String"/>
             <column name="birthDate" class="java.lang.String"/>
@@ -582,10 +643,16 @@
             <column name="professionalName" class="java.lang.String"/>
             <column name="reasons" class="java.lang.String"/>
             <column name="problems" class="java.lang.String"/>
+			<column name="procedures" class="java.lang.String"/>
             <column name="weight" class="java.lang.String"/>
             <column name="height" class="java.lang.String"/>
             <column name="systolicBloodPressure" class="java.lang.String"/>
             <column name="diastolicBloodPressure" class="java.lang.String"/>
+			<column name="cardiovascularRisk" class="java.lang.String"/>
+			<column name="glycosylatedHemoglobin" class="java.lang.String"/>
+			<column name="headCircunference" class="java.lang.String"/>
+			<column name="cpo" class="java.lang.String"/>
+			<column name="ceo" class="java.lang.String"/>
         </constructor-result>
 
     </sql-result-set-mapping>
