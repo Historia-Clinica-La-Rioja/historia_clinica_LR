@@ -20,4 +20,9 @@ export class MedicalConsultationMasterdataService {
 		return this.http.get<MasterDataInterface<number>[]>(url);
 	}
 
+	getAppointmentBlockMotives(): Observable<MasterDataInterface<number>[]> {
+		const url = `${environment.apiBase}/institutions/${this.contextService.institutionId}/medicalConsultations/masterdata/appointmentBlockMotive`;
+		return this.http.get<MasterDataInterface<number>[]>(url);
+	}
+
 }

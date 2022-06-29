@@ -529,3 +529,68 @@ databaseChangeLog:
           - sql:
               sql: |-
                 UPDATE patient_discharge SET medical_discharge_date = administrative_discharge_date WHERE medical_discharge_date IS NULL AND administrative_discharge_date IS NOT NULL;
+    
+    - changeSet:
+        id: appointment_block_motive-createTable
+        comment: Create table appointment_block_motive
+        author: mmalyvarni
+        changes:
+          - createTable:
+              tableName: appointment_block_motive
+              columns:
+                - column:
+                    constraints:
+                      primaryKey: true
+                      primaryKeyName: PK_appointment_block_motive
+                    name: id
+                    type: smallint
+                - column:
+                    constraints:
+                      nullable: false
+                    name: description
+                    type: varchar(50)
+    
+    - changeSet:
+        id: add_appointment_block_motives
+        comment: Add appointment block motives
+        author: mmalyvarni
+        context: "!schema-only"
+        changes:
+          - sql:
+              sql: |-
+                INSERT INTO appointment_block_motive VALUES(1, 'Institucional - Feriado no programado');
+                INSERT INTO appointment_block_motive VALUES(2, 'Personal salud - Congreso');
+                INSERT INTO appointment_block_motive VALUES(3, 'Personal salud - Vacaciones');
+                INSERT INTO appointment_block_motive VALUES(4, 'Personal salud - Enfermedad');
+                INSERT INTO appointment_block_motive VALUES(5, 'Personal salud - Ateneo/Curso');
+                INSERT INTO appointment_block_motive VALUES(6, 'Personal salud - Ausente médico');
+                INSERT INTO appointment_block_motive VALUES(7, 'Personal salud - Cambio de horario');
+                INSERT INTO appointment_block_motive VALUES(8, 'Personal salud - Médica no programada');
+                INSERT INTO appointment_block_motive VALUES(9, 'Personal salud - Maternidad');
+                INSERT INTO appointment_block_motive VALUES(10, 'Fuerza Mayor - Paro general');
+                INSERT INTO appointment_block_motive VALUES(11, 'Fuerza Mayor - Corte de luz');
+                INSERT INTO appointment_block_motive VALUES(12, 'Fuerza Mayor - Falta de rec');
+                INSERT INTO appointment_block_motive VALUES(13, 'Administrativa - Error de carga');
+                INSERT INTO appointment_block_motive VALUES(14, 'Personal salud - Personal');
+                INSERT INTO appointment_block_motive VALUES(15, 'Personal salud - Otros');
+                INSERT INTO appointment_block_motive VALUES(16, 'Cancelación de cirugía');
+                INSERT INTO appointment_block_motive VALUES(17, 'Reprogramación de cirugía');
+                INSERT INTO appointment_block_motive VALUES(18, 'No puede concurrir');
+                INSERT INTO appointment_block_motive VALUES(19, 'Reunión de Equipo');
+                INSERT INTO appointment_block_motive VALUES(20, 'Actividad comunitaria extramuros');
+                INSERT INTO appointment_block_motive VALUES(21, 'Actividad comunitaria intramuros');
+
+    - changeSet:
+        id: add_to_appointment_appointment_block_motive_id
+        comment: Add appointment_block_motive_id to appointment
+        author: mmalyvarni
+        changes:
+          - addColumn:
+              tableName: appointment
+              columns:
+                - column:
+                    constraints:
+                      foreignKeyName: FK_appointment_appointment_block_motive_id
+                      references: appointment_block_motive(id)
+                    name: appointment_block_motive_id
+                    type: smallint

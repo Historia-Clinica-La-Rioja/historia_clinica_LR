@@ -7,6 +7,16 @@
 		<mat-tab label="BLOQUEAR">
 			<form [formGroup]="blockForm">
 				<app-date-range-time-form [selectedAgenda]="data.selectedAgenda" formControlName="control"></app-date-range-time-form>
+				<div fxLayout="column">
+					<mat-form-field appearance="outline">
+						<mat-label [translate]="'turnos.appointment.MOTIVE'"></mat-label>
+						<mat-select formControlName="blockMotive">
+					  		<mat-option *ngFor="let appointmentBlockMotive of appointmentBlockMotives" [value]="appointmentBlockMotive.id">
+							{{ appointmentBlockMotive.description }}</mat-option>
+						</mat-select>
+						<mat-error>Por favor seleccione un motivo</mat-error>
+					</mat-form-field>
+				</div>
 				<div align="end">
 					<button mat-flat-button color="primary" class="uppercase" [disabled]="!blockForm.valid"
 						(click)="block()" id="confirm-button">CONFIRMAR</button>

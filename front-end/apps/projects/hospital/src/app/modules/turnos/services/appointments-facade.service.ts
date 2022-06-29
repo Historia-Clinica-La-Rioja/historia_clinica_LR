@@ -13,6 +13,7 @@ import { Moment } from 'moment';
 import { map, first } from 'rxjs/operators';
 import { CANCEL_STATE_ID, APPOINTMENT_STATES_ID } from '../constants/appointment';
 import { PatientNameService } from "@core/services/patient-name.service";
+import { AppointmentBlockMotivesFacadeService } from './appointment-block-motives-facade.service';
 
 const enum COLORES {
 	ASSIGNED = '#4187FF',
@@ -70,6 +71,8 @@ export class AppointmentsFacadeService {
 	constructor(
 		private readonly appointmentService: AppointmentsService,
 		private readonly patientNameService: PatientNameService,
+		private readonly appointmentBlockMotivesFacadeService: AppointmentBlockMotivesFacadeService,
+
 	) {
 		this.appointments$ = this.appointmenstEmitter.asObservable();
 	}
@@ -97,7 +100,7 @@ export class AppointmentsFacadeService {
 						const from = momentParseTime(appointment.hour).format(DateFormat.HOUR_MINUTE);
 						const to = momentParseTime(from).add(this.appointmentDuration, 'minutes').format(DateFormat.HOUR_MINUTE);
 						const viewName = this.getViewName(appointment.patient?.person);
-						const calendarEvent = toCalendarEvent(from, to, momentParseDate(appointment.date), appointment, viewName);
+						const calendarEvent = toCalendarEvent(from, to, momentParseDate(appointment.date), appointment, viewName, this.appointmentBlockMotivesFacadeService);
 						return calendarEvent;
 					});
 				this.appointmenstEmitter.next(appointmentsCalendarEvents);
@@ -226,7 +229,7 @@ export class AppointmentsFacadeService {
 	}
 }
 
-export function toCalendarEvent(from: string, to: string, date: Moment, appointment: AppointmentListDto, viewName: string): CalendarEvent {
+export function toCalendarEvent(from: string, to: string, date: Moment, appointment: AppointmentListDto, viewName: string, appointmentBlockMotivesFacadeService?: AppointmentBlockMotivesFacadeService): CalendarEvent {
 	const fullName = [appointment.patient?.person.lastName, appointment.patient?.person.firstName].
 		filter(val => val).join(', ');
 
@@ -269,7 +272,7 @@ export function toCalendarEvent(from: string, to: string, date: Moment, appointm
 	function getTitle(): string {
 
 		if (appointment.appointmentStateId === APPOINTMENT_STATES_ID.BLOCKED) {
-			return 'Horario bloqueado'
+			return appointmentBlockMotivesFacadeService?.getAppointmentBlockMotiveById(appointment.appointmentBlockMotiveId);
 		}
 		if (appointment.patient?.typeId === TEMPORARY_PATIENT) {
 			return `${momentParseTime(from).format(DateFormat.HOUR_MINUTE_12)} ${viewName ? viewName : ''} (Temporal)`;

@@ -34,7 +34,9 @@ public class AppointmentDiaryVo {
 
     private final String phoneNumber;
 
-    public AppointmentDiaryVo(
+    private final Short appointmentBlockMotiveId;
+	
+	public AppointmentDiaryVo(
 			Integer diaryId,
 			Integer id,
 			Integer patientId,
@@ -45,7 +47,8 @@ public class AppointmentDiaryVo {
 			Integer patientMedicalCoverageId,
 			String phonePrefix,
 			String phoneNumber,
-			Short medicalAttentionTypeId
+			Short medicalAttentionTypeId,
+			Short appointmentBlockMotiveId
 	) {
         this.diaryId = diaryId;
         this.id = id;
@@ -58,6 +61,7 @@ public class AppointmentDiaryVo {
 		this.phonePrefix = phonePrefix;
         this.phoneNumber = phoneNumber;
         this.medicalAttentionTypeId = medicalAttentionTypeId;
+		this.appointmentBlockMotiveId = appointmentBlockMotiveId;
     }
 
 

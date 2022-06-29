@@ -345,6 +345,7 @@ public class DiaryController {
 		appointmentBo.setAppointmentStateId(AppointmentState.BLOCKED);
 		appointmentBo.setOverturn(false);
 		appointmentBo.setOpeningHoursId(getOpeningHourId(openingHours, date, blockDto).getOpeningHours().getId());
+		appointmentBo.setAppointmentBlockMotiveId(blockDto.getAppointmentBlockMotiveId());
 		return appointmentBo;
 	}
 

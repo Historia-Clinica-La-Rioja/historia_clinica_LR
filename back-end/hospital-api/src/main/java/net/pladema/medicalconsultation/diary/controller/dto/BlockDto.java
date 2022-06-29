@@ -16,4 +16,5 @@ public class BlockDto {
 	private DateDto endDateDto;
 	private TimeDto init;
 	private TimeDto end;
+	private Short appointmentBlockMotiveId;
 }

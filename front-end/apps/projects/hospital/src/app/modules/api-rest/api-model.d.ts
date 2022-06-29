@@ -220,6 +220,7 @@ export interface AppointmentDto extends CreateAppointmentDto {
 }
 
 export interface AppointmentListDto {
+    appointmentBlockMotiveId: number;
     appointmentStateId: number;
     date: string;
     healthInsuranceId: number;
@@ -416,6 +417,7 @@ export interface BedSummaryDto {
 }
 
 export interface BlockDto {
+    appointmentBlockMotiveId: number;
     end: TimeDto;
     endDateDto: DateDto;
     init: TimeDto;

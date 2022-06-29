@@ -210,7 +210,8 @@ public class AppointmentsController {
                 appointmentBo.getMedicalAttentionTypeId(),
                 appointmentBo.getAppointmentStateId(),
                 appointmentBo.getPhonePrefix(),
-                appointmentBo.getPhoneNumber()
+                appointmentBo.getPhoneNumber(),
+				appointmentBo.getAppointmentBlockMotiveId()
         );
     }
 

@@ -3,6 +3,7 @@ package net.pladema.medicalconsultation.controller;
 import ar.lamansys.sgx.shared.masterdata.application.MasterDataService;
 import ar.lamansys.sgx.shared.masterdata.infrastructure.output.repository.MasterDataProjection;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import net.pladema.medicalconsultation.appointment.repository.entity.AppointmentBlockMotive;
 import net.pladema.medicalconsultation.appointment.repository.entity.AppointmentState;
 import net.pladema.medicalconsultation.repository.entity.MedicalAttentionType;
 import org.slf4j.Logger;
@@ -39,4 +40,10 @@ public class MedicalConsultationMasterdataController {
         LOG.debug("{}", "All appointment state");
         return ResponseEntity.ok().body(masterDataService.findAll(AppointmentState.class));
     }
+
+	@GetMapping(value= "/appointmentBlockMotive")
+	public ResponseEntity<Collection<MasterDataProjection>> getAppointmentBlockMotive() {
+		LOG.debug("{}", "All appointment block motive");
+		return ResponseEntity.ok().body(masterDataService.findAll(AppointmentBlockMotive.class));
+	}
 }
