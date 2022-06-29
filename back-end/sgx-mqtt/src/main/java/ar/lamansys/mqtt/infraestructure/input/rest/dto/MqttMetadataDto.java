@@ -25,7 +25,4 @@ public class MqttMetadataDto {
     @NotNull
     private Integer qos;
 
-    @NotNull
-    private String type;
-
 }

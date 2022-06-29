@@ -1,5 +1,6 @@
 package ar.lamansys.sgh.shared.infrastructure.input.service.events;
 
+import ar.lamansys.sgh.shared.infrastructure.input.service.appointment.MqttTypeBo;
 import ar.lamansys.mqtt.infraestructure.input.MqttDtoUtils;
 import ar.lamansys.mqtt.infraestructure.input.rest.dto.MqttMetadataDto;
 import ar.lamansys.mqtt.infraestructure.input.service.MqttCallExternalService;
@@ -28,16 +29,17 @@ public class SimplePublishService {
 	}
 
 	private MqttMetadataDto mapTo(NotifyPatientDto notifyPatientDto) {
-		return new MqttMetadataDto(notifyPatientDto.getTopic(), getMessage(notifyPatientDto), false, 2, "add");
+		return  MqttDtoUtils.getMqtMetadataDto(notifyPatientDto.getTopic(), getMessage(notifyPatientDto));
 	}
 
 	protected String getMessage(NotifyPatientDto notifyPatientDto) {
-		return String.format("\"data\":{\"appointmentId\":%s,\"patient\":\"%s\",\"sector\":%s,\"doctor\":\"%s\",\"doctorsOffice\":\"%s\"}", notifyPatientDto.getAppointmentId(), notifyPatientDto.getPatientName(), notifyPatientDto.getSectorId(), notifyPatientDto.getDoctorName(), notifyPatientDto.getDoctorsOfficeName());
+		return String.format("{\"type\":\"%s\"," +
+				"\"data\":{\"appointmentId\":%s,\"patient\":\"%s\",\"sector\":%s,\"doctor\":\"%s\",\"doctorsOffice\":\"%s\"}}",MqttTypeBo.ADD.getId(), notifyPatientDto.getAppointmentId(), notifyPatientDto.getPatientName(), notifyPatientDto.getSectorId(), notifyPatientDto.getDoctorName(), notifyPatientDto.getDoctorsOfficeName());
 	}
 
 
 	private String getSimplePayload(Integer patientId, String topic) {
-		return String.format("\"description\":\"{\\\"patientId\\\":%d,\\\"topic\\\":\\\"%s\\\"}\"", patientId, topic);
+		return String.format("{\"description\":\"{\\\"patientId\\\":%d,\\\"topic\\\":\\\"%s\\\"}\"}\"", patientId, topic);
 	}
 
 

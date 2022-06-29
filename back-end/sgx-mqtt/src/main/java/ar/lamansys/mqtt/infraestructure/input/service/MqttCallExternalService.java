@@ -44,8 +44,7 @@ public class MqttCallExternalService {
 				metadata.getTopic(),
 				metadata.getMessage(),
 				metadata.isRetained(),
-				metadata.getQos(),
-				metadata.getType()
+				metadata.getQos()
 		);
 	}
 }

@@ -10,7 +10,6 @@ import org.eclipse.paho.client.mqttv3.MqttCallbackExtended;
 import org.eclipse.paho.client.mqttv3.MqttMessage;
 
 import ar.lamansys.mqtt.domain.MqttMetadataBo;
-import ar.lamansys.mqtt.domain.MqttTypeBo;
 import ar.lamansys.mqtt.domain.SubscriptionBo;
 import lombok.extern.slf4j.Slf4j;
 
@@ -44,7 +43,7 @@ public class SgxMqttCallback implements IMqttMessageListener, MqttCallbackExtend
 	}
 
 	private MqttMetadataBo mapTo(String topic, MqttMessage message) {
-		return new MqttMetadataBo(topic, message.toString(), message.isRetained(), message.getQos(), MqttTypeBo.ADD.getId());
+		return new MqttMetadataBo(topic, message.toString(), message.isRetained(), message.getQos());
 	}
 
 

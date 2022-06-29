@@ -1691,7 +1691,6 @@ export interface MqttMetadataDto {
     qos: number;
     retained: boolean;
     topic: string;
-    type: string;
 }
 
 export interface NewDosageDto extends Serializable {

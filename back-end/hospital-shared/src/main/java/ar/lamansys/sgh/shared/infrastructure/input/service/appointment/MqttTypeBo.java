@@ -1,4 +1,4 @@
-package ar.lamansys.mqtt.domain;
+package ar.lamansys.sgh.shared.infrastructure.input.service.appointment;
 
 import ar.lamansys.mqtt.domain.exception.MqttTypeBoException;
 import ar.lamansys.mqtt.domain.exception.MqttTypeBoExceptionEnum;
