@@ -56,6 +56,8 @@ export class InstitucionComponent implements OnInit {
 			this.contextService.setInstitutionId(institutionId);
 			this.institutionHomeLink = ['/', AppRoutes.Institucion, this.contextService.institutionId];
 
+			const url = `${window.location.origin}/institucion/${institutionId}/pacientes/profile/`;
+			localStorage.setItem("PATIENT_PROFILE", url);
 			this.menuItems$ = this.featureFlagService.filterItems$(SIDEBAR_MENU)
 				.pipe(
 					switchMap(menu => this.permissionsService.filterItems$(menu)),
