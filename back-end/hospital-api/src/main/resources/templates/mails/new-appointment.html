@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head th:replace="fragments/header :: header"></head>
+<body>
+    <p>Hola <strong th:text="${recipient.firstname}">Sebastián Perruolo</strong>:</p>
+    <p>
+        Le confirmamos el turno con
+        <span th:text="${args.professionalFullName}">Damián Silva</span>
+        <span th:if="${args.specialty != null}" th:text="${'(' + args.specialty + ')'}">(NEUMONOLOGÍA)</span>
+        el
+        <span th:text="${args.day}">domingo 17 de abril</span>
+        a las
+        <span th:text="${args.time}">10:15</span>
+        .
+    </p>
+    <p th:if="${args.institution != null}">
+        Lo esperamos en
+        <span th:text="${args.institution}">Sanatorio Tandil</span>,
+        <a th:if="${args.address != null}"  th:href="@{'https://www.google.com/maps/place/' + ${args.address}}">
+            <span th:text="${address}">Avellaneda 186, Tandil</span>
+        </a>
+    </p>
+    <p th:if="${args.recomendation != null}" th:text="${args.recomendation}">Le recordamos presentarse 15 min antes con el carnet de la Obra Social</p>
+
+    <button th:if="${args.cancelationLink != null}" type="button">
+        <a th:href="${args.cancelationLink}">Cancelar turno</a>
+    </button>
+</body>
+<footer th:replace="fragments/footer :: footer"></footer>
+</html>

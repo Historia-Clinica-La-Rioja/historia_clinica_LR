@@ -10,6 +10,7 @@ import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
 import net.pladema.person.repository.domain.CompletePersonVo;
+import net.pladema.person.repository.domain.PersonRecipientVo;
 import net.pladema.person.repository.domain.PersonalInformation;
 import net.pladema.person.repository.entity.Person;
 
@@ -65,5 +66,17 @@ public interface PersonRepository extends JpaRepository<Person, Integer> {
     "JOIN Person p ON hp.personId = p.id " +
     "WHERE d.id = :diaryId")
     Optional<Person> findProfessionalNameByDiaryId(@Param("diaryId") Integer diaryId);
-    
+
+	@Transactional(readOnly = true)
+	@Query("SELECT NEW net.pladema.person.repository.domain.PersonRecipientVo(" +
+			"p.firstName, " +
+			"p.lastName, " +
+			"pe.phonePrefix, " +
+			"pe.phoneNumber, " +
+			"pe.email " +
+			") FROM Person as p " +
+			"LEFT JOIN PersonExtended as pe ON (pe.id = p.id) " +
+			"WHERE p.id = :personId ")
+	Optional<PersonRecipientVo> getPersonRecipient(@Param("personId") Integer personId);
+
 }

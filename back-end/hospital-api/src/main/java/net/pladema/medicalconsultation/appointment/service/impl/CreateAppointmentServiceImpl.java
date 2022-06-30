@@ -4,6 +4,8 @@ import org.springframework.stereotype.Service;
 
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import net.pladema.medicalconsultation.appointment.application.port.NewAppointmentNotification;
+import net.pladema.medicalconsultation.appointment.domain.NewAppointmentNotificationBo;
 import net.pladema.medicalconsultation.appointment.repository.AppointmentAssnRepository;
 import net.pladema.medicalconsultation.appointment.repository.AppointmentRepository;
 import net.pladema.medicalconsultation.appointment.repository.entity.Appointment;
@@ -22,6 +24,7 @@ public class CreateAppointmentServiceImpl implements CreateAppointmentService {
 
 	private final AppointmentAssnRepository appointmentAssnRepository;
 
+	private final NewAppointmentNotification newAppointmentNotification;
 
 	@Override
 	@Transactional
@@ -35,6 +38,15 @@ public class CreateAppointmentServiceImpl implements CreateAppointmentService {
 				appointmentBo.getDiaryId(),
 				appointmentBo.getOpeningHoursId(),
 				appointment.getId()
+		));
+
+
+		newAppointmentNotification.run(new NewAppointmentNotificationBo(
+				appointment.getPatientId(),
+				appointment.getPatientMedicalCoverageId(),
+				appointment.getDateTypeId(),
+				appointment.getHour(),
+				appointmentBo.getDiaryId()
 		));
 
 		log.debug("Output -> {}", result);
