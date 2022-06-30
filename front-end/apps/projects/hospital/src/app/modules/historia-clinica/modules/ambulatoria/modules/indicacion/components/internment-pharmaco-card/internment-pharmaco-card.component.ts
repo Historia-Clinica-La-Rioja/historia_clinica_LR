@@ -1,8 +1,9 @@
 import { Component, Input, OnChanges } from '@angular/core';
 import { PharmacoDto } from '@api-rest/api-model';
 import { InternacionMasterDataService } from '@api-rest/services/internacion-master-data.service';
-import { PHARMACO, showFrequencyPharmaco, showTimeElapsed } from "@historia-clinica/modules/ambulatoria/modules/indicacion/constants/internment-indications";
-import { Content, ExtraInfo } from "@presentation/components/indication/indication.component";
+import { PHARMACO, showTimeElapsed } from "@historia-clinica/modules/ambulatoria/modules/indicacion/constants/internment-indications";
+import { Content } from "@presentation/components/indication/indication.component";
+import { loadExtraInfoPharmaco } from '../../constants/load-information';
 
 @Component({
 	selector: 'app-internment-pharmaco-card',
@@ -31,27 +32,11 @@ export class InternmentPharmacoCardComponent implements OnChanges {
 					cssClass: pharmaco.status === "INDICATED" ? 'blue' : 'red'
 				},
 				description: pharmaco.snomed.pt,
-				extra_info: loadExtraInfo(pharmaco, this.vias),
+				extra_info: loadExtraInfoPharmaco(pharmaco, true),
 				createdBy: pharmaco.createdBy,
 				timeElapsed: showTimeElapsed(pharmaco.createdOn),
 			}
 		});
-		function loadExtraInfo(pharmaco: any, vias: any[]): ExtraInfo[] {
-			const extra_info = [];
-			if (pharmaco.dosage.quantity?.value) {
-				extra_info.push({
-					title: 'indicacion.internment-card.sections.indication-extra-description.DOSE',
-					content: pharmaco.dosage.quantity.value + " " + pharmaco.dosage.quantity.unit + " "
-				})
-			}
-
-			extra_info.push({
-				title: 'indicacion.internment-card.sections.indication-extra-description.VIA',
-				content: pharmaco.via
-			})
-
-			return  extra_info.concat(showFrequencyPharmaco(pharmaco));
-		}
 	}
-
 }
+

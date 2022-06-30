@@ -1,9 +1,10 @@
 import { Component, Input, OnChanges } from '@angular/core';
-import { OTHER_INDICATION, OTHER_INDICATION_ID, showFrequency, showTimeElapsed } from "@historia-clinica/modules/ambulatoria/modules/indicacion/constants/internment-indications";
+import { OTHER_INDICATION, OTHER_INDICATION_ID, showTimeElapsed } from "@historia-clinica/modules/ambulatoria/modules/indicacion/constants/internment-indications";
 import { Content } from '@presentation/components/indication/indication.component';
 import { OtherIndicationDto } from '@api-rest/api-model';
 import { OtherIndicationTypeDto } from '@api-rest/services/internment-indication.service';
 import { InternacionMasterDataService } from '@api-rest/services/internacion-master-data.service';
+import { showFrequency } from '../../constants/load-information';
 
 @Component({
 	selector: 'app-internment-other-indication-card',

@@ -1,6 +1,6 @@
-import { ExtraInfo, Title } from "@presentation/components/indication/indication.component"
-import { DateTimeDto, NewDosageDto } from "@api-rest/api-model";
-import { dateTimeDtotoLocalDate, dateTimeDtoToStringDate } from "@api-rest/mapper/date-dto.mapper";
+import { Title } from "@presentation/components/indication/indication.component"
+import { DateTimeDto } from "@api-rest/api-model";
+import { dateTimeDtoToStringDate } from "@api-rest/mapper/date-dto.mapper";
 import { differenceInMinutes, differenceInHours, differenceInDays } from "date-fns";
 import { ConfirmDialogComponent } from "@presentation/dialogs/confirm-dialog/confirm-dialog.component";
 import { MatDialog } from "@angular/material/dialog";
@@ -51,55 +51,9 @@ export const OTHER_INDICATION: Title = {
 	matIcon: 'assignment_late',
 }
 
-export function showFrequency(dosage: NewDosageDto): ExtraInfo[] {
-	const hour = dateTimeDtotoLocalDate(dosage?.startDateTime).getHours();
-	if (dosage?.frequency) {
-		return [{
-			title: 'indicacion.internment-card.sections.indication-extra-description.START_TIME',
-			content: "a las " + hour + "hs."
-		}, {
-			title: 'indicacion.internment-card.sections.indication-extra-description.INTERVAL',
-			content: "cada " + dosage?.frequency + "hs."
-		}]
-	}
-	if (dosage?.event)
-		return [{
-			title: 'indicacion.internment-card.sections.indication-extra-description.EVENT',
-			content: dosage?.event
-		}]
-	if (dosage?.startDateTime?.time.hours)
-		return [{
-			title: 'indicacion.internment-card.sections.indication-extra-description.ONCE',
-			content: "a las " + hour + "hs."
-		}]
-}
-
 const EVENT = "e";
 
 const HOURS = "h";
-
-export function showFrequencyPharmaco(pharmaco: any): ExtraInfo[] {
-	const hour = dateTimeDtotoLocalDate(pharmaco.dosage?.startDateTime).getHours();
-	if (pharmaco.dosage?.frequency) {
-		return [{
-			title: 'indicacion.internment-card.sections.indication-extra-description.START_TIME',
-			content: "a las " + hour + "hs."
-		}, {
-			title: 'indicacion.internment-card.sections.indication-extra-description.INTERVAL',
-			content: "cada " + pharmaco?.dosage?.frequency + "hs."
-		}]
-	}
-	if (pharmaco.dosage.periodUnit === 'e')
-		return [{
-			title: 'indicacion.internment-card.sections.indication-extra-description.EVENT',
-			content: pharmaco.dosage?.event
-		}]
-	if (pharmaco.dosage.periodUnit === 'h' || pharmaco.dosage.periodUnit === 'd')
-		return [{
-			title: 'indicacion.internment-card.sections.indication-extra-description.ONCE',
-			content: "a las " + hour + "hs."
-		}]
-}
 
 export function showTimeElapsed(createdOn: DateTimeDto): string {
 	const differenceInMin = differenceInMinutes(new Date(), new Date(dateTimeDtoToStringDate(createdOn)));
