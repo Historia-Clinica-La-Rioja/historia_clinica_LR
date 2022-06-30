@@ -7,7 +7,7 @@ import { SnackBarService } from '@presentation/services/snack-bar.service';
 import { APPOINTMENT_STATES_ID, getAppointmentState, MAX_LENGTH_MOTIVO } from '../../constants/appointment';
 import { ContextService } from '@core/services/context.service';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { AppFeature, AppointmentDto, ERole, IdentificationTypeDto, PatientMedicalCoverageDto, PersonPhotoDto } from '@api-rest/api-model.d';
+import { AppFeature, AppointmentDto, CompleteDiaryDto, ERole, IdentificationTypeDto, PatientMedicalCoverageDto, PersonPhotoDto } from '@api-rest/api-model.d';
 import { CancelAppointmentComponent } from '../cancel-appointment/cancel-appointment.component';
 import { getError, hasError, processErrors, updateControlValidator } from '@core/utils/form.utils';
 import { AppointmentsFacadeService } from '../../services/appointments-facade.service';
@@ -29,6 +29,7 @@ import { PersonMasterDataService } from "@api-rest/services/person-master-data.s
 import { SummaryCoverageInformation } from '@historia-clinica/modules/ambulatoria/components/medical-coverage-summary-view/medical-coverage-summary-view.component';
 import { PatientService } from '@api-rest/services/patient.service';
 import { ImageDecoderService } from '@presentation/services/image-decoder.service';
+import { momentParseDate } from '@core/utils/moment.utils';
 
 
 const TEMPORARY_PATIENT = 3;
@@ -79,6 +80,9 @@ export class AppointmentComponent implements OnInit {
 	hideFilterPanel = false;
 
 	isDateFormVisible = false;
+	startAgenda = new Date();
+	endAgenda = new Date(this.params.agenda.endDate);
+	availableDays: number[] = [];
 
 	isCheckedDownloadAnexo = false;
 	isCheckedDownloadFormulario = false;
@@ -90,7 +94,7 @@ export class AppointmentComponent implements OnInit {
 	observation: string;
 
 	constructor(
-		@Inject(MAT_DIALOG_DATA) public params: { appointmentData: PatientAppointmentInformation, hasPermissionToAssignShift: boolean },
+		@Inject(MAT_DIALOG_DATA) public params: { appointmentData: PatientAppointmentInformation, hasPermissionToAssignShift: boolean, agenda: CompleteDiaryDto },
 		public dialogRef: MatDialogRef<NewAttentionComponent>,
 		private readonly dialog: MatDialog,
 		private readonly appointmentService: AppointmentsService,
@@ -190,6 +194,13 @@ export class AppointmentComponent implements OnInit {
 					this.decodedPhoto$ = this.imageDecoderService.decode(personPhotoDto.imageData);
 				}
 			});
+
+		for (let i = 0; i < this.params.agenda.diaryOpeningHours.length; i++) {
+			let day = this.params.agenda.diaryOpeningHours[i].openingHours.dayWeekId;
+			if(!this.availableDays.includes(day))
+				this.availableDays.push(day);
+		}
+		console.log(this.availableDays);
 	}
 
 	formatPhonePrefixAndNumber(phonePrefix: string, phoneNumber: string): string {

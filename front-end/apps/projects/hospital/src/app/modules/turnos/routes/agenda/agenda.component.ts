@@ -307,7 +307,8 @@ export class AgendaComponent implements OnInit, OnDestroy, OnChanges {
 						this.dialog.open(AppointmentComponent, {
 							data: {
 								appointmentData: event.meta,
-								professionalPermissions: this.agenda.professionalAssignShift
+								professionalPermissions: this.agenda.professionalAssignShift,
+								agenda: this.agenda,
 							}
 						});
 
@@ -316,7 +317,8 @@ export class AgendaComponent implements OnInit, OnDestroy, OnChanges {
 				this.dialog.open(AppointmentComponent, {
 					data: {
 						appointmentData: event.meta,
-						hasPermissionToAssignShift: this.agenda.professionalAssignShift
+						hasPermissionToAssignShift: this.agenda.professionalAssignShift,
+						agenda: this.agenda,
 					},
 				});
 			}

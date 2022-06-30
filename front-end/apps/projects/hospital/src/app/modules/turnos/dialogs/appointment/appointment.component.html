@@ -159,13 +159,12 @@
 			</div>
 
 			<form [formGroup]="formDate" *ngIf="isDateFormVisible" fxLayout="column" fxLayoutGap="5px" class="dateForm">
-				<mat-form-field appearance="outline" class="date">
-					<input matInput [matDatepicker]="picker" formControlName="date">
-					<mat-datepicker-toggle matSuffix [for]="picker">
-						<mat-icon matDatepickerToggleIcon class="icon-grey" fontSet="material-icons-outlined">calendar_today</mat-icon>
-					</mat-datepicker-toggle>
-					<mat-datepicker #picker></mat-datepicker>
-				</mat-form-field>
+				<app-datepicker 
+					[minDate]="startAgenda"
+					[maxDate]="endAgenda"
+					[dateToSetInDatepicker]="params.appointmentData.date"
+					[availableDays]="availableDays">
+				</app-datepicker>
 
 				<div fxLayout="row" >
 					<mat-form-field appearance="outline" class="hour">

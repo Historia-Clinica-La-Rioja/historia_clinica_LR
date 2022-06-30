@@ -2,7 +2,8 @@
 	<span class="title">{{title | translate}}</span>
 	<form [formGroup]="form">
 		<mat-form-field appearance="outline">
-			<input matInput [min]="minDate" [matDatepicker]="datepicker" formControlName="selectedDate" readonly (dateChange)="changeDate()">
+			<input matInput [min]="minDate" [max]="maxDate" [matDatepicker]="datepicker" [matDatepickerFilter]="dateFilter"
+				formControlName="selectedDate" readonly (dateChange)="changeDate()" >
 			<mat-datepicker-toggle matSuffix [for]="datepicker"></mat-datepicker-toggle>
 			<mat-datepicker #datepicker>
 				<mat-datepicker-actions>
