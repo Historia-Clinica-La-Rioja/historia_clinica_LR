@@ -15,6 +15,8 @@ import net.pladema.medicalconsultation.appointment.domain.NewAppointmentNotifica
 import net.pladema.patient.infraestructure.output.notification.PatientNotificationSender;
 import net.pladema.patient.infraestructure.output.notification.PatientRecipient;
 
+import java.sql.Date;
+import java.text.SimpleDateFormat;
 import java.util.Objects;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -37,12 +39,13 @@ public class NewAppointmentNotificationImpl implements NewAppointmentNotificatio
 		InstitutionBo institutionBo = institutionService.get(diaryService.getInstitution(newAppointmentNotification.diaryId));
 		String address = institutionService.getAddress(institutionBo.getId())
 				.map(addressBo -> Stream.of(addressBo.getStreet(),addressBo.getNumber(),addressBo.getFloor(),addressBo.getCity().getDescription()).filter(Objects::nonNull).collect(Collectors.joining(" "))).orElse("Sin direccion");
+		String day = new SimpleDateFormat("EEEE dd 'de' MMMM 'de' YYYY").format(Date.valueOf(newAppointmentNotification.dateTypeId));
 		var notificationArgs = NewAppointmentNotificationArgs.builder();
 		// se resuelven los argumentos que requiere el mensaje a enviar a partir del BO
 		notificationArgs
 				.professionalFullName(professionalName)
 				.address(address)
-				.day(String.format("%s", newAppointmentNotification.dateTypeId))
+				.day(day)
 				.time(String.format("%s", newAppointmentNotification.hour))
 				.institution(institutionBo.getName())
 				.recomendation("...")
