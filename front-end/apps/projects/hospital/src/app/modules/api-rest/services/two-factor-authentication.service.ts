@@ -17,11 +17,16 @@ export class TwoFactorAuthenticationService {
 		return this.http.post<TwoFactorAuthenticationDto>(url, {});
 	}
 
-	confirmTwoFactorAuthenticationCode(verificationCode): Observable<Boolean> {
+	confirmTwoFactorAuthenticationCode(verificationCode): Observable<boolean> {
 		const url = `${environment.apiBase}/2fa/confirm`;
 		let params: HttpParams = new HttpParams();
 		params = params.append('code', verificationCode);
-		return this.http.post<Boolean>(url, {}, {params});
+		return this.http.post<boolean>(url, {}, {params});
+	}
+
+	loggedUserHasTwoFactorAuthenticationEnabled(): Observable<boolean> {
+		const url = `${environment.apiBase}/2fa/enabled-for-logged-user`;
+		return this.http.get<boolean>(url);
 	}
 
 }

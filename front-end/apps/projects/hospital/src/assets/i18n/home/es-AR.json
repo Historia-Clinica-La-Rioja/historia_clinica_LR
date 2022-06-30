@@ -6,7 +6,9 @@
 	},
 	"profile": {
 		"two-factor-authentication": {
-			"ENABLE_2FA": "Activar autenticacion por doble factor",
+			"ENABLE_2FA": "Activar autenticación por doble factor",
+			"ENABLE_2FA_SUCCESS": "Autenticación por doble factor activada",
+			"2FA_ALREADY_ACTIVATED": "Autenticación por doble factor ya activada",
 			"enable-dialog": {
 				"TITLE": "Activar autenticación por doble factor",
 				"2FA_DESCRIPTION": "Utilizando una aplicación de autenticación en su móvil (por ejemplo Google Authenticator o FreeOTP) deberá elegir la opción “Añadir nueva cuenta” y proceder con alguna de las siguientes opciones",
