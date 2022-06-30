@@ -147,6 +147,10 @@
 					}
 				}
 			}
+		},
+		"nursing-care": {
+			"TITLE": "Enfermería",
+			"TITLE_CARD": "Indicaciones de internación"
 		}
 	}
 }

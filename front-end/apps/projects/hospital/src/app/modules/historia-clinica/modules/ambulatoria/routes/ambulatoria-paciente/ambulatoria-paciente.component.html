@@ -261,7 +261,7 @@
 							<span>{{ 'ambulatoria.paciente.nursing.TAB_LABEL' | translate | uppercase }}</span>
 						</ng-template>
 						<ng-template matTabContent>
-							<app-nursing-care></app-nursing-care>
+							<app-nursing-care [internmentEpisodeId]="internmentEpisodeProcess.id"></app-nursing-care>
 						</ng-template>
 					</mat-tab>
 					<mat-tab id="tab_problemas" *ngIf="!(hasPicturesStaffRole || hasLaboratoryStaffRole || hasPharmacyStaffRole)">

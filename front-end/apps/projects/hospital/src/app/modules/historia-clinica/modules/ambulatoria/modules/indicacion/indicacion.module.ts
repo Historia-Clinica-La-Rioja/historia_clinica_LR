@@ -19,11 +19,14 @@ import { OtherIndicationComponent } from './dialogs/other-indication/other-indic
 import { ParenteralPlanComponent } from './dialogs/parenteral-plan/parenteral-plan.component';
 import { HistoriaClinicaModule } from '@historia-clinica/historia-clinica.module';
 import { PharmacoComponent } from './dialogs/pharmaco/pharmaco.component';
+import { GeneralNursingRecordComponent } from './components/general-nursing-record/general-nursing-record.component';
+import { SpecificNursingRecordComponent } from './components/specific-nursing-record/specific-nursing-record.component';
 
 @NgModule({
 	declarations: [
 		CardMedicacionesComponent,
 		DayDisplayComponent,
+		GeneralNursingRecordComponent,
 		ItemPrescripcionesComponent,
 		InternmentIndicationsCardComponent,
 		InternmentDietCardComponent,
@@ -32,6 +35,7 @@ import { PharmacoComponent } from './dialogs/pharmaco/pharmaco.component';
 		InternmentParenteralPlanCardComponent,
 		NuevaPrescripcionComponent,
 		NursingCareComponent,
+		SpecificNursingRecordComponent,
 		SuspenderMedicacionComponent,
 		DietComponent,
 		OtherIndicationComponent,
