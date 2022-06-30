@@ -1,19 +1,29 @@
 <app-content width="full">
-	<mat-card *ngIf="(institucion$ | async) as institucion; else loading">
-		<mat-card-header>
-			<mat-card-title>{{institucion.name}}</mat-card-title>
-			<mat-card-subtitle>{{address(institucion)}}</mat-card-subtitle>
-		</mat-card-header>
-		<div fxLayout="row" fxLayoutGap="5px" class="roles">
-			<div *ngFor="let role of roles; let i = index">
-				<span *ngIf="i > 0"> |</span> {{role}}
+	<div fxLayout="column" fxLayoutGap="10px">
+
+
+		<mat-card *ngIf="(institucion$ | async) as institucion; else loading">
+			<mat-card-header>
+				<mat-card-title>{{institucion.name}}</mat-card-title>
+				<mat-card-subtitle>{{address(institucion)}}</mat-card-subtitle>
+			</mat-card-header>
+			<div fxLayout="row" fxLayoutGap="5px" class="roles">
+				<div *ngFor="let role of roles; let i = index">
+					<span *ngIf="i > 0"> |</span> {{role}}
+				</div>
 			</div>
-		</div>
-		<mat-card-actions>
-			<button mat-button color="primary" (click)="switchInstitution()">CAMBIAR DE INSTITUCIÓN</button>
-		</mat-card-actions>
-	</mat-card>
-	<ng-template #loading>
-		<mat-progress-bar mode="indeterminate"></mat-progress-bar>
-	</ng-template>
+			<mat-card-actions>
+				<button mat-button color="primary" (click)="switchInstitution()">CAMBIAR DE INSTITUCIÓN</button>
+			</mat-card-actions>
+		</mat-card>
+		<ng-template #loading>
+			<mat-progress-bar mode="indeterminate"></mat-progress-bar>
+		</ng-template>
+		<mat-card *ngFor=" let extension of extensions">
+			<mat-card-content>
+				<app-ui-external-component type="external_component" [params]="extension.params">
+				</app-ui-external-component>
+			</mat-card-content>
+		</mat-card>
+	</div>
 </app-content>
