@@ -594,3 +594,87 @@ databaseChangeLog:
                       references: appointment_block_motive(id)
                     name: appointment_block_motive_id
                     type: smallint
+
+
+    - changeSet:
+        id: nursing_record-createTable
+        author: fsimaro
+        comment: Create table nursing_record
+        changes:
+          - createTable:
+              tableName: nursing_record
+              columns:
+                - column:
+                    autoIncrement: true
+                    constraints:
+                      primaryKey: true
+                      primaryKeyName: PK_nursing_record
+                    name: id
+                    type: int
+                - column:
+                    constraints:
+                      nullable: false
+                    name: indication_id
+                    type: int
+                - column:
+                    name: scheduled_administration_time
+                    type: datetime
+                - column:
+                    name: event
+                    type: varchar(100)
+                - column:
+                    constraints:
+                      nullable: false
+                    name: status_id
+                    type: smallint
+                - column:
+                    name: observation
+                    type: text
+                - column:
+                    name: administration_time
+                    type: datetime
+                - column:
+                    constraints:
+                      nullable: false
+                    name: created_by
+                    type: int
+                    defaultValue: -1
+                - column:
+                    constraints:
+                      nullable: false
+                    name: created_on
+                    type: datetime
+                    defaultValueDate: ${date.now}
+                - column:
+                    constraints:
+                      nullable: false
+                    name: updated_by
+                    type: int
+                    defaultValue: -1
+                - column:
+                    constraints:
+                      nullable: false
+                    name: updated_on
+                    type: datetime
+                    defaultValueDate: ${date.now}
+                - column:
+                    constraints:
+                      nullable: false
+                    name: deleted
+                    type: boolean
+                    defaultValue: ${boolean.false}
+                - column:
+                    name: deleted_by
+                    type: int
+                - column:
+                    name: deleted_on
+                    type: datetime
+          - addForeignKeyConstraint:
+              baseColumnNames: indication_id
+              baseTableName: nursing_record
+              constraintName: FK_nursing_record_indication_id
+              onDelete: NO ACTION
+              onUpdate: NO ACTION
+              referencedColumnNames: id
+              referencedTableName: indication
+              validate: true
