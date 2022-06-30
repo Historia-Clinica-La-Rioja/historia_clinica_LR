@@ -106,6 +106,14 @@ const messages = {
         dialog_title: 'Unificar coberturas médicas',
     },
     resources: {
+        wcDefinitionPath: {
+            name: 'Extension |||| Extensiones',
+            fields: {
+                name: 'Nombre',
+                path: 'Ruta'
+            },
+            createRelated: 'Crear wc'
+        },
         beds: {
             name: 'Cama |||| Camas',
             fields: {

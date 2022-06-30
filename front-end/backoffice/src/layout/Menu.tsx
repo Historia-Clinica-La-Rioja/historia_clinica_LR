@@ -97,7 +97,7 @@ const Menu = ({ dense = false }: MenuProps) => {
                 name="app.menu.more"
                 icon={<MenuOpenIcon />}
                 dense={dense}
-                resources={resources.filter(submenu(''))}
+                resources={resources.filter(submenu('more'))}
             />
         </div>
     );

@@ -49,7 +49,7 @@ import healthcareprofessionallicensenumbers from "./healthcareprofessionallicens
 import licensenumbertypes from "./licensenumbertypes";
 import healthcareprofessionalspecialtylicensenumbers from "./healthcareprofessionalspecialtylicensenumbers";
 //
-
+import wcDefinitionPath from './wcDefinitionPathCreate';
 
 const resourcesAdminInstitucional = (permissions: SGXPermissions) =>
     permissions.isOn('BACKOFFICE_MOSTRAR_ABM_RESERVA_TURNOS') ?
@@ -135,6 +135,9 @@ const resources = (permissions: SGXPermissions) => [
     <Resource name="snomedconcepts" {...snomedconcepts} />,
     <Resource name="internmentepisodes" />,
     <Resource name="healthcareprofessionals" />,
+
+    //Extension
+    <Resource name="wcDefinitionPath" {...wcDefinitionPath} />,
 ];
 
 export default resources;
