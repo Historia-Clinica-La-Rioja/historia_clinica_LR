@@ -1755,6 +1755,16 @@ export interface NursingProcedureDto extends Serializable {
     snomed: SnomedDto;
 }
 
+export interface NursingRecordDto {
+    administrationTime: DateTimeDto;
+    event: string;
+    id: number;
+    indication: IndicationDto;
+    observation: string;
+    scheduledAdministrationTime: DateTimeDto;
+    status: EIndicationStatus;
+}
+
 export interface NursingRiskFactorDto extends Serializable {
     bloodGlucose?: EffectiveClinicalObservationDto;
     bloodOxygenSaturation?: EffectiveClinicalObservationDto;
