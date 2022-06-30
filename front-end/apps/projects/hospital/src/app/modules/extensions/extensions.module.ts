@@ -17,6 +17,7 @@ import { QueryRendererComponent } from './components/query-renderer/query-render
 import { TabsComponent } from './components/tabs/tabs.component';
 import { UiComponentComponent } from './components/ui-component/ui-component.component';
 import { UiComponentListComponent } from './components/ui-component-list/ui-component-list.component';
+import { UiExternalComponentComponent } from './components/ui-external-component/ui-external-component.component';
 // config options
 import { cubejsOptions } from './extensions-cubejs';
 
@@ -43,10 +44,12 @@ import { cubejsOptions } from './extensions-cubejs';
 		TabsComponent,
 		UiComponentComponent,
 		UiComponentListComponent,
+		UiExternalComponentComponent,
 	],
 	exports: [
 		// components
 		PageLayoutComponent,
+		UiExternalComponentComponent,
 	]
 })
 export class ExtensionsModule { }
