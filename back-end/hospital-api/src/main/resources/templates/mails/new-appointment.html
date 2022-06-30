@@ -17,7 +17,7 @@
         Lo esperamos en
         <span th:text="${args.institution}">Sanatorio Tandil</span>,
         <a th:if="${args.address != null}"  th:href="@{'https://www.google.com/maps/place/' + ${args.address}}">
-            <span th:text="${address}">Avellaneda 186, Tandil</span>
+            <span th:text="${args.address}">Avellaneda 186, Tandil</span>
         </a>
     </p>
     <p th:if="${args.recomendation != null}" th:text="${args.recomendation}">Le recordamos presentarse 15 min antes con el carnet de la Obra Social</p>

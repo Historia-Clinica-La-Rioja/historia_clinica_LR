@@ -18,6 +18,9 @@ import net.pladema.medicalconsultation.diary.service.domain.DiaryOpeningHoursBo;
 import net.pladema.medicalconsultation.diary.service.domain.OverturnsLimitException;
 import net.pladema.permissions.controller.external.LoggedUserExternalService;
 import net.pladema.permissions.repository.enums.ERole;
+import net.pladema.medicalconsultation.diary.service.exception.DiaryNotFoundEnumException;
+import net.pladema.medicalconsultation.diary.service.exception.DiaryNotFoundException;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -294,6 +297,12 @@ public class DiaryServiceImpl implements DiaryService {
 		DiaryBo result = createDiaryBoInstance(resultQuery);
 		LOG.debug(OUTPUT, result);
 		return result;
+	}
+
+	@Override
+	public Integer getInstitution(Integer diaryId) {
+		return diaryRepository.getInstitutionIdByDiary(diaryId)
+				.orElseThrow(()-> new DiaryNotFoundException(DiaryNotFoundEnumException.DIARY_ID_NOT_FOUND,"La agenda solicitada no existe"));
 	}
 
 	private DiaryBo createDiaryBoInstance(Diary diary) {

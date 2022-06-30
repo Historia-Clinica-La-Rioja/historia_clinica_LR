@@ -4,5 +4,6 @@ import lombok.Getter;
 
 @Getter
 public enum NewAppointmentNotificationEnumException {
-	PROFESSIONAL_NAME_NOT_FOUND;
+	PROFESSIONAL_NAME_NOT_FOUND,
+	DIARY_NOT_FOUND;
 }

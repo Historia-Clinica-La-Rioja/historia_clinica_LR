@@ -31,5 +31,7 @@ public interface DiaryService {
 	DiaryBo getDiaryById(Integer diaryId);
 
 	Boolean hasActiveDiariesInInstitution(Integer healthcareProfessionalId, Integer institutionId);
+	
+	Integer getInstitution(Integer diaryId);
 
 }
