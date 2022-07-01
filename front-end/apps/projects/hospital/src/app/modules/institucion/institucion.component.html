@@ -2,6 +2,15 @@
 
 	<app-main-layout [menuItems]="menuItems">
 		<app-location-badge
+			location-info-min
+			[collapsed]="true"
+			[location]="institution"
+			[routerLink]="institutionHomeLink"
+			routerLinkActive="headers-card-background"
+			[routerLinkActiveOptions]="{exact: true}"
+			[roles]="roles"
+		></app-location-badge>
+		<app-location-badge
 			location-info
 			[location]="institution"
 			[routerLink]="institutionHomeLink"

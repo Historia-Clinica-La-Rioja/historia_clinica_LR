@@ -1,11 +1,14 @@
 <div class="location-badge">
-	<span class="name" *ngIf="location?.name">
-		{{location.name}}
-	</span>
-	<span class="address" *ngIf="location?.address">
+	<div fxLayout="row" fxLayoutGap="10px" fxLayoutAlign="start center">
+		<mat-icon mat-list-icon>domain </mat-icon>
+		<span [hidden]="collapsed" class="name" *ngIf="location?.name">
+			{{location.name}}
+		</span>
+	</div>
+	<span [hidden]="collapsed" class="address" *ngIf="location?.address">
 		{{location.address}}
 	</span>
-	<span class="role primary" *ngFor="let role of roles">
+	<span [hidden]="collapsed" class="role primary" *ngFor="let role of roles">
 		{{role}}
 	</span>
 </div>

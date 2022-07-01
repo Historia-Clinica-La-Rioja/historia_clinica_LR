@@ -20,9 +20,12 @@
 			<div class="custom-container">
 
 				<div class="top">
-					<div [hidden]="isCollapsed">
+
+					<ng-content *ngIf="isCollapsed else locationInfo" select="[location-info-min]"></ng-content>
+					<ng-template #locationInfo>
 						<ng-content select="[location-info]"></ng-content>
-					</div>
+					</ng-template>
+
 					<app-menu [menuItems]="menuItems" [isCollapsed]="isCollapsed"></app-menu>
 				</div>
 
