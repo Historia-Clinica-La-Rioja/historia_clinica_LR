@@ -150,7 +150,13 @@
 		},
 		"nursing-care": {
 			"TITLE": "Enfermería",
-			"TITLE_CARD": "Indicaciones de internación"
+			"TITLE_CARD": "Indicaciones de internación",
+			"sections": {
+				"TITLE_GENERAL": "Generales"
+			},
+			"status": {
+				"PENDING": "Pendiente"
+			}
 		}
 	}
 }

@@ -1,0 +1,7 @@
+<div class="margin">
+    <div *ngIf="nursingSections.length">
+        <app-nursing-record
+            [nursingRecords]="[{title: 'indicacion.nursing-care.sections.TITLE_GENERAL', record: nursingSections}]">
+        </app-nursing-record>
+    </div>
+</div>

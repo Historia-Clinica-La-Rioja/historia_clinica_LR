@@ -38,7 +38,7 @@ export class NursingCareComponent implements OnInit {
 	}
 
 	filterNursingRecords() {
-		const records: any[] = this.nursingRecords.filter(r => isSameDay(dateDtoToDate(r.indicationDate), this.actualDate));
+		const records: any[] = this.nursingRecords.filter(r => isSameDay(dateDtoToDate(r.indication.indicationDate), this.actualDate));
 		records.forEach(record => {
 			if (record.scheduleAdministrationTime || record.event)
 				this.specificNursingRecords.push(record);
