@@ -10,7 +10,6 @@
 
 .action-bar {
 	max-height: 10vh;
-	min-height: 4vh;
 	padding: 0 2vw;
 
 	font-weight: 500;
@@ -32,6 +31,7 @@
 
 .content {
 	max-height: 88vh;
+	min-height: 88vh;
 
 	.body {
 		max-height: 75vh;

@@ -64,6 +64,12 @@ section {
 	}
 }
 
+div.cdk-global-overlay-wrapper div.cdk-overlay-pane {
+	&.dock-popup-overlay.minimized-without-header {
+		visibility: hidden;
+	}
+}
+
 .dark-theme {
 	@include angular-material-color($dark-theme);
 	@include custom-components-color($dark-theme);

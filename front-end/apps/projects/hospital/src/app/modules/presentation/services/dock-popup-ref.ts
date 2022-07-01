@@ -52,7 +52,7 @@ export class DockPopupRef {
 	}
 
 	toggleWithoutHeader() {
-		this.overlayRef.addPanelClass('minimized');
+		this.overlayRef.addPanelClass('minimized-without-header');
 		this.overlayRef.removePanelClass('maximized');
 		this.minimized = true;
 		this.toggleWithoutHeaderPopUp = true;
