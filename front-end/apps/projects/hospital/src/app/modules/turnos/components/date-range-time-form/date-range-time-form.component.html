@@ -1,4 +1,4 @@
-<form fxLayout="column">
+<form fxLayout="column" class="block_dialog">
 	<div appearance="outline" style="margin-top: 16px;">
 		<div fxLayout="row" fxLayoutGap="20px">
 			<mat-form-field class="dateSelector" appearance="outline">
@@ -19,13 +19,22 @@
 		</div>
 	</div>
 
-	<div fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="5px">
-		<mat-form-field appearance="outline">
-			<input matInput type="time" id="init_time" name="input" [formControl]="form.controls.init" />
+	<div fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="20px">
+		<mat-form-field appearance="outline" class="hour_selector">
+			<mat-select id="startingHour" [formControl]="form.controls.init">
+				<mat-option [value]="possibleTime" *ngFor="let possibleTime of possibleStartingTime"
+					(click)="filterEndingTime()">
+					{{ possibleTime | viewDateDto:'time' | date:'shortTime' }}
+				</mat-option>
+			</mat-select>
 		</mat-form-field>
 		<span>hs. a</span>
-		<mat-form-field appearance="outline">
-			<input matInput type="time" id="end_time" name="end" [formControl]="form.controls.end" />
+		<mat-form-field appearance="outline" class="hour_selector">
+			<mat-select id="endingHour" [formControl]="form.controls.end">
+				<mat-option [value]="possibleTime" *ngFor="let possibleTime of possibleEndingTime">
+					{{ possibleTime | viewDateDto:'time' | date:'shortTime' }}
+				</mat-option>
+			</mat-select>
 		</mat-form-field>
 		<span>hs.</span>
 	</div>

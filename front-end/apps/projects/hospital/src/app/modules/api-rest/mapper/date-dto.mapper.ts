@@ -68,3 +68,12 @@ export const dateToDateTimeDtoUTC = (date: Date): DateTimeDto => {
 		},
 	};
 };
+
+export const stringToTimeDto = (date: string): TimeDto => {
+	const timeArray = date.split(":");
+	return {
+		hours: +timeArray[0],
+		minutes: +timeArray[1],
+		seconds: +timeArray[2]
+	}
+}
