@@ -29,8 +29,8 @@ import { PersonMasterDataService } from "@api-rest/services/person-master-data.s
 import { SummaryCoverageInformation } from '@historia-clinica/modules/ambulatoria/components/medical-coverage-summary-view/medical-coverage-summary-view.component';
 import { PatientService } from '@api-rest/services/patient.service';
 import { ImageDecoderService } from '@presentation/services/image-decoder.service';
-import { momentParseDate } from '@core/utils/moment.utils';
-
+import { formatTimeOnlyISO, getDayHoursRangeIntervalsByMinuteValue } from '@core/utils/date.utils';
+import { CalendarEvent } from 'angular-calendar';
 
 const TEMPORARY_PATIENT = 3;
 const BELL_LABEL = 'Llamar paciente'
@@ -83,6 +83,7 @@ export class AppointmentComponent implements OnInit {
 	startAgenda = new Date();
 	endAgenda = new Date(this.params.agenda.endDate);
 	availableDays: number[] = [];
+	possibleScheduleHours: Date[] = [];
 
 	isCheckedDownloadAnexo = false;
 	isCheckedDownloadFormulario = false;
@@ -94,7 +95,12 @@ export class AppointmentComponent implements OnInit {
 	observation: string;
 
 	constructor(
-		@Inject(MAT_DIALOG_DATA) public params: { appointmentData: PatientAppointmentInformation, hasPermissionToAssignShift: boolean, agenda: CompleteDiaryDto },
+		@Inject(MAT_DIALOG_DATA) public params: { 
+			appointmentData: PatientAppointmentInformation, 
+			hasPermissionToAssignShift: boolean, 
+			agenda: CompleteDiaryDto,
+			appointments: CalendarEvent[]
+		},
 		public dialogRef: MatDialogRef<NewAttentionComponent>,
 		private readonly dialog: MatDialog,
 		private readonly appointmentService: AppointmentsService,
@@ -146,9 +152,12 @@ export class AppointmentComponent implements OnInit {
 			updateControlValidator(this.formEdit, 'phoneNumber', [Validators.required, Validators.maxLength(20)]);
 			updateControlValidator(this.formEdit, 'phonePrefix', [Validators.required, Validators.maxLength(10)]);
 		}
-
-		this.formDate.controls.hour.setValue(this.params.appointmentData.date);
-
+		
+		this.setPossibleScheduleHours(this.params.appointmentData.date);
+		
+		// this.formDate.controls.hour.setValue(this.params.appointmentData.date);
+		// this.formDate.get('hour').setValue(new Date(this.params.appointmentData.date));
+		
 		this.appointmentService.get(this.params.appointmentData.appointmentId)
 			.subscribe(appointment => {
 				this.appointment = appointment;
@@ -200,7 +209,34 @@ export class AppointmentComponent implements OnInit {
 			if(!this.availableDays.includes(day))
 				this.availableDays.push(day);
 		}
-		console.log(this.availableDays);
+}
+
+	setPossibleScheduleHours(date: Date){
+		this.possibleScheduleHours = [];
+		const startDate = new Date(date);
+		const endDate = new Date(date);
+		for (let i = 0; i < this.params.agenda.diaryOpeningHours.length; i++) {
+			let day = this.params.agenda.diaryOpeningHours[i].openingHours.dayWeekId;
+			if(startDate.getDay() === day){
+				startDate.setHours(Number(this.params.agenda.diaryOpeningHours[i].openingHours.from.slice(0,2)));
+				startDate.setMinutes(Number(this.params.agenda.diaryOpeningHours[i].openingHours.from.slice(3,5)));
+				endDate.setHours(Number(this.params.agenda.diaryOpeningHours[i].openingHours.to.slice(0,2)));
+				endDate.setMinutes(Number(this.params.agenda.diaryOpeningHours[i].openingHours.to.slice(3,5)));
+				
+			const hours = getDayHoursRangeIntervalsByMinuteValue(startDate, endDate, this.params.agenda.appointmentDuration);
+			this.possibleScheduleHours = this.possibleScheduleHours.concat(hours);
+			}
+		}
+		this.deleteHoursWithAppointment();
+	}
+
+	deleteHoursWithAppointment(){
+		for (let i = 0; i < this.params.appointments.length; i++) {
+			const index = this.possibleScheduleHours.findIndex(item => {return item.getTime() == this.params.appointments[i].start.getTime()});
+			if(index != -1){
+				this.possibleScheduleHours.splice(index,1);
+			}
+		}
 	}
 
 	formatPhonePrefixAndNumber(phonePrefix: string, phoneNumber: string): string {
