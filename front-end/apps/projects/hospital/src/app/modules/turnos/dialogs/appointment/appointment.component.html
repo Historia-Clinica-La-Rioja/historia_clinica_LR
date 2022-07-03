@@ -150,7 +150,7 @@
 						 <span class="mat-body subtitle-size"> {{params.appointmentData.date | date:"H:mm"}} hs</span> 
 					</div>
 				</div>
-				<button type="button" mat-icon-button color="primary" 
+				<button type="button" mat-icon-button color="primary" *ngIf="estadoSelected === appointmentStatesIds.ASSIGNED"
 					(click)="dateFormToggle(); setDisableDays(); setPossibleScheduleHours(params.appointmentData.date)">
 					<mat-icon class="material-icons-outlined">edit</mat-icon>
 					<span class="mat-body strong-size">
