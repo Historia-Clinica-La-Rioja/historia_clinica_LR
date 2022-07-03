@@ -3,6 +3,7 @@ package ar.lamansys.sgh.clinichistory.infrastructure.output.repository.ips.entit
 
 import ar.lamansys.sgx.shared.auditable.entity.SGXAuditableEntity;
 import ar.lamansys.sgx.shared.auditable.listener.SGXAuditListener;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -24,6 +25,7 @@ import java.time.LocalDateTime;
 @Getter
 @Setter
 @NoArgsConstructor
+@AllArgsConstructor
 public class NursingRecord extends SGXAuditableEntity<Integer> implements Serializable {
 
 	@Id

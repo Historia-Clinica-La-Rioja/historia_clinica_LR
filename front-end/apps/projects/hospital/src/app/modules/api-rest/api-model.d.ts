@@ -2938,6 +2938,7 @@ export const enum EDocumentSearch {
 export const enum EIndicationStatus {
     INDICATED = "INDICATED",
     SUSPENDED = "SUSPENDED",
+    PENDING = "PENDING",
 }
 
 export const enum EIndicationType {

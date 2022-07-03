@@ -77,5 +77,5 @@ public class DietStorageImpl implements DietStorage {
 				entity.getCreatedOn(),
 				entity.getDescription());
 	}
-
+	
 }
