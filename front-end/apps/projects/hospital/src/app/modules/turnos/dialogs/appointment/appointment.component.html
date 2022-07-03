@@ -150,7 +150,8 @@
 						 <span class="mat-body subtitle-size"> {{params.appointmentData.date | date:"H:mm"}} hs</span> 
 					</div>
 				</div>
-				<button type="button" mat-icon-button color="primary" (click)="dateFormToggle()">
+				<button type="button" mat-icon-button color="primary" 
+					(click)="dateFormToggle(); setDisableDays(); setPossibleScheduleHours(params.appointmentData.date)">
 					<mat-icon class="material-icons-outlined">edit</mat-icon>
 					<span class="mat-body strong-size">
 						{{'turnos.appointment.EDIT_DATE_TIME' | translate}}
@@ -164,6 +165,7 @@
 					[maxDate]="endAgenda"
 					[dateToSetInDatepicker]="params.appointmentData.date"
 					[availableDays]="availableDays"
+					[disableDays]="disableDays"
 					(selectDate)="setPossibleScheduleHours($event)">
 				</app-datepicker>
 

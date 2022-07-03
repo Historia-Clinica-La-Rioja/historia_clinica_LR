@@ -83,6 +83,7 @@ export class AppointmentComponent implements OnInit {
 	startAgenda = new Date();
 	endAgenda = new Date(this.params.agenda.endDate);
 	availableDays: number[] = [];
+	disableDays: Date[] = [];
 	possibleScheduleHours: Date[] = [];
 
 	isCheckedDownloadAnexo = false;
@@ -153,8 +154,12 @@ export class AppointmentComponent implements OnInit {
 			updateControlValidator(this.formEdit, 'phonePrefix', [Validators.required, Validators.maxLength(10)]);
 		}
 		
-		this.setPossibleScheduleHours(this.params.appointmentData.date);
-		
+		for (let i = 0; i < this.params.agenda.diaryOpeningHours.length; i++) {
+			let day = this.params.agenda.diaryOpeningHours[i].openingHours.dayWeekId;
+			if(!this.availableDays.includes(day))
+				this.availableDays.push(day);
+		}
+
 		// this.formDate.controls.hour.setValue(this.params.appointmentData.date);
 		// this.formDate.get('hour').setValue(new Date(this.params.appointmentData.date));
 		
@@ -203,12 +208,6 @@ export class AppointmentComponent implements OnInit {
 					this.decodedPhoto$ = this.imageDecoderService.decode(personPhotoDto.imageData);
 				}
 			});
-
-		for (let i = 0; i < this.params.agenda.diaryOpeningHours.length; i++) {
-			let day = this.params.agenda.diaryOpeningHours[i].openingHours.dayWeekId;
-			if(!this.availableDays.includes(day))
-				this.availableDays.push(day);
-		}
 }
 
 	setPossibleScheduleHours(date: Date){
@@ -235,6 +234,24 @@ export class AppointmentComponent implements OnInit {
 			const index = this.possibleScheduleHours.findIndex(item => {return item.getTime() == this.params.appointments[i].start.getTime()});
 			if(index != -1){
 				this.possibleScheduleHours.splice(index,1);
+			}
+		}
+	}
+
+	setDisableDays(){
+		this.disableDays = [];
+		const today = new Date();
+		for (let i = 0; i < this.params.appointments.length; i++) {
+			const appointmentDate = new Date(this.params.appointments[i].start);
+			appointmentDate.setHours(0,0,0,0);
+			appointmentDate.setMinutes(0);
+			if (today.getTime() <= appointmentDate.getTime()){
+				this.setPossibleScheduleHours(appointmentDate);
+				if (this.possibleScheduleHours.length == 0) {
+					if (!this.disableDays.find(x => x.getTime() == appointmentDate.getTime())){
+						this.disableDays.push(appointmentDate);
+					}
+				}
 			}
 		}
 	}

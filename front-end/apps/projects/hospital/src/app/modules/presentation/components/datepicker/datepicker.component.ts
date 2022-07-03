@@ -17,6 +17,7 @@ export class DatepickerComponent implements OnInit {
 	@Input() maxDate: Date;
 	@Input() minDate: Date;
 	@Input() availableDays: number[];
+	@Input() disableDays: Date[];
 	@Output() selectDate: EventEmitter<Date> = new EventEmitter();
 
 	constructor(
@@ -35,9 +36,13 @@ export class DatepickerComponent implements OnInit {
 		this.selectDate.next(moment.toDate());
 	}
 
-	dateFilter = (d?: Moment): boolean => {
-		const day = (d || moment()).day();
-		// Prevent Saturday and Sunday from being selected.
+	dateFilter = (date?: Moment): boolean => {
+		if (date != null) {
+			if (this.disableDays.find(x => x.getTime() == date.toDate().getTime())){
+				return false;
+			}
+		}
+		const day = (date || moment()).day();
 		return this.availableDays.includes(day);
 	  }
 }
