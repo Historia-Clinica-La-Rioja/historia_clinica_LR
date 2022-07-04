@@ -256,7 +256,7 @@
 							<app-card-indicaciones [patientId]="patientId" *ngIf="false"></app-card-indicaciones>
 						</ng-template>
 					</mat-tab>
-					<mat-tab id="tab_nursing" *ngIf="hasInternmentEpisodeInThisInstitution">
+					<mat-tab id="tab_nursing" *ngIf="hasInternmentEpisodeInThisInstitution && showNursingSection">
 						<ng-template mat-tab-label>
 							<span>{{ 'ambulatoria.paciente.nursing.TAB_LABEL' | translate | uppercase }}</span>
 						</ng-template>

@@ -98,6 +98,7 @@ export class AmbulatoriaPacienteComponent implements OnInit, OnDestroy {
 	hasPharmacyStaffRole = false;
 	internmentAction: InternmentActions;
 	PRESUMPTIVE = HEALTH_VERIFICATIONS.PRESUNTIVO;
+	showNursingSection = false;
 
 	private timeOut = 15000;
 	private isOpenOdontologyConsultation = false;
@@ -212,6 +213,8 @@ export class AmbulatoriaPacienteComponent implements OnInit, OnDestroy {
 
 		this.studyCategories$ = this.requestMasterDataService.categories();
 
+		this.featureFlagService.isActive(AppFeature.HABILITAR_MODULO_ENFERMERIA)
+			.subscribe(show => this.showNursingSection = (show && !this.hasLaboratoryStaffRole && !this.hasPicturesStaffRole));
 	}
 
 	ngOnDestroy() {
