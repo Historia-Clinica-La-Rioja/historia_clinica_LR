@@ -40,6 +40,7 @@ import { NewConsultationAddReasonFormComponent } from '@historia-clinica/dialogs
 import { NewConsultationProcedureFormComponent } from '@historia-clinica/dialogs/new-consultation-procedure-form/new-consultation-procedure-form.component';
 import { NewConsultationAddDiagnoseFormComponent } from '../../dialogs/new-consultation-add-diagnose-form/new-consultation-add-diagnose-form.component';
 import { NewConsultationAllergyFormComponent } from '@historia-clinica/dialogs/new-consultation-allergy-form/new-consultation-allergy-form.component';
+import { NewConsultationPersonalHistoryFormComponent } from '../../dialogs/new-consultation-personal-history-form/new-consultation-personal-history-form.component';
 
 @Component({
 	selector: 'app-odontology-consultation-dock-popup',
@@ -216,10 +217,16 @@ export class OdontologyConsultationDockPopupComponent implements OnInit {
 		});
 	}
 
-	private addErrorMessage(): void {
-		this.errors[2] = hasError(this.form, 'maxlength', 'evolution') ?
-			'La nota de evolución debe tener como máximo 1024 caracteres'
-			: undefined;
+	addPersonalHistory(): void {
+		this.dialog.open(NewConsultationPersonalHistoryFormComponent, {
+			data: {
+				personalHistoryService: this.personalHistoriesNewConsultationService,
+				searchConceptsLocallyFF: this.searchConceptsLocallyFFIsOn,
+			},
+			autoFocus: false,
+			width: '35%',
+			disableClose: true,
+		});
 	}
 
 	private openDialog(nonCompletedFields: string[], presentFields: string[], odontologyDto: OdontologyConsultationDto): void {

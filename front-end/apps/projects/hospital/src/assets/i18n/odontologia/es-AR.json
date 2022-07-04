@@ -12,11 +12,7 @@
             "ALLERGIES": "Alergias",
             "ADD_ALLERGY": "Agregar alergia",
             "PERSONAL_HISTORY": "Antecedentes personales",
-            "SEARCH_PERSONAL_HISTORY": "Buscar antecedentes personales",
-            "PROBLEM_TYPE": "Tipo de problema",
-            "REGISTRATION_DATE": "Fecha de registro",
             "ADD_PERSONAL_HISTORY": "Agregar antecedente personal",
-            "REGISTERED_PERSONAL_HISTORY": "Antecedentes registrados",
             "USUAL_MEDICATION": "Medicación habitual",
             "SEARCH_USUAL_MEDICATION": "Buscar medicación habitual",
             "MEDICATION_NAME": "Nombre de medicación",
@@ -46,6 +42,13 @@
             "START_DATE": "Fecha inicio",
             "END_DATE": "Fecha fin",
             "END_DATE_ERROR": "La fecha de fin no puede ser anterior a la fecha de inicio"
+        },
+        "new-consultation-personal-history-form": {
+            "PERSONAL_HISTORY": "Antecedentes personales",
+            "SEARCH_PERSONAL_HISTORY": "Buscar antecedentes personales",
+            "PROBLEM_TYPE": "Tipo de problema",
+            "REGISTRATION_DATE": "Fecha de registro",
+            "ADD_PERSONAL_HISTORY": "Agregar antecedente personal"
         }
     }
 }

@@ -94,7 +94,7 @@ export class PersonalHistoriesNewConsultationService {
 		this.data = removeFrom<AntecedentePersonal>(this.data, index);
 	}
 
-	addToList() {
+	addToList(): boolean {
 		if (this.form.valid && this.snomedConcept) {
 			const antecedente: AntecedentePersonal = {
 				snomed: this.snomedConcept,
@@ -102,7 +102,9 @@ export class PersonalHistoriesNewConsultationService {
 			};
 			this.addControl(antecedente);
 			this.resetForm();
+			return true;
 		}
+		return false;
 	}
 
 	getForm(): FormGroup {
