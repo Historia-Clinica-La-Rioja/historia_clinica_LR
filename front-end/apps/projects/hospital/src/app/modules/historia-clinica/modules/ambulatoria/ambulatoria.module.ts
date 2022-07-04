@@ -111,23 +111,23 @@ import { NewConsultationAllergyFormComponent } from './dialogs/new-consultation-
 		NewConsultationProcedureFormComponent,
 		NewConsultationAllergyFormComponent,
 	],
-    imports: [
-        CommonModule,
-        FormsModule,
-        OverlayModule,
-        PortalModule,
-        PresentationModule,
-        ExtensionsModule,
-        HistoriaClinicaModule,
-        AmbulatoriaRoutingModule,
-        PacientesModule,
-        OdontologiaModule,
-        ClipboardModule,
-        IndicacionModule,
-        InternacionesModule,
+	imports: [
+		CommonModule,
+		FormsModule,
+		OverlayModule,
+		PortalModule,
+		PresentationModule,
+		ExtensionsModule,
+		HistoriaClinicaModule,
+		AmbulatoriaRoutingModule,
+		PacientesModule,
+		OdontologiaModule,
+		ClipboardModule,
+		IndicacionModule,
+		InternacionesModule,
 		EstudioModule,
 		TurnosModule
-    ]
+	]
 })
 export class AmbulatoriaModule {
 }

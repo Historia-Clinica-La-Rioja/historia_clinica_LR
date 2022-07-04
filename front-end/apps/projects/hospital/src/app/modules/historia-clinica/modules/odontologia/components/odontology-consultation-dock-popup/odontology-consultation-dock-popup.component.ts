@@ -163,6 +163,12 @@ export class OdontologyConsultationDockPopupComponent implements OnInit {
 		}
 	}
 
+	private addErrorMessage(): void {
+		this.errors[2] = hasError(this.form, 'maxlength', 'evolution') ?
+			'La nota de evolución debe tener como máximo 1024 caracteres'
+			: undefined;
+	}
+
 	private openDialog(nonCompletedFields: string[], presentFields: string[], odontologyDto: OdontologyConsultationDto): void {
 		const dialogRef = this.dialog.open(SuggestedFieldsPopupComponent, {
 			data: { nonCompletedFields, presentFields }
