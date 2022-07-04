@@ -33,6 +33,7 @@ import { TemplateConceptTypeaheadSearchComponent } from './components/template-c
 import { ConceptsTypeaheadSearchDialogComponent } from './dialogs/concepts-typeahead-search-dialog/concepts-typeahead-search-dialog.component';
 import { NewConsultationAddProblemFormComponent } from './dialogs/new-consultation-add-problem-form/new-consultation-add-problem-form.component';
 import { NewConsultationAddReasonFormComponent } from './dialogs/new-consultation-add-reason-form/new-consultation-add-reason-form.component';
+import { NewConsultationProcedureFormComponent } from './dialogs/new-consultation-procedure-form/new-consultation-procedure-form.component';
 
 @NgModule({
 	declarations: [
@@ -65,6 +66,7 @@ import { NewConsultationAddReasonFormComponent } from './dialogs/new-consultatio
 		ConceptsTypeaheadSearchDialogComponent,
 		NewConsultationAddProblemFormComponent,
 		NewConsultationAddReasonFormComponent,
+		NewConsultationProcedureFormComponent,
 	],
 	imports: [
 		CommonModule,

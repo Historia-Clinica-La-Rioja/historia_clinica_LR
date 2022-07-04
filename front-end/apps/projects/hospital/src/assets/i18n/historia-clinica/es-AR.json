@@ -59,6 +59,13 @@
 			"ADD_REASON": "Agregar motivo",
 			"REASON": "motivo",
 			"SEARCH_PLACEHOLDER": "Buscar motivo"
+		},
+		"new-consultation-procedure-form": {
+			"ADD_PROCEDURE": "Agregar procedimiento",
+			"PROCEDURE": "Procedimiento",
+			"SEARCH_PLACEHOLDER": "Buscar procedimiento",
+			"TYPE": "Tipo de procedimiento",
+			"DATE": "Fecha"
 		}
 	}
 }

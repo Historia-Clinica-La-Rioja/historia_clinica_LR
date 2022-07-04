@@ -42,67 +42,16 @@
 		<app-new-consultation-expansion-section id="other_procedures"
 			[title]="'odontologia.odontology-consultation-dock-popup.OTHER_PROCEDURES_TITLE' | translate"
 			icon="library_add" [isEmpty]="otherProceduresService.isEmpty()">
-			<app-new-document-section>
-				<ng-container concept-form>
-					<ng-container *ngIf="!otherProceduresService.getSnomedConcept() else otherProceduresForm">
-						<app-concepts-search *ngIf="!searchConceptsLocallyFFIsOn else otherProceduresTypeaheadSearch"
-							[label]="'odontologia.odontology-consultation-dock-popup.PROCEDURE'"
-							(search)="otherProceduresService.openSearchDialog($event)">
-						</app-concepts-search>
-
-						<ng-template #otherProceduresTypeaheadSearch>
-							<app-concept-typeahead-search [ecl]="otherProceduresService.getECL()"
-								[placeholder]="'odontologia.odontology-consultation-dock-popup.SEARCH_PROCEDURE'"
-								(conceptSelected)="otherProceduresService.setConcept($event)">
-							</app-concept-typeahead-search>
-						</ng-template>
-					</ng-container>
-
-					<ng-template #otherProceduresForm>
-						<form [formGroup]="otherProceduresService.getForm()"
-							(ngSubmit)="otherProceduresService.addToList()">
-							<mat-form-field appearance="outline">
-								<mat-label>
-									{{ 'odontologia.odontology-consultation-dock-popup.PROCEDURE_TYPE' | translate }}
-								</mat-label>
-								<input id="input_procedure" matInput type="text" formControlName="snomed" name="snomed"
-									readonly matTooltip="{{otherProceduresService.getSnomedConcept().pt }}">
-								<button id="clear_procedure" mat-button matSuffix color="warn" mat-icon-button
-									(click)="otherProceduresService.resetForm()">
-									<mat-icon>close</mat-icon>
-								</button>
-							</mat-form-field>
-
-							<mat-form-field appearance="outline">
-								<mat-label>
-									{{ 'odontologia.odontology-consultation-dock-popup.DATE' | translate }}
-								</mat-label>
-								<input matInput id="date_procedure" [matDatepicker]="datePicker"
-									formControlName="performedDate" [min]="minDate"
-									[max]="otherProceduresService.getFechaMax()">
-								<mat-datepicker-toggle matSuffix [for]="datePicker"></mat-datepicker-toggle>
-								<mat-datepicker #datePicker></mat-datepicker>
-							</mat-form-field>
-
-							<div align="end">
-								<button id="submit_procedure" class="uppercase" mat-raised-button color="primary"
-									type="submit">
-									<span>
-										{{ 'odontologia.odontology-consultation-dock-popup.ADD_PROCEDURE' | translate }}
-									</span>
-								</button>
-							</div>
-
-						</form>
-					</ng-template>
-				</ng-container>
-				<app-document-section-table data-display
-					[tableTitle]="'odontologia.odontology-consultation-dock-popup.REGISTERED_PROCEDURES'"
-					[columns]="otherProceduresService.getTableColumnConfig()"
+			<div>
+				<app-document-section-table [columns]="otherProceduresService.getTableColumnConfig()"
 					[data]="otherProceduresService.getProcedimientos()">
 				</app-document-section-table>
 
-			</app-new-document-section>
+				<button mat-button type="button" id="add-procedure-button" color="primary" class="add-button"
+					(click)="addProcedure()">
+					+ {{ 'odontologia.odontology-consultation-dock-popup.ADD_PROCEDURE' | translate }}
+				</button>
+			</div>
 		</app-new-consultation-expansion-section>
 
 		<app-new-consultation-expansion-section id="other_diagnoses"

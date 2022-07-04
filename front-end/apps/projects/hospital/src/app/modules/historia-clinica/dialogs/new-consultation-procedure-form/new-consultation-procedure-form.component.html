@@ -1,5 +1,5 @@
 <div fxLayout="row" fxLayoutAlign="space-between">
-    <span mat-dialog-title [translate]="'ambulatoria.paciente.nueva-consulta.procedimientos.buttons.ADD'"></span>
+    <span mat-dialog-title [translate]="'historia-clinica.new-consultation-procedure-form.ADD_PROCEDURE'"></span>
     <button mat-icon-button (click)="close()">
         <mat-icon>close</mat-icon>
     </button>
@@ -8,13 +8,13 @@
 <div mat-dialog-content>
     <ng-container *ngIf="!data.procedureService.getSnomedConcept() else procedimientoForm">
         <app-concepts-search *ngIf="!data.searchConceptsLocallyFF else procedimientoTypeaheadSearch"
-            [label]="'ambulatoria.paciente.nueva-consulta.procedimientos.PROCEDIMIENTO'"
+            [label]="'historia-clinica.new-consultation-procedure-form.PROCEDURE'"
             (search)="data.procedureService.openSearchDialog($event)">
         </app-concepts-search>
 
         <ng-template #procedimientoTypeaheadSearch>
             <app-concept-typeahead-search [ecl]="data.procedureService.getECL()"
-                [placeholder]="'ambulatoria.paciente.nueva-consulta.procedimientos.SEARCH_PLACEHOLDER'"
+                [placeholder]="'historia-clinica.new-consultation-procedure-form.SEARCH_PLACEHOLDER'"
                 (conceptSelected)="data.procedureService.setConcept($event)">
             </app-concept-typeahead-search>
         </ng-template>
@@ -25,7 +25,7 @@
     <form [formGroup]="data.procedureService.getForm()" (ngSubmit)="addProcedure()">
         <div fxLayout="column">
             <mat-form-field appearance="outline">
-                <mat-label [translate]="'ambulatoria.paciente.nueva-consulta.procedimientos.TIPO'">
+                <mat-label [translate]="'historia-clinica.new-consultation-procedure-form.TYPE'">
                 </mat-label>
                 <input id="procedimiento-input" matInput type="text" formControlName="snomed" name="snomed" readonly
                     matTooltip="{{data.procedureService.getSnomedConcept().pt }}">
@@ -36,7 +36,7 @@
             </mat-form-field>
 
             <mat-form-field appearance="outline">
-                <mat-label [translate]="'ambulatoria.paciente.nueva-consulta.procedimientos.FECHA'">
+                <mat-label [translate]="'historia-clinica.new-consultation-procedure-form.DATE'">
                 </mat-label>
                 <input matInput id="fecha_procedimiento" [matDatepicker]="datePicker" formControlName="performedDate"
                     [min]="minDate" [max]="data.procedureService.getFechaMax()">
@@ -46,7 +46,7 @@
 
             <div align="end">
                 <button id="submit_procedimiento" mat-raised-button color="primary" type="submit">
-                    <span [translate]="'ambulatoria.paciente.nueva-consulta.procedimientos.buttons.ADD'"
+                    <span [translate]="'historia-clinica.new-consultation-procedure-form.ADD_PROCEDURE'"
                         class="uppercase"></span>
                 </button>
             </div>
