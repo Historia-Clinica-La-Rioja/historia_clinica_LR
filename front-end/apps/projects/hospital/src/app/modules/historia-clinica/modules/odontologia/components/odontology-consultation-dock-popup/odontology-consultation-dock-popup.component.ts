@@ -41,6 +41,7 @@ import { NewConsultationProcedureFormComponent } from '@historia-clinica/dialogs
 import { NewConsultationAddDiagnoseFormComponent } from '../../dialogs/new-consultation-add-diagnose-form/new-consultation-add-diagnose-form.component';
 import { NewConsultationAllergyFormComponent } from '@historia-clinica/dialogs/new-consultation-allergy-form/new-consultation-allergy-form.component';
 import { NewConsultationPersonalHistoryFormComponent } from '../../dialogs/new-consultation-personal-history-form/new-consultation-personal-history-form.component';
+import { NewConsultationMedicationFormComponent } from '@historia-clinica/dialogs/new-consultation-medication-form/new-consultation-medication-form.component';
 
 @Component({
 	selector: 'app-odontology-consultation-dock-popup',
@@ -221,6 +222,18 @@ export class OdontologyConsultationDockPopupComponent implements OnInit {
 		this.dialog.open(NewConsultationPersonalHistoryFormComponent, {
 			data: {
 				personalHistoryService: this.personalHistoriesNewConsultationService,
+				searchConceptsLocallyFF: this.searchConceptsLocallyFFIsOn,
+			},
+			autoFocus: false,
+			width: '35%',
+			disableClose: true,
+		});
+	}
+
+	addMedication(): void {
+		this.dialog.open(NewConsultationMedicationFormComponent, {
+			data: {
+				medicationService: this.medicationsNewConsultationService,
 				searchConceptsLocallyFF: this.searchConceptsLocallyFFIsOn,
 			},
 			autoFocus: false,

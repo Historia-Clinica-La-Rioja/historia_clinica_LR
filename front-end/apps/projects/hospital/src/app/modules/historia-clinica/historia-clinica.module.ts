@@ -35,6 +35,7 @@ import { NewConsultationAddProblemFormComponent } from './dialogs/new-consultati
 import { NewConsultationAddReasonFormComponent } from './dialogs/new-consultation-add-reason-form/new-consultation-add-reason-form.component';
 import { NewConsultationProcedureFormComponent } from './dialogs/new-consultation-procedure-form/new-consultation-procedure-form.component';
 import { NewConsultationAllergyFormComponent } from './dialogs/new-consultation-allergy-form/new-consultation-allergy-form.component';
+import { NewConsultationMedicationFormComponent } from './dialogs/new-consultation-medication-form/new-consultation-medication-form.component';
 
 @NgModule({
 	declarations: [
@@ -69,6 +70,7 @@ import { NewConsultationAllergyFormComponent } from './dialogs/new-consultation-
 		NewConsultationAddReasonFormComponent,
 		NewConsultationProcedureFormComponent,
 		NewConsultationAllergyFormComponent,
+		NewConsultationMedicationFormComponent,
 	],
 	imports: [
 		CommonModule,

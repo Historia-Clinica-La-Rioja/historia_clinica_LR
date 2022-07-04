@@ -72,6 +72,14 @@
 			"ALLERGY": "Alergia",
 			"SEARCH_PLACEHOLDER": "Buscar alergia",
 			"CRITICALITY": "Criticidad"
+		},
+		"new-consultation-medication-form": {
+			"ADD": "Agregar medicación",
+			"CONCEPT_LABEL": "Medicación habitual",
+			"SEARCH_PLACEHOLDER": "Buscar medicación",
+			"MEDICATION": "Medicación",
+			"OBSERVACIONES": "Observaciones",
+			"SUSPENDIDO": "Suspendido"
 		}
 	}
 }

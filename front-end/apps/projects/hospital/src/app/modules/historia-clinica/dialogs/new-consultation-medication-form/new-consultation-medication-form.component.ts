@@ -2,7 +2,7 @@ import { Component, Inject } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { TEXT_AREA_MAX_LENGTH } from '@core/constants/validation-constants';
 import { hasError } from '@core/utils/form.utils';
-import { MedicacionesNuevaConsultaService } from '../../services/medicaciones-nueva-consulta.service';
+import { MedicacionesNuevaConsultaService } from '../../modules/ambulatoria/services/medicaciones-nueva-consulta.service';
 
 @Component({
   selector: 'app-new-consultation-medication-form',
