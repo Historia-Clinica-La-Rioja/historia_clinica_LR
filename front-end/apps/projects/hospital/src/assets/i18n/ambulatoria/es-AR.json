@@ -155,8 +155,7 @@
                     "TABLE_TITLE": "Procedimientos registrados",
                     "TITLE": "Procedimientos",
                     "TIPO": "Tipo de procedimiento",
-                    "PROCEDIMIENTO": "Procedimiento",
-                    "SEARCH_PLACEHOLDER": "Buscar procedimiento"
+                    "PROCEDIMIENTO": "Procedimiento"
                 },
                 "antecedentes-familiares": {
                     "buttons": {

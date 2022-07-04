@@ -61,64 +61,16 @@
 		<app-new-consultation-expansion-section id="procedures"
 			[title]="'ambulatoria.paciente.nueva-consulta.procedimientos.TITLE' | translate" icon="library_add"
 			[isEmpty]="procedimientoNuevaConsultaService.isEmpty()">
-			<app-new-document-section>
-				<ng-container concept-form>
-
-					<ng-container *ngIf="!procedimientoNuevaConsultaService.getSnomedConcept() else procedimientoForm">
-						<app-concepts-search *ngIf="!searchConceptsLocallyFFIsOn else procedimientoTypeaheadSearch"
-							[label]="'ambulatoria.paciente.nueva-consulta.procedimientos.PROCEDIMIENTO'"
-							(search)="procedimientoNuevaConsultaService.openSearchDialog($event)">
-						</app-concepts-search>
-
-						<ng-template #procedimientoTypeaheadSearch>
-							<app-concept-typeahead-search [ecl]="procedimientoNuevaConsultaService.getECL()"
-								[placeholder]="'ambulatoria.paciente.nueva-consulta.procedimientos.SEARCH_PLACEHOLDER'"
-								(conceptSelected)="procedimientoNuevaConsultaService.setConcept($event)">
-							</app-concept-typeahead-search>
-						</ng-template>
-					</ng-container>
-
-					<ng-template #procedimientoForm>
-						<form [formGroup]="procedimientoNuevaConsultaService.getForm()"
-							(ngSubmit)="procedimientoNuevaConsultaService.addToList()">
-							<mat-form-field appearance="outline">
-								<mat-label [translate]="'ambulatoria.paciente.nueva-consulta.procedimientos.TIPO'">
-								</mat-label>
-								<input id="procedimiento_input" matInput type="text" formControlName="snomed" readonly
-									matTooltip="{{procedimientoNuevaConsultaService.getSnomedConcept().pt }}">
-								<button id="clear_procedimiento" mat-button matSuffix color="warn" mat-icon-button
-									(click)="procedimientoNuevaConsultaService.resetForm()">
-									<mat-icon>close</mat-icon>
-								</button>
-							</mat-form-field>
-
-							<mat-form-field appearance="outline">
-								<mat-label [translate]="'ambulatoria.paciente.nueva-consulta.procedimientos.FECHA'">
-								</mat-label>
-								<input matInput id="procedure_date" [matDatepicker]="datePicker"
-									formControlName="performedDate"
-									[max]="procedimientoNuevaConsultaService.getFechaMax()">
-								<mat-datepicker-toggle matSuffix [for]="datePicker"></mat-datepicker-toggle>
-								<mat-datepicker #datePicker></mat-datepicker>
-							</mat-form-field>
-
-							<div align="end">
-								<button id="submit_procedimiento" class="uppercase" mat-raised-button color="primary"
-									type="submit">
-									<span
-										[translate]="'ambulatoria.paciente.nueva-consulta.procedimientos.buttons.ADD'"></span>
-								</button>
-							</div>
-
-						</form>
-					</ng-template>
-				</ng-container>
-				<app-document-section-table data-display
-					[tableTitle]="'ambulatoria.paciente.nueva-consulta.procedimientos.TABLE_TITLE'"
-					[columns]="procedimientoNuevaConsultaService.getTableColumnConfig()"
+			<div>
+				<app-document-section-table [columns]="procedimientoNuevaConsultaService.getTableColumnConfig()"
 					[data]="procedimientoNuevaConsultaService.getProcedimientos()">
 				</app-document-section-table>
-			</app-new-document-section>
+
+				<button mat-button type="button" id="add-procedure-button" color="primary" class="add-button"
+					(click)="addProcedure()">
+					+ {{ 'ambulatoria.paciente.nueva-consulta.procedimientos.buttons.ADD' | translate }}
+				</button>
+			</div>
 		</app-new-consultation-expansion-section>
 
 		<app-new-consultation-expansion-section id="evolucion"

@@ -28,6 +28,7 @@ import { NewNurseConsultationSuggestedFieldsService } from '../../services/new-n
 import { FactoresDeRiesgoFormService } from '../../../../services/factores-de-riesgo-form.service';
 import { NuevaConsultaData } from '../nueva-consulta-dock-popup/nueva-consulta-dock-popup.component';
 import { FeatureFlagService } from "@core/services/feature-flag.service";
+import { NewConsultationProcedureFormComponent } from '@historia-clinica/dialogs/new-consultation-procedure-form/new-consultation-procedure-form.component';
 
 export interface FieldsToUpdate {
 	riskFactors: boolean;
@@ -242,6 +243,18 @@ export class NuevaConsultaDockPopupEnfermeriaComponent implements OnInit {
 				}, 500);
 			}
 		}
+	}
+
+	addProcedure(): void {
+		this.dialog.open(NewConsultationProcedureFormComponent, {
+			data: {
+				procedureService: this.procedimientoNuevaConsultaService,
+				searchConceptsLocallyFF: this.searchConceptsLocallyFFIsOn,
+			},
+			autoFocus: false,
+			width: '35%',
+			disableClose: true,
+		});
 	}
 
 	private openDialog(nonCompletedFields: string[], presentFields: string[], nursingConsultationDto: NursingConsultationDto): void {
