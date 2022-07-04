@@ -38,6 +38,7 @@ import { HCEPersonalHistory } from '@historia-clinica/modules/ambulatoria/dialog
 import { FeatureFlagService } from "@core/services/feature-flag.service";
 import { NewConsultationAddReasonFormComponent } from '@historia-clinica/dialogs/new-consultation-add-reason-form/new-consultation-add-reason-form.component';
 import { NewConsultationProcedureFormComponent } from '@historia-clinica/dialogs/new-consultation-procedure-form/new-consultation-procedure-form.component';
+import { NewConsultationAddDiagnoseFormComponent } from '../../dialogs/new-consultation-add-diagnose-form/new-consultation-add-diagnose-form.component';
 
 @Component({
 	selector: 'app-odontology-consultation-dock-popup',
@@ -182,6 +183,19 @@ export class OdontologyConsultationDockPopupComponent implements OnInit {
 			data: {
 				procedureService: this.otherProceduresService,
 				searchConceptsLocallyFF: this.searchConceptsLocallyFFIsOn,
+			},
+			autoFocus: false,
+			width: '35%',
+			disableClose: true,
+		});
+	}
+
+	addDiagnose() {
+		this.dialog.open(NewConsultationAddDiagnoseFormComponent, {
+			data: {
+				diagnosesService: this.otherDiagnosticsNewConsultationService,
+				searchConceptsLocallyFF: this.searchConceptsLocallyFFIsOn,
+				severityTypes: this.severityTypes
 			},
 			autoFocus: false,
 			width: '35%',

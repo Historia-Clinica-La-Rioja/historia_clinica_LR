@@ -1,0 +1,102 @@
+<div fxLayout="row" fxLayoutAlign="space-between">
+    <span mat-dialog-title [translate]="'odontologia.new-consultation-add-diagnose-form.ADD_PROBLEM'"></span>
+    <button mat-icon-button (click)="close()">
+        <mat-icon>close</mat-icon>
+    </button>
+</div>
+
+<div mat-dialog-content>
+    <ng-container *ngIf="!data.diagnosesService.getSnomedConcept() else otherDiagnosticForm">
+        <app-concepts-search *ngIf="!data.searchConceptsLocallyFF else otherDiagnosticTypeaheadSearch"
+            [label]="'odontologia.new-consultation-add-diagnose-form.PROBLEM'"
+            (search)="data.diagnosesService.openSearchDialog($event)">
+        </app-concepts-search>
+
+        <ng-template #otherDiagnosticTypeaheadSearch>
+            <app-concept-typeahead-search [ecl]="data.diagnosesService.getECL()"
+                [placeholder]="'odontologia.new-consultation-add-diagnose-form.SEARCH_PROBLEM'"
+                (conceptSelected)="data.diagnosesService.setConcept($event)">
+            </app-concept-typeahead-search>
+        </ng-template>
+    </ng-container>
+</div>
+
+<ng-template #otherDiagnosticForm>
+    <form [formGroup]="data.diagnosesService.getForm()" (ngSubmit)="addDiagnose()">
+        <div fxLayout="column" fxLayoutGap="5px">
+            <mat-form-field appearance="outline">
+                <mat-label>
+                    {{ 'odontologia.new-consultation-add-diagnose-form.PROBLEM' | translate }}
+                </mat-label>
+                <input id="snomed-input" matInput type="text" formControlName="snomed" name="snomed" readonly
+                    matTooltip="{{ data.diagnosesService.getSnomedConcept().pt }}">
+                <button id="clear" mat-button matSuffix color="warn" mat-icon-button
+                    (click)="data.diagnosesService.resetForm()">
+                    <mat-icon>close</mat-icon>
+                </button>
+            </mat-form-field>
+
+            <mat-form-field appearance="outline">
+                <mat-label>
+                    {{ 'odontologia.new-consultation-add-diagnose-form.SEVERITY' | translate }}
+                </mat-label>
+                <mat-select id="severity-select" formControlName="severidad">
+                    <mat-option *ngFor="let severityType of data.severityTypes" [value]="severityType.code">
+                        {{severityType.display}}
+                    </mat-option>
+                </mat-select>
+                <mat-error translate="forms.REQUIRED"></mat-error>
+            </mat-form-field>
+
+            <div>
+                <mat-checkbox id="chronic_checkbox" formControlName="cronico">
+                    <span>
+                        {{ 'odontologia.new-consultation-add-diagnose-form.CHRONIC' | translate }}
+                    </span>
+                </mat-checkbox>
+            </div>
+
+            <mat-form-field appearance="outline">
+                <mat-label>
+                    {{ 'odontologia.new-consultation-add-diagnose-form.START_DATE' | translate }}
+                </mat-label>
+                <input matInput id="start_date" [matDatepicker]="startDatePicker" formControlName="fechaInicio"
+                    [min]="minDate" [max]="data.diagnosesService.getFechaInicioMax()"
+                    (dateChange)="data.diagnosesService.checkValidFechaFin()">
+                <mat-datepicker-toggle matSuffix [for]="startDatePicker"></mat-datepicker-toggle>
+                <mat-datepicker #startDatePicker></mat-datepicker>
+                <mat-error *ngIf="data.diagnosesService.hasError('required', 'fechaInicio')"
+                    [translate]="'forms.REQUIRED'">
+                </mat-error>
+                <mat-error *ngIf="data.diagnosesService.hasError('matDatepickerMax', 'fechaInicio')"
+                    [translate]="'forms.MAX_DATE_TODAY'">
+                </mat-error>
+            </mat-form-field>
+
+            <mat-form-field appearance="outline">
+                <mat-label>
+                    {{ 'odontologia.new-consultation-add-diagnose-form.END_DATE' | translate }}
+                </mat-label>
+                <input matInput id="end-date" [matDatepicker]="endDatePicker" formControlName="fechaFin" [max]="today"
+                    (dateChange)="data.diagnosesService.checkValidFechaFin()">
+                <mat-datepicker-toggle matSuffix [for]="endDatePicker"></mat-datepicker-toggle>
+                <mat-datepicker #endDatePicker></mat-datepicker>
+                <mat-error *ngIf="data.diagnosesService.hasError('min', 'fechaFin')">
+                    {{ 'odontologia.new-consultation-add-diagnose-form.END_DATE_ERROR' | translate }}
+                </mat-error>
+                <mat-error *ngIf="data.diagnosesService.hasError('matDatepickerMax', 'fechaFin')"
+                    [translate]="'forms.MAX_DATE_TODAY'">
+                </mat-error>
+            </mat-form-field>
+
+            <div align="end">
+                <button id="submit_diagnostic" class="uppercase" mat-raised-button color="primary" type="submit">
+                    <span>
+                        {{ 'odontologia.new-consultation-add-diagnose-form.ADD_PROBLEM' | translate }}
+                    </span>
+                </button>
+            </div>
+        </div>
+
+    </form>
+</ng-template>

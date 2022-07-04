@@ -8,15 +8,7 @@
             "OTHER_PROCEDURES_TITLE": "Otros procedimientos",
             "ADD_PROCEDURE": "Agregar procedimiento",
             "OTHER_DIAGNOSES": "Otros diagnósticos",
-            "PROBLEM": "Problema",
-            "SEARCH_PROBLEM": "Buscar problema",
-            "SEVERITY": "Severidad",
-            "CHRONIC": "Crónico",
-            "START_DATE": "Fecha inicio",
-            "END_DATE": "Fecha fin",
-            "END_DATE_ERROR": "La fecha de fin no puede ser anterior a la fecha de inicio",
             "ADD_PROBLEM": "Agregar problema",
-            "OTHER_REGISTERED_DIAGNOSES": "Otros diagnósticos registrados",
             "ALLERGIES": "Alergias",
             "ALLERGY": "Alergia",
             "SEARCH_ALLERGY": "Buscar Alergia",
@@ -48,6 +40,16 @@
             "EVOLUTION": "Evolución",
             "REFERENCE_REQUEST": "Solicitud de referencia",
             "ADD_REQUEST": "Agregar solicitud"
+        },
+        "new-consultation-add-diagnose-form": {
+            "ADD_PROBLEM": "Agregar problema",
+            "PROBLEM": "Problema",
+            "SEARCH_PROBLEM": "Buscar problema",
+            "SEVERITY": "Severidad",
+            "CHRONIC": "Crónico",
+            "START_DATE": "Fecha inicio",
+            "END_DATE": "Fecha fin",
+            "END_DATE_ERROR": "La fecha de fin no puede ser anterior a la fecha de inicio"
         }
     }
 }

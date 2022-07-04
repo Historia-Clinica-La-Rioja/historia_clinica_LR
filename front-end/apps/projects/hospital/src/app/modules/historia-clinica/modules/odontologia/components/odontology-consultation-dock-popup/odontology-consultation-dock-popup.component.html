@@ -57,121 +57,16 @@
 		<app-new-consultation-expansion-section id="other_diagnoses"
 			[title]="'odontologia.odontology-consultation-dock-popup.OTHER_DIAGNOSES' | translate" icon="error_outlined"
 			[isEmpty]="otherDiagnosticsNewConsultationService.isEmpty()">
-			<app-new-document-section>
-				<ng-container concept-form>
-					<ng-container
-						*ngIf="!otherDiagnosticsNewConsultationService.getSnomedConcept() else otherDiagnosticForm">
-						<app-concepts-search *ngIf="!searchConceptsLocallyFFIsOn else otherDiagnosticTypeaheadSearch"
-							[label]="'odontologia.odontology-consultation-dock-popup.PROBLEM'"
-							(search)="otherDiagnosticsNewConsultationService.openSearchDialog($event)">
-						</app-concepts-search>
-
-						<ng-template #otherDiagnosticTypeaheadSearch>
-							<app-concept-typeahead-search [ecl]="otherDiagnosticsNewConsultationService.getECL()"
-								[placeholder]="'odontologia.odontology-consultation-dock-popup.SEARCH_PROBLEM'"
-								(conceptSelected)="otherDiagnosticsNewConsultationService.setConcept($event)">
-							</app-concept-typeahead-search>
-						</ng-template>
-					</ng-container>
-
-					<ng-template #otherDiagnosticForm>
-						<form [formGroup]="otherDiagnosticsNewConsultationService.getForm()"
-							(ngSubmit)="otherDiagnosticsNewConsultationService.addToList()">
-
-							<mat-form-field appearance="outline">
-								<mat-label>
-									{{ 'odontologia.odontology-consultation-dock-popup.PROBLEM' | translate }}
-								</mat-label>
-								<input id="snomed-input" matInput type="text" formControlName="snomed" name="snomed"
-									readonly
-									matTooltip="{{ otherDiagnosticsNewConsultationService.getSnomedConcept().pt }}">
-								<button id="clear" mat-button matSuffix color="warn" mat-icon-button
-									(click)="otherDiagnosticsNewConsultationService.resetForm()">
-									<mat-icon>close</mat-icon>
-								</button>
-							</mat-form-field>
-
-							<mat-form-field appearance="outline">
-								<mat-label>
-									{{ 'odontologia.odontology-consultation-dock-popup.SEVERITY' | translate }}
-								</mat-label>
-								<mat-select id="severity-select" formControlName="severidad">
-									<mat-option *ngFor="let severityType of severityTypes" [value]="severityType.code">
-										{{severityType.display}}
-									</mat-option>
-								</mat-select>
-								<mat-error translate="forms.REQUIRED"></mat-error>
-							</mat-form-field>
-
-							<div class="margin-checkbox">
-								<mat-checkbox id="chronic_checkbox" formControlName="cronico">
-									<span>
-										{{ 'odontologia.odontology-consultation-dock-popup.CHRONIC' | translate }}
-									</span>
-								</mat-checkbox>
-							</div>
-
-							<mat-form-field appearance="outline">
-								<mat-label>
-									{{ 'odontologia.odontology-consultation-dock-popup.START_DATE' | translate }}
-								</mat-label>
-								<input matInput id="start_date" [matDatepicker]="startDatePicker"
-									formControlName="fechaInicio" [min]="minDate"
-									[max]="otherDiagnosticsNewConsultationService.getFechaInicioMax()"
-									(dateChange)="otherDiagnosticsNewConsultationService.checkValidFechaFin()">
-								<mat-datepicker-toggle matSuffix [for]="startDatePicker"></mat-datepicker-toggle>
-								<mat-datepicker #startDatePicker></mat-datepicker>
-								<mat-error
-									*ngIf="otherDiagnosticsNewConsultationService.hasError('required', 'fechaInicio')"
-									[translate]="'forms.REQUIRED'">
-								</mat-error>
-								<mat-error
-									*ngIf="otherDiagnosticsNewConsultationService.hasError('matDatepickerMax', 'fechaInicio')"
-									[translate]="'forms.MAX_DATE_TODAY'">
-								</mat-error>
-							</mat-form-field>
-
-							<mat-form-field appearance="outline">
-								<mat-label>
-									{{ 'odontologia.odontology-consultation-dock-popup.END_DATE' | translate }}
-								</mat-label>
-								<input matInput id="end-date" [matDatepicker]="endDatePicker" formControlName="fechaFin"
-									[max]="today"
-									(dateChange)="otherDiagnosticsNewConsultationService.checkValidFechaFin()">
-								<mat-datepicker-toggle matSuffix [for]="endDatePicker"></mat-datepicker-toggle>
-								<mat-datepicker #endDatePicker></mat-datepicker>
-								<mat-error *ngIf="otherDiagnosticsNewConsultationService.hasError('min', 'fechaFin')">
-									{{ 'odontologia.odontology-consultation-dock-popup.END_DATE_ERROR' | translate }}
-								</mat-error>
-								<mat-error
-									*ngIf="otherDiagnosticsNewConsultationService.hasError('matDatepickerMax', 'fechaFin')"
-									[translate]="'forms.MAX_DATE_TODAY'">
-								</mat-error>
-							</mat-form-field>
-
-							<div align="end">
-								<button id="submit_diagnostic" class="uppercase" mat-raised-button color="primary"
-									type="submit">
-									<span>
-										{{ 'odontologia.odontology-consultation-dock-popup.ADD_PROBLEM' | translate }}
-									</span>
-								</button>
-							</div>
-
-						</form>
-					</ng-template>
-
-				</ng-container>
-
-				<app-document-section-table data-display
-					[tableTitle]="'odontologia.odontology-consultation-dock-popup.OTHER_REGISTERED_DIAGNOSES'"
-					[columns]="otherDiagnosticsNewConsultationService.getColumns()"
+			<div>
+				<app-document-section-table [columns]="otherDiagnosticsNewConsultationService.getColumns()"
 					[data]="otherDiagnosticsNewConsultationService.getProblemas()">
 				</app-document-section-table>
 
-			</app-new-document-section>
-
-
+				<button mat-button type="button" id="add-diagnose-button" color="primary" class="add-button"
+					(click)="addDiagnose()">
+					+ {{ 'odontologia.odontology-consultation-dock-popup.ADD_PROBLEM' | translate }}
+				</button>
+			</div>
 		</app-new-consultation-expansion-section>
 
 		<app-new-consultation-expansion-section id="allergies"
