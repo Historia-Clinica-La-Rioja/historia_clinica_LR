@@ -66,6 +66,12 @@
 			"SEARCH_PLACEHOLDER": "Buscar procedimiento",
 			"TYPE": "Tipo de procedimiento",
 			"DATE": "Fecha"
+		},
+		"new-consultation-allergy-form": {
+			"ADD": "Agregar alergia",
+			"ALLERGY": "Alergia",
+			"SEARCH_PLACEHOLDER": "Buscar alergia",
+			"CRITICALITY": "Criticidad"
 		}
 	}
 }

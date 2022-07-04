@@ -1,5 +1,5 @@
 <div fxLayout="row" fxLayoutAlign="space-between">
-    <span mat-dialog-title [translate]="'ambulatoria.paciente.nueva-consulta.alergias.ADD'"></span>
+    <span mat-dialog-title [translate]="'historia-clinica.new-consultation-allergy-form.ADD'"></span>
     <button mat-icon-button (click)="close()">
         <mat-icon>close</mat-icon>
     </button>
@@ -8,13 +8,13 @@
 <div mat-dialog-content>
     <ng-container *ngIf="!data.allergyService.getSnomedConcept() else alergiasForm">
         <app-concepts-search *ngIf="!data.searchConceptsLocallyFF else alergiaTypeaheadSearch"
-            [label]="'ambulatoria.paciente.nueva-consulta.alergias.ALLERGY'"
+            [label]="'historia-clinica.new-consultation-allergy-form.ALLERGY'"
             (search)="data.allergyService.openSearchDialog($event)">
         </app-concepts-search>
 
         <ng-template #alergiaTypeaheadSearch>
             <app-concept-typeahead-search [ecl]="data.allergyService.getECL()"
-                [placeholder]="'ambulatoria.paciente.nueva-consulta.alergias.SEARCH_PLACEHOLDER'"
+                [placeholder]="'historia-clinica.new-consultation-allergy-form.SEARCH_PLACEHOLDER'"
                 (conceptSelected)="data.allergyService.setConcept($event)">
             </app-concept-typeahead-search>
         </ng-template>
@@ -25,7 +25,7 @@
     <form [formGroup]="data.allergyService.getForm()" (ngSubmit)="addAllergy()">
         <div fxLayout="column">
             <mat-form-field appearance="outline">
-                <mat-label [translate]="'ambulatoria.paciente.nueva-consulta.alergias.ALLERGY'">
+                <mat-label [translate]="'historia-clinica.new-consultation-allergy-form.ALLERGY'">
                 </mat-label>
                 <input id="alergias-input" matInput type="text" formControlName="snomed" name="snomed" readonly
                     matTooltip="{{ data.allergyService.getSnomedConcept().pt }}">
@@ -36,7 +36,7 @@
             </mat-form-field>
 
             <mat-form-field appearance="outline">
-                <mat-label [translate]="'ambulatoria.paciente.nueva-consulta.alergias.CRITICALITY'">
+                <mat-label [translate]="'historia-clinica.new-consultation-allergy-form.CRITICALITY'">
                 </mat-label>
                 <mat-select id="criticality-select" formControlName="criticality">
                     <mat-option *ngFor="let criticalityType of data.allergyService.getCriticalityTypes()"
@@ -49,7 +49,7 @@
 
             <div align="end">
                 <button id="submit_alergias" mat-raised-button color="primary" type="submit">
-                    <span class="uppercase" [translate]="'ambulatoria.paciente.nueva-consulta.alergias.ADD'"></span>
+                    <span class="uppercase" [translate]="'historia-clinica.new-consultation-allergy-form.ADD'"></span>
                 </button>
             </div>
         </div>

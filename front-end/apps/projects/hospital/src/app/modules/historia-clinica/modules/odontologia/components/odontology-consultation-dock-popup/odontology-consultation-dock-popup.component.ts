@@ -39,6 +39,7 @@ import { FeatureFlagService } from "@core/services/feature-flag.service";
 import { NewConsultationAddReasonFormComponent } from '@historia-clinica/dialogs/new-consultation-add-reason-form/new-consultation-add-reason-form.component';
 import { NewConsultationProcedureFormComponent } from '@historia-clinica/dialogs/new-consultation-procedure-form/new-consultation-procedure-form.component';
 import { NewConsultationAddDiagnoseFormComponent } from '../../dialogs/new-consultation-add-diagnose-form/new-consultation-add-diagnose-form.component';
+import { NewConsultationAllergyFormComponent } from '@historia-clinica/dialogs/new-consultation-allergy-form/new-consultation-allergy-form.component';
 
 @Component({
 	selector: 'app-odontology-consultation-dock-popup',
@@ -196,6 +197,18 @@ export class OdontologyConsultationDockPopupComponent implements OnInit {
 				diagnosesService: this.otherDiagnosticsNewConsultationService,
 				searchConceptsLocallyFF: this.searchConceptsLocallyFFIsOn,
 				severityTypes: this.severityTypes
+			},
+			autoFocus: false,
+			width: '35%',
+			disableClose: true,
+		});
+	}
+
+	addAllergy(): void {
+		this.dialog.open(NewConsultationAllergyFormComponent, {
+			data: {
+				allergyService: this.allergiesNewConsultationService,
+				searchConceptsLocallyFF: this.searchConceptsLocallyFFIsOn,
 			},
 			autoFocus: false,
 			width: '35%',

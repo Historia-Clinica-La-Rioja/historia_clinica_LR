@@ -48,7 +48,7 @@ import { NewConsultationAddReasonFormComponent } from '@historia-clinica/dialogs
 import { NewConsultationFamilyHistoryFormComponent } from '../new-consultation-family-history-form/new-consultation-family-history-form.component';
 import { NewConsultationMedicationFormComponent } from '../new-consultation-medication-form/new-consultation-medication-form.component';
 import { NewConsultationProcedureFormComponent } from '@historia-clinica/dialogs/new-consultation-procedure-form/new-consultation-procedure-form.component';
-import { NewConsultationAllergyFormComponent } from '../new-consultation-allergy-form/new-consultation-allergy-form.component';
+import { NewConsultationAllergyFormComponent } from '@historia-clinica/dialogs/new-consultation-allergy-form/new-consultation-allergy-form.component';
 
 const TIME_OUT = 5000;
 

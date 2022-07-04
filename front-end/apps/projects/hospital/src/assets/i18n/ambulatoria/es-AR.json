@@ -211,7 +211,6 @@
                     "ADD": "Agregar alergia",
                     "ALLERGY": "Alergia",
                     "CRITICALITY": "Criticidad",
-                    "SEARCH_PLACEHOLDER": "Buscar alergia",
                     "form": {
                         "REGISTRY_DATE": "Fecha registro"
                     },
