@@ -52,7 +52,10 @@ public class FormReportServiceImpl implements FormReportService {
 			DocumentAppointmentBo documentAppointment = documentAppointmentOpt.get();
 			Long documentId = documentAppointment.getDocumentId();
 
-			switch (this.documentService.getSourceType(documentId)){
+			Short sourceType = this.documentService.getSourceType(documentId);
+			Short documentSourceType = sourceType == SourceType.IMMUNIZATION ? SourceType.OUTPATIENT : sourceType;
+
+			switch (documentSourceType){
 
 				case SourceType.OUTPATIENT: {
 					var outpatientResultOpt = formReportRepository.getConsultationFormVInfo(documentId);
@@ -103,7 +106,10 @@ public class FormReportServiceImpl implements FormReportService {
 		LOG.debug("Input parameter -> documentId {}", documentId);
 		FormVBo result;
 
-		switch (this.documentService.getSourceType(documentId)){
+		Short sourceType = this.documentService.getSourceType(documentId);
+		Short documentSourceType = sourceType == SourceType.IMMUNIZATION ? SourceType.OUTPATIENT : sourceType;
+
+		switch (documentSourceType){
 
 			case SourceType.OUTPATIENT: {
 				var outpatientResultOpt = formReportRepository.getConsultationFormVInfo(documentId);

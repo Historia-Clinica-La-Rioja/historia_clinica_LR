@@ -1,16 +1,10 @@
 package ar.lamansys.immunization.infrastructure.input.rest;
 
 
-import ar.lamansys.immunization.application.immunizePatient.ImmunizePatient;
-import ar.lamansys.immunization.domain.consultation.ImmunizePatientBo;
-import ar.lamansys.immunization.domain.immunization.ImmunizationInfoBo;
-import ar.lamansys.immunization.domain.snomed.SnomedBo;
-import ar.lamansys.immunization.domain.vaccine.VaccineDoseBo;
-import ar.lamansys.immunization.infrastructure.input.rest.dto.ImmunizePatientDto;
-import ar.lamansys.sgh.clinichistory.infrastructure.input.rest.ips.dto.ImmunizationDto;
-import ar.lamansys.sgh.clinichistory.infrastructure.input.rest.ips.dto.SnomedDto;
-import ar.lamansys.sgh.shared.infrastructure.input.service.immunization.VaccineDoseInfoDto;
-import ar.lamansys.sgx.shared.dates.configuration.LocalDateMapper;
+import java.util.stream.Collectors;
+
+import javax.validation.Valid;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
@@ -23,8 +17,17 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
-import javax.validation.Valid;
-import java.util.stream.Collectors;
+import ar.lamansys.immunization.application.immunizePatient.ImmunizePatient;
+import ar.lamansys.immunization.domain.consultation.ImmunizePatientBo;
+import ar.lamansys.immunization.domain.immunization.ImmunizationInfoBo;
+import ar.lamansys.immunization.domain.snomed.SnomedBo;
+import ar.lamansys.immunization.domain.vaccine.VaccineDoseBo;
+import ar.lamansys.immunization.infrastructure.input.rest.dto.ImmunizePatientDto;
+import ar.lamansys.sgh.clinichistory.infrastructure.input.rest.ips.dto.ImmunizationDto;
+import ar.lamansys.sgh.clinichistory.infrastructure.input.rest.ips.dto.SnomedDto;
+import ar.lamansys.sgh.shared.infrastructure.input.service.appointment.SharedAppointmentPort;
+import ar.lamansys.sgh.shared.infrastructure.input.service.immunization.VaccineDoseInfoDto;
+import ar.lamansys.sgx.shared.dates.configuration.LocalDateMapper;
 
 @RestController
 @Validated
@@ -37,11 +40,13 @@ public class ImmunizeController {
 
     private final LocalDateMapper localDateMapper;
 
-    public ImmunizeController(ImmunizePatient immunizePatient,
-                              LocalDateMapper localDateMapper) {
+	private final SharedAppointmentPort sharedAppointmentPort;
+
+    public ImmunizeController(ImmunizePatient immunizePatient, LocalDateMapper localDateMapper, SharedAppointmentPort sharedAppointmentPort) {
         this.immunizePatient = immunizePatient;
         this.localDateMapper = localDateMapper;
-        this.logger = LoggerFactory.getLogger(this.getClass());
+		this.sharedAppointmentPort = sharedAppointmentPort;
+		this.logger = LoggerFactory.getLogger(this.getClass());
     }
 
     @PreAuthorize("hasPermission(#institutionId, 'ENFERMERO, ESPECIALISTA_MEDICO, PROFESIONAL_DE_SALUD, ESPECIALISTA_EN_ODONTOLOGIA')")
@@ -58,7 +63,9 @@ public class ImmunizeController {
                 immunizePatientDto.getClinicalSpecialtyId(),
                 immunizePatientDto.getImmunizations().stream()
                         .map(i -> mapImmunization(i, institutionId)).collect(Collectors.toList()));
-        immunizePatient.run(immunizePatientBo);
+        var documentAppointment = immunizePatient.run(immunizePatientBo);
+		if(documentAppointment != null)
+			this.sharedAppointmentPort.saveDocumentAppointment(documentAppointment);
         return true;
     }
 

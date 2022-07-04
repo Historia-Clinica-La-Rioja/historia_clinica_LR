@@ -1,5 +1,12 @@
 package ar.lamansys.immunization.infrastructure.output.repository.document;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Service;
+
 import ar.lamansys.immunization.domain.immunization.ImmunizationDocumentBo;
 import ar.lamansys.immunization.domain.immunization.ImmunizationDocumentStorage;
 import ar.lamansys.immunization.domain.immunization.ImmunizationInfoBo;
@@ -12,12 +19,6 @@ import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.D
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.SourceType;
 import ar.lamansys.sgh.shared.infrastructure.input.service.immunization.VaccineDoseInfoDto;
 import ar.lamansys.sgx.shared.dates.configuration.LocalDateMapper;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.stereotype.Service;
-
-import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 public class ImmunizationDocumentStorageImpl implements ImmunizationDocumentStorage {
@@ -35,9 +36,9 @@ public class ImmunizationDocumentStorageImpl implements ImmunizationDocumentStor
     }
 
     @Override
-    public void save(ImmunizationDocumentBo immunizationDocumentBo) {
+    public Long save(ImmunizationDocumentBo immunizationDocumentBo) {
         logger.debug("Save new immunization document -> {}", immunizationDocumentBo);
-        documentExternalFactory.run(mapTo(immunizationDocumentBo), true);
+        return documentExternalFactory.run(mapTo(immunizationDocumentBo), true);
     }
 
     private DocumentDto mapTo(ImmunizationDocumentBo immunizationDocumentBo) {

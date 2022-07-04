@@ -1,5 +1,14 @@
 package ar.lamansys.immunization.application.immunizePatient;
 
+import java.time.LocalDate;
+import java.util.List;
+import java.util.stream.Collectors;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
 import ar.lamansys.immunization.application.immunizePatient.exceptions.ImmunizePatientException;
 import ar.lamansys.immunization.application.immunizePatient.exceptions.ImmunizePatientExceptionEnum;
 import ar.lamansys.immunization.domain.appointment.AppointmentStorage;
@@ -12,22 +21,14 @@ import ar.lamansys.immunization.domain.immunization.ImmunizationDocumentBo;
 import ar.lamansys.immunization.domain.immunization.ImmunizationDocumentStorage;
 import ar.lamansys.immunization.domain.immunization.ImmunizationInfoBo;
 import ar.lamansys.immunization.domain.immunization.ImmunizationValidator;
+import ar.lamansys.immunization.domain.user.ImmunizationUserStorage;
 import ar.lamansys.immunization.domain.user.RolePermissionException;
 import ar.lamansys.immunization.domain.user.RolesExceptionEnum;
-import ar.lamansys.immunization.domain.user.ImmunizationUserStorage;
 import ar.lamansys.immunization.domain.vaccine.VaccineConditionApplicationStorage;
 import ar.lamansys.immunization.domain.vaccine.VaccineRuleStorage;
 import ar.lamansys.immunization.domain.vaccine.VaccineSchemeStorage;
+import ar.lamansys.sgh.shared.infrastructure.input.service.appointment.dto.DocumentAppointmentDto;
 import ar.lamansys.sgx.shared.dates.configuration.DateTimeProvider;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-
-import java.time.LocalDate;
-import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 public class ImmunizePatient {
@@ -74,7 +75,7 @@ public class ImmunizePatient {
     }
 
     @Transactional
-    public void run(ImmunizePatientBo immunizePatientBo) {
+    public DocumentAppointmentDto run(ImmunizePatientBo immunizePatientBo) {
         logger.debug("Input parameters -> immunize patient {}", immunizePatientBo);
         if (immunizePatientBo == null)
             throw new ImmunizePatientException(ImmunizePatientExceptionEnum.NULL_IMMUNIZATION_PATIENT, "La información de la inmunización es obligatoria");
@@ -94,10 +95,16 @@ public class ImmunizePatient {
                         doctorInfoBo.getId(),
                         now,
                         isBillable(immunizePatientBo)));
-        immunizationDocumentStorage.save(mapTo(immunizePatientBo, encounterId, doctorInfoBo, now));
+        var documentId = immunizationDocumentStorage.save(mapTo(immunizePatientBo, encounterId, doctorInfoBo, now));
+		Integer appointmentId = null;
 
-        if (gettingVaccine(immunizePatientBo.getImmunizations()))
-            appointmentStorage.run(immunizePatientBo.getPatientId(), doctorInfoBo.getId(), now);
+        if (gettingVaccine(immunizePatientBo.getImmunizations())) {
+			appointmentId = appointmentStorage.run(immunizePatientBo.getPatientId(), doctorInfoBo.getId(), now);
+		}
+
+		if(appointmentId != null)
+			return new DocumentAppointmentDto(documentId, appointmentId);
+		return null;
     }
 
     private boolean gettingVaccine(List<ImmunizationInfoBo> immunizations) {
