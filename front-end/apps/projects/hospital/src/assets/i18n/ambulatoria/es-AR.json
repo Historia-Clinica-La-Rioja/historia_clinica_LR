@@ -100,8 +100,6 @@
                 },
                 "motivo": {
                     "TITLE": "Motivo de consulta",
-                    "MOTIVO": "motivo",
-                    "SEARCH_PLACEHOLDER": "Buscar motivo",
                     "ADD": "Agregar motivo",
                     "table": {
                         "columns": {

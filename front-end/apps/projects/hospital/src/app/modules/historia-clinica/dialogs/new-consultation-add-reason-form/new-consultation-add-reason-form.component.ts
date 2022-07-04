@@ -1,6 +1,6 @@
 import { Component, Inject } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
-import { MotivoNuevaConsultaService } from '../../services/motivo-nueva-consulta.service';
+import { MotivoNuevaConsultaService } from '../../modules/ambulatoria/services/motivo-nueva-consulta.service';
 
 @Component({
   selector: 'app-new-consultation-add-reason-form',

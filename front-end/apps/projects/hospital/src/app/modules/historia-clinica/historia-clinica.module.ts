@@ -32,6 +32,7 @@ import { IncludePreviousDataQuestionComponent } from './components/include-previ
 import { TemplateConceptTypeaheadSearchComponent } from './components/template-concept-typeahead-search/template-concept-typeahead-search.component';
 import { ConceptsTypeaheadSearchDialogComponent } from './dialogs/concepts-typeahead-search-dialog/concepts-typeahead-search-dialog.component';
 import { NewConsultationAddProblemFormComponent } from './dialogs/new-consultation-add-problem-form/new-consultation-add-problem-form.component';
+import { NewConsultationAddReasonFormComponent } from './dialogs/new-consultation-add-reason-form/new-consultation-add-reason-form.component';
 
 @NgModule({
 	declarations: [
@@ -63,6 +64,7 @@ import { NewConsultationAddProblemFormComponent } from './dialogs/new-consultati
 		BedAssignmentComponent,
 		ConceptsTypeaheadSearchDialogComponent,
 		NewConsultationAddProblemFormComponent,
+		NewConsultationAddReasonFormComponent,
 	],
 	imports: [
 		CommonModule,

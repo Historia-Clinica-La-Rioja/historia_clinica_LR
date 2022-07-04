@@ -44,7 +44,7 @@ import { HCEPersonalHistory } from '../reference/reference.component';
 import { DATOS_ANTROPOMETRICOS, FACTORES_DE_RIESGO } from '@historia-clinica/constants/validation-constants';
 import { hasMaxTwoDecimalDigits, PATTERN_INTEGER_NUMBER } from '@core/utils/pattern.utils';
 import { NewConsultationAddProblemFormComponent } from '@historia-clinica/dialogs/new-consultation-add-problem-form/new-consultation-add-problem-form.component';
-import { NewConsultationAddReasonFormComponent } from '../new-consultation-add-reason-form/new-consultation-add-reason-form.component';
+import { NewConsultationAddReasonFormComponent } from '@historia-clinica/dialogs/new-consultation-add-reason-form/new-consultation-add-reason-form.component';
 import { NewConsultationFamilyHistoryFormComponent } from '../new-consultation-family-history-form/new-consultation-family-history-form.component';
 import { NewConsultationMedicationFormComponent } from '../new-consultation-medication-form/new-consultation-medication-form.component';
 import { NewConsultationProcedureFormComponent } from '../new-consultation-procedure-form/new-consultation-procedure-form.component';

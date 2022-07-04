@@ -36,6 +36,7 @@ import { ClinicalSpecialtyCareLineService } from '@api-rest/services/clinical-sp
 import { ReferenceFileService } from '@api-rest/services/reference-file.service';
 import { HCEPersonalHistory } from '@historia-clinica/modules/ambulatoria/dialogs/reference/reference.component';
 import { FeatureFlagService } from "@core/services/feature-flag.service";
+import { NewConsultationAddReasonFormComponent } from '@historia-clinica/dialogs/new-consultation-add-reason-form/new-consultation-add-reason-form.component';
 
 @Component({
 	selector: 'app-odontology-consultation-dock-popup',
@@ -161,6 +162,18 @@ export class OdontologyConsultationDockPopupComponent implements OnInit {
 		else {
 			this.snackBarService.showError('Error al guardar documento de nueva consulta odontológica');
 		}
+	}
+
+	addReason() {
+		this.dialog.open(NewConsultationAddReasonFormComponent, {
+			data: {
+				reasonService: this.reasonNewConsultationService,
+				searchConceptsLocallyFF: this.searchConceptsLocallyFFIsOn,
+			},
+			autoFocus: false,
+			width: '35%',
+			disableClose: true,
+		});
 	}
 
 	private addErrorMessage(): void {

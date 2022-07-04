@@ -1,5 +1,5 @@
 <div fxLayout="row" fxLayoutAlign="space-between">
-    <span mat-dialog-title [translate]="'ambulatoria.paciente.nueva-consulta.motivo.ADD'"></span>
+    <span mat-dialog-title [translate]="'historia-clinica.new-consultation-add-reason-form.ADD_REASON'"></span>
     <button mat-icon-button (click)="close()">
         <mat-icon>close</mat-icon>
     </button>
@@ -8,13 +8,13 @@
 <div mat-dialog-content>
     <ng-container *ngIf="!data.reasonService.getSnomedConcept() else mainMotivoConsulta">
         <app-concepts-search *ngIf="!data.searchConceptsLocallyFF else motivoTypeaheadSearch"
-            [label]="'ambulatoria.paciente.nueva-consulta.motivo.MOTIVO'"
+            [label]="'historia-clinica.new-consultation-add-reason-form.REASON'"
             (search)="data.reasonService.openSearchDialog($event)">
         </app-concepts-search>
 
         <ng-template #motivoTypeaheadSearch>
             <app-concept-typeahead-search [ecl]="data.reasonService.getECL()"
-                [placeholder]="'ambulatoria.paciente.nueva-consulta.motivo.SEARCH_PLACEHOLDER'"
+                [placeholder]="'historia-clinica.new-consultation-add-reason-form.SEARCH_PLACEHOLDER'"
                 (conceptSelected)="data.reasonService.setConcept($event)">
             </app-concept-typeahead-search>
         </ng-template>
@@ -34,7 +34,8 @@
             </mat-form-field>
             <div align="end">
                 <button id="submit_motivos" mat-raised-button color="primary" type="submit">
-                    <span class="uppercase" [translate]="'ambulatoria.paciente.nueva-consulta.motivo.ADD'"></span>
+                    <span class="uppercase"
+                        [translate]="'historia-clinica.new-consultation-add-reason-form.ADD_REASON'"></span>
                 </button>
             </div>
         </div>

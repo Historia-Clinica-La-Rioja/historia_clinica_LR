@@ -27,57 +27,16 @@
 		<app-new-consultation-expansion-section id="reasons"
 			[title]="'odontologia.odontology-consultation-dock-popup.REASON_TITLE' | translate" icon="sms_failed"
 			[isEmpty]="reasonNewConsultationService.isEmpty()" [recommend]="true">
-			<app-new-document-section>
-
-				<ng-container concept-form>
-
-					<ng-container *ngIf="!reasonNewConsultationService.getSnomedConcept() else mainReasonConsultation">
-						<app-concepts-search *ngIf="!searchConceptsLocallyFFIsOn else mainReasonTypeaheadSearch"
-							[label]="'odontologia.odontology-consultation-dock-popup.REASON'"
-							(search)="reasonNewConsultationService.openSearchDialog($event)">
-						</app-concepts-search>
-
-						<ng-template #mainReasonTypeaheadSearch>
-							<app-concept-typeahead-search [ecl]="reasonNewConsultationService.getECL()"
-								[placeholder]="'odontologia.odontology-consultation-dock-popup.SEARCH_REASON'"
-								(conceptSelected)="reasonNewConsultationService.setConcept($event)">
-							</app-concept-typeahead-search>
-						</ng-template>
-					</ng-container>
-
-					<ng-template #mainReasonConsultation>
-						<form [formGroup]="reasonNewConsultationService.getForm()"
-							(ngSubmit)="reasonNewConsultationService.addToList()">
-							<mat-form-field appearance="outline">
-								<mat-label>
-									{{ 'odontologia.odontology-consultation-dock-popup.DIAGNOSIS' | translate }}
-								</mat-label>
-								<input id="reason_input" matInput type="text" formControlName="snomed" name="snomed"
-									readonly matTooltip="{{reasonNewConsultationService.getSnomedConcept().pt }}">
-								<button id="clear_reasons" mat-button matSuffix color="warn" mat-icon-button
-									(click)="reasonNewConsultationService.resetForm()">
-									<mat-icon>close</mat-icon>
-								</button>
-							</mat-form-field>
-							<div align="end">
-								<button id="submit_reasons" class="uppercase" mat-raised-button color="primary"
-									type="submit">
-									<span class="uppercase">
-										{{ 'odontologia.odontology-consultation-dock-popup.ADD_REASON' | translate }}
-									</span>
-								</button>
-							</div>
-						</form>
-					</ng-template>
-				</ng-container>
-
-				<app-document-section-table data-display
-					[tableTitle]="'odontologia.odontology-consultation-dock-popup.REGISTERED_REASONS'"
-					[columns]="reasonNewConsultationService.getTableColumnConfig()"
+			<div>
+				<app-document-section-table [columns]="reasonNewConsultationService.getTableColumnConfig()"
 					[data]="reasonNewConsultationService.getMotivosConsulta()">
 				</app-document-section-table>
 
-			</app-new-document-section>
+				<button mat-button type="button" id="add-reason-button" color="primary" class="add-button"
+					(click)="addReason()">
+					+ {{ 'odontologia.odontology-consultation-dock-popup.ADD_REASON' | translate }}
+				</button>
+			</div>
 		</app-new-consultation-expansion-section>
 
 		<app-new-consultation-expansion-section id="other_procedures"

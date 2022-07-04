@@ -54,6 +54,11 @@
 		"template-concept-search": {
 			"TEMPLATE_OPTION_GROUP": "Plantillas",
 			"CONCEPT_OPTION_GROUP": "Conceptos"
+		},
+		"new-consultation-add-reason-form": {
+			"ADD_REASON": "Agregar motivo",
+			"REASON": "motivo",
+			"SEARCH_PLACEHOLDER": "Buscar motivo"
 		}
 	}
 }
