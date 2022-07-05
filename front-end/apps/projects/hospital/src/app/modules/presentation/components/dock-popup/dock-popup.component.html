@@ -1,19 +1,21 @@
 <div class="dock-popup app-background-color" fxLayout="column" *ngIf="!dockPopupRef.istoggleWithoutHeader()">
 	<div id="popup-header" fxLayout="row" fxLayoutAlign="space-between center"
-		 class="background-color-primary action-bar"
-		 (click)="toggle(); $event.stopPropagation()">
+		class="background-color-primary action-bar" (click)="toggle(); $event.stopPropagation()">
 		<div id="title" class="mat-body-1 title" fxLayout="row" fxLayoutAlign="space-between center" fxLayoutGap="10px">
 			<mat-icon fontSet="material-icons-outlined" *ngIf="header.matIcon">{{ header.matIcon }}</mat-icon>
 			<span>{{ header.title | translate }}</span>
-		</div>		
+		</div>
 		<div fxLayout="row" fxLayoutAlign="center center" fxLayoutGap="3px">
-			<button id="minimize-maximize" mat-icon-button *ngIf="!actions.lockToggle" (click)="toggle(); $event.stopPropagation()">
+			<button id="minimize-maximize" mat-icon-button *ngIf="!actions.lockToggle"
+				(click)="toggle(); $event.stopPropagation()">
 				<mat-icon *ngIf="!dockPopupRef.isMinimized() else maximizePopup">minimize</mat-icon>
 			</button>
-			<button id="close" mat-icon-button  *ngIf="actions.showButtonClose" (click)="close(); $event.stopPropagation()">
+			<button id="close" mat-icon-button *ngIf="actions.showButtonClose"
+				(click)="close(); $event.stopPropagation()">
 				<mat-icon>close</mat-icon>
 			</button>
-			<button mat-icon-button *ngIf="actions.showButtonChevron" (click)="toggleWithoutHeader(); $event.stopPropagation()">
+			<button mat-icon-button *ngIf="actions.showButtonChevron"
+				(click)="toggleWithoutHeader(); $event.stopPropagation()">
 				<mat-icon>chevron_right</mat-icon>
 			</button>
 		</div>
@@ -24,7 +26,8 @@
 			<ng-content select="[body]"></ng-content>
 		</div>
 
-		<div id="dock-popup-actions" [class]="style.cssClassActions" *ngIf="!dockPopupRef.isMinimized() && actions.showActions">
+		<div id="dock-popup-actions" [class]="style.cssClassActions"
+			*ngIf="!dockPopupRef.isMinimized() && actions.showActions">
 			<ng-content select="[actions]"></ng-content>
 		</div>
 	</div>
