@@ -126,7 +126,7 @@ public class ReportsController {
     }
 
     @GetMapping(value = "/{institutionId}/summary")
-    @PreAuthorize("hasPermission(#institutionId, 'ADMINISTRADOR_INSTITUCIONAL_BACKOFFICE')")
+    @PreAuthorize("hasPermission(#institutionId, 'ADMINISTRADOR_INSTITUCIONAL_BACKOFFICE, PERSONAL_DE_ESTADISTICA')")
     public @ResponseBody void fetchConsultationSummaryReport(
             @PathVariable Integer institutionId,
             @RequestParam(value="fromDate") String fromDate,
