@@ -39,7 +39,7 @@ public class SimplePublishService {
 
 
 	private String getSimplePayload(Integer patientId, String topic) {
-		return String.format("{\"description\":\"{\\\"patientId\\\":%d,\\\"topic\\\":\\\"%s\\\"}\"}\"", patientId, topic);
+		return String.format("{\"description\":\"{\\\"patientId\\\":%d,\\\"topic\\\":\\\"%s\\\"}\"}", patientId, topic);
 	}
 
 
