@@ -52,6 +52,7 @@ const mapToApiHttpError = (defaultValue = { code: 'error.generic.title' }) => (b
         {
             traceId: body.traceId,
             code: body.code || defaultValue.code,
+            text: body.text || body.message || response.statusText,
             args: body.args,
         }
     );
