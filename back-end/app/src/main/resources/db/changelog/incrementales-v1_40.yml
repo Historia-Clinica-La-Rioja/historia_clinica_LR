@@ -1,5 +1,13 @@
 databaseChangeLog: 
-    - logicalFilePath: incrementales-v1_40 
+    - logicalFilePath: incrementales-v1_40
+
+    - changeSet:
+        id: update-patient_discharge-medical_discharge_date
+        author: jvaldez
+        changes:
+          - sql:
+              sql: |-
+                UPDATE patient_discharge SET medical_discharge_date = administrative_discharge_date WHERE medical_discharge_date IS NULL AND administrative_discharge_date IS NOT NULL;
 
 
     - changeSet:

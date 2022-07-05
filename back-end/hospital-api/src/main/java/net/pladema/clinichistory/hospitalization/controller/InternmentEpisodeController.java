@@ -160,6 +160,7 @@ public class InternmentEpisodeController {
 		InternmentSummaryBo internmentEpisodeSummary = internmentEpisodeService.getIntermentSummary(internmentEpisodeId)
 				.orElseThrow(() -> new NotFoundException("bad-episode-id", INTERNMENT_NOT_FOUND));
 		patientDischarge.setInternmentEpisodeId(internmentEpisodeId);
+		patientDischarge.setMedicalDischargeDate(internmentEpisodeSummary.getMedicalDischargeDate());
 		if (!internmentEpisodeSummary.freeBed())
 			patientDischarge.setPhysicalDischargeDate(patientDischarge.getAdministrativeDischargeDate());
 		PatientDischargeBo patientDischargeSaved = internmentEpisodeService.saveAdministrativeDischarge(patientDischarge);

@@ -41,6 +41,7 @@ export class InternmentEpisodeSummaryComponent implements OnInit {
 	epicrisisDoc: EpicrisisSummaryDto;
 	lastEvolutionNoteDoc: EvaluationNoteSummaryDto;
 	hasMedicalDischarge: boolean;
+	hasAdministrativeDischarge = false;
 
 	constructor(
 		private router: Router,
@@ -102,7 +103,8 @@ export class InternmentEpisodeSummaryComponent implements OnInit {
 
 	loadPhysicalDischarge() {
 		this.internmentService.getPatientDischarge(this.internmentEpisode.id).subscribe(patientDischarge => {
-			if (patientDischarge.physicalDischargeDate && !patientDischarge?.administrativeDischargeDate) {
+			this.hasAdministrativeDischarge = !!patientDischarge.administrativeDischargeDate;
+			if (patientDischarge.physicalDischargeDate && !(patientDischarge?.administrativeDischargeDate)) {
 				const date = new Date(patientDischarge.physicalDischargeDate);
 				let minutes: number | string = date.getMinutes();
 				if (minutes < 10) {

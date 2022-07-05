@@ -19,7 +19,7 @@
 		</div>
 	</mat-list-item>
 	<div fxLayout="row">
-		<div *ngIf="patientDocuments.hasAnamnesis && !physicalDischargeDate && currentUserIsAllowToDoAPhysicalDischarge">
+		<div *ngIf="patientDocuments.hasAnamnesis && !physicalDischargeDate && currentUserIsAllowToDoAPhysicalDischarge && !hasAdministrativeDischarge">
 			<button mat-flat-button color="primary" id="physical-discharge" (click)="physicalDischarge()">
 				<span class="uppercase" [translate]="'internaciones.discharge.PHYSICAL_DISCHARGE'"></span>
 			</button>
