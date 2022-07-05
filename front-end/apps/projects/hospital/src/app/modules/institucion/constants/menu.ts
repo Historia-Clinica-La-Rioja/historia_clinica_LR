@@ -87,5 +87,15 @@ export const SIDEBAR_MENU: MenuItemDef[] = [
 		],
 		featureFlag: AppFeature.HABILITAR_REPORTES
 	},
+	{
+		text: 'app.menu.REPORTES_PROGRAMAS',
+		icon: 'description',
+		id: 'program-reports',
+		url: './program-reports',
+		permissions: [
+			ERole.ADMINISTRADOR_INSTITUCIONAL_BACKOFFICE
+		],
+		featureFlag: AppFeature.HABILITAR_REPORTES_PROGRAMAS
+	},
 
 ];
