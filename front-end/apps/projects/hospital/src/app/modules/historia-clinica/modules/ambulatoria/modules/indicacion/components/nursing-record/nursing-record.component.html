@@ -1,10 +1,10 @@
-<div fxLayout="column" fxLayoutGap="30px" *ngFor=" let nursingRecord of nursingRecords">
+<div fxLayout="column" fxLayoutGap="30px" *ngFor=" let nursingSection of nursingSections">
     <div id="title" fxLayoutGap="10px" fxLayoutAlign="start center">
-        <span class="title capitalize-first-letter">{{ nursingRecord.title | translate }}</span>
+        <span class="title capitalize-first-letter">{{ nursingSection.title | translate }}</span>
         <mat-divider inset></mat-divider>
     </div>
 
-    <div id="content" class="content" *ngFor="let record of nursingRecord.records" fxLayout="column" fxLayoutGap="20px">
+    <div id="content" class="content" *ngFor="let record of nursingSection.records" fxLayout="column" fxLayoutGap="20px">
         <div fxLayout="row" fxLayoutGap="20px" fxLayout.lt-lg="column">
             <mat-icon class="color-primary" fontSet="material-icons-outlined" *ngIf="record.matIcon; else svgIcon">
                 {{ record.matIcon }}

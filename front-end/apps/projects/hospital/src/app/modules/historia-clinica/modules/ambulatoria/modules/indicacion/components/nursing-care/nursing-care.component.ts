@@ -13,7 +13,6 @@ export class NursingCareComponent implements OnInit {
 
 	title = NURSING_CARE;
 	entryDate: Date;
-	actualDate: Date;
 	nursingRecords: any[] = [];
 	generalNursingRecords: any[] = [];
 	specificNursingRecords: any[] = [];
@@ -31,20 +30,21 @@ export class NursingCareComponent implements OnInit {
 	}
 
 	loadActualDateAndFilter(actualDate: Date) {
-		this.actualDate = actualDate;
 		this.generalNursingRecords = [];
 		this.specificNursingRecords = [];
-		this.filterNursingRecords();
+		this.filterNursingRecords(actualDate);
 	}
 
-	filterNursingRecords() {
-		const records: any[] = this.nursingRecords.filter(r => isSameDay(dateDtoToDate(r.indication.indicationDate), this.actualDate));
+	private filterNursingRecords(actualDate: Date) {
+		const records: any[] = this.nursingRecords.filter(r => isSameDay(dateDtoToDate(r.indication.indicationDate), actualDate));
 		records.forEach(record => {
-			if (record.scheduleAdministrationTime || record.event)
+			if (isSpecific(record))
 				this.specificNursingRecords.push(record);
 			else
 				this.generalNursingRecords.push(record);
 		});
+		function isSpecific(record: any) {
+			return record.scheduleAdministrationTime || record.event;
+		}
 	}
-
 }

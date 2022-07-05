@@ -1,12 +1,12 @@
-import { NursingRecord } from './../nursing-record/nursing-record.component';
+import { NursingRecord, NursingSections } from './../nursing-record/nursing-record.component';
 import { ExtraInfo } from './../../../../../../../presentation/components/indication/indication.component';
-import { Component, Input, SimpleChanges, OnChanges, OnInit } from '@angular/core';
-import { OtherIndicationDto, TimeDto } from '@api-rest/api-model';
+import { Component, Input } from '@angular/core';
+import { TimeDto } from '@api-rest/api-model';
+import { EIndicationType } from '@api-rest/api-model';
 import { InternacionMasterDataService } from '@api-rest/services/internacion-master-data.service';
 import { Content } from '@presentation/components/indication/indication.component';
-import { loadExtraInfoParenteralPlan, loadExtraInfoPharmaco } from '../../constants/load-information';
+import { getOtherIndicationType, loadExtraInfoParenteralPlan, loadExtraInfoPharmaco } from '../../constants/load-information';
 import { OtherIndicationTypeDto } from '@api-rest/services/internment-indication.service';
-import { OTHER_INDICATION_ID } from '../../constants/internment-indications';
 import { sortBy } from '@core/utils/array.utils';
 
 @Component({
@@ -14,65 +14,81 @@ import { sortBy } from '@core/utils/array.utils';
 	templateUrl: './specific-nursing-record.component.html',
 	styleUrls: ['./specific-nursing-record.component.scss']
 })
-export class SpecificNursingRecordComponent implements OnInit, OnChanges {
+export class SpecificNursingRecordComponent {
 
 	nursingSections: NursingSections[] = [];
 	vias: any[] = [];
 	records: Content[];
-	othersIndicatiosType: OtherIndicationTypeDto[];
-	@Input() nursingRecords: any[];
+	@Input()
+	set nursingRecordsDto(nursingRecordsDto: any[]) {
+		this.internacionMasterdataService.getVias().subscribe(v => {
+			this.vias = v;
+			this.internacionMasterdataService.getOtherIndicationTypes().subscribe(otherIndicationTypes => {
+				this.filterSections(nursingRecordsDto, otherIndicationTypes);
+			});
+		});
+		
+	}
 
 	constructor(
 		private readonly internacionMasterdataService: InternacionMasterDataService,
 	) { }
 
-	ngOnInit() {
-		this.internacionMasterdataService.getVias().subscribe(v => this.vias = v);
-		this.internacionMasterdataService.getOtherIndicationTypes().subscribe(i => this.othersIndicatiosType = i);
-	}
-
-	ngOnChanges(changes: SimpleChanges) {
-		if (changes.nursingRecords.currentValue) {
-			this.internacionMasterdataService.getOtherIndicationTypes().subscribe(i => {
-				this.othersIndicatiosType = i;
-				this.filterSections();
-			});
-		}
-	}
-
-	filterSections() {
+	filterSections(nursingRecordsDto: any[], otherIndicationTypes: OtherIndicationTypeDto[]) {
 		const eventSections: NursingSections[] = [];
-		const scheduleSection: NursingSections[] = [];
-		this.nursingRecords.forEach(record => {
+		const scheduleSections: NursingSections[] = [];
+		nursingRecordsDto.forEach(record => {
+			const nursingRecord = this.toNursingRecord(record, otherIndicationTypes);
 			if (record.event) {
 				const title = `Ante ${record.event}`;
-				eventSections.push({ title, records: [this.mapNRecordToNRecord(record)] });
+				eventSections.push({ title, records: [nursingRecord] });
 			}
-			if (record.scheduleAdministrationTime) {
-				const section = scheduleSection.find(r => r.time === record.scheduleAdministrationTime.time.hours);
-				if (section)
-					section.records.push(this.mapNRecordToNRecord(record));
-				else {
-					const administrationTime = (record.scheduleAdministrationTime.time.hours > 9) ? record.scheduleAdministrationTime.time.hours : ` 0${record.scheduleAdministrationTime.time.hours}`;
-					const title = `${administrationTime} hs`;
-					scheduleSection.push({ title, records: [this.mapNRecordToNRecord(record)], time: record.scheduleAdministrationTime.time.hours });
+			else {
+				const scheduleHours = record.scheduleAdministrationTime.time;
+				let section = scheduleSections.find(r => r.time === scheduleHours.hours);
+				if (!section) {
+					section = this.createSection(scheduleHours);
+					scheduleSections.push(section);
 				}
+				section.records.push(nursingRecord);
 			}
 		});
 		const sortByTime = sortBy('time');
-		this.nursingSections = [...eventSections, ...sortByTime(scheduleSection)];
+		this.nursingSections = [...eventSections, ...sortByTime(scheduleSections)];
 	}
 
-	private mapNRecordToNRecord(record: any): NursingRecord {
+	private createSection(scheduleHours: TimeDto): NursingSections {
+		const administrationTime = (scheduleHours.hours > 9) ? scheduleHours.hours : `0${scheduleHours.hours}`;
+		const title = `${administrationTime} hs`;
+		return { title, records: [], time: scheduleHours.hours }
+	}
+
+	private toNursingRecord(record: any, otherIndicationTypes: OtherIndicationTypeDto[]): NursingRecord {
+		let svgIcon: string;
+		let matIcon: string;
+		switch (record.indication.type) {
+			case EIndicationType.PHARMACO: {
+				svgIcon = 'pharmaco';
+				break;
+			}
+			case EIndicationType.PARENTERAL_PLAN: {
+				svgIcon = 'parenteral_plans';
+				break;
+			}
+			case EIndicationType.OTHER_INDICATION: {
+				matIcon = 'assignment_late';
+				break;
+			}
+		}
 		return {
-			matIcon: (record.indication.type === "OTHER_INDICATION") ? 'assignment_late' : null,
-			svgIcon: (record.indication.type === "PHARMACO") ? 'pharmaco' : (record.indication.type === "PARENTERAL_PLAN") ? 'parenteral_plans' : null,
+			matIcon,
+			svgIcon,
 			content: {
 				status: {
 					description: 'indicacion.nursing-care.status.PENDING',
 					cssClass: 'red'
 				},
-				description: (record.indication.type === "OTHER_INDICATION") ? this.loadOtherIndicationType(record.indication, this.othersIndicatiosType) : record.indication.snomed.pt,
+				description: (record.indication.type === EIndicationType.OTHER_INDICATION) ? getOtherIndicationType(record.indication, otherIndicationTypes) : record.indication.snomed.pt,
 				extra_info: this.loadExtraInfo(record),
 				createdBy: "",
 				timeElapsed: "",
@@ -80,21 +96,10 @@ export class SpecificNursingRecordComponent implements OnInit, OnChanges {
 		}
 	}
 
-	private loadOtherIndicationType(otherIndication: OtherIndicationDto, othersIndicatiosType: OtherIndicationTypeDto[]): string {
-		const result = othersIndicatiosType.find(i => i.id === otherIndication.otherIndicationTypeId);
-		return (result.id === OTHER_INDICATION_ID) ? otherIndication.otherType : result.description;
-	}
-
 	private loadExtraInfo(record: any): ExtraInfo[] {
-		if (record.indication.type === "PARENTERAL_PLAN")
+		if (record.indication.type === EIndicationType.PARENTERAL_PLAN)
 			return loadExtraInfoParenteralPlan(record.indication, this.vias);
-		if (record.indication.type === "PHARMACO")
+		if (record.indication.type === EIndicationType.PHARMACO)
 			return loadExtraInfoPharmaco(record.indication, false)
 	}
-}
-
-export interface NursingSections {
-	title: string;
-	records: NursingRecord[];
-	time?: TimeDto;
 }

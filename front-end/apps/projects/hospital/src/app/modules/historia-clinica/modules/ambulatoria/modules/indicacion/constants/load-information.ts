@@ -1,7 +1,9 @@
-import { ParenteralPlanDto } from "@api-rest/api-model"
 import { dateTimeDtotoLocalDate } from "@api-rest/mapper/date-dto.mapper";
 import { EIndicationType } from "@api-rest/api-model"
+import { OtherIndicationDto, ParenteralPlanDto } from "@api-rest/api-model"
+import { OtherIndicationTypeDto } from "@api-rest/services/internment-indication.service"
 import { ExtraInfo } from "@presentation/components/indication/indication.component"
+import { OTHER_INDICATION_ID } from "./internment-indications"
 
 export function showFrequency(indication: any): ExtraInfo[] {
 	const hour = dateTimeDtotoLocalDate(indication?.startDateTime).getHours();
@@ -67,4 +69,9 @@ export function loadExtraInfoParenteralPlan(parenteralPlan: ParenteralPlanDto, v
 		})
 	}
 	return extra_info;
+}
+
+export const getOtherIndicationType = (otherIndication: OtherIndicationDto, othersIndicatiosTypes: OtherIndicationTypeDto[]): string => {
+	const result = othersIndicatiosTypes.find(i => i.id === otherIndication.otherIndicationTypeId);
+	return (result.id === OTHER_INDICATION_ID) ? otherIndication.otherType : result.description;
 }

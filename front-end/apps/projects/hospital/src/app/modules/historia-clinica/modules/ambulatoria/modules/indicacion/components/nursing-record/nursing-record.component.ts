@@ -1,6 +1,5 @@
 import { Component, Input } from '@angular/core';
 import { Content } from '@presentation/components/indication/indication.component';
-import { NursingSections } from '../specific-nursing-record/specific-nursing-record.component';
 
 @Component({
   selector: 'app-nursing-record',
@@ -9,10 +8,16 @@ import { NursingSections } from '../specific-nursing-record/specific-nursing-rec
 })
 export class NursingRecordComponent {
 
-  @Input() nursingRecords: NursingSections[];
+  @Input() nursingSections: NursingSections[];
 
   constructor() { }
 
+}
+
+export interface NursingSections {
+  title: string;
+  records: NursingRecord[];
+  time?: number;
 }
 
 export interface NursingRecord {
