@@ -1,8 +1,8 @@
 package net.pladema.clinichistory.hospitalization.service.evolutionnote;
 
-import net.pladema.clinichistory.hospitalization.service.evolutionnote.domain.evolutiondiagnosis.EvolutionDiagnosisBo;
+import net.pladema.clinichistory.hospitalization.service.evolutionnote.domain.EvolutionNoteBo;
 
 public interface EvolutionDiagnosesService {
 
-    Long execute(Integer internmentEpisodeId, Integer patientId, EvolutionDiagnosisBo evolutionNote);
+    Long execute(EvolutionNoteBo evolutionNote);
 }

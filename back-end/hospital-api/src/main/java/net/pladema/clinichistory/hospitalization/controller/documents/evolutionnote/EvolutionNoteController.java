@@ -17,7 +17,6 @@ import net.pladema.clinichistory.hospitalization.service.evolutionnote.Evolution
 import net.pladema.clinichistory.hospitalization.service.evolutionnote.EvolutionNoteService;
 import net.pladema.clinichistory.hospitalization.service.evolutionnote.UpdateEvolutionNoteService;
 import net.pladema.clinichistory.hospitalization.service.evolutionnote.domain.EvolutionNoteBo;
-import net.pladema.clinichistory.hospitalization.service.evolutionnote.domain.evolutiondiagnosis.EvolutionDiagnosisBo;
 import net.pladema.patient.controller.service.PatientExternalService;
 import ar.lamansys.sgx.shared.exceptions.NotFoundException;
 
@@ -111,9 +110,16 @@ public class EvolutionNoteController {
                 institutionId, internmentEpisodeId, evolutionDiagnosisDto);
         Integer patientId = internmentEpisodeService.getPatient(internmentEpisodeId)
                 .orElseThrow(() -> new EntityNotFoundException(INVALID_INTERNMENT_EPISODE));
-
-        EvolutionDiagnosisBo evolutionNote = evolutionNoteMapper.fromEvolutionNoteDto(evolutionDiagnosisDto);
-        evolutionDiagnosesService.execute(internmentEpisodeId, patientId, evolutionNote);
+        EvolutionNoteBo evolutionNote = evolutionNoteMapper.fromEvolutionDiagnosisDto(evolutionDiagnosisDto);
+		internmentEpisodeService.getPatient(internmentEpisodeId)
+				.map(patientExternalService::getBasicDataFromPatient)
+				.map(patientDto -> new PatientInfoBo(patientDto.getId(), patientDto.getPerson().getGender().getId(), patientDto.getPerson().getAge()))
+				.ifPresentOrElse(evolutionNote::setPatientInfo,() -> new NotFoundException("El paciente no existe", "El paciente no existe"));
+		evolutionNote.setInstitutionId(institutionId);
+		evolutionNote.setPatientId(patientId);
+		evolutionNote.setEncounterId(internmentEpisodeId);
+		evolutionNote.setWasMadeByProfessionalNursing(false);
+        evolutionDiagnosesService.execute(evolutionNote);
 
         LOG.debug(OUTPUT, Boolean.TRUE);
         return  ResponseEntity.ok().body(Boolean.TRUE);

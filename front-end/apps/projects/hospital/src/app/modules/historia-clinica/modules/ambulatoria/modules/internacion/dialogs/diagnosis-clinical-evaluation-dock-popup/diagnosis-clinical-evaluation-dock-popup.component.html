@@ -18,13 +18,15 @@
 						<mat-checkbox *ngIf="diagnostics.data.length !== 0"
 									  (change)="$event ? masterToggle(diagnostics.data, diagnostics.selection) : null"
 									  [checked]="diagnostics.selection.hasValue() && isAllSelected(diagnostics.data, diagnostics.selection)"
-									  [indeterminate]="diagnostics.selection.hasValue() && !isAllSelected(diagnostics.data, diagnostics.selection)">
+									  [indeterminate]="diagnostics.selection.hasValue() && !isAllSelected(diagnostics.data, diagnostics.selection)"
+									  disabled>
 						</mat-checkbox>
 					</th>
 					<td mat-cell class="actions" *matCellDef="let row">
 						<mat-checkbox (click)="$event.stopPropagation()"
 									  (change)="$event ? diagnostics.selection.toggle(row) : null"
-									  [checked]="diagnostics.selection.isSelected(row)">
+									  [checked]="diagnostics.selection.isSelected(row)"
+						[disabled]="data.diagnosisInfo.diagnosisId==row.id">
 						</mat-checkbox>
 					</td>
 				</ng-container>

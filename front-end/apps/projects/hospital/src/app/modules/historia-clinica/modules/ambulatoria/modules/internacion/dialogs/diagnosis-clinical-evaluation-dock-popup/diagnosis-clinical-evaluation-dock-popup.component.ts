@@ -130,10 +130,10 @@ export class DiagnosisClinicalEvaluationDockPopupComponent implements OnInit {
 	save(): void {
 		if (this.form.valid) {
 			const evolutionNote: EvolutionDiagnosisDto = {
-				diagnosesId: this.diagnostics.selection.selected.map(diagnosis => diagnosis?.id),
-				notes: this.form.value
+				diagnosis: this.diagnostics.selection.selected.filter(d => d.main === false),
+				notes: this.form.value,
+				mainDiagnosis: this.diagnostics.selection.selected.find(d => d.main === true)
 			};
-			console.log("evolutionNote:  ", evolutionNote);
 			this.evolutionNoteService.createEvolutionDiagnosis(evolutionNote, this.data.diagnosisInfo.internmentEpisodeId).subscribe(
 				_ => {
 					this.snackBarService.showSuccess('internaciones.clinical-assessment-diagnosis.messages.SUCCESS');
@@ -145,7 +145,7 @@ export class DiagnosisClinicalEvaluationDockPopupComponent implements OnInit {
 
 		function setFieldsToUpdate(evolutionNote: EvolutionDiagnosisDto): InternmentFields {
 			return {
-				diagnosis: !!evolutionNote.diagnosesId,
+				diagnosis: !!evolutionNote.diagnosis.map(diagnosis => diagnosis.id),
 				evolutionClinical: !!evolutionNote.notes,
 			}
 		}

@@ -1007,7 +1007,8 @@ export interface EvaluationNoteSummaryDto extends DocumentSummaryDto {
 }
 
 export interface EvolutionDiagnosisDto extends Serializable {
-    diagnosesId?: number[];
+    diagnosis?: DiagnosisDto[];
+    mainDiagnosis?: HealthConditionDto;
     notes?: DocumentObservationsDto;
 }
 
