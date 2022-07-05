@@ -21,7 +21,7 @@
 		</div>
 	</div>
 
-	<div [class]="style.cssClassContent" class="app-background-color" fxLayout="column">
+	<div [class]="style.cssClassContent" class="app-background-color" fxLayout="column" fxLayoutAlign="space-between">
 		<div id="dock-popup-body" [class]="style.cssClassBody" *ngIf="!dockPopupRef.isMinimized()">
 			<ng-content select="[body]"></ng-content>
 		</div>
