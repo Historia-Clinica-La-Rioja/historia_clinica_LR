@@ -1,6 +1,7 @@
 package ar.lamansys.sgh.clinichistory.infrastructure.output;
 
 import ar.lamansys.sgh.clinichistory.application.ports.ParenteralPlanStorage;
+import ar.lamansys.sgh.clinichistory.domain.ips.DietBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.DosageBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.EUnitsOfTimeBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.FrequencyBo;
@@ -78,6 +79,19 @@ public class ParenteralPlanStorageImpl implements ParenteralPlanStorage {
 						ppBo.setCreatedByName(p.getFirstName() + " " + p.getLastName());
 					return ppBo;})
 				.collect(Collectors.toList());
+		log.debug("Output -> {}", result);
+		return result;
+	}
+
+	@Override
+	public Optional<ParenteralPlanBo> findById(Integer id) {
+		log.debug("Input parameter -> id {}", id);
+		Optional<ParenteralPlanBo> result = parenteralPlanRepository.findById(id).map(this::mapToBo);
+		HospitalUserPersonInfoDto p = sharedHospitalUserPort.getUserCompleteInfo(result.get().getCreatedBy());
+		if(featureFlagsService.isOn(AppFeature.HABILITAR_DATOS_AUTOPERCIBIDOS) && p.getNameSelfDetermination() != null)
+			result.get().setCreatedByName(p.getNameSelfDetermination() + " " + p.getLastName());
+		else
+			result.get().setCreatedByName(p.getFirstName() + " " + p.getLastName());
 		log.debug("Output -> {}", result);
 		return result;
 	}

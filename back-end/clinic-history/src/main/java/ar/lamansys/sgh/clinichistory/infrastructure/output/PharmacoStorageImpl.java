@@ -1,5 +1,6 @@
 package ar.lamansys.sgh.clinichistory.infrastructure.output;
 
+import ar.lamansys.sgh.clinichistory.application.ports.NursingRecordStorage;
 import ar.lamansys.sgh.clinichistory.application.ports.PharmacoStorage;
 import ar.lamansys.sgh.clinichistory.domain.ips.EUnitsOfTimeBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.EVia;
@@ -29,6 +30,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -43,7 +45,6 @@ public class PharmacoStorageImpl implements PharmacoStorage {
 	private final SnomedService snomedService;
 	private final SharedHospitalUserPort sharedHospitalUserPort;
 	private final FeatureFlagsService featureFlagsService;
-
 
 	@Override
 	public Integer createPharmaco(PharmacoBo pharmacoBo) {
@@ -69,6 +70,57 @@ public class PharmacoStorageImpl implements PharmacoStorage {
 				.collect(Collectors.toList());
 		log.debug("Output -> {}", result);
 		return result;
+	}
+
+	@Override
+	public Optional<PharmacoBo> findById(Integer id) {
+		log.debug("Input parameter -> id {}", id);
+		Optional<PharmacoBo> result = pharmacoRepository.findById(id).map(this::mapToBo);
+		log.debug("Output -> {}", result.toString());
+		return result;
+	}
+
+	private PharmacoBo mapToBo(Pharmaco entity) {
+		PharmacoBo result = new PharmacoBo();
+		HospitalUserPersonInfoDto p = sharedHospitalUserPort.getUserCompleteInfo(entity.getCreatedBy());
+		SnomedBo snomedBo = snomedService.getSnomed(entity.getSnomedId());
+		DosageBo dosageBo = dosageRepository.findById(entity.getDosageId())
+				.map(this::mapToDosageBo).orElse(null);
+		result.setId(entity.getId());
+		result.setPatientId(entity.getPatientId());
+		result.setStatusId(entity.getStatusId());
+		result.setTypeId(entity.getTypeId());
+		if(featureFlagsService.isOn(AppFeature.HABILITAR_DATOS_AUTOPERCIBIDOS) && p.getNameSelfDetermination() != null)
+			result.setCreatedByName(p.getNameSelfDetermination() + " " + p.getLastName());
+		else
+			result.setCreatedByName(p.getFirstName() + " " + p.getLastName());
+		result.setIndicationDate(entity.getIndicationDate());
+		result.setCreatedOn(entity.getCreatedOn());
+		result.setSnomed(snomedBo);
+		result.setDosage(dosageBo);
+		result.setViaId(entity.getViaId().intValue());
+		result.setFoodRelationId(entity.getFoodRelationId().intValue());
+		result.setHealthConditionId(entity.getHealthConditionId());
+		result.setPatientProvided(entity.getPatientProvided());
+		result.setCreatedBy(entity.getCreatedBy());
+		result.setProfessionalId(entity.getProfessionalId());
+		result.setSolvent(getSolvent(entity.getId()));
+
+		return result;
+	}
+
+	private OtherPharmacoBo getSolvent(Integer id){
+		otherPharmacoRepository.getByIndicationId(id).stream().map(entity -> {
+			OtherPharmacoBo result = new OtherPharmacoBo();
+			result.setIndicationId(entity.getIndicationId());
+			SnomedBo snomedBo = snomedService.getSnomed(entity.getSnomedId());
+			DosageBo dosageBo = dosageRepository.findById(entity.getDosageId())
+					.map(this::mapToDosageBo).orElse(null);
+			result.setSnomed(snomedBo);
+			result.setDosage(dosageBo);
+			return result;
+		});
+		return null;
 	}
 
 	private Integer saveSolvent(OtherPharmacoBo bo, Integer indicationId) {

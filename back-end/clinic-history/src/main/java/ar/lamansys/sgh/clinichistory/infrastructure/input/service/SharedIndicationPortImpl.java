@@ -6,19 +6,26 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import ar.lamansys.sgh.clinichistory.application.indication.createpharmaco.CreatePharmaco;
+import ar.lamansys.sgh.clinichistory.application.indication.getinternmentepisodenursingrecords.GetInternmentEpisodeNursingRecords;
 import ar.lamansys.sgh.clinichistory.application.indication.getinternmentepisodeotherindications.GetInternmentEpisodeOtherIndications;
 
 import ar.lamansys.sgh.clinichistory.application.indication.getinternmentepisodeparenteralplans.GetInternmentEpisodeParenteralPlans;
 import ar.lamansys.sgh.clinichistory.application.indication.getinternmentepisodepharamacos.GetInternmentEpisodePharmacos;
 import ar.lamansys.sgh.clinichistory.domain.ips.FrequencyBo;
+import ar.lamansys.sgh.clinichistory.domain.ips.IndicationBo;
+import ar.lamansys.sgh.clinichistory.domain.ips.NursingRecordBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.PharmacoSummaryBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.QuantityBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.OtherPharmacoBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.PharmacoBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.SnomedBo;
+import ar.lamansys.sgh.shared.infrastructure.input.service.EIndicationStatus;
+import ar.lamansys.sgh.shared.infrastructure.input.service.EIndicationType;
 import ar.lamansys.sgh.shared.infrastructure.input.service.FrequencyDto;
+import ar.lamansys.sgh.shared.infrastructure.input.service.IndicationDto;
 import ar.lamansys.sgh.shared.infrastructure.input.service.NewDosageDto;
 
+import ar.lamansys.sgh.shared.infrastructure.input.service.NursingRecordDto;
 import ar.lamansys.sgh.shared.infrastructure.input.service.OtherPharmacoDto;
 import ar.lamansys.sgh.shared.infrastructure.input.service.PharmacoDto;
 import ar.lamansys.sgh.shared.infrastructure.input.service.PharmacoSummaryDto;
@@ -76,6 +83,8 @@ public class SharedIndicationPortImpl implements SharedIndicationPort {
 	private final CreateParenteralPlan createParenteralPlan;
 
 	private final GetInternmentEpisodeParenteralPlans getInternmentEpisodeParenteralPlans;
+
+	private final GetInternmentEpisodeNursingRecords getInternmentEpisodeNursingRecords;
 
 	@Override
 	public List<DietDto> getInternmentEpisodeDiets(Integer internmentEpisodeId) {
@@ -143,6 +152,14 @@ public class SharedIndicationPortImpl implements SharedIndicationPort {
 	public List<ParenteralPlanDto> getInternmentEpisodeParenteralPlans(Integer internmentEpisodeId) {
 		log.debug("Input parameter -> internmentEpisodeId {}", internmentEpisodeId);
 		List<ParenteralPlanDto> result = getInternmentEpisodeParenteralPlans.run(internmentEpisodeId).stream().map(this::mapToParenteralPlanDto).collect(Collectors.toList());
+		log.debug("Output -> {}", result);
+		return result;
+	}
+
+	@Override
+	public List<NursingRecordDto> getInternmentEpisodeNursingRecords(Integer internmentEpisodeId) {
+		log.debug("Input parameter -> internmentEpisodeId {}", internmentEpisodeId);
+		List<NursingRecordDto> result = getInternmentEpisodeNursingRecords.run(internmentEpisodeId).stream().map(this::mapToNursingRecordDto).collect(Collectors.toList());
 		log.debug("Output -> {}", result);
 		return result;
 	}
@@ -268,6 +285,13 @@ public class SharedIndicationPortImpl implements SharedIndicationPort {
 		return result;
 	}
 
+	private OtherPharmacoDto toOtherPharmacoDto(OtherPharmacoBo bo){
+		OtherPharmacoDto result = new OtherPharmacoDto();
+		result.setSnomed(new SharedSnomedDto(bo.getSnomed().getSctid(), bo.getSnomed().getPt()));
+		result.setDosage(toDosageDto(bo.getDosage()));
+		return result;
+	}
+
 	private PharmacoSummaryDto mapToPharmacoSummaryDto(PharmacoSummaryBo bo) {
 		NewDosageDto dosageDto = toDosageDto(bo.getDosage());
 		SharedSnomedDto snomedDto = new SharedSnomedDto(bo.getSnomed().getSctid(), bo.getSnomed().getPt());
@@ -365,6 +389,61 @@ public class SharedIndicationPortImpl implements SharedIndicationPort {
 				frequencyDto,
 				bo.getVia(),
 				null);
+	}
+
+	private PharmacoDto mapToPharmacoDto(PharmacoBo bo){
+		NewDosageDto dosageDto = toDosageDto(bo.getDosage());
+
+		return new PharmacoDto(bo.getId(),
+				bo.getPatientId(),
+				bo.getTypeId(),
+				bo.getStatusId(),
+				bo.getProfessionalId(),
+				bo.getCreatedByName(),
+				localDateMapper.toDateDto(bo.getIndicationDate()),
+				localDateMapper.toDateTimeDto(bo.getCreatedOn()),
+				bo.getSnomed() != null ? new SharedSnomedDto(bo.getSnomed().getSctid(), bo.getSnomed().getPt()) : null,
+				dosageDto,
+				bo.getSolvent() != null ? toOtherPharmacoDto(bo.getSolvent()) : null,
+				bo.getHealthConditionId(),
+				bo.getFoodRelationId(),
+				bo.getPatientProvided(),
+				bo.getViaId(),
+				bo.getNote());
+	}
+
+	private NursingRecordDto mapToNursingRecordDto(NursingRecordBo bo){
+		NursingRecordDto result = new NursingRecordDto();
+		IndicationDto indicationDto = mapToIndicationDto(bo.getIndication());
+		result.setIndication(indicationDto);
+		result.setEvent(bo.getEvent());
+		result.setId(bo.getId());
+		result.setStatus(EIndicationStatus.map(bo.getStatusId()));
+		result.setObservation(bo.getObservation());
+		result.setScheduledAdministrationTime(localDateMapper.toDateTimeDto(bo.getScheduledAdministrationTime()));
+		result.setAdministrationTime(localDateMapper.toDateTimeDto(bo.getAdministrationTime()));
+		return result;
+	}
+
+	private IndicationDto mapToIndicationDto(IndicationBo indication){
+		switch (EIndicationType.map(indication.getTypeId())){
+			case DIET:{
+				DietBo dietBo = (DietBo) indication;
+				return mapToDietDto(dietBo);
+			}
+			case OTHER_INDICATION:{
+				OtherIndicationBo oiBo = (OtherIndicationBo) indication;
+				return mapToOtherIndicationDto(oiBo);
+			}
+			case PARENTERAL_PLAN:{
+				ParenteralPlanBo ppBo = (ParenteralPlanBo) indication;
+				return mapToParenteralPlanDto(ppBo);
+			}
+			default:{
+				PharmacoBo pharmacoBo = (PharmacoBo) indication;
+				return mapToPharmacoDto(pharmacoBo);
+				}
+		}
 	}
 
 }

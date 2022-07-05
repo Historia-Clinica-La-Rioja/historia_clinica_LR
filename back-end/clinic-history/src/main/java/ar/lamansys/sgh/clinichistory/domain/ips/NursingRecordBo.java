@@ -3,6 +3,7 @@ package ar.lamansys.sgh.clinichistory.domain.ips;
 import ar.lamansys.sgh.shared.infrastructure.input.service.EIndicationStatus;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.time.LocalDateTime;
@@ -10,6 +11,7 @@ import java.time.LocalDateTime;
 @Getter
 @Setter
 @AllArgsConstructor
+@NoArgsConstructor
 public class NursingRecordBo {
 
 	private Integer id;
