@@ -1,4 +1,4 @@
-package ar.lamansys.sgx.auth.twoFactorAuthentication.infrastructure.input.dto;
+package ar.lamansys.sgx.auth.twoFactorAuthentication.infrastructure.input.rest.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

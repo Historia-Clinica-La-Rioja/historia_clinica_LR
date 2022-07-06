@@ -2913,6 +2913,10 @@ export interface VaccineSchemeInfoDto extends AbstractMasterdataDto<number> {
     id: number;
 }
 
+export interface VerificationCodeDto {
+    code: string;
+}
+
 export const enum AppFeature {
     HABILITAR_ALTA_SIN_EPICRISIS = "HABILITAR_ALTA_SIN_EPICRISIS",
     MAIN_DIAGNOSIS_REQUIRED = "MAIN_DIAGNOSIS_REQUIRED",
@@ -3001,6 +3005,7 @@ export const enum ERole {
     PERSONAL_DE_LABORATORIO = "PERSONAL_DE_LABORATORIO",
     PERSONAL_DE_FARMACIA = "PERSONAL_DE_FARMACIA",
     PERSONAL_DE_ESTADISTICA = "PERSONAL_DE_ESTADISTICA",
+    PARTIALLY_AUTHENTICATED = "PARTIALLY_AUTHENTICATED",
 }
 
 export const enum ESurfacePositionDto {

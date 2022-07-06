@@ -2,10 +2,15 @@ package ar.lamansys.sgx.auth.jwt.infrastructure.input.rest;
 
 import javax.validation.Valid;
 
+import ar.lamansys.sgx.auth.jwt.application.logintwofactorauthentication.LoginTwoFactorAuthentication;
+
+import ar.lamansys.sgx.auth.jwt.infrastructure.input.rest.dto.TwoFactorAuthenticationLoginDto;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import ar.lamansys.sgx.auth.jwt.application.login.Login;
@@ -30,9 +35,8 @@ import lombok.extern.slf4j.Slf4j;
 public class AuthenticationController {
 
 	private final Login login;
-
 	private final RefreshToken refreshToken;
-
+	private final LoginTwoFactorAuthentication loginTwoFactorAuthentication;
 	private final ICaptchaService captchaService;
 
 	@PostMapping
@@ -60,5 +64,11 @@ public class AuthenticationController {
 		return new JWTokenDto(resultToken.token, resultToken.refreshToken);
 	}
 
+	@PostMapping("/login-2fa")
+	@PreAuthorize("hasAnyAuthority('PARTIALLY_AUTHENTICATED')")
+	public JWTokenDto completeLoginWith2FA(@RequestBody TwoFactorAuthenticationLoginDto loginDto) throws BadLoginException {
+		JWTokenBo resultToken = loginTwoFactorAuthentication.execute(loginDto.getCode());
+		return new JWTokenDto(resultToken.token, resultToken.refreshToken);
+	}
 
 }
