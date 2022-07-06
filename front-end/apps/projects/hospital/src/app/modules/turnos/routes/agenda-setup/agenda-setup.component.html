@@ -29,8 +29,7 @@
 					<mat-form-field appearance="outline">
 						<mat-select id="healthcareProfessionalSpecialtyId" name="healthcareProfessionalSpecialtyId"
 									formControlName="healthcareProfessionalSpecialtyId"
-									placeholder="{{'pacientes.form.SELECT' | translate}}"
-									[disabled]="!form.value.healthcareProfessionalId">
+									placeholder="{{'pacientes.form.SELECT' | translate}}">
 							<mat-option *ngFor="let specialty of professionalSpecialties" [value]="specialty.id">
 								<span class="mat-body">{{ specialty.name }}</span>
 							</mat-option>
