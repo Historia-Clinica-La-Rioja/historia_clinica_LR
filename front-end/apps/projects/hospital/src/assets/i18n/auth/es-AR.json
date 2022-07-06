@@ -14,6 +14,13 @@
 			"external": {
 				"TITLE": "Iniciar sesión",
 				"GO_TO_EXTERNAL_LOGIN": "Ingresar con OAuth"
+			},
+			"two-factor-authentication-dialog": {
+				"TITLE": "Ingrese código de autenticación por doble factor",
+				"DESCRIPTION": "Ingrese el código que aparece en su aplicación de doble factor de autenticación (Google Authenticator, FreeOTP o similar)",
+				"VERIFICATION_CODE_MINIMUM_LENGTH": "El código debe contener 6 dígitos",
+				"VERIFICATION_CODE_INVALID": "Código incorrecto",
+				"VERIFY": "Verificar"
 			}
 		},
 		"LOGOUT": "Cerrar Sesión",

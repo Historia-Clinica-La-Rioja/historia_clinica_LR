@@ -3,8 +3,11 @@ import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { AuthenticationService } from '../../services/authentication.service';
 import { catchError } from 'rxjs/operators';
 import { ApiErrorMessageDto, RecaptchaPublicConfigDto } from '@api-rest/api-model';
+import { ERole } from '@api-rest/api-model';
 import { PublicService } from '@api-rest/services/public.service';
 import { ActivatedRoute } from '@angular/router';
+import { MatDialog } from "@angular/material/dialog";
+import { LoginPinCodeComponent } from "../../dialogs/login-pin-code/login-pin-code.component";
 
 @Component({
 	selector: 'app-hospital-login',
@@ -23,7 +26,9 @@ export class HospitalLoginComponent implements OnInit {
 		private formBuilder: FormBuilder,
 		private authenticationService: AuthenticationService,
 		private publicService: PublicService,
-		private route: ActivatedRoute) {
+		private route: ActivatedRoute,
+		private readonly dialog: MatDialog,
+		) {
 	}
 
 	ngOnInit(): void {
@@ -73,9 +78,35 @@ export class HospitalLoginComponent implements OnInit {
 					throw err;
 				}),
 			).subscribe(
-				() => this.returnUrl ? this.authenticationService.go(this.returnUrl) : this.authenticationService.go()
+				(response) => {
+					let partiallyAuthenticated = response.roleAssignments
+						.filter((ra) => ra.role === ERole.PARTIALLY_AUTHENTICATED).length > 0;
+					if (!partiallyAuthenticated) {
+						this.doRedirect();
+						return;
+					}
+					this.openLoginPinCodeDialog();
+				}
 			);
 		}
+	}
+
+	private openLoginPinCodeDialog() {
+		const dialogRef = this.dialog.open(LoginPinCodeComponent, {
+			width: '30%'
+		})
+		dialogRef.afterClosed().subscribe(result => {
+			if (result?.loginSuccessful) {
+				this.doRedirect();
+				return;
+			}
+			this.form.reset();
+			this.form.enable();
+		})
+	}
+
+	private doRedirect() {
+		this.returnUrl ? this.authenticationService.go(this.returnUrl) : this.authenticationService.go();
 	}
 
 	reCaptchaResolved(captchaResponse: string) {

@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpParams } from "@angular/common/http";
+import { HttpClient } from "@angular/common/http";
 import { Observable } from "rxjs";
 import { environment } from "@environments/environment";
 import { TwoFactorAuthenticationDto } from "@api-rest/api-model";
@@ -19,9 +19,7 @@ export class TwoFactorAuthenticationService {
 
 	confirmTwoFactorAuthenticationCode(verificationCode): Observable<boolean> {
 		const url = `${environment.apiBase}/2fa/confirm`;
-		let params: HttpParams = new HttpParams();
-		params = params.append('code', verificationCode);
-		return this.http.post<boolean>(url, {}, {params});
+		return this.http.post<boolean>(url, { code: verificationCode });
 	}
 
 	loggedUserHasTwoFactorAuthenticationEnabled(): Observable<boolean> {

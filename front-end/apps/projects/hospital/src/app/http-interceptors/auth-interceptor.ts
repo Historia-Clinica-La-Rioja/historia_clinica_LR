@@ -18,7 +18,13 @@ const PUBLIC_ENDPOINTS = [
 	'auth',
 ];
 
+const NEED_ACCESS_TOKEN_ENDPOINTS = [
+	'auth/login-2fa',
+];
+
 const urlIsPublic = (url: string) => PUBLIC_ENDPOINTS.some(endpointPrefix => url.startsWith(`${environment.apiBase}/${endpointPrefix}`));
+
+const urlNeedsAccessToken = (url: string) => NEED_ACCESS_TOKEN_ENDPOINTS.some(endpointPrefix => url.startsWith(`${environment.apiBase}/${endpointPrefix}`));
 
 
 const isUnauthorized = (error: any): boolean =>  error instanceof HttpErrorResponse && error.status === 401;
@@ -33,7 +39,7 @@ export class AuthInterceptor implements HttpInterceptor {
 
 	intercept(req: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
 
-		if (urlIsPublic(req.url)) {
+		if (urlIsPublic(req.url) && !urlNeedsAccessToken(req.url)) {
 			return next.handle(req.clone());
 		}
 
