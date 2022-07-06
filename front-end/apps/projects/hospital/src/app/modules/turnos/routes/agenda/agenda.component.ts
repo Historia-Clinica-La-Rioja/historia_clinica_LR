@@ -111,7 +111,7 @@ export class AgendaComponent implements OnInit, OnDestroy, OnChanges {
 
 		this.appointmentSubscription = this.appointmentFacade.getAppointments().subscribe(appointments => {
 			if (appointments) {
-				this.appointments = appointments;
+				this.appointments = this.unifyEvents(appointments);
 				this.dailyAmounts$ = this.appointmentsService.getDailyAmounts(this.idAgenda);
 				this.loading = false;
 			}
@@ -433,6 +433,43 @@ export class AgendaComponent implements OnInit, OnDestroy, OnChanges {
 		} else {
 			return this.enableAppointmentScheduling ? `${AGENDA_PROGRAMADA_CLASS} ${ASIGNABLE_CLASS}` : AGENDA_PROGRAMADA_CLASS;
 		}
+	}
+
+	private updateAppoinment(appointmentInformation) {
+		const appointment = this.appointments.find(appointment => appointment.meta.appointmentId === appointmentInformation?.id);
+		appointment.meta.appointmentStateId = appointmentInformation.stateId;
+		const color = getColor(appointmentInformation);
+		appointment.color.primary = color;
+		appointment.color.secondary = color;
+		appointment.cssClass = getSpanColor(appointmentInformation.stateId);
+		this.refreshCalendar.next();
+	}
+
+	private unifyEvents(events: CalendarEvent[]): CalendarEvent[] {
+		const notUnifiedEvents = events.sort(
+			(firstEvent, secondEvent) => firstEvent.start.getTime() - secondEvent.start.getTime()
+		);
+		let unifiedEvents = [];
+		let processedEvents = [notUnifiedEvents[0]];
+		for (let currentNotUnifiedEvent = 1; currentNotUnifiedEvent < notUnifiedEvents.length; currentNotUnifiedEvent++) {
+			if (notUnifiedEvents[currentNotUnifiedEvent-1].end.getTime() === notUnifiedEvents[currentNotUnifiedEvent].start.getTime()
+			&& notUnifiedEvents[currentNotUnifiedEvent-1].title === notUnifiedEvents[currentNotUnifiedEvent].title)
+				processedEvents.push(notUnifiedEvents[currentNotUnifiedEvent]);
+			else {
+				unifiedEvents.push(this.unifyBlockedEvents(processedEvents));
+				processedEvents = [notUnifiedEvents[currentNotUnifiedEvent]];
+			}
+		}
+		unifiedEvents.push(this.unifyBlockedEvents(processedEvents));
+		return unifiedEvents;
+	}
+
+	private unifyBlockedEvents(events: CalendarEvent[]): CalendarEvent {
+		return {
+			...events[0],
+			start: events[0]?.start,
+			end: events[events.length - 1]?.end,
+		};
 	}
 
 }

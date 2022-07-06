@@ -257,6 +257,7 @@ public class DiaryController {
 
 		log.debug(OUTPUT, result);
 		return ResponseEntity.ok(result);
+	}
 
 	@PostMapping("/{diaryId}/unblock")
 	@PreAuthorize("hasPermission(#institutionId, 'ADMINISTRATIVO, ADMINISTRADOR_AGENDA')")
