@@ -35,9 +35,9 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/institutions/{institutionId}/internments/{internmentEpisodeId}/epicrisis/draft")
-@Tag(name = "Epicrisis draft", description = "Epicrisis draft")
+@Tag(name = "Epicrisis Draft", description = "Epicrisis Draft")
 @Validated
-@PreAuthorize("hasPermission(#institutionId, 'ESPECIALISTA_MEDICO', 'ENFERMERO_ADULTO_MAYOR')")
+@PreAuthorize("hasPermission(#institutionId, 'ESPECIALISTA_MEDICO, ENFERMERO_ADULTO_MAYOR')")
 public class EpicrisisDraftController {
 
 	private static final Logger LOG = LoggerFactory.getLogger(EpicrisisDraftController.class);
@@ -77,7 +77,7 @@ public class EpicrisisDraftController {
 	}
 
 
-	@PostMapping()
+	@PostMapping
 	@Transactional
 	public ResponseEntity<Boolean> createDraft(
 			@PathVariable(name = "institutionId") Integer institutionId,
