@@ -47,6 +47,7 @@ public class HospitalsFeatureStates implements InitialFeatureStates {
 		map.put(AppFeature.HABILITAR_MODULO_ENFERMERIA, false);
 		map.put(AppFeature.HABILITAR_2FA, false);
 		map.put(AppFeature.HABILITAR_EXTENSIONES_WEB_COMPONENTS, false);
+		map.put(AppFeature.HABILITAR_NOTIFICACIONES_TURNOS, false);
 	}
 
 	@Override

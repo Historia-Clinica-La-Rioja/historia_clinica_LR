@@ -1,5 +1,6 @@
 package net.pladema.medicalconsultation.appointment.infraestructure.output.notification;
 
+import ar.lamansys.sgx.shared.featureflags.AppFeature;
 import ar.lamansys.sgx.shared.templating.NotificationTemplateInput;
 
 /**
@@ -9,6 +10,6 @@ public class NewAppointmentTemplateInput extends NotificationTemplateInput<NewAp
 	public final static String TEMPLATE_ID = "new-appointment";
 
 	public NewAppointmentTemplateInput(NewAppointmentNotificationArgs args) {
-		super(TEMPLATE_ID, args);
+		super(TEMPLATE_ID, args,AppFeature.HABILITAR_NOTIFICACIONES_TURNOS);
 	}
 }

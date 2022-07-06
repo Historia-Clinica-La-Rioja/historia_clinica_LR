@@ -111,6 +111,9 @@ public enum AppFeature implements Feature {
 	@Label("Indica si están habilitadas las extensiones por web components ")
 	HABILITAR_EXTENSIONES_WEB_COMPONENTS,
 
+	
+    @Label("Indica si esta habilitado el servicio de notificaciones al asignar un turno")
+	HABILITAR_NOTIFICACIONES_TURNOS,
     ;
 
     public boolean isActive() {

@@ -8,6 +8,8 @@ import static org.mockito.ArgumentMatchers.any;
 import java.util.Collections;
 import java.util.Map;
 
+import ar.lamansys.sgx.shared.featureflags.AppFeature;
+
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -50,7 +52,8 @@ class HTMLTemplateEngineTest {
 						new NotificationTemplateInput<>("template1", new TestTemplateDto(
 								"Nice to see you here",
 								null
-						))
+						),
+								AppFeature.HABILITAR_NOTIFICACIONES_TURNOS)
 				)
 		).isEqualTo(classpathFileContent("templates/test/template1-basic.html"));
 	}
@@ -63,7 +66,7 @@ class HTMLTemplateEngineTest {
 						new NotificationTemplateInput<>("template2", new TestTemplateDto(
 								"Nice to see you here",
 								null
-						))
+						), AppFeature.HABILITAR_NOTIFICACIONES_TURNOS)
 				)
 		).isEqualTo(classpathFileContent("templates/test/template2-basic.html"));
 	}
@@ -76,7 +79,7 @@ class HTMLTemplateEngineTest {
 						new NotificationTemplateInput<>("template2", new TestTemplateDto(
 								"Nice to see you here",
 								"Institución 1"
-						))
+						), AppFeature.HABILITAR_NOTIFICACIONES_TURNOS)
 				)
 		).isEqualTo(classpathFileContent("templates/test/template2-full.html"));
 	}
