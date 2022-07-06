@@ -1,5 +1,9 @@
 package ar.lamansys.sgx.auth.jwt.application.login;
 
+import ar.lamansys.sgx.auth.jwt.application.generatepartiallyauthtoken.GeneratePartiallyAuthenticationToken;
+import ar.lamansys.sgx.auth.user.application.fetchuserhastwofactorauthenticationenabled.FetchUserHasTwoFactorAuthenticationEnabled;
+import ar.lamansys.sgx.shared.featureflags.AppFeature;
+import ar.lamansys.sgx.shared.featureflags.application.FeatureFlagsService;
 import org.springframework.stereotype.Service;
 
 import ar.lamansys.sgx.auth.jwt.application.generatetoken.GenerateToken;
@@ -24,6 +28,11 @@ public class LoginJWTImpl implements Login {
 
 	private final GenerateToken generateToken;
 
+	private final FeatureFlagsService featureFlagsService;
+
+	private final GeneratePartiallyAuthenticationToken generatePartiallyAuthenticationToken;
+
+	private final FetchUserHasTwoFactorAuthenticationEnabled fetchUserHasTwoFactorAuthenticationEnabled;
 
 	@Override
 	public JWTokenBo execute(LoginBo login) throws BadLoginException {
@@ -35,8 +44,13 @@ public class LoginJWTImpl implements Login {
 		if (!passwordEncryptor.matches(login.password, user.getPassword()))
 			throw new BadLoginException(BadLoginEnumException.BAD_CREDENTIALS, "Usuario/contraseña inválida");
 		log.debug("User {} authenticated", login.username);
-		JWTokenBo result = generateToken.generateTokens(user.getId(), user.getUsername());
-		userInfoStorage.updateLoginDate(user.getUsername());
+		JWTokenBo result;
+		if (featureFlagsService.isOn(AppFeature.HABILITAR_2FA) && fetchUserHasTwoFactorAuthenticationEnabled.run(user.getId())) {
+			result = generatePartiallyAuthenticationToken.run(user.getId(), user.getUsername());
+		} else {
+			result = generateToken.generateTokens(user.getId(), user.getUsername());
+			userInfoStorage.updateLoginDate(user.getUsername());
+		}
 		log.debug("Token generated");
 		return result;
 	}
