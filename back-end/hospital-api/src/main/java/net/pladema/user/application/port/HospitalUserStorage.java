@@ -18,5 +18,5 @@ public interface HospitalUserStorage {
     String createTokenPasswordReset(Integer userId);
     Integer getUserIdByToken(String token);
     PersonDataBo getPersonDataBoByUserId(Integer userId);
-
+	Optional<Integer> fetchUserIdFromNormalToken(String token);
 }

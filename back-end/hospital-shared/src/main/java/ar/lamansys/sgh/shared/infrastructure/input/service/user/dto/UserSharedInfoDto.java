@@ -12,7 +12,10 @@ public class UserSharedInfoDto {
 
     private Integer id;
 
-	public UserSharedInfoDto(Integer id) {
+	private String username;
+
+	public UserSharedInfoDto(Integer id, String username) {
 		this.id = id;
+		this.username = username;
 	}
 }

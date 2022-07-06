@@ -1,6 +1,7 @@
 package net.pladema.user.infrastructure.output;
 
 import ar.lamansys.sgh.shared.infrastructure.input.service.BasicDataPersonDto;
+import ar.lamansys.sgx.auth.jwt.infrastructure.input.service.JwtExternalService;
 import ar.lamansys.sgx.auth.user.infrastructure.input.service.UserExternalService;
 import net.pladema.person.controller.service.PersonExternalService;
 import net.pladema.user.application.port.exceptions.UserPersonStorageEnumException;
@@ -28,15 +29,19 @@ public class HospitalUserStorageImpl implements HospitalUserStorage {
 
     private final VHospitalUserRepository vHospitalUserRepository;
 
+	private final JwtExternalService jwtExternalService;
+
     public HospitalUserStorageImpl(UserPersonRepository userPersonRepository,
-                                   PersonExternalService personExternalService,
-                                   UserExternalService userExternalService,
-                                   VHospitalUserRepository vHospitalUserRepository) {
+								   PersonExternalService personExternalService,
+								   UserExternalService userExternalService,
+								   VHospitalUserRepository vHospitalUserRepository,
+								   JwtExternalService jwtExternalService) {
         this.userPersonRepository = userPersonRepository;
         this.personExternalService = personExternalService;
         this.userExternalService = userExternalService;
         this.vHospitalUserRepository = vHospitalUserRepository;
-    }
+		this.jwtExternalService = jwtExternalService;
+	}
 
     @Override
     public Optional<UserPersonInfoBo> getUserPersonInfo(Integer userId) {
@@ -118,7 +123,12 @@ public class HospitalUserStorageImpl implements HospitalUserStorage {
                 .orElseThrow(()-> new UserPersonStorageException(UserPersonStorageEnumException.UNEXISTED_USER,"El usuario %s no existe"));
     }
 
-    private PersonDataBo mapPersonDataBo(BasicDataPersonDto person, VHospitalUser user) {
+	@Override
+	public Optional<Integer> fetchUserIdFromNormalToken(String token) {
+		return jwtExternalService.fetchUserIdFromNormalToken(token);
+	}
+
+	private PersonDataBo mapPersonDataBo(BasicDataPersonDto person, VHospitalUser user) {
         return new PersonDataBo(
                 person.getFirstName(),
                 person.getLastName(),

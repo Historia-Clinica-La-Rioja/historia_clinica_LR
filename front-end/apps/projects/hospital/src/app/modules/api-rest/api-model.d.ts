@@ -2849,6 +2849,11 @@ export interface UserRoleDto {
     userId: number;
 }
 
+export interface UserSharedInfoDto {
+    id: number;
+    username: string;
+}
+
 export interface VInstitutionDto {
     lastDateRiskFactor: Date;
     latitude: number;
