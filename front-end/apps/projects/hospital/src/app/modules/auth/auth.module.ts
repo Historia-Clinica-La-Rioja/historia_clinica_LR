@@ -14,6 +14,8 @@ import { ClipboardModule } from "@angular/cdk/clipboard";
 import { ExternalOAuthLoginComponent } from './routes/external-oauth-login/external-oauth-login.component';
 import { OauthLoginComponent } from "./routes/chaco-login/oauth-login.component";
 import { HospitalLoginComponent } from './routes/hospital-login/hospital-login.component';
+import {UpdatePasswordComponent} from "./components/update-password/update-password.component";
+import { UpdatePasswordSuccessComponent } from './components/update-password-success/update-password-success.component';
 
 @NgModule({
 	declarations: [
@@ -29,9 +31,11 @@ import { HospitalLoginComponent } from './routes/hospital-login/hospital-login.c
 		AccessDataResetComponent,
 		ExternalOAuthLoginComponent,
   		HospitalLoginComponent,
+		UpdatePasswordComponent,
+  		UpdatePasswordSuccessComponent
 	],
 	exports: [
-		ExternalOAuthLoginComponent
+		ExternalOAuthLoginComponent,
 	],
 	imports: [
 		FormsModule,
