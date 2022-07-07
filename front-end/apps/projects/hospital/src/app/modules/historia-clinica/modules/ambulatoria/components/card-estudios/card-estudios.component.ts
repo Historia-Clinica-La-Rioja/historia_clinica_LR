@@ -45,6 +45,8 @@ export class CardEstudiosComponent implements OnInit {
 	hasPharmacyStaffRole = false;
 
 	@Input() patientId: number;
+	
+	@Input() epicrisisConfirmed: boolean;
 
 	@Input()
 	set categories(categories: any[]) {
@@ -118,8 +120,8 @@ export class CardEstudiosComponent implements OnInit {
 			});
 	}
 
-	patientHasInternmentEpisodeInProgress(): boolean {
-		return this.internmentEpisodeInProgressId;
+	isNewInternmentOrderEnabled(): boolean {
+		return this.internmentEpisodeInProgressId && !this.epicrisisConfirmed;
 	}
 
 	openNewInternmentOrderDialog() {

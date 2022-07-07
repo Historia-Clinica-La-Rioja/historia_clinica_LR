@@ -250,8 +250,9 @@
 						</ng-template>
 						<ng-template matTabContent>
 							<app-card-estudios [patientId]="patientId"
-								[diagnosticReportsStatus]="diagnosticReportsStatus$ | async"
-								[categories]="studyCategories$ | async">
+								   [epicrisisConfirmed]="epicrisisDoc?.confirmed"
+								   [diagnosticReportsStatus]="diagnosticReportsStatus$ | async"
+								   [categories]="studyCategories$ | async">
 							</app-card-estudios>
 							<app-card-indicaciones [patientId]="patientId" *ngIf="false"></app-card-indicaciones>
 						</ng-template>
