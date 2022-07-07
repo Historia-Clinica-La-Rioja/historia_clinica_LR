@@ -11,7 +11,8 @@
 			</mat-form-field>
 			<mat-form-field class="date-selector" appearance="outline">
 				<mat-label [translate]="'turnos.block.END_DATE'"></mat-label>
-				<input matInput id="endDate" [matDatepicker]="endDatePicker" [formControl]="form.controls.endDate" [matDatepickerFilter]="endDateFilter">
+				<input matInput id="endDate" [matDatepicker]="endDatePicker" [formControl]="form.controls.endDate" [matDatepickerFilter]="endDateFilter"
+				[disabled]="!form.value.initDate">
 				<mat-error [translate]="'turnos.block.DATE_SELECTION_ERROR'"></mat-error>
 				<mat-datepicker-toggle matSuffix [for]="endDatePicker"></mat-datepicker-toggle>
 				<mat-datepicker #endDatePicker></mat-datepicker>
@@ -22,7 +23,7 @@
 	<div fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="20px">
 		<mat-form-field appearance="outline" class="hour-selector">
 			<mat-select id="startingHour" [formControl]="form.controls.init">
-				<mat-option [value]="possibleTime" *ngFor="let possibleTime of possibleStartingTime"
+				<mat-option [value]="possibleTime" *ngFor="let possibleTime of possibleStartingTime | slice:0:possibleStartingTime.length-1"
 					(click)="filterEndingTime()">
 					{{ possibleTime | viewDateDto:'time' | date:'shortTime' }}
 				</mat-option>

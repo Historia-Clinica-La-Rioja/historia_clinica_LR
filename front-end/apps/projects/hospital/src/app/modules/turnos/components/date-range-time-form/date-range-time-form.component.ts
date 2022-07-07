@@ -2,7 +2,7 @@ import { Component, forwardRef, Input, OnDestroy, OnInit } from '@angular/core';
 import { ControlValueAccessor, FormBuilder, NG_VALUE_ACCESSOR, Validators } from '@angular/forms';
 import { CompleteDiaryDto, DiaryOpeningHoursDto, TimeDto } from '@api-rest/api-model';
 import { stringToTimeDto, timeDtoToDate } from '@api-rest/mapper/date-dto.mapper';
-import * as moment from 'moment';
+import { MINUTES_IN_HOUR } from '@turnos/constants/appointment';
 import { Moment } from 'moment';
 import { Subscription } from 'rxjs';
 
@@ -62,8 +62,6 @@ export class DateRangeTimeFormComponent implements ControlValueAccessor, OnDestr
 		this.today.setHours(0,0,0,0);
 		this.agendaLastDay.setHours(0,0,0,0);
 
-		this.form.controls.initDate.setValue(moment(this.today));
-		this.form.controls.endDate.setValue(moment(this.today));
 		this.form.controls.init.setValue(this.possibleStartingTime[0]);
 		this.form.controls.end.setValue(this.possibleStartingTime[1]);
 		this.form.controls.init.valueChanges.subscribe(nv => {
@@ -126,9 +124,12 @@ export class DateRangeTimeFormComponent implements ControlValueAccessor, OnDestr
 	private generateTimeInterval(firstTime: TimeDto, lastTime: TimeDto): TimeDto[] {
 		const possibleTimes: TimeDto[] = [];
 		possibleTimes[0] = firstTime;
-		const iterations = (lastTime.hours - firstTime.hours) * (60 / this.selectedAgenda.appointmentDuration) + (lastTime.minutes - firstTime.minutes) / (60 / this.selectedAgenda.appointmentDuration) - 2;
+		let iterations = (lastTime.hours - firstTime.hours) * (MINUTES_IN_HOUR / this.selectedAgenda.appointmentDuration) + (lastTime.minutes - firstTime.minutes) / (MINUTES_IN_HOUR / this.selectedAgenda.appointmentDuration);
+		if (firstTime.hours !== 0) {
+			iterations = iterations - 2;
+		}
 		for (var currentTimeIteration = 1; currentTimeIteration < iterations; currentTimeIteration++) {
-			if (possibleTimes[currentTimeIteration - 1].minutes === 60 - this.selectedAgenda.appointmentDuration)
+			if (possibleTimes[currentTimeIteration - 1].minutes === MINUTES_IN_HOUR - this.selectedAgenda.appointmentDuration)
 				possibleTimes.push({
 					hours: possibleTimes[currentTimeIteration - 1].hours + 1,
 					minutes: 0
