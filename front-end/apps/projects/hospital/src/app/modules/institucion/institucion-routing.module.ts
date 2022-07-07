@@ -44,6 +44,12 @@ const routes: Routes = [
 				canActivate: [FeatureFlagGuard],
 				data: { featureFlag: AppFeature.HABILITAR_REPORTES }
 			},
+			{
+				path: 'program-reports',
+				loadChildren: () => import('../program-reports/program-reports.module').then(m => m.ProgramReportsModule),
+				canActivate: [FeatureFlagGuard],
+				data: { featureFlag:AppFeature.HABILITAR_REPORTES_PROGRAMAS }
+			},
 			{ path: 'extension/:menuItemId', component: InstitutionExtensionComponent },
 		],
 		canActivate: [RoleGuard],

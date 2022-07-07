@@ -47,6 +47,9 @@ public enum AppFeature implements Feature {
 
     @Label("Indica si está habilitado el módulo de Reportes")
     HABILITAR_REPORTES,
+
+	@Label("Indica si está habilitado el módulo de Reportes de Programas")
+	HABILITAR_REPORTES_PROGRAMAS,
     
     @Label("Indica si está habilitada la funcionalidad para descargar informes desde turnos y desde el perfil del paciente")
     HABILITAR_INFORMES,
