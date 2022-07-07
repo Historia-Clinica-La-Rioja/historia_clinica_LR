@@ -5,6 +5,7 @@ import { RoleAssignmentDto, InstitutionDto } from '@api-rest/api-model';
 import { LoggedUserService } from '../../../auth/services/logged-user.service';
 import { map, mergeMap } from 'rxjs/operators';
 import { InstitutionService } from '@api-rest/services/institution.service';
+import {Router} from "@angular/router";
 
 @Component({
 	selector: 'app-profile',
@@ -17,6 +18,7 @@ export class ProfileComponent {
 	constructor(
 		institutionService: InstitutionService,
 		loggedUserService: LoggedUserService,
+		private router: Router,
 	) {
 		this.roleAssignments$ = loggedUserService.assignments$.pipe(
 			mergeMap((roleAssignments: RoleAssignmentDto[]) =>
@@ -29,6 +31,10 @@ export class ProfileComponent {
 					),
 			),
 		);
+	}
+
+	updatePassword(): void {
+		this.router.navigate(['home/update-password']);
 	}
 
 }

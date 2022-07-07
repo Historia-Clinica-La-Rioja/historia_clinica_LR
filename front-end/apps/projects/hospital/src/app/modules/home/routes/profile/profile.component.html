@@ -6,7 +6,7 @@
 
 		<mat-list role="list" *ngIf="(roleAssignments$ | async) as roleAssignments; else loading">
 			<mat-divider></mat-divider>
-			<div mat-header>Roles</div>
+			<div mat-header class="title">Roles</div>
 			<mat-list-item *ngFor="let roleAssignment of roleAssignments" role="listitem">
 				<mat-icon color="primary" mat-list-icon fontSet="material-icons-outlined">verified_user</mat-icon>
 				<h3 matLine [translate]="roleAssignment.label"></h3>
@@ -14,6 +14,13 @@
 					{{roleAssignment.institution.name}}
 				</p>
 				<p matLine *ngIf="!roleAssignment.institution" [translate]="'auth.roles.LEVEL0'"></p>
+			</mat-list-item>
+			<mat-divider></mat-divider>
+			<mat-list-item>
+					<div fxLayout="row">
+						<mat-icon color="primary" mat-list-icon fontSet="material-icons-outlined">vpn_key</mat-icon>
+						<button mat-button color="primary" (click)="updatePassword()">Cambiar mi contraseña</button>
+					</div>
 			</mat-list-item>
 		</mat-list>
 		<ng-template #loading>

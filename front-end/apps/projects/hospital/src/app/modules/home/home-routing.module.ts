@@ -9,13 +9,17 @@ import { HomeComponent } from './home.component';
 import { InstitucionesComponent } from './routes/instituciones/instituciones.component';
 import { ProfileComponent } from './routes/profile/profile.component';
 import { SettingsComponent } from './routes/settings/settings.component';
+import {UpdatePasswordComponent} from "../auth/components/update-password/update-password.component";
+import {
+	UpdatePasswordSuccessComponent
+} from "../auth/components/update-password-success/update-password-success.component";
+
 
 export enum HomeRoutes {
 	Home = '',						// pantalla inicial
 	Profile = 'profile',			// Perfil del usuario
 	Settings = 'settings',			// Configuración
 	Extension = 'extension', 		// Extensión
-
 }
 
 const routes: Routes = [
@@ -33,13 +37,15 @@ const routes: Routes = [
 				data: { featureFlag: AppFeature.HABILITAR_CONFIGURACION,
 						allowedRoles: [ERole.ROOT],
 						needsRoot: true},
-			}
+			},
+			{ path: 'update-password', component: UpdatePasswordComponent },
+			{ path: 'update-password-success', component: UpdatePasswordSuccessComponent }
 		]
 	}
 ];
 
 @NgModule({
-  imports: [RouterModule.forChild(routes)],
-  exports: [RouterModule]
+	imports: [RouterModule.forChild(routes)],
+	exports: [RouterModule]
 })
 export class HomeRoutingModule { }
