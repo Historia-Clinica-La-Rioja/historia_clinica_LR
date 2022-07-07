@@ -5,7 +5,7 @@ import ar.lamansys.sgx.auth.user.domain.passwordreset.PasswordResetTokenStorage;
 import ar.lamansys.sgx.auth.user.domain.user.model.UserBo;
 import ar.lamansys.sgx.auth.user.domain.user.service.OAuthUserManagementStorage;
 import ar.lamansys.sgx.auth.user.domain.user.service.UserStorage;
-import ar.lamansys.sgx.auth.user.domain.userpassword.UpdateUserPassword;
+import ar.lamansys.sgx.auth.user.application.updateuserpassword.UpdateUserPassword;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;

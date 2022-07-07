@@ -1,4 +1,4 @@
-package ar.lamansys.sgx.auth.user.domain.userpassword;
+package ar.lamansys.sgx.auth.user.application.updateuserpassword;
 
 import ar.lamansys.sgx.auth.user.application.updatepassword.UpdatePassword;
 import ar.lamansys.sgx.auth.user.domain.user.model.OAuthUserBo;

@@ -8,7 +8,7 @@ import ar.lamansys.sgx.auth.user.application.registeruser.RegisterUser;
 import ar.lamansys.sgx.auth.user.application.updatelogindate.UpdateLoginDate;
 import ar.lamansys.sgx.auth.user.domain.user.model.UserBo;
 import ar.lamansys.sgx.auth.user.domain.user.service.UserStorage;
-import ar.lamansys.sgx.auth.user.domain.userpassword.UpdateUserPassword;
+import ar.lamansys.sgx.auth.user.application.updateuserpassword.UpdateUserPassword;
 import ar.lamansys.sgx.auth.user.infrastructure.input.service.dto.UserInfoDto;
 import org.springframework.stereotype.Service;
 
