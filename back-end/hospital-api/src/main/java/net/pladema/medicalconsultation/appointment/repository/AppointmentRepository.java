@@ -142,6 +142,16 @@ public interface AppointmentRepository extends SGXAuditableEntityJPARepository<A
 
 	@Transactional
 	@Modifying
+	@Query( "UPDATE Appointment  AS a " +
+			"SET a.dateTypeId = :date, " +
+			"a.hour = :hour " +
+			"WHERE a.id = :appointmentId ")
+	void updateDate(@Param("appointmentId") Integer appointmentId,
+						   @Param("date") LocalDate date,
+						   @Param("hour") LocalTime hour);
+
+	@Transactional
+	@Modifying
 	@Query( "UPDATE AppointmentObservation  AS ao " +
 			"SET ao.observation = :observation, " +
 			"ao.createdBy = :observationBy " +

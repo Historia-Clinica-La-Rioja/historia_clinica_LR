@@ -9,31 +9,36 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+import ar.lamansys.sgx.shared.dates.configuration.DateTimeProvider;
+import ar.lamansys.sgx.shared.security.UserInfo;
+import net.pladema.establishment.controller.service.InstitutionExternalService;
+
+import net.pladema.establishment.repository.MedicalCoveragePlanRepository;
+import net.pladema.medicalconsultation.appointment.repository.AppointmentObservationRepository;
+import net.pladema.medicalconsultation.appointment.repository.entity.AppointmentObservation;
+import net.pladema.patient.controller.dto.PatientMedicalCoverageDto;
+import net.pladema.patient.controller.service.PatientExternalMedicalCoverageService;
+
+import net.pladema.patient.service.domain.PatientCoverageInsuranceDetailsBo;
+import net.pladema.patient.service.domain.PatientMedicalCoverageBo;
+
+import net.pladema.staff.repository.HealthcareProfessionalRepository;
+
+import org.apache.tomcat.jni.Local;
 import org.springframework.stereotype.Service;
 
 import ar.lamansys.sgh.shared.infrastructure.input.service.SharedStaffPort;
-import ar.lamansys.sgx.shared.dates.configuration.DateTimeProvider;
 import ar.lamansys.sgx.shared.featureflags.AppFeature;
 import ar.lamansys.sgx.shared.featureflags.application.FeatureFlagsService;
-import ar.lamansys.sgx.shared.security.UserInfo;
 import lombok.extern.slf4j.Slf4j;
-import net.pladema.establishment.controller.service.InstitutionExternalService;
-import net.pladema.establishment.repository.MedicalCoveragePlanRepository;
-import net.pladema.medicalconsultation.appointment.repository.AppointmentObservationRepository;
 import net.pladema.medicalconsultation.appointment.repository.AppointmentRepository;
 import net.pladema.medicalconsultation.appointment.repository.HistoricAppointmentStateRepository;
-import net.pladema.medicalconsultation.appointment.repository.entity.AppointmentObservation;
 import net.pladema.medicalconsultation.appointment.repository.entity.AppointmentState;
 import net.pladema.medicalconsultation.appointment.repository.entity.HistoricAppointmentState;
 import net.pladema.medicalconsultation.appointment.service.AppointmentService;
 import net.pladema.medicalconsultation.appointment.service.domain.AppointmentAssignedBo;
 import net.pladema.medicalconsultation.appointment.service.domain.AppointmentBo;
 import net.pladema.medicalconsultation.appointment.service.domain.UpdateAppointmentBo;
-import net.pladema.patient.controller.dto.PatientMedicalCoverageDto;
-import net.pladema.patient.controller.service.PatientExternalMedicalCoverageService;
-import net.pladema.patient.service.domain.PatientCoverageInsuranceDetailsBo;
-import net.pladema.patient.service.domain.PatientMedicalCoverageBo;
-import net.pladema.staff.repository.HealthcareProfessionalRepository;
 
 @Slf4j
 @Service
@@ -180,8 +185,13 @@ public class AppointmentServiceImpl implements AppointmentService {
 		appointmentObservationRepository.save(appointmentObservation);
 		log.debug(OUTPUT, Boolean.TRUE);
 		return Boolean.TRUE;
+	}
 
-
+	@Override
+	public boolean updateDate(Integer appointmentId, LocalDate date, LocalTime time) {
+		appointmentRepository.updateDate(appointmentId, date, time);
+		log.debug(OUTPUT, Boolean.TRUE);
+		return Boolean.TRUE;
 	}
 
 	@Override

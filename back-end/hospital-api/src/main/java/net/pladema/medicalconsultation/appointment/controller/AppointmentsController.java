@@ -1,5 +1,7 @@
 package net.pladema.medicalconsultation.appointment.controller;
 
+import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
@@ -9,6 +11,9 @@ import java.util.stream.Collectors;
 
 import javax.validation.Valid;
 import javax.validation.constraints.Size;
+
+import ar.lamansys.sgx.shared.dates.configuration.LocalDateMapper;
+import ar.lamansys.sgx.shared.dates.controller.dto.DateTimeDto;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
@@ -88,6 +93,8 @@ public class AppointmentsController {
 
     private final BookingPersonService bookingPersonService;
 
+	private final LocalDateMapper dateMapper;
+
     @Value("${test.stress.disable.validation:false}")
     private boolean disableValidation;
 
@@ -104,8 +111,8 @@ public class AppointmentsController {
             HealthcareProfessionalExternalService healthcareProfessionalExternalService,
             DateTimeProvider dateTimeProvider,
             NotifyPatient notifyPatient,
-            BookingPersonService bookingPersonService
-    ) {
+            BookingPersonService bookingPersonService,
+			LocalDateMapper dateMapper) {
         this.appointmentDailyAmountService = appointmentDailyAmountService;
         this.appointmentService = appointmentService;
         this.appointmentValidatorService = appointmentValidatorService;
@@ -116,7 +123,8 @@ public class AppointmentsController {
         this.dateTimeProvider = dateTimeProvider;
         this.notifyPatient = notifyPatient;
         this.bookingPersonService = bookingPersonService;
-    }
+		this.dateMapper = dateMapper;
+	}
 
     @Transactional
     @PostMapping
@@ -315,12 +323,29 @@ public class AppointmentsController {
 
     @PreAuthorize("hasPermission(#institutionId, 'ADMINISTRATIVO, ESPECIALISTA_MEDICO, PROFESIONAL_DE_SALUD, ESPECIALISTA_EN_ODONTOLOGIA, ENFERMERO')")
     @PutMapping(value = "/{appointmentId}/update-medical-coverage")
-    public ResponseEntity<Boolean> updateMedicalCoverage(@PathVariable(name = "institutionId") Integer institutionId, @PathVariable(name = "appointmentId") Integer appointmentId, @RequestParam(name = "patientMedicalCoverageId", required = false) Integer patientMedicalCoverageId) {
+    public ResponseEntity<Boolean> updateMedicalCoverage(
+			@PathVariable(name = "institutionId") Integer institutionId,
+			@PathVariable(name = "appointmentId") Integer appointmentId,
+			@RequestParam(name = "patientMedicalCoverageId", required = false) Integer patientMedicalCoverageId) {
         log.debug("Input parameters -> institutionId {},appointmentId {}, patientMedicalCoverageId {}", institutionId, appointmentId, patientMedicalCoverageId);
         boolean result = appointmentService.updateMedicalCoverage(appointmentId, patientMedicalCoverageId);
         log.debug(OUTPUT, result);
         return ResponseEntity.ok().body(result);
     }
+
+	@PreAuthorize("hasPermission(#institutionId, 'ADMINISTRATIVO, ESPECIALISTA_MEDICO, PROFESIONAL_DE_SALUD, ESPECIALISTA_EN_ODONTOLOGIA, ENFERMERO')")
+	@PutMapping(value = "/{appointmentId}/update-date")
+	public ResponseEntity<Boolean> updateDate(
+			@PathVariable(name = "institutionId") Integer institutionId,
+			@PathVariable(name = "appointmentId") Integer appointmentId,
+			@RequestBody DateTimeDto fullDate) {
+		log.debug("Input parameters -> institutionId {},appointmentId {}, fullDate {}", institutionId, appointmentId, fullDate);
+		LocalDate date = dateMapper.fromDateDto(fullDate.getDate());
+		LocalTime time = dateMapper.fromTimeDto(fullDate.getTime());
+		boolean result = appointmentService.updateDate(appointmentId, date, time);
+		log.debug(OUTPUT, result);
+		return ResponseEntity.ok().body(result);
+	}
 
     @GetMapping("/getDailyAmounts")
     @PreAuthorize("hasPermission(#institutionId, 'ADMINISTRATIVO, ESPECIALISTA_MEDICO, PROFESIONAL_DE_SALUD, ESPECIALISTA_EN_ODONTOLOGIA, ADMINISTRADOR_AGENDA, ENFERMERO')")
