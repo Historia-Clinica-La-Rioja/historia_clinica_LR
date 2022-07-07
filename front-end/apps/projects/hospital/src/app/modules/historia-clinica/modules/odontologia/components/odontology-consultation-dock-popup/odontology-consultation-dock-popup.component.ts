@@ -142,13 +142,6 @@ export class OdontologyConsultationDockPopupComponent implements OnInit {
 		this.featureFlagService.isActive(AppFeature.HABILITAR_BUSQUEDA_LOCAL_CONCEPTOS).subscribe(isOn => this.searchConceptsLocallyFFIsOn = isOn);
 	}
 
-	private addErrorMessage(): void {
-		this.errors[2] = hasError(this.form, 'maxlength', 'evolution') ?
-			'La nota de evolución debe tener como máximo 1024 caracteres'
-			: undefined;
-	}
-
-
 	save() {
 		if (this.form.valid) {
 			combineLatest([this.conceptsFacadeService.getProcedures$(), this.conceptsFacadeService.getDiagnostics$()]).pipe(take(1))

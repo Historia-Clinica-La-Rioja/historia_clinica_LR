@@ -91,7 +91,6 @@
                     "PESO_MIN": "El peso mínimo debe ser 0 kg",
                     "PESO_MAX": "El peso máximo debe ser 1000 kg",
                     "PROBLEMA_OBLIGATORIO": "Problema de consulta obligatorio",
-                    "MAX_LENGTH_NOTA": "La nota de evolución debe tener como máximo 1024 caracteres",
                     "HEAD_CIRCUNFERENCE_RANGE": "Perímetro cefálico debe ser entre 1 y 100 cm",
                     "HEAD_CIRCUNFERENCE_NOT_VALID": "Perímetro cefálico debe tener como máximo 2 decimales",
                     "BLOOD_GLUCOSE_RANGE": "Glucemia debe ser entre 1 y 500 (mg/dl)",

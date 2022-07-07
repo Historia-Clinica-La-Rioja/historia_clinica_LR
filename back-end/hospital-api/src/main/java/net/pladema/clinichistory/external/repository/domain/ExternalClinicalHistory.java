@@ -39,7 +39,7 @@ public class ExternalClinicalHistory implements Serializable {
     @Column(name = "professional_specialty", length = 100, nullable = false)
     private String professionalSpecialty;
 
-    @Column(name = "notes", length = 1024, nullable = false)
+    @Column(name = "notes", nullable = false, columnDefinition = "TEXT")
     private String notes;
 
     @Column(name = "consultation_date", nullable = false)

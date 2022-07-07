@@ -20,7 +20,7 @@ public class OtherIndication extends Indication {
 	@Column(name = "other_indication_type_id", nullable = false)
 	private Short otherIndicationType;
 
-	@Column(name = "description")
+	@Column(name = "description", columnDefinition = "TEXT")
 	private String description;
 
 	@Column(name = "dosage_id", nullable = false)

@@ -166,7 +166,7 @@ export class NuevaConsultaDockPopupEnfermeriaComponent implements OnInit {
 		this.setProblem();
 
 		this.formEvolucion = this.formBuilder.group({
-			evolucion: [null, null],
+			evolucion: [],
 			clinicalSpecialty: [],
 			clinicalProblem: []
 		});
@@ -181,7 +181,7 @@ export class NuevaConsultaDockPopupEnfermeriaComponent implements OnInit {
 			this.errores[3] = pesoError;
 		});
 		this.datosAntropometricosNuevaConsultaService.headCircumferenceError$.subscribe(headCircumferenceError => {
-			this.errores[11] = headCircumferenceError;
+			this.errores[10] = headCircumferenceError;
 		});
 		this.factoresDeRiesgoFormService.heartRateError$.subscribe(frecuenciaCardiacaError => {
 			this.errores[4] = frecuenciaCardiacaError;
@@ -202,13 +202,13 @@ export class NuevaConsultaDockPopupEnfermeriaComponent implements OnInit {
 			this.errores[9] = presionDiastolicaError;
 		});
 		this.factoresDeRiesgoFormService.bloodGlucoseError$.subscribe(bloodGlucoseError => {
-			this.errores[12] = bloodGlucoseError;
+			this.errores[11] = bloodGlucoseError;
 		});
 		this.factoresDeRiesgoFormService.glycosylatedHemoglobinError$.subscribe(glycosylatedHemoglobinError => {
-			this.errores[13] = glycosylatedHemoglobinError;
+			this.errores[12] = glycosylatedHemoglobinError;
 		});
 		this.factoresDeRiesgoFormService.cardiovascularRiskError$.subscribe(cardiovascularRiskError => {
-			this.errores[14] = cardiovascularRiskError;
+			this.errores[13] = cardiovascularRiskError;
 		});
 
 		this.internacionMasterDataService.getHealthSeverity().subscribe(healthConditionSeverities => {
@@ -368,10 +368,6 @@ export class NuevaConsultaDockPopupEnfermeriaComponent implements OnInit {
 			this.factoresDeRiesgoFormService.setCardiovascularRiskError('ambulatoria.paciente.nueva-consulta.errors.CARDIOVASCULAR_RISK_RANGE');
 		}
 
-		this.errores[10] =
-			hasError(this.formEvolucion, 'maxlength', 'evolucion') ?
-				'ambulatoria.paciente.nueva-consulta.errors.MAX_LENGTH_NOTA'
-				: undefined;
 	}
 
 	private buildCreateOutpatientDto(): NursingConsultationDto {

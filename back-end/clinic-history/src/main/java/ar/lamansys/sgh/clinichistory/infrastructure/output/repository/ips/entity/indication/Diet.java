@@ -19,7 +19,7 @@ public class Diet extends Indication {
 	 */
 	private static final long serialVersionUID = 2873716268832417941L;
 
-	@Column(name = "description", nullable = false)
+	@Column(name = "description", nullable = false, columnDefinition = "TEXT")
 	private String description;
 
 }
