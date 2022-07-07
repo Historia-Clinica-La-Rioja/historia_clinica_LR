@@ -7,7 +7,7 @@ import { SnackBarService } from '@presentation/services/snack-bar.service';
 import { APPOINTMENT_STATES_ID, getAppointmentState, MAX_LENGTH_MOTIVO } from '../../constants/appointment';
 import { ContextService } from '@core/services/context.service';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { AppFeature, AppointmentDto, CompleteDiaryDto, ERole, IdentificationTypeDto, PatientMedicalCoverageDto, PersonPhotoDto } from '@api-rest/api-model.d';
+import { AppFeature, AppointmentDto, CompleteDiaryDto, DateTimeDto, ERole, IdentificationTypeDto, PatientMedicalCoverageDto, PersonPhotoDto } from '@api-rest/api-model.d';
 import { CancelAppointmentComponent } from '../cancel-appointment/cancel-appointment.component';
 import { getError, hasError, processErrors, updateControlValidator } from '@core/utils/form.utils';
 import { AppointmentsFacadeService } from '../../services/appointments-facade.service';
@@ -81,10 +81,11 @@ export class AppointmentComponent implements OnInit {
 
 	isDateFormVisible = false;
 	startAgenda = new Date();
-	endAgenda = new Date(this.params.agenda.endDate);
+	endAgenda = new Date(this.data.agenda.endDate);
 	availableDays: number[] = [];
 	disableDays: Date[] = [];
 	possibleScheduleHours: Date[] = [];
+	selectedDate = new Date(this.data.appointmentData.date);
 
 	isCheckedDownloadAnexo = false;
 	isCheckedDownloadFormulario = false;
@@ -96,7 +97,7 @@ export class AppointmentComponent implements OnInit {
 	observation: string;
 
 	constructor(
-		@Inject(MAT_DIALOG_DATA) public params: { 
+		@Inject(MAT_DIALOG_DATA) public data: { 
 			appointmentData: PatientAppointmentInformation, 
 			hasPermissionToAssignShift: boolean, 
 			agenda: CompleteDiaryDto,
@@ -138,8 +139,7 @@ export class AppointmentComponent implements OnInit {
 		});
 
 		this.formDate = this.formBuilder.group({
-			date: [this.params.appointmentData.date,[Validators.required]],
-			hour: ['',[Validators.required]]
+			date: ['',[Validators.required]]
 		});
 
 		this.formObservations = this.formBuilder.group({
@@ -147,23 +147,23 @@ export class AppointmentComponent implements OnInit {
 		});
 
 		this.setMedicalCoverages();
-		this.formEdit.controls.phoneNumber.setValue(this.params.appointmentData.phoneNumber);
-		this.formEdit.controls.phonePrefix.setValue(this.params.appointmentData.phonePrefix);
-		if (this.params.appointmentData.phoneNumber) {
+		this.formEdit.controls.phoneNumber.setValue(this.data.appointmentData.phoneNumber);
+		this.formEdit.controls.phonePrefix.setValue(this.data.appointmentData.phonePrefix);
+		if (this.data.appointmentData.phoneNumber) {
 			updateControlValidator(this.formEdit, 'phoneNumber', [Validators.required, Validators.maxLength(20)]);
 			updateControlValidator(this.formEdit, 'phonePrefix', [Validators.required, Validators.maxLength(10)]);
 		}
 		
-		for (let i = 0; i < this.params.agenda.diaryOpeningHours.length; i++) {
-			let day = this.params.agenda.diaryOpeningHours[i].openingHours.dayWeekId;
+		for (let i = 0; i < this.data.agenda.diaryOpeningHours.length; i++) {
+			let day = this.data.agenda.diaryOpeningHours[i].openingHours.dayWeekId;
 			if(!this.availableDays.includes(day))
 				this.availableDays.push(day);
 		}
 
-		// this.formDate.controls.hour.setValue(this.params.appointmentData.date);
-		// this.formDate.get('hour').setValue(new Date(this.params.appointmentData.date));
+		// this.formDate.controls.hour.setValue(this.data.appointmentData.date);
+		// this.formDate.get('hour').setValue(new Date(this.data.appointmentData.date));
 		
-		this.appointmentService.get(this.params.appointmentData.appointmentId)
+		this.appointmentService.get(this.data.appointmentData.appointmentId)
 			.subscribe(appointment => {
 				this.appointment = appointment;
 				this.observation = appointment.observation;
@@ -176,7 +176,7 @@ export class AppointmentComponent implements OnInit {
 				if (this.appointment.stateChangeReason) {
 					this.formMotivo.controls.motivo.setValue(this.appointment.stateChangeReason);
 				}
-				if (this.appointment.patientMedicalCoverageId && this.params.appointmentData.patient?.id) {
+				if (this.appointment.patientMedicalCoverageId && this.data.appointmentData.patient?.id) {
 					this.patientMedicalCoverageService.getPatientMedicalCoverage(this.appointment.patientMedicalCoverageId)
 						.subscribe(coverageData => {
 							if (coverageData) {
@@ -187,7 +187,7 @@ export class AppointmentComponent implements OnInit {
 							}
 						});
 				}
-				this.phoneNumber = this.formatPhonePrefixAndNumber(this.params.appointmentData.phonePrefix,this.params.appointmentData.phoneNumber);
+				this.phoneNumber = this.formatPhonePrefixAndNumber(this.data.appointmentData.phonePrefix,this.data.appointmentData.phoneNumber);
 			});
 
 		this.hasRoleToChangeState$ = this.permissionsService.hasContextAssignments$(ROLES_TO_CHANGE_STATE).pipe(take(1));
@@ -198,10 +198,10 @@ export class AppointmentComponent implements OnInit {
 
 		this.personMasterDataService.getIdentificationTypes()
 			.subscribe(identificationTypes => {
-				this.identificationType = identificationTypes.find(identificationType => identificationType.id == this.params.appointmentData.patient.identificationTypeId);
+				this.identificationType = identificationTypes.find(identificationType => identificationType.id == this.data.appointmentData.patient.identificationTypeId);
 			});
 
-		this.patientService.getPatientPhoto(this.params.appointmentData.patient.id)
+		this.patientService.getPatientPhoto(this.data.appointmentData.patient.id)
 			.subscribe((personPhotoDto: PersonPhotoDto) => {
 				this.personPhoto = personPhotoDto;
 				if (personPhotoDto?.imageData) {
@@ -210,19 +210,23 @@ export class AppointmentComponent implements OnInit {
 			});
 }
 
+	dateFormToggle(): void{
+		this.isDateFormVisible = !this.isDateFormVisible;
+	}
+
 	setPossibleScheduleHours(date: Date){
 		this.possibleScheduleHours = [];
 		const startDate = new Date(date);
 		const endDate = new Date(date);
-		for (let i = 0; i < this.params.agenda.diaryOpeningHours.length; i++) {
-			let day = this.params.agenda.diaryOpeningHours[i].openingHours.dayWeekId;
+		for (let i = 0; i < this.data.agenda.diaryOpeningHours.length; i++) {
+			let day = this.data.agenda.diaryOpeningHours[i].openingHours.dayWeekId;
 			if(startDate.getDay() === day){
-				startDate.setHours(Number(this.params.agenda.diaryOpeningHours[i].openingHours.from.slice(0,2)));
-				startDate.setMinutes(Number(this.params.agenda.diaryOpeningHours[i].openingHours.from.slice(3,5)));
-				endDate.setHours(Number(this.params.agenda.diaryOpeningHours[i].openingHours.to.slice(0,2)));
-				endDate.setMinutes(Number(this.params.agenda.diaryOpeningHours[i].openingHours.to.slice(3,5)));
+				startDate.setHours(Number(this.data.agenda.diaryOpeningHours[i].openingHours.from.slice(0,2)));
+				startDate.setMinutes(Number(this.data.agenda.diaryOpeningHours[i].openingHours.from.slice(3,5)));
+				endDate.setHours(Number(this.data.agenda.diaryOpeningHours[i].openingHours.to.slice(0,2)));
+				endDate.setMinutes(Number(this.data.agenda.diaryOpeningHours[i].openingHours.to.slice(3,5)));
 				
-			const hours = getDayHoursRangeIntervalsByMinuteValue(startDate, endDate, this.params.agenda.appointmentDuration);
+			const hours = getDayHoursRangeIntervalsByMinuteValue(startDate, endDate, this.data.agenda.appointmentDuration);
 			this.possibleScheduleHours = this.possibleScheduleHours.concat(hours);
 			}
 		}
@@ -230,8 +234,8 @@ export class AppointmentComponent implements OnInit {
 	}
 
 	deleteHoursWithAppointment(){
-		for (let i = 0; i < this.params.appointments.length; i++) {
-			const index = this.possibleScheduleHours.findIndex(item => {return item.getTime() == this.params.appointments[i].start.getTime()});
+		for (let i = 0; i < this.data.appointments.length; i++) {
+			const index = this.possibleScheduleHours.findIndex(item => {return item.getTime() == this.data.appointments[i].start.getTime()});
 			if(index != -1){
 				this.possibleScheduleHours.splice(index,1);
 			}
@@ -241,8 +245,8 @@ export class AppointmentComponent implements OnInit {
 	setDisableDays(){
 		this.disableDays = [];
 		const today = new Date();
-		for (let i = 0; i < this.params.appointments.length; i++) {
-			const appointmentDate = new Date(this.params.appointments[i].start);
+		for (let i = 0; i < this.data.appointments.length; i++) {
+			const appointmentDate = new Date(this.data.appointments[i].start);
 			appointmentDate.setHours(0,0,0,0);
 			appointmentDate.setMinutes(0);
 			if (today.getTime() <= appointmentDate.getTime()){
@@ -254,6 +258,29 @@ export class AppointmentComponent implements OnInit {
 				}
 			}
 		}
+	}
+
+	updateAppointmentDate(){
+		this.selectedDate = this.formDate.get('date').value;
+		const date: DateTimeDto = {
+			date: {
+				year: this.selectedDate.getFullYear(),
+				month: this.selectedDate.getMonth() + 1,
+				day: this.selectedDate.getDate()
+			},
+			time: {
+				hours: this.selectedDate.getHours(),
+				minutes: this.selectedDate.getMinutes(),
+				seconds: this.selectedDate.getSeconds()
+			}
+		};
+		
+		this.appointmentFacade.updateDate(this.data.appointmentData.appointmentId, date).subscribe(() => {
+			this.snackBarService.showSuccess('turnos.appointment.date.UPDATE_SUCCESS');
+		}, error => {
+			processErrors(error, (msg) => this.snackBarService.showError(msg));
+		});
+		this.dateFormToggle();
 	}
 
 	formatPhonePrefixAndNumber(phonePrefix: string, phoneNumber: string): string {
@@ -274,8 +301,8 @@ export class AppointmentComponent implements OnInit {
 	}
 
 	private setMedicalCoverages(): void {
-		if (this.params.appointmentData.patient?.id) {
-			this.patientMedicalCoverageService.getActivePatientMedicalCoverages(Number(this.params.appointmentData.patient.id))
+		if (this.data.appointmentData.patient?.id) {
+			this.patientMedicalCoverageService.getActivePatientMedicalCoverages(Number(this.data.appointmentData.patient.id))
 				.pipe(
 					map(
 						patientMedicalCoveragesDto =>
@@ -305,7 +332,7 @@ export class AppointmentComponent implements OnInit {
 
 	cancelAppointment(): void {
 		const dialogRefCancelAppointment = this.dialog.open(CancelAppointmentComponent, {
-			data: this.params.appointmentData.appointmentId
+			data: this.data.appointmentData.appointmentId
 		});
 		dialogRefCancelAppointment.afterClosed().subscribe(canceledAppointment => {
 			if (canceledAppointment) {
@@ -365,9 +392,9 @@ export class AppointmentComponent implements OnInit {
 	}
 
 	private submitNewState(newStateId: APPOINTMENT_STATES_ID, motivo?: string): void {
-		this.appointmentFacade.changeState(this.params.appointmentData.appointmentId, newStateId, motivo)
+		this.appointmentFacade.changeState(this.data.appointmentData.appointmentId, newStateId, motivo)
 			.subscribe(() => {
-				const appointmentInformation = { id: this.params.appointmentData.appointmentId, stateId: newStateId };
+				const appointmentInformation = { id: this.data.appointmentData.appointmentId, stateId: newStateId };
 				this.dialogRef.close(appointmentInformation);
 				this.snackBarService.showSuccess(`Estado de turno actualizado a ${getAppointmentState(newStateId).description} exitosamente`);
 			}, _ => {
@@ -378,7 +405,7 @@ export class AppointmentComponent implements OnInit {
 	}
 
 	updatePhoneNumber(phonePrefix: string, phoneNumber: string) {
-		this.appointmentFacade.updatePhoneNumber(this.params.appointmentData.appointmentId, phonePrefix, phoneNumber).subscribe(() => {
+		this.appointmentFacade.updatePhoneNumber(this.data.appointmentData.appointmentId, phonePrefix, phoneNumber).subscribe(() => {
 			this.snackBarService.showSuccess('turnos.appointment.coverageData.UPDATE_SUCCESS');
 		}, error => {
 			processErrors(error, (msg) => this.snackBarService.showError(msg));
@@ -386,7 +413,7 @@ export class AppointmentComponent implements OnInit {
 	}
 
 	updateCoverageData(patientMedicalCoverageId: number) {
-		this.appointmentService.updateMedicalCoverage(this.params.appointmentData.appointmentId, patientMedicalCoverageId).subscribe(() => {
+		this.appointmentService.updateMedicalCoverage(this.data.appointmentData.appointmentId, patientMedicalCoverageId).subscribe(() => {
 			this.snackBarService.showSuccess('turnos.appointment.coverageData.UPDATE_SUCCESS');
 		}, error => {
 			processErrors(error, (msg) => this.snackBarService.showError(msg));
@@ -413,9 +440,9 @@ export class AppointmentComponent implements OnInit {
 		this.formEdit.controls.newCoverageData.setValue(null);
 		const dialogRef = this.dialog.open(MedicalCoverageComponent, {
 			data: {
-				identificationTypeId: this.params.appointmentData.patient.identificationTypeId,
-				identificationNumber: this.params.appointmentData.patient.identificationNumber,
-				genderId: this.params.appointmentData.patient.genderId,
+				identificationTypeId: this.data.appointmentData.patient.identificationTypeId,
+				identificationNumber: this.data.appointmentData.patient.identificationNumber,
+				genderId: this.data.appointmentData.patient.genderId,
 				initValues: this.patientMedicalCoverages,
 			}
 		});
@@ -426,7 +453,7 @@ export class AppointmentComponent implements OnInit {
 					const patientCoverages: PatientMedicalCoverageDto[] =
 						values.patientMedicalCoverages.map(s => this.mapperService.toPatientMedicalCoverageDto(s));
 
-					this.patientMedicalCoverageService.addPatientMedicalCoverages(Number(this.params.appointmentData.patient.id), patientCoverages).subscribe(
+					this.patientMedicalCoverageService.addPatientMedicalCoverages(Number(this.data.appointmentData.patient.id), patientCoverages).subscribe(
 						_ => {
 							this.setMedicalCoverages();
 							this.snackBarService.showSuccess('ambulatoria.paciente.ordenes_prescripciones.toast_messages.POST_UPDATE_COVERAGE_SUCCESS');
@@ -439,7 +466,7 @@ export class AppointmentComponent implements OnInit {
 	}
 
 	callPatient() {
-		this.appointmentService.mqttCall(this.params.appointmentData.appointmentId).subscribe();
+		this.appointmentService.mqttCall(this.data.appointmentData.appointmentId).subscribe();
 	}
 
 	hideFilters(): void {
@@ -469,12 +496,12 @@ export class AppointmentComponent implements OnInit {
 
 	getReportAppointment(): void {
 		if (this.isCheckedDownloadAnexo && this.isCheckedDownloadFormulario) {
-			this.appointmentService.getAnexoPdf(this.params.appointmentData).subscribe();
-			this.appointmentService.getFormPdf(this.params.appointmentData).subscribe();
+			this.appointmentService.getAnexoPdf(this.data.appointmentData).subscribe();
+			this.appointmentService.getFormPdf(this.data.appointmentData).subscribe();
 		} else if (this.isCheckedDownloadAnexo && !this.isCheckedDownloadFormulario) {
-			this.appointmentService.getAnexoPdf(this.params.appointmentData).subscribe();
+			this.appointmentService.getAnexoPdf(this.data.appointmentData).subscribe();
 		} else {
-			this.appointmentService.getFormPdf(this.params.appointmentData).subscribe();
+			this.appointmentService.getFormPdf(this.data.appointmentData).subscribe();
 		}
 	}
 
@@ -484,10 +511,6 @@ export class AppointmentComponent implements OnInit {
 
 	clear(): void {
 		this.formEdit.controls.newCoverageData.setValue(null);
-	}
-
-	dateFormToggle(): void{
-		this.isDateFormVisible = !this.isDateFormVisible;
 	}
 
 	setHideObservationTitle(value: boolean): void{
@@ -500,7 +523,7 @@ export class AppointmentComponent implements OnInit {
 
 	updateObservation(): void{
 		this.observation = this.formObservations.get('observation').value;
-		this.appointmentFacade.updateObservation(this.params.appointmentData.appointmentId, this.formObservations.controls.observation.value).subscribe(() => {
+		this.appointmentFacade.updateObservation(this.data.appointmentData.appointmentId, this.formObservations.controls.observation.value).subscribe(() => {
 			this.snackBarService.showSuccess('turnos.appointment.observations.UPDATE_SUCCESS');
 		}, error => {
 			processErrors(error, (msg) => this.snackBarService.showError(msg));

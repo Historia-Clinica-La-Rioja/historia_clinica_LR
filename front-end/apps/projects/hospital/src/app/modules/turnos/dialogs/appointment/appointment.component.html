@@ -11,22 +11,22 @@
 					onerror="this.src='../../../../../assets/images/empty-profile.png'">
 				<div fxLayout="column" fxLayoutAlign="center start">
 					<span class="mat-body-strong capitalize title-size"
-						*ngIf="params.appointmentData.patient.fullName">
-						{{ viewPatientName(params.appointmentData) | uppercase }}
+						*ngIf="data.appointmentData.patient.fullName">
+						{{ viewPatientName(data.appointmentData) | uppercase }}
 					</span>
 					<div>
 						<span id="patient_id" class="mat-body-strong subtitle-size">ID
-							{{params.appointmentData.patient.id}}
+							{{data.appointmentData.patient.id}}
 						</span>•
 						<span class="mat-body-strong subtitle-size"
-							*ngIf="params.appointmentData.patient.identificationNumber">
+							*ngIf="data.appointmentData.patient.identificationNumber">
 							{{identificationType?.description}}
-							{{params.appointmentData.patient.identificationNumber | number:'3.0-0'}}
+							{{data.appointmentData.patient.identificationNumber | number:'3.0-0'}}
 						</span>
 					</div>
 					<a type="button" mat-icon-button color="primary"
 						*appHasRole="['ESPECIALISTA_MEDICO','PROFESIONAL_DE_SALUD','ENFERMERO', 'ESPECIALISTA_EN_ODONTOLOGIA']"
-						[routerLink]="'/institucion/' + institutionId + '/ambulatoria/paciente/' + params.appointmentData?.patient?.id"
+						[routerLink]="'/institucion/' + institutionId + '/ambulatoria/paciente/' + data.appointmentData?.patient?.id"
 						(click)="closeDialog()">
 						<span class="mat-body subtitle-size">
 							{{'turnos.appointment.BUTTON_CLINICAL_HISTORY' | translate}}
@@ -138,32 +138,34 @@
 							calendar_today
 						</mat-icon>
 						<div >		
-							<span class="mat-body subtitle-size"> {{params.appointmentData.date | date:"EEEE, d " | titlecase }} de</span>
-							<span class="mat-body subtitle-size"> {{params.appointmentData.date | date:"MMMM " | titlecase}} de</span>
-							<span class="mat-body subtitle-size"> {{params.appointmentData.date | date:"y " | titlecase}}</span>
+							<span class="mat-body subtitle-size"> {{selectedDate | date:"EEEE, d " | titlecase }} de</span>
+							<span class="mat-body subtitle-size"> {{selectedDate | date:"MMMM " | titlecase}} de</span>
+							<span class="mat-body subtitle-size"> {{selectedDate | date:"y " | titlecase}}</span>
 						</div>
 					</div>
 					<div fxLayout="row" fxLayoutGap="5px" fxLayoutAlign="start">
 						<mat-icon fontSet="material-icons-outlined" mat-list-icon [inline]="true" id="hour" class="icon-grey">
 							access_time
 						</mat-icon>
-						 <span class="mat-body subtitle-size"> {{params.appointmentData.date | date:"H:mm"}} hs</span> 
+						 <span class="mat-body subtitle-size"> {{selectedDate | date:"H:mm"}} hs</span> 
 					</div>
 				</div>
 				<button type="button" mat-icon-button color="primary" *ngIf="estadoSelected === appointmentStatesIds.ASSIGNED"
-					(click)="dateFormToggle(); setDisableDays(); setPossibleScheduleHours(params.appointmentData.date)">
+					(click)="dateFormToggle(); setDisableDays(); setPossibleScheduleHours(selectedDate)">
 					<mat-icon class="material-icons-outlined">edit</mat-icon>
 					<span class="mat-body strong-size">
-						{{'turnos.appointment.EDIT_DATE_TIME' | translate}}
+						{{'turnos.appointment.date.EDIT_DATE_TIME' | translate}}
 					</span>
 				</button>
 			</div>
 
-			<form [formGroup]="formDate" *ngIf="isDateFormVisible" fxLayout="column" fxLayoutGap="5px" class="dateForm">
+			<form [formGroup]="formDate" 
+				*ngIf="isDateFormVisible" fxLayout="column" fxLayoutGap="5px" class="dateForm"
+				(ngSubmit)="updateAppointmentDate()">
 				<app-datepicker 
 					[minDate]="startAgenda"
 					[maxDate]="endAgenda"
-					[dateToSetInDatepicker]="params.appointmentData.date"
+					[dateToSetInDatepicker]="data.appointmentData.date"
 					[availableDays]="availableDays"
 					[disableDays]="disableDays"
 					(selectDate)="setPossibleScheduleHours($event)">
@@ -171,7 +173,7 @@
 
 				<div fxLayout="row" >
 						<mat-form-field appearance="outline" class="hour">
-							<mat-select formControlName="hour">
+							<mat-select formControlName="date">
 								<mat-option [value]="possibleScheduleHour" *ngFor="let possibleScheduleHour of possibleScheduleHours">
 									{{ possibleScheduleHour | date:'shortTime' }}
 								</mat-option>
@@ -288,7 +290,7 @@
 		<ng-container
 			*appHasRole="['ADMINISTRATIVO', 'ENFERMERO', 'ESPECIALISTA_MEDICO', 'PROFESIONAL_DE_SALUD', 'ESPECIALISTA_EN_ODONTOLOGIA']">
 			<ng-container
-				*ngIf="downloadReportIsEnabled && !isAbsent() && ((hasRoleToDownloadReports$ | async) === true || params.hasPermissionToAssignShift)">
+				*ngIf="downloadReportIsEnabled && !isAbsent() && ((hasRoleToDownloadReports$ | async) === true || data.hasPermissionToAssignShift)">
 				<mat-divider></mat-divider>
 				<section id="report" fxLayout="column">
 					<span class="mat-body-strong strong-size">{{'turnos.report.TITLE' | translate}}</span>
@@ -311,7 +313,7 @@
 		*appHasRole="['ADMINISTRATIVO', 'ENFERMERO', 'ESPECIALISTA_MEDICO', 'PROFESIONAL_DE_SALUD', 'ESPECIALISTA_EN_ODONTOLOGIA']"
 		align="end">
 		<ng-container
-			*ngIf="downloadReportIsEnabled && !isAbsent() && ((hasRoleToDownloadReports$ | async) === true || params.hasPermissionToAssignShift)">
+			*ngIf="downloadReportIsEnabled && !isAbsent() && ((hasRoleToDownloadReports$ | async) === true || data.hasPermissionToAssignShift)">
 			<button id="report-appointment" name="report-appointment" mat-stroked-button color="primary" btn-block type="button"
 				(click)="getReportAppointment()" [disabled]="!isCheckedDownloadAnexo && !isCheckedDownloadFormulario">
 				<mat-icon fontSet="material-icons-outlined" >download</mat-icon>

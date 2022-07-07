@@ -87,11 +87,14 @@
 			"TITLE": "Turno",
 			"BUTTON_CLINICAL_HISTORY": "Ver historia clínica",
 			"EDIT_PATIENT_INFO": "Editar información del paciente",
-			"EDIT_DATE_TIME": "Editar fecha y hora del turno",
 			"APPOINTMENT_STATE": "Estado de turno",
 			"MOTIVE": "Motivo",
 			"SAVE": "Guardar",
 			"CANCEL": "Cancelar",
+			"date":{
+				"EDIT_DATE_TIME": "Editar fecha y hora del turno",
+				"UPDATE_SUCCESS": "La fecha y hora del turno se actualizaron exitosamente"
+			},
 			"phoneNumber": {
 				"SUCCESS": "El teléfono se modificó correctamente",
 				"PHONE_NUMBER": "Teléfono",

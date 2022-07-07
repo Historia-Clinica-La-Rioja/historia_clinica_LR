@@ -6,6 +6,8 @@ import {
 	AppointmentListDto,
 	AssignedAppointmentDto,
 	CreateAppointmentDto,
+	DateDto,
+	DateTimeDto,
 	ExternalPatientCoverageDto,
 	UpdateAppointmentDto,
 } from '@api-rest/api-model';
@@ -109,6 +111,11 @@ export class AppointmentsService {
 
 		const url = `${this.BASE_URL}/${appointmentId}/update-observation`;
 		return this.http.put<boolean>(url, {}, { params: queryParams });
+	}
+
+	updateDate(appointmentId: number, date: DateTimeDto): Observable<boolean> {
+		const url = `${this.BASE_URL}/${appointmentId}/update-date`;
+		return this.http.put<boolean>(url, date);
 	}
 
 	mqttCall(appointmentId: number): Observable<any> {
