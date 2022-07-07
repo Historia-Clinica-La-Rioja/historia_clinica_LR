@@ -20,7 +20,7 @@ export const defToMenuItem = ({text, icon, url, id, options}: MenuItemDef): Menu
 })
 export class MenuComponent {
 	@Input() menuItems: MenuItem[];
-	@Input() isCollapsed: boolean;
+	@Input() hideName: boolean;
 	constructor() { }
 
 }

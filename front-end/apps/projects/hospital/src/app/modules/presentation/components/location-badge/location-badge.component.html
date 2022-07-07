@@ -1,14 +1,14 @@
 <div class="location-badge">
 	<div fxLayout="row" fxLayoutGap="10px" fxLayoutAlign="start center">
 		<mat-icon mat-list-icon>domain </mat-icon>
-		<span [hidden]="collapsed" class="name" *ngIf="location?.name">
+		<span [hidden]="hideName" class="name" *ngIf="location?.name">
 			{{location.name}}
 		</span>
 	</div>
-	<span [hidden]="collapsed" class="address" *ngIf="location?.address">
+	<span [hidden]="hideName" class="address" *ngIf="location?.address">
 		{{location.address}}
 	</span>
-	<span [hidden]="collapsed" class="role primary" *ngFor="let role of roles">
+	<span [hidden]="hideName" class="role primary" *ngFor="let role of roles">
 		{{role}}
 	</span>
 </div>

@@ -8,7 +8,7 @@ import {DateTimeDto} from "@api-rest/api-model";
 })
 export class UserBadgeComponent {
 	@Input() userInfo: UserInfo;
-	@Input() collapsed: boolean;
+	@Input() hideName = false;
 
 	constructor() { }
 

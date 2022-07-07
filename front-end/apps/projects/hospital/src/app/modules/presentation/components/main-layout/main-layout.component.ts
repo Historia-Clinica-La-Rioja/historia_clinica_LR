@@ -6,7 +6,7 @@ import { MenuItem } from '../menu/menu.component';
 import { OauthAuthenticationService } from "../../../auth/services/oauth-authentication.service";
 
 const MARGIN_LEFT_COLLAPSED = 94;
-const MARGIN_LEFT_NOT_COLLAPSED = 204;
+const MARGIN_LEFT_NOT_COLLAPSED = 198;
 
 @Component({
 	selector: 'app-main-layout',
@@ -19,6 +19,7 @@ export class MainLayoutComponent implements OnDestroy {
 	private _mobileQueryListener: () => void;
 	private _menuItems: MenuItem[];
 	isCollapsed = false;
+	isCollapsedBolck = true;
 	marginLeft = MARGIN_LEFT_NOT_COLLAPSED;
 
 
@@ -49,9 +50,17 @@ export class MainLayoutComponent implements OnDestroy {
 		this.oauthAuthenticationService.logout();
 	}
 
-	toggleSidebar() {
+	toggleSidebarBlock() {
+		this.isCollapsedBolck = !this.isCollapsedBolck;
 		this.isCollapsed = !this.isCollapsed;
 		this.marginLeft = this.isCollapsed ? MARGIN_LEFT_COLLAPSED : MARGIN_LEFT_NOT_COLLAPSED;
+	}
+
+	toggleSidebarHover() {
+		if (!this.isCollapsedBolck) {
+			this.isCollapsed = !this.isCollapsed;
+			this.marginLeft = this.isCollapsed ? MARGIN_LEFT_COLLAPSED : MARGIN_LEFT_NOT_COLLAPSED;
+		}
 	}
 
 }

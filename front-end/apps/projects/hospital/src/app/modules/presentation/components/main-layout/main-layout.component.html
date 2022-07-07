@@ -6,7 +6,7 @@
 			</button>
 		</ng-container>
 		<ng-template #menuDesktop>
-			<button id="menuDesktop" mat-icon-button (click)="toggleSidebar()">
+			<button id="menuDesktopBlock" mat-icon-button (click)="toggleSidebarBlock()">
 				<mat-icon color="primary">menu</mat-icon>
 			</button>
 		</ng-template>
@@ -14,19 +14,18 @@
 
 	<mat-sidenav-container class="layout-sidenav-container" [style.marginTop.px]="mobileQuery.matches ? 57 : 0">
 
-		<mat-sidenav #sidenav [(opened)]="opened" [mode]="mobileQuery.matches ? 'over' : 'side'"
-			[fixedInViewport]="mobileQuery.matches" fixedTopGap="57">
+		<mat-sidenav #sidenav [(opened)]="opened" (mouseover)="toggleSidebarHover()" (mouseout)="toggleSidebarHover()"
+			[mode]="mobileQuery.matches ? 'over' : 'side'" [fixedInViewport]="mobileQuery.matches" fixedTopGap="57">
 
 			<div class="custom-container">
 
 				<div class="top">
-
 					<ng-content *ngIf="isCollapsed else locationInfo" select="[location-info-min]"></ng-content>
 					<ng-template #locationInfo>
 						<ng-content select="[location-info]"></ng-content>
 					</ng-template>
-
-					<app-menu [menuItems]="menuItems" [isCollapsed]="isCollapsed"></app-menu>
+					<mat-divider></mat-divider>
+					<app-menu [menuItems]="menuItems" [hideName]="isCollapsed"></app-menu>
 				</div>
 
 				<div class="bottom">

@@ -1,4 +1,4 @@
 <ng-container *ngIf="label">
-	<span  [hidden]="collapsed" *ngIf="label.key" [translate]="label.key"></span>
+	<span *ngIf="label.key" [translate]="label.key"></span>
 	<span *ngIf="label.text">{{label.text}}</span>
 </ng-container>

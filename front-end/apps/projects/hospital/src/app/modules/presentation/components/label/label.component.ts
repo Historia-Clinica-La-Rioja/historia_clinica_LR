@@ -12,7 +12,6 @@ export interface Label {
 })
 export class LabelComponent {
 	@Input() label: Label;
-	@Input() collapsed = false;
 	constructor() { }
 
 }
