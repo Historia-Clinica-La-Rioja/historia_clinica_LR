@@ -3,6 +3,7 @@ package net.pladema.medicalconsultation.diary.controller;
 import static ar.lamansys.sgx.shared.dates.utils.DateUtils.getWeekDay;
 import static java.util.stream.Collectors.groupingBy;
 
+import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.time.temporal.ChronoUnit;
@@ -228,11 +229,7 @@ public class DiaryController {
 		List<LocalDate> blockedDates = startingBlockingDate.datesUntil(endingBlockingDate).collect(Collectors.toList());
 		blockedDates.add(endingBlockingDate);
 		blockedDates = blockedDates.stream().filter(potentialBlockedDay -> diaryBo.getDiaryOpeningHours()
-				.stream().anyMatch(diaryOpeningHours -> {
-						if (potentialBlockedDay.getDayOfWeek().getValue() == 7)
-							return diaryOpeningHours.getOpeningHours().getDayWeekId() == 0;
-						return diaryOpeningHours.getOpeningHours().getDayWeekId() == potentialBlockedDay.getDayOfWeek().getValue();
-					}))
+				.stream().anyMatch(diaryOpeningHours -> dayIsIncludedInOpeningHours(potentialBlockedDay, diaryOpeningHours)))
 				.collect(Collectors.toList());
 
 		List<AppointmentBo> listAppointments = new ArrayList<>();
@@ -364,6 +361,13 @@ public class DiaryController {
 						(oh.getOpeningHours().getTo().isAfter(localTimeEnd) || oh.getOpeningHours().getTo().equals(localTimeEnd)))
 				.findFirst().orElseThrow((() -> new ConstraintViolationException("Los horarios de inicio y fin deben pertenecer al mismo período de la agenda.",
 				new HashSet(Collections.singleton("Los horarios de inicio y fin deben pertenecer al mismo período de la agenda.")))));
+	}
+
+	private boolean dayIsIncludedInOpeningHours(LocalDate date, DiaryOpeningHoursBo diaryOpeningHours) {
+		final int SUNDAY_DB_VALUE = 0;
+		if (date.getDayOfWeek().getValue() == DayOfWeek.SUNDAY.getValue())
+			return diaryOpeningHours.getOpeningHours().getDayWeekId() == SUNDAY_DB_VALUE;
+		return diaryOpeningHours.getOpeningHours().getDayWeekId() == date.getDayOfWeek().getValue();
 	}
 
 }

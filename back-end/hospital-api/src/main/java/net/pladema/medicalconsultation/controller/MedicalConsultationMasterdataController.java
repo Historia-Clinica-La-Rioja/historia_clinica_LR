@@ -41,7 +41,7 @@ public class MedicalConsultationMasterdataController {
         return ResponseEntity.ok().body(masterDataService.findAll(AppointmentState.class));
     }
 
-	@GetMapping(value= "/appointmentBlockMotive")
+	@GetMapping(value= "/appointment-block-motive")
 	public ResponseEntity<Collection<MasterDataProjection>> getAppointmentBlockMotive() {
 		LOG.debug("{}", "All appointment block motive");
 		return ResponseEntity.ok().body(masterDataService.findAll(AppointmentBlockMotive.class));

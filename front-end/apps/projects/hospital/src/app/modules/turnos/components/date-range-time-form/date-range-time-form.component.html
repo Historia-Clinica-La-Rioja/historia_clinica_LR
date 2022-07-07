@@ -1,18 +1,18 @@
-<form fxLayout="column" class="block_dialog">
+<form fxLayout="column" class="block-dialog">
 	<div appearance="outline" style="margin-top: 16px;">
 		<div fxLayout="row" fxLayoutGap="20px">
-			<mat-form-field class="dateSelector" appearance="outline">
-				<mat-label>Fecha inicio</mat-label>
+			<mat-form-field class="date-selector" appearance="outline">
+				<mat-label [translate]="'turnos.block.START_DATE'"></mat-label>
 				<input matInput id="initDate" [matDatepicker]="startDatePicker" [formControl]="form.controls.initDate"
 				[matDatepickerFilter]="initDateFilter" (dateChange)="updateEndDate()">
-				<mat-error>Seleccione una fecha</mat-error>
+				<mat-error [translate]="'turnos.block.DATE_SELECTION_ERROR'"></mat-error>
 				<mat-datepicker-toggle matSuffix [for]="startDatePicker"></mat-datepicker-toggle>
 				<mat-datepicker #startDatePicker></mat-datepicker>
 			</mat-form-field>
-			<mat-form-field class="dateSelector" appearance="outline">
-				<mat-label>Fecha fin</mat-label>
+			<mat-form-field class="date-selector" appearance="outline">
+				<mat-label [translate]="'turnos.block.END_DATE'"></mat-label>
 				<input matInput id="endDate" [matDatepicker]="endDatePicker" [formControl]="form.controls.endDate" [matDatepickerFilter]="endDateFilter">
-				<mat-error>Seleccione una fecha</mat-error>
+				<mat-error [translate]="'turnos.block.DATE_SELECTION_ERROR'"></mat-error>
 				<mat-datepicker-toggle matSuffix [for]="endDatePicker"></mat-datepicker-toggle>
 				<mat-datepicker #endDatePicker></mat-datepicker>
 			</mat-form-field>
@@ -20,7 +20,7 @@
 	</div>
 
 	<div fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="20px">
-		<mat-form-field appearance="outline" class="hour_selector">
+		<mat-form-field appearance="outline" class="hour-selector">
 			<mat-select id="startingHour" [formControl]="form.controls.init">
 				<mat-option [value]="possibleTime" *ngFor="let possibleTime of possibleStartingTime"
 					(click)="filterEndingTime()">
@@ -28,14 +28,14 @@
 				</mat-option>
 			</mat-select>
 		</mat-form-field>
-		<span>hs. a</span>
-		<mat-form-field appearance="outline" class="hour_selector">
+		<span [translate]="'turnos.block.HOURS_TO'"></span>
+		<mat-form-field appearance="outline" class="hour-selector">
 			<mat-select id="endingHour" [formControl]="form.controls.end">
 				<mat-option [value]="possibleTime" *ngFor="let possibleTime of possibleEndingTime">
 					{{ possibleTime | viewDateDto:'time' | date:'shortTime' }}
 				</mat-option>
 			</mat-select>
 		</mat-form-field>
-		<span>hs.</span>
+		<span [translate]="'turnos.block.HOURS'"></span>
 	</div>
 </form>

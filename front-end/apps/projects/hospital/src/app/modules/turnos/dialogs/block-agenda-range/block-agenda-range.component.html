@@ -1,10 +1,10 @@
-<h1 mat-dialog-title>Bloquear/Desbloquear agenda</h1>
+<h1 mat-dialog-title>{{ 'turnos.block.TITLE' | translate }}</h1>
 
 <div mat-dialog-content>
 
 	<mat-tab-group>
 
-		<mat-tab label="BLOQUEAR">
+		<mat-tab label="{{ 'turnos.block.BLOCK' | translate }}">
 			<form [formGroup]="blockForm">
 				<app-date-range-time-form [selectedAgenda]="data.selectedAgenda" formControlName="control"></app-date-range-time-form>
 				<div fxLayout="column">
@@ -14,22 +14,22 @@
 					  		<mat-option *ngFor="let appointmentBlockMotive of appointmentBlockMotives" [value]="appointmentBlockMotive.id">
 							{{ appointmentBlockMotive.description }}</mat-option>
 						</mat-select>
-						<mat-error>Por favor seleccione un motivo</mat-error>
+						<mat-error [translate]="'turnos.block.MOTIVE_SELECTION_ERROR'"></mat-error>
 					</mat-form-field>
 				</div>
 				<div align="end">
 					<button mat-flat-button color="primary" class="uppercase" [disabled]="!blockForm.valid"
-						(click)="block()" id="confirm-button">CONFIRMAR</button>
+						(click)="block()" id="confirm-button">{{ 'turnos.block.CONFIRM' | translate }}</button>
 				</div>
 			</form>
 		</mat-tab>
 
-		<mat-tab label="DESBLOQUEAR">
+		<mat-tab label="{{ 'turnos.block.UNBLOCK' | translate }}">
 			<form [formGroup]="unblockForm">
 				<app-date-range-time-form [selectedAgenda]="data.selectedAgenda" formControlName="control"></app-date-range-time-form>
 				<div align="end">
 					<button mat-flat-button color="primary" class="uppercase" [disabled]="!unblockForm.valid"
-						(click)="unblock()" id="confirm-button">CONFIRMAR</button>
+						(click)="unblock()" id="confirm-button">{{ 'turnos.block.CONFIRM' | translate }}</button>
 				</div>
 			</form>
 		</mat-tab>

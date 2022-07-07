@@ -111,7 +111,12 @@ export class AgendaComponent implements OnInit, OnDestroy, OnChanges {
 
 		this.appointmentSubscription = this.appointmentFacade.getAppointments().subscribe(appointments => {
 			if (appointments) {
-				this.appointments = this.unifyEvents(appointments);
+                if (appointments.length) {
+				    this.appointments = this.unifyEvents(appointments);
+				}
+                else {
+                    this.appointments = appointments;
+				}
 				this.dailyAmounts$ = this.appointmentsService.getDailyAmounts(this.idAgenda);
 				this.loading = false;
 			}
@@ -433,16 +438,6 @@ export class AgendaComponent implements OnInit, OnDestroy, OnChanges {
 		} else {
 			return this.enableAppointmentScheduling ? `${AGENDA_PROGRAMADA_CLASS} ${ASIGNABLE_CLASS}` : AGENDA_PROGRAMADA_CLASS;
 		}
-	}
-
-	private updateAppoinment(appointmentInformation) {
-		const appointment = this.appointments.find(appointment => appointment.meta.appointmentId === appointmentInformation?.id);
-		appointment.meta.appointmentStateId = appointmentInformation.stateId;
-		const color = getColor(appointmentInformation);
-		appointment.color.primary = color;
-		appointment.color.secondary = color;
-		appointment.cssClass = getSpanColor(appointmentInformation.stateId);
-		this.refreshCalendar.next();
 	}
 
 	private unifyEvents(events: CalendarEvent[]): CalendarEvent[] {

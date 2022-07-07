@@ -52,9 +52,9 @@ export class DateRangeTimeFormComponent implements ControlValueAccessor, OnDestr
 	{ }
 
 	ngOnInit(): void {
-		const minumumTime = this.getMinimumBlockTime();
+		const minimumTime = this.getMinimumBlockTime();
 		const maximumTime = this.getMaximumBlockTime();
-		this.possibleStartingTime = this.generateTimeInterval(minumumTime, maximumTime);
+		this.possibleStartingTime = this.generateTimeInterval(minimumTime, maximumTime);
 
 		this.today = new Date();
 		this.agendaLastDay = new Date(this.selectedAgenda.endDate);
@@ -100,8 +100,9 @@ export class DateRangeTimeFormComponent implements ControlValueAccessor, OnDestr
 	updateEndDate() {
 		const currentEndDate = this.form.value.endDate;
 		const currentInitDate = this.form.value.initDate;
-		if (currentInitDate > currentEndDate)
+		if (currentInitDate > currentEndDate) {
 			this.form.controls.endDate.setValue(currentInitDate);
+		}
 	}
 
 	private isPossibleAppointmentDay(dayOfWeek: number, diaryOpeningHours: DiaryOpeningHoursDto[]): boolean {

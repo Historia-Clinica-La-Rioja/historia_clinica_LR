@@ -111,6 +111,18 @@
 		"calendar-view-professional": {
 			"TITLE": "Agenda de turnos",
 			"GO_TO_DIARY": "Ir a turnos"
+		},
+		"block": {
+			"TITLE": "Bloquear/Desbloquear agenda",
+			"BLOCK": "BLOQUEAR",
+			"UNBLOCK": "DESBLOQUEAR",
+			"START_DATE": "Fecha inicio",
+			"END_DATE": "Fecha fin",
+			"DATE_SELECTION_ERROR": "Seleccione una fecha",
+			"HOURS_TO": "hs. a",
+			"HOURS": "hs.",
+			"MOTIVE_SELECTION_ERROR": "Por favor seleccione un motivo",
+			"CONFIRM": "CONFIRMAR"
 		}
 	}
 }

@@ -21,7 +21,7 @@ export class MedicalConsultationMasterdataService {
 	}
 
 	getAppointmentBlockMotives(): Observable<MasterDataInterface<number>[]> {
-		const url = `${environment.apiBase}/institutions/${this.contextService.institutionId}/medicalConsultations/masterdata/appointmentBlockMotive`;
+		const url = `${environment.apiBase}/institutions/${this.contextService.institutionId}/medicalConsultations/masterdata/appointment-block-motive`;
 		return this.http.get<MasterDataInterface<number>[]>(url);
 	}
 
