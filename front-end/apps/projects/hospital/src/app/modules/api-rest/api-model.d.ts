@@ -2034,6 +2034,11 @@ export interface ParenteralPlanDto extends IndicationDto {
     via?: number;
 }
 
+export interface PasswordDto {
+    newPassword: string;
+    password: string;
+}
+
 export interface PasswordResetDto {
     password: string;
     token: string;
