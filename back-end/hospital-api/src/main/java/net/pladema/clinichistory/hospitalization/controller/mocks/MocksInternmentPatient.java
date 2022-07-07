@@ -20,7 +20,7 @@ public class MocksInternmentPatient {
 
     private static ResponsibleDoctorDto mockDoctorDto(int i) {
         ResponsibleDoctorDto result = new ResponsibleDoctorDto();
-        result.setId(i);
+        result.setUserId(i);
         result.setFirstName("Doctor name " + i);
         result.setLastName("Doctor surname " +i);
         result.setLicenses(List.of("ABJ2132"));

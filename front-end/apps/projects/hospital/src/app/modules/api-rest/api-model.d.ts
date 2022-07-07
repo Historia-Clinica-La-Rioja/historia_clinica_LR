@@ -2506,10 +2506,10 @@ export interface ResponsibleContactDto extends Serializable {
 
 export interface ResponsibleDoctorDto extends Serializable {
     firstName: string;
-    id: number;
     lastName: string;
     licenses: string[];
     nameSelfDetermination: string;
+    userId: number;
 }
 
 export interface RiskFactorDto extends Serializable {

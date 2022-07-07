@@ -12,7 +12,7 @@ import lombok.ToString;
 @ToString
 public class ResponsibleDoctorDto implements Serializable {
 
-    private Integer id;
+    private Integer userId;
 
     private String firstName;
 
