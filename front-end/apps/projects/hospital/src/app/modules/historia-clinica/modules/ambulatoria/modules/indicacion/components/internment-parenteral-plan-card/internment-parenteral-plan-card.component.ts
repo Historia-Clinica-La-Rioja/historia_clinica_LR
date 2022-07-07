@@ -21,8 +21,10 @@ export class InternmentParenteralPlanCardComponent implements OnChanges {
 	) { }
 
 	ngOnChanges(): void {
-		this.internacionMasterdataService.getVias().subscribe(v => this.vias = v);
-		this.indicationContent = this.mapToIndicationContent();
+		this.internacionMasterdataService.getVias().subscribe(v => {
+			this.vias = v;
+			this.indicationContent = this.mapToIndicationContent();
+		});
 	}
 
 	mapToIndicationContent(): Content[] {

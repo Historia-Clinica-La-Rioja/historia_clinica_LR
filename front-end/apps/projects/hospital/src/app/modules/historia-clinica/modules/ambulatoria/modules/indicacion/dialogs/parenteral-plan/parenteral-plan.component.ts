@@ -21,8 +21,8 @@ import { hasError, getError } from '@core/utils/form.utils';
 import { SnomedService } from "@historia-clinica/services/snomed.service";
 import { SearchSnomedConceptsParenteralPlanService } from "@historia-clinica/modules/ambulatoria/modules/indicacion/services/search-snomed-concepts-parenteral-plan.service";
 import { InternacionMasterDataService } from "@api-rest/services/internacion-master-data.service";
-import { dateDtoToDate, dateToDateDto } from "@api-rest/mapper/date-dto.mapper";
-import { isSameDay, isToday, setHours } from "date-fns";
+import { dateDtoToDate, dateToDateDto, dateToDateTimeDtoUTC } from "@api-rest/mapper/date-dto.mapper";
+import { getMonth, getYear, isSameDay, isToday } from "date-fns";
 import { HOURS_LIST, openConfirmDialog } from "@historia-clinica/modules/ambulatoria/modules/indicacion/constants/internment-indications";
 import { isNumberOrDot } from '@core/utils/pattern.utils';
 
@@ -158,11 +158,10 @@ export class ParenteralPlanComponent implements OnInit {
 
 		function setStartTime(indicationDate: Date): DateTimeDto {
 			if (startTime) {
-				const date: Date = setHours(indicationDate, startTime);
-				return {
-					date: dateToDateDto(date),
-					time: { hours: date.getHours(), minutes: 0 }
-				}
+				const year = getYear(indicationDate);
+				const month = getMonth(indicationDate);
+				const day = indicationDate.getDate();
+				return dateToDateTimeDtoUTC(new Date(year, month, day, startTime));
 			}
 			return null;
 		}

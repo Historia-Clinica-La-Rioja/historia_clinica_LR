@@ -1,3 +1,4 @@
+import { dateToDateTimeDtoUTC } from './../../../../../../../api-rest/mapper/date-dto.mapper';
 import { Component, Inject, OnInit } from '@angular/core';
 import { AbstractControl, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
@@ -144,6 +145,9 @@ export class OtherIndicationComponent implements OnInit {
 	}
 
 	private toIndicationDto(otherIndicatio: any): OtherIndicationDto {
+		const year = getYear(this.indicationDate);
+		const month = getMonth(this.indicationDate);
+		const day = this.indicationDate.getDate();
 		return {
 			id: 0,
 			patientId: this.data.patientId,
@@ -152,9 +156,9 @@ export class OtherIndicationComponent implements OnInit {
 			professionalId: this.data.professionalId,
 			createdBy: null,
 			indicationDate: {
-				year: getYear(this.indicationDate),
-				month: getMonth(this.indicationDate) + 1,
-				day: this.indicationDate.getDate()
+				year,
+				month: month + 1,
+				day
 			},
 			createdOn: null,
 			otherIndicationTypeId: otherIndicatio.indicationType,
@@ -166,17 +170,9 @@ export class OtherIndicationComponent implements OnInit {
 				duration: 0,
 				periodUnit: (otherIndicatio?.event) ? "e" : "h",
 				event: otherIndicatio.event,
-				startDateTime: (otherIndicatio?.startTime) ? {
-					date: {
-						year: this.indicationDate.getUTCFullYear(),
-						month: this.indicationDate.getUTCMonth() + 1,
-						day: this.indicationDate.getUTCDay()
-					},
-					time: {
-						hours: otherIndicatio?.startTime,
-						minutes: 0
-					}
-				} : null,
+				startDateTime: (otherIndicatio?.startTime) ? 
+					dateToDateTimeDtoUTC(new Date(year, month, day, otherIndicatio.startTime))
+				: null,
 			},
 			otherType: otherIndicatio.indication
 		}
