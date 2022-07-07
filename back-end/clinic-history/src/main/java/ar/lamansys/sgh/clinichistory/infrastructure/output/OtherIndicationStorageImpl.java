@@ -80,7 +80,8 @@ public class OtherIndicationStorageImpl implements OtherIndicationStorage {
 		DosageBo result = new DosageBo();
 		result.setId(entity.getId());
 		result.setFrequency(entity.getFrequency());
-		result.setPeriodUnit(EUnitsOfTimeBo.map(entity.getPeriodUnit()));
+		if (entity.getPeriodUnit() != null)
+			result.setPeriodUnit(EUnitsOfTimeBo.map(entity.getPeriodUnit()));
 		result.setStartDate(entity.getStartDate());
 		result.setEndDate(entity.getEndDate());
 		result.setEvent(entity.getEvent());

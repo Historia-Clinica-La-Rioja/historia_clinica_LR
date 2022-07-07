@@ -177,7 +177,8 @@ public class SharedIndicationPortImpl implements SharedIndicationPort {
 	private OtherIndicationBo mapToOtherIndicationBo(OtherIndicationDto dto) {
 		DosageBo dosageBo = new DosageBo();
 		dosageBo.setFrequency(dto.getDosage().getFrequency());
-		dosageBo.setPeriodUnit(EUnitsOfTimeBo.map(dto.getDosage().getPeriodUnit()));
+		if (dto.getDosage().getPeriodUnit() != null)
+			dosageBo.setPeriodUnit(EUnitsOfTimeBo.map(dto.getDosage().getPeriodUnit()));
 		LocalDateTime startDate = (dto.getDosage().getStartDateTime()!=null)
 				? localDateMapper.fromDateTimeDto(dto.getDosage().getStartDateTime())
 				: localDateMapper.fromDateTimeDto(new DateTimeDto(dto.getIndicationDate(), new TimeDto(0,0,0)));

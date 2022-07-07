@@ -94,10 +94,10 @@ export function showFrequencyPharmaco(pharmaco: any): ExtraInfo[] {
 			title: 'indicacion.internment-card.sections.indication-extra-description.EVENT',
 			content: pharmaco.dosage?.event
 		}]
-	if (pharmaco.dosage.periodUnit === 'h')
+	if (pharmaco.dosage.periodUnit === 'h' || pharmaco.dosage.periodUnit === 'd')
 		return [{
 			title: 'indicacion.internment-card.sections.indication-extra-description.ONCE',
-			content: "a las " + pharmaco?.dosage.startDateTime?.time.hours + "hs."
+			content: "a las " + hour + "hs."
 		}]
 }
 

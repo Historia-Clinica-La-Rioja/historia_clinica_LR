@@ -205,7 +205,7 @@ export class PharmacoComponent implements OnInit {
 		return hours === this.TIME_CORRECTION ? 0 : hours;
 	}
 
-	private toDosageDto(quantity: QuantityDto, periodUnit: string): NewDosageDto {
+	private toDosageDto(quantity: QuantityDto, periodUnit?: string): NewDosageDto {
 		const year = getYear(this.indicationDate);
 		const month = getMonth(this.indicationDate);
 		const day = this.indicationDate.getDate();
@@ -215,7 +215,7 @@ export class PharmacoComponent implements OnInit {
 			diary: true,
 			chronic: true,
 			duration: 0,
-			periodUnit: periodUnit,
+			periodUnit: periodUnit ? periodUnit : this.loadPeriodUnit(),
 			event: this.form.controls?.event.value,
 			startDateTime: (startDateTime) ?
 				dateToDateTimeDtoUTC(new Date(year, month, day, startDateTime))
@@ -241,7 +241,7 @@ export class PharmacoComponent implements OnInit {
 			dosage: this.toDosageDto({
 				unit: this.form.controls.unit.value,
 				value: this.form.controls.dosage.value
-			}, (this.form.controls?.event.value) ? this.EVENT : this.HOURS),
+			}),
 			solvent: (this.form.controls.hasSolvent.value && this.searchSnomedConcept?.solventSnomedConcept) ? {
 				snomed: this.toSharedSnomedDto(this.searchSnomedConcept?.solventSnomedConcept),
 				dosage: this.toDosageDto({
@@ -306,5 +306,17 @@ export class PharmacoComponent implements OnInit {
 		control.reset();
 	}
 
+	private loadPeriodUnit(): string {
+		switch (this.form.value.frequencyOption) {
+			case (this.FREQUENCY_OPTION_INTERVAL):
+				return "h";
+			case (this.FREQUENCY_OPTION_START_TIME):
+				return "d";
+			case (this.FREQUENCY_OPTION_EVENT):
+				return "e";
+			default:
+				return null;
+		}
+	}
 }
 

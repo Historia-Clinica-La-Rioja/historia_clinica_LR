@@ -168,7 +168,7 @@ export class OtherIndicationComponent implements OnInit {
 				diary: true,
 				chronic: true,
 				duration: 0,
-				periodUnit: (otherIndicatio?.event) ? "e" : "h",
+				periodUnit: this.loadPeriodUnit(),
 				event: otherIndicatio.event,
 				startDateTime: (otherIndicatio?.startTime) ? 
 					dateToDateTimeDtoUTC(new Date(year, month, day, otherIndicatio.startTime))
@@ -180,6 +180,19 @@ export class OtherIndicationComponent implements OnInit {
 
 	setIndicationDate(d: Date) {
 		this.indicationDate = d;
+	}
+
+	private loadPeriodUnit(): string {
+		switch (this.form.value.frequencyOption) {
+			case ("1"):
+				return "h";
+			case ("2"):
+				return "d";
+			case ("3"):
+				return "e";
+			default:
+				return null;
+		}
 	}
 
 }
