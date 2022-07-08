@@ -7,8 +7,10 @@ import lombok.RequiredArgsConstructor;
 
 import lombok.extern.slf4j.Slf4j;
 
+import org.apache.commons.codec.binary.Base32;
 import org.springframework.stereotype.Service;
 
+import java.security.SecureRandom;
 import java.util.Optional;
 
 @Service
@@ -48,5 +50,19 @@ public class UserAuthenticationStorageImpl implements UserAuthenticationStorage 
 	public Boolean userHasTwoFactorAuthenticationEnabled(Integer userId) {
 		log.debug("Input parameters -> userId {}", userId);
 		return userRepository.userHasTwoFactorAuthenticationEnabled(userId);
+	}
+
+	@Override
+	public String generateSecretKey() {
+		log.debug("Generate secret key");
+		return this.generateKey();
+	}
+
+	private String generateKey() {
+		SecureRandom random = new SecureRandom();
+		byte[] bytes = new byte[20];
+		random.nextBytes(bytes);
+		Base32 base32 = new Base32();
+		return base32.encodeToString(bytes);
 	}
 }

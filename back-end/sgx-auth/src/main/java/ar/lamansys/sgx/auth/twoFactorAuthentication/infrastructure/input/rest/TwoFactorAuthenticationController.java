@@ -17,6 +17,9 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
+
 @RestController
 @RequestMapping("/2fa")
 @Tag(name = "Two-Factor Authentication", description = "Two-Factor Authentication")
@@ -32,9 +35,16 @@ public class TwoFactorAuthenticationController {
 	public ResponseEntity<TwoFactorAuthenticationDto> generateTwoFactorAuthenticationCodes() {
 		log.debug("Generate Two-factor Authentication codes");
 		SetTwoFactorAuthenticationBo authenticationBo = generateTwoFactorAuthentication.run();
-		TwoFactorAuthenticationDto result = new TwoFactorAuthenticationDto(authenticationBo.getSharedSecretBarCode(), authenticationBo.getSharedSecret());
+		TwoFactorAuthenticationDto result = new TwoFactorAuthenticationDto(this.generateAuthenticatorBarCode(authenticationBo), authenticationBo.getSharedSecret());
 		log.debug("Output -> {}", result);
 		return ResponseEntity.ok(result);
+	}
+
+	private String generateAuthenticatorBarCode(SetTwoFactorAuthenticationBo authenticationBo) {
+		return "otpauth://totp/"
+				+ URLEncoder.encode(authenticationBo.getIssuer() + ":" + authenticationBo.getAccount(), StandardCharsets.UTF_8).replace("+", "%20")
+				+ "?secret=" + URLEncoder.encode(authenticationBo.getSharedSecret(), StandardCharsets.UTF_8).replace("+", "%20")
+				+ "&issuer=" + URLEncoder.encode(authenticationBo.getIssuer(), StandardCharsets.UTF_8).replace("+", "%20");
 	}
 
 	@PostMapping("/confirm")

@@ -8,11 +8,16 @@ import lombok.ToString;
 @AllArgsConstructor
 @Getter
 @Setter
-@ToString
 public class SetTwoFactorAuthenticationBo {
 
-	private String sharedSecretBarCode;
+	private String account;
+
+	private String issuer;
 
 	private String sharedSecret;
 
+	@Override
+	public String toString() {
+		return "SetTwoFactorAuthenticationBo{" + "account='" + account + '\'' + ", issuer='" + issuer + '\'' + ", sharedSecret=*******}";
+	}
 }

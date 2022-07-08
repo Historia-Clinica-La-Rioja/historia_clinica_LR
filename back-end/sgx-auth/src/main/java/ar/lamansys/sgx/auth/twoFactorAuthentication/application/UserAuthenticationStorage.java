@@ -14,4 +14,6 @@ public interface UserAuthenticationStorage {
 
 	Boolean userHasTwoFactorAuthenticationEnabled(Integer userId);
 
+	String generateSecretKey();
+
 }

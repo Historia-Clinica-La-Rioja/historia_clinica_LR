@@ -1,5 +1,6 @@
-package ar.lamansys.sgx.auth.twoFactorAuthentication.application;
+package ar.lamansys.sgx.auth.twoFactorAuthentication.infrastructure.output;
 
+import ar.lamansys.sgx.auth.twoFactorAuthentication.application.CypherStorage;
 import lombok.extern.slf4j.Slf4j;
 
 import org.springframework.beans.factory.annotation.Value;
@@ -20,7 +21,7 @@ import java.util.Base64;
 
 @Service
 @Slf4j
-public class TwoFactorAuthenticationCypher {
+public class CypherStorageImpl implements CypherStorage {
 
 	private static final String SALT = "salt";
 	private static final String ALGORITHM = "AES/CBC/PKCS5Padding";
@@ -28,7 +29,7 @@ public class TwoFactorAuthenticationCypher {
 	private SecretKey secretKey;
 	private IvParameterSpec iv;
 
-	public TwoFactorAuthenticationCypher(@Value("${auth.2fa.password:}") String password) {
+	public CypherStorageImpl(@Value("${auth.2fa.password:}") String password) {
 		this.secretKey = this.generateEncryptionKey(password, SALT);
 		this.iv = this.generateIv();
 	}
@@ -48,7 +49,9 @@ public class TwoFactorAuthenticationCypher {
 
 	private IvParameterSpec generateIv() {
 		byte[] iv = new byte[16];
-		new SecureRandom().nextBytes(iv);
+		for (int i = 0; i < 16; i++) {
+			iv[i] = (byte) i;
+		}
 		return new IvParameterSpec(iv);
 	}
 
