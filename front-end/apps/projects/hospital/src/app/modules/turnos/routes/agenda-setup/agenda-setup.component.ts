@@ -59,7 +59,6 @@ export class AgendaSetupComponent implements OnInit {
 	professionals: ProfessionalDto[];
 	sectors;
 	agendaHorarioService: AgendaHorarioService;
-	professionalId: string;
 	professionalSpecialties: any[];
 
 	private editingDiaryId = null;
@@ -85,7 +84,6 @@ export class AgendaSetupComponent implements OnInit {
 		private readonly specialtyService: SpecialtyService
 
 	) {
-		this.route.paramMap.subscribe(params => this.professionalId = params.get("idProfessional"));
 		this.routePrefix = `institucion/${this.contextService.institutionId}/`;
 		this.agendaHorarioService = new AgendaHorarioService(this.dialog, this.cdr, this.TODAY, this.MONDAY, snackBarService);
 	}
@@ -99,15 +97,12 @@ export class AgendaSetupComponent implements OnInit {
 		this.form = this.formBuilder.group({
 			sectorId: [null, [Validators.required]],
 			doctorOffice: [null, [Validators.required]],
-			healthcareProfessionalId: [Number(this.professionalId), [Validators.required]],
+			healthcareProfessionalId: [null, [Validators.required]],
 			startDate: [null, [Validators.required]],
 			endDate: [null, [Validators.required]],
 			appointmentDuration: [null, [Validators.required]],
 			healthcareProfessionalSpecialtyId: [null, [Validators.required]]
 		});
-
-		if (this.professionalId)
-			this.getProfessionalSpecialties();
 
 		this.form.controls.appointmentDuration.valueChanges
 			.subscribe(newDuration => this.hourSegments = MINUTES_IN_HOUR / newDuration);
@@ -150,19 +145,20 @@ export class AgendaSetupComponent implements OnInit {
 			this.professionals = healthcareProfessionals;
 			const healthcareProfessionalId = healthcareProfessionals.find(professional => professional.id === diary.healthcareProfessionalId);
 			this.form.controls.healthcareProfessionalId.setValue(healthcareProfessionalId.id);
-
+			this.specialtyService.getAllSpecialtyByProfessional(this.contextService.institutionId, healthcareProfessionalId.id)
+				.subscribe(response => {
+					this.professionalSpecialties = response;
+					this.form.controls.healthcareProfessionalSpecialtyId.markAsTouched();
+					if(this.professionalSpecialties.find(specialty => specialty.id === diary.clinicalSpecialtyId))
+						this.form.controls.healthcareProfessionalSpecialtyId.setValue(diary.clinicalSpecialtyId);
+				})
 		});
-
-		this.professionalSpecialties = [{
-			id: diary.clinicalSpecialtyId,
-			name: diary.specialtyName,
-		}];
 
 		this.form.controls.healthcareProfessionalId.setValue(diary.healthcareProfessionalId);
 		this.form.controls.startDate.setValue(momentParseDate(diary.startDate));
 		this.form.controls.endDate.setValue(momentParseDate(diary.endDate));
 		this.form.controls.appointmentDuration.setValue(diary.appointmentDuration);
-		this.form.controls.healthcareProfessionalSpecialtyId.setValue(diary.clinicalSpecialtyId);
+
 		this.agendaHorarioService.setAppointmentDuration(diary.appointmentDuration);
 
 		this.appointmentManagement = diary.professionalAssignShift;
@@ -313,7 +309,7 @@ export class AgendaSetupComponent implements OnInit {
 	}
 
 	getProfessionalSpecialties() {
-		this.specialtyService.getAllSpecialtyByProfessional(this.contextService.institutionId, this.form.value.healthcareProfessionalId)
+		this.specialtyService.getAllSpecialtyByProfessional(this.contextService.institutionId, this.form.get("healthcareProfessionalId").value)
 			.subscribe(response => this.professionalSpecialties = response)
 	}
 
