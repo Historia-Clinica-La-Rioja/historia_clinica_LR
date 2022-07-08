@@ -139,7 +139,7 @@ export class AppointmentComponent implements OnInit {
 		});
 
 		this.formDate = this.formBuilder.group({
-			date: ['',[Validators.required]]
+			hour: ['',[Validators.required]],
 		});
 
 		this.formObservations = this.formBuilder.group({
@@ -159,9 +159,6 @@ export class AppointmentComponent implements OnInit {
 			if(!this.availableDays.includes(day))
 				this.availableDays.push(day);
 		}
-
-		// this.formDate.controls.hour.setValue(this.data.appointmentData.date);
-		// this.formDate.get('hour').setValue(new Date(this.data.appointmentData.date));
 		
 		this.appointmentService.get(this.data.appointmentData.appointmentId)
 			.subscribe(appointment => {
@@ -214,6 +211,23 @@ export class AppointmentComponent implements OnInit {
 		this.isDateFormVisible = !this.isDateFormVisible;
 	}
 
+	cancelDateForm(): void{
+		this.formDate.reset();
+		this.dateFormToggle();
+	}
+
+	openDateForm(): void{
+		this.dateFormToggle(); 
+		this.setDisableDays();
+		this.setPossibleScheduleHours(this.selectedDate);
+		this.formDate.controls.hour.setValue(this.possibleScheduleHours.find(item => {return item.getTime() ==  this.selectedDate.getTime()}));
+	}
+
+	selectDate(date: Date): void{
+		this.setPossibleScheduleHours(date);
+		this.formDate.controls.hour.setValue(this.possibleScheduleHours[0]);
+	}
+
 	setPossibleScheduleHours(date: Date){
 		this.possibleScheduleHours = [];
 		const startDate = new Date(date);
@@ -235,7 +249,9 @@ export class AppointmentComponent implements OnInit {
 
 	deleteHoursWithAppointment(){
 		for (let i = 0; i < this.data.appointments.length; i++) {
-			const index = this.possibleScheduleHours.findIndex(item => {return item.getTime() == this.data.appointments[i].start.getTime()});
+			const index = this.possibleScheduleHours.findIndex(item => {
+				return ((item.getTime() == this.data.appointments[i].start.getTime()) && (item.getTime() != this.selectedDate.getTime()))
+			});
 			if(index != -1){
 				this.possibleScheduleHours.splice(index,1);
 			}
@@ -261,7 +277,7 @@ export class AppointmentComponent implements OnInit {
 	}
 
 	updateAppointmentDate(){
-		this.selectedDate = this.formDate.get('date').value;
+		this.selectedDate = this.formDate.get('hour').value;
 		const date: DateTimeDto = {
 			date: {
 				year: this.selectedDate.getFullYear(),
@@ -274,7 +290,6 @@ export class AppointmentComponent implements OnInit {
 				seconds: this.selectedDate.getSeconds()
 			}
 		};
-		
 		this.appointmentFacade.updateDate(this.data.appointmentData.appointmentId, date).subscribe(() => {
 			this.snackBarService.showSuccess('turnos.appointment.date.UPDATE_SUCCESS');
 		}, error => {

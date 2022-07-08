@@ -151,7 +151,7 @@
 					</div>
 				</div>
 				<button type="button" mat-icon-button color="primary" *ngIf="estadoSelected === appointmentStatesIds.ASSIGNED"
-					(click)="dateFormToggle(); setDisableDays(); setPossibleScheduleHours(selectedDate)">
+					(click)="openDateForm()">
 					<mat-icon class="material-icons-outlined">edit</mat-icon>
 					<span class="mat-body strong-size">
 						{{'turnos.appointment.date.EDIT_DATE_TIME' | translate}}
@@ -160,7 +160,7 @@
 			</div>
 
 			<form [formGroup]="formDate" 
-				*ngIf="isDateFormVisible" fxLayout="column" fxLayoutGap="5px" class="dateForm"
+				*ngIf="isDateFormVisible" fxLayout="column" fxLayoutGap="5px" class="dateForm" 
 				(ngSubmit)="updateAppointmentDate()">
 				<app-datepicker 
 					[minDate]="startAgenda"
@@ -168,12 +168,12 @@
 					[dateToSetInDatepicker]="data.appointmentData.date"
 					[availableDays]="availableDays"
 					[disableDays]="disableDays"
-					(selectDate)="setPossibleScheduleHours($event)">
+					(selectDate)="selectDate($event)">
 				</app-datepicker>
 
 				<div fxLayout="row" >
 						<mat-form-field appearance="outline" class="hour">
-							<mat-select formControlName="date">
+							<mat-select formControlName="hour">
 								<mat-option [value]="possibleScheduleHour" *ngFor="let possibleScheduleHour of possibleScheduleHours">
 									{{ possibleScheduleHour | date:'shortTime' }}
 								</mat-option>
@@ -181,10 +181,10 @@
 						</mat-form-field>
 					<span class="hs"> hs.</span>
 					<div class="confirm-buttons" fxLayout="row" fxLayoutAlign="end" fxLayoutGap="15px" fxFlex="60%">
-						<button mat-stroked-button color="primary" btn-block type="button" (click)="dateFormToggle()">
+						<button mat-stroked-button color="primary" btn-block type="button" (click)="cancelDateForm()">
 							<span [translate]="'turnos.appointment.CANCEL'"></span>
 						</button>
-						<button mat-flat-button color="primary" type="submit">
+						<button mat-flat-button color="primary" type="submit" [disabled]="formDate.invalid">
 							<span [translate]="'turnos.appointment.SAVE'"></span>
 						</button>
 					</div>
