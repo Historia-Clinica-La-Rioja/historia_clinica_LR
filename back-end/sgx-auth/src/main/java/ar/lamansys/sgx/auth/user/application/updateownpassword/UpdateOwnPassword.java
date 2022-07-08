@@ -37,11 +37,11 @@ public class UpdateOwnPassword {
 	private boolean passwordIsValid(String newPassword) {
 		if (newPassword.length() < 8)
 			return false;
-		if (newPassword.split("(?=[A-Z])").length - 1 == 0)
+		if (newPassword.split("(?=[A-Z])").length == 0)
 			return false;
-		if (newPassword.split("(?=[a-z])").length - 1 == 0)
+		if (newPassword.split("(?=[a-z])").length == 0)
 			return false;
-		if (newPassword.split("(?=[0-9])").length - 1 == 0)
+		if (newPassword.split("(?=[0-9])").length == 0)
 			return false;
 
 		return true;
