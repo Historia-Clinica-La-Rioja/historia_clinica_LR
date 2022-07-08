@@ -2,6 +2,8 @@ package ar.lamansys.sgx.auth.twoFactorAuthentication.application.generateTwoFact
 
 import ar.lamansys.sgx.auth.twoFactorAuthentication.application.CypherStorage;
 import ar.lamansys.sgx.auth.twoFactorAuthentication.application.UserAuthenticationStorage;
+import ar.lamansys.sgx.auth.twoFactorAuthentication.application.exceptions.TwoFactorAuthenticationException;
+import ar.lamansys.sgx.auth.twoFactorAuthentication.application.exceptions.TwoFactorAuthenticationExceptionEnum;
 import ar.lamansys.sgx.auth.twoFactorAuthentication.domain.SetTwoFactorAuthenticationBo;
 import ar.lamansys.sgx.shared.security.UserInfo;
 
@@ -29,6 +31,9 @@ public class GenerateTwoFactorAuthentication {
 	public SetTwoFactorAuthenticationBo run() {
 		log.debug("Set two factor authentication");
 		Integer userId = UserInfo.getCurrentAuditor();
+		if (userAuthenticationStorage.userHasTwoFactorAuthenticationEnabled(userId))
+			throw new TwoFactorAuthenticationException(TwoFactorAuthenticationExceptionEnum.TWO_FACTOR_AUTHENTICATION_ALREADY_ENABLED,
+					"El usuario ya tiene la autenticación por doble factor activada");
 		String username = userAuthenticationStorage.getUsername(userId);
 		String secretKey = userAuthenticationStorage.generateSecretKey();
 		String encryptedSecret = cypher.encrypt(secretKey);
