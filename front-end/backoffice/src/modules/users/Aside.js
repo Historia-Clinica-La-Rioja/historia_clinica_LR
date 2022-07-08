@@ -4,6 +4,7 @@ import {
     useTranslate,
     useGetList,
     useNotify,
+    useRefresh,
 } from 'react-admin';
 
 import PropTypes from 'prop-types';
@@ -43,7 +44,7 @@ const Aside = ({ record, basePath }) => {
     return (
         <div className={classes.root}>
             {record && <PasswordResetList record={record} basePath={basePath} />}
-            {record && record.twoFactorAuthenticationEnabled && <TwoFactorAuthenticationList record={record} /> }
+            {record?.twoFactorAuthenticationEnabled && <TwoFactorAuthenticationList record={record} /> }
         </div>
     );
 };
@@ -141,8 +142,10 @@ const OpenPageButton = ({ actionClick }) => {
 
 const TwoFactorAuthenticationList = ({ record }) => {
     const notify = useNotify();
+    const refresh = useRefresh();
     const handleResponse = () => {
         notify('resources.users.action.twoFactorAuthenticationResetSuccess');
+        refresh();
     }
     const disableTwoFactorAuthenticationAction = () => {
         sgxFetchApiWithToken(
