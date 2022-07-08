@@ -31,7 +31,7 @@ export class BlockAgendaRangeComponent implements OnInit {
 
 	ngOnInit(): void {
 		this.blockForm = this.formBuilder.group({
-			control: [null],
+			control: [null, Validators.required],
 			blockMotive: [null, Validators.required],
 		});
 
@@ -75,7 +75,8 @@ export class BlockAgendaRangeComponent implements OnInit {
 		const init = value.init;
 		const end = value.end;
 		const appointmentBlockMotiveId = form.value.blockMotive || null;
-		return { initDateDto, endDateDto, init, end, appointmentBlockMotiveId };
+		const fullBlock = value.fullBlock;
+		return { initDateDto, endDateDto, init, end, appointmentBlockMotiveId, fullBlock };
 	}
 
 }

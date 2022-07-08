@@ -18,11 +18,12 @@
 				<mat-datepicker #endDatePicker></mat-datepicker>
 			</mat-form-field>
 		</div>
+		<mat-checkbox style="margin-bottom: 16px;" [formControl]="form.controls.fullBlock">{{ 'turnos.block.COMPLETE_RANGE' | translate }} </mat-checkbox>
 	</div>
 
 	<div fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="20px">
 		<mat-form-field appearance="outline" class="hour-selector">
-			<mat-select id="startingHour" [formControl]="form.controls.init">
+			<mat-select id="startingHour" [formControl]="form.controls.init" [disabled]="form.controls.fullBlock.value">
 				<mat-option [value]="possibleTime" *ngFor="let possibleTime of possibleStartingTime | slice:0:possibleStartingTime.length-1"
 					(click)="filterEndingTime()">
 					{{ possibleTime | viewDateDto:'time' | date:'shortTime' }}
@@ -31,7 +32,7 @@
 		</mat-form-field>
 		<span [translate]="'turnos.block.HOURS_TO'"></span>
 		<mat-form-field appearance="outline" class="hour-selector">
-			<mat-select id="endingHour" [formControl]="form.controls.end">
+			<mat-select id="endingHour" [formControl]="form.controls.end" [disabled]="form.controls.fullBlock.value">
 				<mat-option [value]="possibleTime" *ngFor="let possibleTime of possibleEndingTime">
 					{{ possibleTime | viewDateDto:'time' | date:'shortTime' }}
 				</mat-option>

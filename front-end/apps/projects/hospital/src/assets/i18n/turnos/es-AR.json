@@ -122,7 +122,9 @@
 			"HOURS_TO": "hs. a",
 			"HOURS": "hs.",
 			"MOTIVE_SELECTION_ERROR": "Por favor seleccione un motivo",
-			"CONFIRM": "CONFIRMAR"
+			"CONFIRM": "CONFIRMAR",
+			"BLOCK_COMPLETE_RANGE": "Bloquear rango horario completo",
+			"COMPLETE_RANGE": "Rango horario completo"
 		}
 	}
 }

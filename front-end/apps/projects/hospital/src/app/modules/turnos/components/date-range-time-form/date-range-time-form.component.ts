@@ -44,6 +44,7 @@ export class DateRangeTimeFormComponent implements ControlValueAccessor, OnDestr
 		endDate: [null, Validators.required],
 		init: [null, Validators.required],
 		end: [null, Validators.required],
+		fullBlock: [false, Validators.nullValidator],
 	});
 
 	onChangeSub: Subscription;

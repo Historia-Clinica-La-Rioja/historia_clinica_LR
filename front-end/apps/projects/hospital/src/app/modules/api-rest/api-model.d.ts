@@ -420,6 +420,7 @@ export interface BlockDto {
     appointmentBlockMotiveId: number;
     end: TimeDto;
     endDateDto: DateDto;
+    fullBlock: boolean;
     init: TimeDto;
     initDateDto: DateDto;
 }

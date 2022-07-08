@@ -221,8 +221,6 @@ public class DiaryController {
 		log.debug("Input parameters -> institutionId {}, diaryId {}, blockDto {}", institutionId, diaryId, blockDto);
 		DiaryBo diaryBo = diaryService.getDiary(diaryId).orElseThrow();
 
-		List<LocalTime> slots = getSlots(blockDto, diaryBo).collect(Collectors.toList());
-
 		LocalDate startingBlockingDate = localDateMapper.fromDateDto(blockDto.getInitDateDto());
 		LocalDate endingBlockingDate = localDateMapper.fromDateDto(blockDto.getEndDateDto());
 
@@ -234,14 +232,33 @@ public class DiaryController {
 
 		List<AppointmentBo> listAppointments = new ArrayList<>();
 
-		blockedDates.forEach(date -> listAppointments.addAll(slots.stream().map(slot -> mapTo(date, diaryBo, slot, blockDto))
-				.collect(Collectors.toList())));
+		if (blockDto.isFullBlock())
+			completeDiaryBlock(blockDto, diaryBo, blockedDates, listAppointments);
+		else
+			blockedDates.forEach(date -> generateBlockInterval(diaryBo, listAppointments, date, blockDto));
 
 		assertNoAppointments(diaryId, listAppointments);
 
 		listAppointments.forEach(createAppointmentService::execute);
 
 		return ResponseEntity.ok(Boolean.TRUE);
+	}
+
+	private void completeDiaryBlock(BlockDto blockDto, DiaryBo diaryBo, List<LocalDate> blockedDates, List<AppointmentBo> listAppointments) {
+		blockedDates.forEach(blockedDate -> {
+			List<DiaryOpeningHoursBo> relatedOpeningHours = diaryBo.getDiaryOpeningHours().stream()
+					.filter(diaryOpeningHours -> dayIsIncludedInOpeningHours(blockedDate, diaryOpeningHours)).collect(Collectors.toList());
+			relatedOpeningHours.forEach(openingHours -> {
+				BlockDto a = new BlockDto(localDateMapper.toDateDto(blockedDate), localDateMapper.toDateDto(blockedDate),
+						localDateMapper.toTimeDto(openingHours.getOpeningHours().getFrom()), localDateMapper.toTimeDto(openingHours.getOpeningHours().getTo()),
+						blockDto.getAppointmentBlockMotiveId());
+				generateBlockInterval(diaryBo, listAppointments, blockedDate, a);
+			});
+		});
+	}
+
+	private void generateBlockInterval(DiaryBo diaryBo, List<AppointmentBo> listAppointments, LocalDate blockedDate, BlockDto a) {
+		listAppointments.addAll(getSlots(a, diaryBo).map(slot -> mapTo(blockedDate, diaryBo, slot, a)).collect(Collectors.toList()));
 	}
 
 	@GetMapping("/hasActiveDiaries/{healthcareProfessionalId}")
@@ -265,8 +282,6 @@ public class DiaryController {
 		log.debug("Unblock -> Input parameters -> institutionId {}, diaryId {}, blockDto {}", institutionId, diaryId, unblockDto);
 		DiaryBo diaryBo = diaryService.getDiary(diaryId).orElseThrow();
 
-		List<LocalTime> slots = getSlots(unblockDto, diaryBo).collect(Collectors.toList());
-
 		LocalDate startingBlockingDate = localDateMapper.fromDateDto(unblockDto.getInitDateDto());
 		LocalDate endingBlockingDate = localDateMapper.fromDateDto(unblockDto.getEndDateDto());
 
@@ -275,15 +290,35 @@ public class DiaryController {
 
 		List<AppointmentBo> listAppointments = new ArrayList<>();
 
-		blockedDates.forEach(date -> listAppointments.addAll(slots.stream().map(slot -> findAppointment(date, diaryBo, slot))
-				.filter(Optional::isPresent)
-				.map(Optional::get)
-				.filter(this::isBlocked)
-				.collect(Collectors.toList())));
+		if (unblockDto.isFullBlock())
+			completeDiaryUnblock(unblockDto, diaryBo, blockedDates, listAppointments);
+		else
+			blockedDates.forEach(date -> generateUnblockInterval(diaryBo, listAppointments, date, unblockDto));
 
 		listAppointments.forEach(appointmentService::delete);
 
 		return ResponseEntity.ok(Boolean.TRUE);
+	}
+
+	private void completeDiaryUnblock(BlockDto unblockDto, DiaryBo diaryBo, List<LocalDate> blockedDates, List<AppointmentBo> listAppointments) {
+		blockedDates.forEach(blockedDate -> {
+			List<DiaryOpeningHoursBo> relatedOpeningHours = diaryBo.getDiaryOpeningHours().stream()
+					.filter(diaryOpeningHours -> dayIsIncludedInOpeningHours(blockedDate, diaryOpeningHours)).collect(Collectors.toList());
+			relatedOpeningHours.forEach(openingHours -> {
+				BlockDto a = new BlockDto(localDateMapper.toDateDto(blockedDate), localDateMapper.toDateDto(blockedDate),
+						localDateMapper.toTimeDto(openingHours.getOpeningHours().getFrom()), localDateMapper.toTimeDto(openingHours.getOpeningHours().getTo()),
+						unblockDto.getAppointmentBlockMotiveId());
+				generateUnblockInterval(diaryBo, listAppointments, blockedDate, a);
+			});
+		});
+	}
+
+	private void generateUnblockInterval(DiaryBo diaryBo, List<AppointmentBo> listAppointments, LocalDate blockedDate, BlockDto a) {
+		listAppointments.addAll(getSlots(a, diaryBo).map(slot -> findAppointment(blockedDate, diaryBo, slot))
+				.filter(Optional::isPresent)
+				.map(Optional::get)
+				.filter(this::isBlocked)
+				.collect(Collectors.toList()));
 	}
 
 	private Optional<AppointmentBo> findAppointment(LocalDate date, DiaryBo diaryBo, LocalTime slot) {
