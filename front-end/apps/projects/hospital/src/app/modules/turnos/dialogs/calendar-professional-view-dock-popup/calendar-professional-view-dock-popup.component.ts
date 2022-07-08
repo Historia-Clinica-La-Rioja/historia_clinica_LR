@@ -10,6 +10,7 @@ import { isBefore, parseISO, startOfToday } from 'date-fns';
 import { Subscription } from 'rxjs';
 import { HEADER_CALENDAR_PROFESSIONAL_VIEW } from '@turnos/constants/calendar-professional-view';
 import { CalendarView } from 'angular-calendar';
+import { AppointmentsFacadeService } from '@turnos/services/appointments-facade.service';
 
 const SINGLE_DIARY = 1;
 
@@ -27,7 +28,7 @@ export class CalendarProfessionalViewDockPopupComponent implements OnInit {
 	userId: number;
 	HEADER = HEADER_CALENDAR_PROFESSIONAL_VIEW;
 	STYLE = STYLE;
-	showButtonToClear =true;
+	showButtonToClear = true;
 	professionalId: number;
 	readonly calendarViewEnum = CalendarView;
 	readonly dateFormats = DatePipeFormat;
@@ -37,10 +38,11 @@ export class CalendarProfessionalViewDockPopupComponent implements OnInit {
 		private readonly healthcareProfessional: HealthcareProfessionalService,
 		public dockPopupRef: DockPopupRef,
 		private readonly changeDetectorRef: ChangeDetectorRef,
+		private readonly appointmentFacade: AppointmentsFacadeService,
 	) { }
 
 	ngOnInit(): void {
-		this.healthcareProfessional.getHealthcareProfessionalByUserId().subscribe( professionalId => {
+		this.healthcareProfessional.getHealthcareProfessionalByUserId().subscribe(professionalId => {
 			this.professionalId = professionalId;
 			this.agendaSearchService.search(professionalId);
 			this.agendaFiltersSubscription = this.agendaSearchService.getAgendas$().subscribe((data: AgendaOptionsData) => {
@@ -49,7 +51,7 @@ export class CalendarProfessionalViewDockPopupComponent implements OnInit {
 					this.filters = data.filteredBy;
 				}
 			});
-		});	
+		});
 	}
 
 	changeAgendaSelected(event: MatOptionSelectionChange, agenda: DiaryListDto): void {
@@ -72,11 +74,11 @@ export class CalendarProfessionalViewDockPopupComponent implements OnInit {
 
 	private filterAgendas(diaries: DiaryListDto[]): void {
 		this.agendas = [];
-		if (diaries?.length) 
-		diaries.forEach(diary => {
-			if (isBefore(startOfToday(), parseISO(diary.endDate)))
-				this.agendas.push(diary)
-		});
+		if (diaries?.length)
+			diaries.forEach(diary => {
+				if (isBefore(startOfToday(), parseISO(diary.endDate)))
+					this.agendas.push(diary)
+			});
 	}
 
 	clear(): void {

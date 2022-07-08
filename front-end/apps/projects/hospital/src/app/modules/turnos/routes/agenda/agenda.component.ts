@@ -116,7 +116,7 @@ export class AgendaComponent implements OnInit, OnDestroy, OnChanges {
 				this.loading = false;
 			}
 		});
-
+		this.appointmentFacade.setInterval();
 		this.permissionsService.hasContextAssignments$(ROLES_TO_CREATE).subscribe(hasRole => this.hasRoleToCreate = hasRole);
 	}
 

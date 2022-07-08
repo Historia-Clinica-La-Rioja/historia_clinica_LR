@@ -64,6 +64,7 @@ export class AppointmentsFacadeService {
 	private appointmenstEmitter = new ReplaySubject<CalendarEvent[]>(1);
 	private appointments$: Observable<CalendarEvent[]>;
 
+	private intervalId: any;
 	private professionalId: number;
 
 	constructor(
@@ -103,7 +104,13 @@ export class AppointmentsFacadeService {
 			});
 	}
 
-	loadingAppointments = setInterval(() => this.loadAppointments(), 20000);
+	setInterval() {
+		this.intervalId = setInterval(() => this.loadAppointments(), 20000);
+	}
+
+	clearInterval() {
+		clearInterval(this.intervalId);
+	}
 
 	private getViewName(person: BasicPersonalDataDto): string {
 		return person ? [person.lastName, this.patientNameService.getPatientName(person.firstName, person.nameSelfDetermination)].
