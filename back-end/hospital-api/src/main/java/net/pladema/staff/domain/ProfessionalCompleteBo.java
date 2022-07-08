@@ -27,6 +27,6 @@ public class ProfessionalCompleteBo {
 		this.personId = personId;
 		this.firstName = firstName;
         this.lastName = lastName;
-		this.nameSelfDetermination = nameSelfDetermination;
+		this.nameSelfDetermination = (nameSelfDetermination == null || nameSelfDetermination.isEmpty() || nameSelfDetermination.isBlank()) ? firstName : nameSelfDetermination;
     }
 }
