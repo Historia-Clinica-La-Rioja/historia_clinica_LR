@@ -16,6 +16,7 @@ import { SearchCreateComponent } from './component/search-create/search-create.c
 import { ViewPatientDetailComponent } from './component/view-patient-detail/view-patient-detail.component';
 import { AssignedAppointmentsComponent } from './component/assigned-appointments/assigned-appointments.component';
 import { CardProfessionsComponent } from './component/card-professions/card-professions.component';
+import { ProfessionSpecialtiesFormComponent } from './component/profession-specialties-form/profession-specialties-form.component';
 // dialogs
 import { ReportsComponent } from './dialogs/reports/reports.component';
 import { ScanPatientComponent } from './dialogs/scan-patient/scan-patient.component';
@@ -42,6 +43,7 @@ import { ArtComponent } from './dialogs/art/art.component';
 		SearchCreateComponent,
 		ViewPatientDetailComponent,
 		AssignedAppointmentsComponent,
+		ProfessionSpecialtiesFormComponent,
 		// dialogs
 		EditPatientComponent,
 		ScanPatientComponent,
@@ -55,7 +57,7 @@ import { ArtComponent } from './dialogs/art/art.component';
 		MedicalCoverageComponent,
 	  	HealthInsuranceComponent,
 		PrivateHealthInsuranceComponent,
-  		ArtComponent
+  		ArtComponent,
 	],
     imports: [
         FormsModule,
