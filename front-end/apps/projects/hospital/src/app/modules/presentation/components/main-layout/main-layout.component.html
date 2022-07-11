@@ -1,5 +1,5 @@
-<div class="layout-container" [class.layout-is-mobile]="mobileQuery.matches">
-	<app-bar *ngIf="menuItems" [position]="mobileQuery.matches ? 'fixed' : 'static'">
+<div class="layout-container" [class.layout-is-mobile]="mobileQuery.matches" >
+	<app-bar *ngIf="menuItems" [position]="mobileQuery.matches ? 'fixed' : 'static'" (mouseover)="toggleSidebarHoverOut()" >
 		<ng-container *ngIf="mobileQuery.matches else menuDesktop">
 			<button id="menu" mat-icon-button (click)="sidenav.toggle()">
 				<mat-icon color="primary">menu</mat-icon>
@@ -14,11 +14,10 @@
 
 	<mat-sidenav-container class="layout-sidenav-container" [style.marginTop.px]="mobileQuery.matches ? 57 : 0">
 
-		<mat-sidenav #sidenav [(opened)]="opened" (mouseover)="toggleSidebarHover()" (mouseout)="toggleSidebarHover()"
-			[mode]="mobileQuery.matches ? 'over' : 'side'" [fixedInViewport]="mobileQuery.matches" fixedTopGap="57">
+		<mat-sidenav #sidenav [(opened)]="opened" [mode]="mobileQuery.matches ? 'over' : 'side'"
+			[fixedInViewport]="mobileQuery.matches" fixedTopGap="57" (mouseover)="toggleSidebarHoverOver()">
 
 			<div class="custom-container">
-
 				<div class="top">
 					<ng-content *ngIf="isCollapsed else locationInfo" select="[location-info-min]"></ng-content>
 					<ng-template #locationInfo>
@@ -29,7 +28,6 @@
 				</div>
 
 				<div class="bottom">
-
 					<div class="informative-items">
 						<ng-content *ngIf="isCollapsed else accountInfo" select="[account-info-min]"></ng-content>
 						<ng-template #accountInfo>
@@ -43,10 +41,9 @@
 					</div>
 				</div>
 			</div>
-
 		</mat-sidenav>
 
-		<mat-sidenav-content [style.margin-left.px]="!mobileQuery.matches && menuItems ? marginLeft : 0">
+		<mat-sidenav-content (mouseover)="toggleSidebarHoverOut()" [style.margin-left.px]="!mobileQuery.matches && menuItems ? marginLeft : 0">
 			<div class="panel">
 				<router-outlet></router-outlet>
 			</div>

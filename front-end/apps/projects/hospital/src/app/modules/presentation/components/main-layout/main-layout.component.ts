@@ -52,15 +52,21 @@ export class MainLayoutComponent implements OnDestroy {
 
 	toggleSidebarBlock() {
 		this.isCollapsedBolck = !this.isCollapsedBolck;
-		this.isCollapsed = !this.isCollapsed;
-		this.marginLeft = this.isCollapsed ? MARGIN_LEFT_COLLAPSED : MARGIN_LEFT_NOT_COLLAPSED;
+		this.isCollapsed = false;
+		this.marginLeft = MARGIN_LEFT_NOT_COLLAPSED;
 	}
 
-	toggleSidebarHover() {
+	toggleSidebarHoverOver() {
 		if (!this.isCollapsedBolck) {
-			this.isCollapsed = !this.isCollapsed;
-			this.marginLeft = this.isCollapsed ? MARGIN_LEFT_COLLAPSED : MARGIN_LEFT_NOT_COLLAPSED;
+			this.isCollapsed = false;
+			this.marginLeft = MARGIN_LEFT_NOT_COLLAPSED;
 		}
 	}
 
+	toggleSidebarHoverOut() {
+		if (!this.isCollapsedBolck) {
+			this.isCollapsed = true;
+			this.marginLeft = MARGIN_LEFT_COLLAPSED;
+		}
+	}
 }

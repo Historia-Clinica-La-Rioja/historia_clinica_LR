@@ -1,6 +1,13 @@
 <ng-container *ngIf="(menuItems$ | async) as menuItems; else loading">
 	<app-main-layout [menuItems]="menuItems">
+		<app-user-badge account-info-min
+			[hideName]="true"
+			[userInfo]="userInfo"
+			[routerLink]="userProfileLink"
+			routerLinkActive="headers-card-background"
+		></app-user-badge>
 		<app-user-badge account-info
+			[hideName]="false"
 			[userInfo]="userInfo"
 			[routerLink]="userProfileLink"
 			routerLinkActive="headers-card-background"
