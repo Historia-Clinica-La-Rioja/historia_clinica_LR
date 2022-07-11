@@ -135,6 +135,13 @@ public class AppointmentServiceImpl implements AppointmentService {
 		return res.map(AppointmentBo::newFromAppointment);
 	}
 
+	public boolean existAppointment(Integer diaryId, LocalDate date, LocalTime hour) {
+		log.debug("Input parameters -> diaryId {}, date {}, hour {}", diaryId, date, hour);
+		boolean result = appointmentRepository.existAppointment(diaryId, date, hour);
+		log.debug(OUTPUT, result);
+		return result;
+	}
+
 	@Override
 	public boolean updateState(Integer appointmentId, short appointmentStateId, Integer userId, String reason) {
 		log.debug("Input parameters -> appointmentId {}, appointmentStateId {}, userId {}, reason {}", appointmentId, appointmentStateId, userId, reason);

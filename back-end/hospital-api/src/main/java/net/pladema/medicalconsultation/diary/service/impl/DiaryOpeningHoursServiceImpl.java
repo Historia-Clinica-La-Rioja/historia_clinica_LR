@@ -146,6 +146,16 @@ public class DiaryOpeningHoursServiceImpl implements DiaryOpeningHoursService {
         return result;
     }
 
+	@Override
+	public Collection<DiaryOpeningHoursBo> getDiaryOpeningHours(Integer diaryId) {
+		LOG.debug("Input parameters -> diaryId {} ", diaryId);
+		Collection<DiaryOpeningHoursBo> result = new ArrayList<>();
+		List<DiaryOpeningHoursVo> resultQuery = diaryOpeningHoursRepository.getDiaryOpeningHours(diaryId);
+		result = resultQuery.stream().map(this::createDiaryOpeningHoursBo).collect(Collectors.toList());
+		LOG.debug(OUTPUT, result);
+		return result;
+	}
+
     private DiaryOpeningHoursBo createDiaryOpeningHoursBo(DiaryOpeningHoursVo diaryOpeningHoursVo) {
         LOG.debug("Input parameters -> diaryOpeningHoursVo {} ", diaryOpeningHoursVo);
         DiaryOpeningHoursBo result = new DiaryOpeningHoursBo();

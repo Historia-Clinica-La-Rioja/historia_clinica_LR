@@ -1,5 +1,7 @@
 package net.pladema.medicalconsultation.appointment.service.impl;
 
+import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
@@ -8,9 +10,16 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.function.Function;
 
+import javax.validation.ConstraintViolationException;
 import javax.validation.ValidationException;
 
-import net.pladema.medicalconsultation.diary.service.DiaryAssociatedProfessionalService;
+import net.pladema.medicalconsultation.appointment.service.impl.exceptions.UpdateAppointmentDateException;
+import net.pladema.medicalconsultation.appointment.service.impl.exceptions.UpdateAppointmentDateExceptionEnum;
+import net.pladema.medicalconsultation.diary.repository.entity.OpeningHours;
+import net.pladema.medicalconsultation.diary.service.DiaryOpeningHoursService;
+import net.pladema.medicalconsultation.diary.service.domain.DiaryOpeningHoursBo;
+
+import net.pladema.medicalconsultation.diary.service.domain.OpeningHoursBo;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -38,7 +47,9 @@ public class AppointmentValidatorServiceImpl implements AppointmentValidatorServ
 
     private final Collection<Short> statesWithReason;
 
-    private final DiaryService diaryService;
+	private final DiaryService diaryService;
+	private final DiaryOpeningHoursService diaryOpeningHoursService;
+
     private final HealthcareProfessionalService healthcareProfessionalService;
     private final AppointmentService appointmentService;
 
@@ -47,14 +58,13 @@ public class AppointmentValidatorServiceImpl implements AppointmentValidatorServ
     private final Function<Integer, Boolean> hasProfessionalRole;
 
     public AppointmentValidatorServiceImpl(
-            DiaryService diaryService,
-            HealthcareProfessionalService healthcareProfessionalService,
-            AppointmentService appointmentService,
-            LoggedUserExternalService loggedUserExternalService,
-			DiaryAssociatedProfessionalService diaryAssociatedProfessionalService
+			DiaryService diaryService, DiaryOpeningHoursService diaryOpeningHoursService, HealthcareProfessionalService healthcareProfessionalService,
+			AppointmentService appointmentService,
+			LoggedUserExternalService loggedUserExternalService
     ) {
         this.diaryService = diaryService;
-        this.healthcareProfessionalService = healthcareProfessionalService;
+		this.diaryOpeningHoursService = diaryOpeningHoursService;
+		this.healthcareProfessionalService = healthcareProfessionalService;
         this.appointmentService = appointmentService;
 		this.diaryAssociatedProfessionalService = diaryAssociatedProfessionalService;
         this.hasAdministrativeRole = loggedUserExternalService.hasAnyRoleInstitution(
@@ -105,6 +115,40 @@ public class AppointmentValidatorServiceImpl implements AppointmentValidatorServ
     private boolean validStateTransition(short appointmentStateId, AppointmentBo apmt) {
         return validStates.get(apmt.getAppointmentStateId()).contains(appointmentStateId);
     }
+
+	public boolean validateDateUpdate(Integer institutionId, Integer appointmentId, LocalDate date, LocalTime time){
+		LOG.debug("Input parameters -> appointmentId {}, date {}, time {}", appointmentId, date, time);
+		Optional<DiaryBo> diary = diaryService.getDiaryByAppointment(appointmentId);
+		Optional<AppointmentBo> appointmentBo = appointmentService.getAppointment(appointmentId);
+
+		if ((diary.get().getStartDate().isAfter(date)) || (diary.get().getEndDate().isBefore(date))){
+			throw new UpdateAppointmentDateException(UpdateAppointmentDateExceptionEnum.APPOINTMENT_DATE_OUT_OF_DIARY_RANGE, String.format("La fecha del turno se encuentra fuera del rango horario de la agenda."));
+		}
+		if (appointmentBo.get().getAppointmentStateId() != 1){
+			throw new UpdateAppointmentDateException(UpdateAppointmentDateExceptionEnum.APPOINTMENT_STATE_INVALID, String.format("El estado del turno es invalido."));
+		}
+		System.out.println("Diary ID: "+appointmentBo.get().getDiaryId());
+		System.out.println("Date: "+date);
+		System.out.println("Hour: "+time);
+
+		if(appointmentService.existAppointment(appointmentBo.get().getDiaryId(),date,time)) {
+			throw new UpdateAppointmentDateException(UpdateAppointmentDateExceptionEnum.APPOINTMENT_DATE_ALREADY_ASSIGNED, String.format("Ya existe un turno asignado en ese horario."));
+		}
+
+		Collection<DiaryOpeningHoursBo> diaryOpeningHours = diaryOpeningHoursService.getDiaryOpeningHours(diary.get().getId());
+		for (DiaryOpeningHoursBo doh: diaryOpeningHours) {
+			OpeningHoursBo oh = doh.getOpeningHours();
+			if(oh.getDayWeekId() == date.getDayOfWeek().getValue()){
+				if((oh.getFrom().isBefore(time)) && (oh.getTo().isAfter(time))) {
+					return true;
+				}
+				else{
+					throw new UpdateAppointmentDateException(UpdateAppointmentDateExceptionEnum.APPOINTMENT_TIME_OUT_OF_OPENING_HOURS, String.format("El horario del turno se encuentra fuera del horario de la agenda."));
+				}
+			}
+		}
+		throw new UpdateAppointmentDateException(UpdateAppointmentDateExceptionEnum.APPOINTMENT_DAY_OF_WEEK_INVALID, String.format("La fecha del turno se encuentra en un dia de la semana sin agenda."));
+	}
 
     private static Map<Short, Collection<Short>> buildValidStates() {
         return Map.of(

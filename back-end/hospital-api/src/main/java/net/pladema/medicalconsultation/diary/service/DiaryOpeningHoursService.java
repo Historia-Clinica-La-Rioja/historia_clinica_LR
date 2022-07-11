@@ -17,7 +17,8 @@ public interface DiaryOpeningHoursService {
 
     List<OccupationBo> findAllWeeklyDoctorsOfficeOccupation(Integer doctorOfficeId, LocalDate startDate, LocalDate endDate, Integer ignoreDiaryId) throws DiaryOpeningHoursException;
 
-    Collection<DiaryOpeningHoursBo> getDiariesOpeningHours(List<Integer> diaryIds);
+	Collection<DiaryOpeningHoursBo> getDiariesOpeningHours(List<Integer> diaryIds);
+	Collection<DiaryOpeningHoursBo> getDiaryOpeningHours(Integer diaryId);
 
     List<Short> overlappingDays(@NotNull LocalDate rangeStart1, @NotNull LocalDate rangeEnd1,
                                 @NotNull LocalDate rangeStart2, @NotNull LocalDate rangeEnd2);

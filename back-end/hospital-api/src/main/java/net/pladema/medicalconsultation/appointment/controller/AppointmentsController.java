@@ -342,6 +342,7 @@ public class AppointmentsController {
 		log.debug("Input parameters -> institutionId {},appointmentId {}, fullDate {}", institutionId, appointmentId, fullDate);
 		LocalDate date = dateMapper.fromDateDto(fullDate.getDate());
 		LocalTime time = dateMapper.fromTimeDto(fullDate.getTime());
+		appointmentValidatorService.validateDateUpdate(institutionId, appointmentId, date, time);
 		boolean result = appointmentService.updateDate(appointmentId, date, time);
 		log.debug(OUTPUT, result);
 		return ResponseEntity.ok().body(result);

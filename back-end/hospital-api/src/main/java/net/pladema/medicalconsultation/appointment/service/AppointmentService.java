@@ -20,6 +20,7 @@ public interface AppointmentService {
 	Collection<AppointmentBo> getAppointmentsByProfessionalInInstitution(Integer healthcareProfessionalId, Integer institutionId);
 
 	boolean existAppointment(Integer diaryId, Integer openingHoursId, LocalDate date, LocalTime hour);
+	boolean existAppointment(Integer diaryId, LocalDate date, LocalTime hour);
 
 	Optional<AppointmentBo> findAppointmentBy(Integer diaryId, LocalDate date, LocalTime hour);
 

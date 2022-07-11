@@ -46,7 +46,19 @@ public interface DiaryOpeningHoursRepository extends JpaRepository<DiaryOpeningH
             "ORDER BY oh.dayWeekId, oh.from")
     List<DiaryOpeningHoursVo> getDiariesOpeningHours(@Param("diaryIds") List<Integer> diaryIds);
 
-    @Transactional(readOnly = true)
+	@Transactional(readOnly = true)
+	@Query("SELECT NEW net.pladema.medicalconsultation.diary.repository.domain.DiaryOpeningHoursVo( " +
+			"d.id, oh, doh.medicalAttentionTypeId, doh.overturnCount, doh.externalAppointmentsAllowed) " +
+			"FROM DiaryOpeningHours AS doh " +
+			"JOIN Diary AS d ON ( doh.pk.diaryId = d.id ) " +
+			"JOIN OpeningHours AS oh ON ( doh.pk.openingHoursId = oh.id ) " +
+			"WHERE doh.pk.diaryId = :diaryId " +
+			"AND d.deleteable.deleted = false " +
+			"ORDER BY oh.dayWeekId, oh.from")
+	List<DiaryOpeningHoursVo> getDiaryOpeningHours(@Param("diaryId") Integer diaryId);
+
+
+	@Transactional(readOnly = true)
     @Query( "SELECT (case when count(doh) > 0 then true else false end) " +
             "FROM DiaryOpeningHours AS doh " +
             "WHERE doh.pk.diaryId = :diaryId " +
