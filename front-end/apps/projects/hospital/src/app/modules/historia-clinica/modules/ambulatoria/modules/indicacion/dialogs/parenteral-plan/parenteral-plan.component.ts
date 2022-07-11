@@ -153,7 +153,8 @@ export class ParenteralPlanComponent implements OnInit {
 			chronic: false,
 			diary: false,
 			startDateTime: setStartTime(this.indicationDate),
-			quantity: this.toQuantityDto(quantityValue)
+			quantity: this.toQuantityDto(quantityValue),
+			periodUnit: startTime ? "d" : null
 		}
 
 		function setStartTime(indicationDate: Date): DateTimeDto {
