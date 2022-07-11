@@ -5,6 +5,8 @@ import { MasterDataInterface } from '../../../api-rest/api-model';
 import { MedicalConsultationMasterdataService } from '../../../api-rest/services/medical-consultation-masterdata.service';
 import { MEDICAL_ATTENTION } from '../../constants/descriptions';
 import { REMOVEATTENTION } from '@core/constants/validation-constants';
+import { FeatureFlagService } from "@core/services/feature-flag.service";
+import { AppFeature } from "@api-rest/api-model";
 
 @Component({
 	selector: 'app-new-attention',
@@ -20,13 +22,18 @@ export class NewAttentionComponent implements OnInit {
 	possibleEndingScheduleHours: Date[];
 
 	availableForBooking: boolean;
+	isEnableOnlineAppointments: boolean = false;
 
 	constructor(
 		public dialogRef: MatDialogRef<NewAttentionComponent>,
 		private readonly formBuilder: FormBuilder,
 		private readonly medicalConsultationMasterdataService: MedicalConsultationMasterdataService,
 		@Inject(MAT_DIALOG_DATA) public data: NewAttentionElements,
-	) { }
+		private readonly featureFlagService: FeatureFlagService
+	) {
+
+		this.featureFlagService.isActive(AppFeature.BACKOFFICE_MOSTRAR_ABM_RESERVA_TURNOS).subscribe(isEnabled => this.isEnableOnlineAppointments = isEnabled);
+	}
 
 
 	ngOnInit(): void {
