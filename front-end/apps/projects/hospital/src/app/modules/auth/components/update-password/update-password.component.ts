@@ -58,4 +58,8 @@ export class UpdatePasswordComponent implements OnInit {
 		return this.form.get(control).hasError(type);
 	}
 
+	updateValidation(){
+		this.apiError = null;
+	}
+
 }
