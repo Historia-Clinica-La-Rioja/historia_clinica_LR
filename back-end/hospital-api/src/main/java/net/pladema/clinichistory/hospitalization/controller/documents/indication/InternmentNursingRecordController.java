@@ -32,7 +32,7 @@ public class InternmentNursingRecordController {
 
 
 	@GetMapping()
-	@PreAuthorize("hasPermission(#institutionId, 'ESPECIALISTA_MEDICO, ESPECIALISTA_EN_ODONTOLOGIA, PROFESIONAL_DE_SALUD, ENFERMERO')")
+	@PreAuthorize("hasPermission(#institutionId, 'ESPECIALISTA_MEDICO, ESPECIALISTA_EN_ODONTOLOGIA, PROFESIONAL_DE_SALUD, ENFERMERO, PERSONAL_DE_FARMACIA')")
 	public ResponseEntity<List<NursingRecordDto>> getInternmentEpisodeNursingRecords(@PathVariable(name = "institutionId") Integer institutionId, @PathVariable(name = "internmentEpisodeId") Integer internmentEpisodeId) {
 		log.debug("Input parameters -> institutionId {}, internmentEpisodeId {}", institutionId, internmentEpisodeId);
 		List<NursingRecordDto> result = internmentNursingRecordService.getInternmentEpisodeNursingRecords(internmentEpisodeId);
