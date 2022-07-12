@@ -277,21 +277,22 @@ export class AppointmentComponent implements OnInit {
 	}
 
 	updateAppointmentDate(){
-		this.selectedDate = this.formDate.get('hour').value;
+		const dateAux = this.formDate.get('hour').value;
 		const date: DateTimeDto = {
 			date: {
-				year: this.selectedDate.getFullYear(),
-				month: this.selectedDate.getMonth() + 1,
-				day: this.selectedDate.getDate()
+				year: dateAux.getFullYear(),
+				month: dateAux.getMonth() + 1,
+				day: dateAux.getDate()
 			},
 			time: {
-				hours: this.selectedDate.getHours(),
-				minutes: this.selectedDate.getMinutes(),
-				seconds: this.selectedDate.getSeconds()
+				hours: dateAux.getHours(),
+				minutes: dateAux.getMinutes(),
+				seconds: dateAux.getSeconds()
 			}
 		};
 		this.appointmentFacade.updateDate(this.data.appointmentData.appointmentId, date).subscribe(() => {
 			this.snackBarService.showSuccess('turnos.appointment.date.UPDATE_SUCCESS');
+			this.selectedDate = dateAux;
 		}, error => {
 			processErrors(error, (msg) => this.snackBarService.showError(msg));
 		});
