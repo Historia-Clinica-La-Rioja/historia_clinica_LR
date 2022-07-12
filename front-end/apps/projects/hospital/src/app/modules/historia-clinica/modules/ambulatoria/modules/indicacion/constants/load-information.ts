@@ -37,7 +37,7 @@ export function showFrequency(indication: any): ExtraInfo[] {
 		}]
 }
 
-export function loadExtraInfoPharmaco(pharmaco: any, loadFrequency: boolean): ExtraInfo[] {
+export function loadExtraInfoPharmaco(pharmaco: any, loadFrequency: boolean, vias?: any[]): ExtraInfo[] {
 	const extra_info = [];
 	if (pharmaco.dosage.quantity?.value) {
 		extra_info.push({
@@ -45,10 +45,16 @@ export function loadExtraInfoPharmaco(pharmaco: any, loadFrequency: boolean): Ex
 			content: pharmaco.dosage.quantity.value + " " + pharmaco.dosage.quantity.unit + " "
 		})
 	}
-	extra_info.push({
-		title: 'indicacion.internment-card.sections.indication-extra-description.VIA',
-		content: pharmaco.via
-	})
+	if (pharmaco.viaId)
+		extra_info.push({
+			title: 'indicacion.internment-card.sections.indication-extra-description.VIA',
+			content: vias.find(v => v.id === pharmaco.viaId)?.description
+		})
+	else
+		extra_info.push({
+			title: 'indicacion.internment-card.sections.indication-extra-description.VIA',
+			content: pharmaco.via
+		})
 	if (loadFrequency)
 		return extra_info.concat(showFrequency(pharmaco.dosage));
 	return extra_info;
