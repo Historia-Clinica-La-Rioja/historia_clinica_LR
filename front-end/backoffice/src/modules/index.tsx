@@ -140,6 +140,7 @@ const resources = (permissions: SGXPermissions) => [
     <Resource name="snomedrelatedgroups"  {...snomedrelatedgroups} />,
     <Resource name="snomedconcepts" {...snomedconcepts} />,
     <Resource name="internmentepisodes" />,
+    <Resource name="healthcareprofessionals" />,
 ];
 
 export default resources;
