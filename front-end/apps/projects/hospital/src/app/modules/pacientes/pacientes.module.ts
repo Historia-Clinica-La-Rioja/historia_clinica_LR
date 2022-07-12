@@ -29,6 +29,7 @@ import { MedicalCoverageComponent } from "@pacientes/dialogs/medical-coverage/me
 import { HealthInsuranceComponent } from './dialogs/health-insurance/health-insurance.component';
 import { PrivateHealthInsuranceComponent } from './dialogs/private-health-insurance/private-health-insurance.component';
 import { ArtComponent } from './dialogs/art/art.component';
+import { EditPrefessionsSpecialtiesComponent } from './dialogs/edit-prefessions-specialties/edit-prefessions-specialties.component';
 
 @NgModule({
 	declarations: [
@@ -58,6 +59,7 @@ import { ArtComponent } from './dialogs/art/art.component';
 	  	HealthInsuranceComponent,
 		PrivateHealthInsuranceComponent,
   		ArtComponent,
+   		EditPrefessionsSpecialtiesComponent,
 	],
     imports: [
         FormsModule,
