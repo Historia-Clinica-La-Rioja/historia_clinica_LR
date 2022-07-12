@@ -1,4 +1,11 @@
-<h1 mat-dialog-title>{{ 'turnos.block.TITLE' | translate }}</h1>
+<div>
+	<div align="end">
+		<button id="cancel_button" name="cancel_button" mat-icon-button (click)="closeDialog()">
+			<mat-icon>close</mat-icon>
+		</button>
+	</div>
+	<h1 mat-dialog-title>{{ 'turnos.block.TITLE' | translate }}</h1>
+</div>
 
 <div mat-dialog-content>
 

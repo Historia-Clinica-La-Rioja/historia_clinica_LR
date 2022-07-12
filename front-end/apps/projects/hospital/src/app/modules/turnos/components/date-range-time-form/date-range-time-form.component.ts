@@ -125,23 +125,34 @@ export class DateRangeTimeFormComponent implements ControlValueAccessor, OnDestr
 	private generateTimeInterval(firstTime: TimeDto, lastTime: TimeDto): TimeDto[] {
 		const possibleTimes: TimeDto[] = [];
 		possibleTimes[0] = firstTime;
-		let iterations = (lastTime.hours - firstTime.hours) * (MINUTES_IN_HOUR / this.selectedAgenda.appointmentDuration) + (lastTime.minutes - firstTime.minutes) / (MINUTES_IN_HOUR / this.selectedAgenda.appointmentDuration);
-		if (firstTime.hours !== 0) {
-			iterations = iterations - 2;
-		}
-		for (var currentTimeIteration = 1; currentTimeIteration < iterations; currentTimeIteration++) {
-			if (possibleTimes[currentTimeIteration - 1].minutes === MINUTES_IN_HOUR - this.selectedAgenda.appointmentDuration)
-				possibleTimes.push({
-					hours: possibleTimes[currentTimeIteration - 1].hours + 1,
+		let iterationTime = {
+			hours: firstTime.hours,
+			minutes: firstTime.minutes
+		};
+		let possibleTimeIterationIndex = 1;
+		let lastMinutesLimit;
+
+		lastTime.hours === 23 && lastTime.minutes === 59 ? lastMinutesLimit = 30 : lastMinutesLimit = lastTime.minutes;
+
+		while ((iterationTime.hours < lastTime.hours || iterationTime.minutes < lastMinutesLimit)) {
+			if (possibleTimes[possibleTimeIterationIndex - 1].minutes === MINUTES_IN_HOUR - this.selectedAgenda.appointmentDuration) {
+				iterationTime = {
+					hours: possibleTimes[possibleTimeIterationIndex - 1].hours + 1,
 					minutes: 0
-				});
-			else
-				possibleTimes.push({
-					hours: possibleTimes[currentTimeIteration - 1].hours,
-					minutes: possibleTimes[currentTimeIteration - 1].minutes + this.selectedAgenda.appointmentDuration
-				 });
+				};
+			}
+			else {
+				iterationTime = {
+					hours: possibleTimes[possibleTimeIterationIndex - 1].hours,
+					minutes: possibleTimes[possibleTimeIterationIndex - 1].minutes + this.selectedAgenda.appointmentDuration
+				};
+			}
+			possibleTimes.push(iterationTime);
+			possibleTimeIterationIndex++;
 		}
-		possibleTimes[currentTimeIteration] = lastTime;
+		if (possibleTimes.findIndex(time => time.hours === lastTime.hours && time.minutes === lastTime.minutes) === -1) {
+			possibleTimes.push(lastTime);
+		}
 		return possibleTimes;
 	}
 

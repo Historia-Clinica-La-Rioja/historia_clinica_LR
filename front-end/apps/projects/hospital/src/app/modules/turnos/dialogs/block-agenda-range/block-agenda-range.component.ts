@@ -79,4 +79,8 @@ export class BlockAgendaRangeComponent implements OnInit {
 		return { initDateDto, endDateDto, init, end, appointmentBlockMotiveId, fullBlock };
 	}
 
+	closeDialog() {
+		this.dialogRef.close();
+	}
+
 }

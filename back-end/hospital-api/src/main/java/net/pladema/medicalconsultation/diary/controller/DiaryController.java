@@ -258,7 +258,7 @@ public class DiaryController {
 	}
 
 	private void generateBlockInterval(DiaryBo diaryBo, List<AppointmentBo> listAppointments, LocalDate blockedDate, BlockDto a) {
-		listAppointments.addAll(getSlots(a, diaryBo).map(slot -> mapTo(blockedDate, diaryBo, slot, a)).collect(Collectors.toList()));
+		listAppointments.addAll(getSlots(a, diaryBo).stream().map(slot -> mapTo(blockedDate, diaryBo, slot, a)).collect(Collectors.toList()));
 	}
 
 	@GetMapping("/hasActiveDiaries/{healthcareProfessionalId}")
@@ -314,7 +314,7 @@ public class DiaryController {
 	}
 
 	private void generateUnblockInterval(DiaryBo diaryBo, List<AppointmentBo> listAppointments, LocalDate blockedDate, BlockDto a) {
-		listAppointments.addAll(getSlots(a, diaryBo).map(slot -> findAppointment(blockedDate, diaryBo, slot))
+		listAppointments.addAll(getSlots(a, diaryBo).stream().map(slot -> findAppointment(blockedDate, diaryBo, slot))
 				.filter(Optional::isPresent)
 				.map(Optional::get)
 				.filter(this::isBlocked)
@@ -327,15 +327,23 @@ public class DiaryController {
 				slot);
 	}
 
-	private Stream<LocalTime> getSlots(BlockDto blockDto, DiaryBo diaryBo) {
+	private List<LocalTime> getSlots(BlockDto blockDto, DiaryBo diaryBo) {
 		var appointmentDuration = diaryBo.getAppointmentDuration();
 		var localTimeInit = LocalTime.of(blockDto.getInit().getHours(), blockDto.getInit().getMinutes());
 		var localTimeEnd = LocalTime.of(blockDto.getEnd().getHours(), blockDto.getEnd().getMinutes());
 
 		assertTimeLimits(localTimeInit, localTimeEnd, appointmentDuration);
 
-		return Stream.iterate(localTimeInit, d -> d.plusMinutes(appointmentDuration))
-				.limit(ChronoUnit.MINUTES.between(localTimeInit, localTimeEnd) / appointmentDuration);
+		var slots = Stream.iterate(localTimeInit, d -> d.plusMinutes(appointmentDuration))
+				.limit(ChronoUnit.MINUTES.between(localTimeInit, localTimeEnd) / appointmentDuration)
+				.collect(Collectors.toList());
+
+		var lastTime = slots.get(slots.size()-1).plusMinutes(appointmentDuration);
+
+		if (!slots.contains(lastTime))
+			slots.add(lastTime);
+
+		return slots;
 	}
 
 	private boolean isBlocked(AppointmentBo ap) {
@@ -353,7 +361,7 @@ public class DiaryController {
 			throw new ConstraintViolationException("La hora de inicio no es múltiplo de la duración del turno.",
 					new HashSet(Collections.singleton("La hora de inicio no es múltiplo de la duración del turno.")));
 
-		if(localTimeEnd.getMinute() % appointmentDuration != 0)
+		if(localTimeEnd.getMinute() % appointmentDuration != 0 && (localTimeEnd.getMinute() != 59 && localTimeEnd.getHour() != 23))
 			throw new ConstraintViolationException("La hora de fin no es múltiplo de la duración del turno.",
 					new HashSet(Collections.singleton("La hora de fin no es múltiplo de la duración del turno.")));
 	}
