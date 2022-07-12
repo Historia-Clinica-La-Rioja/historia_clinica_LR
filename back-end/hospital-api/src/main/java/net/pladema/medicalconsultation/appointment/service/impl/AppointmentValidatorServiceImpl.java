@@ -127,9 +127,6 @@ public class AppointmentValidatorServiceImpl implements AppointmentValidatorServ
 		if (appointmentBo.get().getAppointmentStateId() != 1){
 			throw new UpdateAppointmentDateException(UpdateAppointmentDateExceptionEnum.APPOINTMENT_STATE_INVALID, String.format("El estado del turno es invalido."));
 		}
-		System.out.println("Diary ID: "+appointmentBo.get().getDiaryId());
-		System.out.println("Date: "+date);
-		System.out.println("Hour: "+time);
 
 		if(appointmentService.existAppointment(appointmentBo.get().getDiaryId(),date,time)) {
 			throw new UpdateAppointmentDateException(UpdateAppointmentDateExceptionEnum.APPOINTMENT_DATE_ALREADY_ASSIGNED, String.format("Ya existe un turno asignado en ese horario."));
@@ -139,12 +136,10 @@ public class AppointmentValidatorServiceImpl implements AppointmentValidatorServ
 		for (DiaryOpeningHoursBo doh: diaryOpeningHours) {
 			OpeningHoursBo oh = doh.getOpeningHours();
 			if(oh.getDayWeekId() == date.getDayOfWeek().getValue()){
-				if((oh.getFrom().isBefore(time)) && (oh.getTo().isAfter(time))) {
+				if(((oh.getFrom().isBefore(time)) && (oh.getTo().isAfter(time))) || (oh.getFrom().equals(time))) {
 					return true;
 				}
-				else{
 					throw new UpdateAppointmentDateException(UpdateAppointmentDateExceptionEnum.APPOINTMENT_TIME_OUT_OF_OPENING_HOURS, String.format("El horario del turno se encuentra fuera del horario de la agenda."));
-				}
 			}
 		}
 		throw new UpdateAppointmentDateException(UpdateAppointmentDateExceptionEnum.APPOINTMENT_DAY_OF_WEEK_INVALID, String.format("La fecha del turno se encuentra en un dia de la semana sin agenda."));
