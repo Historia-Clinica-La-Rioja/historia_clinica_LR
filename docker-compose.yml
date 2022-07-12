@@ -42,4 +42,9 @@ services:
     ports:
       - "4200:80"
 
-  # hsi-mqtt:
+  hsi-mails:
+    image: mailhog/mailhog:latest
+    container_name: hsi-mails
+    ports:
+      - "1025:1025"
+      - "8025:8025"
