@@ -95,7 +95,7 @@
 		"CREDENTIAL_NUMBER_LABEL": "N° de credencial",
 		"VOLUNTARY": "Voluntaria",
 		"MANDATORY": "Obligatoria",
-		"CUIT_VIEW" : "CUIT: {{cuit}}",
+		"CUIT_VIEW": "CUIT: {{cuit}}",
 		"SEARCH_HEALTH_INSURANCE": "Buscar obra social",
 		"SEARCH_PRIVATE_HEALTH_INSURANCE": "Buscar prepaga",
 		"SEARCH_ART": "Buscar ART",
