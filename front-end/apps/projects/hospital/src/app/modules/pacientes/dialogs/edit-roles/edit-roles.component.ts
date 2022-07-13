@@ -5,7 +5,7 @@ import { RoleDto, UserRoleDto } from '@api-rest/api-model';
 import { ContextService } from '@core/services/context.service';
 import { hasError } from '@core/utils/form.utils';
 
-const ROLES_ADMINISTRATIVE_AND_AGENDA_ADMINISTRATOR_ID = '5|9';
+const ROLES_NOT_NEED_ASSOCIATED_PROFESSION = '12|13|14|15|16|5|9';
 
 @Component({
 	selector: 'app-edit-roles',
@@ -37,7 +37,7 @@ export class EditRolesComponent implements OnInit {
 		return new FormGroup({
 			institutionId: new FormControl(elem.institutionId),
 			roleDescription: new FormControl(elem.roleDescription),
-			roleId: new FormControl(elem.roleId, [Validators.pattern(ROLES_ADMINISTRATIVE_AND_AGENDA_ADMINISTRATOR_ID)]),
+			roleId: new FormControl(elem.roleId, [Validators.pattern(ROLES_NOT_NEED_ASSOCIATED_PROFESSION)]),
 			userId: new FormControl(elem.userId)
 		});
 	}
@@ -66,7 +66,7 @@ export class EditRolesComponent implements OnInit {
 		return new FormGroup({
 			institutionId: new FormControl(this.contextService.institutionId),
 			roleDescription: new FormControl(null),
-			roleId: new FormControl(null, [Validators.pattern(ROLES_ADMINISTRATIVE_AND_AGENDA_ADMINISTRATOR_ID)]),
+			roleId: new FormControl(null, [Validators.pattern(ROLES_NOT_NEED_ASSOCIATED_PROFESSION)]),
 			userId: new FormControl(this.data.userId)
 		});
 	}
