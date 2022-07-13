@@ -4,22 +4,55 @@
 		<br>
 		<form [formGroup]="form" (ngSubmit)="save()">
 			<section>
-
-				<div fxLayout="row">
-					<span [translate]="'Profesional'"></span>
-				</div>
-				<div fxLayout="row">
-					<mat-form-field appearance="outline">
-						<mat-select id="healthcareProfessionalId" name="healthcareProfessionalId"
-									formControlName="healthcareProfessionalId"
-									placeholder="{{'pacientes.form.SELECT' | translate}}"
-									(selectionChange)="getProfessionalSpecialties()">
-							<mat-option *ngFor="let professional of professionals" [value]="professional.id">
-								<span class="mat-body">{{getFullNameLicence(professional)}}</span>
-							</mat-option>
-						</mat-select>
-						<mat-error [translate]="'forms.REQUIRED'"></mat-error>
-					</mat-form-field>
+				<div fxLayout="row" fxLayoutAlign="start start">
+					<div class="professional-form-sector" fxLayout="column">
+						<span [translate]="'turnos.agenda-setup.RESPONSIBLE_PROFESSIONAL'"></span>
+						<mat-form-field class="mat-form-field-on-div" appearance="outline">
+							<mat-select id="healthcareProfessionalId" name="healthcareProfessionalId"
+										formControlName="healthcareProfessionalId"
+										placeholder="{{'pacientes.form.SELECT' | translate}}"
+										(selectionChange)="getProfessionalSpecialties()">
+								<mat-option *ngFor="let professional of professionals" [value]="professional.id">
+									<span class="mat-body">{{getFullNameLicence(professional)}}</span>
+								</mat-option>
+							</mat-select>
+							<mat-error [translate]="'forms.REQUIRED'"></mat-error>
+						</mat-form-field>
+						<section class="checkbox">
+							<mat-checkbox formControlName="conjointDiary" (change)="updateAssociatedProfessionalsForm()">
+								{{ 'turnos.agenda-setup.CONJOINT_DIARY' | translate }}
+							</mat-checkbox>
+						</section>
+					</div>
+					<div class="professional-form-sector" fxLayout="column" *ngIf="form.value.conjointDiary">
+						<span [translate]="'turnos.agenda-setup.OTHER_PROFESSIONALS'"></span>
+						<div formArrayName="otherProfessionals">
+							<div *ngFor="let otherProfessional of getControl('otherProfessionals')?.controls;index as currentProfessional">
+								<div [formGroupName]="currentProfessional">
+									<mat-form-field class="mat-form-field-on-div" appearance="outline">
+										<button type="button" mat-button matSuffix color="warn" mat-icon-button
+										(click)="clear(currentProfessional); $event.stopPropagation()">
+											<mat-icon>close</mat-icon>
+										</button>
+										<mat-select name="healthcareProfessionalId"
+												formControlName="healthcareProfessionalId"
+												placeholder="{{'turnos.agenda-setup.CHOOSE_PROFESSIONAL' | translate}}"
+												(selectionChange)="getProfessionalSpecialties()">
+											<mat-option *ngFor="let professional of getNonResponsibleProfessional()" [value]="professional.id"
+											[disabled]="isProfessionalNonSelectable(professional.id)">
+												<span class="mat-body">{{getFullNameLicence(professional)}}</span>
+											</mat-option>
+										</mat-select>
+										<mat-error [translate]="'turnos.agenda-setup.CHOOSE_PROFESSIONAL_ERROR'"></mat-error>
+									</mat-form-field>
+								</div>
+							</div>
+						</div>
+						<button class="add-prefessional-button" mat-button type="button" color="primary" id="add-button"
+						(click)="addAssociatedProfessional()" [disabled]="!validExtraProfessionalsList()">
+							+ {{ 'turnos.agenda-setup.ADD_ANOTHER_PROFESSIONAL' | translate }}
+						</button>
+					</div>
 				</div>
 
 				<div fxLayout="row">
@@ -38,7 +71,7 @@
 					</mat-form-field>
 				</div>
 
-				<section>
+				<section class="checkbox">
 					<div fxLayout="row">
 						<mat-checkbox (change)="appointmentManagementChange()" [checked]="appointmentManagement">
 							<span [translate]="'El profesional crea turnos'"></span>

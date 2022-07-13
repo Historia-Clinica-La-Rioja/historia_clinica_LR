@@ -48,3 +48,21 @@ form {
 .fixed-header {
     @include fixed-header;
 }
+
+.checkbox {
+	margin-top: 0px;
+}
+
+.professional-form-sector {
+	width: 50%;
+	margin-right: -10%;
+}
+
+.add-prefessional-button {
+	width: fit-content;
+	text-align: left;
+}
+
+.mat-form-field-on-div {
+	width: 70% !important;
+}

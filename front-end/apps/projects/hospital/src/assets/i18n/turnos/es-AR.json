@@ -24,6 +24,12 @@
 			"MEDICAL_ATTENTION_TYPE": "Tipo de atención",
 			"SELECT_DAYS_TYPE": "Días y tipo de consulta",
 			"SELECT_DAYS_TYPE_SUBTITLE": "Seleccione tipos de consulta para cada día",
+			"RESPONSIBLE_PROFESSIONAL": "Profesional responsable",
+			"CONJOINT_DIARY": "Agenda conjunta",
+			"OTHER_PROFESSIONALS": "Otros profesionales",
+			"ADD_ANOTHER_PROFESSIONAL": "Añadir otro profesional",
+			"CHOOSE_PROFESSIONAL": "Seleccione profesional",
+			"CHOOSE_PROFESSIONAL_ERROR": "Por favor seleccione un profesional adjunto",
 			"dialog": {
 				"TITLE": "Nueva atención",
 				"EDIT": "Editar atención",
