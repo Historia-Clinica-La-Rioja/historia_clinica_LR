@@ -4,9 +4,11 @@ import { Admin } from 'react-admin';
 import {
     dataProvider,
     authProvider,
+    i18nProviderBuilder,
 } from './libs/sgx/api';
 
 import resources from './modules';
+import messages from './providers/i18n';
 
 import { 
     Dashboard,
@@ -14,7 +16,6 @@ import {
     LoginPage,
 } from './layout';
 
-import i18nProvider from './providers/i18nProvider';
 import customRoutes from './layout/routes';
 
 const App = () => (
@@ -23,7 +24,7 @@ const App = () => (
         customRoutes={customRoutes}
         dataProvider={dataProvider}
         authProvider={authProvider}
-        i18nProvider={i18nProvider}
+        i18nProvider={i18nProviderBuilder(messages)}
         loginPage={LoginPage}
         dashboard={Dashboard}
         layout={Layout}

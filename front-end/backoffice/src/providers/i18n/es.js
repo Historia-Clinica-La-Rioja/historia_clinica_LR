@@ -1,4 +1,4 @@
-import spanishMessages from '@blackbox-vision/ra-language-spanish';
+
 
 const sectorMessages = {
     name: 'Sector |||| Sectores',
@@ -18,7 +18,6 @@ const sectorMessages = {
 }
 
 const messages = {
-    ...spanishMessages,
     app: {
         menu: {
             staff: 'Planta',

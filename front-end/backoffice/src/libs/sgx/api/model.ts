@@ -30,3 +30,7 @@ export interface OauthConfigDto {
 export interface FileInputData {
     file: {rawFile: File, title: string},
 }
+
+export interface SupportedLanguages {
+    [key: string]: any;
+}
