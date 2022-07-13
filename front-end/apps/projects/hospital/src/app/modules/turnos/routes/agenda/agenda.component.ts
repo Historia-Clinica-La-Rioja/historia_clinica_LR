@@ -257,6 +257,7 @@ export class AgendaComponent implements OnInit, OnDestroy, OnChanges {
 									openingHoursId: openingHourId,
 									overturnMode: addingOverturn,
 									patientId: this.patientId,
+									professionalId: this.professionalId
 								}
 							});
 						}
