@@ -1,6 +1,6 @@
 import { Component, Input, OnChanges } from '@angular/core';
 import { ParenteralPlanDto } from '@api-rest/api-model';
-import { PARENTERAL_PLAN, showTimeElapsed } from "@historia-clinica/modules/ambulatoria/modules/indicacion/constants/internment-indications";
+import { IndicationStatus, IndicationStatusScss, PARENTERAL_PLAN, showTimeElapsed } from "@historia-clinica/modules/ambulatoria/modules/indicacion/constants/internment-indications";
 import { Content, ExtraInfo } from "@presentation/components/indication/indication.component";
 import { InternacionMasterDataService } from "@api-rest/services/internacion-master-data.service";
 import { loadExtraInfoParenteralPlan } from '../../constants/load-information';
@@ -32,8 +32,8 @@ export class InternmentParenteralPlanCardComponent implements OnChanges {
 		return this.parenteralPlans?.map((parenteralPlan: ParenteralPlanDto) => {
 			return {
 				status: {
-					description: parenteralPlan.status === "INDICATED" ? 'indicacion.internment-card.sections.label.INDICATED' : 'indicacion.internment-card.sections.label.SUSPENDED',
-					cssClass: parenteralPlan.status === "INDICATED" ? 'blue' : 'red'
+					description: IndicationStatus[parenteralPlan.status],
+					cssClass: IndicationStatusScss[parenteralPlan.status]
 				},
 				description: parenteralPlan.snomed.pt,
 				extra_info: loadExtraInfoParenteralPlan(parenteralPlan, this.vias),

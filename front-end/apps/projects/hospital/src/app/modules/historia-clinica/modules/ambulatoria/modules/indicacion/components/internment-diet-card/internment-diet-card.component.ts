@@ -1,5 +1,5 @@
 import { Component, Input, OnChanges } from "@angular/core";
-import { DIET, showTimeElapsed } from "@historia-clinica/modules/ambulatoria/modules/indicacion/constants/internment-indications";
+import { DIET, IndicationStatus, IndicationStatusScss, showTimeElapsed } from "@historia-clinica/modules/ambulatoria/modules/indicacion/constants/internment-indications";
 import { DietDto } from "@api-rest/api-model";
 import { Content } from '@presentation/components/indication/indication.component';
 
@@ -25,8 +25,8 @@ export class InternmentDietCardComponent implements OnChanges {
 		return this.diets?.map((diet: DietDto) => {
 			return {
 				status: {
-					description: diet.status === "INDICATED" ? 'indicacion.internment-card.sections.label.INDICATED' : 'indicacion.internment-card.sections.label.SUSPENDED',
-					cssClass: diet.status === "INDICATED" ? 'blue' : 'red'
+					description: IndicationStatus[diet.status],
+					cssClass: IndicationStatusScss[diet.status]
 				},
 				description: diet.description,
 				createdBy: diet.createdBy,

@@ -24,7 +24,10 @@
 				},
 				"label": {
 					"SUSPENDED": "Suspendida",
-					"INDICATED": "Indicada"
+					"INDICATED": "Indicada",
+					"REJECTED": "Rechazada",
+					"COMPLETED": "Completada",
+					"IN_PROGRESS": "En progreso"
 				},
 				"indication-extra-description": {
 					"DOSE": "Dosis:",

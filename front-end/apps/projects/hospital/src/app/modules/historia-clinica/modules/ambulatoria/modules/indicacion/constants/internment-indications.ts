@@ -1,4 +1,5 @@
 import { Title } from "@presentation/components/indication/indication.component"
+import { EIndicationStatus, EIndicationType, ENursingRecordStatus } from "@api-rest/api-model";
 import { DateTimeDto } from "@api-rest/api-model";
 import { dateTimeDtoToStringDate } from "@api-rest/mapper/date-dto.mapper";
 import { differenceInMinutes, differenceInHours, differenceInDays } from "date-fns";
@@ -29,6 +30,44 @@ export enum DAYS_OF_WEEK {
 	Jueves,
 	Viernes,
 	Sábado
+}
+
+export const IndicationStatus = {
+	[EIndicationStatus.INDICATED]: 'indicacion.internment-card.sections.label.INDICATED',
+	[EIndicationStatus.SUSPENDED]: 'indicacion.internment-card.sections.label.SUSPENDED',
+	[EIndicationStatus.IN_PROGRESS]: 'indicacion.internment-card.sections.label.IN_PROGRESS',
+	[EIndicationStatus.COMPLETED]: 'indicacion.internment-card.sections.label.COMPLETED',
+	[EIndicationStatus.REJECTED]: 'indicacion.internment-card.sections.label.REJECTED'
+}
+
+export const IndicationStatusScss = {
+	[EIndicationStatus.INDICATED]: 'blue',
+	[EIndicationStatus.SUSPENDED]: 'red',
+	[EIndicationStatus.IN_PROGRESS]: 'yellow',
+	[EIndicationStatus.COMPLETED]: 'green',
+	[EIndicationStatus.REJECTED]: 'red',
+}
+
+export const NursingRecordStatus = {
+	[ENursingRecordStatus.PENDING]: 'indicacion.nursing-care.status.PENDING',
+	[ENursingRecordStatus.COMPLETED]: 'indicacion.internment-card.sections.label.COMPLETED',
+	[ENursingRecordStatus.REJECTED]: 'indicacion.internment-card.sections.label.REJECTED'
+}
+
+export const NursingRecordStatusScss = {
+	[ENursingRecordStatus.PENDING]: 'red',
+	[ENursingRecordStatus.COMPLETED]: 'blue',
+	[ENursingRecordStatus.REJECTED]: 'red-reject'
+}
+
+export const IndicationMatIcon = {
+	[EIndicationType.DIET]: 'local_dining',
+	[EIndicationType.OTHER_INDICATION]: 'assignment_late',
+}
+
+export const IndicationSvgIcon = {
+	[EIndicationType.PHARMACO]: 'pharmaco',
+	[EIndicationType.PARENTERAL_PLAN]: 'parenteral_plans',
 }
 
 export const DIET: Title = {

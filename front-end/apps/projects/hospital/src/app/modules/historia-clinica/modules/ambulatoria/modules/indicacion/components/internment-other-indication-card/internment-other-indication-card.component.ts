@@ -1,5 +1,5 @@
 import { Component, Input, OnChanges } from '@angular/core';
-import { OTHER_INDICATION, OTHER_INDICATION_ID, showTimeElapsed } from "@historia-clinica/modules/ambulatoria/modules/indicacion/constants/internment-indications";
+import { IndicationStatus, IndicationStatusScss, OTHER_INDICATION, OTHER_INDICATION_ID, showTimeElapsed } from "@historia-clinica/modules/ambulatoria/modules/indicacion/constants/internment-indications";
 import { Content } from '@presentation/components/indication/indication.component';
 import { OtherIndicationDto } from '@api-rest/api-model';
 import { OtherIndicationTypeDto } from '@api-rest/services/internment-indication.service';
@@ -40,8 +40,8 @@ export class InternmentOtherIndicationCardComponent implements OnChanges {
 		return this.otherIndications?.map((otherIndication: OtherIndicationDto) => {
 			return {
 				status: {
-					description: otherIndication.status === "INDICATED" ? 'indicacion.internment-card.sections.label.INDICATED' : 'indicacion.internment-card.sections.label.SUSPENDED',
-					cssClass: otherIndication.status === "INDICATED" ? 'blue' : 'red'
+					description: IndicationStatus[otherIndication.status],
+					cssClass: IndicationStatusScss[otherIndication.status]
 				},
 				description: indication(otherIndication, this.othersIndicatiosType),
 				createdBy: otherIndication.createdBy,

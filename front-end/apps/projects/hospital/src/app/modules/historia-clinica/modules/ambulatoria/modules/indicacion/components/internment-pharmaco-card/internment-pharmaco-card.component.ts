@@ -1,7 +1,7 @@
 import { Component, Input, OnChanges } from '@angular/core';
 import { PharmacoDto } from '@api-rest/api-model';
 import { InternacionMasterDataService } from '@api-rest/services/internacion-master-data.service';
-import { PHARMACO, showTimeElapsed } from "@historia-clinica/modules/ambulatoria/modules/indicacion/constants/internment-indications";
+import { IndicationStatus, IndicationStatusScss, PHARMACO, showTimeElapsed } from "@historia-clinica/modules/ambulatoria/modules/indicacion/constants/internment-indications";
 import { Content } from "@presentation/components/indication/indication.component";
 import { loadExtraInfoPharmaco } from '../../constants/load-information';
 
@@ -28,8 +28,8 @@ export class InternmentPharmacoCardComponent implements OnChanges {
 		return this.pharmacos?.map((pharmaco: any) => {
 			return {
 				status: {
-					description: pharmaco.status === "INDICATED" ? 'indicacion.internment-card.sections.label.INDICATED' : 'indicacion.internment-card.sections.label.SUSPENDED',
-					cssClass: pharmaco.status === "INDICATED" ? 'blue' : 'red'
+					description: IndicationStatus[pharmaco.status],
+					cssClass: IndicationStatusScss[pharmaco.status]
 				},
 				description: pharmaco.snomed.pt,
 				extra_info: loadExtraInfoPharmaco(pharmaco, true),
