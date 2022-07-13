@@ -338,10 +338,10 @@ public class DiaryController {
 				.limit(ChronoUnit.MINUTES.between(localTimeInit, localTimeEnd) / appointmentDuration)
 				.collect(Collectors.toList());
 
-		var lastTime = slots.get(slots.size()-1).plusMinutes(appointmentDuration);
-
-		if (!slots.contains(lastTime))
+		if (localTimeEnd.getHour() == 23 && localTimeEnd.getMinute() == 59) {
+			var lastTime = slots.get(slots.size()-1).plusMinutes(appointmentDuration);
 			slots.add(lastTime);
+		}
 
 		return slots;
 	}
