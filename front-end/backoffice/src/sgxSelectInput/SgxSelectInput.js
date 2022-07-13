@@ -7,7 +7,7 @@ import {
 
  import { sgxFetchApiWithToken } from '../libs/sgx/api/fetch';
 
-const backofficeUrl = '/backoffice';
+const backofficeUrl = 'backoffice';
 const SgxSelectInput = ({ element, ...props})  =>{   
     const [elements, setElements] = useState([]);
     useEffect(() => {
