@@ -2,6 +2,7 @@ package net.pladema.medicalconsultation.appointment.service.impl;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.time.ZoneId;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
@@ -10,12 +11,12 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.function.Function;
 
-import javax.validation.ConstraintViolationException;
 import javax.validation.ValidationException;
 
+import ar.lamansys.sgx.shared.dates.configuration.DateTimeProvider;
+import net.pladema.establishment.controller.service.InstitutionExternalService;
 import net.pladema.medicalconsultation.appointment.service.impl.exceptions.UpdateAppointmentDateException;
 import net.pladema.medicalconsultation.appointment.service.impl.exceptions.UpdateAppointmentDateExceptionEnum;
-import net.pladema.medicalconsultation.diary.repository.entity.OpeningHours;
 import net.pladema.medicalconsultation.diary.service.DiaryOpeningHoursService;
 import net.pladema.medicalconsultation.diary.service.domain.DiaryOpeningHoursBo;
 
@@ -56,12 +57,13 @@ public class AppointmentValidatorServiceImpl implements AppointmentValidatorServ
 	private final DiaryAssociatedProfessionalService diaryAssociatedProfessionalService;
     private final Function<Integer, Boolean> hasAdministrativeRole;
     private final Function<Integer, Boolean> hasProfessionalRole;
+	private final InstitutionExternalService institutionExternalService;
+	private final DateTimeProvider dateTimeProvider;
 
     public AppointmentValidatorServiceImpl(
 			DiaryService diaryService, DiaryOpeningHoursService diaryOpeningHoursService, HealthcareProfessionalService healthcareProfessionalService,
 			AppointmentService appointmentService,
-			LoggedUserExternalService loggedUserExternalService
-    ) {
+			LoggedUserExternalService loggedUserExternalService, InstitutionExternalService institutionExternalService, DateTimeProvider dateTimeProvider) {
         this.diaryService = diaryService;
 		this.diaryOpeningHoursService = diaryOpeningHoursService;
 		this.healthcareProfessionalService = healthcareProfessionalService;
@@ -73,8 +75,10 @@ public class AppointmentValidatorServiceImpl implements AppointmentValidatorServ
         this.hasProfessionalRole = loggedUserExternalService.hasAnyRoleInstitution(
                 ERole.ESPECIALISTA_MEDICO, ERole.PROFESIONAL_DE_SALUD, ERole.ESPECIALISTA_EN_ODONTOLOGIA, ERole.ENFERMERO
         );
+		this.institutionExternalService = institutionExternalService;
+		this.dateTimeProvider = dateTimeProvider;
 
-        this.validStates = buildValidStates();
+		this.validStates = buildValidStates();
         this.statesWithReason = Arrays.asList(CANCELLED, ABSENT);
     }
 
@@ -120,6 +124,13 @@ public class AppointmentValidatorServiceImpl implements AppointmentValidatorServ
 		LOG.debug("Input parameters -> appointmentId {}, date {}, time {}", appointmentId, date, time);
 		Optional<DiaryBo> diary = diaryService.getDiaryByAppointment(appointmentId);
 		Optional<AppointmentBo> appointmentBo = appointmentService.getAppointment(appointmentId);
+		ZoneId institutionZoneId = institutionExternalService.getTimezone(institutionId);
+		LocalDate todayDate = dateTimeProvider.nowDate();
+		LocalTime todayTime = dateTimeProvider.nowDateTimeWithZone(institutionZoneId).toLocalTime();
+		
+		if ((date.isBefore(todayDate)) || ((date.equals(todayDate)) && (time.isBefore(todayTime)))){
+			throw new UpdateAppointmentDateException(UpdateAppointmentDateExceptionEnum.APPOINTMENT_DATE_BEFORE_NOW, String.format("El horario del turno es anterior a la hora actual."));
+		}
 
 		if ((diary.get().getStartDate().isAfter(date)) || (diary.get().getEndDate().isBefore(date))){
 			throw new UpdateAppointmentDateException(UpdateAppointmentDateExceptionEnum.APPOINTMENT_DATE_OUT_OF_DIARY_RANGE, String.format("La fecha del turno se encuentra fuera del rango horario de la agenda."));

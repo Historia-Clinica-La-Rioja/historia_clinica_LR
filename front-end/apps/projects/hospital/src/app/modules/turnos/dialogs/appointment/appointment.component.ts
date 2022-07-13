@@ -228,7 +228,7 @@ export class AppointmentComponent implements OnInit {
 		this.formDate.controls.hour.setValue(this.possibleScheduleHours[0]);
 	}
 
-	setPossibleScheduleHours(date: Date){
+	setPossibleScheduleHours(date: Date): void{
 		this.possibleScheduleHours = [];
 		const startDate = new Date(date);
 		const endDate = new Date(date);
@@ -245,9 +245,10 @@ export class AppointmentComponent implements OnInit {
 			}
 		}
 		this.deleteHoursWithAppointment();
+		this.deleteHoursBeforeNow();
 	}
 
-	deleteHoursWithAppointment(){
+	deleteHoursWithAppointment(): void{
 		for (let i = 0; i < this.data.appointments.length; i++) {
 			const index = this.possibleScheduleHours.findIndex(item => {
 				return ((item.getTime() == this.data.appointments[i].start.getTime()) && (item.getTime() != this.selectedDate.getTime()))
@@ -256,6 +257,13 @@ export class AppointmentComponent implements OnInit {
 				this.possibleScheduleHours.splice(index,1);
 			}
 		}
+	}
+
+	deleteHoursBeforeNow(): void{
+		const now = new Date();
+		this.possibleScheduleHours = this.possibleScheduleHours.filter(item => {
+			return item.getTime() >= now.getTime();
+		});
 	}
 
 	setDisableDays(){
