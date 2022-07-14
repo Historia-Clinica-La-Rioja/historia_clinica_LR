@@ -75,6 +75,12 @@ export class OtherIndicationComponent implements OnInit {
 			this.removeFormValidators();
 
 			switch (frequencyOption) {
+				case '0': { 					
+					this.form.controls.interval.reset();
+					this.form.controls.startTime.reset();
+					this.form.controls.event.reset();
+					break;
+				}
 				case '1': {
 					this.form.controls.startTime.reset();
 
