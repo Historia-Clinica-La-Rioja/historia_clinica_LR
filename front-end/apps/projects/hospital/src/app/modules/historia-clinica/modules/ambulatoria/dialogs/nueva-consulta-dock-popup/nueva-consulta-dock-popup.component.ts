@@ -40,8 +40,6 @@ import { SnvsMasterDataService } from "@api-rest/services/snvs-masterdata.servic
 import { ReferenceFileService } from '@api-rest/services/reference-file.service';
 import { SnvsReportsResultComponent } from '../snvs-reports-result/snvs-reports-result.component';
 import { HCEPersonalHistory } from '../reference/reference.component';
-import { FACTORES_DE_RIESGO } from '@historia-clinica/constants/validation-constants';
-import { hasMaxTwoDecimalDigits } from '@core/utils/pattern.utils';
 import { NewConsultationAddProblemFormComponent } from '@historia-clinica/dialogs/new-consultation-add-problem-form/new-consultation-add-problem-form.component';
 import { NewConsultationAddReasonFormComponent } from '@historia-clinica/dialogs/new-consultation-add-reason-form/new-consultation-add-reason-form.component';
 import { NewConsultationFamilyHistoryFormComponent } from '../new-consultation-family-history-form/new-consultation-family-history-form.component';
@@ -145,14 +143,6 @@ export class NuevaConsultaDockPopupComponent implements OnInit {
 		this.datosAntropometricosNuevaConsultaService.setPreviousAnthropometricData();
 
 		this.factoresDeRiesgoFormService.setPreviousRiskFactorsData();
-
-		this.motivoNuevaConsultaService.error$.subscribe(motivoError => {
-			this.errores[0] = motivoError;
-		});
-
-		this.ambulatoryConsultationProblemsService.error$.subscribe(problemasError => {
-			this.errores[1] = problemasError;
-		});
 
 		this.internacionMasterDataService.getHealthSeverity().subscribe(healthConditionSeverities => {
 			this.severityTypes = healthConditionSeverities;

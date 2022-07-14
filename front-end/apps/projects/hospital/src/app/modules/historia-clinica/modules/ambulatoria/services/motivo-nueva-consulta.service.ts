@@ -1,7 +1,6 @@
 import { SnomedDto, SnomedECL } from '@api-rest/api-model';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { SnomedSemanticSearch, SnomedService } from '../../../services/snomed.service';
-import { Observable, Subject } from 'rxjs';
 import { ColumnConfig } from '@presentation/components/document-section/document-section.component';
 import { pushIfNotExists, removeFrom } from '@core/utils/array.utils';
 import { TableColumnConfig } from "@presentation/components/document-section-table/document-section-table.component";
@@ -14,14 +13,12 @@ export interface MotivoConsulta {
 
 export class MotivoNuevaConsultaService {
 
-	private errorSource = new Subject<string>();
-	private _error$: Observable<string>;
-
 	private motivoConsulta: MotivoConsulta[] = [];
 	private form: FormGroup;
 	private readonly columns: ColumnConfig[];
 	private readonly tableColumnConfig: TableColumnConfig[];
 	private snomedConcept: SnomedDto;
+	private readonly ECL = SnomedECL.CONSULTATION_REASON;
 
 	constructor(
 		private readonly formBuilder: FormBuilder,
@@ -55,13 +52,6 @@ export class MotivoNuevaConsultaService {
 		]
 	}
 
-	get error$(): Observable<string> {
-		if (!this._error$) {
-			this._error$ = this.errorSource.asObservable();
-		}
-		return this._error$;
-	}
-
 	resetForm(): void {
 		delete this.snomedConcept;
 		this.form.reset();
@@ -72,8 +62,6 @@ export class MotivoNuevaConsultaService {
 		const pt = selectedConcept ? selectedConcept.pt : '';
 		this.form.controls.snomed.setValue(pt);
 	}
-
-	private readonly ECL = SnomedECL.CONSULTATION_REASON;
 
 	getECL(): SnomedECL {
 		return this.ECL;
@@ -94,10 +82,6 @@ export class MotivoNuevaConsultaService {
 		return this.form;
 	}
 
-	setError(errorMsg: string): void {
-		this.errorSource.next(errorMsg);
-	}
-
 	getMotivosConsulta(): MotivoConsulta[] {
 		return this.motivoConsulta;
 	}
@@ -109,7 +93,6 @@ export class MotivoNuevaConsultaService {
 	getTableColumnConfig(): TableColumnConfig[] {
 		return this.tableColumnConfig;
 	}
-
 
 	add(motivo: MotivoConsulta): boolean {
 		const currentItems = this.motivoConsulta.length;
@@ -133,7 +116,6 @@ export class MotivoNuevaConsultaService {
 				snomed: this.snomedConcept
 			};
 			this.addControl(motivo);
-			this.errorSource.next();
 			this.resetForm();
 		}
 	}

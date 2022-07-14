@@ -6,7 +6,6 @@ import { pushIfNotExists, removeFrom } from '@core/utils/array.utils';
 import { newMoment } from '@core/utils/moment.utils';
 import { Moment } from 'moment';
 import { hasError } from '@core/utils/form.utils';
-import { Observable, Subject } from 'rxjs';
 import { TableColumnConfig } from '@presentation/components/document-section-table/document-section-table.component';
 import { CellTemplates } from '@presentation/components/cell-templates/cell-templates.component';
 import { SnackBarService } from '@presentation/services/snack-bar.service';
@@ -32,8 +31,6 @@ export class AmbulatoryConsultationProblemsService {
 	private snomedConcept: SnomedDto;
 	private readonly columns: TableColumnConfig[];
 	private data: AmbulatoryConsultationProblem[];
-	private errorSource = new Subject<string>();
-	private _error$: Observable<string>;
 	private severityTypes: any[];
 	private snvsEvents: SnvsEventDto[] = [];
 	private readonly ECL = SnomedECL.DIAGNOSIS;
@@ -268,17 +265,6 @@ export class AmbulatoryConsultationProblemsService {
 		return hasError(this.form, type, controlName);
 	}
 
-	get error$(): Observable<string> {
-		if (!this._error$) {
-			this._error$ = this.errorSource.asObservable();
-		}
-		return this._error$;
-	}
-
-	setError(errorMsg: string): void {
-		this.errorSource.next(errorMsg);
-	}
-
 	editProblem(index: number): void {
 		if (this.form.valid) {
 			this.getProblemas()[index].snomed.pt = this.form.controls.snomed.value;
@@ -300,7 +286,6 @@ export class AmbulatoryConsultationProblemsService {
 
 	private addControlAndResetForm(nuevoProblema: AmbulatoryConsultationProblem) {
 		this.addControl(nuevoProblema);
-		this.errorSource.next();
 		this.resetForm();
 	}
 
