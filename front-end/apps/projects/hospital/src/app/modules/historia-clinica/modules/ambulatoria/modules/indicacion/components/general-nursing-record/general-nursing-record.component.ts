@@ -6,6 +6,7 @@ import { OtherIndicationTypeDto } from '@api-rest/services/internment-indication
 import { IndicationMatIcon, IndicationSvgIcon } from '../../constants/internment-indications';
 import { getOtherIndicationType, loadExtraInfoParenteralPlan } from '../../constants/load-information';
 import { NursingRecord } from '../nursing-record/nursing-record.component';
+import { dateDtoToDate } from '@api-rest/mapper/date-dto.mapper';
 
 @Component({
 	selector: 'app-general-nursing-record',
@@ -46,17 +47,21 @@ function toNursingRecords(nursingRecordsDto: any[], othersIndicatiosTypes: Other
 			}
 		}
 		return {
+			id: r.id,
 			matIcon: IndicationMatIcon[r.indication.type],
 			svgIcon: IndicationSvgIcon[r.indication.type],
 			content: {
 				status: {
 					description: NursingRecordStatus[r.status],
 					cssClass: NursingRecordStatusScss[r.status],
+					type: r.status
 				},
 				description,
 				extra_info: (EIndicationType.PARENTERAL_PLAN === r.indication.type) ? loadExtraInfoParenteralPlan(r.indication, vias) : null,
-				createdBy: "",
-				timeElapsed: ""
+				indicationDate: dateDtoToDate(r.indication.indicationDate),
+				scheduledAdministrationTime: r.scheduledAdministrationTime,
+				administeredBy: "",
+				administeredTime: "",
 			}
 		}
 	});

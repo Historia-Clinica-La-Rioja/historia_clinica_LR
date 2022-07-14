@@ -26,7 +26,8 @@ export class InternmentDietCardComponent implements OnChanges {
 			return {
 				status: {
 					description: IndicationStatus[diet.status],
-					cssClass: IndicationStatusScss[diet.status]
+					cssClass: IndicationStatusScss[diet.status],
+					type: diet.type
 				},
 				description: diet.description,
 				createdBy: diet.createdBy,

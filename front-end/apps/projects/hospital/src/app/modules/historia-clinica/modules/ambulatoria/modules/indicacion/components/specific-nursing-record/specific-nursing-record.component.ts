@@ -1,4 +1,4 @@
-import { dateTimeDtotoLocalDate } from './../../../../../../../api-rest/mapper/date-dto.mapper';
+import { dateDtoToDate, dateTimeDtotoLocalDate } from './../../../../../../../api-rest/mapper/date-dto.mapper';
 import { NursingRecord, NursingSections } from './../nursing-record/nursing-record.component';
 import { ExtraInfo } from './../../../../../../../presentation/components/indication/indication.component';
 import { Component, Input } from '@angular/core';
@@ -66,17 +66,21 @@ export class SpecificNursingRecordComponent {
 
 	private toNursingRecord(record: any, otherIndicationTypes: OtherIndicationTypeDto[]): NursingRecord {
 		return {
+			id: record.id,
 			matIcon: IndicationMatIcon[record.indication.type],
 			svgIcon: IndicationSvgIcon[record.indication.type],
 			content: {
 				status: {
 					description: NursingRecordStatus[record.status],
 					cssClass: NursingRecordStatusScss[record.status],
+					type: record.status
 				},
 				description: (record.indication.type === EIndicationType.OTHER_INDICATION) ? getOtherIndicationType(record.indication, otherIndicationTypes) : record.indication.snomed.pt,
 				extra_info: this.loadExtraInfo(record),
-				createdBy: "",
-				timeElapsed: "",
+				indicationDate: dateDtoToDate(record.indication.indicationDate),
+				scheduledAdministrationTime: record.scheduledAdministrationTime,
+				administeredBy: "",
+				administeredTime: "",
 			}
 		}
 	}

@@ -29,7 +29,8 @@ export class InternmentPharmacoCardComponent implements OnChanges {
 			return {
 				status: {
 					description: IndicationStatus[pharmaco.status],
-					cssClass: IndicationStatusScss[pharmaco.status]
+					cssClass: IndicationStatusScss[pharmaco.status],
+					type: pharmaco.type
 				},
 				description: pharmaco.snomed.pt,
 				extra_info: loadExtraInfoPharmaco(pharmaco, true),

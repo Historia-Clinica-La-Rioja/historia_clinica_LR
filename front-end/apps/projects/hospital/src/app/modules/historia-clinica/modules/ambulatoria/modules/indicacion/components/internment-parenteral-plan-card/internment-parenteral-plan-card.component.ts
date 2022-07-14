@@ -33,7 +33,8 @@ export class InternmentParenteralPlanCardComponent implements OnChanges {
 			return {
 				status: {
 					description: IndicationStatus[parenteralPlan.status],
-					cssClass: IndicationStatusScss[parenteralPlan.status]
+					cssClass: IndicationStatusScss[parenteralPlan.status],
+					type: parenteralPlan.type
 				},
 				description: parenteralPlan.snomed.pt,
 				extra_info: loadExtraInfoParenteralPlan(parenteralPlan, this.vias),

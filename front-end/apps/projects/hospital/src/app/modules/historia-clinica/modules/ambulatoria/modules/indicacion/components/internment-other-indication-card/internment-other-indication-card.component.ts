@@ -41,7 +41,8 @@ export class InternmentOtherIndicationCardComponent implements OnChanges {
 			return {
 				status: {
 					description: IndicationStatus[otherIndication.status],
-					cssClass: IndicationStatusScss[otherIndication.status]
+					cssClass: IndicationStatusScss[otherIndication.status],
+					type: otherIndication.type
 				},
 				description: indication(otherIndication, this.othersIndicatiosType),
 				createdBy: otherIndication.createdBy,

@@ -1,3 +1,4 @@
+import { EIndicationType } from '@api-rest/api-model';
 import { Component, Input } from '@angular/core';
 
 @Component({
@@ -18,7 +19,7 @@ export class IndicationComponent {
 export interface Title {
 	title: string;
 	matIcon?: string;
-	svgIcon?:string;
+	svgIcon?: string;
 }
 
 export interface Content {
@@ -32,6 +33,7 @@ export interface Content {
 export interface Status {
 	description: string;
 	cssClass: string;
+	type?: EIndicationType;
 }
 
 export interface ExtraInfo {
