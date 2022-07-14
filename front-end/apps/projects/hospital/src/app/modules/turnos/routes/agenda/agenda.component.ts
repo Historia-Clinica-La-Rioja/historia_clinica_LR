@@ -113,18 +113,7 @@ export class AgendaComponent implements OnInit, OnDestroy, OnChanges {
 		else
 			this.getAgenda();
 
-		this.appointmentSubscription = this.appointmentFacade.getAppointments().subscribe(appointments => {
-			if (appointments) {
-                if (appointments.length) {
-				    this.appointments = this.unifyEvents(appointments);
-				}
-                else {
-                    this.appointments = appointments;
-				}
-				this.dailyAmounts$ = this.appointmentsService.getDailyAmounts(this.idAgenda);
-				this.loading = false;
-			}
-		});
+		this.loadAppointments();
 		this.appointmentFacade.setInterval();
 		this.permissionsService.hasContextAssignments$(ROLES_TO_CREATE).subscribe(hasRole => this.hasRoleToCreate = hasRole);
 		this.healthcareProfessionalService.getHealthcareProfessionalByUserId().subscribe(healthcareProfessionalId => this.loggedUserHealthcareProfessionalId = healthcareProfessionalId);
@@ -165,6 +154,22 @@ export class AgendaComponent implements OnInit, OnDestroy, OnChanges {
 				&& ((segment.date.getHours() < to.hours()) ||
 					(segment.date.getHours() === to.hours() && segment.date.getMinutes() < to.minutes()));
 		}
+	}
+	
+	loadAppointments(): void {
+		this.loading = true;
+		this.appointmentSubscription = this.appointmentFacade.getAppointments().subscribe(appointments => {
+			if (appointments) {
+				if (appointments.length) {
+					this.appointments = this.unifyEvents(appointments);
+				}
+				else {
+					this.appointments = appointments;
+				}
+				this.dailyAmounts$ = this.appointmentsService.getDailyAmounts(this.idAgenda);
+				this.loading = false;
+			}
+		});
 	}
 
 	loadDailyAmounts(calendarMonthViewBeforeRenderEvent: CalendarMonthViewBeforeRenderEvent): void {
@@ -324,6 +329,7 @@ export class AgendaComponent implements OnInit, OnDestroy, OnChanges {
 					},
 				});
 			}
+			this.loadAppointments();
 		}
 	}
 
