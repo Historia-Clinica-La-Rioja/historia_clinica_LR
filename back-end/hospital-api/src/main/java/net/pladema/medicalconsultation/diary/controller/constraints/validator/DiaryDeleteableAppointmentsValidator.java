@@ -35,7 +35,7 @@ public class DiaryDeleteableAppointmentsValidator
 		Collection<AppointmentBo> appointments = appointmentService.getAppointmentsByDiaries(Arrays.asList(diaryId));
 
 		Optional<AppointmentBo> apmtActive = appointments.stream()
-				.filter(apmt -> !apmt.getAppointmentStateId().equals(AppointmentState.CANCELLED)).findFirst();
+				.filter(apmt -> !apmt.getAppointmentStateId().equals(AppointmentState.CANCELLED) && !apmt.getAppointmentStateId().equals(AppointmentState.BLOCKED)).findFirst();
 
 		if (apmtActive.isPresent()) {
 			buildResponse(context, "{diary.appointments.invalid.cancelled}");
