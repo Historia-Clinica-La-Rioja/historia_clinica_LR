@@ -46,7 +46,6 @@ export class NuevaConsultaDockPopupEnfermeriaComponent implements OnInit {
 
 	disableConfirmButton = false;
 	formEvolucion: FormGroup;
-	errores: string[] = [];
 	motivoNuevaConsultaService: MotivoNuevaConsultaService;
 	medicacionesNuevaConsultaService: MedicacionesNuevaConsultaService;
 	problemasService: ProblemasService;
@@ -257,9 +256,11 @@ export class NuevaConsultaDockPopupEnfermeriaComponent implements OnInit {
 	}
 
 	public isValidConsultation(): boolean {
-		return (this.errores.find(elem =>
-			elem !== undefined
-		) === undefined);
+		if (this.datosAntropometricosNuevaConsultaService.getForm().invalid)
+			return false;
+		if (this.factoresDeRiesgoFormService.getForm().invalid)
+			return false;
+		return true;
 	}
 
 	private buildCreateOutpatientDto(): NursingConsultationDto {

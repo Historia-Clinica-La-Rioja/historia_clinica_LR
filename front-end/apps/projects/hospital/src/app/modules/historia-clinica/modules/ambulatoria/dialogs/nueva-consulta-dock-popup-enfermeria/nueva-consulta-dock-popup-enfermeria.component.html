@@ -89,10 +89,9 @@
 			</app-document-section>
 		</app-new-consultation-expansion-section>
 
-		<div #errorsView>
-			<div id="validations" *ngIf="!isValidConsultation() || apiErrors.length > 0">
+		<div #apiErrorsView>
+			<div id="validations" *ngIf="apiErrors?.length > 0">
 				<mat-card>
-					<mat-error *ngFor="let error of errores" class="mat-body-2">{{ error | translate }}</mat-error>
 					<mat-error class="mat-body-2" *ngFor="let error of apiErrors">{{ error }}</mat-error>
 				</mat-card>
 			</div>

@@ -69,7 +69,6 @@ export class OdontologyConsultationDockPopupComponent implements OnInit {
 
 	searchConceptsLocallyFFIsOn = false;
 	public readonly TEXT_AREA_MAX_LENGTH = TEXT_AREA_MAX_LENGTH;
-	errors: string[] = [];
 	public hasError = hasError;
 	public today = newMoment();
 	minDate = MIN_DATE;
