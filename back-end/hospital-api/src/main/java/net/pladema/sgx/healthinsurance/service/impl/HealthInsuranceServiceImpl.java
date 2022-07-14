@@ -67,10 +67,8 @@ public class HealthInsuranceServiceImpl implements HealthInsuranceService {
 		LOG.debug("Input-> newHealthInsurances {}", newHealthInsurances);
 		newHealthInsurances.stream().filter(hi -> !healthInsuranceRepository.existsByRnos(calculateRnos(hi)))
 				.forEach(hi -> {
-				    MedicalCoverage saved = medicalCoverageRepository
-                            .save(new MedicalCoverage(hi.getName(),hi.getCuit(), EMedicalCoverageType.OBRASOCIAL.getId()));
-					healthInsuranceRepository
-							.save(new HealthInsurance(saved.getId(), saved.getName(), saved.getCuit(), calculateRnos(hi), hi.getAcronym(), EMedicalCoverageType.OBRASOCIAL.getId()));
+				    healthInsuranceRepository
+							.save(new HealthInsurance(null, hi.getName(), hi.getCuit(), calculateRnos(hi), hi.getAcronym(), EMedicalCoverageType.OBRASOCIAL.getId()));
 					LOG.debug("HealthInsurance Added-> newHealthInsurance {}", hi);
 				});
 	}
