@@ -13,4 +13,5 @@ import lombok.Setter;
 public class EmailConfiguration {
 	private String from;
 	private String fromFullname;
+	private String replyTo;
 }
