@@ -169,8 +169,6 @@ export class AgendaSetupComponent implements OnInit {
 	}
 
 	private disableNotEditableControls(): void {
-		this.form.get('sectorId').disable();
-		this.form.get('doctorOffice').disable();
 		this.form.get('healthcareProfessionalId').disable();
 		this.form.get('appointmentDuration').disable();
 	}
