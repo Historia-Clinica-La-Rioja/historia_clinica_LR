@@ -8,6 +8,7 @@ import { DatePipeFormat } from '@core/utils/date.utils';
 import { DatePipe } from '@angular/common';
 import { FACTORES_DE_RIESGO } from '@historia-clinica/constants/validation-constants';
 import { PATTERN_NUMBER_WITH_DECIMALS, PATTERN_NUMBER_WITH_MAX_2_DECIMAL_DIGITS } from '@core/utils/pattern.utils';
+import { TranslateService } from '@ngx-translate/core';
 
 export interface FactoresDeRiesgo {
 	bloodOxygenSaturation?: EffectiveClinicalObservationDto;
@@ -24,29 +25,30 @@ export interface FactoresDeRiesgo {
 export class FactoresDeRiesgoFormService {
 
 	private heartRateErrorSource = new Subject<string>();
-	private _heartRateError$: Observable<string>;
+	private _heartRateError$ = this.heartRateErrorSource.asObservable();
 	private respiratoryRateErrorSource = new Subject<string>();
-	private _respiratoryRateError$: Observable<string>;
+	private _respiratoryRateError$ = this.respiratoryRateErrorSource.asObservable();
 	private temperatureErrorSource = new Subject<string>();
-	private _temperatureError$: Observable<string>;
+	private _temperatureError$ = this.temperatureErrorSource.asObservable();
 	private bloodOxygenSaturationErrorSource = new Subject<string>();
-	private _bloodOxygenSaturationError$: Observable<string>;
+	private _bloodOxygenSaturationError$ = this.bloodOxygenSaturationErrorSource.asObservable();
 	private systolicBloodPressureErrorSource = new Subject<string>();
-	private _systolicBloodPressureError$: Observable<string>;
+	private _systolicBloodPressureError$ = this.systolicBloodPressureErrorSource.asObservable();
 	private diastolicBloodPressureErrorSource = new Subject<string>();
-	private _diastolicBloodPressureError$: Observable<string>;
+	private _diastolicBloodPressureError$ = this.diastolicBloodPressureErrorSource.asObservable();
 	private bloodGlucoseErrorSource = new Subject<string>();
-	private _bloodGlucoseError$: Observable<string>;
+	private _bloodGlucoseError$ = this.bloodGlucoseErrorSource.asObservable();
 	private glycosylatedHemoglobinErrorSource = new Subject<string>();
-	private _glycosylatedHemoglobinError$: Observable<string>;
+	private _glycosylatedHemoglobinError$ = this.glycosylatedHemoglobinErrorSource.asObservable();
 	private cardiovascularRiskErrorSource = new Subject<string>();
-	private _cardiovascularRiskError$: Observable<string>;
+	private _cardiovascularRiskError$ = this.cardiovascularRiskErrorSource.asObservable();
 	private form: FormGroup;
 	private notShowPreloadedRiskFactorsData = false;
 	private dateList: string[] = [];
 
 	constructor(
 		private readonly formBuilder: FormBuilder,
+		private readonly translateService: TranslateService,
 		private readonly hceGeneralStateService?: HceGeneralStateService,
 		private readonly patientId?: number,
 		private readonly datePipe?: DatePipe,
@@ -89,60 +91,165 @@ export class FactoresDeRiesgoFormService {
 				effectiveTime: [newMoment()],
 			})
 		});
-		this.form.controls.heartRate.valueChanges.subscribe(
-			dat => {
-				if (dat.value !== undefined) {
-					this.heartRateErrorSource.next();
-				}
-			});
-		this.form.controls.respiratoryRate.valueChanges.subscribe(
-			dat => {
-				if (dat.value !== undefined) {
-					this.respiratoryRateErrorSource.next();
-				}
-			});
-		this.form.controls.temperature.valueChanges.subscribe(
-			dat => {
-				if (dat.value !== undefined) {
-					this.temperatureErrorSource.next();
-				}
-			});
-		this.form.controls.bloodOxygenSaturation.valueChanges.subscribe(
-			dat => {
-				if (dat.value !== undefined) {
-					this.bloodOxygenSaturationErrorSource.next();
-				}
-			});
-		this.form.controls.systolicBloodPressure.valueChanges.subscribe(
-			dat => {
-				if (dat.value !== undefined) {
-					this.systolicBloodPressureErrorSource.next();
-				}
-			});
-		this.form.controls.diastolicBloodPressure.valueChanges.subscribe(
-			dat => {
-				if (dat.value !== undefined) {
-					this.diastolicBloodPressureErrorSource.next();
-				}
-			});
-		this.form.controls.bloodGlucose.valueChanges.subscribe(
-			dat => {
-				if (dat.value !== undefined) {
-					this.bloodGlucoseErrorSource.next();
-				}
-			});
-		this.form.controls.glycosylatedHemoglobin.valueChanges.subscribe(
-			dat => {
-				if (dat.value !== undefined) {
-					this.glycosylatedHemoglobinErrorSource.next();
-				}
-			});
-		this.form.controls.cardiovascularRisk.valueChanges.subscribe(
-			dat => {
-				if (dat.value !== undefined) {
-					this.cardiovascularRiskErrorSource.next();
-				}
-			});
+
+		this.form.controls.heartRate.valueChanges.subscribe(_ => {
+			if (this.form.get('heartRate.value').hasError('min')) {
+				this.translateService.get('forms.MIN_ERROR', { min: FACTORES_DE_RIESGO.MIN.heartRate }).subscribe(
+					(errorMsg: string) => this.heartRateErrorSource.next(errorMsg)
+				);
+			}
+			else if (this.form.get('heartRate.value').hasError('pattern')) {
+				this.translateService.get('forms.FORMAT_NUMERIC').subscribe(
+					(errorMsg: string) => this.heartRateErrorSource.next(errorMsg)
+				);
+			}
+			else {
+				this.heartRateErrorSource.next();
+			}
+		});
+
+		this.form.controls.respiratoryRate.valueChanges.subscribe(_ => {
+			if (this.form.get('respiratoryRate.value').hasError('min')) {
+				this.translateService.get('forms.MIN_ERROR', { min: FACTORES_DE_RIESGO.MIN.respiratoryRate }).subscribe(
+					(errorMsg: string) => this.respiratoryRateErrorSource.next(errorMsg)
+				);
+			}
+			else if (this.form.get('respiratoryRate.value').hasError('pattern')) {
+				this.translateService.get('forms.FORMAT_NUMERIC').subscribe(
+					(errorMsg: string) => this.respiratoryRateErrorSource.next(errorMsg)
+				);
+			}
+			else {
+				this.respiratoryRateErrorSource.next();
+			}
+		});
+
+		this.form.controls.temperature.valueChanges.subscribe(_ => {
+			if (this.form.get('temperature.value').hasError('min')) {
+				this.translateService.get('forms.MIN_ERROR', { min: FACTORES_DE_RIESGO.MIN.temperature }).subscribe(
+					(errorMsg: string) => this.temperatureErrorSource.next(errorMsg)
+				);
+			}
+			else if (this.form.get('temperature.value').hasError('pattern')) {
+				this.translateService.get('forms.FORMAT_NUMERIC').subscribe(
+					(errorMsg: string) => this.temperatureErrorSource.next(errorMsg)
+				);
+			}
+			else {
+				this.temperatureErrorSource.next();
+			}
+		});
+
+		this.form.controls.bloodOxygenSaturation.valueChanges.subscribe(_ => {
+			if (this.form.get('bloodOxygenSaturation.value').hasError('min')) {
+				this.translateService.get('forms.MIN_ERROR', { min: FACTORES_DE_RIESGO.MIN.bloodOxygenSaturation }).subscribe(
+					(errorMsg: string) => this.bloodOxygenSaturationErrorSource.next(errorMsg)
+				);
+			}
+			else if (this.form.get('bloodOxygenSaturation.value').hasError('pattern')) {
+				this.translateService.get('forms.FORMAT_NUMERIC').subscribe(
+					(errorMsg: string) => this.bloodOxygenSaturationErrorSource.next(errorMsg)
+				);
+			}
+			else {
+				this.bloodOxygenSaturationErrorSource.next();
+			}
+		});
+
+		this.form.controls.systolicBloodPressure.valueChanges.subscribe(_ => {
+			if (this.form.get('systolicBloodPressure.value').hasError('min')) {
+				this.translateService.get('forms.MIN_ERROR', { min: FACTORES_DE_RIESGO.MIN.systolicBloodPressure }).subscribe(
+					(errorMsg: string) => this.systolicBloodPressureErrorSource.next(errorMsg)
+				);
+			}
+			else if (this.form.get('systolicBloodPressure.value').hasError('pattern')) {
+				this.translateService.get('forms.FORMAT_NUMERIC').subscribe(
+					(errorMsg: string) => this.systolicBloodPressureErrorSource.next(errorMsg)
+				);
+			}
+			else {
+				this.systolicBloodPressureErrorSource.next();
+			}
+		});
+
+		this.form.controls.diastolicBloodPressure.valueChanges.subscribe(_ => {
+			if (this.form.get('diastolicBloodPressure.value').hasError('min')) {
+				this.translateService.get('forms.MIN_ERROR', { min: FACTORES_DE_RIESGO.MIN.diastolicBloodPressure }).subscribe(
+					(errorMsg: string) => this.diastolicBloodPressureErrorSource.next(errorMsg)
+				);
+			}
+			else if (this.form.get('diastolicBloodPressure.value').hasError('pattern')) {
+				this.translateService.get('forms.FORMAT_NUMERIC').subscribe(
+					(errorMsg: string) => this.diastolicBloodPressureErrorSource.next(errorMsg)
+				);
+			}
+			else {
+				this.diastolicBloodPressureErrorSource.next();
+			}
+		});
+
+		this.form.controls.bloodGlucose.valueChanges.subscribe(_ => {
+			if (this.form.get('bloodGlucose.value').hasError('min')) {
+				this.translateService.get('forms.MIN_ERROR', { min: FACTORES_DE_RIESGO.MIN.bloodGlucose }).subscribe(
+					(errorMsg: string) => this.bloodGlucoseErrorSource.next(errorMsg)
+				);
+			}
+			else if (this.form.get('bloodGlucose.value').hasError('max')) {
+				this.translateService.get('forms.MAX_ERROR', { max: FACTORES_DE_RIESGO.MAX.bloodGlucose }).subscribe(
+					(errorMsg: string) => this.bloodGlucoseErrorSource.next(errorMsg)
+				);
+			}
+			else if (this.form.get('bloodGlucose.value').hasError('pattern')) {
+				this.translateService.get('forms.FORMAT_NUMERIC').subscribe(
+					(errorMsg: string) => this.bloodGlucoseErrorSource.next(errorMsg)
+				);
+			}
+			else {
+				this.bloodGlucoseErrorSource.next();
+			}
+		});
+
+		this.form.controls.glycosylatedHemoglobin.valueChanges.subscribe(_ => {
+			if (this.form.get('glycosylatedHemoglobin.value').hasError('min')) {
+				this.translateService.get('forms.MIN_ERROR', { min: FACTORES_DE_RIESGO.MIN.glycosylatedHemoglobin }).subscribe(
+					(errorMsg: string) => this.glycosylatedHemoglobinErrorSource.next(errorMsg)
+				);
+			}
+			else if (this.form.get('glycosylatedHemoglobin.value').hasError('max')) {
+				this.translateService.get('forms.MAX_ERROR', { max: FACTORES_DE_RIESGO.MAX.glycosylatedHemoglobin }).subscribe(
+					(errorMsg: string) => this.glycosylatedHemoglobinErrorSource.next(errorMsg)
+				);
+			}
+			else if (this.form.get('glycosylatedHemoglobin.value').hasError('pattern')) {
+				this.translateService.get('ambulatoria.factores-de-riesgo-form.MAX_TWO_DECIMAL_DIGITS_ERROR').subscribe(
+					(errorMsg: string) => this.glycosylatedHemoglobinErrorSource.next(errorMsg)
+				);
+			}
+			else {
+				this.glycosylatedHemoglobinErrorSource.next();
+			}
+		});
+
+		this.form.controls.cardiovascularRisk.valueChanges.subscribe(_ => {
+			if (this.form.get('cardiovascularRisk.value').hasError('min')) {
+				this.translateService.get('forms.MIN_ERROR', { min: FACTORES_DE_RIESGO.MIN.cardiovascularRisk }).subscribe(
+					(errorMsg: string) => this.cardiovascularRiskErrorSource.next(errorMsg)
+				);
+			}
+			else if (this.form.get('cardiovascularRisk.value').hasError('max')) {
+				this.translateService.get('forms.MAX_ERROR', { max: FACTORES_DE_RIESGO.MAX.cardiovascularRisk }).subscribe(
+					(errorMsg: string) => this.cardiovascularRiskErrorSource.next(errorMsg)
+				);
+			}
+			else if (this.form.get('cardiovascularRisk.value').hasError('pattern')) {
+				this.translateService.get('forms.FORMAT_NUMERIC').subscribe(
+					(errorMsg: string) => this.cardiovascularRiskErrorSource.next(errorMsg)
+				);
+			}
+			else {
+				this.cardiovascularRiskErrorSource.next();
+			}
+		});
 	}
 
 	setRiskFactorEffectiveTime(newEffectiveTime: Moment, formField: string): void {
@@ -174,102 +281,39 @@ export class FactoresDeRiesgoFormService {
 	}
 
 	get heartRateError$(): Observable<string> {
-		if (!this._heartRateError$) {
-			this._heartRateError$ = this.heartRateErrorSource.asObservable();
-		}
 		return this._heartRateError$;
 	}
 
 	get respiratoryRateError$(): Observable<string> {
-		if (!this._respiratoryRateError$) {
-			this._respiratoryRateError$ = this.respiratoryRateErrorSource.asObservable();
-		}
 		return this._respiratoryRateError$;
 	}
 
 	get temperatureError$(): Observable<string> {
-		if (!this._temperatureError$) {
-			this._temperatureError$ = this.temperatureErrorSource.asObservable();
-		}
 		return this._temperatureError$;
 	}
 
 	get bloodOxygenSaturationError$(): Observable<string> {
-		if (!this._bloodOxygenSaturationError$) {
-			this._bloodOxygenSaturationError$ = this.bloodOxygenSaturationErrorSource.asObservable();
-		}
 		return this._bloodOxygenSaturationError$;
 	}
 
 	get diastolicBloodPressureError$(): Observable<string> {
-		if (!this._diastolicBloodPressureError$) {
-			this._diastolicBloodPressureError$ = this.diastolicBloodPressureErrorSource.asObservable();
-		}
 		return this._diastolicBloodPressureError$;
 	}
 
 	get systolicBloodPressureError$(): Observable<string> {
-		if (!this._systolicBloodPressureError$) {
-			this._systolicBloodPressureError$ = this.systolicBloodPressureErrorSource.asObservable();
-		}
 		return this._systolicBloodPressureError$;
 	}
 
 	get bloodGlucoseError$(): Observable<string> {
-		if (!this._bloodGlucoseError$) {
-			this._bloodGlucoseError$ = this.bloodGlucoseErrorSource.asObservable();
-		}
 		return this._bloodGlucoseError$;
 	}
 
 	get glycosylatedHemoglobinError$(): Observable<string> {
-		if (!this._glycosylatedHemoglobinError$) {
-			this._glycosylatedHemoglobinError$ = this.glycosylatedHemoglobinErrorSource.asObservable();
-		}
 		return this._glycosylatedHemoglobinError$;
 	}
 
 	get cardiovascularRiskError$(): Observable<string> {
-		if (!this._cardiovascularRiskError$) {
-			this._cardiovascularRiskError$ = this.cardiovascularRiskErrorSource.asObservable();
-		}
 		return this._cardiovascularRiskError$;
-	}
-
-	setHeartRateError(errorMsg: string): void {
-		this.heartRateErrorSource.next(errorMsg);
-	}
-
-	setRespiratoryRateError(errorMsg: string): void {
-		this.respiratoryRateErrorSource.next(errorMsg);
-	}
-
-	setTemperatureError(errorMsg: string): void {
-		this.temperatureErrorSource.next(errorMsg);
-	}
-
-	setBloodOxygenSaturationError(errorMsg: string): void {
-		this.bloodOxygenSaturationErrorSource.next(errorMsg);
-	}
-
-	setSystolicBloodPressureError(errorMsg: string): void {
-		this.systolicBloodPressureErrorSource.next(errorMsg);
-	}
-
-	setDiastolicBloodPressureError(errorMsg: string): void {
-		this.diastolicBloodPressureErrorSource.next(errorMsg);
-	}
-
-	setBloodGlucoseError(errorMsg: string): void {
-		this.bloodGlucoseErrorSource.next(errorMsg);
-	}
-
-	setGlycosylatedHemoglobinError(errorMsg: string): void {
-		this.glycosylatedHemoglobinErrorSource.next(errorMsg);
-	}
-
-	setCardiovascularRiskError(errorMsg: string): void {
-		this.cardiovascularRiskErrorSource.next(errorMsg);
 	}
 
 	setPreviousRiskFactorsData(): void {

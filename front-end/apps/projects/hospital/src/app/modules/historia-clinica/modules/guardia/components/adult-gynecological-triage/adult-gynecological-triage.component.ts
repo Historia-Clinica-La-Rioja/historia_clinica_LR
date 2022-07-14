@@ -1,8 +1,8 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { TriageAdultGynecologicalDto } from '@api-rest/api-model';
-import { getError, hasError } from '@core/utils/form.utils';
 import { FactoresDeRiesgoFormService } from '@historia-clinica/services/factores-de-riesgo-form.service';
+import { TranslateService } from '@ngx-translate/core';
 import { RiskFactorsValue, RiskFactorsFormService } from '../../../../services/risk-factors-form.service';
 import { GuardiaMapperService } from '../../services/guardia-mapper.service';
 
@@ -19,10 +19,6 @@ export class AdultGynecologicalTriageComponent implements OnInit {
 	@Output() confirm = new EventEmitter();
 	@Output() cancel = new EventEmitter();
 
-
-	hasError = hasError;
-	getError = getError;
-
 	private triageCategoryId: number;
 	private doctorsOfficeId: number;
 
@@ -35,8 +31,9 @@ export class AdultGynecologicalTriageComponent implements OnInit {
 		private formBuilder: FormBuilder,
 		private guardiaMapperService: GuardiaMapperService,
 		public riskFactorsFormService: RiskFactorsFormService,
+		private readonly translateService: TranslateService,
 	) {
-		this.factoresDeRiesgoFormService = new FactoresDeRiesgoFormService(formBuilder);
+		this.factoresDeRiesgoFormService = new FactoresDeRiesgoFormService(formBuilder, translateService);
 	}
 
 	ngOnInit(): void {

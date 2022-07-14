@@ -6,8 +6,8 @@
     </app-include-previous-data-question>
     <app-document-section>
         <ng-container concept-form>
-            <form fxLayout="column" fxLayoutGap="15px" [formGroup]="factoresDeRiesgoFormService.getForm()">
-                <div fxLayout="row wrap" fxFlex="100%" fxLayout.lt-lg="column" fxLayoutGap.lt-lg="15px">
+            <form fxLayout="column" fxLayoutGap="20px" [formGroup]="factoresDeRiesgoFormService.getForm()">
+                <div fxFlex="100%" fxLayout="row" fxLayoutGap="5px" fxLayout.lt-lg="column" fxLayoutGap.lt-lg="20px">
                     <div class="factores-de-riesgo-field" formGroupName="heartRate">
                         <mat-label [translate]="'historia-clinica.factores-de-riesgo-form.HEART_RATE'">
                         </mat-label>
@@ -26,12 +26,9 @@
                             [effectiveTime]="factoresDeRiesgoFormService.getForm().value.heartRate.effectiveTime"
                             (update)="factoresDeRiesgoFormService.setRiskFactorEffectiveTime($event, 'heartRate')">
                         </app-effective-time>
-                        <ng-container *ngIf="showErrors">
-                            <mat-error *ngIf="hasError(factoresDeRiesgoFormService.getForm(), 'min', 'heartRate.value')"
-                                [translate]="'forms.MIN_ERROR'"
-                                [translateParams]="{min: getError(factoresDeRiesgoFormService.getForm(), 'min', 'heartRate.value').min}">
-                            </mat-error>
-                        </ng-container>
+                        <mat-error *ngIf="showErrors">
+                            {{ factoresDeRiesgoFormService.heartRateError$ | async }}
+                        </mat-error>
                     </div>
                     <div class="factores-de-riesgo-field" formGroupName="respiratoryRate">
                         <mat-label [translate]="'historia-clinica.factores-de-riesgo-form.RESPIRATORY_RATE'">
@@ -51,17 +48,13 @@
                             [effectiveTime]="factoresDeRiesgoFormService.getForm().value.respiratoryRate.effectiveTime"
                             (update)="factoresDeRiesgoFormService.setRiskFactorEffectiveTime($event, 'respiratoryRate')">
                         </app-effective-time>
-                        <ng-container *ngIf="showErrors">
-                            <mat-error
-                                *ngIf="hasError(factoresDeRiesgoFormService.getForm(), 'min', 'respiratoryRate.value')"
-                                [translate]="'forms.MIN_ERROR'"
-                                [translateParams]="{min: getError(factoresDeRiesgoFormService.getForm(), 'min', 'respiratoryRate.value').min}">
-                            </mat-error>
-                        </ng-container>
+                        <mat-error *ngIf="showErrors">
+                            {{ factoresDeRiesgoFormService.respiratoryRateError$ | async }}
+                        </mat-error>
                     </div>
                 </div>
 
-                <div fxLayout="row wrap" fxFlex="100%" fxLayout.lt-lg="column" fxLayoutGap.lt-lg="15px">
+                <div fxFlex="100%" fxLayout="row" fxLayoutGap="5px" fxLayout.lt-lg="column" fxLayoutGap.lt-lg="20px">
                     <div class="factores-de-riesgo-field" formGroupName="temperature">
                         <mat-label [translate]="'historia-clinica.factores-de-riesgo-form.TEMPERATURE'">
                         </mat-label>
@@ -80,13 +73,9 @@
                             [effectiveTime]="factoresDeRiesgoFormService.getForm().value.temperature.effectiveTime"
                             (update)="factoresDeRiesgoFormService.setRiskFactorEffectiveTime($event, 'temperature')">
                         </app-effective-time>
-                        <ng-container *ngIf="showErrors">
-                            <mat-error
-                                *ngIf="hasError(factoresDeRiesgoFormService.getForm(), 'min', 'temperature.value')"
-                                [translate]="'forms.MIN_ERROR'"
-                                [translateParams]="{min: getError(factoresDeRiesgoFormService.getForm(), 'min', 'temperature.value').min}">
-                            </mat-error>
-                        </ng-container>
+                        <mat-error *ngIf="showErrors">
+                            {{ factoresDeRiesgoFormService.temperatureError$ | async }}
+                        </mat-error>
                     </div>
                     <div class="factores-de-riesgo-field" formGroupName="bloodOxygenSaturation">
                         <mat-label [translate]="'historia-clinica.factores-de-riesgo-form.BLOOD_OXYGEN_SATURATION'">
@@ -107,17 +96,13 @@
                             [effectiveTime]="factoresDeRiesgoFormService.getForm().value.bloodOxygenSaturation.effectiveTime"
                             (update)="factoresDeRiesgoFormService.setRiskFactorEffectiveTime($event, 'bloodOxygenSaturation')">
                         </app-effective-time>
-                        <ng-container *ngIf="showErrors">
-                            <mat-error
-                                *ngIf="hasError(factoresDeRiesgoFormService.getForm(), 'min', 'bloodOxygenSaturation.value')"
-                                [translate]="'forms.MIN_ERROR'"
-                                [translateParams]="{min: getError(factoresDeRiesgoFormService.getForm(), 'min', 'bloodOxygenSaturation.value').min}">
-                            </mat-error>
-                        </ng-container>
+                        <mat-error *ngIf="showErrors">
+                            {{ factoresDeRiesgoFormService.bloodOxygenSaturationError$ | async }}
+                        </mat-error>
                     </div>
                 </div>
 
-                <div fxLayout="row wrap" fxFlex="100%" fxLayout.lt-lg="column" fxLayoutGap.lt-lg="15px">
+                <div fxFlex="100%" fxLayout="row" fxLayoutGap="5px" fxLayout.lt-lg="column" fxLayoutGap.lt-lg="20px">
                     <div class="factores-de-riesgo-field" formGroupName="systolicBloodPressure">
                         <mat-label [translate]="'historia-clinica.factores-de-riesgo-form.SYSTOLIC_BLOOD_PRESSURE'">
                         </mat-label>
@@ -138,13 +123,9 @@
                             [effectiveTime]="factoresDeRiesgoFormService.getForm().value.systolicBloodPressure.effectiveTime"
                             (update)="factoresDeRiesgoFormService.setRiskFactorEffectiveTime($event, 'systolicBloodPressure')">
                         </app-effective-time>
-                        <ng-container *ngIf="showErrors">
-                            <mat-error
-                                *ngIf="hasError(factoresDeRiesgoFormService.getForm(), 'min', 'systolicBloodPressure.value')"
-                                [translate]="'forms.MIN_ERROR'"
-                                [translateParams]="{min: getError(factoresDeRiesgoFormService.getForm(), 'min', 'systolicBloodPressure.value').min}">
-                            </mat-error>
-                        </ng-container>
+                        <mat-error *ngIf="showErrors">
+                            {{ factoresDeRiesgoFormService.systolicBloodPressureError$ | async }}
+                        </mat-error>
                     </div>
                     <div class="factores-de-riesgo-field" formGroupName="diastolicBloodPressure">
                         <mat-label [translate]="'historia-clinica.factores-de-riesgo-form.DIASTOLIC_BLOOD_PRESSURE'">
@@ -167,17 +148,13 @@
                             [effectiveTime]="factoresDeRiesgoFormService.getForm().value.diastolicBloodPressure.effectiveTime"
                             (update)="factoresDeRiesgoFormService.setRiskFactorEffectiveTime($event, 'diastolicBloodPressure')">
                         </app-effective-time>
-                        <ng-container *ngIf="showErrors">
-                            <mat-error
-                                *ngIf="hasError(factoresDeRiesgoFormService.getForm(), 'min', 'diastolicBloodPressure.value')"
-                                [translate]="'forms.MIN_ERROR'"
-                                [translateParams]="{min: getError(factoresDeRiesgoFormService.getForm(), 'min', 'diastolicBloodPressure.value').min}">
-                            </mat-error>
-                        </ng-container>
+                        <mat-error *ngIf="showErrors">
+                            {{ factoresDeRiesgoFormService.diastolicBloodPressureError$ | async }}
+                        </mat-error>
                     </div>
                 </div>
 
-                <div fxLayout="row wrap" fxFlex="100%" fxLayout.lt-lg="column" fxLayoutGap.lt-lg="15px">
+                <div fxFlex="100%" fxLayout="row" fxLayoutGap="5px" fxLayout.lt-lg="column" fxLayoutGap.lt-lg="20px">
                     <div class="factores-de-riesgo-field" formGroupName="bloodGlucose">
                         <mat-label [translate]="'historia-clinica.factores-de-riesgo-form.BLOOD_GLUCOSE'">
                         </mat-label>
@@ -196,18 +173,9 @@
                             [effectiveTime]="factoresDeRiesgoFormService.getForm().value.bloodGlucose.effectiveTime"
                             (update)="factoresDeRiesgoFormService.setRiskFactorEffectiveTime($event, 'bloodGlucose')">
                         </app-effective-time>
-                        <ng-container *ngIf="showErrors">
-                            <mat-error
-                                *ngIf="hasError(factoresDeRiesgoFormService.getForm(), 'min', 'bloodGlucose.value')"
-                                [translate]="'forms.MIN_ERROR'"
-                                [translateParams]="{min: getError(factoresDeRiesgoFormService.getForm(), 'min', 'bloodGlucose.value').min}">
-                            </mat-error>
-                            <mat-error
-                                *ngIf="hasError(factoresDeRiesgoFormService.getForm(), 'max', 'bloodGlucose.value')"
-                                [translate]="'forms.MAX_ERROR'"
-                                [translateParams]="{max: getError(factoresDeRiesgoFormService.getForm(), 'max', 'bloodGlucose.value').max}">
-                            </mat-error>
-                        </ng-container>
+                        <mat-error *ngIf="showErrors">
+                            {{ factoresDeRiesgoFormService.bloodGlucoseError$ | async }}
+                        </mat-error>
                     </div>
                     <div class="factores-de-riesgo-field" formGroupName="glycosylatedHemoglobin">
                         <mat-label [translate]="'historia-clinica.factores-de-riesgo-form.GLYCOSYLATED_HEMOGLOBIN'">
@@ -228,26 +196,13 @@
                             [effectiveTime]="factoresDeRiesgoFormService.getForm().value.glycosylatedHemoglobin.effectiveTime"
                             (update)="factoresDeRiesgoFormService.setRiskFactorEffectiveTime($event, 'glycosylatedHemoglobin')">
                         </app-effective-time>
-                        <ng-container *ngIf="showErrors">
-                            <mat-error
-                                *ngIf="hasError(factoresDeRiesgoFormService.getForm(), 'min', 'glycosylatedHemoglobin.value')"
-                                [translate]="'forms.MIN_ERROR'"
-                                [translateParams]="{min: getError(factoresDeRiesgoFormService.getForm(), 'min', 'glycosylatedHemoglobin.value').min}">
-                            </mat-error>
-                            <mat-error
-                                *ngIf="hasError(factoresDeRiesgoFormService.getForm(), 'max', 'glycosylatedHemoglobin.value')"
-                                [translate]="'forms.MAX_ERROR'"
-                                [translateParams]="{max: getError(factoresDeRiesgoFormService.getForm(), 'max', 'glycosylatedHemoglobin.value').max}">
-                            </mat-error>
-                            <mat-error
-                                *ngIf="hasError(factoresDeRiesgoFormService.getForm(), 'pattern', 'glycosylatedHemoglobin.value')"
-                                [translate]="'historia-clinica.factores-de-riesgo-form.MAX_TWO_DECIMAL_DIGITS'">
-                            </mat-error>
-                        </ng-container>
+                        <mat-error *ngIf="showErrors">
+                            {{ factoresDeRiesgoFormService.glycosylatedHemoglobinError$ | async }}
+                        </mat-error>
                     </div>
                 </div>
 
-                <div fxLayout="row wrap" fxFlex="100%" fxLayout.lt-lg="column" fxLayoutGap.lt-lg="15px">
+                <div fxFlex="100%" fxLayout="row" fxLayoutGap="5px" fxLayout.lt-lg="column" fxLayoutGap.lt-lg="20px">
                     <div class="factores-de-riesgo-field" formGroupName="cardiovascularRisk">
                         <mat-label [translate]="'historia-clinica.factores-de-riesgo-form.CARDIOVASCULAR_RISK'">
                         </mat-label>
@@ -266,18 +221,9 @@
                             [effectiveTime]="factoresDeRiesgoFormService.getForm().value.cardiovascularRisk.effectiveTime"
                             (update)="factoresDeRiesgoFormService.setRiskFactorEffectiveTime($event, 'cardiovascularRisk')">
                         </app-effective-time>
-                        <ng-container *ngIf="showErrors">
-                            <mat-error
-                                *ngIf="hasError(factoresDeRiesgoFormService.getForm(), 'min', 'cardiovascularRisk.value')"
-                                [translate]="'forms.MIN_ERROR'"
-                                [translateParams]="{min: getError(factoresDeRiesgoFormService.getForm(), 'min', 'cardiovascularRisk.value').min}">
-                            </mat-error>
-                            <mat-error
-                                *ngIf="hasError(factoresDeRiesgoFormService.getForm(), 'max', 'cardiovascularRisk.value')"
-                                [translate]="'forms.MAX_ERROR'"
-                                [translateParams]="{max: getError(factoresDeRiesgoFormService.getForm(), 'max', 'cardiovascularRisk.value').max}">
-                            </mat-error>
-                        </ng-container>
+                        <mat-error *ngIf="showErrors">
+                            {{ factoresDeRiesgoFormService.cardiovascularRiskError$ | async }}
+                        </mat-error>
                     </div>
                 </div>
             </form>

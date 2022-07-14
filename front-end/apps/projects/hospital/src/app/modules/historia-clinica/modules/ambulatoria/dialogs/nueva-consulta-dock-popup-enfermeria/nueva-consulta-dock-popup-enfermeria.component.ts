@@ -95,7 +95,7 @@ export class NuevaConsultaDockPopupEnfermeriaComponent implements OnInit {
 		this.procedimientoNuevaConsultaService = new ProcedimientosService(formBuilder, this.snomedService, this.snackBarService);
 		this.datosAntropometricosNuevaConsultaService =
 			new DatosAntropometricosNuevaConsultaService(formBuilder, this.hceGeneralStateService, this.data.idPaciente, this.internacionMasterDataService, this.translateService);
-		this.factoresDeRiesgoFormService = new FactoresDeRiesgoFormService(formBuilder);
+		this.factoresDeRiesgoFormService = new FactoresDeRiesgoFormService(formBuilder, translateService);
 	}
 
 	setProfessionalSpecialties() {
@@ -215,7 +215,7 @@ export class NuevaConsultaDockPopupEnfermeriaComponent implements OnInit {
 		const fieldsService = new NewNurseConsultationSuggestedFieldsService(nursingConsultationDto, this.translateService);
 
 		this.apiErrors = [];
-		this.addErrorMessage(nursingConsultationDto);
+
 		if (this.isValidConsultation()) {
 			if (!fieldsService.nonCompletedFields.length) {
 				this.createConsultation(nursingConsultationDto);
@@ -293,57 +293,6 @@ export class NuevaConsultaDockPopupEnfermeriaComponent implements OnInit {
 		return (this.errores.find(elem =>
 			elem !== undefined
 		) === undefined);
-	}
-
-	private addErrorMessage(consulta: NursingConsultationDto): void {
-		let value = consulta.riskFactors.heartRate?.value;
-		if (parseInt(value, 10) < FACTORES_DE_RIESGO.MIN.heartRate) {
-			this.factoresDeRiesgoFormService.setHeartRateError('ambulatoria.paciente.nueva-consulta.errors.FRECUENCIA_CARDIACA_MIN');
-		}
-
-		value = consulta.riskFactors.respiratoryRate?.value;
-		if (parseInt(value, 10) < FACTORES_DE_RIESGO.MIN.respiratoryRate) {
-			this.factoresDeRiesgoFormService.setRespiratoryRateError('ambulatoria.paciente.nueva-consulta.errors.FRECUENCIA_RESPIRATORIA_MIN');
-		}
-
-		value = consulta.riskFactors.temperature?.value;
-		if (parseInt(value, 10) < FACTORES_DE_RIESGO.MIN.temperature) {
-			this.factoresDeRiesgoFormService.setTemperatureError('ambulatoria.paciente.nueva-consulta.errors.TEMPERATURA_CORPORAL_MIN');
-		}
-
-		value = consulta.riskFactors.bloodOxygenSaturation?.value;
-		if (parseInt(value, 10) < FACTORES_DE_RIESGO.MIN.bloodOxygenSaturation) {
-			this.factoresDeRiesgoFormService.setBloodOxygenSaturationError('ambulatoria.paciente.nueva-consulta.errors.SATURACION_OXIGENO_MIN');
-		}
-
-		value = consulta.riskFactors.diastolicBloodPressure?.value;
-		if (parseInt(value, 10) < FACTORES_DE_RIESGO.MIN.diastolicBloodPressure) {
-			this.factoresDeRiesgoFormService.setDiastolicBloodPressureError('ambulatoria.paciente.nueva-consulta.errors.TENSION_DIASTOLICA_MIN');
-		}
-
-		value = consulta.riskFactors?.systolicBloodPressure?.value;
-		if (parseInt(value, 10) < FACTORES_DE_RIESGO.MIN.systolicBloodPressure) {
-			this.factoresDeRiesgoFormService.setSystolicBloodPressureError('ambulatoria.paciente.nueva-consulta.errors.TENSION_SISTOLICA_MIN');
-		}
-
-		value = consulta.riskFactors?.bloodGlucose?.value;
-		if ((parseInt(value, 10) < FACTORES_DE_RIESGO.MIN.bloodGlucose) || (parseInt(value, 10) > FACTORES_DE_RIESGO.MAX.bloodGlucose)) {
-			this.factoresDeRiesgoFormService.setBloodGlucoseError('ambulatoria.paciente.nueva-consulta.errors.BLOOD_GLUCOSE_RANGE');
-		}
-
-		value = consulta.riskFactors?.glycosylatedHemoglobin?.value;
-		if ((parseFloat(value) < FACTORES_DE_RIESGO.MIN.glycosylatedHemoglobin) || (parseFloat(value) > FACTORES_DE_RIESGO.MAX.glycosylatedHemoglobin)) {
-			this.factoresDeRiesgoFormService.setGlycosylatedHemoglobinError('ambulatoria.paciente.nueva-consulta.errors.GLYCOSYLATED_HEMOGLOBIN_RANGE');
-		}
-		else if (value && !hasMaxTwoDecimalDigits(value)) {
-			this.factoresDeRiesgoFormService.setGlycosylatedHemoglobinError('ambulatoria.paciente.nueva-consulta.errors.MAX_TWO_DECIMAL_DIGITS');
-		}
-
-		value = consulta.riskFactors?.cardiovascularRisk?.value;
-		if ((parseInt(value, 10) < FACTORES_DE_RIESGO.MIN.cardiovascularRisk) || (parseInt(value, 10) > FACTORES_DE_RIESGO.MAX.cardiovascularRisk)) {
-			this.factoresDeRiesgoFormService.setCardiovascularRiskError('ambulatoria.paciente.nueva-consulta.errors.CARDIOVASCULAR_RISK_RANGE');
-		}
-
 	}
 
 	private buildCreateOutpatientDto(): NursingConsultationDto {

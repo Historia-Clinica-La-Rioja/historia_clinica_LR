@@ -42,8 +42,7 @@
 			"DIASTOLIC_BLOOD_PRESSURE": "Tensión diastólica (mm)",
 			"BLOOD_GLUCOSE": "Glucemia (mg/dl)",
 			"GLYCOSYLATED_HEMOGLOBIN": "Hemoglobina glicosilada (%)",
-			"CARDIOVASCULAR_RISK": "Riesgo cardiovascular (%)",
-			"MAX_TWO_DECIMAL_DIGITS": "El valor debe tener máximo 2 cifras decimales"
+			"CARDIOVASCULAR_RISK": "Riesgo cardiovascular (%)"
 		},
 		"include-previous-data-question": {
 			"DESCRIPTION": "Últimos {{dataName}} cargados previamente el {{date}}",

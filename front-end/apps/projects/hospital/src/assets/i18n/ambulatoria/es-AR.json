@@ -9,6 +9,9 @@
         "datos-antropometricos-nueva-consulta": {
             "MAX_TWO_DECIMAL_DIGITS_ERROR": "Máximo 2 cifras decimales"
         },
+        "factores-de-riesgo-form": {
+            "MAX_TWO_DECIMAL_DIGITS_ERROR": "Máximo 2 cifras decimales"
+        },
         "bus-interoperabilidad": {
             "TIMEOUT-MESSAGE": "Existe demora para obtener información externa, por favor consulte mas tarde",
             "PACIENTE-NO-FEDERADO": "Este paciente no está federado en ninguna otra institución",
@@ -77,29 +80,7 @@
                     "DESCRIPCION": "Descripción"
                 },
                 "errors": {
-                    "MOTIVO_OBLIGATORIO": "Motivo de consulta obligatorio",
-                    "FRECUENCIA_CARDIACA_MIN": "La frecuencia cardíaca mínima debe ser 0 (/min)",
-                    "FRECUENCIA_RESPIRATORIA_MIN": "La frecuencia respiratoria mínima debe ser 0 (/min)",
-                    "TEMPERATURA_CORPORAL_MIN": "La temperatura corporal mínima debe ser 0",
-                    "SATURACION_OXIGENO_MIN": "La saturación de oxígeno mínima debe ser 0%",
-                    "TENSION_DIASTOLICA_OBLIGATORIO": "Tensión arterial diastólica obligatorio",
-                    "TENSION_DIASTOLICA_MIN": "Tensión arterial diastólica mínima debe ser 0 mmHg",
-                    "TENSION_SISTOLICA_OBLIGATORIO": "Tensión arterial sistólica obligatorio",
-                    "TENSION_SISTOLICA_MIN": "Tensión arterial sistólica mínima debe ser 0 mmHg",
-                    "TALLA_OBLIGATORIO": "Talla obligatorio",
-                    "TALLA_NOT_INTEGER": "La talla debe ser un valor entero",
-                    "TALLA_MIN": "La talla mínima debe ser 0 cm",
-                    "TALLA_MAX": "La talla máxima debe ser 1000 cm",
-                    "PESO_OBLIGATORIO": "Peso obligatorio",
-                    "PESO_MIN": "El peso mínimo debe ser 0 kg",
-                    "PESO_MAX": "El peso máximo debe ser 1000 kg",
-                    "PROBLEMA_OBLIGATORIO": "Problema de consulta obligatorio",
-                    "HEAD_CIRCUNFERENCE_RANGE": "Perímetro cefálico debe ser entre 1 y 100 cm",
-                    "HEAD_CIRCUNFERENCE_NOT_VALID": "Perímetro cefálico debe tener como máximo 2 decimales",
-                    "BLOOD_GLUCOSE_RANGE": "Glucemia debe ser entre 1 y 500 (mg/dl)",
-                    "GLYCOSYLATED_HEMOGLOBIN_RANGE": "Hemoglobina glicosilada debe ser entre 1 y 20 (%)",
-                    "CARDIOVASCULAR_RISK_RANGE": "Riesgo cardiovascular debe ser entre 1 y 100 (%)",
-                    "MAX_TWO_DECIMAL_DIGITS": "Hemoglobina glicosilada debe tener máximo 2 cifras decimales"
+                    "MOTIVO_OBLIGATORIO": "Motivo de consulta obligatorio"
                 },
                 "motivo": {
                     "TITLE": "Motivo de consulta",

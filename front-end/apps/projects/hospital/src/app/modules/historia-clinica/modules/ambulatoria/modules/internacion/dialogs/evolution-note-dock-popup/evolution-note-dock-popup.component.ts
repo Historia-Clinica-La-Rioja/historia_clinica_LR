@@ -25,6 +25,7 @@ import { PermissionsService } from "@core/services/permissions.service";
 import { anyMatch } from "@core/utils/array.utils";
 import { dateToMoment } from "@core/utils/moment.utils";
 import { EditDocumentActionService } from '../../services/edit-document-action.service';
+import { TranslateService } from '@ngx-translate/core';
 
 @Component({
 	selector: 'app-evolution-note-dock-popup',
@@ -64,12 +65,13 @@ export class EvolutionNoteDockPopupComponent implements OnInit {
 		private readonly snackBarService: SnackBarService,
 		private readonly snomedService: SnomedService,
 		private readonly permissionsService: PermissionsService,
-		private readonly editDocumentAction: EditDocumentActionService
+		private readonly editDocumentAction: EditDocumentActionService,
+		private readonly translateService: TranslateService
 	) {
 		this.mainDiagnosis = data.mainDiagnosis;
 		this.diagnosticos = data.diagnosticos;
 		this.procedimientosService = new ProcedimientosService(formBuilder, this.snomedService, this.snackBarService);
-		this.factoresDeRiesgoFormService = new FactoresDeRiesgoFormService(formBuilder);
+		this.factoresDeRiesgoFormService = new FactoresDeRiesgoFormService(formBuilder, translateService);
 		this.permissionsService.contextAssignments$().subscribe((userRoles: ERole[]) => {
 			this.wasMadeByProfessionalNursing = !anyMatch<ERole>(userRoles, [ERole.ESPECIALISTA_MEDICO, ERole.ESPECIALISTA_EN_ODONTOLOGIA, ERole.PROFESIONAL_DE_SALUD]) && anyMatch<ERole>(userRoles, [ERole.ENFERMERO]);
 		})

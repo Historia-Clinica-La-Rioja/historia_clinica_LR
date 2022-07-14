@@ -1,5 +1,4 @@
 import { Component, Input } from '@angular/core';
-import { getError, hasError } from '@core/utils/form.utils';
 import { isNumberOrDot } from '@core/utils/pattern.utils';
 import { FactoresDeRiesgoFormService } from '../../services/factores-de-riesgo-form.service';
 
@@ -17,8 +16,6 @@ export class FactoresDeRiesgoFormComponent {
   @Input() showTitle: boolean = true;
 
   readonly isNumberOrDot = isNumberOrDot;
-  readonly hasError = hasError;
-  readonly getError = getError;
 
   savePreloadData(save: boolean): void {
     if (save) {

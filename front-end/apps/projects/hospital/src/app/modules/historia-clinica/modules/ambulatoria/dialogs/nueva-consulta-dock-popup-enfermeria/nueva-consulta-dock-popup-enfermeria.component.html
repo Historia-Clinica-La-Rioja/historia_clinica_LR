@@ -35,7 +35,7 @@
 			[title]="'historia-clinica.factores-de-riesgo-form.TITLE' | translate" icon="favorite_outlined"
 			[isEmpty]="!factoresDeRiesgoFormService.hasAtLeastOneValueLoaded()">
 			<app-factores-de-riesgo-form [showRecomendation]="true" [showTitle]="false"
-				[factoresDeRiesgoFormService]="factoresDeRiesgoFormService">
+				[factoresDeRiesgoFormService]="factoresDeRiesgoFormService" [showErrors]="true">
 			</app-factores-de-riesgo-form>
 		</app-new-consultation-expansion-section>
 
