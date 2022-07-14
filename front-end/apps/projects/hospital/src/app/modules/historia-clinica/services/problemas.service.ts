@@ -6,7 +6,6 @@ import { pushIfNotExists, removeFrom } from '@core/utils/array.utils';
 import { newMoment } from '@core/utils/moment.utils';
 import { Moment } from 'moment';
 import { hasError } from '@core/utils/form.utils';
-import { Observable, Subject } from 'rxjs';
 import { TableColumnConfig } from '@presentation/components/document-section-table/document-section-table.component';
 import { CellTemplates } from '@presentation/components/cell-templates/cell-templates.component';
 import { SnackBarService } from '@presentation/services/snack-bar.service';
@@ -25,8 +24,6 @@ export class ProblemasService {
 	private snomedConcept: SnomedDto;
 	private readonly columns: TableColumnConfig[];
 	private data: Problema[];
-	private errorSource = new Subject<string>();
-	private _error$: Observable<string>;
 	private severityTypes: any[];
 	private readonly ECL = SnomedECL.DIAGNOSIS;
 
@@ -112,7 +109,6 @@ export class ProblemasService {
 				fechaFin: this.form.value.fechaFin
 			};
 			this.addControl(nuevoProblema);
-			this.errorSource.next();
 			this.resetForm();
 			return true;
 		}
@@ -191,17 +187,6 @@ export class ProblemasService {
 
 	hasError(type: string, controlName: string): boolean {
 		return hasError(this.form, type, controlName);
-	}
-
-	get error$(): Observable<string> {
-		if (!this._error$) {
-			this._error$ = this.errorSource.asObservable();
-		}
-		return this._error$;
-	}
-
-	setError(errorMsg: string): void {
-		this.errorSource.next(errorMsg);
 	}
 
 	editProblem(): boolean {

@@ -128,15 +128,6 @@ export class OdontologyConsultationDockPopupComponent implements OnInit {
 			this.otherDiagnosticsNewConsultationService.setSeverityTypes(healthConditionSeverities);
 		});
 
-
-		this.reasonNewConsultationService.error$.subscribe(reasonError => {
-			this.errors[0] = reasonError;
-		});
-
-		this.otherDiagnosticsNewConsultationService.error$.subscribe(otherDiagnosticsError => {
-			this.errors[1] = otherDiagnosticsError;
-		});
-
 		this.odontologyConsultationService.getConsultationIndices(this.data.patientId).subscribe(odontologyConsultationArray => {
 			const odontologyConsultation = odontologyConsultationArray.find(odontologyConsultation => odontologyConsultation.permanentTeethPresent !== null && odontologyConsultation.temporaryTeethPresent !== null)
 			if (odontologyConsultation) {
