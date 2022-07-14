@@ -378,7 +378,7 @@ databaseChangeLog:
                 UPDATE odontology_consultation
                 SET doctor_id = subquery.hpid
                 FROM (  SELECT d1.id, tahp.id as hpid
-                        FROM outpatient_consultation d1
+                        FROM odontology_consultation d1
                         JOIN healthcare_professional hp ON (hp.id = d1.doctor_id)
                         JOIN tmp_active_healthcare_professional tahp ON (tahp.person_id = hp.person_id)) AS subquery
                 WHERE odontology_consultation.id = subquery.id;
