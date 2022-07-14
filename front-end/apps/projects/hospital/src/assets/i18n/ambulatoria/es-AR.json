@@ -6,6 +6,9 @@
             "WITHOUT_COVERAGE": "Sin cobertura",
             "NO_INFO": "Sin información"
         },
+        "datos-antropometricos-nueva-consulta": {
+            "MAX_TWO_DECIMAL_DIGITS_ERROR": "Máximo 2 cifras decimales"
+        },
         "bus-interoperabilidad": {
             "TIMEOUT-MESSAGE": "Existe demora para obtener información externa, por favor consulte mas tarde",
             "PACIENTE-NO-FEDERADO": "Este paciente no está federado en ninguna otra institución",

@@ -1,6 +1,5 @@
-import { PATTERN_NUMBER_WITH_MAX_2_DECIMAL_DIGITS } from './../../../../../core/utils/pattern.utils';
 import { Component, OnInit, Inject, ViewChild, ElementRef } from '@angular/core';
-import { AbstractControl, FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { AbstractControl, FormBuilder, FormGroup } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { ClinicalTermDto, ClinicalSpecialtyDto, NursingConsultationDto, HCEPersonalHistoryDto } from '@api-rest/api-model';
 import { AppFeature } from '@api-rest/api-model';
@@ -11,8 +10,8 @@ import { NursingPatientConsultationService } from '@api-rest/services/nursing-pa
 import { TEXT_AREA_MAX_LENGTH } from '@core/constants/validation-constants';
 import { hasError } from '@core/utils/form.utils';
 import { newMoment } from '@core/utils/moment.utils';
-import { hasMaxTwoDecimalDigits, PATTERN_INTEGER_NUMBER } from '@core/utils/pattern.utils';
-import { DATOS_ANTROPOMETRICOS, FACTORES_DE_RIESGO } from '@historia-clinica/constants/validation-constants';
+import { hasMaxTwoDecimalDigits } from '@core/utils/pattern.utils';
+import { FACTORES_DE_RIESGO } from '@historia-clinica/constants/validation-constants';
 import { ProblemasService } from '@historia-clinica/services/problemas.service';
 import { ProcedimientosService } from '@historia-clinica/services/procedimientos.service';
 import { SnomedService } from '@historia-clinica/services/snomed.service';
@@ -95,7 +94,7 @@ export class NuevaConsultaDockPopupEnfermeriaComponent implements OnInit {
 		this.problemasService = new ProblemasService(formBuilder, this.snomedService, this.snackBarService);
 		this.procedimientoNuevaConsultaService = new ProcedimientosService(formBuilder, this.snomedService, this.snackBarService);
 		this.datosAntropometricosNuevaConsultaService =
-			new DatosAntropometricosNuevaConsultaService(formBuilder, this.hceGeneralStateService, this.data.idPaciente, this.internacionMasterDataService);
+			new DatosAntropometricosNuevaConsultaService(formBuilder, this.hceGeneralStateService, this.data.idPaciente, this.internacionMasterDataService, this.translateService);
 		this.factoresDeRiesgoFormService = new FactoresDeRiesgoFormService(formBuilder);
 	}
 
@@ -174,15 +173,6 @@ export class NuevaConsultaDockPopupEnfermeriaComponent implements OnInit {
 
 		this.problemasService.error$.subscribe(problemasError => {
 			this.errores[1] = problemasError;
-		});
-		this.datosAntropometricosNuevaConsultaService.heightError$.subscribe(tallaError => {
-			this.errores[2] = tallaError;
-		});
-		this.datosAntropometricosNuevaConsultaService.weightError$.subscribe(pesoError => {
-			this.errores[3] = pesoError;
-		});
-		this.datosAntropometricosNuevaConsultaService.headCircumferenceError$.subscribe(headCircumferenceError => {
-			this.errores[10] = headCircumferenceError;
 		});
 		this.factoresDeRiesgoFormService.heartRateError$.subscribe(frecuenciaCardiacaError => {
 			this.errores[4] = frecuenciaCardiacaError;
@@ -306,34 +296,7 @@ export class NuevaConsultaDockPopupEnfermeriaComponent implements OnInit {
 	}
 
 	private addErrorMessage(consulta: NursingConsultationDto): void {
-		let value = consulta.anthropometricData?.height?.value;
-		if (value && !PATTERN_INTEGER_NUMBER.test(value)) {
-			this.datosAntropometricosNuevaConsultaService.setHeightError('ambulatoria.paciente.nueva-consulta.errors.TALLA_NOT_INTEGER');
-		}
-		else if (parseInt(value, 10) < DATOS_ANTROPOMETRICOS.MIN.height) {
-			this.datosAntropometricosNuevaConsultaService.setHeightError('ambulatoria.paciente.nueva-consulta.errors.TALLA_MIN');
-		}
-		else if (parseInt(value, 10) > DATOS_ANTROPOMETRICOS.MAX.height) {
-			this.datosAntropometricosNuevaConsultaService.setHeightError('ambulatoria.paciente.nueva-consulta.errors.TALLA_MAX');
-		}
-
-		value = consulta.anthropometricData?.weight?.value;
-		if (parseInt(value, 10) < DATOS_ANTROPOMETRICOS.MIN.weight) {
-			this.datosAntropometricosNuevaConsultaService.setWeightError('ambulatoria.paciente.nueva-consulta.errors.PESO_MIN');
-		}
-		else if (parseInt(value, 10) > DATOS_ANTROPOMETRICOS.MAX.weight) {
-			this.datosAntropometricosNuevaConsultaService.setWeightError('ambulatoria.paciente.nueva-consulta.errors.PESO_MAX');
-		}
-
-		value = consulta.anthropometricData?.headCircumference?.value;
-		if (value && !PATTERN_NUMBER_WITH_MAX_2_DECIMAL_DIGITS.test(value)) {
-			this.datosAntropometricosNuevaConsultaService.setHeadCircumferenceError('ambulatoria.paciente.nueva-consulta.errors.HEAD_CIRCUNFERENCE_NOT_VALID');
-		}
-		else if ((parseInt(value, 10) < DATOS_ANTROPOMETRICOS.MIN.headCircumference) || (parseInt(value, 10) > DATOS_ANTROPOMETRICOS.MAX.headCircumference)) {
-			this.datosAntropometricosNuevaConsultaService.setHeadCircumferenceError('ambulatoria.paciente.nueva-consulta.errors.HEAD_CIRCUNFERENCE_RANGE');
-		}
-
-		value = consulta.riskFactors.heartRate?.value;
+		let value = consulta.riskFactors.heartRate?.value;
 		if (parseInt(value, 10) < FACTORES_DE_RIESGO.MIN.heartRate) {
 			this.factoresDeRiesgoFormService.setHeartRateError('ambulatoria.paciente.nueva-consulta.errors.FRECUENCIA_CARDIACA_MIN');
 		}

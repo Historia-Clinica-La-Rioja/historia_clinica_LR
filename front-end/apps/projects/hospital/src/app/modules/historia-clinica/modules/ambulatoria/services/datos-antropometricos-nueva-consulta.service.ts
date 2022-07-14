@@ -9,6 +9,7 @@ import { DatePipe } from '@angular/common';
 import { PATTERN_INTEGER_NUMBER, PATTERN_NUMBER_WITH_DECIMALS } from '@core/utils/pattern.utils';
 import { DATOS_ANTROPOMETRICOS } from '@historia-clinica/constants/validation-constants';
 import { atLeastOneValueInFormGroup } from '@core/utils/form.utils';
+import { TranslateService } from '@ngx-translate/core';
 
 export interface DatosAntropometricos {
 	bloodType?: ClinicalObservationDto;
@@ -23,11 +24,11 @@ export class DatosAntropometricosNuevaConsultaService {
 	private form: FormGroup;
 	private bloodTypes: MasterDataInterface<string>[];
 	private heightErrorSource = new Subject<string>();
-	private _heightError$: Observable<string>;
+	private _heightError$ = this.heightErrorSource.asObservable();
 	private weightErrorSource = new Subject<string>();
-	private _weightError$: Observable<string>;
+	private _weightError$ = this.weightErrorSource.asObservable();
 	private headCircumferenceErrorSource = new Subject<string>();
-	private _headCircumferenceError$: Observable<string>;
+	private _headCircumferenceError$ = this.headCircumferenceErrorSource.asObservable();
 	private notShowPreloadedAnthropometricData = false;
 	private dateList: string[] = [];
 	private readonly atLeastOneValueInFormGroup = atLeastOneValueInFormGroup;
@@ -38,7 +39,8 @@ export class DatosAntropometricosNuevaConsultaService {
 		private readonly hceGeneralStateService: HceGeneralStateService,
 		private readonly patientId: number,
 		private readonly internacionMasterDataService: InternacionMasterDataService,
-		private readonly datePipe?: DatePipe
+		private readonly translateService: TranslateService,
+		private readonly datePipe?: DatePipe,
 	) {
 		this.form = this.formBuilder.group({
 			bloodType: [null],
@@ -46,23 +48,72 @@ export class DatosAntropometricosNuevaConsultaService {
 			height: [null, [Validators.min(DATOS_ANTROPOMETRICOS.MIN.height), Validators.max(DATOS_ANTROPOMETRICOS.MAX.height), Validators.pattern(PATTERN_INTEGER_NUMBER)]],
 			weight: [null, [Validators.min(DATOS_ANTROPOMETRICOS.MIN.weight), Validators.max(DATOS_ANTROPOMETRICOS.MAX.weight), Validators.pattern(PATTERN_NUMBER_WITH_DECIMALS)]]
 		});
-		this.form.controls.height.valueChanges.subscribe(height => {
-			if (height !== undefined) {
+
+		this.form.controls.headCircumference.valueChanges.subscribe(_ => {
+			if (this.form.controls.headCircumference.hasError('min')) {
+				this.translateService.get('forms.MIN_ERROR', { min: DATOS_ANTROPOMETRICOS.MIN.headCircumference }).subscribe(
+					(errorMsg: string) => this.headCircumferenceErrorSource.next(errorMsg)
+				);
+			}
+			else if (this.form.controls.headCircumference.hasError('max')) {
+				this.translateService.get('forms.MAX_ERROR', { max: DATOS_ANTROPOMETRICOS.MAX.headCircumference }).subscribe(
+					(errorMsg: string) => this.headCircumferenceErrorSource.next(errorMsg)
+				);
+			}
+			else if (this.form.controls.headCircumference.hasError('pattern')) {
+				this.translateService.get('ambulatoria.datos-antropometricos-nueva-consulta.MAX_TWO_DECIMAL_DIGITS_ERROR').subscribe(
+					(errorMsg: string) => this.headCircumferenceErrorSource.next(errorMsg)
+				);
+			}
+			else {
+				this.headCircumferenceErrorSource.next();
+			}
+		});
+
+		this.form.controls.height.valueChanges.subscribe(_ => {
+			if (this.form.controls.height.hasError('min')) {
+				this.translateService.get('forms.MIN_ERROR', { min: DATOS_ANTROPOMETRICOS.MIN.height }).subscribe(
+					(errorMsg: string) => this.heightErrorSource.next(errorMsg)
+				);
+			}
+			else if (this.form.controls.height.hasError('max')) {
+				this.translateService.get('forms.MAX_ERROR', { max: DATOS_ANTROPOMETRICOS.MAX.height }).subscribe(
+					(errorMsg: string) => this.heightErrorSource.next(errorMsg)
+				);
+			}
+			else if (this.form.controls.height.hasError('pattern')) {
+				this.translateService.get('forms.FORMAT_NUMERIC_INTEGER').subscribe(
+					(errorMsg: string) => this.heightErrorSource.next(errorMsg)
+				);
+			}
+			else {
 				this.heightErrorSource.next();
 			}
 		});
-		this.form.controls.weight.valueChanges.subscribe(weight => {
-			if (weight !== undefined) {
+
+		this.form.controls.weight.valueChanges.subscribe(_ => {
+			if (this.form.controls.weight.hasError('min')) {
+				this.translateService.get('forms.MIN_ERROR', { min: DATOS_ANTROPOMETRICOS.MIN.weight }).subscribe(
+					(errorMsg: string) => this.weightErrorSource.next(errorMsg)
+				);
+			}
+			else if (this.form.controls.weight.hasError('max')) {
+				this.translateService.get('forms.MAX_ERROR', { max: DATOS_ANTROPOMETRICOS.MAX.weight }).subscribe(
+					(errorMsg: string) => this.weightErrorSource.next(errorMsg)
+				);
+			}
+			else if (this.form.controls.weight.hasError('pattern')) {
+				this.translateService.get('forms.FORMAT_NUMERIC').subscribe(
+					(errorMsg: string) => this.weightErrorSource.next(errorMsg)
+				);
+			}
+			else {
 				this.weightErrorSource.next();
 			}
 		});
+
 		this.internacionMasterDataService.getBloodTypes().subscribe(bloodTypes => {
 			this.bloodTypes = bloodTypes;
-		});
-		this.form.controls.headCircumference.valueChanges.subscribe(headCircumference => {
-			if (headCircumference !== undefined) {
-				this.headCircumferenceErrorSource.next();
-			}
 		});
 	}
 
@@ -87,36 +138,15 @@ export class DatosAntropometricosNuevaConsultaService {
 	}
 
 	get heightError$(): Observable<string> {
-		if (!this._heightError$) {
-			this._heightError$ = this.heightErrorSource.asObservable();
-		}
 		return this._heightError$;
 	}
 
 	get weightError$(): Observable<string> {
-		if (!this._weightError$) {
-			this._weightError$ = this.weightErrorSource.asObservable();
-		}
 		return this._weightError$;
 	}
 
 	get headCircumferenceError$(): Observable<string> {
-		if (!this._headCircumferenceError$) {
-			this._headCircumferenceError$ = this.headCircumferenceErrorSource.asObservable();
-		}
 		return this._headCircumferenceError$;
-	}
-
-	setHeightError(errorMsg: string): void {
-		this.heightErrorSource.next(errorMsg);
-	}
-
-	setWeightError(errorMsg: string): void {
-		this.weightErrorSource.next(errorMsg);
-	}
-
-	setHeadCircumferenceError(errorMsg: string): void {
-		this.headCircumferenceErrorSource.next(errorMsg);
 	}
 
 	setPreviousAnthropometricData(): void {
