@@ -10,8 +10,6 @@ import { NursingPatientConsultationService } from '@api-rest/services/nursing-pa
 import { TEXT_AREA_MAX_LENGTH } from '@core/constants/validation-constants';
 import { hasError } from '@core/utils/form.utils';
 import { newMoment } from '@core/utils/moment.utils';
-import { hasMaxTwoDecimalDigits } from '@core/utils/pattern.utils';
-import { FACTORES_DE_RIESGO } from '@historia-clinica/constants/validation-constants';
 import { ProblemasService } from '@historia-clinica/services/problemas.service';
 import { ProcedimientosService } from '@historia-clinica/services/procedimientos.service';
 import { SnomedService } from '@historia-clinica/services/snomed.service';
@@ -169,37 +167,6 @@ export class NuevaConsultaDockPopupEnfermeriaComponent implements OnInit {
 			evolucion: [],
 			clinicalSpecialty: [],
 			clinicalProblem: []
-		});
-
-		this.problemasService.error$.subscribe(problemasError => {
-			this.errores[1] = problemasError;
-		});
-		this.factoresDeRiesgoFormService.heartRateError$.subscribe(frecuenciaCardiacaError => {
-			this.errores[4] = frecuenciaCardiacaError;
-		});
-		this.factoresDeRiesgoFormService.respiratoryRateError$.subscribe(frecuenciaRespiratoriaError => {
-			this.errores[5] = frecuenciaRespiratoriaError;
-		});
-		this.factoresDeRiesgoFormService.temperatureError$.subscribe(temperaturaCorporalError => {
-			this.errores[6] = temperaturaCorporalError;
-		});
-		this.factoresDeRiesgoFormService.bloodOxygenSaturationError$.subscribe(saturacionOxigenoError => {
-			this.errores[7] = saturacionOxigenoError;
-		});
-		this.factoresDeRiesgoFormService.systolicBloodPressureError$.subscribe(presionSistolicaError => {
-			this.errores[8] = presionSistolicaError;
-		});
-		this.factoresDeRiesgoFormService.diastolicBloodPressureError$.subscribe(presionDiastolicaError => {
-			this.errores[9] = presionDiastolicaError;
-		});
-		this.factoresDeRiesgoFormService.bloodGlucoseError$.subscribe(bloodGlucoseError => {
-			this.errores[11] = bloodGlucoseError;
-		});
-		this.factoresDeRiesgoFormService.glycosylatedHemoglobinError$.subscribe(glycosylatedHemoglobinError => {
-			this.errores[12] = glycosylatedHemoglobinError;
-		});
-		this.factoresDeRiesgoFormService.cardiovascularRiskError$.subscribe(cardiovascularRiskError => {
-			this.errores[13] = cardiovascularRiskError;
 		});
 
 		this.internacionMasterDataService.getHealthSeverity().subscribe(healthConditionSeverities => {
