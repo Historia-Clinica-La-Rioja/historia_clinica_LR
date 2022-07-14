@@ -1,4 +1,4 @@
-import { FormGroup, FormArray, AbstractControl, FormControl, ValidationErrors } from '@angular/forms';
+import {FormGroup, FormArray, AbstractControl, FormControl, ValidationErrors, ValidatorFn} from '@angular/forms';
 import { ElementRef } from '@angular/core';
 import { Moment } from 'moment';
 import { newMoment, momentFormat, DateFormat } from './moment.utils';
@@ -130,4 +130,13 @@ export function updateForm(form: FormGroup) {
 		const abstractControl = form.controls[key];
 		abstractControl.updateValueAndValidity();
 	});
+}
+
+export function patternValidator(regex: RegExp, error: ValidationErrors): ValidatorFn {
+	return (control: AbstractControl): {[key: string]: any} => {
+		if (!control.value) {
+			return null;
+		}
+		return regex.test(control.value) ? null : error;
+	};
 }
