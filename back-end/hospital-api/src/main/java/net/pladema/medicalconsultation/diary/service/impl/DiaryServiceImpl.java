@@ -9,6 +9,7 @@ import net.pladema.medicalconsultation.diary.repository.DiaryRepository;
 import net.pladema.medicalconsultation.diary.repository.domain.CompleteDiaryListVo;
 import net.pladema.medicalconsultation.diary.repository.domain.DiaryListVo;
 import net.pladema.medicalconsultation.diary.repository.entity.Diary;
+import net.pladema.medicalconsultation.diary.service.DiaryAssociatedProfessionalService;
 import net.pladema.medicalconsultation.diary.service.DiaryOpeningHoursService;
 import net.pladema.medicalconsultation.diary.service.DiaryService;
 import net.pladema.medicalconsultation.diary.service.domain.CompleteDiaryBo;
@@ -52,6 +53,8 @@ public class DiaryServiceImpl implements DiaryService {
 
 	private final UpdateAppointmentOpeningHoursService updateApmtOHService;
 
+	private final DiaryAssociatedProfessionalService diaryAssociatedProfessionalService;
+
 	private final DiaryRepository diaryRepository;
 
 	@Override
@@ -70,6 +73,7 @@ public class DiaryServiceImpl implements DiaryService {
 		diary = diaryRepository.save(diary);
 		Integer diaryId = diary.getId();
 		diaryOpeningHoursService.update(diaryId, diaryToSave.getDiaryOpeningHours());
+		diaryAssociatedProfessionalService.updateDiaryAssociatedProfessionals(diaryToSave.getDiaryAssociatedProfessionalsId(), diaryId);
 		return diaryId;
 	}
 
@@ -252,6 +256,7 @@ public class DiaryServiceImpl implements DiaryService {
 		LOG.debug(INPUT_DIARY_ID, diaryId);
 		Optional<CompleteDiaryBo> result = diaryRepository.getDiary(diaryId).map(this::createCompleteDiaryBoInstance)
 				.map(completeOpeningHours());
+		result.ifPresent(completeDiaryBo -> completeDiaryBo.setDiaryAssociatedProfessionalsId(diaryAssociatedProfessionalService.getAllDiaryAssociatedProfessionals(diaryId)));
 		LOG.debug(OUTPUT, result);
 		return result;
 	}

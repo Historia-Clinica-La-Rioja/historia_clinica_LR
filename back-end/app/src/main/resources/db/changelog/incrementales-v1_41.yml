@@ -1,3 +1,31 @@
 databaseChangeLog: 
-    - logicalFilePath: incrementales-v1_41 
+    - logicalFilePath: incrementales-v1_41
+      
+    - changeSet:
+        id: diary_associated_professional-createTable
+        comment: Create table diary_associated_professional
+        author: mmalyvarni
+        changes:
+          - createTable:
+              tableName: diary_associated_professional
+              columns:
+                - column:
+                    autoIncrement: true
+                    constraints:
+                      primaryKey: true
+                      primaryKeyName: PK_diary_associated_professional
+                    name: id
+                    type: int
+                - column:
+                    constraints:
+                      foreignKeyName: FK_diary_associated_professional_diary_id
+                      references: diary(id)
+                    name: diary_id
+                    type: int
+                - column:
+                    constraints:
+                      foreignKeyName: FK_diary_associated_professional_healthcare_professional_id
+                      references: healthcare_professional(id)
+                    name: healthcare_professional_id
+                    type: int
 

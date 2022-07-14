@@ -723,6 +723,7 @@ export interface DiaryADto {
     appointmentDuration: number;
     automaticRenewal?: boolean;
     clinicalSpecialtyId: number;
+    diaryAssociatedProfessionalsId: number[];
     diaryOpeningHours: DiaryOpeningHoursDto[];
     doctorsOfficeId: number;
     endDate: string;

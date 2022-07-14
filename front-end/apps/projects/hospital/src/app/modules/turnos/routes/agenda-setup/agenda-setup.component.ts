@@ -167,6 +167,15 @@ export class AgendaSetupComponent implements OnInit {
 		this.holidayWork = diary.includeHoliday;
 
 		this.agendaHorarioService.setDiaryOpeningHours(diary.diaryOpeningHours);
+
+		if (diary.diaryAssociatedProfessionalsId.length > 0) {
+			const professionalsReference = this.form.controls.otherProfessionals as FormArray;
+			this.form.controls.conjointDiary.setValue(true);
+			diary.diaryAssociatedProfessionalsId.forEach(diaryAssociatedProfessionalId => {
+				professionalsReference.push(this.initializeAnotherProfessional());
+				professionalsReference.controls[professionalsReference.length-1].setValue({ healthcareProfessionalId: diaryAssociatedProfessionalId });
+			});
+		}
 	}
 
 	private disableNotEditableControls(): void {
@@ -296,7 +305,8 @@ export class AgendaSetupComponent implements OnInit {
 			professionalAssignShift: this.appointmentManagement,
 
 			diaryOpeningHours: this.agendaHorarioService.getDiaryOpeningHours(),
-			clinicalSpecialtyId: this.form.value.healthcareProfessionalSpecialtyId
+			clinicalSpecialtyId: this.form.value.healthcareProfessionalSpecialtyId,
+			diaryAssociatedProfessionalsId: this.form.value.otherProfessionals.map(professional => professional.healthcareProfessionalId)
 		};
 	}
 
