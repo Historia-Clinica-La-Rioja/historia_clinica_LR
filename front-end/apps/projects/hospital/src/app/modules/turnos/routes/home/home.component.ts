@@ -56,7 +56,7 @@ export class HomeComponent implements OnInit, OnDestroy {
 
 		this.route.queryParams.subscribe(qp => this.patientId = Number(qp.idPaciente));
 
-		this.healthCareProfessionalService.getAll().subscribe(doctors => {
+		this.healthCareProfessionalService.getAllAssociated().subscribe(doctors => {
 			this.especialidadesTypeaheadOptions$ = this.getEspecialidadesTypeaheadOptions$(doctors);
 
 			this.profesionales = doctors;

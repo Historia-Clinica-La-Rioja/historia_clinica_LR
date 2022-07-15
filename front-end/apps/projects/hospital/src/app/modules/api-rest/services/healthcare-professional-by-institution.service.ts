@@ -36,4 +36,10 @@ export class HealthcareProfessionalByInstitutionService {
 		return this.http.get<ProfessionalDto>(url);
 	}
 
+	getAllAssociated(): Observable<ProfessionalDto[]> {
+		const url = `${environment.apiBase}` + BASIC_URL_PREFIX + '/' + `${this.contextService.institutionId}` +
+			BASIC_URL_SUFIX + '/associated-healthcare-professionals';
+		return this.http.get<ProfessionalDto[]>(url);
+	}
+
 }

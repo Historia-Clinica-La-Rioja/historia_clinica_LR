@@ -86,6 +86,21 @@ public interface DiaryRepository extends SGXAuditableEntityJPARepository<Diary, 
             "AND d.deleteable.deleted = false")
     List<DiaryListVo> getActiveDiariesFromProfessional(@Param("hcpId") Integer healthcareProfessionalId, @Param("instId") Integer institutionId);
 
+	@Transactional(readOnly = true)
+	@Query("SELECT NEW net.pladema.medicalconsultation.diary.repository.domain.DiaryListVo(" +
+			"d, do.description) " +
+			"FROM Diary d " +
+			"JOIN DoctorsOffice AS do ON (do.id = d.doctorsOfficeId) " +
+			"JOIN DiaryAssociatedProfessional AS dap ON (dap.diaryId = d.id)  " +
+			"WHERE d.healthcareProfessionalId = :healthcareProfessionalId " +
+			"AND dap.healthcareProfessionalId = :associatedHealthcareProfessionalId " +
+			"AND do.institutionId = :institutionId " +
+			"AND d.active = true "+
+			"AND d.deleteable.deleted = false")
+	List<DiaryListVo> getActiveAssociatedDiariesFromProfessional(@Param("associatedHealthcareProfessionalId") Integer associatedHealthcareProfessionalId,
+																 @Param("healthcareProfessionalId") Integer healthcareProfessionalId,
+																 @Param("institutionId") Integer institutionId);
+
 
     @Transactional(readOnly = true)
     @Query("SELECT NEW net.pladema.medicalconsultation.diary.repository.domain.DiaryListVo(" +
@@ -101,6 +116,23 @@ public interface DiaryRepository extends SGXAuditableEntityJPARepository<Diary, 
             @Param("hcpId") Integer healthcareProfessionalId,
             @Param("specialtyId") Integer specialtyId,
             @Param("instId") Integer institutionId);
+
+	@Transactional(readOnly = true)
+	@Query("SELECT NEW net.pladema.medicalconsultation.diary.repository.domain.DiaryListVo(" +
+			"d, do.description) " +
+			"FROM Diary d " +
+			"JOIN DoctorsOffice AS do ON (do.id = d.doctorsOfficeId) " +
+			"JOIN DiaryAssociatedProfessional AS dap ON (dap.diaryId = d.id) " +
+			"WHERE d.healthcareProfessionalId = :healthcareProfessionalId " +
+			"AND dap.healthcareProfessionalId = :associatedHealthcareProfessionalId " +
+			"AND d.clinicalSpecialtyId = :specialtyId " +
+			"AND do.institutionId = :institutionId " +
+			"AND d.active = true "+
+			"AND d.deleteable.deleted = false")
+	List<DiaryListVo> getActiveAssociatedDiariesFromProfessionalAndSpecialty(@Param("associatedHealthcareProfessionalId") Integer associatedHealthcareProfessionalId,
+																			 @Param("healthcareProfessionalId") Integer healthcareProfessionalId,
+																			 @Param("specialtyId") Integer specialtyId,
+																			 @Param("institutionId") Integer institutionId);
     
     @Transactional(readOnly = true)
     @Query("SELECT NEW net.pladema.medicalconsultation.diary.repository.domain.CompleteDiaryListVo( " +

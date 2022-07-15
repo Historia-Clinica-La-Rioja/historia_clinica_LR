@@ -36,6 +36,12 @@ public class DiaryAssociatedProfessionalServiceImpl implements DiaryAssociatedPr
 		return getDiaryAssociatedProfessionalsIds(diaryAssociatedProfessionals);
 	}
 
+	@Override
+	public List<Integer> getAllAssociatedWithProfessionalsByHealthcareProfessionalId(Integer healthcareProfessionalId) {
+		return diaryAssociatedProfessionalsRepository.getAllAssociatedWithHealthcareProfessionalsIdByHealthcareProfessional(healthcareProfessionalId);
+	}
+
+
 	private List<Integer> getDiaryAssociatedProfessionalsIds(List<DiaryAssociatedProfessional> diaryAssociatedProfessionals) {
 		return diaryAssociatedProfessionals.stream()
 				.map(DiaryAssociatedProfessional::getHealthcareProfessionalId)

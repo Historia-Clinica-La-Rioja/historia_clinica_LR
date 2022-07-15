@@ -210,14 +210,20 @@ public class DiaryServiceImpl implements DiaryService {
 	}
 
 	@Override
-	public Collection<DiaryBo> getActiveDiariesBy(Integer healthcareProfessionalId, Integer specialtyId, Integer institutionId) {
+	public Collection<DiaryBo> getActiveDiariesBy(Integer associatedHealthcareProfessionalId, Integer healthcareProfessionalId, Integer specialtyId, Integer institutionId) {
 		LOG.debug("Input parameters -> healthcareProfessionalId {}, specialtyId {}, institutionId {}", healthcareProfessionalId, specialtyId, institutionId);
 		List<DiaryListVo> diaries;
 
 		if (specialtyId == null)
-			diaries = diaryRepository.getActiveDiariesFromProfessional(healthcareProfessionalId, institutionId);
+			if (healthcareProfessionalId.equals(associatedHealthcareProfessionalId) || associatedHealthcareProfessionalId == null)
+				diaries = diaryRepository.getActiveDiariesFromProfessional(healthcareProfessionalId, institutionId);
+			else
+				diaries = diaryRepository.getActiveAssociatedDiariesFromProfessional(associatedHealthcareProfessionalId, healthcareProfessionalId, institutionId);
 		else
-			diaries = diaryRepository.getActiveDiariesFromProfessionalAndSpecialty(healthcareProfessionalId, specialtyId, institutionId);
+			if (healthcareProfessionalId.equals(associatedHealthcareProfessionalId) || associatedHealthcareProfessionalId == null)
+				diaries = diaryRepository.getActiveDiariesFromProfessionalAndSpecialty(healthcareProfessionalId, specialtyId, institutionId);
+			else
+				diaries = diaryRepository.getActiveAssociatedDiariesFromProfessionalAndSpecialty(associatedHealthcareProfessionalId, healthcareProfessionalId, specialtyId, institutionId);
 
 		List<DiaryBo> result = diaries.stream().map(this::createDiaryBoInstance).collect(toList());
 		LOG.debug(OUTPUT, result);

@@ -3,11 +3,14 @@ package net.pladema.medicalconsultation.appointment.service.impl;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.function.Function;
 
 import javax.validation.ValidationException;
+
+import net.pladema.medicalconsultation.diary.service.DiaryAssociatedProfessionalService;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -38,6 +41,8 @@ public class AppointmentValidatorServiceImpl implements AppointmentValidatorServ
     private final DiaryService diaryService;
     private final HealthcareProfessionalService healthcareProfessionalService;
     private final AppointmentService appointmentService;
+
+	private final DiaryAssociatedProfessionalService diaryAssociatedProfessionalService;
     private final Function<Integer, Boolean> hasAdministrativeRole;
     private final Function<Integer, Boolean> hasProfessionalRole;
 
@@ -45,11 +50,13 @@ public class AppointmentValidatorServiceImpl implements AppointmentValidatorServ
             DiaryService diaryService,
             HealthcareProfessionalService healthcareProfessionalService,
             AppointmentService appointmentService,
-            LoggedUserExternalService loggedUserExternalService
+            LoggedUserExternalService loggedUserExternalService,
+			DiaryAssociatedProfessionalService diaryAssociatedProfessionalService
     ) {
         this.diaryService = diaryService;
         this.healthcareProfessionalService = healthcareProfessionalService;
         this.appointmentService = appointmentService;
+		this.diaryAssociatedProfessionalService = diaryAssociatedProfessionalService;
         this.hasAdministrativeRole = loggedUserExternalService.hasAnyRoleInstitution(
                 ERole.ADMINISTRADOR_AGENDA, ERole.ADMINISTRATIVO
         );
@@ -84,7 +91,8 @@ public class AppointmentValidatorServiceImpl implements AppointmentValidatorServ
             DiaryBo diary = diaryService.getDiaryById(apmtOpt.get().getDiaryId());
 
             Integer professionalId = healthcareProfessionalService.getProfessionalId(UserInfo.getCurrentAuditor());
-            if (Boolean.TRUE.equals(hasProfessionalRole.apply(institutionId)) && !diary.getHealthcareProfessionalId().equals(professionalId)) {
+			List<Integer> associatedHealthcareProfessionals = diaryAssociatedProfessionalService.getAllAssociatedWithProfessionalsByHealthcareProfessionalId(professionalId);;
+            if (Boolean.TRUE.equals(hasProfessionalRole.apply(institutionId)) && !diary.getHealthcareProfessionalId().equals(professionalId) && !associatedHealthcareProfessionals.contains(diary.getHealthcareProfessionalId())) {
                 throw new ValidationException("appointment.new.professional.id.invalid}");
             }
         }

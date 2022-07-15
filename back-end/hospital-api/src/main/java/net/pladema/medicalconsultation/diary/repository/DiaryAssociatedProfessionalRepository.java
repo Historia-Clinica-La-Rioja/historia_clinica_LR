@@ -17,4 +17,12 @@ public interface DiaryAssociatedProfessionalRepository extends JpaRepository<Dia
 			"WHERE dap.diaryId = :diaryId")
 	List<DiaryAssociatedProfessional> getDiaryAssociatedProfessionalsByDiary(@Param("diaryId") Integer diaryId);
 
+	@Transactional(readOnly = true)
+	@Query("SELECT DISTINCT healthcareProfessionalId " +
+			"FROM Diary " +
+			"WHERE id IN (SELECT DISTINCT diaryId " +
+			"FROM DiaryAssociatedProfessional  " +
+			"WHERE healthcareProfessionalId = :healthcareProfessionalId)")
+	List<Integer> getAllAssociatedWithHealthcareProfessionalsIdByHealthcareProfessional(@Param("healthcareProfessionalId") Integer healthcareProfessionalId);
+
 }

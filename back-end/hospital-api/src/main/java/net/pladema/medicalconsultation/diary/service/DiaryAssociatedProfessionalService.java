@@ -8,4 +8,6 @@ public interface DiaryAssociatedProfessionalService {
 
 	List<Integer> getAllDiaryAssociatedProfessionals(Integer diaryId);
 
+	List<Integer> getAllAssociatedWithProfessionalsByHealthcareProfessionalId(Integer healthcareProfessionalId);
+
 }
