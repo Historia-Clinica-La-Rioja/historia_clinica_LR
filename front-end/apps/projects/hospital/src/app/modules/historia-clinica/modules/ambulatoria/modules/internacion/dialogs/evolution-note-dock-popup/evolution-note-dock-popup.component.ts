@@ -201,7 +201,7 @@ export class EvolutionNoteDockPopupComponent implements OnInit {
 				cardiovascularRisk: getEffectiveValue(formValues.riskFactors.cardiovascularRisk)
 			},
 			procedures: isNull(this.procedimientosService.getProcedimientos()) ? undefined : this.procedimientosService.getProcedimientos(),
-			wasMadeByProfessionalNursing: this.wasMadeByProfessionalNursing
+			wasMadeByProfessionalNursing: (this.data.documentType) ? this.data.documentType === "Nota de evolución de enfermería" : this.wasMadeByProfessionalNursing
 		};
 
 		function isNull(formGroupValues: any): boolean {
