@@ -15,8 +15,8 @@ public class HospitalApiPublisher {
 		simplePublishService = publisherFactory.getPublisher("HOSPITAL_API");
 	}
 
-	public void publish(Integer patientId, EHospitalApiTopicDto eHospitalApiTopicDto) {
-		simplePublishService.publish(patientId, eHospitalApiTopicDto.toString());
+	public void publish(Integer patientId, Integer institutionId, EHospitalApiTopicDto eHospitalApiTopicDto) {
+		simplePublishService.publish(patientId, institutionId, eHospitalApiTopicDto.toString());
 	}
 
 	public void appointmentCaller(NotifyPatientDto notifyPatientDto) {

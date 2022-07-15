@@ -143,7 +143,7 @@ public class InternmentEpisodeController {
 		PatientDischargeBo patientDischargeSaved = internmentEpisodeService.saveMedicalDischarge(patientDischarge);
 		PatientDischargeDto result = patientDischargeMapper.toPatientDischargeDto(patientDischargeSaved);
 		internmentEpisodeService.getPatient(patientDischargeSaved.getInternmentEpisodeId())
-				.ifPresent( patientId -> hospitalApiPublisher.publish(patientId, EHospitalApiTopicDto.ALTA_MEDICA) );
+				.ifPresent( patientId -> hospitalApiPublisher.publish(patientId, institutionId,EHospitalApiTopicDto.ALTA_MEDICA) );
 		LOG.debug(OUTPUT, result);
 		return ResponseEntity.ok(result);
 	}

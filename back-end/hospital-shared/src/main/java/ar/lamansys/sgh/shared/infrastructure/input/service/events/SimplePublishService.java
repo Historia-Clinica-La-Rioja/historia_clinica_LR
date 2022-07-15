@@ -15,8 +15,8 @@ public class SimplePublishService {
 		this.namePrefix = namePrefix;
 	}
 
-	public void publish(Integer patientId, String topic) {
-		String fullTopic = "HSI/" + namePrefix + "/" + topic;
+	public void publish(Integer patientId, Integer institutionId, String topic) {
+		String fullTopic = "HSI/INSTITUTION/"+ institutionId + "/" + namePrefix + "/" +  topic;
 		String message = getSimplePayload(patientId, fullTopic);
 		MqttMetadataDto mqttMetadataDto = MqttDtoUtils.getMqtMetadataDto(fullTopic, message);
 		mqttCallExternalService.publish(mqttMetadataDto);

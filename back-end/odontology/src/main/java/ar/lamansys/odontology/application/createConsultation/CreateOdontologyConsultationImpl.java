@@ -134,7 +134,7 @@ public class CreateOdontologyConsultationImpl implements CreateOdontologyConsult
 		if(appointmentId != null)
 			this.sharedAppointmentPort.saveDocumentAppointment(new DocumentAppointmentDto(documentId, appointmentId));
 
-		publisher.run(consultationBo.getPatientId(), EOdontologyTopicDto.NUEVA_CONSULTA);
+		publisher.run(consultationBo.getPatientId(),consultationBo.getInstitutionId(), EOdontologyTopicDto.NUEVA_CONSULTA);
         LOG.debug("Output -> encounterId {}", encounterId);
 
         return encounterId;

@@ -154,7 +154,7 @@ public class ServiceRequestController {
                     studyListDto);
             serviceRequestBo.setInstitutionId(institutionId);
             Integer srId = createServiceRequestService.execute(serviceRequestBo);
-			hospitalApiPublisher.publish(serviceRequestBo.getPatientId(), EHospitalApiTopicDto.SOLICITUD_ESTUDIO);
+			hospitalApiPublisher.publish(serviceRequestBo.getPatientId(), institutionId, EHospitalApiTopicDto.SOLICITUD_ESTUDIO);
             result.add(srId);
         });
 

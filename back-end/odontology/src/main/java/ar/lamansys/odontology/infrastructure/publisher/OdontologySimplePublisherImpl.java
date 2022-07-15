@@ -17,8 +17,8 @@ public class OdontologySimplePublisherImpl implements Publisher {
 	}
 
 	@Override
-	public void run(Integer patientId, EOdontologyTopicDto EOdontologyTopicDto) {
-		simplePublishService.publish(patientId, EOdontologyTopicDto.toString());
+	public void run(Integer patientId, Integer institutionId, EOdontologyTopicDto EOdontologyTopicDto) {
+		simplePublishService.publish(patientId, institutionId, EOdontologyTopicDto.toString());
 	}
 
 	// Podria agregarse un metodo que acepte topico global compartido en shared
