@@ -22,9 +22,8 @@ public class GetUserImpl implements GetUser {
     public UserDataBo run(Integer personId) {
         logger.debug("Input -> {}", personId);
         UserDataBo result = hospitalUserStorage.getUserDataByPersonId(personId)
-                .map(userDataBo -> {
-                    return (hospitalUserStorage.hasPassword(userDataBo.getId())) ? userDataBo : new UserDataBo(userDataBo.getId());
-                }).orElse(new UserDataBo());
+                .map(userDataBo -> (hospitalUserStorage.hasPassword(userDataBo.getId())) ? userDataBo : new UserDataBo(userDataBo.getId()))
+				.orElse(new UserDataBo());
         logger.debug("Output -> {}", result);
         return result;
     }

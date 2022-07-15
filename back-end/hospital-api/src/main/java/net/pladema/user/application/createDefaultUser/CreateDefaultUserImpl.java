@@ -1,5 +1,7 @@
 package net.pladema.user.application.createDefaultUser;
 
+import net.pladema.user.application.port.exceptions.UserPersonStorageEnumException;
+import net.pladema.user.application.port.exceptions.UserPersonStorageException;
 import net.pladema.user.domain.UserDataBo;
 import net.pladema.user.application.port.HospitalUserStorage;
 import org.slf4j.Logger;
@@ -20,6 +22,9 @@ public class CreateDefaultUserImpl implements CreateDefaultUser {
     @Override
     public Integer run(Integer personId) {
         logger.debug("Input -> {}", personId);
+		hospitalUserStorage.getUserDataByPersonId(personId).ifPresent(u -> {
+			throw new UserPersonStorageException(UserPersonStorageEnumException.USER_ALREADY_EXISTS, String.format("Ya existe un usuario para la persona con id %s", personId));
+		});
         String identificatioNumber = hospitalUserStorage.getIdentificationNumber(personId);
         String username = personId + "_" + identificatioNumber;
         hospitalUserStorage.registerUser(username, null, null);

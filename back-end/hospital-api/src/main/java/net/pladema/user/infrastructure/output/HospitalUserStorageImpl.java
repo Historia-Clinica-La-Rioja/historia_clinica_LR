@@ -94,7 +94,7 @@ public class HospitalUserStorageImpl implements HospitalUserStorage {
     @Override
     public Optional<UserDataBo> getUserDataByPersonId(Integer personId) {
         return userPersonRepository.getUserIdByPersonId(personId)
-                .map(vHospitalUserRepository::getOne)
+                .map(userId -> vHospitalUserRepository.findById(userId).orElseThrow(()-> new UserPersonStorageException(UserPersonStorageEnumException.UNEXISTED_USER_VIEW, "No se encuentran los datos del usuario")))
                 .map(this::mapUserBo);
     }
 
