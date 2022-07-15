@@ -13,8 +13,10 @@ import ar.lamansys.sgh.clinichistory.domain.ips.NursingRecordBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.OtherIndicationBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.ParenteralPlanBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.PharmacoBo;
+import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.ips.HistoricNursingRecordRepository;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.ips.IndicationRepository;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.ips.NursingRecordRepository;
+import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.ips.entity.indication.HistoricNursingRecordStatus;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.ips.entity.indication.NursingRecord;
 import ar.lamansys.sgh.shared.infrastructure.input.service.EIndicationType;
 import ar.lamansys.sgh.shared.infrastructure.input.service.ENursingRecordStatus;
@@ -24,6 +26,7 @@ import lombok.extern.slf4j.Slf4j;
 
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.util.ArrayList;
@@ -38,6 +41,7 @@ import java.util.stream.Collectors;
 public class NursingRecordStorageImpl implements NursingRecordStorage {
 
 	private static final Short PENDING_STATUS_ID = ENursingRecordStatus.PENDING.getId();
+	private static final String OUTPUT = "Output -> {}";
 
 	private final NursingRecordRepository nursingRecordRepository;
 	private final IndicationRepository indicationRepository;
@@ -45,6 +49,7 @@ public class NursingRecordStorageImpl implements NursingRecordStorage {
 	private final ParenteralPlanStorage parenteralPlanStorage;
 	private final OtherIndicationStorage otherIndicationStorage;
 	private final PharmacoStorage pharmacoStorage;
+	private final HistoricNursingRecordRepository historicNursingRecordRepository;
 
 	@Override
 	public List<Integer> createNursingRecordsFromIndication(IndicationSummaryBo indication) {
@@ -53,7 +58,7 @@ public class NursingRecordStorageImpl implements NursingRecordStorage {
 				.stream()
 				.map( nr -> { return nursingRecordRepository.save(nr).getId();})
 				.collect(Collectors.toList());
-		log.debug("Output -> {}", result);
+		log.debug(OUTPUT, result);
 		return result;
 	}
 
@@ -62,7 +67,33 @@ public class NursingRecordStorageImpl implements NursingRecordStorage {
 		log.debug("Input parameter -> internmentEpisodeId {}", internmentEpisodeId);
 		List<NursingRecordBo> result = nursingRecordRepository.getByInternmentEpisodeId(internmentEpisodeId).
 				stream().map(this::mapToBo).collect(Collectors.toList());
-		log.debug("Output -> {}", result);
+		log.debug(OUTPUT, result);
+		return result;
+	}
+
+	@Override
+	public boolean updateStatus(Integer id, Short statusId, LocalDateTime administrationTime, Integer userId, String reason) {
+		log.debug("Input parameter -> id {}, statusId {}, administrationTime {}, userId {}, reason {}", id, statusId, administrationTime, userId, reason);
+		nursingRecordRepository.updateStatus(id, statusId, userId, administrationTime);
+		historicNursingRecordRepository.save(new HistoricNursingRecordStatus(id, statusId, reason));
+		log.debug(OUTPUT, Boolean.TRUE);
+		return Boolean.TRUE;
+	}
+
+	@Override
+	public Optional<Integer> getIndicationIdById(Integer id) {
+		log.debug("Input parameter -> id {} ", id);
+		Optional<Integer> indicationId = nursingRecordRepository.getIndicationIdById(id);
+		log.debug(OUTPUT, indicationId.get());
+		return indicationId;
+	}
+
+	@Override
+	public List<NursingRecordBo> getIndicationNursingRecords(Integer indicationId) {
+		log.debug("Input parameter -> indicationId {}", indicationId);
+		List<NursingRecordBo> result = nursingRecordRepository.getByIndicationId(indicationId).
+				stream().map(this::mapToBo).collect(Collectors.toList());
+		log.debug(OUTPUT, result);
 		return result;
 	}
 

@@ -11,6 +11,7 @@ import ar.lamansys.sgh.clinichistory.application.indication.getinternmentepisode
 
 import ar.lamansys.sgh.clinichistory.application.indication.getinternmentepisodeparenteralplans.GetInternmentEpisodeParenteralPlans;
 import ar.lamansys.sgh.clinichistory.application.indication.getinternmentepisodepharamacos.GetInternmentEpisodePharmacos;
+import ar.lamansys.sgh.clinichistory.application.indication.updatenursingrecordstatus.UpdateNursingRecordStatus;
 import ar.lamansys.sgh.clinichistory.domain.ips.FrequencyBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.IndicationBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.NursingRecordBo;
@@ -86,6 +87,8 @@ public class SharedIndicationPortImpl implements SharedIndicationPort {
 
 	private final GetInternmentEpisodeNursingRecords getInternmentEpisodeNursingRecords;
 
+	private final UpdateNursingRecordStatus updateNursingRecordStatus;
+
 	@Override
 	public List<DietDto> getInternmentEpisodeDiets(Integer internmentEpisodeId) {
 		log.debug("Input parameter -> internmentEpisodeId {}", internmentEpisodeId);
@@ -160,6 +163,14 @@ public class SharedIndicationPortImpl implements SharedIndicationPort {
 	public List<NursingRecordDto> getInternmentEpisodeNursingRecords(Integer internmentEpisodeId) {
 		log.debug("Input parameter -> internmentEpisodeId {}", internmentEpisodeId);
 		List<NursingRecordDto> result = getInternmentEpisodeNursingRecords.run(internmentEpisodeId).stream().map(this::mapToNursingRecordDto).collect(Collectors.toList());
+		log.debug("Output -> {}", result);
+		return result;
+	}
+
+	@Override
+	public boolean updateNursingRecordStatus(Integer nursingRecordId, String status, LocalDateTime administrationTime, Integer userId, String reason) {
+		log.debug("Input parameter -> nursingRecordId {}, statusId {}, administrationTime {}, userId {}, reason {}", nursingRecordId, status, administrationTime, userId, reason);
+		boolean result = updateNursingRecordStatus.run(nursingRecordId, status, administrationTime, userId, reason);
 		log.debug("Output -> {}", result);
 		return result;
 	}

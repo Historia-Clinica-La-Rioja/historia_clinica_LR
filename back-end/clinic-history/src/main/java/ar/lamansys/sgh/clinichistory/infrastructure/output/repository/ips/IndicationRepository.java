@@ -1,5 +1,6 @@
 package ar.lamansys.sgh.clinichistory.infrastructure.output.repository.ips;
 
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
@@ -19,5 +20,16 @@ public interface IndicationRepository extends SGXAuditableEntityJPARepository<In
 			+ "FROM Indication i "
 			+ "WHERE i.id = :indicationId")
 	Optional<Short> getTypeById(@Param("indicationId")Integer indicationId);
+
+	@Transactional
+	@Modifying
+	@Query( "UPDATE Indication AS i " +
+			"SET i.statusId = :statusId, " +
+			"i.updateable.updatedOn = CURRENT_TIMESTAMP, " +
+			"i.updateable.updatedBy = :userId " +
+			"WHERE i.id = :indicationId ")
+	void updateStatus(@Param("indicationId") Integer indicationId,
+					  @Param("statusId") short statusId,
+					  @Param("userId") Integer userId);
 
 }
