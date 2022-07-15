@@ -8,7 +8,7 @@ import { HceGeneralStateService } from '@api-rest/services/hce-general-state.ser
 import { InternacionMasterDataService } from '@api-rest/services/internacion-master-data.service';
 import { NursingPatientConsultationService } from '@api-rest/services/nursing-patient-consultation.service';
 import { TEXT_AREA_MAX_LENGTH } from '@core/constants/validation-constants';
-import { hasError } from '@core/utils/form.utils';
+import { hasError, scrollIntoError } from '@core/utils/form.utils';
 import { newMoment } from '@core/utils/moment.utils';
 import { ProblemasService } from '@historia-clinica/services/problemas.service';
 import { ProcedimientosService } from '@historia-clinica/services/procedimientos.service';
@@ -62,7 +62,7 @@ export class NuevaConsultaDockPopupEnfermeriaComponent implements OnInit {
 	specialties: ClinicalSpecialtyDto[];
 	problems: ClinicalTermDto[];
 	searchConceptsLocallyFFIsOn = false;
-	@ViewChild('errorsView') errorsView: ElementRef;
+	@ViewChild('apiErrorsView') apiErrorsView: ElementRef;
 
 
 	readonly TEXT_AREA_MAX_LENGTH = TEXT_AREA_MAX_LENGTH;
@@ -85,6 +85,7 @@ export class NuevaConsultaDockPopupEnfermeriaComponent implements OnInit {
 		private readonly dialog: MatDialog,
 		private readonly translateService: TranslateService,
 		private readonly featureFlagService: FeatureFlagService,
+		private readonly el: ElementRef,
 	) {
 		this.motivoNuevaConsultaService = new MotivoNuevaConsultaService(formBuilder, this.snomedService, this.snackBarService);
 		this.medicacionesNuevaConsultaService = new MedicacionesNuevaConsultaService(formBuilder, this.snomedService, this.snackBarService);
@@ -194,9 +195,12 @@ export class NuevaConsultaDockPopupEnfermeriaComponent implements OnInit {
 			this.disableConfirmButton = false;
 			this.snackBarService.showError('ambulatoria.paciente.new-nursing-consultation.messages.ERROR');
 			if (!this.isValidConsultation()) {
-				setTimeout(() => {
-					this.errorsView.nativeElement.scrollIntoView({ behavior: 'smooth', block: 'start' });
-				}, 500);
+				if (this.datosAntropometricosNuevaConsultaService.getForm().invalid) {
+					scrollIntoError(this.datosAntropometricosNuevaConsultaService.getForm(), this.el);
+				}
+				else if (this.factoresDeRiesgoFormService.getForm().invalid) {
+					scrollIntoError(this.factoresDeRiesgoFormService.getForm(), this.el);
+				}
 			}
 		}
 	}
@@ -242,6 +246,13 @@ export class NuevaConsultaDockPopupEnfermeriaComponent implements OnInit {
 						this.apiErrors.push(val);
 					});
 				this.snackBarService.showError('ambulatoria.paciente.new-nursing-consultation.messages.ERROR');
+			},
+			() => {
+				if (this.apiErrors?.length > 0) {
+					setTimeout(() => {
+						this.apiErrorsView.nativeElement.scrollIntoView({ behavior: 'smooth', block: 'start' });
+					}, 500);
+				}
 			}
 		);
 

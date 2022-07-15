@@ -23,7 +23,7 @@ import { HealthConditionService } from '@api-rest/services/healthcondition.servi
 import { ClinicalSpecialtyService } from '@api-rest/services/clinical-specialty.service';
 import { MatDialog } from '@angular/material/dialog';
 import { SuggestedFieldsPopupComponent } from '../../../../../presentation/components/suggested-fields-popup/suggested-fields-popup.component';
-import { hasError } from '@core/utils/form.utils';
+import { hasError, scrollIntoError } from '@core/utils/form.utils';
 import { NewConsultationSuggestedFieldsService } from '../../services/new-consultation-suggested-fields.service';
 import { TranslateService } from '@ngx-translate/core';
 import { AmbulatoryConsultationProblem, AmbulatoryConsultationProblemsService } from '@historia-clinica/services/ambulatory-consultation-problems.service';
@@ -76,7 +76,7 @@ export class NuevaConsultaDockPopupComponent implements OnInit {
 	public reportFFIsOn: boolean;
 	searchConceptsLocallyFFIsOn = false;
 	ambulatoryConsultationReferenceService: AmbulatoryConsultationReferenceService;
-	@ViewChild('errorsView') errorsView: ElementRef;
+	@ViewChild('apiErrorsView') apiErrorsView: ElementRef;
 
 	constructor(
 		@Inject(OVERLAY_DATA) public data: NuevaConsultaData,
@@ -97,6 +97,7 @@ export class NuevaConsultaDockPopupComponent implements OnInit {
 		private readonly careLineService: CareLineService,
 		private readonly clinicalSpecialtyCareLine: ClinicalSpecialtyCareLineService,
 		private readonly referenceFileService: ReferenceFileService,
+		private readonly el: ElementRef,
 	) {
 		this.motivoNuevaConsultaService = new MotivoNuevaConsultaService(formBuilder, this.snomedService, this.snackBarService);
 		this.medicacionesNuevaConsultaService = new MedicacionesNuevaConsultaService(formBuilder, this.snomedService, this.snackBarService);
@@ -201,9 +202,12 @@ export class NuevaConsultaDockPopupComponent implements OnInit {
 				} else {
 					this.disableConfirmButton = false;
 					if (!this.isValidConsultation()) {
-						setTimeout(() => {
-							this.errorsView.nativeElement.scrollIntoView({ behavior: 'smooth', block: 'start' });
-						}, 500);
+						if (this.datosAntropometricosNuevaConsultaService.getForm().invalid) {
+							scrollIntoError(this.datosAntropometricosNuevaConsultaService.getForm(), this.el);
+						}
+						else if (this.factoresDeRiesgoFormService.getForm().invalid) {
+							scrollIntoError(this.factoresDeRiesgoFormService.getForm(), this.el);
+						}
 					}
 
 				}
@@ -299,6 +303,13 @@ export class NuevaConsultaDockPopupComponent implements OnInit {
 				const filesToDelete = nuevaConsulta.references.filter(reference => reference.fileIds.length > 0);
 				if (filesToDelete.length) {
 					this.errorToUploadReferenceFiles();
+				}
+			},
+			() => {
+				if (this.apiErrors?.length > 0) {
+					setTimeout(() => {
+						this.apiErrorsView.nativeElement.scrollIntoView({ behavior: 'smooth', block: 'start' });
+					}, 500);
 				}
 			}
 		);

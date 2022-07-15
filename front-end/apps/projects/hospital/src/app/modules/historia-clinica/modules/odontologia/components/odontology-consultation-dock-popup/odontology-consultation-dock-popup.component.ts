@@ -1,4 +1,4 @@
-import { Component, Inject, OnInit } from '@angular/core';
+import { Component, ElementRef, Inject, OnInit } from '@angular/core';
 import { DockPopupRef } from '@presentation/services/dock-popup-ref';
 import { OVERLAY_DATA } from '@presentation/presentation-model';
 import { MotivoNuevaConsultaService } from '@historia-clinica/modules/ambulatoria/services/motivo-nueva-consulta.service';
@@ -8,7 +8,7 @@ import { AlergiasNuevaConsultaService } from '@historia-clinica/modules/ambulato
 import { InternacionMasterDataService } from '@api-rest/services/internacion-master-data.service';
 import { MedicacionesNuevaConsultaService } from "@historia-clinica/modules/ambulatoria/services/medicaciones-nueva-consulta.service";
 import { TEXT_AREA_MAX_LENGTH } from '@core/constants/validation-constants';
-import { hasError } from '@core/utils/form.utils';
+import { hasError, scrollIntoError } from '@core/utils/form.utils';
 import { PersonalHistoriesNewConsultationService } from "@historia-clinica/modules/ambulatoria/services/personal-histories-new-consultation.service";
 import { newMoment } from "@core/utils/moment.utils";
 import { ClinicalSpecialtyDto, DateDto, OdontologyConceptDto, OdontologyConsultationDto, OdontologyDentalActionDto, OdontologyDiagnosticDto } from '@api-rest/api-model';
@@ -90,6 +90,7 @@ export class OdontologyConsultationDockPopupComponent implements OnInit {
 		private readonly clinicalSpecialtyCareLine: ClinicalSpecialtyCareLineService,
 		private readonly referenceFileService: ReferenceFileService,
 		private readonly featureFlagService: FeatureFlagService,
+		private readonly el: ElementRef,
 	) {
 		this.reasonNewConsultationService = new MotivoNuevaConsultaService(formBuilder, this.snomedService, this.snackBarService);
 		this.allergiesNewConsultationService = new AlergiasNuevaConsultaService(formBuilder, this.snomedService, this.snackBarService);
@@ -156,6 +157,7 @@ export class OdontologyConsultationDockPopupComponent implements OnInit {
 		}
 		else {
 			this.snackBarService.showError('Error al guardar documento de nueva consulta odontológica');
+			scrollIntoError(this.form, this.el);
 		}
 	}
 
