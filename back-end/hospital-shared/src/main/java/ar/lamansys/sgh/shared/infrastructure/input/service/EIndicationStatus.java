@@ -6,7 +6,10 @@ public enum EIndicationStatus {
 
 	INDICATED(1, "indicada"),
 	SUSPENDED(2, "suspendida"),
-	PENDING(3, "pendiente");
+	IN_PROGRESS(3, "en progreso"),
+	COMPLETED(4, "completada"),
+	REJECTED(5, "rechazada");
+
 
 	private Short id;
 	private String value;

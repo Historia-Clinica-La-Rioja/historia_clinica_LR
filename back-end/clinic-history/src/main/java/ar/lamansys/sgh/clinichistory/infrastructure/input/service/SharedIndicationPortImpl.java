@@ -19,8 +19,8 @@ import ar.lamansys.sgh.clinichistory.domain.ips.QuantityBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.OtherPharmacoBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.PharmacoBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.SnomedBo;
-import ar.lamansys.sgh.shared.infrastructure.input.service.EIndicationStatus;
 import ar.lamansys.sgh.shared.infrastructure.input.service.EIndicationType;
+import ar.lamansys.sgh.shared.infrastructure.input.service.ENursingRecordStatus;
 import ar.lamansys.sgh.shared.infrastructure.input.service.FrequencyDto;
 import ar.lamansys.sgh.shared.infrastructure.input.service.IndicationDto;
 import ar.lamansys.sgh.shared.infrastructure.input.service.NewDosageDto;
@@ -418,7 +418,7 @@ public class SharedIndicationPortImpl implements SharedIndicationPort {
 		result.setIndication(indicationDto);
 		result.setEvent(bo.getEvent());
 		result.setId(bo.getId());
-		result.setStatus(EIndicationStatus.map(bo.getStatusId()));
+		result.setStatus(ENursingRecordStatus.map(bo.getStatusId()));
 		result.setObservation(bo.getObservation());
 		result.setScheduledAdministrationTime(localDateMapper.toDateTimeDto(bo.getScheduledAdministrationTime()));
 		result.setAdministrationTime(localDateMapper.toDateTimeDto(bo.getAdministrationTime()));

@@ -1778,7 +1778,7 @@ export interface NursingRecordDto {
     indication: IndicationDto;
     observation: string;
     scheduledAdministrationTime: DateTimeDto;
-    status: EIndicationStatus;
+    status: ENursingRecordStatus;
 }
 
 export interface NursingRiskFactorDto extends Serializable {
@@ -2974,7 +2974,9 @@ export const enum EDocumentSearch {
 export const enum EIndicationStatus {
     INDICATED = "INDICATED",
     SUSPENDED = "SUSPENDED",
-    PENDING = "PENDING",
+    IN_PROGRESS = "IN_PROGRESS",
+    COMPLETED = "COMPLETED",
+    REJECTED = "REJECTED",
 }
 
 export const enum EIndicationType {
@@ -2988,6 +2990,12 @@ export const enum EMedicalCoverageTypeDto {
     PREPAGA = "PREPAGA",
     OBRASOCIAL = "OBRASOCIAL",
     ART = "ART",
+}
+
+export const enum ENursingRecordStatus {
+    COMPLETED = "COMPLETED",
+    REJECTED = "REJECTED",
+    PENDING = "PENDING",
 }
 
 export const enum EOdontologyTopicDto {

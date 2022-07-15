@@ -22,7 +22,7 @@ public class NursingRecordDto {
 	private IndicationDto indication;
 
 	@NotNull(message = "{value.mandatory}")
-	private EIndicationStatus status;
+	private ENursingRecordStatus status;
 
 	private DateTimeDto scheduledAdministrationTime;
 

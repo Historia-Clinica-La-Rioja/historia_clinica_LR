@@ -16,8 +16,8 @@ import ar.lamansys.sgh.clinichistory.domain.ips.PharmacoBo;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.ips.IndicationRepository;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.ips.NursingRecordRepository;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.ips.entity.indication.NursingRecord;
-import ar.lamansys.sgh.shared.infrastructure.input.service.EIndicationStatus;
 import ar.lamansys.sgh.shared.infrastructure.input.service.EIndicationType;
+import ar.lamansys.sgh.shared.infrastructure.input.service.ENursingRecordStatus;
 import ar.lamansys.sgx.shared.dates.configuration.JacksonDateFormatConfig;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -37,7 +37,7 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class NursingRecordStorageImpl implements NursingRecordStorage {
 
-	private static final Short PENDING_STATUS_ID = EIndicationStatus.PENDING.getId();
+	private static final Short PENDING_STATUS_ID = ENursingRecordStatus.PENDING.getId();
 
 	private final NursingRecordRepository nursingRecordRepository;
 	private final IndicationRepository indicationRepository;
