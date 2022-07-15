@@ -361,4 +361,45 @@ export class FactoresDeRiesgoFormService {
 			(riskFactor: FormGroup) => (riskFactor.value === null || riskFactor.value === '')
 		);
 	}
+
+	getEffectiveObservation(controlValue): EffectiveObservation {
+		return controlValue?.value ?
+			{ value: controlValue.value, effectiveTime: controlValue.effectiveTime.toDate() }
+			: undefined;
+	}
+
+	buildRiskFactorsValue(form: FormGroup): RiskFactorsValue {
+		return isNull(form.value) ? undefined : {
+			bloodOxygenSaturation: this.getEffectiveObservation(form.value.bloodOxygenSaturation),
+			diastolicBloodPressure: this.getEffectiveObservation(form.value.diastolicBloodPressure),
+			heartRate: this.getEffectiveObservation(form.value.heartRate),
+			respiratoryRate: this.getEffectiveObservation(form.value.respiratoryRate),
+			systolicBloodPressure: this.getEffectiveObservation(form.value.systolicBloodPressure),
+			temperature: this.getEffectiveObservation(form.value.temperature),
+			bloodGlucose: this.getEffectiveObservation(form.value.bloodGlucose),
+			glycosylatedHemoglobin: this.getEffectiveObservation(form.value.glycosylatedHemoglobin),
+			cardiovascularRisk: this.getEffectiveObservation(form.value.cardiovascularRisk)
+		};
+
+		function isNull(formGroupValues: any): boolean {
+			return Object.values(formGroupValues).every((el: { value: number, effectiveTime: Moment }) => el.value === null);
+		}
+	}
+}
+
+export interface RiskFactorsValue {
+	bloodOxygenSaturation?: EffectiveObservation;
+	diastolicBloodPressure?: EffectiveObservation;
+	heartRate?: EffectiveObservation;
+	respiratoryRate?: EffectiveObservation;
+	systolicBloodPressure?: EffectiveObservation;
+	temperature?: EffectiveObservation;
+	bloodGlucose?: EffectiveObservation;
+	glycosylatedHemoglobin?: EffectiveObservation;
+	cardiovascularRisk?: EffectiveObservation;
+}
+
+export interface EffectiveObservation {
+	effectiveTime: Date;
+	value: string;
 }

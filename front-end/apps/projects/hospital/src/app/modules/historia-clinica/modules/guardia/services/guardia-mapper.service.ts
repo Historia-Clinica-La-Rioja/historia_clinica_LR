@@ -16,9 +16,9 @@ import { parse } from 'date-fns';
 import { Problema } from '../../../services/problemas.service';
 import { DateFormat, dateToMoment, momentFormat } from '@core/utils/moment.utils';
 import { MedicalDischargeForm } from '../routes/medical-discharge/medical-discharge.component';
-import { EffectiveObservation, RiskFactorsValue } from '../../../services/risk-factors-form.service';
 import { AdministrativeForm } from '../routes/administrative-discharge/administrative-discharge.component';
 import { AdministrativeAdmission } from './new-episode.service';
+import { EffectiveObservation, RiskFactorsValue } from '@historia-clinica/services/factores-de-riesgo-form.service';
 
 @Injectable({
 	providedIn: 'root'
