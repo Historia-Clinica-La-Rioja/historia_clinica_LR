@@ -125,3 +125,84 @@ databaseChangeLog:
                 FROM healthcare_professional hp
                 JOIN person p on hp.person_id = p.id
                 WHERE hp.id IN (SELECT DISTINCT pp.healthcare_professional_id FROM professional_professions pp WHERE pp.deleted = false)
+        
+    - changeSet:  
+        id: historic_nursing_record-createTable
+        comment: Create table historic_nursing_record
+        author: fsimaro
+        changes:
+          - createTable:
+              tableName: historic_nursing_record
+              columns:
+                - column:
+                    name: nursing_record_id
+                    type: int
+                    constraints:
+                      nullable: false
+                - column:
+                    name: status_id
+                    type: smallint
+                    constraints:
+                      nullable: false
+                - column:
+                    constraints:
+                      nullable: true
+                    name: reason
+                    type: text
+                - column:
+                    constraints:
+                      nullable: false
+                    name: changed_status_date
+                    type: datetime
+                    defaultValueDate: ${date.now}
+                - column:
+                    constraints:
+                      nullable: false
+                    name: created_by
+                    type: int
+                    defaultValue: -1
+                - column:
+                    constraints:
+                      nullable: false
+                    name: created_on
+                    type: datetime
+                    defaultValueDate: ${date.now}
+                - column:
+                    constraints:
+                      nullable: false
+                    name: updated_by
+                    type: int
+                    defaultValue: -1
+                - column:
+                    constraints:
+                      nullable: false
+                    name: updated_on
+                    type: datetime
+                    defaultValueDate: ${date.now}
+                - column:
+                    constraints:
+                      nullable: false
+                    name: deleted
+                    type: boolean
+                    defaultValue: ${boolean.false}
+                - column:
+                    name: deleted_by
+                    type: int
+                - column:
+                    name: deleted_on
+                    type: datetime
+          - addPrimaryKey:
+              clustered: true
+              columnNames: nursing_record_id, changed_status_date
+              constraintName: PK_historic_nursing_record
+              tableName: historic_nursing_record
+              validate: true
+          - addForeignKeyConstraint:
+              baseColumnNames: nursing_record_id
+              baseTableName: historic_nursing_record
+              constraintName: FK_historic_nursing_record_id
+              onDelete: NO ACTION
+              onUpdate: NO ACTION
+              referencedColumnNames: id
+              referencedTableName: nursing_record
+              validate: true
