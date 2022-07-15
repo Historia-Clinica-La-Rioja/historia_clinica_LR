@@ -26,8 +26,8 @@
 							</mat-label>
 							<mat-form-field appearance="outline">
 								<input readonly placeholder="mm/dd/yyyy" matInput [value]="this.today"
-									[matDatepicker]="newVaccineDatepicker" formControlName="date" [min]=this.minDate [max]="this.today"
-									required>
+									[matDatepicker]="newVaccineDatepicker" formControlName="date" [min]=this.minDate
+									[max]="this.today" required>
 								<mat-datepicker-toggle matSuffix [for]="newVaccineDatepicker"></mat-datepicker-toggle>
 								<mat-datepicker #newVaccineDatepicker
 									(yearSelected)="chosenYearHandler($event,this.billableForm)"
@@ -91,8 +91,10 @@
 										{{ condition.description }}
 									</mat-option>
 								</mat-select>
-								<button id="clear_condition" type="button" mat-button *ngIf="billableForm.value.condition !== null && billableForm.value.condition !== undefined" matSuffix
-									color="warn" mat-icon-button (click)="clear(billableForm.controls.condition, 'condition', billableForm); $event.stopPropagation()">
+								<button id="clear_condition" type="button" mat-button
+									*ngIf="billableForm.value.condition !== null && billableForm.value.condition !== undefined"
+									matSuffix color="warn" mat-icon-button
+									(click)="clear(billableForm.controls.condition, 'condition', billableForm); $event.stopPropagation()">
 									<mat-icon>close</mat-icon>
 								</button>
 							</mat-form-field>
@@ -113,8 +115,10 @@
 												{{ scheme.description }}
 											</mat-option>
 										</mat-select>
-										<button id="clear_scheme" type="button" mat-button *ngIf="billableForm.value.scheme !== null && billableForm.value.scheme !== undefined" matSuffix
-											color="warn" mat-icon-button (click)="clear(billableForm.controls.scheme, 'scheme', billableForm); $event.stopPropagation()">
+										<button id="clear_scheme" type="button" mat-button
+											*ngIf="billableForm.value.scheme !== null && billableForm.value.scheme !== undefined"
+											matSuffix color="warn" mat-icon-button
+											(click)="clear(billableForm.controls.scheme, 'scheme', billableForm); $event.stopPropagation()">
 											<mat-icon>close</mat-icon>
 										</button>
 										<mat-error
@@ -134,8 +138,10 @@
 												{{ dose.description }}
 											</mat-option>
 										</mat-select>
-										<button id="clear_scheme" type="button" mat-button *ngIf="billableForm.value.dose !== null && billableForm.value.dose !== undefined" matSuffix
-											color="warn" mat-icon-button (click)="clear(billableForm.controls.dose, 'dose', billableForm); $event.stopPropagation()">
+										<button id="clear_scheme" type="button" mat-button
+											*ngIf="billableForm.value.dose !== null && billableForm.value.dose !== undefined"
+											matSuffix color="warn" mat-icon-button
+											(click)="clear(billableForm.controls.dose, 'dose', billableForm); $event.stopPropagation()">
 											<mat-icon>close</mat-icon>
 										</button>
 										<mat-error
@@ -171,13 +177,13 @@
 			</ng-container>
 		</ng-container>
 
-		<ng-container *appHasRole="['PROFESIONAL_DE_SALUD', 'ESPECIALISTA_MEDICO', 'ENFERMERO', 'ESPECIALISTA_EN_ODONTOLOGIA']">
+		<ng-container
+			*appHasRole="['PROFESIONAL_DE_SALUD', 'ESPECIALISTA_MEDICO', 'ENFERMERO', 'ESPECIALISTA_EN_ODONTOLOGIA']">
 			<mat-tab>
 				<ng-template mat-tab-label>
 					<span class="color-primary">
-						{{ 'ambulatoria.paciente.vacunas.agregar_vacunas.agregar_vacuna.PREVIOUS_VACCINE_TAB' |
-						translate |
-						uppercase }}
+						{{ 'ambulatoria.paciente.vacunas.agregar_vacunas.agregar_vacuna.PREVIOUS_VACCINE_TAB'
+						| translate | uppercase }}
 					</span>
 				</ng-template>
 
@@ -189,8 +195,8 @@
 						</mat-label>
 						<mat-form-field appearance="outline">
 							<input readonly placeholder="mm/dd/yyyy" matInput [value]="this.today"
-								[matDatepicker]="previousVaccineDatepicker" formControlName="date" [min]=this.minDate [max]="this.today"
-								required>
+								[matDatepicker]="previousVaccineDatepicker" formControlName="date" [min]=this.minDate
+								[max]="this.today" required>
 							<mat-datepicker-toggle matSuffix [for]="previousVaccineDatepicker"></mat-datepicker-toggle>
 							<mat-datepicker #previousVaccineDatepicker
 								(yearSelected)="chosenYearHandler($event,this.previousForm)"
@@ -254,8 +260,10 @@
 									{{ condition.description }}
 								</mat-option>
 							</mat-select>
-							<button id="clear_condition" type="button" mat-button *ngIf="previousForm.value.condition !== null && previousForm.value.condition !== undefined" matSuffix
-								color="warn" mat-icon-button (click)="clear(previousForm.controls.condition, 'condition', previousForm); $event.stopPropagation()">
+							<button id="clear_condition" type="button" mat-button
+								*ngIf="previousForm.value.condition !== null && previousForm.value.condition !== undefined"
+								matSuffix color="warn" mat-icon-button
+								(click)="clear(previousForm.controls.condition, 'condition', previousForm); $event.stopPropagation()">
 								<mat-icon>close</mat-icon>
 							</button>
 						</mat-form-field>
@@ -274,8 +282,10 @@
 											{{ scheme.description }}
 										</mat-option>
 									</mat-select>
-									<button id="clear_scheme" type="button" mat-button *ngIf="previousForm.value.scheme !== null && previousForm.value.scheme !== undefined" matSuffix
-										color="warn" mat-icon-button (click)="clear(previousForm.controls.scheme, 'scheme', previousForm); $event.stopPropagation()">
+									<button id="clear_scheme" type="button" mat-button
+										*ngIf="previousForm.value.scheme !== null && previousForm.value.scheme !== undefined"
+										matSuffix color="warn" mat-icon-button
+										(click)="clear(previousForm.controls.scheme, 'scheme', previousForm); $event.stopPropagation()">
 										<mat-icon>close</mat-icon>
 									</button>
 									<mat-error
@@ -294,11 +304,13 @@
 											{{ dose.description }}
 										</mat-option>
 									</mat-select>
-									<button id="clear_dose" type="button" mat-button *ngIf="this.previousForm.value.dose !== null && this.previousForm.value.dose !== undefined" matSuffix
-										color="warn" mat-icon-button (click)="clear(this.previousForm.controls.dose, 'dose', previousForm); $event.stopPropagation()">
+									<button id="clear_dose" type="button" mat-button
+										*ngIf="this.previousForm.value.dose !== null && this.previousForm.value.dose !== undefined"
+										matSuffix color="warn" mat-icon-button
+										(click)="clear(this.previousForm.controls.dose, 'dose', previousForm); $event.stopPropagation()">
 										<mat-icon>close</mat-icon>
 									</button>
-									 
+
 									<mat-error
 										[translate]="'ambulatoria.paciente.vacunas.agregar_vacunas.agregar_vacuna.NOT_DOSE_SELECTED_ERROR'">
 									</mat-error>
