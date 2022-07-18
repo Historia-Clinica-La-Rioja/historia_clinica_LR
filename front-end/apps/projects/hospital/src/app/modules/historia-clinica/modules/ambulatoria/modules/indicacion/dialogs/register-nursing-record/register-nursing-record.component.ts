@@ -2,12 +2,13 @@ import { ENursingRecordStatus } from '@api-rest/api-model';
 import { DateTimeDto } from '@api-rest/api-model';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Component, Inject, OnInit } from '@angular/core';
-import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { dateTimeDtotoLocalDate, dateToDateTimeDtoUTC } from '@api-rest/mapper/date-dto.mapper';
 import { differenceInDays, setHours } from 'date-fns';
 import { DatePipe } from '@angular/common';
 import { DatePipeFormat } from '@core/utils/date.utils';
 import { beforeTimeDateValidation, futureTimeValidation, TIME_PATTERN } from '@core/utils/form.utils';
+import { DocumentActionReasonComponent } from '../../../internacion/dialogs/document-action-reason/document-action-reason.component';
 
 @Component({
 	selector: 'app-register-nursing-record',
@@ -28,6 +29,7 @@ export class RegisterNursingRecordComponent implements OnInit {
 		private readonly formBuilder: FormBuilder,
 		private readonly dialogRef: MatDialogRef<RegisterNursingRecordComponent>,
 		private readonly datePipe: DatePipe,
+		private readonly dialog: MatDialog
 	) { }
 
 	ngOnInit(): void {
@@ -45,6 +47,26 @@ export class RegisterNursingRecordComponent implements OnInit {
 			const registerNursingRecord = this.buildCompletedNursingRecord();
 			this.dialogRef.close(registerNursingRecord);
 		} else this.form.markAllAsTouched();
+	}
+
+	reject() {
+		const dialogRef = this.dialog.open(DocumentActionReasonComponent, {
+			data: {
+				title: 'indicacion.nursing-care.dialogs.reject.TITLE',
+				subtitle: 'indicacion.nursing-care.dialogs.reject.SUBTITLE',
+				titleColor: 'color-warn'
+			},
+			width: "50vh",
+			autoFocus: false,
+			disableClose: true
+		});
+
+		dialogRef.afterClosed().subscribe((reason: string) => {
+			if (reason) {
+				const rejectNursingRecord = { status: ENursingRecordStatus.REJECTED, reason };
+				this.dialogRef.close(rejectNursingRecord);
+			}
+		})
 	}
 
 	buildCompletedNursingRecord() {

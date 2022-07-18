@@ -174,6 +174,10 @@
 						"SUCCESS": "Se completó la acción de la toma de enfermería correctamente",
 						"ERROR": "No se pudo completar la acción de la toma de enfermería correctamente."
 					}
+				},
+				"reject": {
+					"TITLE": "Rechazar y definir motivo",
+					"SUBTITLE": "Ingrese el motivo por el que la indicación no puede completarse."
 				}
 			}
 		}

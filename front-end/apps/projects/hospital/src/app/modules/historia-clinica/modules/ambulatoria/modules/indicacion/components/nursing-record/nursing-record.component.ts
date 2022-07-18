@@ -43,8 +43,7 @@ export class NursingRecordComponent {
 						this.snackBarService.showSuccess('indicacion.nursing-care.dialogs.register.messages.SUCCESS');
 						this.nursingRecordFacade.getNursingRecords();
 					},
-					error => this.snackBarService.showError('indicacion.nursing-care.dialogs.register.messages.ERROR')
-				)
+					error => this.snackBarService.showError('indicacion.nursing-care.dialogs.register.messages.ERROR'));
 		});
 	}
 }

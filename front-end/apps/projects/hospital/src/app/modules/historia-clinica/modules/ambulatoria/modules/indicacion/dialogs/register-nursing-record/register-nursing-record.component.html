@@ -42,9 +42,12 @@
         </form>
     </mat-dialog-content>
 
-    <mat-dialog-actions align="center">
+    <mat-dialog-actions fxLayout="column" fxLayoutGap="10px" fxLayoutAlign="center center">
         <button mat-flat-button color="primary" (click)="save()">
             {{ 'indicacion.nursing-care.buttons.REGISTER' | translate | uppercase }}
+        </button>
+        <button mat-stroked-button color="warn" class="reject" (click)="reject()">
+            {{ 'indicacion.nursing-care.dialogs.reject.TITLE' | translate | uppercase }}
         </button>
     </mat-dialog-actions>
 </div>
