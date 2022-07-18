@@ -12,7 +12,6 @@ export class FactoresDeRiesgoFormComponent {
   @Input() factoresDeRiesgoFormService: FactoresDeRiesgoFormService;
   @Input() showPreloadData: boolean = false;
   @Input() showRecomendation: boolean = false;
-  @Input() showErrors: boolean = false;
   @Input() showTitle: boolean = true;
 
   readonly isNumberOrDot = isNumberOrDot;
