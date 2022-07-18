@@ -10,13 +10,15 @@ import { MAT_DIALOG_DATA, MatDialogRef } from "@angular/material/dialog";
 export class DocumentActionReasonComponent implements OnInit {
 
 	form: FormGroup
+	scssTitle: string;
 	constructor(
 		private readonly formB: FormBuilder,
 		private dialogRef: MatDialogRef<DocumentActionReasonComponent>,
-		@Inject(MAT_DIALOG_DATA) public data: { title: string },
+		@Inject(MAT_DIALOG_DATA) public data: { title: string, titleColor?: string, subtitle: string },
 	) { }
 
 	ngOnInit(): void {
+		this.scssTitle = this.data.titleColor ? this.data.titleColor : 'black';
 		this.form = this.formB.group({
 			reason: [null, [Validators.required]],
 		})
