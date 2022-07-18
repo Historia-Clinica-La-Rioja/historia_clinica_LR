@@ -5,7 +5,7 @@
     </div>
 
     <div id="content" class="content" *ngFor="let record of nursingSection.records" fxLayout="column" fxLayoutGap="20px">
-        <div fxLayout="row" fxLayoutGap="20px" fxLayout.lt-lg="column">
+        <div fxLayout="row" fxLayoutGap="20px" fxLayout.lt-lg="column" fxLayoutAlign="space-between center" fxLayoutAlign.lt-lg="start">
             <mat-icon class="color-primary" fontSet="material-icons-outlined" *ngIf="record.matIcon; else svgIcon">
                 {{ record.matIcon }}
             </mat-icon>
@@ -24,6 +24,11 @@
 
             <div>
                 <strong [class]="record.content.status.cssClass" class="label">{{ record.content.status.description | translate | uppercase }}</strong>
+            </div>
+            <div *ngIf="record.content.status.type == PENDING">
+                <button mat-button mat-raised-button color="primary" (click)="openDialogToRegister(record)">
+                    {{ 'indicacion.nursing-care.buttons.TO_REGISTER' | translate | uppercase }}
+                </button>
             </div>
         </div>
     </div>

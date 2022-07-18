@@ -88,6 +88,7 @@ export function beforeTimeDateValidation(date: string) {
 function isValidTime(time: string) {
 	return time.match('([0-1]{1}[0-9]{1}|20|21|22|23):[0-5]{1}[0-9]{1}');
 }
+
 export class MinTimeValidator {
 	constructor(private readonly minDateTime: Moment) { }
 

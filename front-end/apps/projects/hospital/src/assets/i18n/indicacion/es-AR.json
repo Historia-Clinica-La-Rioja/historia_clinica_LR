@@ -159,6 +159,22 @@
 			},
 			"status": {
 				"PENDING": "Pendiente"
+			}, 
+			"buttons": {
+				"TO_REGISTER": "registrar",
+				"REGISTER": "marcar como completado"
+			},
+			"dialogs": {
+				"register": {
+					"TITLE": "Completar registro",
+					"OBSERVATIONS": "Observaciones",
+					"INVALID_HOUR": "La hora no puede ser inferior al horario de inicio de administración.",
+					"INVALID_FUTURE": "No se puede elegir una hora mayor a la actual",
+					"messages": {
+						"SUCCESS": "Se completó la acción de la toma de enfermería correctamente",
+						"ERROR": "No se pudo completar la acción de la toma de enfermería correctamente."
+					}
+				}
 			}
 		}
 	}
