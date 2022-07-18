@@ -38,6 +38,7 @@ export class NewAppointmentComponent implements OnInit {
 
 	@ViewChild('stepper', { static: false }) stepper: MatStepper;
 
+	initialIndex = 0;
 	public formSearch: FormGroup;
 	public appointmentInfoForm: FormGroup;
 	public identifyTypeArray: IdentificationTypeDto[];
@@ -115,6 +116,11 @@ export class NewAppointmentComponent implements OnInit {
 		this.appointmentInfoForm.markAllAsTouched();
 
 		this.formSearch.controls.patientId.patchValue(this.data.patientId);
+		if (this.data.patientId) {
+			this.search();
+			this.initialIndex = 1;
+		}
+
 	}
 
 	search(): void {
