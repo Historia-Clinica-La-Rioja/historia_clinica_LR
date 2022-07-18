@@ -102,6 +102,7 @@ export class AgendaSetupComponent implements OnInit {
 			appointmentDuration: new FormControl(null, [Validators.required]),
 			healthcareProfessionalSpecialtyId: new FormControl(null, [Validators.required]),
 			conjointDiary: new FormControl(false, [Validators.nullValidator]),
+			alias: new FormControl(null, [Validators.nullValidator]),
 			otherProfessionals: new FormArray([], [this.otherPossibleProfessionals()]),
 		});
 
@@ -175,6 +176,10 @@ export class AgendaSetupComponent implements OnInit {
 				professionalsReference.push(this.initializeAnotherProfessional());
 				professionalsReference.controls[professionalsReference.length-1].setValue({ healthcareProfessionalId: diaryAssociatedProfessionalId });
 			});
+		}
+
+		if (diary.alias) {
+			this.form.controls.alias.setValue(diary.alias);
 		}
 	}
 
@@ -306,6 +311,7 @@ export class AgendaSetupComponent implements OnInit {
 
 			diaryOpeningHours: this.agendaHorarioService.getDiaryOpeningHours(),
 			clinicalSpecialtyId: this.form.value.healthcareProfessionalSpecialtyId,
+			alias: this.form.value.alias,
 			diaryAssociatedProfessionalsId: this.form.value.otherProfessionals.map(professional => professional.healthcareProfessionalId)
 		};
 	}
@@ -375,7 +381,7 @@ export class AgendaSetupComponent implements OnInit {
 	}
 
 	getNonResponsibleProfessional(): ProfessionalDto[] {
-		return this.professionals.filter(professional => professional.id !== this.form.controls.healthcareProfessionalId.value);
+		return this.professionals?.filter(professional => professional.id !== this.form.controls.healthcareProfessionalId.value);
 	}
 
 }

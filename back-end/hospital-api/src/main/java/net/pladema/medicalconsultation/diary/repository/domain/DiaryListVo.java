@@ -37,7 +37,11 @@ public class DiaryListVo {
 
 	private Integer clinicalSpecialtyId;
 
-    public DiaryListVo(Diary diary, String doctorsOfficeDescription) {
+	private String alias;
+
+	private String clinicalSpecialtyName;
+
+    public DiaryListVo(Diary diary, String doctorsOfficeDescription, String clinicalSpecialtyName) {
         this.id = diary.getId();
         this.doctorsOfficeId = diary.getDoctorsOfficeId();
         this.doctorsOfficeDescription = doctorsOfficeDescription;
@@ -48,6 +52,8 @@ public class DiaryListVo {
         this.professionalAssignShift = diary.isProfessionalAsignShift();
         this.includeHoliday = diary.isIncludeHoliday();
 		this.clinicalSpecialtyId = diary.getClinicalSpecialtyId();
+		this.alias = diary.getAlias();
+		this.clinicalSpecialtyName = clinicalSpecialtyName;
     }
 
 }

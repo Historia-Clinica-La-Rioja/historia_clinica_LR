@@ -720,6 +720,7 @@ export interface DiagnosticReportInfoWithFilesDto extends DiagnosticReportInfoDt
 }
 
 export interface DiaryADto {
+    alias?: string;
     appointmentDuration: number;
     automaticRenewal?: boolean;
     clinicalSpecialtyId: number;
@@ -743,7 +744,9 @@ export interface DiaryDto extends DiaryADto {
 }
 
 export interface DiaryListDto {
+    alias: string;
     appointmentDuration: number;
+    clinicalSpecialtyName: string;
     doctorsOfficeDescription: string;
     endDate: string;
     id: number;

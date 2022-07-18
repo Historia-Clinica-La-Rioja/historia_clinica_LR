@@ -51,4 +51,7 @@ public class DiaryADto {
 
 	@NotNull
 	private List<Integer> diaryAssociatedProfessionalsId;
+
+	@Nullable
+	private String alias;
 }

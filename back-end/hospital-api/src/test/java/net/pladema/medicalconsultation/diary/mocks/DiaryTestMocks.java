@@ -2,6 +2,7 @@ package net.pladema.medicalconsultation.diary.mocks;
 
 import net.pladema.medicalconsultation.diary.repository.entity.Diary;
 import net.pladema.medicalconsultation.doctorsoffice.repository.entity.DoctorsOffice;
+import net.pladema.staff.repository.entity.ClinicalSpecialty;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
@@ -37,5 +38,13 @@ public class DiaryTestMocks {
         result.setClosingTime(closingTime);
         return result;
     }
+
+	public static ClinicalSpecialty createClinicalSpecialty(Short clinicalSpecialtyTypeId, String name, String sctIdCode) {
+		ClinicalSpecialty result = new ClinicalSpecialty();
+		result.setClinicalSpecialtyTypeId(clinicalSpecialtyTypeId);
+		result.setName(name);
+		result.setSctidCode(sctIdCode);
+		return result;
+	}
 
 }

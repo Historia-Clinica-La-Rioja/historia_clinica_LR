@@ -77,9 +77,10 @@ public interface DiaryRepository extends SGXAuditableEntityJPARepository<Diary, 
 
     @Transactional(readOnly = true)
     @Query("SELECT NEW net.pladema.medicalconsultation.diary.repository.domain.DiaryListVo(" +
-            "d, do.description) " +
+            "d, do.description, cs.name) " +
             "FROM Diary d " +
             "JOIN DoctorsOffice AS do ON (do.id = d.doctorsOfficeId) " +
+			"JOIN ClinicalSpecialty cs ON (cs.id = d.clinicalSpecialtyId) " +
             "WHERE d.healthcareProfessionalId = :hcpId " +
             "AND do.institutionId = :instId " +
             "AND d.active = true "+
@@ -88,10 +89,11 @@ public interface DiaryRepository extends SGXAuditableEntityJPARepository<Diary, 
 
 	@Transactional(readOnly = true)
 	@Query("SELECT NEW net.pladema.medicalconsultation.diary.repository.domain.DiaryListVo(" +
-			"d, do.description) " +
+			"d, do.description, cs.name) " +
 			"FROM Diary d " +
 			"JOIN DoctorsOffice AS do ON (do.id = d.doctorsOfficeId) " +
 			"JOIN DiaryAssociatedProfessional AS dap ON (dap.diaryId = d.id)  " +
+			"JOIN ClinicalSpecialty cs ON (cs.id = d.clinicalSpecialtyId) " +
 			"WHERE d.healthcareProfessionalId = :healthcareProfessionalId " +
 			"AND dap.healthcareProfessionalId = :associatedHealthcareProfessionalId " +
 			"AND do.institutionId = :institutionId " +
@@ -104,9 +106,10 @@ public interface DiaryRepository extends SGXAuditableEntityJPARepository<Diary, 
 
     @Transactional(readOnly = true)
     @Query("SELECT NEW net.pladema.medicalconsultation.diary.repository.domain.DiaryListVo(" +
-            "d, do.description) " +
+            "d, do.description, cs.name) " +
             "FROM Diary d " +
             "JOIN DoctorsOffice AS do ON (do.id = d.doctorsOfficeId) " +
+			"JOIN ClinicalSpecialty cs ON (cs.id = d.clinicalSpecialtyId) " +
             "WHERE d.healthcareProfessionalId = :hcpId " +
             "AND d.clinicalSpecialtyId = :specialtyId " +
             "AND do.institutionId = :instId " +
@@ -119,10 +122,11 @@ public interface DiaryRepository extends SGXAuditableEntityJPARepository<Diary, 
 
 	@Transactional(readOnly = true)
 	@Query("SELECT NEW net.pladema.medicalconsultation.diary.repository.domain.DiaryListVo(" +
-			"d, do.description) " +
+			"d, do.description, cs.name) " +
 			"FROM Diary d " +
 			"JOIN DoctorsOffice AS do ON (do.id = d.doctorsOfficeId) " +
 			"JOIN DiaryAssociatedProfessional AS dap ON (dap.diaryId = d.id) " +
+			"JOIN ClinicalSpecialty cs ON (cs.id = d.clinicalSpecialtyId) " +
 			"WHERE d.healthcareProfessionalId = :healthcareProfessionalId " +
 			"AND dap.healthcareProfessionalId = :associatedHealthcareProfessionalId " +
 			"AND d.clinicalSpecialtyId = :specialtyId " +

@@ -16,6 +16,8 @@ import net.pladema.medicalconsultation.diary.service.domain.CompleteDiaryBo;
 import net.pladema.medicalconsultation.diary.service.domain.DiaryBo;
 import net.pladema.medicalconsultation.diary.service.domain.DiaryOpeningHoursBo;
 import net.pladema.medicalconsultation.diary.service.domain.OverturnsLimitException;
+import net.pladema.permissions.controller.external.LoggedUserExternalService;
+import net.pladema.permissions.repository.enums.ERole;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -57,6 +59,8 @@ public class DiaryServiceImpl implements DiaryService {
 
 	private final DiaryRepository diaryRepository;
 
+	private final LoggedUserExternalService loggedUserExternalService;
+
 	@Override
 	public Integer addDiary(DiaryBo diaryToSave) {
 		LOG.debug("Input parameters -> diaryToSave {}", diaryToSave);
@@ -94,6 +98,7 @@ public class DiaryServiceImpl implements DiaryService {
 		diary.setIncludeHoliday(diaryBo.isIncludeHoliday());
 		diary.setActive(true);
 		diary.setClinicalSpecialtyId(diaryBo.getClinicalSpecialtyId());
+		diary.setAlias(diaryBo.getAlias());
 		return diary;
 	}
 
@@ -215,7 +220,7 @@ public class DiaryServiceImpl implements DiaryService {
 		List<DiaryListVo> diaries;
 
 		if (specialtyId == null)
-			if (healthcareProfessionalId.equals(associatedHealthcareProfessionalId) || associatedHealthcareProfessionalId == null)
+			if (healthcareProfessionalId.equals(associatedHealthcareProfessionalId) || associatedHealthcareProfessionalId == null || loggedUserExternalService.hasAnyRoleInstitution(institutionId, ERole.ADMINISTRADOR_AGENDA))
 				diaries = diaryRepository.getActiveDiariesFromProfessional(healthcareProfessionalId, institutionId);
 			else
 				diaries = diaryRepository.getActiveAssociatedDiariesFromProfessional(associatedHealthcareProfessionalId, healthcareProfessionalId, institutionId);
@@ -242,6 +247,8 @@ public class DiaryServiceImpl implements DiaryService {
 		result.setAutomaticRenewal(diaryListVo.isAutomaticRenewal());
 		result.setProfessionalAssignShift(diaryListVo.isProfessionalAssignShift());
 		result.setIncludeHoliday(diaryListVo.isIncludeHoliday());
+		result.setAlias(diaryListVo.getAlias());
+		result.setClinicalSpecialtyName(diaryListVo.getClinicalSpecialtyName());
 		LOG.debug(OUTPUT, result);
 		return result;
 	}
@@ -252,7 +259,6 @@ public class DiaryServiceImpl implements DiaryService {
 		result.setSectorId(completeDiaryListVo.getSectorId());
 		result.setClinicalSpecialtyId(completeDiaryListVo.getClinicalSpecialtyId());
 		result.setHealthcareProfessionalId(completeDiaryListVo.getHealthcareProfessionalId());
-		result.setSpecialtyName(completeDiaryListVo.getSpecialtyName());
 		LOG.debug(OUTPUT, result);
 		return result;
 	}

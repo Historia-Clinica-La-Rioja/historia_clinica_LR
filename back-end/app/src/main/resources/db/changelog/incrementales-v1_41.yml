@@ -1,6 +1,6 @@
 databaseChangeLog: 
     - logicalFilePath: incrementales-v1_41
-      
+
     - changeSet:
         id: diary_associated_professional-createTable
         comment: Create table diary_associated_professional
@@ -28,4 +28,16 @@ databaseChangeLog:
                       references: healthcare_professional(id)
                     name: healthcare_professional_id
                     type: int
+
+    - changeSet:
+        id: addColumn-alias-diary
+        author: mmalyvarni
+        comment: Add column alias to diary table
+        changes:
+          - addColumn:
+              tableName: diary
+              columns:
+                - column:
+                    name: alias
+                    type: varchar(100)
 

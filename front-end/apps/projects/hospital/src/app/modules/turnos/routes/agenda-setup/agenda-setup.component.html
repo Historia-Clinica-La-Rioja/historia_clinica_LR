@@ -55,20 +55,26 @@
 					</div>
 				</div>
 
-				<div fxLayout="row">
-					<span [translate]="'turnos.home.SPECIALTY_SEARCH'"></span>
-				</div>
-				<div fxLayout="row">
-					<mat-form-field appearance="outline">
-						<mat-select id="healthcareProfessionalSpecialtyId" name="healthcareProfessionalSpecialtyId"
-									formControlName="healthcareProfessionalSpecialtyId"
-									placeholder="{{'pacientes.form.SELECT' | translate}}">
-							<mat-option *ngFor="let specialty of professionalSpecialties" [value]="specialty.id">
-								<span class="mat-body">{{ specialty.name }}</span>
-							</mat-option>
-						</mat-select>
-						<mat-error [translate]="'forms.REQUIRED'"></mat-error>
-					</mat-form-field>
+				<div style="padding-top: 20px" fxLayout="row">
+					<div class="professional-form-sector" fxLayout="column">
+						<span [translate]="'turnos.home.SPECIALTY_SEARCH'"></span>
+						<mat-form-field class="mat-form-field-on-div" appearance="outline">
+							<mat-select id="healthcareProfessionalSpecialtyId" name="healthcareProfessionalSpecialtyId"
+										formControlName="healthcareProfessionalSpecialtyId"
+										placeholder="{{'pacientes.form.SELECT' | translate}}">
+								<mat-option *ngFor="let specialty of professionalSpecialties" [value]="specialty.id">
+									<span class="mat-body">{{ specialty.name }}</span>
+								</mat-option>
+							</mat-select>
+							<mat-error [translate]="'forms.REQUIRED'"></mat-error>
+						</mat-form-field>
+					</div>
+					<div class="professional-form-sector" fxLayout="column">
+						<span [translate]="'turnos.agenda-setup.OPTIONAL_ALIAS'"></span>
+						<mat-form-field class="mat-form-field-on-div" appearance="outline" floatLabel="never">
+							<input matInput formControlName="alias" type="text" [placeholder]="'turnos.agenda-setup.ALIAS_HINT_TEXT' | translate">
+						</mat-form-field>
+					</div>
 				</div>
 
 				<section class="checkbox">

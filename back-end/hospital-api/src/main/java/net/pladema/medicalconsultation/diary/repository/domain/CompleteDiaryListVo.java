@@ -16,14 +16,11 @@ public class CompleteDiaryListVo extends DiaryListVo {
 	
 	private final Integer healthcareProfessionalId;
 
-	private final String specialtyName;
-
 	public CompleteDiaryListVo(Diary diary, String doctorsOfficeDescription, Integer sectorId,
 							   Integer healthcareProfessionalId, String specialtyName) {
-		super(diary, doctorsOfficeDescription);
+		super(diary, doctorsOfficeDescription, specialtyName);
 		this.sectorId = sectorId;
 		this.healthcareProfessionalId = healthcareProfessionalId;
-		this.specialtyName = specialtyName;
 	}
 	
 	

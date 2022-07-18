@@ -1,6 +1,6 @@
 <section id="select-agenda" *ngIf="agendas?.length" fxLayout="row" fxLayoutAlign="space-between center"
 	fxLayout.xs="column" fxLayoutAlign.xs="space-between center">
-	<mat-form-field fxFlex.gt-xs="30%" appearance="outline">
+	<mat-form-field fxFlex.gt-xs="35%" appearance="outline">
 		<mat-label [translate]="'turnos.home.SELECT_AGENDA'"></mat-label>
 		<mat-select [(value)]="agendaSelected">
 			<mat-optgroup *ngIf="activeAgendas?.length">
@@ -8,7 +8,7 @@
 				<mat-option *ngFor="let agenda of activeAgendas" [value]="agenda"
 					(onSelectionChange)="changeAgendaSelected($event, agenda)">
 					<span class="mat-body-strong">
-						{{agenda.doctorsOfficeDescription}}
+						{{agenda.alias === undefined ? agenda.clinicalSpecialtyName : getAliasAndSpecialtyText(agenda.alias, agenda.clinicalSpecialtyName)}}
 					</span>
 					<span class="mat-body">
 						{{agenda.startDate | date:dateFormats.SHORT_DATE }} - {{agenda.endDate | date:dateFormats.SHORT_DATE}}
@@ -20,7 +20,7 @@
 				<mat-option *ngFor="let agenda of expiredAgendas" [value]="agenda"
 					(onSelectionChange)="changeAgendaSelected($event, agenda)">
 					<span class="mat-body-strong">
-						{{agenda.doctorsOfficeDescription}}
+						{{agenda.alias === undefined ? agenda.clinicalSpecialtyName : getAliasAndSpecialtyText(agenda.alias, agenda.clinicalSpecialtyName)}}
 					</span>
 					<span class="mat-body">
 						{{agenda.startDate | date:dateFormats.SHORT_DATE }} - {{agenda.endDate | date:dateFormats.SHORT_DATE}}

@@ -3,7 +3,6 @@ package net.pladema.medicalconsultation.diary.service.domain;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
-import net.pladema.medicalconsultation.diary.repository.entity.DiaryAssociatedProfessional;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -42,5 +41,9 @@ public class DiaryBo {
 	protected Integer clinicalSpecialtyId;
 
 	protected List<Integer> diaryAssociatedProfessionalsId;
+
+	protected String alias;
+
+	protected String clinicalSpecialtyName;
     
 }
