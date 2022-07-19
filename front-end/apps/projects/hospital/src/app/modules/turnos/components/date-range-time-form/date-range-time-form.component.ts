@@ -60,7 +60,7 @@ export class DateRangeTimeFormComponent implements ControlValueAccessor, OnDestr
 		this.today = new Date();
 
 		const agendaLastDayData = this.selectedAgenda.endDate.split("-");
-		this.agendaLastDay = new Date(+agendaLastDayData[0], +agendaLastDayData[1], +agendaLastDayData[2]);
+		this.agendaLastDay = new Date(+agendaLastDayData[0], +agendaLastDayData[1]-1, +agendaLastDayData[2]);
 
 		this.today.setHours(0,0,0,0);
 		this.agendaLastDay.setHours(0,0,0,0);
