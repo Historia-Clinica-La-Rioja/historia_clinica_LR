@@ -2,18 +2,17 @@ package net.pladema.staff.service;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
+
+import net.pladema.staff.service.domain.ClinicalSpecialtyBo;
 
 import org.springframework.stereotype.Service;
 
 import lombok.RequiredArgsConstructor;
-import net.pladema.staff.repository.DeletedHealthcareProfessionalSpecialtyRepositoryImpl;
 import net.pladema.staff.repository.HealthcareProfessionalSpecialtyRepository;
 import net.pladema.staff.repository.domain.HealthcareProfessionalSpecialtyVo;
 import net.pladema.staff.repository.domain.ProfessionalClinicalSpecialtyVo;
 import net.pladema.staff.repository.entity.ClinicalSpecialty;
-import net.pladema.staff.repository.entity.HealthcareProfessionalSpecialty;
 import net.pladema.staff.service.domain.HealthcareProfessionalSpecialtyBo;
 import net.pladema.staff.service.domain.ProfessionalsByClinicalSpecialtyBo;
 
@@ -22,8 +21,6 @@ import net.pladema.staff.service.domain.ProfessionalsByClinicalSpecialtyBo;
 public class HealthcareProfessionalSpecialtyServiceImpl implements HealthcareProfessionalSpecialtyService {
 
     private final HealthcareProfessionalSpecialtyRepository healthcareProfessionalSpecialtyRepository;
-
-    private final DeletedHealthcareProfessionalSpecialtyRepositoryImpl findHealthcareProfessionalSpecialtyRepository;
 
     @Override
     public List<ProfessionalsByClinicalSpecialtyBo> getProfessionalsByClinicalSpecialtyBo(List<Integer> professionalsIds) {
@@ -112,8 +109,8 @@ public class HealthcareProfessionalSpecialtyServiceImpl implements HealthcarePro
         return new HealthcareProfessionalSpecialtyBo(
                 hpsVo.getId(),
                 hpsVo.getHealthcareProfessionalId(),
-                hpsVo.getProfessionalSpecialtyId(),
-                hpsVo.getClinicalSpecialtyId()
+                hpsVo.getProfessionalProfessionId(),
+                new ClinicalSpecialtyBo(hpsVo.getClinicalSpecialtyId(), null)
         );
     }
 

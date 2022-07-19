@@ -13,13 +13,16 @@ import lombok.Setter;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class HealthcareProfessionalCompleteDto {
+public class ProfessionalProfessionsDto {
 
     @Nullable
     private Integer id;
 
-    private Integer personId;
+	@Nullable
+    private Integer healthcareProfessionalId;
 
-    private List<ProfessionalProfessionsDto> professionalProfessions;
+    private ProfessionalSpecialtyDto profession;
+
+	private List<HealthcareProfessionalSpecialtyDto> specialties;
 
 }

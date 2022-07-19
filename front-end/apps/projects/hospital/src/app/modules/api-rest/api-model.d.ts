@@ -1348,9 +1348,8 @@ export interface HealthInsuranceDto extends CoverageDto {
 
 export interface HealthcareProfessionalCompleteDto {
     id?: number;
-    licenseNumber: string;
     personId: number;
-    professionalSpecialtyDtos: HealthcareProfessionalSpecialtyDto[];
+    professionalProfessions: ProfessionalProfessionsDto[];
 }
 
 export interface HealthcareProfessionalDto {
@@ -1368,10 +1367,10 @@ export interface HealthcareProfessionalHealthInsuranceDto extends Serializable {
 }
 
 export interface HealthcareProfessionalSpecialtyDto {
-    clinicalSpecialtyId: number;
+    clinicalSpecialty: ClinicalSpecialtyDto;
     healthcareProfessionalId?: number;
     id?: number;
-    professionalSpecialtyId: number;
+    professionalProfessionId?: number;
 }
 
 export interface HospitalUserPersonInfoDto {
@@ -2399,6 +2398,13 @@ export interface ProfessionalProfessionBackofficeDto {
     id: number;
     personId: number;
     professionalSpecialtyId: number;
+}
+
+export interface ProfessionalProfessionsDto {
+    healthcareProfessionalId?: number;
+    id?: number;
+    profession: ProfessionalSpecialtyDto;
+    specialties: HealthcareProfessionalSpecialtyDto[];
 }
 
 export interface ProfessionalSpecialtyDto {

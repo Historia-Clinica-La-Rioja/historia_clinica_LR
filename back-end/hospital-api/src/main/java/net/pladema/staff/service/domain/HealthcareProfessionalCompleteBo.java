@@ -1,5 +1,7 @@
 package net.pladema.staff.service.domain;
 
+import java.util.List;
+
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -9,15 +11,14 @@ import lombok.Setter;
 @NoArgsConstructor
 public class HealthcareProfessionalCompleteBo {
 
-    private Integer id;
+	private Integer id;
 
-    private Integer personId;
+	private Integer personId;
 
-    private String licenseNumber;
+	private List<ProfessionalProfessionsBo> professionalProfessions;
 
-	public HealthcareProfessionalCompleteBo(Integer id, Integer personId, String licenseNumber) {
+	public HealthcareProfessionalCompleteBo(Integer id, Integer personId) {
 		this.id = id;
 		this.personId = personId;
-		this.licenseNumber = licenseNumber;
 	}
 }

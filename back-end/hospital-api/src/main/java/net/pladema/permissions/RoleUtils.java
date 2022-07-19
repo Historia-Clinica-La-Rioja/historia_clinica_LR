@@ -1,5 +1,6 @@
 package net.pladema.permissions;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -28,5 +29,9 @@ public class RoleUtils {
 				.min(Integer::compareTo)
 				.orElse(CLAIMS_RANK.size());
 		return loggedUserRank < entityUserRank;
+	}
+
+	public static boolean hasProfessionalRole(List<ERole> roles){
+		return !Collections.disjoint(roles, List.of(ERole.ESPECIALISTA_MEDICO, ERole.ENFERMERO, ERole.ESPECIALISTA_EN_ODONTOLOGIA, ERole.PROFESIONAL_DE_SALUD));
 	}
 }

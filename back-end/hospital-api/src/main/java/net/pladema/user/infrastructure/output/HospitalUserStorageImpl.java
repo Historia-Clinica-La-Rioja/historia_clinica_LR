@@ -3,7 +3,10 @@ package net.pladema.user.infrastructure.output;
 import ar.lamansys.sgh.shared.infrastructure.input.service.BasicDataPersonDto;
 import ar.lamansys.sgx.auth.jwt.infrastructure.input.service.JwtExternalService;
 import ar.lamansys.sgx.auth.user.infrastructure.input.service.UserExternalService;
+import net.pladema.permissions.RoleUtils;
+import net.pladema.permissions.repository.enums.ERole;
 import net.pladema.person.controller.service.PersonExternalService;
+import net.pladema.user.application.port.UserRoleStorage;
 import net.pladema.user.application.port.exceptions.UserPersonStorageEnumException;
 import net.pladema.user.application.port.exceptions.UserPersonStorageException;
 import net.pladema.user.controller.service.domain.UserPersonInfoBo;
@@ -17,6 +20,7 @@ import net.pladema.user.application.port.HospitalUserStorage;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class HospitalUserStorageImpl implements HospitalUserStorage {
@@ -31,16 +35,20 @@ public class HospitalUserStorageImpl implements HospitalUserStorage {
 
 	private final JwtExternalService jwtExternalService;
 
+	private final UserRoleStorage userRoleStorage;
+
     public HospitalUserStorageImpl(UserPersonRepository userPersonRepository,
 								   PersonExternalService personExternalService,
 								   UserExternalService userExternalService,
 								   VHospitalUserRepository vHospitalUserRepository,
-								   JwtExternalService jwtExternalService) {
+								   JwtExternalService jwtExternalService,
+								   UserRoleStorage userRoleStorage) {
         this.userPersonRepository = userPersonRepository;
         this.personExternalService = personExternalService;
         this.userExternalService = userExternalService;
         this.vHospitalUserRepository = vHospitalUserRepository;
 		this.jwtExternalService = jwtExternalService;
+		this.userRoleStorage = userRoleStorage;
 	}
 
     @Override
@@ -134,6 +142,12 @@ public class HospitalUserStorageImpl implements HospitalUserStorage {
     @Override
 	public void resetTwoFactorAuthentication(Integer userId) {
 		userExternalService.resetTwoFactorAuthentication(userId);
+        
+	@Override
+	public boolean hasProfessionalRole(Integer userId) {
+		return RoleUtils.hasProfessionalRole(userRoleStorage.getRolesByUser(userId).stream()
+				.map(r-> ERole.map(r.getRoleId()))
+				.collect(Collectors.toList()));
 	}
 
 	private PersonDataBo mapPersonDataBo(BasicDataPersonDto person, VHospitalUser user) {

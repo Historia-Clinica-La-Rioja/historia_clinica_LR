@@ -1,5 +1,6 @@
 package net.pladema.staff.controller.dto;
 
+import ar.lamansys.sgh.shared.infrastructure.input.service.ClinicalSpecialtyDto;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -17,7 +18,8 @@ public class HealthcareProfessionalSpecialtyDto {
     @Nullable
     private Integer healthcareProfessionalId;
 
-    private Integer professionalSpecialtyId;
+	@Nullable
+    private Integer professionalProfessionId;
 
-    private Integer clinicalSpecialtyId;
+    private ClinicalSpecialtyDto clinicalSpecialty;
 }

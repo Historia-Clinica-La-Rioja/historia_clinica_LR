@@ -19,30 +19,29 @@ public class HealthcareProfessionalSpecialtyBo {
 
     private Integer healthcareProfessionalId;
 
-    private Integer professionalSpecialtyId;
+    private Integer professionalProfessionId;
 
-    private Integer clinicalSpecialtyId;
+    private ClinicalSpecialtyBo clinicalSpecialty;
 
     @Nullable
     private Boolean deleted;
 
     public HealthcareProfessionalSpecialtyBo(Integer id,
                                              Integer healthcareProfessionalId,
-                                             Integer professionalSpecialtyId,
-                                             Integer clinicalSpecialtyId) {
+                                             Integer professionalProfessionId,
+											 ClinicalSpecialtyBo clinicalSpecialty) {
         this.id = id;
         this.healthcareProfessionalId = healthcareProfessionalId;
-        this.professionalSpecialtyId = professionalSpecialtyId;
-        this.clinicalSpecialtyId = clinicalSpecialtyId;
+        this.professionalProfessionId = professionalProfessionId;
+        this.clinicalSpecialty = clinicalSpecialty;
     }
 
     public HealthcareProfessionalSpecialtyBo(Integer healthcareProfessionalId,
-                                             Integer professionalSpecialtyId,
-                                             Integer clinicalSpecialtyId) {
-        this(null, healthcareProfessionalId, professionalSpecialtyId, clinicalSpecialtyId);
+                                             Integer professionalProfessionId,
+											 ClinicalSpecialtyBo clinicalSpecialty) {
+        this(null, healthcareProfessionalId, professionalProfessionId, clinicalSpecialty);
     }
 
-    public boolean hasToBeDeleted(Integer id){
-        return (this.id!=null&&!Objects.equals(id, this.id));
-    }
-}
+	public boolean equalsClinicalSpecialty(HealthcareProfessionalSpecialtyBo bo){
+		return this.clinicalSpecialty.getId().equals(bo.getClinicalSpecialty().getId());
+	}}

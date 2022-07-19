@@ -1,4 +1,4 @@
-package net.pladema.staff.application.createprofessional.exceptions;
+package net.pladema.staff.application.saveprofessional.exceptions;
 
 import lombok.Getter;
 
