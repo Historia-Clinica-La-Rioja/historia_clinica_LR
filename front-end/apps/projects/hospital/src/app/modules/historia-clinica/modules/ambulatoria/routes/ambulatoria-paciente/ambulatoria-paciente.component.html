@@ -211,7 +211,7 @@
 			<mat-card-content>
 				<mat-tab-group (selectedTabChange)="onTabChanged($event)"
 					*ngIf="hasInternmentEpisodeInThisInstitution !== undefined">
-					<mat-tab id="tab_resumen" *ngIf="!hasInternmentEpisodeInThisInstitution && !(hasPicturesStaffRole || hasLaboratoryStaffRole || hasPharmacyStaffRole)">
+					<mat-tab id="tab_resumen" *ngIf="!hasInternmentEpisodeInThisInstitution && hasHealthRelatedRole">
 						<ng-template mat-tab-label>
 							<span>{{ 'ambulatoria.paciente.resumen.TAB_LABEL' | translate | uppercase }}</span>
 						</ng-template>
@@ -219,7 +219,7 @@
 							<app-resumen [patientExternalSummary]="patientExternalSummary"></app-resumen>
 						</ng-template>
 					</mat-tab>
-					<mat-tab id="tab_internacion" *ngIf="hasInternmentEpisodeInThisInstitution && !(hasPicturesStaffRole || hasLaboratoryStaffRole || hasPharmacyStaffRole)">
+					<mat-tab id="tab_internacion" *ngIf="hasInternmentEpisodeInThisInstitution && hasHealthRelatedRole">
 						<ng-template mat-tab-label>
 							<span>{{ 'ambulatoria.paciente.internacion.TAB_LABEL' | translate | uppercase }}</span>
 						</ng-template>
@@ -228,7 +228,7 @@
 							</app-internacion-paciente>
 						</ng-template>
 					</mat-tab>
-					<mat-tab id="tab_indications" *ngIf="!(hasPicturesStaffRole || hasLaboratoryStaffRole)">
+					<mat-tab id="tab_indications" *ngIf="hasHealthRelatedRole || hasPharmacyStaffRole">
 						<ng-template mat-tab-label>
 							<span>{{ 'indicacion.TITLE' | translate | uppercase }}</span>
 						</ng-template>
@@ -244,7 +244,7 @@
 							</app-card-medicaciones>
 						</ng-template>
 					</mat-tab>
-					<mat-tab id="tab_studies" *ngIf="!hasPharmacyStaffRole">
+					<mat-tab id="tab_studies" *ngIf="hasHealthRelatedRole || hasPicturesStaffRole || hasLaboratoryStaffRole">
 						<ng-template mat-tab-label>
 							<span>{{ 'ambulatoria.paciente.studies.TAB_LABEL' | translate | uppercase }}</span>
 						</ng-template>
@@ -264,7 +264,7 @@
 							<app-nursing-care [internmentEpisodeId]="internmentEpisodeProcess.id"></app-nursing-care>
 						</ng-template>
 					</mat-tab>
-					<mat-tab id="tab_problemas" *ngIf="!(hasPicturesStaffRole || hasLaboratoryStaffRole || hasPharmacyStaffRole)">
+					<mat-tab id="tab_problemas" *ngIf="hasHealthRelatedRole">
 						<ng-template mat-tab-label>
 							<span>{{ 'ambulatoria.paciente.problemas.TAB_LABEL' | translate | uppercase }}</span>
 						</ng-template>
@@ -274,7 +274,7 @@
 							</app-problemas>
 						</ng-template>
 					</mat-tab>
-					<mat-tab id="tab_vacunas" *ngIf="!(hasPicturesStaffRole || hasLaboratoryStaffRole || hasPharmacyStaffRole)">
+					<mat-tab id="tab_vacunas" *ngIf="hasHealthRelatedRole">
 						<ng-template mat-tab-label>
 							<span>{{ 'ambulatoria.paciente.vacunas.TAB_LABEL' | translate | uppercase }}</span>
 						</ng-template>
@@ -293,7 +293,7 @@
 							</ng-container>
 						</ng-template>
 					</mat-tab>
-					<mat-tab id="tab_odontologia" *ngIf="odontologyEnabled && !(hasPicturesStaffRole || hasLaboratoryStaffRole || hasPharmacyStaffRole)">
+					<mat-tab id="tab_odontologia" *ngIf="odontologyEnabled && hasHealthRelatedRole">
 						<ng-template mat-tab-label>
 							<span>ODONTOLOGÍA</span>
 						</ng-template>
