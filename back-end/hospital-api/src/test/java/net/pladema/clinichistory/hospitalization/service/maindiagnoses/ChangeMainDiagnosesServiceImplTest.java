@@ -6,7 +6,6 @@ import javax.validation.ConstraintViolationException;
 
 import net.pladema.clinichistory.hospitalization.repository.InternmentEpisodeStorage;
 import net.pladema.clinichistory.hospitalization.repository.domain.InternmentEpisode;
-import net.pladema.clinichistory.hospitalization.service.InternmentEpisodeService;
 
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;

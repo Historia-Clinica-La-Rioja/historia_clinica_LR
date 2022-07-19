@@ -1,6 +1,5 @@
 package ar.lamansys.sgh.publicapi.infrastructure.input.rest.user.dto;
 
-import ar.lamansys.sgh.publicapi.domain.authorities.PublicAuthorityBo;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;

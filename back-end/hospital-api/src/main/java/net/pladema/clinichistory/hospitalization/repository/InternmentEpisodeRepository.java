@@ -17,7 +17,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import net.pladema.clinichistory.hospitalization.repository.domain.InternmentEpisode;
 import net.pladema.clinichistory.hospitalization.repository.domain.processepisode.InternmentEpisodeProcessVo;
-import net.pladema.clinichistory.hospitalization.repository.domain.summary.InternmentSummaryVo;
 import net.pladema.clinichistory.hospitalization.service.domain.BasicListedPatientBo;
 import net.pladema.clinichistory.hospitalization.service.domain.InternmentEpisodeBo;
 

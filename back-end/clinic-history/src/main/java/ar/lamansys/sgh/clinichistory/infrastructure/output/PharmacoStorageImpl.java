@@ -1,6 +1,5 @@
 package ar.lamansys.sgh.clinichistory.infrastructure.output;
 
-import ar.lamansys.sgh.clinichistory.application.ports.NursingRecordStorage;
 import ar.lamansys.sgh.clinichistory.application.ports.PharmacoStorage;
 import ar.lamansys.sgh.clinichistory.domain.ips.EUnitsOfTimeBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.EVia;

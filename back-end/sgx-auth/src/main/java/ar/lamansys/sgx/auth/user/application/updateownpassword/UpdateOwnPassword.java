@@ -6,7 +6,6 @@ import ar.lamansys.sgx.auth.user.domain.user.model.UserBo;
 import ar.lamansys.sgx.auth.user.domain.user.service.UserStorage;
 import ar.lamansys.sgx.auth.user.domain.userpassword.PasswordEncryptor;
 import ar.lamansys.sgx.auth.user.application.updateuserpassword.UpdateUserPassword;
-import ar.lamansys.sgx.shared.restclient.services.domain.WSResponseException;
 import lombok.AllArgsConstructor;
 
 import org.springframework.stereotype.Service;

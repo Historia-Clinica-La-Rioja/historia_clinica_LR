@@ -5,11 +5,9 @@ import ar.lamansys.sgx.auth.jwt.application.login.exceptions.BadLoginException;
 import ar.lamansys.sgx.auth.jwt.domain.LoginBo;
 import ar.lamansys.sgx.auth.jwt.domain.token.ETokenType;
 import ar.lamansys.sgx.auth.jwt.domain.token.JWTokenBo;
-import ar.lamansys.sgx.auth.jwt.domain.token.TokenData;
 import ar.lamansys.sgx.auth.jwt.infrastructure.input.rest.dto.JWTokenDto;
 import ar.lamansys.sgx.auth.jwt.infrastructure.input.rest.dto.LoginDto;
 import ar.lamansys.sgx.auth.jwt.infrastructure.output.token.TokenUtils;
-import ar.lamansys.sgx.shared.token.JWTUtils;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

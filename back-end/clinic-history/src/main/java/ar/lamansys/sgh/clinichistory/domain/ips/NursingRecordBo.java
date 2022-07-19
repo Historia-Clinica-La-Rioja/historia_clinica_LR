@@ -1,6 +1,5 @@
 package ar.lamansys.sgh.clinichistory.domain.ips;
 
-import ar.lamansys.sgh.shared.infrastructure.input.service.EIndicationStatus;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
