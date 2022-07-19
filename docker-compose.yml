@@ -6,6 +6,7 @@ services:
     environment:
       POSTGRES_PASSWORD: Local123
       POSTGRES_DB: hospitalDB
+      PGDATA: /data/pgdata
     volumes:
       - ./ci/dbapgsql/:/app/pg/
       - ./.docker-data/postgres/:/data/

@@ -5,8 +5,8 @@ import { loginUrl } from '../../providers/utils/webappLink';
 import LoginRedirect from '../../libs/sgx/components/login/LoginRedirect';
 
 const MyLoginPage = () => {
-	const hideRedirect = !loginUrl;
-	return hideRedirect ? <Login /> : (
+	const useAppLogin = !!loginUrl;
+	return !useAppLogin ? <Login /> : (
 		<Login>
 			<LoginRedirect loginUrl={loginUrl} />
 		</Login>

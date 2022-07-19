@@ -14,6 +14,7 @@ import {
     Dashboard,
     Layout,
     LoginPage,
+    LogoutButton,
 } from './layout';
 
 import customRoutes from './layout/routes';
@@ -28,6 +29,7 @@ const App = () => (
         loginPage={LoginPage}
         dashboard={Dashboard}
         layout={Layout}
+        logoutButton={LogoutButton}
         disableTelemetry >
         {permissions => resources(permissions)}
     </Admin>
