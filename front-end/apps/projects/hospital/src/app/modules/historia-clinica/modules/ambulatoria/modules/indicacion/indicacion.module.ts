@@ -1,3 +1,4 @@
+import { NursingRecordFacadeService } from './services/nursing-record-facade.service';
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from "@angular/forms";
@@ -55,6 +56,9 @@ import { SpecificNursingRecordComponent } from './components/specific-nursing-re
 		FormsModule,
 		PresentationModule,
 		HistoriaClinicaModule
+	],
+	providers: [
+		NursingRecordFacadeService
 	]
 })
 export class IndicacionModule { }
