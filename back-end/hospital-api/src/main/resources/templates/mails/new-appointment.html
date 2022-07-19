@@ -25,6 +25,9 @@
     <button th:if="${args.cancelationLink != null}" type="button">
         <a th:href="${args.cancelationLink}">Cancelar turno</a>
     </button>
+
+    <p th:if="${args.fromFullName != null}"> Saludos cordiales, <span th:text="${args.fromFullName}">equipo HSI</span></p>
+
 </body>
 <footer th:replace="fragments/footer :: footer"></footer>
 </html>

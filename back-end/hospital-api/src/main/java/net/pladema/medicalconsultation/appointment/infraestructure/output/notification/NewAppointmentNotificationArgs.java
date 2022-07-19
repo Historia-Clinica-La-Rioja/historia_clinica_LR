@@ -12,4 +12,5 @@ public class NewAppointmentNotificationArgs {
 	public final String address;
 	public final String recomendation;
 	public final String cancelationLink;
+	public final String fromFullName;
 }

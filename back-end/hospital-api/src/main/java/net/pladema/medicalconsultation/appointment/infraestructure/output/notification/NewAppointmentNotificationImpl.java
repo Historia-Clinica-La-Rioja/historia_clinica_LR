@@ -6,6 +6,7 @@ import net.pladema.medicalconsultation.appointment.infraestructure.output.notifi
 import net.pladema.medicalconsultation.appointment.service.booking.BookingPersonService;
 import net.pladema.medicalconsultation.diary.service.DiaryService;
 import net.pladema.medicalconsultation.diary.service.domain.CompleteDiaryBo;
+import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Service;
 
 import lombok.AllArgsConstructor;
@@ -29,6 +30,7 @@ public class NewAppointmentNotificationImpl implements NewAppointmentNotificatio
 	private final BookingPersonService bookingPersonService;
 	private final InstitutionService institutionService;
 	private final DiaryService diaryService;
+	private final Environment env;
 
 	@Override
 	public void run(NewAppointmentNotificationBo newAppointmentNotification) {
@@ -49,7 +51,8 @@ public class NewAppointmentNotificationImpl implements NewAppointmentNotificatio
 				.time(String.format("%s", newAppointmentNotification.hour))
 				.institution(institutionBo.getName())
 				.recomendation("...")
-				.specialty(diaryBo.getSpecialtyName());
+				.specialty(diaryBo.getSpecialtyName())
+				.fromFullName(env.getProperty("app.notification.mail.fromFullname"));
 		this.patientNotificationSender.send(
 				new PatientRecipient(newAppointmentNotification.patientId),
 				new NewAppointmentTemplateInput(

@@ -1,5 +1,7 @@
 package net.pladema.medicalconsultation.appointment.service.impl;
 
+import ar.lamansys.sgx.shared.featureflags.AppFeature;
+
 import org.springframework.stereotype.Service;
 
 import lombok.AllArgsConstructor;
@@ -40,14 +42,14 @@ public class CreateAppointmentServiceImpl implements CreateAppointmentService {
 				appointment.getId()
 		));
 
-
-		newAppointmentNotification.run(new NewAppointmentNotificationBo(
+		if(appointment.getPatientId()!=null && AppFeature.HABILITAR_NOTIFICACIONES_TURNOS.isActive())
+			newAppointmentNotification.run(new NewAppointmentNotificationBo(
 				appointment.getPatientId(),
 				appointment.getPatientMedicalCoverageId(),
 				appointment.getDateTypeId(),
 				appointment.getHour(),
 				appointmentBo.getDiaryId()
-		));
+			));
 
 		log.debug("Output -> {}", result);
 		return result;
