@@ -93,6 +93,7 @@ export class AmbulatoriaPacienteComponent implements OnInit, OnDestroy {
 	hasNurseRole = false;
 	hasHealthProfessionalRole = false;
 	hasOdontologyRole = false;
+	hasHealthRelatedRole = false;
 	hasPicturesStaffRole = false;
 	hasLaboratoryStaffRole = false;
 	hasPharmacyStaffRole = false;
@@ -343,6 +344,7 @@ export class AmbulatoriaPacienteComponent implements OnInit, OnDestroy {
 			this.hasNurseRole = anyMatch<ERole>(userRoles, [ERole.ENFERMERO]);
 			this.hasHealthProfessionalRole = anyMatch<ERole>(userRoles, [ERole.PROFESIONAL_DE_SALUD]);
 			this.hasOdontologyRole = anyMatch<ERole>(userRoles, [ERole.ESPECIALISTA_EN_ODONTOLOGIA]);
+			this.hasHealthRelatedRole = anyMatch<ERole>(userRoles, [ERole.PROFESIONAL_DE_SALUD, ERole.ESPECIALISTA_MEDICO, ERole.ENFERMERO, ERole.ESPECIALISTA_EN_ODONTOLOGIA, ERole.ENFERMERO_ADULTO_MAYOR]);
 			this.hasPicturesStaffRole = anyMatch<ERole>(userRoles, [ERole.PERSONAL_DE_IMAGENES]);
 			this.hasLaboratoryStaffRole = anyMatch<ERole>(userRoles, [ERole.PERSONAL_DE_LABORATORIO]);
 			this.hasPharmacyStaffRole = anyMatch<ERole>(userRoles, [ERole.PERSONAL_DE_FARMACIA]);

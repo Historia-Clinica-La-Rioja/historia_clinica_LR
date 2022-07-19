@@ -39,6 +39,7 @@ export class CardEstudiosComponent implements OnInit {
 	public hideFilterPanel = false;
 	public formFilter: FormGroup;
 	private internmentEpisodeInProgressId;
+	hasHealthRelatedRole = false;
 	hasPicturesStaffRole = false;
 	hasLaboratoryStaffRole = false;
 	hasPharmacyStaffRole = false;
@@ -101,6 +102,7 @@ export class CardEstudiosComponent implements OnInit {
 			this.hasPicturesStaffRole = anyMatch<ERole>(userRoles, [ERole.PERSONAL_DE_IMAGENES]);
 			this.hasLaboratoryStaffRole = anyMatch<ERole>(userRoles, [ERole.PERSONAL_DE_LABORATORIO]);
 			this.hasPharmacyStaffRole = anyMatch<ERole>(userRoles, [ERole.PERSONAL_DE_FARMACIA]);
+			this.hasHealthRelatedRole = anyMatch<ERole>(userRoles, [ERole.PROFESIONAL_DE_SALUD, ERole.ESPECIALISTA_MEDICO, ERole.ENFERMERO, ERole.ESPECIALISTA_EN_ODONTOLOGIA, ERole.ENFERMERO_ADULTO_MAYOR]);
 		});
 	}
 

@@ -7,7 +7,7 @@
 <app-summary-card id="estudios" [header]="estudios"
                                 [canEdit]="['ESPECIALISTA_MEDICO', 'ESPECIALISTA_EN_ODONTOLOGIA', 'PERSONAL_DE_IMAGENES', 'PERSONAL_DE_LABORATORIO']"
 								[matMenu]="newPrescriptionMenu"
-								[menu]="!(hasPicturesStaffRole || hasLaboratoryStaffRole)">
+								[menu]="hasHealthRelatedRole">
 
 	<mat-menu #newPrescriptionMenu="matMenu">
 		<ng-container>
@@ -21,7 +21,7 @@
 		</ng-container>
 	</mat-menu>
 
-	<div class="header-filters" fxLayout="row" fxLayoutGap="15px" *ngIf="!(hasPicturesStaffRole || hasLaboratoryStaffRole)">
+	<div class="header-filters" fxLayout="row" fxLayoutGap="15px" *ngIf="hasHealthRelatedRole">
 		<button mat-button class="filter-button" color="primary" (click)="hideFilters()">
 			<mat-icon fontSet="material-icons-outlined">filter_alt</mat-icon> FILTRAR
 		</button>
@@ -97,39 +97,39 @@
 	<mat-divider></mat-divider>
     <div *ngIf="theresReports() else noInfo" fxLayout="column">
 
-		<app-study-images-card (updateCurrentReportsEventEmitter)="updateModifiedStudyList(categories[0].id)" *ngIf="imageDiagnotics.length > 0 && !(hasLaboratoryStaffRole)"
+		<app-study-images-card (updateCurrentReportsEventEmitter)="updateModifiedStudyList(categories[0].id)" *ngIf="imageDiagnotics.length > 0 && (hasHealthRelatedRole || hasPicturesStaffRole)"
 		fxFlex="100%" mat-list-item class="item-padding" [images]="imageDiagnotics" [patientId]="patientId">
 		</app-study-images-card>
 
-		<app-study-laboratory-card (updateCurrentReportsEventEmitter)="updateModifiedStudyList(categories[1].id)" *ngIf="laboratoryDiagnotics.length > 0 && !(hasPicturesStaffRole)"
+		<app-study-laboratory-card (updateCurrentReportsEventEmitter)="updateModifiedStudyList(categories[1].id)" *ngIf="laboratoryDiagnotics.length > 0 && (hasHealthRelatedRole || hasLaboratoryStaffRole)"
 		fxFlex="100%" mat-list-item class="item-padding" [laboratories]="laboratoryDiagnotics" [patientId]="patientId">
 		</app-study-laboratory-card>
 
 		<app-study-pathologic-anatomy-card (updateCurrentReportsEventEmitter)="updateModifiedStudyList(categories[2].id)"
-		*ngIf="pathologicAnatomyDiagnotics.length > 0 && !(hasPicturesStaffRole)" fxFlex="100%" mat-list-item class="item-padding"
+		*ngIf="pathologicAnatomyDiagnotics.length > 0 && hasHealthRelatedRole" fxFlex="100%" mat-list-item class="item-padding"
 		[pathologicAnatomies]="pathologicAnatomyDiagnotics" [patientId]="patientId">
 		</app-study-pathologic-anatomy-card>
 
 		<app-study-hemotherapy-card (updateCurrentReportsEventEmitter)="updateModifiedStudyList(categories[3].id)"
-		*ngIf="hemotherapyDiagnotics.length > 0 && !(hasPicturesStaffRole || hasLaboratoryStaffRole)" fxFlex="100%" mat-list-item class="item-padding" [hemotherapies]="hemotherapyDiagnotics"
+		*ngIf="hemotherapyDiagnotics.length > 0 && hasHealthRelatedRole" fxFlex="100%" mat-list-item class="item-padding" [hemotherapies]="hemotherapyDiagnotics"
 		[patientId]="patientId">
 		</app-study-hemotherapy-card>
 
         <app-study-surgical-procedure-card (updateCurrentReportsEventEmitter)="updateModifiedStudyList(categories[4].id)"
-		*ngIf="surgicalProceduresDiagnotics.length > 0 && !(hasPicturesStaffRole || hasLaboratoryStaffRole)" fxFlex="100%" mat-list-item class="item-padding"
+		*ngIf="surgicalProceduresDiagnotics.length > 0 && hasHealthRelatedRole" fxFlex="100%" mat-list-item class="item-padding"
 		[surgicalProcedures]="surgicalProceduresDiagnotics" [patientId]="patientId">
 		</app-study-surgical-procedure-card>
 
 		<app-study-other-procedures-and-practices-card (updateCurrentReportsEventEmitter)="updateModifiedStudyList(categories[5].id)"
-		*ngIf="otherProceduresAndPracticesDiagnotics.length > 0 && !(hasPicturesStaffRole || hasLaboratoryStaffRole)" fxFlex="100%" mat-list-item class="item-padding"
+		*ngIf="otherProceduresAndPracticesDiagnotics.length > 0 && hasHealthRelatedRole" fxFlex="100%" mat-list-item class="item-padding"
 		[otherProceduresAndPractices]="otherProceduresAndPracticesDiagnotics" [patientId]="patientId">
 		</app-study-other-procedures-and-practices-card>
 
-		<app-study-advice-card (updateCurrentReportsEventEmitter)="updateModifiedStudyList(categories[6].id)" *ngIf="adviceDiagnotics.length > 0 && !(hasPicturesStaffRole || hasLaboratoryStaffRole)"
+		<app-study-advice-card (updateCurrentReportsEventEmitter)="updateModifiedStudyList(categories[6].id)" *ngIf="adviceDiagnotics.length > 0 && hasHealthRelatedRole"
 		fxFlex="100%" mat-list-item class="item-padding" [advices]="adviceDiagnotics" [patientId]="patientId" [categoryId]="categories[6].id">
 		</app-study-advice-card>
 
-		<app-study-education-card (updateCurrentReportsEventEmitter)="updateModifiedStudyList(categories[7].id)" *ngIf="educationDiagnotics.length > 0 && !(hasPicturesStaffRole || hasLaboratoryStaffRole)"
+		<app-study-education-card (updateCurrentReportsEventEmitter)="updateModifiedStudyList(categories[7].id)" *ngIf="educationDiagnotics.length > 0 && hasHealthRelatedRole"
 		fxFlex="100%" mat-list-item class="item-padding" [educations]="educationDiagnotics" [patientId]="patientId">
 		</app-study-education-card>
 
