@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import net.pladema.staff.repository.domain.HealthcareProfessionalSpecialtyVo;
 
 import javax.annotation.Nullable;
 import java.util.Objects;
@@ -44,4 +45,13 @@ public class HealthcareProfessionalSpecialtyBo {
 
 	public boolean equalsClinicalSpecialty(HealthcareProfessionalSpecialtyBo bo){
 		return this.clinicalSpecialty.getId().equals(bo.getClinicalSpecialty().getId());
-	}}
+	}
+    
+	public HealthcareProfessionalSpecialtyBo(HealthcareProfessionalSpecialtyVo vo){
+		this.id = vo.getId();
+		this.healthcareProfessionalId = vo.getHealthcareProfessionalId();
+		this.professionalProfessionId = vo.getProfessionalProfessionId();
+		this.clinicalSpecialty = new ClinicalSpecialtyBo(vo.getClinicalSpecialtyId(), vo.getClinicalSpecialtyName());
+	}
+
+}

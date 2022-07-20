@@ -8,6 +8,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import net.pladema.staff.repository.domain.ProfessionalProfessionsVo;
 
 @Getter
 @Setter
@@ -26,6 +27,12 @@ public class ProfessionalProfessionsBo {
 
 	public boolean equalsProfession(ProfessionalProfessionsBo bo){
 		return this.profession.getId().equals(bo.getProfession().getId());
+	}
+	
+	public ProfessionalProfessionsBo (ProfessionalProfessionsVo vo){
+		this.id = vo.getId();
+		this.healthcareProfessionalId = vo.getHealthcareProfessionalId();
+		this.profession = new ProfessionalSpecialtyBo(vo.getProfessionalSpecialtyId(), vo.getProfessionalSpecialtyName());
 	}
 
 }

@@ -34,7 +34,13 @@ public class ProfessionalProfessionStorageImpl implements ProfessionalProfession
 	@Override
 	public List<ProfessionalProfessionsBo> getProfessionsByHealthcareProfessionalId(Integer healthcareProfessionalId) {
 		log.debug("Input parameters -> healthcareProfessionalId {}", healthcareProfessionalId);
-		List<ProfessionalProfessionsBo> result = professionalProfessionRepository.findByHealthcareProfessionalId(healthcareProfessionalId).stream().map(this::mapToProfessionalProfessionsBo).peek(pbo -> pbo.setSpecialties(healthcareProfessionalSpecialtyRepository.getAllByProfessional(pbo.getId()).stream().map(this::mapToHealthcareProfessionalSpecialtyBo).collect(Collectors.toList()))).collect(Collectors.toList());
+		List<ProfessionalProfessionsBo> result = professionalProfessionRepository.findByHealthcareProfessionalId(healthcareProfessionalId)
+				.stream()
+				.map(this::mapToProfessionalProfessionsBo)
+				.peek(pbo -> pbo.setSpecialties(healthcareProfessionalSpecialtyRepository.getAllByProfessional(pbo.getId())
+						.stream()
+						.map(this::mapToHealthcareProfessionalSpecialtyBo)
+						.collect(Collectors.toList()))).collect(Collectors.toList());
 		log.debug("Output -> {}", result);
 		return result;
 	}
@@ -56,15 +62,17 @@ public class ProfessionalProfessionStorageImpl implements ProfessionalProfession
 	@Transactional
 	public Integer save(ProfessionalProfessionsBo bo) {
 		log.debug("Input parameters -> professionalProfessionsBo {}", bo);
-		ProfessionalProfessions professionalEntity = professionalProfessionRepository.findDeletedProfession(bo.getHealthcareProfessionalId(), bo.getProfession().getId()).map(pp -> {
-			pp.setDeleted(false);
+		ProfessionalProfessions professionalEntity = professionalProfessionRepository.findByProfessionalAndProfession(bo.getHealthcareProfessionalId(), bo.getProfession().getId()).map(pp -> {
+			if(pp.isDeleted())
+				pp.setDeleted(false);
 			return pp;
 		}).orElse(mapToEntity(bo));
 		Integer result = professionalProfessionRepository.save(professionalEntity).getId();
 		bo.getSpecialties().forEach(s -> {
 			s.setProfessionalProfessionId(result);
-			healthcareProfessionalSpecialtyRepository.findDeletedProfessionSpecialty(result, s.getClinicalSpecialty().getId()).ifPresentOrElse(hps -> {
-				hps.setDeleted(false);
+			healthcareProfessionalSpecialtyRepository.findByProfessionAndSpecialty(result, s.getClinicalSpecialty().getId()).ifPresentOrElse(hps -> {
+				if(hps.isDeleted())
+				 hps.setDeleted(false);
 				healthcareProfessionalSpecialtyRepository.save(hps);
 			}, () -> healthcareProfessionalSpecialtyRepository.save(mapToHealthcareProfessionalSpecialty(s)));
 		});

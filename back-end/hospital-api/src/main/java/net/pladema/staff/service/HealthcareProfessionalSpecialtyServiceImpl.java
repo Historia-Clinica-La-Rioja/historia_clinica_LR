@@ -4,13 +4,11 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import net.pladema.staff.service.domain.ClinicalSpecialtyBo;
-
+import net.pladema.staff.repository.ProfessionalProfessionRepository;
+import net.pladema.staff.service.domain.ProfessionalProfessionsBo;
 import org.springframework.stereotype.Service;
-
 import lombok.RequiredArgsConstructor;
 import net.pladema.staff.repository.HealthcareProfessionalSpecialtyRepository;
-import net.pladema.staff.repository.domain.HealthcareProfessionalSpecialtyVo;
 import net.pladema.staff.repository.domain.ProfessionalClinicalSpecialtyVo;
 import net.pladema.staff.repository.entity.ClinicalSpecialty;
 import net.pladema.staff.service.domain.HealthcareProfessionalSpecialtyBo;
@@ -21,6 +19,8 @@ import net.pladema.staff.service.domain.ProfessionalsByClinicalSpecialtyBo;
 public class HealthcareProfessionalSpecialtyServiceImpl implements HealthcareProfessionalSpecialtyService {
 
     private final HealthcareProfessionalSpecialtyRepository healthcareProfessionalSpecialtyRepository;
+
+	private final ProfessionalProfessionRepository professionalProfessionRepository;
 
     @Override
     public List<ProfessionalsByClinicalSpecialtyBo> getProfessionalsByClinicalSpecialtyBo(List<Integer> professionalsIds) {
@@ -39,12 +39,12 @@ public class HealthcareProfessionalSpecialtyServiceImpl implements HealthcarePro
     }
 
     @Override
-    public List<HealthcareProfessionalSpecialtyBo> getProfessionsByProfessional(Integer professionalId) {
-        List<HealthcareProfessionalSpecialtyBo> result = new ArrayList<>();
-        healthcareProfessionalSpecialtyRepository.getAllByProfessional(professionalId)
-                .forEach(healthcareProfessionalSpecialtyVo ->
-                        result.add(mapToHealthcareProfessionalSpecialtyBo(healthcareProfessionalSpecialtyVo))
-                );
+    public List<ProfessionalProfessionsBo> getProfessionsByProfessional(Integer professionalId) {
+        List<ProfessionalProfessionsBo> result = professionalProfessionRepository.findByHealthcareProfessionalId(professionalId)
+				.stream().map(ProfessionalProfessionsBo::new).collect(Collectors.toList());
+		result.forEach(pp->
+			pp.setSpecialties(healthcareProfessionalSpecialtyRepository.getAllByProfessional(pp.getId())
+					.stream().map(HealthcareProfessionalSpecialtyBo::new).collect(Collectors.toList())));
         return result;
     }
 

@@ -39,8 +39,7 @@ public interface ProfessionalProfessionRepository extends SGXAuditableEntityJPAR
 
 	@Query(value = "SELECT pp FROM ProfessionalProfessions pp " +
 			"WHERE pp.professionalSpecialtyId = :professionId " +
-			"AND pp.healthcareProfessionalId = :healthcareProfessionalId " +
-			"AND pp.deleteable.deleted = true")
-	Optional<ProfessionalProfessions> findDeletedProfession(@Param("healthcareProfessionalId") Integer healthcareProfessionalId, @Param("professionId") Integer professionId);
+			"AND pp.healthcareProfessionalId = :healthcareProfessionalId ")
+	Optional<ProfessionalProfessions> findByProfessionalAndProfession(@Param("healthcareProfessionalId") Integer healthcareProfessionalId, @Param("professionId") Integer professionId);
 
 }

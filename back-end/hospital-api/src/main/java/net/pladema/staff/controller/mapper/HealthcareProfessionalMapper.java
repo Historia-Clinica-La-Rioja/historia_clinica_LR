@@ -55,13 +55,6 @@ public interface HealthcareProfessionalMapper {
 	@Mapping(target = "person.lastName", source = "lastName")
 	HealthcareProfessionalDto fromHealthcareProfessionalBo(HealthcareProfessionalBo healthcareProfessionalBo);
 
-
-	@Name("fromListProfessionalCompleteBo")
-	default List<ProfessionalCompleteDto> fromListProfessionalCompleteBo(List<ProfessionalCompleteBo> professionalCompleteBos) {
-		return professionalCompleteBos.stream()
-				.map(this::fromProfessionalCompleteBo)
-				.collect(Collectors.toList());
-	}
 	@Name("fromProfessionalCompleteBo")
 	default ProfessionalCompleteDto fromProfessionalCompleteBo(ProfessionalCompleteBo professionalCompleteBo) {
 		return new ProfessionalCompleteDto(professionalCompleteBo.getId(), professionalCompleteBo.getPersonId(), professionalCompleteBo.getFirstName(),

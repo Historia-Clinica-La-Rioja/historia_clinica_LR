@@ -54,7 +54,7 @@ public interface HealthcareProfessionalSpecialtyRepository extends SGXAuditableE
 
     @Transactional(readOnly = true)
     @Query(value = "SELECT NEW net.pladema.staff.repository.domain.HealthcareProfessionalSpecialtyVo" +
-            "(hps.id,pp.healthcareProfessionalId, pp.professionalSpecialtyId, hps.clinicalSpecialtyId, cs.name) " +
+            "(hps.id,pp.healthcareProfessionalId, hps.professionalProfessionId, hps.clinicalSpecialtyId, cs.name) " +
             "FROM HealthcareProfessionalSpecialty hps "
 			+ "INNER JOIN ProfessionalProfessions pp ON pp.id = hps.professionalProfessionId "
 			+ "JOIN ClinicalSpecialty cs ON hps.clinicalSpecialtyId = cs.id "
@@ -113,7 +113,6 @@ public interface HealthcareProfessionalSpecialtyRepository extends SGXAuditableE
 
 	@Query(value = "SELECT hps FROM HealthcareProfessionalSpecialty hps " +
 			"WHERE hps.clinicalSpecialtyId = :clinicalSpecialtyId " +
-			"AND hps.professionalProfessionId = :professionalProfessionId " +
-			"AND hps.deleteable.deleted = true")
-	Optional<HealthcareProfessionalSpecialty> findDeletedProfessionSpecialty(@Param("professionalProfessionId") Integer professionalProfessionId, @Param("clinicalSpecialtyId") Integer clinicalSpecialtyId);
+			"AND hps.professionalProfessionId = :professionalProfessionId")
+	Optional<HealthcareProfessionalSpecialty> findByProfessionAndSpecialty(@Param("professionalProfessionId") Integer professionalProfessionId, @Param("clinicalSpecialtyId") Integer clinicalSpecialtyId);
 }
