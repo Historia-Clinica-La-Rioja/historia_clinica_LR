@@ -185,10 +185,6 @@ databaseChangeLog:
     relativeToChangelogFile: true
 
 - include:
-    file: incrementales-booking-v0_1.yml
-    relativeToChangelogFile: true
-
-- include:
     file: incrementales-v1_37.yml
     relativeToChangelogFile: true
 
