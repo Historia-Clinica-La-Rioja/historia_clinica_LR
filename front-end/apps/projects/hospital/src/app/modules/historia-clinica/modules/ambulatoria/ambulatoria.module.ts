@@ -58,6 +58,7 @@ import { EstudioModule } from './modules/estudio/estudio.module';
 import { OperationDeniedComponent } from './dialogs/diagnosis-required/operation-denied.component';
 import { CreateOutpatientOrderComponent } from './dialogs/create-outpatient-order/create-outpatient-order.component';
 import { NewConsultationFamilyHistoryFormComponent } from './dialogs/new-consultation-family-history-form/new-consultation-family-history-form.component';
+import { VaccineSearchComponent } from './dialogs/vaccine-search/vaccine-search.component';
 
 @NgModule({
 	declarations: [
@@ -102,6 +103,7 @@ import { NewConsultationFamilyHistoryFormComponent } from './dialogs/new-consult
 		OperationDeniedComponent,
 		CreateOutpatientOrderComponent,
 		NewConsultationFamilyHistoryFormComponent,
+		VaccineSearchComponent,
 	],
 	imports: [
 		CommonModule,

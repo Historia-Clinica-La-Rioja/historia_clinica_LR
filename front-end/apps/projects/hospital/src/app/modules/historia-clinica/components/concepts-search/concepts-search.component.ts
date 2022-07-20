@@ -13,6 +13,7 @@ export class ConceptsSearchComponent implements OnInit {
 
 	@Input() label = '';
 	@Input() hideIcon = false;
+	@Input() initialSearchValue: string = null;
 	@Output() search = new EventEmitter<string>();
 
 	readonly MIN_LENGTH = 3;
@@ -31,8 +32,9 @@ export class ConceptsSearchComponent implements OnInit {
 			translatedText => this.translatedLabel = translatedText.toLowerCase()
 		);
 		this.form = this.formBuilder.group({
-			searchValue: [null, [Validators.minLength(this.MIN_LENGTH)]],
+			searchValue: [this.initialSearchValue, [Validators.minLength(this.MIN_LENGTH)]],
 		});
+		this.emitSearch();
 	}
 
 	emitSearch(): void {

@@ -1,5 +1,10 @@
 {
     "ambulatoria": {
+        "vaccine-search": {
+            "TITLE": "Agregar vacuna",
+            "IMMUNIZATION": "Vacuna",
+            "COLUMN_VACCINE_HEADER": "Descripción SNOMED"
+        },
         "medical-coverage-summary-view": {
             "TITLE": "Cobertura",
             "AFFILIATE_NUMBER": "Afiliado N°:",
