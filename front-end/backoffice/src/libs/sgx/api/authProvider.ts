@@ -3,7 +3,7 @@ import SGXPermissions from '../auth/SGXPermissions';
 import roleAssignments from './role-assignments';
 import { sgxFetchApi, sgxFetchApiWithToken, jsonPayload, withHeader } from './fetch';
 import { LoggedUserDto, PermissionsDto, PublicInfoDto } from './model';
-import { clearTokens, retrieveToken, saveTokens } from './tokenStorage';
+import { clearUserAuth, saveUserAuth, retrieveUserAuth } from './userAuthStorage';
 
 const getPermissions = (): Promise<SGXPermissions> =>
         Promise.all([
@@ -19,24 +19,24 @@ const authProvider: AuthProvider = {
     login: ({ username, password, raToken }) => {
         const options = jsonPayload('POST', { username, password });
         const optionsWithReCaptcha = withHeader(options, 'recaptcha', raToken);
-        return sgxFetchApi<{ token: string, refreshToken: string }>('auth', optionsWithReCaptcha)
-            .then(({ token, refreshToken }) => {
-                saveTokens(token, refreshToken);
+        return sgxFetchApi<void>('auth', optionsWithReCaptcha)
+            .then(() => {
+                saveUserAuth();
             });
     },
     checkError: (error: HttpError) => {
         const status = error.status;
         if (status === 401 ) {
-            clearTokens();
+            clearUserAuth();
             return Promise.reject();
         }
         console.log('authProvider checkError', error);
         return Promise.resolve()
     },
-    checkAuth: () => retrieveToken() ? Promise.resolve() : Promise.reject(),
+    checkAuth: () => retrieveUserAuth() ? Promise.resolve() : Promise.reject(),
     logout: () => {
-        clearTokens();
-        return Promise.resolve();
+        clearUserAuth();
+        return sgxFetchApi<void>('auth/refresh', { method: 'DELETE'});
     },
     getIdentity:
         () => sgxFetchApiWithToken<LoggedUserDto>('account/info')
