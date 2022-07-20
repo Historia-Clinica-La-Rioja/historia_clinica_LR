@@ -136,7 +136,7 @@ public class HCEMapClinicalObservationVo {
 		LOG.debug("Input parameter -> last {}", last);
     	List<HCEAnthropometricDataBo> result = new ArrayList<>();
     	for (int i=0; i<last; i++) {
-			result.add(getNAnthropometricData(i).orElse(null));
+			getNAnthropometricData(i).ifPresent(result::add);
 		}
 		LOG.debug(OUTPUT, result);
 		return result;

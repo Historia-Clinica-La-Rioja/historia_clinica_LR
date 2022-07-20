@@ -21,18 +21,26 @@ public class AppointmentVo {
 	
     private Integer diaryId;
 
+	private String observation;
+
+	private Integer observationBy;
+
 	public AppointmentVo(Appointment appointment) {
 		this.appointment = appointment;
 		this.medicalAttentionTypeId = null;
 		this.stateChangeReason = null;
 		this.diaryId = null;
+		this.observation = null;
+		this.observationBy = null;
 	}
 
-	public AppointmentVo(Integer diaryId, Appointment appointment, Short medicalAttentionTypeId, String stateChangeReason) {
+	public AppointmentVo(Integer diaryId, Appointment appointment, Short medicalAttentionTypeId, String stateChangeReason, String observation, Integer observationBy) {
 		this.appointment = appointment;
 		this.stateChangeReason = stateChangeReason;
 		this.medicalAttentionTypeId = medicalAttentionTypeId;
 		this.diaryId = diaryId;
+		this.observation = observation;
+		this.observationBy = observationBy;
 	}
 
 	public Integer getId() {

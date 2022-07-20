@@ -1,40 +1,42 @@
 package ar.lamansys.nursing.application;
 
-import ar.lamansys.nursing.application.exceptions.NursingConsultationException;
-import ar.lamansys.nursing.application.exceptions.NursingConsultationExceptionEnum;
-import ar.lamansys.nursing.application.port.NursingConsultationStorage;
-import ar.lamansys.nursing.application.port.NursingDoctorStorage;
-import ar.lamansys.nursing.domain.NursingConsultationBo;
-import ar.lamansys.nursing.application.port.NursingAppointmentStorage;
-import ar.lamansys.nursing.domain.document.NursingDocumentBo;
-import ar.lamansys.nursing.application.port.NursingDocumentStorage;
-import ar.lamansys.nursing.domain.doctor.DoctorInfoBo;
-import ar.lamansys.nursing.domain.NursingConsultationInfoBo;
-import ar.lamansys.sgx.shared.dates.configuration.DateTimeProvider;
+import java.time.LocalDate;
+
+import javax.transaction.Transactional;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
-import javax.transaction.Transactional;
-import java.time.LocalDate;
+import ar.lamansys.nursing.application.exceptions.NursingConsultationException;
+import ar.lamansys.nursing.application.exceptions.NursingConsultationExceptionEnum;
+import ar.lamansys.nursing.application.port.NursingAppointmentStorage;
+import ar.lamansys.nursing.application.port.NursingConsultationStorage;
+import ar.lamansys.nursing.application.port.NursingDoctorStorage;
+import ar.lamansys.nursing.application.port.NursingDocumentStorage;
+import ar.lamansys.nursing.domain.NursingConsultationBo;
+import ar.lamansys.nursing.domain.NursingConsultationInfoBo;
+import ar.lamansys.nursing.domain.doctor.DoctorInfoBo;
+import ar.lamansys.nursing.domain.document.NursingDocumentBo;
+import ar.lamansys.sgh.shared.infrastructure.input.service.appointment.SharedAppointmentPort;
+import ar.lamansys.sgh.shared.infrastructure.input.service.appointment.dto.DocumentAppointmentDto;
+import ar.lamansys.sgx.shared.dates.configuration.DateTimeProvider;
 
 @Service
 public class CreateNursingConsultation {
 
     private static final Logger LOG = LoggerFactory.getLogger(CreateNursingConsultation.class);
 
+	private final SharedAppointmentPort sharedAppointmentPort;
     private final DateTimeProvider dateTimeProvider;
     private final NursingDoctorStorage nursingDoctorStorage;
     private final NursingConsultationStorage nursingConsultationStorage;
     private final NursingDocumentStorage nursingDocumentStorage;
     private final NursingAppointmentStorage nursingAppointmentStorage;
 
-    public CreateNursingConsultation(DateTimeProvider dateTimeProvider,
-                                     NursingDoctorStorage nursingDoctorStorage,
-                                     NursingConsultationStorage nursingConsultationStorage,
-                                     NursingDocumentStorage nursingDocumentStorage,
-                                     NursingAppointmentStorage nursingAppointmentStorage) {
-        this.dateTimeProvider = dateTimeProvider;
+    public CreateNursingConsultation(SharedAppointmentPort sharedAppointmentPort, DateTimeProvider dateTimeProvider, NursingDoctorStorage nursingDoctorStorage, NursingConsultationStorage nursingConsultationStorage, NursingDocumentStorage nursingDocumentStorage, NursingAppointmentStorage nursingAppointmentStorage) {
+		this.sharedAppointmentPort = sharedAppointmentPort;
+		this.dateTimeProvider = dateTimeProvider;
         this.nursingDoctorStorage = nursingDoctorStorage;
         this.nursingConsultationStorage = nursingConsultationStorage;
         this.nursingDocumentStorage = nursingDocumentStorage;
@@ -64,9 +66,10 @@ public class CreateNursingConsultation {
                         now,
                         false));
 
-        nursingDocumentStorage.save(new NursingDocumentBo(null, nursingConsultationBo, encounterId, doctorInfoBo.getId(), now));
-        nursingAppointmentStorage.run(nursingConsultationBo.getPatientId(), doctorInfoBo.getId(), now);
-
+        Long documentId = nursingDocumentStorage.save(new NursingDocumentBo(null, nursingConsultationBo, encounterId, doctorInfoBo.getId(), now));
+        Integer appointmentId = nursingAppointmentStorage.run(nursingConsultationBo.getPatientId(), doctorInfoBo.getId(), now);
+		if(appointmentId != null)
+			this.sharedAppointmentPort.saveDocumentAppointment(new DocumentAppointmentDto(documentId, appointmentId));
     }
 
     private void assertContextValid(NursingConsultationBo consultationBo, DoctorInfoBo doctorInfoBo) {

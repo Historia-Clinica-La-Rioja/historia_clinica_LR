@@ -23,6 +23,7 @@ import ar.lamansys.sgx.shared.dates.configuration.DateTimeProvider;
 import ar.lamansys.sgx.shared.featureflags.AppFeature;
 import ar.lamansys.sgx.shared.featureflags.ToggleConfiguration;
 import ar.lamansys.sgx.shared.flavor.FlavorService;
+import ar.lamansys.sgx.shared.strings.StringHelper;
 import lombok.extern.slf4j.Slf4j;
 
 
@@ -51,7 +52,7 @@ public class SystemPropertiesConfiguration {
                                          DateTimeProvider dateTimeProvider,
                                          FlavorService flavorService,
                                          MessageSource messageSource,
-                                         @Value("${app.default.language}") String defaultLanguage
+                                         @Value("${app.default.language:es}") String defaultLanguage
     ) {
         this.environ = environ;
         this.systemPropertyRepository = systemPropertyRepository;
@@ -60,6 +61,7 @@ public class SystemPropertiesConfiguration {
         this.nodeId = UUID.randomUUID().toString();
         this.flavorService = flavorService;
         this.defaultLanguage = defaultLanguage;
+		Locale.setDefault(new Locale(defaultLanguage));
         systemPropertyRepository.deleteAll();
 		this.include = "(spring\\.*|email-*|ws\\.*|logging\\.*|ws\\.*|jobs\\.*|"
 				+ "app\\.*|api\\.*|admin\\.*|token\\.*|management\\.*|"
@@ -125,16 +127,12 @@ public class SystemPropertiesConfiguration {
                 .forEach((propertyKey, propertyValueDescriptor) -> sortedSet.add(
                         new PropertyBo(null,
                                 propertyKey,
-                                toString(propertyValueDescriptor.getValue()),
+								StringHelper.toString(propertyValueDescriptor.getValue()),
                                 buildLabel(propertyKey),
                                 propertySourceDescriptor.getName(),
                                 nodeId, dateTimeProvider.nowDateTime())));
         return sortedSet;
     }
-
-	private static String toString(Object value) {
-		return value == null ? null : value.toString();
-	}
 
     private String buildLabel(String propertyKey) {
         return isFeatureFlag(propertyKey) ?

@@ -1,5 +1,9 @@
 package ar.lamansys.odontology.infrastructure.repository.document;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Service;
+
 import ar.lamansys.odontology.domain.OdontologyDocumentStorage;
 import ar.lamansys.odontology.domain.OdontologySnomedBo;
 import ar.lamansys.odontology.domain.consultation.OdontologyDocumentBo;
@@ -9,9 +13,6 @@ import ar.lamansys.sgh.clinichistory.infrastructure.input.service.DocumentExtern
 import ar.lamansys.sgh.clinichistory.infrastructure.input.service.dto.DocumentDto;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.DocumentType;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.SourceType;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.stereotype.Service;
 
 @Service
 public class OdontologyDocumentStorageImpl implements OdontologyDocumentStorage {
@@ -29,10 +30,10 @@ public class OdontologyDocumentStorageImpl implements OdontologyDocumentStorage 
     }
 
     @Override
-    public void save(OdontologyDocumentBo odontologyDocumentBo) {
+    public Long save(OdontologyDocumentBo odontologyDocumentBo) {
         LOG.debug("Save new odontology document -> {}", odontologyDocumentBo);
         DocumentDto documentDto = mapTo(odontologyDocumentBo);
-        documentExternalFactory.run(documentDto, true);
+        return documentExternalFactory.run(documentDto, true);
     }
 
     private DocumentDto mapTo(OdontologyDocumentBo odontologyDocumentBo) {

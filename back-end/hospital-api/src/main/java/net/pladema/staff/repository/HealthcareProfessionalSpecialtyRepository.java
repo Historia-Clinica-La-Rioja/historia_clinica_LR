@@ -36,8 +36,7 @@ public interface HealthcareProfessionalSpecialtyRepository extends SGXAuditableE
     @Query( "SELECT (CASE WHEN COUNT(d.healthcareProfessionalId) >= 1 THEN TRUE ELSE FALSE END)" +
             "FROM Diary d " +
             "JOIN DoctorsOffice doff ON d.doctorsOfficeId = doff.id " +
-            "JOIN ClinicalSpecialtySector css ON doff.clinicalSpecialtySectorId = css.id "+
-            "WHERE d.healthcareProfessionalId = :healthcareProfessionalId AND css.clinicalSpecialtyId = :clinicalSpecialtyId")
+            "WHERE d.healthcareProfessionalId = :healthcareProfessionalId AND d.clinicalSpecialtyId = :clinicalSpecialtyId")
     boolean hasHealthcareProfessionalSpecialtyAffected(@Param("healthcareProfessionalId") Integer healthcareProfessionalId,
                                                        @Param("clinicalSpecialtyId") Integer clinicalSpecialtyId);
 

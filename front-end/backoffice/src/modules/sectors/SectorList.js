@@ -25,6 +25,9 @@ const SectorList = props => (
             <ReferenceField source="institutionId" reference="institutions">
                 <TextField source="name" />
             </ReferenceField>
+            <ReferenceField source="sectorTypeId"  link={false}  reference="sectortypes">
+                <TextField source="description" />
+            </ReferenceField>
         </Datagrid>
     </List>
 );

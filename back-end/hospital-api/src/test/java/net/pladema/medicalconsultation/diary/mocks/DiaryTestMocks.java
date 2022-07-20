@@ -11,7 +11,7 @@ public class DiaryTestMocks {
     public static Diary createDiary(Integer healthcareProfessionalId, Integer doctorsOfficeId,
                                     LocalDate startDate, LocalDate endDate, Short appointmentDuration,
                                     Boolean automaticRenewal, Short daysBeforeRenew, Boolean professionalAssignShift,
-                                    Boolean includeHoliday, Boolean active) {
+                                    Boolean includeHoliday, Boolean active, Integer clinicalSpecialtyId) {
         Diary result = new Diary();
         result.setHealthcareProfessionalId(healthcareProfessionalId);
         result.setDoctorsOfficeId(doctorsOfficeId);
@@ -23,14 +23,15 @@ public class DiaryTestMocks {
         result.setProfessionalAsignShift(professionalAssignShift);
         result.setIncludeHoliday(includeHoliday);
         result.setActive(active);
+		result.setClinicalSpecialtyId(clinicalSpecialtyId);
         return result;
     }
 
-    public static DoctorsOffice createDoctorsOffice(Integer institutionId, Integer clinicalSpecialtySectorId,
+    public static DoctorsOffice createDoctorsOffice(Integer institutionId, Integer sectorId,
                                                     String description, LocalTime openingTime, LocalTime closingTime) {
         DoctorsOffice result = new DoctorsOffice();
         result.setInstitutionId(institutionId);
-        result.setClinicalSpecialtySectorId(clinicalSpecialtySectorId);
+        result.setSectorId(sectorId);
         result.setDescription(description);
         result.setOpeningTime(openingTime);
         result.setClosingTime(closingTime);

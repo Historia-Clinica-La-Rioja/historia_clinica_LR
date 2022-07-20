@@ -1,6 +1,7 @@
 package net.pladema.reports.repository;
 
 import lombok.AllArgsConstructor;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
@@ -9,6 +10,7 @@ import lombok.ToString;
 @Setter
 @ToString
 @AllArgsConstructor
+@EqualsAndHashCode
 public class ConsultationDetail {
 
     private String province;

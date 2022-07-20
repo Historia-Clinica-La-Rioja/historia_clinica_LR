@@ -37,16 +37,19 @@ public interface AppointmentRepository extends SGXAuditableEntityJPARepository<A
     List<AppointmentDiaryVo> getAppointmentsByDiaries(@Param("diaryIds") List<Integer> diaryIds);
     
     @Transactional(readOnly = true)
-    @Query( "SELECT NEW net.pladema.medicalconsultation.appointment.repository.domain.AppointmentVo(aa.pk.diaryId, a, doh.medicalAttentionTypeId, has.reason )" +
+    @Query( "SELECT NEW net.pladema.medicalconsultation.appointment.repository.domain.AppointmentVo(aa.pk.diaryId, a, doh.medicalAttentionTypeId, has.reason, ao.observation, ao.createdBy)" +
             "FROM Appointment AS a " +
             "JOIN AppointmentAssn AS aa ON (a.id = aa.pk.appointmentId) " +
+			"LEFT JOIN AppointmentObservation AS ao ON (a.id = ao.appointmentId) " +
             "LEFT JOIN HistoricAppointmentState AS has ON (a.id = has.pk.appointmentId) " +
             "JOIN Diary d ON (d.id = aa.pk.diaryId )" +
 			"JOIN DiaryOpeningHours  AS doh ON (doh.pk.diaryId = d.id) " +
             "WHERE a.id = :appointmentId " +
+			"AND doh.pk.openingHoursId = aa.pk.openingHoursId " +
 			"AND a.deleteable.deleted = FALSE OR a.deleteable.deleted IS NULL " +
             "AND ( has.pk.changedStateDate IS NULL OR has.pk.changedStateDate = " +
-            "   ( SELECT MAX (subHas.pk.changedStateDate) FROM HistoricAppointmentState subHas WHERE subHas.pk.appointmentId = a.id) ) ")
+            "   ( SELECT MAX (subHas.pk.changedStateDate) FROM HistoricAppointmentState subHas WHERE subHas.pk.appointmentId = a.id) ) " +
+			"ORDER BY has.pk.changedStateDate DESC")
     List<AppointmentVo> getAppointment(@Param("appointmentId") Integer appointmentId);
 
     @Transactional(readOnly = true)
@@ -112,6 +115,16 @@ public interface AppointmentRepository extends SGXAuditableEntityJPARepository<A
                            @Param("phoneNumber") String phoneNumber,
                            @Param("userId") Integer userId);
 
+	@Transactional
+	@Modifying
+	@Query( "UPDATE AppointmentObservation  AS ao " +
+			"SET ao.observation = :observation, " +
+			"ao.createdBy = :observationBy " +
+			"WHERE ao.appointmentId = :appointmentId ")
+	void updateObservation(@Param("appointmentId") Integer appointmentId,
+						   @Param("observation") String observation,
+						   @Param("observationBy") Integer observationBy);
+
     @Transactional(readOnly = true)
     @Query(name = "Appointment.medicalCoverage")
     List<Integer> getMedicalCoverage(@Param("patientId") Integer patientId,
@@ -126,14 +139,13 @@ public interface AppointmentRepository extends SGXAuditableEntityJPARepository<A
 	Optional<Integer> getAppointmentMedicalCoverageId(@Param("appointmentId") Integer appointmentId);
 
     @Transactional(readOnly = true)
-    @Query( "SELECT NEW net.pladema.medicalconsultation.appointment.repository.domain.NotifyPatientVo(a.id, pp.lastName, pp.firstName, css.sectorId, php.lastName,php.firstName, do.description, do.topic)" +
+    @Query( "SELECT NEW net.pladema.medicalconsultation.appointment.repository.domain.NotifyPatientVo(a.id, pp.lastName, pp.firstName, do.sectorId, php.lastName,php.firstName, do.description, do.topic)" +
             "FROM Appointment AS a " +
             "JOIN Patient AS p ON (p.id = a.patientId) " +
             "JOIN Person AS pp ON (pp.id = p.personId) " +
             "JOIN AppointmentAssn AS aa ON (a.id = aa.pk.appointmentId) " +
             "JOIN Diary d ON (d.id = aa.pk.diaryId) " +
             "JOIN DoctorsOffice AS do ON (do.id = d.doctorsOfficeId) " +
-            "JOIN ClinicalSpecialtySector AS css ON (do.clinicalSpecialtySectorId = css.id) " +
             "JOIN HealthcareProfessional AS hp ON (d.healthcareProfessionalId = hp.id)" +
             "JOIN Person AS php ON (php.id = hp.personId)" +
             "WHERE a.id = :appointmentId ")

@@ -20,6 +20,7 @@ import net.pladema.clinichistory.hospitalization.repository.EvolutionNoteDocumen
 import net.pladema.clinichistory.hospitalization.repository.InternmentEpisodeRepository;
 import net.pladema.clinichistory.hospitalization.repository.PatientDischargeRepository;
 import net.pladema.clinichistory.hospitalization.repository.domain.InternmentEpisode;
+import net.pladema.clinichistory.hospitalization.service.anamnesis.AnamnesisValidator;
 import net.pladema.clinichistory.hospitalization.service.anamnesis.domain.AnamnesisBo;
 import net.pladema.clinichistory.hospitalization.service.anamnesis.impl.CreateAnamnesisServiceImpl;
 import net.pladema.clinichistory.hospitalization.service.impl.InternmentEpisodeServiceImpl;
@@ -75,6 +76,8 @@ class CreateAnamnesisServiceImplTest extends UnitRepository {
 	@Mock
 	private FeatureFlagsService featureFlagsService;
 
+	private AnamnesisValidator anamnesisValidator;
+
 	@BeforeEach
 	public void setUp() {
 		var internmentEpisodeService = new InternmentEpisodeServiceImpl(
@@ -85,7 +88,8 @@ class CreateAnamnesisServiceImplTest extends UnitRepository {
                 medicalCoveragePlanRepository,
 				featureFlagsService);
 		createAnamnesisServiceImpl =
-				new CreateAnamnesisServiceImpl(documentFactory, internmentEpisodeService, featureFlagsService, dateTimeProvider);
+				new CreateAnamnesisServiceImpl(documentFactory, internmentEpisodeService, dateTimeProvider,
+						new AnamnesisValidator(featureFlagsService));
 	}
 
 	@Test

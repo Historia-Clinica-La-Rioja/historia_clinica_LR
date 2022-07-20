@@ -299,6 +299,18 @@ public class AppointmentsController {
         return ResponseEntity.ok().body(result);
     }
 
+	@PreAuthorize("hasPermission(#institutionId, 'ADMINISTRATIVO, ESPECIALISTA_MEDICO, PROFESIONAL_DE_SALUD, ESPECIALISTA_EN_ODONTOLOGIA, ENFERMERO')")
+	@PutMapping(value = "/{appointmentId}/update-observation")
+	public ResponseEntity<Boolean> updateObservation(
+			@PathVariable(name = "institutionId") Integer institutionId,
+			@PathVariable(name = "appointmentId") Integer appointmentId,
+			@RequestParam(name = "observation") String observation) {
+		log.debug("Input parameters -> institutionId {},appointmentId {}, observation {}", institutionId, appointmentId, observation);
+		boolean result = appointmentService.saveObservation(appointmentId, observation);
+		log.debug(OUTPUT, result);
+		return ResponseEntity.ok().body(result);
+	}
+
     @PreAuthorize("hasPermission(#institutionId, 'ADMINISTRATIVO, ESPECIALISTA_MEDICO, PROFESIONAL_DE_SALUD, ESPECIALISTA_EN_ODONTOLOGIA, ENFERMERO')")
     @PutMapping(value = "/{appointmentId}/update-medical-coverage")
     public ResponseEntity<Boolean> updateMedicalCoverage(@PathVariable(name = "institutionId") Integer institutionId, @PathVariable(name = "appointmentId") Integer appointmentId, @RequestParam(name = "patientMedicalCoverageId", required = false) Integer patientMedicalCoverageId) {
@@ -317,14 +329,14 @@ public class AppointmentsController {
 
         Integer diaryIdParam = Integer.parseInt(diaryId);
 
-		Collection<AppointmentDailyAmountBo> resultService = appointmentDailyAmountService
-				.getDailyAmounts(diaryIdParam);
-		List<AppointmentDailyAmountDto> result = resultService.stream()
-				.parallel()
-				.map(appointmentMapper::toAppointmentDailyAmountDto)
-				.collect(Collectors.toList());
-		log.debug(OUTPUT, result);
-		return ResponseEntity.ok().body(result);
+        Collection<AppointmentDailyAmountBo> resultService = appointmentDailyAmountService
+                .getDailyAmounts(diaryIdParam);
+        List<AppointmentDailyAmountDto> result = resultService.stream()
+                .parallel()
+                .map(appointmentMapper::toAppointmentDailyAmountDto)
+                .collect(Collectors.toList());
+        log.debug(OUTPUT, result);
+        return ResponseEntity.ok().body(result);
     }
 
     @PostMapping("/{appointmentId}/notifyPatient")

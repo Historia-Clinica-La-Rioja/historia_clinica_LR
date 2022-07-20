@@ -79,7 +79,7 @@ export class SearchComponent implements OnInit {
 		else {
 			this.route.queryParams.subscribe(params => {
 				this.identificationTypeId = params.identificationTypeId;
-				this.identificationNumber = params.identificationNumber;
+				this.identificationNumber = +params.identificationNumber;
 				this.genderId = params.genderId;
 				this.noIdentity = params.noIdentity === 'true';
 				if (!this.noIdentity) {

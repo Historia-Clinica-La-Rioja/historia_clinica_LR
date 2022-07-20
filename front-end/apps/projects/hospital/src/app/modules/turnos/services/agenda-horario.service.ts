@@ -104,7 +104,8 @@ export class AgendaHorarioService {
 					end: possibleScheduleHours.find(date => date.getTime() === event.end.getTime()),
 					overturnCount: event.meta.overturnCount,
 					medicalAttentionTypeId: event.meta.medicalAttentionType?.id,
-					possibleScheduleHours
+					possibleScheduleHours,
+					availableForBooking: event.meta.availableForBooking,
 				}
 			});
 		dialogRef.afterClosed().subscribe(dialogInfo => {
@@ -153,7 +154,8 @@ export class AgendaHorarioService {
 						overturnCount: event.meta.overturnCount,
 						medicalAttentionTypeId: event.meta.medicalAttentionType?.id,
 						isEdit: true,
-						possibleScheduleHours
+						possibleScheduleHours,
+						availableForBooking: event.meta.availableForBooking
 					}
 				});
 			dialogRef.afterClosed().subscribe(dialogInfo => {
@@ -264,7 +266,8 @@ export class AgendaHorarioService {
 			color: this.getMedicalAttentionColor(diaryOpeningHour.medicalAttentionTypeId),
 			meta: {
 				medicalAttentionType: { id: diaryOpeningHour.medicalAttentionTypeId },
-				overturnCount: diaryOpeningHour.overturnCount
+				overturnCount: diaryOpeningHour.overturnCount,
+				availableForBooking: diaryOpeningHour.externalAppointmentsAllowed,
 			}
 		};
 	}

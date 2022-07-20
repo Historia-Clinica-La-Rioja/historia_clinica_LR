@@ -11,8 +11,7 @@ import { pushIfNotExists } from '@core/utils/array.utils';
 export class BedManagementFacadeService {
 
 	public sectors: Sector[] = [];
-	public specialities: Speciality[] = [];
-	public categories: Category[] = [];
+	public services: Service[] = [];
 
 	private bedSummarySubject = new ReplaySubject<BedSummaryDto[]>(1);
 	private bedSummary$: Observable<BedSummaryDto[]>;
@@ -55,8 +54,7 @@ export class BedManagementFacadeService {
 		const bedManagementCopy = [...this.originalBedManagement];
 		const result = bedManagementCopy.filter(bedManagement => (
 			this.filterBySector(newFilter, bedManagement)
-			&& this.filterBySpeciality(newFilter, bedManagement)
-			&& this.filterByCategory(newFilter, bedManagement)
+			&& this.filterByService(newFilter, bedManagement)
 			&& this.filterByProbableDischargeDate(newFilter, bedManagement)
 			&& this.filterByFreeBed(newFilter, bedManagement)));
 		this.bedSummarySubject.next(result);
@@ -67,12 +65,8 @@ export class BedManagementFacadeService {
 		return (filter.sector ? bed.sector.id === filter.sector : true);
 	}
 
-	private filterBySpeciality(filter: BedManagementFilter, bedSummary: BedSummaryDto): boolean {
-		return (filter.speciality ? this.sectorHasSpecialty(bedSummary.sector, filter.speciality) : true);
-	}
-
-	private filterByCategory(filter: BedManagementFilter, bedSummary: BedSummaryDto): boolean {
-		return (filter.category ? bedSummary.bed.bedCategory.id === filter.category : true);
+	private filterByService(filter: BedManagementFilter, bedSummary: BedSummaryDto): boolean {
+		return (filter.service ? this.sectorHasSpecialty(bedSummary.sector, filter.service) : true);
 	}
 
 	private filterByProbableDischargeDate(filter: BedManagementFilter, bed: BedSummaryDto): boolean {
@@ -86,8 +80,7 @@ export class BedManagementFacadeService {
 	public getFilterOptions() {
 		return {
 			sectors: this.sectors,
-			specialities: this.specialities,
-			categories: this.categories
+			services: this.services
 		};
 	}
 
@@ -97,14 +90,11 @@ export class BedManagementFacadeService {
 			this.sectors = pushIfNotExists(this.sectors,
 				{ sectorId: bedSummary.sector.id, sectorDescription: bedSummary.sector.description }, this.compareSector);
 
-			bedSummary.sector.clinicalSpecialties.forEach(clinicalSpecialty => {
-				this.specialities = pushIfNotExists(this.specialities,
-					{ specialityId: clinicalSpecialty.id, specialityDescription: clinicalSpecialty.name }, this.compareSpeciality);
+			bedSummary.sector.clinicalSpecialties.forEach(clinicalService => {
+				this.services = pushIfNotExists(this.services,
+					{ serviceId: clinicalService.id, serviceDescription: clinicalService.name }, this.compareService);
 			}
 			);
-
-			this.categories = pushIfNotExists(this.categories,
-				{ categoryId: bedSummary.bed.bedCategory.id, categoryDescription: bedSummary.bed.bedCategory.description }, this.compareCategory);
 		});
 	}
 
@@ -112,12 +102,8 @@ export class BedManagementFacadeService {
 		return sector.sectorId === sector2.sectorId;
 	}
 
-	private compareSpeciality(speciality: Speciality, speciality2: Speciality): boolean {
-		return speciality.specialityId === speciality2.specialityId;
-	}
-
-	private compareCategory(category: Category, category2: Category): boolean {
-		return category.categoryId === category2.categoryId;
+	private compareService(service: Service, service2: Service): boolean {
+		return service.serviceId === service2.serviceId;
 	}
 
 	private sectorHasSpecialty(sector: SectorSummaryDto, specialtyId: number): boolean {
@@ -138,13 +124,8 @@ export class Sector {
 	sectorDescription: string;
 }
 
-export class Speciality {
-	specialityId: number;
-	specialityDescription: string;
-}
-
-export class Category {
-	categoryId: number;
-	categoryDescription: string;
+export class Service {
+	serviceId: number;
+	serviceDescription: string;
 }
 

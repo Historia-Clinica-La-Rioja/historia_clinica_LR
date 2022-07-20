@@ -60,6 +60,9 @@
 				"DIAGNOSIS": "Diagnóstico",
 				"CONFIRMED": "Confirmado",
 				"PRESUMPTIVE": "Presuntivo",
+				"DISCARD": "Descartado",
+				"REMISSION": "Remisión",
+				"RESOLVED": "Resuelto",
 				"ANAMNESIS_SUBTITLE": "Agregue los diagnósticos detectados",
 				"EVOLUTION_NOTE_SUBTITLE": "Seleccione los diagnósticos que desea evolucionar o agregue nuevos",
 				"VERIFICATION": "Verificación",
@@ -172,7 +175,9 @@
 			},
 			"buttons": {
 				"ATTACH_SIGNATURE": "Adjuntar firma digital",
+				"EDIT_DRAFT": "Seguir editando",
 				"SAVE_DRAFT": "Guardar borrador",
+				"FINALIZE": "Finalizar y dar alta medica",
 				"CONFIRM": "Confirmar"
 			},
 			"diagnosticos": {
@@ -214,6 +219,10 @@
 				"ERROR": "Error al guardar documento de epicrisis",
 				"SUCCESS": "El documento de epicrisis se guardó exitosamente"
 			},
+			"messages-draft": {
+				"ERROR": "Error al guardar borrador de epicrisis",
+				"SUCCESS": "El borrador de epicrisis se guardó exitosamente"
+			},
 			"observations": {
 				"TITLE": "Evaluación clínica",
 				"EVOLUTION_NOTE": "Evolución",
@@ -222,6 +231,10 @@
 				"INDICATIONS_NOTE": "Indicaciones al alta",
 				"OTHERS": "Otras observaciones",
 				"DESCRIPTION": "Descripción"
+			},
+			"warning-dialog": {
+				"FIRST_TEXT": "Se han realizado evoluciones sobre el episodio de internación posteriores a la última versión del borrador.",
+				"SECOND_TEXT": "Por favor, revise los últimos datos cargados."
 			}
 		},
 		"clinical-assessment-diagnosis": {
@@ -300,7 +313,9 @@
 				"WITHOUT_DIAGNOSIS": "Sin diagnóstico definido"
 			},
 			"WITHOUT_OBSERVATIONS": "No hay observaciones para mostrar",
-			"CLINICAL_EVALUATION": "Evaluación clínica"
+			"CLINICAL_EVALUATION": "Evaluación clínica",
+			"EDITED_DOCUMENT": "(Editado)",
+			"NO_FILTERED_PROBLEMS": "No hay resultados para la búsqueda seleccionada"
 		},
 		"nota-evolucion": {
 			"TITLE": "Nota de evolución",
@@ -345,12 +360,19 @@
 				"ONE_DAY": "1 día internado",
 				"ADMISSION": "Ingreso: {{datetime}}",
 				"PROBABLE_DISCHARGE": "Fecha probable de alta: {{datetime}}",
+				"DISCHARGE_DATE_CHANGE": "Cambiar",
 				"probable_discharge_dialog": {
 					"TITLE": "Actualizar fecha de alta probable",
 					"PLACEHOLDER": "Fecha de alta probable",
 					"SUCCESS": "La fecha de alta probable se actualizó correctamente",
 					"ERROR": "Error al guardar nueva fecha de alta probable"
 				}
+			},
+			"pending-document": {
+				"PENDING_EVOLUTION": "Evolución pendiente",
+				"PENDING_EPICRISIS": "Epicrisis pendiente",
+				"PENDING_MEDICAL_DISCHARGE": "Alta médica pendiente",
+				"PENDING_ADMINISTRATIVE_DISCHARGE": "Alta administrativa pendiente"
 			},
 			"main-diagnosis": {
 				"TITLE": "Diagnóstico principal",
@@ -472,7 +494,8 @@
 		"dialogs": {
 			"actions-document": {
 				"DELETE_TITLE": "Aclarar motivo de eliminación",
-				"SUBTITLE": "Para confirmar los cambios por favor especifique el motivo por el cual edita este documento.",
+				"EDIT_TITLE": "Aclarar motivo de edición",
+				"SUBTITLE": "Para confirmar los cambios por favor especifique el motivo por el cuál edita este documento.",
 				"REASON": "Motivo"
 			}
 		}

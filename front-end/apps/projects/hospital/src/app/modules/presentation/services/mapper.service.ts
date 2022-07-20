@@ -9,7 +9,7 @@ import {
 	BedSummaryDto,
 	InternmentPatientDto,
 	HCEEvolutionSummaryDto,
-	InternmentEpisodeDto,
+	InternmentEpisodeDto, DocumentsSummaryDto,
 } from '@api-rest/api-model';
 import { PatientBasicData } from '../components/patient-card/patient-card.component';
 import { PersonalInformation } from '@presentation/components/personal-information/personal-information.component';
@@ -122,7 +122,9 @@ export class MapperService {
 					roomNumber: patient.roomNumber,
 					bedNumber: patient.bedNumber
 				},
-				hasPhysicalDischarge: patient.hasPhysicalDischarge
+				hasPhysicalDischarge: patient.hasPhysicalDischarge,
+				documentsSummary: patient.documentsSummary,
+				hasMedicalDischarge: patient.hasMedicalDischarge
 			}
 		}
 
@@ -141,7 +143,8 @@ export class MapperService {
 					roomNumber: info.bed.room.roomNumber,
 					bedNumber: info.bed.bedNumber
 				},
-				hasPhysicalDischarge: info.hasPhysicalDischarge
+				hasPhysicalDischarge: info.hasPhysicalDischarge,
+				documentsSummary: info.documentsSummary
 			}
 		}
 	}
@@ -192,7 +195,9 @@ export class MapperService {
 				historicalProblemsList = [...historicalProblemsList, ...currentOutpatientEvolutionSummary.healthConditions.map(problem => ({
 					consultationDate: currentOutpatientEvolutionSummary.startDate,
 					consultationEvolutionNote: currentOutpatientEvolutionSummary.evolutionNote,
-					consultationProfessionalName: `${currentOutpatientEvolutionSummary.professional.person.firstName} ${currentOutpatientEvolutionSummary.professional.person.lastName}`,
+					professionalFirstName: currentOutpatientEvolutionSummary.professional.person.firstName,
+					professionalLastName: currentOutpatientEvolutionSummary.professional.person.lastName,
+					professionalNameSelfDetermination: currentOutpatientEvolutionSummary.professional.person.nameSelfDetermination,
 					consultationProfessionalId: currentOutpatientEvolutionSummary.professional.id,
 					consultationProfessionalPersonId: currentOutpatientEvolutionSummary.professional.person.id,
 					document: currentOutpatientEvolutionSummary.document,
@@ -207,7 +212,9 @@ export class MapperService {
 				}))] : historicalProblemsList = [...historicalProblemsList, {
 					consultationDate: currentOutpatientEvolutionSummary.startDate,
 					consultationEvolutionNote: currentOutpatientEvolutionSummary.evolutionNote,
-					consultationProfessionalName: `${currentOutpatientEvolutionSummary.professional.person.firstName} ${currentOutpatientEvolutionSummary.professional.person.lastName}`,
+					professionalFirstName: currentOutpatientEvolutionSummary.professional.person.firstName,
+					professionalLastName: currentOutpatientEvolutionSummary.professional.person.lastName,
+					professionalNameSelfDetermination: currentOutpatientEvolutionSummary.professional.person.nameSelfDetermination,
 					consultationProfessionalId: currentOutpatientEvolutionSummary.professional.id,
 					consultationProfessionalPersonId: currentOutpatientEvolutionSummary.professional.person.id,
 					document: currentOutpatientEvolutionSummary.document,

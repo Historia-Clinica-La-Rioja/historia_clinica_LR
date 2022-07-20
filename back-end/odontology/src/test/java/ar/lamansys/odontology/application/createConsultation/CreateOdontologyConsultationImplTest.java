@@ -1,30 +1,12 @@
 package ar.lamansys.odontology.application.createConsultation;
 
-import ar.lamansys.odontology.application.createConsultation.exceptions.CreateConsultationException;
-import ar.lamansys.odontology.application.odontogram.GetToothService;
-import ar.lamansys.odontology.application.odontogram.GetToothSurfacesService;
-import ar.lamansys.odontology.domain.DiagnosticBo;
-import ar.lamansys.odontology.domain.DiagnosticStorage;
-import ar.lamansys.odontology.domain.ESurfacePositionBo;
-import ar.lamansys.odontology.domain.OdontologyDocumentStorage;
-import ar.lamansys.odontology.domain.ProcedureStorage;
-import ar.lamansys.odontology.domain.Publisher;
-import ar.lamansys.odontology.domain.consultation.ClinicalSpecialtyBo;
-import ar.lamansys.odontology.domain.consultation.ConsultationAllergyBo;
-import ar.lamansys.odontology.domain.consultation.ConsultationDiagnosticBo;
-import ar.lamansys.odontology.domain.consultation.ConsultationMedicationBo;
-import ar.lamansys.odontology.domain.consultation.ConsultationPersonalHistoryBo;
-import ar.lamansys.odontology.domain.consultation.ConsultationProcedureBo;
-import ar.lamansys.odontology.domain.consultation.ConsultationReasonBo;
-import ar.lamansys.odontology.domain.consultation.DoctorInfoBo;
-import ar.lamansys.odontology.domain.consultation.OdontologyDoctorStorage;
-import ar.lamansys.odontology.domain.consultation.OdontologyConsultationStorage;
-import ar.lamansys.odontology.domain.OdontologySnomedBo;
-import ar.lamansys.odontology.domain.ProcedureBo;
-import ar.lamansys.odontology.domain.consultation.ConsultationBo;
-import ar.lamansys.odontology.domain.consultation.ConsultationDentalActionBo;
-import ar.lamansys.odontology.domain.consultation.AppointmentStorage;
-import ar.lamansys.sgx.shared.dates.configuration.DateTimeProvider;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.mockito.Mockito.when;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
+
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -32,12 +14,32 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
-
-import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.mockito.Mockito.when;
+import ar.lamansys.odontology.application.createConsultation.exceptions.CreateConsultationException;
+import ar.lamansys.odontology.application.odontogram.GetToothService;
+import ar.lamansys.odontology.application.odontogram.GetToothSurfacesService;
+import ar.lamansys.odontology.domain.DiagnosticBo;
+import ar.lamansys.odontology.domain.DiagnosticStorage;
+import ar.lamansys.odontology.domain.ESurfacePositionBo;
+import ar.lamansys.odontology.domain.OdontologyDocumentStorage;
+import ar.lamansys.odontology.domain.OdontologySnomedBo;
+import ar.lamansys.odontology.domain.ProcedureBo;
+import ar.lamansys.odontology.domain.ProcedureStorage;
+import ar.lamansys.odontology.domain.Publisher;
+import ar.lamansys.odontology.domain.consultation.ClinicalSpecialtyBo;
+import ar.lamansys.odontology.domain.consultation.ConsultationAllergyBo;
+import ar.lamansys.odontology.domain.consultation.ConsultationBo;
+import ar.lamansys.odontology.domain.consultation.ConsultationDentalActionBo;
+import ar.lamansys.odontology.domain.consultation.ConsultationDiagnosticBo;
+import ar.lamansys.odontology.domain.consultation.ConsultationMedicationBo;
+import ar.lamansys.odontology.domain.consultation.ConsultationPersonalHistoryBo;
+import ar.lamansys.odontology.domain.consultation.ConsultationProcedureBo;
+import ar.lamansys.odontology.domain.consultation.ConsultationReasonBo;
+import ar.lamansys.odontology.domain.consultation.DoctorInfoBo;
+import ar.lamansys.odontology.domain.consultation.OdontologyAppointmentStorage;
+import ar.lamansys.odontology.domain.consultation.OdontologyConsultationStorage;
+import ar.lamansys.odontology.domain.consultation.OdontologyDoctorStorage;
+import ar.lamansys.sgh.shared.infrastructure.input.service.appointment.SharedAppointmentPort;
+import ar.lamansys.sgx.shared.dates.configuration.DateTimeProvider;
 
 @ExtendWith(MockitoExtension.class)
 class CreateOdontologyConsultationImplTest {
@@ -65,6 +67,9 @@ class CreateOdontologyConsultationImplTest {
     @Mock
     private DrawOdontogramService drawOdontogramService;
 
+	@Mock
+	private SharedAppointmentPort sharedAppointmentPort;
+
     @Mock
     private CpoCeoIndicesCalculator cpoCeoIndicesCalculator;
 
@@ -72,7 +77,7 @@ class CreateOdontologyConsultationImplTest {
     private GetToothSurfacesService getToothSurfacesService;
 
     @Mock
-    private AppointmentStorage appointmentStorage;
+    private OdontologyAppointmentStorage odontologyAppointmentStorage;
 
     @Mock
     private GetToothService getToothService;
@@ -89,9 +94,8 @@ class CreateOdontologyConsultationImplTest {
                 odontologyDoctorStorage,
                 odontologyDocumentStorage,
                 drawOdontogramService,
-                cpoCeoIndicesCalculator,
-                getToothSurfacesService,
-                appointmentStorage,
+                sharedAppointmentPort, cpoCeoIndicesCalculator,
+                getToothSurfacesService, odontologyAppointmentStorage,
                 getToothService, publisher);
     }
 

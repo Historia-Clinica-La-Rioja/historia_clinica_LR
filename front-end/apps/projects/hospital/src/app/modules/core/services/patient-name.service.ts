@@ -7,23 +7,15 @@ import {FeatureFlagService} from "@core/services/feature-flag.service";
 })
 export class PatientNameService {
 
-	private nameSelfDeterminationFF;
+	private nameSelfDeterminationFF = false;
 
 	constructor(private readonly featureFlagService: FeatureFlagService) {
-
-	}
-
-	nameSelfDeterminationFFIsEnabled(): boolean {
-		if ((this.nameSelfDeterminationFF === null) || (this.nameSelfDeterminationFF === undefined))
 			this.featureFlagService.isActive(AppFeature.HABILITAR_DATOS_AUTOPERCIBIDOS).subscribe(isOn =>{
-				this.nameSelfDeterminationFF = isOn});
-		return this.nameSelfDeterminationFF;
+			this.nameSelfDeterminationFF = isOn});
 	}
 
 	getPatientName(patientName: string, patientNameSelfDetermination: string): string {
-		const nameSelfDetermination = patientNameSelfDetermination ? patientNameSelfDetermination : null;
-		if (this.nameSelfDeterminationFFIsEnabled() && (patientNameSelfDetermination != undefined && nameSelfDetermination != null))
-			return nameSelfDetermination;
-		return patientName;
+		return this.nameSelfDeterminationFF && patientNameSelfDetermination ? patientNameSelfDetermination : patientName;
 	}
+
 }

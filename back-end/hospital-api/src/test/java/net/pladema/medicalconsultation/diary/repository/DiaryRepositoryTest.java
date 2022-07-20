@@ -38,15 +38,15 @@ class DiaryRepositoryTest extends UnitRepository {
 		DoctorsOffice doctorsOffice = save(DiaryTestMocks.createDoctorsOffice(1, 1, "DOCTORS_OFFICE", openingTime, closingTime));
 
 		save(DiaryTestMocks.createDiary(1, doctorsOffice.getId(), LocalDate.parse(startDate, formatter),
-				LocalDate.parse(endDate, formatter), (short) 1, true, (short) 4, true, true, true));
+				LocalDate.parse(endDate, formatter), (short) 1, true, (short) 4, true, true, true, 1));
 
 
 		save(DiaryTestMocks.createDiary(1, 1, LocalDate.parse(startDate, formatter),
-				LocalDate.parse(endDate, formatter), (short) 1, true, (short) 4, true, true, false));
+				LocalDate.parse(endDate, formatter), (short) 1, true, (short) 4, true, true, false, 1));
 
 
 		save(DiaryTestMocks.createDiary(2, 1, LocalDate.parse(startDate, formatter),
-				LocalDate.parse(endDate, formatter), (short) 1, true, (short) 4, true, true, true));
+				LocalDate.parse(endDate, formatter), (short) 1, true, (short) 4, true, true, true, 1));
 
 		List<DiaryListVo> resultQuery = diaryRepository.getActiveDiariesFromProfessional(1, 1);
 

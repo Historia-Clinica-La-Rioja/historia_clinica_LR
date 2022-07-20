@@ -157,4 +157,11 @@ export class DiagnosisEpicrisisService {
 		return this.verifications.find(clinicalStatus => clinicalStatus.description === 'Confirmado').description;
 	}
 
+	checkDiagnosis(diagnosis: DiagnosisDto[]) {
+		this.table.data.forEach(d => {
+			const existEquals = !!diagnosis.find(diag => diag.snomed.sctid === d.snomed.sctid);
+			if (existEquals)
+				this.table.selection.select(d);
+		})
+	}
 }

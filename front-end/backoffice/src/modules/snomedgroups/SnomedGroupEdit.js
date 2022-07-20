@@ -9,12 +9,14 @@ import {
     BooleanInput,
     ReferenceInput,
     AutocompleteInput,
-    SelectInput,
     usePermissions,
 } from 'react-admin';
 import CustomToolbar from "../components/CustomToolbar";
 import { ADMINISTRADOR } from "../roles";
 import UserReferenceInput from "../users/UserReferenceInput";
+
+
+const searchSnomedGroupToFilter = searchText => ({description: searchText ? searchText : ''});
 
 const InstitutionSelect = ({ formData, ...rest }) => {
     const { permissions } = usePermissions();
@@ -38,10 +40,11 @@ const SnomedGroupSelect = ({ formData, ...rest }) => {
             {...rest}
             reference="snomedgroups"
             sort={{ field: 'description', order: 'ASC' }}
+            filterToQuery={searchSnomedGroupToFilter}
             isRequired={true}
             validate={required()}
         >
-            <SelectInput optionText="description" optionValue="id" disabled={true} />
+            <AutocompleteInput optionText="description" optionValue="id" disabled={true} />
         </ReferenceInput>);
 };
 

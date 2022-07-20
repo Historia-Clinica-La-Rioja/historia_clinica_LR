@@ -54,25 +54,22 @@ public class LoadImmunizations {
     public List<ImmunizationBo> run(PatientInfoBo patientInfo, Long documentId, List<ImmunizationBo> immunizations) {
         LOG.debug("Input parameters -> patientInfo {}, documentId {}, immunizations {}", patientInfo, documentId, immunizations);
         immunizations.forEach(i -> {
-            Integer snomedId = snomedService.getSnomedId(i.getSnomed())
-                    .orElseGet(() -> snomedService.createSnomedTerm(i.getSnomed()));
-            String cie10Codes = calculateCie10Facade.execute(i.getSnomed().getSctid(),
-                    new Cie10FacadeRuleFeature(patientInfo.getGenderId(), patientInfo.getAge()));
+			if(i.getId()==null) {
+				Integer snomedId = snomedService.getSnomedId(i.getSnomed()).orElseGet(() -> snomedService.createSnomedTerm(i.getSnomed()));
+				String cie10Codes = calculateCie10Facade.execute(i.getSnomed().getSctid(), new Cie10FacadeRuleFeature(patientInfo.getGenderId(), patientInfo.getAge()));
 
-            AtomicReference<Long> noteId = new AtomicReference<>(null);
-            Optional.ofNullable(i.getNote()).ifPresent(n ->
-                noteId.set(loadNote(n))
-            );
+				AtomicReference<Long> noteId = new AtomicReference<>(null);
+				Optional.ofNullable(i.getNote()).ifPresent(n -> noteId.set(loadNote(n)));
 
-            Inmunization immunization = saveImmunization(patientInfo.getId(), i, snomedId, cie10Codes, noteId.get());
+				Inmunization immunization = saveImmunization(patientInfo.getId(), i, snomedId, cie10Codes, noteId.get());
 
-            i.setId(immunization.getId());
-            i.setStatusId(immunization.getStatusId());
-            i.setStatus(getStatus(i.getStatusId()));
-            i.setAdministrationDate(immunization.getAdministrationDate());
+				i.setId(immunization.getId());
+				i.setStatusId(immunization.getStatusId());
+				i.setStatus(getStatus(i.getStatusId()));
+				i.setAdministrationDate(immunization.getAdministrationDate());
+			}
 
-
-            documentService.createImmunization(documentId, immunization.getId());
+            documentService.createImmunization(documentId, i.getId());
         });
         List<ImmunizationBo> result = immunizations;
         LOG.debug(OUTPUT, result);

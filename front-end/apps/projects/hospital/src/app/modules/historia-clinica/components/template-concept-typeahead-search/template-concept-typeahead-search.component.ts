@@ -3,7 +3,7 @@ import { SnomedECL } from "@api-rest/api-model";
 import { FormControl } from "@angular/forms";
 import { Observable, of } from "rxjs";
 import { SnowstormService } from "@api-rest/services/snowstorm.service";
-import { debounceTime, distinctUntilChanged, map, startWith, switchMap } from "rxjs/operators";
+import { debounceTime, distinctUntilChanged, map, mergeMap, startWith } from "rxjs/operators";
 import { ContextService } from "@core/services/context.service";
 
 @Component({
@@ -19,8 +19,8 @@ export class TemplateConceptTypeaheadSearchComponent implements OnInit {
 	@Output() optionSelected = new EventEmitter<TemplateOrConceptOption>();
 
 	myControl = new FormControl();
-	conceptOptions$: Observable<any[]>;
-	templateOptions$: Observable<any[]>;
+	conceptOptions: TemplateOrConceptOption[];
+	templateOptions: TemplateOrConceptOption[];
 	opts = [];
 
 	initialTemplateOptions: TemplateOrConceptOption[] = [];
@@ -32,22 +32,26 @@ export class TemplateConceptTypeaheadSearchComponent implements OnInit {
 		private readonly snowstormService: SnowstormService,
 		private readonly constextService: ContextService,
 	) {
-		this.conceptOptions$ = this.myControl.valueChanges.pipe(
+		this.myControl.valueChanges.pipe(
 			startWith(''),
 			debounceTime(this.debounceTime),
 			distinctUntilChanged(),
-			switchMap(searchValue => {
+			mergeMap(searchValue => {
 				return this.searchConcepts(searchValue || '')
 			})
-		);
-		this.templateOptions$ = this.myControl.valueChanges.pipe(
+		).subscribe(data => {
+			this.conceptOptions = data;
+		});
+		this.myControl.valueChanges.pipe(
 			startWith(''),
 			debounceTime(this.debounceTime),
 			distinctUntilChanged(),
-			switchMap(searchValue => {
+			mergeMap(searchValue => {
 				return this.searchTemplates(searchValue || '')
 			})
-		);
+		).subscribe(data => {
+			this.templateOptions = data;
+		});
 	}
 
 	ngOnInit(): void {
@@ -56,6 +60,7 @@ export class TemplateConceptTypeaheadSearchComponent implements OnInit {
 				return {type: TemplateOrConceptType.TEMPLATE, data: template}
 			});
 			this.initialOptionsLoaded = true;
+			this.myControl.reset();
 		});
 	}
 

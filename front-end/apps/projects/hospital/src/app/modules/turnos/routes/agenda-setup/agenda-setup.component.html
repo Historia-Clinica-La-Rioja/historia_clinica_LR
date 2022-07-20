@@ -12,9 +12,27 @@
 					<mat-form-field appearance="outline">
 						<mat-select id="healthcareProfessionalId" name="healthcareProfessionalId"
 									formControlName="healthcareProfessionalId"
-									placeholder="{{'pacientes.form.SELECT' | translate}}">
+									placeholder="{{'pacientes.form.SELECT' | translate}}"
+									(selectionChange)="getProfessionalSpecialties()">
 							<mat-option *ngFor="let professional of professionals" [value]="professional.id">
 								<span class="mat-body">{{getFullNameLicence(professional)}}</span>
+							</mat-option>
+						</mat-select>
+						<mat-error [translate]="'forms.REQUIRED'"></mat-error>
+					</mat-form-field>
+				</div>
+
+				<div fxLayout="row">
+					<span [translate]="'turnos.home.SPECIALTY_SEARCH'"></span>
+				</div>
+				<div fxLayout="row">
+					<mat-form-field appearance="outline">
+						<mat-select id="healthcareProfessionalSpecialtyId" name="healthcareProfessionalSpecialtyId"
+									formControlName="healthcareProfessionalSpecialtyId"
+									placeholder="{{'pacientes.form.SELECT' | translate}}"
+									[disabled]="!form.value.healthcareProfessionalId">
+							<mat-option *ngFor="let specialty of professionalSpecialties" [value]="specialty.id">
+								<span class="mat-body">{{ specialty.name }}</span>
 							</mat-option>
 						</mat-select>
 						<mat-error [translate]="'forms.REQUIRED'"></mat-error>

@@ -1,5 +1,22 @@
 import spanishMessages from '@blackbox-vision/ra-language-spanish';
 
+const sectorMessages = {
+    name: 'Sector |||| Sectores',
+    fields: {
+        institutionId: 'Institución',
+        description: 'Nombre',
+        clinicalspecialtysectors: 'Especialidad | Sector',
+        childSectors: 'Sectores Hijos',
+        ageGroupId: 'Grupo de edad',
+        sectorTypeId: 'Tipo de sector',
+        sectorOrganizationId: 'Organización',
+        careTypeId: 'Tipo de cuidado',
+        hospitalizationTypeId: 'Permanencia',
+        sectorId: 'Sector padre'
+    },
+    createRelated: 'Crear Sector'
+}
+
 const messages = {
     ...spanishMessages,
     app: {
@@ -8,6 +25,7 @@ const messages = {
             facilities: 'Instalaciones',
             debug: 'Inspeccionar',
             masterData: 'Datos maestros',
+            booking: 'Reservas online',
             more: 'Mas',
 
         },
@@ -43,7 +61,7 @@ const messages = {
         },
         "doctorsoffices": {
             "closingBeforeOpening": "La hora de apertura no puede ser posterior a la hora de cierre",
-            "matchingIds": "Esa Especialidad | Sector no pertenece a esa institución"
+            "matchingIds": "Ese Sector no pertenece a esa institución"
         },
         "healthcareprofessional": {
             "exists": "Esta persona ya está registrada como profesional en el sistema",
@@ -135,7 +153,7 @@ const messages = {
                 description: 'Nombre',
                 openingTime: 'Horario de apertura',
                 closingTime: 'Horario de cierre',
-                clinicalSpecialtySectorId: 'Especialidad | Sector',
+                sectorId: 'Sector',
                 institutionId: 'Institución',
                 topic: 'Tópico'
             },
@@ -170,6 +188,12 @@ const messages = {
                 provinceCode: 'Código de provincia'
             },
         },
+        "booking-institution": {
+            name: 'Instituciones turnos online |||| Instituciones turnos online',
+            fields: {
+                id: 'Nombre',
+            },
+        },
         snvs: {
             name: 'SNVS |||| SNVS',
             fields: {
@@ -187,21 +211,8 @@ const messages = {
                 lastUpdate: 'Última actualización'
             },
         },
-        sectors: {
-            name: 'Sector |||| Sectores',
-            fields: {
-                institutionId: 'Institución',
-                description: 'Nombre',
-                clinicalspecialtysectors: 'Especialidad | Sector',
-                ageGroupId: 'Grupo de edad',
-                sectorTypeId: 'Tipo de sector',
-                sectorOrganizationId: 'Organización',
-                careTypeId: 'Tipo de cuidado',
-                hospitalizationTypeId: 'Permanencia',
-                sectorId: 'Sector padre'
-            },
-            createRelated: 'Crear Sector'
-        },
+        sectors: sectorMessages,
+        rootsectors: sectorMessages,
 
         clinicalspecialties: {
             name: 'Especialidad |||| Especialidades',
@@ -210,6 +221,14 @@ const messages = {
                 description: 'Descripción',
                 sctidCode: 'Código SNOMED',
             },
+        },
+        clinicalservices: {
+            name: 'Servicio |||| Servicios',
+            fields: {
+                name: 'Nombre',
+                description: 'Descripción',
+                sctidCode: 'Código SNOMED'
+            }
         },
         clinicalspecialtysectors: {
             name: 'Especialidad | Sector',
@@ -222,6 +241,25 @@ const messages = {
             },
             createRelated: 'Crear Especialidad | Sector',
         },
+        clinicalservicesectors: {
+            name: 'Servicio | Sector',
+            fields: {
+                description: 'Descripción',
+                sectorId: 'Sector',
+                clinicalSpecialtyId: 'Servicio',
+                rooms: 'Habitaciones',
+                doctorsoffices: 'Consultorios',
+            },
+            createRelated: 'Crear Servicio | Sector',
+        },
+        clinicalspecialtymandatorymedicalpractices: {
+            name: 'Especialidad | PMO',
+            fields: {
+                practiceRecommendations: 'Recomendaciones',
+                clinicalSpecialtyId: 'Especialidad',
+                mandatoryMedicalPracticeId: 'PMO',
+            }
+        },
         professionalspecialties: {
             name: 'Profesión |||| Profesiones',
             fields: {
@@ -233,6 +271,7 @@ const messages = {
         },
         healthcareprofessionals: {
             name: 'Profesional |||| Profesionales',
+            license: 'Nro. de licencia del profesional',
             fields: {
                 personId: 'Persona',
                 licenseNumber: 'Nro. Licencia',
@@ -253,6 +292,14 @@ const messages = {
                 description: 'Descripción',
             },
             createRelated: 'Crear Profesión | Especialidad',
+        },
+        mandatorymedicalpractices: {
+            name: 'PMO',
+            fields: {
+                description: 'Nombre',
+                mmpCode: 'Código PMO',
+                snomedId: 'Id Snomed'
+            }
         },
         users: {
             name: 'Usuario |||| Usuarios',
@@ -451,7 +498,46 @@ const messages = {
                 description: 'Descripción',
             }
         },
-    },
+        "healthinsurances": {
+            name: 'Obras sociales |||| Obras sociales',
+            fields: {
+                name: 'Nombre',
+                acronym: 'Acrónimo',
+                id: 'Obra social',
+                healthinsurances: 'Obra social',
+            }
+        },
+        "healthcareprofessionalhealthinsurances": {
+            name: 'Profesional | Cobertura médica |||| Profesional | Cobertura médica',
+            fields: {
+                acronym: 'Acrónimo',
+                medicalCoverageId: 'Cobertura médica',
+                healthcareProfessionalId: 'Profesional',
+                licenseNumber: 'Nro. Licencia de profesional',
+                person: 'Profesional',
+                personId: 'Profesional',
+                medicalcoverages: 'Cobertura médica',
+            }
+        },
+        "healthinsurancepractices": {
+            name: 'Obra social | PMO |||| Obra social | PMO',
+            fields: {
+                healthInsuranceId: 'Obra social',
+                clinicalSpecialtyId: 'Especialidad',
+                mandatoryMedicalPracticeId: 'PMO',
+                coverageInformation: 'Información de cobertura'
+            }
+        },
+        "mandatoryprofessionalpracticefreedays": {
+            name: 'Días de atención',
+            fields: {
+                clinicalSpecialtyId: 'Especialidad',
+                days: 'Días',
+                healthcareProfessionalId: 'Profesional',
+                mandatoryMedicalPracticeId: 'PMO',
+            }
+        },
+    }
 };
 
 export default messages;

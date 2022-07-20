@@ -18,14 +18,17 @@
 					[value]="patientMedicalCoverage.id">
 					{{getFullMedicalCoverageText(patientMedicalCoverage)}}
 				</mat-option>
+				<mat-divider></mat-divider>
+				<mat-option (click)="openMedicalCoverageDialog()">
+					<span class="color-primary"
+						translate="guardia.administrative_admision.UPDATE_MEDICAL_COVERAGE"></span>
+				</mat-option>
 			</mat-select>
 			<button id="clear_medical_coverage" type="button" mat-button *ngIf="form.value.patientMedicalCoverageId" matSuffix
 				color="warn" mat-icon-button (click)="clear(form.controls.patientMedicalCoverageId); $event.stopPropagation()">
 				<mat-icon>close</mat-icon>
 			</button>
 		</mat-form-field>
-		<button mat-stroked-button type="button" color="primary" (click)="openMedicalCoverageDialog()" class="uppercase"
-			translate="guardia.administrative_admision.UPDATE_MEDICAL_COVERAGE"></button>
 	</ng-container>
 
 	<div id="motivos">

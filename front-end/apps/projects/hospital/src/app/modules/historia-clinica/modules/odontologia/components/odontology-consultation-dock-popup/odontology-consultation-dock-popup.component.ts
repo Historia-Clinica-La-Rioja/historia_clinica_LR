@@ -197,7 +197,7 @@ export class OdontologyConsultationDockPopupComponent implements OnInit {
 			_ => {
 				this.snackBarService.showError('Error al guardar documento de nueva consulta odontológica');
 				const filesToDelete = odontologyDto.references.filter(reference => reference.fileIds.length > 0);
-				if (filesToDelete.length){
+				if (filesToDelete.length) {
 					this.errorToUploadReferenceFiles();
 				}
 			}
@@ -275,7 +275,7 @@ export class OdontologyConsultationDockPopupComponent implements OnInit {
 			}, _ => {
 				this.snackBarService.showError('Error al guardar la solicitud de referencia');
 				this.errorToUploadReferenceFiles();
-				}
+			}
 			);
 		}
 		else {
@@ -293,7 +293,7 @@ export class OdontologyConsultationDockPopupComponent implements OnInit {
 	private problemsToUpdate(odontologyDto: OdontologyConsultationDto): OdontologyDiagnosticDto[] {
 		const odontologyDiagnosticDto = [];
 
-		odontologyDto.diagnostics?.forEach( diagnostic => odontologyDiagnosticDto.push(diagnostic));
+		odontologyDto.diagnostics?.forEach(diagnostic => odontologyDiagnosticDto.push(diagnostic));
 
 		const references: Reference[] = this.odontologyReferenceService.getReferences();
 

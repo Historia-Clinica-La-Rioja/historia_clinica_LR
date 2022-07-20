@@ -1,15 +1,32 @@
 package net.pladema.clinichistory.hospitalization.controller;
 
+import java.time.LocalDateTime;
+
+import javax.transaction.Transactional;
+import javax.validation.Valid;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
 import ar.lamansys.sgx.shared.dates.configuration.LocalDateMapper;
 import ar.lamansys.sgx.shared.dates.controller.dto.DateTimeDto;
 import ar.lamansys.sgx.shared.exceptions.NotFoundException;
 import ar.lamansys.sgx.shared.featureflags.AppFeature;
 import ar.lamansys.sgx.shared.featureflags.application.FeatureFlagsService;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import net.pladema.clinichistory.hospitalization.controller.constraints.InternmentPhysicalDischargeValid;
-import net.pladema.events.EHospitalApiTopicDto;
-import net.pladema.events.HospitalApiPublisher;
 import net.pladema.clinichistory.hospitalization.controller.constraints.InternmentDischargeValid;
+import net.pladema.clinichistory.hospitalization.controller.constraints.InternmentPhysicalDischargeValid;
 import net.pladema.clinichistory.hospitalization.controller.constraints.InternmentValid;
 import net.pladema.clinichistory.hospitalization.controller.constraints.ProbableDischargeDateValid;
 import net.pladema.clinichistory.hospitalization.controller.dto.InternmentEpisodeADto;
@@ -29,24 +46,9 @@ import net.pladema.clinichistory.hospitalization.service.domain.InternmentSummar
 import net.pladema.clinichistory.hospitalization.service.domain.PatientDischargeBo;
 import net.pladema.clinichistory.hospitalization.service.patientdischarge.PatientDischargeService;
 import net.pladema.establishment.controller.service.BedExternalService;
+import net.pladema.events.EHospitalApiTopicDto;
+import net.pladema.events.HospitalApiPublisher;
 import net.pladema.staff.controller.service.HealthcareProfessionalExternalService;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
-
-import javax.transaction.Transactional;
-import javax.validation.Valid;
-import java.time.LocalDateTime;
 
 @RestController
 @RequestMapping("/institutions/{institutionId}/internments")
@@ -157,11 +159,12 @@ public class InternmentEpisodeController {
 		PatientDischargeBo patientDischarge = patientDischargeMapper.toPatientDischargeBo(patientDischargeDto);
 		InternmentSummaryBo internmentEpisodeSummary = internmentEpisodeService.getIntermentSummary(internmentEpisodeId)
 				.orElseThrow(() -> new NotFoundException("bad-episode-id", INTERNMENT_NOT_FOUND));
-		if (patientDischarge.getPhysicalDischargeDate()==null)
-			patientDischarge.setPhysicalDischargeDate(patientDischarge.getAdministrativeDischargeDate());
 		patientDischarge.setInternmentEpisodeId(internmentEpisodeId);
+		if (!internmentEpisodeSummary.freeBed())
+			patientDischarge.setPhysicalDischargeDate(patientDischarge.getAdministrativeDischargeDate());
 		PatientDischargeBo patientDischargeSaved = internmentEpisodeService.saveAdministrativeDischarge(patientDischarge);
-		bedExternalService.freeBed(internmentEpisodeSummary.getBedId());
+		if (!internmentEpisodeSummary.freeBed())
+			bedExternalService.freeBed(internmentEpisodeSummary.getBedId());
 		internmentEpisodeService.updateInternmentEpisodeStatus(internmentEpisodeId,
 				Short.valueOf(InternmentEpisodeStatus.INACTIVE));
 		PatientDischargeDto result = patientDischargeMapper.toPatientDischargeDto(patientDischargeSaved);

@@ -1,22 +1,23 @@
 package net.pladema.booking.controller;
 
-import net.pladema.booking.controller.dto.BackofficeMandatoryProfessionalPracticeFreeDaysDto;
-import net.pladema.booking.repository.BackofficeClinicalSpecialtyMandatoryMedicalPracticeRepository;
-import net.pladema.booking.repository.BackofficeMandatoryProfessionalPracticeFreeDaysRepository;
-import net.pladema.booking.repository.entity.BackofficeClinicalSpecialtyMandatoryMedicalPractice;
-import net.pladema.booking.repository.entity.BackofficeMandatoryProfessionalPracticeFreeDays;
-import net.pladema.sgx.backoffice.repository.BackofficeStore;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+import java.util.stream.Collectors;
+
 import org.springframework.data.domain.Example;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-import java.util.stream.Collectors;
+import net.pladema.booking.controller.dto.BackofficeMandatoryProfessionalPracticeFreeDaysDto;
+import net.pladema.booking.repository.BackofficeClinicalSpecialtyMandatoryMedicalPracticeRepository;
+import net.pladema.booking.repository.BackofficeMandatoryProfessionalPracticeFreeDaysRepository;
+import net.pladema.booking.repository.entity.BackofficeClinicalSpecialtyMandatoryMedicalPractice;
+import net.pladema.booking.repository.entity.BackofficeMandatoryProfessionalPracticeFreeDays;
+import net.pladema.sgx.backoffice.repository.BackofficeStore;
 
 @Service
 public class BackofficeMandatoryProfessionalPracticeFreeDaysStore
@@ -89,7 +90,7 @@ public class BackofficeMandatoryProfessionalPracticeFreeDaysStore
 
     @Override
     public Optional<BackofficeMandatoryProfessionalPracticeFreeDaysDto> findById(Integer id) {
-        return this.findAll().stream().filter(el -> el.getId().equals(id)).findFirst();
+        return this.findAll().stream().filter(el -> id.equals(el.getId())).findFirst();
     }
 
     @Override

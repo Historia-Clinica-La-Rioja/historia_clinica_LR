@@ -1,0 +1,13 @@
+@import "projects/hospital/src/assets/styles/mixins";
+
+.title {
+	@include general-font;
+	font-weight: 500;
+	font-size: 16px;
+	line-height: 18.75px;
+	white-space: nowrap;
+}
+
+.svg-icon {
+	transform: scale(1.5);
+}

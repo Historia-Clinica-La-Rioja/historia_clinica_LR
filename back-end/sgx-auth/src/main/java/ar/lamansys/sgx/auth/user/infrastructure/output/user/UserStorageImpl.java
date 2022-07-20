@@ -70,6 +70,7 @@ public class UserStorageImpl implements UserStorage {
         user.setUsername(userBo.getUsername());
         user.setEnable(userBo.isEnable());
         user.setLastLogin(userBo.getLastLogin());
+		user.setPreviousLogin(userBo.getPreviousLogin());
         return user;
     }
 
@@ -103,7 +104,8 @@ public class UserStorageImpl implements UserStorage {
                 userPassword.getPassword(),
                 userPassword.getSalt(),
                 userPassword.getHashAlgorithm(),
-                user.getLastLogin()):
+                user.getLastLogin(),
+				user.getPreviousLogin()):
                 new UserBo(user.getId(),
                         user.getUsername(),
                         user.getEnable());

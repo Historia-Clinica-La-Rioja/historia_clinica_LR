@@ -130,7 +130,7 @@ export class NewAppointmentComponent implements OnInit {
 
 			const searchRequest = {
 				identificationTypeId: formSearchValue.identifType,
-				identificationNumber: formSearchValue.identifNumber,
+				identificationNumber: +formSearchValue.identifNumber,
 				genderId: formSearchValue.gender,
 			};
 

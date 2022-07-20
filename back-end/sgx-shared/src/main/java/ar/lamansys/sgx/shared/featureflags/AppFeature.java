@@ -92,6 +92,15 @@ public enum AppFeature implements Feature {
 
 	@Label("Indica si esta habilitada la búsqueda de conceptos en la base de datos local")
 	HABILITAR_BUSQUEDA_LOCAL_CONCEPTOS,
+
+	@Label("Indica si se debe avisar al paciente por mail al reservar un turno")
+	HABILITAR_MAIL_RESERVA_TURNO,
+
+	@Label("Indica si la api publica de reserva de turnos es abierta sin la necesidad de usar api-key")
+	LIBERAR_API_RESERVA_TURNOS,
+
+	@Label("Muestra los menus en backoffice para la administración de turnos online de la institución (Solo para administradores institucionales)")
+	BACKOFFICE_MOSTRAR_ABM_RESERVA_TURNOS,
     ;
 
     public boolean isActive() {

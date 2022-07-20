@@ -325,7 +325,7 @@
 															<h3 class="mat-h2 primary"
 																[translate]="'ambulatoria.paciente.problemas.historical-problems.PROFESSIONAL'">
 															</h3>
-															{{historicalProblem.consultationProfessionalName}}
+															{{getFullName(historicalProblem.professionalFirstName, historicalProblem.professionalNameSelfDetermination)}} {{historicalProblem.professionalLastName}}
 														</div>
 													</div>
 													<div fxLayout="column" fxLayoutGap="10px" fxFlex="calc(10% - 10px)"

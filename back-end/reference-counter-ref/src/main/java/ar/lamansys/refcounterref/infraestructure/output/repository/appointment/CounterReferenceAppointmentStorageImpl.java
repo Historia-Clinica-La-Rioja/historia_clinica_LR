@@ -1,7 +1,7 @@
 package ar.lamansys.refcounterref.infraestructure.output.repository.appointment;
 
 import ar.lamansys.refcounterref.application.port.CounterReferenceAppointmentStorage;
-import ar.lamansys.sgh.shared.infrastructure.input.service.SharedAppointmentPort;
+import ar.lamansys.sgh.shared.infrastructure.input.service.appointment.SharedAppointmentPort;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 

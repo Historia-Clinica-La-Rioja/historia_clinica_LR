@@ -13,7 +13,7 @@ import { hasError } from '@core/utils/form.utils';
 import { pairwise, startWith } from 'rxjs/operators';
 import { InternmentSummaryFacadeService } from "@historia-clinica/modules/ambulatoria/modules/internacion/services/internment-summary-facade.service";
 import { DocumentActionsService, DocumentSearch } from "@historia-clinica/modules/ambulatoria/modules/internacion/services/document-actions.service";
-import {PatientNameService} from "@core/services/patient-name.service";
+import { PatientNameService } from "@core/services/patient-name.service";
 
 @Component({
 	selector: 'app-documents-summary',
@@ -24,6 +24,7 @@ export class DocumentsSummaryComponent implements OnInit, OnChanges {
 
 	@Input() internmentEpisodeId: number;
 	@Input() clinicalEvaluation: DocumentHistoricDto;
+	@Input() patientId: number;
 
 	public searchFields: SearchField[] = DOCUMENTS_SEARCH_FIELDS;
 	public documentsToShow: DocumentSearch[] = [];
@@ -55,7 +56,7 @@ export class DocumentsSummaryComponent implements OnInit, OnChanges {
 
 	ngOnChanges() {
 		this.documentHistoric = this.clinicalEvaluation;
-		if (this.documentHistoric?.documents.length) {
+		if (this.documentHistoric) {
 			this.updateDocuments();
 		}
 		this.activeDocument = undefined;
@@ -64,7 +65,7 @@ export class DocumentsSummaryComponent implements OnInit, OnChanges {
 	ngOnInit(): void {
 		this.internmentSummaryFacadeService.initializeEvolutionNoteFilterResult(this.internmentEpisodeId);
 		this.setInputResetBehaviour();
-		this.documentActions.setInformation();
+		this.documentActions.setInformation(this.patientId, this.internmentEpisodeId);
 	}
 
 	search(): void {
@@ -96,8 +97,12 @@ export class DocumentsSummaryComponent implements OnInit, OnChanges {
 	setActive(d: DocumentSearch) {
 		this.activeDocument = {
 			document: d.document,
-			canDoAction: this.documentActions.canDoActionInTheDocument(d.document),
-			createdOn: d.createdOn
+			canDoAction: {
+				delete: this.documentActions.canDeleteDocument(d.document),
+				edit: this.documentActions.canEditDocument(d.document)
+			},
+			createdOn: d.createdOn,
+			editedOn: d.document.editedOn ? this.documentActions.loadTime(d.document.editedOn) : null
 		};
 	}
 
@@ -109,7 +114,7 @@ export class DocumentsSummaryComponent implements OnInit, OnChanges {
 		});
 		this.documentActions.setPatientDocuments(documents);
 		this.documentsToShow = documents.map(document => {
-			return { document, createdOn: this.documentActions.loadTime(document.createdOn)	}
+			return { document, createdOn: this.documentActions.loadTime(document.createdOn) }
 		})
 		this.changeDetectorRef.detectChanges();
 	}
@@ -122,7 +127,7 @@ export class DocumentsSummaryComponent implements OnInit, OnChanges {
 		});
 		this.documentActions.setPatientDocuments(documents);
 		this.documentsToShow = documents.map(document => {
-			return { document, createdOn: this.documentActions.loadTime(document.createdOn)	}
+			return { document, createdOn: this.documentActions.loadTime(document.createdOn) }
 		});
 		this.changeDetectorRef.detectChanges();
 	}
@@ -150,6 +155,17 @@ export class DocumentsSummaryComponent implements OnInit, OnChanges {
 
 	delete(document: DocumentSearchDto) {
 		this.documentActions.deleteDocument(document, this.internmentEpisodeId);
+		this.activeDocument = undefined;
+	}
+
+	edit(document: DocumentSearchDto) {
+		this.documentActions.editDocument(document);
+		this.activeDocument = undefined;
+	}
+
+	editDraftEpicrisis(document: DocumentSearchDto) {
+
+		this.documentActions.editEpicrisisDraft(document);
 		this.activeDocument = undefined;
 	}
 

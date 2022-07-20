@@ -115,11 +115,14 @@ public class BackofficeHealthcareProfessionalStore implements BackofficeStore<Ba
     }
 
     private BackofficeHealthcareProfessionalCompleteDto buildHealthcareProfessionalDto(HealthcareProfessional byId) {
-            BackofficeHealthcareProfessionalCompleteDto dto = new BackofficeHealthcareProfessionalCompleteDto();
-            dto.setPersonId(byId.getPersonId());
-            dto.setLicenseNumber(byId.getLicenseNumber());
-            dto.setId(byId.getId());
-            return dto;
+		BackofficeHealthcareProfessionalCompleteDto dto = new BackofficeHealthcareProfessionalCompleteDto();
+		dto.setPersonId(byId.getPersonId());
+		dto.setId(byId.getId());
+		if(byId.getLicenseNumber().isBlank())
+			dto.setLicenseNumber("Número de matrícula no definido");
+		else
+			dto.setLicenseNumber(byId.getLicenseNumber());
+		return dto;
     }
 
 }

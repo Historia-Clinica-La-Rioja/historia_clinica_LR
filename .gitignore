@@ -67,3 +67,4 @@ sonarlint.json
 # Docker build
 front-end/.docker/
 back-end/.docker/
+.docker-data/

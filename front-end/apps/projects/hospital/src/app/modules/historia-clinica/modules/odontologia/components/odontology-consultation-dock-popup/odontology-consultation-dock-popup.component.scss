@@ -1,3 +1,5 @@
+@import '../../../../../../../assets/styles/mat-mixins.scss';
+
 ::ng-deep .cdk-overlay-pane {
 	app-odontology-consultation-dock-popup {
 		width: 100%;
@@ -32,32 +34,22 @@ span {
 }
 
 .form_dental_pieces {
+	@include mat-form-field-background-white;
+
 	.mat-form-field {
 		width: 80%;
-		margin-top: 10px;
-		::ng-deep .mat-form-field-wrapper{
-			background-color: white;
-			height: 38px;
+
+		::ng-deep .mat-form-field-wrapper {
+			padding-bottom: 0;
 		}
 	}
 }
 
-.mat-error{
+.mat-error {
 	font-family: Roboto, "Helvetica Neue", sans-serif;
 	font-size: 14px;
 }
 
-.reference {
-
-	font-family: Roboto, "Helvetica Neue", sans-serif;
-			
-	span {
-		font-size: 16px;
-		font-weight: 500;
-		cursor: pointer;
-	}
-
-	span:hover {
-		text-decoration: underline;
-	}
+.add-button {
+	font-size: 16px;
 }

@@ -40,7 +40,7 @@ public class HCHMedicationStatementRepositoryImpl implements HCHMedicationStatem
                 "join {h-schema}medication_statement ms on dms.medication_statement_id = ms.id " +
                 "where d.source_id = :internmentEpisodeId " +
                 "and d.source_type_id = " + SourceType.HOSPITALIZATION +" "+
-                "and d.status_id = :documentStatusId " +
+                "and d.status_id IN (:documentStatusId) " +
                 ") " +
                 "select t.id as id, s.sctid as sctid, s.pt, status_id, n.id as note_id, n.description as note " +
                 "from temporal t " +
@@ -51,7 +51,7 @@ public class HCHMedicationStatementRepositoryImpl implements HCHMedicationStatem
 
         List<Object[]> queryResult = entityManager.createNativeQuery(sqlString)
                 .setParameter("internmentEpisodeId", internmentEpisodeId)
-                .setParameter("documentStatusId", DocumentStatus.FINAL)
+                .setParameter("documentStatusId", List.of(DocumentStatus.FINAL, DocumentStatus.DRAFT))
                 .setParameter("medicationStatusId", MedicationStatementStatus.ERROR)
                 .getResultList();
         List<MedicationVo> result = new ArrayList<>();

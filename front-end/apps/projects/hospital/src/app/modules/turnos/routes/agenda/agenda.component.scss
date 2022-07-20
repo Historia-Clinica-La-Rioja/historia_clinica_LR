@@ -129,3 +129,8 @@ div.spinner {
 .fixed-header {
     @include fixed-header;
 }
+
+.mat-dialog-container {
+    padding-top: 10px !important;
+    padding-right: 10px !important;
+}

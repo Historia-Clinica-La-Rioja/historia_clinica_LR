@@ -1,5 +1,5 @@
 import { Component, Inject, OnInit } from '@angular/core';
-import { MAT_DIALOG_DATA, MatDialogRef } from "@angular/material/dialog";
+import { MAT_DIALOG_DATA, MatDialog, MatDialogRef } from "@angular/material/dialog";
 import { RequestMasterDataService } from "@api-rest/services/request-masterdata.service";
 import { ApiErrorDto, PrescriptionDto } from "@api-rest/api-model";
 import { SnomedECL } from "@api-rest/api-model";
@@ -11,6 +11,7 @@ import { hasError } from '@core/utils/form.utils';
 import { OrderStudiesService, Study } from "@historia-clinica/services/order-studies.service";
 import { InternmentOrderService } from "@api-rest/services/internment-order.service";
 import { SnackBarService } from "@presentation/services/snack-bar.service";
+import { ConceptsTypeaheadSearchDialogComponent } from "@historia-clinica/dialogs/concepts-typeahead-search-dialog/concepts-typeahead-search-dialog.component";
 
 @Component({
   selector: 'app-create-order',
@@ -40,6 +41,7 @@ export class CreateInternmentOrderComponent implements OnInit {
 		private readonly internmentStateService: InternmentStateService,
 		private readonly internmentOrderService: InternmentOrderService,
 		private readonly snackBarService: SnackBarService,
+		private readonly dialog: MatDialog,
 	) {
   		this.orderStudiesService = new OrderStudiesService();
 	}
@@ -122,6 +124,10 @@ export class CreateInternmentOrderComponent implements OnInit {
 		this.orderStudiesService.addAll(conceptsToLoad);
 	}
 
+	removeStudy(i) {
+		this.orderStudiesService.remove(i);
+	}
+
 	getSelectedCategoryDisplayName() {
 		return this.studyCategoryOptions.filter((c) => c.id === this.form.controls.studyCategory.value).pop()?.description;
 	}
@@ -161,6 +167,25 @@ export class CreateInternmentOrderComponent implements OnInit {
 
 	private closeModal(newInternmentOrder: NewInternmentOrder): void {
 		this.dialogRef.close(newInternmentOrder);
+	}
+
+	openAddAnotherStudyDialog() {
+		const addStudy = this.dialog.open(ConceptsTypeaheadSearchDialogComponent, {
+			width: '25%',
+			data: {
+				ecl: this.ecl,
+				placeholder: 'ambulatoria.paciente.internment-order.create-order-dialog.STUDY',
+				title: 'ambulatoria.paciente.internment-order.create-order-dialog.ADD_STUDY_DIALOG_TITLE'
+			},
+		});
+
+		addStudy.afterClosed().subscribe((addStudyDialogData) => {
+			if (addStudyDialogData?.selectedConcept) {
+				let added = this.orderStudiesService.add({snomed: addStudyDialogData.selectedConcept});
+				if (!added)
+					this.snackBarService.showError('ambulatoria.paciente.internment-order.create-order-dialog.STUDY_REPEATED')
+			}
+		})
 	}
 
 }

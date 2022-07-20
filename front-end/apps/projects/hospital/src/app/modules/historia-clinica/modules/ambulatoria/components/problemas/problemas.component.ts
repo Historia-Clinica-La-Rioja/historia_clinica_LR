@@ -36,6 +36,7 @@ import { dateDtoToDate } from '@api-rest/mapper/date-dto.mapper';
 import { ReferenceFileService } from '@api-rest/services/reference-file.service';
 import { CounterreferenceFileService } from '@api-rest/services/counterreference-file.service';
 import { DocumentService } from "@api-rest/services/document.service";
+import {PatientNameService} from "@core/services/patient-name.service";
 
 const ROUTE_INTERNMENT_EPISODE_PREFIX = 'internaciones/internacion/';
 const ROUTE_INTERNMENT_EPISODE_SUFIX = '/paciente/';
@@ -104,6 +105,7 @@ export class ProblemasComponent implements OnInit, OnDestroy {
 		private readonly referenceFileService: ReferenceFileService,
 		private readonly counterreferenceFileService: CounterreferenceFileService,
 		private readonly documentService: DocumentService,
+		private readonly patientNameService: PatientNameService,
 	) {
 		this.contextService = this.injector.get<ContextService>(ContextService);
 		this.dockPopupService = this.injector.get<DockPopupService>(DockPopupService);
@@ -305,5 +307,9 @@ export class ProblemasComponent implements OnInit, OnDestroy {
 
 	downloadDocument(document: HCEDocumentDataDto) {
 		this.documentService.downloadFile(document);
+	}
+
+	getFullName(firstName: string, nameSelfDetermination: string): string {
+		return `${this.patientNameService.getPatientName(firstName, nameSelfDetermination)}`;
 	}
 }

@@ -35,7 +35,7 @@ class UpdateLoginDateImplTest {
     @Test
     @DisplayName("Update login date success")
     void updateLoginDateSuccess() {
-        when(userStorage.getUser(anyString())).thenReturn(new UserBo(1,"USERNAME", true, "PASSWORD_ENCRIPTED", "SALT", "HASH", LocalDateTime.of(2020,01,15,15,16)));
+        when(userStorage.getUser(anyString())).thenReturn(new UserBo(1,"USERNAME", true, "PASSWORD_ENCRIPTED", "SALT", "HASH", LocalDateTime.of(2020,01,15,15,16), LocalDateTime.of(2020,01,01,01,01)));
         when(dateTimeProvider.nowDateTime()).thenReturn(LocalDateTime.of(2020,01,15,15,16));
         updateLoginDate.execute("USERNAME");
 

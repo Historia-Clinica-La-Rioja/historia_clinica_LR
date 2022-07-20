@@ -1,0 +1,12 @@
+<div id="title" fxLayoutGap="10px" fxLayoutAlign="start center">
+	<div fxLayout="row" fxFlex="20px">
+		<mat-icon class="color-primary" fontSet="material-icons-outlined" *ngIf="header.matIcon; else svgIcon">
+			{{ header.matIcon }}</mat-icon>
+	</div>
+	<span class="color-primary title">{{ header.title | translate | uppercase }}</span>
+	<mat-divider inset></mat-divider>
+</div>
+
+<ng-template #svgIcon>
+	<mat-icon class="color-primary svg-icon" svgIcon={{header.svgIcon}}></mat-icon>
+</ng-template>

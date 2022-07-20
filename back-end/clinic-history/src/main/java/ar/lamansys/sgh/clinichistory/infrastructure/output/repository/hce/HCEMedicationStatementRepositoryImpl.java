@@ -37,7 +37,7 @@ public class HCEMedicationStatementRepositoryImpl implements HCEMedicationStatem
                 "JOIN {h-schema}medication_statement ms ON dms.medication_statement_id = ms.id " +
                 "WHERE ms.patient_id = :patientId  " +
                 "AND d.type_id IN (:documentTypes) "+
-                "AND d.status_id = :documentStatusId " +
+                "AND d.status_id IN (:documentStatusId) " +
                 ") " +
                 "SELECT t.id AS id, s.sctid AS sctid, s.pt, status_id,  " +
                 "d.id AS d_id, d.chronic, d.start_date, d.end_date, d.suspended_start_date, d.suspended_end_date " +
@@ -48,7 +48,7 @@ public class HCEMedicationStatementRepositoryImpl implements HCEMedicationStatem
                 "ORDER BY t.updated_on";
 
         List<Object[]> queryResult = entityManager.createNativeQuery(sqlString)
-                .setParameter("documentStatusId", DocumentStatus.FINAL)
+                .setParameter("documentStatusId", List.of(DocumentStatus.FINAL, DocumentStatus.DRAFT))
                 .setParameter("medicationStatusId", List.of(MedicationStatementStatus.ACTIVE))
                 .setParameter("patientId", patientId)
                 .setParameter("documentTypes", List.of(DocumentType.OUTPATIENT, DocumentType.RECIPE, DocumentType.COUNTER_REFERENCE, DocumentType.ODONTOLOGY))

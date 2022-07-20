@@ -6,6 +6,7 @@ import { PrescriptionItemData } from '../../../modules/indicacion/components/ite
 import { PrescripcionesService, PrescriptionTypes } from './../../../services/prescripciones.service';
 import { hasError } from '@core/utils/form.utils';
 import {TEXT_AREA_MAX_LENGTH} from '@core/constants/validation-constants';
+import { forkJoin } from 'rxjs';
 
 @Component({
   selector: 'app-completar-estudio',
@@ -14,7 +15,7 @@ import {TEXT_AREA_MAX_LENGTH} from '@core/constants/validation-constants';
 })
 export class CompletarEstudioComponent implements OnInit {
 
-	diagnosticReport: DiagnosticReportInfoDto;
+	diagnosticReport: DiagnosticReportInfoDto[];
 	completeStudyForm: FormGroup;
 	selectedFiles: File[] = [];
 	selectedFilesShow: any[] = [];
@@ -25,7 +26,7 @@ export class CompletarEstudioComponent implements OnInit {
 		private prescripcionesService: PrescripcionesService,
 		public dialogRef: MatDialogRef<CompletarEstudioComponent>,
 		@Inject(MAT_DIALOG_DATA) public data: {
-			diagnosticReport: DiagnosticReportInfoDto,
+			diagnosticReport: DiagnosticReportInfoDto[],
 			patientId: number,
 		}
 	) { }
@@ -42,13 +43,12 @@ export class CompletarEstudioComponent implements OnInit {
 		this.dialogRef.close(simpleClose ? null : {completed});
 	}
 
-	prescriptionItemDataBuilder(diagnosticReport: DiagnosticReportInfoDto): PrescriptionItemData {
+	prescriptionItemDataBuilder(diagnosticReport: DiagnosticReportInfoDto[]): PrescriptionItemData {
 		return {
-			prescriptionStatus: this.prescripcionesService.renderStatusDescription(PrescriptionTypes.STUDY, diagnosticReport.statusId),
-			prescriptionPt: diagnosticReport.snomed.pt,
-			problemPt: diagnosticReport.healthCondition.snomed.pt,
-			doctor: diagnosticReport.doctor,
-			totalDays: diagnosticReport.totalDays
+			prescriptionStatus: this.prescripcionesService.renderStatusDescription(PrescriptionTypes.STUDY, diagnosticReport[0].statusId),
+			prescriptionPt: diagnosticReport[0].snomed.pt,
+			problemPt: diagnosticReport[0].healthCondition.snomed.pt,
+			doctor: diagnosticReport[0].doctor,
 		};
 	}
 
@@ -57,10 +57,13 @@ export class CompletarEstudioComponent implements OnInit {
 			observations: this.completeStudyForm.controls.observations.value,
 		};
 
-		this.prescripcionesService.completeStudy(this.data.patientId, this.diagnosticReport.id, completeRequest, this.selectedFiles).subscribe(() => {
-			this.closeModal(false, true);
-		}, _ => {
-			this.closeModal(false, false);
+		forkJoin(this.diagnosticReport.map(report =>
+			this.prescripcionesService.completeStudy(this.data.patientId, report.id, completeRequest, this.selectedFiles)
+		)).subscribe(
+			() => {
+				this.closeModal(false, true);
+			}, _ => {
+				this.closeModal(false, false);
 		});
 	}
 

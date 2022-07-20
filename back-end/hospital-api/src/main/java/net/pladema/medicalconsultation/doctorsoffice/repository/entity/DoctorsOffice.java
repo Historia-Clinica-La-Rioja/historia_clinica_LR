@@ -28,8 +28,8 @@ public class DoctorsOffice implements Serializable {
     @Column(name = "institution_id", nullable = false)
     private Integer institutionId;
 
-    @Column(name = "clinical_specialty_sector_id", nullable = false)
-    private Integer clinicalSpecialtySectorId;
+    @Column(name = "sector_id", nullable = false)
+    private Integer sectorId;
 
     @Column(name = "description", nullable = false)
     private String description;

@@ -4,7 +4,7 @@ import ar.lamansys.sgh.clinichistory.UnitRepository;
 import ar.lamansys.sgh.clinichistory.application.notes.NoteService;
 import ar.lamansys.sgh.clinichistory.application.notes.NoteServiceImpl;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.NoteRepository;
-import ar.lamansys.sgx.shared.strings.StringValidatorException;
+
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

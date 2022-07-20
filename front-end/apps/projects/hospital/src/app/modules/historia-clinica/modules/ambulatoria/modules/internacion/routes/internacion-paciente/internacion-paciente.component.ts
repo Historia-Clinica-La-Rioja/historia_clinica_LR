@@ -17,9 +17,7 @@ import {
 	AnamnesisSummaryDto,
 	EpicrisisSummaryDto,
 	PersonPhotoDto,
-	InternmentEpisodeProcessDto,
-	DiagnosisDto,
-	HealthConditionDto
+	InternmentEpisodeProcessDto
 } from '@api-rest/api-model';
 
 import { AppFeature } from '@api-rest/api-model';
@@ -29,14 +27,8 @@ import { INTERNACION, ANTECEDENTES_FAMILIARES, ANTECEDENTES_PERSONALES, MEDICACI
 import { ROLES_FOR_EDIT_DIAGNOSIS } from '../../../internacion/constants/permissions';
 import { ProbableDischargeDialogComponent } from '../../../../../../dialogs/probable-discharge-dialog/probable-discharge-dialog.component';
 import { Moment } from 'moment';
-import { InternmentFields, InternmentSummaryFacadeService } from "@historia-clinica/modules/ambulatoria/modules/internacion/services/internment-summary-facade.service";
+import { InternmentSummaryFacadeService } from "@historia-clinica/modules/ambulatoria/modules/internacion/services/internment-summary-facade.service";
 import { DockPopupRef } from '@presentation/services/dock-popup-ref';
-import { EvolutionNoteDockPopupComponent } from '../../dialogs/evolution-note-dock-popup/evolution-note-dock-popup.component';
-import { DockPopupService } from '@presentation/services/dock-popup.service';
-import { AnamnesisDockPopupComponent } from "@historia-clinica/modules/ambulatoria/modules/internacion/dialogs/anamnesis-dock-popup/anamnesis-dock-popup.component";
-import { EpicrisisDockPopupComponent } from "@historia-clinica/modules/ambulatoria/modules/internacion/dialogs/epicrisis-dock-popup/epicrisis-dock-popup.component";
-import { MedicalDischargeComponent } from "@historia-clinica/modules/ambulatoria/modules/internacion/dialogs/medical-discharge/medical-discharge.component";
-import { PatientAllergiesService } from "@historia-clinica/modules/ambulatoria/services/patient-allergies.service";
 import { InternmentPatientService } from '@api-rest/services/internment-patient.service';
 import { InternmentEpisodeSummary } from "@historia-clinica/modules/ambulatoria/modules/internacion/components/internment-episode-summary/internment-episode-summary.component";
 
@@ -61,8 +53,6 @@ export class InternacionPacienteComponent implements OnInit {
 	patientId: number;
 	dialogRef: DockPopupRef;
 	internmentEpisodeId: number;
-	mainDiagnosis: HealthConditionDto;
-	diagnosticos: DiagnosisDto[];
 	readonly internacionSummary = INTERNACION;
 	readonly familyHistoriesHeader = ANTECEDENTES_FAMILIARES;
 	readonly personalHistoriesHeader = ANTECEDENTES_PERSONALES;
@@ -78,12 +68,9 @@ export class InternacionPacienteComponent implements OnInit {
 		private featureFlagService: FeatureFlagService,
 		private readonly permissionService: PermissionsService,
 		private readonly internmentPatientService: InternmentPatientService,
-		private readonly dockPopupService: DockPopupService,
 		private readonly dialog: MatDialog,
-		private readonly patientAllergies: PatientAllergiesService,
 		readonly internmentSummaryFacadeService: InternmentSummaryFacadeService,
-	) {
-	}
+	) { }
 
 	ngOnInit(): void {
 		this.route.paramMap.subscribe(
@@ -101,7 +88,7 @@ export class InternacionPacienteComponent implements OnInit {
 				);
 
 				this.patientService.getPatientPhoto(this.patientId)
-					.subscribe((personPhotoDto: PersonPhotoDto) => { this.personPhoto = personPhotoDto; });
+					.subscribe((personPhotoDto: PersonPhotoDto) => this.personPhoto = personPhotoDto);
 			});
 
 		this.internmentSummaryFacadeService.anamnesis$.subscribe(a => this.anamnesisDoc = a);
@@ -150,114 +137,7 @@ export class InternacionPacienteComponent implements OnInit {
 		}
 		);
 	}
-
-	openAnamnesis(): void {
-		if (!this.dialogRef) {
-			this.dialogRef = this.dockPopupService.open(AnamnesisDockPopupComponent, {
-				patientInfo: {
-					patientId: this.patientId,
-					internmentEpisodeId: this.internmentEpisodeId,
-					anamnesisId: this.anamnesisDoc?.id
-				},
-				autoFocus: false,
-				disableClose: true,
-				mainDiagnosis: this.mainDiagnosis,
-				diagnosticos: this.diagnosticos
-			});
-			this.dialogRef.afterClosed().subscribe((fieldsToUpdate: InternmentFields) => {
-				delete this.dialogRef;
-				if (fieldsToUpdate)
-					this.updateInternmentSummary(fieldsToUpdate);
-			});
-		} else {
-			if (this.dialogRef.isMinimized()) {
-				this.dialogRef.maximize();
-			}
-		}
-	}
-
-	openEvolutionNote(): void {
-		if (!this.dialogRef) {
-			this.dialogRef = this.dockPopupService.open(EvolutionNoteDockPopupComponent, {
-				internmentEpisodeId: this.internmentEpisodeId,
-				autoFocus: false,
-				disableClose: true,
-				mainDiagnosis: this.mainDiagnosis,
-				diagnosticos: this.diagnosticos
-			});
-			this.dialogRef.afterClosed().subscribe((fieldsToUpdate: InternmentFields) => {
-				delete this.dialogRef;
-				if (fieldsToUpdate)
-					this.updateInternmentSummary(fieldsToUpdate);
-			});
-		} else {
-			if (this.dialogRef.isMinimized()) {
-				this.dialogRef.maximize();
-			}
-		}
-	}
-
-	openEpicrisis(): void {
-		if (!this.dialogRef) {
-			this.dialogRef = this.dockPopupService.open(EpicrisisDockPopupComponent, {
-				patientInfo: {
-					patientId: this.patientId,
-					internmentEpisodeId: this.internmentEpisodeId,
-				},
-				autoFocus: false,
-				disableClose: true,
-			});
-			this.dialogRef.afterClosed().subscribe((fieldsToUpdate: InternmentFields) => {
-				delete this.dialogRef;
-				if (fieldsToUpdate)
-					this.updateInternmentSummary(fieldsToUpdate);
-			});
-		} else {
-			if (this.dialogRef.isMinimized()) {
-				this.dialogRef.maximize();
-			}
-		}
-	}
-
-	updateInternmentSummary(fieldsToUpdate: InternmentFields): void {
-		const fields = {
-			personalHistories: fieldsToUpdate?.personalHistories,
-			riskFactors: fieldsToUpdate?.riskFactors,
-			medications: fieldsToUpdate?.medications,
-			heightAndWeight: fieldsToUpdate?.heightAndWeight,
-			bloodType: fieldsToUpdate?.bloodType,
-			immunizations: fieldsToUpdate?.immunizations,
-			mainDiagnosis: fieldsToUpdate?.mainDiagnosis,
-			diagnosis: fieldsToUpdate?.diagnosis,
-			evolutionClinical: fieldsToUpdate?.evolutionClinical
-		}
-		this.internmentSummaryFacadeService.setFieldsToUpdate(fields);
-		if (fieldsToUpdate?.familyHistories)
-			this.internmentSummaryFacadeService.unifyFamilyHistories(this.patientId);
-		if (fieldsToUpdate?.allergies) {
-			this.patientAllergies.updateCriticalAllergies(this.patientId);
-			this.internmentSummaryFacadeService.unifyAllergies(this.patientId);
-		}
-		this.internmentSummaryFacadeService.updateInternmentEpisode();
-	}
-
-	openMedicalDischarge(): void {
-		const dialogRef = this.dialog.open(MedicalDischargeComponent, {
-			data: {
-				patientId: this.patientId,
-				internmentEpisodeId: this.internmentEpisodeId,
-			},
-			autoFocus: false,
-			disableClose: true,
-		});
-		dialogRef.afterClosed().subscribe(medicalDischarge => {
-			if (medicalDischarge) {
-				this.internmentSummaryFacadeService.updateInternmentEpisode();
-			}
-		});
-	}
 }
-
 export interface PatientDischarge {
 	medicalDischarge?: Date;
 	physicalDischarge?: Date;

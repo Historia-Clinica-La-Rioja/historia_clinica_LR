@@ -4,6 +4,6 @@ import ar.lamansys.nursing.domain.document.NursingDocumentBo;
 
 public interface NursingDocumentStorage {
 
-    void save(NursingDocumentBo nursingDocumentBo);
+    Long save(NursingDocumentBo nursingDocumentBo);
 
 }

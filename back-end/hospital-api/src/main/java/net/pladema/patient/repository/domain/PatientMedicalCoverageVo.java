@@ -3,8 +3,6 @@ package net.pladema.patient.repository.domain;
 
 import lombok.*;
 import net.pladema.patient.controller.dto.EMedicalCoverageType;
-import net.pladema.patient.controller.dto.EPatientMedicalCoverageCondition;
-import net.pladema.patient.repository.entity.PrivateHealthInsuranceDetails;
 
 import java.time.LocalDate;
 

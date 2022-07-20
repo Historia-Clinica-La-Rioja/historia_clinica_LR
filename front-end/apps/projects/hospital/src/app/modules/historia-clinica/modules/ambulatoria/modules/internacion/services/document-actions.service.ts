@@ -4,12 +4,8 @@ import { differenceInHours } from "date-fns";
 import { AccountService } from "@api-rest/services/account.service";
 import { InternmentSummaryFacadeService } from "@historia-clinica/modules/ambulatoria/modules/internacion/services/internment-summary-facade.service";
 import { dateTimeDtoToDate, dateTimeDtoToStringDate } from "@api-rest/mapper/date-dto.mapper";
-import { MatDialog } from "@angular/material/dialog";
-import { EvolutionNoteService } from "@api-rest/services/evolution-note.service";
-import { EpicrisisService } from "@api-rest/services/epicrisis.service";
-import { DocumentDeletionReasonComponent } from "@historia-clinica/modules/ambulatoria/modules/internacion/dialogs/document-deletion-reason/document-deletion-reason.component";
-import { AnamnesisService } from "@api-rest/services/anamnesis.service";
-import { SnackBarService } from "@presentation/services/snack-bar.service";
+import { DeleteDocumentActionService } from "@historia-clinica/modules/ambulatoria/modules/internacion/services/delete-document-action.service";
+import { EditDocumentActionService } from './edit-document-action.service';
 
 @Injectable({
 	providedIn: 'root'
@@ -23,18 +19,16 @@ export class DocumentActionsService {
 
 	constructor(
 		private readonly accountService: AccountService,
-		private internmentSummaryFacadeService: InternmentSummaryFacadeService,
-		private readonly dialog: MatDialog,
-		private readonly anmanesisService: AnamnesisService,
-		private readonly epicrisisService: EpicrisisService,
-		private readonly evolutionNoteService: EvolutionNoteService,
-		private readonly snackBarService: SnackBarService,
+		private readonly internmentSummaryFacadeService: InternmentSummaryFacadeService,
+		private readonly deleteDocumentAction: DeleteDocumentActionService,
+		private readonly editDocumentAction: EditDocumentActionService,
 	) { }
 
-	setInformation() {
+	setInformation(patientId: number, internmentEpisodeId: number) {
 		this.accountService.getInfo().subscribe((loggedUser: LoggedUserDto) => this.userId = loggedUser.id);
 		this.internmentSummaryFacadeService.hasMedicalDischarge$.subscribe(m => this.hasMedicalDischarge = m);
 		this.internmentSummaryFacadeService.hasPhysicalDischarge$.subscribe(p => this.hasPhysicalDischarge = p);
+		this.editDocumentAction.setInformation(patientId, internmentEpisodeId);
 	}
 
 	setPatientDocuments(documents: DocumentSearchDto[]) {
@@ -45,13 +39,23 @@ export class DocumentActionsService {
 		}
 	}
 
-	canDoActionInTheDocument(document: DocumentSearchDto): boolean {
-		if (document.creator.id !== this.userId)
+	canEditDocument(document: DocumentSearchDto): boolean {
+		if (!this.isCreatorDocumnt(document))
 			return false;
 		const createdOn = dateTimeDtoToDate(document.createdOn);
 		if (differenceInHours(new Date(), (new Date(createdOn))) > 24)
 			return false;
 		if (this.hasMedicalDischarge)
+			return false;
+		return true;
+	}
+
+	isCreatorDocumnt(document: DocumentSearchDto): boolean {
+		return (document.creator.id === this.userId);
+	}
+
+	canDeleteDocument(document: DocumentSearchDto): boolean {
+		if (!this.canEditDocument(document))
 			return false;
 		if (document.documentType === "Anamnesis") {
 			if (this.hasPhysicalDischarge) {
@@ -81,64 +85,29 @@ export class DocumentActionsService {
 	}
 
 	deleteDocument(document: DocumentSearchDto, internmentEpisodeId: number) {
-		const dialogRef = this.dialog.open(DocumentDeletionReasonComponent, {
-			data: {
-				title: 'internaciones.dialogs.actions-document.DELETE_TITLE',
-			},
-			width: "50vh",
-			autoFocus: false,
-			disableClose: true
-		});
-		dialogRef.afterClosed().subscribe(reason => {
-			if (reason) {
-				switch (document.documentType) {
-					case "Anamnesis":
-						this.anmanesisService.deleteAnamnesis(document.id, internmentEpisodeId, reason).subscribe(
-							success => {
-								this.snackBarService.showSuccess("internaciones.delete-document.messages.SUCCESS");
-								this.updateInformation();
-							},
-							error => this.snackBarService.showError("internaciones.delete-document.messages.ERROR"))
-						break;
-					case "Nota de evolución":
-						this.evolutionNoteService.deleteEvolutionDiagnosis(document.id, internmentEpisodeId, reason).subscribe(
-							success => {
-								this.snackBarService.showSuccess("internaciones.delete-document.messages.SUCCESS");
-								this.updateInformation();
-							},
-							error => this.snackBarService.showError("internaciones.delete-document.messages.ERROR"))
-						break;
-					case "Nota de evolución de enfermería":
-						this.evolutionNoteService.deleteEvolutionDiagnosis(document.id, internmentEpisodeId, reason).subscribe(
-							success => {
-								this.snackBarService.showSuccess("internaciones.delete-document.messages.SUCCESS");
-								this.updateInformation();
-							},
-							error => this.snackBarService.showError("internaciones.delete-document.messages.ERROR"))
-						break;
-					case "Epicrisis":
-						this.epicrisisService.deleteEpicrisis(document.id, internmentEpisodeId, reason).subscribe(
-							success => {
-								this.snackBarService.showSuccess("internaciones.delete-document.messages.SUCCESS");
-								this.updateInformation();
-							},
-							error => this.snackBarService.showError("internaciones.delete-document.messages.ERROR"))
-						break;
-				}
-			}
-		})
+		this.deleteDocumentAction.delete(document, internmentEpisodeId);
 	}
 
-	private updateInformation() {
-		this.internmentSummaryFacadeService.setFieldsToUpdate({ evolutionClinical: true });
-		this.internmentSummaryFacadeService.updateInternmentEpisode();
+	editDocument(document: DocumentSearchDto) {
+		this.editDocumentAction.editDocument(document)
 	}
+
+	editEpicrisisDraft(document: DocumentSearchDto) {
+		this.editDocumentAction.editDraftEpicrisis(document,this.isCreatorDocumnt(document));
+	}
+
 }
 
 export interface DocumentSearch {
 	document: DocumentSearchDto;
-	canDoAction?: boolean;
+	canDoAction?: DocumentAction;
 	createdOn: string;
+	editedOn?: string;
+}
+
+interface DocumentAction {
+	delete: boolean;
+	edit: boolean;
 }
 
 interface PatientDocument {

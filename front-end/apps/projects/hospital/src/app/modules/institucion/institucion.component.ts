@@ -21,6 +21,8 @@ import { MenuService } from '@extensions/services/menu.service';
 import { HomeRoutes } from '../home/home-routing.module';
 import { AppRoutes } from '../../app-routing.module';
 import { SIDEBAR_MENU } from './constants/menu';
+import {AppFeature} from "@api-rest/api-model";
+
 @Component({
 	selector: 'app-institucion',
 	templateUrl: './institucion.component.html',
@@ -33,6 +35,7 @@ export class InstitucionComponent implements OnInit {
 	institution: LocationInfo;
 	userInfo: UserInfo;
 	roles = [];
+	nameSelfDeterminationFF: boolean
 
 	constructor(
 		private activatedRoute: ActivatedRoute,
@@ -42,7 +45,10 @@ export class InstitucionComponent implements OnInit {
 		private institutionService: InstitutionService,
 		private accountService: AccountService,
 		private featureFlagService: FeatureFlagService,
-	) { }
+	) {
+		this.featureFlagService.isActive(AppFeature.HABILITAR_DATOS_AUTOPERCIBIDOS).subscribe(isOn =>{
+			this.nameSelfDeterminationFF = isOn});
+	}
 
 	ngOnInit(): void {
 		this.activatedRoute.paramMap.subscribe(params => {
@@ -64,9 +70,9 @@ export class InstitucionComponent implements OnInit {
 					this.institution = mapToLocation(institutionDto[0])
 				);
 			this.accountService.getInfo()
-				.subscribe(userInfo =>
-					this.userInfo = mapToUserInfo(userInfo.email, userInfo.personDto)
-				);
+				.subscribe(userInfo => {
+					this.userInfo = mapToUserInfo(userInfo.email, userInfo.personDto, this.nameSelfDeterminationFF, userInfo.previousLogin)
+				})
 		});
 		this.permissionsService.contextRoleAssignments$.subscribe(
 			roles => this.roles = roles.map(role => role.roleDescription)

@@ -22,7 +22,7 @@
         "filters": {
             "FREE_BEDS": "Ver camas ocupadas",
             "SECTOR": "Sector",
-            "SPECIALITY": "Especialidad",
+            "SERVICE": "Servicio",
             "BED_CATEGORY": "Categoría",
             "PROBABLE_DISCHARGE_DATE": "Fecha de alta probable"
         }

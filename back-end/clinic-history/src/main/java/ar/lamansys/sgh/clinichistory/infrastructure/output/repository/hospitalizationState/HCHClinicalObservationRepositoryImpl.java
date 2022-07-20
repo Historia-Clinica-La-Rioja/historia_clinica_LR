@@ -45,7 +45,7 @@ public class HCHClinicalObservationRepositoryImpl implements HCHClinicalObservat
                 "    JOIN {h-schema}snomed s ON (ovs.snomed_id = s.id) " +
                 "    WHERE source_id = :internmentEpisodeId " +
                 "          AND source_type_id = " + SourceType.HOSPITALIZATION +" "+
-                "          AND d.status_id = :statusId " +
+                "          AND d.status_id IN (:statusId) " +
                 " )UNION( " +
                 "   SELECT  ovs.id, " +
                 "            s.sctid, " +
@@ -58,11 +58,11 @@ public class HCHClinicalObservationRepositoryImpl implements HCHClinicalObservat
                 "    JOIN {h-schema}snomed s ON (ovs.snomed_id = s.id) " +
                 "    WHERE source_id = :internmentEpisodeId " +
                 "          AND source_type_id = " + SourceType.HOSPITALIZATION +" "+
-                "          AND d.status_id = :statusId " +
+                "          AND d.status_id IN (:statusId) " +
                 ")" +
                 "    ORDER BY effective_time DESC " );
         query.setParameter("internmentEpisodeId", internmentEpisodeId);
-        query.setParameter("statusId", DocumentStatus.FINAL);
+        query.setParameter("statusId", List.of(DocumentStatus.FINAL, DocumentStatus.DRAFT));
         List<Object[]> queryResult = query.getResultList();
         List<ClinicalObservationVo> clinicalObservationVos = new ArrayList<>();
         for (Object[] o : queryResult) {

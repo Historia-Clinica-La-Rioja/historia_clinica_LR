@@ -4,6 +4,7 @@ import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { DiagnosisDto, HealthConditionDto, SnomedDto } from '@api-rest/api-model';
 import { SnomedECL } from '@api-rest/api-model'
 import { SnomedSemanticSearch, SnomedService } from '@historia-clinica/services/snomed.service';
+import { HEALTH_CLINICAL_STATUS, HEALTH_VERIFICATIONS } from '../../constants/ids';
 
 @Component({
 	selector: 'app-diagnosis-creation-edition',
@@ -18,6 +19,10 @@ export class DiagnosisCreationEditionComponent implements OnInit {
 	type: string;
 	selection = false;
 	diagnosis: DiagnosisDto;
+	hasPresumptiveOption: boolean;
+	ACTIVE = HEALTH_CLINICAL_STATUS.ACTIVO;
+	CONFIRMED = HEALTH_VERIFICATIONS.CONFIRMADO;
+	PRESUMPTIVE = HEALTH_VERIFICATIONS.PRESUNTIVO;
 
 	constructor(@Inject(MAT_DIALOG_DATA) public data: any,
 		public dialogRef: MatDialogRef<DiagnosisCreationEditionComponent>,
@@ -25,6 +30,7 @@ export class DiagnosisCreationEditionComponent implements OnInit {
 		private snomedService: SnomedService) {
 		this.type = data.type;
 		this.diagnosis = data.diagnosis;
+		this.hasPresumptiveOption = ! data?.isMainDiagnosis;
 	}
 
 	ngOnInit(): void {
@@ -32,7 +38,7 @@ export class DiagnosisCreationEditionComponent implements OnInit {
 			snomed: [null, Validators.required],
 			validation: [false, Validators.required]
 		});
-		if (this.diagnosis){
+		if (this.diagnosis) {
 			this.form.controls.snomed.setValue(this.diagnosis.snomed.pt);
 			this.form.controls.validation.setValue(this.diagnosis.presumptive);
 		}
@@ -41,10 +47,13 @@ export class DiagnosisCreationEditionComponent implements OnInit {
 	saveDiagnosis() {
 		this.snomedError = false;
 		if (this.form.valid) {
-			if (this.diagnosis.presumptive != this.form.value.validation) {
-				this.diagnosis.presumptive = this.form.value.validation;
-				this.diagnosis.isAdded = true;
-			}
+			if (this.form.value.validation)
+				this.diagnosis.verificationId = this.PRESUMPTIVE;
+			else
+				this.diagnosis.verificationId = this.CONFIRMED;
+			this.diagnosis.presumptive = this.form.value.validation;
+			this.diagnosis.isAdded = true;
+			this.diagnosis.statusId = this.ACTIVE;
 			this.dialogRef.close(this.diagnosis);
 		}
 		else
@@ -57,8 +66,6 @@ export class DiagnosisCreationEditionComponent implements OnInit {
 			this.form.controls.snomed.setValue(selectedConcept.pt);
 			newDiagnosis = {
 				id: null,
-				verificationId: null,
-				statusId: null,
 				snomed: selectedConcept
 			};
 		}
@@ -79,7 +86,7 @@ export class DiagnosisCreationEditionComponent implements OnInit {
 	resetForm(): void {
 		delete this.diagnosis;
 		this.snomedError = false;
-		this.form.reset( { validation: false });
+		this.form.reset({ validation: false });
 	}
 
 }

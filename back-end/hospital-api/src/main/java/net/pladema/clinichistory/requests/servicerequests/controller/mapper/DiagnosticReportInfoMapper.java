@@ -11,10 +11,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
-import java.time.LocalDateTime;
-
-import static java.time.temporal.ChronoUnit.DAYS;
-
 @Component
 public class DiagnosticReportInfoMapper {
 
@@ -31,7 +27,9 @@ public class DiagnosticReportInfoMapper {
         result.setStatusId(diagnosticReportBo.getStatusId());
         result.setDoctor(DoctorInfoDto.from(professionalDto));
         result.setServiceRequestId(diagnosticReportBo.getEncounterId());
-        result.setTotalDays(diagnosticReportBo.getEffectiveTime() != null ? DAYS.between(diagnosticReportBo.getEffectiveTime(), LocalDateTime.now()) : -1);
+        result.setCreationDate(diagnosticReportBo.getEffectiveTime());
+		result.setCategory(diagnosticReportBo.getCategory());
+		result.setSource(diagnosticReportBo.getSource());
         LOG.debug("Output: {}", result);
         return result;
     }

@@ -15,6 +15,7 @@ import net.pladema.clinichistory.hospitalization.service.evolutionnote.CreateEvo
 import net.pladema.clinichistory.hospitalization.service.evolutionnote.DeleteEvolutionNoteService;
 import net.pladema.clinichistory.hospitalization.service.evolutionnote.EvolutionDiagnosesService;
 import net.pladema.clinichistory.hospitalization.service.evolutionnote.EvolutionNoteService;
+import net.pladema.clinichistory.hospitalization.service.evolutionnote.UpdateEvolutionNoteService;
 import net.pladema.clinichistory.hospitalization.service.evolutionnote.domain.EvolutionNoteBo;
 import net.pladema.clinichistory.hospitalization.service.evolutionnote.domain.evolutiondiagnosis.EvolutionDiagnosisBo;
 import net.pladema.patient.controller.service.PatientExternalService;
@@ -58,13 +59,16 @@ public class EvolutionNoteController {
 
 	private final DeleteEvolutionNoteService deleteEvolutionNoteService;
 
+	private final UpdateEvolutionNoteService updateEvolutionNoteService;
+
     public EvolutionNoteController(InternmentEpisodeService internmentEpisodeService,
                                    CreateEvolutionNoteService createEvolutionNoteService,
                                    EvolutionNoteService evolutionNoteService,
                                    EvolutionDiagnosesService evolutionDiagnosesService,
                                    EvolutionNoteMapper evolutionNoteMapper,
                                    PatientExternalService patientExternalService,
-								   DeleteEvolutionNoteService deleteEvolutionNoteService) {
+								   DeleteEvolutionNoteService deleteEvolutionNoteService,
+								   UpdateEvolutionNoteService updateEvolutionNoteService) {
         this.internmentEpisodeService = internmentEpisodeService;
         this.createEvolutionNoteService = createEvolutionNoteService;
         this.evolutionNoteService = evolutionNoteService;
@@ -72,6 +76,7 @@ public class EvolutionNoteController {
         this.evolutionNoteMapper = evolutionNoteMapper;
         this.patientExternalService = patientExternalService;
         this.deleteEvolutionNoteService = deleteEvolutionNoteService;
+		this.updateEvolutionNoteService = updateEvolutionNoteService;
     }
 
     @PostMapping
@@ -118,7 +123,7 @@ public class EvolutionNoteController {
 
     @GetMapping("/{evolutionNoteId}")
     @InternmentValid
-    @DocumentValid(isConfirmed = false, documentType = DocumentType.EVALUATION_NOTE)
+    @DocumentValid(isConfirmed = true, documentType = DocumentType.EVALUATION_NOTE)
     public ResponseEntity<ResponseEvolutionNoteDto> getDocument(
             @PathVariable(name = "institutionId") Integer institutionId,
             @PathVariable(name = "internmentEpisodeId") Integer internmentEpisodeId,
@@ -130,6 +135,21 @@ public class EvolutionNoteController {
         LOG.debug(OUTPUT, result);
         return  ResponseEntity.ok().body(result);
     }
+
+	@GetMapping("/nursing/{evolutionNoteId}")
+	@InternmentValid
+	@DocumentValid(isConfirmed = true, documentType = DocumentType.NURSING_EVOLUTION_NOTE)
+	public ResponseEntity<ResponseEvolutionNoteDto> getNursingDocument(
+			@PathVariable(name = "institutionId") Integer institutionId,
+			@PathVariable(name = "internmentEpisodeId") Integer internmentEpisodeId,
+			@PathVariable(name = "evolutionNoteId") Long evolutionNoteId){
+		LOG.debug("Input parameters -> institutionId {}, internmentEpisodeId {}, evolutionNoteId {}",
+				institutionId, internmentEpisodeId, evolutionNoteId);
+		EvolutionNoteBo evolutionNoteBo = evolutionNoteService.getDocument(evolutionNoteId);
+		ResponseEvolutionNoteDto result = evolutionNoteMapper.fromEvolutionNote(evolutionNoteBo);
+		LOG.debug(OUTPUT, result);
+		return  ResponseEntity.ok().body(result);
+	}
 
 
 	@DeleteMapping("/{evolutionNoteId}")
@@ -144,6 +164,28 @@ public class EvolutionNoteController {
 		deleteEvolutionNoteService.execute(internmentEpisodeId, evolutionNoteId, reason);
 		LOG.debug(OUTPUT, Boolean.TRUE);
 		return  ResponseEntity.ok().body(Boolean.TRUE);
+	}
+
+	@PutMapping("/{evolutionNoteId}")
+	@Transactional
+	public ResponseEntity<Long> updateAnamnesis(
+			@PathVariable(name = "institutionId") Integer institutionId,
+			@PathVariable(name = "internmentEpisodeId") Integer internmentEpisodeId,
+			@PathVariable(name = "evolutionNoteId") Long evolutionNoteId,
+			@RequestBody @Valid EvolutionNoteDto evolutionNoteDto) {
+		LOG.debug("Input parameters -> institutionId {}, internmentEpisodeId {}, evolutionNoteId {}, evolutionNoteDto {}",
+				institutionId, internmentEpisodeId, evolutionNoteId, evolutionNoteDto);
+		EvolutionNoteBo newEvolution = evolutionNoteMapper.fromEvolutionNoteDto(evolutionNoteDto);
+		internmentEpisodeService.getPatient(internmentEpisodeId)
+				.map(patientExternalService::getBasicDataFromPatient)
+				.map(patientDto -> new PatientInfoBo(patientDto.getId(), patientDto.getPerson().getGender().getId(), patientDto.getPerson().getAge()))
+				.ifPresentOrElse(newEvolution::setPatientInfo, () -> new NotFoundException("El paciente no existe", "El paciente no existe"));
+		newEvolution.setPatientId(newEvolution.getPatientInfo().getId());
+		newEvolution.setInstitutionId(institutionId);
+		newEvolution.setEncounterId(internmentEpisodeId);
+		Long result = updateEvolutionNoteService.execute(internmentEpisodeId, evolutionNoteId, newEvolution);
+		LOG.debug(OUTPUT, result);
+		return  ResponseEntity.ok().body(result);
 	}
 
 }

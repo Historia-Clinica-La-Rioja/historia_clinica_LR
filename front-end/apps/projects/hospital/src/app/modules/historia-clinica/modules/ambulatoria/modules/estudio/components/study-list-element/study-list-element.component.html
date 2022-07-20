@@ -1,0 +1,10 @@
+<div fxLayout="column">
+	<div fxLayout="row">
+		<app-list-element-item fxFlex [content]="content"></app-list-element-item>
+		<ng-content select="[actions]"></ng-content>
+	</div>
+	<div class="internment-dialog message-label" fxLayout="row" fxLayoutAlign="none center" fxLayoutGap="10px" *ngIf="wasCreatedDuringInternment">
+		<mat-icon>error_outline</mat-icon>
+		<span class="color-black" [translate]="'ambulatoria.paciente.studies.INTERNMENT_MEDICAL_STUDY'"></span>
+	</div>
+</div>

@@ -31,26 +31,47 @@ public class SnomedConceptsCsvReader {
         }
     }
 
-    public static List<SnomedConceptBo> csvToSnomedConceptsBo(InputStream is) {
-        try (BufferedReader fileReader = new BufferedReader(new InputStreamReader(is, StandardCharsets.UTF_8));
-             CSVParser csvParser = new CSVParser(fileReader,
-                     CSVFormat.EXCEL.withFirstRecordAsHeader().withIgnoreHeaderCase().withTrim())) {
-            List<SnomedConceptBo> concepts = new ArrayList<>();
-            Iterable<CSVRecord> csvRecords = csvParser.getRecords();
-            for (CSVRecord csvRecord : csvRecords) {
-                String term = csvRecord.get("term");
-                term = (isSurroundedByQuotes(term)) ? deleteSurroundingCharacters(term) : term;
-                SnomedConceptBo concept = new SnomedConceptBo(
-                        csvRecord.get("conceptId"),
-                        term
-                );
-                concepts.add(concept);
-            }
-            return concepts;
-        } catch (IOException e) {
-            throw new RuntimeException("Failed to parse CSV file: " + e.getMessage());
-        }
-    }
+	public static List<SnomedConceptBo> csvToSnomedConceptsBo(InputStream is) {
+		try (BufferedReader fileReader = new BufferedReader(new InputStreamReader(is, StandardCharsets.UTF_8));
+			 CSVParser csvParser = new CSVParser(fileReader,
+					 CSVFormat.EXCEL.withFirstRecordAsHeader().withIgnoreHeaderCase().withTrim())) {
+			List<SnomedConceptBo> concepts = new ArrayList<>();
+			Iterable<CSVRecord> csvRecords = csvParser.getRecords();
+			for (CSVRecord csvRecord : csvRecords) {
+				String term = csvRecord.get("term");
+				term = (isSurroundedByQuotes(term)) ? deleteSurroundingCharacters(term) : term;
+				SnomedConceptBo concept = new SnomedConceptBo(
+						csvRecord.get("conceptId"),
+						term
+				);
+				concepts.add(concept);
+			}
+			return concepts;
+		} catch (IOException e) {
+			throw new RuntimeException("Failed to parse CSV file: " + e.getMessage());
+		}
+	}
+
+	public static List<SnomedConceptBo> csvToSnomedConceptsBo(InputStream is, int start, int end) {
+		try (BufferedReader fileReader = new BufferedReader(new InputStreamReader(is, StandardCharsets.UTF_8));
+			 CSVParser csvParser = new CSVParser(fileReader,
+					 CSVFormat.EXCEL.withFirstRecordAsHeader().withIgnoreHeaderCase().withTrim())) {
+			List<SnomedConceptBo> concepts = new ArrayList<>();
+			Iterable<CSVRecord> csvRecords = csvParser.getRecords().subList(start, end);
+			for (CSVRecord csvRecord : csvRecords) {
+				String term = csvRecord.get("term");
+				term = (isSurroundedByQuotes(term)) ? deleteSurroundingCharacters(term) : term;
+				SnomedConceptBo concept = new SnomedConceptBo(
+						csvRecord.get("conceptId"),
+						term
+				);
+				concepts.add(concept);
+			}
+			return concepts;
+		} catch (IOException e) {
+			throw new RuntimeException("Failed to parse CSV file: " + e.getMessage());
+		}
+	}
 
     private static boolean isSurroundedByQuotes(String s) {
         return s.startsWith("\"") && s.endsWith("\"");

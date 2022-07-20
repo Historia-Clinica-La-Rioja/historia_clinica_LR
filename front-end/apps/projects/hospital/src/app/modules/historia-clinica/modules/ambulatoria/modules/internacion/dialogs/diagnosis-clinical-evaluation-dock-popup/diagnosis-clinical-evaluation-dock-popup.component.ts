@@ -100,8 +100,8 @@ export class DiagnosisClinicalEvaluationDockPopupComponent implements OnInit {
 			map(diagnostics => diagnostics.filter(od => od.statusId === HEALTH_CLINICAL_STATUS.ACTIVO))
 		);
 		diagnosesGeneralState$.subscribe(diagnostics => {
-			this.permissionsService.hasContextAssignments$(ROLES_FOR_ACCESS_MAIN).subscribe(cantAccesMain => {
-				diagnostics = diagnostics.filter(diagnostic => cantAccesMain ? !diagnostic.main : true);
+			this.permissionsService.hasContextAssignments$(ROLES_FOR_ACCESS_MAIN).subscribe(canAccesMain => {
+				diagnostics = canAccesMain ? diagnostics : diagnostics.filter(diagnostic => canAccesMain ? !diagnostic.main : true);
 				this.diagnostics.data = diagnostics;
 				this.diagnostics.selection.select(diagnostics.find(d => d.id === this.data.diagnosisInfo.diagnosisId));
 			});
@@ -130,9 +130,10 @@ export class DiagnosisClinicalEvaluationDockPopupComponent implements OnInit {
 	save(): void {
 		if (this.form.valid) {
 			const evolutionNote: EvolutionDiagnosisDto = {
-				diagnosesId: this.diagnostics.selection.selected.map(diagnosis => diagnosis.id),
+				diagnosesId: this.diagnostics.selection.selected.map(diagnosis => diagnosis?.id),
 				notes: this.form.value
 			};
+			console.log("evolutionNote:  ", evolutionNote);
 			this.evolutionNoteService.createEvolutionDiagnosis(evolutionNote, this.data.diagnosisInfo.internmentEpisodeId).subscribe(
 				_ => {
 					this.snackBarService.showSuccess('internaciones.clinical-assessment-diagnosis.messages.SUCCESS');

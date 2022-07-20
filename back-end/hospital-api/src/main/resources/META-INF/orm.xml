@@ -180,6 +180,36 @@
         </query>
     </named-native-query>
 
+	<named-native-query name="Reports.OdontologyConsultationSummary" result-set-mapping="Reports.OutpatientSummaryResult">
+		<query>SELECT oc.doctor_id as professional_id,
+			cs.id as specialty_id, cs."name" as specialty, cs.clinical_specialty_type_id as specialtyType,
+			extract(year from (age(oc.created_on, per.birth_date))) as "age", per.gender_id,
+			CASE WHEN oc.patient_medical_coverage_id is null THEN false ELSE true END as "OS"
+			FROM odontology_consultation oc
+			LEFT JOIN clinical_specialty cs on (oc.clinical_specialty_id = cs.id)
+			JOIN patient pat on (oc.patient_id = pat.id)
+			JOIN person per on (pat.person_id = per.id)
+			WHERE oc.institution_id = :institutionId
+			AND oc.created_on between :from and :to
+			AND oc.billable
+		</query>
+	</named-native-query>
+
+	<named-native-query name="Reports.NursingConsultationSummary" result-set-mapping="Reports.OutpatientSummaryResult">
+		<query>
+			SELECT nc.doctor_id as professional_id,
+			cs.id as specialty_id, cs."name" as specialty, cs.clinical_specialty_type_id as specialtyType,
+			extract(year from (age(nc.created_on, per.birth_date))) as "age", per.gender_id,
+			CASE WHEN nc.patient_medical_coverage_id is null THEN false ELSE true END as "OS"
+			FROM nursing_consultation nc
+			LEFT JOIN clinical_specialty cs on (nc.clinical_specialty_id = cs.id)
+			JOIN patient pat on (nc.patient_id = pat.id)
+			JOIN person per on (pat.person_id = per.id)
+			WHERE nc.institution_id = :institutionId
+			AND nc.created_on between :from and :to
+		</query>
+	</named-native-query>
+
     <named-native-query name="Reports.ConsultationDetail" result-set-mapping="Reports.ConsultationDetailResult">
         <query>WITH consultation AS (
             SELECT  oc.institution_id, oc.patient_id, oc.patient_medical_coverage_id, oc.clinical_specialty_id,
@@ -580,6 +610,150 @@
 		</query>
 	</named-native-query>
 
+	<named-native-query name="Reports.OdontologyConsultationDetail" result-set-mapping="Reports.ConsultationDetailResult">
+		<query>
+			WITH consultation AS (
+			SELECT oc.institution_id, oc.patient_id, oc.patient_medical_coverage_id, oc.clinical_specialty_id,
+			oc.doctor_id, oc.created_on as start_date, ocr.reasons as reasons,  CONCAT(otherprob.descriptions, '/split/', prob.descriptions) as problems,
+			null as weight, null as height, null as systolicBloodPressure, null as diastolicBloodPressure,
+			'odontology' as consultation_type
+			FROM odontology_consultation oc
+			LEFT JOIN (
+			SELECT ocr.odontology_consultation_id as id, STRING_AGG(r.description, ', ') as reasons
+			FROM odontology_consultation_reason ocr
+			JOIN odontology_reason r ON (ocr.reason_id = r.id)
+			GROUP BY ocr.odontology_consultation_id
+			) ocr ON (oc.id = ocr.id )
+			LEFT JOIN (
+			SELECT oc.id, STRING_AGG(s2.pt, '/split/') as descriptions
+			FROM odontology_consultation oc
+			JOIN document doc ON (oc.id = doc.source_id and doc.source_type_id = 6)
+			left join document_health_condition dhc on(doc.id = dhc.document_id)
+			join health_condition hc on(dhc.health_condition_id = hc.id)
+			join snomed s2 on(hc.snomed_id = s2.id)
+			GROUP BY oc.id
+			) otherprob ON (oc.id = otherprob.id)
+			LEFT JOIN (
+			SELECT oc.id, STRING_AGG(sno.pt, '/split/') as descriptions
+			FROM odontology_consultation oc
+			JOIN document doc ON (oc.id = doc.source_id and doc.source_type_id = 6)
+			left JOIN document_odontology_diagnostic dod ON (doc.id = dod.document_id)
+			JOIN odontology_diagnostic od ON (dod.odontology_diagnostic_id = od.id)
+			JOIN snomed sno ON (od.snomed_id = sno.id)
+			GROUP BY oc.id
+			) prob ON (oc.id = prob.id)
+			WHERE oc.institution_id = :institutionId
+			AND oc.billable = true
+			AND oc.created_on BETWEEN :startDate AND :endDate
+			)
+			SELECT p.description as province, d.description as department, i.sisa_code as sisaCode, i.name as institution,
+			CONCAT(pe.last_name, ' ', pe.other_last_names) as patientSurname,
+			CONCAT(pe.first_name, ' ', pe.middle_names) as patientFirstName,
+			it.description as identificationType, pe.identification_number as identificationNumber,
+			to_char(pe.birth_date,'DD/MM/YYYY') as birthDate,  g.description as gender,
+			CONCAT(a2.street, ' ', a2.number, ' ', a2.floor, ' ', a2.apartment, ' ', c2.description) as address,
+			px.phone_number as phoneNumber, px.email as email,
+			coverage.coverageName, coverage.affiliateNumber,
+			to_char(cst.start_date,'DD/MM/YYYY') as startDate,
+			cs.id as clinicalSpecialtyId, cs.name as clinicalSpecialty,
+			hp.id as professionalId,
+			CONCAT(p2.last_name, ' ', p2.other_last_names, ' ',p2.first_name, ' ', p2.middle_names) as professionalName,
+			cst.reasons as reasons,  cst.problems,
+			cst.weight, cst.height, cst.systolicBloodPressure, cst.diastolicBloodPressure
+			FROM consultation cst
+			JOIN institution i ON (cst.institution_id = i.id)
+			JOIN address a ON (i.address_id = a.id)
+			LEFT JOIN city c ON (a.city_id = c.id)
+			JOIN department d ON (c.department_id = d.id)
+			JOIN province p ON (d.province_id = p.id)
+			JOIN patient pa ON (cst.patient_id = pa.id)
+			JOIN person pe ON (pa.person_id = pe.id)
+			LEFT JOIN identification_type it ON (pe.identification_type_id = it.id)
+			LEFT JOIN person_extended px ON (px.person_id = pe.id)
+			LEFT JOIN gender g ON (px.gender_self_determination = g.id)
+			LEFT JOIN address a2 ON (px.address_id = a2.id)
+			LEFT JOIN city c2 ON (a2.city_id = c2.id)
+			LEFT JOIN (
+			select pmc.id, mc."name" AS coverageName, affiliate_number AS affiliateNumber
+			from patient_medical_coverage pmc
+			join medical_coverage mc on (pmc.medical_coverage_id = mc.id)
+			) coverage ON (cst.patient_medical_coverage_id = coverage.id)
+			LEFT JOIN clinical_specialty cs ON (cst.clinical_specialty_id = cs.id)
+			JOIN healthcare_professional hp ON (cst.doctor_id = hp.id)
+			JOIN person p2 ON (hp.person_id = p2.id)
+		</query>
+	</named-native-query>
+
+	<named-native-query name="Reports.NursingConsultationDetail" result-set-mapping="Reports.ConsultationDetailResult">
+		<query>
+			WITH consultation AS (
+			SELECT  oc.institution_id, oc.patient_id, oc.patient_medical_coverage_id, oc.clinical_specialty_id,
+			oc.doctor_id, oc.created_on as start_date, null as reasons,  prob.descriptions as problems,
+			vs.weight, vs.height, vs.systolic as systolicBloodPressure, vs.diastolic as diastolicBloodPressure,
+			'nursing' as consultation_type
+			FROM nursing_consultation oc
+			LEFT JOIN (
+			SELECT oc.id, STRING_AGG(sno.pt, ', ') as descriptions
+			FROM nursing_consultation oc
+			JOIN document doc ON (oc.id = doc.source_id and doc.source_type_id = 7)
+			JOIN document_health_condition dhc ON (doc.id = dhc.document_id)
+			JOIN health_condition hc ON (dhc.health_condition_id = hc.id)
+			JOIN snomed sno ON (hc.snomed_id = sno.id)
+			GROUP BY oc.id
+			) prob ON (oc.id = prob.id)
+			LEFT JOIN (
+			SELECT oc.id,
+			MAX(CASE WHEN ovs.loinc_code='8480-6' THEN ovs.value END) as systolic,
+			MAX(CASE WHEN ovs.loinc_code='8462-4' THEN ovs.value END) as diastolic,
+			MAX(CASE WHEN ovs.loinc_code='8302-2' THEN ovs.value END) as height,
+			MAX(CASE WHEN ovs.loinc_code='29463-7' THEN ovs.value END) as weight
+			FROM nursing_consultation oc
+			join document d on(oc.id = d.source_id and d.source_type_id = 7)
+			LEFT JOIN document_vital_sign dvs ON (d.id = dvs.document_id)
+			LEFT JOIN observation_vital_sign ovs ON (dvs.observation_vital_sign_id = ovs.id)
+			GROUP BY oc.id
+			ORDER BY oc.id
+			) vs ON (oc.id = vs.id)
+			WHERE oc.institution_id = :institutionId
+			AND oc.created_on BETWEEN :startDate AND :endDate
+			)
+			SELECT p.description as province, d.description as department, i.sisa_code as sisaCode, i.name as institution,
+			CONCAT(pe.last_name, ' ', pe.other_last_names) as patientSurname,
+			CONCAT(pe.first_name, ' ', pe.middle_names) as patientFirstName,
+			it.description as identificationType, pe.identification_number as identificationNumber,
+			to_char(pe.birth_date,'DD/MM/YYYY') as birthDate,  g.description as gender,
+			CONCAT(a2.street, ' ', a2.number, ' ', a2.floor, ' ', a2.apartment, ' ', c2.description) as address,
+			px.phone_number as phoneNumber, px.email as email,
+			coverage.coverageName, coverage.affiliateNumber,
+			to_char(cst.start_date,'DD/MM/YYYY') as startDate,
+			cs.id as clinicalSpecialtyId, cs.name as clinicalSpecialty,
+			hp.id as professionalId,
+			CONCAT(p2.last_name, ' ', p2.other_last_names, ' ',p2.first_name, ' ', p2.middle_names) as professionalName,
+			cst.reasons as reasons,  cst.problems,
+			cst.weight, cst.height, cst.systolicBloodPressure, cst.diastolicBloodPressure
+			FROM consultation cst
+			JOIN institution i ON (cst.institution_id = i.id)
+			JOIN address a ON (i.address_id = a.id)
+			LEFT JOIN city c ON (a.city_id = c.id)
+			JOIN department d ON (c.department_id = d.id)
+			JOIN province p ON (d.province_id = p.id)
+			JOIN patient pa ON (cst.patient_id = pa.id)
+			JOIN person pe ON (pa.person_id = pe.id)
+			LEFT JOIN identification_type it ON (pe.identification_type_id = it.id)
+			LEFT JOIN person_extended px ON (px.person_id = pe.id)
+			LEFT JOIN gender g ON (px.gender_self_determination = g.id)
+			LEFT JOIN address a2 ON (px.address_id = a2.id)
+			LEFT JOIN city c2 ON (a2.city_id = c2.id)
+			LEFT JOIN (
+			select pmc.id, mc."name" AS coverageName, affiliate_number AS affiliateNumber
+			from patient_medical_coverage pmc
+			join medical_coverage mc on (pmc.medical_coverage_id = mc.id)
+			) coverage ON (cst.patient_medical_coverage_id = coverage.id)
+			LEFT JOIN clinical_specialty cs ON (cst.clinical_specialty_id = cs.id)
+			JOIN healthcare_professional hp ON (cst.doctor_id = hp.id)
+			JOIN person p2 ON (hp.person_id = p2.id)
+		</query>
+	</named-native-query>
 
     <!-- ========================================== -->
     <!-- ============== Appointment =============== -->

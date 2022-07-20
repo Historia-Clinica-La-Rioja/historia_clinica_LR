@@ -40,6 +40,10 @@ const routes: Routes = [
 		path: AppRoutes.Backoffice,
 		component: BackofficeComponent,
 	},
+	{
+		path: '**',
+		redirectTo: AppRoutes.Home,
+	},
 ];
 
 @NgModule({
