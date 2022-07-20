@@ -185,6 +185,8 @@ public class InternmentEpisodeController {
 		PatientDischargeBo patientDischargeSaved = internmentEpisodeService.savePatientPhysicalDischarge(internmentEpisodeId);
 		bedExternalService.freeBed(internmentEpisodeSummary.getBedId());
 		PatientDischargeDto result = patientDischargeMapper.toPatientDischargeDto(patientDischargeSaved);
+		internmentEpisodeService.getPatient(patientDischargeSaved.getInternmentEpisodeId())
+				.ifPresent( patientId -> hospitalApiPublisher.publish(patientId, institutionId, EHospitalApiTopicDto.CLINIC_HISTORY__HOSPITALIZATION__DISCHARGE__PHYSIC) );
 		LOG.debug(OUTPUT, result);
 		return ResponseEntity.ok(result);
 	}

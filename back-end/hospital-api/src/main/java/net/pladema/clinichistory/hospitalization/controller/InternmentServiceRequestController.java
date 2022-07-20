@@ -76,12 +76,20 @@ public class InternmentServiceRequestController {
 					studyListDto);
 			serviceRequestBo.setInstitutionId(institutionId);
 			Integer srId = createInternmentServiceRequestService.execute(serviceRequestBo);
-			hospitalApiPublisher.publish(serviceRequestBo.getPatientId(), institutionId, EHospitalApiTopicDto.SOLICITUD_ESTUDIO);
+			hospitalApiPublisher.publish(serviceRequestBo.getPatientId(), institutionId, getTopicToPublish(categoryId) );
 			result.add(srId);
 		});
 
 		log.debug("Output -> {}", result);
 		return result;
+	}
+
+	private EHospitalApiTopicDto getTopicToPublish (String categoryId) {
+		if (categoryId.equals("108252007"))
+			return EHospitalApiTopicDto.CLINIC_HISTORY__HOSPITALIZATION__SERVICE_RESQUEST__LABORATORY;
+		if (categoryId.equals("363679005"))
+			return EHospitalApiTopicDto.CLINIC_HISTORY__HOSPITALIZATION__SERVICE_RESQUEST__IMAGE;
+		return EHospitalApiTopicDto.CLINIC_HISTORY__HOSPITALIZATION__SERVICE_RESQUEST;
 	}
 
 	public InternmentServiceRequestBo parseTo(StudyMapper studyMapper, Integer doctorId, BasicPatientDto patientDto, String categoryId, Integer medicalCoverageId, List<PrescriptionItemDto> studies){

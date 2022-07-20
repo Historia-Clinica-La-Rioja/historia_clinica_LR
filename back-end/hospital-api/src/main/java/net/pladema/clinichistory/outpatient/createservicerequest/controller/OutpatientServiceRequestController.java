@@ -66,7 +66,7 @@ public class OutpatientServiceRequestController {
 			OutpatientServiceRequestBo serviceRequestBo = this.parseTo(studyMapper, doctorId, patientDto, categoryId, serviceRequestListDto.getMedicalCoverageId(), studyListDto);
 			serviceRequestBo.setInstitutionId(institutionId);
 			Integer srId = createOutpatientServiceRequestService.execute(serviceRequestBo);
-			hospitalApiPublisher.publish(serviceRequestBo.getPatientId(), institutionId, EHospitalApiTopicDto.SOLICITUD_ESTUDIO);
+			hospitalApiPublisher.publish(serviceRequestBo.getPatientId(), institutionId, getTopicToPublish(categoryId));
 			result.add(srId);
 		});
 
@@ -74,7 +74,15 @@ public class OutpatientServiceRequestController {
 		return result;
 	}
 
-	private OutpatientServiceRequestBo parseTo(StudyMapper studyMapper, Integer doctorId, BasicPatientDto patientDto, String categoryId, Integer medicalCoverageId, List<PrescriptionItemDto> studies) {
+	private EHospitalApiTopicDto getTopicToPublish (String categoryId) {
+		if (categoryId.equals("108252007"))
+			return EHospitalApiTopicDto.CLINIC_HISTORY__HOSPITALIZATION__SERVICE_RESQUEST__LABORATORY;
+		if (categoryId.equals("363679005"))
+			return EHospitalApiTopicDto.CLINIC_HISTORY__HOSPITALIZATION__SERVICE_RESQUEST__IMAGE;
+		return EHospitalApiTopicDto.CLINIC_HISTORY__HOSPITALIZATION__SERVICE_RESQUEST;
+	}
+
+	private OutpatientServiceRequestBo parseTo(StudyMapper studyMapper, Integer doctorId, BasicPatientDto patientDto, String categoryId, Integer medicalCoverageId, List<PrescriptionItemDto> studies){
 		log.debug("parseTo -> doctorId {}, patientDto {}, medicalCoverageId {}, studies {} ", doctorId, patientDto, medicalCoverageId, studies);
 		OutpatientServiceRequestBo result = new OutpatientServiceRequestBo();
 		result.setCategoryId(categoryId);
