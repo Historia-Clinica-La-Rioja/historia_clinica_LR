@@ -188,10 +188,12 @@
       "ADD_ANOTHER_PROFESSION_AND_SPECIALTIES": "Agregar otra profesión/especialidad",
       "profession_specialties": {
         "ADD_ANOTHER_SPECIALTY": "Agregar otra especialidad",
-		"SELECT_SPECIALTY": "Seleccione especialidad",
-		"SELECT_PROFESSION": "Seleccione profesión",
-        "PROFESSION": "Profesión:",
-        "ERROR": "Se requiere almenos una escialidad."
+        "SELECT_SPECIALTY": "Seleccione especialidad",
+        "SELECT_PROFESSION": "Seleccione profesión",
+        "PROFESSION": "Profesión",
+        "SPECIALTY": "Especialidad",
+        "PROFESSION_ERROR": "Se requiere una profesion.",
+        "SPECIALTY_ERROR": "Se requiere al menos una escialidad."
       }
     },
     "edit_roles": {

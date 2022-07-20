@@ -53,6 +53,8 @@ import { EstadosEpisodio, Triages } from "@historia-clinica/modules/guardia/cons
 import { EmergencyCareEpisodeSummaryService } from "@api-rest/services/emergency-care-episode-summary.service";
 import { AppRoutes } from "../../../../app-routing.module";
 import { InternmentDocuments, InternmentEpisodeSummary } from "@historia-clinica/modules/ambulatoria/modules/internacion/components/internment-episode-summary/internment-episode-summary.component";
+import { EditPrefessionsSpecialtiesComponent } from '@pacientes/dialogs/edit-prefessions-specialties/edit-prefessions-specialties.component';
+import { Observable } from 'rxjs';
 
 const ROUTE_NEW_INTERNMENT = 'internaciones/internacion/new';
 const ROUTE_EDIT_PATIENT = 'pacientes/edit';
@@ -85,6 +87,7 @@ export class ProfileComponent implements OnInit {
 	allProfessions: ProfessionDto[] = [];
 	allSpecialties: ClinicalSpecialtyDto[] = [];
 	ownProfessionsAndSpecialties: ProfessionalProfessionsDto[] = [];
+	ownProfessionsAndSpecialties$: Observable<ProfessionalProfessionsDto[]>;
 	isProfessional = false;
 	institutionName: string;
 	license: string = '';
@@ -272,13 +275,12 @@ export class ProfileComponent implements OnInit {
 		})
 	}
 
-	setProfessionsAndSpecialties(): void {
+	setProfessionsAndSpecialties() {
 		this.professionalService.getProfessionsByProfessional(this.professionalId).subscribe(
 			(professionalsByClinicalSpecialty: ProfessionalProfessionsDto[]) => {
 				this.ownProfessionsAndSpecialties = professionalsByClinicalSpecialty;
-
 			})
-
+		this.ownProfessionsAndSpecialties$ = this.professionalService.getProfessionsByProfessional(this.professionalId);
 	}
 
 	goNewInternment(): void {
@@ -337,29 +339,24 @@ export class ProfileComponent implements OnInit {
 
 	editProfessions(): void {
 
-		const dialog = this.dialog.open(EditProfessionsComponent, {
+		const dialog = this.dialog.open(EditPrefessionsSpecialtiesComponent, {
 			width: DIALOG_SIZE,
 			data: {
-				personId: this.personId, professionalId: this.professionalId, ownLicense: this.license,
+				personId: this.personId, professionalId: this.professionalId,
 				id: this.professionalSpecialtyId, allSpecialties: this.allSpecialties, allProfessions: this.allProfessions, ownProfessionsAndSpecialties: this.ownProfessionsAndSpecialties
 			}
 		});
 		dialog.afterClosed().subscribe((professional: HealthcareProfessionalCompleteDto) => {
 			if (professional) {
-					{
-					this.professionalService.addProfessional(professional).subscribe(_ => {
-						this.snackBarService.showSuccess('pacientes.edit_professions.messages.SUCCESS');
+				this.professionalService.addProfessional(professional).subscribe(_ => {
+					this.snackBarService.showSuccess('pacientes.edit_professions.messages.SUCCESS');
+					this.setProfessionsAndSpecialties();
+				},
+					error => {
 						this.setProfessionsAndSpecialties();
-						this.professionalService.get(this.personId).subscribe((profession: ProfessionalDto) => {
-							if (profession)
-								this.professionalId = profession.id;
-						});
-					},
-						error => {
-							error?.text ?
-								this.snackBarService.showError(error.text) : this.snackBarService.showError('pacientes.edit_professions.messages.ERROR');
-						})
-				}
+						error?.text ?
+							this.snackBarService.showError(error.text) : this.snackBarService.showError('pacientes.edit_professions.messages.ERROR');
+					})
 			}
 		});
 	}
