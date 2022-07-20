@@ -27,5 +27,10 @@ public class NursingRecordBo {
 
 	private LocalDateTime administrationTime;
 
+	private Integer updatedBy;
+
+	private String updatedByName;
+
+	private String updateReason;
 
 }

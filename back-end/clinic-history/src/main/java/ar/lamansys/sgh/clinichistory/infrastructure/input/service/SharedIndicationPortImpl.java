@@ -433,6 +433,8 @@ public class SharedIndicationPortImpl implements SharedIndicationPort {
 		result.setObservation(bo.getObservation());
 		result.setScheduledAdministrationTime(localDateMapper.toDateTimeDto(bo.getScheduledAdministrationTime()));
 		result.setAdministrationTime(localDateMapper.toDateTimeDto(bo.getAdministrationTime()));
+		result.setUpdatedBy(bo.getUpdatedByName());
+		result.setUpdateReason(bo.getUpdateReason());
 		return result;
 	}
 

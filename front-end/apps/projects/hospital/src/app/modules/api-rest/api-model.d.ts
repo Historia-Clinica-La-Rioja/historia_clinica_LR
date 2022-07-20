@@ -1779,6 +1779,8 @@ export interface NursingRecordDto {
     observation: string;
     scheduledAdministrationTime: DateTimeDto;
     status: ENursingRecordStatus;
+    updateReason: string;
+    updatedBy: string;
 }
 
 export interface NursingRiskFactorDto extends Serializable {

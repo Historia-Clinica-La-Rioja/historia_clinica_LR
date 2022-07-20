@@ -32,6 +32,10 @@ public class NursingRecordDto {
 
 	private DateTimeDto administrationTime;
 
+	private String updatedBy;
+
+	private String updateReason;
+
 }
 
 

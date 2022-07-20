@@ -20,7 +20,11 @@ import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.ips.entity
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.ips.entity.indication.NursingRecord;
 import ar.lamansys.sgh.shared.infrastructure.input.service.EIndicationType;
 import ar.lamansys.sgh.shared.infrastructure.input.service.ENursingRecordStatus;
+import ar.lamansys.sgh.shared.infrastructure.input.service.HospitalUserPersonInfoDto;
+import ar.lamansys.sgh.shared.infrastructure.input.service.SharedHospitalUserPort;
 import ar.lamansys.sgx.shared.dates.configuration.JacksonDateFormatConfig;
+import ar.lamansys.sgx.shared.featureflags.AppFeature;
+import ar.lamansys.sgx.shared.featureflags.application.FeatureFlagsService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -50,6 +54,8 @@ public class NursingRecordStorageImpl implements NursingRecordStorage {
 	private final OtherIndicationStorage otherIndicationStorage;
 	private final PharmacoStorage pharmacoStorage;
 	private final HistoricNursingRecordRepository historicNursingRecordRepository;
+	private final SharedHospitalUserPort sharedHospitalUserPort;
+	private final FeatureFlagsService featureFlagsService;
 
 	@Override
 	public List<Integer> createNursingRecordsFromIndication(IndicationSummaryBo indication) {
@@ -67,6 +73,7 @@ public class NursingRecordStorageImpl implements NursingRecordStorage {
 		log.debug("Input parameter -> internmentEpisodeId {}", internmentEpisodeId);
 		List<NursingRecordBo> result = nursingRecordRepository.getByInternmentEpisodeId(internmentEpisodeId).
 				stream().map(this::mapToBo).collect(Collectors.toList());
+		result.forEach(this::setLastUpdateInfo);
 		log.debug(OUTPUT, result);
 		return result;
 	}
@@ -93,8 +100,18 @@ public class NursingRecordStorageImpl implements NursingRecordStorage {
 		log.debug("Input parameter -> indicationId {}", indicationId);
 		List<NursingRecordBo> result = nursingRecordRepository.getByIndicationId(indicationId).
 				stream().map(this::mapToBo).collect(Collectors.toList());
+		result.forEach(this::setLastUpdateInfo);
 		log.debug(OUTPUT, result);
 		return result;
+	}
+
+	private void setLastUpdateInfo(NursingRecordBo nursingRecordBo){
+		historicNursingRecordRepository.getAllByNursingRecordId(nursingRecordBo.getId()).stream().findFirst().ifPresent(entity -> nursingRecordBo.setUpdateReason(entity.getReason()));
+		HospitalUserPersonInfoDto p = sharedHospitalUserPort.getUserCompleteInfo(nursingRecordBo.getUpdatedBy());
+		if(featureFlagsService.isOn(AppFeature.HABILITAR_DATOS_AUTOPERCIBIDOS) && p.getNameSelfDetermination() != null && !p.getNameSelfDetermination().isEmpty())
+			nursingRecordBo.setUpdatedByName(p.getNameSelfDetermination() + " " + p.getLastName());
+		else
+			nursingRecordBo.setUpdatedByName(p.getFirstName() + " " + p.getLastName());
 	}
 
 	private NursingRecordBo mapToBo(NursingRecord entity){
@@ -106,6 +123,7 @@ public class NursingRecordStorageImpl implements NursingRecordStorage {
 		result.setAdministrationTime(entity.getAdministrationTime());
 		result.setEvent(entity.getEvent());
 		result.setObservation(entity.getObservation());
+		result.setUpdatedBy(entity.getUpdatedBy());
 		return result;
 	}
 
