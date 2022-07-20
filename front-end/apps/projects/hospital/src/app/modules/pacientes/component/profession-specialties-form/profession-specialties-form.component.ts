@@ -1,4 +1,4 @@
-import { Component, forwardRef, Input, OnDestroy } from '@angular/core';
+import { ChangeDetectionStrategy, Component, EventEmitter, forwardRef, Input, OnDestroy, Output } from '@angular/core';
 import { ControlValueAccessor, FormArray, FormBuilder, FormControl, FormGroup, NG_VALUE_ACCESSOR, Validators } from '@angular/forms';
 import { ClinicalSpecialtyDto, HealthcareProfessionalSpecialtyDto, ProfessionalProfessionsDto, ProfessionalSpecialtyDto } from '@api-rest/api-model';
 import { TypeaheadOption } from '@presentation/components/typeahead/typeahead.component';
@@ -15,11 +15,11 @@ import { Subscription } from 'rxjs';
 			multi: true,
 		}
 	],
+	changeDetection: ChangeDetectionStrategy.OnPush
 
 })
 
 export class ProfessionSpecialtiesFormComponent implements ControlValueAccessor, OnDestroy {
-
 	professionsTypeahead: TypeaheadOption<ProfessionalSpecialtyDto>[] = [];
 	specialtiesTypeahead: TypeaheadOption<ClinicalSpecialtyDto>[] = [];
 	initValueTypeaheadSpecialties: TypeaheadOption<ClinicalSpecialtyDto>[] = [];
@@ -29,12 +29,13 @@ export class ProfessionSpecialtiesFormComponent implements ControlValueAccessor,
 	@Input() allSpecialties: ClinicalSpecialtyDto[] = [];
 	@Input() confirmationValidation: boolean = false;
 	@Input() professionalProfessionsDto?: ProfessionalProfessionsDto = null;
+	@Output() isEmptyCombo = new EventEmitter<boolean>();
 	onTouched = () => { };
 
 	form = this.formBuilder.group({
 		id: null,
 		healthcareProfessionalId: null,
-		profession: new FormControl([]),
+		profession: new FormControl(null, Validators.required),
 		specialties: new FormArray([])
 	});
 
@@ -45,7 +46,8 @@ export class ProfessionSpecialtiesFormComponent implements ControlValueAccessor,
 	ngOnInit(): void {
 		this.professionsTypeahead = this.allProfessions.map(d => this.toProfessionDtoTypeahead(d));
 		this.specialtiesTypeahead = this.allSpecialties.map(d => this.toSpecialtyDtoTypeahead(d));
-		!!this.professionalProfessionsDto ? this.setPreviousSpeciality() : this.addSpecialties();
+		if (!!this.professionalProfessionsDto)
+			this.setPreviousSpeciality();
 
 	}
 
@@ -60,19 +62,17 @@ export class ProfessionSpecialtiesFormComponent implements ControlValueAccessor,
 	}
 
 	setProfession($event: ProfessionalSpecialtyDto): void {
+		const arraySpecialties = this.form.get('specialties') as FormArray;
+
 		this.form.controls.profession.setValue($event);
 		if ($event === null) {
-			this.initValueTypeaheadSpecialties = [];
-			this.deleteSpecialties();
-			this.form.controls.healthcareProfessionalId.setValue(null);
-			this.form.controls.id.setValue(null);
+			this.isEmptyCombo.emit(true);
+		} else {
+			if (arraySpecialties.length === 0)
+				this.addSpecialties();
 		}
 	}
 
-	private deleteSpecialties(): void {
-		const arraySpecialties = this.form.get('specialties') as FormArray;
-		arraySpecialties.clear();
-	}
 
 	setSpeciality($event: ClinicalSpecialtyDto, pointIndex: number): void {
 		const arraySpecialties = this.form.get('specialties') as FormArray;
@@ -134,11 +134,14 @@ export class ProfessionSpecialtiesFormComponent implements ControlValueAccessor,
 		arraySpecialties.push(this.initFormSpecialties(elem));
 	}
 
+	hasErrorProfession(): boolean {
+		return (this.confirmationValidation && this.form.controls.profession.value === null);
+	}
 
-	hasError(): boolean {
+	hasErrorSpecialty(): boolean {
 		const arraySpecialties = this.form.get('specialties') as FormArray;
 		let length = arraySpecialties?.length;
-		return (this.confirmationValidation && length > 0 ? (arraySpecialties.at(arraySpecialties.length - 1).value.clinicalSpecialty.id === null) : false);
+		return (this.confirmationValidation && (length > 0 ? (arraySpecialties.at(length - 1).value.clinicalSpecialty?.id === null) : false) && (this.form.value.profession !== null));
 	}
 
 	isDisableAddSpecialties(): boolean {

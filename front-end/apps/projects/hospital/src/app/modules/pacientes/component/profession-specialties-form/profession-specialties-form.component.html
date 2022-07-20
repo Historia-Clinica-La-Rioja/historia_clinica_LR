@@ -4,6 +4,9 @@
 		[titleInput]="'pacientes.edit_prefessions_specialties.profession_specialties.PROFESSION'| translate "
 		(selectionChange)="setProfession($event)" (blur)="onTouched()">
 	</app-typeahead>
+	<mat-error *ngIf="hasErrorProfession()">
+		{{'pacientes.edit_prefessions_specialties.profession_specialties.PROFESSION_ERROR' | translate }}
+	</mat-error>
 
 	<div formArrayName="specialties">
 		<div *ngFor="let p of getCtrl('specialties',form)?.controls;index as formChild" fxLayoutAlign="end">
@@ -13,8 +16,9 @@
 					[titleInput]="'pacientes.edit_prefessions_specialties.profession_specialties.SPECIALTY'| translate "
 					(selectionChange)="setSpeciality($event,formChild)">
 				</app-typeahead>
-				<mat-error *ngIf='hasError()'> {{'pacientes.edit_prefessions_specialties.profession_specialties.ERROR'
-					| translate }}</mat-error>
+				<mat-error *ngIf='hasErrorSpecialty()'>
+					{{'pacientes.edit_prefessions_specialties.profession_specialties.SPECIALTY_ERROR' | translate }}
+				</mat-error>
 			</div>
 		</div>
 	</div>
