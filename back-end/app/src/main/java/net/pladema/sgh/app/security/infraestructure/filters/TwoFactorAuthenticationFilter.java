@@ -1,14 +1,11 @@
 package net.pladema.sgh.app.security.infraestructure.filters;
 
-import ar.lamansys.sgx.auth.jwt.domain.token.ETokenType;
-import ar.lamansys.sgx.auth.jwt.infrastructure.input.rest.filter.JWTFilter;
-import ar.lamansys.sgx.auth.jwt.infrastructure.input.service.AuthenticationExternalService;
-import ar.lamansys.sgx.auth.jwt.infrastructure.output.token.TokenUtils;
-import lombok.extern.slf4j.Slf4j;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
+import java.util.function.Function;
 
-import net.pladema.permissions.repository.enums.ERole;
-import net.pladema.permissions.service.dto.RoleAssignment;
-import net.pladema.sgh.app.security.infraestructure.authorization.InstitutionGrantedAuthority;
+import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -18,15 +15,15 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 import org.springframework.stereotype.Component;
 
-import javax.servlet.FilterChain;
-import javax.servlet.ServletException;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
+import ar.lamansys.sgx.auth.jwt.domain.token.ETokenType;
+import ar.lamansys.sgx.auth.jwt.infrastructure.input.rest.filter.AuthenticationTokenFilter;
+import ar.lamansys.sgx.auth.jwt.infrastructure.input.rest.filter.JWTFilter;
+import ar.lamansys.sgx.auth.jwt.infrastructure.input.service.AuthenticationExternalService;
+import ar.lamansys.sgx.auth.jwt.infrastructure.output.token.TokenUtils;
+import lombok.extern.slf4j.Slf4j;
+import net.pladema.permissions.repository.enums.ERole;
+import net.pladema.permissions.service.dto.RoleAssignment;
+import net.pladema.sgh.app.security.infraestructure.authorization.InstitutionGrantedAuthority;
 
 
 @Slf4j
@@ -38,36 +35,30 @@ public class TwoFactorAuthenticationFilter extends JWTFilter {
 			@Value("${token.header}") String tokenHeader,
 			AuthenticationExternalService authenticationExternalService) {
 		super(
-				secret,
-				authenticationExternalService::getAppAuthentication,
-				request -> Optional.ofNullable(request.getHeader(tokenHeader))
-				.or(() -> Optional.ofNullable(request.getHeader("Authorization")))
+				authenticationLoader(authenticationExternalService, secret),
+				request -> AuthenticationTokenFilter.readFromCookie(request)
+						.or(() -> Optional.ofNullable(request.getHeader(tokenHeader)))
+						.or(() -> Optional.ofNullable(request.getHeader("Authorization")))
 		);
 	}
 
-	@Override
-	protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
-			throws ServletException, IOException {
-		tokenExtractor.apply(request)
-				.map(this::removeBearer)
-				.flatMap(token -> TokenUtils.parseToken(token, secret, ETokenType.PARTIALLY_AUTHENTICATED))
-				.flatMap(tokenData -> authenticationLoader.apply(tokenData.username))
-				.ifPresent(this::loadPermission);
-
-		log.debug("Request {}", request.getRequestURL());
-		filterChain.doFilter(request, response);
-		log.debug("Response {}", response.getStatus());
+	public static Function<String, Optional<Authentication>> authenticationLoader(
+			AuthenticationExternalService authenticationExternalService,
+			String secret
+	) {
+		return (String token) -> TokenUtils.parseToken(token, secret, ETokenType.PARTIALLY_AUTHENTICATED)
+				.flatMap(tokenData -> authenticationExternalService.getAppAuthentication(tokenData.username))
+				.map(TwoFactorAuthenticationFilter::loadPermission);
 	}
 
-	private void loadPermission(Authentication authentication) {
+	private static Authentication loadPermission(Authentication authentication) {
 		List<GrantedAuthority> authorities = new ArrayList<>();
 		authorities.add(new InstitutionGrantedAuthority(new RoleAssignment(ERole.PARTIALLY_AUTHENTICATED, null)));
-		Optional.ofNullable(authentication)
-				.map(auth -> new UsernamePasswordAuthenticationToken(
-						auth.getPrincipal(),
-						auth.getCredentials(),
-						authorities))
-				.ifPresent(op -> SecurityContextHolder.getContext().setAuthentication(op));
+		return new UsernamePasswordAuthenticationToken(
+				authentication.getPrincipal(),
+				authentication.getCredentials(),
+				authorities
+		);
 	}
 
 	@Override

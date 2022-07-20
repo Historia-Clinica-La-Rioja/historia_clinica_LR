@@ -30,6 +30,8 @@ services:
       DATABASE_IP_PORT: hsi-db:5432
       DOCUMENT_ROOT_DIRECTORY: /var/hsi/documents
       CUBEJS_URL: http://hsi-cubejs:4000/cubejs-api/v1
+      # AUTH_DOMAIN: test1-os.dev-env.lamansys.ar
+      # AUTH_SECURE: "false"
     volumes:
       - ./.docker-data/documents/:/var/hsi/documents
     ports:

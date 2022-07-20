@@ -26,7 +26,8 @@ Este documento detalla las propiedades configurables del sistema.
 | Propiedad               | Variable de ambiente | Valor por defecto       | Necesidad | Descripcion | Desde |
 | ----------------------- | ----------------| ----------------------- | --------- | ----------- | ----- |
 | token.secret | TOKEN_SECRET |  | **Obligatorio** | La clave secreta de generación de token, usada para validar los tokens recibidos desde los request. | v0.2.0 |
-
+| app.auth.domain | AUTH_DOMAIN | localhost | **Obligatorio** | Define el dominio a autenticar | v0.40.0 |
+| app.auth.cookie.secure | AUTH_SECURE | false | **Obligatorio** | Activar en los ambientes productivos junto al uso de HTTPS | v0.40.0 |
 ## Configuración DDBB (SQL)
 
 | Propiedad | Variable de ambiente | Valor por defecto | Necesidad | Descripcion                                                                                | Desde |
