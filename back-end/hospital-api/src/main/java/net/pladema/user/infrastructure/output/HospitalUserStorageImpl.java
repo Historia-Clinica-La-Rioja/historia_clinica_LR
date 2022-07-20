@@ -142,7 +142,9 @@ public class HospitalUserStorageImpl implements HospitalUserStorage {
     @Override
 	public void resetTwoFactorAuthentication(Integer userId) {
 		userExternalService.resetTwoFactorAuthentication(userId);
-        
+
+	}
+
 	@Override
 	public boolean hasProfessionalRole(Integer userId) {
 		return RoleUtils.hasProfessionalRole(userRoleStorage.getRolesByUser(userId).stream()

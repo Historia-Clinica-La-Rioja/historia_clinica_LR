@@ -27,11 +27,31 @@ public class ProfessionalLicenseNumberStorageImpl implements ProfessionalLicense
 		return result;
 	}
 
+	@Override
+	public void save(ProfessionalLicenseNumberBo professionalLicenseNumberBo) {
+		log.debug("Inputs parameters -> professionalLicenseNumberBo {}", professionalLicenseNumberBo);
+		repository.save(mapToEntity(professionalLicenseNumberBo));
+	}
+
+	@Override
+	public void delete(Integer id) {
+		log.debug("Inputs parameters -> professionalLicenseNumberId {}", id);
+		repository.deleteById(id);
+	}
+
 	private ProfessionalLicenseNumberBo mapToBo(ProfessionalLicenseNumber entity) {
 		return new ProfessionalLicenseNumberBo(entity.getId(),
 				entity.getLicenseNumber(),
 				entity.getType(),
 				entity.getProfessionalProfessionId(),
 				entity.getHealthcareProfessionalSpecialtyId());
+	}
+
+	private ProfessionalLicenseNumber mapToEntity(ProfessionalLicenseNumberBo bo){
+		return new ProfessionalLicenseNumber(bo.getId(),
+				bo.getLicenseNumber(),
+				bo.getType(),
+				bo.getProfessionalProfessionId(),
+				bo.getHealthcareProfessionalSpecialtyId());
 	}
 }

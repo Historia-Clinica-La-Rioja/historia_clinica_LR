@@ -8,6 +8,8 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 
+import javax.annotation.Nullable;
+
 @Getter
 @Setter
 @ToString
@@ -17,6 +19,7 @@ public class ProfessionalLicenseNumberDto implements Serializable {
 
 	private static final long serialVersionUID = 7788785116152807155L;
 
+	@Nullable
 	private Integer id;
 
 	private String licenseNumber;
@@ -25,6 +28,7 @@ public class ProfessionalLicenseNumberDto implements Serializable {
 
 	private Integer professionalProfessionId;
 
+	@Nullable
 	private Integer healthcareProfessionalSpecialtyId;
 
 }
