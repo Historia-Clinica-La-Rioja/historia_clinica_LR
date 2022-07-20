@@ -11,29 +11,29 @@ import lombok.Value;
 @ToString
 public class AppointmentDiaryVo {
 
-    private final Integer id;
+	private final Integer id;
 
-    private final Integer patientId;
+	private final Integer patientId;
 
-    private final Integer diaryId;
+	private final Integer diaryId;
 
-    private final LocalDate date;
+	private final LocalDate date;
 
-    private final LocalTime hour;
+	private final LocalTime hour;
 
-    private final Short appointmentStateId;
+	private final Short appointmentStateId;
 
-    private final boolean overturn;
+	private final boolean overturn;
 
-    private final Integer patientMedicalCoverageId;
+	private final Integer patientMedicalCoverageId;
 
-    private final Short medicalAttentionTypeId;
+	private final Short medicalAttentionTypeId;
 
 	private final String phonePrefix;
 
-    private final String phoneNumber;
+	private final String phoneNumber;
 
-    private final Short appointmentBlockMotiveId;
+	private final Short appointmentBlockMotiveId;
 	
 	public AppointmentDiaryVo(
 			Integer diaryId,
@@ -49,19 +49,19 @@ public class AppointmentDiaryVo {
 			Short medicalAttentionTypeId,
 			Short appointmentBlockMotiveId
 	) {
-        this.diaryId = diaryId;
-        this.id = id;
-        this.patientId = patientId;
-        this.date = date;
-        this.hour = hour;
-        this.appointmentStateId = appointmentStateId;
-        this.overturn = overturn;
-        this.patientMedicalCoverageId = patientMedicalCoverageId;
+		this.diaryId = diaryId;
+		this.id = id;
+		this.patientId = patientId;
+		this.date = date;
+		this.hour = hour;
+		this.appointmentStateId = appointmentStateId;
+		this.overturn = overturn;
+		this.patientMedicalCoverageId = patientMedicalCoverageId;
 		this.phonePrefix = phonePrefix;
-        this.phoneNumber = phoneNumber;
-        this.medicalAttentionTypeId = medicalAttentionTypeId;
+		this.phoneNumber = phoneNumber;
+		this.medicalAttentionTypeId = medicalAttentionTypeId;
 		this.appointmentBlockMotiveId = appointmentBlockMotiveId;
-    }
+	}
 
 
 }

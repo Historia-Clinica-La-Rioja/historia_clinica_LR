@@ -4,9 +4,11 @@ import { DatePipe } from '@angular/common';
 import { MatOptionSelectionChange } from '@angular/material/core';
 import { MatDialog } from '@angular/material/dialog';
 import { Subscription } from 'rxjs';
+import { isAfter, parseISO, startOfToday } from 'date-fns';
 
 import { ContextService } from '@core/services/context.service';
 import { processErrors } from '@core/utils/form.utils';
+import { DatePipeFormat } from '@core/utils/date.utils';
 
 import { DailyAppointmentService } from '@api-rest/services/daily-appointment.service';
 import { DiaryService } from '@api-rest/services/diary.service';
@@ -19,8 +21,6 @@ import { DatePickerComponent } from '@presentation/dialogs/date-picker/date-pick
 import { AgendaSearchService, AgendaFilters, AgendaOptionsData } from '../../services/agenda-search.service';
 import { AppointmentsFacadeService } from '@turnos/services/appointments-facade.service';
 import { BlockAgendaRangeComponent } from '@turnos/dialogs/block-agenda-range/block-agenda-range.component';
-import { isAfter, parseISO, startOfToday } from 'date-fns';
-import { DatePipeFormat } from '@core/utils/date.utils';
 
 @Component({
 	selector: 'app-select-agenda',

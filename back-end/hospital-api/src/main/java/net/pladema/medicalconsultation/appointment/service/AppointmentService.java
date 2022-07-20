@@ -8,30 +8,30 @@ import java.util.Optional;
 
 import net.pladema.medicalconsultation.appointment.service.domain.AppointmentAssignedBo;
 import net.pladema.medicalconsultation.appointment.service.domain.AppointmentBo;
-import net.pladema.patient.service.domain.PatientMedicalCoverageBo;
 import net.pladema.medicalconsultation.appointment.service.domain.UpdateAppointmentBo;
+import net.pladema.patient.service.domain.PatientMedicalCoverageBo;
 
 public interface AppointmentService {
 
-    Optional<AppointmentBo> getAppointment(Integer appointmentId);
+	Optional<AppointmentBo> getAppointment(Integer appointmentId);
 
-    Collection<AppointmentBo> getAppointmentsByDiaries(List<Integer> diaryIds);
+	Collection<AppointmentBo> getAppointmentsByDiaries(List<Integer> diaryIds);
 
 	Collection<AppointmentBo> getAppointmentsByProfessionalInInstitution(Integer healthcareProfessionalId, Integer institutionId);
 
-    boolean existAppointment(Integer diaryId, Integer openingHoursId, LocalDate date, LocalTime hour);
+	boolean existAppointment(Integer diaryId, Integer openingHoursId, LocalDate date, LocalTime hour);
 
 	Optional<AppointmentBo> findAppointmentBy(Integer diaryId, LocalDate date, LocalTime hour);
 
-    Collection<AppointmentBo> getFutureActiveAppointmentsByDiary(Integer diaryId);
+	Collection<AppointmentBo> getFutureActiveAppointmentsByDiary(Integer diaryId);
 
-    boolean updateState(Integer appointmentId, short appointmentStateId, Integer userId, String reason);
+	boolean updateState(Integer appointmentId, short appointmentStateId, Integer userId, String reason);
 
-    boolean hasConfirmedAppointment(Integer patientId, Integer healthcareProfessionalId, LocalDate date);
+	boolean hasConfirmedAppointment(Integer patientId, Integer healthcareProfessionalId, LocalDate date);
 
-    List<Integer> getAppointmentsId(Integer patientId, Integer healthcareProfessionalId, LocalDate date);
+	List<Integer> getAppointmentsId(Integer patientId, Integer healthcareProfessionalId, LocalDate date);
 
-    boolean updatePhoneNumber(Integer appointmentId, String phonePrefix, String phoneNumber, Integer userId);
+	boolean updatePhoneNumber(Integer appointmentId, String phonePrefix, String phoneNumber, Integer userId);
 
 	boolean updateMedicalCoverage(Integer appointmentId, Integer patientMedicalCoverage);
 
@@ -43,7 +43,7 @@ public interface AppointmentService {
 
 	Collection<AppointmentAssignedBo> getCompleteAssignedAppointmentInfo(Integer patientId);
 
-    AppointmentBo updateAppointment(UpdateAppointmentBo appointmentDto);
+	AppointmentBo updateAppointment(UpdateAppointmentBo appointmentDto);
 
-    void delete(AppointmentBo appointmentBo);
+	void delete(AppointmentBo appointmentBo);
 }

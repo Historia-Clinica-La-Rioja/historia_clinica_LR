@@ -39,9 +39,12 @@ export class AppointmentsService {
 
 	getList(diaryIds: number[], healthcareProfessionalId: number): Observable<AppointmentListDto[]> {
 		const url = this.BASE_URL + `/list/${healthcareProfessionalId}`;
+		// Se filtra porque pueden llegar diaryIds como undefined
+		diaryIds = diaryIds.filter(d => d !== undefined);
 		if (!diaryIds || diaryIds.length === 0 || !healthcareProfessionalId) {
 			return of([]);
 		}
+
 		return this.http.get<AppointmentListDto[]>(url, {
 			params: {
 				diaryIds: `${diaryIds.join(',')}`

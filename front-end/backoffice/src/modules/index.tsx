@@ -55,9 +55,7 @@ import healthcareprofessionalspecialtylicensenumbers from "./healthcareprofessio
 const resourcesAdminInstitucional = (permissions: SGXPermissions) =>
     permissions.isOn('BACKOFFICE_MOSTRAR_ABM_RESERVA_TURNOS') ?
         [
-        <Resource name="users" {...users}/>,
         <Resource name="professionalprofessions" {...professionalprofessions}/>,
-        <Resource name="medicalCoverages" {...medicalCoverage}/>,
         <Resource name="booking-institution" {...bookingInstitutions(permissions)}/>,
         <Resource name="healthcareprofessionalhealthinsurances"  {...healthcareprofessionalhealthinsurances}/>,
         <Resource name="mandatorymedicalpractices"  {...mandatorymedicalpractices}/>,
@@ -70,10 +68,6 @@ const resourcesAdminInstitucional = (permissions: SGXPermissions) =>
 const resourcesAdminRoot = (permissions: SGXPermissions) => [
     <Resource name="professionalprofessions" {...professionalprofessions} />,
     <Resource name="healthcareprofessionalspecialties" {...healthcareprofessionalspecialties} />,
-    <Resource name="password-reset" {...passwordReset} />,
-    <Resource name="roles" />,
-    <Resource name="addresses" {...addresses} />,
-
     <Resource name="medicalcoveragetypes" />,
     <Resource name="medicalcoverageplans" {...medicalcoverageplans} />,
     <Resource name="medicalcoveragesmerge" />,
@@ -91,7 +85,9 @@ const resources = (permissions: SGXPermissions) => [
     <Resource name="person" {...person(permissions)} />,
     <Resource name="admin" {...admin(permissions)}/>,
     <Resource name="users" {...users}/>,
-     ...resourcesFor(permissions),
+    <Resource name="roles" />,
+    <Resource name="password-reset" {...passwordReset(permissions)} />,
+    ...resourcesFor(permissions),
     // facilities
     <Resource name="institutions" {...institutions(permissions)} />,
     <Resource name="sectors" {...sectors} />,

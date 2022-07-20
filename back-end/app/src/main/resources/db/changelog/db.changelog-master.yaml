@@ -185,6 +185,10 @@ databaseChangeLog:
     relativeToChangelogFile: true
 
 - include:
+    file: incrementales-booking-v0_1.yml
+    relativeToChangelogFile: true
+
+- include:
     file: incrementales-v1_37.yml
     relativeToChangelogFile: true
 
@@ -200,9 +204,8 @@ databaseChangeLog:
     file: incrementales-v1_40.yml
     relativeToChangelogFile: true
 
-# Los forks deberían agregar sus incrementales debajo de esta línea para evitar conflictos
-
-
 - include:
     file: incrementales-v1_41.yml
     relativeToChangelogFile: true
+
+# Los forks deberían agregar sus incrementales debajo de esta línea para evitar conflictos
