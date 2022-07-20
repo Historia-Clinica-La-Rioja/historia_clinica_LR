@@ -43,7 +43,7 @@ export class AuthenticationService {
 		);
 	}
 
-	tokenRefresh(refreshToken: string): Observable<string>  {
-		return this.authService.tokenRefresh(refreshToken);
+	tokenRefresh(): Observable<any>  {
+		return this.authService.tokenRefresh();
 	}
 }

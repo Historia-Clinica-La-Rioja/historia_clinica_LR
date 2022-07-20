@@ -10,47 +10,27 @@ import { throwError, EMPTY, Observable, ReplaySubject } from 'rxjs';
 import { catchError, switchMap } from 'rxjs/operators';
 
 import { AuthenticationService } from '../modules/auth/services/authentication.service';
-import { environment } from '@environments/environment';
-import { canRefreshToken, addToken } from '@core/utils/auth.utils';
-import { retrieveRefreshToken, retrieveToken } from '@core/utils/jwt-storage';
 
-const PUBLIC_ENDPOINTS = [
-	'auth',
-];
-
-const NEED_ACCESS_TOKEN_ENDPOINTS = [
-	'auth/login-2fa',
-];
-
-const urlIsPublic = (url: string) => PUBLIC_ENDPOINTS.some(endpointPrefix => url.startsWith(`${environment.apiBase}/${endpointPrefix}`));
-
-const urlNeedsAccessToken = (url: string) => NEED_ACCESS_TOKEN_ENDPOINTS.some(endpointPrefix => url.startsWith(`${environment.apiBase}/${endpointPrefix}`));
-
-const isExternalURL = (url: string) => url.startsWith('http');
+const shouldAuthorize = (url: string) => !url.startsWith('http'); // any absolute request (another domain)
 
 const isUnauthorized = (error: any): boolean =>  error instanceof HttpErrorResponse && error.status === 401;
 
 @Injectable()
 export class AuthInterceptor implements HttpInterceptor {
-	private refreshTokenSubject: ReplaySubject<string>;
+	private refreshTokenSubject: ReplaySubject<any>;
 
 	constructor(
 		private readonly authenticationService: AuthenticationService,
 	) { }
 
 	intercept(req: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
-
-		if (urlIsPublic(req.url) && !urlNeedsAccessToken(req.url) || isExternalURL(req.url)) {
-			return next.handle(req.clone());
-		}
-
-		return next.handle(addToken(req, retrieveToken()))
+		return next.handle(req.clone())
 			.pipe(
 				catchError((error: any) => {
-					if (isUnauthorized(error)) {
+					if (isUnauthorized(error) && shouldAuthorize(req.url)) {
 						return this.refreshToken().pipe(
-							switchMap(token => {
-								return next.handle(addToken(req, token));
+							switchMap(() => {
+								return next.handle(req.clone());
 							})
 						);
 					}
@@ -59,10 +39,10 @@ export class AuthInterceptor implements HttpInterceptor {
 			));
 	}
 
-	private refreshToken(): Observable<string> {
+	private refreshToken(): Observable<any> {
 		if (!this.refreshTokenSubject) {
-			this.refreshTokenSubject = new ReplaySubject<string>(1);
-			this.callRefreshToken().pipe(
+			this.refreshTokenSubject = new ReplaySubject<any>(1);
+			this.authenticationService.tokenRefresh().pipe(
 				catchError(_ => {
 					this.refreshTokenSubject = undefined;
 					this.authenticationService.logout();
@@ -80,14 +60,6 @@ export class AuthInterceptor implements HttpInterceptor {
 			});
 		}
 		return this.refreshTokenSubject?.asObservable() || EMPTY;
-	}
-
-	private callRefreshToken(): Observable<string>  {
-		const refreshToken: string = retrieveRefreshToken();
-		if (canRefreshToken(refreshToken)) {
-			return this.authenticationService.tokenRefresh(refreshToken);
-		}
-		return throwError(undefined);
 	}
 
 }
