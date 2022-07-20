@@ -11,6 +11,8 @@ import lombok.extern.slf4j.Slf4j;
 import net.pladema.clinichistory.hospitalization.service.indication.nursingrecord.InternmentNursingRecordService;
 
 
+import net.pladema.clinichistory.hospitalization.service.indication.nursingrecord.NursingRecordValidatorService;
+
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
@@ -36,6 +38,8 @@ public class InternmentNursingRecordController {
 
 	private final InternmentNursingRecordService internmentNursingRecordService;
 
+	private final NursingRecordValidatorService nursingRecordValidatorService;
+
 
 	@GetMapping()
 	@PreAuthorize("hasPermission(#institutionId, 'ESPECIALISTA_MEDICO, ESPECIALISTA_EN_ODONTOLOGIA, PROFESIONAL_DE_SALUD, ENFERMERO, PERSONAL_DE_FARMACIA')")
@@ -56,6 +60,7 @@ public class InternmentNursingRecordController {
 													   @RequestBody(required = false) DateTimeDto administrationTime){
 		log.debug("Input parameters -> institutionId {}, internmentEpisodeId {}, nursingRecordId {}, statusId {}, administrationTime {}, reason {}",
 				institutionId, internmentEpisodeId, nursingRecordId, status, administrationTime, reason);
+		nursingRecordValidatorService.validateStatusUpdate(status, reason, administrationTime);
 		boolean result = internmentNursingRecordService.updateNursingRecordStatus(nursingRecordId, status, localDateMapper.fromDateTimeDto(administrationTime), UserInfo.getCurrentAuditor(), reason);
 		log.debug("Output => {}", result);
 		return ResponseEntity.ok().body(true);
