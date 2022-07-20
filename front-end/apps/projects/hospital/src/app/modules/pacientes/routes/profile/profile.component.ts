@@ -345,7 +345,7 @@ export class ProfileComponent implements OnInit {
 			height: DIALOG_SIZE_HEIGHT,
 			disableClose: true,
 			data: {
-				personId: this.personId,
+				personId: this.personId, professionalId: this.professionalId,
 				id: this.professionalSpecialtyId, allSpecialties: this.allSpecialties, allProfessions: this.allProfessions, ownProfessionsAndSpecialties: this.ownProfessionsAndSpecialties
 			}
 		});

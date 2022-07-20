@@ -74,6 +74,11 @@ export class EditPrefessionsSpecialtiesComponent implements OnInit {
 		}
 	}
 
+	deleteCombo(pointIndex: number): void {
+		const array = this.form.get('professionalProfessions') as FormArray;
+		array.removeAt(pointIndex);
+	}
+
 	private buildCreateProfessionalDto(): HealthcareProfessionalCompleteDto {
 		const array = this.form.get('professionalProfessions') as FormArray;
 		const refArray = array.value;

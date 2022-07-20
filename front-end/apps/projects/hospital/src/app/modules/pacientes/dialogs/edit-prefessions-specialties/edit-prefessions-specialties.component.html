@@ -17,7 +17,7 @@
 				<div [formGroupName]="formChild">
 					<app-profession-specialties-form [confirmationValidation]="confirmationValidation"
 						[allProfessions]="data.allProfessions" [allSpecialties]="data.allSpecialties" formControlName="combo"
-						[professionalProfessionsDto]="ownProfessionsAndSpecialties.pop()">
+						[professionalProfessionsDto]="ownProfessionsAndSpecialties.pop()" (isEmptyCombo)="deleteCombo(formChild)">
 					</app-profession-specialties-form>
 				</div>
 				<hr class="divider" />
