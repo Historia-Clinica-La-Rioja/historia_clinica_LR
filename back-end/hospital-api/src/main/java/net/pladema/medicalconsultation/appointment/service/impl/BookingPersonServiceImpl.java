@@ -1,5 +1,6 @@
 package net.pladema.medicalconsultation.appointment.service.impl;
 
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
@@ -8,6 +9,9 @@ import java.util.stream.Collectors;
 import net.pladema.medicalconsultation.appointment.repository.HistoricAppointmentStateRepository;
 import net.pladema.medicalconsultation.appointment.repository.entity.HistoricAppointmentState;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import ar.lamansys.sgx.shared.security.UserInfo;
@@ -72,7 +76,16 @@ public class BookingPersonServiceImpl implements BookingPersonService {
 
     @Override
     public Optional<BookingPerson> findByEmail(String email) {
-        return bookingPersonRepository.findByEmail(email);
+		final int AUX_PAGEABLE_PAGE_NUMBER = 0;
+		final int AUX_PAGEABLE_PAGE_SIZE = 1;
+		Pageable pageable = PageRequest.of(AUX_PAGEABLE_PAGE_NUMBER, AUX_PAGEABLE_PAGE_SIZE);
+		Page<BookingPerson> page = bookingPersonRepository.findByEmail(email, pageable);
+		List<BookingPerson> content = page.getContent();
+		if (content.isEmpty()) {
+			return Optional.empty();
+		} else {
+			return Optional.of(content.get(0));
+		}
     }
 
     @Override

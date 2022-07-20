@@ -48,6 +48,21 @@ import net.pladema.medicalconsultation.appointment.repository.entity.Appointment
 @Repository
 public interface AppointmentRepository extends SGXAuditableEntityJPARepository<Appointment, Integer>, SGXDocumentEntityRepository<Appointment> {
 
+	@Transactional(readOnly = true)
+	@Query( "SELECT a" +
+			" FROM Appointment AS a" +
+			" JOIN AppointmentAssn AS assn ON (a.id = assn.pk.appointmentId)" +
+			" JOIN Diary AS d ON (d.id = assn.pk.diaryId)" +
+			" JOIN BookingAppointment AS ba ON (a.id = ba.pk.appointmentId)" +
+			" JOIN BookingPerson AS bp ON (ba.pk.bookingPersonId = bp.id)" +
+			" WHERE d.healthcareProfessionalId = :id" +
+			" AND bp.identificationNumber = :dni" +
+			" AND a.dateTypeId >= CURRENT_DATE" +
+			" AND a.appointmentStateId <> " + AppointmentState.ABSENT +
+			" AND a.appointmentStateId <> " + AppointmentState.CANCELLED +
+			" AND a.appointmentStateId <> " + AppointmentState.SERVED)
+	List<Appointment> hasAppointment(@Param("dni") String dni, @Param("id") Integer id);
+
     @Transactional(readOnly = true)
     @Query( "SELECT NEW net.pladema.medicalconsultation.appointment.repository.domain.AppointmentVo(aa.pk.diaryId, a, doh.medicalAttentionTypeId, has.reason, ao.observation, ao.createdBy, dl, a.recurringAppointmentTypeId)" +
             "FROM Appointment AS a " +

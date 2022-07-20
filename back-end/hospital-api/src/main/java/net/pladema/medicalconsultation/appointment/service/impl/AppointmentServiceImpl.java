@@ -809,6 +809,14 @@ public class AppointmentServiceImpl implements AppointmentService {
 		}
 	}
 
+	@Override
+	public Collection<AppointmentBo> hasAppointment(String dni, Integer id) {
+		return appointmentRepository.hasAppointment(dni, id)
+				.stream()
+				.map(AppointmentBo::newFromAppointment)
+				.collect(Collectors.toList());
+	}
+
 	private void updateRecurringAppointmentDate(AppointmentBo currentAppointment, AppointmentBo newAppointment) {
 		Integer parentAppointmentId = currentAppointment.getParentAppointmentId();
 		if (parentAppointmentId == null)

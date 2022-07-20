@@ -1,11 +1,14 @@
 package ar.lamansys.sgh.shared.infrastructure.input.service.booking;
 
 
+import ar.lamansys.sgh.shared.infrastructure.input.service.appointment.exceptions.BookingPersonMailNotExistsException;
+import ar.lamansys.sgh.shared.infrastructure.input.service.appointment.exceptions.ProfessionalAlreadyBookedException;
+
 import java.util.List;
 
 public interface SharedBookingPort {
 
-	SavedBookingAppointmentDto makeBooking(BookingDto bookingDto, boolean onlineBooking);
+	SavedBookingAppointmentDto makeBooking(BookingDto bookingDto, boolean onlineBooking) throws ProfessionalAlreadyBookedException, BookingPersonMailNotExistsException;
 
 	void cancelBooking(String uuid);
 

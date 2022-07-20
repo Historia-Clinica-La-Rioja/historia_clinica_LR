@@ -66,7 +66,7 @@ public interface PersonRepository extends JpaRepository<Person, Integer>, AuditP
     Optional<CompletePersonVo> getCompletePerson(@Param("personId") Integer personId);
 
     @Transactional(readOnly = true)
-    @Query("SELECT NEW net.pladema.person.repository.domain.CompletePersonNameBo( p, pe.nameSelfDetermination) " +
+    @Query("SELECT NEW net.pladema.person.repository.domain.CompletePersonNameBo( p, pe.nameSelfDetermination, hp.id) " +
     "FROM Diary d " +
     "JOIN HealthcareProfessional hp ON d.healthcareProfessionalId = hp.id " +
     "JOIN Person p ON hp.personId = p.id " +

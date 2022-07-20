@@ -122,4 +122,6 @@ public interface AppointmentService {
 	Boolean isAppointmentOverturn(Integer appointmentId);
 
 	void verifyRecurringAppointmentsOverturn(Integer diaryId);
+
+	Collection<AppointmentBo> hasAppointment(String dni, Integer id);
 }

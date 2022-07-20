@@ -2,6 +2,8 @@ package ar.lamansys.online.infraestructure.output.repository;
 
 import java.util.Optional;
 
+import ar.lamansys.sgh.shared.infrastructure.input.service.appointment.exceptions.BookingPersonMailNotExistsException;
+import ar.lamansys.sgh.shared.infrastructure.input.service.appointment.exceptions.ProfessionalAlreadyBookedException;
 import ar.lamansys.sgh.shared.infrastructure.input.service.booking.SavedBookingAppointmentDto;
 
 import ar.lamansys.sgh.shared.infrastructure.input.service.institution.SharedInstitutionPort;
@@ -26,7 +28,7 @@ public class BookingAppointmentStorageImpl implements BookingAppointmentStorage 
     }
 
     @Override
-    public SavedBookingAppointmentDto save(BookingBo bookingBo) {
+    public SavedBookingAppointmentDto save(BookingBo bookingBo) throws ProfessionalAlreadyBookedException, BookingPersonMailNotExistsException {
         return sharedAppointmentPort.saveBooking(
                 mapToAppointment(bookingBo),
                 mapToBookingPerson(bookingBo),

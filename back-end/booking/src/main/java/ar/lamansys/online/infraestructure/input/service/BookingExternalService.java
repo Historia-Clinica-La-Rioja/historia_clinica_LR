@@ -5,6 +5,8 @@ import java.util.stream.Collectors;
 
 import ar.lamansys.online.application.integration.FetchBookingInstitutionsExtended;
 import ar.lamansys.online.domain.integration.BookingInstitutionExtendedBo;
+import ar.lamansys.sgh.shared.infrastructure.input.service.appointment.exceptions.BookingPersonMailNotExistsException;
+import ar.lamansys.sgh.shared.infrastructure.input.service.appointment.exceptions.ProfessionalAlreadyBookedException;
 import ar.lamansys.sgh.shared.infrastructure.input.service.booking.BookingInstitutionExtendedDto;
 import ar.lamansys.sgh.shared.infrastructure.input.service.booking.SavedBookingAppointmentDto;
 
@@ -67,7 +69,7 @@ public class BookingExternalService implements SharedBookingPort {
 	private final FetchAvailabilityByPracticeAndProfessional fetchAvailabilityByPracticeAndProfessional;
 	private final FetchAvailabilityByPractice fetchAvailabilityByPractice;
 
-	public SavedBookingAppointmentDto makeBooking(BookingDto bookingDto, boolean onlineBooking) {
+	public SavedBookingAppointmentDto makeBooking(BookingDto bookingDto, boolean onlineBooking) throws ProfessionalAlreadyBookedException, BookingPersonMailNotExistsException {
 		BookingBo bookingBo = new BookingBo(
 				bookingDto.getAppointmentDataEmail(),
 				mapToAppointment(bookingDto.getBookingAppointmentDto()),

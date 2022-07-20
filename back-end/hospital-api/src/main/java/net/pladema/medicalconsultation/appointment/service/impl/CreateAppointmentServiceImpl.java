@@ -7,6 +7,7 @@ import ar.lamansys.sgx.shared.security.UserInfo;
 import net.pladema.medicalconsultation.appointment.application.port.AppointmentReferenceStorage;
 import net.pladema.medicalconsultation.appointment.domain.enums.EAppointmentModality;
 import net.pladema.medicalconsultation.appointment.service.AppointmentService;
+import net.pladema.medicalconsultation.appointment.repository.entity.AppointmentAssn;
 import net.pladema.medicalconsultation.appointment.service.SendVirtualAppointmentEmailService;
 import net.pladema.medicalconsultation.appointment.service.exceptions.AppointmentEnumException;
 import net.pladema.medicalconsultation.appointment.service.exceptions.AppointmentException;
@@ -22,7 +23,6 @@ import net.pladema.medicalconsultation.appointment.domain.NewAppointmentNotifica
 import net.pladema.medicalconsultation.appointment.repository.AppointmentAssnRepository;
 import net.pladema.medicalconsultation.appointment.repository.AppointmentRepository;
 import net.pladema.medicalconsultation.appointment.repository.entity.Appointment;
-import net.pladema.medicalconsultation.appointment.repository.entity.AppointmentAssn;
 import net.pladema.medicalconsultation.appointment.service.CreateAppointmentService;
 import net.pladema.medicalconsultation.appointment.service.domain.AppointmentBo;
 

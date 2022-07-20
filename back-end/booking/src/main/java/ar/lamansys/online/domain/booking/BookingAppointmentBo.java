@@ -1,5 +1,6 @@
 package ar.lamansys.online.domain.booking;
 
+import ar.lamansys.sgh.shared.infrastructure.input.service.booking.BookingProfessionalDto;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -17,4 +18,5 @@ public class BookingAppointmentBo {
     private final Integer coverageId;
     private final Integer snomedId;
     private final Integer specialtyId;
+	private final BookingProfessionalDto professional;
 }

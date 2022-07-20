@@ -3,7 +3,7 @@ package net.pladema.medicalconsultation.appointment.controller.service.impl;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.ArrayList;
-import java.util.Collections;
+import java.util.Collection;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
@@ -11,11 +11,12 @@ import java.util.Optional;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
-import javax.validation.ConstraintViolationException;
 import javax.validation.constraints.NotNull;
 
 import ar.lamansys.sgh.shared.infrastructure.input.service.SharedPersonPort;
 import ar.lamansys.sgh.shared.infrastructure.input.service.appointment.dto.AppointmentDataDto;
+import ar.lamansys.sgh.shared.infrastructure.input.service.appointment.exceptions.BookingPersonMailNotExistsException;
+import ar.lamansys.sgh.shared.infrastructure.input.service.appointment.exceptions.ProfessionalAlreadyBookedException;
 import ar.lamansys.sgh.shared.infrastructure.input.service.institution.InstitutionInfoDto;
 import ar.lamansys.sgh.shared.infrastructure.input.service.referencecounterreference.ReferenceAppointmentStateDto;
 import ar.lamansys.sgh.shared.infrastructure.input.service.booking.SavedBookingAppointmentDto;
@@ -24,6 +25,9 @@ import net.pladema.medicalconsultation.appointment.repository.entity.BookingPers
 import net.pladema.medicalconsultation.appointment.service.domain.AppointmentSummaryBo;
 
 import net.pladema.medicalconsultation.diary.service.DiaryService;
+
+import net.pladema.person.repository.domain.CompletePersonNameBo;
+import net.pladema.person.service.PersonService;
 
 import org.springframework.stereotype.Service;
 
@@ -82,12 +86,13 @@ public class AppointmentExternalServiceImpl implements AppointmentExternalServic
 	private final FetchAppointments fetchAppointments;
 	private final LocalDateMapper localDateMapper;
 	private final SharedPersonPort sharedPersonPort;
+	private final PersonService personService;
 
 	public AppointmentExternalServiceImpl(AppointmentService appointmentService, AppointmentValidatorService appointmentValidatorService,
 										  CreateAppointmentService createAppointmentService, BookingPersonService bookingPersonService,
 										  CreateBookingAppointmentService createBookingAppointmentService, DocumentAppointmentService documentAppointmentService,
 										  FetchAppointments fetchAppointments, LocalDateMapper localDateMapper,
-										  SharedPersonPort sharedPersonPort, DiaryService diaryService) {
+										  SharedPersonPort sharedPersonPort, DiaryService diaryService, PersonService personService) {
 		this.appointmentService = appointmentService;
 		this.appointmentValidatorService = appointmentValidatorService;
 		this.createAppointmentService = createAppointmentService;
@@ -98,6 +103,7 @@ public class AppointmentExternalServiceImpl implements AppointmentExternalServic
 		this.localDateMapper = localDateMapper;
 		this.sharedPersonPort = sharedPersonPort;
 		this.diaryService = diaryService;
+		this.personService = personService;
 	}
 
 	@Override
@@ -154,10 +160,14 @@ public class AppointmentExternalServiceImpl implements AppointmentExternalServic
 			BookingAppointmentDto bookingAppointmentDto,
 			BookingPersonDto bookingPersonDto,
 			String email
-	) {
+	) throws ProfessionalAlreadyBookedException, BookingPersonMailNotExistsException {
 		log.debug("saveBooking -> bookingAppointmentDto {}, bookingPersonDto {}", bookingAppointmentDto, bookingPersonDto);
-		BookingPerson bookingPerson = getBookingPerson(bookingPersonDto);
+		BookingPerson bookingPerson = getBookingPerson(bookingPersonDto, email);
+		assertProfessionalNotAlreadyBooked(bookingPerson, bookingAppointmentDto);
 		AppointmentBo newAppointmentBo = mapTo(bookingAppointmentDto);
+		newAppointmentBo.setPhoneNumber(bookingPerson.getPhoneNumber());
+		newAppointmentBo.setPhonePrefix(bookingPerson.getPhonePrefix());
+
 		newAppointmentBo = createAppointmentService.execute(newAppointmentBo);
 		Integer appointmentId = newAppointmentBo.getId();
 
@@ -171,15 +181,35 @@ public class AppointmentExternalServiceImpl implements AppointmentExternalServic
 				bookingAppointmentBo.getUuid());
 	}
 
-	private BookingPerson getBookingPerson(BookingPersonDto bookingPersonDto) throws RuntimeException {
-		BookingPerson bookingPerson = null;
-		if(bookingPersonDto == null){
-			bookingPerson = bookingPersonService.findByEmail(bookingPersonDto.getEmail()).orElse(null);
-			if (bookingPerson == null)
-				throw new ConstraintViolationException("El mail no existe", Collections.emptySet());
-		} else {
-			return bookingPersonService.save(mapToBookingPerson(bookingPersonDto));
+	private void assertProfessionalNotAlreadyBooked(BookingPerson bookingPerson, BookingAppointmentDto bookingAppointmentDto) throws ProfessionalAlreadyBookedException {
+		Optional<CompletePersonNameBo> completePersonNameBo = personService.findByHealthcareProfessionalPersonDataByDiaryId(bookingAppointmentDto.getDiaryId());
+		if (completePersonNameBo.isPresent()) {
+			Collection<AppointmentBo> appointments = appointmentService.hasAppointment(
+					bookingPerson.getIdentificationNumber(),
+					completePersonNameBo.get().getHealthcareProfessionalId()
+			);
+			if ( ! appointments.isEmpty())
+				throw new ProfessionalAlreadyBookedException();
 		}
+	}
+
+	private BookingPerson getBookingPerson(BookingPersonDto bookingPersonDto, String requestingBookingPersonEmail) throws BookingPersonMailNotExistsException {
+		BookingPerson bookingPerson;
+		boolean shouldExistsBookingPerson = (bookingPersonDto == null);
+		if(shouldExistsBookingPerson)
+			bookingPerson = bookingPersonService.findByEmail(requestingBookingPersonEmail)
+					.orElseThrow(BookingPersonMailNotExistsException::new);
+		else
+			bookingPerson = searchOrSaveBookingPerson(bookingPersonDto);
+		return bookingPerson;
+	}
+
+	private BookingPerson searchOrSaveBookingPerson(BookingPersonDto bookingPersonDto) {
+		BookingPerson bookingPerson = null;
+		if(bookingPersonDto.getEmail() != null)
+			bookingPerson = bookingPersonService.findByEmail(bookingPersonDto.getEmail()).orElse(null);
+		if(bookingPerson == null)
+			return bookingPersonService.save(mapToBookingPerson(bookingPersonDto));
 		return bookingPerson;
 	}
 
