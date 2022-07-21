@@ -1,25 +1,20 @@
 import { AfterContentInit, Component, ElementRef, Inject, OnInit, ViewEncapsulation } from '@angular/core';
 import { AbstractControl, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Moment } from 'moment';
-import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { DateFormat, momentParseDate, newMoment } from '@core/utils/moment.utils';
-import { SnowstormService } from '@api-rest/services/snowstorm.service';
-import { ActionDisplays, TableModel } from '@presentation/components/table/table.component';
 import {
 	ImmunizationDto,
 	SnomedDto,
-	SnomedResponseDto,
 	VaccineConditionsDto,
 	VaccineDoseInfoDto,
 	VaccineInformationDto,
 	VaccineSchemeDto
 } from '@api-rest/api-model';
-import { SnomedECL } from '@api-rest/api-model';
 import { VaccineService } from '@api-rest/services/vaccine.service';
-import { SnackBarService } from '@presentation/services/snack-bar.service';
-import { TranslateService } from '@ngx-translate/core';
 import { scrollIntoError } from '@core/utils/form.utils';
 import { MIN_DATE } from "@core/utils/date.utils";
+import { VaccineSearchComponent } from '../vaccine-search/vaccine-search.component';
 
 @Component({
 	selector: 'app-agregar-vacuna',
@@ -40,16 +35,14 @@ export class AgregarVacunaComponent implements OnInit, AfterContentInit {
 
 	// billable form attributes (new vaccine application)
 	billableForm: FormGroup;
+	searchBillableVaccineForm: FormGroup;
 	newVaccineSnomedConcept: SnomedDto;
-	searchingNew: boolean = false;
-	conceptsResultsTable: TableModel<any>;
 	tryToSubmit: boolean = false;
 
 	// previous form attributes (register previous vaccine application)
 	previousForm: FormGroup;
+	searchPreviousVaccineForm: FormGroup;
 	previousVaccineSnomedConcept: SnomedDto;
-	searchingPrevious: boolean = false;
-	conceptsResultsTablePreviousForm: TableModel<any>;
 	tryToSubmitPrevious: boolean = false;
 
 	private CLEAR_CASES = {
@@ -71,12 +64,10 @@ export class AgregarVacunaComponent implements OnInit, AfterContentInit {
 				hasConfirmedAppointment: boolean
 			},
 		private readonly formBuilder: FormBuilder,
-		private readonly snowstormService: SnowstormService,
 		private readonly vaccineService: VaccineService,
-		private readonly snackBarService: SnackBarService,
-		public dialogRef: MatDialogRef<AgregarVacunaComponent>,
-		private readonly translate: TranslateService,
-		private readonly el: ElementRef
+		private readonly dialog: MatDialog,
+		private readonly el: ElementRef,
+		public dialogRef: MatDialogRef<AgregarVacunaComponent>
 	) { }
 
 	ngAfterContentInit(): void {
@@ -87,6 +78,9 @@ export class AgregarVacunaComponent implements OnInit, AfterContentInit {
 
 	ngOnInit(): void {
 
+		this.searchPreviousVaccineForm = this.formBuilder.group({
+			search: [null]
+		});
 		this.previousForm = this.formBuilder.group({
 			date: [this.today, Validators.required],
 			snomed: [null, Validators.required],
@@ -98,6 +92,9 @@ export class AgregarVacunaComponent implements OnInit, AfterContentInit {
 			professional: [null]
 		});
 
+		this.searchBillableVaccineForm = this.formBuilder.group({
+			search: [null]
+		});
 		this.billableForm = this.formBuilder.group({
 			date: [this.today, Validators.required],
 			snomed: [null, Validators.required],
@@ -291,117 +288,50 @@ export class AgregarVacunaComponent implements OnInit, AfterContentInit {
 		}
 	}
 
-	public onSearchBillableForm(searchValue: string): void {
-		if (searchValue) {
-			this.searchingNew = true;
-			this.tryToSubmit = false;
-			this.snowstormService.getSNOMEDConcepts({ term: searchValue, ecl: SnomedECL.VACCINE })
-				.subscribe(
-					(results: SnomedResponseDto) => {
-						this.buildConceptsResultsTableBillableForm(results.items);
-					},
-					_ => {
-						this.snackBarService.showError('historia-clinica.snowstorm.CONCEPTS_COULD_NOT_BE_OBTAINED');
-					},
-					() => {
-						this.searchingNew = false;
-					}
-				);
-		}
-	}
+	public openSearchBillableVaccineDialog(): void {
+		const dialogRef = this.dialog.open(VaccineSearchComponent, {
+			data: {
+				searchValue: this.searchBillableVaccineForm.value.search
+			},
+			autoFocus: false,
+			width: '70%',
+			disableClose: true,
+		})
 
-	public onSearchPreviousForm(searchValue: string): void {
-		if (searchValue) {
-			this.searchingPrevious = true;
-			this.tryToSubmitPrevious = false;
-			this.snowstormService.getSNOMEDConcepts({ term: searchValue, ecl: SnomedECL.VACCINE })
-				.subscribe(
-					(results: SnomedResponseDto) => {
-						this.buildConceptsResultsTablePreviousForm(results.items);
-					},
-					_ => {
-						this.snackBarService.showError('historia-clinica.snowstorm.CONCEPTS_COULD_NOT_BE_OBTAINED');
-					},
-					() => {
-						this.searchingPrevious = false;
-					}
-				);
-		}
-	}
-
-	private buildConceptsResultsTableBillableForm(data: SnomedDto[]): void {
-		this.translate.get('ambulatoria.paciente.vacunas.agregar_vacunas.agregar_vacuna.COLUMN_VACCINE_HEADER').subscribe(
-			(columnHeader: string) => {
-				this.conceptsResultsTable = {
-					columns: [
-						{
-							columnDef: '1',
-							header: columnHeader,
-							text: concept => concept.pt
-						},
-						{
-							columnDef: 'select',
-							action: {
-								displayType: ActionDisplays.BUTTON,
-								display: this.translate.instant('buttons.SELECT'),
-								matColor: 'primary',
-								do: concept => this.setConceptBillableForm(concept)
-							}
-						}
-					],
-					data,
-					enablePagination: true
-				};
+		dialogRef.afterClosed().subscribe(
+			(vaccineSelected: SnomedDto) => {
+				if (vaccineSelected) {
+					this.newVaccineSnomedConcept = vaccineSelected;
+					this.billableForm.controls.snomed.setValue(vaccineSelected.pt);
+					this.loadConditions(vaccineSelected.sctid, this.billableForm);
+				}
 			}
 		);
 	}
 
-	private buildConceptsResultsTablePreviousForm(data: SnomedDto[]): void {
-		this.translate.get('ambulatoria.paciente.vacunas.agregar_vacunas.agregar_vacuna.COLUMN_VACCINE_HEADER').subscribe(
-			(columnHeader: string) => {
-				this.conceptsResultsTablePreviousForm = {
-					columns: [
-						{
-							columnDef: '1',
-							header: columnHeader,
-							text: concept => concept.pt
-						},
-						{
-							columnDef: 'select',
-							action: {
-								displayType: ActionDisplays.BUTTON,
-								display: this.translate.instant('buttons.SELECT'),
-								matColor: 'primary',
-								do: concept => this.setConceptPreviousForm(concept)
-							}
-						}
-					],
-					data,
-					enablePagination: true
-				};
+	public openSearchPreviousVaccineDialog(): void {
+		const dialogRef = this.dialog.open(VaccineSearchComponent, {
+			data: {
+				searchValue: this.searchPreviousVaccineForm.value.search
+			},
+			autoFocus: false,
+			width: '70%',
+			disableClose: true,
+		})
+
+		dialogRef.afterClosed().subscribe(
+			(vaccineSelected: SnomedDto) => {
+				if (vaccineSelected) {
+					this.previousVaccineSnomedConcept = vaccineSelected;
+					this.previousForm.controls.snomed.setValue(vaccineSelected.pt);
+					this.loadConditions(vaccineSelected.sctid, this.previousForm);
+				}
 			}
 		);
-	}
-
-	private setConceptBillableForm(selectedConcept: SnomedDto): void {
-		this.newVaccineSnomedConcept = selectedConcept;
-		const pt = selectedConcept ? selectedConcept.pt : '';
-		this.billableForm.controls.snomed.setValue(pt);
-		const sctId = selectedConcept ? selectedConcept.sctid : '';
-		this.loadConditions(sctId, this.billableForm);
-	}
-
-	private setConceptPreviousForm(selectedConcept: SnomedDto): void {
-		this.previousVaccineSnomedConcept = selectedConcept;
-		const pt = selectedConcept ? selectedConcept.pt : '';
-		this.previousForm.controls.snomed.setValue(pt);
-		const sctId = selectedConcept ? selectedConcept.sctid : '';
-		this.loadConditions(sctId, this.previousForm);
 	}
 
 	public resetConceptBillableForm(): void {
 		delete this.newVaccineSnomedConcept;
-		delete this.conceptsResultsTable;
 		this.billableForm.get("snomed").setValue(null);
 		this.tryToSubmit = false;
 		this.disableDoses(this.billableForm);
@@ -411,7 +341,6 @@ export class AgregarVacunaComponent implements OnInit, AfterContentInit {
 
 	public resetConceptPreviousForm(): void {
 		delete this.previousVaccineSnomedConcept;
-		delete this.conceptsResultsTablePreviousForm;
 		this.previousForm.get("snomed").setValue(null);
 		this.tryToSubmitPrevious = false;
 		this.disableDoses(this.previousForm);

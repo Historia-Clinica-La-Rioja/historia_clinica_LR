@@ -37,13 +37,13 @@
 							</mat-form-field>
 							<div #vaccineInput>
 								<div fxLayout="column" fxFlex="100%">
+									<mat-label>
+										{{
+										'ambulatoria.paciente.vacunas.agregar_vacunas.agregar_vacuna.IMMUNIZATION' |
+										translate
+										}}
+									</mat-label>
 									<ng-container *ngIf="newVaccineSnomedConcept else searchImmunizations">
-										<mat-label>
-											{{
-											'ambulatoria.paciente.vacunas.agregar_vacunas.agregar_vacuna.IMMUNIZATION' |
-											translate
-											}}
-										</mat-label>
 										<mat-form-field appearance="outline">
 											<input matInput required readonly formControlName="snomed"
 												matTooltip="{{ newVaccineSnomedConcept.pt }}">
@@ -57,20 +57,20 @@
 								</div>
 
 								<ng-template #searchImmunizations>
-									<app-concepts-search
-										[label]="'ambulatoria.paciente.vacunas.agregar_vacunas.agregar_vacuna.IMMUNIZATION'"
-										(search)="onSearchBillableForm($event)">
-									</app-concepts-search>
+									<mat-form-field appearance="outline" class="search"
+										[formGroup]="searchBillableVaccineForm">
+										<input matInput formControlName="search">
+										<button type="button" matSuffix mat-flat-button color="primary"
+											(click)="openSearchBillableVaccineDialog()">
+											<span class="uppercase" [translate]="'buttons.SEARCH'"></span>
+										</button>
+									</mat-form-field>
 									<div class="vaccine-error">
 										<div class="mat-error"
 											[translate]="'ambulatoria.paciente.vacunas.agregar_vacunas.agregar_vacuna.NOT_VACCINE_SELECTED_ERROR'"
-											*ngIf="!searchingNew && tryToSubmit">
+											*ngIf="tryToSubmit">
 										</div>
 									</div>
-									<div class="spinner" fxLayoutAlign="center center">
-										<mat-spinner diameter="70" color="primary" *ngIf="searchingNew"></mat-spinner>
-									</div>
-									<app-table *ngIf="!searchingNew" [model]="conceptsResultsTable"></app-table>
 								</ng-template>
 							</div>
 
@@ -207,12 +207,12 @@
 
 						<div #previousVaccineInput>
 							<div fxLayout="column" fxFlex="100%">
+								<mat-label>
+									{{ 'ambulatoria.paciente.vacunas.agregar_vacunas.agregar_vacuna.IMMUNIZATION' |
+									translate
+									}}
+								</mat-label>
 								<ng-container *ngIf="previousVaccineSnomedConcept else searchImmunizationsPreviousForm">
-									<mat-label>
-										{{ 'ambulatoria.paciente.vacunas.agregar_vacunas.agregar_vacuna.IMMUNIZATION' |
-										translate
-										}}
-									</mat-label>
 									<mat-form-field appearance="outline">
 										<input matInput required readonly formControlName="snomed"
 											matTooltip="{{ previousVaccineSnomedConcept.pt }}">
@@ -226,21 +226,20 @@
 							</div>
 
 							<ng-template #searchImmunizationsPreviousForm>
-								<app-concepts-search
-									[label]="'ambulatoria.paciente.vacunas.agregar_vacunas.agregar_vacuna.IMMUNIZATION'"
-									(search)="onSearchPreviousForm($event)">
-								</app-concepts-search>
+								<mat-form-field appearance="outline" class="search"
+									[formGroup]="searchPreviousVaccineForm">
+									<input matInput formControlName="search">
+									<button type="button" matSuffix mat-flat-button color="primary"
+										(click)="openSearchPreviousVaccineDialog()">
+										<span class="uppercase" [translate]="'buttons.SEARCH'"></span>
+									</button>
+								</mat-form-field>
 								<div class="vaccine-error">
 									<div class="mat-error"
 										[translate]="'ambulatoria.paciente.vacunas.agregar_vacunas.agregar_vacuna.NOT_VACCINE_SELECTED_ERROR'"
-										*ngIf="!searchingPrevious && tryToSubmitPrevious">
+										*ngIf="tryToSubmitPrevious">
 									</div>
 								</div>
-								<div class="spinner" fxLayoutAlign="center center">
-									<mat-spinner diameter="70" color="primary" *ngIf="searchingPrevious"></mat-spinner>
-								</div>
-								<app-table *ngIf="!searchingPrevious && !previousVaccineSnomedConcept"
-									[model]="conceptsResultsTablePreviousForm"></app-table>
 							</ng-template>
 						</div>
 
