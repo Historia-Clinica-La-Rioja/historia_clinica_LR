@@ -18,7 +18,7 @@
 						</span>
 					</ng-template>
 
-					<form [formGroup]="billableForm" (submit)="submit(vaccineInput)">
+					<form [formGroup]="billableForm" (submit)="submit(vaccineInput)" id="billableForm">
 						<div fxLayout="column">
 							<mat-label>
 								{{ 'ambulatoria.paciente.vacunas.agregar_vacunas.agregar_vacuna.ADMINISTRATION_DATE' |
@@ -37,7 +37,7 @@
 							</mat-form-field>
 							<div #vaccineInput>
 								<div fxLayout="column" fxFlex="100%">
-									<mat-label>
+									<mat-label *ngIf="newVaccineSnomedConcept || !searchConceptsLocallyFF">
 										{{
 										'ambulatoria.paciente.vacunas.agregar_vacunas.agregar_vacuna.IMMUNIZATION' |
 										translate
@@ -57,8 +57,8 @@
 								</div>
 
 								<ng-template #searchImmunizations>
-									<mat-form-field appearance="outline" class="search"
-										[formGroup]="searchBillableVaccineForm">
+									<mat-form-field *ngIf="!searchConceptsLocallyFF else vaccineTypeaheadSearch"
+										appearance="outline" class="search" [formGroup]="searchBillableVaccineForm">
 										<input matInput formControlName="search">
 										<button type="button" matSuffix mat-flat-button color="primary"
 											(click)="openSearchBillableVaccineDialog()">
@@ -71,6 +71,13 @@
 											*ngIf="tryToSubmit">
 										</div>
 									</div>
+								</ng-template>
+
+								<ng-template #vaccineTypeaheadSearch>
+									<app-concept-typeahead-search [ecl]="ecl"
+										placeholder="ambulatoria.paciente.vacunas.agregar_vacunas.agregar_vacuna.SEARCH_VACCINE"
+										(conceptSelected)="setBillableConcept($event)">
+									</app-concept-typeahead-search>
 								</ng-template>
 							</div>
 
@@ -187,7 +194,7 @@
 					</span>
 				</ng-template>
 
-				<form [formGroup]="previousForm" (submit)="submitPreviousForm(previousVaccineInput)">
+				<form [formGroup]="previousForm" (submit)="submitPreviousForm(previousVaccineInput)" id="previousForm">
 					<div fxLayout="column">
 						<mat-label>
 							{{ 'ambulatoria.paciente.vacunas.agregar_vacunas.agregar_vacuna.ADMINISTRATION_DATE' |
@@ -207,7 +214,7 @@
 
 						<div #previousVaccineInput>
 							<div fxLayout="column" fxFlex="100%">
-								<mat-label>
+								<mat-label *ngIf="previousVaccineSnomedConcept || !searchConceptsLocallyFF">
 									{{ 'ambulatoria.paciente.vacunas.agregar_vacunas.agregar_vacuna.IMMUNIZATION' |
 									translate
 									}}
@@ -226,8 +233,8 @@
 							</div>
 
 							<ng-template #searchImmunizationsPreviousForm>
-								<mat-form-field appearance="outline" class="search"
-									[formGroup]="searchPreviousVaccineForm">
+								<mat-form-field *ngIf="!searchConceptsLocallyFF else previousVaccineTypeaheadSearch"
+									appearance="outline" class="search" [formGroup]="searchPreviousVaccineForm">
 									<input matInput formControlName="search">
 									<button type="button" matSuffix mat-flat-button color="primary"
 										(click)="openSearchPreviousVaccineDialog()">
@@ -240,6 +247,13 @@
 										*ngIf="tryToSubmitPrevious">
 									</div>
 								</div>
+							</ng-template>
+
+							<ng-template #previousVaccineTypeaheadSearch>
+								<app-concept-typeahead-search [ecl]="ecl"
+									placeholder="ambulatoria.paciente.vacunas.agregar_vacunas.agregar_vacuna.SEARCH_VACCINE"
+									(conceptSelected)="setPreviousConcept($event)">
+								</app-concept-typeahead-search>
 							</ng-template>
 						</div>
 

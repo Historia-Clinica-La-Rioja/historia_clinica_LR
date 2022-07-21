@@ -1,11 +1,12 @@
-form {
+#billableForm,
+#previousForm {
   font-size: 14px;
   padding-top: 30px;
-}
 
-mat-label,
-mat-form-field.mat-form-field {
-  margin-bottom: 6px;
+  mat-label,
+  mat-form-field.mat-form-field {
+    margin-bottom: 6px;
+  }
 }
 
 .vaccine-error {

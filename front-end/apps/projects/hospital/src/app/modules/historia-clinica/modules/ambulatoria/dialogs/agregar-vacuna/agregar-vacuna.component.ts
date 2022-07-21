@@ -11,10 +11,13 @@ import {
 	VaccineInformationDto,
 	VaccineSchemeDto
 } from '@api-rest/api-model';
+import { AppFeature } from '@api-rest/api-model';
+import { SnomedECL } from '@api-rest/api-model';
 import { VaccineService } from '@api-rest/services/vaccine.service';
 import { scrollIntoError } from '@core/utils/form.utils';
 import { MIN_DATE } from "@core/utils/date.utils";
 import { VaccineSearchComponent } from '../vaccine-search/vaccine-search.component';
+import { FeatureFlagService } from '@core/services/feature-flag.service';
 
 @Component({
 	selector: 'app-agregar-vacuna',
@@ -32,6 +35,8 @@ export class AgregarVacunaComponent implements OnInit, AfterContentInit {
 	conditions: VaccineConditionsDto[];
 	today: Moment = newMoment();
 	minDate = MIN_DATE;
+	searchConceptsLocallyFF: boolean;
+	ecl = SnomedECL.VACCINE;
 
 	// billable form attributes (new vaccine application)
 	billableForm: FormGroup;
@@ -67,6 +72,7 @@ export class AgregarVacunaComponent implements OnInit, AfterContentInit {
 		private readonly vaccineService: VaccineService,
 		private readonly dialog: MatDialog,
 		private readonly el: ElementRef,
+		private readonly featureFlagService: FeatureFlagService,
 		public dialogRef: MatDialogRef<AgregarVacunaComponent>
 	) { }
 
@@ -104,6 +110,9 @@ export class AgregarVacunaComponent implements OnInit, AfterContentInit {
 			lot: [null],
 			note: [null]
 		});
+
+		this.featureFlagService.isActive(AppFeature.HABILITAR_BUSQUEDA_LOCAL_CONCEPTOS)
+			.subscribe(isOn => this.searchConceptsLocallyFF = isOn);
 
 		if (this.data?.edit) { // then load information to form fields and class attributes
 
@@ -298,15 +307,9 @@ export class AgregarVacunaComponent implements OnInit, AfterContentInit {
 			disableClose: true,
 		})
 
-		dialogRef.afterClosed().subscribe(
-			(vaccineSelected: SnomedDto) => {
-				if (vaccineSelected) {
-					this.newVaccineSnomedConcept = vaccineSelected;
-					this.billableForm.controls.snomed.setValue(vaccineSelected.pt);
-					this.loadConditions(vaccineSelected.sctid, this.billableForm);
-				}
-			}
-		);
+		dialogRef.afterClosed().subscribe((vaccineSelected: SnomedDto) => {
+			this.setBillableConcept(vaccineSelected);
+		});
 	}
 
 	public openSearchPreviousVaccineDialog(): void {
@@ -319,15 +322,25 @@ export class AgregarVacunaComponent implements OnInit, AfterContentInit {
 			disableClose: true,
 		})
 
-		dialogRef.afterClosed().subscribe(
-			(vaccineSelected: SnomedDto) => {
-				if (vaccineSelected) {
-					this.previousVaccineSnomedConcept = vaccineSelected;
-					this.previousForm.controls.snomed.setValue(vaccineSelected.pt);
-					this.loadConditions(vaccineSelected.sctid, this.previousForm);
-				}
-			}
-		);
+		dialogRef.afterClosed().subscribe((vaccineSelected: SnomedDto) => {
+			this.setPreviousConcept(vaccineSelected);
+		});
+	}
+
+	public setBillableConcept(vaccineSelected: SnomedDto): void {
+		if (vaccineSelected) {
+			this.newVaccineSnomedConcept = vaccineSelected;
+			this.billableForm.controls.snomed.setValue(vaccineSelected.pt);
+			this.loadConditions(vaccineSelected.sctid, this.billableForm);
+		}
+	}
+
+	public setPreviousConcept(vaccineSelected: SnomedDto): void {
+		if (vaccineSelected) {
+			this.previousVaccineSnomedConcept = vaccineSelected;
+			this.previousForm.controls.snomed.setValue(vaccineSelected.pt);
+			this.loadConditions(vaccineSelected.sctid, this.previousForm);
+		}
 	}
 
 	public resetConceptBillableForm(): void {

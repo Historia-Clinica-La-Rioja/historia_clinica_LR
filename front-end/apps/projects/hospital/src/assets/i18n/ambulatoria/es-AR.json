@@ -514,6 +514,7 @@
                         "NOT_VACCINE_SELECTED_ERROR": "Debe seleccionar una vacuna",
                         "NOT_SCHEME_SELECTED_ERROR": "Si selecciona una condición, debe elegir un esquema",
                         "NOT_DOSE_SELECTED_ERROR": "Si selecciona un esquema, debe elegir una dosis",
+                        "SEARCH_VACCINE": "Buscar vacuna",
                         "NULL_OPTION_MESSAGE": "Seleccione una opción"
                     }
                 }
