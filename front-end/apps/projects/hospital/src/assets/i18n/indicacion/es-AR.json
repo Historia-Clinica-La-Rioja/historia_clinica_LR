@@ -162,7 +162,8 @@
 			}, 
 			"buttons": {
 				"TO_REGISTER": "registrar",
-				"REGISTER": "marcar como completado"
+				"REGISTER": "marcar como completado",
+				"UNDO": "Deshacer"
 			},
 			"dialogs": {
 				"register": {

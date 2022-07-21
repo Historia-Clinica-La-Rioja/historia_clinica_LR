@@ -46,6 +46,16 @@ export class NursingRecordComponent {
 					error => this.snackBarService.showError('indicacion.nursing-care.dialogs.register.messages.ERROR'));
 		});
 	}
+
+	undoActionOfNRecord(id: number) {
+		const data = { status: ENursingRecordStatus.REJECTED };
+		this.nursingRecordFacade.changeStateOfNursingRecord(id, data).subscribe(
+			sucess => {
+				this.snackBarService.showSuccess('indicacion.nursing-care.dialogs.register.messages.SUCCESS');
+				this.nursingRecordFacade.getNursingRecords();
+			},
+			error => this.snackBarService.showError('indicacion.nursing-care.dialogs.register.messages.ERROR'));
+	}
 }
 
 export interface NursingSections {
