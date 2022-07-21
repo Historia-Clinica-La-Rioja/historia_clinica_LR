@@ -13,7 +13,7 @@ const clinicalspecialties = (permissions: SGXPermissions) => ({
     create: permissions.hasAnyAssignment(ROOT, ADMINISTRADOR) ? ClinicalSpecialtyCreate : undefined,
     edit: permissions.hasAnyAssignment(ROOT, ADMINISTRADOR) ? ClinicalSpecialtyEdit : undefined,
     options: {
-        submenu: 'facilities'
+        submenu: 'masterData'
     }
 });
 

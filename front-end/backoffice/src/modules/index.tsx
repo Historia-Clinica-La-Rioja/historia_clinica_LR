@@ -11,7 +11,6 @@ import sectors from './sectors';
 import rootSectors from './root-sectors';
 import clinicalspecialties from './clinicalspecialties';
 import clinicalservices from './clinicalservices';
-import clinicalspecialtysectors from './clinicalspecialtysectors';
 import clinicalservicesectors from './clinicalservicesectors';
 import rooms from './rooms';
 import beds from './beds';
@@ -92,9 +91,6 @@ const resources = (permissions: SGXPermissions) => [
     <Resource name="institutions" {...institutions(permissions)} />,
     <Resource name="sectors" {...sectors} />,
     <Resource name="rootsectors" {...rootSectors} />,
-    <Resource name="clinicalspecialties" {...clinicalspecialties(permissions)} />,
-    <Resource name="clinicalspecialtysectors" {...clinicalspecialtysectors} />,
-    <Resource name="clinicalservices" {...clinicalservices(permissions)} />,
     <Resource name="clinicalservicesectors" {...clinicalservicesectors} />,
     <Resource name="doctorsoffices" {...doctorsoffices} />,
     <Resource name="rooms" {...rooms} />,
@@ -113,6 +109,8 @@ const resources = (permissions: SGXPermissions) => [
     <Resource name="documenttypes" {...documentTypes(permissions)} />,
     <Resource name="snomedgroups"   {...snomedgroups} />,
     <Resource name="medicalcoverages" {...medicalCoverage(permissions)} />,
+    <Resource name="clinicalspecialties" {...clinicalspecialties(permissions)} />,
+    <Resource name="clinicalservices" {...clinicalservices(permissions)} />,
     <Resource name="professionalspecialties" {...professionalSpecialties(permissions)} />,
     // more
     <Resource name="identificationTypes" />,
