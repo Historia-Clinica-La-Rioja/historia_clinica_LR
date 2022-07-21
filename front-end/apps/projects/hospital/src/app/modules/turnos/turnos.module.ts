@@ -14,6 +14,8 @@ import { HomeComponent } from './routes/home/home.component';
 import { CalendarProfessionalViewComponent } from '@turnos/components/calendar-professional-view/calendar-professional-view.component';
 import { SelectAgendaComponent } from './components/select-agenda/select-agenda.component';
 import { DateRangeTimeFormComponent } from './components/date-range-time-form/date-range-time-form.component';
+import { SeachAppointmentsByProfessionalComponent } from './components/seach-appointments-by-professional/seach-appointments-by-professional.component';
+
 // dialogs
 import { AppointmentComponent } from './dialogs/appointment/appointment.component';
 import { BlockAgendaRangeComponent } from './dialogs/block-agenda-range/block-agenda-range.component';
@@ -37,6 +39,7 @@ import { CustomDateFormatter } from './services/custom-date-formatter.service';
 		SelectAgendaComponent,
 		BlockAgendaRangeComponent,
 		DateRangeTimeFormComponent,
+		SeachAppointmentsByProfessionalComponent,
 		// dialogs
 		AppointmentComponent,
 		CalendarProfessionalViewDockPopupComponent,

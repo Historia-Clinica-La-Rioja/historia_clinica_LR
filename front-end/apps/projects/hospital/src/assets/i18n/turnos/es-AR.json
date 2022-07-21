@@ -13,7 +13,9 @@
 			"NO_AGENDA_MSG_SUBTITLE": "Creá una agenda para gestionar turnos.",
 			"AGENDA_NOT_FOUND": "Agenda no encontrada",
 			"ACTIVES_AGENDAS_LABEL": "ACTIVAS",
-			"EXPIRED_AGENDAS_LABEL": "VENCIDAS"
+			"EXPIRED_AGENDAS_LABEL": "VENCIDAS",
+			"SEARCH_BY_PROFESSIONAL": "Oferta por profesional",
+			"SEARCH_BY_SPECIALTY": "Oferta por especialidad"
 		},
 		"agenda-setup": {
 			"NEW_AGENDA": "Nueva agenda",
