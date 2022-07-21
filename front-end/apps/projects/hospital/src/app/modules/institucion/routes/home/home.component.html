@@ -21,7 +21,7 @@
 		</ng-template>
 		<mat-card *ngFor=" let extension of extensions">
 			<mat-card-content>
-				<app-ui-external-component type="external_component" [params]="extension.params">
+				<app-ui-external-component type="external_component" [params]="extension">
 				</app-ui-external-component>
 			</mat-card-content>
 		</mat-card>

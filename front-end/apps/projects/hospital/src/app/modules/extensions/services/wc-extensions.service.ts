@@ -10,10 +10,14 @@ import { ExtensionsService } from './extensions.service';
 export class WCExtensionsService {
 
 	private readonly institutionEmitter = new BehaviorSubject<SlotedInfo[]>(null);
-	institutionsExtension$: Observable<any[]> = this.institutionEmitter.asObservable();
+	institutionsExtension$: Observable<SlotedInfo[]> = this.institutionEmitter.asObservable();
+
+	private readonly clinicHistoryTabsEmitter = new BehaviorSubject<SlotedInfo[]>(null);
+	clinicHistoryTabsExtensions$: Observable<SlotedInfo[]> = this.clinicHistoryTabsEmitter.asObservable();
 
 	private readonly emmiters = {
 		[Slot.INSTITUTION_HOME_PAGE]: this.institutionEmitter,
+		[Slot.CLINIC_HISTORY_TAB]: this.clinicHistoryTabsEmitter,
 	}
 	constructor(
 		private readonly extensionService: ExtensionsService
@@ -34,6 +38,7 @@ export class WCExtensionsService {
 
 		const valuesToEmit = {
 			[Slot.INSTITUTION_HOME_PAGE]: [],
+			[Slot.CLINIC_HISTORY_TAB]: [],
 		}
 		const allPlugins$: Observable<ExtensionComponentDto[]> = this.extensionService.getExtensions();
 
@@ -63,10 +68,9 @@ export class WCExtensionsService {
 
 	private map(element: WCInfo): SlotedInfo {
 		return {
-			params: {
-				componentName: element.componentName,
-				url: element.url,
-			}
+			componentName: element.componentName,
+			url: element.url,
+			title: element.title
 		}
 	}
 
@@ -76,17 +80,21 @@ export interface WCInfo {
 	slot: string;
 	url: string;
 	componentName: string;
+	title?: string;
 	params?: {
 	}
 }
 
 
 export interface SlotedInfo {
-
+	componentName: string;
+	url: string;
+	title?: string;
 }
 
 export enum Slot {
 	INSTITUTION_HOME_PAGE = 'INSTITUTION_HOME_PAGE',
+	CLINIC_HISTORY_TAB = 'CLINIC_HISTORY_TAB'
 }
 
 
