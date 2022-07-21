@@ -15,11 +15,13 @@ import net.pladema.staff.service.domain.ClinicalSpecialtyBo;
 public interface ClinicalSpecialtyRepository extends JpaRepository<ClinicalSpecialty, Integer>{
 
     @Transactional(readOnly = true)
-    @Query(value = " SELECT cs FROM HealthcareProfessionalSpecialty hps "
+    @Query(value = " SELECT cs "
+			+ "FROM HealthcareProfessionalSpecialty hps "
             + "INNER JOIN ClinicalSpecialty cs ON hps.clinicalSpecialtyId = cs.id "
 			+ "INNER JOIN ProfessionalProfessions pp ON hps.professionalProfessionId = pp.id "
             + "WHERE pp.healthcareProfessionalId = :professionalId "
-			+ "AND pp.deleteable.deleted = false")
+			+ "AND pp.deleteable.deleted = false "
+			+ "AND hps.deleteable.deleted = false")
     List<ClinicalSpecialty> getAllByProfessional(@Param("professionalId") Integer professionalId);
 
     @Transactional(readOnly = true)
