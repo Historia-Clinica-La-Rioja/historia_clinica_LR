@@ -68,7 +68,8 @@
 				"ERROR": "Paciente no encontrado",
 				"SUCCESS": "Paciente encontrado",
 				"APPOINTMENT_ERROR": "Error al confirmar el turno",
-				"APPOINTMENT_SUCCESS": "Turno confirmado"
+				"APPOINTMENT_SUCCESS": "Turno confirmado",
+				"NOT_RESPONSIBLE": "Solo el responsable de la agenda puede crear turnos"
 			}
 		},
 		"cancel": {

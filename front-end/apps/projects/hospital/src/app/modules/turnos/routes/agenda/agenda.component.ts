@@ -21,7 +21,7 @@ import { MEDICAL_ATTENTION } from '../../constants/descriptions';
 import { AppointmentComponent } from '../../dialogs/appointment/appointment.component';
 import { SnackBarService } from '@presentation/services/snack-bar.service';
 
-import { AppointmentsFacadeService, getColor, getSpanColor, toCalendarEvent } from '@turnos/services/appointments-facade.service';
+import { AppointmentsFacadeService, toCalendarEvent } from '@turnos/services/appointments-facade.service';
 
 import { APPOINTMENT_STATES_ID, MINUTES_IN_HOUR } from '../../constants/appointment';
 import { map, take } from 'rxjs/operators';
@@ -33,6 +33,7 @@ import { AgendaSearchService } from '../../services/agenda-search.service';
 import { ContextService } from '@core/services/context.service';
 import { ConfirmBookingComponent } from '@turnos/dialogs/confirm-booking/confirm-booking.component';
 import { DatePipeFormat } from '@core/utils/date.utils';
+import { HealthcareProfessionalService } from '@api-rest/services/healthcare-professional.service';
 
 const ASIGNABLE_CLASS = 'cursor-pointer';
 const AGENDA_PROGRAMADA_CLASS = 'bg-green';
@@ -68,6 +69,7 @@ export class AgendaComponent implements OnInit, OnDestroy, OnChanges {
 
 	private readonly routePrefix = 'institucion/' + this.contextService.institutionId;
 	private patientId: number;
+	private loggedUserHealthcareProfessionalId: number;
 	@Input() professionalId: number;
 	@Input() canCreateAppoinment = true;
 	@Input() idAgenda: number;
@@ -86,6 +88,7 @@ export class AgendaComponent implements OnInit, OnDestroy, OnChanges {
 		private readonly healthInsuranceService: HealthInsuranceService,
 		private readonly agendaSearchService: AgendaSearchService,
 		private readonly contextService: ContextService,
+		private readonly healthcareProfessionalService: HealthcareProfessionalService,
 	) {
 	}
 
@@ -121,6 +124,7 @@ export class AgendaComponent implements OnInit, OnDestroy, OnChanges {
 		});
 		this.appointmentFacade.setInterval();
 		this.permissionsService.hasContextAssignments$(ROLES_TO_CREATE).subscribe(hasRole => this.hasRoleToCreate = hasRole);
+		this.healthcareProfessionalService.getHealthcareProfessionalByUserId().subscribe(healthcareProfessionalId => this.loggedUserHealthcareProfessionalId = healthcareProfessionalId);
 	}
 
 	ngOnDestroy() {
@@ -247,6 +251,10 @@ export class AgendaComponent implements OnInit, OnDestroy, OnChanges {
 							if (diaryOpeningHourDto.medicalAttentionTypeId !== MEDICAL_ATTENTION.SPONTANEOUS_ID) {
 								this.snackBarService.showError('turnos.overturns.messages.ERROR');
 							}
+						}
+
+						if (this.loggedUserHealthcareProfessionalId !== this.professionalId) {
+							this.snackBarService.showError('turnos.new-appointment.messages.NOT_RESPONSIBLE');
 						} else {
 							this.dialog.open(NewAppointmentComponent, {
 								width: '35%',
