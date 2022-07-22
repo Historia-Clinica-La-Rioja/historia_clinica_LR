@@ -23,13 +23,15 @@ export class DateRangeTimeFormComponent implements ControlValueAccessor, OnDestr
 	@Input() selectedAgenda: CompleteDiaryDto;
 	private today: Date;
 	private agendaLastDay: Date;
+	private agendaFirstDay: Date;
 	possibleStartingTime: TimeDto[];
 	possibleEndingTime: TimeDto[];
 
 	initDateFilter = (d: Moment | null): boolean => {
 		const date = (d?.toDate() || new Date());
 		date.setHours(0,0,0,0);
-		return this.isPossibleAppointmentDay(date.getDay(), this.selectedAgenda.diaryOpeningHours) && date >= this.today && date <= this.agendaLastDay;
+		return this.isPossibleAppointmentDay(date.getDay(), this.selectedAgenda.diaryOpeningHours) && date >= this.today && date <= this.agendaLastDay
+		&& date >= this.agendaFirstDay;
 	}
 
 	endDateFilter = (d: Moment | null): boolean => {
@@ -59,8 +61,8 @@ export class DateRangeTimeFormComponent implements ControlValueAccessor, OnDestr
 
 		this.today = new Date();
 
-		const agendaLastDayData = this.selectedAgenda.endDate.split("-");
-		this.agendaLastDay = new Date(+agendaLastDayData[0], +agendaLastDayData[1]-1, +agendaLastDayData[2]);
+		this.agendaLastDay = this.fromStringToDate(this.selectedAgenda.endDate);
+		this.agendaFirstDay = this.fromStringToDate(this.selectedAgenda.startDate);
 
 		this.today.setHours(0,0,0,0);
 		this.agendaLastDay.setHours(0,0,0,0);
@@ -167,5 +169,10 @@ export class DateRangeTimeFormComponent implements ControlValueAccessor, OnDestr
 
 	private compareTimes(time1: TimeDto, time2: TimeDto): boolean {
 		return time1.hours > time2.hours || (time1.hours === time2.hours && time1.minutes > time2.minutes);
+	}
+
+	private fromStringToDate(date: string): Date {
+		const dateData = date.split("-");
+		return new Date(+dateData[0], +dateData[1]-1, +dateData[2]);
 	}
 }
