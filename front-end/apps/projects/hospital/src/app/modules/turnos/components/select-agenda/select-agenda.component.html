@@ -8,7 +8,7 @@
 				<mat-option *ngFor="let agenda of activeAgendas" [value]="agenda"
 					(onSelectionChange)="changeAgendaSelected($event, agenda)">
 					<span class="mat-body-strong">
-						{{agenda.alias === undefined ? agenda.clinicalSpecialtyName : getAliasAndSpecialtyText(agenda.alias, agenda.clinicalSpecialtyName)}}
+						{{agenda.alias === undefined || agenda.alias == "" ? agenda.clinicalSpecialtyName : getAliasAndSpecialtyText(agenda.alias, agenda.clinicalSpecialtyName)}}
 					</span>
 					<span class="mat-body">
 						{{agenda.startDate | date:dateFormats.SHORT_DATE }} - {{agenda.endDate | date:dateFormats.SHORT_DATE}}
@@ -20,7 +20,7 @@
 				<mat-option *ngFor="let agenda of expiredAgendas" [value]="agenda"
 					(onSelectionChange)="changeAgendaSelected($event, agenda)">
 					<span class="mat-body-strong">
-						{{agenda.alias === undefined ? agenda.clinicalSpecialtyName : getAliasAndSpecialtyText(agenda.alias, agenda.clinicalSpecialtyName)}}
+						{{agenda.alias === undefined || agenda.alias == "" ? agenda.clinicalSpecialtyName : getAliasAndSpecialtyText(agenda.alias, agenda.clinicalSpecialtyName)}}
 					</span>
 					<span class="mat-body">
 						{{agenda.startDate | date:dateFormats.SHORT_DATE }} - {{agenda.endDate | date:dateFormats.SHORT_DATE}}
