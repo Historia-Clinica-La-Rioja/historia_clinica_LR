@@ -3,6 +3,7 @@ import { NursingRecord, NursingSections } from './../nursing-record/nursing-reco
 import { ExtraInfo } from './../../../../../../../presentation/components/indication/indication.component';
 import { Component, Input } from '@angular/core';
 import { NursingRecordDto } from '@api-rest/api-model';
+import { ENursingRecordStatus } from '@api-rest/api-model';
 import { EIndicationType } from '@api-rest/api-model';
 import { InternacionMasterDataService } from '@api-rest/services/internacion-master-data.service';
 import { Content } from '@presentation/components/indication/indication.component';
@@ -79,8 +80,9 @@ export class SpecificNursingRecordComponent {
 				extra_info: this.loadExtraInfo(record),
 				indicationDate: dateDtoToDate(record.indication.indicationDate),
 				scheduledAdministrationTime: record.scheduledAdministrationTime,
-				administeredBy: "",
-				administeredTime: "",
+				administeredBy: record.updatedBy,
+				administeredTime: (record.administrationTime) ? dateTimeDtotoLocalDate(record.administrationTime) : null,
+				reason: ENursingRecordStatus.REJECTED === record.status ? record.updateReason : null
 			}
 		}
 	}

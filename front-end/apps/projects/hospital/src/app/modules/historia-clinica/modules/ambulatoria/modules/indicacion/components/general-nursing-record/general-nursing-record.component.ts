@@ -1,12 +1,13 @@
 import { NursingRecordStatus, NursingRecordStatusScss } from './../../constants/internment-indications';
 import { Component, Input } from '@angular/core';
-import { EIndicationType } from '@api-rest/api-model';
+import { EIndicationType, ENursingRecordStatus } from '@api-rest/api-model';
 import { InternacionMasterDataService } from '@api-rest/services/internacion-master-data.service';
 import { OtherIndicationTypeDto } from '@api-rest/services/internment-indication.service';
 import { IndicationMatIcon, IndicationSvgIcon } from '../../constants/internment-indications';
 import { getOtherIndicationType, loadExtraInfoParenteralPlan } from '../../constants/load-information';
 import { NursingRecord } from '../nursing-record/nursing-record.component';
 import { dateDtoToDate } from '@api-rest/mapper/date-dto.mapper';
+import { dateTimeDtotoLocalDate } from '@api-rest/mapper/date-dto.mapper';
 
 @Component({
 	selector: 'app-general-nursing-record',
@@ -60,8 +61,9 @@ function toNursingRecords(nursingRecordsDto: any[], othersIndicatiosTypes: Other
 				extra_info: (EIndicationType.PARENTERAL_PLAN === r.indication.type) ? loadExtraInfoParenteralPlan(r.indication, vias) : null,
 				indicationDate: dateDtoToDate(r.indication.indicationDate),
 				scheduledAdministrationTime: r.scheduledAdministrationTime,
-				administeredBy: "",
-				administeredTime: "",
+				administeredBy: r.updatedBy,
+				administeredTime: (r.administrationTime) ? dateTimeDtotoLocalDate(r.administrationTime) : null,
+				reason: ENursingRecordStatus.REJECTED === r.status ? r.updateReason : null
 			}
 		}
 	});

@@ -5,14 +5,14 @@
     </div>
 
     <div id="content" class="content" *ngFor="let record of nursingSection.records" fxLayout="column" fxLayoutGap="20px">
-        <div fxLayout="row" fxLayoutGap="20px" fxLayout.lt-lg="column" fxLayoutAlign="space-between center" fxLayoutAlign.lt-lg="start">
+        <div fxLayout="row" fxLayoutGap="20px" fxLayout.lt-lg="column" fxLayoutAlign="start">
             <mat-icon class="color-primary" fontSet="material-icons-outlined" *ngIf="record.matIcon; else svgIcon">
                 {{ record.matIcon }}
             </mat-icon>
             <ng-template #svgIcon>
                 <mat-icon class="color-primary svg-icon" svgIcon={{record.svgIcon}}></mat-icon>
             </ng-template>
-            <div fxLayout="column" fxFlex="50%" fxLayoutGap="10px">
+            <div fxLayout="column" fxFlex="40%" fxLayoutGap="10px">
                 <span class="description">{{record.content.description}}</span>
                 <div fxLayout="row" fxLayoutGap="20px">
                     <div *ngFor="let extraInfo of record.content.extra_info" class="color-grey extra-info" fxLayout="row" fxLayoutGap="5px">
@@ -22,13 +22,25 @@
                 </div>
             </div>
 
-            <div>
+            <div fxFlex="10%">
                 <strong [class]="record.content.status.cssClass" class="label">{{ record.content.status.description | translate | uppercase }}</strong>
             </div>
-            <div *ngIf="record.content.status.type == PENDING" else undoAction>
-                <button mat-button mat-raised-button color="primary" (click)="openDialogToRegister(record)">
-                    {{ 'indicacion.nursing-care.buttons.TO_REGISTER' | translate | uppercase }}
-                </button>
+            <ng-container *appHasRole="['ENFERMERO']">
+                <div *ngIf="record.content.status.type == PENDING">
+                    <button mat-button mat-raised-button color="primary" (click)="openDialogToRegister(record)">
+                        {{ 'indicacion.nursing-care.buttons.TO_REGISTER' | translate | uppercase }}
+                    </button>
+                </div>
+            </ng-container>    
+          
+            <div *ngIf="record.content.status.type == COMPLETED" class="color-grey extra-info" fxLayout="row" fxLayoutGap="20px" fxFlex="35%">
+                <span>{{ record.content.administeredBy }}</span>
+                <span *ngIf="record.content.administeredTime">{{ datePipe.transform(record.content.administeredTime, datePipeFormat.SHORT_TIME) }}hs</span>
+            </div>
+
+            <div *ngIf="record.content.status.type == REJECTED" class="color-grey extra-info description" fxLayout="column" fxLayoutGap="10px" fxFlex="35%">
+                <span>{{ record.content.reason }}</span>
+                <span>{{ record.content.administeredBy }}</span>
             </div>
 
             <ng-container *appHasRole="['ENFERMERO']">
@@ -40,7 +52,7 @@
                         <span [translate]="'indicacion.nursing-care.buttons.UNDO'"></span>
                     </button>
                 </mat-menu>
-            </ng-template>
+            </ng-container>
         </div>
     </div>
 </div>

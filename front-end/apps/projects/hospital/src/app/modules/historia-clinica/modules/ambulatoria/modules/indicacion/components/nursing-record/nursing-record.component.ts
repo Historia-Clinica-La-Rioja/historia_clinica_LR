@@ -7,6 +7,8 @@ import { RegisterNursingRecordComponent } from '../../dialogs/register-nursing-r
 import { dateDtoToDate } from '@api-rest/mapper/date-dto.mapper';
 import { NursingRecordFacadeService } from '../../services/nursing-record-facade.service';
 import { SnackBarService } from '@presentation/services/snack-bar.service';
+import { DatePipeFormat } from '@core/utils/date.utils';
+import { DatePipe } from '@angular/common';
 
 @Component({
 	selector: 'app-nursing-record',
@@ -16,6 +18,9 @@ import { SnackBarService } from '@presentation/services/snack-bar.service';
 export class NursingRecordComponent {
 
 	PENDING = ENursingRecordStatus.PENDING;
+	COMPLETED = ENursingRecordStatus.COMPLETED;
+	REJECTED = ENursingRecordStatus.REJECTED;
+	datePipeFormat = DatePipeFormat;
 	internmentEpisodeId: number;
 
 	@Input() nursingSections: NursingSections[];
@@ -24,6 +29,7 @@ export class NursingRecordComponent {
 		private readonly dialog: MatDialog,
 		private readonly nursingRecordFacade: NursingRecordFacadeService,
 		private readonly snackBarService: SnackBarService,
+		readonly datePipe: DatePipe,
 	) { }
 
 	openDialogToRegister(nursingRecord: NursingRecord) {
@@ -48,7 +54,7 @@ export class NursingRecordComponent {
 	}
 
 	undoActionOfNRecord(id: number) {
-		const data = { status: ENursingRecordStatus.REJECTED };
+		const data = { status: ENursingRecordStatus.PENDING };
 		this.nursingRecordFacade.changeStateOfNursingRecord(id, data).subscribe(
 			sucess => {
 				this.snackBarService.showSuccess('indicacion.nursing-care.dialogs.register.messages.SUCCESS');
@@ -78,5 +84,6 @@ export interface NursingRecordContent {
 	indicationDate: Date;
 	scheduledAdministrationTime: DateTimeDto;
 	administeredBy: string;
-	administeredTime: string;
+	administeredTime: Date;
+	reason?: string;
 }
