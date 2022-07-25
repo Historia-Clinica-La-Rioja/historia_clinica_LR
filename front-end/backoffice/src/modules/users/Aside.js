@@ -20,7 +20,7 @@ import { makeStyles } from '@material-ui/core/styles';
 
 import { parseISO, isFuture } from 'date-fns';
 
-import passwordReset from '../password-reset';
+import LockIcon from '@material-ui/icons/Lock';
 import { openPasswordReset } from '../../providers/utils/webappLink';
 
 const useAsideStyles = makeStyles(theme => ({
@@ -105,7 +105,7 @@ const ResetPasswordCard = ({ actionClick, loading }) => {
                     <Avatar
                         className={classes.avatar}
                     >
-                        <passwordReset.icon />
+                        <LockIcon />
                     </Avatar>
                 }
                 action={<OpenPageButton actionClick={actionClick} disabled={loading}/>}
