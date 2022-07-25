@@ -235,6 +235,17 @@ export interface AppointmentListDto {
     phonePrefix: string;
 }
 
+export interface AppointmentTicketDto {
+    date: string;
+    doctorFullName: string;
+    doctorsOffice: string;
+    documentNumber: string;
+    hour: string;
+    institution: string;
+    medicalCoverage: string;
+    patientFullName: string;
+}
+
 export interface AssignedAppointmentDto {
     date: DateDto;
     hour: TimeDto;
@@ -317,12 +328,12 @@ export interface BackofficeHealthInsurancePracticeDto {
 }
 
 export interface BackofficeHealthcareProfessionalCompleteDto {
-    clinicalSpecialtyId: number;
-    deleted: boolean;
+    firstName: string;
     id: number;
-    licenseNumber: string;
+    identificationNumber: string;
+    identificationTypeId: number;
+    lastName: string;
     personId: number;
-    professionalSpecialtyId: number;
 }
 
 export interface BackofficeMandatoryMedicalPracticeDto {

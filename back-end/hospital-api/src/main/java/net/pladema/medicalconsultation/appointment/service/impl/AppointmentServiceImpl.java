@@ -33,6 +33,8 @@ import ar.lamansys.sgx.shared.featureflags.application.FeatureFlagsService;
 import lombok.extern.slf4j.Slf4j;
 import net.pladema.medicalconsultation.appointment.repository.AppointmentRepository;
 import net.pladema.medicalconsultation.appointment.repository.HistoricAppointmentStateRepository;
+import net.pladema.medicalconsultation.appointment.repository.domain.AppointmentTicketBo;
+import net.pladema.medicalconsultation.appointment.repository.entity.AppointmentObservation;
 import net.pladema.medicalconsultation.appointment.repository.entity.AppointmentState;
 import net.pladema.medicalconsultation.appointment.repository.entity.HistoricAppointmentState;
 import net.pladema.medicalconsultation.appointment.service.AppointmentService;
@@ -339,5 +341,13 @@ public class AppointmentServiceImpl implements AppointmentService {
 	@Override
 	public void delete(AppointmentBo appointmentBo) {
 		appointmentRepository.deleteById(appointmentBo.getId());
+	}
+
+	@Override
+	public AppointmentTicketBo getAppointmentTicketData(Integer appointmentId) {
+		log.debug("Input parameters -> appointmentId {}", appointmentId);
+		var result = this.appointmentRepository.getAppointmentTicketData(appointmentId).orElse(null);
+		log.trace(OUTPUT, result);
+		return result;
 	}
 }
