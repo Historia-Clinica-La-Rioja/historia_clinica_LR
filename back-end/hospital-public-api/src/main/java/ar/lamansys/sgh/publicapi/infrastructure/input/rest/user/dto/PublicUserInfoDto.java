@@ -14,6 +14,4 @@ public class PublicUserInfoDto {
 	private Integer id;
 
 	private String username;
-
-	private List<PublicAuthorityDto> roles;
 }

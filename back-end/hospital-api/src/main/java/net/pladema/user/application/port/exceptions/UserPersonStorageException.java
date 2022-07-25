@@ -1,5 +1,8 @@
 package net.pladema.user.application.port.exceptions;
 
+import lombok.Getter;
+
+@Getter
 public class UserPersonStorageException extends RuntimeException {
 
     private final UserPersonStorageEnumException code;

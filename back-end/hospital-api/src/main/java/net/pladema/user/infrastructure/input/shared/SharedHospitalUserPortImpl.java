@@ -3,6 +3,7 @@ package net.pladema.user.infrastructure.input.shared;
 import ar.lamansys.sgh.shared.infrastructure.input.service.user.dto.UserSharedInfoDto;
 import net.pladema.user.application.fetchuserdatafromtoken.FetchUserDataFromToken;
 
+import net.pladema.user.application.port.exceptions.UserPersonStorageException;
 import net.pladema.user.infrastructure.input.rest.mapper.UserDataDtoMapper;
 
 import org.springframework.stereotype.Service;
@@ -39,10 +40,14 @@ public class SharedHospitalUserPortImpl implements SharedHospitalUserPort {
 	}
 	@Override
 	public Optional<UserSharedInfoDto> fetchUserInfoFromNormalToken(String token) {
-		return fetchUserDataFromToken.execute(token)
-				.map(userDataDtoMapper::PersonDataBoToPersonDataDto)
-				.map(personDataBo -> new UserSharedInfoDto(
-						personDataBo.getUserId(),
-						personDataBo.getUsername()));
+		try {
+			return fetchUserDataFromToken.execute(token)
+					.map(userDataDtoMapper::PersonDataBoToPersonDataDto)
+					.map(personDataBo -> new UserSharedInfoDto(
+							personDataBo.getUserId(),
+							personDataBo.getUsername()));
+		} catch (UserPersonStorageException e) {
+			return Optional.empty();
+		}
 	}
 }

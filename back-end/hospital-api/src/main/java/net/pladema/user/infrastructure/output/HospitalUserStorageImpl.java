@@ -117,10 +117,13 @@ public class HospitalUserStorageImpl implements HospitalUserStorage {
 
     @Override
     public PersonDataBo getPersonDataBoByUserId(Integer userId) {
-        return userPersonRepository.getPersonIdByUserId(userId)
-                .map(personExternalService::getBasicDataPerson)
-                .map(dataPerson -> mapPersonDataBo(dataPerson,vHospitalUserRepository.getOne(userId)))
-                .orElseThrow(()-> new UserPersonStorageException(UserPersonStorageEnumException.UNEXISTED_USER,"El usuario %s no existe"));
+        return vHospitalUserRepository.findById(userId)
+				.map(vHospitalUser ->
+						userPersonRepository.getPersonIdByUserId(userId)
+						.map(personExternalService::getBasicDataPerson)
+						.map(basicDataPersonDto -> mapPersonDataBo(basicDataPersonDto, vHospitalUser))
+								.orElseGet(() -> mapPersonDataBo(null, vHospitalUser)))
+                .orElseThrow(()-> new UserPersonStorageException(UserPersonStorageEnumException.UNEXISTED_USER, String.format("El usuario %s no existe", userId)));
     }
 
 	@Override
@@ -134,13 +137,13 @@ public class HospitalUserStorageImpl implements HospitalUserStorage {
 	}
 
 	private PersonDataBo mapPersonDataBo(BasicDataPersonDto person, VHospitalUser user) {
-        return new PersonDataBo(
+        return person != null ? new PersonDataBo(
                 person.getFirstName(),
                 person.getLastName(),
                 person.getIdentificationType(),
                 person.getIdentificationNumber(),
                 user.getUserId(),
-                user.getUsername());
+                user.getUsername()) : new PersonDataBo(user.getUserId(), user.getUsername());
     }
 
     private UserDataBo mapUserBo(VHospitalUser vHospitalUser) {

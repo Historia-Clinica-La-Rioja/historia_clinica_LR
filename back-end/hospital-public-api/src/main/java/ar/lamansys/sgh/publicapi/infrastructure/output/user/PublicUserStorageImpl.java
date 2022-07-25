@@ -10,6 +10,7 @@ import ar.lamansys.sgh.shared.infrastructure.input.service.SharedPermissionPort;
 
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -27,12 +28,15 @@ public class PublicUserStorageImpl implements PublicUserStorage {
 
 	@Override
 	public Optional<PublicUserInfoBo> fetchUserInfoFromToken(String token) {
-		var roles = sharedPermissionPort.fetchAuthoritiesFromToken(token);
 		return sharedHospitalUserPort.fetchUserInfoFromNormalToken(token)
-				.map(user -> new PublicUserInfoBo(user.getId(), user.getUsername(),
-				roles.stream()
-						.map(this::mapTo)
-						.collect(Collectors.toList())));
+				.map(user -> new PublicUserInfoBo(user.getId(), user.getUsername()));
+	}
+
+	@Override
+	public List<PublicAuthorityBo> fetchRolesFromToken(String token) {
+		return sharedPermissionPort.fetchAuthoritiesFromToken(token).stream()
+				.map(this::mapTo)
+				.collect(Collectors.toList());
 	}
 
 	private PublicAuthorityBo mapTo(RoleInfoDto roleInfoDto) {
