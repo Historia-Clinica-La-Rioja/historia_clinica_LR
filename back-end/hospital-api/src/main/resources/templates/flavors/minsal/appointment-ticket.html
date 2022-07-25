@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="es">
+<head th:fragment="headerfiles">
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <!-- Bootstrap core CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+          integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous"/>
+
+    <style>
+        p {
+            font-size: 45px !important;
+            padding: 0 !important;
+            margin: 0 !important;
+            border: 0 !important;
+        }
+        .container{
+            margin: 0 !important;
+            padding: 0 !important;
+            border: 0 !important;
+        }
+        .separator{
+            margin: 0 !important;
+            padding: 0 !important;
+            border: 0 !important;
+            height: 45px !important;
+            width: min-content !important;
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+
+    <p th:text="${'Hospital: ' + institution}"></p>
+    <div class="separator"></div>
+    <p th:text="${'Datos del paciente: '}"></p>
+    <p th:text="${'Nro documento: ' + dni}"></p>
+    <p th:text="${'Apellido y nombre:'}"></p>
+    <p th:text="${patientFullName}"></p>
+    <p th:text="${'Cobertura médica:'}"></p>
+    <p th:text="${medicalCoverage}"></p>
+    <div class="separator"></div>
+    <p th:text="${'Fecha turno: ' + date}"></p>
+    <p th:text="${'Hora turno: ' + hour}"></p>
+    <p th:text="${'Consultorio: ' + doctorsOffice}"></p>
+    <p th:text="${'Profesional:'}"></p>
+    <p th:text="${doctorFullName}"></p>
+
+</div>
+</body>
+</html>
