@@ -6,33 +6,42 @@
 	</div>
 	<div mat-dialog-content class="ventana">
 		<section id="personal-data" fxLayout="column" fxLayoutGap="5px">
-			<div class="header-content" fxLayout="row" fxLayoutAlign="start" fxLayoutGap="20px">
-				<img mat-card-md-image mat-card-avatar class="mat-card-patient-image" [src]="decodedPhoto$ | async"
-					onerror="this.src='../../../../../assets/images/empty-profile.png'">
-				<div fxLayout="column" fxLayoutAlign="center start">
-					<span class="mat-body-strong capitalize title-size"
-						*ngIf="data.appointmentData.patient.fullName">
-						{{ viewPatientName(data.appointmentData) | uppercase }}
-					</span>
-					<div>
-						<span id="patient_id" class="mat-body-strong subtitle-size">ID
-							{{data.appointmentData.patient.id}}
-						</span>•
-						<span class="mat-body-strong subtitle-size"
-							*ngIf="data.appointmentData.patient.identificationNumber">
-							{{identificationType?.description}}
-							{{data.appointmentData.patient.identificationNumber | number:'3.0-0'}}
+			<div fxLayout="row">
+				<div class="header-content" fxLayout="row" fxLayoutAlign="start " fxLayoutGap="20px">
+					<img mat-card-md-image mat-card-avatar class="mat-card-patient-image" [src]="decodedPhoto$ | async"
+						onerror="this.src='../../../../../assets/images/empty-profile.png'">
+					<div fxLayout="column" fxLayoutAlign="center start">
+						<span class="mat-body-strong capitalize title-size"
+							*ngIf="data.appointmentData.patient.fullName">
+							{{ viewPatientName(data.appointmentData) | uppercase }}
 						</span>
+						<div>
+							<span id="patient_id" class="mat-body-strong subtitle-size">ID
+								{{data.appointmentData.patient.id}}
+							</span>•
+							<span class="mat-body-strong subtitle-size"
+								*ngIf="data.appointmentData.patient.identificationNumber">
+								{{identificationType?.description}}
+								{{data.appointmentData.patient.identificationNumber | number:'3.0-0'}}
+							</span>
+						</div>
+						<a type="button" mat-icon-button color="primary"
+							*appHasRole="['ESPECIALISTA_MEDICO','PROFESIONAL_DE_SALUD','ENFERMERO', 'ESPECIALISTA_EN_ODONTOLOGIA']"
+							[routerLink]="'/institucion/' + institutionId + '/ambulatoria/paciente/' + data.appointmentData?.patient?.id"
+							(click)="closeDialog()">
+							<span class="mat-body subtitle-size">
+								{{'turnos.appointment.BUTTON_CLINICAL_HISTORY' | translate}}
+							</span>
+							<mat-icon color="primary">open_in_new</mat-icon>
+						</a>
 					</div>
-					<a type="button" mat-icon-button color="primary"
-						*appHasRole="['ESPECIALISTA_MEDICO','PROFESIONAL_DE_SALUD','ENFERMERO', 'ESPECIALISTA_EN_ODONTOLOGIA']"
-						[routerLink]="'/institucion/' + institutionId + '/ambulatoria/paciente/' + data.appointmentData?.patient?.id"
-						(click)="closeDialog()">
-						<span class="mat-body subtitle-size">
-							{{'turnos.appointment.BUTTON_CLINICAL_HISTORY' | translate}}
-						</span>
-						<mat-icon color="primary">open_in_new</mat-icon>
-					</a>
+				</div>
+				<div fxLayoutAlign="end center">
+					<button id="print-appointment" name="print-appointment" mat-stroked-button color="primary" btn-block type="button"
+							(click)="getReportAppointment()">
+						<mat-icon fontSet="material-icons-outlined" >print</mat-icon>
+						<span class="uppercase">imprimir turno</span>
+					</button>
 				</div>
 			</div>
 
@@ -137,7 +146,7 @@
 							id="full-date" class="icon-grey">
 							calendar_today
 						</mat-icon>
-						<div >		
+						<div >
 							<span class="mat-body subtitle-size"> {{selectedDate | date:"EEEE, d " | titlecase }} de</span>
 							<span class="mat-body subtitle-size"> {{selectedDate | date:"MMMM " | titlecase}} de</span>
 							<span class="mat-body subtitle-size"> {{selectedDate | date:"y " | titlecase}}</span>
@@ -147,7 +156,7 @@
 						<mat-icon fontSet="material-icons-outlined" mat-list-icon [inline]="true" id="hour" class="icon-grey">
 							access_time
 						</mat-icon>
-						 <span class="mat-body subtitle-size"> {{selectedDate | date:"H:mm"}} hs</span> 
+						 <span class="mat-body subtitle-size"> {{selectedDate | date:"H:mm"}} hs</span>
 					</div>
 				</div>
 				<button type="button" mat-icon-button color="primary" *ngIf="selectedState === appointmentStatesIds.ASSIGNED"
@@ -159,10 +168,10 @@
 				</button>
 			</div>
 
-			<form [formGroup]="formDate" 
-				*ngIf="isDateFormVisible" fxLayout="column" fxLayoutGap="5px" class="dateForm" 
+			<form [formGroup]="formDate"
+				*ngIf="isDateFormVisible" fxLayout="column" fxLayoutGap="5px" class="dateForm"
 				(ngSubmit)="updateAppointmentDate()">
-				<app-datepicker 
+				<app-datepicker
 					[minDate]="startAgenda"
 					[maxDate]="endAgenda"
 					[dateToSetInDatepicker]="data.appointmentData.date"

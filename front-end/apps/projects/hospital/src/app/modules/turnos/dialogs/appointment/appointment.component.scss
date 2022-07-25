@@ -41,7 +41,7 @@
 
 .header-content {
 	@media screen and (min-width: 959px) {
-		width: 380px;
+		width: 100%;
 	}
 
 	button {
@@ -192,7 +192,7 @@ section {
 		cursor: pointer;
 	}
 
-	p {		
+	p {
 		margin: auto;
 		margin-left: 3px;
 		white-space: pre-line;
@@ -202,5 +202,4 @@ section {
 
 .confirm-buttons {
 	margin-bottom: 15px;
-	height: 38px;
-}	
+}
