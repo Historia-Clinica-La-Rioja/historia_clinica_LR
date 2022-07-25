@@ -15,6 +15,7 @@ import { CalendarProfessionalViewComponent } from '@turnos/components/calendar-p
 import { SelectAgendaComponent } from './components/select-agenda/select-agenda.component';
 import { DateRangeTimeFormComponent } from './components/date-range-time-form/date-range-time-form.component';
 import { SeachAppointmentsByProfessionalComponent } from './components/seach-appointments-by-professional/seach-appointments-by-professional.component';
+import { SearchAppointmentsBySpecialtyComponent } from './components/search-appointments-by-specialty/search-appointments-by-specialty.component';
 
 // dialogs
 import { AppointmentComponent } from './dialogs/appointment/appointment.component';
@@ -40,6 +41,7 @@ import { CustomDateFormatter } from './services/custom-date-formatter.service';
 		BlockAgendaRangeComponent,
 		DateRangeTimeFormComponent,
 		SeachAppointmentsByProfessionalComponent,
+		SearchAppointmentsBySpecialtyComponent,
 		// dialogs
 		AppointmentComponent,
 		CalendarProfessionalViewDockPopupComponent,

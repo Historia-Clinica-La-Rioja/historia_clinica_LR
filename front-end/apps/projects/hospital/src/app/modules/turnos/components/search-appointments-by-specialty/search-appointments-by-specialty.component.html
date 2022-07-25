@@ -1,0 +1,55 @@
+<div style="padding-top: 16px;" [formGroup]="searchBySpecialtyForm">
+	<span [translate]="'turnos.home.SEARCH_BY_SPECIALTY_CRITERIA'"></span>
+	<div class="form-category" fxLayout="column" fxLayoutGap="5px">
+		<span class="category-title" [translate]="'turnos.home.SPECIALTY_SEARCH'"></span>
+		<app-typeahead
+			style="max-width: 25%;"
+			[placeholder]="'turnos.home.SPECIALTY_SEARCH'">
+		</app-typeahead>
+	</div>
+	<div class="form-category" fxLayout="column" fxLayoutGap="5px">
+		<span class="category-title" [translate]="'turnos.home.AVAILABLE_DAYS'"></span>
+		<div fxLayout="row" fxLayoutGap="18px">
+			<mat-checkbox [checked]="true">{{ 'turnos.day-of-week.MONDAY' | translate | slice:0:3 }}</mat-checkbox>
+			<mat-checkbox [checked]="true">{{ 'turnos.day-of-week.TUESDAY' | translate | slice:0:3 }}</mat-checkbox>
+			<mat-checkbox [checked]="true">{{ 'turnos.day-of-week.WEDNESDAY' | translate | slice:0:3 }}</mat-checkbox>
+			<mat-checkbox [checked]="true">{{ 'turnos.day-of-week.THURSDAY' | translate | slice:0:3 }}</mat-checkbox>
+			<mat-checkbox [checked]="true">{{ 'turnos.day-of-week.FRIDAY' | translate | slice:0:3 }}</mat-checkbox>
+			<mat-checkbox>{{ 'turnos.day-of-week.SATURDAY' | translate | slice:0:3 }}</mat-checkbox>
+			<mat-checkbox>{{ 'turnos.day-of-week.SUNDAY' | translate | slice:0:3 }}</mat-checkbox>
+		</div>
+	</div>
+	<div class="form-category" fxLayout="column" fxLayoutGap="5px">
+		<span class="category-title" [translate]="'turnos.home.TIME_RANGE'"></span>
+		<div fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="20px">
+			<mat-form-field appearance="outline" class="time_selector">
+				<mat-select id="initialTime" formControlName="initialTime">
+					<mat-option [value]="initialTimeFilter" *ngFor="let initialTimeFilter of timesToFilter"
+						(click)="filterEndingTime()">
+						{{ initialTimeFilter | viewDateDto:'time' | date:'shortTime' }}
+					</mat-option>
+				</mat-select>
+			</mat-form-field>
+			<span>hs. a</span>
+			<mat-form-field appearance="outline" class="time_selector">
+				<mat-select id="endingTime" formControlName="endingTime">
+					<mat-option [value]="endingTimeFilter" *ngFor="let endingTimeFilter of endingTimes">
+						{{ endingTimeFilter | viewDateDto:'time' | date:'shortTime' }}
+					</mat-option>
+				</mat-select>
+			</mat-form-field>
+			<span>hs.</span>
+		</div>
+	</div>
+	<div fxLayout="column" fxLayoutGap="5px">
+		<span class="category-title" [translate]="'turnos.home.SEARCH_START_DATE'"></span>
+		<mat-form-field style="max-width: 25%;" appearance="outline">
+			<input matInput [matDatepicker]="startDatePicker">
+			<mat-datepicker-toggle matSuffix [for]="startDatePicker"></mat-datepicker-toggle>
+  			<mat-datepicker #startDatePicker></mat-datepicker>
+		</mat-form-field>
+	</div>
+	<button mat-flat-button color="primary" id="searchAppointmentButton">
+		<span class="uppercase" [translate]="'turnos.home.actions.SEARCH_APPOINTMENTS'"></span>
+	</button>
+</div>

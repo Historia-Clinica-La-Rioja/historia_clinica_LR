@@ -4,7 +4,8 @@
 			"TITLE": "Gestión de turnos",
 			"actions": {
 				"CREATE_AGENDA": "Crear agenda",
-				"NEW_AGENDA": "Nueva agenda"
+				"NEW_AGENDA": "Nueva agenda",
+				"SEARCH_APPOINTMENTS": "Buscar turnos"
 			},
 			"PROFESSIONAL_SEARCH": "Profesional",
 			"SPECIALTY_SEARCH": "Especialidad",
@@ -15,7 +16,11 @@
 			"ACTIVES_AGENDAS_LABEL": "ACTIVAS",
 			"EXPIRED_AGENDAS_LABEL": "VENCIDAS",
 			"SEARCH_BY_PROFESSIONAL": "Oferta por profesional",
-			"SEARCH_BY_SPECIALTY": "Oferta por especialidad"
+			"SEARCH_BY_SPECIALTY": "Oferta por especialidad",
+			"SEARCH_BY_SPECIALTY_CRITERIA": "Seleccione los criterios para la búsqueda de turnos disponibles por especialidad:",
+			"AVAILABLE_DAYS": "Días disponibles",
+			"TIME_RANGE": "Rango horario",
+			"SEARCH_START_DATE": "Fecha de inicio de búsqueda"
 		},
 		"agenda-setup": {
 			"NEW_AGENDA": "Nueva agenda",
@@ -141,6 +146,15 @@
 			"CONFIRM": "CONFIRMAR",
 			"BLOCK_COMPLETE_RANGE": "Bloquear rango horario completo",
 			"COMPLETE_RANGE": "Rango horario completo"
+		},
+		"day-of-week": {
+			"MONDAY": "Lunes",
+			"TUESDAY": "Martes",
+			"WEDNESDAY": "Miércoles",
+			"THURSDAY": "Jueves",
+			"FRIDAY": "Viernes",
+			"SATURDAY": "Sábado",
+			"SUNDAY": "Domingo"
 		}
 	}
 }
