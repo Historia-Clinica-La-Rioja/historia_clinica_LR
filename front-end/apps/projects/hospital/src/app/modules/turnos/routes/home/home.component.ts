@@ -115,7 +115,7 @@ export class HomeComponent implements OnInit, OnDestroy {
 
 	setProfesional(result: ProfessionalDto) {
 		this.idProfesional = result?.id;
-		this.appointmentFacadeService.setProfessionalId(this.idProfesional);
+		this.appointmentFacadeService.setProfessionalId(result?.id);
 		this.agendaSearchService.search(this.idProfesional);
 		if (!result) {
 			if (this.patientId) {

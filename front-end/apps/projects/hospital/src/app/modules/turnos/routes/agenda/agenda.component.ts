@@ -58,6 +58,7 @@ export class AgendaComponent implements OnInit, OnDestroy, OnChanges {
 	loading = true;
 	dayStartHour: number;
 	dayEndHour: number;
+	professionalId: number;
 	diaryOpeningHours: DiaryOpeningHoursDto[];
 
 	enableAppointmentScheduling = true;
@@ -70,7 +71,6 @@ export class AgendaComponent implements OnInit, OnDestroy, OnChanges {
 	private readonly routePrefix = 'institucion/' + this.contextService.institutionId;
 	private patientId: number;
 	private loggedUserHealthcareProfessionalId: number;
-	@Input() professionalId: number;
 	@Input() canCreateAppoinment = true;
 	@Input() idAgenda: number;
 	@Input() showAll = true;
@@ -93,12 +93,7 @@ export class AgendaComponent implements OnInit, OnDestroy, OnChanges {
 	}
 
 	ngOnInit(): void {
-		this.route.queryParams.subscribe(qp => {
-			this.patientId = Number(qp.idPaciente);
-			if (!this.professionalId)
-				this.professionalId = Number(qp.idProfessional);
-			this.appointmentFacade.setProfessionalId(this.professionalId);
-		});
+		this.professionalId = this.appointmentFacade.getProfessionalId();
 		this.loading = true;
 		this.appointmentSubscription?.unsubscribe();
 		this.appointmentFacade.clear();
@@ -137,22 +132,23 @@ export class AgendaComponent implements OnInit, OnDestroy, OnChanges {
 	}
 
 	loadCalendar(renderEvent: CalendarWeekViewBeforeRenderEvent) {
-		renderEvent.hourColumns.forEach((hourColumn) => {
-			const openingHours: DiaryOpeningHoursDto[] = this._getOpeningHoursFor(hourColumn.date);
-			if (openingHours.length) {
-				hourColumn.hours.forEach((hour) => {
-					hour.segments.forEach((segment) => {
-						openingHours.forEach(openingHour => {
-							const from: Moment = momentParseTime(openingHour.openingHours.from);
-							const to: Moment = momentParseTime(openingHour.openingHours.to);
-							if (isBetween(segment, from, to)) {
-								segment.cssClass = this.getOpeningHoursCssClass(openingHour);
-							}
+		if (this.agenda)
+			renderEvent.hourColumns.forEach((hourColumn) => {
+				const openingHours: DiaryOpeningHoursDto[] = this._getOpeningHoursFor(hourColumn.date);
+				if (openingHours.length) {
+					hourColumn.hours.forEach((hour) => {
+						hour.segments.forEach((segment) => {
+							openingHours.forEach(openingHour => {
+								const from: Moment = momentParseTime(openingHour.openingHours.from);
+								const to: Moment = momentParseTime(openingHour.openingHours.to);
+								if (isBetween(segment, from, to)) {
+									segment.cssClass = this.getOpeningHoursCssClass(openingHour);
+								}
+							});
 						});
 					});
-				});
-			}
-		});
+				}
+			});
 
 		function isBetween(segment: WeekViewHourSegment, from: Moment, to: Moment) {
 			return ((segment.date.getHours() > from.hours()) ||
@@ -264,8 +260,7 @@ export class AgendaComponent implements OnInit, OnDestroy, OnChanges {
 									hour: clickedDate.format(DateFormat.HOUR_MINUTE_SECONDS),
 									openingHoursId: openingHourId,
 									overturnMode: addingOverturn,
-									patientId: this.patientId,
-									professionalId: this.professionalId
+									patientId: this.patientId
 								}
 							});
 						}
@@ -454,8 +449,8 @@ export class AgendaComponent implements OnInit, OnDestroy, OnChanges {
 		let unifiedEvents = [];
 		let processedEvents = [notUnifiedEvents[0]];
 		for (let currentNotUnifiedEvent = 1; currentNotUnifiedEvent < notUnifiedEvents.length; currentNotUnifiedEvent++) {
-			if (notUnifiedEvents[currentNotUnifiedEvent-1].end.getTime() === notUnifiedEvents[currentNotUnifiedEvent].start.getTime()
-			&& notUnifiedEvents[currentNotUnifiedEvent-1].title === notUnifiedEvents[currentNotUnifiedEvent].title)
+			if (notUnifiedEvents[currentNotUnifiedEvent - 1].end.getTime() === notUnifiedEvents[currentNotUnifiedEvent].start.getTime()
+				&& notUnifiedEvents[currentNotUnifiedEvent - 1].title === notUnifiedEvents[currentNotUnifiedEvent].title)
 				processedEvents.push(notUnifiedEvents[currentNotUnifiedEvent]);
 			else {
 				unifiedEvents.push(this.unifyBlockedEvents(processedEvents));

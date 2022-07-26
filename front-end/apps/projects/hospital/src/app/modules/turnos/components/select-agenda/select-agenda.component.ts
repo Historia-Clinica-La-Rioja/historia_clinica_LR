@@ -42,7 +42,6 @@ export class SelectAgendaComponent implements OnInit, OnDestroy {
 
 	private readonly routePrefix = 'institucion/' + this.contextService.institutionId;
 	private patientId: number;
-	@Input() professionalId: number;
 
 	constructor(
 		private readonly router: Router,
@@ -78,9 +77,9 @@ export class SelectAgendaComponent implements OnInit, OnDestroy {
 		if (event.isUserInput) {
 			this.agendaSelected = agenda;
 			if (this.patientId) {
-				this.router.navigate([`agenda/${agenda.id}`], { relativeTo: this.route, queryParams: { idPaciente: this.patientId, idProfessional: this.professionalId } });
+				this.router.navigate([`agenda/${agenda.id}`], { relativeTo: this.route, queryParams: { idPaciente: this.patientId } });
 			} else {
-				this.router.navigate([`agenda/${agenda.id}`], { relativeTo: this.route , queryParams: { idProfessional: this.professionalId } });
+				this.router.navigate([`agenda/${agenda.id}`], { relativeTo: this.route });
 			}
 		}
 	}

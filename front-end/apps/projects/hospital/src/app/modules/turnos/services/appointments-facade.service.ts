@@ -79,6 +79,12 @@ export class AppointmentsFacadeService {
 
 	setProfessionalId(id: number) {
 		this.professionalId = id;
+		if (this.agendaId)
+			this.loadAppointments();
+	}
+
+	getProfessionalId() {
+		return this.professionalId
 	}
 
 	setValues(agendaId, appointmentDuration): void {

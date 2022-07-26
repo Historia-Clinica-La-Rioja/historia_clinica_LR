@@ -45,6 +45,7 @@ export class CalendarProfessionalViewDockPopupComponent implements OnInit {
 		this.healthcareProfessional.getHealthcareProfessionalByUserId().subscribe(professionalId => {
 			this.professionalId = professionalId;
 			this.agendaSearchService.search(professionalId);
+			this.appointmentFacade.setProfessionalId(professionalId);
 			this.agendaFiltersSubscription = this.agendaSearchService.getAgendas$().subscribe((data: AgendaOptionsData) => {
 				if (data) {
 					this.loadAgendas(data.agendas, data.idAgendaSelected);
