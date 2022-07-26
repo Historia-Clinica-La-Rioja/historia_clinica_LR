@@ -20,7 +20,6 @@ import { ProfessionSpecialtiesFormComponent } from './component/profession-speci
 // dialogs
 import { ReportsComponent } from './dialogs/reports/reports.component';
 import { ScanPatientComponent } from './dialogs/scan-patient/scan-patient.component';
-import { EditProfessionsComponent } from './dialogs/edit-professions/edit-professions.component';
 import { EditRolesComponent } from './dialogs/edit-roles/edit-roles.component';
 import { CardRolesComponent } from './component/card-roles/card-roles.component';
 import { AssignedAppointmentComponent } from './component/assigned-appointment/assigned-appointment.component';
@@ -48,7 +47,6 @@ import { EditPrefessionsSpecialtiesComponent } from './dialogs/edit-prefessions-
 		// dialogs
 		EditPatientComponent,
 		ScanPatientComponent,
-		EditProfessionsComponent,
 		ReportsComponent,
 		EditRolesComponent,
 		CardRolesComponent,

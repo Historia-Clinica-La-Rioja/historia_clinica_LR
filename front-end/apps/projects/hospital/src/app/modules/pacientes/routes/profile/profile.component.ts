@@ -16,7 +16,8 @@ import {
 	EmergencyCareEpisodeInProgressDto,
 	EmergencyCareListDto,
 	HealthcareProfessionalCompleteDto,
-	ProfessionalProfessionsDto
+	ProfessionalProfessionsDto,
+	ProfessionalSpecialtyDto
 } from '@api-rest/api-model';
 import { ERole } from '@api-rest/api-model';
 import { AppFeature } from '@api-rest/api-model';
@@ -40,7 +41,6 @@ import { FormBuilder, FormGroup } from "@angular/forms";
 import { processErrors } from "@core/utils/form.utils";
 import { PermissionsService } from "@core/services/permissions.service";
 import { UserPasswordResetService } from "@api-rest/services/user-password-reset.service";
-import { EditProfessionsComponent, ProfessionDto } from '@pacientes/dialogs/edit-professions/edit-professions.component';
 import { ProfessionalService } from '@api-rest/services/professional.service';
 import { SpecialtyService } from '@api-rest/services/specialty.service';
 import { EditRolesComponent } from '@pacientes/dialogs/edit-roles/edit-roles.component';
@@ -84,7 +84,7 @@ export class ProfileComponent implements OnInit {
 	showDischarge = false;
 	internmentDocuments: InternmentDocuments;
 	canLoadProbableDischargeDate: boolean;
-	allProfessions: ProfessionDto[] = [];
+	allProfessions: ProfessionalSpecialtyDto[] = [];
 	allSpecialties: ClinicalSpecialtyDto[] = [];
 	ownProfessionsAndSpecialties: ProfessionalProfessionsDto[] = [];
 	ownProfessionsAndSpecialties$: Observable<ProfessionalProfessionsDto[]>;
@@ -197,7 +197,7 @@ export class ProfileComponent implements OnInit {
 									this.institutionName = institutions[0].name;
 								});
 
-								this.professionalService.getList().subscribe((allProfessions: ProfessionDto[]) => {
+								this.professionalService.getList().subscribe((allProfessions: ProfessionalSpecialtyDto[]) => {
 									this.allProfessions = allProfessions;
 								});
 
@@ -342,7 +342,7 @@ export class ProfileComponent implements OnInit {
 		const dialog = this.dialog.open(EditPrefessionsSpecialtiesComponent, {
 			width: DIALOG_SIZE,
 			data: {
-				personId: this.personId, professionalId: this.professionalId,
+				personId: this.personId,
 				id: this.professionalSpecialtyId, allSpecialties: this.allSpecialties, allProfessions: this.allProfessions, ownProfessionsAndSpecialties: this.ownProfessionsAndSpecialties
 			}
 		});
