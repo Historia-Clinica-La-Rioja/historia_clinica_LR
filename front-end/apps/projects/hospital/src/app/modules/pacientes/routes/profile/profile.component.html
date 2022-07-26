@@ -128,9 +128,9 @@
 							<mat-divider inset></mat-divider>
 							<div *ngIf="!hideProfessions" fxLayout="column" fxLayoutGap="10px">
 								<div content>
-										<app-card-professions [license]="license"
-											[ownProfessionsAndSpecialties]="ownProfessionsAndSpecialties">
-										</app-card-professions>
+									<app-card-professions
+										[ownProfessionsAndSpecialties]="ownProfessionsAndSpecialties$ | async">
+									</app-card-professions>
 								</div>
 								<div content>
 									<button id="button-edit-professions" mat-stroked-button color="primary"

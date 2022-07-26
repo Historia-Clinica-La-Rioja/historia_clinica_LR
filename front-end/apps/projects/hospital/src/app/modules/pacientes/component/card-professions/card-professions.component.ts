@@ -1,5 +1,5 @@
 import { Component, Input, OnInit } from '@angular/core';
-import { ProfessionAndSpecialtyDto } from '@pacientes/routes/profile/profile.component';
+import { HealthcareProfessionalSpecialtyDto } from '@api-rest/api-model';
 
 @Component({
 	selector: 'app-card-professions',
@@ -8,15 +8,13 @@ import { ProfessionAndSpecialtyDto } from '@pacientes/routes/profile/profile.com
 })
 export class CardProfessionsComponent implements OnInit {
 
-	@Input() ownProfessionsAndSpecialties: ProfessionAndSpecialtyDto[];
+	@Input() ownProfessionsAndSpecialties: HealthcareProfessionalSpecialtyDto[];
 
-	@Input() license: string;
 
 	constructor() { }
 
 	ngOnInit(): void {
 	}
-
 	hasProfessions(): boolean {
 		return this.ownProfessionsAndSpecialties?.length > 0;
 	}
