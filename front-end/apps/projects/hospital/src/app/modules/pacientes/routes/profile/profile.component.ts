@@ -15,7 +15,8 @@ import {
 	InstitutionDto,
 	EmergencyCareEpisodeInProgressDto,
 	EmergencyCareListDto,
-	HealthcareProfessionalCompleteDto
+	HealthcareProfessionalCompleteDto,
+	ProfessionalProfessionsDto
 } from '@api-rest/api-model';
 import { ERole } from '@api-rest/api-model';
 import { AppFeature } from '@api-rest/api-model';
@@ -83,7 +84,7 @@ export class ProfileComponent implements OnInit {
 	canLoadProbableDischargeDate: boolean;
 	allProfessions: ProfessionDto[] = [];
 	allSpecialties: ClinicalSpecialtyDto[] = [];
-	ownProfessionsAndSpecialties: ProfessionAndSpecialtyDto[] = [];
+	ownProfessionsAndSpecialties: ProfessionalProfessionsDto[] = [];
 	isProfessional = false;
 	institutionName: string;
 	license: string = '';
@@ -273,21 +274,8 @@ export class ProfileComponent implements OnInit {
 
 	setProfessionsAndSpecialties(): void {
 		this.professionalService.getProfessionsByProfessional(this.professionalId).subscribe(
-			(professionalsByClinicalSpecialty: HealthcareProfessionalSpecialtyDto[]) => {
-				professionalsByClinicalSpecialty.forEach((index: HealthcareProfessionalSpecialtyDto) => {
-					this.professionalSpecialtyId.push(index.id);
-					this.ownProfessionsAndSpecialties.push(
-						{
-							professionDescription: (this.allProfessions.find(element =>
-								element.id === index.professionalSpecialtyId
-							).description),
-							professionId: index.professionalSpecialtyId,
-							specialtyId: index.clinicalSpecialtyId,
-							specialtyName: (this.allSpecialties.find(element =>
-								element.id === index.clinicalSpecialtyId
-							).name)
-						})
-				})
+			(professionalsByClinicalSpecialty: ProfessionalProfessionsDto[]) => {
+				this.ownProfessionsAndSpecialties = professionalsByClinicalSpecialty;
 
 			})
 
@@ -346,23 +334,7 @@ export class ProfileComponent implements OnInit {
 			}
 		});
 	}
-	toUpdateProfessionsAndSpecialties(professional: HealthcareProfessionalCompleteDto): void {
-		this.ownProfessionsAndSpecialties = [];
-		this.isProfessional = true;
-		professional.professionalSpecialtyDtos.forEach((e: HealthcareProfessionalSpecialtyDto) => {
-			this.ownProfessionsAndSpecialties.push(
-				{
-					professionDescription: (this.allProfessions.find(element =>
-						element.id === e.professionalSpecialtyId,
-					).description),
-					professionId: e.professionalSpecialtyId,
-					specialtyId: e.clinicalSpecialtyId,
-					specialtyName: (this.allSpecialties.find(element =>
-						element.id === e.clinicalSpecialtyId
-					).name)
-				})
-		})
-	}
+
 	editProfessions(): void {
 
 		const dialog = this.dialog.open(EditProfessionsComponent, {
@@ -374,11 +346,10 @@ export class ProfileComponent implements OnInit {
 		});
 		dialog.afterClosed().subscribe((professional: HealthcareProfessionalCompleteDto) => {
 			if (professional) {
-				this.license = professional.licenseNumber;
-				if (this.professionalId === undefined) {
+					{
 					this.professionalService.addProfessional(professional).subscribe(_ => {
 						this.snackBarService.showSuccess('pacientes.edit_professions.messages.SUCCESS');
-						this.toUpdateProfessionsAndSpecialties(professional);
+						this.setProfessionsAndSpecialties();
 						this.professionalService.get(this.personId).subscribe((profession: ProfessionalDto) => {
 							if (profession)
 								this.professionalId = profession.id;
@@ -389,19 +360,8 @@ export class ProfileComponent implements OnInit {
 								this.snackBarService.showError(error.text) : this.snackBarService.showError('pacientes.edit_professions.messages.ERROR');
 						})
 				}
-				else {
-					this.professionalService.editProfessional(this.professionalId, professional).subscribe(_ => {
-						this.snackBarService.showSuccess('pacientes.edit_professions.messages.SUCCESS');
-						this.toUpdateProfessionsAndSpecialties(professional);
-					},
-						error => {
-							error?.text ?
-								this.snackBarService.showError(error.text) : this.snackBarService.showError('pacientes.edit_professions.messages.ERROR');
-						}
-					);
-				}
 			}
-		})
+		});
 	}
 
 	reports(): void {
