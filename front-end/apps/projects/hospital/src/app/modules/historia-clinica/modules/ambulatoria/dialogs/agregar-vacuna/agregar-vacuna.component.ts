@@ -308,7 +308,12 @@ export class AgregarVacunaComponent implements OnInit, AfterContentInit {
 		})
 
 		dialogRef.afterClosed().subscribe((vaccineSelected: SnomedDto) => {
-			this.setBillableConcept(vaccineSelected);
+			if (vaccineSelected) {
+				this.setBillableConcept(vaccineSelected);
+			}
+			else {
+				this.searchBillableVaccineForm.get("search").setValue(null);
+			}
 		});
 	}
 
@@ -323,29 +328,31 @@ export class AgregarVacunaComponent implements OnInit, AfterContentInit {
 		})
 
 		dialogRef.afterClosed().subscribe((vaccineSelected: SnomedDto) => {
-			this.setPreviousConcept(vaccineSelected);
+			if (vaccineSelected) {
+				this.setPreviousConcept(vaccineSelected);
+			}
+			else {
+				this.searchPreviousVaccineForm.get("search").setValue(null);
+			}
 		});
 	}
 
 	public setBillableConcept(vaccineSelected: SnomedDto): void {
-		if (vaccineSelected) {
-			this.newVaccineSnomedConcept = vaccineSelected;
-			this.billableForm.controls.snomed.setValue(vaccineSelected.pt);
-			this.loadConditions(vaccineSelected.sctid, this.billableForm);
-		}
+		this.newVaccineSnomedConcept = vaccineSelected;
+		this.billableForm.controls.snomed.setValue(vaccineSelected.pt);
+		this.loadConditions(vaccineSelected.sctid, this.billableForm);
 	}
 
 	public setPreviousConcept(vaccineSelected: SnomedDto): void {
-		if (vaccineSelected) {
-			this.previousVaccineSnomedConcept = vaccineSelected;
-			this.previousForm.controls.snomed.setValue(vaccineSelected.pt);
-			this.loadConditions(vaccineSelected.sctid, this.previousForm);
-		}
+		this.previousVaccineSnomedConcept = vaccineSelected;
+		this.previousForm.controls.snomed.setValue(vaccineSelected.pt);
+		this.loadConditions(vaccineSelected.sctid, this.previousForm);
 	}
 
 	public resetConceptBillableForm(): void {
 		delete this.newVaccineSnomedConcept;
 		this.billableForm.get("snomed").setValue(null);
+		this.searchBillableVaccineForm.get("search").setValue(null);
 		this.tryToSubmit = false;
 		this.disableDoses(this.billableForm);
 		this.disableSchemes(this.billableForm);
@@ -355,6 +362,7 @@ export class AgregarVacunaComponent implements OnInit, AfterContentInit {
 	public resetConceptPreviousForm(): void {
 		delete this.previousVaccineSnomedConcept;
 		this.previousForm.get("snomed").setValue(null);
+		this.searchPreviousVaccineForm.get("search").setValue(null);
 		this.tryToSubmitPrevious = false;
 		this.disableDoses(this.previousForm);
 		this.disableSchemes(this.previousForm);
