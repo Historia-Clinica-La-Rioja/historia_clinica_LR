@@ -34,6 +34,7 @@ import { ContextService } from '@core/services/context.service';
 import { ConfirmBookingComponent } from '@turnos/dialogs/confirm-booking/confirm-booking.component';
 import { DatePipeFormat } from '@core/utils/date.utils';
 import { HealthcareProfessionalService } from '@api-rest/services/healthcare-professional.service';
+import { LoggedUserService } from '../../../auth/services/logged-user.service';
 
 const ASIGNABLE_CLASS = 'cursor-pointer';
 const AGENDA_PROGRAMADA_CLASS = 'bg-green';
@@ -71,6 +72,7 @@ export class AgendaComponent implements OnInit, OnDestroy, OnChanges {
 	private readonly routePrefix = 'institucion/' + this.contextService.institutionId;
 	private patientId: number;
 	private loggedUserHealthcareProfessionalId: number;
+	private loggedUserRoles: string[];
 	@Input() canCreateAppoinment = true;
 	@Input() idAgenda: number;
 	@Input() showAll = true;
@@ -89,6 +91,7 @@ export class AgendaComponent implements OnInit, OnDestroy, OnChanges {
 		private readonly agendaSearchService: AgendaSearchService,
 		private readonly contextService: ContextService,
 		private readonly healthcareProfessionalService: HealthcareProfessionalService,
+		private readonly loggedUserService: LoggedUserService
 	) {
 	}
 
@@ -120,6 +123,7 @@ export class AgendaComponent implements OnInit, OnDestroy, OnChanges {
 		this.appointmentFacade.setInterval();
 		this.permissionsService.hasContextAssignments$(ROLES_TO_CREATE).subscribe(hasRole => this.hasRoleToCreate = hasRole);
 		this.healthcareProfessionalService.getHealthcareProfessionalByUserId().subscribe(healthcareProfessionalId => this.loggedUserHealthcareProfessionalId = healthcareProfessionalId);
+		this.loggedUserService.load().subscribe(response => this.loggedUserRoles = response.roleAssignments.map(role => role.role));
 	}
 
 	ngOnDestroy() {
@@ -249,7 +253,7 @@ export class AgendaComponent implements OnInit, OnDestroy, OnChanges {
 							}
 						}
 
-						if (this.loggedUserHealthcareProfessionalId !== this.professionalId) {
+						if (this.loggedUserHealthcareProfessionalId !== this.professionalId && !this.userHasValidRoles()) {
 							this.snackBarService.showError('turnos.new-appointment.messages.NOT_RESPONSIBLE');
 						} else {
 							this.dialog.open(NewAppointmentComponent, {
@@ -467,6 +471,10 @@ export class AgendaComponent implements OnInit, OnDestroy, OnChanges {
 			start: events[0]?.start,
 			end: events[events.length - 1]?.end,
 		};
+	}
+
+	private userHasValidRoles(): boolean {
+		return this.loggedUserRoles.includes(ERole.ADMINISTRATIVO) || this.loggedUserRoles.includes(ERole.ADMINISTRADOR_AGENDA);
 	}
 
 }
