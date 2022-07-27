@@ -22,3 +22,14 @@
   align-self: center;
   top: 0.09em;
 }
+
+.search.mat-form-field-appearance-outline {
+
+  .mat-form-field-flex {
+    padding: 0 0 0 .75em;
+  }
+
+  .mat-form-field-infix {
+    padding: .5em 0;
+  }
+}
