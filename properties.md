@@ -41,16 +41,18 @@ Este documento detalla las propiedades configurables del sistema.
 
 | Propiedad | Variable de ambiente | Valor por defecto | Necesidad | Descripcion | Desde |
 | ------ | ---- | ---- | ---- | ------------ | ----- |
-|spring.mail.host | SMTP_HOST | smtp.gmail.co | Opcional | Dirección del servidor de mails | v0.2.0 |
-|spring.mail.port | SMTP_PORT |587 | Opcional | Puerto del servidor de mails | v0.2.0 |
-|spring.mail.username | SMTP_USERNAME | user | Opcional | Usuario del servidor de mails | v0.2.0 |
-|spring.mail.password| SMTP_PASS | pass | Opcional | Password del servidor de mails | v0.2.0 |
-|spring.mail.properties.mail.transport.protocol | | smtp | Opcional | Protocolo del servidor de mails | v0.2.0 |
-|spring.mail.properties.mail.smtp.auth | | true | Opcional |  |  v0.2.0 |
-|spring.mail.properties.mail.smtp.starttls.required | | true | Opcional |  |  v0.2.0 |
-|spring.mail.properties.mail.smtp.starttls.enable | |false | Opcional | Habilita el envío de mails |v0.2.0 |
-| app.notification.mail.from  | SMTP_EMAIL  | hsi@pladema.net  | Opcional  |   | v0.38.0  |
-| app.notification.mail.fromFullname  |   | HSI  | Opcional  |   | v0.38.0  |
+|spring.mail.host | SMTP_HOST | | Opcional | Dirección del servidor de mails | v0.38.0 |
+|spring.mail.port | SMTP_PORT | | Opcional | Puerto del servidor de mails | v0.38.0 |
+|spring.mail.username | SMTP_USERNAME | | Opcional | Usuario del servidor de mails | v0.38.0 |
+|spring.mail.password| SMTP_PASS | | Opcional | Password del servidor de mails | v0.38.0 |
+|spring.mail.properties.mail.smtp.auth | SMTP_AUTH | true | Opcional | Habilita autentificación |  v0.38.0 |
+|spring.mail.properties.mail.transport.protocol | | smtp | Opcional | Protocolo del servidor de mails | v0.38.0 |
+|spring.mail.properties.mail.smtp.ssl.enable | SMTP_SSL | true | Opcional | Habilita el envío de mails |v0.38.0 |
+|spring.mail.properties.mail.smtp.starttls.required | SMTP_SSL | true | Opcional |  |  v0.38.0 |
+|spring.mail.properties.mail.smtp.starttls.enable | SMTP_SSL | true | Opcional | Habilita el envío de mails |v0.38.0 |
+| app.notification.mail.from  | | hsi@pladema.net  | Opcional  |   | v0.38.0  |
+| app.notification.mail.fromFullname  | | HSI  | Opcional  |   | v0.38.0  |
+
 
 
 ## Configuración util para debug y monitoring 
@@ -86,6 +88,14 @@ Este documento detalla las propiedades configurables del sistema.
 | habilitar.boton.consulta | | false | Opcional | Propiedad de configuración de aplicación para des/habilitar el botón Nueva consulta.| v1.3.0 |
 
 ## Integración con servicios de terceros (Renaper, Federar, Snowstorm, Nomivac ... )
+
+### Conexiones HTTP salientes
+| Propiedad | Variable de ambiente | Valor por defecto | Condición | Descripcion | Desde |
+| -------- | ------ | -------- | ------ | -------------- | ---- |
+| app.http.client.trustInvalidCertificate | | false | Opcional | Ignora certificados inválidos (habilitar esta propiedad sólo en casos extremos)| v1.40.0  |
+| app.http.client.timeout | | 15000 | Opcional | Timeout en milisegundos| v1.40.0  |
+| app.http.client.proxyHost | | | Opcional | Host del proxy| v1.40.0  |
+| app.http.client.proxyPort | | | Opcional | Puerto del proxy| v1.40.0  |
 
 ### Bus de interoperabilidad
 | Propiedad | Variable de ambiente | Valor por defecto | Condición | Descripcion | Desde |

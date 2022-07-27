@@ -5,6 +5,7 @@ import ar.lamansys.sgx.auth.oauth.application.ports.OAuthTokenStorage;
 import ar.lamansys.sgx.auth.oauth.infrastructure.output.config.OAuthWSConfig;
 import ar.lamansys.sgx.auth.oauth.infrastructure.output.dto.OAuthRefreshTokenResponse;
 import ar.lamansys.sgx.auth.user.infrastructure.output.oauthuser.configuration.OAuthLoginInterceptor;
+import ar.lamansys.sgx.shared.restclient.configuration.HttpClientConfiguration;
 import ar.lamansys.sgx.shared.restclient.configuration.resttemplate.RestTemplateSSL;
 import ar.lamansys.sgx.shared.restclient.services.RestClient;
 import lombok.extern.slf4j.Slf4j;
@@ -19,13 +20,18 @@ public class OAuthTokenStorageImpl extends RestClient implements OAuthTokenStora
 
     private final OAuthWSConfig oAuthWSConfig;
 
-    public OAuthTokenStorageImpl(OAuthWSConfig oAuthWSConfig) throws Exception {
-        super(getRestTemplateSSL(), oAuthWSConfig);
+    public OAuthTokenStorageImpl(
+			HttpClientConfiguration configuration,
+			OAuthWSConfig oAuthWSConfig
+	) throws Exception {
+        super(getRestTemplateSSL(configuration), oAuthWSConfig);
         this.oAuthWSConfig = oAuthWSConfig;
     }
 
-    private static RestTemplateSSL getRestTemplateSSL() throws Exception {
-        var restTemplate = new RestTemplateSSL();
+    private static RestTemplateSSL getRestTemplateSSL(
+			HttpClientConfiguration configuration
+	) throws Exception {
+        var restTemplate = new RestTemplateSSL(configuration);
         restTemplate.getInterceptors().add(0, new OAuthLoginInterceptor()); // adds the interceptor in the first position
         return restTemplate;
     }

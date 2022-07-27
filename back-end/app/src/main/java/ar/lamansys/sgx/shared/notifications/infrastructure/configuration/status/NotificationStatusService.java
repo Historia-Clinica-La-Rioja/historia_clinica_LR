@@ -1,4 +1,4 @@
-package ar.lamansys.sgx.shared.notificationsinfrastructure.configuration.status;
+package ar.lamansys.sgx.shared.notifications.infrastructure.configuration.status;
 
 import java.util.Collections;
 import java.util.List;

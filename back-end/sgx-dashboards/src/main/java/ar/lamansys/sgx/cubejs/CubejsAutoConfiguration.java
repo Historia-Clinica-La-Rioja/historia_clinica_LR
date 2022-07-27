@@ -17,6 +17,7 @@ import org.springframework.context.annotation.PropertySource;
 import ar.lamansys.sgx.cubejs.domain.DashboardStorage;
 import ar.lamansys.sgx.cubejs.infrastructure.repository.DashboardStorageImpl;
 import ar.lamansys.sgx.cubejs.infrastructure.repository.DashboardStorageUnavailableImpl;
+import ar.lamansys.sgx.shared.restclient.configuration.HttpClientConfiguration;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -44,15 +45,18 @@ public class CubejsAutoConfiguration {
     }
 
     @Bean
-    public DashboardStorage dashboardStorageImpl(UserPermissionStorage userPermissionStorage,
-								@Value("${app.gateway.cubejs.token.secret}") String secret,
-								@Value("${app.gateway.cubejs.token.header:Authorization}") String cubeTokenHeader,
-								@Value("${app.gateway.cubejs.token.expiration:20d}") Duration tokenExpiration) throws Exception {
+    public DashboardStorage dashboardStorageImpl(
+			UserPermissionStorage userPermissionStorage,
+			HttpClientConfiguration configuration,
+			@Value("${app.gateway.cubejs.token.secret}") String secret,
+			@Value("${app.gateway.cubejs.token.header:Authorization}") String cubeTokenHeader,
+			@Value("${app.gateway.cubejs.token.expiration:20d}") Duration tokenExpiration
+	) throws Exception {
         if (!isEnabled()) {
             log.warn("Cubejs dashboards are disabled");
             return new DashboardStorageUnavailableImpl();
         }
-        return new DashboardStorageImpl(this, userPermissionStorage, secret, cubeTokenHeader, tokenExpiration);
+        return new DashboardStorageImpl(this, userPermissionStorage, configuration, secret, cubeTokenHeader, tokenExpiration);
     }
 
     @Bean

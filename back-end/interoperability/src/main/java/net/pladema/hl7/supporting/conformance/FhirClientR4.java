@@ -1,5 +1,6 @@
 package net.pladema.hl7.supporting.conformance;
 
+import ar.lamansys.sgx.shared.restclient.configuration.HttpClientConfiguration;
 import ar.lamansys.sgx.shared.restclient.configuration.RestUtils;
 import ca.uhn.fhir.context.FhirContext;
 import ca.uhn.fhir.context.PerformanceOptionsEnum;
@@ -42,11 +43,14 @@ public class FhirClientR4 {
     private final IGenericClient nomivacClient;
     private final IGenericClient federadorClient;
 
-    public FhirClientR4(WebApplicationContext webApplicationContext,
-                        @Value("${ws.federar.url.base}") String federador,
-                        @Value("${ws.bus.url.base}") String bus,
-                        @Value("${ws.nomivac.synchronization.url.base:localhost}") String nomivac,
-                        @Value("${ws.nomivac.rest-client.config.trust-invalid-certificate:false}") Boolean nomivacTrustInvalidCertificate) throws KeyStoreException, NoSuchAlgorithmException, KeyManagementException {
+    public FhirClientR4(
+			WebApplicationContext webApplicationContext,
+			@Value("${ws.federar.url.base}") String federador,
+			@Value("${ws.bus.url.base}") String bus,
+			@Value("${ws.nomivac.synchronization.url.base:localhost}") String nomivac,
+			@Value("${ws.nomivac.rest-client.config.trust-invalid-certificate:false}") Boolean nomivacTrustInvalidCertificate,
+			HttpClientConfiguration configuration
+	) throws KeyStoreException, NoSuchAlgorithmException, KeyManagementException {
         super();
 
         FhirContext context = FhirContext.forR4();
@@ -72,7 +76,11 @@ public class FhirClientR4 {
         busClient.registerInterceptor(webApplicationContext.getBean(ClientAuthInterceptor.class));
 
         this.nomivacClient = context.newRestfulGenericClient(nomivac);
-        nomivacClient.getFhirContext().getRestfulClientFactory().setHttpClient(RestUtils.httpClient(nomivacTrustInvalidCertificate));
+        nomivacClient.getFhirContext().getRestfulClientFactory().setHttpClient(RestUtils.httpClient(
+				nomivacTrustInvalidCertificate,
+				configuration.getProxyHost(),
+				configuration.getProxyPort()
+		));
         nomivacClient.registerInterceptor(webApplicationContext.getBean(ClientAuthInterceptor.class));
 
         federadorClient = context.newRestfulGenericClient(federador + CodingSystem.SERVER.PATIENT_SERVICE);
