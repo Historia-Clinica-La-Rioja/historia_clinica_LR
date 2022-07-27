@@ -42,7 +42,7 @@ public interface HealthcareProfessionalSpecialtyRepository extends SGXAuditableE
 
     @Transactional(readOnly = true)
     @Query(value = "SELECT NEW net.pladema.staff.repository.domain.ProfessionalClinicalSpecialtyVo" +
-            "(hps.professionalProfessionId, cs) " +
+            "(pp.healthcareProfessionalId, cs) " +
             "FROM HealthcareProfessionalSpecialty hps "
             + "INNER JOIN ClinicalSpecialty cs ON hps.clinicalSpecialtyId = cs.id "
 			+ "INNER JOIN ProfessionalProfessions pp ON pp.id = hps.professionalProfessionId "
