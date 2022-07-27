@@ -31,9 +31,6 @@ public class AppointmentTicketDto {
 	private String doctorFullName;
 
 	public static AppointmentTicketDto toAppointmentTicketDto(AppointmentTicketBo bo) {
-		if(bo == null)
-			return null;
-
 		DecimalFormat decimalFormat = new DecimalFormat("###,###.##");
 		final String notMedicalCoverage = "SIN COBERTURA";
 		String medicalCoverage = bo.getMedicalCoverage();

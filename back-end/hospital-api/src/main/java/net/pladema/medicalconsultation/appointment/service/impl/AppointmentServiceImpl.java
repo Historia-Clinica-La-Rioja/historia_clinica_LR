@@ -31,6 +31,11 @@ import ar.lamansys.sgh.shared.infrastructure.input.service.SharedStaffPort;
 import ar.lamansys.sgx.shared.featureflags.AppFeature;
 import ar.lamansys.sgx.shared.featureflags.application.FeatureFlagsService;
 import lombok.extern.slf4j.Slf4j;
+import net.pladema.establishment.controller.service.InstitutionExternalService;
+import net.pladema.establishment.repository.MedicalCoveragePlanRepository;
+import net.pladema.medicalconsultation.appointment.controller.exceptions.AppointmentNotFoundEnumException;
+import net.pladema.medicalconsultation.appointment.controller.exceptions.AppointmentNotFoundException;
+import net.pladema.medicalconsultation.appointment.repository.AppointmentObservationRepository;
 import net.pladema.medicalconsultation.appointment.repository.AppointmentRepository;
 import net.pladema.medicalconsultation.appointment.repository.HistoricAppointmentStateRepository;
 import net.pladema.medicalconsultation.appointment.repository.domain.AppointmentTicketBo;
@@ -346,7 +351,9 @@ public class AppointmentServiceImpl implements AppointmentService {
 	@Override
 	public AppointmentTicketBo getAppointmentTicketData(Integer appointmentId) {
 		log.debug("Input parameters -> appointmentId {}", appointmentId);
-		var result = this.appointmentRepository.getAppointmentTicketData(appointmentId).orElse(null);
+		var result = this.appointmentRepository.getAppointmentTicketData(appointmentId).orElseThrow(
+				()-> new AppointmentNotFoundException(AppointmentNotFoundEnumException.APPOINTMENT_ID_NOT_FOUND, "el id no corresponde con ningun turno asignado")
+		);
 		log.trace(OUTPUT, result);
 		return result;
 	}

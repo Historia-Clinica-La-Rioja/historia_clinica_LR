@@ -1,5 +1,12 @@
 package net.pladema.medicalconsultation.appointment.controller.exceptions;
 
+import java.util.Locale;
+
+import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.ResponseStatus;
+import org.springframework.web.bind.annotation.RestControllerAdvice;
+
 import ar.lamansys.sgx.shared.exceptions.dto.ApiErrorMessageDto;
 import lombok.extern.slf4j.Slf4j;
 import net.pladema.medicalconsultation.appointment.service.impl.exceptions.UpdateAppointmentDateException;
@@ -26,6 +33,13 @@ public class AppointmentExceptionHandler {
 	@ExceptionHandler({ UpdateAppointmentDateException.class })
 	protected ApiErrorMessageDto handleUpdateAppointmentDateException(UpdateAppointmentDateException ex, Locale locale) {
 		log.debug("UpdateAppointmentDateException exception -> {}", ex.getMessage());
+		return new ApiErrorMessageDto(ex.getCode(), ex.getMessage());
+	}
+
+	@ResponseStatus(HttpStatus.BAD_REQUEST)
+	@ExceptionHandler({ AppointmentNotFoundException.class })
+	protected ApiErrorMessageDto handleAppointmentNotFoundException(AppointmentNotFoundException ex, Locale locale) {
+		log.debug("AppointmentNotFoundException exception -> {}", ex.getMessage());
 		return new ApiErrorMessageDto(ex.getCode(), ex.getMessage());
 	}
 }
