@@ -59,7 +59,8 @@
 								<ng-template #searchImmunizations>
 									<mat-form-field *ngIf="!searchConceptsLocallyFF else vaccineTypeaheadSearch"
 										appearance="outline" class="search" [formGroup]="searchBillableVaccineForm">
-										<input matInput formControlName="search">
+										<input matInput formControlName="search"
+											(keydown.enter)="openSearchBillableVaccineDialog()">
 										<button type="button" matSuffix mat-flat-button color="primary"
 											(click)="openSearchBillableVaccineDialog()">
 											<span class="uppercase" [translate]="'buttons.SEARCH'"></span>
@@ -235,7 +236,8 @@
 							<ng-template #searchImmunizationsPreviousForm>
 								<mat-form-field *ngIf="!searchConceptsLocallyFF else previousVaccineTypeaheadSearch"
 									appearance="outline" class="search" [formGroup]="searchPreviousVaccineForm">
-									<input matInput formControlName="search">
+									<input matInput formControlName="search"
+										(keydown.enter)="openSearchPreviousVaccineDialog()">
 									<button type="button" matSuffix mat-flat-button color="primary"
 										(click)="openSearchPreviousVaccineDialog()">
 										<span class="uppercase" [translate]="'buttons.SEARCH'"></span>
