@@ -6,6 +6,8 @@ import ar.lamansys.sgx.cubejs.infrastructure.repository.DashboardStorageImpl;
 import ar.lamansys.sgx.cubejs.infrastructure.repository.DashboardStorageUnavailableImpl;
 import ar.lamansys.sgx.cubejs.infrastructure.repository.permissions.UserPermissionStorageEmptyImpl;
 import ar.lamansys.sgx.shared.proxy.reverse.ReverseProxy;
+import ar.lamansys.sgx.shared.restclient.configuration.HttpClientConfiguration;
+
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Disabled;
@@ -49,6 +51,7 @@ class DashboardInfoServiceImplTest {
         when(cubejsAutoConfiguration.getHeaders()).thenReturn(new HashMap<>());
         dashboardInfoService = new DashboardInfoServiceImpl(
 				new DashboardStorageImpl(cubejsAutoConfiguration, new UserPermissionStorageEmptyImpl(),
+						newHttpClientConfiguration(),
 						"SECRET", "AUTHORIZATION", Duration.ofDays(2)));
         Map<String, String[]> parameterMap = new HashMap<>();
         parameterMap.put("PRUEBA",new String[]{"Prueba2"});
@@ -57,7 +60,11 @@ class DashboardInfoServiceImplTest {
                 .isNotNull();
     }
 
-    @Test
+	private HttpClientConfiguration newHttpClientConfiguration() {
+		return new HttpClientConfiguration(null, null, 1500, false);
+	}
+
+	@Test
     @DisplayName("Dashboardinfo faild with disable storage")
     void dashboardinfo_disable_storage_exception() {
 

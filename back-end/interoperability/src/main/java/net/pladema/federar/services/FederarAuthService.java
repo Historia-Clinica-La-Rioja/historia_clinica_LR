@@ -1,5 +1,6 @@
 package net.pladema.federar.services;
 
+import ar.lamansys.sgx.shared.restclient.configuration.HttpClientConfiguration;
 import ar.lamansys.sgx.shared.restclient.configuration.resttemplate.RestTemplateSSL;
 import ar.lamansys.sgx.shared.restclient.services.AuthService;
 import ar.lamansys.sgx.shared.restclient.services.domain.WSResponseException;
@@ -19,8 +20,17 @@ public class FederarAuthService extends AuthService<FederarLoginResponse> {
 
 	private FederarWSConfig federarWSConfig;
 
-	public FederarAuthService(FederarWSConfig wsConfig) throws Exception {
-		super(wsConfig.getAuthenticationPath(), new RestTemplateSSL(wsConfig.getRequestTimeOut().intValue()), wsConfig);
+	public FederarAuthService(
+			FederarWSConfig wsConfig,
+			HttpClientConfiguration configuration
+	) throws Exception {
+		super(
+				wsConfig.getAuthenticationPath(),
+				new RestTemplateSSL(
+						configuration.with(wsConfig.getRequestTimeOut())
+				),
+				wsConfig
+		);
 		federarWSConfig = wsConfig;
 	}
 

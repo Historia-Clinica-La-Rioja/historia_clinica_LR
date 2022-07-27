@@ -1,5 +1,6 @@
 package net.pladema.snowstorm.configuration;
 
+import ar.lamansys.sgx.shared.restclient.configuration.HttpClientConfiguration;
 import ar.lamansys.sgx.shared.restclient.configuration.resttemplate.RestTemplateSSL;
 import ar.lamansys.sgx.shared.restclient.services.AuthService;
 import net.pladema.snowstorm.services.domain.SnowstormLoginResponse;
@@ -10,9 +11,12 @@ import org.springframework.stereotype.Service;
 @Service
 public class SnowstormAuthService extends AuthService<SnowstormLoginResponse> {
 
-    public SnowstormAuthService(@Value("${ws.snowstorm.url.login:/}") String relUrl,
-                                SnowstormWSConfig wsConfig) throws Exception {
-        super(relUrl, new RestTemplateSSL(), wsConfig);
+    public SnowstormAuthService(
+			HttpClientConfiguration configuration,
+			@Value("${ws.snowstorm.url.login:/}") String relUrl,
+			SnowstormWSConfig wsConfig
+	) throws Exception {
+        super(relUrl, new RestTemplateSSL(configuration), wsConfig);
     }
 
     @Override

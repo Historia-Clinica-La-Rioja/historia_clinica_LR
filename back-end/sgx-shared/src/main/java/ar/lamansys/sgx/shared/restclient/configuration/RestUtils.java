@@ -1,5 +1,6 @@
 package ar.lamansys.sgx.shared.restclient.configuration;
 
+import org.apache.http.HttpHost;
 import org.apache.http.client.CredentialsProvider;
 import org.apache.http.client.HttpClient;
 import org.apache.http.conn.ssl.SSLConnectionSocketFactory;
@@ -16,12 +17,26 @@ import java.security.cert.X509Certificate;
 
 public class RestUtils {
 
-    public static HttpClient httpClient(boolean trustInvalidCertificate) throws KeyStoreException, NoSuchAlgorithmException, KeyManagementException {
+    public static HttpClient httpClient(
+			boolean trustInvalidCertificate,
+			String httpProxyHost,
+			Integer httpProxyPort
+	) throws KeyStoreException, NoSuchAlgorithmException, KeyManagementException {
+		HttpHost proxy = httpProxy(httpProxyHost, httpProxyPort);
         TrustStrategy acceptingTrustStrategy = (X509Certificate[] chain, String authType) -> true;
         CredentialsProvider credentialsProvider = new BasicCredentialsProvider();
         SSLConnectionSocketFactory socketFactory = new SSLConnectionSocketFactory(
                 new SSLContextBuilder().loadTrustMaterial(null, trustInvalidCertificate ? acceptingTrustStrategy : new TrustSelfSignedStrategy()).build());
         return HttpClients.custom().setDefaultCredentialsProvider(credentialsProvider)
+				.setProxy(proxy)
                 .setSSLSocketFactory(socketFactory).build();
     }
+
+	private static HttpHost httpProxy(
+			String httpProxyHost,
+			Integer httpProxyPort
+	) {
+		return (httpProxyPort == null || httpProxyHost == null || httpProxyHost.trim().isEmpty()) ? null :
+				new HttpHost(httpProxyHost, httpProxyPort);
+	}
 }
