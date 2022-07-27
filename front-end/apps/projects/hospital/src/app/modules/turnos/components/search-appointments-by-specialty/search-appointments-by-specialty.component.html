@@ -4,19 +4,21 @@
 		<span class="category-title" [translate]="'turnos.home.SPECIALTY_SEARCH'"></span>
 		<app-typeahead
 			style="max-width: 25%;"
-			[placeholder]="'turnos.home.SPECIALTY_SEARCH'">
+			[placeholder]="'turnos.home.SPECIALTY_SEARCH'"
+			[options]="aliasTypeaheadOptions$ | async"
+			(selectionChange)="setClinicalSpecialty($event)">
 		</app-typeahead>
 	</div>
 	<div class="form-category" fxLayout="column" fxLayoutGap="5px">
 		<span class="category-title" [translate]="'turnos.home.AVAILABLE_DAYS'"></span>
 		<div fxLayout="row" fxLayoutGap="18px">
-			<mat-checkbox [checked]="true">{{ 'turnos.day-of-week.MONDAY' | translate | slice:0:3 }}</mat-checkbox>
-			<mat-checkbox [checked]="true">{{ 'turnos.day-of-week.TUESDAY' | translate | slice:0:3 }}</mat-checkbox>
-			<mat-checkbox [checked]="true">{{ 'turnos.day-of-week.WEDNESDAY' | translate | slice:0:3 }}</mat-checkbox>
-			<mat-checkbox [checked]="true">{{ 'turnos.day-of-week.THURSDAY' | translate | slice:0:3 }}</mat-checkbox>
-			<mat-checkbox [checked]="true">{{ 'turnos.day-of-week.FRIDAY' | translate | slice:0:3 }}</mat-checkbox>
-			<mat-checkbox>{{ 'turnos.day-of-week.SATURDAY' | translate | slice:0:3 }}</mat-checkbox>
-			<mat-checkbox>{{ 'turnos.day-of-week.SUNDAY' | translate | slice:0:3 }}</mat-checkbox>
+			<mat-checkbox formControlName="mondayControl">{{ 'turnos.day-of-week.MONDAY' | translate | slice:0:3 }}</mat-checkbox>
+			<mat-checkbox formControlName="tuesdayControl">{{ 'turnos.day-of-week.TUESDAY' | translate | slice:0:3 }}</mat-checkbox>
+			<mat-checkbox formControlName="wednesdayControl">{{ 'turnos.day-of-week.WEDNESDAY' | translate | slice:0:3 }}</mat-checkbox>
+			<mat-checkbox formControlName="thursdayControl">{{ 'turnos.day-of-week.THURSDAY' | translate | slice:0:3 }}</mat-checkbox>
+			<mat-checkbox formControlName="fridayControl">{{ 'turnos.day-of-week.FRIDAY' | translate | slice:0:3 }}</mat-checkbox>
+			<mat-checkbox formControlName="saturdayControl">{{ 'turnos.day-of-week.SATURDAY' | translate | slice:0:3 }}</mat-checkbox>
+			<mat-checkbox formControlName="sundayControl">{{ 'turnos.day-of-week.SUNDAY' | translate | slice:0:3 }}</mat-checkbox>
 		</div>
 	</div>
 	<div class="form-category" fxLayout="column" fxLayoutGap="5px">
@@ -41,15 +43,16 @@
 			<span>hs.</span>
 		</div>
 	</div>
-	<div fxLayout="column" fxLayoutGap="5px">
+	<div style="padding-bottom: 10px;" fxLayout="column" fxLayoutGap="5px">
 		<span class="category-title" [translate]="'turnos.home.SEARCH_START_DATE'"></span>
 		<mat-form-field style="max-width: 25%;" appearance="outline">
-			<input matInput [matDatepicker]="startDatePicker">
+			<input formControlName="searchInitialDate" matInput [matDatepicker]="startDatePicker" [matDatepickerFilter]="dateSearchFilter">
+			<mat-error [translate]="'turnos.home.messages.NO_SPECIFIED_DATE'"></mat-error>
 			<mat-datepicker-toggle matSuffix [for]="startDatePicker"></mat-datepicker-toggle>
   			<mat-datepicker #startDatePicker></mat-datepicker>
 		</mat-form-field>
 	</div>
-	<button mat-flat-button color="primary" id="searchAppointmentButton">
+	<button mat-flat-button color="primary" id="searchAppointmentButton" [disabled]="!searchBySpecialtyForm.valid">
 		<span class="uppercase" [translate]="'turnos.home.actions.SEARCH_APPOINTMENTS'"></span>
 	</button>
 </div>

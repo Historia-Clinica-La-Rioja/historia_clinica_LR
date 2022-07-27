@@ -339,4 +339,12 @@ public class DiaryServiceImpl implements DiaryService {
 		return result;
 	}
 
+	@Override
+	public List<String> getActiveDiariesAliases(Integer institutionId) {
+		LOG.debug("Input parameters -> institutionId {}", institutionId);
+		List<String> result = diaryRepository.getActiveDiariesAliases(institutionId);
+		LOG.debug(OUTPUT, result);
+		return result;
+	}
+
 }

@@ -24,6 +24,7 @@ import net.pladema.medicalconsultation.diary.controller.constraints.DiaryEmptyAp
 import net.pladema.medicalconsultation.diary.controller.constraints.EditDiaryOpeningHoursValid;
 import net.pladema.medicalconsultation.diary.controller.constraints.ExistingDiaryPeriodValid;
 
+import net.pladema.staff.controller.dto.ProfessionalsByClinicalSpecialtyDto;
 import net.pladema.staff.service.HealthcareProfessionalService;
 
 import org.springframework.http.ResponseEntity;
@@ -304,6 +305,15 @@ public class DiaryController {
 		listAppointments.forEach(appointmentService::delete);
 
 		return ResponseEntity.ok(Boolean.TRUE);
+	}
+
+	@GetMapping("/active-diaries-alias")
+	@PreAuthorize("hasPermission(#institutionId, 'ADMINISTRADOR_AGENDA, ADMINISTRATIVO')")
+	public ResponseEntity<List<String>> getManyByActiveDiariesAndProfessionals(
+			@PathVariable(name = "institutionId") Integer institutionId) {
+		List<String> activeDiariesAliases = diaryService.getActiveDiariesAliases(institutionId);
+		log.debug("Get all aliases by active diaries and Institution {} ", institutionId);
+		return ResponseEntity.ok(activeDiariesAliases);
 	}
 
 	private void completeDiaryUnblock(BlockDto unblockDto, DiaryBo diaryBo, List<LocalDate> blockedDates, List<AppointmentBo> listAppointments) {

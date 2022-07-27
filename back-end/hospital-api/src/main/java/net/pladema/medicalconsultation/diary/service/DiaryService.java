@@ -34,4 +34,6 @@ public interface DiaryService {
 	
 	Integer getInstitution(Integer diaryId);
 
+	List<String> getActiveDiariesAliases(Integer institutionId);
+
 }

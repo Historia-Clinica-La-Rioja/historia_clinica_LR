@@ -172,4 +172,13 @@ public interface DiaryRepository extends SGXAuditableEntityJPARepository<Diary, 
 			"JOIN Sector s ON do.sectorId = s.id " +
 			"WHERE d.id = :diaryId ")
 	Optional<Integer> getInstitutionIdByDiary(@Param("diaryId") Integer diaryId);
+
+	@Transactional(readOnly = true)
+	@Query(" SELECT DISTINCT (CASE WHEN d.alias IS NULL THEN cs.name ELSE d.alias END) AS alias " +
+			"FROM Diary d " +
+			"INNER JOIN ClinicalSpecialty cs ON (d.clinicalSpecialtyId = cs.id) " +
+			"INNER JOIN DoctorsOffice dof ON (dof.id = d.doctorsOfficeId) " +
+			"WHERE d.active = TRUE " +
+			"AND dof.institutionId = :institutionId ")
+	List<String> getActiveDiariesAliases(@Param("institutionId") Integer institutionId);
 }

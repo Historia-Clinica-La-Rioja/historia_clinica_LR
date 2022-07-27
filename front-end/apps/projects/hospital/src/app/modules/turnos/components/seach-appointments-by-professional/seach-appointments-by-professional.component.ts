@@ -52,7 +52,7 @@ export class SeachAppointmentsByProfessionalComponent implements OnInit, OnDestr
 
 		this.route.queryParams.subscribe(qp => this.patientId = Number(qp.idPaciente));
 
-		this.healthCareProfessionalService.getAll().subscribe(doctors => {
+		this.healthCareProfessionalService.getAllAssociated().subscribe(doctors => {
 			this.especialidadesTypeaheadOptions$ = this.getEspecialidadesTypeaheadOptions$(doctors);
 
 			this.profesionales = doctors;
@@ -111,7 +111,7 @@ export class SeachAppointmentsByProfessionalComponent implements OnInit, OnDestr
 
 	setProfesional(result: ProfessionalDto) {
 		this.idProfesional = result?.id;
-		this.appointmentFacadeService.setProfessionalId(this.idProfesional);
+		this.appointmentFacadeService.setProfessionalId(result?.id);
 		this.agendaSearchService.search(this.idProfesional);
 		if (!result) {
 			if (this.patientId) {
@@ -138,7 +138,7 @@ export class SeachAppointmentsByProfessionalComponent implements OnInit, OnDestr
 	}
 
 	private getEspecialidadesTypeaheadOptions$(doctors: ProfessionalDto[]) {
-		return this.clinicalSpecialtyService.getClinicalSpecialties(doctors.map(d => d.id))
+		return this.clinicalSpecialtyService.getActiveDiariesByProfessionalsClinicalSpecialties(doctors.map(d => d.id))
 			.pipe(map(toTypeaheadOptionList));
 
 		function toTypeaheadOptionList(prosBySpecialtyList: ProfessionalsByClinicalSpecialtyDto[]):

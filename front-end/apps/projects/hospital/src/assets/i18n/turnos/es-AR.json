@@ -20,7 +20,10 @@
 			"SEARCH_BY_SPECIALTY_CRITERIA": "Seleccione los criterios para la búsqueda de turnos disponibles por especialidad:",
 			"AVAILABLE_DAYS": "Días disponibles",
 			"TIME_RANGE": "Rango horario",
-			"SEARCH_START_DATE": "Fecha de inicio de búsqueda"
+			"SEARCH_START_DATE": "Fecha de inicio de búsqueda",
+			"messages": {
+				"NO_SPECIFIED_DATE": "Por favor ingrese una fecha para realizar la búsqueda"
+			}
 		},
 		"agenda-setup": {
 			"NEW_AGENDA": "Nueva agenda",
