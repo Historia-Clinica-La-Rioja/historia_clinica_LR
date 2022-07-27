@@ -29,7 +29,7 @@ import { PersonMasterDataService } from "@api-rest/services/person-master-data.s
 import { SummaryCoverageInformation } from '@historia-clinica/modules/ambulatoria/components/medical-coverage-summary-view/medical-coverage-summary-view.component';
 import { PatientService } from '@api-rest/services/patient.service';
 import { ImageDecoderService } from '@presentation/services/image-decoder.service';
-import { formatTimeOnlyISO, getDayHoursRangeIntervalsByMinuteValue } from '@core/utils/date.utils';
+import { getDayHoursRangeIntervalsByMinuteValue } from '@core/utils/date.utils';
 import { CalendarEvent } from 'angular-calendar';
 
 const TEMPORARY_PATIENT = 3;
@@ -91,15 +91,15 @@ export class AppointmentComponent implements OnInit {
 	isCheckedDownloadFormulario = false;
 	downloadReportIsEnabled: boolean;
 	isMqttCallEnabled = false;
-	
+
 	hideObservationForm = true;
 	hideObservationTitle = true;
 	observation: string;
 
 	constructor(
-		@Inject(MAT_DIALOG_DATA) public data: { 
-			appointmentData: PatientAppointmentInformation, 
-			hasPermissionToAssignShift: boolean, 
+		@Inject(MAT_DIALOG_DATA) public data: {
+			appointmentData: PatientAppointmentInformation,
+			hasPermissionToAssignShift: boolean,
 			agenda: CompleteDiaryDto,
 			appointments: CalendarEvent[]
 		},
@@ -158,7 +158,7 @@ export class AppointmentComponent implements OnInit {
 			if(!this.availableDays.includes(day))
 				this.availableDays.push(day);
 		});
-		
+
 		this.appointmentService.get(this.data.appointmentData.appointmentId)
 			.subscribe(appointment => {
 				this.appointment = appointment;
@@ -216,7 +216,7 @@ export class AppointmentComponent implements OnInit {
 	}
 
 	openDateForm(): void{
-		this.dateFormToggle(); 
+		this.dateFormToggle();
 		this.setDisableDays();
 		this.setPossibleScheduleHours(this.selectedDate);
 		this.formDate.controls.hour.setValue(this.possibleScheduleHours.find(item => {return item.getTime() ==  this.selectedDate.getTime()}));
@@ -511,6 +511,18 @@ export class AppointmentComponent implements OnInit {
 
 	enableDowndloadFormulario(option: boolean) {
 		this.isCheckedDownloadFormulario = option;
+	}
+
+	getAppointmentTicketReport(): void {
+		this.appointmentService.getAppointmentTicketPdf(this.data.appointmentData).subscribe((pdf)=>{
+			const file = new Blob([pdf], {type: 'application/pdf'});
+			const blobUrl = URL.createObjectURL(file);
+			const div = document.querySelector("#pdfPrinter");
+			const iframe = document.createElement("iframe");
+			iframe.setAttribute("src", blobUrl);
+			div.appendChild(iframe);
+			iframe.contentWindow.print();
+		});
 	}
 
 	getReportAppointment(): void {

@@ -38,10 +38,11 @@
 				</div>
 				<div fxLayoutAlign="end center">
 					<button id="print-appointment" name="print-appointment" mat-stroked-button color="primary" btn-block type="button"
-							(click)="getReportAppointment()">
+							(click)="getAppointmentTicketReport()">
 						<mat-icon fontSet="material-icons-outlined" >print</mat-icon>
-						<span class="uppercase">imprimir turno</span>
+						<span class="uppercase" [translate]="'turnos.appointment.PRINT'"></span>
 					</button>
+					<div class="none" id="pdfPrinter"></div>
 				</div>
 			</div>
 

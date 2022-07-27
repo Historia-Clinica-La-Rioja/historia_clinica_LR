@@ -146,6 +146,12 @@ export class AppointmentsService {
 		return this.getAppointmentReport(url, appointmentData, pdfName);
 	}
 
+	getAppointmentTicketPdf(appointmentData: any): Observable<any> {
+		const pdfName = 'Turno';
+		const url = `${environment.apiBase}/institutions/${this.contextService.institutionId}/medicalConsultations/appointment-ticket-report/${appointmentData.appointmentId}`;
+		return this.getAppointmentReport(url, appointmentData, pdfName);
+	}
+
 	getAppointmentReport(url: string, appointmentData: any, pdfName: string): Observable<any> {
 		const appointmentId: number = appointmentData.appointmentId;
 		const fullNamePatient: string = appointmentData.patient.fullName.replace(' ', '');
