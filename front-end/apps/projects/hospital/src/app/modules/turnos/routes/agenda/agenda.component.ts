@@ -123,7 +123,7 @@ export class AgendaComponent implements OnInit, OnDestroy, OnChanges {
 		this.appointmentFacade.setInterval();
 		this.permissionsService.hasContextAssignments$(ROLES_TO_CREATE).subscribe(hasRole => this.hasRoleToCreate = hasRole);
 		this.healthcareProfessionalService.getHealthcareProfessionalByUserId().subscribe(healthcareProfessionalId => this.loggedUserHealthcareProfessionalId = healthcareProfessionalId);
-		this.loggedUserService.load().subscribe(response => this.loggedUserRoles = response.roleAssignments.map(role => role.role));
+		this.loggedUserService.assignments$.subscribe(response => this.loggedUserRoles = response.map(role => role.role));
 	}
 
 	ngOnDestroy() {
