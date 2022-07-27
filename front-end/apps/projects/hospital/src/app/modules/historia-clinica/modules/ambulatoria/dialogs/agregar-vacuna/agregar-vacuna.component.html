@@ -37,7 +37,7 @@
 							</mat-form-field>
 							<div #vaccineInput>
 								<div fxLayout="column" fxFlex="100%">
-									<mat-label *ngIf="newVaccineSnomedConcept || !searchConceptsLocallyFF">
+									<mat-label>
 										{{
 										'ambulatoria.paciente.vacunas.agregar_vacunas.agregar_vacuna.IMMUNIZATION' |
 										translate
@@ -75,7 +75,8 @@
 								</ng-template>
 
 								<ng-template #vaccineTypeaheadSearch>
-									<app-concept-typeahead-search [ecl]="ecl"
+									<app-concept-typeahead-search [ecl]="ecl" [appearanceOutline]="true"
+										[showSearchIcon]="true"
 										placeholder="ambulatoria.paciente.vacunas.agregar_vacunas.agregar_vacuna.SEARCH_VACCINE"
 										(conceptSelected)="setBillableConcept($event)">
 									</app-concept-typeahead-search>
@@ -215,7 +216,7 @@
 
 						<div #previousVaccineInput>
 							<div fxLayout="column" fxFlex="100%">
-								<mat-label *ngIf="previousVaccineSnomedConcept || !searchConceptsLocallyFF">
+								<mat-label>
 									{{ 'ambulatoria.paciente.vacunas.agregar_vacunas.agregar_vacuna.IMMUNIZATION' |
 									translate
 									}}
@@ -252,7 +253,8 @@
 							</ng-template>
 
 							<ng-template #previousVaccineTypeaheadSearch>
-								<app-concept-typeahead-search [ecl]="ecl"
+								<app-concept-typeahead-search [ecl]="ecl" [appearanceOutline]="true"
+									[showSearchIcon]="true"
 									placeholder="ambulatoria.paciente.vacunas.agregar_vacunas.agregar_vacuna.SEARCH_VACCINE"
 									(conceptSelected)="setPreviousConcept($event)">
 								</app-concept-typeahead-search>
