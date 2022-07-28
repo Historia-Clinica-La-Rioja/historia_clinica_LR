@@ -6,10 +6,6 @@
 				formControlName="selectedDate" readonly (dateChange)="changeDate()" >
 			<mat-datepicker-toggle matSuffix [for]="datepicker"></mat-datepicker-toggle>
 			<mat-datepicker #datepicker>
-				<mat-datepicker-actions>
-					<button mat-button matDatepickerCancel>{{'buttons.CANCEL' | translate}}</button>
-					<button mat-raised-button color="primary" matDatepickerApply>{{'buttons.APPLY' | translate}}</button>
-				</mat-datepicker-actions>
 			</mat-datepicker>
 		</mat-form-field>
 	</form>
