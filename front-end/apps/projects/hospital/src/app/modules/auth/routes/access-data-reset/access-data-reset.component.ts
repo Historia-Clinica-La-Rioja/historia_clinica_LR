@@ -5,7 +5,7 @@ import { ApiErrorMessageDto, PersonDataDto } from '@api-rest/api-model';
 import { PublicUserService } from '@api-rest/services/public-user.service';
 import { AccessDataService } from '@api-rest/services/access-data.service';
 import { SnackBarService } from '@presentation/services/snack-bar.service';
-import { processErrors } from '@core/utils/form.utils';
+import {patternValidator, processErrors} from '@core/utils/form.utils';
 import { PasswordTokenExpirationService } from '@api-rest/services/password-token-expiration.service';
 import {Observable} from "rxjs";
 
@@ -21,6 +21,8 @@ export class AccessDataResetComponent implements OnInit {
 	public apiResponse: any = null;
 	public location: string = window.location.href;
 	hoursExpiration$ : Observable<number>;
+	public hidePassword = true;
+
 	constructor(private route: ActivatedRoute,
 				private formBuilder: FormBuilder,
 				private publicUserService: PublicUserService,
@@ -47,22 +49,14 @@ export class AccessDataResetComponent implements OnInit {
 		this.hoursExpiration$ = this.passwordTokenExpirationService.get();
 		this.form = this.formBuilder.group({
 			username: [null, Validators.required],
-			password: [null, Validators.required],
-			repassword: [null, Validators.required],
-		}, {validator: this.checkIfMatchingPasswords('password', 'repassword')});
+			password: [null, [Validators.required,
+				Validators.minLength(8),
+				patternValidator(new RegExp('(?=.*[a-z])'), {'min': true}),
+				patternValidator(new RegExp('(?=.*[A-Z])'), {'mayus': true}),
+				patternValidator(new RegExp('(?=.*[0-9])'), {'number': true}),
+			]],
+		});
 
-	}
-
-	private checkIfMatchingPasswords(passwordKey: string, passwordConfirmationKey: string) {
-		return (group: FormGroup) => {
-			const passwordInput = group.controls[passwordKey];
-			const passwordConfirmationInput = group.controls[passwordConfirmationKey];
-			if (passwordInput.value !== passwordConfirmationInput.value) {
-				return passwordConfirmationInput.setErrors({notEquivalent: true});
-			} else {
-				return passwordConfirmationInput.setErrors(null);
-			}
-		};
 	}
 
 	hasError(type: string, control: string): boolean {
