@@ -126,7 +126,6 @@ export class AppointmentComponent implements OnInit {
 	}
 
 	ngOnInit(): void {
-
 		this.formMotivo = this.formBuilder.group({
 			motivo: ['', [Validators.required, Validators.maxLength(MAX_LENGTH_MOTIVO)]]
 		});

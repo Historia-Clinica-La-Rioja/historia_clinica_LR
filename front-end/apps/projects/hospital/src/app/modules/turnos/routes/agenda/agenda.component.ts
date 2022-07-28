@@ -303,11 +303,13 @@ export class AgendaComponent implements OnInit, OnDestroy, OnChanges {
 				}
 			});
 		} else {
+			let dialogRef;
 			if (event.meta.rnos) {
 				this.healthInsuranceService.get(event.meta.rnos)
 					.subscribe((medicalCoverageDto: MedicalCoverageDto) => {
 						event.meta.healthInsurance = medicalCoverageDto;
-						this.dialog.open(AppointmentComponent, {
+						dialogRef = this.dialog.open(AppointmentComponent, {
+							disableClose: true,
 							data: {
 								appointmentData: event.meta,
 								professionalPermissions: this.agenda.professionalAssignShift,
@@ -317,7 +319,8 @@ export class AgendaComponent implements OnInit, OnDestroy, OnChanges {
 						});
 					});
 			} else {
-				this.dialog.open(AppointmentComponent, {
+				dialogRef = this.dialog.open(AppointmentComponent, {
+					disableClose: true,
 					data: {
 						appointmentData: event.meta,
 						hasPermissionToAssignShift: this.agenda.professionalAssignShift,
@@ -326,6 +329,9 @@ export class AgendaComponent implements OnInit, OnDestroy, OnChanges {
 					},
 				});
 			}
+			dialogRef.afterClosed().subscribe(appointmentDate => {
+				this.viewDate = appointmentDate;
+			});
 		}
 	}
 

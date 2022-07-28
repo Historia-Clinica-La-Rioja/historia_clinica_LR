@@ -1,6 +1,6 @@
 <form class="appointment-body" [formGroup]="formMotivo" (ngSubmit)="saveAbsent()">
 	<div fxLayout="row" fxLayoutAlign="end">
-		<button mat-icon-button mat-dialog-close class="icon-close">
+		<button mat-icon-button [mat-dialog-close]="selectedDate" class="icon-close">
 			<mat-icon>close</mat-icon>
 		</button>
 	</div>
