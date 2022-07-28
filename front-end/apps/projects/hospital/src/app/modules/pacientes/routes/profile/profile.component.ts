@@ -17,7 +17,8 @@ import {
 	EmergencyCareListDto,
 	HealthcareProfessionalCompleteDto,
 	ProfessionalProfessionsDto,
-	ProfessionalSpecialtyDto
+	ProfessionalSpecialtyDto,
+	ProfessionalLicenseNumberDto
 } from '@api-rest/api-model';
 import { ERole } from '@api-rest/api-model';
 import { AppFeature } from '@api-rest/api-model';
@@ -55,6 +56,8 @@ import { AppRoutes } from "../../../../app-routing.module";
 import { InternmentDocuments, InternmentEpisodeSummary } from "@historia-clinica/modules/ambulatoria/modules/internacion/components/internment-episode-summary/internment-episode-summary.component";
 import { EditPrefessionsSpecialtiesComponent } from '@pacientes/dialogs/edit-prefessions-specialties/edit-prefessions-specialties.component';
 import { Observable } from 'rxjs';
+import { EditLicenseComponent } from '@pacientes/dialogs/edit-license/edit-license.component';
+import { ProfessionalLicenseService } from '@api-rest/services/professional-license.service';
 
 const ROUTE_NEW_INTERNMENT = 'internaciones/internacion/new';
 const ROUTE_EDIT_PATIENT = 'pacientes/edit';
@@ -69,6 +72,11 @@ export interface ProfessionAndSpecialtyDto {
 	professionId: number,
 	specialtyId: number,
 	specialtyName: string,
+}
+
+export interface ProfessionalSpecialties {
+	profession: ProfessionalSpecialtyDto,
+	specialties: ClinicalSpecialtyDto[],
 }
 
 @Component({
@@ -89,10 +97,12 @@ export class ProfileComponent implements OnInit {
 	allSpecialties: ClinicalSpecialtyDto[] = [];
 	ownProfessionsAndSpecialties: ProfessionalProfessionsDto[] = [];
 	ownProfessionsAndSpecialties$: Observable<ProfessionalProfessionsDto[]>;
+	professionsWithLicense$: Observable<ProfessionalLicenseNumberDto[]>;
 	isProfessional = false;
 	institutionName: string;
 	license: string = '';
 	hasPhysicalDischarge = false;
+	private healthcareProfessionalId: number;
 	private institution: number[] = [];
 	private rolesAdmin = false;
 	public patientBasicData: PatientBasicData;
@@ -137,6 +147,7 @@ export class ProfileComponent implements OnInit {
 		private readonly userService: UserService,
 		private readonly snackBarService: SnackBarService,
 		private readonly professionalService: ProfessionalService,
+		private readonly professionalLicenseService: ProfessionalLicenseService,
 		private readonly specialtyService: SpecialtyService,
 		private readonly formBuilder: FormBuilder,
 		private readonly rolesService: RolesService,
@@ -277,11 +288,17 @@ export class ProfileComponent implements OnInit {
 	}
 
 	setProfessionsAndSpecialties() {
-		this.professionalService.getProfessionsByProfessional(this.professionalId).subscribe(
-			(professionalsByClinicalSpecialty: ProfessionalProfessionsDto[]) => {
-				this.ownProfessionsAndSpecialties = professionalsByClinicalSpecialty;
-			})
 		this.ownProfessionsAndSpecialties$ = this.professionalService.getProfessionsByProfessional(this.professionalId);
+		this.ownProfessionsAndSpecialties$.subscribe((professionalsByClinicalSpecialty: ProfessionalProfessionsDto[]) => {
+			this.ownProfessionsAndSpecialties = professionalsByClinicalSpecialty;
+			this.healthcareProfessionalId = professionalsByClinicalSpecialty[0]?.healthcareProfessionalId;
+			this.setLicenses();
+		})
+	}
+
+	private setLicenses(): void {
+		this.professionsWithLicense$ =
+			this.professionalLicenseService.getLicenseNumberByProfessional(this.healthcareProfessionalId);
 	}
 
 	goNewInternment(): void {
@@ -361,6 +378,34 @@ export class ProfileComponent implements OnInit {
 							this.snackBarService.showError(error.text) : this.snackBarService.showError('pacientes.edit_professions.messages.ERROR');
 					})
 			}
+		});
+	}
+
+	editLicense(): void {
+		const professionSpecialties = this.ownProfessionsAndSpecialties.map((e: ProfessionalProfessionsDto) => {
+			return {
+				profession: { description: e.profession.description, id: e.id },
+				specialties: e.specialties.map(specialty => { return { name: specialty.clinicalSpecialty.name, id: specialty.id } })
+			}
+		});
+
+		const dialog = this.dialog.open(EditLicenseComponent, {
+			width: DIALOG_SIZE,
+			disableClose: true,
+			height: '80%',
+			data: {
+				personId: this.personId, id: this.professionalSpecialtyId, professionSpecialties: professionSpecialties, healthcareProfessionalId: this.healthcareProfessionalId
+			}
+		});
+		dialog.afterClosed().subscribe((license) => {
+			this.professionalLicenseService.saveProfessionalLicensesNumber(this.healthcareProfessionalId, license).subscribe(_ => {
+				this.snackBarService.showSuccess('pacientes.edit_professions.messages.SUCCESS');
+				this.setLicenses();
+			},
+				error => {
+					this.snackBarService.showError(error.text || 'pacientes.edit_professions.messages.ERROR');
+				}
+			)
 		});
 	}
 
