@@ -280,9 +280,7 @@ export class AgendaComponent implements OnInit, OnDestroy, OnChanges {
 						}
 					});
 				}
-
 			});
-
 	}
 
 	viewAppointment(event: CalendarEvent): void {
@@ -317,7 +315,6 @@ export class AgendaComponent implements OnInit, OnDestroy, OnChanges {
 								appointments: this.appointments
 							}
 						});
-
 					});
 			} else {
 				this.dialog.open(AppointmentComponent, {
@@ -329,7 +326,6 @@ export class AgendaComponent implements OnInit, OnDestroy, OnChanges {
 					},
 				});
 			}
-			this.loadAppointments();
 		}
 	}
 
@@ -343,7 +339,6 @@ export class AgendaComponent implements OnInit, OnDestroy, OnChanges {
 		this.appointmentFacade.setValues(agenda.id, agenda.appointmentDuration);
 		this.diaryOpeningHours = agenda.diaryOpeningHours;
 		this.setDayStartHourAndEndHour(agenda.diaryOpeningHours);
-
 	}
 
 	goToDayViewOn(date: Date) {

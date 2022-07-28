@@ -119,7 +119,7 @@
 						<button mat-stroked-button color="primary" btn-block type="button" (click)="hideFilters()">
 							<span [translate]="'turnos.appointment.CANCEL'"></span>
 						</button>
-						<button mat-flat-button color="primary" type="submit"  [disabled]="formEdit.invalid">
+						<button mat-flat-button color="primary" [disabled]="formEdit.invalid">
 							<span [translate]="'turnos.appointment.SAVE'"></span>
 						</button>
 					</div>
@@ -150,7 +150,7 @@
 						 <span class="mat-body subtitle-size"> {{selectedDate | date:"H:mm"}} hs</span> 
 					</div>
 				</div>
-				<button type="button" mat-icon-button color="primary" *ngIf="estadoSelected === appointmentStatesIds.ASSIGNED"
+				<button type="button" mat-icon-button color="primary" *ngIf="selectedState === appointmentStatesIds.ASSIGNED"
 					(click)="openDateForm()">
 					<mat-icon class="material-icons-outlined">edit</mat-icon>
 					<span class="mat-body strong-size">
@@ -184,7 +184,7 @@
 						<button mat-stroked-button color="primary" btn-block type="button" (click)="cancelDateForm()">
 							<span [translate]="'turnos.appointment.CANCEL'"></span>
 						</button>
-						<button mat-flat-button color="primary" type="submit" [disabled]="formDate.invalid">
+						<button mat-flat-button color="primary" [disabled]="formDate.invalid">
 							<span [translate]="'turnos.appointment.SAVE'"></span>
 						</button>
 					</div>
@@ -197,14 +197,14 @@
 			<div class="appointment-actions" fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="8px">
 
 				<button type="button" [disabled]="(hasRoleToChangeState$ | async) === false"
-					[ngClass]="{'selected assigned': estadoSelected === appointmentStatesIds.ASSIGNED }"
+					[ngClass]="{'selected assigned': selectedState === appointmentStatesIds.ASSIGNED }"
 					(click)="onClickedState(appointmentStatesIds.ASSIGNED)" mat-stroked-button>
 					<mat-icon matTooltip="{{getAppointmentState(appointmentStatesIds.ASSIGNED).description}}"
 						color="primary">event_available</mat-icon>
 				</button>
 
 				<button type="button" [disabled]="(hasRoleToChangeState$ | async) === false"
-					[ngClass]="{'selected confirmed': estadoSelected === appointmentStatesIds.CONFIRMED }"
+					[ngClass]="{'selected confirmed': selectedState === appointmentStatesIds.CONFIRMED }"
 					(click)="onClickedState(appointmentStatesIds.CONFIRMED)" mat-stroked-button>
 					<mat-icon matTooltip="{{getAppointmentState(appointmentStatesIds.CONFIRMED).description}}"
 						color="primary">meeting_room
@@ -212,14 +212,14 @@
 				</button>
 
 				<button type="button" [disabled]="(hasRoleToChangeState$ | async) === false"
-					[ngClass]="{ 'assigned': estadoSelected === appointmentStatesIds.CONFIRMED }"
+					[ngClass]="{ 'assigned': selectedState === appointmentStatesIds.CONFIRMED }"
 					(click)="callPatient()"
-					*ngIf="isMqttCallEnabled && estadoSelected === appointmentStatesIds.CONFIRMED" mat-stroked-button>
+					*ngIf="isMqttCallEnabled && selectedState === appointmentStatesIds.CONFIRMED" mat-stroked-button>
 					<mat-icon matTooltip="{{BELL_LABEL}}" color="primary" svgIcon="bell_appointment_call">
 					</mat-icon>
 				</button>
 
-				<button type="button" [ngClass]="{'selected absent': estadoSelected === appointmentStatesIds.ABSENT }"
+				<button type="button" [ngClass]="{'selected absent': selectedState === appointmentStatesIds.ABSENT }"
 					(click)="onClickedState(appointmentStatesIds.ABSENT)" mat-stroked-button
 					[disabled]="(hasRoleToChangeState$ | async) === false">
 					<mat-icon matTooltip="{{getAppointmentState(appointmentStatesIds.ABSENT).description}}"
@@ -228,7 +228,7 @@
 				</button>
 
 				<button type="button" disabled
-					[ngClass]="{'selected served': estadoSelected === appointmentStatesIds.SERVED }" mat-stroked-button>
+					[ngClass]="{'selected served': selectedState === appointmentStatesIds.SERVED }" mat-stroked-button>
 					<mat-icon color="primary" svgIcon="person_check_outlined"
 						matTooltip="{{getAppointmentState(appointmentStatesIds.SERVED).description}}"></mat-icon>
 				</button>
@@ -279,7 +279,7 @@
 							(click)="cancelObservation()">
 							<span [translate]="'turnos.appointment.CANCEL'"></span>
 						</button>
-						<button mat-flat-button color="primary" type="submit" [disabled]="formObservations.invalid">
+						<button mat-flat-button color="primary" [disabled]="formObservations.invalid">
 							<span [translate]="'turnos.appointment.SAVE'"></span>
 						</button>
 					</div>
@@ -325,7 +325,7 @@
 			<span class="uppercase" [translate]="'turnos.cancel.TITLE'"></span>
 		</button>
 
-		<button type="submit" *ngIf="isMotivoRequired()" mat-flat-button color="primary" id="save">
+		<button *ngIf="isMotivoRequired()" mat-flat-button color="primary" id="save">
 			<span class="uppercase">{{'turnos.appointment.SAVE' | translate}}</span>
 		</button>
 	</mat-dialog-actions>

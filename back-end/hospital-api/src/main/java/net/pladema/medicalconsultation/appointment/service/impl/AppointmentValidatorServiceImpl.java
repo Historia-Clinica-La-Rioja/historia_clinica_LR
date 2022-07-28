@@ -17,6 +17,7 @@ import ar.lamansys.sgx.shared.dates.configuration.DateTimeProvider;
 import net.pladema.establishment.controller.service.InstitutionExternalService;
 import net.pladema.medicalconsultation.appointment.service.impl.exceptions.UpdateAppointmentDateException;
 import net.pladema.medicalconsultation.appointment.service.impl.exceptions.UpdateAppointmentDateExceptionEnum;
+import net.pladema.medicalconsultation.diary.service.DiaryAssociatedProfessionalService;
 import net.pladema.medicalconsultation.diary.service.DiaryOpeningHoursService;
 import net.pladema.medicalconsultation.diary.service.domain.DiaryOpeningHoursBo;
 
@@ -62,7 +63,7 @@ public class AppointmentValidatorServiceImpl implements AppointmentValidatorServ
 
     public AppointmentValidatorServiceImpl(
 			DiaryService diaryService, DiaryOpeningHoursService diaryOpeningHoursService, HealthcareProfessionalService healthcareProfessionalService,
-			AppointmentService appointmentService,
+			AppointmentService appointmentService, DiaryAssociatedProfessionalService diaryAssociatedProfessionalService,
 			LoggedUserExternalService loggedUserExternalService, InstitutionExternalService institutionExternalService, DateTimeProvider dateTimeProvider) {
         this.diaryService = diaryService;
 		this.diaryOpeningHoursService = diaryOpeningHoursService;
