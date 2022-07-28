@@ -6,6 +6,7 @@ import ar.lamansys.sgx.auth.user.domain.user.model.UserBo;
 import ar.lamansys.sgx.auth.user.domain.user.service.UserStorage;
 import ar.lamansys.sgx.auth.user.domain.userpassword.PasswordEncryptor;
 import ar.lamansys.sgx.auth.user.application.updateuserpassword.UpdateUserPassword;
+import ar.lamansys.sgx.auth.user.domain.userpassword.PasswordValidator;
 import lombok.AllArgsConstructor;
 
 import org.springframework.stereotype.Service;
@@ -17,6 +18,7 @@ public class UpdateOwnPassword {
 	private final UserStorage userStorage;
 	private final PasswordEncryptor passwordEncryptor;
 	private final UpdateUserPassword updateUserPassword;
+	private final PasswordValidator passwordValidator;
 
 	public void execute(Integer userId, String oldPassword, String newPassword) {
 		UserBo user = userStorage.getUser(userId);
@@ -29,22 +31,8 @@ public class UpdateOwnPassword {
 			throw new PasswordException(PasswordExceptionEnum.USER_INCORRECT, "El usuario no existe");
 		if (!passwordEncryptor.matches(password, oldPassword))
 			throw new PasswordException(PasswordExceptionEnum.PASSWORD_INCORRECT, "Contraseña incorrecta");
-		if (newPassword == null || newPassword.isEmpty() || !passwordIsValid(newPassword))
-			throw new PasswordException(PasswordExceptionEnum.NEW_PASSWORD_INCORRECT, "Debe contener un mínimo de 8 caracteres, y al menos\n" + "1 mayúscula, 1 mínuscula y 1 número.");
+		if (newPassword == null || newPassword.isEmpty() || !passwordValidator.passwordIsValid(newPassword))
+			throw new PasswordException(PasswordExceptionEnum.NEW_PASSWORD_INCORRECT, "Debe contener un mínimo de 8 caracteres, y al menos 1 mayúscula, 1 mínuscula y 1 número.");
 	}
-
-	private boolean passwordIsValid(String newPassword) {
-		if (newPassword.length() < 8)
-			return false;
-		if (newPassword.split("(?=[A-Z])").length == 0)
-			return false;
-		if (newPassword.split("(?=[a-z])").length == 0)
-			return false;
-		if (newPassword.split("(?=[0-9])").length == 0)
-			return false;
-
-		return true;
-	}
-
 
 }
