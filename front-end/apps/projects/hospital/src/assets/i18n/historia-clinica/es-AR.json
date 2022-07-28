@@ -3,6 +3,9 @@
 		"new-consultation-expansion-section": {
 			"RECOMMEND": "Recomendado"
 		},
+		"concept-typeahead-search": {
+			"AT_LEAST_THREE_CHARACTERS_MESSAGE": "Ingrese al menos 3 caracteres"
+		},
 		"summary-card": {
 			"evolution-notes-filter": {
 				"filterFieldIsRequiredWhenInputIsSet": "Debe seleccionar un tipo de filtro",
