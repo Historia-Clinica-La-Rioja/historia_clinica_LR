@@ -55,7 +55,11 @@
 				"REPASSWORD_LABEL": "Repetir clave",
 				"REPASSWORD_NOTEQUIVALENT": "Deben coincidir las claves",
 				"REPASSWORD_REQUIRED": "Debe reingresar la clave",
-				"SUBMIT": "Confirmar"
+				"SUBMIT": "Confirmar",
+				"ERROR_MINLENGTH": "Mínimo de 8 caracteres",
+				"ERROR_UPPERCASE": "Mayúscula",
+				"ERROR_LOWERCASE": "Mínuscula",
+				"ERROR_NUMBER": "Número"
 			},
 			"result": {
 				"OK": "Sus datos de acceso fueron establecidos correctamente",
