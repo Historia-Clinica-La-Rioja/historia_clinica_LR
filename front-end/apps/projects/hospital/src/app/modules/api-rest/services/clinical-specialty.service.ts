@@ -40,4 +40,18 @@ export class ClinicalSpecialtyService {
 		const url = `${environment.apiBase}/institution/${this.contextService.institutionId}/clinicalspecialty/loggedProfessionalClinicalSpecialty`;
 		return this.http.get<any[]>(url);
 	}
+
+	getActiveDiariesByProfessionalsClinicalSpecialties(professionalsIds: number[]): Observable<ProfessionalsByClinicalSpecialtyDto[]> {
+		if (professionalsIds?.length) {
+			const url = `${environment.apiBase}/institution/${this.contextService.institutionId}/clinicalspecialty/diary/professional`;
+			return this.http.get<ProfessionalsByClinicalSpecialtyDto[]>(url, {
+				params: {
+					professionalsIds: professionalsIds.join(',')
+				}
+			});
+
+		}
+		return of([]);
+	}
+
 }

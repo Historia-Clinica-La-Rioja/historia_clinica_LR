@@ -147,7 +147,7 @@ export class HomeComponent implements OnInit, OnDestroy {
 	}
 
 	private getEspecialidadesTypeaheadOptions$(doctors: ProfessionalDto[]) {
-		return this.clinicalSpecialtyService.getClinicalSpecialties(doctors.map(d => d.id))
+		return this.clinicalSpecialtyService.getActiveDiariesByProfessionalsClinicalSpecialties(doctors.map(d => d.id))
 			.pipe(map(toTypeaheadOptionList));
 
 		function toTypeaheadOptionList(prosBySpecialtyList: ProfessionalsByClinicalSpecialtyDto[]):
