@@ -299,7 +299,7 @@
 			JOIN person pe ON (pa.person_id = pe.id)
 			LEFT JOIN identification_type it ON (pe.identification_type_id = it.id)
 			LEFT JOIN person_extended px ON (px.person_id = pe.id)
-			LEFT JOIN gender g ON (px.gender_self_determination = g.id)
+			LEFT JOIN self_perceived_gender g ON (px.gender_self_determination = g.id)
 			LEFT JOIN address a2 ON (px.address_id = a2.id)
 			LEFT JOIN city c2 ON (a2.city_id = c2.id)
 			LEFT JOIN (
@@ -401,7 +401,7 @@
 			JOIN person pe ON (pa.person_id = pe.id)
 			LEFT JOIN identification_type it ON (pe.identification_type_id = it.id)
 			LEFT JOIN person_extended px ON (px.person_id = pe.id)
-			LEFT JOIN gender g ON (px.gender_self_determination = g.id)
+			LEFT JOIN self_perceived_gender g ON (px.gender_self_determination = g.id)
 			LEFT JOIN address a2 ON (px.address_id = a2.id)
 			LEFT JOIN city c2 ON (a2.city_id = c2.id)
 			LEFT JOIN (
@@ -487,7 +487,7 @@
 			JOIN person pe ON (pa.person_id = pe.id)
 			LEFT JOIN identification_type it ON (pe.identification_type_id = it.id)
 			LEFT JOIN person_extended px ON (px.person_id = pe.id)
-			LEFT JOIN gender g ON (px.gender_self_determination = g.id)
+			LEFT JOIN self_perceived_gender g ON (px.gender_self_determination = g.id)
 			LEFT JOIN address a2 ON (px.address_id = a2.id)
 			LEFT JOIN city c2 ON (a2.city_id = c2.id)
 			LEFT JOIN (
