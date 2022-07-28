@@ -147,8 +147,10 @@ public class DailyAppointmentController {
         LOG.debug("Input parameters -> attentionTypeReportItemBo {}", attentionTypeReportItemBo);
         BasicDataPersonDto personData = patientExternalService.getBasicDataFromPatient(attentionTypeReportItemBo.getPatientId()).getPerson();
 
-		if(featureFlagsService.isOn(AppFeature.HABILITAR_DATOS_AUTOPERCIBIDOS) && personData.getNameSelfDetermination() != null)
-            personData.setFirstName(personData.getNameSelfDetermination());
+		if(featureFlagsService.isOn(AppFeature.HABILITAR_DATOS_AUTOPERCIBIDOS) && personData.getNameSelfDetermination() != null && !personData.getNameSelfDetermination().isEmpty()) {
+			personData.setFirstName(personData.getNameSelfDetermination());
+			if (personData.getMiddleNames() != null) personData.setMiddleNames(null);
+		}
 
         AttentionTypeReportItemDto newReportItem = new AttentionTypeReportItemDto(attentionTypeReportItemBo, personData);
         if (attentionTypeReportItemBo.getPatientMedicalCoverageId() != null){
