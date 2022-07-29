@@ -13,16 +13,16 @@ import lombok.ToString;
 @AllArgsConstructor
 public class BackofficeHealthcareProfessionalCompleteDto {
 
-    private Integer id;
+	private Integer id;
 
-    private Integer personId;
+	private Integer personId;
 
-    private String licenseNumber;
+	private String firstName;
 
-    private Integer professionalSpecialtyId;
+	private String lastName;
 
-    private Integer clinicalSpecialtyId;
+	private Short identificationTypeId;
 
-    private boolean deleted = false;
+	private String identificationNumber;
 
 }

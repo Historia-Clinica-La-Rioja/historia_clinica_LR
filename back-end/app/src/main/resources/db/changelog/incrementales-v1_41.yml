@@ -109,3 +109,19 @@ databaseChangeLog:
                   CASE WHEN u.two_factor_authentication_secret IS NOT NULL THEN true ELSE false END as two_factor_authentication_enabled
                 FROM users u
                 WHERE u.id NOT IN (SELECT up.user_id FROM user_person as up)
+
+    - changeSet:
+        id: 0.1.41-7
+        comment: Create view v_available_professional
+        author: etrapani
+        changes:
+          - createView:
+              viewName: v_available_professional
+              fullDefinition: false
+              replaceIfExists: true
+              selectQuery: |-
+                SELECT hp.id, hp.person_id,
+                      CAST(first_name AS VARCHAR(255)), CAST(last_name AS VARCHAR(255)),identification_type_id, identification_number
+                FROM healthcare_professional hp
+                JOIN person p on hp.person_id = p.id
+                WHERE hp.id IN (SELECT DISTINCT pp.healthcare_professional_id FROM professional_professions pp WHERE pp.deleted = false)
