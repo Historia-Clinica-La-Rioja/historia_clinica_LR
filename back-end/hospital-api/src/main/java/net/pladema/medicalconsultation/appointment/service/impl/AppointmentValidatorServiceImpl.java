@@ -141,7 +141,7 @@ public class AppointmentValidatorServiceImpl implements AppointmentValidatorServ
 		}
 
 		if(appointmentService.existAppointment(appointmentBo.get().getDiaryId(),date,time)) {
-			throw new UpdateAppointmentDateException(UpdateAppointmentDateExceptionEnum.APPOINTMENT_DATE_ALREADY_ASSIGNED, String.format("Ya existe un turno asignado en ese horario."));
+			throw new UpdateAppointmentDateException(UpdateAppointmentDateExceptionEnum.APPOINTMENT_DATE_ALREADY_ASSIGNED, String.format("En ese horario ya existe un turno asignado o la agenda se encuentra bloqueada."));
 		}
 
 		Collection<DiaryOpeningHoursBo> diaryOpeningHours = diaryOpeningHoursService.getDiaryOpeningHours(diary.get().getId());

@@ -238,30 +238,26 @@ export class AppointmentComponent implements OnInit {
 				startDate.setMinutes(Number(DOH.openingHours.from.slice(3,5)));
 				endDate.setHours(Number(DOH.openingHours.to.slice(0,2)));
 				endDate.setMinutes(Number(DOH.openingHours.to.slice(3,5)));
-				
-			const hours = getDayHoursRangeIntervalsByMinuteValue(startDate, endDate, this.data.agenda.appointmentDuration);
-			this.possibleScheduleHours = this.possibleScheduleHours.concat(hours);
+				const hours = getDayHoursRangeIntervalsByMinuteValue(startDate, endDate, this.data.agenda.appointmentDuration);
+				this.possibleScheduleHours = this.possibleScheduleHours.concat(hours);
 			}
-		})
+		});
 		this.deleteHoursWithAppointment();
 		this.deleteHoursBeforeNow();
 	}
 
 	deleteHoursWithAppointment(): void{
 		this.data.appointments.forEach(appointment => {
-			const index = this.possibleScheduleHours.findIndex(item => {
-				return ((item.getTime() == appointment.start.getTime()) && (item.getTime() != this.selectedDate.getTime()))
+			this.possibleScheduleHours = this.possibleScheduleHours.filter(item => {
+				return ((item.getTime() < appointment.start.getTime()) || (item.getTime() >= appointment.end.getTime()) || (item.getTime() == this.selectedDate.getTime()));
 			});
-			if(index != -1){
-				this.possibleScheduleHours.splice(index,1);
-			}
-		})
+		});
 	}
 
 	deleteHoursBeforeNow(): void{
 		const now = new Date();
 		this.possibleScheduleHours = this.possibleScheduleHours.filter(item => {
-			return item.getTime() >= now.getTime();
+			return ((item.getTime() >= now.getTime()) || (item.getTime() == this.selectedDate.getTime()));
 		});
 	}
 
@@ -300,7 +296,6 @@ export class AppointmentComponent implements OnInit {
 		this.appointmentFacade.updateDate(this.data.appointmentData.appointmentId, date).subscribe(() => {
 			this.snackBarService.showSuccess('turnos.appointment.date.UPDATE_SUCCESS');
 			this.selectedDate = dateAux;
-			this.appointmentFacade.loadAppointments();
 		}, error => {
 			processErrors(error, (msg) => this.snackBarService.showError(msg));
 		});
