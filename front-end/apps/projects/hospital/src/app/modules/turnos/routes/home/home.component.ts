@@ -104,6 +104,10 @@ export class HomeComponent implements OnInit, OnDestroy {
 		this.profesionalesTypeahead = profesionalesFilteredBy.map(d => this.toProfessionalTypeahead(d));
 
 		if (!professionalsByClinicalSpecialtyDto || especialidadContainsProfesional(this.idProfesional)) {
+			if (professionalsByClinicalSpecialtyDto === null) {
+				this.idProfesional = null;
+				this.router.navigate([`${this.routePrefix}`]);
+			}
 			this.appointmentFacadeService.setProfessionalId(this.idProfesional);
 			this.agendaSearchService.search(this.idProfesional);
 		}
