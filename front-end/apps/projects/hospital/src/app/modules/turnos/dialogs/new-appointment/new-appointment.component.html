@@ -1,23 +1,21 @@
 <div mat-dialog-title fxLayout="row" fxLayoutGap="10px">
-	<div class="mat-h2" [translate]= "data.overturnMode ? 'turnos.overturns.CREATE' : 'turnos.new-appointment.NEW_APPOINTMENT'" ></div>
+	<div class="mat-h2"
+		[translate]="data.overturnMode ? 'turnos.overturns.CREATE' : 'turnos.new-appointment.NEW_APPOINTMENT'"></div>
 	<div class="mat-h3" fxFlexAlign="end">{{data.date | viewDate}} {{data.hour | viewHourMinute}}</div>
 </div>
 
 <div mat-dialog-content>
 
-	<mat-horizontal-stepper  [selectedIndex]="initialIndex" #stepper labelPosition="bottom">
-		<mat-step  [stepControl]="formSearch" label="{{'turnos.new-appointment.STEP_1' | translate}}">
+	<mat-horizontal-stepper [selectedIndex]="initialIndex" #stepper labelPosition="bottom">
+		<mat-step [stepControl]="formSearch" label="{{'turnos.new-appointment.STEP_1' | translate}}">
 			<mat-card class="mat-typography">
 				<form [formGroup]="formSearch" (ngSubmit)="search()">
 					<mat-card-content>
 						<div fxLayout="column">
 							<mat-form-field appearance="outline">
 								<mat-label>Tipo</mat-label>
-								<mat-select
-									formControlName="identifType">
-									<mat-option
-										id="identifType"
-										name="identifType"
+								<mat-select formControlName="identifType">
+									<mat-option id="identifType" name="identifType"
 										*ngFor="let type of identifyTypeArray" [value]="type.id">
 										{{type.description}}
 									</mat-option>
@@ -28,27 +26,26 @@
 							</mat-form-field>
 							<mat-form-field appearance="outline">
 								<mat-label>Nro de documento</mat-label>
-								<input matInput
-									type="text"
-									id="identifNumber"
-									name="identifNumber"
-									formControlName="identifNumber"
-									placeholder="Nro de documento">
+								<input matInput type="text" id="identifNumber" name="identifNumber"
+									formControlName="identifNumber" placeholder="Nro de documento">
 								<mat-error *ngIf="hasError(formSearch, 'required', 'identifNumber')">
 									<span translate="forms.REQUIRED"></span>
 								</mat-error>
 								<mat-error *ngIf="hasError(formSearch, 'maxlength', 'identifNumber')"
-										   translate="forms.MAX_LENGTH_ERROR" [translateParams]="{max: VALIDATIONS.MAX_LENGTH.identif_number}">
+									translate="forms.MAX_LENGTH_ERROR"
+									[translateParams]="{max: VALIDATIONS.MAX_LENGTH.identif_number}">
 								</mat-error>
 							</mat-form-field>
 							<div class="padding-bottom">
 								<mat-label>Sexo</mat-label>
 								<div>
 									<mat-radio-group name="gender" id="gender" formControlName="gender">
-										<mat-radio-button id="genderButton_{{gender.id}}" *ngFor="let gender of genderOptions" [value]="gender.id">
+										<mat-radio-button id="genderButton_{{gender.id}}"
+											*ngFor="let gender of genderOptions" [value]="gender.id">
 											{{gender.description}}
 										</mat-radio-button>
-										<mat-error *ngIf="isFormSubmitted && hasError(formSearch, 'required', 'gender') ">
+										<mat-error
+											*ngIf="isFormSubmitted && hasError(formSearch, 'required', 'gender') ">
 											<span translate="forms.REQUIRED"></span>
 										</mat-error>
 									</mat-radio-group>
@@ -56,12 +53,14 @@
 							</div>
 							<mat-form-field appearance="outline">
 								<mat-label translate="turnos.new-appointment.PATIENT_ID"></mat-label>
-								<input matInput type="number" id="patientId" name="patientId" formControlName="patientId">
+								<input matInput type="number" id="patientId" name="patientId"
+									formControlName="patientId">
 							</mat-form-field>
 						</div>
 						<div fxLayout="row" fxLayoutAlign="end" fxLayoutGap="10px">
 							<ng-container *appHasRole="['ADMINISTRATIVO']">
-								<button mat-flat-button mat-dialog-close color="primary" (click)="goCreatePatient()" *ngIf="showAddPatient">
+								<button mat-flat-button mat-dialog-close color="primary" (click)="goCreatePatient()"
+									*ngIf="showAddPatient">
 									<span [translate]="'turnos.new-appointment.BUTTON_ADD_PATIENT'"></span>
 								</button>
 							</ng-container>
@@ -74,14 +73,19 @@
 			</mat-card>
 		</mat-step>
 
-		<mat-step [stepControl]="appointmentInfoForm" label="{{'turnos.new-appointment.STEP_2' | translate}}" [editable]="false">
+		<mat-step [stepControl]="appointmentInfoForm" label="{{'turnos.new-appointment.STEP_2' | translate}}"
+			[editable]="false">
 			<mat-card class="mat-typography">
 				<mat-list class="mat-form-field-wrapper">
 					<mat-list-item id="patient" class="patient-data-list">
 						<mat-icon color="primary" mat-list-icon [inline]="true">person</mat-icon>
 						<div fxLayout="column">
-							<strong *ngIf="patient?.patientTypeId === TEMPORARY_PATIENT_ID" translate="turnos.new-appointment.TEMPORARY_PATIENT"></strong>
-							<span translate="turnos.new-appointment.PATIENT_ID">: {{patientId}} </span>
+							<strong *ngIf="patient?.patientTypeId === TEMPORARY_PATIENT_ID"
+								translate="turnos.new-appointment.TEMPORARY_PATIENT"></strong>
+							<div fxLayout="row">
+								<span translate="turnos.new-appointment.PATIENT_ID"> </span>
+								<span>: {{patientId}}</span>
+							</div>
 							<span *ngIf="patient">
 								{{ mapToPersonIdentification(patient.personalDataDto) | personIdentification}}
 							</span>
@@ -92,52 +96,43 @@
 					<div fxLayout="column">
 						<mat-form-field appearance="outline">
 							<mat-label>Cobertura Médica </mat-label>
-							<mat-select
-								formControlName="patientMedicalCoverage">
-								<mat-option
-									id="medicalCoverage"
-									name="medicalCoverage"
-									*ngFor="let patientMedicalCoverage of patientMedicalCoverages" [value]="patientMedicalCoverage">
+							<mat-select formControlName="patientMedicalCoverage">
+								<mat-option id="medicalCoverage" name="medicalCoverage"
+									*ngFor="let patientMedicalCoverage of patientMedicalCoverages"
+									[value]="patientMedicalCoverage">
 									{{getFullMedicalCoverageText(patientMedicalCoverage)}}
 								</mat-option>
 								<mat-divider></mat-divider>
 								<mat-option (click)="openMedicalCoverageDialog()">
-									<span class="color-primary"
-									[translate]="'Actualizar cobertura'"></span>
+									<span class="color-primary" [translate]="'Actualizar cobertura'"></span>
 								</mat-option>
 							</mat-select>
 						</mat-form-field>
 						<div fxLayout="row" fxLayoutGap="10px" fxLayout.xs="column">
 							<mat-form-field fxFlex="30%" appearance="outline">
 								<mat-label [translate]="'turnos.new-appointment.PHONE_PREFIX'"></mat-label>
-								<input matInput
-									   type="text"
-									   id="phonePrefix"
-									   name="phonePrefix"
-									   formControlName="phonePrefix"
-									   placeholder="{{'turnos.new-appointment.PHONE_PREFIX' | translate }}"
-									   (keyup)="updatePhoneValidators()">
+								<input matInput type="text" id="phonePrefix" name="phonePrefix"
+									formControlName="phonePrefix"
+									placeholder="{{'turnos.new-appointment.PHONE_PREFIX' | translate }}"
+									(keyup)="updatePhoneValidators()">
 								<mat-error *ngIf="hasError(appointmentInfoForm, 'required', 'phonePrefix')">
 									<span translate="forms.REQUIRED"></span>
 								</mat-error>
 								<mat-error *ngIf="hasError(appointmentInfoForm, 'maxlength', 'phonePrefix')"
-										   translate="forms.MAX_LENGTH_ERROR" [translateParams]="{max: 10}">
+									translate="forms.MAX_LENGTH_ERROR" [translateParams]="{max: 10}">
 								</mat-error>
 							</mat-form-field>
 							<mat-form-field fxFlex="70%" appearance="outline">
 								<mat-label [translate]="'turnos.new-appointment.PHONE_NUMBER'"></mat-label>
-								<input matInput
-									   type="text"
-									   id="phoneNumber"
-									   name="phoneNumber"
-									   formControlName="phoneNumber"
-									   placeholder="{{'turnos.new-appointment.PHONE_NUMBER' | translate }}"
-									   (keyup)="updatePhoneValidators()">
+								<input matInput type="text" id="phoneNumber" name="phoneNumber"
+									formControlName="phoneNumber"
+									placeholder="{{'turnos.new-appointment.PHONE_NUMBER' | translate }}"
+									(keyup)="updatePhoneValidators()">
 								<mat-error *ngIf="hasError(appointmentInfoForm, 'required', 'phoneNumber')">
 									<span translate="forms.REQUIRED"></span>
 								</mat-error>
 								<mat-error *ngIf="hasError(appointmentInfoForm, 'maxlength', 'phoneNumber')"
-										   translate="forms.MAX_LENGTH_ERROR" [translateParams]="{max: 20}">
+									translate="forms.MAX_LENGTH_ERROR" [translateParams]="{max: 20}">
 								</mat-error>
 							</mat-form-field>
 						</div>
@@ -154,10 +149,11 @@
 </div>
 
 <mat-dialog-actions fxLayout="row" fxLayoutAlign="end" fxLayoutGap="10px">
-    <button mat-stroked-button color="primary" mat-dialog-close>
+	<button mat-stroked-button color="primary" mat-dialog-close>
 		<span [translate]="'buttons.CANCEL'"></span>
-    </button>
-	<button mat-raised-button color="primary" *ngIf="showConfirmButton()" (click)="submit()" [disabled]="isSubmitButtonDisabled">
+	</button>
+	<button mat-raised-button color="primary" *ngIf="showConfirmButton()" (click)="submit()"
+		[disabled]="isSubmitButtonDisabled">
 		<span [translate]="'buttons.CONFIRM'"></span>
 	</button>
 </mat-dialog-actions>

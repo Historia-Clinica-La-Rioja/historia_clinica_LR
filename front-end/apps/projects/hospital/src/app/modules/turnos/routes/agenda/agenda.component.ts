@@ -269,7 +269,7 @@ export class AgendaComponent implements OnInit, OnDestroy, OnChanges {
 									hour: clickedDate.format(DateFormat.HOUR_MINUTE_SECONDS),
 									openingHoursId: openingHourId,
 									overturnMode: addingOverturn,
-									patientId: this.patientId
+									patientId: this.patientId ? Number(this.patientId) : null,
 								}
 							});
 						}
