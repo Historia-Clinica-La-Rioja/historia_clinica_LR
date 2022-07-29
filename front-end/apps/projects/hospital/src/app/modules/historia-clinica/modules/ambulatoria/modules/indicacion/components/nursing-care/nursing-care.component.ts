@@ -18,6 +18,7 @@ export class NursingCareComponent implements OnInit {
 	nursingRecords: NursingRecordDto[] = [];
 	generalNursingRecords: NursingRecordDto[] = [];
 	specificNursingRecords: NursingRecordDto[] = [];
+	actualDate = new Date();
 	@Input() internmentEpisodeId: number;
 
 	constructor(
@@ -32,13 +33,14 @@ export class NursingCareComponent implements OnInit {
 		);
 		this.nursingRecordFacade.nursingRecords$.subscribe(nr => {
 			this.nursingRecords = nr;
-			this.loadActualDateAndFilter(new Date());
+			this.loadActualDateAndFilter(this.actualDate);
 		});
 	}
 
 	loadActualDateAndFilter(actualDate: Date) {
 		this.generalNursingRecords = [];
 		this.specificNursingRecords = [];
+		this.actualDate = actualDate;
 		this.filterNursingRecords(actualDate);
 	}
 
