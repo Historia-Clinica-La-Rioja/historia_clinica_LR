@@ -25,8 +25,8 @@
 				"label": {
 					"SUSPENDED": "Suspendida",
 					"INDICATED": "Indicada",
-					"REJECTED": "Rechazada",
-					"COMPLETED": "Completada",
+					"REJECTED": "Rechazado",
+					"COMPLETED": "Completado",
 					"IN_PROGRESS": "En progreso"
 				},
 				"indication-extra-description": {

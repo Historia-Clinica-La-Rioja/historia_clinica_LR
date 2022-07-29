@@ -45,7 +45,7 @@ export const IndicationStatusScss = {
 	[EIndicationStatus.SUSPENDED]: 'red',
 	[EIndicationStatus.IN_PROGRESS]: 'yellow',
 	[EIndicationStatus.COMPLETED]: 'green',
-	[EIndicationStatus.REJECTED]: 'red',
+	[EIndicationStatus.REJECTED]: 'grey',
 }
 
 export const NursingRecordStatus = {
@@ -56,8 +56,8 @@ export const NursingRecordStatus = {
 
 export const NursingRecordStatusScss = {
 	[ENursingRecordStatus.PENDING]: 'red',
-	[ENursingRecordStatus.COMPLETED]: 'blue',
-	[ENursingRecordStatus.REJECTED]: 'red-reject'
+	[ENursingRecordStatus.COMPLETED]: 'green',
+	[ENursingRecordStatus.REJECTED]: 'grey'
 }
 
 export const IndicationMatIcon = {
