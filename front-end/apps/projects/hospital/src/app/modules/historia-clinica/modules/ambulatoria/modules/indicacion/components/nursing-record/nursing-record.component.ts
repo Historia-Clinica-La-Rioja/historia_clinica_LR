@@ -9,6 +9,7 @@ import { NursingRecordFacadeService } from '../../services/nursing-record-facade
 import { SnackBarService } from '@presentation/services/snack-bar.service';
 import { DatePipeFormat } from '@core/utils/date.utils';
 import { DatePipe } from '@angular/common';
+import { isSameDay } from 'date-fns';
 
 @Component({
 	selector: 'app-nursing-record',
@@ -22,6 +23,8 @@ export class NursingRecordComponent {
 	REJECTED = ENursingRecordStatus.REJECTED;
 	datePipeFormat = DatePipeFormat;
 	internmentEpisodeId: number;
+	today = new Date();
+	isSameDay = isSameDay;
 
 	@Input() nursingSections: NursingSections[];
 

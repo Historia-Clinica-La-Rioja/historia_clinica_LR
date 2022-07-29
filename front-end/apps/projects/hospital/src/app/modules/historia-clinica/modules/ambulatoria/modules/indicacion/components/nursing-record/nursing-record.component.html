@@ -26,7 +26,7 @@
                 <strong [class]="record.content.status.cssClass" class="label">{{ record.content.status.description | translate | uppercase }}</strong>
             </div>
             <ng-container *appHasRole="['ENFERMERO']">
-                <div *ngIf="record.content.status.type == PENDING">
+                <div *ngIf="record.content.status.type == PENDING && isSameDay(record.content.indicationDate, today)">
                     <button mat-button mat-raised-button color="primary" (click)="openDialogToRegister(record)">
                         {{ 'indicacion.nursing-care.buttons.TO_REGISTER' | translate | uppercase }}
                     </button>
@@ -44,7 +44,7 @@
             </div>
 
             <ng-container *appHasRole="['ENFERMERO']">
-                <button mat-icon-button [matMenuTriggerFor]="menu" *ngIf="record.content.status.type != PENDING">
+                <button mat-icon-button [matMenuTriggerFor]="menu" *ngIf="record.content.status.type != PENDING && isSameDay(record.content.indicationDate, today)">
                     <mat-icon>more_vert</mat-icon>
                 </button>
                 <mat-menu #menu="matMenu">
