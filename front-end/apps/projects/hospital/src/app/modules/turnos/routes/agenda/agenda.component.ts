@@ -96,6 +96,11 @@ export class AgendaComponent implements OnInit, OnDestroy, OnChanges {
 	}
 
 	ngOnInit(): void {
+
+		this.route.queryParams.subscribe(qp => {
+			this.patientId = Number(qp.idPaciente);
+		});
+
 		this.professionalId = this.appointmentFacade.getProfessionalId();
 		this.loading = true;
 		this.appointmentSubscription?.unsubscribe();
