@@ -39,8 +39,8 @@ public class AppointmentTicketController {
 	public ResponseEntity<InputStreamResource> getTicket(@PathVariable(name = "institutionId") Integer institutionId,
 			@PathVariable(name = "appointmentId") Integer appointmentId) throws PDFDocumentException {
 		log.debug("Input parameters -> appointmentId {}", appointmentId);
-		var bo = this.appointmentService.getAppointmentTicketData(appointmentId);
-		var dto = AppointmentTicketDto.toAppointmentTicketDto(bo);
+		var bo = appointmentService.getAppointmentTicketData(appointmentId);
+		var dto = new AppointmentTicketDto(bo);
 		Map<String, Object> context = createContext(dto);
 		String outputFileName = createOutputFileName(dto);
 		log.debug("outputFileName " + outputFileName);
@@ -65,7 +65,7 @@ public class AppointmentTicketController {
 		log.debug("Input parameters -> AppointmentTicketDto {}", dto);
 		Map<String, Object> ctx = new HashMap<>();
 		ctx.put("institution", dto.getInstitution());
-		ctx.put("dni", dto.getDni());
+		ctx.put("dni", dto.getDocumentNumber());
 		ctx.put("patientFullName", dto.getPatientFullName());
 		ctx.put("medicalCoverage", dto.getMedicalCoverage());
 		ctx.put("date", dto.getDate());

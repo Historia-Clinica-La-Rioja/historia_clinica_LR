@@ -1,4 +1,4 @@
-package net.pladema.medicalconsultation.appointment.controller.exceptions;
+package net.pladema.medicalconsultation.appointment.service.exceptions;
 
 import lombok.Getter;
 

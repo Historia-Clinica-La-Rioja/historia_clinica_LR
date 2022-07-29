@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 import ar.lamansys.sgx.shared.exceptions.dto.ApiErrorMessageDto;
 import lombok.extern.slf4j.Slf4j;
 import net.pladema.medicalconsultation.appointment.service.impl.exceptions.UpdateAppointmentDateException;
+import net.pladema.medicalconsultation.appointment.service.exceptions.AppointmentNotFoundException;
 import net.pladema.medicalconsultation.diary.service.exception.DiaryNotFoundException;
 
 import org.springframework.http.HttpStatus;

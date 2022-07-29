@@ -16,7 +16,7 @@ public class AppointmentTicketDto {
 
 	private String institution;
 
-	private String dni;
+	private String documentNumber;
 
 	private String patientFullName;
 
@@ -30,21 +30,19 @@ public class AppointmentTicketDto {
 
 	private String doctorFullName;
 
-	public static AppointmentTicketDto toAppointmentTicketDto(AppointmentTicketBo bo) {
+	public AppointmentTicketDto(AppointmentTicketBo bo) {
 		DecimalFormat decimalFormat = new DecimalFormat("###,###.##");
 		final String notMedicalCoverage = "SIN COBERTURA";
 		String medicalCoverage = bo.getMedicalCoverage();
 
-		return new AppointmentTicketDto(
-				bo.getInstitution().toUpperCase(Locale.ROOT),
-				decimalFormat.format(Integer.parseInt(bo.getDni())).replaceAll(",", "."),
-				bo.getPatientFullName().toUpperCase(Locale.ROOT),
-				medicalCoverage == null ? notMedicalCoverage : medicalCoverage.toUpperCase(Locale.ROOT),
-				bo.getDate().format(DateTimeFormatter.ofPattern("dd/MM/yyyy")),
-				bo.getHour().toString(),
-				bo.getDoctorsOffice().toUpperCase(Locale.ROOT),
-				bo.getDoctorFullName().toUpperCase(Locale.ROOT)
-		);
+		institution = bo.getInstitution().toUpperCase(Locale.ROOT);
+		documentNumber = decimalFormat.format(Integer.parseInt(bo.getDocumentNumber())).replaceAll(",", ".");
+		patientFullName = bo.getPatientFullName().toUpperCase(Locale.ROOT);
+		this.medicalCoverage = medicalCoverage == null ? notMedicalCoverage : medicalCoverage.toUpperCase(Locale.ROOT);
+		date = bo.getDate().format(DateTimeFormatter.ofPattern("dd/MM/yyyy"));
+		hour = bo.getHour().toString();
+		doctorsOffice = bo.getDoctorsOffice().toUpperCase(Locale.ROOT);
+		doctorFullName = bo.getDoctorFullName().toUpperCase(Locale.ROOT);
 	}
 
 }

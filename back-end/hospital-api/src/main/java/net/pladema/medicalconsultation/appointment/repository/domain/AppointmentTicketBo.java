@@ -14,7 +14,7 @@ public class AppointmentTicketBo {
 
 	private String institution;
 
-	private String dni;
+	private String documentNumber;
 
 	private String patientLastName;
 
@@ -25,6 +25,8 @@ public class AppointmentTicketBo {
 	private String patientMiddleNames;
 
 	private String medicalCoverage;
+
+	private String medicalCoverageAcronym;
 
 	private LocalDate date;
 
@@ -40,24 +42,35 @@ public class AppointmentTicketBo {
 
 	private String doctorMiddleNames;
 
+	public String getMedicalCoverage() {
+		if(medicalCoverageAcronym != null && !medicalCoverageAcronym.isBlank())
+			return medicalCoverageAcronym;
+		return medicalCoverage;
+	}
+
+	/*
+	* TODO
+	*  se debe mostrar el nombre completo del paciente y del doctor
+	*  https://taiga.lamansys.com/project/mrisso-hce/task/8129
+	* */
 
 	public String getPatientFullName(){
 		String fullName = patientLastName;
-		if(!(patientOtherLastNames == null || patientOtherLastNames.isBlank()))
-			fullName += " " + patientOtherLastNames;
+//		if(!(patientOtherLastNames == null || patientOtherLastNames.isBlank()))
+//			fullName += " " + patientOtherLastNames;
 		fullName += " " + patientFistName;
-		if(!(patientMiddleNames == null || patientMiddleNames.isBlank()))
-			fullName += " " + patientMiddleNames;
+//		if(!(patientMiddleNames == null || patientMiddleNames.isBlank()))
+//			fullName += " " + patientMiddleNames;
 		return fullName;
 	}
 
 	public String getDoctorFullName(){
 		String fullName = doctorLastName;
-		if(!(doctorOtherLastNames == null || doctorOtherLastNames.isBlank()))
-			fullName += " " + doctorOtherLastNames;
+//		if(!(doctorOtherLastNames == null || doctorOtherLastNames.isBlank()))
+//			fullName += " " + doctorOtherLastNames;
 		fullName += " " + doctorFistName;
-		if(!(doctorMiddleNames == null || doctorMiddleNames.isBlank()))
-			fullName += " " + doctorMiddleNames;
+//		if(!(doctorMiddleNames == null || doctorMiddleNames.isBlank()))
+//			fullName += " " + doctorMiddleNames;
 		return fullName;
 	}
 

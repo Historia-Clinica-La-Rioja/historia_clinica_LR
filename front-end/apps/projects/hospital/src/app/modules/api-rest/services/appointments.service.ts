@@ -18,6 +18,7 @@ import { environment } from '@environments/environment';
 import { ContextService } from '@core/services/context.service';
 import { DateFormat, momentFormat } from "@core/utils/moment.utils";
 import { DownloadService } from "@core/services/download.service";
+import { tap } from "rxjs/operators";
 
 @Injectable({
 	providedIn: 'root'
@@ -147,9 +148,17 @@ export class AppointmentsService {
 	}
 
 	getAppointmentTicketPdf(appointmentData: any): Observable<any> {
-		const pdfName = 'Turno';
 		const url = `${environment.apiBase}/institutions/${this.contextService.institutionId}/medicalConsultations/appointment-ticket-report/${appointmentData.appointmentId}`;
-		return this.getAppointmentReport(url, appointmentData, pdfName);
+		const httpOptions = {
+			responseType  : 'arraybuffer' as 'json',
+			params: appointmentData.appointmentId
+		};
+		return this.http.get<any>(url, httpOptions).pipe(
+			tap((data: any) => {
+				const blobType = { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' };
+				const file = new Blob([data], blobType);
+			})
+		);
 	}
 
 	getAppointmentReport(url: string, appointmentData: any, pdfName: string): Observable<any> {

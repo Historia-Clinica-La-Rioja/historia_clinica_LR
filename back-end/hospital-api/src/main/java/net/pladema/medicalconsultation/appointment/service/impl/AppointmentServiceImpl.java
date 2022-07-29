@@ -33,8 +33,6 @@ import ar.lamansys.sgx.shared.featureflags.application.FeatureFlagsService;
 import lombok.extern.slf4j.Slf4j;
 import net.pladema.establishment.controller.service.InstitutionExternalService;
 import net.pladema.establishment.repository.MedicalCoveragePlanRepository;
-import net.pladema.medicalconsultation.appointment.controller.exceptions.AppointmentNotFoundEnumException;
-import net.pladema.medicalconsultation.appointment.controller.exceptions.AppointmentNotFoundException;
 import net.pladema.medicalconsultation.appointment.repository.AppointmentObservationRepository;
 import net.pladema.medicalconsultation.appointment.repository.AppointmentRepository;
 import net.pladema.medicalconsultation.appointment.repository.HistoricAppointmentStateRepository;
@@ -46,6 +44,13 @@ import net.pladema.medicalconsultation.appointment.service.AppointmentService;
 import net.pladema.medicalconsultation.appointment.service.domain.AppointmentAssignedBo;
 import net.pladema.medicalconsultation.appointment.service.domain.AppointmentBo;
 import net.pladema.medicalconsultation.appointment.service.domain.UpdateAppointmentBo;
+import net.pladema.medicalconsultation.appointment.service.exceptions.AppointmentNotFoundEnumException;
+import net.pladema.medicalconsultation.appointment.service.exceptions.AppointmentNotFoundException;
+import net.pladema.patient.controller.dto.PatientMedicalCoverageDto;
+import net.pladema.patient.controller.service.PatientExternalMedicalCoverageService;
+import net.pladema.patient.service.domain.PatientCoverageInsuranceDetailsBo;
+import net.pladema.patient.service.domain.PatientMedicalCoverageBo;
+import net.pladema.staff.repository.HealthcareProfessionalRepository;
 
 @Slf4j
 @Service

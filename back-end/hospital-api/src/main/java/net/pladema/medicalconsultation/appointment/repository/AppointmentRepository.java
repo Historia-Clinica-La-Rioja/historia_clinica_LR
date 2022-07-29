@@ -243,21 +243,21 @@ public interface AppointmentRepository extends SGXAuditableEntityJPARepository<A
 											@Param("date") LocalDate date, @Param("hour") LocalTime hour);
 
 	@Transactional(readOnly = true)
-	@Query(	"SELECT NEW net.pladema.medicalconsultation.appointment.repository.domain.AppointmentTicketBo(" +
+	@Query(	"SELECT DISTINCT NEW net.pladema.medicalconsultation.appointment.repository.domain.AppointmentTicketBo(" +
 			"i.name, per.identificationNumber, per.lastName, per.otherLastNames, per.firstName, per.middleNames, " +
-			"mc.name, a.dateTypeId, a.hour, do2.description, per2.lastName, per2.otherLastNames, per2.firstName, per2.middleNames) " +
+			"mc.name, hi.acronym, a.dateTypeId, a.hour, do2.description, per2.lastName, per2.otherLastNames, per2.firstName, per2.middleNames) " +
 			"FROM Appointment a " +
-			"LEFT JOIN AppointmentAssn aa ON(a.id = aa.pk.appointmentId) " +
-			"LEFT JOIN Diary d ON(d.id = aa.pk.diaryId) " +
-			"LEFT JOIN Patient p ON(p.id = a.patientId) " +
-			"LEFT JOIN Person per ON(per.id = p.personId) " +
-			"LEFT JOIN PatientMedicalCoverageAssn pmc ON(pmc.patientId = p.id) " +
+			"JOIN AppointmentAssn aa ON(a.id = aa.pk.appointmentId) " +
+			"JOIN Diary d ON(d.id = aa.pk.diaryId) " +
+			"JOIN Patient p ON(p.id = a.patientId) " +
+			"JOIN Person per ON(per.id = p.personId) " +
+			"LEFT JOIN PatientMedicalCoverageAssn pmc ON(pmc.id = a.patientMedicalCoverageId) " +
 			"LEFT JOIN MedicalCoverage mc ON(pmc.medicalCoverageId = mc.id) " +
-			"LEFT JOIN DoctorsOffice do2 ON(d.doctorsOfficeId = do2.id) " +
-			"LEFT JOIN Institution i On(do2.institutionId = i.id) " +
-			"LEFT JOIN HealthcareProfessional hp ON(d.healthcareProfessionalId = hp.id) " +
-			"LEFT JOIN Person per2 ON(hp.personId = per2.id) " +
-			"LEFT JOIN HealthcareProfessionalSpecialty hps ON(hps.clinicalSpecialtyId = hp.id) " +
+			"LEFT JOIN HealthInsurance hi ON(hi.id = mc.id) " +
+			"JOIN DoctorsOffice do2 ON(d.doctorsOfficeId = do2.id) " +
+			"JOIN Institution i On(do2.institutionId = i.id) " +
+			"JOIN HealthcareProfessional hp ON(d.healthcareProfessionalId = hp.id) " +
+			"JOIN Person per2 ON(hp.personId = per2.id) " +
 			"WHERE a.id = :appointmentId ")
 	Optional<AppointmentTicketBo> getAppointmentTicketData(@Param("appointmentId") Integer appointmentId);
 }

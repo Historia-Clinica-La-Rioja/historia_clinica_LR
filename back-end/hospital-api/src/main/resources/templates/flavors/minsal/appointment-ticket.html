@@ -8,7 +8,7 @@
 
     <style>
         p {
-            font-size: 45px !important;
+            font-size: 45px;
             padding: 0 !important;
             margin: 0 !important;
             border: 0 !important;
@@ -22,28 +22,33 @@
             margin: 0 !important;
             padding: 0 !important;
             border: 0 !important;
-            height: 45px !important;
+            height: 20px !important;
             width: min-content !important;
+        }
+        .patientData{
+            font-size: 40px !important;
         }
     </style>
 </head>
 <body>
 <div class="container">
 
+    <p th:text="${'.........................................................'}"></p>
     <p th:text="${'Hospital: ' + institution}"></p>
     <div class="separator"></div>
-    <p th:text="${'Datos del paciente: '}"></p>
-    <p th:text="${'Nro documento: ' + dni}"></p>
-    <p th:text="${'Apellido y nombre:'}"></p>
-    <p th:text="${patientFullName}"></p>
-    <p th:text="${'Cobertura médica:'}"></p>
-    <p th:text="${medicalCoverage}"></p>
+    <p class="patientData" th:text="${'Datos del paciente: '}"></p>
+    <p class="patientData" th:text="${'Nro documento: ' + dni}"></p>
+    <p class="patientData" th:text="${'Apellido y nombre:'}"></p>
+    <p class="patientData" th:text="${patientFullName}"></p>
+    <p class="patientData" th:text="${'Cobertura médica:'}"></p>
+    <p class="patientData" th:text="${medicalCoverage}"></p>
     <div class="separator"></div>
     <p th:text="${'Fecha turno: ' + date}"></p>
     <p th:text="${'Hora turno: ' + hour}"></p>
     <p th:text="${'Consultorio: ' + doctorsOffice}"></p>
     <p th:text="${'Profesional:'}"></p>
     <p th:text="${doctorFullName}"></p>
+    <p th:text="${'.........................................................'}"></p>
 
 </div>
 </body>
