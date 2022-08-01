@@ -207,8 +207,8 @@ export class AgendaSetupComponent implements OnInit {
 		}
 	}
 
-	getFullNameLicence(professional: ProfessionalDto): string {
-		return `${professional.lastName}, ${this.patientNameService.getPatientName(professional.firstName, professional.nameSelfDetermination)} - ${professional.licenceNumber}`;
+	getFullName(professional: ProfessionalDto): string {
+		return `${professional.lastName}, ${this.patientNameService.getPatientName(professional.firstName, professional.nameSelfDetermination)}`;
 	}
 
 	appointmentManagementChange(): void {

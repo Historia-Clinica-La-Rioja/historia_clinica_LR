@@ -13,7 +13,7 @@
 										placeholder="{{'pacientes.form.SELECT' | translate}}"
 										(selectionChange)="getProfessionalSpecialties()">
 								<mat-option *ngFor="let professional of professionals" [value]="professional.id">
-									<span class="mat-body">{{getFullNameLicence(professional)}}</span>
+									<span class="mat-body">{{getFullName(professional)}}</span>
 								</mat-option>
 							</mat-select>
 							<mat-error [translate]="'forms.REQUIRED'"></mat-error>
@@ -40,7 +40,7 @@
 												(selectionChange)="getProfessionalSpecialties()">
 											<mat-option *ngFor="let professional of getNonResponsibleProfessional()" [value]="professional.id"
 											[disabled]="isProfessionalNonSelectable(professional.id)">
-												<span class="mat-body">{{getFullNameLicence(professional)}}</span>
+												<span class="mat-body">{{getFullName(professional)}}</span>
 											</mat-option>
 										</mat-select>
 										<mat-error [translate]="'turnos.agenda-setup.CHOOSE_PROFESSIONAL_ERROR'"></mat-error>
