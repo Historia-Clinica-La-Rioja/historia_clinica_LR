@@ -140,6 +140,21 @@
 									</button>
 								</div>
 							</div>
+							<mat-divider inset></mat-divider>
+							<div fxLayout="column" fxLayoutGap="10px">
+								<div content>
+									<app-card-license [professionsWithLicense]="professionsWithLicense$ | async"
+										[ownProfessionsAndSpecialties]="ownProfessionsAndSpecialties$ | async">
+									</app-card-license>
+								</div>
+								<div content>
+									<button id="button-edit-licenses" mat-stroked-button color="primary"
+										(click)="editLicense()">
+										<span [translate]="'pacientes.user_data.buttons.EDIT_LICENSES'"
+											class="uppercase"></span>
+									</button>
+								</div>
+							</div>
 						</mat-card-content>
 					</mat-card>
 				</div>
