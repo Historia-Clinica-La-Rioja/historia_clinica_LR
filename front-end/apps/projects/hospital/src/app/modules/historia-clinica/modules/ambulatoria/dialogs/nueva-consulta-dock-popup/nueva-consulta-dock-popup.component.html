@@ -247,15 +247,34 @@
 		<app-new-consultation-expansion-section id="alergias"
 			[title]="'ambulatoria.paciente.nueva-consulta.alergias.TITLE' | translate" icon="cancel"
 			[isEmpty]="alergiasNuevaConsultaService.isEmpty()">
-			<div>
-				<app-document-section-table [columns]="alergiasNuevaConsultaService.getTableColumnConfig()"
-					[data]="alergiasNuevaConsultaService.getAlergias()">
-				</app-document-section-table>
+			<div fxLayout="column" fxLayoutGap="2vh">
 
-				<button mat-button type="button" id="add-allergies-button" color="primary" class="add-button"
-					(click)="addAllergy()">
-					+ {{ 'ambulatoria.paciente.nueva-consulta.alergias.ADD' | translate }}
-				</button>
+				<app-document-section-card-list *ngIf="!alergiasNuevaConsultaService.isEmpty()"
+					title="ambulatoria.paciente.nueva-consulta.alergias.table.TITLE">
+					<div *ngFor="let alergia of alergiasNuevaConsultaService.getAlergias(); index as i; last as isLast">
+						<div fxLayout="row" fxLayoutAlign="space-between center">
+							<div fxLayout="column">
+								<span>{{ alergia.snomed.pt }}</span>
+								<span *ngIf="alergia?.criticalityId" class="mat-caption"
+									[ngClass]="{'gray-caption' : alergia.criticalityId === 1, 'color-warn': alergia.criticalityId === 2}">
+									{{ alergiasNuevaConsultaService.getDisplayName(alergia.criticalityId) }}
+								</span>
+							</div>
+							<button type=" button" mat-icon-button color="warn"
+								(click)="alergiasNuevaConsultaService.removeAlergia(i)">
+								<mat-icon>delete_outline</mat-icon>
+							</button>
+						</div>
+						<mat-divider class="separation" inset *ngIf="!isLast"></mat-divider>
+					</div>
+				</app-document-section-card-list>
+
+				<div>
+					<button mat-button type="button" id="add-allergies-button" color="primary" class="add-button"
+						(click)="addAllergy()">
+						+ {{ 'ambulatoria.paciente.nueva-consulta.alergias.ADD' | translate }}
+					</button>
+				</div>
 			</div>
 		</app-new-consultation-expansion-section>
 

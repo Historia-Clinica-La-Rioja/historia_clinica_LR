@@ -68,7 +68,7 @@ export class AlergiasNuevaConsultaService {
 
 	}
 
-	private getDisplayName(criticalityId) {
+	getDisplayName(criticalityId) {
 		return this.criticalityTypes.find(criticalityType => criticalityType.id === criticalityId)?.display;
 	}
 
