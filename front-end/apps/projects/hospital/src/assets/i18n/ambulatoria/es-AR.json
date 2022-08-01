@@ -87,6 +87,7 @@
                 "motivo": {
                     "TITLE": "Motivo de consulta",
                     "ADD": "Agregar motivo",
+                    "LIST_CARD_TITLE": "Motivos registrados",
                     "table": {
                         "columns": {
                             "MOTIVO": "Motivos"
