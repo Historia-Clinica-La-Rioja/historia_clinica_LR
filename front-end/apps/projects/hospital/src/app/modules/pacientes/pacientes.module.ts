@@ -17,6 +17,9 @@ import { ViewPatientDetailComponent } from './component/view-patient-detail/view
 import { AssignedAppointmentsComponent } from './component/assigned-appointments/assigned-appointments.component';
 import { CardProfessionsComponent } from './component/card-professions/card-professions.component';
 import { ProfessionSpecialtiesFormComponent } from './component/profession-specialties-form/profession-specialties-form.component';
+import { LicenseFormComponent } from './component/license-form/license-form.component';
+import { CardLicenseComponent } from './component/card-license/card-license.component';
+import { ViewNameProfessionAndSpecialtyPipe } from './pipe/view-name-profession-and-specialty.pipe';
 // dialogs
 import { ReportsComponent } from './dialogs/reports/reports.component';
 import { ScanPatientComponent } from './dialogs/scan-patient/scan-patient.component';
@@ -29,6 +32,7 @@ import { HealthInsuranceComponent } from './dialogs/health-insurance/health-insu
 import { PrivateHealthInsuranceComponent } from './dialogs/private-health-insurance/private-health-insurance.component';
 import { ArtComponent } from './dialogs/art/art.component';
 import { EditPrefessionsSpecialtiesComponent } from './dialogs/edit-prefessions-specialties/edit-prefessions-specialties.component';
+import { EditLicenseComponent } from './dialogs/edit-license/edit-license.component';
 
 @NgModule({
 	declarations: [
@@ -44,6 +48,9 @@ import { EditPrefessionsSpecialtiesComponent } from './dialogs/edit-prefessions-
 		ViewPatientDetailComponent,
 		AssignedAppointmentsComponent,
 		ProfessionSpecialtiesFormComponent,
+		LicenseFormComponent,
+		CardLicenseComponent,
+		ViewNameProfessionAndSpecialtyPipe,
 		// dialogs
 		EditPatientComponent,
 		ScanPatientComponent,
@@ -58,6 +65,7 @@ import { EditPrefessionsSpecialtiesComponent } from './dialogs/edit-prefessions-
 		PrivateHealthInsuranceComponent,
   		ArtComponent,
    		EditPrefessionsSpecialtiesComponent,
+     	EditLicenseComponent,
 	],
     imports: [
         FormsModule,
