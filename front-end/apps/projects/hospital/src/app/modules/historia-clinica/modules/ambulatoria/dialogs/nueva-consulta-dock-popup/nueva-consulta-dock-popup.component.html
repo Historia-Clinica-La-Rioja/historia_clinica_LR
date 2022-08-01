@@ -60,7 +60,7 @@
 					title="ambulatoria.paciente.nueva-consulta.problemas.PROBLEMA">
 					<div
 						*ngFor="let problema of ambulatoryConsultationProblemsService.getProblemas(); index as i; last as isLast">
-						<div fxLayout="row" fxLayoutAlign="start center">
+						<div fxLayout="row" fxLayoutAlign="space-between center">
 							<div fxFlex="80" fxLayout="column" fxLayoutGap="2px">
 								<span>{{ problema.snomed.pt }}</span>
 								<div fxLayout="row" fxLayoutGap="3px">
@@ -88,11 +88,11 @@
 									</span>
 								</div>
 							</div>
-							<button fxFlex="10" type="button" mat-icon-button color="primary"
+							<button type="button" mat-icon-button color="primary"
 								(click)="ambulatoryConsultationProblemsService.openEditDialog(i)">
 								<mat-icon>edit</mat-icon>
 							</button>
-							<button fxFlex="10" type="button" mat-icon-button color="warn"
+							<button type="button" mat-icon-button color="warn"
 								(click)="ambulatoryConsultationProblemsService.remove(i)">
 								<mat-icon>delete_outline</mat-icon>
 							</button>
