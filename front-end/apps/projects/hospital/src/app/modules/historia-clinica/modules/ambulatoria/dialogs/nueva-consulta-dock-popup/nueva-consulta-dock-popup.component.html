@@ -162,15 +162,38 @@
 		<app-new-consultation-expansion-section id="medications"
 			[title]="'ambulatoria.paciente.nueva-consulta.medicaciones.TITLE' | translate" icon="event_available"
 			[isEmpty]="medicacionesNuevaConsultaService.isEmpty()">
-			<div>
-				<app-document-section-table [columns]="medicacionesNuevaConsultaService.getTableColumnConfig()"
-					[data]="medicacionesNuevaConsultaService.getMedicaciones()">
-				</app-document-section-table>
+			<div fxLayout="column" fxLayoutGap="2vh">
 
-				<button mat-button type="button" id="add-medication-button" color="primary" class="add-button"
-					(click)="addMedication()">
-					+ {{ 'ambulatoria.paciente.nueva-consulta.medicaciones.ADD' | translate }}
-				</button>
+				<app-document-section-card-list *ngIf="!medicacionesNuevaConsultaService.isEmpty()"
+					title="ambulatoria.paciente.nueva-consulta.medicaciones.LIST_CARD_TITLE">
+					<div fxLayout="column" fxLayoutGap="10px"
+						*ngFor="let medicacion of medicacionesNuevaConsultaService.getMedicaciones(); index as i; last as isLast">
+						<div fxLayout="row" fxLayoutAlign="space-between center">
+							<div fxLayout="column" fxLayoutGap="6px">
+								<app-chip-indicator *ngIf="medicacion?.suspendido"
+									text="ambulatoria.paciente.nueva-consulta.medicaciones.SUSPENDIDA"
+									[warnColor]="true">
+								</app-chip-indicator>
+								<span>{{ medicacion.snomed.pt }}</span>
+							</div>
+							<button type="button" mat-icon-button color="warn"
+								(click)="medicacionesNuevaConsultaService.remove(i)">
+								<mat-icon>delete_outline</mat-icon>
+							</button>
+						</div>
+						<em *ngIf="medicacion?.observaciones" class="mat-caption gray-caption">
+							{{ medicacion.observaciones }}
+						</em>
+						<mat-divider class="separation" inset *ngIf="!isLast"></mat-divider>
+					</div>
+				</app-document-section-card-list>
+
+				<div>
+					<button mat-button type="button" id="add-medication-button" color="primary" class="add-button"
+						(click)="addMedication()">
+						+ {{ 'ambulatoria.paciente.nueva-consulta.medicaciones.ADD' | translate }}
+					</button>
+				</div>
 			</div>
 		</app-new-consultation-expansion-section>
 

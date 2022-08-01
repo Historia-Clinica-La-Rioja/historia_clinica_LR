@@ -51,6 +51,7 @@ import { ViewDateDtoPipe } from './pipes/view-date-dto.pipe';
 import { ViewDatePipe } from './pipes/view-date.pipe';
 import { ViewHourMinutePipe } from './pipes/view-hour-minute.pipe';
 import { DocumentSectionCardListComponent } from './components/document-section-card-list/document-section-card-list.component';
+import { ChipIndicatorComponent } from './components/chip-indicator/chip-indicator.component';
 
 
 @NgModule({
@@ -89,6 +90,7 @@ import { DocumentSectionCardListComponent } from './components/document-section-
 		TypeaheadComponent,
 		UserBadgeComponent,
 		DocumentSectionCardListComponent,
+		ChipIndicatorComponent,
 		// dialogs
 		ConfirmDialogComponent,
 		DatePickerComponent,
@@ -102,7 +104,6 @@ import { DocumentSectionCardListComponent } from './components/document-section-
 		ViewDateDtoPipe,
 		ViewDatePipe,
 		ViewHourMinutePipe,
-
 	],
 	imports: [
 		CommonModule,
@@ -149,6 +150,7 @@ import { DocumentSectionCardListComponent } from './components/document-section-
 		TableComponent,
 		TypeaheadComponent,
 		UserBadgeComponent,
+		ChipIndicatorComponent,
 		// dialogs
 		// directives
 		CtrlTemplateDirective,
