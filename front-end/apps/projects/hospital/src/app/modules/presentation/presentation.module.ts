@@ -50,6 +50,7 @@ import { PersonIdentificationPipe } from './pipes/person-identification.pipe';
 import { ViewDateDtoPipe } from './pipes/view-date-dto.pipe';
 import { ViewDatePipe } from './pipes/view-date.pipe';
 import { ViewHourMinutePipe } from './pipes/view-hour-minute.pipe';
+import { DocumentSectionCardListComponent } from './components/document-section-card-list/document-section-card-list.component';
 
 
 @NgModule({
@@ -87,6 +88,7 @@ import { ViewHourMinutePipe } from './pipes/view-hour-minute.pipe';
 		TableComponent,
 		TypeaheadComponent,
 		UserBadgeComponent,
+		DocumentSectionCardListComponent,
 		// dialogs
 		ConfirmDialogComponent,
 		DatePickerComponent,
@@ -117,6 +119,7 @@ import { ViewHourMinutePipe } from './pipes/view-hour-minute.pipe';
 		CoreModule,
 		AppMaterialModule,
 		// components
+		DocumentSectionCardListComponent,
 		BarComponent,
 		CategoryHeaderDividerComponent,
 		CellTemplatesComponent,
