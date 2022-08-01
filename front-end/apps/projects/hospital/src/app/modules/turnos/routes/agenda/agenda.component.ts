@@ -1,3 +1,4 @@
+import { CalendarDateService } from './../../services/calendar-date.service';
 import { Component, Input, OnChanges, OnDestroy, OnInit, SimpleChanges } from '@angular/core';
 import { AppointmentDailyAmountDto, AppointmentListDto, CompleteDiaryDto, DiaryOpeningHoursDto, MedicalCoverageDto } from '@api-rest/api-model';
 import { ERole } from '@api-rest/api-model';
@@ -8,8 +9,7 @@ import {
 	dateToMoment,
 	dateToMomentTimeZone,
 	momentParseDate,
-	momentParseTime,
-	newMoment
+	momentParseTime
 } from '@core/utils/moment.utils';
 import { MatDialog } from '@angular/material/dialog';
 import { ActivatedRoute, ParamMap, Router } from '@angular/router';
@@ -35,6 +35,7 @@ import { ConfirmBookingComponent } from '@turnos/dialogs/confirm-booking/confirm
 import { DatePipeFormat } from '@core/utils/date.utils';
 import { HealthcareProfessionalService } from '@api-rest/services/healthcare-professional.service';
 import { LoggedUserService } from '../../../auth/services/logged-user.service';
+import * as moment from 'moment';
 
 const ASIGNABLE_CLASS = 'cursor-pointer';
 const AGENDA_PROGRAMADA_CLASS = 'bg-green';
@@ -55,7 +56,6 @@ export class AgendaComponent implements OnInit, OnDestroy, OnChanges {
 	hourSegments: number;
 	agenda: CompleteDiaryDto;
 
-	viewDate: Date = new Date();
 	loading = true;
 	dayStartHour: number;
 	dayEndHour: number;
@@ -77,6 +77,7 @@ export class AgendaComponent implements OnInit, OnDestroy, OnChanges {
 	@Input() idAgenda: number;
 	@Input() showAll = true;
 	@Input() view: CalendarView = CalendarView.Week;
+	@Input() viewDate: Date = new Date();
 
 	constructor(
 		private readonly dialog: MatDialog,
@@ -91,7 +92,8 @@ export class AgendaComponent implements OnInit, OnDestroy, OnChanges {
 		private readonly agendaSearchService: AgendaSearchService,
 		private readonly contextService: ContextService,
 		private readonly healthcareProfessionalService: HealthcareProfessionalService,
-		private readonly loggedUserService: LoggedUserService
+		private readonly loggedUserService: LoggedUserService,
+		private readonly calendarDateService: CalendarDateService
 	) {
 	}
 
@@ -117,7 +119,7 @@ export class AgendaComponent implements OnInit, OnDestroy, OnChanges {
 		this.appointmentSubscription = this.appointmentFacade.getAppointments().subscribe(appointments => {
 			if (appointments) {
 				if (appointments.length) {
-					this.appointments = this.unifyEvents(appointments);
+				    this.appointments = this.unifyEvents(appointments);
 				}
 				else {
 					this.appointments = appointments;
@@ -137,8 +139,12 @@ export class AgendaComponent implements OnInit, OnDestroy, OnChanges {
 	}
 
 	ngOnChanges(changes: SimpleChanges) {
-		if (changes.idAgenda.currentValue)
+		if (changes.idAgenda?.currentValue)
 			this.getAgenda();
+	}
+
+	changeViewDate(date: Date) {
+		this.calendarDateService.setCalendarDate(date);
 	}
 
 	loadCalendar(renderEvent: CalendarWeekViewBeforeRenderEvent) {
@@ -375,12 +381,12 @@ export class AgendaComponent implements OnInit, OnDestroy, OnChanges {
 	private _getViewDate(): Date {
 		const momentStartDate = momentParseDate(this.agenda.startDate);
 		const momentEndDate = momentParseDate(this.agenda.endDate);
-		const today = newMoment();
+		const lastSelectedDate = moment(this.viewDate);
 
-		if (today.isBetween(momentStartDate, momentEndDate)) {
-			return new Date();
+		if (lastSelectedDate.isBetween(momentStartDate, momentEndDate)) {
+			return this.viewDate;
 		}
-		if (today.isBefore(momentStartDate)) {
+		if (lastSelectedDate.isSameOrBefore(momentStartDate)) {
 			return momentStartDate.toDate();
 		}
 		return momentEndDate.toDate();

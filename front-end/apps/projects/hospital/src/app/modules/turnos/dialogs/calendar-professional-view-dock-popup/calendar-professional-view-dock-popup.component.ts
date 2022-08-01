@@ -1,3 +1,4 @@
+import { CalendarDateService } from './../../services/calendar-date.service';
 import { STYLE } from './../../constants/calendar-professional-view';
 import { HealthcareProfessionalService } from '@api-rest/services/healthcare-professional.service';
 import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
@@ -30,6 +31,7 @@ export class CalendarProfessionalViewDockPopupComponent implements OnInit {
 	STYLE = STYLE;
 	showButtonToClear = true;
 	professionalId: number;
+	calendarDate: Date;
 	readonly calendarViewEnum = CalendarView;
 	readonly dateFormats = DatePipeFormat;
 
@@ -38,6 +40,7 @@ export class CalendarProfessionalViewDockPopupComponent implements OnInit {
 		private readonly healthcareProfessional: HealthcareProfessionalService,
 		public dockPopupRef: DockPopupRef,
 		private readonly changeDetectorRef: ChangeDetectorRef,
+		private calendarDateService: CalendarDateService,
 		private readonly appointmentFacade: AppointmentsFacadeService,
 	) { }
 
@@ -53,6 +56,7 @@ export class CalendarProfessionalViewDockPopupComponent implements OnInit {
 				}
 			});
 		});
+		this.calendarDate = this.calendarDateService.getCalendarDate();
 	}
 
 	changeAgendaSelected(event: MatOptionSelectionChange, agenda: DiaryListDto): void {

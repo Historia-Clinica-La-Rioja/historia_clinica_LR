@@ -151,12 +151,14 @@
 								mwlCalendarPreviousView
 								[view]=view
 								[(viewDate)]="viewDate"
+								(viewDateChange)="changeViewDate($event)"
 				>
 					Anterior
 				</mat-button-toggle>
 				<mat-button-toggle id="today" class="today"
 								mwlCalendarToday
 								[(viewDate)]="viewDate"
+								(viewDateChange)="changeViewDate($event)"
 				>
 					Hoy
 				</mat-button-toggle>
@@ -164,6 +166,7 @@
 								mwlCalendarNextView
 								[view]=view
 								[(viewDate)]="viewDate"
+								(viewDateChange)="changeViewDate($event)"
 				>
 					Próximo
 				</mat-button-toggle>
