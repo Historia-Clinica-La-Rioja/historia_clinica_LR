@@ -215,6 +215,10 @@
                     "TITLE": "Solicitud de referencia",
                     "ADD_REQUEST": "Agregar solicitud",
                     "REQUESTED_REFERENCE": "Referencias solicitadas",
+                    "REGISTERED_REQUEST": "Solicitudes registradas",
+                    "PROBLEMS": "Problemas",
+                    "CARE_LINE": "Línea de cuidado",
+                    "SPECIALTY": "Especialidad",
                     "table": {
                         "columns": {
                             "REFERENCES": "Referencias agregadas"

@@ -281,16 +281,62 @@
 		<app-new-consultation-expansion-section id="solicitud-referencia"
 			[title]="'ambulatoria.paciente.nueva-consulta.solicitud-referencia.TITLE' | translate" icon="forum"
 			[isEmpty]="ambulatoryConsultationReferenceService.isEmpty()">
-			<div fxLayout="column" fxLayoutGap="10px">
+			<div fxLayout="column" fxLayoutGap="2vh">
+
+				<app-document-section-card-list *ngIf="!ambulatoryConsultationReferenceService.isEmpty()"
+					title="ambulatoria.paciente.nueva-consulta.solicitud-referencia.REGISTERED_REQUEST">
+					<div
+						*ngFor="let request of ambulatoryConsultationReferenceService.getData(); last as isLast; trackBy: trackByRequest">
+						<div fxLayout="column" fxLayoutGap="15px">
+							<div fxLayout="row" fxLayoutAlign="space-between center">
+								<div fxLayout="column">
+									<span class="bold">
+										{{
+										'ambulatoria.paciente.nueva-consulta.solicitud-referencia.PROBLEMS' | translate
+										}}
+									</span>
+									<span *ngFor="let problem of request?.problems">{{ problem.snomed.pt }}</span>
+								</div>
+								<button type="button" mat-icon-button color="warn"
+									(click)="ambulatoryConsultationReferenceService.remove(request.index)">
+									<mat-icon>delete_outline</mat-icon>
+								</button>
+							</div>
+							<div fxLayout="row" fxLayoutGap="5px" fxLayout.lt-md="column" fxLayoutGap.lt-md="5px">
+								<div fxFlex="50" fxLayout="column">
+									<span class="bold">
+										{{
+										'ambulatoria.paciente.nueva-consulta.solicitud-referencia.SPECIALTY' |
+										translate
+										}}
+									</span>
+									<span>{{ request.clinicalSpecialty.name }}</span>
+								</div>
+								<div fxFlex="calc(50%-5px)" fxLayout="column">
+									<span class="bold">
+										{{
+										'ambulatoria.paciente.nueva-consulta.solicitud-referencia.CARE_LINE' |
+										translate
+										}}
+									</span>
+									<span>{{ request.careLine.description }}</span>
+								</div>
+							</div>
+							<span class="gray-caption" *ngIf="request?.note">
+								"{{ request?.note }}"
+							</span>
+						</div>
+						<mat-divider class="separation" inset *ngIf="!isLast"></mat-divider>
+					</div>
+				</app-document-section-card-list>
+
 				<div>
 					<button mat-button type="button" id="add-request-button" color="primary" class="add-button"
 						(click)="ambulatoryConsultationReferenceService.openReferenceDialog()">
 						+ {{ 'ambulatoria.paciente.nueva-consulta.solicitud-referencia.ADD_REQUEST' | translate }}
 					</button>
 				</div>
-				<app-document-section-table data-display [columns]="ambulatoryConsultationReferenceService.getColumns()"
-					[data]="ambulatoryConsultationReferenceService.getData()">
-				</app-document-section-table>
+
 			</div>
 		</app-new-consultation-expansion-section>
 

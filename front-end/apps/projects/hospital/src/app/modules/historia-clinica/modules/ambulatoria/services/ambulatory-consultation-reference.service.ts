@@ -80,13 +80,14 @@ export class AmbulatoryConsultationReferenceService {
 
 	getData(): any[] {
 		return (this.outpatientReferences.map(
-			(reference: ReferenceDto) => ({
+			(reference: ReferenceDto, index: number) => ({
 				problems: reference.problems,
 				consultation: reference.consultation,
 				procedure: reference.procedure,
 				careLine: this.careLines.find(careLine => careLine.id == reference.careLineId),
 				clinicalSpecialty: this.specialties.find(specialty => specialty.id === reference.clinicalSpecialtyId),
 				note: reference.note,
+				index: index
 			})
 		));
 	}
