@@ -62,6 +62,7 @@ const ROUTE_EMERGENCY_CARE_EPISODE_PREFIX = 'guardia/episodio/';
 const ROLES_TO_VIEW_USER_DATA: ERole[] = [ERole.ADMINISTRADOR_INSTITUCIONAL_BACKOFFICE];
 const ROLES_TO_VIEW_CLINIC_HISTORY_DATA: ERole[] = [ERole.ADMINISTRATIVO];
 const DIALOG_SIZE = '30%';
+const DIALOG_SIZE_HEIGHT = '80%';
 
 export interface ProfessionAndSpecialtyDto {
 	professionDescription: string,
@@ -341,6 +342,7 @@ export class ProfileComponent implements OnInit {
 
 		const dialog = this.dialog.open(EditPrefessionsSpecialtiesComponent, {
 			width: DIALOG_SIZE,
+			height: DIALOG_SIZE_HEIGHT,
 			data: {
 				personId: this.personId,
 				id: this.professionalSpecialtyId, allSpecialties: this.allSpecialties, allProfessions: this.allProfessions, ownProfessionsAndSpecialties: this.ownProfessionsAndSpecialties
