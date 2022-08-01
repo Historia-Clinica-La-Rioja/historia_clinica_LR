@@ -27,7 +27,7 @@ import { SuggestedFieldsPopupComponent } from '../../../../../presentation/compo
 import { hasError, scrollIntoError } from '@core/utils/form.utils';
 import { NewConsultationSuggestedFieldsService } from '../../services/new-consultation-suggested-fields.service';
 import { TranslateService } from '@ngx-translate/core';
-import { AmbulatoryConsultationProblem, AmbulatoryConsultationProblemsService } from '@historia-clinica/services/ambulatory-consultation-problems.service';
+import { AmbulatoryConsultationProblem, AmbulatoryConsultationProblemsService, SEVERITY_CODES } from '@historia-clinica/services/ambulatory-consultation-problems.service';
 import { FeatureFlagService } from '@core/services/feature-flag.service';
 import { AmbulatoryConsultationReferenceService, Reference } from '../../services/ambulatory-consultation-reference.service';
 import { CareLineService } from '@api-rest/services/care-line.service';
@@ -79,6 +79,7 @@ export class NuevaConsultaDockPopupComponent implements OnInit {
 	public reportFFIsOn: boolean;
 	searchConceptsLocallyFFIsOn = false;
 	ambulatoryConsultationReferenceService: AmbulatoryConsultationReferenceService;
+	readonly SEVERITY_CODES = SEVERITY_CODES;
 	@ViewChild('apiErrorsView') apiErrorsView: ElementRef;
 
 	constructor(

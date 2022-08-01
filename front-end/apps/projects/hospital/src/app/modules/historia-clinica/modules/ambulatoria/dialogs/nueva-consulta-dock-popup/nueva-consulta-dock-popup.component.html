@@ -68,7 +68,8 @@
 										({{ 'ambulatoria.paciente.nueva-consulta.problemas.CRONICO' | translate }})
 									</span>
 									<span *ngIf="problema?.cronico && problema.codigoSeveridad">-</span>
-									<em *ngIf="problema?.codigoSeveridad">
+									<em *ngIf="problema?.codigoSeveridad"
+										[ngClass]="{ 'gray-caption': SEVERITY_CODES.LOW === problema.codigoSeveridad, 'color-warn': SEVERITY_CODES.HIGH === problema.codigoSeveridad }">
 										{{
 										ambulatoryConsultationProblemsService.getSeverityDisplayName(problema.codigoSeveridad)
 										}}

@@ -25,6 +25,12 @@ export interface AmbulatoryConsultationProblem {
 	snvsReports?: EpidemiologicalReport[];
 }
 
+export enum SEVERITY_CODES {
+	LOW = 'LA6752-5',
+	MEDIUM = 'LA6751-7',
+	HIGH = 'LA6750-9'
+}
+
 export class AmbulatoryConsultationProblemsService {
 
 	private readonly form: FormGroup;
