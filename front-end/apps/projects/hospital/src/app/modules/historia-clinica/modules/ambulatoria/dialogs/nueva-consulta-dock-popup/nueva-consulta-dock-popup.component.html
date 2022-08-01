@@ -64,9 +64,8 @@
 							<div fxFlex="80" fxLayout="column" fxLayoutGap="2px">
 								<span>{{ problema.snomed.pt }}</span>
 								<div fxLayout="row" fxLayoutGap="3px">
-									<span *ngIf="problema?.cronico" class="color-primary">
-										{{ 'ambulatoria.paciente.nueva-consulta.problemas.CRONICO' | translate |
-										uppercase }}
+									<span *ngIf="problema?.cronico" class="gray-caption">
+										({{ 'ambulatoria.paciente.nueva-consulta.problemas.CRONICO' | translate }})
 									</span>
 									<span *ngIf="problema?.cronico && problema.codigoSeveridad">-</span>
 									<em *ngIf="problema?.codigoSeveridad">
