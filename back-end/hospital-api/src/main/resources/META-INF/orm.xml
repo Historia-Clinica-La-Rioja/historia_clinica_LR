@@ -310,6 +310,7 @@
 			OR LOWER(s.pt) LIKE '%psitacosis%' OR LOWER(s.pt) LIKE '%rabia%' OR LOWER(s.pt) LIKE '%rubeola%' OR LOWER(s.pt) LIKE '%sarampión%' OR LOWER(s.pt) LIKE '%síndr%urémico%hemol%'
 			OR LOWER(s.pt) LIKE '%síndr%guillén barré%' OR LOWER(s.pt) LIKE '%síndrome respiratorio agudo severo%' OR LOWER(s.pt) LIKE '%sars%' OR LOWER(s.pt) LIKE '%tétano%'
 			OR LOWER(s.pt) LIKE '%tifus%' OR LOWER(s.pt) LIKE '%triquinosis%' OR LOWER(s.pt) LIKE '%viruela%')
+			AND ((EXTRACT(MONTH FROM oc.created_on)=(EXTRACT(MONTH FROM CURRENT_TIMESTAMP)-1) AND EXTRACT(YEAR FROM oc.created_on)=EXTRACT(YEAR FROM CURRENT_TIMESTAMP)) OR (EXTRACT(MONTH FROM oc.created_on)=1 AND EXTRACT(YEAR FROM oc.created_on)=(EXTRACT(YEAR FROM CURRENT_TIMESTAMP)-1)))
 		</query>
 	</named-native-query>
 
@@ -345,7 +346,7 @@
 			INNER JOIN snomed s on hc.snomed_id=s.id
 			INNER JOIN problem_type pt on hc.problem_id=pt.id
 			WHERE ins.id= :institutionId AND (pt.id='55607006' OR pt.id='439401001') AND hc.status_id='55561003' AND hc.verification_status_id='59156000'
-			AND oc.institution_id= :institutionId),
+			AND oc.institution_id= :institutionId) AND (((EXTRACT(MONTH FROM oc.created_on)=(EXTRACT(MONTH FROM CURRENT_TIMESTAMP)-1) AND EXTRACT(YEAR FROM oc.created_on)=EXTRACT(YEAR FROM CURRENT_TIMESTAMP)) OR (EXTRACT(MONTH FROM oc.created_on)=1 AND EXTRACT(YEAR FROM oc.created_on)=(EXTRACT(YEAR FROM CURRENT_TIMESTAMP)-1))))),
 			data_ep AS (
 			SELECT *,
 			CASE
@@ -478,7 +479,8 @@
 			LEFT JOIN signos_vitales sv_h on sv_h.id_doc=oc.document_id and sv_h.id=8
 			LEFT JOIN signos_vitales sv_p on sv_p.id_doc=oc.document_id and sv_p.id=9
 			LEFT JOIN signos_vitales sv_idh on sv_idh.id_doc=oc.document_id and sv_idh.id=10
-			WHERE ins.id= :institutionId AND (pmc.id is not null AND NOT (lower(mc.name) like '%sumar%')) AND oc.institution_id= :institutionId
+			WHERE ((EXTRACT(MONTH FROM oc.created_on)=(EXTRACT(MONTH FROM CURRENT_TIMESTAMP)-1) AND EXTRACT(YEAR FROM oc.created_on)=EXTRACT(YEAR FROM CURRENT_TIMESTAMP)) OR (EXTRACT(MONTH FROM oc.created_on)=1 AND EXTRACT(YEAR FROM oc.created_on)=(EXTRACT(YEAR FROM CURRENT_TIMESTAMP)-1)))
+			AND ins.id= :institutionId AND (pmc.id is not null AND NOT (lower(mc.name) like '%sumar%'))
 			ORDER BY oc.created_on
 		</query>
 	</named-native-query>
@@ -579,7 +581,8 @@
 			LEFT JOIN signos_vitales sv_h on sv_h.id_doc=oc.document_id and sv_h.id=8
 			LEFT JOIN signos_vitales sv_p on sv_p.id_doc=oc.document_id and sv_p.id=9
 			LEFT JOIN signos_vitales sv_idh on sv_idh.id_doc=oc.document_id and sv_idh.id=10
-			WHERE ins.id= :institutionId AND (pmc.id is null OR (lower(mc.name) like '%sumar%')) AND oc.institution_id= :institutionId
+			WHERE ((EXTRACT(MONTH FROM oc.created_on)=(EXTRACT(MONTH FROM CURRENT_TIMESTAMP)-1) AND EXTRACT(YEAR FROM oc.created_on)=EXTRACT(YEAR FROM CURRENT_TIMESTAMP)) OR (EXTRACT(MONTH FROM oc.created_on)=1 AND EXTRACT(YEAR FROM oc.created_on)=(EXTRACT(YEAR FROM CURRENT_TIMESTAMP)-1)))
+			AND ins.id= :institutionId AND (pmc.id is null OR (lower(mc.name) like '%sumar%'))
 			ORDER BY oc.id
 		</query>
 	</named-native-query>
@@ -975,8 +978,8 @@
 			OR s_p.sctid='234709002'
 			OR s_p.sctid='398941000221109'
 			OR s_p.sctid='398821000221106')
-<!--			AND ((EXTRACT(MONTH FROM d.created_on)=(EXTRACT(MONTH FROM CURRENT_TIMESTAMP)-1) AND EXTRACT(YEAR FROM d.created_on)=EXTRACT(YEAR FROM CURRENT_TIMESTAMP))
-			OR (EXTRACT(YEAR FROM d.created_on)=(EXTRACT(YEAR FROM CURRENT_TIMESTAMP)-1) AND EXTRACT(MONTH FROM d.created_on)=12))-->
+			AND ((EXTRACT(MONTH FROM d.created_on)=(EXTRACT(MONTH FROM CURRENT_TIMESTAMP)-1) AND EXTRACT(YEAR FROM d.created_on)=EXTRACT(YEAR FROM CURRENT_TIMESTAMP))
+			OR (EXTRACT(YEAR FROM d.created_on)=(EXTRACT(YEAR FROM CURRENT_TIMESTAMP)-1) AND EXTRACT(MONTH FROM d.created_on)=12))
 			group by institution, professional, procedures
 		</query>
 	</named-native-query>
