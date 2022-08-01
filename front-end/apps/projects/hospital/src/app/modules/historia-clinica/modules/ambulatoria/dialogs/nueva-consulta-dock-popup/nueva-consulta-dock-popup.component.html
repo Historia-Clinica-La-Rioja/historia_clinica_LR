@@ -87,6 +87,18 @@
 										{{ momentFormat(problema.fechaFin, DateFormat.VIEW_DATE) }}
 									</span>
 								</div>
+								<div *ngIf="problema.isReportable">
+									<ng-container *ngIf="problema.epidemiologicalManualClassifications?.length">
+										<div
+											*ngFor="let classification of problema.epidemiologicalManualClassifications; let i=index">
+											<span class="color-primary">
+												{{ problema.epidemiologicalManualClassifications[i] }}
+											</span>
+										</div>
+									</ng-container>
+									<span class="color-warn" *ngIf="!problema.epidemiologicalManualClassifications"
+										translate="ambulatoria.paciente.nueva-consulta.problemas.DO_NOT_REPORT_PROBLEM"></span>
+								</div>
 							</div>
 							<button type="button" mat-icon-button color="primary"
 								(click)="ambulatoryConsultationProblemsService.openEditDialog(i)">
