@@ -160,7 +160,8 @@
         "SET_ACCESS_DATA": "ESTABLECER DATOS DE ACCESO",
         "RESET_ACCESS_DATA": "RESTABLECER DATOS DE ACCESO",
         "EDIT_ROLES": "EDITAR ROLES",
-        "EDIT_PROFESSIONS": "EDITAR PROFESIONES"
+        "EDIT_PROFESSIONS": "EDITAR PROFESIONES",
+        "EDIT_LICENSES": "EDITAR MATRICULAS"
       },
       "messages": {
         "SUCCESS": "El usuario se creó exitosamente",
@@ -181,6 +182,23 @@
       "messages": {
         "SUCCESS": "Se guardaron correctamente los cambios en profesiones",
         "ERROR": "Error al guardaron los cambios en profesiones"
+      }
+    },
+    "edit_license": {
+      "TITLE": "Matriculas",
+      "ADD_ANOTHER_LICENSE": "Agregar otra matricula",
+      "form_license": {
+        "LICENSE_NUMBER": "N° de matricula",
+        "NATIONAL": "Nacional",
+        "PROVINCE": "Provincial",
+        "PROFESSION": "Profesión",
+        "SELECT_SPECIALTY": "Seleccione especialidad",
+        "SELECT_PROFESSION": "Seleccione profesión",
+        "SPECIALTY": "Especialidad",
+        "ASSOCIATED_WITH": "Asociada a:",
+		"PROFESSION_ERROR": "Requiere al menos una professión.",
+		"LICENSE_ERROR": "Requiere una matricula."
+
       }
     },
     "edit_prefessions_specialties": {
@@ -209,6 +227,12 @@
       "ROL_COLUMN": "Rol",
       "INSTITUTION_COLUMN": "Institución",
       "WITHOUT_ROLES": "Sin roles asignados."
+    },
+    "card_license": {
+      "TITLE": "Matriculas",
+	  "NATIONAL": "Nacional",
+	  "PROVINCE": "Provincial",
+	  "WITHOUT_LICENSE": "Sin matriculas asignadas."
     },
     "emergency_care_episode_sumamry": {
       "TITLE": "Resumen de Guardia",
