@@ -14,7 +14,8 @@ import {
 	AntecedentesFamiliaresNuevaConsultaService
 } from '../../services/antecedentes-familiares-nueva-consulta.service';
 import { Alergia, AlergiasNuevaConsultaService } from '../../services/alergias-nueva-consulta.service';
-import { DateFormat, dateToMomentTimeZone, momentFormat, newMoment } from '@core/utils/moment.utils';
+import { dateToMomentTimeZone, momentFormat, newMoment } from '@core/utils/moment.utils';
+import { DateFormat } from '@core/utils/moment.utils';
 import { AppFeature, ClinicalSpecialtyDto, CreateOutpatientDto, HealthConditionNewConsultationDto, OutpatientProblemDto, SnvsToReportDto } from '@api-rest/api-model.d';
 import { InternacionMasterDataService } from '@api-rest/services/internacion-master-data.service';
 import { OutpatientConsultationService } from '@api-rest/services/outpatient-consultation.service';
@@ -71,6 +72,8 @@ export class NuevaConsultaDockPopupComponent implements OnInit {
 	defaultSpecialty: ClinicalSpecialtyDto;
 	specialties: ClinicalSpecialtyDto[];
 	public hasError = hasError;
+	momentFormat = momentFormat;
+	DateFormat = DateFormat;
 	severityTypes: any[];
 	criticalityTypes: any[];
 	public reportFFIsOn: boolean;

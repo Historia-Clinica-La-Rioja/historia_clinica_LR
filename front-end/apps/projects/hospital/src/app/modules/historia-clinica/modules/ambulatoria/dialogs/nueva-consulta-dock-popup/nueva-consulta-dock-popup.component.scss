@@ -20,6 +20,10 @@ mat-form-field {
 	font-size: 16px;
 }
 
-.separation {
+mat-divider.mat-divider-horizontal.mat-divider-inset.separation {
 	margin: 10px 0;
+}
+
+.gray-caption {
+	color: #979797;
 }
