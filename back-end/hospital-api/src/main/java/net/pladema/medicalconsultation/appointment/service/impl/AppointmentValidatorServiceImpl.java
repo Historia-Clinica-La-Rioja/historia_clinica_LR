@@ -134,7 +134,7 @@ public class AppointmentValidatorServiceImpl implements AppointmentValidatorServ
 		}
 
 		if ((diary.get().getStartDate().isAfter(date)) || (diary.get().getEndDate().isBefore(date))){
-			throw new UpdateAppointmentDateException(UpdateAppointmentDateExceptionEnum.APPOINTMENT_DATE_OUT_OF_DIARY_RANGE, String.format("La fecha del turno se encuentra fuera del rango horario de la agenda."));
+			throw new UpdateAppointmentDateException(UpdateAppointmentDateExceptionEnum.APPOINTMENT_DATE_OUT_OF_DIARY_RANGE, String.format("La fecha del turno se encuentra fuera del rango de la agenda."));
 		}
 		if (appointmentBo.get().getAppointmentStateId() != 1){
 			throw new UpdateAppointmentDateException(UpdateAppointmentDateExceptionEnum.APPOINTMENT_STATE_INVALID, String.format("El estado del turno es invalido."));
@@ -151,10 +151,9 @@ public class AppointmentValidatorServiceImpl implements AppointmentValidatorServ
 				if(((oh.getFrom().isBefore(time)) && (oh.getTo().isAfter(time))) || (oh.getFrom().equals(time))) {
 					return true;
 				}
-					throw new UpdateAppointmentDateException(UpdateAppointmentDateExceptionEnum.APPOINTMENT_TIME_OUT_OF_OPENING_HOURS, String.format("El horario del turno se encuentra fuera del horario de la agenda."));
 			}
 		}
-		throw new UpdateAppointmentDateException(UpdateAppointmentDateExceptionEnum.APPOINTMENT_DAY_OF_WEEK_INVALID, String.format("La fecha del turno se encuentra en un dia de la semana sin agenda."));
+		throw new UpdateAppointmentDateException(UpdateAppointmentDateExceptionEnum.APPOINTMENT_DATE_OUT_OF_OPENING_HOURS, String.format("El horario del turno se encuentra fuera de la agenda."));
 	}
 
     private static Map<Short, Collection<Short>> buildValidStates() {
