@@ -136,4 +136,32 @@ public class ProgramReportsController {
 		out.flush();
 		response.flushBuffer();
 	}
+
+	@GetMapping(value = "/{institutionId}/odontology")
+	public @ResponseBody
+	void getMonthlyOdontologyExcelReport(
+			@PathVariable Integer institutionId,
+			HttpServletResponse response
+	)throws Exception{
+		LOG.debug("Se creará el excel{}", institutionId);
+		LOG.debug("Inputs parameters -> institutionID {}, fromDate {}, toDate{}", institutionId);
+
+		String title = "Reporte Odontologia General";
+		String[] headers = new String[]{"Institucion", "Unidad Operativa", "Prestador", "DNI", "Fecha de atencion", "Cons. N°",
+				"DNI Paciente", "Nombre Paciente", "Sexo", "Genero", "Nombre con el que se identifica", "Fecha de nacimiento",
+				"Edad a fecha del turno", "Edad a Hoy", "Etnia", "Obra/s social/es", "Domicilio", "Localidad", "Nivel de Instruccion",
+				"Situacion laboral", "Motivos", "Procedimientos", "problemas", "Medicacion", "Evolucion"};
+
+		IWorkbook wb = this.excelService.buildExcelOdontologia(title, headers, this.queryFactoryPR.queryOdontologia(institutionId));
+
+		String filename = title + "." + wb.getExtension();
+		response.addHeader("Content-disposition", "attachment;filename= " + filename);
+		response.setContentType(wb.getContentType());
+
+		OutputStream out = response.getOutputStream();
+		wb.write(out);
+		out.close();
+		out.flush();
+		response.flushBuffer();
+	}
 }
