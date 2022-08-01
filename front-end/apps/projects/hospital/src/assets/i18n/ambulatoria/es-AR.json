@@ -157,6 +157,8 @@
                     "TITLE": "Antecedentes familiares",
                     "ANTECEDENTES_FAMILIARES": "Antecedentes familiares",
                     "SEARCH_PLACEHOLDER": "Buscar antecedentes familiares",
+                    "LIST_CARD_TITLE": "Antecedentes registrados",
+                    "DATE_PREFIX": "Desde",
                     "FECHA": "Fecha de registro"
                 },
                 "antecedentes-personales": {
