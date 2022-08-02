@@ -16,8 +16,8 @@ export class DatepickerComponent implements OnInit {
 	@Input() dateToSetInDatepicker: Date;
 	@Input() maxDate: Date;
 	@Input() minDate: Date;
-	@Input() availableDays: number[];
-	@Input() disableDays: Date[];
+	@Input() availableDays: number[] = [];
+	@Input() disableDays: Date[] = [];
 	@Output() selectDate: EventEmitter<Date> = new EventEmitter();
 
 	constructor(
@@ -37,6 +37,8 @@ export class DatepickerComponent implements OnInit {
 	}
 
 	dateFilter = (date?: Moment): boolean => {
+		if (!this.availableDays.length && !this.disableDays.length)
+			return true;
 		if (date != null) {
 			if (this.disableDays.find(x => x.getTime() == date.toDate().getTime())){
 				return false;
