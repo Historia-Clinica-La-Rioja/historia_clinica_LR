@@ -52,6 +52,7 @@ import { ViewDatePipe } from './pipes/view-date.pipe';
 import { ViewHourMinutePipe } from './pipes/view-hour-minute.pipe';
 import { DocumentSectionCardListComponent } from './components/document-section-card-list/document-section-card-list.component';
 import { ChipIndicatorComponent } from './components/chip-indicator/chip-indicator.component';
+import { ColoredLabelComponent } from './colored-label/colored-label.component';
 
 
 @NgModule({
@@ -60,6 +61,7 @@ import { ChipIndicatorComponent } from './components/chip-indicator/chip-indicat
 		BarComponent,
 		CategoryHeaderDividerComponent,
 		CellTemplatesComponent,
+		ColoredLabelComponent,
 		ContentTitleComponent,
 		DatepickerComponent,
 		DetailBoxComponent,
@@ -124,6 +126,7 @@ import { ChipIndicatorComponent } from './components/chip-indicator/chip-indicat
 		BarComponent,
 		CategoryHeaderDividerComponent,
 		CellTemplatesComponent,
+		ColoredLabelComponent,
 		ContentTitleComponent,
 		DatepickerComponent,
 		DetailBoxComponent,
