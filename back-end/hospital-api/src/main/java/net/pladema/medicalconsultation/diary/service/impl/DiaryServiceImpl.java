@@ -119,18 +119,20 @@ public class DiaryServiceImpl implements DiaryService {
 	@Override
 	public Integer updateDiary(DiaryBo diaryToUpdate) {
 		LOG.debug("Input parameters -> diaryToUpdate {}", diaryToUpdate);
-		Diary savedDiary = diaryRepository.getOne(diaryToUpdate.getId());
-		HashMap<DiaryOpeningHoursBo, List<AppointmentBo>> apmtsByNewDOH = new HashMap<>();
-		diaryToUpdate.getDiaryOpeningHours().forEach( doh -> {
-					doh.setDiaryId(savedDiary.getId());
-					apmtsByNewDOH.put(doh, new ArrayList<>());
-				});
-		Collection<AppointmentBo> apmts = appointmentService.getFutureActiveAppointmentsByDiary(diaryToUpdate.getId());
-		adjustExistingAppointmentsOpeningHours(apmtsByNewDOH, apmts);
-		persistDiary(diaryToUpdate, mapDiaryBo(diaryToUpdate, savedDiary));
-		updatedExistingAppointments(diaryToUpdate, apmtsByNewDOH);
-		LOG.debug("Diary updated -> {}", diaryToUpdate);
-		return diaryToUpdate.getId();
+		return diaryRepository.findById(diaryToUpdate.getId()).map(savedDiary -> {
+			HashMap<DiaryOpeningHoursBo, List<AppointmentBo>> apmtsByNewDOH = new HashMap<>();
+			diaryToUpdate.getDiaryOpeningHours().forEach( doh -> {
+				doh.setDiaryId(savedDiary.getId());
+				apmtsByNewDOH.put(doh, new ArrayList<>());
+			});
+			Collection<AppointmentBo> apmts = appointmentService.getFutureActiveAppointmentsByDiary(diaryToUpdate.getId());
+			adjustExistingAppointmentsOpeningHours(apmtsByNewDOH, apmts);
+			persistDiary(diaryToUpdate, mapDiaryBo(diaryToUpdate, savedDiary));
+			updatedExistingAppointments(diaryToUpdate, apmtsByNewDOH);
+			LOG.debug("Diary updated -> {}", diaryToUpdate);
+			return diaryToUpdate.getId();
+		}).get();
+
 	}
 
 	private void adjustExistingAppointmentsOpeningHours(HashMap<DiaryOpeningHoursBo, List<AppointmentBo>> apmtsByNewDOH,

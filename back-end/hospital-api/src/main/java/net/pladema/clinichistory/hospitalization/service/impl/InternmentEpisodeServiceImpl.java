@@ -361,10 +361,11 @@ public class InternmentEpisodeServiceImpl implements InternmentEpisodeService {
     public Integer updateInternmentEpisodeBed(Integer internmentEpisodeId, Integer newBedId) {
         LOG.debug("Input parameters -> internmentEpisodeId {}, newBedId {}", internmentEpisodeId, newBedId);
         Integer currentUser = UserInfo.getCurrentAuditor();
-        Integer oldBed = internmentEpisodeRepository.getOne(internmentEpisodeId).getBedId();
-        internmentEpisodeRepository.updateInternmentEpisodeBed(internmentEpisodeId, newBedId, currentUser, LocalDateTime.now());
-        LOG.debug(LOGGING_OUTPUT, newBedId);
-        return oldBed;
+        return internmentEpisodeRepository.findById(internmentEpisodeId).map(internmentEpisode -> {
+			internmentEpisodeRepository.updateInternmentEpisodeBed(internmentEpisodeId, newBedId, currentUser, LocalDateTime.now());
+			LOG.debug(LOGGING_OUTPUT, newBedId);
+			return internmentEpisode.getBedId();
+		}).get();
     }
 
 	@Override

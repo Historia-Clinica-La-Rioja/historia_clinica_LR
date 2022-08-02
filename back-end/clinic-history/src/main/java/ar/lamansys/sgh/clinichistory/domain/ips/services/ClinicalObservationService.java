@@ -180,10 +180,12 @@ public class ClinicalObservationService {
 
     public RiskFactorObservationBo getObservationById(Integer riskFactorObservationId) {
         LOG.debug("Input parameter -> riskFactorObservationId {}", riskFactorObservationId);
-        ObservationRiskFactor observationRiskFactor = observationRiskFactorRepository.getOne(riskFactorObservationId);
-        RiskFactorObservationBo result = new RiskFactorObservationBo(observationRiskFactor);
-        LOG.debug(OUTPUT, result);
-        return result;
+        return observationRiskFactorRepository.findById(riskFactorObservationId)
+				.map(observationRiskFactor -> {
+					RiskFactorObservationBo result = new RiskFactorObservationBo(observationRiskFactor);
+					LOG.debug(OUTPUT, result);
+					return result;
+				}).get();
     }
 
     private boolean mustSaveClinicalObservation(ClinicalObservationBo co) {

@@ -46,10 +46,12 @@ public class TriageMasterDataServiceImpl implements TriageMasterDataService {
     @Override
     public TriageCategoryBo getCategoryById(Short categoryId) {
         LOG.debug("Input parameter -> categoryId {}", categoryId);
-        TriageCategory tc = triageCategoryRepository.getOne(categoryId);
-        TriageCategoryBo result = new TriageCategoryBo(tc);
-        LOG.debug(OUTPUT, result);
-        return result;
+        return triageCategoryRepository.findById(categoryId)
+				.map(tc -> {
+					TriageCategoryBo result = new TriageCategoryBo(tc);
+					LOG.debug(OUTPUT, result);
+					return result;
+				}).get();
     }
 
     @Override

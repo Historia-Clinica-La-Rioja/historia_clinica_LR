@@ -269,7 +269,7 @@ public class PatientController {
 				.orElseThrow(() -> new EntityNotFoundException(PATIENT_INVALID));
 		DoctorsBo doctorsBo = additionalDoctorService.getAdditionalDoctors(patientId);
 		BasicDataPersonDto personData = personExternalService.getBasicDataPerson(patient.getPersonId());
-		PatientType patientType = patientTypeRepository.getOne(patient.getTypeId());
+		PatientType patientType = patientTypeRepository.findById(patient.getTypeId()).get();
 		CompletePatientDto result = new CompletePatientDto(patient, patientType, personData,
 				doctorsBo.getGeneralPractitionerBo() != null
 						? new AAdditionalDoctorDto(doctorsBo.getGeneralPractitionerBo())

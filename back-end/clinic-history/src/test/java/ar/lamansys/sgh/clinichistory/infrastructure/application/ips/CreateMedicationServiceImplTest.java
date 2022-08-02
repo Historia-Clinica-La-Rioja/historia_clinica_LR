@@ -101,7 +101,7 @@ class CreateMedicationServiceImplTest extends UnitRepository {
         Assertions.assertThat(resultMedication.getId())
                 .isNotNull();
 
-        MedicationStatement medicationStatement = medicationStatementRepository.getOne(medication.getId());
+        MedicationStatement medicationStatement = medicationStatementRepository.findById(medication.getId()).get();
 
         Assertions.assertThat(medicationStatement)
                 .isNotNull();
@@ -161,7 +161,7 @@ class CreateMedicationServiceImplTest extends UnitRepository {
         Assertions.assertThat(resultMedication.getId())
                 .isNotNull();
 
-        MedicationStatement medicationStatement = medicationStatementRepository.getOne(medication.getId());
+        MedicationStatement medicationStatement = medicationStatementRepository.findById(medication.getId()).get();
 
         Assertions.assertThat(medicationStatement)
                 .isNotNull();
@@ -219,7 +219,7 @@ class CreateMedicationServiceImplTest extends UnitRepository {
         Assertions.assertThat(resultMedication.getId())
                 .isNotNull();
 
-        MedicationStatement medicationStatement = medicationStatementRepository.getOne(medication.getId());
+        MedicationStatement medicationStatement = medicationStatementRepository.findById(medication.getId()).get();
 
         Assertions.assertThat(medicationStatement)
                 .isNotNull();
