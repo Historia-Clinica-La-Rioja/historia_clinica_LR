@@ -2,7 +2,6 @@
 	<app-typeahead id="select-profession" [options]="professionsTypeahead"
 		[externalSetValue]="initValueTypeaheadProfessions"
 		[titleInput]="'pacientes.edit_prefessions_specialties.profession_specialties.PROFESSION'| translate "
-		[placeholder]="'pacientes.edit_prefessions_specialties.profession_specialties.SELECT_PROFESSION' | translate "
 		(selectionChange)="setProfession($event)" (blur)="onTouched()">
 	</app-typeahead>
 
@@ -11,8 +10,7 @@
 			<div class="form-input" [formGroupName]="formChild" fxFlex="90%">
 				<app-typeahead id="select-specialty" [options]="specialtiesTypeahead"
 					[externalSetValue]="initValueTypeaheadSpecialties[formChild]"
-					[titleInput]="'Espacialidad'| translate "
-					[placeholder]="'pacientes.edit_prefessions_specialties.profession_specialties.SELECT_SPECIALTY' | translate "
+					[titleInput]="'pacientes.edit_prefessions_specialties.profession_specialties.SPECIALTY'| translate "
 					(selectionChange)="setSpeciality($event,formChild)">
 				</app-typeahead>
 				<mat-error *ngIf='hasError()'> {{'pacientes.edit_prefessions_specialties.profession_specialties.ERROR'
