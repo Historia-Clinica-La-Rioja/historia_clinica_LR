@@ -24,7 +24,7 @@ export class EditPrefessionsSpecialtiesComponent implements OnInit {
 	) { }
 
 	ngOnInit(): void {
-		this.ownProfessionsAndSpecialties = this.data.ownProfessionsAndSpecialties;
+		this.ownProfessionsAndSpecialties = this.data.ownProfessionsAndSpecialties.map(e => e);
 
 		this.form = this.formBuilder.group({
 			professionalProfessions: new FormArray([])
