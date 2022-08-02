@@ -2378,8 +2378,8 @@ export interface ProfessionalInfoDto {
 }
 
 export interface ProfessionalLicenseNumberDto extends Serializable {
-    healthcareProfessionalSpecialtyId: number;
-    id: number;
+    healthcareProfessionalSpecialtyId?: number;
+    id?: number;
     licenseNumber: string;
     professionalProfessionId: number;
     typeId: number;

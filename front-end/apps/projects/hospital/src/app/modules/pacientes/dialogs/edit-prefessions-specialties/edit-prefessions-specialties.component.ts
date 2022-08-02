@@ -68,8 +68,10 @@ export class EditPrefessionsSpecialtiesComponent implements OnInit {
 
 	save(): void {
 		this.confirmationValidation = !this.form.valid;
-		const professional: HealthcareProfessionalCompleteDto = this.buildCreateProfessionalDto();
-		this.dialog.close(professional);
+		if (this.form.valid) {
+			const professional: HealthcareProfessionalCompleteDto = this.buildCreateProfessionalDto();
+			this.dialog.close(professional);
+		}
 	}
 
 	private buildCreateProfessionalDto(): HealthcareProfessionalCompleteDto {

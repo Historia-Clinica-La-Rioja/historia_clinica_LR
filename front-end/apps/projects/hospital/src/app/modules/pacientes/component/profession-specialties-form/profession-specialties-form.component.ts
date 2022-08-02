@@ -138,7 +138,7 @@ export class ProfessionSpecialtiesFormComponent implements ControlValueAccessor,
 	hasError(): boolean {
 		const arraySpecialties = this.form.get('specialties') as FormArray;
 		let length = arraySpecialties?.length;
-		return (this.confirmationValidation && (length > 0 ? (arraySpecialties.at(length - 1).value.clinicalSpecialty?.id === null) : false) && (this.form.value.profession !== null));
+		return (this.confirmationValidation && length > 0 ? (arraySpecialties.at(arraySpecialties.length - 1).value.clinicalSpecialty.id === null) : false);
 	}
 
 	isDisableAddSpecialties(): boolean {
