@@ -67,7 +67,7 @@ public class SaveHealthcareProfessional {
 	private void assertHasProfessionalRole(Integer personId) {
 		hospitalUserStorage.getUserDataByPersonId(personId).ifPresent(u -> {
 			if (hospitalUserStorage.hasProfessionalRole(u.getId()))
-				throw new HealthcareProfessionalException(HealthcareProfessionalEnumException.HEALTHCARE_PROFESSIONAL_HAS_ROLE, "user.hasrole");
+				throw new HealthcareProfessionalException(HealthcareProfessionalEnumException.HEALTHCARE_PROFESSIONAL_HAS_ROLE, "El profesional que quiere eliminar tiene un rol asociado");
 		});
 	}
 
