@@ -343,6 +343,7 @@ export class ProfileComponent implements OnInit {
 		const dialog = this.dialog.open(EditPrefessionsSpecialtiesComponent, {
 			width: DIALOG_SIZE,
 			height: DIALOG_SIZE_HEIGHT,
+			disableClose: true,
 			data: {
 				personId: this.personId,
 				id: this.professionalSpecialtyId, allSpecialties: this.allSpecialties, allProfessions: this.allProfessions, ownProfessionsAndSpecialties: this.ownProfessionsAndSpecialties
