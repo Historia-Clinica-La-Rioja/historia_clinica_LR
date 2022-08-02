@@ -19,6 +19,7 @@ import net.pladema.user.repository.UserPersonRepository;
 import net.pladema.user.repository.VHospitalUserRepository;
 import net.pladema.user.repository.entity.UserPerson;
 import net.pladema.user.repository.entity.VHospitalUser;
+import net.pladema.staff.repository.ProfessionalProfessionRepository;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Example;
@@ -49,6 +50,8 @@ public class BackofficeUsersStore implements BackofficeStore<BackofficeUserDto, 
 
 	private final HealthcareProfessionalRepository healthcareProfessionalRepository;
 
+	private final ProfessionalProfessionRepository professionalProfessionRepository;
+
 	private final List<Integer> administratorUserIds;
 
 	private final UserExternalService userExternalService;
@@ -64,7 +67,8 @@ public class BackofficeUsersStore implements BackofficeStore<BackofficeUserDto, 
 								UserRoleDtoMapper userRoleDtoMapper,
 								UserPersonRepository userPersonRepository,
 								HealthcareProfessionalRepository healthcareProfessionalRepository,
-								UserExternalService userExternalService) {
+								UserExternalService userExternalService,
+								ProfessionalProfessionRepository professionalProfessionRepository) {
 		this.vHospitalUserRepository = vHospitalUserRepository;
 		this.userRoleRepository = userRoleRepository;
 		this.userDtoMapper = userDtoMapper;
@@ -74,6 +78,7 @@ public class BackofficeUsersStore implements BackofficeStore<BackofficeUserDto, 
 		this.healthcareProfessionalRepository = healthcareProfessionalRepository;
 		this.administratorUserIds = userRoleRepository.findAllByRoles(List.of(ERole.ROOT.getId()));
 		this.userExternalService = userExternalService;
+		this.professionalProfessionRepository = professionalProfessionRepository;
 	}
 
 	@Override
@@ -265,7 +270,8 @@ public class BackofficeUsersStore implements BackofficeStore<BackofficeUserDto, 
 	private boolean isValidRole(BackofficeUserRoleDto role, Integer personId) {
 		if(!isProfessional(role))
 			return true;
-		return healthcareProfessionalRepository.findProfessionalByPersonId(personId).isPresent();
+		return healthcareProfessionalRepository.findProfessionalByPersonId(personId).map(hp-> professionalProfessionRepository.countActiveByHealthcareProfessionalId(hp)>0)
+                .orElse(false);
 	}
 
 	private boolean isProfessional(BackofficeUserRoleDto role) {
