@@ -772,6 +772,11 @@ export interface DoctorsOfficeDto {
     openingTime: string;
 }
 
+export interface DocumentAppointmentDto {
+    appointmentId: number;
+    documentId: number;
+}
+
 export interface DocumentDto {
     allergies: AllergyConditionDto[];
     anthropometricData: AnthropometricDataDto;
