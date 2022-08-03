@@ -20,7 +20,7 @@ public interface MedicalCoverageRepository extends SGXAuditableEntityJPAReposito
     @Query(value = "SELECT mc FROM MedicalCoverage mc WHERE upper(mc.name) = upper(:name)")
     List<MedicalCoverage> getByName(@Param("name") String name);
 
-    @Transactional
+    @Transactional(readOnly = true)
     @Query(value = "SELECT * FROM medical_coverage mc WHERE mc.cuit = :cuit" ,  nativeQuery=true)
     Optional<MedicalCoverage> getMedicalCoverage(@Param("cuit") String cuit);
 

@@ -18,7 +18,6 @@ public class GetReference {
 
     private final ReferenceStorage referenceStorage;
 
-    @Transactional
     public List<ReferenceGetBo> run(Integer patientId, List<Integer> clinicalSpecialtyIds) {
         log.debug("Input parameters -> patientId {}, clinicalSpecialtyIds {} ", patientId, clinicalSpecialtyIds);
         assertContextValid(patientId, clinicalSpecialtyIds);

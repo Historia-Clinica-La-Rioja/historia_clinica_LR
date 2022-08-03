@@ -53,7 +53,6 @@ public class UserController {
     }
 
     @PostMapping(value = "/person/{personId}")
-    @Transactional
     public Integer createDefaultUser(
             @PathVariable(name = "institutionId") Integer institutionId,
             @PathVariable(name = "personId") Integer personId) {
@@ -64,7 +63,6 @@ public class UserController {
     }
 
     @PutMapping(value = "/user/{userId}")
-    @Transactional
     public ResponseEntity<Boolean> updateEnable(
             @PathVariable(name = "institutionId") Integer institutionId,
             @PathVariable(name = "userId") Integer userId,

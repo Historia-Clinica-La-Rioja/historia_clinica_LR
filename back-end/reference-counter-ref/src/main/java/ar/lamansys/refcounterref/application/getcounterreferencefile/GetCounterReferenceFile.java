@@ -17,7 +17,6 @@ public class GetCounterReferenceFile {
 
     private final ReferenceCounterReferenceFileStorage referenceCounterReferenceFileStorage;
 
-    @Transactional
     public StoredFileBo run(Integer fileId) {
         log.debug("Input parameters -> fileId {}", fileId);
 

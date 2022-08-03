@@ -42,7 +42,6 @@ public class EmergencyCareEpisodeStateController {
 		return ResponseEntity.ok().body(EnumWriter.write(result));
 	}
 
-	@Transactional
 	@PostMapping
 	@PreAuthorize("hasPermission(#institutionId, 'ADMINISTRATIVO, ENFERMERO, ESPECIALISTA_MEDICO, PROFESIONAL_DE_SALUD')")
 	public ResponseEntity<Boolean> changeState(

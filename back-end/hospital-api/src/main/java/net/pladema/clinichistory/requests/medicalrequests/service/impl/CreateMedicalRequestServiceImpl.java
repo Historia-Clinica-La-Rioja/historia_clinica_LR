@@ -10,6 +10,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
+import javax.transaction.Transactional;
+
 @Service
 public class CreateMedicalRequestServiceImpl implements CreateMedicalRequestService {
 
@@ -31,6 +33,7 @@ public class CreateMedicalRequestServiceImpl implements CreateMedicalRequestServ
     }
 
     @Override
+	@Transactional
     public Integer execute(Integer institutionId, MedicalRequestBo medicalRequestBo) {
         LOG.debug("Input parameters -> institutionId {}, medicalRequestBo {}", institutionId, medicalRequestBo);
         Long noteId = noteService.createNote(medicalRequestBo.getObservations());

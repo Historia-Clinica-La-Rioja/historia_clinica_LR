@@ -14,6 +14,8 @@ import net.pladema.clinichistory.hospitalization.service.epicrisis.CreateEpicris
 import net.pladema.clinichistory.hospitalization.service.epicrisis.EpicrisisValidator;
 import net.pladema.clinichistory.hospitalization.service.epicrisis.domain.EpicrisisBo;
 
+import org.springframework.transaction.annotation.Transactional;
+
 @Service
 public class CreateEpicrisisServiceImpl implements CreateEpicrisisService {
 
@@ -37,6 +39,7 @@ public class CreateEpicrisisServiceImpl implements CreateEpicrisisService {
     }
 
     @Override
+	@Transactional
     public EpicrisisBo execute(EpicrisisBo epicrisis, boolean draft) {
         LOG.debug("Input parameters -> epicrisis {}", epicrisis);
 		epicrisisValidator.assertContextValid(epicrisis);

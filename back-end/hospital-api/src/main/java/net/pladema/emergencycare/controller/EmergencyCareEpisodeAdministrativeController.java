@@ -47,7 +47,7 @@ public class EmergencyCareEpisodeAdministrativeController {
 		return ResponseEntity.ok().body(result);
 	}
 
-	@Transactional
+
 	@PutMapping
 	@PreAuthorize("hasPermission(#institutionId, 'ADMINISTRATIVO, ENFERMERO, ESPECIALISTA_MEDICO, PROFESIONAL_DE_SALUD')")
 	public ResponseEntity<Boolean> setPatient(

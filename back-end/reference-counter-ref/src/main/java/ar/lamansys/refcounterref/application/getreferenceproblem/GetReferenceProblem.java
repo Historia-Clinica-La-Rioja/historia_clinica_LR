@@ -16,7 +16,6 @@ public class GetReferenceProblem {
 
     private final ReferenceStorage referenceStorage;
 
-    @Transactional
     public List<ReferenceProblemBo> run(Integer patientId) {
         log.debug("Input parameters -> patientId {} ", patientId);
         return referenceStorage.getReferencesProblems(patientId);

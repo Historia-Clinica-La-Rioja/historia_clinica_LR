@@ -52,6 +52,8 @@ import net.pladema.patient.service.domain.PatientCoverageInsuranceDetailsBo;
 import net.pladema.patient.service.domain.PatientMedicalCoverageBo;
 import net.pladema.staff.repository.HealthcareProfessionalRepository;
 
+import org.springframework.transaction.annotation.Transactional;
+
 @Slf4j
 @Service
 public class AppointmentServiceImpl implements AppointmentService {
@@ -155,6 +157,7 @@ public class AppointmentServiceImpl implements AppointmentService {
 	}
 
 	@Override
+	@Transactional
 	public boolean updateState(Integer appointmentId, short appointmentStateId, Integer userId, String reason) {
 		log.debug("Input parameters -> appointmentId {}, appointmentStateId {}, userId {}, reason {}", appointmentId, appointmentStateId, userId, reason);
 		appointmentRepository.updateState(appointmentId, appointmentStateId, userId);
@@ -335,6 +338,7 @@ public class AppointmentServiceImpl implements AppointmentService {
 	}
 
 	@Override
+	@Transactional
 	public AppointmentBo updateAppointment(UpdateAppointmentBo updateAppointmentBo) {
 		var appointment = appointmentRepository.findById(updateAppointmentBo.getAppointmentId());
 		if(appointment.isPresent()){

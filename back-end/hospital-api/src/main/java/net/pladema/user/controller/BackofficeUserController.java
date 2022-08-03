@@ -34,8 +34,6 @@ public class BackofficeUserController extends AbstractBackofficeController<Backo
 	}
 
 	@PutMapping("/{userId}/reset-2fa")
-	@Modifying
-	@Transactional
 	@PreAuthorize("hasAnyAuthority('ROOT', 'ADMINISTRADOR', 'ADMINISTRADOR_INSTITUCIONAL_BACKOFFICE')")
 	public @ResponseBody
  	Boolean resetTwoFactorAuthentication(@PathVariable("userId") Integer userId) {

@@ -32,7 +32,7 @@ public class EmergencyCareEpisodeAdministrativeDischargeController {
         this.emergencyCareEpisodeAdministrativeDischargeService = emergencyCareEpisodeAdministrativeDischargeService;
     }
 
-    @Transactional
+
     @PostMapping
     public ResponseEntity<Boolean> newAdministrativeDischarge(
             @PathVariable(name = "institutionId") Integer institutionId,
@@ -47,7 +47,7 @@ public class EmergencyCareEpisodeAdministrativeDischargeController {
         return ResponseEntity.ok().body(saved);
     }
 
-    @Transactional
+
     @PostMapping("/absence")
     public ResponseEntity<Boolean> newAdministrativeDischargeByAbsence(
             @PathVariable(name = "institutionId") Integer institutionId,

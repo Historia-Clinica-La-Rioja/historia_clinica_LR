@@ -58,7 +58,7 @@ public class OdontologyConsultationController {
         this.sharedReferenceCounterReference = sharedReferenceCounterReference;
     }
 
-    @Transactional
+
     @ResponseStatus(code = HttpStatus.OK)
     @PostMapping
     @PreAuthorize("hasPermission(#institutionId, 'ESPECIALISTA_EN_ODONTOLOGIA')")

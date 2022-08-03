@@ -22,6 +22,7 @@ import ar.lamansys.sgx.shared.dates.configuration.JacksonDateFormatConfig;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.time.ZoneId;
@@ -113,7 +114,7 @@ public class TriageServiceImpl implements TriageService {
     public TriageBo createPediatric(TriageBo triageBo, Integer institutionId) {
         return persistTriage(triageBo, institutionId, getPediatricConsumer());
     }
-
+	@Transactional
     private TriageBo persistTriage(TriageBo triageBo, Integer institutionId, Consumer<TriageBo> consumer){
         LOG.debug("Input parameter -> triageBo {}, institutionId{}", triageBo, institutionId);
         validTriage(triageBo, institutionId);

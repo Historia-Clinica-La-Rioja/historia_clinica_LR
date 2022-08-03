@@ -18,7 +18,9 @@ import org.springframework.data.domain.ExampleMatcher;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
@@ -99,6 +101,7 @@ public class BackofficeMedicalCoverageMergeStore implements BackofficeStore<Back
                         .orElse(new BackofficeCoverageDto(entity.getId(), entity.getName(), entity.getCuit(),EMedicalCoverageType.OBRASOCIAL.getId(), null,null, true)));
     }
 
+	@Transactional
     public BackofficeCoverageDto merge(Integer id, Integer baseMedicalCoverageId){
 		patientMedicalCoverageRepository.getByMedicalCoverageId(id).forEach(pmc -> {
 			pmc.setMedicalCoverageId(baseMedicalCoverageId);

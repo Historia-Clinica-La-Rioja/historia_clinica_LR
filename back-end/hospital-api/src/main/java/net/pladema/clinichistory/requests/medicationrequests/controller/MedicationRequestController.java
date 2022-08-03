@@ -118,7 +118,6 @@ public class MedicationRequestController {
 
     @PostMapping
     @ResponseStatus(code = HttpStatus.CREATED)
-    @Transactional
     @PreAuthorize("hasPermission(#institutionId, 'ESPECIALISTA_MEDICO, ESPECIALISTA_EN_ODONTOLOGIA')")
     public @ResponseBody
     Integer create(@PathVariable(name = "institutionId") Integer institutionId,
@@ -139,7 +138,6 @@ public class MedicationRequestController {
     @PutMapping(value = "/suspend")
     @ResponseStatus(code = HttpStatus.OK)
     @PreAuthorize("hasPermission(#institutionId, 'ESPECIALISTA_MEDICO, ESPECIALISTA_EN_ODONTOLOGIA')")
-    @Transactional
     public void suspendMedication(@PathVariable(name = "institutionId") Integer institutionId,
                                   @PathVariable(name = "patientId") Integer patientId,
                                   @RequestBody ChangeStateMedicationRequestDto changeStateRequest) {
@@ -154,7 +152,6 @@ public class MedicationRequestController {
     @PutMapping(value = "/finalize")
     @ResponseStatus(code = HttpStatus.OK)
     @PreAuthorize("hasPermission(#institutionId, 'ESPECIALISTA_MEDICO, ESPECIALISTA_EN_ODONTOLOGIA')")
-    @Transactional
     public void finalizeMedication(@PathVariable(name = "institutionId") Integer institutionId,
                         @PathVariable(name = "patientId") Integer patientId,
                         @RequestBody ChangeStateMedicationRequestDto changeStateRequest) {
@@ -168,7 +165,6 @@ public class MedicationRequestController {
     @PutMapping(value = "/reactivate")
     @ResponseStatus(code = HttpStatus.OK)
     @PreAuthorize("hasPermission(#institutionId, 'ESPECIALISTA_MEDICO, ESPECIALISTA_EN_ODONTOLOGIA')")
-    @Transactional
     public void reactivateMedication(@PathVariable(name = "institutionId") Integer institutionId,
                                      @PathVariable(name = "patientId") Integer patientId,
                                      @RequestBody ChangeStateMedicationRequestDto changeStateRequest) {

@@ -79,7 +79,6 @@ public class EvolutionNoteController {
     }
 
     @PostMapping
-    @Transactional
     public ResponseEntity<Boolean> createDocument(
             @PathVariable(name = "institutionId") Integer institutionId,
             @PathVariable(name = "internmentEpisodeId") Integer internmentEpisodeId,
@@ -99,7 +98,6 @@ public class EvolutionNoteController {
     }
 
     @PostMapping("/evolutionDiagnosis")
-    @Transactional
     @InternmentValid
     @EvolutionNoteValid
     public ResponseEntity<Boolean> createEvolutionDiagnosis(
@@ -173,7 +171,6 @@ public class EvolutionNoteController {
 	}
 
 	@PutMapping("/{evolutionNoteId}")
-	@Transactional
 	public ResponseEntity<Long> updateAnamnesis(
 			@PathVariable(name = "institutionId") Integer institutionId,
 			@PathVariable(name = "internmentEpisodeId") Integer internmentEpisodeId,

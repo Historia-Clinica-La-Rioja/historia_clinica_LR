@@ -6,6 +6,7 @@ import net.pladema.user.application.validator.UserValidator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class CreateTokenPasswordImpl implements CreateTokenPassword {
@@ -21,6 +22,7 @@ public class CreateTokenPasswordImpl implements CreateTokenPassword {
     }
 
     @Override
+	@Transactional
     public String run(Integer userId) {
         logger.debug("Input -> userId {}", userId);
         userValidator.assertUpdate(userId);

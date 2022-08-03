@@ -13,6 +13,7 @@ import ar.lamansys.sgh.clinichistory.domain.ips.DiagnosticReportBo;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
 
 import java.util.List;
@@ -39,6 +40,7 @@ public class DeleteDiagnosticReportServiceImpl implements DeleteDiagnosticReport
         this.snomedService = snomedService;
     }
     @Override
+	@Transactional
     public Integer execute(PatientInfoBo patient, Integer diagnosticReportId) {
         LOG.debug("Input: patient: {}, diagnosticReportId: {}", patient, diagnosticReportId);
         Optional<DiagnosticReport> drOpt = diagnosticReportRepository.findById(diagnosticReportId);

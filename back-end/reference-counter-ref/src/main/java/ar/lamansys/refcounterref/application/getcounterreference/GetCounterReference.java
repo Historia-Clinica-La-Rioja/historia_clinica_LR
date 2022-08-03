@@ -15,7 +15,6 @@ public class GetCounterReference {
 
     private final CounterReferenceStorage counterReferenceStorage;
 
-    @Transactional
     public CounterReferenceSummaryBo run(Integer referenceId) {
         log.debug("Input parameters -> referenceId {}", referenceId);
         return counterReferenceStorage.getCounterReference(referenceId);

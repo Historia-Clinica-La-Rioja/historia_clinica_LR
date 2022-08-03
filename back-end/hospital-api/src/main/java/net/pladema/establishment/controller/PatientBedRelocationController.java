@@ -38,7 +38,6 @@ public class PatientBedRelocationController {
 
 
 	@PostMapping("/bed/relocation")
-	@Transactional
 	@PreAuthorize("hasPermission(#institutionId, 'ADMINISTRATIVO')")
 	public ResponseEntity<PatientBedRelocationDto> addPatientBedRelocation(@PathVariable(name = "institutionId") Integer institutionId,
 			@RequestBody PatientBedRelocationDto patientBedRelocationDto) {

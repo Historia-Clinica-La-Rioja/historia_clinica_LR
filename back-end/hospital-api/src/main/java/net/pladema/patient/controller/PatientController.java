@@ -250,7 +250,6 @@ public class PatientController {
 	}
 
 	@PostMapping("/{patientId}/photo")
-	@Transactional
 	public ResponseEntity<Boolean> addPatientPhoto(@PathVariable(name = "patientId") Integer patientId,
 												   @RequestBody PersonPhotoDto personPhotoDto) {
 		LOG.debug("Input parameters -> patientId {}, PersonPhotoDto {}", patientId, personPhotoDto);

@@ -26,8 +26,6 @@ public class BackofficeMedicalCoverageMergeController extends AbstractBackoffice
     }
 
     @PutMapping("/{id}/baseMedicalCoverage/{baseMedicalCoverageId}")
-    @Modifying
-    @Transactional
     public @ResponseBody
     BackofficeCoverageDto update(@PathVariable("id") Integer id,
                                  @PathVariable("baseMedicalCoverageId") Integer baseMedicalCoverageId) {

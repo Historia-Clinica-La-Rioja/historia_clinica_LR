@@ -116,7 +116,6 @@ public class DiaryController {
 
     @PostMapping
     @PreAuthorize("hasPermission(#institutionId, 'ADMINISTRATIVO, ADMINISTRADOR_AGENDA')")
-    @Transactional
     public ResponseEntity<Integer> addDiary(
             @PathVariable(name = "institutionId") Integer institutionId,
             @RequestBody @Valid @NewDiaryPeriodValid @DiaryOpeningHoursValid DiaryADto diaryADto) {

@@ -10,6 +10,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
+import javax.transaction.Transactional;
+
 @Service
 public class EmergencyCareEpisodeStateServiceImpl implements EmergencyCareEpisodeStateService {
 
@@ -42,6 +44,7 @@ public class EmergencyCareEpisodeStateServiceImpl implements EmergencyCareEpisod
 	}
 
 	@Override
+	@Transactional
 	public Boolean changeState(Integer episodeId, Integer institutionId, Short emergencyCareStateId, Integer doctorsOfficeId) {
 		LOG.debug("Input parameters -> episodeId {}, emergencyCareStateId {}, doctorsOfficeId {}",
 				episodeId, emergencyCareStateId, doctorsOfficeId);

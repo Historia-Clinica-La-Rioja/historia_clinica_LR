@@ -11,6 +11,8 @@ import net.pladema.medicalconsultation.appointment.repository.entity.Appointment
 import net.pladema.medicalconsultation.appointment.service.CreateAppointmentService;
 import net.pladema.medicalconsultation.appointment.service.domain.AppointmentBo;
 
+import org.springframework.transaction.annotation.Transactional;
+
 @Slf4j
 @AllArgsConstructor
 @Service
@@ -22,6 +24,7 @@ public class CreateAppointmentServiceImpl implements CreateAppointmentService {
 
 
 	@Override
+	@Transactional
 	public AppointmentBo execute(AppointmentBo appointmentBo) {
 		log.debug("Input parameters -> appointmentBo {}", appointmentBo);
 		Appointment appointment = Appointment.newFromAppointmentBo(appointmentBo);

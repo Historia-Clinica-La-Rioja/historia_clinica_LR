@@ -8,6 +8,7 @@ import org.apache.commons.io.FilenameUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.Arrays;
@@ -30,6 +31,7 @@ public class UploadDiagnosticReportCompletedFileServiceImpl  implements UploadDi
     }
 
     @Override
+	@Transactional
     public List<Integer> execute(MultipartFile[] files, Integer diagnosticReportId, Integer patientId) {
         List<Integer> result = Arrays.stream(files).mapToInt(file -> {
             String newFileName = fileService.createFileName(FilenameUtils.getExtension(file.getOriginalFilename()));

@@ -21,6 +21,7 @@ import net.pladema.permissions.repository.enums.ERole;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityNotFoundException;
 import javax.validation.constraints.NotNull;
@@ -73,6 +74,7 @@ public class DiaryServiceImpl implements DiaryService {
 		return diaryId;
 	}
 
+	@Transactional
 	private Integer persistDiary(DiaryBo diaryToSave, Diary diary) {
 		diary = diaryRepository.save(diary);
 		Integer diaryId = diary.getId();

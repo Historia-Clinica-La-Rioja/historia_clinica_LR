@@ -25,6 +25,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
+import javax.transaction.Transactional;
 import javax.validation.ValidationException;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
@@ -127,6 +128,7 @@ public class EmergencyCareEpisodeServiceImpl implements EmergencyCareEpisodeServ
     }
 
     @Override
+	@Transactional
     public Boolean validateAndSetPatient(Integer episodeId, Integer patientId, Integer institutionId) {
         LOG.debug("Input parameters -> episodeId {}, patientId {}",
                 episodeId, patientId);

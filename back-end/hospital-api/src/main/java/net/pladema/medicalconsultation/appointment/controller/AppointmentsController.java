@@ -126,7 +126,7 @@ public class AppointmentsController {
 		this.dateMapper = dateMapper;
 	}
 
-    @Transactional
+
     @PostMapping
     @PreAuthorize("hasPermission(#institutionId, 'ADMINISTRATIVO, ESPECIALISTA_MEDICO, PROFESIONAL_DE_SALUD, ESPECIALISTA_EN_ODONTOLOGIA, ENFERMERO')")
     @ValidAppointment
@@ -142,7 +142,7 @@ public class AppointmentsController {
         return ResponseEntity.ok().body(result);
     }
 
-    @Transactional
+
     @PostMapping(value = "/update")
     @PreAuthorize("hasPermission(#institutionId, 'ADMINISTRATIVO, ESPECIALISTA_MEDICO, PROFESIONAL_DE_SALUD, ESPECIALISTA_EN_ODONTOLOGIA, ENFERMERO')")
     public ResponseEntity<Integer> update(
@@ -254,7 +254,6 @@ public class AppointmentsController {
     }
 
 
-    @Transactional
     @PutMapping(value = "/{appointmentId}/change-state")
     @PreAuthorize("hasPermission(#institutionId, 'ADMINISTRATIVO, ESPECIALISTA_MEDICO, PROFESIONAL_DE_SALUD, ESPECIALISTA_EN_ODONTOLOGIA, ENFERMERO')")
     public ResponseEntity<Boolean> changeState(

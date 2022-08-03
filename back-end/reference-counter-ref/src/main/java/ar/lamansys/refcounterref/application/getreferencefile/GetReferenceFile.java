@@ -20,7 +20,6 @@ public class GetReferenceFile {
 
     private final ReferenceCounterReferenceFileStorage referenceCounterReferenceFileStorage;
 
-    @Transactional
     public StoredFileBo run(Integer fileId) {
         log.debug("Input parameters -> fileId {}", fileId);
 
@@ -32,7 +31,6 @@ public class GetReferenceFile {
     }
 
 
-    @Transactional
     public List<ReferenceCounterReferenceFileBo> getReferencesFileData(Integer referenceId) {
         log.debug("Input parameters -> referenceId {}", referenceId);
         return referenceCounterReferenceFileStorage.getFilesByReferenceCounterReferenceIdAndType(referenceId, EReferenceCounterReferenceType.REFERENCIA.getId().intValue());

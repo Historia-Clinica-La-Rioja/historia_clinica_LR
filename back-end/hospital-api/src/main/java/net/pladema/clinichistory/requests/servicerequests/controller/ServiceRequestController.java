@@ -198,7 +198,6 @@ public class ServiceRequestController {
     }
 
     @PostMapping(value = "/{diagnosticReportId}/uploadFile", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    @Transactional
     @ResponseStatus(code = HttpStatus.OK)
     @PreAuthorize("hasPermission(#institutionId, 'ESPECIALISTA_MEDICO, ESPECIALISTA_EN_ODONTOLOGIA, PERSONAL_DE_IMAGENES, PERSONAL_DE_LABORATORIO')")
     public List<Integer> uploadFile(@PathVariable(name = "institutionId") Integer institutionId,
@@ -216,7 +215,6 @@ public class ServiceRequestController {
 
 
     @DeleteMapping("/{diagnosticReportId}")
-    @Transactional
     @ResponseStatus(code = HttpStatus.OK)
     @PreAuthorize("hasPermission(#institutionId, 'ESPECIALISTA_MEDICO, ESPECIALISTA_EN_ODONTOLOGIA')")
     public void delete(@PathVariable(name = "institutionId") Integer institutionId,

@@ -14,6 +14,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
+import javax.transaction.Transactional;
+
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 
@@ -34,6 +36,7 @@ public class EmergencyCareEpisodeAdministrativeDischargeServiceImpl implements E
     }
 
     @Override
+	@Transactional
     public boolean newAdministrativeDischarge(AdministrativeDischargeBo administrativeDischargeBo, Integer institutionId, ZoneId institutionZoneId){
         LOG.debug("New administrative discharge  -> administrativeDischargeBo {}, institutionId{}", administrativeDischargeBo, institutionId);
         EmergencyCareDischarge emergencyCareDischarge = emergencyCareEpisodeDischargeRepository.findById(administrativeDischargeBo.getEpisodeId())
@@ -50,6 +53,7 @@ public class EmergencyCareEpisodeAdministrativeDischargeServiceImpl implements E
     }
 
     @Override
+	@Transactional
     public boolean newAdministrativeDischargeByAbsence(Integer episodeId, Integer institutionId, Integer userId, ZoneId institutionZoneId) {
         LOG.debug("New administrative discharge by absence  -> episodeId {}, institutionId{}, userId{}, institutionZoneId{}", episodeId, institutionId, userId, institutionZoneId);
         LocalDateTime localDateTIme = dateTimeProvider.nowDateTimeWithZone(institutionZoneId);

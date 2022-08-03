@@ -73,6 +73,7 @@ public class BedServiceImpl implements BedService {
 	}
 
 	@Override
+	@Transactional
 	public HistoricPatientBedRelocation addPatientBedRelocation(HistoricPatientBedRelocation patientBedRelocation) {
 		LOG.debug("BedService::addPatientBedRelocation-> input parameters -> PatientBedRelocation{} ", patientBedRelocation);
 		if (patientBedRelocation.getOriginBedId() != null) {

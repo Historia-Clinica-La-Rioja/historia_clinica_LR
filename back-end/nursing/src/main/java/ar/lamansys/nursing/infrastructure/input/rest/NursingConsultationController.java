@@ -36,7 +36,7 @@ public class NursingConsultationController {
         this.nursingConsultationMapper = nursingConsultationMapper;
     }
 
-    @Transactional
+
     @ResponseStatus(code = HttpStatus.OK)
     @PostMapping
     @PreAuthorize("hasPermission(#institutionId, 'ENFERMERO')")

@@ -13,6 +13,7 @@ import net.pladema.clinichistory.hospitalization.service.epicrisis.UpdateEpicris
 import net.pladema.clinichistory.hospitalization.service.epicrisis.domain.EpicrisisBo;
 
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Optional;
 
@@ -30,6 +31,7 @@ public class UpdateEpicrisisDraftServiceImpl implements UpdateEpicrisisDraftServ
 
 
 	@Override
+	@Transactional
 	public Long run(Integer intermentEpisodeId, Long oldEpicrisisId, EpicrisisBo newEpicrisis) {
 		log.debug("Input parameters -> intermentEpisodeId {}, oldEpicrisisId {}, newEpicrisis {} ", intermentEpisodeId, oldEpicrisisId, newEpicrisis);
 		EpicrisisBo oldEpicrisis = epicrisisService.getDocument(oldEpicrisisId);

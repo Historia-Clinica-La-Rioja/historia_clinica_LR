@@ -23,7 +23,6 @@ public class UserPasswordResetController {
     }
 
     @PostMapping(value = "/users/institution/{institutionId}/user/{userId}/password-reset")
-    @Transactional
     public String create(@PathVariable(name = "institutionId") Integer institutionId,
                          @PathVariable(name = "userId") Integer userId) {
         logger.debug("Input parameters -> {}", userId);
