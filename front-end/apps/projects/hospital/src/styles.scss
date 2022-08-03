@@ -55,12 +55,15 @@ section {
 
 @media (max-width: $mobile-popups) {
 	div.cdk-global-overlay-wrapper div.cdk-overlay-pane {
-		width: calc(100% - 220px) !important;
+		width: 100% !important;
+
+		&.dock-popup-overlay.minimized {
+			width: calc(100% - 220px) !important;
+		}
 
 		&.dock-popup-overlay.maximized {
 			max-height: 100vh !important;
 			height: 100vh !important;
-			width: 100% !important;
 		}
 	}
 }
