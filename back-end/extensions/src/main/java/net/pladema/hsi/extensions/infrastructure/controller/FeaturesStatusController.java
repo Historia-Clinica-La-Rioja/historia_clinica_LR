@@ -66,6 +66,9 @@ public class FeaturesStatusController {
 	}
 
 	private Stream<UIComponentDto> dataToUIComponent(Map<String, Object> data) {
+		if (data.isEmpty()) {
+			return Stream.empty();
+		}
 		return Stream.of(
 				DIVIDER,
 				new UIComponentDto("json", Map.of(

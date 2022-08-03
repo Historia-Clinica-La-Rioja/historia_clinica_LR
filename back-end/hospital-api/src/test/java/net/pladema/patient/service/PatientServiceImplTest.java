@@ -21,6 +21,9 @@ import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.when;
+
 
 class PatientServiceImplIntegrationTest extends UnitRepository {
 
@@ -47,6 +50,7 @@ class PatientServiceImplIntegrationTest extends UnitRepository {
 
     private PatientService patientService;
 
+	@Mock
     private FeatureFlagsService featureFlagsService;
 
     @BeforeEach
@@ -66,7 +70,7 @@ class PatientServiceImplIntegrationTest extends UnitRepository {
     @Test
     void test_searchPatientOptionalFilters_limitedResultSize(){
         populatePacientRepository(1534);
-
+		when(featureFlagsService.isOn(any())).thenReturn(true);
         PatientSearchFilter patientSearchFilter = new PatientSearchFilter();
         patientSearchFilter.setIdentificationTypeId((short)1);
         var result = patientService.searchPatientOptionalFilters(patientSearchFilter);
@@ -79,7 +83,7 @@ class PatientServiceImplIntegrationTest extends UnitRepository {
     @Test
     void test_searchPatientOptionalFilters_resultSizeLowerThanMax(){
         populatePacientRepository(49);
-
+		when(featureFlagsService.isOn(any())).thenReturn(true);
         PatientSearchFilter patientSearchFilter = new PatientSearchFilter();
         patientSearchFilter.setIdentificationTypeId((short)1);
         var result = patientService.searchPatientOptionalFilters(patientSearchFilter);

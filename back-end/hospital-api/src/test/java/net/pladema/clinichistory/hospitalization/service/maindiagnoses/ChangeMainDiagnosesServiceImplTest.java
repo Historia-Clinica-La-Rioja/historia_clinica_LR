@@ -6,6 +6,10 @@ import ar.lamansys.sgh.clinichistory.application.fetchHospitalizationState.Fetch
 import ar.lamansys.sgh.clinichistory.domain.ips.DocumentObservationsBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.HealthConditionBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.SnomedBo;
+import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.DocumentStatus;
+import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.DocumentType;
+import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.SourceType;
+import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.entity.Document;
 import ar.lamansys.sgx.shared.dates.configuration.DateTimeProvider;
 import ar.lamansys.sgx.shared.exceptions.NotFoundException;
 import ar.lamansys.sgx.shared.featureflags.application.FeatureFlagsService;
@@ -119,7 +123,8 @@ class ChangeMainDiagnosesServiceImplTest extends UnitRepository {
 
     @Test
     void createDocumentWithEpicrisis() {
-        var internmentEpisode = save(newInternmentEpisodeWithEpicrisis(1l));
+		var epicrisisDoc = save (new Document(1, DocumentStatus.FINAL, DocumentType.EPICRISIS, SourceType.HOSPITALIZATION));
+        var internmentEpisode = save(newInternmentEpisodeWithEpicrisis(epicrisisDoc.getId()));
         Exception exception = Assertions.assertThrows(ConstraintViolationException.class, () ->
                 changeMainDiagnosesService.execute(validMainDiagnosisBo(8, internmentEpisode.getId()))
         );

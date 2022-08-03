@@ -1,13 +1,15 @@
 package net.pladema.reports.service;
 
-import net.pladema.reports.repository.ConsultationStorage;
-import net.pladema.reports.service.domain.ConsultationsBo;
+import java.util.Comparator;
+import java.util.List;
+import java.util.stream.Collectors;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
-import java.util.stream.Collectors;
+import net.pladema.reports.repository.ConsultationStorage;
+import net.pladema.reports.service.domain.ConsultationsBo;
 
 @Service
 public class FetchConsultations {
@@ -25,6 +27,7 @@ public class FetchConsultations {
         logger.debug("Input parameter -> patientId {}", patientId);
         List<ConsultationsBo> result = consultationStorage.fetchAllByPatientId(patientId).stream().map(consultationsVo -> new ConsultationsBo(consultationsVo))
                 .collect(Collectors.toList());
+		result.sort(Comparator.comparing(ConsultationsBo::getDocumentId).reversed());
         logger.debug("Output -> {}", result);
         return result;
     }

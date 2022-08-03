@@ -1,12 +1,26 @@
 package ar.lamansys.sgh.publicapi.infrastructure.input.rest.mapper;
 
-import ar.lamansys.sgh.publicapi.domain.*;
-import ar.lamansys.sgh.publicapi.infrastructure.input.rest.dto.*;
-import ar.lamansys.sgx.shared.dates.configuration.LocalDateMapper;
-import org.springframework.stereotype.Component;
-
 import java.util.List;
 import java.util.stream.Collectors;
+
+import org.springframework.stereotype.Component;
+
+import ar.lamansys.sgh.publicapi.domain.AttentionInfoBo;
+import ar.lamansys.sgh.publicapi.domain.BedRelocationInfoBo;
+import ar.lamansys.sgh.publicapi.domain.CoverageActivityInfoBo;
+import ar.lamansys.sgh.publicapi.domain.InternmentBo;
+import ar.lamansys.sgh.publicapi.domain.PersonInfoBo;
+import ar.lamansys.sgh.publicapi.domain.ProfessionalBo;
+import ar.lamansys.sgh.publicapi.domain.SnomedBo;
+import ar.lamansys.sgh.publicapi.infrastructure.input.rest.dto.AttentionInfoDto;
+import ar.lamansys.sgh.publicapi.infrastructure.input.rest.dto.BedRelocationInfoDto;
+import ar.lamansys.sgh.publicapi.infrastructure.input.rest.dto.ClinicalSpecialityDto;
+import ar.lamansys.sgh.publicapi.infrastructure.input.rest.dto.CoverageActivityInfoDto;
+import ar.lamansys.sgh.publicapi.infrastructure.input.rest.dto.InternmentDto;
+import ar.lamansys.sgh.publicapi.infrastructure.input.rest.dto.PersonInfoDto;
+import ar.lamansys.sgh.publicapi.infrastructure.input.rest.dto.ProfessionalDto;
+import ar.lamansys.sgh.publicapi.infrastructure.input.rest.dto.SnomedDto;
+import ar.lamansys.sgx.shared.dates.configuration.LocalDateMapper;
 
 @Component
 public class ActivitiesMapper {
@@ -68,7 +82,7 @@ public class ActivitiesMapper {
                 .firstName(personInfoBo.getFirstName())
                 .lastName(personInfoBo.getLastName())
                 .identificationNumber(personInfoBo.getIdentificationNumber())
-                .genderId(personInfoBo.getGender().getGenderId())
+                .genderId(personInfoBo.getGender().getId())
                 .birthDate(localDateMapper.toDateDto(personInfoBo.getBirthDate()))
                 .build();
     }
@@ -84,8 +98,8 @@ public class ActivitiesMapper {
     private InternmentDto mapToInternment(InternmentBo internmentBo) {
         return InternmentDto.builder()
                 .id(internmentBo.getId())
-                .entryDate(localDateMapper.toDateDto(internmentBo.getEntryDate()))
-                .dischargeDate(localDateMapper.toDateDto(internmentBo.getDischargeDate()))
+                .entryDate(localDateMapper.toDateTimeDto(internmentBo.getEntryDate()))
+                .dischargeDate(localDateMapper.toDateTimeDto(internmentBo.getDischargeDate()))
                 .build();
     }
 

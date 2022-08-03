@@ -9,8 +9,6 @@ import ar.lamansys.sgh.clinichistory.infrastructure.input.rest.ips.dto.DocumentO
 import net.pladema.clinichistory.hospitalization.controller.dto.ResponsibleDoctorDto;
 
 import java.io.Serializable;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.List;
 
 @Getter
@@ -35,5 +33,9 @@ public class DocumentSearchDto implements Serializable {
     private String message;
 
     private String documentType;
+
+	private DateTimeDto editedOn;
+    
+	private boolean confirmed;
 
 }

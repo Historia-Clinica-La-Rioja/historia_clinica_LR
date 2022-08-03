@@ -38,6 +38,11 @@
 			}
 		}
 	},
+	"spring": {
+		"mail": {
+			"TITLE": "Mail"
+		}
+	},
 	"ws": {
 		"snowstorm": {
 			"TITLE": "Snowstorm"

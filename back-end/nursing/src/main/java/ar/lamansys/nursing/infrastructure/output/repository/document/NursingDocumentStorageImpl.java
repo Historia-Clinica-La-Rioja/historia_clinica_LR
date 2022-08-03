@@ -1,15 +1,16 @@
 package ar.lamansys.nursing.infrastructure.output.repository.document;
 
-import ar.lamansys.nursing.domain.document.NursingDocumentBo;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Service;
+
 import ar.lamansys.nursing.application.port.NursingDocumentStorage;
+import ar.lamansys.nursing.domain.document.NursingDocumentBo;
 import ar.lamansys.nursing.infrastructure.output.repository.document.mapper.NursingDocumentMapper;
 import ar.lamansys.sgh.clinichistory.infrastructure.input.service.DocumentExternalFactory;
 import ar.lamansys.sgh.clinichistory.infrastructure.input.service.dto.DocumentDto;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.DocumentType;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.SourceType;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.stereotype.Service;
 
 @Service
 public class NursingDocumentStorageImpl implements NursingDocumentStorage {
@@ -26,10 +27,10 @@ public class NursingDocumentStorageImpl implements NursingDocumentStorage {
     }
 
     @Override
-    public void save(NursingDocumentBo nursingDocumentBo) {
+    public Long save(NursingDocumentBo nursingDocumentBo) {
         LOG.debug("Save new nursing cosultation document -> {}", nursingDocumentBo);
         DocumentDto documentDto = mapTo(nursingDocumentBo);
-        documentExternalFactory.run(documentDto, true);
+        return documentExternalFactory.run(documentDto, true);
     }
 
     private DocumentDto mapTo(NursingDocumentBo nursingDocumentBo) {

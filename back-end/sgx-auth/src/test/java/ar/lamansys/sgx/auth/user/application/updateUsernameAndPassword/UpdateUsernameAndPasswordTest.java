@@ -45,7 +45,7 @@ class UpdateUsernameAndPasswordTest {
     @Test
     @DisplayName("Reset password success")
     void resetPasswordSuccess() {
-        UserBo userBo = new UserBo(1, "username", true, "password", "salt", "hashAlgoritm", LocalDateTime.of(2020,01,01,10,10));
+        UserBo userBo = new UserBo(1, "username", true, "password", "salt", "hashAlgoritm", LocalDateTime.of(2020,01,01,10,10), LocalDateTime.of(2020,01,01,01,01));
 
         when(userStorage.getUser(1))
                 .thenReturn(userBo);

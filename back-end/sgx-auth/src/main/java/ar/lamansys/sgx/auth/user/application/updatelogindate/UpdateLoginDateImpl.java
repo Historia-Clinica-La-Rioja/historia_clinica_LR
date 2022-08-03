@@ -27,8 +27,9 @@ public class UpdateLoginDateImpl implements UpdateLoginDate {
     public void execute(String username) {
         logger.debug("Enable user -> {}", username);
         UserBo user = userStorage.getUser(username);
+		user.setPrevoiusLogin(user.getLastLogin());
         user.setLastLogin(dateTimeProvider.nowDateTime());
-        userStorage.update(user);
+		userStorage.update(user);
     }
 
 }

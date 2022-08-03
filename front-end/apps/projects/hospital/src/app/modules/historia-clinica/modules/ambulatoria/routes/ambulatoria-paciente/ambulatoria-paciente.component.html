@@ -90,9 +90,19 @@
 			<div buttons-content fxLayout="column" fxLayoutGap="10px" fxLayout.xs="row" fxLayoutAlign="center center">
 				<ng-container *ngIf="currentUserIsAllowedToDoAConsultation else hasOdontologyRole">
 					<button id="acciones" mat-flat-button color="primary" mat-button [matMenuTriggerFor]="menu"
-						*ngIf="(hasInternmentEpisodeInThisInstitution && !hasMedicalDischarge && hasMedicalRole) || (hasInternmentEpisodeInThisInstitution && !epicrisisDoc?.confirmed && !hasMedicalRole) || (hasNewConsultationEnabled$ | async)">
+						*ngIf="!((isNewConsultationButtonEnabled() && (hasMedicalRole || hasHealthProfessionalRole)) || (isNewConsultationButtonEnabled() && hasNurseRole))">
 						{{ 'ambulatoria.paciente.card.buttons.actions.ACTIONS' | translate | uppercase }}
 					</button>
+					<ng-container *ngIf="hasNewConsultationEnabled$ | async">
+						<button id="nueva_consulta_ambulatoria" mat-flat-button color="primary" mat-button (click)="referenceNotificationService.hasReferenceNotification()"
+							*ngIf="isNewConsultationButtonEnabled() && (hasMedicalRole || hasHealthProfessionalRole)">
+							{{ 'ambulatoria.paciente.card.buttons.actions.NUEVA_CONSULTA' | translate | uppercase }}
+						</button>
+						<button id="nueva_consulta_enfermeria" mat-flat-button color="primary" mat-button (click)="openNuevaConsultaEnfermeria()"
+							*ngIf="isNewConsultationButtonEnabled() && hasNurseRole">
+							{{ 'ambulatoria.paciente.card.buttons.actions.NUEVA_CONSULTA' | translate | uppercase }}
+						</button>
+					</ng-container>
 				</ng-container>
 
 				<ng-template #hasOdontologyRole>
@@ -108,17 +118,19 @@
 						*ngIf="(hasInternmentEpisodeInThisInstitution && !hasMedicalDischarge && hasMedicalRole) || (hasInternmentEpisodeInThisInstitution && !epicrisisDoc?.confirmed && !hasMedicalRole)">
 						<mat-label class="actions-labels color-grey">
 							{{'ambulatoria.paciente.internacion.TAB_LABEL' | translate | uppercase }}</mat-label>
+						<ng-container *ngIf="!epicrisisDoc?.confirmed">
+							<ng-container
+								*appHasRole="['ESPECIALISTA_MEDICO', 'ENFERMERO_ADULTO_MAYOR','ENFERMERO','PROFESIONAL_DE_SALUD', 'ESPECIALISTA_EN_ODONTOLOGIA']">
+								<button mat-menu-item class="actions" (click)="openInternmentAction(1)">
+									{{'ambulatoria.paciente.card.buttons.actions.EVOLUTION_NOTE' | translate}}</button>
+							</ng-container>
+						</ng-container>
 						<ng-container *ngIf="!epicrisisDoc">
 							<ng-container *ngIf="!anamnesisDoc?.confirmed">
 								<button mat-menu-item class="actions"
 									*appHasRole="['ESPECIALISTA_MEDICO', 'ENFERMERO_ADULTO_MAYOR']"
 									(click)="openInternmentAction(0)">
 									{{'ambulatoria.paciente.card.buttons.actions.ANAMNESIS' | translate}}</button>
-							</ng-container>
-							<ng-container
-								*appHasRole="['ESPECIALISTA_MEDICO', 'ENFERMERO_ADULTO_MAYOR','ENFERMERO','PROFESIONAL_DE_SALUD', 'ESPECIALISTA_EN_ODONTOLOGIA']">
-								<button mat-menu-item class="actions" (click)="openInternmentAction(1)">
-									{{'ambulatoria.paciente.card.buttons.actions.EVOLUTION_NOTE' | translate}}</button>
 							</ng-container>
 							<ng-container *ngIf="anamnesisDoc?.confirmed && lastEvolutionNoteDoc?.confirmed">
 								<button mat-menu-item *appHasRole="['ESPECIALISTA_MEDICO']" class="actions"

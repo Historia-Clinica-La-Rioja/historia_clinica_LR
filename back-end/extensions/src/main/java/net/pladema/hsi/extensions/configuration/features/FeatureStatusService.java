@@ -7,6 +7,11 @@ import java.util.function.Supplier;
 
 import org.springframework.scheduling.annotation.Scheduled;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+
+import lombok.extern.slf4j.Slf4j;
+
 /**
  * Los módulos pueden implementar este servicio para que se incluya en el menú de la aplicación un acceso
  * para ver el estado del módulo. Útil para mostrar configuración y estado de la integración con servicios
@@ -17,8 +22,10 @@ import org.springframework.scheduling.annotation.Scheduled;
  * último estado.
  *
  */
+@Slf4j
 public class FeatureStatusService {
 	public static final Supplier<Map<String, Object>> FEATURE_DISABLED = () -> Collections.emptyMap();
+	private static final ObjectMapper MAPPER = new ObjectMapper();
 	private final String prefix;
 	private final Supplier<Map<String, Object>> statusData;
 	private final Supplier<List<FeatureProperty>> properties;
@@ -56,10 +63,21 @@ public class FeatureStatusService {
 			try {
 				lastStatusData = statusData.get();
 			} catch (Exception e) {
-				lastStatusData = Map.of("error", e);
+				lastStatusData = Map.of(
+						"error", e.getMessage(),
+						"cause", formatCause(e.getCause())
+				);
 			}
 		}
 		needToUpdateLastStatusData = false;
 	}
 
+	private static Object formatCause(Throwable cause) {
+		try {
+			return MAPPER.readValue(MAPPER.writeValueAsString(cause), Object.class);
+		} catch (JsonProcessingException e) {
+			log.debug("Couldn't format cause", cause);
+		}
+		return "-no se pudo formatear la causa-";
+	}
 }

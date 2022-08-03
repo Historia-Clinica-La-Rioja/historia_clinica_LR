@@ -6,8 +6,6 @@ import net.pladema.staff.repository.HealthcareProfessionalSpecialtyRepository;
 import net.pladema.staff.repository.entity.HealthcareProfessionalSpecialty;
 import org.springframework.stereotype.Component;
 
-import java.util.Optional;
-
 @Component
 public class HealthcareProfessionalSpecialtyEntityValidator extends BackofficeEntityValidatorAdapter<HealthcareProfessionalSpecialty, Integer> {
 

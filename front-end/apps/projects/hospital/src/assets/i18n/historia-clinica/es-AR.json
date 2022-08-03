@@ -1,5 +1,8 @@
 {
 	"historia-clinica": {
+		"new-consultation-expansion-section": {
+			"RECOMMEND": "Recomendado"
+		},
 		"summary-card": {
 			"evolution-notes-filter": {
 				"filterFieldIsRequiredWhenInputIsSet": "Debe seleccionar un tipo de filtro",

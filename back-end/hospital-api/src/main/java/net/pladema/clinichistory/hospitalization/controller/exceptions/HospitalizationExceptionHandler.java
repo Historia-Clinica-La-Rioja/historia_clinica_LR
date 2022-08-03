@@ -5,7 +5,6 @@ import net.pladema.clinichistory.hospitalization.service.impl.exceptions.CreateI
 import net.pladema.clinichistory.hospitalization.service.impl.exceptions.InternmentDocumentException;
 import net.pladema.clinichistory.hospitalization.service.impl.exceptions.SaveMedicalDischargeException;
 import net.pladema.sgx.exceptions.PermissionDeniedException;
-import net.pladema.clinichistory.hospitalization.service.servicerequest.exception.CreateInternmentServiceRequestEnumException;
 import net.pladema.clinichistory.hospitalization.service.servicerequest.exception.CreateInternmentServiceRequestException;
 
 import org.slf4j.Logger;

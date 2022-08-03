@@ -1,9 +1,9 @@
-import { Component, ComponentFactoryResolver, OnInit, ViewContainerRef } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Observable } from 'rxjs';
 import { MatTabChangeEvent } from '@angular/material/tabs';
-import {AppFeature, EMedicalCoverageTypeDto, ERole} from '@api-rest/api-model';
-import { EvaluationNoteSummaryDto, AnamnesisSummaryDto, EpicrisisSummaryDto, BasicPatientDto, OrganizationDto, PatientSummaryDto, PersonPhotoDto, HCEAnthropometricDataDto, InternmentEpisodeProcessDto, ExternalPatientCoverageDto, EmergencyCareEpisodeInProgressDto } from '@api-rest/api-model';
+import { AppFeature, EMedicalCoverageTypeDto, ERole } from '@api-rest/api-model';
+import { EvaluationNoteSummaryDto, AnamnesisSummaryDto, EpicrisisSummaryDto, BasicPatientDto, OrganizationDto, PatientSummaryDto, PersonPhotoDto, InternmentEpisodeProcessDto, ExternalPatientCoverageDto, EmergencyCareEpisodeInProgressDto } from '@api-rest/api-model';
 import { PatientService } from '@api-rest/services/patient.service';
 import { InteroperabilityBusService } from '@api-rest/services/interoperability-bus.service';
 import { PatientBasicData } from '@presentation/components/patient-card/patient-card.component';
@@ -39,13 +39,14 @@ import { AppRoutes } from 'projects/hospital/src/app/app-routing.module';
 import { HomeRoutes } from 'projects/hospital/src/app/modules/home/home-routing.module';
 import { EmergencyCareEpisodeSummaryService } from "@api-rest/services/emergency-care-episode-summary.service";
 import { RequestMasterDataService } from '@api-rest/services/request-masterdata.service';
-import { InternacionPacienteComponent } from "@historia-clinica/modules/ambulatoria/modules/internacion/routes/internacion-paciente/internacion-paciente.component";
 import { InternmentSummaryFacadeService } from "@historia-clinica/modules/ambulatoria/modules/internacion/services/internment-summary-facade.service";
 import { PatientAllergiesService } from '../../services/patient-allergies.service';
 import { AppointmentsService } from '@api-rest/services/appointments.service';
 import { SummaryCoverageInformation } from '../../components/medical-coverage-summary-view/medical-coverage-summary-view.component';
 import { InternmentStateService } from '@api-rest/services/internment-state.service';
 import { EMedicalCoverageType } from "@pacientes/dialogs/medical-coverage/medical-coverage.component";
+import { InternmentActionsService } from "@historia-clinica/modules/ambulatoria/modules/internacion/services/internment-actions.service";
+import { HEALTH_VERIFICATIONS } from '../../modules/internacion/constants/ids';
 
 const RESUMEN_INDEX = 0;
 const VOLUNTARY_ID = 1;
@@ -91,8 +92,11 @@ export class AmbulatoriaPacienteComponent implements OnInit {
 	hasMedicalDischarge: boolean;
 	currentUserIsAllowedToDoAConsultation = false;
 	hasMedicalRole = false;
+	hasNurseRole = false;
+	hasHealthProfessionalRole = false;
 	internmentAction: InternmentActions;
 	appointmentConfirmedCoverageInfo: ExternalPatientCoverageDto;
+	PRESUMPTIVE = HEALTH_VERIFICATIONS.PRESUNTIVO;
 
 	private timeOut = 15000;
 	private isOpenOdontologyConsultation = false;
@@ -119,13 +123,12 @@ export class AmbulatoriaPacienteComponent implements OnInit {
 		private readonly contextService: ContextService,
 		private readonly router: Router,
 		private readonly emergencyCareEpisodeSummaryService: EmergencyCareEpisodeSummaryService,
-		private readonly componentFactoryResolver: ComponentFactoryResolver,
-		private viewContainerRef: ViewContainerRef,
 		readonly internmentSummaryFacadeService: InternmentSummaryFacadeService,
 		readonly patientAllergies: PatientAllergiesService,
 		private readonly appointmentsService: AppointmentsService,
 		private readonly internmentStateService: InternmentStateService,
 		private readonly requestMasterDataService: RequestMasterDataService,
+		private readonly internmentActionsService: InternmentActionsService
 
 	) {
 		if (this.router.getCurrentNavigation()?.extras?.state?.appointmentCoverageInfo) {
@@ -156,6 +159,7 @@ export class AmbulatoriaPacienteComponent implements OnInit {
 					(internmentEpisodeProcess: InternmentEpisodeProcessDto) => {
 						this.internmentEpisodeProcess = internmentEpisodeProcess
 						if (this.internmentEpisodeProcess.id && this.internmentEpisodeProcess.inProgress) {
+							this.internmentActionsService.setInternmentInformation(this.patientId, this.internmentEpisodeProcess.id);
 							if (!this.summaryCoverageInfo) {
 								this.hceGeneralStateService.getInternmentEpisodeMedicalCoverage(this.patientId, this.internmentEpisodeProcess.id).subscribe(
 									(data: ExternalPatientCoverageDto) => this.internmentEpisodeCoverageInfo = data
@@ -334,12 +338,14 @@ export class AmbulatoriaPacienteComponent implements OnInit {
 	}
 
 	setActionsLayout(): void {
-		this.CurrentUserIsAllowedToMakeBothQueries = false
+		this.CurrentUserIsAllowedToMakeBothQueries = false;
 		this.permissionsService.contextAssignments$().subscribe((userRoles: ERole[]) => {
 			this.CurrentUserIsAllowedToMakeBothQueries = (anyMatch<ERole>(userRoles, [ERole.ENFERMERO]) &&
 				(anyMatch<ERole>(userRoles, [ERole.PROFESIONAL_DE_SALUD, ERole.ESPECIALISTA_MEDICO])))
 			this.currentUserIsAllowedToDoAConsultation = (anyMatch<ERole>(userRoles, [ERole.PROFESIONAL_DE_SALUD, ERole.ESPECIALISTA_MEDICO, ERole.ENFERMERO]));
 			this.hasMedicalRole = anyMatch<ERole>(userRoles, [ERole.ESPECIALISTA_MEDICO]);
+			this.hasNurseRole = anyMatch<ERole>(userRoles, [ERole.ENFERMERO]);
+			this.hasHealthProfessionalRole = anyMatch<ERole>(userRoles, [ERole.PROFESIONAL_DE_SALUD]);
 		});
 	}
 
@@ -373,40 +379,38 @@ export class AmbulatoriaPacienteComponent implements OnInit {
 	}
 
 	openInternmentAction(internmentActionId: number): void {
-		const component = this.componentFactoryResolver.resolveComponentFactory(InternacionPacienteComponent);
-		const internmentComponent = this.viewContainerRef.createComponent(component);
-		this.viewContainerRef.clear();
-		internmentComponent.instance.internmentEpisodeId = this.internmentEpisodeProcess.id;
-		internmentComponent.instance.patientId = this.patientId;
 
 		if (InternmentActions.anamnesis === internmentActionId) {
 			this.internmentStateService.getDiagnosesGeneralState(this.internmentEpisodeProcess.id).subscribe(diagnoses => {
-				diagnoses.forEach(modifiedDiagnosis => modifiedDiagnosis.presumptive = modifiedDiagnosis.verificationId === '76104008');
-				internmentComponent.instance.diagnosticos = diagnoses;
-				internmentComponent.instance.openAnamnesis();
+				diagnoses.forEach(modifiedDiagnosis => modifiedDiagnosis.presumptive = modifiedDiagnosis.verificationId === this.PRESUMPTIVE);
+				this.internmentActionsService.mainDiagnosis = diagnoses.filter(diagnosis => diagnosis.main)[0];
+				if (this.internmentActionsService.mainDiagnosis)
+					this.internmentActionsService.mainDiagnosis.isAdded = true;
+				this.internmentActionsService.diagnosticos = diagnoses.filter(diagnosis => !diagnosis.main);
+				this.internmentActionsService.openAnamnesis();
 			});
 			return;
 		}
 
 		if (InternmentActions.evolutionNote === internmentActionId) {
 			this.internmentStateService.getDiagnosesGeneralState(this.internmentEpisodeProcess.id).subscribe(diagnoses => {
-				diagnoses.forEach(modifiedDiagnosis => modifiedDiagnosis.presumptive = modifiedDiagnosis.verificationId === '76104008');
-				internmentComponent.instance.mainDiagnosis = diagnoses.filter(diagnosis => diagnosis.main)[0];
-				if (internmentComponent.instance.mainDiagnosis)
-					internmentComponent.instance.mainDiagnosis.isAdded = true;
-				internmentComponent.instance.diagnosticos = diagnoses.filter(diagnosis => !diagnosis.main);
-				internmentComponent.instance.openEvolutionNote();
+				diagnoses.forEach(modifiedDiagnosis => modifiedDiagnosis.presumptive = modifiedDiagnosis.verificationId === this.PRESUMPTIVE);
+				this.internmentActionsService.mainDiagnosis = diagnoses.filter(diagnosis => diagnosis.main)[0];
+				if (this.internmentActionsService.mainDiagnosis)
+					this.internmentActionsService.mainDiagnosis.isAdded = true;
+				this.internmentActionsService.diagnosticos = diagnoses.filter(diagnosis => !diagnosis.main);
+				this.internmentActionsService.openEvolutionNote();
 			});
 			return;
 		}
 
 		if (InternmentActions.epicrisis === internmentActionId) {
-			internmentComponent.instance.openEpicrisis();
+			this.internmentActionsService.openEpicrisis();
 			return;
 		}
 
 		if (InternmentActions.medicalDischarge === internmentActionId) {
-			internmentComponent.instance.openMedicalDischarge();
+			this.internmentActionsService.openMedicalDischarge();
 		}
 	}
 
@@ -456,8 +460,8 @@ export class AmbulatoriaPacienteComponent implements OnInit {
 		return summaryInfo;
 	}
 
-	getMedicalCoverageType(type : EMedicalCoverageTypeDto){
-		switch (type){
+	getMedicalCoverageType(type: EMedicalCoverageTypeDto) {
+		switch (type) {
 			case EMedicalCoverageTypeDto.OBRASOCIAL: return EMedicalCoverageType.OBRASOCIAL;
 			case EMedicalCoverageTypeDto.PREPAGA: return EMedicalCoverageType.PREPAGA;
 			case EMedicalCoverageTypeDto.ART: return EMedicalCoverageType.ART;
@@ -468,6 +472,11 @@ export class AmbulatoriaPacienteComponent implements OnInit {
 		if (this.summaryCoverageInfo || this.appointmentConfirmedCoverageInfo)
 			return true;
 		return false;
+	}
+
+	isNewConsultationButtonEnabled(): boolean {
+		return (this.hasNewConsultationEnabled$ && (!((this.hasInternmentEpisodeInThisInstitution && !this.hasMedicalDischarge && this.hasMedicalRole) ||
+			(this.hasInternmentEpisodeInThisInstitution && !this.epicrisisDoc?.confirmed && !this.hasMedicalRole))) && !this.CurrentUserIsAllowedToMakeBothQueries);
 	}
 }
 

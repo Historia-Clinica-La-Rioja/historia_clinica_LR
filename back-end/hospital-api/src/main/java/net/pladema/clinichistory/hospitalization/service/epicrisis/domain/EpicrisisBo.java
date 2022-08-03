@@ -62,7 +62,13 @@ public class EpicrisisBo extends SelfValidating<EpicrisisBo> implements IDocumen
 
     private LocalDateTime performedDate;
 
-    @Override
+	private Long initialDocumentId;
+
+	private String modificationReason;
+	
+	private boolean confirmed;
+
+	@Override
     public Integer getPatientId() {
         if (patientInfo != null)
             return patientInfo.getId();
@@ -77,4 +83,7 @@ public class EpicrisisBo extends SelfValidating<EpicrisisBo> implements IDocumen
     public Short getDocumentSource() {
         return SourceType.HOSPITALIZATION;
     }
+
+	public Long getPreviousDocumentId () { return getInitialDocumentId() == null ? getId() : getInitialDocumentId(); }
+
 }

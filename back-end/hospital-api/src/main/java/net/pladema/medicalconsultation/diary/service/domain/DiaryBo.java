@@ -37,5 +37,7 @@ public class DiaryBo {
     protected List<DiaryOpeningHoursBo> diaryOpeningHours;
     
     protected boolean deleted = false;
+
+	protected Integer clinicalSpecialtyId;
     
 }

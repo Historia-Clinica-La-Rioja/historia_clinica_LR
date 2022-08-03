@@ -41,8 +41,8 @@ export class AmbulatoryConsultationReferenceService {
 			careLines => {
 				this.careLines = careLines;
 				this.careLines.forEach(careLine => {
-					this.clinicalSpecialtyCareLine.getSpecialtyCareLine(careLine.id).subscribe((specialty: ClinicalSpecialtyDto[]) => {
-						specialty.forEach((specialty: ClinicalSpecialtyDto) => this.specialties.push(specialty));
+					this.clinicalSpecialtyCareLine.getSpecialtyCareLine(careLine.id).subscribe((specialties: ClinicalSpecialtyDto[]) => {
+						specialties.forEach((specialty: ClinicalSpecialtyDto) => this.specialties.push(specialty));
 					});
 				});
 			});
@@ -59,10 +59,10 @@ export class AmbulatoryConsultationReferenceService {
 		});
 		dialogRef.afterClosed().subscribe(reference => {
 			if (reference.data) {
-				let ref = { referenceNumber: this.references.length, referenceFiles: [], referenceIds: [], referenceProblems:  reference.problems}
+				let ref = { referenceNumber: this.references.length, referenceFiles: [], referenceIds: [], referenceProblems: reference.problems }
 				if (reference.files.length) {
 					let referenceIds: number[] = [];
-					ref = { referenceNumber: this.references.length, referenceFiles: reference.files, referenceIds: referenceIds, referenceProblems:  reference.problems}
+					ref = { referenceNumber: this.references.length, referenceFiles: reference.files, referenceIds: referenceIds, referenceProblems: reference.problems }
 				}
 				this.references.push(ref);
 				this.outpatientReferences.push(reference.data);
@@ -119,9 +119,14 @@ export class AmbulatoryConsultationReferenceService {
 		});
 	}
 
-	getReferenceProblems(referenceId: number): HCEPersonalHistory[]{
+	getReferenceProblems(referenceId: number): HCEPersonalHistory[] {
 		return this.references[referenceId].referenceProblems
 	}
+
+	isEmpty(): boolean {
+		return (!this.outpatientReferences || this.outpatientReferences.length === 0);
+	}
+
 }
 
 export interface Reference {

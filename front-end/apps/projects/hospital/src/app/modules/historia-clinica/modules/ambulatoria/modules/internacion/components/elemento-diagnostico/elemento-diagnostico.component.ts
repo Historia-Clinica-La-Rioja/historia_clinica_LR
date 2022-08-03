@@ -1,4 +1,5 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { HEALTH_CLINICAL_STATUS, HEALTH_VERIFICATIONS } from './../../constants/ids';
+import { Component, Input } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { DiagnosisDto } from '@api-rest/api-model';
 import { DiagnosisCreationEditionComponent } from '../../dialogs/diagnosis-creation-edition/diagnosis-creation-edition.component';
@@ -8,7 +9,7 @@ import { DiagnosisCreationEditionComponent } from '../../dialogs/diagnosis-creat
 	templateUrl: './elemento-diagnostico.component.html',
 	styleUrls: ['./elemento-diagnostico.component.scss']
 })
-export class ElementoDiagnosticoComponent implements OnInit {
+export class ElementoDiagnosticoComponent {
 
 	@Input()
 	diagnosis: DiagnosisDto;
@@ -16,10 +17,13 @@ export class ElementoDiagnosticoComponent implements OnInit {
 	@Input()
 	isMain: boolean;
 
-	constructor(public dialog: MatDialog) { }
+	ACTIVE = HEALTH_CLINICAL_STATUS.ACTIVO;
+	REMISSION = HEALTH_CLINICAL_STATUS.REMISION;
+	RESOLVED = HEALTH_CLINICAL_STATUS.RESUELTO;
+	CONFIRMED = HEALTH_VERIFICATIONS.CONFIRMADO;
+	DISCARDED = HEALTH_VERIFICATIONS.DESCARTADO;
 
-  	ngOnInit(): void {
-  	}
+	constructor(public dialog: MatDialog) { }
 
 	openDiagnosisEditionDialog() {
 		const dialogRef = this.dialog.open(DiagnosisCreationEditionComponent, {

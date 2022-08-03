@@ -53,4 +53,10 @@ public class MedicationBo extends ClinicalTerm {
         return suspended ? MedicationStatementStatus.SUSPENDED : statusId;
     }
 
+	@Override
+	public boolean equals(ClinicalTerm c){
+		return super.equals(c)&&
+				((MedicationBo)c).isSuspended()==isSuspended();
+	}
+
 }

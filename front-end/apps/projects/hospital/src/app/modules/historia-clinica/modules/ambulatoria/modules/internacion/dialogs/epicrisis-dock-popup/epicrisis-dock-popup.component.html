@@ -1,5 +1,16 @@
 <app-dock-popup [dockPopupRef]="dockPopupRef" [title]="'internaciones.epicrisis.TITLE'" *ngIf="waitToResponse">
 	<div body fxLayout="column" fxLayoutGap="20px">
+		<div *ngIf="showWarning">
+			<mat-card class="background-primary">
+				<mat-card-content fxLayout="row" fxLayoutGap="10px">
+					<mat-icon color="primary">error_outline</mat-icon>
+					<div fxLayout="column" >
+						<span [translate]="'internaciones.epicrisis.warning-dialog.FIRST_TEXT'"></span>
+						<a class="bold"  [translate]="'internaciones.epicrisis.warning-dialog.SECOND_TEXT'"></a>
+					</div>
+				</mat-card-content>
+			</mat-card>
+		</div>
 		<form id="epicrisis-form" (keydown.enter)="false" [formGroup]="form">
 			<div id="mainDiagnosis">
 				<h2 class="mat-h2" [translate]="'internaciones.epicrisis.diagnosticos.TITLE'"></h2>
@@ -305,10 +316,23 @@
 			</div>
 		</form>
 	</div>
-	<div actions id="buttons" align="end">
-		<button id="sign-confirm" type="button" mat-raised-button color="primary"
-				*appHasRole="['ESPECIALISTA_MEDICO']" (click)="save()">
-			<span class="uppercase" [translate]="'internaciones.epicrisis.buttons.CONFIRM'"></span>
-		</button>
+
+	<div actions id="buttons" fxLayoutGap="10px" fxLayoutAlign="end">
+			<button id="sign-draft" type="button"  mat-stroked-button color="primary"
+				*appHasRole="['ESPECIALISTA_MEDICO']" (click)="saveDraft()" [disabled]="isDisableConfirmButton">
+			<span class="uppercase" [translate]="'internaciones.epicrisis.buttons.SAVE_DRAFT'"></span>
+			</button>
+		<div *ngIf="!isDraft">
+			<button [disabled]="isDisableConfirmButton" id="sign-confirm" type="button" mat-raised-button color="primary"
+					*appHasRole="['ESPECIALISTA_MEDICO']" (click)="save()">
+				<span class="uppercase" [translate]="'internaciones.epicrisis.buttons.CONFIRM'"></span>
+			</button>
+		</div>
+		<div *ngIf="isDraft && canConfirmedDocument">
+			<button id="sign-confirm-draft" type="button" mat-raised-button color="primary"
+					*appHasRole="['ESPECIALISTA_MEDICO']" (click)="saveConfirmedDraft()" [disabled]="isDisableConfirmButton">
+				<span class="uppercase"  [translate]="'internaciones.epicrisis.buttons.FINALIZE'"></span>
+			</button>
+		</div>
 	</div>
 </app-dock-popup>

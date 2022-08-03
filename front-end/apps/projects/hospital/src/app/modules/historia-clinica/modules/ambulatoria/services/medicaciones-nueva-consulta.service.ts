@@ -1,5 +1,5 @@
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { SnomedDto, SnomedECL} from '@api-rest/api-model';
+import { SnomedDto, SnomedECL } from '@api-rest/api-model';
 import { ColumnConfig } from '@presentation/components/document-section/document-section.component';
 import { SnomedSemanticSearch, SnomedService } from '../../../services/snomed.service';
 import { pushIfNotExists, removeFrom } from '@core/utils/array.utils';
@@ -85,7 +85,7 @@ export class MedicacionesNuevaConsultaService {
 	add(medicacion: Medicacion): boolean {
 		const currentItems = this.data.length;
 		this.data = pushIfNotExists<Medicacion>(this.data, medicacion, this.compareSpeciality);
-	 	return currentItems === this.data.length;
+		return currentItems === this.data.length;
 	}
 
 	addControl(medicacion: Medicacion): void {
@@ -97,7 +97,7 @@ export class MedicacionesNuevaConsultaService {
 		return data.snomed.sctid === data1.snomed.sctid;
 	}
 
-	addToList() {
+	addToList(): boolean {
 		if (this.form.valid && this.snomedConcept) {
 			const nuevaMedicacion: Medicacion = {
 				snomed: this.snomedConcept,
@@ -106,7 +106,9 @@ export class MedicacionesNuevaConsultaService {
 			};
 			this.addControl(nuevaMedicacion);
 			this.resetForm();
+			return true;
 		}
+		return false;
 	}
 
 	remove(index: number): void {
@@ -145,11 +147,15 @@ export class MedicacionesNuevaConsultaService {
 		return this.data;
 	}
 
-	getState(suspendido :boolean ): string{
-		return suspendido?'Suspendido':'Activo'
+	getState(suspendido: boolean): string {
+		return suspendido ? 'Suspendido' : 'Activo'
 	}
 
 	getECL(): SnomedECL {
 		return this.ECL;
+	}
+
+	isEmpty(): boolean {
+		return (!this.data || this.data.length === 0);
 	}
 }

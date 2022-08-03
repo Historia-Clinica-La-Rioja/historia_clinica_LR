@@ -20,21 +20,21 @@ export class PersonalHistoriesNewConsultationService {
 	private snomedConcept: SnomedDto;
 
 	private readonly ECL = SnomedECL.PERSONAL_RECORD;
-	private readonly tableColumnConfig : TableColumnConfig[];
+	private readonly tableColumnConfig: TableColumnConfig[];
 
 	constructor(
 		private readonly formBuilder: FormBuilder,
 		private readonly snomedService: SnomedService,
 		private readonly snackBarService: SnackBarService
 
-		) {
+	) {
 
 		this.form = this.formBuilder.group({
 			snomed: [null, Validators.required],
 			fecha: [null, Validators.required]
 		});
 
-		this.tableColumnConfig =[
+		this.tableColumnConfig = [
 			{
 				def: 'problemType',
 				header: 'ambulatoria.paciente.nueva-consulta.antecedentes-personales.table.columns.ANTECEDENTE_PERSONAL',
@@ -132,6 +132,10 @@ export class PersonalHistoriesNewConsultationService {
 
 	getECL(): SnomedECL {
 		return this.ECL;
+	}
+
+	isEmpty(): boolean {
+		return (!this.data || this.data.length === 0);
 	}
 
 }

@@ -62,17 +62,16 @@ public class LoadMedications {
         LOG.debug("Input parameters -> patientInfo {}, documentId {}, medications {}", patientInfo, documentId, medications);
         assertRequiredFields(documentId);
         medications.forEach(medication -> {
-            Integer snomedId = snomedService.getSnomedId(medication.getSnomed())
-                    .orElseGet(() -> snomedService.createSnomedTerm(medication.getSnomed()));
-            String cie10Codes = calculateCie10Facade.execute(medication.getSnomed().getSctid(),
-                    new Cie10FacadeRuleFeature(patientInfo.getGenderId(), patientInfo.getAge()));
-            MedicationStatement medicationStatement = saveMedicationStatement(patientInfo.getId(), medication, snomedId, cie10Codes);
+			if(medication.getId()==null) {
+				Integer snomedId = snomedService.getSnomedId(medication.getSnomed()).orElseGet(() -> snomedService.createSnomedTerm(medication.getSnomed()));
+				String cie10Codes = calculateCie10Facade.execute(medication.getSnomed().getSctid(), new Cie10FacadeRuleFeature(patientInfo.getGenderId(), patientInfo.getAge()));
+				MedicationStatement medicationStatement = saveMedicationStatement(patientInfo.getId(), medication, snomedId, cie10Codes);
 
-            medication.setId(medicationStatement.getId());
-            medication.setStatusId(medicationStatement.getStatusId());
-            medication.setStatus(getStatus(medication.getStatusId()));
-
-            documentService.createDocumentMedication(documentId, medicationStatement.getId());
+				medication.setId(medicationStatement.getId());
+				medication.setStatusId(medicationStatement.getStatusId());
+				medication.setStatus(getStatus(medication.getStatusId()));
+			}
+            documentService.createDocumentMedication(documentId, medication.getId());
         });
         List<MedicationBo> result = medications;
         LOG.debug(OUTPUT, result);

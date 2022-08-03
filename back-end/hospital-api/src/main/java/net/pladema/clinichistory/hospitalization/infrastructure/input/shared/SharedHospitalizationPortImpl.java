@@ -8,8 +8,6 @@ import ar.lamansys.sgh.clinichistory.application.fetchHospitalizationState.Fetch
 
 import net.pladema.clinichistory.hospitalization.service.InternmentPatientService;
 
-import net.pladema.patient.controller.dto.EMedicalCoverageType;
-
 import org.springframework.stereotype.Service;
 
 import ar.lamansys.sgh.shared.infrastructure.input.service.ExternalCoverageDto;

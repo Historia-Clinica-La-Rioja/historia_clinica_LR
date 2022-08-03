@@ -63,6 +63,10 @@ public class AnamnesisBo extends SelfValidating<AnamnesisBo> implements IDocumen
 
     private LocalDateTime performedDate;
 
+	private Long initialDocumentId;
+
+	private String modificationReason;
+
     @Override
     public Integer getPatientId() {
         if (patientInfo != null)

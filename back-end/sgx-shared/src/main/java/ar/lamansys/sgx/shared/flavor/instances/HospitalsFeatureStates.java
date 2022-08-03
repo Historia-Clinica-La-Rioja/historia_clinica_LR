@@ -1,10 +1,10 @@
 package ar.lamansys.sgx.shared.flavor.instances;
 
-import ar.lamansys.sgx.shared.featureflags.AppFeature;
-import ar.lamansys.sgx.shared.featureflags.states.InitialFeatureStates;
-
 import java.util.EnumMap;
 import java.util.Optional;
+
+import ar.lamansys.sgx.shared.featureflags.AppFeature;
+import ar.lamansys.sgx.shared.featureflags.states.InitialFeatureStates;
 
 public class HospitalsFeatureStates implements InitialFeatureStates {
 
@@ -26,6 +26,7 @@ public class HospitalsFeatureStates implements InitialFeatureStates {
 		map.put(AppFeature.HABILITAR_BUS_INTEROPERABILIDAD, false);
 		map.put(AppFeature.HABILITAR_ODONTOLOGY, false);
 		map.put(AppFeature.HABILITAR_REPORTES, false);
+		map.put(AppFeature.HABILITAR_REPORTES_PROGRAMAS, false);
 		map.put(AppFeature.HABILITAR_INFORMES, false);
 		map.put(AppFeature.HABILITAR_LLAMADO, false);
 		map.put(AppFeature.HABILITAR_HISTORIA_CLINICA_EXTERNA, false);
@@ -40,6 +41,9 @@ public class HospitalsFeatureStates implements InitialFeatureStates {
 		map.put(AppFeature.HABILITAR_VISUALIZACION_PROPIEDADES_SISTEMA, true);
 		map.put(AppFeature.HABILITAR_GENERACION_ASINCRONICA_DOCUMENTOS_PDF, false);
 		map.put(AppFeature.HABILITAR_BUSQUEDA_LOCAL_CONCEPTOS, false);
+		map.put(AppFeature.HABILITAR_MAIL_RESERVA_TURNO, false);
+		map.put(AppFeature.LIBERAR_API_RESERVA_TURNOS, false);
+		map.put(AppFeature.BACKOFFICE_MOSTRAR_ABM_RESERVA_TURNOS, false);
 	}
 
 	@Override

@@ -101,7 +101,7 @@ export class NewPatientComponent implements OnInit {
 					lastName: [params.lastName ? params.lastName : null, [Validators.required]],
 					otherLastNames: [params.otherLastNames ? params.otherLastNames : null],
 					genderId: [Number(params.genderId), [Validators.required]],
-					identificationNumber: [params.identificationNumber, [Validators.required, Validators.maxLength(VALIDATIONS.MAX_LENGTH.identif_number)]],
+					identificationNumber: [+params.identificationNumber, [Validators.required, Validators.maxLength(VALIDATIONS.MAX_LENGTH.identif_number)]],
 					identificationTypeId: [Number(params.identificationTypeId), [Validators.required]],
 					birthDate: [params.birthDate ? moment(params.birthDate) : null, [Validators.required]],
 

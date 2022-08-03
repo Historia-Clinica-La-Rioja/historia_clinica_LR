@@ -24,17 +24,15 @@ public class BedInfoVo implements Serializable {
 	private static final long serialVersionUID = 3859785005602426098L;
 
 	private BedVo bed;
-	private BedCategoryVo bedCategory;
 	private RoomVo room;
 	private SectorVo sector;
 	private PatientVo patient;
 	private LocalDateTime probableDischargeDate;
 
-	public BedInfoVo(Bed bed, BedCategory bedCategory, Room room, Sector sector,
+	public BedInfoVo(Bed bed, Room room, Sector sector,
 					 Integer patientId, Person person, String identificationType,
 					 LocalDateTime probableDischargeDate) {
 		this.bed = new BedVo(bed);
-		this.bedCategory = new BedCategoryVo(bedCategory);
 		this.room = new RoomVo(room);
 		this.sector = new SectorVo(sector);
 		this.patient = Boolean.FALSE.equals(bed.getFree()) ? new PatientVo(patientId, person, identificationType)

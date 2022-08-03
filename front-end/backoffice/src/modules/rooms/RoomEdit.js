@@ -1,21 +1,35 @@
 import React from 'react';
 import {
-    AutocompleteInput,
     Datagrid,
     DateInput,
     Edit,
     EditButton,
-    ReferenceField,
     ReferenceInput,
     ReferenceManyField,
-    required,
+    required, SelectInput,
     SimpleForm,
     TextField,
-    TextInput,
+    TextInput, useGetOne,
 } from 'react-admin';
 import CreateRelatedButton from '../components/CreateRelatedButton';
 import SectionTitle from '../components/SectionTitle';
 import CustomToolbar from "../components/CustomToolbar";
+
+const INTERNACION = 2;
+
+const SectorField = ({ record }) => {
+    const sector = useGetOne('sectors',  record.sectorId );
+        return sector.data ? (
+            <ReferenceInput
+                source="sectorId"
+                reference="sectors"
+                sort={{ field: 'description', order: 'ASC' }}
+                filter={{sectorTypeId: INTERNACION, institutionId: sector.data.institutionId}}>
+                <SelectInput optionText="description" optionValue="id" />
+            </ReferenceInput>
+        ) : null;
+}
+
 
 const RoomEdit = props => (
     <Edit {...props}>
@@ -24,15 +38,8 @@ const RoomEdit = props => (
             <TextInput source="description" validate={[required()]} />
             <TextInput source="type" validate={[required()]} />
             <DateInput source="dischargeDate" />
+            <SectorField/>
 
-            <ReferenceInput
-                source="sectorId"
-                reference="sectors"
-                sort={{ field: 'description', order: 'ASC' }}
-                filterToQuery={searchText => ({description: searchText})}
-            >
-                <AutocompleteInput optionText="description" optionValue="id" options={{ disabled: true }} />
-            </ReferenceInput>
 
             <SectionTitle label="resources.rooms.fields.beds"/>
             <CreateRelatedButton
@@ -49,9 +56,6 @@ const RoomEdit = props => (
             >
                 <Datagrid rowClick="show">
                     <TextField source="bedNumber" />
-                    <ReferenceField source="bedCategoryId" reference="bedcategories" link={false}>
-                        <TextField source="description" />
-                    </ReferenceField>
                     <EditButton />
                 </Datagrid>
             </ReferenceManyField>

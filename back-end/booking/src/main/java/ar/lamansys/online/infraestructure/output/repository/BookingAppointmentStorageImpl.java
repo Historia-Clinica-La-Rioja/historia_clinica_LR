@@ -6,22 +6,22 @@ import org.springframework.stereotype.Service;
 
 import ar.lamansys.online.application.booking.BookingAppointmentStorage;
 import ar.lamansys.online.domain.booking.BookingBo;
-import ar.lamansys.sgh.shared.infrastructure.input.service.SharedBookingPort;
+import ar.lamansys.sgh.shared.infrastructure.input.service.appointment.SharedAppointmentPort;
 import ar.lamansys.sgh.shared.infrastructure.input.service.booking.BookingAppointmentDto;
 import ar.lamansys.sgh.shared.infrastructure.input.service.booking.BookingPersonDto;
 
 @Service
 public class BookingAppointmentStorageImpl implements BookingAppointmentStorage {
 
-    private final SharedBookingPort sharedBookingPort;
+    private final SharedAppointmentPort sharedAppointmentPort;
 
-    public BookingAppointmentStorageImpl(SharedBookingPort sharedBookingPort) {
-        this.sharedBookingPort = sharedBookingPort;
+    public BookingAppointmentStorageImpl(SharedAppointmentPort sharedAppointmentPort) {
+        this.sharedAppointmentPort = sharedAppointmentPort;
     }
 
     @Override
     public String save(BookingBo bookingBo) {
-        return sharedBookingPort.saveBooking(
+        return sharedAppointmentPort.saveBooking(
                 mapToAppointment(bookingBo),
                 mapToBookingPerson(bookingBo),
                 bookingBo.getAppointmentDataEmail()
@@ -30,22 +30,22 @@ public class BookingAppointmentStorageImpl implements BookingAppointmentStorage 
 
     @Override
     public boolean existsEmail(String email) {
-        return sharedBookingPort.existsEmail(email);
+        return sharedAppointmentPort.existsEmail(email);
     }
 
     @Override
     public void cancelBooking(String email) {
-        sharedBookingPort.cancelBooking(email);
+		sharedAppointmentPort.cancelBooking(email);
     }
 
     @Override
     public Optional<String> getPatientName(String uuid) {
-        return sharedBookingPort.getPatientName(uuid);
+        return sharedAppointmentPort.getPatientName(uuid);
     }
 
     @Override
     public Optional<String> getProfessionalName(Integer diaryId) {
-        return sharedBookingPort.getProfessionalName(diaryId);
+        return sharedAppointmentPort.getProfessionalName(diaryId);
     }
 
     private BookingPersonDto mapToBookingPerson(BookingBo bookingBo) {

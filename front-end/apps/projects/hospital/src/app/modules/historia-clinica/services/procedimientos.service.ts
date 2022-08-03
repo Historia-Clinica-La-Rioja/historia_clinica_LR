@@ -82,11 +82,11 @@ export class ProcedimientosService {
 	add(procedimiento: Procedimiento): boolean {
 		const currentItems = this.data.length;
 		this.data = pushIfNotExists<Procedimiento>(this.data, procedimiento, this.compareSpeciality);
-	 	return currentItems === this.data.length;
+		return currentItems === this.data.length;
 	}
 
 	addControl(procedimiento: Procedimiento): void {
-		if (this.add(procedimiento)){
+		if (this.add(procedimiento)) {
 			this.snackBarService.showError("Procedimiento duplicado");
 		}
 	}
@@ -95,7 +95,7 @@ export class ProcedimientosService {
 		return data.snomed.sctid === data1.snomed.sctid;
 	}
 
-	addToList() {
+	addToList(): boolean {
 		if (this.form.valid && this.snomedConcept) {
 			const nuevoProcedimiento: Procedimiento = {
 				snomed: this.snomedConcept,
@@ -103,7 +103,9 @@ export class ProcedimientosService {
 			};
 			this.addControl(nuevoProcedimiento);
 			this.resetForm();
+			return true;
 		}
+		return false;
 	}
 
 	removeProcedimiento(index: number): void {
@@ -158,4 +160,7 @@ export class ProcedimientosService {
 		return this.ECL;
 	}
 
+	isEmpty(): boolean {
+		return (!this.data || this.data.length === 0);
+	}
 }

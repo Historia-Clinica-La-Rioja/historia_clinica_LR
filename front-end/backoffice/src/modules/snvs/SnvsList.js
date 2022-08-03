@@ -32,8 +32,10 @@ const SnvsList = props => (
             <TextField source="groupEventId" />
             <TextField source="eventId" />
             <TextField source="manualClassificationId" />
-            <ReferenceField source="patientId" reference="person" link={false}>
-                <FunctionField render={patient => `${patient.firstName} ${patient.lastName}`} />
+            <ReferenceField source="patientId" reference="patient" link={false}>
+                <ReferenceField source="personId" reference="person" link={false}>
+                    <FunctionField render={p => `${p.firstName} ${p.lastName}`} />
+                </ReferenceField>
             </ReferenceField>
             <TextField source="snomedSctid" />
             <TextField source="snomedPt" />

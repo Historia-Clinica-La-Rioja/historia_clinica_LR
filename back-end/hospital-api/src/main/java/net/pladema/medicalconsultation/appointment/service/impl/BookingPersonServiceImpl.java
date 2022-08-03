@@ -98,7 +98,7 @@ public class BookingPersonServiceImpl implements BookingPersonService {
 
     private BookingPersonBo mapToBookingPersonBo(BookingPerson bookingPerson) {
         return new BookingPersonBo(
-                bookingPerson.getBirthDate().toString(),
+                bookingPerson.getBirthDate(),
                 bookingPerson.getEmail(),
                 bookingPerson.getFirstName(),
                 bookingPerson.getGenderId(),

@@ -6,7 +6,6 @@ import java.util.stream.Collectors;
 
 import javax.persistence.EntityManager;
 
-import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import ar.lamansys.online.application.specialty.BookingSpecialtyStorage;

@@ -26,7 +26,8 @@
 			"SELECT_DAYS_TYPE_SUBTITLE": "Seleccione tipos de consulta para cada día",
 			"dialog": {
 				"TITLE": "Nueva atención",
-				"EDIT": "Editar atención"
+				"EDIT": "Editar atención",
+				"BOOKING": "Disponible para turnos online"
 			},
 			"messages": {
 				"SUCCESS": "La agenda se guardó exitosamente",
@@ -74,6 +75,13 @@
 			}
 		},
 		"appointment": {
+			"TITLE": "Turno",
+			"BUTTON_CLINICAL_HISTORY": "Ver historia clínica",
+			"EDIT_PACIENT_INFO": "Editar información del paciente",
+			"APPOINTMENT_STATE": "Estado de turno",
+			"MOTIVE": "Motivo",
+			"SAVE": "Guardar",
+			"CANCEL": "Cancelar",
 			"phoneNumber": {
 				"SUCCESS": "El teléfono se modificó correctamente",
 				"PHONE_NUMBER": "Teléfono",
@@ -82,10 +90,23 @@
 			"coverageData": {
 				"COVERAGE_DATA": "Cobertura Médica",
 				"UPDATE_SUCCESS": "Los datos se han modificado correctamente"
+			},
+			"observations": {
+				"OBSERVATIONS": "Observaciones",
+				"UPDATE_SUCCESS": "Las observaciones se han modificado correctamente",
+				"ADD_OBSERVATION": "+ Agregar observaciones",
+				"ADD_OBSERVATION_SUBTITLE": "Ingrese observaciones..."
+			},
+			"reports":{
+				"DOWNLOAD_REPORT": "Descargar informe",
+				"ANEXO": "Anexo II",
+				"FORM": "Formulario V"
 			}
 		},
 		"report": {
-			"TITLE": "Descargar informes"
+			"TITLE": "Descargar informes",
+			"ANEXO": "Anexo II",
+			"FORM": "Formulario V"
 		}
 	}
 }

@@ -20,13 +20,14 @@ import {
 	DiaryDto,
 	DoctorsOfficeDto,
 	OccupationDto,
-	ProfessionalDto
+	ProfessionalDto,
 } from '@api-rest/api-model';
 import { DiaryOpeningHoursService } from '@api-rest/services/diary-opening-hours.service';
 import { DiaryService } from '@api-rest/services/diary.service';
 import { APPOINTMENT_DURATIONS, MINUTES_IN_HOUR } from '../../constants/appointment';
 import { AgendaHorarioService } from '../../services/agenda-horario.service';
 import {PatientNameService} from "@core/services/patient-name.service";
+import { SpecialtyService } from '@api-rest/services/specialty.service';
 
 const ROUTE_APPOINTMENT = 'turnos';
 
@@ -59,6 +60,7 @@ export class AgendaSetupComponent implements OnInit {
 	sectors;
 	agendaHorarioService: AgendaHorarioService;
 	professionalId: string;
+	professionalSpecialties: any[];
 
 	private editingDiaryId = null;
 	private readonly routePrefix;
@@ -80,6 +82,7 @@ export class AgendaSetupComponent implements OnInit {
 		private readonly diaryOpeningHoursService: DiaryOpeningHoursService,
 		private readonly route: ActivatedRoute,
 		private readonly patientNameService: PatientNameService,
+		private readonly specialtyService: SpecialtyService
 
 	) {
 		this.route.paramMap.subscribe(params => this.professionalId = params.get("idProfessional"));
@@ -100,7 +103,11 @@ export class AgendaSetupComponent implements OnInit {
 			startDate: [null, [Validators.required]],
 			endDate: [null, [Validators.required]],
 			appointmentDuration: [null, [Validators.required]],
+			healthcareProfessionalSpecialtyId: [null, [Validators.required]]
 		});
+
+		if (this.professionalId)
+			this.getProfessionalSpecialties();
 
 		this.form.controls.appointmentDuration.valueChanges
 			.subscribe(newDuration => this.hourSegments = MINUTES_IN_HOUR / newDuration);
@@ -146,10 +153,16 @@ export class AgendaSetupComponent implements OnInit {
 
 		});
 
+		this.professionalSpecialties = [{
+			id: diary.clinicalSpecialtyId,
+			name: diary.specialtyName,
+		}];
+
 		this.form.controls.healthcareProfessionalId.setValue(diary.healthcareProfessionalId);
 		this.form.controls.startDate.setValue(momentParseDate(diary.startDate));
 		this.form.controls.endDate.setValue(momentParseDate(diary.endDate));
 		this.form.controls.appointmentDuration.setValue(diary.appointmentDuration);
+		this.form.controls.healthcareProfessionalSpecialtyId.setValue(diary.clinicalSpecialtyId);
 		this.agendaHorarioService.setAppointmentDuration(diary.appointmentDuration);
 
 		this.appointmentManagement = diary.professionalAssignShift;
@@ -287,7 +300,8 @@ export class AgendaSetupComponent implements OnInit {
 			includeHoliday: this.holidayWork,
 			professionalAssignShift: this.appointmentManagement,
 
-			diaryOpeningHours: this.agendaHorarioService.getDiaryOpeningHours()
+			diaryOpeningHours: this.agendaHorarioService.getDiaryOpeningHours(),
+			clinicalSpecialtyId: this.form.value.healthcareProfessionalSpecialtyId
 		};
 	}
 
@@ -296,6 +310,11 @@ export class AgendaSetupComponent implements OnInit {
 
 		const scrollbar = document.getElementsByClassName('cal-time-events')[0];
 		scrollbar?.scrollTo(0, this.PIXEL_SIZE_HEIGHT * this.TURN_STARTING_HOUR * this.hourSegments);
+	}
+
+	getProfessionalSpecialties() {
+		this.specialtyService.getAllSpecialtyByProfessional(this.contextService.institutionId, this.form.value.healthcareProfessionalId)
+			.subscribe(response => this.professionalSpecialties = response)
 	}
 
 }

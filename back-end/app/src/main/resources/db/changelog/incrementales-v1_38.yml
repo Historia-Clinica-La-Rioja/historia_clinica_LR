@@ -1,0 +1,180 @@
+databaseChangeLog: 
+    - logicalFilePath: incrementales-v1_38
+
+    - changeSet:
+        id: 0.1.38-1
+        comment: view about appointment summary
+        author: etrapani
+        changes:
+              - createView:
+                  viewName: v_appointment_summary
+                  fullDefinition: false
+                  replaceIfExists: true
+                  selectQuery: |-
+                    (SELECT a.id,
+                          a.date_type_id,
+                          a.hour,
+                          a.appointment_state_id,
+                          ass.description AS status_description,
+                          a.is_overturn,
+                          a.phone_number,
+                          a.phone_prefix,
+                          a.patient_id,
+                          p1.first_name            AS patient_first_name,
+                          p1.last_name             AS patient_last_name,
+                          p1.identification_number AS patient_identification_number,
+                          p1.gender_id             AS patient_gender_id,
+                          hp.license_number,
+                          p2.first_name            AS doctor_name,
+                          p2.last_name             AS doctor_last_name,
+                          P2.identification_number AS doctor_identification_number,
+                          mc.name AS medical_coverage_name,
+                          mc.cuit,
+                          pmc.affiliate_number,
+                          cs.sctid_code,
+                          cs.name AS clinical_specialty_name,
+                          doff.institution_id,
+                          i.cuit                   AS institution_cuit,
+                          i.sisa_code
+                    FROM appointment AS a
+                    INNER JOIN appointment_state ass on a.appointment_state_id = ass.id
+                    INNER JOIN appointment_assn aa on aa.appointment_id = a.id
+                    INNER JOIN patient pa1 on a.patient_id = pa1.id
+                    INNER JOIN person p1 ON pa1.person_id = p1.id
+                    INNER JOIN diary d ON aa.diary_id = d.id
+                    INNER JOIN doctors_office doff ON d.doctors_office_id = doff.id
+                    INNER JOIN institution i ON doff.institution_id = i.id
+                    INNER JOIN clinical_specialty_sector CSS ON doff.clinical_specialty_sector_id = CSS.id
+                    INNER JOIN clinical_specialty cs ON CSS.clinical_specialty_id = cs.id
+                    INNER JOIN healthcare_professional hp ON d.healthcare_professional_id = hp.id
+                    INNER JOIN person p2 ON hp.person_id = p2.id
+                    INNER JOIN patient_medical_coverage AS pmc ON a.patient_medical_coverage_id = pmc.id
+                    INNER JOIN medical_coverage mc ON pmc.medical_coverage_id = mc.id
+                    WHERE a.appointment_state_id != 6)
+                    UNION ALL
+                    (SELECT a.id,
+                          a.date_type_id,
+                          a.hour,
+                          a.appointment_state_id ,
+                          ass.description AS status_description,
+                          a.is_overturn,
+                          a.phone_number,
+                          a.phone_prefix,
+                          a.patient_id,
+                          bp.first_name            AS patient_first_name,
+                          bp.last_name             AS patient_last_name,
+                          bp.identification_number AS patient_identification_number,
+                          bp.gender_id             AS patient_gender_id,
+                          hp.license_number,
+                          p2.first_name            AS doctor_name,
+                          p2.last_name             AS doctor_last_name,
+                          P2.identification_number AS doctor_identification_number,
+                          null AS medical_coverage_name,
+                          null AS cuit,
+                          null AS affiliate_number,
+                          cs.sctid_code,
+                          cs.name AS clinical_specialty_name,
+                          doff.institution_id,
+                          i.cuit                   AS institution_cuit,
+                          i.sisa_code
+                    FROM appointment AS a
+                    INNER JOIN appointment_state ass on a.appointment_state_id = ass.id
+                    INNER JOIN appointment_assn aa on aa.appointment_id = a.id
+                    INNER JOIN booking_appointment ba on a.id = ba.appointment_id
+                    INNER JOIN booking_person bp ON ba.booking_person_id = bp.id
+                    INNER JOIN diary d ON aa.diary_id = d.id
+                    INNER JOIN doctors_office doff ON d.doctors_office_id = doff.id
+                    INNER JOIN institution i ON doff.institution_id = i.id
+                    INNER JOIN clinical_specialty_sector CSS ON doff.clinical_specialty_sector_id = CSS.id
+                    INNER JOIN clinical_specialty cs ON CSS.clinical_specialty_id = cs.id
+                    INNER JOIN healthcare_professional hp ON d.healthcare_professional_id = hp.id
+                    INNER JOIN person p2 ON hp.person_id = p2.id
+                    WHERE a.appointment_state_id = 6)
+
+    - changeSet:
+        id: upate-identification_number-with-zeros
+        comment: Edita documentos existentes ingresados con ceros a la izquierda.
+        author: bchacon
+        context: "!schema-only"
+        changes:
+          - sql:
+              sql: |-
+                UPDATE person
+                SET identification_number = TRIM('0' FROM identification_number)
+                WHERE identification_number LIKE '0%'
+
+    - changeSet:
+        id: add-new-gender_indication_type-concepts
+        comment: Agrega género no binario
+        author: lbergottini
+        context: "!schema-only"
+        changes:
+          - sql:
+              sql: |-
+                INSERT INTO gender(id,description) VALUES ('3','X') ON CONFLICT DO NOTHING;
+
+    - changeSet:    
+        id: add-column-initial_document_id-document
+        comment: Add initial_document_id column in document table
+        author: mvenere
+        changes:
+          - addColumn:
+              columns:
+                - column:
+                    name: initial_document_id
+                    type: bigint
+              tableName: document
+          - addForeignKeyConstraint:
+              baseColumnNames: id
+              baseTableName: document
+              constraintName: FK_initial_document_id
+              onDelete: NO ACTION
+              onUpdate: NO ACTION
+              referencedColumnNames: id
+              referencedTableName: document
+              validate: true
+
+    - changeSet:
+        id: appointment_observation-createTable
+        comment: Create table appointment_observation
+        author: flizalde
+        changes:
+          - createTable:
+              tableName: appointment_observation
+              columns:
+                - column:
+                    constraints:
+                      primaryKey: true
+                      primaryKeyName: PK_appointment_observation
+                    name: appointment_id
+                    type: int
+                - column:
+                    constraints:
+                      nullable: true
+                    name: observation
+                    type: text
+                - column:
+                    constraints:
+                      nullable: false
+                    name: created_by
+                    type: int
+
+          - addForeignKeyConstraint:
+              baseColumnNames: appointment_id
+              baseTableName: appointment_observation
+              constraintName: FK_appointment_observation_appointment_id
+              onDelete: NO ACTION
+              onUpdate: NO ACTION
+              referencedColumnNames: id
+              referencedTableName: appointment
+              validate: true
+
+          - addForeignKeyConstraint:
+              baseColumnNames: created_by
+              baseTableName: appointment_observation
+              constraintName: FK_appointment_observation_created_by
+              onDelete: NO ACTION
+              onUpdate: NO ACTION
+              referencedColumnNames: id
+              referencedTableName: healthcare_professional
+              validate: true

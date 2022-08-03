@@ -25,7 +25,9 @@ import net.pladema.clinichistory.hospitalization.repository.InternmentEpisodeRep
 import net.pladema.clinichistory.hospitalization.repository.PatientDischargeRepository;
 import net.pladema.clinichistory.hospitalization.repository.domain.EvolutionNoteDocument;
 import net.pladema.clinichistory.hospitalization.repository.domain.InternmentEpisode;
+import net.pladema.clinichistory.hospitalization.service.InternmentEpisodeService;
 import net.pladema.clinichistory.hospitalization.service.epicrisis.CreateEpicrisisService;
+import net.pladema.clinichistory.hospitalization.service.epicrisis.EpicrisisValidator;
 import net.pladema.clinichistory.hospitalization.service.epicrisis.domain.EpicrisisBo;
 import net.pladema.clinichistory.hospitalization.service.impl.InternmentEpisodeServiceImpl;
 import net.pladema.establishment.repository.MedicalCoveragePlanRepository;
@@ -76,6 +78,9 @@ class CreateEpicrisisServiceImplTest extends UnitRepository {
 	@Mock
 	private FeatureFlagsService featureFlagsService;
 
+	@Mock
+	private InternmentEpisodeService internmentEpisodeService;
+
     @BeforeEach
     void setUp(){
         var internmentEpisodeService = new InternmentEpisodeServiceImpl(
@@ -88,13 +93,15 @@ class CreateEpicrisisServiceImplTest extends UnitRepository {
         createEpicrisisService = new CreateEpicrisisServiceImpl(
                 documentFactory,
                 internmentEpisodeService,
-                dateTimeProvider);
+                dateTimeProvider,
+				new EpicrisisValidator(internmentEpisodeService)
+				);
     }
 
     @Test
     void createDocumentWithEpisodeThatNotExists() {
         Exception exception = Assertions.assertThrows(NotFoundException.class, () ->
-                createEpicrisisService.execute(validEpicrisis(9, -14))
+                createEpicrisisService.execute(validEpicrisis(9, -14), false)
         );
         String expectedMessage = "internmentepisode.not.found";
         String actualMessage = exception.getMessage();
@@ -104,7 +111,7 @@ class CreateEpicrisisServiceImplTest extends UnitRepository {
     @Test
     void createDocumentWithInvalidInstitutionId() {
         Exception exception = Assertions.assertThrows(ConstraintViolationException.class, () ->
-                createEpicrisisService.execute(validEpicrisis(null, 8))
+                createEpicrisisService.execute(validEpicrisis(null, 8), false)
         );
         String expectedMessage = "El id de la institución es obligatorio";
         String actualMessage = exception.getMessage();
@@ -114,7 +121,7 @@ class CreateEpicrisisServiceImplTest extends UnitRepository {
     @Test
     void createDocumentWithInvalidEpisodeId() {
         Exception exception = Assertions.assertThrows(ConstraintViolationException.class, () ->
-                createEpicrisisService.execute(validEpicrisis(8, null))
+                createEpicrisisService.execute(validEpicrisis(8, null), false)
         );
         String expectedMessage = "El id del encuentro asociado es obligatorio";
         String actualMessage = exception.getMessage();
@@ -125,7 +132,7 @@ class CreateEpicrisisServiceImplTest extends UnitRepository {
     void createDocumentWithInternmentInOtherInstitution() {
         var internmentEpisode = save(newInternmentEpisodeWithEpicrisis(null));
         Exception exception = Assertions.assertThrows(NotFoundException.class, () ->
-                createEpicrisisService.execute(validEpicrisis(internmentEpisode.getInstitutionId()+1, internmentEpisode.getId()))
+                createEpicrisisService.execute(validEpicrisis(internmentEpisode.getInstitutionId()+1, internmentEpisode.getId()), false)
         );
         String expectedMessage = "internmentepisode.not.found";
         String actualMessage = exception.getMessage();
@@ -136,7 +143,7 @@ class CreateEpicrisisServiceImplTest extends UnitRepository {
     void createDocumentWithEpicrisis() {
         var internmentEpisode = save(newInternmentEpisodeWithEpicrisis(1l));
         Exception exception = Assertions.assertThrows(ConstraintViolationException.class, () ->
-                createEpicrisisService.execute(validEpicrisis(8, internmentEpisode.getId()))
+                createEpicrisisService.execute(validEpicrisis(8, internmentEpisode.getId()), false)
         );
         String expectedMessage = "Esta internación no puede crear una epicrisis";
         String actualMessage = exception.getMessage();
@@ -150,7 +157,7 @@ class CreateEpicrisisServiceImplTest extends UnitRepository {
         var epicrisis = validEpicrisis(internmentEpisode.getInstitutionId(), internmentEpisode.getId());
         epicrisis.setMainDiagnosis(null);
         Exception exception = Assertions.assertThrows(ConstraintViolationException.class, () ->
-                createEpicrisisService.execute(epicrisis)
+                createEpicrisisService.execute(epicrisis, false)
         );
         String expectedMessage = "mainDiagnosis: {value.mandatory}";
         String actualMessage = exception.getMessage();
@@ -163,24 +170,24 @@ class CreateEpicrisisServiceImplTest extends UnitRepository {
         var internmentEpisode = newValidInternmentEpisodeToCreateEpicrisis();
         internmentEpisode.setEntryDate(LocalDateTime.of(2020,10,10,00,00,00));
         var internmentEpisodeSaved = save(internmentEpisode);
-
+		boolean draft = false;
         var epicrisis = validEpicrisis(internmentEpisodeSaved.getInstitutionId(), internmentEpisode.getId());
 
         epicrisis.setDiagnosis(List.of(new DiagnosisBo(new SnomedBo("", ""))));
         Assertions.assertThrows(ConstraintViolationException.class, () ->
-                createEpicrisisService.execute(epicrisis)
+                createEpicrisisService.execute(epicrisis, draft)
         );
 
 
         epicrisis.setDiagnosis(List.of(new DiagnosisBo(new SnomedBo(null, null))));
         Assertions.assertThrows(ConstraintViolationException.class, () ->
-                createEpicrisisService.execute(epicrisis)
+                createEpicrisisService.execute(epicrisis, draft)
         );
 
         epicrisis.setDiagnosis(List.of(new DiagnosisBo(new SnomedBo("REPEATED", "REPEATED")),
                 new DiagnosisBo(new SnomedBo("REPEATED", "REPEATED"))));
         Exception exception = Assertions.assertThrows(ConstraintViolationException.class, () ->
-                createEpicrisisService.execute(epicrisis)
+                createEpicrisisService.execute(epicrisis, draft)
         );
         String expectedMessage = "Diagnósticos secundarios repetidos";
         String actualMessage = exception.getMessage();
@@ -192,17 +199,17 @@ class CreateEpicrisisServiceImplTest extends UnitRepository {
         var internmentEpisode = newValidInternmentEpisodeToCreateEpicrisis();
         internmentEpisode.setEntryDate(LocalDateTime.of(2020,10,10,00,00,00));
         var internmentEpisodeSaved = save(internmentEpisode);
-
+		boolean draft = false;
         var epicrisis = validEpicrisis(internmentEpisodeSaved.getInstitutionId(), internmentEpisode.getId());
 
         epicrisis.setImmunizations(List.of(new ImmunizationBo(new SnomedBo("", ""))));
         Assertions.assertThrows(ConstraintViolationException.class, () ->
-                createEpicrisisService.execute(epicrisis)
+                createEpicrisisService.execute(epicrisis, draft)
         );
 
         epicrisis.setImmunizations(List.of(new ImmunizationBo(new SnomedBo(null, null))));
         Assertions.assertThrows(ConstraintViolationException.class, () ->
-                createEpicrisisService.execute(epicrisis)
+                createEpicrisisService.execute(epicrisis, draft)
         );
     }
 
@@ -211,7 +218,7 @@ class CreateEpicrisisServiceImplTest extends UnitRepository {
         var internmentEpisode = newValidInternmentEpisodeToCreateEpicrisis();
         internmentEpisode.setEntryDate(LocalDateTime.of(2020,10,10,00,00,00));
         var internmentEpisodeSaved = save(internmentEpisode);
-
+		boolean draft = false;
         var epicrisis = validEpicrisis(internmentEpisodeSaved.getInstitutionId(), internmentEpisode.getId());
 
         LocalDateTime localDateTime = LocalDateTime.of(
@@ -220,13 +227,13 @@ class CreateEpicrisisServiceImplTest extends UnitRepository {
 
         epicrisis.setAnthropometricData(newAnthropometricData("10001", localDateTime));
         Exception exception = Assertions.assertThrows(ConstraintViolationException.class, () ->
-                createEpicrisisService.execute(epicrisis)
+                createEpicrisisService.execute(epicrisis, draft)
         );
         Assertions.assertTrue(exception.getMessage().contains("peso: La medición debe estar entre 0.0 y 1000.0"));
 
         epicrisis.setAnthropometricData(newAnthropometricData("-50", null));
         Assertions.assertThrows(ConstraintViolationException.class, () ->
-                createEpicrisisService.execute(epicrisis)
+                createEpicrisisService.execute(epicrisis, draft)
         );
         Assertions.assertTrue(exception.getMessage().contains("peso: La medición debe estar entre 0.0 y 1000.0"));
     }
@@ -236,20 +243,20 @@ class CreateEpicrisisServiceImplTest extends UnitRepository {
         var internmentEpisode = newValidInternmentEpisodeToCreateEpicrisis();
         internmentEpisode.setEntryDate(LocalDateTime.of(2020,10,10,00,00,00));
         var internmentEpisodeSaved = save(internmentEpisode);
-
+		boolean draft = false;
         var epicrisis = validEpicrisis(internmentEpisodeSaved.getInstitutionId(), internmentEpisode.getId());
         LocalDateTime localDateTime = LocalDateTime.of(
                 LocalDate.of(2020, 10,29),
                 LocalTime.of(11,20));
         epicrisis.setRiskFactors(newRiskFactors(null, localDateTime));
         Exception exception = Assertions.assertThrows(ConstraintViolationException.class, () ->
-                createEpicrisisService.execute(epicrisis)
+                createEpicrisisService.execute(epicrisis, draft)
         );
         Assertions.assertTrue(exception.getMessage().contains("riskFactors.bloodOxygenSaturation.value: {value.mandatory}"));
 
         epicrisis.setRiskFactors(newRiskFactors("Value", LocalDateTime.of(2020,9,9,1,5,6)));
         exception = Assertions.assertThrows(ConstraintViolationException.class, () ->
-                createEpicrisisService.execute(epicrisis)
+                createEpicrisisService.execute(epicrisis, draft)
         );
         Assertions.assertTrue(exception.getMessage().contains("Saturación de oxigeno: La fecha de medición debe ser posterior a la fecha de internación"));
     }
@@ -259,28 +266,28 @@ class CreateEpicrisisServiceImplTest extends UnitRepository {
         var internmentEpisode = newValidInternmentEpisodeToCreateEpicrisis();
         internmentEpisode.setEntryDate(LocalDateTime.of(2020,10,10,00,00,00));
         var internmentEpisodeSaved = save(internmentEpisode);
-
+		boolean draft = false;
         var epicrisis = validEpicrisis(internmentEpisodeSaved.getInstitutionId(), internmentEpisode.getId());
         epicrisis.setPersonalHistories(null);
         Exception exception = Assertions.assertThrows(ConstraintViolationException.class, () ->
-                createEpicrisisService.execute(epicrisis)
+                createEpicrisisService.execute(epicrisis, draft)
         );
         Assertions.assertTrue(exception.getMessage().contains("personalHistories: {value.mandatory}"));
 
         epicrisis.setPersonalHistories(List.of(new HealthHistoryConditionBo(new SnomedBo("", ""))));
         Assertions.assertThrows(ConstraintViolationException.class, () ->
-                createEpicrisisService.execute(epicrisis)
+                createEpicrisisService.execute(epicrisis, draft)
         );
 
         epicrisis.setPersonalHistories(List.of(new HealthHistoryConditionBo(new SnomedBo(null, null))));
         Assertions.assertThrows(ConstraintViolationException.class, () ->
-                createEpicrisisService.execute(epicrisis)
+                createEpicrisisService.execute(epicrisis, draft)
         );
 
         epicrisis.setPersonalHistories(List.of(new HealthHistoryConditionBo(new SnomedBo("REPEATED", "REPEATED")),
                 new HealthHistoryConditionBo(new SnomedBo("REPEATED", "REPEATED"))));
         exception = Assertions.assertThrows(ConstraintViolationException.class, () ->
-                createEpicrisisService.execute(epicrisis)
+                createEpicrisisService.execute(epicrisis, draft)
         );
         Assertions.assertTrue(exception.getMessage().contains("Antecedentes personales repetidos"));
 
@@ -291,28 +298,28 @@ class CreateEpicrisisServiceImplTest extends UnitRepository {
         var internmentEpisode = newValidInternmentEpisodeToCreateEpicrisis();
         internmentEpisode.setEntryDate(LocalDateTime.of(2020,10,10,00,00,00));
         var internmentEpisodeSaved = save(internmentEpisode);
-
+		boolean draft = false;
         var epicrisis = validEpicrisis(internmentEpisodeSaved.getInstitutionId(), internmentEpisode.getId());
         epicrisis.setFamilyHistories(null);
         Exception exception = Assertions.assertThrows(ConstraintViolationException.class, () ->
-                createEpicrisisService.execute(epicrisis)
+                createEpicrisisService.execute(epicrisis, draft)
         );
         Assertions.assertTrue(exception.getMessage().contains("familyHistories: {value.mandatory}"));
 
         epicrisis.setFamilyHistories(List.of(new HealthHistoryConditionBo(new SnomedBo("", ""))));
         Assertions.assertThrows(ConstraintViolationException.class, () ->
-                createEpicrisisService.execute(epicrisis)
+                createEpicrisisService.execute(epicrisis, draft)
         );
 
         epicrisis.setFamilyHistories(List.of(new HealthHistoryConditionBo(new SnomedBo(null, null))));
         Assertions.assertThrows(ConstraintViolationException.class, () ->
-                createEpicrisisService.execute(epicrisis)
+                createEpicrisisService.execute(epicrisis, draft)
         );
 
         epicrisis.setFamilyHistories(List.of(new HealthHistoryConditionBo(new SnomedBo("REPEATED", "REPEATED")),
                 new HealthHistoryConditionBo(new SnomedBo("REPEATED", "REPEATED"))));
         exception = Assertions.assertThrows(ConstraintViolationException.class, () ->
-                createEpicrisisService.execute(epicrisis)
+                createEpicrisisService.execute(epicrisis, draft)
         );
         Assertions.assertTrue(exception.getMessage().contains("Antecedentes familiares repetidos"));
     }
@@ -322,21 +329,21 @@ class CreateEpicrisisServiceImplTest extends UnitRepository {
         var internmentEpisode = newValidInternmentEpisodeToCreateEpicrisis();
         internmentEpisode.setEntryDate(LocalDateTime.of(2020,10,10,00,00,00));
         var internmentEpisodeSaved = save(internmentEpisode);
-
+		boolean draft = false;
         var epicrisis = validEpicrisis(internmentEpisodeSaved.getInstitutionId(), internmentEpisode.getId());
         epicrisis.setMedications(null);
         Assertions.assertThrows(ConstraintViolationException.class, () ->
-                createEpicrisisService.execute(epicrisis)
+                createEpicrisisService.execute(epicrisis, draft)
         );
 
         epicrisis.setMedications(List.of(new MedicationBo(new SnomedBo("", ""))));
         Assertions.assertThrows(ConstraintViolationException.class, () ->
-                createEpicrisisService.execute(epicrisis)
+                createEpicrisisService.execute(epicrisis, draft)
         );
 
         epicrisis.setMedications(List.of(new MedicationBo(new SnomedBo(null, null))));
         Assertions.assertThrows(ConstraintViolationException.class, () ->
-                createEpicrisisService.execute(epicrisis)
+                createEpicrisisService.execute(epicrisis, draft)
         );
     }
 

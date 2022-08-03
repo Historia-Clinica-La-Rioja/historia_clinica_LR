@@ -5,27 +5,26 @@ import {
 	AllergyConditionDto,
 	ImmunizationDto,
 	EvolutionNoteDto,
-	HealthConditionDto
+	HealthConditionDto, ResponseEvolutionNoteDto
 } from '@api-rest/api-model';
 import { ERole } from '@api-rest/api-model';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { InternacionMasterDataService } from '@api-rest/services/internacion-master-data.service';
 import { EvolutionNoteService } from '@api-rest/services/evolution-note.service';
 import { SnackBarService } from '@presentation/services/snack-bar.service';
-import { Moment } from 'moment';
 import { getError, hasError } from '@core/utils/form.utils';
 import { SnomedService } from '@historia-clinica/services/snomed.service';
 import { TEXT_AREA_MAX_LENGTH } from '@core/constants/validation-constants';
 import { MIN_DATE } from "@core/utils/date.utils";
 import { DockPopupRef } from "@presentation/services/dock-popup-ref";
 import { OVERLAY_DATA } from "@presentation/presentation-model";
-import { ProcedimientosService } from "@historia-clinica/services/procedimientos.service";
-import {
-	InternmentFields
-} from "@historia-clinica/modules/ambulatoria/modules/internacion/services/internment-summary-facade.service";
+import { Procedimiento, ProcedimientosService } from "@historia-clinica/services/procedimientos.service";
+import { InternmentFields } from "@historia-clinica/modules/ambulatoria/modules/internacion/services/internment-summary-facade.service";
 import { FactoresDeRiesgoFormService } from '@historia-clinica/services/factores-de-riesgo-form.service';
 import { PermissionsService } from "@core/services/permissions.service";
 import { anyMatch } from "@core/utils/array.utils";
+import { dateToMoment } from "@core/utils/moment.utils";
+import { EditDocumentActionService } from '../../services/edit-document-action.service';
 
 @Component({
 	selector: 'app-evolution-note-dock-popup',
@@ -53,6 +52,8 @@ export class EvolutionNoteDockPopupComponent implements OnInit {
 	public readonly TEXT_AREA_MAX_LENGTH = TEXT_AREA_MAX_LENGTH;
 
 	minDate = MIN_DATE;
+	evolutionNote: ResponseEvolutionNoteDto;
+	isDisableConfirmButton = false;
 
 	constructor(
 		@Inject(OVERLAY_DATA) public data: any,
@@ -62,14 +63,15 @@ export class EvolutionNoteDockPopupComponent implements OnInit {
 		private readonly evolutionNoteService: EvolutionNoteService,
 		private readonly snackBarService: SnackBarService,
 		private readonly snomedService: SnomedService,
-		private readonly permissionsService: PermissionsService
+		private readonly permissionsService: PermissionsService,
+		private readonly editDocumentAction: EditDocumentActionService
 	) {
 		this.mainDiagnosis = data.mainDiagnosis;
 		this.diagnosticos = data.diagnosticos;
 		this.procedimientosService = new ProcedimientosService(formBuilder, this.snomedService, this.snackBarService);
 		this.factoresDeRiesgoFormService = new FactoresDeRiesgoFormService(formBuilder);
 		this.permissionsService.contextAssignments$().subscribe((userRoles: ERole[]) => {
-			this.wasMadeByProfessionalNursing = !anyMatch<ERole>(userRoles,[ERole.ESPECIALISTA_MEDICO, ERole.ESPECIALISTA_EN_ODONTOLOGIA, ERole.PROFESIONAL_DE_SALUD]) && anyMatch<ERole>(userRoles,[ERole.ENFERMERO])  ;
+			this.wasMadeByProfessionalNursing = !anyMatch<ERole>(userRoles, [ERole.ESPECIALISTA_MEDICO, ERole.ESPECIALISTA_EN_ODONTOLOGIA, ERole.PROFESIONAL_DE_SALUD]) && anyMatch<ERole>(userRoles, [ERole.ENFERMERO]);
 		})
 	}
 
@@ -93,38 +95,66 @@ export class EvolutionNoteDockPopupComponent implements OnInit {
 
 		this.internacionMasterDataService.getBloodTypes().subscribe(bloodTypes => this.bloodTypes = bloodTypes);
 
+
+		if (this.data.evolutionNoteId) {
+			if (this.data.documentType === "Nota de evolución") {
+				this.evolutionNoteService.getEvolutionDiagnosis(this.data.evolutionNoteId, this.data.internmentEpisodeId).subscribe(e => {
+					this.evolutionNote = e;
+					this.loadEvolutionNoteInfo();
+				});
+			}
+			else {
+				this.evolutionNoteService.getEvolutionDiagnosisNursing(this.data.evolutionNoteId, this.data.internmentEpisodeId).subscribe(e => {
+					this.evolutionNote = e;
+					this.loadEvolutionNoteInfo();
+				});
+			}
+		}
 	}
 
 	save(): void {
 		if (this.form.valid) {
+			this.isDisableConfirmButton = true;
+
 			this.apiErrors = [];
 			const evolutionNote = this.buildEvolutionNoteDto();
-			this.evolutionNoteService.createDocument(evolutionNote, this.data.internmentEpisodeId)
-				.subscribe(() => {
-					this.snackBarService.showSuccess('internaciones.nota-evolucion.messages.SUCCESS');
-					this.dockPopupRef.close(setFieldsToUpdate(evolutionNote));
-				}, error => {
-					error.errors.forEach(val => {
-						this.apiErrors.push(val);
-					});
-					this.snackBarService.showError('internaciones.nota-evolucion.messages.ERROR');
+			if (this.data.evolutionNoteId) {
+				this.editDocumentAction.openEditReason().subscribe(reason => {
+					if (reason) {
+						evolutionNote.modificationReason = reason;
+						this.evolutionNoteService.editEvolutionDiagnosis(evolutionNote, this.data.evolutionNoteId, this.data.internmentEpisodeId).subscribe(
+							success => this.showSuccesAndClosePopup(evolutionNote),
+							error => {
+								this.isDisableConfirmButton = false;
+								this.showError(error);
+							});
+					}
 				});
+				return;
+			}
+			this.evolutionNoteService.createDocument(evolutionNote, this.data.internmentEpisodeId)
+				.subscribe(
+					() => this.showSuccesAndClosePopup(evolutionNote),
+					error => {
+						this.isDisableConfirmButton = false;
+						this.showError(error);
+					});
 		} else {
 			this.snackBarService.showError('internaciones.nota-evolucion.messages.ERROR');
 			this.form.markAllAsTouched();
 		}
+	}
 
-		function setFieldsToUpdate(evolutionNoteDto: EvolutionNoteDto): InternmentFields {
-			return {
-				allergies: !!evolutionNoteDto.allergies,
-				heightAndWeight: !!evolutionNoteDto.anthropometricData?.weight || !!evolutionNoteDto.anthropometricData?.height,
-				bloodType: !!evolutionNoteDto.anthropometricData?.bloodType,
-				immunizations: !!evolutionNoteDto.immunizations,
-				riskFactors: !!evolutionNoteDto.riskFactors,
-				mainDiagnosis: !!evolutionNoteDto.mainDiagnosis,
-				diagnosis: !!evolutionNoteDto.diagnosis,
-				evolutionClinical: !!evolutionNoteDto.diagnosis,
-			}
+	private setFieldsToUpdate(evolutionNoteDto: EvolutionNoteDto): InternmentFields {
+		return {
+			allergies: !!evolutionNoteDto.allergies,
+			heightAndWeight: !!evolutionNoteDto.anthropometricData?.weight || !!evolutionNoteDto.anthropometricData?.height,
+			bloodType: !!evolutionNoteDto.anthropometricData?.bloodType,
+			immunizations: !!evolutionNoteDto.immunizations,
+			riskFactors: !!evolutionNoteDto.riskFactors,
+			mainDiagnosis: !!evolutionNoteDto.mainDiagnosis,
+			diagnosis: !!evolutionNoteDto.diagnosis,
+			evolutionClinical: !!evolutionNoteDto.diagnosis,
 		}
 	}
 
@@ -135,11 +165,23 @@ export class EvolutionNoteDockPopupComponent implements OnInit {
 			allergies: this.allergies,
 			anthropometricData: isNull(formValues.anthropometricData) ? undefined : {
 				bloodType: formValues.anthropometricData.bloodType ? {
-					id: formValues.anthropometricData.bloodType.id,
+					id: this.evolutionNote ?
+						(formValues.anthropometricData.bloodType.description === this.evolutionNote.anthropometricData?.bloodType?.value) ? this.evolutionNote.anthropometricData.bloodType.id : null
+						: null,
 					value: formValues.anthropometricData.bloodType.description
 				} : undefined,
-				height: getValue(formValues.anthropometricData.height),
-				weight: getValue(formValues.anthropometricData.weight),
+				height: formValues.anthropometricData.height ? {
+					id: this.evolutionNote ?
+						(formValues.anthropometricData.height === this.evolutionNote.anthropometricData?.height?.value) ? this.evolutionNote.anthropometricData.height.id : null
+						: null,
+					value: formValues.anthropometricData.height
+				} : undefined,
+				weight: formValues.anthropometricData.weight ? {
+					id: this.evolutionNote ?
+						(formValues.anthropometricData.weight === this.evolutionNote.anthropometricData?.weight?.value) ? this.evolutionNote.anthropometricData.weight.id : null
+						: null,
+					value: formValues.anthropometricData.weight
+				} : undefined,
 			},
 			mainDiagnosis: this.mainDiagnosis?.isAdded ? this.mainDiagnosis : null,
 			diagnosis: this.diagnosticos.filter(diagnosis => diagnosis.isAdded),
@@ -164,10 +206,6 @@ export class EvolutionNoteDockPopupComponent implements OnInit {
 			return Object.values(formGroupValues).every(el => el === null);
 		}
 
-		function getValue(controlValue: any) {
-			return controlValue ? { value: controlValue } : undefined;
-		}
-
 		function getEffectiveValue(controlValue: any) {
 			return controlValue.value ? { value: controlValue.value, effectiveTime: controlValue.effectiveTime } : undefined;
 		}
@@ -176,4 +214,58 @@ export class EvolutionNoteDockPopupComponent implements OnInit {
 	clearBloodType(control): void {
 		control.controls.bloodType.reset();
 	}
+
+	loadEvolutionNoteInfo() {
+		this.allergies = this.evolutionNote.allergies;
+		this.diagnosticos = this.evolutionNote.diagnosis;
+		this.diagnosticos.forEach(d => d.isAdded = true);
+		this.immunizations = this.evolutionNote.immunizations;
+		const procedure: Procedimiento[] = this.evolutionNote.procedures.map(p => {
+			return { snomed: p.snomed, performedDate: p.performedDate }
+		});
+		procedure.forEach(p => this.procedimientosService.add(p));
+		this.mainDiagnosis = this.evolutionNote.mainDiagnosis;
+		if (this.mainDiagnosis)
+			this.mainDiagnosis.isAdded = true;
+		if (this.evolutionNote.anthropometricData) {
+			const findBloodTypeValue = findBloodType(this.bloodTypes, this.evolutionNote.anthropometricData.bloodType?.value)
+			this.form.controls.anthropometricData.setValue({
+				bloodType: findBloodTypeValue ? findBloodTypeValue : null,
+				height: this.evolutionNote.anthropometricData.height?.value ? this.evolutionNote.anthropometricData.height.value : null,
+				weight: this.evolutionNote.anthropometricData.weight?.value ? this.evolutionNote.anthropometricData.weight.value : null
+			});
+		}
+		if (this.evolutionNote.riskFactors) {
+			Object.keys(this.evolutionNote.riskFactors).forEach((key: string) => {
+				if (this.evolutionNote.riskFactors[key].value != undefined) {
+					this.form.controls.riskFactors.patchValue({ [key]: { value: this.evolutionNote.riskFactors[key].value } });
+					const date: Date = new Date(this.evolutionNote.riskFactors[key].effectiveTime);
+					this.form.controls.riskFactors.patchValue({ [key]: { effectiveTime: dateToMoment(date) } });
+				}
+			});
+		}
+		Object.keys(this.evolutionNote.notes).forEach((key: string) => {
+			if (this.evolutionNote.notes[key]) {
+				this.form.controls.observations.patchValue({ [key]: this.evolutionNote.notes[key] })
+			}
+		});
+
+		function findBloodType(bloodTypes: MasterDataInterface<string>[], value: string): MasterDataInterface<string> {
+			return bloodTypes.find(bloodType => bloodType.description === value);
+		}
+	}
+
+	showSuccesAndClosePopup(evolutionNote: EvolutionNoteDto) {
+		this.snackBarService.showSuccess('internaciones.nota-evolucion.messages.SUCCESS');
+		this.dockPopupRef.close(this.setFieldsToUpdate(evolutionNote));
+	}
+
+	showError(error) {
+		error.errors?.forEach(val => {
+			this.apiErrors.push(val);
+		});
+		this.snackBarService.showError('internaciones.nota-evolucion.messages.ERROR');
+	}
 }
+
+

@@ -76,6 +76,10 @@ export class AlergiasNuevaConsultaService {
 		this.criticalityTypes = criticalityTypes;
 	}
 
+	getCriticalityTypes() {
+		return this.criticalityTypes;
+	}
+
 	getColumns(): ColumnConfig[] {
 		return this.columns;
 	}
@@ -117,7 +121,7 @@ export class AlergiasNuevaConsultaService {
 		this.data = removeFrom<Alergia>(this.data, index);
 	}
 
-	addToList() {
+	addToList(): boolean {
 		if (this.form.valid && this.snomedConcept) {
 			const alergia: Alergia = {
 				snomed: this.snomedConcept,
@@ -125,7 +129,9 @@ export class AlergiasNuevaConsultaService {
 			};
 			this.addControl(alergia);
 			this.resetForm();
+			return true;
 		}
+		return false;
 	}
 
 	getForm(): FormGroup {
@@ -150,6 +156,10 @@ export class AlergiasNuevaConsultaService {
 
 	getECL(): SnomedECL {
 		return this.ECL;
+	}
+
+	isEmpty(): boolean {
+		return (!this.data || this.data.length === 0);
 	}
 
 }

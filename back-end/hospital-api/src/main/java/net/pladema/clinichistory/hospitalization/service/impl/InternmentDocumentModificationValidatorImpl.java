@@ -48,7 +48,7 @@ public class InternmentDocumentModificationValidatorImpl implements InternmentDo
 		if (internmentEpisodeService.haveMedicalDischarge(intermentEpisodeId))
 			throw new InternmentDocumentException(InternmentDocumentEnumException.HAVE_MEDICAL_DISCHARGE, "No es posible llevar a cabo la acción dado que se ha realizado un alta médica");
 
-		if (ChronoUnit.DAYS.between(document.getCreatedOn(), LocalDateTime.now()) > 1)
+		if (ChronoUnit.HOURS.between(document.getCreatedOn(), LocalDateTime.now()) > 24)
 			throw new InternmentDocumentException(InternmentDocumentEnumException.INVALID_DATE, "La acción puede llevarse a cabo únicamente dentro de las 24 hs posteriores a su creación");
 	}
 }

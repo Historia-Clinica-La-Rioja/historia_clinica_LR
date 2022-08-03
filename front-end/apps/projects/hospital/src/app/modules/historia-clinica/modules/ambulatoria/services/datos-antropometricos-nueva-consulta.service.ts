@@ -122,16 +122,14 @@ export class DatosAntropometricosNuevaConsultaService {
 	setPreviousAnthropometricData(): void {
 		this.hceGeneralStateService.getAnthropometricData(this.patientId).subscribe(
 			(anthropometricData: HCEAnthropometricDataDto) => {
-				if (anthropometricData === null)
-					this.notShowPreloadedAnthropometricData = false;
-				else {
-					this.notShowPreloadedAnthropometricData = true;
+				this.notShowPreloadedAnthropometricData = anthropometricData ? true : false;
+				if (anthropometricData) {
 					this.setAnthropometric(anthropometricData.weight?.value, anthropometricData.height?.value, anthropometricData.bloodType?.value, anthropometricData.headCircumference?.value);
 					Object.keys(anthropometricData).forEach((key: string) => {
-						if (anthropometricData[key].effectiveTime != undefined) {
+						if (anthropometricData[key].effectiveTime) {
 							this.dateList.push(anthropometricData[key].effectiveTime);
 						}
-					})
+					});
 				}
 			}
 		);

@@ -158,18 +158,6 @@ public class InternmentStateController {
         return  ResponseEntity.ok().body(result);
     }
 
-    @InternmentValid
-    @GetMapping("/{internmentEpisodeId}/general/anthropometricData")
-    public ResponseEntity<AnthropometricDataDto> anthropometricDataGeneralState(
-            @PathVariable(name = "institutionId") Integer institutionId,
-            @PathVariable(name = "internmentEpisodeId") Integer internmentEpisodeId){
-        LOG.debug(LOGGING_INSTITUTION_AND_INTERNMENT_EPISODE, institutionId, internmentEpisodeId);
-        AnthropometricDataBo anthropometricData = fetchHospitalizationClinicalObservationState.getLastAnthropometricDataGeneralState(internmentEpisodeId);
-        AnthropometricDataDto result = internmentStateMapper.toAnthropometricDataDto(anthropometricData);
-        LOG.debug(LOGGING_OUTPUT, result);
-        return  ResponseEntity.ok().body(result);
-    }
-
 	@InternmentValid
 	@GetMapping("/{internmentEpisodeId}/general/last-2-anthropometric-data")
 	public ResponseEntity<List<AnthropometricDataDto>> getLast2AnthropometricDataGeneralState(

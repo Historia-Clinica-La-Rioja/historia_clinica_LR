@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import net.pladema.clinichistory.hospitalization.controller.dto.summary.DocumentsSummaryDto;
 
 import java.time.LocalDate;
 
@@ -38,5 +39,11 @@ public class InternmentPatientDto {
 	private String sectorDescription;
 
 	private boolean hasPhysicalDischarge;
+
+	private DocumentsSummaryDto documentsSummary;
+
+	private boolean hasAdministrativeDischarge;
+
+	private boolean hasMedicalDischarge;
 
 }

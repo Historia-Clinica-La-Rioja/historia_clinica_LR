@@ -208,7 +208,7 @@
 	</form>
 	<div actions id="buttons" align="end">
 		<button id="sign-confirm" mat-raised-button type="submit" color="primary"
-			*appHasRole="['ESPECIALISTA_MEDICO', 'ENFERMERO_ADULTO_MAYOR']" (click)="save()">
+			*appHasRole="['ESPECIALISTA_MEDICO', 'ENFERMERO_ADULTO_MAYOR']" (click)="save()" [disabled]="isDisableConfirmButton">
 			<span class="uppercase" [translate]="'internaciones.anamnesis.buttons.CONFIRM'"></span>
 		</button>
 	</div>

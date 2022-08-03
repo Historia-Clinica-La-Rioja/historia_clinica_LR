@@ -71,36 +71,6 @@
                     </compilerArgs>
                 </configuration>
             </plugin>
-            <plugin>
-                <groupId>cz.habarta.typescript-generator</groupId>
-                <artifactId>typescript-generator-maven-plugin</artifactId>
-                <version>2.33.956</version>
-                <executions>
-                    <execution>
-                        <id>generate</id>
-                        <goals>
-                            <goal>generate</goal>
-                        </goals>
-                        <phase>process-classes</phase>
-                    </execution>
-                </executions>
-                <configuration>
-                    <jsonLibrary>jackson2</jsonLibrary>
-                    <noFileComment>true</noFileComment>
-                    <sortDeclarations>true</sortDeclarations>
-                    <loggingLevel>Info</loggingLevel>
-                    <mapEnum>asEnum</mapEnum>
-                    <classPatterns>
-                        <pattern>ar.lamansys.online.infraestructure.input.rest.*.dto.**Dto</pattern>
-                    </classPatterns>
-                    <outputKind>module</outputKind>
-                    <outputFile>../../front-end/apps/projects/hospital/src/app/modules/api-rest/api-online.d.ts</outputFile>
-                    <optionalAnnotations>
-                        <annotation>javax.annotation.Nullable</annotation>
-                        <annotation>org.springframework.lang.Nullable</annotation>
-                    </optionalAnnotations>
-                </configuration>
-            </plugin>
         </plugins>
     </build>
 

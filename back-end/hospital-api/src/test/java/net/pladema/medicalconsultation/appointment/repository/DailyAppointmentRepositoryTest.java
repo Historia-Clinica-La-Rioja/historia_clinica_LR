@@ -156,13 +156,14 @@ class DailyAppointmentRepositoryTest extends UnitRepository {
         diary.setStartDate(LocalDate.of(2020, 9, 1));
         diary.setEndDate(LocalDate.of(2020, 11, 1));
         diary.setAppointmentDuration((short) 30);
+		diary.setClinicalSpecialtyId(1);
         return diary;
     }
 
     private DoctorsOffice mockDoctorsOffice(Integer institutionId){
         DoctorsOffice doctorsOffice = new DoctorsOffice();
         doctorsOffice.setInstitutionId(institutionId);
-        doctorsOffice.setClinicalSpecialtySectorId(10);
+        doctorsOffice.setSectorId(10);
         doctorsOffice.setDescription("Office description");
         doctorsOffice.setOpeningTime(LocalTime.of(0, 0));
         doctorsOffice.setClosingTime(LocalTime.of(23, 59));

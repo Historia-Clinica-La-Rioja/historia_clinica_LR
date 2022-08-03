@@ -21,12 +21,8 @@ public interface ClinicalSpecialtyRepository extends JpaRepository<ClinicalSpeci
 
     @Transactional(readOnly = true)
     @Query(value = " SELECT cs FROM Diary d " +
-            "JOIN DoctorsOffice doff " +
-            "ON d.doctorsOfficeId = doff.id " +
-            "JOIN ClinicalSpecialtySector css " +
-            "ON doff.clinicalSpecialtySectorId = css.id " +
             "JOIN ClinicalSpecialty cs "+
-            "ON cs.id = css.clinicalSpecialtyId " +
+            "ON cs.id = d.clinicalSpecialtyId " +
             "WHERE d.id = :diaryId")
     ClinicalSpecialty getClinicalSpecialtyByDiary(@Param("diaryId") Integer diaryId);
 

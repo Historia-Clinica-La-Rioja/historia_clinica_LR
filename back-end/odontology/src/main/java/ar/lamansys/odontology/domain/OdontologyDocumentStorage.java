@@ -4,6 +4,6 @@ import ar.lamansys.odontology.domain.consultation.OdontologyDocumentBo;
 
 public interface OdontologyDocumentStorage {
 
-    void save(OdontologyDocumentBo odontologyDocumentBo);
+    Long save(OdontologyDocumentBo odontologyDocumentBo);
 
 }

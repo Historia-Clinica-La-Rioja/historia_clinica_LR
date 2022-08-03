@@ -122,6 +122,23 @@ export class AppointmentsFacadeService {
 			);
 	}
 
+	updateObservation(appointmentId: number, observation: string): Observable<boolean> {
+		return this.appointmentService.updateObservation(appointmentId, observation)
+			.pipe(
+				map((response: boolean) => {
+					if (response) {
+						this.appointments$.pipe(first()).subscribe((events: CalendarEvent[]) => {
+							const toEdit: CalendarEvent = events.find(event => event.meta.appointmentId === appointmentId);
+							toEdit.meta.observation = observation;
+							this.appointmenstEmitter.next(events);
+						});
+						return true;
+					}
+					return false;
+				})
+			);
+	}
+
 	update(events) {
 		this.appointmenstEmitter.next(events);
 	}
@@ -252,7 +269,7 @@ export function getColor(appointment: AppointmentListDto): COLORES {
 		return COLORES.FUERA_DE_AGENDA;
 	}
 
-	if (!appointment?.patient.id) {
+	if (!appointment?.patient?.id) {
 		return COLORES.RESERVA_ALTA;
 	}
 

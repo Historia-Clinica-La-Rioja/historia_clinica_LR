@@ -77,7 +77,7 @@ export class SearchCreateComponent implements OnInit {
 			this.disableButtonConfirm = true;
 			const searchRequest = {
 				identificationTypeId: this.formSearch.controls.identifType.value,
-				identificationNumber: this.formSearch.controls.identifNumber.value,
+				identificationNumber: +this.formSearch.controls.identifNumber.value,
 				genderId: this.formSearch.controls.gender.value,
 			};
 			if (this.noIdentity) {
@@ -102,7 +102,7 @@ export class SearchCreateComponent implements OnInit {
 			{
 				queryParams: {
 					identificationTypeId: this.formSearch.controls.identifType.value,
-					identificationNumber: this.formSearch.controls.identifNumber.value,
+					identificationNumber: +this.formSearch.controls.identifNumber.value,
 					genderId: this.formSearch.controls.gender.value,
 					IdentityVerificationStatus: this.formSearch.controls.IdentityVerificationStatus.value,
 					comments: this.formSearch.controls.comments.value,

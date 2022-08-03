@@ -12,6 +12,7 @@ import javax.persistence.EntityManager;
 import java.math.BigInteger;
 import java.sql.Date;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 @Repository
@@ -37,7 +38,7 @@ public class HCHHealthConditionRepositoryImpl implements HCHHealthConditionRepos
                 "join {h-schema}health_condition hc on dhc.health_condition_id = hc.id " +
                 "where d.source_id = :internmentEpisodeId " +
                 "and d.source_type_id = " + SourceType.HOSPITALIZATION +" "+
-                "and d.status_id = :statusId )" +
+                "and d.status_id IN (:statusId) )" +
                 "select t.id as id, s.sctid as sctid, s.pt, status_id, t.main, verification_status_id, problem_id, " +
                 "start_date, n.id note_id, n.description as note " +
                 "from t " +
@@ -47,7 +48,7 @@ public class HCHHealthConditionRepositoryImpl implements HCHHealthConditionRepos
                 "order by t.updated_on desc";
 
         List<Object[]> queryResult = entityManager.createNativeQuery(sqlString)
-                .setParameter("statusId", DocumentStatus.FINAL)
+				.setParameter("statusId", List.of(DocumentStatus.FINAL, DocumentStatus.DRAFT))
                 .setParameter("verificationId", ConditionVerificationStatus.ERROR)
                 .setParameter("internmentEpisodeId", internmentEpisodeId)
                 .getResultList();

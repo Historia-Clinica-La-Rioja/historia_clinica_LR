@@ -9,7 +9,7 @@ import { getDisplayedColumns, flattenColumns } from './utils';
 import * as moment from "moment";
 
 const formatColumnDate = (tableData: any[], column): any[] => {
-	const dateFormatter = ({x}) => moment(x).format('DD/MM/YYYY');
+	const dateFormatter = (x) => !x ? x : moment(x).format('DD/MM/YYYY');
 	return tableData.map(row => {
 		return {
 		...row,

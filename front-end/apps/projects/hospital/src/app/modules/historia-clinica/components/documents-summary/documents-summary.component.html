@@ -75,14 +75,18 @@
 						<ng-container>
 							<mat-icon *ngIf="documentSearch.document.documentType != 'Epicrisis' && documentSearch.document.documentType != 'Anamnesis'"mat-list-icon fontSet="material-icons-outlined" color="primary">assignment</mat-icon>
 							<mat-icon *ngIf="documentSearch.document.documentType == 'Anamnesis'" mat-list-icon fontSet="material-icons-outlined" color="primary" svgIcon="assignment_return"></mat-icon>
-							<mat-icon *ngIf="documentSearch.document.documentType == 'Epicrisis'" mat-list-icon fontSet="material-icons-outlined" color="primary">assignment_turned_in</mat-icon>
+							<mat-icon *ngIf="documentSearch.document.documentType == 'Epicrisis' && documentSearch.document.confirmed" mat-list-icon fontSet="material-icons-outlined" color="primary">assignment_turned_in</mat-icon>
+							<mat-icon *ngIf="documentSearch.document.documentType == 'Epicrisis' && !documentSearch.document.confirmed" mat-list-icon fontSet="material-icons-outlined" class="empicrisis-draft">assignment_turned_in</mat-icon>
 						</ng-container>
 						<div fxLayout="column" fxLayoutGap="20px">
 							<span id="document-type" class="color-primary uppercase">
 								<ng-container *ngIf="documentSearch.document.documentType === 'Anamnesis'">
 									Evaluación de ingreso
 								</ng-container>
-								<ng-container *ngIf="documentSearch.document.documentType !== 'Anamnesis'">
+								<ng-container *ngIf="documentSearch.document.documentType === 'Epicrisis' && !documentSearch.document.confirmed">
+									<span class="empicrisis-draft">{{documentSearch.document.documentType}} (Borrador) </span>
+								</ng-container>
+								<ng-container *ngIf="documentSearch.document.documentType !== 'Anamnesis' && documentSearch.document.confirmed">
 									{{documentSearch.document.documentType}}
 								</ng-container>
 							</span>
@@ -152,6 +156,10 @@
 								<div class="mat-body" [translate]="'internaciones.anamnesis.observations.OTHERS'"></div>
 								<div class="mat-body-strong">{{activeDocument.document.notes.otherNote}}</div>
 							</section>
+							<button *ngIf="!activeDocument.document.confirmed" id="edit-draft-button" type="button"  class="edit-draft-button" mat-flat-button color="primary" (click)="editDraftEpicrisis(activeDocument.document)">
+								<span [translate]="'internaciones.epicrisis.buttons.EDIT_DRAFT'">
+								</span>
+							</button>
 						</div>
 					</ng-container>
 
@@ -169,22 +177,49 @@
 							</div>
 						</div>
 					</section>
+
+					<section *ngIf="activeDocument.editedOn">
+						<div fxLayoutGap="5px" fxLayoutAlign="start center" class="grey">
+							<span [translate]="'internaciones.documents-summary.EDITED_DOCUMENT'"></span>
+							<span>{{ activeDocument.editedOn }}</span>
+						</div>
+					</section>
 				</div>
 
-				<div *ngIf="activeDocument.canDoAction">
-					<button type="button" mat-button color="warn" (click)="delete(activeDocument.document)">
+				<div>
+					<button type="button" mat-button color="primary" *ngIf="activeDocument.canDoAction.edit && activeDocument.document.confirmed" (click)="edit(activeDocument.document)">
+						<mat-icon>edit</mat-icon>
+					</button>
+					<button type="button" mat-button color="warn" *ngIf="activeDocument.canDoAction.delete" (click)="delete(activeDocument.document)">
 						<mat-icon>delete</mat-icon>
 					</button>
 				</div>
 			</div>
 
 			<div *ngIf="(activeDocument && !viewEvolutionNote() )" class="no-notes content mat-body-strong" fxLayout="row" fxLayoutAlign="space-between center">
-				<span>{{"internaciones.documents-summary.WITHOUT_OBSERVATIONS" | translate}}</span>
-				<div *ngIf="activeDocument.canDoAction">
-					<button type="button" mat-button color="warn" (click)="delete(activeDocument.document)">
+				<div fxLayout="column" fxLayoutGap="10px">
+					<span>{{"internaciones.documents-summary.WITHOUT_OBSERVATIONS" | translate}}</span>
+					<section *ngIf="activeDocument.editedOn">
+						<div fxLayoutGap="5px" fxLayoutAlign="start center" class="grey">
+							<span [translate]="'internaciones.documents-summary.EDITED_DOCUMENT'"></span>
+							<span>{{ activeDocument.editedOn }}</span>
+						</div>
+					</section>
+				</div>
+				<div>
+					<button type="button" mat-button color="primary" *ngIf="activeDocument.canDoAction.edit" (click)="edit(activeDocument.document)">
+						<mat-icon>edit</mat-icon>
+					</button>
+					<button type="button" mat-button color="warn" *ngIf="activeDocument.canDoAction.delete" (click)="delete(activeDocument.document)">
 						<mat-icon>delete</mat-icon>
 					</button>
 				</div>
+			</div>
+		</div>
+		<div
+			*ngIf="this.documentHistoric && !this.documentHistoric.documents.length">
+			<div class="no-data-styles">
+				<span [translate]="'internaciones.documents-summary.NO_FILTERED_PROBLEMS'"></span>
 			</div>
 		</div>
 	</ng-container>

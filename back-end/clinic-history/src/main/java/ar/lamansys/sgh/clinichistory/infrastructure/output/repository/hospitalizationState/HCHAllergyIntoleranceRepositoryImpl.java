@@ -41,19 +41,19 @@ public class HCHAllergyIntoleranceRepositoryImpl implements HCHAllergyIntoleranc
                 "from {h-schema}document d " +
                 "join {h-schema}document_allergy_intolerance dai on d.id = dai.document_id " +
                 "join {h-schema}allergy_intolerance ai on dai.allergy_intolerance_id = ai.id " +
-                "where d.source_id = :internmentEpisodeId " +
+                "where d.source_id IN (:internmentEpisodeId) " +
                 "and d.source_type_id = " + SourceType.HOSPITALIZATION +" "+
-                "and d.status_id = :documentStatusId " +
+                "and d.status_id IN (:documentStatusId) " +
                 ") " +
                 "select t.id as id, s.sctid as sctid, s.pt, t.status_id, t.verification_status_id, t.category_id, t.criticality, t.start_date " +
                 "from temporal t " +
                 "join {h-schema}snomed s on t.snomed_id = s.id " +
-                "where rw = 1 and not status_id = :allergyIntoleranceStatus " +
+                "where rw = 1 and not verification_status_id = :allergyIntoleranceStatus " +
                 "order by t.updated_on desc ";
 
         List<Object[]> queryResult = entityManager.createNativeQuery(sqlString)
                 .setParameter("internmentEpisodeId", internmentEpisodeId)
-                .setParameter("documentStatusId", DocumentStatus.FINAL)
+                .setParameter("documentStatusId", List.of(DocumentStatus.FINAL, DocumentStatus.DRAFT))
                 .setParameter("allergyIntoleranceStatus", AllergyIntoleranceVerificationStatus.ERROR)
                 .getResultList();
         List<AllergyConditionVo> result = new ArrayList<>();

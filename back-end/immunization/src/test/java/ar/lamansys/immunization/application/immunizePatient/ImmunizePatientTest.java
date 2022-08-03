@@ -27,7 +27,7 @@ import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.S
 import ar.lamansys.sgh.shared.infrastructure.input.service.ClinicalSpecialtyDto;
 import ar.lamansys.sgh.shared.infrastructure.input.service.ProfessionalInfoDto;
 import ar.lamansys.sgh.shared.infrastructure.input.service.RoleInfoDto;
-import ar.lamansys.sgh.shared.infrastructure.input.service.SharedAppointmentPort;
+import ar.lamansys.sgh.shared.infrastructure.input.service.appointment.SharedAppointmentPort;
 import ar.lamansys.sgh.shared.infrastructure.input.service.SharedPermissionPort;
 import ar.lamansys.sgh.shared.infrastructure.input.service.SharedStaffPort;
 import ar.lamansys.sgh.shared.infrastructure.input.service.immunization.VaccineDoseInfoDto;
