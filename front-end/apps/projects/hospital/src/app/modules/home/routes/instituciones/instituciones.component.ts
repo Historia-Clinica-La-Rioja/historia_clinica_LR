@@ -41,18 +41,20 @@ export class InstitucionesComponent {
 			this.backofficeAccess = this.hasAccessToBackoffice(allRoles);
 			this.patientPortalAccess = this.hasAccessToPatientPortal(allRoles);
 
-			institutionService.getInstitutions(institutionIds).subscribe(institutions => {
-				/*const uniqueIds = uniqueItems(institutionIds);
+			if (institutionIds[0] !== undefined) {
+				institutionService.getInstitutions(institutionIds).subscribe(institutions => {
+					/*const uniqueIds = uniqueItems(institutionIds);
 
-				const webappAccess = this.hasAccessToWebapp(allRoles);
+					const webappAccess = this.hasAccessToWebapp(allRoles);
 
-				const onlyBackoffice = !webappAccess && this.backoffice;
-				const hasSingleIdWebapp = !this.backoffice && webappAccess && uniqueIds.length === 1;
+					const onlyBackoffice = !webappAccess && this.backoffice;
+					const hasSingleIdWebapp = !this.backoffice && webappAccess && uniqueIds.length === 1;
 
-				if (hasSingleIdWebapp || onlyBackoffice)
-					this.ingresar({id: uniqueIds[0]}, this.backoffice)*/
-				this.institutions = institutions;
-			});
+					if (hasSingleIdWebapp || onlyBackoffice)
+						this.ingresar({id: uniqueIds[0]}, this.backoffice)*/
+					this.institutions = institutions;
+				});
+			}
 		});
 
 		this.featureFlagService.isActive(AppFeature.HABILITAR_MODULO_PORTAL_PACIENTE).subscribe(isOn => this.patientPortalEnabled = isOn);
