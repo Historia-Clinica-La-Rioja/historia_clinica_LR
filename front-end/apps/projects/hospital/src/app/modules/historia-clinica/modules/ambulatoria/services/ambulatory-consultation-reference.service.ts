@@ -59,11 +59,11 @@ export class AmbulatoryConsultationReferenceService {
 		});
 		dialogRef.afterClosed().subscribe(reference => {
 			if (reference.data) {
-				let ref = { referenceNumber: this.references.length, referenceFiles: [], referenceIds: [], referenceProblems: reference.problems }
-				if (reference.files.length) {
-					let referenceIds: number[] = [];
-					ref = { referenceNumber: this.references.length, referenceFiles: reference.files, referenceIds: referenceIds, referenceProblems: reference.problems }
-				}
+				let ref = {
+					referenceFiles: reference.files.length ? reference.files : [],
+					referenceIds: [],
+					referenceProblems: reference.problems
+				};
 				this.references.push(ref);
 				this.outpatientReferences.push(reference.data);
 			}
@@ -72,6 +72,7 @@ export class AmbulatoryConsultationReferenceService {
 
 	remove(index: number): void {
 		this.outpatientReferences = removeFrom<ReferenceDto>(this.outpatientReferences, index);
+		this.references = removeFrom<Reference>(this.references, index);
 	}
 
 	getColumns(): TableColumnConfig[] {
@@ -114,14 +115,10 @@ export class AmbulatoryConsultationReferenceService {
 		return referencesFilesIds;
 	}
 
-	setReferenceFilesIds(referenceFilesIds: number[]) {
+	deleteReferenceFilesIds() {
 		this.references.forEach(reference => {
-			reference.referenceIds = referenceFilesIds;
+			reference.referenceIds = [];
 		});
-	}
-
-	getReferenceProblems(referenceId: number): HCEPersonalHistory[] {
-		return this.references[referenceId].referenceProblems
 	}
 
 	isEmpty(): boolean {
@@ -131,7 +128,6 @@ export class AmbulatoryConsultationReferenceService {
 }
 
 export interface Reference {
-	referenceNumber: number;
 	referenceFiles: File[];
 	referenceIds: number[];
 	referenceProblems: HCEPersonalHistory[];

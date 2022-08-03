@@ -253,14 +253,16 @@ export class NuevaConsultaDockPopupComponent implements OnInit {
 		if (filesToUpdate.length) {
 
 			forkJoin(filesToUpdate).subscribe((referenceFileId: number[]) => {
-				let indiceRefFilesIds = 0;
-				references.forEach(reference => {
-
-					const filesLength = reference.referenceFiles.length;
-					for (let a = indiceRefFilesIds; a < indiceRefFilesIds + filesLength; a++)
-						this.ambulatoryConsultationReferenceService.addFileIdAt(reference.referenceNumber, referenceFileId[a]);
-					indiceRefFilesIds += filesLength;
-				});
+				let indexRefFilesIds = 0;
+				references.forEach(
+					(reference: Reference, index: number) => {
+						const filesAmount = reference.referenceFiles.length;
+						for (let i = indexRefFilesIds; i < indexRefFilesIds + filesAmount; i++) {
+							this.ambulatoryConsultationReferenceService.addFileIdAt(index, referenceFileId[i]);
+						}
+						indexRefFilesIds += filesAmount;
+					}
+				);
 				this.goToCreateConsultation(nuevaConsulta);
 			}, _ => {
 				this.snackBarService.showError('ambulatoria.paciente.nueva-consulta.messages.ERROR_TO_UPLOAD_FILES');
@@ -405,7 +407,7 @@ export class NuevaConsultaDockPopupComponent implements OnInit {
 	errorToUploadReferenceFiles() {
 		const filesToDelete = this.ambulatoryConsultationReferenceService.getReferenceFilesIds();
 		this.referenceFileService.deleteReferenceFiles(filesToDelete);
-		this.ambulatoryConsultationReferenceService.setReferenceFilesIds([]);
+		this.ambulatoryConsultationReferenceService.deleteReferenceFilesIds();
 	}
 
 	goToCreateConsultation(nuevaConsulta: CreateOutpatientDto) {
@@ -465,16 +467,17 @@ export class NuevaConsultaDockPopupComponent implements OnInit {
 
 		const references: Reference[] = this.ambulatoryConsultationReferenceService.getReferences();
 
-		references.forEach(reference => {
-			const referenceProblems = this.ambulatoryConsultationReferenceService.getReferenceProblems(reference.referenceNumber);
-			referenceProblems.forEach(referenceProblem => {
-				const outProblemDto = this.mapToOutpatientProblemDto(referenceProblem);
-				const existProblem = outpatientProblemDto.find(problem => problem.snomed.sctid === outProblemDto.snomed.sctid);
-				if (!existProblem) {
-					outpatientProblemDto.push(outProblemDto);
-				}
-			});
-		});
+		references.forEach(
+			(reference: Reference) => {
+				reference.referenceProblems.forEach(referenceProblem => {
+					const outProblemDto = this.mapToOutpatientProblemDto(referenceProblem);
+					const existProblem = outpatientProblemDto.find(problem => problem.snomed.sctid === outProblemDto.snomed.sctid);
+					if (!existProblem) {
+						outpatientProblemDto.push(outProblemDto);
+					}
+				});
+			}
+		);
 
 		return outpatientProblemDto;
 	}

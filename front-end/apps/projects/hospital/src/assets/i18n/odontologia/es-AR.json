@@ -26,7 +26,8 @@
             "ONLY_TWO_DIGIT_ERROR": "Solo números de dos dígitos",
             "EVOLUTION": "Evolución",
             "REFERENCE_REQUEST": "Solicitud de referencia",
-            "ADD_REQUEST": "Agregar solicitud"
+            "ADD_REQUEST": "Agregar solicitud",
+            "ERROR_TO_UPLOAD_FILES": "Error al guardar la solicitud de referencia"
         },
         "new-consultation-add-diagnose-form": {
             "ADD_PROBLEM": "Agregar problema",

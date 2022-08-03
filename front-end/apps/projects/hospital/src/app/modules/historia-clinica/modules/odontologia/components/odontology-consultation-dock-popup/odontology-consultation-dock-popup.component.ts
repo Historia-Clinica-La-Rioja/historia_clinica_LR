@@ -326,18 +326,20 @@ export class OdontologyConsultationDockPopupComponent implements OnInit {
 		if (filesToUpdate.length) {
 
 			forkJoin(filesToUpdate).subscribe((referenceFileId: number[]) => {
-				let indiceRefFilesIds = 0;
-				references.forEach(reference => {
-
-					const filesLength = reference.referenceFiles.length;
-					for (let a = indiceRefFilesIds; a < indiceRefFilesIds + filesLength; a++)
-						this.odontologyReferenceService.addFileIdAt(reference.referenceNumber, referenceFileId[a]);
-					indiceRefFilesIds += filesLength;
-				});
+				let indexRefFilesIds = 0;
+				references.forEach(
+					(reference: Reference, index: number) => {
+						const filesAmount = reference.referenceFiles.length;
+						for (let i = indexRefFilesIds; i < indexRefFilesIds + filesAmount; i++) {
+							this.odontologyReferenceService.addFileIdAt(index, referenceFileId[i]);
+						}
+						indexRefFilesIds += filesAmount;
+					}
+				);
 				odontologyDto.references = this.odontologyReferenceService.getOdontologyReferences();
 				this.createConsultation(odontologyDto);
 			}, _ => {
-				this.snackBarService.showError('Error al guardar la solicitud de referencia');
+				this.snackBarService.showError('odontologia.odontology-consultation-dock-popup.ERROR_TO_UPLOAD_FILES');
 				this.errorToUploadReferenceFiles();
 			}
 			);
@@ -351,7 +353,7 @@ export class OdontologyConsultationDockPopupComponent implements OnInit {
 	private errorToUploadReferenceFiles() {
 		const filesToDelete = this.odontologyReferenceService.getReferenceFilesIds();
 		this.referenceFileService.deleteReferenceFiles(filesToDelete);
-		this.odontologyReferenceService.setReferenceFilesIds([]);
+		this.odontologyReferenceService.deleteReferenceFilesIds();
 	}
 
 	private problemsToUpdate(odontologyDto: OdontologyConsultationDto): OdontologyDiagnosticDto[] {
@@ -362,8 +364,7 @@ export class OdontologyConsultationDockPopupComponent implements OnInit {
 		const references: Reference[] = this.odontologyReferenceService.getReferences();
 
 		references.forEach(reference => {
-			const referenceProblems = this.odontologyReferenceService.getReferenceProblems(reference.referenceNumber);
-			referenceProblems.forEach(referenceProblem => {
+			reference.referenceProblems.forEach(referenceProblem => {
 				const odontoDiagnosticDto = this.mapToOdontologyDiagnosticDto(referenceProblem);
 				const existProblem = odontologyDiagnosticDto.find(problem => problem.snomed.sctid === odontoDiagnosticDto.snomed.sctid);
 				if (!existProblem) {
