@@ -502,7 +502,8 @@ export class AppointmentComponent implements OnInit {
 	closeDialog(returnValue?: string) {
 		if (!returnValue)
 			this.medicalCoverageInfo.setAppointmentMCoverage(this.summaryCoverageData);
-		this.dialogRef.close(returnValue);
+		const appointmentInformation = { returnValue: returnValue, date: this.selectedDate};
+		this.dialogRef.close(appointmentInformation);
 	}
 
 	enableDowndloadAnexo(option: boolean) {
