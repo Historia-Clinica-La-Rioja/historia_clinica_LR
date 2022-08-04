@@ -222,7 +222,7 @@ public class DiaryServiceImpl implements DiaryService {
 		List<DiaryListVo> diaries;
 
 		if (specialtyId == null)
-			if (healthcareProfessionalId.equals(associatedHealthcareProfessionalId) || associatedHealthcareProfessionalId == null || loggedUserExternalService.hasAnyRoleInstitution(institutionId, ERole.ADMINISTRADOR_AGENDA))
+			if (healthcareProfessionalId.equals(associatedHealthcareProfessionalId) || associatedHealthcareProfessionalId == null || loggedUserExternalService.hasAnyRoleInstitution(institutionId, ERole.ADMINISTRADOR_AGENDA, ERole.ADMINISTRATIVO))
 				diaries = diaryRepository.getActiveDiariesFromProfessional(healthcareProfessionalId, institutionId);
 			else
 				diaries = diaryRepository.getActiveAssociatedDiariesFromProfessional(associatedHealthcareProfessionalId, healthcareProfessionalId, institutionId);
