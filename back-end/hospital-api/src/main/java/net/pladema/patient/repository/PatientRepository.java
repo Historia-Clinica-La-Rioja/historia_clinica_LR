@@ -16,9 +16,10 @@ import java.util.stream.Stream;
 @Repository
 public interface PatientRepository extends JpaRepository<Patient, Integer>, PatientRepositoryCustom, PatientRepositorySearch {
 
-	@Query(value = " SELECT new net.pladema.patient.service.domain.PatientSearch(person, patient.id, patientType.active, 0) " +
+	@Query(value = " SELECT new net.pladema.patient.service.domain.PatientSearch(person, patient.id, patientType.active, 0, personExtended.nameSelfDetermination) " +
 			" FROM Patient patient JOIN Person person ON patient.personId = person.id " +
 			" JOIN PatientType patientType ON patient.typeId = patientType.id" +
+			" LEFT JOIN PersonExtended personExtended ON personExtended.id = person.id" +
 			" WHERE person.firstName = :name " +
 			" OR person.lastName = :lastName " +
 			" OR person.identificationNumber = :identificationNumber " +

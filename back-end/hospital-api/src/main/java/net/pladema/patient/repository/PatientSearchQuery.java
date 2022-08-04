@@ -66,11 +66,9 @@ public class PatientSearchQuery {
 				" person.identification_type_id, \n" +
 				" person.identification_number, \n" +
 				" person.birth_date, \n" +
-				" type.active \n";
+				" type.active, \n" +
+				" personExtended.name_self_determination \n";
 
-    	String selectWithNameSelfDetermination = ", personExtended.name_self_determination\n";
-		if (this.filterByNameSelfDetermination)
-			select = select + selectWithNameSelfDetermination;
 
 		return new QueryPart(select);
     }
@@ -78,12 +76,13 @@ public class PatientSearchQuery {
     public QueryPart from() {
     	String from = "	{h-schema}patient as patient \n" +
 				"	join {h-schema}person as person on (patient.person_id = person.id) \n" +
-				"	join {h-schema}patient_type as type on (patient.type_id = type.id) \n";
+				"	join {h-schema}patient_type as type on (patient.type_id = type.id) \n" +
+				" 	left join {h-schema}person_extended as personExtended on ( personExtended.person_id = person.id) \n";
 
-    	String fromWithPersonExtended = "join {h-schema}person_extended as personExtended on (person.id = personExtended.person_id) \n";
+    	/*String fromWithPersonExtended = "join {h-schema}person_extended as personExtended on (person.id = personExtended.person_id) \n";
 		if (this.filterByNameSelfDetermination)
     		from = from + fromWithPersonExtended;
-
+*/
 		return new QueryPart(from);
     }
 
@@ -217,11 +216,8 @@ public class PatientSearchQuery {
         diagnosisByDocuments.forEach((id,v) -> {
             Object[] tuple = v.get(0);
 
-            if(this.filterByNameSelfDetermination) {
-				result.add(new PatientSearch(mapPerson(tuple), id, (Boolean) tuple[10], 0, (String) tuple[11])); //rating no se usa, seteo 0
-			} else {
-				result.add(new PatientSearch(mapPerson(tuple), id, (Boolean) tuple[10], 0, null)); //rating no se usa, seteo 0
-			}
+			result.add(new PatientSearch(mapPerson(tuple), id, (Boolean) tuple[10], 0, (String) tuple[11])); //rating no se usa, seteo 0
+
         });
         return result;
     }
