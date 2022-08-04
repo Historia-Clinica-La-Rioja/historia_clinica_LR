@@ -1,12 +1,13 @@
 package ar.lamansys.sgx.cubejs.application.dashboardinfo;
 
-import ar.lamansys.sgx.cubejs.application.dashboardinfo.excepciones.DashboardInfoException;
-import ar.lamansys.sgx.cubejs.CubejsAutoConfiguration;
-import ar.lamansys.sgx.cubejs.infrastructure.repository.DashboardStorageImpl;
-import ar.lamansys.sgx.cubejs.infrastructure.repository.DashboardStorageUnavailableImpl;
-import ar.lamansys.sgx.cubejs.infrastructure.repository.permissions.UserPermissionStorageEmptyImpl;
-import ar.lamansys.sgx.shared.proxy.reverse.ReverseProxy;
-import ar.lamansys.sgx.shared.restclient.configuration.HttpClientConfiguration;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.when;
+
+import java.time.Duration;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Optional;
 
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
@@ -18,14 +19,13 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.http.ResponseEntity;
 
-import java.time.Duration;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Optional;
-
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.when;
+import ar.lamansys.sgx.cubejs.CubejsAutoConfiguration;
+import ar.lamansys.sgx.cubejs.application.dashboardinfo.excepciones.DashboardInfoException;
+import ar.lamansys.sgx.cubejs.infrastructure.repository.DashboardStorageImpl;
+import ar.lamansys.sgx.cubejs.infrastructure.repository.DashboardStorageUnavailableImpl;
+import ar.lamansys.sgx.cubejs.infrastructure.repository.permissions.UserPermissionStorageEmptyImpl;
+import ar.lamansys.sgx.shared.proxy.reverse.ReverseProxy;
+import ar.lamansys.sgx.shared.restclient.configuration.HttpClientConfiguration;
 
 @ExtendWith(MockitoExtension.class)
 class DashboardInfoServiceImplTest {
@@ -61,7 +61,7 @@ class DashboardInfoServiceImplTest {
     }
 
 	private HttpClientConfiguration newHttpClientConfiguration() {
-		return new HttpClientConfiguration(null, null, 1500, false);
+		return new HttpClientConfiguration(null, 1500, false);
 	}
 
 	@Test

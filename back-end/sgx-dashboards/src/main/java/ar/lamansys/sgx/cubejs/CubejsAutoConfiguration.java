@@ -37,6 +37,7 @@ import net.pladema.hsi.extensions.configuration.plugins.InstitutionMenuExtension
 @PropertySource(value = "classpath:dashboards.properties", ignoreResourceNotFound = true)
 public class CubejsAutoConfiguration {
     private String apiUrl;
+	private String proxy;
 
     private Map<String, String> headers = new HashMap<>();
 
@@ -47,7 +48,7 @@ public class CubejsAutoConfiguration {
     @Bean
     public DashboardStorage dashboardStorageImpl(
 			UserPermissionStorage userPermissionStorage,
-			HttpClientConfiguration configuration,
+			HttpClientConfiguration httpClientConfiguration,
 			@Value("${app.gateway.cubejs.token.secret}") String secret,
 			@Value("${app.gateway.cubejs.token.header:Authorization}") String cubeTokenHeader,
 			@Value("${app.gateway.cubejs.token.expiration:20d}") Duration tokenExpiration
@@ -56,7 +57,14 @@ public class CubejsAutoConfiguration {
             log.warn("Cubejs dashboards are disabled");
             return new DashboardStorageUnavailableImpl();
         }
-        return new DashboardStorageImpl(this, userPermissionStorage, configuration, secret, cubeTokenHeader, tokenExpiration);
+        return new DashboardStorageImpl(
+				this,
+				userPermissionStorage,
+				httpClientConfiguration.withProxy(this.proxy),
+				secret,
+				cubeTokenHeader,
+				tokenExpiration
+		);
     }
 
     @Bean

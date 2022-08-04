@@ -19,10 +19,9 @@ public class RestUtils {
 
     public static HttpClient httpClient(
 			boolean trustInvalidCertificate,
-			String httpProxyHost,
-			Integer httpProxyPort
+			String httpProxy
 	) throws KeyStoreException, NoSuchAlgorithmException, KeyManagementException {
-		HttpHost proxy = httpProxy(httpProxyHost, httpProxyPort);
+		HttpHost proxy = httpProxy(httpProxy);
         TrustStrategy acceptingTrustStrategy = (X509Certificate[] chain, String authType) -> true;
         CredentialsProvider credentialsProvider = new BasicCredentialsProvider();
         SSLConnectionSocketFactory socketFactory = new SSLConnectionSocketFactory(
@@ -33,10 +32,9 @@ public class RestUtils {
     }
 
 	private static HttpHost httpProxy(
-			String httpProxyHost,
-			Integer httpProxyPort
+			String httpProxy
 	) {
-		return (httpProxyPort == null || httpProxyHost == null || httpProxyHost.trim().isEmpty()) ? null :
-				new HttpHost(httpProxyHost, httpProxyPort);
+		return (httpProxy == null || httpProxy.trim().isEmpty()) ? null :
+				HttpHost.create(httpProxy);
 	}
 }

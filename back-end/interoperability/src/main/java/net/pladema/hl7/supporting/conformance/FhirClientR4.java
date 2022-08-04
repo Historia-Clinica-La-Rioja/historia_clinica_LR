@@ -78,8 +78,7 @@ public class FhirClientR4 {
         this.nomivacClient = context.newRestfulGenericClient(nomivac);
         nomivacClient.getFhirContext().getRestfulClientFactory().setHttpClient(RestUtils.httpClient(
 				nomivacTrustInvalidCertificate,
-				configuration.getProxyHost(),
-				configuration.getProxyPort()
+				configuration.getProxy()
 		));
         nomivacClient.registerInterceptor(webApplicationContext.getBean(ClientAuthInterceptor.class));
 
