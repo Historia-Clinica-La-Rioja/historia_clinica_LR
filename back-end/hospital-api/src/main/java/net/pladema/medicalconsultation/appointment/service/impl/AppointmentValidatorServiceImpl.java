@@ -159,9 +159,9 @@ public class AppointmentValidatorServiceImpl implements AppointmentValidatorServ
     private static Map<Short, Collection<Short>> buildValidStates() {
         return Map.of(
                 BOOKED, Arrays.asList(ASSIGNED, CONFIRMED, CANCELLED),
-                ASSIGNED, Arrays.asList(CONFIRMED, CANCELLED),
-                CONFIRMED, Arrays.asList(ABSENT, CANCELLED, SERVED),
-                ABSENT, Arrays.asList(CONFIRMED,ABSENT),
+                ASSIGNED, Arrays.asList(CONFIRMED, CANCELLED, ABSENT),
+                CONFIRMED, Arrays.asList(ABSENT, CANCELLED, SERVED, ASSIGNED),
+                ABSENT, Arrays.asList(CONFIRMED,ABSENT, ASSIGNED),
                 SERVED, Collections.emptyList(),
                 CANCELLED, Collections.singletonList(CANCELLED),
 				OUT_OF_DIARY, Arrays.asList(CANCELLED, ASSIGNED, BOOKED)
