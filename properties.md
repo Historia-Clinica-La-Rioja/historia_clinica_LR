@@ -94,8 +94,7 @@ Este documento detalla las propiedades configurables del sistema.
 | -------- | ------ | -------- | ------ | -------------- | ---- |
 | app.http.client.trustInvalidCertificate | | false | Opcional | Ignora certificados inválidos (habilitar esta propiedad sólo en casos extremos)| v1.40.0  |
 | app.http.client.timeout | | 15000 | Opcional | Timeout en milisegundos| v1.40.0  |
-| app.http.client.proxyHost | | | Opcional | Host del proxy| v1.40.0  |
-| app.http.client.proxyPort | | | Opcional | Puerto del proxy| v1.40.0  |
+| app.http.client.proxy | | | Opcional | Host del proxy (ejemplo: http://127.0.0.1:3128) | v1.40.0  |
 
 ### Bus de interoperabilidad
 | Propiedad | Variable de ambiente | Valor por defecto | Condición | Descripcion | Desde |

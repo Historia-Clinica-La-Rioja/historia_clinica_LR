@@ -22,8 +22,7 @@ public class HttpClientTest {
 
 		var restTemplate = new RestTemplateSSL(
 				new HttpClientConfiguration(
-						"localhost",
-						3128,
+						"http://localhost:3128",
 						15000,
 						false
 				)

@@ -33,8 +33,7 @@ public class HttpClientStatusService extends FeatureStatusService {
 		return () -> List.of(
 				new FeatureProperty("trustInvalidCertificate", StringHelper.toString(properties.isTrustInvalidCertificate())),
 				new FeatureProperty("timeout", StringHelper.toString(properties.getTimeout())),
-				new FeatureProperty("proxyHost", properties.getProxyHost()),
-				new FeatureProperty("proxyPort", StringHelper.toString(properties.getProxyPort()))
+				new FeatureProperty("proxy", properties.getProxy())
 		);
 	}
 

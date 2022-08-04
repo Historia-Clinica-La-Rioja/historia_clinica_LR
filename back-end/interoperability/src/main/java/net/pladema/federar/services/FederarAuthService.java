@@ -27,7 +27,7 @@ public class FederarAuthService extends AuthService<FederarLoginResponse> {
 		super(
 				wsConfig.getAuthenticationPath(),
 				new RestTemplateSSL(
-						configuration.with(wsConfig.getRequestTimeOut())
+						configuration.withTimeout(wsConfig.getRequestTimeOut())
 				),
 				wsConfig
 		);
