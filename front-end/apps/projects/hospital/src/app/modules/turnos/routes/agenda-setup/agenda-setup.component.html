@@ -163,7 +163,7 @@
 
 			</section>
 
-			<section *ngIf="form.valid">
+			<section *ngIf="form.valid" fxLayout="column" fxLayoutAlign="space-around" fxLayoutGap="15px">
 				<h3 [translate]="'turnos.agenda-setup.SELECT_DAYS_TYPE'"></h3>
 				<div fxLayout="row">
 					<span [translate]="'turnos.agenda-setup.SELECT_DAYS_TYPE_SUBTITLE'"></span>
@@ -198,10 +198,12 @@
 										[weekStartsOn]="MONDAY"
 										(eventClicked)="agendaHorarioService.eventClicked($event)">
 				</mwl-calendar-week-view>
+
+				<mat-card *ngIf="errors.length">
+					<mat-error *ngFor="let error of errors" class="mat-body-2">{{error}}</mat-error>
+				</mat-card>
 			</section>
-			<mat-card *ngIf="errors.length">
-				<mat-error *ngFor="let error of errors" class="mat-body-2">{{error}}</mat-error>
-			</mat-card>
+
 
 			<div *ngIf="form.valid" align="end">
 					<button mat-flat-button color="primary" name="confirmAgenda" id="confirmAgenda">
