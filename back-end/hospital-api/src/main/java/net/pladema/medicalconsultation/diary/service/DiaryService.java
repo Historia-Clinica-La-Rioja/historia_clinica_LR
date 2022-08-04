@@ -1,5 +1,7 @@
 package net.pladema.medicalconsultation.diary.service;
 
+import net.pladema.medicalconsultation.appointment.service.domain.AppointmentSearchBo;
+import net.pladema.medicalconsultation.appointment.service.domain.EmptyAppointmentBo;
 import net.pladema.medicalconsultation.diary.service.domain.CompleteDiaryBo;
 import net.pladema.medicalconsultation.diary.service.domain.DiaryBo;
 
@@ -35,5 +37,7 @@ public interface DiaryService {
 	Integer getInstitution(Integer diaryId);
 
 	List<String> getActiveDiariesAliases(Integer institutionId);
+
+	List<EmptyAppointmentBo> getEmptyAppointmentsBySearchCriteria(Integer institutionId, AppointmentSearchBo searchCriteria);
 
 }

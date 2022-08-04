@@ -20,11 +20,15 @@ import java.util.stream.Stream;
 import javax.validation.ConstraintViolationException;
 import javax.validation.Valid;
 
+import net.pladema.medicalconsultation.appointment.controller.dto.EmptyAppointmentDto;
+import net.pladema.medicalconsultation.appointment.controller.mapper.AppointmentMapper;
+import net.pladema.medicalconsultation.appointment.service.domain.AppointmentSearchBo;
+import net.pladema.medicalconsultation.appointment.service.domain.EmptyAppointmentBo;
 import net.pladema.medicalconsultation.diary.controller.constraints.DiaryEmptyAppointmentsValid;
 import net.pladema.medicalconsultation.diary.controller.constraints.EditDiaryOpeningHoursValid;
 import net.pladema.medicalconsultation.diary.controller.constraints.ExistingDiaryPeriodValid;
 
-import net.pladema.staff.controller.dto.ProfessionalsByClinicalSpecialtyDto;
+import net.pladema.medicalconsultation.appointment.controller.dto.AppointmentSearchDto;
 import net.pladema.staff.service.HealthcareProfessionalService;
 
 import org.springframework.http.ResponseEntity;
@@ -88,13 +92,16 @@ public class DiaryController {
 
     private final LocalDateMapper localDateMapper;
 
+	private final AppointmentMapper appointmentMapper;
+
     public DiaryController(
             DiaryMapper diaryMapper,
             DiaryService diaryService,
             CreateAppointmentService createAppointmentService,
             AppointmentService appointmentService,
 			HealthcareProfessionalService healthcareProfessionalService,
-            LocalDateMapper localDateMapper
+            LocalDateMapper localDateMapper,
+			AppointmentMapper appointmentMapper
     ) {
         this.diaryMapper = diaryMapper;
         this.diaryService = diaryService;
@@ -102,6 +109,7 @@ public class DiaryController {
         this.appointmentService = appointmentService;
 		this.healthcareProfessionalService = healthcareProfessionalService;
         this.localDateMapper = localDateMapper;
+		this.appointmentMapper = appointmentMapper;
     }
 
     @GetMapping("/{diaryId}")
@@ -314,6 +322,19 @@ public class DiaryController {
 		List<String> activeDiariesAliases = diaryService.getActiveDiariesAliases(institutionId);
 		log.debug("Get all aliases by active diaries and Institution {} ", institutionId);
 		return ResponseEntity.ok(activeDiariesAliases);
+	}
+
+	@PostMapping("/generate-empty-appointments")
+	@PreAuthorize("hasPermission(#institutionId, 'ADMINISTRADOR_AGENDA, ADMINISTRATIVO')")
+	public ResponseEntity<List<EmptyAppointmentDto>> getAvailableAppointments(
+			@PathVariable(name = "institutionId") Integer institutionId,
+			@RequestBody AppointmentSearchDto searchCriteria) {
+		log.debug("Generate all empty appointments by Institution {} and criteria {} ", institutionId, searchCriteria);
+		AppointmentSearchBo searchCriteriaBo = appointmentMapper.toAppointmentSearchBo(searchCriteria);
+		List<EmptyAppointmentBo> emptyAppointments = diaryService.getEmptyAppointmentsBySearchCriteria(institutionId, searchCriteriaBo);
+		List<EmptyAppointmentDto> result = emptyAppointments.stream().map(appointmentMapper::toEmptyAppointmentDto).collect(Collectors.toList());
+		log.debug(OUTPUT, result);
+		return ResponseEntity.ok(result);
 	}
 
 	private void completeDiaryUnblock(BlockDto unblockDto, DiaryBo diaryBo, List<LocalDate> blockedDates, List<AppointmentBo> listAppointments) {

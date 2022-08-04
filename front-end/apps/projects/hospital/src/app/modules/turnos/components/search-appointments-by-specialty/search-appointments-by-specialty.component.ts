@@ -84,7 +84,6 @@ export class SearchAppointmentsBySpecialtyComponent implements OnInit {
 	}
 
 	private getClinicalSpecialtiesTypeaheadOptions$() {
-		this.diaryService.getActiveDiariesAliases().subscribe(r => console.log(r))
 		return this.diaryService.getActiveDiariesAliases().pipe(map(toTypeaheadOptionList));
 
 		function toTypeaheadOptionList(clinicalSpecialtiesList: string[]):

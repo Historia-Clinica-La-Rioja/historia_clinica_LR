@@ -246,6 +246,14 @@ export interface AppointmentTicketDto {
     patientFullName: string;
 }
 
+export interface AppointmentSearchDto {
+    aliasOrSpecialtyName: string;
+    daysOfWeek: number[];
+    endSearchTime: TimeDto;
+    initialSearchDate: DateDto;
+    initialSearchTime: TimeDto;
+}
+
 export interface AssignedAppointmentDto {
     date: DateDto;
     hour: TimeDto;
@@ -981,6 +989,20 @@ export interface EmergencyCareUserDto {
     id: number;
     lastName: string;
     nameSelfDetermination: string;
+}
+
+export interface EmptyAppointmentDto {
+    alias: string;
+    clinicalSpecialtyName: string;
+    date: string;
+    diaryId: number;
+    doctorFirstName: string;
+    doctorLastName: string;
+    doctorsOfficeDescription: string;
+    hour: string;
+    openingHoursId: number;
+    overturnMode: boolean;
+    patientId: number;
 }
 
 export interface EpicrisisDto extends Serializable {

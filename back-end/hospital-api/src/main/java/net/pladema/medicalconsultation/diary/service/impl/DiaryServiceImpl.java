@@ -5,6 +5,8 @@ import lombok.RequiredArgsConstructor;
 import net.pladema.medicalconsultation.appointment.service.AppointmentService;
 import net.pladema.medicalconsultation.appointment.service.UpdateAppointmentOpeningHoursService;
 import net.pladema.medicalconsultation.appointment.service.domain.AppointmentBo;
+import net.pladema.medicalconsultation.appointment.service.domain.AppointmentSearchBo;
+import net.pladema.medicalconsultation.appointment.service.domain.EmptyAppointmentBo;
 import net.pladema.medicalconsultation.diary.repository.DiaryRepository;
 import net.pladema.medicalconsultation.diary.repository.domain.CompleteDiaryListVo;
 import net.pladema.medicalconsultation.diary.repository.domain.DiaryListVo;
@@ -15,6 +17,7 @@ import net.pladema.medicalconsultation.diary.service.DiaryService;
 import net.pladema.medicalconsultation.diary.service.domain.CompleteDiaryBo;
 import net.pladema.medicalconsultation.diary.service.domain.DiaryBo;
 import net.pladema.medicalconsultation.diary.service.domain.DiaryOpeningHoursBo;
+import net.pladema.medicalconsultation.diary.service.domain.OpeningHoursBo;
 import net.pladema.medicalconsultation.diary.service.domain.OverturnsLimitException;
 import net.pladema.permissions.controller.external.LoggedUserExternalService;
 import net.pladema.permissions.repository.enums.ERole;
@@ -28,8 +31,11 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityNotFoundException;
 import javax.validation.constraints.NotNull;
+import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
+import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
@@ -267,6 +273,8 @@ public class DiaryServiceImpl implements DiaryService {
 		result.setClinicalSpecialtyId(completeDiaryListVo.getClinicalSpecialtyId());
 		result.setHealthcareProfessionalId(completeDiaryListVo.getHealthcareProfessionalId());
 		result.setDoctorsOfficeDescription(completeDiaryListVo.getDoctorsOfficeDescription());
+		result.setDoctorFirstName(completeDiaryListVo.getDoctorFirstName());
+		result.setDoctorLastName(completeDiaryListVo.getDoctorLastName());
 		LOG.debug(OUTPUT, result);
 		return result;
 	}
@@ -344,6 +352,95 @@ public class DiaryServiceImpl implements DiaryService {
 		LOG.debug("Input parameters -> institutionId {}", institutionId);
 		List<String> result = diaryRepository.getActiveDiariesAliases(institutionId);
 		LOG.debug(OUTPUT, result);
+		return result;
+	}
+
+	@Override
+	public List<EmptyAppointmentBo> getEmptyAppointmentsBySearchCriteria(Integer institutionId, AppointmentSearchBo searchCriteria) {
+		LOG.debug("Input parameters -> institutionId {}, searchCriteria {}", institutionId, searchCriteria);
+		List<EmptyAppointmentBo> emptyAppointments = new ArrayList<>();
+		List<CompleteDiaryBo> diariesBySpecialty = getActiveDiariesByAliasOrClinicalSpecialtyName(institutionId, searchCriteria.getAliasOrSpecialtyName());
+		for (CompleteDiaryBo diary: diariesBySpecialty)
+			emptyAppointments = getEmptyAppointmentBos(searchCriteria, emptyAppointments, diary);
+		LOG.debug(OUTPUT, emptyAppointments);
+		return emptyAppointments;
+	}
+
+	private List<EmptyAppointmentBo> getEmptyAppointmentBos(AppointmentSearchBo searchCriteria, List<EmptyAppointmentBo> emptyAppointments, CompleteDiaryBo diary) {
+		List<EmptyAppointmentBo> availableAppointments = getDiaryAvailableAppointments(diary, searchCriteria);
+		emptyAppointments.addAll(availableAppointments);
+		Collection<AppointmentBo> assignedAppointments = appointmentService.getAppointmentsByDiaries(List.of(diary.getId()));
+		emptyAppointments = emptyAppointments.stream().filter(emptyAppointment -> assignedAppointments.stream()
+						.noneMatch(assignedAppointment -> assignedAppointment.getDate().equals(emptyAppointment.getDate()) && assignedAppointment.getHour()
+								.equals(emptyAppointment.getHour()))).collect(toList());
+		return emptyAppointments;
+	}
+
+	private List<CompleteDiaryBo> getActiveDiariesByAliasOrClinicalSpecialtyName(Integer institutionId, String aliasOrClinicalSpecialtyName) {
+		LOG.debug("Input parameters -> institutionId {}, aliasOrClinicalSpecialtyName {}", institutionId, aliasOrClinicalSpecialtyName);
+		List<CompleteDiaryBo> result = diaryRepository.getActiveDiariesByAliasOrClinicalSpecialtyName(institutionId, aliasOrClinicalSpecialtyName).stream()
+				.map(this::createCompleteDiaryBoInstance).map(completeOpeningHours()).collect(toList());
+		LOG.debug(OUTPUT, result);
+		return result;
+	}
+
+	private List<EmptyAppointmentBo> getDiaryAvailableAppointments(CompleteDiaryBo diary, AppointmentSearchBo searchCriteria) {
+		List<EmptyAppointmentBo> result = new ArrayList<>();
+		Map<Short, Map<Integer, List<LocalTime>>> potentialAppointmentTimesByDay = new HashMap<>();
+		diary.getDiaryOpeningHours().forEach(openingHours -> {
+			if (searchCriteria.getDaysOfWeek().contains(openingHours.getOpeningHours().getDayWeekId())) {
+				potentialAppointmentTimesByDay.computeIfAbsent(openingHours.getOpeningHours().getDayWeekId(), k -> new HashMap<>());
+				potentialAppointmentTimesByDay.get(openingHours.getOpeningHours().getDayWeekId())
+						.put(openingHours.getOpeningHours().getId(), generateEmptyAppointmentsHoursFromOpeningHours(openingHours.getOpeningHours(), diary, searchCriteria));
+			}
+		});
+		LocalDate searchInitialDate = searchCriteria.getInitialSearchDate();
+		LocalDate searchEndingDate = searchInitialDate.plusDays(21);
+		List<LocalDate> daysBetweenLimits = searchInitialDate.datesUntil(searchEndingDate).collect(Collectors.toList());
+		daysBetweenLimits.add(searchEndingDate);
+		daysBetweenLimits.forEach(day -> {
+			if (day.compareTo(diary.getStartDate()) >= 0 && day.compareTo(diary.getEndDate()) <= 0) {
+				generateDayEmptyAppointments(diary, result, potentialAppointmentTimesByDay, day);
+			}
+		});
+		return result;
+	}
+
+	private void generateDayEmptyAppointments(CompleteDiaryBo diary, List<EmptyAppointmentBo> result, Map<Short, Map<Integer, List<LocalTime>>> potentialAppointmentTimesByDay, LocalDate day) {
+		int currentDayOfWeek = day.getDayOfWeek().getValue() == 7 ? 0 : day.getDayOfWeek().getValue();
+		Map<Integer, List<LocalTime>> emptyAppointmentTimesOfCurrentDayOpeningHours = potentialAppointmentTimesByDay.get((short) currentDayOfWeek);
+		if (emptyAppointmentTimesOfCurrentDayOpeningHours != null) {
+			emptyAppointmentTimesOfCurrentDayOpeningHours.forEach((openingHoursId, openingHoursTimeList) ->
+					result.addAll(openingHoursTimeList.stream().map(time -> createEmptyAppointmentBoFromRawData(time, day, diary, openingHoursId)).collect(Collectors.toList())));
+		}
+	}
+
+	private List<LocalTime> generateEmptyAppointmentsHoursFromOpeningHours(OpeningHoursBo openingHours, CompleteDiaryBo diary, AppointmentSearchBo searchCriteria) {
+		LocalTime searchCriteriaInitialTime = searchCriteria.getInitialSearchTime();
+		long iterationAmount = ChronoUnit.MINUTES.between(searchCriteriaInitialTime, searchCriteria.getEndSearchTime()) / diary.getAppointmentDuration();
+		List<LocalTime> generatedHours = new ArrayList<>();
+		for (int currentEmptyAppointment = 0; currentEmptyAppointment < iterationAmount; currentEmptyAppointment++) {
+			if (searchCriteriaInitialTime.compareTo(openingHours.getFrom()) >= 0 && searchCriteriaInitialTime.compareTo(openingHours.getTo()) < 0) {
+				generatedHours.add(searchCriteriaInitialTime);
+			}
+			searchCriteriaInitialTime = searchCriteriaInitialTime.plusMinutes(diary.getAppointmentDuration());
+		}
+		return generatedHours;
+	}
+
+	private EmptyAppointmentBo createEmptyAppointmentBoFromRawData(LocalTime emptyAppointmentTime, LocalDate emptyAppointmentDate, CompleteDiaryBo diary, Integer openingHoursId) {
+		EmptyAppointmentBo result = new EmptyAppointmentBo();
+		result.setDiaryId(diary.getId());
+		result.setDate(emptyAppointmentDate);
+		result.setHour(emptyAppointmentTime);
+		result.setOverturnMode(false);
+		result.setPatientId(null);
+		result.setOpeningHoursId(openingHoursId);
+		result.setDoctorsOfficeDescription(diary.getDoctorsOfficeDescription());
+		result.setClinicalSpecialtyName(diary.getClinicalSpecialtyName());
+		result.setAlias(diary.getAlias());
+		result.setDoctorFirstName(diary.getDoctorFirstName());
+		result.setDoctorLastName(diary.getDoctorLastName());
 		return result;
 	}
 

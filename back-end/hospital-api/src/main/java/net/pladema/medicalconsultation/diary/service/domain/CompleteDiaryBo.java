@@ -13,12 +13,16 @@ public class CompleteDiaryBo extends DiaryBo {
 
 	private Integer sectorId;
 
-	private String specialtyName;
+	private String doctorFirstName;
+
+	private String doctorLastName;
 
 	public CompleteDiaryBo(DiaryBo diaryBo) {
 		appointmentDuration = diaryBo.getAppointmentDuration();
 		id = diaryBo.getId();
 		doctorsOfficeId = diaryBo.getDoctorsOfficeId();
+		doctorsOfficeDescription = diaryBo.getDoctorsOfficeDescription();
+		clinicalSpecialtyName = diaryBo.getClinicalSpecialtyName();
 		startDate = diaryBo.getStartDate();
 		endDate = diaryBo.getEndDate();
 		automaticRenewal = diaryBo.isAutomaticRenewal();
