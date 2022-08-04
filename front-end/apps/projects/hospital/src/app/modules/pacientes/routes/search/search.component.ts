@@ -20,6 +20,7 @@ import { FeatureFlagService } from '@core/services/feature-flag.service';
 import { PERSON } from '@core/constants/validation-constants';
 import { NavigationService } from '@pacientes/services/navigation.service';
 import { MIN_DATE } from "@core/utils/date.utils";
+import { PatientNameService } from "@core/services/patient-name.service";
 
 const ROUTE_NEW = 'pacientes/new';
 const ROUTE_NEW_TEMPORARY = 'pacientes/temporary';
@@ -67,7 +68,8 @@ export class SearchComponent implements OnInit {
 		public dialog: MatDialog,
 		private contextService: ContextService,
 		private featureFlagService: FeatureFlagService,
-		public navigationService: NavigationService
+		public navigationService: NavigationService,
+		private readonly patientNameService: PatientNameService,
 
 	) {
 		this.routePrefix = 'institucion/' + this.contextService.institutionId + '/';
@@ -127,7 +129,7 @@ export class SearchComponent implements OnInit {
 				{
 					columnDef: 'firstName',
 					header: 'Nombre',
-					text: (row) => row.person.firstName
+					text: (row) => this.patientNameService.getPatientName(row.person.firstName, row.nameSelfDetermination)
 				},
 				{
 					columnDef: 'lastName',
@@ -136,7 +138,7 @@ export class SearchComponent implements OnInit {
 				},
 				{
 					columnDef: 'gender',
-					header: 'Sexo',
+					header: 'Sexo documento',
 					text: (row) => this.genderOptionsViewTable[row.person.genderId]
 				},
 				{

@@ -2177,6 +2177,7 @@ export interface PatientPhotoDto {
 export interface PatientSearchDto {
     activo: boolean;
     idPatient: number;
+    nameSelfDetermination: string;
     person: BMPersonDto;
     ranking: number;
 }
