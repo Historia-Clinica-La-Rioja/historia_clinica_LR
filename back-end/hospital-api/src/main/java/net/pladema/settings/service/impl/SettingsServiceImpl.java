@@ -7,7 +7,6 @@ import org.apache.http.MethodNotSupportedException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.Optional;
@@ -27,7 +26,6 @@ public class SettingsServiceImpl implements SettingsService {
     }
 
     @Override
-	@Transactional
     public boolean uploadFile(Optional<Assets> newAsset, MultipartFile file) throws MethodNotSupportedException {
         logger.debug("Input parameters -> fileName {}", newAsset);
 
@@ -41,7 +39,6 @@ public class SettingsServiceImpl implements SettingsService {
     }
 
     @Override
-	@Transactional
     public boolean deleteFile(Optional<Assets> newAsset) throws MethodNotSupportedException {
         logger.debug("Input parameters -> fileName {}", newAsset);
 

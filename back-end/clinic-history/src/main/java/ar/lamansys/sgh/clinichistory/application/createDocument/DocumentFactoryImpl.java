@@ -16,6 +16,7 @@ import ar.lamansys.sgx.shared.featureflags.application.FeatureFlagsService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Optional;
 
@@ -75,6 +76,7 @@ public class DocumentFactoryImpl implements DocumentFactory {
     }
 
     @Override
+	@Transactional
     public Long run(IDocumentBo documentBo, boolean createFile) {
 
         Document doc = new Document(documentBo.getEncounterId(),

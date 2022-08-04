@@ -24,9 +24,9 @@ import net.pladema.staff.controller.service.HealthcareProfessionalExternalServic
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
-import javax.transaction.Transactional;
 import java.time.ZoneId;
 import java.util.stream.Collectors;
 
@@ -57,7 +57,7 @@ public class EmergencyCareEpisodeMedicalDischargeController {
 		this.hospitalApiPublisher = hospitalApiPublisher;
 	}
 
-    @Transactional
+    @Transactional // Transaccion compleja
     @PostMapping
     public ResponseEntity<Boolean> newMedicalDischarge(
             @PathVariable(name = "institutionId") Integer institutionId,

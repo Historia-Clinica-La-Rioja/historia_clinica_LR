@@ -40,7 +40,6 @@ public class DeleteDiagnosticReportServiceImpl implements DeleteDiagnosticReport
         this.snomedService = snomedService;
     }
     @Override
-	@Transactional
     public Integer execute(PatientInfoBo patient, Integer diagnosticReportId) {
         LOG.debug("Input: patient: {}, diagnosticReportId: {}", patient, diagnosticReportId);
         Optional<DiagnosticReport> drOpt = diagnosticReportRepository.findById(diagnosticReportId);

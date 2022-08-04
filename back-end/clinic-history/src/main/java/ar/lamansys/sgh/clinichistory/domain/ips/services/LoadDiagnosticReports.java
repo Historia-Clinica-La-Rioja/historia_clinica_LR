@@ -11,6 +11,7 @@ import ar.lamansys.sgh.clinichistory.domain.ips.DiagnosticReportBo;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -40,6 +41,7 @@ public class LoadDiagnosticReports {
         this.calculateCie10Facade = calculateCie10Facade;
     }
 
+	@Transactional
     public List<Integer> run(Long documentId, PatientInfoBo patientInfo, List<DiagnosticReportBo> diagnosticReportBos) {
         LOG.debug("Input parameters -> documentId {}, patientInfo {}, studyBo {}", documentId, patientInfo, diagnosticReportBos);
         List<Integer> result = new ArrayList<>();

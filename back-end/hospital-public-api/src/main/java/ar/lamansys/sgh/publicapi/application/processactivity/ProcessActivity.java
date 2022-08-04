@@ -4,7 +4,6 @@ import ar.lamansys.sgh.publicapi.application.port.out.ActivityInfoStorage;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class ProcessActivity {
@@ -17,7 +16,6 @@ public class ProcessActivity {
         this.activityInfoStorage = activityInfoStorage;
     }
 
-    @Transactional
     public void run(String refsetCode, String provinceCode, Long activityId) {
         logger.debug("Input parameters -> refsetCode {}, provinceCode {}, activityId {}", refsetCode, provinceCode, activityId);
         activityInfoStorage.processActivity(refsetCode, provinceCode, activityId);

@@ -31,7 +31,7 @@ public class UploadDiagnosticReportCompletedFileServiceImpl  implements UploadDi
     }
 
     @Override
-	@Transactional
+	@Transactional // Transaccion compleja
     public List<Integer> execute(MultipartFile[] files, Integer diagnosticReportId, Integer patientId) {
         List<Integer> result = Arrays.stream(files).mapToInt(file -> {
             String newFileName = fileService.createFileName(FilenameUtils.getExtension(file.getOriginalFilename()));

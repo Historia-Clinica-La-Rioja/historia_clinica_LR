@@ -7,7 +7,6 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-import javax.transaction.Transactional;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -40,6 +39,8 @@ import ar.lamansys.odontology.domain.consultation.OdontologyDocumentBo;
 import ar.lamansys.sgh.shared.infrastructure.input.service.appointment.SharedAppointmentPort;
 import ar.lamansys.sgh.shared.infrastructure.input.service.appointment.dto.DocumentAppointmentDto;
 import ar.lamansys.sgx.shared.dates.configuration.DateTimeProvider;
+
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class CreateOdontologyConsultationImpl implements CreateOdontologyConsultation {

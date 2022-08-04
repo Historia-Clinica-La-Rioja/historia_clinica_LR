@@ -24,7 +24,6 @@ import net.pladema.person.service.PersonService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
@@ -243,7 +242,6 @@ public class PersonExternalServiceImpl implements PersonExternalService {
 	}
 
 	@Override
-	@Transactional
 	public boolean savePersonPhoto(Integer personId, String imageData) {
 		LOG.debug("Input parameters -> personId {}, imageData {}", personId, imageData);
 		boolean result = personPhotoService.save(personId, imageData);

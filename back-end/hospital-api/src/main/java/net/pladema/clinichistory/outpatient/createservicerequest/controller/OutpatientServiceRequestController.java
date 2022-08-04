@@ -51,7 +51,7 @@ public class OutpatientServiceRequestController {
 
 	@PostMapping
 	@ResponseStatus(code = HttpStatus.CREATED)
-	@Transactional
+	@Transactional // Transaccion compleja
 	@PreAuthorize("hasPermission(#institutionId, 'ESPECIALISTA_MEDICO, ESPECIALISTA_EN_ODONTOLOGIA')")
 	public List<Integer> create(@PathVariable(name = "institutionId") Integer institutionId,
 								@PathVariable(name = "patientId") Integer patientId,

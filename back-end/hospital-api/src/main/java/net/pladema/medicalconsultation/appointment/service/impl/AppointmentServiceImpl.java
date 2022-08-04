@@ -338,7 +338,6 @@ public class AppointmentServiceImpl implements AppointmentService {
 	}
 
 	@Override
-	@Transactional
 	public AppointmentBo updateAppointment(UpdateAppointmentBo updateAppointmentBo) {
 		var appointment = appointmentRepository.findById(updateAppointmentBo.getAppointmentId());
 		if(appointment.isPresent()){

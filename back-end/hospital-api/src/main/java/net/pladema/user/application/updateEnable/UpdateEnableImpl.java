@@ -6,7 +6,6 @@ import net.pladema.user.application.port.HospitalUserStorage;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class UpdateEnableImpl implements UpdateEnable {
@@ -24,7 +23,6 @@ public class UpdateEnableImpl implements UpdateEnable {
     }
 
     @Override
-	@Transactional
     public Boolean run(Integer userId, Boolean enable) {
         logger.debug("Input -> userId {}, enable {}", userId, enable);
         userValidator.assertUpdate(userId);

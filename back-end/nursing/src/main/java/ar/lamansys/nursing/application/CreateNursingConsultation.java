@@ -2,7 +2,6 @@ package ar.lamansys.nursing.application;
 
 import java.time.LocalDate;
 
-import javax.transaction.Transactional;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -21,6 +20,8 @@ import ar.lamansys.nursing.domain.document.NursingDocumentBo;
 import ar.lamansys.sgh.shared.infrastructure.input.service.appointment.SharedAppointmentPort;
 import ar.lamansys.sgh.shared.infrastructure.input.service.appointment.dto.DocumentAppointmentDto;
 import ar.lamansys.sgx.shared.dates.configuration.DateTimeProvider;
+
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class CreateNursingConsultation {
