@@ -59,7 +59,6 @@ export class AgendaComponent implements OnInit, OnDestroy, OnChanges {
 	loading = true;
 	dayStartHour: number;
 	dayEndHour: number;
-	professionalId: number;
 	diaryOpeningHours: DiaryOpeningHoursDto[];
 
 	enableAppointmentScheduling = true;
@@ -103,7 +102,6 @@ export class AgendaComponent implements OnInit, OnDestroy, OnChanges {
 			this.patientId = Number(qp.idPaciente);
 		});
 
-		this.professionalId = this.appointmentFacade.getProfessionalId();
 		this.loading = true;
 		this.appointmentSubscription?.unsubscribe();
 		this.appointmentFacade.clear();
@@ -231,7 +229,7 @@ export class AgendaComponent implements OnInit, OnDestroy, OnChanges {
 	}
 
 	onClickedSegment(event) {
-		this.appointmentsService.getList([this.agenda.id], this.professionalId)
+		this.appointmentsService.getList([this.agenda.id], this.appointmentFacade.getProfessionalId())
 			.subscribe((appointments: AppointmentListDto[]) => {
 				const appointmentsCalendarEvents: CalendarEvent[] = appointments
 					.map(appointment => {
@@ -265,7 +263,7 @@ export class AgendaComponent implements OnInit, OnDestroy, OnChanges {
 							}
 						}
 
-						if (this.loggedUserHealthcareProfessionalId !== this.professionalId && !this.userHasValidRoles()) {
+						if (this.loggedUserHealthcareProfessionalId !== this.appointmentFacade.getProfessionalId() && !this.userHasValidRoles()) {
 							this.snackBarService.showError('turnos.new-appointment.messages.NOT_RESPONSIBLE');
 						} else {
 							this.dialog.open(NewAppointmentComponent, {
