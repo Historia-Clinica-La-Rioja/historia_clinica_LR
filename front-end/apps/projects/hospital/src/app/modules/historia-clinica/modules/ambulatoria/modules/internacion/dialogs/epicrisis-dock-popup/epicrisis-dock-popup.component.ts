@@ -373,7 +373,7 @@ export class EpicrisisDockPopupComponent implements OnInit {
 
 	showSuccesAndClosePopup(epicrisis: EpicrisisDto) {
 		this.snackBarService.showSuccess('internaciones.epicrisis.messages.SUCCESS');
-		this.dockPopupRef.close(this.fieldsToUpdate(epicrisis));
+		this.dockPopupRef.close( { fieldsToUpdate: this.fieldsToUpdate(epicrisis)});
 	}
 
 	private closeEpicrisis(obs: Observable<any>, epicrisis: EpicrisisDto, openMedicalDischarge: boolean) {
