@@ -278,7 +278,7 @@ public class AppointmentsController {
     }
 
 
-    @GetMapping("/confirmed-appointment")
+    @GetMapping("/current-appointment")
     @PreAuthorize("hasPermission(#institutionId, 'ESPECIALISTA_MEDICO, PROFESIONAL_DE_SALUD, ESPECIALISTA_EN_ODONTOLOGIA, ENFERMERO, PERSONAL_DE_IMAGENES, PERSONAL_DE_LABORATORIO, PERSONAL_DE_FARMACIA')")
     public ResponseEntity<Boolean> hasNewConsultationEnabled(
             @PathVariable(name = "institutionId") Integer institutionId,
@@ -286,7 +286,7 @@ public class AppointmentsController {
     ) {
         log.debug("Input parameters -> institutionId {}, patientId {}", institutionId, patientId);
         Integer healthProfessionalId = healthcareProfessionalExternalService.getProfessionalId(UserInfo.getCurrentAuditor());
-        boolean result = disableValidation || enableNewConsultation || appointmentService.hasConfirmedAppointment(patientId, healthProfessionalId, dateTimeProvider.nowDate());
+        boolean result = disableValidation || enableNewConsultation || appointmentService.hasCurrentAppointment(patientId, healthProfessionalId, dateTimeProvider.nowDate());
         log.debug(OUTPUT, result);
         return ResponseEntity.ok(result);
     }

@@ -98,7 +98,8 @@ public interface AppointmentRepository extends SGXAuditableEntityJPARepository<A
             "AND (d.healthcareProfessionalId = :healthProfessionalId " +
 			"OR dap.healthcareProfessionalId = :healthProfessionalId) " +
             "AND a.dateTypeId = :appointmentDate " +
-            "AND a.appointmentStateId = " + AppointmentState.CONFIRMED + " " +
+            "AND ( a.appointmentStateId = " + AppointmentState.CONFIRMED + " " +
+			"OR a.appointmentStateId = " + AppointmentState.ASSIGNED + ") " +
             "ORDER BY a.hour ASC")
     List<Integer> getAppointmentsId(@Param("patientId") Integer patientId,
                                     @Param("healthProfessionalId")  Integer healthProfessionalId,
@@ -142,7 +143,8 @@ public interface AppointmentRepository extends SGXAuditableEntityJPARepository<A
     @Query(name = "Appointment.medicalCoverage")
     List<Integer> getMedicalCoverage(@Param("patientId") Integer patientId,
                                      @Param("currentDate") LocalDate currentDate,
-                                     @Param("appointmentState") Short appointmentState,
+                                     @Param("confirmedAppointmentState") Short confirmedAppointmentState,
+									 @Param("assignedAppointmentState") Short assignedAppointmentState,
                                      @Param("professionalId") Integer professionalId);
 
 	@Transactional(readOnly = true)
@@ -188,13 +190,14 @@ public interface AppointmentRepository extends SGXAuditableEntityJPARepository<A
 			"WHERE a.patientId = :patientId " +
 			"AND do.institutionId = :institutionId " +
 			"AND up.pk.userId = :userId " +
-			"AND a.appointmentStateId = " + AppointmentState.CONFIRMED + " " +
+			"AND ( a.appointmentStateId = " + AppointmentState.CONFIRMED + " " +
+			"OR a.appointmentStateId = " + AppointmentState.ASSIGNED + ") " +
 			"AND a.dateTypeId = :currentDate " +
 			"ORDER BY a.dateTypeId, a.hour ASC ")
-	List<Integer> getConfirmedAppointmentsByPatient(@Param("patientId") Integer patientId,
-													@Param("institutionId") Integer institutionId,
-													@Param("userId") Integer userId,
-													@Param("currentDate") LocalDate currentDate);
+	List<Integer> getCurrentAppointmentsByPatient(@Param("patientId") Integer patientId,
+												  @Param("institutionId") Integer institutionId,
+												  @Param("userId") Integer userId,
+												  @Param("currentDate") LocalDate currentDate);
 
 	@Transactional(readOnly = true)
 	@Query( "SELECT a " +

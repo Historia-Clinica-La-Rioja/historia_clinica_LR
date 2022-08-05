@@ -514,7 +514,8 @@
             where ap.patient_id = :patientId and
             ap.date_type_id = :currentDate and
             ap.patient_medical_coverage_id is not null and
-            ap.appointment_state_id = :appointmentState and
+            (ap.appointment_state_id = :confirmedAppointmentState or
+			ap.appointment_state_id = :assignedAppointmentState ) and
             d.healthcare_professional_id = :professionalId
             order by hour asc
             limit 1

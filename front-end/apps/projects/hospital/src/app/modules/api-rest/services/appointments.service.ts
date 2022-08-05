@@ -82,7 +82,7 @@ export class AppointmentsService {
 		let queryParams: HttpParams = new HttpParams();
 		queryParams = queryParams.append('patientId', JSON.stringify(patientId));
 
-		const url = `${this.BASE_URL}/confirmed-appointment`;
+		const url = `${this.BASE_URL}/current-appointment`;
 		return this.http.get<boolean>(url, { params: queryParams });
 	}
 

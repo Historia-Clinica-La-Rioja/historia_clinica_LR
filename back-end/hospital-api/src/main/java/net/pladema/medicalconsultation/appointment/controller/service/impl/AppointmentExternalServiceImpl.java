@@ -77,9 +77,9 @@ public class AppointmentExternalServiceImpl implements AppointmentExternalServic
 	}
 
 	@Override
-	public boolean hasConfirmedAppointment(Integer patientId, Integer healthProfessionalId, LocalDate date) {
+	public boolean hasCurrentAppointment(Integer patientId, Integer healthProfessionalId, LocalDate date) {
 		log.debug("Input parameters -> patientId {}, healthProfessionalId {}, date {}", patientId, healthProfessionalId, date);
-		boolean result = appointmentService.hasConfirmedAppointment(patientId, healthProfessionalId, date);
+		boolean result = appointmentService.hasCurrentAppointment(patientId, healthProfessionalId, date);
 		log.debug(OUTPUT, result);
 		return result;
 	}

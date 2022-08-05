@@ -29,7 +29,7 @@ public interface AppointmentService {
 
 	boolean updateState(Integer appointmentId, short appointmentStateId, Integer userId, String reason);
 
-	boolean hasConfirmedAppointment(Integer patientId, Integer healthcareProfessionalId, LocalDate date);
+	boolean hasCurrentAppointment(Integer patientId, Integer healthcareProfessionalId, LocalDate date);
 
 	List<Integer> getAppointmentsId(Integer patientId, Integer healthcareProfessionalId, LocalDate date);
 

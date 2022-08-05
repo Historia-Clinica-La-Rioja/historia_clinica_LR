@@ -166,7 +166,7 @@ public class AppointmentServiceImpl implements AppointmentService {
 	}
 
 	@Override
-	public boolean hasConfirmedAppointment(Integer patientId, Integer healthProfessionalId, LocalDate date) {
+	public boolean hasCurrentAppointment(Integer patientId, Integer healthProfessionalId, LocalDate date) {
 		log.debug("Input parameters -> patientId {}, healthProfessionalId {}, date {} ", patientId, healthProfessionalId, date);
 		boolean result = !(appointmentRepository.getAppointmentsId(patientId, healthProfessionalId, date).isEmpty());
 		log.debug(OUTPUT, result);
@@ -223,7 +223,7 @@ public class AppointmentServiceImpl implements AppointmentService {
 	public Integer getMedicalCoverage(Integer patientId, Integer healthcareProfessionalId,
 									  LocalDate currentDate) {
 		List<Integer> medicalCoverages = appointmentRepository.getMedicalCoverage(patientId, currentDate,
-				AppointmentState.CONFIRMED, healthcareProfessionalId);
+				AppointmentState.CONFIRMED,AppointmentState.ASSIGNED, healthcareProfessionalId);
 		Integer patientMedicalCoverageId = medicalCoverages.stream().findAny().orElse(null);
 		log.debug(OUTPUT, patientMedicalCoverageId);
 		return patientMedicalCoverageId;
@@ -256,12 +256,12 @@ public class AppointmentServiceImpl implements AppointmentService {
 		ZoneId institutionZoneId = institutionExternalService.getTimezone(institutionId);
 		var currentDateTime = dateTimeProvider.nowDateTimeWithZone(institutionZoneId);
 		var userId = UserInfo.getCurrentAuditor();
-		var getConfirmedAppointmentsByPatient = appointmentRepository.getConfirmedAppointmentsByPatient(patientId,
+		var getCurrentAppointmentsByPatient = appointmentRepository.getCurrentAppointmentsByPatient(patientId,
 				institutionId, userId, currentDateTime.toLocalDate());
-		if(getConfirmedAppointmentsByPatient.isEmpty())
+		if(getCurrentAppointmentsByPatient.isEmpty())
 			return null;
 
-		var result = getConfirmedAppointmentsByPatient.get(0);
+		var result = getCurrentAppointmentsByPatient.get(0);
 		log.debug(OUTPUT, result);
 		return result;
 	}
