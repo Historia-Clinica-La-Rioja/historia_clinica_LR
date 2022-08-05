@@ -9,6 +9,7 @@ import { newMoment } from '@core/utils/moment.utils';
 import { GuardiaMapperService } from '../../services/guardia-mapper.service';
 import { EffectiveObservation, FactoresDeRiesgoFormService } from '@historia-clinica/services/factores-de-riesgo-form.service';
 import { FACTORES_DE_RIESGO } from '@historia-clinica/constants/validation-constants';
+import { TranslateService } from '@ngx-translate/core';
 
 @Component({
 	selector: 'app-pediatric-triage',
@@ -39,12 +40,15 @@ export class PediatricTriageComponent implements OnInit {
 		respiratoryRetractionId: (control) => control.controls.respiratoryRetractionId.reset(),
 		perfusionId: (control) => control.controls.perfusionId.reset(),
 	}
+	
+	factoresDeRiesgoFormService: FactoresDeRiesgoFormService;
 
 	constructor(
 		private formBuilder: FormBuilder,
 		private readonly triageMasterDataService: TriageMasterDataService,
-		private readonly factoresDeRiesgoFormService: FactoresDeRiesgoFormService
+		private readonly translateService: TranslateService,
 	) {
+		this.factoresDeRiesgoFormService = new FactoresDeRiesgoFormService(formBuilder, translateService);
 	}
 
 	ngOnInit(): void {
