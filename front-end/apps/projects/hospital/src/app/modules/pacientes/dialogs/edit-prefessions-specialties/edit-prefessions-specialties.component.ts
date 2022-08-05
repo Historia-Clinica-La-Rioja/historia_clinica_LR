@@ -1,7 +1,7 @@
 import { ChangeDetectorRef, Component, Inject, OnInit } from '@angular/core';
 import { FormArray, FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
-import { ClinicalSpecialtyDto, HealthcareProfessionalCompleteDto, ProfessionalProfessionsDto, ProfessionalSpecialtyDto } from '@api-rest/api-model';
+import { ClinicalSpecialtyDto, HealthcareProfessionalCompleteDto, HealthcareProfessionalSpecialtyDto, ProfessionalProfessionsDto, ProfessionalSpecialtyDto } from '@api-rest/api-model';
 import { hasError } from '@core/utils/form.utils';
 
 @Component({
@@ -74,6 +74,21 @@ export class EditPrefessionsSpecialtiesComponent implements OnInit {
 		}
 	}
 
+	private filterEmtySpecialty(array: ProfessionalProfessionsDto[]): ProfessionalProfessionsDto[] {
+		array.forEach(
+			pp => {
+				pp.specialties = this.updateSpecialties(pp.specialties)
+			}
+		)
+		return array;
+	}
+
+	private updateSpecialties(specialties: HealthcareProfessionalSpecialtyDto[]): HealthcareProfessionalSpecialtyDto[] {
+
+		return !specialties[specialties.length - 1].clinicalSpecialty.id ?
+			specialties.slice(0,specialties.length - 1) : specialties
+	}
+
 	deleteCombo(pointIndex: number): void {
 		const array = this.form.get('professionalProfessions') as FormArray;
 		array.removeAt(pointIndex);
@@ -85,7 +100,7 @@ export class EditPrefessionsSpecialtiesComponent implements OnInit {
 		return {
 			id: null,
 			personId: (this.data?.personId) ? (this.data?.personId) : null,
-			professionalProfessions: refArray.map(e => e.combo)
+			professionalProfessions: this.filterEmtySpecialty(refArray.map(e => e.combo))
 		}
 	}
 
