@@ -115,3 +115,32 @@ databaseChangeLog:
             columnNames: care_line_id, snomed_id
             constraintName: UQ_care_line_id_snomed_id
             tableName: care_line_problem
+
+  - changeSet:
+      id: createTable-app_node_data
+      comment: Create table app_node_data
+      author: sperruolo
+      changes:
+        - createTable:
+            tableName: app_node_data
+            columns:
+              - column:
+                  constraints:
+                    primaryKey: true
+                    primaryKeyName: PK_app_node_data
+                  name: uuid
+                  type: varchar(36)
+              - column:
+                  constraints:
+                    nullable: false
+                  name: updated
+                  type: datetime
+              - column:
+                  name: ip
+                  type: varchar(40)
+              - column:
+                  name: hostname
+                  type: varchar(50)
+              - column:
+                  name: interval_in_sec
+                  type: int

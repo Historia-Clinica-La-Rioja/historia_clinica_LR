@@ -16,6 +16,7 @@ import javax.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
+import ar.lamansys.sgx.shared.actuator.infrastructure.configuration.AppNode;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
@@ -23,11 +24,14 @@ import lombok.extern.slf4j.Slf4j;
 public class CorsFilter implements Filter {
 
 	private final String tokenHeader;
+	private final AppNode appNode;
 
 	public CorsFilter(
-			@Value("${token.header}") String tokenHeader
+			@Value("${token.header}") String tokenHeader,
+			AppNode appNode
 	) {
 		this.tokenHeader = tokenHeader;
+		this.appNode = appNode;
 	}
 
 	public void doFilter(ServletRequest req, ServletResponse res, FilterChain chain) throws IOException, ServletException {
@@ -37,6 +41,7 @@ public class CorsFilter implements Filter {
 		response.setHeader("Access-Control-Allow-Methods", "POST, GET, PUT, OPTIONS, DELETE, PATCH");
 		response.setHeader("Access-Control-Max-Age", "3600");
 		response.setHeader("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept, Accept-Language,  " + tokenHeader);
+		response.setHeader("App-Node", appNode.nodeId);
 
 		Instant start = Instant.now();
 		chain.doFilter(req, res);

@@ -1,6 +1,8 @@
 package ar.lamansys.sgx.shared;
 
 
+import java.util.UUID;
+
 import javax.annotation.PostConstruct;
 
 import org.springframework.boot.autoconfigure.domain.EntityScan;
@@ -11,6 +13,7 @@ import org.springframework.context.annotation.PropertySource;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.web.filter.CommonsRequestLoggingFilter;
 
+import ar.lamansys.sgx.shared.actuator.infrastructure.configuration.AppNode;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
@@ -38,4 +41,10 @@ public class SharedAutoConfiguration {
         return filter;
     }
 
+	@Bean
+	public AppNode appNode() {
+		return new AppNode(
+				UUID.randomUUID().toString()
+		);
+	}
 }
