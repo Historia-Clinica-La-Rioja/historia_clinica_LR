@@ -5364,6 +5364,7 @@ export const enum ESignatureStatus {
     PENDING = "PENDING",
     IN_PROGRESS = "IN_PROGRESS",
     SIGNED = "SIGNED",
+    ADMINISTRADOR_DE_DATOS_PERSONALES = "ADMINISTRADOR_DE_DATOS_PERSONALES",
 }
 
 export const enum ESurfacePositionDto {

@@ -67,6 +67,7 @@ public class RoleNameMapperImpl implements RoleNameMapper {
 			case ABORDAJE_VIOLENCIAS: return "Abordaje violencias";
 			case GESTOR_CENTRO_LLAMADO: return "Gestor de centro de llamado";
 			case AUDITORIA_DE_ACCESO: return "Auditoria de Acceso";
+			case ADMINISTRADOR_DE_DATOS_PERSONALES: return "Administrador de Datos Personales";
 		}
 		throw new NotFoundException("role-not-exists", String.format("El rol %s no existe", eRole));
 	}

@@ -7,12 +7,17 @@ import {
     Show,
     Tab,
     TabbedShowLayout,
-    TextField
+    TextField,
+    TopToolbar,
+    ListButton,
+    EditButton
 } from 'react-admin';
 import {
     SgxDateField,
     CreateRelatedButton,
 } from '../../components';
+import { ADMINISTRADOR_DE_DATOS_PERSONALES } from '../../roles';
+import { usePermissions } from 'react-admin';
 
 const redirect = (personId) => {
     return `/person/${personId}/show/2`;
@@ -35,10 +40,22 @@ const UserTab = ({ personId, loaded, total, ...props }) => (
         }
     </Fragment>
 );
+
+const PersonShowActions = ({ data }) => {
+    const { permissions } = usePermissions();
+    return (!data || !data.id) ? <TopToolbar/> :
+        (
+            <TopToolbar>
+                <ListButton basePath="/person" label="Listar personas"/>
+                {permissions?.hasAnyAssignment(ADMINISTRADOR_DE_DATOS_PERSONALES) && <EditButton basePath="/person" record={{ id: data.id }} />}
+            </TopToolbar>
+        )
+};
+
 const PersonShow = props =>{ 
     let personId = props.id;
     return (
-    <Show {...props}>
+    <Show actions={<PersonShowActions />} {...props}>
         <TabbedShowLayout>
             <Tab label="resources.person.tabs.details" id="personal_information">
                 <TextField source="firstName" />
