@@ -15,25 +15,30 @@ import lombok.Setter;
 @Component
 @ConfigurationProperties(prefix = "app.http.client")
 public class HttpClientConfiguration {
-	private String proxyHost;
-	private Integer proxyPort;
+	private String proxy;
 	private Integer timeout;
 	private boolean trustInvalidCertificate;
 
 	public HttpClientConfiguration with(boolean newTrustInvalidCertificate) {
 		return new HttpClientConfiguration(
-				proxyHost,
-				proxyPort,
+				proxy,
 				timeout,
 				newTrustInvalidCertificate
 		);
 	}
 
-	public HttpClientConfiguration with(Number newTimeout) {
+	public HttpClientConfiguration withTimeout(Number newTimeout) {
 		return new HttpClientConfiguration(
-				proxyHost,
-				proxyPort,
+				proxy,
 				newTimeout.intValue(),
+				trustInvalidCertificate
+		);
+	}
+
+	public HttpClientConfiguration withProxy(String newProxy) {
+		return new HttpClientConfiguration(
+				newProxy,
+				timeout,
 				trustInvalidCertificate
 		);
 	}

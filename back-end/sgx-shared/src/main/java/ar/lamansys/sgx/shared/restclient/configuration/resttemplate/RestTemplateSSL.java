@@ -15,8 +15,7 @@ public class RestTemplateSSL extends RestTemplate {
 		super(new BufferingClientHttpRequestFactory(getClientHttpRequestFactory(
 				configuration.getTimeout(),
 				configuration.isTrustInvalidCertificate(),
-				configuration.getProxyHost(),
-				configuration.getProxyPort()
+				configuration.getProxy()
 		)));
 		this.getInterceptors().add(new LoggingRequestInterceptor());
 		this.getInterceptors().add(new MonitoringRequestInterceptor());
@@ -26,15 +25,13 @@ public class RestTemplateSSL extends RestTemplate {
 	private static HttpComponentsClientHttpRequestFactory getClientHttpRequestFactory(
 			Integer timeout,
 			boolean trustInvalidCertificate,
-			String httpProxyHost,
-			Integer httpProxyPort
+			String httpProxy
 	) throws Exception {
 
 		HttpComponentsClientHttpRequestFactory clientHttpRequestFactory = new HttpComponentsClientHttpRequestFactory();
 		clientHttpRequestFactory.setHttpClient(RestUtils.httpClient(
 				trustInvalidCertificate,
-				httpProxyHost,
-				httpProxyPort
+				httpProxy
 		));
 		clientHttpRequestFactory.setConnectTimeout(timeout);
 		clientHttpRequestFactory.setReadTimeout(timeout);

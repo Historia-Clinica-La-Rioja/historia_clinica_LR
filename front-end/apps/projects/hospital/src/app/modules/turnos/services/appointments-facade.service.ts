@@ -111,12 +111,13 @@ export class AppointmentsFacadeService {
 	}
 
 	setInterval() {
-		this.intervalId = setInterval(() => this.loadAppointments(), 20000);
+		//this.intervalId = setInterval(() => this.loadAppointments(), 20000);
 	}
-
+	
 	clearInterval() {
-		clearInterval(this.intervalId);
+		//clearInterval(this.intervalId);
 	}
+		
 
 	private getViewName(person: BasicPersonalDataDto): string {
 		return person ? [person.lastName, this.patientNameService.getPatientName(person.firstName, person.nameSelfDetermination)].
