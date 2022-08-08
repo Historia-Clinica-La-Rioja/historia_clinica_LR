@@ -14,7 +14,7 @@ import { ExtensionJSLoaderService } from '@extensions/services/extension-jsloade
 })
 export class UiExternalComponentComponent implements OnChanges {
 	@Input() type: string;
-	@Input() params: any;
+	@Input() params: WCParams;
 
 	constructor(
 		//inject the elRef object to interact with the template
@@ -64,4 +64,9 @@ export class UiExternalComponentComponent implements OnChanges {
 		// append the element, so it's attached to the DOM
 		hostElement.appendChild(customElement);
 	}
+}
+
+export interface WCParams {
+	componentName: string;
+	url: string;
 }

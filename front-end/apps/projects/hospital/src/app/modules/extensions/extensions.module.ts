@@ -20,6 +20,7 @@ import { UiComponentListComponent } from './components/ui-component-list/ui-comp
 import { UiExternalComponentComponent } from './components/ui-external-component/ui-external-component.component';
 // config options
 import { cubejsOptions } from './extensions-cubejs';
+import { RoutedExternalComponent } from './components/routed-external/routed-external.component';
 
 @NgModule({
 	imports: [
@@ -45,6 +46,7 @@ import { cubejsOptions } from './extensions-cubejs';
 		UiComponentComponent,
 		UiComponentListComponent,
 		UiExternalComponentComponent,
+  RoutedExternalComponent,
 	],
 	exports: [
 		// components

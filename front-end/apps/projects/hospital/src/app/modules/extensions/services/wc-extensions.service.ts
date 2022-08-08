@@ -15,9 +15,13 @@ export class WCExtensionsService {
 	private readonly clinicHistoryTabsEmitter = new BehaviorSubject<SlotedInfo[]>(null);
 	clinicHistoryTabsExtensions$: Observable<SlotedInfo[]> = this.clinicHistoryTabsEmitter.asObservable();
 
+	private readonly homeMenuEmitter = new BehaviorSubject<SlotedInfo[]>(null);
+	homeMenuExtension$: Observable<SlotedInfo[]> = this.homeMenuEmitter.asObservable();
+
 	private readonly emmiters = {
 		[Slot.INSTITUTION_HOME_PAGE]: this.institutionEmitter,
 		[Slot.CLINIC_HISTORY_TAB]: this.clinicHistoryTabsEmitter,
+		[Slot.HOME_MENU]: this.homeMenuEmitter
 	}
 	constructor(
 		private readonly extensionService: ExtensionsService
@@ -39,6 +43,7 @@ export class WCExtensionsService {
 		const valuesToEmit = {
 			[Slot.INSTITUTION_HOME_PAGE]: [],
 			[Slot.CLINIC_HISTORY_TAB]: [],
+			[Slot.HOME_MENU]: []
 		}
 		const allPlugins$: Observable<ExtensionComponentDto[]> = this.extensionService.getExtensions();
 
@@ -49,9 +54,14 @@ export class WCExtensionsService {
 						(defPluginArr: WCInfo[]) => {
 
 							defPluginArr.forEach(d => {
-								valuesToEmit[d.slot].push(this.map(d))
+								if (!valuesToEmit[d.slot]) {
+									console.warn(`Extension ${d.slot} inexistente`);
+								} else {
+									valuesToEmit[d.slot].push(this.map(d))
+								}
+
 							});
-							const newWC = new Set(defPluginArr.map(e => e.slot));
+							const newWC = this.allUsedExtensions(defPluginArr);
 							newWC.forEach(key => {
 								this.emmiters[key].next(valuesToEmit[key]);
 							})
@@ -60,6 +70,11 @@ export class WCExtensionsService {
 				})
 			}
 		);
+	}
+
+	private allUsedExtensions(defPluginArr: WCInfo[]): Set<string> {
+		return new Set(defPluginArr.map(e => e.slot).
+			filter(value => Object.keys(Slot).some(a => a == value)));
 	}
 
 	private fetchDefinicion(url: string): Observable<WCInfo[]> {
@@ -96,6 +111,7 @@ export enum Slot {
 	INSTITUTION_HOME_PAGE = 'INSTITUTION_HOME_PAGE',
 	CLINIC_HISTORY_TAB = 'CLINIC_HISTORY_TAB',
 	SYSTEM_HOME_PAGE = 'SYSTEM_HOME_PAGE',
+	HOME_MENU = 'HOME_MENU'
 }
 
 

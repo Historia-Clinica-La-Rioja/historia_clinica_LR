@@ -20,6 +20,8 @@ import { NO_ROLES_USER_SIDEBAR_MENU, ROLES_USER_SIDEBAR_MENU } from './constants
 
 import { HomeRoutes } from '../home/home-routing.module';
 import { AppRoutes } from '../../app-routing.module';
+import { SlotedInfo, WCExtensionsService } from '@extensions/services/wc-extensions.service';
+import { MenuItemDef } from '@core/core-model';
 
 @Component({
 	selector: 'app-home',
@@ -33,7 +35,7 @@ export class HomeComponent implements OnInit {
 	nameSelfDeterminationFF: boolean;
 
 	private readonly NO_INSTITUTION = -1;
-
+	homeExtensions$: Observable<any[]>;
 	constructor(
 		private contextService: ContextService,
 		private extensionMenuService: MenuService,
@@ -41,22 +43,47 @@ export class HomeComponent implements OnInit {
 		private accountService: AccountService,
 		private featureFlagService: FeatureFlagService,
 		private loggedUserService: LoggedUserService,
+		private readonly wcExtensionsService: WCExtensionsService,
 	) {
-		this.featureFlagService.isActive(AppFeature.HABILITAR_DATOS_AUTOPERCIBIDOS).subscribe(isOn =>{
-		this.nameSelfDeterminationFF = isOn});
+		this.featureFlagService.isActive(AppFeature.HABILITAR_DATOS_AUTOPERCIBIDOS).subscribe(isOn => {
+			this.nameSelfDeterminationFF = isOn
+		});
+		this.wcExtensionsService.fetchExtensions();
+		this.homeExtensions$ = this.wcExtensionsService.homeMenuExtension$
+			.pipe(
+				map(array => {
+					return array.map(this.map)
+				})
+			);
+	}
+
+	private map(slotedInfo: SlotedInfo): MenuItem {
+		const url = slotedInfo.title.replace(' ', '-');
+		return {
+			label: {
+				text: slotedInfo.title,
+			},
+			icon: 'home',
+			id: url,
+			url: `web-components/${slotedInfo.componentName}`,
+		}
 	}
 
 	ngOnInit(): void {
 		this.contextService.setInstitutionId(this.NO_INSTITUTION);
 
 		this.loggedUserService.assignments$.subscribe(roleAssignment => {
-			const menuItemDefs = this.userHasAnyRole(roleAssignment)? ROLES_USER_SIDEBAR_MENU : NO_ROLES_USER_SIDEBAR_MENU;
+			const menuItemDefs: MenuItemDef[] = this.userHasAnyRole(roleAssignment) ? ROLES_USER_SIDEBAR_MENU : NO_ROLES_USER_SIDEBAR_MENU;
+
 			this.menuItems$ = this.featureFlagService.filterItems$(menuItemDefs)
 				.pipe(
 					switchMap(menu => this.permissionsService.filterItems$(menu)),
 					map(menu => menu.map(defToMenuItem)),
 					switchMap(items => this.extensionMenuService.getSystemMenuItems().pipe(
-						map(extesionItems => [...items, ...extesionItems]),
+						map((extesionItems: MenuItem[]) => [...items, ...extesionItems]),
+					)),
+					switchMap(items => this.homeExtensions$.pipe(
+						map((wcExtensionesMenu: MenuItem[]) => [...items, ...wcExtensionesMenu,]),
 					)),
 				);
 
