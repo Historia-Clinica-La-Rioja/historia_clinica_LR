@@ -1,13 +1,12 @@
 import { Component, Input, OnChanges, OnDestroy, OnInit, SimpleChanges } from '@angular/core';
-import { AppointmentDailyAmountDto, AppointmentListDto, CompleteDiaryDto, DiaryOpeningHoursDto, MedicalCoverageDto } from '@api-rest/api-model';
+import { AppointmentDailyAmountDto, CompleteDiaryDto, DiaryOpeningHoursDto, MedicalCoverageDto } from '@api-rest/api-model';
 import { ERole } from '@api-rest/api-model';
 import { CalendarMonthViewBeforeRenderEvent, CalendarView, CalendarWeekViewBeforeRenderEvent, DAYS_OF_WEEK } from 'angular-calendar';
 import {
 	buildFullDate,
 	DateFormat,
 	dateToMoment,
-	dateToMomentTimeZone,
-	momentFormat,
+	dateToMomentTimeZone, momentFormat,
 	momentParseDate,
 	momentParseTime
 } from '@core/utils/moment.utils';
@@ -21,7 +20,7 @@ import { MEDICAL_ATTENTION } from '../../constants/descriptions';
 import { AppointmentComponent } from '../../dialogs/appointment/appointment.component';
 import { SnackBarService } from '@presentation/services/snack-bar.service';
 
-import { AppointmentsFacadeService, toCalendarEvent } from '@turnos/services/appointments-facade.service';
+import { AppointmentsFacadeService } from '@turnos/services/appointments-facade.service';
 
 import { APPOINTMENT_STATES_ID, MINUTES_IN_HOUR } from '../../constants/appointment';
 import { map, take } from 'rxjs/operators';
@@ -33,6 +32,8 @@ import { AgendaSearchService } from '../../services/agenda-search.service';
 import { ContextService } from '@core/services/context.service';
 import { ConfirmBookingComponent } from '@turnos/dialogs/confirm-booking/confirm-booking.component';
 import { DatePipeFormat } from '@core/utils/date.utils';
+import { HealthcareProfessionalService } from '@api-rest/services/healthcare-professional.service';
+import { LoggedUserService } from '../../../auth/services/logged-user.service';
 import * as moment from 'moment';
 import { endOfWeek, startOfWeek } from 'date-fns';
 
@@ -54,8 +55,6 @@ export class AgendaComponent implements OnInit, OnDestroy, OnChanges {
 
 	hourSegments: number;
 	agenda: CompleteDiaryDto;
-
-	viewDate: Date = new Date();
 	loading = true;
 	dayStartHour: number;
 	dayEndHour: number;
@@ -77,6 +76,7 @@ export class AgendaComponent implements OnInit, OnDestroy, OnChanges {
 	@Input() idAgenda: number;
 	@Input() showAll = true;
 	@Input() view: CalendarView = CalendarView.Week;
+	@Input() viewDate: Date = new Date();
 
 	constructor(
 		private readonly dialog: MatDialog,
@@ -90,6 +90,8 @@ export class AgendaComponent implements OnInit, OnDestroy, OnChanges {
 		private readonly healthInsuranceService: HealthInsuranceService,
 		private readonly agendaSearchService: AgendaSearchService,
 		private readonly contextService: ContextService,
+		private readonly healthcareProfessionalService: HealthcareProfessionalService,
+		private readonly loggedUserService: LoggedUserService
 	) {
 	}
 
@@ -100,6 +102,7 @@ export class AgendaComponent implements OnInit, OnDestroy, OnChanges {
 				this.professionalId = Number(qp.idProfessional);
 			this.appointmentFacade.setProfessionalId(this.professionalId);
 		});
+
 		this.loading = true;
 		this.appointmentSubscription?.unsubscribe();
 		this.appointmentFacade.clear();
@@ -114,8 +117,8 @@ export class AgendaComponent implements OnInit, OnDestroy, OnChanges {
 		this.loading = true;
 		this.appointmentSubscription = this.appointmentFacade.getAppointments().subscribe(appointments => {
 			if (appointments) {
-				if (appointments.length) {
-					this.appointments = this.unifyEvents(appointments);
+                if (appointments.length) {
+				    this.appointments = this.unifyEvents(appointments);
 				}
                 else {
                     this.appointments = appointments;
@@ -227,55 +230,43 @@ export class AgendaComponent implements OnInit, OnDestroy, OnChanges {
 	}
 
 	onClickedSegment(event) {
-		this.appointmentsService.getList([this.agenda.id], this.professionalId, this.startDate, this.endDate)
-			.subscribe((appointments: AppointmentListDto[]) => {
-				const appointmentsCalendarEvents: CalendarEvent[] = appointments
-					.map(appointment => {
-						const from = momentParseTime(appointment.hour).format(DateFormat.HOUR_MINUTE);
-						const to = momentParseTime(from).add(this.agenda.appointmentDuration, 'minutes').format(DateFormat.HOUR_MINUTE);
-						return toCalendarEvent(from, to, momentParseDate(appointment.date), appointment, '');
-					});
+		if (this.getOpeningHoursId(event.date) && this.enableAppointmentScheduling) {
+			const clickedDate: Moment = dateToMomentTimeZone(event.date);
+			const openingHourId: number = this.getOpeningHoursId(event.date);
+			const diaryOpeningHourDto: DiaryOpeningHoursDto =
+				this.diaryOpeningHours.find(diaryOpeningHour => diaryOpeningHour.openingHours.id === openingHourId);
 
-				this.appointmentFacade.loadAppointments();
+			forkJoin([
+				this.getAppointmentAt(event.date).pipe(take(1)),
+				this.allOverturnsAssignedForDiaryOpeningHour(diaryOpeningHourDto, clickedDate).pipe(take(1))
+			]).subscribe(([busySlot, numberOfOverturnsAssigned]) => {
 
-				if (this.getOpeningHoursId(event.date) && this.enableAppointmentScheduling) {
-					const clickedDate: Moment = dateToMomentTimeZone(event.date);
-					const openingHourId: number = this.getOpeningHoursId(event.date);
-					const diaryOpeningHourDto: DiaryOpeningHoursDto =
-						this.diaryOpeningHours.find(diaryOpeningHour => diaryOpeningHour.openingHours.id === openingHourId);
+				if (busySlot && busySlot.meta.appointmentStateId === APPOINTMENT_STATES_ID.BLOCKED) {
+					this.snackBarService.showError('No es posible agragar un turno en un horario bloqueado');
+					return;
+				}
+				const addingOverturn = !!busySlot;
 
-					forkJoin([
-						this.getAppointmentAt(event.date).pipe(take(1)),
-						this.allOverturnsAssignedForDiaryOpeningHour(diaryOpeningHourDto, clickedDate).pipe(take(1))
-					]).subscribe(([busySlot, numberOfOverturnsAssigned]) => {
-
-						if (busySlot && busySlot.meta.appointmentStateId === APPOINTMENT_STATES_ID.BLOCKED) {
-							this.snackBarService.showError('No es posible agragar un turno en un horario bloqueado');
-							return;
-						}
-						const addingOverturn = !!busySlot;
-
-						if (addingOverturn && (numberOfOverturnsAssigned === diaryOpeningHourDto.overturnCount)) {
-							if (diaryOpeningHourDto.medicalAttentionTypeId !== MEDICAL_ATTENTION.SPONTANEOUS_ID) {
-								this.snackBarService.showError('turnos.overturns.messages.ERROR');
-							}
-						} else {
-							this.dialog.open(NewAppointmentComponent, {
-								width: '35%',
-								data: {
-									date: clickedDate.format(DateFormat.API_DATE),
-									diaryId: this.agenda.id,
-									hour: clickedDate.format(DateFormat.HOUR_MINUTE_SECONDS),
-									openingHoursId: openingHourId,
-									overturnMode: addingOverturn,
-									patientId: this.patientId,
-									professionalId: this.professionalId
-								}
-							});
+				if (addingOverturn && (numberOfOverturnsAssigned === diaryOpeningHourDto.overturnCount)) {
+					if (diaryOpeningHourDto.medicalAttentionTypeId !== MEDICAL_ATTENTION.SPONTANEOUS_ID) {
+						this.snackBarService.showError('turnos.overturns.messages.ERROR');
+					}
+				} else {
+					this.dialog.open(NewAppointmentComponent, {
+						width: '35%',
+						data: {
+							date: clickedDate.format(DateFormat.API_DATE),
+							diaryId: this.agenda.id,
+							hour: clickedDate.format(DateFormat.HOUR_MINUTE_SECONDS),
+							openingHoursId: openingHourId,
+							overturnMode: addingOverturn,
+							patientId: this.patientId,
+							professionalId: this.professionalId
 						}
 					});
 				}
 			});
+		}
 	}
 
 	viewAppointment(event: CalendarEvent): void {
@@ -338,7 +329,6 @@ export class AgendaComponent implements OnInit, OnDestroy, OnChanges {
 		this.appointmentFacade.setValues(agenda.id, agenda.appointmentDuration, this.startDate, this.endDate);
 		this.diaryOpeningHours = agenda.diaryOpeningHours;
 		this.setDayStartHourAndEndHour(agenda.diaryOpeningHours);
-
 	}
 
 	goToDayViewOn(date: Date) {
