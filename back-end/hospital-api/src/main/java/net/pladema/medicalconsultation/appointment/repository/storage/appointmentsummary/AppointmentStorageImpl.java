@@ -1,10 +1,16 @@
 package net.pladema.medicalconsultation.appointment.repository.storage.appointmentsummary;
 
+import java.time.LocalDate;
+import java.util.Collection;
 import java.util.List;
 import java.util.stream.Collectors;
 
 import javax.persistence.EntityManager;
 import javax.persistence.Query;
+
+import net.pladema.medicalconsultation.appointment.repository.domain.AppointmentDiaryVo;
+import net.pladema.medicalconsultation.appointment.repository.entity.AppointmentState;
+import net.pladema.medicalconsultation.appointment.service.domain.AppointmentBo;
 
 import org.springframework.stereotype.Service;
 
@@ -51,6 +57,68 @@ public class AppointmentStorageImpl implements AppointmentStorage {
 			query.setParameter("appointmentStatusId", filter.getIncludeAppointmentStatus());
 		return ((List<VAppointmentSummary>) query.getResultList()).stream()
 				.map(this::mapTo)
+				.collect(Collectors.toList());
+	}
+
+	@Override
+	public Collection<AppointmentBo> getAppointmentsByProfessionalInInstitution(Integer healthcareProfessionalId, Integer institutionId, LocalDate from, LocalDate to) {
+		String sqlString =
+				"SELECT  NEW net.pladema.medicalconsultation.appointment.repository.domain.AppointmentDiaryVo(" +
+						"aa.pk.diaryId, a.id, a.patientId, a.dateTypeId, a.hour, a.appointmentStateId, a.isOverturn, " +
+						"a.patientMedicalCoverageId,a.phonePrefix, a.phoneNumber, doh.medicalAttentionTypeId, " +
+						"a.appointmentBlockMotiveId) " +
+						"FROM Appointment AS a " +
+						"JOIN AppointmentAssn AS aa ON (a.id = aa.pk.appointmentId) " +
+						"JOIN Diary d ON (d.id = aa.pk.diaryId )" +
+						"JOIN DiaryOpeningHours AS doh ON (doh.pk.diaryId = d.id) " +
+						"JOIN DoctorsOffice AS do ON (do.id = d.doctorsOfficeId) " +
+						"WHERE d.healthcareProfessionalId = :healthcareProfessionalId " +
+						"AND do.institutionId = :institutionId " +
+						"AND d.active = true " +
+						"AND (d.deleteable.deleted = false OR d.deleteable.deleted is null) " +
+						"AND NOT a.appointmentStateId = " + AppointmentState.CANCELLED_STR +
+						"AND (a.deleteable.deleted = FALSE OR a.deleteable.deleted IS NULL) " +
+						(from!=null ? "AND a.dateTypeId >= :from " : "") +
+						(to!=null ? "AND a.dateTypeId <= :to " : "") +
+						"ORDER BY d.id,a.isOverturn";
+		Query query = entityManager.createQuery(sqlString, AppointmentDiaryVo.class)
+				.setParameter("healthcareProfessionalId", healthcareProfessionalId)
+				.setParameter("institutionId", institutionId);
+		if (from != null)
+			query.setParameter("from", from);
+		if (to != null)
+			query.setParameter("to", to);
+		return ((List<AppointmentDiaryVo>) query.getResultList()).stream()
+				.map(AppointmentBo::fromAppointmentDiaryVo)
+				.collect(Collectors.toList());
+	}
+
+	@Override
+	public Collection<AppointmentBo> getAppointmentsByDiaries(List<Integer> diaryIds, LocalDate from, LocalDate to) {
+		String sqlString =
+				"SELECT  NEW net.pladema.medicalconsultation.appointment.repository.domain.AppointmentDiaryVo(" +
+						"aa.pk.diaryId, a.id, a.patientId, a.dateTypeId, a.hour, a.appointmentStateId, a.isOverturn, " +
+						"a.patientMedicalCoverageId,a.phonePrefix, a.phoneNumber, doh.medicalAttentionTypeId, " +
+						"a.appointmentBlockMotiveId )" +
+						"FROM Appointment AS a " +
+						"JOIN AppointmentAssn AS aa ON (a.id = aa.pk.appointmentId) " +
+						"JOIN Diary d ON (d.id = aa.pk.diaryId ) " +
+						"JOIN DiaryOpeningHours  AS doh ON (doh.pk.diaryId = d.id) " +
+						"WHERE aa.pk.diaryId IN (:diaryIds) AND (d.deleteable.deleted = false OR d.deleteable.deleted is null ) " +
+						(from!=null ? "AND a.dateTypeId >= :from " : "") +
+						(to!=null ? "AND a.dateTypeId <= :to " : "") +
+						"AND NOT a.appointmentStateId = " + AppointmentState.CANCELLED_STR +
+						"AND (a.deleteable.deleted = FALSE OR a.deleteable.deleted IS NULL) " +
+
+						"ORDER BY d.id,a.isOverturn";
+		Query query = entityManager.createQuery(sqlString, AppointmentDiaryVo.class)
+				.setParameter("diaryIds", diaryIds);
+		if (from != null)
+			query.setParameter("from", from);
+		if (to != null)
+			query.setParameter("to", to);
+		return ((List<AppointmentDiaryVo>) query.getResultList()).stream()
+				.map(AppointmentBo::fromAppointmentDiaryVo)
 				.collect(Collectors.toList());
 	}
 
