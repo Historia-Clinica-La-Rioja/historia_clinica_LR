@@ -101,7 +101,9 @@ public class AppointmentsController {
     @Value("${habilitar.boton.consulta:false}")
     private boolean enableNewConsultation;
 
-    public AppointmentsController(
+	private final LocalDateMapper localDateMapper;
+
+	public AppointmentsController(
             AppointmentDailyAmountService appointmentDailyAmountService,
             AppointmentService appointmentService,
             AppointmentValidatorService appointmentValidatorService,
@@ -112,7 +114,8 @@ public class AppointmentsController {
             DateTimeProvider dateTimeProvider,
             NotifyPatient notifyPatient,
             BookingPersonService bookingPersonService,
-			LocalDateMapper dateMapper) {
+			LocalDateMapper dateMapper,
+			LocalDateMapper localDateMapper) {
         this.appointmentDailyAmountService = appointmentDailyAmountService;
         this.appointmentService = appointmentService;
         this.appointmentValidatorService = appointmentValidatorService;
@@ -124,6 +127,7 @@ public class AppointmentsController {
         this.notifyPatient = notifyPatient;
         this.bookingPersonService = bookingPersonService;
 		this.dateMapper = dateMapper;
+		this.localDateMapper = localDateMapper;
 	}
 
 
@@ -171,12 +175,16 @@ public class AppointmentsController {
     public ResponseEntity<Collection<AppointmentListDto>> getList(
             @PathVariable(name = "institutionId") Integer institutionId,
 			@PathVariable(name = "healthcareProfessionalId") Integer healthcareProfessionalId,
-            @RequestParam(name = "diaryIds", defaultValue = "") List<Integer> diaryIds
+            @RequestParam(name = "diaryIds", defaultValue = "") List<Integer> diaryIds,
+			@RequestParam(name = "from", required = false) String from,
+			@RequestParam(name = "to", required = false) String to
     ) {
         log.debug("Input parameters -> institutionId {}, diaryIds {}", institutionId, diaryIds);
+		LocalDate startDate = (from!=null) ? localDateMapper.fromStringToLocalDate(from) : null;
+		LocalDate endDate = (to!=null) ? localDateMapper.fromStringToLocalDate(to) : null;
 		Collection<AppointmentBo> resultService = diaryIds.isEmpty() ?
-				appointmentService.getAppointmentsByProfessionalInInstitution(healthcareProfessionalId, institutionId) :
-				appointmentService.getAppointmentsByDiaries(diaryIds);
+				appointmentService.getAppointmentsByProfessionalInInstitution(healthcareProfessionalId, institutionId, startDate, endDate) :
+				appointmentService.getAppointmentsByDiaries(diaryIds, startDate, endDate);
         Set<Integer> patientsIds = resultService.stream().
                 filter(appointmentBo -> appointmentBo.getPatientId() != null).
 				map(AppointmentBo::getPatientId).collect(Collectors.toSet());

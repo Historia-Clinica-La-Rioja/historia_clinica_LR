@@ -15,7 +15,9 @@ import net.pladema.establishment.controller.service.InstitutionExternalService;
 
 import net.pladema.establishment.repository.MedicalCoveragePlanRepository;
 import net.pladema.medicalconsultation.appointment.repository.AppointmentObservationRepository;
+import net.pladema.medicalconsultation.appointment.repository.domain.AppointmentDiaryVo;
 import net.pladema.medicalconsultation.appointment.repository.entity.AppointmentObservation;
+import net.pladema.medicalconsultation.appointment.service.ports.AppointmentStorage;
 import net.pladema.patient.controller.dto.PatientMedicalCoverageDto;
 import net.pladema.patient.controller.service.PatientExternalMedicalCoverageService;
 
@@ -24,20 +26,15 @@ import net.pladema.patient.service.domain.PatientMedicalCoverageBo;
 
 import net.pladema.staff.repository.HealthcareProfessionalRepository;
 
-import org.apache.tomcat.jni.Local;
 import org.springframework.stereotype.Service;
 
 import ar.lamansys.sgh.shared.infrastructure.input.service.SharedStaffPort;
 import ar.lamansys.sgx.shared.featureflags.AppFeature;
 import ar.lamansys.sgx.shared.featureflags.application.FeatureFlagsService;
 import lombok.extern.slf4j.Slf4j;
-import net.pladema.establishment.controller.service.InstitutionExternalService;
-import net.pladema.establishment.repository.MedicalCoveragePlanRepository;
-import net.pladema.medicalconsultation.appointment.repository.AppointmentObservationRepository;
 import net.pladema.medicalconsultation.appointment.repository.AppointmentRepository;
 import net.pladema.medicalconsultation.appointment.repository.HistoricAppointmentStateRepository;
 import net.pladema.medicalconsultation.appointment.repository.domain.AppointmentTicketBo;
-import net.pladema.medicalconsultation.appointment.repository.entity.AppointmentObservation;
 import net.pladema.medicalconsultation.appointment.repository.entity.AppointmentState;
 import net.pladema.medicalconsultation.appointment.repository.entity.HistoricAppointmentState;
 import net.pladema.medicalconsultation.appointment.service.AppointmentService;
@@ -46,11 +43,6 @@ import net.pladema.medicalconsultation.appointment.service.domain.AppointmentBo;
 import net.pladema.medicalconsultation.appointment.service.domain.UpdateAppointmentBo;
 import net.pladema.medicalconsultation.appointment.service.exceptions.AppointmentNotFoundEnumException;
 import net.pladema.medicalconsultation.appointment.service.exceptions.AppointmentNotFoundException;
-import net.pladema.patient.controller.dto.PatientMedicalCoverageDto;
-import net.pladema.patient.controller.service.PatientExternalMedicalCoverageService;
-import net.pladema.patient.service.domain.PatientCoverageInsuranceDetailsBo;
-import net.pladema.patient.service.domain.PatientMedicalCoverageBo;
-import net.pladema.staff.repository.HealthcareProfessionalRepository;
 
 import org.springframework.transaction.annotation.Transactional;
 
@@ -78,9 +70,10 @@ public class AppointmentServiceImpl implements AppointmentService {
 
 	private final MedicalCoveragePlanRepository medicalCoveragePlanRepository;
 
-	private final HealthcareProfessionalRepository healthcareProfessionalRepository;
+	private final AppointmentStorage appointmentStorage;
 
-	public AppointmentServiceImpl(AppointmentRepository appointmentRepository, AppointmentObservationRepository appointmentObservationRepository, HistoricAppointmentStateRepository historicAppointmentStateRepository, SharedStaffPort sharedStaffPort, DateTimeProvider dateTimeProvider, PatientExternalMedicalCoverageService patientExternalMedicalCoverageService, InstitutionExternalService institutionExternalService, MedicalCoveragePlanRepository medicalCoveragePlanRepository, FeatureFlagsService featureFlagsService, HealthcareProfessionalRepository healthcareProfessionalRepository) {
+
+	public AppointmentServiceImpl(AppointmentRepository appointmentRepository, AppointmentObservationRepository appointmentObservationRepository, HistoricAppointmentStateRepository historicAppointmentStateRepository, SharedStaffPort sharedStaffPort, DateTimeProvider dateTimeProvider, PatientExternalMedicalCoverageService patientExternalMedicalCoverageService, InstitutionExternalService institutionExternalService, MedicalCoveragePlanRepository medicalCoveragePlanRepository, FeatureFlagsService featureFlagsService, AppointmentStorage appointmentStorage) {
 		this.appointmentRepository = appointmentRepository;
 		this.appointmentObservationRepository = appointmentObservationRepository;
 		this.historicAppointmentStateRepository = historicAppointmentStateRepository;
@@ -90,16 +83,15 @@ public class AppointmentServiceImpl implements AppointmentService {
 		this.patientExternalMedicalCoverageService = patientExternalMedicalCoverageService;
 		this.institutionExternalService = institutionExternalService;
 		this.medicalCoveragePlanRepository = medicalCoveragePlanRepository;
-		this.healthcareProfessionalRepository = healthcareProfessionalRepository;
+		this.appointmentStorage = appointmentStorage;
 	}
 
 	@Override
-	public Collection<AppointmentBo> getAppointmentsByDiaries(List<Integer> diaryIds) {
+	public Collection<AppointmentBo> getAppointmentsByDiaries(List<Integer> diaryIds, LocalDate from, LocalDate to) {
 		log.debug("Input parameters -> diaryIds {}", diaryIds);
 		Collection<AppointmentBo> result = new ArrayList<>();
 		if (!diaryIds.isEmpty())
-			result = appointmentRepository.getAppointmentsByDiaries(diaryIds).stream()
-					.map(AppointmentBo::fromAppointmentDiaryVo)
+			result = appointmentStorage.getAppointmentsByDiaries(diaryIds, from, to).stream()
 					.distinct()
 					.collect(Collectors.toList());
 		log.debug("Result size {}", result.size());
@@ -108,12 +100,11 @@ public class AppointmentServiceImpl implements AppointmentService {
 	}
 
 	@Override
-	public Collection<AppointmentBo> getAppointmentsByProfessionalInInstitution(Integer healthcareProfessionalId, Integer institutionId) {
+	public Collection<AppointmentBo> getAppointmentsByProfessionalInInstitution(Integer healthcareProfessionalId, Integer institutionId, LocalDate from, LocalDate to) {
 		log.debug("Input parameters -> diaryIds {}", healthcareProfessionalId);
 		Collection<AppointmentBo> result = new ArrayList<>();
 		if (healthcareProfessionalId!=null)
-			result = appointmentRepository.getAppointmentsByProfessionalInInstitution(healthcareProfessionalId, institutionId).stream()
-					.map(AppointmentBo::fromAppointmentDiaryVo)
+			result = appointmentStorage.getAppointmentsByProfessionalInInstitution(healthcareProfessionalId, institutionId, from, to).stream()
 					.distinct()
 					.collect(Collectors.toList());
 		log.debug("Result size {}", result.size());

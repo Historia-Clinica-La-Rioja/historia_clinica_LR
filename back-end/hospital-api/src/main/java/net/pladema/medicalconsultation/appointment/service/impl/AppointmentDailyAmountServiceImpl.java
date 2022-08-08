@@ -48,7 +48,7 @@ public class AppointmentDailyAmountServiceImpl implements AppointmentDailyAmount
 
 		Collection<AppointmentDailyAmountBo> appointmentsDailyAmount = new ArrayList<>();
 
-        Collection<AppointmentBo> appointments = appointmentService.getAppointmentsByDiaries(Arrays.asList(diaryId));
+        Collection<AppointmentBo> appointments = appointmentService.getAppointmentsByDiaries(Arrays.asList(diaryId), null, null);
         Optional<CompleteDiaryBo> diary = diaryService.getDiary(diaryId);
 
         if (diary.isPresent()) {
