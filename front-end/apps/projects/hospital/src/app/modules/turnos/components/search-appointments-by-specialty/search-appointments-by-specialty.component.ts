@@ -103,4 +103,41 @@ export class SearchAppointmentsBySpecialtyComponent implements OnInit {
 		this.searchBySpecialtyForm.controls.clinicalSpecialty.setValue(clinicalSpecialty);
 	}
 
+	submit() {
+		const selectedDaysOfWeek = [];
+		if (this.searchBySpecialtyForm.value.mondayControl)
+			selectedDaysOfWeek.push(1);
+		if (this.searchBySpecialtyForm.value.tuesdayControl)
+			selectedDaysOfWeek.push(2);
+		if (this.searchBySpecialtyForm.value.wednesdayControl)
+			selectedDaysOfWeek.push(3);
+		if (this.searchBySpecialtyForm.value.tuesdayControl)
+			selectedDaysOfWeek.push(4);
+		if (this.searchBySpecialtyForm.value.fridayControl)
+			selectedDaysOfWeek.push(5);
+		if (this.searchBySpecialtyForm.value.saturdayControl)
+			selectedDaysOfWeek.push(6);
+		if (this.searchBySpecialtyForm.value.sundayControl)
+			selectedDaysOfWeek.push(0);
+		this.diaryService.generateEmptyAppointments(
+			{
+				aliasOrSpecialtyName: this.searchBySpecialtyForm.value.clinicalSpecialty,
+				daysOfWeek: selectedDaysOfWeek,
+				endSearchTime: {
+					hours: this.searchBySpecialtyForm.value.endingTime.hours,
+					minutes: this.searchBySpecialtyForm.value.endingTime.minutes
+				},
+				initialSearchTime: {
+					hours: this.searchBySpecialtyForm.value.initialTime.hours,
+					minutes: this.searchBySpecialtyForm.value.initialTime.minutes
+				},
+				initialSearchDate: {
+					year: this.searchBySpecialtyForm.value.searchInitialDate.year(),
+					month: this.searchBySpecialtyForm.value.searchInitialDate.month() + 1,
+					day: this.searchBySpecialtyForm.value.searchInitialDate.date()
+				},
+			}
+		).subscribe();
+	}
+
 }

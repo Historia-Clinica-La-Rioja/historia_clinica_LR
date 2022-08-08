@@ -52,7 +52,7 @@
   			<mat-datepicker #startDatePicker></mat-datepicker>
 		</mat-form-field>
 	</div>
-	<button mat-flat-button color="primary" id="searchAppointmentButton" [disabled]="!searchBySpecialtyForm.valid">
+	<button mat-flat-button color="primary" id="searchAppointmentButton" [disabled]="!searchBySpecialtyForm.valid" (click)="submit()">
 		<span class="uppercase" [translate]="'turnos.home.actions.SEARCH_APPOINTMENTS'"></span>
 	</button>
 </div>
