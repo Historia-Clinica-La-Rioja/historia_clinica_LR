@@ -250,6 +250,7 @@ export interface AppointmentSearchDto {
     aliasOrSpecialtyName: string;
     daysOfWeek: number[];
     endSearchTime: TimeDto;
+    endingSearchDate: DateDto;
     initialSearchDate: DateDto;
     initialSearchTime: TimeDto;
 }

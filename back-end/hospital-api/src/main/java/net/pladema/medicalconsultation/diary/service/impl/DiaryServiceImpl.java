@@ -395,7 +395,7 @@ public class DiaryServiceImpl implements DiaryService {
 			}
 		});
 		LocalDate searchInitialDate = searchCriteria.getInitialSearchDate();
-		LocalDate searchEndingDate = searchInitialDate.plusDays(21);
+		LocalDate searchEndingDate = searchCriteria.getEndingSearchDate();
 		List<LocalDate> daysBetweenLimits = searchInitialDate.datesUntil(searchEndingDate).collect(Collectors.toList());
 		daysBetweenLimits.add(searchEndingDate);
 		daysBetweenLimits.forEach(day -> {

@@ -20,5 +20,6 @@ public class AppointmentSearchDto {
 	private TimeDto initialSearchTime;
 	private TimeDto endSearchTime;
 	private DateDto initialSearchDate;
+	private DateDto endingSearchDate;
 
 }

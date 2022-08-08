@@ -20,5 +20,6 @@ public class AppointmentSearchBo {
 	private LocalTime initialSearchTime;
 	private LocalTime endSearchTime;
 	private LocalDate initialSearchDate;
+	private LocalDate endingSearchDate;
 
 }

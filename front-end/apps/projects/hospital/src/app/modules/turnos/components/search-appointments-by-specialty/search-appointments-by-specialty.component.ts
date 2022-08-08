@@ -3,6 +3,7 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ClinicalSpecialtyDto, TimeDto } from '@api-rest/api-model';
 import { DiaryService } from '@api-rest/services/diary.service';
 import { TypeaheadOption } from '@presentation/components/typeahead/typeahead.component';
+import * as moment from 'moment';
 import { Moment } from 'moment';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
@@ -48,7 +49,8 @@ export class SearchAppointmentsBySpecialtyComponent implements OnInit {
 			fridayControl: [true, Validators.nullValidator],
 			saturdayControl: [false, Validators.nullValidator],
 			sundayControl: [false, Validators.nullValidator],
-			searchInitialDate: [null, Validators.required]
+			searchInitialDate: [moment(), Validators.required],
+			searchEndingDate: [moment().add(21, "days"), Validators.required]
 		});
 
 		this.aliasTypeaheadOptions$ = this.getClinicalSpecialtiesTypeaheadOptions$();
@@ -103,6 +105,11 @@ export class SearchAppointmentsBySpecialtyComponent implements OnInit {
 		this.searchBySpecialtyForm.controls.clinicalSpecialty.setValue(clinicalSpecialty);
 	}
 
+	updateSearchEndingDate(changedValue) {
+		const newInitialDate = changedValue.value.clone();
+		this.searchBySpecialtyForm.controls.searchEndingDate.setValue(newInitialDate.add(21, "days"));
+	}
+
 	submit() {
 		const selectedDaysOfWeek = [];
 		if (this.searchBySpecialtyForm.value.mondayControl)
@@ -136,6 +143,11 @@ export class SearchAppointmentsBySpecialtyComponent implements OnInit {
 					month: this.searchBySpecialtyForm.value.searchInitialDate.month() + 1,
 					day: this.searchBySpecialtyForm.value.searchInitialDate.date()
 				},
+				endingSearchDate: {
+					year: this.searchBySpecialtyForm.value.searchEndingDate.year(),
+					month: this.searchBySpecialtyForm.value.searchEndingDate.month() + 1,
+					day: this.searchBySpecialtyForm.value.searchEndingDate.date()
+				}
 			}
 		).subscribe();
 	}
