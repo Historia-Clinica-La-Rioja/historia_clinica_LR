@@ -32,7 +32,7 @@ public class DiaryDeleteableAppointmentsValidator
 	@Override
 	public boolean isValid(Integer diaryId, ConstraintValidatorContext context) {
 		LOG.debug("Input parameters -> diaryId {}", diaryId);
-		Collection<AppointmentBo> appointments = appointmentService.getAppointmentsByDiaries(Arrays.asList(diaryId));
+		Collection<AppointmentBo> appointments = appointmentService.getAppointmentsByDiaries(Arrays.asList(diaryId), null, null);
 
 		Optional<AppointmentBo> apmtActive = appointments.stream()
 				.filter(apmt -> !apmt.getAppointmentStateId().equals(AppointmentState.CANCELLED)).findFirst();

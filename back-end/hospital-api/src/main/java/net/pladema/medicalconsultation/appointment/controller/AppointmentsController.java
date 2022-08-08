@@ -1,5 +1,6 @@
 package net.pladema.medicalconsultation.appointment.controller;
 
+import java.time.LocalDate;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
@@ -9,6 +10,8 @@ import java.util.stream.Collectors;
 
 import javax.validation.Valid;
 import javax.validation.constraints.Size;
+
+import ar.lamansys.sgx.shared.dates.configuration.LocalDateMapper;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
@@ -88,6 +91,8 @@ public class AppointmentsController {
 
     private final BookingPersonService bookingPersonService;
 
+	private final LocalDateMapper dateMapper;
+
     @Value("${test.stress.disable.validation:false}")
     private boolean disableValidation;
 
@@ -104,8 +109,8 @@ public class AppointmentsController {
             HealthcareProfessionalExternalService healthcareProfessionalExternalService,
             DateTimeProvider dateTimeProvider,
             NotifyPatient notifyPatient,
-            BookingPersonService bookingPersonService
-    ) {
+            BookingPersonService bookingPersonService,
+			LocalDateMapper dateMapper) {
         this.appointmentDailyAmountService = appointmentDailyAmountService;
         this.appointmentService = appointmentService;
         this.appointmentValidatorService = appointmentValidatorService;
@@ -116,7 +121,8 @@ public class AppointmentsController {
         this.dateTimeProvider = dateTimeProvider;
         this.notifyPatient = notifyPatient;
         this.bookingPersonService = bookingPersonService;
-    }
+		this.dateMapper = dateMapper;
+	}
 
     @Transactional
     @PostMapping
@@ -163,12 +169,16 @@ public class AppointmentsController {
     public ResponseEntity<Collection<AppointmentListDto>> getList(
             @PathVariable(name = "institutionId") Integer institutionId,
 			@PathVariable(name = "healthcareProfessionalId") Integer healthcareProfessionalId,
-            @RequestParam(name = "diaryIds", defaultValue = "") List<Integer> diaryIds
+            @RequestParam(name = "diaryIds", defaultValue = "") List<Integer> diaryIds,
+			@RequestParam(name = "from", required = false) String from,
+			@RequestParam(name = "to", required = false) String to
     ) {
         log.debug("Input parameters -> institutionId {}, diaryIds {}", institutionId, diaryIds);
+		LocalDate startDate = (from!=null) ? dateMapper.fromStringToLocalDate(from) : null;
+		LocalDate endDate = (to!=null) ? dateMapper.fromStringToLocalDate(to) : null;
 		Collection<AppointmentBo> resultService = diaryIds.isEmpty() ?
-				appointmentService.getAppointmentsByProfessionalInInstitution(healthcareProfessionalId, institutionId) :
-				appointmentService.getAppointmentsByDiaries(diaryIds);
+				appointmentService.getAppointmentsByProfessionalInInstitution(healthcareProfessionalId, institutionId, startDate, endDate) :
+				appointmentService.getAppointmentsByDiaries(diaryIds, startDate, endDate);
         Set<Integer> patientsIds = resultService.stream().
                 filter(appointmentBo -> appointmentBo.getPatientId() != null).
 				map(AppointmentBo::getPatientId).collect(Collectors.toSet());
@@ -315,7 +325,10 @@ public class AppointmentsController {
 
     @PreAuthorize("hasPermission(#institutionId, 'ADMINISTRATIVO, ESPECIALISTA_MEDICO, PROFESIONAL_DE_SALUD, ESPECIALISTA_EN_ODONTOLOGIA, ENFERMERO')")
     @PutMapping(value = "/{appointmentId}/update-medical-coverage")
-    public ResponseEntity<Boolean> updateMedicalCoverage(@PathVariable(name = "institutionId") Integer institutionId, @PathVariable(name = "appointmentId") Integer appointmentId, @RequestParam(name = "patientMedicalCoverageId", required = false) Integer patientMedicalCoverageId) {
+    public ResponseEntity<Boolean> updateMedicalCoverage(
+			@PathVariable(name = "institutionId") Integer institutionId,
+			@PathVariable(name = "appointmentId") Integer appointmentId,
+			@RequestParam(name = "patientMedicalCoverageId", required = false) Integer patientMedicalCoverageId) {
         log.debug("Input parameters -> institutionId {},appointmentId {}, patientMedicalCoverageId {}", institutionId, appointmentId, patientMedicalCoverageId);
         boolean result = appointmentService.updateMedicalCoverage(appointmentId, patientMedicalCoverageId);
         log.debug(OUTPUT, result);
