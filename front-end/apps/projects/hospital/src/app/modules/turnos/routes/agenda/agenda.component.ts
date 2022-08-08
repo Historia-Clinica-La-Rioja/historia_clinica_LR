@@ -236,59 +236,46 @@ export class AgendaComponent implements OnInit, OnDestroy, OnChanges {
 	}
 
 	onClickedSegment(event) {
-		this.appointmentsService.getList([this.agenda.id], this.appointmentFacade.getProfessionalId(), this.startDate, this.endDate)
-			.subscribe((appointments: AppointmentListDto[]) => {
-				const appointmentsCalendarEvents: CalendarEvent[] = appointments
-					.map(appointment => {
-						const from = momentParseTime(appointment.hour).format(DateFormat.HOUR_MINUTE);
-						const to = momentParseTime(from).add(this.agenda.appointmentDuration, 'minutes').format(DateFormat.HOUR_MINUTE);
-						return toCalendarEvent(from, to, momentParseDate(appointment.date), appointment, '');
-					});
+		if (this.getOpeningHoursId(event.date) && this.enableAppointmentScheduling) {
+			const clickedDate: Moment = dateToMomentTimeZone(event.date);
+			const openingHourId: number = this.getOpeningHoursId(event.date);
+			const diaryOpeningHourDto: DiaryOpeningHoursDto =
+				this.diaryOpeningHours.find(diaryOpeningHour => diaryOpeningHour.openingHours.id === openingHourId);
 
-				this.appointmentFacade.loadAppointments();
+			forkJoin([
+				this.getAppointmentAt(event.date).pipe(take(1)),
+				this.allOverturnsAssignedForDiaryOpeningHour(diaryOpeningHourDto, clickedDate).pipe(take(1))
+			]).subscribe(([busySlot, numberOfOverturnsAssigned]) => {
 
-				if (this.getOpeningHoursId(event.date) && this.enableAppointmentScheduling) {
-					const clickedDate: Moment = dateToMomentTimeZone(event.date);
-					const openingHourId: number = this.getOpeningHoursId(event.date);
-					const diaryOpeningHourDto: DiaryOpeningHoursDto =
-						this.diaryOpeningHours.find(diaryOpeningHour => diaryOpeningHour.openingHours.id === openingHourId);
+				if (busySlot && busySlot.meta.appointmentStateId === APPOINTMENT_STATES_ID.BLOCKED) {
+					this.snackBarService.showError('No es posible agragar un turno en un horario bloqueado');
+					return;
+				}
+				const addingOverturn = !!busySlot;
 
-					forkJoin([
-						this.getAppointmentAt(event.date).pipe(take(1)),
-						this.allOverturnsAssignedForDiaryOpeningHour(diaryOpeningHourDto, clickedDate).pipe(take(1))
-					]).subscribe(([busySlot, numberOfOverturnsAssigned]) => {
+				if (addingOverturn && (numberOfOverturnsAssigned === diaryOpeningHourDto.overturnCount)) {
+					if (diaryOpeningHourDto.medicalAttentionTypeId !== MEDICAL_ATTENTION.SPONTANEOUS_ID) {
+						this.snackBarService.showError('turnos.overturns.messages.ERROR');
+					}
+				}
 
-						if (busySlot && busySlot.meta.appointmentStateId === APPOINTMENT_STATES_ID.BLOCKED) {
-							this.snackBarService.showError('No es posible agragar un turno en un horario bloqueado');
-							return;
-						}
-						const addingOverturn = !!busySlot;
-
-						if (addingOverturn && (numberOfOverturnsAssigned === diaryOpeningHourDto.overturnCount)) {
-							if (diaryOpeningHourDto.medicalAttentionTypeId !== MEDICAL_ATTENTION.SPONTANEOUS_ID) {
-								this.snackBarService.showError('turnos.overturns.messages.ERROR');
-								return;
-							}
-						}
-
-						if (this.loggedUserHealthcareProfessionalId !== this.appointmentFacade.getProfessionalId() && !this.userHasValidRoles()) {
-							this.snackBarService.showError('turnos.new-appointment.messages.NOT_RESPONSIBLE');
-						} else {
-							this.dialog.open(NewAppointmentComponent, {
-								width: '35%',
-								data: {
-									date: clickedDate.format(DateFormat.API_DATE),
-									diaryId: this.agenda.id,
-									hour: clickedDate.format(DateFormat.HOUR_MINUTE_SECONDS),
-									openingHoursId: openingHourId,
-									overturnMode: addingOverturn,
-									patientId: this.patientId ? Number(this.patientId) : null,
-								}
-							});
+				if (this.loggedUserHealthcareProfessionalId !== this.appointmentFacade.getProfessionalId() && !this.userHasValidRoles()) {
+					this.snackBarService.showError('turnos.new-appointment.messages.NOT_RESPONSIBLE');
+				} else {
+					this.dialog.open(NewAppointmentComponent, {
+						width: '35%',
+						data: {
+							date: clickedDate.format(DateFormat.API_DATE),
+							diaryId: this.agenda.id,
+							hour: clickedDate.format(DateFormat.HOUR_MINUTE_SECONDS),
+							openingHoursId: openingHourId,
+							overturnMode: addingOverturn,
+							patientId: this.patientId ? Number(this.patientId) : null,
 						}
 					});
 				}
 			});
+		}
 	}
 
 	viewAppointment(event: CalendarEvent): void {
@@ -501,14 +488,14 @@ export class AgendaComponent implements OnInit, OnDestroy, OnChanges {
 
 	private setDateRange(date: Date) {
 		if (CalendarView.Day === this.view) {
-			const d = moment(date); 
+			const d = moment(date);
 			this.startDate = momentFormat(d, DateFormat.API_DATE);
 			this.endDate = momentFormat(d, DateFormat.API_DATE);
 			return;
 		}
 		const start = startOfWeek(date, { weekStartsOn: 1 });
 		this.startDate = momentFormat(moment(start), DateFormat.API_DATE);
-		
+
 		const end = endOfWeek(date, { weekStartsOn: 1 });
 		this.endDate = momentFormat(moment(end), DateFormat.API_DATE);
 	}
