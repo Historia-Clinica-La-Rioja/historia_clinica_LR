@@ -6,7 +6,6 @@ import {
 	AppointmentListDto,
 	AssignedAppointmentDto,
 	CreateAppointmentDto,
-	DateDto,
 	DateTimeDto,
 	ExternalPatientCoverageDto,
 	UpdateAppointmentDto,
@@ -40,7 +39,7 @@ export class AppointmentsService {
 		return this.http.post<number>(this.BASE_URL, appointment);
 	}
 
-	getList(diaryIds: number[], healthcareProfessionalId: number): Observable<AppointmentListDto[]> {
+	getList(diaryIds: number[], healthcareProfessionalId: number, from: string, to: string): Observable<AppointmentListDto[]> {
 		const url = this.BASE_URL + `/list/${healthcareProfessionalId}`;
 		// Se filtra porque pueden llegar diaryIds como undefined
 		diaryIds = diaryIds.filter(d => d !== undefined);
@@ -50,7 +49,9 @@ export class AppointmentsService {
 
 		return this.http.get<AppointmentListDto[]>(url, {
 			params: {
-				diaryIds: `${diaryIds.join(',')}`
+				diaryIds: `${diaryIds.join(',')}`,
+				from, 
+				to
 			}
 		});
 	}

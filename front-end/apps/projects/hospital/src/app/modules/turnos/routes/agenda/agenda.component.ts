@@ -8,6 +8,7 @@ import {
 	DateFormat,
 	dateToMoment,
 	dateToMomentTimeZone,
+	momentFormat,
 	momentParseDate,
 	momentParseTime
 } from '@core/utils/moment.utils';
@@ -36,6 +37,7 @@ import { DatePipeFormat } from '@core/utils/date.utils';
 import { HealthcareProfessionalService } from '@api-rest/services/healthcare-professional.service';
 import { LoggedUserService } from '../../../auth/services/logged-user.service';
 import * as moment from 'moment';
+import { endOfWeek, startOfWeek } from 'date-fns';
 
 const ASIGNABLE_CLASS = 'cursor-pointer';
 const AGENDA_PROGRAMADA_CLASS = 'bg-green';
@@ -67,6 +69,8 @@ export class AgendaComponent implements OnInit, OnDestroy, OnChanges {
 	dailyAmounts$: Observable<AppointmentDailyAmountDto[]>;
 	appointmentSubscription: Subscription;
 	refreshCalendar = new Subject<void>();
+	startDate: string;
+	endDate: string;
 
 	private readonly routePrefix = 'institucion/' + this.contextService.institutionId;
 	private patientId: number;
@@ -117,7 +121,7 @@ export class AgendaComponent implements OnInit, OnDestroy, OnChanges {
 		this.appointmentSubscription = this.appointmentFacade.getAppointments().subscribe(appointments => {
 			if (appointments) {
 				if (appointments.length) {
-				    this.appointments = this.unifyEvents(appointments);
+					this.appointments = this.unifyEvents(appointments);
 				}
 				else {
 					this.appointments = appointments;
@@ -130,6 +134,7 @@ export class AgendaComponent implements OnInit, OnDestroy, OnChanges {
 		this.permissionsService.hasContextAssignments$(ROLES_TO_CREATE).subscribe(hasRole => this.hasRoleToCreate = hasRole);
 		this.healthcareProfessionalService.getHealthcareProfessionalByUserId().subscribe(healthcareProfessionalId => this.loggedUserHealthcareProfessionalId = healthcareProfessionalId);
 		this.loggedUserService.assignments$.subscribe(response => this.loggedUserRoles = response.map(role => role.role));
+		this.setDateRange(this.viewDate);
 	}
 
 	ngOnDestroy() {
@@ -142,6 +147,8 @@ export class AgendaComponent implements OnInit, OnDestroy, OnChanges {
 	}
 
 	changeViewDate(date: Date) {
+		this.setDateRange(date);
+		this.appointmentFacade.setValues(this.agenda.id, this.agenda.appointmentDuration, this.startDate, this.endDate);
 		this.calendarDateService.setCalendarDate(date);
 	}
 
@@ -229,7 +236,7 @@ export class AgendaComponent implements OnInit, OnDestroy, OnChanges {
 	}
 
 	onClickedSegment(event) {
-		this.appointmentsService.getList([this.agenda.id], this.appointmentFacade.getProfessionalId())
+		this.appointmentsService.getList([this.agenda.id], this.appointmentFacade.getProfessionalId(), this.startDate, this.endDate)
 			.subscribe((appointments: AppointmentListDto[]) => {
 				const appointmentsCalendarEvents: CalendarEvent[] = appointments
 					.map(appointment => {
@@ -341,7 +348,7 @@ export class AgendaComponent implements OnInit, OnDestroy, OnChanges {
 		this.setEnableAppointmentScheduling();
 		this.viewDate = this._getViewDate();
 		this.hourSegments = MINUTES_IN_HOUR / agenda.appointmentDuration;
-		this.appointmentFacade.setValues(agenda.id, agenda.appointmentDuration);
+		this.appointmentFacade.setValues(agenda.id, agenda.appointmentDuration, this.startDate, this.endDate);
 		this.diaryOpeningHours = agenda.diaryOpeningHours;
 		this.setDayStartHourAndEndHour(agenda.diaryOpeningHours);
 	}
@@ -490,6 +497,20 @@ export class AgendaComponent implements OnInit, OnDestroy, OnChanges {
 
 	private userHasValidRoles(): boolean {
 		return this.loggedUserRoles.includes(ERole.ADMINISTRATIVO) || this.loggedUserRoles.includes(ERole.ADMINISTRADOR_AGENDA);
+	}
+
+	private setDateRange(date: Date) {
+		if (CalendarView.Day === this.view) {
+			const d = moment(date); 
+			this.startDate = momentFormat(d, DateFormat.API_DATE);
+			this.endDate = momentFormat(d, DateFormat.API_DATE);
+			return;
+		}
+		const start = startOfWeek(date, { weekStartsOn: 1 });
+		this.startDate = momentFormat(moment(start), DateFormat.API_DATE);
+		
+		const end = endOfWeek(date, { weekStartsOn: 1 });
+		this.endDate = momentFormat(moment(end), DateFormat.API_DATE);
 	}
 
 }
