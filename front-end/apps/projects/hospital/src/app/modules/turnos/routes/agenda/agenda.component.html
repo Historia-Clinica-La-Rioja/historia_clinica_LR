@@ -14,8 +14,8 @@
 			<div>
 				<mat-button-toggle-group class="toggle-view" [(value)]="view">
 					<mat-button-toggle value="{{calendarViewEnum.Month}}">Mes</mat-button-toggle>
-					<mat-button-toggle value="{{calendarViewEnum.Week}}">Semana</mat-button-toggle>
-					<mat-button-toggle value="{{calendarViewEnum.Day}}">Día</mat-button-toggle>
+					<mat-button-toggle value="{{calendarViewEnum.Week}}" (click)="changeViewDate(viewDate)">Semana</mat-button-toggle>
+					<mat-button-toggle value="{{calendarViewEnum.Day}}" (click)="changeViewDate(viewDate)">Día</mat-button-toggle>
 				</mat-button-toggle-group>
 			</div>
 		</div>

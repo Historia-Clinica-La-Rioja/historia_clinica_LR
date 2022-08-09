@@ -68,6 +68,9 @@ export class AppointmentsFacadeService {
 	private intervalId: any;
 	private professionalId: number;
 
+	private startDate: string;
+	private endDate: string;
+
 	constructor(
 		private readonly appointmentService: AppointmentsService,
 		private readonly patientNameService: PatientNameService,
@@ -87,9 +90,11 @@ export class AppointmentsFacadeService {
 		return this.professionalId
 	}
 
-	setValues(agendaId, appointmentDuration): void {
+	setValues(agendaId, appointmentDuration, startDate: string, endDate: string): void {
 		this.agendaId = agendaId;
 		this.appointmentDuration = appointmentDuration;
+		this.startDate = startDate;
+		this.endDate = endDate;
 		this.loadAppointments();
 	}
 
@@ -99,7 +104,7 @@ export class AppointmentsFacadeService {
 
 	public loadAppointments(): void {
 
-		this.appointmentService.getList([this.agendaId], this.professionalId)
+		this.appointmentService.getList([this.agendaId], this.professionalId, this.startDate, this.endDate)
 			.subscribe((appointments: AppointmentListDto[]) => {
 				const appointmentsCalendarEvents: CalendarEvent[] = appointments
 					.map(appointment => {
