@@ -7,9 +7,9 @@ import {
 	DateFormat,
 	dateToMoment,
 	dateToMomentTimeZone,
+	momentFormat,
 	momentParseDate,
-	momentParseTime,
-	newMoment
+	momentParseTime
 } from '@core/utils/moment.utils';
 import { MatDialog } from '@angular/material/dialog';
 import { ActivatedRoute, ParamMap, Router } from '@angular/router';
@@ -21,7 +21,7 @@ import { MEDICAL_ATTENTION } from '../../constants/descriptions';
 import { AppointmentComponent } from '../../dialogs/appointment/appointment.component';
 import { SnackBarService } from '@presentation/services/snack-bar.service';
 
-import { AppointmentsFacadeService, getColor, getSpanColor, toCalendarEvent } from '@turnos/services/appointments-facade.service';
+import { AppointmentsFacadeService, toCalendarEvent } from '@turnos/services/appointments-facade.service';
 
 import { APPOINTMENT_STATES_ID, MINUTES_IN_HOUR } from '../../constants/appointment';
 import { map, take } from 'rxjs/operators';
@@ -33,6 +33,8 @@ import { AgendaSearchService } from '../../services/agenda-search.service';
 import { ContextService } from '@core/services/context.service';
 import { ConfirmBookingComponent } from '@turnos/dialogs/confirm-booking/confirm-booking.component';
 import { DatePipeFormat } from '@core/utils/date.utils';
+import * as moment from 'moment';
+import { endOfWeek, startOfWeek } from 'date-fns';
 
 const ASIGNABLE_CLASS = 'cursor-pointer';
 const AGENDA_PROGRAMADA_CLASS = 'bg-green';
@@ -65,6 +67,8 @@ export class AgendaComponent implements OnInit, OnDestroy, OnChanges {
 	dailyAmounts$: Observable<AppointmentDailyAmountDto[]>;
 	appointmentSubscription: Subscription;
 	refreshCalendar = new Subject<void>();
+	startDate: string;
+	endDate: string;
 
 	private readonly routePrefix = 'institucion/' + this.contextService.institutionId;
 	private patientId: number;
@@ -107,10 +111,11 @@ export class AgendaComponent implements OnInit, OnDestroy, OnChanges {
 		else
 			this.getAgenda();
 
+		this.loading = true;
 		this.appointmentSubscription = this.appointmentFacade.getAppointments().subscribe(appointments => {
 			if (appointments) {
-                if (appointments.length) {
-				    this.appointments = this.unifyEvents(appointments);
+				if (appointments.length) {
+					this.appointments = this.unifyEvents(appointments);
 				}
                 else {
                     this.appointments = appointments;
@@ -121,6 +126,7 @@ export class AgendaComponent implements OnInit, OnDestroy, OnChanges {
 		});
 		this.appointmentFacade.setInterval();
 		this.permissionsService.hasContextAssignments$(ROLES_TO_CREATE).subscribe(hasRole => this.hasRoleToCreate = hasRole);
+		this.setDateRange(this.viewDate);
 	}
 
 	ngOnDestroy() {
@@ -128,27 +134,33 @@ export class AgendaComponent implements OnInit, OnDestroy, OnChanges {
 	}
 
 	ngOnChanges(changes: SimpleChanges) {
-		if (changes.idAgenda.currentValue)
+		if (changes.idAgenda?.currentValue)
 			this.getAgenda();
 	}
 
+	changeViewDate(date: Date) {
+		this.setDateRange(date);
+		this.appointmentFacade.setValues(this.agenda.id, this.agenda.appointmentDuration, this.startDate, this.endDate);
+	}
+
 	loadCalendar(renderEvent: CalendarWeekViewBeforeRenderEvent) {
-		renderEvent.hourColumns.forEach((hourColumn) => {
-			const openingHours: DiaryOpeningHoursDto[] = this._getOpeningHoursFor(hourColumn.date);
-			if (openingHours.length) {
-				hourColumn.hours.forEach((hour) => {
-					hour.segments.forEach((segment) => {
-						openingHours.forEach(openingHour => {
-							const from: Moment = momentParseTime(openingHour.openingHours.from);
-							const to: Moment = momentParseTime(openingHour.openingHours.to);
-							if (isBetween(segment, from, to)) {
-								segment.cssClass = this.getOpeningHoursCssClass(openingHour);
-							}
+		if (this.agenda)
+			renderEvent.hourColumns.forEach((hourColumn) => {
+				const openingHours: DiaryOpeningHoursDto[] = this._getOpeningHoursFor(hourColumn.date);
+				if (openingHours.length) {
+					hourColumn.hours.forEach((hour) => {
+						hour.segments.forEach((segment) => {
+							openingHours.forEach(openingHour => {
+								const from: Moment = momentParseTime(openingHour.openingHours.from);
+								const to: Moment = momentParseTime(openingHour.openingHours.to);
+								if (isBetween(segment, from, to)) {
+									segment.cssClass = this.getOpeningHoursCssClass(openingHour);
+								}
+							});
 						});
 					});
-				});
-			}
-		});
+				}
+			});
 
 		function isBetween(segment: WeekViewHourSegment, from: Moment, to: Moment) {
 			return ((segment.date.getHours() > from.hours()) ||
@@ -215,7 +227,7 @@ export class AgendaComponent implements OnInit, OnDestroy, OnChanges {
 	}
 
 	onClickedSegment(event) {
-		this.appointmentsService.getList([this.agenda.id], this.professionalId)
+		this.appointmentsService.getList([this.agenda.id], this.professionalId, this.startDate, this.endDate)
 			.subscribe((appointments: AppointmentListDto[]) => {
 				const appointmentsCalendarEvents: CalendarEvent[] = appointments
 					.map(appointment => {
@@ -263,9 +275,7 @@ export class AgendaComponent implements OnInit, OnDestroy, OnChanges {
 						}
 					});
 				}
-
 			});
-
 	}
 
 	viewAppointment(event: CalendarEvent): void {
@@ -288,26 +298,33 @@ export class AgendaComponent implements OnInit, OnDestroy, OnChanges {
 				}
 			});
 		} else {
+			let dialogRef;
 			if (event.meta.rnos) {
 				this.healthInsuranceService.get(event.meta.rnos)
 					.subscribe((medicalCoverageDto: MedicalCoverageDto) => {
 						event.meta.healthInsurance = medicalCoverageDto;
-						this.dialog.open(AppointmentComponent, {
+						dialogRef = this.dialog.open(AppointmentComponent, {
+							disableClose: true,
 							data: {
 								appointmentData: event.meta,
-								professionalPermissions: this.agenda.professionalAssignShift
+								professionalPermissions: this.agenda.professionalAssignShift,
+								agenda: this.agenda,
+								appointments: this.appointments
 							}
 						});
-
 					});
 			} else {
-				this.dialog.open(AppointmentComponent, {
+				dialogRef = this.dialog.open(AppointmentComponent, {
+					disableClose: true,
 					data: {
 						appointmentData: event.meta,
-						hasPermissionToAssignShift: this.agenda.professionalAssignShift
+						hasPermissionToAssignShift: this.agenda.professionalAssignShift,
+						agenda: this.agenda,
+						appointments: this.appointments
 					},
 				});
 			}
+			dialogRef.afterClosed().subscribe((appointmentInformation) => {this.viewDate = appointmentInformation.date;});
 		}
 	}
 
@@ -318,7 +335,7 @@ export class AgendaComponent implements OnInit, OnDestroy, OnChanges {
 		this.setEnableAppointmentScheduling();
 		this.viewDate = this._getViewDate();
 		this.hourSegments = MINUTES_IN_HOUR / agenda.appointmentDuration;
-		this.appointmentFacade.setValues(agenda.id, agenda.appointmentDuration);
+		this.appointmentFacade.setValues(agenda.id, agenda.appointmentDuration, this.startDate, this.endDate);
 		this.diaryOpeningHours = agenda.diaryOpeningHours;
 		this.setDayStartHourAndEndHour(agenda.diaryOpeningHours);
 
@@ -355,12 +372,12 @@ export class AgendaComponent implements OnInit, OnDestroy, OnChanges {
 	private _getViewDate(): Date {
 		const momentStartDate = momentParseDate(this.agenda.startDate);
 		const momentEndDate = momentParseDate(this.agenda.endDate);
-		const today = newMoment();
+		const lastSelectedDate = moment(this.viewDate);
 
-		if (today.isBetween(momentStartDate, momentEndDate)) {
-			return new Date();
+		if (lastSelectedDate.isBetween(momentStartDate, momentEndDate)) {
+			return this.viewDate;
 		}
-		if (today.isBefore(momentStartDate)) {
+		if (lastSelectedDate.isSameOrBefore(momentStartDate)) {
 			return momentStartDate.toDate();
 		}
 		return momentEndDate.toDate();
@@ -446,8 +463,8 @@ export class AgendaComponent implements OnInit, OnDestroy, OnChanges {
 		let unifiedEvents = [];
 		let processedEvents = [notUnifiedEvents[0]];
 		for (let currentNotUnifiedEvent = 1; currentNotUnifiedEvent < notUnifiedEvents.length; currentNotUnifiedEvent++) {
-			if (notUnifiedEvents[currentNotUnifiedEvent-1].end.getTime() === notUnifiedEvents[currentNotUnifiedEvent].start.getTime()
-			&& notUnifiedEvents[currentNotUnifiedEvent-1].title === notUnifiedEvents[currentNotUnifiedEvent].title)
+			if (notUnifiedEvents[currentNotUnifiedEvent - 1].end.getTime() === notUnifiedEvents[currentNotUnifiedEvent].start.getTime()
+				&& notUnifiedEvents[currentNotUnifiedEvent - 1].title === notUnifiedEvents[currentNotUnifiedEvent].title)
 				processedEvents.push(notUnifiedEvents[currentNotUnifiedEvent]);
 			else {
 				unifiedEvents.push(this.unifyBlockedEvents(processedEvents));
@@ -464,6 +481,20 @@ export class AgendaComponent implements OnInit, OnDestroy, OnChanges {
 			start: events[0]?.start,
 			end: events[events.length - 1]?.end,
 		};
+	}
+
+	private setDateRange(date: Date) {
+		if (CalendarView.Day === this.view) {
+			const d = moment(date);
+			this.startDate = momentFormat(d, DateFormat.API_DATE);
+			this.endDate = momentFormat(d, DateFormat.API_DATE);
+			return;
+		}
+		const start = startOfWeek(date, { weekStartsOn: 1 });
+		this.startDate = momentFormat(moment(start), DateFormat.API_DATE);
+
+		const end = endOfWeek(date, { weekStartsOn: 1 });
+		this.endDate = momentFormat(moment(end), DateFormat.API_DATE);
 	}
 
 }
