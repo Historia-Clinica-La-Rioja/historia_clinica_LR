@@ -107,6 +107,10 @@ public enum AppFeature implements Feature {
 
     @Label("Indica si está habilitado el doble factor de autenticación")
 	HABILITAR_2FA,
+
+	@Label("Indica si están habilitadas las extensiones por web components ")
+	HABILITAR_EXTENSIONES_WEB_COMPONENTS,
+
     ;
 
     public boolean isActive() {

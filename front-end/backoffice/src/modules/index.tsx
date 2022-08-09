@@ -137,7 +137,7 @@ const resources = (permissions: SGXPermissions) => [
     <Resource name="healthcareprofessionals" />,
 
     //Extension
-    <Resource name="wcDefinitionPath" {...wcDefinitionPath} />,
+    <Resource name="wcDefinitionPath" {...wcDefinitionPath(permissions)} />,
 ];
 
 export default resources;
