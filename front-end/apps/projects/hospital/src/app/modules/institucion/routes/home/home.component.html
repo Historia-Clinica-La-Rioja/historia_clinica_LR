@@ -19,7 +19,7 @@
 		<ng-template #loading>
 			<mat-progress-bar mode="indeterminate"></mat-progress-bar>
 		</ng-template>
-		<mat-card *ngFor=" let extension of extensions">
+		<mat-card *ngFor=" let extension of extensions$ | async">
 			<mat-card-content>
 				<app-ui-external-component type="external_component" [params]="extension">
 				</app-ui-external-component>

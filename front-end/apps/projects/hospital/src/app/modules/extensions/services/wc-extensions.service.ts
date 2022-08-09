@@ -9,25 +9,22 @@ import { ExtensionsService } from './extensions.service';
 })
 export class WCExtensionsService {
 
-	private readonly institutionEmitter = new BehaviorSubject<SlotedInfo[]>(null);
-	institutionsExtension$: Observable<SlotedInfo[]> = this.institutionEmitter.asObservable();
+	private emitters: { slot: Slot, emitter: BehaviorSubject<SlotedInfo[]> }[] = [];
+	private slotedComponents: { slot: Slot, components$: Observable<SlotedInfo[]> }[] = [];
 
-	private readonly clinicHistoryTabsEmitter = new BehaviorSubject<SlotedInfo[]>(null);
-	clinicHistoryTabsExtensions$: Observable<SlotedInfo[]> = this.clinicHistoryTabsEmitter.asObservable();
 
-	private readonly homeMenuEmitter = new BehaviorSubject<SlotedInfo[]>(null);
-	homeMenuExtension$: Observable<SlotedInfo[]> = this.homeMenuEmitter.asObservable();
-
-	private readonly emmiters = {
-		[Slot.INSTITUTION_HOME_PAGE]: this.institutionEmitter,
-		[Slot.CLINIC_HISTORY_TAB]: this.clinicHistoryTabsEmitter,
-		[Slot.HOME_MENU]: this.homeMenuEmitter
-	}
 	constructor(
 		private readonly extensionService: ExtensionsService
-	) { }
+	) {
+		this.init();
+		this.fetchExtensions();
+	}
 
-	fetchExtensions() {
+	getComponentsFromSlot(slot: Slot): Observable<SlotedInfo[]> {
+		return this.slotedComponents.find(a => a.slot === slot).components$;
+	}
+
+	private fetchExtensions() {
 
 		/**
 		 * Cada modulo va a insertar una tupla en la BD
@@ -57,13 +54,13 @@ export class WCExtensionsService {
 								if (!valuesToEmit[d.slot]) {
 									console.warn(`Extension ${d.slot} inexistente`);
 								} else {
-									valuesToEmit[d.slot].push(this.map(d))
+									valuesToEmit[d.slot].push(this.map(d));
 								}
 
 							});
-							const newWC = this.allUsedExtensions(defPluginArr);
-							newWC.forEach(key => {
-								this.emmiters[key].next(valuesToEmit[key]);
+							const filledSlotsNames = this.allUsedExtensions(defPluginArr);
+							filledSlotsNames.forEach(slotName => {
+								this.emitters.find(sc => sc.slot === slotName).emitter.next(valuesToEmit[slotName]);
 							})
 						}
 					)
@@ -72,7 +69,17 @@ export class WCExtensionsService {
 		);
 	}
 
-	private allUsedExtensions(defPluginArr: WCInfo[]): Set<string> {
+	init() { // Just public for testing
+		Object.values(Slot).forEach(
+			slot => {
+				const emitter = new BehaviorSubject<SlotedInfo[]>([]);
+				this.emitters.push({ slot, emitter });
+				this.slotedComponents.push({ slot, components$: emitter.asObservable() }); // Initial value null means not fetched, [] means no components
+			}
+		)
+	}
+
+	private allUsedExtensions(defPluginArr: WCInfo[]): Set<string> { // Cambiar a que devuelva slot
 		return new Set(defPluginArr.map(e => e.slot).
 			filter(value => Object.keys(Slot).some(a => a == value)));
 	}

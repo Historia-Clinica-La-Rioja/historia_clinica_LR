@@ -14,6 +14,7 @@ import {
 	UpdatePasswordSuccessComponent
 } from "../auth/components/update-password-success/update-password-success.component";
 import { RoutedExternalComponent } from '@extensions/components/routed-external/routed-external.component';
+import { Slot } from '@extensions/services/wc-extensions.service';
 
 
 export enum HomeRoutes {
@@ -41,7 +42,7 @@ const routes: Routes = [
 			},
 			{ path: 'update-password', component: UpdatePasswordComponent },
 			{ path: 'update-password-success', component: UpdatePasswordSuccessComponent },
-			{ path: 'web-components/:wcId', component: RoutedExternalComponent}
+			{ path: 'web-components/:wcId', component: RoutedExternalComponent, data: {slot: Slot.HOME_MENU}}
 		]
 	}
 ];

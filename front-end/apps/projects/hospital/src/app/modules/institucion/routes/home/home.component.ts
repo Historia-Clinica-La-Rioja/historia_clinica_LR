@@ -9,7 +9,7 @@ import { InstitutionService } from '@api-rest/services/institution.service';
 import { AppRoutes } from '../../../../app-routing.module';
 import { mapToAddress } from '@api-presentation/mappers/institution-dto.mapper';
 import { PermissionsService } from '@core/services/permissions.service';
-import { WCExtensionsService } from '@extensions/services/wc-extensions.service';
+import { Slot, WCExtensionsService } from '@extensions/services/wc-extensions.service';
 
 
 @Component({
@@ -21,7 +21,7 @@ export class HomeComponent implements OnInit {
 	institucion$: Observable<InstitutionDto>;
 	roles = [];
 
-	extensions;
+	extensions$;
 	constructor(
 		private contextService: ContextService,
 		private institutionService: InstitutionService,
@@ -43,11 +43,7 @@ export class HomeComponent implements OnInit {
 		);
 
 
-		this.wcExtensionsService.institutionsExtension$.subscribe(
-			e => {
-				e ? this.extensions = e : this.wcExtensionsService.fetchExtensions();
-			}
-		)
+		this.extensions$ = this.wcExtensionsService.getComponentsFromSlot(Slot.INSTITUTION_HOME_PAGE);
 	}
 
 	address(institution: InstitutionDto) {

@@ -20,7 +20,7 @@ import { NO_ROLES_USER_SIDEBAR_MENU, ROLES_USER_SIDEBAR_MENU } from './constants
 
 import { HomeRoutes } from '../home/home-routing.module';
 import { AppRoutes } from '../../app-routing.module';
-import { SlotedInfo, WCExtensionsService } from '@extensions/services/wc-extensions.service';
+import { Slot, SlotedInfo, WCExtensionsService } from '@extensions/services/wc-extensions.service';
 import { MenuItemDef } from '@core/core-model';
 
 @Component({
@@ -48,8 +48,7 @@ export class HomeComponent implements OnInit {
 		this.featureFlagService.isActive(AppFeature.HABILITAR_DATOS_AUTOPERCIBIDOS).subscribe(isOn => {
 			this.nameSelfDeterminationFF = isOn
 		});
-		this.wcExtensionsService.fetchExtensions();
-		this.homeExtensions$ = this.wcExtensionsService.homeMenuExtension$
+		this.homeExtensions$ = this.wcExtensionsService.getComponentsFromSlot(Slot.HOME_MENU)
 			.pipe(
 				map(array => {
 					return array.map(this.map)

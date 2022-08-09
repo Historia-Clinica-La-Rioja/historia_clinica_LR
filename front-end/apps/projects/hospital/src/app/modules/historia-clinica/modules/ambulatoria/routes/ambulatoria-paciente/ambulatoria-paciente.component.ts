@@ -46,7 +46,7 @@ import { InternmentStateService } from '@api-rest/services/internment-state.serv
 import { EMedicalCoverageType } from "@pacientes/dialogs/medical-coverage/medical-coverage.component";
 import { InternmentActionsService } from "@historia-clinica/modules/ambulatoria/modules/internacion/services/internment-actions.service";
 import { HEALTH_VERIFICATIONS } from '../../modules/internacion/constants/ids';
-import { SlotedInfo, WCExtensionsService } from '@extensions/services/wc-extensions.service';
+import { Slot, SlotedInfo, WCExtensionsService } from '@extensions/services/wc-extensions.service';
 
 const RESUMEN_INDEX = 0;
 const VOLUNTARY_ID = 1;
@@ -64,7 +64,7 @@ export class AmbulatoriaPacienteComponent implements OnInit, OnDestroy {
 	patient: PatientBasicData;
 	patientId: number;
 	extensionTabs$: Observable<{ head: MenuItem, body$: Observable<UIPageDto> }[]>;
-	extensionWCTabs: SlotedInfo[];
+	extensionWCTabs$: Observable<SlotedInfo[]>;
 	medicamentStatus$: Observable<any>;
 	studyCategories$: Observable<any>;
 	diagnosticReportsStatus$: Observable<any>;
@@ -203,11 +203,8 @@ export class AmbulatoriaPacienteComponent implements OnInit, OnDestroy {
 		this.extensionTabs$ = this.extensionPatientService.getTabs(this.patientId);
 
 
-		this.wcExtensionsService.clinicHistoryTabsExtensions$.subscribe(
-			(e: SlotedInfo[]) => {
-				e ? this.extensionWCTabs = e : this.wcExtensionsService.fetchExtensions();
-			}
-		)
+		this.extensionWCTabs$ = this.wcExtensionsService.getComponentsFromSlot(Slot.CLINIC_HISTORY_TAB);
+
 		this.odontogramService.resetOdontogram();
 
 		this.referenceNotificationService.getOpenConsultation().subscribe(type => {

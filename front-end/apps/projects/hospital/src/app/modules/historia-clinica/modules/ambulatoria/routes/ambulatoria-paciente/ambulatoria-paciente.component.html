@@ -303,7 +303,7 @@
 								(consultationCompleted)="updateFields($event)"></app-odontogram>
 						</ng-template>
 					</mat-tab>
-					<mat-tab *ngFor="let extensionWCTab of extensionWCTabs" [id]="extensionWCTab.title">
+					<mat-tab *ngFor="let extensionWCTab of extensionWCTabs$ | async" [id]="extensionWCTab.title">
 						<ng-template mat-tab-label>
 							<span>{{extensionWCTab.title | uppercase}}</span>
 						</ng-template>
