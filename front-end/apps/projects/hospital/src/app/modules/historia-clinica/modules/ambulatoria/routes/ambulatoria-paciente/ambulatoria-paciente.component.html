@@ -258,7 +258,7 @@
 						</ng-template>
 					</mat-tab>
 					<mat-tab id="tab_nursing" *ngIf="hasInternmentEpisodeInThisInstitution && showNursingSection">
-						<ng-template mat-tab-label>
+						<ng-template mat-tab-label *appHasRole="['ESPECIALISTA_MEDICO', 'PROFESIONAL_DE_SALUD', 'ENFERMERO', 'ESPECIALISTA_EN_ODONTOLOGIA', 'PERSONAL_DE_FARMACIA']">
 							<span>{{ 'ambulatoria.paciente.nursing.TAB_LABEL' | translate | uppercase }}</span>
 						</ng-template>
 						<ng-template matTabContent>
