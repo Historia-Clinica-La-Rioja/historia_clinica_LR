@@ -2,6 +2,7 @@ package net.pladema.medicalconsultation.appointment.service.impl;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -147,6 +148,16 @@ public class AppointmentServiceImpl implements AppointmentService {
 		log.debug("Input parameters -> appointmentId {}, appointmentStateId {}, userId {}, reason {}", appointmentId, appointmentStateId, userId, reason);
 		appointmentRepository.updateState(appointmentId, appointmentStateId, userId);
 		historicAppointmentStateRepository.save(new HistoricAppointmentState(appointmentId, appointmentStateId, reason));
+		log.debug(OUTPUT, Boolean.TRUE);
+		return Boolean.TRUE;
+	}
+
+	@Override
+	@Transactional
+	public boolean updateAppointmentsState(List<Integer> appointmentIds, short appointmentStateId, Integer userId, String reason) {
+		log.debug("Input parameters -> appointmentId {}, appointmentStateId {}, userId {}, reason {}", appointmentIds, appointmentStateId, userId, reason);
+		appointmentRepository.updateAppointmentsState(appointmentIds, appointmentStateId, userId);
+		appointmentIds.forEach(id -> historicAppointmentStateRepository.save(new HistoricAppointmentState(id, appointmentStateId, reason)));
 		log.debug(OUTPUT, Boolean.TRUE);
 		return Boolean.TRUE;
 	}
@@ -374,6 +385,16 @@ public class AppointmentServiceImpl implements AppointmentService {
 		List<AppointmentShortSummaryBo> appointmentShortSummaryBoList = this.appointmentRepository.getAppointmentFromDeterminatedDate(patientId, date);
 		if (!appointmentShortSummaryBoList.isEmpty())
 			result = appointmentShortSummaryBoList.get(0);
+		return result;
+	}
+
+
+	@Override
+	public List<Integer> getPastAppointmentsByStatesAndUpdatedBeforeDate(List<Short> statesIds, LocalDateTime lastUpdateDate){
+		log.debug("Input parameters -> stateIds {}, lastUpdateDate {}", statesIds, lastUpdateDate);
+		var result = appointmentRepository.getPastAppointmentsByStatesAndUpdatedBeforeDate(statesIds, lastUpdateDate);
+		log.debug("Result size {}", result.size());
+		log.trace(OUTPUT, result);
 		return result;
 	}
 

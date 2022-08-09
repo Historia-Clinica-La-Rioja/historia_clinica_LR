@@ -1,6 +1,7 @@
 package net.pladema.medicalconsultation.appointment.service;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.Collection;
 import java.util.List;
@@ -29,6 +30,8 @@ public interface AppointmentService {
 	Collection<AppointmentBo> getFutureActiveAppointmentsByDiary(Integer diaryId);
 
 	boolean updateState(Integer appointmentId, short appointmentStateId, Integer userId, String reason);
+
+	boolean updateAppointmentsState(List<Integer> appointmentIds, short appointmentStateId, Integer userId, String reason);
 
 	boolean hasCurrentAppointment(Integer patientId, Integer healthcareProfessionalId, LocalDate date);
 
@@ -59,4 +62,6 @@ public interface AppointmentService {
 	AppointmentTicketBo getAppointmentTicketData(Integer appointmentId);
 
 	AppointmentShortSummaryBo getAppointmentFromDeterminatedDate(Integer patientId, LocalDate date);
+
+	List<Integer> getPastAppointmentsByStatesAndUpdatedBeforeDate(List<Short> statesIds, LocalDateTime lastUpdateDate);
 }

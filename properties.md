@@ -238,6 +238,14 @@ Se crearon las siguientes propiedades para ser usado en las pruebas de estrés.
 | scheduledjobs.updatesnomedcache.dayofmonth  |  | - | Opcional  | Configura el día del mes del cron usado para la actualización de grupos de conceptos Snomed. | v1.32.0 |
 | scheduledjobs.updatesnomedcache.month  |   | - | Opcional | Configura el mes del cron usado para la actualización de grupos de conceptos Snomed.  | v1.32.0 |
 | scheduledjobs.updatesnomedcache.dayofweek  |  | - | Opcional  |  Configura el día de la semana del cron usado para la actualización de grupos de conceptos Snomed. | v1.32.0 |
+| scheduledjobs.updateappointmentsstate.enabled  |   | true  | Opcional  | Des/habilitar la actualización de estado de turnos.           | v1.42.0 |
+| scheduledjobs.updateappointmentsstate.seconds  |   | 0 | Opcional  | Configura los segundos del cron usado para la actualización de estado de turnos.        | v1.42.0 |
+| scheduledjobs.updateappointmentsstate.minutes  |   | 0 | Opcional  | Configura los minutos del cron usado para la actualización de estado de turnos.         | v1.42.0 |
+| scheduledjobs.updateappointmentsstate.hours  |   | 0 | Opcional  | Configura las horas del cron usado para la actualización de estado de turnos.           | v1.42.0 |
+| scheduledjobs.updateappointmentsstate.dayofmonth  |  | * | Opcional  | Configura el dia del mes del cron usado para la actualización de estado de turnos.      | v1.42.0 |
+| scheduledjobs.updateappointmentsstate.month  |   | * | Opcional | Configura el mes del cron usado para la actualización de estado de turnos.              | v1.42.0 |
+| scheduledjobs.updateappointmentsstate.dayofweek  |  | * | Opcional  | Configura el dia de la semana del cron usado para la actualización de estado de turnos. | v1.42.0 |
+| scheduledjobs.updateappointmentsstate.hourssincelastchange  |  | 24 | Opcional  | Configura la minima cantidad de horas pasadas desde la ultima modificación de estado de turno para actualizar el mismo en la actualización de estado de turnos. | v1.42.0 |
 
 
 ## Monitoring
