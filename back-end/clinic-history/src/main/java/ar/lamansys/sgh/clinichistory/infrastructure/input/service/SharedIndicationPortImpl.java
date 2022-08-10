@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import ar.lamansys.sgh.clinichistory.application.indication.createpharmaco.CreatePharmaco;
+import ar.lamansys.sgh.clinichistory.application.indication.getInternmentEpisodeOtherIndication.GetInternmentEpisodeOtherIndication;
 import ar.lamansys.sgh.clinichistory.application.indication.getInternmentEpisodeParenteralPlan.GetInternmentEpisodeParenteralPlan;
 import ar.lamansys.sgh.clinichistory.application.indication.getinternmentepisodediet.GetInternmentEpisodeDiet;
 import ar.lamansys.sgh.clinichistory.application.indication.getinternmentepisodenursingrecords.GetInternmentEpisodeNursingRecords;
@@ -71,6 +72,7 @@ public class SharedIndicationPortImpl implements SharedIndicationPort {
 	private final GetInternmentEpisodeDiet getInternmentEpisodeDiet;
 
 	private final GetInternmentEpisodeOtherIndications getInternmentEpisodeOtherIndications;
+	private final GetInternmentEpisodeOtherIndication getInternmentEpisodeOtherIndication;
 
 	private final GetInternmentEpisodePharmacos getInternmentEpisodePharmacos;
 
@@ -119,6 +121,14 @@ public class SharedIndicationPortImpl implements SharedIndicationPort {
 				.stream()
 				.map(this::mapToOtherIndicationDto)
 				.collect(Collectors.toList());
+		log.debug("Output -> {}", result);
+		return result;
+	}
+
+	@Override
+	public OtherIndicationDto getInternmentEpisodeOtherIndication(Integer otherIndicationId) {
+		log.debug("Input parameter -> otherIndicationId {}", otherIndicationId);
+		OtherIndicationDto result = mapToOtherIndicationDto(getInternmentEpisodeOtherIndication.run(otherIndicationId));
 		log.debug("Output -> {}", result);
 		return result;
 	}

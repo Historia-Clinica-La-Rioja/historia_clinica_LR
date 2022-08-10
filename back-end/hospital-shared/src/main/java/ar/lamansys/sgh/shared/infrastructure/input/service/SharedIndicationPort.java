@@ -18,6 +18,7 @@ public interface SharedIndicationPort {
 	Integer addParenteralPlan(ParenteralPlanDto parenteralPlanDto);
 
 	List<OtherIndicationDto> getInternmentEpisodeOtherIndications(Integer internmentEpisodeId);
+	OtherIndicationDto getInternmentEpisodeOtherIndication(Integer otherIndicationId);
 
 	List<PharmacoSummaryDto> getInternmentEpisodePharmacos(Integer internmentEpisodeId);
 
