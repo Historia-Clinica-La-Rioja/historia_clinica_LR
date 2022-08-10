@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import ar.lamansys.sgh.clinichistory.application.indication.createpharmaco.CreatePharmaco;
+import ar.lamansys.sgh.clinichistory.application.indication.getInternmentEpisodeParenteralPlan.GetInternmentEpisodeParenteralPlan;
 import ar.lamansys.sgh.clinichistory.application.indication.getinternmentepisodediet.GetInternmentEpisodeDiet;
 import ar.lamansys.sgh.clinichistory.application.indication.getinternmentepisodenursingrecords.GetInternmentEpisodeNursingRecords;
 import ar.lamansys.sgh.clinichistory.application.indication.getinternmentepisodeotherindications.GetInternmentEpisodeOtherIndications;
@@ -86,6 +87,7 @@ public class SharedIndicationPortImpl implements SharedIndicationPort {
 	private final CreateParenteralPlan createParenteralPlan;
 
 	private final GetInternmentEpisodeParenteralPlans getInternmentEpisodeParenteralPlans;
+	private final GetInternmentEpisodeParenteralPlan getInternmentEpisodeParenteralPlan;
 
 	private final GetInternmentEpisodeNursingRecords getInternmentEpisodeNursingRecords;
 
@@ -165,6 +167,14 @@ public class SharedIndicationPortImpl implements SharedIndicationPort {
 	public List<ParenteralPlanDto> getInternmentEpisodeParenteralPlans(Integer internmentEpisodeId) {
 		log.debug("Input parameter -> internmentEpisodeId {}", internmentEpisodeId);
 		List<ParenteralPlanDto> result = getInternmentEpisodeParenteralPlans.run(internmentEpisodeId).stream().map(this::mapToParenteralPlanDto).collect(Collectors.toList());
+		log.debug("Output -> {}", result);
+		return result;
+	}
+
+	@Override
+	public ParenteralPlanDto getInternmentEpisodeParenteralPlan(Integer parenteralPlanId) {
+		log.debug("Input parameter -> parenteralPlanId {}", parenteralPlanId);
+		ParenteralPlanDto result = mapToParenteralPlanDto(getInternmentEpisodeParenteralPlan.run(parenteralPlanId));
 		log.debug("Output -> {}", result);
 		return result;
 	}
@@ -396,6 +406,8 @@ public class SharedIndicationPortImpl implements SharedIndicationPort {
 		dosageDto.setQuantity(new QuantityDto(dosageBo.getQuantity().getValue(), dosageBo.getQuantity().getUnit()));
 		SharedSnomedDto snomedDto = new SharedSnomedDto(bo.getSnomed().getSctid(), bo.getSnomed().getPt());
 		FrequencyDto frequencyDto = toFrequencyDto(bo.getFrequency());
+		List<OtherPharmacoDto> otherPharmacos = bo.getPharmacos().stream().map(p-> toOtherPharmacoDto(p)).collect(Collectors.toList());
+
 		return new ParenteralPlanDto(
 				bo.getId(),
 				bo.getPatientId(),
@@ -409,7 +421,7 @@ public class SharedIndicationPortImpl implements SharedIndicationPort {
 				dosageDto,
 				frequencyDto,
 				bo.getVia(),
-				null);
+				otherPharmacos);
 	}
 
 	private PharmacoDto mapToPharmacoDto(PharmacoBo bo){

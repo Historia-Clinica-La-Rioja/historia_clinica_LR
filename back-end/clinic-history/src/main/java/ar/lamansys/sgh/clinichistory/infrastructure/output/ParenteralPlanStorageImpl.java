@@ -86,6 +86,7 @@ public class ParenteralPlanStorageImpl implements ParenteralPlanStorage {
 	public Optional<ParenteralPlanBo> findById(Integer id) {
 		log.debug("Input parameter -> id {}", id);
 		Optional<ParenteralPlanBo> result = parenteralPlanRepository.findById(id).map(this::mapToBo);
+		result.get().setPharmacos(getOtherPharmacosByIndicationId(id));
 		HospitalUserPersonInfoDto p = sharedHospitalUserPort.getUserCompleteInfo(result.get().getCreatedBy());
 		if(featureFlagsService.isOn(AppFeature.HABILITAR_DATOS_AUTOPERCIBIDOS) && p.getNameSelfDetermination() != null)
 			result.get().setCreatedByName(p.getNameSelfDetermination() + " " + p.getLastName());
@@ -95,6 +96,15 @@ public class ParenteralPlanStorageImpl implements ParenteralPlanStorage {
 		return result;
 	}
 
+	private List<OtherPharmacoBo> getOtherPharmacosByIndicationId(Integer id){
+		List<OtherPharmacoBo> result = otherPharmacoRepository.getByIndicationId(id)
+				.stream()
+				.map(entity -> {
+					OtherPharmacoBo opBo = mapToOtherPharmacoBo(entity);
+					return opBo;})
+				.collect(Collectors.toList());
+		return result;
+	}
 
 	private void saveOtherPharmaco (OtherPharmacoBo bo){
 		OtherPharmaco otherPharmaco = new OtherPharmaco();
@@ -106,6 +116,16 @@ public class ParenteralPlanStorageImpl implements ParenteralPlanStorage {
 		otherPharmaco.setSnomedId(snomedId);
 		otherPharmaco.setIndicationId(bo.getIndicationId());
 		otherPharmacoRepository.save(otherPharmaco);
+	}
+
+	private OtherPharmacoBo mapToOtherPharmacoBo(OtherPharmaco entity){
+		SnomedBo snomedBo = snomedService.getSnomed(entity.getSnomedId());
+		Optional<Dosage> dosage = dosageRepository.findById(entity.getDosageId());
+		OtherPharmacoBo result = new OtherPharmacoBo();
+		result.setIndicationId(entity.getIndicationId());
+		result.setSnomed(snomedBo);
+		result.setDosage(dosage.isPresent() ? mapToDosageBo(dosage.get()) : null);
+		return result;
 	}
 
 	private Frequency mapToFrequency (FrequencyBo bo){

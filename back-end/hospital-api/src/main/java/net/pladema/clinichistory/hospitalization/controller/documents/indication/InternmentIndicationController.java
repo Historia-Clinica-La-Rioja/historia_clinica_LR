@@ -151,6 +151,15 @@ public class InternmentIndicationController {
 		return ResponseEntity.ok(result);
 	}
 
+	@GetMapping("/parenteral-plan/{parenteralPlanId}")
+	@PreAuthorize("hasPermission(#institutionId, 'ESPECIALISTA_MEDICO, ESPECIALISTA_EN_ODONTOLOGIA, PROFESIONAL_DE_SALUD, ENFERMERO, PERSONAL_DE_FARMACIA')")
+	public ResponseEntity<ParenteralPlanDto> getInternmentEpisodeParenteralPlan(@PathVariable(name = "institutionId") Integer institutionId, @PathVariable(name = "internmentEpisodeId") Integer internmentEpisodeId, @PathVariable(name = "parenteralPlanId") Integer parenteralPlanId) {
+		log.debug("Input parameters -> institutionId {}, internmentEpisodeId {}, parenteralPlanId {}", institutionId, internmentEpisodeId, parenteralPlanId);
+		ParenteralPlanDto result = internmentParenteralPlanService.getInternmentEpisodeParenteralPlan(parenteralPlanId);
+		log.debug("Output => {}", result.toString());
+		return ResponseEntity.ok(result);
+	}
+
 	private InternmentDietBo mapToDietBo(DietDto dto, Integer institutionId, Integer internmentEpisodeId) {
 		InternmentDietBo result = new InternmentDietBo();
 		result.setDescription(dto.getDescription());
