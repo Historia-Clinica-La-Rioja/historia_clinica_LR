@@ -171,7 +171,7 @@ export class AgendaComponent implements OnInit, OnDestroy, OnChanges {
 					(segment.date.getHours() === to.hours() && segment.date.getMinutes() < to.minutes()));
 		}
 	}
-	
+
 	loadDailyAmounts(calendarMonthViewBeforeRenderEvent: CalendarMonthViewBeforeRenderEvent): void {
 		const daysCells: MonthViewDay[] = calendarMonthViewBeforeRenderEvent.body;
 		if (this.appointments) {
@@ -260,6 +260,7 @@ export class AgendaComponent implements OnInit, OnDestroy, OnChanges {
 						if (addingOverturn && (numberOfOverturnsAssigned === diaryOpeningHourDto.overturnCount)) {
 							if (diaryOpeningHourDto.medicalAttentionTypeId !== MEDICAL_ATTENTION.SPONTANEOUS_ID) {
 								this.snackBarService.showError('turnos.overturns.messages.ERROR');
+								return;
 							}
 						}
 
