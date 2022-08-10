@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import ar.lamansys.sgh.clinichistory.application.indication.createpharmaco.CreatePharmaco;
+import ar.lamansys.sgh.clinichistory.application.indication.getinternmentepisodediet.GetInternmentEpisodeDiet;
 import ar.lamansys.sgh.clinichistory.application.indication.getinternmentepisodenursingrecords.GetInternmentEpisodeNursingRecords;
 import ar.lamansys.sgh.clinichistory.application.indication.getinternmentepisodeotherindications.GetInternmentEpisodeOtherIndications;
 
@@ -66,6 +67,7 @@ import lombok.extern.slf4j.Slf4j;
 public class SharedIndicationPortImpl implements SharedIndicationPort {
 
 	private final GetInternmentEpisodeDiets getInternmentEpisodeDiets;
+	private final GetInternmentEpisodeDiet getInternmentEpisodeDiet;
 
 	private final GetInternmentEpisodeOtherIndications getInternmentEpisodeOtherIndications;
 
@@ -96,6 +98,14 @@ public class SharedIndicationPortImpl implements SharedIndicationPort {
 				.stream()
 				.map(this::mapToDietDto)
 				.collect(Collectors.toList());
+		log.debug("Output -> {}", result);
+		return result;
+	}
+
+	@Override
+	public DietDto getInternmentEpisodeDiet(Integer dietId) {
+		log.debug("Input parameter -> dietId {}", dietId);
+		DietDto result = mapToDietDto(getInternmentEpisodeDiet.run(dietId));
 		log.debug("Output -> {}", result);
 		return result;
 	}

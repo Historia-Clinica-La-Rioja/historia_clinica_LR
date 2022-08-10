@@ -7,6 +7,8 @@ public interface SharedIndicationPort {
 
 	List<DietDto> getInternmentEpisodeDiets(Integer internmentEpisodeId);
 
+	DietDto getInternmentEpisodeDiet(Integer dietId);
+
 	Integer addDiet(DietDto dietDto);
 
 	Integer addOtherIndication(OtherIndicationDto otherIndicationDto);

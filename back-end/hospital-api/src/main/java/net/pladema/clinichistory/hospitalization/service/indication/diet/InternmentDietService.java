@@ -8,6 +8,7 @@ import net.pladema.clinichistory.hospitalization.service.indication.diet.domain.
 public interface InternmentDietService {
 
 	List<DietDto> getInternmentEpisodeDiets(Integer internmentEpisodeId);
+	DietDto getInternmentEpisodeDiet(Integer dietId);
 
 	Integer addDiet(InternmentDietBo dietBo);
 }
