@@ -6,7 +6,8 @@ import {
 	buildFullDate,
 	DateFormat,
 	dateToMoment,
-	dateToMomentTimeZone, momentFormat,
+	dateToMomentTimeZone,
+	momentFormat,
 	momentParseDate,
 	momentParseTime
 } from '@core/utils/moment.utils';
@@ -142,8 +143,10 @@ export class AgendaComponent implements OnInit, OnDestroy, OnChanges {
 	}
 
 	changeViewDate(date: Date) {
-		this.setDateRange(date);
-		this.appointmentFacade.setValues(this.agenda.id, this.agenda.appointmentDuration, this.startDate, this.endDate);
+		if (this.view !== CalendarView.Month) {
+			this.setDateRange(date);
+			this.appointmentFacade.setValues(this.agenda.id, this.agenda.appointmentDuration, this.startDate, this.endDate);
+		}
 	}
 
 	loadCalendar(renderEvent: CalendarWeekViewBeforeRenderEvent) {
