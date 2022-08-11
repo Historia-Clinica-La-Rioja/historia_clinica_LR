@@ -36,7 +36,7 @@
                 </button>
             </mat-form-field>
         </div>
-        <app-agenda *ngIf="diarySelected" class="agenda" [canCreateAppoinment]="false" [idAgenda]="diarySelected.id"
+        <app-agenda *ngIf="diarySelected" class="agenda" [canCreateAppoinment]="false" [id]="diarySelected.id"
             [showAll]="false" [view]="calendarViewEnum.Day" [viewDate]="calendarDate">
         </app-agenda>
     </div>

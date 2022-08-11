@@ -69,7 +69,6 @@ export class SeachAppointmentsByProfessionalComponent implements OnInit, OnDestr
 	ngOnDestroy() {
 		this.agendaSearchService.clearAll();
 		this.agendaFiltersSubscription?.unsubscribe();
-		this.appointmentFacadeService.clearInterval();
 	}
 
 	private diaryNotFound() {

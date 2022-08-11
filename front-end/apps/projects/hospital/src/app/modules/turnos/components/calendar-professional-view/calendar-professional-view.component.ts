@@ -29,7 +29,7 @@ export class CalendarProfessionalViewComponent implements OnInit, OnDestroy {
 	ngOnInit(): void {
 		this.healthcareProfessional.getHealthcareProfessionalByUserId().subscribe( professionalId => {
 			this.diaryService.hasActiveDiaries(professionalId).subscribe( hasActiveDiary => this.hasActiveDiaries = hasActiveDiary);
-			
+
 		});
 	}
 
@@ -38,7 +38,6 @@ export class CalendarProfessionalViewComponent implements OnInit, OnDestroy {
 	}
 
 	ngOnDestroy(): void {
-		this.appointmentFacade.clearInterval();
 		this.calendarProfessionalInfo.setCalendarDate(new Date());
 		this.calendarProfessionalInfo.setProfessionalSelected(null);
 	}
