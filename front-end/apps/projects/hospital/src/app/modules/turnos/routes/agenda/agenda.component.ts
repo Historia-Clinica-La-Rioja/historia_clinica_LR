@@ -334,6 +334,8 @@ export class AgendaComponent implements OnInit, OnDestroy, OnChanges {
 	goToDayViewOn(date: Date) {
 		this.viewDate = date;
 		this.view = this.calendarViewEnum.Day;
+		this.setDateRange(date);
+		this.appointmentFacade.setValues(this.agenda.id, this.agenda.appointmentDuration, this.startDate, this.endDate);
 	}
 
 	goToDiary() {
