@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { ClinicalSpecialtyDto, TimeDto } from '@api-rest/api-model';
+import { ClinicalSpecialtyDto, EmptyAppointmentDto, TimeDto } from '@api-rest/api-model';
 import { DiaryService } from '@api-rest/services/diary.service';
 import { TypeaheadOption } from '@presentation/components/typeahead/typeahead.component';
 import * as moment from 'moment';
@@ -20,6 +20,8 @@ export class SearchAppointmentsBySpecialtyComponent implements OnInit {
 	initialTimes: TimeDto[];
 	endingTimes: TimeDto[];
 	searchBySpecialtyForm: FormGroup;
+	emptyAppointments: EmptyAppointmentDto[];
+	emptyAppointmentsFiltered: EmptyAppointmentDto[];
 	private today: Date;
 
 	dateSearchFilter = (d: Moment): boolean => {
@@ -149,7 +151,14 @@ export class SearchAppointmentsBySpecialtyComponent implements OnInit {
 					day: this.searchBySpecialtyForm.value.searchEndingDate.date()
 				}
 			}
-		).subscribe();
+		).subscribe(emptyAppointments => {
+			this.emptyAppointments = emptyAppointments;
+			this.emptyAppointmentsFiltered = this.emptyAppointments.slice(0, 5);
+		});
+	}
+
+	onPageChange($event) {
+		this.emptyAppointmentsFiltered = this.emptyAppointments.slice($event.pageIndex*$event.pageSize, $event.pageIndex*$event.pageSize + $event.pageSize);
 	}
 
 }

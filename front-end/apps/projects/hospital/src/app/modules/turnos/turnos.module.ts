@@ -16,6 +16,7 @@ import { SelectAgendaComponent } from './components/select-agenda/select-agenda.
 import { DateRangeTimeFormComponent } from './components/date-range-time-form/date-range-time-form.component';
 import { SeachAppointmentsByProfessionalComponent } from './components/seach-appointments-by-professional/seach-appointments-by-professional.component';
 import { SearchAppointmentsBySpecialtyComponent } from './components/search-appointments-by-specialty/search-appointments-by-specialty.component';
+import { AppointmentDetailsComponent } from './components/appointment-details/appointment-details.component';
 
 // dialogs
 import { AppointmentComponent } from './dialogs/appointment/appointment.component';
@@ -42,6 +43,7 @@ import { CustomDateFormatter } from './services/custom-date-formatter.service';
 		DateRangeTimeFormComponent,
 		SeachAppointmentsByProfessionalComponent,
 		SearchAppointmentsBySpecialtyComponent,
+		AppointmentDetailsComponent,
 		// dialogs
 		AppointmentComponent,
 		CalendarProfessionalViewDockPopupComponent,

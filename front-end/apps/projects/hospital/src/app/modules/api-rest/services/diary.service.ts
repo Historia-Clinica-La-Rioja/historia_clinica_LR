@@ -51,7 +51,7 @@ export class DiaryService {
 		return this.http.get<string[]>(url);
 	}
 
-	generateEmptyAppointments(searchCriteria: AppointmentSearchDto): Observable<EmptyAppointmentDto> {
+	generateEmptyAppointments(searchCriteria: AppointmentSearchDto): Observable<EmptyAppointmentDto[]> {
 		const url = `${environment.apiBase}/institutions/${this.contextService.institutionId}/medicalConsultations/diary/generate-empty-appointments`;
 		return this.http.post<any>(url, searchCriteria);
 	}

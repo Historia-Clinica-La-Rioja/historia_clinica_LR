@@ -1,39 +1,32 @@
-<div fxLayout="column" fxLayoutGap="15px">
-
-    <div fxLayout="row" fxLayoutGap="10px">
-        <div fxFlex="60" fxLayout="row" fxLayoutGap="5px">
-            <mat-icon color="primary"> person_outline </mat-icon>
-            <div fxLayout="column">
-                <span class="mat-body-2"> {{ appointment.professionalName }} </span>
-            </div>
-        </div>
-        <div fxFlex="calc(40%-10px)" fxLayout="row" fxLayoutGap="5px">
-            <mat-icon color="primary" fontSet="material-icons-outlined"> add_box </mat-icon>
-            <div fxLayout="column">
-                <span *ngFor="let specialty of appointment.specialties" class="mat-body line-height">
-                    {{ specialty }}
-                </span>
-            </div>
-        </div>
-    </div>
-
-    <div fxLayout="row" fxLayoutGap="10px">
-        <div fxFlex="40" fxLayout="row" fxLayoutGap="5px">
-            <mat-icon color="primary" fontSet="material-icons-outlined"> event </mat-icon>
-            <span class="mat-body capitalize-first-letter line-height">
-                {{ getViewDate() }}
-            </span>
-        </div>
-        <div fxFlex="calc(20%-10px)" fxLayout="row" fxLayoutGap="5px" fxLayoutAlign="center start">
-            <mat-icon color="primary"> query_builder </mat-icon>
-            <span class="mat-body line-height">
-                {{ getViewTime() }} hs
-            </span>
-        </div>
-        <div fxFlex="calc(40%-10px)" fxLayout="row" fxLayoutGap="5px">
-            <mat-icon color="primary" fontSet="material-icons-outlined"> meeting_room </mat-icon>
-            <span class="mat-body-2"> {{ appointment.office }} </span>
-        </div>
-    </div>
-
+<div fxLayout.gt-xs="row wrap" fxLayout.xs="column" fxLayoutGap="10px">
+	<div fxFlex.gt-xs="57%" fxFlex.xs="100%" fxLayout="row" fxLayoutGap="5px">
+		<mat-icon class="icon" fontSet="material-icons-outlined"> event </mat-icon>
+		<span class="mat-body capitalize-first-letter text">
+			{{ getViewDate() }}
+		</span>
+	</div>
+	<div fxFlex.gt-xs="37%" fxFlex.xs="100%" fxLayout="row" fxLayoutGap="5px">
+		<mat-icon class="icon"> query_builder </mat-icon>
+		<span class="mat-body text">
+			{{ getViewTime() }} hs
+		</span>
+	</div>
+	<div fxFlex.gt-xs="57%" fxFlex.xs="100%" fxLayout="row" fxLayoutGap="5px">
+		<mat-icon class="icon"> person_outline </mat-icon>
+		<div fxLayout="column">
+			<span class="mat-body text"> {{ appointment.professionalName }} </span>
+		</div>
+	</div>
+	<div fxFlex.gt-xs="37%" fxFlex.xs="100%" fxLayout="row" fxLayoutGap="5px">
+		<mat-icon class="icon" fontSet="material-icons-outlined"> add_box </mat-icon>
+		<div fxLayout="column">
+			<span *ngFor="let specialty of appointment.specialties" class="mat-body text">
+				{{ specialty }}
+			</span>
+		</div>
+	</div>
+	<div fxFlex.gt-xs="100%" fxFlex.xs="100%" fxLayout="row" fxLayoutGap="5px">
+		<mat-icon class="icon" fontSet="material-icons-outlined"> meeting_room </mat-icon>
+		<span class="mat-body text"> {{ appointment.office }} </span>
+	</div>
 </div>

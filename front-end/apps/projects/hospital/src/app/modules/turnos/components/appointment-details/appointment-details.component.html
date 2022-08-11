@@ -1,0 +1,36 @@
+<div fxLayout.lg="row" fxLayout.gt-xs="row wrap" fxLayout.xs="column" fxLayoutGap="10px" fxLayoutAlign.lg="center center">
+	<div fxFlex.lg="25%" fxFlex.gt-xs="57%" fxFlex.xs="100%" fxLayout="row" fxLayoutGap="5px">
+		<mat-icon class="icon" fontSet="material-icons-outlined"> event </mat-icon>
+		<span class="mat-body capitalize-first-letter text">{{ emptyAppointment.date | date: 'fullDate' }}</span>
+	</div>
+	<div fxFlex.lg="8%" fxFlex.gt-xs="37%" fxFlex.xs="100%" fxLayout="row" fxLayoutGap="5px">
+		<mat-icon class="icon"> query_builder </mat-icon>
+		<span class="mat-body text">{{ appointmentTime | date: 'shortTime' }} hs</span>
+	</div>
+	<div fxFlex.lg="18%" fxFlex.gt-xs="57%" fxFlex.xs="100%" fxLayout="row" fxLayoutGap="5px">
+		<mat-icon class="icon"> person_outline </mat-icon>
+		<div fxLayout="column">
+			<span class="mat-body text">{{ emptyAppointment.doctorFirstName + " " + emptyAppointment.doctorLastName }}</span>
+		</div>
+	</div>
+	<div fxFlex.lg="14%" fxFlex.gt-xs="37%" fxFlex.xs="100%" fxLayout="row" fxLayoutGap="5px">
+		<mat-icon class="icon" fontSet="material-icons-outlined"> add_box </mat-icon>
+		<div fxLayout="column">
+			<span class="mat-body text" *ngIf="emptyAppointment.alias === undefined else aliasExists">
+				{{ emptyAppointment.clinicalSpecialtyName }}
+			</span>
+			<ng-template #aliasExists>
+				<span>{{ emptyAppointment.alias + " (" + emptyAppointment.clinicalSpecialtyName +") " }}</span>
+			</ng-template>
+		</div>
+	</div>
+	<div fxFlex.lg="20%" fxFlex.gt-xs="100%" fxFlex.xs="100%" fxLayout="row" fxLayoutGap="5px">
+		<mat-icon class="icon" fontSet="material-icons-outlined"> meeting_room </mat-icon>
+		<span class="mat-body text">{{ emptyAppointment.doctorsOfficeDescription }}</span>
+	</div>
+	<div fxFlex.lg="15%" fxFlex.gt-xs="100%" fxFlex.xs="100%">
+		<button id="assignAppointmentButton" mat-flat-button color="primary" (click)="assignAppointment()">
+			<span [translate]="'turnos.home.ASSIGN_APPOINTMENT'"></span>
+		</button>
+	</div>
+</div>
