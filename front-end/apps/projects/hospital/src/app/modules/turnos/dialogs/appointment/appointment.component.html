@@ -38,8 +38,8 @@
 				</div>
 				<div fxLayoutAlign="end center">
 					<button id="print-appointment" mat-stroked-button color="primary" btn-block type="button"
-							(click)="getAppointmentTicketReport()">
-						<mat-icon fontSet="material-icons-outlined" >print</mat-icon>
+						(click)="getAppointmentTicketReport()">
+						<mat-icon fontSet="material-icons-outlined">print</mat-icon>
 						<span class="uppercase" [translate]="'turnos.appointment.PRINT'"></span>
 					</button>
 					<div class="none" id="pdfPrinter"></div>
@@ -48,7 +48,8 @@
 
 			<ng-container *ngIf="!hideFilterPanel else editAppointment">
 				<div fxLayout="column" fxLayoutGap="5px">
-					<span class="mat-caption normal-size">{{'turnos.appointment.coverageData.COVERAGE_DATA' | translate}}</span>
+					<span class="mat-caption normal-size">{{'turnos.appointment.coverageData.COVERAGE_DATA' |
+						translate}}</span>
 					<div fxLayout="row" fxLayoutGap="5px">
 						<span class="mat-body patient-info coverage-text subtitle-size" *ngIf="coverageData"
 							matTooltip="{{coverageData.medicalCoverage.name}}">{{coverageText}}</span>
@@ -58,17 +59,19 @@
 						<span class="mat-body patient-info coverage-text subtitle-size" *ngIf="coverageNumber">/
 							{{coverageNumber}}
 						</span>
-						<span class="mat-body patient-info coverage-text lowercase subtitle-size" *ngIf="coverageCondition">/
+						<span class="mat-body patient-info coverage-text lowercase subtitle-size"
+							*ngIf="coverageCondition">/
 							{{coverageCondition}}
 						</span>
 					</div>
 				</div>
 				<div fxLayout="column" fxLayoutGap="5px">
-					<span class="mat-caption normal-size" [translate]="'turnos.appointment.phoneNumber.PHONE_NUMBER'">:asd</span>
+					<span class="mat-caption normal-size"
+						[translate]="'turnos.appointment.phoneNumber.PHONE_NUMBER'">:asd</span>
 					<span class="mat-body patient-info coverage-text subtitle-size">{{phoneNumber}}</span>
 				</div>
-				<button type="button" mat-icon-button color="primary"
-					*ngIf="( hasRoleToEditPhoneNumber$ | async )" (click)="hideFilters()">
+				<button type="button" mat-icon-button color="primary" *ngIf="( hasRoleToEditPhoneNumber$ | async )"
+					(click)="hideFilters()">
 					<mat-icon class="material-icons-outlined">edit</mat-icon>
 					<span class="mat-body strong-size">
 						{{'turnos.appointment.EDIT_PATIENT_INFO' | translate}}
@@ -143,25 +146,27 @@
 			<div *ngIf="!isDateFormVisible">
 				<div fxLayout="row" fxLayoutGap="30px">
 					<div fxLayout="row" fxLayoutGap="5px" fxLayoutAlign="start">
-						<mat-icon fontSet="material-icons-outlined" mat-list-icon [inline]="true"
-							id="full-date" class="icon-grey">
+						<mat-icon fontSet="material-icons-outlined" mat-list-icon [inline]="true" id="full-date"
+							class="icon-grey">
 							calendar_today
 						</mat-icon>
-						<div >
-							<span class="mat-body subtitle-size"> {{selectedDate | date:"EEEE, d " | titlecase }} de</span>
+						<div>
+							<span class="mat-body subtitle-size"> {{selectedDate | date:"EEEE, d " | titlecase }}
+								de</span>
 							<span class="mat-body subtitle-size"> {{selectedDate | date:"MMMM " | titlecase}} de</span>
 							<span class="mat-body subtitle-size"> {{selectedDate | date:"y " | titlecase}}</span>
 						</div>
 					</div>
 					<div fxLayout="row" fxLayoutGap="5px" fxLayoutAlign="start">
-						<mat-icon fontSet="material-icons-outlined" mat-list-icon [inline]="true" id="hour" class="icon-grey">
+						<mat-icon fontSet="material-icons-outlined" mat-list-icon [inline]="true" id="hour"
+							class="icon-grey">
 							access_time
 						</mat-icon>
-						 <span class="mat-body subtitle-size"> {{selectedDate | date:"H:mm"}} hs</span>
+						<span class="mat-body subtitle-size"> {{selectedDate | date:"H:mm"}} hs</span>
 					</div>
 				</div>
-				<button type="button" mat-icon-button color="primary" *ngIf="selectedState === appointmentStatesIds.ASSIGNED"
-					(click)="openDateForm()">
+				<button type="button" mat-icon-button color="primary"
+					*ngIf="selectedState === appointmentStatesIds.ASSIGNED" (click)="openDateForm()">
 					<mat-icon class="material-icons-outlined">edit</mat-icon>
 					<span class="mat-body strong-size">
 						{{'turnos.appointment.date.EDIT_DATE_TIME' | translate}}
@@ -169,26 +174,22 @@
 				</button>
 			</div>
 
-			<form [formGroup]="formDate"
-				*ngIf="isDateFormVisible" fxLayout="column" fxLayoutGap="5px" class="dateForm"
+			<form [formGroup]="formDate" *ngIf="isDateFormVisible" fxLayout="column" fxLayoutGap="5px" class="dateForm"
 				(ngSubmit)="updateAppointmentDate()">
-				<app-datepicker
-					[minDate]="startAgenda"
-					[maxDate]="endAgenda"
-					[dateToSetInDatepicker]="data.appointmentData.date"
-					[availableDays]="availableDays"
-					[disableDays]="disableDays"
-					(selectDate)="selectDate($event)">
+				<app-datepicker [minDate]="startAgenda" [maxDate]="endAgenda"
+					[dateToSetInDatepicker]="data.appointmentData.date" [availableDays]="availableDays"
+					[disableDays]="disableDays" (selectDate)="selectDate($event)">
 				</app-datepicker>
 
-				<div fxLayout="row" >
-						<mat-form-field appearance="outline" class="hour">
-							<mat-select formControlName="hour">
-								<mat-option [value]="possibleScheduleHour" *ngFor="let possibleScheduleHour of possibleScheduleHours">
-									{{ possibleScheduleHour | date:'shortTime' }}
-								</mat-option>
-							</mat-select>
-						</mat-form-field>
+				<div fxLayout="row">
+					<mat-form-field appearance="outline" class="hour">
+						<mat-select formControlName="hour">
+							<mat-option [value]="possibleScheduleHour"
+								*ngFor="let possibleScheduleHour of possibleScheduleHours">
+								{{ possibleScheduleHour | date:'shortTime' }}
+							</mat-option>
+						</mat-select>
+					</mat-form-field>
 					<span class="hs"> hs.</span>
 					<div class="confirm-buttons" fxLayout="row" fxLayoutAlign="end" fxLayoutGap="15px" fxFlex="60%">
 						<button mat-stroked-button color="primary" btn-block type="button" (click)="cancelDateForm()">
@@ -222,8 +223,7 @@
 				</button>
 
 				<button type="button" [disabled]="(hasRoleToChangeState$ | async) === false"
-					[ngClass]="{ 'assigned': selectedState === appointmentStatesIds.CONFIRMED }"
-					(click)="callPatient()"
+					[ngClass]="{ 'assigned': selectedState === appointmentStatesIds.CONFIRMED }" (click)="callPatient()"
 					*ngIf="isMqttCallEnabled && selectedState === appointmentStatesIds.CONFIRMED" mat-stroked-button>
 					<mat-icon matTooltip="{{BELL_LABEL}}" color="primary" svgIcon="bell_appointment_call">
 					</mat-icon>
@@ -261,7 +261,7 @@
 
 		<section id="observation-section" class="observation-section">
 			<div *ngIf="!observation && hideObservationForm && hideObservationTitle">
-				<a class="mat-body"	(click)="setHideObservationForm(false); setHideObservationTitle(false)"
+				<a class="mat-body" (click)="setHideObservationForm(false); setHideObservationTitle(false)"
 					[translate]="'turnos.appointment.observations.ADD_OBSERVATION'">
 				</a>
 			</div>
@@ -270,18 +270,20 @@
 				<span class="mat-body-strong strong-size" *ngIf="!hideObservationTitle"
 					[translate]="'turnos.appointment.observations.OBSERVATIONS'">
 				</span>
-				<div class="observation" *ngIf="observation && hideObservationForm" fxLayout="row" fxLayoutAlign="space-between" fxLayoutGap="20px">
-					<p  class="mat-body strong-size">
+				<div class="observation" *ngIf="observation && hideObservationForm" fxLayout="row"
+					fxLayoutAlign="space-between" fxLayoutGap="20px">
+					<p class="mat-body strong-size">
 						{{observation}}
 					</p>
-					<button type="button" mat-icon-button color="primary"
-						(click)="setHideObservationForm(false)">
+					<button type="button" mat-icon-button color="primary" (click)="setHideObservationForm(false)">
 						<mat-icon class="material-icons-outlined">edit</mat-icon>
 					</button>
 				</div>
-				<form [formGroup]="formObservations" *ngIf="!hideObservationForm" fxLayout="column" fxLayoutGap="5px" (ngSubmit)="updateObservation()">
+				<form [formGroup]="formObservations" *ngIf="!hideObservationForm" fxLayout="column" fxLayoutGap="5px"
+					(ngSubmit)="updateObservation()">
 					<mat-form-field appearance="outline">
-						<textarea formControlName="observation" placeholder="Ingrese observaciones..." rows="4" matInput type="text"></textarea>
+						<textarea formControlName="observation" placeholder="Ingrese observaciones..." rows="4" matInput
+							type="text"></textarea>
 					</mat-form-field>
 
 					<div class="observation-buttons" fxLayout="row" fxLayoutAlign="end" fxLayoutGap="15px">
@@ -305,8 +307,7 @@
 				<section id="report" fxLayout="column">
 					<span class="mat-body-strong strong-size">{{'turnos.report.TITLE' | translate}}</span>
 					<section fxLayout="row" fxLayoutGap="30px">
-						<mat-checkbox color="primary" fxLayout="row"
-							(change)="enableDowndloadAnexo($event.checked)">
+						<mat-checkbox color="primary" fxLayout="row" (change)="enableDowndloadAnexo($event.checked)">
 							<span class="mat-body strong-size">{{'turnos.report.ANEXO' | translate}}</span>
 						</mat-checkbox>
 						<mat-checkbox color="primary" fxLayout="row"
@@ -324,9 +325,10 @@
 		align="end">
 		<ng-container
 			*ngIf="downloadReportIsEnabled && !isAbsent() && ((hasRoleToDownloadReports$ | async) === true || data.hasPermissionToAssignShift)">
-			<button id="report-appointment" name="report-appointment" mat-stroked-button color="primary" btn-block type="button"
-				(click)="getReportAppointment()" [disabled]="!isCheckedDownloadAnexo && !isCheckedDownloadFormulario">
-				<mat-icon fontSet="material-icons-outlined" >download</mat-icon>
+			<button id="report-appointment" name="report-appointment" mat-stroked-button color="primary" btn-block
+				type="button" (click)="getReportAppointment()"
+				[disabled]="!isCheckedDownloadAnexo && !isCheckedDownloadFormulario">
+				<mat-icon fontSet="material-icons-outlined">download</mat-icon>
 				<span class="uppercase" [translate]="'turnos.report.TITLE'"></span>
 			</button>
 		</ng-container>
