@@ -147,9 +147,11 @@ export class AgendaComponent implements OnInit, OnDestroy, OnChanges {
 	}
 
 	changeViewDate(date: Date) {
-		this.setDateRange(date);
-		this.appointmentFacade.setValues(this.agenda.id, this.agenda.appointmentDuration, this.startDate, this.endDate);
-		this.calendarDateService.setCalendarDate(date);
+		if (this.view !== CalendarView.Month) {
+			this.setDateRange(date);
+			this.appointmentFacade.setValues(this.agenda.id, this.agenda.appointmentDuration, this.startDate, this.endDate);
+			this.calendarDateService.setCalendarDate(date);
+		}
 	}
 
 	loadCalendar(renderEvent: CalendarWeekViewBeforeRenderEvent) {
