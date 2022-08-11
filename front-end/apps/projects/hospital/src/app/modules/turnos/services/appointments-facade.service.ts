@@ -64,8 +64,6 @@ export class AppointmentsFacadeService {
 
 	private appointmenstEmitter = new ReplaySubject<CalendarEvent[]>(1);
 	private appointments$: Observable<CalendarEvent[]>;
-
-	private intervalId: any;
 	private professionalId: number;
 
 	private startDate: string;
@@ -82,6 +80,12 @@ export class AppointmentsFacadeService {
 
 	setProfessionalId(id: number) {
 		this.professionalId = id;
+		if (this.agendaId)
+			this.loadAppointments();
+	}
+
+	getProfessionalId() {
+		return this.professionalId
 	}
 
 	setValues(agendaId, appointmentDuration, startDate: string, endDate: string): void {
@@ -118,11 +122,11 @@ export class AppointmentsFacadeService {
 	setInterval() {
 		//this.intervalId = setInterval(() => this.loadAppointments(), 20000);
 	}
-	
+
 	clearInterval() {
 		//clearInterval(this.intervalId);
 	}
-		
+
 
 	private getViewName(person: BasicPersonalDataDto): string {
 		return person ? [person.lastName, this.patientNameService.getPatientName(person.firstName, person.nameSelfDetermination)].

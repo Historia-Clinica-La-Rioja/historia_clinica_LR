@@ -58,6 +58,7 @@ export class AgendaComponent implements OnInit, OnDestroy, OnChanges {
 
 	hourSegments: number;
 	agenda: CompleteDiaryDto;
+
 	loading = true;
 	dayStartHour: number;
 	dayEndHour: number;
@@ -76,7 +77,14 @@ export class AgendaComponent implements OnInit, OnDestroy, OnChanges {
 	private patientId: number;
 	@Input() professionalId: number;
 	@Input() canCreateAppoinment = true;
-	@Input() idAgenda: number;
+	idAgenda: number;
+	@Input()
+	set id(id: number) {
+		if (id) {
+			this.idAgenda = id;
+			this.getAgenda();
+		}
+	}
 	@Input() showAll = true;
 	@Input() view: CalendarView = CalendarView.Week;
 	@Input() viewDate: Date = new Date();
@@ -101,6 +109,7 @@ export class AgendaComponent implements OnInit, OnDestroy, OnChanges {
 	}
 
 	ngOnInit(): void {
+
 		this.route.queryParams.subscribe(qp => {
 			this.patientId = Number(qp.idPaciente);
 			if (!this.professionalId)
@@ -119,7 +128,7 @@ export class AgendaComponent implements OnInit, OnDestroy, OnChanges {
 		else
 			this.getAgenda();
 
-		this.loading = true;
+
 		this.appointmentSubscription = this.appointmentFacade.getAppointments().subscribe(appointments => {
 			if (appointments) {
                 if (appointments.length) {
@@ -131,7 +140,6 @@ export class AgendaComponent implements OnInit, OnDestroy, OnChanges {
 				this.loading = false;
 			}
 		});
-		this.appointmentFacade.setInterval();
 		this.permissionsService.hasContextAssignments$(ROLES_TO_CREATE).subscribe(hasRole => this.hasRoleToCreate = hasRole);
 		this.setDateRange(this.viewDate);
 	}
@@ -149,6 +157,7 @@ export class AgendaComponent implements OnInit, OnDestroy, OnChanges {
 		if (this.view !== CalendarView.Month) {
 			this.setDateRange(date);
 			this.appointmentFacade.setValues(this.agenda.id, this.agenda.appointmentDuration, this.startDate, this.endDate);
+			this.calendarDateService.setCalendarDate(date);
 		}
 	}
 
