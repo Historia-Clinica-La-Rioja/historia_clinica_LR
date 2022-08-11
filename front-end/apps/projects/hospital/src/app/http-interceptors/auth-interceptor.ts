@@ -26,7 +26,7 @@ const urlIsPublic = (url: string) => PUBLIC_ENDPOINTS.some(endpointPrefix => url
 
 const urlNeedsAccessToken = (url: string) => NEED_ACCESS_TOKEN_ENDPOINTS.some(endpointPrefix => url.startsWith(`${environment.apiBase}/${endpointPrefix}`));
 
-const isExternalURL = (url: string) => url.startsWith('http://');
+const isExternalURL = (url: string) => url.startsWith('http');
 
 const isUnauthorized = (error: any): boolean =>  error instanceof HttpErrorResponse && error.status === 401;
 
