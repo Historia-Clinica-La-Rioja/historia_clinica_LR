@@ -207,14 +207,15 @@
 			<span class="mat-body-strong strong-size">{{'turnos.appointment.APPOINTMENT_STATE' | translate}}</span>
 			<div class="appointment-actions" fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="8px">
 
-				<button type="button" [disabled]="(hasRoleToChangeState$ | async) === false"
+				<button type="button"
+					[disabled]="(hasRoleToChangeState$ | async) === false || selectedState === appointmentStatesIds.SERVED"
 					[ngClass]="{'selected assigned': selectedState === appointmentStatesIds.ASSIGNED }"
 					(click)="onClickedState(appointmentStatesIds.ASSIGNED)" mat-stroked-button>
 					<mat-icon matTooltip="{{getAppointmentState(appointmentStatesIds.ASSIGNED).description}}"
 						color="primary">event_available</mat-icon>
 				</button>
 
-				<button type="button" [disabled]="(hasRoleToChangeState$ | async) === false"
+				<button type="button" [disabled]="(hasRoleToChangeState$ | async) === false || selectedState === appointmentStatesIds.SERVED"
 					[ngClass]="{'selected confirmed': selectedState === appointmentStatesIds.CONFIRMED }"
 					(click)="onClickedState(appointmentStatesIds.CONFIRMED)" mat-stroked-button>
 					<mat-icon matTooltip="{{getAppointmentState(appointmentStatesIds.CONFIRMED).description}}"
@@ -231,7 +232,7 @@
 
 				<button type="button" [ngClass]="{'selected absent': selectedState === appointmentStatesIds.ABSENT }"
 					(click)="onClickedState(appointmentStatesIds.ABSENT)" mat-stroked-button
-					[disabled]="(hasRoleToChangeState$ | async) === false">
+					[disabled]="(hasRoleToChangeState$ | async) === false || selectedState === appointmentStatesIds.SERVED">
 					<mat-icon matTooltip="{{getAppointmentState(appointmentStatesIds.ABSENT).description}}"
 						color="primary" svgIcon="person_cancel_outlined">
 					</mat-icon>
