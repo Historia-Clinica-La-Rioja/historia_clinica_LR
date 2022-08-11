@@ -26,6 +26,7 @@ const urlIsPublic = (url: string) => PUBLIC_ENDPOINTS.some(endpointPrefix => url
 
 const urlNeedsAccessToken = (url: string) => NEED_ACCESS_TOKEN_ENDPOINTS.some(endpointPrefix => url.startsWith(`${environment.apiBase}/${endpointPrefix}`));
 
+const isExternalURL = (url: string) => url.startsWith('http://');
 
 const isUnauthorized = (error: any): boolean =>  error instanceof HttpErrorResponse && error.status === 401;
 
@@ -39,7 +40,7 @@ export class AuthInterceptor implements HttpInterceptor {
 
 	intercept(req: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
 
-		if (urlIsPublic(req.url) && !urlNeedsAccessToken(req.url)) {
+		if (urlIsPublic(req.url) && !urlNeedsAccessToken(req.url) || isExternalURL(req.url)) {
 			return next.handle(req.clone());
 		}
 
