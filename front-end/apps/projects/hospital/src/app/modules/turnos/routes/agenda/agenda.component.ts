@@ -78,7 +78,14 @@ export class AgendaComponent implements OnInit, OnDestroy, OnChanges {
 	private loggedUserHealthcareProfessionalId: number;
 	private loggedUserRoles: string[];
 	@Input() canCreateAppoinment = true;
-	@Input() idAgenda: number;
+	idAgenda: number;
+	@Input()
+	set id(id: number) {
+		if (id) {
+			this.idAgenda = id;
+			this.getAgenda();
+		}
+	}
 	@Input() showAll = true;
 	@Input() view: CalendarView = CalendarView.Week;
 	@Input() viewDate: Date = new Date();
@@ -103,7 +110,12 @@ export class AgendaComponent implements OnInit, OnDestroy, OnChanges {
 	}
 
 	ngOnInit(): void {
-
+		this.route.paramMap.subscribe((params: ParamMap) => {
+			if (params.get('idAgenda')) {
+				this.idAgenda = Number(params.get('idAgenda'));
+				this.getAgenda();
+			}
+		});
 		this.route.queryParams.subscribe(qp => {
 			this.patientId = Number(qp.idPaciente);
 		});
@@ -111,13 +123,6 @@ export class AgendaComponent implements OnInit, OnDestroy, OnChanges {
 		this.loading = true;
 		this.appointmentSubscription?.unsubscribe();
 		this.appointmentFacade.clear();
-		if (!this.idAgenda)
-			this.route.paramMap.subscribe((params: ParamMap) => {
-				this.idAgenda = Number(params.get('idAgenda'));
-				this.getAgenda();
-			});
-		else
-			this.getAgenda();
 
 		this.loading = true;
 		this.appointmentSubscription = this.appointmentFacade.getAppointments().subscribe(appointments => {
@@ -131,7 +136,6 @@ export class AgendaComponent implements OnInit, OnDestroy, OnChanges {
 				this.loading = false;
 			}
 		});
-		this.appointmentFacade.setInterval();
 		this.permissionsService.hasContextAssignments$(ROLES_TO_CREATE).subscribe(hasRole => this.hasRoleToCreate = hasRole);
 		this.healthcareProfessionalService.getHealthcareProfessionalByUserId().subscribe(healthcareProfessionalId => this.loggedUserHealthcareProfessionalId = healthcareProfessionalId);
 		this.loggedUserService.assignments$.subscribe(response => this.loggedUserRoles = response.map(role => role.role));

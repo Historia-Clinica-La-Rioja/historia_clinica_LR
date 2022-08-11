@@ -64,8 +64,6 @@ export class AppointmentsFacadeService {
 
 	private appointmenstEmitter = new ReplaySubject<CalendarEvent[]>(1);
 	private appointments$: Observable<CalendarEvent[]>;
-
-	private intervalId: any;
 	private professionalId: number;
 
 	private startDate: string;
@@ -119,14 +117,6 @@ export class AppointmentsFacadeService {
 					});
 				this.appointmenstEmitter.next(appointmentsCalendarEvents);
 			});
-	}
-
-	setInterval() {
-		this.intervalId = setInterval(() => this.loadAppointments(), 20000);
-	}
-
-	clearInterval() {
-		clearInterval(this.intervalId);
 	}
 
 	private getViewName(person: BasicPersonalDataDto): string {
