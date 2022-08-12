@@ -1,6 +1,7 @@
 package net.pladema.medicalconsultation.appointment.service.impl;
 
 import lombok.extern.slf4j.Slf4j;
+import net.pladema.medicalconsultation.appointment.repository.entity.AppointmentState;
 import net.pladema.medicalconsultation.appointment.service.AppointmentDailyAmountService;
 import net.pladema.medicalconsultation.appointment.service.AppointmentService;
 import net.pladema.medicalconsultation.appointment.service.domain.AppointmentBo;
@@ -40,21 +41,22 @@ public class AppointmentDailyAmountServiceImpl implements AppointmentDailyAmount
     }
 
     @Override
-    public Collection<AppointmentDailyAmountBo> getDailyAmounts(Integer diaryId) {
+    public Collection<AppointmentDailyAmountBo> getDailyAmounts(Integer diaryId, LocalDate from, LocalDate to) {
 		log.debug("Input parameter -> diaryId {}", diaryId);
 
 		if(diaryService.getDiary(diaryId).isEmpty())
 			throw new DiaryNotFoundException(DiaryNotFoundEnumException.DIARY_ID_NOT_FOUND, "La Agenda solicitada no existe");
 
 		Collection<AppointmentDailyAmountBo> appointmentsDailyAmount = new ArrayList<>();
-
-        Collection<AppointmentBo> appointments = appointmentService.getAppointmentsByDiaries(Arrays.asList(diaryId), null, null);
-        Optional<CompleteDiaryBo> diary = diaryService.getDiary(diaryId);
+		Optional<CompleteDiaryBo> diary = diaryService.getDiary(diaryId);
 
         if (diary.isPresent()) {
+			if(diary.get().getEndDate().isBefore(to))
+				to = diary.get().getEndDate();
+			Collection<AppointmentBo> appointments = appointmentService.getAppointmentsByDiaries(Arrays.asList(diaryId), from, to);
 
-            for (LocalDate date = diary.get().getStartDate();
-                 date.isBefore(diary.get().getEndDate()) || date.isEqual(diary.get().getEndDate()); date = date.plusDays(1)) {
+            for (LocalDate date = from;
+                 date.isBefore(to) || date.isEqual(to); date = date.plusDays(1)) {
 
                 Collection<DiaryOpeningHoursBo> openingHoursDate = this.getOpeningHoursFor(date, diary.get().getDiaryOpeningHours());
 
@@ -101,7 +103,7 @@ public class AppointmentDailyAmountServiceImpl implements AppointmentDailyAmount
             dailyAmountBo.setProgrammed(0);
             dailyAmountBo.setProgrammedAvailable(0);
         }
-        dailyAmountBo.setProgrammedAvailable(dailyAmountBo.getProgrammedAvailable() + segmentsInOpeningHour.intValue());
+        dailyAmountBo.setProgrammedAvailable(dailyAmountBo.getProgrammedAvailable() + segmentsInOpeningHour.intValue() - (int) appointmentsForDate.stream().filter(a->a.getAppointmentStateId().equals(AppointmentState.BLOCKED)).count());
         if (!appointmentsForDate.isEmpty()) {
             Integer amount = this.getAmountBy(oh, appointmentsForDate);
             dailyAmountBo.setProgrammed(dailyAmountBo.getProgrammed() + amount);
@@ -122,7 +124,7 @@ public class AppointmentDailyAmountServiceImpl implements AppointmentDailyAmount
         LocalTime to = oh.getOpeningHours().getTo();
 
         Collection<AppointmentBo> appointmentsInOH = appointmentsForDate.stream()
-                .filter(a -> (!a.isOverturn() && this.isAppointmentInOH(a, from, to)))
+                .filter(a -> (!a.isOverturn() && this.isAppointmentInOH(a, from, to) && !(a.getAppointmentStateId().equals(AppointmentState.BLOCKED))))
                 .collect(Collectors.toList());
 
         return appointmentsInOH.size();

@@ -37,7 +37,8 @@ import { DatePipeFormat } from '@core/utils/date.utils';
 import { HealthcareProfessionalService } from '@api-rest/services/healthcare-professional.service';
 import { LoggedUserService } from '../../../auth/services/logged-user.service';
 import * as moment from 'moment';
-import { endOfWeek, startOfWeek } from 'date-fns';
+import { endOfMonth, endOfWeek, startOfMonth, startOfWeek } from 'date-fns';
+import { DatePipe } from "@angular/common";
 
 const ASIGNABLE_CLASS = 'cursor-pointer';
 const AGENDA_PROGRAMADA_CLASS = 'bg-green';
@@ -126,7 +127,6 @@ export class AgendaComponent implements OnInit, OnDestroy, OnChanges {
 				else {
 					this.appointments = appointments;
 				}
-				this.dailyAmounts$ = this.appointmentsService.getDailyAmounts(this.idAgenda);
 				this.loading = false;
 			}
 		});
@@ -147,9 +147,11 @@ export class AgendaComponent implements OnInit, OnDestroy, OnChanges {
 	}
 
 	changeViewDate(date: Date) {
-		this.setDateRange(date);
-		this.appointmentFacade.setValues(this.agenda.id, this.agenda.appointmentDuration, this.startDate, this.endDate);
-		this.calendarProfessionalInfo.setCalendarDate(date);
+		if (this.view !== CalendarView.Month) {
+			this.setDateRange(date);
+			this.appointmentFacade.setValues(this.agenda.id, this.agenda.appointmentDuration, this.startDate, this.endDate);
+			this.calendarProfessionalInfo.setCalendarDate(date);
+		}
 	}
 
 	loadCalendar(renderEvent: CalendarWeekViewBeforeRenderEvent) {
@@ -497,6 +499,13 @@ export class AgendaComponent implements OnInit, OnDestroy, OnChanges {
 			const d = moment(date);
 			this.startDate = momentFormat(d, DateFormat.API_DATE);
 			this.endDate = momentFormat(d, DateFormat.API_DATE);
+			return;
+		}
+		if (CalendarView.Month === this.view) {
+			const from = startOfMonth(date);
+			const to = endOfMonth(date);
+			this.startDate = momentFormat(moment(from), DateFormat.API_DATE);
+			this.endDate = momentFormat(moment(to), DateFormat.API_DATE);
 			return;
 		}
 		const start = startOfWeek(date, { weekStartsOn: 1 });
