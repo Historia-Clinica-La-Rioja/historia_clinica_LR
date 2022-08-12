@@ -126,33 +126,35 @@
 								</div>
 							</div>
 							<mat-divider inset></mat-divider>
-							<div *ngIf="!hideProfessions" fxLayout="column" fxLayoutGap="10px">
-								<div content>
-									<app-card-professions
-										[ownProfessionsAndSpecialties]="ownProfessionsAndSpecialties$ | async">
-									</app-card-professions>
+							<div *ngIf="!hideProfessions">
+								<div fxLayout="column" fxLayoutGap="10px">
+									<div content>
+										<app-card-professions
+											[ownProfessionsAndSpecialties]="ownProfessionsAndSpecialties$ | async">
+										</app-card-professions>
+									</div>
+									<div content>
+										<button id="button-edit-professions" mat-stroked-button color="primary"
+											(click)="editProfessions()">
+											<span [translate]="'pacientes.user_data.buttons.EDIT_PROFESSIONS'"
+												class="uppercase"></span>
+										</button>
+									</div>
 								</div>
-								<div content>
-									<button id="button-edit-professions" mat-stroked-button color="primary"
-										(click)="editProfessions()">
-										<span [translate]="'pacientes.user_data.buttons.EDIT_PROFESSIONS'"
-											class="uppercase"></span>
-									</button>
-								</div>
-							</div>
-							<mat-divider inset></mat-divider>
-							<div fxLayout="column" fxLayoutGap="10px">
-								<div content>
-									<app-card-license [professionsWithLicense]="professionsWithLicense$ | async"
-										[ownProfessionsAndSpecialties]="ownProfessionsAndSpecialties$ | async">
-									</app-card-license>
-								</div>
-								<div content>
-									<button id="button-edit-licenses" mat-stroked-button color="primary"
-										(click)="editLicense()">
-										<span [translate]="'pacientes.user_data.buttons.EDIT_LICENSES'"
-											class="uppercase"></span>
-									</button>
+								<mat-divider inset></mat-divider>
+								<div fxLayout="column" fxLayoutGap="10px">
+									<div content>
+										<app-card-license [professionsWithLicense]="professionsWithLicense$ | async"
+											[ownProfessionsAndSpecialties]="ownProfessionsAndSpecialties$ | async">
+										</app-card-license>
+									</div>
+									<div content>
+										<button id="button-edit-licenses" mat-stroked-button color="primary"
+											(click)="editLicense()">
+											<span [translate]="'pacientes.user_data.buttons.EDIT_LICENSES'"
+												class="uppercase"></span>
+										</button>
+									</div>
 								</div>
 							</div>
 						</mat-card-content>
