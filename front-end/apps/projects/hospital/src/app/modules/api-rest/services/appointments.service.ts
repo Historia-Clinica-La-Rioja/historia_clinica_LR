@@ -120,9 +120,11 @@ export class AppointmentsService {
 		return this.http.post(url, {});
 	}
 
-	getDailyAmounts(diaryId: number): Observable<AppointmentDailyAmountDto[]> {
+	getDailyAmounts(diaryId: number, from : string, to : string): Observable<AppointmentDailyAmountDto[]> {
 		let queryParams: HttpParams = new HttpParams();
 		queryParams = (diaryId) ? queryParams.append('diaryId', JSON.stringify(diaryId)) : queryParams;
+		queryParams = queryParams.append("from",from);
+		queryParams = queryParams.append("to",to);
 
 		const url = `${this.BASE_URL}/getDailyAmounts`;
 		return this.http.get<AppointmentDailyAmountDto[]>(url,

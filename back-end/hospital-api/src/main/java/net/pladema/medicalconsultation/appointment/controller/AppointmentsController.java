@@ -339,13 +339,16 @@ public class AppointmentsController {
     @PreAuthorize("hasPermission(#institutionId, 'ADMINISTRATIVO, ESPECIALISTA_MEDICO, PROFESIONAL_DE_SALUD, ESPECIALISTA_EN_ODONTOLOGIA, ADMINISTRADOR_AGENDA, ENFERMERO')")
 	public ResponseEntity<List<AppointmentDailyAmountDto>> getDailyAmounts(
             @PathVariable(name = "institutionId") Integer institutionId,
-            @RequestParam(name = "diaryId") String diaryId) {
+            @RequestParam(name = "diaryId") String diaryId,
+			@RequestParam(name = "from") String from,
+			@RequestParam(name = "to") String to) {
         log.debug("Input parameters -> diaryId {}", diaryId);
 
         Integer diaryIdParam = Integer.parseInt(diaryId);
-
+		LocalDate startDate = dateMapper.fromStringToLocalDate(from);
+		LocalDate endDate = dateMapper.fromStringToLocalDate(to);
         Collection<AppointmentDailyAmountBo> resultService = appointmentDailyAmountService
-                .getDailyAmounts(diaryIdParam);
+                .getDailyAmounts(diaryIdParam, startDate, endDate);
         List<AppointmentDailyAmountDto> result = resultService.stream()
                 .parallel()
                 .map(appointmentMapper::toAppointmentDailyAmountDto)

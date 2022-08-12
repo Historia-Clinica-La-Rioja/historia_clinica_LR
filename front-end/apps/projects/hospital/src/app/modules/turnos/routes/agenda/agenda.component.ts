@@ -1,3 +1,4 @@
+import { CalendarDateService } from './../../services/calendar-date.service';
 import { Component, Input, OnChanges, OnDestroy, OnInit, SimpleChanges } from '@angular/core';
 import { AppointmentDailyAmountDto, CompleteDiaryDto, DiaryOpeningHoursDto, MedicalCoverageDto } from '@api-rest/api-model';
 import { ERole } from '@api-rest/api-model';
@@ -36,7 +37,8 @@ import { DatePipeFormat } from '@core/utils/date.utils';
 import { HealthcareProfessionalService } from '@api-rest/services/healthcare-professional.service';
 import { LoggedUserService } from '../../../auth/services/logged-user.service';
 import * as moment from 'moment';
-import { endOfWeek, startOfWeek } from 'date-fns';
+import { endOfMonth, endOfWeek, startOfMonth, startOfWeek } from 'date-fns';
+import { DatePipe } from "@angular/common";
 
 const ASIGNABLE_CLASS = 'cursor-pointer';
 const AGENDA_PROGRAMADA_CLASS = 'bg-green';
@@ -92,7 +94,9 @@ export class AgendaComponent implements OnInit, OnDestroy, OnChanges {
 		private readonly agendaSearchService: AgendaSearchService,
 		private readonly contextService: ContextService,
 		private readonly healthcareProfessionalService: HealthcareProfessionalService,
-		private readonly loggedUserService: LoggedUserService
+		private readonly loggedUserService: LoggedUserService,
+		private readonly calendarDateService: CalendarDateService,
+		private readonly datePipe : DatePipe
 	) {
 	}
 
@@ -124,7 +128,6 @@ export class AgendaComponent implements OnInit, OnDestroy, OnChanges {
                 else {
                     this.appointments = appointments;
 				}
-				this.dailyAmounts$ = this.appointmentsService.getDailyAmounts(this.idAgenda);
 				this.loading = false;
 			}
 		});
@@ -177,6 +180,11 @@ export class AgendaComponent implements OnInit, OnDestroy, OnChanges {
 	}
 
 	loadDailyAmounts(calendarMonthViewBeforeRenderEvent: CalendarMonthViewBeforeRenderEvent): void {
+		const from = this.datePipe.transform(calendarMonthViewBeforeRenderEvent.period.start, 'YYYY-MM-dd');
+		const to = this.datePipe.transform(calendarMonthViewBeforeRenderEvent.period.end, 'YYYY-MM-dd');
+		if(this.view === CalendarView.Month){
+			this.dailyAmounts$ = this.appointmentsService.getDailyAmounts(this.idAgenda, from, to);
+		}
 		const daysCells: MonthViewDay[] = calendarMonthViewBeforeRenderEvent.body;
 		if (this.appointments) {
 			if (agendaOverlapsWithViewRange(this.agenda.startDate, this.agenda.endDate)) {
@@ -483,6 +491,13 @@ export class AgendaComponent implements OnInit, OnDestroy, OnChanges {
 			const d = moment(date);
 			this.startDate = momentFormat(d, DateFormat.API_DATE);
 			this.endDate = momentFormat(d, DateFormat.API_DATE);
+			return;
+		}
+		if (CalendarView.Month === this.view) {
+			const from = startOfMonth(date);
+			const to = endOfMonth(date);
+			this.startDate = momentFormat(moment(from), DateFormat.API_DATE);
+			this.endDate = momentFormat(moment(to), DateFormat.API_DATE);
 			return;
 		}
 		const start = startOfWeek(date, { weekStartsOn: 1 });
