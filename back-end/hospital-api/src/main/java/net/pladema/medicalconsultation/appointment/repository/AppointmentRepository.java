@@ -240,7 +240,7 @@ public interface AppointmentRepository extends SGXAuditableEntityJPARepository<A
 			"AND a.hour = :hour " +
 			"AND NOT a.appointmentStateId = " + AppointmentState.CANCELLED_STR +
 			"AND (a.deleteable.deleted = false OR a.deleteable.deleted is null)")
-	Optional<Appointment> findAppointmentBy(@Param("diaryId") Integer diaryId,
+	List<Appointment> findAppointmentBy(@Param("diaryId") Integer diaryId,
 											@Param("date") LocalDate date, @Param("hour") LocalTime hour);
 
 	@Transactional(readOnly = true)
