@@ -28,4 +28,7 @@ public interface PatientService {
     void updatePatientPermanent(PatientPersonVo patientPersonVo, Integer nationalId);
 
     void auditActionPatient(Integer institutionId, Integer patientId, EActionType eActionType);
+
+	Optional<String> getIdentificationNumber(Integer patientId);
+
 }

@@ -7,7 +7,6 @@ import lombok.*;
 @EqualsAndHashCode
 @ToString
 @AllArgsConstructor
-@NoArgsConstructor
 public class BookingPersonDto {
     private String birthDate;
     private String email;

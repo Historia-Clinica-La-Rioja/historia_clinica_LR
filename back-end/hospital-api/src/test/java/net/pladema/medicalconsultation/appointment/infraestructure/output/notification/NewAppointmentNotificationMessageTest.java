@@ -60,6 +60,7 @@ class NewAppointmentNotificationMessageTest {
 						.professionalFullName("Carl Sagan")
 						.time("10:15")
 						.fromFullName("HSI")
+						.doctorOffice("Consultorio 1")
 						.build())
 		);
 		assertThat(mail.subject).isNotNull();

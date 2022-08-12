@@ -7,7 +7,6 @@ import lombok.*;
 @EqualsAndHashCode
 @ToString
 @AllArgsConstructor
-@NoArgsConstructor
 public class BookingAppointmentDto {
     private Integer coverageId;
     private String day;

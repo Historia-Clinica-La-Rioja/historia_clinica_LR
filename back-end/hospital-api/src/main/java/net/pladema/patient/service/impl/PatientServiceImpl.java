@@ -152,4 +152,13 @@ public class PatientServiceImpl implements PatientService {
 		LOG.debug("Saved -> {}", patientAuditSaved);
 	}
 
+	@Override
+	public Optional<String> getIdentificationNumber(Integer patientId) {
+		LOG.debug("Input parameter -> patientId {}", patientId);
+		Optional<String> result = patientRepository.getIdentificationNumber(patientId);
+		LOG.debug("Output -> {}", result);
+		return result;
+	}
+
+
 }

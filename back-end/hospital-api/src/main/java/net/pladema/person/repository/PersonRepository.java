@@ -71,6 +71,7 @@ public interface PersonRepository extends JpaRepository<Person, Integer> {
 	@Query("SELECT NEW net.pladema.person.repository.domain.PersonRecipientVo(" +
 			"p.firstName, " +
 			"p.lastName, " +
+			"pe.nameSelfDetermination, " +
 			"pe.phonePrefix, " +
 			"pe.phoneNumber, " +
 			"pe.email " +

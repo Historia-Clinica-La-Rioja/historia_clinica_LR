@@ -42,4 +42,11 @@ public interface PatientRepository extends JpaRepository<Patient, Integer>, Pati
 			"JOIN Person person ON patient.personId = person.id " +
 			"WHERE patient.typeId = :patientTypeId ")
 	List<PatientPersonVo> getAllByPatientType(@Param("patientTypeId") Short patientTypeId);
+
+	@Query(value = " SELECT p.identificationNumber " +
+			"FROM Patient pa " +
+			"JOIN Person p ON p.id = pa.personId " +
+			"WHERE pa.id = :patientId")
+	Optional<String> getIdentificationNumber(@Param("patientId") Integer patientId);
+
 }

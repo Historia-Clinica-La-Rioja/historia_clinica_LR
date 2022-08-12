@@ -266,6 +266,7 @@ public class DiaryServiceImpl implements DiaryService {
 		result.setSectorId(completeDiaryListVo.getSectorId());
 		result.setClinicalSpecialtyId(completeDiaryListVo.getClinicalSpecialtyId());
 		result.setHealthcareProfessionalId(completeDiaryListVo.getHealthcareProfessionalId());
+		result.setDoctorsOfficeDescription(completeDiaryListVo.getDoctorsOfficeDescription());
 		LOG.debug(OUTPUT, result);
 		return result;
 	}
