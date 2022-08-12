@@ -137,7 +137,7 @@ public class AppointmentServiceImpl implements AppointmentService {
 		log.debug("Input parameters -> diaryId {}, date {}, hour {}", diaryId, date, hour);
 		var res = appointmentRepository.findAppointmentBy(diaryId, date, hour);
 		log.debug(OUTPUT, res);
-		return res.map(AppointmentBo::newFromAppointment);
+		return res.stream().findFirst().map(AppointmentBo::newFromAppointment);
 	}
 
 	public boolean existAppointment(Integer diaryId, LocalDate date, LocalTime hour) {
