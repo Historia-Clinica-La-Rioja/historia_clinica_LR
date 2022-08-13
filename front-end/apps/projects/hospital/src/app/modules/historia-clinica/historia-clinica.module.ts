@@ -18,6 +18,7 @@ import { MedicacionSummaryComponent } from './components/medicacion-summary/medi
 import { FactoresDeRiesgoSummaryComponent } from './components/factores-de-riesgo-summary/factores-de-riesgo-summary.component';
 import { FactoresDeRiesgoFormComponent } from './components/factores-de-riesgo-form/factores-de-riesgo-form.component';
 import { NewConsultationExpansionSectionComponent } from './components/new-consultation-expansion-section/new-consultation-expansion-section.component';
+import { ProcedureListComponent } from './components/procedure-list/procedure-list.component';
 // dialogs
 import { AddAllergyComponent } from './dialogs/add-allergy/add-allergy.component';
 import { AddAnthropometricComponent } from './dialogs/add-anthropometric/add-anthropometric.component';
@@ -55,6 +56,7 @@ import { NewConsultationMedicationFormComponent } from './dialogs/new-consultati
 		ConceptTypeaheadSearchComponent,
 		TemplateConceptTypeaheadSearchComponent,
 		NewConsultationExpansionSectionComponent,
+		ProcedureListComponent,
 		// dialogs
 		AddAllergyComponent,
 		AddAnthropometricComponent,
@@ -96,6 +98,7 @@ import { NewConsultationMedicationFormComponent } from './dialogs/new-consultati
 		ConceptTypeaheadSearchComponent,
 		TemplateConceptTypeaheadSearchComponent,
 		NewConsultationExpansionSectionComponent,
+		ProcedureListComponent,
 		// dialogs
 		ConceptsSearchDialogComponent,
 		ConceptsTypeaheadSearchDialogComponent,

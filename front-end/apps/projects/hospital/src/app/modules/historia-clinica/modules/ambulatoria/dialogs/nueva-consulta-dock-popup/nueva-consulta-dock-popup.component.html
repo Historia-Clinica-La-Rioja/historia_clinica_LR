@@ -213,25 +213,9 @@
 			[title]="'ambulatoria.paciente.nueva-consulta.procedimientos.TITLE' | translate" icon="library_add"
 			[isEmpty]="procedimientoNuevaConsultaService.isEmpty()">
 			<div fxLayout="column" fxLayoutGap="2vh">
-
 				<app-titled-content-card *ngIf="!procedimientoNuevaConsultaService.isEmpty()"
 					title="{{ 'ambulatoria.paciente.nueva-consulta.procedimientos.TABLE_TITLE' }}">
-					<div
-						*ngFor="let procedimiento of procedimientoNuevaConsultaService.getProcedimientos(); index as i; last as isLast">
-						<div fxLayout="row" fxLayoutAlign="space-between center">
-							<div fxLayout="column">
-								<span>{{ procedimiento.snomed.pt }}</span>
-								<span *ngIf="procedimiento?.performedDate" class="mat-caption gray-caption">
-									{{ procedimiento.performedDate | date: 'shortDate' }}
-								</span>
-							</div>
-							<button type="button" mat-icon-button color="warn"
-								(click)="procedimientoNuevaConsultaService.remove(i)">
-								<mat-icon>delete_outline</mat-icon>
-							</button>
-						</div>
-						<mat-divider class="separation" inset *ngIf="!isLast"></mat-divider>
-					</div>
+					<app-procedure-list [service]="procedimientoNuevaConsultaService"></app-procedure-list>
 				</app-titled-content-card>
 
 				<div>
