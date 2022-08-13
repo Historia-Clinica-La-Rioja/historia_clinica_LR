@@ -1,12 +1,9 @@
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { SnomedSemanticSearch, SnomedService } from '../../../services/snomed.service';
-import { ColumnConfig } from '@presentation/components/document-section/document-section.component';
 import { SnomedDto, SnomedECL } from '@api-rest/api-model';
 import { pushIfNotExists, removeFrom } from '@core/utils/array.utils';
-import { DateFormat, momentFormat, newMoment } from '@core/utils/moment.utils';
+import { newMoment } from '@core/utils/moment.utils';
 import { Moment } from 'moment';
-import { CellTemplates } from '@presentation/components/cell-templates/cell-templates.component';
-import { TableColumnConfig } from '@presentation/components/document-section-table/document-section-table.component';
 import { SnackBarService } from "@presentation/services/snack-bar.service";
 
 export interface AntecedenteFamiliar {
@@ -16,11 +13,9 @@ export interface AntecedenteFamiliar {
 
 export class AntecedentesFamiliaresNuevaConsultaService {
 
-	private readonly columns: ColumnConfig[];
 	private form: FormGroup;
 	private data: AntecedenteFamiliar[];
 	private snomedConcept: SnomedDto;
-	private readonly tableColumnConfig: TableColumnConfig[];
 	private readonly ECL = SnomedECL.FAMILY_RECORD;
 
 	constructor(
@@ -33,43 +28,7 @@ export class AntecedentesFamiliaresNuevaConsultaService {
 			fecha: [null, Validators.required]
 		});
 
-		this.columns = [
-			{
-				def: 'problemType',
-				header: 'ambulatoria.paciente.nueva-consulta.antecedentes-familiares.table.columns.ANTECEDENTE_FAMILIAR',
-				text: af => af.snomed.pt
-			},
-			{
-				def: 'fecha',
-				header: 'ambulatoria.paciente.nueva-consulta.antecedentes-familiares.table.columns.FECHA',
-				text: (row) => momentFormat(row.fecha, DateFormat.VIEW_DATE)
-			},
-		];
-		this.tableColumnConfig = [
-			{
-				def: 'problemType',
-				header: 'ambulatoria.paciente.nueva-consulta.antecedentes-familiares.table.columns.ANTECEDENTE_FAMILIAR',
-				template: CellTemplates.TEXT,
-				text: v => v.snomed.pt
-			},
-			{
-				def: 'fecha',
-				header: 'ambulatoria.paciente.nueva-consulta.antecedentes-familiares.table.columns.FECHA',
-				template: CellTemplates.TEXT,
-				text: (row) => momentFormat(row.fecha, DateFormat.VIEW_DATE)
-			},
-			{
-				def: 'eliminar',
-				template: CellTemplates.REMOVE_BUTTON,
-				action: (rowIndex) => this.remove(rowIndex)
-			}
-		]
 		this.data = [];
-	}
-
-
-	getColumns(): ColumnConfig[] {
-		return this.columns;
 	}
 
 	getAntecedentes(): AntecedenteFamiliar[] {
@@ -138,10 +97,6 @@ export class AntecedentesFamiliaresNuevaConsultaService {
 
 	getMaxFecha(): Moment {
 		return newMoment();
-	}
-
-	getTableColumnConfig(): TableColumnConfig[] {
-		return this.tableColumnConfig;
 	}
 
 	getECL(): SnomedECL {

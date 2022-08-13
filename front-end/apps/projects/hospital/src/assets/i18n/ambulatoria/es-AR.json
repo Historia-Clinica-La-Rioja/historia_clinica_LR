@@ -149,12 +149,6 @@
                     "buttons": {
                         "ADD": "Agregar antecedente familiar"
                     },
-                    "table": {
-                        "columns": {
-                            "ANTECEDENTE_FAMILIAR": "Antecedente familiar",
-                            "FECHA": "Fecha de registro"
-                        }
-                    },
                     "TITLE": "Antecedentes familiares",
                     "ANTECEDENTES_FAMILIARES": "Antecedentes familiares",
                     "SEARCH_PLACEHOLDER": "Buscar antecedentes familiares",
@@ -215,17 +209,7 @@
                     "TITLE": "Solicitud de referencia",
                     "ADD_REQUEST": "Agregar solicitud",
                     "REQUESTED_REFERENCE": "Referencias solicitadas",
-                    "REGISTERED_REQUEST": "Solicitudes registradas",
-                    "table": {
-                        "columns": {
-                            "REFERENCES": "Referencias agregadas"
-                        },
-                        "row": {
-                            "PROBLEMS": "Problema asociado:",
-                            "CARE_LINE": "Línea de cuidado:",
-                            "SPECIALTY": "Especialidad:"
-                        }
-                    }
+                    "REGISTERED_REQUEST": "Solicitudes registradas"
                 },
                 "reference-dialog": {
                     "TITLE": "Agregar solicitud de referencia",
