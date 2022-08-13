@@ -1,0 +1,19 @@
+<div fxLayout="column" fxLayoutGap="10px"
+    *ngFor="let medicacion of service.getMedicaciones(); index as i; last as isLast">
+    <div fxLayout="row" fxLayoutAlign="space-between center">
+        <div fxLayout="column" fxLayoutGap="6px">
+            <app-colored-label *ngIf="medicacion?.suspendido"
+                [description]="'ambulatoria.paciente.nueva-consulta.medicaciones.SUSPENDIDA' | translate | uppercase"
+                [color]="Color.RED">
+            </app-colored-label>
+            <span>{{ medicacion.snomed.pt }}</span>
+        </div>
+        <button type="button" mat-icon-button color="warn" (click)="service.remove(i)">
+            <mat-icon>delete_outline</mat-icon>
+        </button>
+    </div>
+    <em *ngIf="medicacion?.observaciones" class="mat-caption gray-caption">
+        {{ medicacion.observaciones }}
+    </em>
+    <mat-divider class="separation" inset *ngIf="!isLast"></mat-divider>
+</div>

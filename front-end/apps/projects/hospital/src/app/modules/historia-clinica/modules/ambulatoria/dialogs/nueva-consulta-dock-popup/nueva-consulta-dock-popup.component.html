@@ -98,26 +98,7 @@
 
 				<app-titled-content-card *ngIf="!medicacionesNuevaConsultaService.isEmpty()"
 					title="{{ 'ambulatoria.paciente.nueva-consulta.medicaciones.LIST_CARD_TITLE' }}">
-					<div fxLayout="column" fxLayoutGap="10px"
-						*ngFor="let medicacion of medicacionesNuevaConsultaService.getMedicaciones(); index as i; last as isLast">
-						<div fxLayout="row" fxLayoutAlign="space-between center">
-							<div fxLayout="column" fxLayoutGap="6px">
-								<app-chip-indicator *ngIf="medicacion?.suspendido"
-									text="ambulatoria.paciente.nueva-consulta.medicaciones.SUSPENDIDA"
-									[warnColor]="true">
-								</app-chip-indicator>
-								<span>{{ medicacion.snomed.pt }}</span>
-							</div>
-							<button type="button" mat-icon-button color="warn"
-								(click)="medicacionesNuevaConsultaService.remove(i)">
-								<mat-icon>delete_outline</mat-icon>
-							</button>
-						</div>
-						<em *ngIf="medicacion?.observaciones" class="mat-caption gray-caption">
-							{{ medicacion.observaciones }}
-						</em>
-						<mat-divider class="separation" inset *ngIf="!isLast"></mat-divider>
-					</div>
+					<app-medication-list [service]="medicacionesNuevaConsultaService"></app-medication-list>
 				</app-titled-content-card>
 
 				<div>

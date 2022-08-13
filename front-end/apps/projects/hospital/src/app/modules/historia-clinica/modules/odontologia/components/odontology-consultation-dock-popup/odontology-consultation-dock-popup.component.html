@@ -117,15 +117,18 @@
 		<app-new-consultation-expansion-section id="medications"
 			[title]="'odontologia.odontology-consultation-dock-popup.USUAL_MEDICATION' | translate"
 			icon="event_available" [isEmpty]="medicationsNewConsultationService.isEmpty()">
-			<div>
-				<app-document-section-table [columns]="medicationsNewConsultationService.getTableColumnConfig()"
-					[data]="medicationsNewConsultationService.getMedicaciones()">
-				</app-document-section-table>
+			<div fxLayout="column" fxLayoutGap="2vh">
+				<app-titled-content-card *ngIf="!medicationsNewConsultationService.isEmpty()"
+					title="{{ 'odontologia.odontology-consultation-dock-popup.REGISTERED_USUAL_MEDICATIONS' }}">
+					<app-medication-list [service]="medicationsNewConsultationService"></app-medication-list>
+				</app-titled-content-card>
 
-				<button mat-button type="button" id="add-medication-button" color="primary" class="add-button"
-					(click)="addMedication()">
-					+ {{ 'odontologia.odontology-consultation-dock-popup.ADD_MEDICATION' | translate }}
-				</button>
+				<div>
+					<button mat-button type="button" id="add-medication-button" color="primary" class="add-button"
+						(click)="addMedication()">
+						+ {{ 'odontologia.odontology-consultation-dock-popup.ADD_MEDICATION' | translate }}
+					</button>
+				</div>
 			</div>
 		</app-new-consultation-expansion-section>
 

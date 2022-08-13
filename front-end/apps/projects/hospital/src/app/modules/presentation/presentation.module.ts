@@ -37,6 +37,8 @@ import { SummaryCardComponent } from './components/summary-card/summary-card.com
 import { TableComponent } from './components/table/table.component';
 import { TypeaheadComponent } from './components/typeahead/typeahead.component';
 import { UserBadgeComponent } from './components/user-badge/user-badge.component';
+import { TitledContentCardComponent } from './components/titled-content-card/titled-content-card.component';
+import { ColoredLabelComponent } from './colored-label/colored-label.component';
 // dialogs
 import { DatePickerComponent } from './dialogs/date-picker/date-picker.component';
 import { DiscardWarningComponent } from './dialogs/discard-warning/discard-warning.component';
@@ -50,10 +52,6 @@ import { PersonIdentificationPipe } from './pipes/person-identification.pipe';
 import { ViewDateDtoPipe } from './pipes/view-date-dto.pipe';
 import { ViewDatePipe } from './pipes/view-date.pipe';
 import { ViewHourMinutePipe } from './pipes/view-hour-minute.pipe';
-import { TitledContentCardComponent } from './components/titled-content-card/titled-content-card.component';
-import { ChipIndicatorComponent } from './components/chip-indicator/chip-indicator.component';
-import { ColoredLabelComponent } from './colored-label/colored-label.component';
-
 
 @NgModule({
 	declarations: [
@@ -92,7 +90,6 @@ import { ColoredLabelComponent } from './colored-label/colored-label.component';
 		TypeaheadComponent,
 		UserBadgeComponent,
 		TitledContentCardComponent,
-		ChipIndicatorComponent,
 		// dialogs
 		ConfirmDialogComponent,
 		DatePickerComponent,
@@ -153,7 +150,6 @@ import { ColoredLabelComponent } from './colored-label/colored-label.component';
 		TableComponent,
 		TypeaheadComponent,
 		UserBadgeComponent,
-		ChipIndicatorComponent,
 		// dialogs
 		// directives
 		CtrlTemplateDirective,
