@@ -42,6 +42,7 @@ import { ProblemListComponent } from './components/problem-list/problem-list.com
 import { AllergyListComponent } from './components/allergy-list/allergy-list.component';
 import { BackgroundListComponent } from './components/background-list/background-list.component';
 import { MedicationListComponent } from './components/medication-list/medication-list.component';
+import { ReferenceRequestListComponent } from './components/reference-request-list/reference-request-list.component';
 
 @NgModule({
 	declarations: [
@@ -67,6 +68,7 @@ import { MedicationListComponent } from './components/medication-list/medication
 		AllergyListComponent,
 		BackgroundListComponent,
 		MedicationListComponent,
+		ReferenceRequestListComponent,
 		// dialogs
 		AddAllergyComponent,
 		AddAnthropometricComponent,
@@ -114,6 +116,7 @@ import { MedicationListComponent } from './components/medication-list/medication
 		AllergyListComponent,
 		BackgroundListComponent,
 		MedicationListComponent,
+		ReferenceRequestListComponent,
 		// dialogs
 		ConceptsSearchDialogComponent,
 		ConceptsTypeaheadSearchDialogComponent,

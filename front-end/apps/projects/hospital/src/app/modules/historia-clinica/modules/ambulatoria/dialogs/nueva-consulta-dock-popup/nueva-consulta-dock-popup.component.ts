@@ -559,10 +559,6 @@ export class NuevaConsultaDockPopupComponent implements OnInit {
 			disableClose: true,
 		});
 	}
-
-	trackByRequest(index, request) {
-		return request.index;
-	}
 }
 
 export interface NuevaConsultaData {

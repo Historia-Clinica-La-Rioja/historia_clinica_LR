@@ -33,6 +33,7 @@
             "EVOLUTION": "Evolución",
             "REFERENCE_REQUEST": "Solicitud de referencia",
             "ADD_REQUEST": "Agregar solicitud",
+            "REGISTERED_REQUEST": "Solicitudes registradas",
             "ERROR_TO_UPLOAD_FILES": "Error al guardar la solicitud de referencia"
         },
         "new-consultation-add-diagnose-form": {
