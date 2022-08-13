@@ -1,3 +1,5 @@
+@import "../../../../../../../assets/styles/mat-mixins";
+
 ::ng-deep .cdk-overlay-pane {
 	app-counterreference-dock-popup {
 		width: 100%;
@@ -50,4 +52,8 @@ mat-form-field {
 span {
 	font-family: Roboto, "Helvetica Neue", sans-serif;
 	font-size: 14px;
+}
+
+.counterreference-form {
+	@include mat-form-field-background-white;
 }

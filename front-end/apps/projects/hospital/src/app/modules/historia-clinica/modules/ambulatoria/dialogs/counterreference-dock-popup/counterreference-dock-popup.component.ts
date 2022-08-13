@@ -56,6 +56,7 @@ export class CounterreferenceDockPopupComponent implements OnInit {
 		this.formDescription = this.formBuilder.group({
 			description: [null, [Validators.required]]
 		});
+		console.log(!!this.formDescription.value.description);
 
 		this.internacionMasterDataService.getAllergyCriticality().subscribe(allergyCriticalities => {
 			this.criticalityTypes = allergyCriticalities;
