@@ -97,10 +97,8 @@
                 "medicaciones": {
                     "CONCEPT_LABEL": "Medicación habitual",
                     "DESCRIPCION": "Descripción",
-                    "NOMBRE_MEDICACION": "Nombre de medicación",
                     "OBSERVACIONES": "Observaciones",
                     "SUSPENDIDA": "Suspendida",
-                    "TABLE_TITLE": "Medicaciones registradas",
                     "LIST_CARD_TITLE": "Medicaciones habituales registradas",
                     "TITLE": "Medicación habitual",
                     "STATE": "Estado",

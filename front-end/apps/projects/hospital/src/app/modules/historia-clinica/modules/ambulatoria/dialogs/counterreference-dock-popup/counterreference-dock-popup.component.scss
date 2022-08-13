@@ -8,17 +8,8 @@
 	background-color: white;
 }
 
-.dose {
-	border-radius: 6px;
-    padding: 4px 17px;
-    background-color: #ffcece;
-    color: #EB5757;
-    font-weight: 700;
-    font-size: 14px;
-    line-height: 19px;
-    width: 163px;
-    margin-top: 10px;
-    margin-bottom: 10px;
+.reference-label {
+	margin-bottom: 10px;
 }
 
 .grayText {
@@ -26,7 +17,7 @@
 }
 
 .reference-description {
-    margin-top: 10px;
+	margin-top: 10px;
 }
 
 mat-form-field {
@@ -37,7 +28,7 @@ mat-form-field {
 	margin-bottom: 15px;
 }
 
-.icon{
+.icon {
 	padding: 20px 0px 20px 10px;
 }
 
@@ -46,6 +37,7 @@ mat-form-field {
 	span:hover {
 		text-decoration: underline;
 	}
+
 	font-size: 15px;
 	font-weight: 500;
 	cursor: pointer;
@@ -59,5 +51,3 @@ span {
 	font-family: Roboto, "Helvetica Neue", sans-serif;
 	font-size: 14px;
 }
-
-

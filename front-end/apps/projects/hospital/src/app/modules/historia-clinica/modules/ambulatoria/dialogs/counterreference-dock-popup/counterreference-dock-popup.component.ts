@@ -15,6 +15,7 @@ import { Medicacion, MedicacionesNuevaConsultaService } from '../../services/med
 import { CounterreferenceService } from '@api-rest/services/counterreference.service';
 import { ReferenceFileService } from '@api-rest/services/reference-file.service';
 import { CounterreferenceFileService } from '@api-rest/services/counterreference-file.service';
+import { Color } from '@presentation/colored-label/colored-label.component';
 
 @Component({
 	selector: 'app-counterreference-dock-popup',
@@ -25,6 +26,7 @@ export class CounterreferenceDockPopupComponent implements OnInit {
 
 	public minDate = MIN_DATE;
 	public readonly TEXT_AREA_MAX_LENGTH = TEXT_AREA_MAX_LENGTH;
+	readonly Color = Color;
 	medicacionesNuevaConsultaService: MedicacionesNuevaConsultaService;
 	procedimientoNuevaConsultaService: ProcedimientosService;
 	alergiasNuevaConsultaService: AlergiasNuevaConsultaService;
