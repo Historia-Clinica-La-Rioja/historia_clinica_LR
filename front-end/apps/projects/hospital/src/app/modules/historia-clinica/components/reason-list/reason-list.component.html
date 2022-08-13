@@ -1,0 +1,9 @@
+<div *ngFor="let motivo of service.getMotivosConsulta(); index as i; last as isLast">
+    <div fxLayout="row" fxLayoutAlign="space-between center">
+        <span>{{ motivo.snomed.pt }}</span>
+        <button type="button" mat-icon-button color="warn" (click)="service.remove(i)">
+            <mat-icon>delete_outline</mat-icon>
+        </button>
+    </div>
+    <mat-divider class="separation" inset *ngIf="!isLast"></mat-divider>
+</div>

@@ -29,17 +29,7 @@
 			<div fxLayout="column" fxLayoutGap="2vh">
 				<app-titled-content-card *ngIf="!motivoNuevaConsultaService.isEmpty()"
 					title="{{ 'ambulatoria.paciente.nueva-consulta.motivo.LIST_CARD_TITLE' }}">
-					<div
-						*ngFor="let motivo of motivoNuevaConsultaService.getMotivosConsulta(); index as i; last as isLast">
-						<div fxLayout="row" fxLayoutAlign="space-between center">
-							<span>{{ motivo.snomed.pt }}</span>
-							<button type="button" mat-icon-button color="warn"
-								(click)="motivoNuevaConsultaService.remove(i)">
-								<mat-icon>delete_outline</mat-icon>
-							</button>
-						</div>
-						<mat-divider class="separation" inset *ngIf="!isLast"></mat-divider>
-					</div>
+					<app-reason-list [service]="motivoNuevaConsultaService"></app-reason-list>
 				</app-titled-content-card>
 
 				<div>
