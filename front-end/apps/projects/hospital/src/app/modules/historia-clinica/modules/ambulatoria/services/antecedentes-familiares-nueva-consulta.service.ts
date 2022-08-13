@@ -72,7 +72,7 @@ export class AntecedentesFamiliaresNuevaConsultaService {
 		return this.columns;
 	}
 
-	getAntecedentesFamiliares(): AntecedenteFamiliar[] {
+	getAntecedentes(): AntecedenteFamiliar[] {
 		return this.data;
 	}
 

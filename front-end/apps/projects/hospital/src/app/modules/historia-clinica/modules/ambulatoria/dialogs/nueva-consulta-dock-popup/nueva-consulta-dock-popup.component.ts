@@ -366,7 +366,7 @@ export class NuevaConsultaDockPopupComponent implements OnInit {
 			}),
 			anthropometricData: this.datosAntropometricosNuevaConsultaService.getDatosAntropometricos(),
 			evolutionNote: this.formEvolucion.value?.evolucion,
-			familyHistories: this.antecedentesFamiliaresNuevaConsultaService.getAntecedentesFamiliares().map((antecedente: AntecedenteFamiliar) => {
+			familyHistories: this.antecedentesFamiliaresNuevaConsultaService.getAntecedentes().map((antecedente: AntecedenteFamiliar) => {
 				return {
 					snomed: antecedente.snomed,
 					startDate: antecedente.fecha ? momentFormat(antecedente.fecha, DateFormat.API_DATE) : undefined

@@ -40,6 +40,7 @@ import { NewConsultationMedicationFormComponent } from './dialogs/new-consultati
 import { ReasonListComponent } from './components/reason-list/reason-list.component';
 import { ProblemListComponent } from './components/problem-list/problem-list.component';
 import { AllergyListComponent } from './components/allergy-list/allergy-list.component';
+import { BackgroundListComponent } from './components/background-list/background-list.component';
 
 @NgModule({
 	declarations: [
@@ -63,6 +64,7 @@ import { AllergyListComponent } from './components/allergy-list/allergy-list.com
 		ReasonListComponent,
 		ProblemListComponent,
 		AllergyListComponent,
+		BackgroundListComponent,
 		// dialogs
 		AddAllergyComponent,
 		AddAnthropometricComponent,
@@ -108,6 +110,7 @@ import { AllergyListComponent } from './components/allergy-list/allergy-list.com
 		ReasonListComponent,
 		ProblemListComponent,
 		AllergyListComponent,
+		BackgroundListComponent,
 		// dialogs
 		ConceptsSearchDialogComponent,
 		ConceptsTypeaheadSearchDialogComponent,

@@ -1,0 +1,16 @@
+<div *ngFor="let antecedente of service.getAntecedentes(); index as i; last as isLast">
+    <div fxLayout="row" fxLayoutAlign="space-between center">
+        <div fxLayout="column">
+            <span>{{ antecedente.snomed.pt }}</span>
+            <span *ngIf="antecedente?.fecha" class="mat-caption gray-caption">
+                {{ 'ambulatoria.paciente.nueva-consulta.antecedentes-familiares.DATE_PREFIX' |
+                translate }}
+                {{ momentFormat(antecedente.fecha, DateFormat.VIEW_DATE) }}
+            </span>
+        </div>
+        <button type="button" mat-icon-button color="warn" (click)="service.remove(i)">
+            <mat-icon>delete_outline</mat-icon>
+        </button>
+    </div>
+    <mat-divider class="separation" inset *ngIf="!isLast"></mat-divider>
+</div>

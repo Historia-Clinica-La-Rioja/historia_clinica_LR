@@ -299,7 +299,7 @@ export class OdontologyConsultationDockPopupComponent implements OnInit {
 			reasons: this.reasonNewConsultationService.getMotivosConsulta(),
 			clinicalSpecialtyId: this.form.value.clinicalSpecialty,
 			dentalActions,
-			personalHistories: this.personalHistoriesNewConsultationService.getAntecedentesPersonales().map(toOdontologyPersonalHistoryDto),
+			personalHistories: this.personalHistoriesNewConsultationService.getAntecedentes().map(toOdontologyPersonalHistoryDto),
 			permanentTeethPresent: this.form.value.permanentTeethPresent,
 			temporaryTeethPresent: this.form.value.temporaryTeethPresent,
 			references: this.odontologyReferenceService.getOdontologyReferences(),

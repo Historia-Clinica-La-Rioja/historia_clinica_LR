@@ -50,7 +50,7 @@ export class PersonalHistoriesNewConsultationService {
 			{
 				def: 'delete',
 				template: CellTemplates.REMOVE_BUTTON,
-				action: (rowIndex) => this.removeAntecedente(rowIndex)
+				action: (rowIndex) => this.remove(rowIndex)
 			}
 		]
 
@@ -61,7 +61,7 @@ export class PersonalHistoriesNewConsultationService {
 		return this.tableColumnConfig;
 	}
 
-	getAntecedentesPersonales(): AntecedentePersonal[] {
+	getAntecedentes(): AntecedentePersonal[] {
 		return this.data;
 	}
 
@@ -90,7 +90,7 @@ export class PersonalHistoriesNewConsultationService {
 		return data.snomed.sctid === data1.snomed.sctid;
 	}
 
-	removeAntecedente(index: number): void {
+	remove(index: number): void {
 		this.data = removeFrom<AntecedentePersonal>(this.data, index);
 	}
 
