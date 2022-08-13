@@ -38,6 +38,7 @@ import { NewConsultationProcedureFormComponent } from './dialogs/new-consultatio
 import { NewConsultationAllergyFormComponent } from './dialogs/new-consultation-allergy-form/new-consultation-allergy-form.component';
 import { NewConsultationMedicationFormComponent } from './dialogs/new-consultation-medication-form/new-consultation-medication-form.component';
 import { ReasonListComponent } from './components/reason-list/reason-list.component';
+import { ProblemListComponent } from './components/problem-list/problem-list.component';
 
 @NgModule({
 	declarations: [
@@ -59,6 +60,7 @@ import { ReasonListComponent } from './components/reason-list/reason-list.compon
 		NewConsultationExpansionSectionComponent,
 		ProcedureListComponent,
 		ReasonListComponent,
+		ProblemListComponent,
 		// dialogs
 		AddAllergyComponent,
 		AddAnthropometricComponent,
@@ -102,6 +104,7 @@ import { ReasonListComponent } from './components/reason-list/reason-list.compon
 		NewConsultationExpansionSectionComponent,
 		ProcedureListComponent,
 		ReasonListComponent,
+		ProblemListComponent,
 		// dialogs
 		ConceptsSearchDialogComponent,
 		ConceptsTypeaheadSearchDialogComponent,

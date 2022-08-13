@@ -63,15 +63,18 @@
 		<app-new-consultation-expansion-section id="other_diagnoses"
 			[title]="'odontologia.odontology-consultation-dock-popup.OTHER_DIAGNOSES' | translate" icon="error_outlined"
 			[isEmpty]="otherDiagnosticsNewConsultationService.isEmpty()">
-			<div>
-				<app-document-section-table [columns]="otherDiagnosticsNewConsultationService.getColumns()"
-					[data]="otherDiagnosticsNewConsultationService.getProblemas()">
-				</app-document-section-table>
+			<div fxLayout="column" fxLayoutGap="2vh">
+				<app-titled-content-card *ngIf="!otherDiagnosticsNewConsultationService.isEmpty()"
+					title="{{ 'odontologia.odontology-consultation-dock-popup.REGISTERED_DIAGNOSES' }}">
+					<app-problem-list [diagnosesService]="otherDiagnosticsNewConsultationService"></app-problem-list>
+				</app-titled-content-card>
 
-				<button mat-button type="button" id="add-diagnose-button" color="primary" class="add-button"
-					(click)="addDiagnose()">
-					+ {{ 'odontologia.odontology-consultation-dock-popup.ADD_PROBLEM' | translate }}
-				</button>
+				<div>
+					<button mat-button type="button" id="add-diagnose-button" color="primary" class="add-button"
+						(click)="addDiagnose()">
+						+ {{ 'odontologia.odontology-consultation-dock-popup.ADD_DIAGNOSE' | translate }}
+					</button>
+				</div>
 			</div>
 		</app-new-consultation-expansion-section>
 

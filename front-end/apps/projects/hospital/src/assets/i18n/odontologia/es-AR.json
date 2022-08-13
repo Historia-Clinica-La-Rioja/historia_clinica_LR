@@ -8,7 +8,8 @@
             "OTHER_PROCEDURES_TITLE": "Otros procedimientos",
             "ADD_PROCEDURE": "Agregar procedimiento",
             "OTHER_DIAGNOSES": "Otros diagnósticos",
-            "ADD_PROBLEM": "Agregar problema",
+            "ADD_DIAGNOSE": "Agregar diagnóstico",
+            "REGISTERED_DIAGNOSES": "Diagnósticos registrados",
             "ALLERGIES": "Alergias",
             "ADD_ALLERGY": "Agregar alergia",
             "PERSONAL_HISTORY": "Antecedentes personales",
@@ -30,6 +31,7 @@
             "ERROR_TO_UPLOAD_FILES": "Error al guardar la solicitud de referencia"
         },
         "new-consultation-add-diagnose-form": {
+            "ADD_DIAGNOSE": "Agregar diagnóstico",
             "ADD_PROBLEM": "Agregar problema",
             "PROBLEM": "Problema",
             "SEARCH_PROBLEM": "Buscar problema",
