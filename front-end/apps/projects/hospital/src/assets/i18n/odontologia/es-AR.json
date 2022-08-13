@@ -20,6 +20,8 @@
             "ADD_MEDICATION": "Agregar medicación",
             "REGISTERED_USUAL_MEDICATIONS": "Medicaciones habituales registradas",
             "FINDINGS_ON_DENTAL_TISSUES": "Hallazgos sobre tejidos dentales",
+            "REGISTERED_FINDINGS": "Hallazgos registrados",
+            "PIECE": "Pieza",
             "PROCEDURES_ON_DENTAL_TISSUES": "Procedimientos sobre tejidos dentales",
             "AMOUNT_OF_PIECES_PRESENT": "Cantidad de piezas presentes",
             "PERMANENT": "Permanentes",

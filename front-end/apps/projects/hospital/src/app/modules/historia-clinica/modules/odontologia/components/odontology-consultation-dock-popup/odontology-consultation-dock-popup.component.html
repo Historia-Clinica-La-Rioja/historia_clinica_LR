@@ -135,22 +135,19 @@
 		<app-new-consultation-expansion-section id="diagnoses"
 			[title]="'odontologia.odontology-consultation-dock-popup.FINDINGS_ON_DENTAL_TISSUES' | translate"
 			icon="crop_free" [isEmpty]="false" [collapsed]="false">
-			<section *ngIf="diagnosticsNewConsultationService.columns && diagnosticsNewConsultationService.tableData">
-				<table mat-table [dataSource]="diagnosticsNewConsultationService.tableData" class="secondary">
-
-					<ng-container *ngFor="let column of diagnosticsNewConsultationService.columns"
-						[matColumnDef]="column.def">
-						<th *matHeaderCellDef>{{ column.header}}</th>
-						<td mat-cell *matCellDef="let element"> {{ column.text(element) }} </td>
-					</ng-container>
-
-					<tr mat-header-row *matHeaderRowDef="diagnosticsNewConsultationService.displayedColumns"></tr>
-					<tr mat-row *matRowDef="let row; columns: diagnosticsNewConsultationService.displayedColumns;">
-					</tr>
-				</table>
-				<app-no-data class="secondary" *ngIf="diagnosticsNewConsultationService.tableData.length === 0">
-				</app-no-data>
-			</section>
+			<app-titled-content-card title="{{ 'odontologia.odontology-consultation-dock-popup.REGISTERED_FINDINGS' }}">
+				<ng-container *ngIf="diagnosticsNewConsultationService.tableData?.length > 0 else noData">
+					<div *ngFor="let item of diagnosticsNewConsultationService.tableData; index as i; last as isLast">
+						<div fxLayout="row" fxLayoutAlign="space-between center">
+							<span class="bold">
+								{{ 'odontologia.odontology-consultation-dock-popup.PIECE' | translate }} {{ item.zone }}
+							</span>
+							<span>{{ item.action }}</span>
+						</div>
+						<mat-divider class="separation" inset *ngIf="!isLast"></mat-divider>
+					</div>
+				</ng-container>
+			</app-titled-content-card>
 		</app-new-consultation-expansion-section>
 
 		<app-new-consultation-expansion-section id="procedures"
@@ -259,3 +256,8 @@
 	</div>
 
 </app-dock-popup>
+
+<ng-template #noData>
+	<app-no-data>
+	</app-no-data>
+</ng-template>
