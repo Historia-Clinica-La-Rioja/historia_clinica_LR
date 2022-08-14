@@ -1,4 +1,4 @@
-import { Component, Inject, OnInit } from '@angular/core';
+import { Component, ElementRef, Inject, OnInit, SimpleChanges } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { CounterReferenceDto, DateDto, ReferenceCounterReferenceFileDto } from '@api-rest/api-model';
 import { InternacionMasterDataService } from '@api-rest/services/internacion-master-data.service';
@@ -9,7 +9,7 @@ import { SnomedService } from '@historia-clinica/services/snomed.service';
 import { OVERLAY_DATA } from '@presentation/presentation-model';
 import { DockPopupRef } from '@presentation/services/dock-popup-ref';
 import { SnackBarService } from '@presentation/services/snack-bar.service';
-import { hasError } from '@core/utils/form.utils';
+import { hasError, scrollIntoError } from '@core/utils/form.utils';
 import { Alergia, AlergiasNuevaConsultaService } from '../../services/alergias-nueva-consulta.service';
 import { Medicacion, MedicacionesNuevaConsultaService } from '../../services/medicaciones-nueva-consulta.service';
 import { CounterreferenceService } from '@api-rest/services/counterreference.service';
@@ -35,6 +35,7 @@ export class CounterreferenceDockPopupComponent implements OnInit {
 	hasError = hasError;
 	selectedFiles: File[] = [];
 	selectedFilesShow: any[] = [];
+	collapsedCounterReference = false;
 
 	constructor(
 		@Inject(OVERLAY_DATA) public data: any,
@@ -46,6 +47,7 @@ export class CounterreferenceDockPopupComponent implements OnInit {
 		private readonly counterreferenceService: CounterreferenceService,
 		private readonly referenceFileService: ReferenceFileService,
 		private readonly counterreferenceFileService: CounterreferenceFileService,
+		private readonly el: ElementRef,
 	) {
 		this.medicacionesNuevaConsultaService = new MedicacionesNuevaConsultaService(formBuilder, this.snomedService, this.snackBarService);
 		this.procedimientoNuevaConsultaService = new ProcedimientosService(formBuilder, this.snomedService, this.snackBarService);
@@ -56,7 +58,6 @@ export class CounterreferenceDockPopupComponent implements OnInit {
 		this.formDescription = this.formBuilder.group({
 			description: [null, [Validators.required]]
 		});
-		console.log(!!this.formDescription.value.description);
 
 		this.internacionMasterDataService.getAllergyCriticality().subscribe(allergyCriticalities => {
 			this.criticalityTypes = allergyCriticalities;
@@ -94,6 +95,10 @@ export class CounterreferenceDockPopupComponent implements OnInit {
 
 		else {
 			this.formDescription.controls['description'].markAsTouched();
+			this.collapsedCounterReference = false;
+			setTimeout(() => {
+				scrollIntoError(this.formDescription, this.el)
+			}, 300);
 		}
 	}
 

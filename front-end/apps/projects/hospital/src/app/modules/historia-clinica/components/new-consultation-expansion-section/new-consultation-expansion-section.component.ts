@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
 
 @Component({
   selector: 'app-new-consultation-expansion-section',
@@ -13,10 +13,12 @@ export class NewConsultationExpansionSectionComponent {
   @Input() hideBorder = false;
   @Input() recommend = false;
   @Input() collapsed = true;
+  @Output() collapsedChange = new EventEmitter<boolean>();
   @Input() isEmpty = true;
   @Input() set fixedExpanded(value: boolean) {
     if (this._fixedExpanded && !value) {
       this.collapsed = false;
+      this.collapsedChange.emit(this.collapsed);
     }
     this._fixedExpanded = value;
   }
@@ -28,6 +30,7 @@ export class NewConsultationExpansionSectionComponent {
   toggle(): void {
     if (!this.fixedExpanded) {
       this.collapsed = !this.collapsed
+      this.collapsedChange.emit(this.collapsed);
     }
   }
 

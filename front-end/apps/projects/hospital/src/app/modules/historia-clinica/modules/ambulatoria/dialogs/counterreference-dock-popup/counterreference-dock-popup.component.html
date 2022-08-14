@@ -212,7 +212,7 @@
 
 		<app-new-consultation-expansion-section id="counterreference"
 			[title]="'ambulatoria.paciente.counterreference.COUNTERREFERENCE' | translate" icon="forum"
-			[isEmpty]="!formDescription.value.description" [collapsed]="false">
+			[isEmpty]="!formDescription.value.description" [(collapsed)]="collapsedCounterReference">
 			<div fxLayout="column">
 				<form [formGroup]="formDescription" class="counterreference-form">
 					<mat-form-field appearance="outline" fxFlex="100%">
