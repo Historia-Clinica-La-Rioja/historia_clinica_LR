@@ -1,6 +1,7 @@
 import { Component, ElementRef, Inject, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { CounterReferenceDto, DateDto, ReferenceCounterReferenceFileDto } from '@api-rest/api-model';
+import { AppFeature } from '@api-rest/api-model';
 import { InternacionMasterDataService } from '@api-rest/services/internacion-master-data.service';
 import { TEXT_AREA_MAX_LENGTH } from '@core/constants/validation-constants';
 import { MIN_DATE } from '@core/utils/date.utils';
@@ -18,6 +19,8 @@ import { CounterreferenceFileService } from '@api-rest/services/counterreference
 import { Color } from '@presentation/colored-label/colored-label.component';
 import { NewConsultationProcedureFormComponent } from '@historia-clinica/dialogs/new-consultation-procedure-form/new-consultation-procedure-form.component';
 import { MatDialog } from '@angular/material/dialog';
+import { NewConsultationAllergyFormComponent } from '@historia-clinica/dialogs/new-consultation-allergy-form/new-consultation-allergy-form.component';
+import { FeatureFlagService } from '@core/services/feature-flag.service';
 
 @Component({
 	selector: 'app-counterreference-dock-popup',
@@ -38,6 +41,7 @@ export class CounterreferenceDockPopupComponent implements OnInit {
 	selectedFiles: File[] = [];
 	selectedFilesShow: any[] = [];
 	collapsedCounterReference = false;
+	searchConceptsLocallyFFIsOn = false;
 
 	constructor(
 		@Inject(OVERLAY_DATA) public data: any,
@@ -48,6 +52,7 @@ export class CounterreferenceDockPopupComponent implements OnInit {
 		private readonly internacionMasterDataService: InternacionMasterDataService,
 		private readonly counterreferenceService: CounterreferenceService,
 		private readonly dialog: MatDialog,
+		private readonly featureFlagService: FeatureFlagService,
 		private readonly referenceFileService: ReferenceFileService,
 		private readonly counterreferenceFileService: CounterreferenceFileService,
 		private readonly el: ElementRef,
@@ -65,6 +70,10 @@ export class CounterreferenceDockPopupComponent implements OnInit {
 		this.internacionMasterDataService.getAllergyCriticality().subscribe(allergyCriticalities => {
 			this.criticalityTypes = allergyCriticalities;
 			this.alergiasNuevaConsultaService.setCriticalityTypes(allergyCriticalities);
+		});
+
+		this.featureFlagService.isActive(AppFeature.HABILITAR_BUSQUEDA_LOCAL_CONCEPTOS).subscribe(isOn => {
+			this.searchConceptsLocallyFFIsOn = isOn;
 		});
 
 	}
@@ -109,7 +118,19 @@ export class CounterreferenceDockPopupComponent implements OnInit {
 		this.dialog.open(NewConsultationProcedureFormComponent, {
 			data: {
 				procedureService: this.procedimientoNuevaConsultaService,
-				searchConceptsLocallyFF: false,
+				searchConceptsLocallyFF: this.searchConceptsLocallyFFIsOn,
+			},
+			autoFocus: false,
+			width: '35%',
+			disableClose: true,
+		});
+	}
+
+	addAllergy(): void {
+		this.dialog.open(NewConsultationAllergyFormComponent, {
+			data: {
+				allergyService: this.alergiasNuevaConsultaService,
+				searchConceptsLocallyFF: this.searchConceptsLocallyFFIsOn,
 			},
 			autoFocus: false,
 			width: '35%',
