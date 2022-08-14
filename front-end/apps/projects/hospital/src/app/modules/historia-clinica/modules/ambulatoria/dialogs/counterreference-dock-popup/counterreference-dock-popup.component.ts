@@ -21,6 +21,7 @@ import { NewConsultationProcedureFormComponent } from '@historia-clinica/dialogs
 import { MatDialog } from '@angular/material/dialog';
 import { NewConsultationAllergyFormComponent } from '@historia-clinica/dialogs/new-consultation-allergy-form/new-consultation-allergy-form.component';
 import { FeatureFlagService } from '@core/services/feature-flag.service';
+import { NewConsultationMedicationFormComponent } from '@historia-clinica/dialogs/new-consultation-medication-form/new-consultation-medication-form.component';
 
 @Component({
 	selector: 'app-counterreference-dock-popup',
@@ -130,6 +131,18 @@ export class CounterreferenceDockPopupComponent implements OnInit {
 		this.dialog.open(NewConsultationAllergyFormComponent, {
 			data: {
 				allergyService: this.alergiasNuevaConsultaService,
+				searchConceptsLocallyFF: this.searchConceptsLocallyFFIsOn,
+			},
+			autoFocus: false,
+			width: '35%',
+			disableClose: true,
+		});
+	}
+
+	addMedication(): void {
+		this.dialog.open(NewConsultationMedicationFormComponent, {
+			data: {
+				medicationService: this.medicacionesNuevaConsultaService,
 				searchConceptsLocallyFF: this.searchConceptsLocallyFFIsOn,
 			},
 			autoFocus: false,
