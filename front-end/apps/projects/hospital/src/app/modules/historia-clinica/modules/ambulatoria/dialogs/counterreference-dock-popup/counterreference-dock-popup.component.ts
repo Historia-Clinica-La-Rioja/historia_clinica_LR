@@ -1,4 +1,4 @@
-import { Component, ElementRef, Inject, OnInit, SimpleChanges } from '@angular/core';
+import { Component, ElementRef, Inject, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { CounterReferenceDto, DateDto, ReferenceCounterReferenceFileDto } from '@api-rest/api-model';
 import { InternacionMasterDataService } from '@api-rest/services/internacion-master-data.service';
@@ -16,6 +16,8 @@ import { CounterreferenceService } from '@api-rest/services/counterreference.ser
 import { ReferenceFileService } from '@api-rest/services/reference-file.service';
 import { CounterreferenceFileService } from '@api-rest/services/counterreference-file.service';
 import { Color } from '@presentation/colored-label/colored-label.component';
+import { NewConsultationProcedureFormComponent } from '@historia-clinica/dialogs/new-consultation-procedure-form/new-consultation-procedure-form.component';
+import { MatDialog } from '@angular/material/dialog';
 
 @Component({
 	selector: 'app-counterreference-dock-popup',
@@ -45,6 +47,7 @@ export class CounterreferenceDockPopupComponent implements OnInit {
 		private readonly snackBarService: SnackBarService,
 		private readonly internacionMasterDataService: InternacionMasterDataService,
 		private readonly counterreferenceService: CounterreferenceService,
+		private readonly dialog: MatDialog,
 		private readonly referenceFileService: ReferenceFileService,
 		private readonly counterreferenceFileService: CounterreferenceFileService,
 		private readonly el: ElementRef,
@@ -100,6 +103,18 @@ export class CounterreferenceDockPopupComponent implements OnInit {
 				scrollIntoError(this.formDescription, this.el)
 			}, 300);
 		}
+	}
+
+	addProcedure(): void {
+		this.dialog.open(NewConsultationProcedureFormComponent, {
+			data: {
+				procedureService: this.procedimientoNuevaConsultaService,
+				searchConceptsLocallyFF: false,
+			},
+			autoFocus: false,
+			width: '35%',
+			disableClose: true,
+		});
 	}
 
 	private buildCounterReferenceDto(fileIds): CounterReferenceDto {
