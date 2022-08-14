@@ -45,6 +45,8 @@ const ATENCION_ENFERMERIA_SCTID = '9632001';
 export class NuevaConsultaDockPopupEnfermeriaComponent implements OnInit {
 
 	disableConfirmButton = false;
+	collapsedAnthropometricDataSection = false;
+	collapsedRiskFactorsSection = false;
 	formEvolucion: FormGroup;
 	motivoNuevaConsultaService: MotivoNuevaConsultaService;
 	medicacionesNuevaConsultaService: MedicacionesNuevaConsultaService;
@@ -196,10 +198,16 @@ export class NuevaConsultaDockPopupEnfermeriaComponent implements OnInit {
 			this.snackBarService.showError('ambulatoria.paciente.new-nursing-consultation.messages.ERROR');
 			if (!this.isValidConsultation()) {
 				if (this.datosAntropometricosNuevaConsultaService.getForm().invalid) {
-					scrollIntoError(this.datosAntropometricosNuevaConsultaService.getForm(), this.el);
+					this.collapsedAnthropometricDataSection = false;
+					setTimeout(() => {
+						scrollIntoError(this.datosAntropometricosNuevaConsultaService.getForm(), this.el)
+					}, 300);
 				}
 				else if (this.factoresDeRiesgoFormService.getForm().invalid) {
-					scrollIntoError(this.factoresDeRiesgoFormService.getForm(), this.el);
+					this.collapsedRiskFactorsSection = false;
+					setTimeout(() => {
+						scrollIntoError(this.factoresDeRiesgoFormService.getForm(), this.el)
+					}, 300);
 				}
 			}
 		}

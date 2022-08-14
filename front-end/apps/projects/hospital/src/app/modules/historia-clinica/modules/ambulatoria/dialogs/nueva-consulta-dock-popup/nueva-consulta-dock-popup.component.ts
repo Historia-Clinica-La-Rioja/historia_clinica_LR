@@ -80,6 +80,8 @@ export class NuevaConsultaDockPopupComponent implements OnInit {
 	searchConceptsLocallyFFIsOn = false;
 	ambulatoryConsultationReferenceService: AmbulatoryConsultationReferenceService;
 	readonly SEVERITY_CODES = SEVERITY_CODES;
+	collapsedAnthropometricDataSection = false;
+	collapsedRiskFactorsSection = false;
 	@ViewChild('apiErrorsView') apiErrorsView: ElementRef;
 
 	constructor(
@@ -207,10 +209,16 @@ export class NuevaConsultaDockPopupComponent implements OnInit {
 					this.disableConfirmButton = false;
 					if (!this.isValidConsultation()) {
 						if (this.datosAntropometricosNuevaConsultaService.getForm().invalid) {
-							scrollIntoError(this.datosAntropometricosNuevaConsultaService.getForm(), this.el);
+							this.collapsedAnthropometricDataSection = false;
+							setTimeout(() => {
+								scrollIntoError(this.datosAntropometricosNuevaConsultaService.getForm(), this.el)
+							}, 300);
 						}
 						else if (this.factoresDeRiesgoFormService.getForm().invalid) {
-							scrollIntoError(this.factoresDeRiesgoFormService.getForm(), this.el);
+							this.collapsedRiskFactorsSection = false;
+							setTimeout(() => {
+								scrollIntoError(this.factoresDeRiesgoFormService.getForm(), this.el)
+							}, 300);
 						}
 					}
 

@@ -63,7 +63,8 @@
 		<app-new-consultation-expansion-section id="datos_antropometricos"
 			[title]="'ambulatoria.paciente.nueva-consulta.datos-antropometricos.TITLE' | translate" icon="accessibility"
 			[fixedExpanded]="datosAntropometricosNuevaConsultaService.getShowPreloadedAnthropometricData()"
-			[isEmpty]="!datosAntropometricosNuevaConsultaService.hasAtLeastOneValueLoaded()">
+			[isEmpty]="!datosAntropometricosNuevaConsultaService.hasAtLeastOneValueLoaded()"
+			[(collapsed)]="collapsedAnthropometricDataSection">
 
 			<app-datos-antropometricos-nueva-consulta
 				[showPreloadData]="datosAntropometricosNuevaConsultaService.getShowPreloadedAnthropometricData()"
@@ -131,7 +132,8 @@
 		<app-new-consultation-expansion-section id="factores_de_riesgo"
 			[title]="'historia-clinica.factores-de-riesgo-form.TITLE' | translate" icon="favorite_outlined"
 			[fixedExpanded]="factoresDeRiesgoFormService.getShowPreloadedRiskFactorsData()"
-			[isEmpty]="!factoresDeRiesgoFormService.hasAtLeastOneValueLoaded()">
+			[isEmpty]="!factoresDeRiesgoFormService.hasAtLeastOneValueLoaded()"
+			[(collapsed)]="collapsedRiskFactorsSection">
 
 			<app-factores-de-riesgo-form
 				[showPreloadData]="factoresDeRiesgoFormService.getShowPreloadedRiskFactorsData()"
