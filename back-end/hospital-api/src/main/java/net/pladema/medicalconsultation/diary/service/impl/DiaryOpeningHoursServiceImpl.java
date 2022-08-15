@@ -12,6 +12,7 @@ import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 
 import lombok.RequiredArgsConstructor;
+import net.pladema.medicalconsultation.appointment.repository.AppointmentAssnRepository;
 import net.pladema.medicalconsultation.diary.service.domain.*;
 import net.pladema.medicalconsultation.diary.service.exception.DiaryOpeningHoursEnumException;
 import net.pladema.medicalconsultation.diary.service.exception.DiaryOpeningHoursException;
@@ -43,10 +44,12 @@ public class DiaryOpeningHoursServiceImpl implements DiaryOpeningHoursService {
 
     private final OpeningHoursRepository openingHoursRepository;
 
+	private final AppointmentAssnRepository appointmentAssnRepository;
+
     private final DiaryBoMapper diaryBoMapper;
 
     @Override
-    public void load(Integer diaryId, List<DiaryOpeningHoursBo> diaryOpeningHours) {
+    public void load(Integer diaryId, List<DiaryOpeningHoursBo> diaryOpeningHours, List<Integer>... appointmentIds) {
         Sort sort = Sort.by("dayWeekId", "from");
         List<OpeningHours> savedOpeningHours = openingHoursRepository.findAll(sort);
 
@@ -67,13 +70,18 @@ public class DiaryOpeningHoursServiceImpl implements DiaryOpeningHoursService {
             openingHoursBo.setId(openingHoursId);
             diaryOpeningHoursRepository.save(createDiaryOpeningHoursInstance(diaryId, openingHoursId, doh));
 
+			if (appointmentIds.length > 0)
+				appointmentIds[0].forEach(appointmentId -> appointmentAssnRepository.updateOpeningHoursId(openingHoursId, appointmentId));
         });
     }
 
 	@Override
 	public void update(Integer diaryId, List<DiaryOpeningHoursBo> diaryOpeningHours) {
+		List<Integer> appointmentsIdsToUpdate = diaryOpeningHoursRepository.getDiaryOpeningHours(diaryId).stream().map(diaryOpeningHour ->
+			createDiaryOpeningHoursBo(diaryOpeningHour).getOpeningHours().getId()
+		).collect(Collectors.toList());
 		diaryOpeningHoursRepository.deleteAll(diaryId);
-		load(diaryId, diaryOpeningHours);
+		load(diaryId, diaryOpeningHours, appointmentsIdsToUpdate);
 	}
     
     private DiaryOpeningHours createDiaryOpeningHoursInstance(Integer diaryId, Integer openingHoursId, DiaryOpeningHoursBo doh){
