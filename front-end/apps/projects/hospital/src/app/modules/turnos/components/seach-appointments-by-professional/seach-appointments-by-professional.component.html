@@ -5,11 +5,12 @@
 		[options]="especialidadesTypeaheadOptions$ | async"
 		(selectionChange)="setEspecialidad($event)">
 	</app-typeahead>
-	<app-typeahead
+	<app-professional-select id="professionals"
 	style="width: 20%;"
-		[options]="profesionalesTypeahead" [placeholder]="'turnos.home.PROFESSIONAL_SEARCH'"
-		[externalSetValue]="profesionalInitValue"
-		(selectionChange)="setProfesional($event)">
-	</app-typeahead>
+		[professionals]="professionalsFilteredBySpecialty.length ? professionalsFilteredBySpecialty : profesionales"
+		[professionalSelected]="professionalSelected"
+		(selectionChange)="goBack($event)"
+	>
+	</app-professional-select>
 </div>
 <app-select-agenda></app-select-agenda>

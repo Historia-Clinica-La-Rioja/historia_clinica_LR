@@ -10,7 +10,6 @@ import { ClinicalSpecialtyService } from '@api-rest/services/clinical-specialty.
 import { TypeaheadOption } from '@presentation/components/typeahead/typeahead.component';
 import { SnackBarService } from '@presentation/services/snack-bar.service';
 import { AgendaSearchService } from '../../services/agenda-search.service';
-import {PatientNameService} from "@core/services/patient-name.service";
 
 @Component({
 	selector: 'app-seach-appointments-by-professional',
@@ -19,8 +18,8 @@ import {PatientNameService} from "@core/services/patient-name.service";
 })
 export class SeachAppointmentsByProfessionalComponent implements OnInit, OnDestroy {
 
-	profesionalesTypeahead: TypeaheadOption<ProfessionalDto>[];
-	profesionalInitValue: TypeaheadOption<ProfessionalDto>;
+	professionalsFilteredBySpecialty: ProfessionalDto[] = [];
+	professionalSelected: ProfessionalDto;
 	profesionales: ProfessionalDto[] = [];
 
 	especialidadesTypeahead: TypeaheadOption<ProfessionalsByClinicalSpecialtyDto>[];
@@ -41,7 +40,6 @@ export class SeachAppointmentsByProfessionalComponent implements OnInit, OnDestr
 		private readonly clinicalSpecialtyService: ClinicalSpecialtyService,
 		private readonly agendaSearchService: AgendaSearchService,
 		private readonly snackBarService: SnackBarService,
-		private readonly patientNameService: PatientNameService,
 		private readonly appointmentFacadeService: AppointmentsFacadeService
 
 	) {
@@ -54,21 +52,17 @@ export class SeachAppointmentsByProfessionalComponent implements OnInit, OnDestr
 
 		this.healthCareProfessionalService.getAllAssociated().subscribe(doctors => {
 			this.especialidadesTypeaheadOptions$ = this.getEspecialidadesTypeaheadOptions$(doctors);
-
 			this.profesionales = doctors;
-			this.profesionalesTypeahead = doctors.map(d => this.toProfessionalTypeahead(d));
-
-			if ((this.profesionales.length === 1) && (!this.route.firstChild)) {
-				this.profesionalInitValue = this.toProfessionalTypeahead(this.profesionales[0]);
-				this.setProfesional(this.profesionales[0]);
-			}
-
 			this.agendaFiltersSubscription = this.agendaSearchService.getFilters$().subscribe(filters => {
 				if (filters?.idProfesional && filters?.idProfesional !== this.idProfesional) {
-					this.loadProfessionalSelected(filters.idProfesional);
+					const profesional: ProfessionalDto = this.profesionales.find(p => p.id === filters.idProfesional);
+					if (!profesional)
+						this.diaryNotFound();
+					else
+						this.professionalSelected = profesional;
+
 				}
 			});
-
 		});
 	}
 
@@ -78,38 +72,25 @@ export class SeachAppointmentsByProfessionalComponent implements OnInit, OnDestr
 		this.appointmentFacadeService.clearInterval();
 	}
 
-	private loadProfessionalSelected(idProfesional: number) {
-		const profesional: ProfessionalDto = this.profesionales.find(p => p.id === idProfesional);
-		this.idProfesional = idProfesional;
-		if (profesional) {
-			this.appointmentFacadeService.setProfessionalId(idProfesional);
-			this.profesionalInitValue = this.toProfessionalTypeahead(profesional);
-			this.agendaSearchService.search(idProfesional);
-		} else {
-			this.snackBarService.showError('turnos.home.AGENDA_NOT_FOUND');
-			this.profesionalInitValue = undefined;
-			this.router.navigate([`institucion/${this.contextService.institutionId}/turnos`]);
-		}
+	private diaryNotFound() {
+		this.snackBarService.showError('turnos.home.AGENDA_NOT_FOUND');
+		this.professionalSelected = undefined;
+		this.router.navigate([`institucion/${this.contextService.institutionId}/turnos`]);
 	}
 
 	setEspecialidad(professionalsByClinicalSpecialtyDto: ProfessionalsByClinicalSpecialtyDto) {
-		this.profesionalInitValue = null;
+		this.professionalSelected = null;
 		this.idEspecialidad = professionalsByClinicalSpecialtyDto?.clinicalSpecialty?.id;
 
-		const profesionalesFilteredBy = this.getProfesionalesFilteredBy(professionalsByClinicalSpecialtyDto);
-		this.profesionalesTypeahead = profesionalesFilteredBy.map(d => this.toProfessionalTypeahead(d));
-
+		this.professionalsFilteredBySpecialty = this.getProfesionalesFilteredBy(professionalsByClinicalSpecialtyDto);
 		this.idProfesional = null;
 		this.router.navigate([`${this.routePrefix}`]);
 		this.appointmentFacadeService.setProfessionalId(this.idProfesional);
 		this.agendaSearchService.search(this.idProfesional);
 	}
 
-	setProfesional(result: ProfessionalDto) {
-		this.idProfesional = result?.id;
-		this.appointmentFacadeService.setProfessionalId(result?.id);
-		this.agendaSearchService.search(this.idProfesional);
-		if (!result) {
+	goBack(professional: ProfessionalDto) {
+		if (!professional) {
 			if (this.patientId) {
 				this.router.navigate([`${this.routePrefix}`], { queryParams: { idPaciente: this.patientId } });
 			} else {
@@ -118,12 +99,8 @@ export class SeachAppointmentsByProfessionalComponent implements OnInit, OnDestr
 		}
 	}
 
-	getFullName(profesional: ProfessionalDto): string {
-		return `${profesional.lastName}, ${this.patientNameService.getPatientName(profesional.firstName, profesional.nameSelfDetermination)}`;
-	}
-
-	getFullNameLicence(profesional: ProfessionalDto): string {
-		return `${this.getFullName(profesional)}`;
+	goToNewAgenda(): void {
+		this.router.navigate([`${this.routePrefix}/nueva-agenda/`]);
 	}
 
 	private getProfesionalesFilteredBy(especialidad: ProfessionalsByClinicalSpecialtyDto): ProfessionalDto[] {
@@ -150,11 +127,5 @@ export class SeachAppointmentsByProfessionalComponent implements OnInit, OnDestr
 		}
 	}
 
-	private toProfessionalTypeahead(professionalDto: ProfessionalDto): TypeaheadOption<ProfessionalDto> {
-		return {
-			compareValue: this.getFullNameLicence(professionalDto),
-			value: professionalDto
-		};
-	}
-
 }
+
