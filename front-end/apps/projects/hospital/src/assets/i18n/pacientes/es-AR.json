@@ -211,7 +211,7 @@
         "PROFESSION": "Profesión",
         "SPECIALTY": "Especialidad",
         "PROFESSION_ERROR": "Se requiere una profesion.",
-        "SPECIALTY_ERROR": "Se requiere al menos una escialidad."
+        "SPECIALTY_ERROR": "Se requiere al menos una especialidad."
       }
     },
     "edit_roles": {
