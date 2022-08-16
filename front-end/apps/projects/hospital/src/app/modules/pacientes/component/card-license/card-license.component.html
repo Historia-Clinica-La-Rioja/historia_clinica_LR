@@ -1,6 +1,6 @@
 <div fxLayout="column">
 
-	<ng-container *ngIf="hasLicense() else noInfo">
+	<ng-container *ngIf="ownProfessionsAndSpecialties?.length > 0 && professionsWithLicense?.length > 0 else noInfo">
 		<div class="flex-container">
 			<mat-list>
 				<div>

@@ -288,17 +288,21 @@ export class ProfileComponent implements OnInit {
 	}
 
 	setProfessionsAndSpecialties() {
-		this.ownProfessionsAndSpecialties$ = this.professionalService.getProfessionsByProfessional(this.professionalId);
-		this.ownProfessionsAndSpecialties$.subscribe((professionalsByClinicalSpecialty: ProfessionalProfessionsDto[]) => {
-			this.ownProfessionsAndSpecialties = professionalsByClinicalSpecialty;
-			this.healthcareProfessionalId = professionalsByClinicalSpecialty[0]?.healthcareProfessionalId;
+		if (this.professionalId) {
+			this.ownProfessionsAndSpecialties$ = this.professionalService.getProfessionsByProfessional(this.professionalId);
 			this.setLicenses();
-		})
+
+		}
 	}
 
 	private setLicenses(): void {
-		this.professionsWithLicense$ =
-			this.professionalLicenseService.getLicenseNumberByProfessional(this.healthcareProfessionalId);
+		this.ownProfessionsAndSpecialties$.subscribe((professionalsByClinicalSpecialty: ProfessionalProfessionsDto[]) => {
+			this.ownProfessionsAndSpecialties = professionalsByClinicalSpecialty;
+			this.healthcareProfessionalId = professionalsByClinicalSpecialty[0]?.healthcareProfessionalId;
+			if (this.healthcareProfessionalId)
+			this.professionsWithLicense$ =
+				this.professionalLicenseService.getLicenseNumberByProfessional(this.healthcareProfessionalId);
+		})
 	}
 
 	goNewInternment(): void {
@@ -373,7 +377,6 @@ export class ProfileComponent implements OnInit {
 					this.setProfessionsAndSpecialties();
 				},
 					error => {
-						this.setProfessionsAndSpecialties();
 						error?.text ?
 							this.snackBarService.showError(error.text) : this.snackBarService.showError('pacientes.edit_professions.messages.ERROR');
 					})

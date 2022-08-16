@@ -33,11 +33,11 @@ export class EditLicenseComponent implements OnInit {
 			professionalSpecialties: new FormArray([]),
 		});
 
-		this.professionalLicenseService.getLicenseNumberByProfessional(this.data.healthcareProfessionalId).subscribe((e: ProfessionalLicenseNumberDto[]) => {
-			this.professionsWithLicense = e;
-
-			this.setPreviousLicenses();
-		})
+		if (this.data.healthcareProfessionalId)
+			this.professionalLicenseService.getLicenseNumberByProfessional(this.data.healthcareProfessionalId).subscribe((e: ProfessionalLicenseNumberDto[]) => {
+				this.professionsWithLicense = e;
+				this.setPreviousLicenses();
+			})
 
 	}
 

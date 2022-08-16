@@ -19,16 +19,12 @@ export class CardLicenseComponent  {
 
 	convertToProfessionalLicenseNumberDto(elem: ProfessionalLicenseNumberDto): ProfessionalLicenseNumberDto {
 		return {
-			id: elem?.id ? elem?.id : null,
+			id: elem?.id || null,
 			licenseNumber: elem.licenseNumber,
 			professionalProfessionId: elem.professionalProfessionId,
 			typeId: elem.typeId,
-			healthcareProfessionalSpecialtyId: elem?.healthcareProfessionalSpecialtyId ? elem.healthcareProfessionalSpecialtyId : null,
+			healthcareProfessionalSpecialtyId: elem?.healthcareProfessionalSpecialtyId || null,
 		}
-	}
-
-	hasLicense(): boolean {
-		return !!this.professionsWithLicense?.length;
 	}
 
 }
