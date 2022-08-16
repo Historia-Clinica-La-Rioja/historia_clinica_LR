@@ -27,7 +27,7 @@
 			<div fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="20px">
 				<mat-form-field appearance="outline" class="time_selector">
 					<mat-select id="initialTime" formControlName="initialTime">
-						<mat-option [value]="initialTimeFilter" *ngFor="let initialTimeFilter of timesToFilter"
+						<mat-option [value]="initialTimeFilter" *ngFor="let initialTimeFilter of initialTimes"
 							(click)="filterEndingTime()">
 							{{ initialTimeFilter | viewDateDto:'time' | date:'shortTime' }}
 						</mat-option>
@@ -71,14 +71,17 @@
 	</div>
 	<div *ngIf="emptyAppointments">
 		<h2 [translate]="'turnos.home.APPOINTMENTS_FOUND'"></h2>
-		<mat-card *ngIf="emptyAppointments.length > 0 else noInfo">
-			<div style="padding-top: 15px; padding-bottom: 15px;" *ngFor="let emptyAppointment of emptyAppointmentsFiltered; let last = last">
-				<app-appointment-details [emptyAppointment]="emptyAppointment"></app-appointment-details>
-				<mat-divider style="margin-top: 15px;" *ngIf="!last"></mat-divider>
-			</div>
-			<mat-paginator (page)="onPageChange($event)" [pageSizeOptions]="[5, 10, 25, emptyAppointments.length]"  [pageSize]="5"
-			[length]="emptyAppointments.length"></mat-paginator>
-		</mat-card>
+		<div *ngIf="emptyAppointments.length > 0 else noInfo" fxLayout="column" fxLayoutGap="15px">
+			<span style="font-style: italic;" [translate]="'turnos.home.RESULT_DISCLAIMER'"></span>
+			<mat-card>
+				<div style="padding-top: 15px; padding-bottom: 15px;" *ngFor="let emptyAppointment of emptyAppointmentsFiltered; let last = last">
+					<app-appointment-details (resetAppointmentList)="resetEmptyAppointmentList($event)" [emptyAppointment]="emptyAppointment"></app-appointment-details>
+					<mat-divider style="margin-top: 15px;" *ngIf="!last"></mat-divider>
+				</div>
+				<mat-paginator (page)="onPageChange($event)" [pageSizeOptions]="[5, 10, 25, emptyAppointments.length]"  [pageSize]="5"
+				[length]="emptyAppointments.length"></mat-paginator>
+			</mat-card>
+		</div>
 		<ng-template #noInfo>
 			<mat-card>
 				<app-no-data></app-no-data>

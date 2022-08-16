@@ -141,7 +141,7 @@ public class AppointmentsController {
         log.debug("Input parameters -> institutionId {}, appointmentDto {}", institutionId, createAppointmentDto);
         AppointmentBo newAppointmentBo = appointmentMapper.toAppointmentBo(createAppointmentDto);
         newAppointmentBo = createAppointmentService.execute(newAppointmentBo);
-        Integer result = newAppointmentBo.getId();
+		Integer result = newAppointmentBo.getId();
         log.debug(OUTPUT, result);
         return ResponseEntity.ok().body(result);
     }

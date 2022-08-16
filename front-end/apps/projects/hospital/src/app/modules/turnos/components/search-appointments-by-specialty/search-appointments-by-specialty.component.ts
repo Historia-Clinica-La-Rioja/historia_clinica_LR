@@ -42,7 +42,7 @@ export class SearchAppointmentsBySpecialtyComponent implements OnInit {
 		this.initializeTimeFilters();
 		this.searchBySpecialtyForm = this.formBuilder.group({
 			clinicalSpecialty: [null, Validators.required],
-			initialTime: [this.timesToFilter[0], Validators.required],
+			initialTime: [this.initialTimes[7], Validators.required],
 			endingTime: [this.endingTimes[0], Validators.required],
 			mondayControl: [true, Validators.nullValidator],
 			tuesdayControl: [true, Validators.nullValidator],
@@ -60,7 +60,8 @@ export class SearchAppointmentsBySpecialtyComponent implements OnInit {
 
 	private initializeTimeFilters() {
 		this.timesToFilter = this.generateInitialTimes();
-		this.endingTimes = this.timesToFilter.slice(1);
+		this.endingTimes = this.timesToFilter.slice(8);
+		this.initialTimes = this.timesToFilter.slice(0, -1);
 	}
 
 	private generateInitialTimes(): TimeDto[] {
@@ -120,7 +121,7 @@ export class SearchAppointmentsBySpecialtyComponent implements OnInit {
 			selectedDaysOfWeek.push(2);
 		if (this.searchBySpecialtyForm.value.wednesdayControl)
 			selectedDaysOfWeek.push(3);
-		if (this.searchBySpecialtyForm.value.tuesdayControl)
+		if (this.searchBySpecialtyForm.value.thursdayControl)
 			selectedDaysOfWeek.push(4);
 		if (this.searchBySpecialtyForm.value.fridayControl)
 			selectedDaysOfWeek.push(5);
@@ -159,6 +160,10 @@ export class SearchAppointmentsBySpecialtyComponent implements OnInit {
 
 	onPageChange($event) {
 		this.emptyAppointmentsFiltered = this.emptyAppointments.slice($event.pageIndex*$event.pageSize, $event.pageIndex*$event.pageSize + $event.pageSize);
+	}
+
+	resetEmptyAppointmentList(event) {
+		this.emptyAppointments = null;
 	}
 
 }

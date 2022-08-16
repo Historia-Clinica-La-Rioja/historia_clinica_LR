@@ -99,14 +99,10 @@ export class SeachAppointmentsByProfessionalComponent implements OnInit, OnDestr
 		const profesionalesFilteredBy = this.getProfesionalesFilteredBy(professionalsByClinicalSpecialtyDto);
 		this.profesionalesTypeahead = profesionalesFilteredBy.map(d => this.toProfessionalTypeahead(d));
 
-		if (!professionalsByClinicalSpecialtyDto || especialidadContainsProfesional(this.idProfesional)) {
-			this.appointmentFacadeService.setProfessionalId(this.idProfesional);
-			this.agendaSearchService.search(this.idProfesional);
-		}
-
-		function especialidadContainsProfesional(idProfesional: number): boolean {
-			return professionalsByClinicalSpecialtyDto.professionalsIds.includes(idProfesional);
-		}
+		this.idProfesional = null;
+		this.router.navigate([`${this.routePrefix}`]);
+		this.appointmentFacadeService.setProfessionalId(this.idProfesional);
+		this.agendaSearchService.search(this.idProfesional);
 	}
 
 	setProfesional(result: ProfessionalDto) {

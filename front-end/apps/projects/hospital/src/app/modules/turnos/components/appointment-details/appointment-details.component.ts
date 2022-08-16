@@ -1,9 +1,10 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { NewAppointmentComponent } from '@turnos/dialogs/new-appointment/new-appointment.component';
+import { ConfirmDialogComponent } from '@presentation/dialogs/confirm-dialog/confirm-dialog.component';
 import { EmptyAppointmentDto } from '@api-rest/api-model';
-import { ContextService } from '@core/services/context.service';
-import { Router } from '@angular/router';
+import { DatePipeFormat } from '@core/utils/date.utils';
+import { DatePipe } from '@angular/common';
 
 @Component({
 	selector: 'app-appointment-details',
@@ -13,12 +14,12 @@ import { Router } from '@angular/router';
 export class AppointmentDetailsComponent implements OnInit {
 
 	@Input() emptyAppointment: EmptyAppointmentDto;
+	@Output() resetAppointmentList = new EventEmitter<void>();
 	appointmentTime: Date = new Date();
 
 	constructor(
 		private readonly dialog: MatDialog,
-		private readonly contextService: ContextService,
-		private readonly router: Router
+		private readonly datePipe: DatePipe
 	) {}
 
 	ngOnInit(): void {
@@ -43,9 +44,18 @@ export class AppointmentDetailsComponent implements OnInit {
 		dialogReference.afterClosed().subscribe(
 			(result: boolean) => {
 				if (result) {
-					this.router.navigate([`institucion/${this.contextService.institutionId}/turnos/agenda/${this.emptyAppointment.diaryId}`])
-					.then(() => {
-						window.location.reload();
+					this.resetAppointmentList.emit();
+
+					var fullAppointmentDate = this.datePipe.transform(this.emptyAppointment.date, DatePipeFormat.FULL_DATE);
+					fullAppointmentDate = fullAppointmentDate[0].toUpperCase() + fullAppointmentDate.slice(1);
+					const timeData = this.emptyAppointment.hour.split(":");
+
+					this.dialog.open(ConfirmDialogComponent, {
+						data: {
+							title: 'turnos.new-appointment.ASSIGNED_APPOINTMENT',
+							content: `${fullAppointmentDate} - ${timeData[0]}:${timeData[1]}hs`,
+							okButtonLabel: 'turnos.new-appointment.ACCEPT'
+						}
 					});
 				}
 			}

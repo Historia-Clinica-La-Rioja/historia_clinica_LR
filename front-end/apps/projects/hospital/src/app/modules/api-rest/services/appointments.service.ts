@@ -50,7 +50,7 @@ export class AppointmentsService {
 		return this.http.get<AppointmentListDto[]>(url, {
 			params: {
 				diaryIds: `${diaryIds.join(',')}`,
-				from, 
+				from,
 				to
 			}
 		});

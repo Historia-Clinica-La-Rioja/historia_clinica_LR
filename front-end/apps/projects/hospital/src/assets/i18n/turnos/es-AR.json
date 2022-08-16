@@ -26,6 +26,7 @@
 			"SEARCH_DISCLAIMER": "Se traerán resultados desde la fecha seleccionada hasta 21 días en adelante",
 			"ASSIGN_APPOINTMENT": "Asignar turno",
 			"APPOINTMENTS_FOUND": "Turnos disponibles encontrados:",
+			"RESULT_DISCLAIMER": "Si no se encuentra el resultado esperado, por favor refine la búsqueda.",
 			"messages": {
 				"NO_SPECIFIED_DATE": "Por favor ingrese una fecha para realizar la búsqueda"
 			}
@@ -79,6 +80,8 @@
 			"PATIENT_ID": "ID del paciente",
 			"PHONE_NUMBER": "Número Telefónico",
 			"PHONE_PREFIX": "Prefijo",
+			"ACCEPT": "Aceptar",
+			"ASSIGNED_APPOINTMENT": "Turno asignado",
 			"messages": {
 				"ERROR": "Paciente no encontrado",
 				"SUCCESS": "Paciente encontrado",

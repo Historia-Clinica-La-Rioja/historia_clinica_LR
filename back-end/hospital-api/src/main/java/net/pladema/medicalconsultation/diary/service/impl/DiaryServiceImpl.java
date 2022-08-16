@@ -38,6 +38,8 @@ import java.time.LocalTime;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -362,17 +364,15 @@ public class DiaryServiceImpl implements DiaryService {
 		List<CompleteDiaryBo> diariesBySpecialty = getActiveDiariesByAliasOrClinicalSpecialtyName(institutionId, searchCriteria.getAliasOrSpecialtyName());
 		for (CompleteDiaryBo diary: diariesBySpecialty)
 			emptyAppointments = getEmptyAppointmentBos(searchCriteria, emptyAppointments, diary);
+		emptyAppointments.sort(Comparator.comparing(EmptyAppointmentBo::getDate).thenComparing(EmptyAppointmentBo::getHour));
 		LOG.debug(OUTPUT, emptyAppointments);
 		return emptyAppointments;
 	}
 
 	private List<EmptyAppointmentBo> getEmptyAppointmentBos(AppointmentSearchBo searchCriteria, List<EmptyAppointmentBo> emptyAppointments, CompleteDiaryBo diary) {
-		List<EmptyAppointmentBo> availableAppointments = getDiaryAvailableAppointments(diary, searchCriteria);
+		Collection<AppointmentBo> assignedAppointments = appointmentService.getAppointmentsByDiaries(List.of(diary.getId()), searchCriteria.getInitialSearchDate(), searchCriteria.getEndingSearchDate());
+		List<EmptyAppointmentBo> availableAppointments = getDiaryAvailableAppointments(diary, searchCriteria, assignedAppointments);
 		emptyAppointments.addAll(availableAppointments);
-		Collection<AppointmentBo> assignedAppointments = appointmentService.getAppointmentsByDiaries(List.of(diary.getId()));
-		emptyAppointments = emptyAppointments.stream().filter(emptyAppointment -> assignedAppointments.stream()
-						.noneMatch(assignedAppointment -> assignedAppointment.getDate().equals(emptyAppointment.getDate()) && assignedAppointment.getHour()
-								.equals(emptyAppointment.getHour()))).collect(toList());
 		return emptyAppointments;
 	}
 
@@ -384,7 +384,7 @@ public class DiaryServiceImpl implements DiaryService {
 		return result;
 	}
 
-	private List<EmptyAppointmentBo> getDiaryAvailableAppointments(CompleteDiaryBo diary, AppointmentSearchBo searchCriteria) {
+	private List<EmptyAppointmentBo> getDiaryAvailableAppointments(CompleteDiaryBo diary, AppointmentSearchBo searchCriteria, Collection<AppointmentBo> assignedAppointments) {
 		List<EmptyAppointmentBo> result = new ArrayList<>();
 		Map<Short, Map<Integer, List<LocalTime>>> potentialAppointmentTimesByDay = new HashMap<>();
 		diary.getDiaryOpeningHours().forEach(openingHours -> {
@@ -399,19 +399,29 @@ public class DiaryServiceImpl implements DiaryService {
 		List<LocalDate> daysBetweenLimits = searchInitialDate.datesUntil(searchEndingDate).collect(Collectors.toList());
 		daysBetweenLimits.add(searchEndingDate);
 		daysBetweenLimits.forEach(day -> {
-			if (day.compareTo(diary.getStartDate()) >= 0 && day.compareTo(diary.getEndDate()) <= 0) {
-				generateDayEmptyAppointments(diary, result, potentialAppointmentTimesByDay, day);
+			if (day.compareTo(diary.getStartDate()) >= 0 && day.compareTo(diary.getEndDate()) <= 0 && result.size() < 20) {
+				generateDayEmptyAppointments(diary, result, potentialAppointmentTimesByDay, day, assignedAppointments);
 			}
 		});
 		return result;
 	}
 
-	private void generateDayEmptyAppointments(CompleteDiaryBo diary, List<EmptyAppointmentBo> result, Map<Short, Map<Integer, List<LocalTime>>> potentialAppointmentTimesByDay, LocalDate day) {
+	private void generateDayEmptyAppointments(CompleteDiaryBo diary,
+											  List<EmptyAppointmentBo> result,
+											  Map<Short, Map<Integer, List<LocalTime>>> potentialAppointmentTimesByDay,
+											  LocalDate day,
+											  Collection<AppointmentBo> assignedAppointments) {
 		int currentDayOfWeek = day.getDayOfWeek().getValue() == 7 ? 0 : day.getDayOfWeek().getValue();
 		Map<Integer, List<LocalTime>> emptyAppointmentTimesOfCurrentDayOpeningHours = potentialAppointmentTimesByDay.get((short) currentDayOfWeek);
 		if (emptyAppointmentTimesOfCurrentDayOpeningHours != null) {
 			emptyAppointmentTimesOfCurrentDayOpeningHours.forEach((openingHoursId, openingHoursTimeList) ->
-					result.addAll(openingHoursTimeList.stream().map(time -> createEmptyAppointmentBoFromRawData(time, day, diary, openingHoursId)).collect(Collectors.toList())));
+					result.addAll(openingHoursTimeList.stream().map(time -> createEmptyAppointmentBoFromRawData(time, day, diary, openingHoursId))
+							.filter(emptyAppointment -> {
+								var time = emptyAppointment.getHour();
+								var date = emptyAppointment.getDate();
+								return assignedAppointments.stream().filter(appointment -> appointment.getDate().equals(date) && appointment.getHour().equals(time)).findAny().isEmpty();
+							})
+							.collect(Collectors.toList())));
 		}
 	}
 
