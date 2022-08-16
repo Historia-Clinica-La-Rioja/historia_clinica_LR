@@ -1,4 +1,3 @@
-import { CalendarDateService } from './../../services/calendar-date.service';
 import { STYLE } from './../../constants/calendar-professional-view';
 import { HealthcareProfessionalService } from '@api-rest/services/healthcare-professional.service';
 import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
@@ -12,6 +11,7 @@ import { Subscription } from 'rxjs';
 import { HEADER_CALENDAR_PROFESSIONAL_VIEW } from '@turnos/constants/calendar-professional-view';
 import { CalendarView } from 'angular-calendar';
 import { AppointmentsFacadeService } from '@turnos/services/appointments-facade.service';
+import { CalendarProfessionalInformation } from '@turnos/services/calendar-professional-information';
 
 const SINGLE_DIARY = 1;
 
@@ -40,7 +40,7 @@ export class CalendarProfessionalViewDockPopupComponent implements OnInit {
 		private readonly healthcareProfessional: HealthcareProfessionalService,
 		public dockPopupRef: DockPopupRef,
 		private readonly changeDetectorRef: ChangeDetectorRef,
-		private calendarDateService: CalendarDateService,
+		private calendarProfessionalInfo: CalendarProfessionalInformation,
 		private readonly appointmentFacade: AppointmentsFacadeService,
 	) { }
 
@@ -56,7 +56,7 @@ export class CalendarProfessionalViewDockPopupComponent implements OnInit {
 				}
 			});
 		});
-		this.calendarDate = this.calendarDateService.getCalendarDate();
+		this.calendarDate = this.calendarProfessionalInfo.getCalendarDate();
 	}
 
 	changeDiarySelected(event: MatOptionSelectionChange, diary: DiaryListDto) {

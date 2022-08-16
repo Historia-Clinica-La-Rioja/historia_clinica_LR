@@ -1,4 +1,4 @@
-import { CalendarDateService } from './../../services/calendar-date.service';
+import { CalendarProfessionalInformation } from '../../services/calendar-professional-information';
 import { Component, Input, OnChanges, OnDestroy, OnInit, SimpleChanges } from '@angular/core';
 import { AppointmentDailyAmountDto, AppointmentListDto, CompleteDiaryDto, DiaryOpeningHoursDto, MedicalCoverageDto } from '@api-rest/api-model';
 import { ERole } from '@api-rest/api-model';
@@ -96,7 +96,7 @@ export class AgendaComponent implements OnInit, OnDestroy, OnChanges {
 		private readonly contextService: ContextService,
 		private readonly healthcareProfessionalService: HealthcareProfessionalService,
 		private readonly loggedUserService: LoggedUserService,
-		private readonly calendarDateService: CalendarDateService
+		private readonly calendarProfessionalInfo: CalendarProfessionalInformation
 	) {
 	}
 
@@ -149,7 +149,7 @@ export class AgendaComponent implements OnInit, OnDestroy, OnChanges {
 	changeViewDate(date: Date) {
 		this.setDateRange(date);
 		this.appointmentFacade.setValues(this.agenda.id, this.agenda.appointmentDuration, this.startDate, this.endDate);
-		this.calendarDateService.setCalendarDate(date);
+		this.calendarProfessionalInfo.setCalendarDate(date);
 	}
 
 	loadCalendar(renderEvent: CalendarWeekViewBeforeRenderEvent) {
