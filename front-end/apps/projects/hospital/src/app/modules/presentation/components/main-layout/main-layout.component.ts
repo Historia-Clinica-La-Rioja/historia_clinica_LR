@@ -6,7 +6,7 @@ import { MenuItem } from '../menu/menu.component';
 import { OauthAuthenticationService } from "../../../auth/services/oauth-authentication.service";
 
 const MARGIN_LEFT_COLLAPSED = 94;
-const MARGIN_LEFT_NOT_COLLAPSED = 198;
+const MARGIN_LEFT_NOT_COLLAPSED = 167;
 
 @Component({
 	selector: 'app-main-layout',
