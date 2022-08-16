@@ -2,28 +2,27 @@
     [actions]="{ lockToggle: true, showButtonClose: false, showButtonChevron: true, showActions: false}"
     [style]="STYLE">
     <div body fxLayout="column">
-        <div *ngIf="agendas?.length" fxLayout="row" fxLayoutAlign="space-between">
+        <div *ngIf="diaries?.length" fxLayout="row" fxLayoutAlign="space-between">
             <mat-form-field appearance="outline">
                 <mat-label [translate]="'turnos.home.SELECT_AGENDA'"></mat-label>
-                <mat-select [(value)]="agendaSelected">
-                    <mat-option *ngFor="let agenda of agendas" [value]="agenda"
-                        (onSelectionChange)="changeAgendaSelected($event, agenda)">
+                <mat-select [(value)]="diarySelected">
+                    <mat-option *ngFor="let diary of diaries" [value]="diary"
+                        (onSelectionChange)="changeDiarySelected($event, diary)">
                         <span class="mat-body-strong">
-                            {{agenda.doctorsOfficeDescription}}
+                            {{diary.doctorsOfficeDescription}}
                         </span>
                         <span class="mat-body">
-                            {{agenda.startDate | date: dateFormats.SHORT_DATE }} - {{agenda.endDate | date:
-                            dateFormats.SHORT_DATE}}
+                            {{ diary.startDate | date: dateFormats.SHORT_DATE }} - {{ diary.endDate | date:dateFormats.SHORT_DATE}}
                         </span>
                     </mat-option>
                 </mat-select>
-                <button id="clear_agenda_selected" type="button" mat-button *ngIf="agendaSelected && showButtonToClear" matSuffix
-                    color="warn" mat-icon-button (click)="clear(); $event.stopPropagation()">
+                <button id="clear_agenda_selected" type="button" mat-button *ngIf="diarySelected && showButtonToClear"
+                    matSuffix color="warn" mat-icon-button (click)="clear(); $event.stopPropagation()">
                     <mat-icon>close</mat-icon>
                 </button>
             </mat-form-field>
         </div>
-        <app-agenda *ngIf="agendaSelected" class="agenda" [canCreateAppoinment]="false" [idAgenda]="agendaSelected.id"
+        <app-agenda *ngIf="diarySelected" class="agenda" [canCreateAppoinment]="false" [idAgenda]="diarySelected.id"
             [showAll]="false" [view]="calendarViewEnum.Day" [viewDate]="calendarDate">
         </app-agenda>
     </div>

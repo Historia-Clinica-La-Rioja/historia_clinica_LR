@@ -24,8 +24,8 @@ export class CalendarProfessionalViewDockPopupComponent implements OnInit {
 
 	agendaFiltersSubscription: Subscription;
 	filters: AgendaFilters;
-	agendaSelected: DiaryListDto;
-	agendas: DiaryListDto[] = [];
+	diarySelected: DiaryListDto;
+	diaries: DiaryListDto[] = [];
 	userId: number;
 	HEADER = HEADER_CALENDAR_PROFESSIONAL_VIEW;
 	STYLE = STYLE;
@@ -44,14 +44,14 @@ export class CalendarProfessionalViewDockPopupComponent implements OnInit {
 		private readonly appointmentFacade: AppointmentsFacadeService,
 	) { }
 
-	ngOnInit(): void {
+	ngOnInit() {
 		this.healthcareProfessional.getHealthcareProfessionalByUserId().subscribe(professionalId => {
 			this.professionalId = professionalId;
 			this.agendaSearchService.search(professionalId);
 			this.appointmentFacade.setProfessionalId(professionalId);
 			this.agendaFiltersSubscription = this.agendaSearchService.getAgendas$().subscribe((data: AgendaOptionsData) => {
 				if (data) {
-					this.loadAgendas(data.agendas, data.idAgendaSelected);
+					this.loadDiaries(data.agendas, data.idAgendaSelected);
 					this.filters = data.filteredBy;
 				}
 			});
@@ -59,35 +59,35 @@ export class CalendarProfessionalViewDockPopupComponent implements OnInit {
 		this.calendarDate = this.calendarDateService.getCalendarDate();
 	}
 
-	changeAgendaSelected(event: MatOptionSelectionChange, agenda: DiaryListDto): void {
+	changeDiarySelected(event: MatOptionSelectionChange, diary: DiaryListDto) {
 		if (event.isUserInput)
-			this.agendaSelected = agenda;
+			this.diarySelected = diary;
 	}
 
-	private loadAgendas(diaries, idAgendaSelected?): void {
-		delete this.agendas;
-		delete this.agendaSelected;
-		this.filterAgendas(diaries);
-		if (this.agendas.length === SINGLE_DIARY) {
-			this.agendaSelected = this.agendas[0];
+	private loadDiaries(diaries: DiaryListDto[], idDiarySelected?: number) {
+		delete this.diaries;
+		delete this.diarySelected;
+		this.filterDiaries(diaries);
+		if (this.diaries.length === SINGLE_DIARY) {
+			this.diarySelected = this.diaries[0];
 			this.showButtonToClear = false;
 		}
-		if (idAgendaSelected) {
-			this.agendaSelected = this.agendas.find(agenda => agenda.id === idAgendaSelected);
+		if (idDiarySelected) {
+			this.diarySelected = this.diaries.find(diary => diary.id === idDiarySelected);
 		}
 	}
 
-	private filterAgendas(diaries: DiaryListDto[]): void {
-		this.agendas = [];
+	private filterDiaries(diaries: DiaryListDto[]) {
+		this.diaries = [];
 		if (diaries?.length)
 			diaries.forEach(diary => {
 				if (isBefore(startOfToday(), parseISO(diary.endDate)))
-					this.agendas.push(diary)
+					this.diaries.push(diary)
 			});
 	}
 
-	clear(): void {
-		this.agendaSelected = null;
+	clear() {
+		this.diarySelected = null;
 		this.changeDetectorRef.detectChanges();
 	}
 
