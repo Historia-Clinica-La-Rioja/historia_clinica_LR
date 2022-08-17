@@ -152,6 +152,17 @@ public class InternmentIndicationController {
 		return ResponseEntity.ok(result);
 	}
 
+	@GetMapping("/pharmacos/{pharmacoId}")
+	@PreAuthorize("hasPermission(#institutionId, 'ESPECIALISTA_MEDICO, PROFESIONAL_DE_SALUD, ESPECIALISTA_EN_ODONTOLOGIA, ENFERMERO, PERSONAL_DE_FARMACIA')")
+	public ResponseEntity<PharmacoDto> getInternmentEpisodePharmaco(@PathVariable(name = "institutionId") Integer institutionId,
+																		   @PathVariable(name = "internmentEpisodeId") Integer internmentEpisodeId,
+																		   @PathVariable(name = "pharmacoId") Integer pharmacoId) {
+		log.debug("Input parameters -> institutionId {}, internmentEpisodeId {}, pharmacoId {}", institutionId, internmentEpisodeId, pharmacoId);
+		PharmacoDto result = internmentPharmacoService.getInternmentEpisodePharmaco(pharmacoId);
+		log.debug("Output -> {}", result);
+		return ResponseEntity.ok(result);
+	}
+
 	@GetMapping("/parenteral-plans")
 	@PreAuthorize("hasPermission(#institutionId, 'ESPECIALISTA_MEDICO, ESPECIALISTA_EN_ODONTOLOGIA, PROFESIONAL_DE_SALUD, ENFERMERO, PERSONAL_DE_FARMACIA')")
 	public ResponseEntity<List<ParenteralPlanDto>> getInternmentEpisodeParenteralPlans(@PathVariable(name = "institutionId") Integer institutionId, @PathVariable(name = "internmentEpisodeId") Integer internmentEpisodeId) {

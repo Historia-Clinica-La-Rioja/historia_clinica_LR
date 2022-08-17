@@ -8,6 +8,7 @@ import java.util.stream.Collectors;
 import ar.lamansys.sgh.clinichistory.application.indication.createpharmaco.CreatePharmaco;
 import ar.lamansys.sgh.clinichistory.application.indication.getInternmentEpisodeOtherIndication.GetInternmentEpisodeOtherIndication;
 import ar.lamansys.sgh.clinichistory.application.indication.getInternmentEpisodeParenteralPlan.GetInternmentEpisodeParenteralPlan;
+import ar.lamansys.sgh.clinichistory.application.indication.getInternmentEpisodePharmaco.GetInternmentEpisodePharmaco;
 import ar.lamansys.sgh.clinichistory.application.indication.getinternmentepisodediet.GetInternmentEpisodeDiet;
 import ar.lamansys.sgh.clinichistory.application.indication.getinternmentepisodenursingrecords.GetInternmentEpisodeNursingRecords;
 import ar.lamansys.sgh.clinichistory.application.indication.getinternmentepisodeotherindications.GetInternmentEpisodeOtherIndications;
@@ -75,6 +76,7 @@ public class SharedIndicationPortImpl implements SharedIndicationPort {
 	private final GetInternmentEpisodeOtherIndication getInternmentEpisodeOtherIndication;
 
 	private final GetInternmentEpisodePharmacos getInternmentEpisodePharmacos;
+	private final GetInternmentEpisodePharmaco getInternmentEpisodePharmaco;
 
 	private final CreateDiet createDiet;
 
@@ -137,6 +139,14 @@ public class SharedIndicationPortImpl implements SharedIndicationPort {
 	public List<PharmacoSummaryDto> getInternmentEpisodePharmacos(Integer internmentEpisodeId) {
 		log.debug("Input parameter -> internmentEpisodeId {}", internmentEpisodeId);
 		List<PharmacoSummaryDto> result = getInternmentEpisodePharmacos.run(internmentEpisodeId).stream().map(this::mapToPharmacoSummaryDto).collect(Collectors.toList());
+		log.debug("Output -> {}", result);
+		return result;
+	}
+
+	@Override
+	public PharmacoDto getInternmentEpisodePharmaco(Integer pharmacoId) {
+		log.debug("Input parameter -> pharmacoId {}", pharmacoId);
+		PharmacoDto result = mapToPharmacoDto(getInternmentEpisodePharmaco.run(pharmacoId));
 		log.debug("Output -> {}", result);
 		return result;
 	}

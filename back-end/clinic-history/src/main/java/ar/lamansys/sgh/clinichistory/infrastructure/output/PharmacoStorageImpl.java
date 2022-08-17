@@ -104,22 +104,25 @@ public class PharmacoStorageImpl implements PharmacoStorage {
 		result.setCreatedBy(entity.getCreatedBy());
 		result.setProfessionalId(entity.getProfessionalId());
 		result.setSolvent(getSolvent(entity.getId()));
-
+		result.setNote(pharmacoRepository.getNote(entity.getId()));
 		return result;
 	}
 
 	private OtherPharmacoBo getSolvent(Integer id){
-		otherPharmacoRepository.getByIndicationId(id).stream().map(entity -> {
-			OtherPharmacoBo result = new OtherPharmacoBo();
-			result.setIndicationId(entity.getIndicationId());
-			SnomedBo snomedBo = snomedService.getSnomed(entity.getSnomedId());
-			DosageBo dosageBo = dosageRepository.findById(entity.getDosageId())
-					.map(this::mapToDosageBo).orElse(null);
-			result.setSnomed(snomedBo);
-			result.setDosage(dosageBo);
-			return result;
-		});
-		return null;
+		List<OtherPharmacoBo> otherPharmacos = getOtherPharmacosByIndicationId(id);
+		if (otherPharmacos.isEmpty())
+			return null;
+		return otherPharmacos.get(0);
+	}
+
+	private List<OtherPharmacoBo> getOtherPharmacosByIndicationId(Integer id){
+		List<OtherPharmacoBo> result = otherPharmacoRepository.getByIndicationId(id)
+				.stream()
+				.map(entity -> {
+					OtherPharmacoBo opBo = mapToOtherPharmacoBo(entity);
+					return opBo;})
+				.collect(Collectors.toList());
+		return result;
 	}
 
 	private Integer saveSolvent(OtherPharmacoBo bo, Integer indicationId) {
@@ -174,6 +177,16 @@ public class PharmacoStorageImpl implements PharmacoStorage {
 		result.setIndicationId(indicationId);
 		result.setSnomedId(snomedId);
 		result.setDosageId(dosageId);
+		return result;
+	}
+
+	private OtherPharmacoBo mapToOtherPharmacoBo(OtherPharmaco entity){
+		SnomedBo snomedBo = snomedService.getSnomed(entity.getSnomedId());
+		Optional<Dosage> dosage = dosageRepository.findById(entity.getDosageId());
+		OtherPharmacoBo result = new OtherPharmacoBo();
+		result.setIndicationId(entity.getIndicationId());
+		result.setSnomed(snomedBo);
+		result.setDosage(dosage.isPresent() ? mapToDosageBo(dosage.get()) : null);
 		return result;
 	}
 
