@@ -40,5 +40,6 @@ export class CalendarProfessionalViewComponent implements OnInit, OnDestroy {
 	ngOnDestroy(): void {
 		this.appointmentFacade.clearInterval();
 		this.calendarProfessionalInfo.setCalendarDate(new Date());
+		this.calendarProfessionalInfo.setProfessionalSelected(null);
 	}
 }

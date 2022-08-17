@@ -1,19 +1,33 @@
 <app-dock-popup [dockPopupRef]="dockPopupRef" [header]="HEADER"
     [actions]="{ lockToggle: true, showButtonClose: false, showButtonChevron: true, showActions: false}"
     [style]="STYLE">
-    <div body fxLayout="column">
-        <div *ngIf="diaries?.length" fxLayout="row" fxLayoutAlign="space-between">
+    <div body fxLayout="column" fxLayoutGap="15px">
+        <app-professional-select id="professionals" *ngIf="professionals.length > 1" [professionals]="professionals"
+            [professionalSelected]="professionalSelected" (selectionChange)="setDiaries($event)">
+        </app-professional-select>
+        <div id="diaries" *ngIf="professionalSelected" fxLayout="row" fxLayoutAlign="space-between">
             <mat-form-field appearance="outline">
                 <mat-label [translate]="'turnos.home.SELECT_AGENDA'"></mat-label>
                 <mat-select [(value)]="diarySelected">
                     <mat-option *ngFor="let diary of diaries" [value]="diary"
                         (onSelectionChange)="changeDiarySelected($event, diary)">
-                        <span class="mat-body-strong">
-                            {{diary.doctorsOfficeDescription}}
-                        </span>
-                        <span class="mat-body">
-                            {{ diary.startDate | date: dateFormats.SHORT_DATE }} - {{ diary.endDate | date:dateFormats.SHORT_DATE}}
-                        </span>
+
+                        <div fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="5px">
+                            <div
+                                *ngIf="diary.alias === undefined || diary.alias == '' else showAliasAndClinicalSpecialtyName">
+                                <span class="mat-body-strong">{{diary.clinicalSpecialtyName}}</span>
+                            </div>
+                            <span class="mat-body">
+                                {{diary.startDate | date:dateFormats.SHORT_DATE }} - {{diary.endDate |
+                                date:dateFormats.SHORT_DATE}}
+                            </span>
+                        </div>
+
+                        <ng-template #showAliasAndClinicalSpecialtyName>
+                            <span class="mat-body-strong">
+                                {{diary.alias}} ({{diary.clinicalSpecialtyName}})
+                            </span>
+                        </ng-template>
                     </mat-option>
                 </mat-select>
                 <button id="clear_agenda_selected" type="button" mat-button *ngIf="diarySelected && showButtonToClear"

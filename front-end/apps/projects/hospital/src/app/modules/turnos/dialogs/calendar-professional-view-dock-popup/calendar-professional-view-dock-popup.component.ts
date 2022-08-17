@@ -2,15 +2,15 @@ import { STYLE } from './../../constants/calendar-professional-view';
 import { HealthcareProfessionalService } from '@api-rest/services/healthcare-professional.service';
 import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { MatOptionSelectionChange } from '@angular/material/core';
-import { DiaryListDto } from '@api-rest/api-model';
+import { DiaryListDto, ProfessionalDto } from '@api-rest/api-model';
 import { DatePipeFormat } from '@core/utils/date.utils';
 import { DockPopupRef } from '@presentation/services/dock-popup-ref';
 import { AgendaFilters, AgendaOptionsData, AgendaSearchService } from '@turnos/services/agenda-search.service';
 import { isBefore, parseISO, startOfToday } from 'date-fns';
-import { Subscription } from 'rxjs';
+import { forkJoin, Subscription } from 'rxjs';
 import { HEADER_CALENDAR_PROFESSIONAL_VIEW } from '@turnos/constants/calendar-professional-view';
 import { CalendarView } from 'angular-calendar';
-import { AppointmentsFacadeService } from '@turnos/services/appointments-facade.service';
+import { HealthcareProfessionalByInstitutionService } from '@api-rest/services/healthcare-professional-by-institution.service';
 import { CalendarProfessionalInformation } from '@turnos/services/calendar-professional-information';
 
 const SINGLE_DIARY = 1;
@@ -30,7 +30,9 @@ export class CalendarProfessionalViewDockPopupComponent implements OnInit {
 	HEADER = HEADER_CALENDAR_PROFESSIONAL_VIEW;
 	STYLE = STYLE;
 	showButtonToClear = true;
-	professionalId: number;
+	professionalLogged: ProfessionalDto;
+	professionalSelected: ProfessionalDto;
+	professionals: ProfessionalDto[] = [];
 	calendarDate: Date;
 	readonly calendarViewEnum = CalendarView;
 	readonly dateFormats = DatePipeFormat;
@@ -41,27 +43,42 @@ export class CalendarProfessionalViewDockPopupComponent implements OnInit {
 		public dockPopupRef: DockPopupRef,
 		private readonly changeDetectorRef: ChangeDetectorRef,
 		private calendarProfessionalInfo: CalendarProfessionalInformation,
-		private readonly appointmentFacade: AppointmentsFacadeService,
+		private readonly healthCareProfessionalService: HealthcareProfessionalByInstitutionService,
 	) { }
 
 	ngOnInit() {
-		this.healthcareProfessional.getHealthcareProfessionalByUserId().subscribe(professionalId => {
-			this.professionalId = professionalId;
-			this.agendaSearchService.search(professionalId);
-			this.appointmentFacade.setProfessionalId(professionalId);
-			this.agendaFiltersSubscription = this.agendaSearchService.getAgendas$().subscribe((data: AgendaOptionsData) => {
-				if (data) {
-					this.loadDiaries(data.agendas, data.idAgendaSelected);
-					this.filters = data.filteredBy;
-				}
-			});
+		const professionalLogged$ = this.healthcareProfessional.getHealthcareProfessionalByUserId();
+		const asociatedProfessionals$ = this.healthCareProfessionalService.getAllAssociated();
+
+		forkJoin([professionalLogged$, asociatedProfessionals$]).subscribe(data => {
+			this.professionals = data[1];
+			this.professionalLogged = data[1].find(p => p.id === data[0]);
+			const profSelected = this.calendarProfessionalInfo.getProfessionalSelected();
+			this.professionalSelected = profSelected ? profSelected : this.professionalLogged;
+			this.changeDetectorRef.detectChanges();
 		});
+
 		this.calendarDate = this.calendarProfessionalInfo.getCalendarDate();
 	}
 
 	changeDiarySelected(event: MatOptionSelectionChange, diary: DiaryListDto) {
 		if (event.isUserInput)
 			this.diarySelected = diary;
+	}
+
+	setDiaries(professional: ProfessionalDto) {
+		if (professional) {
+			this.professionalSelected = professional;
+			this.calendarProfessionalInfo.setProfessionalSelected(professional);
+			this.agendaFiltersSubscription = this.agendaSearchService.getAgendas$().subscribe((data: AgendaOptionsData) => {
+				if (data) {
+					this.loadDiaries(data.agendas, data.idAgendaSelected);
+					this.filters = data.filteredBy;
+				}
+			});
+		}
+		else
+			this.professionalSelected = null;
 	}
 
 	private loadDiaries(diaries: DiaryListDto[], idDiarySelected?: number) {

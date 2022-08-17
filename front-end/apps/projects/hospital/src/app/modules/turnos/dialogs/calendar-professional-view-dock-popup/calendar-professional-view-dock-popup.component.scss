@@ -1,4 +1,8 @@
 @import '../../../../../assets/styles/variables.scss';
+@import '../../../../../assets/styles/mat-mixins';
+
+@include mat-form-field-background-white;
+
 ::ng-deep .cdk-overlay-pane {
 	app-calendar-professional-view-dock-popup {
 		width: 100%;
@@ -16,4 +20,8 @@
 
 .agenda {
 	padding: 0 20px 0 20px;
+}
+
+mat-form-field {
+	width: 100%;
 }
