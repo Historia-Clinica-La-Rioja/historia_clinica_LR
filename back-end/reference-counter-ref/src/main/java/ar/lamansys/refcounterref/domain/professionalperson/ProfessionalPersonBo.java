@@ -17,6 +17,13 @@ public class ProfessionalPersonBo {
 
     private String firstName;
 
+	private String nameSelfDetermination;
+
     private String lastName;
 
+	public String getFirstName() {
+		if(nameSelfDetermination == null || nameSelfDetermination.isBlank())
+			return firstName;
+		return nameSelfDetermination;
+	}
 }

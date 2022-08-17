@@ -1,5 +1,8 @@
 package ar.lamansys.refcounterref.domain.counterreference;
 
+import java.time.LocalDate;
+import java.util.List;
+
 import ar.lamansys.refcounterref.domain.file.ReferenceCounterReferenceFileBo;
 import ar.lamansys.refcounterref.domain.procedure.CounterReferenceProcedureBo;
 import ar.lamansys.refcounterref.domain.professionalperson.ProfessionalPersonBo;
@@ -8,9 +11,6 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
-
-import java.time.LocalDate;
-import java.util.List;
 
 @Getter
 @Setter
@@ -34,13 +34,13 @@ public class CounterReferenceSummaryBo {
     private List<CounterReferenceProcedureBo> procedures;
 
     public CounterReferenceSummaryBo(Integer id, LocalDate performedDate, Integer professionalId,
-                                     String professionalName, String professionalLastName,
+                                     String professionalName, String professionalNameSelfDetermination, String professionalLastName,
                                      String clinicalSpecialty, String note) {
         this.id = id;
         this.performedDate = performedDate;
         this.clinicalSpecialty = clinicalSpecialty;
         this.note = note;
-        this.professional = new ProfessionalPersonBo(professionalId, professionalName, professionalLastName);
+        this.professional = new ProfessionalPersonBo(professionalId, professionalName, professionalNameSelfDetermination, professionalLastName);
     }
 
 }
