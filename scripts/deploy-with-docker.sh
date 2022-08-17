@@ -43,6 +43,7 @@ echo Crea environment con hash: $(
         --restart=unless-stopped \
         -e GLOWROOT_PROJECT=${GLOWROOT_PROJECT} \
         -e GLOWROOT_AGENT_ID="${ENV_NAME}" \
+        -e APP_DOMAIN=${REVIEW_APP_URL} \
         --name ${ENV_NAME} \
         -v /sgh/${ENV_NAME}:/sgh  \
         --log-opt max-size=10m \

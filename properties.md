@@ -19,7 +19,7 @@ Este documento detalla las propiedades configurables del sistema.
 | admin.password | ADMIN_PASS | admin123 | **Obligatorio** | Contraseña del usuario Administrador |  v0.2.0  |
 | internment.document.directory |DOCUMENT_ROOT_DIRECTORY | /temp | **Obligatorio** | Directorio donde se almacenan documentos clínicos y fotos de pacientes | v0.2.0 |
 | spring.profiles.active  |   | default  | **Único**  | Valores posibles: dev, qa, prod   | v0.2.0  |
-
+| app.env.domain  |  APP_DOMAIN | localhost:4200  | **Opcional**  | Define el dominio. En caso de tener activo el FF HABILITAR_NOTIFICACIONES_TURNOS debe ser **obligatoria**   | v1.42.0  |
 
 # Config de login / auth / token 
 
@@ -52,7 +52,7 @@ Este documento detalla las propiedades configurables del sistema.
 |spring.mail.properties.mail.smtp.starttls.enable | SMTP_SSL | true | Opcional | Habilita el envío de mails |v0.38.0 |
 | app.notification.mail.from  | | hsi@pladema.net  | Opcional  |   | v0.38.0  |
 | app.notification.mail.fromFullname  | | HSI  | Opcional  |   | v0.38.0  |
-
+| app.notification.mail.replyTo  | | no-reply@pladema.net  | Opcional  |  Define la dirección de mail a responder | v1.41.0  |
 
 
 ## Configuración util para debug y monitoring 

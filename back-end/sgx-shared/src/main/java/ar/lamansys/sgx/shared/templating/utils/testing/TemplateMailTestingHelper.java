@@ -19,7 +19,7 @@ public class TemplateMailTestingHelper<T> {
 
     public MailMessageBo renderTemplate(String scenario, NotificationTemplateInput<T> notificationArgs) throws TemplateException {
 		var mailTemplateEngine = new MailTemplateEngine(
-				"http://localhost:5005",
+				"localhost:5005",
 				messageSource,
 				"classpath:/templates/mails/",
 				applicationContext
