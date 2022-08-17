@@ -300,8 +300,8 @@ export class ProfileComponent implements OnInit {
 			this.ownProfessionsAndSpecialties = professionalsByClinicalSpecialty;
 			this.healthcareProfessionalId = professionalsByClinicalSpecialty[0]?.healthcareProfessionalId;
 			if (this.healthcareProfessionalId)
-			this.professionsWithLicense$ =
-				this.professionalLicenseService.getLicenseNumberByProfessional(this.healthcareProfessionalId);
+				this.professionsWithLicense$ =
+					this.professionalLicenseService.getLicenseNumberByProfessional(this.healthcareProfessionalId);
 		})
 	}
 
@@ -374,7 +374,7 @@ export class ProfileComponent implements OnInit {
 			if (professional) {
 				this.professionalService.addProfessional(professional).subscribe(_ => {
 					this.snackBarService.showSuccess('pacientes.edit_professions.messages.SUCCESS');
-					this.setProfessionsAndSpecialties();
+					this.professionalId ? this.setProfessionsAndSpecialties() : this.checkIfProfessional();
 				},
 					error => {
 						error?.text ?
