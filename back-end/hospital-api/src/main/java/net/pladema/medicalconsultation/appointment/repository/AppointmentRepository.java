@@ -51,7 +51,7 @@ public interface AppointmentRepository extends SGXAuditableEntityJPARepository<A
             "JOIN DiaryOpeningHours  AS doh ON (doh.pk.diaryId = aa.pk.diaryId) " +
             "WHERE aa.pk.diaryId = :diaryId AND a.appointmentStateId <> " + AppointmentState.CANCELLED_STR +
 			"AND aa.pk.openingHoursId = doh.pk.openingHoursId " +
-			"AND a.deleteable.deleted = FALSE OR a.deleteable.deleted IS NULL " +
+			"AND (a.deleteable.deleted = FALSE OR a.deleteable.deleted IS NULL ) " +
             " AND a.dateTypeId >= CURRENT_DATE ")
     List<AppointmentDiaryVo> getFutureActiveAppointmentsByDiary(@Param("diaryId") Integer diaryId);
 
