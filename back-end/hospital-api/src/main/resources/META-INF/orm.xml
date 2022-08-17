@@ -216,7 +216,7 @@
 			SELECT  oc.institution_id, oc.patient_id, oc.patient_medical_coverage_id, oc.clinical_specialty_id,
 			oc.doctor_id, oc.start_date as start_date, ocr.reasons as reasons,  prob.descriptions as problems, proced.cst_procedures as procedures,
 			vs.weight, vs.height, vs.systolic as systolicBloodPressure, vs.diastolic as diastolicBloodPressure,
-			vs.cardiovascular_risk as cardiovascularRisk, vs.glycosylated as glycosylatedHemoglobin, vs.head_circunference as headCircunference,
+			vs.cardiovascular_risk as cardiovascularRisk, vs.glycosylated as glycosylatedHemoglobin, vs.blood_glucose as bloodGlucose, vs.head_circunference as headCircunference,
 			'outpatient' as consultation_type
 			FROM outpatient_consultation oc
 			LEFT JOIN (
@@ -232,7 +232,6 @@
 			JOIN document_health_condition dhc ON (doc.id = dhc.document_id)
 			JOIN health_condition hc ON (dhc.health_condition_id = hc.id)
 			JOIN snomed sno ON (hc.snomed_id = sno.id)
-			WHERE hc.problem_id IN (:problemTypes)
 			GROUP BY oc.id
 			) prob ON (oc.id = prob.id)
 			LEFT JOIN (
@@ -243,6 +242,7 @@
 			MAX(CASE WHEN ovs.loinc_code='29463-7' THEN ovs.value END) as weight,
 			MAX(CASE WHEN ovs.loinc_code='65853-4' THEN ovs.value END) as cardiovascular_risk,
 			MAX(CASE WHEN ovs.loinc_code='62854-5' THEN ovs.value END) as glycosylated,
+			MAX(CASE WHEN ovs.loinc_code='15074-8' THEN ovs.value END) as blood_glucose,
 			MAX(CASE WHEN ovs.loinc_code='11947-9' THEN ovs.value END) as head_circunference
 			FROM outpatient_consultation oc
 			LEFT JOIN document_vital_sign dvs ON (oc.document_id = dvs.document_id)
@@ -266,7 +266,7 @@
 			SELECT vc.institution_id, vc.patient_id, vc.patient_medical_coverage_id, vc.clinical_specialty_id,
 			vc.doctor_id, vc.performed_date as start_date, NULL AS reasons,  NULL AS problems, null as procedures,
 			NULL AS weight, NULL AS height, NULL AS systolicBloodPressure, NULL AS diastolicBloodPressure,
-			null as cardiovascularRisk, null as glycosylatedHemoglobin, null as headCircunference,
+			null as cardiovascularRisk, null as glycosylatedHemoglobin, null as bloodGlucose, null as headCircunference,
 			'vaccine' as consultation_type
 			FROM vaccine_consultation vc
 			WHERE vc.institution_id = :institutionId
@@ -288,7 +288,7 @@
 			CONCAT(p2.last_name, ' ', p2.other_last_names, ' ',p2.first_name, ' ', p2.middle_names) as professionalName,
 			cst.reasons as reasons,  cst.problems, cst.procedures,
 			cst.weight, cst.height, cst.systolicBloodPressure, cst.diastolicBloodPressure,
-			cst.cardiovascularRisk, cst.glycosylatedHemoglobin, cst.headCircunference, null as cpo, null as ceo
+			cst.cardiovascularRisk, cst.glycosylatedHemoglobin, cst.bloodGlucose, cst.headCircunference, null as cpo, null as ceo
 			FROM consultation cst
 			JOIN institution i ON (cst.institution_id = i.id)
 			JOIN address a ON (i.address_id = a.id)
@@ -320,7 +320,7 @@
 			oc.doctor_id, oc.created_on as start_date, ocr.reasons as reasons,  concat_ws('/split/', otherprob.descriptions, prob.descriptions) as problems,
 			concat_ws('/split/', proced.cst_procedures, otherproced.cst_procedures) as procedures,
 			null as weight, null as height, null as systolicBloodPressure, null as diastolicBloodPressure,
-			null as cardiovascularRisk, null as glycosylatedHemoglobin, null as headCircunference, indexs.cpo, indexs.ceo,
+			null as cardiovascularRisk, null as glycosylatedHemoglobin, null as bloodGlucose, null as headCircunference, indexs.cpo, indexs.ceo,
 			'odontology' as consultation_type
 			FROM odontology_consultation oc
 			LEFT JOIN (
@@ -390,7 +390,7 @@
 			CONCAT(p2.last_name, ' ', p2.other_last_names, ' ',p2.first_name, ' ', p2.middle_names) as professionalName,
 			cst.reasons as reasons,  cst.problems, cst.procedures,
 			cst.weight, cst.height, cst.systolicBloodPressure, cst.diastolicBloodPressure,
-			cst.cardiovascularRisk, cst.glycosylatedHemoglobin, cst.headCircunference, cst.cpo, cst.ceo
+			cst.cardiovascularRisk, cst.glycosylatedHemoglobin, cst.bloodGlucose, cst.headCircunference, cst.cpo, cst.ceo
 			FROM consultation cst
 			JOIN institution i ON (cst.institution_id = i.id)
 			JOIN address a ON (i.address_id = a.id)
@@ -421,7 +421,7 @@
 			SELECT  oc.institution_id, oc.patient_id, oc.patient_medical_coverage_id, oc.clinical_specialty_id,
 			oc.doctor_id, oc.created_on as start_date, null as reasons,  prob.descriptions as problems, proced.cst_procedures as procedures,
 			vs.weight, vs.height, vs.systolic as systolicBloodPressure, vs.diastolic as diastolicBloodPressure,
-			vs.cardiovascular_risk as cardiovascularRisk, vs.glycosylated as glycosylatedHemoglobin, vs.head_circunference as headCircunference,
+			vs.cardiovascular_risk as cardiovascularRisk, vs.glycosylated as glycosylatedHemoglobin, vs.blood_glucose as bloodGlucose, vs.head_circunference as headCircunference,
 			'nursing' as consultation_type
 			FROM nursing_consultation oc
 			LEFT JOIN (
@@ -441,6 +441,7 @@
 			MAX(CASE WHEN ovs.loinc_code='29463-7' THEN ovs.value END) as weight,
 			MAX(CASE WHEN ovs.loinc_code='65853-4' THEN ovs.value END) as cardiovascular_risk,
 			MAX(CASE WHEN ovs.loinc_code='62854-5' THEN ovs.value END) as glycosylated,
+			MAX(CASE WHEN ovs.loinc_code='15074-8' THEN ovs.value END) as blood_glucose,
 			MAX(CASE WHEN ovs.loinc_code='11947-9' THEN ovs.value END) as head_circunference
 			FROM nursing_consultation oc
 			join document d on(oc.id = d.source_id and d.source_type_id = 7)
@@ -476,7 +477,7 @@
 			CONCAT(p2.last_name, ' ', p2.other_last_names, ' ',p2.first_name, ' ', p2.middle_names) as professionalName,
 			cst.reasons as reasons,  cst.problems, cst.procedures,
 			cst.weight, cst.height, cst.systolicBloodPressure, cst.diastolicBloodPressure,
-			cst.cardiovascularRisk, cst.glycosylatedHemoglobin, cst.headCircunference, null as cpo, null as ceo
+			cst.cardiovascularRisk, cst.glycosylatedHemoglobin, cst.bloodGlucose, cst.headCircunference, null as cpo, null as ceo
 			FROM consultation cst
 			JOIN institution i ON (cst.institution_id = i.id)
 			JOIN address a ON (i.address_id = a.id)
@@ -650,6 +651,7 @@
             <column name="diastolicBloodPressure" class="java.lang.String"/>
 			<column name="cardiovascularRisk" class="java.lang.String"/>
 			<column name="glycosylatedHemoglobin" class="java.lang.String"/>
+			<column name="bloodGlucose" class="java.lang.String"/>
 			<column name="headCircunference" class="java.lang.String"/>
 			<column name="cpo" class="java.lang.String"/>
 			<column name="ceo" class="java.lang.String"/>
