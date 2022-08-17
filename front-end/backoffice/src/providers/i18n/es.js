@@ -586,6 +586,13 @@ const messages = {
                 mandatoryMedicalPracticeId: 'PMO',
             }
         },
+        holidays: {
+            name: 'Feriados',
+            fields: {
+                date: 'Fecha',
+                description: 'Descripción',
+            }
+        }
     }
 };
 

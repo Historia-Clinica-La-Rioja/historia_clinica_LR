@@ -18,7 +18,7 @@ import professionalprofessions from './professionalprofessions';
 import professionalSpecialties from './professionalspecialties';
 import healthcareprofessionalspecialties from './healthcareprofessionalspecialties';
 import doctorsoffices from './doctorsoffices';
-
+import holidays from './holidays';
 import person from './person';
 import admin from './admin';
 import users from './users';
@@ -112,6 +112,7 @@ const resources = (permissions: SGXPermissions) => [
     <Resource name="clinicalspecialties" {...clinicalspecialties(permissions)} />,
     <Resource name="clinicalservices" {...clinicalservices(permissions)} />,
     <Resource name="professionalspecialties" {...professionalSpecialties(permissions)} />,
+    <Resource name="holidays" {...holidays(permissions)} />,
     // more
     <Resource name="identificationTypes" />,
     <Resource name="patient" />,
