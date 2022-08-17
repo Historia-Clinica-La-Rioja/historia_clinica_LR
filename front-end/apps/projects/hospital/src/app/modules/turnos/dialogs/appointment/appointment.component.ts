@@ -7,7 +7,7 @@ import { SnackBarService } from '@presentation/services/snack-bar.service';
 import { APPOINTMENT_STATES_ID, getAppointmentState, MAX_LENGTH_MOTIVO } from '../../constants/appointment';
 import { ContextService } from '@core/services/context.service';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { AppFeature, AppointmentDto, CompleteDiaryDto, DateTimeDto, ERole, IdentificationTypeDto, PatientMedicalCoverageDto, PersonPhotoDto } from '@api-rest/api-model.d';
+import { AppFeature, AppointmentDto, CompleteDiaryDto, DateTimeDto, ERole, IdentificationTypeDto, PatientMedicalCoverageDto, PersonPhotoDto, UpdateAppointmentDto } from '@api-rest/api-model.d';
 import { CancelAppointmentComponent } from '../cancel-appointment/cancel-appointment.component';
 import { getError, hasError, processErrors, updateControlValidator } from '@core/utils/form.utils';
 import { AppointmentsFacadeService } from '../../services/appointments-facade.service';
@@ -279,7 +279,21 @@ export class AppointmentComponent implements OnInit {
 		});
 	}
 
+	updateAppointmentOverturn(appointmentId: number, appointmentStateId: number, overturn: boolean, patientId: number): void{
+		const appointment: UpdateAppointmentDto = {
+			appointmentId: appointmentId,
+			appointmentStateId: appointmentStateId,
+			overturn: overturn,
+			patientId: patientId,
+		}
+		this.appointmentFacade.updateAppointment(appointment).subscribe(() => {}, 
+			error => {
+				processErrors(error, (msg) => this.snackBarService.showError(msg));
+		});
+	}
+
 	updateAppointmentDate(){
+		
 		const dateAux = this.formDate.get('hour').value;
 		const date: DateTimeDto = {
 			date: {
@@ -293,7 +307,18 @@ export class AppointmentComponent implements OnInit {
 				seconds: dateAux.getSeconds()
 			}
 		};
-		this.appointmentFacade.updateDate(this.data.appointmentData.appointmentId, date).subscribe(() => {
+
+		this.appointmentFacade.updateDate(this.data.appointmentData.appointmentId, date).subscribe(() => {	
+	
+			if (this.data.appointmentData.overturn){
+				this.updateAppointmentOverturn(
+					this.data.appointmentData.appointmentId,
+					this.data.appointmentData.appointmentStateId, 
+					false, 
+					this.data.appointmentData.patient.id
+				);
+			}
+
 			this.snackBarService.showSuccess('turnos.appointment.date.UPDATE_SUCCESS');
 			this.selectedDate = dateAux;
 		}, error => {
@@ -619,4 +644,5 @@ export interface PatientAppointmentInformation {
 	};
 	medicalCoverageName: string;
 	affiliateNumber: string;
+	overturn: boolean;
 }
