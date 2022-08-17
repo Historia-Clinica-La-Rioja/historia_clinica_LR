@@ -33,11 +33,14 @@ export class EditLicenseComponent implements OnInit {
 			professionalSpecialties: new FormArray([]),
 		});
 
-		if (this.data.healthcareProfessionalId)
+		if (this.data.healthcareProfessionalId) {
 			this.professionalLicenseService.getLicenseNumberByProfessional(this.data.healthcareProfessionalId).subscribe((e: ProfessionalLicenseNumberDto[]) => {
 				this.professionsWithLicense = e;
 				this.setPreviousLicenses();
 			})
+		} else {
+			this.addCombo();
+		}
 
 	}
 
@@ -52,7 +55,7 @@ export class EditLicenseComponent implements OnInit {
 
 	private convertToProfessionalLicenseNumberDto(elem: ProfessionalLicenseNumberDto): ProfessionalLicenseNumberDto {
 		return {
-			id:  elem?.id || null,
+			id: elem?.id || null,
 			licenseNumber: elem.licenseNumber,
 			professionalProfessionId: elem.professionalProfessionId,
 			typeId: elem.typeId,
