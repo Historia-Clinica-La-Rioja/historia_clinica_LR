@@ -24,6 +24,7 @@ import { PharmacoComponent } from './dialogs/pharmaco/pharmaco.component';
 import { GeneralNursingRecordComponent } from './components/general-nursing-record/general-nursing-record.component';
 import { SpecificNursingRecordComponent } from './components/specific-nursing-record/specific-nursing-record.component';
 import { RegisterNursingRecordComponent } from './dialogs/register-nursing-record/register-nursing-record.component';
+import { InternmentIndicationDetailComponent } from './dialogs/internment-indication-detail/internment-indication-detail.component';
 
 @NgModule({
 	declarations: [
@@ -46,6 +47,7 @@ import { RegisterNursingRecordComponent } from './dialogs/register-nursing-recor
 		ParenteralPlanComponent,
 		PharmacoComponent,
 		RegisterNursingRecordComponent,
+  InternmentIndicationDetailComponent,
 	],
 	exports: [
 		CardMedicacionesComponent,
