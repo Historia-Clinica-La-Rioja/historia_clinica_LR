@@ -401,14 +401,16 @@ export class ProfileComponent implements OnInit {
 			}
 		});
 		dialog.afterClosed().subscribe((license) => {
-			this.professionalLicenseService.saveProfessionalLicensesNumber(this.healthcareProfessionalId, license).subscribe(_ => {
-				this.snackBarService.showSuccess('pacientes.edit_professions.messages.SUCCESS');
-				this.setLicenses();
-			},
-				error => {
-					this.snackBarService.showError(error.text || 'pacientes.edit_professions.messages.ERROR');
-				}
-			)
+			if (license) {
+				this.professionalLicenseService.saveProfessionalLicensesNumber(this.healthcareProfessionalId, license).subscribe(_ => {
+					this.snackBarService.showSuccess('pacientes.edit_professions.messages.SUCCESS');
+					this.setLicenses();
+				},
+					error => {
+						this.snackBarService.showError(error.text || 'pacientes.edit_professions.messages.ERROR');
+					}
+				)
+			}
 		});
 	}
 
