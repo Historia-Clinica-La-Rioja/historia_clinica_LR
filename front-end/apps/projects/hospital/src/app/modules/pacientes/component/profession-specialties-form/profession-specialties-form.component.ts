@@ -73,25 +73,30 @@ export class ProfessionSpecialtiesFormComponent implements ControlValueAccessor,
 		}
 	}
 
+	private checkIsSameSpecialty(pointIndex: number, $event: ClinicalSpecialtyDto): boolean {
+		const arraySpecialties = this.form.get('specialties') as FormArray;
+		return arraySpecialties.at(pointIndex).value.clinicalSpecialty.id === $event.id;
+	}
 
-	setSpeciality($event: ClinicalSpecialtyDto, pointIndex: number): void {
+	setSpecialty($event: ClinicalSpecialtyDto, pointIndex: number): void {
 		const arraySpecialties = this.form.get('specialties') as FormArray;
 
-		arraySpecialties.at(pointIndex).setValue({
-			id: arraySpecialties.at(pointIndex).value.id,
-			professionalProfessionId: arraySpecialties.at(pointIndex).value.professionalProfessionId,
-			healthcareProfessionalId: arraySpecialties.at(pointIndex).value.healthcareProfessionalId,
-			clinicalSpecialty: {
-				id: $event ? $event.id : null,
-				specialty: $event ? $event.name : null
-			}
-		});
-
-		if ($event === null) {
+		if ($event) {
+			arraySpecialties.at(pointIndex).setValue({
+				id: this.checkIsSameSpecialty(pointIndex, $event) ? arraySpecialties.at(pointIndex).value.id : null,
+				professionalProfessionId: this.checkIsSameSpecialty(pointIndex, $event) ? arraySpecialties.at(pointIndex).value.professionalProfessionId : null,
+				healthcareProfessionalId: this.checkIsSameSpecialty(pointIndex, $event) ? arraySpecialties.at(pointIndex).value.healthcareProfessionalId : null,
+				clinicalSpecialty: {
+					id: $event?.id || null,
+					specialty: $event?.name || null
+				}
+			});
+		}
+		else {
 			this.initValueTypeaheadSpecialties.splice(pointIndex, 1);
-			if (arraySpecialties.length > 1) {
-				arraySpecialties.removeAt(pointIndex)
-			}
+			arraySpecialties.removeAt(pointIndex)
+			if (arraySpecialties.length < 1)
+				this.addSpecialties();
 		}
 
 	}

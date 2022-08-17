@@ -14,7 +14,7 @@
 				<app-typeahead id="select-specialty" [options]="specialtiesTypeahead"
 					[externalSetValue]="initValueTypeaheadSpecialties[formChild]"
 					[titleInput]="'pacientes.edit_prefessions_specialties.profession_specialties.SPECIALTY'| translate "
-					(selectionChange)="setSpeciality($event,formChild)">
+					(selectionChange)="setSpecialty($event,formChild)">
 				</app-typeahead>
 				<mat-error *ngIf='hasErrorSpecialty()'>
 					{{'pacientes.edit_prefessions_specialties.profession_specialties.SPECIALTY_ERROR' | translate }}
