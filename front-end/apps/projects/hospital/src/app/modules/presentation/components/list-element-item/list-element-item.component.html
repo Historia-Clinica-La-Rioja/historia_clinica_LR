@@ -1,8 +1,9 @@
 <div fxLayout="row" fxLayoutGap="20px" fxLayout.lt-lg="column">
-	<div>
-		<strong [class]="content.status.cssClass" class="label">{{content.status.description | translate |
-			uppercase}}</strong>
-	</div>
+	
+	<app-colored-label 
+		[description]="content.status.description | translate |	uppercase"
+		[color]="content.status.cssClass">
+    </app-colored-label>
 
 	<div fxLayout="column" fxFlex="50%" fxLayoutGap="10px">
 		<span class="content">{{content.description}}</span>
