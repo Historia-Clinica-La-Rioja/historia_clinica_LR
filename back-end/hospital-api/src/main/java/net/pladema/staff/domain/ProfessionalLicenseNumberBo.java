@@ -28,7 +28,7 @@ public class ProfessionalLicenseNumberBo {
 
 	public boolean hasSameProfessionAndType(ProfessionalLicenseNumberBo bo){
 		return this.type.equals(bo.getType())
-				&& this.professionalProfessionId.equals(bo.getProfessionalProfessionId())
+				&& Objects.equals(this.professionalProfessionId,bo.getProfessionalProfessionId())
 				&& Objects.equals(this.healthcareProfessionalSpecialtyId, bo.getHealthcareProfessionalSpecialtyId());
 	}
 }

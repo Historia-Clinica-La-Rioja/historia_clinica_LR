@@ -2,6 +2,7 @@ package net.pladema.staff.infrastructure.output.repository.professional;
 
 import java.util.List;
 import java.util.stream.Collectors;
+import net.pladema.staff.repository.HealthcareProfessionalSpecialtyRepository;
 
 import org.springframework.stereotype.Service;
 
@@ -19,10 +20,16 @@ public class ProfessionalLicenseNumberStorageImpl implements ProfessionalLicense
 
 	private final ProfessionalLicenseNumberRepository repository;
 
+	private final HealthcareProfessionalSpecialtyRepository hpsRepository;
+
 	@Override
 	public List<ProfessionalLicenseNumberBo> getByHealthCareProfessionalId(Integer healthcareProfessionalId) {
 		log.debug("Inputs parameters -> healthcareProfessionalId {}", healthcareProfessionalId);
 		List<ProfessionalLicenseNumberBo> result = repository.findByHealthcareProfessionalId(healthcareProfessionalId).stream().map(this::mapToBo).collect(Collectors.toList());
+		result.forEach(l-> {
+			if(l.getProfessionalProfessionId()==null&&l.getHealthcareProfessionalSpecialtyId()!=null)
+				l.setProfessionalProfessionId(hpsRepository.findById(l.getHealthcareProfessionalSpecialtyId()).get().getProfessionalProfessionId());
+		});
 		log.debug("Output -> {}", result);
 		return result;
 	}

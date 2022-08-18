@@ -46,18 +46,17 @@ public interface ProfessionalLicenseNumberRepository extends JpaRepository<Profe
 									  @Param("type") ELicenseNumberTypeBo type);
 
 	@Transactional(readOnly = true)
-	@Query(value = "SELECT pln  " +
+	@Query(value = "SELECT pln " +
 			"FROM ProfessionalLicenseNumber pln " +
-			"WHERE pln.professionalProfessionId IN (SELECT pp.id " +
-			"FROM ProfessionalProfessions pp " +
+			"WHERE pln.professionalProfessionId IN " +
+			"(SELECT pp.id FROM ProfessionalProfessions pp " +
 			"WHERE pp.healthcareProfessionalId = :healthcareProfessionalId " +
-			"AND pp.deleteable.deleted = false)" +
-			"OR pln.healthcareProfessionalSpecialtyId IN (SELECT hps.id " +
-			"FROM HealthcareProfessionalSpecialty hps " +
-			"JOIN ProfessionalProfessions pp2 " +
-			"ON pp2.id = hps.professionalProfessionId " +
-			"WHERE pp2.healthcareProfessionalId = :healthcareProfessionalId " +
-			"AND hps.deleteable.deleted = false) ")
-	List<ProfessionalLicenseNumber> findByHealthcareProfessionalId( @Param("healthcareProfessionalId") Integer healthcareProfessionalId);
+			"AND pp.deleteable.deleted = false OR pp.deleteable.deleted IS NULL) " +
+			"OR pln.healthcareProfessionalSpecialtyId IN " +
+			"(SELECT hps.id FROM HealthcareProfessionalSpecialty hps " +
+			"JOIN ProfessionalProfessions pp ON (pp.id = hps.professionalProfessionId) " +
+			"WHERE pp.healthcareProfessionalId = :healthcareProfessionalId " +
+			"AND hps.deleteable.deleted = false OR hps.deleteable.deleted IS NULL) ")
+	List<ProfessionalLicenseNumber> findByHealthcareProfessionalId(@Param("healthcareProfessionalId") Integer healthcareProfessionalId);
 
 }

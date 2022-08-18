@@ -55,7 +55,7 @@ public class ProfessionalLicenseNumberController {
 		return new ProfessionalLicenseNumberBo(dto.getId(),
 				dto.getLicenseNumber(),
 				ELicenseNumberTypeBo.map(dto.getTypeId()),
-				dto.getProfessionalProfessionId(),
+				dto.getHealthcareProfessionalSpecialtyId()==null?dto.getProfessionalProfessionId() : null,
 				dto.getHealthcareProfessionalSpecialtyId());
 	}
 
