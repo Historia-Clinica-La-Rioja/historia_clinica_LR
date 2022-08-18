@@ -42,7 +42,8 @@
 			"menu-items": {
 				"PHARMACO": "Fármaco",
 				"DIET": "Dieta",
-				"PARENTERAL_PLAN": "Plan parenteral"
+				"PARENTERAL_PLAN": "Plan parenteral",
+				"DETAILS": "Ver detalle"
 			},
 			"dialogs": {
 				"diet":{

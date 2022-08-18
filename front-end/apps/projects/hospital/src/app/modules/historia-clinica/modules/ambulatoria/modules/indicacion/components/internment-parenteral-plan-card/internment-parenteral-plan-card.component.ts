@@ -4,6 +4,8 @@ import { IndicationStatus, IndicationStatusScss, PARENTERAL_PLAN, showTimeElapse
 import { Content, ExtraInfo } from "@presentation/components/indication/indication.component";
 import { InternacionMasterDataService } from "@api-rest/services/internacion-master-data.service";
 import { loadExtraInfoParenteralPlan } from '../../constants/load-information';
+import { MatDialog } from '@angular/material/dialog';
+import { InternmentIndicationDetailComponent } from '../../dialogs/internment-indication-detail/internment-indication-detail.component';
 
 @Component({
 	selector: 'app-internment-parenteral-plan-card',
@@ -19,6 +21,7 @@ export class InternmentParenteralPlanCardComponent implements OnChanges {
 
 	constructor(
 		private readonly internacionMasterdataService: InternacionMasterDataService,
+		private readonly dialog: MatDialog,
 	) { }
 
 	ngOnChanges(): void {
@@ -41,6 +44,19 @@ export class InternmentParenteralPlanCardComponent implements OnChanges {
 				createdBy: parenteralPlan.createdBy,
 				timeElapsed: showTimeElapsed(parenteralPlan.createdOn),
 			}
+		});
+	}
+
+	openDetailDialog(): void{
+		const dialogRef = this.dialog.open(InternmentIndicationDetailComponent, {
+			data: {
+				indication: this.PARENTERAL_PLAN.title,
+			},
+			disableClose: false
+		});
+
+		dialogRef.afterClosed().subscribe(() => {
+			console.log('The Diet dialog was closed');
 		});
 	}
 }

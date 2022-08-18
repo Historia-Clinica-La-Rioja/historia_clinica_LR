@@ -5,6 +5,8 @@ import { OtherIndicationDto } from '@api-rest/api-model';
 import { OtherIndicationTypeDto } from '@api-rest/services/internment-indication.service';
 import { InternacionMasterDataService } from '@api-rest/services/internacion-master-data.service';
 import { showFrequency } from '../../constants/load-information';
+import { MatDialog } from '@angular/material/dialog';
+import { InternmentIndicationDetailComponent } from '../../dialogs/internment-indication-detail/internment-indication-detail.component';
 
 @Component({
 	selector: 'app-internment-other-indication-card',
@@ -26,7 +28,7 @@ export class InternmentOtherIndicationCardComponent implements OnChanges {
 
 	constructor(
 		private readonly internacionMasterdataService: InternacionMasterDataService,
-
+		private readonly dialog: MatDialog,
 	) { }
 
 	ngOnChanges() {
@@ -57,5 +59,18 @@ export class InternmentOtherIndicationCardComponent implements OnChanges {
 			return (result.id === OTHER_INDICATION_ID) ? otherIndication.otherType : result.description;
 		}
 
+	}
+
+	openDetailDialog(): void{
+		const dialogRef = this.dialog.open(InternmentIndicationDetailComponent, {
+			data: {
+				indication: this.OTHER_INDICATION.title,
+			},
+			disableClose: false
+		});
+
+		dialogRef.afterClosed().subscribe(() => {
+			console.log('The Diet dialog was closed');
+		});
 	}
 }

@@ -1,3 +1,9 @@
 <app-content width="full">
-	<app-indication [header]="OTHER_INDICATION" [contents]="indicationContent" [noInformation]="'indicacion.internment-card.sections.no-data.OTHER_INDICATION'"></app-indication>
+	<app-indication 
+		[header]="OTHER_INDICATION" 
+		[contents]="indicationContent" 
+		[noInformation]="'indicacion.internment-card.sections.no-data.OTHER_INDICATION'"
+		[menuOption]= "'indicacion.internment-card.menu-items.DETAILS'"
+		(onMenuOptionClick)="openDetailDialog()">
+	</app-indication>
 </app-content>

@@ -1,5 +1,5 @@
 import { EIndicationType } from '@api-rest/api-model';
-import { Component, Input } from '@angular/core';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
 
 @Component({
 	selector: 'app-indication',
@@ -11,9 +11,14 @@ export class IndicationComponent {
 	@Input() header: Title;
 	@Input() contents: Content[];
 	@Input() noInformation: string;
+	@Input() menuOption: string;
+	@Output() onMenuOptionClick = new EventEmitter<void>();
 
 	constructor() { }
 
+	menuOptionClick(): void{
+		this.onMenuOptionClick.emit();
+	}
 }
 
 export interface Title {

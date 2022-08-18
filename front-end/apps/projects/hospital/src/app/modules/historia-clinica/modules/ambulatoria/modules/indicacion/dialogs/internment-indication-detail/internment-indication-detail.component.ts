@@ -1,4 +1,5 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Inject, OnInit } from '@angular/core';
+import { MAT_DIALOG_DATA } from '@angular/material/dialog';
 
 @Component({
   selector: 'app-internment-indication-detail',
@@ -7,9 +8,14 @@ import { Component, OnInit } from '@angular/core';
 })
 export class InternmentIndicationDetailComponent implements OnInit {
 
-  constructor() { }
+  indication: string;
+
+  constructor(
+    @Inject(MAT_DIALOG_DATA) public data: { indication: string},
+  ) { }
 
   ngOnInit(): void {
+    this.indication = this.data.indication;
   }
 
 }

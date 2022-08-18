@@ -2,6 +2,8 @@ import { Component, Input, OnChanges } from "@angular/core";
 import { DIET, IndicationStatus, IndicationStatusScss, showTimeElapsed } from "@historia-clinica/modules/ambulatoria/modules/indicacion/constants/internment-indications";
 import { DietDto } from "@api-rest/api-model";
 import { Content } from '@presentation/components/indication/indication.component';
+import { MatDialog } from "@angular/material/dialog";
+import { InternmentIndicationDetailComponent } from "../../dialogs/internment-indication-detail/internment-indication-detail.component";
 
 @Component({
 	selector: 'app-internment-diet-card',
@@ -14,7 +16,9 @@ export class InternmentDietCardComponent implements OnChanges {
 	indicationContent: Content[] = [];
 	@Input() diets: DietDto[]
 
-	constructor() { }
+	constructor(
+		private readonly dialog: MatDialog,
+	) { }
 
 	ngOnChanges() {
 		this.indicationContent = this.mapToIndicationContent();
@@ -33,6 +37,19 @@ export class InternmentDietCardComponent implements OnChanges {
 				createdBy: diet.createdBy,
 				timeElapsed: showTimeElapsed(diet.createdOn),
 			}
+		});
+	}
+
+	openDetailDialog(): void{
+		const dialogRef = this.dialog.open(InternmentIndicationDetailComponent, {
+			data: {
+				indication: this.DIET.title,
+			},
+			disableClose: false
+		});
+
+		dialogRef.afterClosed().subscribe(() => {
+			console.log('The Diet dialog was closed');
 		});
 	}
 }

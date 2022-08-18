@@ -1,9 +1,11 @@
 import { Component, Input, OnChanges } from '@angular/core';
+import { MatDialog } from '@angular/material/dialog';
 import { PharmacoDto } from '@api-rest/api-model';
 import { InternacionMasterDataService } from '@api-rest/services/internacion-master-data.service';
 import { IndicationStatus, IndicationStatusScss, PHARMACO, showTimeElapsed } from "@historia-clinica/modules/ambulatoria/modules/indicacion/constants/internment-indications";
 import { Content } from "@presentation/components/indication/indication.component";
 import { loadExtraInfoPharmaco } from '../../constants/load-information';
+import { InternmentIndicationDetailComponent } from '../../dialogs/internment-indication-detail/internment-indication-detail.component';
 
 @Component({
 	selector: 'app-internment-pharmaco-card',
@@ -18,6 +20,7 @@ export class InternmentPharmacoCardComponent implements OnChanges {
 	@Input() pharmacos: PharmacoDto[]
 	constructor(
 		private readonly internacionMasterdataService: InternacionMasterDataService,
+		private readonly dialog: MatDialog,
 	) { }
 	ngOnChanges(): void {
 		this.internacionMasterdataService.getVias().subscribe(v => this.vias = v);
@@ -37,6 +40,19 @@ export class InternmentPharmacoCardComponent implements OnChanges {
 				createdBy: pharmaco.createdBy,
 				timeElapsed: showTimeElapsed(pharmaco.createdOn),
 			}
+		});
+	}
+
+	openDetailDialog(): void{
+		const dialogRef = this.dialog.open(InternmentIndicationDetailComponent, {
+			data: {
+				indication: this.PHARMACO.title,
+			},
+			disableClose: false
+		});
+
+		dialogRef.afterClosed().subscribe(() => {
+			console.log('The Diet dialog was closed');
 		});
 	}
 }
