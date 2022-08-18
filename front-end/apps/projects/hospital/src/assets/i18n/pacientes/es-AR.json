@@ -196,7 +196,8 @@
         "SELECT_PROFESSION": "Seleccione profesión",
         "SPECIALTY": "Especialidad",
         "ASSOCIATED_WITH": "Asociada a:",
-		"PROFESSION_ERROR": "Requiere al menos una professión.",
+		"PROFESSION_ERROR": "Requiere al menos una profesión.",
+		"SPECIALTY_ERROR": "Requiere una especialidad.",
 		"LICENSE_ERROR": "Requiere una matricula."
 
       }

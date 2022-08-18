@@ -1,4 +1,4 @@
-<div class="dialog">
+<div>
 
 	<div fxLayout="row" fxLayoutAlign="end end">
 		<button matSuffix mat-icon-button [mat-dialog-close]>
@@ -31,8 +31,8 @@
 	</button>
 
 	<div actions id="confirm-button" fxLayoutAlign="end">
-		<button class="uppercase" mat-raised-button color="primary" (click)="save()">
-			<span [translate]="'buttons.CONFIRM'"></span>
+		<button mat-raised-button color="primary" (click)="save()">
+			<span>{{ 'buttons.CONFIRM' | translate | uppercase }}</span>
 		</button>
 	</div>
 
