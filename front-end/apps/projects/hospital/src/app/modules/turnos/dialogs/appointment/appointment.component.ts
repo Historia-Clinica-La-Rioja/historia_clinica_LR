@@ -85,6 +85,7 @@ export class AppointmentComponent implements OnInit {
 	hideObservationForm: boolean = true;
 	hideObservationTitle: boolean = true;
 	observation: string;
+	selectedDate = new Date(this.params.appointmentData.date);
 
 	constructor(
 		@Inject(MAT_DIALOG_DATA) public params: { appointmentData: PatientAppointmentInformation, hasPermissionToAssignShift: boolean },
@@ -292,7 +293,7 @@ export class AppointmentComponent implements OnInit {
 	private submitNewState(newStateId: APPOINTMENT_STATES_ID, motivo?: string): void {
 		this.appointmentFacade.changeState(this.params.appointmentData.appointmentId, newStateId, motivo)
 			.subscribe(() => {
-				const appointmentInformation = { id: this.params.appointmentData.appointmentId, stateId: newStateId };
+				const appointmentInformation = { id: this.params.appointmentData.appointmentId, stateId: newStateId, date: this.selectedDate };
 				this.dialogRef.close(appointmentInformation);
 				this.snackBarService.showSuccess(`Estado de turno actualizado a ${getAppointmentState(newStateId).description} exitosamente`);
 			}, _ => {
@@ -381,7 +382,8 @@ export class AppointmentComponent implements OnInit {
 	closeDialog(returnValue?: string) {
 		if (!returnValue)
 			this.medicalCoverageInfo.setAppointmentMCoverage(this.summaryCoverageData);
-		this.dialogRef.close(returnValue);
+		const appointmentInformation = { returnValue: returnValue, date: this.selectedDate };
+		this.dialogRef.close(appointmentInformation);
 	}
 
 	enableDowndloadAnexo(option: boolean) {

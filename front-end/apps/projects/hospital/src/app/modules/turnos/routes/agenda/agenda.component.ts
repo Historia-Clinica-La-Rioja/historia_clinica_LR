@@ -335,7 +335,10 @@ export class AgendaComponent implements OnInit, OnDestroy, OnChanges {
 					},
 				});
 			}
-			dialogRef.afterClosed().subscribe((appointmentInformation) => {this.viewDate = appointmentInformation.date;});
+			dialogRef.afterClosed().subscribe((appointmentInformation) => {
+				if (appointmentInformation.date)
+					this.viewDate = appointmentInformation.date;
+			});
 		}
 	}
 
