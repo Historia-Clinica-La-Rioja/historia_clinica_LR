@@ -25,7 +25,7 @@ export class AntecedentesFamiliaresNuevaConsultaService {
 
 		this.form = this.formBuilder.group({
 			snomed: [null, Validators.required],
-			fecha: [null, Validators.required]
+			fecha: [null]
 		});
 
 		this.data = [];

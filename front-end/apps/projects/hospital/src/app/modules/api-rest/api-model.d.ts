@@ -1338,7 +1338,7 @@ export interface HealthConditionNewConsultationDto extends Serializable {
 
 export interface HealthHistoryConditionDto extends HealthConditionDto {
     note: string;
-    startDate: string;
+    startDate?: string;
 }
 
 export interface HealthInsuranceDto extends CoverageDto {

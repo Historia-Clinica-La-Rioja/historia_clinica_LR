@@ -189,7 +189,7 @@ export class InternmentSummaryFacadeService {
 
 	private mapToHealthHistoryConditionDto(familyHistory: HCEPersonalHistoryDto): HealthHistoryConditionDto {
 		return {
-			date: familyHistory.startDate,
+			startDate: familyHistory.startDate,
 			note: null,
 			id: familyHistory.id,
 			snomed: familyHistory.snomed,
