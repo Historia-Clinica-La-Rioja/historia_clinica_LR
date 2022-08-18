@@ -587,7 +587,7 @@ const messages = {
             }
         },
         holidays: {
-            name: 'Feriados',
+            name: 'Feriado |||| Feriados',
             fields: {
                 date: 'Fecha',
                 description: 'Descripción',

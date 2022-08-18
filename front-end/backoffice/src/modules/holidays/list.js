@@ -4,7 +4,8 @@ import {
     Datagrid,
     TextField,
     Filter,
-    TextInput
+    TextInput,
+    DateField
 } from 'react-admin';
 
 const HolidayFilter = (props) => (
@@ -18,7 +19,7 @@ const HolidayList = props => (
     <List {...props} filters={<HolidayFilter />}>
         <Datagrid rowClick="show">
             <TextField source="description" />
-            <TextField source="date" />
+            <DateField source="date" locales="es-ES" />
         </Datagrid>
     </List>
 );

@@ -10,7 +10,7 @@ import CustomToolbar from "../../modules/components/CustomToolbar";
 
 const HolidayCreate = props => (
     <Create {...props}>
-        <SimpleForm redirect="list" toolbar={<CustomToolbar />} >
+        <SimpleForm redirect="show" toolbar={<CustomToolbar />} >
             <TextInput source="description" validate={[required()]} />
             <DateInput source="date" validate={[required()]} />
         </SimpleForm>
