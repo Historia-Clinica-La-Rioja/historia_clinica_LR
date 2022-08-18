@@ -7,6 +7,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+import ar.lamansys.sgx.shared.dates.controller.dto.DateDto;
+
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -549,15 +551,15 @@ class CreateOdontologyConsultationImplTest {
 
         List<ConsultationPersonalHistoryBo> personalHistories = new ArrayList<>();
 
-        ConsultationPersonalHistoryBo personalHistory1 = new ConsultationPersonalHistoryBo();
+        ConsultationPersonalHistoryBo personalHistory1 = new ConsultationPersonalHistoryBo(new DateDto(2022, 1,1));
         personalHistory1.setSnomed(new OdontologySnomedBo("SCTID 1", "PT 1"));
         personalHistories.add(personalHistory1);
 
-        ConsultationPersonalHistoryBo personalHistory2 = new ConsultationPersonalHistoryBo();
+        ConsultationPersonalHistoryBo personalHistory2 = new ConsultationPersonalHistoryBo(new DateDto(2022, 1,1));
         personalHistory2.setSnomed(new OdontologySnomedBo("SCTID 2", "PT 2"));
         personalHistories.add(personalHistory2);
 
-        ConsultationPersonalHistoryBo personalHistory3 = new ConsultationPersonalHistoryBo();
+        ConsultationPersonalHistoryBo personalHistory3 = new ConsultationPersonalHistoryBo(new DateDto(2022, 1,1));
         personalHistory3.setSnomed(new OdontologySnomedBo("SCTID 1", "PT 1"));
         personalHistories.add(personalHistory3);
 
@@ -724,10 +726,10 @@ class CreateOdontologyConsultationImplTest {
         consultation.setAllergies(allergies);
 
         List<ConsultationPersonalHistoryBo> personalHistories = new ArrayList<>();
-        ConsultationPersonalHistoryBo personalHistory1 = new ConsultationPersonalHistoryBo();
+        ConsultationPersonalHistoryBo personalHistory1 = new ConsultationPersonalHistoryBo(new DateDto(2022, 1,1));
         personalHistory1.setSnomed(new OdontologySnomedBo("SCTID 1", "PT 1"));
         personalHistories.add(personalHistory1);
-        ConsultationPersonalHistoryBo personalHistory2 = new ConsultationPersonalHistoryBo();
+        ConsultationPersonalHistoryBo personalHistory2 = new ConsultationPersonalHistoryBo(new DateDto(2022, 1,1));
         personalHistory2.setSnomed(new OdontologySnomedBo("SCTID 1", "PT 1"));
         personalHistories.add(personalHistory2);
         consultation.setPersonalHistories(personalHistories);

@@ -1337,8 +1337,8 @@ export interface HealthConditionNewConsultationDto extends Serializable {
 }
 
 export interface HealthHistoryConditionDto extends HealthConditionDto {
-    date: string;
     note: string;
+    startDate: string;
 }
 
 export interface HealthInsuranceDto extends CoverageDto {
@@ -1927,7 +1927,7 @@ export interface OdontologyMedicationDto {
 
 export interface OdontologyPersonalHistoryDto extends Serializable {
     snomed: SnomedDto;
-    startDate: DateDto;
+    startDate?: DateDto;
     statusId?: string;
     verificationId?: string;
 }
@@ -2003,7 +2003,7 @@ export interface OutpatientEvolutionSummaryDto extends Serializable {
 
 export interface OutpatientFamilyHistoryDto {
     snomed: SnomedDto;
-    startDate: string;
+    startDate?: string;
     statusId?: string;
     verificationId?: string;
 }
