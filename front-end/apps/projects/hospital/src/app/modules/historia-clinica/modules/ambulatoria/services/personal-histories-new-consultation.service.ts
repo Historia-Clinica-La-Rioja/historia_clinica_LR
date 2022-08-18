@@ -31,7 +31,7 @@ export class PersonalHistoriesNewConsultationService {
 
 		this.form = this.formBuilder.group({
 			snomed: [null, Validators.required],
-			fecha: [null, Validators.required]
+			fecha: [null]
 		});
 
 		this.tableColumnConfig = [
@@ -45,7 +45,7 @@ export class PersonalHistoriesNewConsultationService {
 				def: 'date',
 				header: 'ambulatoria.paciente.nueva-consulta.antecedentes-personales.table.columns.FECHA',
 				template: CellTemplates.TEXT,
-				text: (row) => momentFormat(row.fecha, DateFormat.VIEW_DATE)
+				text: (row) =>row.fecha ?  momentFormat(row.fecha, DateFormat.VIEW_DATE) : null
 			},
 			{
 				def: 'delete',
