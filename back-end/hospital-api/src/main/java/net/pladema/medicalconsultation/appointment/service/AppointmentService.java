@@ -6,6 +6,7 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 
+import net.pladema.medicalconsultation.appointment.repository.domain.AppointmentShortSummaryBo;
 import net.pladema.medicalconsultation.appointment.repository.domain.AppointmentTicketBo;
 import net.pladema.medicalconsultation.appointment.service.domain.AppointmentAssignedBo;
 import net.pladema.medicalconsultation.appointment.service.domain.AppointmentBo;
@@ -52,4 +53,6 @@ public interface AppointmentService {
     void delete(AppointmentBo appointmentBo);
 
 	AppointmentTicketBo getAppointmentTicketData(Integer appointmentId);
+
+	AppointmentShortSummaryBo getAppointmentFromDeterminatedDate(Integer patientId, LocalDate date);
 }

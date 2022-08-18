@@ -244,6 +244,13 @@ export interface AppointmentSearchDto {
     initialSearchTime: TimeDto;
 }
 
+export interface AppointmentShortSummaryDto {
+    date: DateDto;
+    doctorFullName: string;
+    hour: TimeDto;
+    institution: string;
+}
+
 export interface AppointmentTicketDto {
     date: string;
     doctorFullName: string;

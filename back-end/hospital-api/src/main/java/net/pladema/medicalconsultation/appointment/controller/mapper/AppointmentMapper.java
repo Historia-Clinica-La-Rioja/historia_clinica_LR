@@ -1,8 +1,10 @@
 package net.pladema.medicalconsultation.appointment.controller.mapper;
 
+import net.pladema.medicalconsultation.appointment.controller.dto.AppointmentShortSummaryDto;
 import net.pladema.medicalconsultation.appointment.controller.dto.AssignedAppointmentDto;
 import net.pladema.medicalconsultation.appointment.controller.dto.EmptyAppointmentDto;
 import net.pladema.medicalconsultation.appointment.service.domain.EmptyAppointmentBo;
+import net.pladema.medicalconsultation.appointment.repository.domain.AppointmentShortSummaryBo;
 import net.pladema.medicalconsultation.appointment.service.domain.AppointmentAssignedBo;
 import net.pladema.medicalconsultation.appointment.service.domain.AppointmentSearchBo;
 import net.pladema.medicalconsultation.appointment.controller.dto.AppointmentSearchDto;
@@ -49,6 +51,9 @@ public interface AppointmentMapper {
 
 	@Named("toUpdateAppointmentBo")
 	UpdateAppointmentBo toUpdateAppointmentBo(UpdateAppointmentDto updateAppointmentDto);
+
+	@Named("toAppointmentShortSummaryDto")
+	AppointmentShortSummaryDto toAppointmentShortSummaryDto(AppointmentShortSummaryBo appointmentShortSummaryBo);
 
 	@Named("toAppointmentSearchBo")
 	AppointmentSearchBo toAppointmentSearchBo(AppointmentSearchDto appointmentSearchDto);

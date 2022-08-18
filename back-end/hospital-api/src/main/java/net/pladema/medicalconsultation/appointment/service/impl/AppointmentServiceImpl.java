@@ -16,6 +16,7 @@ import net.pladema.establishment.controller.service.InstitutionExternalService;
 import net.pladema.establishment.repository.MedicalCoveragePlanRepository;
 import net.pladema.medicalconsultation.appointment.repository.AppointmentObservationRepository;
 import net.pladema.medicalconsultation.appointment.repository.domain.AppointmentDiaryVo;
+import net.pladema.medicalconsultation.appointment.repository.domain.AppointmentShortSummaryBo;
 import net.pladema.medicalconsultation.appointment.repository.entity.AppointmentObservation;
 import net.pladema.medicalconsultation.appointment.service.ports.AppointmentStorage;
 import net.pladema.patient.controller.dto.PatientMedicalCoverageDto;
@@ -356,4 +357,15 @@ public class AppointmentServiceImpl implements AppointmentService {
 		log.trace(OUTPUT, result);
 		return result;
 	}
+
+	@Override
+	public AppointmentShortSummaryBo getAppointmentFromDeterminatedDate(Integer patientId, LocalDate date) {
+		log.debug("Input parameters -> patientId {}, date {}", patientId, date);
+		AppointmentShortSummaryBo result = null;
+		List<AppointmentShortSummaryBo> appointmentShortSummaryBoList = this.appointmentRepository.getAppointmentFromDeterminatedDate(patientId, date);
+		if (!appointmentShortSummaryBoList.isEmpty())
+			result = appointmentShortSummaryBoList.get(0);
+		return result;
+	}
+
 }

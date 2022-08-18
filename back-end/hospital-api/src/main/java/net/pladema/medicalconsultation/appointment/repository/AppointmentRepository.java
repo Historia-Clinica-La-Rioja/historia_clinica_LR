@@ -5,6 +5,8 @@ import java.time.LocalTime;
 import java.util.List;
 import java.util.Optional;
 
+import net.pladema.medicalconsultation.appointment.repository.domain.AppointmentShortSummaryBo;
+
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -228,4 +230,24 @@ public interface AppointmentRepository extends SGXAuditableEntityJPARepository<A
 			"JOIN Person per2 ON(hp.personId = per2.id) " +
 			"WHERE a.id = :appointmentId ")
 	Optional<AppointmentTicketBo> getAppointmentTicketData(@Param("appointmentId") Integer appointmentId);
+
+	@Transactional(readOnly = true)
+	@Query("SELECT NEW net.pladema.medicalconsultation.appointment.repository.domain.AppointmentShortSummaryBo(" +
+			"i.name, a.dateTypeId, a.hour, per.lastName, per.otherLastNames, per.firstName, per.middleNames) " +
+			"FROM Appointment a " +
+			"JOIN AppointmentAssn aa ON(a.id = aa.pk.appointmentId) " +
+			"JOIN Diary d ON(d.id = aa.pk.diaryId) " +
+			"JOIN Patient p ON(p.id = a.patientId) " +
+			"JOIN DoctorsOffice do2 ON(d.doctorsOfficeId = do2.id) " +
+			"JOIN Institution i On(do2.institutionId = i.id) " +
+			"JOIN HealthcareProfessional hp ON(d.healthcareProfessionalId = hp.id) " +
+			"JOIN Person per ON (hp.personId = per.id) " +
+			"WHERE a.patientId = :patientId " +
+			"AND a.dateTypeId = :date " +
+			"AND a.appointmentStateId NOT IN (" + AppointmentState.CANCELLED_STR + "," + AppointmentState.SERVED + "," + AppointmentState.ABSENT + ") " +
+			"AND (a.deleteable.deleted = false OR a.deleteable.deleted is null ) " +
+			"ORDER BY a.hour asc")
+	List<AppointmentShortSummaryBo> getAppointmentFromDeterminatedDate(@Param("patientId") Integer patientId,
+																				 @Param("date") LocalDate date);
+
 }

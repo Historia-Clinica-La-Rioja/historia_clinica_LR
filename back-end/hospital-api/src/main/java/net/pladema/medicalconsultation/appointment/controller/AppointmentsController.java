@@ -15,6 +15,8 @@ import javax.validation.constraints.Size;
 import ar.lamansys.sgx.shared.dates.configuration.LocalDateMapper;
 import ar.lamansys.sgx.shared.dates.controller.dto.DateTimeDto;
 
+import net.pladema.medicalconsultation.appointment.controller.dto.AppointmentShortSummaryDto;
+
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -425,6 +427,18 @@ public class AppointmentsController {
 			return ResponseEntity.ok(result);
 		}
 		return ResponseEntity.ok(null);
+	}
+
+	@GetMapping("/patient/{patientId}/verify-existing-appointments")
+	@PreAuthorize("hasPermission(#institutionId, 'ADMINISTRATIVO, ESPECIALISTA_MEDICO, PROFESIONAL_DE_SALUD, ESPECIALISTA_EN_ODONTOLOGIA, ENFERMERO')")
+	public ResponseEntity<AppointmentShortSummaryDto> getAppointmentFromDeterminatedDate(
+			@PathVariable(name = "institutionId") Integer institutionId,
+			@PathVariable(name = "patientId") Integer patientId,
+			@RequestParam String date) {
+		log.debug("Input parameters -> institutionId {}, patientId {}, date {}", institutionId, patientId, date);
+		var appointmentShortSummaryBo = appointmentService.getAppointmentFromDeterminatedDate(patientId, localDateMapper.fromStringToLocalDate(date));
+		var result = appointmentMapper.toAppointmentShortSummaryDto(appointmentShortSummaryBo);
+		return ResponseEntity.ok(result);
 	}
 
 }
