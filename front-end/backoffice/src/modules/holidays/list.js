@@ -11,7 +11,6 @@ import {
 const HolidayFilter = (props) => (
     <Filter {...props}>
         <TextInput source="description" />
-        <TextInput source="date" />
     </Filter>
 );
 
