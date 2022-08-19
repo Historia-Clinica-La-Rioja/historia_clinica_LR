@@ -1,7 +1,9 @@
 package net.pladema.medicalconsultation.diary.service.impl;
 
+import ar.lamansys.sgx.shared.dates.configuration.DateTimeProvider;
 import ar.lamansys.sgx.shared.exceptions.NotFoundException;
 import lombok.RequiredArgsConstructor;
+import net.pladema.establishment.controller.service.InstitutionExternalService;
 import net.pladema.medicalconsultation.appointment.service.AppointmentService;
 import net.pladema.medicalconsultation.appointment.service.UpdateAppointmentOpeningHoursService;
 import net.pladema.medicalconsultation.appointment.service.domain.AppointmentBo;
@@ -35,6 +37,7 @@ import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.time.ZoneId;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -72,6 +75,10 @@ public class DiaryServiceImpl implements DiaryService {
 	private final DiaryRepository diaryRepository;
 
 	private final LoggedUserExternalService loggedUserExternalService;
+
+	private final InstitutionExternalService institutionExternalService;
+
+	private final DateTimeProvider dateTimeProvider;
 
 	@Override
 	public Integer addDiary(DiaryBo diaryToSave) {
@@ -362,16 +369,20 @@ public class DiaryServiceImpl implements DiaryService {
 		LOG.debug("Input parameters -> institutionId {}, searchCriteria {}", institutionId, searchCriteria);
 		List<EmptyAppointmentBo> emptyAppointments = new ArrayList<>();
 		List<CompleteDiaryBo> diariesBySpecialty = getActiveDiariesByAliasOrClinicalSpecialtyName(institutionId, searchCriteria.getAliasOrSpecialtyName());
+		LocalDateTime currentDateTime = dateTimeProvider.nowDateTimeWithZone(institutionExternalService.getTimezone(institutionId));
 		for (CompleteDiaryBo diary: diariesBySpecialty)
-			emptyAppointments = getEmptyAppointmentBos(searchCriteria, emptyAppointments, diary);
+			emptyAppointments = getEmptyAppointmentBos(searchCriteria, emptyAppointments, diary, currentDateTime);
 		emptyAppointments.sort(Comparator.comparing(EmptyAppointmentBo::getDate).thenComparing(EmptyAppointmentBo::getHour));
 		LOG.debug(OUTPUT, emptyAppointments);
 		return emptyAppointments;
 	}
 
-	private List<EmptyAppointmentBo> getEmptyAppointmentBos(AppointmentSearchBo searchCriteria, List<EmptyAppointmentBo> emptyAppointments, CompleteDiaryBo diary) {
+	private List<EmptyAppointmentBo> getEmptyAppointmentBos(AppointmentSearchBo searchCriteria,
+															List<EmptyAppointmentBo> emptyAppointments,
+															CompleteDiaryBo diary,
+															LocalDateTime currentDateTime) {
 		Collection<AppointmentBo> assignedAppointments = appointmentService.getAppointmentsByDiaries(List.of(diary.getId()), searchCriteria.getInitialSearchDate(), searchCriteria.getEndingSearchDate());
-		List<EmptyAppointmentBo> availableAppointments = getDiaryAvailableAppointments(diary, searchCriteria, assignedAppointments);
+		List<EmptyAppointmentBo> availableAppointments = getDiaryAvailableAppointments(diary, searchCriteria, assignedAppointments, currentDateTime);
 		emptyAppointments.addAll(availableAppointments);
 		return emptyAppointments;
 	}
@@ -384,7 +395,10 @@ public class DiaryServiceImpl implements DiaryService {
 		return result;
 	}
 
-	private List<EmptyAppointmentBo> getDiaryAvailableAppointments(CompleteDiaryBo diary, AppointmentSearchBo searchCriteria, Collection<AppointmentBo> assignedAppointments) {
+	private List<EmptyAppointmentBo> getDiaryAvailableAppointments(CompleteDiaryBo diary,
+																   AppointmentSearchBo searchCriteria,
+																   Collection<AppointmentBo> assignedAppointments,
+																   LocalDateTime currentDateTime) {
 		List<EmptyAppointmentBo> result = new ArrayList<>();
 		Map<Short, Map<Integer, List<LocalTime>>> potentialAppointmentTimesByDay = new HashMap<>();
 		diary.getDiaryOpeningHours().forEach(openingHours -> {
@@ -400,7 +414,7 @@ public class DiaryServiceImpl implements DiaryService {
 		daysBetweenLimits.add(searchEndingDate);
 		daysBetweenLimits.forEach(day -> {
 			if (day.compareTo(diary.getStartDate()) >= 0 && day.compareTo(diary.getEndDate()) <= 0 && result.size() < 20) {
-				generateDayEmptyAppointments(diary, result, potentialAppointmentTimesByDay, day, assignedAppointments);
+				generateDayEmptyAppointments(diary, result, potentialAppointmentTimesByDay, day, assignedAppointments, currentDateTime);
 			}
 		});
 		return result;
@@ -410,12 +424,15 @@ public class DiaryServiceImpl implements DiaryService {
 											  List<EmptyAppointmentBo> result,
 											  Map<Short, Map<Integer, List<LocalTime>>> potentialAppointmentTimesByDay,
 											  LocalDate day,
-											  Collection<AppointmentBo> assignedAppointments) {
+											  Collection<AppointmentBo> assignedAppointments,
+											  LocalDateTime currentDateTime) {
 		int currentDayOfWeek = day.getDayOfWeek().getValue() == 7 ? 0 : day.getDayOfWeek().getValue();
 		Map<Integer, List<LocalTime>> emptyAppointmentTimesOfCurrentDayOpeningHours = potentialAppointmentTimesByDay.get((short) currentDayOfWeek);
 		if (emptyAppointmentTimesOfCurrentDayOpeningHours != null) {
 			emptyAppointmentTimesOfCurrentDayOpeningHours.forEach((openingHoursId, openingHoursTimeList) ->
-					result.addAll(openingHoursTimeList.stream().map(time -> createEmptyAppointmentBoFromRawData(time, day, diary, openingHoursId))
+					result.addAll(openingHoursTimeList.stream()
+							.filter(time -> time.compareTo(currentDateTime.toLocalTime()) > 0 && day.compareTo(currentDateTime.toLocalDate()) >= 0)
+							.map(time -> createEmptyAppointmentBoFromRawData(time, day, diary, openingHoursId))
 							.filter(emptyAppointment -> {
 								var time = emptyAppointment.getHour();
 								var date = emptyAppointment.getDate();

@@ -13,7 +13,7 @@
 		<mat-tab label="{{ 'turnos.home.SEARCH_BY_PROFESSIONAL' | translate | uppercase }}">
 			<app-seach-appointments-by-professional></app-seach-appointments-by-professional>
 		</mat-tab>
-		<mat-tab label="{{ 'turnos.home.SEARCH_BY_SPECIALTY' | translate | uppercase }}" *appHasRole="['ADMINISTRADOR_AGENDA']">
+		<mat-tab label="{{ 'turnos.home.SEARCH_BY_SPECIALTY' | translate | uppercase }}" *appHasRole="['ADMINISTRADOR_AGENDA', 'ADMINISTRATIVO']">
 			<app-search-appointments-by-specialty></app-search-appointments-by-specialty>
 		</mat-tab>
 	</mat-tab-group>
