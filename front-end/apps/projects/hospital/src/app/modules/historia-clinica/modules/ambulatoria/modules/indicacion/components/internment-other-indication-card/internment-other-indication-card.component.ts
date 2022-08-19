@@ -8,6 +8,8 @@ import { showFrequency } from '../../constants/load-information';
 import { MatDialog } from '@angular/material/dialog';
 import { InternmentIndicationDetailComponent } from '../../dialogs/internment-indication-detail/internment-indication-detail.component';
 
+
+const DIALOG_SIZE = '45%';
 @Component({
 	selector: 'app-internment-other-indication-card',
 	templateUrl: './internment-other-indication-card.component.html',
@@ -73,7 +75,8 @@ export class InternmentOtherIndicationCardComponent implements OnChanges {
 					header: this.OTHER_INDICATION,
 					status: content.status
 				},
-				disableClose: false
+				disableClose: false,
+				width: DIALOG_SIZE
 			});
 		});
 	}

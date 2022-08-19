@@ -8,6 +8,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { InternmentIndicationDetailComponent } from '../../dialogs/internment-indication-detail/internment-indication-detail.component';
 import { InternmentIndicationService } from '@api-rest/services/internment-indication.service';
 
+const DIALOG_SIZE = '45%';
 @Component({
 	selector: 'app-internment-parenteral-plan-card',
 	templateUrl: './internment-parenteral-plan-card.component.html',
@@ -60,7 +61,8 @@ export class InternmentParenteralPlanCardComponent implements OnChanges {
 					header: this.PARENTERAL_PLAN,
 					status: content.status
 				},
-				disableClose: false
+				disableClose: false,
+				width: DIALOG_SIZE
 			});
 		});
 	}

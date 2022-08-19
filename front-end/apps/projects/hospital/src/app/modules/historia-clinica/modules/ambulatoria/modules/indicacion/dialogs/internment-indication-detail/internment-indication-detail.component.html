@@ -1,1 +1,20 @@
-<p>internment-indication-detail works!</p>
+<div class="close" fxLayout="row" fxLayoutAlign="end">
+    <button matSuffix mat-icon-button [mat-dialog-close]>
+        <mat-icon>close</mat-icon>
+    </button>
+</div>
+<div id="header" fxLayout="row">
+    <div fxLayout="row" fxFlex="20px">
+        <mat-icon class="color-primary" fontSet="material-icons-outlined" *ngIf="data.header.matIcon; else svgIcon">
+            {{ data.header.matIcon }}</mat-icon>
+    </div>
+    
+    <ng-template #svgIcon>
+        <mat-icon class="color-primary svg-icon" svgIcon={{data.header.svgIcon}}></mat-icon>
+    </ng-template>
+
+    <app-colored-label class="label"
+        [description]="data.status.description | translate |	uppercase"
+        [color]="'blue'">
+    </app-colored-label>
+</div>

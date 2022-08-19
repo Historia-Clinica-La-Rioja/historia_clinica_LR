@@ -6,6 +6,9 @@ import { MatDialog } from "@angular/material/dialog";
 import { InternmentIndicationDetailComponent } from "../../dialogs/internment-indication-detail/internment-indication-detail.component";
 import { InternmentIndicationService } from "@api-rest/services/internment-indication.service";
 
+
+const DIALOG_SIZE = '45%';
+
 @Component({
 	selector: 'app-internment-diet-card',
 	templateUrl: './internment-diet-card.component.html',
@@ -53,7 +56,8 @@ export class InternmentDietCardComponent implements OnChanges {
 					header: this.DIET,
 					status: content.status
 				},
-				disableClose: false
+				disableClose: false,
+				width: DIALOG_SIZE
 			});
 		});
 	}

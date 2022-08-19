@@ -18,6 +18,8 @@ export class InternmentIndicationDetailComponent implements OnInit {
     },
   ) { }
 
-  ngOnInit(): void {}
+  ngOnInit(): void {
+    console.log(this.data);
+  }
 
 }
