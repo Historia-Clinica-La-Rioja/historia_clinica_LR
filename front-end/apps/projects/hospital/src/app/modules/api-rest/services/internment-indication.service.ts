@@ -21,7 +21,7 @@ export class InternmentIndicationService {
 		return this.http.get<DietDto[]>(url);
 	}
 	getInternmentEpisodeOtherIndications(internmentEpisodeId: number): Observable<OtherIndicationDto[]> {
-		const url = `${environment.apiBase}/institutions/${this.contextService.institutionId}/internments/${internmentEpisodeId}/other-indication`;
+		const url = `${environment.apiBase}/institutions/${this.contextService.institutionId}/internments/${internmentEpisodeId}/other-indications`;
 		return this.http.get<OtherIndicationDto[]>(url);
 	}
 	addDiet(indication: DietDto, internmentEpisodeId: number): Observable<DietDto> {
@@ -39,14 +39,34 @@ export class InternmentIndicationService {
 		return this.http.get<OtherIndicationTypeDto[]>(url);
 	}
 
-	getInternmentEpisodeParenteralPlan(internmentEpisodeId: number): Observable<ParenteralPlanDto[]> {
+	getInternmentEpisodeParenteralPlans(internmentEpisodeId: number): Observable<ParenteralPlanDto[]> {
 		const url = `${environment.apiBase}/institutions/${this.contextService.institutionId}/internments/${internmentEpisodeId}/parenteral-plans`;
 		return this.http.get<ParenteralPlanDto[]>(url);
 	}
 
-	getInternmentEpisodePharmaco(internmentEpisodeId: number): Observable<PharmacoDto[]> {
+	getInternmentEpisodePharmacos(internmentEpisodeId: number): Observable<PharmacoDto[]> {
 		const url = `${environment.apiBase}/institutions/${this.contextService.institutionId}/internments/${internmentEpisodeId}/pharmacos`;
 		return this.http.get<PharmacoDto[]>(url);
+	}
+
+	getInternmentEpisodeDiet(internmentEpisodeId: number, dietId: number): Observable<DietDto> {
+		const url = `${environment.apiBase}/institutions/${this.contextService.institutionId}/internments/${internmentEpisodeId}/diets/${dietId}`;
+		return this.http.get<DietDto>(url);
+	}
+	
+	getInternmentEpisodeOtherIndication(internmentEpisodeId: number, otherIndicationId: number): Observable<OtherIndicationDto> {
+		const url = `${environment.apiBase}/institutions/${this.contextService.institutionId}/internments/${internmentEpisodeId}/other-indications/${otherIndicationId}`;
+		return this.http.get<OtherIndicationDto>(url);
+	}
+
+	getInternmentEpisodeParenteralPlan(internmentEpisodeId: number, parenteralPlanid: number): Observable<ParenteralPlanDto> {
+		const url = `${environment.apiBase}/institutions/${this.contextService.institutionId}/internments/${internmentEpisodeId}/parenteral-plans/${parenteralPlanid}`;
+		return this.http.get<ParenteralPlanDto>(url);
+	}
+
+	getInternmentEpisodePharmaco(internmentEpisodeId: number, pharmacoId: number): Observable<PharmacoDto> {
+		const url = `${environment.apiBase}/institutions/${this.contextService.institutionId}/internments/${internmentEpisodeId}/pharmacos/${pharmacoId}`;
+		return this.http.get<PharmacoDto>(url);
 	}
 
 	addParenteralPlan(indication: ParenteralPlanDto, internmentEpisodeId: number): Observable<number> {

@@ -12,12 +12,12 @@ export class IndicationComponent {
 	@Input() contents: Content[];
 	@Input() noInformation: string;
 	@Input() menuOption: string;
-	@Output() onMenuOptionClick = new EventEmitter<void>();
+	@Output() onMenuOptionClick = new EventEmitter<Content>();
 
 	constructor() { }
 
-	menuOptionClick(): void{
-		this.onMenuOptionClick.emit();
+	menuOptionClick(content: Content): void{
+		this.onMenuOptionClick.emit(content);
 	}
 }
 
@@ -28,6 +28,7 @@ export interface Title {
 }
 
 export interface Content {
+	id?: number;
 	status: Status;
 	description: string;
 	extra_info?: ExtraInfo[];

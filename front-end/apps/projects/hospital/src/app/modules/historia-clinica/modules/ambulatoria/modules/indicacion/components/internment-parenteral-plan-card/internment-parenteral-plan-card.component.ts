@@ -6,6 +6,7 @@ import { InternacionMasterDataService } from "@api-rest/services/internacion-mas
 import { loadExtraInfoParenteralPlan } from '../../constants/load-information';
 import { MatDialog } from '@angular/material/dialog';
 import { InternmentIndicationDetailComponent } from '../../dialogs/internment-indication-detail/internment-indication-detail.component';
+import { InternmentIndicationService } from '@api-rest/services/internment-indication.service';
 
 @Component({
 	selector: 'app-internment-parenteral-plan-card',
@@ -17,11 +18,13 @@ export class InternmentParenteralPlanCardComponent implements OnChanges {
 	PARENTERAL_PLAN = PARENTERAL_PLAN;
 	indicationContent: Content[] = [];
 	vias: any[] = [];
-	@Input() parenteralPlans: ParenteralPlanDto[]
+	@Input() parenteralPlans: ParenteralPlanDto[];
+	@Input() internmentEpisodeId: number;
 
 	constructor(
 		private readonly internacionMasterdataService: InternacionMasterDataService,
 		private readonly dialog: MatDialog,
+		private readonly internmentIndicationService: InternmentIndicationService,
 	) { }
 
 	ngOnChanges(): void {
@@ -39,6 +42,7 @@ export class InternmentParenteralPlanCardComponent implements OnChanges {
 					cssClass: IndicationStatusScss[parenteralPlan.status],
 					type: parenteralPlan.type
 				},
+				id: parenteralPlan.id,
 				description: parenteralPlan.snomed.pt,
 				extra_info: loadExtraInfoParenteralPlan(parenteralPlan, this.vias),
 				createdBy: parenteralPlan.createdBy,
@@ -47,16 +51,17 @@ export class InternmentParenteralPlanCardComponent implements OnChanges {
 		});
 	}
 
-	openDetailDialog(): void{
-		const dialogRef = this.dialog.open(InternmentIndicationDetailComponent, {
-			data: {
-				indication: this.PARENTERAL_PLAN.title,
-			},
-			disableClose: false
-		});
-
-		dialogRef.afterClosed().subscribe(() => {
-			console.log('The Diet dialog was closed');
+	openDetailDialog(content: Content): void{
+		this.internmentIndicationService.getInternmentEpisodeParenteralPlan(this.internmentEpisodeId, content.id)
+		.subscribe(parenteralPlan => {
+			this.dialog.open(InternmentIndicationDetailComponent, {
+				data: {
+					indication: parenteralPlan,
+					header: this.PARENTERAL_PLAN,
+					status: content.status
+				},
+				disableClose: false
+			});
 		});
 	}
 }

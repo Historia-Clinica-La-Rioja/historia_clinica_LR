@@ -75,7 +75,7 @@ public class InternmentIndicationController {
 		return ResponseEntity.ok(result);
 	}
 
-	@GetMapping("/diet/{dietId}")
+	@GetMapping("/diets/{dietId}")
 	@PreAuthorize("hasPermission(#institutionId, 'ESPECIALISTA_MEDICO, PROFESIONAL_DE_SALUD, ESPECIALISTA_EN_ODONTOLOGIA, ENFERMERO, PERSONAL_DE_FARMACIA')")
 	public ResponseEntity<DietDto> getInternmentEpisodeDiet(@PathVariable(name = "institutionId") Integer institutionId, @PathVariable(name = "internmentEpisodeId") Integer internmentEpisodeId, @PathVariable(name = "dietId") Integer dietId) {
 		log.debug("Input parameters -> institutionId {}, intermentEpisodeId {}, dietId {}", institutionId, internmentEpisodeId, dietId);
@@ -102,7 +102,7 @@ public class InternmentIndicationController {
 		return ResponseEntity.ok(result);
 	}
 
-	@GetMapping("/other-indication")
+	@GetMapping("/other-indications")
 	@PreAuthorize("hasPermission(#institutionId, 'ESPECIALISTA_MEDICO, PROFESIONAL_DE_SALUD, ESPECIALISTA_EN_ODONTOLOGIA, ENFERMERO, PERSONAL_DE_FARMACIA')")
 	public ResponseEntity<List<OtherIndicationDto>> getInternmentEpisodeOtherIndications(@PathVariable(name = "institutionId") Integer institutionId, @PathVariable(name = "internmentEpisodeId") Integer internmentEpisodeId) {
 		log.debug("Input parameters -> institutionId {}, internmentEpisodeId {}", institutionId, internmentEpisodeId);
@@ -111,7 +111,7 @@ public class InternmentIndicationController {
 		return ResponseEntity.ok(result);
 	}
 
-	@GetMapping("/other-indication/{otherIndicationId}")
+	@GetMapping("/other-indications/{otherIndicationId}")
 	@PreAuthorize("hasPermission(#institutionId, 'ESPECIALISTA_MEDICO, PROFESIONAL_DE_SALUD, ESPECIALISTA_EN_ODONTOLOGIA, ENFERMERO, PERSONAL_DE_FARMACIA')")
 	public ResponseEntity<OtherIndicationDto> getInternmentEpisodeOtherIndication(@PathVariable(name = "institutionId") Integer institutionId, @PathVariable(name = "internmentEpisodeId") Integer internmentEpisodeId, @PathVariable(name = "otherIndicationId") Integer otherIndicationId) {
 		log.debug("Input parameters -> institutionId {}, internmentEpisodeId {}, otherIndicationId {}", institutionId, internmentEpisodeId, otherIndicationId);
@@ -172,7 +172,7 @@ public class InternmentIndicationController {
 		return ResponseEntity.ok(result);
 	}
 
-	@GetMapping("/parenteral-plan/{parenteralPlanId}")
+	@GetMapping("/parenteral-plans/{parenteralPlanId}")
 	@PreAuthorize("hasPermission(#institutionId, 'ESPECIALISTA_MEDICO, ESPECIALISTA_EN_ODONTOLOGIA, PROFESIONAL_DE_SALUD, ENFERMERO, PERSONAL_DE_FARMACIA')")
 	public ResponseEntity<ParenteralPlanDto> getInternmentEpisodeParenteralPlan(@PathVariable(name = "institutionId") Integer institutionId, @PathVariable(name = "internmentEpisodeId") Integer internmentEpisodeId, @PathVariable(name = "parenteralPlanId") Integer parenteralPlanId) {
 		log.debug("Input parameters -> institutionId {}, internmentEpisodeId {}, parenteralPlanId {}", institutionId, internmentEpisodeId, parenteralPlanId);

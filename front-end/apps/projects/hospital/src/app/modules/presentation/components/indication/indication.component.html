@@ -9,7 +9,7 @@
 					<mat-icon>more_vert</mat-icon>
 				</button>
 				<mat-menu #menu="matMenu">
-					<button mat-menu-item (click)="menuOptionClick()">
+					<button mat-menu-item (click)="menuOptionClick(content)">
 						<span>{{menuOption | translate}}</span>
 					</button>
 				</mat-menu>

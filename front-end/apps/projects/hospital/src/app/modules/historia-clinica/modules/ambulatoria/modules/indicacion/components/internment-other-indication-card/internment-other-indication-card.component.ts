@@ -2,7 +2,7 @@ import { Component, Input, OnChanges } from '@angular/core';
 import { IndicationStatus, IndicationStatusScss, OTHER_INDICATION, OTHER_INDICATION_ID, showTimeElapsed } from "@historia-clinica/modules/ambulatoria/modules/indicacion/constants/internment-indications";
 import { Content } from '@presentation/components/indication/indication.component';
 import { OtherIndicationDto } from '@api-rest/api-model';
-import { OtherIndicationTypeDto } from '@api-rest/services/internment-indication.service';
+import { InternmentIndicationService, OtherIndicationTypeDto } from '@api-rest/services/internment-indication.service';
 import { InternacionMasterDataService } from '@api-rest/services/internacion-master-data.service';
 import { showFrequency } from '../../constants/load-information';
 import { MatDialog } from '@angular/material/dialog';
@@ -24,11 +24,13 @@ export class InternmentOtherIndicationCardComponent implements OnChanges {
 	othersIndicatiosType: OtherIndicationTypeDto[] = [];
 
 	@Input() otherIndications: OtherIndicationDto[];
+	@Input() internmentEpisodeId: number;
 
 
 	constructor(
 		private readonly internacionMasterdataService: InternacionMasterDataService,
 		private readonly dialog: MatDialog,
+		private readonly internmentIndicationService: InternmentIndicationService,
 	) { }
 
 	ngOnChanges() {
@@ -46,6 +48,7 @@ export class InternmentOtherIndicationCardComponent implements OnChanges {
 					cssClass: IndicationStatusScss[otherIndication.status],
 					type: otherIndication.type
 				},
+				id: otherIndication.id,
 				description: indication(otherIndication, this.othersIndicatiosType),
 				createdBy: otherIndication.createdBy,
 				timeElapsed: showTimeElapsed(otherIndication.createdOn),
@@ -61,16 +64,17 @@ export class InternmentOtherIndicationCardComponent implements OnChanges {
 
 	}
 
-	openDetailDialog(): void{
-		const dialogRef = this.dialog.open(InternmentIndicationDetailComponent, {
-			data: {
-				indication: this.OTHER_INDICATION.title,
-			},
-			disableClose: false
-		});
-
-		dialogRef.afterClosed().subscribe(() => {
-			console.log('The Diet dialog was closed');
+	openDetailDialog(content: Content): void{
+		this.internmentIndicationService.getInternmentEpisodeOtherIndication(this.internmentEpisodeId, content.id)
+		.subscribe(otherIndication => {
+			this.dialog.open(InternmentIndicationDetailComponent, {
+				data: {
+					indication: otherIndication,
+					header: this.OTHER_INDICATION,
+					status: content.status
+				},
+				disableClose: false
+			});
 		});
 	}
 }

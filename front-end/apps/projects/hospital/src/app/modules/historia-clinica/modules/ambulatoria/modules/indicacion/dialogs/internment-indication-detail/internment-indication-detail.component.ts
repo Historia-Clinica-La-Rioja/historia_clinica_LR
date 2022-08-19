@@ -1,5 +1,7 @@
 import { Component, Inject, OnInit } from '@angular/core';
 import { MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { DietDto, OtherIndicationDto, ParenteralPlanDto, PharmacoDto } from '@api-rest/api-model';import { DIET } from "@historia-clinica/modules/ambulatoria/modules/indicacion/constants/internment-indications";
+import { Status, Title } from "@presentation/components/indication/indication.component"
 
 @Component({
   selector: 'app-internment-indication-detail',
@@ -8,14 +10,14 @@ import { MAT_DIALOG_DATA } from '@angular/material/dialog';
 })
 export class InternmentIndicationDetailComponent implements OnInit {
 
-  indication: string;
-
   constructor(
-    @Inject(MAT_DIALOG_DATA) public data: { indication: string},
+    @Inject(MAT_DIALOG_DATA) public data: {
+      indication: DietDto | PharmacoDto | OtherIndicationDto | ParenteralPlanDto, 
+      header: Title,
+      status: Status
+    },
   ) { }
 
-  ngOnInit(): void {
-    this.indication = this.data.indication;
-  }
+  ngOnInit(): void {}
 
 }
