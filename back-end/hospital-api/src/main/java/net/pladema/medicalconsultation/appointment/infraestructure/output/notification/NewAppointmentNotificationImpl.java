@@ -55,7 +55,7 @@ public class NewAppointmentNotificationImpl implements NewAppointmentNotificatio
 				.time(String.format("%s", newAppointmentNotification.hour))
 				.institution(institutionBo.getName())
 				.recomendation("...")
-				.specialty(diaryBo.getSpecialtyName())
+				.specialty(diaryBo.getClinicalSpecialtyName())
 				.fromFullName(env.getProperty("app.notification.mail.fromFullname"))
 				.doctorOffice(diaryBo.getDoctorsOfficeDescription())
 				.medicalCoverage(medicalCoverage)

@@ -51,10 +51,16 @@ export class AppointmentDetailsComponent implements OnInit {
 					fullAppointmentDate = fullAppointmentDate[0].toUpperCase() + fullAppointmentDate.slice(1);
 					const timeData = this.emptyAppointment.hour.split(":");
 
+					const specialtyAndAlias = this.emptyAppointment.clinicalSpecialtyName ? this.emptyAppointment.clinicalSpecialtyName :
+					`${this.emptyAppointment.alias} (${this.emptyAppointment.clinicalSpecialtyName})`;
+
 					this.dialog.open(ConfirmDialogComponent, {
 						data: {
 							title: 'turnos.new-appointment.ASSIGNED_APPOINTMENT',
-							content: `${fullAppointmentDate} - ${timeData[0]}:${timeData[1]}hs`,
+							content: `${this.emptyAppointment.doctorFirstName} ${this.emptyAppointment.doctorLastName}
+							- ${specialtyAndAlias}
+							- ${fullAppointmentDate}
+							- ${timeData[0]}:${timeData[1]}hs`,
 							okButtonLabel: 'turnos.new-appointment.ACCEPT'
 						}
 					});
