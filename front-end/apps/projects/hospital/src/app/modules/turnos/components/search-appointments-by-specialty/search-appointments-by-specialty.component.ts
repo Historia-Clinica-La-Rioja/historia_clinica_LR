@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { ActivatedRoute } from '@angular/router';
 import { ClinicalSpecialtyDto, EmptyAppointmentDto, TimeDto } from '@api-rest/api-model';
 import { DiaryService } from '@api-rest/services/diary.service';
 import { TypeaheadOption } from '@presentation/components/typeahead/typeahead.component';
@@ -22,6 +23,7 @@ export class SearchAppointmentsBySpecialtyComponent implements OnInit {
 	searchBySpecialtyForm: FormGroup;
 	emptyAppointments: EmptyAppointmentDto[];
 	emptyAppointmentsFiltered: EmptyAppointmentDto[];
+	patientId: number;
 	private today: Date;
 
 	dateSearchFilter = (d: Moment): boolean => {
@@ -32,10 +34,15 @@ export class SearchAppointmentsBySpecialtyComponent implements OnInit {
 
 	constructor(
 		private readonly formBuilder: FormBuilder,
-		private readonly diaryService: DiaryService
+		private readonly diaryService: DiaryService,
+		private readonly route: ActivatedRoute
 	) {}
 
 	ngOnInit(): void {
+		this.route.queryParams.subscribe(qp => {
+			this.patientId = Number(qp.idPaciente);
+		});
+
 		this.today = new Date();
 		this.today.setHours(0,0,0,0);
 

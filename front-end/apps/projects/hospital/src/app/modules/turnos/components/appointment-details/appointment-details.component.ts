@@ -14,6 +14,7 @@ import { DatePipe } from '@angular/common';
 export class AppointmentDetailsComponent implements OnInit {
 
 	@Input() emptyAppointment: EmptyAppointmentDto;
+	@Input() patientId: number;
 	@Output() resetAppointmentList = new EventEmitter<void>();
 	appointmentTime: Date = new Date();
 
@@ -38,7 +39,7 @@ export class AppointmentDetailsComponent implements OnInit {
 				hour: this.emptyAppointment.hour,
 				openingHoursId: this.emptyAppointment.openingHoursId,
 				overturnMode: false,
-				patientId: null,
+				patientId: this.patientId ? this.patientId : null,
 			}
 		});
 		dialogReference.afterClosed().subscribe(
