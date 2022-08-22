@@ -268,6 +268,7 @@ export class AgendaComponent implements OnInit, OnDestroy, OnChanges {
 				if (addingOverturn && (numberOfOverturnsAssigned === diaryOpeningHourDto.overturnCount)) {
 					if (diaryOpeningHourDto.medicalAttentionTypeId !== MEDICAL_ATTENTION.SPONTANEOUS_ID) {
 						this.snackBarService.showError('turnos.overturns.messages.ERROR');
+                        return;
 					}
 				}
 
