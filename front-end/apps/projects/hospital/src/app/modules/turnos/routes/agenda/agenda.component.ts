@@ -39,6 +39,8 @@ import { LoggedUserService } from '../../../auth/services/logged-user.service';
 import * as moment from 'moment';
 import { endOfMonth, endOfWeek, startOfMonth, startOfWeek } from 'date-fns';
 import { DatePipe } from "@angular/common";
+import { DiscardWarningComponent } from '@presentation/dialogs/discard-warning/discard-warning.component';
+import { TranslateService } from '@ngx-translate/core';
 
 const ASIGNABLE_CLASS = 'cursor-pointer';
 const AGENDA_PROGRAMADA_CLASS = 'bg-green';
@@ -66,6 +68,7 @@ export class AgendaComponent implements OnInit, OnDestroy, OnChanges {
 
 	enableAppointmentScheduling = true;
 	appointments: CalendarEvent[];
+	holidays: CalendarEvent[];
 	dailyAmounts: AppointmentDailyAmountDto[];
 	dailyAmounts$: Observable<AppointmentDailyAmountDto[]>;
 	appointmentSubscription: Subscription;
@@ -104,7 +107,9 @@ export class AgendaComponent implements OnInit, OnDestroy, OnChanges {
 		private readonly contextService: ContextService,
 		private readonly healthcareProfessionalService: HealthcareProfessionalService,
 		private readonly loggedUserService: LoggedUserService,
-		private readonly calendarProfessionalInfo: CalendarProfessionalInformation
+		private readonly calendarProfessionalInfo: CalendarProfessionalInformation,
+		private readonly datePipe: DatePipe,
+		private readonly translateService: TranslateService
 	) {
 	}
 
@@ -262,30 +267,58 @@ export class AgendaComponent implements OnInit, OnDestroy, OnChanges {
 				if (addingOverturn && (numberOfOverturnsAssigned === diaryOpeningHourDto.overturnCount)) {
 					if (diaryOpeningHourDto.medicalAttentionTypeId !== MEDICAL_ATTENTION.SPONTANEOUS_ID) {
 						this.snackBarService.showError('turnos.overturns.messages.ERROR');
+						return;
 					}
 				}
 
 				if (this.loggedUserHealthcareProfessionalId !== this.appointmentFacade.getProfessionalId() && !this.userHasValidRoles()) {
 					this.snackBarService.showError('turnos.new-appointment.messages.NOT_RESPONSIBLE');
+					return;
 				} else {
-					this.dialog.open(NewAppointmentComponent, {
-						width: '35%',
-						data: {
-							date: clickedDate.format(DateFormat.API_DATE),
-							diaryId: this.agenda.id,
-							hour: clickedDate.format(DateFormat.HOUR_MINUTE_SECONDS),
-							openingHoursId: openingHourId,
-							overturnMode: addingOverturn,
-							patientId: this.patientId ? Number(this.patientId) : null,
+						if (!this.holidays?.find(holiday => holiday.start.getDate() === clickedDate.toDate().getDate())) {
+							this.openNewAppointmentDialog(clickedDate, openingHourId, addingOverturn);
 						}
-					});
-				}
+						else {
+							const holidayText = this.translateService.instant('turnos.holiday.HOLIDAY_RELATED');
+							const holidayDateText = this.datePipe.transform(clickedDate.toDate(), DatePipeFormat.FULL_DATE);
+							const dialogRef = this.dialog.open(DiscardWarningComponent, {
+								data: {
+									content: `${holidayDateText.charAt(0).toUpperCase() + holidayDateText.slice(1)} ${holidayText}`,
+									contentBold: `turnos.holiday.HOLIDAY_DISCLAIMER`,
+									okButtonLabel: 'turnos.holiday.OK_BUTTON',
+									cancelButtonLabel: 'turnos.holiday.CANCEL_BUTTON',
+								}
+							});
+							dialogRef.afterClosed().subscribe((result: boolean) => {
+								if (!result) {
+									dialogRef?.close();
+								}
+								else {
+									this.openNewAppointmentDialog(clickedDate, openingHourId, addingOverturn);
+								}
+							});
+						}
+					}
 			});
 		}
 	}
 
+	private openNewAppointmentDialog(clickedDate: Moment, openingHourId: number, addingOverturn: boolean) {
+		this.dialog.open(NewAppointmentComponent, {
+			width: '35%',
+			data: {
+				date: clickedDate.format(DateFormat.API_DATE),
+				diaryId: this.agenda.id,
+				hour: clickedDate.format(DateFormat.HOUR_MINUTE_SECONDS),
+				openingHoursId: openingHourId,
+				overturnMode: addingOverturn,
+				patientId: this.patientId ? Number(this.patientId) : null,
+			}
+		});
+	}
+
 	viewAppointment(event: CalendarEvent): void {
-		if (event.meta.appointmentStateId === APPOINTMENT_STATES_ID.BLOCKED) {
+		if (event.meta?.appointmentStateId === APPOINTMENT_STATES_ID.BLOCKED || !event.meta) {
 			return;
 		}
 		if (!event.meta.patient?.id) {

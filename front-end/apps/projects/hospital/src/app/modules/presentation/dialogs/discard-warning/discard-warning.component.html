@@ -3,7 +3,7 @@
 		<mat-icon>close</mat-icon>
 	</button>
 </div>
-<div class="report" fxLayout="column" fxLayoutAlign="center center">
+<div class="report" fxLayout="column" fxLayoutAlign="center center" fxLayoutGap="10px">
 
 	<h1 mat-dialog-title>{{ data.title | translate}}</h1>
 
@@ -19,7 +19,7 @@
 		<strong innerHTML="{{ data.contentBold | translate}}"></strong>
 	</div>
 
-	<div mat-dialog-actions align="end">
+	<div mat-dialog-actions fxLayout="row" fxLayoutGap="25px">
 		<button mat-stroked-button [mat-dialog-close]=false color="primary" class="uppercase" id="cancel-button">
 			{{(data.cancelButtonLabel? data.cancelButtonLabel : 'buttons.CANCEL') | translate}}</button>
 		<button mat-raised-button [mat-dialog-close]=true cdkFocusInitial [color]='okBottonColor' class="uppercase"
