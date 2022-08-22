@@ -235,6 +235,15 @@ export interface AppointmentListDto {
     phonePrefix: string;
 }
 
+export interface AppointmentSearchDto {
+    aliasOrSpecialtyName: string;
+    daysOfWeek: number[];
+    endSearchTime: TimeDto;
+    endingSearchDate: DateDto;
+    initialSearchDate: DateDto;
+    initialSearchTime: TimeDto;
+}
+
 export interface AppointmentTicketDto {
     date: string;
     doctorFullName: string;
@@ -244,15 +253,6 @@ export interface AppointmentTicketDto {
     institution: string;
     medicalCoverage: string;
     patientFullName: string;
-}
-
-export interface AppointmentSearchDto {
-    aliasOrSpecialtyName: string;
-    daysOfWeek: number[];
-    endSearchTime: TimeDto;
-    endingSearchDate: DateDto;
-    initialSearchDate: DateDto;
-    initialSearchTime: TimeDto;
 }
 
 export interface AssignedAppointmentDto {
