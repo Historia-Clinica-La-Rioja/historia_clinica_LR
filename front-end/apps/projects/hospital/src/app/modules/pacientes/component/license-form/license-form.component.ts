@@ -29,16 +29,14 @@ export class LicenseFormComponent implements ControlValueAccessor, OnDestroy, On
 	@Input() confirmationValidation = false;
 	onChangeSub: Subscription;
 
-	internalForm = this.formBuilder.group({
-		radioButtonOptionSpecialty: new FormControl(false, []),
-	})
 
 	form = this.formBuilder.group({
 		id: null,
 		licenseNumber: new FormControl(null, [Validators.required]),
 		typeId: this.RADIO_OPTION_NATIONAL,
 		professionalProfessionId: new FormControl(null, [Validators.required]),
-		healthcareProfessionalSpecialtyId: null,
+		healthcareProfessionalSpecialtyId: new FormControl(null, []),
+		radioButtonOptionSpecialty: new FormControl(false, [])
 	});
 
 	constructor(
@@ -52,21 +50,22 @@ export class LicenseFormComponent implements ControlValueAccessor, OnDestroy, On
 	}
 
 	ngOnInit(): void {
-		this.form.controls.healthcareProfessionalSpecialtyId?.valueChanges.subscribe((healthcareProfessionalSpecialtyId: number) => {
-			if (healthcareProfessionalSpecialtyId)
-				this.internalForm.controls.radioButtonOptionSpecialty.setValue(healthcareProfessionalSpecialtyId ? true : false);
-		});
 
 		this.form.controls.professionalProfessionId?.valueChanges.subscribe((professionalProfessionId: number) => {
-			this.internalForm.controls.radioButtonOptionSpecialty.setValue(false);
+			this.form.controls.healthcareProfessionalSpecialtyId.setValue(null);
 			this.specialtiesOption = this.professionSpecialties.find((elem: ProfessionalSpecialties) => elem.profession.id === professionalProfessionId)?.specialties;
 		});
 
-		this.internalForm.controls.radioButtonOptionSpecialty?.valueChanges.subscribe((value: boolean) => {
-			if (!value)
+		this.form.controls.radioButtonOptionSpecialty?.valueChanges.subscribe((value: boolean) => {
+			if (value) {
+				this.form.controls.healthcareProfessionalSpecialtyId.setValidators([Validators.required]);
+				this.form.controls.healthcareProfessionalSpecialtyId.updateValueAndValidity();
+			}
+			else {
+				this.form.controls.healthcareProfessionalSpecialtyId.removeValidators([Validators.required]);
+				this.form.controls.healthcareProfessionalSpecialtyId.updateValueAndValidity();
 				this.form.controls.healthcareProfessionalSpecialtyId.setValue(null);
-
-		});
+		}});
 
 	}
 

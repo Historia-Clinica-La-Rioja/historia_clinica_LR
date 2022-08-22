@@ -53,19 +53,20 @@ export class EditLicenseComponent implements OnInit {
 		} while (length > 0);
 	}
 
-	private convertToProfessionalLicenseNumberDto(elem: ProfessionalLicenseNumberDto): ProfessionalLicenseNumberDto {
+	private getComboProfessionLicense(elem: ProfessionalLicenseNumberDto): any {
 		return {
 			id: elem?.id || null,
 			licenseNumber: elem.licenseNumber,
 			professionalProfessionId: elem.professionalProfessionId,
 			typeId: elem.typeId,
-			healthcareProfessionalSpecialtyId: elem?.healthcareProfessionalSpecialtyId || null
+			healthcareProfessionalSpecialtyId: elem?.healthcareProfessionalSpecialtyId || null,
+			radioButtonOptionSpecialty: !!elem?.healthcareProfessionalSpecialtyId
 		}
 	}
 
 	private add(): FormGroup {
 		return new FormGroup({
-			combo: new FormControl(this.professionsWithLicense.length >= 1 ? this.convertToProfessionalLicenseNumberDto(this.professionsWithLicense.pop()) : null, [Validators.required]),
+			combo: new FormControl(this.professionsWithLicense.length ? this.getComboProfessionLicense(this.professionsWithLicense.shift()) : null, [Validators.required]),
 		});
 	}
 

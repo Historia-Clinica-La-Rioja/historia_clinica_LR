@@ -24,7 +24,7 @@
 
 		<strong>{{'pacientes.edit_license.form_license.ASSOCIATED_WITH'| translate}}</strong>
 
-		<form [formGroup]="internalForm">
+		<form [formGroup]="form">
 			<mat-radio-group id="radio-option-specialty" fxLayoutGap="15px" formControlName="radioButtonOptionSpecialty">
 				<mat-radio-button [value]="false">{{'pacientes.edit_license.form_license.PROFESSION'|
 					translate}}
@@ -49,8 +49,7 @@
 			{{'pacientes.edit_license.form_license.PROFESSION_ERROR' | translate }}
 		</mat-error>
 	</mat-form-field>
-
-	<ng-container *ngIf="internalForm.value.radioButtonOptionSpecialty">
+	<ng-container *ngIf="form.value.radioButtonOptionSpecialty">
 		<mat-form-field appearance="outline">
 			<mat-select id="healthcare-professional-specialtyId"
 				placeholder="{{'pacientes.edit_license.form_license.SELECT_SPECIALTY'| translate}} "
@@ -59,6 +58,9 @@
 					{{elem.name}}
 				</mat-option>
 			</mat-select>
+			<mat-error>
+				{{'pacientes.edit_license.form_license.SPECIALTY_ERROR' | translate }}
+			</mat-error>
 		</mat-form-field>
 	</ng-container>
 
