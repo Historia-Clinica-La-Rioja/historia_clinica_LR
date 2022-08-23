@@ -2500,6 +2500,7 @@ export interface ReferenceDto extends Serializable {
     careLineId: number;
     clinicalSpecialtyId: number;
     consultation?: boolean;
+    destinationInstitutionId?: number;
     fileIds: number[];
     note?: string;
     problems: ReferenceProblemDto[];

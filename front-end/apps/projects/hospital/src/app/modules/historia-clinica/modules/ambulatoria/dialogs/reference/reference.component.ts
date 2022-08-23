@@ -25,6 +25,7 @@ export class ReferenceComponent implements OnInit {
 	institutions$: Observable<InstitutionBasicInfoDto[]>;
 	selectedFiles: File[] = [];
 	selectedFilesShow: any[] = [];
+	destinationInstitutionId: number;
 
 	constructor(
 		@Inject(MAT_DIALOG_DATA) public data: any,
@@ -43,7 +44,7 @@ export class ReferenceComponent implements OnInit {
 			procedure: [null],
 			careLine: [null, [Validators.required]],
 			clinicalSpecialtyId: [null, [Validators.required]],
-			institution: [null],
+			destinationInstitutionId: [null],
 			summary: [null],
 		});
 		this.setProblems();
@@ -150,7 +151,8 @@ export class ReferenceComponent implements OnInit {
 			note: this.formReference.value.summary,
 			problems: this.mapProblems(this.referenceProblemDto),
 			procedure: false,
-			fileIds: []
+			fileIds: [],
+			destinationInstitutionId: this.formReference.value.destinationInstitutionId
 		}
 	}
 

@@ -38,4 +38,6 @@ public class ReferenceBo {
 
     private List<Integer> fileIds;
 
+    private Integer destinationInstitutionId;
+
 }

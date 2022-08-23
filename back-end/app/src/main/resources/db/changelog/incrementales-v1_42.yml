@@ -62,3 +62,24 @@ databaseChangeLog:
                 - column:
                     name: deleted_on
                     type: datetime
+
+    - changeSet:
+        id: addColumn-destination_institution_id-reference
+        comment: Add column destination_institution_id to reference table
+        author: bchacon
+        changes:
+          - addColumn:
+              tableName: reference
+              columns:
+                - column:
+                    name: destination_institution_id
+                    type: int
+          - addForeignKeyConstraint:
+              baseColumnNames: destination_institution_id
+              baseTableName: reference
+              constraintName: FK_reference_destination_institution_id
+              onDelete: NO ACTION
+              onUpdate: NO ACTION
+              referencedColumnNames: id
+              referencedTableName: institution
+              validate: true

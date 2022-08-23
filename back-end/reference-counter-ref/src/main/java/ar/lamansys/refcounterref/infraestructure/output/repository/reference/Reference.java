@@ -53,6 +53,9 @@ public class Reference implements Serializable {
     @Column(name = "reference_note_id")
     private Integer referenceNoteId;
 
+    @Column(name = "destination_institution_id")
+	private Integer destinationInstitutionId;
+
     public Reference(ReferenceBo referenceBo) {
         this.encounterId = referenceBo.getEncounterId();
         this.sourceTypeId = referenceBo.getSourceTypeId();
@@ -60,6 +63,7 @@ public class Reference implements Serializable {
         this.procedure = referenceBo.getProcedure();
         this.careLineId = referenceBo.getCareLineId();
         this.clinicalSpecialtyId = referenceBo.getClinicalSpecialtyId();
+        this.destinationInstitutionId = referenceBo.getDestinationInstitutionId();
     }
 
 }

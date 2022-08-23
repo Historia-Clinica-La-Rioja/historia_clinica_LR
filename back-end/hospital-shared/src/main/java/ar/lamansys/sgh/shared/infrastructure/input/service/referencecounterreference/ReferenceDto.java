@@ -42,4 +42,7 @@ public class ReferenceDto implements Serializable {
 
     private List<Integer> fileIds;
 
+    @Nullable
+    private Integer destinationInstitutionId;
+
 }
