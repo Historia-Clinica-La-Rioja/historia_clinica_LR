@@ -3,7 +3,7 @@ import { Observable, of } from 'rxjs';
 import {
 	AppointmentDailyAmountDto,
 	AppointmentDto,
-	AppointmentListDto,
+	AppointmentListDto, AppointmentShortSummaryDto,
 	AssignedAppointmentDto,
 	CreateAppointmentDto,
 	DateTimeDto,
@@ -181,5 +181,12 @@ export class AppointmentsService {
 	getCurrentAppointmentMedicalCoverage(patientId: number): Observable<ExternalPatientCoverageDto> {
 		const url = `${this.BASE_URL}/patient/${patientId}/get-medical-coverage`;
 		return this.http.get<ExternalPatientCoverageDto>(url);
+	}
+
+	verifyExistingAppointments(patientId: number, date:string): Observable<AppointmentShortSummaryDto> {
+		const url = `${this.BASE_URL}/patient/${patientId}/verify-existing-appointments`;
+		let queryParam: HttpParams = new HttpParams();
+		queryParam = queryParam.append('date', date);
+		return this.http.get<AppointmentShortSummaryDto>(url, { params: queryParam });
 	}
 }

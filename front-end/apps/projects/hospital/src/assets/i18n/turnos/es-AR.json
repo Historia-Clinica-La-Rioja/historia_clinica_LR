@@ -88,6 +88,14 @@
 				"APPOINTMENT_ERROR": "Error al confirmar el turno",
 				"APPOINTMENT_SUCCESS": "Turno confirmado",
 				"NOT_RESPONSIBLE": "Solo el responsable de la agenda puede crear turnos"
+			},
+			"appointment-exists": {
+				"TITLE": "Otro turno en la misma fecha",
+				"ASSIGNMENT-QUESTION": "¿Desea conceder el turno de todos modos?",
+				"buttons": {
+					"ASSIGN": "Si, asignar",
+					"NOT-ASSIGN": "No, cancelar"
+				}
 			}
 		},
 		"cancel": {

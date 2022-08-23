@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { CalendarEvent } from 'angular-calendar';
 import { ReplaySubject, Observable } from 'rxjs';
 import { AppointmentsService } from '@api-rest/services/appointments.service';
-import { AppointmentListDto, BasicPersonalDataDto, CreateAppointmentDto, DateTimeDto, UpdateAppointmentDto } from '@api-rest/api-model';
+import { AppointmentListDto, AppointmentShortSummaryDto, BasicPersonalDataDto, CreateAppointmentDto, DateTimeDto, UpdateAppointmentDto } from '@api-rest/api-model';
 import {
 	momentParseTime,
 	DateFormat,
@@ -247,6 +247,10 @@ export class AppointmentsFacadeService {
 					return false;
 				})
 			);
+	}
+
+	verifyExistingAppointment(patientId: number, date: string): Observable<AppointmentShortSummaryDto> {
+		return this.appointmentService.verifyExistingAppointments(patientId, date);
 	}
 }
 

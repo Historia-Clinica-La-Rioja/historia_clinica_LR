@@ -19,11 +19,11 @@
 		<strong innerHTML="{{ data.contentBold | translate}}"></strong>
 	</div>
 
-	<div mat-dialog-actions fxLayout="column" fxLayoutGap="25px">
-		<button mat-raised-button [mat-dialog-close]=true cdkFocusInitial [color]='okBottonColor' class="uppercase"
-			id="okButton-button">
-			{{(data.okButtonLabel? data.okButtonLabel : 'buttons.CONFIRM' ) | translate}}</button>
+	<div mat-dialog-actions align="end">
 		<button mat-stroked-button [mat-dialog-close]=false color="primary" class="uppercase" id="cancel-button">
 			{{(data.cancelButtonLabel? data.cancelButtonLabel : 'buttons.CANCEL') | translate}}</button>
+		<button mat-raised-button [mat-dialog-close]=true cdkFocusInitial [color]='okBottonColor' class="uppercase"
+				id="okButton-button">
+			{{(data.okButtonLabel? data.okButtonLabel : 'buttons.CONFIRM' ) | translate}}</button>
 	</div>
 </div>
