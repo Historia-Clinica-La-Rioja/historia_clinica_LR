@@ -36,7 +36,15 @@
 					"INTERVAL": "Intervalo:",
 					"ONCE": "Única vez:",
 					"START_TIME": "Hora de inicio:",
-					"EVENT": "Ante evento:"
+					"EVENT": "Ante evento:",
+					"SOLVENT": "Diluyente:",
+					"SOLVENT_DOSAGE": "Dosis diluyente:",
+					"DURATION": "Duración:",
+					"FLOW": "Flujo:",
+					"VOLUMEN_DAY": "Vol/Día:",
+					"PHARMACO": "Fármaco:",
+					"PHARMACO_DOSE":"Dosis fármaco:",
+					"ASSOCIATED_DIAGNOSIS":"Diagnóstico asociado:"
 				}
 			},
 			"menu-items": {
@@ -112,6 +120,9 @@
 					"MILLILITERS": "ml",
 					"START-TIME": "Hora de inicio",
 					"OBSERVATIONS": "Observaciones",
+					"PATIENT_PROVIDED": "Aportada por el paciente",
+					"AWAY_FROM_FOOD": "Lejos de las comidas",
+					"FASTING": "Con ayuno",
 					"add-snomed-concept":{
 						"TITLE": "Agregar fármaco",
 						"SEARCH": "Fármaco"

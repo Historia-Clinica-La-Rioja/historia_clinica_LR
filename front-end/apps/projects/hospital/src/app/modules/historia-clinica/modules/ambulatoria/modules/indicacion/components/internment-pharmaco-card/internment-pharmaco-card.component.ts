@@ -9,7 +9,7 @@ import { loadExtraInfoPharmaco } from '../../constants/load-information';
 import { InternmentIndicationDetailComponent } from '../../dialogs/internment-indication-detail/internment-indication-detail.component';
 
 
-const DIALOG_SIZE = '45%';
+const DIALOG_SIZE = '35%';
 @Component({
 	selector: 'app-internment-pharmaco-card',
 	templateUrl: './internment-pharmaco-card.component.html',

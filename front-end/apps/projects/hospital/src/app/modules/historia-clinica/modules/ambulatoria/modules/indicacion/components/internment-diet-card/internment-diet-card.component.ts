@@ -7,7 +7,7 @@ import { InternmentIndicationDetailComponent } from "../../dialogs/internment-in
 import { InternmentIndicationService } from "@api-rest/services/internment-indication.service";
 
 
-const DIALOG_SIZE = '45%';
+const DIALOG_SIZE = '35%';
 
 @Component({
 	selector: 'app-internment-diet-card',

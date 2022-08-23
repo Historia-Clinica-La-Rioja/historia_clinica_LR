@@ -9,7 +9,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { InternmentIndicationDetailComponent } from '../../dialogs/internment-indication-detail/internment-indication-detail.component';
 
 
-const DIALOG_SIZE = '45%';
+const DIALOG_SIZE = '35%';
 @Component({
 	selector: 'app-internment-other-indication-card',
 	templateUrl: './internment-other-indication-card.component.html',

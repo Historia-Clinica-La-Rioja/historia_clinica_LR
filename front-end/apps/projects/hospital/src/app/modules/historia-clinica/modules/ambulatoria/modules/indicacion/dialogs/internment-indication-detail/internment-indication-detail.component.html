@@ -1,20 +1,58 @@
-<div class="close" fxLayout="row" fxLayoutAlign="end">
-    <button matSuffix mat-icon-button [mat-dialog-close]>
-        <mat-icon>close</mat-icon>
-    </button>
-</div>
-<div id="header" fxLayout="row">
-    <div fxLayout="row" fxFlex="20px">
-        <mat-icon class="color-primary" fontSet="material-icons-outlined" *ngIf="data.header.matIcon; else svgIcon">
-            {{ data.header.matIcon }}</mat-icon>
+<div id="header" fxLayout="row" fxLayoutAlign="space-between center">
+    <div class="margined">
+        <div fxLayout="row" fxFlex="20px">
+            <mat-icon class="color-primary" fontSet="material-icons-outlined" *ngIf="data.header.matIcon; else svgIcon">
+                {{ data.header.matIcon }}</mat-icon>
+        </div>
+        
+        <ng-template #svgIcon>
+            <mat-icon class="color-primary svg-icon" svgIcon={{data.header.svgIcon}}></mat-icon>
+        </ng-template>
+    
+        <app-colored-label class="label"
+            [description]="data.status.description | translate | uppercase"
+            [color]="'blue'">
+        </app-colored-label>    
     </div>
     
-    <ng-template #svgIcon>
-        <mat-icon class="color-primary svg-icon" svgIcon={{data.header.svgIcon}}></mat-icon>
-    </ng-template>
+    <div class="close">
+        <button matSuffix mat-icon-button [mat-dialog-close]>
+            <mat-icon>close</mat-icon>
+        </button>
+    </div>
+</div>
 
-    <app-colored-label class="label"
-        [description]="data.status.description | translate |	uppercase"
-        [color]="'blue'">
-    </app-colored-label>
+<div mat-dialog-title fxLayout="row" fxLayoutAlign="start start">
+    <div class="title" class="capitalize-first-letter margined">{{title}}</div>
+</div>
+
+<div id="body">
+    <div *ngFor="let info of information">
+        <div fxLayout="row" fxLayoutGap="10px">
+            <strong fxFlex="30" *ngIf="info.title">{{info.title | translate }}</strong>
+            <p>{{info.content}} </p>
+        </div>
+    </div>
+    <div *ngIf="data.indication.type == 'PHARMACO'"  class="margined">
+        <mat-divider></mat-divider>
+        <div class="margined">
+            <div fxLayout="row" class="green" *ngIf="patientProvided">
+                <mat-icon class="icon" fontSet="material-icons-outlined">check_circle_outline</mat-icon>
+                <p>{{'indicacion.internment-card.dialogs.pharmaco.PATIENT_PROVIDED' | translate }}</p>
+            </div>
+            <div fxLayout="row" class="orange" *ngIf="foodRelationId == 1">
+                <mat-icon class="icon" fontSet="material-icons-outlined">restaurant</mat-icon>
+                <p>{{'indicacion.internment-card.dialogs.pharmaco.AWAY_FROM_FOOD' | translate }}</p>
+            </div>
+            <div fxLayout="row" class="red" *ngIf="foodRelationId == 2">
+                <mat-icon class="icon" fontSet="material-icons-outlined">restaurant</mat-icon>
+                <p>{{'indicacion.internment-card.dialogs.pharmaco.FASTING' | translate }}</p>
+            </div>    
+            <div fxLayout="row" fxLayoutGap="10px">
+                <strong>{{'indicacion.internment-card.sections.indication-extra-description.ASSOCIATED_DIAGNOSIS' | translate }}</strong>
+                <p class="capitalize-first-letter">{{healthCondition}}</p>
+            </div>
+        </div>
+    </div>
+    <mat-divider class="margined"></mat-divider>
 </div>

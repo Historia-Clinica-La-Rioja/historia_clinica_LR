@@ -47,7 +47,7 @@ import { InternmentIndicationDetailComponent } from './dialogs/internment-indica
 		ParenteralPlanComponent,
 		PharmacoComponent,
 		RegisterNursingRecordComponent,
-  InternmentIndicationDetailComponent,
+		InternmentIndicationDetailComponent,
 	],
 	exports: [
 		CardMedicacionesComponent,
