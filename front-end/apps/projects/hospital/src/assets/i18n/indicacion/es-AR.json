@@ -120,6 +120,7 @@
 					"MILLILITERS": "ml",
 					"START-TIME": "Hora de inicio",
 					"OBSERVATIONS": "Observaciones",
+					"NO_OBSERVATIONS": "Sin observaciones",
 					"PATIENT_PROVIDED": "Aportada por el paciente",
 					"AWAY_FROM_FOOD": "Lejos de las comidas",
 					"FASTING": "Con ayuno",

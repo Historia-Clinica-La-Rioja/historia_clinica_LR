@@ -20,6 +20,7 @@ export class InternmentIndicationDetailComponent implements OnInit {
   patientProvided = false;
   foodRelationId = 0;
   healthCondition: string;
+  observations: string;
 
   constructor(
     @Inject(MAT_DIALOG_DATA) public data: {
@@ -62,6 +63,7 @@ export class InternmentIndicationDetailComponent implements OnInit {
           this.information = this.loadPharmacoInformation(pharmaco);
           this.patientProvided = pharmaco.patientProvided;
           this.foodRelationId = pharmaco.foodRelationId;
+          this.observations = pharmaco.note;
         });
         break;
       }
