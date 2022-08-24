@@ -1,6 +1,12 @@
 package ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document;
 
-import lombok.*;
+import java.util.List;
+
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.ToString;
 
 @Getter
 @Setter
@@ -15,7 +21,7 @@ public class ResponsibleDoctorVo {
 
     private String lastName;
 
-    private String licence;
+    private List<String> licenses;
 
 	private String nameSelfDetermination;
 }

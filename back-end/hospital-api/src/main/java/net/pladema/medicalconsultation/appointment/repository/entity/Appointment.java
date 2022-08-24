@@ -67,6 +67,9 @@ public class Appointment extends SGXAuditableEntity<Integer> {
 	@Column(name = "snomed_id")
 	private Integer snomedId;
 
+	@Column(name = "appointment_block_motive_id")
+	private Short appointmentBlockMotiveId;
+
 	public static Appointment newFromAppointmentBo(AppointmentBo appointmentBo) {
 		return Appointment.builder()
 				.dateTypeId(appointmentBo.getDate())
@@ -78,6 +81,7 @@ public class Appointment extends SGXAuditableEntity<Integer> {
 				.phonePrefix(appointmentBo.getPhonePrefix())
 				.phoneNumber(appointmentBo.getPhoneNumber())
 				.snomedId(appointmentBo.getSnomedId())
+				.appointmentBlockMotiveId(appointmentBo.getAppointmentBlockMotiveId())
 				.build();
 	}
 

@@ -3,6 +3,8 @@
 <html lang="es">
     <div th:fragment="author (firstName, lastName, licenseNumber)" style="text-align:right">
         <br/><br/><strong>Profesional: </strong><label class="center-padding" th:text="${lastName + ' '}"></label><label th:text="${firstName}"></label>
+    </div>
+    <div th:fragment="author (firstName, lastName, licenseNumber)" style="text-align:right">
         <p><strong>Matricula: </strong><label class="center-padding" th:text="${licenseNumber}"></label></p>
     </div>
 </html>

@@ -71,7 +71,11 @@
 				"ADMINISTRADOR_INSTITUCIONAL_BACKOFFICE":  "Administrador institucional",
 				"ADMINISTRADOR_AGENDA": "Administrador de agenda",
 				"ESPECIALISTA_EN_ODONTOLOGIA": "Especialista en Odontología",
-				"ADMINISTRADOR_DE_CAMAS": "Administrador de camas"
+				"ADMINISTRADOR_DE_CAMAS": "Administrador de camas",
+				"PERSONAL_DE_LABORATORIO": "Personal de laboratorio",
+				"PERSONAL_DE_FARMACIA": "Personal de farmacia",
+				"PERSONAL_DE_IMAGENES": "Personal de imágenes",
+				"PERSONAL_DE_ESTADISTICA": "Personal de estadística"
 			}
 		}
 	}

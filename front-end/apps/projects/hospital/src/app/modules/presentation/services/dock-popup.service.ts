@@ -1,6 +1,7 @@
+import { ElementRef } from '@angular/core';
 import { ComponentRef, Injectable, Injector } from '@angular/core';
 import { ComponentPortal, ComponentType, PortalInjector } from '@angular/cdk/portal';
-import { Overlay, OverlayConfig, OverlayRef } from '@angular/cdk/overlay';
+import { GlobalPositionStrategy, Overlay, OverlayConfig, OverlayRef } from '@angular/cdk/overlay';
 import { DockPopupRef } from '@presentation/services/dock-popup-ref';
 import { OVERLAY_DATA } from '@presentation/presentation-model';
 import { Router } from '@angular/router';
@@ -24,6 +25,15 @@ export class DockPopupService {
 
 	open(type: ComponentType<any>, data?: any): DockPopupRef {
 		const overlayRef = this.overlay.create(this.getOverlayConfig());
+		return this.createDockPopUp(overlayRef, type, data);
+	}
+
+	openOnTop(type: ComponentType<any>, data?: any): DockPopupRef {
+		const overlayRef = this.overlay.create(this.getOverlayOnTopConfig());
+		return this.createDockPopUp(overlayRef, type, data);
+	}
+
+	private createDockPopUp(overlayRef: OverlayRef, type: ComponentType<any>, data: any): DockPopupRef {
 		const dockPopupRef = new DockPopupRef(overlayRef);
 		this.attachDialogContainer(overlayRef, data, dockPopupRef, type);
 		this.eventsSubscription = this.router.events.pipe(take(1)).subscribe(_ => dockPopupRef.close());
@@ -52,11 +62,19 @@ export class DockPopupService {
 	}
 
 	private getOverlayConfig(): OverlayConfig {
-		const positionStrategy = this.overlay.position()
-			.global()
-			.bottom()
-			.right();
+		const positionStrategy: GlobalPositionStrategy = this.overlay.position().global().right().bottom();
+		const overlayConfig = new OverlayConfig({
+			scrollStrategy: this.overlay.scrollStrategies.noop(),
+			positionStrategy,
+			maxHeight: '95vh',
+			width: '40vw',
+			panelClass: ['dock-popup-overlay', 'maximized'],
+		});
+		return overlayConfig;
+	}
 
+	private getOverlayOnTopConfig(): OverlayConfig {
+		let positionStrategy: GlobalPositionStrategy = this.overlay.position().global().right().top();
 		const overlayConfig = new OverlayConfig({
 			scrollStrategy: this.overlay.scrollStrategies.noop(),
 			positionStrategy,

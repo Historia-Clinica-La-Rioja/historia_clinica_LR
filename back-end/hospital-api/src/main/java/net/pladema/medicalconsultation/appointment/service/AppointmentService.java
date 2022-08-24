@@ -15,9 +15,13 @@ public interface AppointmentService {
 
     Optional<AppointmentBo> getAppointment(Integer appointmentId);
 
-    Collection<AppointmentBo> getAppointmentsByDiaries(List<Integer> diaryIds);
+	Collection<AppointmentBo> getAppointmentsByDiaries(List<Integer> diaryIds, LocalDate from, LocalDate to);
+
+	Collection<AppointmentBo> getAppointmentsByProfessionalInInstitution(Integer healthcareProfessionalId, Integer institutionId, LocalDate from, LocalDate to);
 
     boolean existAppointment(Integer diaryId, Integer openingHoursId, LocalDate date, LocalTime hour);
+
+	Optional<AppointmentBo> findAppointmentBy(Integer diaryId, LocalDate date, LocalTime hour);
 
     Collection<AppointmentBo> getFutureActiveAppointmentsByDiary(Integer diaryId);
 

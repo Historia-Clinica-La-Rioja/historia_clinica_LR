@@ -1,0 +1,55 @@
+<div fxLayout="row" fxLayoutAlign="space-between">
+    <span mat-dialog-title [translate]="'historia-clinica.new-consultation-procedure-form.ADD_PROCEDURE'"></span>
+    <button mat-icon-button (click)="close()">
+        <mat-icon>close</mat-icon>
+    </button>
+</div>
+
+<div mat-dialog-content>
+    <ng-container *ngIf="!data.procedureService.getSnomedConcept() else procedimientoForm">
+        <app-concepts-search *ngIf="!data.searchConceptsLocallyFF else procedimientoTypeaheadSearch"
+            [label]="'historia-clinica.new-consultation-procedure-form.PROCEDURE'"
+            (search)="data.procedureService.openSearchDialog($event)">
+        </app-concepts-search>
+
+        <ng-template #procedimientoTypeaheadSearch>
+            <app-concept-typeahead-search [ecl]="data.procedureService.getECL()"
+                [placeholder]="'historia-clinica.new-consultation-procedure-form.SEARCH_PLACEHOLDER'"
+                (conceptSelected)="data.procedureService.setConcept($event)">
+            </app-concept-typeahead-search>
+        </ng-template>
+    </ng-container>
+</div>
+
+<ng-template #procedimientoForm>
+    <form [formGroup]="data.procedureService.getForm()" (ngSubmit)="addProcedure()">
+        <div fxLayout="column">
+            <mat-form-field appearance="outline">
+                <mat-label [translate]="'historia-clinica.new-consultation-procedure-form.TYPE'">
+                </mat-label>
+                <input id="procedimiento-input" matInput type="text" formControlName="snomed" name="snomed" readonly
+                    matTooltip="{{data.procedureService.getSnomedConcept().pt }}">
+                <button id="clear-procedimiento" mat-button matSuffix color="warn" mat-icon-button
+                    (click)="data.procedureService.resetForm()">
+                    <mat-icon>close</mat-icon>
+                </button>
+            </mat-form-field>
+
+            <mat-form-field appearance="outline">
+                <mat-label [translate]="'historia-clinica.new-consultation-procedure-form.DATE'">
+                </mat-label>
+                <input matInput id="fecha_procedimiento" [matDatepicker]="datePicker" formControlName="performedDate"
+                    [min]="minDate" [max]="data.procedureService.getFechaMax()">
+                <mat-datepicker-toggle matSuffix [for]="datePicker"></mat-datepicker-toggle>
+                <mat-datepicker #datePicker></mat-datepicker>
+            </mat-form-field>
+
+            <div align="end">
+                <button id="submit_procedimiento" mat-raised-button color="primary" type="submit">
+                    <span [translate]="'historia-clinica.new-consultation-procedure-form.ADD_PROCEDURE'"
+                        class="uppercase"></span>
+                </button>
+            </div>
+        </div>
+    </form>
+</ng-template>

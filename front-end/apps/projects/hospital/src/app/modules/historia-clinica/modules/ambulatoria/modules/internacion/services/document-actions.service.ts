@@ -51,7 +51,7 @@ export class DocumentActionsService {
 	}
 
 	isCreatorDocumnt(document: DocumentSearchDto): boolean {
-		return (document.creator.id === this.userId);
+		return (document.creator.userId === this.userId);
 	}
 
 	canDeleteDocument(document: DocumentSearchDto): boolean {

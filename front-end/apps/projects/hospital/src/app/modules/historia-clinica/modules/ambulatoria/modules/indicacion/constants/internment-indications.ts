@@ -1,5 +1,5 @@
-import { ExtraInfo, Title } from "@presentation/components/indication/indication.component"
-import { DateTimeDto, NewDosageDto, PharmacoDto } from "@api-rest/api-model";
+import { Title } from "@presentation/components/indication/indication.component"
+import { DateTimeDto } from "@api-rest/api-model";
 import { dateTimeDtoToStringDate } from "@api-rest/mapper/date-dto.mapper";
 import { differenceInMinutes, differenceInHours, differenceInDays } from "date-fns";
 import { ConfirmDialogComponent } from "@presentation/dialogs/confirm-dialog/confirm-dialog.component";
@@ -51,52 +51,9 @@ export const OTHER_INDICATION: Title = {
 	matIcon: 'assignment_late',
 }
 
-export function showFrequency(dosage: NewDosageDto): ExtraInfo[] {
-	if (dosage?.frequency)
-		return [{
-			title: 'indicacion.internment-card.sections.indication-extra-description.START_TIME',
-			content: "a las " + dosage?.startDateTime?.time.hours + "hs."
-		}, {
-			title: 'indicacion.internment-card.sections.indication-extra-description.INTERVAL',
-			content: "cada " + dosage?.frequency + "hs."
-		}]
-	if (dosage?.event)
-		return [{
-			title: 'indicacion.internment-card.sections.indication-extra-description.EVENT',
-			content: dosage?.event
-		}]
-	if (dosage?.startDateTime?.time.hours)
-		return [{
-			title: 'indicacion.internment-card.sections.indication-extra-description.ONCE',
-			content: "a las " + dosage?.startDateTime.time.hours + "hs."
-		}]
-}
-
 const EVENT = "e";
 
 const HOURS = "h";
-
-export function showFrequencyPharmaco(pharmaco: any): ExtraInfo[] {
-	if (pharmaco.dosage?.frequency) {
-		return [{
-			title: 'indicacion.internment-card.sections.indication-extra-description.START_TIME',
-			content: "a las " + pharmaco?.dosage.startDateTime?.time.hours + "hs."
-		}, {
-			title: 'indicacion.internment-card.sections.indication-extra-description.INTERVAL',
-			content: "cada " + pharmaco?.dosage?.frequency + "hs."
-		}]
-	}
-	if (pharmaco.dosage.periodUnit === 'e')
-		return [{
-			title: 'indicacion.internment-card.sections.indication-extra-description.EVENT',
-			content: pharmaco.dosage?.event
-		}]
-	if (pharmaco.dosage.periodUnit === 'h')
-		return [{
-			title: 'indicacion.internment-card.sections.indication-extra-description.ONCE',
-			content: "a las " + pharmaco?.dosage.startDateTime?.time.hours + "hs."
-		}]
-}
 
 export function showTimeElapsed(createdOn: DateTimeDto): string {
 	const differenceInMin = differenceInMinutes(new Date(), new Date(dateTimeDtoToStringDate(createdOn)));
@@ -119,7 +76,7 @@ export function showTimeElapsed(createdOn: DateTimeDto): string {
 
 export function openConfirmDialog(dialog: MatDialog, date: Date): Observable<any> {
 	const keyPrefix = 'indicacion.internment-card.buttons';
-	const dateString = date.getDate() + "/" + (date.getMonth() +1) + "/" + date.getFullYear();
+	const dateString = date.getDate() + "/" + (date.getMonth() + 1) + "/" + date.getFullYear();
 	const dateHTML = `<strong>${dateString}</strong>`;
 	const messageHTML = `<strong>¿Desea confirmar la indicación?</strong>`;
 	const dialogRef = dialog.open(ConfirmDialogComponent, {

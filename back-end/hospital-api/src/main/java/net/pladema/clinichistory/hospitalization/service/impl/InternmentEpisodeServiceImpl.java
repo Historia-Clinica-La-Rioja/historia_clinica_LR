@@ -1,11 +1,27 @@
 package net.pladema.clinichistory.hospitalization.service.impl;
 
+import java.time.LocalDateTime;
+import java.util.List;
+import java.util.Optional;
+import java.util.concurrent.atomic.AtomicReference;
+import java.util.stream.Collectors;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.stereotype.Service;
+
 import ar.lamansys.sgh.clinichistory.application.document.DocumentService;
+import ar.lamansys.sgx.shared.auditable.entity.Updateable;
 import ar.lamansys.sgx.shared.dates.configuration.DateTimeProvider;
+import ar.lamansys.sgx.shared.exceptions.NotFoundException;
 import ar.lamansys.sgx.shared.featureflags.AppFeature;
 import ar.lamansys.sgx.shared.featureflags.application.FeatureFlagsService;
+import ar.lamansys.sgx.shared.security.UserInfo;
 import net.pladema.clinichistory.hospitalization.repository.EvolutionNoteDocumentRepository;
 import net.pladema.clinichistory.hospitalization.repository.InternmentEpisodeRepository;
+import net.pladema.clinichistory.hospitalization.repository.InternmentEpisodeStorage;
 import net.pladema.clinichistory.hospitalization.repository.PatientDischargeRepository;
 import net.pladema.clinichistory.hospitalization.repository.domain.DischargeType;
 import net.pladema.clinichistory.hospitalization.repository.domain.EvolutionNoteDocument;
@@ -16,28 +32,12 @@ import net.pladema.clinichistory.hospitalization.repository.domain.summary.Inter
 import net.pladema.clinichistory.hospitalization.service.InternmentEpisodeService;
 import net.pladema.clinichistory.hospitalization.service.domain.InternmentSummaryBo;
 import net.pladema.clinichistory.hospitalization.service.domain.PatientDischargeBo;
-import ar.lamansys.sgx.shared.auditable.entity.Updateable;
-import ar.lamansys.sgx.shared.exceptions.NotFoundException;
-import ar.lamansys.sgx.shared.security.UserInfo;
 import net.pladema.clinichistory.hospitalization.service.impl.exceptions.CreateInternmentEpisodeEnumException;
 import net.pladema.clinichistory.hospitalization.service.impl.exceptions.CreateInternmentEpisodeException;
 import net.pladema.clinichistory.hospitalization.service.impl.exceptions.SaveMedicalDischargeException;
 import net.pladema.clinichistory.hospitalization.service.impl.exceptions.SaveMedicalDischargeExceptionEnum;
 import net.pladema.establishment.repository.MedicalCoveragePlanRepository;
 import net.pladema.patient.service.domain.PatientMedicalCoverageBo;
-
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.stereotype.Service;
-
-import java.time.LocalDateTime;
-import java.util.List;
-import java.util.Optional;
-import java.util.concurrent.atomic.AtomicReference;
-import java.util.stream.Collectors;
 
 @Service
 public class InternmentEpisodeServiceImpl implements InternmentEpisodeService {
@@ -64,15 +64,25 @@ public class InternmentEpisodeServiceImpl implements InternmentEpisodeService {
 
     private final DocumentService documentService;
 
+	private final InternmentEpisodeStorage internmentEpisodeStorage;
+
 	private final FeatureFlagsService featureFlagsService;
 
-	public InternmentEpisodeServiceImpl(InternmentEpisodeRepository internmentEpisodeRepository, DateTimeProvider dateTimeProvider, EvolutionNoteDocumentRepository evolutionNoteDocumentRepository, PatientDischargeRepository patientDischargeRepository, DocumentService documentService, MedicalCoveragePlanRepository medicalCoveragePlanRepository, FeatureFlagsService featureFlagsService) {
+	public InternmentEpisodeServiceImpl(InternmentEpisodeRepository internmentEpisodeRepository,
+										DateTimeProvider dateTimeProvider,
+										EvolutionNoteDocumentRepository evolutionNoteDocumentRepository,
+										PatientDischargeRepository patientDischargeRepository,
+										DocumentService documentService,
+										MedicalCoveragePlanRepository medicalCoveragePlanRepository,
+										InternmentEpisodeStorage internmentEpisodeStorage,
+										FeatureFlagsService featureFlagsService) {
         this.internmentEpisodeRepository = internmentEpisodeRepository;
         this.dateTimeProvider = dateTimeProvider;
         this.evolutionNoteDocumentRepository = evolutionNoteDocumentRepository;
         this.patientDischargeRepository = patientDischargeRepository;
         this.documentService = documentService;
 		this.medicalCoveragePlanRepository = medicalCoveragePlanRepository;
+		this.internmentEpisodeStorage = internmentEpisodeStorage;
 		this.featureFlagsService = featureFlagsService;
 	}
 
@@ -205,7 +215,7 @@ public class InternmentEpisodeServiceImpl implements InternmentEpisodeService {
 	@Override
 	public Optional<InternmentSummaryBo> getIntermentSummary(Integer internmentEpisodeId) {
 		LOG.debug(INPUT_PARAMETERS, internmentEpisodeId);
-		Optional<InternmentSummaryVo> resultQuery = internmentEpisodeRepository.getSummary(internmentEpisodeId);
+		Optional<InternmentSummaryVo> resultQuery = internmentEpisodeStorage.getSummary(internmentEpisodeId);
 		AtomicReference<Optional<InternmentSummaryBo>> result = new AtomicReference<>(Optional.empty());
 		resultQuery.ifPresent(r -> {
 			r.getDocuments().setLastEvaluationNote(getLastEvaluationNoteSummary(internmentEpisodeId).orElse(new EvaluationNoteSummaryVo()));

@@ -13,56 +13,70 @@ import lombok.ToString;
 @EqualsAndHashCode
 public class ConsultationDetail {
 
-    private String province;
+	private String province;
 
-    private String department;
+	private String department;
 
-    private String sisaCode;
+	private String sisaCode;
 
-    private String institution;
+	private String institution;
 
-    private String patientSurname;
+	private String patientSurname;
 
-    private String patientFirstName;
+	private String patientFirstName;
 
-    private String identificationType;
+	private String selfPerceivedName;
 
-    private String identificationNumber;
+	private String identificationType;
 
-    private String birthDate;
+	private String identificationNumber;
 
-    private String gender;
+	private String birthDate;
 
-    private String address;
+	private String gender;
 
-    private String phoneNumber;
+	private String address;
 
-    private String email;
+	private String phoneNumber;
 
-    private String coverageName;
+	private String email;
 
-    private String affiliateNumber;
+	private String coverageName;
 
-    private String startDate;
+	private String affiliateNumber;
 
-    private Integer clinicalSpecialtyId;
+	private String startDate;
 
-    private String clinicalSpecialty;
+	private Integer clinicalSpecialtyId;
 
-    private Integer professionalId;
+	private String clinicalSpecialty;
 
-    private String professionalName;
+	private Integer professionalId;
 
-    private String reasons;
+	private String professionalName;
 
-    private String problems;
+	private String reasons;
 
-    private String weight;
+	private String problems;
 
-    private String height;
+	private String procedures;
 
-    private String systolicBloodPressure;
+	private String weight;
 
-    private String diastolicBloodPressure;
+	private String height;
+
+	private String systolicBloodPressure;
+
+	private String diastolicBloodPressure;
+
+	private String cardiovascularRisk;
+
+	private String glycosylatedHemoglobin;
+
+	private String headCircunference;
+
+	private String cpo;
+
+	private String ceo;
 
 }

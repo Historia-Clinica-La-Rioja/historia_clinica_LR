@@ -4,7 +4,6 @@ import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.D
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.DocumentStatus;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.DocumentType;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.entity.Document;
-import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.generateFile.AuthorMapper;
 import net.pladema.IntegrationController;
 import net.pladema.clinichistory.hospitalization.controller.documents.anamnesis.mapper.AnamnesisMapper;
 import net.pladema.clinichistory.hospitalization.repository.InternmentEpisodeRepository;
@@ -52,9 +51,6 @@ class AnamnesisControllerIntegrationTest extends IntegrationController {
 
 	@MockBean
 	private PatientExternalService patientExternalService;
-
-	@MockBean
-	private AuthorMapper responsibleDoctorMapper;
 
 	@MockBean
 	private InternmentEpisodeRepository internmentEpisodeRepository;

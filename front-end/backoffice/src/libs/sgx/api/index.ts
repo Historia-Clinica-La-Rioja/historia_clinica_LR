@@ -1,9 +1,9 @@
 import springbootRestProvider from './sgxDataProvider';
 import authProvider from './authProvider';
 
-const dataProvider = springbootRestProvider('/backoffice', {});
+const dataProvider = springbootRestProvider('backoffice', {});
 
 export {
-	dataProvider,
 	authProvider,
+	dataProvider,
 };

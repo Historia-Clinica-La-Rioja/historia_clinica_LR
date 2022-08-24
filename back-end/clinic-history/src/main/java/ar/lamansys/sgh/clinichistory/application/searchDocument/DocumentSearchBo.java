@@ -1,7 +1,6 @@
 package ar.lamansys.sgh.clinichistory.application.searchDocument;
 
 import ar.lamansys.sgh.clinichistory.domain.document.AuthorBo;
-import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.DocumentStatus;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.ProcedureReduced;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.searchdocuments.DocumentSearchVo;
 import lombok.*;

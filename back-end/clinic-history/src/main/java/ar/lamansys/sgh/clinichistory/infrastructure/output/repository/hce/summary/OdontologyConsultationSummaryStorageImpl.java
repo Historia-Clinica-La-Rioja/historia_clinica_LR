@@ -45,7 +45,7 @@ public class OdontologyConsultationSummaryStorageImpl implements OdontologyConsu
                 + " FROM OdontologyConsultation oc"
                 + " LEFT JOIN ClinicalSpecialty cs ON (oc.clinicalSpecialtyId = cs.id)"
                 + " JOIN Document doc ON (doc.sourceId = oc.id)"
-                + " LEFT JOIN Note n ON (n.id = doc.otherNoteId)"
+                + " LEFT JOIN Note n ON (n.id = doc.evolutionNoteId)"
                 + " JOIN HealthcareProfessional hp ON (hp.id = oc.doctorId)"
                 + " JOIN Person p ON (p.id = hp.personId)"
 				+ " LEFT JOIN PersonExtended pe ON (p.id = pe.id)"

@@ -3,17 +3,23 @@ import { CalendarEvent } from 'angular-calendar';
 import { ReplaySubject, Observable } from 'rxjs';
 import { AppointmentsService } from '@api-rest/services/appointments.service';
 import { AppointmentListDto, BasicPersonalDataDto, CreateAppointmentDto, UpdateAppointmentDto } from '@api-rest/api-model';
-import { momentParseTime, DateFormat, momentParseDate, buildFullDate } from '@core/utils/moment.utils';
+import {
+	momentParseTime,
+	DateFormat,
+	momentParseDate,
+	buildFullDate,
+} from '@core/utils/moment.utils';
 import { Moment } from 'moment';
 import { map, first } from 'rxjs/operators';
 import { CANCEL_STATE_ID, APPOINTMENT_STATES_ID } from '../constants/appointment';
 import { PatientNameService } from "@core/services/patient-name.service";
+import { AppointmentBlockMotivesFacadeService } from './appointment-block-motives-facade.service';
 
 const enum COLORES {
 	ASSIGNED = '#4187FF',
 	CONFIRMED = '#FFA500',
 	ABSENT = '#D5E0D5',
-	BLOCKED = '#C2C2C2',
+	BLOCKED = '#7D807D',
 	SERVED = '#A3EBAF',
 	PROGRAMADA = '#7FC681',
 	ESPONTANEA = '#2687C5',
@@ -22,6 +28,7 @@ const enum COLORES {
 	RESERVA_VALIDACION = '#EB5757',
 	FUERA_DE_AGENDA = '#FF0000'
 }
+
 const TEMPORARY_PATIENT = 3;
 const GREY_TEXT = 'calendar-event-grey-text';
 const WHITE_TEXT = 'calendar-event-white-text';
@@ -57,18 +64,35 @@ export class AppointmentsFacadeService {
 
 	private appointmenstEmitter = new ReplaySubject<CalendarEvent[]>(1);
 	private appointments$: Observable<CalendarEvent[]>;
+	private professionalId: number;
+
+	private startDate: string;
+	private endDate: string;
 
 	constructor(
 		private readonly appointmentService: AppointmentsService,
 		private readonly patientNameService: PatientNameService,
+		private readonly appointmentBlockMotivesFacadeService: AppointmentBlockMotivesFacadeService,
 
 	) {
 		this.appointments$ = this.appointmenstEmitter.asObservable();
 	}
 
-	setValues(agendaId, appointmentDuration): void {
+	setProfessionalId(id: number) {
+		this.professionalId = id;
+		if (this.agendaId)
+			this.loadAppointments();
+	}
+
+	getProfessionalId() {
+		return this.professionalId
+	}
+
+	setValues(agendaId, appointmentDuration, startDate: string, endDate: string): void {
 		this.agendaId = agendaId;
 		this.appointmentDuration = appointmentDuration;
+		this.startDate = startDate;
+		this.endDate = endDate;
 		this.loadAppointments();
 	}
 
@@ -78,21 +102,31 @@ export class AppointmentsFacadeService {
 
 	public loadAppointments(): void {
 
-		this.appointmentService.getList([this.agendaId])
+		this.appointmentService.getList([this.agendaId], this.professionalId, this.startDate, this.endDate)
 			.subscribe((appointments: AppointmentListDto[]) => {
 				const appointmentsCalendarEvents: CalendarEvent[] = appointments
 					.map(appointment => {
 						const from = momentParseTime(appointment.hour).format(DateFormat.HOUR_MINUTE);
-						const to = momentParseTime(from).add(this.appointmentDuration, 'minutes').format(DateFormat.HOUR_MINUTE);
+						let to = momentParseTime(from).add(this.appointmentDuration, 'minutes').format(DateFormat.HOUR_MINUTE);
+						if (from > to) {
+							to = momentParseTime(from).set({hour: 23, minute: 59}).format(DateFormat.HOUR_MINUTE);
+						}
 						const viewName = this.getViewName(appointment.patient?.person);
-						const calendarEvent = toCalendarEvent(from, to, momentParseDate(appointment.date), appointment, viewName);
+						const calendarEvent = toCalendarEvent(from, to, momentParseDate(appointment.date), appointment, viewName, this.appointmentBlockMotivesFacadeService);
 						return calendarEvent;
 					});
 				this.appointmenstEmitter.next(appointmentsCalendarEvents);
 			});
 	}
 
-	loadingAppointments = setInterval(() => this.loadAppointments(), 20000);
+	setInterval() {
+		//this.intervalId = setInterval(() => this.loadAppointments(), 20000);
+	}
+
+	clearInterval() {
+		//clearInterval(this.intervalId);
+	}
+
 
 	private getViewName(person: BasicPersonalDataDto): string {
 		return person ? [person.lastName, this.patientNameService.getPatientName(person.firstName, person.nameSelfDetermination)].
@@ -208,7 +242,7 @@ export class AppointmentsFacadeService {
 	}
 }
 
-export function toCalendarEvent(from: string, to: string, date: Moment, appointment: AppointmentListDto, viewName: string): CalendarEvent {
+export function toCalendarEvent(from: string, to: string, date: Moment, appointment: AppointmentListDto, viewName: string, appointmentBlockMotivesFacadeService?: AppointmentBlockMotivesFacadeService): CalendarEvent {
 	const fullName = [appointment.patient?.person.lastName, appointment.patient?.person.firstName].
 		filter(val => val).join(', ');
 
@@ -251,10 +285,10 @@ export function toCalendarEvent(from: string, to: string, date: Moment, appointm
 	function getTitle(): string {
 
 		if (appointment.appointmentStateId === APPOINTMENT_STATES_ID.BLOCKED) {
-			return 'Horario bloqueado'
+			return appointmentBlockMotivesFacadeService?.getAppointmentBlockMotiveById(appointment.appointmentBlockMotiveId);
 		}
 		if (appointment.patient?.typeId === TEMPORARY_PATIENT) {
-			return `${momentParseTime(from).format(DateFormat.HOUR_MINUTE_12)} ${viewName} (Temporal)`;
+			return `${momentParseTime(from).format(DateFormat.HOUR_MINUTE_12)} ${viewName ? viewName : ''} (Temporal)`;
 		}
 		return `${momentParseTime(from).format(DateFormat.HOUR_MINUTE_12)}	 ${viewName}`;
 	}
@@ -269,9 +303,7 @@ export function getColor(appointment: AppointmentListDto): COLORES {
 		return COLORES.FUERA_DE_AGENDA;
 	}
 
-	if (!appointment?.patient?.id) {
-		return COLORES.RESERVA_ALTA;
-	}
+
 
 	if (appointment.overturn) {
 		return COLORES.SOBRETURNO;
@@ -291,6 +323,9 @@ export function getColor(appointment: AppointmentListDto): COLORES {
 
 	if(appointment.appointmentStateId === APPOINTMENT_STATES_ID.SERVED) {
 		return COLORES.SERVED;
+	}
+	if (!appointment?.patient?.id) {
+		return COLORES.RESERVA_ALTA;
 	}
 
 	return COLORES.ASSIGNED;

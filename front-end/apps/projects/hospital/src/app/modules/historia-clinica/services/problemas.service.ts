@@ -102,7 +102,7 @@ export class ProblemasService {
 		return data.snomed.sctid === data1.snomed.sctid;
 	}
 
-	addToList() {
+	addToList(): boolean {
 		if (this.form.valid && this.snomedConcept) {
 			const nuevoProblema: Problema = {
 				snomed: this.snomedConcept,
@@ -114,7 +114,9 @@ export class ProblemasService {
 			this.addControl(nuevoProblema);
 			this.errorSource.next();
 			this.resetForm();
+			return true;
 		}
+		return false;
 	}
 
 	addProblemToList(problema: Problema): void {

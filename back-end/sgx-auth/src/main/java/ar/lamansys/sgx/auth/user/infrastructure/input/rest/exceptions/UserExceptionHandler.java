@@ -2,6 +2,7 @@ package ar.lamansys.sgx.auth.user.infrastructure.input.rest.exceptions;
 
 import ar.lamansys.sgx.auth.user.application.exception.OAuthUserException;
 import ar.lamansys.sgx.auth.user.application.registeruser.exceptions.RegisterUserException;
+import ar.lamansys.sgx.auth.user.application.updateownpassword.exceptions.PasswordException;
 import ar.lamansys.sgx.auth.user.domain.passwordreset.exceptions.PasswordResetTokenStorageException;
 import ar.lamansys.sgx.auth.user.domain.user.model.UserException;
 import ar.lamansys.sgx.auth.user.domain.user.service.exceptions.UserStorageException;
@@ -62,6 +63,13 @@ public class UserExceptionHandler {
 	protected ApiErrorMessageDto handleOAuthUserException(OAuthUserException ex) {
 		LOG.debug("OAuthUserException exception -> {}", ex.getMessage());
 		return new ApiErrorMessageDto(ex.getCode().name(), ex.getMessage());
+	}
+
+	@ResponseStatus(HttpStatus.BAD_REQUEST)
+	@ExceptionHandler({ PasswordException.class })
+	protected ApiErrorMessageDto handleInvalidPasswordException(PasswordException ex) {
+		LOG.debug("InvalidUserException -> {}", ex.getMessage(), ex);
+		return new ApiErrorMessageDto(ex.code.toString(), ex.getMessage());
 	}
 }
 

@@ -5,6 +5,7 @@ import ar.lamansys.sgx.auth.oauth.domain.OAuthUserInfoBo;
 import ar.lamansys.sgx.auth.oauth.infrastructure.output.config.OAuthWSConfig;
 import ar.lamansys.sgx.auth.oauth.infrastructure.output.dto.OAuthUserInfoDto;
 import ar.lamansys.sgx.auth.oauth.infrastructure.output.mapper.OAuthUserMapper;
+import ar.lamansys.sgx.shared.restclient.configuration.HttpClientConfiguration;
 import ar.lamansys.sgx.shared.restclient.configuration.resttemplate.RestTemplateSSL;
 import ar.lamansys.sgx.shared.restclient.services.RestClient;
 import lombok.extern.slf4j.Slf4j;
@@ -22,8 +23,15 @@ public class OAuthUserInfoStorageImpl extends RestClient implements OAuthUserInf
 
     private final OAuthUserMapper oAuthUserMapper;
 
-    public OAuthUserInfoStorageImpl(OAuthWSConfig oAuthWSConfig, OAuthUserMapper oAuthUserMapper) throws Exception {
-        super(new RestTemplateSSL(), oAuthWSConfig);
+    public OAuthUserInfoStorageImpl(
+			HttpClientConfiguration configuration,
+			OAuthWSConfig oAuthWSConfig,
+			OAuthUserMapper oAuthUserMapper
+	) throws Exception {
+        super(
+				new RestTemplateSSL(configuration),
+				oAuthWSConfig
+		);
         this.oAuthWSConfig = oAuthWSConfig;
         this.oAuthUserMapper = oAuthUserMapper;
     }

@@ -1,28 +1,26 @@
 package ar.lamansys.sgh.clinichistory.domain.document;
 
-import lombok.*;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.ToString;
 
 @Getter
 @Setter
 @ToString
 @NoArgsConstructor
-@AllArgsConstructor
 public class AuthorBo {
 
-    private Integer id;
-
+	private Integer userId;
     private String firstName;
-
     private String lastName;
-
-    private String licence;
-
 	private String nameSelfDetermination;
 
-	public AuthorBo(Integer id, String firstName, String lastName, String nameSelfDetermination){
-		this.id = id;
+	public AuthorBo(Integer userId, String firstName, String lastName, String nameSelfDetermination){
+		this.userId = userId;
 		this.firstName = firstName;
         this.lastName = lastName;
 		this.nameSelfDetermination = nameSelfDetermination;
     }
+
 }

@@ -19,6 +19,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -66,6 +67,24 @@ public class OtherIndicationStorageImpl implements OtherIndicationStorage {
 		return result;
 	}
 
+	@Override
+	public Optional<OtherIndicationBo> findById(Integer id) {
+		log.debug("Input parameter -> id {}", id);
+		Optional<OtherIndicationBo> result = otherIndicationRepository.findById(id).map(entity -> {
+					OtherIndicationBo oiBo = mapToBo(entity);
+					HospitalUserPersonInfoDto p = sharedHospitalUserPort.getUserCompleteInfo(oiBo.getCreatedBy());
+					if (featureFlagsService.isOn(AppFeature.HABILITAR_DATOS_AUTOPERCIBIDOS) && p.getNameSelfDetermination() != null)
+						oiBo.setCreatedByName(p.getNameSelfDetermination() + " " + p.getLastName());
+					else oiBo.setCreatedByName(p.getFirstName() + " " + p.getLastName());
+					DosageBo dosageBo = dosageRepository.findById(entity.getDosageId()).map(this::mapToDosageBo).orElse(null);
+					oiBo.setDosage(dosageBo);
+					log.debug("Output -> {}", oiBo.toString());
+					return oiBo;
+				});
+		log.debug("Output -> {}", result.toString());
+		return result;
+	}
+
 	private Dosage mapToDosage(DosageBo bo){
 		Dosage result = new Dosage();
 		result.setFrequency(bo.getFrequency());
@@ -80,7 +99,8 @@ public class OtherIndicationStorageImpl implements OtherIndicationStorage {
 		DosageBo result = new DosageBo();
 		result.setId(entity.getId());
 		result.setFrequency(entity.getFrequency());
-		result.setPeriodUnit(EUnitsOfTimeBo.map(entity.getPeriodUnit()));
+		if (entity.getPeriodUnit() != null)
+			result.setPeriodUnit(EUnitsOfTimeBo.map(entity.getPeriodUnit()));
 		result.setStartDate(entity.getStartDate());
 		result.setEndDate(entity.getEndDate());
 		result.setEvent(entity.getEvent());

@@ -1,6 +1,8 @@
 package ar.lamansys.sgh.clinichistory.application.indication.createpharmaco;
 
+import ar.lamansys.sgh.clinichistory.application.ports.NursingRecordStorage;
 import ar.lamansys.sgh.clinichistory.application.ports.PharmacoStorage;
+import ar.lamansys.sgh.clinichistory.domain.ips.IndicationSummaryBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.PharmacoBo;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -18,10 +20,14 @@ public class CreatePharmaco {
 
 	private final PharmacoStorage storage;
 
+	private final NursingRecordStorage nursingRecordStorage;
+
 	public Integer run(PharmacoBo pharmacoBo) {
 		log.debug("Input parameter -> pharmacoBo {}", pharmacoBo);
 		assertContextValid(pharmacoBo);
 		Integer result = storage.createPharmaco(pharmacoBo);
+		pharmacoBo.setId(result);
+		nursingRecordStorage.createNursingRecordsFromIndication(getIndicationSummary(pharmacoBo));
 		log.debug("Output -> {}", result);
 		return result;
 	}
@@ -40,6 +46,15 @@ public class CreatePharmaco {
 		if (pharmacoBo.getIndicationDate() == null)
 			throw new ConstraintViolationException("La fecha de la indicación es un dato obligatorio", Collections.emptySet());
 
+	}
+
+	private IndicationSummaryBo getIndicationSummary(PharmacoBo pharmacoBo){
+		return new IndicationSummaryBo(
+				pharmacoBo.getId(),
+				pharmacoBo.getDosage(),
+				pharmacoBo.getNote(),
+				pharmacoBo.getIndicationDate()
+		);
 	}
 
 }

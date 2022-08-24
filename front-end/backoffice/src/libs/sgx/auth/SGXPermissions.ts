@@ -1,9 +1,9 @@
-import { RoleAssignment } from "../api/model";
+import { RoleAssignment } from '../api/model';
 
 class SGXPermissions {
     roleAssignments: RoleAssignment[];
     featureFlags: string[];
-
+    
     constructor(roleAssignments: RoleAssignment[], featureFlags: string[]) {
         this.roleAssignments = roleAssignments;
         this.featureFlags = featureFlags;
@@ -13,7 +13,7 @@ class SGXPermissions {
         if (anyAssignments.length === 0) {
             return true;
         }
-        const hasAny = anyAssignments.find(assignment =>
+        const hasAny = anyAssignments.find(assignment => 
             this.roleAssignments.find(userAssignment => userAssignment.role === assignment.role && userAssignment.institutionId === assignment.institutionId)
         ) !== undefined;
 
@@ -25,5 +25,5 @@ class SGXPermissions {
     }
 
 }
-
+  
 export default SGXPermissions;

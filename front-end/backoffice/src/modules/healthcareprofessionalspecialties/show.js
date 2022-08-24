@@ -6,27 +6,36 @@ import {
     FunctionField,
     TextField,
 } from 'react-admin';
-import SubReference from '../components/subreference';
-import renderPerson from '../components/renderperson';
+import CreateRelatedButton from "../components/CreateRelatedButton";
+import ProfessionalSpecialtyLicenseNumbersSection from "./ProfessionalSpecialtyLicenseNumbersSection";
+import SectionTitle from "../components/SectionTitle";
 
+const renderPerson = (choice) => `${choice.identificationNumber} ${choice.lastName} ${choice.firstName}`;
 const HealthcareProfessionalSpecialtyShow = props => (
     <Show {...props}>
         <SimpleShowLayout>
-            <ReferenceField source="healthcareProfessionalId" reference="healthcareprofessionals" link={false} label="Persona">
-                <SubReference source="personId" reference="person" link={false}>
-                    <FunctionField render={renderPerson} />
-                </SubReference>
+            <ReferenceField label="resources.healthcareprofessionalspecialties.fields.personId"
+                source="professionalProfessionId" reference="professionalprofessions" link={false}>
+                <ReferenceField source="personId" reference="person">
+                    <FunctionField render={renderPerson}/>
+                </ReferenceField>
             </ReferenceField>
-
-            <ReferenceField source="healthcareProfessionalId" reference="healthcareprofessionals" >
-                <TextField source="licenseNumber" />
-            </ReferenceField>
-            <ReferenceField source="professionalSpecialtyId" reference="professionalspecialties" >
-                <TextField source="description" />
+            <ReferenceField label="resources.healthcareprofessionalspecialties.fields.professionalSpecialtyId"
+                source="professionalProfessionId" reference="professionalprofessions" link={false}>
+                <ReferenceField source="professionalSpecialtyId" reference="professionalspecialties" link={false}>
+                    <TextField source="description" />
+                </ReferenceField>
             </ReferenceField>
             <ReferenceField source="clinicalSpecialtyId" reference="clinicalspecialties">
                 <TextField source="name" />
             </ReferenceField>
+            <SectionTitle label="resources.healthcareprofessionalspecialties.title.professionalSpecialtyLicenseNumbers"/>
+            <CreateRelatedButton
+                reference="healthcareprofessionalspecialtylicensenumbers"
+                refFieldName="healthcareProfessionalSpecialtyId"
+                label="resources.healthcareprofessionalspecialties.buttons.linkProfessionalSpecialtyLicenseNumbers"
+            />
+            <ProfessionalSpecialtyLicenseNumbersSection/>
         </SimpleShowLayout>
     </Show>
 );

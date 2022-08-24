@@ -13,6 +13,9 @@ import { OdontogramComponent } from './components/odontogram/odontogram.componen
 import { OdontologyConsultationDockPopupComponent } from './components/odontology-consultation-dock-popup/odontology-consultation-dock-popup.component';
 import { ToothComponent } from './components/tooth/tooth.component';
 import { ToothDialogComponent } from './components/tooth-dialog/tooth-dialog.component';
+// dialogs
+import { NewConsultationAddDiagnoseFormComponent } from './dialogs/new-consultation-add-diagnose-form/new-consultation-add-diagnose-form.component';
+import { NewConsultationPersonalHistoryFormComponent } from './dialogs/new-consultation-personal-history-form/new-consultation-personal-history-form.component';
 // services
 import { ConceptsFacadeService } from './services/concepts-facade.service';
 
@@ -25,6 +28,9 @@ import { ConceptsFacadeService } from './services/concepts-facade.service';
 		OdontologyConsultationDockPopupComponent,
 		ToothComponent,
 		ToothDialogComponent,
+		// dialogs
+		NewConsultationAddDiagnoseFormComponent,
+		NewConsultationPersonalHistoryFormComponent,
 	],
 	imports: [
 		CommonModule,

@@ -1,5 +1,9 @@
 package net.pladema.staff.application.updatehealthcareprofessional;
 
+import java.util.List;
+
+import org.springframework.stereotype.Service;
+
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import net.pladema.staff.application.updatehealthcareprofessional.exceptions.UpdateHealthcareProfessionalEnumException;
@@ -10,9 +14,6 @@ import net.pladema.staff.service.HealthcareProfessionalService;
 import net.pladema.staff.service.HealthcareProfessionalSpecialtyService;
 import net.pladema.staff.service.domain.HealthcareProfessionalCompleteBo;
 import net.pladema.staff.service.domain.HealthcareProfessionalSpecialtyBo;
-import org.springframework.stereotype.Service;
-
-import java.util.List;
 
 @Slf4j
 @RequiredArgsConstructor

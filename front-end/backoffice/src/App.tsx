@@ -6,17 +6,16 @@ import {
     authProvider,
 } from './libs/sgx/api';
 
+import resources from './modules';
+
 import { 
     Dashboard,
     Layout,
     LoginPage,
 } from './layout';
 
-import resources from './modules';
-
 import i18nProvider from './providers/i18nProvider';
 import customRoutes from './layout/routes';
-
 
 const App = () => (
     <Admin

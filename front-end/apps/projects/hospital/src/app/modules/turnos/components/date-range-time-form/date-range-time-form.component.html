@@ -1,0 +1,43 @@
+<form fxLayout="column" class="block-dialog">
+	<div appearance="outline" style="margin-top: 16px;">
+		<div fxLayout="row" fxLayoutGap="20px">
+			<mat-form-field class="date-selector" appearance="outline">
+				<mat-label [translate]="'turnos.block.START_DATE'"></mat-label>
+				<input matInput id="initDate" [matDatepicker]="startDatePicker" [formControl]="form.controls.initDate"
+				[matDatepickerFilter]="initDateFilter" (dateChange)="updateEndDate()">
+				<mat-error [translate]="'turnos.block.DATE_SELECTION_ERROR'"></mat-error>
+				<mat-datepicker-toggle matSuffix [for]="startDatePicker"></mat-datepicker-toggle>
+				<mat-datepicker #startDatePicker></mat-datepicker>
+			</mat-form-field>
+			<mat-form-field class="date-selector" appearance="outline">
+				<mat-label [translate]="'turnos.block.END_DATE'"></mat-label>
+				<input matInput id="endDate" [matDatepicker]="endDatePicker" [formControl]="form.controls.endDate" [matDatepickerFilter]="endDateFilter"
+				[disabled]="!form.value.initDate">
+				<mat-error [translate]="'turnos.block.DATE_SELECTION_ERROR'"></mat-error>
+				<mat-datepicker-toggle matSuffix [for]="endDatePicker"></mat-datepicker-toggle>
+				<mat-datepicker #endDatePicker></mat-datepicker>
+			</mat-form-field>
+		</div>
+		<mat-checkbox style="margin-bottom: 16px;" [formControl]="form.controls.fullBlock">{{ 'turnos.block.COMPLETE_RANGE' | translate }} </mat-checkbox>
+	</div>
+
+	<div fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="20px">
+		<mat-form-field appearance="outline" class="hour-selector">
+			<mat-select id="startingHour" [formControl]="form.controls.init" [disabled]="form.controls.fullBlock.value">
+				<mat-option [value]="possibleTime" *ngFor="let possibleTime of possibleStartingTime | slice:0:possibleStartingTime.length-1"
+					(click)="filterEndingTime()">
+					{{ possibleTime | viewDateDto:'time' | date:'shortTime' }}
+				</mat-option>
+			</mat-select>
+		</mat-form-field>
+		<span [translate]="'turnos.block.HOURS_TO'"></span>
+		<mat-form-field appearance="outline" class="hour-selector">
+			<mat-select id="endingHour" [formControl]="form.controls.end" [disabled]="form.controls.fullBlock.value">
+				<mat-option [value]="possibleTime" *ngFor="let possibleTime of possibleEndingTime">
+					{{ possibleTime | viewDateDto:'time' | date:'shortTime' }}
+				</mat-option>
+			</mat-select>
+		</mat-form-field>
+		<span [translate]="'turnos.block.HOURS'"></span>
+	</div>
+</form>

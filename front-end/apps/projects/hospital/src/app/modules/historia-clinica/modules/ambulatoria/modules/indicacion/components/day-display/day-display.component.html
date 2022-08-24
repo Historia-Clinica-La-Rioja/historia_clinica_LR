@@ -1,0 +1,27 @@
+<div class="content" fxLayout="row" fxLayoutAlign="left center" fxLayoutGap="10px">
+    <button mat-icon-button (click)="viewAnotherDay(-1)" [disabled]="sameDay(actualDate,minDate)">
+        <mat-icon [ngClass]="{ 'disabled': sameDay(actualDate,minDate), 'color-primary': !sameDay(actualDate,minDate)}">chevron_left</mat-icon>
+    </button>
+    <div *ngIf="today || yesterday || tomorrow">
+        <ng-container *ngIf="today; else isYesterday">
+            <span class="actual-date" [translate]="'indicacion.internment-card.TODAY'"></span>
+        </ng-container>
+    </div>
+    <div *ngIf="viewDay" fxLayout="row" fxLayoutGap="4px" fxLayoutAlign="left center" class="actual-date">
+        <span>{{ viewDay.nameDay }}</span>
+        <span>{{ viewDay.numberDay }}</span>
+        <span>{{ viewDay.month }}</span>
+    </div>
+    <button mat-icon-button (click)="viewAnotherDay(1)">
+        <mat-icon class="color-primary">chevron_right</mat-icon>
+    </button>
+</div>
+
+<ng-template #isYesterday>
+	<ng-container *ngIf="yesterday else isTomorrow">
+		<span class="actual-date" [translate]="'indicacion.internment-card.YESTERDAY'"></span>
+	</ng-container>
+</ng-template>
+<ng-template #isTomorrow>
+	<span class="actual-date" [translate]="'indicacion.internment-card.TOMORROW'"></span>
+</ng-template>

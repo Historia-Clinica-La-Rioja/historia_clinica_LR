@@ -6,11 +6,11 @@ import static org.mockito.Mockito.when;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import javax.validation.ConstraintViolationException;
 
-import org.assertj.core.util.Lists;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -153,12 +153,12 @@ class UpdateEpicrisisServiceImplTest extends UnitRepository {
 		epicrisisBo.setInstitutionId(institutionId);
 		epicrisisBo.setEncounterId(encounterId);
 		epicrisisBo.setMainDiagnosis(new HealthConditionBo(new SnomedBo("MAIN", "MAIN")));
-		epicrisisBo.setDiagnosis(Lists.emptyList());
-		epicrisisBo.setImmunizations(Lists.emptyList());
-		epicrisisBo.setFamilyHistories(Lists.emptyList());
-		epicrisisBo.setPersonalHistories(Lists.emptyList());
-		epicrisisBo.setMedications(Lists.emptyList());
-		epicrisisBo.setAllergies(Lists.emptyList());
+		epicrisisBo.setDiagnosis(Collections.emptyList());
+		epicrisisBo.setImmunizations(Collections.emptyList());
+		epicrisisBo.setFamilyHistories(Collections.emptyList());
+		epicrisisBo.setPersonalHistories(Collections.emptyList());
+		epicrisisBo.setMedications(Collections.emptyList());
+		epicrisisBo.setAllergies(Collections.emptyList());
 		return epicrisisBo;
 	}
 

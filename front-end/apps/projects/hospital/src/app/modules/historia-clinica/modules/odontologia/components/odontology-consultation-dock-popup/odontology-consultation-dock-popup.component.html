@@ -1,4 +1,5 @@
-<app-dock-popup [dockPopupRef]="dockPopupRef" [title]="'odontologia.odontology-consultation-dock-popup.TITLE'">
+<app-dock-popup [dockPopupRef]="dockPopupRef"
+	[header]="{ title:'odontologia.odontology-consultation-dock-popup.TITLE' }">
 
 	<div body fxLayout="column" fxLayoutGap="20px">
 
@@ -26,459 +27,92 @@
 		<app-new-consultation-expansion-section id="reasons"
 			[title]="'odontologia.odontology-consultation-dock-popup.REASON_TITLE' | translate" icon="sms_failed"
 			[isEmpty]="reasonNewConsultationService.isEmpty()" [recommend]="true">
-			<app-new-document-section>
-
-				<ng-container concept-form>
-
-					<ng-container *ngIf="!reasonNewConsultationService.getSnomedConcept() else mainReasonConsultation">
-						<app-concepts-search *ngIf="!searchConceptsLocallyFFIsOn else mainReasonTypeaheadSearch"
-							[label]="'odontologia.odontology-consultation-dock-popup.REASON'"
-							(search)="reasonNewConsultationService.openSearchDialog($event)">
-						</app-concepts-search>
-
-						<ng-template #mainReasonTypeaheadSearch>
-							<app-concept-typeahead-search [ecl]="reasonNewConsultationService.getECL()"
-								[placeholder]="'odontologia.odontology-consultation-dock-popup.SEARCH_REASON'"
-								(conceptSelected)="reasonNewConsultationService.setConcept($event)">
-							</app-concept-typeahead-search>
-						</ng-template>
-					</ng-container>
-
-					<ng-template #mainReasonConsultation>
-						<form [formGroup]="reasonNewConsultationService.getForm()"
-							(ngSubmit)="reasonNewConsultationService.addToList()">
-							<mat-form-field appearance="outline">
-								<mat-label>
-									{{ 'odontologia.odontology-consultation-dock-popup.DIAGNOSIS' | translate }}
-								</mat-label>
-								<input id="reason_input" matInput type="text" formControlName="snomed" name="snomed"
-									readonly matTooltip="{{reasonNewConsultationService.getSnomedConcept().pt }}">
-								<button id="clear_reasons" mat-button matSuffix color="warn" mat-icon-button
-									(click)="reasonNewConsultationService.resetForm()">
-									<mat-icon>close</mat-icon>
-								</button>
-							</mat-form-field>
-							<div align="end">
-								<button id="submit_reasons" class="uppercase" mat-raised-button color="primary"
-									type="submit">
-									<span class="uppercase">
-										{{ 'odontologia.odontology-consultation-dock-popup.ADD_REASON' | translate }}
-									</span>
-								</button>
-							</div>
-						</form>
-					</ng-template>
-				</ng-container>
-
-				<app-document-section-table data-display
-					[tableTitle]="'odontologia.odontology-consultation-dock-popup.REGISTERED_REASONS'"
-					[columns]="reasonNewConsultationService.getTableColumnConfig()"
+			<div>
+				<app-document-section-table [columns]="reasonNewConsultationService.getTableColumnConfig()"
 					[data]="reasonNewConsultationService.getMotivosConsulta()">
 				</app-document-section-table>
 
-			</app-new-document-section>
+				<button mat-button type="button" id="add-reason-button" color="primary" class="add-button"
+					(click)="addReason()">
+					+ {{ 'odontologia.odontology-consultation-dock-popup.ADD_REASON' | translate }}
+				</button>
+			</div>
 		</app-new-consultation-expansion-section>
 
 		<app-new-consultation-expansion-section id="other_procedures"
 			[title]="'odontologia.odontology-consultation-dock-popup.OTHER_PROCEDURES_TITLE' | translate"
 			icon="library_add" [isEmpty]="otherProceduresService.isEmpty()">
-			<app-new-document-section>
-				<ng-container concept-form>
-					<ng-container *ngIf="!otherProceduresService.getSnomedConcept() else otherProceduresForm">
-						<app-concepts-search *ngIf="!searchConceptsLocallyFFIsOn else otherProceduresTypeaheadSearch"
-							[label]="'odontologia.odontology-consultation-dock-popup.PROCEDURE'"
-							(search)="otherProceduresService.openSearchDialog($event)">
-						</app-concepts-search>
-
-						<ng-template #otherProceduresTypeaheadSearch>
-							<app-concept-typeahead-search [ecl]="otherProceduresService.getECL()"
-								[placeholder]="'odontologia.odontology-consultation-dock-popup.SEARCH_PROCEDURE'"
-								(conceptSelected)="otherProceduresService.setConcept($event)">
-							</app-concept-typeahead-search>
-						</ng-template>
-					</ng-container>
-
-					<ng-template #otherProceduresForm>
-						<form [formGroup]="otherProceduresService.getForm()"
-							(ngSubmit)="otherProceduresService.addToList()">
-							<mat-form-field appearance="outline">
-								<mat-label>
-									{{ 'odontologia.odontology-consultation-dock-popup.PROCEDURE_TYPE' | translate }}
-								</mat-label>
-								<input id="input_procedure" matInput type="text" formControlName="snomed" name="snomed"
-									readonly matTooltip="{{otherProceduresService.getSnomedConcept().pt }}">
-								<button id="clear_procedure" mat-button matSuffix color="warn" mat-icon-button
-									(click)="otherProceduresService.resetForm()">
-									<mat-icon>close</mat-icon>
-								</button>
-							</mat-form-field>
-
-							<mat-form-field appearance="outline">
-								<mat-label>
-									{{ 'odontologia.odontology-consultation-dock-popup.DATE' | translate }}
-								</mat-label>
-								<input matInput id="date_procedure" [matDatepicker]="datePicker"
-									formControlName="performedDate" [min]="minDate"
-									[max]="otherProceduresService.getFechaMax()">
-								<mat-datepicker-toggle matSuffix [for]="datePicker"></mat-datepicker-toggle>
-								<mat-datepicker #datePicker></mat-datepicker>
-							</mat-form-field>
-
-							<div align="end">
-								<button id="submit_procedure" class="uppercase" mat-raised-button color="primary"
-									type="submit">
-									<span>
-										{{ 'odontologia.odontology-consultation-dock-popup.ADD_PROCEDURE' | translate }}
-									</span>
-								</button>
-							</div>
-
-						</form>
-					</ng-template>
-				</ng-container>
-				<app-document-section-table data-display
-					[tableTitle]="'odontologia.odontology-consultation-dock-popup.REGISTERED_PROCEDURES'"
-					[columns]="otherProceduresService.getTableColumnConfig()"
+			<div>
+				<app-document-section-table [columns]="otherProceduresService.getTableColumnConfig()"
 					[data]="otherProceduresService.getProcedimientos()">
 				</app-document-section-table>
 
-			</app-new-document-section>
+				<button mat-button type="button" id="add-procedure-button" color="primary" class="add-button"
+					(click)="addProcedure()">
+					+ {{ 'odontologia.odontology-consultation-dock-popup.ADD_PROCEDURE' | translate }}
+				</button>
+			</div>
 		</app-new-consultation-expansion-section>
 
 		<app-new-consultation-expansion-section id="other_diagnoses"
 			[title]="'odontologia.odontology-consultation-dock-popup.OTHER_DIAGNOSES' | translate" icon="error_outlined"
 			[isEmpty]="otherDiagnosticsNewConsultationService.isEmpty()">
-			<app-new-document-section>
-				<ng-container concept-form>
-					<ng-container
-						*ngIf="!otherDiagnosticsNewConsultationService.getSnomedConcept() else otherDiagnosticForm">
-						<app-concepts-search *ngIf="!searchConceptsLocallyFFIsOn else otherDiagnosticTypeaheadSearch"
-							[label]="'odontologia.odontology-consultation-dock-popup.PROBLEM'"
-							(search)="otherDiagnosticsNewConsultationService.openSearchDialog($event)">
-						</app-concepts-search>
-
-						<ng-template #otherDiagnosticTypeaheadSearch>
-							<app-concept-typeahead-search [ecl]="otherDiagnosticsNewConsultationService.getECL()"
-								[placeholder]="'odontologia.odontology-consultation-dock-popup.SEARCH_PROBLEM'"
-								(conceptSelected)="otherDiagnosticsNewConsultationService.setConcept($event)">
-							</app-concept-typeahead-search>
-						</ng-template>
-					</ng-container>
-
-					<ng-template #otherDiagnosticForm>
-						<form [formGroup]="otherDiagnosticsNewConsultationService.getForm()"
-							(ngSubmit)="otherDiagnosticsNewConsultationService.addToList()">
-
-							<mat-form-field appearance="outline">
-								<mat-label>
-									{{ 'odontologia.odontology-consultation-dock-popup.PROBLEM' | translate }}
-								</mat-label>
-								<input id="snomed-input" matInput type="text" formControlName="snomed" name="snomed"
-									readonly
-									matTooltip="{{ otherDiagnosticsNewConsultationService.getSnomedConcept().pt }}">
-								<button id="clear" mat-button matSuffix color="warn" mat-icon-button
-									(click)="otherDiagnosticsNewConsultationService.resetForm()">
-									<mat-icon>close</mat-icon>
-								</button>
-							</mat-form-field>
-
-							<mat-form-field appearance="outline">
-								<mat-label>
-									{{ 'odontologia.odontology-consultation-dock-popup.SEVERITY' | translate }}
-								</mat-label>
-								<mat-select id="severity-select" formControlName="severidad">
-									<mat-option *ngFor="let severityType of severityTypes" [value]="severityType.code">
-										{{severityType.display}}
-									</mat-option>
-								</mat-select>
-								<mat-error translate="forms.REQUIRED"></mat-error>
-							</mat-form-field>
-
-							<div class="margin-checkbox">
-								<mat-checkbox id="chronic_checkbox" formControlName="cronico">
-									<span>
-										{{ 'odontologia.odontology-consultation-dock-popup.CHRONIC' | translate }}
-									</span>
-								</mat-checkbox>
-							</div>
-
-							<mat-form-field appearance="outline">
-								<mat-label>
-									{{ 'odontologia.odontology-consultation-dock-popup.START_DATE' | translate }}
-								</mat-label>
-								<input matInput id="start_date" [matDatepicker]="startDatePicker"
-									formControlName="fechaInicio" [min]="minDate"
-									[max]="otherDiagnosticsNewConsultationService.getFechaInicioMax()"
-									(dateChange)="otherDiagnosticsNewConsultationService.checkValidFechaFin()">
-								<mat-datepicker-toggle matSuffix [for]="startDatePicker"></mat-datepicker-toggle>
-								<mat-datepicker #startDatePicker></mat-datepicker>
-								<mat-error
-									*ngIf="otherDiagnosticsNewConsultationService.hasError('required', 'fechaInicio')"
-									[translate]="'forms.REQUIRED'">
-								</mat-error>
-								<mat-error
-									*ngIf="otherDiagnosticsNewConsultationService.hasError('matDatepickerMax', 'fechaInicio')"
-									[translate]="'forms.MAX_DATE_TODAY'">
-								</mat-error>
-							</mat-form-field>
-
-							<mat-form-field appearance="outline">
-								<mat-label>
-									{{ 'odontologia.odontology-consultation-dock-popup.END_DATE' | translate }}
-								</mat-label>
-								<input matInput id="end-date" [matDatepicker]="endDatePicker" formControlName="fechaFin"
-									[max]="today"
-									(dateChange)="otherDiagnosticsNewConsultationService.checkValidFechaFin()">
-								<mat-datepicker-toggle matSuffix [for]="endDatePicker"></mat-datepicker-toggle>
-								<mat-datepicker #endDatePicker></mat-datepicker>
-								<mat-error *ngIf="otherDiagnosticsNewConsultationService.hasError('min', 'fechaFin')">
-									{{ 'odontologia.odontology-consultation-dock-popup.END_DATE_ERROR' | translate }}
-								</mat-error>
-								<mat-error
-									*ngIf="otherDiagnosticsNewConsultationService.hasError('matDatepickerMax', 'fechaFin')"
-									[translate]="'forms.MAX_DATE_TODAY'">
-								</mat-error>
-							</mat-form-field>
-
-							<div align="end">
-								<button id="submit_diagnostic" class="uppercase" mat-raised-button color="primary"
-									type="submit">
-									<span>
-										{{ 'odontologia.odontology-consultation-dock-popup.ADD_PROBLEM' | translate }}
-									</span>
-								</button>
-							</div>
-
-						</form>
-					</ng-template>
-
-				</ng-container>
-
-				<app-document-section-table data-display
-					[tableTitle]="'odontologia.odontology-consultation-dock-popup.OTHER_REGISTERED_DIAGNOSES'"
-					[columns]="otherDiagnosticsNewConsultationService.getColumns()"
+			<div>
+				<app-document-section-table [columns]="otherDiagnosticsNewConsultationService.getColumns()"
 					[data]="otherDiagnosticsNewConsultationService.getProblemas()">
 				</app-document-section-table>
 
-			</app-new-document-section>
-
-
+				<button mat-button type="button" id="add-diagnose-button" color="primary" class="add-button"
+					(click)="addDiagnose()">
+					+ {{ 'odontologia.odontology-consultation-dock-popup.ADD_PROBLEM' | translate }}
+				</button>
+			</div>
 		</app-new-consultation-expansion-section>
 
 		<app-new-consultation-expansion-section id="allergies"
 			[title]="'odontologia.odontology-consultation-dock-popup.ALLERGIES' | translate" icon="highlight_off"
 			[isEmpty]="allergiesNewConsultationService.isEmpty()">
-			<app-new-document-section>
-
-				<ng-container concept-form>
-
-					<ng-container *ngIf="!allergiesNewConsultationService.getSnomedConcept() else allergiesForm">
-						<app-concepts-search *ngIf="!searchConceptsLocallyFFIsOn else allergyTypeaheadSearch"
-							[label]="'odontologia.odontology-consultation-dock-popup.ALLERGY'"
-							(search)="allergiesNewConsultationService.openSearchDialog($event)">
-						</app-concepts-search>
-
-						<ng-template #allergyTypeaheadSearch>
-							<app-concept-typeahead-search [ecl]="allergiesNewConsultationService.getECL()"
-								[placeholder]="'odontologia.odontology-consultation-dock-popup.SEARCH_ALLERGY'"
-								(conceptSelected)="allergiesNewConsultationService.setConcept($event)">
-							</app-concept-typeahead-search>
-						</ng-template>
-					</ng-container>
-
-					<ng-template #allergiesForm>
-						<form [formGroup]="allergiesNewConsultationService.getForm()"
-							(ngSubmit)="allergiesNewConsultationService.addToList()">
-							<mat-form-field appearance="outline">
-								<mat-label>
-									{{ 'odontologia.odontology-consultation-dock-popup.ALLERGY' | translate }}
-								</mat-label>
-								<input id="allergies_input" matInput type="text" formControlName="snomed" name="snomed"
-									readonly matTooltip="{{allergiesNewConsultationService.getSnomedConcept().pt }}">
-								<button id="clear_allergies" mat-button matSuffix color="warn" mat-icon-button
-									(click)="allergiesNewConsultationService.resetForm()">
-									<mat-icon>close</mat-icon>
-								</button>
-							</mat-form-field>
-
-							<mat-form-field appearance="outline">
-								<mat-label>
-									{{ 'odontologia.odontology-consultation-dock-popup.CRITICALITY' | translate }}
-								</mat-label>
-								<mat-select id="criticality_select" formControlName="criticality">
-									<mat-option *ngFor="let criticalityType of criticalityTypes"
-										[value]="criticalityType.id">
-										{{criticalityType.display}}
-									</mat-option>
-								</mat-select>
-								<mat-error translate="forms.REQUIRED"></mat-error>
-							</mat-form-field>
-
-							<div align="end">
-								<button id="submit_allergies" class="uppercase" mat-raised-button color="primary"
-									type="submit">
-									<span class="uppercase">
-										{{ 'odontologia.odontology-consultation-dock-popup.ADD_ALLERGY' | translate }}
-									</span>
-								</button>
-							</div>
-						</form>
-					</ng-template>
-				</ng-container>
-
-				<app-document-section-table data-display
-					[tableTitle]="'odontologia.odontology-consultation-dock-popup.REGISTERED_ALLERGIES'"
-					[columns]="allergiesNewConsultationService.getTableColumnConfig()"
+			<div>
+				<app-document-section-table [columns]="allergiesNewConsultationService.getTableColumnConfig()"
 					[data]="allergiesNewConsultationService.getAlergias()">
 				</app-document-section-table>
 
-			</app-new-document-section>
+				<button mat-button type="button" id="add-allergy-button" color="primary" class="add-button"
+					(click)="addAllergy()">
+					+ {{ 'odontologia.odontology-consultation-dock-popup.ADD_ALLERGY' | translate }}
+				</button>
+			</div>
 		</app-new-consultation-expansion-section>
 
 		<app-new-consultation-expansion-section id="personal_histories"
 			[title]="'odontologia.odontology-consultation-dock-popup.PERSONAL_HISTORY' | translate" icon="report"
 			[isEmpty]="personalHistoriesNewConsultationService.isEmpty()">
-			<app-new-document-section>
-				<ng-container concept-form>
-					<ng-container
-						*ngIf="!personalHistoriesNewConsultationService.getSnomedConcept() else personalHistoriesForm">
-						<app-concepts-search *ngIf="!searchConceptsLocallyFFIsOn else personalHistoriesTypeaheadSearch"
-							[label]="'odontologia.odontology-consultation-dock-popup.PERSONAL_HISTORY'"
-							(search)="personalHistoriesNewConsultationService.openSearchDialog($event)">
-						</app-concepts-search>
-
-						<ng-template #personalHistoriesTypeaheadSearch>
-							<app-concept-typeahead-search [ecl]="personalHistoriesNewConsultationService.getECL()"
-								[placeholder]="'odontologia.odontology-consultation-dock-popup.SEARCH_PERSONAL_HISTORY'"
-								(conceptSelected)="personalHistoriesNewConsultationService.setConcept($event)">
-							</app-concept-typeahead-search>
-						</ng-template>
-					</ng-container>
-
-					<ng-template #personalHistoriesForm>
-						<form [formGroup]="personalHistoriesNewConsultationService.getForm()"
-							(ngSubmit)="personalHistoriesNewConsultationService.addToList()">
-
-							<mat-form-field appearance="outline">
-								<mat-label>
-									{{ 'odontologia.odontology-consultation-dock-popup.PROBLEM_TYPE' | translate }}
-								</mat-label>
-								<input id="personal_history_input" matInput type="text" formControlName="snomed"
-									name="snomed" readonly
-									matTooltip="{{personalHistoriesNewConsultationService.getSnomedConcept().pt }}">
-								<button id="clear_history" mat-button matSuffix color="warn" mat-icon-button
-									(click)="personalHistoriesNewConsultationService.resetForm()">
-									<mat-icon>close</mat-icon>
-								</button>
-							</mat-form-field>
-
-							<mat-form-field appearance="outline">
-								<mat-label>
-									{{ 'odontologia.odontology-consultation-dock-popup.REGISTRATION_DATE' | translate }}
-								</mat-label>
-								<input matInput id="history_date" [matDatepicker]="historyDatePicker"
-									formControlName="fecha" [min]="minDate"
-									[max]="personalHistoriesNewConsultationService.getMaxDate()">
-								<mat-datepicker-toggle matSuffix [for]="historyDatePicker"></mat-datepicker-toggle>
-								<mat-datepicker #historyDatePicker></mat-datepicker>
-							</mat-form-field>
-
-							<div align="end">
-								<button id="submit_personal_history" class="uppercase" mat-raised-button color="primary"
-									type="submit">
-									<span class="uppercase">
-										{{ 'odontologia.odontology-consultation-dock-popup.ADD_PERSONAL_HISTORY' |
-										translate }}
-									</span>
-								</button>
-							</div>
-						</form>
-					</ng-template>
-				</ng-container>
-
-				<app-document-section-table data-display
-					[tableTitle]="'odontologia.odontology-consultation-dock-popup.REGISTERED_PERSONAL_HISTORY'"
-					[columns]="personalHistoriesNewConsultationService.getTableColumnConfig()"
+			<div>
+				<app-document-section-table [columns]="personalHistoriesNewConsultationService.getTableColumnConfig()"
 					[data]="personalHistoriesNewConsultationService.getAntecedentesPersonales()">
 				</app-document-section-table>
 
-			</app-new-document-section>
+				<button mat-button type="button" id="add-allergy-button" color="primary" class="add-button"
+					(click)="addPersonalHistory()">
+					+ {{ 'odontologia.odontology-consultation-dock-popup.ADD_PERSONAL_HISTORY' | translate }}
+				</button>
+			</div>
+
 		</app-new-consultation-expansion-section>
 
 		<app-new-consultation-expansion-section id="medications"
 			[title]="'odontologia.odontology-consultation-dock-popup.USUAL_MEDICATION' | translate"
 			icon="event_available" [isEmpty]="medicationsNewConsultationService.isEmpty()">
-			<app-new-document-section>
-				<div concept-form>
-					<ng-container *ngIf="!medicationsNewConsultationService.getSnomedConcept() else medicationForm">
-						<app-concepts-search *ngIf="!searchConceptsLocallyFFIsOn else medicationTypeaheadSearch"
-							[label]="'odontologia.odontology-consultation-dock-popup.USUAL_MEDICATION'"
-							(search)="medicationsNewConsultationService.openSearchDialog($event)">
-						</app-concepts-search>
-
-						<ng-template #medicationTypeaheadSearch>
-							<app-concept-typeahead-search [ecl]="medicationsNewConsultationService.getECL()"
-								[placeholder]="'odontologia.odontology-consultation-dock-popup.SEARCH_USUAL_MEDICATION'"
-								(conceptSelected)="medicationsNewConsultationService.setConcept($event)">
-							</app-concept-typeahead-search>
-						</ng-template>
-					</ng-container>
-				</div>
-
-				<ng-template #medicationForm>
-					<form [formGroup]="medicationsNewConsultationService.getForm()"
-						(ngSubmit)="medicationsNewConsultationService.addToList()">
-						<mat-form-field appearance="outline">
-							<mat-label>
-								{{ 'odontologia.odontology-consultation-dock-popup.MEDICATION_NAME' | translate }}
-							</mat-label>
-							<input matInput type="text" formControlName="snomed" name="snomed" readonly
-								matTooltip="{{ medicationsNewConsultationService.getSnomedConcept().pt }}">
-							<button id="clear_medication" mat-button matSuffix color="warn" mat-icon-button
-								(click)="medicationsNewConsultationService.resetForm()">
-								<mat-icon>close</mat-icon>
-							</button>
-						</mat-form-field>
-
-						<mat-form-field appearance="outline">
-							<mat-label>
-								{{ 'odontologia.odontology-consultation-dock-popup.OBSERVATIONS' | translate }}
-							</mat-label>
-							<textarea matInput type="text" id="observations" name="observaciones"
-								formControlName="observaciones"
-								[placeholder]="'odontologia.odontology-consultation-dock-popup.DESCRIPTION' | translate">
-							</textarea>
-							<mat-error
-								*ngIf="hasError(medicationsNewConsultationService.getForm(), 'maxlength', 'observaciones')"
-								translate="forms.MAX_LENGTH_ERROR" [translateParams]="{max: TEXT_AREA_MAX_LENGTH}">
-							</mat-error>
-						</mat-form-field>
-
-						<div class="margin-checkbox">
-							<mat-checkbox formControlName="suspendido">
-								<span>
-									{{ 'odontologia.odontology-consultation-dock-popup.SUSPENDED' | translate }}
-								</span>
-							</mat-checkbox>
-						</div>
-
-						<div align="end">
-							<button class="uppercase" mat-raised-button color="primary" type="submit">
-								<span>
-									{{ 'odontologia.odontology-consultation-dock-popup.ADD_MEDICATION' | translate }}
-								</span>
-							</button>
-						</div>
-					</form>
-				</ng-template>
-
-				<app-document-section-table data-display
-					[tableTitle]="'odontologia.odontology-consultation-dock-popup.REGISTERED_MEDICATIONS'"
-					[columns]="medicationsNewConsultationService.getTableColumnConfig()"
+			<div>
+				<app-document-section-table [columns]="medicationsNewConsultationService.getTableColumnConfig()"
 					[data]="medicationsNewConsultationService.getMedicaciones()">
 				</app-document-section-table>
 
-			</app-new-document-section>
+				<button mat-button type="button" id="add-medication-button" color="primary" class="add-button"
+					(click)="addMedication()">
+					+ {{ 'odontologia.odontology-consultation-dock-popup.ADD_MEDICATION' | translate }}
+				</button>
+			</div>
 		</app-new-consultation-expansion-section>
 
 		<app-new-consultation-expansion-section id="diagnoses"

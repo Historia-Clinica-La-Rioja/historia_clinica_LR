@@ -1,0 +1,680 @@
+databaseChangeLog: 
+    - logicalFilePath: incrementales-v1_40
+
+
+    - changeSet:
+        id: 1.40.0-1
+        comment: drop NotNullConstraint healthcare_professional-licence_number
+        author: etrapani
+        changes:
+          - dropNotNullConstraint:
+              tableName: healthcare_professional
+              columnName: license_number
+              columnDataType: varchar(512)
+
+    - changeSet:
+        id: 1.40.0-2
+        comment: create table professional_professions
+        author: etrapani
+        changes:
+          - createTable:
+              tableName: professional_professions
+              columns:
+                - column:
+                    autoIncrement: true
+                    constraints:
+                      primaryKey: true
+                      primaryKeyName: PK_professional_professions
+                    name: id
+                    type: int
+                - column:
+                    constraints:
+                      nullable: false
+                    name: healthcare_professional_id
+                    type: int
+                - column:
+                    constraints:
+                      nullable: false
+                    name: professional_specialty_id
+                    type: int
+                - column:
+                    constraints:
+                      nullable: false
+                    name: created_by
+                    type: int
+                    defaultValue: -1
+                - column:
+                    constraints:
+                      nullable: false
+                    name: created_on
+                    type: datetime
+                    defaultValueDate: ${date.now}
+                - column:
+                    constraints:
+                      nullable: false
+                    name: updated_by
+                    type: int
+                    defaultValue: -1
+                - column:
+                    constraints:
+                      nullable: false
+                    name: updated_on
+                    type: datetime
+                    defaultValueDate: ${date.now}
+                - column:
+                    constraints:
+                      nullable: false
+                    name: deleted
+                    type: BOOLEAN
+                    defaultValue: ${boolean.false}
+                - column:
+                    name: deleted_by
+                    type: int
+                - column:
+                    name: deleted_on
+                    type: datetime
+          - addForeignKeyConstraint:
+              baseColumnNames: professional_specialty_id
+              baseTableName: professional_professions
+              constraintName: FK_professional_professions_professional_specialty_id
+              onDelete: NO ACTION
+              onUpdate: NO ACTION
+              referencedColumnNames: id
+              referencedTableName: professional_specialty
+              validate: true
+          - addForeignKeyConstraint:
+              baseColumnNames: healthcare_professional_id
+              baseTableName: professional_professions
+              constraintName: FK_professional_professions_healthcare_professional_id
+              onDelete: NO ACTION
+              onUpdate: NO ACTION
+              referencedColumnNames: id
+              referencedTableName: healthcare_professional
+              validate: true
+
+    - changeSet:
+        id: 1.40.0-3
+        author: etrapani
+        changes:
+          - addUniqueConstraint:
+              columnNames: professional_specialty_id, healthcare_professional_id
+              constraintName: UQ_professional_specialty_id_healthcare_professional_id
+              tableName: professional_professions
+
+
+    - changeSet:
+        id: 1.40.0-4
+        comment: Agrega  columna professional_profession_id
+        author: etrapani
+        changes:
+          - addColumn:
+              tableName: healthcare_professional_specialty
+              columns:
+                - column:
+                    constraints:
+                      foreignKeyName: FK_healthcare_professional_specialty_professional_profession_id
+                      references: professional_professions(id)
+                    name: professional_profession_id
+                    type: int
+
+    - changeSet:
+        id: 1.40.0-5
+        author: etrapani
+        changes:
+          - createProcedure:
+              dbms: postgresql
+              encoding: UTF-8
+              procedureBody: |-
+                DROP PROCEDURE IF EXISTS fill_professional_professions;
+                CREATE PROCEDURE fill_professional_professions()
+                    language plpgsql
+                as
+                $$
+                DECLARE
+                    temprow RECORD;
+                    last_id INTEGER;
+                    Query VARCHAR(5000);
+                    professional_professions_id INTEGER;
+                BEGIN
+                    last_id := null;
+                    FOR temprow IN EXECUTE 'SELECT hps.id, hps.healthcare_professional_id, hps.professional_specialty_id, hps.clinical_specialty_id, ' ||
+                                           'hps.deleted, hps.deleted_on, hps.deleted_by, hps.created_on, hps.created_by, hps.updated_on, ' ||
+                                           'hps.updated_by ' ||
+                                           'FROM healthcare_professional_specialty AS hps ' ||
+                                           'ORDER BY hps.id, hps.healthcare_professional_id, hps.deleted'
+                    LOOP
+                        query := 'SELECT hp.id
+                                  FROM professional_professions AS hp
+                                  WHERE hp.healthcare_professional_id = '|| temprow.healthcare_professional_id ||
+                                 ' AND hp.professional_specialty_id = '|| temprow.professional_specialty_id || ';';
+
+                        EXECUTE (query) INTO professional_professions_id;
+
+                        IF (professional_professions_id IS NULL)
+                        THEN
+                            EXECUTE format('INSERT INTO professional_professions (healthcare_professional_id, professional_specialty_id, ' ||
+                                       'deleted, deleted_by, deleted_on, created_on, updated_on, created_by, updated_by)
+                                        VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9)') USING
+                             temprow.healthcare_professional_id, temprow.professional_specialty_id, temprow.deleted,
+                             temprow.deleted_by, temprow.deleted_on, NOW(),  NOW(),  -1, -1;
+
+                            EXECUTE (query) INTO professional_professions_id;
+
+                            EXECUTE format('UPDATE healthcare_professional_specialty ' ||
+                                           'SET professional_profession_id = $1 ' ||
+                                           'WHERE id = $2 ')
+                            USING professional_professions_id, temprow.id;
+                        ELSE
+                             EXECUTE format('UPDATE healthcare_professional_specialty ' ||
+                                               'SET professional_profession_id = $1 ' ||
+                                               'WHERE id = $2 ')
+                                USING professional_professions_id, temprow.id;
+                        END IF;
+                    END LOOP;
+                END;
+                $$;
+
+    - changeSet:
+        id: 1.40.0-6
+        author: etrapani
+        changes:
+          - sql:
+              dbms: postgresql
+              sql: |-
+                CALL fill_professional_professions();
+                DROP PROCEDURE IF EXISTS fill_professional_professions;
+
+    - changeSet:
+        id: 1.40.0-7
+        author: etrapani
+        changes:
+          - dropColumn:
+              columnName: professional_specialty_id
+              tableName: healthcare_professional_specialty
+
+    - changeSet:
+        id: 1.40.0-8
+        comment: Update view v_booking_healthcare_professional_specialty
+        author: etrapani
+        changes:
+          -  createView:
+               viewName: v_booking_healthcare_professional_specialty
+               fullDefinition: false
+               replaceIfExists: true
+               selectQuery: |-
+                 SELECT hps.id, pp.healthcare_professional_id, hps.clinical_specialty_id
+                 FROM healthcare_professional_specialty AS hps
+                 INNER JOIN professional_professions AS pp on (hps.professional_profession_id = pp.id)
+                 WHERE hps.deleted = false OR hps.deleted IS NULL
+
+    - changeSet:
+        id: 1.40.0-9
+        author: etrapani
+        changes:
+          - dropColumn:
+              columnName: healthcare_professional_id
+              tableName: healthcare_professional_specialty
+
+    - changeSet:
+        id: 1.40.0-10
+        comment: Create table professional_license_numbers
+        author: etrapani
+        changes:
+          - createTable:
+              tableName: professional_license_numbers
+              columns:
+                - column:
+                    autoIncrement: true
+                    constraints:
+                      primaryKey: true
+                      primaryKeyName: PK_professional_license_numbers
+                    name: id
+                    type: int
+                - column:
+                    constraints:
+                      nullable: false
+                    name: type_license_number
+                    type: smallint
+                - column:
+                    constraints:
+                      nullable: false
+                    name: license_number
+                    type: varchar(100)
+                - column:
+                    constraints:
+                      nullable: true
+                    name: professional_profession_id
+                    type: int
+                - column:
+                    constraints:
+                      nullable: true
+                    name: healthcare_professional_specialty_id
+                    type: int
+          - addForeignKeyConstraint:
+              baseColumnNames: professional_profession_id
+              baseTableName: professional_license_numbers
+              constraintName: FK_professional_license_numbers_professional_profession_id
+              onDelete: NO ACTION
+              onUpdate: NO ACTION
+              referencedColumnNames: id
+              referencedTableName: professional_professions
+              validate: true
+          - addForeignKeyConstraint:
+              baseColumnNames: healthcare_professional_specialty_id
+              baseTableName: professional_license_numbers
+              constraintName: FK_professional_license_numbers_healthcare_professional_specialty_id
+              onDelete: NO ACTION
+              onUpdate: NO ACTION
+              referencedColumnNames: id
+              referencedTableName: healthcare_professional_specialty
+              validate: true
+
+
+    - changeSet:
+        id: 1.40.0-11
+        comment: Actualizar tabla de licencias
+        author: etrapani
+        context: "!schema-only"
+        changes:
+          - sql:
+              sql: |-
+                INSERT INTO professional_license_numbers(type_license_number, license_number, professional_profession_id, healthcare_professional_specialty_id) 
+                SELECT 1, hp.license_number, pp.id, NULL 
+                FROM professional_professions AS pp 
+                INNER JOIN healthcare_professional AS hp ON (pp.healthcare_professional_id = hp.id)
+                WHERE hp.license_number IS NOT NULL 
+                ORDER BY pp.id;
+
+
+    - changeSet:
+        id: 1.40.0-12
+        author: etrapani
+        changes:
+          - createProcedure:
+              dbms: postgresql
+              encoding: UTF-8
+              procedureBody: |-
+                DROP PROCEDURE IF EXISTS fix_healthcare_professional_references;
+                CREATE PROCEDURE fix_healthcare_professional_references()
+                language plpgsql
+                as
+                $$
+                BEGIN
+                CREATE TEMP TABLE tmp_active_healthcare_professional ON COMMIT DROP AS
+                (
+                  WITH summary AS (
+                  SELECT id, person_id, deleted, ROW_NUMBER() OVER(PARTITION BY person_id ORDER BY deleted ASC, id) AS rank
+                  FROM healthcare_professional
+                  )
+                  SELECT id, person_id
+                  FROM summary
+                  WHERE rank = 1
+                );
+                
+                UPDATE diary
+                SET healthcare_professional_id = subquery.hpid
+                FROM (  SELECT d1.id, tahp.id as hpid
+                        FROM diary d1
+                        JOIN healthcare_professional hp ON (hp.id = d1.healthcare_professional_id)
+                        JOIN tmp_active_healthcare_professional tahp ON (tahp.person_id = hp.person_id)) AS subquery
+                WHERE diary.id = subquery.id;
+                
+                UPDATE service_request
+                SET doctor_id = subquery.hpid
+                FROM (  SELECT d1.id, tahp.id as hpid
+                        FROM service_request d1
+                        JOIN healthcare_professional hp ON (hp.id = d1.doctor_id)
+                        JOIN tmp_active_healthcare_professional tahp ON (tahp.person_id = hp.person_id)) AS subquery
+                WHERE service_request.id = subquery.id;
+                
+                UPDATE medical_request
+                SET doctor_id = subquery.hpid
+                FROM (  SELECT d1.id, tahp.id as hpid
+                        FROM medical_request d1
+                        JOIN healthcare_professional hp ON (hp.id = d1.doctor_id)
+                        JOIN tmp_active_healthcare_professional tahp ON (tahp.person_id = hp.person_id)) AS subquery
+                WHERE medical_request.id = subquery.id;
+                
+                UPDATE healthcare_professional_group
+                SET healthcare_professional_id = subquery.hpid
+                FROM (  SELECT d1.healthcare_professional_id, tahp.id as hpid
+                        FROM healthcare_professional_group d1
+                        JOIN healthcare_professional hp ON (hp.id = d1.healthcare_professional_id)
+                        JOIN tmp_active_healthcare_professional tahp ON (tahp.person_id = hp.person_id)) AS subquery
+                WHERE healthcare_professional_group.healthcare_professional_id = subquery.healthcare_professional_id;
+                
+                UPDATE medication_request
+                SET doctor_id = subquery.hpid
+                FROM (  SELECT d1.id, tahp.id as hpid
+                        FROM medication_request d1
+                        JOIN healthcare_professional hp ON (hp.id = d1.doctor_id)
+                        JOIN tmp_active_healthcare_professional tahp ON (tahp.person_id = hp.person_id)) AS subquery
+                WHERE medication_request.id = subquery.id;
+                
+                UPDATE vaccine_consultation
+                SET doctor_id = subquery.hpid
+                FROM (  SELECT d1.id, tahp.id as hpid
+                        FROM vaccine_consultation d1
+                        JOIN healthcare_professional hp ON (hp.id = d1.doctor_id)
+                        JOIN tmp_active_healthcare_professional tahp ON (tahp.person_id = hp.person_id)) AS subquery
+                WHERE vaccine_consultation.id = subquery.id;
+                
+                UPDATE nursing_consultation
+                SET doctor_id = subquery.hpid
+                FROM (  SELECT d1.id, tahp.id as hpid
+                        FROM nursing_consultation d1
+                        JOIN healthcare_professional hp ON (hp.id = d1.doctor_id)
+                        JOIN tmp_active_healthcare_professional tahp ON (tahp.person_id = hp.person_id)) AS subquery
+                WHERE nursing_consultation.id = subquery.id;
+                
+                UPDATE outpatient_consultation
+                SET doctor_id = subquery.hpid
+                FROM (  SELECT d1.id, tahp.id as hpid
+                        FROM outpatient_consultation d1
+                        JOIN healthcare_professional hp ON (hp.id = d1.doctor_id)
+                        JOIN tmp_active_healthcare_professional tahp ON (tahp.person_id = hp.person_id)) AS subquery
+                WHERE outpatient_consultation.id = subquery.id;
+                
+                UPDATE odontology_consultation
+                SET doctor_id = subquery.hpid
+                FROM (  SELECT d1.id, tahp.id as hpid
+                        FROM odontology_consultation d1
+                        JOIN healthcare_professional hp ON (hp.id = d1.doctor_id)
+                        JOIN tmp_active_healthcare_professional tahp ON (tahp.person_id = hp.person_id)) AS subquery
+                WHERE odontology_consultation.id = subquery.id;
+                
+                UPDATE indication
+                SET professional_id = subquery.hpid
+                FROM (  SELECT d1.id, tahp.id as hpid
+                        FROM indication d1
+                        JOIN healthcare_professional hp ON (hp.id = d1.professional_id)
+                        JOIN tmp_active_healthcare_professional tahp ON (tahp.person_id = hp.person_id)) AS subquery
+                WHERE indication.id = subquery.id;
+                
+                UPDATE counter_reference
+                SET doctor_id = subquery.hpid
+                FROM (  SELECT d1.id, tahp.id as hpid
+                        FROM counter_reference d1
+                        JOIN healthcare_professional hp ON (hp.id = d1.doctor_id)
+                        JOIN tmp_active_healthcare_professional tahp ON (tahp.person_id = hp.person_id)) AS subquery
+                WHERE counter_reference.id = subquery.id;
+                
+                UPDATE snvs_report
+                SET professional_id = subquery.hpid
+                FROM (  SELECT d1.id, tahp.id as hpid
+                        FROM snvs_report d1
+                        JOIN healthcare_professional hp ON (hp.id = d1.professional_id)
+                        JOIN tmp_active_healthcare_professional tahp ON (tahp.person_id = hp.person_id)) AS subquery
+                WHERE snvs_report.id = subquery.id;
+                
+                -------------------------------- problematicos --------------
+                
+                UPDATE mandatory_professional_practice_free_days
+                SET healthcare_professional_id = subquery.hpid
+                FROM (  SELECT d1.id, tahp.id as hpid
+                        FROM mandatory_professional_practice_free_days d1
+                        JOIN healthcare_professional hp ON (hp.id = d1.healthcare_professional_id)
+                        JOIN tmp_active_healthcare_professional tahp ON (tahp.person_id = hp.person_id)
+                        WHERE NOT EXISTS (SELECT id
+                                          FROM mandatory_professional_practice_free_days as hphi1
+                                          WHERE d1.healthcare_professional_id = hphi1.healthcare_professional_id
+                                          AND   d1.clinical_specialty_mandatory_medical_practice_id = hphi1.clinical_specialty_mandatory_medical_practice_id)
+                        ) AS subquery
+                WHERE mandatory_professional_practice_free_days.id = subquery.id;
+                
+                DELETE FROM mandatory_professional_practice_free_days
+                WHERE healthcare_professional_id NOT IN (SELECT id FROM tmp_active_healthcare_professional);
+                
+                
+                UPDATE healthcare_professional_health_insurance
+                SET healthcare_professional_id = subquery.hpid
+                FROM (  SELECT d1.id, tahp.id as hpid
+                        FROM healthcare_professional_health_insurance d1
+                        JOIN healthcare_professional hp ON (hp.id = d1.healthcare_professional_id)
+                        JOIN tmp_active_healthcare_professional tahp ON (tahp.person_id = hp.person_id)
+                        WHERE NOT EXISTS (SELECT id
+                                          FROM healthcare_professional_health_insurance as hphi1
+                                          WHERE d1.healthcare_professional_id = hphi1.healthcare_professional_id
+                                          AND   d1.medical_coverage_id = hphi1.medical_coverage_id)
+                        ) AS subquery
+                WHERE healthcare_professional_health_insurance.id = subquery.id;
+                
+                DELETE FROM healthcare_professional_health_insurance
+                WHERE healthcare_professional_id NOT IN (SELECT id FROM tmp_active_healthcare_professional);
+                
+                UPDATE professional_professions
+                SET healthcare_professional_id = subquery.hpid
+                FROM (  SELECT d1.id, tahp.id as hpid
+                        FROM professional_professions d1
+                        JOIN healthcare_professional hp ON (hp.id = d1.healthcare_professional_id)
+                        JOIN tmp_active_healthcare_professional tahp ON (tahp.person_id = hp.person_id)
+                        WHERE NOT EXISTS (SELECT id
+                                          FROM professional_professions as hphi1
+                                          WHERE d1.healthcare_professional_id = hphi1.healthcare_professional_id
+                                          AND   d1.professional_specialty_id = hphi1.professional_specialty_id)
+                        ) AS subquery
+                WHERE professional_professions.id = subquery.id;
+                
+                INSERT INTO healthcare_professional_specialty (clinical_specialty_id, professional_profession_id,
+                deleted, deleted_by, deleted_on, created_on, updated_on, created_by, updated_by)
+                SELECT s.clinical_specialty_id, pp0.id, s.deleted, s.deleted_by, s.deleted_on, s.created_on, s.updated_on, s.created_by, s.updated_by
+                FROM professional_professions as pp0
+                JOIN tmp_active_healthcare_professional tahp ON (tahp.id = pp0.healthcare_professional_id)
+                JOIN (SELECT hp.person_id, clinical_specialty_id, hps1.deleted, hps1.deleted_by, hps1.deleted_on, hps1.created_on, hps1.updated_on, hps1.created_by, hps1.updated_by
+                      FROM healthcare_professional_specialty hps1
+                      JOIN professional_professions pp2 ON (hps1.professional_profession_id = pp2.id)
+                      JOIN healthcare_professional hp ON (hp.id = pp2.healthcare_professional_id)
+                      WHERE clinical_specialty_id NOT IN (SELECT hps.clinical_specialty_id
+                      FROM healthcare_professional_specialty hps
+                      JOIN professional_professions pp  ON (hps.professional_profession_id = pp.id)
+                      JOIN tmp_active_healthcare_professional tahp ON (tahp.id = pp.healthcare_professional_id))
+                      ) AS s ON (s.person_id = tahp.person_id);
+                
+                
+                DELETE FROM healthcare_professional_specialty
+                WHERE professional_profession_id NOT IN (SELECT p.id
+                FROM tmp_active_healthcare_professional as tahp2
+                JOIN professional_professions p on tahp2.id = p.healthcare_professional_id);
+                
+                
+                DELETE FROM professional_license_numbers
+                WHERE professional_profession_id NOT IN (SELECT p.id
+                FROM tmp_active_healthcare_professional as tahp2
+                JOIN professional_professions p on tahp2.id = p.healthcare_professional_id);
+                
+                DELETE FROM professional_professions
+                WHERE healthcare_professional_id NOT IN (SELECT id FROM tmp_active_healthcare_professional);
+                
+                -------------------------------- problematicos --------------
+                
+                DELETE FROM healthcare_professional_health_insurance
+                WHERE id NOT IN (SELECT id FROM tmp_active_healthcare_professional);
+                
+                DELETE FROM healthcare_professional
+                WHERE id NOT IN (SELECT id FROM tmp_active_healthcare_professional);
+                
+                UPDATE healthcare_professional
+                SET deleted = false,
+                deleted_by = null,
+                deleted_on = NULL
+                WHERE id IN (SELECT id FROM tmp_active_healthcare_professional);
+                END;
+                $$;
+
+    - changeSet:
+        id: 1.40.0-13
+        author: etrapani
+        changes:
+          - sql:
+              dbms: postgresql
+              sql: |-
+                CALL fix_healthcare_professional_references();
+                DROP PROCEDURE IF EXISTS fix_healthcare_professional_references;
+
+
+    - changeSet:
+        id: 1.40.0-14
+        author: etrapani
+        changes:
+          - addUniqueConstraint:
+              columnNames: person_id
+              constraintName: UQ_person_id
+              tableName: healthcare_professional
+
+
+    - changeSet:
+        id: update-patient_discharge-medical_discharge_date
+        author: jvaldez
+        changes:
+          - sql:
+              sql: |-
+                UPDATE patient_discharge SET medical_discharge_date = administrative_discharge_date WHERE medical_discharge_date IS NULL AND administrative_discharge_date IS NOT NULL;
+    
+    - changeSet:
+        id: appointment_block_motive-createTable
+        comment: Create table appointment_block_motive
+        author: mmalyvarni
+        changes:
+          - createTable:
+              tableName: appointment_block_motive
+              columns:
+                - column:
+                    constraints:
+                      primaryKey: true
+                      primaryKeyName: PK_appointment_block_motive
+                    name: id
+                    type: smallint
+                - column:
+                    constraints:
+                      nullable: false
+                    name: description
+                    type: varchar(50)
+    
+    - changeSet:
+        id: add_appointment_block_motives
+        comment: Add appointment block motives
+        author: mmalyvarni
+        context: "!schema-only"
+        changes:
+          - sql:
+              sql: |-
+                INSERT INTO appointment_block_motive VALUES(1, 'Institucional - Feriado no programado');
+                INSERT INTO appointment_block_motive VALUES(2, 'Personal salud - Congreso');
+                INSERT INTO appointment_block_motive VALUES(3, 'Personal salud - Vacaciones');
+                INSERT INTO appointment_block_motive VALUES(4, 'Personal salud - Enfermedad');
+                INSERT INTO appointment_block_motive VALUES(5, 'Personal salud - Ateneo/Curso');
+                INSERT INTO appointment_block_motive VALUES(6, 'Personal salud - Ausente médico');
+                INSERT INTO appointment_block_motive VALUES(7, 'Personal salud - Cambio de horario');
+                INSERT INTO appointment_block_motive VALUES(8, 'Personal salud - Médica no programada');
+                INSERT INTO appointment_block_motive VALUES(9, 'Personal salud - Maternidad');
+                INSERT INTO appointment_block_motive VALUES(10, 'Fuerza Mayor - Paro general');
+                INSERT INTO appointment_block_motive VALUES(11, 'Fuerza Mayor - Corte de luz');
+                INSERT INTO appointment_block_motive VALUES(12, 'Fuerza Mayor - Falta de rec');
+                INSERT INTO appointment_block_motive VALUES(13, 'Administrativa - Error de carga');
+                INSERT INTO appointment_block_motive VALUES(14, 'Personal salud - Personal');
+                INSERT INTO appointment_block_motive VALUES(15, 'Personal salud - Otros');
+                INSERT INTO appointment_block_motive VALUES(16, 'Cancelación de cirugía');
+                INSERT INTO appointment_block_motive VALUES(17, 'Reprogramación de cirugía');
+                INSERT INTO appointment_block_motive VALUES(18, 'No puede concurrir');
+                INSERT INTO appointment_block_motive VALUES(19, 'Reunión de Equipo');
+                INSERT INTO appointment_block_motive VALUES(20, 'Actividad comunitaria extramuros');
+                INSERT INTO appointment_block_motive VALUES(21, 'Actividad comunitaria intramuros');
+
+    - changeSet:
+        id: add_to_appointment_appointment_block_motive_id
+        comment: Add appointment_block_motive_id to appointment
+        author: mmalyvarni
+        changes:
+          - addColumn:
+              tableName: appointment
+              columns:
+                - column:
+                    constraints:
+                      foreignKeyName: FK_appointment_appointment_block_motive_id
+                      references: appointment_block_motive(id)
+                    name: appointment_block_motive_id
+                    type: smallint
+
+
+    - changeSet:
+        id: nursing_record-createTable
+        author: fsimaro
+        comment: Create table nursing_record
+        changes:
+          - createTable:
+              tableName: nursing_record
+              columns:
+                - column:
+                    autoIncrement: true
+                    constraints:
+                      primaryKey: true
+                      primaryKeyName: PK_nursing_record
+                    name: id
+                    type: int
+                - column:
+                    constraints:
+                      nullable: false
+                    name: indication_id
+                    type: int
+                - column:
+                    name: scheduled_administration_time
+                    type: datetime
+                - column:
+                    name: event
+                    type: varchar(100)
+                - column:
+                    constraints:
+                      nullable: false
+                    name: status_id
+                    type: smallint
+                - column:
+                    name: observation
+                    type: text
+                - column:
+                    name: administration_time
+                    type: datetime
+                - column:
+                    constraints:
+                      nullable: false
+                    name: created_by
+                    type: int
+                    defaultValue: -1
+                - column:
+                    constraints:
+                      nullable: false
+                    name: created_on
+                    type: datetime
+                    defaultValueDate: ${date.now}
+                - column:
+                    constraints:
+                      nullable: false
+                    name: updated_by
+                    type: int
+                    defaultValue: -1
+                - column:
+                    constraints:
+                      nullable: false
+                    name: updated_on
+                    type: datetime
+                    defaultValueDate: ${date.now}
+                - column:
+                    constraints:
+                      nullable: false
+                    name: deleted
+                    type: boolean
+                    defaultValue: ${boolean.false}
+                - column:
+                    name: deleted_by
+                    type: int
+                - column:
+                    name: deleted_on
+                    type: datetime
+          - addForeignKeyConstraint:
+              baseColumnNames: indication_id
+              baseTableName: nursing_record
+              constraintName: FK_nursing_record_indication_id
+              onDelete: NO ACTION
+              onUpdate: NO ACTION
+              referencedColumnNames: id
+              referencedTableName: indication
+              validate: true

@@ -1,5 +1,6 @@
 package net.pladema.medicalconsultation.appointment.controller;
 
+import java.time.LocalDate;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
@@ -8,12 +9,9 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 import javax.validation.Valid;
-import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.Size;
 
-import ar.lamansys.sgh.shared.infrastructure.input.service.ExternalPatientCoverageDto;
-import net.pladema.medicalconsultation.appointment.controller.mapper.ExternalPatientCoverageMapper;
-import net.pladema.medicalconsultation.appointment.controller.dto.AssignedAppointmentDto;
+import ar.lamansys.sgx.shared.dates.configuration.LocalDateMapper;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
@@ -33,6 +31,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import ar.lamansys.sgh.shared.infrastructure.input.service.BasicDataPersonDto;
 import ar.lamansys.sgh.shared.infrastructure.input.service.BasicPatientDto;
+import ar.lamansys.sgh.shared.infrastructure.input.service.ExternalPatientCoverageDto;
 import ar.lamansys.sgx.shared.dates.configuration.DateTimeProvider;
 import ar.lamansys.sgx.shared.security.UserInfo;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -44,9 +43,11 @@ import net.pladema.medicalconsultation.appointment.controller.dto.AppointmentBas
 import net.pladema.medicalconsultation.appointment.controller.dto.AppointmentDailyAmountDto;
 import net.pladema.medicalconsultation.appointment.controller.dto.AppointmentDto;
 import net.pladema.medicalconsultation.appointment.controller.dto.AppointmentListDto;
+import net.pladema.medicalconsultation.appointment.controller.dto.AssignedAppointmentDto;
 import net.pladema.medicalconsultation.appointment.controller.dto.CreateAppointmentDto;
 import net.pladema.medicalconsultation.appointment.controller.dto.UpdateAppointmentDto;
 import net.pladema.medicalconsultation.appointment.controller.mapper.AppointmentMapper;
+import net.pladema.medicalconsultation.appointment.controller.mapper.ExternalPatientCoverageMapper;
 import net.pladema.medicalconsultation.appointment.repository.domain.BookingPersonBo;
 import net.pladema.medicalconsultation.appointment.service.AppointmentDailyAmountService;
 import net.pladema.medicalconsultation.appointment.service.AppointmentService;
@@ -90,6 +91,8 @@ public class AppointmentsController {
 
     private final BookingPersonService bookingPersonService;
 
+	private final LocalDateMapper dateMapper;
+
     @Value("${test.stress.disable.validation:false}")
     private boolean disableValidation;
 
@@ -106,8 +109,8 @@ public class AppointmentsController {
             HealthcareProfessionalExternalService healthcareProfessionalExternalService,
             DateTimeProvider dateTimeProvider,
             NotifyPatient notifyPatient,
-            BookingPersonService bookingPersonService
-    ) {
+            BookingPersonService bookingPersonService,
+			LocalDateMapper dateMapper) {
         this.appointmentDailyAmountService = appointmentDailyAmountService;
         this.appointmentService = appointmentService;
         this.appointmentValidatorService = appointmentValidatorService;
@@ -118,7 +121,8 @@ public class AppointmentsController {
         this.dateTimeProvider = dateTimeProvider;
         this.notifyPatient = notifyPatient;
         this.bookingPersonService = bookingPersonService;
-    }
+		this.dateMapper = dateMapper;
+	}
 
     @Transactional
     @PostMapping
@@ -160,14 +164,21 @@ public class AppointmentsController {
     }
 
 
-    @GetMapping
+	@GetMapping(value="/list/{healthcareProfessionalId}")
     @PreAuthorize("hasPermission(#institutionId, 'ADMINISTRATIVO, ESPECIALISTA_MEDICO, PROFESIONAL_DE_SALUD, ESPECIALISTA_EN_ODONTOLOGIA, ADMINISTRADOR_AGENDA, ENFERMERO')")
     public ResponseEntity<Collection<AppointmentListDto>> getList(
             @PathVariable(name = "institutionId") Integer institutionId,
-            @RequestParam(name = "diaryIds") @NotEmpty List<Integer> diaryIds
+			@PathVariable(name = "healthcareProfessionalId") Integer healthcareProfessionalId,
+            @RequestParam(name = "diaryIds", defaultValue = "") List<Integer> diaryIds,
+			@RequestParam(name = "from", required = false) String from,
+			@RequestParam(name = "to", required = false) String to
     ) {
         log.debug("Input parameters -> institutionId {}, diaryIds {}", institutionId, diaryIds);
-        Collection<AppointmentBo> resultService = appointmentService.getAppointmentsByDiaries(diaryIds);
+		LocalDate startDate = (from!=null) ? dateMapper.fromStringToLocalDate(from) : null;
+		LocalDate endDate = (to!=null) ? dateMapper.fromStringToLocalDate(to) : null;
+		Collection<AppointmentBo> resultService = diaryIds.isEmpty() ?
+				appointmentService.getAppointmentsByProfessionalInInstitution(healthcareProfessionalId, institutionId, startDate, endDate) :
+				appointmentService.getAppointmentsByDiaries(diaryIds, startDate, endDate);
         Set<Integer> patientsIds = resultService.stream().
                 filter(appointmentBo -> appointmentBo.getPatientId() != null).
 				map(AppointmentBo::getPatientId).collect(Collectors.toSet());
@@ -209,7 +220,8 @@ public class AppointmentsController {
                 appointmentBo.getMedicalAttentionTypeId(),
                 appointmentBo.getAppointmentStateId(),
                 appointmentBo.getPhonePrefix(),
-                appointmentBo.getPhoneNumber()
+                appointmentBo.getPhoneNumber(),
+				appointmentBo.getAppointmentBlockMotiveId()
         );
     }
 
@@ -262,7 +274,7 @@ public class AppointmentsController {
 
 
     @GetMapping("/confirmed-appointment")
-    @PreAuthorize("hasPermission(#institutionId, 'ESPECIALISTA_MEDICO, PROFESIONAL_DE_SALUD, ESPECIALISTA_EN_ODONTOLOGIA, ENFERMERO')")
+    @PreAuthorize("hasPermission(#institutionId, 'ESPECIALISTA_MEDICO, PROFESIONAL_DE_SALUD, ESPECIALISTA_EN_ODONTOLOGIA, ENFERMERO, PERSONAL_DE_IMAGENES, PERSONAL_DE_LABORATORIO, PERSONAL_DE_FARMACIA')")
     public ResponseEntity<Boolean> hasNewConsultationEnabled(
             @PathVariable(name = "institutionId") Integer institutionId,
             @RequestParam(name = "patientId") Integer patientId
@@ -313,7 +325,10 @@ public class AppointmentsController {
 
     @PreAuthorize("hasPermission(#institutionId, 'ADMINISTRATIVO, ESPECIALISTA_MEDICO, PROFESIONAL_DE_SALUD, ESPECIALISTA_EN_ODONTOLOGIA, ENFERMERO')")
     @PutMapping(value = "/{appointmentId}/update-medical-coverage")
-    public ResponseEntity<Boolean> updateMedicalCoverage(@PathVariable(name = "institutionId") Integer institutionId, @PathVariable(name = "appointmentId") Integer appointmentId, @RequestParam(name = "patientMedicalCoverageId", required = false) Integer patientMedicalCoverageId) {
+    public ResponseEntity<Boolean> updateMedicalCoverage(
+			@PathVariable(name = "institutionId") Integer institutionId,
+			@PathVariable(name = "appointmentId") Integer appointmentId,
+			@RequestParam(name = "patientMedicalCoverageId", required = false) Integer patientMedicalCoverageId) {
         log.debug("Input parameters -> institutionId {},appointmentId {}, patientMedicalCoverageId {}", institutionId, appointmentId, patientMedicalCoverageId);
         boolean result = appointmentService.updateMedicalCoverage(appointmentId, patientMedicalCoverageId);
         log.debug(OUTPUT, result);
@@ -324,13 +339,16 @@ public class AppointmentsController {
     @PreAuthorize("hasPermission(#institutionId, 'ADMINISTRATIVO, ESPECIALISTA_MEDICO, PROFESIONAL_DE_SALUD, ESPECIALISTA_EN_ODONTOLOGIA, ADMINISTRADOR_AGENDA, ENFERMERO')")
 	public ResponseEntity<List<AppointmentDailyAmountDto>> getDailyAmounts(
             @PathVariable(name = "institutionId") Integer institutionId,
-            @RequestParam(name = "diaryId") String diaryId) {
+            @RequestParam(name = "diaryId") String diaryId,
+			@RequestParam(name = "from") String from,
+			@RequestParam(name = "to") String to) {
         log.debug("Input parameters -> diaryId {}", diaryId);
 
         Integer diaryIdParam = Integer.parseInt(diaryId);
-
+		LocalDate startDate = dateMapper.fromStringToLocalDate(from);
+		LocalDate endDate = dateMapper.fromStringToLocalDate(to);
         Collection<AppointmentDailyAmountBo> resultService = appointmentDailyAmountService
-                .getDailyAmounts(diaryIdParam);
+                .getDailyAmounts(diaryIdParam, startDate, endDate);
         List<AppointmentDailyAmountDto> result = resultService.stream()
                 .parallel()
                 .map(appointmentMapper::toAppointmentDailyAmountDto)
@@ -375,7 +393,7 @@ public class AppointmentsController {
     }
 
 	@GetMapping("/patient/{patientId}/get-medical-coverage")
-	@PreAuthorize("hasPermission(#institutionId, 'ESPECIALISTA_MEDICO, PROFESIONAL_DE_SALUD, ESPECIALISTA_EN_ODONTOLOGIA, ENFERMERO')")
+	@PreAuthorize("hasPermission(#institutionId, 'ESPECIALISTA_MEDICO, PROFESIONAL_DE_SALUD, ESPECIALISTA_EN_ODONTOLOGIA, ENFERMERO, PERSONAL_DE_IMAGENES, PERSONAL_DE_LABORATORIO, PERSONAL_DE_FARMACIA')")
 	public ResponseEntity<ExternalPatientCoverageDto> getCurrentAppointmentMedicalCoverage(
 			@PathVariable(name = "institutionId") Integer institutionId,
 			@PathVariable(name = "patientId") Integer patientId) {

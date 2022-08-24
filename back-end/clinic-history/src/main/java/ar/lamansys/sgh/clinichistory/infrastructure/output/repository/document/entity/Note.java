@@ -26,7 +26,7 @@ public class Note implements Serializable {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 
-	@Column(name = "description", nullable = false, length = 1024)
+	@Column(name = "description", nullable = false, columnDefinition = "TEXT")
 	private String description;
 
 	public Note(String description) {

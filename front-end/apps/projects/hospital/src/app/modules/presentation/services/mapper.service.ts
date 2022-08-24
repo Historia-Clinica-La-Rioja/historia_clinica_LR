@@ -51,7 +51,7 @@ export class MapperService {
 			internmentEpisodeSummary.doctor = {
 				firstName: internmentSummary.doctor.firstName,
 				lastName: internmentSummary.doctor.lastName,
-				license: internmentSummary.doctor.licence,
+				licenses: internmentSummary.doctor.licenses,
 			};
 		}
 		if (internmentSummary.responsibleContact) {

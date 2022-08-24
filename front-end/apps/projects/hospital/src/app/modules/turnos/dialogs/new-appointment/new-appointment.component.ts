@@ -56,7 +56,7 @@ export class NewAppointmentComponent implements OnInit {
 	VALIDATIONS = VALIDATIONS;
 	constructor(
 		@Inject(MAT_DIALOG_DATA) public data: {
-			date: string, diaryId: number, hour: string, openingHoursId: number, overturnMode: boolean, patientId?: number
+			date: string, diaryId: number, hour: string, openingHoursId: number, overturnMode: boolean, patientId?: number, professionalId: number
 		},
 		public dialogRef: MatDialogRef<NewAppointmentComponent>,
 		private readonly formBuilder: FormBuilder,
@@ -297,6 +297,6 @@ export class NewAppointmentComponent implements OnInit {
 	}
 
 	private clearQueryParams() {
-		this.router.navigate([]);
+		this.router.navigate([], { queryParams: { idProfessional: this.data.professionalId }});
 	}
 }

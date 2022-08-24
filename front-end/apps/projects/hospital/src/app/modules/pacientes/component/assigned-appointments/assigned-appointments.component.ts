@@ -15,7 +15,7 @@ export class AssignedAppointmentsComponent implements OnInit {
 	assignedAppointmentsSummary = ASSIGNED_APPOINTMENTS_SUMMARY;
 	appointmentsList: AssignedAppointmentDto[] = [];
 
-  constructor(private readonly appointmentsService: AppointmentsService) { }
+	constructor(private readonly appointmentsService: AppointmentsService) { }
 
 	ngOnInit(): void {
 		this.appointmentsService.getAssignedAppointmentsList(this.patientId).subscribe(

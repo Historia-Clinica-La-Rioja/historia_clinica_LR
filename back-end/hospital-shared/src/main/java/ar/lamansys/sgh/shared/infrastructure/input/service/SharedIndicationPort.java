@@ -20,5 +20,7 @@ public interface SharedIndicationPort {
 
 	List<ParenteralPlanDto> getInternmentEpisodeParenteralPlans(Integer internmentEpisodeId);
 
+	List<NursingRecordDto> getInternmentEpisodeNursingRecords(Integer internmentEpisodeId);
+
 	void saveDocument(Long id, Integer indicationId);
 }

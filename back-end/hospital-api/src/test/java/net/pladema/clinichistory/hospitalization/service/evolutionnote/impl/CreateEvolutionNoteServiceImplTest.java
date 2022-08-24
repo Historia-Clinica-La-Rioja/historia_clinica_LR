@@ -1,5 +1,25 @@
 package net.pladema.clinichistory.hospitalization.service.evolutionnote.impl;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.when;
+
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
+import java.util.ArrayList;
+import java.util.List;
+
+import javax.validation.ConstraintViolationException;
+
+import org.assertj.core.util.Lists;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.mockito.Mock;
+import org.mockito.Mockito;
+import org.springframework.beans.factory.annotation.Autowired;
+
 import ar.lamansys.sgh.clinichistory.application.createDocument.DocumentFactory;
 import ar.lamansys.sgh.clinichistory.application.document.DocumentService;
 import ar.lamansys.sgh.clinichistory.application.fetchHospitalizationState.FetchHospitalizationHealthConditionState;
@@ -23,6 +43,7 @@ import ar.lamansys.sgx.shared.featureflags.application.FeatureFlagsService;
 import net.pladema.UnitRepository;
 import net.pladema.clinichistory.hospitalization.repository.EvolutionNoteDocumentRepository;
 import net.pladema.clinichistory.hospitalization.repository.InternmentEpisodeRepository;
+import net.pladema.clinichistory.hospitalization.repository.InternmentEpisodeStorage;
 import net.pladema.clinichistory.hospitalization.repository.PatientDischargeRepository;
 import net.pladema.clinichistory.hospitalization.repository.domain.InternmentEpisode;
 import net.pladema.clinichistory.hospitalization.service.evolutionnote.CreateEvolutionNoteService;
@@ -30,30 +51,10 @@ import net.pladema.clinichistory.hospitalization.service.evolutionnote.Evolution
 import net.pladema.clinichistory.hospitalization.service.evolutionnote.domain.EvolutionNoteBo;
 import net.pladema.clinichistory.hospitalization.service.impl.InternmentEpisodeServiceImpl;
 import net.pladema.establishment.repository.MedicalCoveragePlanRepository;
-
 import net.pladema.permissions.repository.enums.ERole;
 import net.pladema.permissions.service.dto.RoleAssignment;
 import net.pladema.sgx.exceptions.PermissionDeniedException;
 import net.pladema.sgx.session.infrastructure.input.service.FetchLoggedUserRolesExternalService;
-
-import org.assertj.core.util.Lists;
-import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
-import org.mockito.Mock;
-import org.mockito.Mockito;
-import org.springframework.beans.factory.annotation.Autowired;
-
-import javax.validation.ConstraintViolationException;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.LocalTime;
-import java.util.ArrayList;
-import java.util.List;
-
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.when;
 
 class CreateEvolutionNoteServiceImplTest extends UnitRepository {
 
@@ -87,6 +88,8 @@ class CreateEvolutionNoteServiceImplTest extends UnitRepository {
 	private FetchLoggedUserRolesExternalService fetchLoggedUserRolesExternalService;
 
 	@Mock
+	private InternmentEpisodeStorage internmentEpisodeStorage;
+	@Mock
 	private FeatureFlagsService featureFlagsService;
 
 	private EvolutionNoteValidator evolutionNoteValidator;
@@ -100,7 +103,7 @@ class CreateEvolutionNoteServiceImplTest extends UnitRepository {
                 patientDischargeRepository,
                 documentService,
                 medicalCoveragePlanRepository,
-				featureFlagsService);
+                internmentEpisodeStorage, featureFlagsService);
         createEvolutionNoteService = new CreateEvolutionNoteServiceImpl(
                 documentFactory,
                 internmentEpisodeService,

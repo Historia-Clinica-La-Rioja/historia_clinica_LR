@@ -269,27 +269,64 @@ const messages = {
                 educationTypeId: 'Formación',
             }
         },
-        healthcareprofessionals: {
-            name: 'Profesional |||| Profesionales',
+        professionalprofessions: {
+            name: 'Profesión',
+            tab: {
+                title: 'Profesiones',
+                subtitle: 'Profesiones'
+            },
             license: 'Nro. de licencia del profesional',
             fields: {
                 personId: 'Persona',
                 licenseNumber: 'Nro. Licencia',
                 isMedicalDoctor: 'Es médico?',
-                healthcareprofessionalspecialties: 'Profesional | Especialidad',
+                healthcareprofessionalspecialties: 'Especialidades',
                 professionalSpecialtyId: 'Profesión',
+                professionalLicenseNumbers: 'Matriculas',
                 clinicalSpecialtyId: 'Especialidad'
             },
-            createRelated: 'Crear Profesional',
+            buttons: {
+                linkSpecialities: 'Asociar especialidades',
+                linkProfessionalLicenseNumbers: 'Asociar matricula'
+            }
+        },
+        healthcareprofessionallicensenumbers: {
+            name: 'Matricula',
+            fields: {
+                licenseNumber: 'Nro. de matricula',
+                typeId: 'Tipo de matricula',
+                description: 'Descripción',
+                professionalSpecialtyId: 'Profesión',
+                personId: 'Persona',
+                clinicalSpecialtyId: 'Especialidad',
+            }
+        },
+        healthcareprofessionalspecialtylicensenumbers: {
+            name: 'Matricula',
+            fields: {
+                licenseNumber: 'Nro. de matricula',
+                typeId: 'Tipo de matricula',
+                description: 'Descripción',
+                professionalSpecialtyId: 'Profesión',
+                personId: 'Persona',
+                clinicalSpecialtyId: 'Especialidad',
+            }
         },
         healthcareprofessionalspecialties: {
             name: 'Profesión | Especialidad',
             fields: {
                 healthcareProfessionalId: 'Profesional',
+                healthcareProfessionalSpecialtyId: 'Especialidad',
                 professionalSpecialtyId: 'Profesión',
                 clinicalSpecialtyId: 'Especialidad',
                 personId: 'Persona',
                 description: 'Descripción',
+            },
+            buttons: {
+                linkProfessionalSpecialtyLicenseNumbers: 'Asociar matricula'
+            },
+            title: {
+                professionalSpecialtyLicenseNumbers: 'Matriculas'
             },
             createRelated: 'Crear Profesión | Especialidad',
         },
@@ -356,6 +393,9 @@ const messages = {
                 details: 'Datos personales',
                 users: 'Usuario'
             },
+            buttons: {
+                linkProfession: 'Asociar profesión'
+            }
         },
         carelines: {
             name: 'Línea de cuidado |||| Líneas de cuidado',

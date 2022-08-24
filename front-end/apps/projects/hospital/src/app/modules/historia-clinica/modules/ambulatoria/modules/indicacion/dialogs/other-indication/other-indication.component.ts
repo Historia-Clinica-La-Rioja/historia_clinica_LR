@@ -1,3 +1,4 @@
+import { dateToDateTimeDtoUTC } from './../../../../../../../api-rest/mapper/date-dto.mapper';
 import { Component, Inject, OnInit } from '@angular/core';
 import { AbstractControl, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
@@ -74,6 +75,12 @@ export class OtherIndicationComponent implements OnInit {
 			this.removeFormValidators();
 
 			switch (frequencyOption) {
+				case '0': { 					
+					this.form.controls.interval.reset();
+					this.form.controls.startTime.reset();
+					this.form.controls.event.reset();
+					break;
+				}
 				case '1': {
 					this.form.controls.startTime.reset();
 
@@ -144,6 +151,9 @@ export class OtherIndicationComponent implements OnInit {
 	}
 
 	private toIndicationDto(otherIndicatio: any): OtherIndicationDto {
+		const year = getYear(this.indicationDate);
+		const month = getMonth(this.indicationDate);
+		const day = this.indicationDate.getDate();
 		return {
 			id: 0,
 			patientId: this.data.patientId,
@@ -152,9 +162,9 @@ export class OtherIndicationComponent implements OnInit {
 			professionalId: this.data.professionalId,
 			createdBy: null,
 			indicationDate: {
-				year: getYear(this.indicationDate),
-				month: getMonth(this.indicationDate) + 1,
-				day: this.indicationDate.getDate()
+				year,
+				month: month + 1,
+				day
 			},
 			createdOn: null,
 			otherIndicationTypeId: otherIndicatio.indicationType,
@@ -164,19 +174,11 @@ export class OtherIndicationComponent implements OnInit {
 				diary: true,
 				chronic: true,
 				duration: 0,
-				periodUnit: (otherIndicatio?.event) ? "e" : "h",
+				periodUnit: this.loadPeriodUnit(),
 				event: otherIndicatio.event,
-				startDateTime: (otherIndicatio?.startTime) ? {
-					date: {
-						year: this.indicationDate.getUTCFullYear(),
-						month: this.indicationDate.getUTCMonth() + 1,
-						day: this.indicationDate.getUTCDay()
-					},
-					time: {
-						hours: otherIndicatio?.startTime,
-						minutes: 0
-					}
-				} : null,
+				startDateTime: (otherIndicatio?.startTime) ? 
+					dateToDateTimeDtoUTC(new Date(year, month, day, otherIndicatio.startTime))
+				: null,
 			},
 			otherType: otherIndicatio.indication
 		}
@@ -184,6 +186,19 @@ export class OtherIndicationComponent implements OnInit {
 
 	setIndicationDate(d: Date) {
 		this.indicationDate = d;
+	}
+
+	private loadPeriodUnit(): string {
+		switch (this.form.value.frequencyOption) {
+			case ("1"):
+				return "h";
+			case ("2"):
+				return "d";
+			case ("3"):
+				return "e";
+			default:
+				return null;
+		}
 	}
 
 }
