@@ -206,28 +206,28 @@ export class AppointmentComponent implements OnInit {
 			});
 }
 
-	dateFormToggle(): void{
+	dateFormToggle(): void {
 		this.isDateFormVisible = !this.isDateFormVisible;
 	}
 
-	cancelDateForm(): void{
+	cancelDateForm(): void {
 		this.formDate.reset();
 		this.dateFormToggle();
 	}
 
-	openDateForm(): void{
+	openDateForm(): void {
 		this.dateFormToggle();
 		this.setDisableDays();
 		this.setPossibleScheduleHours(this.selectedDate);
 		this.formDate.controls.hour.setValue(this.possibleScheduleHours.find(item => {return item.getTime() ==  this.selectedDate.getTime()}));
 	}
 
-	selectDate(date: Date): void{
+	selectDate(date: Date): void {
 		this.setPossibleScheduleHours(date);
 		this.formDate.controls.hour.setValue(this.possibleScheduleHours[0]);
 	}
 
-	setPossibleScheduleHours(date: Date): void{
+	setPossibleScheduleHours(date: Date): void {
 		this.possibleScheduleHours = [];
 		const startDate = new Date(date);
 		const endDate = new Date(date);
@@ -246,7 +246,7 @@ export class AppointmentComponent implements OnInit {
 		this.deleteHoursBeforeNow();
 	}
 
-	deleteHoursWithAppointment(): void{
+	deleteHoursWithAppointment(): void {
 		this.data.appointments.forEach(appointment => {
 			if (!appointment.allDay)
 				this.possibleScheduleHours = this.possibleScheduleHours.filter(item => {
@@ -255,14 +255,14 @@ export class AppointmentComponent implements OnInit {
 		});
 	}
 
-	deleteHoursBeforeNow(): void{
+	deleteHoursBeforeNow(): void {
 		const now = new Date();
 		this.possibleScheduleHours = this.possibleScheduleHours.filter(item => {
 			return ((item.getTime() >= now.getTime()) || (item.getTime() == this.selectedDate.getTime()));
 		});
 	}
 
-	setDisableDays(){
+	setDisableDays(): void {
 		this.disableDays = [];
 		const today = new Date();
 		this.data.appointments.forEach(appointment => {
@@ -280,7 +280,7 @@ export class AppointmentComponent implements OnInit {
 		});
 	}
 
-	updateAppointmentOverturn(appointmentId: number, appointmentStateId: number, overturn: boolean, patientId: number): void{
+	updateAppointmentOverturn(appointmentId: number, appointmentStateId: number, overturn: boolean, patientId: number): void {
 		const appointment: UpdateAppointmentDto = {
 			appointmentId: appointmentId,
 			appointmentStateId: appointmentStateId,
@@ -293,7 +293,7 @@ export class AppointmentComponent implements OnInit {
 		});
 	}
 
-	updateAppointmentDate(){
+	updateAppointmentDate(): void {
 
 		const dateAux = this.formDate.get('hour').value;
 		const date: DateTimeDto = {
