@@ -56,7 +56,7 @@ const SubMenu = (props: Props) => {
         return <Fragment></Fragment>;
     }
     const header = (
-        <MenuItem dense={dense} button onClick={handleToggle} disabled={resources.length === 0}>
+        <MenuItem id="menu_list_options" dense={dense} button onClick={handleToggle} disabled={resources.length === 0}>
             <ListItemIcon className={classes.icon}>
                 {isOpen ? <ExpandMore /> : icon}
             </ListItemIcon>
@@ -87,7 +87,7 @@ const SubMenu = (props: Props) => {
                     }
                 >
                     {resources.filter(resource => resource.hasList).map(resource => (
-                        <MenuItemLink
+                        <MenuItemLink id="menu_list_admin"
                             {...menuItemProps}
                             to={{
                                 pathname: `/${resource.name}`,
