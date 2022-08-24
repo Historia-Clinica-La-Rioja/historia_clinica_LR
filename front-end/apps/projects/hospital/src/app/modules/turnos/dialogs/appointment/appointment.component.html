@@ -177,7 +177,7 @@
 			<form [formGroup]="formDate" *ngIf="isDateFormVisible" fxLayout="column" fxLayoutGap="5px" class="dateForm"
 				(ngSubmit)="updateAppointmentDate()">
 				<app-datepicker [minDate]="startAgenda" [maxDate]="endAgenda"
-					[dateToSetInDatepicker]="data.appointmentData.date" [availableDays]="availableDays"
+					[dateToSetInDatepicker]="selectedDate" [availableDays]="availableDays"
 					[disableDays]="disableDays" (selectDate)="selectDate($event)">
 				</app-datepicker>
 
