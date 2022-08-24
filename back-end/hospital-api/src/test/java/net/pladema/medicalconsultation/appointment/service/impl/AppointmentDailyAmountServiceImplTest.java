@@ -3,6 +3,7 @@ package net.pladema.medicalconsultation.appointment.service.impl;
 import net.pladema.medicalconsultation.appointment.service.AppointmentService;
 import net.pladema.medicalconsultation.diary.service.DiaryService;
 
+import net.pladema.medicalconsultation.diary.service.HolidaysService;
 import net.pladema.medicalconsultation.diary.service.exception.DiaryNotFoundException;
 
 import org.junit.jupiter.api.Assertions;
@@ -24,11 +25,14 @@ class AppointmentDailyAmountServiceImplTest {
 	@Mock
 	private AppointmentService appointmentService;
 
+	@Mock
+	private HolidaysService holidaysService;
+
 	private AppointmentDailyAmountServiceImpl appointmentDailyAmountService;
 
 	@BeforeEach
 	void setUp() {
-		this.appointmentDailyAmountService = new AppointmentDailyAmountServiceImpl(appointmentService, diaryService);
+		this.appointmentDailyAmountService = new AppointmentDailyAmountServiceImpl(appointmentService, diaryService, holidaysService);
 	}
 
 	@Test

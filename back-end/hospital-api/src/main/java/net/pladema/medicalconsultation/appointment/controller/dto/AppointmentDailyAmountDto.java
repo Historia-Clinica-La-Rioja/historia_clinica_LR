@@ -19,6 +19,8 @@ public class AppointmentDailyAmountDto {
 
     private Integer programmed;
 
+	private Integer holiday;
+
     @JsonFormat(pattern = JacksonDateFormatConfig.DATE_FORMAT)
     private String date;
 }

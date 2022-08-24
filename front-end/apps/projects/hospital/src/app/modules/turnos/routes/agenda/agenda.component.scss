@@ -116,6 +116,12 @@ div.spinner {
 	.no-disponibles {
 		color: $orange-month-cell;
 	}
+
+	.holiday {
+		color: #1E90FF;
+		border-color: #1E90FF;
+		opacity: 0.75;
+	}
 }
 
 ::ng-deep {

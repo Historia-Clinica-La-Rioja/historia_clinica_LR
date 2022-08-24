@@ -1,6 +1,6 @@
 import { CalendarProfessionalInformation } from '../../services/calendar-professional-information';
 import { Component, Input, OnChanges, OnDestroy, OnInit, SimpleChanges } from '@angular/core';
-import { AppointmentDailyAmountDto, AppointmentListDto, CompleteDiaryDto, DiaryOpeningHoursDto, MedicalCoverageDto } from '@api-rest/api-model';
+import { AppointmentDailyAmountDto, CompleteDiaryDto, DiaryOpeningHoursDto, HolidayDto, MedicalCoverageDto } from '@api-rest/api-model';
 import { ERole } from '@api-rest/api-model';
 import { CalendarMonthViewBeforeRenderEvent, CalendarView, CalendarWeekViewBeforeRenderEvent, DAYS_OF_WEEK } from 'angular-calendar';
 import {
@@ -22,11 +22,11 @@ import { MEDICAL_ATTENTION } from '../../constants/descriptions';
 import { AppointmentComponent } from '../../dialogs/appointment/appointment.component';
 import { SnackBarService } from '@presentation/services/snack-bar.service';
 
-import { AppointmentsFacadeService, toCalendarEvent } from '@turnos/services/appointments-facade.service';
+import { AppointmentsFacadeService } from '@turnos/services/appointments-facade.service';
 
 import { APPOINTMENT_STATES_ID, MINUTES_IN_HOUR } from '../../constants/appointment';
 import { map, take } from 'rxjs/operators';
-import { forkJoin, Observable, of, Subject, Subscription } from 'rxjs';
+import { combineLatest, forkJoin, Observable, of, Subject } from 'rxjs';
 import { PermissionsService } from '@core/services/permissions.service';
 import { HealthInsuranceService } from '@api-rest/services/health-insurance.service';
 import { AppointmentsService } from '@api-rest/services/appointments.service';
@@ -41,6 +41,8 @@ import { endOfMonth, endOfWeek, startOfMonth, startOfWeek } from 'date-fns';
 import { DatePipe } from "@angular/common";
 import { DiscardWarningComponent } from '@presentation/dialogs/discard-warning/discard-warning.component';
 import { TranslateService } from '@ngx-translate/core';
+import { HolidaysService } from '@api-rest/services/holidays.service';
+import { dateDtoToDate } from '@api-rest/mapper/date-dto.mapper';
 
 const ASIGNABLE_CLASS = 'cursor-pointer';
 const AGENDA_PROGRAMADA_CLASS = 'bg-green';
@@ -68,10 +70,9 @@ export class AgendaComponent implements OnInit, OnDestroy, OnChanges {
 
 	enableAppointmentScheduling = true;
 	appointments: CalendarEvent[];
-	holidays: CalendarEvent[];
+	holidays: CalendarEvent[] = [];
 	dailyAmounts: AppointmentDailyAmountDto[];
 	dailyAmounts$: Observable<AppointmentDailyAmountDto[]>;
-	appointmentSubscription: Subscription;
 	refreshCalendar = new Subject<void>();
 	startDate: string;
 	endDate: string;
@@ -109,7 +110,8 @@ export class AgendaComponent implements OnInit, OnDestroy, OnChanges {
 		private readonly loggedUserService: LoggedUserService,
 		private readonly calendarProfessionalInfo: CalendarProfessionalInformation,
 		private readonly datePipe: DatePipe,
-		private readonly translateService: TranslateService
+		private readonly translateService: TranslateService,
+		private readonly holidaysService: HolidaysService,
 	) {
 	}
 
@@ -124,26 +126,31 @@ export class AgendaComponent implements OnInit, OnDestroy, OnChanges {
 			this.patientId = Number(qp.idPaciente);
 		});
 
+		this.setDateRange(this.viewDate);
+
 		this.loading = true;
-		this.appointmentSubscription?.unsubscribe();
 		this.appointmentFacade.clear();
 
 		this.loading = true;
-		this.appointmentSubscription = this.appointmentFacade.getAppointments().subscribe(appointments => {
-			if (appointments) {
-				if (appointments.length) {
+		combineLatest([
+			this.appointmentFacade.getAppointments(),
+			this.holidaysService.getHolidays(this.startDate, this.endDate)
+		]).subscribe(([appointments, holidays]) => {
+			if (appointments || holidays) {
+				if (appointments?.length) {
 					this.appointments = this.unifyEvents(appointments);
 				}
 				else {
 					this.appointments = appointments;
 				}
+				this.generateHolidayEvents(holidays);
+				this.dailyAmounts$ = this.appointmentsService.getDailyAmounts(this.idAgenda, this.startDate, this.endDate);
 				this.loading = false;
 			}
 		});
 		this.permissionsService.hasContextAssignments$(ROLES_TO_CREATE).subscribe(hasRole => this.hasRoleToCreate = hasRole);
 		this.healthcareProfessionalService.getHealthcareProfessionalByUserId().subscribe(healthcareProfessionalId => this.loggedUserHealthcareProfessionalId = healthcareProfessionalId);
 		this.loggedUserService.assignments$.subscribe(response => this.loggedUserRoles = response.map(role => role.role));
-		this.setDateRange(this.viewDate);
 	}
 
 	ngOnDestroy() {
@@ -160,6 +167,7 @@ export class AgendaComponent implements OnInit, OnDestroy, OnChanges {
 			this.setDateRange(date);
 			this.appointmentFacade.setValues(this.agenda.id, this.agenda.appointmentDuration, this.startDate, this.endDate);
 			this.calendarProfessionalInfo.setCalendarDate(date);
+			this.holidaysService.getHolidays(this.startDate, this.endDate).subscribe(holidays => this.generateHolidayEvents(holidays));
 		}
 	}
 
@@ -191,6 +199,11 @@ export class AgendaComponent implements OnInit, OnDestroy, OnChanges {
 	}
 
 	loadDailyAmounts(calendarMonthViewBeforeRenderEvent: CalendarMonthViewBeforeRenderEvent): void {
+		const from = this.datePipe.transform(calendarMonthViewBeforeRenderEvent.period.start, 'YYYY-MM-dd');
+		const to = this.datePipe.transform(calendarMonthViewBeforeRenderEvent.period.end, 'YYYY-MM-dd');
+		if(this.view === CalendarView.Month){
+			this.dailyAmounts$ = this.appointmentsService.getDailyAmounts(this.idAgenda, from, to);
+		}
 		const daysCells: MonthViewDay[] = calendarMonthViewBeforeRenderEvent.body;
 		if (this.appointments) {
 			if (agendaOverlapsWithViewRange(this.agenda.startDate, this.agenda.endDate)) {
@@ -304,7 +317,7 @@ export class AgendaComponent implements OnInit, OnDestroy, OnChanges {
 	}
 
 	private openNewAppointmentDialog(clickedDate: Moment, openingHourId: number, addingOverturn: boolean) {
-		this.dialog.open(NewAppointmentComponent, {
+		const dialogRef = this.dialog.open(NewAppointmentComponent, {
 			width: '35%',
 			data: {
 				date: clickedDate.format(DateFormat.API_DATE),
@@ -313,6 +326,12 @@ export class AgendaComponent implements OnInit, OnDestroy, OnChanges {
 				openingHoursId: openingHourId,
 				overturnMode: addingOverturn,
 				patientId: this.patientId ? Number(this.patientId) : null,
+			}
+		});
+
+		dialogRef.afterClosed().subscribe(response => {
+			if (response) {
+				this.holidaysService.getHolidays(this.startDate, this.endDate).subscribe(holidays => this.generateHolidayEvents(holidays));
 			}
 		});
 	}
@@ -550,6 +569,18 @@ export class AgendaComponent implements OnInit, OnDestroy, OnChanges {
 
 		const end = endOfWeek(date, { weekStartsOn: 1 });
 		this.endDate = momentFormat(moment(end), DateFormat.API_DATE);
+	}
+
+	private generateHolidayEvents(holidays: HolidayDto[]) {
+		this.holidays = holidays.map(holiday => {
+			return {
+				start: dateDtoToDate(holiday.date),
+				title: holiday.description,
+				allDay: true
+			}
+		});
+		this.appointments = this.appointments?.concat(this.holidays.filter(holiday =>
+			!this.appointments.find(appointment => appointment.start.getTime() === holiday.start.getTime() && appointment.title === holiday.title)));
 	}
 
 }

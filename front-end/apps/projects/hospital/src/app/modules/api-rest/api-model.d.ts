@@ -207,6 +207,7 @@ export interface AppointmentBasicPatientDto {
 
 export interface AppointmentDailyAmountDto {
     date: string;
+    holiday: number;
     programmed: number;
     programmedAvailable: number;
     spontaneous: number;
@@ -1378,6 +1379,11 @@ export interface HealthcareProfessionalSpecialtyDto {
     healthcareProfessionalId?: number;
     id?: number;
     professionalProfessionId?: number;
+}
+
+export interface HolidayDto {
+    date: DateDto;
+    description: string;
 }
 
 export interface HospitalUserPersonInfoDto {

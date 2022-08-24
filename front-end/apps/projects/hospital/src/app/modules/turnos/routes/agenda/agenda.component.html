@@ -124,6 +124,14 @@
 						<span>Turnos disponibles</span>
 					</div>
 
+					<div *ngIf="day.meta?.amount?.holiday" class="holiday"
+						 fxLayout="row" fxLayoutGap="3px" fxLayoutAlign="start center">
+						<div class="count-border" fxLayoutAlign="center center">
+							<span>{{day.meta?.amount?.holiday}}</span>
+						</div>
+						<span>Feriados</span>
+					</div>
+
 					<div *ngIf="day.meta?.amount?.programmedAvailable === 0" class="no-disponibles">No existen turnos disponibles</div>
 				</div>
 			</div>
@@ -144,7 +152,7 @@
 				</div>
 			</div>
 		</ng-template>
-		
+
 		<ng-template #navigation>
 			<mat-button-toggle-group>
 				<mat-button-toggle id="previous" class="navigation"
