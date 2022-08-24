@@ -121,7 +121,7 @@ export class SearchCreateComponent implements OnInit {
 		if (this.noIdentity) {
 			this.disableButtonScan = true;
 			this.formSearch.controls.identifType.clearValidators();
-			this.formSearch.controls.identifNumber.clearValidators();
+			this.formSearch.controls.identifNumber.setValidators([Validators.maxLength(VALIDATIONS.MAX_LENGTH.identif_number), Validators.pattern(/^\S*$/)]);
 			this.formSearch.controls.gender.clearValidators();
 			this.formSearch.controls.IdentityVerificationStatus.setValidators(Validators.required);
 			updateForm(this.formSearch);
