@@ -60,12 +60,14 @@
             <p>{{data.indication.createdBy}}</p>
             <p>{{data.indication.createdOn.date.day}}/{{data.indication.createdOn.date.month}}/{{data.indication.createdOn.date.year}}</p>
         </div>
-        <mat-divider></mat-divider>
-        <div id="observations" class="capitalize-first-letter margined">
-            <p *ngIf="observations; else no_observations">"{{observations}}"</p>
-            <ng-template #no_observations>
-                <p class="grey">{{'indicacion.internment-card.dialogs.pharmaco.NO_OBSERVATIONS' | translate }}</p>
-            </ng-template>
+        <div *ngIf="data.indication.type == 'PHARMACO'">
+            <mat-divider></mat-divider>
+            <div id="observations" class="capitalize-first-letter margined">
+                <p *ngIf="observations; else no_observations">"{{observations}}"</p>
+                <ng-template #no_observations>
+                    <p class="grey">{{'indicacion.internment-card.dialogs.pharmaco.NO_OBSERVATIONS' | translate }}</p>
+                </ng-template>
+            </div>
         </div>
     </div>
 </mat-dialog-content>
