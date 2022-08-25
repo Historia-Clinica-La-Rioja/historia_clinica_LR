@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+import net.pladema.permissions.RoleUtils;
 import net.pladema.staff.repository.HealthcareProfessionalSpecialtyRepository;
 import net.pladema.staff.repository.ProfessionalProfessionRepository;
 import net.pladema.staff.repository.domain.HealthcareProfessionalSpecialtyVo;
@@ -77,8 +78,9 @@ public class HealthcareProfessionalServiceImpl implements  HealthcareProfessiona
     @Override
     public List<HealthcareProfessionalBo> getAllByInstitution(Integer institutionId) {
         LOG.debug("Input parameters -> institutionId {}", institutionId);
+        List<Short> professionalERolIds = RoleUtils.getProfessionalERoleIds();
         List<HealthcareProfessionalVo> queryResults = healthcareProfessionalRepository
-                .findAllByInstitution(institutionId);
+                .findAllByInstitution(institutionId, professionalERolIds);
         List<HealthcareProfessionalBo> result = new ArrayList<>();
         queryResults.forEach(hcp ->
                 result.add(new HealthcareProfessionalBo(hcp))
