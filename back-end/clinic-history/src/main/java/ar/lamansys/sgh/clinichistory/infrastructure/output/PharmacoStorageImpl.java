@@ -10,6 +10,7 @@ import ar.lamansys.sgh.clinichistory.domain.ips.OtherPharmacoBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.PharmacoBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.SnomedBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.services.SnomedService;
+import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.DocumentIndicationRepository;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.EDocumentType;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.ips.DosageRepository;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.ips.OtherPharmacoRepository;
@@ -41,6 +42,7 @@ public class PharmacoStorageImpl implements PharmacoStorage {
 	private final DosageRepository dosageRepository;
 	private final PharmacoRepository pharmacoRepository;
 	private final OtherPharmacoRepository otherPharmacoRepository;
+	private final DocumentIndicationRepository documentIndicationRepository;
 	private final SnomedService snomedService;
 	private final SharedHospitalUserPort sharedHospitalUserPort;
 	private final FeatureFlagsService featureFlagsService;
@@ -104,7 +106,7 @@ public class PharmacoStorageImpl implements PharmacoStorage {
 		result.setCreatedBy(entity.getCreatedBy());
 		result.setProfessionalId(entity.getProfessionalId());
 		result.setSolvent(getSolvent(entity.getId()));
-		result.setNote(pharmacoRepository.getNote(entity.getId()));
+		result.setNote(documentIndicationRepository.getNote(entity.getId()));
 		return result;
 	}
 

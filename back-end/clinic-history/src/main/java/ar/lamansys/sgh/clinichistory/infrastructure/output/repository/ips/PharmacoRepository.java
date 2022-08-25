@@ -25,14 +25,4 @@ public interface PharmacoRepository extends JpaRepository<Pharmaco, Integer> {
 			+ "ORDER BY i.creationable.createdOn DESC")
 	List<Pharmaco> getByInternmentEpisodeId(@Param("internmentEpisodeId") Integer internmentEpisodeId,
 												   @Param("documentTypeId") Short documentTypeId);
-
-	@Transactional(readOnly = true)
-	@Query(value = "SELECT n.description "
-			+ "FROM Pharmaco p "
-			+ "JOIN Indication i ON i.id = p.id "
-			+ "JOIN DocumentIndication di ON di.pk.indicationId = i.id "
-			+ "JOIN Document doc ON di.pk.documentId = doc.id "
-			+ "JOIN Note n ON n.id = doc.otherNoteId "
-			+ "WHERE p.id = :pharmacoId ")
-	String getNote(@Param("pharmacoId") Integer pharmacoId);
 }
