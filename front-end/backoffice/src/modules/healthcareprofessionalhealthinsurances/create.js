@@ -1,6 +1,12 @@
 import React from 'react';
-import {Create, FormDataConsumer, ReferenceInput, required, SimpleForm} from 'react-admin';
-import {AutocompleteInput} from "ra-ui-materialui";
+import {
+    AutocompleteInput,
+    Create,
+    FormDataConsumer,
+    ReferenceInput,
+    required,
+    SimpleForm
+} from 'react-admin';
 import CustomToolbar from "../components/CustomToolbar";
 import SgxSelectInput from '../../sgxSelectInput/SgxSelectInput';
 

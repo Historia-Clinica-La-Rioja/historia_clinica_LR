@@ -25,7 +25,7 @@ Este documento detalla las propiedades configurables del sistema.
 
 | Propiedad               | Variable de ambiente | Valor por defecto       | Necesidad | Descripcion | Desde |
 | ----------------------- | ----------------| ----------------------- | --------- | ----------- | ----- |
-| token.secret | TOKEN_SECRET | ultra_secret_token | **Obligatorio** | La clave secreta de generación de token, usada para validar los tokens recibidos desde los request. | v0.2.0 |
+| token.secret | TOKEN_SECRET |  | **Obligatorio** | La clave secreta de generación de token, usada para validar los tokens recibidos desde los request. | v0.2.0 |
 
 ## Configuración DDBB (SQL)
 

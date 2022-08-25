@@ -23,7 +23,7 @@ const dayFormat = new Intl.DateTimeFormat(locales, {
 
 const dateFormatterParams = {locales, options};
 
-const dateFormatter = (dateStr: string): string  => dateStr ? dateFormat.format(new Date(dateStr)) : '';
+const dateFormatter = (dateStr: string): string => dateStr ? dateFormat.format(new Date(dateStr)) : '';
 
 const dayFormatter = (dateStr: string): string => dateStr ? dayFormat.format(new Date(dateStr)) : '';
 

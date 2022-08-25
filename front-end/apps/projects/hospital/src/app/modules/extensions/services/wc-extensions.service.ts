@@ -4,6 +4,12 @@ import { BehaviorSubject, Observable } from 'rxjs';
 import { ExtensionsService } from './extensions.service';
 
 
+const slotedInfoMapper = (definition: ExtensionComponentDto) => (element: WCInfo): SlotedInfo  => ({
+	componentName: element.componentName,
+	url: (new URL(element.url, definition.path)).toString(),
+	title: element.title,
+});
+
 @Injectable({
 	providedIn: 'root'
 })
@@ -47,6 +53,7 @@ export class WCExtensionsService {
 		allPlugins$.subscribe(
 			allPlugins => {
 				allPlugins.forEach(plugin => {
+					const mapper = slotedInfoMapper(plugin);
 					this.fetchDefinicion(plugin.path).subscribe(
 						(defPluginArr: WCInfo[]) => {
 
@@ -54,7 +61,7 @@ export class WCExtensionsService {
 								if (!valuesToEmit[d.slot]) {
 									console.warn(`Extension ${d.slot} inexistente`);
 								} else {
-									valuesToEmit[d.slot].push(this.map(d));
+									valuesToEmit[d.slot].push(mapper(d));
 								}
 
 							});
@@ -86,14 +93,6 @@ export class WCExtensionsService {
 
 	private fetchDefinicion(url: string): Observable<WCInfo[]> {
 		return this.extensionService.getDefinition(url);
-	}
-
-	private map(element: WCInfo): SlotedInfo {
-		return {
-			componentName: element.componentName,
-			url: element.url,
-			title: element.title
-		}
 	}
 
 }

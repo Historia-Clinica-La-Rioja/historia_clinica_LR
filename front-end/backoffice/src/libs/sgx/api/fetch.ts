@@ -4,12 +4,25 @@
  * It handles JSON decoding. HTTP error will be translated to ApiHttpError.
  */
 import { configureRefreshFetch } from 'refresh-fetch';
-import { retrieveToken, retrieveRefreshToken, saveTokens, clearTokens } from './tokenStorage';
-import { safeParseJson, safeStringifyJson } from '../shared/json';
-import { JWTokenDto, FileInputData } from './model';
 import { saveAs } from 'file-saver';
-
 import { HttpError } from 'react-admin';
+
+import {
+    safeParseJson,
+    safeStringifyJson,
+} from '../shared/json';
+
+import {
+    retrieveToken,
+    retrieveRefreshToken,
+    saveTokens,
+    clearTokens,
+} from './tokenStorage';
+
+import {
+    JWTokenDto,
+    FileInputData,
+} from './model';
 
 const API_CONTEXT_PATH = '/api/';
 

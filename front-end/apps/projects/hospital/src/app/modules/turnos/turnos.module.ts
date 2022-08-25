@@ -40,7 +40,6 @@ import { CustomDateFormatter } from './services/custom-date-formatter.service';
 		// components
 		CalendarProfessionalViewComponent,
 		SelectAgendaComponent,
-		BlockAgendaRangeComponent,
 		DateRangeTimeFormComponent,
 		SeachAppointmentsByProfessionalComponent,
 		SearchAppointmentsBySpecialtyComponent,
@@ -48,6 +47,7 @@ import { CustomDateFormatter } from './services/custom-date-formatter.service';
 		ProfessionalSelectComponent,
 		// dialogs
 		AppointmentComponent,
+		BlockAgendaRangeComponent,
 		CalendarProfessionalViewDockPopupComponent,
 		CancelAppointmentComponent,
 		ConfirmBookingComponent,
