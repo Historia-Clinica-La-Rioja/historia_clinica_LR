@@ -1,6 +1,6 @@
 <app-typeahead
-    [options]="professionalsTypeahead" 
-    [placeholder]="'turnos.home.PROFESSIONAL_SEARCH'"
+    [options]="professionalsTypeahead"
+    [titleInput]="'turnos.home.PROFESSIONAL_SEARCH' | translate"
     [externalSetValue]="professionalInitValue"
     (selectionChange)="setProfesional($event)"
 >

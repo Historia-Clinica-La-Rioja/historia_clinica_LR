@@ -1,7 +1,7 @@
 <div id="search" class="actions" fxLayout="row" fxLayoutGap="15px">
 	<app-typeahead
 		style="width: 26%;"
-		[placeholder]="'turnos.home.SPECIALTY_SEARCH'"
+		[titleInput]="'turnos.home.SPECIALTY_SEARCH' | translate"
 		[options]="especialidadesTypeaheadOptions$ | async"
 		(selectionChange)="setEspecialidad($event)">
 	</app-typeahead>
