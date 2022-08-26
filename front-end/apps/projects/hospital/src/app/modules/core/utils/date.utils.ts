@@ -61,3 +61,8 @@ export function getDayHoursRangeIntervalsByMinuteValue(startDate: Date, endDate:
 	
 	return dividedDate;
 }
+
+export function fromStringToDate(date: string): Date {
+	const dateData = date.split("/");
+	return new Date(+dateData[2], +dateData[1]-1, +dateData[0]);
+}

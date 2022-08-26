@@ -14,6 +14,7 @@ import { pairwise, startWith } from 'rxjs/operators';
 import { InternmentSummaryFacadeService } from "@historia-clinica/modules/ambulatoria/modules/internacion/services/internment-summary-facade.service";
 import { DocumentActionsService, DocumentSearch } from "@historia-clinica/modules/ambulatoria/modules/internacion/services/document-actions.service";
 import { PatientNameService } from "@core/services/patient-name.service";
+import { fromStringToDate } from "@core/utils/date.utils";
 
 @Component({
 	selector: 'app-documents-summary',
@@ -25,6 +26,7 @@ export class DocumentsSummaryComponent implements OnInit, OnChanges {
 	@Input() internmentEpisodeId: number;
 	@Input() clinicalEvaluation: DocumentHistoricDto;
 	@Input() patientId: number;
+	@Input() internmentEpisodeAdmissionDatetime: string;
 
 	public searchFields: SearchField[] = DOCUMENTS_SEARCH_FIELDS;
 	public documentsToShow: DocumentSearch[] = [];
@@ -35,6 +37,7 @@ export class DocumentsSummaryComponent implements OnInit, OnChanges {
 	public documentHistoric: DocumentHistoricDto;
 	public searchTriggered = false;
 	public hasError = hasError;
+	public minDate: Date;
 
 	constructor(
 		private formBuilder: FormBuilder,
@@ -66,6 +69,7 @@ export class DocumentsSummaryComponent implements OnInit, OnChanges {
 		this.internmentSummaryFacadeService.initializeEvolutionNoteFilterResult(this.internmentEpisodeId);
 		this.setInputResetBehaviour();
 		this.documentActions.setInformation(this.patientId, this.internmentEpisodeId);
+		this.minDate = fromStringToDate(this.internmentEpisodeAdmissionDatetime);
 	}
 
 	search(): void {
