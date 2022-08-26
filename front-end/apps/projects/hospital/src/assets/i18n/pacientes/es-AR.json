@@ -211,7 +211,7 @@
         "SELECT_PROFESSION": "Seleccione profesión",
         "PROFESSION": "Profesión",
         "SPECIALTY": "Especialidad",
-        "PROFESSION_ERROR": "Se requiere una profesion.",
+        "PROFESSION_ERROR": "Se requiere una profesión.",
         "SPECIALTY_ERROR": "Se requiere al menos una especialidad."
       }
     },
