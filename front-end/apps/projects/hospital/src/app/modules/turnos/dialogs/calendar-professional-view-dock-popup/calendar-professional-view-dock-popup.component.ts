@@ -6,12 +6,13 @@ import { DiaryListDto, ProfessionalDto } from '@api-rest/api-model';
 import { DatePipeFormat } from '@core/utils/date.utils';
 import { DockPopupRef } from '@presentation/services/dock-popup-ref';
 import { AgendaFilters, AgendaOptionsData, AgendaSearchService } from '@turnos/services/agenda-search.service';
-import { isBefore, parseISO, startOfToday } from 'date-fns';
+import { isBefore, isToday, parseISO, startOfToday } from 'date-fns';
 import { forkJoin, Subscription } from 'rxjs';
 import { HEADER_CALENDAR_PROFESSIONAL_VIEW } from '@turnos/constants/calendar-professional-view';
 import { CalendarView } from 'angular-calendar';
 import { HealthcareProfessionalByInstitutionService } from '@api-rest/services/healthcare-professional-by-institution.service';
 import { CalendarProfessionalInformation } from '@turnos/services/calendar-professional-information';
+import { AppointmentsFacadeService } from '@turnos/services/appointments-facade.service';
 
 const SINGLE_DIARY = 1;
 
@@ -44,6 +45,7 @@ export class CalendarProfessionalViewDockPopupComponent implements OnInit {
 		private readonly changeDetectorRef: ChangeDetectorRef,
 		private calendarProfessionalInfo: CalendarProfessionalInformation,
 		private readonly healthCareProfessionalService: HealthcareProfessionalByInstitutionService,
+		private readonly appointmentFacade: AppointmentsFacadeService,
 	) { }
 
 	ngOnInit() {
@@ -56,9 +58,18 @@ export class CalendarProfessionalViewDockPopupComponent implements OnInit {
 			const profSelected = this.calendarProfessionalInfo.getProfessionalSelected();
 			this.professionalSelected = profSelected ? profSelected : this.professionalLogged;
 			this.changeDetectorRef.detectChanges();
+			if (this.professionals.length === 1) {
+				this.appointmentFacade.setProfessionalId(this.professionalSelected?.id);
+				this.agendaSearchService.search(this.professionalSelected?.id);
+				this.setDiaries(this.professionalSelected);
+			}
 		});
 
 		this.calendarDate = this.calendarProfessionalInfo.getCalendarDate();
+	}
+
+	ngOnDestroy() {
+		this.agendaFiltersSubscription.unsubscribe();
 	}
 
 	changeDiarySelected(event: MatOptionSelectionChange, diary: DiaryListDto) {
@@ -98,7 +109,7 @@ export class CalendarProfessionalViewDockPopupComponent implements OnInit {
 		this.diaries = [];
 		if (diaries?.length)
 			diaries.forEach(diary => {
-				if (isBefore(startOfToday(), parseISO(diary.endDate)))
+				if (isBefore(startOfToday(), parseISO(diary.endDate)) || isToday(parseISO(diary.endDate)))
 					this.diaries.push(diary)
 			});
 	}
