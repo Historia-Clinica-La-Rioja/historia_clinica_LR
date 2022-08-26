@@ -38,7 +38,7 @@ const PersonShow = props =>{
     return (
     <Show {...props}>
         <TabbedShowLayout>
-            <Tab label="resources.person.tabs.details">
+            <Tab label="resources.person.tabs.details" id="personal_information">
                 <TextField source="firstName" />
                 <TextField source="middleNames" />
                 <TextField source="lastName" />
@@ -53,13 +53,13 @@ const PersonShow = props =>{
                 <SgxDateField source="birthDate" />
             </Tab>
 
-            <Tab label="resources.person.tabs.users">
+            <Tab label="resources.person.tabs.users" id="users">
                 <ReferenceManyField label="resources.person.tabs.users" reference="users" target="personId">
                     <UserTab personId={personId} />
                 </ReferenceManyField>
             </Tab>
             
-            <Tab label="resources.professionalprofessions.tab.title">
+            <Tab label="resources.professionalprofessions.tab.title" id="professions">
                 <ReferenceManyField addLabel={false} reference="professionalprofessions" target="personId">
                     <Datagrid rowClick="show">
                         <ReferenceField source="professionalSpecialtyId" reference="professionalspecialties" link={false}>
