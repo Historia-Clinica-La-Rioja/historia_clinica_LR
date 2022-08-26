@@ -4,10 +4,15 @@
 
 		<mat-label>{{'pacientes.edit_license.form_license.LICENSE_NUMBER'| translate}} </mat-label>
 		<input id="license" formControlName="licenseNumber" type="text" matInput>
-		<mat-error>
-			{{'pacientes.edit_license.form_license.LICENSE_ERROR' | translate }}
+		<mat-error *ngIf="hasError(	form, 'pattern', 'licenseNumber')">
+				{{'pacientes.edit_license.form_license.LICENSE_PATTERN_ERROR' | translate }}
 		</mat-error>
-
+		<mat-error *ngIf="hasError(	form, 'required', 'licenseNumber')">
+				{{'pacientes.edit_license.form_license.LICENSE_REQUIRED_ERROR' | translate }}
+		</mat-error>
+		<mat-error *ngIf="hasError(	form, 'maxlength', 'licenseNumber')">
+			{{'pacientes.edit_license.form_license.LICENSE_MAX_LENGTH_ERROR' | translate }}
+	</mat-error>
 	</mat-form-field>
 
 	<div fxLayout="column" fxLayoutGap="15px">

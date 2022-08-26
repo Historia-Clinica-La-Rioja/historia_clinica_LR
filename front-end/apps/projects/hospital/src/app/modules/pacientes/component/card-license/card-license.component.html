@@ -7,18 +7,18 @@
 					<strong>{{ 'pacientes.card_license.TITLE' | translate }}:</strong>
 				</div>
 
-				<mat-list>
+				<mat-list fxLayoutGap="16px">
 					<div id="professionsWithLicense" *ngFor="let item of professionsWithLicense" fxLayout="row"
 						fxLayoutGap="16px">
 
-						<div fxFlex="20%">
-							<div id="licenseNumber" fxLayout="row" fxLayoutGap="16px">
+						<div id="licenseNumber" fxLayout="row" >
+							<div fxFlex="20%">
 								<span>{{item.licenseNumber}} </span>
 							</div>
 						</div>
 
 						<div fxFlex="20%">
-							<div id="typeID" fxLayout="row" fxLayoutGap="16px">
+							<div id="typeId" fxLayout="row">
 								<span *ngIf="item.typeId === NATIONAL">
 									{{ 'pacientes.card_license.NATIONAL' | translate}}</span>
 								<span *ngIf="item.typeId === PROVINCE">
