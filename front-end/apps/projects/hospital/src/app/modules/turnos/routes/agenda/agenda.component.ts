@@ -26,7 +26,7 @@ import { AppointmentsFacadeService } from '@turnos/services/appointments-facade.
 
 import { APPOINTMENT_STATES_ID, MINUTES_IN_HOUR } from '../../constants/appointment';
 import { map, take } from 'rxjs/operators';
-import { combineLatest, forkJoin, Observable, of, Subject } from 'rxjs';
+import { forkJoin, Observable, of, Subject } from 'rxjs';
 import { PermissionsService } from '@core/services/permissions.service';
 import { HealthInsuranceService } from '@api-rest/services/health-insurance.service';
 import { AppointmentsService } from '@api-rest/services/appointments.service';
@@ -132,18 +132,15 @@ export class AgendaComponent implements OnInit, OnDestroy, OnChanges {
 		this.appointmentFacade.clear();
 
 		this.loading = true;
-		combineLatest([
-			this.appointmentFacade.getAppointments(),
-			this.holidaysService.getHolidays(this.startDate, this.endDate)
-		]).subscribe(([appointments, holidays]) => {
-			if (appointments || holidays) {
-				if (appointments?.length) {
+		this.appointmentFacade.getAppointments().subscribe(appointments => {
+			if (appointments) {
+				if (appointments.length) {
 					this.appointments = this.unifyEvents(appointments);
 				}
 				else {
 					this.appointments = appointments;
 				}
-				this.generateHolidayEvents(holidays);
+				this.holidaysService.getHolidays(this.startDate, this.endDate).subscribe(holidays => this.generateHolidayEvents(holidays));
 				this.dailyAmounts$ = this.appointmentsService.getDailyAmounts(this.idAgenda, this.startDate, this.endDate);
 				this.loading = false;
 			}
@@ -167,7 +164,6 @@ export class AgendaComponent implements OnInit, OnDestroy, OnChanges {
 			this.setDateRange(date);
 			this.appointmentFacade.setValues(this.agenda.id, this.agenda.appointmentDuration, this.startDate, this.endDate);
 			this.calendarProfessionalInfo.setCalendarDate(date);
-			this.holidaysService.getHolidays(this.startDate, this.endDate).subscribe(holidays => this.generateHolidayEvents(holidays));
 		}
 	}
 
@@ -326,12 +322,6 @@ export class AgendaComponent implements OnInit, OnDestroy, OnChanges {
 				openingHoursId: openingHourId,
 				overturnMode: addingOverturn,
 				patientId: this.patientId ? Number(this.patientId) : null,
-			}
-		});
-
-		dialogRef.afterClosed().subscribe(response => {
-			if (response) {
-				this.holidaysService.getHolidays(this.startDate, this.endDate).subscribe(holidays => this.generateHolidayEvents(holidays));
 			}
 		});
 	}
