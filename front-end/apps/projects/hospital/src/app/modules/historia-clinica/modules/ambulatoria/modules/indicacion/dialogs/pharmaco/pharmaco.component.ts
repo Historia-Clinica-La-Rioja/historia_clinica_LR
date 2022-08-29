@@ -6,13 +6,13 @@ import { SharedSnomedDto } from '@api-rest/api-model';
 import { SnomedDto } from '@api-rest/api-model';
 import { EIndicationType } from '@api-rest/api-model';
 import { EIndicationStatus } from '@api-rest/api-model';
-import { dateDtoToDate, dateToDateDto } from '@api-rest/mapper/date-dto.mapper';
+import { dateDtoToDate, dateToDateDto, dateToDateTimeDtoUTC } from '@api-rest/mapper/date-dto.mapper';
 import { InternacionMasterDataService } from '@api-rest/services/internacion-master-data.service';
 import { SnowstormService } from '@api-rest/services/snowstorm.service';
 import { getError, hasError } from '@core/utils/form.utils';
 import { SnomedService } from '@historia-clinica/services/snomed.service';
 import { SnackBarService } from '@presentation/services/snack-bar.service';
-import { isSameDay, isToday } from 'date-fns';
+import { getMonth, getYear, isSameDay, isToday } from 'date-fns';
 import { SearchSnomedConceptsPharmacoService } from '../../services/search-snomed-concepts-pharmaco.service';
 import { isNumberOrDot } from '@core/utils/pattern.utils';
 import { HOURS_LIST, INTERVALS_TIME, openConfirmDialog, OTHER_FREQUENCY, OTHER_INDICATION_ID } from '../../constants/internment-indications';
@@ -205,21 +205,21 @@ export class PharmacoComponent implements OnInit {
 		return hours === this.TIME_CORRECTION ? 0 : hours;
 	}
 
-	private toDosageDto(quantity: QuantityDto, periodUnit: string): NewDosageDto {
+	private toDosageDto(quantity: QuantityDto, periodUnit?: string): NewDosageDto {
+		const year = getYear(this.indicationDate);
+		const month = getMonth(this.indicationDate);
+		const day = this.indicationDate.getDate();
+		const startDateTime = this.form.value.startTime;
 		return {
 			frequency: this.form.controls.interval.value,
 			diary: true,
 			chronic: true,
 			duration: 0,
-			periodUnit: periodUnit,
+			periodUnit: periodUnit ? periodUnit : this.loadPeriodUnit(),
 			event: this.form.controls?.event.value,
-			startDateTime: (this.form.controls?.startTime) ? {
-				date: dateToDateDto(this.indicationDate),
-				time: {
-					hours: (this.form.controls?.startTime?.value) ? this.setHours(this.form.controls.startTime.value) : 0,
-					minutes: 0
-				}
-			} : null,
+			startDateTime: (startDateTime) ?
+				dateToDateTimeDtoUTC(new Date(year, month, day, startDateTime))
+				: null,
 			quantity: {
 				value: quantity.value,
 				unit: quantity.unit
@@ -241,7 +241,7 @@ export class PharmacoComponent implements OnInit {
 			dosage: this.toDosageDto({
 				unit: this.form.controls.unit.value,
 				value: this.form.controls.dosage.value
-			}, (this.form.controls?.event.value) ? this.EVENT : this.HOURS),
+			}),
 			solvent: (this.form.controls.hasSolvent.value && this.searchSnomedConcept?.solventSnomedConcept) ? {
 				snomed: this.toSharedSnomedDto(this.searchSnomedConcept?.solventSnomedConcept),
 				dosage: this.toDosageDto({
@@ -306,5 +306,17 @@ export class PharmacoComponent implements OnInit {
 		control.reset();
 	}
 
+	private loadPeriodUnit(): string {
+		switch (this.form.value.frequencyOption) {
+			case (this.FREQUENCY_OPTION_INTERVAL):
+				return "h";
+			case (this.FREQUENCY_OPTION_START_TIME):
+				return "d";
+			case (this.FREQUENCY_OPTION_EVENT):
+				return "e";
+			default:
+				return null;
+		}
+	}
 }
 

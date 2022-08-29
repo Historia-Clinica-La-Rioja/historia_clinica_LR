@@ -155,10 +155,6 @@ const SectorShow = props => (
                 <TextField source="description" />
             </ReferenceField>
             
-            <ReferenceField source="sectorId" reference="sectors">
-                <TextField source="description"/>
-            </ReferenceField>
-            
             <SectionTitle label="resources.sectors.fields.childSectors" />
             <CreateSector />
             <ReferenceManyField

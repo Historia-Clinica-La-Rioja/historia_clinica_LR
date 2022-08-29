@@ -26,31 +26,6 @@ public interface InternmentEpisodeRepository extends JpaRepository<InternmentEpi
 
 
     @Transactional(readOnly = true)
-    @Query("SELECT NEW net.pladema.clinichistory.hospitalization.repository.domain.summary.InternmentSummaryVo(" +
-            "ie.id,  ie.entryDate, " +
-            "ie.anamnesisDocId, da.statusId as anamnesisStatusId, " +
-            "ie.epicrisisDocId, de.statusId as epicrisisStatusId, " +
-            "b.id as bedId, b.bedNumber, " +
-            "r.id as roomId, r.roomNumber, sector.description, " +
-			"hpg.pk.healthcareProfessionalId, hp.licenseNumber, p.firstName, p.lastName, pe.nameSelfDetermination," +
-            "rc, ie.statusId, ie.probableDischargeDate, pd.administrativeDischargeDate, pd.physicalDischargeDate, pd.medicalDischargeDate) " +
-            "FROM InternmentEpisode ie " +
-            "JOIN Bed b ON (b.id = ie.bedId) " +
-            "JOIN Room r ON (r.id = b.roomId) " +
-            "JOIN Sector sector ON (sector.id = r.sectorId) " +
-            "LEFT JOIN Document da ON (da.id = ie.anamnesisDocId) " +
-            "LEFT JOIN Document de ON (de.id = ie.epicrisisDocId) " +
-            "LEFT JOIN HealthcareProfessionalGroup hpg ON (hpg.pk.internmentEpisodeId = ie.id and hpg.responsible = true) " +
-            "LEFT JOIN HealthcareProfessional hp ON (hpg.pk.healthcareProfessionalId = hp.id) " +
-            "LEFT JOIN Person p ON (hp.personId = p.id) " +
-			"LEFT JOIN PersonExtended pe ON (p.id = pe.id) " +
-            "LEFT JOIN ResponsibleContact rc ON (ie.id = rc.internmentEpisodeId) " +
-            "LEFT JOIN PatientDischarge pd ON (ie.id = pd.internmentEpisodeId) " +
-            "WHERE ie.id = :internmentEpisodeId")
-    Optional<InternmentSummaryVo> getSummary(@Param("internmentEpisodeId") Integer internmentEpisodeId);
-
-
-    @Transactional(readOnly = true)
     @Query("SELECT ie.patientId " +
             "FROM InternmentEpisode ie " +
             "WHERE ie.id = :internmentEpisodeId")

@@ -1,3 +1,4 @@
+import { MedicalCoverageInfoService } from './../../../historia-clinica/modules/ambulatoria/services/medical-coverage-info.service';
 import { Component, Inject, OnInit } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { NewAttentionComponent } from '../new-attention/new-attention.component';
@@ -6,7 +7,7 @@ import { SnackBarService } from '@presentation/services/snack-bar.service';
 import { APPOINTMENT_STATES_ID, getAppointmentState, MAX_LENGTH_MOTIVO } from '../../constants/appointment';
 import { ContextService } from '@core/services/context.service';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { AppFeature, AppointmentDto, CompletePatientDto, ERole, IdentificationTypeDto, LoggedUserDto, PatientMedicalCoverageDto, PersonPhotoDto } from '@api-rest/api-model.d';
+import { AppFeature, AppointmentDto, ERole, IdentificationTypeDto, PatientMedicalCoverageDto, PersonPhotoDto } from '@api-rest/api-model.d';
 import { CancelAppointmentComponent } from '../cancel-appointment/cancel-appointment.component';
 import { getError, hasError, processErrors, updateControlValidator } from '@core/utils/form.utils';
 import { AppointmentsFacadeService } from '../../services/appointments-facade.service';
@@ -54,7 +55,7 @@ export class AppointmentComponent implements OnInit {
 
 	personPhoto: PersonPhotoDto;
 	decodedPhoto$: Observable<string>;
-	
+
 	appointment: AppointmentDto;
 	estadoSelected: APPOINTMENT_STATES_ID;
 	formMotivo: FormGroup;
@@ -80,10 +81,11 @@ export class AppointmentComponent implements OnInit {
 	isCheckedDownloadFormulario = false;
 	downloadReportIsEnabled: boolean;
 	isMqttCallEnabled: boolean = false;
-	
+
 	hideObservationForm: boolean = true;
 	hideObservationTitle: boolean = true;
 	observation: string;
+	selectedDate = new Date(this.params.appointmentData.date);
 
 	constructor(
 		@Inject(MAT_DIALOG_DATA) public params: { appointmentData: PatientAppointmentInformation, hasPermissionToAssignShift: boolean },
@@ -102,6 +104,7 @@ export class AppointmentComponent implements OnInit {
 		private readonly personMasterDataService: PersonMasterDataService,
 		private readonly patientService: PatientService,
 		private readonly imageDecoderService: ImageDecoderService,
+		private readonly medicalCoverageInfo: MedicalCoverageInfoService
 
 	) {
 		this.featureFlagService.isActive(AppFeature.HABILITAR_INFORMES).subscribe(isOn => this.downloadReportIsEnabled = isOn);
@@ -171,14 +174,14 @@ export class AppointmentComponent implements OnInit {
 			});
 
 		this.patientService.getPatientPhoto(this.params.appointmentData.patient.id)
-			.subscribe((personPhotoDto: PersonPhotoDto) => { 
-				this.personPhoto = personPhotoDto; 
+			.subscribe((personPhotoDto: PersonPhotoDto) => {
+				this.personPhoto = personPhotoDto;
 				if (personPhotoDto?.imageData) {
 					this.decodedPhoto$ = this.imageDecoderService.decode(personPhotoDto.imageData);
 				}
 			});
 	}
-	
+
 	formatPhonePrefixAndNumber(phonePrefix: string, phoneNumber: string): string {
 		return phoneNumber ? phonePrefix
 			? "(" + phonePrefix + ") " + phoneNumber
@@ -290,7 +293,7 @@ export class AppointmentComponent implements OnInit {
 	private submitNewState(newStateId: APPOINTMENT_STATES_ID, motivo?: string): void {
 		this.appointmentFacade.changeState(this.params.appointmentData.appointmentId, newStateId, motivo)
 			.subscribe(() => {
-				const appointmentInformation = { id: this.params.appointmentData.appointmentId, stateId: newStateId };
+				const appointmentInformation = { id: this.params.appointmentData.appointmentId, stateId: newStateId, date: this.selectedDate };
 				this.dialogRef.close(appointmentInformation);
 				this.snackBarService.showSuccess(`Estado de turno actualizado a ${getAppointmentState(newStateId).description} exitosamente`);
 			}, _ => {
@@ -377,7 +380,10 @@ export class AppointmentComponent implements OnInit {
 	}
 
 	closeDialog(returnValue?: string) {
-		this.dialogRef.close(returnValue);
+		if (!returnValue)
+			this.medicalCoverageInfo.setAppointmentMCoverage(this.summaryCoverageData);
+		const appointmentInformation = { returnValue: returnValue, date: this.selectedDate };
+		this.dialogRef.close(appointmentInformation);
 	}
 
 	enableDowndloadAnexo(option: boolean) {

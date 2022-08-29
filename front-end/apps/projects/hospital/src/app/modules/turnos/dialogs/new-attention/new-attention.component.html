@@ -74,8 +74,9 @@
 		</div>
 
 
-		<div fxLayout="column" >
-			<mat-checkbox (change)="changeAvailableForBooking()" [checked]="form.value.availableForBooking" *ngIf="form?.value?.medicalAttentionType?.description != SPONTANEOUS ">
+		<div fxLayout="column" *ngIf="isEnableOnlineAppointments">
+			<mat-checkbox (change)="changeAvailableForBooking()" [checked]="form.value.availableForBooking"
+						  *ngIf="isEnableOnlineAppointments && form?.value?.medicalAttentionType?.description != SPONTANEOUS">
 				<span [translate]="'turnos.agenda-setup.dialog.BOOKING'"></span>
 			</mat-checkbox>
 		</div>

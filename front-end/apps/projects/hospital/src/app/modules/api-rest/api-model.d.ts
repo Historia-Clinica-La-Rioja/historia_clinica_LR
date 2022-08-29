@@ -220,6 +220,7 @@ export interface AppointmentDto extends CreateAppointmentDto {
 }
 
 export interface AppointmentListDto {
+    appointmentBlockMotiveId: number;
     appointmentStateId: number;
     date: string;
     healthInsuranceId: number;
@@ -416,9 +417,12 @@ export interface BedSummaryDto {
 }
 
 export interface BlockDto {
-    dateDto: DateDto;
+    appointmentBlockMotiveId: number;
     end: TimeDto;
+    endDateDto: DateDto;
+    fullBlock: boolean;
     init: TimeDto;
+    initDateDto: DateDto;
 }
 
 export interface BookingAppointmentDto {
@@ -1007,7 +1011,8 @@ export interface EvaluationNoteSummaryDto extends DocumentSummaryDto {
 }
 
 export interface EvolutionDiagnosisDto extends Serializable {
-    diagnosesId?: number[];
+    diagnosis?: DiagnosisDto[];
+    mainDiagnosis?: HealthConditionDto;
     notes?: DocumentObservationsDto;
 }
 
@@ -1530,6 +1535,18 @@ export interface Last2RiskFactorsDto extends Serializable {
     previous: RiskFactorDto;
 }
 
+export interface LicenseNumberDto {
+    id: number;
+    info: string;
+    number: string;
+    type: string;
+}
+
+export interface LicenseNumberTypeDto extends Serializable {
+    description: string;
+    id: number;
+}
+
 export interface LimitedPatientSearchDto {
     actualPatientSearchSize: number;
     patientList: PatientSearchDto[];
@@ -1736,6 +1753,16 @@ export interface NursingProblemDto extends Serializable {
 export interface NursingProcedureDto extends Serializable {
     performedDate?: string;
     snomed: SnomedDto;
+}
+
+export interface NursingRecordDto {
+    administrationTime: DateTimeDto;
+    event: string;
+    id: number;
+    indication: IndicationDto;
+    observation: string;
+    scheduledAdministrationTime: DateTimeDto;
+    status: EIndicationStatus;
 }
 
 export interface NursingRiskFactorDto extends Serializable {
@@ -2021,6 +2048,11 @@ export interface ParenteralPlanDto extends IndicationDto {
     via?: number;
 }
 
+export interface PasswordDto {
+    newPassword: string;
+    password: string;
+}
+
 export interface PasswordResetDto {
     password: string;
     token: string;
@@ -2244,9 +2276,35 @@ export interface ProcedureReduced {
     procedure: string;
 }
 
+export interface ProfessionCompleteDto {
+    allLicenses: LicenseNumberDto[];
+    description: string;
+    id: number;
+    licenses: LicenseNumberDto[];
+    professionId: number;
+    specialties: ProfessionSpecialtyDto[];
+}
+
+export interface ProfessionSpecialtyDto {
+    id: number;
+    licenses: LicenseNumberDto[];
+    specialty: ClinicalSpecialtyDto;
+}
+
 export interface ProfessionalAvailabilityDto {
     availability: DiaryAvailabilityDto[];
     professional: BookingProfessionalDto;
+}
+
+export interface ProfessionalCompleteDto {
+    allLicenses: LicenseNumberDto[];
+    completeLicenseInfo: string;
+    firstName: string;
+    id: number;
+    lastName: string;
+    nameSelfDetermination: string;
+    personId: number;
+    professions: ProfessionCompleteDto[];
 }
 
 export interface ProfessionalDto {
@@ -2270,10 +2328,27 @@ export interface ProfessionalInfoDto {
     phoneNumber: string;
 }
 
+export interface ProfessionalLicenseNumberDto extends Serializable {
+    healthcareProfessionalSpecialtyId: number;
+    id: number;
+    licenseNumber: string;
+    professionalProfessionId: number;
+    typeId: number;
+}
+
 export interface ProfessionalPersonDto extends Serializable {
     firstName: string;
     id: number;
     lastName: string;
+}
+
+export interface ProfessionalProfessionBackofficeDto {
+    clinicalSpecialtyId: number;
+    deleted: boolean;
+    healthcareProfessionalId: number;
+    id: number;
+    personId: number;
+    professionalSpecialtyId: number;
 }
 
 export interface ProfessionalSpecialtyDto {
@@ -2450,10 +2525,10 @@ export interface ResponsibleContactDto extends Serializable {
 
 export interface ResponsibleDoctorDto extends Serializable {
     firstName: string;
-    id: number;
     lastName: string;
-    licence: string;
+    licenses: string[];
     nameSelfDetermination: string;
+    userId: number;
 }
 
 export interface RiskFactorDto extends Serializable {
@@ -2852,6 +2927,8 @@ export const enum AppFeature {
     HABILITAR_MAIL_RESERVA_TURNO = "HABILITAR_MAIL_RESERVA_TURNO",
     LIBERAR_API_RESERVA_TURNOS = "LIBERAR_API_RESERVA_TURNOS",
     BACKOFFICE_MOSTRAR_ABM_RESERVA_TURNOS = "BACKOFFICE_MOSTRAR_ABM_RESERVA_TURNOS",
+    OCULTAR_LISTADO_PROFESIONES_WEBAPP = "OCULTAR_LISTADO_PROFESIONES_WEBAPP",
+    HABILITAR_MODULO_ENFERMERIA = "HABILITAR_MODULO_ENFERMERIA",
 }
 
 export const enum EDocumentSearch {
@@ -2863,6 +2940,7 @@ export const enum EDocumentSearch {
 export const enum EIndicationStatus {
     INDICATED = "INDICATED",
     SUSPENDED = "SUSPENDED",
+    PENDING = "PENDING",
 }
 
 export const enum EIndicationType {
@@ -2900,6 +2978,10 @@ export const enum ERole {
     API_CONSUMER = "API_CONSUMER",
     ESPECIALISTA_EN_ODONTOLOGIA = "ESPECIALISTA_EN_ODONTOLOGIA",
     ADMINISTRADOR_DE_CAMAS = "ADMINISTRADOR_DE_CAMAS",
+    PERSONAL_DE_IMAGENES = "PERSONAL_DE_IMAGENES",
+    PERSONAL_DE_LABORATORIO = "PERSONAL_DE_LABORATORIO",
+    PERSONAL_DE_FARMACIA = "PERSONAL_DE_FARMACIA",
+    PERSONAL_DE_ESTADISTICA = "PERSONAL_DE_ESTADISTICA",
 }
 
 export const enum ESurfacePositionDto {

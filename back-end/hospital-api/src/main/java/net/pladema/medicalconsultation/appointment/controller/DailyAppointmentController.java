@@ -116,6 +116,7 @@ public class DailyAppointmentController {
         LOG.debug("Input parameters -> attentionTypeReportBos {}", attentionTypeReportBos);
         List<AttentionTypeReportDto> result = attentionTypeReportBos.stream()
                 .map(this::associateAttentionTypeWithPatientData)
+				.filter(attentionTypeReportDto -> attentionTypeReportDto.getAppointments().size() > 0)
                 .collect(Collectors.toList());
         LOG.debug(OUTPUT, result);
         return result;
@@ -135,6 +136,7 @@ public class DailyAppointmentController {
     private List<AttentionTypeReportItemDto> createPatientAssociatedReportItemList(AttentionTypeReportBo attentionTypeReportBo) {
         LOG.debug("Input parameters -> attentionTypeReportBo {}", attentionTypeReportBo);
         List<AttentionTypeReportItemDto> newReportItemList = attentionTypeReportBo.getAppointments().stream()
+				.filter(attentionTypeReportItemBo -> attentionTypeReportItemBo.getPatientId() != null)
                 .map(this::createPatientAssociatedReportItem)
                 .collect(Collectors.toList());
         LOG.debug(OUTPUT, newReportItemList);

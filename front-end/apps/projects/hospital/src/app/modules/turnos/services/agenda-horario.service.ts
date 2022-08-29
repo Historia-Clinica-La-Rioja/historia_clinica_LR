@@ -285,13 +285,11 @@ export class AgendaHorarioService {
 			return;
 		}
 		const newEnd = addDays(addMinutes(segment.date, minutesDiff), daysDiff);
-		if (newEnd.getDay() !== dragToSelectEvent.start.getDay()) {
-			return;
-		}
 		const endOfView = endOfWeek(this.viewDate, { weekStartsOn: this.weekStartsOn });
-		if (newEnd.getHours() >= 23) {
+		if (newEnd.getHours() >= 0 && newEnd.getDay() !== dragToSelectEvent.start.getDay()) {
+			newEnd.setTime(dragToSelectEvent.start.getTime());
 			newEnd.setHours(23);
-			newEnd.setMinutes(0);
+			newEnd.setMinutes(59);
 			newEnd.setSeconds(0);
 		}
 		if (newEnd > segment.date && newEnd < endOfView) {

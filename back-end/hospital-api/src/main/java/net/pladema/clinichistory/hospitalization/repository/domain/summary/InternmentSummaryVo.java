@@ -34,9 +34,10 @@ public class InternmentSummaryVo {
 	private LocalDateTime medicalDischargeDate;
 
 	public InternmentSummaryVo(Integer id, LocalDateTime entryDate, Long anamnesisDocId, String anamnesisStatusId,
-							   Long epicrisisDocId, String epicrisisStatusId, Integer bedId, String bedNumber, Integer roomId,
-							   String roomNumber, String sectorDescription,
-							   Integer healthcareProfessionalId, String licenseNumber, String firstName, String lastName, String nameSelfDetermination,
+							   Long epicrisisDocId, String epicrisisStatusId,
+							   Integer bedId, String bedNumber, Integer roomId, String roomNumber,
+							   String sectorDescription,
+							   ResponsibleDoctorVo responsibleDoctorVo,
 							   ResponsibleContact responsibleContact, Short internmentStatusId,
 							   LocalDateTime probableDischargeDate, LocalDateTime administrativeDischargeDate,
 							   LocalDateTime physicalDischargeDate,  LocalDateTime medicalDischargeDate) {
@@ -52,8 +53,7 @@ public class InternmentSummaryVo {
 
 		this.sectorSpecialty = null;
 		this.entryDate = entryDate;
-		if (healthcareProfessionalId != null)
-			this.doctor = new ResponsibleDoctorVo(healthcareProfessionalId, firstName, lastName, licenseNumber, nameSelfDetermination);
+		this.doctor = responsibleDoctorVo;
 		if (responsibleContact != null)
 			this.responsibleContact = new ResponsibleContactVo(responsibleContact);
 		this.active = this.isActive(internmentStatusId);

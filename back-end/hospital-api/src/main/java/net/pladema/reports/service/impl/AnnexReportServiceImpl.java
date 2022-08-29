@@ -54,7 +54,10 @@ public class AnnexReportServiceImpl implements AnnexReportService {
 			DocumentAppointmentBo documentAppointment = documentAppointmentOpt.get();
 			Long documentId = documentAppointment.getDocumentId();
 
-			switch (this.documentService.getSourceType(documentId)){
+			Short sourceType = this.documentService.getSourceType(documentId);
+			Short documentSourceType = sourceType == SourceType.IMMUNIZATION ? SourceType.OUTPATIENT : sourceType;
+
+			switch (documentSourceType){
 
 				case SourceType.OUTPATIENT: {
 					var outpatientConsultationData = annexReportRepository.getConsultationAnnexInfo(documentId);
@@ -109,7 +112,10 @@ public class AnnexReportServiceImpl implements AnnexReportService {
         LOG.debug("Input parameter -> documentId {}", documentId);
 		AnnexIIBo result;
 
-		switch (this.documentService.getSourceType(documentId)) {
+		Short sourceType = this.documentService.getSourceType(documentId);
+		Short documentSourceType = sourceType == SourceType.IMMUNIZATION ? SourceType.OUTPATIENT : sourceType;
+
+		switch (documentSourceType){
 
 			case SourceType.OUTPATIENT: {
 				var outpatientResultOpt = annexReportRepository.getConsultationAnnexInfo(documentId);

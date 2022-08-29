@@ -5,8 +5,8 @@
  */
 import { configureRefreshFetch } from 'refresh-fetch';
 import { retrieveToken, retrieveRefreshToken, saveTokens, clearTokens } from './tokenStorage';
-import { safeParseJson } from '../shared/json';
-import { JWTokenDto } from './model';
+import { safeParseJson, safeStringifyJson } from '../shared/json';
+import { JWTokenDto, FileInputData } from './model';
 import { saveAs } from 'file-saver';
 
 import { HttpError } from 'react-admin';
@@ -52,12 +52,13 @@ const mapToApiHttpError = (defaultValue = { code: 'error.generic.title' }) => (b
         {
             traceId: body.traceId,
             code: body.code || defaultValue.code,
+            text: body.text || body.message || response.statusText,
             args: body.args,
         }
     );
 };
 
-const doRefreshToken = () => {
+const doRefreshToken = (): Promise<void> => {
     const refreshToken = retrieveRefreshToken();
     const options = jsonPayload('POST', { refreshToken });
     return sgxFetchApi<JWTokenDto>('auth/refresh', options)
@@ -108,14 +109,23 @@ const addAuth = (options: any = {}) => {
     return (!token) ? options : withHeader(options, 'Authorization', token);
 };
 
-const jsonPayload = (method: string, body: any) => ({ method, body: JSON.stringify(body) });
+const jsonPayload = (method: string, body: any) => ({ method, body: safeStringifyJson(body) });
+
+const formDataPayload = (method: string, body: any) => ({ method, body: formData(body) });
+
+const formData = ({file, ...data}: FileInputData) => {
+    let formData = new FormData();
+    formData.append("data", new Blob([JSON.stringify(data)], {type: "application/json"}));
+    formData.append("file", file.rawFile, file.title);
+    return formData;
+};
 
 export { 
-    sgxFetch, 
-    sgxFetchApi, 
-    jsonPayload, 
-    withHeader, 
-    sgxFetchApiWithToken, 
-    sgxDownload, 
-    safeParseJson,
+    formDataPayload,
+    jsonPayload,
+    sgxDownload,
+    sgxFetch,
+    sgxFetchApi,
+    sgxFetchApiWithToken,
+    withHeader,
 };

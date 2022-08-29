@@ -35,7 +35,8 @@ public class DashboardStatusService extends FeatureStatusService {
 
 	private static Supplier<List<FeatureProperty>> listProperties(CubejsAutoConfiguration configuration) {
 		return () -> List.of(
-				new FeatureProperty("apiUrl", configuration.getApiUrl())
+				new FeatureProperty("apiUrl", configuration.getApiUrl()),
+				new FeatureProperty("proxy", configuration.getProxy())
 		);
 	}
 

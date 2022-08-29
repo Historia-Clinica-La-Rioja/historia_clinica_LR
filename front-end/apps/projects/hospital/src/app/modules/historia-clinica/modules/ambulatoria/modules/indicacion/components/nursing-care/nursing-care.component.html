@@ -1,0 +1,13 @@
+<app-content width="full">
+	<h2 [translate]="'indicacion.nursing-care.TITLE'"></h2>
+	<app-summary-card id="nursing-care" [header]="title">
+	    <app-day-display id="visualization-days" [minDate]="entryDate" (actualDateEmmiter)="loadActualDateAndFilter($event)"></app-day-display>
+        <section>
+            <app-general-nursing-record id="general-section" *ngIf="generalNursingRecords.length" [nursingRecordsDto]="generalNursingRecords"></app-general-nursing-record>
+            <app-specific-nursing-record id="specific-section" *ngIf="specificNursingRecords.length" [nursingRecordsDto]="specificNursingRecords"></app-specific-nursing-record>
+        </section>
+        <div *ngIf="!generalNursingRecords.length && !specificNursingRecords.length">
+            <app-no-data></app-no-data>
+        </div>
+	</app-summary-card>
+</app-content>

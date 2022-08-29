@@ -1,14 +1,13 @@
 package ar.lamansys.immunization.infrastructure.input.rest;
 
-import ar.lamansys.immunization.application.immunizePatient.ImmunizePatient;
-import ar.lamansys.immunization.domain.consultation.ImmunizePatientBo;
-import ar.lamansys.immunization.domain.snomed.SnomedBo;
-import ar.lamansys.immunization.domain.vaccine.VaccineDoseBo;
-import ar.lamansys.immunization.infrastructure.input.rest.dto.ImmunizePatientDto;
-import ar.lamansys.sgh.clinichistory.infrastructure.input.rest.ips.dto.ImmunizationDto;
-import ar.lamansys.sgh.clinichistory.infrastructure.input.rest.ips.dto.SnomedDto;
-import ar.lamansys.sgh.shared.infrastructure.input.service.immunization.VaccineDoseInfoDto;
-import ar.lamansys.sgx.shared.dates.configuration.LocalDateMapper;
+import static org.mockito.Mockito.any;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
+
+import java.time.LocalDate;
+import java.util.List;
+
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -17,10 +16,16 @@ import org.mockito.ArgumentCaptor;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import java.time.LocalDate;
-import java.util.List;
-
-import static org.mockito.Mockito.*;
+import ar.lamansys.immunization.application.immunizePatient.ImmunizePatient;
+import ar.lamansys.immunization.domain.consultation.ImmunizePatientBo;
+import ar.lamansys.immunization.domain.snomed.SnomedBo;
+import ar.lamansys.immunization.domain.vaccine.VaccineDoseBo;
+import ar.lamansys.immunization.infrastructure.input.rest.dto.ImmunizePatientDto;
+import ar.lamansys.sgh.clinichistory.infrastructure.input.rest.ips.dto.ImmunizationDto;
+import ar.lamansys.sgh.clinichistory.infrastructure.input.rest.ips.dto.SnomedDto;
+import ar.lamansys.sgh.shared.infrastructure.input.service.appointment.SharedAppointmentPort;
+import ar.lamansys.sgh.shared.infrastructure.input.service.immunization.VaccineDoseInfoDto;
+import ar.lamansys.sgx.shared.dates.configuration.LocalDateMapper;
 
 
 @ExtendWith(MockitoExtension.class)
@@ -34,9 +39,12 @@ class ImmunizeControllerTest {
     @Mock
     private LocalDateMapper localDateMapper;
 
+	@Mock
+	private SharedAppointmentPort sharedAppointmentPort;
+
     @BeforeEach
     public void setUp() {
-        immunizeController = new ImmunizeController(immunizePatient, localDateMapper);
+        immunizeController = new ImmunizeController(immunizePatient, localDateMapper, sharedAppointmentPort);
     }
 
     @Test

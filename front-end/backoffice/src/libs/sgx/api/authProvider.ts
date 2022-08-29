@@ -1,6 +1,6 @@
-import { AuthProvider } from 'react-admin';
+import { AuthProvider, HttpError } from 'react-admin';
 import SGXPermissions from '../auth/SGXPermissions';
-import roleAssignments from './role-assignments'
+import roleAssignments from './role-assignments';
 import { sgxFetchApi, sgxFetchApiWithToken, jsonPayload, withHeader } from './fetch';
 import { LoggedUserDto, OauthConfigDto, PermissionsDto, PublicInfoDto } from './model';
 import { clearTokens, retrieveToken, saveTokens } from './tokenStorage';
@@ -10,9 +10,9 @@ const getPermissions = (): Promise<SGXPermissions> =>
             roleAssignments(() => sgxFetchApiWithToken<PermissionsDto>('account/permissions')), 
             sgxFetchApiWithToken<PublicInfoDto>('public/info'),
         ])
-            .then(([roleAssignments, { features }]) => {
+        .then(([roleAssignments, { features }]) => {
                 return new SGXPermissions(roleAssignments, features)
-            })
+        });
 
 function logoutFromOAuthServer(oAuthConfig: OauthConfigDto, refreshToken: string) {
     const options = jsonPayload('POST', {
@@ -27,6 +27,7 @@ function logoutFromOAuthServer(oAuthConfig: OauthConfigDto, refreshToken: string
 }
 
 const authProvider: AuthProvider = {
+    // authentication
     login: ({ username, password, raToken }) => {
         const options = jsonPayload('POST', { username, password });
         const optionsWithReCaptcha = withHeader(options, 'recaptcha', raToken);
@@ -35,7 +36,7 @@ const authProvider: AuthProvider = {
                 saveTokens(token, refreshToken);
             });
     },
-    checkError: (error) => {
+    checkError: (error: HttpError) => {
         const status = error.status;
         if (status === 401 ) {
             clearTokens();
@@ -61,6 +62,7 @@ const authProvider: AuthProvider = {
     getIdentity:
         () => sgxFetchApiWithToken<LoggedUserDto>('account/info')
             .then(({id, email}) => ({id, fullName: email})),
+    // authorization
     getPermissions,
 };
 

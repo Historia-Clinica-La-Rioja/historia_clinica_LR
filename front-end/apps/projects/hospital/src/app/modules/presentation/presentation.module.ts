@@ -6,18 +6,23 @@ import { CoreModule } from '@core/core.module';
 import { AppMaterialModule } from '@material/app.material.module';
 // components
 import { BarComponent } from './components/bar/bar.component';
+import { CategoryHeaderDividerComponent } from './components/category-header-divider/category-header-divider.component';
 import { CellTemplatesComponent } from './components/cell-templates/cell-templates.component';
 import { ContentTitleComponent } from './components/content-title/content-title.component';
-import { DatepickerComponent } from "@presentation/components/datepicker/datepicker.component";
+import { DatepickerComponent } from './components/datepicker/datepicker.component';
 import { DetailBoxComponent } from './components/detail-box/detail-box.component';
 import { DockPopupComponent } from './components/dock-popup/dock-popup.component';
+import { DocumentSectionComponent } from './components/document-section/document-section.component';
 import { DocumentSectionTableComponent } from './components/document-section-table/document-section-table.component';
 import { EditableFieldComponent } from './components/editable-field/editable-field.component';
+import { FactorDeRiesgoComponent } from './components/factor-de-riesgo-current/factor-de-riesgo.component';
+import { FactorDeRiesgoCurrentPreviousComponent } from './components/factor-de-riesgo-current-previous/factor-de-riesgo-current-previous.component';
 import { FiltersCardComponent } from './components/filters-card/filters-card.component';
 import { FooterComponent } from './components/footer/footer.component';
 import { ImgUploaderComponent } from './components/img-uploader/img-uploader.component';
-import { IndicationComponent } from "./components/indication/indication.component";
+import { IndicationComponent } from './components/indication/indication.component';
 import { LabelComponent } from './components/label/label.component';
+import { ListElementItemComponent } from './components/list-element-item/list-element-item.component';
 import { LocationBadgeComponent } from './components/location-badge/location-badge.component';
 import { LogoComponent } from './components/logo/logo.component';
 import { MainLayoutComponent } from './components/main-layout/main-layout.component';
@@ -28,19 +33,14 @@ import { NoDataComponent } from './components/no-data/no-data.component';
 import { PatientCardComponent } from './components/patient-card/patient-card.component';
 import { PatientTypeLogoComponent } from './components/patient-type-logo/patient-type-logo.component';
 import { PersonalInformationComponent } from './components/personal-information/personal-information.component';
-import { FactorDeRiesgoComponent } from './components/factor-de-riesgo-current/factor-de-riesgo.component';
-import { FactorDeRiesgoCurrentPreviousComponent } from './components/factor-de-riesgo-current-previous/factor-de-riesgo-current-previous.component';
 import { SummaryCardComponent } from './components/summary-card/summary-card.component';
 import { TableComponent } from './components/table/table.component';
 import { TypeaheadComponent } from './components/typeahead/typeahead.component';
 import { UserBadgeComponent } from './components/user-badge/user-badge.component';
-import { ListElementItemComponent } from './components/list-element-item/list-element-item.component';
-import { CategoryHeaderDividerComponent } from './components/category-header-divider/category-header-divider.component';
 // dialogs
-import { ConfirmDialogComponent } from './dialogs/confirm-dialog/confirm-dialog.component';
 import { DatePickerComponent } from './dialogs/date-picker/date-picker.component';
-import { DocumentSectionComponent } from './components/document-section/document-section.component';
 import { DiscardWarningComponent } from './dialogs/discard-warning/discard-warning.component';
+import { ConfirmDialogComponent } from './dialogs/confirm-dialog/confirm-dialog.component';
 // directives
 import { CtrlTemplateDirective } from './directives/ctrl-template.directive';
 // pipes
@@ -56,18 +56,23 @@ import { ViewHourMinutePipe } from './pipes/view-hour-minute.pipe';
 	declarations: [
 		// components
 		BarComponent,
+		CategoryHeaderDividerComponent,
 		CellTemplatesComponent,
 		ContentTitleComponent,
 		DatepickerComponent,
 		DetailBoxComponent,
 		DockPopupComponent,
+		DocumentSectionComponent,
 		DocumentSectionTableComponent,
 		EditableFieldComponent,
+		FactorDeRiesgoComponent,
+		FactorDeRiesgoCurrentPreviousComponent,
 		FiltersCardComponent,
 		FooterComponent,
 		ImgUploaderComponent,
 		IndicationComponent,
 		LabelComponent,
+		ListElementItemComponent,
 		LocationBadgeComponent,
 		LogoComponent,
 		MainLayoutComponent,
@@ -78,18 +83,13 @@ import { ViewHourMinutePipe } from './pipes/view-hour-minute.pipe';
 		PatientCardComponent,
 		PatientTypeLogoComponent,
 		PersonalInformationComponent,
-		FactorDeRiesgoComponent,
-		FactorDeRiesgoCurrentPreviousComponent,
 		SummaryCardComponent,
 		TableComponent,
 		TypeaheadComponent,
 		UserBadgeComponent,
-		CategoryHeaderDividerComponent,
-		ListElementItemComponent,
 		// dialogs
 		ConfirmDialogComponent,
 		DatePickerComponent,
-		DocumentSectionComponent,
 		DiscardWarningComponent,
 		// directives
 		CtrlTemplateDirective,
@@ -100,6 +100,7 @@ import { ViewHourMinutePipe } from './pipes/view-hour-minute.pipe';
 		ViewDateDtoPipe,
 		ViewDatePipe,
 		ViewHourMinutePipe,
+
 	],
 	imports: [
 		CommonModule,
@@ -117,6 +118,7 @@ import { ViewHourMinutePipe } from './pipes/view-hour-minute.pipe';
 		AppMaterialModule,
 		// components
 		BarComponent,
+		CategoryHeaderDividerComponent,
 		CellTemplatesComponent,
 		ContentTitleComponent,
 		DatepickerComponent,
@@ -125,10 +127,13 @@ import { ViewHourMinutePipe } from './pipes/view-hour-minute.pipe';
 		DocumentSectionComponent,
 		DocumentSectionTableComponent,
 		EditableFieldComponent,
+		FactorDeRiesgoComponent,
+		FactorDeRiesgoCurrentPreviousComponent,
 		FiltersCardComponent,
 		ImgUploaderComponent,
 		IndicationComponent,
 		LabelComponent,
+		ListElementItemComponent,
 		LocationBadgeComponent,
 		MainLayoutComponent,
 		MenuComponent,
@@ -137,14 +142,11 @@ import { ViewHourMinutePipe } from './pipes/view-hour-minute.pipe';
 		PatientCardComponent,
 		PatientTypeLogoComponent,
 		PersonalInformationComponent,
-		FactorDeRiesgoComponent,
-		FactorDeRiesgoCurrentPreviousComponent,
 		SummaryCardComponent,
 		TableComponent,
 		TypeaheadComponent,
 		UserBadgeComponent,
-		CategoryHeaderDividerComponent,
-		ListElementItemComponent,
+		// dialogs
 		// directives
 		CtrlTemplateDirective,
 		// pipes

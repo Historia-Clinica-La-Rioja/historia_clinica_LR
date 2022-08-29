@@ -91,7 +91,6 @@
                     "PESO_MIN": "El peso mínimo debe ser 0 kg",
                     "PESO_MAX": "El peso máximo debe ser 1000 kg",
                     "PROBLEMA_OBLIGATORIO": "Problema de consulta obligatorio",
-                    "MAX_LENGTH_NOTA": "La nota de evolución debe tener como máximo 1024 caracteres",
                     "HEAD_CIRCUNFERENCE_RANGE": "Perímetro cefálico debe ser entre 1 y 100 cm",
                     "HEAD_CIRCUNFERENCE_NOT_VALID": "Perímetro cefálico debe tener como máximo 2 decimales",
                     "BLOOD_GLUCOSE_RANGE": "Glucemia debe ser entre 1 y 500 (mg/dl)",
@@ -101,8 +100,6 @@
                 },
                 "motivo": {
                     "TITLE": "Motivo de consulta",
-                    "MOTIVO": "motivo",
-                    "SEARCH_PLACEHOLDER": "Buscar motivo",
                     "ADD": "Agregar motivo",
                     "table": {
                         "columns": {
@@ -114,7 +111,6 @@
                     "CONCEPT_LABEL": "Medicación habitual",
                     "DESCRIPCION": "Descripción",
                     "NOMBRE_MEDICACION": "Nombre de medicación",
-                    "SEARCH_PLACEHOLDER": "Buscar medicación",
                     "OBSERVACIONES": "Observaciones",
                     "SUSPENDIDO": "Suspendido",
                     "TABLE_TITLE": "Medicaciones registradas",
@@ -159,8 +155,7 @@
                     "TABLE_TITLE": "Procedimientos registrados",
                     "TITLE": "Procedimientos",
                     "TIPO": "Tipo de procedimiento",
-                    "PROCEDIMIENTO": "Procedimiento",
-                    "SEARCH_PLACEHOLDER": "Buscar procedimiento"
+                    "PROCEDIMIENTO": "Procedimiento"
                 },
                 "antecedentes-familiares": {
                     "buttons": {
@@ -214,7 +209,6 @@
                     "ADD": "Agregar alergia",
                     "ALLERGY": "Alergia",
                     "CRITICALITY": "Criticidad",
-                    "SEARCH_PLACEHOLDER": "Buscar alergia",
                     "form": {
                         "REGISTRY_DATE": "Fecha registro"
                     },
@@ -577,6 +571,9 @@
                     "STUDY_REPEATED": "El estudio seleccionado ya está presente en la orden",
                     "CONFIRM_ORDER": "Finalizar orden"
                 }
+            },
+            "nursing": {
+                "TAB_LABEL": "enfermería"
             }
         },
         "screen_change_warning_dialog": {

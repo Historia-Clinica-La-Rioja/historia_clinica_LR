@@ -101,6 +101,12 @@ public enum AppFeature implements Feature {
 
 	@Label("Muestra los menus en backoffice para la administración de turnos online de la institución (Solo para administradores institucionales)")
 	BACKOFFICE_MOSTRAR_ABM_RESERVA_TURNOS,
+
+	@Label("Oculta el listado de profesiones asociado a un paciente en la webapp")
+	OCULTAR_LISTADO_PROFESIONES_WEBAPP,
+    
+	@Label("Muestra en HC la seccion de Enfermeria")
+	HABILITAR_MODULO_ENFERMERIA,
     ;
 
     public boolean isActive() {

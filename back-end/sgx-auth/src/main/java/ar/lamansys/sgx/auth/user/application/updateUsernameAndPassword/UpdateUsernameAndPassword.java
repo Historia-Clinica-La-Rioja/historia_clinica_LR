@@ -6,7 +6,7 @@ import ar.lamansys.sgx.auth.user.domain.user.model.OAuthUserBo;
 import ar.lamansys.sgx.auth.user.domain.user.model.UserBo;
 import ar.lamansys.sgx.auth.user.domain.user.service.OAuthUserManagementStorage;
 import ar.lamansys.sgx.auth.user.domain.user.service.UserStorage;
-import ar.lamansys.sgx.auth.user.domain.userpassword.UpdateUserPassword;
+import ar.lamansys.sgx.auth.user.application.updateuserpassword.UpdateUserPassword;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;

@@ -23,11 +23,13 @@ public interface SharedBookingPort {
 
 	List<BookingProfessionalDto> fetchBookingProfessionals(Integer institutionId, Integer medicalCoverageId, boolean all);
 
-	ProfessionalAvailabilityDto fetchAvailabilityByPracticeAndProfessional(Integer institutionId, Integer professionalId, Integer clinicalSpecialtyId, Integer practiceId);
+	ProfessionalAvailabilityDto fetchAvailabilityByPracticeAndProfessional(
+			Integer institutionId,
+			Integer professionalId,
+			Integer clinicalSpecialtyId,
+			Integer practiceId
+	);
 
 	List<ProfessionalAvailabilityDto> fetchAvailabilityByPractice(Integer institutionId,  Integer clinicalSpecialtyId, Integer practiceId, Integer medicalCoverageId);
-
-
-
 
 }

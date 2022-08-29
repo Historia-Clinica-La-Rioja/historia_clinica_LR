@@ -202,13 +202,16 @@ Esto se puede exportar haciendo click en el botón **_Export_** y seleccionando 
 
 ## **1.2.2 Generar archivo CSV con script de Python**
 
-Otra opción para generar el archivo es con un script escrito en Python, el cual genera archivos CSV consultando reiteradamente a un servicio de Snowstorm. A continuación se presenta un script de ejemplo, donde basta con configurar la variable snowstorm\_base\_url con la URL base del servicio Snowstorm que se esté utilizando.
+Otra opción para generar el archivo es con un script escrito en Python, el cual genera archivos CSV consultando reiteradamente a un servicio de Snowstorm. A continuación se presenta un script de ejemplo, donde basta con configurar la variable `snowstorm_base_url` con la URL base del servicio Snowstorm que se esté utilizando. Adicionalmente, si el servidor de Snowstorm requiere de autenticación para su uso (lo que es normal para los servidores de producción, modificar también la variable `auth_headers_required` a `True` y configurar las variables `app_id` y `app_key` con los respectivos valores.
 
 ```
 import json
 import requests
  
 snowstorm_base_url = ''
+auth_headers_required = False
+app_id = ''
+app_key = ''
  
 def write_concepts_to_file(file, items):
     for concept in items:
@@ -226,7 +229,7 @@ def do_request(ecl, searchAfter=None):
     url += '&limit=2000'
     url += '&ecl=' + ecl
     url += ("&searchAfter=" + searchAfter) if searchAfter else ''
-    headers = {  "Accept": "application/json", "Accept-Language": "es" }
+    headers = {  "Accept": "application/json", "Accept-Language": "es", "app_id": app_id, "app_key": app_key } if auth_headers_required else {  "Accept": "application/json", "Accept-Language": "es" }
     return requests.get(url=url, headers=headers).json()
  
 def generate_csv_file(groupName, ecl):

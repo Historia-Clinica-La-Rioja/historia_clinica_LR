@@ -8,4 +8,13 @@ const safeParseJson = (text: string): any => {
     return undefined;
 };
 
-export { safeParseJson };
+const safeStringifyJson = (object: any): string | undefined => {
+    try {
+        return object ? JSON.stringify(object) : undefined;
+    } catch(e) {
+        console.warn('Please check Object response', e);
+    }
+    return undefined;
+};
+
+export { safeParseJson, safeStringifyJson };

@@ -7,7 +7,6 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 import net.pladema.establishment.repository.entity.Bed;
-import net.pladema.establishment.repository.entity.BedCategory;
 import net.pladema.establishment.repository.entity.Room;
 import net.pladema.establishment.repository.entity.Sector;
 import net.pladema.patient.repository.domain.PatientVo;

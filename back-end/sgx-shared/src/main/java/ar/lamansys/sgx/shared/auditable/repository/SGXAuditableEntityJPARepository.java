@@ -43,4 +43,20 @@ public interface SGXAuditableEntityJPARepository<T extends SGXAuditableEntity<ID
             + ", e.deleteable.deletedBy = ?#{ principal.userId } "
             + ", e.deleteable.deletedOn = CURRENT_TIMESTAMP ")
     void deleteAll();
+
+	@Transactional
+	@Modifying(clearAutomatically = true)
+	@Query("UPDATE #{#entityName} e  "
+			+ "SET e.deleteable.deleted = false "
+			+ ", e.deleteable.deletedOn = null "
+			+ ", e.deleteable.deletedBy = null "
+			+ ", e.updateable.updatedOn = CURRENT_TIMESTAMP "
+			+ ", e.updateable.updatedBy = ?#{ principal.userId } "
+			+ "WHERE e.id = :id ")
+	void reactivate(@Param("id") ID var1);
+
+	default T reactivate(T entity) {
+		this.reactivate(entity.getId());
+		return findById(entity.getId()).orElse(null);
+	}
 }

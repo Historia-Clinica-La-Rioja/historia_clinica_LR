@@ -1,10 +1,8 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { INTERNMENT_INDICATIONS } from "@historia-clinica/constants/summaries";
-import { getDay, getMonth, isTomorrow, isYesterday, isToday, differenceInCalendarDays, isSameDay } from "date-fns";
-import { MONTHS_OF_YEAR, DAYS_OF_WEEK } from "@historia-clinica/modules/ambulatoria/modules/indicacion/constants/internment-indications";
+import { isSameDay } from "date-fns";
 import { InternmentEpisodeService } from "@api-rest/services/internment-episode.service";
 import { DiagnosesGeneralStateDto, DietDto, MasterDataInterface, OtherIndicationDto, ParenteralPlanDto, PharmacoDto } from "@api-rest/api-model";
-import { DateTimeDto } from "@api-rest/api-model";
 import { DietComponent } from '../../dialogs/diet/diet.component';
 import { MatDialog } from '@angular/material/dialog';
 import { SnackBarService } from '@presentation/services/snack-bar.service';
@@ -29,14 +27,8 @@ const DIALOG_SIZE = '45%';
 export class InternmentIndicationsCardComponent implements OnInit {
 
 	internmentIndication = INTERNMENT_INDICATIONS;
-	viewDay: ViewDate;
-	isToday = true;
-	isYesterday = false;
-	isTomorrow = false;
-	actualDate: Date = new Date();
+	actualDate: Date;
 	entryDate: Date;
-	currentViewIsEntryDate = false;
-	dateTime: DateTimeDto;
 	professionalId: number;
 	diets: DietDto[] = [];
 	diagnostics: DiagnosesGeneralStateDto[] = [];
@@ -62,22 +54,11 @@ export class InternmentIndicationsCardComponent implements OnInit {
 	) { }
 
 	ngOnInit(): void {
-		this.viewDay = {
-			nameDay: DAYS_OF_WEEK[getDay(this.actualDate)],
-			numberDay: this.actualDate.getDate(),
-			month: MONTHS_OF_YEAR[getMonth(this.actualDate)]
-		};
 		this.internmentEpisode.getInternmentEpisode(this.internmentEpisodeId).subscribe(
-			internmentEpisode => {
-				this.entryDate = new Date(internmentEpisode.entryDate);
-				const differenceInDays = differenceInCalendarDays(this.actualDate, this.entryDate);
-				if (differenceInDays <= 0)
-					this.currentViewIsEntryDate = true;
-			}
+			internmentEpisode => this.entryDate = new Date(internmentEpisode.entryDate)
 		);
 		this.healthcareProfessionalService.getHealthcareProfessionalByUserId().subscribe((professionalId: number) => this.professionalId = professionalId);
 		this.indicationsFacadeService.setInternmentEpisodeId(this.internmentEpisodeId);
-		this.filterIndications();
 		this.internmentIndicationService.getOtherIndicationTypes().subscribe((othersIndicationsType: OtherIndicationTypeDto[]) => this.othersIndicatiosType = othersIndicationsType);
 		this.internmentStateService.getDiagnosesGeneralState(this.internmentEpisodeId).subscribe((diagnostics: DiagnosesGeneralStateDto[]) => {
 			if (diagnostics)
@@ -88,29 +69,6 @@ export class InternmentIndicationsCardComponent implements OnInit {
 
 				});
 		});
-	}
-
-	viewAnotherDay(daysToMove: number) {
-		this.actualDate.setDate(this.actualDate.getDate() + daysToMove);
-		this.isToday = isToday(this.actualDate);
-		this.isTomorrow = isTomorrow(this.actualDate);
-		this.isYesterday = isYesterday(this.actualDate);
-		this.loadDay();
-	}
-
-	private loadDay() {
-		const differenceInDays = differenceInCalendarDays(this.actualDate, this.entryDate);
-		if (differenceInDays >= 0) {
-			this.currentViewIsEntryDate = false;
-			this.viewDay = {
-				nameDay: DAYS_OF_WEEK[getDay(this.actualDate)],
-				numberDay: this.actualDate.getDate(),
-				month: MONTHS_OF_YEAR[getMonth(this.actualDate)]
-			};
-			this.filterIndications();
-		}
-		if (differenceInDays <= 0)
-			this.currentViewIsEntryDate = true;
 	}
 
 	openDietDialog() {
@@ -140,10 +98,15 @@ export class InternmentIndicationsCardComponent implements OnInit {
 		});
 	}
 
+	loadActualDateAndFilter(actualDate: Date) {
+		this.actualDate = actualDate;
+		this.filterIndications();
+	}
+
 	filterIndications() {
-		this.indicationsFacadeService.diets$.subscribe(d => this.diets = d.filter((diet: DietDto) => isSameDay(dateDtoToDate(diet.indicationDate), this.actualDate) === true));
+		this.indicationsFacadeService.diets$.subscribe(d => this.diets = d.filter((diet: DietDto) => isSameDay(dateDtoToDate(diet.indicationDate), this.actualDate)));
 		this.indicationsFacadeService.otherIndications$.subscribe(d => this.otherIndications = d.filter((otherIndications: OtherIndicationDto) => isSameDay(dateDtoToDate(otherIndications.indicationDate), this.actualDate)));
-		this.indicationsFacadeService.parenteralPlans$.subscribe(p => this.parenteralPlan = p.filter((plan: ParenteralPlanDto) => isSameDay(dateDtoToDate(plan.indicationDate), this.actualDate) === true));
+		this.indicationsFacadeService.parenteralPlans$.subscribe(p => this.parenteralPlan = p.filter((plan: ParenteralPlanDto) => isSameDay(dateDtoToDate(plan.indicationDate), this.actualDate)));
 		this.indicationsFacadeService.pharmacos$.subscribe(p => this.pharmacos = p.filter((pharmaco: PharmacoDto) => isSameDay(dateDtoToDate(pharmaco.indicationDate), this.actualDate)));
 	}
 
@@ -217,8 +180,6 @@ export class InternmentIndicationsCardComponent implements OnInit {
 		});
 	}
 
-
-
 	openParenteralPlanDialog() {
 		const dialogRef = this.dialog.open(ParenteralPlanComponent, {
 			data: {
@@ -243,10 +204,3 @@ export class InternmentIndicationsCardComponent implements OnInit {
 		});
 	}
 }
-
-interface ViewDate {
-	nameDay: string,
-	numberDay: number,
-	month: string,
-}
-

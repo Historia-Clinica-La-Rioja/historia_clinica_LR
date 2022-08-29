@@ -1,6 +1,7 @@
 <app-content width="full">
-	<section id="title">
+	<section id="title" fxLayout="row" fxLayoutAlign="space-between">
 		<h2 class="page-title" [translate]="'ambulatoria.paciente.TITLE'"></h2>
+		<app-calendar-professional-view *appHasRole="['ESPECIALISTA_MEDICO', 'PROFESIONAL_DE_SALUD', 'ESPECIALISTA_EN_ODONTOLOGIA', 'ENFERMERO']"></app-calendar-professional-view>
 	</section>
 
 	<section id="content" fxLayout="column" fxLayoutGap="20px">
@@ -108,7 +109,7 @@
 				<ng-template #hasOdontologyRole>
 					<button id="acciones_odontologo" mat-flat-button color="primary" mat-button
 						[matMenuTriggerFor]="menu"
-						*ngIf="hasInternmentEpisodeInThisInstitution && !epicrisisDoc?.confirmed">
+						*ngIf="hasInternmentEpisodeInThisInstitution && !epicrisisDoc?.confirmed && !(hasPicturesStaffRole || hasLaboratoryStaffRole || hasPharmacyStaffRole)">
 						{{ 'ambulatoria.paciente.card.buttons.actions.ACTIONS' | translate | uppercase }}
 					</button>
 				</ng-template>
@@ -210,7 +211,7 @@
 			<mat-card-content>
 				<mat-tab-group (selectedTabChange)="onTabChanged($event)"
 					*ngIf="hasInternmentEpisodeInThisInstitution !== undefined">
-					<mat-tab id="tab_resumen" *ngIf="!hasInternmentEpisodeInThisInstitution">
+					<mat-tab id="tab_resumen" *ngIf="!hasInternmentEpisodeInThisInstitution && hasHealthRelatedRole">
 						<ng-template mat-tab-label>
 							<span>{{ 'ambulatoria.paciente.resumen.TAB_LABEL' | translate | uppercase }}</span>
 						</ng-template>
@@ -218,7 +219,7 @@
 							<app-resumen [patientExternalSummary]="patientExternalSummary"></app-resumen>
 						</ng-template>
 					</mat-tab>
-					<mat-tab id="tab_internacion" *ngIf="hasInternmentEpisodeInThisInstitution">
+					<mat-tab id="tab_internacion" *ngIf="hasInternmentEpisodeInThisInstitution && hasHealthRelatedRole">
 						<ng-template mat-tab-label>
 							<span>{{ 'ambulatoria.paciente.internacion.TAB_LABEL' | translate | uppercase }}</span>
 						</ng-template>
@@ -227,7 +228,7 @@
 							</app-internacion-paciente>
 						</ng-template>
 					</mat-tab>
-					<mat-tab id="tab_indications">
+					<mat-tab id="tab_indications" *ngIf="hasHealthRelatedRole || hasPharmacyStaffRole">
 						<ng-template mat-tab-label>
 							<span>{{ 'indicacion.TITLE' | translate | uppercase }}</span>
 						</ng-template>
@@ -243,7 +244,7 @@
 							</app-card-medicaciones>
 						</ng-template>
 					</mat-tab>
-					<mat-tab id="tab_studies">
+					<mat-tab id="tab_studies" *ngIf="hasHealthRelatedRole || hasPicturesStaffRole || hasLaboratoryStaffRole">
 						<ng-template mat-tab-label>
 							<span>{{ 'ambulatoria.paciente.studies.TAB_LABEL' | translate | uppercase }}</span>
 						</ng-template>
@@ -255,7 +256,15 @@
 							<app-card-indicaciones [patientId]="patientId" *ngIf="false"></app-card-indicaciones>
 						</ng-template>
 					</mat-tab>
-					<mat-tab id="tab_problemas">
+					<mat-tab id="tab_nursing" *ngIf="hasInternmentEpisodeInThisInstitution && showNursingSection">
+						<ng-template mat-tab-label>
+							<span>{{ 'ambulatoria.paciente.nursing.TAB_LABEL' | translate | uppercase }}</span>
+						</ng-template>
+						<ng-template matTabContent>
+							<app-nursing-care [internmentEpisodeId]="internmentEpisodeProcess.id"></app-nursing-care>
+						</ng-template>
+					</mat-tab>
+					<mat-tab id="tab_problemas" *ngIf="hasHealthRelatedRole">
 						<ng-template mat-tab-label>
 							<span>{{ 'ambulatoria.paciente.problemas.TAB_LABEL' | translate | uppercase }}</span>
 						</ng-template>
@@ -265,7 +274,7 @@
 							</app-problemas>
 						</ng-template>
 					</mat-tab>
-					<mat-tab id="tab_vacunas">
+					<mat-tab id="tab_vacunas" *ngIf="hasHealthRelatedRole">
 						<ng-template mat-tab-label>
 							<span>{{ 'ambulatoria.paciente.vacunas.TAB_LABEL' | translate | uppercase }}</span>
 						</ng-template>
@@ -284,7 +293,7 @@
 							</ng-container>
 						</ng-template>
 					</mat-tab>
-					<mat-tab id="tab_odontologia" *ngIf="odontologyEnabled">
+					<mat-tab id="tab_odontologia" *ngIf="odontologyEnabled && hasHealthRelatedRole">
 						<ng-template mat-tab-label>
 							<span>ODONTOLOGÍA</span>
 						</ng-template>

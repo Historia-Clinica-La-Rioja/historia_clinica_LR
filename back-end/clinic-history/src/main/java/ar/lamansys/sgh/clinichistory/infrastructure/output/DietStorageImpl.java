@@ -1,6 +1,7 @@
 package ar.lamansys.sgh.clinichistory.infrastructure.output;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import ar.lamansys.sgh.shared.infrastructure.input.service.HospitalUserPersonInfoDto;
@@ -54,6 +55,19 @@ public class DietStorageImpl implements DietStorage {
 		return result;
 	}
 
+	@Override
+	public Optional<DietBo> findById(Integer id) {
+		log.debug("Input parameter -> id {}", id);
+		Optional<DietBo> result = repository.findById(id).map(this::mapToBo);
+		HospitalUserPersonInfoDto p = sharedHospitalUserPort.getUserCompleteInfo(result.get().getCreatedBy());
+		if(featureFlagsService.isOn(AppFeature.HABILITAR_DATOS_AUTOPERCIBIDOS) && p.getNameSelfDetermination() != null)
+			result.get().setCreatedByName(p.getNameSelfDetermination() + " " + p.getLastName());
+		else
+			result.get().setCreatedByName(p.getFirstName() + " " + p.getLastName());
+		log.debug("Output -> {}", result.toString());
+		return result;
+	}
+
 	private Diet mapToEntity(DietBo bo) {
 		Diet result = new Diet();
 		result.setId(bo.getId());
@@ -77,5 +91,5 @@ public class DietStorageImpl implements DietStorage {
 				entity.getCreatedOn(),
 				entity.getDescription());
 	}
-
+	
 }

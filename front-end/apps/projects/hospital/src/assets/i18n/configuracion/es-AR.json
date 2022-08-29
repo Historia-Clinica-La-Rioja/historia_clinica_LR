@@ -36,6 +36,11 @@
 			"cubejs": {
 				"TITLE": "Tableros"
 			}
+		},
+		"http": {
+			"client": {
+				"TITLE": "Cliente HTTP"
+			}
 		}
 	},
 	"spring": {

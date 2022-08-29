@@ -1,16 +1,15 @@
 package ar.lamansys.sgx.auth.user.infrastructure.input.rest.updatepassword;
 
-import ar.lamansys.sgx.auth.user.application.updatepassword.UpdatePassword;
-import ar.lamansys.sgx.auth.user.domain.user.model.UserBo;
+import ar.lamansys.sgx.auth.user.application.updateownpassword.UpdateOwnPassword;
 import ar.lamansys.sgx.auth.user.domain.user.service.UserStorage;
+import ar.lamansys.sgx.auth.user.infrastructure.input.rest.updatepassword.dto.PasswordDto;
+import ar.lamansys.sgx.shared.security.UserInfo;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.PatchMapping;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
@@ -26,25 +25,19 @@ public class UserPasswordController {
 
 	private final Logger logger;
 
-	private final UpdatePassword updatePassword;
+	private final UpdateOwnPassword updateOwnPassword;
 
-	private final UserStorage userStorage;
-
-	public UserPasswordController(UpdatePassword updatePassword,
-								  UserStorage userStorage) {
+	public UserPasswordController(UpdateOwnPassword updateOwnPassword) {
 		this.logger = LoggerFactory.getLogger(getClass());
-		this.updatePassword = updatePassword;
-		this.userStorage = userStorage;
+		this.updateOwnPassword = updateOwnPassword;
 	}
 
-	@PreAuthorize("#userId == authentication.principal")
-	@PatchMapping(value = "/{userId}")
+	@PatchMapping
 	@ResponseStatus(HttpStatus.OK)
-	public void updatePassword(@PathVariable("userId") Integer userId,
-			@NotNull @RequestBody String password) {
+	public void updatePassword(@NotNull @RequestBody PasswordDto passwordDto) {
 		logger.debug("{}", "updatePassword valid");
-		UserBo user = userStorage.getUser(userId);
-		updatePassword.execute(user.getUsername(), password);
+		var userId = UserInfo.getCurrentAuditor();
+		updateOwnPassword.execute(userId, passwordDto.getPassword(), passwordDto.getNewPassword());
 		logger.debug("{}", "Password updated");
 	}
 }

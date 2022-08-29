@@ -30,6 +30,7 @@ import { MedicalDischargeComponent } from './dialogs/medical-discharge/medical-d
 import { DiagnosisCreationEditionComponent } from './dialogs/diagnosis-creation-edition/diagnosis-creation-edition.component';
 import { SelectMainDiagnosisComponent } from './dialogs/select-main-diagnosis/select-main-diagnosis.component';
 import { DocumentActionReasonComponent } from "@historia-clinica/modules/ambulatoria/modules/internacion/dialogs/document-action-reason/document-action-reason.component";
+import { TurnosModule } from '@turnos/turnos.module';
 
 @NgModule({
 	declarations: [
@@ -71,6 +72,7 @@ import { DocumentActionReasonComponent } from "@historia-clinica/modules/ambulat
 		// deps
 		HistoriaClinicaModule,
 		PresentationModule,
+		TurnosModule
 	]
 })
 export class InternacionesModule { }

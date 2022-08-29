@@ -1,11 +1,16 @@
 package net.pladema.sgx.exceptions;
 
-import ar.lamansys.sgx.shared.exceptions.NotFoundException;
-import ar.lamansys.sgx.shared.exceptions.dto.ApiErrorDto;
-import ar.lamansys.sgx.shared.exceptions.dto.ApiErrorMessageDto;
-import ar.lamansys.sgx.shared.strings.StringValidatorException;
-import net.pladema.medicalconsultation.diary.service.domain.OverturnsLimitException;
-import net.pladema.sgx.healthinsurance.service.exceptions.PrivateHealthInsuranceServiceException;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Locale;
+import java.util.Map;
+
+import javax.mail.MessagingException;
+import javax.persistence.EntityNotFoundException;
+import javax.validation.ConstraintViolation;
+import javax.validation.ConstraintViolationException;
+import javax.validation.ValidationException;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.http.MethodNotSupportedException;
@@ -25,16 +30,12 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.context.request.WebRequest;
 
-import javax.mail.MessagingException;
-import javax.persistence.EntityNotFoundException;
-import javax.validation.ConstraintViolation;
-import javax.validation.ConstraintViolationException;
-import javax.validation.ValidationException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Locale;
-import java.util.Map;
+import ar.lamansys.sgx.shared.exceptions.NotFoundException;
+import ar.lamansys.sgx.shared.exceptions.dto.ApiErrorDto;
+import ar.lamansys.sgx.shared.exceptions.dto.ApiErrorMessageDto;
+import ar.lamansys.sgx.shared.strings.StringValidatorException;
+import net.pladema.medicalconsultation.diary.service.domain.OverturnsLimitException;
+import net.pladema.sgx.healthinsurance.service.exceptions.PrivateHealthInsuranceServiceException;
 
 @Order(Ordered.HIGHEST_PRECEDENCE)
 @RestControllerAdvice
@@ -171,7 +172,7 @@ public class RestExceptionHandler {
 
 	private ApiErrorMessageDto handleRuntimeException(RuntimeException ex, Locale locale) {
 		String errorMessage = messageSource.getMessage(ex.getMessage(), null, locale);
-		LOG.error(errorMessage, ex);
+		LOG.error(errorMessage);
 		return new ApiErrorMessageDto(
 				ex.getMessage(),
 				errorMessage

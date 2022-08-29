@@ -6,6 +6,7 @@ import {
 	AppointmentListDto,
 	AssignedAppointmentDto,
 	CreateAppointmentDto,
+	DateTimeDto,
 	ExternalPatientCoverageDto,
 	UpdateAppointmentDto,
 } from '@api-rest/api-model';
@@ -16,6 +17,7 @@ import { environment } from '@environments/environment';
 import { ContextService } from '@core/services/context.service';
 import { DateFormat, momentFormat } from "@core/utils/moment.utils";
 import { DownloadService } from "@core/services/download.service";
+import { tap } from "rxjs/operators";
 
 @Injectable({
 	providedIn: 'root'
@@ -37,13 +39,19 @@ export class AppointmentsService {
 		return this.http.post<number>(this.BASE_URL, appointment);
 	}
 
-	getList(diaryIds: number[]): Observable<AppointmentListDto[]> {
-		if (!diaryIds || diaryIds.length === 0) {
+	getList(diaryIds: number[], healthcareProfessionalId: number, from: string, to: string): Observable<AppointmentListDto[]> {
+		const url = this.BASE_URL + `/list/${healthcareProfessionalId}`;
+		// Se filtra porque pueden llegar diaryIds como undefined
+		diaryIds = diaryIds.filter(d => d !== undefined);
+		if (!diaryIds || diaryIds.length === 0 || !healthcareProfessionalId) {
 			return of([]);
 		}
-		return this.http.get<AppointmentListDto[]>(this.BASE_URL, {
+
+		return this.http.get<AppointmentListDto[]>(url, {
 			params: {
-				diaryIds: `${diaryIds.join(',')}`
+				diaryIds: `${diaryIds.join(',')}`,
+				from,
+				to
 			}
 		});
 	}
@@ -101,7 +109,7 @@ export class AppointmentsService {
 
 	updateObservation(appointmentId: number, observation: string): Observable<boolean> {
 		let queryParams: HttpParams = new HttpParams();
-		queryParams = (observation) ? queryParams.append('observation', observation): queryParams;
+		queryParams = (observation) ? queryParams.append('observation', observation) : queryParams;
 
 		const url = `${this.BASE_URL}/${appointmentId}/update-observation`;
 		return this.http.put<boolean>(url, {}, { params: queryParams });
@@ -112,9 +120,11 @@ export class AppointmentsService {
 		return this.http.post(url, {});
 	}
 
-	getDailyAmounts(diaryId: number): Observable<AppointmentDailyAmountDto[]> {
+	getDailyAmounts(diaryId: number, from : string, to : string): Observable<AppointmentDailyAmountDto[]> {
 		let queryParams: HttpParams = new HttpParams();
 		queryParams = (diaryId) ? queryParams.append('diaryId', JSON.stringify(diaryId)) : queryParams;
+		queryParams = queryParams.append("from",from);
+		queryParams = queryParams.append("to",to);
 
 		const url = `${this.BASE_URL}/getDailyAmounts`;
 		return this.http.get<AppointmentDailyAmountDto[]>(url,

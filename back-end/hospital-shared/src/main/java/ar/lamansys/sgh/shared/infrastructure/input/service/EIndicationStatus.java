@@ -5,7 +5,8 @@ import ar.lamansys.sgx.shared.exceptions.NotFoundException;
 public enum EIndicationStatus {
 
 	INDICATED(1, "indicada"),
-	SUSPENDED(2, "suspendida");
+	SUSPENDED(2, "suspendida"),
+	PENDING(3, "pendiente");
 
 	private Short id;
 	private String value;

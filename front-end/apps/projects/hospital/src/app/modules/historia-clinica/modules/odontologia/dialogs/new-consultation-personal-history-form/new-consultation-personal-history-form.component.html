@@ -1,0 +1,61 @@
+<div fxLayout="row" fxLayoutAlign="space-between">
+    <span mat-dialog-title
+        [translate]="'odontologia.new-consultation-personal-history-form.ADD_PERSONAL_HISTORY'"></span>
+    <button mat-icon-button (click)="close()">
+        <mat-icon>close</mat-icon>
+    </button>
+</div>
+
+
+<div mat-dialog-content>
+    <ng-container *ngIf="!data.personalHistoryService.getSnomedConcept() else personalHistoriesForm">
+        <app-concepts-search *ngIf="!data.searchConceptsLocallyFF else personalHistoriesTypeaheadSearch"
+            [label]="'odontologia.new-consultation-personal-history-form.PERSONAL_HISTORY'"
+            (search)="data.personalHistoryService.openSearchDialog($event)">
+        </app-concepts-search>
+
+        <ng-template #personalHistoriesTypeaheadSearch>
+            <app-concept-typeahead-search [ecl]="data.personalHistoryService.getECL()"
+                [placeholder]="'odontologia.new-consultation-personal-history-form.SEARCH_PERSONAL_HISTORY'"
+                (conceptSelected)="data.personalHistoryService.setConcept($event)">
+            </app-concept-typeahead-search>
+        </ng-template>
+    </ng-container>
+</div>
+
+<ng-template #personalHistoriesForm>
+    <form [formGroup]="data.personalHistoryService.getForm()" (ngSubmit)="addPersonalHistory()">
+        <div fxLayout="column">
+            <mat-form-field appearance="outline">
+                <mat-label>
+                    {{ 'odontologia.new-consultation-personal-history-form.PROBLEM_TYPE' | translate }}
+                </mat-label>
+                <input id="personal_history_input" matInput type="text" formControlName="snomed" name="snomed" readonly
+                    matTooltip="{{data.personalHistoryService.getSnomedConcept().pt }}">
+                <button id="clear_history" mat-button matSuffix color="warn" mat-icon-button
+                    (click)="data.personalHistoryService.resetForm()">
+                    <mat-icon>close</mat-icon>
+                </button>
+            </mat-form-field>
+
+            <mat-form-field appearance="outline">
+                <mat-label>
+                    {{ 'odontologia.new-consultation-personal-history-form.REGISTRATION_DATE' | translate }}
+                </mat-label>
+                <input matInput id="history_date" [matDatepicker]="historyDatePicker" formControlName="fecha"
+                    [min]="minDate" [max]="data.personalHistoryService.getMaxDate()">
+                <mat-datepicker-toggle matSuffix [for]="historyDatePicker"></mat-datepicker-toggle>
+                <mat-datepicker #historyDatePicker></mat-datepicker>
+            </mat-form-field>
+
+            <div align="end">
+                <button id="submit_personal_history" mat-raised-button color="primary" type="submit">
+                    <span class="uppercase">
+                        {{ 'odontologia.new-consultation-personal-history-form.ADD_PERSONAL_HISTORY' |
+                        translate }}
+                    </span>
+                </button>
+            </div>
+        </div>
+    </form>
+</ng-template>

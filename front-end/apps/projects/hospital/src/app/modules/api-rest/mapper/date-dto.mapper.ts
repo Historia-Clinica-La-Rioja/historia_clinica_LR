@@ -26,9 +26,9 @@ export const dateTimeDtotoLocalDate = (dateTimeDto: DateTimeDto): Date => {
 }
 
 export const dateTimeDtoToStringDate = (dateTimeDto: DateTimeDto): string => {
-	const date=formatDateOnlyISO(dateDtoToDate(dateTimeDto.date));
-	const time=formatTimeOnlyISO(timeDtoToDate(dateTimeDto.time));
-	return( date + 'T' + time.split("-")[0] +'.000'+ 'Z');
+	const date = formatDateOnlyISO(dateDtoToDate(dateTimeDto.date));
+	const time = formatTimeOnlyISO(timeDtoToDate(dateTimeDto.time));
+	return (date + 'T' + time.split("-")[0] + '.000' + 'Z');
 };
 
 export const dateToDateTimeDto = (date: Date): DateTimeDto => {
@@ -53,3 +53,27 @@ export const dateToDateDto = (date: Date): DateDto => {
 		year: date.getFullYear()
 	};
 };
+
+export const dateToDateTimeDtoUTC = (date: Date): DateTimeDto => {
+	return {
+		date: {
+			year: date.getUTCFullYear(),
+			month: date.getUTCMonth() + 1,
+			day: date.getUTCDate()
+		},
+		time: {
+			hours: date.getUTCHours(),
+			minutes: date.getUTCMinutes(),
+			seconds: date.getUTCSeconds()
+		},
+	};
+};
+
+export const stringToTimeDto = (date: string): TimeDto => {
+	const timeArray = date.split(":");
+	return {
+		hours: +timeArray[0],
+		minutes: +timeArray[1],
+		seconds: +timeArray[2]
+	}
+}

@@ -1,3 +1,4 @@
+import { TurnosModule } from './../../../turnos/turnos.module';
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
@@ -56,11 +57,7 @@ import { CreateInternmentOrderComponent } from './dialogs/create-internment-orde
 import { EstudioModule } from './modules/estudio/estudio.module';
 import { OperationDeniedComponent } from './dialogs/diagnosis-required/operation-denied.component';
 import { CreateOutpatientOrderComponent } from './dialogs/create-outpatient-order/create-outpatient-order.component';
-import { NewConsultationAddReasonFormComponent } from './dialogs/new-consultation-add-reason-form/new-consultation-add-reason-form.component';
 import { NewConsultationFamilyHistoryFormComponent } from './dialogs/new-consultation-family-history-form/new-consultation-family-history-form.component';
-import { NewConsultationMedicationFormComponent } from './dialogs/new-consultation-medication-form/new-consultation-medication-form.component';
-import { NewConsultationProcedureFormComponent } from './dialogs/new-consultation-procedure-form/new-consultation-procedure-form.component';
-import { NewConsultationAllergyFormComponent } from './dialogs/new-consultation-allergy-form/new-consultation-allergy-form.component';
 
 @NgModule({
 	declarations: [
@@ -104,11 +101,7 @@ import { NewConsultationAllergyFormComponent } from './dialogs/new-consultation-
 		CreateInternmentOrderComponent,
 		OperationDeniedComponent,
 		CreateOutpatientOrderComponent,
-		NewConsultationAddReasonFormComponent,
 		NewConsultationFamilyHistoryFormComponent,
-		NewConsultationMedicationFormComponent,
-		NewConsultationProcedureFormComponent,
-		NewConsultationAllergyFormComponent,
 	],
 	imports: [
 		CommonModule,
@@ -124,7 +117,8 @@ import { NewConsultationAllergyFormComponent } from './dialogs/new-consultation-
 		ClipboardModule,
 		IndicacionModule,
 		InternacionesModule,
-		EstudioModule
+		EstudioModule,
+		TurnosModule
 	]
 })
 export class AmbulatoriaModule {

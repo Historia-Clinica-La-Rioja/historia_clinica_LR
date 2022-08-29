@@ -9,7 +9,6 @@ const SgxDateField = ({ source, ...props})  => {
 
 SgxDateField.defaultProps = {
     locales: "es-AR",
-    options: {timeZone: 'UTC'},
     addLabel: true
 }
 

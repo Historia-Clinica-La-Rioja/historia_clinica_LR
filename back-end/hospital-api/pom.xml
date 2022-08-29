@@ -63,6 +63,12 @@
 		</dependency>
 
 		<dependency>
+			<groupId>ar.lamansys.hsi</groupId>
+			<artifactId>hospital-shared</artifactId>
+			<version>${revision}</version>
+		</dependency>
+
+		<dependency>
 			<groupId>ar.lamansys</groupId>
 			<artifactId>sgx-auth</artifactId>
 			<version>0.0.1-SNAPSHOT</version>

@@ -36,6 +36,12 @@ import { ClinicalSpecialtyCareLineService } from '@api-rest/services/clinical-sp
 import { ReferenceFileService } from '@api-rest/services/reference-file.service';
 import { HCEPersonalHistory } from '@historia-clinica/modules/ambulatoria/dialogs/reference/reference.component';
 import { FeatureFlagService } from "@core/services/feature-flag.service";
+import { NewConsultationAddReasonFormComponent } from '@historia-clinica/dialogs/new-consultation-add-reason-form/new-consultation-add-reason-form.component';
+import { NewConsultationProcedureFormComponent } from '@historia-clinica/dialogs/new-consultation-procedure-form/new-consultation-procedure-form.component';
+import { NewConsultationAddDiagnoseFormComponent } from '../../dialogs/new-consultation-add-diagnose-form/new-consultation-add-diagnose-form.component';
+import { NewConsultationAllergyFormComponent } from '@historia-clinica/dialogs/new-consultation-allergy-form/new-consultation-allergy-form.component';
+import { NewConsultationPersonalHistoryFormComponent } from '../../dialogs/new-consultation-personal-history-form/new-consultation-personal-history-form.component';
+import { NewConsultationMedicationFormComponent } from '@historia-clinica/dialogs/new-consultation-medication-form/new-consultation-medication-form.component';
 
 @Component({
 	selector: 'app-odontology-consultation-dock-popup',
@@ -142,13 +148,6 @@ export class OdontologyConsultationDockPopupComponent implements OnInit {
 		this.featureFlagService.isActive(AppFeature.HABILITAR_BUSQUEDA_LOCAL_CONCEPTOS).subscribe(isOn => this.searchConceptsLocallyFFIsOn = isOn);
 	}
 
-	private addErrorMessage(): void {
-		this.errors[2] = hasError(this.form, 'maxlength', 'evolution') ?
-			'La nota de evolución debe tener como máximo 1024 caracteres'
-			: undefined;
-	}
-
-
 	save() {
 		if (this.form.valid) {
 			combineLatest([this.conceptsFacadeService.getProcedures$(), this.conceptsFacadeService.getDiagnostics$()]).pipe(take(1))
@@ -168,6 +167,79 @@ export class OdontologyConsultationDockPopupComponent implements OnInit {
 		else {
 			this.snackBarService.showError('Error al guardar documento de nueva consulta odontológica');
 		}
+	}
+
+	addReason() {
+		this.dialog.open(NewConsultationAddReasonFormComponent, {
+			data: {
+				reasonService: this.reasonNewConsultationService,
+				searchConceptsLocallyFF: this.searchConceptsLocallyFFIsOn,
+			},
+			autoFocus: false,
+			width: '35%',
+			disableClose: true,
+		});
+	}
+
+	addProcedure() {
+		this.dialog.open(NewConsultationProcedureFormComponent, {
+			data: {
+				procedureService: this.otherProceduresService,
+				searchConceptsLocallyFF: this.searchConceptsLocallyFFIsOn,
+			},
+			autoFocus: false,
+			width: '35%',
+			disableClose: true,
+		});
+	}
+
+	addDiagnose() {
+		this.dialog.open(NewConsultationAddDiagnoseFormComponent, {
+			data: {
+				diagnosesService: this.otherDiagnosticsNewConsultationService,
+				searchConceptsLocallyFF: this.searchConceptsLocallyFFIsOn,
+				severityTypes: this.severityTypes
+			},
+			autoFocus: false,
+			width: '35%',
+			disableClose: true,
+		});
+	}
+
+	addAllergy(): void {
+		this.dialog.open(NewConsultationAllergyFormComponent, {
+			data: {
+				allergyService: this.allergiesNewConsultationService,
+				searchConceptsLocallyFF: this.searchConceptsLocallyFFIsOn,
+			},
+			autoFocus: false,
+			width: '35%',
+			disableClose: true,
+		});
+	}
+
+	addPersonalHistory(): void {
+		this.dialog.open(NewConsultationPersonalHistoryFormComponent, {
+			data: {
+				personalHistoryService: this.personalHistoriesNewConsultationService,
+				searchConceptsLocallyFF: this.searchConceptsLocallyFFIsOn,
+			},
+			autoFocus: false,
+			width: '35%',
+			disableClose: true,
+		});
+	}
+
+	addMedication(): void {
+		this.dialog.open(NewConsultationMedicationFormComponent, {
+			data: {
+				medicationService: this.medicationsNewConsultationService,
+				searchConceptsLocallyFF: this.searchConceptsLocallyFFIsOn,
+			},
+			autoFocus: false,
+			width: '35%',
+			disableClose: true,
+		});
 	}
 
 	private openDialog(nonCompletedFields: string[], presentFields: string[], odontologyDto: OdontologyConsultationDto): void {

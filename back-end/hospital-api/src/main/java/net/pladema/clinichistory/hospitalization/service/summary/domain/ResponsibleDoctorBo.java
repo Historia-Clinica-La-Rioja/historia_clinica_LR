@@ -1,7 +1,13 @@
 package net.pladema.clinichistory.hospitalization.service.summary.domain;
 
+import java.util.List;
+
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.ResponsibleDoctorVo;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.ToString;
 
 @Getter
 @Setter
@@ -16,14 +22,14 @@ public class ResponsibleDoctorBo {
 
     private String lastName;
 
-    private String licence;
+    private List<String> licenses;
 
     public ResponsibleDoctorBo(ResponsibleDoctorVo responsibleDoctorVo){
         super();
         this.id = responsibleDoctorVo.getId();
         this.firstName = responsibleDoctorVo.getFirstName();
         this.lastName = responsibleDoctorVo.getLastName();
-        this.licence = responsibleDoctorVo.getLicence();
+        this.licenses = responsibleDoctorVo.getLicenses();
     }
 
     public ResponsibleDoctorBo(String firstName, String lastName){

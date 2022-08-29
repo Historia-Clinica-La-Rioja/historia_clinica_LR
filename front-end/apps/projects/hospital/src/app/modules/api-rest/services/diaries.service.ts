@@ -26,4 +26,9 @@ export class DiariesService {
 		return this.http.delete<boolean>(url);
 	}
 
+	hasActiveDiaries(healthcareProfessionalId: number): Observable<boolean> {
+		const url = `${environment.apiBase}/institutions/${this.contextService.institutionId}/medicalConsultations/diary/hasActiveDiaries/${healthcareProfessionalId}`;
+		return this.http.get<boolean>(url);
+	}
+
 }

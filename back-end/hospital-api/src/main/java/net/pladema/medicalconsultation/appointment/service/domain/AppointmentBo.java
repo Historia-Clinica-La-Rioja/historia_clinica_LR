@@ -54,6 +54,8 @@ public class AppointmentBo {
 
 	private Integer observationBy;
 
+	private Short appointmentBlockMotiveId;
+
 	public static AppointmentBo fromAppointmentDiaryVo(AppointmentDiaryVo appointmentDiaryVo) {
 		return AppointmentBo.builder()
 				.id(appointmentDiaryVo.getId())
@@ -67,6 +69,7 @@ public class AppointmentBo {
 				.medicalAttentionTypeId(appointmentDiaryVo.getMedicalAttentionTypeId())
 				.phonePrefix(appointmentDiaryVo.getPhonePrefix())
 				.phoneNumber(appointmentDiaryVo.getPhoneNumber())
+				.appointmentBlockMotiveId(appointmentDiaryVo.getAppointmentBlockMotiveId())
 				.build();
 	}
 

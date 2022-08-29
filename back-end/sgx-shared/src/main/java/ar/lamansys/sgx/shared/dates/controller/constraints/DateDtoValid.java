@@ -4,19 +4,20 @@ import ar.lamansys.sgx.shared.dates.controller.constraints.validator.DateDtoVali
 
 import javax.validation.Constraint;
 import javax.validation.Payload;
+
 import java.lang.annotation.*;
+
 
 @Documented
 @Constraint(validatedBy = DateDtoValidator.class)
-@Target( { ElementType.TYPE })
+@Target({ElementType.TYPE})
 @Retention(RetentionPolicy.RUNTIME)
 public @interface DateDtoValid {
 
-    String message() default "{date-dto.invalid}";
+	String message() default "{date-dto.invalid}";
 
-    Class<?>[] groups() default {};
+	Class<?>[] groups() default {};
 
-    Class<? extends Payload>[] payload() default {};
-
+	Class<? extends Payload>[] payload() default {};
 
 }

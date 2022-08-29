@@ -2,38 +2,31 @@ import React from 'react';
 import {
     ReferenceInput,
     AutocompleteInput,
-    SelectInput,
     Create,
     SimpleForm,
-    required
+    required, ReferenceField, FunctionField, TextField
 } from 'react-admin';
 import CustomToolbar from "../../modules/components/CustomToolbar";
 
-const searchToFilter = searchText => ({description: searchText ? searchText : -1});
 const searchSpecialtyToFilter = searchText => ({name: searchText ? searchText : -1});
-const renderSpecialty = (choice) => choice ? `${choice.description} - ${choice.descriptionProfessionRef}` : '';
-const redirect = (basePath, id, data) => `/healthcareprofessionals/${data.healthcareProfessionalId}/edit`;
+const renderPerson = (choice) => `${choice.identificationNumber} ${choice.lastName} ${choice.firstName}`;
+const redirect = (basePath, id, data) => `/professionalprofessions/${data.professionalProfessionId}/show`;
 
 const HealthcareProfessionalSpecialtyCreate = props => (
     <Create {...props}>
         <SimpleForm redirect={redirect} toolbar={<CustomToolbar />}>
-            <ReferenceInput
-                source="healthcareProfessionalId"
-                reference="healthcareprofessionals"
-                label="resources.healthcareprofessionalspecialties.fields.healthcareProfessionalId"
-                sort={{ field: 'licenseNumber', order: 'ASC' }}
-            >
-                <SelectInput optionText="licenseNumber" optionValue="id" validate={[required()]} options={{ disabled: true }} />
-            </ReferenceInput>
-
-            <ReferenceInput
-                source="professionalSpecialtyId"
-                reference="professionalspecialties"
-                sort={{ field: 'description', order: 'ASC' }}
-                filterToQuery={searchToFilter}
-            >
-                <AutocompleteInput optionText={renderSpecialty} optionValue="id" validate={[required()]} />
-            </ReferenceInput>
+            <ReferenceField label="resources.healthcareprofessionalspecialties.fields.personId"
+                source="professionalProfessionId" reference="professionalprofessions" link={false}>
+                <ReferenceField source="personId" reference="person">
+                    <FunctionField render={renderPerson}/>
+                </ReferenceField>
+            </ReferenceField>
+            <ReferenceField label="resources.healthcareprofessionalspecialties.fields.professionalSpecialtyId"
+                source="professionalProfessionId" reference="professionalprofessions" link={false}>
+                <ReferenceField source="professionalSpecialtyId" reference="professionalspecialties" link={false}>
+                    <TextField source="description" />
+                </ReferenceField>
+            </ReferenceField>
 
             <ReferenceInput
                 source="clinicalSpecialtyId"

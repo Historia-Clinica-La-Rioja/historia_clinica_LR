@@ -4,7 +4,7 @@ import ar.lamansys.sgx.auth.user.domain.passwordreset.PasswordResetTokenBo;
 import ar.lamansys.sgx.auth.user.domain.passwordreset.PasswordResetTokenStorage;
 import ar.lamansys.sgx.auth.user.domain.user.model.UserBo;
 import ar.lamansys.sgx.auth.user.domain.user.service.UserStorage;
-import ar.lamansys.sgx.auth.user.domain.userpassword.UpdateUserPassword;
+import ar.lamansys.sgx.auth.user.application.updateuserpassword.UpdateUserPassword;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;

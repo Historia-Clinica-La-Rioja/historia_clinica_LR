@@ -7,7 +7,6 @@ import org.springframework.stereotype.Service;
 
 import ar.lamansys.online.application.booking.BookAppointment;
 import ar.lamansys.online.application.booking.CancelBooking;
-import ar.lamansys.online.application.booking.CheckIfMailExists;
 import ar.lamansys.online.application.insurance.FetchHealthcareInsurances;
 import ar.lamansys.online.application.integration.FetchBookingInstitutions;
 import ar.lamansys.online.application.professional.FetchAvailabilityByPractice;
@@ -40,11 +39,13 @@ import ar.lamansys.sgh.shared.infrastructure.input.service.booking.DiaryAvailabi
 import ar.lamansys.sgh.shared.infrastructure.input.service.booking.PracticeDto;
 import ar.lamansys.sgh.shared.infrastructure.input.service.booking.ProfessionalAvailabilityDto;
 import ar.lamansys.sgh.shared.infrastructure.input.service.booking.SharedBookingPort;
+import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 
-@Service
 @Slf4j
+@AllArgsConstructor
+@Service
 public class BookingExternalService implements SharedBookingPort {
 	private final BookAppointment bookAppointment;
 	private final CancelBooking cancelBooking;
@@ -57,32 +58,6 @@ public class BookingExternalService implements SharedBookingPort {
 	private final FetchBookingProfessionals fetchBookingProfessionals;
 	private final FetchAvailabilityByPracticeAndProfessional fetchAvailabilityByPracticeAndProfessional;
 	private final FetchAvailabilityByPractice fetchAvailabilityByPractice;
-
-	public BookingExternalService(
-			BookAppointment bookAppointment,
-			CheckIfMailExists checkIfMailExists,
-			CancelBooking cancelBooking,
-			FetchBookingInstitutions fetchBookingInstitutions,
-			FetchHealthcareInsurances fetchHealthcareInsurances,
-			FetchPracticesBySpecialtyAndHealthInsurance fetchPracticesBySpecialtyAndHealthInsurance,
-			FetchPracticesByProfessionalAndHealthInsurance fetchPracticesByProfessionalAndHealthInsurance,
-			FetchSpecialties fetchSpecialties,
-			FetchSpecialtiesByProfessional fetchSpecialtiesByProfessional,
-			FetchBookingProfessionals fetchBookingProfessionals,
-			FetchAvailabilityByPracticeAndProfessional fetchAvailabilityByPracticeAndProfessional,
-			FetchAvailabilityByPractice fetchAvailabilityByPractice) {
-		this.bookAppointment = bookAppointment;
-		this.cancelBooking = cancelBooking;
-		this.fetchBookingInstitutions = fetchBookingInstitutions;
-		this.fetchHealthcareInsurances = fetchHealthcareInsurances;
-		this.fetchPracticesBySpecialtyAndHealthInsurance = fetchPracticesBySpecialtyAndHealthInsurance;
-		this.fetchPracticesByProfessionalAndHealthInsurance = fetchPracticesByProfessionalAndHealthInsurance;
-		this.fetchSpecialties = fetchSpecialties;
-		this.fetchSpecialtiesByProfessional = fetchSpecialtiesByProfessional;
-		this.fetchBookingProfessionals = fetchBookingProfessionals;
-		this.fetchAvailabilityByPracticeAndProfessional = fetchAvailabilityByPracticeAndProfessional;
-		this.fetchAvailabilityByPractice = fetchAvailabilityByPractice;
-	}
 
 	public String makeBooking(BookingDto bookingDto) {
 		BookingBo bookingBo = new BookingBo(
@@ -168,7 +143,12 @@ public class BookingExternalService implements SharedBookingPort {
 	}
 
 	@Override
-	public ProfessionalAvailabilityDto fetchAvailabilityByPracticeAndProfessional(Integer institutionId, Integer professionalId, Integer clinicalSpecialtyId, Integer practiceId) {
+	public ProfessionalAvailabilityDto fetchAvailabilityByPracticeAndProfessional(
+		Integer institutionId, 
+		Integer professionalId, 
+		Integer clinicalSpecialtyId, 
+		Integer practiceId
+	) {
 		var professionalAvailabilityBo = fetchAvailabilityByPracticeAndProfessional.run(
 				institutionId,
 				professionalId,
@@ -217,29 +197,30 @@ public class BookingExternalService implements SharedBookingPort {
 	}
 
 	private static BookingAppointmentBo mapToAppointment(BookingAppointmentDto bookingAppointmentDto) {
-		return new BookingAppointmentBo(
-				bookingAppointmentDto.getDiaryId(),
-				bookingAppointmentDto.getDay(),
-				bookingAppointmentDto.getHour(),
-				bookingAppointmentDto.getOpeningHoursId(),
-				bookingAppointmentDto.getPhoneNumber(),
-				bookingAppointmentDto.getCoverageId(),
-				bookingAppointmentDto.getSnomedId(),
-				bookingAppointmentDto.getSpecialtyId()
-		);
+		return BookingAppointmentBo.builder()
+				.diaryId(bookingAppointmentDto.getDiaryId())
+				.day(bookingAppointmentDto.getDay())
+				.hour(bookingAppointmentDto.getHour())
+				.openingHoursId(bookingAppointmentDto.getOpeningHoursId())
+				.phoneNumber(bookingAppointmentDto.getPhoneNumber())
+				.coverageId(bookingAppointmentDto.getCoverageId())
+				.snomedId(bookingAppointmentDto.getSnomedId())
+				.specialtyId(bookingAppointmentDto.getSpecialtyId())
+				.build();
 	}
 
 	private static BookingPersonBo mapToPerson(BookingPersonDto bookingPersonDto) {
 		if(bookingPersonDto == null) {
 			return null;
 		}
-		return new BookingPersonBo(
-				bookingPersonDto.getEmail(),
-				bookingPersonDto.getFirstName(),
-				bookingPersonDto.getLastName(),
-				bookingPersonDto.getIdNumber(),
-				bookingPersonDto.getGenderId(),
-				bookingPersonDto.getBirthDate()
-		);
+		return BookingPersonBo.builder()
+				.email(bookingPersonDto.getEmail())
+				.firstName(bookingPersonDto.getFirstName())
+				.lastName(bookingPersonDto.getLastName())
+				.idNumber(bookingPersonDto.getIdNumber())
+				.genderId(bookingPersonDto.getGenderId())
+				.birthDate(bookingPersonDto.getBirthDate())
+				.build();
+
 	}
 }

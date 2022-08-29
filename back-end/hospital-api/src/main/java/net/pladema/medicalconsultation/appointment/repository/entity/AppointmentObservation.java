@@ -26,7 +26,7 @@ public class AppointmentObservation {
 	@Column(name = "appointment_id")
 	private Integer appointmentId;
 
-	@Column(name = "observation")
+	@Column(name = "observation", columnDefinition = "TEXT")
 	private String observation;
 
 	@Column(name = "created_by")

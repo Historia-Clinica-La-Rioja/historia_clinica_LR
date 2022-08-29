@@ -312,6 +312,7 @@ databaseChangeLog:
                 - column:
                     name: previous_login
                     type: datetime
+
     - changeSet:
         id: dropFK_appointment_observation_created_by
         comment: drop FK constraint from appointment_observation table
