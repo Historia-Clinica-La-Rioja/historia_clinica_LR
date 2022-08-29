@@ -72,3 +72,5 @@ back-end/.docker/
 #mqtt files
 *.lck
 *.msg
+
+cubejs/node_modules/

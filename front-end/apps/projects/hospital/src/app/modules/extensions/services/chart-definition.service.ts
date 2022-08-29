@@ -1,21 +1,23 @@
 import { Injectable } from '@angular/core';
 import { Observable, ReplaySubject } from 'rxjs';
-import { switchMap, tap } from 'rxjs/operators';
+import { map, switchMap, tap } from 'rxjs/operators';
 
 import { HttpClient } from '@angular/common/http';
 import { environment } from '@environments/environment';
 import { ChartDefinitionDto } from '@extensions/extensions-model';
 import { ContextService } from '@core/services/context.service';
 
-export interface QueryForm {
-	[key: string]: string;
+export interface FilterValue {
+	member: string;
+	operator: string;
+	values: string[];
 }
 
 @Injectable({
 	providedIn: 'root'
 })
 export class ChartDefinitionService {
-	private queryForm = new ReplaySubject<QueryForm>(1);
+	private queryForm = new ReplaySubject<FilterValue[]>(1);
 
 	constructor(
 		private http: HttpClient,
@@ -24,23 +26,30 @@ export class ChartDefinitionService {
 
 	queryStream$(queryName: string): Observable<ChartDefinitionDto> {
 		return this.queryForm.asObservable().pipe(
-			switchMap(params => this.fetchChartDefinition(queryName, params)),
+			switchMap(filtersToAdd => this.fetchChartDefinition(queryName, filtersToAdd)),
 		);
 	}
 
-	next(params: QueryForm): void {
-		this.queryForm.next(params);
+	next(filtersToAdd: FilterValue[]): void {
+		this.queryForm.next(filtersToAdd);
 	}
 
-	public fetchChartDefinition(name: string, params: QueryForm): Observable<ChartDefinitionDto> {
+	private fetchChartDefinition(name: string, filtersToAdd: FilterValue[]): Observable<ChartDefinitionDto> {
+		console.log('fetchChartDefinition', filtersToAdd);
 		const url = `${environment.apiBase}/dashboards/charts/${name}`;
 
 		return this.http.get<ChartDefinitionDto>(url, {
 			params: {
-				...params,
 				institutionId: this.context.institutionId
 			},
-		});
+		}).pipe(
+			map(definition => {
+				const { filters } = definition.cubeQuery;
+
+				definition.cubeQuery.filters = [...filters, ...filtersToAdd];
+				return definition;
+			})
+		);
 	}
 
 }

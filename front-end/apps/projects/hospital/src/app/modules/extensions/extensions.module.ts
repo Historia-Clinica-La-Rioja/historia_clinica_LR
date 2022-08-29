@@ -11,6 +11,7 @@ import { InstitutionExtensionComponent, SystemExtensionComponent } from './route
 import { CardComponent } from './components/card/card.component';
 import { CubejsChartComponent } from './components/cubejs-chart/cubejs-chart.component';
 import { CubejsDashboardComponent } from './components/cubejs-dashboard/cubejs-dashboard.component';
+import { DateOnlyIsoFormInputComponent } from './components/date-only-iso-form-input/date-only-iso-form-input.component';
 import { JsonComponent } from './components/json/json.component';
 import { PageLayoutComponent } from './components/page-layout/page-layout.component';
 import { QueryRendererComponent } from './components/query-renderer/query-renderer.component';
@@ -39,6 +40,7 @@ import { RoutedExternalComponent } from './components/routed-external/routed-ext
 		CardComponent,
 		CubejsChartComponent,
 		CubejsDashboardComponent,
+		DateOnlyIsoFormInputComponent,
 		JsonComponent,
 		PageLayoutComponent,
 		QueryRendererComponent,

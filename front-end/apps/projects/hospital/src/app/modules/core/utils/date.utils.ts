@@ -58,7 +58,7 @@ export function getDayHoursRangeIntervalsByMinuteValue(startDate: Date, endDate:
 		dividedDate[currentRangeValue] = new Date(startDate);
 		startDate = addMinutes(startDate, timeRange);
 	}
-	
+
 	return dividedDate;
 }
 
