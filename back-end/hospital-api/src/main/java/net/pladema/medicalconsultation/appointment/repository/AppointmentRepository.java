@@ -107,6 +107,20 @@ public interface AppointmentRepository extends SGXAuditableEntityJPARepository<A
                                     @Param("healthProfessionalId")  Integer healthProfessionalId,
                                     @Param("appointmentDate")  LocalDate appointmentDate);
 
+	@Transactional(readOnly = true)
+	@Query( "SELECT DISTINCT a.id, a.hour " +
+			"FROM Appointment AS a " +
+			"JOIN AppointmentAssn AS aa ON (a.id = aa.pk.appointmentId) " +
+			"JOIN Diary AS d ON (d.id = aa.pk.diaryId) " +
+			"LEFT JOIN DiaryAssociatedProfessional AS dap ON (dap.diaryId = d.id) " +
+			"WHERE a.patientId = :patientId " +
+			"AND (d.healthcareProfessionalId = :healthProfessionalId " +
+			"OR dap.healthcareProfessionalId = :healthProfessionalId) " +
+			"AND a.appointmentStateId = " + AppointmentState.CONFIRMED + " " +
+			"ORDER BY a.hour ASC")
+	List<Integer> getOldAppointmentsId(@Param("patientId") Integer patientId,
+									@Param("healthProfessionalId")  Integer healthProfessionalId);
+
 
     @Transactional
     @Modifying

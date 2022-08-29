@@ -9,33 +9,23 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-import ar.lamansys.sgx.shared.dates.configuration.DateTimeProvider;
-import ar.lamansys.sgx.shared.security.UserInfo;
-import net.pladema.establishment.controller.service.InstitutionExternalService;
-
-import net.pladema.establishment.repository.MedicalCoveragePlanRepository;
-import net.pladema.medicalconsultation.appointment.repository.AppointmentObservationRepository;
-import net.pladema.medicalconsultation.appointment.repository.domain.AppointmentDiaryVo;
-import net.pladema.medicalconsultation.appointment.repository.domain.AppointmentShortSummaryBo;
-import net.pladema.medicalconsultation.appointment.repository.entity.AppointmentObservation;
-import net.pladema.medicalconsultation.appointment.service.ports.AppointmentStorage;
-import net.pladema.patient.controller.dto.PatientMedicalCoverageDto;
-import net.pladema.patient.controller.service.PatientExternalMedicalCoverageService;
-
-import net.pladema.patient.service.domain.PatientCoverageInsuranceDetailsBo;
-import net.pladema.patient.service.domain.PatientMedicalCoverageBo;
-
-import net.pladema.staff.repository.HealthcareProfessionalRepository;
-
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import ar.lamansys.sgh.shared.infrastructure.input.service.SharedStaffPort;
+import ar.lamansys.sgx.shared.dates.configuration.DateTimeProvider;
 import ar.lamansys.sgx.shared.featureflags.AppFeature;
 import ar.lamansys.sgx.shared.featureflags.application.FeatureFlagsService;
+import ar.lamansys.sgx.shared.security.UserInfo;
 import lombok.extern.slf4j.Slf4j;
+import net.pladema.establishment.controller.service.InstitutionExternalService;
+import net.pladema.establishment.repository.MedicalCoveragePlanRepository;
+import net.pladema.medicalconsultation.appointment.repository.AppointmentObservationRepository;
 import net.pladema.medicalconsultation.appointment.repository.AppointmentRepository;
 import net.pladema.medicalconsultation.appointment.repository.HistoricAppointmentStateRepository;
+import net.pladema.medicalconsultation.appointment.repository.domain.AppointmentShortSummaryBo;
 import net.pladema.medicalconsultation.appointment.repository.domain.AppointmentTicketBo;
+import net.pladema.medicalconsultation.appointment.repository.entity.AppointmentObservation;
 import net.pladema.medicalconsultation.appointment.repository.entity.AppointmentState;
 import net.pladema.medicalconsultation.appointment.repository.entity.HistoricAppointmentState;
 import net.pladema.medicalconsultation.appointment.service.AppointmentService;
@@ -44,8 +34,11 @@ import net.pladema.medicalconsultation.appointment.service.domain.AppointmentBo;
 import net.pladema.medicalconsultation.appointment.service.domain.UpdateAppointmentBo;
 import net.pladema.medicalconsultation.appointment.service.exceptions.AppointmentNotFoundEnumException;
 import net.pladema.medicalconsultation.appointment.service.exceptions.AppointmentNotFoundException;
-
-import org.springframework.transaction.annotation.Transactional;
+import net.pladema.medicalconsultation.appointment.service.ports.AppointmentStorage;
+import net.pladema.patient.controller.dto.PatientMedicalCoverageDto;
+import net.pladema.patient.controller.service.PatientExternalMedicalCoverageService;
+import net.pladema.patient.service.domain.PatientCoverageInsuranceDetailsBo;
+import net.pladema.patient.service.domain.PatientMedicalCoverageBo;
 
 @Slf4j
 @Service
@@ -170,6 +163,22 @@ public class AppointmentServiceImpl implements AppointmentService {
 	public boolean hasCurrentAppointment(Integer patientId, Integer healthProfessionalId, LocalDate date) {
 		log.debug("Input parameters -> patientId {}, healthProfessionalId {}, date {} ", patientId, healthProfessionalId, date);
 		boolean result = !(appointmentRepository.getAppointmentsId(patientId, healthProfessionalId, date).isEmpty());
+		log.debug(OUTPUT, result);
+		return result;
+	}
+
+	@Override
+	public boolean hasOldAppointment(Integer patientId, Integer healthProfessionalId) {
+		log.debug("Input parameters -> patientId {}, healthProfessionalId {}", patientId, healthProfessionalId);
+		boolean result = !(appointmentRepository.getOldAppointmentsId(patientId, healthProfessionalId).isEmpty());
+		log.debug(OUTPUT, result);
+		return result;
+	}
+
+	@Override
+	public List<Integer> getOldAppointments(Integer patientId, Integer healthProfessionalId) {
+		log.debug("Input parameters -> patientId {}, healthProfessionalId {}", patientId, healthProfessionalId);
+		List<Integer> result = appointmentRepository.getOldAppointmentsId(patientId, healthProfessionalId);
 		log.debug(OUTPUT, result);
 		return result;
 	}

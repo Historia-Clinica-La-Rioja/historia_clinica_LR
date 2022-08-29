@@ -6,6 +6,8 @@ public interface AppointmentExternalService {
 
     boolean hasCurrentAppointment(Integer patientId, Integer healthProfessionalId, LocalDate date);
 
+	boolean hasOldAppointment(Integer patientId, Integer healthProfessionalId);
+
     Integer serveAppointment(Integer patientId, Integer healthcareProfessionalId, LocalDate date);
 
     Integer getMedicalCoverage(Integer patientId, Integer healthcareProfessionalId);

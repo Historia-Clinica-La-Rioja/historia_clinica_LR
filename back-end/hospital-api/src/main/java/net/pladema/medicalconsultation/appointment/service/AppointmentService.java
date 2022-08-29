@@ -32,6 +32,10 @@ public interface AppointmentService {
 
 	boolean hasCurrentAppointment(Integer patientId, Integer healthcareProfessionalId, LocalDate date);
 
+	boolean hasOldAppointment(Integer patientId, Integer healthProfessionalId);
+
+	List<Integer> getOldAppointments(Integer patientId, Integer healthProfessionalId);
+
 	List<Integer> getAppointmentsId(Integer patientId, Integer healthcareProfessionalId, LocalDate date);
 
 	boolean updatePhoneNumber(Integer appointmentId, String phonePrefix, String phoneNumber, Integer userId);

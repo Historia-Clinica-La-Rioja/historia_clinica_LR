@@ -14,6 +14,8 @@ public interface SharedAppointmentPort {
 
 	boolean hasCurrentAppointment(Integer patientId, Integer doctorId, LocalDate date);
 
+	boolean hasOldAppointment(Integer patientId, Integer healthProfessionalId);
+
 	Integer serveAppointment(Integer patientId, Integer doctorId, LocalDate date);
 
 	Integer getMedicalCoverage(Integer patientId, Integer healthcareProfessionalId);
