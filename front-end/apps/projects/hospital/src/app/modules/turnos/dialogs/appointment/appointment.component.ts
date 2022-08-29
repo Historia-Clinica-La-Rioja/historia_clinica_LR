@@ -294,22 +294,31 @@ export class AppointmentComponent implements OnInit {
 	}
 
 	updateAppointmentDate(): void {
-
-		const dateAux = this.formDate.get('hour').value;
+		const previousDate = new Date(this.data.appointmentData.date);
+		const newDate = this.formDate.get('hour').value;
 		const date: DateTimeDto = {
 			date: {
-				year: dateAux.getFullYear(),
-				month: dateAux.getMonth() + 1,
-				day: dateAux.getDate()
+				year: newDate.getFullYear(),
+				month: newDate.getMonth() + 1,
+				day: newDate.getDate()
 			},
 			time: {
-				hours: dateAux.getHours(),
-				minutes: dateAux.getMinutes(),
-				seconds: dateAux.getSeconds()
+				hours: newDate.getHours(),
+				minutes: newDate.getMinutes(),
+				seconds: newDate.getSeconds()
 			}
 		};
 
 		this.appointmentFacade.updateDate(this.data.appointmentData.appointmentId, date).subscribe(() => {
+			const appointmentsInDate = this.data.appointments.filter(appointment => appointment.start.getTime() == previousDate.getTime());
+			if (appointmentsInDate.length > 1  && !this.data.appointmentData.overturn){
+				this.updateAppointmentOverturn(
+					appointmentsInDate[1].meta.appointmentId,
+					appointmentsInDate[1].meta.appointmentStateId,
+					false,
+					appointmentsInDate[1].meta.patient.id
+				);
+			}
 
 			if (this.data.appointmentData.overturn){
 				this.updateAppointmentOverturn(
@@ -321,7 +330,7 @@ export class AppointmentComponent implements OnInit {
 			}
 
 			this.snackBarService.showSuccess('turnos.appointment.date.UPDATE_SUCCESS');
-			this.selectedDate = dateAux;
+			this.selectedDate = newDate;
 		}, error => {
 			processErrors(error, (msg) => this.snackBarService.showError(msg));
 		});
@@ -386,6 +395,15 @@ export class AppointmentComponent implements OnInit {
 		});
 		dialogRefCancelAppointment.afterClosed().subscribe(canceledAppointment => {
 			if (canceledAppointment) {
+				const appointmentsInDate = this.data.appointments.filter(appointment => appointment.start.getTime() == new Date(this.data.appointmentData.date).getTime());
+				if (appointmentsInDate.length > 1  && !this.data.appointmentData.overturn){
+					this.updateAppointmentOverturn(
+						appointmentsInDate[1].meta.appointmentId,
+						appointmentsInDate[1].meta.appointmentStateId,
+						false,
+						appointmentsInDate[1].meta.patient.id
+					);
+				}
 				this.closeDialog('statuschanged');
 			}
 		});
