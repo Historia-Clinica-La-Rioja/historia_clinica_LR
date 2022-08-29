@@ -7,7 +7,7 @@
 				<mat-card-title>{{institucion.name}}</mat-card-title>
 				<mat-card-subtitle>{{address(institucion)}}</mat-card-subtitle>
 			</mat-card-header>
-			<div fxLayout="row" fxLayoutGap="5px" class="roles">
+			<div fxLayout="row wrap" fxLayoutGap="5px" class="roles">
 				<div *ngFor="let role of roles; let i = index">
 					<span *ngIf="i > 0"> |</span> {{role}}
 				</div>
