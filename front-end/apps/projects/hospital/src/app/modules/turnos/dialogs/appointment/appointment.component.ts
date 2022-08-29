@@ -286,14 +286,14 @@ export class AppointmentComponent implements OnInit {
 			overturn: overturn,
 			patientId: patientId,
 		}
-		this.appointmentFacade.updateAppointment(appointment).subscribe(() => {}, 
+		this.appointmentFacade.updateAppointment(appointment).subscribe(() => {},
 			error => {
 				processErrors(error, (msg) => this.snackBarService.showError(msg));
 		});
 	}
 
 	updateAppointmentDate(){
-		
+
 		const dateAux = this.formDate.get('hour').value;
 		const date: DateTimeDto = {
 			date: {
@@ -308,13 +308,13 @@ export class AppointmentComponent implements OnInit {
 			}
 		};
 
-		this.appointmentFacade.updateDate(this.data.appointmentData.appointmentId, date).subscribe(() => {	
-	
+		this.appointmentFacade.updateDate(this.data.appointmentData.appointmentId, date).subscribe(() => {
+
 			if (this.data.appointmentData.overturn){
 				this.updateAppointmentOverturn(
 					this.data.appointmentData.appointmentId,
-					this.data.appointmentData.appointmentStateId, 
-					false, 
+					this.data.appointmentData.appointmentStateId,
+					false,
 					this.data.appointmentData.patient.id
 				);
 			}
@@ -342,6 +342,11 @@ export class AppointmentComponent implements OnInit {
 			updateControlValidator(this.formEdit, 'phoneNumber', []);
 			updateControlValidator(this.formEdit, 'phonePrefix', []);
 		}
+	}
+
+	isInvalidFormEdit(): boolean {
+		this.formEdit.markAllAsTouched();
+		return this.formEdit.invalid;
 	}
 
 	private setMedicalCoverages(): void {

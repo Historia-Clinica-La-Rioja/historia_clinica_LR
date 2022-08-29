@@ -132,7 +132,7 @@
 						<button mat-stroked-button color="primary" btn-block type="button" (click)="hideFilters()">
 							<span [translate]="'turnos.appointment.CANCEL'"></span>
 						</button>
-						<button mat-flat-button color="primary" [disabled]="formEdit.invalid">
+						<button mat-flat-button color="primary" [disabled]="isInvalidFormEdit()" >
 							<span [translate]="'turnos.appointment.SAVE'"></span>
 						</button>
 					</div>
