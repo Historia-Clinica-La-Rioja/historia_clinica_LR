@@ -138,11 +138,11 @@ export class AppointmentComponent implements OnInit {
 		});
 
 		this.formDate = this.formBuilder.group({
-			hour: ['',[Validators.required]],
+			hour: ['', [Validators.required]],
 		});
 
 		this.formObservations = this.formBuilder.group({
-			observation: ['',[Validators.required]]
+			observation: ['', [Validators.required]]
 		});
 
 		this.setMedicalCoverages();
@@ -155,7 +155,7 @@ export class AppointmentComponent implements OnInit {
 
 		this.data.agenda.diaryOpeningHours.forEach(DOH => {
 			let day = DOH.openingHours.dayWeekId;
-			if(!this.availableDays.includes(day))
+			if (!this.availableDays.includes(day))
 				this.availableDays.push(day);
 		});
 
@@ -164,7 +164,7 @@ export class AppointmentComponent implements OnInit {
 				this.appointment = appointment;
 				this.observation = appointment.observation;
 
-				if(this.observation){
+				if (this.observation) {
 					this.hideObservationTitle = false;
 					this.formObservations.controls.observation.setValue(this.observation);
 				}
@@ -183,7 +183,7 @@ export class AppointmentComponent implements OnInit {
 							}
 						});
 				}
-				this.phoneNumber = this.formatPhonePrefixAndNumber(this.data.appointmentData.phonePrefix,this.data.appointmentData.phoneNumber);
+				this.phoneNumber = this.formatPhonePrefixAndNumber(this.data.appointmentData.phonePrefix, this.data.appointmentData.phoneNumber);
 			});
 
 		this.hasRoleToChangeState$ = this.permissionsService.hasContextAssignments$(ROLES_TO_CHANGE_STATE).pipe(take(1));
@@ -204,7 +204,7 @@ export class AppointmentComponent implements OnInit {
 					this.decodedPhoto$ = this.imageDecoderService.decode(personPhotoDto.imageData);
 				}
 			});
-}
+	}
 
 	dateFormToggle(): void {
 		this.isDateFormVisible = !this.isDateFormVisible;
@@ -219,7 +219,7 @@ export class AppointmentComponent implements OnInit {
 		this.dateFormToggle();
 		this.setDisableDays();
 		this.setPossibleScheduleHours(this.selectedDate);
-		this.formDate.controls.hour.setValue(this.possibleScheduleHours.find(item => {return item.getTime() ==  this.selectedDate.getTime()}));
+		this.formDate.controls.hour.setValue(this.possibleScheduleHours.find(item => { return item.getTime() == this.selectedDate.getTime() }));
 	}
 
 	selectDate(date: Date): void {
@@ -233,11 +233,11 @@ export class AppointmentComponent implements OnInit {
 		const endDate = new Date(date);
 		this.data.agenda.diaryOpeningHours.forEach(DOH => {
 			let day = DOH.openingHours.dayWeekId;
-			if(startDate.getDay() === day){
-				startDate.setHours(Number(DOH.openingHours.from.slice(0,2)));
-				startDate.setMinutes(Number(DOH.openingHours.from.slice(3,5)));
-				endDate.setHours(Number(DOH.openingHours.to.slice(0,2)));
-				endDate.setMinutes(Number(DOH.openingHours.to.slice(3,5)));
+			if (startDate.getDay() === day) {
+				startDate.setHours(Number(DOH.openingHours.from.slice(0, 2)));
+				startDate.setMinutes(Number(DOH.openingHours.from.slice(3, 5)));
+				endDate.setHours(Number(DOH.openingHours.to.slice(0, 2)));
+				endDate.setMinutes(Number(DOH.openingHours.to.slice(3, 5)));
 				const hours = getDayHoursRangeIntervalsByMinuteValue(startDate, endDate, this.data.agenda.appointmentDuration);
 				this.possibleScheduleHours = this.possibleScheduleHours.concat(hours);
 			}
@@ -262,17 +262,17 @@ export class AppointmentComponent implements OnInit {
 		});
 	}
 
-	setDisableDays(): void {
+	setDisableDays(){
 		this.disableDays = [];
 		const today = new Date();
 		this.data.appointments.forEach(appointment => {
 			const appointmentDate = new Date(appointment.start);
-			appointmentDate.setHours(0,0,0,0);
+			appointmentDate.setHours(0, 0, 0, 0);
 			appointmentDate.setMinutes(0);
-			if (today.getTime() <= appointmentDate.getTime()){
+			if (today.getTime() <= appointmentDate.getTime()) {
 				this.setPossibleScheduleHours(appointmentDate);
 				if (this.possibleScheduleHours.length == 0) {
-					if (!this.disableDays.find(x => x.getTime() == appointmentDate.getTime())){
+					if (!this.disableDays.find(x => x.getTime() == appointmentDate.getTime())) {
 						this.disableDays.push(appointmentDate);
 					}
 				}
@@ -287,10 +287,10 @@ export class AppointmentComponent implements OnInit {
 			overturn: overturn,
 			patientId: patientId,
 		}
-		this.appointmentFacade.updateAppointment(appointment).subscribe(() => {},
+		this.appointmentFacade.updateAppointment(appointment).subscribe(() => { },
 			error => {
 				processErrors(error, (msg) => this.snackBarService.showError(msg));
-		});
+			});
 	}
 
 	updateAppointmentDate(): void {
@@ -320,7 +320,7 @@ export class AppointmentComponent implements OnInit {
 				);
 			}
 
-			if (this.data.appointmentData.overturn){
+			if (this.data.appointmentData.overturn) {
 				this.updateAppointmentOverturn(
 					this.data.appointmentData.appointmentId,
 					this.data.appointmentData.appointmentStateId,
@@ -433,7 +433,7 @@ export class AppointmentComponent implements OnInit {
 			}
 			if (this.formEdit.controls.phoneNumber.dirty || this.formEdit.controls.phonePrefix.dirty) {
 				this.updatePhoneNumber(this.formEdit.controls.phonePrefix.value, this.formEdit.controls.phoneNumber.value);
-				this.phoneNumber = this.formatPhonePrefixAndNumber(this.formEdit.controls.phonePrefix.value ,this.formEdit.controls.phoneNumber.value);
+				this.phoneNumber = this.formatPhonePrefixAndNumber(this.formEdit.controls.phonePrefix.value, this.formEdit.controls.phoneNumber.value);
 			}
 			this.hideFilters();
 		}
@@ -452,7 +452,7 @@ export class AppointmentComponent implements OnInit {
 			this.appointment?.appointmentStateId === APPOINTMENT_STATES_ID.ASSIGNED) ||
 			(this.selectedState === APPOINTMENT_STATES_ID.CONFIRMED &&
 				this.appointment?.appointmentStateId === APPOINTMENT_STATES_ID.CONFIRMED) ||
-				this.appointment?.appointmentStateId === APPOINTMENT_STATES_ID.OUT_OF_DIARY;
+			this.appointment?.appointmentStateId === APPOINTMENT_STATES_ID.OUT_OF_DIARY;
 	}
 
 	isAbsent(): boolean {
@@ -462,7 +462,7 @@ export class AppointmentComponent implements OnInit {
 	private submitNewState(newStateId: APPOINTMENT_STATES_ID, motivo?: string): void {
 		this.appointmentFacade.changeState(this.data.appointmentData.appointmentId, newStateId, motivo)
 			.subscribe(() => {
-				const appointmentInformation = { id: this.data.appointmentData.appointmentId, stateId: newStateId, date: this.selectedDate};
+				const appointmentInformation = { id: this.data.appointmentData.appointmentId, stateId: newStateId, date: this.selectedDate };
 				this.dialogRef.close(appointmentInformation);
 				this.snackBarService.showSuccess(`Estado de turno actualizado a ${getAppointmentState(newStateId).description} exitosamente`);
 			}, _ => {
@@ -551,7 +551,7 @@ export class AppointmentComponent implements OnInit {
 	closeDialog(returnValue?: string) {
 		if (!returnValue)
 			this.medicalCoverageInfo.setAppointmentMCoverage(this.summaryCoverageData);
-		const appointmentInformation = { returnValue: returnValue, date: this.selectedDate};
+		const appointmentInformation = { returnValue: returnValue, date: this.selectedDate };
 		this.dialogRef.close(appointmentInformation);
 	}
 
@@ -564,8 +564,8 @@ export class AppointmentComponent implements OnInit {
 	}
 
 	getAppointmentTicketReport(): void {
-		this.appointmentService.getAppointmentTicketPdf(this.data.appointmentData).subscribe((pdf)=>{
-			const file = new Blob([pdf], {type: 'application/pdf'});
+		this.appointmentService.getAppointmentTicketPdf(this.data.appointmentData).subscribe((pdf) => {
+			const file = new Blob([pdf], { type: 'application/pdf' });
 			const blobUrl = URL.createObjectURL(file);
 			const div = document.querySelector("#pdfPrinter");
 			const iframe = document.createElement("iframe");
@@ -594,15 +594,15 @@ export class AppointmentComponent implements OnInit {
 		this.formEdit.controls.newCoverageData.setValue(null);
 	}
 
-	setHideObservationTitle(value: boolean): void{
+	setHideObservationTitle(value: boolean): void {
 		this.hideObservationTitle = value;
 	}
 
-	setHideObservationForm(value: boolean): void{
+	setHideObservationForm(value: boolean): void {
 		this.hideObservationForm = value;
 	}
 
-	updateObservation(): void{
+	updateObservation(): void {
 		this.observation = this.formObservations.get('observation').value;
 		this.appointmentFacade.updateObservation(this.data.appointmentData.appointmentId, this.formObservations.controls.observation.value).subscribe(() => {
 			this.snackBarService.showSuccess('turnos.appointment.observations.UPDATE_SUCCESS');
@@ -612,9 +612,9 @@ export class AppointmentComponent implements OnInit {
 		this.setHideObservationForm(true);
 	}
 
-	cancelObservation(): void{
+	cancelObservation(): void {
 		this.hideObservationForm = true;
-		if(!this.observation)
+		if (!this.observation)
 			this.hideObservationTitle = true;
 		else
 			this.hideObservationTitle = false;
@@ -632,13 +632,13 @@ export class AppointmentComponent implements OnInit {
 			if (this.coverageData?.planName) {
 				summaryInfo.plan = this.coverageData?.planName;
 			}
-			if(this.coverageData.condition) {
+			if (this.coverageData.condition) {
 				summaryInfo.condition = this.coverageData.condition;
 			}
-			if(this.coverageData.medicalCoverage.cuit) {
+			if (this.coverageData.medicalCoverage.cuit) {
 				summaryInfo.cuit = this.coverageData.medicalCoverage.cuit;
 			}
-			if(this.coverageData.medicalCoverage.type) {
+			if (this.coverageData.medicalCoverage.type) {
 				summaryInfo.type = this.coverageData.medicalCoverage.type;
 			}
 		}
