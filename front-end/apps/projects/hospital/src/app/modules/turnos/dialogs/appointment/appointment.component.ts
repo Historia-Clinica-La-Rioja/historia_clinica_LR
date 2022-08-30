@@ -248,9 +248,10 @@ export class AppointmentComponent implements OnInit {
 
 	deleteHoursWithAppointment(): void{
 		this.data.appointments.forEach(appointment => {
-			this.possibleScheduleHours = this.possibleScheduleHours.filter(item => {
-				return ((item.getTime() < appointment.start.getTime()) || (item.getTime() >= appointment.end.getTime()) || (item.getTime() == this.selectedDate.getTime()));
-			});
+			if (!appointment.allDay)
+				this.possibleScheduleHours = this.possibleScheduleHours.filter(item => {
+					return ((item.getTime() < appointment.start.getTime()) || (item.getTime() >= appointment.end.getTime()) || (item.getTime() == this.selectedDate.getTime()));
+				});
 		});
 	}
 
