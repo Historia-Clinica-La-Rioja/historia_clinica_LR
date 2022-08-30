@@ -31,6 +31,8 @@ import { PatientService } from '@api-rest/services/patient.service';
 import { ImageDecoderService } from '@presentation/services/image-decoder.service';
 import { getDayHoursRangeIntervalsByMinuteValue } from '@core/utils/date.utils';
 import { CalendarEvent } from 'angular-calendar';
+import { momentParseDate } from '@core/utils/moment.utils';
+import * as moment from 'moment';
 
 const TEMPORARY_PATIENT = 3;
 const BELL_LABEL = 'Llamar paciente'
@@ -80,8 +82,8 @@ export class AppointmentComponent implements OnInit {
 	hideFilterPanel = false;
 
 	isDateFormVisible = false;
-	startAgenda = new Date();
-	endAgenda = new Date(this.data.agenda.endDate);
+	startAgenda = moment();
+	endAgenda = momentParseDate(this.data.agenda.endDate);
 	availableDays: number[] = [];
 	disableDays: Date[] = [];
 	possibleScheduleHours: Date[] = [];
@@ -262,20 +264,27 @@ export class AppointmentComponent implements OnInit {
 		});
 	}
 
-	setDisableDays(){
+	checkDisableDay(date: Date): void {
+		this.setPossibleScheduleHours(date);
+		if (this.possibleScheduleHours.length == 0) {
+			if (!this.disableDays.find(x => x.getTime() == date.getTime())) {
+				this.disableDays.push(date);
+			}
+		}
+	}
+
+	setDisableDays(): void {
 		this.disableDays = [];
 		const today = new Date();
+		today.setHours(0, 0, 0, 0);
+		today.setMinutes(0);
+		this.checkDisableDay(today);
 		this.data.appointments.forEach(appointment => {
 			const appointmentDate = new Date(appointment.start);
 			appointmentDate.setHours(0, 0, 0, 0);
 			appointmentDate.setMinutes(0);
 			if (today.getTime() <= appointmentDate.getTime()) {
-				this.setPossibleScheduleHours(appointmentDate);
-				if (this.possibleScheduleHours.length == 0) {
-					if (!this.disableDays.find(x => x.getTime() == appointmentDate.getTime())) {
-						this.disableDays.push(appointmentDate);
-					}
-				}
+				this.checkDisableDay(appointmentDate);
 			}
 		});
 	}
