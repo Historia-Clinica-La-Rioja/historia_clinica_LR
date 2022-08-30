@@ -141,6 +141,12 @@
 				"DOWNLOAD_REPORT": "Descargar informe",
 				"ANEXO": "Anexo II",
 				"FORM": "Formulario V"
+			},
+			"confirm-dialog": {
+				"CONTENT": "Si confirma el turno no podrá actualizar la cobertura luego.",
+				"CONFIRM": "Si, actualizar cobertura",
+				"CANCEL": "No, confirmar turno",
+				"QUESTION": "¿Desea actualizarla ahora?"
 			}
 		},
 		"report": {

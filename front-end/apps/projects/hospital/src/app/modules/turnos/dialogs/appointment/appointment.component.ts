@@ -31,6 +31,7 @@ import { PatientService } from '@api-rest/services/patient.service';
 import { ImageDecoderService } from '@presentation/services/image-decoder.service';
 import { getDayHoursRangeIntervalsByMinuteValue } from '@core/utils/date.utils';
 import { CalendarEvent } from 'angular-calendar';
+import { DiscardWarningComponent } from '@presentation/dialogs/discard-warning/discard-warning.component';
 import { DateFormat, momentFormat, momentParseDate, momentParseTime } from '@core/utils/moment.utils';
 import * as moment from 'moment';
 
@@ -99,7 +100,7 @@ export class AppointmentComponent implements OnInit {
 	hideObservationForm = true;
 	hideObservationTitle = true;
 	observation: string;
-
+	firstCoverage: number;
 	constructor(
 		@Inject(MAT_DIALOG_DATA) public data: {
 			appointmentData: PatientAppointmentInformation,
@@ -182,6 +183,7 @@ export class AppointmentComponent implements OnInit {
 								this.coverageData = this.mapperService.toPatientMedicalCoverage(coverageData);
 								this.updateSummaryCoverageData();
 								this.formEdit.controls.newCoverageData.setValue(coverageData.id);
+								this.firstCoverage = coverageData.id;
 								this.setCoverageText(coverageData);
 							}
 						});
@@ -415,11 +417,40 @@ export class AppointmentComponent implements OnInit {
 		this.selectedState = newStateId;
 	}
 
+	private coverageIsNotUpdate(): boolean {
+		return this.firstCoverage === this.formEdit.controls.newCoverageData?.value;
+	}
+
+	private updateState(newStateId: APPOINTMENT_STATES_ID): void {
+		this.changeState(newStateId);
+		if (this.isANewState(newStateId) && !this.isMotivoRequired()) {
+			this.submitNewState(newStateId);
+		}
+	}
+
+	private confirmChangeState(newStateId: APPOINTMENT_STATES_ID): void {
+		const dialogRefConfirmation = this.dialog.open(DiscardWarningComponent,
+			{
+				data: {
+					content: `turnos.appointment.confirm-dialog.CONTENT`,
+					okButtonLabel: `turnos.appointment.confirm-dialog.CONFIRM`,
+					cancelButtonLabel: `turnos.appointment.confirm-dialog.CANCEL`,
+					contentBold: `turnos.appointment.confirm-dialog.QUESTION`,
+					showMatIconError: true,
+				}
+			});
+		dialogRefConfirmation.afterClosed().subscribe(upgradeCoverage => {
+			if (!upgradeCoverage)
+				this.updateState(newStateId);
+		});
+	}
+
 	onClickedState(newStateId: APPOINTMENT_STATES_ID): void {
 		if (this.selectedState !== newStateId) {
-			this.changeState(newStateId);
-			if (this.isANewState(newStateId) && !this.isMotivoRequired()) {
-				this.submitNewState(newStateId);
+			if (newStateId === APPOINTMENT_STATES_ID.CONFIRMED && this.coverageIsNotUpdate()) {
+				this.confirmChangeState(newStateId);
+			} else {
+				this.updateState(newStateId);
 			}
 		}
 	}
