@@ -49,4 +49,11 @@ public class QueryFactoryPR {
 		List<ConsultationDetailRecupero> data = query.getResultList();
 		return data;
 	}
+
+	public List<ConsultationDetailOdontologia> queryOdontologia(Integer institutionId){
+		Query query = entityManager.createNamedQuery("ProgramReports.ConsultationDetailOdontologia");
+		query.setParameter("institutionId", institutionId);
+		List<ConsultationDetailOdontologia> data = query.getResultList();
+		return data;
+	}
 }
