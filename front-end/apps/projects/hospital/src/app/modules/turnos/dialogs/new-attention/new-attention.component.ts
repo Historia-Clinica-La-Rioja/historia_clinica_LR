@@ -5,6 +5,8 @@ import { MasterDataInterface } from '../../../api-rest/api-model';
 import { MedicalConsultationMasterdataService } from '../../../api-rest/services/medical-consultation-masterdata.service';
 import { MEDICAL_ATTENTION } from '../../constants/descriptions';
 import { REMOVEATTENTION } from '@core/constants/validation-constants';
+import { FeatureFlagService } from "@core/services/feature-flag.service";
+import { AppFeature } from "@api-rest/api-model";
 
 @Component({
 	selector: 'app-new-attention',
@@ -19,12 +21,19 @@ export class NewAttentionComponent implements OnInit {
 	possibleStartingScheduleHours: Date[];
 	possibleEndingScheduleHours: Date[];
 
+	availableForBooking: boolean;
+	isEnableOnlineAppointments: boolean = false;
+
 	constructor(
 		public dialogRef: MatDialogRef<NewAttentionComponent>,
 		private readonly formBuilder: FormBuilder,
 		private readonly medicalConsultationMasterdataService: MedicalConsultationMasterdataService,
-		@Inject(MAT_DIALOG_DATA) public data: NewAttentionElements
-	) { }
+		@Inject(MAT_DIALOG_DATA) public data: NewAttentionElements,
+		private readonly featureFlagService: FeatureFlagService
+	) {
+
+		this.featureFlagService.isActive(AppFeature.BACKOFFICE_MOSTRAR_ABM_RESERVA_TURNOS).subscribe(isEnabled => this.isEnableOnlineAppointments = isEnabled);
+	}
 
 
 	ngOnInit(): void {
@@ -40,11 +49,15 @@ export class NewAttentionComponent implements OnInit {
 			startingHour: [this.data.start, Validators.required],
 			endingHour: [this.data.end, Validators.required],
 			overturnCount: [this.data.overturnCount, Validators.min(0)],
-			medicalAttentionType: [null, Validators.required]
+			medicalAttentionType: [null, Validators.required],
+			availableForBooking: [this.data.availableForBooking],
 		});
+
+		this.availableForBooking = this.data.availableForBooking;
 
 		this.possibleStartingScheduleHours = this.data.possibleScheduleHours.slice(0, this.data.possibleScheduleHours.length - 1);
 		this.filterAppointmentEndingHours();
+
 	}
 
 	onSelectionChanged(): void {
@@ -52,13 +65,16 @@ export class NewAttentionComponent implements OnInit {
 
 		if (medicalAttentionType.description === MEDICAL_ATTENTION.SPONTANEOUS) {
 			this.form.controls.overturnCount.disable();
+			this.form.controls.availableForBooking.disable();
 		} else {
 			this.form.controls.overturnCount.enable();
+			this.form.controls.availableForBooking.enable();
 		}
 	}
 
 	submit() {
 		if (this.form.valid) {
+			this.form.value.availableForBooking = this.availableForBooking;
 			this.dialogRef.close(this.form.value);
 		}
 	}
@@ -78,6 +94,9 @@ export class NewAttentionComponent implements OnInit {
 			this.form.patchValue({ endingHour: this.possibleEndingScheduleHours[0] });
 	}
 
+	changeAvailableForBooking(): void {
+		this.availableForBooking = !this.availableForBooking;
+	}
 }
 
 export interface NewAttentionElements{
@@ -86,5 +105,6 @@ export interface NewAttentionElements{
 	overturnCount?: number,
 	medicalAttentionTypeId?: number,
 	isEdit?: boolean,
-	possibleScheduleHours: Date[]
+	possibleScheduleHours: Date[],
+	availableForBooking: boolean,
 }

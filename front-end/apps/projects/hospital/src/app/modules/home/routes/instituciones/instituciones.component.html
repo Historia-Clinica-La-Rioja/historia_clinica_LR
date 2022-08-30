@@ -46,5 +46,9 @@
 				</mat-list-item>
 			</mat-action-list>
 		</mat-card>
+		<div class="space"></div>
+		<div class="previous-login" *ngIf="enabledPreviousLogin">
+			<span>{{'home.instituciones.PREVIOUS_LOGIN' | translate}}: </span>{{previousLogin | date: 'short'}}
+		</div>
 	</ng-container>
 </app-content>

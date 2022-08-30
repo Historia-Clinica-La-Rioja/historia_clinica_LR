@@ -68,4 +68,7 @@ public class Diary extends SGXAuditableEntity<Integer> {
     @Column(name = "active", nullable = false)
 	@ColumnDefault("true")
     private boolean active = true;
+
+	@Column(name = "clinical_specialty_id", nullable = false)
+	private Integer clinicalSpecialtyId;
 }

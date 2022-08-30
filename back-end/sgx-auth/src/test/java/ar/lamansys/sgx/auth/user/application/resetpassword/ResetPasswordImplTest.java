@@ -4,7 +4,7 @@ import ar.lamansys.sgx.auth.user.domain.passwordreset.PasswordResetTokenBo;
 import ar.lamansys.sgx.auth.user.domain.passwordreset.PasswordResetTokenStorage;
 import ar.lamansys.sgx.auth.user.domain.user.model.UserBo;
 import ar.lamansys.sgx.auth.user.domain.user.service.UserStorage;
-import ar.lamansys.sgx.auth.user.domain.userpassword.UpdateUserPassword;
+import ar.lamansys.sgx.auth.user.application.updateuserpassword.UpdateUserPassword;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -41,7 +41,7 @@ class ResetPasswordImplTest {
     @Test
     @DisplayName("Reset password success")
     void resetPasswordSuccess() {
-        UserBo userBo = new UserBo(1, "username", true, "password", "salt", "hashAlgoritm", LocalDateTime.of(2020,01,01,10,10));
+        UserBo userBo = new UserBo(1, "username", true, "password", "salt", "hashAlgoritm", LocalDateTime.of(2020,01,01,10,10), LocalDateTime.of(2020,01,01,01,01));
         when(userStorage.getUser(1))
                 .thenReturn(userBo);
         when(passwordResetTokenStorage.get("token"))

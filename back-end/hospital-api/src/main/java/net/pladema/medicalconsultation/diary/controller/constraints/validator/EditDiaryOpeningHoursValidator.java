@@ -7,6 +7,8 @@ import net.pladema.medicalconsultation.diary.controller.mapper.DiaryMapper;
 import net.pladema.medicalconsultation.diary.service.DiaryOpeningHoursValidatorService;
 import net.pladema.medicalconsultation.diary.service.domain.DiaryBo;
 import net.pladema.medicalconsultation.diary.service.domain.DiaryOpeningHoursBo;
+import net.pladema.medicalconsultation.repository.entity.MedicalAttentionType;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -35,6 +37,11 @@ public class EditDiaryOpeningHoursValidator implements ConstraintValidator<EditD
     @Override
     public boolean isValid(DiaryDto diaryDto, ConstraintValidatorContext context) {
         LOG.debug("Input parameters -> diaryDto {}", diaryDto);
+
+		if(! overturnValuesAreValid(diaryDto, context)) {
+			LOG.debug(OUTPUT, Boolean.FALSE);
+			return false;
+		}
 
         DiaryBo diaryBo = diaryMapper.toDiaryBo(diaryDto);
         diaryBo.setId(diaryDto.getId());
@@ -68,5 +75,33 @@ public class EditDiaryOpeningHoursValidator implements ConstraintValidator<EditD
         return true;
     }
 
+	private boolean overturnValuesAreValid(DiaryDto dto, ConstraintValidatorContext context){
+
+		var isInvalidOverturnCount = dto.getDiaryOpeningHours().stream()
+				.anyMatch(diaryOpeningHoursDto ->
+						diaryOpeningHoursDto.getOverturnCount() != null
+						&& diaryOpeningHoursDto.getOverturnCount() < 0
+				);
+		if(isInvalidOverturnCount) {
+			context.disableDefaultConstraintViolation();
+			context.buildConstraintViolationWithTemplate("{diary.attention.invalid.overturn-value-negative}")
+					.addConstraintViolation();
+			return false;
+		}
+
+		var isInvalidMedicalAttentionType = dto.getDiaryOpeningHours().stream()
+				.anyMatch(diaryOpeningHoursDto ->
+						diaryOpeningHoursDto.getOverturnCount() != null
+								&& diaryOpeningHoursDto.getOverturnCount() > 0
+								&& diaryOpeningHoursDto.getMedicalAttentionTypeId().equals(MedicalAttentionType.SPONTANEOUS));
+		if(isInvalidMedicalAttentionType) {
+			context.disableDefaultConstraintViolation();
+			context.buildConstraintViolationWithTemplate("{diary.attention.invalid.spontaneous-with-overturn}")
+					.addConstraintViolation();
+			return false;
+		}
+
+		return true;
+	}
 
 }

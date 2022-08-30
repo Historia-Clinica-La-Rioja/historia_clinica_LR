@@ -12,7 +12,7 @@ import {
     required,
     number,
     maxLength,
-    minLength,
+    minLength, ReferenceField,
 } from 'react-admin';
 import CreateRelatedButton from '../components/CreateRelatedButton';
 import SectionTitle from '../components/SectionTitle';
@@ -66,6 +66,9 @@ const InstitutionEdit = props => (
             >
                 <Datagrid rowClick="show">
                     <TextField source="description" />
+                    <ReferenceField source="sectorTypeId"  link={false}  reference="sectortypes">
+                        <TextField source="description" />
+                    </ReferenceField>
                     <EditButton />
                 </Datagrid>
             </ReferenceManyField>

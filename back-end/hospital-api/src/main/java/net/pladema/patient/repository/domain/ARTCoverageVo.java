@@ -5,7 +5,6 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 import net.pladema.patient.service.domain.ARTCoverageBo;
-import net.pladema.patient.service.domain.HealthInsuranceBo;
 import net.pladema.patient.service.domain.MedicalCoverageBo;
 
 @Getter

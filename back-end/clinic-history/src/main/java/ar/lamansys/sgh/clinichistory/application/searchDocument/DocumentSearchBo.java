@@ -32,6 +32,12 @@ public class DocumentSearchBo {
 
     private String documentType;
 
+	private Long initialDocumentId;
+
+	private LocalDateTime editedOn;
+    
+	private boolean confirmed;
+
     public DocumentSearchBo(DocumentSearchVo source) {
         this.id = source.getId();
         if(source.getNotes() != null)
@@ -42,5 +48,7 @@ public class DocumentSearchBo {
         this.creator = new AuthorBo(source.getCreator().getUserId(), source.getCreator().getFirstName(), source.getCreator().getLastName(), source.getCreator().getNameSelfDetermination());
         this.createdOn = source.getCreatedOn();
         this.documentType = source.getDocumentType();
+		this.initialDocumentId = source.getInitDocumentId();
+		this.confirmed = source.isFinal();
     }
 }

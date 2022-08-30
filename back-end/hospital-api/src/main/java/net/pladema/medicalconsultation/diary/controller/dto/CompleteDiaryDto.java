@@ -10,6 +10,6 @@ import lombok.ToString;
 public class CompleteDiaryDto extends DiaryDto {
 
     private Integer sectorId;
-    
-    private Integer clinicalSpecialtyId;
+
+	private String specialtyName;
 }

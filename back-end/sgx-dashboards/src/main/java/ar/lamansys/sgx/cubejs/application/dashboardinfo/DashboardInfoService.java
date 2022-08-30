@@ -7,4 +7,5 @@ import java.util.Map;
 public interface DashboardInfoService {
 
     DashboardBoInfo execute(String path, Map<String, String[]> parameterMap);
+
 }

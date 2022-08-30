@@ -8,6 +8,7 @@ import lombok.Setter;
 import lombok.ToString;
 
 import java.time.LocalDate;
+import java.util.Optional;
 
 @Getter
 @Setter
@@ -32,5 +33,15 @@ public class ProcedureBo extends ClinicalTerm {
 		setSnomed(new SnomedBo(procedureVo.getSnomed()));
 		setStatus(procedureVo.getStatusId());
 		setPerformedDate(procedureVo.getPerformedDate());
+	}
+
+	public boolean equals (ClinicalTerm bo){
+		boolean datesAreEquals = Optional.ofNullable(((ProcedureBo)bo).getPerformedDate())
+				.map(p1 -> Optional.ofNullable(getPerformedDate())
+						.map(p2-> p2.equals(p1))
+						.orElse(false))
+				.orElseGet(()-> getPerformedDate()==null);
+		return super.equals(bo)
+				&& datesAreEquals;
 	}
 }

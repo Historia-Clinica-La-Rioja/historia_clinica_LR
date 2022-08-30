@@ -45,4 +45,7 @@ public class DiaryADto {
     @NotNull
     @Valid
     private List<DiaryOpeningHoursDto> diaryOpeningHours;
+
+	@NotNull
+	private Integer clinicalSpecialtyId;
 }

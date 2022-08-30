@@ -36,4 +36,6 @@ public class AppointmentListDto {
 
     private final String phoneNumber;
 
+	private final Short appointmentBlockMotiveId;
+
 }

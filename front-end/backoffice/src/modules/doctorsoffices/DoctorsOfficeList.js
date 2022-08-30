@@ -7,7 +7,7 @@ const DoctorsOfficeFilter = props => (
     <Filter {...props}>
         <TextInput source="description" />
         <SgxSelectInput source="institutionId" element="institutions" optionText="name" allowEmpty={false} />
-        <SgxSelectInput label="Especialidad | Sector" source="clinicalSpecialtySectorId" element="clinicalspecialtysectors" optionText="description" allowEmpty={false} />
+        <SgxSelectInput label="Sector" source="sectorId" element="sectors" optionText="description" allowEmpty={false} />
     </Filter>
 );
 
@@ -23,7 +23,7 @@ const DoctorsOfficeList = (props) => {
                     <TextField source="name" />
                 </ReferenceField>
 
-                <ReferenceField source="clinicalSpecialtySectorId" reference="clinicalspecialtysectors">
+                <ReferenceField source="sectorId" reference="sectors">
                     <TextField source="description" />
                 </ReferenceField>
 

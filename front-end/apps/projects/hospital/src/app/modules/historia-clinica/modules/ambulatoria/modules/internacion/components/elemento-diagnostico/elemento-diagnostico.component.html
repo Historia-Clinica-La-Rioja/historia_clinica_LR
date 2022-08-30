@@ -3,12 +3,28 @@
 		<mat-checkbox id="{{ diagnosis.snomed.pt }}" [checked]="diagnosis.isAdded" [disabled]="isMain" (change)="diagnosis.isAdded = $event.checked"></mat-checkbox>
 		<strong class="capitalize">{{ diagnosis.snomed.pt }}</strong>
 	</div>
-	<span [translate]="'internaciones.anamnesis.diagnosticos.ACTIVE'"></span>
+	<span *ngIf="diagnosis.statusId == ACTIVE else remissionDiagnosis" [translate]="'internaciones.anamnesis.diagnosticos.ACTIVE'"></span>
 	<span *ngIf="diagnosis.presumptive else confirmedDiagnosis" [translate]="'internaciones.anamnesis.diagnosticos.PRESUMPTIVE'"></span>
 	<ng-template #confirmedDiagnosis>
-		<span [translate]="'internaciones.anamnesis.diagnosticos.CONFIRMED'"></span>
-	</ng-template>
+		<span *ngIf="diagnosis.verificationId == CONFIRMED else discardedDiagnosis" [translate]="'internaciones.anamnesis.diagnosticos.CONFIRMED'"></span>
+	</ng-template>	
 	<button mat-icon-button color="primary" (click)="openDiagnosisEditionDialog()" [disabled]="isMain">
         <mat-icon>edit</mat-icon>
       </button>
 </div>
+
+<ng-template #discardedDiagnosis>
+	<span *ngIf="diagnosis.verificationId" [translate]="'internaciones.anamnesis.diagnosticos.DISCARD'"></span>
+</ng-template>
+
+<ng-template #remissionDiagnosis>
+	<div *ngIf="diagnosis.statusId == REMISSION else resolvedDiagnosis">
+		<span [translate]="'internaciones.anamnesis.diagnosticos.REMISSION'"></span>
+	</div>
+</ng-template>
+
+<ng-template #resolvedDiagnosis>
+	<div *ngIf="diagnosis.statusId == RESOLVED">
+		<span [translate]="'internaciones.anamnesis.diagnosticos.RESOLVED'"></span>
+	</div>
+</ng-template>

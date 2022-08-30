@@ -74,6 +74,13 @@
 		</div>
 
 
+		<div fxLayout="column" *ngIf="isEnableOnlineAppointments">
+			<mat-checkbox (change)="changeAvailableForBooking()" [checked]="form.value.availableForBooking"
+						  *ngIf="isEnableOnlineAppointments && form?.value?.medicalAttentionType?.description != SPONTANEOUS">
+				<span [translate]="'turnos.agenda-setup.dialog.BOOKING'"></span>
+			</mat-checkbox>
+		</div>
+
 		<mat-dialog-actions align="end">
 			<button *ngIf="data.isEdit" mat-flat-button mat-dialog-close color="warn" (click)="removeAttention()">
 				<span>Eliminar atención</span>

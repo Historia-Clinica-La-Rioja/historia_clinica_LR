@@ -4,11 +4,13 @@ import { Router } from '@angular/router';
 import { AppRoutes } from '../../../../app-routing.module';
 import { LoggedUserService } from '../../../auth/services/logged-user.service';
 
-import { RoleAssignmentDto } from '@api-rest/api-model';
+import {LoggedUserDto, RoleAssignmentDto} from '@api-rest/api-model';
 import { ERole, AppFeature } from '@api-rest/api-model';
 
 import { InstitutionService } from '@api-rest/services/institution.service';
 import { FeatureFlagService } from '@core/services/feature-flag.service';
+import { AccountService } from "@api-rest/services/account.service";
+import { dateTimeDtotoLocalDate } from "@api-rest/mapper/date-dto.mapper";
 
 @Component({
 	selector: 'app-instituciones',
@@ -21,12 +23,15 @@ export class InstitucionesComponent {
 	webappInstitutionsAccess: boolean;
 	backofficeAccess: boolean;
 	patientPortalAccess: boolean;
+	previousLogin: Date;
+	enabledPreviousLogin = false;
 
 	constructor(
 		loggedUserService: LoggedUserService,
 		institutionService: InstitutionService,
 		private featureFlagService: FeatureFlagService,
 		private router: Router,
+		private accountService: AccountService,
 	) {
 		loggedUserService.assignments$.subscribe((allRoles: RoleAssignmentDto[]) => {
 			const institutionIds = allRoles
@@ -51,6 +56,17 @@ export class InstitucionesComponent {
 		});
 
 		this.featureFlagService.isActive(AppFeature.HABILITAR_MODULO_PORTAL_PACIENTE).subscribe(isOn => this.patientPortalEnabled = isOn);
+	}
+
+	ngOnInit(): void {
+
+		this.accountService.getInfo()
+			.subscribe((userInfo: LoggedUserDto) => {
+					if(userInfo?.previousLogin){
+						this.enabledPreviousLogin = true;
+						this.previousLogin = dateTimeDtotoLocalDate(userInfo.previousLogin);
+					}
+				});
 	}
 
 	ingresar(institutionDto: { id: number }, backoffice): void {

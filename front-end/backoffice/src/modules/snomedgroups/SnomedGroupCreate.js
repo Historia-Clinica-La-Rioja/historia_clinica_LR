@@ -7,7 +7,6 @@ import {
     maxLength,
     ReferenceInput,
     AutocompleteInput,
-    SelectInput,
     FormDataConsumer,
     BooleanInput,
     usePermissions,
@@ -15,6 +14,8 @@ import {
 import CustomToolbar from "../components/CustomToolbar";
 import { ADMINISTRADOR } from "../roles";
 import UserReferenceInput from "../users/UserReferenceInput";
+
+const searchSnomedGroupToFilter = searchText => ({description: searchText ? searchText : ''});
 
 const InstitutionSelect = ({ formData, ...rest }) => {
     const { permissions } = usePermissions();
@@ -38,10 +39,11 @@ const SnomedGroupSelect = ({ formData, ...rest }) => {
             {...rest}
             reference="snomedgroups"
             sort={{ field: 'description', order: 'ASC' }}
+            filterToQuery={searchSnomedGroupToFilter}
             isRequired={true}
             validate={required()}
         >
-            <SelectInput optionText="description" optionValue="id" />
+            <AutocompleteInput optionText="description" optionValue="id" resettable />
         </ReferenceInput>);
 };
 

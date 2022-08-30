@@ -4,7 +4,7 @@ import java.time.LocalDate;
 
 public interface AppointmentStorage {
 
-    void run(Integer patientId, Integer id, LocalDate nowDate);
+    Integer run(Integer patientId, Integer id, LocalDate nowDate);
 
     Integer getPatientMedicalCoverageId(Integer patientId, Integer id);
 }

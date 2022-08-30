@@ -24,11 +24,9 @@ import { HealthConditionService } from '@api-rest/services/healthcondition.servi
 import { ClinicalSpecialtyService } from '@api-rest/services/clinical-specialty.service';
 import { MatDialog } from '@angular/material/dialog';
 import { SuggestedFieldsPopupComponent } from '../../../../../presentation/components/suggested-fields-popup/suggested-fields-popup.component';
-import { TEXT_AREA_MAX_LENGTH } from '@core/constants/validation-constants';
 import { hasError } from '@core/utils/form.utils';
 import { NewConsultationSuggestedFieldsService } from '../../services/new-consultation-suggested-fields.service';
 import { TranslateService } from '@ngx-translate/core';
-import { MIN_DATE } from "@core/utils/date.utils";
 import { AmbulatoryConsultationProblem, AmbulatoryConsultationProblemsService } from '@historia-clinica/services/ambulatory-consultation-problems.service';
 import { FeatureFlagService } from '@core/services/feature-flag.service';
 import { AmbulatoryConsultationReferenceService, Reference } from '../../services/ambulatory-consultation-reference.service';
@@ -45,6 +43,12 @@ import { SnvsReportsResultComponent } from '../snvs-reports-result/snvs-reports-
 import { HCEPersonalHistory } from '../reference/reference.component';
 import { DATOS_ANTROPOMETRICOS, FACTORES_DE_RIESGO } from '@historia-clinica/constants/validation-constants';
 import { hasMaxTwoDecimalDigits, PATTERN_INTEGER_NUMBER } from '@core/utils/pattern.utils';
+import { NewConsultationAddProblemFormComponent } from '@historia-clinica/dialogs/new-consultation-add-problem-form/new-consultation-add-problem-form.component';
+import { NewConsultationAddReasonFormComponent } from '@historia-clinica/dialogs/new-consultation-add-reason-form/new-consultation-add-reason-form.component';
+import { NewConsultationFamilyHistoryFormComponent } from '../new-consultation-family-history-form/new-consultation-family-history-form.component';
+import { NewConsultationMedicationFormComponent } from '@historia-clinica/dialogs/new-consultation-medication-form/new-consultation-medication-form.component';
+import { NewConsultationProcedureFormComponent } from '@historia-clinica/dialogs/new-consultation-procedure-form/new-consultation-procedure-form.component';
+import { NewConsultationAllergyFormComponent } from '@historia-clinica/dialogs/new-consultation-allergy-form/new-consultation-allergy-form.component';
 
 const TIME_OUT = 5000;
 
@@ -65,17 +69,14 @@ export class NuevaConsultaDockPopupComponent implements OnInit {
 	factoresDeRiesgoFormService: FactoresDeRiesgoFormService;
 	antecedentesFamiliaresNuevaConsultaService: AntecedentesFamiliaresNuevaConsultaService;
 	alergiasNuevaConsultaService: AlergiasNuevaConsultaService;
-	readOnlyProblema = false;
 	apiErrors: string[] = [];
 	public today = newMoment();
 	fixedSpecialty = true;
 	defaultSpecialty: ClinicalSpecialtyDto;
 	specialties: ClinicalSpecialtyDto[];
-	public readonly TEXT_AREA_MAX_LENGTH = TEXT_AREA_MAX_LENGTH;
 	public hasError = hasError;
 	severityTypes: any[];
 	criticalityTypes: any[];
-	minDate = MIN_DATE;
 	public reportFFIsOn: boolean;
 	searchConceptsLocallyFFIsOn = false;
 	ambulatoryConsultationReferenceService: AmbulatoryConsultationReferenceService;
@@ -132,14 +133,13 @@ export class NuevaConsultaDockPopupComponent implements OnInit {
 		this.setProfessionalSpecialties();
 
 		if (this.data.idProblema) {
-			this.readOnlyProblema = true;
 			this.healthConditionService.getHealthCondition(this.data.idProblema).subscribe(p => {
 				this.ambulatoryConsultationProblemsService.addProblemToList(this.buildProblema(p));
 			});
 		}
 
 		this.formEvolucion = this.formBuilder.group({
-			evolucion: [null, null],
+			evolucion: [],
 			clinicalSpecialty: [null, [Validators.required]],
 		});
 
@@ -160,7 +160,7 @@ export class NuevaConsultaDockPopupComponent implements OnInit {
 			this.errores[3] = pesoError;
 		});
 		this.datosAntropometricosNuevaConsultaService.headCircumferenceError$.subscribe(headCircumferenceError => {
-			this.errores[11] = headCircumferenceError;
+			this.errores[10] = headCircumferenceError;
 		});
 		this.factoresDeRiesgoFormService.heartRateError$.subscribe(frecuenciaCardiacaError => {
 			this.errores[4] = frecuenciaCardiacaError;
@@ -181,13 +181,13 @@ export class NuevaConsultaDockPopupComponent implements OnInit {
 			this.errores[9] = presionDiastolicaError;
 		});
 		this.factoresDeRiesgoFormService.bloodGlucoseError$.subscribe(bloodGlucoseError => {
-			this.errores[12] = bloodGlucoseError;
+			this.errores[11] = bloodGlucoseError;
 		});
 		this.factoresDeRiesgoFormService.glycosylatedHemoglobinError$.subscribe(glycosylatedHemoglobinError => {
-			this.errores[13] = glycosylatedHemoglobinError;
+			this.errores[12] = glycosylatedHemoglobinError;
 		});
 		this.factoresDeRiesgoFormService.cardiovascularRiskError$.subscribe(cardiovascularRiskError => {
-			this.errores[14] = cardiovascularRiskError;
+			this.errores[13] = cardiovascularRiskError;
 		});
 
 		this.internacionMasterDataService.getHealthSeverity().subscribe(healthConditionSeverities => {
@@ -200,8 +200,15 @@ export class NuevaConsultaDockPopupComponent implements OnInit {
 			this.alergiasNuevaConsultaService.setCriticalityTypes(allergyCriticalities);
 		});
 
-		this.featureFlagService.isActive(AppFeature.HABILITAR_REPORTE_EPIDEMIOLOGICO).subscribe(isOn => this.reportFFIsOn = isOn);
-		this.featureFlagService.isActive(AppFeature.HABILITAR_BUSQUEDA_LOCAL_CONCEPTOS).subscribe(isOn => this.searchConceptsLocallyFFIsOn = isOn);
+		this.featureFlagService.isActive(AppFeature.HABILITAR_REPORTE_EPIDEMIOLOGICO).subscribe(isOn => {
+			this.reportFFIsOn = isOn;
+			this.ambulatoryConsultationProblemsService.setReportFF(isOn);
+		});
+		this.featureFlagService.isActive(AppFeature.HABILITAR_BUSQUEDA_LOCAL_CONCEPTOS).subscribe(isOn => {
+			this.searchConceptsLocallyFFIsOn = isOn;
+			this.ambulatoryConsultationProblemsService.setSearchConceptsLocallyFF(isOn);
+
+		});
 	}
 
 
@@ -439,10 +446,6 @@ export class NuevaConsultaDockPopupComponent implements OnInit {
 			this.factoresDeRiesgoFormService.setCardiovascularRiskError('ambulatoria.paciente.nueva-consulta.errors.CARDIOVASCULAR_RISK_RANGE');
 		}
 
-		this.errores[10] =
-			hasError(this.formEvolucion, 'maxlength', 'evolucion') ?
-				'ambulatoria.paciente.nueva-consulta.errors.MAX_LENGTH_NOTA'
-				: undefined;
 	}
 
 	private buildProblema(p: HealthConditionNewConsultationDto) {
@@ -501,12 +504,6 @@ export class NuevaConsultaDockPopupComponent implements OnInit {
 			clinicalSpecialtyId: this.defaultSpecialty?.id,
 			references: this.ambulatoryConsultationReferenceService.getOutpatientReferences(),
 		};
-	}
-
-	editProblema() {
-		if (this.ambulatoryConsultationProblemsService.editProblem()) {
-			this.readOnlyProblema = false;
-		}
 	}
 
 	setDefaultSpecialty() {
@@ -595,6 +592,79 @@ export class NuevaConsultaDockPopupComponent implements OnInit {
 		control.reset();
 	}
 
+	addProblem(): void {
+		this.dialog.open(NewConsultationAddProblemFormComponent, {
+			data: {
+				ambulatoryConsultationProblemsService: this.ambulatoryConsultationProblemsService,
+				severityTypes: this.severityTypes,
+				epidemiologicalReportFF: this.reportFFIsOn,
+				searchConceptsLocallyFF: this.searchConceptsLocallyFFIsOn,
+			},
+			autoFocus: false,
+			width: '35%',
+			disableClose: true,
+		});
+	}
+
+	addReason(): void {
+		this.dialog.open(NewConsultationAddReasonFormComponent, {
+			data: {
+				reasonService: this.motivoNuevaConsultaService,
+				searchConceptsLocallyFF: this.searchConceptsLocallyFFIsOn,
+			},
+			autoFocus: false,
+			width: '35%',
+			disableClose: true,
+		});
+	}
+
+	addFamilyHistory(): void {
+		this.dialog.open(NewConsultationFamilyHistoryFormComponent, {
+			data: {
+				familyHistoryService: this.antecedentesFamiliaresNuevaConsultaService,
+				searchConceptsLocallyFF: this.searchConceptsLocallyFFIsOn,
+			},
+			autoFocus: false,
+			width: '35%',
+			disableClose: true,
+		});
+	}
+
+	addMedication(): void {
+		this.dialog.open(NewConsultationMedicationFormComponent, {
+			data: {
+				medicationService: this.medicacionesNuevaConsultaService,
+				searchConceptsLocallyFF: this.searchConceptsLocallyFFIsOn,
+			},
+			autoFocus: false,
+			width: '35%',
+			disableClose: true,
+		});
+	}
+
+	addProcedure(): void {
+		this.dialog.open(NewConsultationProcedureFormComponent, {
+			data: {
+				procedureService: this.procedimientoNuevaConsultaService,
+				searchConceptsLocallyFF: this.searchConceptsLocallyFFIsOn,
+			},
+			autoFocus: false,
+			width: '35%',
+			disableClose: true,
+		});
+	}
+
+	addAllergy(): void {
+		this.dialog.open(NewConsultationAllergyFormComponent, {
+			data: {
+				allergyService: this.alergiasNuevaConsultaService,
+				searchConceptsLocallyFF: this.searchConceptsLocallyFFIsOn,
+			},
+			autoFocus: false,
+			width: '35%',
+			disableClose: true,
+		});
+	}
 }
 
 export interface NuevaConsultaData {

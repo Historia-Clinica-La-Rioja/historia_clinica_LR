@@ -18,6 +18,9 @@ import javax.validation.constraints.NotNull;
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
 public class HospitalizationProcedureDto {
 
+	@Nullable
+	private Integer id;
+
     @NotNull(message = "{value.mandatory}")
     @Valid
     @EqualsAndHashCode.Include

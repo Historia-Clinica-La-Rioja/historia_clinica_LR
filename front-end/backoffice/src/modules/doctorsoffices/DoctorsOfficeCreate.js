@@ -4,7 +4,7 @@ import { Create, required, SimpleForm, TextInput, usePermissions } from 'react-a
 import SgxSelectInput from '../../sgxSelectInput/SgxSelectInput';
 import CustomToolbar from '../components/CustomToolbar';
 
-const redirect = (basePath, id, data) => `/clinicalspecialtysectors/${data.clinicalSpecialtySectorId}/show`;
+const redirect = (basePath, id, data) => `/sectors/${data.sectorId}/show`;
 
 const DoctorsOfficeCreate = (props) => {
     const { permissions } = usePermissions();
@@ -12,8 +12,8 @@ const DoctorsOfficeCreate = (props) => {
         <Create {...props}>
             <SimpleForm redirect={redirect} toolbar={<CustomToolbar />}>
                 <TextInput source="description" validate={[required()]} />
-                <SgxSelectInput source="clinicalSpecialtySectorId"
-                    element="clinicalspecialtysectors"
+                <SgxSelectInput source="sectorId"
+                    element="sectors"
                     optionText="description"
                     alwaysOn
                     allowEmpty={false}

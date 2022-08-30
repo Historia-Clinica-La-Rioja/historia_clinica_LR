@@ -29,7 +29,8 @@ import { EvolutionNoteDockPopupComponent } from './dialogs/evolution-note-dock-p
 import { MedicalDischargeComponent } from './dialogs/medical-discharge/medical-discharge.component';
 import { DiagnosisCreationEditionComponent } from './dialogs/diagnosis-creation-edition/diagnosis-creation-edition.component';
 import { SelectMainDiagnosisComponent } from './dialogs/select-main-diagnosis/select-main-diagnosis.component';
-import { DocumentDeletionReasonComponent } from './dialogs/document-deletion-reason/document-deletion-reason.component';
+import { DocumentActionReasonComponent } from "@historia-clinica/modules/ambulatoria/modules/internacion/dialogs/document-action-reason/document-action-reason.component";
+import { TurnosModule } from '@turnos/turnos.module';
 
 @NgModule({
 	declarations: [
@@ -57,7 +58,7 @@ import { DocumentDeletionReasonComponent } from './dialogs/document-deletion-rea
 		ElementoDiagnosticoComponent,
 		DiagnosisCreationEditionComponent,
 		SelectMainDiagnosisComponent,
-		DocumentDeletionReasonComponent,
+		DocumentActionReasonComponent
 	],
     exports: [
         InternmentEpisodeSummaryComponent,
@@ -71,6 +72,7 @@ import { DocumentDeletionReasonComponent } from './dialogs/document-deletion-rea
 		// deps
 		HistoriaClinicaModule,
 		PresentationModule,
+		TurnosModule
 	]
 })
 export class InternacionesModule { }

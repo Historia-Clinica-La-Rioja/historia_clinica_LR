@@ -42,7 +42,7 @@ public class HCEClinicalObservationRepositoryImpl implements HCEClinicalObservat
                         "    JOIN {h-schema}document_vital_sign dvs ON (d.id = dvs.document_id) " +
                         "    JOIN {h-schema}observation_vital_sign ovs ON (dvs.observation_vital_sign_id = ovs.id) " +
                         "    JOIN {h-schema}snomed s ON (ovs.snomed_id = s.id) " +
-                        "    WHERE d.status_id = :docStatusId " +
+                        "    WHERE d.status_id IN (:docStatusId) " +
 								invalidDocumentCondition +
                         "       AND ovs.patient_id = :patientId " +
                         " )UNION( " +
@@ -55,7 +55,7 @@ public class HCEClinicalObservationRepositoryImpl implements HCEClinicalObservat
                         "    JOIN {h-schema}document_lab dl ON (d.id = dl.document_id) " +
                         "    JOIN {h-schema}observation_lab ovs ON (dl.observation_lab_id = ovs.id) " +
                         "    JOIN {h-schema}snomed s ON (ovs.snomed_id = s.id) " +
-                        "    WHERE d.status_id = :docStatusId " +
+                        "    WHERE d.status_id IN (:docStatusId) " +
 								invalidDocumentCondition +
                         "       AND ovs.patient_id = :patientId " +
                         ")" +

@@ -30,7 +30,7 @@
 }
 
 .content {
-	max-height: 88vh;
+	height: 88vh;
 
 	.body {
 		max-height: 75vh;
@@ -45,10 +45,21 @@
 	}
 }
 
+.menu {
+	min-height: 90vh;
+
+	.body-menu {
+		max-height: 83vh;
+		padding: 35px 30px;
+		overflow-y: auto
+	}
+}
+
 @media (max-width: $mobile-popups) {
 	.dock-popup {
 		height: 100vh;
 	}
+
 	.content {
 		max-height: 100vh;
 		overflow-y: scroll;
@@ -58,4 +69,3 @@
 		}
 	}
 }
-

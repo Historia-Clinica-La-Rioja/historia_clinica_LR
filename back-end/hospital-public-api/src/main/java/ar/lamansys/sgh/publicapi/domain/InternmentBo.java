@@ -1,8 +1,12 @@
 package ar.lamansys.sgh.publicapi.domain;
 
-import lombok.*;
+import java.time.LocalDateTime;
 
-import java.time.LocalDate;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.ToString;
 
 @Getter
 @Setter
@@ -12,6 +16,6 @@ import java.time.LocalDate;
 public class InternmentBo {
 
     private String id;
-    private LocalDate entryDate;
-    private LocalDate dischargeDate;
+    private LocalDateTime entryDate;
+    private LocalDateTime dischargeDate;
 }

@@ -1,8 +1,12 @@
 package ar.lamansys.sgh.publicapi.domain;
 
-import lombok.*;
-
 import java.time.LocalDate;
+
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.ToString;
 
 @Getter
 @Setter
@@ -11,7 +15,7 @@ import java.time.LocalDate;
 @ToString
 public class AttentionInfoBo {
 
-    private Integer id;
+    private Long id;
     private LocalDate attentionDate;
     private SnomedBo speciality;
     private PersonInfoBo patient;

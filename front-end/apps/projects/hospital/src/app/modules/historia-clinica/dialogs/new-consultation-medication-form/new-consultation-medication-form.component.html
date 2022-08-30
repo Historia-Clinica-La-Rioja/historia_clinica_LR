@@ -1,0 +1,64 @@
+<div fxLayout="row" fxLayoutAlign="space-between">
+    <span mat-dialog-title [translate]="'historia-clinica.new-consultation-medication-form.ADD'"></span>
+    <button mat-icon-button (click)="close()">
+        <mat-icon>close</mat-icon>
+    </button>
+</div>
+
+<div mat-dialog-content>
+    <ng-container *ngIf="!data.medicationService.getSnomedConcept() else medicationForm">
+        <app-concepts-search *ngIf="!data.searchConceptsLocallyFF else medicationTypeaheadSearch"
+            [label]="'historia-clinica.new-consultation-medication-form.CONCEPT_LABEL'"
+            (search)="data.medicationService.openSearchDialog($event)">
+        </app-concepts-search>
+
+        <ng-template #medicationTypeaheadSearch>
+            <app-concept-typeahead-search [ecl]="data.medicationService.getECL()"
+                [placeholder]="'historia-clinica.new-consultation-medication-form.SEARCH_PLACEHOLDER'"
+                (conceptSelected)="data.medicationService.setConcept($event)">
+            </app-concept-typeahead-search>
+        </ng-template>
+    </ng-container>
+</div>
+
+<ng-template #medicationForm>
+    <form [formGroup]="data.medicationService.getForm()" (ngSubmit)="addMedication()">
+        <div fxLayout="column">
+            <mat-form-field appearance="outline">
+                <mat-label [translate]="'historia-clinica.new-consultation-medication-form.MEDICATION'">
+                </mat-label>
+                <input matInput type="text" formControlName="snomed" name="snomed" readonly
+                    matTooltip="{{ data.medicationService.getSnomedConcept().pt }}">
+                <button id="clear_medication" mat-button matSuffix color="warn" mat-icon-button
+                    (click)="data.medicationService.resetForm()">
+                    <mat-icon>close</mat-icon>
+                </button>
+            </mat-form-field>
+
+            <mat-form-field appearance="outline">
+                <mat-label [translate]="'historia-clinica.new-consultation-medication-form.OBSERVACIONES'">
+                </mat-label>
+                <textarea matInput type="text" id="observations" name="observaciones" formControlName="observaciones"
+                    placeholder="Descripción">
+                </textarea>
+                <mat-error *ngIf="hasError(data.medicationService.getForm(), 'maxlength', 'observaciones')"
+                    translate="forms.MAX_LENGTH_ERROR" [translateParams]="{max: TEXT_AREA_MAX_LENGTH}">
+                </mat-error>
+            </mat-form-field>
+
+            <div class="margin-checkbox">
+                <mat-checkbox formControlName="suspendido">
+                    <span [translate]="'historia-clinica.new-consultation-medication-form.SUSPENDIDO'">
+                    </span>
+                </mat-checkbox>
+            </div>
+
+            <div align="end">
+                <button id="add-medication-button" mat-raised-button color="primary" type="submit">
+                    <span [translate]="'historia-clinica.new-consultation-medication-form.ADD'"
+                        class="uppercase"></span>
+                </button>
+            </div>
+        </div>
+    </form>
+</ng-template>

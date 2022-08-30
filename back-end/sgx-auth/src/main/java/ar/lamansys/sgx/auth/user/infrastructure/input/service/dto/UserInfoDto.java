@@ -3,6 +3,8 @@ package ar.lamansys.sgx.auth.user.infrastructure.input.service.dto;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
+import java.time.LocalDateTime;
+
 @AllArgsConstructor
 @Getter
 public class UserInfoDto {
@@ -14,5 +16,7 @@ public class UserInfoDto {
     private final String password;
 
     private final boolean enabled;
+
+	private LocalDateTime previousLogin;
 
 }

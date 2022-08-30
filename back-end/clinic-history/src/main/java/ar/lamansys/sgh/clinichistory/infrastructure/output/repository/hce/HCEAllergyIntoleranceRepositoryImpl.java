@@ -25,7 +25,7 @@ public class HCEAllergyIntoleranceRepositoryImpl implements HCEAllergyIntoleranc
     @SuppressWarnings("unchecked")
     @Override
     @Transactional(readOnly = true)
-    public List<HCEAllergyVo> findAllergies(Integer patientId) {
+    public List<HCEAllergyVo> findActiveAllergiesByPatient(Integer patientId) {
 
         String sqlString = "with temporal as (" +
                 "SELECT DISTINCT " +
@@ -42,7 +42,7 @@ public class HCEAllergyIntoleranceRepositoryImpl implements HCEAllergyIntoleranc
                 "JOIN {h-schema}document_allergy_intolerance dai ON d.id = dai.document_id " +
                 "JOIN {h-schema}allergy_intolerance ai ON dai.allergy_intolerance_id = ai.id " +
                 "WHERE d.type_id IN (:documentTypes) "+
-                "AND d.status_id = :documentStatusId " +
+                "AND d.status_id IN (:documentStatusId) " +
                 "AND ai.patient_id = :patientId " +
                 ") " +
                 "SELECT t.id AS id, s.sctid AS sctid, s.pt, t.status_id, t.verification_status_id, t.category_id, t.criticality, t.start_date " +
@@ -53,7 +53,7 @@ public class HCEAllergyIntoleranceRepositoryImpl implements HCEAllergyIntoleranc
 
         List<Object[]> queryResult = entityManager.createNativeQuery(sqlString)
                 .setParameter("patientId", patientId)
-                .setParameter("documentStatusId", DocumentStatus.FINAL)
+                .setParameter("documentStatusId", List.of(DocumentStatus.FINAL, DocumentStatus.DRAFT))
                 .setParameter("documentTypes", List.of(DocumentType.OUTPATIENT, DocumentType.COUNTER_REFERENCE, DocumentType.ODONTOLOGY))
                 .setParameter("allergyIntoleranceStatus", AllergyIntoleranceVerificationStatus.ERROR)
                 .getResultList();

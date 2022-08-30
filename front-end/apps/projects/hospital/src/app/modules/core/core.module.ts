@@ -15,6 +15,8 @@ import { ExchangeableThemeComponent } from './components/exchangeable-theme/exch
 // directives
 import { HasRoleDirective } from './directives/has-role.directive';
 import { FeatureFlagDirective } from './directives/feature-flag.directive';
+import { adapterFactory } from 'angular-calendar/date-adapters/date-fns';
+import { CalendarModule, DateAdapter } from 'angular-calendar';
 
 @NgModule({
 	declarations: [
@@ -26,6 +28,7 @@ import { FeatureFlagDirective } from './directives/feature-flag.directive';
 		HasRoleDirective,
 	],
 	imports: [
+		CalendarModule.forRoot({ provide: DateAdapter, useFactory: adapterFactory }),
 		CommonModule,
 		HttpClientModule,
 		FormsModule,

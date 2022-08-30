@@ -4,6 +4,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.time.LocalDateTime;
+
 @Getter
 @Setter
 @NoArgsConstructor
@@ -19,10 +21,13 @@ public class UserDto extends AbstractUserDto {
 
 	private UserPersonDto personDto;
 
-	public UserDto(String email, Integer id, Integer personId, String firstName, String lastName, String nameSelfDetermination) {
+	private LocalDateTime previousLogin;
+
+	public UserDto(String email, Integer id, Integer personId, String firstName, String lastName, String nameSelfDetermination, LocalDateTime previousLogin) {
 		this.email = email;
 		this.id = id;
 		this.personDto = new UserPersonDto(personId, firstName, lastName, nameSelfDetermination);
+		this.previousLogin = previousLogin;
 	}
 
 	public Integer getPersonId() {

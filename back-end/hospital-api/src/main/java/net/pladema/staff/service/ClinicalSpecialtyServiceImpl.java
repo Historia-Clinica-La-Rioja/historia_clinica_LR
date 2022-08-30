@@ -28,6 +28,7 @@ public class ClinicalSpecialtyServiceImpl implements ClinicalSpecialtyService{
     public List<ClinicalSpecialtyBo> getSpecialtiesByProfessional(Integer professionalId) {
         return clinicalSpecialtyRepository.getAllByProfessional(professionalId)
                 .stream()
+				.distinct()
                 .filter(ClinicalSpecialty::isSpecialty)
                 .map(clinicalSpecialty -> new ClinicalSpecialtyBo(clinicalSpecialty.getId(), clinicalSpecialty.getName()))
                 .collect(Collectors.toList());

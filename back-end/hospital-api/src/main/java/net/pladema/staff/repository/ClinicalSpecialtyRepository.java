@@ -1,32 +1,33 @@
 package net.pladema.staff.repository;
 
-import net.pladema.staff.service.domain.ClinicalSpecialtyBo;
-import net.pladema.staff.repository.entity.ClinicalSpecialty;
+import java.util.List;
+
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.List;
+import net.pladema.staff.repository.entity.ClinicalSpecialty;
+import net.pladema.staff.service.domain.ClinicalSpecialtyBo;
 
 @Repository
 public interface ClinicalSpecialtyRepository extends JpaRepository<ClinicalSpecialty, Integer>{
 
     @Transactional(readOnly = true)
-    @Query(value = " SELECT cs FROM HealthcareProfessionalSpecialty hps "
+    @Query(value = " SELECT cs "
+			+ "FROM HealthcareProfessionalSpecialty hps "
             + "INNER JOIN ClinicalSpecialty cs ON hps.clinicalSpecialtyId = cs.id "
-            + "WHERE hps.healthcareProfessionalId = :professionalId")
+			+ "INNER JOIN ProfessionalProfessions pp ON hps.professionalProfessionId = pp.id "
+            + "WHERE pp.healthcareProfessionalId = :professionalId "
+			+ "AND pp.deleteable.deleted = false "
+			+ "AND hps.deleteable.deleted = false")
     List<ClinicalSpecialty> getAllByProfessional(@Param("professionalId") Integer professionalId);
 
     @Transactional(readOnly = true)
     @Query(value = " SELECT cs FROM Diary d " +
-            "JOIN DoctorsOffice doff " +
-            "ON d.doctorsOfficeId = doff.id " +
-            "JOIN ClinicalSpecialtySector css " +
-            "ON doff.clinicalSpecialtySectorId = css.id " +
             "JOIN ClinicalSpecialty cs "+
-            "ON cs.id = css.clinicalSpecialtyId " +
+            "ON cs.id = d.clinicalSpecialtyId " +
             "WHERE d.id = :diaryId")
     ClinicalSpecialty getClinicalSpecialtyByDiary(@Param("diaryId") Integer diaryId);
 

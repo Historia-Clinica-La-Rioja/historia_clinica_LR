@@ -69,4 +69,7 @@ public class StringHelper {
 		return (str == null || str.length() == 0 || str.equals(" "));
 	}
 
+	public static String toString(Object value) {
+		return value == null ? null : value.toString();
+	}
 }

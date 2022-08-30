@@ -48,7 +48,7 @@ public class HCHImmunizationRepositoryImpl implements HCHImmunizationRepository 
                 "join {h-schema}inmunization i on (di.inmunization_id = i.id) " +
                 "where d.source_id = :internmentEpisodeId " +
                 "and d.source_type_id = " + SourceType.HOSPITALIZATION +" "+
-                "and d.status_id = :documentStatusId " +
+                "and d.status_id IN (:documentStatusId) " +
                 ") " +
                 "select t.id as id, s.sctid as sctid, s.pt, t.status_id, t.administration_date, " +
                 "n.id as note_id, n.description as note " +
@@ -60,7 +60,7 @@ public class HCHImmunizationRepositoryImpl implements HCHImmunizationRepository 
 
         List<Object[]> queryResult = entityManager.createNativeQuery(sqlString)
                 .setParameter("internmentEpisodeId", internmentEpisodeId)
-                .setParameter("documentStatusId", DocumentStatus.FINAL)
+                .setParameter("documentStatusId", List.of(DocumentStatus.FINAL, DocumentStatus.DRAFT))
                 .setParameter("immunizationStatusId", InmunizationStatus.ERROR)
                 .getResultList();
         List<ImmunizationVo> result = new ArrayList<>();

@@ -26,31 +26,6 @@ public interface InternmentEpisodeRepository extends JpaRepository<InternmentEpi
 
 
     @Transactional(readOnly = true)
-    @Query("SELECT NEW net.pladema.clinichistory.hospitalization.repository.domain.summary.InternmentSummaryVo(" +
-            "ie.id,  ie.entryDate, " +
-            "ie.anamnesisDocId, da.statusId as anamnesisStatusId, " +
-            "ie.epicrisisDocId, de.statusId as epicrisisStatusId, " +
-            "b.id as bedId, b.bedNumber, " +
-            "r.id as roomId, r.roomNumber, sector.description, " +
-			"hpg.pk.healthcareProfessionalId, hp.licenseNumber, p.firstName, p.lastName, pe.nameSelfDetermination," +
-            "rc, ie.probableDischargeDate, pd.administrativeDischargeDate, ie.statusId, pd.physicalDischargeDate) " +
-            "FROM InternmentEpisode ie " +
-            "JOIN Bed b ON (b.id = ie.bedId) " +
-            "JOIN Room r ON (r.id = b.roomId) " +
-            "JOIN Sector sector ON (sector.id = r.sectorId) " +
-            "LEFT JOIN Document da ON (da.id = ie.anamnesisDocId) " +
-            "LEFT JOIN Document de ON (de.id = ie.epicrisisDocId) " +
-            "LEFT JOIN HealthcareProfessionalGroup hpg ON (hpg.pk.internmentEpisodeId = ie.id and hpg.responsible = true) " +
-            "LEFT JOIN HealthcareProfessional hp ON (hpg.pk.healthcareProfessionalId = hp.id) " +
-            "LEFT JOIN Person p ON (hp.personId = p.id) " +
-			"LEFT JOIN PersonExtended pe ON (p.id = pe.id) " +
-            "LEFT JOIN ResponsibleContact rc ON (ie.id = rc.internmentEpisodeId) " +
-            "LEFT JOIN PatientDischarge pd ON (ie.id = pd.internmentEpisodeId) " +
-            "WHERE ie.id = :internmentEpisodeId")
-    Optional<InternmentSummaryVo> getSummary(@Param("internmentEpisodeId") Integer internmentEpisodeId);
-
-
-    @Transactional(readOnly = true)
     @Query("SELECT ie.patientId " +
             "FROM InternmentEpisode ie " +
             "WHERE ie.id = :internmentEpisodeId")
@@ -78,7 +53,9 @@ public interface InternmentEpisodeRepository extends JpaRepository<InternmentEpi
 
     @Transactional(readOnly = true)
     @Query("SELECT NEW net.pladema.clinichistory.hospitalization.service.domain.BasicListedPatientBo(pa.id, pe.identificationTypeId, " +
-            "pe.identificationNumber, pe.firstName, pe.lastName, petd.nameSelfDetermination, pe.birthDate, pe.genderId, ie.id, b.bedNumber, r.roomNumber, s.description, CASE when pd.physicalDischargeDate is not null then true else false end) " +
+            "pe.identificationNumber, pe.firstName, pe.lastName, petd.nameSelfDetermination, pe.birthDate, pe.genderId, ie.id, b.bedNumber, r.roomNumber, s.description, " +
+			"CASE when pd.physicalDischargeDate is not null then true else false end, CASE when pd.administrativeDischargeDate is not null then true else false end," +
+			"CASE when pd.medicalDischargeDate is not null then true else false end) " +
             " FROM InternmentEpisode as ie " +
 			" LEFT JOIN PatientDischarge as pd ON (ie.id = pd.internmentEpisodeId) " +
             " JOIN Patient as pa ON (ie.patientId = pa.id) " +
@@ -122,9 +99,10 @@ public interface InternmentEpisodeRepository extends JpaRepository<InternmentEpi
     @Transactional(readOnly = true)
     @Query("SELECT (case when count(ie.id)> 0 then true else false end) " +
             "FROM InternmentEpisode ie " +
-            "WHERE ie.id = :internmentEpisodeId " +
+			"JOIN Document d ON (ie.epicrisisDocId = d.id) " +
+            "WHERE ie.id = :internmentEpisodeId AND d.statusId = '" + DocumentStatus.FINAL + "'" +
             "AND ie.epicrisisDocId IS NOT NULL")
-    boolean haveEpicrisis(@Param("internmentEpisodeId") Integer internmentEpisodeId);
+    boolean hasFinalEpicrisis(@Param("internmentEpisodeId") Integer internmentEpisodeId);
 
     @Transactional(readOnly = true)
     @Query(" SELECT NEW net.pladema.clinichistory.hospitalization.repository.domain.processepisode.InternmentEpisodeProcessVo(ie.id, ie.institutionId) " +
@@ -145,7 +123,12 @@ public interface InternmentEpisodeRepository extends JpaRepository<InternmentEpi
             "FROM InternmentEpisode ie " +
             "JOIN Document da ON (da.id = ie.anamnesisDocId and da.statusId = '"+ DocumentStatus.FINAL + "') " +
             "WHERE ie.id = :internmentEpisodeId " +
-            "AND ie.epicrisisDocId IS NULL " +
+            "AND (ie.epicrisisDocId IS NULL " +
+			"	OR NOT EXISTS (" +
+			"					SELECT doc.id " +
+			"					FROM Document doc " +
+			"					WHERE doc.id = ie.epicrisisDocId " +
+			"					AND doc.statusId = '" + DocumentStatus.FINAL + "'))" +
             "AND EXISTS (" +
             "               SELECT d.id " +
             "               FROM EvolutionNoteDocument evnd " +
@@ -237,6 +220,30 @@ public interface InternmentEpisodeRepository extends JpaRepository<InternmentEpi
 			"        )")
 	boolean haveEvolutionNoteAfterAnamnesis(@Param("internmentEpisodeId") Integer internmentEpisodeId,
 											@Param("anamnesisDocId") Long anamnesisDocId);
+
+	@Transactional(readOnly = true)
+	@Query("SELECT (case when count(dc.id) > 0 then true else false end) " +
+			"FROM Document dc " +
+			"WHERE dc.id = :epicrisisId " +
+			"AND dc.statusId IN ('" + DocumentStatus.DRAFT + "', '" + DocumentStatus.FINAL + "') " +
+			"AND (EXISTS (" +
+			"           SELECT d.id " +
+			"           FROM EvolutionNoteDocument evnd " +
+			"           JOIN Document d ON (d.id = evnd.pk.documentId) " +
+			"           WHERE evnd.pk.internmentEpisodeId = :internmentEpisodeId " +
+			"           AND d.statusId = '"+ DocumentStatus.FINAL + "' " +
+			"           AND d.creationable.createdOn > dc.creationable.createdOn " +
+			"        ) " +
+			"OR EXISTS (" +
+			"			SELECT doc.id " +
+			"			FROM InternmentEpisode ie " +
+			"			JOIN Document doc ON (doc.id = ie.anamnesisDocId) " +
+			"			WHERE ie.id = :internmentEpisodeId " +
+			"           AND doc.statusId = '"+ DocumentStatus.FINAL + "' " +
+			" 			AND doc.creationable.createdOn > dc.creationable.createdOn " +
+			" 		) )")
+	boolean haveUpdatesAfterEpicrisis(@Param("internmentEpisodeId") Integer internmentEpisodeId,
+											@Param("epicrisisId") Long epicrisisId);
 
 	@Transactional(readOnly = true)
 	@Query("SELECT (case when count(ie.id)> 0 then true else false end) "+

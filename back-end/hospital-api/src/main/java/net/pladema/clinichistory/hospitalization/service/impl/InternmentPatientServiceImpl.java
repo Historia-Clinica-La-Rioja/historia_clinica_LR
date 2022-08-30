@@ -2,17 +2,18 @@ package net.pladema.clinichistory.hospitalization.service.impl;
 
 import net.pladema.clinichistory.hospitalization.repository.InternmentEpisodeRepository;
 import net.pladema.clinichistory.hospitalization.repository.domain.processepisode.InternmentEpisodeProcessVo;
+import net.pladema.clinichistory.hospitalization.service.InternmentEpisodeService;
 import net.pladema.clinichistory.hospitalization.service.InternmentPatientService;
 import net.pladema.clinichistory.hospitalization.service.domain.BasicListedPatientBo;
 import net.pladema.clinichistory.hospitalization.service.domain.InternmentEpisodeBo;
 import net.pladema.clinichistory.hospitalization.service.domain.InternmentEpisodeProcessBo;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 @Service
 public class InternmentPatientServiceImpl implements InternmentPatientService {
@@ -24,14 +25,18 @@ public class InternmentPatientServiceImpl implements InternmentPatientService {
 
     private final InternmentEpisodeRepository internmentEpisodeRepository;
 
-    public InternmentPatientServiceImpl(InternmentEpisodeRepository internmentEpisodeRepository) {
+	private final InternmentEpisodeService internmentEpisodeService;
+
+    public InternmentPatientServiceImpl(InternmentEpisodeRepository internmentEpisodeRepository, InternmentEpisodeService internmentEpisodeService) {
         this.internmentEpisodeRepository = internmentEpisodeRepository;
-    }
+    	this.internmentEpisodeService = internmentEpisodeService;
+	}
 
     @Override
     public List<BasicListedPatientBo> getInternmentPatients(Integer institutionId) {
         LOG.debug(INPUT_PARAMETERS_INSTITUTION_ID, institutionId);
         List<BasicListedPatientBo> result = internmentEpisodeRepository.findAllPatientsListedData(institutionId);
+		result.forEach(i -> internmentEpisodeService.getIntermentSummary(i.getInternmentId()).ifPresent(e-> i.setDocumentsSummary(e.getDocuments())));
         LOG.debug(LOGGING_OUTPUT, result);
         return result;
     }
@@ -40,7 +45,8 @@ public class InternmentPatientServiceImpl implements InternmentPatientService {
     public List<InternmentEpisodeBo> getAllInternmentPatient(Integer institutionId) {
         LOG.debug(INPUT_PARAMETERS_INSTITUTION_ID, institutionId);
         List<InternmentEpisodeBo> result = internmentEpisodeRepository.getAllInternmentPatient(institutionId);
-        LOG.debug(LOGGING_OUTPUT, result);
+		result.forEach(i -> internmentEpisodeService.getIntermentSummary(i.getId()).ifPresent(e-> i.setDocumentsSummary(e.getDocuments())));
+		LOG.debug(LOGGING_OUTPUT, result);
         return result;
     }
 

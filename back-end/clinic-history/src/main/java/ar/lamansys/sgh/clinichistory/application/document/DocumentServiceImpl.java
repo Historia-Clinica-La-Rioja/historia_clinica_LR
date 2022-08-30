@@ -1,22 +1,51 @@
 package ar.lamansys.sgh.clinichistory.application.document;
 
-import ar.lamansys.sgh.clinichistory.domain.ips.*;
-import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.*;
-import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.entity.*;
-import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.hospitalizationState.entity.*;
-import ar.lamansys.sgx.shared.auditable.entity.Updateable;
-import ar.lamansys.sgx.shared.exceptions.NotFoundException;
-import ar.lamansys.sgx.shared.security.UserInfo;
+import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.util.List;
-import java.util.Optional;
-import java.util.stream.Collectors;
+import ar.lamansys.sgh.clinichistory.domain.ips.AllergyConditionBo;
+import ar.lamansys.sgh.clinichistory.domain.ips.AnthropometricDataBo;
+import ar.lamansys.sgh.clinichistory.domain.ips.GeneralHealthConditionBo;
+import ar.lamansys.sgh.clinichistory.domain.ips.ImmunizationBo;
+import ar.lamansys.sgh.clinichistory.domain.ips.MapClinicalObservationVo;
+import ar.lamansys.sgh.clinichistory.domain.ips.MedicationBo;
+import ar.lamansys.sgh.clinichistory.domain.ips.ProcedureBo;
+import ar.lamansys.sgh.clinichistory.domain.ips.RiskFactorBo;
+import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.DocumentAllergyIntoleranceRepository;
+import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.DocumentDiagnosticReportRepository;
+import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.DocumentHealthConditionRepository;
+import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.DocumentImmunizationRepository;
+import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.DocumentLabRepository;
+import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.DocumentMedicamentionStatementRepository;
+import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.DocumentOdontologyDiagnosticRepository;
+import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.DocumentOdontologyProcedureRepository;
+import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.DocumentProcedureRepository;
+import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.DocumentRepository;
+import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.DocumentRiskFactorRepository;
+import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.entity.Document;
+import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.entity.DocumentAllergyIntolerance;
+import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.entity.DocumentDiagnosticReport;
+import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.entity.DocumentHealthCondition;
+import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.entity.DocumentInmunization;
+import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.entity.DocumentLab;
+import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.entity.DocumentMedicamentionStatement;
+import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.entity.DocumentOdontologyDiagnostic;
+import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.entity.DocumentOdontologyProcedure;
+import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.entity.DocumentProcedure;
+import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.entity.DocumentRiskFactor;
+import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.hospitalizationState.entity.AllergyConditionVo;
+import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.hospitalizationState.entity.ClinicalObservationVo;
+import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.hospitalizationState.entity.HealthConditionVo;
+import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.hospitalizationState.entity.ImmunizationVo;
+import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.hospitalizationState.entity.MedicationVo;
+import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.hospitalizationState.entity.ProcedureVo;
+import ar.lamansys.sgx.shared.auditable.entity.Updateable;
+import ar.lamansys.sgx.shared.exceptions.NotFoundException;
 
 @Service
 public class  DocumentServiceImpl implements DocumentService {
@@ -336,6 +365,14 @@ public class  DocumentServiceImpl implements DocumentService {
 			documentRepository.save(document);
 			},() -> new NotFoundException("document-not-exists", String.format("No existe el documento con id %s", documentId)));
 		LOG.debug(LOGGING_UPDATE_MODIFICATION_REASON_SUCCESS);
+	}
+
+	@Override
+	public Short getSourceType(Long documentId) {
+		LOG.debug("Input parameters -> documentId {}", documentId);
+		Short result = this.documentRepository.getSourceTypeId(documentId);
+		LOG.debug(OUTPUT, result);
+		return result;
 	}
 
 }

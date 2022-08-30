@@ -1,9 +1,10 @@
 package ar.lamansys.sgh.publicapi.domain;
 
-import lombok.Getter;
-
 import java.util.Arrays;
 import java.util.List;
+
+import ar.lamansys.sgx.shared.exceptions.NotFoundException;
+import lombok.Getter;
 
 @Getter
 public enum ScopeEnum {
@@ -16,4 +17,11 @@ public enum ScopeEnum {
     ScopeEnum(Short... ids){
         this.ids = Arrays.asList(ids);
     }
+
+	public static ScopeEnum map(Short id) {
+		for(ScopeEnum e : values()) {
+			if(e.ids.contains(id)) return e;
+		}
+		throw new NotFoundException("scope-not-exists", String.format("El tipo de atención %s no existe", id));
+	}
 }

@@ -92,9 +92,8 @@ public interface DiaryRepository extends SGXAuditableEntityJPARepository<Diary, 
             "d, do.description) " +
             "FROM Diary d " +
             "JOIN DoctorsOffice AS do ON (do.id = d.doctorsOfficeId) " +
-            "JOIN ClinicalSpecialtySector css ON css.id = do.clinicalSpecialtySectorId " +
             "WHERE d.healthcareProfessionalId = :hcpId " +
-            "AND css.clinicalSpecialtyId = :specialtyId " +
+            "AND d.clinicalSpecialtyId = :specialtyId " +
             "AND do.institutionId = :instId " +
             "AND d.active = true "+
             "AND d.deleteable.deleted = false")
@@ -105,10 +104,10 @@ public interface DiaryRepository extends SGXAuditableEntityJPARepository<Diary, 
     
     @Transactional(readOnly = true)
     @Query("SELECT NEW net.pladema.medicalconsultation.diary.repository.domain.CompleteDiaryListVo( " +
-            "d, do.description, css.sectorId, css.clinicalSpecialtyId, d.healthcareProfessionalId) " +
+            "d, do.description, do.sectorId, d.healthcareProfessionalId, cs.name) " +
             "FROM Diary d " +
             "JOIN DoctorsOffice do ON do.id = d.doctorsOfficeId " +
-            "JOIN ClinicalSpecialtySector css ON css.id = do.clinicalSpecialtySectorId " +
+			"JOIN ClinicalSpecialty cs ON cs.id = d.clinicalSpecialtyId " +
             "WHERE d.id = :diaryId ")
     Optional<CompleteDiaryListVo> getDiary(@Param("diaryId") Integer diaryId);
     
@@ -118,4 +117,15 @@ public interface DiaryRepository extends SGXAuditableEntityJPARepository<Diary, 
             "JOIN AppointmentAssn aa ON aa.pk.diaryId = d.id " +
             "WHERE aa.pk.appointmentId = :appointmentId ")
     Optional<Diary> getDiaryByAppointment(@Param("appointmentId") Integer appointmentId);
+
+	@Transactional(readOnly = true)
+	@Query("SELECT (case when count(d.id)> 0 then true else false end) " +
+			"FROM Diary d " +
+			"JOIN DoctorsOffice AS do ON (do.id = d.doctorsOfficeId) " +
+			"WHERE d.healthcareProfessionalId = :healthcareProfessionalId " +
+			"AND do.institutionId = :institutionId " +
+			"AND d.active = true " +
+			"AND d.endDate >= current_date() " +
+			"AND (d.deleteable.deleted = false OR d.deleteable.deleted is null)")
+	boolean hasActiveDiariesInInstitution(@Param("healthcareProfessionalId")Integer healthcareProfessionalId, @Param("institutionId") Integer institutionId);
 }

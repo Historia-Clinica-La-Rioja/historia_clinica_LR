@@ -35,6 +35,8 @@ public class DiaryListVo {
 
     private final boolean includeHoliday;
 
+	private Integer clinicalSpecialtyId;
+
     public DiaryListVo(Diary diary, String doctorsOfficeDescription) {
         this.id = diary.getId();
         this.doctorsOfficeId = diary.getDoctorsOfficeId();
@@ -45,6 +47,7 @@ public class DiaryListVo {
         this.automaticRenewal = diary.isAutomaticRenewal();
         this.professionalAssignShift = diary.isProfessionalAsignShift();
         this.includeHoliday = diary.isIncludeHoliday();
+		this.clinicalSpecialtyId = diary.getClinicalSpecialtyId();
     }
 
 }

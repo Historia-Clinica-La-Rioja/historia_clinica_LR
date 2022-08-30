@@ -37,7 +37,7 @@ class UpdatePasswordImplTest {
     @DisplayName("Update password success")
     void update_password_success() {
         when(userStorage.getUser("username"))
-                .thenReturn(new UserBo(1, "username", true, "password", "salt", "hashAlgorithm", LocalDateTime.of(2020,01,01,10,10)));
+                .thenReturn(new UserBo(1, "username", true, "password", "salt", "hashAlgorithm", LocalDateTime.of(2020,01,01,10,10), LocalDateTime.of(2020,01,01,01,01)));
         when(passwordEncryptor.encode("password", "salt", "hashAlgorithm"))
                 .thenReturn("passwordEncoded");
         updatePassword.execute("username","password");

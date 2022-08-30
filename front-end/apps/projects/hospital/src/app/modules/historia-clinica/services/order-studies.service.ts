@@ -13,6 +13,14 @@ export class OrderStudiesService {
 		this.data = [];
 	}
 
+	add(study: Study): boolean {
+		const alreadyPresent = this.data.some(s => s.snomed.sctid === study.snomed.sctid && s.snomed.pt === study.snomed.pt);
+		if (!alreadyPresent) {
+			this.addAll([study]);
+		}
+		return !alreadyPresent;
+	}
+
 	addAll(studies: Study[]) {
 		this.data = this.data.concat(studies);
 	}

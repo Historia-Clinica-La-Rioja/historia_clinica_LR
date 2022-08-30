@@ -8,6 +8,7 @@ import { InstitutionDto } from '@api-rest/api-model';
 import { InstitutionService } from '@api-rest/services/institution.service';
 import { AppRoutes } from '../../../../app-routing.module';
 import { mapToAddress } from '@api-presentation/mappers/institution-dto.mapper';
+import { PermissionsService } from '@core/services/permissions.service';
 
 @Component({
 	selector: 'app-home',
@@ -16,11 +17,14 @@ import { mapToAddress } from '@api-presentation/mappers/institution-dto.mapper';
 })
 export class HomeComponent implements OnInit {
 	institucion$: Observable<InstitutionDto>;
+	roles = [];
 
 	constructor(
 		private contextService: ContextService,
 		private institutionService: InstitutionService,
 		private router: Router,
+		private permissionsService: PermissionsService,
+
 	) { }
 
 	ngOnInit(): void {
@@ -30,6 +34,10 @@ export class HomeComponent implements OnInit {
 			);
 
 		});
+		this.permissionsService.contextRoleAssignments$.subscribe(
+			roles => this.roles = roles.map(role => role.roleDescription)
+		);
+
 	}
 
 	address(institution: InstitutionDto) {

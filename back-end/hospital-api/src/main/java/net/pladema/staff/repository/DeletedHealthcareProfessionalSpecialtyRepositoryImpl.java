@@ -1,13 +1,15 @@
 package net.pladema.staff.repository;
 
-import lombok.RequiredArgsConstructor;
-import net.pladema.staff.service.domain.HealthcareProfessionalSpecialtyBo;
-import org.springframework.stereotype.Repository;
-import org.springframework.transaction.annotation.Transactional;
+import java.util.List;
 
 import javax.persistence.EntityManager;
 import javax.persistence.Query;
-import java.util.List;
+
+import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
+
+import lombok.RequiredArgsConstructor;
+import net.pladema.staff.service.domain.HealthcareProfessionalSpecialtyBo;
 
 @Repository
 @RequiredArgsConstructor
@@ -23,9 +25,10 @@ public class DeletedHealthcareProfessionalSpecialtyRepositoryImpl {
         String sqlString = "SELECT hps.id, hps.healthcare_professional_id," +
                 "hps.professional_specialty_id, hps.clinical_specialty_id, hps.deleted " +
 				"FROM {h-schema}healthcare_professional_specialty  hps " +
+				"JOIN {h-schema}healthcare_professional hp ON (hp.id = hps.healthcare_professional_id)" +
                 " WHERE hps.healthcare_professional_id = :healthcareProfessionalId " +
                 " AND hps.clinical_specialty_id = :clinicalSpecialtyId " +
-                " AND hps.professional_specialty_id = :professionalSpecialtyId ";
+                " AND hp.professional_specialty_id = :professionalSpecialtyId ";
         Query query = entityManager.createNativeQuery(sqlString);
         query.setParameter("healthcareProfessionalId", healthcareProfessionalId)
                 .setParameter("clinicalSpecialtyId", clinicalSpecialtyId)

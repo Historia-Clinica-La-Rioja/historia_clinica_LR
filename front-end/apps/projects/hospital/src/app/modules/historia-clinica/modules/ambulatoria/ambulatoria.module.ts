@@ -1,3 +1,4 @@
+import { TurnosModule } from './../../../turnos/turnos.module';
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
@@ -53,7 +54,10 @@ import { IndicacionModule } from "@historia-clinica/modules/ambulatoria/modules/
 import { MedicalCoverageSummaryViewComponent } from './components/medical-coverage-summary-view/medical-coverage-summary-view.component';
 import { InternacionesModule } from "@historia-clinica/modules/ambulatoria/modules/internacion/internaciones.module";
 import { CreateInternmentOrderComponent } from './dialogs/create-internment-order/create-internment-order.component';
-import { DiagnosisRequiredComponent } from './dialogs/diagnosis-required/diagnosis-required.component';
+import { EstudioModule } from './modules/estudio/estudio.module';
+import { OperationDeniedComponent } from './dialogs/diagnosis-required/operation-denied.component';
+import { CreateOutpatientOrderComponent } from './dialogs/create-outpatient-order/create-outpatient-order.component';
+import { NewConsultationFamilyHistoryFormComponent } from './dialogs/new-consultation-family-history-form/new-consultation-family-history-form.component';
 
 @NgModule({
 	declarations: [
@@ -94,24 +98,28 @@ import { DiagnosisRequiredComponent } from './dialogs/diagnosis-required/diagnos
 		DiagnosisSummaryComponent,
 		InternmentSummaryComponent,
 		MedicalCoverageSummaryViewComponent,
-  		CreateInternmentOrderComponent,
-    	DiagnosisRequiredComponent,
+		CreateInternmentOrderComponent,
+		OperationDeniedComponent,
+		CreateOutpatientOrderComponent,
+		NewConsultationFamilyHistoryFormComponent,
 	],
-    imports: [
-        CommonModule,
-        FormsModule,
-        OverlayModule,
-        PortalModule,
-        PresentationModule,
-        ExtensionsModule,
-        HistoriaClinicaModule,
-        AmbulatoriaRoutingModule,
-        PacientesModule,
-        OdontologiaModule,
-        ClipboardModule,
-        IndicacionModule,
-        InternacionesModule
-    ]
+	imports: [
+		CommonModule,
+		FormsModule,
+		OverlayModule,
+		PortalModule,
+		PresentationModule,
+		ExtensionsModule,
+		HistoriaClinicaModule,
+		AmbulatoriaRoutingModule,
+		PacientesModule,
+		OdontologiaModule,
+		ClipboardModule,
+		IndicacionModule,
+		InternacionesModule,
+		EstudioModule,
+		TurnosModule
+	]
 })
 export class AmbulatoriaModule {
 }

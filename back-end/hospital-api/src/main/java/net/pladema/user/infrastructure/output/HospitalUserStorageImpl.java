@@ -45,6 +45,7 @@ public class HospitalUserStorageImpl implements HospitalUserStorage {
                     UserPersonInfoBo result = new UserPersonInfoBo();
                     result.setId(userInfoDto.getId());
                     result.setEmail(userInfoDto.getUsername());
+					result.setPreviousLogin(userInfoDto.getPreviousLogin());
                     return result;
                 })
                 .map(this::loadPersonInfo);

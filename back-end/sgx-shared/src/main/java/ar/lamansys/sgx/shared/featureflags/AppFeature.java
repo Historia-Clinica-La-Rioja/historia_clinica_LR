@@ -47,6 +47,9 @@ public enum AppFeature implements Feature {
 
     @Label("Indica si está habilitado el módulo de Reportes")
     HABILITAR_REPORTES,
+
+	@Label("Indica si está habilitado el módulo de Reportes de Programas")
+	HABILITAR_REPORTES_PROGRAMAS,
     
     @Label("Indica si está habilitada la funcionalidad para descargar informes desde turnos y desde el perfil del paciente")
     HABILITAR_INFORMES,
@@ -89,6 +92,21 @@ public enum AppFeature implements Feature {
 
 	@Label("Indica si esta habilitada la búsqueda de conceptos en la base de datos local")
 	HABILITAR_BUSQUEDA_LOCAL_CONCEPTOS,
+
+	@Label("Indica si se debe avisar al paciente por mail al reservar un turno")
+	HABILITAR_MAIL_RESERVA_TURNO,
+
+	@Label("Indica si la api publica de reserva de turnos es abierta sin la necesidad de usar api-key")
+	LIBERAR_API_RESERVA_TURNOS,
+
+	@Label("Muestra los menus en backoffice para la administración de turnos online de la institución (Solo para administradores institucionales)")
+	BACKOFFICE_MOSTRAR_ABM_RESERVA_TURNOS,
+
+	@Label("Oculta el listado de profesiones asociado a un paciente en la webapp")
+	OCULTAR_LISTADO_PROFESIONES_WEBAPP,
+    
+	@Label("Muestra en HC la seccion de Enfermeria")
+	HABILITAR_MODULO_ENFERMERIA,
     ;
 
     public boolean isActive() {

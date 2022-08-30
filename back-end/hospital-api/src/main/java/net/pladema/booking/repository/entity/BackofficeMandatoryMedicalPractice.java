@@ -1,8 +1,15 @@
 package net.pladema.booking.repository.entity;
 
-import lombok.*;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.Table;
 
-import javax.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.ToString;
 
 @ToString
 @Getter
@@ -14,7 +21,6 @@ import javax.persistence.*;
 public class BackofficeMandatoryMedicalPractice {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name="mandatory_medical_practice_id")
     private Integer id;
 

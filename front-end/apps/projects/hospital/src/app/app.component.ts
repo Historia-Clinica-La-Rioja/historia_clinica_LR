@@ -68,6 +68,38 @@ export class AppComponent {
 			'assignment_return',
 			this.domSanitizer.bypassSecurityTrustResourceUrl('assets/icons/assignment_return.svg')
 		);
+		this.matIconRegistry.addSvgIcon(
+			'images',
+			this.domSanitizer.bypassSecurityTrustResourceUrl('assets/icons/images.svg')
+		);
+		this.matIconRegistry.addSvgIcon(
+			'laboratory',
+			this.domSanitizer.bypassSecurityTrustResourceUrl('assets/icons/laboratory.svg')
+		);
+		this.matIconRegistry.addSvgIcon(
+			'pathologic_anatomy',
+			this.domSanitizer.bypassSecurityTrustResourceUrl('assets/icons/pathologic_anatomy.svg')
+		);
+		this.matIconRegistry.addSvgIcon(
+			'hemotherapy',
+			this.domSanitizer.bypassSecurityTrustResourceUrl('assets/icons/hemotherapy.svg')
+		);
+		this.matIconRegistry.addSvgIcon(
+			'surgical_procedure',
+			this.domSanitizer.bypassSecurityTrustResourceUrl('assets/icons/surgical_procedure.svg')
+		);
+		this.matIconRegistry.addSvgIcon(
+			'other_procedures_and_practices',
+			this.domSanitizer.bypassSecurityTrustResourceUrl('assets/icons/other_procedures_and_practices.svg')
+		);
+		this.matIconRegistry.addSvgIcon(
+			'advice',
+			this.domSanitizer.bypassSecurityTrustResourceUrl('assets/icons/advice.svg')
+		);
+		this.matIconRegistry.addSvgIcon(
+			'education',
+			this.domSanitizer.bypassSecurityTrustResourceUrl('assets/icons/education.svg')
+		);
 		//
 		pwaInstallService.install$.pipe(
 			switchMap(

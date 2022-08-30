@@ -1,0 +1,58 @@
+<div fxLayout="row" fxLayoutAlign="space-between">
+    <span mat-dialog-title
+        [translate]="'ambulatoria.paciente.nueva-consulta.antecedentes-familiares.buttons.ADD'"></span>
+    <button mat-icon-button (click)="close()">
+        <mat-icon>close</mat-icon>
+    </button>
+</div>
+
+<div mat-dialog-content>
+    <ng-container *ngIf="!data.familyHistoryService.getSnomedConcept() else antecedentesFamiliaresForm">
+        <app-concepts-search *ngIf="!data.searchConceptsLocallyFF else antecedentesFamiliaresTypeaheadSearch"
+            [label]="'ambulatoria.paciente.nueva-consulta.antecedentes-familiares.ANTECEDENTES_FAMILIARES'"
+            (search)="data.familyHistoryService.openSearchDialog($event)">
+        </app-concepts-search>
+
+        <ng-template #antecedentesFamiliaresTypeaheadSearch>
+            <app-concept-typeahead-search [ecl]="data.familyHistoryService.getECL()"
+                [placeholder]="'ambulatoria.paciente.nueva-consulta.antecedentes-familiares.SEARCH_PLACEHOLDER'"
+                (conceptSelected)="data.familyHistoryService.setConcept($event)">
+            </app-concept-typeahead-search>
+        </ng-template>
+    </ng-container>
+</div>
+
+<ng-template #antecedentesFamiliaresForm>
+    <form [formGroup]="data.familyHistoryService.getForm()" (ngSubmit)="addFamilyHistory()">
+        <div fxLayout="column">
+            <mat-form-field appearance="outline">
+                <mat-label
+                    [translate]="'ambulatoria.paciente.nueva-consulta.antecedentes-familiares.ANTECEDENTES_FAMILIARES'">
+                </mat-label>
+                <input id="antecedentes-familiares-input" matInput type="text" formControlName="snomed" readonly
+                    matTooltip="{{ data.familyHistoryService.getSnomedConcept().pt }}">
+                <button id="clear-antecedente" mat-button matSuffix color="warn" mat-icon-button
+                    (click)="data.familyHistoryService.resetForm()">
+                    <mat-icon>close</mat-icon>
+                </button>
+            </mat-form-field>
+
+            <mat-form-field appearance="outline">
+                <mat-label [translate]="'ambulatoria.paciente.nueva-consulta.antecedentes-familiares.FECHA'">
+                </mat-label>
+                <input matInput id="fecha_antecedente" [matDatepicker]="antecedenteDatePicker" formControlName="fecha"
+                    [min]="minDate" [max]="data.familyHistoryService.getMaxFecha()">
+                <mat-datepicker-toggle matSuffix [for]="antecedenteDatePicker">
+                </mat-datepicker-toggle>
+                <mat-datepicker #antecedenteDatePicker></mat-datepicker>
+            </mat-form-field>
+
+            <div align="end">
+                <button id="submit_antecedentes_familiares" mat-raised-button color="primary" type="submit">
+                    <span class="uppercase"
+                        [translate]="'ambulatoria.paciente.nueva-consulta.antecedentes-familiares.buttons.ADD'"></span>
+                </button>
+            </div>
+        </div>
+    </form>
+</ng-template>

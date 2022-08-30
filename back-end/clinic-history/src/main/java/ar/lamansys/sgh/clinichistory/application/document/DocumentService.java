@@ -1,11 +1,27 @@
 package ar.lamansys.sgh.clinichistory.application.document;
 
-import ar.lamansys.sgh.clinichistory.domain.ips.*;
-import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.entity.*;
-import ar.lamansys.sgx.shared.auditable.entity.Updateable;
-
 import java.util.List;
 import java.util.Optional;
+
+import ar.lamansys.sgh.clinichistory.domain.ips.AllergyConditionBo;
+import ar.lamansys.sgh.clinichistory.domain.ips.AnthropometricDataBo;
+import ar.lamansys.sgh.clinichistory.domain.ips.GeneralHealthConditionBo;
+import ar.lamansys.sgh.clinichistory.domain.ips.ImmunizationBo;
+import ar.lamansys.sgh.clinichistory.domain.ips.MedicationBo;
+import ar.lamansys.sgh.clinichistory.domain.ips.ProcedureBo;
+import ar.lamansys.sgh.clinichistory.domain.ips.RiskFactorBo;
+import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.entity.Document;
+import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.entity.DocumentAllergyIntolerance;
+import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.entity.DocumentDiagnosticReport;
+import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.entity.DocumentHealthCondition;
+import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.entity.DocumentInmunization;
+import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.entity.DocumentLab;
+import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.entity.DocumentMedicamentionStatement;
+import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.entity.DocumentOdontologyDiagnostic;
+import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.entity.DocumentOdontologyProcedure;
+import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.entity.DocumentProcedure;
+import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.entity.DocumentRiskFactor;
+import ar.lamansys.sgx.shared.auditable.entity.Updateable;
 
 public interface DocumentService {
 
@@ -72,5 +88,7 @@ public interface DocumentService {
     void deleteById(Long documentId, String documentStatus);
 
     void updateDocumentModificationReason(Long documentId, String reason);
+
+	Short getSourceType(Long documentId);
 }
 

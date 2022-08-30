@@ -38,7 +38,7 @@ class DiaryOpeningHoursRepositoryTest extends UnitRepository {
 		String startDate = "2020-05-04";
 		String endDate = "2020-06-04";
 		Diary diary1 = save(DiaryTestMocks.createDiary(1, 1, LocalDate.parse(startDate, formatter),
-				LocalDate.parse(endDate, formatter), (short) 1, true, (short) 4, true, true, true));
+				LocalDate.parse(endDate, formatter), (short) 1, true, (short) 4, true, true, true, 1));
 
 		String from = "09:15";
 		String to = "12:00";
@@ -56,7 +56,7 @@ class DiaryOpeningHoursRepositoryTest extends UnitRepository {
 		startDate = "2020-06-04";
 		endDate = "2020-07-04";
 		Diary diary2 = save(DiaryTestMocks.createDiary(1, 1, LocalDate.parse(startDate, formatter),
-				LocalDate.parse(endDate, formatter), (short) 1, true, (short) 4, true, true, true));
+				LocalDate.parse(endDate, formatter), (short) 1, true, (short) 4, true, true, true, 1));
 
 		from = "09:15";
 		to = "12:00";

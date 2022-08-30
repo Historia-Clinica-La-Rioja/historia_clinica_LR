@@ -15,9 +15,13 @@ public interface AppointmentService {
 
     Optional<AppointmentBo> getAppointment(Integer appointmentId);
 
-    Collection<AppointmentBo> getAppointmentsByDiaries(List<Integer> diaryIds);
+	Collection<AppointmentBo> getAppointmentsByDiaries(List<Integer> diaryIds, LocalDate from, LocalDate to);
+
+	Collection<AppointmentBo> getAppointmentsByProfessionalInInstitution(Integer healthcareProfessionalId, Integer institutionId, LocalDate from, LocalDate to);
 
     boolean existAppointment(Integer diaryId, Integer openingHoursId, LocalDate date, LocalTime hour);
+
+	Optional<AppointmentBo> findAppointmentBy(Integer diaryId, LocalDate date, LocalTime hour);
 
     Collection<AppointmentBo> getFutureActiveAppointmentsByDiary(Integer diaryId);
 
@@ -29,9 +33,11 @@ public interface AppointmentService {
 
     boolean updatePhoneNumber(Integer appointmentId, String phonePrefix, String phoneNumber, Integer userId);
 
-    boolean updateMedicalCoverage(Integer appointmentId, Integer patientMedicalCoverage);
+	boolean updateMedicalCoverage(Integer appointmentId, Integer patientMedicalCoverage);
 
-    Integer getMedicalCoverage(Integer patientId, Integer healthcareProfessionalId, LocalDate currentDate);
+	boolean saveObservation(Integer appointmentId, String observation);
+
+	Integer getMedicalCoverage(Integer patientId, Integer healthcareProfessionalId, LocalDate currentDate);
 
 	PatientMedicalCoverageBo getCurrentAppointmentMedicalCoverage(Integer patientId, Integer institutionId);
 
@@ -40,5 +46,4 @@ public interface AppointmentService {
     AppointmentBo updateAppointment(UpdateAppointmentBo appointmentDto);
 
     void delete(AppointmentBo appointmentBo);
-
 }

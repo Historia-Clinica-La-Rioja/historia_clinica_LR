@@ -27,5 +27,5 @@ export class PrescriptionItemData {
 	prescriptionPt: string;
 	problemPt: string;
 	doctor: DoctorInfoDto;
-	totalDays: number;
+	totalDays?: number | string;
 }

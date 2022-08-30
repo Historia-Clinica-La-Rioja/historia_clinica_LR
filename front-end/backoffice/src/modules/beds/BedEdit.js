@@ -4,10 +4,8 @@ import {
     Datagrid,
     Edit,
     Pagination,
-    ReferenceInput,
     ReferenceManyField,
     required,
-    SelectInput,
     SimpleForm,
     TextInput
 } from 'react-admin';
@@ -21,15 +19,6 @@ const BedEdit = props => (
             <TextInput source="bedNumber" validate={[required()]} />
 
             <SgxSelectInput source="roomId" element="rooms" optionText="description" alwaysOn allowEmpty={false}/>
-
-            <ReferenceInput
-                source="bedCategoryId"
-                reference="bedcategories"
-                sort={{ field: 'description', order: 'ASC' }}
-                validate={[required()]}
-            >
-                <SelectInput optionText="description" optionValue="id"/>
-            </ReferenceInput>
 
             <BooleanInput source="enabled" validate={[required()]} disabled={false} initialValue={true}/>
             <BooleanInput source="available" validate={[required()]} disabled={false} initialValue={true}/>

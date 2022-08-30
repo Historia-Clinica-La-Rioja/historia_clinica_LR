@@ -1,0 +1,49 @@
+{
+    "odontologia": {
+        "odontology-consultation-dock-popup": {
+            "TITLE": "Nueva consulta odontológica",
+            "SPECIALTY": "Especialidad",
+            "REASON_TITLE": "Motivo de consulta",
+            "ADD_REASON": "Agregar motivo",
+            "OTHER_PROCEDURES_TITLE": "Otros procedimientos",
+            "ADD_PROCEDURE": "Agregar procedimiento",
+            "OTHER_DIAGNOSES": "Otros diagnósticos",
+            "ADD_PROBLEM": "Agregar problema",
+            "ALLERGIES": "Alergias",
+            "ADD_ALLERGY": "Agregar alergia",
+            "PERSONAL_HISTORY": "Antecedentes personales",
+            "ADD_PERSONAL_HISTORY": "Agregar antecedente personal",
+            "USUAL_MEDICATION": "Medicación habitual",
+            "SEARCH_USUAL_MEDICATION": "Buscar medicación habitual",
+            "ADD_MEDICATION": "Agregar medicación",
+            "FINDINGS_ON_DENTAL_TISSUES": "Hallazgos sobre tejidos dentales",
+            "PROCEDURES_ON_DENTAL_TISSUES": "Procedimientos sobre tejidos dentales",
+            "AMOUNT_OF_PIECES_PRESENT": "Cantidad de piezas presentes",
+            "PERMANENT": "Permanentes",
+            "NO_INFORMATION": "Sin información",
+            "TEMPORARY": "Temporales",
+            "ONLY_NUMERIC_VALUES_ERROR": "Solo valores numéricos",
+            "ONLY_TWO_DIGIT_ERROR": "Solo números de dos dígitos",
+            "EVOLUTION": "Evolución",
+            "REFERENCE_REQUEST": "Solicitud de referencia",
+            "ADD_REQUEST": "Agregar solicitud"
+        },
+        "new-consultation-add-diagnose-form": {
+            "ADD_PROBLEM": "Agregar problema",
+            "PROBLEM": "Problema",
+            "SEARCH_PROBLEM": "Buscar problema",
+            "SEVERITY": "Severidad",
+            "CHRONIC": "Crónico",
+            "START_DATE": "Fecha inicio",
+            "END_DATE": "Fecha fin",
+            "END_DATE_ERROR": "La fecha de fin no puede ser anterior a la fecha de inicio"
+        },
+        "new-consultation-personal-history-form": {
+            "PERSONAL_HISTORY": "Antecedentes personales",
+            "SEARCH_PERSONAL_HISTORY": "Buscar antecedentes personales",
+            "PROBLEM_TYPE": "Tipo de problema",
+            "REGISTRATION_DATE": "Fecha de registro",
+            "ADD_PERSONAL_HISTORY": "Agregar antecedente personal"
+        }
+    }
+}

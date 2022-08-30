@@ -44,4 +44,7 @@ public class EpicrisisDto implements Serializable {
     @NotNull
     private List<@Valid AllergyConditionDto> allergies = new ArrayList<>();
 
+	@Nullable
+	private String modificationReason;
+
 }

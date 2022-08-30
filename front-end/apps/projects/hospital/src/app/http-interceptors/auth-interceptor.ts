@@ -62,6 +62,11 @@ export class AuthInterceptor implements HttpInterceptor {
 					return EMPTY;
 				}),
 			).subscribe(token => {
+				if (!token) {
+					this.refreshTokenSubject = undefined;
+					this.authenticationService.logout();
+					return;
+				}
 				this.refreshTokenSubject.next(token);
 				this.refreshTokenSubject.complete();
 				this.refreshTokenSubject = undefined;

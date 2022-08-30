@@ -36,7 +36,7 @@ class EnableUserImplTest {
     @DisplayName("Enable user success")
     void enableUserSuccess() {
         when(userStorage.getUser("username"))
-                .thenReturn(new UserBo(1, "username", true, "password", "salt", "hashAlgoritm", LocalDateTime.of(2020,01,01,10,10)));
+                .thenReturn(new UserBo(1, "username", true, "password", "salt", "hashAlgoritm", LocalDateTime.of(2020,01,01,10,10), LocalDateTime.of(2020,01,01,01,01)));
         enableUser.execute("username");
 
         ArgumentCaptor<UserBo> userBoArgumentCaptor = ArgumentCaptor.forClass(UserBo.class);

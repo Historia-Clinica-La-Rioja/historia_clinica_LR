@@ -15,7 +15,7 @@ const routes: Routes = [
 		],
 		canActivate: [RoleGuard, FeatureFlagGuard],
 		data: {
-			allowedRoles: [ERole.ADMINISTRADOR_INSTITUCIONAL_BACKOFFICE],
+			allowedRoles: [ERole.ADMINISTRADOR_INSTITUCIONAL_BACKOFFICE, ERole.PERSONAL_DE_ESTADISTICA],
 			featureFlag: AppFeature.HABILITAR_REPORTES
 		}
 	},

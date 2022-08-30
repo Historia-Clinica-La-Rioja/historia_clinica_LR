@@ -41,10 +41,11 @@ export function getDayHoursIntervalsByMinuteValue(date: Date, timeRange: number)
 	var dateToDivide = new Date(date);
 	dateToDivide.setHours(0,0,0,0);
 
-	for (let currentRangeValue = 0; currentRangeValue <= (60/timeRange)*23; currentRangeValue++){
+	for (let currentRangeValue = 0; currentRangeValue <= (60/timeRange)*24; currentRangeValue++){
 		dividedDate[currentRangeValue] = new Date(dateToDivide);
 		dateToDivide = addMinutes(dateToDivide, timeRange);
 	}
 
+	dividedDate[dividedDate.length - 1] = addMinutes(dividedDate[dividedDate.length - 1], -1);
 	return dividedDate;
 }

@@ -2,7 +2,7 @@ package ar.lamansys.immunization.infrastructure.input.rest;
 
 import ar.lamansys.immunization.application.fetchVaccines.FetchVaccineById;
 import ar.lamansys.immunization.domain.vaccine.VaccineBo;
-import org.assertj.core.util.Lists;
+
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -12,6 +12,8 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
+
+import java.util.Collections;
 
 @ExtendWith(MockitoExtension.class)
 class VaccinesControllerTest {
@@ -29,7 +31,7 @@ class VaccinesControllerTest {
     @Test
     void success() {
         when(fetchVaccineById.run(any()))
-                .thenReturn(new VaccineBo((short)-4, (short)4, "DESC", 4, 5, Lists.emptyList()));
+                .thenReturn(new VaccineBo((short)-4, (short)4, "DESC", 4, 5, Collections.emptyList()));
         var result = vaccinesController.vaccineInformation("4");
 
         Assertions.assertEquals((short)-4, result.getId());

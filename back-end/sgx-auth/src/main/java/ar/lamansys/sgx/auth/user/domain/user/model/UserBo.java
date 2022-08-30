@@ -20,6 +20,9 @@ public class UserBo {
     @Getter
     private LocalDateTime lastLogin;
 
+	@Getter
+	private LocalDateTime previousLogin;
+
     private UserPasswordBo userPasswordBo;
 
     public UserBo(String username){
@@ -36,15 +39,16 @@ public class UserBo {
     }
 
     public UserBo(Integer id, String username, boolean enable, String password, String salt, String hashAlgorithm) {
-        this(id, username, enable, password, salt, hashAlgorithm, null);
+        this(id, username, enable, password, salt, hashAlgorithm, null, null);
     }
 
-    public UserBo(Integer id, String username, boolean enable, String password, String salt, String hashAlgorithm, LocalDateTime lastLogin) {
+    public UserBo(Integer id, String username, boolean enable, String password, String salt, String hashAlgorithm, LocalDateTime lastLogin, LocalDateTime previousLogin) {
         validations(username);
         this.id = id;
         this.username = username;
         this.enable = enable;
         this.lastLogin = lastLogin;
+		this.previousLogin = previousLogin;
         this.userPasswordBo = new UserPasswordBo(password, salt, hashAlgorithm);
     }
 
@@ -82,4 +86,7 @@ public class UserBo {
         this.username = username;
     }
 
+	public void setPrevoiusLogin(LocalDateTime previousLogin) {
+		this.previousLogin = previousLogin;
+	}
 }

@@ -8,9 +8,11 @@ import { Component, Input } from '@angular/core';
 export class NewConsultationExpansionSectionComponent {
 
   private _fixedExpanded = false;
-  collapsed = true;
   @Input() icon: string;
   @Input() title: string;
+  @Input() hideBorder = false;
+  @Input() recommend = false;
+  @Input() collapsed = true;
   @Input() isEmpty = true;
   @Input() set fixedExpanded(value: boolean) {
     if (this._fixedExpanded && !value) {

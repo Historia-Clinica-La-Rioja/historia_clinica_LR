@@ -17,9 +17,8 @@ public interface DoctorsOfficeRepository extends JpaRepository<DoctorsOffice, In
     @Query("SELECT NEW net.pladema.medicalconsultation.doctorsoffice.repository.domain.DoctorsOfficeVo(" +
             "do.id, do.description, do.openingTime, do.closingTime) " +
             "FROM DoctorsOffice do " +
-            "JOIN ClinicalSpecialtySector css on ( do.clinicalSpecialtySectorId = css.id ) " +
             "WHERE do.institutionId = :institutionId " +
-            "AND css.sectorId = :sectorId " +
+            "AND do.sectorId = :sectorId " +
             "ORDER BY do.description ASC ")
     List<DoctorsOfficeVo> findAllBy(@Param("institutionId") Integer institutionId,
                                     @Param("sectorId") Integer sectorId);
@@ -28,8 +27,7 @@ public interface DoctorsOfficeRepository extends JpaRepository<DoctorsOffice, In
     @Query("SELECT NEW net.pladema.medicalconsultation.doctorsoffice.repository.domain.DoctorsOfficeVo(" +
             "do.id, do.description, do.openingTime, do.closingTime) " +
             "FROM DoctorsOffice do " +
-            "JOIN ClinicalSpecialtySector css on ( do.clinicalSpecialtySectorId = css.id ) " +
-            "JOIN Sector s on (css.sectorId = s.id) " +
+            "JOIN Sector s on (do.sectorId = s.id) " +
             "WHERE do.institutionId = :institutionId " +
             "AND s.sectorTypeId = :sectorTypeId " +
             "ORDER BY do.description ASC ")

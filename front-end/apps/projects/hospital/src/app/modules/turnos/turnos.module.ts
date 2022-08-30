@@ -11,15 +11,19 @@ import { AgendaComponent } from './routes/agenda/agenda.component';
 import { AgendaSetupComponent } from './routes/agenda-setup/agenda-setup.component';
 import { HomeComponent } from './routes/home/home.component';
 // components
+import { CalendarProfessionalViewComponent } from '@turnos/components/calendar-professional-view/calendar-professional-view.component';
 import { SelectAgendaComponent } from './components/select-agenda/select-agenda.component';
+import { BlockAgendaRangeComponent } from './dialogs/block-agenda-range/block-agenda-range.component';
+import { DateRangeTimeFormComponent } from './components/date-range-time-form/date-range-time-form.component';
 // dialogs
 import { AppointmentComponent } from './dialogs/appointment/appointment.component';
+import { CalendarProfessionalViewDockPopupComponent } from './dialogs/calendar-professional-view-dock-popup/calendar-professional-view-dock-popup.component';
 import { CancelAppointmentComponent } from './dialogs/cancel-appointment/cancel-appointment.component';
+import { ConfirmBookingComponent } from './dialogs/confirm-booking/confirm-booking.component';
 import { NewAppointmentComponent } from './dialogs/new-appointment/new-appointment.component';
 import { NewAttentionComponent } from './dialogs/new-attention/new-attention.component';
 // services
 import { CustomDateFormatter } from './services/custom-date-formatter.service';
-import { ConfirmBookingComponent } from './dialogs/confirm-booking/confirm-booking.component';
 
 
 @NgModule({
@@ -29,13 +33,17 @@ import { ConfirmBookingComponent } from './dialogs/confirm-booking/confirm-booki
 		AgendaSetupComponent,
 		HomeComponent,
 		// components
+		CalendarProfessionalViewComponent,
 		SelectAgendaComponent,
+		BlockAgendaRangeComponent,
+		DateRangeTimeFormComponent,
 		// dialogs
 		AppointmentComponent,
+		CalendarProfessionalViewDockPopupComponent,
 		CancelAppointmentComponent,
+		ConfirmBookingComponent,
 		NewAppointmentComponent,
 		NewAttentionComponent,
-  		ConfirmBookingComponent,
 	],
 	imports: [
 		CommonModule,
@@ -45,6 +53,9 @@ import { ConfirmBookingComponent } from './dialogs/confirm-booking/confirm-booki
 		// deps
 		PresentationModule,
 		LazyMaterialModule,
+	],
+	exports: [
+		CalendarProfessionalViewComponent
 	],
 	providers: [
 		{

@@ -17,6 +17,6 @@ public class UserPersonExternalService {
 
     public Optional<UserDto> getUser(Integer userId) {
         return Optional.ofNullable(hospitalUserService.getUserPersonInfo(userId))
-                .map(user -> new UserDto(user.getEmail(), user.getId(), user.getPersonId(), user.getFirstName(), user.getLastName(), user.getNameSelfDetermination()));
+                .map(user -> new UserDto(user.getEmail(), user.getId(), user.getPersonId(), user.getFirstName(), user.getLastName(), user.getNameSelfDetermination(), user.getPreviousLogin()));
     }
 }

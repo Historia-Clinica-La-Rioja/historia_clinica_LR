@@ -7,7 +7,6 @@ import net.pladema.clinichistory.hospitalization.controller.documents.evolutionn
 import ar.lamansys.sgh.clinichistory.infrastructure.input.rest.ips.mapper.AnthropometricDataMapper;
 import ar.lamansys.sgh.clinichistory.infrastructure.input.rest.ips.mapper.SnomedMapper;
 import net.pladema.clinichistory.hospitalization.service.evolutionnote.domain.EvolutionNoteBo;
-import net.pladema.clinichistory.hospitalization.service.evolutionnote.domain.evolutiondiagnosis.EvolutionDiagnosisBo;
 import ar.lamansys.sgx.shared.dates.configuration.LocalDateMapper;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
@@ -26,6 +25,6 @@ public interface EvolutionNoteMapper {
     @Mapping(target = "riskFactors", source = "riskFactors", qualifiedByName = "fromRiskFactorBo")
     ResponseEvolutionNoteDto fromEvolutionNote(EvolutionNoteBo evolutionNoteBo);
 
-    EvolutionDiagnosisBo fromEvolutionNoteDto(EvolutionDiagnosisDto evolutionDiagnosisDto);
+	EvolutionNoteBo fromEvolutionDiagnosisDto(EvolutionDiagnosisDto evolutionDiagnosisDto);
 
 }

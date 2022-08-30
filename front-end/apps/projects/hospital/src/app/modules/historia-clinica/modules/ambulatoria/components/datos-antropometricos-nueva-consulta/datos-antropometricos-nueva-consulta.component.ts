@@ -11,7 +11,6 @@ export class DatosAntropometricosNuevaConsultaComponent {
 
   @Input() datosAntropometricosNuevaConsultaService: DatosAntropometricosNuevaConsultaService;
   @Input() showPreloadData: boolean = false;
-  @Input() showTitle: boolean = true;
   readonly isNumberOrDot = isNumberOrDot;
 
   savePreloadData(save: boolean): void {

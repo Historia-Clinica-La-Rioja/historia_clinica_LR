@@ -9,7 +9,7 @@
     <mat-list id="estudio" style="margin-bottom: 25px;">
         <app-item-prescripciones fxFlex="100%" mat-list-item class="item-padding" [prescriptionItemData]="prescriptionItemDataBuilder(diagnosticReport)">
             <span prescription-number mat-line class="mat-body element-light-color">
-                Orden #{{diagnosticReport.serviceRequestId}}
+                Orden #{{diagnosticReport[0].serviceRequestId}}
             </span>
         </app-item-prescripciones>
     </mat-list>

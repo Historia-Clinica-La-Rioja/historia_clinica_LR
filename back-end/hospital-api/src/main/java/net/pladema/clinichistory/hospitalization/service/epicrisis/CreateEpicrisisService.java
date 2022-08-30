@@ -4,5 +4,5 @@ import net.pladema.clinichistory.hospitalization.service.epicrisis.domain.Epicri
 
 public interface CreateEpicrisisService {
 
-    EpicrisisBo execute(EpicrisisBo epicrisis);
+    EpicrisisBo execute(EpicrisisBo epicrisis, boolean draft);
 }

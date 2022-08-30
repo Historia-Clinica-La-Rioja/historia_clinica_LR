@@ -17,8 +17,9 @@ import GroupIcon from '@material-ui/icons/Group';
 import MenuOpenIcon from '@material-ui/icons/MenuOpen';
 import TuneIcon from '@material-ui/icons/Tune';
 import LocalHospitalIcon from '@material-ui/icons/LocalHospital';
+import AssignmentIcon from '@material-ui/icons/Assignment';
 
-type MenuName = 'staff' | 'facilities' | 'debug' | 'masterData' | 'more';
+type MenuName = 'staff' | 'facilities' | 'debug' | 'masterData' | 'booking' | 'more';
 
 const submenu = (submenu: string) => (resource: ResourceDefinition): boolean => 
     (!!resource.hasList && (resource.options?.submenu || '') === submenu);
@@ -29,6 +30,7 @@ const Menu = ({ dense = false }: MenuProps) => {
         facilities: false,
         debug: false,
         masterData: false,
+        booking: false,
         more: false,
     });
 
@@ -74,10 +76,18 @@ const Menu = ({ dense = false }: MenuProps) => {
                 resources={resources.filter(submenu('debug'))}
             />
             <SubMenu
+                handleToggle={() => handleToggle('booking')}
+                isOpen={state.booking}
+                name="app.menu.booking"
+                icon={<AssignmentIcon />}
+                dense={dense}
+                resources={resources.filter(submenu('booking'))}
+            />
+            <SubMenu
                 handleToggle={() => handleToggle('masterData')}
                 isOpen={state.masterData}
                 name="app.menu.masterData"
-                icon={<TuneIcon />}
+                icon={<TuneIcon  />}
                 dense={dense}
                 resources={resources.filter(submenu('masterData'))}
             />

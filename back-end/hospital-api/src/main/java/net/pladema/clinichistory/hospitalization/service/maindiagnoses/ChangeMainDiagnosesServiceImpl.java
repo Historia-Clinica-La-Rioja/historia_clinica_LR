@@ -59,7 +59,7 @@ public class ChangeMainDiagnosesServiceImpl implements ChangeMainDiagnosesServic
 
         assertDoesNotHaveEpicrisis(internmentEpisode);
         mainDiagnosisBo.validateSelf();
-
+		mainDiagnosisBo.getMainDiagnosis().setId(null);
         HealthConditionBo currentMainDiagnose = fetchHospitalizationHealthConditionState.
                 getMainDiagnosisGeneralState(internmentEpisode.getId());
         if (!currentMainDiagnose.getSnomed().equals(mainDiagnosisBo.getMainDiagnosis().getSnomed()))
@@ -96,7 +96,7 @@ public class ChangeMainDiagnosesServiceImpl implements ChangeMainDiagnosesServic
     }
 
     private void assertDoesNotHaveEpicrisis(InternmentEpisode internmentEpisode) {
-        if(internmentEpisode.getEpicrisisDocId() != null) {
+        if(internmentEpisodeService.haveEpicrisis(internmentEpisode.getId())) {
             throw new ConstraintViolationException("Esta internación ya posee una epicrisis", Collections.emptySet());
         }
     }

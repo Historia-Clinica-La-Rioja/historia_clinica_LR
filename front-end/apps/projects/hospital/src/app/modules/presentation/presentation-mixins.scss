@@ -1,10 +1,12 @@
-
 @import "./components/detail-box/detail-box.component.scss-theme.scss";
 @import "./components/factor-de-riesgo-current/factor-de-riesgo.component.scss-theme.scss";
 @import "components/indication/indication.component.scss-theme";
+@import "components/indication/indication.component.scss-theme";
+@import "components/list-element-item/list-element-item.component.scss-theme.scss";
 
 @mixin presentation-mixins($theme) {
     @include app-detail-box($theme);
     @include app-factor-de-riesgo($theme);
 	@include app-indication($theme);
+	@include app-list-element-item($theme);
 }

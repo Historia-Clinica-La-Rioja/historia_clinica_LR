@@ -1,7 +1,7 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { FormControl } from "@angular/forms";
 import { Observable, of } from "rxjs";
-import { debounceTime, distinctUntilChanged, startWith, switchMap } from "rxjs/operators";
+import { debounceTime, distinctUntilChanged, mergeMap, startWith } from "rxjs/operators";
 import { SnowstormService } from "@api-rest/services/snowstorm.service";
 import { SnomedECL, SnomedDto } from "@api-rest/api-model";
 
@@ -28,7 +28,7 @@ export class ConceptTypeaheadSearchComponent {
 			startWith(''),
 			debounceTime(this.debounceTime),
 			distinctUntilChanged(),
-			switchMap(searchValue => {
+			mergeMap(searchValue => {
 				return this.filter(searchValue || '')
 			})
 		)

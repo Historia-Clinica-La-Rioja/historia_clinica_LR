@@ -90,7 +90,7 @@ export class ProblemasService {
 	add(problema: Problema): boolean {
 		const currentItems = this.data.length;
 		this.data = pushIfNotExists<Problema>(this.data, problema, this.compareSpeciality);
-	 	return currentItems === this.data.length;
+		return currentItems === this.data.length;
 	}
 
 	addControl(problema: Problema): void {
@@ -102,7 +102,7 @@ export class ProblemasService {
 		return data.snomed.sctid === data1.snomed.sctid;
 	}
 
-	addToList() {
+	addToList(): boolean {
 		if (this.form.valid && this.snomedConcept) {
 			const nuevoProblema: Problema = {
 				snomed: this.snomedConcept,
@@ -114,7 +114,9 @@ export class ProblemasService {
 			this.addControl(nuevoProblema);
 			this.errorSource.next();
 			this.resetForm();
+			return true;
 		}
+		return false;
 	}
 
 	addProblemToList(problema: Problema): void {
@@ -172,17 +174,17 @@ export class ProblemasService {
 	checkValidFechaFin(): void {
 		this.form.controls.fechaFin.setErrors(null);
 		if (this.form.value.fechaFin) {
-			if(this.form.value.fechaInicio) {
+			if (this.form.value.fechaInicio) {
 				const today = newMoment();
 				const newFechaFin: Moment = this.form.value.fechaFin;
 				if (newFechaFin.isBefore(this.form.value.fechaInicio, 'day')) {
-					this.form.controls.fechaFin.setErrors({min: true});
+					this.form.controls.fechaFin.setErrors({ min: true });
 				}
 				if (newFechaFin.isAfter(today)) {
-					this.form.controls.fechaFin.setErrors({max: true});
+					this.form.controls.fechaFin.setErrors({ max: true });
 				}
 			} else {
-				this.form.controls.fechaFin.setErrors({required_init_date: true});
+				this.form.controls.fechaFin.setErrors({ required_init_date: true });
 			}
 		}
 	}
@@ -219,5 +221,9 @@ export class ProblemasService {
 
 	getECL(): SnomedECL {
 		return this.ECL;
+	}
+
+	isEmpty(): boolean {
+		return (!this.data || this.data.length === 0);
 	}
 }

@@ -13,6 +13,7 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import java.time.LocalDate;
 import java.util.Optional;
 
 @ExtendWith(MockitoExtension.class)
@@ -36,7 +37,7 @@ class AppointmentDailyAmountServiceImplTest {
 				Optional.empty()
 		);
 		var exception = Assertions.assertThrows(DiaryNotFoundException.class, () -> {
-			appointmentDailyAmountService.getDailyAmounts(1);
+			appointmentDailyAmountService.getDailyAmounts(1, LocalDate.now(),LocalDate.now());
 		});
 		Assertions.assertEquals(exception.getMessage(), "La Agenda solicitada no existe");
 	}

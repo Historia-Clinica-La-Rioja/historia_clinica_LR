@@ -1,14 +1,15 @@
 package net.pladema.establishment.controller.service.impl;
 
+import java.time.ZoneId;
+import java.util.Optional;
+
+import org.springframework.stereotype.Service;
+
 import ar.lamansys.sgh.shared.infrastructure.input.service.institution.InstitutionInfoDto;
 import ar.lamansys.sgh.shared.infrastructure.input.service.institution.SharedInstitutionPort;
 import net.pladema.establishment.controller.service.InstitutionExternalService;
 import net.pladema.establishment.service.InstitutionService;
 import net.pladema.establishment.service.domain.InstitutionBo;
-import org.springframework.stereotype.Service;
-
-import java.time.ZoneId;
-import java.util.Optional;
 
 @Service
 public class InstitutionExternalServiceImpl implements InstitutionExternalService, SharedInstitutionPort {
@@ -31,5 +32,12 @@ public class InstitutionExternalServiceImpl implements InstitutionExternalServic
                 .map(institutionBo -> new InstitutionInfoDto(institutionBo.getId(), institutionBo.getName(), institutionBo.getSisaCode()))
                 .orElse(null);
     }
+
+	@Override
+	public InstitutionInfoDto fetchInstitutionBySisaCode(String sisaCode) {
+		return Optional.ofNullable(institutionService.get(sisaCode))
+				.map(institutionBo -> new InstitutionInfoDto(institutionBo.getId(), institutionBo.getName(), institutionBo.getSisaCode()))
+				.orElse(null);
+	}
 
 }

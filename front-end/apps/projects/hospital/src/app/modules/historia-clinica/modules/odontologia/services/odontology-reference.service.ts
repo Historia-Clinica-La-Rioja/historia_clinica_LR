@@ -122,9 +122,13 @@ export class OdontologyReferenceService {
 			reference.referenceIds = referenceFilesIds;
 		});
 	}
-	
+
 	getReferenceProblems(referenceId: number): HCEPersonalHistory[] {
 		return this.references[referenceId].referenceProblems
+	}
+
+	isEmpty(): boolean {
+		return (!this.odontologyReferences || this.odontologyReferences.length === 0);
 	}
 }
 

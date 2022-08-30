@@ -44,13 +44,19 @@ const routes: Routes = [
 				canActivate: [FeatureFlagGuard],
 				data: { featureFlag: AppFeature.HABILITAR_REPORTES }
 			},
+			{
+				path: 'program-reports',
+				loadChildren: () => import('../program-reports/program-reports.module').then(m => m.ProgramReportsModule),
+				canActivate: [FeatureFlagGuard],
+				data: { featureFlag:AppFeature.HABILITAR_REPORTES_PROGRAMAS }
+			},
 			{ path: 'extension/:menuItemId', component: InstitutionExtensionComponent },
 		],
 		canActivate: [RoleGuard],
 		data: {
 			allowedRoles: [ERole.ADMINISTRADOR, ERole.ADMINISTRADOR_AGENDA, ERole.ADMINISTRADOR_INSTITUCIONAL_BACKOFFICE, ERole.ADMINISTRATIVO,
 			ERole.ENFERMERO, ERole.ENFERMERO_ADULTO_MAYOR, ERole.ESPECIALISTA_MEDICO, ERole.PROFESIONAL_DE_SALUD, ERole.ROOT, ERole.ESPECIALISTA_EN_ODONTOLOGIA,
-			ERole.ADMINISTRADOR_DE_CAMAS]
+			ERole.ADMINISTRADOR_DE_CAMAS, ERole.PERSONAL_DE_IMAGENES, ERole.PERSONAL_DE_LABORATORIO, ERole.PERSONAL_DE_FARMACIA, ERole.PERSONAL_DE_ESTADISTICA]
 		},
 
 	}

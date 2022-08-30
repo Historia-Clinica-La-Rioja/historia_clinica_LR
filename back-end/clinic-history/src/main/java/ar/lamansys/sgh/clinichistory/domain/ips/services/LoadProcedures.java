@@ -47,17 +47,16 @@ public class LoadProcedures {
     public List<ProcedureBo> run(PatientInfoBo patientInfo, Long documentId, List<ProcedureBo> procedures) {
         LOG.debug("Input parameters -> patientInfo {}, documentId {}, procedures {}", patientInfo, documentId, procedures);
         procedures.forEach(p -> {
-            Integer snomedId = snomedService.getSnomedId(p.getSnomed())
-                    .orElseGet(() -> snomedService.createSnomedTerm(p.getSnomed()));
-            String cie10Codes = calculateCie10Facade.execute(p.getSnomed().getSctid(),
-                    new Cie10FacadeRuleFeature(patientInfo.getGenderId(), patientInfo.getAge()));
-            Procedure procedure = saveProcedure(patientInfo.getId(), p, snomedId, cie10Codes);
+			if(p.getId()==null) {
+				Integer snomedId = snomedService.getSnomedId(p.getSnomed()).orElseGet(() -> snomedService.createSnomedTerm(p.getSnomed()));
+				String cie10Codes = calculateCie10Facade.execute(p.getSnomed().getSctid(), new Cie10FacadeRuleFeature(patientInfo.getGenderId(), patientInfo.getAge()));
+				Procedure procedure = saveProcedure(patientInfo.getId(), p, snomedId, cie10Codes);
 
-            p.setId(procedure.getId());
-            p.setStatusId(procedure.getStatusId());
-            p.setStatus(getStatus(p.getStatusId()));
-
-            documentService.createDocumentProcedure(documentId, procedure.getId());
+				p.setId(procedure.getId());
+				p.setStatusId(procedure.getStatusId());
+				p.setStatus(getStatus(p.getStatusId()));
+			}
+            documentService.createDocumentProcedure(documentId, p.getId());
         });
         List<ProcedureBo> result = procedures;
         LOG.debug(OUTPUT, result);

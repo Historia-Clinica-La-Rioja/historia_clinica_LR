@@ -39,9 +39,16 @@ public class BasicListedPatientBo {
 
 	private boolean hasPhysicalDischarge;
 
+	private DocumentsSummaryBo documentsSummary;
+
+	private boolean hasAdministrativeDischarge;
+
+	private boolean hasMedicalDischarge;
+
     public BasicListedPatientBo(Integer patientId, Short identificationTypeId, String identificationNumber,
                                 String firstName, String lastName, String nameSelfDetermination, LocalDate birthDate,
-                                Short genderId, Integer internmentId, String bedNumber, String roomNumber, String sectorDescription, boolean hasPhysicalDischarge){
+                                Short genderId, Integer internmentId, String bedNumber, String roomNumber, String sectorDescription,
+								boolean hasPhysicalDischarge, boolean hasAdministrativeDischarge, boolean hasMedicalDischarge){
         this.internmentId = internmentId;
         this.patientId = patientId;
         this.identificationTypeId = identificationTypeId;
@@ -55,5 +62,7 @@ public class BasicListedPatientBo {
 		this.roomNumber = roomNumber;
 		this.sectorDescription = sectorDescription;
 		this.hasPhysicalDischarge = hasPhysicalDischarge;
+		this.hasAdministrativeDischarge = hasAdministrativeDischarge;
+		this.hasMedicalDischarge = hasMedicalDischarge;
     }
 }

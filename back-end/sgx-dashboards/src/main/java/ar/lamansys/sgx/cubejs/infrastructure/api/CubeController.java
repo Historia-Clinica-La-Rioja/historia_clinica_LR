@@ -1,30 +1,25 @@
 package ar.lamansys.sgx.cubejs.infrastructure.api;
 
-import ar.lamansys.sgx.cubejs.application.dashboardinfo.DashboardInfoService;
-import io.swagger.v3.oas.annotations.tags.Tag;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import javax.servlet.http.HttpServletRequest;
+
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
-import javax.servlet.http.HttpServletRequest;
+import ar.lamansys.sgx.cubejs.application.dashboardinfo.DashboardInfoService;
+import io.swagger.v3.oas.annotations.tags.Tag;
+import lombok.AllArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
+@AllArgsConstructor
 @RestController
 @RequestMapping("/dashboards/cubejs-api")
 @Tag(name = "Dashboards", description = "Dashboards")
 public class CubeController {
-	private final Logger logger;
 	private final DashboardInfoService dashboardInfoService;
-
-	public CubeController(
-			DashboardInfoService dashboardInfoService
-	){
-		this.dashboardInfoService = dashboardInfoService;
-		this.logger = LoggerFactory.getLogger(getClass());
-	}
 
 	@GetMapping("/**")
 	@ResponseBody
@@ -32,7 +27,7 @@ public class CubeController {
 		String requestContext = request.getContextPath() + "/dashboards/cubejs-api";
 		String path = removeContext(request.getRequestURI(), requestContext);
 
-		logger.debug("Fetching {}", path);
+		log.debug("Fetching {}", path);
 
 		return dashboardInfoService.execute(path, request.getParameterMap()).getResponse();
 	}

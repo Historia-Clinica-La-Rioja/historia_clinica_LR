@@ -4,6 +4,9 @@ import { FormsModule } from "@angular/forms";
 import { PresentationModule } from "@presentation/presentation.module";
 
 import { CardMedicacionesComponent } from "@historia-clinica/modules/ambulatoria/modules/indicacion/components/card-medicaciones/card-medicaciones.component";
+import { DayDisplayComponent } from './components/day-display/day-display.component';
+import { NursingCareComponent } from './components/nursing-care/nursing-care.component';
+import { NursingRecordComponent } from './components/nursing-record/nursing-record.component';
 import { InternmentIndicationsCardComponent } from "@historia-clinica/modules/ambulatoria/modules/indicacion/components/internment-indications-card/internment-indications-card.component";
 import { ItemPrescripcionesComponent } from "@historia-clinica/modules/ambulatoria/modules/indicacion/components/item-prescripciones/item-prescripciones.component";
 import { InternmentDietCardComponent } from './components/internment-diet-card/internment-diet-card.component';
@@ -17,10 +20,14 @@ import { OtherIndicationComponent } from './dialogs/other-indication/other-indic
 import { ParenteralPlanComponent } from './dialogs/parenteral-plan/parenteral-plan.component';
 import { HistoriaClinicaModule } from '@historia-clinica/historia-clinica.module';
 import { PharmacoComponent } from './dialogs/pharmaco/pharmaco.component';
+import { GeneralNursingRecordComponent } from './components/general-nursing-record/general-nursing-record.component';
+import { SpecificNursingRecordComponent } from './components/specific-nursing-record/specific-nursing-record.component';
 
 @NgModule({
 	declarations: [
 		CardMedicacionesComponent,
+		DayDisplayComponent,
+		GeneralNursingRecordComponent,
 		ItemPrescripcionesComponent,
 		InternmentIndicationsCardComponent,
 		InternmentDietCardComponent,
@@ -28,16 +35,20 @@ import { PharmacoComponent } from './dialogs/pharmaco/pharmaco.component';
 		InternmentOtherIndicationCardComponent,
 		InternmentParenteralPlanCardComponent,
 		NuevaPrescripcionComponent,
+		NursingCareComponent,
+		NursingRecordComponent,
+		SpecificNursingRecordComponent,
 		SuspenderMedicacionComponent,
 		DietComponent,
 		OtherIndicationComponent,
-  		ParenteralPlanComponent,
-   		PharmacoComponent,
+		ParenteralPlanComponent,
+		PharmacoComponent,
 	],
 	exports: [
 		CardMedicacionesComponent,
 		ItemPrescripcionesComponent,
 		InternmentIndicationsCardComponent,
+		NursingCareComponent,
 	],
 	imports: [
 		CommonModule,

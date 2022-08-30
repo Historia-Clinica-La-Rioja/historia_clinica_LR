@@ -3,7 +3,7 @@ import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { map, tap } from 'rxjs/operators';
 
-import { LoginDto, JWTokenDto, OauthConfigDto, RefreshTokenDto } from '@api-rest/api-model';
+import {LoginDto, JWTokenDto, OauthConfigDto, RefreshTokenDto, PasswordDto} from '@api-rest/api-model';
 import { environment } from '@environments/environment';
 
 const TOKEN_KEY = 'token';
@@ -66,6 +66,10 @@ export class AuthService {
 	private storeTokens(tokens: JWTokenDto) {
 		localStorage.setItem(TOKEN_KEY, tokens.token);
 		localStorage.setItem(REFRESH_TOKEN_KEY, tokens.refreshToken);
+	}
+
+	updatePassword(newPasword: PasswordDto): Observable<any>{
+		return this.http.patch<void>(`${environment.apiBase}/passwords`, newPasword);
 	}
 
 }

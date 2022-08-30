@@ -1,5 +1,6 @@
 package net.pladema.clinichistory.hospitalization.service.epicrisis.impl;
 
+import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.DocumentStatus;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.entity.Document;
 import ar.lamansys.sgh.clinichistory.application.document.DocumentService;
 import net.pladema.clinichistory.hospitalization.service.epicrisis.EpicrisisService;
@@ -22,6 +23,7 @@ public class EpicrisisServiceImpl implements EpicrisisService {
 
     private final NoteService noteService;
 
+
     public EpicrisisServiceImpl(DocumentService documentService, NoteService noteService) {
         this.documentService = documentService;
         this.noteService = noteService;
@@ -33,8 +35,9 @@ public class EpicrisisServiceImpl implements EpicrisisService {
         EpicrisisBo result = new EpicrisisBo();
         documentService.findById(documentId).ifPresent( document -> {
             result.setId(document.getId());
-
-            GeneralHealthConditionBo generalHealthConditionBo = documentService.getHealthConditionFromDocument(document.getId());
+			result.setInitialDocumentId(document.getInitialDocumentId());
+			result.setConfirmed(document.getStatusId().equals(DocumentStatus.FINAL));
+			GeneralHealthConditionBo generalHealthConditionBo = documentService.getHealthConditionFromDocument(document.getId());
             result.setMainDiagnosis(generalHealthConditionBo.getMainDiagnosis());
             result.setDiagnosis(generalHealthConditionBo.getDiagnosis());
             result.setFamilyHistories(generalHealthConditionBo.getFamilyHistories());
@@ -43,7 +46,7 @@ public class EpicrisisServiceImpl implements EpicrisisService {
             result.setAllergies(documentService.getAllergyIntoleranceStateFromDocument(document.getId()));
             result.setAnthropometricData(documentService.getAnthropometricDataStateFromDocument(document.getId()));
             result.setRiskFactors(documentService.getRiskFactorStateFromDocument(document.getId()));
-            
+			result.setMedications(documentService.getMedicationStateFromDocument(document.getId()));
             result.setNotes(loadNotes(document));
         });
         LOG.debug(OUTPUT, result);

@@ -1,3 +1,4 @@
+import { MedicalCoverageInfoService } from './../../../historia-clinica/modules/ambulatoria/services/medical-coverage-info.service';
 import { Component, Inject, OnInit } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { NewAttentionComponent } from '../new-attention/new-attention.component';
@@ -6,7 +7,7 @@ import { SnackBarService } from '@presentation/services/snack-bar.service';
 import { APPOINTMENT_STATES_ID, getAppointmentState, MAX_LENGTH_MOTIVO } from '../../constants/appointment';
 import { ContextService } from '@core/services/context.service';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { AppFeature, AppointmentDto, ERole, IdentificationTypeDto, PatientMedicalCoverageDto } from '@api-rest/api-model.d';
+import { AppFeature, AppointmentDto, ERole, IdentificationTypeDto, PatientMedicalCoverageDto, PersonPhotoDto } from '@api-rest/api-model.d';
 import { CancelAppointmentComponent } from '../cancel-appointment/cancel-appointment.component';
 import { getError, hasError, processErrors, updateControlValidator } from '@core/utils/form.utils';
 import { AppointmentsFacadeService } from '../../services/appointments-facade.service';
@@ -26,6 +27,9 @@ import { FeatureFlagService } from "@core/services/feature-flag.service";
 import { PatientNameService } from "@core/services/patient-name.service";
 import { PersonMasterDataService } from "@api-rest/services/person-master-data.service";
 import { SummaryCoverageInformation } from '@historia-clinica/modules/ambulatoria/components/medical-coverage-summary-view/medical-coverage-summary-view.component';
+import { PatientService } from '@api-rest/services/patient.service';
+import { ImageDecoderService } from '@presentation/services/image-decoder.service';
+
 
 const TEMPORARY_PATIENT = 3;
 const BELL_LABEL = 'Llamar paciente'
@@ -49,19 +53,25 @@ export class AppointmentComponent implements OnInit {
 	hasError = hasError;
 	medicalCoverageId: number;
 
+	personPhoto: PersonPhotoDto;
+	decodedPhoto$: Observable<string>;
+
 	appointment: AppointmentDto;
 	estadoSelected: APPOINTMENT_STATES_ID;
 	formMotivo: FormGroup;
 	formEdit: FormGroup;
+	formObservations: FormGroup;
 	institutionId = this.contextService.institutionId;
 	coverageText: string;
 	coverageNumber: any;
 	coverageCondition: string;
 	coverageData: PatientMedicalCoverage;
+	phoneNumber: string;
 	summaryCoverageData: SummaryCoverageInformation = {};
 	hasRoleToChangeState$: Observable<boolean>;
 	hasRoleToEditPhoneNumber$: Observable<boolean>;
 	hasRoleToDownloadReports$: Observable<boolean>;
+	hasRoleToAddObservations$: Observable<boolean>;
 	patientMedicalCoverages: PatientMedicalCoverage[];
 	identificationType: IdentificationTypeDto;
 
@@ -71,6 +81,11 @@ export class AppointmentComponent implements OnInit {
 	isCheckedDownloadFormulario = false;
 	downloadReportIsEnabled: boolean;
 	isMqttCallEnabled: boolean = false;
+
+	hideObservationForm: boolean = true;
+	hideObservationTitle: boolean = true;
+	observation: string;
+	selectedDate = new Date(this.params.appointmentData.date);
 
 	constructor(
 		@Inject(MAT_DIALOG_DATA) public params: { appointmentData: PatientAppointmentInformation, hasPermissionToAssignShift: boolean },
@@ -87,6 +102,9 @@ export class AppointmentComponent implements OnInit {
 		private readonly featureFlagService: FeatureFlagService,
 		private readonly patientNameService: PatientNameService,
 		private readonly personMasterDataService: PersonMasterDataService,
+		private readonly patientService: PatientService,
+		private readonly imageDecoderService: ImageDecoderService,
+		private readonly medicalCoverageInfo: MedicalCoverageInfoService
 
 	) {
 		this.featureFlagService.isActive(AppFeature.HABILITAR_INFORMES).subscribe(isOn => this.downloadReportIsEnabled = isOn);
@@ -105,6 +123,11 @@ export class AppointmentComponent implements OnInit {
 			phonePrefix: null,
 			phoneNumber: null
 		});
+
+		this.formObservations = this.formBuilder.group({
+			observation: ['',[Validators.required]]
+		});
+
 		this.setMedicalCoverages();
 		this.formEdit.controls.phoneNumber.setValue(this.params.appointmentData.phoneNumber);
 		this.formEdit.controls.phonePrefix.setValue(this.params.appointmentData.phonePrefix);
@@ -115,6 +138,12 @@ export class AppointmentComponent implements OnInit {
 		this.appointmentService.get(this.params.appointmentData.appointmentId)
 			.subscribe(appointment => {
 				this.appointment = appointment;
+				this.observation = appointment.observation;
+
+				if(this.observation){
+					this.hideObservationTitle = false;
+					this.formObservations.controls.observation.setValue(this.observation);
+				}
 				this.estadoSelected = this.appointment?.appointmentStateId;
 				if (this.appointment.stateChangeReason) {
 					this.formMotivo.controls.motivo.setValue(this.appointment.stateChangeReason);
@@ -130,6 +159,7 @@ export class AppointmentComponent implements OnInit {
 							}
 						});
 				}
+				this.phoneNumber = this.formatPhonePrefixAndNumber(this.params.appointmentData.phonePrefix,this.params.appointmentData.phoneNumber);
 			});
 
 		this.hasRoleToChangeState$ = this.permissionsService.hasContextAssignments$(ROLES_TO_CHANGE_STATE).pipe(take(1));
@@ -142,12 +172,20 @@ export class AppointmentComponent implements OnInit {
 			.subscribe(identificationTypes => {
 				this.identificationType = identificationTypes.find(identificationType => identificationType.id == this.params.appointmentData.patient.identificationTypeId);
 			});
+
+		this.patientService.getPatientPhoto(this.params.appointmentData.patient.id)
+			.subscribe((personPhotoDto: PersonPhotoDto) => {
+				this.personPhoto = personPhotoDto;
+				if (personPhotoDto?.imageData) {
+					this.decodedPhoto$ = this.imageDecoderService.decode(personPhotoDto.imageData);
+				}
+			});
 	}
 
-	formatPhonePrefixAndNumber(): string {
-		return this.params.appointmentData.phoneNumber ? this.params.appointmentData.phonePrefix
-			? this.params.appointmentData.phonePrefix + "-" + this.params.appointmentData.phoneNumber
-			: this.params.appointmentData.phoneNumber
+	formatPhonePrefixAndNumber(phonePrefix: string, phoneNumber: string): string {
+		return phoneNumber ? phonePrefix
+			? "(" + phonePrefix + ") " + phoneNumber
+			: phoneNumber
 			: "Sin información";
 	}
 
@@ -226,6 +264,7 @@ export class AppointmentComponent implements OnInit {
 			}
 			if (this.formEdit.controls.phoneNumber.dirty || this.formEdit.controls.phonePrefix.dirty) {
 				this.updatePhoneNumber(this.formEdit.controls.phonePrefix.value, this.formEdit.controls.phoneNumber.value);
+				this.phoneNumber = this.formatPhonePrefixAndNumber(this.formEdit.controls.phonePrefix.value ,this.formEdit.controls.phoneNumber.value);
 			}
 			this.hideFilters();
 		}
@@ -254,7 +293,7 @@ export class AppointmentComponent implements OnInit {
 	private submitNewState(newStateId: APPOINTMENT_STATES_ID, motivo?: string): void {
 		this.appointmentFacade.changeState(this.params.appointmentData.appointmentId, newStateId, motivo)
 			.subscribe(() => {
-				const appointmentInformation = { id: this.params.appointmentData.appointmentId, stateId: newStateId };
+				const appointmentInformation = { id: this.params.appointmentData.appointmentId, stateId: newStateId, date: this.selectedDate };
 				this.dialogRef.close(appointmentInformation);
 				this.snackBarService.showSuccess(`Estado de turno actualizado a ${getAppointmentState(newStateId).description} exitosamente`);
 			}, _ => {
@@ -341,7 +380,10 @@ export class AppointmentComponent implements OnInit {
 	}
 
 	closeDialog(returnValue?: string) {
-		this.dialogRef.close(returnValue);
+		if (!returnValue)
+			this.medicalCoverageInfo.setAppointmentMCoverage(this.summaryCoverageData);
+		const appointmentInformation = { returnValue: returnValue, date: this.selectedDate };
+		this.dialogRef.close(appointmentInformation);
 	}
 
 	enableDowndloadAnexo(option: boolean) {
@@ -369,6 +411,32 @@ export class AppointmentComponent implements OnInit {
 
 	clear(): void {
 		this.formEdit.controls.newCoverageData.setValue(null);
+	}
+
+	setHideObservationTitle(value: boolean): void{
+		this.hideObservationTitle = value;
+	}
+
+	setHideObservationForm(value: boolean): void{
+		this.hideObservationForm = value;
+	}
+
+	updateObservation(): void{
+		this.observation = this.formObservations.get('observation').value;
+		this.appointmentFacade.updateObservation(this.params.appointmentData.appointmentId, this.formObservations.controls.observation.value).subscribe(() => {
+			this.snackBarService.showSuccess('turnos.appointment.observations.UPDATE_SUCCESS');
+		}, error => {
+			processErrors(error, (msg) => this.snackBarService.showError(msg));
+		});
+		this.setHideObservationForm(true);
+	}
+
+	cancelObservation(): void{
+		this.hideObservationForm = true;
+		if(!this.observation)
+			this.hideObservationTitle = true;
+		else
+			this.hideObservationTitle = false;
 	}
 
 	private updateSummaryCoverageData(): void {

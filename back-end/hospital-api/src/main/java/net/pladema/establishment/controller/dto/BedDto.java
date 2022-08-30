@@ -23,7 +23,5 @@ public class BedDto implements Serializable {
     private RoomDto room;
     
     private Boolean free;
-    
-    private BedCategoryDto bedCategory; 
-    
+
 }

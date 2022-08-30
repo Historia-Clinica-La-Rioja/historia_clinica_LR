@@ -28,14 +28,12 @@ public interface BedMapper {
     List<BedDto> toListBedDto(List<Bed> bedList);
 
     @Named("toBedInfoDto")
-    @Mapping(target = "bed.bedCategory", source = "bedCategory")
     @Mapping(target = "bed", source = "bed")
     @Mapping(target = "bed.room", source = "room")
     @Mapping(target = "bed.room.sector", source = "sector")
     BedInfoDto toBedInfoDto(BedInfoVo bedSummaryVo);
     
     @Named("toBedSummaryDto")
-    @Mapping(target = "bed.bedCategory", source = "bedCategory")
     @Mapping(target = "bed", source = "bed")
     BedSummaryDto toBedSummaryDto(BedSummaryVo bedSummary);
     

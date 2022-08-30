@@ -58,6 +58,10 @@ public class EvolutionNoteBo extends SelfValidating<EvolutionNoteBo> implements 
 
     private Boolean wasMadeByProfessionalNursing;
 
+	private String modificationReason;
+
+	private Long initialDocumentId;
+
     @Override
     public Integer getPatientId() {
         if (patientInfo != null)

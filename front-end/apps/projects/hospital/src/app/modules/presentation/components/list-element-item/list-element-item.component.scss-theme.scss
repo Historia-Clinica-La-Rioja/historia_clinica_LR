@@ -1,0 +1,15 @@
+@mixin app-list-element-item($theme) {
+	$palette-primary: map-get($theme, primary);
+	$palette-dark-warn: map-get($theme, warn);
+
+	app-list-element-item {
+		.blue {
+			background-color: #b0d2f0;
+			color: mat-color($palette-primary, 400);
+		}
+		.red {
+			background-color: rgba(255, 163, 163, 0.93);
+			color: mat-color($palette-dark-warn, 400);
+		}
+	}
+}

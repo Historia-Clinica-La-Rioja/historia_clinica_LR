@@ -5,7 +5,7 @@ module.exports = {
             const { roles, userId } = securityContext;
             console.log(`userId ${userId} with roles ${roles.map(function(item) { return JSON.stringify(item);}).toString()}`);
         }
-        else console.log(`securityContext => ${securityContext}`);
+        else console.log(`securityContext is undefined => ${securityContext}`);
         return query;
     },
 };

@@ -1,0 +1,103 @@
+<div fxLayout="row" fxLayoutAlign="space-between">
+    <span mat-dialog-title [translate]="'ambulatoria.paciente.nueva-consulta.problemas.buttons.ADD'"></span>
+    <button mat-icon-button (click)="close()">
+        <mat-icon>close</mat-icon>
+    </button>
+</div>
+
+<div mat-dialog-content>
+    <div *ngIf="!data?.editing else problemForm">
+        <ng-container *ngIf="!data.ambulatoryConsultationProblemsService.getSnomedConcept() else problemForm">
+            <app-concepts-search *ngIf="!data.searchConceptsLocallyFF else problemTypeaheadSearch"
+                [label]="'ambulatoria.paciente.nueva-consulta.problemas.CONCEPT_LABEL'"
+                (search)="data.ambulatoryConsultationProblemsService.openSearchDialog($event)">
+            </app-concepts-search>
+
+            <ng-template #problemTypeaheadSearch>
+                <app-concept-typeahead-search [ecl]="data.ambulatoryConsultationProblemsService.getECL()"
+                    [placeholder]="'ambulatoria.paciente.nueva-consulta.problemas.SEARCH_PLACEHOLDER'"
+                    (conceptSelected)="data.ambulatoryConsultationProblemsService.setConcept($event)">
+                </app-concept-typeahead-search>
+            </ng-template>
+        </ng-container>
+    </div>
+</div>
+
+<ng-template #problemForm>
+    <form [formGroup]="data.ambulatoryConsultationProblemsService.getForm()"
+        (ngSubmit)="data?.editing ? this.editProblem() : this.addProblem()">
+
+        <div fxLayout="column" fxLayoutGap="5px">
+            <mat-form-field appearance="outline">
+                <mat-label [translate]="'ambulatoria.paciente.nueva-consulta.problemas.CONCEPT_LABEL'">
+                </mat-label>
+                <input id="snomed-input" matInput type="text" formControlName="snomed" name="snomed" readonly
+                    matTooltip="{{ data.ambulatoryConsultationProblemsService.getSnomedConcept().pt }}"
+                    *ngIf="!data?.editing">
+                <input id="snomed-input-new-consultation" matInput type="text" formControlName="snomed" name="snomed"
+                    readonly *ngIf="data?.editing">
+                <button id="clear" mat-button matSuffix color="warn" mat-icon-button
+                    (click)="data.ambulatoryConsultationProblemsService.resetForm()" *ngIf="!data?.editing">
+                    <mat-icon>close</mat-icon>
+                </button>
+            </mat-form-field>
+
+            <mat-form-field appearance="outline">
+                <mat-label [translate]="'ambulatoria.paciente.nueva-consulta.problemas.SEVERIDAD'">
+                </mat-label>
+                <mat-select id="severity-select" formControlName="severidad">
+                    <mat-option *ngFor="let severityType of data.severityTypes" [value]="severityType.code">
+                        {{severityType.display}}
+                    </mat-option>
+                </mat-select>
+            </mat-form-field>
+
+            <div>
+                <mat-checkbox id="cronico-checkbox" formControlName="cronico">
+                    <span [translate]="'ambulatoria.paciente.nueva-consulta.problemas.CRONICO'"></span>
+                </mat-checkbox>
+            </div>
+
+            <mat-form-field appearance="outline">
+                <mat-label [translate]="'ambulatoria.paciente.nueva-consulta.problemas.FECHA_INICIO'">
+                </mat-label>
+                <input matInput id="fecha_inicio" [matDatepicker]="inicioDatePicker" formControlName="fechaInicio"
+                    [min]="minDate" [max]="data.ambulatoryConsultationProblemsService.getFechaInicioMax()"
+                    (dateChange)="data.ambulatoryConsultationProblemsService.checkValidFechaFin()">
+                <mat-datepicker-toggle matSuffix [for]="inicioDatePicker"></mat-datepicker-toggle>
+                <mat-datepicker #inicioDatePicker></mat-datepicker>
+            </mat-form-field>
+
+            <mat-form-field appearance="outline">
+                <mat-label [translate]="'ambulatoria.paciente.nueva-consulta.problemas.FECHA_FIN'">
+                </mat-label>
+                <input matInput id="fecha_fin" [matDatepicker]="finDatePicker" formControlName="fechaFin"
+                    [min]="minDate" [max]="today"
+                    (dateChange)="data.ambulatoryConsultationProblemsService.checkValidFechaFin()">
+                <mat-datepicker-toggle matSuffix [for]="finDatePicker"></mat-datepicker-toggle>
+                <mat-datepicker #finDatePicker></mat-datepicker>
+                <mat-error *ngIf="data.ambulatoryConsultationProblemsService.hasError('min', 'fechaFin')"
+                    [translate]="'ambulatoria.paciente.nueva-consulta.problemas.errors.FECHA_FIN_MIN'">
+                </mat-error>
+                <mat-error *ngIf="data.ambulatoryConsultationProblemsService.hasError('matDatepickerMax', 'fechaFin')"
+                    [translate]="'forms.MAX_DATE_TODAY'">
+                </mat-error>
+                <mat-error *ngIf="data.ambulatoryConsultationProblemsService.hasError('required_init_date', 'fechaFin')"
+                    [translate]="'forms.REQUIRED_INIT_DATE'">
+                </mat-error>
+            </mat-form-field>
+
+            <div align="end" *ngIf="!data?.editing">
+                <button id="submit_problema" class="uppercase" mat-raised-button color="primary" type="submit">
+                    <span [translate]="'ambulatoria.paciente.nueva-consulta.problemas.buttons.ADD'"></span>
+                </button>
+            </div>
+
+            <div align="end" *ngIf="data?.editing">
+                <button id="edit_problema" class="uppercase" mat-raised-button color="primary" type="submit">
+                    <span [translate]="'ambulatoria.paciente.nueva-consulta.problemas.buttons.SAVE'"></span>
+                </button>
+            </div>
+        </div>
+    </form>
+</ng-template>

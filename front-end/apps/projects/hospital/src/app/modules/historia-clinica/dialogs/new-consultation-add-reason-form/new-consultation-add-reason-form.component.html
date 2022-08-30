@@ -1,0 +1,43 @@
+<div fxLayout="row" fxLayoutAlign="space-between">
+    <span mat-dialog-title [translate]="'historia-clinica.new-consultation-add-reason-form.ADD_REASON'"></span>
+    <button mat-icon-button (click)="close()">
+        <mat-icon>close</mat-icon>
+    </button>
+</div>
+
+<div mat-dialog-content>
+    <ng-container *ngIf="!data.reasonService.getSnomedConcept() else mainMotivoConsulta">
+        <app-concepts-search *ngIf="!data.searchConceptsLocallyFF else motivoTypeaheadSearch"
+            [label]="'historia-clinica.new-consultation-add-reason-form.REASON'"
+            (search)="data.reasonService.openSearchDialog($event)">
+        </app-concepts-search>
+
+        <ng-template #motivoTypeaheadSearch>
+            <app-concept-typeahead-search [ecl]="data.reasonService.getECL()"
+                [placeholder]="'historia-clinica.new-consultation-add-reason-form.SEARCH_PLACEHOLDER'"
+                (conceptSelected)="data.reasonService.setConcept($event)">
+            </app-concept-typeahead-search>
+        </ng-template>
+    </ng-container>
+</div>
+
+<ng-template #mainMotivoConsulta>
+    <form [formGroup]="data.reasonService.getForm()" (ngSubmit)="addReason()">
+        <div fxLayout="column" fxLayoutGap="5px">
+            <mat-form-field appearance="outline">
+                <input id="motivo-input" matInput type="text" formControlName="snomed" name="snomed" readonly
+                    matTooltip="{{ data.reasonService.getSnomedConcept().pt }}">
+                <button id="clear-motivo" mat-button matSuffix color="warn" mat-icon-button
+                    (click)="data.reasonService.resetForm()">
+                    <mat-icon>close</mat-icon>
+                </button>
+            </mat-form-field>
+            <div align="end">
+                <button id="submit_motivos" mat-raised-button color="primary" type="submit">
+                    <span class="uppercase"
+                        [translate]="'historia-clinica.new-consultation-add-reason-form.ADD_REASON'"></span>
+                </button>
+            </div>
+        </div>
+    </form>
+</ng-template>

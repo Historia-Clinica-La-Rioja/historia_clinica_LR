@@ -17,27 +17,6 @@ import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 @Getter
 @Setter
 public class BookingAutoConfiguration {
-    @Value("${booking-mail-from}")
-    private String from;
-
-    @Value("${booking-password}")
-    private String password;
-
-    @Value("${booking-host}")
-    private String host;
-
-    @Value("${booking-port}")
-    private String port;
-
-    @Value("${booking-starttls.enable}")
-    private String enable;
-
-    @Value("${booking-auth}")
-    private String auth;
-
-    @Value("${booking-protocol}")
-    private String protocol;
-
     @Value("${booking-apibase}")
     private String apiBase;
 }

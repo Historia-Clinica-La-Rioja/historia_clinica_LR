@@ -19,6 +19,7 @@ import { MedicacionesService } from '@historia-clinica/modules/ambulatoria/servi
 import { AmbulatoriaSummaryFacadeService } from '@historia-clinica/modules/ambulatoria/services/ambulatoria-summary-facade.service';
 import { ReferenceNotificationInfo, ReferenceNotificationService } from '@historia-clinica/services/reference-notification.service';
 import { REFERENCE_CONSULTATION_TYPE } from '@historia-clinica/modules/ambulatoria/constants/reference-masterdata';
+import { DockPopupRef } from '@presentation/services/dock-popup-ref';
 
 
 @Component({
@@ -29,7 +30,9 @@ import { REFERENCE_CONSULTATION_TYPE } from '@historia-clinica/modules/ambulator
 export class OdontogramComponent implements OnInit {
 
 	@Output() isOpenOdontologyConsultation = new EventEmitter<boolean>();
-	@Output() consultationCompleted = new EventEmitter<FieldsToUpdate>()
+	@Output() consultationCompleted = new EventEmitter<FieldsToUpdate>();
+
+	private dialogRef: DockPopupRef;
 
 	constructor(
 		private readonly odontogramRestService: OdontogramRestService,
@@ -58,7 +61,7 @@ export class OdontogramComponent implements OnInit {
 					consultationType: REFERENCE_CONSULTATION_TYPE.ODONTOLOGY
 				}
 				this.referenceNotificationService = new ReferenceNotificationService(this.refNotificationInfo, this.referenceService, this.dialog, this.clinicalSpecialtyService, this.medicacionesService, this.ambulatoriaSummaryFacadeService, this.dockPopupService);
-		});
+			});
 
 	}
 
@@ -131,16 +134,24 @@ export class OdontogramComponent implements OnInit {
 	}
 
 	openConsultationPopup() {
-		this.isOpenOdontologyConsultation.emit(true);
-		const dialogRef = this.dockPopupService.open(OdontologyConsultationDockPopupComponent, { patientId: this.patientId });
-		dialogRef.afterClosed().subscribe(consultationResult => {
-			this.isOpenOdontologyConsultation.emit(false);
-			if (consultationResult && consultationResult.confirmed) {
-				this.setActionsAsRecords();
-				this.consultationsIndices$ = this.odontologyConsultationService.getConsultationIndices(this.patientId);
-				this.consultationCompleted.emit(consultationResult.fieldsToUpdate);
+		if (!this.dialogRef) {
+			this.isOpenOdontologyConsultation.emit(true);
+			this.dialogRef = this.dockPopupService.open(OdontologyConsultationDockPopupComponent, { patientId: this.patientId });
+			this.dialogRef.afterClosed().subscribe(consultationResult => {
+				this.isOpenOdontologyConsultation.emit(false);
+				delete this.dialogRef;
+				if (consultationResult && consultationResult.confirmed) {
+					this.setActionsAsRecords();
+					this.consultationsIndices$ = this.odontologyConsultationService.getConsultationIndices(this.patientId);
+					this.consultationCompleted.emit(consultationResult.fieldsToUpdate);
+				}
+			});
+		}
+		else {
+			if (this.dialogRef.isMinimized()) {
+				this.dialogRef.maximize();
 			}
-		})
+		}
 	}
 
 	private setActionsAsRecords() {

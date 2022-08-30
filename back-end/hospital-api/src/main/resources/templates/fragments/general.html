@@ -525,11 +525,11 @@
 </body>
 <footer class="footer-dark" th:fragment="footer" th:if="${author != null}">
     <div th:if="${nameSelfDeterminationFF}">
-        <div th:replace="fragments/author.html :: author(firstName=${author.nameSelfDetermination}, lastName=${author.lastName},licenseNumber=${author.licence})">
+        <div th:replace="fragments/author.html :: author(firstName=${author.nameSelfDetermination}, lastName=${author.lastName},licenseNumber=${author.completeLicenseInfo})">
         </div>
     </div>
     <div th:if="${!nameSelfDeterminationFF}">
-        <div th:replace="fragments/author.html :: author(firstName=${author.firstName}, lastName=${author.lastName},licenseNumber=${author.licence})">
+        <div th:replace="fragments/author.html :: author(firstName=${author.firstName}, lastName=${author.lastName},licenseNumber=${author.completeLicenseInfo})">
         </div>
     </div>
     <div class="col-12">

@@ -1,0 +1,57 @@
+<div fxLayout="row" fxLayoutAlign="space-between">
+    <span mat-dialog-title [translate]="'historia-clinica.new-consultation-allergy-form.ADD'"></span>
+    <button mat-icon-button (click)="close()">
+        <mat-icon>close</mat-icon>
+    </button>
+</div>
+
+<div mat-dialog-content>
+    <ng-container *ngIf="!data.allergyService.getSnomedConcept() else alergiasForm">
+        <app-concepts-search *ngIf="!data.searchConceptsLocallyFF else alergiaTypeaheadSearch"
+            [label]="'historia-clinica.new-consultation-allergy-form.ALLERGY'"
+            (search)="data.allergyService.openSearchDialog($event)">
+        </app-concepts-search>
+
+        <ng-template #alergiaTypeaheadSearch>
+            <app-concept-typeahead-search [ecl]="data.allergyService.getECL()"
+                [placeholder]="'historia-clinica.new-consultation-allergy-form.SEARCH_PLACEHOLDER'"
+                (conceptSelected)="data.allergyService.setConcept($event)">
+            </app-concept-typeahead-search>
+        </ng-template>
+    </ng-container>
+</div>
+
+<ng-template #alergiasForm>
+    <form [formGroup]="data.allergyService.getForm()" (ngSubmit)="addAllergy()">
+        <div fxLayout="column">
+            <mat-form-field appearance="outline">
+                <mat-label [translate]="'historia-clinica.new-consultation-allergy-form.ALLERGY'">
+                </mat-label>
+                <input id="alergias-input" matInput type="text" formControlName="snomed" name="snomed" readonly
+                    matTooltip="{{ data.allergyService.getSnomedConcept().pt }}">
+                <button id="clear-alergias" mat-button matSuffix color="warn" mat-icon-button
+                    (click)="data.allergyService.resetForm()">
+                    <mat-icon>close</mat-icon>
+                </button>
+            </mat-form-field>
+
+            <mat-form-field appearance="outline">
+                <mat-label [translate]="'historia-clinica.new-consultation-allergy-form.CRITICALITY'">
+                </mat-label>
+                <mat-select id="criticality-select" formControlName="criticality">
+                    <mat-option *ngFor="let criticalityType of data.allergyService.getCriticalityTypes()"
+                        [value]="criticalityType.id">
+                        {{criticalityType.display}}
+                    </mat-option>
+                </mat-select>
+                <mat-error translate="forms.REQUIRED"></mat-error>
+            </mat-form-field>
+
+            <div align="end">
+                <button id="submit_alergias" mat-raised-button color="primary" type="submit">
+                    <span class="uppercase" [translate]="'historia-clinica.new-consultation-allergy-form.ADD'"></span>
+                </button>
+            </div>
+        </div>
+    </form>
+</ng-template>

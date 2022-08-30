@@ -104,7 +104,8 @@ export class AgendaHorarioService {
 					end: possibleScheduleHours.find(date => date.getTime() === event.end.getTime()),
 					overturnCount: event.meta.overturnCount,
 					medicalAttentionTypeId: event.meta.medicalAttentionType?.id,
-					possibleScheduleHours
+					possibleScheduleHours,
+					availableForBooking: event.meta.availableForBooking,
 				}
 			});
 		dialogRef.afterClosed().subscribe(dialogInfo => {
@@ -153,7 +154,8 @@ export class AgendaHorarioService {
 						overturnCount: event.meta.overturnCount,
 						medicalAttentionTypeId: event.meta.medicalAttentionType?.id,
 						isEdit: true,
-						possibleScheduleHours
+						possibleScheduleHours,
+						availableForBooking: event.meta.availableForBooking
 					}
 				});
 			dialogRef.afterClosed().subscribe(dialogInfo => {
@@ -264,7 +266,8 @@ export class AgendaHorarioService {
 			color: this.getMedicalAttentionColor(diaryOpeningHour.medicalAttentionTypeId),
 			meta: {
 				medicalAttentionType: { id: diaryOpeningHour.medicalAttentionTypeId },
-				overturnCount: diaryOpeningHour.overturnCount
+				overturnCount: diaryOpeningHour.overturnCount,
+				availableForBooking: diaryOpeningHour.externalAppointmentsAllowed,
 			}
 		};
 	}
@@ -282,13 +285,11 @@ export class AgendaHorarioService {
 			return;
 		}
 		const newEnd = addDays(addMinutes(segment.date, minutesDiff), daysDiff);
-		if (newEnd.getDay() !== dragToSelectEvent.start.getDay()) {
-			return;
-		}
 		const endOfView = endOfWeek(this.viewDate, { weekStartsOn: this.weekStartsOn });
-		if (newEnd.getHours() >= 23) {
+		if (newEnd.getHours() >= 0 && newEnd.getDay() !== dragToSelectEvent.start.getDay()) {
+			newEnd.setTime(dragToSelectEvent.start.getTime());
 			newEnd.setHours(23);
-			newEnd.setMinutes(0);
+			newEnd.setMinutes(59);
 			newEnd.setSeconds(0);
 		}
 		if (newEnd > segment.date && newEnd < endOfView) {

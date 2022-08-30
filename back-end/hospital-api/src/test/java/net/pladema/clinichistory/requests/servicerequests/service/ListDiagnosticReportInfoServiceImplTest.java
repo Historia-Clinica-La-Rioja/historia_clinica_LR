@@ -52,8 +52,14 @@ class ListDiagnosticReportInfoServiceImplTest extends UnitRepository {
         Integer sctId_papera = save(SnomedTestMocks.createSnomed("PAPERA")).getId();
         Integer sctId_radiografia = save(SnomedTestMocks.createSnomed("RADIOGRAFIA")).getId();
 
-        Integer sr1_id = save(new ServiceRequest(1, patientId, 1, 1, "category")).getId();
-        Integer sr2_id = save(new ServiceRequest(1, patientId, 1, null, "category")).getId();
+		ServiceRequest sr1 = new ServiceRequest(1, patientId, 1, 1, ServiceRequestCategory.LABORATORY_PROCEDURE);
+		ServiceRequest sr2 = new ServiceRequest(1, patientId, 1, null, ServiceRequestCategory.LABORATORY_PROCEDURE);
+
+		sr1.setSourceTypeId((short) 0);
+		sr2.setSourceTypeId((short) 0);
+
+        Integer sr1_id = save(sr1).getId();
+        Integer sr2_id = save(sr2).getId();
 
         Long outpatient_doc_id = save(DocumentsTestMocks.createDocument(1, DocumentType.OUTPATIENT, SourceType.OUTPATIENT, DocumentStatus.FINAL)).getId();
         Long order1_doc_id = save(DocumentsTestMocks.createDocument(sr1_id, DocumentType.ORDER, SourceType.ORDER, DocumentStatus.FINAL)).getId();
@@ -65,6 +71,15 @@ class ListDiagnosticReportInfoServiceImplTest extends UnitRepository {
         Integer papera_id = save(HealthConditionTestMocks.createPersonalHistory(patientId, sctId_papera, ConditionClinicalStatus.ACTIVE, ConditionVerificationStatus.CONFIRMED)).getId();
         save(HealthConditionTestMocks.createHealthConditionDocument(outpatient_doc_id, papera_id));
 
+		ServiceRequestCategory serviceRequestCategory = new ServiceRequestCategory();
+		serviceRequestCategory.setId(ServiceRequestCategory.LABORATORY_PROCEDURE);
+		serviceRequestCategory.setDescription("Description");
+		save(serviceRequestCategory);
+
+		SourceType sourceType = new SourceType();
+		sourceType.setId((short) 0);
+		sourceType.setDescription("Description");
+		save(sourceType);
 
         Integer diagnosticReportId = save(DiagnosticReportTestMocks.createDiagnosticReport(patientId, sctId_radiografia, DiagnosticReportStatus.REGISTERED, "", null, angina_id)).getId();
         save(DiagnosticReportTestMocks.createDocumentDiagnosticReport(order1_doc_id, diagnosticReportId));

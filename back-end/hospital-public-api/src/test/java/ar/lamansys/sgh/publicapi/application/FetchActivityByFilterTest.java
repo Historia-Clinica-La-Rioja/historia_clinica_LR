@@ -1,9 +1,11 @@
 package ar.lamansys.sgh.publicapi.application;
 
-import ar.lamansys.sgh.publicapi.application.fetchactivitiesbyfilter.ActivitySearchFilter;
-import ar.lamansys.sgh.publicapi.application.fetchactivitiesbyfilter.FetchActivitiesByFilter;
-import ar.lamansys.sgh.publicapi.application.port.out.ActivityStorage;
-import ar.lamansys.sgh.publicapi.domain.*;
+import static org.mockito.Mockito.when;
+
+import java.time.LocalDate;
+import java.util.Arrays;
+import java.util.List;
+
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -11,11 +13,17 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import java.time.LocalDate;
-import java.util.Arrays;
-import java.util.List;
-
-import static org.mockito.Mockito.when;
+import ar.lamansys.sgh.publicapi.application.fetchactivitiesbyfilter.ActivitySearchFilter;
+import ar.lamansys.sgh.publicapi.application.fetchactivitiesbyfilter.FetchActivitiesByFilter;
+import ar.lamansys.sgh.publicapi.application.port.out.ActivityStorage;
+import ar.lamansys.sgh.publicapi.domain.AttentionInfoBo;
+import ar.lamansys.sgh.publicapi.domain.CoverageActivityInfoBo;
+import ar.lamansys.sgh.publicapi.domain.GenderEnum;
+import ar.lamansys.sgh.publicapi.domain.InternmentBo;
+import ar.lamansys.sgh.publicapi.domain.PersonInfoBo;
+import ar.lamansys.sgh.publicapi.domain.ProfessionalBo;
+import ar.lamansys.sgh.publicapi.domain.ScopeEnum;
+import ar.lamansys.sgh.publicapi.domain.SnomedBo;
 
 @ExtendWith(MockitoExtension.class)
 public class FetchActivityByFilterTest {
@@ -38,27 +46,27 @@ public class FetchActivityByFilterTest {
         when(activityStorage.getActivitiesByInstitution(param.getRefsetCode(), param.getProvinceCode(), param.getFrom(), param.getTo(), param.getReprocessing())).thenReturn(
                 Arrays.asList(
                     new AttentionInfoBo(
-                        10, LocalDate.ofYearDay(2020, 1),
+                        10L, LocalDate.ofYearDay(2020, 1),
                         new SnomedBo("1", "1"),
                         new PersonInfoBo("35555555", "Juan", "Perez", LocalDate.ofYearDay(1990, 1), GenderEnum.MALE),
                         new CoverageActivityInfoBo("AN-35555555"), ScopeEnum.AMBULATORIA,
-                        new InternmentBo("100", LocalDate.ofYearDay(2020, 1), LocalDate.ofYearDay(2020, 20)),
+                        new InternmentBo("100", LocalDate.ofYearDay(2020, 1).atStartOfDay(), LocalDate.ofYearDay(2020, 20).atStartOfDay()),
                         new ProfessionalBo(1, "Jose", "Fernandez", "DOC-30000000", "30000000")
                     ),
                     new AttentionInfoBo(
-                            11, LocalDate.ofYearDay(2020, 2),
+                            11L, LocalDate.ofYearDay(2020, 2),
                             new SnomedBo("2", "2"),
                             new PersonInfoBo("35555556", "Rocio", "Gonzalez", LocalDate.ofYearDay(1990, 1), GenderEnum.FEMALE),
                             new CoverageActivityInfoBo("AN-35555556"), ScopeEnum.INTERNACION,
-                            new InternmentBo("100", LocalDate.ofYearDay(2020, 1), LocalDate.ofYearDay(2020, 20)),
+                            new InternmentBo("100", LocalDate.ofYearDay(2020, 1).atStartOfDay(), LocalDate.ofYearDay(2020, 20).atStartOfDay()),
                             new ProfessionalBo(1, "Juan", "Perez", "DOC-30000000", "30000000")
                     ),
                     new AttentionInfoBo(
-                            12, LocalDate.ofYearDay(2020, 3),
+                            12L, LocalDate.ofYearDay(2020, 3),
                             new SnomedBo("3", "3"),
                             new PersonInfoBo("35555557", "Pedro", "Rodriguez", LocalDate.ofYearDay(1990, 1), GenderEnum.MALE),
                             new CoverageActivityInfoBo("AN-35555557"), ScopeEnum.AMBULATORIA,
-                            new InternmentBo("100", LocalDate.ofYearDay(2020, 1), LocalDate.ofYearDay(2020, 20)),
+                            new InternmentBo("100", LocalDate.ofYearDay(2020, 1).atStartOfDay(), LocalDate.ofYearDay(2020, 20).atStartOfDay()),
                             new ProfessionalBo(1, "Jose", "Fernandez", "DOC-30000000", "30000000")
                     )
                 )
@@ -77,11 +85,11 @@ public class FetchActivityByFilterTest {
                 param.getFrom(), param.getTo(), param.getReprocessing())).thenReturn(
                     Arrays.asList(
                             new AttentionInfoBo(
-                                    10, LocalDate.ofYearDay(2020, 1),
+                                    10L, LocalDate.ofYearDay(2020, 1),
                                     new SnomedBo("1", "1"),
                                     new PersonInfoBo("35555555", "Juan", "Perez", LocalDate.ofYearDay(1990, 1), GenderEnum.MALE),
                                     new CoverageActivityInfoBo("AN-35555555"), ScopeEnum.AMBULATORIA,
-                                    new InternmentBo("100", LocalDate.ofYearDay(2020, 1), LocalDate.ofYearDay(2020, 20)),
+                                    new InternmentBo("100", LocalDate.ofYearDay(2020, 1).atStartOfDay(), LocalDate.ofYearDay(2020, 20).atStartOfDay()),
                                     new ProfessionalBo(1, "Jose", "Fernandez", "DOC-30000000", "30000000")
                             )
                     )
@@ -101,19 +109,19 @@ public class FetchActivityByFilterTest {
         when(activityStorage.getActivitiesByInstitutionAndCoverage(param.getRefsetCode(), param.getProvinceCode(), param.getCoverageCuit(), param.getFrom(), param.getTo(), param.getReprocessing())).thenReturn(
                 Arrays.asList(
                         new AttentionInfoBo(
-                                10, LocalDate.ofYearDay(2020, 1),
+                                10L, LocalDate.ofYearDay(2020, 1),
                                 new SnomedBo("1", "1"),
                                 new PersonInfoBo("35555555", "Juan", "Perez", LocalDate.ofYearDay(1990, 1), GenderEnum.MALE),
                                 new CoverageActivityInfoBo("AN-35555555"), ScopeEnum.AMBULATORIA,
-                                new InternmentBo("100", LocalDate.ofYearDay(2020, 1), LocalDate.ofYearDay(2020, 20)),
+                                new InternmentBo("100", LocalDate.ofYearDay(2020, 1).atStartOfDay(), LocalDate.ofYearDay(2020, 20).atStartOfDay()),
                                 new ProfessionalBo(1, "Jose", "Fernandez", "DOC-30000000", "30000000")
                         ),
                         new AttentionInfoBo(
-                                11, LocalDate.ofYearDay(2020, 2),
+                                11L, LocalDate.ofYearDay(2020, 2),
                                 new SnomedBo("2", "2"),
                                 new PersonInfoBo("35555556", "Rocio", "Gonzalez", LocalDate.ofYearDay(1990, 1), GenderEnum.FEMALE),
                                 new CoverageActivityInfoBo("AN-35555556"), ScopeEnum.INTERNACION,
-                                new InternmentBo("100", LocalDate.ofYearDay(2020, 1), LocalDate.ofYearDay(2020, 20)),
+                                new InternmentBo("100", LocalDate.ofYearDay(2020, 1).atStartOfDay(), LocalDate.ofYearDay(2020, 20).atStartOfDay()),
                                 new ProfessionalBo(1, "Juan", "Perez", "DOC-30000000", "30000000")
                         )
                 ));

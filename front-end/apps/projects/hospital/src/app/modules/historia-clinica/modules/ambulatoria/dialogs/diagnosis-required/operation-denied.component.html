@@ -1,0 +1,17 @@
+<div fxLayout="row" fxLayoutAlign="end">
+	<button id="close-modal" mat-button mat-icon-button aria-label="close" (click)="closeModal()">
+		<mat-icon>close</mat-icon>
+	</button>
+</div>
+
+<mat-dialog-actions fxLayout="column" fxLayoutAlign="start center">
+	<div class="icon">
+		<mat-icon [inline]="true" class="material-icons-outlined" color="primary">highlight_off</mat-icon>
+	</div>
+	<h1 class="mat-headline item-margin" style="padding-top: 1em; text-align: center">
+		{{ this.data.message | translate }}
+	</h1>
+	<button class="item-margin" mat-flat-button color="primary" (click)="closeModal()">
+		<span class="uppercase"> {{ 'buttons.ACCEPT' | translate }} </span>
+	</button>
+</mat-dialog-actions>

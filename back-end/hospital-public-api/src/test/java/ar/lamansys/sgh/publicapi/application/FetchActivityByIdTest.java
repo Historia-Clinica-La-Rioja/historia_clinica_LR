@@ -1,19 +1,27 @@
 package ar.lamansys.sgh.publicapi.application;
 
-import ar.lamansys.sgh.publicapi.application.fetchactivitybyid.FetchActivityById;
-import ar.lamansys.sgh.publicapi.application.port.out.ActivityStorage;
-import ar.lamansys.sgh.publicapi.domain.*;
-import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.Mock;
-import org.mockito.junit.jupiter.MockitoExtension;
+import static org.mockito.Mockito.when;
 
 import java.time.LocalDate;
 import java.util.Optional;
 
-import static org.mockito.Mockito.when;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
+
+import ar.lamansys.sgh.publicapi.application.fetchactivitybyid.FetchActivityById;
+import ar.lamansys.sgh.publicapi.application.port.out.ActivityStorage;
+import ar.lamansys.sgh.publicapi.domain.AttentionInfoBo;
+import ar.lamansys.sgh.publicapi.domain.CoverageActivityInfoBo;
+import ar.lamansys.sgh.publicapi.domain.GenderEnum;
+import ar.lamansys.sgh.publicapi.domain.InternmentBo;
+import ar.lamansys.sgh.publicapi.domain.PersonInfoBo;
+import ar.lamansys.sgh.publicapi.domain.ProfessionalBo;
+import ar.lamansys.sgh.publicapi.domain.ScopeEnum;
+import ar.lamansys.sgh.publicapi.domain.SnomedBo;
 
 @ExtendWith(MockitoExtension.class)
 public class FetchActivityByIdTest {
@@ -36,11 +44,11 @@ public class FetchActivityByIdTest {
 
         when(activityStorage.getActivityById(refsetCode, provinceCode, activityId)).thenReturn(
                 Optional.of(new AttentionInfoBo(
-                        10, LocalDate.now(),
+                        10L, LocalDate.now(),
                         new SnomedBo("1", "1"),
                         new PersonInfoBo("35555555", "Juan", "Perez", LocalDate.ofYearDay(1990, 1), GenderEnum.MALE),
                         new CoverageActivityInfoBo("AN-35555555"), ScopeEnum.AMBULATORIA,
-                        new InternmentBo("100", LocalDate.ofYearDay(2020, 1), LocalDate.ofYearDay(2020, 20)),
+                        new InternmentBo("100", LocalDate.ofYearDay(2020, 1).atStartOfDay(), LocalDate.ofYearDay(2020, 20).atStartOfDay()),
                         new ProfessionalBo(1, "Juan", "Perez", "DOC-30000000", "30000000"))
         ));
 

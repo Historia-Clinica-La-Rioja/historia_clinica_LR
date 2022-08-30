@@ -17,32 +17,23 @@ import net.pladema.clinichistory.hospitalization.service.summary.domain.Responsi
 public class InternmentSummaryBo {
 
     private Integer id;
-
     private DocumentsSummaryBo documents;
-
-    private net.pladema.clinichistory.hospitalization.service.summary.domain.ResponsibleDoctorBo doctor;
-
+    private ResponsibleDoctorBo doctor;
     private Integer bedId;
-
     private String bedNumber;
-
     private Integer roomId;
-
     private String roomNumber;
-    
     private String sectorDescription;
-    
     private String sectorSpecialty;
-
     private LocalDateTime entryDate;
+	private ResponsibleContactBo responsibleContact;
+	private LocalDateTime probableDischargeDate;
+    private LocalDateTime administrativeDischargeDate;
 
-    private LocalDateTime dischargeDate;
-
-    private int totalInternmentDays;
-
-    private ResponsibleContactBo responsibleContact;
-
-    private LocalDateTime probableDischargeDate;
+	private LocalDateTime physicalDischargeDate;
+	private LocalDateTime medicalDischargeDate;
+	private boolean active;
+	private int totalInternmentDays;
 
     public InternmentSummaryBo(InternmentSummaryVo internmentSummaryVo) {
         this.id = internmentSummaryVo.getId();
@@ -59,13 +50,25 @@ public class InternmentSummaryBo {
         if (internmentSummaryVo.getResponsibleContact() != null)
             this.responsibleContact = new ResponsibleContactBo(internmentSummaryVo.getResponsibleContact());
         this.probableDischargeDate = internmentSummaryVo.getProbableDischargeDate();
-        this.dischargeDate = internmentSummaryVo.getDischargeDate();
-        this.totalInternmentDays = totalInternmentDays(internmentSummaryVo.getActive(), internmentSummaryVo.getPhysicalDischargeDate());
+        this.administrativeDischargeDate = internmentSummaryVo.getAdministrativeDischargeDate();
+		this.medicalDischargeDate = internmentSummaryVo.getMedicalDischargeDate();
+		this.physicalDischargeDate = internmentSummaryVo.getPhysicalDischargeDate();
+		this.active = internmentSummaryVo.getActive();
+        this.totalInternmentDays = totalInternmentDays();
     }
 
-    private int totalInternmentDays(boolean active, LocalDateTime physicalDischargeDate){
-		var validDate = physicalDischargeDate != null ? physicalDischargeDate : active ? LocalDateTime.now() : getDischargeDate();
+    private int totalInternmentDays(){
+		var validDate =
+				physicalDischargeDate != null ?
+						physicalDischargeDate :
+						active ?
+								LocalDateTime.now() :
+								administrativeDischargeDate;
 		return (int)ChronoUnit.DAYS.between(getEntryDate(), validDate);
     }
+
+	public boolean freeBed() {
+		return (physicalDischargeDate != null) || (administrativeDischargeDate != null);
+	}
 
 }

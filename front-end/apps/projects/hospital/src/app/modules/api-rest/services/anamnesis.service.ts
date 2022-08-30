@@ -39,4 +39,9 @@ export class AnamnesisService {
 			body: reason
 		});
 	}
+
+	editAnamnesis(anamnesis: AnamnesisDto, anamnesisId: number, internmentEpisodeId: number): Observable<number> {
+		const url = `${environment.apiBase}/institutions/${this.contextService.institutionId}/internments/${internmentEpisodeId}/anamnesis/${anamnesisId}`;
+		return this.http.put<number>(url, anamnesis);
+	}
 }

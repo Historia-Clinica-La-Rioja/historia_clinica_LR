@@ -88,7 +88,7 @@ export class AntropometricosSummaryComponent implements OnInit {
 			Object.keys(this.LABELS).forEach(
 				key => {
 					const lastAnthropometricData = list[0];
-					if (lastAnthropometricData && lastAnthropometricData[key]?.value) {
+					if (lastAnthropometricData[key]?.value) {
 						let detail: DetailBoxExtended = {
 							description: this.LABELS[key],
 							id: this.getIdentificator(this.LABELS[key]),
@@ -102,7 +102,7 @@ export class AntropometricosSummaryComponent implements OnInit {
 
 						if (list.length > 1) {
 							const previousAnthropometricData = list[1];
-							if (previousAnthropometricData && previousAnthropometricData[key]?.value) {
+							if (previousAnthropometricData[key]?.value) {
 								detail.registeredValues.push(
 									{
 										date: previousAnthropometricData[key]?.effectiveTime,

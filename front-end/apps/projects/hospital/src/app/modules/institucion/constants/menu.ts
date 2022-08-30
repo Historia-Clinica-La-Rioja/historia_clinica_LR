@@ -21,7 +21,10 @@ export const SIDEBAR_MENU: MenuItemDef[] = [
 			ERole.ESPECIALISTA_MEDICO,
 			ERole.PROFESIONAL_DE_SALUD,
 			ERole.ENFERMERO,
-			ERole.ESPECIALISTA_EN_ODONTOLOGIA
+			ERole.ESPECIALISTA_EN_ODONTOLOGIA,
+			ERole.PERSONAL_DE_LABORATORIO,
+			ERole.PERSONAL_DE_IMAGENES,
+			ERole.PERSONAL_DE_FARMACIA
 		],
 		featureFlag: AppFeature.HABILITAR_HISTORIA_CLINICA_AMBULATORIA
 	},
@@ -83,9 +86,20 @@ export const SIDEBAR_MENU: MenuItemDef[] = [
 		id: 'reportes',
 		url: './reportes',
 		permissions: [
-			ERole.ADMINISTRADOR_INSTITUCIONAL_BACKOFFICE
+			ERole.ADMINISTRADOR_INSTITUCIONAL_BACKOFFICE,
+			ERole.PERSONAL_DE_ESTADISTICA
 		],
 		featureFlag: AppFeature.HABILITAR_REPORTES
+	},
+	{
+		text: 'app.menu.REPORTES_PROGRAMAS',
+		icon: 'description',
+		id: 'program-reports',
+		url: './program-reports',
+		permissions: [
+			ERole.ADMINISTRADOR_INSTITUCIONAL_BACKOFFICE
+		],
+		featureFlag: AppFeature.HABILITAR_REPORTES_PROGRAMAS
 	},
 
 ];

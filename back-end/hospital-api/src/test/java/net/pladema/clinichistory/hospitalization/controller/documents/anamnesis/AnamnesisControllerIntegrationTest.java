@@ -4,7 +4,6 @@ import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.D
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.DocumentStatus;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.DocumentType;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.entity.Document;
-import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.generateFile.AuthorMapper;
 import net.pladema.IntegrationController;
 import net.pladema.clinichistory.hospitalization.controller.documents.anamnesis.mapper.AnamnesisMapper;
 import net.pladema.clinichistory.hospitalization.repository.InternmentEpisodeRepository;
@@ -12,6 +11,7 @@ import net.pladema.clinichistory.hospitalization.service.InternmentEpisodeServic
 import net.pladema.clinichistory.hospitalization.service.anamnesis.AnamnesisService;
 import net.pladema.clinichistory.hospitalization.service.anamnesis.CreateAnamnesisService;
 import net.pladema.clinichistory.hospitalization.service.anamnesis.DeleteAnamnesisService;
+import net.pladema.clinichistory.hospitalization.service.anamnesis.UpdateAnamnesisService;
 import net.pladema.clinichistory.hospitalization.service.documents.validation.EffectiveRiskFactorTimeValidator;
 import net.pladema.establishment.repository.InstitutionRepository;
 import net.pladema.featureflags.controller.constraints.validators.SGHNotNullValidator;
@@ -53,9 +53,6 @@ class AnamnesisControllerIntegrationTest extends IntegrationController {
 	private PatientExternalService patientExternalService;
 
 	@MockBean
-	private AuthorMapper responsibleDoctorMapper;
-
-	@MockBean
 	private InternmentEpisodeRepository internmentEpisodeRepository;
 
 	@MockBean
@@ -72,6 +69,10 @@ class AnamnesisControllerIntegrationTest extends IntegrationController {
 
 	@MockBean
 	private DeleteAnamnesisService deleteAnamnesisService;
+
+	@MockBean
+	private UpdateAnamnesisService updateAnamnesisService;
+
 	@BeforeEach
 	void setup() {
 		buildMockMvc();
@@ -106,7 +107,7 @@ class AnamnesisControllerIntegrationTest extends IntegrationController {
 		Document mock = new Document();
 		mock.setId(DOCUMENT_ID);
 		mock.setTypeId(DocumentType.ANAMNESIS);
-		mock.setStatusId(DocumentStatus.DRAFT);
+		mock.setStatusId(DocumentStatus.FINAL);
 		return Optional.of(mock);
 	}
 

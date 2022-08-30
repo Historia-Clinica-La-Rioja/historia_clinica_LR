@@ -36,9 +36,6 @@ const BedShow = props => (
                     <SgxDateField source="entryDate" />
                 </Datagrid>
             </ReferenceManyField>
-            <ReferenceField source="bedCategoryId" reference="bedcategories" link={false} >
-                <TextField source="description" />
-            </ReferenceField>
         </SimpleShowLayout>
     </Show>
 );

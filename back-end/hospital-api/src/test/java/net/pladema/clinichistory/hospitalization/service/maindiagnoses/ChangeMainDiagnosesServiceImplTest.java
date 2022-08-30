@@ -1,11 +1,29 @@
 package net.pladema.clinichistory.hospitalization.service.maindiagnoses;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
+import javax.validation.ConstraintViolationException;
+
+import net.pladema.clinichistory.hospitalization.repository.InternmentEpisodeStorage;
+import net.pladema.clinichistory.hospitalization.repository.domain.InternmentEpisode;
+import net.pladema.clinichistory.hospitalization.service.InternmentEpisodeService;
+
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.mockito.Mock;
+import org.springframework.beans.factory.annotation.Autowired;
+
 import ar.lamansys.sgh.clinichistory.application.createDocument.DocumentFactory;
 import ar.lamansys.sgh.clinichistory.application.document.DocumentService;
 import ar.lamansys.sgh.clinichistory.application.fetchHospitalizationState.FetchHospitalizationHealthConditionState;
 import ar.lamansys.sgh.clinichistory.domain.ips.DocumentObservationsBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.HealthConditionBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.SnomedBo;
+import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.DocumentStatus;
+import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.DocumentType;
+import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.SourceType;
+import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.entity.Document;
 import ar.lamansys.sgx.shared.dates.configuration.DateTimeProvider;
 import ar.lamansys.sgx.shared.exceptions.NotFoundException;
 import ar.lamansys.sgx.shared.featureflags.application.FeatureFlagsService;
@@ -13,21 +31,11 @@ import net.pladema.UnitRepository;
 import net.pladema.clinichistory.hospitalization.repository.EvolutionNoteDocumentRepository;
 import net.pladema.clinichistory.hospitalization.repository.InternmentEpisodeRepository;
 import net.pladema.clinichistory.hospitalization.repository.PatientDischargeRepository;
-import net.pladema.clinichistory.hospitalization.repository.domain.InternmentEpisode;
 import net.pladema.clinichistory.hospitalization.service.impl.InternmentEpisodeServiceImpl;
 import net.pladema.clinichistory.hospitalization.service.maindiagnoses.domain.MainDiagnosisBo;
 import net.pladema.establishment.repository.MedicalCoveragePlanRepository;
 
-import org.assertj.core.util.Lists;
-import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
-import org.mockito.Mock;
-import org.springframework.beans.factory.annotation.Autowired;
-
-import javax.validation.ConstraintViolationException;
-
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import java.util.Collections;
 
 class ChangeMainDiagnosesServiceImplTest extends UnitRepository {
 
@@ -58,6 +66,9 @@ class ChangeMainDiagnosesServiceImplTest extends UnitRepository {
     private FetchHospitalizationHealthConditionState fetchHospitalizationHealthConditionState;
 
 	@Mock
+	private InternmentEpisodeStorage internmentEpisodeStorage;
+
+	@Mock
 	private FeatureFlagsService featureFlagsService;
 
     @BeforeEach
@@ -68,7 +79,7 @@ class ChangeMainDiagnosesServiceImplTest extends UnitRepository {
                 patientDischargeRepository,
                 documentService,
 				medicalCoveragePlanRepository,
-				featureFlagsService);
+                internmentEpisodeStorage, featureFlagsService);
         changeMainDiagnosesService = new ChangeMainDiagnosesServiceImpl(
                 documentFactory,
                 internmentEpisodeService,
@@ -119,7 +130,8 @@ class ChangeMainDiagnosesServiceImplTest extends UnitRepository {
 
     @Test
     void createDocumentWithEpicrisis() {
-        var internmentEpisode = save(newInternmentEpisodeWithEpicrisis(1l));
+		var epicrisisDoc = save (new Document(1, DocumentStatus.FINAL, DocumentType.EPICRISIS, SourceType.HOSPITALIZATION));
+        var internmentEpisode = save(newInternmentEpisodeWithEpicrisis(epicrisisDoc.getId()));
         Exception exception = Assertions.assertThrows(ConstraintViolationException.class, () ->
                 changeMainDiagnosesService.execute(validMainDiagnosisBo(8, internmentEpisode.getId()))
         );
@@ -149,7 +161,7 @@ class ChangeMainDiagnosesServiceImplTest extends UnitRepository {
         result.setEncounterId(encounterId);
         result.setNotes(new DocumentObservationsBo());
         result.setMainDiagnosis(new HealthConditionBo(new SnomedBo("MAIN", "MAIN")));
-        result.setDiagnosis(Lists.emptyList());
+        result.setDiagnosis(Collections.emptyList());
         return result;
     }
 

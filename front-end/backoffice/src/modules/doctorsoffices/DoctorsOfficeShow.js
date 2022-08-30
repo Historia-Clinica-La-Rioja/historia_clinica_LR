@@ -7,7 +7,7 @@ const DoctorsOfficeShow = (props) => {
         <Show  {...props}>
             <SimpleShowLayout>
                 <TextField source="description" />
-                <ReferenceField source="clinicalSpecialtySectorId" reference="clinicalspecialtysectors" link="show">
+                <ReferenceField source="sectorId" reference="sectors" link="show">
                     <TextField source="description" />
                 </ReferenceField>
 

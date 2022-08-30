@@ -13,17 +13,17 @@ import net.pladema.medicalconsultation.diary.repository.entity.Diary;
 public class CompleteDiaryListVo extends DiaryListVo {
 
 	private final Integer sectorId;
-
-	private final Integer clinicalSpecialtyId;
 	
 	private final Integer healthcareProfessionalId;
 
+	private final String specialtyName;
+
 	public CompleteDiaryListVo(Diary diary, String doctorsOfficeDescription, Integer sectorId,
-							   Integer clinicalSpecialtyId, Integer healthcareProfessionalId) {
+							   Integer healthcareProfessionalId, String specialtyName) {
 		super(diary, doctorsOfficeDescription);
 		this.sectorId = sectorId;
-		this.clinicalSpecialtyId = clinicalSpecialtyId;
 		this.healthcareProfessionalId = healthcareProfessionalId;
+		this.specialtyName = specialtyName;
 	}
 	
 	

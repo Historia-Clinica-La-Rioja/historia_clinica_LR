@@ -1,15 +1,8 @@
 package ar.lamansys.sgh.publicapi.infrastructure.input.rest;
 
-import ar.lamansys.sgh.publicapi.application.saveexternalpatient.SaveExternalPatient;
-import ar.lamansys.sgh.publicapi.domain.ExternalCoverageBo;
-import ar.lamansys.sgh.publicapi.domain.ExternalPatientCoverageBo;
-import ar.lamansys.sgh.publicapi.domain.ExternalPatientExtendedBo;
-import ar.lamansys.sgh.publicapi.domain.exceptions.ExternalPatientExtendedBoException;
-import ar.lamansys.sgh.publicapi.domain.exceptions.ExternalPatientBoException;
-import ar.lamansys.sgh.publicapi.infrastructure.input.rest.dto.ExternalPatientExtendedDto;
-import ar.lamansys.sgh.shared.infrastructure.input.service.ExternalPatientCoverageDto;
-import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
+import java.util.ArrayList;
+import java.util.List;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -17,14 +10,23 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.ArrayList;
-import java.util.List;
+import ar.lamansys.sgh.publicapi.application.saveexternalpatient.SaveExternalPatient;
+import ar.lamansys.sgh.publicapi.domain.ExternalCoverageBo;
+import ar.lamansys.sgh.publicapi.domain.ExternalPatientCoverageBo;
+import ar.lamansys.sgh.publicapi.domain.ExternalPatientExtendedBo;
+import ar.lamansys.sgh.publicapi.domain.exceptions.ExternalPatientBoException;
+import ar.lamansys.sgh.publicapi.domain.exceptions.ExternalPatientExtendedBoException;
+import ar.lamansys.sgh.publicapi.infrastructure.input.rest.dto.ExternalPatientExtendedDto;
+import ar.lamansys.sgh.shared.infrastructure.input.service.ExternalPatientCoverageDto;
+import io.swagger.v3.oas.annotations.tags.Tag;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 @RequiredArgsConstructor
 @RestController
 @RequestMapping("/public-api/patient")
-//@Api(value = "External Patient", tags = {"External Patient"})
+@Tag(name = "Public Api", description = "External patient Api")
 public class ExternalPatientController {
 
     private static final String OUTPUT = "Output -> {}";

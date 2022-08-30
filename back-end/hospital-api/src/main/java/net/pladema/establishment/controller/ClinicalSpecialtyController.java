@@ -1,5 +1,16 @@
 package net.pladema.establishment.controller;
 
+import java.util.List;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
+
 import ar.lamansys.sgh.shared.infrastructure.input.service.ClinicalSpecialtyDto;
 import ar.lamansys.sgx.shared.dates.configuration.DateTimeProvider;
 import ar.lamansys.sgx.shared.security.UserInfo;
@@ -14,16 +25,6 @@ import net.pladema.staff.repository.entity.ClinicalSpecialty;
 import net.pladema.staff.service.ClinicalSpecialtyService;
 import net.pladema.staff.service.HealthcareProfessionalSpecialtyService;
 import net.pladema.staff.service.domain.ProfessionalsByClinicalSpecialtyBo;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
-
-import java.util.List;
 
 @RestController
 @Tag(name = "Clinical specialties", description = "Clinical specialties")
@@ -68,7 +69,7 @@ public class ClinicalSpecialtyController {
     }
 
     @GetMapping(value = "/institution/{institutionId}/clinicalspecialty/professional", params = "professionalsIds")
-    @PreAuthorize("hasPermission(#institutionId, 'ADMINISTRATIVO, ADMINISTRADOR_AGENDA, ADMINISTRADOR_INSTITUCIONAL_BACKOFFICE, ESPECIALISTA_MEDICO, PROFESIONAL_DE_SALUD, ESPECIALISTA_EN_ODONTOLOGIA, ENFERMERO')")
+    @PreAuthorize("hasPermission(#institutionId, 'ADMINISTRATIVO, ADMINISTRADOR_AGENDA, ADMINISTRADOR_INSTITUCIONAL_BACKOFFICE, ESPECIALISTA_MEDICO, PROFESIONAL_DE_SALUD, ESPECIALISTA_EN_ODONTOLOGIA, ENFERMERO, PERSONAL_DE_ESTADISTICA')")
     public ResponseEntity<List<ProfessionalsByClinicalSpecialtyDto>> getManyByProfessionals(
             @PathVariable(name = "institutionId") Integer institutionId,
             @RequestParam List<Integer> professionalsIds) {

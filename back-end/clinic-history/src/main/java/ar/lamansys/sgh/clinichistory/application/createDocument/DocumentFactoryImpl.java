@@ -80,7 +80,8 @@ public class DocumentFactoryImpl implements DocumentFactory {
         Document doc = new Document(documentBo.getEncounterId(),
                 documentBo.getDocumentStatusId(),
                 documentBo.getDocumentType(),
-                documentBo.getDocumentSource());
+                documentBo.getDocumentSource(),
+				documentBo.getInitialDocumentId());
         loadNotes(doc, Optional.ofNullable(documentBo.getNotes()));
         doc = documentService.save(doc);
         documentBo.setId(doc.getId());
@@ -116,6 +117,7 @@ public class DocumentFactoryImpl implements DocumentFactory {
             document.setEvolutionNoteId(noteService.createNote(notes.getEvolutionNote()));
             document.setClinicalImpressionNoteId(noteService.createNote(notes.getClinicalImpressionNote()));
             document.setOtherNoteId(noteService.createNote(notes.getOtherNote()));
+			document.setIndicationsNoteId(noteService.createNote(notes.getIndicationsNote()));
         });
         return document;
     }

@@ -35,7 +35,7 @@ public class HCEAllergyServiceImpl implements HCEAllergyService {
     @Override
     public List<HCEAllergyBo> getAllergies(Integer patientId) {
         LOG.debug(LOGGING_INPUT, patientId);
-        List<HCEAllergyVo> resultQuery = hceAllergyIntoleranceRepository.findAllergies(patientId);
+        List<HCEAllergyVo> resultQuery = hceAllergyIntoleranceRepository.findActiveAllergiesByPatient(patientId);
         List<HCEAllergyBo> result = resultQuery.stream().map(HCEAllergyBo::new).collect(Collectors.toList());
         LOG.debug(LOGGING_OUTPUT, result);
         return result;

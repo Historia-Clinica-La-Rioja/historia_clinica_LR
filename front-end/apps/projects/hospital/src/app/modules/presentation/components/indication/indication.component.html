@@ -1,42 +1,12 @@
 <div fxLayout="column" fxLayoutGap="30px">
-	<div id="title" fxLayoutGap="10px" fxLayoutAlign="start center">
-		<div fxLayout="row" fxFlex="20px">
-			<mat-icon class="color-primary" fontSet="material-icons-outlined" *ngIf="header.matIcon; else svgIcon">{{ header.matIcon }}</mat-icon>
-		</div>
-		<span class="color-primary title">{{ header.title | translate | uppercase }}</span>
-		<mat-divider inset></mat-divider>
-	</div>
+	<app-category-header-divider [header]="header"></app-category-header-divider>
 
 	<div id="content" *ngIf="contents.length; else noData" fxLayout="column" fxLayoutGap="20px">
-		<div *ngFor="let content of contents" fxLayout="row" fxLayoutGap="20px" fxLayout.lt-lg="column">
-			<div>
-				<div [class]="content.status.cssClass" class="label">
-					<strong>{{content.status.description | translate | uppercase}}</strong>
-				</div>
-			</div>
-
-			<div fxLayout="column" fxFlex="50%" fxLayoutGap="10px">
-				<span class="content">{{content.description}}</span>
-				<div fxLayout="row" fxLayoutGap="20px">
-					<div *ngFor="let extraInfo of content.extra_info" class="color-grey extra-info" fxLayoutGap="5px">
-						<span class="extra-info-title">{{extraInfo.title | translate}}</span>
-						<span>{{extraInfo.content}}</span>
-					</div>
-
- 				</div>
-			</div>
-
-			<div fxLayout="row" fxFlex="30%" fxLayoutGap="30px" class="professional-elapsed-time color-grey">
-				<span>{{ content.createdBy }}</span>
-				<span>{{ content.timeElapsed }}</span>
-			</div>
+		<div *ngFor="let content of contents">
+			<app-list-element-item [content]="content"></app-list-element-item>
 		</div>
 	</div>
 </div>
-
-<ng-template #svgIcon>
-	<mat-icon class="color-primary" svgIcon={{header.svgIcon}}></mat-icon>
-</ng-template>
 
 <ng-template #noData>
 	<div class="no-data mat-typography color-grey">

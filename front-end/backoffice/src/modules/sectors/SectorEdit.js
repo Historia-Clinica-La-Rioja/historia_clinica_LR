@@ -1,11 +1,9 @@
 import React from 'react';
 import {
     Datagrid,
-    DeleteButton,
     Edit,
     EditButton,
-    FormDataConsumer,
-    ReferenceField,
+    FormDataConsumer, ReferenceField,
     ReferenceInput,
     ReferenceManyField,
     required,
@@ -14,11 +12,13 @@ import {
     TextField,
     TextInput,
 } from 'react-admin';
-import CreateRelatedButton from '../components/CreateRelatedButton';
 import SectionTitle from '../components/SectionTitle';
 import SgxSelectInput from "../../sgxSelectInput/SgxSelectInput";
 import CustomToolbar from "../components/CustomToolbar";
 import SgxDateField from "../../dateComponents/sgxDateField";
+import { CreateSector, CreateDoctorsOffice, CreateRooms, ShowServiceSectorData } from './SectorShow';
+
+const redirect = (basePath, id, data) => `/sectors/${data.id}/show`;
 
 const INTERNACION = 2;
 
@@ -30,7 +30,7 @@ const SectorType = (sourceId) => {
             perPage={100}
             sort={{ field: 'description', order: 'ASC' }}
         >
-            <SelectInput optionText="description" optionValue="id" />
+            <SelectInput optionText="description" optionValue="id" options={{ disabled: true }}/>
         </ReferenceInput>);
 
 };
@@ -58,7 +58,7 @@ const Sector = ({ formData, ...rest }) => {
 
 const SectorEdit = props => (
     <Edit {...props}>
-        <SimpleForm redirect="show" toolbar={<CustomToolbar isEdit={true}/>}>
+        <SimpleForm redirect={ redirect } toolbar={<CustomToolbar isEdit={true}/>}>
             <TextInput source="description" validate={[required()]} />
 
             <SgxSelectInput source="institutionId" element="institutions" optionText="name" alwaysOn allowEmpty={false}/>
@@ -86,46 +86,55 @@ const SectorEdit = props => (
                 {formDataProps => ( <HospitalizationField {...formDataProps} reference="hospitalizationtypes" source="hospitalizationTypeId"/>)}
             </FormDataConsumer>
 
-            <SectionTitle label="resources.sectors.fields.clinicalspecialtysectors"/>
-            <CreateRelatedButton
-                reference="clinicalspecialtysectors"
-                refFieldName="sectorId"
-                label="resources.clinicalspecialtysectors.createRelated"
-            />
-            {/*TODO: Aislar esto en un componente. También se usa en show.js*/}
+            <SectionTitle label="resources.sectors.fields.childSectors" />
+            <CreateSector />
             <ReferenceManyField
                 addLabel={false}
-                reference="clinicalspecialtysectors"
-                target="sectorId"
+                reference="sectors"
+                target= { "sectorId" }
                 sort={{ field: 'description', order: 'DESC' }}
             >
                 <Datagrid rowClick="show">
                     <TextField source="description" />
-                    <ReferenceField source="clinicalSpecialtyId" reference="clinicalspecialties">
-                        <TextField source="name" />
+                    <ReferenceField source="sectorTypeId"  link={false}  reference="sectortypes">
+                        <TextField source="description" />
                     </ReferenceField>
-                    <DeleteButton />
+                    <EditButton />
                 </Datagrid>
             </ReferenceManyField>
 
+            <SectionTitle label="resources.clinicalspecialtysectors.fields.doctorsoffices"/>
+            <CreateDoctorsOffice />
+            <ReferenceManyField
+                addLabel={false}
+                reference="doctorsoffices"
+                target="sectorId"
+                sort={{ field: 'description', order: 'DESC' }}
+            >
+                <Datagrid rowClick="show"
+                          empty={<p style={{paddingLeft:10, marginTop:0, color:'#8c8c8c'}} >Sin consultorios definidos</p>}>
+                    <TextField source="description"/>
+                    <EditButton />
+                </Datagrid>
+            </ReferenceManyField>
+
+            <ShowServiceSectorData />
+
+            {/*Rooms*/}
             <SectionTitle label="resources.clinicalspecialtysectors.fields.rooms"/>
-            <CreateRelatedButton
-                reference="rooms"
-                refFieldName="sectorId"
-                label="resources.rooms.createRelated"
-            />
+            <CreateRooms />
             <ReferenceManyField
                 addLabel={false}
                 reference="rooms"
                 target="sectorId"
-                sort={{ field: 'description', order: 'DESC' }}
-            >
-                <Datagrid rowClick="show">
+                sort={{ field: 'description', order: 'DESC' }}>
+                <Datagrid rowClick="show"
+                          empty={<p style={{paddingLeft:10, marginTop:0, color:'#8c8c8c'}} >Sin habitaciones definidas</p>}>
                     <TextField source="roomNumber" />
                     <TextField source="description"/>
                     <TextField source="type" />
                     <SgxDateField source="dischargeDate" />
-                    <EditButton />
+                    <EditButton/>
                 </Datagrid>
             </ReferenceManyField>
         </SimpleForm>

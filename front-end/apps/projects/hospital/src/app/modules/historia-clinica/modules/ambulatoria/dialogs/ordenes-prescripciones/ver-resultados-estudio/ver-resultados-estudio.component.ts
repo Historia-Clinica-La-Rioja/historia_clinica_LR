@@ -44,7 +44,6 @@ export class VerResultadosEstudioComponent implements OnInit {
 			prescriptionPt: diagnosticReport.snomed.pt,
 			problemPt: diagnosticReport.healthCondition.snomed.pt,
 			doctor: diagnosticReport.doctor,
-			totalDays: diagnosticReport.totalDays
 		};
 	}
 

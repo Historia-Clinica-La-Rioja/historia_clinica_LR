@@ -1,11 +1,12 @@
 package ar.lamansys.nursing.infrastructure.output.repository;
 
-import ar.lamansys.nursing.application.port.NursingAppointmentStorage;
-import ar.lamansys.sgh.shared.infrastructure.input.service.SharedAppointmentPort;
+import java.time.LocalDate;
+
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDate;
+import ar.lamansys.nursing.application.port.NursingAppointmentStorage;
+import ar.lamansys.sgh.shared.infrastructure.input.service.appointment.SharedAppointmentPort;
 
 @Service
 public class NursingAppointmentStorageImpl implements NursingAppointmentStorage {
@@ -21,9 +22,11 @@ public class NursingAppointmentStorageImpl implements NursingAppointmentStorage 
     }
 
     @Override
-    public void run(Integer patientId, Integer doctorId, LocalDate date) {
-        if (!disableValidation && sharedAppointmentPort.hasConfirmedAppointment(patientId,doctorId,date))
-            sharedAppointmentPort.serveAppointment(patientId, doctorId, date);
+    public Integer run(Integer patientId, Integer doctorId, LocalDate date) {
+        if (!disableValidation && sharedAppointmentPort.hasConfirmedAppointment(patientId,doctorId,date)) {
+			return sharedAppointmentPort.serveAppointment(patientId, doctorId, date);
+		}
+		return null;
     }
 
     @Override

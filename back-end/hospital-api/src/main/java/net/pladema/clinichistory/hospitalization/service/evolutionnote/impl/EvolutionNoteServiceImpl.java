@@ -22,6 +22,7 @@ public class EvolutionNoteServiceImpl implements EvolutionNoteService {
 
     private final NoteService noteService;
 
+
     public EvolutionNoteServiceImpl(DocumentService documentService, NoteService noteService) {
         this.documentService = documentService;
         this.noteService = noteService;
@@ -34,8 +35,8 @@ public class EvolutionNoteServiceImpl implements EvolutionNoteService {
         EvolutionNoteBo r = documentService.findById(documentId).map( document -> {
             EvolutionNoteBo result = new EvolutionNoteBo();
             result.setId(document.getId());
-
-            GeneralHealthConditionBo generalHealthConditionBo = documentService.getHealthConditionFromDocument(document.getId());
+			result.setInitialDocumentId(document.getInitialDocumentId());
+			GeneralHealthConditionBo generalHealthConditionBo = documentService.getHealthConditionFromDocument(document.getId());
             result.setMainDiagnosis(generalHealthConditionBo.getMainDiagnosis());
             result.setDiagnosis(generalHealthConditionBo.getDiagnosis());
             result.setImmunizations(documentService.getImmunizationStateFromDocument(document.getId()));

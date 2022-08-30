@@ -1,0 +1,40 @@
+<app-content width="narrow">
+
+	<section id="title">
+		<h2 class="page-title" [translate]="'program-reports.TITLE'"> </h2>
+	</section>
+
+	<mat-card>
+		<h2 [translate]="'program-reports.form.TITLE'"></h2>
+		<form [formGroup]="form">
+	<div id="program-report-type" fxLayout="column">
+		<div>
+			<mat-label [translate]="'program-reports.form.REPORT_TYPE'"></mat-label>
+		</div>
+		<div fxLayout="row">
+			<mat-form-field fxFlex.gt-xs="50%" appearance="outline">
+				<mat-select id="program-report-type-select-group"
+							name="programReportTypeSelectGroup"
+							formControlName="programReportType"
+							placeholder="{{'pacientes.form.SELECT' | translate}}">
+					<mat-option *ngFor="let programReportType of PROGRAM_REPORT_TYPES"
+								[value]="programReportType.id">
+						{{programReportType.description}}
+					</mat-option>
+				</mat-select>
+				<mat-error *ngIf="submitted && hasError(form, 'required', 'programReportType')">
+					<span translate="forms.REQUIRED"></span>
+				</mat-error>
+			</mat-form-field>
+		</div>
+	</div>
+			<div fxLayout="row" fxLayoutAlign="end" style="margin-top: 20px">
+				<button class="uppercase" mat-raised-button color="primary" (click)="generateProgramReport()">
+					<span [translate]="'program-reports.form.SUBMIT'"></span>
+				</button>
+			</div>
+		</form>
+
+	</mat-card>
+
+</app-content>

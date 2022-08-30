@@ -1,5 +1,5 @@
 import React from 'react';
-import { Resource } from 'react-admin';
+import {Resource} from 'react-admin';
 import SGXPermissions from "../libs/sgx/auth/SGXPermissions";
 
 import cities from './cities';
@@ -8,11 +8,14 @@ import institutions from './institutions';
 import snvs from './snvs';
 import addresses from './addresses';
 import sectors from './sectors';
+import rootSectors from './root-sectors';
 import clinicalspecialties from './clinicalspecialties';
+import clinicalservices from './clinicalservices';
 import clinicalspecialtysectors from './clinicalspecialtysectors';
+import clinicalservicesectors from './clinicalservicesectors';
 import rooms from './rooms';
 import beds from './beds';
-import healthcareprofessionals from './healthcareprofessionals';
+import professionalprofessions from './professionalprofessions';
 import professionalSpecialties from './professionalspecialties';
 import healthcareprofessionalspecialties from './healthcareprofessionalspecialties';
 import doctorsoffices from './doctorsoffices';
@@ -37,21 +40,40 @@ import snomedrelatedgroups from './snomedrelatedgroups';
 import medicalcoverageplans from "./medicalcoverageplans";
 
 // Ampliación
+import healthcareprofessionalhealthinsurances from './healthcareprofessionalhealthinsurances';
+import mandatorymedicalpractices from './mandatorymedicalpractices';
+import clinicalspecialtymandatorymedicalpractices from './clinicalspecialtymandatorymedicalpractices';
+import healthinsurancepractices from './healthinsurancepractices';
+import mandatoryprofessionalpracticefreedays from './mandatoryprofessionalpracticefreedays';
+import bookingInstitutions from "./booking-institutions";
+import healthcareprofessionallicensenumbers from "./healthcareprofessionallicensenumbers";
+import licensenumbertypes from "./licensenumbertypes";
+import healthcareprofessionalspecialtylicensenumbers from "./healthcareprofessionalspecialtylicensenumbers";
 //
 
-const resourcesAdminInstitucional = [
-    <Resource name="healthcareprofessionals" />,
-    <Resource name="users" />,
-];
+
+const resourcesAdminInstitucional = (permissions: SGXPermissions) =>
+    permissions.isOn('BACKOFFICE_MOSTRAR_ABM_RESERVA_TURNOS') ?
+        [
+        <Resource name="users" {...users}/>,
+        <Resource name="professionalprofessions" {...professionalprofessions}/>,
+        <Resource name="medicalCoverages" {...medicalCoverage}/>,
+        <Resource name="booking-institution" {...bookingInstitutions(permissions)}/>,
+        <Resource name="healthcareprofessionalhealthinsurances"  {...healthcareprofessionalhealthinsurances}/>,
+        <Resource name="mandatorymedicalpractices"  {...mandatorymedicalpractices}/>,
+        <Resource name="clinicalspecialtymandatorymedicalpractices"  {...clinicalspecialtymandatorymedicalpractices}/>,
+        <Resource name="healthinsurancepractices"  {...healthinsurancepractices}/>,
+        <Resource name="mandatoryprofessionalpracticefreedays"  {...mandatoryprofessionalpracticefreedays}/>,
+        ] : []
+;
 
 const resourcesAdminRoot = (permissions: SGXPermissions) => [
-    <Resource name="healthcareprofessionals" {...healthcareprofessionals} />,
+    <Resource name="professionalprofessions" {...professionalprofessions} />,
     <Resource name="healthcareprofessionalspecialties" {...healthcareprofessionalspecialties} />,
     <Resource name="password-reset" {...passwordReset} />,
     <Resource name="roles" />,
     <Resource name="addresses" {...addresses} />,
-    
-    <Resource name="users" {...users} />,
+
     <Resource name="medicalcoveragetypes" />,
     <Resource name="medicalcoverageplans" {...medicalcoverageplans} />,
     <Resource name="medicalcoveragesmerge" />,
@@ -62,18 +84,22 @@ const resourcesAdminRoot = (permissions: SGXPermissions) => [
 const resourcesFor = (permissions: SGXPermissions) =>
     permissions.hasAnyAssignment(
         ROOT, ADMINISTRADOR
-    ) ? resourcesAdminRoot(permissions): resourcesAdminInstitucional;
+    ) ? resourcesAdminRoot(permissions): resourcesAdminInstitucional(permissions);
 
 const resources = (permissions: SGXPermissions) => [
     // staff
     <Resource name="person" {...person(permissions)} />,
     <Resource name="admin" {...admin(permissions)}/>,
-    ...resourcesFor(permissions),
+    <Resource name="users" {...users}/>,
+     ...resourcesFor(permissions),
     // facilities
     <Resource name="institutions" {...institutions(permissions)} />,
     <Resource name="sectors" {...sectors} />,
+    <Resource name="rootsectors" {...rootSectors} />,
     <Resource name="clinicalspecialties" {...clinicalspecialties(permissions)} />,
     <Resource name="clinicalspecialtysectors" {...clinicalspecialtysectors} />,
+    <Resource name="clinicalservices" {...clinicalservices(permissions)} />,
+    <Resource name="clinicalservicesectors" {...clinicalservicesectors} />,
     <Resource name="doctorsoffices" {...doctorsoffices} />,
     <Resource name="rooms" {...rooms} />,
     <Resource name="beds" {...beds} />,
@@ -94,6 +120,7 @@ const resources = (permissions: SGXPermissions) => [
     <Resource name="professionalspecialties" {...professionalSpecialties(permissions)} />,
     // more
     <Resource name="identificationTypes" />,
+    <Resource name="patient" />,
     <Resource name="dependencies" />,
     <Resource name="personextended" />,
     <Resource name="genders" />,
@@ -105,11 +132,15 @@ const resources = (permissions: SGXPermissions) => [
     <Resource name="provinces" />,
     <Resource name="bedcategories" />,
     <Resource name="educationtypes" />,
-    
+    <Resource name="healthcareprofessionallicensenumbers" {...healthcareprofessionallicensenumbers} />,
+    <Resource name="healthcareprofessionalspecialtylicensenumbers" {...healthcareprofessionalspecialtylicensenumbers} />,
+    <Resource name="licensenumbertypes" {...licensenumbertypes} />,
+
     <Resource name="snomedgroupconcepts" />,
     <Resource name="snomedrelatedgroups"  {...snomedrelatedgroups} />,
     <Resource name="snomedconcepts" {...snomedconcepts} />,
     <Resource name="internmentepisodes" />,
+    <Resource name="healthcareprofessionals" />,
 ];
 
 export default resources;

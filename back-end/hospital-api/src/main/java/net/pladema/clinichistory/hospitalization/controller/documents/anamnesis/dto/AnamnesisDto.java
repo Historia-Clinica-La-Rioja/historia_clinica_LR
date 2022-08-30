@@ -58,4 +58,7 @@ public class AnamnesisDto implements Serializable {
     @Nullable
     private RiskFactorDto riskFactors;
 
+	@Nullable
+	private String modificationReason;
+
 }

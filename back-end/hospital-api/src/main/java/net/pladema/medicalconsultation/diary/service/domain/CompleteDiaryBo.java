@@ -13,7 +13,7 @@ public class CompleteDiaryBo extends DiaryBo {
 
 	private Integer sectorId;
 
-	private Integer clinicalSpecialtyId;
+	private String specialtyName;
 
 	public CompleteDiaryBo(DiaryBo diaryBo) {
 		appointmentDuration = diaryBo.getAppointmentDuration();

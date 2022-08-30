@@ -23,4 +23,8 @@ public class DiagnosisBo extends HealthConditionBo {
             return false;
         return presumptive;
     }
+	@Override
+	public boolean equals(ClinicalTerm bo){
+		return super.equals(bo)&&((DiagnosisBo)bo).isPresumptive()==isPresumptive();
+	}
 }

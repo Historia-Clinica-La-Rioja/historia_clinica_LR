@@ -89,6 +89,7 @@ public class DiaryServiceImpl implements DiaryService {
 		diary.setProfessionalAsignShift(diaryBo.isProfessionalAssignShift());
 		diary.setIncludeHoliday(diaryBo.isIncludeHoliday());
 		diary.setActive(true);
+		diary.setClinicalSpecialtyId(diaryBo.getClinicalSpecialtyId());
 		return diary;
 	}
 
@@ -241,6 +242,7 @@ public class DiaryServiceImpl implements DiaryService {
 		result.setSectorId(completeDiaryListVo.getSectorId());
 		result.setClinicalSpecialtyId(completeDiaryListVo.getClinicalSpecialtyId());
 		result.setHealthcareProfessionalId(completeDiaryListVo.getHealthcareProfessionalId());
+		result.setSpecialtyName(completeDiaryListVo.getSpecialtyName());
 		LOG.debug(OUTPUT, result);
 		return result;
 	}
@@ -294,6 +296,14 @@ public class DiaryServiceImpl implements DiaryService {
 	public Optional<DiaryBo> getDiaryByAppointment(Integer appointmentId) {
 		LOG.debug("Input parameters -> appointmentId {}", appointmentId);
 		Optional<DiaryBo> result = diaryRepository.getDiaryByAppointment(appointmentId).map(this::createDiaryBoInstance);
+		LOG.debug(OUTPUT, result);
+		return result;
+	}
+
+	@Override
+	public Boolean hasActiveDiariesInInstitution(Integer healthcareProfessionalId, Integer institutionId){
+		LOG.debug("Input parameters -> healthcareProfessionalId {}, institutionId {}", healthcareProfessionalId, institutionId);
+		Boolean result = diaryRepository.hasActiveDiariesInInstitution(healthcareProfessionalId, institutionId);
 		LOG.debug(OUTPUT, result);
 		return result;
 	}

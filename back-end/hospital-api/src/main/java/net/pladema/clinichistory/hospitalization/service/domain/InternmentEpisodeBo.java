@@ -27,6 +27,8 @@ public class InternmentEpisodeBo implements Serializable {
 
 	private boolean hasPhysicalDischarge;
 
+	private DocumentsSummaryBo documentsSummary;
+
     public InternmentEpisodeBo(Integer internmentEpisodeId, Integer patientId, String firstName, String lastName,
 							   String nameSelfDetermination, Short identificationTypeId, String identificationNumber, LocalDate birthDate, Integer bedId, String bedNumber, Integer roomId,
 							   String roomNumber , Integer sectorId, String sector, boolean hasPhysicalDischarge){

@@ -12,7 +12,6 @@ import {
 	RoleDto,
 	InternmentSummaryDto,
 	PatientDischargeDto,
-	EpicrisisSummaryDto,
 	InstitutionDto,
 	EmergencyCareEpisodeInProgressDto,
 	EmergencyCareListDto,
@@ -110,6 +109,7 @@ export class ProfileComponent implements OnInit {
 
 	public downloadReportIsEnabled: boolean;
 	public createUsersIsEnable: boolean;
+	hideProfessions: boolean;
 
 	emergencyCareEpisodeInProgress: EmergencyCareEpisodeInProgressDto;
 	emergencyCareEpisodeSummary: EmergencyCareListDto;
@@ -143,6 +143,7 @@ export class ProfileComponent implements OnInit {
 		this.routePrefix = 'institucion/' + this.contextService.institutionId + '/';
 		this.featureFlagService.isActive(AppFeature.HABILITAR_INFORMES).subscribe(isOn => this.downloadReportIsEnabled = isOn);
 		this.featureFlagService.isActive(AppFeature.HABILITAR_CREACION_USUARIOS).subscribe(isOn => this.createUsersIsEnable = isOn);
+		this.featureFlagService.isActive(AppFeature.OCULTAR_LISTADO_PROFESIONES_WEBAPP).subscribe(isOn => this.hideProfessions = isOn);
 	}
 
 	ngOnInit(): void {

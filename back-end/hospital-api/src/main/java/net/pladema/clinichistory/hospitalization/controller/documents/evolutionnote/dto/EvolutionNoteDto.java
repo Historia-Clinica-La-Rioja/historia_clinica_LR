@@ -50,4 +50,7 @@ public class EvolutionNoteDto implements Serializable {
 	@Nullable
 	private Boolean wasMadeByProfessionalNursing = false;
 
+	@Nullable
+	private String modificationReason;
+
 }

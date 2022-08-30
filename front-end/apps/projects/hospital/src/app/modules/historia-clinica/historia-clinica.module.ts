@@ -30,6 +30,12 @@ import { RemoveDiagnosisComponent } from './dialogs/remove-diagnosis/remove-diag
 import { BedAssignmentComponent } from './dialogs/bed-assignment/bed-assignment.component';
 import { IncludePreviousDataQuestionComponent } from './components/include-previous-data-question/include-previous-data-question.component';
 import { TemplateConceptTypeaheadSearchComponent } from './components/template-concept-typeahead-search/template-concept-typeahead-search.component';
+import { ConceptsTypeaheadSearchDialogComponent } from './dialogs/concepts-typeahead-search-dialog/concepts-typeahead-search-dialog.component';
+import { NewConsultationAddProblemFormComponent } from './dialogs/new-consultation-add-problem-form/new-consultation-add-problem-form.component';
+import { NewConsultationAddReasonFormComponent } from './dialogs/new-consultation-add-reason-form/new-consultation-add-reason-form.component';
+import { NewConsultationProcedureFormComponent } from './dialogs/new-consultation-procedure-form/new-consultation-procedure-form.component';
+import { NewConsultationAllergyFormComponent } from './dialogs/new-consultation-allergy-form/new-consultation-allergy-form.component';
+import { NewConsultationMedicationFormComponent } from './dialogs/new-consultation-medication-form/new-consultation-medication-form.component';
 
 @NgModule({
 	declarations: [
@@ -59,6 +65,12 @@ import { TemplateConceptTypeaheadSearchComponent } from './components/template-c
 		RemoveDiagnosisComponent,
 		ProbableDischargeDialogComponent,
 		BedAssignmentComponent,
+		ConceptsTypeaheadSearchDialogComponent,
+		NewConsultationAddProblemFormComponent,
+		NewConsultationAddReasonFormComponent,
+		NewConsultationProcedureFormComponent,
+		NewConsultationAllergyFormComponent,
+		NewConsultationMedicationFormComponent,
 	],
 	imports: [
 		CommonModule,
@@ -86,6 +98,8 @@ import { TemplateConceptTypeaheadSearchComponent } from './components/template-c
 		NewConsultationExpansionSectionComponent,
 		// dialogs
 		ConceptsSearchDialogComponent,
+		ConceptsTypeaheadSearchDialogComponent,
+		NewConsultationAddProblemFormComponent,
 	]
 })
 export class HistoriaClinicaModule {

@@ -9,6 +9,7 @@ import lombok.ToString;
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 import java.time.LocalDate;
+import java.util.Optional;
 
 @Getter
 @Setter
@@ -82,4 +83,14 @@ public class ImmunizationBo extends ClinicalTerm {
     public ImmunizationBo(SnomedBo snomedBo) {
         super(snomedBo);
     }
+
+	@Override
+	public boolean equals (ClinicalTerm c){
+		boolean datesAreEquals = Optional.ofNullable(((ImmunizationBo)c).getAdministrationDate())
+				.map(c1 -> Optional.ofNullable(getAdministrationDate())
+						.map(c2-> c2.equals(c1))
+						.orElse(false))
+				.orElseGet(()-> getAdministrationDate()==null);
+		return super.equals(c)&&datesAreEquals;
+	}
 }

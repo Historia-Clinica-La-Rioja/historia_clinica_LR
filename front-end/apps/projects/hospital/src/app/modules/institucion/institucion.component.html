@@ -2,15 +2,28 @@
 
 	<app-main-layout [menuItems]="menuItems">
 		<app-location-badge
+			location-info-min
+			[hideName]="true"
+			[location]="institution"
+			[routerLink]="institutionHomeLink"
+			routerLinkActive="headers-card-background"
+			[routerLinkActiveOptions]="{exact: true}"
+		></app-location-badge>
+		<app-location-badge
 			location-info
 			[location]="institution"
 			[routerLink]="institutionHomeLink"
 			routerLinkActive="headers-card-background"
 			[routerLinkActiveOptions]="{exact: true}"
-			[roles]="roles"
 		></app-location-badge>
 		<app-user-badge
 			account-info
+			[userInfo]="userInfo"
+			[routerLink]="userProfileLink"
+		></app-user-badge>
+		<app-user-badge
+			account-info-min
+			[hideName]="true"
 			[userInfo]="userInfo"
 			[routerLink]="userProfileLink"
 		></app-user-badge>
