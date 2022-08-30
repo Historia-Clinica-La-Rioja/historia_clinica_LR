@@ -3,6 +3,8 @@ package net.pladema.establishment.repository;
 import java.util.List;
 import java.util.Optional;
 
+import net.pladema.establishment.service.domain.InstitutionBasicInfoBo;
+
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -28,4 +30,11 @@ public interface InstitutionRepository extends JpaRepository<Institution, Intege
 			"FROM Institution AS i " +
 			"WHERE i.sisaCode = :sisaCode ")
 	Optional<Institution> findBySisaCode(@Param("sisaCode") String sisaCode);
+
+	@Query("SELECT NEW net.pladema.establishment.service.domain.InstitutionBasicInfoBo(i.id, i.name) "+
+			"FROM Institution i " +
+			"JOIN Address a ON (i.addressId = a.id) " +
+			"JOIN City c ON (a.cityId = c.id) " +
+			"WHERE c.departmentId = :departmentId ")
+	List<InstitutionBasicInfoBo> findByDeparmentId(@Param("departmentId") Short departmentId);
 }

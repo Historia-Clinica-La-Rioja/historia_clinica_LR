@@ -9,11 +9,13 @@ import net.pladema.establishment.controller.dto.InstitutionDto;
 import net.pladema.establishment.controller.mapper.InstitutionMapper;
 import net.pladema.establishment.repository.InstitutionRepository;
 import net.pladema.establishment.repository.entity.Institution;
+import net.pladema.establishment.service.domain.InstitutionBasicInfoBo;
 import net.pladema.establishment.service.domain.InstitutionBo;
 import net.pladema.establishment.service.fetchInstitutions.FetchAllInstitutions;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -74,6 +76,16 @@ public class InstitutionController {
 		var result = mapper.toListInstitutionBasicInfoDto(institutionBos);
 		logger.debug("Ids results -> {}", result.stream().map(InstitutionBasicInfoDto::getId));
 		logger.trace("Results -> {}", result);
+		return result;
+	}
+
+	@GetMapping("/department/{departmentId}")
+	public @ResponseBody
+	List<InstitutionBasicInfoDto> findByDepartmentId(@PathVariable(name = "departmentId") Short departmentId) {
+		logger.debug("Input parameter -> departmentId {}", departmentId);
+		List<InstitutionBasicInfoBo> institutionBasicInfoBoList = fetchAllInstitutions.findByDepartmentId(departmentId);
+		var result = mapper.fromListInstitutionBasicInfoBo(institutionBasicInfoBoList);
+		logger.trace("result -> {}", result);
 		return result;
 	}
 
