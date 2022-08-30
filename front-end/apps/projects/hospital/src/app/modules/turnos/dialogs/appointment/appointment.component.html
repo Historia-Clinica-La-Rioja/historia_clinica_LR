@@ -51,11 +51,8 @@
 					<span class="mat-caption normal-size">{{'turnos.appointment.coverageData.COVERAGE_DATA' |
 						translate}}</span>
 					<div fxLayout="row" fxLayoutGap="5px">
-						<span class="mat-body patient-info coverage-text subtitle-size" *ngIf="coverageData"
+						<span class="mat-body patient-info coverage-text subtitle-size" *ngIf="coverageData else noInfo"
 							matTooltip="{{coverageData.medicalCoverage.name}}">{{coverageText}}</span>
-						<span class="mat-body patient-info coverage-text subtitle-size" *ngIf="!coverageData">
-							{{"Sin información"}}
-						</span>
 						<span class="mat-body patient-info coverage-text subtitle-size" *ngIf="coverageNumber">/
 							{{coverageNumber}}
 						</span>
@@ -68,7 +65,7 @@
 				<div fxLayout="column" fxLayoutGap="5px">
 					<span class="mat-caption normal-size"
 						[translate]="'turnos.appointment.phoneNumber.PHONE_NUMBER'">:asd</span>
-					<span class="mat-body patient-info coverage-text subtitle-size">{{phoneNumber}}</span>
+					<span  *ngIf="phoneNumber else noInfo" class="mat-body patient-info coverage-text subtitle-size">{{phoneNumber}}</span>
 				</div>
 				<button type="button" mat-icon-button color="primary" *ngIf="( hasRoleToEditPhoneNumber$ | async )"
 					(click)="hideFilters()">
@@ -343,3 +340,9 @@
 		</button>
 	</mat-dialog-actions>
 </form>
+
+<ng-template #noInfo>
+	<span class="mat-body patient-no-info coverage-text subtitle-size">
+		{{'turnos.appointment.NO-INFO' | translate}}
+	</span>
+</ng-template>

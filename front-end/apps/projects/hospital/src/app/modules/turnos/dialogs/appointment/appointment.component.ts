@@ -382,7 +382,7 @@ export class AppointmentComponent implements OnInit {
 		return phoneNumber ? phonePrefix
 			? "(" + phonePrefix + ") " + phoneNumber
 			: phoneNumber
-			: "Sin información";
+			: null;
 	}
 
 	updatePhoneValidators() {
@@ -447,7 +447,7 @@ export class AppointmentComponent implements OnInit {
 
 	onClickedState(newStateId: APPOINTMENT_STATES_ID): void {
 		if (this.selectedState !== newStateId) {
-			if (newStateId === APPOINTMENT_STATES_ID.CONFIRMED && this.coverageIsNotUpdate()) {
+			if (this.selectedState === APPOINTMENT_STATES_ID.ASSIGNED && newStateId === APPOINTMENT_STATES_ID.CONFIRMED && this.coverageIsNotUpdate()) {
 				this.confirmChangeState(newStateId);
 			} else {
 				this.updateState(newStateId);
