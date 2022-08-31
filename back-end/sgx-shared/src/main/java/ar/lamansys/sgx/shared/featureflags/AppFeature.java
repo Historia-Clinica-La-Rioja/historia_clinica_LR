@@ -24,9 +24,6 @@ public enum AppFeature implements Feature {
     @Label("Indica si se debe habilitar la funcionalidad historia clinica ambulatoria")
     HABILITAR_HISTORIA_CLINICA_AMBULATORIA,
 
-    @Label("Indica si esta habilitada la funcionalidad para actualizar documentos de internación")
-    HABILITAR_UPDATE_DOCUMENTS,
-
     @Label("Indica si esta habilitada la funcionalidad para editar un paciente")
     HABILITAR_EDITAR_PACIENTE_COMPLETO,
 
