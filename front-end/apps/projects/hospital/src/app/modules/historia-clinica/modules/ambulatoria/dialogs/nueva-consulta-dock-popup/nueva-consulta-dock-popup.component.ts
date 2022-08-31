@@ -82,6 +82,7 @@ export class NuevaConsultaDockPopupComponent implements OnInit {
 	readonly SEVERITY_CODES = SEVERITY_CODES;
 	collapsedAnthropometricDataSection = false;
 	collapsedRiskFactorsSection = false;
+	isEnablePopUpConfirm: boolean = true;
 	@ViewChild('apiErrorsView') apiErrorsView: ElementRef;
 
 	constructor(
@@ -115,6 +116,7 @@ export class NuevaConsultaDockPopupComponent implements OnInit {
 		this.antecedentesFamiliaresNuevaConsultaService = new AntecedentesFamiliaresNuevaConsultaService(formBuilder, this.snomedService, this.snackBarService);
 		this.alergiasNuevaConsultaService = new AlergiasNuevaConsultaService(formBuilder, this.snomedService, this.snackBarService);
 		this.ambulatoryConsultationReferenceService = new AmbulatoryConsultationReferenceService(this.dialog, this.data, this.ambulatoryConsultationProblemsService, this.clinicalSpecialtyCareLine, this.careLineService);
+		this.featureFlagService.isActive(AppFeature.HABILITAR_GUARDADO_CON_CONFIRMACION_CONSULTA_AMBULATORIA).subscribe(isEnabled => this.isEnablePopUpConfirm = isEnabled);
 	}
 
 	setProfessionalSpecialties() {
@@ -203,7 +205,9 @@ export class NuevaConsultaDockPopupComponent implements OnInit {
 						this.uploadReferencesFileAndCreateConsultation(nuevaConsulta);
 					}
 					else {
-						this.openDialog(fieldsService.nonCompletedFields, fieldsService.presentFields, nuevaConsulta);
+						(this.isEnablePopUpConfirm)
+							? this.openDialog(fieldsService.nonCompletedFields, fieldsService.presentFields, nuevaConsulta)
+							: this.uploadReferencesFileAndCreateConsultation(nuevaConsulta)
 					}
 				} else {
 					this.disableConfirmButton = false;

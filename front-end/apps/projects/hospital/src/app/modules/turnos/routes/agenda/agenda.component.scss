@@ -5,6 +5,7 @@ $green-month-cell: #009b68;
 $blue-month-cell: #2687c5;
 $orange-month-cell: #ff5c00;
 $border-color-calendar: #e1e1e1;
+$border-color-cell: #888;
 
 div.spinner {
 	@include centered-spinner;
@@ -60,6 +61,22 @@ div.spinner {
 				bottom: none;
 			}
 		}
+
+		.cal-week-view {
+			.cal-day-column:last-child {
+				border-right: 1px solid $border-color-cell;
+			}
+	
+			.cal-day-column:first-child {
+				border-left: 1px solid $border-color-cell;
+			}
+		}
+	
+		.cal-week-view .cal-day-column, 
+		.cal-week-view .cal-hour:not(:last-child) .cal-hour-segment, 
+		.cal-week-view .cal-hour:last-child :not(:last-child) .cal-hour-segment {
+			border-color: $border-color-cell;
+		}	
 	}
 }
 

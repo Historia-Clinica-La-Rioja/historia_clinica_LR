@@ -108,10 +108,12 @@ public enum AppFeature implements Feature {
 	@Label("Indica si están habilitadas las extensiones por web components ")
 	HABILITAR_EXTENSIONES_WEB_COMPONENTS,
 
-	
     @Label("Indica si esta habilitado el servicio de notificaciones al asignar un turno")
 	HABILITAR_NOTIFICACIONES_TURNOS,
-    ;
+
+	@Label("Habilita PopUp de guardado en consulta ambulatoria")
+	HABILITAR_GUARDADO_CON_CONFIRMACION_CONSULTA_AMBULATORIA
+	;
 
     public boolean isActive() {
         return FeatureContext.getFeatureManager().isActive(this);

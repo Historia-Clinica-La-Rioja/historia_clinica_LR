@@ -72,7 +72,7 @@
 				 [class.cal-hour-start]="segment.isStart" [class.cal-after-hour-start]="!segment.isStart"
 				 [ngClass]="segment.cssClass">
 				<div class="cal-time" *ngIf="isTimeLabel">
-					{{ segment.date | calendarDate:'weekViewHour':locale }}
+					{{ segment.date | date: 'HH:mm' }}
 				</div>
 			</div>
 		</ng-template>

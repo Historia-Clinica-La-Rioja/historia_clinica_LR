@@ -320,9 +320,9 @@ export function toCalendarEvent(from: string, to: string, date: Moment, appointm
 			return appointmentBlockMotivesFacadeService?.getAppointmentBlockMotiveById(appointment.appointmentBlockMotiveId);
 		}
 		if (appointment.patient?.typeId === TEMPORARY_PATIENT) {
-			return `${momentParseTime(from).format(DateFormat.HOUR_MINUTE_12)} ${viewName ? viewName : ''} (Temporal)`;
+			return `${momentParseTime(from).format(DateFormat.HOUR_MINUTE)} ${viewName ? viewName : ''} (Temporal)`;
 		}
-		return `${momentParseTime(from).format(DateFormat.HOUR_MINUTE_12)}	 ${viewName}`;
+		return `${momentParseTime(from).format(DateFormat.HOUR_MINUTE)}	 ${viewName}`;
 	}
 }
 
