@@ -9,6 +9,9 @@ import net.pladema.medicalconsultation.appointment.service.domain.AppointmentAss
 import net.pladema.medicalconsultation.appointment.service.domain.AppointmentSearchBo;
 import net.pladema.medicalconsultation.appointment.controller.dto.AppointmentSearchDto;
 
+import net.pladema.medicalconsultation.diary.controller.dto.BlockDto;
+import net.pladema.medicalconsultation.diary.service.domain.BlockBo;
+
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.Named;
@@ -61,4 +64,6 @@ public interface AppointmentMapper {
 	@Named("toEmptyAppointmentDto")
 	EmptyAppointmentDto toEmptyAppointmentDto(EmptyAppointmentBo emptyAppointmentBo);
 
+	@Named("toBlockBo")
+	BlockBo toBlockBo(BlockDto appointmentSearchDto);
 }

@@ -1,14 +1,22 @@
 package net.pladema.medicalconsultation.appointment.service.impl;
 
+import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
+import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
+
+import net.pladema.medicalconsultation.diary.service.domain.BlockBo;
+import net.pladema.medicalconsultation.diary.service.domain.DiaryBo;
+import net.pladema.medicalconsultation.diary.service.domain.DiaryOpeningHoursBo;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -40,6 +48,8 @@ import net.pladema.patient.controller.dto.PatientMedicalCoverageDto;
 import net.pladema.patient.controller.service.PatientExternalMedicalCoverageService;
 import net.pladema.patient.service.domain.PatientCoverageInsuranceDetailsBo;
 import net.pladema.patient.service.domain.PatientMedicalCoverageBo;
+
+import javax.validation.ConstraintViolationException;
 
 @Slf4j
 @Service
@@ -396,6 +406,166 @@ public class AppointmentServiceImpl implements AppointmentService {
 		log.debug("Result size {}", result.size());
 		log.trace(OUTPUT, result);
 		return result;
+	}
+
+	@Override
+	public List<AppointmentBo> generateBlockedAppointments(Integer diaryId, BlockBo block, DiaryBo diaryBo, LocalDate startingBlockingDate, LocalDate endingBlockingDate) {
+		List<LocalDate> blockedDates = startingBlockingDate.datesUntil(endingBlockingDate).collect(Collectors.toList());
+		blockedDates.add(endingBlockingDate);
+		blockedDates = blockedDates.stream().filter(potentialBlockedDay -> diaryBo.getDiaryOpeningHours()
+						.stream().anyMatch(diaryOpeningHours -> dayIsIncludedInOpeningHours(potentialBlockedDay, diaryOpeningHours)))
+				.collect(Collectors.toList());
+
+		List<AppointmentBo> listAppointments = new ArrayList<>();
+
+		if (block.isFullBlock())
+			completeDiaryBlock(block, diaryBo, blockedDates, listAppointments);
+		else
+			blockedDates.forEach(date -> generateBlockInterval(diaryBo, listAppointments, date, block));
+
+		assertNoAppointments(diaryId, listAppointments);
+		return listAppointments;
+	}
+
+	@Override
+	public List<AppointmentBo> unblockAppointments(BlockBo unblock, DiaryBo diaryBo, LocalDate startingBlockingDate, LocalDate endingBlockingDate) {
+		List<LocalDate> blockedDates = startingBlockingDate.datesUntil(endingBlockingDate).collect(Collectors.toList());
+		blockedDates.add(endingBlockingDate);
+
+		List<AppointmentBo> listAppointments = new ArrayList<>();
+
+		if (unblock.isFullBlock())
+			completeDiaryUnblock(unblock, diaryBo, blockedDates, listAppointments);
+		else
+			blockedDates.forEach(date -> generateUnblockInterval(diaryBo, listAppointments, date, unblock));
+		return listAppointments;
+	}
+
+	private boolean dayIsIncludedInOpeningHours(LocalDate date, DiaryOpeningHoursBo diaryOpeningHours) {
+		final int SUNDAY_DB_VALUE = 0;
+		if (date.getDayOfWeek().getValue() == DayOfWeek.SUNDAY.getValue())
+			return diaryOpeningHours.getOpeningHours().getDayWeekId() == SUNDAY_DB_VALUE;
+		return diaryOpeningHours.getOpeningHours().getDayWeekId() == date.getDayOfWeek().getValue();
+	}
+
+	private void completeDiaryBlock(BlockBo block, DiaryBo diaryBo, List<LocalDate> blockedDates, List<AppointmentBo> listAppointments) {
+		blockedDates.forEach(blockedDate -> {
+			List<DiaryOpeningHoursBo> relatedOpeningHours = diaryBo.getDiaryOpeningHours().stream()
+					.filter(diaryOpeningHours -> dayIsIncludedInOpeningHours(blockedDate, diaryOpeningHours)).collect(Collectors.toList());
+			relatedOpeningHours.forEach(openingHours -> {
+				BlockBo currentBlock = new BlockBo(blockedDate, blockedDate,
+						openingHours.getOpeningHours().getFrom(), openingHours.getOpeningHours().getTo(),
+						block.getAppointmentBlockMotiveId());
+				generateBlockInterval(diaryBo, listAppointments, blockedDate, currentBlock);
+			});
+		});
+	}
+
+	private void generateBlockInterval(DiaryBo diaryBo, List<AppointmentBo> listAppointments, LocalDate blockedDate, BlockBo block) {
+		listAppointments.addAll(getSlots(block, diaryBo).stream().map(slot -> mapTo(blockedDate, diaryBo, slot, block)).collect(Collectors.toList()));
+	}
+
+	private AppointmentBo mapTo(LocalDate date, DiaryBo diaryBo, LocalTime hour, BlockBo block) {
+		var openingHours = diaryBo.getDiaryOpeningHours();
+		AppointmentBo appointmentBo = new AppointmentBo();
+		appointmentBo.setDiaryId(diaryBo.getId());
+		appointmentBo.setDate(LocalDate.of(date.getYear(), date.getMonth(), date.getDayOfMonth()));
+		appointmentBo.setHour(hour);
+		appointmentBo.setAppointmentStateId(AppointmentState.BLOCKED);
+		appointmentBo.setOverturn(false);
+		appointmentBo.setOpeningHoursId(getOpeningHourId(openingHours, date, block).getOpeningHours().getId());
+		appointmentBo.setAppointmentBlockMotiveId(block.getAppointmentBlockMotiveId());
+		return appointmentBo;
+	}
+
+	private DiaryOpeningHoursBo getOpeningHourId(List<DiaryOpeningHoursBo> openingHours, LocalDate date, BlockBo block) {
+		var dayOfWeek =
+				(short)LocalDate.of(date.getYear(),
+						date.getMonth(),
+						date.getDayOfMonth()).getDayOfWeek().getValue();
+		var localTimeInit = block.getInit();
+		var localTimeEnd = block.getEnd();
+
+		return openingHours.stream()
+				.filter(oh -> oh.getOpeningHours().getDayWeekId().equals(dayOfWeek))
+				.filter(oh -> (oh.getOpeningHours().getFrom().isBefore(localTimeInit) || oh.getOpeningHours().getFrom().equals(localTimeInit)) &&
+						(oh.getOpeningHours().getTo().isAfter(localTimeEnd) || oh.getOpeningHours().getTo().equals(localTimeEnd)))
+				.findFirst().orElseThrow((() -> new ConstraintViolationException("Los horarios de inicio y fin deben pertenecer al mismo período de la agenda.",
+						Collections.emptySet())));
+	}
+
+	private List<LocalTime> getSlots(BlockBo block, DiaryBo diaryBo) {
+		var appointmentDuration = diaryBo.getAppointmentDuration();
+		var localTimeInit = block.getInit();
+		var localTimeEnd = block.getEnd();
+
+		assertTimeLimits(localTimeInit, localTimeEnd, appointmentDuration);
+
+		var slots = Stream.iterate(localTimeInit, d -> d.plusMinutes(appointmentDuration))
+				.limit(ChronoUnit.MINUTES.between(localTimeInit, localTimeEnd) / appointmentDuration)
+				.collect(Collectors.toList());
+
+		if (localTimeEnd.getHour() == 23 && localTimeEnd.getMinute() == 59) {
+			var lastTime = slots.get(slots.size()-1).plusMinutes(appointmentDuration);
+			slots.add(lastTime);
+		}
+
+		return slots;
+	}
+
+	private void assertTimeLimits(LocalTime localTimeInit, LocalTime localTimeEnd, Short appointmentDuration) {
+		if (localTimeEnd.isBefore(localTimeInit) || localTimeEnd.equals(localTimeInit))
+			throw new ConstraintViolationException("La segunda hora seleccionada debe ser posterior a la primera.", Collections.emptySet());
+
+		if(localTimeInit.getMinute() % appointmentDuration != 0)
+			throw new ConstraintViolationException("La hora de inicio no es múltiplo de la duración del turno.", Collections.emptySet());
+
+		if(localTimeEnd.getMinute() % appointmentDuration != 0 && (localTimeEnd.getMinute() != 59 && localTimeEnd.getHour() != 23))
+			throw new ConstraintViolationException("La hora de fin no es múltiplo de la duración del turno.", Collections.emptySet());
+	}
+
+	private void assertNoAppointments(Integer diaryId, List<AppointmentBo> listAppointments) {
+		if(listAppointments.stream().anyMatch(appointmentBo ->
+				existAppointment(diaryId,
+						appointmentBo.getOpeningHoursId(),
+						appointmentBo.getDate(),
+						appointmentBo.getHour()
+				)
+		))
+			throw new ConstraintViolationException("Algún horario de la franja horaria seleccionada tiene un turno o ya está bloqueado.", Collections.emptySet());
+	}
+
+	private void completeDiaryUnblock(BlockBo unblock, DiaryBo diaryBo, List<LocalDate> blockedDates, List<AppointmentBo> listAppointments) {
+		blockedDates.forEach(blockedDate -> {
+			List<DiaryOpeningHoursBo> relatedOpeningHours = diaryBo.getDiaryOpeningHours().stream()
+					.filter(diaryOpeningHours -> dayIsIncludedInOpeningHours(blockedDate, diaryOpeningHours)).collect(Collectors.toList());
+			relatedOpeningHours.forEach(openingHours -> {
+				BlockBo currentUnblock = new BlockBo(blockedDate, blockedDate,
+						openingHours.getOpeningHours().getFrom(), openingHours.getOpeningHours().getTo(),
+						unblock.getAppointmentBlockMotiveId());
+				generateUnblockInterval(diaryBo, listAppointments, blockedDate, currentUnblock);
+			});
+		});
+	}
+
+	private void generateUnblockInterval(DiaryBo diaryBo, List<AppointmentBo> listAppointments, LocalDate blockedDate, BlockBo unblock) {
+		listAppointments.addAll(getSlots(unblock, diaryBo).stream().map(slot -> findAppointment(blockedDate, diaryBo, slot))
+				.filter(Optional::isPresent)
+				.map(Optional::get)
+				.filter(this::isBlocked)
+				.collect(Collectors.toList()));
+	}
+
+	private boolean isBlocked(AppointmentBo ap) {
+		return getAppointment(ap.getId())
+				.map(appointmentBo -> appointmentBo.getAppointmentStateId()
+						.equals(AppointmentState.BLOCKED)).orElse(false);
+	}
+
+	private Optional<AppointmentBo> findAppointment(LocalDate date, DiaryBo diaryBo, LocalTime slot) {
+		return findAppointmentBy(diaryBo.getId(),
+				LocalDate.of(date.getYear(), date.getMonth(), date.getDayOfMonth()),
+				slot);
 	}
 
 }

@@ -12,6 +12,8 @@ import net.pladema.medicalconsultation.appointment.repository.domain.Appointment
 import net.pladema.medicalconsultation.appointment.service.domain.AppointmentAssignedBo;
 import net.pladema.medicalconsultation.appointment.service.domain.AppointmentBo;
 import net.pladema.medicalconsultation.appointment.service.domain.UpdateAppointmentBo;
+import net.pladema.medicalconsultation.diary.service.domain.BlockBo;
+import net.pladema.medicalconsultation.diary.service.domain.DiaryBo;
 import net.pladema.patient.service.domain.PatientMedicalCoverageBo;
 
 public interface AppointmentService {
@@ -64,4 +66,8 @@ public interface AppointmentService {
 	AppointmentShortSummaryBo getAppointmentFromDeterminatedDate(Integer patientId, LocalDate date);
 
 	List<Integer> getPastAppointmentsByStatesAndUpdatedBeforeDate(List<Short> statesIds, LocalDateTime lastUpdateDate);
+
+	List<AppointmentBo> generateBlockedAppointments(Integer diaryId, BlockBo blockBo, DiaryBo diaryBo, LocalDate startingBlockingDate, LocalDate endingBlockingDate);
+
+	List<AppointmentBo> unblockAppointments(BlockBo unblockDto, DiaryBo diaryBo, LocalDate startingBlockingDate, LocalDate endingBlockingDate);
 }
