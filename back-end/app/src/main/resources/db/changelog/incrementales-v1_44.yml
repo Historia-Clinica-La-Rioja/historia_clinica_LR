@@ -178,3 +178,78 @@ databaseChangeLog:
                 JOIN care_line cl ON (cl.id = clcs.care_line_id)
                 WHERE hps.deleted = false
                 GROUP BY cs.id, cl.id, ur.institution_id, cs.name
+
+    - changeSet:
+        id: diary_care_line-createTable
+        comment: Create table diary_care_line
+        author: bchacon
+        changes:
+          - createTable:
+              tableName: diary_care_line
+              columns:
+                - column:
+                    name: diary_id
+                    type: int
+                - column:
+                    name: care_line_id
+                    type: int
+                - column:
+                    constraints:
+                      nullable: false
+                    name: created_by
+                    type: int
+                    defaultValue: -1
+                - column:
+                    constraints:
+                      nullable: false
+                    name: created_on
+                    type: datetime
+                    defaultValueDate: ${date.now}
+                - column:
+                    constraints:
+                      nullable: false
+                    name: updated_by
+                    type: int
+                    defaultValue: -1
+                - column:
+                    constraints:
+                      nullable: false
+                    name: updated_on
+                    type: datetime
+                    defaultValueDate: ${date.now}
+                - column:
+                    constraints:
+                      nullable: false
+                    name: deleted
+                    type: BOOLEAN
+                    defaultValue: ${boolean.false}
+                - column:
+                    name: deleted_by
+                    type: int
+                - column:
+                    name: deleted_on
+                    type: datetime
+          - addForeignKeyConstraint:
+              baseColumnNames: diary_id
+              baseTableName: diary_care_line
+              constraintName: FK_diary_care_line_diary_id
+              onDelete: NO ACTION
+              onUpdate: NO ACTION
+              referencedColumnNames: id
+              referencedTableName: diary
+              validate: true
+          - addForeignKeyConstraint:
+              baseColumnNames: care_line_id
+              baseTableName: diary_care_line
+              constraintName: FK_diary_care_line_care_line_id
+              onDelete: NO ACTION
+              onUpdate: NO ACTION
+              referencedColumnNames: id
+              referencedTableName: care_line
+              validate: true
+          - addPrimaryKey:
+              clustered: true
+              columnNames: diary_id, care_line_id
+              constraintName: PK_diary_care_line
+              tableName: diary_care_line
+              validate: true
