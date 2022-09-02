@@ -253,3 +253,15 @@ databaseChangeLog:
               constraintName: PK_diary_care_line
               tableName: diary_care_line
               validate: true
+
+    - changeSet:
+        id: addColumn-protected_appointments_percentage-diary
+        comment: Add column protected_appointments_percentage to diary table
+        author: bchacon
+        changes:
+          - addColumn:
+              tableName: diary
+              columns:
+                - column:
+                    name: protected_appointments_percentage
+                    type: smallint
