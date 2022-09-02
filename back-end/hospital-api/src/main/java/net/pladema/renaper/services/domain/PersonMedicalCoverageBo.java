@@ -6,6 +6,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Getter;
 import lombok.Setter;
 import net.pladema.patient.repository.domain.HealthInsuranceVo;
+import net.pladema.person.repository.entity.HealthInsurance;
 
 @Getter
 @Setter
@@ -32,6 +33,15 @@ public class PersonMedicalCoverageBo {
 	}
 
 	public PersonMedicalCoverageBo(HealthInsuranceVo healthInsurance){
+		this.id = healthInsurance.getId();
+		if(healthInsurance.getRnos()!=null)
+			this.rnos = healthInsurance.getRnos().toString();
+		this.name = healthInsurance.getName();
+		this.cuit = healthInsurance.getCuit();
+		this.acronym = healthInsurance.getAcronym();
+	}
+
+	public PersonMedicalCoverageBo(HealthInsurance healthInsurance){
 		this.id = healthInsurance.getId();
 		if(healthInsurance.getRnos()!=null)
 			this.rnos = healthInsurance.getRnos().toString();

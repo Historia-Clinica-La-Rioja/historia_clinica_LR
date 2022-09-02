@@ -4,7 +4,6 @@ import net.pladema.establishment.repository.MedicalCoveragePlanRepository;
 import net.pladema.establishment.repository.entity.MedicalCoveragePlan;
 import net.pladema.patient.controller.dto.EMedicalCoverageType;
 import net.pladema.patient.repository.domain.HealthInsuranceVo;
-import net.pladema.patient.repository.entity.MedicalCoverage;
 import net.pladema.patient.service.domain.MedicalCoveragePlanBo;
 import net.pladema.person.repository.HealthInsuranceRepository;
 import net.pladema.patient.repository.MedicalCoverageRepository;
@@ -65,17 +64,20 @@ public class HealthInsuranceServiceImpl implements HealthInsuranceService {
 	@Override
 	public void addAll(Collection<PersonMedicalCoverageBo> newHealthInsurances) {
 		LOG.debug("Input-> newHealthInsurances {}", newHealthInsurances);
-		newHealthInsurances.stream().filter(hi -> !healthInsuranceRepository.existsByRnos(calculateRnos(hi)))
-				.forEach(hi -> {
-				    healthInsuranceRepository
-							.save(new HealthInsurance(null, hi.getName(), hi.getCuit(), calculateRnos(hi), hi.getAcronym(), EMedicalCoverageType.OBRASOCIAL.getId()));
-					LOG.debug("HealthInsurance Added-> newHealthInsurance {}", hi);
-				});
+		newHealthInsurances.forEach(nhi -> healthInsuranceRepository.findByRnos(calculateRnos(nhi)).ifPresentOrElse(hi -> {
+			if (hi.isDeleted()) {
+				hi.setDeleted(false);
+				healthInsuranceRepository.save(hi);
+			}
+		}, () -> {
+			healthInsuranceRepository.save(new HealthInsurance(null, nhi.getName(), nhi.getCuit(), calculateRnos(nhi), nhi.getAcronym(), EMedicalCoverageType.OBRASOCIAL.getId()));
+			LOG.debug("HealthInsurance Added-> newHealthInsurance {}", nhi);
+		}));
 	}
 
     @Override
     public PersonMedicalCoverageBo get(Integer rnos) {
-        HealthInsuranceVo healthInsuranceOptional = healthInsuranceRepository.findByRnos(rnos).orElseThrow(() -> new NotFoundException(WRONG_RNOS, HEALTH_INSURANCE_NOT_FOUND));
+        HealthInsurance healthInsuranceOptional = healthInsuranceRepository.findByRnos(rnos).orElseThrow(() -> new NotFoundException(WRONG_RNOS, HEALTH_INSURANCE_NOT_FOUND));
         PersonMedicalCoverageBo result = new PersonMedicalCoverageBo(healthInsuranceOptional);
         return result;
     }
