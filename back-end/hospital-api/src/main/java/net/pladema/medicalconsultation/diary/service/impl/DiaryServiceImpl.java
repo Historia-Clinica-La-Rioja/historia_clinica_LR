@@ -428,7 +428,12 @@ public class DiaryServiceImpl implements DiaryService {
 		if (emptyAppointmentTimesOfCurrentDayOpeningHours != null) {
 			emptyAppointmentTimesOfCurrentDayOpeningHours.forEach((openingHoursId, openingHoursTimeList) ->
 					result.addAll(openingHoursTimeList.stream()
-							.filter(time -> time.compareTo(currentDateTime.toLocalTime()) > 0 && day.compareTo(currentDateTime.toLocalDate()) >= 0)
+							.filter(time -> {
+								if (day.compareTo(currentDateTime.toLocalDate()) > 0)
+									return true;
+								else
+									return time.compareTo(currentDateTime.toLocalTime()) > 0;
+							})
 							.map(time -> createEmptyAppointmentBoFromRawData(time, day, diary, openingHoursId))
 							.filter(emptyAppointment -> {
 								var time = emptyAppointment.getHour();
