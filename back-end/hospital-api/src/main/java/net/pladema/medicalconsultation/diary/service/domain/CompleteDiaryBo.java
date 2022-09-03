@@ -4,6 +4,9 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
+import net.pladema.establishment.service.domain.CareLineBo;
+
+import java.util.List;
 
 @Getter
 @Setter
@@ -17,6 +20,8 @@ public class CompleteDiaryBo extends DiaryBo {
 
 	private String doctorLastName;
 
+	private List<CareLineBo> careLinesInfo;
+
 	public CompleteDiaryBo(DiaryBo diaryBo) {
 		appointmentDuration = diaryBo.getAppointmentDuration();
 		id = diaryBo.getId();
@@ -29,6 +34,7 @@ public class CompleteDiaryBo extends DiaryBo {
 		professionalAssignShift = diaryBo.isProfessionalAssignShift();
 		includeHoliday = diaryBo.isIncludeHoliday();
 		alias = diaryBo.getAlias();
+		protectedAppointmentsPercentage = diaryBo.getProtectedAppointmentsPercentage();
 	}
 
 }

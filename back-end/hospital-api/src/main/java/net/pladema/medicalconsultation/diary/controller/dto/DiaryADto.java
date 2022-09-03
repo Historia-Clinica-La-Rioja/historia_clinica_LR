@@ -54,4 +54,10 @@ public class DiaryADto {
 
 	@Nullable
 	private String alias;
+
+	@Nullable
+	private List<Integer> careLines;
+
+	@NotNull
+	private Integer protectedAppointmentsPercentage;
 }

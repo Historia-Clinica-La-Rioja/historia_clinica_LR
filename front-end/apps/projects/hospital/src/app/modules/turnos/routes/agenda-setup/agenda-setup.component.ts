@@ -312,7 +312,9 @@ export class AgendaSetupComponent implements OnInit {
 			diaryOpeningHours: this.agendaHorarioService.getDiaryOpeningHours(),
 			clinicalSpecialtyId: this.form.value.healthcareProfessionalSpecialtyId,
 			alias: this.form.value.alias === "" ? null : this.form.value.alias,
-			diaryAssociatedProfessionalsId: this.form.value.otherProfessionals.map(professional => professional.healthcareProfessionalId)
+			diaryAssociatedProfessionalsId: this.form.value.otherProfessionals.map(professional => professional.healthcareProfessionalId),
+			careLines: [],
+			protectedAppointmentsPercentage: 0		
 		};
 	}
 

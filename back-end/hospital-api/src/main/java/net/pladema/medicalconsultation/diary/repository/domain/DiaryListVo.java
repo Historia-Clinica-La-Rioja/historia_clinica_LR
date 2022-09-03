@@ -41,6 +41,8 @@ public class DiaryListVo {
 
 	private String clinicalSpecialtyName;
 
+	private Short protectedAppointmentsPercentage;
+
     public DiaryListVo(Diary diary, String doctorsOfficeDescription, String clinicalSpecialtyName) {
         this.id = diary.getId();
         this.doctorsOfficeId = diary.getDoctorsOfficeId();
@@ -54,6 +56,7 @@ public class DiaryListVo {
 		this.clinicalSpecialtyId = diary.getClinicalSpecialtyId();
 		this.alias = diary.getAlias();
 		this.clinicalSpecialtyName = clinicalSpecialtyName;
+		this.protectedAppointmentsPercentage = diary.getProtectedAppointmentsPercentage();
     }
 
 }

@@ -521,6 +521,7 @@ export interface BreathingDto extends Serializable {
 }
 
 export interface CareLineDto extends Serializable {
+    clinicalSpecialties: ClinicalSpecialtyDto[];
     description: string;
     id: number;
 }
@@ -557,6 +558,7 @@ export interface ClinicalTermDto extends Serializable {
 }
 
 export interface CompleteDiaryDto extends DiaryDto {
+    careLinesInfo: CareLineDto[];
     sectorId: number;
     specialtyName: string;
 }
@@ -755,6 +757,7 @@ export interface DiaryADto {
     alias?: string;
     appointmentDuration: number;
     automaticRenewal?: boolean;
+    careLines?: number[];
     clinicalSpecialtyId: number;
     diaryAssociatedProfessionalsId: number[];
     diaryOpeningHours: DiaryOpeningHoursDto[];
@@ -763,6 +766,7 @@ export interface DiaryADto {
     healthcareProfessionalId: number;
     includeHoliday?: boolean;
     professionalAssignShift?: boolean;
+    protectedAppointmentsPercentage: number;
     startDate: string;
 }
 

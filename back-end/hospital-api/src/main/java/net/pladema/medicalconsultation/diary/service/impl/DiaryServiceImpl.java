@@ -14,6 +14,7 @@ import net.pladema.medicalconsultation.diary.repository.domain.CompleteDiaryList
 import net.pladema.medicalconsultation.diary.repository.domain.DiaryListVo;
 import net.pladema.medicalconsultation.diary.repository.entity.Diary;
 import net.pladema.medicalconsultation.diary.service.DiaryAssociatedProfessionalService;
+import net.pladema.medicalconsultation.diary.service.DiaryCareLineService;
 import net.pladema.medicalconsultation.diary.service.DiaryOpeningHoursService;
 import net.pladema.medicalconsultation.diary.service.DiaryService;
 import net.pladema.medicalconsultation.diary.service.domain.CompleteDiaryBo;
@@ -69,6 +70,8 @@ public class DiaryServiceImpl implements DiaryService {
 
 	private final DiaryAssociatedProfessionalService diaryAssociatedProfessionalService;
 
+	private final DiaryCareLineService diaryCareLineService;
+
 	private final DiaryRepository diaryRepository;
 
 	private final LoggedUserExternalService loggedUserExternalService;
@@ -95,6 +98,7 @@ public class DiaryServiceImpl implements DiaryService {
 		Integer diaryId = diary.getId();
 		diaryOpeningHoursService.update(diaryId, diaryToSave.getDiaryOpeningHours());
 		diaryAssociatedProfessionalService.updateDiaryAssociatedProfessionals(diaryToSave.getDiaryAssociatedProfessionalsId(), diaryId);
+		diaryCareLineService.updateCareLinesAssociatedToDiary(diaryId, diaryToSave.getCareLines());
 		return diaryId;
 	}
 
@@ -116,6 +120,7 @@ public class DiaryServiceImpl implements DiaryService {
 		diary.setActive(true);
 		diary.setClinicalSpecialtyId(diaryBo.getClinicalSpecialtyId());
 		diary.setAlias(diaryBo.getAlias());
+		diary.setProtectedAppointmentsPercentage(diaryBo.getProtectedAppointmentsPercentage().shortValue());
 		return diary;
 	}
 
@@ -281,6 +286,7 @@ public class DiaryServiceImpl implements DiaryService {
 		result.setDoctorsOfficeDescription(completeDiaryListVo.getDoctorsOfficeDescription());
 		result.setDoctorFirstName(completeDiaryListVo.getDoctorFirstName());
 		result.setDoctorLastName(completeDiaryListVo.getDoctorLastName());
+		result.setProtectedAppointmentsPercentage(completeDiaryListVo.getProtectedAppointmentsPercentage() != null ? completeDiaryListVo.getProtectedAppointmentsPercentage().intValue() : 0);
 		LOG.debug(OUTPUT, result);
 		return result;
 	}
@@ -290,7 +296,10 @@ public class DiaryServiceImpl implements DiaryService {
 		LOG.debug(INPUT_DIARY_ID, diaryId);
 		Optional<CompleteDiaryBo> result = diaryRepository.getDiary(diaryId).map(this::createCompleteDiaryBoInstance)
 				.map(completeOpeningHours());
-		result.ifPresent(completeDiaryBo -> completeDiaryBo.setDiaryAssociatedProfessionalsId(diaryAssociatedProfessionalService.getAllDiaryAssociatedProfessionals(diaryId)));
+		result.ifPresent(completeDiaryBo -> {
+			completeDiaryBo.setDiaryAssociatedProfessionalsId(diaryAssociatedProfessionalService.getAllDiaryAssociatedProfessionals(diaryId));
+			completeDiaryBo.setCareLinesInfo(diaryCareLineService.getAllCareLinesByDiaryId(diaryId, completeDiaryBo.getHealthcareProfessionalId()));
+		});
 		LOG.debug(OUTPUT, result);
 		return result;
 	}

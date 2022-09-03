@@ -75,7 +75,7 @@ public class DiaryOpeningHoursServiceImpl implements DiaryOpeningHoursService {
 			}
 
             openingHoursBo.setId(openingHoursId);
-            diaryOpeningHoursRepository.save(createDiaryOpeningHoursInstance(diaryId, openingHoursId, doh));
+            diaryOpeningHoursRepository.saveAndFlush(createDiaryOpeningHoursInstance(diaryId, openingHoursId, doh));
 
         });
     }
