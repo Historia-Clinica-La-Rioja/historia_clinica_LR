@@ -1028,6 +1028,9 @@
 			AND ((EXTRACT(MONTH FROM d.created_on)=(EXTRACT(MONTH FROM CURRENT_TIMESTAMP)-1) AND EXTRACT(YEAR FROM d.created_on)=EXTRACT(YEAR FROM CURRENT_TIMESTAMP))
 			OR (EXTRACT(YEAR FROM d.created_on)=(EXTRACT(YEAR FROM CURRENT_TIMESTAMP)-1) AND EXTRACT(MONTH FROM d.created_on)=12))
 			group by institution, professional, procedures
+		</query>
+	</named-native-query>
+	
 	<named-native-query name="Reports.OdontologyConsultationDetail" result-set-mapping="Reports.ConsultationDetailResult">
 		<query>
 			WITH consultation AS (
