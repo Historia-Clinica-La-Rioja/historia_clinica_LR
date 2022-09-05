@@ -126,8 +126,6 @@ export class AgendaComponent implements OnInit, OnDestroy, OnChanges {
 			this.patientId = Number(qp.idPaciente);
 		});
 
-		this.setDateRange(this.viewDate);
-
 		this.loading = true;
 		this.appointmentFacade.clear();
 
@@ -386,6 +384,7 @@ export class AgendaComponent implements OnInit, OnDestroy, OnChanges {
 		this.agenda = agenda;
 		this.setEnableAppointmentScheduling();
 		this.viewDate = this._getViewDate();
+		this.setDateRange(this.viewDate);
 		this.hourSegments = MINUTES_IN_HOUR / agenda.appointmentDuration;
 		this.appointmentFacade.setValues(agenda.id, agenda.appointmentDuration, this.startDate, this.endDate);
 		this.diaryOpeningHours = agenda.diaryOpeningHours;
