@@ -254,7 +254,7 @@ export class AppointmentsFacadeService {
 	}
 }
 
-export function toCalendarEvent(from: string, to: string, date: Moment, appointment: AppointmentListDto, viewName: string, appointmentBlockMotivesFacadeService?: AppointmentBlockMotivesFacadeService): CalendarEvent {
+export function toCalendarEvent(from: string, to: string, date: Moment, appointment: AppointmentListDto, viewName?: string, appointmentBlockMotivesFacadeService?: AppointmentBlockMotivesFacadeService): CalendarEvent {
 	const fullName = [appointment.patient?.person.lastName, appointment.patient?.person.firstName].
 		filter(val => val).join(', ');
 

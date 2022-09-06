@@ -6,11 +6,11 @@ import { AppointmentsService } from '@api-rest/services/appointments.service';
 import { SnackBarService } from '@presentation/services/snack-bar.service';
 import { APPOINTMENT_STATES_ID, getAppointmentState, MAX_LENGTH_MOTIVO } from '../../constants/appointment';
 import { ContextService } from '@core/services/context.service';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { AppFeature, AppointmentDto, CompleteDiaryDto, DateTimeDto, ERole, IdentificationTypeDto, PatientMedicalCoverageDto, PersonPhotoDto, UpdateAppointmentDto } from '@api-rest/api-model.d';
+import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
+import { AppFeature, AppointmentDto, CompleteDiaryDto, DateTimeDto, ERole, IdentificationTypeDto, PatientMedicalCoverageDto, PersonPhotoDto, UpdateAppointmentDto, AppointmentListDto } from '@api-rest/api-model.d';
 import { CancelAppointmentComponent } from '../cancel-appointment/cancel-appointment.component';
 import { getError, hasError, processErrors, updateControlValidator } from '@core/utils/form.utils';
-import { AppointmentsFacadeService } from '../../services/appointments-facade.service';
+import { AppointmentsFacadeService, toCalendarEvent } from '../../services/appointments-facade.service';
 import { MapperService } from '@core/services/mapper.service';
 import {
 	determineIfIsHealthInsurance,
@@ -31,7 +31,7 @@ import { PatientService } from '@api-rest/services/patient.service';
 import { ImageDecoderService } from '@presentation/services/image-decoder.service';
 import { getDayHoursRangeIntervalsByMinuteValue } from '@core/utils/date.utils';
 import { CalendarEvent } from 'angular-calendar';
-import { momentParseDate } from '@core/utils/moment.utils';
+import { DateFormat, momentFormat, momentParseDate, momentParseTime } from '@core/utils/moment.utils';
 import * as moment from 'moment';
 
 const TEMPORARY_PATIENT = 3;
@@ -60,6 +60,7 @@ export class AppointmentComponent implements OnInit {
 	decodedPhoto$: Observable<string>;
 
 	appointment: AppointmentDto;
+	appointments: CalendarEvent[];
 	selectedState: APPOINTMENT_STATES_ID;
 	formMotivo: FormGroup;
 	formEdit: FormGroup;
@@ -86,6 +87,7 @@ export class AppointmentComponent implements OnInit {
 	endAgenda = momentParseDate(this.data.agenda.endDate);
 	availableDays: number[] = [];
 	disableDays: Date[] = [];
+	openingDateForm = false;
 	possibleScheduleHours: Date[] = [];
 	selectedDate = new Date(this.data.appointmentData.date);
 
@@ -102,8 +104,7 @@ export class AppointmentComponent implements OnInit {
 		@Inject(MAT_DIALOG_DATA) public data: {
 			appointmentData: PatientAppointmentInformation,
 			hasPermissionToAssignShift: boolean,
-			agenda: CompleteDiaryDto,
-			appointments: CalendarEvent[]
+			agenda: CompleteDiaryDto
 		},
 		public dialogRef: MatDialogRef<NewAttentionComponent>,
 		private readonly dialog: MatDialog,
@@ -219,14 +220,39 @@ export class AppointmentComponent implements OnInit {
 
 	openDateForm(): void {
 		this.dateFormToggle();
-		this.setDisableDays();
-		this.setPossibleScheduleHours(this.selectedDate);
-		this.formDate.controls.hour.setValue(this.possibleScheduleHours.find(item => { return item.getTime() == this.selectedDate.getTime() }));
+		this.loadAppointments(this.selectedDate);
+		this.openingDateForm = true
 	}
 
 	selectDate(date: Date): void {
-		this.setPossibleScheduleHours(date);
-		this.formDate.controls.hour.setValue(this.possibleScheduleHours[0]);
+		this.loadAppointments(date);
+		this.openingDateForm = false;
+	}
+
+	loadAppointments(date: Date): void {
+		const d = momentFormat(moment(date), DateFormat.API_DATE);
+		this.formDate.controls['hour'].disable();
+		this.appointmentService.getList([this.data.agenda.id], this.data.agenda.healthcareProfessionalId, d, d)
+			.subscribe((appointments: AppointmentListDto[]) => {
+
+				this.appointments = appointments
+					.map(appointment => {
+						const from = momentParseTime(appointment.hour).format(DateFormat.HOUR_MINUTE);
+						let to = momentParseTime(from).add(this.data.agenda.appointmentDuration, 'minutes').format(DateFormat.HOUR_MINUTE);
+						if (from > to) {
+							to = momentParseTime(from).set({ hour: 23, minute: 59 }).format(DateFormat.HOUR_MINUTE);
+						}
+						const calendarEvent = toCalendarEvent(from, to, momentParseDate(appointment.date), appointment);
+						return calendarEvent;
+					});
+				this.setDisableDays();
+				this.setPossibleScheduleHours(date);
+				if (this.openingDateForm)
+					this.formDate.controls.hour.setValue(this.possibleScheduleHours.find(item => { return item.getTime() == this.selectedDate.getTime() }));
+				else
+					this.formDate.controls.hour.setValue(this.possibleScheduleHours[0]);
+				this.formDate.controls['hour'].enable();
+			});
 	}
 
 	setPossibleScheduleHours(date: Date): void {
@@ -249,7 +275,7 @@ export class AppointmentComponent implements OnInit {
 	}
 
 	deleteHoursWithAppointment(): void {
-		this.data.appointments.forEach(appointment => {
+		this.appointments.forEach(appointment => {
 			if (!appointment.allDay)
 				this.possibleScheduleHours = this.possibleScheduleHours.filter(item => {
 					return ((item.getTime() < appointment.start.getTime()) || (item.getTime() >= appointment.end.getTime()) || (item.getTime() == this.selectedDate.getTime()));
@@ -279,7 +305,7 @@ export class AppointmentComponent implements OnInit {
 		today.setHours(0, 0, 0, 0);
 		today.setMinutes(0);
 		this.checkDisableDay(today);
-		this.data.appointments.forEach(appointment => {
+		this.appointments.forEach(appointment => {
 			const appointmentDate = new Date(appointment.start);
 			appointmentDate.setHours(0, 0, 0, 0);
 			appointmentDate.setMinutes(0);
@@ -319,8 +345,8 @@ export class AppointmentComponent implements OnInit {
 		};
 
 		this.appointmentFacade.updateDate(this.data.appointmentData.appointmentId, date).subscribe(() => {
-			const appointmentsInDate = this.data.appointments.filter(appointment => appointment.start.getTime() == previousDate.getTime());
-			if (appointmentsInDate.length > 1  && !this.data.appointmentData.overturn){
+			const appointmentsInDate = this.appointments.filter(appointment => appointment.start.getTime() == previousDate.getTime());
+			if (appointmentsInDate.length > 1 && !this.data.appointmentData.overturn) {
 				this.updateAppointmentOverturn(
 					appointmentsInDate[1].meta.appointmentId,
 					appointmentsInDate[1].meta.appointmentStateId,
@@ -404,8 +430,8 @@ export class AppointmentComponent implements OnInit {
 		});
 		dialogRefCancelAppointment.afterClosed().subscribe(canceledAppointment => {
 			if (canceledAppointment) {
-				const appointmentsInDate = this.data.appointments.filter(appointment => appointment.start.getTime() == new Date(this.data.appointmentData.date).getTime());
-				if (appointmentsInDate.length > 1  && !this.data.appointmentData.overturn){
+				const appointmentsInDate = this.appointments.filter(appointment => appointment.start.getTime() == new Date(this.data.appointmentData.date).getTime());
+				if (appointmentsInDate.length > 1 && !this.data.appointmentData.overturn) {
 					this.updateAppointmentOverturn(
 						appointmentsInDate[1].meta.appointmentId,
 						appointmentsInDate[1].meta.appointmentStateId,

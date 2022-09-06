@@ -354,8 +354,7 @@ export class AgendaComponent implements OnInit, OnDestroy, OnChanges {
 							data: {
 								appointmentData: event.meta,
 								professionalPermissions: this.agenda.professionalAssignShift,
-								agenda: this.agenda,
-								appointments: this.appointments
+								agenda: this.agenda
 							}
 						});
 					});
@@ -365,8 +364,7 @@ export class AgendaComponent implements OnInit, OnDestroy, OnChanges {
 					data: {
 						appointmentData: event.meta,
 						hasPermissionToAssignShift: this.agenda.professionalAssignShift,
-						agenda: this.agenda,
-						appointments: this.appointments
+						agenda: this.agenda
 					},
 				});
 			}
