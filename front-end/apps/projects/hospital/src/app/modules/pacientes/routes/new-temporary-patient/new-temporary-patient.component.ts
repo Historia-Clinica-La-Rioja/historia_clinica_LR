@@ -1,4 +1,4 @@
-import { Component, OnInit, ElementRef } from '@angular/core';
+import { Component, OnInit, ElementRef, ViewChild } from '@angular/core';
 import { FormGroup, FormBuilder, Validators, AbstractControl } from '@angular/forms';
 import { APatientDto, BMPatientDto, EthnicityDto, PersonOccupationDto, EducationLevelDto, GenderDto, IdentificationTypeDto, PatientMedicalCoverageDto, SelfPerceivedGenderDto } from '@api-rest/api-model';
 import { scrollIntoError, hasError, VALIDATIONS, DEFAULT_COUNTRY_ID, updateControlValidator } from '@core/utils/form.utils';
@@ -20,6 +20,7 @@ import { PERSON } from '@core/constants/validation-constants';
 const TEMPORARY_PATIENT = 3;
 const ROUTE_HOME = 'pacientes';
 const ROUTE_PROFILE = 'pacientes/profile/';
+const TIME_TO_PREVENT_SCROLL = 100;
 
 @Component({
 	selector: 'app-new-temporary-patient',
@@ -27,7 +28,6 @@ const ROUTE_PROFILE = 'pacientes/profile/';
 	styleUrls: ['./new-temporary-patient.component.scss']
 })
 export class NewTemporaryPatientComponent implements OnInit {
-
 	readonly PERSON_MAX_LENGTH = PERSON.MAX_LENGTH;
 	readonly GENDER_MAX_LENGTH = VALIDATIONS.MAX_LENGTH.gender;
 	private readonly NONE_SELF_PERCEIVED_GENDER_SELECTED_ID = 10; // Dato Maestro proveniente de género autopercibido "Ninguna de las anteriores"
@@ -63,6 +63,7 @@ export class NewTemporaryPatientComponent implements OnInit {
 	public lastNameDisabled = false;
 	public otherLastNamesDisabled = false;
 	public birthDateDisabled = false;
+	@ViewChild('startView') startView: ElementRef;
 
 	constructor(
 		private formBuilder: FormBuilder,
@@ -224,6 +225,8 @@ export class NewTemporaryPatientComponent implements OnInit {
 				this.form.controls.addressCountryId.setValue(DEFAULT_COUNTRY_ID);
 				this.setProvinces();
 			});
+		setTimeout(() => {
+			this.startView.nativeElement.scrollIntoView();}, TIME_TO_PREVENT_SCROLL);
 	}
 
 	save(): void {

@@ -25,6 +25,7 @@ import { PatientNameService } from "@core/services/patient-name.service";
 const ROUTE_NEW = 'pacientes/new';
 const ROUTE_NEW_TEMPORARY = 'pacientes/temporary';
 const ROUTE_HOME = 'pacientes';
+const TIME_TO_PREVENT_SCROLL = 100;
 
 @Component({
 	selector: 'app-search',
@@ -95,8 +96,9 @@ export class SearchComponent implements OnInit {
 							}
 						});
 				} else {
-					this.buildFormSearchWithoutValidations(params);
-					this.isLoading = false;
+					setTimeout(() => {
+						this.buildFormSearchWithoutValidations(params);
+					}, TIME_TO_PREVENT_SCROLL);
 				}
 
 				this.personMasterDataService.getIdentificationTypes().subscribe(
@@ -230,6 +232,7 @@ export class SearchComponent implements OnInit {
 			birthDate: [params.birthDate ? momentParseDate(params.birthDate) : undefined]
 		});
 		this.lockFormField(params);
+		this.isLoading = false;
 	}
 
 	private lockFormField(params) {
