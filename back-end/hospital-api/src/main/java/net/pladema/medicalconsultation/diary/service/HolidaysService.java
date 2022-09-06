@@ -9,5 +9,4 @@ public interface HolidaysService {
 
 	List<HolidayBo> getHolidays(LocalDate startDate, LocalDate endDate);
 
-	List<HolidayBo> getMonthlyHolidays(LocalDate date);
 }

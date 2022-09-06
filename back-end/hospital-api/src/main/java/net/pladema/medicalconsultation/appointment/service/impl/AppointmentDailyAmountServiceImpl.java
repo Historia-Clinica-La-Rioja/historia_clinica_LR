@@ -54,7 +54,7 @@ public class AppointmentDailyAmountServiceImpl implements AppointmentDailyAmount
 			throw new DiaryNotFoundException(DiaryNotFoundEnumException.DIARY_ID_NOT_FOUND, "La Agenda solicitada no existe");
 
 		Collection<AppointmentDailyAmountBo> appointmentsDailyAmount = new ArrayList<>();
-		List<HolidayBo> holidays = holidaysService.getMonthlyHolidays(from);
+		List<HolidayBo> holidays = holidaysService.getHolidays(from, to);
         Optional<CompleteDiaryBo> diary = diaryService.getDiary(diaryId);
 
         if (diary.isPresent()) {

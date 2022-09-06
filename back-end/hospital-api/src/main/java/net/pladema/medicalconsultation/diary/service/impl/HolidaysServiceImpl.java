@@ -31,13 +31,6 @@ public class HolidaysServiceImpl implements HolidaysService {
 		return result;
 	}
 
-	@Override
-	public List<HolidayBo> getMonthlyHolidays(LocalDate date) {
-		List<HolidayBo> result = holidayRepository.getMonthlyHolidays(date.getMonthValue()).stream().map(this::generateHolidayBo).collect(Collectors.toList());
-		LOG.debug(OUTPUT, result);
-		return result;
-	}
-
 	private HolidayBo generateHolidayBo(HolidayVo holiday) {
 		HolidayBo result = new HolidayBo();
 		result.setDate(holiday.getDate());
