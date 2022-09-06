@@ -59,7 +59,6 @@ export class ProfessionalSelectComponent {
 
 	private loadProfessionalSelected(professional: ProfessionalDto) {
 		this.professionalInitValue = this.toProfessionalTypeahead(professional);
-		this.setProfesional(professional);
 	}
 
 	private loadProfessionalsTypeahead(professionals: ProfessionalDto[]) {

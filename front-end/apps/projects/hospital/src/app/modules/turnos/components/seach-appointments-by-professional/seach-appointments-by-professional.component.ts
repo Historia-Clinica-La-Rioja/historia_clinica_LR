@@ -89,6 +89,7 @@ export class SeachAppointmentsByProfessionalComponent implements OnInit, OnDestr
 	}
 
 	goBack(professional: ProfessionalDto) {
+		this.idProfesional = professional?.id;
 		if (!professional) {
 			if (this.patientId) {
 				this.router.navigate([`${this.routePrefix}`], { queryParams: { idPaciente: this.patientId } });

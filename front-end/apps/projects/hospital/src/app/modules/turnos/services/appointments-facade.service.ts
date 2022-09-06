@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { CalendarEvent } from 'angular-calendar';
-import { ReplaySubject, Observable } from 'rxjs';
+import { ReplaySubject, Observable, forkJoin } from 'rxjs';
 import { AppointmentsService } from '@api-rest/services/appointments.service';
 import { AppointmentListDto, AppointmentShortSummaryDto, BasicPersonalDataDto, CreateAppointmentDto, DateTimeDto, UpdateAppointmentDto } from '@api-rest/api-model';
 import {
@@ -14,6 +14,8 @@ import { map, first } from 'rxjs/operators';
 import { CANCEL_STATE_ID, APPOINTMENT_STATES_ID } from '../constants/appointment';
 import { PatientNameService } from "@core/services/patient-name.service";
 import { AppointmentBlockMotivesFacadeService } from './appointment-block-motives-facade.service';
+import { HolidaysService } from '@api-rest/services/holidays.service';
+import { dateDtoToDate } from '@api-rest/mapper/date-dto.mapper';
 
 const enum COLORES {
 	ASSIGNED = '#4187FF',
@@ -63,7 +65,9 @@ export class AppointmentsFacadeService {
 
 
 	private appointmenstEmitter = new ReplaySubject<CalendarEvent[]>(1);
+	private holidayEmitter = new ReplaySubject<CalendarEvent[]>(1);
 	private appointments$: Observable<CalendarEvent[]>;
+	private holidays$: Observable<CalendarEvent[]>;
 	private professionalId: number;
 
 	private startDate: string;
@@ -73,15 +77,20 @@ export class AppointmentsFacadeService {
 		private readonly appointmentService: AppointmentsService,
 		private readonly patientNameService: PatientNameService,
 		private readonly appointmentBlockMotivesFacadeService: AppointmentBlockMotivesFacadeService,
+		private readonly holidayService: HolidaysService
 
 	) {
 		this.appointments$ = this.appointmenstEmitter.asObservable();
+		this.holidays$ = this.holidayEmitter.asObservable();
 	}
 
 	setProfessionalId(id: number) {
-		this.professionalId = id;
-		if (this.agendaId)
-			this.loadAppointments();
+		if (this.professionalId !== id) {
+			this.professionalId = id;
+			if (this.agendaId) {
+				this.loadAppointments();
+			}
+		}
 	}
 
 	getProfessionalId() {
@@ -101,10 +110,9 @@ export class AppointmentsFacadeService {
 	}
 
 	public loadAppointments(): void {
-
-		this.appointmentService.getList([this.agendaId], this.professionalId, this.startDate, this.endDate)
-			.subscribe((appointments: AppointmentListDto[]) => {
-				const appointmentsCalendarEvents: CalendarEvent[] = appointments
+		forkJoin([	this.appointmentService.getList([this.agendaId], this.professionalId, this.startDate, this.endDate),
+					this.holidayService.getHolidays(this.startDate, this.endDate)]).subscribe((result) => {
+				const appointmentsCalendarEvents: CalendarEvent[] = result[0]
 					.map(appointment => {
 						const from = momentParseTime(appointment.hour).format(DateFormat.HOUR_MINUTE);
 						let to = momentParseTime(from).add(this.appointmentDuration, 'minutes').format(DateFormat.HOUR_MINUTE);
@@ -115,7 +123,15 @@ export class AppointmentsFacadeService {
 						const calendarEvent = toCalendarEvent(from, to, momentParseDate(appointment.date), appointment, viewName, this.appointmentBlockMotivesFacadeService);
 						return calendarEvent;
 					});
-				this.appointmenstEmitter.next(appointmentsCalendarEvents);
+				const holidaysCalendarEvents = result[1].map(holiday => {
+					return {
+						start: dateDtoToDate(holiday.date),
+						title: holiday.description,
+						allDay: true
+					}
+				});
+				this.appointmenstEmitter.next(appointmentsCalendarEvents.concat(holidaysCalendarEvents));
+				this.holidayEmitter.next(holidaysCalendarEvents);
 			});
 	}
 
@@ -128,6 +144,9 @@ export class AppointmentsFacadeService {
 		return this.appointments$;
 	}
 
+	getHolidays(): Observable<CalendarEvent[]> {
+		return this.holidays$;
+	}
 
 	updatePhoneNumber(appointmentId: number, phonePrefix: string, phoneNumber: string): Observable<boolean> {
 		return this.appointmentService.updatePhoneNumber(appointmentId, phonePrefix, phoneNumber)
