@@ -180,6 +180,7 @@ export class NuevaPrescripcionComponent implements OnInit {
 				identificationNumber: this.patientData.person.identificationNumber,
 				identificationTypeId: this.patientData.person.identificationTypeId,
 				initValues: this.patientMedicalCoverages,
+				patientId: this.patientData.id
 			}
 		});
 

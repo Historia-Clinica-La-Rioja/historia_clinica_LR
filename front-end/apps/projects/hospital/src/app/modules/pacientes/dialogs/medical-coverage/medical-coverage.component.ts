@@ -14,6 +14,9 @@ import { EPatientMedicalCoverageCondition } from '@api-rest/api-model';
 import { HealthInsuranceComponent } from "@pacientes/dialogs/health-insurance/health-insurance.component";
 import { PrivateHealthInsuranceComponent } from "@pacientes/dialogs/private-health-insurance/private-health-insurance.component";
 import { ArtComponent } from "@pacientes/dialogs/art/art.component";
+import { map } from "rxjs/operators";
+import { PatientMedicalCoverageService } from "@api-rest/services/patient-medical-coverage.service";
+import { MapperService } from "@core/services/mapper.service";
 
 const DNI_TYPE_ID = 1;
 @Component({
@@ -37,9 +40,12 @@ export class MedicalCoverageComponent implements OnInit {
 			genderId: number;
 			identificationNumber: string;
 			identificationTypeId: number;
-			initValues: PatientMedicalCoverage[]
+			patientId: number;
+			initValues:  PatientMedicalCoverage[];
 		},
-		private readonly dialog: MatDialog
+		private readonly dialog: MatDialog,
+		private readonly patientMedicalCoverageService: PatientMedicalCoverageService,
+		private readonly mapperService: MapperService
 	) {
 		this.patientMedicalCoverages = this.personInfo.initValues ? this.personInfo.initValues : [];
 	}
@@ -55,14 +61,18 @@ export class MedicalCoverageComponent implements OnInit {
 					({ genderId: this.personInfo.genderId, identificationNumber: this.personInfo.identificationNumber })
 					.subscribe((healthInsurances: MedicalCoverageDto[]) => {
 						if (healthInsurances) {
-							healthInsurances.forEach(healthInsurance => {
-								const patientMedicalCoverage = this.patientMedicalCoverages
-									.find(patientHealthInsurance => (patientHealthInsurance.medicalCoverage as HealthInsurance).rnos === healthInsurance.rnos);
-								if (!patientMedicalCoverage) {
-									this.patientMedicalCoverages = this.patientMedicalCoverages.concat(this.fromRenaperToPatientMedicalCoverage(healthInsurance));
-								} else if (healthInsurance.dateQuery) {
-									patientMedicalCoverage.validDate = momentParse(healthInsurance.dateQuery, DateFormat.YEAR_MONTH);
-								}
+							this.healthInsuranceService.getAll().subscribe((values: MedicalCoverageDto[]) => {
+								this.healthInsuranceMasterData = values;
+								this.personInfo?.patientId ? this.setPatientMedicalCoverages() : this.patientMedicalCoverages = [];
+								healthInsurances.forEach(healthInsurance => {
+									const patientMedicalCoverage = this.patientMedicalCoverages
+										.find(patientHealthInsurance => (patientHealthInsurance.medicalCoverage as HealthInsurance).rnos === healthInsurance.rnos);
+									if (!patientMedicalCoverage) {
+										this.patientMedicalCoverages = this.patientMedicalCoverages.concat(this.fromRenaperToPatientMedicalCoverage(healthInsurance));
+									} else if (healthInsurance.dateQuery) {
+										patientMedicalCoverage.validDate = momentParse(healthInsurance.dateQuery, DateFormat.YEAR_MONTH);
+									}
+								});
 							});
 						}
 						this.loading = false;
@@ -74,6 +84,17 @@ export class MedicalCoverageComponent implements OnInit {
 		}
 		);
 
+	}
+
+	private setPatientMedicalCoverages(): void {
+		this.patientMedicalCoverageService.getActivePatientMedicalCoverages(this.personInfo.patientId)
+			.pipe(
+				map(
+					patientMedicalCoveragesDto =>
+						patientMedicalCoveragesDto.map(s => this.mapperService.toPatientMedicalCoverage(s))
+				)
+			)
+			.subscribe((patientMedicalCoverages: PatientMedicalCoverage[]) => this.patientMedicalCoverages = patientMedicalCoverages);
 	}
 
 	getFullHealthInsuranceText(healthInsurance: MedicalCoverageDto): string {

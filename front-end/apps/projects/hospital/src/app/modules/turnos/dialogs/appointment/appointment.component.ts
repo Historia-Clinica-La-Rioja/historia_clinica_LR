@@ -547,6 +547,7 @@ export class AppointmentComponent implements OnInit {
 				identificationNumber: this.data.appointmentData.patient.identificationNumber,
 				genderId: this.data.appointmentData.patient.genderId,
 				initValues: this.patientMedicalCoverages,
+				patientId: this.data.appointmentData.patient.id,
 			}
 		});
 

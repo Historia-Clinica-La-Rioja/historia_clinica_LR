@@ -303,6 +303,7 @@ export class NewAppointmentComponent implements OnInit {
 				identificationNumber: this.patient.personalDataDto.identificationNumber,
 				identificationTypeId: this.patient.personalDataDto.identificationTypeId,
 				initValues: this.patientMedicalCoverages,
+				patientId: this.patientId
 			}
 		});
 
