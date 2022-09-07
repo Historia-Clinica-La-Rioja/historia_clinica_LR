@@ -107,6 +107,7 @@ export class AppointmentsFacadeService {
 
 	clear(): void {
 		this.appointmenstEmitter.next(undefined);
+		this.agendaId = null;
 	}
 
 	public loadAppointments(): void {

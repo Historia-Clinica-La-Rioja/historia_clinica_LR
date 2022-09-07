@@ -70,6 +70,7 @@ export class CalendarProfessionalViewDockPopupComponent implements OnInit {
 
 	ngOnDestroy() {
 		this.agendaFiltersSubscription.unsubscribe();
+		this.agendaSearchService.clearAll();
 	}
 
 	changeDiarySelected(event: MatOptionSelectionChange, diary: DiaryListDto) {

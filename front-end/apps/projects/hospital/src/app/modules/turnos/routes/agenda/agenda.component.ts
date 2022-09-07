@@ -149,6 +149,7 @@ export class AgendaComponent implements OnInit, OnDestroy, OnChanges {
 
 	ngOnDestroy() {
 		this.agendaSearchService.setAgendaSelected(undefined);
+		this.appointmentFacade.clear();
 	}
 
 	ngOnChanges(changes: SimpleChanges) {
