@@ -83,7 +83,11 @@ export class SeachAppointmentsByProfessionalComponent implements OnInit, OnDestr
 
 		this.professionalsFilteredBySpecialty = this.getProfesionalesFilteredBy(professionalsByClinicalSpecialtyDto);
 		this.idProfesional = null;
-		this.router.navigate([`${this.routePrefix}`]);
+		if (this.patientId) {
+			this.router.navigate([`${this.routePrefix}`], { queryParams: { idPaciente: this.patientId } });
+		} else {
+			this.router.navigate([`${this.routePrefix}`]);
+		}
 		this.appointmentFacadeService.setProfessionalId(this.idProfesional);
 		this.agendaSearchService.search(this.idProfesional);
 	}
