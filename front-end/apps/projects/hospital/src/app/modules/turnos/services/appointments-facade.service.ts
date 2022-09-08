@@ -257,7 +257,7 @@ export class AppointmentsFacadeService {
 					if (response) {
 						this.appointments$.subscribe(
 							(events: CalendarEvent[]) => {
-								const updatedEvent: CalendarEvent = events.find(event => event.meta.appointmentId === appointmentId);
+								const updatedEvent: CalendarEvent = events.find(event => event.meta?.appointmentId === appointmentId);
 								updatedEvent.meta.appointmentStateId = newStateId;
 								this.loadAppointments();
 							}
