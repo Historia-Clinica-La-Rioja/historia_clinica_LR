@@ -153,6 +153,12 @@ export class AmbulatoriaPacienteComponent implements OnInit, OnDestroy {
 					consultationType: REFERENCE_CONSULTATION_TYPE.AMBULATORY
 				}
 				this.referenceNotificationService = new ReferenceNotificationService(this.refNotificationInfo, this.referenceService, this.dialog, this.clinicalSpecialtyService, this.medicacionesService, this.ambulatoriaSummaryFacadeService, this.dockPopupService);
+				
+				this.referenceNotificationService.getOpenConsultation().subscribe(type => {
+					if (type === REFERENCE_CONSULTATION_TYPE.AMBULATORY)
+						this.openNuevaConsulta();
+				});
+				
 				this.ambulatoriaSummaryFacadeService.bloodType$.subscribe(blood => this.bloodType = blood);
 
 				this.medicalCoverageInfo.setAppointmentConfirmedCoverageInfo(this.patientId);
@@ -206,12 +212,6 @@ export class AmbulatoriaPacienteComponent implements OnInit, OnDestroy {
 		this.extensionWCTabs$ = this.wcExtensionsService.getComponentsFromSlot(Slot.CLINIC_HISTORY_TAB);
 
 		this.odontogramService.resetOdontogram();
-
-		this.referenceNotificationService.getOpenConsultation().subscribe(type => {
-			if (type === REFERENCE_CONSULTATION_TYPE.AMBULATORY) {
-				this.openNuevaConsulta();
-			}
-		})
 
 		this.medicamentStatus$ = this.requestMasterDataService.medicationStatus();
 
