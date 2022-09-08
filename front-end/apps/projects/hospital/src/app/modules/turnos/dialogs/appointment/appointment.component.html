@@ -1,6 +1,6 @@
 <form class="appointment-body" [formGroup]="formMotivo" (ngSubmit)="saveAbsent()">
 	<div fxLayout="row" fxLayoutAlign="end">
-		<button mat-icon-button (click)="closeDialog()" type="button" class="icon-close">
+		<button id="close-dialog" mat-icon-button (click)="closeDialog()" type="button" class="icon-close">
 			<mat-icon>close</mat-icon>
 		</button>
 	</div>
@@ -192,10 +192,10 @@
 					</mat-form-field>
 					<span class="hs"> hs.</span>
 					<div class="confirm-buttons" fxLayout="row" fxLayoutAlign="end" fxLayoutGap="15px" fxFlex="60%">
-						<button mat-stroked-button color="primary" btn-block type="button" (click)="cancelDateForm()">
+						<button id="cancel-edition" mat-stroked-button color="primary" btn-block type="button" (click)="cancelDateForm()">
 							<span [translate]="'turnos.appointment.CANCEL'"></span>
 						</button>
-						<button mat-flat-button color="primary" [disabled]="formDate.invalid">
+						<button id="save-edition" mat-flat-button color="primary" [disabled]="formDate.invalid">
 							<span [translate]="'turnos.appointment.SAVE'"></span>
 						</button>
 					</div>
