@@ -345,27 +345,31 @@ export class AppointmentComponent implements OnInit {
 		};
 
 		this.appointmentFacade.updateDate(this.data.appointmentData.appointmentId, date).subscribe(() => {
-			const appointmentsInDate = this.appointments.filter(appointment => appointment.start.getTime() == previousDate.getTime());
-			if (appointmentsInDate.length > 1 && !this.data.appointmentData.overturn) {
-				this.updateAppointmentOverturn(
-					appointmentsInDate[1].meta.appointmentId,
-					appointmentsInDate[1].meta.appointmentStateId,
-					false,
-					appointmentsInDate[1].meta.patient.id
-				);
-			}
+			const date = momentFormat(moment(previousDate), DateFormat.API_DATE);
+			this.appointmentService.getList([this.data.agenda.id], this.data.agenda.healthcareProfessionalId, date, date)
+				.subscribe((appointments: AppointmentListDto[]) => {
+					const appointmentsInDate = this.generateEventsFromAppointments(appointments)
+						.filter(appointment => appointment.start.getTime() == previousDate.getTime());
+					if (appointmentsInDate.length > 0 && !this.data.appointmentData.overturn) {
+						this.updateAppointmentOverturn(
+							appointmentsInDate[0].meta.appointmentId,
+							appointmentsInDate[0].meta.appointmentStateId,
+							false,
+							appointmentsInDate[0].meta.patient.id
+						);
+					}
 
-			if (this.data.appointmentData.overturn) {
-				this.updateAppointmentOverturn(
-					this.data.appointmentData.appointmentId,
-					this.data.appointmentData.appointmentStateId,
-					false,
-					this.data.appointmentData.patient.id
-				);
-			}
-
-			this.snackBarService.showSuccess('turnos.appointment.date.UPDATE_SUCCESS');
-			this.selectedDate = newDate;
+					if (this.data.appointmentData.overturn) {
+						this.updateAppointmentOverturn(
+							this.data.appointmentData.appointmentId,
+							this.data.appointmentData.appointmentStateId,
+							false,
+							this.data.appointmentData.patient.id
+						);
+					}
+					this.snackBarService.showSuccess('turnos.appointment.date.UPDATE_SUCCESS');
+					this.selectedDate = newDate;
+			});
 		}, error => {
 			processErrors(error, (msg) => this.snackBarService.showError(msg));
 		});
@@ -430,15 +434,21 @@ export class AppointmentComponent implements OnInit {
 		});
 		dialogRefCancelAppointment.afterClosed().subscribe(canceledAppointment => {
 			if (canceledAppointment) {
-				const appointmentsInDate = this.appointments.filter(appointment => appointment.start.getTime() == new Date(this.data.appointmentData.date).getTime());
-				if (appointmentsInDate.length > 1 && !this.data.appointmentData.overturn) {
-					this.updateAppointmentOverturn(
-						appointmentsInDate[1].meta.appointmentId,
-						appointmentsInDate[1].meta.appointmentStateId,
-						false,
-						appointmentsInDate[1].meta.patient.id
-					);
-				}
+				const date = momentFormat(moment(this.data.appointmentData.date), DateFormat.API_DATE);
+				this.appointmentService.getList([this.data.agenda.id], this.data.agenda.healthcareProfessionalId, date, date)
+				.subscribe((appointments: AppointmentListDto[]) => {
+					const appointmentsInDate = this.generateEventsFromAppointments(appointments)
+						.filter(appointment => appointment.start.getTime() == new Date(this.data.appointmentData.date).getTime());
+
+					if (appointmentsInDate.length > 0 && !this.data.appointmentData.overturn) {
+						this.updateAppointmentOverturn(
+							appointmentsInDate[0].meta.appointmentId,
+							appointmentsInDate[0].meta.appointmentStateId,
+							false,
+							appointmentsInDate[0].meta.patient.id
+						);
+					}
+				});
 				this.closeDialog('statuschanged');
 			}
 		});
@@ -679,6 +689,18 @@ export class AppointmentComponent implements OnInit {
 			}
 		}
 		this.summaryCoverageData = summaryInfo;
+	}
+
+	private generateEventsFromAppointments(appointments: AppointmentListDto[]): CalendarEvent[] {
+		return appointments.map(appointment => {
+			const from = momentParseTime(appointment.hour).format(DateFormat.HOUR_MINUTE);
+			let to = momentParseTime(from).add(this.data.agenda.appointmentDuration, 'minutes').format(DateFormat.HOUR_MINUTE);
+			if (from > to) {
+				to = momentParseTime(from).set({ hour: 23, minute: 59 }).format(DateFormat.HOUR_MINUTE);
+			}
+			const calendarEvent = toCalendarEvent(from, to, momentParseDate(appointment.date), appointment);
+			return calendarEvent;
+		});
 	}
 
 }

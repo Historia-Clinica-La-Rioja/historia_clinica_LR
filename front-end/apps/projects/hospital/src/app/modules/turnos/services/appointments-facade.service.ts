@@ -155,7 +155,7 @@ export class AppointmentsFacadeService {
 				map((response: boolean) => {
 					if (response) {
 						this.appointments$.pipe(first()).subscribe((events: CalendarEvent[]) => {
-							const toEdit: CalendarEvent = events.find(event => event.meta.appointmentId === appointmentId);
+							const toEdit: CalendarEvent = events.find(event => event.meta?.appointmentId === appointmentId);
 							toEdit.meta.phoneNumber = phoneNumber;
 							toEdit.meta.phonePrefix = phonePrefix;
 							this.appointmenstEmitter.next(events);
@@ -173,7 +173,7 @@ export class AppointmentsFacadeService {
 				map((response: boolean) => {
 					if (response) {
 						this.appointments$.pipe(first()).subscribe((events: CalendarEvent[]) => {
-							const toEdit: CalendarEvent = events.find(event => event.meta.appointmentId === appointmentId);
+							const toEdit: CalendarEvent = events.find(event => event.meta?.appointmentId === appointmentId);
 							toEdit.meta.observation = observation;
 							this.appointmenstEmitter.next(events);
 						});
@@ -190,7 +190,7 @@ export class AppointmentsFacadeService {
 				map((response: boolean) => {
 					if (response) {
 						this.appointments$.pipe(first()).subscribe((events: CalendarEvent[]) => {
-							const toEdit: CalendarEvent = events.find(event => event.meta.appointmentId === appointmentId);
+							const toEdit: CalendarEvent = events.find(event => event.meta?.appointmentId === appointmentId);
 							toEdit.meta.date = date;
 							this.appointmenstEmitter.next(events);
 						});
@@ -224,7 +224,7 @@ export class AppointmentsFacadeService {
 				map((response: boolean) => {
 					if (response) {
 						this.appointments$.pipe(first()).subscribe((events: CalendarEvent[]) => {
-							const validEvents = events.filter(event => event.meta.appointmentId !== appointmentId);
+							const validEvents = events.filter(event => event.meta?.appointmentId !== appointmentId);
 							this.appointmenstEmitter.next(validEvents);
 						});
 						return true;
@@ -240,7 +240,7 @@ export class AppointmentsFacadeService {
 				map(() => {
 						this.appointments$.subscribe(
 							(events: CalendarEvent[]) => {
-								const updatedEvent: CalendarEvent = events.find(event => event.meta.appointmentId === appointment.appointmentId);
+								const updatedEvent: CalendarEvent = events.find(event => event.meta?.appointmentId === appointment.appointmentId);
 								updatedEvent.meta.appointmentStateId = appointment.appointmentStateId
 								this.loadAppointments();
 							}
