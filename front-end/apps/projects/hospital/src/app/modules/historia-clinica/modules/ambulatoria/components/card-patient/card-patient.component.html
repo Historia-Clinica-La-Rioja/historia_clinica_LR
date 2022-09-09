@@ -1,0 +1,29 @@
+<mat-card>
+	<div *ngFor="let patient of patientContent">
+		<app-card [cardContent]="patient">
+			<div gdAreas="id dni gender date" fxLayoutAlign="space-around center" gdGap="16px"
+				gdAreas.lt-sm=" id dni | gender date" gdRows.lt-sm="auto auto">
+
+				<div gdArea="id">
+					<span>{{'ambulatoria.card-patient.ID' | translate}} {{ patient.id}}</span>
+				</div>
+
+				<div gdArea="dni">
+					<span> {{'ambulatoria.card-patient.DNI' | translate}} {{patient.dni}}</span>
+				</div>
+
+				<div gdArea="gender" fxLayout.lt-sm="column">
+					<span> {{'ambulatoria.card-patient.GENDER' | translate}}</span>
+					<span> {{patient.gender}}</span>
+				</div>
+
+				<div gdArea="date"  fxLayout.lt-sm="column">
+					<span>{{'ambulatoria.card-patient.BIRTHDAY_DATE' | translate}} </span>
+					<span>{{patient.date}}</span>
+				</div>
+
+			</div>
+		</app-card>
+	</div>
+
+</mat-card>
