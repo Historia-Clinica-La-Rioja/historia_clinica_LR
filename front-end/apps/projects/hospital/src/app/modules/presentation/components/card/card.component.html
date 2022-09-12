@@ -1,0 +1,28 @@
+<div fxLayoutGap="15px" fxLayout="row" fxLayout.lt-sm="column">
+
+	<div fxLayout="column" fxLayout.gt-sm="row" fxFlex="85%">
+		<div fxLayoutAlign="none center" fxLayoutGap="15px" fxFlex="25%">
+			<img mat-card-avatar [src]="cardContent?.avatar"
+				onerror="this.src='../../../../../assets/images/empty-profile.png'" alt>
+			<div *ngFor="let header of cardContent.header">
+				<strong>{{header.value}}</strong>
+			</div>
+		</div>
+
+		<mat-card-content fxFlex="75%">
+			<ng-content></ng-content>
+		</mat-card-content>
+	</div>
+
+	<div fxLayoutAlign="center center" fxLayout.gt-sm="center center" fxLayoutAlign.lt-sm="start start" fxFlex="15%"
+		class="button">
+		<button mat-flat-button color="primary" (click)="goTo(cardContent.action.do)">
+			<span>{{ cardContent.action.display | translate | uppercase }}</span>
+		</button>
+	</div>
+
+</div>
+
+<div class="divider">
+	<mat-divider></mat-divider>
+</div>
