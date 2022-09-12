@@ -235,8 +235,10 @@
             "counterreference": {
                 "TITLE": "Responder referencia",
                 "COUNTERREFERENCE": "Contrarreferencia",
+				"REFERENCE_CLOSURE": "Cierre de la referencia",
                 "PLACEHOLDER_DESCRIPTION": "Descripción",
                 "CONFIRM_COUNTERREFERENCE": "Confirmar contrarreferencia",
+				"CONFIRM_CLOSURE": "Confirmar cierre",
                 "messages": {
                     "ERROR": "Error al guardar documento de contrarreferencia",
                     "SUCCESS": "El documento de contrarreferencia se guardó exitosamente"

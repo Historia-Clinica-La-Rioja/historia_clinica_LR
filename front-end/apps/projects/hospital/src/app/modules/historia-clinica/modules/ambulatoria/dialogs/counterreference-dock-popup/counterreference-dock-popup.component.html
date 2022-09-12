@@ -89,7 +89,7 @@
 		</app-new-consultation-expansion-section>
 
 		<app-new-consultation-expansion-section id="counterreference"
-			[title]="'ambulatoria.paciente.counterreference.COUNTERREFERENCE' | translate" icon="forum"
+			[title]="'ambulatoria.paciente.counterreference.REFERENCE_CLOSURE' | translate" icon="forum"
 			[isEmpty]="!formDescription.value.description" [(collapsed)]="collapsedCounterReference">
 			<div fxLayout="column">
 				<form [formGroup]="formDescription" class="counterreference-form">
@@ -132,7 +132,7 @@
 	<div actions id="buttons">
 		<div align="end">
 			<button class="uppercase" mat-raised-button color="primary" (click)="save()">
-				<span [translate]="'ambulatoria.paciente.counterreference.CONFIRM_COUNTERREFERENCE'"></span>
+				<span [translate]="'ambulatoria.paciente.counterreference.CONFIRM_CLOSURE'"></span>
 			</button>
 		</div>
 	</div>
