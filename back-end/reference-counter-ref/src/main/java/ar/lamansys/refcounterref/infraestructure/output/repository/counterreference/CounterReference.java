@@ -57,7 +57,10 @@ public class CounterReference extends SGXAuditableEntity<Integer> {
     @Column(name = "performed_date", nullable = false)
     private LocalDate performedDate;
 
-    public CounterReference(CounterReferenceInfoBo counterReferenceInfoBo) {
+	@Column(name = "closure_type_id", nullable = false)
+	private Integer closureTypeId;
+
+	public CounterReference(CounterReferenceInfoBo counterReferenceInfoBo) {
         super();
         this.id = counterReferenceInfoBo.getId();
         this.referenceId = counterReferenceInfoBo.getReferenceId();
@@ -68,6 +71,7 @@ public class CounterReference extends SGXAuditableEntity<Integer> {
         this.doctorId = counterReferenceInfoBo.getDoctorId();
         this.clinicalSpecialtyId = counterReferenceInfoBo.getClinicalSpecialtyId();
         this.performedDate = counterReferenceInfoBo.getPerformedDate();
+		this.closureTypeId = counterReferenceInfoBo.getClosureTypeId();
     }
 
 }

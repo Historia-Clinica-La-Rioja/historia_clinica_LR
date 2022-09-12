@@ -606,6 +606,7 @@ export interface CounterReferenceAllergyDto extends Serializable {
 export interface CounterReferenceDto extends Serializable {
     allergies: CounterReferenceAllergyDto[];
     clinicalSpecialtyId: number;
+    closureTypeId: number;
     counterReferenceNote: string;
     fileIds: number[];
     medications: CounterReferenceMedicationDto[];

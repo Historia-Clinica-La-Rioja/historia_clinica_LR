@@ -190,6 +190,7 @@ export class CounterreferenceDockPopupComponent implements OnInit {
 				};
 			}),
 			fileIds: fileIds,
+			closureTypeId: this.formReferenceClosure.value.closureType.id,
 		};
 	}
 

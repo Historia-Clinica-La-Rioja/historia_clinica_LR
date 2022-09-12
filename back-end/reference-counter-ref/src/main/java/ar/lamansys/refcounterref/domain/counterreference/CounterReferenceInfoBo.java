@@ -32,4 +32,5 @@ public class CounterReferenceInfoBo {
 
     private List<Integer> fileIds;
 
+	private Integer closureTypeId;
 }
