@@ -22,7 +22,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { NewConsultationAllergyFormComponent } from '@historia-clinica/dialogs/new-consultation-allergy-form/new-consultation-allergy-form.component';
 import { FeatureFlagService } from '@core/services/feature-flag.service';
 import { NewConsultationMedicationFormComponent } from '@historia-clinica/dialogs/new-consultation-medication-form/new-consultation-medication-form.component';
-
+import { ReferenceMasterDataService } from '@api-rest/services/reference-master-data.service';
 @Component({
 	selector: 'app-counterreference-dock-popup',
 	templateUrl: './counterreference-dock-popup.component.html',
@@ -41,6 +41,7 @@ export class CounterreferenceDockPopupComponent implements OnInit {
 	hasError = hasError;
 	selectedFiles: File[] = [];
 	selectedFilesShow: any[] = [];
+	closureTypes: any[] = [];
 	collapsedCounterReference = false;
 	searchConceptsLocallyFFIsOn = false;
 
@@ -56,6 +57,7 @@ export class CounterreferenceDockPopupComponent implements OnInit {
 		private readonly featureFlagService: FeatureFlagService,
 		private readonly referenceFileService: ReferenceFileService,
 		private readonly counterreferenceFileService: CounterreferenceFileService,
+		private readonly referenceMasterDataService: ReferenceMasterDataService,
 		private readonly el: ElementRef,
 	) {
 		this.medicacionesNuevaConsultaService = new MedicacionesNuevaConsultaService(formBuilder, this.snomedService, this.snackBarService);
@@ -76,6 +78,10 @@ export class CounterreferenceDockPopupComponent implements OnInit {
 		this.featureFlagService.isActive(AppFeature.HABILITAR_BUSQUEDA_LOCAL_CONCEPTOS).subscribe(isOn => {
 			this.searchConceptsLocallyFFIsOn = isOn;
 		});
+
+		this.referenceMasterDataService.getClosureTypes().subscribe( closureTypes => {
+			this.closureTypes = closureTypes;
+		})
 
 	}
 
