@@ -1,3 +1,23 @@
-databaseChangeLog: 
-    - logicalFilePath: incrementales-v1_43 
+databaseChangeLog:
+  - logicalFilePath: incrementales-v1_43
 
+  - changeSet:
+      id: addColumn-closure_type_id-counter_reference
+      author: jirimoldi
+      comment: Add closure_type_id column to counter_reference table
+      changes:
+        - addColumn:
+            tableName: counter_reference
+            columns:
+              - column:
+                  name: closure_type_id
+                  type: int
+
+  - changeSet:
+      id: set-default-closure-type-id
+      comment: Actualiza el tipo de cierre por defecto.
+      author: jirimoldi
+      changes:
+        - sql:
+            sql: |-
+              UPDATE counter_reference SET closure_type_id = 4;
