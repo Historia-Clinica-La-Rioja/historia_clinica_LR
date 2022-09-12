@@ -703,3 +703,17 @@ databaseChangeLog:
               referencedColumnNames: id
               referencedTableName: indication
               validate: true
+
+    - changeSet:
+        id: 1.40.0-20
+        author: etrapani
+        comment: Fix professional delete status
+        context: "!schema-only"
+        changes:
+          - sql:
+              sql: |-
+                UPDATE professional_professions
+                SET deleted = false,
+                deleted_on = NULL,
+                deleted_by = NULL
+                WHERE id IN (SELECT DISTINCT professional_profession_id FROM healthcare_professional_specialty AS hps WHERE hps.deleted = false)
