@@ -48,4 +48,10 @@ public class DiaryADto {
 
 	@NotNull
 	private Integer clinicalSpecialtyId;
+
+	@NotNull
+	private List<Integer> diaryAssociatedProfessionalsId;
+
+	@Nullable
+	private String alias;
 }

@@ -215,7 +215,7 @@ export class AmbulatoriaPacienteComponent implements OnInit, OnDestroy {
 		this.studyCategories$ = this.requestMasterDataService.categories();
 
 		this.featureFlagService.isActive(AppFeature.HABILITAR_MODULO_ENFERMERIA)
-			.subscribe(show => this.showNursingSection = (show && !this.hasLaboratoryStaffRole && !this.hasPicturesStaffRole));
+			.subscribe(show => this.showNursingSection = show);
 	}
 
 	ngOnDestroy() {

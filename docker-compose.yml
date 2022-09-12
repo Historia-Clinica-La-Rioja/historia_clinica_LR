@@ -6,6 +6,7 @@ services:
     environment:
       POSTGRES_PASSWORD: Local123
       POSTGRES_DB: hospitalDB
+      PGDATA: /data/pgdata
     volumes:
       - ./ci/dbapgsql/:/app/pg/
       - ./.docker-data/postgres/:/data/
@@ -42,4 +43,9 @@ services:
     ports:
       - "4200:80"
 
-  # hsi-mqtt:
+  hsi-mails:
+    image: mailhog/mailhog:latest
+    container_name: hsi-mails
+    ports:
+      - "1025:1025"
+      - "8025:8025"

@@ -9,7 +9,7 @@ const clinicalservices = (permissions: SGXPermissions) => ({
     show: ClinicalSpecialtyShow,
     list: permissions.hasAnyAssignment(ROOT, ADMINISTRADOR) ? ClinicalSpecialtyList : undefined,
     options: {
-        submenu: 'facilities'
+        submenu: 'masterData'
     }
 });
 

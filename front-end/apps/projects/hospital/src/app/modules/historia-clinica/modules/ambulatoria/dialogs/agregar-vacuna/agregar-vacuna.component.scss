@@ -1,14 +1,35 @@
-form {
+#billableForm,
+#previousForm {
   font-size: 14px;
-  padding-top: 30px ;
+  padding-top: 30px;
+
+  mat-label,
+  mat-form-field.mat-form-field {
+    margin-bottom: 6px;
+  }
 }
-mat-label, mat-form-field.mat-form-field {
-  margin-bottom: 6px;
-}
+
 .vaccine-error {
   margin-bottom: 18px;
   font-size: 90%;
+
   div.mat-error {
     margin-bottom: 17px;
+  }
+}
+
+.search .mat-form-field-suffix {
+  align-self: center;
+  top: 0.09em;
+}
+
+.search.mat-form-field-appearance-outline {
+
+  .mat-form-field-flex {
+    padding: 0 0 0 .75em;
+  }
+
+  .mat-form-field-infix {
+    padding: .5em 0;
   }
 }

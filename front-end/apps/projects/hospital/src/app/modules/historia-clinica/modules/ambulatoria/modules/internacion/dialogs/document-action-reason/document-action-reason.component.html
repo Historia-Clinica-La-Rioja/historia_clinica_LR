@@ -1,12 +1,12 @@
 <div mat-dialog-title fxLayoutAlign="space-between">
-	<div class="mat-h2">{{data.title | translate}}</div>
+	<div [class]="scssTitle" class="mat-h2">{{data.title | translate}}</div>
 	<button mat-icon-button mat-dialog-close>
 		<mat-icon>close</mat-icon>
 	</button>
 </div>
 <mat-dialog-content>
 	<div fxLayout="column" fxLayoutGap="20px">
-		<span [translate]="'internaciones.dialogs.actions-document.SUBTITLE'"></span>
+		<span>{{data.subtitle | translate}}</span>
 		<form [formGroup]="form" (ngSubmit)="save()">
 			<mat-form-field appearance="outline">
 				<mat-label [translate]="'internaciones.dialogs.actions-document.REASON'"></mat-label>

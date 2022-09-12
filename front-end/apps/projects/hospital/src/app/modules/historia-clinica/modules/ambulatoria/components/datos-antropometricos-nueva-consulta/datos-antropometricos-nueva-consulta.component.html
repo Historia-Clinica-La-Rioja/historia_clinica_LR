@@ -36,6 +36,7 @@
                             </mat-label>
                             <input id="height" formControlName="height" placeholder="Ej: 180" type="number" matInput
                                 (keypress)="isNumberOrDot($event.key)">
+                            <mat-error> {{ datosAntropometricosNuevaConsultaService.heightError$ | async }} </mat-error>
                         </mat-form-field>
                         <ng-container *ngIf="showPreloadData">
                             <mat-icon class="field-icon" color="primary">error_outline</mat-icon>
@@ -51,6 +52,7 @@
                             </mat-label>
                             <input id="weight" formControlName="weight" placeholder="Ej: 70" type="number" matInput
                                 (keypress)="isNumberOrDot($event.key)">
+                            <mat-error> {{ datosAntropometricosNuevaConsultaService.weightError$ | async }} </mat-error>
                         </mat-form-field>
                         <ng-container *ngIf="showPreloadData">
                             <mat-icon class="field-icon" color="primary">error_outline</mat-icon>
@@ -67,6 +69,9 @@
                             </mat-label>
                             <input id="head-circumference" formControlName="headCircumference" placeholder="Ej: 47"
                                 type="number" matInput (keypress)="isNumberOrDot($event.key)" step=".01">
+                            <mat-error>
+                                {{ datosAntropometricosNuevaConsultaService.headCircumferenceError$ | async }}
+                            </mat-error>
                         </mat-form-field>
                         <ng-container *ngIf="showPreloadData">
                             <mat-icon class="field-icon" color="primary">error_outline</mat-icon>

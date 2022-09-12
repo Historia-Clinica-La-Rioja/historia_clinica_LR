@@ -1,0 +1,20 @@
+.register-nursing-record {
+	font-family: Roboto, "Helvetica Neue", sans-serif;
+    position: relative;    
+    padding: 2vh 2vh 2vh 2vh;
+}
+
+.close{
+	transform: scale(1.0);
+	position: absolute;
+}
+
+mat-form-field {
+	width: 100%;
+}
+
+mat-dialog-actions {
+	.reject {
+		margin-left: 0;
+	}
+}

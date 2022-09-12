@@ -1,0 +1,53 @@
+<div class="register-nursing-record">
+
+    <div fxLayout="row" fxLayoutAlign="end">
+        <button class="close" type="button" mat-dialog-close mat-icon-button matSuffix>
+            <mat-icon>close</mat-icon>
+        </button>
+    </div>
+
+    <div mat-dialog-title fxLayout="row" fxLayoutAlign="center">
+        <div class="mat-h2" [translate]="'indicacion.nursing-care.dialogs.register.TITLE'"></div>
+    </div>
+
+    <mat-dialog-content>
+        <form [formGroup]="form" fxLayout="column" fxLayoutGap="10px" fxLayoutAlign="center">
+            <mat-form-field appearance="outline">
+                <input matInput id="time" type="text" formControlName="time" pattern="{{TIME_PATTERN}}"> 
+                <mat-error *ngIf="form.hasError('required', 'time')"
+                    translate="forms.REQUIRED">
+                </mat-error>
+                <mat-error *ngIf="form.hasError('pattern', 'time')" translate="forms.TIME_FORMAT">
+                </mat-error>
+                <mat-error *ngIf="form.hasError('beforeTime', 'time')"
+                    translate="indicacion.nursing-care.dialogs.register.INVALID_HOUR">
+                </mat-error>
+                <mat-error *ngIf="form.hasError('futureTime', 'time')"
+                    translate="indicacion.nursing-care.dialogs.register.INVALID_FUTURE">
+                </mat-error>
+            </mat-form-field>
+            <mat-form-field appearance="outline">
+                <input matInput [min]="this.data.indicationDate" [max]="this.data.indicationDate" [matDatepicker]="datepicker"
+                    formControlName="date" readonly (dateChange)="setValidators()">
+                <mat-datepicker-toggle matSuffix [for]="datepicker"></mat-datepicker-toggle>
+                <mat-datepicker #datepicker></mat-datepicker>
+                <mat-error *ngIf="form.hasError('required', 'date')" translate="forms.REQUIRED"></mat-error>
+            </mat-form-field>
+            <mat-form-field appearance="outline">
+                <mat-label [translate]="'indicacion.nursing-care.dialogs.register.OBSERVATIONS'"></mat-label>
+                <textarea matInput type="text" id="observations" formControlName="observations"
+                    placeholder="Observaciones">
+                </textarea>
+            </mat-form-field>
+        </form>
+    </mat-dialog-content>
+
+    <mat-dialog-actions fxLayout="column" fxLayoutGap="10px" fxLayoutAlign="center center">
+        <button mat-flat-button color="primary" (click)="save()">
+            {{ 'indicacion.nursing-care.buttons.REGISTER' | translate | uppercase }}
+        </button>
+        <button mat-stroked-button color="warn" class="reject" (click)="reject()">
+            {{ 'indicacion.nursing-care.dialogs.reject.TITLE' | translate | uppercase }}
+        </button>
+    </mat-dialog-actions>
+</div>

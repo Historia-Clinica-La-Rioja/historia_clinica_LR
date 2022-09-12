@@ -26,6 +26,7 @@ import { ViewChild, ElementRef } from "@angular/core";
 import { FactoresDeRiesgoFormService } from '@historia-clinica/services/factores-de-riesgo-form.service';
 import { dateToMoment } from "@core/utils/moment.utils";
 import { EditDocumentActionService } from "@historia-clinica/modules/ambulatoria/modules/internacion/services/edit-document-action.service";
+import { TranslateService } from '@ngx-translate/core';
 
 @Component({
 	selector: 'app-anamnesis-dock-popup',
@@ -67,12 +68,13 @@ export class AnamnesisDockPopupComponent implements OnInit {
 		private readonly anamnesisService: AnamnesisService,
 		private readonly snackBarService: SnackBarService,
 		private readonly snomedService: SnomedService,
-		private readonly editDocumentAction: EditDocumentActionService
+		private readonly editDocumentAction: EditDocumentActionService,
+		private readonly translateService: TranslateService
 	) {
 		this.mainDiagnosis = data.mainDiagnosis;
 		this.diagnosticos = data.diagnosticos;
 		this.procedimientosService = new ProcedimientosService(formBuilder, this.snomedService, this.snackBarService);
-		this.factoresDeRiesgoFormService = new FactoresDeRiesgoFormService(formBuilder);
+		this.factoresDeRiesgoFormService = new FactoresDeRiesgoFormService(formBuilder, translateService);
 	}
 
 	ngOnInit(): void {

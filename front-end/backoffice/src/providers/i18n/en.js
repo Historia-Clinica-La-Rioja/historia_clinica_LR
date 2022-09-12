@@ -1,7 +1,5 @@
-import englishMessages from 'ra-language-english';
 
 const messages = {
-    ...englishMessages,
     app: {
         search: 'Search',
         configuration: 'Configuration',

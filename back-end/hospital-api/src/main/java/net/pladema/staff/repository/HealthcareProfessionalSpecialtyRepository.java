@@ -42,7 +42,7 @@ public interface HealthcareProfessionalSpecialtyRepository extends SGXAuditableE
 
     @Transactional(readOnly = true)
     @Query(value = "SELECT NEW net.pladema.staff.repository.domain.ProfessionalClinicalSpecialtyVo" +
-            "(hps.professionalProfessionId, cs) " +
+            "(pp.healthcareProfessionalId, cs) " +
             "FROM HealthcareProfessionalSpecialty hps "
             + "INNER JOIN ClinicalSpecialty cs ON hps.clinicalSpecialtyId = cs.id "
 			+ "INNER JOIN ProfessionalProfessions pp ON pp.id = hps.professionalProfessionId "
@@ -59,6 +59,31 @@ public interface HealthcareProfessionalSpecialtyRepository extends SGXAuditableE
             + "WHERE hps.id =:professionalId "
             + "AND hps.deleteable.deleted = false")
     List<HealthcareProfessionalSpecialtyVo> getAllByProfessional(@Param("professionalId") Integer professionalId);
+
+	@Transactional(readOnly = true)
+	@Query(value = "SELECT NEW net.pladema.staff.repository.domain.ProfessionalClinicalSpecialtyVo" +
+			"(pp.healthcareProfessionalId, cs) " +
+			"FROM HealthcareProfessionalSpecialty hps "
+			+ "INNER JOIN ClinicalSpecialty cs ON hps.clinicalSpecialtyId = cs.id "
+			+ "INNER JOIN ProfessionalProfessions pp ON pp.id = hps.professionalProfessionId "
+			+ "INNER JOIN Diary d ON d.clinicalSpecialtyId = cs.id "
+			+ "INNER JOIN DoctorsOffice do ON do.id = d.doctorsOfficeId "
+			+ "WHERE d.active is true "
+			+ "AND do.institutionId = :institutionId "
+			+ "AND pp.healthcareProfessionalId IN :professionalsIds "
+			+ "AND hps.deleteable.deleted = false ")
+	List<ProfessionalClinicalSpecialtyVo> getAllByActiveDiaryAndProfessionals(
+			@Param("professionalsIds") List<Integer> professionalsIds,
+			@Param("institutionId") Integer institutionId
+	);
+
+	@Transactional(readOnly = true)
+	@Query(value = " SELECT d.healthcareProfessionalId " +
+					"FROM Diary d " +
+					"INNER JOIN DoctorsOffice do ON (do.id = d.doctorsOfficeId) " +
+					"WHERE d.active is true " +
+					"AND do.institutionId = :institutionId ")
+	List<Integer> getProfessionalsByActiveDiary(@Param("institutionId") Integer institutionId);
 
     @Transactional
     @Modifying

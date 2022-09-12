@@ -6,6 +6,7 @@ import { EvolutionNoteDto } from '@api-rest/api-model';
 import { EvolutionNoteService } from '@api-rest/services/evolution-note.service';
 import { SnackBarService } from '@presentation/services/snack-bar.service';
 import { FactoresDeRiesgoFormService } from '@historia-clinica/services/factores-de-riesgo-form.service';
+import { TranslateService } from '@ngx-translate/core';
 
 @Component({
 	selector: 'app-add-risk-factors',
@@ -24,8 +25,9 @@ export class AddRiskFactorsComponent implements OnInit {
 		private readonly evolutionNoteService: EvolutionNoteService,
 		private readonly snackBarService: SnackBarService,
 		private readonly formBuilder: FormBuilder,
+		private readonly translateService: TranslateService,
 	) {
-		this.factoresDeRiesgoFormService = new FactoresDeRiesgoFormService(formBuilder);
+		this.factoresDeRiesgoFormService = new FactoresDeRiesgoFormService(formBuilder, translateService);
 	}
 
 	ngOnInit(): void {

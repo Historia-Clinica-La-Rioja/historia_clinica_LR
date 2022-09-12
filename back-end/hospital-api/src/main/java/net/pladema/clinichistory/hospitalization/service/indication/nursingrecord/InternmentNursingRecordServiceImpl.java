@@ -8,6 +8,7 @@ import lombok.extern.slf4j.Slf4j;
 
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
@@ -27,4 +28,13 @@ InternmentNursingRecordServiceImpl implements InternmentNursingRecordService{
 		log.debug("Output -> {}", result.toString());
 		return result;
 	}
+
+	@Override
+	public boolean updateNursingRecordStatus(Integer id, String status, LocalDateTime administrationTime, Integer userId, String reason) {
+		log.debug("Input parameter -> id {}, statusId {}, administrationTime {}, ", id, status, administrationTime, userId, reason);
+		boolean result = sharedIndicationPort.updateNursingRecordStatus(id, status, administrationTime, userId, reason);
+		log.debug("Output -> {}", result);
+		return result;
+	}
+
 }

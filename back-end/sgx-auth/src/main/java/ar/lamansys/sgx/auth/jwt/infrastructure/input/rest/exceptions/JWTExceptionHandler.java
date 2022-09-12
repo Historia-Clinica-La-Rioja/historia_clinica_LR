@@ -2,6 +2,8 @@ package ar.lamansys.sgx.auth.jwt.infrastructure.input.rest.exceptions;
 
 import java.util.Locale;
 
+import ar.lamansys.sgx.auth.jwt.application.logintwofactorauthentication.exceptions.BadOTPException;
+
 import org.springframework.core.Ordered;
 import org.springframework.core.annotation.Order;
 import org.springframework.http.HttpStatus;
@@ -35,13 +37,18 @@ public class JWTExceptionHandler {
 		return new ApiErrorMessageDto(null, ex.getMessage());
 	}
 
-
-
 	@ResponseStatus(HttpStatus.BAD_REQUEST)
 	@ExceptionHandler({ BadCredentialsException.class })
 	public ApiErrorMessageDto invalidCredentials(BadCredentialsException ex) {
 		log.warn(ex.getMessage(), ex);
 		return new ApiErrorMessageDto(ex.getMessage(), "Nombre de usuario o clave inválidos");
+	}
+
+	@ResponseStatus(HttpStatus.BAD_REQUEST)
+	@ExceptionHandler({ BadOTPException.class })
+	public ApiErrorMessageDto invalidCredentials(BadOTPException ex) {
+		log.warn(ex.getMessage(), ex);
+		return new ApiErrorMessageDto(ex.getCode().name(), "Código de verificación inválido");
 	}
 
 }

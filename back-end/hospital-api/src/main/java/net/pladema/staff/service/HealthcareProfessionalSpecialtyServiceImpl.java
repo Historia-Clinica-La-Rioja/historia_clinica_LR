@@ -51,6 +51,26 @@ public class HealthcareProfessionalSpecialtyServiceImpl implements HealthcarePro
         return result;
     }
 
+	@Override
+	public List<ProfessionalsByClinicalSpecialtyBo> getProfessionalsByActiveDiaryAndClinicalSpecialtyBo(List<Integer> professionalsIds, Integer institutionId) {
+		List<ProfessionalClinicalSpecialtyVo> professionalsSpecialties = this.healthcareProfessionalSpecialtyRepository
+				.getAllByActiveDiaryAndProfessionals(professionalsIds, institutionId)
+				.stream()
+				.filter(ProfessionalClinicalSpecialtyVo::isSpecialty)
+				.collect(Collectors.toList());
+
+		List<Integer> healthcareProfessionalIdsWithActiveDiaries = healthcareProfessionalSpecialtyRepository.getProfessionalsByActiveDiary(institutionId);
+
+		List<ProfessionalsByClinicalSpecialtyBo> professionalsBySpecialty = new ArrayList<>();
+
+		professionalsSpecialties.forEach(professionalSpecialty -> {
+			if (healthcareProfessionalIdsWithActiveDiaries.contains(professionalSpecialty.getProfessionalId()))
+				addToProfessionalsBySpecialty(professionalSpecialty, professionalsBySpecialty);
+		});
+
+		return professionalsBySpecialty;
+	}
+
     // Create a new professional specialty or activate an existent one
     @Override
     public Integer saveProfessionalSpeciality(HealthcareProfessionalSpecialtyBo professionalSpecialtyBo) {

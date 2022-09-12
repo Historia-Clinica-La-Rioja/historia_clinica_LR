@@ -42,7 +42,7 @@ class RefreshTokenTest {
     @DisplayName("Refresh token success")
     @Disabled
     void refreshSuccess() throws BadRefreshTokenException {
-        when(userInfoStorage.getUser(any())).thenReturn(new UserInfoBo(1,"USERNAME", true, "PASSWORD_ENCRIPTED" ));
+        when(userInfoStorage.getUser("USERNAME")).thenReturn(new UserInfoBo(1,"USERNAME", true, "PASSWORD_ENCRIPTED" ));
         when(generateToken.generateTokens(any(), any())).thenReturn(new JWTokenBo("TOKEN", "REFRESH_TOKEN"));
 /*
         try (MockedStatic<JWTUtils> utilities = Mockito.mockStatic(JWTUtils.class)) {

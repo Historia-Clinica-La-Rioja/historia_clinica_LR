@@ -12,14 +12,22 @@ mat-form-field {
 	width: 100%;
 }
 
-.margin-bottom {
-	margin-bottom: 3vh;
-}
-
 .icon {
 	padding: 20px 0px 20px 10px;
 }
 
 .add-button {
 	font-size: 16px;
+}
+
+mat-divider.mat-divider-horizontal.mat-divider-inset.separation {
+	margin: 10px 0;
+}
+
+.gray-caption {
+	color: #979797;
+}
+
+.bold {
+	font-weight: 500;
 }
