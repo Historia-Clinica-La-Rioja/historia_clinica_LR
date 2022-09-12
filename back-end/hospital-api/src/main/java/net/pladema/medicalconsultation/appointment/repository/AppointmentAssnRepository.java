@@ -10,6 +10,8 @@ import org.springframework.transaction.annotation.Transactional;
 import net.pladema.medicalconsultation.appointment.repository.entity.AppointmentAssn;
 import net.pladema.medicalconsultation.appointment.repository.entity.AppointmentAssnPK;
 
+import java.util.List;
+
 @Repository
 public interface AppointmentAssnRepository extends JpaRepository<AppointmentAssn, AppointmentAssnPK> {
 	
@@ -20,4 +22,12 @@ public interface AppointmentAssnRepository extends JpaRepository<AppointmentAssn
             "WHERE aassn.pk.appointmentId = :appointmentId")
     void updateOpeningHoursId(@Param("openingHoursId") Integer openingHoursId,
                                    @Param("appointmentId") Integer appointmentId);
+
+	@Transactional
+	@Modifying
+	@Query("UPDATE AppointmentAssn AS assn " +
+			"SET assn.pk.openingHoursId = :newOpeningHoursId " +
+			"WHERE assn.pk.openingHoursId = :oldOpeningHoursId")
+	void updateOldWithNewOpeningHoursId(@Param("oldOpeningHoursId") Integer oldOpeningHoursId, @Param("newOpeningHoursId") Integer newOpeningHoursId);
+
 }

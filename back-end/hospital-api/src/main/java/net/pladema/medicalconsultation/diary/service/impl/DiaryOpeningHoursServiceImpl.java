@@ -49,7 +49,7 @@ public class DiaryOpeningHoursServiceImpl implements DiaryOpeningHoursService {
     private final DiaryBoMapper diaryBoMapper;
 
     @Override
-    public void load(Integer diaryId, List<DiaryOpeningHoursBo> diaryOpeningHours, List<Integer>... appointmentIds) {
+    public void load(Integer diaryId, List<DiaryOpeningHoursBo> diaryOpeningHours, List<DiaryOpeningHoursBo>... oldOpeningHours) {
         Sort sort = Sort.by("dayWeekId", "from");
         List<OpeningHours> savedOpeningHours = openingHoursRepository.findAll(sort);
 
@@ -64,24 +64,27 @@ public class DiaryOpeningHoursServiceImpl implements DiaryOpeningHoursService {
                     .filter(oh -> oh.equals(newOpeningHours)).findAny();
             if(existingOpeningHours.isPresent())
                 openingHoursId = existingOpeningHours.get().getId();
-            else
-                openingHoursId = openingHoursRepository.save(newOpeningHours).getId();
+            else {
+				openingHoursId = openingHoursRepository.save(newOpeningHours).getId();
+				if (oldOpeningHours.length > 0) {
+					Optional<DiaryOpeningHoursBo> recoveredOpeningHours = oldOpeningHours[0].stream()
+							.filter(openingHours -> Objects.equals(openingHours.getOpeningHours().getDayWeekId(), newOpeningHours.getDayWeekId()) && openingHours.getOpeningHours().getFrom().equals(newOpeningHours.getFrom()))
+							.findFirst();
+					recoveredOpeningHours.ifPresent(diaryOpeningHoursBo -> appointmentAssnRepository.updateOldWithNewOpeningHoursId(diaryOpeningHoursBo.getOpeningHours().getId(), openingHoursId));
+				}
+			}
 
             openingHoursBo.setId(openingHoursId);
             diaryOpeningHoursRepository.save(createDiaryOpeningHoursInstance(diaryId, openingHoursId, doh));
 
-			if (appointmentIds.length > 0)
-				appointmentIds[0].forEach(appointmentId -> appointmentAssnRepository.updateOpeningHoursId(openingHoursId, appointmentId));
         });
     }
 
 	@Override
 	public void update(Integer diaryId, List<DiaryOpeningHoursBo> diaryOpeningHours) {
-		List<Integer> appointmentsIdsToUpdate = diaryOpeningHoursRepository.getDiaryOpeningHours(diaryId).stream().map(diaryOpeningHour ->
-			createDiaryOpeningHoursBo(diaryOpeningHour).getOpeningHours().getId()
-		).collect(Collectors.toList());
+		List<DiaryOpeningHoursBo> oldOpeningHours = diaryOpeningHoursRepository.getDiaryOpeningHours(diaryId).stream().map(this::createDiaryOpeningHoursBo).collect(Collectors.toList());
 		diaryOpeningHoursRepository.deleteAll(diaryId);
-		load(diaryId, diaryOpeningHours, appointmentsIdsToUpdate);
+		load(diaryId, diaryOpeningHours, oldOpeningHours);
 	}
     
     private DiaryOpeningHours createDiaryOpeningHoursInstance(Integer diaryId, Integer openingHoursId, DiaryOpeningHoursBo doh){
