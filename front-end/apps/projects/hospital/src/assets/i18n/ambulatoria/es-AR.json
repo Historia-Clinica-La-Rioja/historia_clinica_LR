@@ -236,6 +236,7 @@
                 "TITLE": "Responder referencia",
                 "COUNTERREFERENCE": "Contrarreferencia",
 				"REFERENCE_CLOSURE": "Cierre de la referencia",
+				"CLOSURE_TYPE": "Tipo de cierre",
                 "PLACEHOLDER_DESCRIPTION": "Descripción",
                 "CONFIRM_COUNTERREFERENCE": "Confirmar contrarreferencia",
 				"CONFIRM_CLOSURE": "Confirmar cierre",

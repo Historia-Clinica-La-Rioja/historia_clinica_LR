@@ -37,7 +37,7 @@ export class CounterreferenceDockPopupComponent implements OnInit {
 	procedimientoNuevaConsultaService: ProcedimientosService;
 	alergiasNuevaConsultaService: AlergiasNuevaConsultaService;
 	criticalityTypes: any[];
-	formDescription: FormGroup;
+	formReferenceClosure: FormGroup;
 	hasError = hasError;
 	selectedFiles: File[] = [];
 	selectedFilesShow: any[] = [];
@@ -66,7 +66,8 @@ export class CounterreferenceDockPopupComponent implements OnInit {
 	}
 
 	ngOnInit(): void {
-		this.formDescription = this.formBuilder.group({
+		this.formReferenceClosure = this.formBuilder.group({
+			closureType: [null, [Validators.required]],
 			description: [null, [Validators.required]]
 		});
 
@@ -86,7 +87,7 @@ export class CounterreferenceDockPopupComponent implements OnInit {
 	}
 
 	save(): void {
-		if (this.formDescription.valid) {
+		if (this.formReferenceClosure.valid) {
 			let fileIds: number[] = [];
 			let longFiles = 0;
 			if (!this.selectedFiles.length) {
@@ -113,10 +114,11 @@ export class CounterreferenceDockPopupComponent implements OnInit {
 		}
 
 		else {
-			this.formDescription.controls['description'].markAsTouched();
+			this.formReferenceClosure.controls['closureType'].markAsTouched();
+			this.formReferenceClosure.controls['description'].markAsTouched();
 			this.collapsedCounterReference = false;
 			setTimeout(() => {
-				scrollIntoError(this.formDescription, this.el)
+				scrollIntoError(this.formReferenceClosure, this.el)
 			}, 300);
 		}
 	}
@@ -172,7 +174,7 @@ export class CounterreferenceDockPopupComponent implements OnInit {
 				};
 			}),
 			clinicalSpecialtyId: this.data.reference.clinicalSpecialty.id,
-			counterReferenceNote: this.formDescription.value.description,
+			counterReferenceNote: this.formReferenceClosure.value.description,
 			medications: this.medicacionesNuevaConsultaService.getMedicaciones().map((medicacion: Medicacion) => {
 				return {
 					note: medicacion.observaciones,

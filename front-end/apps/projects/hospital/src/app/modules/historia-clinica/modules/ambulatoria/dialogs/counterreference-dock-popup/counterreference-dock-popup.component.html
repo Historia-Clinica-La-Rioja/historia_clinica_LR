@@ -90,10 +90,21 @@
 
 		<app-new-consultation-expansion-section id="counterreference"
 			[title]="'ambulatoria.paciente.counterreference.REFERENCE_CLOSURE' | translate" icon="forum"
-			[isEmpty]="!formDescription.value.description" [(collapsed)]="collapsedCounterReference">
+			[isEmpty]="!formReferenceClosure.value.description" [(collapsed)]="collapsedCounterReference">
 			<div fxLayout="column">
-				<form [formGroup]="formDescription" class="counterreference-form">
-					<mat-form-field appearance="outline" fxFlex="100%">
+				<form [formGroup]="formReferenceClosure" class="counterreference-form">
+					<mat-form-field appearance="outline">
+						<mat-label [translate]="'ambulatoria.paciente.counterreference.CLOSURE_TYPE'">
+						</mat-label>
+						<mat-select formControlName="closureType">
+							<mat-option [value]="closureType"
+								*ngFor="let closureType of closureTypes">
+								{{ closureType.description }}
+							</mat-option>
+						</mat-select>
+						<mat-error translate="forms.REQUIRED"></mat-error>
+					</mat-form-field>
+					<mat-form-field appearance="outline" >
 						<mat-label [translate]="'ambulatoria.paciente.counterreference.PLACEHOLDER_DESCRIPTION'">
 						</mat-label>
 						<textarea matInput type="text" name="description" formControlName="description"></textarea>
