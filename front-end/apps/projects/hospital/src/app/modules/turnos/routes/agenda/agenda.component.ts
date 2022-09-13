@@ -404,13 +404,12 @@ export class AgendaComponent implements OnInit, OnDestroy, OnChanges {
 	private setDayStartHourAndEndHour(openingHours: DiaryOpeningHoursDto[]) {
 		openingHours.forEach(oh => {
 			const from = momentParseTime(oh.openingHours.from).hour();
-			if (this.dayStartHour === undefined || from < this.dayStartHour) {
+			if (this.dayStartHour === undefined || from <= this.dayStartHour) {
 				this.dayStartHour = (from > 0) ? from - 1 : from;
 			}
 			const to = momentParseTime(oh.openingHours.to).hour();
-			const toMinutes = momentParseTime(oh.openingHours.to).minutes();
 			if (this.dayEndHour === undefined || to >= this.dayEndHour) {
-				this.dayEndHour = (toMinutes > 0) ? to : to - 1;
+				this.dayEndHour = (to < 23) ? to + 1 : to;
 			}
 		});
 	}
