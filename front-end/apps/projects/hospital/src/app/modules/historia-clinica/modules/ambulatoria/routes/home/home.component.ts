@@ -5,14 +5,12 @@ import { GenderDto, IdentificationTypeDto, LimitedPatientSearchDto, PatientSearc
 import { AppFeature } from '@api-rest/api-model';
 import { atLeastOneValueInFormGroup, hasError, } from '@core/utils/form.utils';
 import { Moment } from 'moment';
-import { ActionDisplays, TableModel } from '@presentation/components/table/table.component';
-import { DateFormat, momentFormat, momentParseDateTime, newMoment } from '@core/utils/moment.utils';
+import { newMoment } from '@core/utils/moment.utils';
 import { Router } from '@angular/router';
 import { ContextService } from '@core/services/context.service';
 import { PatientService, PersonInformationRequest } from '@api-rest/services/patient.service';
 import { PERSON } from '@core/constants/validation-constants';
 import { MIN_DATE } from "@core/utils/date.utils";
-import { PatientNameService } from "@core/services/patient-name.service";
 import { FeatureFlagService } from "@core/services/feature-flag.service";
 import { IDENTIFICATION_TYPE_IDS } from '@core/utils/patient.utils';
 
@@ -29,7 +27,6 @@ export class HomeComponent implements OnInit {
   public identificationTypeList: IdentificationTypeDto[];
   public hasError = hasError;
   public today: Moment = newMoment();
-  public tableModel: TableModel<PatientSearchDto>;
   public formSubmitted: boolean;
   public requiringValues: boolean;
   public patientResultsLength: number;
@@ -47,7 +44,6 @@ export class HomeComponent implements OnInit {
 	private readonly patientService: PatientService,
 	private readonly router: Router,
 	private readonly contextService: ContextService,
-	private readonly patientNameService: PatientNameService,
 	private readonly featureFlagService: FeatureFlagService,
   ) {
   	this.routePrefix = `institucion/${this.contextService.institutionId}/`;
@@ -120,108 +116,10 @@ export class HomeComponent implements OnInit {
 			this.patientService.searchPatientOptionalFilters(personalInformationReq)
 				.subscribe((data: LimitedPatientSearchDto) => {
 					this.patientData = data.patientList;
-					this.tableModel = this.buildTable(data.patientList);
 					this.patientResultsLength = data.actualPatientSearchSize;
 				});
 		}
 
-	}
-
-  private buildTable(data: PatientSearchDto[]): TableModel<any> {
-		if(this.nameSelfDeterminationEnabled) {
-			return {
-				columns: [
-					{
-						columnDef: 'patiendId',
-						header: 'pacientes.search.ROW_TABLE',
-						text: (row) => row.idPatient
-					},
-					{
-						columnDef: 'numberDni',
-						header: 'Nro. Documento',
-						text: (row) => row.person.identificationNumber
-					},
-					{
-						columnDef: 'firstName',
-						header: 'Nombre',
-						text: (row) => this.patientNameService.getPatientName(row.person.firstName, row.person.nameSelfDetermination)
-					},
-					{
-						columnDef: 'lastName',
-						header: 'Apellido',
-						text: (row) => row.person.lastName
-					},
-					{
-						columnDef: 'birthDate',
-						header: 'F. Nacimiento',
-						text: (row) => (row.person.birthDate === undefined) ? '' : momentFormat(momentParseDateTime(String(row.person.birthDate)), DateFormat.VIEW_DATE)
-					},
-					{
-						columnDef: 'action',
-						action: {
-							displayType: ActionDisplays.BUTTON,
-							display: 'Ver',
-							matColor: 'primary',
-							do: (row) => {
-								const url = `${this.routePrefix}ambulatoria/paciente/${row.idPatient}`;
-								this.router.navigateByUrl(url);
-							}
-						}
-					},
-				],
-				data,
-				enablePagination: true
-			}
-		} else {
-			return {
-				columns: [
-					{
-						columnDef: 'patiendId',
-						header: 'pacientes.search.ROW_TABLE',
-						text: (row) => row.idPatient
-					},
-					{
-						columnDef: 'numberDni',
-						header: 'Nro. Documento',
-						text: (row) => row.person.identificationNumber
-					},
-					{
-						columnDef: 'firstName',
-						header: 'Nombre',
-						text: (row) => row.person.firstName
-					},
-					{
-						columnDef: 'lastName',
-						header: 'Apellido',
-						text: (row) => row.person.lastName
-					},
-					{
-						columnDef: 'birthDate',
-						header: 'F. Nac',
-						text: (row) => (row.person.birthDate === undefined) ? '' : momentFormat(momentParseDateTime(String(row.person.birthDate)), DateFormat.VIEW_DATE)
-					},
-					{
-						columnDef: 'gender',
-						header: 'Sexo',
-						text: (row) => this.genderTableView[row.person.genderId]
-					},
-					{
-						columnDef: 'action',
-						action: {
-							displayType: ActionDisplays.BUTTON,
-							display: 'Ver',
-							matColor: 'primary',
-							do: (row) => {
-								const url = `${this.routePrefix}ambulatoria/paciente/${row.idPatient}`;
-								this.router.navigateByUrl(url);
-							}
-						}
-					},
-				],
-				data,
-				enablePagination: true
-			};
-		}
 	}
 
 	clear(control: AbstractControl): void {
