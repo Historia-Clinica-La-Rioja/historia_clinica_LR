@@ -563,6 +563,13 @@
         "dialog-title": {
             "OTHER-INDICATION": "Otra indicación",
             "DIET": "Dieta"
-        }
+        },
+		"card-patient":{
+			"ID": "ID",
+			"DNI": "DNI",
+			"GENDER": "Género",
+			"BIRTHDAY_DATE": "Fecha de Nac.",
+			"BUTTON": "Ver"
+		}
     }
 }
