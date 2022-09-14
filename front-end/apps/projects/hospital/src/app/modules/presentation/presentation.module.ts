@@ -39,6 +39,7 @@ import { TypeaheadComponent } from './components/typeahead/typeahead.component';
 import { UserBadgeComponent } from './components/user-badge/user-badge.component';
 import { TitledContentCardComponent } from './components/titled-content-card/titled-content-card.component';
 import { ColoredLabelComponent } from './colored-label/colored-label.component';
+import { CardComponent } from './components/card/card.component';
 // dialogs
 import { DatePickerComponent } from './dialogs/date-picker/date-picker.component';
 import { DiscardWarningComponent } from './dialogs/discard-warning/discard-warning.component';
@@ -58,6 +59,7 @@ import { ViewHourMinutePipe } from './pipes/view-hour-minute.pipe';
 		// components
 		BarComponent,
 		CategoryHeaderDividerComponent,
+		CardComponent,
 		CellTemplatesComponent,
 		ColoredLabelComponent,
 		ContentTitleComponent,
@@ -122,6 +124,7 @@ import { ViewHourMinutePipe } from './pipes/view-hour-minute.pipe';
 		TitledContentCardComponent,
 		BarComponent,
 		CategoryHeaderDividerComponent,
+		CardComponent,
 		CellTemplatesComponent,
 		ColoredLabelComponent,
 		ContentTitleComponent,
