@@ -148,6 +148,9 @@
 			</span>
 		</mat-card>
 
+		<app-card-patient [patientData]="patientData" [genderTableView]="genderTableView">
+		</app-card-patient>
+
 		<app-table id="resultTable" [model]="tableModel"  *ngIf="tableModel?.data.length > 0 else noInfo"></app-table>
 		<ng-template #noInfo>
 			<app-no-data></app-no-data>

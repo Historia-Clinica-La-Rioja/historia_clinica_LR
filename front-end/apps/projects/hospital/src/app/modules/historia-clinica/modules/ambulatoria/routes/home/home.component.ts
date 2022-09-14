@@ -22,8 +22,8 @@ import { IDENTIFICATION_TYPE_IDS } from '@core/utils/patient.utils';
 	styleUrls: ['./home.component.scss']
 })
 export class HomeComponent implements OnInit {
-
-
+  patientData: PatientSearchDto[] = [];
+  genderTableView: string[] = [];
   public personalInformationForm: FormGroup;
   public genders: GenderDto[];
   public identificationTypeList: IdentificationTypeDto[];
@@ -40,7 +40,6 @@ export class HomeComponent implements OnInit {
   requiringAtLeastOneMoreValue: boolean;
 
   private readonly routePrefix;
-  private genderTableView: string[] = [];
 
   constructor(
 	private readonly formBuilder: FormBuilder,
@@ -120,6 +119,7 @@ export class HomeComponent implements OnInit {
 			const personalInformationReq: PersonInformationRequest = this.personalInformationForm.value;
 			this.patientService.searchPatientOptionalFilters(personalInformationReq)
 				.subscribe((data: LimitedPatientSearchDto) => {
+					this.patientData = data.patientList;
 					this.tableModel = this.buildTable(data.patientList);
 					this.patientResultsLength = data.actualPatientSearchSize;
 				});
