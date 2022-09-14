@@ -5,6 +5,8 @@ import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { SnowstormService, SNOMED_RESULTS_LIMIT } from '@api-rest/services/snowstorm.service';
 import { SnomedSemanticSearch } from '../../services/snomed.service';
 import { SnackBarService } from '@presentation/services/snack-bar.service';
+import { FarmacosService } from '@historia-clinica/services/farmacos.service';
+import { ContextService } from '@core/services/context.service';
 
 @Component({
 	selector: 'app-concepts-search-dialog',
@@ -24,13 +26,34 @@ export class ConceptsSearchDialogComponent implements OnInit {
 		public dialogRef: MatDialogRef<ConceptsSearchDialogComponent>,
 		private readonly snowstormService: SnowstormService,
 		private readonly snackBarService: SnackBarService,
+		private readonly farmacosService: FarmacosService,
+		private readonly contextService: ContextService
 	) { }
 
 	ngOnInit(): void {
+		this.setVademecumPharmacos();
+	}
+
+	private setVademecumPharmacos() {
+		this.farmacosService.getPharmacos({ term: this.data.searchValue, ecl: this.data.eclFilter, institutionId: this.contextService.institutionId }).subscribe(
+			result => {
+				this.conceptsResultsTable = this.buildConceptsResultsTable(result.items);
+				this.conceptsResultsLength = result.total
+				if (result.total === 0) {
+					this.setSnomedPharmacos();
+				}
+			}, 
+			error => {
+				this.setSnomedPharmacos();
+			}
+		);
+	}
+
+	private setSnomedPharmacos() {
 		this.snowstormService.getSNOMEDConcepts({ term: this.data.searchValue, ecl: this.data.eclFilter }).subscribe(
 			result => {
-					this.conceptsResultsTable = this.buildConceptsResultsTable(result.items);
-					this.conceptsResultsLength = result.total;
+				this.conceptsResultsTable = this.buildConceptsResultsTable(result.items);
+				this.conceptsResultsLength = result.total;
 			},
 			error => {
 				this.snackBarService.showError('historia-clinica.snowstorm.CONCEPTS_COULD_NOT_BE_OBTAINED');
