@@ -1,0 +1,45 @@
+<mat-card>
+	<div *ngFor="let patient of internmentPatientCard">
+		<app-card [cardContent]="patient">
+
+			<div *ngIf="patient.hasPhysicalDischarge else physicalDischarge"fxLayoutGap="16px">
+				<div fxLayout="row" fxLayoutGap="70px">
+
+					<div fxLayoutAlign="none center" fxLayoutGap="10px">
+						<mat-icon class="green">check_circle_outline</mat-icon>
+						<span class="green">{{'internaciones.internment-patient-card.HAS_PHYSICAL_DISCHARGE' |
+							translate}}</span>
+					</div>
+
+					<div fxLayoutAlign="none center" fxLayoutGap="10px">
+						<mat-icon class="red" fontSet="material-icons-outlined">
+							{{patient?.lastMissingDocument.matIcon}}</mat-icon>
+						<span class="red"> {{patient.lastMissingDocument.title | translate}} </span>
+					</div>
+
+				</div>
+			</div>
+
+			<ng-template #physicalDischarge>
+				<div fxLayout="row" fxLayoutAlign="space-between" fxLayoutGap="16px" >
+
+					<div fxLayoutAlign="none center" class="conten">
+						<mat-icon fontSet="material-icons-outlined">meeting_room</mat-icon>
+						<span *ngIf="!patient.hasPhysicalDischarge">{{patient?.roomNumber}}</span>
+					</div>
+
+					<div fxLayoutAlign="none center" class="conten">
+						<mat-icon fontSet="material-icons-outlined">single_bed</mat-icon>
+						<span *ngIf="!patient.hasPhysicalDischarge">{{patient?.bedNumber}}</span>
+					</div>
+
+					<div fxLayoutAlign="none center" class="conten">
+						<span *ngIf="!patient.hasPhysicalDischarge">{{patient?.sectorDescription}}</span>
+					</div>
+
+				</div>
+			</ng-template>
+
+		</app-card>
+	</div>
+</mat-card>

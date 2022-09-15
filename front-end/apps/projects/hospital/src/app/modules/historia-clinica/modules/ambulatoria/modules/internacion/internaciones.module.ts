@@ -17,6 +17,7 @@ import { AntecedentesPersonalesComponent } from './components/antecedentes-perso
 import { DiagnosticosComponent } from './components/diagnosticos/diagnosticos.component';
 import { InternmentPatientTableComponent } from './components/internment-patient-table/internment-patient-table.component';
 import { InternmentEpisodeSummaryComponent } from "@historia-clinica/modules/ambulatoria/modules/internacion/components/internment-episode-summary/internment-episode-summary.component";
+import { InternmentPatientCardComponent } from './components/internment-patient-card/internment-patient-card.component';
 import { MedicacionComponent } from './components/medicacion/medicacion.component';
 import { VacunasComponent } from './components/vacunas/vacunas.component';
 import { ElementoDiagnosticoComponent } from './components/elemento-diagnostico/elemento-diagnostico.component';
@@ -46,6 +47,7 @@ import { TurnosModule } from '@turnos/turnos.module';
 		DiagnosticosComponent,
 		InternmentPatientTableComponent,
 		InternmentEpisodeSummaryComponent,
+		InternmentPatientCardComponent,
 		MedicacionComponent,
 		VacunasComponent,
 		// dialogs
