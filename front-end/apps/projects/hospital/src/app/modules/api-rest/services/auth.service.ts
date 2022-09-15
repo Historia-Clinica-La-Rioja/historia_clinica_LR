@@ -28,8 +28,8 @@ export class AuthService {
 		return this.http.post<any>(`${environment.apiBase}/auth/refresh`, undefined);
 	}
 
-	logout(): Observable<any> {
-		return this.http.delete<any>(`${environment.apiBase}/auth/refresh`);
+	logout(): void {
+		this.http.delete<any>(`${environment.apiBase}/auth/refresh`).subscribe();
 	}
 
 	completeLoginWith2FA(code: string): Observable<any> {
