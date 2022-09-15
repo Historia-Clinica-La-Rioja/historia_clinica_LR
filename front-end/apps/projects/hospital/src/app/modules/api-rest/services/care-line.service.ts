@@ -10,13 +10,22 @@ import { Observable } from 'rxjs';
 })
 export class CareLineService {
 
+	private readonly BASE_URL: string;
+
 	constructor(
 		private readonly http: HttpClient,
 		private readonly contextService: ContextService,
-	) { }
+	) {
+		this.BASE_URL = `${environment.apiBase}/institution/${this.contextService.institutionId}`
+	}
 
 	getCareLines(): Observable<CareLineDto[]> {
-		const url = `${environment.apiBase}/institution/${this.contextService.institutionId}/carelines`;
+		const url = `${this.BASE_URL}/carelines`;
+		return this.http.get<CareLineDto[]>(url);
+	}
+
+	getCareLinesBySpecialty(specialtyId: number): Observable<CareLineDto[]> {
+		const url = `${this.BASE_URL}/diary-care-lines/${specialtyId} `;
 		return this.http.get<CareLineDto[]>(url);
 	}
 }
