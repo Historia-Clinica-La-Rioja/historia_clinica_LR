@@ -17,6 +17,7 @@ import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.ips.Medica
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.ips.entity.Dosage;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.ips.entity.MedicationStatement;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.masterdata.MedicamentStatementStatusRepository;
+import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.masterdata.SnomedRepository;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.masterdata.entity.MedicationStatementStatus;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
