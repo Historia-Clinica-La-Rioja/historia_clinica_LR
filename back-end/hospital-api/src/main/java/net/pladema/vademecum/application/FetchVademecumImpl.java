@@ -22,12 +22,18 @@ public class FetchVademecumImpl implements FetchVademecum {
 
 	@Override
 	public List<SnomedBo> getConcepts(String term, String ecl, Integer institutionId) {
-		return this.vademecumStorage.searchConcepts(term, ecl, institutionId);
+		logger.debug("Input -> {}", term, ecl, institutionId);
+		List<SnomedBo> concepts = this.vademecumStorage.searchConcepts(term, ecl, institutionId);
+		logger.debug("Output -> {}", concepts);
+		return concepts;
 	}
 
 	@Override
 	public Long getTotalConcepts(String term, String ecl, Integer institutionId) {
-		return this.vademecumStorage.getTotalConcepts(term, ecl, institutionId);
+		logger.debug("Input -> {}", term, ecl, institutionId);
+		Long total = this.vademecumStorage.getTotalConcepts(term, ecl, institutionId);
+		logger.debug("Output -> {}", total);
+		return total;
 	}
 
 

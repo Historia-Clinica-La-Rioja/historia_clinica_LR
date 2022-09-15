@@ -1,9 +1,10 @@
 package net.pladema.vademecum.infraestructure.controller;
 
 import ar.lamansys.sgh.clinichistory.infrastructure.input.rest.ips.dto.SnomedDto;
+import ar.lamansys.sgh.shared.infrastructure.input.service.SharedSnomedDto;
 import net.pladema.vademecum.application.FetchVademecum;
 
-import net.pladema.vademecum.domain.VademecumResponseDto;
+import net.pladema.vademecum.infraestructure.dto.VademecumResponseDto;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -33,11 +34,12 @@ public class Vademecum {
 									@RequestParam(name = "ecl") String ecl,
 									@RequestParam(name = "institutionId") Integer institutionId)
 	{
-		logger.debug("Output -> {}", term);
-		List<SnomedDto> vademecumConcepts = this.fetchVademecum.getConcepts(term, ecl, institutionId)
+		logger.debug("Input -> {}", term, ecl, institutionId);
+		List<SharedSnomedDto> vademecumConcepts = this.fetchVademecum.getConcepts(term, ecl, institutionId)
 				.stream()
-				.map(s -> new SnomedDto(s.getSctid(), s.getPt())).collect(Collectors.toList());
+				.map(s -> new SharedSnomedDto(s.getSctid(), s.getPt())).collect(Collectors.toList());
 		Long total = this.fetchVademecum.getTotalConcepts(term, ecl, institutionId);
+		logger.debug("Output -> {}", vademecumConcepts, total);
 		return new VademecumResponseDto(vademecumConcepts, total);
 	}
 }

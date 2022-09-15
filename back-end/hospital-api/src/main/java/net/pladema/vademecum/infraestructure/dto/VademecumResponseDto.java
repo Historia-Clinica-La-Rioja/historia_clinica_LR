@@ -1,6 +1,6 @@
-package net.pladema.vademecum.domain;
+package net.pladema.vademecum.infraestructure.dto;
 
-import ar.lamansys.sgh.clinichistory.infrastructure.input.rest.ips.dto.SnomedDto;
+import ar.lamansys.sgh.shared.infrastructure.input.service.SharedSnomedDto;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.ToString;
@@ -12,6 +12,6 @@ import java.util.List;
 @Getter
 public class VademecumResponseDto {
 
-	private List<SnomedDto> items;
+	private List<SharedSnomedDto> items;
 	private Long total;
 }
