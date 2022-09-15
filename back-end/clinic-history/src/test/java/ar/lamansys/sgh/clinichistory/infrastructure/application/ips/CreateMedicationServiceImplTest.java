@@ -57,6 +57,9 @@ class CreateMedicationServiceImplTest extends UnitRepository {
     @MockBean
     private NoteService noteService;
 
+	@MockBean
+	private SnomedRepository snomedRepository;
+
     @BeforeEach
     void setUp() {
         medicationServiceImpl = new LoadMedications(
