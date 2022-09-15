@@ -57,7 +57,7 @@ export class HomeComponent implements OnInit {
 	}
 
 	private map(slotedInfo: SlotedInfo): MenuItem {
-		const url = slotedInfo.title.replace(' ', '-');
+		const url = slotedInfo.title.split(' ').join('-');
 		return {
 			label: {
 				text: slotedInfo.title,

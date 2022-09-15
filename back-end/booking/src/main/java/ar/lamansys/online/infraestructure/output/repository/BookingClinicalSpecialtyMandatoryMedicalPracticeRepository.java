@@ -6,6 +6,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
 import java.util.Optional;
 
 public interface BookingClinicalSpecialtyMandatoryMedicalPracticeRepository
@@ -16,7 +17,7 @@ public interface BookingClinicalSpecialtyMandatoryMedicalPracticeRepository
             "FROM MandatoryMedicalPractice mmp " +
             "JOIN ClinicalSpecialtyMandatoryMedicalPractice csmmp ON csmmp.mandatoryMedicalPracticeId = mmp.id " +
             "WHERE mmp.snomedId = :snomedId AND csmmp.clinicalSpecialtyId = :specialtyId")
-    Optional<ClinicalSpecialtyMandatoryMedicalPractice> findBySnomedIdAndSpecialtyId(@Param("snomedId") Integer snomedId,
-                                                                       @Param("specialtyId") Integer specialtyId);
+	List<ClinicalSpecialtyMandatoryMedicalPractice> findBySnomedIdAndSpecialtyId(@Param("snomedId") Integer snomedId,
+																				 @Param("specialtyId") Integer specialtyId);
 
 }

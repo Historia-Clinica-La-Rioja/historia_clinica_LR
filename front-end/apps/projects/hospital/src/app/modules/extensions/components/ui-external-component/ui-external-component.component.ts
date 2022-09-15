@@ -42,7 +42,10 @@ export class UiExternalComponentComponent implements OnChanges {
 		const fetchedComponent = customElements.get(this.params.componentName);
 		const hostElement = this.elRef.nativeElement;
 		if (fetchedComponent) {
-			this.setCustomElement(hostElement, this.params.componentName);
+			this.setCustomElement(
+				hostElement,
+				this.params,
+			);
 			return;
 		}
 		const script = this.extensionJSLoaderService.addScriptTag(this.params.url);
@@ -52,15 +55,19 @@ export class UiExternalComponentComponent implements OnChanges {
 				console.warn(`Custom element ${this.params.componentName} does not exist`);
 				return;
 			}
-			this.setCustomElement(hostElement, this.params.componentName);
+			this.setCustomElement(
+				hostElement,
+				this.params
+			);
 		});
 	}
 
-	private setCustomElement(hostElement, elementName) {
-		const customElement = document.createElement(elementName);
+	private setCustomElement(hostElement: HTMLElement, params: WCParams) {
+		const customElement = document.createElement(params.componentName);
 		customElement.setAttribute('params', JSON.stringify(this.params));
-		customElement.setAttribute('data-type', this.type);
+/* 		customElement.setAttribute('data-type', this.type);
 		customElement.setAttribute('type', this.type);
+		customElement.setAttribute('data-url', params.url); */
 		// append the element, so it's attached to the DOM
 		hostElement.appendChild(customElement);
 	}

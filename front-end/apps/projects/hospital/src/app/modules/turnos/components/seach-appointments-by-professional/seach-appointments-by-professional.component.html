@@ -6,7 +6,7 @@
 		[options]="especialidadesTypeaheadOptions$ | async"
 		(selectionChange)="setEspecialidad($event)">
 	</app-typeahead>
-	<app-professional-select 
+	<app-professional-select
 		style="width: 20%;"
 		[professionals]="professionalsFilteredBySpecialty.length ? professionalsFilteredBySpecialty : profesionales"
 		[professionalSelected]="professionalSelected"
