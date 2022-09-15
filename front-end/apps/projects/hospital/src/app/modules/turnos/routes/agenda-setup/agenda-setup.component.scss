@@ -43,6 +43,10 @@ form {
 	mwl-calendar-week-view ::ng-deep .cal-day-columns {
 		height: 100%;
 	}
+
+	.protected-appointments-percentage-container .mat-form-field {
+		width: 5%;
+	}
 }
 
 .fixed-header {
@@ -65,4 +69,14 @@ form {
 
 .mat-form-field-on-div {
 	width: 70% !important;
+}
+
+input[type="number"]::-webkit-outer-spin-button,
+input[type="number"]::-webkit-inner-spin-button {
+	-webkit-appearance: none;
+	margin: 0;
+}
+
+.color-grey {
+	color: #a8a8a8;
 }
