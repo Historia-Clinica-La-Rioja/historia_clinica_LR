@@ -184,12 +184,12 @@ export class AgendaSetupComponent implements OnInit {
 
 		this.agendaHorarioService.setDiaryOpeningHours(diary.diaryOpeningHours);
 
-		if (diary.diaryAssociatedProfessionalsId.length > 0) {
+		if (diary.associatedProfessionalsInfo.length > 0) {
 			const professionalsReference = this.form.controls.otherProfessionals as FormArray;
 			this.form.controls.conjointDiary.setValue(true);
-			diary.diaryAssociatedProfessionalsId.forEach(diaryAssociatedProfessionalId => {
+			diary.associatedProfessionalsInfo.forEach(diaryAssociatedProfessional => {
 				professionalsReference.push(this.initializeAnotherProfessional());
-				professionalsReference.controls[professionalsReference.length - 1].setValue({ healthcareProfessionalId: diaryAssociatedProfessionalId });
+				professionalsReference.controls[professionalsReference.length-1].setValue({ healthcareProfessionalId: diaryAssociatedProfessional.id });
 			});
 		}
 

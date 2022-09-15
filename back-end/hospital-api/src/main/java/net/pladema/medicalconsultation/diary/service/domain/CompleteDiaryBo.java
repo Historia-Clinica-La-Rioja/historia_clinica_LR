@@ -16,11 +16,15 @@ public class CompleteDiaryBo extends DiaryBo {
 
 	private Integer sectorId;
 
+	private String sectorDescription;
+
 	private String doctorFirstName;
 
 	private String doctorLastName;
 
 	private List<CareLineBo> careLinesInfo;
+
+	private List<ProfessionalPersonBo> associatedProfessionalsInfo;
 
 	public CompleteDiaryBo(DiaryBo diaryBo) {
 		appointmentDuration = diaryBo.getAppointmentDuration();

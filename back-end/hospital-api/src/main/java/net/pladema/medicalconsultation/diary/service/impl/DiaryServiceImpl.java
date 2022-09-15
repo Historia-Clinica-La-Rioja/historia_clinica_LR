@@ -281,6 +281,7 @@ public class DiaryServiceImpl implements DiaryService {
 		LOG.debug("Input parameters -> diaryListVo {}", completeDiaryListVo);
 		CompleteDiaryBo result = new CompleteDiaryBo(createDiaryBoInstance(completeDiaryListVo));
 		result.setSectorId(completeDiaryListVo.getSectorId());
+		result.setSectorDescription(completeDiaryListVo.getSectorDescription());
 		result.setClinicalSpecialtyId(completeDiaryListVo.getClinicalSpecialtyId());
 		result.setHealthcareProfessionalId(completeDiaryListVo.getHealthcareProfessionalId());
 		result.setDoctorsOfficeDescription(completeDiaryListVo.getDoctorsOfficeDescription());
@@ -297,7 +298,7 @@ public class DiaryServiceImpl implements DiaryService {
 		Optional<CompleteDiaryBo> result = diaryRepository.getDiary(diaryId).map(this::createCompleteDiaryBoInstance)
 				.map(completeOpeningHours());
 		result.ifPresent(completeDiaryBo -> {
-			completeDiaryBo.setDiaryAssociatedProfessionalsId(diaryAssociatedProfessionalService.getAllDiaryAssociatedProfessionals(diaryId));
+			completeDiaryBo.setAssociatedProfessionalsInfo(diaryAssociatedProfessionalService.getAllDiaryAssociatedProfessionalsInfo(diaryId));
 			completeDiaryBo.setCareLinesInfo(diaryCareLineService.getAllCareLinesByDiaryId(diaryId, completeDiaryBo.getHealthcareProfessionalId()));
 		});
 		LOG.debug(OUTPUT, result);

@@ -1,6 +1,7 @@
 package net.pladema.medicalconsultation.diary.repository;
 
 import net.pladema.medicalconsultation.diary.repository.entity.DiaryAssociatedProfessional;
+import net.pladema.medicalconsultation.diary.service.domain.ProfessionalPersonBo;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -25,5 +26,16 @@ public interface DiaryAssociatedProfessionalRepository extends JpaRepository<Dia
 			"WHERE dap.healthcareProfessionalId = :healthcareProfessionalId) " +
 			"AND d.deleteable.deleted = false")
 	List<Integer> getAllAssociatedWithHealthcareProfessionalsIdByHealthcareProfessional(@Param("healthcareProfessionalId") Integer healthcareProfessionalId);
+
+
+	@Transactional(readOnly = true)
+	@Query("SELECT NEW net.pladema.medicalconsultation.diary.service.domain.ProfessionalPersonBo( hp.id, " +
+			"p.firstName, p.lastName, pe.nameSelfDetermination) " +
+			"FROM DiaryAssociatedProfessional as dap " +
+			"JOIN HealthcareProfessional as hp ON (dap.healthcareProfessionalId = hp.id ) " +
+			"JOIN Person p ON (hp.personId = p.id) " +
+			"JOIN PersonExtended pe ON (p.id = pe.id) " +
+			"WHERE dap.diaryId = :diaryId")
+	List<ProfessionalPersonBo> getDiaryAssociatedProfessionalsInfo(@Param("diaryId") Integer diaryId);
 
 }

@@ -5,6 +5,8 @@ import net.pladema.medicalconsultation.diary.repository.DiaryAssociatedProfessio
 import net.pladema.medicalconsultation.diary.repository.entity.DiaryAssociatedProfessional;
 import net.pladema.medicalconsultation.diary.service.DiaryAssociatedProfessionalService;
 
+import net.pladema.medicalconsultation.diary.service.domain.ProfessionalPersonBo;
+
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -31,9 +33,8 @@ public class DiaryAssociatedProfessionalServiceImpl implements DiaryAssociatedPr
 	}
 
 	@Override
-	public List<Integer> getAllDiaryAssociatedProfessionals(Integer diaryId) {
-		List<DiaryAssociatedProfessional> diaryAssociatedProfessionals = diaryAssociatedProfessionalsRepository.getDiaryAssociatedProfessionalsByDiary(diaryId);
-		return getDiaryAssociatedProfessionalsIds(diaryAssociatedProfessionals);
+	public List<ProfessionalPersonBo> getAllDiaryAssociatedProfessionalsInfo(Integer diaryId) {
+		return diaryAssociatedProfessionalsRepository.getDiaryAssociatedProfessionalsInfo(diaryId);
 	}
 
 	@Override

@@ -558,8 +558,12 @@ export interface ClinicalTermDto extends Serializable {
 }
 
 export interface CompleteDiaryDto extends DiaryDto {
+    associatedProfessionalsInfo: ProfessionalPersonDto[];
     careLinesInfo: CareLineDto[];
+    doctorsOfficeDescription: string;
+    sectorDescription: string;
     sectorId: number;
+    sectorName: string;
     specialtyName: string;
 }
 
@@ -2415,6 +2419,7 @@ export interface ProfessionalPersonDto extends Serializable {
     firstName: string;
     id: number;
     lastName: string;
+    nameSelfDetermination: string;
 }
 
 export interface ProfessionalProfessionBackofficeDto {
