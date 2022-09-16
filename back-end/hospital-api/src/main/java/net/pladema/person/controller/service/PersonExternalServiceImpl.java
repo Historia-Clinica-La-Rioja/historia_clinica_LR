@@ -164,12 +164,7 @@ public class PersonExternalServiceImpl implements PersonExternalService {
 		List<BasicDataPersonDto> result = people.parallelStream()
 				.map(p -> mapToBasicDataDto(p, genders, selfPerceivedGenders, identificationTypes))
 				.collect(Collectors.toList());
-
-		result.forEach(bdp -> {
-			PersonExtended personExtended = personService.getPersonExtended(bdp.getId());
-			bdp.setNameSelfDetermination(personExtended.getNameSelfDetermination());
-		});
-
+		
 		LOG.debug("Result size {}", result.size());
 		LOG.trace(OUTPUT, result);
 		return result;
@@ -191,6 +186,7 @@ public class PersonExternalServiceImpl implements PersonExternalService {
 				.orElse(new IdentificationType());
 
 		BasicDataPersonDto result = personMapper.basicDataFromPerson(person, gender, selfPerceivedGender, identificationType);
+		result.setNameSelfDetermination(personExtended.getNameSelfDetermination());
 		LOG.debug("BasicDataPersonDto id result {}", result.getId());
 		return result;
 	}
