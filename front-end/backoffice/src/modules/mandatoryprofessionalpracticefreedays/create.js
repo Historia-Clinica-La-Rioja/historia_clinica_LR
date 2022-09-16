@@ -9,16 +9,21 @@ import {
 } from 'react-admin';
 import SgxSelectInput from '../../sgxSelectInput/SgxSelectInput';
 
+const renderPerson = (choice) => choice ? `${choice.identificationNumber} ${choice.lastName} ${choice.firstName}` : '';
+
 const MandatoryProfessionalPracticeFreeDaysCreate = props => (
     <Create {...props}>
         <SimpleForm redirect="list">
+
             <ReferenceInput
+                label="resources.healthcareprofessionalhealthinsurances.fields.personId"
                 source="healthcareProfessionalId"
                 reference="healthcareprofessionals"
-                label="resources.healthcareprofessionalhealthinsurances.fields.licenseNumber"
-                sort={{ field: 'licenseNumber', order: 'ASC' }}
+                sort={{ field: 'firstName', order: 'ASC' }}
+                validate={[required()]}
+                filterToQuery={searchText => ({firstName: searchText})}
             >
-                <AutocompleteInput optionText="licenseNumber" optionValue="id" validate={[required()]}/>
+                <AutocompleteInput optionText={renderPerson} optionValue="id" />
             </ReferenceInput>
 
             <SgxSelectInput source="clinicalSpecialtyId"

@@ -55,6 +55,12 @@ export class AuthService {
 		});
 	}
 
+	completeLoginWith2FA(code: string): Observable<any> {
+		return this.http.post<JWTokenDto>(`${environment.apiBase}/auth/login-2fa`, { code : code }).pipe(
+			map(tokens => this.storeTokens(tokens))
+		);
+	}
+
 	getRedirectUrl(): Observable<string> {
 		return this.http.get<string>(`${environment.apiBase}/oauth/redirectUrl`, { responseType: 'text' as 'json' });
 	}
@@ -65,7 +71,9 @@ export class AuthService {
 
 	private storeTokens(tokens: JWTokenDto) {
 		localStorage.setItem(TOKEN_KEY, tokens.token);
-		localStorage.setItem(REFRESH_TOKEN_KEY, tokens.refreshToken);
+		if (tokens.refreshToken) {
+			localStorage.setItem(REFRESH_TOKEN_KEY, tokens.refreshToken);
+		}
 	}
 
 	updatePassword(newPasword: PasswordDto): Observable<any>{

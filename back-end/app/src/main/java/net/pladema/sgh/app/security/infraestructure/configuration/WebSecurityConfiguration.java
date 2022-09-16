@@ -1,5 +1,7 @@
 package net.pladema.sgh.app.security.infraestructure.configuration;
 
+import net.pladema.sgh.app.security.infraestructure.filters.TwoFactorAuthenticationFilter;
+
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
@@ -48,17 +50,21 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
 
 	private final OAuth2AuthenticationFilter oAuth2AuthenticationFilter;
 
+	private final TwoFactorAuthenticationFilter twoFactorAuthenticationFilter;
+
 	public WebSecurityConfiguration(AuthenticationTokenFilter authenticationTokenFilter,
 									ActuatorConfiguration actuatorConfiguration,
 									AuthorizationFilter authorizationFilter,
 									PublicApiAuthenticationFilter publicApiAuthenticationFilter,
 									OAuth2AuthenticationFilter oAuth2AuthenticationFilter,
-									FeatureFlagsService featureFlagsService) {
+									FeatureFlagsService featureFlagsService,
+									TwoFactorAuthenticationFilter twoFactorAuthenticationFilter) {
 		this.authenticationTokenFilter = authenticationTokenFilter;
 		this.actuatorConfiguration = actuatorConfiguration;
 		this.authorizationFilter = authorizationFilter;
 		this.publicApiAuthenticationFilter = publicApiAuthenticationFilter;
 		this.oAuth2AuthenticationFilter = oAuth2AuthenticationFilter;
+		this.twoFactorAuthenticationFilter = twoFactorAuthenticationFilter;
 		if (featureFlagsService.isOn(AppFeature.LIBERAR_API_RESERVA_TURNOS))
 				this.BOOKING_API_RESOURCES =  new String[]{
 					"/public-api/appointment/booking/**",
@@ -108,6 +114,7 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
 		httpSecurity.addFilterAfter(oAuth2AuthenticationFilter, AuthenticationTokenFilter.class);
 		httpSecurity.addFilterAfter(publicApiAuthenticationFilter, OAuth2AuthenticationFilter.class);
 		httpSecurity.addFilterAfter(authorizationFilter, PublicApiAuthenticationFilter.class);
+		httpSecurity.addFilterAfter(twoFactorAuthenticationFilter, AuthorizationFilter.class);
 	}
 
 }

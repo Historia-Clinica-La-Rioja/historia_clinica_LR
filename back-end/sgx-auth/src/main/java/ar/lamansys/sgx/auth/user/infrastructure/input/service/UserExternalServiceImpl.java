@@ -3,8 +3,10 @@ package ar.lamansys.sgx.auth.user.infrastructure.input.service;
 import ar.lamansys.sgx.auth.user.application.createtokenpasswordreset.CreateTokenPasswordReset;
 import ar.lamansys.sgx.auth.user.application.disableUser.DisableUser;
 import ar.lamansys.sgx.auth.user.application.enableuser.EnableUser;
+import ar.lamansys.sgx.auth.user.application.fetchuserhastwofactorauthenticationenabled.FetchUserHasTwoFactorAuthenticationEnabled;
 import ar.lamansys.sgx.auth.user.application.getuseridbytoken.GetUserIdByToken;
 import ar.lamansys.sgx.auth.user.application.registeruser.RegisterUser;
+import ar.lamansys.sgx.auth.user.application.resettwofactorauthentication.ResetTwoFactorAuthentication;
 import ar.lamansys.sgx.auth.user.application.updatelogindate.UpdateLoginDate;
 import ar.lamansys.sgx.auth.user.domain.user.model.UserBo;
 import ar.lamansys.sgx.auth.user.domain.user.service.UserStorage;
@@ -33,6 +35,10 @@ public class UserExternalServiceImpl implements UserExternalService {
 
     private final GetUserIdByToken getUserIdByToken;
 
+	private final ResetTwoFactorAuthentication resetTwoFactorAuthentication;
+
+    private final FetchUserHasTwoFactorAuthenticationEnabled fetchUserHasTwoFactorAuthenticationEnabled;
+
     public UserExternalServiceImpl(RegisterUser registerUser,
                                    UpdateUserPassword updateUserPassword,
                                    UserStorage userStorage,
@@ -40,7 +46,9 @@ public class UserExternalServiceImpl implements UserExternalService {
                                    UpdateLoginDate updateLoginDate,
                                    DisableUser disableUser,
                                    CreateTokenPasswordReset createTokenPasswordReset,
-                                   GetUserIdByToken getUserIdByToken) {
+                                   GetUserIdByToken getUserIdByToken,
+                                   ResetTwoFactorAuthentication resetTwoFactorAuthentication,
+                                   FetchUserHasTwoFactorAuthenticationEnabled fetchUserHasTwoFactorAuthenticationEnabled) {
         this.registerUser = registerUser;
         this.updateUserPassword = updateUserPassword;
         this.userStorage = userStorage;
@@ -49,6 +57,8 @@ public class UserExternalServiceImpl implements UserExternalService {
         this.disableUser = disableUser;
         this.createTokenPasswordReset = createTokenPasswordReset;
         this.getUserIdByToken = getUserIdByToken;
+		this.resetTwoFactorAuthentication = resetTwoFactorAuthentication;
+        this.fetchUserHasTwoFactorAuthenticationEnabled = fetchUserHasTwoFactorAuthenticationEnabled;
     }
 
     @Override
@@ -108,5 +118,15 @@ public class UserExternalServiceImpl implements UserExternalService {
     @Override
     public Integer getUserIdByToken(String token) {
         return getUserIdByToken.execute(token);
+    }
+
+	@Override
+	public void resetTwoFactorAuthentication(Integer userId) {
+		resetTwoFactorAuthentication.run(userId);
+	}
+
+    @Override
+    public Boolean fetchUserHasTwoFactorAuthenticationEnabled(Integer userId) {
+        return fetchUserHasTwoFactorAuthenticationEnabled.run(userId);
     }
 }

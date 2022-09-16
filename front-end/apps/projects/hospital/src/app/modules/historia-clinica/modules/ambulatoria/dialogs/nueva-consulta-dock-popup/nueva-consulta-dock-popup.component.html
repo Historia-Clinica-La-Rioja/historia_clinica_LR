@@ -26,30 +26,100 @@
 		<app-new-consultation-expansion-section id="motivo"
 			[title]="'ambulatoria.paciente.nueva-consulta.motivo.TITLE' | translate" icon="sms_failed"
 			[isEmpty]="motivoNuevaConsultaService.isEmpty()" [recommend]="true">
-			<div>
-				<app-document-section-table [columns]="motivoNuevaConsultaService.getTableColumnConfig()"
-					[data]="motivoNuevaConsultaService.getMotivosConsulta()">
-				</app-document-section-table>
+			<div fxLayout="column" fxLayoutGap="2vh">
+				<app-document-section-card-list *ngIf="!motivoNuevaConsultaService.isEmpty()"
+					title="{{ 'ambulatoria.paciente.nueva-consulta.motivo.LIST_CARD_TITLE' }}">
+					<div
+						*ngFor="let motivo of motivoNuevaConsultaService.getMotivosConsulta(); index as i; last as isLast">
+						<div fxLayout="row" fxLayoutAlign="space-between center">
+							<span>{{ motivo.snomed.pt }}</span>
+							<button type="button" mat-icon-button color="warn"
+								(click)="motivoNuevaConsultaService.remove(i)">
+								<mat-icon>delete_outline</mat-icon>
+							</button>
+						</div>
+						<mat-divider class="separation" inset *ngIf="!isLast"></mat-divider>
+					</div>
+				</app-document-section-card-list>
 
-				<button mat-button type="button" id="add-reason-button" color="primary" class="add-button"
-					(click)="addReason()">
-					+ {{ 'ambulatoria.paciente.nueva-consulta.motivo.ADD' | translate }}
-				</button>
+				<div>
+					<button mat-button type="button" id="add-reason-button" color="primary" class="add-button"
+						(click)="addReason()">
+						+ {{ 'ambulatoria.paciente.nueva-consulta.motivo.ADD' | translate }}
+					</button>
+				</div>
 			</div>
 		</app-new-consultation-expansion-section>
 
 		<app-new-consultation-expansion-section id="problemas"
 			[title]="'ambulatoria.paciente.nueva-consulta.problemas.TITLE' | translate" icon="error_outlined"
 			[isEmpty]="ambulatoryConsultationProblemsService.isEmpty()" [collapsed]="false" [recommend]="true">
-			<div>
-				<app-document-section-table [columns]="ambulatoryConsultationProblemsService.getColumns()"
-					[data]="ambulatoryConsultationProblemsService.getProblemas()">
-				</app-document-section-table>
+			<div fxLayout="column" fxLayoutGap="2vh">
 
-				<button mat-button type="button" id="add-problem-button" color="primary" class="add-button"
-					(click)="addProblem()">
-					+ {{ 'ambulatoria.paciente.nueva-consulta.problemas.buttons.ADD' | translate }}
-				</button>
+				<app-document-section-card-list *ngIf="!ambulatoryConsultationProblemsService.isEmpty()"
+					title="{{ 'ambulatoria.paciente.nueva-consulta.problemas.PROBLEMA' }}">
+					<div
+						*ngFor="let problema of ambulatoryConsultationProblemsService.getProblemas(); index as i; last as isLast">
+						<div fxLayout="row" fxLayoutAlign="space-between center">
+							<div fxFlex="80" fxLayout="column" fxLayoutGap="2px">
+								<span>{{ problema.snomed.pt }}</span>
+								<div fxLayout="row" fxLayoutGap="3px">
+									<span *ngIf="problema?.cronico" class="gray-caption">
+										({{ 'ambulatoria.paciente.nueva-consulta.problemas.CRONICO' | translate }})
+									</span>
+									<span *ngIf="problema?.cronico && problema.codigoSeveridad">-</span>
+									<em *ngIf="problema?.codigoSeveridad"
+										[ngClass]="{ 'gray-caption': SEVERITY_CODES.LOW === problema.codigoSeveridad, 'color-warn': SEVERITY_CODES.HIGH === problema.codigoSeveridad }">
+										{{
+										ambulatoryConsultationProblemsService.getSeverityDisplayName(problema.codigoSeveridad)
+										}}
+									</em>
+								</div>
+								<div fxLayout="row" fxLayoutGap="5px">
+									<span *ngIf="problema.fechaInicio" class="mat-caption gray-caption">
+										{{ 'ambulatoria.paciente.nueva-consulta.problemas.FECHA_INICIO_PREFIJO' |
+										translate }}
+										{{ momentFormat(problema.fechaInicio, DateFormat.VIEW_DATE) }}
+									</span>
+									<span *ngIf="problema.fechaFin" class="mat-caption gray-caption">
+										{{ 'ambulatoria.paciente.nueva-consulta.problemas.FECHA_FIN_PREFIJO' |
+										translate }}
+										{{ momentFormat(problema.fechaFin, DateFormat.VIEW_DATE) }}
+									</span>
+								</div>
+								<div *ngIf="problema.isReportable">
+									<ng-container *ngIf="problema.epidemiologicalManualClassifications?.length">
+										<div
+											*ngFor="let classification of problema.epidemiologicalManualClassifications; let i=index">
+											<span class="color-primary">
+												{{ problema.epidemiologicalManualClassifications[i] }}
+											</span>
+										</div>
+									</ng-container>
+									<span class="color-warn" *ngIf="!problema.epidemiologicalManualClassifications"
+										translate="ambulatoria.paciente.nueva-consulta.problemas.DO_NOT_REPORT_PROBLEM"></span>
+								</div>
+							</div>
+							<button type="button" mat-icon-button color="primary"
+								(click)="ambulatoryConsultationProblemsService.openEditDialog(i)">
+								<mat-icon>edit</mat-icon>
+							</button>
+							<button type="button" mat-icon-button color="warn"
+								(click)="ambulatoryConsultationProblemsService.remove(i)">
+								<mat-icon>delete_outline</mat-icon>
+							</button>
+						</div>
+
+						<mat-divider class="separation" inset *ngIf="!isLast"></mat-divider>
+					</div>
+				</app-document-section-card-list>
+
+				<div>
+					<button mat-button type="button" id="add-problem-button" color="primary" class="add-button"
+						(click)="addProblem()">
+						+ {{ 'ambulatoria.paciente.nueva-consulta.problemas.buttons.ADD' | translate }}
+					</button>
+				</div>
 			</div>
 		</app-new-consultation-expansion-section>
 
@@ -68,46 +138,108 @@
 		<app-new-consultation-expansion-section id="antecedentes-familiares"
 			[title]="'ambulatoria.paciente.nueva-consulta.antecedentes-familiares.TITLE' | translate" icon="report"
 			[isEmpty]="antecedentesFamiliaresNuevaConsultaService.isEmpty()">
-			<div>
-				<app-document-section-table
-					[columns]="antecedentesFamiliaresNuevaConsultaService.getTableColumnConfig()"
-					[data]="antecedentesFamiliaresNuevaConsultaService.getAntecedentesFamiliares()">
-				</app-document-section-table>
+			<div fxLayout="column" fxLayoutGap="2vh">
 
-				<button mat-button type="button" id="add-family-history-button" color="primary" class="add-button"
-					(click)="addFamilyHistory()">
-					+ {{ 'ambulatoria.paciente.nueva-consulta.antecedentes-familiares.buttons.ADD' | translate }}
-				</button>
+				<app-document-section-card-list *ngIf="!antecedentesFamiliaresNuevaConsultaService.isEmpty()"
+					title="{{ 'ambulatoria.paciente.nueva-consulta.antecedentes-familiares.LIST_CARD_TITLE' }}">
+					<div
+						*ngFor="let antecedente of antecedentesFamiliaresNuevaConsultaService.getAntecedentesFamiliares(); index as i; last as isLast">
+						<div fxLayout="row" fxLayoutAlign="space-between center">
+							<div fxLayout="column">
+								<span>{{ antecedente.snomed.pt }}</span>
+								<span *ngIf="antecedente?.fecha" class="mat-caption gray-caption">
+									{{ 'ambulatoria.paciente.nueva-consulta.antecedentes-familiares.DATE_PREFIX' |
+									translate }}
+									{{ momentFormat(antecedente.fecha, DateFormat.VIEW_DATE) }}
+								</span>
+							</div>
+							<button type="button" mat-icon-button color="warn"
+								(click)="antecedentesFamiliaresNuevaConsultaService.remove(i)">
+								<mat-icon>delete_outline</mat-icon>
+							</button>
+						</div>
+						<mat-divider class="separation" inset *ngIf="!isLast"></mat-divider>
+					</div>
+				</app-document-section-card-list>
+
+				<div>
+					<button mat-button type="button" id="add-family-history-button" color="primary" class="add-button"
+						(click)="addFamilyHistory()">
+						+ {{ 'ambulatoria.paciente.nueva-consulta.antecedentes-familiares.buttons.ADD' | translate }}
+					</button>
+				</div>
 			</div>
 		</app-new-consultation-expansion-section>
 
 		<app-new-consultation-expansion-section id="medications"
 			[title]="'ambulatoria.paciente.nueva-consulta.medicaciones.TITLE' | translate" icon="event_available"
 			[isEmpty]="medicacionesNuevaConsultaService.isEmpty()">
-			<div>
-				<app-document-section-table [columns]="medicacionesNuevaConsultaService.getTableColumnConfig()"
-					[data]="medicacionesNuevaConsultaService.getMedicaciones()">
-				</app-document-section-table>
+			<div fxLayout="column" fxLayoutGap="2vh">
 
-				<button mat-button type="button" id="add-medication-button" color="primary" class="add-button"
-					(click)="addMedication()">
-					+ {{ 'ambulatoria.paciente.nueva-consulta.medicaciones.ADD' | translate }}
-				</button>
+				<app-document-section-card-list *ngIf="!medicacionesNuevaConsultaService.isEmpty()"
+					title="{{ 'ambulatoria.paciente.nueva-consulta.medicaciones.LIST_CARD_TITLE' }}">
+					<div fxLayout="column" fxLayoutGap="10px"
+						*ngFor="let medicacion of medicacionesNuevaConsultaService.getMedicaciones(); index as i; last as isLast">
+						<div fxLayout="row" fxLayoutAlign="space-between center">
+							<div fxLayout="column" fxLayoutGap="6px">
+								<app-chip-indicator *ngIf="medicacion?.suspendido"
+									text="ambulatoria.paciente.nueva-consulta.medicaciones.SUSPENDIDA"
+									[warnColor]="true">
+								</app-chip-indicator>
+								<span>{{ medicacion.snomed.pt }}</span>
+							</div>
+							<button type="button" mat-icon-button color="warn"
+								(click)="medicacionesNuevaConsultaService.remove(i)">
+								<mat-icon>delete_outline</mat-icon>
+							</button>
+						</div>
+						<em *ngIf="medicacion?.observaciones" class="mat-caption gray-caption">
+							{{ medicacion.observaciones }}
+						</em>
+						<mat-divider class="separation" inset *ngIf="!isLast"></mat-divider>
+					</div>
+				</app-document-section-card-list>
+
+				<div>
+					<button mat-button type="button" id="add-medication-button" color="primary" class="add-button"
+						(click)="addMedication()">
+						+ {{ 'ambulatoria.paciente.nueva-consulta.medicaciones.ADD' | translate }}
+					</button>
+				</div>
 			</div>
 		</app-new-consultation-expansion-section>
 
 		<app-new-consultation-expansion-section id="procedimientos"
 			[title]="'ambulatoria.paciente.nueva-consulta.procedimientos.TITLE' | translate" icon="library_add"
 			[isEmpty]="procedimientoNuevaConsultaService.isEmpty()">
-			<div>
-				<app-document-section-table [columns]="procedimientoNuevaConsultaService.getTableColumnConfig()"
-					[data]="procedimientoNuevaConsultaService.getProcedimientos()">
-				</app-document-section-table>
+			<div fxLayout="column" fxLayoutGap="2vh">
 
-				<button mat-button type="button" id="add-procedure-button" color="primary" class="add-button"
-					(click)="addProcedure()">
-					+ {{ 'ambulatoria.paciente.nueva-consulta.procedimientos.buttons.ADD' | translate }}
-				</button>
+				<app-document-section-card-list *ngIf="!procedimientoNuevaConsultaService.isEmpty()"
+					title="{{ 'ambulatoria.paciente.nueva-consulta.procedimientos.TABLE_TITLE' }}">
+					<div
+						*ngFor="let procedimiento of procedimientoNuevaConsultaService.getProcedimientos(); index as i; last as isLast">
+						<div fxLayout="row" fxLayoutAlign="space-between center">
+							<div fxLayout="column">
+								<span>{{ procedimiento.snomed.pt }}</span>
+								<span *ngIf="procedimiento?.performedDate" class="mat-caption gray-caption">
+									{{ procedimiento.performedDate | date: 'shortDate' }}
+								</span>
+							</div>
+							<button type="button" mat-icon-button color="warn"
+								(click)="procedimientoNuevaConsultaService.remove(i)">
+								<mat-icon>delete_outline</mat-icon>
+							</button>
+						</div>
+						<mat-divider class="separation" inset *ngIf="!isLast"></mat-divider>
+					</div>
+				</app-document-section-card-list>
+
+				<div>
+					<button mat-button type="button" id="add-procedure-button" color="primary" class="add-button"
+						(click)="addProcedure()">
+						+ {{ 'ambulatoria.paciente.nueva-consulta.procedimientos.buttons.ADD' | translate }}
+					</button>
+				</div>
 			</div>
 		</app-new-consultation-expansion-section>
 
@@ -127,31 +259,96 @@
 		<app-new-consultation-expansion-section id="alergias"
 			[title]="'ambulatoria.paciente.nueva-consulta.alergias.TITLE' | translate" icon="cancel"
 			[isEmpty]="alergiasNuevaConsultaService.isEmpty()">
-			<div>
-				<app-document-section-table [columns]="alergiasNuevaConsultaService.getTableColumnConfig()"
-					[data]="alergiasNuevaConsultaService.getAlergias()">
-				</app-document-section-table>
+			<div fxLayout="column" fxLayoutGap="2vh">
 
-				<button mat-button type="button" id="add-allergies-button" color="primary" class="add-button"
-					(click)="addAllergy()">
-					+ {{ 'ambulatoria.paciente.nueva-consulta.alergias.ADD' | translate }}
-				</button>
+				<app-document-section-card-list *ngIf="!alergiasNuevaConsultaService.isEmpty()"
+					title="{{ 'ambulatoria.paciente.nueva-consulta.alergias.table.TITLE' }}">
+					<div *ngFor="let alergia of alergiasNuevaConsultaService.getAlergias(); index as i; last as isLast">
+						<div fxLayout="row" fxLayoutAlign="space-between center">
+							<div fxLayout="column">
+								<span>{{ alergia.snomed.pt }}</span>
+								<span *ngIf="alergia?.criticalityId" class="mat-caption"
+									[ngClass]="{'gray-caption' : alergia.criticalityId === 1, 'color-warn': alergia.criticalityId === 2}">
+									{{ alergiasNuevaConsultaService.getDisplayName(alergia.criticalityId) }}
+								</span>
+							</div>
+							<button type=" button" mat-icon-button color="warn"
+								(click)="alergiasNuevaConsultaService.removeAlergia(i)">
+								<mat-icon>delete_outline</mat-icon>
+							</button>
+						</div>
+						<mat-divider class="separation" inset *ngIf="!isLast"></mat-divider>
+					</div>
+				</app-document-section-card-list>
+
+				<div>
+					<button mat-button type="button" id="add-allergies-button" color="primary" class="add-button"
+						(click)="addAllergy()">
+						+ {{ 'ambulatoria.paciente.nueva-consulta.alergias.ADD' | translate }}
+					</button>
+				</div>
 			</div>
 		</app-new-consultation-expansion-section>
 
 		<app-new-consultation-expansion-section id="solicitud-referencia"
 			[title]="'ambulatoria.paciente.nueva-consulta.solicitud-referencia.TITLE' | translate" icon="forum"
 			[isEmpty]="ambulatoryConsultationReferenceService.isEmpty()">
-			<div fxLayout="column" fxLayoutGap="10px">
+			<div fxLayout="column" fxLayoutGap="2vh">
+
+				<app-document-section-card-list *ngIf="!ambulatoryConsultationReferenceService.isEmpty()"
+					title="{{ 'ambulatoria.paciente.nueva-consulta.solicitud-referencia.REGISTERED_REQUEST' }}">
+					<div
+						*ngFor="let request of ambulatoryConsultationReferenceService.getData(); last as isLast; trackBy: trackByRequest">
+						<div fxLayout="column" fxLayoutGap="15px">
+							<div fxLayout="row" fxLayoutAlign="space-between center">
+								<div fxLayout="column">
+									<span class="bold">
+										{{
+										'ambulatoria.paciente.nueva-consulta.solicitud-referencia.PROBLEMS' | translate
+										}}
+									</span>
+									<span *ngFor="let problem of request?.problems">{{ problem.snomed.pt }}</span>
+								</div>
+								<button type="button" mat-icon-button color="warn"
+									(click)="ambulatoryConsultationReferenceService.remove(request.index)">
+									<mat-icon>delete_outline</mat-icon>
+								</button>
+							</div>
+							<div fxLayout="row" fxLayoutGap="5px" fxLayout.lt-md="column" fxLayoutGap.lt-md="5px">
+								<div fxFlex="50" fxLayout="column">
+									<span class="bold">
+										{{
+										'ambulatoria.paciente.nueva-consulta.solicitud-referencia.SPECIALTY' |
+										translate
+										}}
+									</span>
+									<span>{{ request.clinicalSpecialty.name }}</span>
+								</div>
+								<div fxFlex="calc(50%-5px)" fxLayout="column">
+									<span class="bold">
+										{{
+										'ambulatoria.paciente.nueva-consulta.solicitud-referencia.CARE_LINE' |
+										translate
+										}}
+									</span>
+									<span>{{ request.careLine.description }}</span>
+								</div>
+							</div>
+							<span class="gray-caption" *ngIf="request?.note">
+								"{{ request?.note }}"
+							</span>
+						</div>
+						<mat-divider class="separation" inset *ngIf="!isLast"></mat-divider>
+					</div>
+				</app-document-section-card-list>
+
 				<div>
 					<button mat-button type="button" id="add-request-button" color="primary" class="add-button"
 						(click)="ambulatoryConsultationReferenceService.openReferenceDialog()">
 						+ {{ 'ambulatoria.paciente.nueva-consulta.solicitud-referencia.ADD_REQUEST' | translate }}
 					</button>
 				</div>
-				<app-document-section-table data-display [columns]="ambulatoryConsultationReferenceService.getColumns()"
-					[data]="ambulatoryConsultationReferenceService.getData()">
-				</app-document-section-table>
+
 			</div>
 		</app-new-consultation-expansion-section>
 
@@ -173,10 +370,9 @@
 			</app-document-section>
 		</app-new-consultation-expansion-section>
 
-		<div #errorsView>
-			<div id="validations" *ngIf="!isValidConsultation() || apiErrors.length > 0">
+		<div #apiErrorsView>
+			<div id="validations" *ngIf="apiErrors?.length > 0">
 				<mat-card>
-					<mat-error *ngFor="let error of errores" class="mat-body-2">{{ error | translate }}</mat-error>
 					<mat-error class="mat-body-2" *ngFor="let error of apiErrors">{{ error }}</mat-error>
 				</mat-card>
 			</div>

@@ -9,12 +9,15 @@ import net.pladema.medicalconsultation.diary.repository.DiaryRepository;
 import net.pladema.medicalconsultation.diary.repository.domain.CompleteDiaryListVo;
 import net.pladema.medicalconsultation.diary.repository.domain.DiaryListVo;
 import net.pladema.medicalconsultation.diary.repository.entity.Diary;
+import net.pladema.medicalconsultation.diary.service.DiaryAssociatedProfessionalService;
 import net.pladema.medicalconsultation.diary.service.DiaryOpeningHoursService;
 import net.pladema.medicalconsultation.diary.service.DiaryService;
 import net.pladema.medicalconsultation.diary.service.domain.CompleteDiaryBo;
 import net.pladema.medicalconsultation.diary.service.domain.DiaryBo;
 import net.pladema.medicalconsultation.diary.service.domain.DiaryOpeningHoursBo;
 import net.pladema.medicalconsultation.diary.service.domain.OverturnsLimitException;
+import net.pladema.permissions.controller.external.LoggedUserExternalService;
+import net.pladema.permissions.repository.enums.ERole;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -52,7 +55,11 @@ public class DiaryServiceImpl implements DiaryService {
 
 	private final UpdateAppointmentOpeningHoursService updateApmtOHService;
 
+	private final DiaryAssociatedProfessionalService diaryAssociatedProfessionalService;
+
 	private final DiaryRepository diaryRepository;
+
+	private final LoggedUserExternalService loggedUserExternalService;
 
 	@Override
 	public Integer addDiary(DiaryBo diaryToSave) {
@@ -70,6 +77,7 @@ public class DiaryServiceImpl implements DiaryService {
 		diary = diaryRepository.save(diary);
 		Integer diaryId = diary.getId();
 		diaryOpeningHoursService.update(diaryId, diaryToSave.getDiaryOpeningHours());
+		diaryAssociatedProfessionalService.updateDiaryAssociatedProfessionals(diaryToSave.getDiaryAssociatedProfessionalsId(), diaryId);
 		return diaryId;
 	}
 
@@ -90,6 +98,7 @@ public class DiaryServiceImpl implements DiaryService {
 		diary.setIncludeHoliday(diaryBo.isIncludeHoliday());
 		diary.setActive(true);
 		diary.setClinicalSpecialtyId(diaryBo.getClinicalSpecialtyId());
+		diary.setAlias(diaryBo.getAlias());
 		return diary;
 	}
 
@@ -110,18 +119,20 @@ public class DiaryServiceImpl implements DiaryService {
 	@Override
 	public Integer updateDiary(DiaryBo diaryToUpdate) {
 		LOG.debug("Input parameters -> diaryToUpdate {}", diaryToUpdate);
-		Diary savedDiary = diaryRepository.getOne(diaryToUpdate.getId());
-		HashMap<DiaryOpeningHoursBo, List<AppointmentBo>> apmtsByNewDOH = new HashMap<>();
-		diaryToUpdate.getDiaryOpeningHours().forEach( doh -> {
-					doh.setDiaryId(savedDiary.getId());
-					apmtsByNewDOH.put(doh, new ArrayList<>());
-				});
-		Collection<AppointmentBo> apmts = appointmentService.getFutureActiveAppointmentsByDiary(diaryToUpdate.getId());
-		adjustExistingAppointmentsOpeningHours(apmtsByNewDOH, apmts);
-		persistDiary(diaryToUpdate, mapDiaryBo(diaryToUpdate, savedDiary));
-		updatedExistingAppointments(diaryToUpdate, apmtsByNewDOH);
-		LOG.debug("Diary updated -> {}", diaryToUpdate);
-		return diaryToUpdate.getId();
+		return diaryRepository.findById(diaryToUpdate.getId()).map(savedDiary -> {
+			HashMap<DiaryOpeningHoursBo, List<AppointmentBo>> apmtsByNewDOH = new HashMap<>();
+			diaryToUpdate.getDiaryOpeningHours().forEach( doh -> {
+				doh.setDiaryId(savedDiary.getId());
+				apmtsByNewDOH.put(doh, new ArrayList<>());
+			});
+			Collection<AppointmentBo> apmts = appointmentService.getFutureActiveAppointmentsByDiary(diaryToUpdate.getId());
+			adjustExistingAppointmentsOpeningHours(apmtsByNewDOH, apmts);
+			persistDiary(diaryToUpdate, mapDiaryBo(diaryToUpdate, savedDiary));
+			updatedExistingAppointments(diaryToUpdate, apmtsByNewDOH);
+			LOG.debug("Diary updated -> {}", diaryToUpdate);
+			return diaryToUpdate.getId();
+		}).get();
+
 	}
 
 	private void adjustExistingAppointmentsOpeningHours(HashMap<DiaryOpeningHoursBo, List<AppointmentBo>> apmtsByNewDOH,
@@ -206,14 +217,20 @@ public class DiaryServiceImpl implements DiaryService {
 	}
 
 	@Override
-	public Collection<DiaryBo> getActiveDiariesBy(Integer healthcareProfessionalId, Integer specialtyId, Integer institutionId) {
+	public Collection<DiaryBo> getActiveDiariesBy(Integer associatedHealthcareProfessionalId, Integer healthcareProfessionalId, Integer specialtyId, Integer institutionId) {
 		LOG.debug("Input parameters -> healthcareProfessionalId {}, specialtyId {}, institutionId {}", healthcareProfessionalId, specialtyId, institutionId);
 		List<DiaryListVo> diaries;
 
 		if (specialtyId == null)
-			diaries = diaryRepository.getActiveDiariesFromProfessional(healthcareProfessionalId, institutionId);
+			if (healthcareProfessionalId.equals(associatedHealthcareProfessionalId) || associatedHealthcareProfessionalId == null || loggedUserExternalService.hasAnyRoleInstitution(institutionId, ERole.ADMINISTRADOR_AGENDA, ERole.ADMINISTRATIVO))
+				diaries = diaryRepository.getActiveDiariesFromProfessional(healthcareProfessionalId, institutionId);
+			else
+				diaries = diaryRepository.getActiveAssociatedDiariesFromProfessional(associatedHealthcareProfessionalId, healthcareProfessionalId, institutionId);
 		else
-			diaries = diaryRepository.getActiveDiariesFromProfessionalAndSpecialty(healthcareProfessionalId, specialtyId, institutionId);
+			if (healthcareProfessionalId.equals(associatedHealthcareProfessionalId) || associatedHealthcareProfessionalId == null)
+				diaries = diaryRepository.getActiveDiariesFromProfessionalAndSpecialty(healthcareProfessionalId, specialtyId, institutionId);
+			else
+				diaries = diaryRepository.getActiveAssociatedDiariesFromProfessionalAndSpecialty(associatedHealthcareProfessionalId, healthcareProfessionalId, specialtyId, institutionId);
 
 		List<DiaryBo> result = diaries.stream().map(this::createDiaryBoInstance).collect(toList());
 		LOG.debug(OUTPUT, result);
@@ -232,6 +249,8 @@ public class DiaryServiceImpl implements DiaryService {
 		result.setAutomaticRenewal(diaryListVo.isAutomaticRenewal());
 		result.setProfessionalAssignShift(diaryListVo.isProfessionalAssignShift());
 		result.setIncludeHoliday(diaryListVo.isIncludeHoliday());
+		result.setAlias(diaryListVo.getAlias());
+		result.setClinicalSpecialtyName(diaryListVo.getClinicalSpecialtyName());
 		LOG.debug(OUTPUT, result);
 		return result;
 	}
@@ -242,7 +261,6 @@ public class DiaryServiceImpl implements DiaryService {
 		result.setSectorId(completeDiaryListVo.getSectorId());
 		result.setClinicalSpecialtyId(completeDiaryListVo.getClinicalSpecialtyId());
 		result.setHealthcareProfessionalId(completeDiaryListVo.getHealthcareProfessionalId());
-		result.setSpecialtyName(completeDiaryListVo.getSpecialtyName());
 		LOG.debug(OUTPUT, result);
 		return result;
 	}
@@ -252,6 +270,7 @@ public class DiaryServiceImpl implements DiaryService {
 		LOG.debug(INPUT_DIARY_ID, diaryId);
 		Optional<CompleteDiaryBo> result = diaryRepository.getDiary(diaryId).map(this::createCompleteDiaryBoInstance)
 				.map(completeOpeningHours());
+		result.ifPresent(completeDiaryBo -> completeDiaryBo.setDiaryAssociatedProfessionalsId(diaryAssociatedProfessionalService.getAllDiaryAssociatedProfessionals(diaryId)));
 		LOG.debug(OUTPUT, result);
 		return result;
 	}

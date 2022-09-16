@@ -1,0 +1,208 @@
+databaseChangeLog: 
+    - logicalFilePath: incrementales-v1_41
+
+    - changeSet:
+        id: diary_associated_professional-createTable
+        comment: Create table diary_associated_professional
+        author: mmalyvarni
+        changes:
+          - createTable:
+              tableName: diary_associated_professional
+              columns:
+                - column:
+                    autoIncrement: true
+                    constraints:
+                      primaryKey: true
+                      primaryKeyName: PK_diary_associated_professional
+                    name: id
+                    type: int
+                - column:
+                    constraints:
+                      foreignKeyName: FK_diary_associated_professional_diary_id
+                      references: diary(id)
+                    name: diary_id
+                    type: int
+                - column:
+                    constraints:
+                      foreignKeyName: FK_diary_associated_professional_healthcare_professional_id
+                      references: healthcare_professional(id)
+                    name: healthcare_professional_id
+                    type: int
+
+    - changeSet:
+        id: addColumn-alias-diary
+        author: mmalyvarni
+        comment: Add column alias to diary table
+        changes:
+          - addColumn:
+              tableName: diary
+              columns:
+                - column:
+                    name: alias
+                    type: varchar(100)
+
+    - changeSet:       
+        id: add-column-two_factor_authentication_secret-user
+        comment: Add two_factor_authentication_secret column in users table
+        author: tmedina
+        changes:
+          - addColumn:
+              columns:
+                - column:
+                    name: two_factor_authentication_secret
+                    type: varchar(64)
+              tableName: users
+
+    - changeSet:
+        id: update-v_hospital_users-add-two_factor_authentication_enabled-column
+        author: tmedina
+        dbms: postgresql
+        changes:
+          - createView:
+              viewName: v_hospital_users
+              fullDefinition: false
+              replaceIfExists: true
+              schemaName: public
+              selectQuery: |-
+                SELECT u.id as user_id, u.username, u.enable, u.last_login, up.person_id,
+                  CASE WHEN u.two_factor_authentication_secret IS NOT NULL THEN true ELSE false END as two_factor_authentication_enabled
+                FROM users u
+                INNER JOIN user_person as up ON (u.id = up.user_id)
+                UNION
+                SELECT u.id as user_id, u.username, u.enable, u.last_login, -1,
+                  CASE WHEN u.two_factor_authentication_secret IS NOT NULL THEN true ELSE false END as two_factor_authentication_enabled
+                FROM users u
+                WHERE u.id NOT IN (SELECT up.user_id FROM user_person as up)
+
+    - changeSet:
+        id: add-column-two_factor_authentication_enabled-users
+        comment: Add two_factor_authentication_enabled column in users table
+        author: tmedina
+        changes:
+          - addColumn:
+              columns:
+                constraints:
+                  nullable: false
+                name: two_factor_authentication_enabled
+                type: boolean
+                defaultValue: ${boolean.false}
+              tableName: users
+
+    - changeSet:
+        id: new-update-v_hospital_users-add-two_factor_authentication_enabled-column
+        author: tmedina
+        dbms: postgresql
+        changes:
+          - createView:
+              viewName: v_hospital_users
+              fullDefinition: false
+              replaceIfExists: true
+              schemaName: public
+              selectQuery: |-
+                SELECT u.id as user_id, u.username, u.enable, u.last_login, up.person_id,
+                  CASE WHEN (u.two_factor_authentication_secret IS NOT NULL AND u.two_factor_authentication_enabled = true) THEN true
+                    ELSE false END as two_factor_authentication_enabled
+                FROM users u
+                INNER JOIN user_person as up ON (u.id = up.user_id)
+                UNION
+                SELECT u.id as user_id, u.username, u.enable, u.last_login, -1,
+                  CASE WHEN u.two_factor_authentication_secret IS NOT NULL THEN true ELSE false END as two_factor_authentication_enabled
+                FROM users u
+                WHERE u.id NOT IN (SELECT up.user_id FROM user_person as up)
+
+    - changeSet:
+        id: 0.1.41-7
+        comment: Create view v_available_professional
+        author: etrapani
+        changes:
+          - createView:
+              viewName: v_available_professional
+              fullDefinition: false
+              replaceIfExists: true
+              selectQuery: |-
+                SELECT hp.id, hp.person_id,
+                      CAST(first_name AS VARCHAR(255)), CAST(last_name AS VARCHAR(255)),identification_type_id, identification_number
+                FROM healthcare_professional hp
+                JOIN person p on hp.person_id = p.id
+                WHERE hp.id IN (SELECT DISTINCT pp.healthcare_professional_id FROM professional_professions pp WHERE pp.deleted = false)
+        
+    - changeSet:  
+        id: historic_nursing_record-createTable
+        comment: Create table historic_nursing_record
+        author: fsimaro
+        changes:
+          - createTable:
+              tableName: historic_nursing_record
+              columns:
+                - column:
+                    name: nursing_record_id
+                    type: int
+                    constraints:
+                      nullable: false
+                - column:
+                    name: status_id
+                    type: smallint
+                    constraints:
+                      nullable: false
+                - column:
+                    constraints:
+                      nullable: true
+                    name: reason
+                    type: text
+                - column:
+                    constraints:
+                      nullable: false
+                    name: changed_status_date
+                    type: datetime
+                    defaultValueDate: ${date.now}
+                - column:
+                    constraints:
+                      nullable: false
+                    name: created_by
+                    type: int
+                    defaultValue: -1
+                - column:
+                    constraints:
+                      nullable: false
+                    name: created_on
+                    type: datetime
+                    defaultValueDate: ${date.now}
+                - column:
+                    constraints:
+                      nullable: false
+                    name: updated_by
+                    type: int
+                    defaultValue: -1
+                - column:
+                    constraints:
+                      nullable: false
+                    name: updated_on
+                    type: datetime
+                    defaultValueDate: ${date.now}
+                - column:
+                    constraints:
+                      nullable: false
+                    name: deleted
+                    type: boolean
+                    defaultValue: ${boolean.false}
+                - column:
+                    name: deleted_by
+                    type: int
+                - column:
+                    name: deleted_on
+                    type: datetime
+          - addPrimaryKey:
+              clustered: true
+              columnNames: nursing_record_id, changed_status_date
+              constraintName: PK_historic_nursing_record
+              tableName: historic_nursing_record
+              validate: true
+          - addForeignKeyConstraint:
+              baseColumnNames: nursing_record_id
+              baseTableName: historic_nursing_record
+              constraintName: FK_historic_nursing_record_id
+              onDelete: NO ACTION
+              onUpdate: NO ACTION
+              referencedColumnNames: id
+              referencedTableName: nursing_record
+              validate: true

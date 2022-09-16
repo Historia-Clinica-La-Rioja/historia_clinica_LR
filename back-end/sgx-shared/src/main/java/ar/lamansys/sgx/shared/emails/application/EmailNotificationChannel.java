@@ -42,6 +42,7 @@ public class EmailNotificationChannel implements NotificationChannel<MailMessage
 
 		helper.setFrom(configuration.getFrom(), configuration.getFromFullname());
 		helper.setTo(new InternetAddress(emailMessage.to, emailMessage.toFullname));
+		helper.setReplyTo(configuration.getReplyTo());
 
 		helper.setSubject(emailMessage.subject);
 		helper.setText(emailMessage.html, true);

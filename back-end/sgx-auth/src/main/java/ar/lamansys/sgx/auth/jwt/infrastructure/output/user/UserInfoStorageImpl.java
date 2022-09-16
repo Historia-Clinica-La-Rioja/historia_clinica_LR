@@ -27,10 +27,22 @@ public class UserInfoStorageImpl implements UserInfoStorage {
                 .orElse(null);
     }
 
-    @Override
+	@Override
+	public UserInfoBo getUser(Integer userId) {
+		return userExternalService.getUser(userId)
+				.map(this::toUserInfoBo)
+				.orElse(null);
+	}
+
+	@Override
     public void updateLoginDate(String username) {
         logger.debug("Update login date {}",username);
         userExternalService.updateLoginDate(username);
+    }
+
+    @Override
+    public Boolean fetchUserHasTwoFactorAuthenticationEnabled(Integer userId) {
+        return userExternalService.fetchUserHasTwoFactorAuthenticationEnabled(userId);
     }
 
     private UserInfoBo toUserInfoBo(UserInfoDto userInfoDto) {

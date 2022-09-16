@@ -56,7 +56,7 @@ export class HomeComponent implements OnInit, OnDestroy {
 
 		this.route.queryParams.subscribe(qp => this.patientId = Number(qp.idPaciente));
 
-		this.healthCareProfessionalService.getAll().subscribe(doctors => {
+		this.healthCareProfessionalService.getAllAssociated().subscribe(doctors => {
 			this.especialidadesTypeaheadOptions$ = this.getEspecialidadesTypeaheadOptions$(doctors);
 
 			this.profesionales = doctors;
@@ -102,19 +102,15 @@ export class HomeComponent implements OnInit, OnDestroy {
 		const profesionalesFilteredBy = this.getProfesionalesFilteredBy(professionalsByClinicalSpecialtyDto);
 		this.profesionalesTypeahead = profesionalesFilteredBy.map(d => this.toProfessionalTypeahead(d));
 
-		if (!professionalsByClinicalSpecialtyDto || especialidadContainsProfesional(this.idProfesional)) {
-			this.appointmentFacadeService.setProfessionalId(this.idProfesional);
-			this.agendaSearchService.search(this.idProfesional);
-		}
-
-		function especialidadContainsProfesional(idProfesional: number): boolean {
-			return professionalsByClinicalSpecialtyDto.professionalsIds.includes(idProfesional);
-		}
+		this.idProfesional = null;
+		this.router.navigate([`${this.routePrefix}`]);
+		this.appointmentFacadeService.setProfessionalId(this.idProfesional);
+		this.agendaSearchService.search(this.idProfesional);
 	}
 
 	setProfesional(result: ProfessionalDto) {
 		this.idProfesional = result?.id;
-		this.appointmentFacadeService.setProfessionalId(this.idProfesional);
+		this.appointmentFacadeService.setProfessionalId(result?.id);
 		this.agendaSearchService.search(this.idProfesional);
 		if (!result) {
 			if (this.patientId) {
@@ -146,7 +142,7 @@ export class HomeComponent implements OnInit, OnDestroy {
 	}
 
 	private getEspecialidadesTypeaheadOptions$(doctors: ProfessionalDto[]) {
-		return this.clinicalSpecialtyService.getClinicalSpecialties(doctors.map(d => d.id))
+		return this.clinicalSpecialtyService.getActiveDiariesByProfessionalsClinicalSpecialties(doctors.map(d => d.id))
 			.pipe(map(toTypeaheadOptionList));
 
 		function toTypeaheadOptionList(prosBySpecialtyList: ProfessionalsByClinicalSpecialtyDto[]):

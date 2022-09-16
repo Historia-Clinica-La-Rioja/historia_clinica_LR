@@ -46,7 +46,7 @@ public class RenaperController {
 	
 	private final HealthInsuranceService healthInsuranceService;
 
-	@Value("${ws.renaper.request.timeout:10000}")
+	@Value("${ws.renaper.request.timeout}")
 	private long requestTimeOut;
 
 

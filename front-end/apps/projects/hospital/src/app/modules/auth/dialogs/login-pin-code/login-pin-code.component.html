@@ -1,0 +1,44 @@
+<div fxLayout="row" fxLayoutAlign="space-between">
+	<div mat-dialog-title class="mat-h3">
+		{{ 'auth.login.two-factor-authentication-dialog.TITLE' | translate }}
+	</div>
+	<button mat-icon-button mat-dialog-close>
+		<mat-icon>close</mat-icon>
+	</button>
+</div>
+
+<mat-dialog-content>
+
+	<div id="description">
+		{{ 'auth.login.two-factor-authentication-dialog.DESCRIPTION' | translate }}
+	</div>
+
+	<!-- 6-DIGIT VERIFICATION CODE INPUT -->
+	<div id="otp-input">
+		<code-input
+			[codeLength]="VERIFICATION_CODE_LENGTH"
+			(codeChanged)="onCodeChange($event)"
+			(codeCompleted)="onCodeCompleted($event)">
+		</code-input>
+	</div>
+
+	<mat-error *ngIf="verificationCodeTooShort">
+		{{ 'auth.login.two-factor-authentication-dialog.VERIFICATION_CODE_MINIMUM_LENGTH' | translate }}
+	</mat-error>
+
+	<mat-error *ngIf="verificationCodeInvalid">
+		{{ 'auth.login.two-factor-authentication-dialog.VERIFICATION_CODE_INVALID' | translate }}
+	</mat-error>
+
+</mat-dialog-content>
+
+
+<mat-dialog-actions class="dialog-actions" fxLayout="row" fxLayoutAlign="end start">
+	<button mat-flat-button color="primary" (click)="verify()">
+		<span class="uppercase">
+			{{ 'auth.login.two-factor-authentication-dialog.VERIFY' | translate }}
+		</span>
+	</button>
+</mat-dialog-actions>
+
+

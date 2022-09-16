@@ -2,6 +2,7 @@ package net.pladema.user.infrastructure.input.rest.exceptions;
 
 import ar.lamansys.sgx.shared.exceptions.dto.ApiErrorMessageDto;
 import lombok.extern.slf4j.Slf4j;
+import net.pladema.user.application.port.exceptions.UserPersonStorageException;
 import net.pladema.user.application.port.exceptions.UserRoleStorageException;
 import org.springframework.core.Ordered;
 import org.springframework.core.annotation.Order;
@@ -21,4 +22,15 @@ public class UserRoleExceptionHandler {
         log.debug("RegisterUserException exception -> {}", ex.getMessage());
         return new ApiErrorMessageDto(ex.getCode().toString(), ex.getMessage());
     }
+
+
+	@ResponseStatus(HttpStatus.PRECONDITION_FAILED)
+	@ExceptionHandler({UserPersonStorageException.class})
+	protected ApiErrorMessageDto handleUserPersonStorageException(UserPersonStorageException ex) {
+		log.debug("RegisterUserException exception -> {}", ex.getMessage());
+		return new ApiErrorMessageDto(ex.getCode().toString(), ex.getMessage());
+	}
 }
+
+
+

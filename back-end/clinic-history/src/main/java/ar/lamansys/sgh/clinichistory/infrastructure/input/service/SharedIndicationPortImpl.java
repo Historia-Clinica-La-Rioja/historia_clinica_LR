@@ -11,6 +11,7 @@ import ar.lamansys.sgh.clinichistory.application.indication.getinternmentepisode
 
 import ar.lamansys.sgh.clinichistory.application.indication.getinternmentepisodeparenteralplans.GetInternmentEpisodeParenteralPlans;
 import ar.lamansys.sgh.clinichistory.application.indication.getinternmentepisodepharamacos.GetInternmentEpisodePharmacos;
+import ar.lamansys.sgh.clinichistory.application.indication.updatenursingrecordstatus.UpdateNursingRecordStatus;
 import ar.lamansys.sgh.clinichistory.domain.ips.FrequencyBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.IndicationBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.NursingRecordBo;
@@ -19,8 +20,8 @@ import ar.lamansys.sgh.clinichistory.domain.ips.QuantityBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.OtherPharmacoBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.PharmacoBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.SnomedBo;
-import ar.lamansys.sgh.shared.infrastructure.input.service.EIndicationStatus;
 import ar.lamansys.sgh.shared.infrastructure.input.service.EIndicationType;
+import ar.lamansys.sgh.shared.infrastructure.input.service.ENursingRecordStatus;
 import ar.lamansys.sgh.shared.infrastructure.input.service.FrequencyDto;
 import ar.lamansys.sgh.shared.infrastructure.input.service.IndicationDto;
 import ar.lamansys.sgh.shared.infrastructure.input.service.NewDosageDto;
@@ -85,6 +86,8 @@ public class SharedIndicationPortImpl implements SharedIndicationPort {
 	private final GetInternmentEpisodeParenteralPlans getInternmentEpisodeParenteralPlans;
 
 	private final GetInternmentEpisodeNursingRecords getInternmentEpisodeNursingRecords;
+
+	private final UpdateNursingRecordStatus updateNursingRecordStatus;
 
 	@Override
 	public List<DietDto> getInternmentEpisodeDiets(Integer internmentEpisodeId) {
@@ -160,6 +163,14 @@ public class SharedIndicationPortImpl implements SharedIndicationPort {
 	public List<NursingRecordDto> getInternmentEpisodeNursingRecords(Integer internmentEpisodeId) {
 		log.debug("Input parameter -> internmentEpisodeId {}", internmentEpisodeId);
 		List<NursingRecordDto> result = getInternmentEpisodeNursingRecords.run(internmentEpisodeId).stream().map(this::mapToNursingRecordDto).collect(Collectors.toList());
+		log.debug("Output -> {}", result);
+		return result;
+	}
+
+	@Override
+	public boolean updateNursingRecordStatus(Integer nursingRecordId, String status, LocalDateTime administrationTime, Integer userId, String reason) {
+		log.debug("Input parameter -> nursingRecordId {}, statusId {}, administrationTime {}, userId {}, reason {}", nursingRecordId, status, administrationTime, userId, reason);
+		boolean result = updateNursingRecordStatus.run(nursingRecordId, status, administrationTime, userId, reason);
 		log.debug("Output -> {}", result);
 		return result;
 	}
@@ -418,10 +429,12 @@ public class SharedIndicationPortImpl implements SharedIndicationPort {
 		result.setIndication(indicationDto);
 		result.setEvent(bo.getEvent());
 		result.setId(bo.getId());
-		result.setStatus(EIndicationStatus.map(bo.getStatusId()));
+		result.setStatus(ENursingRecordStatus.map(bo.getStatusId()));
 		result.setObservation(bo.getObservation());
 		result.setScheduledAdministrationTime(localDateMapper.toDateTimeDto(bo.getScheduledAdministrationTime()));
 		result.setAdministrationTime(localDateMapper.toDateTimeDto(bo.getAdministrationTime()));
+		result.setUpdatedBy(bo.getUpdatedByName());
+		result.setUpdateReason(bo.getUpdateReason());
 		return result;
 	}
 

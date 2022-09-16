@@ -6,15 +6,17 @@ import { SnowstormService } from "@api-rest/services/snowstorm.service";
 import { SnomedECL, SnomedDto } from "@api-rest/api-model";
 
 @Component({
-  selector: 'app-concept-typeahead-search',
-  templateUrl: './concept-typeahead-search.component.html',
-  styleUrls: ['./concept-typeahead-search.component.scss']
+	selector: 'app-concept-typeahead-search',
+	templateUrl: './concept-typeahead-search.component.html',
+	styleUrls: ['./concept-typeahead-search.component.scss']
 })
 export class ConceptTypeaheadSearchComponent {
 
 	@Input() ecl: SnomedECL;
 	@Input() placeholder = '';
 	@Input() debounceTime = 300;
+	@Input() appearanceOutline = false;
+	@Input() showSearchIcon = false;
 	@Output() conceptSelected = new EventEmitter<SnomedDto>();
 
 	myControl = new FormControl();
@@ -38,7 +40,7 @@ export class ConceptTypeaheadSearchComponent {
 		return this.searchConcepts(searchValue)
 	}
 
-	private searchConcepts(searchValue):  Observable<SnomedDto[]> {
+	private searchConcepts(searchValue): Observable<SnomedDto[]> {
 		if (searchValue.length < this.MIN_SEARCH_LENGTH) return of(this.opts);
 		return this.opts.length ?
 			of(this.opts) :

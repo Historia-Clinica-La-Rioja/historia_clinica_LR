@@ -24,7 +24,10 @@
 				},
 				"label": {
 					"SUSPENDED": "Suspendida",
-					"INDICATED": "Indicada"
+					"INDICATED": "Indicada",
+					"REJECTED": "Rechazado",
+					"COMPLETED": "Completado",
+					"IN_PROGRESS": "En progreso"
 				},
 				"indication-extra-description": {
 					"DOSE": "Dosis:",
@@ -156,6 +159,27 @@
 			},
 			"status": {
 				"PENDING": "Pendiente"
+			}, 
+			"buttons": {
+				"TO_REGISTER": "registrar",
+				"REGISTER": "marcar como completado",
+				"UNDO": "Deshacer"
+			},
+			"dialogs": {
+				"register": {
+					"TITLE": "Completar registro",
+					"OBSERVATIONS": "Observaciones",
+					"INVALID_HOUR": "La hora no puede ser inferior al horario de inicio de administración.",
+					"INVALID_FUTURE": "No se puede elegir una hora mayor a la actual",
+					"messages": {
+						"SUCCESS": "Se completó la acción de la toma de enfermería correctamente",
+						"ERROR": "No se pudo completar la acción de la toma de enfermería correctamente."
+					}
+				},
+				"reject": {
+					"TITLE": "Rechazar y definir motivo",
+					"SUBTITLE": "Ingrese el motivo por el que la indicación no puede completarse."
+				}
 			}
 		}
 	}

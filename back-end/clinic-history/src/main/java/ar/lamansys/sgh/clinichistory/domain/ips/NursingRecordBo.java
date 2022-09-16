@@ -1,6 +1,5 @@
 package ar.lamansys.sgh.clinichistory.domain.ips;
 
-import ar.lamansys.sgh.shared.infrastructure.input.service.EIndicationStatus;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -28,5 +27,10 @@ public class NursingRecordBo {
 
 	private LocalDateTime administrationTime;
 
+	private Integer updatedBy;
+
+	private String updatedByName;
+
+	private String updateReason;
 
 }

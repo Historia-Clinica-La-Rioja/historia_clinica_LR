@@ -1,0 +1,16 @@
+<div fxLayout="row" fxLayoutAlign="space-between">
+    <span mat-dialog-title [translate]="'ambulatoria.vaccine-search.TITLE'"></span>
+    <button mat-icon-button mat-dialog-close>
+        <mat-icon>close</mat-icon>
+    </button>
+</div>
+
+<div mat-dialog-content>
+    <app-concepts-search [label]="'ambulatoria.vaccine-search.IMMUNIZATION'" (search)="onSearch($event)"
+        [initialSearchValue]="this.data.searchValue">
+    </app-concepts-search>
+    <div *ngIf="searching" class="spinner" fxLayoutAlign="center center">
+        <mat-spinner diameter="70" color="primary"></mat-spinner>
+    </div>
+    <app-table *ngIf="!searching" [model]="conceptsResultsTable"></app-table>
+</div>

@@ -5,7 +5,6 @@ import { DockPopupService } from '@presentation/services/dock-popup.service';
 import { HealthcareProfessionalService } from '@api-rest/services/healthcare-professional.service';
 import { DiariesService } from '@api-rest/services/diaries.service';
 import { CalendarDateService } from '@turnos/services/calendar-date.service';
-import { AppointmentsFacadeService } from '@turnos/services/appointments-facade.service';
 
 @Component({
 	selector: 'app-calendar-professional-view',
@@ -22,7 +21,6 @@ export class CalendarProfessionalViewComponent implements OnInit, OnDestroy {
 		private readonly dockPopupService: DockPopupService,
 		private readonly healthcareProfessional: HealthcareProfessionalService,
 		private readonly diaryService: DiariesService,
-		private readonly appointmentFacade: AppointmentsFacadeService,
 		private readonly calendarDateService: CalendarDateService
 	) { }
 

@@ -14,6 +14,13 @@
 			"external": {
 				"TITLE": "Iniciar sesión",
 				"GO_TO_EXTERNAL_LOGIN": "Ingresar con OAuth"
+			},
+			"two-factor-authentication-dialog": {
+				"TITLE": "Ingrese código de autenticación por doble factor",
+				"DESCRIPTION": "Ingrese el código que aparece en su aplicación de doble factor de autenticación (Google Authenticator, FreeOTP o similar)",
+				"VERIFICATION_CODE_MINIMUM_LENGTH": "El código debe contener 6 dígitos",
+				"VERIFICATION_CODE_INVALID": "Código incorrecto",
+				"VERIFY": "Verificar"
 			}
 		},
 		"LOGOUT": "Cerrar Sesión",
@@ -48,7 +55,11 @@
 				"REPASSWORD_LABEL": "Repetir clave",
 				"REPASSWORD_NOTEQUIVALENT": "Deben coincidir las claves",
 				"REPASSWORD_REQUIRED": "Debe reingresar la clave",
-				"SUBMIT": "Confirmar"
+				"SUBMIT": "Confirmar",
+				"ERROR_MINLENGTH": "Mínimo de 8 caracteres",
+				"ERROR_UPPERCASE": "Mayúscula",
+				"ERROR_LOWERCASE": "Mínuscula",
+				"ERROR_NUMBER": "Número"
 			},
 			"result": {
 				"OK": "Sus datos de acceso fueron establecidos correctamente",

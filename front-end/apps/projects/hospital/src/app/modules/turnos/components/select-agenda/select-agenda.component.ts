@@ -4,9 +4,11 @@ import { DatePipe } from '@angular/common';
 import { MatOptionSelectionChange } from '@angular/material/core';
 import { MatDialog } from '@angular/material/dialog';
 import { Subscription } from 'rxjs';
+import { isAfter, parseISO, startOfToday } from 'date-fns';
 
 import { ContextService } from '@core/services/context.service';
 import { processErrors } from '@core/utils/form.utils';
+import { DatePipeFormat } from '@core/utils/date.utils';
 
 import { DailyAppointmentService } from '@api-rest/services/daily-appointment.service';
 import { DiaryService } from '@api-rest/services/diary.service';
@@ -19,8 +21,6 @@ import { DatePickerComponent } from '@presentation/dialogs/date-picker/date-pick
 import { AgendaSearchService, AgendaFilters, AgendaOptionsData } from '../../services/agenda-search.service';
 import { AppointmentsFacadeService } from '@turnos/services/appointments-facade.service';
 import { BlockAgendaRangeComponent } from '@turnos/dialogs/block-agenda-range/block-agenda-range.component';
-import { isAfter, parseISO, startOfToday } from 'date-fns';
-import { DatePipeFormat } from '@core/utils/date.utils';
 
 @Component({
 	selector: 'app-select-agenda',
@@ -42,7 +42,6 @@ export class SelectAgendaComponent implements OnInit, OnDestroy {
 
 	private readonly routePrefix = 'institucion/' + this.contextService.institutionId;
 	private patientId: number;
-	@Input() professionalId: number;
 
 	constructor(
 		private readonly router: Router,
@@ -78,9 +77,9 @@ export class SelectAgendaComponent implements OnInit, OnDestroy {
 		if (event.isUserInput) {
 			this.agendaSelected = agenda;
 			if (this.patientId) {
-				this.router.navigate([`agenda/${agenda.id}`], { relativeTo: this.route, queryParams: { idPaciente: this.patientId, idProfessional: this.professionalId } });
+				this.router.navigate([`agenda/${agenda.id}`], { relativeTo: this.route, queryParams: { idPaciente: this.patientId } });
 			} else {
-				this.router.navigate([`agenda/${agenda.id}`], { relativeTo: this.route , queryParams: { idProfessional: this.professionalId } });
+				this.router.navigate([`agenda/${agenda.id}`], { relativeTo: this.route });
 			}
 		}
 	}
@@ -190,4 +189,9 @@ export class SelectAgendaComponent implements OnInit, OnDestroy {
 		}
 
 	}
+
+	getAliasAndSpecialtyText(alias: string, clinicalSpecialtyName: string): string {
+		return `${alias} (${clinicalSpecialtyName})`;
+	}
+
 }

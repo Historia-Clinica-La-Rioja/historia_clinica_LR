@@ -44,11 +44,12 @@ public class BedServiceImpl implements BedService {
 	@Override
 	public Bed updateBedStatusOccupied(Integer id) {
 		LOG.debug("Input parameters -> BedId {}", id);
-		Bed bedToUpdate = bedRepository.getOne(id);
-		bedToUpdate.setFree(false);
-		Bed result = bedRepository.save(bedToUpdate);
-		LOG.debug(OUTPUT, result);
-		return result;
+		return bedRepository.findById(id).map(bedToUpdate -> {
+			bedToUpdate.setFree(false);
+			Bed result = bedRepository.save(bedToUpdate);
+			LOG.debug(OUTPUT, result);
+			return result;
+		}).get();
 	}
 
 	@Override

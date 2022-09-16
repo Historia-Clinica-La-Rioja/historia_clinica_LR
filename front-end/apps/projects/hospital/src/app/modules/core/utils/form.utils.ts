@@ -1,4 +1,4 @@
-import { FormGroup, FormArray, AbstractControl, FormControl, ValidationErrors } from '@angular/forms';
+import {FormGroup, FormArray, AbstractControl, FormControl, ValidationErrors, ValidatorFn} from '@angular/forms';
 import { ElementRef } from '@angular/core';
 import { Moment } from 'moment';
 import { newMoment, momentFormat, DateFormat } from './moment.utils';
@@ -88,6 +88,7 @@ export function beforeTimeDateValidation(date: string) {
 function isValidTime(time: string) {
 	return time.match('([0-1]{1}[0-9]{1}|20|21|22|23):[0-5]{1}[0-9]{1}');
 }
+
 export class MinTimeValidator {
 	constructor(private readonly minDateTime: Moment) { }
 
@@ -130,4 +131,13 @@ export function updateForm(form: FormGroup) {
 		const abstractControl = form.controls[key];
 		abstractControl.updateValueAndValidity();
 	});
+}
+
+export function patternValidator(regex: RegExp, error: ValidationErrors): ValidatorFn {
+	return (control: AbstractControl): {[key: string]: any} => {
+		if (!control.value) {
+			return null;
+		}
+		return regex.test(control.value) ? null : error;
+	};
 }

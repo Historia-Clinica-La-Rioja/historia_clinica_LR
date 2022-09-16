@@ -21,9 +21,9 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public abstract class JWTFilter extends OncePerRequestFilter implements AuthenticationFilter {
 
-	private final String secret;
-	private final Function<String, Optional<Authentication>> authenticationLoader;
-	private final Function<HttpServletRequest, Optional<String>> tokenExtractor;
+	protected final String secret;
+	protected final Function<String, Optional<Authentication>> authenticationLoader;
+	protected final Function<HttpServletRequest, Optional<String>> tokenExtractor;
 
 	protected JWTFilter(
 			@Value("${token.secret}") String secret,
@@ -50,7 +50,7 @@ public abstract class JWTFilter extends OncePerRequestFilter implements Authenti
 		log.debug("Response {}", response.getStatus());
 	}
 
-	private String removeBearer(String token) {
+	protected String removeBearer(String token) {
 		return token.replaceFirst("^Bearer ", "");
 	}
 

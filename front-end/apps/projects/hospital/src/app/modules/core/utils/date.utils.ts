@@ -49,3 +49,15 @@ export function getDayHoursIntervalsByMinuteValue(date: Date, timeRange: number)
 	dividedDate[dividedDate.length - 1] = addMinutes(dividedDate[dividedDate.length - 1], -1);
 	return dividedDate;
 }
+
+export function getDayHoursRangeIntervalsByMinuteValue(startDate: Date, endDate: Date, timeRange: number): Date[]{
+	const hours = Math.abs(endDate.getTime() - startDate.getTime()) / (1000 * 60 * 60) % 24;
+	var dividedDate = [];
+
+	for (let currentRangeValue = 0; currentRangeValue < (60/timeRange)*hours; currentRangeValue++){
+		dividedDate[currentRangeValue] = new Date(startDate);
+		startDate = addMinutes(startDate, timeRange);
+	}
+	
+	return dividedDate;
+}

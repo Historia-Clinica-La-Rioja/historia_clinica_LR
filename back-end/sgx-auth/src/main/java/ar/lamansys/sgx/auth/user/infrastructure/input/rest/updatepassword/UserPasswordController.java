@@ -1,7 +1,6 @@
 package ar.lamansys.sgx.auth.user.infrastructure.input.rest.updatepassword;
 
 import ar.lamansys.sgx.auth.user.application.updateownpassword.UpdateOwnPassword;
-import ar.lamansys.sgx.auth.user.domain.user.service.UserStorage;
 import ar.lamansys.sgx.auth.user.infrastructure.input.rest.updatepassword.dto.PasswordDto;
 import ar.lamansys.sgx.shared.security.UserInfo;
 import io.swagger.v3.oas.annotations.tags.Tag;

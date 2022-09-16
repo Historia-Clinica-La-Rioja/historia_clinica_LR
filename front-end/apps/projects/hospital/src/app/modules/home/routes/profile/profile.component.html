@@ -22,9 +22,22 @@
 						<button mat-button color="primary" (click)="updatePassword()">Cambiar mi contraseña</button>
 					</div>
 			</mat-list-item>
+			<mat-list-item *ngIf="twoFactorAuthenticationFFEnabled">
+				<mat-icon color="primary" mat-list-icon fontSet="material-icons-outlined">devices</mat-icon>
+				<button *ngIf="!twoFactorAuthenticationEnabledForUser else alreadyActivated" mat-button color="primary" (click)="openTwoFactorAuthenticationDialog()">
+					{{'profile.two-factor-authentication.ENABLE_2FA' | translate}}
+				</button>
+				<ng-template #alreadyActivated>
+					<button  mat-button color="primary" disabled="true">
+						{{'profile.two-factor-authentication.2FA_ALREADY_ACTIVATED' | translate}}
+					</button>
+				</ng-template>
+			</mat-list-item>
 		</mat-list>
 		<ng-template #loading>
 			<mat-progress-bar mode="indeterminate"></mat-progress-bar>
 		</ng-template>
+
+
 	</mat-card>
 </app-content>

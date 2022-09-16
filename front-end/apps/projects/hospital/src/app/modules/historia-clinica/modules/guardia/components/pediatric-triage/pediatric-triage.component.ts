@@ -2,13 +2,14 @@ import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { AbstractControl, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MasterDataDto, NewEffectiveClinicalObservationDto, TriagePediatricDto } from '@api-rest/api-model';
 import { TriageMasterDataService } from '@api-rest/services/triage-master-data.service';
-import { RISK_FACTORS } from '@core/constants/validation-constants';
 import { getError, hasError } from '@core/utils/form.utils';
 import { Observable } from 'rxjs';
-import { EffectiveObservation, RiskFactorsFormService } from '../../../../services/risk-factors-form.service';
 import { Moment } from 'moment';
 import { newMoment } from '@core/utils/moment.utils';
 import { GuardiaMapperService } from '../../services/guardia-mapper.service';
+import { EffectiveObservation, FactoresDeRiesgoFormService } from '@historia-clinica/services/factores-de-riesgo-form.service';
+import { FACTORES_DE_RIESGO } from '@historia-clinica/constants/validation-constants';
+import { TranslateService } from '@ngx-translate/core';
 
 @Component({
 	selector: 'app-pediatric-triage',
@@ -39,12 +40,15 @@ export class PediatricTriageComponent implements OnInit {
 		respiratoryRetractionId: (control) => control.controls.respiratoryRetractionId.reset(),
 		perfusionId: (control) => control.controls.perfusionId.reset(),
 	}
+	
+	factoresDeRiesgoFormService: FactoresDeRiesgoFormService;
 
 	constructor(
 		private formBuilder: FormBuilder,
 		private readonly triageMasterDataService: TriageMasterDataService,
-		private readonly riskFactorsFormService: RiskFactorsFormService
+		private readonly translateService: TranslateService,
 	) {
+		this.factoresDeRiesgoFormService = new FactoresDeRiesgoFormService(formBuilder, translateService);
 	}
 
 	ngOnInit(): void {
@@ -58,11 +62,11 @@ export class PediatricTriageComponent implements OnInit {
 			}),
 			breathing: this.formBuilder.group({
 				bloodOxygenSaturation: this.formBuilder.group({
-					value: [null, Validators.min(RISK_FACTORS.min_value)],
+					value: [null, Validators.min(FACTORES_DE_RIESGO.MIN.bloodOxygenSaturation)],
 					effectiveTime: [newMoment()]
 				}),
 				respiratoryRate: this.formBuilder.group({
-					value: [null, Validators.min(RISK_FACTORS.min_value)],
+					value: [null, Validators.min(FACTORES_DE_RIESGO.MIN.respiratoryRate)],
 					effectiveTime: [newMoment()]
 				}),
 				respiratoryRetractionId: [null],
@@ -70,7 +74,7 @@ export class PediatricTriageComponent implements OnInit {
 			}),
 			circulation: this.formBuilder.group({
 				heartRate: this.formBuilder.group({
-					value: [null, Validators.min(RISK_FACTORS.min_value)],
+					value: [null, Validators.min(FACTORES_DE_RIESGO.MIN.heartRate)],
 					effectiveTime: [newMoment()]
 				}),
 				perfusionId: [null]
@@ -97,8 +101,8 @@ export class PediatricTriageComponent implements OnInit {
 		}
 	}
 
-	setRiskFactorEffectiveTime(newEffectiveTime: Moment, form, field: string): void {
-		this.riskFactorsFormService.setRiskFactorEffectiveTime(newEffectiveTime, form as FormGroup, field);
+	setRiskFactorEffectiveTime(newEffectiveTime: Moment, form: AbstractControl, field: string): void {
+		(form.get(field) as FormGroup).controls.effectiveTime.setValue(newEffectiveTime);
 	}
 
 	back(): void {
@@ -106,7 +110,7 @@ export class PediatricTriageComponent implements OnInit {
 	}
 
 	private mapRiskFactorToDto(riskFactorValue): NewEffectiveClinicalObservationDto {
-		const effectiveObservation: EffectiveObservation = this.riskFactorsFormService.getEffectiveObservation(riskFactorValue);
+		const effectiveObservation: EffectiveObservation = this.factoresDeRiesgoFormService.getEffectiveObservation(riskFactorValue);
 		return GuardiaMapperService._mapEffectiveObservationToNewEffectiveClinicalObservationDto(effectiveObservation);
 	}
 

@@ -50,6 +50,9 @@ import { PersonIdentificationPipe } from './pipes/person-identification.pipe';
 import { ViewDateDtoPipe } from './pipes/view-date-dto.pipe';
 import { ViewDatePipe } from './pipes/view-date.pipe';
 import { ViewHourMinutePipe } from './pipes/view-hour-minute.pipe';
+import { DocumentSectionCardListComponent } from './components/document-section-card-list/document-section-card-list.component';
+import { ChipIndicatorComponent } from './components/chip-indicator/chip-indicator.component';
+import { ColoredLabelComponent } from './colored-label/colored-label.component';
 
 
 @NgModule({
@@ -58,6 +61,7 @@ import { ViewHourMinutePipe } from './pipes/view-hour-minute.pipe';
 		BarComponent,
 		CategoryHeaderDividerComponent,
 		CellTemplatesComponent,
+		ColoredLabelComponent,
 		ContentTitleComponent,
 		DatepickerComponent,
 		DetailBoxComponent,
@@ -87,6 +91,8 @@ import { ViewHourMinutePipe } from './pipes/view-hour-minute.pipe';
 		TableComponent,
 		TypeaheadComponent,
 		UserBadgeComponent,
+		DocumentSectionCardListComponent,
+		ChipIndicatorComponent,
 		// dialogs
 		ConfirmDialogComponent,
 		DatePickerComponent,
@@ -100,7 +106,6 @@ import { ViewHourMinutePipe } from './pipes/view-hour-minute.pipe';
 		ViewDateDtoPipe,
 		ViewDatePipe,
 		ViewHourMinutePipe,
-
 	],
 	imports: [
 		CommonModule,
@@ -117,9 +122,11 @@ import { ViewHourMinutePipe } from './pipes/view-hour-minute.pipe';
 		CoreModule,
 		AppMaterialModule,
 		// components
+		DocumentSectionCardListComponent,
 		BarComponent,
 		CategoryHeaderDividerComponent,
 		CellTemplatesComponent,
+		ColoredLabelComponent,
 		ContentTitleComponent,
 		DatepickerComponent,
 		DetailBoxComponent,
@@ -146,6 +153,7 @@ import { ViewHourMinutePipe } from './pipes/view-hour-minute.pipe';
 		TableComponent,
 		TypeaheadComponent,
 		UserBadgeComponent,
+		ChipIndicatorComponent,
 		// dialogs
 		// directives
 		CtrlTemplateDirective,

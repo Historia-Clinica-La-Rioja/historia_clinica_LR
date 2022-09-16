@@ -39,5 +39,11 @@ public class DiaryBo {
     protected boolean deleted = false;
 
 	protected Integer clinicalSpecialtyId;
+
+	protected List<Integer> diaryAssociatedProfessionalsId;
+
+	protected String alias;
+
+	protected String clinicalSpecialtyName;
     
 }

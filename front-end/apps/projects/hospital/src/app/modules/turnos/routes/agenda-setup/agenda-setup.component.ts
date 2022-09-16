@@ -1,5 +1,5 @@
 import { ChangeDetectorRef, Component, ElementRef, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { FormArray, FormControl, FormGroup, ValidationErrors, ValidatorFn, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { MatDialog } from '@angular/material/dialog';
 import { TranslateService } from '@ngx-translate/core';
@@ -66,7 +66,6 @@ export class AgendaSetupComponent implements OnInit {
 	private mappedCurrentWeek = {};
 
 	constructor(
-		private readonly formBuilder: FormBuilder,
 		private readonly el: ElementRef,
 		private readonly sectorService: SectorService,
 		private translator: TranslateService,
@@ -94,14 +93,17 @@ export class AgendaSetupComponent implements OnInit {
 			this.mappedCurrentWeek[day.day()] = day;
 		});
 
-		this.form = this.formBuilder.group({
-			sectorId: [null, [Validators.required]],
-			doctorOffice: [null, [Validators.required]],
-			healthcareProfessionalId: [null, [Validators.required]],
-			startDate: [null, [Validators.required]],
-			endDate: [null, [Validators.required]],
-			appointmentDuration: [null, [Validators.required]],
-			healthcareProfessionalSpecialtyId: [null, [Validators.required]]
+		this.form = new FormGroup({
+			sectorId: new FormControl(null, [Validators.required]),
+			doctorOffice: new FormControl(null, [Validators.required]),
+			healthcareProfessionalId: new FormControl(null, [Validators.required]),
+			startDate: new FormControl(null, [Validators.required]),
+			endDate: new FormControl(null, [Validators.required]),
+			appointmentDuration: new FormControl(null, [Validators.required]),
+			healthcareProfessionalSpecialtyId: new FormControl(null, [Validators.required]),
+			conjointDiary: new FormControl(false, [Validators.nullValidator]),
+			alias: new FormControl(null, [Validators.nullValidator]),
+			otherProfessionals: new FormArray([], [this.otherPossibleProfessionals()]),
 		});
 
 		this.form.controls.appointmentDuration.valueChanges
@@ -166,11 +168,22 @@ export class AgendaSetupComponent implements OnInit {
 		this.holidayWork = diary.includeHoliday;
 
 		this.agendaHorarioService.setDiaryOpeningHours(diary.diaryOpeningHours);
+
+		if (diary.diaryAssociatedProfessionalsId.length > 0) {
+			const professionalsReference = this.form.controls.otherProfessionals as FormArray;
+			this.form.controls.conjointDiary.setValue(true);
+			diary.diaryAssociatedProfessionalsId.forEach(diaryAssociatedProfessionalId => {
+				professionalsReference.push(this.initializeAnotherProfessional());
+				professionalsReference.controls[professionalsReference.length-1].setValue({ healthcareProfessionalId: diaryAssociatedProfessionalId });
+			});
+		}
+
+		if (diary.alias) {
+			this.form.controls.alias.setValue(diary.alias);
+		}
 	}
 
 	private disableNotEditableControls(): void {
-		this.form.get('sectorId').disable();
-		this.form.get('doctorOffice').disable();
 		this.form.get('healthcareProfessionalId').disable();
 		this.form.get('appointmentDuration').disable();
 	}
@@ -194,8 +207,8 @@ export class AgendaSetupComponent implements OnInit {
 		}
 	}
 
-	getFullNameLicence(professional: ProfessionalDto): string {
-		return `${professional.lastName}, ${this.patientNameService.getPatientName(professional.firstName, professional.nameSelfDetermination)} - ${professional.licenceNumber}`;
+	getFullName(professional: ProfessionalDto): string {
+		return `${professional.lastName}, ${this.patientNameService.getPatientName(professional.firstName, professional.nameSelfDetermination)}`;
 	}
 
 	appointmentManagementChange(): void {
@@ -297,7 +310,9 @@ export class AgendaSetupComponent implements OnInit {
 			professionalAssignShift: this.appointmentManagement,
 
 			diaryOpeningHours: this.agendaHorarioService.getDiaryOpeningHours(),
-			clinicalSpecialtyId: this.form.value.healthcareProfessionalSpecialtyId
+			clinicalSpecialtyId: this.form.value.healthcareProfessionalSpecialtyId,
+			alias: this.form.value.alias,
+			diaryAssociatedProfessionalsId: this.form.value.otherProfessionals.map(professional => professional.healthcareProfessionalId)
 		};
 	}
 
@@ -311,6 +326,62 @@ export class AgendaSetupComponent implements OnInit {
 	getProfessionalSpecialties() {
 		this.specialtyService.getAllSpecialtyByProfessional(this.contextService.institutionId, this.form.get("healthcareProfessionalId").value)
 			.subscribe(response => this.professionalSpecialties = response)
+	}
+
+	getControl(key: string): any {
+		return this.form.get(key);
+	}
+
+	addAssociatedProfessional() {
+		const currentOtherProfessionals = this.form.controls.otherProfessionals as FormArray;
+		currentOtherProfessionals.push(this.initializeAnotherProfessional());
+	}
+
+	private initializeAnotherProfessional(): FormGroup {
+		return new FormGroup({
+			healthcareProfessionalId: new FormControl(null, [Validators.required]),
+		});
+	}
+
+	clear(i: number): void {
+		const professionalsReference = this.form.controls.otherProfessionals as FormArray;
+		if (professionalsReference.length === 1) {
+			professionalsReference.controls[0].setValue({ healthcareProfessionalId: null });
+		}
+		else {
+			professionalsReference.removeAt(i);
+		}
+	}
+
+	updateAssociatedProfessionalsForm() {
+		let professionalsReference = this.form.controls.otherProfessionals as FormArray;
+		if (this.form.value.conjointDiary === true) {
+			professionalsReference.push(this.initializeAnotherProfessional());
+		}
+		else {
+			professionalsReference.clear();
+			this.form.controls.conjointDiary.setValue(false);
+		}
+	}
+
+	private otherPossibleProfessionals(): ValidatorFn {
+		return (control: FormArray): ValidationErrors | null => {
+			return control.valid ? null : {validProfessionals: {valid: false}};
+		};
+	}
+
+	validExtraProfessionalsList(): boolean {
+		const professionalsReference = this.form.controls.otherProfessionals as FormArray;
+		return professionalsReference.valid;
+	}
+
+	isProfessionalNonSelectable(professionalId: number): boolean {
+		const professionalsReference = this.form.controls.otherProfessionals as FormArray;
+		return professionalsReference.value.map(professional => professional.healthcareProfessionalId).includes(professionalId);
+	}
+
+	getNonResponsibleProfessional(): ProfessionalDto[] {
+		return this.professionals?.filter(professional => professional.id !== this.form.controls.healthcareProfessionalId.value);
 	}
 
 }

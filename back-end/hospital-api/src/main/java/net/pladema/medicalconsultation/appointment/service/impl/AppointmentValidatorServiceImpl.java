@@ -1,13 +1,27 @@
 package net.pladema.medicalconsultation.appointment.service.impl;
 
+import java.time.LocalDate;
+import java.time.LocalTime;
+import java.time.ZoneId;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.function.Function;
 
 import javax.validation.ValidationException;
+
+import ar.lamansys.sgx.shared.dates.configuration.DateTimeProvider;
+import net.pladema.establishment.controller.service.InstitutionExternalService;
+import net.pladema.medicalconsultation.appointment.service.impl.exceptions.UpdateAppointmentDateException;
+import net.pladema.medicalconsultation.appointment.service.impl.exceptions.UpdateAppointmentDateExceptionEnum;
+import net.pladema.medicalconsultation.diary.service.DiaryAssociatedProfessionalService;
+import net.pladema.medicalconsultation.diary.service.DiaryOpeningHoursService;
+import net.pladema.medicalconsultation.diary.service.domain.DiaryOpeningHoursBo;
+
+import net.pladema.medicalconsultation.diary.service.domain.OpeningHoursBo;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -35,29 +49,37 @@ public class AppointmentValidatorServiceImpl implements AppointmentValidatorServ
 
     private final Collection<Short> statesWithReason;
 
-    private final DiaryService diaryService;
+	private final DiaryService diaryService;
+	private final DiaryOpeningHoursService diaryOpeningHoursService;
+
     private final HealthcareProfessionalService healthcareProfessionalService;
     private final AppointmentService appointmentService;
+
+	private final DiaryAssociatedProfessionalService diaryAssociatedProfessionalService;
     private final Function<Integer, Boolean> hasAdministrativeRole;
     private final Function<Integer, Boolean> hasProfessionalRole;
+	private final InstitutionExternalService institutionExternalService;
+	private final DateTimeProvider dateTimeProvider;
 
     public AppointmentValidatorServiceImpl(
-            DiaryService diaryService,
-            HealthcareProfessionalService healthcareProfessionalService,
-            AppointmentService appointmentService,
-            LoggedUserExternalService loggedUserExternalService
-    ) {
+			DiaryService diaryService, DiaryOpeningHoursService diaryOpeningHoursService, HealthcareProfessionalService healthcareProfessionalService,
+			AppointmentService appointmentService, DiaryAssociatedProfessionalService diaryAssociatedProfessionalService,
+			LoggedUserExternalService loggedUserExternalService, InstitutionExternalService institutionExternalService, DateTimeProvider dateTimeProvider) {
         this.diaryService = diaryService;
-        this.healthcareProfessionalService = healthcareProfessionalService;
+		this.diaryOpeningHoursService = diaryOpeningHoursService;
+		this.healthcareProfessionalService = healthcareProfessionalService;
         this.appointmentService = appointmentService;
+		this.diaryAssociatedProfessionalService = diaryAssociatedProfessionalService;
         this.hasAdministrativeRole = loggedUserExternalService.hasAnyRoleInstitution(
                 ERole.ADMINISTRADOR_AGENDA, ERole.ADMINISTRATIVO
         );
         this.hasProfessionalRole = loggedUserExternalService.hasAnyRoleInstitution(
                 ERole.ESPECIALISTA_MEDICO, ERole.PROFESIONAL_DE_SALUD, ERole.ESPECIALISTA_EN_ODONTOLOGIA, ERole.ENFERMERO
         );
+		this.institutionExternalService = institutionExternalService;
+		this.dateTimeProvider = dateTimeProvider;
 
-        this.validStates = buildValidStates();
+		this.validStates = buildValidStates();
         this.statesWithReason = Arrays.asList(CANCELLED, ABSENT);
     }
 
@@ -84,7 +106,8 @@ public class AppointmentValidatorServiceImpl implements AppointmentValidatorServ
             DiaryBo diary = diaryService.getDiaryById(apmtOpt.get().getDiaryId());
 
             Integer professionalId = healthcareProfessionalService.getProfessionalId(UserInfo.getCurrentAuditor());
-            if (Boolean.TRUE.equals(hasProfessionalRole.apply(institutionId)) && !diary.getHealthcareProfessionalId().equals(professionalId)) {
+			List<Integer> associatedHealthcareProfessionals = diaryAssociatedProfessionalService.getAllAssociatedWithProfessionalsByHealthcareProfessionalId(professionalId);;
+            if (Boolean.TRUE.equals(hasProfessionalRole.apply(institutionId)) && !diary.getHealthcareProfessionalId().equals(professionalId) && !associatedHealthcareProfessionals.contains(diary.getHealthcareProfessionalId())) {
                 throw new ValidationException("appointment.new.professional.id.invalid}");
             }
         }
@@ -97,6 +120,41 @@ public class AppointmentValidatorServiceImpl implements AppointmentValidatorServ
     private boolean validStateTransition(short appointmentStateId, AppointmentBo apmt) {
         return validStates.get(apmt.getAppointmentStateId()).contains(appointmentStateId);
     }
+
+	public boolean validateDateUpdate(Integer institutionId, Integer appointmentId, LocalDate date, LocalTime time){
+		LOG.debug("Input parameters -> appointmentId {}, date {}, time {}", appointmentId, date, time);
+		Optional<DiaryBo> diary = diaryService.getDiaryByAppointment(appointmentId);
+		Optional<AppointmentBo> appointmentBo = appointmentService.getAppointment(appointmentId);
+		ZoneId institutionZoneId = institutionExternalService.getTimezone(institutionId);
+		LocalDate todayDate = dateTimeProvider.nowDate();
+		LocalTime todayTime = dateTimeProvider.nowDateTimeWithZone(institutionZoneId).toLocalTime();
+		
+		if ((date.isBefore(todayDate)) || ((date.equals(todayDate)) && (time.isBefore(todayTime)))){
+			throw new UpdateAppointmentDateException(UpdateAppointmentDateExceptionEnum.APPOINTMENT_DATE_BEFORE_NOW, String.format("El horario del turno es anterior a la hora actual."));
+		}
+
+		if ((diary.get().getStartDate().isAfter(date)) || (diary.get().getEndDate().isBefore(date))){
+			throw new UpdateAppointmentDateException(UpdateAppointmentDateExceptionEnum.APPOINTMENT_DATE_OUT_OF_DIARY_RANGE, String.format("La fecha del turno se encuentra fuera del rango de la agenda."));
+		}
+		if (appointmentBo.get().getAppointmentStateId() != 1){
+			throw new UpdateAppointmentDateException(UpdateAppointmentDateExceptionEnum.APPOINTMENT_STATE_INVALID, String.format("El estado del turno es invalido."));
+		}
+
+		if(appointmentService.existAppointment(appointmentBo.get().getDiaryId(),date,time)) {
+			throw new UpdateAppointmentDateException(UpdateAppointmentDateExceptionEnum.APPOINTMENT_DATE_ALREADY_ASSIGNED, String.format("En ese horario ya existe un turno asignado o la agenda se encuentra bloqueada."));
+		}
+
+		Collection<DiaryOpeningHoursBo> diaryOpeningHours = diaryOpeningHoursService.getDiaryOpeningHours(diary.get().getId());
+		for (DiaryOpeningHoursBo doh: diaryOpeningHours) {
+			OpeningHoursBo oh = doh.getOpeningHours();
+			if(oh.getDayWeekId() == date.getDayOfWeek().getValue()){
+				if(((oh.getFrom().isBefore(time)) && (oh.getTo().isAfter(time))) || (oh.getFrom().equals(time))) {
+					return true;
+				}
+			}
+		}
+		throw new UpdateAppointmentDateException(UpdateAppointmentDateExceptionEnum.APPOINTMENT_DATE_OUT_OF_OPENING_HOURS, String.format("El horario del turno se encuentra fuera de la agenda."));
+	}
 
     private static Map<Short, Collection<Short>> buildValidStates() {
         return Map.of(

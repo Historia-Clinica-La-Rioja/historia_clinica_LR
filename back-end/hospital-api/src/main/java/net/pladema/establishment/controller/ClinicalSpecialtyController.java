@@ -123,5 +123,19 @@ public class ClinicalSpecialtyController {
         return ResponseEntity.ok().body(result);
     }
 
+	@GetMapping(value = "/institution/{institutionId}/clinicalspecialty/diary/professional", params = "professionalsIds")
+	@PreAuthorize("hasPermission(#institutionId, 'ADMINISTRATIVO, ADMINISTRADOR_AGENDA, ADMINISTRADOR_INSTITUCIONAL_BACKOFFICE, ESPECIALISTA_MEDICO, PROFESIONAL_DE_SALUD, ESPECIALISTA_EN_ODONTOLOGIA, ENFERMERO, PERSONAL_DE_ESTADISTICA')")
+	public ResponseEntity<List<ProfessionalsByClinicalSpecialtyDto>> getManyByActiveDiariesAndProfessionals(
+			@PathVariable(name = "institutionId") Integer institutionId,
+			@RequestParam List<Integer> professionalsIds) {
+		List<ProfessionalsByClinicalSpecialtyBo> clinicalSpecialties =
+				this.healthcareProfessionalSpecialtyService.getProfessionalsByActiveDiaryAndClinicalSpecialtyBo(professionalsIds, institutionId);
+		List<ProfessionalsByClinicalSpecialtyDto> professionalsByClinicalSpecialtyDtos =
+				clinicalSpecialtyMapper.fromProfessionalsByClinicalSpecialtyBoList(clinicalSpecialties);
+
+		LOG.debug("Get all Clinical Specialty by active diaries, Professionals {} and Institution {} => {}", professionalsIds, institutionId, professionalsByClinicalSpecialtyDtos);
+		return ResponseEntity.ok(professionalsByClinicalSpecialtyDtos);
+	}
+
 }
 

@@ -6,6 +6,7 @@ import net.pladema.medicalconsultation.diary.repository.domain.DiaryListVo;
 import net.pladema.medicalconsultation.doctorsoffice.repository.entity.DoctorsOffice;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -24,6 +25,7 @@ class DiaryRepositoryTest extends UnitRepository {
 	}
 
 	@Test
+	@Disabled
 	void test_active_diaries_from_professional() {
 
 		String startDate = "2020-05-04";
@@ -47,6 +49,8 @@ class DiaryRepositoryTest extends UnitRepository {
 
 		save(DiaryTestMocks.createDiary(2, 1, LocalDate.parse(startDate, formatter),
 				LocalDate.parse(endDate, formatter), (short) 1, true, (short) 4, true, true, true, 1));
+
+		save(DiaryTestMocks.createClinicalSpecialty((short) 1, "1", "1"));
 
 		List<DiaryListVo> resultQuery = diaryRepository.getActiveDiariesFromProfessional(1, 1);
 

@@ -6,6 +6,7 @@ import net.pladema.permissions.repository.entity.UserRole;
 import net.pladema.permissions.repository.enums.ERole;
 import net.pladema.permissions.service.RoleService;
 import net.pladema.staff.repository.HealthcareProfessionalRepository;
+import net.pladema.staff.repository.ProfessionalProfessionRepository;
 import net.pladema.user.application.port.UserRoleStorage;
 import net.pladema.user.application.port.exceptions.UserPersonStorageEnumException;
 import net.pladema.user.application.port.exceptions.UserPersonStorageException;
@@ -28,6 +29,8 @@ public class UserRoleStorageImpl implements UserRoleStorage {
     private final HealthcareProfessionalRepository healthcareProfessionalRepository;
 
     private final UserPersonRepository userPersonRepository;
+
+	private final ProfessionalProfessionRepository professionalProfessionRepository;
 
     private final RoleService roleService;
 
@@ -74,7 +77,9 @@ public class UserRoleStorageImpl implements UserRoleStorage {
 
     private boolean isValidRole(UserRoleBo role) {
         return !isProfessional(role) || userPersonRepository.getPersonIdByUserId(role.getUserId())
-                .map(personId -> healthcareProfessionalRepository.findProfessionalByPersonId(personId).isPresent())
+                .map(personId -> healthcareProfessionalRepository.findProfessionalByPersonId(personId)
+                .map(hp-> professionalProfessionRepository.countActiveByHealthcareProfessionalId(hp)>0)
+                .orElse(false))
                 .orElseThrow(() -> new UserPersonStorageException(UserPersonStorageEnumException.UNEXISTED_USER, "El usuario no existe"));
     }
 
