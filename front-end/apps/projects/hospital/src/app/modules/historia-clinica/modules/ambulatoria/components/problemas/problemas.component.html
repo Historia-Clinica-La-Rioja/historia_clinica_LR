@@ -353,9 +353,14 @@
 													fxLayoutGap="10px">
 
 														<ng-container>
-															<strong class="reference-counterref-title reference-request uppercase"
+															<strong class="reference-counterref-title reference-title reference-request uppercase"
 																[translate]="'ambulatoria.paciente.problemas.historical-problems.REFERENCE_REQUEST'"></strong>
 														</ng-container>
+
+														<div fxLayout="row" fxLayoutGap="10px">
+															<strong [translate]="'ambulatoria.paciente.problemas.historical-problems.INSTITUTION'"></strong>
+															<span>{{reference.institution}}</span>
+														</div>
 
 														<div fxLayout="row" fxLayoutGap="10px">
 															<strong [translate]="'ambulatoria.paciente.problemas.historical-problems.CARE_LINE'"></strong>
@@ -391,13 +396,18 @@
 																	<mat-icon>subdirectory_arrow_right</mat-icon>
 
 																	<ng-container>
-																		<strong class="reference-counterref-title counterreference-request uppercase"
-																			[translate]="'ambulatoria.paciente.problemas.historical-problems.COUNTERREFERENCE'"></strong>
+																		<strong class="reference-counterref-title counterreference-request uppercase">
+																			{{reference.counterReference.closureType}}</strong>
 																	</ng-container>
 
 																</div>
 
 																<div class="counterreference-description" fxLayout="column" fxLayoutGap="10px">
+
+																	<div fxLayout="row" fxLayoutGap="10px">
+																		<strong [translate]="'ambulatoria.paciente.problemas.historical-problems.INSTITUTION'"></strong>
+																		<span>{{reference.counterReference.institution}}</span>
+																	</div>
 
 																	<div fxLayout="row" fxLayoutGap="10px">
 																		<strong [translate]="'ambulatoria.paciente.problemas.historical-problems.SPECIALTY'"></strong>

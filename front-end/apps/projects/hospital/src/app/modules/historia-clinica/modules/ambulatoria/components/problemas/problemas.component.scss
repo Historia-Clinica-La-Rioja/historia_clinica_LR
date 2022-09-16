@@ -83,8 +83,11 @@
     font-weight: 700;
     font-size: 14px;
     line-height: 19px;
-    width: 163px;
     text-align:center;
+}
+
+.reference-title{
+	width: 163px;
 }
 
 .reference-request {
@@ -92,7 +95,7 @@
     color: #EB5757;
 }
 
-.span-clickable {    
+.span-clickable {
 	font-size: 15px;
 	font-weight: 500;
 	cursor: pointer;
