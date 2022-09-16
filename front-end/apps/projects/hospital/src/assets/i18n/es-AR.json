@@ -15,7 +15,9 @@
 			"PERFIL": "Mi cuenta",
 			"TURNOS": "Gestión de turnos",
 			"REPORTES": "Reportes",
-			"REPORTES_PROGRAMAS": "Reportes de programas",
+			"REPORTES_PROGRAMAS": "Reportes Provinciales",
+			"REPORTES_ODONTOLOGICOS":"Reportes Odontológicos",
+			"REPORTES_GENERALES":"Reportes Generales",
 			"LOGOUT": "Cerrar sesión"
 		}
 	},
