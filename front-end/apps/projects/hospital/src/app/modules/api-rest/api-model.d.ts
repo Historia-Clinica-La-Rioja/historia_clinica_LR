@@ -1282,6 +1282,7 @@ export interface HCEReferenceDto {
     counterReference: HCESummaryCounterReferenceDto;
     files: ReferenceCounterReferenceFileDto[];
     id: number;
+    institution: string;
     note: string;
 }
 
@@ -2091,6 +2092,7 @@ export interface OutpatientSummaryReferenceDto {
     counterReference: OutpatientSummaryCounterReferenceDto;
     files: ReferenceCounterReferenceFileDto[];
     id: number;
+    institution: string;
     note: string;
 }
 
