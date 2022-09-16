@@ -328,6 +328,14 @@
 		"internados-table": {
 			"TITLE": "Búsqueda de pacientes"
 		},
+		"internment-patient-card":{
+			"HAS_PHYSICAL_DISCHARGE": "Alta física realizada",
+			"PENDING_EVOLUTION": "Nota de evolución pendiente",
+			"PENDING_EPICRISIS": "Epicrisis pendiente",
+			"PENDING_MEDICAL_DISCHARGE": "Alta médica pendiente",
+			"PENDING_ADMINISTRATIVE_DISCHARGE": "Alta administrativa pendiente",
+			"NO_INFO": "Sin información"
+		},
 		"internacion-paciente": {
 			"TITLE": "Internación",
 			"confirmacion": "¿Está seguro que desea crear una nueva internación para el paciente con ID ",
