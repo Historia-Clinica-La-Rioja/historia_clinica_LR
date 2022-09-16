@@ -58,7 +58,7 @@ public class CounterReference extends SGXAuditableEntity<Integer> {
     private LocalDate performedDate;
 
 	@Column(name = "closure_type_id", nullable = false)
-	private Integer closureTypeId;
+	private Short closureTypeId;
 
 	public CounterReference(CounterReferenceInfoBo counterReferenceInfoBo) {
         super();

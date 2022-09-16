@@ -629,8 +629,10 @@ export interface CounterReferenceProcedureDto extends Serializable {
 
 export interface CounterReferenceSummaryDto extends Serializable {
     clinicalSpecialty: string;
+    closureType: string;
     files: ReferenceCounterReferenceFileDto[];
     id: number;
+    institution: string;
     note: string;
     performedDate: Date;
     procedures: CounterReferenceSummaryProcedureDto[];
@@ -1300,9 +1302,11 @@ export interface HCERiskFactorDto extends Serializable {
 
 export interface HCESummaryCounterReferenceDto {
     clinicalSpecialtyId: string;
+    closureType: string;
     counterReferenceNote: string;
     files: ReferenceCounterReferenceFileDto[];
     id: number;
+    institution: string;
     performedDate: DateDto;
     procedures: CounterReferenceSummaryProcedureDto[];
     professional: ProfessionalPersonDto;
@@ -2070,9 +2074,11 @@ export interface OutpatientRiskFactorDto extends Serializable {
 
 export interface OutpatientSummaryCounterReferenceDto {
     clinicalSpecialtyId: string;
+    closureType: string;
     counterReferenceNote: string;
     files: ReferenceCounterReferenceFileDto[];
     id: number;
+    institution: string;
     performedDate: DateDto;
     procedures: CounterReferenceSummaryProcedureDto[];
     professional: ProfessionalPersonDto;

@@ -63,7 +63,10 @@ public class HCEReferenceCounterReferenceStorageImpl implements HCEReferenceCoun
                 counterReferenceSummaryDto.getProcedures() != null ? counterReferenceSummaryDto.getProcedures()
                         .stream()
                         .map(crp -> new CounterReferenceProcedureBo(crp.getSnomed().getSctid(), crp.getSnomed().getPt()))
-                        .collect(Collectors.toList()) : null);
+                        .collect(Collectors.toList()) : null,
+				counterReferenceSummaryDto.getInstitution(),
+				counterReferenceSummaryDto.getClosureType());
+
     }
 
     private List<HCEReferenceProblemBo> mapToHCEReferenceProblemBoList(List<ReferenceProblemDto> referenceProblemDtoList) {

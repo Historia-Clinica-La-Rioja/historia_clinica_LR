@@ -34,4 +34,8 @@ public class CounterReferenceSummaryDto implements Serializable {
 
     private List<CounterReferenceSummaryProcedureDto> procedures;
 
+	private String institution;
+
+	private String closureType;
+
 }

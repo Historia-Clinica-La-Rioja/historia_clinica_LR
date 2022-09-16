@@ -18,8 +18,9 @@ import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.S
 public interface CounterReferenceRepository extends JpaRepository<CounterReference, Integer> {
 
     @Query(value = " SELECT new ar.lamansys.refcounterref.domain.counterreference.CounterReferenceSummaryBo("
-            + " cr.id, cr.performedDate, hp.id, p.firstName, px.nameSelfDetermination, p.lastName, cs.name, n.description)"
+            + " cr.id, cr.performedDate, hp.id, p.firstName, px.nameSelfDetermination, p.lastName, cs.name, n.description, i.name, cr.closureTypeId)"
             + "  FROM CounterReference cr"
+			+ "  JOIN Institution i ON (cr.institutionId = i.id)"
             + "  JOIN ClinicalSpecialty cs ON (cr.clinicalSpecialtyId = cs.id)"
             + "  JOIN Document doc ON (doc.sourceId = cr.id)"
             + "  LEFT JOIN Note n ON (n.id = doc.evolutionNoteId)"
