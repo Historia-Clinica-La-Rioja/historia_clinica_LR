@@ -283,7 +283,8 @@
 					"INSTITUTION": "Institución:",
                     "SUMMARY_REFERENCE": "Resumen de referencia",
                     "COUNTERREFERENCE": "Contrarreferencia",
-                    "PROCEDURE": "Procedimientos:"
+                    "PROCEDURE": "Procedimientos:",
+					"REFERENCE_CLOSURE": "Cierre de referencia"
                 },
                 "historical-problems-filters": {
                     "SPECIALTY": "Especialidad",
