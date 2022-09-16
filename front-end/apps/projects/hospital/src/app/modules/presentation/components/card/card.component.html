@@ -1,15 +1,22 @@
 <div fxLayoutGap="15px" fxLayout="row" fxLayout.lt-sm="column">
 
 	<div fxLayout="column" fxLayout.gt-sm="row" fxFlex="85%">
-		<div fxLayoutAlign="none center" fxLayoutGap="15px" fxFlex="25%">
-			<img mat-card-avatar [src]="cardContent?.avatar"
-				onerror="this.src='../../../../../assets/images/empty-profile.png'" alt>
-			<div *ngFor="let header of cardContent.header">
-				<strong>{{header.value}}</strong>
+		<div fxLayoutAlign="space-between center" fxLayoutGap="15px" fxFlex="40%">
+			<div fxLayoutAlign="center" fxFlex="20%">
+				<img mat-card-avatar [src]="cardContent?.avatar"
+					onerror="this.src='../../../../../assets/images/empty-profile.png'" alt>
+			</div>
+
+			<div *ngFor="let header of cardContent.header" class="header" fxFlex="80%">
+				<strong> {{header.title | translate}} {{header.value | translate}}</strong>
+			</div>
+
+			<div *ngFor="let headerSimple of cardContent.headerSimple" class="header" fxFlex="80%">
+				<span> {{headerSimple?.title | translate}} {{headerSimple.value | translate}}</span>
 			</div>
 		</div>
 
-		<mat-card-content fxFlex="75%">
+		<mat-card-content fxFlex="60%">
 			<ng-content></ng-content>
 		</mat-card-content>
 	</div>
