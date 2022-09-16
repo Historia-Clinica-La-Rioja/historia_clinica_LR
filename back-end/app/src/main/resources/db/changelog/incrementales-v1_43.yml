@@ -21,3 +21,13 @@ databaseChangeLog:
         - sql:
             sql: |-
               UPDATE counter_reference SET closure_type_id = 4;
+
+  - changeSet:
+          id: update-closure_type_id-type
+          comment: Actualiza tipo de dato de la columna closure_type_id en counter_reference
+          author: jirimoldi
+          changes:
+            - modifyDataType:
+                columnName: closure_type_id
+                newDataType: smallint
+                tableName: counter_reference
