@@ -1,5 +1,4 @@
 import {
-    BooleanField,
     Datagrid,
     DeleteButton,
     Pagination,
@@ -70,8 +69,10 @@ const SnomedGroupShow = props => {
                                 <TextField source="description"/>
                             </ReferenceField>
 
-                            {/* Is template */}
-                            <BooleanField source="template"/>
+                            {/* Snomed Group Type */}
+                            <ReferenceField source="groupType" reference="snomedgrouptypes" link={false} >
+                                <TextField source="description"/>
+                            </ReferenceField>
 
                             {/* Institution */}
                             <ReferenceField source="institutionId" reference="institutions" link="show"

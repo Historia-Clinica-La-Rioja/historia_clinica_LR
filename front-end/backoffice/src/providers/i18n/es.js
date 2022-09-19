@@ -503,7 +503,8 @@ const messages = {
                 userId: 'Usuario',
                 template: 'Plantilla',
                 lastUpdate: 'Última actualización',
-                snomedConcepts: "Conceptos de Snomed"
+                snomedConcepts: "Conceptos de Snomed",
+                groupType: "Tipo de grupo",
             },
             createRelated: 'Agregar concepto Snomed',
             noInfo: 'Sin información',
