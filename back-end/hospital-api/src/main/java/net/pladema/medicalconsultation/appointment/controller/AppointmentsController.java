@@ -1,6 +1,7 @@
 package net.pladema.medicalconsultation.appointment.controller;
 
 import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
@@ -12,6 +13,7 @@ import javax.validation.Valid;
 import javax.validation.constraints.Size;
 
 import ar.lamansys.sgx.shared.dates.configuration.LocalDateMapper;
+import ar.lamansys.sgx.shared.dates.controller.dto.DateTimeDto;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
@@ -99,7 +101,9 @@ public class AppointmentsController {
     @Value("${habilitar.boton.consulta:false}")
     private boolean enableNewConsultation;
 
-    public AppointmentsController(
+	private final LocalDateMapper localDateMapper;
+
+	public AppointmentsController(
             AppointmentDailyAmountService appointmentDailyAmountService,
             AppointmentService appointmentService,
             AppointmentValidatorService appointmentValidatorService,
@@ -110,7 +114,8 @@ public class AppointmentsController {
             DateTimeProvider dateTimeProvider,
             NotifyPatient notifyPatient,
             BookingPersonService bookingPersonService,
-			LocalDateMapper dateMapper) {
+			LocalDateMapper dateMapper,
+			LocalDateMapper localDateMapper) {
         this.appointmentDailyAmountService = appointmentDailyAmountService;
         this.appointmentService = appointmentService;
         this.appointmentValidatorService = appointmentValidatorService;
@@ -122,6 +127,7 @@ public class AppointmentsController {
         this.notifyPatient = notifyPatient;
         this.bookingPersonService = bookingPersonService;
 		this.dateMapper = dateMapper;
+		this.localDateMapper = localDateMapper;
 	}
 
     @Transactional
@@ -174,8 +180,8 @@ public class AppointmentsController {
 			@RequestParam(name = "to", required = false) String to
     ) {
         log.debug("Input parameters -> institutionId {}, diaryIds {}", institutionId, diaryIds);
-		LocalDate startDate = (from!=null) ? dateMapper.fromStringToLocalDate(from) : null;
-		LocalDate endDate = (to!=null) ? dateMapper.fromStringToLocalDate(to) : null;
+		LocalDate startDate = (from!=null) ? localDateMapper.fromStringToLocalDate(from) : null;
+		LocalDate endDate = (to!=null) ? localDateMapper.fromStringToLocalDate(to) : null;
 		Collection<AppointmentBo> resultService = diaryIds.isEmpty() ?
 				appointmentService.getAppointmentsByProfessionalInInstitution(healthcareProfessionalId, institutionId, startDate, endDate) :
 				appointmentService.getAppointmentsByDiaries(diaryIds, startDate, endDate);
@@ -335,6 +341,21 @@ public class AppointmentsController {
         return ResponseEntity.ok().body(result);
     }
 
+	@PreAuthorize("hasPermission(#institutionId, 'ADMINISTRATIVO, ESPECIALISTA_MEDICO, PROFESIONAL_DE_SALUD, ESPECIALISTA_EN_ODONTOLOGIA, ENFERMERO')")
+	@PutMapping(value = "/{appointmentId}/update-date")
+	public ResponseEntity<Boolean> updateDate(
+			@PathVariable(name = "institutionId") Integer institutionId,
+			@PathVariable(name = "appointmentId") Integer appointmentId,
+			@RequestBody DateTimeDto fullDate) {
+		log.debug("Input parameters -> institutionId {},appointmentId {}, fullDate {}", institutionId, appointmentId, fullDate);
+		LocalDate date = dateMapper.fromDateDto(fullDate.getDate());
+		LocalTime time = dateMapper.fromTimeDto(fullDate.getTime());
+		appointmentValidatorService.validateDateUpdate(institutionId, appointmentId, date, time);
+		boolean result = appointmentService.updateDate(appointmentId, date, time);
+		log.debug(OUTPUT, result);
+		return ResponseEntity.ok().body(result);
+	}
+
     @GetMapping("/getDailyAmounts")
     @PreAuthorize("hasPermission(#institutionId, 'ADMINISTRATIVO, ESPECIALISTA_MEDICO, PROFESIONAL_DE_SALUD, ESPECIALISTA_EN_ODONTOLOGIA, ADMINISTRADOR_AGENDA, ENFERMERO')")
 	public ResponseEntity<List<AppointmentDailyAmountDto>> getDailyAmounts(
@@ -345,8 +366,8 @@ public class AppointmentsController {
         log.debug("Input parameters -> diaryId {}", diaryId);
 
         Integer diaryIdParam = Integer.parseInt(diaryId);
-		LocalDate startDate = dateMapper.fromStringToLocalDate(from);
-		LocalDate endDate = dateMapper.fromStringToLocalDate(to);
+		LocalDate startDate = localDateMapper.fromStringToLocalDate(from);
+		LocalDate endDate = localDateMapper.fromStringToLocalDate(to);
         Collection<AppointmentDailyAmountBo> resultService = appointmentDailyAmountService
                 .getDailyAmounts(diaryIdParam, startDate, endDate);
         List<AppointmentDailyAmountDto> result = resultService.stream()

@@ -4,6 +4,8 @@ import java.util.List;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
+import net.pladema.medicalconsultation.diary.service.DiaryAssociatedProfessionalService;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
@@ -38,12 +40,16 @@ public class HealthcareProfessionalByInstitutionController {
 
 	private final LoggedUserExternalService loggedUserExternalService;
 
+	private final DiaryAssociatedProfessionalService diaryAssociatedProfessionalService;
+
 	public HealthcareProfessionalByInstitutionController(HealthcareProfessionalService healthcareProfessionalService,
 														 HealthcareProfessionalMapper healthcareProfessionalMapper,
-														 LoggedUserExternalService loggedUserExternalService) {
+														 LoggedUserExternalService loggedUserExternalService,
+														 DiaryAssociatedProfessionalService diaryAssociatedProfessionalService) {
 		this.healthcareProfessionalService = healthcareProfessionalService;
 		this.healthcareProfessionalMapper = healthcareProfessionalMapper;
 		this.loggedUserExternalService = loggedUserExternalService;
+		this.diaryAssociatedProfessionalService = diaryAssociatedProfessionalService;
 	}
 
 
@@ -78,6 +84,25 @@ public class HealthcareProfessionalByInstitutionController {
 			healthcareProfessionals = healthcareProfessionals.stream().filter(filterByProfessionalId).collect(Collectors.toList());
 		}
 		LOG.debug("Get all Healthcare professional => {}", healthcareProfessionals);
+		List<ProfessionalDto> result = healthcareProfessionalMapper.fromProfessionalBoList(healthcareProfessionals);
+		LOG.debug(OUTPUT, result);
+		return ResponseEntity.ok(result);
+	}
+
+	@GetMapping("/associated-healthcare-professionals")
+	@PreAuthorize("hasPermission(#institutionId, 'ADMINISTRATIVO, ADMINISTRADOR_AGENDA, ESPECIALISTA_MEDICO, PROFESIONAL_DE_SALUD, ESPECIALISTA_EN_ODONTOLOGIA, ENFERMERO, ADMINISTRADOR_INSTITUCIONAL_BACKOFFICE, PERSONAL_DE_ESTADISTICA')")
+	public ResponseEntity<List<ProfessionalDto>> getAllByDiaryAndInstitution(@PathVariable(name = "institutionId") Integer institutionId) {
+		LOG.debug("Input parameters -> institutionId {}", institutionId);
+		boolean isAdministrativeRole = loggedUserExternalService.hasAnyRoleInstitution(institutionId,
+				ERole.ADMINISTRATIVO, ERole.ADMINISTRADOR_AGENDA, ERole.ADMINISTRADOR_INSTITUCIONAL_BACKOFFICE, ERole.PERSONAL_DE_ESTADISTICA);
+		List<HealthcareProfessionalBo> healthcareProfessionals = healthcareProfessionalService.getAllByInstitution(institutionId);
+		Integer healthcareProfessionalId = healthcareProfessionalService.getProfessionalId(UserInfo.getCurrentAuditor());
+		if (!isAdministrativeRole) {
+			List<Integer> associatedHealthcareProfessionals = diaryAssociatedProfessionalService.getAllAssociatedWithProfessionalsByHealthcareProfessionalId(healthcareProfessionalId);
+			healthcareProfessionals = healthcareProfessionals.stream().filter(healthcareProfessional ->
+					healthcareProfessional.getId().equals(healthcareProfessionalId) || associatedHealthcareProfessionals.contains(healthcareProfessional.getId())
+			).collect(Collectors.toList());
+		}
 		List<ProfessionalDto> result = healthcareProfessionalMapper.fromProfessionalBoList(healthcareProfessionals);
 		LOG.debug(OUTPUT, result);
 		return ResponseEntity.ok(result);

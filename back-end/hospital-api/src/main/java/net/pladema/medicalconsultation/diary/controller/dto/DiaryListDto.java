@@ -23,4 +23,8 @@ public class DiaryListDto {
 
     private Boolean includeHoliday = false;
 
+	private String alias;
+
+	private String clinicalSpecialtyName;
+
 }

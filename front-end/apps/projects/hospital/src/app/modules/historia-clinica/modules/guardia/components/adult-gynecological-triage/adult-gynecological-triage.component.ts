@@ -1,9 +1,8 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { TriageAdultGynecologicalDto } from '@api-rest/api-model';
-import { getError, hasError } from '@core/utils/form.utils';
-import { FactoresDeRiesgoFormService } from '@historia-clinica/services/factores-de-riesgo-form.service';
-import { RiskFactorsValue, RiskFactorsFormService } from '../../../../services/risk-factors-form.service';
+import { FactoresDeRiesgoFormService, RiskFactorsValue } from '@historia-clinica/services/factores-de-riesgo-form.service';
+import { TranslateService } from '@ngx-translate/core';
 import { GuardiaMapperService } from '../../services/guardia-mapper.service';
 
 @Component({
@@ -19,10 +18,6 @@ export class AdultGynecologicalTriageComponent implements OnInit {
 	@Output() confirm = new EventEmitter();
 	@Output() cancel = new EventEmitter();
 
-
-	hasError = hasError;
-	getError = getError;
-
 	private triageCategoryId: number;
 	private doctorsOfficeId: number;
 
@@ -34,9 +29,9 @@ export class AdultGynecologicalTriageComponent implements OnInit {
 	constructor(
 		private formBuilder: FormBuilder,
 		private guardiaMapperService: GuardiaMapperService,
-		public riskFactorsFormService: RiskFactorsFormService,
+		private readonly translateService: TranslateService,
 	) {
-		this.factoresDeRiesgoFormService = new FactoresDeRiesgoFormService(formBuilder);
+		this.factoresDeRiesgoFormService = new FactoresDeRiesgoFormService(formBuilder, translateService);
 	}
 
 	ngOnInit(): void {
@@ -57,7 +52,7 @@ export class AdultGynecologicalTriageComponent implements OnInit {
 	confirmAdultGynecologicalTriage(): void {
 		const formValue = this.adultGynecologicalForm.value;
 		if (this.adultGynecologicalForm.valid && this.riskFactorsForm.valid) {
-			const riskFactorsValue: RiskFactorsValue = this.riskFactorsFormService.buildRiskFactorsValue(this.riskFactorsForm);
+			const riskFactorsValue: RiskFactorsValue = this.factoresDeRiesgoFormService.buildRiskFactorsValue(this.riskFactorsForm);
 			const triage: TriageAdultGynecologicalDto = {
 				categoryId: this.triageCategoryId,
 				doctorsOfficeId: this.doctorsOfficeId,

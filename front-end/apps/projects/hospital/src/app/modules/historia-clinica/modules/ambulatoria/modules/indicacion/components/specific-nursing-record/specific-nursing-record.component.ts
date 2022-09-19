@@ -1,14 +1,16 @@
-import { dateTimeDtotoLocalDate } from './../../../../../../../api-rest/mapper/date-dto.mapper';
+import { dateDtoToDate, dateTimeDtotoLocalDate } from './../../../../../../../api-rest/mapper/date-dto.mapper';
 import { NursingRecord, NursingSections } from './../nursing-record/nursing-record.component';
 import { ExtraInfo } from './../../../../../../../presentation/components/indication/indication.component';
 import { Component, Input } from '@angular/core';
 import { NursingRecordDto } from '@api-rest/api-model';
+import { ENursingRecordStatus } from '@api-rest/api-model';
 import { EIndicationType } from '@api-rest/api-model';
 import { InternacionMasterDataService } from '@api-rest/services/internacion-master-data.service';
 import { Content } from '@presentation/components/indication/indication.component';
 import { getOtherIndicationType, loadExtraInfoParenteralPlan, loadExtraInfoPharmaco } from '../../constants/load-information';
 import { OtherIndicationTypeDto } from '@api-rest/services/internment-indication.service';
 import { sortBy } from '@core/utils/array.utils';
+import { IndicationMatIcon, IndicationSvgIcon, NursingRecordStatus, NursingRecordStatusScss } from '../../constants/internment-indications';
 
 @Component({
 	selector: 'app-specific-nursing-record',
@@ -28,7 +30,6 @@ export class SpecificNursingRecordComponent {
 				this.filterSections(nursingRecordsDto, otherIndicationTypes);
 			});
 		});
-		
 	}
 
 	constructor(
@@ -65,34 +66,23 @@ export class SpecificNursingRecordComponent {
 	}
 
 	private toNursingRecord(record: any, otherIndicationTypes: OtherIndicationTypeDto[]): NursingRecord {
-		let svgIcon: string;
-		let matIcon: string;
-		switch (record.indication.type) {
-			case EIndicationType.PHARMACO: {
-				svgIcon = 'pharmaco';
-				break;
-			}
-			case EIndicationType.PARENTERAL_PLAN: {
-				svgIcon = 'parenteral_plans';
-				break;
-			}
-			case EIndicationType.OTHER_INDICATION: {
-				matIcon = 'assignment_late';
-				break;
-			}
-		}
 		return {
-			matIcon,
-			svgIcon,
+			id: record.id,
+			matIcon: IndicationMatIcon[record.indication.type],
+			svgIcon: IndicationSvgIcon[record.indication.type],
 			content: {
 				status: {
-					description: 'indicacion.nursing-care.status.PENDING',
-					cssClass: 'red'
+					description: NursingRecordStatus[record.status],
+					cssClass: NursingRecordStatusScss[record.status],
+					type: record.status
 				},
 				description: (record.indication.type === EIndicationType.OTHER_INDICATION) ? getOtherIndicationType(record.indication, otherIndicationTypes) : record.indication.snomed.pt,
 				extra_info: this.loadExtraInfo(record),
-				createdBy: "",
-				timeElapsed: "",
+				indicationDate: dateDtoToDate(record.indication.indicationDate),
+				scheduledAdministrationTime: record.scheduledAdministrationTime,
+				administeredBy: record.updatedBy,
+				administeredTime: (record.administrationTime) ? dateTimeDtotoLocalDate(record.administrationTime) : null,
+				reason: ENursingRecordStatus.REJECTED === record.status ? record.updateReason : null
 			}
 		}
 	}

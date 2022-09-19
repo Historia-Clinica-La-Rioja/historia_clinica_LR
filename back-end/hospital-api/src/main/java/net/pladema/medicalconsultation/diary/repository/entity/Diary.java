@@ -71,4 +71,7 @@ public class Diary extends SGXAuditableEntity<Integer> {
 
 	@Column(name = "clinical_specialty_id", nullable = false)
 	private Integer clinicalSpecialtyId;
+
+	@Column(name = "alias", length = 100)
+	private String alias;
 }

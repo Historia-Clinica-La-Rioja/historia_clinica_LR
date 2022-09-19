@@ -14,8 +14,10 @@ import { ClipboardModule } from "@angular/cdk/clipboard";
 import { ExternalOAuthLoginComponent } from './routes/external-oauth-login/external-oauth-login.component';
 import { OauthLoginComponent } from "./routes/chaco-login/oauth-login.component";
 import { HospitalLoginComponent } from './routes/hospital-login/hospital-login.component';
-import {UpdatePasswordComponent} from "./components/update-password/update-password.component";
+import { UpdatePasswordComponent } from "./components/update-password/update-password.component";
 import { UpdatePasswordSuccessComponent } from './components/update-password-success/update-password-success.component';
+import { LoginPinCodeComponent } from './dialogs/login-pin-code/login-pin-code.component';
+import { CodeInputModule } from "angular-code-input";
 
 @NgModule({
 	declarations: [
@@ -32,7 +34,9 @@ import { UpdatePasswordSuccessComponent } from './components/update-password-suc
 		ExternalOAuthLoginComponent,
   		HospitalLoginComponent,
 		UpdatePasswordComponent,
-  		UpdatePasswordSuccessComponent
+  		UpdatePasswordSuccessComponent,
+		// dialogs
+    	LoginPinCodeComponent,
 	],
 	exports: [
 		ExternalOAuthLoginComponent,
@@ -45,6 +49,7 @@ import { UpdatePasswordSuccessComponent } from './components/update-password-suc
 		AuthRoutingModule,
 		// deps
 		PresentationModule,
+		CodeInputModule,
 	]
 })
 export class AuthModule { }

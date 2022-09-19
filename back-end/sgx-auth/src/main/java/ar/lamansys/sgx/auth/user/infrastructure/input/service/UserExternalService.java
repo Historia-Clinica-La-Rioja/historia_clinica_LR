@@ -23,4 +23,8 @@ public interface UserExternalService {
     String createTokenPasswordReset(Integer userId);
 
     Integer getUserIdByToken(String token);
+
+	void resetTwoFactorAuthentication(Integer userId);
+
+    Boolean fetchUserHasTwoFactorAuthenticationEnabled(Integer userId);
 }

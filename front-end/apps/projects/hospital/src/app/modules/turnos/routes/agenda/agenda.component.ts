@@ -1,6 +1,6 @@
 import { CalendarDateService } from './../../services/calendar-date.service';
 import { Component, Input, OnChanges, OnDestroy, OnInit, SimpleChanges } from '@angular/core';
-import { AppointmentDailyAmountDto, CompleteDiaryDto, DiaryOpeningHoursDto, MedicalCoverageDto } from '@api-rest/api-model';
+import { AppointmentDailyAmountDto, AppointmentListDto, CompleteDiaryDto, DiaryOpeningHoursDto, MedicalCoverageDto } from '@api-rest/api-model';
 import { ERole } from '@api-rest/api-model';
 import { CalendarMonthViewBeforeRenderEvent, CalendarView, CalendarWeekViewBeforeRenderEvent, DAYS_OF_WEEK } from 'angular-calendar';
 import {
@@ -22,7 +22,7 @@ import { MEDICAL_ATTENTION } from '../../constants/descriptions';
 import { AppointmentComponent } from '../../dialogs/appointment/appointment.component';
 import { SnackBarService } from '@presentation/services/snack-bar.service';
 
-import { AppointmentsFacadeService } from '@turnos/services/appointments-facade.service';
+import { AppointmentsFacadeService, toCalendarEvent } from '@turnos/services/appointments-facade.service';
 
 import { APPOINTMENT_STATES_ID, MINUTES_IN_HOUR } from '../../constants/appointment';
 import { map, take } from 'rxjs/operators';
@@ -75,7 +75,8 @@ export class AgendaComponent implements OnInit, OnDestroy, OnChanges {
 
 	private readonly routePrefix = 'institucion/' + this.contextService.institutionId;
 	private patientId: number;
-	@Input() professionalId: number;
+	private loggedUserHealthcareProfessionalId: number;
+	private loggedUserRoles: string[];
 	@Input() canCreateAppoinment = true;
 	idAgenda: number;
 	@Input()
@@ -109,38 +110,35 @@ export class AgendaComponent implements OnInit, OnDestroy, OnChanges {
 	}
 
 	ngOnInit(): void {
-
+		this.route.paramMap.subscribe((params: ParamMap) => {
+			if (params.get('idAgenda')) {
+				this.idAgenda = Number(params.get('idAgenda'));
+				this.getAgenda();
+			}
+		});
 		this.route.queryParams.subscribe(qp => {
 			this.patientId = Number(qp.idPaciente);
-			if (!this.professionalId)
-				this.professionalId = Number(qp.idProfessional);
-			this.appointmentFacade.setProfessionalId(this.professionalId);
 		});
 
 		this.loading = true;
 		this.appointmentSubscription?.unsubscribe();
 		this.appointmentFacade.clear();
-		if (!this.idAgenda)
-			this.route.paramMap.subscribe((params: ParamMap) => {
-				this.idAgenda = Number(params.get('idAgenda'));
-				this.getAgenda();
-			});
-		else
-			this.getAgenda();
 
-
+		this.loading = true;
 		this.appointmentSubscription = this.appointmentFacade.getAppointments().subscribe(appointments => {
 			if (appointments) {
-                if (appointments.length) {
-				    this.appointments = this.unifyEvents(appointments);
+				if (appointments.length) {
+					this.appointments = this.unifyEvents(appointments);
 				}
-                else {
-                    this.appointments = appointments;
+				else {
+					this.appointments = appointments;
 				}
 				this.loading = false;
 			}
 		});
 		this.permissionsService.hasContextAssignments$(ROLES_TO_CREATE).subscribe(hasRole => this.hasRoleToCreate = hasRole);
+		this.healthcareProfessionalService.getHealthcareProfessionalByUserId().subscribe(healthcareProfessionalId => this.loggedUserHealthcareProfessionalId = healthcareProfessionalId);
+		this.loggedUserService.assignments$.subscribe(response => this.loggedUserRoles = response.map(role => role.role));
 		this.setDateRange(this.viewDate);
 	}
 
@@ -270,7 +268,12 @@ export class AgendaComponent implements OnInit, OnDestroy, OnChanges {
 				if (addingOverturn && (numberOfOverturnsAssigned === diaryOpeningHourDto.overturnCount)) {
 					if (diaryOpeningHourDto.medicalAttentionTypeId !== MEDICAL_ATTENTION.SPONTANEOUS_ID) {
 						this.snackBarService.showError('turnos.overturns.messages.ERROR');
+                        return;
 					}
+				}
+
+				if (this.loggedUserHealthcareProfessionalId !== this.appointmentFacade.getProfessionalId() && !this.userHasValidRoles()) {
+					this.snackBarService.showError('turnos.new-appointment.messages.NOT_RESPONSIBLE');
 				} else {
 					this.dialog.open(NewAppointmentComponent, {
 						width: '35%',
@@ -280,8 +283,7 @@ export class AgendaComponent implements OnInit, OnDestroy, OnChanges {
 							hour: clickedDate.format(DateFormat.HOUR_MINUTE_SECONDS),
 							openingHoursId: openingHourId,
 							overturnMode: addingOverturn,
-							patientId: this.patientId,
-							professionalId: this.professionalId
+							patientId: this.patientId ? Number(this.patientId) : null,
 						}
 					});
 				}
@@ -336,8 +338,9 @@ export class AgendaComponent implements OnInit, OnDestroy, OnChanges {
 				});
 			}
 			dialogRef.afterClosed().subscribe((appointmentInformation) => {
-				if (appointmentInformation.date)
-					this.viewDate = appointmentInformation.date;
+				this.viewDate = appointmentInformation.date;
+				this.setDateRange(this.viewDate);
+				this.appointmentFacade.setValues(this.agenda.id, this.agenda.appointmentDuration, this.startDate, this.endDate);
 			});
 		}
 	}
@@ -496,6 +499,10 @@ export class AgendaComponent implements OnInit, OnDestroy, OnChanges {
 			start: events[0]?.start,
 			end: events[events.length - 1]?.end,
 		};
+	}
+
+	private userHasValidRoles(): boolean {
+		return this.loggedUserRoles.includes(ERole.ADMINISTRATIVO) || this.loggedUserRoles.includes(ERole.ADMINISTRADOR_AGENDA);
 	}
 
 	private setDateRange(date: Date) {

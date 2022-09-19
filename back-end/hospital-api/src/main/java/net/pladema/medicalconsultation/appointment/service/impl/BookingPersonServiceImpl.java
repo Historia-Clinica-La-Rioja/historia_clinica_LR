@@ -83,7 +83,7 @@ public class BookingPersonServiceImpl implements BookingPersonService {
     public Optional<String> getPatientName(String uuid) {
         var a = bookingPersonRepository.findPatientByUuid(uuid);
         return a.map(bookingPerson ->
-                bookingPerson.getFirstName() + " " + bookingPerson.getLastName());
+                bookingPerson.getLastName() + ", " + bookingPerson.getFirstName());
     }
 
     @Override

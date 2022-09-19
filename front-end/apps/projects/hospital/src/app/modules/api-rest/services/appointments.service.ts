@@ -50,7 +50,7 @@ export class AppointmentsService {
 		return this.http.get<AppointmentListDto[]>(url, {
 			params: {
 				diaryIds: `${diaryIds.join(',')}`,
-				from,
+				from, 
 				to
 			}
 		});
@@ -115,6 +115,11 @@ export class AppointmentsService {
 		return this.http.put<boolean>(url, {}, { params: queryParams });
 	}
 
+	updateDate(appointmentId: number, date: DateTimeDto): Observable<boolean> {
+		const url = `${this.BASE_URL}/${appointmentId}/update-date`;
+		return this.http.put<boolean>(url, date);
+	}
+
 	mqttCall(appointmentId: number): Observable<any> {
 		const url = `${this.BASE_URL}/${appointmentId}/notifyPatient`;
 		return this.http.post(url, {});
@@ -143,6 +148,20 @@ export class AppointmentsService {
 		const pdfName = 'FormularioV';
 		const url = `${environment.apiBase}/reports/${this.contextService.institutionId}/appointment-formv`;
 		return this.getAppointmentReport(url, appointmentData, pdfName);
+	}
+
+	getAppointmentTicketPdf(appointmentData: any): Observable<any> {
+		const url = `${environment.apiBase}/institutions/${this.contextService.institutionId}/medicalConsultations/appointment-ticket-report/${appointmentData.appointmentId}`;
+		const httpOptions = {
+			responseType  : 'arraybuffer' as 'json',
+			params: appointmentData.appointmentId
+		};
+		return this.http.get<any>(url, httpOptions).pipe(
+			tap((data: any) => {
+				const blobType = { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' };
+				const file = new Blob([data], blobType);
+			})
+		);
 	}
 
 	getAppointmentReport(url: string, appointmentData: any, pdfName: string): Observable<any> {

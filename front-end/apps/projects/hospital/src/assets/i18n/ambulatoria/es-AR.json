@@ -1,10 +1,21 @@
 {
     "ambulatoria": {
+        "vaccine-search": {
+            "TITLE": "Agregar vacuna",
+            "IMMUNIZATION": "Vacuna",
+            "COLUMN_VACCINE_HEADER": "Descripción SNOMED"
+        },
         "medical-coverage-summary-view": {
             "TITLE": "Cobertura",
             "AFFILIATE_NUMBER": "Afiliado N°:",
             "WITHOUT_COVERAGE": "Sin cobertura",
             "NO_INFO": "Sin información"
+        },
+        "datos-antropometricos-nueva-consulta": {
+            "MAX_TWO_DECIMAL_DIGITS_ERROR": "Máximo 2 cifras decimales"
+        },
+        "factores-de-riesgo-form": {
+            "MAX_TWO_DECIMAL_DIGITS_ERROR": "Máximo 2 cifras decimales"
         },
         "bus-interoperabilidad": {
             "TIMEOUT-MESSAGE": "Existe demora para obtener información externa, por favor consulte mas tarde",
@@ -73,34 +84,10 @@
                     "TITLE": "Evolución",
                     "DESCRIPCION": "Descripción"
                 },
-                "errors": {
-                    "MOTIVO_OBLIGATORIO": "Motivo de consulta obligatorio",
-                    "FRECUENCIA_CARDIACA_MIN": "La frecuencia cardíaca mínima debe ser 0 (/min)",
-                    "FRECUENCIA_RESPIRATORIA_MIN": "La frecuencia respiratoria mínima debe ser 0 (/min)",
-                    "TEMPERATURA_CORPORAL_MIN": "La temperatura corporal mínima debe ser 0",
-                    "SATURACION_OXIGENO_MIN": "La saturación de oxígeno mínima debe ser 0%",
-                    "TENSION_DIASTOLICA_OBLIGATORIO": "Tensión arterial diastólica obligatorio",
-                    "TENSION_DIASTOLICA_MIN": "Tensión arterial diastólica mínima debe ser 0 mmHg",
-                    "TENSION_SISTOLICA_OBLIGATORIO": "Tensión arterial sistólica obligatorio",
-                    "TENSION_SISTOLICA_MIN": "Tensión arterial sistólica mínima debe ser 0 mmHg",
-                    "TALLA_OBLIGATORIO": "Talla obligatorio",
-                    "TALLA_NOT_INTEGER": "La talla debe ser un valor entero",
-                    "TALLA_MIN": "La talla mínima debe ser 0 cm",
-                    "TALLA_MAX": "La talla máxima debe ser 1000 cm",
-                    "PESO_OBLIGATORIO": "Peso obligatorio",
-                    "PESO_MIN": "El peso mínimo debe ser 0 kg",
-                    "PESO_MAX": "El peso máximo debe ser 1000 kg",
-                    "PROBLEMA_OBLIGATORIO": "Problema de consulta obligatorio",
-                    "HEAD_CIRCUNFERENCE_RANGE": "Perímetro cefálico debe ser entre 1 y 100 cm",
-                    "HEAD_CIRCUNFERENCE_NOT_VALID": "Perímetro cefálico debe tener como máximo 2 decimales",
-                    "BLOOD_GLUCOSE_RANGE": "Glucemia debe ser entre 1 y 500 (mg/dl)",
-                    "GLYCOSYLATED_HEMOGLOBIN_RANGE": "Hemoglobina glicosilada debe ser entre 1 y 20 (%)",
-                    "CARDIOVASCULAR_RISK_RANGE": "Riesgo cardiovascular debe ser entre 1 y 100 (%)",
-                    "MAX_TWO_DECIMAL_DIGITS": "Hemoglobina glicosilada debe tener máximo 2 cifras decimales"
-                },
                 "motivo": {
                     "TITLE": "Motivo de consulta",
                     "ADD": "Agregar motivo",
+                    "LIST_CARD_TITLE": "Motivos registrados",
                     "table": {
                         "columns": {
                             "MOTIVO": "Motivos"
@@ -112,8 +99,9 @@
                     "DESCRIPCION": "Descripción",
                     "NOMBRE_MEDICACION": "Nombre de medicación",
                     "OBSERVACIONES": "Observaciones",
-                    "SUSPENDIDO": "Suspendido",
+                    "SUSPENDIDA": "Suspendida",
                     "TABLE_TITLE": "Medicaciones registradas",
+                    "LIST_CARD_TITLE": "Medicaciones habituales registradas",
                     "TITLE": "Medicación habitual",
                     "STATE": "Estado",
                     "MEDICATION": "Medicación",
@@ -170,6 +158,8 @@
                     "TITLE": "Antecedentes familiares",
                     "ANTECEDENTES_FAMILIARES": "Antecedentes familiares",
                     "SEARCH_PLACEHOLDER": "Buscar antecedentes familiares",
+                    "LIST_CARD_TITLE": "Antecedentes registrados",
+                    "DATE_PREFIX": "Desde",
                     "FECHA": "Fecha de registro"
                 },
                 "antecedentes-personales": {
@@ -225,6 +215,10 @@
                     "TITLE": "Solicitud de referencia",
                     "ADD_REQUEST": "Agregar solicitud",
                     "REQUESTED_REFERENCE": "Referencias solicitadas",
+                    "REGISTERED_REQUEST": "Solicitudes registradas",
+                    "PROBLEMS": "Problemas",
+                    "CARE_LINE": "Línea de cuidado",
+                    "SPECIALTY": "Especialidad",
                     "table": {
                         "columns": {
                             "REFERENCES": "Referencias agregadas"
@@ -528,8 +522,8 @@
                         "NOT_VACCINE_SELECTED_ERROR": "Debe seleccionar una vacuna",
                         "NOT_SCHEME_SELECTED_ERROR": "Si selecciona una condición, debe elegir un esquema",
                         "NOT_DOSE_SELECTED_ERROR": "Si selecciona un esquema, debe elegir una dosis",
-                        "NULL_OPTION_MESSAGE": "Seleccione una opción",
-                        "COLUMN_VACCINE_HEADER": "Descripción SNOMED"
+                        "SEARCH_VACCINE": "Buscar vacuna",
+                        "NULL_OPTION_MESSAGE": "Seleccione una opción"
                     }
                 }
             },

@@ -12,6 +12,10 @@ import { SettingsComponent } from './routes/settings/settings.component';
 import { HomeComponent } from './home.component';
 import { LogoSettingsComponent } from './components/logo-settings/logo-settings.component';
 import { FeatureSettingsComponent } from './components/feature-settings/feature-settings.component';
+// dialogs
+import { ActivateTwoFactorAuthenticationComponent } from "./dialogs/activate-two-factor-authentication/activate-two-factor-authentication.component";
+import { QRCodeModule } from "angularx-qrcode";
+import { CodeInputModule } from "angular-code-input";
 
 
 @NgModule({
@@ -24,6 +28,8 @@ import { FeatureSettingsComponent } from './components/feature-settings/feature-
 		HomeComponent,
 		LogoSettingsComponent,
 		FeatureSettingsComponent,
+		// dialogs
+		ActivateTwoFactorAuthenticationComponent
 	],
 	imports: [
 		CommonModule,
@@ -32,6 +38,8 @@ import { FeatureSettingsComponent } from './components/feature-settings/feature-
 		// deps
 		ExtensionsModule,
 		PresentationModule,
+		QRCodeModule,
+		CodeInputModule,
 	]
 })
 export class HomeModule { }

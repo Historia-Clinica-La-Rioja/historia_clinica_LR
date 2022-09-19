@@ -5,6 +5,7 @@ import { switchMap, map } from 'rxjs/operators';
 import { Observable } from 'rxjs';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { ApiErrorMessageDto } from '@api-rest/api-model';
+import {patternValidator} from "@core/utils/form.utils";
 
 @Component({
 	selector: 'app-password-reset',
@@ -15,6 +16,7 @@ export class PasswordResetComponent implements OnInit {
 	public passwordResetToken$: Observable<string>;
 	public form: FormGroup;
 	public apiResponse: any = null;
+	public hidePassword = true;
 
 	constructor(
 		private route: ActivatedRoute,
@@ -27,21 +29,13 @@ export class PasswordResetComponent implements OnInit {
 			map((params: ParamMap) => params.get('token'))
 		);
 		this.form = this.formBuilder.group({
-			password: [null, Validators.required],
-			repassword: [null, Validators.required],
-		}, { validator: this.checkIfMatchingPasswords('password', 'repassword') });
-	}
-
-	private checkIfMatchingPasswords(passwordKey: string, passwordConfirmationKey: string) {
-		return (group: FormGroup) => {
-			const passwordInput = group.controls[passwordKey];
-			const passwordConfirmationInput = group.controls[passwordConfirmationKey];
-			if (passwordInput.value !== passwordConfirmationInput.value) {
-				return passwordConfirmationInput.setErrors({ notEquivalent: true });
-			} else {
-				return passwordConfirmationInput.setErrors(null);
-			}
-		};
+			password:[null, [Validators.required,
+				Validators.minLength(8),
+				patternValidator(new RegExp('(?=.*[a-z])'), {'min': true}),
+				patternValidator(new RegExp('(?=.*[A-Z])'), {'mayus': true}),
+				patternValidator(new RegExp('(?=.*[0-9])'), {'number': true}),
+			]],
+		});
 	}
 
 	hasError(type: string, control: string): boolean {

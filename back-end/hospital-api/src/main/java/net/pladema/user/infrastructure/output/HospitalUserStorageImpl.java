@@ -1,6 +1,7 @@
 package net.pladema.user.infrastructure.output;
 
 import ar.lamansys.sgh.shared.infrastructure.input.service.BasicDataPersonDto;
+import ar.lamansys.sgx.auth.jwt.infrastructure.input.service.JwtExternalService;
 import ar.lamansys.sgx.auth.user.infrastructure.input.service.UserExternalService;
 import net.pladema.person.controller.service.PersonExternalService;
 import net.pladema.user.application.port.exceptions.UserPersonStorageEnumException;
@@ -28,15 +29,19 @@ public class HospitalUserStorageImpl implements HospitalUserStorage {
 
     private final VHospitalUserRepository vHospitalUserRepository;
 
+	private final JwtExternalService jwtExternalService;
+
     public HospitalUserStorageImpl(UserPersonRepository userPersonRepository,
-                                   PersonExternalService personExternalService,
-                                   UserExternalService userExternalService,
-                                   VHospitalUserRepository vHospitalUserRepository) {
+								   PersonExternalService personExternalService,
+								   UserExternalService userExternalService,
+								   VHospitalUserRepository vHospitalUserRepository,
+								   JwtExternalService jwtExternalService) {
         this.userPersonRepository = userPersonRepository;
         this.personExternalService = personExternalService;
         this.userExternalService = userExternalService;
         this.vHospitalUserRepository = vHospitalUserRepository;
-    }
+		this.jwtExternalService = jwtExternalService;
+	}
 
     @Override
     public Optional<UserPersonInfoBo> getUserPersonInfo(Integer userId) {
@@ -89,7 +94,7 @@ public class HospitalUserStorageImpl implements HospitalUserStorage {
     @Override
     public Optional<UserDataBo> getUserDataByPersonId(Integer personId) {
         return userPersonRepository.getUserIdByPersonId(personId)
-                .map(vHospitalUserRepository::getOne)
+                .map(userId -> vHospitalUserRepository.findById(userId).orElseThrow(()-> new UserPersonStorageException(UserPersonStorageEnumException.UNEXISTED_USER_VIEW, "No se encuentran los datos del usuario")))
                 .map(this::mapUserBo);
     }
 
@@ -112,20 +117,33 @@ public class HospitalUserStorageImpl implements HospitalUserStorage {
 
     @Override
     public PersonDataBo getPersonDataBoByUserId(Integer userId) {
-        return userPersonRepository.getPersonIdByUserId(userId)
-                .map(personExternalService::getBasicDataPerson)
-                .map(dataPerson -> mapPersonDataBo(dataPerson,vHospitalUserRepository.getOne(userId)))
-                .orElseThrow(()-> new UserPersonStorageException(UserPersonStorageEnumException.UNEXISTED_USER,"El usuario %s no existe"));
+        return vHospitalUserRepository.findById(userId)
+				.map(vHospitalUser ->
+						userPersonRepository.getPersonIdByUserId(userId)
+						.map(personExternalService::getBasicDataPerson)
+						.map(basicDataPersonDto -> mapPersonDataBo(basicDataPersonDto, vHospitalUser))
+								.orElseGet(() -> mapPersonDataBo(null, vHospitalUser)))
+                .orElseThrow(()-> new UserPersonStorageException(UserPersonStorageEnumException.UNEXISTED_USER, String.format("El usuario %s no existe", userId)));
     }
 
-    private PersonDataBo mapPersonDataBo(BasicDataPersonDto person, VHospitalUser user) {
-        return new PersonDataBo(
+	@Override
+	public Optional<Integer> fetchUserIdFromNormalToken(String token) {
+		return jwtExternalService.fetchUserIdFromNormalToken(token);
+	}
+
+    @Override
+	public void resetTwoFactorAuthentication(Integer userId) {
+		userExternalService.resetTwoFactorAuthentication(userId);
+	}
+
+	private PersonDataBo mapPersonDataBo(BasicDataPersonDto person, VHospitalUser user) {
+        return person != null ? new PersonDataBo(
                 person.getFirstName(),
                 person.getLastName(),
                 person.getIdentificationType(),
                 person.getIdentificationNumber(),
                 user.getUserId(),
-                user.getUsername());
+                user.getUsername()) : new PersonDataBo(user.getUserId(), user.getUsername());
     }
 
     private UserDataBo mapUserBo(VHospitalUser vHospitalUser) {

@@ -31,7 +31,8 @@ public class BackofficeRolesStore implements BackofficeStore<Role, Short> {
 
 	private boolean filterRoles(Role role) {
 		return !role.getId().equals(ERole.ROOT.getId()) &&
-				!role.getId().equals(ERole.API_CONSUMER.getId());
+				!role.getId().equals(ERole.API_CONSUMER.getId()) &&
+				!role.getId().equals(ERole.PARTIALLY_AUTHENTICATED.getId());
 	}
 
 	@Override

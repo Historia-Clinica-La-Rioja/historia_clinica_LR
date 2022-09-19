@@ -41,7 +41,7 @@
 
 .header-content {
 	@media screen and (min-width: 959px) {
-		width: 380px;
+		width: 100%;
 	}
 
 	button {
@@ -164,15 +164,35 @@ section {
     text-overflow: ellipsis;
 }
 
+.dateForm{
+	.date{
+		width: 276px;
+	}
+
+	.hour{
+		width: 90px;
+		height: 50px;
+	}
+
+	.hs{
+		height: fit-content;
+		margin-top: 20px;
+		margin-left: 5px;
+	}
+	.confirm-buttons{
+		margin-top: 15px;
+	}
+}
+
 .observation-section {
-	min-width: 550px;
+	width: 550px;
 	margin: 15px 0;
 
 	a {
 		cursor: pointer;
 	}
 
-	p {		
+	p {
 		margin: auto;
 		margin-left: 3px;
 		white-space: pre-line;
@@ -182,4 +202,8 @@ section {
 
 .confirm-buttons {
 	margin-bottom: 15px;
-}	
+}
+
+.none {
+	display: none;
+}

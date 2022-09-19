@@ -235,6 +235,17 @@ export interface AppointmentListDto {
     phonePrefix: string;
 }
 
+export interface AppointmentTicketDto {
+    date: string;
+    doctorFullName: string;
+    doctorsOffice: string;
+    documentNumber: string;
+    hour: string;
+    institution: string;
+    medicalCoverage: string;
+    patientFullName: string;
+}
+
 export interface AssignedAppointmentDto {
     date: DateDto;
     hour: TimeDto;
@@ -317,12 +328,12 @@ export interface BackofficeHealthInsurancePracticeDto {
 }
 
 export interface BackofficeHealthcareProfessionalCompleteDto {
-    clinicalSpecialtyId: number;
-    deleted: boolean;
+    firstName: string;
     id: number;
-    licenseNumber: string;
+    identificationNumber: string;
+    identificationTypeId: number;
+    lastName: string;
     personId: number;
-    professionalSpecialtyId: number;
 }
 
 export interface BackofficeMandatoryMedicalPracticeDto {
@@ -346,6 +357,7 @@ export interface BackofficeUserDto {
     lastLogin: Date;
     personId: number;
     roles: BackofficeUserRoleDto[];
+    twoFactorAuthenticationEnabled: boolean;
     username: string;
 }
 
@@ -720,9 +732,11 @@ export interface DiagnosticReportInfoWithFilesDto extends DiagnosticReportInfoDt
 }
 
 export interface DiaryADto {
+    alias?: string;
     appointmentDuration: number;
     automaticRenewal?: boolean;
     clinicalSpecialtyId: number;
+    diaryAssociatedProfessionalsId: number[];
     diaryOpeningHours: DiaryOpeningHoursDto[];
     doctorsOfficeId: number;
     endDate: string;
@@ -742,7 +756,9 @@ export interface DiaryDto extends DiaryADto {
 }
 
 export interface DiaryListDto {
+    alias: string;
     appointmentDuration: number;
+    clinicalSpecialtyName: string;
     doctorsOfficeDescription: string;
     endDate: string;
     id: number;
@@ -1762,7 +1778,9 @@ export interface NursingRecordDto {
     indication: IndicationDto;
     observation: string;
     scheduledAdministrationTime: DateTimeDto;
-    status: EIndicationStatus;
+    status: ENursingRecordStatus;
+    updateReason: string;
+    updatedBy: string;
 }
 
 export interface NursingRiskFactorDto extends Serializable {
@@ -2793,6 +2811,15 @@ export interface TriagePediatricDto extends TriageNoAdministrativeDto {
     circulation?: CirculationDto;
 }
 
+export interface TwoFactorAuthenticationDto {
+    sharedSecret: string;
+    sharedSecretBarCode: string;
+}
+
+export interface TwoFactorAuthenticationLoginDto {
+    code: string;
+}
+
 export interface UpdateAppointmentDto {
     appointmentId: number;
     appointmentStateId: number;
@@ -2849,6 +2876,11 @@ export interface UserRoleDto {
     userId: number;
 }
 
+export interface UserSharedInfoDto {
+    id: number;
+    username: string;
+}
+
 export interface VInstitutionDto {
     lastDateRiskFactor: Date;
     latitude: number;
@@ -2894,6 +2926,10 @@ export interface VaccineSchemeInfoDto extends AbstractMasterdataDto<number> {
     id: number;
 }
 
+export interface VerificationCodeDto {
+    code: string;
+}
+
 export const enum AppFeature {
     HABILITAR_ALTA_SIN_EPICRISIS = "HABILITAR_ALTA_SIN_EPICRISIS",
     MAIN_DIAGNOSIS_REQUIRED = "MAIN_DIAGNOSIS_REQUIRED",
@@ -2929,6 +2965,7 @@ export const enum AppFeature {
     BACKOFFICE_MOSTRAR_ABM_RESERVA_TURNOS = "BACKOFFICE_MOSTRAR_ABM_RESERVA_TURNOS",
     OCULTAR_LISTADO_PROFESIONES_WEBAPP = "OCULTAR_LISTADO_PROFESIONES_WEBAPP",
     HABILITAR_MODULO_ENFERMERIA = "HABILITAR_MODULO_ENFERMERIA",
+    HABILITAR_2FA = "HABILITAR_2FA",
 }
 
 export const enum EDocumentSearch {
@@ -2940,7 +2977,9 @@ export const enum EDocumentSearch {
 export const enum EIndicationStatus {
     INDICATED = "INDICATED",
     SUSPENDED = "SUSPENDED",
-    PENDING = "PENDING",
+    IN_PROGRESS = "IN_PROGRESS",
+    COMPLETED = "COMPLETED",
+    REJECTED = "REJECTED",
 }
 
 export const enum EIndicationType {
@@ -2954,6 +2993,12 @@ export const enum EMedicalCoverageTypeDto {
     PREPAGA = "PREPAGA",
     OBRASOCIAL = "OBRASOCIAL",
     ART = "ART",
+}
+
+export const enum ENursingRecordStatus {
+    COMPLETED = "COMPLETED",
+    REJECTED = "REJECTED",
+    PENDING = "PENDING",
 }
 
 export const enum EOdontologyTopicDto {
@@ -2982,6 +3027,7 @@ export const enum ERole {
     PERSONAL_DE_LABORATORIO = "PERSONAL_DE_LABORATORIO",
     PERSONAL_DE_FARMACIA = "PERSONAL_DE_FARMACIA",
     PERSONAL_DE_ESTADISTICA = "PERSONAL_DE_ESTADISTICA",
+    PARTIALLY_AUTHENTICATED = "PARTIALLY_AUTHENTICATED",
 }
 
 export const enum ESurfacePositionDto {

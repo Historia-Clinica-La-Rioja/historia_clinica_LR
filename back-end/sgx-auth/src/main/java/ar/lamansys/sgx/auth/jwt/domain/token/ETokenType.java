@@ -4,7 +4,9 @@ public enum ETokenType {
 
     NORMAL("normal"),
     REFRESH("refresh"),
-    VERIFICATION("verification");
+    VERIFICATION("verification"),
+    PARTIALLY_AUTHENTICATED("partially_authenticated")
+    ;
  
     private String url;
  

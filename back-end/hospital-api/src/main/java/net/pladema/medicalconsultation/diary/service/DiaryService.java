@@ -22,7 +22,7 @@ public interface DiaryService {
     List<DiaryBo> getAllOverlappingDiary(Integer doctorsOfficeId,
                                          LocalDate newDiaryStart, LocalDate newDiaryEnd, Optional<Integer> excludeDiaryId);
 
-    Collection<DiaryBo> getActiveDiariesBy(Integer healthcareProfessionalId, Integer specialtyId, Integer institutionId);
+    Collection<DiaryBo> getActiveDiariesBy(Integer associatedHealthcareProfessionalId, Integer healthcareProfessionalId, Integer specialtyId, Integer institutionId);
 
 	Optional<CompleteDiaryBo> getDiary(Integer diaryId);
 	

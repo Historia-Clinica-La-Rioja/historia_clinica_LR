@@ -2,6 +2,7 @@ package net.pladema.staff.controller;
 
 import ar.lamansys.sgx.shared.exceptions.NotFoundException;
 import net.pladema.IntegrationController;
+import net.pladema.medicalconsultation.diary.service.DiaryAssociatedProfessionalService;
 import net.pladema.permissions.controller.external.LoggedUserExternalService;
 import net.pladema.staff.controller.dto.ProfessionalDto;
 import net.pladema.staff.controller.mapper.HealthcareProfessionalMapper;
@@ -31,6 +32,9 @@ class HealthcareProfessionalByInstitutionControllerIntegrationTest extends Integ
 
 	@MockBean
 	private LoggedUserExternalService loggedUserExternalService;
+
+	@MockBean
+	DiaryAssociatedProfessionalService diaryAssociatedProfessionalService;
 
 	@Autowired
 	private MessageSource messageSource;

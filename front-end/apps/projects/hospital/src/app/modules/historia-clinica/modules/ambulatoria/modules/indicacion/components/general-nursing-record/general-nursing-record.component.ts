@@ -1,9 +1,13 @@
+import { NursingRecordStatus, NursingRecordStatusScss } from './../../constants/internment-indications';
 import { Component, Input } from '@angular/core';
-import { EIndicationType } from '@api-rest/api-model';
+import { EIndicationType, ENursingRecordStatus } from '@api-rest/api-model';
 import { InternacionMasterDataService } from '@api-rest/services/internacion-master-data.service';
 import { OtherIndicationTypeDto } from '@api-rest/services/internment-indication.service';
+import { IndicationMatIcon, IndicationSvgIcon } from '../../constants/internment-indications';
 import { getOtherIndicationType, loadExtraInfoParenteralPlan } from '../../constants/load-information';
 import { NursingRecord } from '../nursing-record/nursing-record.component';
+import { dateDtoToDate } from '@api-rest/mapper/date-dto.mapper';
+import { dateTimeDtotoLocalDate } from '@api-rest/mapper/date-dto.mapper';
 
 @Component({
 	selector: 'app-general-nursing-record',
@@ -26,40 +30,40 @@ export class GeneralNursingRecordComponent {
 	) { }
 }
 
-function toNursingRecords(nursingRecordsDto: any[], othersIndicatiosTypes: OtherIndicationTypeDto[], vias:any[]): NursingRecord[] {
+function toNursingRecords(nursingRecordsDto: any[], othersIndicatiosTypes: OtherIndicationTypeDto[], vias: any[]): NursingRecord[] {
 	return nursingRecordsDto.map(r => {
-		let svgIcon: string;
-		let matIcon: string;
 		let description: string;
 		switch (r.indication.type) {
 			case EIndicationType.DIET: {
-				matIcon = 'local_dining';
 				description = r.indication.description;
 				break;
 			}
 			case EIndicationType.PARENTERAL_PLAN: {
-				svgIcon = 'parenteral_plans';
 				description = r.indication.snomed.pt
 				break;
 			}
 			case EIndicationType.OTHER_INDICATION: {
-				matIcon = 'assignment_late';
 				description = getOtherIndicationType(r.indication, othersIndicatiosTypes);
 				break;
 			}
 		}
 		return {
-			matIcon,
-			svgIcon,
+			id: r.id,
+			matIcon: IndicationMatIcon[r.indication.type],
+			svgIcon: IndicationSvgIcon[r.indication.type],
 			content: {
 				status: {
-					description: 'indicacion.nursing-care.status.PENDING',
-					cssClass: 'red'
+					description: NursingRecordStatus[r.status],
+					cssClass: NursingRecordStatusScss[r.status],
+					type: r.status
 				},
 				description,
 				extra_info: (EIndicationType.PARENTERAL_PLAN === r.indication.type) ? loadExtraInfoParenteralPlan(r.indication, vias) : null,
-				createdBy: "",
-				timeElapsed: ""
+				indicationDate: dateDtoToDate(r.indication.indicationDate),
+				scheduledAdministrationTime: r.scheduledAdministrationTime,
+				administeredBy: r.updatedBy,
+				administeredTime: (r.administrationTime) ? dateTimeDtotoLocalDate(r.administrationTime) : null,
+				reason: ENursingRecordStatus.REJECTED === r.status ? r.updateReason : null
 			}
 		}
 	});

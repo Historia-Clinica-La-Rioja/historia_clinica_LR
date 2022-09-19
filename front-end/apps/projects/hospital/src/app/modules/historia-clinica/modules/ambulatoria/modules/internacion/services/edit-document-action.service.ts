@@ -36,6 +36,7 @@ export class EditDocumentActionService {
 		const dialogRef = this.dialog.open(DocumentActionReasonComponent, {
 			data: {
 				title: 'internaciones.dialogs.actions-document.EDIT_TITLE',
+				subtitle: 'internaciones.dialogs.actions-document.SUBTITLE',
 			},
 			width: "50vh",
 			autoFocus: false,
