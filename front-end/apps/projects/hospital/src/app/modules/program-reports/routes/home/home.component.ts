@@ -43,6 +43,15 @@ export class HomeComponent implements OnInit {
         case 2:
           this.reportsService.getMonthlyEpiIIReport(params, `${this.PROGRAM_REPORT_TYPES[1].description}.xls`).subscribe();
           break;
+        case 3:
+          this.reportsService.getMonthlyRecupero(params, `${this.PROGRAM_REPORT_TYPES[2].description}.xls`).subscribe();
+        break;
+        case 4:
+          this.reportsService.getMonthlySumar(params, `${this.PROGRAM_REPORT_TYPES[3].description}.xls`).subscribe();
+        break;
+        case 5:
+          this.reportsService.getMonthlyOdontologyReport(params, `${this.PROGRAM_REPORT_TYPES[4].description}.xls`).subscribe();          
+        break;
         default:
       }
     }

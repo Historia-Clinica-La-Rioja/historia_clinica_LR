@@ -30,4 +30,19 @@ export class ProgramReportsService {
     const url = `${environment.apiBase}/programreports/${this.contextService.institutionId}/monthlyEpiII`;
     return this.getReportProgram(params, fileName, url);
   }
+  getMonthlyRecupero(params: any, fileName: string): Observable<any> {
+		const url = `${environment.apiBase}/programreports/${this.contextService.institutionId}/monthlyRecupero`;
+		return this.getReportProgram(params, fileName, url);
+	}
+
+	getMonthlySumar(params: any, fileName: string): Observable<any> {
+		const url = `${environment.apiBase}/programreports/${this.contextService.institutionId}/monthlySumar`;
+		return this.getReportProgram(params, fileName, url);
+	}
+
+  getMonthlyOdontologyReport(params: any, fileName: string): Observable<any> {
+		const url = `${environment.apiBase}/programreports/${this.contextService.institutionId}/odontology`;
+		return this.getReportProgram(params, fileName, url);
+	}
 }
+
