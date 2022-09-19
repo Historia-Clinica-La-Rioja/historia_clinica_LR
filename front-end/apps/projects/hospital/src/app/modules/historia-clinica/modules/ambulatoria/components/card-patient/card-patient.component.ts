@@ -35,13 +35,11 @@ export class CardPatientComponent {
 	mapToPatientContent(): CardModel[] {
 		return this.patientData?.map((patient: PatientSearchDto) => {
 			return {
-				header: [{ title: " ", value: this.patientNameService.getPatientName(patient.person.firstName, patient.person.nameSelfDetermination) }],
-
+				header: [{ title: " ", value: this.patientNameService.getFullName(patient.person.firstName, patient.person.nameSelfDetermination, patient.person?.middleNames) + ' ' +this.getLastNames(patient)}],
 				id: patient.idPatient,
 				dni: patient.person.identificationNumber,
 				gender: this.genderTableView[patient.person.genderId],
-				date: patient.person.birthDate ? this.datePipe.transform(patient.person.birthDate, DatePipeFormat.SHORT_DATE) : '' ,
-
+				date: patient.person.birthDate ? this.datePipe.transform(patient.person.birthDate, DatePipeFormat.SHORT_DATE) : '',
 				action: {
 					display: 'ambulatoria.card-patient.BUTTON',
 					do: `${this.routePrefix}ambulatoria/paciente/${patient.idPatient}`
@@ -50,4 +48,7 @@ export class CardPatientComponent {
 		});
 	}
 
+	private getLastNames(patient: PatientSearchDto): string {
+		return patient.person?.otherLastNames  ?  patient.person?.lastName + ' ' + patient.person?.otherLastNames : patient.person?.lastName;
+	}
 }

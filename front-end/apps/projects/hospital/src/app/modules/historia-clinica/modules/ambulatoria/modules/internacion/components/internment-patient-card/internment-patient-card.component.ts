@@ -47,7 +47,7 @@ export class InternmentPatientCardComponent {
 	private buildCard(data: InternmentPatientTableData[], redirect: Redirect): CardModel[] {
 		return data?.map((person: InternmentPatientTableData) => {
 			return {
-				header: [{ title: "", value: (person.firstName || person.nameSelfDetermination) ? this.patientNameService.getPatientName(person.firstName, person.nameSelfDetermination) : `internaciones.internment-patient-card.NO_INFO` }],
+				header: [{ title: "", value: person.nameSelfDetermination ? `${this.patientNameService.getPatientName(person.firstName, person.nameSelfDetermination)} ${person.lastName}` : this.getName(person) }],
 				headerSimple: [{ title: "DNI", value: person.identificationNumber || "-" }],
 				hasPhysicalDischarge: person.hasPhysicalDischarge,
 				roomNumber: person.bedInfo.roomNumber,
@@ -63,6 +63,10 @@ export class InternmentPatientCardComponent {
 
 		})
 
+	}
+
+	private getName(person: InternmentPatientTableData): string {
+		return person.fullName ? ` ${person.fullName}` : `internaciones.internment-patient-card.NO_INFO`
 	}
 
 	private missingDocument(document: DocumentsSummaryDto, hasMedicalDischarge: boolean): Documnet {
