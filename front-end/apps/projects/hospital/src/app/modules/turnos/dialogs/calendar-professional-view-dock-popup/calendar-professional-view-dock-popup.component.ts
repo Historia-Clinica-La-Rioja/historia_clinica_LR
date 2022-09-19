@@ -59,7 +59,7 @@ export class CalendarProfessionalViewDockPopupComponent implements OnInit {
 			this.professionalSelected = profSelected ? profSelected : this.professionalLogged;
 			this.changeDetectorRef.detectChanges();
 			if (this.professionals.length === 1) {
-				this.appointmentFacade.setProfessionalId(this.professionalSelected?.id);
+				this.appointmentFacade.setProfessional(this.professionalSelected);
 				this.agendaSearchService.search(this.professionalSelected?.id);
 				this.setDiaries(this.professionalSelected);
 			}

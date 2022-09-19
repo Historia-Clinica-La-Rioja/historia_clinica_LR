@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { CalendarEvent } from 'angular-calendar';
 import { ReplaySubject, Observable, forkJoin } from 'rxjs';
 import { AppointmentsService } from '@api-rest/services/appointments.service';
-import { AppointmentListDto, AppointmentShortSummaryDto, BasicPersonalDataDto, CreateAppointmentDto, DateTimeDto, UpdateAppointmentDto } from '@api-rest/api-model';
+import { AppointmentListDto, AppointmentShortSummaryDto, BasicPersonalDataDto, CreateAppointmentDto, DateTimeDto, ProfessionalDto, UpdateAppointmentDto } from '@api-rest/api-model';
 import {
 	momentParseTime,
 	DateFormat,
@@ -68,7 +68,7 @@ export class AppointmentsFacadeService {
 	private holidayEmitter = new ReplaySubject<CalendarEvent[]>(1);
 	private appointments$: Observable<CalendarEvent[]>;
 	private holidays$: Observable<CalendarEvent[]>;
-	private professionalId: number;
+	private professional: ProfessionalDto;
 
 	private startDate: string;
 	private endDate: string;
@@ -84,17 +84,17 @@ export class AppointmentsFacadeService {
 		this.holidays$ = this.holidayEmitter.asObservable();
 	}
 
-	setProfessionalId(id: number) {
-		if (this.professionalId !== id) {
-			this.professionalId = id;
+	setProfessional(professional: ProfessionalDto) {
+		if (this.professional?.id !== professional.id) {
+			this.professional = professional;
 			if (this.agendaId) {
 				this.loadAppointments();
 			}
 		}
 	}
 
-	getProfessionalId() {
-		return this.professionalId
+	getProfessional() {
+		return this.professional;
 	}
 
 	setValues(agendaId, appointmentDuration, startDate: string, endDate: string): void {
@@ -111,7 +111,7 @@ export class AppointmentsFacadeService {
 	}
 
 	public loadAppointments(): void {
-		forkJoin([	this.appointmentService.getList([this.agendaId], this.professionalId, this.startDate, this.endDate),
+		forkJoin([	this.appointmentService.getList([this.agendaId], this.professional?.id, this.startDate, this.endDate),
 					this.holidayService.getHolidays(this.startDate, this.endDate)]).subscribe((result) => {
 				const appointmentsCalendarEvents: CalendarEvent[] = result[0]
 					.map(appointment => {

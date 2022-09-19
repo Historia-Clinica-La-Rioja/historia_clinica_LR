@@ -43,7 +43,7 @@ export class ProfessionalSelectComponent {
 			this.selectionChange.emit(null);
 			return;
 		}
-		this.appointmentFacade.setProfessionalId(result?.id);
+		this.appointmentFacade.setProfessional(result);
 		this.agendaSearchService.search(result?.id);
 		this.selectionChange.next(result);
 	}

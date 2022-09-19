@@ -41,7 +41,6 @@ import { endOfMonth, endOfWeek, startOfMonth, startOfWeek } from 'date-fns';
 import { DatePipe } from "@angular/common";
 import { DiscardWarningComponent } from '@presentation/dialogs/discard-warning/discard-warning.component';
 import { TranslateService } from '@ngx-translate/core';
-import { HolidaysService } from '@api-rest/services/holidays.service';
 
 const ASIGNABLE_CLASS = 'cursor-pointer';
 const AGENDA_PROGRAMADA_CLASS = 'bg-green';
@@ -110,7 +109,6 @@ export class AgendaComponent implements OnInit, OnDestroy, OnChanges {
 		private readonly calendarProfessionalInfo: CalendarProfessionalInformation,
 		private readonly datePipe: DatePipe,
 		private readonly translateService: TranslateService,
-		private readonly holidaysService: HolidaysService,
 	) {
 	}
 
@@ -278,7 +276,7 @@ export class AgendaComponent implements OnInit, OnDestroy, OnChanges {
 					}
 				}
 
-				if (this.loggedUserHealthcareProfessionalId !== this.appointmentFacade.getProfessionalId() && !this.userHasValidRoles()) {
+				if (this.loggedUserHealthcareProfessionalId !== this.appointmentFacade.getProfessional()?.id && !this.userHasValidRoles()) {
 					this.snackBarService.showError('turnos.new-appointment.messages.NOT_RESPONSIBLE');
 					return;
 				} else {

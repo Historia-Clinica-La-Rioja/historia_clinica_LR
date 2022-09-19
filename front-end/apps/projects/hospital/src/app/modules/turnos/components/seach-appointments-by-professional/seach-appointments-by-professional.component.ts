@@ -88,7 +88,7 @@ export class SeachAppointmentsByProfessionalComponent implements OnInit, OnDestr
 		} else {
 			this.router.navigate([`${this.routePrefix}`]);
 		}
-		this.appointmentFacadeService.setProfessionalId(this.idProfesional);
+		this.appointmentFacadeService.setProfessional(this.professionalSelected);
 		this.agendaSearchService.search(this.idProfesional);
 	}
 
