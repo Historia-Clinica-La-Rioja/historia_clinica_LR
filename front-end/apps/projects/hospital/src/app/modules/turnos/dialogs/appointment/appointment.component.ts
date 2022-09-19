@@ -418,7 +418,7 @@ export class AppointmentComponent implements OnInit {
 	}
 
 	private coverageIsNotUpdate(): boolean {
-		return this.firstCoverage === this.formEdit.controls.newCoverageData?.value;
+		return this.formEdit.controls.newCoverageData?.value ? this.firstCoverage === this.formEdit.controls.newCoverageData?.value : true;
 	}
 
 	private updateState(newStateId: APPOINTMENT_STATES_ID): void {
