@@ -219,7 +219,7 @@ export class AmbulatoriaPacienteComponent implements OnInit, OnDestroy {
 
 		this.studyCategories$ = this.requestMasterDataService.categories();
 
-		this.featureFlagService.isActive(AppFeature.HABILITAR_MODULO_ENFERMERIA)
+		this.featureFlagService.isActive(AppFeature.HABILITAR_MODULO_ENF_EN_DESARROLLO)
 			.subscribe(show => this.showNursingSection = show);
 	}
 
