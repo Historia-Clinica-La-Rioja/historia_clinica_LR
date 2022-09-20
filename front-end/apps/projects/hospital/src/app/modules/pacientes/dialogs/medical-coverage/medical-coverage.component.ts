@@ -55,28 +55,23 @@ export class MedicalCoverageComponent implements OnInit {
 
 		this.healthInsuranceService.getAll().subscribe((values: MedicalCoverageDto[]) => {
 			this.healthInsuranceMasterData = values;
-
+			this.personInfo?.patientId ? this.setPatientMedicalCoverages() : this.patientMedicalCoverages = [];
 			if (this.personInfo.identificationTypeId === DNI_TYPE_ID && this.personInfo.genderId) {
 				this.renaperService.getHealthInsurance
 					({ genderId: this.personInfo.genderId, identificationNumber: this.personInfo.identificationNumber })
 					.subscribe((healthInsurances: MedicalCoverageDto[]) => {
 						if (healthInsurances) {
-							this.healthInsuranceService.getAll().subscribe((values: MedicalCoverageDto[]) => {
-								this.healthInsuranceMasterData = values;
-								this.personInfo?.patientId ? this.setPatientMedicalCoverages() : this.patientMedicalCoverages = [];
-								healthInsurances.forEach(healthInsurance => {
-									const patientMedicalCoverage = this.patientMedicalCoverages
-										.find(patientHealthInsurance => (patientHealthInsurance.medicalCoverage as HealthInsurance).rnos === healthInsurance.rnos);
-									if (!patientMedicalCoverage) {
-										this.patientMedicalCoverages = this.patientMedicalCoverages.concat(this.fromRenaperToPatientMedicalCoverage(healthInsurance));
-									} else if (healthInsurance.dateQuery) {
-										patientMedicalCoverage.validDate = momentParse(healthInsurance.dateQuery, DateFormat.YEAR_MONTH);
-									}
-								});
+							healthInsurances.forEach(healthInsurance => {
+								const patientMedicalCoverage = this.patientMedicalCoverages
+									.find(patientHealthInsurance => (patientHealthInsurance.medicalCoverage as HealthInsurance).rnos === healthInsurance.rnos);
+								if (!patientMedicalCoverage) {
+									this.patientMedicalCoverages = this.patientMedicalCoverages.concat(this.fromRenaperToPatientMedicalCoverage(healthInsurance));
+								} else if (healthInsurance.dateQuery) {
+									patientMedicalCoverage.validDate = momentParse(healthInsurance.dateQuery, DateFormat.YEAR_MONTH);
+								}
 							});
 						}
 						this.loading = false;
-
 					}, _ => this.loading = false);
 			} else {
 				this.loading = false;
