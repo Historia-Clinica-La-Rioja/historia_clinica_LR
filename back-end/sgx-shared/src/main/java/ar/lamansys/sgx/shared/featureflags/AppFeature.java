@@ -112,7 +112,10 @@ public enum AppFeature implements Feature {
 	HABILITAR_NOTIFICACIONES_TURNOS,
 
 	@Label("Habilita PopUp de guardado en consulta ambulatoria")
-	HABILITAR_GUARDADO_CON_CONFIRMACION_CONSULTA_AMBULATORIA
+	HABILITAR_GUARDADO_CON_CONFIRMACION_CONSULTA_AMBULATORIA,
+
+	@Label("Indica si esta habilitada la opcion de asociar procedimientos a una institucion")
+	HABILITAR_ASOCIAR_PRACTICAS_A_INSTITUCIONES
 	;
 
     public boolean isActive() {

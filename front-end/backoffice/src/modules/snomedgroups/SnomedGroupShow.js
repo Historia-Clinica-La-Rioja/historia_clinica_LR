@@ -70,7 +70,8 @@ const SnomedGroupShow = props => {
                             </ReferenceField>
 
                             {/* Snomed Group Type */}
-                            <ReferenceField source="groupType" reference="snomedgrouptypes" link={false} >
+                            <ReferenceField source="groupType" reference="snomedgrouptypes" link={false}
+                                            emptyText={translate('resources.snomedgroups.noInfo')}>
                                 <TextField source="description"/>
                             </ReferenceField>
 
