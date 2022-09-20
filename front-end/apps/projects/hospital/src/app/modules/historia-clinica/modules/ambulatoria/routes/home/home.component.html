@@ -136,7 +136,7 @@
 			</form>
 		</section>
 	</div>
-	<section id="searchResults" *ngIf="formSubmitted">
+	<section id="searchResults" *ngIf="formSubmitted" fxLayout="column" fxLayoutGap="10px">
 		<h2 class="page-title" translate="forms.SEARCH_RESULTS"></h2>
 
 		<mat-card id="search_limit" name="search_limit" *ngIf="patientResultsLength > 1">

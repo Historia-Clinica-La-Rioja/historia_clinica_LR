@@ -1,6 +1,6 @@
 <mat-card>
-	<div *ngFor="let patient of patientContent">
-		<app-card [cardContent]="patient">
+	<div *ngFor="let patient of patientContent;last as isLast">
+		<app-card [cardContent]="patient" [showDivider]="!isLast">
 			<div gdAreas="id dni gender date" fxLayoutAlign="space-around center" gdGap="16px"
 				gdAreas.lt-sm=" id dni | gender date" gdRows.lt-sm="auto auto">
 

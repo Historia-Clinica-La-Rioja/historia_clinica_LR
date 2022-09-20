@@ -1,8 +1,8 @@
 <mat-card>
-	<div *ngFor="let patient of internmentPatientCard">
-		<app-card [cardContent]="patient">
+	<div *ngFor="let patient of internmentPatientCard;last as isLast">
+		<app-card [cardContent]="patient" [showDivider]="!isLast">
 
-			<div *ngIf="patient.hasPhysicalDischarge else physicalDischarge"fxLayoutGap="16px">
+			<div *ngIf="patient.hasPhysicalDischarge else physicalDischarge" fxLayoutGap="16px">
 				<div fxLayout="row" fxLayoutGap="70px">
 
 					<div fxLayoutAlign="none center" fxLayoutGap="10px">
@@ -21,7 +21,7 @@
 			</div>
 
 			<ng-template #physicalDischarge>
-				<div fxLayout="row" fxLayoutAlign="space-between" fxLayoutGap="16px" >
+				<div fxLayout="row" fxLayoutAlign="space-between" fxLayoutGap="16px">
 
 					<div fxLayoutAlign="none center" class="conten">
 						<mat-icon fontSet="material-icons-outlined">meeting_room</mat-icon>
