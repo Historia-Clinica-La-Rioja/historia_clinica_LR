@@ -593,6 +593,14 @@ const messages = {
                 date: 'Fecha',
                 description: 'Descripción',
             }
+        },
+        carelineproblems: {
+            name: 'Problemas',
+            fields: {
+                careLineId: 'Línea de cuidado',
+                snomedId: 'Problema',
+            },
+            addRelated: 'Agregar problema',
         }
     }
 };

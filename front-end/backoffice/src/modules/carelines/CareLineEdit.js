@@ -39,7 +39,26 @@ const CareLineEdit = props => (
                     <ReferenceField source="clinicalSpecialtyId" reference="clinicalspecialties">
                         <TextField source="name" />
                     </ReferenceField>
-                    <DeleteButton />
+                    <DeleteButton redirect={false} />
+                </Datagrid>
+            </ReferenceManyField>
+            <SectionTitle label="resources.carelineproblems.name"/>
+            <CreateRelatedButton
+                reference="carelineproblems"
+                refFieldName="careLineId"
+                label="resources.carelineproblems.addRelated"
+            />
+            <ReferenceManyField
+                addLabel={false}
+                reference="carelineproblems"
+                target="careLineId"
+                sort={{field: 'id', order: 'DESC'}}
+            >
+                <Datagrid>
+                    <ReferenceField source="snomedId" reference="snomedconcepts" link="show">
+                        <TextField source="pt"/>
+                    </ReferenceField>
+                    <DeleteButton redirect={false} />
                 </Datagrid>
             </ReferenceManyField>
         </SimpleForm>

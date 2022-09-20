@@ -31,6 +31,7 @@ import properties from './properties';
 import restClientMeasures from './rest-client-measures';
 import medicalCoverage from './medicalcoverage';
 import snomedgroups from './snomedgroups';
+import carelineproblems from './carelineproblems';
 
 
 import { ROOT, ADMINISTRADOR } from './roles';
@@ -97,6 +98,7 @@ const resources = (permissions: SGXPermissions) => [
     <Resource name="beds" {...beds} />,
     <Resource name="clinicalspecialtycarelines" {...clinicalspecialtycarelines} />,
     <Resource name="carelines" {...careLines(permissions)} />,
+    <Resource name="carelineproblems" {...carelineproblems} />,
     // debug
     <Resource name="snvs"  {...snvs} />,
     <Resource name="documentfiles" {...documentFiles(permissions)} />,
