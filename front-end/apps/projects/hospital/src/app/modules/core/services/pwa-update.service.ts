@@ -43,6 +43,7 @@ export class PwaUpdateService {
 	checkForUpdate() {
 		if (!this.updates.isEnabled) {
 			console.warn('checkForUpdate: Service Worker not enabled');
+			return;
 		}
 		console.debug('Checking App version');
 		this.updates.checkForUpdate();
