@@ -15,6 +15,8 @@ export class AuthService {
 	) { }
 
 	public login(loginDto: LoginDto, recaptchaResponse): Observable<any> {
+		// limpio el cache tg-718
+		localStorage.clear();
 		let httpHeaders;
 		if (recaptchaResponse) {
 			httpHeaders = new HttpHeaders({
