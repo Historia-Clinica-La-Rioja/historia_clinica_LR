@@ -792,6 +792,18 @@ export interface DiaryAvailabilityDto {
     slots: AvailabilityDto;
 }
 
+export interface DiaryAvailableProtectedAppointmentsDto {
+    clinicalSpecialty: ClinicalSpecialtyDto;
+    date: DateDto;
+    department: DepartmentDto;
+    diaryId: number;
+    doctorOffice: string;
+    hour: TimeDto;
+    institution: InstitutionBasicInfoDto;
+    jointDiary: boolean;
+    professionalFullName: string;
+}
+
 export interface DiaryDto extends DiaryADto {
     id: number;
 }
