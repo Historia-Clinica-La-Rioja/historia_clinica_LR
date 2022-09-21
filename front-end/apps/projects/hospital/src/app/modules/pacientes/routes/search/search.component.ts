@@ -222,7 +222,7 @@ export class SearchComponent implements OnInit {
 
 	private buildFormSearchWithoutValidations(params) {
 		this.formSearch = this.formBuilder.group({
-			identificationNumber: [params.identificationNumber, [Validators.maxLength(VALIDATIONS.MAX_LENGTH.identif_number)]],
+			identificationNumber: [params.identificationNumber !=0 ? params.identificationNumber : '', [Validators.maxLength(VALIDATIONS.MAX_LENGTH.identif_number)]],
 			identificationTypeId: [Number(params.identificationTypeId)],
 			firstName: [params.firstName],
 			middleNames: [params.middleNames],

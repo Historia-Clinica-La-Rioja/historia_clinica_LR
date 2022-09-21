@@ -38,7 +38,7 @@
 						<mat-form-field appearance="outline">
 							<input id="identificationNumber"
 								   formControlName="identificationNumber"
-								   placeholder="Sin puntos"
+								   placeholder= "{{'pacientes.form.NO_INFO' | translate}}"
 								   matInput>
 							<mat-error *ngIf="formSearchSubmitted && hasError(formSearch, 'required', 'identificationNumber')">
 								<span [translate]="'pacientes.form.REQUIRED'"></span>
