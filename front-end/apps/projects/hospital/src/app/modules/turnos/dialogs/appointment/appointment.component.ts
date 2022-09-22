@@ -439,8 +439,8 @@ export class AppointmentComponent implements OnInit {
 					showMatIconError: true,
 				}
 			});
-		dialogRefConfirmation.afterClosed().subscribe(upgradeCoverage => {
-			if (!upgradeCoverage)
+		dialogRefConfirmation.afterClosed().subscribe((upDateState: boolean) => {
+			if (upDateState)
 				this.updateState(newStateId);
 		});
 	}

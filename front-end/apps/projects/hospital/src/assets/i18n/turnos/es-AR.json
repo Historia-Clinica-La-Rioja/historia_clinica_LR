@@ -145,8 +145,8 @@
 			},
 			"confirm-dialog": {
 				"CONTENT": "Si confirma el turno no podrá actualizar la cobertura luego.",
-				"CONFIRM": "Si, actualizar cobertura",
-				"CANCEL": "No, confirmar turno",
+				"CANCEL": "Si, actualizar cobertura",
+				"CONFIRM": "No, confirmar turno",
 				"QUESTION": "¿Desea actualizarla ahora?"
 			}
 		},
