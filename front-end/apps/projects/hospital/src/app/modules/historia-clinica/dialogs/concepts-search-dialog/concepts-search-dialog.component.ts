@@ -37,11 +37,10 @@ export class ConceptsSearchDialogComponent implements OnInit {
 	private setVademecumPharmacos() {
 		this.farmacosService.getPharmacos({ term: this.data.searchValue, ecl: this.data.eclFilter, institutionId: this.contextService.institutionId }).subscribe(
 			result => {
-				this.conceptsResultsTable = this.buildConceptsResultsTable(result.items);
-				this.conceptsResultsLength = result.total
-				if (result.total === 0) {
+				if (result.total === 0)
 					this.setSnomedPharmacos();
-				}
+				else
+					this.buildConcepts(result);
 			}, 
 			error => {
 				this.setSnomedPharmacos();
@@ -52,8 +51,7 @@ export class ConceptsSearchDialogComponent implements OnInit {
 	private setSnomedPharmacos() {
 		this.snowstormService.getSNOMEDConcepts({ term: this.data.searchValue, ecl: this.data.eclFilter }).subscribe(
 			result => {
-				this.conceptsResultsTable = this.buildConceptsResultsTable(result.items);
-				this.conceptsResultsLength = result.total;
+				this.buildConcepts(result);
 			},
 			error => {
 				this.snackBarService.showError('historia-clinica.snowstorm.CONCEPTS_COULD_NOT_BE_OBTAINED');
@@ -61,6 +59,11 @@ export class ConceptsSearchDialogComponent implements OnInit {
 				this.snowstormServiceNotAvailable = true;
 			}
 		);
+	}
+
+	private buildConcepts(result) {
+		this.conceptsResultsTable = this.buildConceptsResultsTable(result.items);
+		this.conceptsResultsLength = result.total;
 	}
 
 	private buildConceptsResultsTable(data: SnomedDto[]): TableModel<SnomedDto> {
