@@ -139,7 +139,7 @@
 	<section id="searchResults" *ngIf="formSubmitted" fxLayout="column" fxLayoutGap="10px">
 		<h2 class="page-title" translate="forms.SEARCH_RESULTS"></h2>
 
-		<mat-card id="search_limit" name="search_limit" *ngIf="patientResultsLength > 1">
+		<mat-card id="search_limit" name="search_limit" *ngIf="tableModel && patientResultsLength > 1">
 			<span class="mat-body-1" [translate]="'ambulatoria.home.search_limit.TITLE'" style="display:block;"
 				[translateParams]="{ resultsLength: patientResultsLength }">
 			</span>
@@ -148,8 +148,14 @@
 			</span>
 		</mat-card>
 
-		<app-card-patient [patientData]="patientData" [genderTableView]="genderTableView"  *ngIf="patientData?.length > 0 else noInfo">
-		</app-card-patient>
+		<div *ngIf="!ffOfCardsIsOn else patientCard">
+			<app-table id="resultTable" [model]="tableModel"  *ngIf="tableModel?.data.length > 0 else noInfo"></app-table>
+		</div>
+
+		<ng-template #patientCard>
+			<app-card-patient [patientData]="patientData" [genderTableView]="genderTableView"  *ngIf="patientData?.length > 0 else noInfo">
+			</app-card-patient>
+		</ng-template>
 
 		<ng-template #noInfo>
 			<app-no-data></app-no-data>
