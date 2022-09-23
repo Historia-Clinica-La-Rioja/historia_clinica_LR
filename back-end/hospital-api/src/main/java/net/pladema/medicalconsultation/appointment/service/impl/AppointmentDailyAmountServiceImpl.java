@@ -60,6 +60,8 @@ public class AppointmentDailyAmountServiceImpl implements AppointmentDailyAmount
         if (diary.isPresent()) {
 			if(diary.get().getEndDate().isBefore(to))
 				to = diary.get().getEndDate();
+			if(diary.get().getStartDate().isAfter(from))
+				from = diary.get().getStartDate();
 			Collection<AppointmentBo> appointments = appointmentService.getAppointmentsByDiaries(Arrays.asList(diaryId), from, to);
 
             for (LocalDate date = from;
