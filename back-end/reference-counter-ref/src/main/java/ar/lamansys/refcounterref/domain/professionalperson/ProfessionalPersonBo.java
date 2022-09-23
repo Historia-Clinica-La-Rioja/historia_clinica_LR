@@ -20,4 +20,12 @@ public class ProfessionalPersonBo {
 	private String nameSelfDetermination;
 
     private String lastName;
+
+    public ProfessionalPersonBo(String firstName, String nameSelfDetermination,
+								String lastName) {
+    	this.firstName = firstName;
+    	this.nameSelfDetermination = nameSelfDetermination;
+    	this.lastName = lastName;
+	}
+
 }

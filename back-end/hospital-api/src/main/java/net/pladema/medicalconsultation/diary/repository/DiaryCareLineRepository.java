@@ -28,4 +28,10 @@ public interface DiaryCareLineRepository extends SGXAuditableEntityJPARepository
 			"WHERE dcl.pk.diaryId = :diaryId " +
 			"AND dcl.deleteable.deleted = false")
 	List<CareLineBo> getCareLinesByDiaryId(@Param("diaryId") Integer diaryId);
+
+	@Query("SELECT dcl.pk.careLineId " +
+			"FROM DiaryCareLine dcl " +
+			"WHERE dcl.pk.diaryId = :diaryId " +
+			"AND dcl.deleteable.deleted = false")
+	List<Integer> getCareLineIdsByDiary(@Param("diaryId") Integer diaryId);
 }

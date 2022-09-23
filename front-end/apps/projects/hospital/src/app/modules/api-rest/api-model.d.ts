@@ -2586,6 +2586,13 @@ export interface ReferenceProblemDto extends Serializable {
     snomed: SharedSnomedDto;
 }
 
+export interface ReferenceSummaryDto {
+    date: DateDto;
+    institution: InstitutionInfoDto;
+    professional: ProfessionalPersonDto;
+    referenceId: number;
+}
+
 export interface ReferenceSummaryNoteDto extends Serializable {
     description: string;
     id: number;

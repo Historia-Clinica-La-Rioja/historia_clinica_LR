@@ -6,6 +6,7 @@ import ar.lamansys.refcounterref.domain.enums.EReferenceCounterReferenceType;
 import ar.lamansys.refcounterref.domain.file.ReferenceCounterReferenceFileBo;
 import ar.lamansys.refcounterref.domain.reference.ReferenceBo;
 import ar.lamansys.refcounterref.domain.reference.ReferenceGetBo;
+import ar.lamansys.refcounterref.domain.reference.ReferenceSummaryBo;
 import ar.lamansys.refcounterref.domain.referenceproblem.ReferenceProblemBo;
 import ar.lamansys.refcounterref.infraestructure.output.repository.reference.Reference;
 import ar.lamansys.refcounterref.infraestructure.output.repository.reference.ReferenceRepository;
@@ -15,6 +16,7 @@ import ar.lamansys.refcounterref.infraestructure.output.repository.referenceheal
 import ar.lamansys.refcounterref.infraestructure.output.repository.referencenote.ReferenceNote;
 import ar.lamansys.refcounterref.infraestructure.output.repository.referencenote.ReferenceNoteRepository;
 import ar.lamansys.sgh.clinichistory.application.healthCondition.HealthConditionStorage;
+import ar.lamansys.sgh.shared.infrastructure.input.service.SharedDiaryCareLinePort;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -34,6 +36,7 @@ public class ReferenceStorageImpl implements ReferenceStorage {
     private final ReferenceHealthConditionRepository referenceHealthConditionRepository;
     private final HealthConditionStorage healthConditionStorage;
     private final ReferenceCounterReferenceFileStorage referenceCounterReferenceFileStorage;
+	private final SharedDiaryCareLinePort sharedDiaryCareLinePort;
 
     @Override
 	@Transactional
@@ -84,7 +87,19 @@ public class ReferenceStorageImpl implements ReferenceStorage {
         return referenceHealthConditionRepository.getReferencesProblemsByPatientId(patientId);
     }
 
-    public List<ReferenceHealthCondition> saveProblems(Integer referenceId, ReferenceBo referenceBo) {
+	@Override
+	public List<ReferenceSummaryBo> getReferencesSummary(Integer patientId, Integer clinicalSpecialtyId, Integer diaryId) {
+    	log.debug("Input parameters -> patientId {}, clinicalSpecialtyid {}, diaryId {} ", patientId, clinicalSpecialtyId, diaryId);
+		List<ReferenceSummaryBo> queryResult = referenceRepository.getReferencesSummaryFromOutpatientConsultation(patientId, clinicalSpecialtyId);
+		queryResult.addAll(referenceRepository.getReferencesSummaryFromOdontologyConsultation(patientId, clinicalSpecialtyId));
+		List<Integer> careLinesOfDiary = sharedDiaryCareLinePort.getCareLineIdsByDiaryId(diaryId);
+		if (!careLinesOfDiary.isEmpty())
+			queryResult = queryResult.stream().filter(r -> r.getCareLineId() == null || careLinesOfDiary.contains(r.getCareLineId())).collect(Collectors.toList());
+		log.debug("Output -> references {} ", queryResult);
+		return queryResult;
+	}
+
+	public List<ReferenceHealthCondition> saveProblems(Integer referenceId, ReferenceBo referenceBo) {
         return referenceBo.getProblems().stream().map(problem -> {
             Integer healthConditionId = healthConditionStorage.getHealthConditionIdByEncounterAndSnomedConcept(
                     referenceBo.getEncounterId(), referenceBo.getSourceTypeId(), problem.getSnomed().getSctid(), problem.getSnomed().getPt());
