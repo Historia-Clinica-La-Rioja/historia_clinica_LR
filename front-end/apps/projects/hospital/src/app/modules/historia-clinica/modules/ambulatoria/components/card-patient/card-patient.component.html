@@ -1,6 +1,6 @@
 <mat-card>
 	<div *ngFor="let patient of patientContent;last as isLast">
-		<app-card [cardContent]="patient" [showDivider]="!isLast">
+		<app-card [cardContent]="patient">
 			<div gdAreas="id dni gender date" fxLayoutAlign="space-around center" gdGap="16px"
 				gdAreas.lt-sm=" id dni | gender date" gdRows.lt-sm="auto auto">
 
@@ -17,13 +17,13 @@
 					<span> {{patient.gender}}</span>
 				</div>
 
-				<div gdArea="date"  fxLayout.lt-sm="column">
+				<div gdArea="date" fxLayout.lt-sm="column">
 					<span>{{'ambulatoria.card-patient.BIRTHDAY_DATE' | translate}} </span>
 					<span>{{patient.date}}</span>
 				</div>
-
 			</div>
 		</app-card>
+		<mat-divider *ngIf="!isLast" insert class="divider"></mat-divider>
 	</div>
 
 </mat-card>

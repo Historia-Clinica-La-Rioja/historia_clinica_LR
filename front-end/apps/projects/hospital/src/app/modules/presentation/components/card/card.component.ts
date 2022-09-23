@@ -9,8 +9,6 @@ import { Router } from '@angular/router';
 export class CardComponent {
 
 	@Input() cardContent: CardModel;
-	@Input() showDivider = false;
-
 	constructor(
 		private readonly router: Router
 	) { }

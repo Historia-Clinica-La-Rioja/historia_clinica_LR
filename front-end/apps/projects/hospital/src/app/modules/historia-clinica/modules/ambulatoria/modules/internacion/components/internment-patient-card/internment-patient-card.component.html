@@ -1,17 +1,17 @@
 <mat-card>
 	<div *ngFor="let patient of internmentPatientCard;last as isLast">
-		<app-card [cardContent]="patient" [showDivider]="!isLast">
+		<app-card [cardContent]="patient">
 
 			<div *ngIf="patient.hasPhysicalDischarge else physicalDischarge" fxLayoutGap="16px">
 				<div fxLayout="row" fxLayoutGap="70px">
 
-					<div fxLayoutAlign="none center" fxLayoutGap="10px">
+					<div fxLayoutAlign="none center" fxLayoutGap="10px" class="conten">
 						<mat-icon class="green">check_circle_outline</mat-icon>
 						<span class="green">{{'internaciones.internment-patient-card.HAS_PHYSICAL_DISCHARGE' |
 							translate}}</span>
 					</div>
 
-					<div fxLayoutAlign="none center" fxLayoutGap="10px">
+					<div fxLayoutAlign="none center" fxLayoutGap="10px" class="conten">
 						<mat-icon class="red" fontSet="material-icons-outlined">
 							{{patient?.lastMissingDocument.matIcon}}</mat-icon>
 						<span class="red"> {{patient.lastMissingDocument.title | translate}} </span>
@@ -41,5 +41,6 @@
 			</ng-template>
 
 		</app-card>
+		<mat-divider *ngIf="!isLast" insert class="divider"></mat-divider>
 	</div>
 </mat-card>

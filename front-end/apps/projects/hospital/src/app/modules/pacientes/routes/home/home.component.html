@@ -13,9 +13,7 @@
 	</section>
 	<section *appHasRole="['ADMINISTRATIVO']">
 		<h2 class="page-title" [translate]="'pacientes.home.TITLE_SEARCH'"></h2>
-		<div fxLayout="row">
-			<app-internment-patient-card [redirect]="redirect"></app-internment-patient-card>
-</div>
+		<app-internment-patient-card [redirect]="redirect"></app-internment-patient-card>
 	</section>
 </app-content>
 
