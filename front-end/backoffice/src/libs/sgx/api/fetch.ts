@@ -58,9 +58,6 @@ const mapToApiHttpError = (defaultValue = { code: 'error.generic.title' }) => (b
 const doRefreshToken = (): Promise<void> => {
     const options = jsonPayload('POST', undefined);
     return sgxFetchApi<void>('auth/refresh', options)
-        .then((value) => {
-            console.log(value)
-        })
         .catch(error => {
             throw error
         })
