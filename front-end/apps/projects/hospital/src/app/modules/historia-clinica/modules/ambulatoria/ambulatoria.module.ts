@@ -29,7 +29,6 @@ import { CompletarEstudioComponent } from './dialogs/ordenes-prescripciones/comp
 import { VerResultadosEstudioComponent } from './dialogs/ordenes-prescripciones/ver-resultados-estudio/ver-resultados-estudio.component';
 import { ExternalSummaryCardComponent } from '@presentation/components/external-summary-card/external-summary-card.component';
 import { SuggestedFieldsPopupComponent } from '../../../presentation/components/suggested-fields-popup/suggested-fields-popup.component';
-import { CardPatientComponent } from './components/card-patient/card-patient.component';
 
 import { AgregarVacunaComponent } from './dialogs/agregar-vacuna/agregar-vacuna.component';
 import { AgregarVacunasComponent } from './dialogs/agregar-vacunas/agregar-vacunas.component';
@@ -108,7 +107,6 @@ import { HistoricalProblemsFacadeService } from './services/historical-problems-
 		CreateOutpatientOrderComponent,
 		NewConsultationFamilyHistoryFormComponent,
 		VaccineSearchComponent,
-  		CardPatientComponent,
   		ClinicalHistoryActionsComponent,
 	],
 	imports: [

@@ -17,6 +17,7 @@ import { AssignedAppointmentComponent } from './component/assigned-appointment/a
 import { AssignedAppointmentsComponent } from './component/assigned-appointments/assigned-appointments.component';
 import { CardLicenseComponent } from './component/card-license/card-license.component';
 import { CardProfessionsComponent } from './component/card-professions/card-professions.component';
+import { CardPatientComponent } from './component/card-patient/card-patient.component';
 import { CardRolesComponent } from './component/card-roles/card-roles.component';
 import { LicenseFormComponent } from './component/license-form/license-form.component';
 import { ProfessionSpecialtiesFormComponent } from './component/profession-specialties-form/profession-specialties-form.component';
@@ -50,6 +51,7 @@ import { ViewNameProfessionAndSpecialtyPipe } from './pipe/view-name-profession-
 		AssignedAppointmentsComponent,
 		CardLicenseComponent,
 		CardProfessionsComponent,
+		CardPatientComponent,
 		CardRolesComponent,
 		LicenseFormComponent,
 		ProfessionSpecialtiesFormComponent,
@@ -68,6 +70,9 @@ import { ViewNameProfessionAndSpecialtyPipe } from './pipe/view-name-profession-
 		ScanPatientComponent,
 		// pipes
 		ViewNameProfessionAndSpecialtyPipe,
+	],
+	exports: [
+		CardPatientComponent,
 	],
     imports: [
         FormsModule,
