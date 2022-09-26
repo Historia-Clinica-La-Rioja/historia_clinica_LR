@@ -39,10 +39,10 @@
 	</div>
 
 	<div *ngSwitchCase="TYPE_DEFINITIONS.card">
-		<app-card
+		<app-ui-card
 			[title]="uiComponent.args.title"
 			[content]="uiComponent.args.content"
-		></app-card>
+		></app-ui-card>
 	</div>
 
 	<div *ngSwitchCase="TYPE_DEFINITIONS.json">

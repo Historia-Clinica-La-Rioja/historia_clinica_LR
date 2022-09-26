@@ -8,7 +8,6 @@ import { PresentationModule } from '@presentation/presentation.module';
 // routing
 import { InstitutionExtensionComponent, SystemExtensionComponent } from './routes/extension/extension.component';
 // components
-import { CardComponent } from './components/card/card.component';
 import { CubejsChartComponent } from './components/cubejs-chart/cubejs-chart.component';
 import { CubejsDashboardComponent } from './components/cubejs-dashboard/cubejs-dashboard.component';
 import { DateOnlyIsoFormInputComponent } from './components/date-only-iso-form-input/date-only-iso-form-input.component';
@@ -16,6 +15,7 @@ import { JsonComponent } from './components/json/json.component';
 import { PageLayoutComponent } from './components/page-layout/page-layout.component';
 import { QueryRendererComponent } from './components/query-renderer/query-renderer.component';
 import { TabsComponent } from './components/tabs/tabs.component';
+import { UiCardComponent } from './components/ui-card/ui-card.component';
 import { UiComponentComponent } from './components/ui-component/ui-component.component';
 import { UiComponentListComponent } from './components/ui-component-list/ui-component-list.component';
 import { UiExternalComponentComponent } from './components/ui-external-component/ui-external-component.component';
@@ -37,7 +37,6 @@ import { RoutedExternalComponent } from './components/routed-external/routed-ext
 		InstitutionExtensionComponent,
 		SystemExtensionComponent,
 		// components
-		CardComponent,
 		CubejsChartComponent,
 		CubejsDashboardComponent,
 		DateOnlyIsoFormInputComponent,
@@ -45,6 +44,7 @@ import { RoutedExternalComponent } from './components/routed-external/routed-ext
 		PageLayoutComponent,
 		QueryRendererComponent,
 		TabsComponent,
+		UiCardComponent,
 		UiComponentComponent,
 		UiComponentListComponent,
 		UiExternalComponentComponent,
