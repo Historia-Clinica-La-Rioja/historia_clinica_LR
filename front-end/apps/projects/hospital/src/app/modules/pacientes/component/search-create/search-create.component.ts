@@ -75,9 +75,10 @@ export class SearchCreateComponent implements OnInit {
 		if (this.formSearch.valid) {
 			this.disableButtonScan = true;
 			this.disableButtonConfirm = true;
+			const identificationNumber = this.formSearch.controls?.identifNumber.value.replace(/^(0+)/g, '');
 			const searchRequest = {
 				identificationTypeId: this.formSearch.controls.identifType.value,
-				identificationNumber: (this.formSearch.controls.identifType.value === IDENTIFICATION_TYPE_IDS.DNI && !!this.formSearch.controls?.identifNumber.value) ? +this.formSearch.controls.identifNumber.value.toString().replaceAll(/\W/g,'') : +this.formSearch.controls.identifNumber.value,
+				identificationNumber: (this.formSearch.controls.identifType.value === IDENTIFICATION_TYPE_IDS.DNI && !!this.formSearch.controls?.identifNumber.value) ? identificationNumber.replaceAll(/\W/g,'') : identificationNumber,
 				genderId: this.formSearch.controls.gender.value,
 			};
 			if (this.noIdentity) {
@@ -98,11 +99,12 @@ export class SearchCreateComponent implements OnInit {
 	}
 
 	private navigateToSearchPatient(): void {
+		const identificationNumber = this.formSearch.controls?.identifNumber.value.replace(/^(0+)/g, '');
 		this.router.navigate([this.routePrefix + ROUTE_SEARCH],
 			{
 				queryParams: {
 					identificationTypeId: this.formSearch.controls.identifType.value,
-					identificationNumber: (this.formSearch.controls.identifType.value === IDENTIFICATION_TYPE_IDS.DNI && !!this.formSearch.controls?.identifNumber.value) ? +this.formSearch.controls.identifNumber.value.toString().replaceAll(/\W/g,'') : +this.formSearch.controls.identifNumber.value,
+					identificationNumber: (this.formSearch.controls.identifType.value === IDENTIFICATION_TYPE_IDS.DNI && !!this.formSearch.controls?.identifNumber.value) ? identificationNumber.replaceAll(/\W/g,'') : identificationNumber,
 					genderId: this.formSearch.controls.gender.value,
 					IdentityVerificationStatus: this.formSearch.controls.IdentityVerificationStatus.value,
 					comments: this.formSearch.controls.comments.value,
