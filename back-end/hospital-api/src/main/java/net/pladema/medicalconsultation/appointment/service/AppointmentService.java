@@ -33,8 +33,6 @@ public interface AppointmentService {
 
 	boolean updateState(Integer appointmentId, short appointmentStateId, Integer userId, String reason);
 
-	boolean updateAppointmentsState(List<Integer> appointmentIds, short appointmentStateId, Integer userId, String reason);
-
 	boolean hasCurrentAppointment(Integer patientId, Integer healthcareProfessionalId, LocalDate date);
 
 	boolean hasOldAppointment(Integer patientId, Integer healthProfessionalId);
@@ -65,7 +63,7 @@ public interface AppointmentService {
 
 	AppointmentShortSummaryBo getAppointmentFromDeterminatedDate(Integer patientId, LocalDate date);
 
-	List<Integer> getPastAppointmentsByStatesAndUpdatedBeforeDate(List<Short> statesIds, LocalDateTime lastUpdateDate);
+	List<Integer> getPastAppointmentsByStatesAndUpdatedBeforeDate(List<Short> statesIds, LocalDateTime lastUpdateDate, Short limit);
 
 	List<AppointmentBo> generateBlockedAppointments(Integer diaryId, BlockBo blockBo, DiaryBo diaryBo, LocalDate startingBlockingDate, LocalDate endingBlockingDate);
 

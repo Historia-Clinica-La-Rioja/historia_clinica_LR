@@ -32,12 +32,15 @@ public class UpdateAppointmentsStateJob {
 
 	private static final Integer ANONYMOUS_USER_ID = -1;
 
-	private static final List<Short> stateIds = Stream.of(AppointmentState.CONFIRMED, AppointmentState.ASSIGNED).collect(Collectors.toList());
+	private static final List<Short> STATES = Stream.of(AppointmentState.CONFIRMED, AppointmentState.ASSIGNED).collect(Collectors.toList());
 
-	private static final String REASON = "ActualizaciÃ³n programada";
+	private static final String REASON = "Actualización programada";
 
-	@Value("${scheduledjobs.updateappointmentsstate.hourssincelastchange}")
-	private int HOURS_SINCE_LAST_CHANGE;
+	@Value("${scheduledjobs.updateappointmentsstate.hourssincelastchange:24}")
+	private Long HOURS_SINCE_LAST_CHANGE;
+
+	@Value("${scheduledjobs.updateappointmentsstate.limit:10}")
+	private Short LIMIT;
 
 	private final AppointmentService appointmentService;
 
@@ -51,8 +54,17 @@ public class UpdateAppointmentsStateJob {
 	public void execute(){
 		LOG.debug("Executing UpdateAppointmentsStateJob at {}", new Date());
 		LocalDateTime actualDate = LocalDateTime.now();
-		List<Integer> appointmentIds = appointmentService.getPastAppointmentsByStatesAndUpdatedBeforeDate(stateIds, actualDate.minusHours(HOURS_SINCE_LAST_CHANGE));
-		appointmentService.updateAppointmentsState(appointmentIds, AppointmentState.ABSENT, ANONYMOUS_USER_ID, REASON);
+		List<Integer> appointmentIds = appointmentService.getPastAppointmentsByStatesAndUpdatedBeforeDate(STATES, actualDate.minusHours(HOURS_SINCE_LAST_CHANGE), LIMIT);
+		appointmentIds.forEach(id ->
+		{
+			try{
+				appointmentService.updateState(id, AppointmentState.ABSENT, ANONYMOUS_USER_ID, REASON);
+			}
+			catch (Exception ex){
+				LOG.error("Exception occurred while updating appointment: " + id.toString(), ex);
+			}
+		});
 		LOG.debug("Finishing UpdateAppointmentsStateJob at {}", new Date());
 	}
+
 }

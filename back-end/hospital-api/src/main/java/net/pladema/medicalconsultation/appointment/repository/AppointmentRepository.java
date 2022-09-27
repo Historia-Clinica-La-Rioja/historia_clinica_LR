@@ -92,17 +92,6 @@ public interface AppointmentRepository extends SGXAuditableEntityJPARepository<A
                      @Param("appointmentStateId") short appointmentStateId,
                      @Param("userId") Integer userId);
 
-	@Transactional
-	@Modifying
-	@Query( "UPDATE Appointment AS a " +
-			"SET a.appointmentStateId = :appointmentStateId, " +
-			"a.updateable.updatedOn = CURRENT_TIMESTAMP, " +
-			"a.updateable.updatedBy = :userId " +
-			"WHERE a.id IN :appointmentIds ")
-	void updateAppointmentsState(@Param("appointmentIds") List<Integer> appointmentId,
-					 @Param("appointmentStateId") short appointmentStateId,
-					 @Param("userId") Integer userId);
-
     @Transactional(readOnly = true)
     @Query( "SELECT DISTINCT a.id, a.hour " +
             "FROM Appointment AS a " +
@@ -279,13 +268,4 @@ public interface AppointmentRepository extends SGXAuditableEntityJPARepository<A
 																				 @Param("date") LocalDate date);
 
 
-	@Transactional(readOnly = true)
-	@Query("SELECT a.id " +
-			"FROM Appointment a " +
-			"WHERE a.appointmentStateId IN (:stateIds) " +
-			"AND a.dateTypeId < CURRENT_DATE " +
-			"AND NOT EXISTS " +
-			"	(SELECT 1 From HistoricAppointmentState has WHERE has.pk.appointmentId = a.id AND has.creationable.createdOn >= :lastUpdateDate) " +
-			"AND (a.deleteable.deleted = false OR a.deleteable.deleted is null) ")
-	List<Integer> getPastAppointmentsByStatesAndUpdatedBeforeDate(@Param("stateIds")List<Short> stateIds, @Param("lastUpdateDate")LocalDateTime lastUpdateDate);
 }

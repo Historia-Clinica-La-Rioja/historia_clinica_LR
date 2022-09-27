@@ -14,6 +14,7 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+import net.pladema.medicalconsultation.appointment.repository.AppointmentUpdateRepository;
 import net.pladema.medicalconsultation.diary.service.domain.BlockBo;
 import net.pladema.medicalconsultation.diary.service.domain.DiaryBo;
 import net.pladema.medicalconsultation.diary.service.domain.DiaryOpeningHoursBo;
@@ -77,8 +78,10 @@ public class AppointmentServiceImpl implements AppointmentService {
 
 	private final AppointmentStorage appointmentStorage;
 
+	private final AppointmentUpdateRepository appointmentUpdateRepository;
 
-	public AppointmentServiceImpl(AppointmentRepository appointmentRepository, AppointmentObservationRepository appointmentObservationRepository, HistoricAppointmentStateRepository historicAppointmentStateRepository, SharedStaffPort sharedStaffPort, DateTimeProvider dateTimeProvider, PatientExternalMedicalCoverageService patientExternalMedicalCoverageService, InstitutionExternalService institutionExternalService, MedicalCoveragePlanRepository medicalCoveragePlanRepository, FeatureFlagsService featureFlagsService, AppointmentStorage appointmentStorage) {
+
+	public AppointmentServiceImpl(AppointmentRepository appointmentRepository, AppointmentObservationRepository appointmentObservationRepository, HistoricAppointmentStateRepository historicAppointmentStateRepository, SharedStaffPort sharedStaffPort, DateTimeProvider dateTimeProvider, PatientExternalMedicalCoverageService patientExternalMedicalCoverageService, InstitutionExternalService institutionExternalService, MedicalCoveragePlanRepository medicalCoveragePlanRepository, FeatureFlagsService featureFlagsService, AppointmentStorage appointmentStorage, AppointmentUpdateRepository appointmentUpdateRepository) {
 		this.appointmentRepository = appointmentRepository;
 		this.appointmentObservationRepository = appointmentObservationRepository;
 		this.historicAppointmentStateRepository = historicAppointmentStateRepository;
@@ -89,6 +92,7 @@ public class AppointmentServiceImpl implements AppointmentService {
 		this.institutionExternalService = institutionExternalService;
 		this.medicalCoveragePlanRepository = medicalCoveragePlanRepository;
 		this.appointmentStorage = appointmentStorage;
+		this.appointmentUpdateRepository = appointmentUpdateRepository;
 	}
 
 	@Override
@@ -158,16 +162,6 @@ public class AppointmentServiceImpl implements AppointmentService {
 		log.debug("Input parameters -> appointmentId {}, appointmentStateId {}, userId {}, reason {}", appointmentId, appointmentStateId, userId, reason);
 		appointmentRepository.updateState(appointmentId, appointmentStateId, userId);
 		historicAppointmentStateRepository.save(new HistoricAppointmentState(appointmentId, appointmentStateId, reason));
-		log.debug(OUTPUT, Boolean.TRUE);
-		return Boolean.TRUE;
-	}
-
-	@Override
-	@Transactional
-	public boolean updateAppointmentsState(List<Integer> appointmentIds, short appointmentStateId, Integer userId, String reason) {
-		log.debug("Input parameters -> appointmentId {}, appointmentStateId {}, userId {}, reason {}", appointmentIds, appointmentStateId, userId, reason);
-		appointmentRepository.updateAppointmentsState(appointmentIds, appointmentStateId, userId);
-		appointmentIds.forEach(id -> historicAppointmentStateRepository.save(new HistoricAppointmentState(id, appointmentStateId, reason)));
 		log.debug(OUTPUT, Boolean.TRUE);
 		return Boolean.TRUE;
 	}
@@ -400,9 +394,9 @@ public class AppointmentServiceImpl implements AppointmentService {
 
 
 	@Override
-	public List<Integer> getPastAppointmentsByStatesAndUpdatedBeforeDate(List<Short> statesIds, LocalDateTime lastUpdateDate){
-		log.debug("Input parameters -> stateIds {}, lastUpdateDate {}", statesIds, lastUpdateDate);
-		var result = appointmentRepository.getPastAppointmentsByStatesAndUpdatedBeforeDate(statesIds, lastUpdateDate);
+	public List<Integer> getPastAppointmentsByStatesAndUpdatedBeforeDate(List<Short> statesIds, LocalDateTime lastUpdateDate, Short limit){
+		log.debug("Input parameters -> stateIds {}, lastUpdateDate {}, limit {}", statesIds, lastUpdateDate, limit);
+		var result = appointmentUpdateRepository.getPastAppointmentsByStatesAndUpdatedBeforeDate(statesIds, lastUpdateDate, limit);
 		log.debug("Result size {}", result.size());
 		log.trace(OUTPUT, result);
 		return result;
