@@ -1,6 +1,8 @@
 import SGXPermissions from "../../libs/sgx/auth/SGXPermissions";
 import WcDefinitionPathCreate from "./WcDefinitionPathCreate";
+import WcDefinitionPathEdit from "./WcDefinitionPathEdit";
 import WcDefinitionPathList from "./WcDefinitionPathList";
+import WcDefinitionPathShow from "./WcDefinitionPathShow";
 
 
 
@@ -11,9 +13,11 @@ const wcDefinitionPath = (permissions: SGXPermissions) => (
     {
         list: check(permissions) ? WcDefinitionPathList : undefined,
         create: WcDefinitionPathCreate,
+        show: WcDefinitionPathShow,
+        edit: WcDefinitionPathEdit,
         options: {
             submenu: 'more'
-        }
+        },
     });
 
 
