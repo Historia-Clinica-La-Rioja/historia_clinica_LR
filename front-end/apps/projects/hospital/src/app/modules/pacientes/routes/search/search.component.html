@@ -152,7 +152,7 @@
 		<section>
 			<h2 class="mat-body-2" [translate]="'pacientes.search.TITLE'"></h2>
 			<h3 class="mat-body-2" [translate]="'Se encontraron posibles coincidencias.'"></h3>
-			<app-table [model]="matchingPatient" [mainStyle]="'primary'"></app-table>
+			<app-card-patient [patientData]="patientData"></app-card-patient>
 			<div class="new-patient-button" align="end">
 				<button *appHasRole="['ADMINISTRATIVO','ADMINISTRADOR_INSTITUCIONAL_BACKOFFICE']" mat-raised-button id="new_patient_button" color="primary" (click)="goToNewPatient()">
 					<span [translate]="'pacientes.search.NEW_PATIENT'"></span>
