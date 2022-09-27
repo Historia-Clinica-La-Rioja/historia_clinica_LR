@@ -299,7 +299,7 @@ export class NewInternmentComponent implements OnInit {
 	}
 
 	setDoctor($event: HealthcareProfessionalDto) {
-		this.form.controls['doctorId'].setValue($event.id);
+		this.form.controls['doctorId'].setValue($event?.id );
 	}
 
 	toDoctorDtoTypeahead(doctorDto: HealthcareProfessionalDto): TypeaheadOption<HealthcareProfessionalDto> {
