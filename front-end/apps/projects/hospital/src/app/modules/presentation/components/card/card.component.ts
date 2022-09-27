@@ -24,6 +24,7 @@ export interface CardModel {
 	headerSimple?: Value[];
 	details?: any[];
 	action: ValueAction;
+	ranking?: number;
 }
 
 export interface Value {

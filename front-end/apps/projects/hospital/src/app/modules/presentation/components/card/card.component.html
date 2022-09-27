@@ -1,17 +1,16 @@
-<div fxLayoutGap="15px" fxLayout="row" fxLayout.lt-sm="column" class="card">
+<div fxLayoutGap="5px" fxLayout="row" fxLayout.lt-sm="column" class="card">
 
-	<div fxLayout="column" fxLayout.gt-sm="row" fxFlex="85%">
-		<div fxLayoutAlign="space-between center" fxLayoutGap="15px" fxFlex="40%">
+	<div fxLayout="column" fxLayout.gt-sm="row" fxFlex="94%">
+		<div fxLayoutAlign="start center" fxLayoutGap="15px" fxFlex="40%">
 			<div fxLayoutAlign="center" fxFlex="20%">
 				<img mat-card-avatar [src]="cardContent?.avatar"
 					onerror="this.src='../../../../../assets/images/empty-profile.png'" alt>
 			</div>
-
-			<div *ngFor="let header of cardContent.header" class="header" fxFlex="80%">
+			<div *ngFor="let header of cardContent.header" fxFlex="55%">
 				<strong> {{header.title | translate}} {{header.value | translate}}</strong>
 			</div>
 
-			<div *ngFor="let headerSimple of cardContent.headerSimple" class="header" fxFlex="80%">
+			<div *ngFor="let headerSimple of cardContent.headerSimple" fxFlex="25%">
 				<span> {{headerSimple?.title | translate}} {{headerSimple.value | translate}}</span>
 			</div>
 		</div>
@@ -21,7 +20,7 @@
 		</mat-card-content>
 	</div>
 
-	<div fxLayoutAlign="center center" fxLayout.gt-sm="center center" fxLayoutAlign.lt-sm="start start" fxFlex="15%"
+	<div fxLayoutAlign="center start" fxLayout.gt-sm="center start" fxLayoutAlign.lt-sm="start start" fxFlex="6%"
 		class="button">
 		<button mat-flat-button color="primary" (click)="goTo(cardContent.action.do)">
 			<span>{{ cardContent.action.display | translate | uppercase }}</span>

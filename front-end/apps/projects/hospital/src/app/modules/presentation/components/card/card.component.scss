@@ -4,7 +4,10 @@
 
 .mat-card-content {
 	align-self: auto;
-	margin: 17px 0 0;
+	margin: 17px 0 0 0;
+	@media screen and (min-width: 600px) {
+		margin: 17px 0 0 12px;
+	}
 }
 
 .button {
@@ -17,7 +20,3 @@
 	}
 }
 
-
-.header {
-	min-width: 100px;
-}
