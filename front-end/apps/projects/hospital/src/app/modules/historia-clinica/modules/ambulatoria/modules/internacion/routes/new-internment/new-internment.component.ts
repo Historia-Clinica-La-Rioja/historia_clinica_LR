@@ -42,6 +42,7 @@ import * as moment from 'moment';
 import { map } from 'rxjs/operators';
 import { BedAssignmentComponent } from '@historia-clinica/dialogs/bed-assignment/bed-assignment.component';
 import {PatientNameService} from "@core/services/patient-name.service";
+import { TypeaheadOption } from '@presentation/components/typeahead/typeahead.component';
 
 const ROUTE_PROFILE = 'pacientes/profile/';
 
@@ -67,6 +68,7 @@ export class NewInternmentComponent implements OnInit {
 	hasError = hasError;
 	public form: FormGroup;
 	public doctors: HealthcareProfessionalDto[];
+	public doctorsTypehead: TypeaheadOption<HealthcareProfessionalDto>[] = [];
 	public patientId: number;
 	public patientBasicData: PatientBasicData;
 	public personalInformation: PersonalInformation;
@@ -145,6 +147,7 @@ export class NewInternmentComponent implements OnInit {
 
 		this.healthcareProfessionalService.getAllDoctors().subscribe(data => {
 			this.doctors = data;
+			this.doctorsTypehead = this.doctors.map(d => this.toDoctorDtoTypeahead(d));
 		});
 
 		this.featureFlagService.isActive(AppFeature.RESPONSIBLE_DOCTOR_REQUIRED).subscribe(isOn => {
@@ -295,8 +298,15 @@ export class NewInternmentComponent implements OnInit {
 		);
 	}
 
-	getFullName(firstName: string, nameSelfDetermination: string): string {
-		return `${this.patientNameService.getPatientName(firstName, nameSelfDetermination)}`;
+	setDoctor($event: HealthcareProfessionalDto) {
+		this.form.controls['doctorId'].setValue($event.id);
 	}
 
+	toDoctorDtoTypeahead(doctorDto: HealthcareProfessionalDto): TypeaheadOption<HealthcareProfessionalDto> {
+		return {
+			compareValue: `${this.patientNameService.getPatientName(doctorDto.person.firstName, doctorDto.nameSelfDetermination)}` + " " + doctorDto.person.lastName,
+			value: doctorDto
+		};
+
+	}
 }
