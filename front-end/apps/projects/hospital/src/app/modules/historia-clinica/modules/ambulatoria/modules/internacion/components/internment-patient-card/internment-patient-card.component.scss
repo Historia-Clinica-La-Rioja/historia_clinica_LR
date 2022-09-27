@@ -3,10 +3,14 @@
 	color: #a8a8a8;
 }
 
-.conten {
-	min-width: 100px;
-	margin-left: 25px;
-
+.content {
+	@media screen and ( max-width: 600px) {
+		margin-left: 20px;
+	}
+	@media screen and (min-width: 700px) {
+		min-width: 100px;
+		margin-left: 25px;
+	}
 }
 
 .green {
