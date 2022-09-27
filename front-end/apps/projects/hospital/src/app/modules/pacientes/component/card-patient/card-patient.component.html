@@ -1,8 +1,8 @@
 <mat-card id="card">
 	<div id="content-card"  *ngFor="let patient of patientContent;last as isLast">
 		<app-card id="patient" [cardContent]="patient">
-			<div id="content-patient" gdAreas="id dni gender date" fxLayoutAlign="space-around center" gdGap="16px"
-				gdAreas.lt-sm=" id dni | gender date" gdRows.lt-sm="auto auto">
+			<div id="content-patient" gdAreas="id dni gender date ranking" fxLayoutAlign="space-around start"
+			gdAreas.lt-sm=" id dni dni | gender date ranking" gdRows.lt-sm="auto auto" gdGap.gt-xs="16px">
 
 				<div id="id" gdArea="id">
 					<span>{{'ambulatoria.card-patient.ID' | translate}} {{ patient.id}}</span>
@@ -17,9 +17,14 @@
 					<span> {{patient.gender}}</span>
 				</div>
 
-				<div  id="date" gdArea="date"  fxLayout.lt-sm="column">
+				<div  id="date" gdArea="date"  fxLayout="column">
 					<span>{{'ambulatoria.card-patient.BIRTHDAY_DATE' | translate}} </span>
 					<span>{{patient.date}}</span>
+				</div>
+
+				<div id="ranking" *ngIf="patient?.ranking" fxLayout="column" gdArea="ranking" fxLayoutAlign="center center" class="color-primary">
+					<span class="percentage">{{patient.ranking}}% </span>
+					<span class="ranking"> {{ 'ambulatoria.card-patient.COINCIDENCE' | translate}}</span>
 				</div>
 
 			</div>

@@ -40,6 +40,7 @@ export class CardPatientComponent {
 				dni: patient.person.identificationNumber,
 				gender: this.genderTableView[patient.person.genderId],
 				date: patient.person.birthDate ? this.datePipe.transform(patient.person.birthDate, DatePipeFormat.SHORT_DATE) : '',
+				ranking: patient?.ranking,
 				action: {
 					display: 'ambulatoria.card-patient.BUTTON',
 					do: `${this.routePrefix}ambulatoria/paciente/${patient.idPatient}`
