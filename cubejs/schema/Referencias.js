@@ -16,6 +16,7 @@ sql: `SELECT r.id,
         case when cr.id  is null then 'Referencia pendiente' else 'Contrarreferencia' end as tiene_contra
       FROM reference r 
         JOIN outpatient_consultation oc ON (r.encounter_id = oc.id)
+        JOIN odontology_consultation odc ON (r.encounter_id = odc.id)
         JOIN institution io ON (io.id = oc.institution_id)
         LEFT JOIN institution idest ON (idest.id = r.destination_institution_id)
         JOIN clinical_specialty cs ON (r.clinical_specialty_id = cs.id) 
