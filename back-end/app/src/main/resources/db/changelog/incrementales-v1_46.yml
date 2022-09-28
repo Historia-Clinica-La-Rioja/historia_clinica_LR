@@ -20,3 +20,78 @@ databaseChangeLog:
               columnName: value
               newDataType: text
               tableName: system_property
+              
+    - changeSet:
+        id: reference_appointment-createTable
+        comment: Create table reference_appointment
+        author: bchacon
+        changes:
+          - createTable:
+              tableName: reference_appointment
+              columns:
+                - column:
+                    name: appointment_id
+                    type: int
+                - column:
+                    name: reference_id
+                    type: int
+                - column:
+                    constraints:
+                      nullable: false
+                    name: created_by
+                    type: int
+                    defaultValue: -1
+                - column:
+                    constraints:
+                      nullable: false
+                    name: created_on
+                    type: datetime
+                    defaultValueDate: ${date.now}
+                - column:
+                    constraints:
+                      nullable: false
+                    name: updated_by
+                    type: int
+                    defaultValue: -1
+                - column:
+                    constraints:
+                      nullable: false
+                    name: updated_on
+                    type: datetime
+                    defaultValueDate: ${date.now}
+                - column:
+                    constraints:
+                      nullable: false
+                    name: deleted
+                    type: BOOLEAN
+                    defaultValue: ${boolean.false}
+                - column:
+                    name: deleted_by
+                    type: int
+                - column:
+                    name: deleted_on
+                    type: datetime
+          - addForeignKeyConstraint:
+              baseColumnNames: appointment_id
+              baseTableName: reference_appointment
+              constraintName: FK_reference_appointment_appointment_id
+              onDelete: NO ACTION
+              onUpdate: NO ACTION
+              referencedColumnNames: id
+              referencedTableName: appointment
+              validate: true
+          - addForeignKeyConstraint:
+              baseColumnNames: reference_id
+              baseTableName: reference_appointment
+              constraintName: FK_reference_appointment_reference_id
+              onDelete: NO ACTION
+              onUpdate: NO ACTION
+              referencedColumnNames: id
+              referencedTableName: reference
+              validate: true
+          - addPrimaryKey:
+              clustered: true
+              columnNames: appointment_id, reference_id
+              constraintName: PK_reference_appointment
+              tableName: reference_appointment
+              validate: true
