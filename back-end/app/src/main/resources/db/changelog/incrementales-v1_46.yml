@@ -11,6 +11,7 @@ databaseChangeLog:
                 - column:
                     name: patient_age_period
                     type: varchar(12)
+                    
     - changeSet:
         id: 1.46.0-0
         comment: Update value type column in system_property
