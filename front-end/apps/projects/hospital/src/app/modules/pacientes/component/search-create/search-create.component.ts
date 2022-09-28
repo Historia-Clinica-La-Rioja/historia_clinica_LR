@@ -75,7 +75,7 @@ export class SearchCreateComponent implements OnInit {
 		if (this.formSearch.valid) {
 			this.disableButtonScan = true;
 			this.disableButtonConfirm = true;
-			const identificationNumber = this.formSearch.controls?.identifNumber.value.replace(/^(0+)/g, '');
+			const identificationNumber = this.formSearch.controls?.identifNumber.value ? this.formSearch.controls?.identifNumber.value.replace(/^(0+)/g, '') : null;
 			const searchRequest = {
 				identificationTypeId: this.formSearch.controls.identifType.value,
 				identificationNumber: (this.formSearch.controls.identifType.value === IDENTIFICATION_TYPE_IDS.DNI && !!this.formSearch.controls?.identifNumber.value) ? identificationNumber.replaceAll(/\W/g,'') : identificationNumber,
@@ -99,7 +99,7 @@ export class SearchCreateComponent implements OnInit {
 	}
 
 	private navigateToSearchPatient(): void {
-		const identificationNumber = this.formSearch.controls?.identifNumber.value.replace(/^(0+)/g, '');
+		const identificationNumber = this.formSearch.controls?.identifNumber.value ? this.formSearch.controls?.identifNumber.value.replace(/^(0+)/g, '') : null;
 		this.router.navigate([this.routePrefix + ROUTE_SEARCH],
 			{
 				queryParams: {
