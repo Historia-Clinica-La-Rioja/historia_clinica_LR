@@ -269,7 +269,7 @@
 				*appHasRole="['ADMINISTRATIVO', 'ENFERMERO', 'ESPECIALISTA_MEDICO', 'PROFESIONAL_DE_SALUD', 'ESPECIALISTA_EN_ODONTOLOGIA']">
 				<ng-container
 					*ngIf="downloadReportIsEnabled && !isAbsent() && ((hasRoleToDownloadReports$ | async) === true || data.hasPermissionToAssignShift)">
-					<section id="report" fxLayout="column">
+					<section class="report" fxLayout="column">
 						<span class="mat-body-strong strong-size">{{'turnos.report.TITLE' | translate}}</span>
 						<section fxLayout="row" fxLayoutGap="30px">
 							<mat-checkbox color="primary" fxLayout="row" (change)="enableDowndloadAnexo($event.checked)">
@@ -282,6 +282,15 @@
 						</section>
 					</section>
 				</ng-container>
+			</ng-container>
+			<ng-container
+				*ngIf="downloadReportIsEnabled && !isAbsent() && ((hasRoleToDownloadReports$ | async) === true || data.hasPermissionToAssignShift)">
+				<button id="report-appointment" name="report-appointment" mat-stroked-button color="primary" btn-block
+					type="button" (click)="getReportAppointment()"
+					[disabled]="!isCheckedDownloadAnexo && !isCheckedDownloadFormulario">
+					<mat-icon fontSet="material-icons-outlined">download</mat-icon>
+					<span class="uppercase" [translate]="'turnos.report.TITLE'"></span>
+				</button>
 			</ng-container>
 		</section>
 
@@ -332,15 +341,6 @@
 	<mat-dialog-actions
 		*appHasRole="['ADMINISTRATIVO', 'ENFERMERO', 'ESPECIALISTA_MEDICO', 'PROFESIONAL_DE_SALUD', 'ESPECIALISTA_EN_ODONTOLOGIA']"
 		align="end">
-		<ng-container
-			*ngIf="downloadReportIsEnabled && !isAbsent() && ((hasRoleToDownloadReports$ | async) === true || data.hasPermissionToAssignShift)">
-			<button id="report-appointment" name="report-appointment" mat-stroked-button color="primary" btn-block
-				type="button" (click)="getReportAppointment()"
-				[disabled]="!isCheckedDownloadAnexo && !isCheckedDownloadFormulario">
-				<mat-icon fontSet="material-icons-outlined">download</mat-icon>
-				<span class="uppercase" [translate]="'turnos.report.TITLE'"></span>
-			</button>
-		</ng-container>
 		<button type="button" *ngIf="isCancelable()" mat-flat-button color="warn" id="cancel-appointment"
 			name="cancel-appointment" (click)="cancelAppointment()">
 			<span class="uppercase" [translate]="'turnos.cancel.TITLE'"></span>
