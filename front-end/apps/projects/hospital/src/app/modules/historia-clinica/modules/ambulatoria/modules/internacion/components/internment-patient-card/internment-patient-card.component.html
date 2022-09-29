@@ -1,5 +1,6 @@
 <mat-card>
-	<div *ngFor="let patient of internmentPatientCard;last as isLast">
+
+	<div *ngFor="let patient of pageSlice;last as isLast">
 		<app-card [cardContent]="patient">
 
 			<div *ngIf="patient.hasPhysicalDischarge else physicalDischarge" fxLayoutGap.gt-xs="16px">
@@ -43,4 +44,11 @@
 		</app-card>
 		<mat-divider *ngIf="!isLast" insert class="divider"></mat-divider>
 	</div>
+
+	<mat-divider></mat-divider>
+
+	<mat-paginator *ngIf="(internmentPatientCard?.length !== 0)" [length]="numberOfPatients"
+		[pageSizeOptions]="pageSizeOptions" (page)="onPageChange($event)" showFirstLastButtons>
+	</mat-paginator>
+
 </mat-card>

@@ -1,12 +1,14 @@
 import { Component, Input } from '@angular/core';
 import { CardModel } from '@presentation/components/card/card.component';
-import { TableModel } from '@presentation/components/table/table.component';
 import { InternacionService } from '@api-rest/services/internacion.service';
 import { PatientNameService } from "@core/services/patient-name.service";
 import { ContextService } from '@core/services/context.service';
 import { MapperService } from "@presentation/services/mapper.service";
 import { DocumentsSummaryDto } from '@api-rest/api-model';
 import { InternmentPatientService } from '@api-rest/services/internment-patient.service';
+
+const PAGE_SIZE_OPTIONS = [5, 10, 25];
+const PAGE_MIN_SIZE = 5;
 
 @Component({
 	selector: 'app-internment-patient-card',
@@ -15,20 +17,25 @@ import { InternmentPatientService } from '@api-rest/services/internment-patient.
 })
 
 export class InternmentPatientCardComponent {
+	pageSizeOptions: number[] = PAGE_SIZE_OPTIONS;
+	numberOfPatients = 0;
 	private readonly routePrefix;
-	internmentPatientTable: TableModel<InternmentPatientTableData>;
 	internmentPatientCard: CardModel[] = [];
-
+	pageSlice: CardModel[] = [];
 	@Input()
 	set redirect(redirect: Redirect) {
 		if (redirect === Redirect.patientCard) {
 			this.internmentPatientService.getAllInternmentPatientsBasicData().subscribe(data => {
 				this.internmentPatientCard = this.buildCard(data.map(patient => this.mapperService.toInternmentPatientTableData(patient)), redirect);
+				this.pageSlice = this.internmentPatientCard.slice(0, PAGE_MIN_SIZE);
+				this.numberOfPatients = this.internmentPatientCard?.length;
 			});
 		}
 		else {
 			this.internacionService.getAllPacientesInternados().subscribe(data => {
 				this.internmentPatientCard = this.buildCard(data.map(patient => this.mapperService.toInternmentPatientTableData(patient)), redirect);
+				this.pageSlice = this.internmentPatientCard.slice(0, PAGE_MIN_SIZE);
+				this.numberOfPatients = this.internmentPatientCard?.length;
 			})
 		}
 	}
@@ -66,7 +73,7 @@ export class InternmentPatientCardComponent {
 	}
 
 	private getName(person: InternmentPatientTableData): string {
-		return person.fullName ? ` ${person.fullName}` : `internaciones.internment-patient-card.NO_INFO`
+		return person.fullName ? `${person.fullName}` : `internaciones.internment-patient-card.NO_INFO`
 	}
 
 	private missingDocument(document: DocumentsSummaryDto, hasMedicalDischarge: boolean): Documnet {
@@ -78,7 +85,15 @@ export class InternmentPatientCardComponent {
 			return { matIcon: "assignment_return", title: 'internaciones.internment-patient-card.PENDING_MEDICAL_DISCHARGE' }
 		return { matIcon: "keyboard_backspace", title: 'internaciones.internment-patient-card.PENDING_ADMINISTRATIVE_DISCHARGE' }
 	}
+
+	onPageChange($event: any): void {
+		const page = $event;
+		const startPage = page.pageIndex * page.pageSize;
+		this.pageSlice = this.internmentPatientCard.slice(startPage, $event.pageSize + startPage);
+	}
+
 }
+
 export interface InternmentPatientTableData {
 	patientId: number;
 	firstName: string;
@@ -106,3 +121,4 @@ interface Documnet {
 	matIcon: string;
 	title: string;
 }
+
