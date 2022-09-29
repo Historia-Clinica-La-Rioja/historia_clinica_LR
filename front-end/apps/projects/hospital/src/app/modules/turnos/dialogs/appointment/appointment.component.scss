@@ -33,16 +33,11 @@
 	}
 }
 
-.ventana {
-	@media (min-height: 680px) {
-		min-height: 570px;
-	}
+.header{
+	width: 88%;
 }
 
 .header-content {
-	@media screen and (min-width: 959px) {
-		width: 100%;
-	}
 
 	button {
 		padding: 0;
@@ -189,9 +184,6 @@ section {
 }
 
 .observation-section {
-	width: 550px;
-	margin: 15px 0;
-
 	a {
 		cursor: pointer;
 	}

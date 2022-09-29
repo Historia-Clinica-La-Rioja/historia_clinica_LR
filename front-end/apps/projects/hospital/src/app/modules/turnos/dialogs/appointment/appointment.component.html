@@ -4,9 +4,16 @@
 			<mat-icon>close</mat-icon>
 		</button>
 	</div>
-	<div mat-dialog-content class="ventana">
-		<section id="personal-data" fxLayout="column" fxLayoutGap="5px">
-			<div fxLayout="row">
+	<div mat-dialog-content class="ventana"
+		gdAreas="personal-data personal-data | coverage appointment | div-sup div-sup | state reports | observations observations | div-inf div-inf "
+		gdColumns="1fr 1fr"
+		gdRows="auto"
+		gdGap="10px 50px"
+		gdAreas.lt-md="personal-data | coverage | appointment | state | reports | observations"
+        gdColumns.lt-md="auto">
+
+		<section gdArea="personal-data" id="personal-data" fxLayout="column" fxLayoutGap="5px">
+			<div class="header" fxLayout="row" fxLayoutAlign="space-between" fxLayout.lt-md="column">
 				<div class="header-content" fxLayout="row" fxLayoutAlign="start " fxLayoutGap="20px">
 					<img mat-card-md-image mat-card-avatar class="mat-card-patient-image" [src]="decodedPhoto$ | async"
 						onerror="this.src='../../../../../assets/images/empty-profile.png'">
@@ -36,7 +43,7 @@
 						</a>
 					</div>
 				</div>
-				<div fxLayoutAlign="end center">
+				<div fxLayoutAlign="end center" fxLayoutAlign.lt-md="start center">
 					<button id="print-appointment" mat-stroked-button color="primary" btn-block type="button"
 						(click)="getAppointmentTicketReport()">
 						<mat-icon fontSet="material-icons-outlined">print</mat-icon>
@@ -45,7 +52,9 @@
 					<div class="none" id="pdfPrinter"></div>
 				</div>
 			</div>
+		</section>
 
+		<section gdArea="coverage">
 			<ng-container *ngIf="!hideFilterPanel else editAppointment">
 				<div fxLayout="column" fxLayoutGap="5px">
 					<span class="mat-caption normal-size">{{'turnos.appointment.coverageData.COVERAGE_DATA' |
@@ -89,7 +98,6 @@
 								[value]="patientMedicalCoverage.id">
 								{{getFullMedicalCoverageText(patientMedicalCoverage)}}
 							</mat-option>
-							<mat-divider></mat-divider>
 							<mat-option (click)="openMedicalCoverageDialog()">
 								<span class="color-primary"
 									[translate]="'ambulatoria.paciente.ordenes_prescripciones.new_prescription_dialog.UPDATE_COVERAGE'">
@@ -135,13 +143,12 @@
 					</div>
 				</form>
 			</ng-template>
-			<mat-divider></mat-divider>
 		</section>
 
-		<section id="appointment" class="appointment-details section" fxLayout="column">
+		<section gdArea="appointment" id="appointment" class="appointment-details section" fxLayout="column">
 			<span class="mat-body-strong title-size appointment-title">{{'turnos.appointment.TITLE' | translate}}</span>
 			<div *ngIf="!isDateFormVisible">
-				<div fxLayout="row" fxLayoutGap="30px">
+				<div fxLayout="column" fxLayoutGap="10px">
 					<div fxLayout="row" fxLayoutGap="5px" fxLayoutAlign="start">
 						<mat-icon fontSet="material-icons-outlined" mat-list-icon [inline]="true" id="full-date"
 							class="icon-grey">
@@ -188,19 +195,19 @@
 						</mat-select>
 					</mat-form-field>
 					<span class="hs"> hs.</span>
-					<div class="confirm-buttons" fxLayout="row" fxLayoutAlign="end" fxLayoutGap="15px" fxFlex="60%">
-						<button id="cancel-edition" mat-stroked-button color="primary" btn-block type="button" (click)="cancelDateForm()">
-							<span [translate]="'turnos.appointment.CANCEL'"></span>
-						</button>
-						<button id="save-edition" mat-flat-button color="primary" [disabled]="formDate.invalid">
-							<span [translate]="'turnos.appointment.SAVE'"></span>
-						</button>
-					</div>
+				</div>
+				<div class="confirm-buttons" fxLayout="row" fxLayoutAlign="end" fxLayoutGap="15px" fxFlex="60%">
+					<button id="cancel-edition" mat-stroked-button color="primary" btn-block type="button" (click)="cancelDateForm()">
+						<span [translate]="'turnos.appointment.CANCEL'"></span>
+					</button>
+					<button id="save-edition" mat-flat-button color="primary" [disabled]="formDate.invalid">
+						<span [translate]="'turnos.appointment.SAVE'"></span>
+					</button>
 				</div>
 			</form>
 		</section>
 
-		<section id="state">
+		<section gdArea="state" id="state">
 			<span class="mat-body-strong strong-size">{{'turnos.appointment.APPOINTMENT_STATE' | translate}}</span>
 			<div class="appointment-actions" fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="8px">
 
@@ -257,7 +264,28 @@
 			</div>
 		</section>
 
-		<section id="observation-section" class="observation-section">
+		<section gdArea="reports" id="reports">
+			<ng-container
+				*appHasRole="['ADMINISTRATIVO', 'ENFERMERO', 'ESPECIALISTA_MEDICO', 'PROFESIONAL_DE_SALUD', 'ESPECIALISTA_EN_ODONTOLOGIA']">
+				<ng-container
+					*ngIf="downloadReportIsEnabled && !isAbsent() && ((hasRoleToDownloadReports$ | async) === true || data.hasPermissionToAssignShift)">
+					<section id="report" fxLayout="column">
+						<span class="mat-body-strong strong-size">{{'turnos.report.TITLE' | translate}}</span>
+						<section fxLayout="row" fxLayoutGap="30px">
+							<mat-checkbox color="primary" fxLayout="row" (change)="enableDowndloadAnexo($event.checked)">
+								<span class="mat-body strong-size">{{'turnos.report.ANEXO' | translate}}</span>
+							</mat-checkbox>
+							<mat-checkbox color="primary" fxLayout="row"
+								(change)="enableDowndloadFormulario($event.checked)">
+								<span class="mat-body strong-size">{{'turnos.report.FORM' | translate}}</span>
+							</mat-checkbox>
+						</section>
+					</section>
+				</ng-container>
+			</ng-container>
+		</section>
+
+		<section gdArea="observations" id="observation-section" class="observation-section">
 			<div *ngIf="!observation && hideObservationForm && hideObservationTitle">
 				<a class="mat-body" (click)="setHideObservationForm(false); setHideObservationTitle(false)"
 					[translate]="'turnos.appointment.observations.ADD_OBSERVATION'">
@@ -297,25 +325,8 @@
 			</div>
 		</section>
 
-		<ng-container
-			*appHasRole="['ADMINISTRATIVO', 'ENFERMERO', 'ESPECIALISTA_MEDICO', 'PROFESIONAL_DE_SALUD', 'ESPECIALISTA_EN_ODONTOLOGIA']">
-			<ng-container
-				*ngIf="downloadReportIsEnabled && !isAbsent() && ((hasRoleToDownloadReports$ | async) === true || data.hasPermissionToAssignShift)">
-				<mat-divider></mat-divider>
-				<section id="report" fxLayout="column">
-					<span class="mat-body-strong strong-size">{{'turnos.report.TITLE' | translate}}</span>
-					<section fxLayout="row" fxLayoutGap="30px">
-						<mat-checkbox color="primary" fxLayout="row" (change)="enableDowndloadAnexo($event.checked)">
-							<span class="mat-body strong-size">{{'turnos.report.ANEXO' | translate}}</span>
-						</mat-checkbox>
-						<mat-checkbox color="primary" fxLayout="row"
-							(change)="enableDowndloadFormulario($event.checked)">
-							<span class="mat-body strong-size">{{'turnos.report.FORM' | translate}}</span>
-						</mat-checkbox>
-					</section>
-				</section>
-			</ng-container>
-		</ng-container>
+		<mat-divider gdArea="div-sup"></mat-divider>
+		<mat-divider gdArea="div-inf"></mat-divider>
 	</div>
 
 	<mat-dialog-actions
