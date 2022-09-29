@@ -16,9 +16,36 @@
         },
         "content": [
           {
-            "type": "cubejs-chart",
+            "type": "tabs",
             "args": {
-              "query": "tablaReferencia"
+              "tabs": [
+                {
+                  "args": {
+                    "label": "Referencias",
+                    "content": [
+                      {
+                        "type": "cubejs-chart",
+                        "args": {
+                          "query": "tablaReferencia"
+                        }
+                      }
+                    ]
+                  }
+                },
+                {
+                  "args": {
+                    "label": "Contrareferencias",
+                    "content": [
+                      {
+                        "type": "cubejs-chart",
+                        "args": {
+                          "query": "tablaContraReferencia"
+                        }
+                      }
+                    ]
+                  }
+                }
+              ]
             }
           }
         ]
