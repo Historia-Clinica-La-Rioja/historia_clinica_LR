@@ -567,7 +567,6 @@
 		"card-patient":{
 			"ID": "ID",
 			"DNI": "DNI",
-			"GENDER": "Género",
 			"BIRTHDAY_DATE": "Fecha de Nac.",
 			"COINCIDENCE": "coincidencia",
 			"BUTTON": "Ver"
