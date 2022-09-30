@@ -27,6 +27,7 @@ import { CancelAppointmentComponent } from './dialogs/cancel-appointment/cancel-
 import { ConfirmBookingComponent } from './dialogs/confirm-booking/confirm-booking.component';
 import { NewAppointmentComponent } from './dialogs/new-appointment/new-appointment.component';
 import { NewAttentionComponent } from './dialogs/new-attention/new-attention.component';
+import { ConfirmPrintAppointmentComponent } from './dialogs/confirm-print-appointment/confirm-print-appointment.component';
 // services
 import { CustomDateFormatter } from './services/custom-date-formatter.service';
 
@@ -53,6 +54,7 @@ import { CustomDateFormatter } from './services/custom-date-formatter.service';
 		ConfirmBookingComponent,
 		NewAppointmentComponent,
 		NewAttentionComponent,
+  		ConfirmPrintAppointmentComponent,
 	],
 	imports: [
 		CommonModule,

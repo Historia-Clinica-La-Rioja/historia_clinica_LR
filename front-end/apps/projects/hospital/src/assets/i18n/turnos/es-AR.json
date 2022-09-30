@@ -92,6 +92,7 @@
 			"PHONE_NUMBER": "Número Telefónico",
 			"PHONE_PREFIX": "Prefijo",
 			"ACCEPT": "Aceptar",
+			"PRINT_APPOINTMENT_BUTTON":"Imprimir turno",
 			"ASSIGNED_APPOINTMENT": "Turno asignado",
 			"messages": {
 				"ERROR": "Paciente no encontrado",

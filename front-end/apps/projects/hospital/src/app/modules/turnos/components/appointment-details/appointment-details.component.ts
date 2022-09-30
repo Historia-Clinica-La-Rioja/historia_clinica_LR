@@ -1,10 +1,10 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { NewAppointmentComponent } from '@turnos/dialogs/new-appointment/new-appointment.component';
-import { ConfirmDialogComponent } from '@presentation/dialogs/confirm-dialog/confirm-dialog.component';
 import { EmptyAppointmentDto } from '@api-rest/api-model';
 import { DatePipeFormat } from '@core/utils/date.utils';
 import { DatePipe } from '@angular/common';
+import { ConfirmPrintAppointmentComponent } from '@turnos/dialogs/confirm-print-appointment/confirm-print-appointment.component';
 
 @Component({
 	selector: 'app-appointment-details',
@@ -53,15 +53,16 @@ export class AppointmentDetailsComponent implements OnInit {
 
 					const specialtyAndAlias = this.emptyAppointment.clinicalSpecialtyName ? this.emptyAppointment.clinicalSpecialtyName :
 					`${this.emptyAppointment.alias} (${this.emptyAppointment.clinicalSpecialtyName})`;
-
-					this.dialog.open(ConfirmDialogComponent, {
+					this.dialog.open(ConfirmPrintAppointmentComponent, {
+						width: '50%',
 						data: {
 							title: 'turnos.new-appointment.ASSIGNED_APPOINTMENT',
-							content: `${this.emptyAppointment.doctorFirstName} ${this.emptyAppointment.doctorLastName}
-							- ${specialtyAndAlias}
-							- ${fullAppointmentDate}
-							- ${timeData[0]}:${timeData[1]}hs`,
-							okButtonLabel: 'turnos.new-appointment.ACCEPT'
+							content: 'Se ha asignado un turno el '+
+							 `${fullAppointmentDate} ${timeData[0]}:${timeData[1]}hs`+
+							 ' para '+
+							 `${this.emptyAppointment.doctorFirstName} ${this.emptyAppointment.doctorLastName}
+							  ${specialtyAndAlias}`+' en ' +
+							 `${this.emptyAppointment.doctorsOfficeDescription}`,
 						}
 					});
 				}
