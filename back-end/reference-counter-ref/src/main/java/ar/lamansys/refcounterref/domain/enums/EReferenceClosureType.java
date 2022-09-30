@@ -12,7 +12,7 @@ import java.util.stream.Stream;
 @JsonFormat(shape = JsonFormat.Shape.OBJECT)
 public enum EReferenceClosureType {
 
-	CONTINUA_OBSERVACION(1, "Continua en observación"),
+	CONTINUA_OBSERVACION(1, "Continúa en observación"),
 	INICIA_TRATAMIENTO(2, "Inicia tratamiento en centro de referencia"),
 	REQUIERE_ESTUDIOS(3, "Requiere estudios complementarios"),
 	CONTRARREFERENCIA(4, "Contrarreferencia");
