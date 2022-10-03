@@ -24,18 +24,21 @@ import { SelectConsultorioComponent } from '../../dialogs/select-consultorio/sel
 import { EmergencyCareEpisodeStateService } from '@api-rest/services/emergency-care-episode-state.service';
 import { ContextService } from '@core/services/context.service';
 import {PatientNameService} from "@core/services/patient-name.service";
+import { AnexosIIComponent } from './anexos-ii/anexos-ii.component';
+import { ReportsComponent } from '@pacientes/dialogs/reports/reports.component';
 
 @Component({
 	selector: 'app-episode-details',
 	templateUrl: './episode-details.component.html',
 	styleUrls: ['./episode-details.component.scss']
 })
+
 export class EpisodeDetailsComponent implements OnInit {
 
 	readonly triages = Triages;
 	readonly STATES = EstadosEpisodio;
 	private readonly routePrefix;
-
+	
 	personPhoto$: Observable<PersonPhotoDto>;
 	patientBasicData;
 	personalInformation;
@@ -236,6 +239,11 @@ export class EpisodeDetailsComponent implements OnInit {
 		return `${this.patientNameService.getPatientName(triage.createdBy.firstName, triage.createdBy.nameSelfDetermination)}, ${triage.createdBy.lastName}`;
 	}
 
+	goToAnexoReports():void{
+		this.dialog.open(AnexosIIComponent, {
+			data: {patientId: this.patientBasicData.id, patientName: this.patientBasicData.name},
+		});
+	}
 }
 
 export interface TriageReduced {

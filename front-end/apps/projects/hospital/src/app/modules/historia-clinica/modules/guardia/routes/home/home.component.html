@@ -217,14 +217,18 @@
 
 								<ng-template #enAtencion>
 									<span id="state">{{ episode.state.description | uppercase }}</span>
-								</ng-template>
+								</ng-template>	
+							</div>	
+
+							<div id="anexosII" fxFlex="30%" fxLayout="column">
+								<button mat-raised-button color="primary">{{'guardia.home.episodes.episode.actions.ANEXOSII' | translate }}</button>
 							</div>
 
 							<div id="actions-container" fxFlex="5%" *ngIf="episode.state.id !== estadosEpisodio.CON_ALTA_MEDICA">
 								<button id="actions" mat-icon-button
 										(click)="$event.stopPropagation()" [matMenuTriggerFor]="actions">
 									<mat-icon>more_vert</mat-icon>
-								</button>
+								</button>						
 
 								<mat-menu #actions="matMenu">
 									<button id="nuevo-triage" mat-menu-item (click)="nuevoTriage(episode)">
@@ -236,7 +240,7 @@
 											(click)="atender(episode.id)">
 										{{ 'guardia.home.episodes.episode.actions.atender.TITLE' | translate }}
 									</button>
-
+													
 									<ng-container *appHasRole="['ADMINISTRATIVO']" >
 										<button id="finalizar-ausencia" mat-menu-item
 												*ngIf="episode.state.id === estadosEpisodio.EN_ESPERA"

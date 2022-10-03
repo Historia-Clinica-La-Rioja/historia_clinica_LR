@@ -84,7 +84,8 @@
 							"SUCCESS": "Episodio finalizado por ausencia exitosamente",
 							"ERROR": "Error al finalizar por ausencia el episodio"
 						},
-						"NUEVO_TRIAGE": "Nuevo triage"
+						"NUEVO_TRIAGE": "Nuevo triage",
+						"ANEXOSII": "Anexos II"
 					},
 					"patient": {
 						"ID": "ID Paciente",
@@ -116,6 +117,7 @@
 			"TITLE": "Episodio de guardia",
 			"CANCEL_ATTENTION": "Cancelar atención",
 			"EDIT_EPISODE": "Editar episodio",
+			"ANEXOS_II": "Anexos II",
 			"NOT_ACTIVE": "El episodio de guardia no se encuentra activo",
 			"cancel_attention": {
 				"SUCCESS": "La atención fue cancelada exitosamente",

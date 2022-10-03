@@ -32,6 +32,7 @@ import { SelectConsultorioComponent } from './dialogs/select-consultorio/select-
 // services
 import { EpisodeStateService } from './services/episode-state.service';
 import { NewEpisodeService } from './services/new-episode.service';
+import { AnexosIIComponent } from './routes/episode-details/anexos-ii/anexos-ii.component';
 
 @NgModule({
 	declarations: [
@@ -58,6 +59,7 @@ import { NewEpisodeService } from './services/new-episode.service';
 		AdultGynecologicalTriageDialogComponent,
 		PediatricTriageDialogComponent,
 		SelectConsultorioComponent,
+  		AnexosIIComponent,
 	],
 	imports: [
 		CommonModule,

@@ -1,0 +1,29 @@
+<div fxLayout="row" fxLayoutAlign="space-between start">
+	<h1 mat-dialog-title [translate]="'pacientes.reports.TITLE'"></h1>
+	<button id="close-modal" mat-icon-button (click)="closeModal()">
+		<mat-icon>close</mat-icon>
+	</button>
+</div>
+
+<div mat-dialog-content>
+	<span class="mat-body-strong" fxLayout="row" [translate]="'pacientes.reports.SELECT_CONSULTATIONS'"></span>
+	<section fxLayout="row" fxLayoutAlign="center" class="consultations-table">
+		<app-table [mainStyle]="'secondary'" [model]="tableModel"></app-table>
+	</section>
+	<span class="mat-body-strong" fxLayout="row" [translate]="'pacientes.reports.SELECT_REPORT_TYPE'"></span>
+	<section class="reports-options">
+		<mat-checkbox fxLayout="row" id="anexo-report" (change)="enableDownloadAnexo($event.checked)">
+			<span class="mat-body">Anexo II</span>
+		</mat-checkbox>
+		<mat-checkbox fxLayout="row" id="form-report" (change)="enableDownloadFormulario($event.checked)">
+			<span class="mat-body">Formulario V</span>
+		</mat-checkbox>
+	</section>
+</div>
+
+<mat-dialog-actions align="end">
+	<button type="button" mat-flat-button color="primary" id="download-report" (click)="downloadReports()"
+			[disabled]="((consultationsToDownload.length == 0) || (consultationsToDownload.length > 0 && (!isCheckedDownloadAnexo && !isCheckedDownloadFormulario)))">
+		<span class="uppercase" [translate]="'pacientes.reports.buttons.DOWNLOAD_REPORTS'"></span>
+	</button>
+</mat-dialog-actions>
