@@ -227,7 +227,8 @@ export class NewAppointmentComponent implements OnInit {
 							contentBold: 'turnos.new-appointment.appointment-exists.ASSIGNMENT-QUESTION',
 							okButtonLabel: 'turnos.new-appointment.appointment-exists.buttons.ASSIGN',
 							cancelButtonLabel: 'turnos.new-appointment.appointment-exists.buttons.NOT-ASSIGN'
-						}
+						},
+						maxWidth: '500px'
 					});
 				warnignComponent.afterClosed().subscribe(confirmed => {
 					if (confirmed) {

@@ -1,15 +1,10 @@
-<div fxLayout="row" fxLayoutAlign="end">
-	<button matSuffix class="close" mat-icon-button [mat-dialog-close]>
-		<mat-icon>close</mat-icon>
-	</button>
-</div>
 <div class="report" fxLayout="column" fxLayoutAlign="center center" fxLayoutGap="10px">
-
-	<h1 mat-dialog-title>{{ data.title | translate}}</h1>
 
 	<div fxLayout="row" class="image" fxLayoutAlign="center">
 		<img src='assets/images/error_outline.png'>
 	</div>
+
+	<h1 mat-dialog-title>{{ data.title | translate}}</h1>
 
 	<div mat-dialog-content class="content" fxLayoutGap="25px">
 		<div innerHTML="{{ data.content | translate}}"></div>

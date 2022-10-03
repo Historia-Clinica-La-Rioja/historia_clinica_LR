@@ -290,6 +290,7 @@ export class AgendaComponent implements OnInit, OnDestroy, OnChanges {
 							const holidayDateText = this.datePipe.transform(clickedDate.toDate(), DatePipeFormat.FULL_DATE);
 							const dialogRef = this.dialog.open(DiscardWarningComponent, {
 								data: {
+									title: 'turnos.holiday.TITLE',
 									content: `${holidayDateText.charAt(0).toUpperCase() + holidayDateText.slice(1)} ${holidayText}`,
 									contentBold: `turnos.holiday.HOLIDAY_DISCLAIMER`,
 									okButtonLabel: 'turnos.holiday.OK_BUTTON',
@@ -297,7 +298,7 @@ export class AgendaComponent implements OnInit, OnDestroy, OnChanges {
 								}
 							});
 							dialogRef.afterClosed().subscribe((result: boolean) => {
-								if (!result) {
+								if (result) {
 									dialogRef?.close();
 								}
 								else {

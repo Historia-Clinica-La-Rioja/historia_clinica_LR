@@ -93,7 +93,7 @@
 				"TITLE": "Otro turno en la misma fecha",
 				"ASSIGNMENT-QUESTION": "¿Desea conceder el turno de todos modos?",
 				"buttons": {
-					"ASSIGN": "Si, asignar",
+					"ASSIGN": "Si, asignar turno",
 					"NOT-ASSIGN": "No, cancelar"
 				}
 			}
@@ -183,10 +183,11 @@
 			"SUNDAY": "Domingo"
 		},
 		"holiday": {
+			"TITLE": "Día feriado",
 			"HOLIDAY_RELATED": "corresponde a un día feriado.",
 			"HOLIDAY_DISCLAIMER": "¿Desea asignar un turno de todos modos?",
-			"OK_BUTTON": "Si, asignar turno",
-			"CANCEL_BUTTON": "No, elegir otra fecha"
+			"OK_BUTTON": "No, elegir otra fecha",
+			"CANCEL_BUTTON": "Si, asignar turno"
 		}
 	}
 }
