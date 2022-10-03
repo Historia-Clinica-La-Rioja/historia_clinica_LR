@@ -195,80 +195,92 @@ public class ExcelServiceGRImpl implements ExcelServiceGR {
 		AtomicInteger rowNumber = new AtomicInteger(0);
 
 		ICell cell = row.createCell(rowNumber.getAndIncrement());
-		cell.setCellValue(content.getInstitution());
+		cell.setCellValue(content.getCreatedOn());
 		cell.setCellStyle(style);
 
 		ICell cell2 = row.createCell(rowNumber.getAndIncrement());
-		cell2.setCellValue(content.getAmbulance());
+		cell2.setCellValue(content.getInstitutionId());
 		cell2.setCellStyle(style);
 
 		ICell cell3 = row.createCell(rowNumber.getAndIncrement());
-		cell3.setCellValue(content.getOffice());
+		cell3.setCellValue(content.getInstitution());
 		cell3.setCellStyle(style);
 
 		ICell cell4 = row.createCell(rowNumber.getAndIncrement());
-		cell4.setCellValue(content.getSector());
+		cell4.setCellValue(content.getAmbulance());
 		cell4.setCellStyle(style);
 
 		ICell cell5 = row.createCell(rowNumber.getAndIncrement());
-		cell5.setCellValue(content.getPoliceIntervention());
+		cell5.setCellValue(content.getOffice());
 		cell5.setCellStyle(style);
 
 		ICell cell6 = row.createCell(rowNumber.getAndIncrement());
-		cell6.setCellValue(content.getAttentionDate());
+		cell6.setCellValue(content.getSector());
 		cell6.setCellStyle(style);
 
 		ICell cell7 = row.createCell(rowNumber.getAndIncrement());
-		cell7.setCellValue(content.getIdentification());
+		cell7.setCellValue(content.getPoliceIntervention());
 		cell7.setCellStyle(style);
 
 		ICell cell8 = row.createCell(rowNumber.getAndIncrement());
-		cell8.setCellValue(content.getLastName());
+		cell8.setCellValue(content.getAttentionDate());
 		cell8.setCellStyle(style);
 
 		ICell cell9 = row.createCell(rowNumber.getAndIncrement());
-		cell9.setCellValue(content.getNames());
+		cell9.setCellValue(content.getAttentionHour());
 		cell9.setCellStyle(style);
 
 		ICell cell10 = row.createCell(rowNumber.getAndIncrement());
-		cell10.setCellValue(content.getMedicalCoverage());
+		cell10.setCellValue(content.getIdentification());
 		cell10.setCellStyle(style);
 
 		ICell cell11 = row.createCell(rowNumber.getAndIncrement());
-		cell11.setCellValue(content.getEmergencyCareEntrance());
+		cell11.setCellValue(content.getLastName());
 		cell11.setCellStyle(style);
 
 		ICell cell12 = row.createCell(rowNumber.getAndIncrement());
-		cell12.setCellValue(content.getSituation());
+		cell12.setCellValue(content.getNames());
 		cell12.setCellStyle(style);
 
 		ICell cell13 = row.createCell(rowNumber.getAndIncrement());
-		cell13.setCellValue(content.getEmergencyCareType());
+		cell13.setCellValue(content.getMedicalCoverage());
 		cell13.setCellStyle(style);
 
 		ICell cell14 = row.createCell(rowNumber.getAndIncrement());
-		cell14.setCellValue(content.getTriageNote());
+		cell14.setCellValue(content.getEmergencyCareEntrance());
 		cell14.setCellStyle(style);
 
 		ICell cell15 = row.createCell(rowNumber.getAndIncrement());
-		cell15.setCellValue(content.getTriageLevel());
+		cell15.setCellValue(content.getSituation());
 		cell15.setCellStyle(style);
 
 		ICell cell16 = row.createCell(rowNumber.getAndIncrement());
-		cell16.setCellValue(content.getDateDischarge());
+		cell16.setCellValue(content.getEmergencyCareType());
 		cell16.setCellStyle(style);
 
 		ICell cell17 = row.createCell(rowNumber.getAndIncrement());
-		cell17.setCellValue(content.getAmbulanceDischarge());
+		cell17.setCellValue(content.getTriageNote());
 		cell17.setCellStyle(style);
 
 		ICell cell18 = row.createCell(rowNumber.getAndIncrement());
-		cell18.setCellValue(content.getTypeDischarge());
+		cell18.setCellValue(content.getTriageLevel());
 		cell18.setCellStyle(style);
 
 		ICell cell19 = row.createCell(rowNumber.getAndIncrement());
-		cell19.setCellValue(content.getPatientExit());
+		cell19.setCellValue(content.getDateDischarge());
 		cell19.setCellStyle(style);
+
+		ICell cell20 = row.createCell(rowNumber.getAndIncrement());
+		cell20.setCellValue(content.getAmbulanceDischarge());
+		cell20.setCellStyle(style);
+
+		ICell cell21 = row.createCell(rowNumber.getAndIncrement());
+		cell21.setCellValue(content.getTypeDischarge());
+		cell21.setCellStyle(style);
+
+		ICell cell22 = row.createCell(rowNumber.getAndIncrement());
+		cell22.setCellValue(content.getPatientExit());
+		cell22.setCellStyle(style);
 	}
 
 	private void fillRowContent(IRow row, ConsultationDetailDiabeticosHipertensos content, ICellStyle style){
