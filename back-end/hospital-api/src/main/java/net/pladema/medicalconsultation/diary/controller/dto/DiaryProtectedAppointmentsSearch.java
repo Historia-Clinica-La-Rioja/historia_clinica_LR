@@ -42,5 +42,4 @@ public class DiaryProtectedAppointmentsSearch {
 
 	private Boolean includeNameSelfDetermination = false;
 
-
 }
