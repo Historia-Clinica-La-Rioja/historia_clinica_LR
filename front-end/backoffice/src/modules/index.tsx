@@ -51,6 +51,9 @@ import licensenumbertypes from "./licensenumbertypes";
 import healthcareprofessionalspecialtylicensenumbers from "./healthcareprofessionalspecialtylicensenumbers";
 //
 import wcDefinitionPath from './wcDefinitionPathCreate';
+import careLineInstitution from "./carelineinstitution";
+import carelineinstitutionspecialty from "./carelineinstitutionspecialty";
+import careLineInstitutionPractice from "./carelineinstitutionpractice";
 
 const resourcesAdminInstitucional = (permissions: SGXPermissions) =>
     permissions.isOn('BACKOFFICE_MOSTRAR_ABM_RESERVA_TURNOS') ?
@@ -99,6 +102,11 @@ const resources = (permissions: SGXPermissions) => [
     <Resource name="clinicalspecialtycarelines" {...clinicalspecialtycarelines} />,
     <Resource name="carelines" {...careLines(permissions)} />,
     <Resource name="carelineproblems" {...carelineproblems} />,
+    <Resource name="carelineinstitution" {...careLineInstitution(permissions)} />,
+    <Resource name="carelineinstitutionspecialty" {...carelineinstitutionspecialty(permissions)} />,
+    <Resource name="carelineinstitutionpractice" {...careLineInstitutionPractice(permissions)} />,
+    <Resource name="practicesinstitution" />,
+    <Resource name="carelinespecialtyinstitution" />,
     // debug
     <Resource name="snvs"  {...snvs} />,
     <Resource name="documentfiles" {...documentFiles(permissions)} />,
