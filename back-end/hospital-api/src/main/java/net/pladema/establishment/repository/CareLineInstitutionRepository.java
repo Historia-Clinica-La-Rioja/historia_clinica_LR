@@ -19,7 +19,8 @@ public interface CareLineInstitutionRepository extends JpaRepository<CareLineIns
 	@Query("SELECT cli " +
 			"FROM CareLineInstitution cli " +
 			"WHERE cli.institutionId = :institutionId " +
-			"AND cli.careLineId = :careLineId")
+			"AND cli.careLineId = :careLineId " +
+			"AND cli.deleted = false ")
 	Optional<CareLineInstitution> findByInstitutionIdAndCareLineId(@Param("institutionId") Integer institutionId,
 																   @Param("careLineId") Integer careLineId);
 
