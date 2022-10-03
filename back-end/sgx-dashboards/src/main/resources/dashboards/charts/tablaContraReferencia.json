@@ -30,14 +30,13 @@
     ],
     "filters": [
       {
-        "member": "Referencias.institucion_origen_id",
+        "member": "Referencias.institucion_destino_id",
         "operator": "equals",
         "values": [
           "[(${institutionId})]"
         ]
       }
     ]
-
   },
   "chartType": "table",
   "pivotConfig": {

@@ -21,7 +21,7 @@
               "tabs": [
                 {
                   "args": {
-                    "label": "Referencias",
+                    "label": "Solicitadas",
                     "content": [
                       {
                         "type": "cubejs-chart",
@@ -34,7 +34,7 @@
                 },
                 {
                   "args": {
-                    "label": "Contrareferencias",
+                    "label": "Recibidas",
                     "content": [
                       {
                         "type": "cubejs-chart",
