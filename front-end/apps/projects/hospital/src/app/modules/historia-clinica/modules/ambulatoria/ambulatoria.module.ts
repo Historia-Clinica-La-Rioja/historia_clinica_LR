@@ -60,6 +60,9 @@ import { OperationDeniedComponent } from './dialogs/diagnosis-required/operation
 import { CreateOutpatientOrderComponent } from './dialogs/create-outpatient-order/create-outpatient-order.component';
 import { NewConsultationFamilyHistoryFormComponent } from './dialogs/new-consultation-family-history-form/new-consultation-family-history-form.component';
 import { VaccineSearchComponent } from './dialogs/vaccine-search/vaccine-search.component';
+import { ClinicalHistoryActionsComponent } from './components/clinical-history-actions/clinical-history-actions.component';
+import { AmbulatoriaSummaryFacadeService } from './services/ambulatoria-summary-facade.service';
+import { HistoricalProblemsFacadeService } from './services/historical-problems-facade.service';
 
 @NgModule({
 	declarations: [
@@ -106,6 +109,7 @@ import { VaccineSearchComponent } from './dialogs/vaccine-search/vaccine-search.
 		NewConsultationFamilyHistoryFormComponent,
 		VaccineSearchComponent,
   		CardPatientComponent,
+  		ClinicalHistoryActionsComponent,
 	],
 	imports: [
 		CommonModule,
@@ -123,6 +127,10 @@ import { VaccineSearchComponent } from './dialogs/vaccine-search/vaccine-search.
 		InternacionesModule,
 		EstudioModule,
 		TurnosModule
+	],
+	providers: [
+		AmbulatoriaSummaryFacadeService,
+		HistoricalProblemsFacadeService
 	]
 })
 export class AmbulatoriaModule {
