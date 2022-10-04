@@ -334,6 +334,7 @@
 			"PENDING_EPICRISIS": "Epicrisis pendiente",
 			"PENDING_MEDICAL_DISCHARGE": "Alta médica pendiente",
 			"PENDING_ADMINISTRATIVE_DISCHARGE": "Alta administrativa pendiente",
+			"SEARCH": "Buscar por nombre o documento...",
 			"NO_INFO": "Sin información"
 		},
 		"internacion-paciente": {
