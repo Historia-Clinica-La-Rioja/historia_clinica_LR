@@ -6,11 +6,14 @@ import {
     ReferenceManyField,
     Show,
     SimpleShowLayout,
-    TextField, useTranslate
+    TextField,
+    usePermissions,
+    useTranslate
 } from 'react-admin';
 import SectionTitle from '../components/SectionTitle';
 import Button from "@material-ui/core/Button";
 import { Link } from 'react-router-dom';
+import {ADMINISTRADOR, ADMINISTRADOR_INSTITUCIONAL_BACKOFFICE, ROOT} from "../roles";
 
 const CreateRelatedButton = ({record, reference, label, disabled}) => {
     const newRecord = {careLineInstitutionId: record.id, institutionId: record.institutionId, careLineId: record.careLineId};
@@ -27,60 +30,65 @@ const CreateRelatedButton = ({record, reference, label, disabled}) => {
     );
 };
 
-const CareLineinstitutionShow = props => (
-    <Show {...props}>
-        <SimpleShowLayout>
+const CareLineinstitutionShow = props => {
+    const { permissions } = usePermissions();
+    const userIsRootOrAdmin = permissions?.roleAssignments?.filter(roleAssignment => (roleAssignment.role === ADMINISTRADOR.role) || (roleAssignment.role === ROOT.role)).length > 0;
+    const userIsAdminInstitutional = permissions?.roleAssignments?.filter(roleAssignment => (roleAssignment.role === ADMINISTRADOR_INSTITUCIONAL_BACKOFFICE.role)).length > 0;
+    return(
+        <Show {...props} hasEdit={userIsAdminInstitutional}>
+            <SimpleShowLayout>
 
-            <ReferenceField source="institutionId" reference="institutions">
-                <TextField source="name" />
-            </ReferenceField>
+                <ReferenceField source="institutionId" reference="institutions">
+                    <TextField source="name" />
+                </ReferenceField>
 
-            <ReferenceField source="careLineId" reference="carelines">
-                <TextField source="description" />
-            </ReferenceField>
+                <ReferenceField source="careLineId" reference="carelines">
+                    <TextField source="description" />
+                </ReferenceField>
 
-            <SectionTitle label="Especialidades"/>
-            <CreateRelatedButton
-                reference="carelineinstitutionspecialty"
-                label="Agregar Especialidad"
-                disabled={false}
-            />
+                <SectionTitle label="resources.carelineinstitution.fields.specialtys"/>
+                <CreateRelatedButton
+                    reference="carelineinstitutionspecialty"
+                    label="resources.carelineinstitution.fields.newspecialty"
+                    disabled={userIsRootOrAdmin}
+                />
 
-            <ReferenceManyField
-                addLabel={false}
-                reference="carelineinstitutionspecialty"
-                target="careLineInstitutionId"
-            >
-                <Datagrid>
-                    <ReferenceField source="clinicalSpecialtyId" reference="clinicalspecialties">
-                        <TextField source="name"/>
-                    </ReferenceField>
-                    <DeleteButton redirect={false}/>
-                </Datagrid>
-            </ReferenceManyField>
+                <ReferenceManyField
+                    addLabel={false}
+                    reference="carelineinstitutionspecialty"
+                    target="careLineInstitutionId"
+                >
+                    <Datagrid>
+                        <ReferenceField source="clinicalSpecialtyId" reference="clinicalspecialties">
+                            <TextField source="name"/>
+                        </ReferenceField>
+                        <DeleteButton redirect={false} disabled={userIsRootOrAdmin} />
+                    </Datagrid>
+                </ReferenceManyField>
 
-            <SectionTitle label="Practicas"/>
-            <CreateRelatedButton
-                reference="carelineinstitutionpractice"
-                label="Agregar Practica"
-                disabled={false}
-            />
+                <SectionTitle label="resources.carelineinstitution.fields.practices"/>
+                <CreateRelatedButton
+                    reference="carelineinstitutionpractice"
+                    label="resources.carelineinstitution.fields.newpractice"
+                    disabled={userIsRootOrAdmin}
+                />
 
-            <ReferenceManyField
-                addLabel={false}
-                reference="carelineinstitutionpractice"
-                target="careLineInstitutionId"
-            >
-                <Datagrid>
-                    <ReferenceField source="snomedRelatedGroupId" reference="practicesinstitution" link={false}>
-                        <TextField source="description" />
-                    </ReferenceField>
-                    <DeleteButton redirect={false}/>
-                </Datagrid>
-            </ReferenceManyField>
+                <ReferenceManyField
+                    addLabel={false}
+                    reference="carelineinstitutionpractice"
+                    target="careLineInstitutionId"
+                >
+                    <Datagrid>
+                        <ReferenceField source="snomedRelatedGroupId" reference="practicesinstitution" link={false}>
+                            <TextField source="description" />
+                        </ReferenceField>
+                        <DeleteButton redirect={false} disabled={userIsRootOrAdmin} />
+                    </Datagrid>
+                </ReferenceManyField>
 
-        </SimpleShowLayout>
-    </Show>
-);
+            </SimpleShowLayout>
+        </Show>
+    );
+};
 
 export default CareLineinstitutionShow;

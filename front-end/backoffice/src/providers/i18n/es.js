@@ -601,6 +601,37 @@ const messages = {
                 snomedId: 'Problema',
             },
             addRelated: 'Agregar problema',
+        },
+        carelineinstitution: {
+            name: 'Adhesión a Línea de cuidado',
+            fields: {
+                institutionId: 'Institución',
+                careLineId: 'Línea de cuidado',
+                newspecialty: 'Agregar Especialidad',
+                newpractice: 'Agregar Práctica',
+                specialtys: 'Especialidades',
+                practices: 'Prácticas',
+                specialty: 'Especialidad',
+                practice: 'Práctica',
+            }
+        },
+        carelineinstitutionspecialty: {
+            name: 'Especialidad de adhesión a Línea de cuidado',
+            fields: {
+                institutionId: 'Institución',
+                careLineId: 'Línea de cuidado',
+                clinicalSpecialtyId: 'Especialidad',
+                newspecialty: 'Nueva Especialidad',
+            }
+        },
+        carelineinstitutionpractice: {
+            name: 'Práctica de adhesión a Línea de cuidado',
+            fields: {
+                institutionId: 'Institución',
+                careLineId: 'Línea de cuidado',
+                snomedRelatedGroupId: 'Práctica',
+                newpractice: 'Nueva Práctica',
+            }
         }
     }
 };

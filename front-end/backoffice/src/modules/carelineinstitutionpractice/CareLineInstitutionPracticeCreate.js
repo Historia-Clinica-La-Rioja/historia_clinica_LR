@@ -3,14 +3,20 @@ import {
     Create,
     SimpleForm,
     ReferenceInput,
-    AutocompleteInput, ReferenceField, TextField,
+    AutocompleteInput,
+    ReferenceField,
+    TextField,
+    usePermissions,
 } from 'react-admin';
 import CustomToolbar from '../components/CustomToolbar';
 import SectionTitle from "../components/SectionTitle";
+import {ADMINISTRADOR, ROOT} from "../roles";
 
 const CareLineInstitutionPracticeCreate = props => {
     const institutionId = props?.location?.state?.record?.institutionId;
     const redirect = `/carelineinstitution/${props?.location?.state?.record?.careLineInstitutionId}/show`;
+    const { permissions } = usePermissions();
+    const userIsRootOrAdmin = permissions?.roleAssignments?.filter(roleAssignment => (roleAssignment.role === ADMINISTRADOR.role) || (roleAssignment.role === ROOT.role)).length > 0;
     return(
         <Create {...props}>
             <SimpleForm redirect={redirect} toolbar={<CustomToolbar/>}>
@@ -22,14 +28,14 @@ const CareLineInstitutionPracticeCreate = props => {
                     <TextField source="description" />
                 </ReferenceField>
 
-                <SectionTitle label="Nueva Practica"/>
+                <SectionTitle label="resources.carelineinstitutionpractice.fields.newpractice"/>
                 <ReferenceInput
                     source="snomedRelatedGroupId"
                     reference="practicesinstitution"
                     sort={{ field: 'description', order: 'ASC' }}
                     filterToQuery={searchText => ({institutionId: institutionId})}
                 >
-                    <AutocompleteInput optionText="description" optionValue="id" resettable />
+                    <AutocompleteInput optionText="description" optionValue="id" disabled={userIsRootOrAdmin} resettable />
                 </ReferenceInput>
 
             </SimpleForm>

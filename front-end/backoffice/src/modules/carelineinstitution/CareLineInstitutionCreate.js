@@ -2,30 +2,31 @@ import React from 'react';
 import {
     Create,
     SimpleForm,
-    required,
-    usePermissions, ReferenceInput, AutocompleteInput, FormDataConsumer,
+    usePermissions,
+    ReferenceInput,
+    AutocompleteInput,
+    FormDataConsumer,
 } from 'react-admin';
 import CustomToolbar from '../components/CustomToolbar';
-import {ADMINISTRADOR} from "../roles";
+import {ADMINISTRADOR, ROOT} from "../roles";
 
 const CareLineSelect = ({ formData, ...rest }) => {
     const { permissions } = usePermissions();
-    const userIsAdmin = permissions?.roleAssignments?.filter(roleAssignment => (roleAssignment.role === ADMINISTRADOR.role)).length > 0;
+    const userIsRootOrAdmin = permissions?.roleAssignments?.filter(roleAssignment => (roleAssignment.role === ADMINISTRADOR.role) || (roleAssignment.role === ROOT.role)).length > 0;
     return (
         <ReferenceInput
             {...rest}
             reference="carelines"
             sort={{ field: 'description', order: 'ASC' }}
             filterToQuery={searchText => ({description: searchText})}
-            validate={!userIsAdmin ? [required()] : []}
         >
-            <AutocompleteInput optionText="description" optionValue="id" resettable />
+            <AutocompleteInput optionText="description" optionValue="id" disabled={userIsRootOrAdmin} resettable isRequired={true} />
         </ReferenceInput>);
 };
 
 const InstitutionSelect = ({ formData, ...rest }) => {
     const { permissions } = usePermissions();
-    const userIsAdmin = permissions?.roleAssignments?.filter(roleAssignment => (roleAssignment.role === ADMINISTRADOR.role)).length > 0;
+    const userIsRootOrAdmin = permissions?.roleAssignments?.filter(roleAssignment => (roleAssignment.role === ADMINISTRADOR.role) || (roleAssignment.role === ROOT.role)).length > 0;
     return (
         <ReferenceInput
             {...rest}
@@ -33,9 +34,8 @@ const InstitutionSelect = ({ formData, ...rest }) => {
             sort={{ field: 'name', order: 'ASC' }}
             filterToQuery={searchText => ({name: searchText})}
             filter={{ institutionId: formData.institutionId }}
-            validate={!userIsAdmin ? [required()] : []}
         >
-            <AutocompleteInput optionText="name" optionValue="id" resettable />
+            <AutocompleteInput optionText="name" optionValue="id" disabled={userIsRootOrAdmin} resettable isRequired={true} />
         </ReferenceInput>);
 };
 
