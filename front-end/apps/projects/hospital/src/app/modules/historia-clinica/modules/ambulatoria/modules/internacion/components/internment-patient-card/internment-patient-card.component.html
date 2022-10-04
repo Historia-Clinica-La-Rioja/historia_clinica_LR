@@ -1,3 +1,8 @@
+<mat-form-field appearance="outline" class="serch">
+	<mat-label>Buscar por nombre o documento...</mat-label>
+	<input matInput (keyup)="applyFilter($event)">
+	<mat-icon matSuffix>search</mat-icon>
+</mat-form-field>
 <mat-card>
 
 	<div *ngFor="let patient of pageSlice;last as isLast">

@@ -20,6 +20,8 @@ export class CardComponent {
 
 export interface CardModel {
 	avatar?: any;
+	name?: string;
+	dni?: string;
 	header: Value[];
 	headerSimple?: Value[];
 	details?: any[];

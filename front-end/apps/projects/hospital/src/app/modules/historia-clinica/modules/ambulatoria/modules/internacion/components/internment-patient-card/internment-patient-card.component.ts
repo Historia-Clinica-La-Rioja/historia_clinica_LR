@@ -8,6 +8,7 @@ import { DocumentsSummaryDto } from '@api-rest/api-model';
 import { InternmentPatientService } from '@api-rest/services/internment-patient.service';
 
 const PAGE_SIZE_OPTIONS = [5, 10, 25];
+const PAGE_MAX_SIZE = 25;
 const PAGE_MIN_SIZE = 5;
 
 @Component({
@@ -17,6 +18,8 @@ const PAGE_MIN_SIZE = 5;
 })
 
 export class InternmentPatientCardComponent {
+	private applySearchFilter = '';
+	private sizePageSelect = PAGE_MIN_SIZE;
 	pageSizeOptions: number[] = PAGE_SIZE_OPTIONS;
 	numberOfPatients = 0;
 	private readonly routePrefix;
@@ -54,8 +57,10 @@ export class InternmentPatientCardComponent {
 	private buildCard(data: InternmentPatientTableData[], redirect: Redirect): CardModel[] {
 		return data?.map((person: InternmentPatientTableData) => {
 			return {
+				name: person.nameSelfDetermination ? `${this.patientNameService.getPatientName(person.firstName, person.nameSelfDetermination)} ${person.lastName}` : this.getName(person),
 				header: [{ title: "", value: person.nameSelfDetermination ? `${this.patientNameService.getPatientName(person.firstName, person.nameSelfDetermination)} ${person.lastName}` : this.getName(person) }],
 				headerSimple: [{ title: "DNI", value: person.identificationNumber || "-" }],
+				dni: person.identificationNumber || "-",
 				hasPhysicalDischarge: person.hasPhysicalDischarge,
 				roomNumber: person.bedInfo.roomNumber,
 				bedNumber: person.bedInfo.bedNumber,
@@ -88,8 +93,37 @@ export class InternmentPatientCardComponent {
 
 	onPageChange($event: any): void {
 		const page = $event;
+		this.sizePageSelect = page.pageSize;
 		const startPage = page.pageIndex * page.pageSize;
-		this.pageSlice = this.internmentPatientCard.slice(startPage, $event.pageSize + startPage);
+		this.pageSlice = this.filterPatientForNameAndDNI();
+		this.pageSlice = this.pageSlice.slice(startPage, $event.pageSize + startPage);
+	}
+
+	applyFilter($event: any): void {
+		this.applySearchFilter = ($event.target as HTMLInputElement).value;
+		this.pageSlice = this.filterPatientForNameAndDNI();
+		this.setPageSizeOptions();
+		this.pageSlice = this.pageSlice.slice(0, this.sizePageSelect);
+	}
+
+	private filterPatientForNameAndDNI(): CardModel[] {
+		return this.applySearchFilter ? this.internmentPatientCard.filter((e: CardModel) => e?.name.toLowerCase().includes(this.applySearchFilter.toLowerCase()) || e?.dni.toString().includes(this.applySearchFilter)) : this.internmentPatientCard;
+	}
+
+	private setPageSizeOptions(): void {
+		if (this.applySearchFilter === '') {
+			this.numberOfPatients = this.internmentPatientCard.length;
+			this.pageSizeOptions = PAGE_SIZE_OPTIONS;
+		} else {
+			const unrepeatedSizeOptions = [...new Set([...PAGE_SIZE_OPTIONS, this.pageSlice.length])];
+			let pageSizeOptions = unrepeatedSizeOptions.filter(opt => this.betweenLimits(opt));
+			pageSizeOptions.forEach(e => (e < PAGE_MIN_SIZE) ? this.pageSizeOptions.push(PAGE_MIN_SIZE) : this.pageSizeOptions.push(e));
+			this.numberOfPatients = this.pageSlice.length;
+		}
+	}
+
+	private betweenLimits(opt: number): boolean {
+		return opt <= this.pageSlice.length && opt <= PAGE_MAX_SIZE;
 	}
 
 }
