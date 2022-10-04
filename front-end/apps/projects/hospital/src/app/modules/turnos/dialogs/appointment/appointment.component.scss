@@ -33,6 +33,12 @@
 	}
 }
 
+.ventana {
+	@media (min-height: 600px) {
+		min-height: 500px;
+	}
+}
+
 .header{
 	width: 88%;
 }

@@ -115,6 +115,8 @@
 			"BUTTON_CLINICAL_HISTORY": "Ver historia clínica",
 			"EDIT_PATIENT_INFO": "Editar información del paciente",
 			"APPOINTMENT_STATE": "Estado de turno",
+			"ABSENCE_MOTIVE": "Motivo de ausencia",
+			"DESCRIBE_MOTIVE": "Describa el motivo",
 			"MOTIVE": "Motivo",
 			"SAVE": "Guardar",
 			"CANCEL": "Cancelar",

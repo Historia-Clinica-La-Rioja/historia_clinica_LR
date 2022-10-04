@@ -1,4 +1,4 @@
-<form class="appointment-body" [formGroup]="formMotivo" (ngSubmit)="saveAbsent()">
+<div class="appointment-body">
 	<div fxLayout="row" fxLayoutAlign="end">
 		<button id="close-dialog" mat-icon-button (click)="closeDialog()" type="button" class="icon-close">
 			<mat-icon>close</mat-icon>
@@ -249,9 +249,9 @@
 				</button>
 			</div>
 
-			<div class="motivo" *ngIf="isMotivoRequired()">
-				<mat-form-field [floatLabel]="'never'" appearance="outline">
-					<mat-label>{{'turnos.appointment.MOTIVE' | translate}}</mat-label>
+			<form [formGroup]="formMotivo" (ngSubmit)="saveAbsent()" class="motivo" *ngIf="isMotivoRequired()" fxLayout="column">
+				<span class="mat-body-strong strong-size">{{'turnos.appointment.ABSENCE_MOTIVE' | translate}}</span>
+				<mat-form-field appearance="outline">
 					<textarea formControlName="motivo" placeholder="Describa el motivo" matInput type="text"
 						id="motivo"></textarea>
 					<mat-error *ngIf="hasError(formMotivo, 'required', 'motivo')" [translate]="'forms.REQUIRED'">
@@ -261,7 +261,13 @@
 						[translateParams]="{max: getError(formMotivo, 'maxlength', 'motivo')?.requiredLength}">
 					</mat-error>
 				</mat-form-field>
-			</div>
+				<div fxLayoutAlign="end" >
+					<button mat-flat-button color="primary" id="save" >
+						<span [translate]="'turnos.appointment.SAVE'"></span>
+					</button>
+				</div>
+
+			</form>
 		</section>
 
 		<section gdArea="reports" id="reports">
@@ -345,12 +351,8 @@
 			name="cancel-appointment" (click)="cancelAppointment()">
 			<span class="uppercase" [translate]="'turnos.cancel.TITLE'"></span>
 		</button>
-
-		<button *ngIf="isMotivoRequired()" mat-flat-button color="primary" id="save">
-			<span class="uppercase">{{'turnos.appointment.SAVE' | translate}}</span>
-		</button>
 	</mat-dialog-actions>
-</form>
+</div>
 
 <ng-template #noInfo>
 	<span class="mat-body patient-no-info coverage-text subtitle-size">
