@@ -4,12 +4,12 @@
 			<mat-icon>close</mat-icon>
 		</button>
 	</div>
-	<div mat-dialog-content class="ventana"
-		gdAreas="personal-data personal-data | coverage appointment | div-sup div-sup | state reports | observations observations | div-inf div-inf "
+	<div mat-dialog-content class="ventana" id="ventana"
+		gdAreas="personal-data personal-data | coverage appointment | div-sup div-sup | state-observations reports | div-inf div-inf "
 		gdColumns="1fr 1fr"
 		gdRows="auto"
 		gdGap="10px 50px"
-		gdAreas.lt-md="personal-data | coverage | appointment | state | reports | observations"
+		gdAreas.lt-md="personal-data | coverage | appointment | state-observations | reports"
         gdColumns.lt-md="auto">
 
 		<section gdArea="personal-data" id="personal-data" fxLayout="column" fxLayoutGap="5px">
@@ -207,67 +207,110 @@
 			</form>
 		</section>
 
-		<section gdArea="state" id="state">
-			<span class="mat-body-strong strong-size">{{'turnos.appointment.APPOINTMENT_STATE' | translate}}</span>
-			<div class="appointment-actions" fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="8px">
+		<section gdArea="state-observations">
 
-				<button type="button"
-					[disabled]="(hasRoleToChangeState$ | async) === false || selectedState === appointmentStatesIds.SERVED"
-					[ngClass]="{'selected assigned': selectedState === appointmentStatesIds.ASSIGNED }"
-					(click)="onClickedState(appointmentStatesIds.ASSIGNED)" mat-stroked-button>
-					<mat-icon matTooltip="{{getAppointmentState(appointmentStatesIds.ASSIGNED).description}}"
-						color="primary">event_available</mat-icon>
-				</button>
+			<section id="state">
+				<span class="mat-body-strong strong-size">{{'turnos.appointment.APPOINTMENT_STATE' | translate}}</span>
+				<div class="appointment-actions" fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="8px">
 
-				<button type="button" [disabled]="(hasRoleToChangeState$ | async) === false || selectedState === appointmentStatesIds.SERVED"
-					[ngClass]="{'selected confirmed': selectedState === appointmentStatesIds.CONFIRMED }"
-					(click)="onClickedState(appointmentStatesIds.CONFIRMED)" mat-stroked-button>
-					<mat-icon matTooltip="{{getAppointmentState(appointmentStatesIds.CONFIRMED).description}}"
-						color="primary">meeting_room
-					</mat-icon>
-				</button>
+					<button type="button"
+						[disabled]="(hasRoleToChangeState$ | async) === false || selectedState === appointmentStatesIds.SERVED"
+						[ngClass]="{'selected assigned': selectedState === appointmentStatesIds.ASSIGNED }"
+						(click)="onClickedState(appointmentStatesIds.ASSIGNED)" mat-stroked-button>
+						<mat-icon matTooltip="{{getAppointmentState(appointmentStatesIds.ASSIGNED).description}}"
+							color="primary">event_available</mat-icon>
+					</button>
 
-				<button type="button" [disabled]="(hasRoleToChangeState$ | async) === false"
-					[ngClass]="{ 'assigned': selectedState === appointmentStatesIds.CONFIRMED }" (click)="callPatient()"
-					*ngIf="isMqttCallEnabled && selectedState === appointmentStatesIds.CONFIRMED" mat-stroked-button>
-					<mat-icon matTooltip="{{BELL_LABEL}}" color="primary" svgIcon="bell_appointment_call">
-					</mat-icon>
-				</button>
+					<button type="button" [disabled]="(hasRoleToChangeState$ | async) === false || selectedState === appointmentStatesIds.SERVED"
+						[ngClass]="{'selected confirmed': selectedState === appointmentStatesIds.CONFIRMED }"
+						(click)="onClickedState(appointmentStatesIds.CONFIRMED)" mat-stroked-button>
+						<mat-icon matTooltip="{{getAppointmentState(appointmentStatesIds.CONFIRMED).description}}"
+							color="primary">meeting_room
+						</mat-icon>
+					</button>
 
-				<button type="button" [ngClass]="{'selected absent': selectedState === appointmentStatesIds.ABSENT }"
-					(click)="onClickedState(appointmentStatesIds.ABSENT)" mat-stroked-button
-					[disabled]="(hasRoleToChangeState$ | async) === false || selectedState === appointmentStatesIds.SERVED">
-					<mat-icon matTooltip="{{getAppointmentState(appointmentStatesIds.ABSENT).description}}"
-						color="primary" svgIcon="person_cancel_outlined">
-					</mat-icon>
-				</button>
+					<button type="button" [disabled]="(hasRoleToChangeState$ | async) === false"
+						[ngClass]="{ 'assigned': selectedState === appointmentStatesIds.CONFIRMED }" (click)="callPatient()"
+						*ngIf="isMqttCallEnabled && selectedState === appointmentStatesIds.CONFIRMED" mat-stroked-button>
+						<mat-icon matTooltip="{{BELL_LABEL}}" color="primary" svgIcon="bell_appointment_call">
+						</mat-icon>
+					</button>
 
-				<button type="button" disabled
-					[ngClass]="{'selected served': selectedState === appointmentStatesIds.SERVED }" mat-stroked-button>
-					<mat-icon color="primary" svgIcon="person_check_outlined"
-						matTooltip="{{getAppointmentState(appointmentStatesIds.SERVED).description}}"></mat-icon>
-				</button>
-			</div>
+					<button type="button" [ngClass]="{'selected absent': selectedState === appointmentStatesIds.ABSENT }"
+						(click)="onClickedState(appointmentStatesIds.ABSENT)" mat-stroked-button
+						[disabled]="(hasRoleToChangeState$ | async) === false || selectedState === appointmentStatesIds.SERVED">
+						<mat-icon matTooltip="{{getAppointmentState(appointmentStatesIds.ABSENT).description}}"
+							color="primary" svgIcon="person_cancel_outlined">
+						</mat-icon>
+					</button>
 
-			<form [formGroup]="formMotivo" (ngSubmit)="saveAbsent()" class="motivo" *ngIf="isMotivoRequired()" fxLayout="column">
-				<span class="mat-body-strong strong-size">{{'turnos.appointment.ABSENCE_MOTIVE' | translate}}</span>
-				<mat-form-field appearance="outline">
-					<textarea formControlName="motivo" placeholder="Describa el motivo" matInput type="text"
-						id="motivo"></textarea>
-					<mat-error *ngIf="hasError(formMotivo, 'required', 'motivo')" [translate]="'forms.REQUIRED'">
-					</mat-error>
-					<mat-error *ngIf="hasError(formMotivo, 'maxlength', 'motivo')"
-						[translate]="'forms.MAX_LENGTH_ERROR'"
-						[translateParams]="{max: getError(formMotivo, 'maxlength', 'motivo')?.requiredLength}">
-					</mat-error>
-				</mat-form-field>
-				<div fxLayoutAlign="end" >
-					<button mat-flat-button color="primary" id="save" >
-						<span [translate]="'turnos.appointment.SAVE'"></span>
+					<button type="button" disabled
+						[ngClass]="{'selected served': selectedState === appointmentStatesIds.SERVED }" mat-stroked-button>
+						<mat-icon color="primary" svgIcon="person_check_outlined"
+							matTooltip="{{getAppointmentState(appointmentStatesIds.SERVED).description}}"></mat-icon>
 					</button>
 				</div>
 
-			</form>
+				<form [formGroup]="formMotivo" (ngSubmit)="saveAbsent()" class="motivo" *ngIf="isMotivoRequired()" fxLayout="column">
+					<span class="mat-body-strong strong-size">{{'turnos.appointment.ABSENCE_MOTIVE' | translate}}</span>
+					<mat-form-field appearance="outline">
+						<textarea formControlName="motivo" placeholder="Describa el motivo" matInput type="text"
+							id="motivo"></textarea>
+						<mat-error *ngIf="hasError(formMotivo, 'required', 'motivo')" [translate]="'forms.REQUIRED'">
+						</mat-error>
+						<mat-error *ngIf="hasError(formMotivo, 'maxlength', 'motivo')"
+							[translate]="'forms.MAX_LENGTH_ERROR'"
+							[translateParams]="{max: getError(formMotivo, 'maxlength', 'motivo')?.requiredLength}">
+						</mat-error>
+					</mat-form-field>
+					<div fxLayoutAlign="end" >
+						<button mat-flat-button color="primary" id="save" >
+							<span [translate]="'turnos.appointment.SAVE'"></span>
+						</button>
+					</div>
+
+				</form>
+			</section>
+
+			<section id="observation-section" class="observation-section">
+				<div *ngIf="!observation && hideObservationForm && hideObservationTitle">
+					<a class="mat-body" (click)="setHideObservationForm(false); setHideObservationTitle(false)"
+						[translate]="'turnos.appointment.observations.ADD_OBSERVATION'">
+					</a>
+				</div>
+
+				<div class="observation-details">
+					<span class="mat-body-strong strong-size" *ngIf="!hideObservationTitle"
+						[translate]="'turnos.appointment.observations.OBSERVATIONS'">
+					</span>
+					<div class="observation" *ngIf="observation && hideObservationForm" fxLayout="row"
+						fxLayoutAlign="space-between" fxLayoutGap="20px">
+						<p class="mat-body strong-size">
+							{{observation}}
+						</p>
+						<button type="button" mat-icon-button color="primary" (click)="setHideObservationForm(false)">
+							<mat-icon class="material-icons-outlined">edit</mat-icon>
+						</button>
+					</div>
+					<form [formGroup]="formObservations" *ngIf="!hideObservationForm" fxLayout="column" fxLayoutGap="5px"
+						(ngSubmit)="updateObservation()">
+						<mat-form-field appearance="outline">
+							<textarea formControlName="observation" placeholder="Ingrese observaciones..." rows="4" matInput
+								type="text"></textarea>
+						</mat-form-field>
+
+						<div class="observation-buttons" fxLayout="row" fxLayoutAlign="end" fxLayoutGap="15px">
+							<button mat-stroked-button color="primary" btn-block type="button"
+								(click)="cancelObservation()">
+								<span [translate]="'turnos.appointment.CANCEL'"></span>
+							</button>
+							<button mat-flat-button color="primary" [disabled]="formObservations.invalid">
+								<span [translate]="'turnos.appointment.SAVE'"></span>
+							</button>
+						</div>
+					</form>
+				</div>
+			</section>
 		</section>
 
 		<section gdArea="reports" id="reports">
@@ -298,46 +341,6 @@
 					<span class="uppercase" [translate]="'turnos.report.TITLE'"></span>
 				</button>
 			</ng-container>
-		</section>
-
-		<section gdArea="observations" id="observation-section" class="observation-section">
-			<div *ngIf="!observation && hideObservationForm && hideObservationTitle">
-				<a class="mat-body" (click)="setHideObservationForm(false); setHideObservationTitle(false)"
-					[translate]="'turnos.appointment.observations.ADD_OBSERVATION'">
-				</a>
-			</div>
-
-			<div class="observation-details">
-				<span class="mat-body-strong strong-size" *ngIf="!hideObservationTitle"
-					[translate]="'turnos.appointment.observations.OBSERVATIONS'">
-				</span>
-				<div class="observation" *ngIf="observation && hideObservationForm" fxLayout="row"
-					fxLayoutAlign="space-between" fxLayoutGap="20px">
-					<p class="mat-body strong-size">
-						{{observation}}
-					</p>
-					<button type="button" mat-icon-button color="primary" (click)="setHideObservationForm(false)">
-						<mat-icon class="material-icons-outlined">edit</mat-icon>
-					</button>
-				</div>
-				<form [formGroup]="formObservations" *ngIf="!hideObservationForm" fxLayout="column" fxLayoutGap="5px"
-					(ngSubmit)="updateObservation()">
-					<mat-form-field appearance="outline">
-						<textarea formControlName="observation" placeholder="Ingrese observaciones..." rows="4" matInput
-							type="text"></textarea>
-					</mat-form-field>
-
-					<div class="observation-buttons" fxLayout="row" fxLayoutAlign="end" fxLayoutGap="15px">
-						<button mat-stroked-button color="primary" btn-block type="button"
-							(click)="cancelObservation()">
-							<span [translate]="'turnos.appointment.CANCEL'"></span>
-						</button>
-						<button mat-flat-button color="primary" [disabled]="formObservations.invalid">
-							<span [translate]="'turnos.appointment.SAVE'"></span>
-						</button>
-					</div>
-				</form>
-			</div>
 		</section>
 
 		<mat-divider gdArea="div-sup"></mat-divider>
