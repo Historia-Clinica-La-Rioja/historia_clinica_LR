@@ -1,5 +1,5 @@
 <mat-card id="card">
-	<div id="content-card"  *ngFor="let patient of patientContent;last as isLast">
+	<div id="content-card" *ngFor="let patient of pageSlice;last as isLast">
 		<app-card id="patient" [cardContent]="patient">
 			<div id="content-patient" gdAreas="id dni gender date ranking" fxLayoutAlign="space-around start"
 			gdAreas.lt-sm=" id dni dni | gender date ranking" gdRows.lt-sm="auto auto" gdGap.gt-xs="16px">
@@ -30,5 +30,11 @@
 		</app-card>
 		<mat-divider *ngIf="!isLast" insert class="divider"></mat-divider>
 	</div>
+
+	<mat-divider [hidden]="patientContent?.length"></mat-divider>
+
+	<mat-paginator *ngIf="(patientContent?.length !== 0)" [length]="numberOfPatients"
+		[pageSizeOptions]="pageSizeOptions" (page)="onPageChange($event)" showFirstLastButtons>
+	</mat-paginator>
 
 </mat-card>
