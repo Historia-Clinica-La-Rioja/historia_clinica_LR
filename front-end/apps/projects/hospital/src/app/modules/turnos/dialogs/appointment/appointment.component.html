@@ -107,8 +107,7 @@
 					<div fxLayout="row" fxLayoutGap="10px" fxLayout.xs="column">
 						<mat-form-field fxFlex="30%" appearance="outline">
 							<mat-label>{{'turnos.appointment.phoneNumber.PHONE_PREFIX' | translate}}</mat-label>
-							<input matInput type="text" id="phonePrefix"
-								formControlName="phonePrefix"
+							<input matInput type="text" id="phonePrefix" formControlName="phonePrefix"
 								placeholder="{{'turnos.appointment.phoneNumber.PHONE_PREFIX' | translate }}"
 								(keyup)="updatePhoneValidators()">
 							<mat-error *ngIf="hasError(formEdit, 'required', 'phonePrefix')">
@@ -120,8 +119,7 @@
 						</mat-form-field>
 						<mat-form-field fxFlex="70%" appearance="outline">
 							<mat-label [translate]="'turnos.appointment.phoneNumber.PHONE_NUMBER'"></mat-label>
-							<input matInput type="text" id="phoneNumber"
-								formControlName="phoneNumber"
+							<input matInput type="text" id="phoneNumber" formControlName="phoneNumber"
 								placeholder="{{'turnos.appointment.phoneNumber.PHONE_NUMBER' | translate }}"
 								(keyup)="updatePhoneValidators()">
 							<mat-error *ngIf="hasError(formEdit, 'required', 'phoneNumber')">
@@ -340,16 +338,13 @@
 							</mat-checkbox>
 						</section>
 					</section>
+					<button id="report-appointment" mat-stroked-button color="primary" btn-block type="button"
+						(click)="getReportAppointment()"
+						[disabled]="!isCheckedDownloadAnexo && !isCheckedDownloadFormulario">
+						<mat-icon fontSet="material-icons-outlined">download</mat-icon>
+						<span class="uppercase">{{'turnos.report.TITLE' | translate}}</span>
+					</button>
 				</ng-container>
-			</ng-container>
-			<ng-container
-				*ngIf="downloadReportIsEnabled && !isAbsent() && ((hasRoleToDownloadReports$ | async) === true || data.hasPermissionToAssignShift)">
-				<button id="report-appointment" mat-stroked-button color="primary" btn-block type="button"
-					(click)="getReportAppointment()"
-					[disabled]="!isCheckedDownloadAnexo && !isCheckedDownloadFormulario">
-					<mat-icon fontSet="material-icons-outlined">download</mat-icon>
-					<span class="uppercase">{{'turnos.report.TITLE' | translate}}</span>
-				</button>
 			</ng-container>
 		</section>
 
