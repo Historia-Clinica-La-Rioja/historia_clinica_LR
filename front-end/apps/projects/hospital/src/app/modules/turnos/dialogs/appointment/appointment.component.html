@@ -4,7 +4,7 @@
 			<mat-icon>close</mat-icon>
 		</button>
 	</div>
-	<div mat-dialog-content class="ventana" id="ventana"
+	<div mat-dialog-content class="window" id="window"
 		gdAreas="personal-data personal-data | coverage appointment | div-sup div-sup | state-observations reports | div-inf div-inf "
 		gdColumns="1fr 1fr"
 		gdRows="auto"
@@ -251,16 +251,16 @@
 					</button>
 				</div>
 
-				<form [formGroup]="formMotivo" (ngSubmit)="saveAbsent()" class="motivo" *ngIf="isMotivoRequired()" fxLayout="column">
+				<form [formGroup]="formMotive" (ngSubmit)="saveAbsent()" class="motive" *ngIf="isMotiveRequired()" fxLayout="column">
 					<span class="mat-body-strong strong-size">{{'turnos.appointment.ABSENCE_MOTIVE' | translate}}</span>
 					<mat-form-field appearance="outline">
-						<textarea formControlName="motivo" placeholder="Describa el motivo" matInput type="text"
-							id="motivo"></textarea>
-						<mat-error *ngIf="hasError(formMotivo, 'required', 'motivo')" [translate]="'forms.REQUIRED'">
+						<textarea formControlName="motive" placeholder="Describa el motivo" matInput type="text"
+							id="motive"></textarea>
+						<mat-error *ngIf="hasError(formMotive, 'required', 'motive')" [translate]="'forms.REQUIRED'">
 						</mat-error>
-						<mat-error *ngIf="hasError(formMotivo, 'maxlength', 'motivo')"
+						<mat-error *ngIf="hasError(formMotive, 'maxlength', 'motive')"
 							[translate]="'forms.MAX_LENGTH_ERROR'"
-							[translateParams]="{max: getError(formMotivo, 'maxlength', 'motivo')?.requiredLength}">
+							[translateParams]="{max: getError(formMotive, 'maxlength', 'motive')?.requiredLength}">
 						</mat-error>
 					</mat-form-field>
 					<div fxLayoutAlign="end" >

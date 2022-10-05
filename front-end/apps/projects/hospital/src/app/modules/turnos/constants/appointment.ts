@@ -76,7 +76,7 @@ export function getAppointmentState(id: APPOINTMENT_STATES_ID): AppointmentState
 	return APPOINTMENT_STATES.find(appointment => appointment.id === id);
 }
 
-export const MAX_LENGTH_MOTIVO = 255;
+export const MAX_LENGTH_MOTIVE = 255;
 
 export const MINUTES_IN_HOUR = 60;
 

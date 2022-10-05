@@ -4,7 +4,7 @@ import { MAT_DIALOG_DATA, MatDialog, MatDialogRef } from '@angular/material/dial
 import { NewAttentionComponent } from '../new-attention/new-attention.component';
 import { AppointmentsService } from '@api-rest/services/appointments.service';
 import { SnackBarService } from '@presentation/services/snack-bar.service';
-import { APPOINTMENT_STATES_ID, getAppointmentState, MAX_LENGTH_MOTIVO } from '../../constants/appointment';
+import { APPOINTMENT_STATES_ID, getAppointmentState, MAX_LENGTH_MOTIVE } from '../../constants/appointment';
 import { ContextService } from '@core/services/context.service';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { AppFeature, AppointmentDto, CompleteDiaryDto, DateTimeDto, ERole, IdentificationTypeDto, PatientMedicalCoverageDto, PersonPhotoDto, UpdateAppointmentDto, AppointmentListDto } from '@api-rest/api-model.d';
@@ -63,7 +63,7 @@ export class AppointmentComponent implements OnInit {
 	appointment: AppointmentDto;
 	appointments: CalendarEvent[];
 	selectedState: APPOINTMENT_STATES_ID;
-	formMotivo: FormGroup;
+	formMotive: FormGroup;
 	formEdit: FormGroup;
 	formDate: FormGroup;
 	formObservations: FormGroup;
@@ -130,8 +130,8 @@ export class AppointmentComponent implements OnInit {
 	}
 
 	ngOnInit(): void {
-		this.formMotivo = this.formBuilder.group({
-			motivo: ['', [Validators.required, Validators.maxLength(MAX_LENGTH_MOTIVO)]]
+		this.formMotive = this.formBuilder.group({
+			motive: ['', [Validators.required, Validators.maxLength(MAX_LENGTH_MOTIVE)]]
 		});
 
 		this.formEdit = this.formBuilder.group({
@@ -174,7 +174,7 @@ export class AppointmentComponent implements OnInit {
 				}
 				this.selectedState = this.appointment?.appointmentStateId;
 				if (this.appointment.stateChangeReason) {
-					this.formMotivo.controls.motivo.setValue(this.appointment.stateChangeReason);
+					this.formMotive.controls.motive.setValue(this.appointment.stateChangeReason);
 				}
 				if (this.appointment.patientMedicalCoverageId && this.data.appointmentData.patient?.id) {
 					this.patientMedicalCoverageService.getPatientMedicalCoverage(this.appointment.patientMedicalCoverageId)
@@ -423,7 +423,7 @@ export class AppointmentComponent implements OnInit {
 
 	private updateState(newStateId: APPOINTMENT_STATES_ID): void {
 		this.changeState(newStateId);
-		if (this.isANewState(newStateId) && !this.isMotivoRequired()) {
+		if (this.isANewState(newStateId) && !this.isMotiveRequired()) {
 			this.submitNewState(newStateId);
 		}
 	}
@@ -486,8 +486,8 @@ export class AppointmentComponent implements OnInit {
 	}
 
 	saveAbsent(): void {
-		if (this.formMotivo.valid) {
-			this.submitNewState(APPOINTMENT_STATES_ID.ABSENT, this.formMotivo.value.motivo);
+		if (this.formMotive.valid) {
+			this.submitNewState(APPOINTMENT_STATES_ID.ABSENT, this.formMotive.value.motive);
 		}
 	}
 
@@ -515,7 +515,7 @@ export class AppointmentComponent implements OnInit {
 		}
 	}
 
-	isMotivoRequired(): boolean {
+	isMotiveRequired(): boolean {
 		return this.selectedState === APPOINTMENT_STATES_ID.ABSENT;
 	}
 
@@ -535,8 +535,8 @@ export class AppointmentComponent implements OnInit {
 		return this.appointment?.appointmentStateId === APPOINTMENT_STATES_ID.ABSENT;
 	}
 
-	private submitNewState(newStateId: APPOINTMENT_STATES_ID, motivo?: string): void {
-		this.appointmentFacade.changeState(this.data.appointmentData.appointmentId, newStateId, motivo)
+	private submitNewState(newStateId: APPOINTMENT_STATES_ID, motive?: string): void {
+		this.appointmentFacade.changeState(this.data.appointmentData.appointmentId, newStateId, motive)
 			.subscribe(() => {
 				const appointmentInformation = { id: this.data.appointmentData.appointmentId, stateId: newStateId, date: this.selectedDate };
 				this.dialogRef.close(appointmentInformation);
