@@ -9,7 +9,6 @@
 	}
 
 	.icon-close {
-		height: 10px;
 		mat-icon {
 			font-size: 24px;
 			color: rgba(0, 0, 0, 0.54);
@@ -40,7 +39,7 @@
 }
 
 .header{
-	width: 88%;
+	width: 95%;
 }
 
 .header-content {
@@ -212,4 +211,16 @@ section {
 
 .report{
 	margin-bottom: 10px;
+}
+
+mat-divider{
+	width: 95%;
+}
+
+mat-dialog-actions{
+	width: 95%;
+}
+
+.mat-dialog-container {
+    padding-right: 0px;
 }

@@ -146,7 +146,7 @@
 		</section>
 
 		<section gdArea="appointment" id="appointment" class="appointment-details section" fxLayout="column">
-			<span class="mat-body-strong title-size appointment-title">{{'turnos.appointment.TITLE' | translate}}</span>
+			<span class="mat-body-strong subtitle-size appointment-title">{{'turnos.appointment.TITLE' | translate}}</span>
 			<div *ngIf="!isDateFormVisible">
 				<div fxLayout="column" fxLayoutGap="10px">
 					<div fxLayout="row" fxLayoutGap="5px" fxLayoutAlign="start">
@@ -155,10 +155,10 @@
 							calendar_today
 						</mat-icon>
 						<div>
-							<span class="mat-body subtitle-size"> {{selectedDate | date:"EEEE, d " | titlecase }}
+							<span class="mat-body strong-size"> {{selectedDate | date:"EEEE, d " | titlecase }}
 								de</span>
-							<span class="mat-body subtitle-size"> {{selectedDate | date:"MMMM " | titlecase}} de</span>
-							<span class="mat-body subtitle-size"> {{selectedDate | date:"y " | titlecase}}</span>
+							<span class="mat-body strong-size"> {{selectedDate | date:"MMMM " | titlecase}} de</span>
+							<span class="mat-body strong-size"> {{selectedDate | date:"y " | titlecase}}</span>
 						</div>
 					</div>
 					<div fxLayout="row" fxLayoutGap="5px" fxLayoutAlign="start">
