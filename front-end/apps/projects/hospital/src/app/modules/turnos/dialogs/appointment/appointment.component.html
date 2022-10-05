@@ -107,7 +107,7 @@
 					<div fxLayout="row" fxLayoutGap="10px" fxLayout.xs="column">
 						<mat-form-field fxFlex="30%" appearance="outline">
 							<mat-label>{{'turnos.appointment.phoneNumber.PHONE_PREFIX' | translate}}</mat-label>
-							<input matInput type="text" id="phonePrefix" name="phonePrefix"
+							<input matInput type="text" id="phonePrefix"
 								formControlName="phonePrefix"
 								placeholder="{{'turnos.appointment.phoneNumber.PHONE_PREFIX' | translate }}"
 								(keyup)="updatePhoneValidators()">
@@ -120,7 +120,7 @@
 						</mat-form-field>
 						<mat-form-field fxFlex="70%" appearance="outline">
 							<mat-label [translate]="'turnos.appointment.phoneNumber.PHONE_NUMBER'"></mat-label>
-							<input matInput type="text" id="phoneNumber" name="phoneNumber"
+							<input matInput type="text" id="phoneNumber"
 								formControlName="phoneNumber"
 								placeholder="{{'turnos.appointment.phoneNumber.PHONE_NUMBER' | translate }}"
 								(keyup)="updatePhoneValidators()">
@@ -344,8 +344,8 @@
 			</ng-container>
 			<ng-container
 				*ngIf="downloadReportIsEnabled && !isAbsent() && ((hasRoleToDownloadReports$ | async) === true || data.hasPermissionToAssignShift)">
-				<button id="report-appointment" name="report-appointment" mat-stroked-button color="primary" btn-block
-					type="button" (click)="getReportAppointment()"
+				<button id="report-appointment" mat-stroked-button color="primary" btn-block type="button"
+					(click)="getReportAppointment()"
 					[disabled]="!isCheckedDownloadAnexo && !isCheckedDownloadFormulario">
 					<mat-icon fontSet="material-icons-outlined">download</mat-icon>
 					<span class="uppercase">{{'turnos.report.TITLE' | translate}}</span>
@@ -361,7 +361,7 @@
 		*appHasRole="['ADMINISTRATIVO', 'ENFERMERO', 'ESPECIALISTA_MEDICO', 'PROFESIONAL_DE_SALUD', 'ESPECIALISTA_EN_ODONTOLOGIA']"
 		align="end">
 		<button type="button" *ngIf="isCancelable()" mat-flat-button color="warn" id="cancel-appointment"
-			name="cancel-appointment" (click)="cancelAppointment()">
+			(click)="cancelAppointment()">
 			<span class="uppercase">{{'turnos.cancel.TITLE' | translate}}</span>
 		</button>
 	</mat-dialog-actions>
