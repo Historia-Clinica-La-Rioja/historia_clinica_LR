@@ -164,8 +164,10 @@ export class AgendaSetupComponent implements OnInit {
 				.subscribe(response => {
 					this.professionalSpecialties = response;
 					this.form.controls.healthcareProfessionalSpecialtyId.markAsTouched();
-					if(this.professionalSpecialties.find(specialty => specialty.id === diary.clinicalSpecialtyId))
+					if (this.professionalSpecialties.find(specialty => specialty.id === diary.clinicalSpecialtyId)) {
 						this.form.controls.healthcareProfessionalSpecialtyId.setValue(diary.clinicalSpecialtyId);
+						this.getCareLines();
+					}
 				})
 		});
 
@@ -187,13 +189,19 @@ export class AgendaSetupComponent implements OnInit {
 			this.form.controls.conjointDiary.setValue(true);
 			diary.diaryAssociatedProfessionalsId.forEach(diaryAssociatedProfessionalId => {
 				professionalsReference.push(this.initializeAnotherProfessional());
-				professionalsReference.controls[professionalsReference.length-1].setValue({ healthcareProfessionalId: diaryAssociatedProfessionalId });
+				professionalsReference.controls[professionalsReference.length - 1].setValue({ healthcareProfessionalId: diaryAssociatedProfessionalId });
 			});
 		}
 
 		if (diary.alias) {
 			this.form.controls.alias.setValue(diary.alias);
 		}
+
+		if (diary.protectedAppointmentsPercentage)
+			this.form.controls.protectedAppointmentsPercentage.setValue(diary.protectedAppointmentsPercentage);
+
+		if (diary.careLinesInfo.length)
+			this.careLinesSelected = diary.careLinesInfo;
 	}
 
 	private disableNotEditableControls(): void {
@@ -421,8 +429,10 @@ export class AgendaSetupComponent implements OnInit {
 				clinicalSpecialties: this.careLines.find(c => c.description === careLine).clinicalSpecialties
 			}));
 		}
-		else
+		else {
 			this.form.controls.protectedAppointmentsPercentage.removeValidators([Validators.required]);
+			this.careLinesSelected = [];
+		}
 		this.form.controls.protectedAppointmentsPercentage.updateValueAndValidity();
 	}
 
