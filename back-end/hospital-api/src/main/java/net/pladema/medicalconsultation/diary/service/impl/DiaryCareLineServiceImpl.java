@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 
 import lombok.extern.slf4j.Slf4j;
 
+import net.pladema.establishment.service.CareLineService;
 import net.pladema.establishment.service.domain.CareLineBo;
 import net.pladema.medicalconsultation.diary.repository.DiaryCareLineRepository;
 import net.pladema.medicalconsultation.diary.repository.entity.DiaryCareLine;
@@ -21,6 +22,8 @@ import static java.util.stream.Collectors.toList;
 public class DiaryCareLineServiceImpl implements DiaryCareLineService {
 
 	private final DiaryCareLineRepository diaryCareLineRepository;
+
+	private final CareLineService careLineService;
 
 	@Override
 	public void updateCareLinesAssociatedToDiary(Integer diaryId, List<Integer> careLines) {
@@ -54,4 +57,11 @@ public class DiaryCareLineServiceImpl implements DiaryCareLineService {
 		return careLines;
 	}
 
+	@Override
+	public List<CareLineBo> getPossibleCareLinesForDiary(Integer institutionId, Integer clinicalSpecialtyId) {
+		log.debug("Input parameters -> institutionId {}, clinicalSpecialtyId {}", institutionId, clinicalSpecialtyId);
+		List<CareLineBo> careLines = careLineService.getCareLinesByClinicalSpecialtyAndInstitutionId(institutionId, clinicalSpecialtyId);
+		log.trace("Output -> {}", careLines);
+		return careLines;
+	}
 }

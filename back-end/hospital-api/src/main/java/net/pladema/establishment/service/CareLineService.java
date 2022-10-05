@@ -8,4 +8,6 @@ public interface CareLineService {
 
     List<CareLineBo> getCareLines();
 
+	List<CareLineBo> getCareLinesByClinicalSpecialtyAndInstitutionId(Integer institutionId, Integer clinicalSpecialtyId);
+
 }

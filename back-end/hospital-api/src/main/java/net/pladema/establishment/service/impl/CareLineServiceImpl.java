@@ -35,4 +35,12 @@ public class CareLineServiceImpl implements CareLineService {
         return careLines;
     }
 
+	@Override
+	public List<CareLineBo> getCareLinesByClinicalSpecialtyAndInstitutionId(Integer institutionId, Integer clinicalSpecialtyId) {
+		LOG.debug("Input parameter ->, institutionId {}, clinicalSpecialtyId {}", institutionId, clinicalSpecialtyId);
+		List<CareLineBo> result = careLineRepository.getCareLinesByClinicalSpecialtyAndInstitutionId(institutionId, clinicalSpecialtyId);
+		LOG.trace(OUTPUT, result);
+		return result;
+	}
+
 }
