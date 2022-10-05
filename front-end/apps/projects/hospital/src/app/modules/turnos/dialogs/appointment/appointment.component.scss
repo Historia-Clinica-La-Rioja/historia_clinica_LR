@@ -38,7 +38,7 @@
 	}
 }
 
-.header{
+.header {
 	width: 95%;
 }
 
@@ -130,7 +130,7 @@ a {
 
 }
 
-.motive{
+.motive {
 	margin-top: 10px;
 }
 
@@ -157,33 +157,34 @@ section {
 }
 
 .mat-icon-button ::ng-deep .mat-button-focus-overlay {
-    display: none;
+	display: none;
 }
 
 .coverage-text {
 	display: inline-block;
-    max-width: 285px;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
+	max-width: 285px;
+	white-space: nowrap;
+	overflow: hidden;
+	text-overflow: ellipsis;
 }
 
-.dateForm{
-	.date{
+.dateForm {
+	.date {
 		width: 276px;
 	}
 
-	.hour{
+	.hour {
 		width: 90px;
 		height: 50px;
 	}
 
-	.hs{
+	.hs {
 		height: fit-content;
 		margin-top: 20px;
 		margin-left: 5px;
 	}
-	.confirm-buttons{
+
+	.confirm-buttons {
 		margin-top: 15px;
 	}
 }
@@ -197,7 +198,7 @@ section {
 		margin: auto;
 		margin-left: 3px;
 		white-space: pre-line;
-    	overflow-wrap: break-word;
+		overflow-wrap: break-word;
 	}
 }
 
@@ -209,18 +210,18 @@ section {
 	display: none;
 }
 
-.report{
+.report {
 	margin-bottom: 10px;
 }
 
-mat-divider{
+mat-divider {
 	width: 95%;
 }
 
-mat-dialog-actions{
+mat-dialog-actions {
 	width: 95%;
 }
 
 .mat-dialog-container {
-    padding-right: 0px;
+	padding-right: 0px;
 }

@@ -6,11 +6,8 @@
 	</div>
 	<div mat-dialog-content class="window" id="window"
 		gdAreas="personal-data personal-data | coverage appointment | div-sup div-sup | state-observations reports | div-inf div-inf "
-		gdColumns="1fr 1fr"
-		gdRows="auto"
-		gdGap="10px 50px"
-		gdAreas.lt-md="personal-data | coverage | appointment | state-observations | reports"
-        gdColumns.lt-md="auto">
+		gdColumns="1fr 1fr" gdRows="auto" gdGap="10px 50px"
+		gdAreas.lt-md="personal-data | coverage | appointment | state-observations | reports" gdColumns.lt-md="auto">
 
 		<section gdArea="personal-data" id="personal-data" fxLayout="column" fxLayoutGap="5px">
 			<div class="header" fxLayout="row" fxLayoutAlign="space-between" fxLayout.lt-md="column">
@@ -72,8 +69,10 @@
 					</div>
 				</div>
 				<div fxLayout="column" fxLayoutGap="5px">
-					<span class="mat-caption normal-size">{{'turnos.appointment.phoneNumber.PHONE_NUMBER' | translate}}</span>
-					<span  *ngIf="phoneNumber else noInfo" class="mat-body patient-info coverage-text subtitle-size">{{phoneNumber}}</span>
+					<span class="mat-caption normal-size">{{'turnos.appointment.phoneNumber.PHONE_NUMBER' |
+						translate}}</span>
+					<span *ngIf="phoneNumber else noInfo"
+						class="mat-body patient-info coverage-text subtitle-size">{{phoneNumber}}</span>
 				</div>
 				<button type="button" mat-icon-button color="primary" *ngIf="( hasRoleToEditPhoneNumber$ | async )"
 					(click)="hideFilters()">
@@ -99,7 +98,8 @@
 							</mat-option>
 							<mat-option (click)="openMedicalCoverageDialog()">
 								<span class="color-primary">
-									{{'ambulatoria.paciente.ordenes_prescripciones.new_prescription_dialog.UPDATE_COVERAGE' | translate}}
+									{{'ambulatoria.paciente.ordenes_prescripciones.new_prescription_dialog.UPDATE_COVERAGE'
+									| translate}}
 								</span>
 							</mat-option>
 						</mat-select>
@@ -136,7 +136,7 @@
 						<button mat-stroked-button color="primary" btn-block type="button" (click)="hideFilters()">
 							<span>{{'turnos.appointment.CANCEL' | translate}}</span>
 						</button>
-						<button mat-flat-button color="primary" [disabled]="isInvalidFormEdit()" >
+						<button mat-flat-button color="primary" [disabled]="isInvalidFormEdit()">
 							<span>{{'turnos.appointment.SAVE' | translate}}</span>
 						</button>
 					</div>
@@ -145,7 +145,8 @@
 		</section>
 
 		<section gdArea="appointment" id="appointment" class="appointment-details section" fxLayout="column">
-			<span class="mat-body-strong subtitle-size appointment-title">{{'turnos.appointment.TITLE' | translate}}</span>
+			<span class="mat-body-strong subtitle-size appointment-title">{{'turnos.appointment.TITLE' |
+				translate}}</span>
 			<div *ngIf="!isDateFormVisible">
 				<div fxLayout="column" fxLayoutGap="10px">
 					<div fxLayout="row" fxLayoutGap="5px" fxLayoutAlign="start">
@@ -179,9 +180,8 @@
 
 			<form [formGroup]="formDate" *ngIf="isDateFormVisible" fxLayout="column" fxLayoutGap="5px" class="dateForm"
 				(ngSubmit)="updateAppointmentDate()">
-				<app-datepicker [minDate]="startAgenda" [maxDate]="endAgenda"
-					[dateToSetInDatepicker]="selectedDate" [availableDays]="availableDays"
-					[disableDays]="disableDays" (selectDate)="selectDate($event)">
+				<app-datepicker [minDate]="startAgenda" [maxDate]="endAgenda" [dateToSetInDatepicker]="selectedDate"
+					[availableDays]="availableDays" [disableDays]="disableDays" (selectDate)="selectDate($event)">
 				</app-datepicker>
 
 				<div fxLayout="row">
@@ -196,7 +196,8 @@
 					<span class="hs"> hs.</span>
 				</div>
 				<div class="confirm-buttons" fxLayout="row" fxLayoutAlign="end" fxLayoutGap="15px" fxFlex="60%">
-					<button id="cancel-edition" mat-stroked-button color="primary" btn-block type="button" (click)="cancelDateForm()">
+					<button id="cancel-edition" mat-stroked-button color="primary" btn-block type="button"
+						(click)="cancelDateForm()">
 						<span>{{'turnos.appointment.CANCEL' | translate}}</span>
 					</button>
 					<button id="save-edition" mat-flat-button color="primary" [disabled]="formDate.invalid">
@@ -220,7 +221,8 @@
 							color="primary">event_available</mat-icon>
 					</button>
 
-					<button type="button" [disabled]="(hasRoleToChangeState$ | async) === false || selectedState === appointmentStatesIds.SERVED"
+					<button type="button"
+						[disabled]="(hasRoleToChangeState$ | async) === false || selectedState === appointmentStatesIds.SERVED"
 						[ngClass]="{'selected confirmed': selectedState === appointmentStatesIds.CONFIRMED }"
 						(click)="onClickedState(appointmentStatesIds.CONFIRMED)" mat-stroked-button>
 						<mat-icon matTooltip="{{getAppointmentState(appointmentStatesIds.CONFIRMED).description}}"
@@ -229,13 +231,16 @@
 					</button>
 
 					<button type="button" [disabled]="(hasRoleToChangeState$ | async) === false"
-						[ngClass]="{ 'assigned': selectedState === appointmentStatesIds.CONFIRMED }" (click)="callPatient()"
-						*ngIf="isMqttCallEnabled && selectedState === appointmentStatesIds.CONFIRMED" mat-stroked-button>
+						[ngClass]="{ 'assigned': selectedState === appointmentStatesIds.CONFIRMED }"
+						(click)="callPatient()"
+						*ngIf="isMqttCallEnabled && selectedState === appointmentStatesIds.CONFIRMED"
+						mat-stroked-button>
 						<mat-icon matTooltip="{{BELL_LABEL}}" color="primary" svgIcon="bell_appointment_call">
 						</mat-icon>
 					</button>
 
-					<button type="button" [ngClass]="{'selected absent': selectedState === appointmentStatesIds.ABSENT }"
+					<button type="button"
+						[ngClass]="{'selected absent': selectedState === appointmentStatesIds.ABSENT }"
 						(click)="onClickedState(appointmentStatesIds.ABSENT)" mat-stroked-button
 						[disabled]="(hasRoleToChangeState$ | async) === false || selectedState === appointmentStatesIds.SERVED">
 						<mat-icon matTooltip="{{getAppointmentState(appointmentStatesIds.ABSENT).description}}"
@@ -244,16 +249,19 @@
 					</button>
 
 					<button type="button" disabled
-						[ngClass]="{'selected served': selectedState === appointmentStatesIds.SERVED }" mat-stroked-button>
+						[ngClass]="{'selected served': selectedState === appointmentStatesIds.SERVED }"
+						mat-stroked-button>
 						<mat-icon color="primary" svgIcon="person_check_outlined"
 							matTooltip="{{getAppointmentState(appointmentStatesIds.SERVED).description}}"></mat-icon>
 					</button>
 				</div>
 
-				<form [formGroup]="formMotive" (ngSubmit)="saveAbsent()" class="motive" *ngIf="isMotiveRequired()" fxLayout="column">
+				<form [formGroup]="formMotive" (ngSubmit)="saveAbsent()" class="motive" *ngIf="isMotiveRequired()"
+					fxLayout="column">
 					<span class="mat-body-strong strong-size">{{'turnos.appointment.ABSENCE_MOTIVE' | translate}}</span>
 					<mat-form-field appearance="outline">
-						<textarea formControlName="motive" placeholder="{{'turnos.appointment.ABSENCE_MOTIVE' | translate }}" matInput type="text"
+						<textarea formControlName="motive"
+							placeholder="{{'turnos.appointment.ABSENCE_MOTIVE' | translate }}" matInput type="text"
 							id="motive"></textarea>
 						<mat-error *ngIf="hasError(formMotive, 'required', 'motive')" [translate]="'forms.REQUIRED'">
 						</mat-error>
@@ -262,8 +270,8 @@
 							[translateParams]="{max: getError(formMotive, 'maxlength', 'motive')?.requiredLength}">
 						</mat-error>
 					</mat-form-field>
-					<div fxLayoutAlign="end" >
-						<button mat-flat-button color="primary" id="save" >
+					<div fxLayoutAlign="end">
+						<button mat-flat-button color="primary" id="save">
 							<span> {{'turnos.appointment.SAVE' | translate}}</span>
 						</button>
 					</div>
@@ -291,14 +299,12 @@
 							<mat-icon class="material-icons-outlined">edit</mat-icon>
 						</button>
 					</div>
-					<form [formGroup]="formObservations" *ngIf="!hideObservationForm" fxLayout="column" fxLayoutGap="5px"
-						(ngSubmit)="updateObservation()">
+					<form [formGroup]="formObservations" *ngIf="!hideObservationForm" fxLayout="column"
+						fxLayoutGap="5px" (ngSubmit)="updateObservation()">
 						<mat-form-field appearance="outline">
 							<textarea formControlName="observation"
 								placeholder="{{'turnos.appointment.observations.ADD_OBSERVATION_SUBTITLE' | translate }}"
-								rows="4"
-								matInput
-								type="text">
+								rows="4" matInput type="text">
 							</textarea>
 						</mat-form-field>
 
@@ -324,7 +330,8 @@
 					<section class="report" fxLayout="column">
 						<span class="mat-body-strong strong-size">{{'turnos.report.TITLE' | translate}}</span>
 						<section fxLayout="row" fxLayoutGap="30px">
-							<mat-checkbox color="primary" fxLayout="row" (change)="enableDowndloadAnexo($event.checked)">
+							<mat-checkbox color="primary" fxLayout="row"
+								(change)="enableDowndloadAnexo($event.checked)">
 								<span class="mat-body strong-size">{{'turnos.report.ANEXO' | translate}}</span>
 							</mat-checkbox>
 							<mat-checkbox color="primary" fxLayout="row"

@@ -371,7 +371,7 @@ export class AppointmentComponent implements OnInit {
 					}
 					this.snackBarService.showSuccess('turnos.appointment.date.UPDATE_SUCCESS');
 					this.selectedDate = newDate;
-			});
+				});
 		}, error => {
 			processErrors(error, (msg) => this.snackBarService.showError(msg));
 		});
@@ -467,19 +467,19 @@ export class AppointmentComponent implements OnInit {
 			if (canceledAppointment) {
 				const date = momentFormat(moment(this.data.appointmentData.date), DateFormat.API_DATE);
 				this.appointmentService.getList([this.data.agenda.id], this.data.agenda.healthcareProfessionalId, date, date)
-				.subscribe((appointments: AppointmentListDto[]) => {
-					const appointmentsInDate = this.generateEventsFromAppointments(appointments)
-						.filter(appointment => appointment.start.getTime() == new Date(this.data.appointmentData.date).getTime());
+					.subscribe((appointments: AppointmentListDto[]) => {
+						const appointmentsInDate = this.generateEventsFromAppointments(appointments)
+							.filter(appointment => appointment.start.getTime() == new Date(this.data.appointmentData.date).getTime());
 
-					if (appointmentsInDate.length > 0 && !this.data.appointmentData.overturn) {
-						this.updateAppointmentOverturn(
-							appointmentsInDate[0].meta.appointmentId,
-							appointmentsInDate[0].meta.appointmentStateId,
-							false,
-							appointmentsInDate[0].meta.patient.id
-						);
-					}
-				});
+						if (appointmentsInDate.length > 0 && !this.data.appointmentData.overturn) {
+							this.updateAppointmentOverturn(
+								appointmentsInDate[0].meta.appointmentId,
+								appointmentsInDate[0].meta.appointmentStateId,
+								false,
+								appointmentsInDate[0].meta.patient.id
+							);
+						}
+					});
 				this.closeDialog('statuschanged');
 			}
 		});
