@@ -7,6 +7,7 @@ import { VACUNAS } from '@historia-clinica/constants/summaries';
 import { AgregarVacunasComponent } from '../../dialogs/agregar-vacunas/agregar-vacunas.component';
 import { DetalleVacunaComponent } from '../../dialogs/detalle-vacuna/detalle-vacuna.component';
 import { AmbulatoriaSummaryFacadeService } from '@historia-clinica/modules/ambulatoria/services/ambulatoria-summary-facade.service';
+import { Color } from '@presentation/colored-label/colored-label.component';
 
 @Component({
 	selector: 'app-vacunas',
@@ -20,6 +21,7 @@ export class VacunasComponent implements OnInit {
 	public vaccines: HCEImmunizationDto[] = [];
 	@Input() hasNewConsultationEnabled: boolean;
 	public dialogRef: any;
+	Color = Color;
 
 	constructor(
 		private readonly hceGeneralStateService: HceGeneralStateService,
