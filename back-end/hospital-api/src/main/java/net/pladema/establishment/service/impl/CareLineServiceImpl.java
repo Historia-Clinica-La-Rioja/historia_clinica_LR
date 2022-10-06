@@ -1,5 +1,7 @@
 package net.pladema.establishment.service.impl;
 
+import lombok.RequiredArgsConstructor;
+import net.pladema.establishment.repository.CareLineInstitutionSpecialtyRepository;
 import net.pladema.establishment.repository.CareLineRepository;
 import net.pladema.establishment.service.CareLineService;
 import net.pladema.establishment.service.domain.CareLineBo;
@@ -12,6 +14,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
+@RequiredArgsConstructor
 public class CareLineServiceImpl implements CareLineService {
 
     private static final Logger LOG = LoggerFactory.getLogger(CareLineServiceImpl.class);
@@ -19,10 +22,7 @@ public class CareLineServiceImpl implements CareLineService {
     private static final String OUTPUT = "Output -> {}";
 
     private final CareLineRepository careLineRepository;
-
-    public CareLineServiceImpl(CareLineRepository careLineRepository) {
-        this.careLineRepository = careLineRepository;
-    }
+	private final CareLineInstitutionSpecialtyRepository careLineInstitutionSpecialtyRepository;
 
     @Override
     public List<CareLineBo> getCareLines() {
@@ -49,6 +49,14 @@ public class CareLineServiceImpl implements CareLineService {
 		List<CareLineBo> careLines = careLineRepository.getCareLinesByProblemsSctidsAndDestinationInstitutionIdWithActiveDiaries(problemSnomedIds, destinationInstitutionId);
 		LOG.trace(OUTPUT, careLines);
 		return careLines;
+	}
+
+	@Override
+	public List<CareLineBo> getCareLinesAttachedToInstitution() {
+		List<CareLineBo> result = careLineRepository.getCareLinesAttachedToInstitution();
+		result.stream().forEach(careLine -> careLine.setClinicalSpecialties(careLineInstitutionSpecialtyRepository.getClinicalSpecialtiesByCareLineId(careLine.getId())));
+		LOG.debug(OUTPUT, result);
+		return result;
 	}
 
 }

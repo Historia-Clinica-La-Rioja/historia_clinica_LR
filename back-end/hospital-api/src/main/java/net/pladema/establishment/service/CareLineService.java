@@ -12,4 +12,6 @@ public interface CareLineService {
 	
 	List<CareLineBo> getCareLinesByProblemsSctidsAndDestinationInstitutionIdWithActiveDiaries(List<String> problemSnomedIds, Integer destinationInstitutionId);
 
+	List<CareLineBo> getCareLinesAttachedToInstitution();
+
 }

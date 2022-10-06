@@ -46,4 +46,12 @@ public class CareLineController {
 		return ResponseEntity.ok(careLineMapper.toListCareLineDto(careLinesBo));
 	}
 
+	@GetMapping("/attached")
+	@PreAuthorize("hasPermission(#institutionId, 'ADMINISTRATIVO')")
+	public ResponseEntity<List<CareLineDto>> getCareLinesAttachedToInstitution(@PathVariable(name = "institutionId") Integer institutionId) {
+    	List<CareLineBo> careLinesBo = careLineService.getCareLinesAttachedToInstitution();
+		log.debug("Get all care lines with clinical specialties => {}", careLinesBo);
+		return ResponseEntity.ok(careLineMapper.toListCareLineDto(careLinesBo));
+	}
+
 }

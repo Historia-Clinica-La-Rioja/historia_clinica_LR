@@ -53,4 +53,13 @@ public interface CareLineRepository extends SGXAuditableEntityJPARepository<Care
 			"ORDER BY cl.description" )
 	List<CareLineBo> getCareLinesByProblemsSctidsAndDestinationInstitutionIdWithActiveDiaries(@Param("problemSnomedIds") List<String> problemSnomedIds,
 																							  @Param("destinationInstitutionId") Integer destinationInstitutionId);
+
+
+	@Transactional(readOnly = true)
+	@Query("SELECT NEW net.pladema.establishment.service.domain.CareLineBo(cl.id, cl.description) " +
+			"FROM CareLine cl " +
+			"JOIN CareLineInstitution cli ON (cl.id = cli.careLineId) " +
+			"WHERE cli.deleted = false")
+	List<CareLineBo> getCareLinesAttachedToInstitution();
+
 }

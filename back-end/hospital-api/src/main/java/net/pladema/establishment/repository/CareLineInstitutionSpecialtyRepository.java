@@ -1,6 +1,9 @@
 package net.pladema.establishment.repository;
 
+import java.util.List;
 import java.util.Optional;
+
+import net.pladema.establishment.service.domain.ClinicalSpecialtyBo;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -32,4 +35,13 @@ public interface CareLineInstitutionSpecialtyRepository extends JpaRepository<Ca
 	Optional<CareLineInstitutionSpecialty> findByCareLineIdAndInstitutionIdAndClinicalSpecialtyId(@Param("careLineId") Integer careLineId,
 																							 @Param("institutionId") Integer institutionId,
 																							 @Param("clinicalSpecialtyId") Integer clinicalSpecialtyId);
+
+	@Query("SELECT new net.pladema.establishment.service.domain.ClinicalSpecialtyBo(cs.id, cs.name) " +
+			"FROM CareLineInstitutionSpecialty clis " +
+			"JOIN CareLineInstitution cli ON (clis.careLineInstitutionId = cli.id) " +
+			"JOIN ClinicalSpecialty cs ON (clis.clinicalSpecialtyId = cs.id)" +
+			"WHERE cli.careLineId = :careLineId")
+	List<ClinicalSpecialtyBo> getClinicalSpecialtiesByCareLineId(@Param("careLineId") Integer careLineId);
+
+
 }
