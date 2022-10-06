@@ -632,7 +632,34 @@ const messages = {
                 snomedRelatedGroupId: 'Práctica',
                 newpractice: 'Nueva Práctica',
             }
-        }
+        },
+        institutionpractices: {
+            name: 'Grupo de prácticas |||| Grupos de prácticas',
+            fields: {
+                id: 'ID',
+                description: 'Descripción',
+                ecl: 'ECL',
+                customId: 'ID custom',
+                groupId: 'Grupo padre',
+                institutionId: 'Institución',
+                userId: 'Usuario',
+                template: 'Plantilla',
+                lastUpdate: 'Última actualización',
+                snomedConcepts: "Prácticas",
+                groupType: "Tipo de grupo",
+            },
+            createRelated: 'Agregar práctica',
+            noInfo: 'Sin información',
+        },
+        institutionpracticesrelatedgroups: {
+            name: 'Práctica | Grupo de prácticas',
+            fields: {
+                orden: 'Orden',
+                lastUpdate: 'Última actualización',
+                groupId: 'Grupo de prácticas',
+                snomedId: 'Práctica'
+            },
+        },
     }
 };
 
