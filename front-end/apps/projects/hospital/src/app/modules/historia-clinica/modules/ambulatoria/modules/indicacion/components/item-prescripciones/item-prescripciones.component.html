@@ -1,43 +1,54 @@
 <div fxLayout="row" fxLayoutAlign="space-between">
-	<div class="label" [ngClass]="{ 'active':prescriptionItemData.prescriptionStatus === medication_status.ACTIVE.description || prescriptionItemData.prescriptionStatus === STUDY_STATUS.FINAL.description,
-					'suspended':prescriptionItemData.prescriptionStatus === medication_status.SUSPENDED.description || prescriptionItemData.prescriptionStatus === STUDY_STATUS.REGISTERED.description,
-					'stopped':prescriptionItemData.prescriptionStatus === medication_status.STOPPED.description }" mat-line>
-		<strong > {{prescriptionItemData.prescriptionStatus |translate | uppercase}}</strong>
-
+	<div class="label" [ngSwitch]="prescriptionItemData.prescriptionStatus">
+		<app-colored-label *ngSwitchCase="medication_status.ACTIVE.description || STUDY_STATUS.FINAL.description"
+			[description]="prescriptionItemData.prescriptionStatus | translate | uppercase"
+			[color]="Color.BLUE">
+		</app-colored-label>
+		<app-colored-label
+			*ngSwitchCase="medication_status.SUSPENDED.description || STUDY_STATUS.REGISTERED.description"
+			[description]="prescriptionItemData.prescriptionStatus | translate | uppercase"
+			[color]="Color.RED">
+		</app-colored-label>
+		<app-colored-label *ngSwitchCase="medication_status.STOPPED.description"
+			[description]="prescriptionItemData.prescriptionStatus | translate | uppercase"
+			[color]="Color.GREY">
+		</app-colored-label>
 	</div>
-
-    <div>
-        <ng-content select="[actions]"></ng-content>
-    </div>
+	<div>
+		<ng-content select="[actions]"></ng-content>
+	</div>
 </div>
 
 <div class="element-margin" fxLayout="column-reverse" fxLayout.gt-sm="row" fxLayoutAlign="space-between start">
-    <span class="mat-subheading-2 capitalize-first-letter" style="margin: 0" fxFlex="70%">
-        {{prescriptionItemData.prescriptionPt}}
-    </span>
+	<span class="mat-subheading-2 capitalize-first-letter" style="margin: 0" fxFlex="70%">
+		{{prescriptionItemData.prescriptionPt}}
+	</span>
 
-    <ng-content select="[prescription-number]"></ng-content>
+	<ng-content select="[prescription-number]"></ng-content>
 </div>
 
 <ng-content select="[dosage]"></ng-content>
 
 <div class="element-margin">
-    <h3 mat-line class="primary bold mat-subheading-2 capitalize-first-letter">
-        {{prescriptionItemData.problemPt}}
-    </h3>
+	<h3 mat-line class="primary bold mat-subheading-2 capitalize-first-letter">
+		{{prescriptionItemData.problemPt}}
+	</h3>
 </div>
 
 <div fxLayout="column" fxLayout.gt-sm="row" fxLayoutAlign="space-between start">
-    <span mat-line class="mat-body capitalize-first-letter element-light-color">
-        {{getFullName(prescriptionItemData.doctor.firstName, prescriptionItemData.doctor.nameSelfDetermination)}} {{prescriptionItemData.doctor.lastName }}
-    </span>
-    <span mat-line class="mat-body capitalize-first-letter element-light-color" *ngIf="prescriptionItemData.totalDays == 0"
-        [translate]="'ambulatoria.paciente.ordenes_prescripciones.DESDE_HOY'">
-    </span>
-    <span mat-line class="mat-body capitalize-first-letter element-light-color" *ngIf="prescriptionItemData.totalDays == 1"
-        [translate]="'ambulatoria.paciente.ordenes_prescripciones.UN_DIA'">
-    </span>
-    <span mat-line class="mat-body capitalize-first-letter element-light-color" *ngIf="prescriptionItemData.totalDays > 1">
-        Hace {{prescriptionItemData.totalDays }} días
-    </span>
+	<span mat-line class="mat-body capitalize-first-letter element-light-color">
+		{{getFullName(prescriptionItemData.doctor.firstName, prescriptionItemData.doctor.nameSelfDetermination)}}
+		{{prescriptionItemData.doctor.lastName }}
+	</span>
+	<span mat-line class="mat-body capitalize-first-letter element-light-color"
+		*ngIf="prescriptionItemData.totalDays == 0"
+		[translate]="'ambulatoria.paciente.ordenes_prescripciones.DESDE_HOY'">
+	</span>
+	<span mat-line class="mat-body capitalize-first-letter element-light-color"
+		*ngIf="prescriptionItemData.totalDays == 1" [translate]="'ambulatoria.paciente.ordenes_prescripciones.UN_DIA'">
+	</span>
+	<span mat-line class="mat-body capitalize-first-letter element-light-color"
+		*ngIf="prescriptionItemData.totalDays > 1">
+		Hace {{prescriptionItemData.totalDays }} días
+	</span>
 </div>
