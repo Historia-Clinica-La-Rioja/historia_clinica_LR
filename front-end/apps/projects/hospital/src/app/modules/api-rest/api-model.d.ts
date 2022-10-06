@@ -368,6 +368,12 @@ export interface BackofficeMandatoryProfessionalPracticeFreeDaysDto {
     mandatoryMedicalPracticeId: number;
 }
 
+export interface BackofficeSnowstormDto {
+    conceptId: string;
+    id: string;
+    term: string;
+}
+
 export interface BackofficeUserDto {
     enable: boolean;
     id: number;
@@ -2709,6 +2715,20 @@ export interface SharedSnomedDto extends Serializable {
     parentId: string;
     pt: string;
     sctid: string;
+}
+
+export interface SharedSnowstormSearchDto {
+    items: SharedSnowstormSearchItemDto[];
+    limit: number;
+    searchAfter: string;
+    total: number;
+}
+
+export interface SharedSnowstormSearchItemDto {
+    active: boolean;
+    conceptId: string;
+    id: string;
+    pt: string;
 }
 
 export interface SnomedDto extends Serializable {
