@@ -24,4 +24,9 @@ public interface SnowstormService {
     <T> T getRefsetMembers(String referencedComponentId, String referenceSetId, String limit, Class<T> type) throws SnowstormApiException;
 
     ResponseEntity<SnowstormSearchResponse> status();
+
+	SnowstormSearchResponse getConcepts(List<Integer> ids) throws SnowstormApiException;
+
+	SnowstormItemResponse getConceptById(String conceptId) throws SnowstormApiException;
+
 }
