@@ -20,6 +20,8 @@
     "dimensions": [
       "Referencias.documento",
       "Referencias.paciente",
+      "Referencias.email",
+      "Referencias.telefono",
       "Referencias.institucion_origen",
       "Referencias.doctor_solicitante",
       "Referencias.linea_cuidado",
@@ -43,6 +45,8 @@
     "x": [
       "Referencias.documento",
       "Referencias.paciente",
+      "Referencias.email",
+      "Referencias.telefono",
       "Referencias.institucion_origen",
       "Referencias.doctor_solicitante",
       "Referencias.linea_cuidado",

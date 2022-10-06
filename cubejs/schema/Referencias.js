@@ -1,11 +1,13 @@
 cube(`Referencias`, {
 sql: `SELECT r.id,
-        concat_ws(' ', it.description, p2.identification_number) AS documento,
-        concat_ws(', ', concat_ws(' ', p2.last_name, p2.other_last_names), concat_ws(' ', p2.first_name, p2.middle_names)) AS paciente,
+        concat_ws(' ', it.description, p.identification_number) AS documento,
+        concat_ws(', ', concat_ws(' ', p.last_name, p.other_last_names), concat_ws(' ', p.first_name, p.middle_names)) AS paciente,
+        concat_ws('- ', pex.phone_prefix, pex.phone_number) AS telefono,
+        pex.email,
         oc.institution_id as institucion_origen_id,
         io.name as institucion_origen,
         oc.doctor_id,
-        concat_ws(', ', concat_ws(' ', p.last_name, p.other_last_names), concat_ws(' ', p.first_name, p.middle_names)) AS profesional_solicitante,
+        concat_ws(', ', concat_ws(' ', doc.last_name, doc.other_last_names), concat_ws(' ', doc.first_name, doc.middle_names)) AS profesional_solicitante,
         cl.id as id_linea_cuidado,
         cl.description as linea_cuidado,
         cs.id as id_especialidad_clinica,
@@ -14,18 +16,18 @@ sql: `SELECT r.id,
         r.destination_institution_id as institucion_destino_id,
         idest.name as institucion_destino,
         case when cr.id  is null then 'Referencia pendiente' else 'Contrarreferencia' end as tiene_contra
-      FROM reference r 
-        LEFT JOIN outpatient_consultation oc ON (r.encounter_id = oc.id)
-        LEFT JOIN odontology_consultation odc ON (r.encounter_id = odc.id)
+    FROM reference r 
+        JOIN outpatient_consultation oc ON (r.encounter_id = oc.id) 
         JOIN institution io ON (io.id = oc.institution_id)
         LEFT JOIN institution idest ON (idest.id = r.destination_institution_id)
         JOIN clinical_specialty cs ON (r.clinical_specialty_id = cs.id) 
         JOIN care_line cl ON (r.care_line_id = cl.id) 
         JOIN healthcare_professional hp ON (oc.doctor_id = hp.id) 
-        JOIN person p ON (hp.person_id = p.id)
-        JOIN patient pat ON (pat.id=oc.patient_id)
-        JOIN person p2 ON (p2.id=pat.person_id)
-        JOIN identification_type it ON (p2.identification_type_id = it.id)
+        JOIN person doc ON (hp.person_id = doc.id)
+        JOIN patient pa ON (pa.id=oc.patient_id)
+        JOIN person p ON (p.id=pa.person_id)
+        JOIN person_extended pex ON (pex.person_id = p.id)
+        JOIN identification_type it ON (p.identification_type_id = it.id)
         LEFT JOIN counter_reference cr ON (r.id = cr.reference_id)
     ${SECURITY_CONTEXT.userId.unsafeValue() ? '' +  `
     WHERE oc.institution_id IN (
@@ -68,11 +70,23 @@ sql: `SELECT r.id,
       type: `string`,
       title: 'Paciente',
     },
+    // teléfono del paciente
+    telefono: {
+      sql: `telefono`,
+      type: `string`,
+      title: 'Nro de teléfono',
+    },
+    // Email del paciente
+    email: {
+      sql: `email`,
+      type: `string`,
+      title: 'Email',
+    },
     // Línea de cuidado
     id_linea_cuidado: {
       sql: `id_linea_cuidado`,
       type: `number`,
-      title: 'id linea cuidado',
+      title: 'Id línea cuidado',
     },
     linea_cuidado: {
       sql: `linea_cuidado`,
@@ -83,7 +97,7 @@ sql: `SELECT r.id,
     id_especialidad_clinica: {
       sql: `id_especialidad_clinica`,
       type: `number`,
-      title: 'id Especialidad',
+      title: 'Id Especialidad',
       
     },
     especialidad_clinica: {
@@ -94,7 +108,7 @@ sql: `SELECT r.id,
     doctor_id: {
       sql: `doctor_id`,
       type: `number`,
-      title: 'id Profesional solicitante',
+      title: 'Id Profesional solicitante',
     },
     // Apellido y nombre del profesional solicitante
     doctor_solicitante: {
@@ -112,23 +126,23 @@ sql: `SELECT r.id,
     institucion_origen_id: {
       sql: `institucion_origen_id`,
       type: `number`,
-      title: 'Institucion solicitante id',
+      title: 'Institución solicitante id',
     },
     institucion_origen: {
       sql: `institucion_origen`,
       type: `number`,
-      title: 'Institucion solicitante',
+      title: 'Institución solicitante',
     },
     // Institución destino
     institucion_destino_id: {
       sql: `institucion_destino_id`,
       type: `number`,
-      title: 'Institucion destino id',
+      title: 'Institución destino id',
     },
     institucion_destino: {
       sql: `institucion_destino`,
       type: `number`,
-      title: 'Institucion destino',
+      title: 'Institución destino',
     },
   },
   title:` `,
