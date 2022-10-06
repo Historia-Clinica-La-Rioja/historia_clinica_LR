@@ -1,6 +1,6 @@
 import { CalendarProfessionalInformation } from '../../services/calendar-professional-information';
 import { Component, Input, OnChanges, OnDestroy, OnInit, SimpleChanges } from '@angular/core';
-import { AppointmentDailyAmountDto, CompleteDiaryDto, DiaryOpeningHoursDto, MedicalCoverageDto } from '@api-rest/api-model';
+import { AppointmentDailyAmountDto, CompleteDiaryDto, DiaryOpeningHoursDto, MedicalCoverageDto, ProfessionalDto, ProfessionalPersonDto } from '@api-rest/api-model';
 import { ERole } from '@api-rest/api-model';
 import { CalendarMonthViewBeforeRenderEvent, CalendarView, CalendarWeekViewBeforeRenderEvent, DAYS_OF_WEEK } from 'angular-calendar';
 import {
@@ -41,6 +41,7 @@ import { endOfMonth, endOfWeek, startOfMonth, startOfWeek } from 'date-fns';
 import { DatePipe } from "@angular/common";
 import { DiscardWarningComponent } from '@presentation/dialogs/discard-warning/discard-warning.component';
 import { TranslateService } from '@ngx-translate/core';
+import { PatientNameService } from '../../../core/services/patient-name.service';
 
 const ASIGNABLE_CLASS = 'cursor-pointer';
 const AGENDA_PROGRAMADA_CLASS = 'bg-green';
@@ -74,6 +75,8 @@ export class AgendaComponent implements OnInit, OnDestroy, OnChanges {
 	refreshCalendar = new Subject<void>();
 	startDate: string;
 	endDate: string;
+	careLinesToShow: string = "";
+	associatedProfessionalsToShow: string = "";
 
 	private readonly routePrefix = 'institucion/' + this.contextService.institutionId;
 	private patientId: number;
@@ -109,6 +112,7 @@ export class AgendaComponent implements OnInit, OnDestroy, OnChanges {
 		private readonly calendarProfessionalInfo: CalendarProfessionalInformation,
 		private readonly datePipe: DatePipe,
 		private readonly translateService: TranslateService,
+		private readonly patientNameService: PatientNameService,
 	) {
 	}
 
@@ -123,9 +127,7 @@ export class AgendaComponent implements OnInit, OnDestroy, OnChanges {
 			this.patientId = Number(qp.idPaciente);
 		});
 
-		this.loading = true;
 		this.appointmentFacade.clear();
-
 		this.loading = true;
 		this.appointmentFacade.getAppointments().subscribe(appointments => {
 			if (appointments) {
@@ -376,9 +378,9 @@ export class AgendaComponent implements OnInit, OnDestroy, OnChanges {
 	}
 
 	setAgenda(agenda: CompleteDiaryDto): void {
-		delete this.dayEndHour;
-		delete this.dayStartHour;
+		this.resetInformation();
 		this.agenda = agenda;
+		this.loadInformationToShow(agenda);
 		this.setEnableAppointmentScheduling();
 		this.viewDate = this._getViewDate();
 		this.setDateRange(this.viewDate);
@@ -555,6 +557,47 @@ export class AgendaComponent implements OnInit, OnDestroy, OnChanges {
 
 		const end = endOfWeek(date, { weekStartsOn: 1 });
 		this.endDate = momentFormat(moment(end), DateFormat.API_DATE);
+	}
+
+	private loadInformationToShow(diary: CompleteDiaryDto) {
+		this.loadCareLinesToShow(diary);
+		this.loadAssociatedProfessionalsToShow(diary);
+	}
+
+	private loadCareLinesToShow(diary: CompleteDiaryDto) {
+		diary.careLinesInfo.forEach((careLine, index) => {
+			if (index === diary.careLinesInfo.length - 1)
+				this.careLinesToShow = this.careLinesToShow.concat(careLine.description);
+			else
+				this.careLinesToShow = this.careLinesToShow.concat(careLine.description + ", ");
+		});
+	}
+
+	private loadAssociatedProfessionalsToShow(diary: CompleteDiaryDto) {
+		if (diary.associatedProfessionalsInfo.length) {
+			this.appointmentFacade.professional$.subscribe(professional => {
+				if (professional) {
+					this.associatedProfessionalsToShow = this.associatedProfessionalsToShow.concat(this.getProfessionalFullName(professional) + ", ");
+					diary.associatedProfessionalsInfo.forEach((associatedProfessional, index) => {
+						if (index === diary.associatedProfessionalsInfo.length - 1)
+							this.associatedProfessionalsToShow = this.associatedProfessionalsToShow.concat(this.getProfessionalFullName(associatedProfessional));
+						else
+							this.associatedProfessionalsToShow = this.associatedProfessionalsToShow.concat(this.getProfessionalFullName(associatedProfessional) + ", ");
+					});
+				}
+			});
+		}
+	}
+
+	private getProfessionalFullName(professional: ProfessionalPersonDto | ProfessionalDto): string {
+		return `${this.patientNameService.getPatientName(professional?.firstName, professional?.nameSelfDetermination)} ${professional?.lastName}`;
+	}
+
+	private resetInformation() {
+		delete this.dayEndHour;
+		delete this.dayStartHour;
+		this.careLinesToShow = "";
+		this.associatedProfessionalsToShow = "";
 	}
 
 }

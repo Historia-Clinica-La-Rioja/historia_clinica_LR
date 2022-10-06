@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { CalendarEvent } from 'angular-calendar';
-import { ReplaySubject, Observable, forkJoin } from 'rxjs';
+import { ReplaySubject, Observable, forkJoin, BehaviorSubject } from 'rxjs';
 import { AppointmentsService } from '@api-rest/services/appointments.service';
 import { AppointmentListDto, AppointmentShortSummaryDto, BasicPersonalDataDto, CreateAppointmentDto, DateTimeDto, ProfessionalDto, UpdateAppointmentDto } from '@api-rest/api-model';
 import {
@@ -68,7 +68,10 @@ export class AppointmentsFacadeService {
 	private holidayEmitter = new ReplaySubject<CalendarEvent[]>(1);
 	private appointments$: Observable<CalendarEvent[]>;
 	private holidays$: Observable<CalendarEvent[]>;
+	private professionalSubject = new BehaviorSubject<ProfessionalDto>(null);
+
 	private professional: ProfessionalDto;
+	professional$ = this.professionalSubject.asObservable();
 
 	private startDate: string;
 	private endDate: string;
@@ -85,8 +88,9 @@ export class AppointmentsFacadeService {
 	}
 
 	setProfessional(professional: ProfessionalDto) {
-		if (this.professional?.id !== professional.id) {
+		if (professional.id && this.professional?.id !== professional.id) {
 			this.professional = professional;
+			this.professionalSubject.next(professional);
 			if (this.agendaId) {
 				this.loadAppointments();
 			}

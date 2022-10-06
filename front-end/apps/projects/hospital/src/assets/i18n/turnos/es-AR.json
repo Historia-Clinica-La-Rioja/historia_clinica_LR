@@ -27,6 +27,11 @@
 			"ASSIGN_APPOINTMENT": "Asignar turno",
 			"APPOINTMENTS_FOUND": "Turnos disponibles encontrados:",
 			"RESULT_DISCLAIMER": "Si no se encuentra el resultado esperado, por favor refine la búsqueda.",
+			"CARE_LINE_TOOLTIP": "Línea de cuidado",
+			"SECTOR_CONSULTORY_TOOLTIP": "Consultorio y sector",
+			"PROTECTED_APPOINTMENT_TOOLTIP": "Turnos protegidos",
+			"PROFESSIONALS_TOOLTIP": "Profesionales",
+			"PERCENTAGE_PROTECTED_APPOINTMENT": "% de turnos protegidos por día",
 			"messages": {
 				"NO_SPECIFIED_DATE": "Por favor ingrese una fecha para realizar la búsqueda"
 			}

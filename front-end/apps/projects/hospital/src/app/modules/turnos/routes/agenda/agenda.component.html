@@ -1,3 +1,30 @@
+<div fxLayout="column" fxLayoutAlign="start" fxLayoutGap="10px">
+	<div fxLayout="row" fxLayoutGap="20px">
+		<div id="sector" fxLayoutAlign="start center" fxLayoutGap="5px">
+			<mat-icon class="icon-color" mat-list-icon fontSet="material-icons-outlined" [inline]="true"
+				matTooltip="{{'turnos.home.SECTOR_CONSULTORY_TOOLTIP' | translate}}">meeting_room</mat-icon>
+			<span>{{agenda?.doctorsOfficeDescription}} | {{agenda?.sectorDescription}}</span>
+		</div>
+		<div id="protected_appointments_percentage" fxLayoutAlign="start center" fxLayoutGap="5px" *ngIf="agenda?.protectedAppointmentsPercentage">
+			<mat-icon class="icon-color" mat-list-icon fontSet="material-icons-outlined" [inline]="true"
+				matTooltip="{{'turnos.home.PROTECTED_APPOINTMENT_TOOLTIP' | translate}}">health_and_safety</mat-icon>
+			<span>{{agenda.protectedAppointmentsPercentage}} {{'turnos.home.PERCENTAGE_PROTECTED_APPOINTMENT' | translate}}</span>
+		</div>
+	</div>
+
+	<div id="care_lines" *ngIf="agenda?.careLinesInfo.length" fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="5px">
+		<mat-icon class="svg-icon" svgIcon="clean_hands" matTooltip="{{'turnos.home.CARE_LINE_TOOLTIP' | translate}}">
+		</mat-icon>
+		<span>{{careLinesToShow}}</span>
+	</div>
+
+	<div id="professionals" fxLayout="row" fxLayoutGap="5px" *ngIf="agenda?.associatedProfessionalsInfo.length">
+		<mat-icon class="icon-color" mat-list-icon fontSet="material-icons-outlined" [inline]="true"
+			matTooltip="{{'turnos.home.PROFESSIONALS_TOOLTIP' | translate}}">group</mat-icon>
+		<span>{{associatedProfessionalsToShow}}</span>
+	</div>
+</div>
+
 <div class="spinner" *ngIf="loading else calendar">
 	<mat-spinner color="primary"></mat-spinner>
 </div>

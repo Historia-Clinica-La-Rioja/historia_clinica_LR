@@ -100,6 +100,10 @@ export class AppComponent {
 			'education',
 			this.domSanitizer.bypassSecurityTrustResourceUrl('assets/icons/education.svg')
 		);
+		this.matIconRegistry.addSvgIcon(
+			'clean_hands',
+			this.domSanitizer.bypassSecurityTrustResourceUrl('assets/icons/clean_hands.svg')
+		);
 		//
 		pwaInstallService.install$.pipe(
 			switchMap(
