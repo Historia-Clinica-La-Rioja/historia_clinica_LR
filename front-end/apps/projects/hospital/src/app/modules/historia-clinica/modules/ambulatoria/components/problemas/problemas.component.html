@@ -34,10 +34,12 @@
 										<span mat-line class="capitalize-first-letter">
 											{{ problem.snomed.pt }}
 										</span>
-										<div *ngIf="problem.hasPendingReference">
+										<div *ngIf="problem.hasPendingReference" class="pending-reference-label">
 											<ng-container>
-												<strong class="reference-subtitle reference-request uppercase"
-													[translate]="'ambulatoria.paciente.problemas.PENDING_REFERENCE'"></strong>
+												<app-colored-label
+													[description]="'ambulatoria.paciente.problemas.PENDING_REFERENCE' | translate | uppercase"
+													[color]="Color.RED">
+												</app-colored-label>
 											</ng-container>
 										</div>
 									</div>
@@ -96,10 +98,12 @@
 										<span mat-line class="capitalize-first-letter">
 											{{ problem.snomed.pt}}
 										</span>
-										<div *ngIf="problem.hasPendingReference">
+										<div *ngIf="problem.hasPendingReference" class="pending-reference-label">
 											<ng-container>
-												<strong class="reference-subtitle reference-request uppercase"
-													[translate]="'ambulatoria.paciente.problemas.PENDING_REFERENCE'"></strong>
+												<app-colored-label
+													[description]="'ambulatoria.paciente.problemas.PENDING_REFERENCE' | translate | uppercase"
+													[color]="Color.RED">
+												</app-colored-label>
 											</ng-container>
 										</div>
 									</div>
