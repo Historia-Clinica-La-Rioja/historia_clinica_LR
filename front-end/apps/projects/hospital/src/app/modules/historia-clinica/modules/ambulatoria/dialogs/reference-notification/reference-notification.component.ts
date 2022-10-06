@@ -2,6 +2,7 @@ import { Component, Inject, OnInit } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { ReferenceDto, ReferenceCounterReferenceFileDto } from '@api-rest/api-model';
 import { ReferenceFileService } from '@api-rest/services/reference-file.service';
+import { Color } from '@presentation/colored-label/colored-label.component';
 
 @Component({
 	selector: 'app-reference-notification',
@@ -9,6 +10,8 @@ import { ReferenceFileService } from '@api-rest/services/reference-file.service'
 	styleUrls: ['./reference-notification.component.scss']
 })
 export class ReferenceNotificationComponent implements OnInit {
+
+	Color = Color;
 
 	constructor(
 		@Inject(MAT_DIALOG_DATA) public data: ReferenceDto[],
