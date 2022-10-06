@@ -37,6 +37,7 @@ import { ReferenceFileService } from '@api-rest/services/reference-file.service'
 import { CounterreferenceFileService } from '@api-rest/services/counterreference-file.service';
 import { DocumentService } from "@api-rest/services/document.service";
 import {PatientNameService} from "@core/services/patient-name.service";
+import { Color } from '@presentation/colored-label/colored-label.component';
 
 const ROUTE_INTERNMENT_EPISODE_PREFIX = 'internaciones/internacion/';
 const ROUTE_INTERNMENT_EPISODE_SUFIX = '/paciente/';
@@ -57,6 +58,7 @@ export class ProblemasComponent implements OnInit, OnDestroy {
 			delete this.nuevaConsultaFromProblemaRef;
 		}
 	}
+	Color = Color;
 	public hasNewConsultationEnabled$: Observable<boolean>;
 
 	public readonly cronicos = PROBLEMAS_CRONICOS;
