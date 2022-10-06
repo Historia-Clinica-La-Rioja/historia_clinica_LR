@@ -7,14 +7,18 @@ import {
     CreateButton,
     TopToolbar,
 } from 'react-admin';
-import { ADMINISTRADOR_INSTITUCIONAL_BACKOFFICE } from "../roles";
+import {ADMINISTRADOR, ADMINISTRADOR_INSTITUCIONAL_BACKOFFICE, ROOT} from "../roles";
 import React from "react";
 
-const ListActions = () => (
-    <TopToolbar>
-        <CreateButton/>
-    </TopToolbar>
-);
+const ListActions = () => {
+    const { permissions } = usePermissions();
+    const userIsRootOrAdmin = permissions?.roleAssignments?.filter(roleAssignment => (roleAssignment.role === ADMINISTRADOR.role) || (roleAssignment.role === ROOT.role)).length > 0;
+    return(
+        <TopToolbar>
+            <CreateButton disabled={userIsRootOrAdmin} />
+        </TopToolbar>
+    );
+};
 
 const CareLineInstitutionList = props => {
     const {permissions} = usePermissions();
