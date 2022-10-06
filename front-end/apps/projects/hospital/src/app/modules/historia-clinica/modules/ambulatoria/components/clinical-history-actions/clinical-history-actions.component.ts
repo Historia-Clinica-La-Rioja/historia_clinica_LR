@@ -16,7 +16,7 @@ import { NuevaConsultaDockPopupEnfermeriaComponent } from '../../dialogs/nueva-c
 import { NuevaConsultaDockPopupComponent } from '../../dialogs/nueva-consulta-dock-popup/nueva-consulta-dock-popup.component';
 import { HEALTH_VERIFICATIONS } from '../../modules/internacion/constants/ids';
 import { InternmentActionsService } from '../../modules/internacion/services/internment-actions.service';
-import { InternmentSummaryFacadeService } from '../../modules/internacion/services/internment-summary-facade.service';
+import { InternmentFields, InternmentSummaryFacadeService } from '../../modules/internacion/services/internment-summary-facade.service';
 import { AmbulatoriaSummaryFacadeService } from '../../services/ambulatoria-summary-facade.service';
 import { HistoricalProblemsFacadeService } from '../../services/historical-problems-facade.service';
 import { MedicacionesService } from '../../services/medicaciones.service';
@@ -84,6 +84,11 @@ export class ClinicalHistoryActionsComponent implements OnInit {
 		this.referenceNotificationService.getOpenConsultation().subscribe(type => {
 			if (type === REFERENCE_CONSULTATION_TYPE.AMBULATORY)
 				this.openNuevaConsulta();
+		});
+
+		this.internmentActions.medicalDischarge$.subscribe(medicalDischarge => {
+			if (medicalDischarge) 
+				this.internmentSummaryFacadeService.updateInternmentEpisode();
 		});
 	}
 
@@ -164,6 +169,10 @@ export class ClinicalHistoryActionsComponent implements OnInit {
 				this.internmentActions.mainDiagnosis.isAdded = true;
 			this.internmentActions.diagnosticos = diagnoses.filter(diagnosis => !diagnosis.main);
 			this.internmentActions.openAnamnesis();
+			this.internmentActions.anamnesis$.subscribe(fieldsToUpdate => {
+				if (fieldsToUpdate)
+					this.updateInternmentSummary(fieldsToUpdate);
+			});
 		})
 	}
 
@@ -175,11 +184,19 @@ export class ClinicalHistoryActionsComponent implements OnInit {
 				this.internmentActions.mainDiagnosis.isAdded = true;
 			this.internmentActions.diagnosticos = diagnoses.filter(diagnosis => !diagnosis.main);
 			this.internmentActions.openEvolutionNote();
+			this.internmentActions.evolutionNote$.subscribe(fieldsToUpdate => {
+				if (fieldsToUpdate)
+					this.updateInternmentSummary(fieldsToUpdate);
+			});
 		})
 	}
 
 	openEpicrisis() {
 		this.internmentActions.openEpicrisis();
+		this.internmentActions.epicrisis$.subscribe(fieldsToUpdate => {
+			if (fieldsToUpdate)
+				this.updateInternmentSummary(fieldsToUpdate);
+		});
 	}
 
 	openMedicalDischarge() {
@@ -200,5 +217,27 @@ export class ClinicalHistoryActionsComponent implements OnInit {
 			return;
 		}
 		this.hasInternmentActionsToDo = true;
+	}
+
+	private updateInternmentSummary(fieldsToUpdate: InternmentFields): void {
+		const fields = {
+			personalHistories: fieldsToUpdate?.personalHistories,
+			riskFactors: fieldsToUpdate?.riskFactors,
+			medications: fieldsToUpdate?.medications,
+			heightAndWeight: fieldsToUpdate?.heightAndWeight,
+			bloodType: fieldsToUpdate?.bloodType,
+			immunizations: fieldsToUpdate?.immunizations,
+			mainDiagnosis: fieldsToUpdate?.mainDiagnosis,
+			diagnosis: fieldsToUpdate?.diagnosis,
+			evolutionClinical: fieldsToUpdate?.evolutionClinical
+		}
+		this.internmentSummaryFacadeService.setFieldsToUpdate(fields);
+		if (fieldsToUpdate?.familyHistories)
+			this.internmentSummaryFacadeService.unifyFamilyHistories(this.patientId);
+		if (fieldsToUpdate?.allergies) {
+			this.patientAllergies.updateCriticalAllergies(this.patientId);
+			this.internmentSummaryFacadeService.unifyAllergies(this.patientId);
+		}
+		this.internmentSummaryFacadeService.updateInternmentEpisode();
 	}
 }

@@ -14,13 +14,11 @@ import {
 } from '@api-rest/api-model';
 import { SnomedECL } from '@api-rest/api-model';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { ActivatedRoute, Router } from '@angular/router';
 import { EpicrisisService } from '@api-rest/services/epicrisis.service';
 import { DatePipe } from '@angular/common';
 import { SnackBarService } from '@presentation/services/snack-bar.service';
 import { SelectionModel } from '@angular/cdk/collections';
 import { InternacionMasterDataService } from '@api-rest/services/internacion-master-data.service';
-import { ContextService } from '@core/services/context.service';
 import { TableCheckbox } from '@material/model/table.model';
 import { TableService } from '@core/services/table.service';
 import { InternmentStateService } from '@api-rest/services/internment-state.service';
@@ -31,9 +29,9 @@ import { SnomedService, SnomedSemanticSearch } from '@historia-clinica/services/
 import { DockPopupRef } from "@presentation/services/dock-popup-ref";
 import { OVERLAY_DATA } from "@presentation/presentation-model";
 import { InternmentFields } from "@historia-clinica/modules/ambulatoria/modules/internacion/services/internment-summary-facade.service";
-import { EditDocumentActionService } from "@historia-clinica/modules/ambulatoria/modules/internacion/services/edit-document-action.service";
 import { Observable } from 'rxjs';
-import { EpicrisisClose } from '../../services/internment-actions.service';
+import { DocumentActionReasonComponent } from '../document-action-reason/document-action-reason.component';
+import { MatDialog } from '@angular/material/dialog';
 
 @Component({
 	selector: 'app-epicrisis-dock-popup',
@@ -123,16 +121,13 @@ export class EpicrisisDockPopupComponent implements OnInit {
 		public dockPopupRef: DockPopupRef,
 		private readonly formBuilder: FormBuilder,
 		private readonly epicrisisService: EpicrisisService,
-		private readonly route: ActivatedRoute,
-		private readonly router: Router,
 		private readonly datePipe: DatePipe,
 		private readonly snackBarService: SnackBarService,
 		private readonly tableService: TableService,
-		private readonly contextService: ContextService,
 		private readonly internacionMasterDataService: InternacionMasterDataService,
 		private readonly internmentStateService: InternmentStateService,
 		private readonly snomedService: SnomedService,
-		private readonly editDocumentAction: EditDocumentActionService
+		private readonly dialog: MatDialog,
 	) {
 		this.familyHistories.displayedColumns = this.familyHistories.columns?.map(c => c.def).concat(['select']);
 		this.personalHistories.displayedColumns = this.personalHistories.columns?.map(c => c.def).concat(['select']);
@@ -143,7 +138,7 @@ export class EpicrisisDockPopupComponent implements OnInit {
 	ngOnInit(): void {
 
 		this.isDraft = this.data.patientInfo.isDraft;
-		this.canConfirmedDocument = this.editDocumentAction.canConfirmedDocument;
+		this.canConfirmedDocument = this.data.patientInfo.isDraft;
 		this.diagnosticsEpicrisisService = new DiagnosisEpicrisisService(this.internacionMasterDataService, this.internmentStateService, this.tableService, this.data.patientInfo.internmentEpisodeId);
 
 		this.formDiagnosis = this.formBuilder.group({
@@ -230,20 +225,9 @@ export class EpicrisisDockPopupComponent implements OnInit {
 
 	save(): void {
 		if (this.form.valid) {
-			const epicrisis = this.getEpicrisis(true);
+			const epicrisis: EpicrisisDto = this.getEpicrisis(true);
 			if (this.data.patientInfo.epicrisisId) {
-				this.editDocumentAction.openEditReason().subscribe(reason => {
-					this.isDisableConfirmButton = true;
-					if (reason) {
-						epicrisis.modificationReason = reason;
-						this.epicrisisService.editEpicrsis(epicrisis, this.data.patientInfo.epicrisisId, this.data.patientInfo.internmentEpisodeId).subscribe(
-							success => this.showSuccesAndClosePopup(epicrisis),
-							_ => {
-								this.isDisableConfirmButton = false;
-								this.snackBarService.showError('internaciones.epicrisis.messages.ERROR')
-							});
-					}
-				})
+				this.openEditReason(epicrisis);
 				return;
 			}
 			else {
@@ -373,7 +357,7 @@ export class EpicrisisDockPopupComponent implements OnInit {
 
 	showSuccesAndClosePopup(epicrisis: EpicrisisDto) {
 		this.snackBarService.showSuccess('internaciones.epicrisis.messages.SUCCESS');
-		this.dockPopupRef.close( { fieldsToUpdate: this.fieldsToUpdate(epicrisis)});
+		this.dockPopupRef.close({ fieldsToUpdate: this.fieldsToUpdate(epicrisis) });
 	}
 
 	private closeEpicrisis(obs: Observable<any>, epicrisis: EpicrisisDto, openMedicalDischarge: boolean) {
@@ -389,5 +373,28 @@ export class EpicrisisDockPopupComponent implements OnInit {
 			});
 	}
 
+	private openEditReason(epicrisis: EpicrisisDto) {
+		const dialogRef = this.dialog.open(DocumentActionReasonComponent, {
+			data: {
+				title: 'internaciones.dialogs.actions-document.EDIT_TITLE',
+				subtitle: 'internaciones.dialogs.actions-document.SUBTITLE',
+			},
+			width: "50vh",
+			autoFocus: false,
+			disableClose: true
+		});
+		dialogRef.afterClosed().subscribe(reason => {
+			this.isDisableConfirmButton = true;
+			if (reason) {
+				epicrisis.modificationReason = reason;
+				this.epicrisisService.editEpicrsis(epicrisis, this.data.patientInfo.epicrisisId, this.data.patientInfo.internmentEpisodeId).subscribe(
+					success => this.showSuccesAndClosePopup(epicrisis),
+					_ => {
+						this.isDisableConfirmButton = false;
+						this.snackBarService.showError('internaciones.epicrisis.messages.ERROR')
+					});
+			}
+		});
+	}
 
 }

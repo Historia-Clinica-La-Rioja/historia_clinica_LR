@@ -14,12 +14,15 @@ import { pairwise, startWith } from 'rxjs/operators';
 import { InternmentSummaryFacadeService } from "@historia-clinica/modules/ambulatoria/modules/internacion/services/internment-summary-facade.service";
 import { DocumentActionsService, DocumentSearch } from "@historia-clinica/modules/ambulatoria/modules/internacion/services/document-actions.service";
 import { PatientNameService } from "@core/services/patient-name.service";
+import { DeleteDocumentActionService } from '@historia-clinica/modules/ambulatoria/modules/internacion/services/delete-document-action.service';
+import { EditDocumentActionService } from '@historia-clinica/modules/ambulatoria/modules/internacion/services/edit-document-action.service';
 import { fromStringToDate } from "@core/utils/date.utils";
 
 @Component({
 	selector: 'app-documents-summary',
 	templateUrl: './documents-summary.component.html',
-	styleUrls: ['./documents-summary.component.scss']
+	styleUrls: ['./documents-summary.component.scss'],
+	providers: [DocumentActionsService, DeleteDocumentActionService, EditDocumentActionService]
 })
 export class DocumentsSummaryComponent implements OnInit, OnChanges {
 
@@ -158,7 +161,14 @@ export class DocumentsSummaryComponent implements OnInit, OnChanges {
 	}
 
 	delete(document: DocumentSearchDto) {
-		this.documentActions.deleteDocument(document, this.internmentEpisodeId);
+		this.documentActions.deleteDocument(document, this.internmentEpisodeId).subscribe(
+			fieldsToUpdate => {
+				if (fieldsToUpdate) {
+					this.internmentSummaryFacadeService.setFieldsToUpdate(fieldsToUpdate);
+					this.internmentSummaryFacadeService.updateInternmentEpisode();
+				}
+			}
+		);
 		this.activeDocument = undefined;
 	}
 

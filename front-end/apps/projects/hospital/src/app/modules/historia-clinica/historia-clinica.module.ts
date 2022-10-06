@@ -43,6 +43,7 @@ import { AllergyListComponent } from './components/allergy-list/allergy-list.com
 import { BackgroundListComponent } from './components/background-list/background-list.component';
 import { MedicationListComponent } from './components/medication-list/medication-list.component';
 import { ReferenceRequestListComponent } from './components/reference-request-list/reference-request-list.component';
+import { InternmentSummaryFacadeService } from './modules/ambulatoria/modules/internacion/services/internment-summary-facade.service';
 
 @NgModule({
 	declarations: [
@@ -121,6 +122,9 @@ import { ReferenceRequestListComponent } from './components/reference-request-li
 		ConceptsSearchDialogComponent,
 		ConceptsTypeaheadSearchDialogComponent,
 		NewConsultationAddProblemFormComponent,
+	],
+	providers: [
+		InternmentSummaryFacadeService
 	]
 })
 export class HistoriaClinicaModule {
