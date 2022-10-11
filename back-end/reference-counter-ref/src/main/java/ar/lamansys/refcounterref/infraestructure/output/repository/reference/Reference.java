@@ -44,7 +44,7 @@ public class Reference implements Serializable {
     @Column(name = "procedure")
     private Boolean procedure;
 
-    @Column(name = "care_line_id", nullable = false)
+    @Column(name = "care_line_id")
     private Integer careLineId;
 
     @Column(name = "clinical_specialty_id", nullable = false)
@@ -53,7 +53,7 @@ public class Reference implements Serializable {
     @Column(name = "reference_note_id")
     private Integer referenceNoteId;
 
-    @Column(name = "destination_institution_id")
+    @Column(name = "destination_institution_id", nullable = false)
 	private Integer destinationInstitutionId;
 
     public Reference(ReferenceBo referenceBo) {

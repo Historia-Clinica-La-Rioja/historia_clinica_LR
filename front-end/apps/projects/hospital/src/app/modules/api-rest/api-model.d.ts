@@ -2548,10 +2548,10 @@ export interface ReferenceCounterReferenceFileDto extends Serializable {
 }
 
 export interface ReferenceDto extends Serializable {
-    careLineId: number;
+    careLineId?: number;
     clinicalSpecialtyId: number;
     consultation?: boolean;
-    destinationInstitutionId?: number;
+    destinationInstitutionId: number;
     fileIds: number[];
     note?: string;
     problems: ReferenceProblemDto[];

@@ -28,8 +28,7 @@ public class ReferenceDto implements Serializable {
     @Nullable
     private Boolean procedure;
 
-    @Valid
-    @NotNull(message = "{value.mandatory}")
+	@Nullable
     private Integer careLineId;
 
     @Valid
@@ -42,7 +41,8 @@ public class ReferenceDto implements Serializable {
 
     private List<Integer> fileIds;
 
-    @Nullable
+	@Valid
+	@NotNull(message = "{value.mandatory}")
     private Integer destinationInstitutionId;
 
 }

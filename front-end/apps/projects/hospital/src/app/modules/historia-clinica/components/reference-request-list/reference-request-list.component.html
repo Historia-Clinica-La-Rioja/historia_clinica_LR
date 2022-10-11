@@ -23,7 +23,7 @@
                 </span>
                 <span>{{ request.clinicalSpecialty.name }}</span>
             </div>
-            <div fxFlex="calc(50%-5px)" fxLayout="column">
+            <div fxFlex="calc(50%-5px)" fxLayout="column" *ngIf="request.careLine?.description">
                 <span class="bold">
                     {{
                     'historia-clinica.reference-request-list.CARE_LINE' |

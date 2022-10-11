@@ -30,7 +30,6 @@ public class ReferenceBo {
     @NotNull(message = "{value.mandatory}")
     private List<ReferenceProblemBo> problems;
 
-    @NotNull(message = "{value.mandatory}")
     private Integer careLineId;
 
     @NotNull(message = "{value.mandatory}")
@@ -38,6 +37,7 @@ public class ReferenceBo {
 
     private List<Integer> fileIds;
 
+	@NotNull(message = "{value.mandatory}")
     private Integer destinationInstitutionId;
 
 }

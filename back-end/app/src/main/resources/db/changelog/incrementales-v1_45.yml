@@ -35,3 +35,15 @@ databaseChangeLog:
                 JOIN document as d ON (vc.id = d.source_id and d.source_type_id = 5)
 
 
+    - changeSet:
+        id: dropNotNullConstraint-reference-care_line_id
+        comment: Drop NotNullConstraint reference-care_line_id
+        author: jvaldez
+        changes:
+          - dropNotNullConstraint:
+              columnDataType: int
+              columnName: care_line_id
+              tableName: reference
+              validate: true
+
+
