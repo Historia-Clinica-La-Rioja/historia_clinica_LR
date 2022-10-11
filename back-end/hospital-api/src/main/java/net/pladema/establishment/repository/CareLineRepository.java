@@ -15,7 +15,7 @@ import java.util.List;
 @Repository
 public interface CareLineRepository extends SGXAuditableEntityJPARepository<CareLine, Integer> {
 
-    @Transactional(readOnly = true)
+	@Transactional(readOnly = true)
     @Query("SELECT cl FROM CareLine as cl " +
             "JOIN ClinicalSpecialtyCareLine cscl " +
             "ON cl.id = cscl.careLineId " +
@@ -33,4 +33,23 @@ public interface CareLineRepository extends SGXAuditableEntityJPARepository<Care
 			"AND cli.deleted = false")
 	List<CareLineBo> getCareLinesByClinicalSpecialtyAndInstitutionId(@Param("institutionId") Integer institutionId,
 																	 @Param("clinicalSpecialtyId") Integer clinicalSpecialtyId);
+
+	@Transactional(readOnly = true)
+	@Query("SELECT DISTINCT NEW net.pladema.establishment.service.domain.CareLineBo(cl.id, cl.description) " +
+			"FROM CareLine as cl " +
+			"JOIN CareLineProblem clp ON (cl.id = clp.careLineId) " +
+			"JOIN Snomed s ON (clp.snomedId = s.id) " +
+			"JOIN CareLineInstitution cli ON (cl.id = cli.careLineId) " +
+			"JOIN DoctorsOffice do ON (do.institutionId = cli.institutionId) " +
+			"JOIN Diary d ON (do.id = d.doctorsOfficeId) " +
+			"JOIN DiaryCareLine dcl ON (d.id = dcl.pk.diaryId) " +
+			"WHERE s.sctid IN :problemSnomedIds " +
+			"AND cli.institutionId = :destinationInstitutionId " +
+			"AND dcl.pk.careLineId = cl.id " +
+			"AND cli.deleted = false " +
+			"AND d.active = true " +
+			"AND d.endDate >= current_date() " +
+			"AND (d.deleteable.deleted = false OR d.deleteable.deleted is null)" )
+	List<CareLineBo> getCareLinesByProblemsSctidsAndDestinationInstitutionIdWithActiveDiaries(@Param("problemSnomedIds") List<String> problemSnomedIds,
+																							  @Param("destinationInstitutionId") Integer destinationInstitutionId);
 }

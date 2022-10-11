@@ -12,6 +12,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
@@ -33,5 +34,16 @@ public class CareLineController {
         log.debug("Get all care lines  => {}", careLinesBo);
         return ResponseEntity.ok(careLineMapper.toListCareLineDto(careLinesBo));
     }
+
+	@GetMapping(value = "/problems")
+	@PreAuthorize("hasPermission(#institutionId, 'ESPECIALISTA_MEDICO, PROFESIONAL_DE_SALUD, ESPECIALISTA_EN_ODONTOLOGIA, ENFERMERO')")
+	public ResponseEntity<List<CareLineDto>> getByProblemSnomedIdsAndDestinationInstitutionIdWithActiveDiaries(@PathVariable(name = "institutionId") Integer institutionId,
+																				   @RequestParam(name = "problemSnomedIds") List<String> problemSnomedIds,
+                                                                                   @RequestParam Integer destinationInstitutionId) {
+		log.debug("Input parameters -> institutionId {}, problemSnomedIds {}", institutionId, problemSnomedIds);
+		List<CareLineBo> careLinesBo = careLineService.getCareLinesByProblemsSctidsAndDestinationInstitutionIdWithActiveDiaries(problemSnomedIds, destinationInstitutionId);
+		log.debug("Get care lines by snomedId and institutionId  => {}", careLinesBo);
+		return ResponseEntity.ok(careLineMapper.toListCareLineDto(careLinesBo));
+	}
 
 }
