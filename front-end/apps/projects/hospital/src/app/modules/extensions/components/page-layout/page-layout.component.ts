@@ -8,7 +8,7 @@ import { UIPageDto } from '@extensions/extensions-model';
 })
 export class PageLayoutComponent {
 
-	@Input() page: UIPageDto = {layout: 'loading', content: []};
+	@Input() page: UIPageDto = { layout: 'loading', content: [] };
 
 	constructor() { }
 
