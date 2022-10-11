@@ -22,11 +22,9 @@ const CareLineProblemCreate = props => (
             </ReferenceInput>
 
             <ReferenceInput
-                source='snomedId'
-                reference="snomedgroupconcepts"
+                source='conceptSctid'
+                reference="snowstormproblems"
                 label="resources.carelineproblems.fields.snomedId"
-                filter={{ groupId: 11}}
-                sort= {{field: 'conceptPt', order: 'ASC'}}
                 filterToQuery={searchText => ({ conceptPt: searchText})}
             >
                 <AutocompleteInput optionText="conceptPt" optionValue="id" validate={[required()]} />

@@ -599,6 +599,8 @@ const messages = {
             fields: {
                 careLineId: 'Línea de cuidado',
                 snomedId: 'Problema',
+                conceptSctid: 'sctid',
+                pt: 'pt',
             },
             addRelated: 'Agregar problema',
         },
@@ -660,6 +662,13 @@ const messages = {
                 snomedId: 'Práctica'
             },
         },
+        snowstormproblems: {
+            name: 'Concepto Snowstorm',
+            fields: {
+                conceptId: 'Id Concepto',
+                term: 'Descripción',
+            }
+        }
     }
 };
 

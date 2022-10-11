@@ -532,6 +532,13 @@ export interface CareLineDto extends Serializable {
     id: number;
 }
 
+export interface CareLineProblemDto {
+    careLineId: number;
+    conceptSctid: string;
+    id: number;
+    snomedId: number;
+}
+
 export interface ChangeStateMedicationRequestDto extends Serializable {
     dayQuantity?: number;
     medicationsIds: number[];

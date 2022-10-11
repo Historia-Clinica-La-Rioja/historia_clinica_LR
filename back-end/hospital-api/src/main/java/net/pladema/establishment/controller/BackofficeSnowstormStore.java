@@ -48,7 +48,7 @@ public class BackofficeSnowstormStore implements BackofficeStore<BackofficeSnows
 				int maxIndex = pageable.getPageSize() < listSize ? (pageable.getPageSize() - 1) : (listSize == 0 ? 0 : listSize - 1);
 				return new PageImpl<>(resultSearch.subList(0, maxIndex), pageable, pageable.getPageSize());
 			} catch (SnowstormPortException e){
-				throw new BackofficeValidationException(e.getMessage());
+				throw new BackofficeValidationException(SNOWSTORM_EXCEPTION);
 			}
 		}
 		return new PageImpl<>(Collections.emptyList());
@@ -76,7 +76,7 @@ public class BackofficeSnowstormStore implements BackofficeStore<BackofficeSnows
 							Comparator.nullsFirst(Comparator.naturalOrder())))
 					.collect(Collectors.toList());
 		} catch (SnowstormPortException e){
-			throw new BackofficeValidationException(e.getMessage());
+			throw new BackofficeValidationException(SNOWSTORM_EXCEPTION);
 		}
 		return result;
 	}
@@ -87,14 +87,14 @@ public class BackofficeSnowstormStore implements BackofficeStore<BackofficeSnows
 		try{
 			result = mapToBackofficeSnowstormDto(snowstormExternalService.getConceptById(id.toString()));
 		} catch (SnowstormPortException e){
-			throw new BackofficeValidationException(e.getMessage());
+			throw new BackofficeValidationException(SNOWSTORM_EXCEPTION);
 		}
 		return Optional.of(result);
 	}
 
 	@Override
 	public BackofficeSnowstormDto save(BackofficeSnowstormDto entity) {
-		return new BackofficeSnowstormDto();
+		return entity;
 	}
 
 	@Override
