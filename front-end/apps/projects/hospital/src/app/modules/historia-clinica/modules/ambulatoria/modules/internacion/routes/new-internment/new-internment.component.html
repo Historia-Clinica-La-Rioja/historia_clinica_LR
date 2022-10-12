@@ -99,17 +99,18 @@
 						</div>
 					</div>
 				</section>
-				<section>
+				<section #errorDoctor>
 					<h2 [translate]="'internaciones.new-internment.SECTION_DOCTOR'"></h2>
 					<div class="form-row">
-						<span [translate]="'Nombre del médico'"></span>
+						<span [translate]="'internaciones.new-internment.DOCTOR_NAME'"></span>
 					</div>
 					<div class="form-row">
 						<div fxFlex="100%">
 							<app-typeahead id="doctorId" [options]="doctorsTypehead"
-								[titleInput]="'Nombre del medico'| translate" (selectionChange)="setDoctor($event)">
+								[titleInput]="'internaciones.new-internment.DOCTOR_NAME' | translate" (selectionChange)="setDoctor($event)">
 							</app-typeahead>
 						</div>
+						<mat-error class="error-message" *ngIf="!form.value.doctorId && submitForm" [translate]="'pacientes.form.REQUIRED'"></mat-error>
 					</div>
 				</section>
 

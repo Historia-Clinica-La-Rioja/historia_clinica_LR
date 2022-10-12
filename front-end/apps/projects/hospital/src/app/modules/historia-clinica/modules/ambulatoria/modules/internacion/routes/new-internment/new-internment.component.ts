@@ -1,4 +1,4 @@
-import { Component, ElementRef, OnInit } from '@angular/core';
+import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { MatDialog } from '@angular/material/dialog';
@@ -41,7 +41,7 @@ import { Moment } from 'moment';
 import * as moment from 'moment';
 import { map } from 'rxjs/operators';
 import { BedAssignmentComponent } from '@historia-clinica/dialogs/bed-assignment/bed-assignment.component';
-import {PatientNameService} from "@core/services/patient-name.service";
+import { PatientNameService } from "@core/services/patient-name.service";
 import { TypeaheadOption } from '@presentation/components/typeahead/typeahead.component';
 
 const ROUTE_PROFILE = 'pacientes/profile/';
@@ -66,6 +66,7 @@ export class NewInternmentComponent implements OnInit {
 	validPreviousDays = new Date(this.today);
 	patientMedicalCoverages: PatientMedicalCoverage[] = [];
 	hasError = hasError;
+	submitForm = false;
 	public form: FormGroup;
 	public doctors: HealthcareProfessionalDto[];
 	public doctorsTypehead: TypeaheadOption<HealthcareProfessionalDto>[] = [];
@@ -78,6 +79,8 @@ export class NewInternmentComponent implements OnInit {
 	public selectedBedInfo: BedInfoDto;
 	private readonly routePrefix;
 	private patientData: BasicPatientDto;
+	
+	@ViewChild('errorDoctor') errorDoctor: ElementRef;
 	constructor(
 		private readonly formBuilder: FormBuilder,
 		private readonly el: ElementRef,
@@ -138,7 +141,7 @@ export class NewInternmentComponent implements OnInit {
 		this.form.controls.dateTime.get('date').valueChanges.subscribe((value: Moment) => {
 			if (value?.isSame(newMoment(), 'day')) {
 				this.form.controls.dateTime.get('time').setValidators([Validators.required, futureTimeValidation,
-					Validators.pattern(TIME_PATTERN)]);
+				Validators.pattern(TIME_PATTERN)]);
 			} else {
 				this.form.controls.dateTime.get('time').removeValidators(futureTimeValidation);
 			}
@@ -163,14 +166,17 @@ export class NewInternmentComponent implements OnInit {
 	}
 
 	save(): void {
-
+		this.submitForm = true;
 		if (this.form.valid && this.selectedBedInfo) {
 			this.openDialog();
 		} else {
 			if (!this.selectedBedInfo) {
 				this.snackBarService.showError('internaciones.new-internment.messages.ERROR_BED_ASSIGNMENT');
 			}
-			scrollIntoError(this.form, this.el);
+			if (!this.form.value.doctorId) 
+				this.errorDoctor.nativeElement.scrollIntoView({ behavior: 'smooth', block: 'start' });
+			if (!this.form.value.patientMedicalCoverage)
+				scrollIntoError(this.form, this.el);
 		}
 	}
 
@@ -253,7 +259,7 @@ export class NewInternmentComponent implements OnInit {
 		const condition = (patientMedicalCoverage.condition) ? patientMedicalCoverage.condition.toLowerCase() : null;
 		const medicalCoverageText = [patientMedicalCoverage.medicalCoverage.acronym, patientMedicalCoverage.medicalCoverage.name]
 			.filter(Boolean).join(MIDDLE_DASH_SYMBOL);
-		return [medicalCoverageText, patientMedicalCoverage.affiliateNumber,condition].filter(Boolean).join(SLASH_SYMBOL);
+		return [medicalCoverageText, patientMedicalCoverage.affiliateNumber, condition].filter(Boolean).join(SLASH_SYMBOL);
 	}
 
 	private setMedicalCoverages(): void {
@@ -299,7 +305,10 @@ export class NewInternmentComponent implements OnInit {
 	}
 
 	setDoctor($event: HealthcareProfessionalDto) {
-		this.form.controls['doctorId'].setValue($event?.id );
+		if ($event)
+			this.form.controls['doctorId'].setValue($event.id);
+		else
+			this.form.controls.doctorId.reset();
 	}
 
 	toDoctorDtoTypeahead(doctorDto: HealthcareProfessionalDto): TypeaheadOption<HealthcareProfessionalDto> {

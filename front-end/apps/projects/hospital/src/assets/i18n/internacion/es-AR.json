@@ -422,6 +422,7 @@
 			"SECTION_BED": "Asignación de cama",
 			"SECTION_CONTACT": "Contacto responsable",
 			"SECTION_DOCTOR": "Médico responsable",
+			"DOCTOR_NAME":"Nombre del médico",
 			"SELECT": "Seleccionar",
 			"SELECT_MEDICAL_COVERAGE": "Seleccione una cobertura",
 			"BED_ASSIGNMENT": "Asigne una cama para la nueva internación",
