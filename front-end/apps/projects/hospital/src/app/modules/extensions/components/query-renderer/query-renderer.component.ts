@@ -7,6 +7,7 @@ import { ChartDataSets, ChartOptions } from 'chart.js';
 import { Label } from 'ng2-charts';
 import { getDisplayedColumns, flattenColumns } from './utils';
 import * as moment from "moment";
+import { CSVFileDownloadService } from '@extensions/services/csvfile-download.service';
 
 const formatColumnDate = (tableData: any[], column): any[] => {
 	const dateFormatter = (x) => !x ? x : moment(x).format('DD/MM/YYYY');
@@ -48,6 +49,8 @@ export class QueryRendererComponent {
 	@Input('defaultColor')
 	defaultColor?: string;
 
+	@Input() listOnTab: string = null;
+
 	chartType: any = null;
 	isQueryPresent = false;
 	error: string | null = null;
@@ -71,7 +74,10 @@ export class QueryRendererComponent {
 	numericValues: number[] = [];
 	loading = false;
 
-	constructor(private cubejsClient: CubejsClient) {
+	constructor(
+		private cubejsClient: CubejsClient,
+		private fileDownloadService: CSVFileDownloadService
+	) {
 	}
 
 	ngOnInit() {
@@ -184,6 +190,9 @@ export class QueryRendererComponent {
 			resultSet.tableColumns(pivotConfig)
 		);
 		this.columnTitles = flattenColumns(resultSet.tableColumns(pivotConfig));
+		if (this.listOnTab) {
+			this.fileDownloadService.addTableData(this.listOnTab, this.columnTitles, this.tableData);
+		}
 	}
 
 	updateNumericData(resultSet) {
