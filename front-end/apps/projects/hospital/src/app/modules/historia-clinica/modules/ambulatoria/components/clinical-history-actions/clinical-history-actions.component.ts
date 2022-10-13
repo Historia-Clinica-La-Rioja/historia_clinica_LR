@@ -50,7 +50,8 @@ export class ClinicalHistoryActionsComponent implements OnInit {
 		this.internmentEpisode = episode;
 		if (episode?.inProgress) {
 			this.hasInternmentEpisodeInThisInstitution = episode.inProgress && !!episode.id;
-			this.setInternmentInformation(episode.id);
+			if (this.hasInternmentEpisodeInThisInstitution)
+				this.setInternmentInformation(episode.id);
 		}
 		else
 			this.hasInternmentActionsToDo = false;
@@ -87,7 +88,7 @@ export class ClinicalHistoryActionsComponent implements OnInit {
 		});
 
 		this.internmentActions.medicalDischarge$.subscribe(medicalDischarge => {
-			if (medicalDischarge) 
+			if (medicalDischarge)
 				this.internmentSummaryFacadeService.updateInternmentEpisode();
 		});
 	}
