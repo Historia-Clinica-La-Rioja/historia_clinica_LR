@@ -13,8 +13,7 @@ import { ADMINISTRADOR_INSTITUCIONAL_BACKOFFICE } from "../roles";
 const redirect = (basePath, id, data) => `/institutionpractices/${data.groupId}/show`;
 
 const InstitutionPracticeRelatedGroupCreate = props => {
-    const parentGroupId = props?.location?.state?.record?.parentGroupId;
-    const { permissions } = usePermissions();;
+    const { permissions } = usePermissions();
     const userIsAdminInstitutional = permissions?.roleAssignments?.filter(roleAssignment => (roleAssignment.role === ADMINISTRADOR_INSTITUCIONAL_BACKOFFICE.role)).length > 0;
     return (
         <Create {...props} hasCreate={userIsAdminInstitutional}>
@@ -28,9 +27,8 @@ const InstitutionPracticeRelatedGroupCreate = props => {
 
                 <ReferenceInput
                     source="snomedId"
-                    reference="snomedgroupconcepts"
-                    sort={{ field: 'conceptPt', order: 'ASC' }}
-                    filterToQuery={searchText => ({ conceptPt: searchText, groupId: parentGroupId })}
+                    reference="snowstormpractices"
+                    filterToQuery={searchText => ({conceptPt: searchText})}
                 >
                     <AutocompleteInput optionText="conceptPt" optionValue="id" validate={[required()]} resettable />
                 </ReferenceInput>

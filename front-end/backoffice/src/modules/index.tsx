@@ -146,6 +146,7 @@ const resources = (permissions: SGXPermissions) => [
     <Resource name="licensenumbertypes" {...licensenumbertypes} />,
     <Resource name="institutionpractices" {...institutionpractices} />,
     <Resource name="institutionpracticesrelatedgroups" {...institutionpracticesrelatedgroups} />,
+    <Resource name="snowstormpractices" />,
 
     <Resource name="snomedgroupconcepts" />,
     <Resource name="snomedrelatedgroups"  {...snomedrelatedgroups} />,
