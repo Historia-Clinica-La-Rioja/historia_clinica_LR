@@ -26,7 +26,7 @@ import { ContextService } from '@core/services/context.service';
 import {PatientNameService} from "@core/services/patient-name.service";
 import { AnexosIIComponent } from './anexos-ii/anexos-ii.component';
 import { ReportsComponent } from '@pacientes/dialogs/reports/reports.component';
-
+import { CuadroDeDialogoComponent } from './cuadro-de-dialogo/cuadro-de-dialogo.component';
 @Component({
 	selector: 'app-episode-details',
 	templateUrl: './episode-details.component.html',
@@ -240,9 +240,14 @@ export class EpisodeDetailsComponent implements OnInit {
 	}
 
 	goToAnexoReports():void{
-		this.dialog.open(AnexosIIComponent, {
-			data: {patientId: this.patientBasicData.id, patientName: this.patientBasicData.name},
-		});
+		if(this.patientBasicData === undefined){
+			this.dialog.open(CuadroDeDialogoComponent);
+		}
+		else{
+			this.dialog.open(AnexosIIComponent, {
+				data: {patientId: this.patientBasicData.id, patientName: this.patientBasicData.name},
+			});
+		}
 	}
 }
 

@@ -15,7 +15,7 @@ import { EstadosEpisodio, Triages } from '../../constants/masterdata';
 import { ImageDecoderService } from '@presentation/services/image-decoder.service';
 import { EpisodeStateService } from '../../services/episode-state.service';
 import { SnackBarService } from '@presentation/services/snack-bar.service';
-import { MatDialog } from '@angular/material/dialog';
+import { MAT_DIALOG_DATA, MatDialog } from '@angular/material/dialog';
 import { SelectConsultorioComponent } from '../../dialogs/select-consultorio/select-consultorio.component';
 import { ConfirmDialogComponent } from '@presentation/dialogs/confirm-dialog/confirm-dialog.component';
 import { TriageDefinitionsService } from '../../services/triage-definitions.service';
@@ -29,6 +29,7 @@ import { EmergencyCareMasterDataService } from '@api-rest/services/emergency-car
 import { getError, hasError } from '@core/utils/form.utils';
 import { EmergencyCareEpisodeAdministrativeDischargeService } from '@api-rest/services/emergency-care-episode-administrative-service.service';
 import { PatientNameService } from "@core/services/patient-name.service";
+import { AppointmentsService } from "/home/emeritus/Escritorio/Repositorios/HistorialClinica-LaRioja/front-end/apps/projects/hospital/src/app/modules/api-rest/services/appointments.service"
 
 const TRANSLATE_KEY_PREFIX = 'guardia.home.episodes.episode.actions';
 
@@ -37,6 +38,9 @@ const TRANSLATE_KEY_PREFIX = 'guardia.home.episodes.episode.actions';
 	templateUrl: './home.component.html',
 	styleUrls: ['./home.component.scss']
 })
+
+
+
 export class HomeComponent implements OnInit {
 
 	getError = getError;
@@ -55,10 +59,10 @@ export class HomeComponent implements OnInit {
 		public readonly triageMasterDataService: TriageMasterDataService,
 		public readonly emergencyCareMasterDataService: EmergencyCareMasterDataService,
 		private readonly emergencyCareEpisodeAdministrativeDischargeService: EmergencyCareEpisodeAdministrativeDischargeService,
-		private readonly patientNameService: PatientNameService,) {
+		private readonly patientNameService: PatientNameService) {
 		this.filterService = new EpisodeFilterService(formBuilder, triageMasterDataService, emergencyCareMasterDataService);
 	}
-
+	
 	filterService: EpisodeFilterService;
 
 	readonly estadosEpisodio = EstadosEpisodio;
@@ -231,6 +235,8 @@ export class HomeComponent implements OnInit {
 				e.patient.person.firstName = this.patientNameService.getPatientName(e.patient.person.firstName, e.patient.person.nameSelfDetermination);
 		})
 	}
+
+
 }
 
 export interface Episode {

@@ -73,6 +73,10 @@
                     "TITLE": "Evolución",
                     "DESCRIPCION": "Descripción"
                 },
+                "notas": {
+                    "TITLE": "Notas propias",
+                    "DESCRIPCION": "Descripción"
+                },
                 "errors": {
                     "MOTIVO_OBLIGATORIO": "Motivo de consulta obligatorio",
                     "FRECUENCIA_CARDIACA_MIN": "La frecuencia cardíaca mínima debe ser 0 (/min)",
