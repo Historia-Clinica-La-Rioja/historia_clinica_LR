@@ -45,7 +45,12 @@ export class CSVFileDownloadService {
     this.institutionService.getInstitutions([this.contextService.institutionId]).subscribe(
       (institutions: InstitutionDto[]) => {
         const institutionName = institutions[0]?.name ? institutions[0].name.trim() : 'Institucion';
-        const fileName = "Ref_" + institutionName + "_" + (new Date().toLocaleString('es-AR', { year: 'numeric', month: '2-digit', day: '2-digit' }));
+        const today = new Date();
+        const fileName =
+          "Ref_" + institutionName
+          + "_" + today.toLocaleString('es-AR', { year: 'numeric' })
+          + "_" + today.toLocaleString('es-AR', { month: '2-digit' })
+          + "_" + today.toLocaleString('es-AR', { day: '2-digit' });
         this.saveFile(fileName, csvContent);
       }
     );
