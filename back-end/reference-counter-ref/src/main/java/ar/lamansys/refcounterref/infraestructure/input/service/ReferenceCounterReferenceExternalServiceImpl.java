@@ -76,6 +76,12 @@ public class ReferenceCounterReferenceExternalServiceImpl implements SharedRefer
         return referenceAppointmentRepository.getAssignedProtectedAppointmentsQuantity(diaryId, day, appointmentStateId);
 	}
 
+	@Override
+	public List<Integer> getProtectedAppointmentsIds(List<Integer> diaryIds) {
+		log.debug("Input parameter -> diaryIds {}", diaryIds);
+		return referenceAppointmentRepository.findAppointmentIdsByDiaryIds(diaryIds);
+	}
+
 	private List<ReferenceCounterReferenceFileDto> mapToReferenceCounterReferenceFileDto(List<ReferenceCounterReferenceFileBo> referenceCounterReferenceFileBos) {
         List<ReferenceCounterReferenceFileDto> referenceCounterReferenceFileDtos = new ArrayList<>();
         referenceCounterReferenceFileBos.stream().forEach(referenceCounterReferenceFileBo ->

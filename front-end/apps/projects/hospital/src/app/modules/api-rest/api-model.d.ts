@@ -217,6 +217,7 @@ export interface AppointmentDto extends CreateAppointmentDto {
     appointmentStateId: number;
     observation?: string;
     observationBy?: string;
+    protected: boolean;
     stateChangeReason?: string;
 }
 
@@ -234,6 +235,7 @@ export interface AppointmentListDto {
     patient: AppointmentBasicPatientDto;
     phoneNumber: string;
     phonePrefix: string;
+    protected: boolean;
 }
 
 export interface AppointmentSearchDto {

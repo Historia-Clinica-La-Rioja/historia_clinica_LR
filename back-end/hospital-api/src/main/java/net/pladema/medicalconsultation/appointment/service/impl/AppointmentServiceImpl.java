@@ -15,6 +15,7 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import net.pladema.medicalconsultation.appointment.repository.AppointmentAssnRepository;
+import ar.lamansys.sgh.shared.infrastructure.input.service.SharedReferenceCounterReference;
 import net.pladema.medicalconsultation.appointment.repository.AppointmentUpdateRepository;
 import net.pladema.medicalconsultation.diary.service.DiaryOpeningHoursService;
 import net.pladema.medicalconsultation.diary.service.domain.BlockBo;
@@ -86,8 +87,23 @@ public class AppointmentServiceImpl implements AppointmentService {
 
 	private final DiaryOpeningHoursService diaryOpeningHoursService;
 
+	private final SharedReferenceCounterReference sharedReferenceCounterReference;
 
-	public AppointmentServiceImpl(AppointmentRepository appointmentRepository, AppointmentObservationRepository appointmentObservationRepository, HistoricAppointmentStateRepository historicAppointmentStateRepository, SharedStaffPort sharedStaffPort, DateTimeProvider dateTimeProvider, PatientExternalMedicalCoverageService patientExternalMedicalCoverageService, InstitutionExternalService institutionExternalService, MedicalCoveragePlanRepository medicalCoveragePlanRepository, FeatureFlagsService featureFlagsService, AppointmentStorage appointmentStorage, AppointmentUpdateRepository appointmentUpdateRepository, AppointmentAssnRepository appointmentAssnRepository, DiaryOpeningHoursService diaryOpeningHoursService) {
+
+	public AppointmentServiceImpl(AppointmentRepository appointmentRepository,
+								  AppointmentObservationRepository appointmentObservationRepository,
+								  HistoricAppointmentStateRepository historicAppointmentStateRepository,
+								  SharedStaffPort sharedStaffPort,
+								  DateTimeProvider dateTimeProvider,
+								  PatientExternalMedicalCoverageService patientExternalMedicalCoverageService,
+								  InstitutionExternalService institutionExternalService,
+								  MedicalCoveragePlanRepository medicalCoveragePlanRepository,
+								  FeatureFlagsService featureFlagsService,
+								  AppointmentStorage appointmentStorage,
+								  AppointmentUpdateRepository appointmentUpdateRepository,
+								  AppointmentAssnRepository appointmentAssnRepository,
+								  DiaryOpeningHoursService diaryOpeningHoursService,
+								  SharedReferenceCounterReference sharedReferenceCounterReference) {
 		this.appointmentRepository = appointmentRepository;
 		this.appointmentObservationRepository = appointmentObservationRepository;
 		this.historicAppointmentStateRepository = historicAppointmentStateRepository;
@@ -101,16 +117,18 @@ public class AppointmentServiceImpl implements AppointmentService {
 		this.appointmentUpdateRepository = appointmentUpdateRepository;
 		this.appointmentAssnRepository = appointmentAssnRepository;
 		this.diaryOpeningHoursService = diaryOpeningHoursService;
+		this.sharedReferenceCounterReference = sharedReferenceCounterReference;
 	}
 
 	@Override
 	public Collection<AppointmentBo> getAppointmentsByDiaries(List<Integer> diaryIds, LocalDate from, LocalDate to) {
 		log.debug("Input parameters -> diaryIds {}", diaryIds);
 		Collection<AppointmentBo> result = new ArrayList<>();
-		if (!diaryIds.isEmpty())
-			result = appointmentStorage.getAppointmentsByDiaries(diaryIds, from, to).stream()
-					.distinct()
+		if (!diaryIds.isEmpty()) {
+			result = appointmentStorage.getAppointmentsByDiaries(diaryIds, from, to).stream().distinct()
 					.collect(Collectors.toList());
+		}
+		result = setIsAppointmentProtected(result, diaryIds);
 		log.debug("Result size {}", result.size());
 		log.trace(OUTPUT, result);
 		return result;
@@ -120,10 +138,13 @@ public class AppointmentServiceImpl implements AppointmentService {
 	public Collection<AppointmentBo> getAppointmentsByProfessionalInInstitution(Integer healthcareProfessionalId, Integer institutionId, LocalDate from, LocalDate to) {
 		log.debug("Input parameters -> diaryIds {}", healthcareProfessionalId);
 		Collection<AppointmentBo> result = new ArrayList<>();
-		if (healthcareProfessionalId!=null)
+		if (healthcareProfessionalId!=null) {
 			result = appointmentStorage.getAppointmentsByProfessionalInInstitution(healthcareProfessionalId, institutionId, from, to).stream()
 					.distinct()
 					.collect(Collectors.toList());
+			List<Integer> diaryIds = result.stream().map(AppointmentBo::getDiaryId).collect(Collectors.toList());
+			result = setIsAppointmentProtected(result, diaryIds);
+		}
 		log.debug("Result size {}", result.size());
 		log.trace(OUTPUT, result);
 		return result;
@@ -178,6 +199,11 @@ public class AppointmentServiceImpl implements AppointmentService {
 	public Optional<AppointmentBo> getAppointment(Integer appointmentId) {
 		log.debug("Input parameters -> appointmentId {}", appointmentId);
 		Optional<AppointmentBo>	result = appointmentRepository.getAppointment(appointmentId).stream().findFirst().map(AppointmentBo::fromAppointmentVo);
+		if (result.isPresent()) {
+			List<Integer> diaryIds = result.stream().map(AppointmentBo::getDiaryId).collect(Collectors.toList());
+			result = setIsAppointmentProtected(result.stream().collect(Collectors.toList()), diaryIds)
+					.stream().findFirst();
+		}
 		log.debug(OUTPUT, result);
 		return result;
 	}
@@ -572,4 +598,14 @@ public class AppointmentServiceImpl implements AppointmentService {
 				slot);
 	}
 
+	private Collection<AppointmentBo> setIsAppointmentProtected(Collection<AppointmentBo> appointments, List<Integer> diaryIds) {
+		List<Integer> protectedAppointments = sharedReferenceCounterReference.getProtectedAppointmentsIds(diaryIds);
+		appointments.stream().forEach(a -> {
+			if (protectedAppointments.contains(a.getId()))
+				a.setProtected(true);
+			else
+				a.setProtected(false);
+		});
+		return appointments;
+	}
 }

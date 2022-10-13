@@ -38,10 +38,12 @@ public interface AppointmentMapper {
     @Mapping(target = "appointmentStateId", source = "appointmentBo.appointmentStateId")
     @Mapping(target = "patient", source = "patient")
     @Mapping(target = "phoneNumber", source = "appointmentBo.phoneNumber")
+	@Mapping(target = "isProtected", source = "appointmentBo.protected")
     AppointmentListDto toAppointmentListDto(AppointmentBo appointmentBo, AppointmentBasicPatientDto patient);
   
     @Named("toAppointmentDto")
-    AppointmentDto toAppointmentDto(AppointmentBo appointmentBo);
+	@Mapping(target = "protected", source = "appointmentBo.protected")
+	AppointmentDto toAppointmentDto(AppointmentBo appointmentBo);
 
     @Named("toAppointmentBo")
     AppointmentBo toAppointmentBo(CreateAppointmentDto createAppointmentDto);

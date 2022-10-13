@@ -6,8 +6,10 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
+import java.util.List;
 
 @Repository
 public interface ReferenceAppointmentRepository extends SGXAuditableEntityJPARepository<ReferenceAppointment, ReferenceAppointmentPk> {
@@ -24,5 +26,12 @@ public interface ReferenceAppointmentRepository extends SGXAuditableEntityJPARep
 													 @Param("day") LocalDate day,
 													 @Param("appointmentStateId") Short appointmentStateId);
 
+	@Transactional(readOnly = true)
+	@Query(value = "SELECT ra.pk.appointmentId " +
+			"FROM ReferenceAppointment ra " +
+			"JOIN AppointmentAssn asn ON ra.pk.appointmentId = asn.pk.appointmentId	" +
+			"WHERE asn.pk.diaryId IN (:diaryIds) " +
+			"AND ra.deleteable.deleted = false")
+	List<Integer> findAppointmentIdsByDiaryIds(@Param("diaryIds") List<Integer> diaryIds);
 
 }

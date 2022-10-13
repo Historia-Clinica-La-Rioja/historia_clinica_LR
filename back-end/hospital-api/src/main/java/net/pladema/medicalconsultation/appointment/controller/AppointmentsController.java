@@ -235,7 +235,8 @@ public class AppointmentsController {
                 appointmentBo.getAppointmentStateId(),
                 appointmentBo.getPhonePrefix(),
                 appointmentBo.getPhoneNumber(),
-				appointmentBo.getAppointmentBlockMotiveId()
+				appointmentBo.getAppointmentBlockMotiveId(),
+				appointmentBo.isProtected()
         );
     }
 

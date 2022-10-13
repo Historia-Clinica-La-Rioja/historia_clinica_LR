@@ -37,4 +37,6 @@ public class AppointmentListDto {
 
 	private final Short appointmentBlockMotiveId;
 
+	private final boolean isProtected;
+
 }
