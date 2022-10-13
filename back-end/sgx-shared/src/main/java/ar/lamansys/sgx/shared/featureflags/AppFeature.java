@@ -114,9 +114,6 @@ public enum AppFeature implements Feature {
 	@Label("Habilita PopUp de guardado en consulta ambulatoria")
 	HABILITAR_GUARDADO_CON_CONFIRMACION_CONSULTA_AMBULATORIA,
 
-	@Label("Indica si esta habilitada la opcion de asociar procedimientos a una institucion")
-	HABILITAR_ASOCIAR_PRACTICAS_A_INSTITUCIONES,
-
 	@Label("Indica si esta habilitado el uso de card en HC e INTERNACION")
 	HABILITAR_VISUALIZACION_DE_CARDS
 	;
