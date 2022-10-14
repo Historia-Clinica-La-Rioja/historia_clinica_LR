@@ -62,6 +62,7 @@ import { VaccineSearchComponent } from './dialogs/vaccine-search/vaccine-search.
 import { ClinicalHistoryActionsComponent } from './components/clinical-history-actions/clinical-history-actions.component';
 import { AmbulatoriaSummaryFacadeService } from './services/ambulatoria-summary-facade.service';
 import { HistoricalProblemsFacadeService } from './services/historical-problems-facade.service';
+import { LazyMaterialModule } from '../../../lazy-material/lazy-material.module';
 
 @NgModule({
 	declarations: [
@@ -128,6 +129,7 @@ import { HistoricalProblemsFacadeService } from './services/historical-problems-
 	],
 	providers: [
 		AmbulatoriaSummaryFacadeService,
+		LazyMaterialModule,
 		HistoricalProblemsFacadeService
 	]
 })

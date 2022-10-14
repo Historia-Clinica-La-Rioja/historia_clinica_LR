@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 // deps
 import { HistoriaClinicaModule } from '@historia-clinica/historia-clinica.module';
+import { LazyMaterialModule } from 'projects/hospital/src/app/modules/lazy-material/lazy-material.module';
 import { PresentationModule } from '@presentation/presentation.module';
 // routing
 import { InternacionesRoutingModule } from './internaciones-routing.module';
@@ -75,6 +76,7 @@ import { TurnosModule } from '@turnos/turnos.module';
 		// deps
 		HistoriaClinicaModule,
 		PresentationModule,
+		LazyMaterialModule,
 		TurnosModule
 	]
 })

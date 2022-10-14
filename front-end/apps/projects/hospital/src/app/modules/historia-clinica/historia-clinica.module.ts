@@ -2,7 +2,6 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 // deps
 import { InstitucionModule } from '../institucion/institucion.module';
-import { LazyMaterialModule } from '../lazy-material/lazy-material.module';
 import { PresentationModule } from '@presentation/presentation.module';
 // components
 import { AlergiasSummaryComponent } from './components/alergias-summary/alergias-summary.component';
@@ -91,7 +90,6 @@ import { InternmentSummaryFacadeService } from './modules/ambulatoria/modules/in
 		CommonModule,
 		// deps
 		InstitucionModule,
-		LazyMaterialModule,
 		PresentationModule,
 	],
 	exports: [
