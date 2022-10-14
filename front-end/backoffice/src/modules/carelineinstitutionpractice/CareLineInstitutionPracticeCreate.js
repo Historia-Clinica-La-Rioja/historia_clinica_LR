@@ -14,7 +14,8 @@ import {ADMINISTRADOR, ROOT} from "../roles";
 
 const CareLineInstitutionPracticeCreate = props => {
     const institutionId = props?.location?.state?.record?.institutionId;
-    const redirect = `/carelineinstitution/${props?.location?.state?.record?.careLineInstitutionId}/show`;
+    const careLineInstitutionId = props?.location?.state?.record?.careLineInstitutionId;
+    const redirect = `/carelineinstitution/${careLineInstitutionId}/show`;
     const { permissions } = usePermissions();
     const userIsRootOrAdmin = permissions?.roleAssignments?.filter(roleAssignment => (roleAssignment.role === ADMINISTRADOR.role) || (roleAssignment.role === ROOT.role)).length > 0;
     return(
@@ -33,7 +34,7 @@ const CareLineInstitutionPracticeCreate = props => {
                     source="snomedRelatedGroupId"
                     reference="practicesinstitution"
                     sort={{ field: 'description', order: 'ASC' }}
-                    filterToQuery={searchText => ({institutionId: institutionId})}
+                    filterToQuery={searchText => ({id: careLineInstitutionId, institutionId: institutionId})}
                 >
                     <AutocompleteInput optionText="description" optionValue="id" disabled={userIsRootOrAdmin} resettable />
                 </ReferenceInput>

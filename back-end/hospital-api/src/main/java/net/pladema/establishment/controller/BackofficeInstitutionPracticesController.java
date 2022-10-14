@@ -5,10 +5,13 @@ import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
+import javax.validation.Valid;
+
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -16,6 +19,7 @@ import ar.lamansys.sgx.shared.dates.configuration.DateTimeProvider;
 import net.pladema.establishment.controller.constraints.validator.permissions.BackofficeSnomedGroupValidator;
 import net.pladema.permissions.repository.enums.ERole;
 import net.pladema.sgx.backoffice.rest.dto.BackofficeDeleteResponse;
+import net.pladema.sgx.exceptions.BackofficeValidationException;
 import net.pladema.snowstorm.repository.SnomedGroupRepository;
 import net.pladema.snowstorm.repository.entity.SnomedGroup;
 import net.pladema.snowstorm.repository.entity.SnomedGroupType;
@@ -56,6 +60,15 @@ public class BackofficeInstitutionPracticesController extends BackofficeSnomedGr
 						&& allowedInstitutions.contains(item.getInstitutionId())))
 				.collect(Collectors.toList());
 		return new PageImpl<>(practicesList, pageable, practicesList.size());
+	}
+
+	@Override
+	public SnomedGroup create(@Valid @RequestBody SnomedGroup entity) {
+		boolean hasPersisted = snomedGroupRepository.findByInstitutionIdAndGroupIdAndGroupType(
+				entity.getInstitutionId(), entity.getGroupId(), entity.getGroupType()).isPresent();
+		if(hasPersisted)
+			throw new BackofficeValidationException("Esta institución ya posee un grupo de prácticas");
+		return super.create(entity);
 	}
 
 	@Override
