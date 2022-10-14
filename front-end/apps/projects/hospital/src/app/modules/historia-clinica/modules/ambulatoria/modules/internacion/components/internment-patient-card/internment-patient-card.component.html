@@ -1,11 +1,11 @@
-<div *ngIf="pageSlice?.length else noInfo">
+<div>
 	<mat-form-field appearance="outline" class="serch">
 		<mat-label>{{'internaciones.internment-patient-card.SEARCH' |
 			translate}}</mat-label>
 		<input matInput (keyup)="applyFilter($event)">
 		<mat-icon matSuffix>search</mat-icon>
 	</mat-form-field>
-	<mat-card>
+	<mat-card *ngIf="pageSlice?.length else noInfo">
 
 		<div *ngFor="let patient of pageSlice;last as isLast">
 			<app-card [cardContent]="patient">
