@@ -10,6 +10,7 @@ import net.pladema.establishment.controller.constraints.validator.permissions.Ba
 import net.pladema.establishment.repository.CareLineInstitutionRepository;
 import net.pladema.establishment.repository.entity.CareLineInstitution;
 import net.pladema.sgx.backoffice.rest.AbstractBackofficeController;
+import net.pladema.sgx.exceptions.BackofficeValidationException;
 
 @RestController
 @RequestMapping("backoffice/carelineinstitution")
@@ -27,12 +28,12 @@ public class BackofficeCareLineInstitutionController extends AbstractBackofficeC
 	@Override
 	public CareLineInstitution create(@Valid @RequestBody CareLineInstitution entity) {
 		if(entity.getInstitutionId() == null || entity.getCareLineId() == null)
-			return null;
+			throw new BackofficeValidationException("Debe completar todos los campos");
 		boolean hasPersistedEntity = this.careLineInstitutionRepository
 				.findByInstitutionIdAndCareLineId(entity.getInstitutionId(), entity.getCareLineId())
 				.isPresent();
 		if(hasPersistedEntity)
-			return null;
+			throw new BackofficeValidationException("La asociación ya existe");
 		return super.create(entity);
 	}
 }

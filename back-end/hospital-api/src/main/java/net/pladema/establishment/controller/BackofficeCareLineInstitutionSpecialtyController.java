@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.RestController;
 import net.pladema.establishment.repository.CareLineInstitutionSpecialtyRepository;
 import net.pladema.establishment.repository.entity.CareLineInstitutionSpecialty;
 import net.pladema.sgx.backoffice.rest.AbstractBackofficeController;
+import net.pladema.sgx.exceptions.BackofficeValidationException;
 
 @RestController
 @RequestMapping("backoffice/carelineinstitutionspecialty")
@@ -25,12 +26,12 @@ public class BackofficeCareLineInstitutionSpecialtyController extends AbstractBa
 	@Override
 	public CareLineInstitutionSpecialty create(@Valid @RequestBody CareLineInstitutionSpecialty entity) {
 		if(entity.getCareLineInstitutionId() == null || entity.getClinicalSpecialtyId() == null)
-			return null;
+			throw new BackofficeValidationException("Debe completar todos los campos");
 		boolean hasPersistedEntity = this.careLineInstitutionSpecialtyRepository
 				.findByCareLineInstitutionIdAndClinicalSpecialtyId(entity.getCareLineInstitutionId(), entity.getClinicalSpecialtyId())
 				.isPresent();
 		if(hasPersistedEntity)
-			return null;
+			throw new BackofficeValidationException("La especialidad ya fue agregada");
 		return super.create(entity);
 	}
 }
