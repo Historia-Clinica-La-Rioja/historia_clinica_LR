@@ -641,7 +641,7 @@ export class AppointmentComponent implements OnInit {
 	}
 
 	getAppointmentTicketReport(): void {
-		this.appointmentService.getAppointmentTicketPdf(this.data.appointmentData).subscribe((pdf) => {
+		this.appointmentService.getAppointmentTicketPdf(this.data.appointmentData.appointmentId).subscribe((pdf) => {
 			const file = new Blob([pdf], { type: 'application/pdf' });
 			const blobUrl = URL.createObjectURL(file);
 			const div = document.querySelector("#pdfPrinter");

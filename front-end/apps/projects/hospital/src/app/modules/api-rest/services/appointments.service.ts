@@ -150,13 +150,10 @@ export class AppointmentsService {
 		return this.getAppointmentReport(url, appointmentData, pdfName);
 	}
 
-	getAppointmentTicketPdf(appointmentData: any): Observable<any> {
-		const url = `${environment.apiBase}/institutions/${this.contextService.institutionId}/medicalConsultations/appointment-ticket-report/${appointmentData.appointmentId}`;
-		const httpOptions = {
-			responseType  : 'arraybuffer' as 'json',
-			params: appointmentData.appointmentId
-		};
-		return this.http.get<any>(url, httpOptions).pipe(
+	getAppointmentTicketPdf(appointmentId: number): Observable<any> {
+		const url = `${environment.apiBase}/institutions/${this.contextService.institutionId}/medicalConsultations/appointment-ticket-report/${appointmentId}`;
+		const responseType = 'arraybuffer' as 'json';
+		return this.http.get<any>(url,{responseType} ).pipe(
 			tap((data: any) => {
 				const blobType = { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' };
 				const file = new Blob([data], blobType);
