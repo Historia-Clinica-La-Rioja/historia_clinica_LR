@@ -257,7 +257,7 @@ export class NewAppointmentComponent implements OnInit {
 		};
 		this.appointmentFacade.addAppointment(newAppointment).subscribe(_ => {
 			this.snackBarService.showSuccess('turnos.new-appointment.messages.APPOINTMENT_SUCCESS');
-			this.dialogRef.close(true);
+			this.dialogRef.close(_);
 		}, error => {
 			this.isSubmitButtonDisabled = false;
 			processErrors(error, (msg) => this.snackBarService.showError(msg));

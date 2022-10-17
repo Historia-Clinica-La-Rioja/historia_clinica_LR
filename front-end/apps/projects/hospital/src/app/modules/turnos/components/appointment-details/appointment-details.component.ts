@@ -43,8 +43,8 @@ export class AppointmentDetailsComponent implements OnInit {
 			}
 		});
 		dialogReference.afterClosed().subscribe(
-			(result: boolean) => {
-				if (result) {
+			(result: number) => {
+				if (result!== -1) {
 					this.resetAppointmentList.emit();
 
 					var fullAppointmentDate = this.datePipe.transform(this.emptyAppointment.date, DatePipeFormat.FULL_DATE);
@@ -63,11 +63,12 @@ export class AppointmentDetailsComponent implements OnInit {
 							 `${this.emptyAppointment.doctorFirstName} ${this.emptyAppointment.doctorLastName}
 							  ${specialtyAndAlias}`+' en ' +
 							 `${this.emptyAppointment.doctorsOfficeDescription}`,
-						}
+							 appointmentId:result,
+						},
+
 					});
 				}
 			}
 		);
 	}
-
 }

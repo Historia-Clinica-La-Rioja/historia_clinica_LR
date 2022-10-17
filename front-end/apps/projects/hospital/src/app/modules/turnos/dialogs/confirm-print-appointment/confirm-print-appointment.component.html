@@ -11,5 +11,11 @@
 	<div mat-dialog-content fxFill="50" >
 		<div innerHTML="{{ data.content | translate}}"></div>
 	</div>
+	<button id="print-appointment" mat-raised-button color="primary" btn-block type="button"
+	(click)="getAppointmentTicketReport()">
+	<mat-icon fontSet="material-icons-outlined">print</mat-icon>
+	<span class="uppercase">{{'turnos.appointment.PRINT' | translate}}</span>
+	</button>
+	<div class="none" id="pdfPrinter"></div>
 </div>
 

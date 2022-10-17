@@ -209,15 +209,15 @@ export class AppointmentsFacadeService {
 		this.appointmenstEmitter.next(events);
 	}
 
-	addAppointment(newAppointment: CreateAppointmentDto): Observable<boolean> {
+	addAppointment(newAppointment: CreateAppointmentDto): Observable<number> {
 		return this.appointmentService.create(newAppointment)
 			.pipe(
 				map((response: number) => {
 					if (response) {
 						this.loadAppointments(); // TODO En lugar de hacer otro llamado al BE evaluar si se puede agregar appointments$
-						return true;
+						return response;
 					}
-					return false;
+					return -1;
 				})
 			);
 	}
