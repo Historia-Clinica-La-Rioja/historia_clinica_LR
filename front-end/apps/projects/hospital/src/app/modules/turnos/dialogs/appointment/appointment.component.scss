@@ -225,3 +225,10 @@ mat-dialog-actions {
 .mat-dialog-container {
 	padding-right: 0px;
 }
+
+@media only screen and (max-width: 426px) {
+	/* For mobile phones: */
+	.mat-card-patient-image{
+		display: none;
+	}
+  }
