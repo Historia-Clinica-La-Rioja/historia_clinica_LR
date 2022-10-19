@@ -41,7 +41,11 @@
             </div>
 
             <div class="grayText" fxLayout="row" fxLayoutAlign="space-between center" fxFlex="50px">
-                <span>{{reference.professional.firstName}} {{reference.professional.lastName}}</span>
+				<span>
+					{{getFullName(reference.professional.firstName,
+						reference.professional.nameSelfDetermination)}}
+						{{reference.professional.lastName}}
+				</span>
                 <span>{{reference.referenceDate.day}}/{{reference.referenceDate.month}}/{{reference.referenceDate.year}}</span>
             </div>
 

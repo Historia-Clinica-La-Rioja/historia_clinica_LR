@@ -30,7 +30,7 @@ public class HCEReferenceCounterReferenceStorageImpl implements HCEReferenceCoun
     @Override
     public CounterReferenceSummaryBo getCounterReference(Integer referenceId) {
         log.debug("Input parameter -> referenceId {}", referenceId);
-        return mapToCounterReferenceSummaryBo(sharedReferenceCounterReference.getCounterReference(referenceId));
+		return mapToCounterReferenceSummaryBo(sharedReferenceCounterReference.getCounterReference(referenceId));
     }
 
     @Override
@@ -55,7 +55,8 @@ public class HCEReferenceCounterReferenceStorageImpl implements HCEReferenceCoun
                 counterReferenceSummaryDto.getPerformedDate(),
                 counterReferenceSummaryDto.getProfessional() != null ? new CHPersonBo(counterReferenceSummaryDto.getProfessional().getId(),
                         counterReferenceSummaryDto.getProfessional().getFirstName(),
-                        counterReferenceSummaryDto.getProfessional().getLastName(), null, null) : null,
+                        counterReferenceSummaryDto.getProfessional().getLastName(), null,
+						counterReferenceSummaryDto.getProfessional().getNameSelfDetermination()) : null,
                 counterReferenceSummaryDto.getFiles() != null ? counterReferenceSummaryDto.getFiles()
                         .stream()
                         .map(crf -> new ReferenceCounterReferenceFileBo(crf.getFileId(), crf.getFileName()))

@@ -491,8 +491,11 @@
 																	<h3 class="mat-h2 primary"
 																		[translate]="'ambulatoria.paciente.problemas.historical-problems.PROFESSIONAL'">
 																	</h3>
-																	<span>{{reference.counterReference.professional?.firstName}}</span>
-																	<span>{{reference.counterReference.professional?.lastName}}</span>
+																	<span>
+																		{{getFullName(reference.counterReference.professional?.firstName,
+																		reference.counterReference.professional?.nameSelfDetermination)}}
+																		{{historicalProblem.professionalLastName}}
+																	</span>
 																</div>
 
 															</div>
