@@ -58,7 +58,7 @@
 				"SUBMIT": "Confirmar",
 				"ERROR_MINLENGTH": "Mínimo de 8 caracteres",
 				"ERROR_UPPERCASE": "Mayúscula",
-				"ERROR_LOWERCASE": "Mínuscula",
+				"ERROR_LOWERCASE": "Minúscula",
 				"ERROR_NUMBER": "Número"
 			},
 			"result": {
