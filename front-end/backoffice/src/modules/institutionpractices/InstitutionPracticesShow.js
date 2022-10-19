@@ -16,7 +16,7 @@ import React from "react";
 import { Link } from 'react-router-dom';
 import Button from "@material-ui/core/Button";
 import SectionTitle from "../components/SectionTitle";
-import {ADMINISTRADOR, ADMINISTRADOR_INSTITUCIONAL_BACKOFFICE, ROOT} from "../roles";
+import { ADMINISTRADOR_INSTITUCIONAL_BACKOFFICE } from "../roles";
 
 const CreateRelatedButton = ({ record, reference, label, disabled}) => {
     const newRecord = {groupId: record.id, parentGroupId: record.groupId};
@@ -35,22 +35,14 @@ const CreateRelatedButton = ({ record, reference, label, disabled}) => {
 
 const SnomedGroupShow = props => {
     const translate = useTranslate();
-    const { permissions } = usePermissions();;
-    const userIsRootOrAdmin = permissions?.roleAssignments?.filter(roleAssignment => (roleAssignment.role === ADMINISTRADOR.role) || (roleAssignment.role === ROOT.role)).length > 0;
-    const userIsAdminInstitutional = permissions?.roleAssignments?.filter(roleAssignment => (roleAssignment.role === ADMINISTRADOR_INSTITUCIONAL_BACKOFFICE.role)).length > 0;
+    const { permissions } = usePermissions();
     return (
         <ShowController {...props} >
             {controllerProps =>
                 {
-                    const isEditableGroup = controllerProps?.record?.groupId != null;
-                    const isDomainGroup = !controllerProps?.record?.institutionId;
                     const institutionId = controllerProps?.record?.institutionId;
-                    const userIsAdmin = permissions?.roleAssignments?.filter(roleAssignment => (roleAssignment.role === ADMINISTRADOR.role)).length > 0;
                     const userCanEditInstitution = permissions?.roleAssignments?.filter(roleAssignment => (roleAssignment.role === ADMINISTRADOR_INSTITUCIONAL_BACKOFFICE.role && roleAssignment.institutionId === institutionId)).length > 0;
-
-                    const canBeEdited = isDomainGroup ? (isEditableGroup && userIsAdmin) : ((isEditableGroup && userCanEditInstitution) || userIsAdmin);
-
-                    return <ShowView {...props} {...controllerProps} hasEdit={userIsAdminInstitutional}>
+                    return <ShowView {...props} {...controllerProps} hasEdit={userCanEditInstitution}>
                         <SimpleShowLayout>
 
                             {/* Institution */}
@@ -74,7 +66,7 @@ const SnomedGroupShow = props => {
                             <CreateRelatedButton
                                 reference="institutionpracticesrelatedgroups"
                                 label="resources.institutionpractices.createRelated"
-                                disabled={userIsRootOrAdmin}
+                                disabled={!userCanEditInstitution}
                             />
 
                             <ReferenceManyField
@@ -90,7 +82,7 @@ const SnomedGroupShow = props => {
                                     <TextField source="conceptPt"/>
                                     <TextField source="conceptSctid"/>
                                     <SgxDateField source="lastUpdate"/>
-                                    <DeleteButton redirect={false} disabled={!canBeEdited}/>
+                                    <DeleteButton redirect={false} disabled={!userCanEditInstitution}/>
                                 </Datagrid>
                             </ReferenceManyField>
                         </SimpleShowLayout>
