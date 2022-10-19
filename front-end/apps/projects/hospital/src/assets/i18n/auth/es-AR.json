@@ -34,7 +34,7 @@
 				"REPASSWORD_PLACEHOLDER": "Vuelva a ingresar la nueva clave",
 				"REPASSWORD_NOTEQUIVALENT": "Deben coincidir las claves",
 				"REPASSWORD_REQUIRED": "Debe reingresar la clave",
-				"SUBMIT": "CAMBIAR"
+				"SUBMIT": "CONFIRMAR"
 			},
 			"result": {
 				"ERROR": "Error definiendo nueva clave",
