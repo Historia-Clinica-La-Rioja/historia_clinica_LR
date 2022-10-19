@@ -30,7 +30,7 @@ const SnomedGroupSelect = ({ formData, ...rest }) => {
         <ReferenceInput
             {...rest}
             reference="snomedgroups"
-            filterToQuery={searchText => ({id: 16})}
+            filterToQuery={searchText => ({description: "PROCEDURE"})}
             isRequired={true}
         >
             <AutocompleteInput optionText="description" optionValue="id" resettable />
