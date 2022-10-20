@@ -24,7 +24,8 @@ public class MqttClientServiceImpl implements MqttClientService {
     public MqttClientServiceImpl(String mqttServerAddress, String mqttPublisherId, String username, String password) {
         this.mqttClient = connect(mqttServerAddress, mqttPublisherId, username, password);
 		this.callback = new SgxMqttCallback();
-		this.mqttClient.setCallback(callback);
+		if (mqttClient != null)
+			this.mqttClient.setCallback(callback);
 		this.topicRegistered = new ArrayList<>();
     }
 
