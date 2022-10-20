@@ -265,3 +265,21 @@ databaseChangeLog:
                 - column:
                     name: protected_appointments_percentage
                     type: smallint
+
+    - changeSet:
+        id: updateView-v_practice_institution
+        comment: Update view v_practice_institution
+        author: tcepeda
+        changes:
+          - createView:
+              viewName: v_practice_institution
+              fullDefinition: false
+              replaceIfExists: true
+              selectQuery: |-
+                SELECT srg.id AS id, sg.institution_id, s.pt 
+                FROM snomed_related_group srg
+                JOIN snomed_group sg ON (srg.group_id = sg.id)
+                JOIN snomed_group sg2 on (sg2.id = sg.group_id)
+                JOIN snomed s ON (srg.snomed_id = s.id)
+                WHERE sg2.description = 'PROCEDURE'
+                AND sg.group_type = 3
