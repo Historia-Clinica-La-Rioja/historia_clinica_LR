@@ -3,8 +3,8 @@
 		<div>
 			<h2 id="title" class="page-title" [translate]="'turnos.home.TITLE'"></h2>
 		</div>
-		<button mat-flat-button color="primary" id="goToNewAgendaButton" *appHasRole="['ADMINISTRADOR_AGENDA']" (click)="goToNewAgenda()"
-		fxFlexFill.xs>
+		<button mat-flat-button color="primary" id="goToNewAgendaButton" *appHasRole="['ADMINISTRADOR_AGENDA']"
+			(click)="goToNewAgenda()" fxFlexFill.xs>
 			<span class="uppercase" [translate]="'turnos.home.actions.NEW_AGENDA'"></span>
 		</button>
 	</section>
@@ -13,7 +13,8 @@
 		<mat-tab label="{{ 'turnos.home.SEARCH_BY_PROFESSIONAL' | translate | uppercase }}">
 			<app-seach-appointments-by-professional></app-seach-appointments-by-professional>
 		</mat-tab>
-		<mat-tab label="{{ 'turnos.home.SEARCH_BY_SPECIALTY' | translate | uppercase }}" *appHasRole="['ADMINISTRATIVO']">
+		<mat-tab label="{{ 'turnos.home.SEARCH_BY_SPECIALTY' | translate | uppercase }}"
+			*appHasRole="['ADMINISTRATIVO']">
 			<app-search-appointments-by-specialty></app-search-appointments-by-specialty>
 		</mat-tab>
 	</mat-tab-group>

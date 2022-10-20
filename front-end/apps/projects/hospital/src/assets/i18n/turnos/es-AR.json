@@ -52,9 +52,9 @@
 			"CHOOSE_PROFESSIONAL": "Seleccione profesional",
 			"CHOOSE_PROFESSIONAL_ERROR": "Por favor seleccione un profesional adjunto",
 			"OPTIONAL_ALIAS": "Alias (Opcional)",
-			"ALIAS_HINT_TEXT" : "Identificador para la oferta de turnos",
+			"ALIAS_HINT_TEXT": "Identificador para la oferta de turnos",
 			"OPTIONAL_CARELINE": "Línea de cuidado (Opcional)",
-			"CARELINE":  "Seleccionar línea de cuidado",
+			"CARELINE": "Seleccionar línea de cuidado",
 			"PROTECTED_APPOINTMENT_PERCENTAGE": "Porcentajes de turnos protegidos por día",
 			"PROTECTED_APPOINTMENT_PERCENTAGE_RANGE": "Ingrese un valor entre 0 y 100%. Considere que se redondea hacia abajo.",
 			"PROTECTED_APPOINTMENT_PERCENTAGE_RANGE_EXAMPLE": "Por ej. valores entre 1 y 9% pueden no implicar turnos protegidos en una agenda con menos de 10 turnos totales.",
@@ -76,7 +76,7 @@
 			}
 		},
 		"booking": {
-			"VALIDATE":"Validar",
+			"VALIDATE": "Validar",
 			"BOOKING": "Turno online",
 			"SLOT_NOT_AVAILABLE": "Este turno fue ocupado por una reserva online",
 			"CANCEL_BOOKING": "Cancelar turno"
@@ -133,7 +133,7 @@
 			"SAVE": "Guardar",
 			"CANCEL": "Cancelar",
 			"NO-INFO": "Sin información",
-			"date":{
+			"date": {
 				"EDIT_DATE_TIME": "Editar fecha y hora del turno",
 				"UPDATE_SUCCESS": "La fecha y hora del turno se actualizaron exitosamente"
 			},
@@ -152,7 +152,7 @@
 				"ADD_OBSERVATION": "+ Agregar observaciones",
 				"ADD_OBSERVATION_SUBTITLE": "Ingrese observaciones..."
 			},
-			"reports":{
+			"reports": {
 				"DOWNLOAD_REPORT": "Descargar informe",
 				"ANEXO": "Anexo II",
 				"FORM": "Formulario V"
