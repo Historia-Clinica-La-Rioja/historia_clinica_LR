@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { AddressDto, CareLineDto, ClinicalSpecialtyDto, DepartmentDto, InstitutionDto } from '@api-rest/api-model';
+import { AddressDto, CareLineDto, ClinicalSpecialtyDto, DepartmentDto, InstitutionBasicInfoDto, InstitutionDto } from '@api-rest/api-model';
 import { AddressMasterDataService } from '@api-rest/services/address-master-data.service';
 import { CareLineService } from '@api-rest/services/care-line.service';
 import { InstitutionService } from '@api-rest/services/institution.service';
@@ -22,7 +22,7 @@ export class SearchAppointmentsInCareNetworkComponent implements OnInit {
   searchForm: FormGroup;
   provinces = [];
   departments: DepartmentDto[] = [];
-  institutions: InstitutionShortInfo[] = [];
+  institutions: InstitutionBasicInfoDto[] = [];
   careLines: CareLineDto[] = [];
   specialties: ClinicalSpecialtyDto[] = [];
   allSpecialties: ClinicalSpecialtyDto[] = [];
@@ -33,8 +33,6 @@ export class SearchAppointmentsInCareNetworkComponent implements OnInit {
   departmentTypeaheadOptions: TypeaheadOption<DepartmentDto>[] = [];
   institutionTypeaheadOptions: TypeaheadOption<InstitutionDto>[] = [];
   provinceTypeaheadOptions: TypeaheadOption<InstitutionDto>[] = [];
-
-
 
   constructor(
     private readonly formBuilder: FormBuilder,
@@ -68,9 +66,9 @@ export class SearchAppointmentsInCareNetworkComponent implements OnInit {
       (institutionAddres: AddressDto) => {
         this.searchForm.controls.state.setValue(institutionAddres.province);
 
-        this.addressMasterDataService.getDepartmentsByProvince(institutionAddres.province.id).subscribe(
+        this.addressMasterDataService.getDepartmentsByProvince(institutionAddres.provinceId).subscribe(
           departments => {
-            const foundDepartment = departments.find((department) => { department.id === institutionAddres.departmentId });
+            const foundDepartment = departments.find((department: DepartmentDto) => { return (department.id === institutionAddres.departmentId) });
             this.searchForm.controls.department.setValue(foundDepartment);
           }
         );
@@ -79,7 +77,7 @@ export class SearchAppointmentsInCareNetworkComponent implements OnInit {
 
     this.institutionService.getInstitutions([this.contextService.institutionId]).subscribe(
       (institutions: InstitutionDto[]) => {
-        const institutionInfo: InstitutionShortInfo = { id: institutions[0].id, name: institutions[0].name }
+        const institutionInfo: InstitutionBasicInfoDto = { id: institutions[0].id, name: institutions[0].name }
         this.searchForm.controls.institution.setValue(institutionInfo);
       }
     );
@@ -120,15 +118,18 @@ export class SearchAppointmentsInCareNetworkComponent implements OnInit {
         delete this.institutions;
         delete this.institutionTypeaheadOptions;
         if (department) {
-          // To do .. connect BE to get institutions by department - load this.institutions
-          this.institutions = [];
-          this.loadInstitutionTypeaheadOptions();
+          this.institutionService.findByDepartmentId(department.id).subscribe(
+            (institutions) => {
+              this.institutions = institutions;
+              this.loadInstitutionTypeaheadOptions();
+            }
+          );
         }
       }
     );
 
     this.searchForm.get("institution").valueChanges.subscribe(
-      (institution: InstitutionShortInfo) => {
+      (institution: InstitutionBasicInfoDto) => {
         this.searchForm.controls.careLine.reset();
         delete this.careLines;
         delete this.careLineTypeaheadOptions;
@@ -146,7 +147,7 @@ export class SearchAppointmentsInCareNetworkComponent implements OnInit {
     this.searchForm.get("careLine").valueChanges.subscribe(
       (careLine: CareLineDto) => {
         this.searchForm.controls.specialty.reset();
-        if (careLine?.clinicalSpecialties?.length) {
+        if (careLine) {
           this.specialties = careLine.clinicalSpecialties;
         }
         else {
@@ -170,7 +171,7 @@ export class SearchAppointmentsInCareNetworkComponent implements OnInit {
     this.searchForm.controls.department.setValue(department);
   }
 
-  setInstitution(institution: InstitutionShortInfo) {
+  setInstitution(institution: InstitutionBasicInfoDto) {
     this.searchForm.controls.institution.setValue(institution);
   }
 
@@ -246,10 +247,4 @@ export class SearchAppointmentsInCareNetworkComponent implements OnInit {
     }
   }
 
-}
-
-
-interface InstitutionShortInfo {
-  id: number,
-  name: string
 }
