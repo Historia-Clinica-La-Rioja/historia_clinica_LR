@@ -1,4 +1,4 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { CareLineDto } from '@api-rest/api-model';
 import { ContextService } from '@core/services/context.service';
@@ -27,5 +27,13 @@ export class CareLineService {
 	getCareLinesBySpecialty(specialtyId: number): Observable<CareLineDto[]> {
 		const url = `${this.BASE_URL}/diary-care-lines/${specialtyId} `;
 		return this.http.get<CareLineDto[]>(url);
+	}
+
+	getByProblemSnomedIdsAndInstitutionId(institutionId: number, problemSnomedIds: string[]) {
+		const url = `${environment.apiBase}/institution/${this.contextService.institutionId}/carelines/problems`;
+		let params = new HttpParams();
+		params = params.append('problemSnomedIds', problemSnomedIds.join(', '));
+		params = params.append('destinationInstitutionId', institutionId);
+		return this.http.get<CareLineDto[]>(url, { params });
 	}
 }
