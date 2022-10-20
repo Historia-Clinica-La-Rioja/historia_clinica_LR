@@ -17,5 +17,9 @@
 			*appHasRole="['ADMINISTRATIVO']">
 			<app-search-appointments-by-specialty></app-search-appointments-by-specialty>
 		</mat-tab>
+		<mat-tab label="{{ 'turnos.home.CARE_NETWORK_OFFER' | translate | uppercase }}"
+			*appHasRole="['ADMINISTRATIVO']">
+			<app-search-appointments-in-care-network></app-search-appointments-in-care-network>
+		</mat-tab>
 	</mat-tab-group>
 </app-content>

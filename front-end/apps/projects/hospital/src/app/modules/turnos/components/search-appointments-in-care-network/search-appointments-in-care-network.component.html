@@ -1,0 +1,83 @@
+<div id="container" fxLayout="column" fxLayoutGap="25px" [formGroup]="searchForm">
+
+    <span [translate]="'turnos.search-appointments-in-care-network.SEARCH_IN_CARE_NETWORK_CRITERIA'"></span>
+
+    <div fxLayout="row" fxLayoutAlign="start end" fxLayoutGap="20px" fxLayout.lt-sm="column"
+        fxLayoutAlign.lt-sm="start start">
+        <div fxFlex="35" fxLayout="column" fxLayoutGap="5px">
+            <span>
+                <strong>
+                    {{ 'turnos.search-appointments-in-care-network.CARELINE' | translate }}
+                </strong>
+                {{ 'turnos.search-appointments-in-care-network.OPTIONAL' | translate }}
+            </span>
+            <app-typeahead id="careline" [placeholder]="'turnos.search-appointments-in-care-network.CARELINE'"
+                [options]="careLineTypeaheadOptions" (selectionChange)="setCareLine($event)">
+            </app-typeahead>
+        </div>
+
+        <div fxFlex="35" fxLayout="column" fxLayoutGap="5px">
+            <strong>{{ 'turnos.search-appointments-in-care-network.SPECIALTY' | translate }}</strong>
+            <app-typeahead id="specialty" [placeholder]="'turnos.search-appointments-in-care-network.SPECIALTY'"
+                [options]="specialtyTypeaheadOptions" (selectionChange)="setClinicalSpecialty($event)">
+            </app-typeahead>
+        </div>
+    </div>
+
+    <div fxLayout="row" fxLayoutAlign="start end" fxLayoutGap="20px" fxLayout.lt-sm="column"
+        fxLayoutAlign.lt-sm="start start">
+        <div fxFlex="25" fxLayout="column" fxLayoutGap="5px">
+            <strong> {{ 'turnos.search-appointments-in-care-network.PROVINCE' | translate }} </strong>
+            <app-typeahead id="province" [placeholder]="'turnos.search-appointments-in-care-network.PROVINCE'"
+                [options]="provinceTypeaheadOptions" (selectionChange)="setProvince($event)">
+            </app-typeahead>
+        </div>
+
+        <div fxFlex="25" fxLayout="column" fxLayoutGap="5px">
+            <strong> {{ 'turnos.search-appointments-in-care-network.DEPARTMENT' | translate }} </strong>
+            <app-typeahead id="department" [placeholder]="'turnos.search-appointments-in-care-network.DEPARTMENT'"
+                [options]="departmentTypeaheadOptions" (selectionChange)="setDepartment($event)">
+            </app-typeahead>
+        </div>
+
+        <div fxFlex="25" fxLayout="column" fxLayoutGap="5px">
+            <span>
+                <strong> {{ 'turnos.search-appointments-in-care-network.INSTITUTION' | translate }} </strong>
+                {{ 'turnos.search-appointments-in-care-network.OPTIONAL' | translate }}
+            </span>
+            <app-typeahead id="institution" [placeholder]="'turnos.search-appointments-in-care-network.INSTITUTION'"
+                [options]="institutionTypeaheadOptions" (selectionChange)="setInstitution($event)">
+            </app-typeahead>
+        </div>
+    </div>
+
+    <div fxLayout="column" fxLayoutGap="10px">
+        <strong> {{ 'turnos.search-appointments-in-care-network.SEARCH_START_DATE' | translate }} </strong>
+        <div fxLayout="row" fxLayoutGap="20px" fxLayout.lt-sm="column" fxLayoutGap.lt-sm="5px">
+            <mat-form-field appearance="outline" fxFlex="25">
+                <mat-label [translate]="'turnos.home.START_DATE'"></mat-label>
+                <input formControlName="startDate" matInput [matDatepicker]="startDatePicker" [min]="today"
+                    (dateChange)="updateEndDate($event.value)">
+                <mat-error [translate]="'forms.REQUIRED'"></mat-error>
+                <mat-datepicker-toggle matSuffix [for]="startDatePicker"></mat-datepicker-toggle>
+                <mat-datepicker #startDatePicker></mat-datepicker>
+            </mat-form-field>
+            <mat-form-field appearance="outline" fxFlex="25">
+                <mat-label [translate]="'turnos.home.END_DATE'"></mat-label>
+                <input formControlName="endDate" matInput [matDatepicker]="endDatePicker">
+                <mat-datepicker-toggle matSuffix [for]="endDatePicker"></mat-datepicker-toggle>
+                <mat-datepicker #endDatePicker></mat-datepicker>
+            </mat-form-field>
+        </div>
+        <mat-hint> {{ 'turnos.search-appointments-in-care-network.DATE_PERIOD_NOTE' | translate }} </mat-hint>
+    </div>
+
+    <div fxLayout="row">
+        <button mat-flat-button type="button" id="search-appointments" color="primary" (click)="searchAppointments()">
+            {{ 'turnos.home.actions.SEARCH_APPOINTMENTS' | translate | uppercase }}
+        </button>
+    </div>
+
+
+
+</div>

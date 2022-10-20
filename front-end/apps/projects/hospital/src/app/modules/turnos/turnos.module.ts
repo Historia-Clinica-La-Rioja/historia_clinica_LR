@@ -18,6 +18,7 @@ import { ProfessionalSelectComponent } from './components/professional-select/pr
 import { SeachAppointmentsByProfessionalComponent } from './components/seach-appointments-by-professional/seach-appointments-by-professional.component';
 import { SearchAppointmentsBySpecialtyComponent } from './components/search-appointments-by-specialty/search-appointments-by-specialty.component';
 import { AppointmentDetailsComponent } from './components/appointment-details/appointment-details.component';
+import { SearchAppointmentsInCareNetworkComponent } from './components/search-appointments-in-care-network/search-appointments-in-care-network.component';
 
 // dialogs
 import { AppointmentComponent } from './dialogs/appointment/appointment.component';
@@ -46,6 +47,7 @@ import { CustomDateFormatter } from './services/custom-date-formatter.service';
 		SearchAppointmentsBySpecialtyComponent,
 		AppointmentDetailsComponent,
 		ProfessionalSelectComponent,
+		SearchAppointmentsInCareNetworkComponent,
 		// dialogs
 		AppointmentComponent,
 		BlockAgendaRangeComponent,
@@ -54,7 +56,7 @@ import { CustomDateFormatter } from './services/custom-date-formatter.service';
 		ConfirmBookingComponent,
 		NewAppointmentComponent,
 		NewAttentionComponent,
-  		ConfirmPrintAppointmentComponent,
+		ConfirmPrintAppointmentComponent,
 	],
 	imports: [
 		CommonModule,

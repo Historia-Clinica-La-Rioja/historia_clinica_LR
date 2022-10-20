@@ -17,6 +17,7 @@
 			"EXPIRED_AGENDAS_LABEL": "VENCIDAS",
 			"SEARCH_BY_PROFESSIONAL": "Oferta por profesional",
 			"SEARCH_BY_SPECIALTY": "Oferta por especialidad",
+			"CARE_NETWORK_OFFER": "Oferta en red de atención",
 			"SEARCH_BY_SPECIALTY_CRITERIA": "Seleccione los criterios para la búsqueda de turnos disponibles por especialidad:",
 			"AVAILABLE_DAYS": "Días disponibles",
 			"TIME_RANGE": "Rango horario",
@@ -35,6 +36,17 @@
 			"messages": {
 				"NO_SPECIFIED_DATE": "Por favor ingrese una fecha para realizar la búsqueda"
 			}
+		},
+		"search-appointments-in-care-network": {
+			"SEARCH_IN_CARE_NETWORK_CRITERIA": "Seleccione los criterios para la búsqueda de turnos disponibles en la red de atención:",
+			"OPTIONAL": "(Opcional)",
+			"CARELINE": "Línea de cuidado",
+			"PROVINCE": "Provincia",
+			"DEPARTMENT": "Partido",
+			"INSTITUTION": "Institución",
+			"SPECIALTY": "Especialidad",
+			"DATE_PERIOD_NOTE": "Se traerán resultados desde la fecha seleccionada hasta 7 días en adelante",
+			"SEARCH_START_DATE": "Fecha de inicio de búsqueda"
 		},
 		"agenda-setup": {
 			"NEW_AGENDA": "Nueva agenda",
