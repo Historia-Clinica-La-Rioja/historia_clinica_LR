@@ -19,6 +19,7 @@ import net.pladema.sgx.backoffice.rest.dto.BackofficeDeleteResponse;
 import net.pladema.snowstorm.repository.SnomedGroupRepository;
 import net.pladema.snowstorm.repository.entity.SnomedGroup;
 import net.pladema.snowstorm.repository.entity.SnomedGroupType;
+import net.pladema.snowstorm.services.domain.semantics.SnomedECL;
 import net.pladema.user.controller.BackofficeAuthoritiesValidator;
 
 @RestController
@@ -37,7 +38,8 @@ public class BackofficeInstitutionPracticesController extends BackofficeSnomedGr
 	@Override
 	public Page<SnomedGroup> getList(Pageable pageable, SnomedGroup entity) {
 		var page = super.getList(Pageable.ofSize(Integer.MAX_VALUE), entity);
-		String ecl = snomedGroupRepository.getById(16).getEcl();
+		Integer procedureId = snomedGroupRepository.getIdByDescription(SnomedECL.PROCEDURE.toString());
+		String ecl = snomedGroupRepository.getById(procedureId).getEcl();
 
 		if (authoritiesValidator.hasRole(ERole.ROOT) || authoritiesValidator.hasRole(ERole.ADMINISTRADOR)) {
 			var practicesList = page.getContent().stream()

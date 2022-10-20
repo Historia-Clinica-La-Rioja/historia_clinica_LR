@@ -19,6 +19,11 @@ public interface SnomedGroupRepository extends JpaRepository<SnomedGroup, Intege
 			" 	AND sg.groupId IS NULL ")
     Integer getBaseGroupIdByEclAndDescription(@Param("ecl") String ecl, @Param("description") String description);
 
+	@Query( " SELECT sg.id " +
+			" FROM SnomedGroup sg " +
+			" WHERE sg.description = :description ")
+	Integer getIdByDescription(@Param("description") String description);
+
 	@Query( " SELECT NEW net.pladema.snowstorm.repository.domain.SnomedTemplateSearchVo(sg.id, sg.description, s.id, s.sctid, s.pt) " +
 			" FROM SnomedGroup sg " +
 			" JOIN SnomedGroup baseGroup ON (sg.groupId = baseGroup.id) " +
