@@ -2,11 +2,15 @@ import { Component, Inject, OnInit } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { CareLineDto, ClinicalSpecialtyDto, DateDto, HCEPersonalHistoryDto, InstitutionBasicInfoDto, ReferenceDto, ReferenceProblemDto } from '@api-rest/api-model';
+import { AddressMasterDataService } from '@api-rest/services/address-master-data.service';
 import { CareLineService } from '@api-rest/services/care-line.service';
 import { ClinicalSpecialtyService } from '@api-rest/services/clinical-specialty.service';
 import { HceGeneralStateService } from '@api-rest/services/hce-general-state.service';
 import { InstitutionService } from '@api-rest/services/institution.service';
 import { forkJoin, Observable, of } from 'rxjs';
+
+
+const COUNTRY = 14;
 
 @Component({
 	selector: 'app-reference',
@@ -20,6 +24,8 @@ export class ReferenceComponent implements OnInit {
 	problemsList: any[] = [];
 	specialties$: Observable<ClinicalSpecialtyDto[]>;
 	careLines$: Observable<CareLineDto[]>;
+	departments$: Observable<any[]>;
+	provinces$: Observable<any[]>;
 	referenceProblemDto: ReferenceProblemDto[] = [];
 	institutions$: Observable<InstitutionBasicInfoDto[]>;
 	selectedFiles: File[] = [];
@@ -35,12 +41,15 @@ export class ReferenceComponent implements OnInit {
 		private readonly dialogRef: MatDialogRef<ReferenceComponent>,
 		private readonly institutionService: InstitutionService,
 		private readonly clinicalSpecialty: ClinicalSpecialtyService,
+		private readonly adressMasterData: AddressMasterDataService
 	) { }
 
 	ngOnInit(): void {
 		this.formReference = this.formBuilder.group({
 			problems: [null, [Validators.required]],
 			searchByCareLine: [this.DEFAULT_RADIO_OPTION],
+			provinceId: [null, [Validators.required]],
+			departmentId: [null, [Validators.required]],
 			consultation: [null],
 			procedure: [null],
 			careLine: [null, [Validators.required]],
@@ -55,6 +64,8 @@ export class ReferenceComponent implements OnInit {
 		this.formReference.controls.careLine.disable();
 
 		this.subscribesToChangesInForm();
+
+		this.provinces$ = this.adressMasterData.getByCountry(COUNTRY);
 
 		this.institutions$ = this.institutionService.getAllInstitutions();
 	}
@@ -227,6 +238,10 @@ export class ReferenceComponent implements OnInit {
 			}
 			this.setInformation();
 		});
+	}
+
+	setDepartmentsByProvince(province: number) {
+		this.departments$ = this.adressMasterData.getDepartmentsByProvince(province);
 	}
 
 }

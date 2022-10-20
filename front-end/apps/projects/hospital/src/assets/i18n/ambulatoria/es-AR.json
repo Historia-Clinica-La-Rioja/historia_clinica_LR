@@ -223,7 +223,9 @@
                     "PLACEHOLDER_SUMMARY": "Resumen de referencia solicitada",
                     "UPLOAD_FILES": "Adjuntar archivos",
                     "ADD_REFERENCE": "AGREGAR SOLICITUD",
-                    "NO_CARE_LINES": "No existen líneas de cuidado para la solicitud"
+                    "NO_CARE_LINES": "No existen líneas de cuidado para la solicitud",
+                    "PROVINCE": "Provincia",
+                    "DEPARTMENT": "Partido"
                 }
             },
             "reference-notification": {

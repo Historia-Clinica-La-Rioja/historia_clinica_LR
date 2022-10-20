@@ -27,6 +27,30 @@
 
                 <div>
                     <mat-form-field appearance="outline" fxFlex="100%" fxLayoutGap="7px">
+                        <mat-label [translate]="'ambulatoria.paciente.nueva-consulta.reference-dialog.PROVINCE'"></mat-label>
+                        <mat-select id="province" name="provinceId" formControlName="provinceId" (selectionChange)="setDepartmentsByProvince($event.value)">
+                            <mat-option *ngFor="let province of provinces$ | async" [value]="province.id">
+                                {{province.description | translate}}
+                            </mat-option>
+                        </mat-select>
+                        <mat-error [translate]="'forms.REQUIRED'"></mat-error>
+                    </mat-form-field>
+                </div>
+
+                <div>
+                    <mat-form-field appearance="outline" fxFlex="100%" fxLayoutGap="7px">
+                        <mat-label [translate]="'ambulatoria.paciente.nueva-consulta.reference-dialog.DEPARTMENT'"></mat-label>
+                        <mat-select id="department" name="departmentId" formControlName="departmentId">
+                            <mat-option *ngFor="let department of departments$ | async" [value]="department.id">
+                                {{department.description | translate}}
+                            </mat-option>
+                        </mat-select>
+                        <mat-error [translate]="'forms.REQUIRED'"></mat-error>
+                    </mat-form-field>
+                </div>
+
+                <div>
+                    <mat-form-field appearance="outline" fxFlex="100%" fxLayoutGap="7px">
                         <mat-label [translate]="'ambulatoria.paciente.nueva-consulta.reference-dialog.PLACEHOLDER_INSTITUTION'"></mat-label>
                         <mat-select id="institution" name="destinationInstitutionId" formControlName="destinationInstitutionId" (selectionChange)="setInformation()">
                             <mat-option *ngFor="let institution of institutions$ | async" [value]="institution.id">
