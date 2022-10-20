@@ -2,6 +2,12 @@
 
     <h2 [translate]="'ambulatoria.paciente.nueva-consulta.reference-dialog.TITLE'"></h2>
 
+    <div fxLayout="row" fxLayoutAlign="end">
+		<button class="close" type="button" mat-dialog-close mat-icon-button matSuffix>
+            <mat-icon>close</mat-icon>
+        </button>
+	</div>
+
         <form [formGroup]="formReference" fxLayout="column" (ngSubmit)="save()">
             <mat-dialog-content>
 
@@ -144,20 +150,12 @@
                 </div>
             </mat-dialog-content>
 
-            <div align="end">
+            <div fxLayoutAlign="end center" class="add_reference">
                 <button type="submit" mat-raised-button color="primary">
                     <span [translate]="'ambulatoria.paciente.nueva-consulta.reference-dialog.ADD_REFERENCE'"></span>
                 </button>
             </div>
 
         </form>
-
-    
-
-    <mat-dialog-actions align="end">
-        <button class="close" type="button" mat-dialog-close mat-icon-button matSuffix>
-            <mat-icon>close</mat-icon>
-        </button>
-    </mat-dialog-actions>
 
 </div>
