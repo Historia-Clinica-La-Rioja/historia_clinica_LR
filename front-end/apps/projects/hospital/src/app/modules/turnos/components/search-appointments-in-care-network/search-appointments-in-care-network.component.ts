@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { AddressDto, CareLineDto, ClinicalSpecialtyDto, DepartmentDto, DiaryAvailableProtectedAppointmentsDto, InstitutionBasicInfoDto, InstitutionDto } from '@api-rest/api-model';
+import { AddressDto, CareLineDto, ClinicalSpecialtyDto, DepartmentDto, DiaryAvailableProtectedAppointmentsDto, InstitutionBasicInfoDto, InstitutionDto, ProvinceDto } from '@api-rest/api-model';
 import { AddressMasterDataService } from '@api-rest/services/address-master-data.service';
 import { CareLineService } from '@api-rest/services/care-line.service';
 import { InstitutionService } from '@api-rest/services/institution.service';
@@ -21,7 +21,7 @@ const PERIOD_DAYS = 7
 export class SearchAppointmentsInCareNetworkComponent implements OnInit {
 
   searchForm: FormGroup;
-  provinces = [];
+  provinces: ProvinceDto[] = [];
   departments: DepartmentDto[] = [];
   institutions: InstitutionBasicInfoDto[] = [];
   careLines: CareLineDto[] = [];
@@ -48,6 +48,7 @@ export class SearchAppointmentsInCareNetworkComponent implements OnInit {
     this.specialtyService.getAll().subscribe(
       (specialties: ClinicalSpecialtyDto[]) => {
         this.allSpecialties = specialties;
+        this.specialties = specialties;
       }
     );
   }
@@ -67,7 +68,16 @@ export class SearchAppointmentsInCareNetworkComponent implements OnInit {
 
     this.institutionService.getInstitutionAddress(this.contextService.institutionId).subscribe(
       (institutionAddres: AddressDto) => {
-        this.searchForm.controls.state.setValue(institutionAddres.province);
+
+        this.addressMasterDataService.getByCountry(DEFAULT_COUNTRY_ID).subscribe(
+          provinces => {
+            this.provinces = provinces;
+            this.loadProvinceTypeaheadOptions();
+
+            const foundState = this.provinces.find((province: ProvinceDto) => { return (province.id === institutionAddres.provinceId) });
+            this.searchForm.controls.state.setValue(foundState);
+          }
+        );
 
         this.addressMasterDataService.getDepartmentsByProvince(institutionAddres.provinceId).subscribe(
           departments => {
@@ -89,13 +99,6 @@ export class SearchAppointmentsInCareNetworkComponent implements OnInit {
       (careLines: CareLineDto[]) => {
         this.careLines = careLines;
         this.loadCareLineTypeaheadOptions();
-      }
-    );
-
-    this.addressMasterDataService.getByCountry(DEFAULT_COUNTRY_ID).subscribe(
-      provinces => {
-        this.provinces = provinces;
-        this.loadProvinceTypeaheadOptions();
       }
     );
 
@@ -204,8 +207,8 @@ export class SearchAppointmentsInCareNetworkComponent implements OnInit {
     };
 
     this.diaryAvailableAppointmentsSearchService.getAvailableProtectedAppointments(this.searchForm.value.institution.id, filters).subscribe(
-      (avaibleAppointments: DiaryAvailableProtectedAppointmentsDto[]) => {
-        this.protectedAvaibleAppointments = avaibleAppointments;
+      (availableAppointments: DiaryAvailableProtectedAppointmentsDto[]) => {
+        this.protectedAvaibleAppointments = availableAppointments;
       }
     );
 
