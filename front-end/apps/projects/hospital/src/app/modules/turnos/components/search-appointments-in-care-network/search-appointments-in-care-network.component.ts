@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { AddressDto, CareLineDto, ClinicalSpecialtyDto, DepartmentDto, InstitutionBasicInfoDto, InstitutionDto } from '@api-rest/api-model';
+import { AddressDto, CareLineDto, ClinicalSpecialtyDto, DepartmentDto, DiaryAvailableProtectedAppointmentsDto, InstitutionBasicInfoDto, InstitutionDto } from '@api-rest/api-model';
 import { AddressMasterDataService } from '@api-rest/services/address-master-data.service';
 import { CareLineService } from '@api-rest/services/care-line.service';
 import { InstitutionService } from '@api-rest/services/institution.service';
@@ -9,6 +9,7 @@ import { ContextService } from '@core/services/context.service';
 import { datePlusDays } from '@core/utils/date.utils';
 import { DEFAULT_COUNTRY_ID } from '@core/utils/form.utils';
 import { TypeaheadOption } from '@presentation/components/typeahead/typeahead.component';
+import { DiaryAvailableAppointmentsSearchService, ProtectedAppointmentsFilter } from '@turnos/services/diary-available-appointments-search.service';
 import { Moment } from 'moment';
 
 const PERIOD_DAYS = 7
@@ -27,6 +28,7 @@ export class SearchAppointmentsInCareNetworkComponent implements OnInit {
   specialties: ClinicalSpecialtyDto[] = [];
   allSpecialties: ClinicalSpecialtyDto[] = [];
   readonly today = new Date();
+  protectedAvaibleAppointments: DiaryAvailableProtectedAppointmentsDto[] = [];
 
   careLineTypeaheadOptions: TypeaheadOption<CareLineDto>[] = [];
   specialtyTypeaheadOptions: TypeaheadOption<ClinicalSpecialtyDto>[] = [];
@@ -41,6 +43,7 @@ export class SearchAppointmentsInCareNetworkComponent implements OnInit {
     private addressMasterDataService: AddressMasterDataService,
     private careLineService: CareLineService,
     private specialtyService: SpecialtyService,
+    private diaryAvailableAppointmentsSearchService: DiaryAvailableAppointmentsSearchService,
   ) {
     this.specialtyService.getAll().subscribe(
       (specialties: ClinicalSpecialtyDto[]) => {
@@ -184,6 +187,27 @@ export class SearchAppointmentsInCareNetworkComponent implements OnInit {
   }
 
   searchAppointments() {
+    const filters: ProtectedAppointmentsFilter = {
+      careLineId: this.searchForm.value.careLine?.id,
+      clinicalSpecialtyId: this.searchForm.value.specialty.id,
+      departmentId: this.searchForm.value.department.id,
+      initialSearchDate: {
+        year: this.searchForm.value.startDate.getFullYear(),
+        month: this.searchForm.value.startDate.getMonth() + 1,
+        day: this.searchForm.value.startDate.getDay()
+      },
+      endSearchDate: {
+        year: this.searchForm.value.endDate.getFullYear(),
+        month: this.searchForm.value.endDate.getMonth() + 1,
+        day: this.searchForm.value.endDate.getDay()
+      }
+    };
+
+    this.diaryAvailableAppointmentsSearchService.getAvailableProtectedAppointments(this.searchForm.value.institution.id, filters).subscribe(
+      (avaibleAppointments: DiaryAvailableProtectedAppointmentsDto[]) => {
+        this.protectedAvaibleAppointments = avaibleAppointments;
+      }
+    );
 
   }
 
