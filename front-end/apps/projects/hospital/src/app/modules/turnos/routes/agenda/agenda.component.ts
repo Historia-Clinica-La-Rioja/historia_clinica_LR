@@ -323,6 +323,7 @@ export class AgendaComponent implements OnInit, OnDestroy, OnChanges {
 				patientId: this.patientId ? Number(this.patientId) : null,
 			}
 		});
+		dialogRef.afterClosed().subscribe(() => this.appointmentFacade.loadAppointments());
 	}
 
 	viewAppointment(event: CalendarEvent): void {

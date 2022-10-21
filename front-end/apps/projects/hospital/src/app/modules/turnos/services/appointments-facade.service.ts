@@ -214,7 +214,6 @@ export class AppointmentsFacadeService {
 			.pipe(
 				map((response: number) => {
 					if (response) {
-						this.loadAppointments(); // TODO En lugar de hacer otro llamado al BE evaluar si se puede agregar appointments$
 						return response;
 					}
 					return -1;
