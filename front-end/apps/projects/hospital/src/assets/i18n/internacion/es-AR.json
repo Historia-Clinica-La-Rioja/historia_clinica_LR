@@ -335,7 +335,13 @@
 			"PENDING_MEDICAL_DISCHARGE": "Alta médica pendiente",
 			"PENDING_ADMINISTRATIVE_DISCHARGE": "Alta administrativa pendiente",
 			"SEARCH": "Buscar por nombre o documento...",
-			"NO_INFO": "Sin información"
+			"NO_INFO": "Sin información",
+			"filters":{
+				"PHYSICAL_DISCHARGE_DONE": "Alta física realizada",
+				"ROOM": "Habitación",
+				"SECTOR": "Sector",
+				"FILTER": "Filtro"
+			}
 		},
 		"internacion-paciente": {
 			"TITLE": "Internación",
