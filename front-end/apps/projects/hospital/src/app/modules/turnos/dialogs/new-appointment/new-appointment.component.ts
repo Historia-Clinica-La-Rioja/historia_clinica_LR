@@ -221,6 +221,7 @@ export class NewAppointmentComponent implements OnInit {
 
 				const warnignComponent = this.dialog.open(DiscardWarningComponent,
 					{
+						disableClose:true,
 						data: {
 							title: 'turnos.new-appointment.appointment-exists.TITLE',
 							content: content,

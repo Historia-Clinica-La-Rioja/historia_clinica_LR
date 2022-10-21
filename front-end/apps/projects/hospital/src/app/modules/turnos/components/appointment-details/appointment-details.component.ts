@@ -33,6 +33,7 @@ export class AppointmentDetailsComponent implements OnInit {
 	assignAppointment() {
 		const dialogReference = this.dialog.open(NewAppointmentComponent, {
 			width: '35%',
+			disableClose:true,
 			data: {
 				date: this.emptyAppointment.date,
 				diaryId: this.emptyAppointment.diaryId,
