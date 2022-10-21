@@ -28,7 +28,8 @@
       "Referencias.especialidad_clinica",
       "Referencias.fecha_consulta",
       "Referencias.institucion_destino",
-      "Referencias.tiene_contra"
+      "Referencias.tiene_contra",
+      "Referencias.id"
     ],
     "filters": [
       {
@@ -54,7 +55,8 @@
       "Referencias.especialidad_clinica",
       "Referencias.fecha_consulta",
       "Referencias.institucion_destino",
-      "Referencias.tiene_contra"
+      "Referencias.tiene_contra",
+      "Referencias.id"
     ],
     "y": [
       "measures"

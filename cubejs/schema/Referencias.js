@@ -46,12 +46,18 @@ sql: `SELECT r.id,
   measures: {
     cant_referencia: {
         sql: `id`,
-        type: `sum`,
+        type: `count`,
         title: `Cantidad Referencias`,
     }
   },
   
   dimensions: {
+    // Id
+    id: {
+      sql: `id`,
+      type: `number`,
+      title: 'Id',
+    },
     // Fecha consulta
     fecha_consulta: {
       sql: `fecha_consulta`,
