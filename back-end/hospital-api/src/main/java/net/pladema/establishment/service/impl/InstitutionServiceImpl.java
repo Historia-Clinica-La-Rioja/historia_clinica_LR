@@ -51,9 +51,7 @@ public class InstitutionServiceImpl implements InstitutionService {
 	}
 
 	@Override
-	public Optional<AddressBo> getAddress(Integer institutionId) {
-		return Optional.ofNullable(get(institutionId))
-				.map(institutionBo -> addressService.getAddressesByIds(List.of(institutionBo.getAddressId()))
-						.stream().findFirst()).orElse(null);
+	public AddressBo getAddress(Integer institutionId) {
+		return addressService.getAddressByInstitution(institutionId);
 	}
 }

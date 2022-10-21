@@ -9,5 +9,5 @@ public interface InstitutionService {
 
     InstitutionBo get(Integer id);
 	InstitutionBo get(String sisaCode);
-	Optional<AddressBo> getAddress(Integer institutionId);
+	AddressBo getAddress(Integer institutionId);
 }

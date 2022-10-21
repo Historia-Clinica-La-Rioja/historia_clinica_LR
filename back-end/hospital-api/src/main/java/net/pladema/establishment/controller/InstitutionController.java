@@ -2,13 +2,16 @@ package net.pladema.establishment.controller;
 
 import io.swagger.v3.oas.annotations.tags.Tag;
 import net.pladema.address.controller.dto.AddressDto;
+import net.pladema.address.controller.mapper.AddressMapper;
 import net.pladema.address.controller.service.AddressExternalService;
+import net.pladema.address.controller.service.domain.AddressBo;
 import net.pladema.establishment.controller.dto.InstitutionAddressDto;
 import net.pladema.establishment.controller.dto.InstitutionBasicInfoDto;
 import net.pladema.establishment.controller.dto.InstitutionDto;
 import net.pladema.establishment.controller.mapper.InstitutionMapper;
 import net.pladema.establishment.repository.InstitutionRepository;
 import net.pladema.establishment.repository.entity.Institution;
+import net.pladema.establishment.service.InstitutionService;
 import net.pladema.establishment.service.domain.InstitutionBasicInfoBo;
 import net.pladema.establishment.service.domain.InstitutionBo;
 import net.pladema.establishment.service.fetchInstitutions.FetchAllInstitutions;
@@ -33,18 +36,24 @@ public class InstitutionController {
 	private final AddressExternalService addressExternalService;
 	private final InstitutionRepository repository;
 	private final InstitutionMapper mapper;
+	private final AddressMapper addressMapper;
 	private final FetchAllInstitutions fetchAllInstitutions;
 	private final Logger logger;
+	private final InstitutionService institutionService;
 
 	public InstitutionController(InstitutionRepository repository,
 								 InstitutionMapper mapper,
 								 AddressExternalService addressExternalService,
-								 FetchAllInstitutions fetchAllInstitutions) {
+								 FetchAllInstitutions fetchAllInstitutions,
+								 InstitutionService institutionService,
+								 AddressMapper addressMapper) {
 		this.repository = repository;
 		this.mapper = mapper;
 		this.addressExternalService = addressExternalService;
 		this.fetchAllInstitutions = fetchAllInstitutions;
 		this.logger = LoggerFactory.getLogger(this.getClass());
+		this.institutionService = institutionService;
+		this.addressMapper = addressMapper;
 	}
 
 	@GetMapping(params = "ids")
@@ -76,6 +85,16 @@ public class InstitutionController {
 		var result = mapper.toListInstitutionBasicInfoDto(institutionBos);
 		logger.debug("Ids results -> {}", result.stream().map(InstitutionBasicInfoDto::getId));
 		logger.trace("Results -> {}", result);
+		return result;
+	}
+
+	@GetMapping("/{institutionId}/address")
+	public @ResponseBody
+	AddressDto getInstitutionAddress(@PathVariable(name = "institutionId") Integer institutionId) {
+		logger.debug("Input parameter -> institutionId {}", institutionId);
+		AddressBo institutionAddressBo = institutionService.getAddress(institutionId);
+		var result = addressMapper.fromAddressBo(institutionAddressBo);
+		logger.trace("result -> {}", result);
 		return result;
 	}
 
