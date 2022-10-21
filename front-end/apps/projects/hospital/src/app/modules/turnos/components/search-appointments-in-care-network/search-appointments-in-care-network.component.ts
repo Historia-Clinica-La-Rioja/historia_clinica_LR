@@ -12,7 +12,7 @@ import { TypeaheadOption } from '@presentation/components/typeahead/typeahead.co
 import { DiaryAvailableAppointmentsSearchService, ProtectedAppointmentsFilter } from '@turnos/services/diary-available-appointments-search.service';
 import { Moment } from 'moment';
 
-const PERIOD_DAYS = 7
+const PERIOD_DAYS = 7;
 @Component({
   selector: 'app-search-appointments-in-care-network',
   templateUrl: './search-appointments-in-care-network.component.html',
@@ -33,8 +33,12 @@ export class SearchAppointmentsInCareNetworkComponent implements OnInit {
   careLineTypeaheadOptions: TypeaheadOption<CareLineDto>[] = [];
   specialtyTypeaheadOptions: TypeaheadOption<ClinicalSpecialtyDto>[] = [];
   departmentTypeaheadOptions: TypeaheadOption<DepartmentDto>[] = [];
-  institutionTypeaheadOptions: TypeaheadOption<InstitutionDto>[] = [];
-  provinceTypeaheadOptions: TypeaheadOption<InstitutionDto>[] = [];
+  institutionTypeaheadOptions: TypeaheadOption<InstitutionBasicInfoDto>[] = [];
+  provinceTypeaheadOptions: TypeaheadOption<ProvinceDto>[] = [];
+
+  initialProvinceTypeaheadOptionSelected: TypeaheadOption<ProvinceDto>;
+  initialDepartmentTypeaheadOptionSelected: TypeaheadOption<DepartmentDto>;
+  initialInstitutionTypeaheadOptionSelected: TypeaheadOption<InstitutionBasicInfoDto>;
 
   constructor(
     private readonly formBuilder: FormBuilder,
@@ -75,23 +79,29 @@ export class SearchAppointmentsInCareNetworkComponent implements OnInit {
             this.loadProvinceTypeaheadOptions();
 
             const foundState = this.provinces.find((province: ProvinceDto) => { return (province.id === institutionAddres.provinceId) });
-            this.searchForm.controls.state.setValue(foundState);
+            this.initialProvinceTypeaheadOptionSelected = provinceToTypeaheadOption(foundState);
           }
         );
 
         this.addressMasterDataService.getDepartmentsByProvince(institutionAddres.provinceId).subscribe(
           departments => {
+            this.departments = departments;
+            this.loadDepartmentTypeaheadOptions();
+
             const foundDepartment = departments.find((department: DepartmentDto) => { return (department.id === institutionAddres.departmentId) });
-            this.searchForm.controls.department.setValue(foundDepartment);
+            this.initialDepartmentTypeaheadOptionSelected = departmentToTypeaheadOption(foundDepartment);
+
+            this.institutionService.findByDepartmentId(foundDepartment.id).subscribe(
+              (institutions) => {
+                this.institutions = institutions;
+                this.loadInstitutionTypeaheadOptions();
+
+                const foundInstitution = this.institutions.find((institution: InstitutionBasicInfoDto) => { return (institution.id === this.contextService.institutionId) });
+                this.initialInstitutionTypeaheadOptionSelected = institutionToTypeaheadOption(foundInstitution)
+              }
+            );
           }
         );
-      }
-    );
-
-    this.institutionService.getInstitutions([this.contextService.institutionId]).subscribe(
-      (institutions: InstitutionDto[]) => {
-        const institutionInfo: InstitutionBasicInfoDto = { id: institutions[0].id, name: institutions[0].name }
-        this.searchForm.controls.institution.setValue(institutionInfo);
       }
     );
 
@@ -102,71 +112,19 @@ export class SearchAppointmentsInCareNetworkComponent implements OnInit {
       }
     );
 
-    this.searchForm.get("state").valueChanges.subscribe(
-      province => {
-        this.searchForm.controls.department.reset();
-        delete this.departments;
-        delete this.departmentTypeaheadOptions;
-        if (province) {
-          this.addressMasterDataService.getDepartmentsByProvince(province.id).subscribe(
-            departments => {
-              this.departments = departments;
-              this.loadDepartmentTypeaheadOptions();
-            }
-          );
-        }
-      }
-    );
-
-    this.searchForm.get("department").valueChanges.subscribe(
-      department => {
-        this.searchForm.controls.institution.reset();
-        delete this.institutions;
-        delete this.institutionTypeaheadOptions;
-        if (department) {
-          this.institutionService.findByDepartmentId(department.id).subscribe(
-            (institutions) => {
-              this.institutions = institutions;
-              this.loadInstitutionTypeaheadOptions();
-            }
-          );
-        }
-      }
-    );
-
-    this.searchForm.get("institution").valueChanges.subscribe(
-      (institution: InstitutionBasicInfoDto) => {
-        this.searchForm.controls.careLine.reset();
-        delete this.careLines;
-        delete this.careLineTypeaheadOptions;
-        if (institution) {
-          this.careLineService.getCareLinesAttachedToInstitution(institution.id).subscribe(
-            (careLines: CareLineDto[]) => {
-              this.careLines = careLines;
-              this.loadCareLineTypeaheadOptions();
-            }
-          );
-        }
-      }
-    );
-
-    this.searchForm.get("careLine").valueChanges.subscribe(
-      (careLine: CareLineDto) => {
-        this.searchForm.controls.specialty.reset();
-        if (careLine) {
-          this.specialties = careLine.clinicalSpecialties;
-        }
-        else {
-          this.specialties = this.allSpecialties;
-        }
-        this.loadSpecialtyTypeaheadOptions();
-      }
-    );
-
   }
 
   setCareLine(careLine: CareLineDto) {
     this.searchForm.controls.careLine.setValue(careLine);
+
+    this.searchForm.controls.specialty.reset();
+    if (careLine) {
+      this.specialties = careLine.clinicalSpecialties;
+    }
+    else {
+      this.specialties = this.allSpecialties;
+    }
+    this.loadSpecialtyTypeaheadOptions();
   }
 
   setClinicalSpecialty(clinicalSpecialty: ClinicalSpecialtyDto) {
@@ -175,14 +133,52 @@ export class SearchAppointmentsInCareNetworkComponent implements OnInit {
 
   setDepartment(department: DepartmentDto) {
     this.searchForm.controls.department.setValue(department);
+
+    this.institutions = [];
+    this.institutionTypeaheadOptions = [];
+    this.initialInstitutionTypeaheadOptionSelected = null;
+    this.searchForm.controls.institution.reset();
+    if (department) {
+      this.institutionService.findByDepartmentId(department.id).subscribe(
+        (institutions) => {
+          this.institutions = institutions;
+          this.loadInstitutionTypeaheadOptions();
+        }
+      );
+    }
   }
 
   setInstitution(institution: InstitutionBasicInfoDto) {
     this.searchForm.controls.institution.setValue(institution);
+
+    this.careLines = [];
+    this.careLineTypeaheadOptions = [];
+    this.searchForm.controls.careLine.reset();
+    if (institution) {
+      this.careLineService.getCareLinesAttachedToInstitution(institution.id).subscribe(
+        (careLines: CareLineDto[]) => {
+          this.careLines = careLines;
+          this.loadCareLineTypeaheadOptions();
+        }
+      );
+    }
   }
 
   setProvince(province) {
     this.searchForm.controls.state.setValue(province);
+
+    this.departments = [];
+    this.departmentTypeaheadOptions = [];
+    this.initialDepartmentTypeaheadOptionSelected = null;
+    this.searchForm.controls.department.reset();
+    if (province) {
+      this.addressMasterDataService.getDepartmentsByProvince(province.id).subscribe(
+        departments => {
+          this.departments = departments;
+          this.loadDepartmentTypeaheadOptions();
+        }
+      );
+    }
   }
 
   updateEndDate(initialDate: Moment) {
@@ -195,14 +191,14 @@ export class SearchAppointmentsInCareNetworkComponent implements OnInit {
       clinicalSpecialtyId: this.searchForm.value.specialty.id,
       departmentId: this.searchForm.value.department.id,
       initialSearchDate: {
-        year: this.searchForm.value.startDate.getFullYear(),
-        month: this.searchForm.value.startDate.getMonth() + 1,
-        day: this.searchForm.value.startDate.getDay()
+        year: this.searchForm.controls.startDate.value.getFullYear(),
+        month: this.searchForm.controls.startDate.value.getMonth() + 1,
+        day: this.searchForm.controls.startDate.value.getDate()
       },
       endSearchDate: {
-        year: this.searchForm.value.endDate.getFullYear(),
-        month: this.searchForm.value.endDate.getMonth() + 1,
-        day: this.searchForm.value.endDate.getDay()
+        year: this.searchForm.controls.endDate.value.getFullYear(),
+        month: this.searchForm.controls.endDate.value.getMonth() + 1,
+        day: this.searchForm.controls.endDate.value.getDate()
       }
     };
 
@@ -215,63 +211,63 @@ export class SearchAppointmentsInCareNetworkComponent implements OnInit {
   }
 
   private loadSpecialtyTypeaheadOptions(): void {
-    this.specialtyTypeaheadOptions = this.specialties?.map(toTypeaheadOption);
-
-    function toTypeaheadOption(specialty: ClinicalSpecialtyDto): TypeaheadOption<ClinicalSpecialtyDto> {
-      return {
-        compareValue: specialty.name,
-        value: specialty,
-        viewValue: specialty.name
-      };
-    }
+    this.specialtyTypeaheadOptions = this.specialties?.map(specialtyToTypeaheadOption);
   }
 
   private loadCareLineTypeaheadOptions(): void {
-    this.careLineTypeaheadOptions = this.careLines?.map(toTypeaheadOption);
-
-    function toTypeaheadOption(careLine: CareLineDto): TypeaheadOption<CareLineDto> {
-      return {
-        compareValue: careLine.description,
-        value: careLine,
-        viewValue: careLine.description
-      };
-    }
+    this.careLineTypeaheadOptions = this.careLines?.map(careLineToTypeaheadOption);
   }
 
   private loadDepartmentTypeaheadOptions(): void {
-    this.departmentTypeaheadOptions = this.departments?.map(toTypeaheadOption);
-
-    function toTypeaheadOption(department: DepartmentDto): TypeaheadOption<DepartmentDto> {
-      return {
-        compareValue: department.description,
-        value: department,
-        viewValue: department.description
-      };
-    }
+    this.departmentTypeaheadOptions = this.departments?.map(departmentToTypeaheadOption);
   }
 
   private loadInstitutionTypeaheadOptions(): void {
-    this.institutionTypeaheadOptions = this.institutions?.map(toTypeaheadOption);
-
-    function toTypeaheadOption(institution: InstitutionDto): TypeaheadOption<InstitutionDto> {
-      return {
-        compareValue: institution.name,
-        value: institution,
-        viewValue: institution.name
-      };
-    }
+    this.institutionTypeaheadOptions = this.institutions?.map(institutionToTypeaheadOption);
   }
 
   private loadProvinceTypeaheadOptions(): void {
-    this.provinceTypeaheadOptions = this.provinces?.map(toTypeaheadOption);
-
-    function toTypeaheadOption(province): TypeaheadOption<any> {
-      return {
-        compareValue: province.description,
-        value: province,
-        viewValue: province.description
-      };
-    }
+    this.provinceTypeaheadOptions = this.provinces?.map(provinceToTypeaheadOption);
   }
 
+}
+
+function departmentToTypeaheadOption(department: DepartmentDto): TypeaheadOption<DepartmentDto> {
+  return {
+    compareValue: department.description,
+    value: department,
+    viewValue: department.description
+  };
+}
+
+function provinceToTypeaheadOption(province: ProvinceDto): TypeaheadOption<ProvinceDto> {
+  return {
+    compareValue: province.description,
+    value: province,
+    viewValue: province.description
+  };
+}
+
+function institutionToTypeaheadOption(institution: InstitutionBasicInfoDto): TypeaheadOption<InstitutionBasicInfoDto> {
+  return {
+    compareValue: institution.name,
+    value: institution,
+    viewValue: institution.name
+  };
+}
+
+function careLineToTypeaheadOption(careLine: CareLineDto): TypeaheadOption<CareLineDto> {
+  return {
+    compareValue: careLine.description,
+    value: careLine,
+    viewValue: careLine.description
+  };
+}
+
+function specialtyToTypeaheadOption(specialty: ClinicalSpecialtyDto): TypeaheadOption<ClinicalSpecialtyDto> {
+  return {
+    compareValue: specialty.name,
+    value: specialty,
+    viewValue: specialty.name
+  };
 }

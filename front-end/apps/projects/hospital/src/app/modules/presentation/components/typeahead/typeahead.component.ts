@@ -40,15 +40,13 @@ export class TypeaheadComponent implements OnInit, OnChanges {
 	ngOnChanges(): void {
 		this.optionsFiltered = this.options;
 
-		if (this.options) {
-			this.form.controls.searchValue.setValue(this.externalSetValue?.compareValue);
+		if (this.externalSetValue && this.optionsIncludes(this.externalSetValue)) {
 			this.optionSelected = this.externalSetValue;
-			if (this.externalSetValue) {
-				this.selectionChange.emit(this.optionSelected?.value);
-			}
-		}
 
-		if (this.optionSelected && this.optionsNotIncludesSelected()) {
+			this.form.controls.searchValue.setValue(this.optionSelected?.compareValue);
+			this.selectionChange.emit(this.optionSelected?.value);
+		}
+		else {
 			this.reset();
 		}
 	}
@@ -81,9 +79,9 @@ export class TypeaheadComponent implements OnInit, OnChanges {
 		});
 	}
 
-	private optionsNotIncludesSelected(): boolean {
-		return this.optionsFiltered && !this.optionsFiltered
-			.find(o => o.compareValue === this.optionSelected.compareValue);
+	private optionsIncludes(option: TypeaheadOption<any>): boolean {
+		return this.optionsFiltered && !!this.optionsFiltered
+			.find(o => o.compareValue === option.compareValue);
 	}
 
 }

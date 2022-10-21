@@ -29,14 +29,16 @@
         <div fxFlex="25" fxLayout="column" fxLayoutGap="5px">
             <strong> {{ 'turnos.search-appointments-in-care-network.PROVINCE' | translate }} </strong>
             <app-typeahead id="province" [placeholder]="'turnos.search-appointments-in-care-network.PROVINCE'"
-                [options]="provinceTypeaheadOptions" (selectionChange)="setProvince($event)">
+                [options]="provinceTypeaheadOptions" (selectionChange)="setProvince($event)"
+                [externalSetValue]="initialProvinceTypeaheadOptionSelected">
             </app-typeahead>
         </div>
 
         <div fxFlex="25" fxLayout="column" fxLayoutGap="5px">
             <strong> {{ 'turnos.search-appointments-in-care-network.DEPARTMENT' | translate }} </strong>
             <app-typeahead id="department" [placeholder]="'turnos.search-appointments-in-care-network.DEPARTMENT'"
-                [options]="departmentTypeaheadOptions" (selectionChange)="setDepartment($event)">
+                [options]="departmentTypeaheadOptions" (selectionChange)="setDepartment($event)"
+                [externalSetValue]="initialDepartmentTypeaheadOptionSelected">
             </app-typeahead>
         </div>
 
@@ -46,7 +48,8 @@
                 {{ 'turnos.search-appointments-in-care-network.OPTIONAL' | translate }}
             </span>
             <app-typeahead id="institution" [placeholder]="'turnos.search-appointments-in-care-network.INSTITUTION'"
-                [options]="institutionTypeaheadOptions" (selectionChange)="setInstitution($event)">
+                [options]="institutionTypeaheadOptions" (selectionChange)="setInstitution($event)"
+                [externalSetValue]="initialInstitutionTypeaheadOptionSelected">
             </app-typeahead>
         </div>
     </div>
