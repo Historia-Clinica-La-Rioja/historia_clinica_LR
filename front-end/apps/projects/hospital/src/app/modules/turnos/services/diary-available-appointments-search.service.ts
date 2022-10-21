@@ -1,65 +1,21 @@
+import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { DiaryAvailableProtectedAppointmentsDto } from '@api-rest/api-model';
-import { Observable, of } from 'rxjs';
+import { environment } from '@environments/environment';
+import { Observable } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
 })
 export class DiaryAvailableAppointmentsSearchService {
 
-  constructor() { }
+  constructor(
+    private http: HttpClient,
+  ) { }
 
   getAvailableProtectedAppointments(institutionId: number, filters: ProtectedAppointmentsFilter): Observable<DiaryAvailableProtectedAppointmentsDto[]> {
-    return of(
-      [
-        {
-          clinicalSpecialty: { id: 5, name: "Ginecología" },
-          date: {
-            day: 5,
-            month: 11,
-            year: 2022,
-          },
-
-          department: { id: 14, description: "Bolivar" },
-          diaryId: 511,
-          doctorsOffice: "oficina1",
-          hour: {
-            hours: 14,
-            minutes: 30,
-          },
-          institution: {
-            id: 1,
-            name: "clinica chacabuco",
-          },
-          jointDiary: true,
-          professionalFullName: "Marcelo Tinelli"
-
-        },
-        {
-          clinicalSpecialty: { id: 5, name: "Pediatría" },
-          date: {
-            day: 5,
-            month: 11,
-            year: 2022,
-          },
-
-          department: { id: 14, description: "Tandil" },
-          diaryId: 511,
-          doctorsOffice: "oficina1",
-          hour: {
-            hours: 14,
-            minutes: 30,
-          },
-          institution: {
-            id: 1,
-            name: "clinica Paz",
-          },
-          jointDiary: true,
-          professionalFullName: "Jorgelin Tinelli"
-
-        }
-      ]
-    );
+    const url = `${environment.apiBase}/institutions/${institutionId}/medicalConsultations/available-appointments/protected`;
+    return this.http.post<DiaryAvailableProtectedAppointmentsDto[]>(url, filters);
   }
 }
 
