@@ -27,6 +27,9 @@ export interface CardModel {
 	details?: any[];
 	action: ValueAction;
 	ranking?: number;
+	hasPhysicalDischarge?: boolean;
+	sectorDescription?: string;
+	roomNumber?: string;
 }
 
 export interface Value {

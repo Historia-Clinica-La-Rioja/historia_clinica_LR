@@ -1,13 +1,63 @@
-<div>
+<div fxLayout="row">
 	<mat-form-field appearance="outline" class="serch">
 		<mat-label>{{'internaciones.internment-patient-card.SEARCH' |
 			translate}}</mat-label>
 		<input matInput (keyup)="applyFilter($event)">
 		<mat-icon matSuffix>search</mat-icon>
 	</mat-form-field>
-	<mat-card *ngIf="pageSlice?.length else noInfo">
 
-		<div *ngFor="let patient of pageSlice;last as isLast">
+	<button mat-button color="primary" class="margin-button" (click)="setPanelState()" fxLayoutAlign="none start"
+		fxLayoutGap="15px">
+		<mat-icon color="primary">filter_list</mat-icon>
+		{{'internaciones.internment-patient-card.filters.FILTER'| translate | uppercase }} <mat-icon color="primary"
+			[ngClass]="{'button-filter-effect':panelOpenState }">
+			keyboard_arrow_down</mat-icon>
+	</button>
+</div>
+
+<div [hidden]="!panelOpenState">
+
+	<form id="filter-form" [formGroup]="formFilter" fxLayoutGap="15px">
+
+		<mat-form-field appearance="outline">
+			<mat-select id="filter-sector" formControlName="sector" (selectionChange)="upDateFilters()"
+				placeholder="{{'internaciones.internment-patient-card.filters.SECTOR' | translate}}">
+				<mat-option *ngFor="let sector of sectors" [value]="sector.sectorDescription">
+					{{sector.sectorDescription | translate}}
+				</mat-option>
+			</mat-select>
+			<button id="clear-filter-sector" type="button" mat-button *ngIf="formFilter.controls.sector.value" matSuffix
+				color="warn" mat-icon-button
+				(click)="clearFilterField(formFilter.controls.sector); $event.stopPropagation()">
+				<mat-icon>close</mat-icon>
+			</button>
+		</mat-form-field>
+
+		<mat-form-field appearance="outline">
+			<mat-select id="filter-room" formControlName="room" (selectionChange)="upDateFilters()"
+				placeholder="{{'internaciones.internment-patient-card.filters.ROOM' | translate}}">
+				<mat-option *ngFor="let room of rooms" [value]="room.roomNumber">
+					{{room.roomNumber | translate}}
+				</mat-option>
+			</mat-select>
+			<button id="clear-filter-room" type="button" mat-button *ngIf="formFilter.controls.room.value" matSuffix
+				color="warn" mat-icon-button
+				(click)="clearFilterField(formFilter.controls.room); $event.stopPropagation()">
+				<mat-icon>close</mat-icon>
+			</button>
+		</mat-form-field>
+
+		<mat-slide-toggle id="physical-slide" class="margin-button" color="primary" formControlName="physical"
+			(change)="upDateFilters()">
+			<span> {{'internaciones.internment-patient-card.filters.PHYSICAL_DISCHARGE_DONE' | translate}}</span>
+		</mat-slide-toggle>
+	</form>
+</div>
+
+<mat-card *ngIf="pageSlice?.length else noInfo">
+
+	<div *ngFor="let patient of pageSlice;last as isLast">
+
 			<app-card [cardContent]="patient">
 
 				<div *ngIf="patient.hasPhysicalDischarge else physicalDischarge" fxLayoutGap.gt-xs="16px">
@@ -32,12 +82,12 @@
 					<div fxLayout="row" fxLayoutAlign="space-between">
 
 						<div fxLayoutAlign="none center" class="content">
-							<mat-icon fontSet="material-icons-outlined">meeting_room</mat-icon>
+							<mat-icon class="icon" fontSet="material-icons-outlined">meeting_room</mat-icon>
 							<span *ngIf="!patient.hasPhysicalDischarge">{{patient?.roomNumber}}</span>
 						</div>
 
 						<div fxLayoutAlign="none center" class="content">
-							<mat-icon fontSet="material-icons-outlined">single_bed</mat-icon>
+							<mat-icon class="icon" fontSet="material-icons-outlined">single_bed</mat-icon>
 							<span *ngIf="!patient.hasPhysicalDischarge">{{patient?.bedNumber}}</span>
 						</div>
 
@@ -58,8 +108,7 @@
 			[pageSizeOptions]="pageSizeOptions" (page)="onPageChange($event)" showFirstLastButtons>
 		</mat-paginator>
 
-	</mat-card>
-</div>
+</mat-card>
 
 <ng-template #noInfo>
 	<app-no-data></app-no-data>
