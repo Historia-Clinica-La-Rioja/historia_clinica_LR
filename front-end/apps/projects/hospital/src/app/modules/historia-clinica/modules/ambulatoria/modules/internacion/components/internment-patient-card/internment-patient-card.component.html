@@ -58,55 +58,55 @@
 
 	<div *ngFor="let patient of pageSlice;last as isLast">
 
-			<app-card [cardContent]="patient">
+		<app-card [cardContent]="patient">
 
-				<div *ngIf="patient.hasPhysicalDischarge else physicalDischarge" fxLayoutGap.gt-xs="16px">
-					<div fxLayout="row" fxLayoutGap="70px">
+			<div *ngIf="patient.hasPhysicalDischarge else physicalDischarge" fxLayoutGap.gt-xs="16px">
+				<div fxLayout="row" fxLayoutGap="70px">
 
-						<div fxLayoutAlign="none center" fxLayoutGap="10px" class="content">
-							<mat-icon class="green">check_circle_outline</mat-icon>
-							<span class="green">{{'internaciones.internment-patient-card.HAS_PHYSICAL_DISCHARGE' |
-								translate}}</span>
-						</div>
-
-						<div fxLayoutAlign="none center" fxLayoutGap="10px" class="content">
-							<mat-icon class="red" fontSet="material-icons-outlined">
-								{{patient?.lastMissingDocument.matIcon}}</mat-icon>
-							<span class="red"> {{patient.lastMissingDocument.title | translate}} </span>
-						</div>
-
+					<div fxLayoutAlign="none center" fxLayoutGap="10px" class="content">
+						<mat-icon class="green">check_circle_outline</mat-icon>
+						<span class="green">{{'internaciones.internment-patient-card.HAS_PHYSICAL_DISCHARGE' |
+							translate}}</span>
 					</div>
+
+					<div fxLayoutAlign="none center" fxLayoutGap="10px" class="content">
+						<mat-icon class="red" fontSet="material-icons-outlined">
+							{{patient?.lastMissingDocument.matIcon}}</mat-icon>
+						<span class="red"> {{patient.lastMissingDocument.title | translate}} </span>
+					</div>
+
 				</div>
+			</div>
 
-				<ng-template #physicalDischarge>
-					<div fxLayout="row" fxLayoutAlign="space-between">
+			<ng-template #physicalDischarge>
+				<div fxLayout="row" fxLayoutAlign="space-between">
 
-						<div fxLayoutAlign="none center" class="content">
-							<mat-icon class="icon" fontSet="material-icons-outlined">meeting_room</mat-icon>
-							<span *ngIf="!patient.hasPhysicalDischarge">{{patient?.roomNumber}}</span>
-						</div>
-
-						<div fxLayoutAlign="none center" class="content">
-							<mat-icon class="icon" fontSet="material-icons-outlined">single_bed</mat-icon>
-							<span *ngIf="!patient.hasPhysicalDischarge">{{patient?.bedNumber}}</span>
-						</div>
-
-						<div fxLayoutAlign="none center" class="content">
-							<span *ngIf="!patient.hasPhysicalDischarge">{{patient?.sectorDescription}}</span>
-						</div>
-
+					<div fxLayoutAlign="none center" class="content">
+						<mat-icon class="icon" fontSet="material-icons-outlined">meeting_room</mat-icon>
+						<span *ngIf="!patient.hasPhysicalDischarge">{{patient?.roomNumber}}</span>
 					</div>
-				</ng-template>
 
-			</app-card>
-			<mat-divider *ngIf="!isLast" insert class="divider"></mat-divider>
-		</div>
+					<div fxLayoutAlign="none center" class="content">
+						<mat-icon class="icon" fontSet="material-icons-outlined">single_bed</mat-icon>
+						<span *ngIf="!patient.hasPhysicalDischarge">{{patient?.bedNumber}}</span>
+					</div>
 
-		<mat-divider></mat-divider>
+					<div fxLayoutAlign="none center" class="content">
+						<span *ngIf="!patient.hasPhysicalDischarge">{{patient?.sectorDescription}}</span>
+					</div>
 
-		<mat-paginator *ngIf="(internmentPatientCard?.length !== 0)" [length]="numberOfPatients"
-			[pageSizeOptions]="pageSizeOptions" (page)="onPageChange($event)" showFirstLastButtons>
-		</mat-paginator>
+				</div>
+			</ng-template>
+
+		</app-card>
+		<mat-divider *ngIf="!isLast" insert class="divider"></mat-divider>
+	</div>
+
+	<mat-divider></mat-divider>
+
+	<mat-paginator *ngIf="(internmentPatientCard?.length !== 0)" [length]="numberOfPatients"
+		[pageSizeOptions]="pageSizeOptions" (page)="onPageChange($event)" showFirstLastButtons>
+	</mat-paginator>
 
 </mat-card>
 
