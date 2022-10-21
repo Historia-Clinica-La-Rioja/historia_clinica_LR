@@ -38,7 +38,7 @@ public class SectorController  {
 	}
 
 	@GetMapping
-	@PreAuthorize("hasPermission(#institutionId, 'ADMINISTRATIVO, ADMINISTRADOR_AGENDA')")
+	@PreAuthorize("hasPermission(#institutionId, 'ADMINISTRATIVO, ADMINISTRADOR_AGENDA, ESPECIALISTA_MEDICO, ENFERMERO, PROFESIONAL_DE_SALUD, ESPECIALISTA_EN_ODONTOLOGIA')")
 	public ResponseEntity<List<Sector>> getAll(@PathVariable(name = "institutionId") Integer institutionId) {
 		List<Sector> sectors = sectorRepository.getSectorsByInstitution(institutionId);
 		LOG.debug("Get all Sectors => {}", sectors);
