@@ -43,6 +43,14 @@ public class ConsultationDetailOdontologia {
 
 	private String medicalCoverage;
 
+	private String indexCpo;
+
+	private String indexCeo;
+
+	private String permanentTeethPresent;
+
+	private String temporaryTeethPresent;
+
 	private String address;
 
 	private String location;
