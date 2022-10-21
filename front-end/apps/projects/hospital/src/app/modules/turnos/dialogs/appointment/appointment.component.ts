@@ -75,7 +75,7 @@ export class AppointmentComponent implements OnInit {
 	phoneNumber: string;
 	summaryCoverageData: SummaryCoverageInformation = {};
 	hasRoleToChangeState$: Observable<boolean>;
-	hasRoleToEditPhoneNumber$: Observable<boolean>;
+	hasRoleToEdit$: Observable<boolean>;
 	hasRoleToDownloadReports$: Observable<boolean>;
 	hasRoleToAddObservations$: Observable<boolean>;
 	patientMedicalCoverages: PatientMedicalCoverage[];
@@ -193,7 +193,7 @@ export class AppointmentComponent implements OnInit {
 
 		this.hasRoleToChangeState$ = this.permissionsService.hasContextAssignments$(ROLES_TO_CHANGE_STATE).pipe(take(1));
 
-		this.hasRoleToEditPhoneNumber$ = this.permissionsService.hasContextAssignments$(ROLES_TO_EDIT).pipe(take(1));
+		this.hasRoleToEdit$ = this.permissionsService.hasContextAssignments$(ROLES_TO_EDIT).pipe(take(1));
 
 		this.hasRoleToDownloadReports$ = this.permissionsService.hasContextAssignments$(ROLE_TO_DOWNDLOAD_REPORTS).pipe(take(1));
 

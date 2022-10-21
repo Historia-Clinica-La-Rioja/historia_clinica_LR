@@ -74,7 +74,7 @@
 					<span *ngIf="phoneNumber else noInfo"
 						class="mat-body patient-info coverage-text subtitle-size">{{phoneNumber}}</span>
 				</div>
-				<button type="button" mat-icon-button color="primary" *ngIf="( hasRoleToEditPhoneNumber$ | async )"
+				<button type="button" mat-icon-button color="primary" *ngIf="( hasRoleToEdit$ | async )"
 					(click)="hideFilters()">
 					<mat-icon class="material-icons-outlined">edit</mat-icon>
 					<span class="mat-body strong-size">
@@ -168,7 +168,7 @@
 					</div>
 				</div>
 				<button type="button" mat-icon-button color="primary"
-					*ngIf="selectedState === appointmentStatesIds.ASSIGNED" (click)="openDateForm()">
+					*ngIf="(selectedState === appointmentStatesIds.ASSIGNED) && ( hasRoleToEdit$ | async )" (click)="openDateForm()">
 					<mat-icon class="material-icons-outlined">edit</mat-icon>
 					<span class="mat-body strong-size">
 						{{'turnos.appointment.date.EDIT_DATE_TIME' | translate}}
