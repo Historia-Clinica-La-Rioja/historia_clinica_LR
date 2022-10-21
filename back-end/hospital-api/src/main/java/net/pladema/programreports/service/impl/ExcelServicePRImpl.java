@@ -508,40 +508,56 @@ public class ExcelServicePRImpl implements ExcelServicePR {
 		cell15.setCellStyle(style);
 
 		ICell cell16 = row.createCell(rowNumber.getAndIncrement());
-		cell16.setCellValue(content.getAddress());
+		cell16.setCellValue(content.getIndexCpo());
 		cell16.setCellStyle(style);
 
 		ICell cell17 = row.createCell(rowNumber.getAndIncrement());
-		cell17.setCellValue(content.getLocation());
+		cell17.setCellValue(content.getIndexCeo());
 		cell17.setCellStyle(style);
 
 		ICell cell18 = row.createCell(rowNumber.getAndIncrement());
-		cell18.setCellValue(content.getEducationLevel());
+		cell18.setCellValue(content.getPermanentTeethPresent());
 		cell18.setCellStyle(style);
 
 		ICell cell19 = row.createCell(rowNumber.getAndIncrement());
-		cell19.setCellValue(content.getOccupation());
+		cell19.setCellValue(content.getTemporaryTeethPresent());
 		cell19.setCellStyle(style);
 
 		ICell cell20 = row.createCell(rowNumber.getAndIncrement());
-		cell20.setCellValue(content.getReasons());
+		cell20.setCellValue(content.getAddress());
 		cell20.setCellStyle(style);
 
 		ICell cell21 = row.createCell(rowNumber.getAndIncrement());
-		cell21.setCellValue(content.getProcedures());
+		cell21.setCellValue(content.getLocation());
 		cell21.setCellStyle(style);
 
 		ICell cell22 = row.createCell(rowNumber.getAndIncrement());
-		cell22.setCellValue(content.getProblems());
+		cell22.setCellValue(content.getEducationLevel());
 		cell22.setCellStyle(style);
 
 		ICell cell23 = row.createCell(rowNumber.getAndIncrement());
-		cell23.setCellValue(content.getMedication());
+		cell23.setCellValue(content.getOccupation());
 		cell23.setCellStyle(style);
 
 		ICell cell24 = row.createCell(rowNumber.getAndIncrement());
-		cell24.setCellValue(content.getEvolution());
+		cell24.setCellValue(content.getReasons());
 		cell24.setCellStyle(style);
+
+		ICell cell25 = row.createCell(rowNumber.getAndIncrement());
+		cell25.setCellValue(content.getProcedures());
+		cell25.setCellStyle(style);
+
+		ICell cell26 = row.createCell(rowNumber.getAndIncrement());
+		cell26.setCellValue(content.getProblems());
+		cell26.setCellStyle(style);
+
+		ICell cell27 = row.createCell(rowNumber.getAndIncrement());
+		cell27.setCellValue(content.getMedication());
+		cell27.setCellStyle(style);
+
+		ICell cell28 = row.createCell(rowNumber.getAndIncrement());
+		cell28.setCellValue(content.getEvolution());
+		cell28.setCellStyle(style);
 
 	}
 }
