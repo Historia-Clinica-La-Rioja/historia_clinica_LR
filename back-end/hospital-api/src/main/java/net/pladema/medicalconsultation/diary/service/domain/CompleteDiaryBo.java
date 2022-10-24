@@ -24,6 +24,7 @@ public class CompleteDiaryBo extends DiaryBo {
 		automaticRenewal = diaryBo.isAutomaticRenewal();
 		professionalAssignShift = diaryBo.isProfessionalAssignShift();
 		includeHoliday = diaryBo.isIncludeHoliday();
+		alias = diaryBo.getAlias();
 	}
 
 }

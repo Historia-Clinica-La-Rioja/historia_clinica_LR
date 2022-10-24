@@ -4,6 +4,8 @@ import {AutocompleteInput} from "ra-ui-materialui";
 import CustomToolbar from "../components/CustomToolbar";
 import SgxSelectInput from '../../sgxSelectInput/SgxSelectInput';
 
+const renderPerson = (choice) => choice ? `${choice.identificationNumber} ${choice.lastName} ${choice.firstName}` : '';
+
 const HealthcareProfessionalHealthInsurance = ({ formData, ...rest }) => {
     return !formData.healthcareProfessionalId ? null :  (
 
@@ -18,14 +20,16 @@ const HealthcareProfessionalHealthInsurance = ({ formData, ...rest }) => {
 const HealthcareProfessionalHealthInsuranceCreate = (props) => (
     <Create {...props}>
         <SimpleForm toolbar={<CustomToolbar />} redirect="list">
+
             <ReferenceInput
-                label="resources.healthcareprofessionals.license"
-                reference="healthcareprofessionals"
-                sort={{ field: 'licenseNumber', order: 'ASC' }}
+                label="resources.healthcareprofessionalhealthinsurances.fields.personId"
                 source="healthcareProfessionalId"
+                reference="healthcareprofessionals"
+                sort={{ field: 'firstName', order: 'ASC' }}
                 validate={[required()]}
+                filterToQuery={searchText => ({firstName: searchText})}
             >
-                <AutocompleteInput optionText="licenseNumber" optionValue="id"/>
+                <AutocompleteInput optionText={renderPerson} optionValue="id" />
             </ReferenceInput>
 
             <FormDataConsumer>

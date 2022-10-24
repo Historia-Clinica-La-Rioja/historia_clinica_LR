@@ -1,5 +1,6 @@
 package ar.lamansys.sgh.shared.infrastructure.input.service;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 public interface SharedIndicationPort {
@@ -21,6 +22,8 @@ public interface SharedIndicationPort {
 	List<ParenteralPlanDto> getInternmentEpisodeParenteralPlans(Integer internmentEpisodeId);
 
 	List<NursingRecordDto> getInternmentEpisodeNursingRecords(Integer internmentEpisodeId);
+
+	boolean updateNursingRecordStatus(Integer nursingRecordId, String status, LocalDateTime administrationTime, Integer userId, String reason);
 
 	void saveDocument(Long id, Integer indicationId);
 }

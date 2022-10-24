@@ -50,9 +50,10 @@ public class DoctorsOfficeServiceImpl implements DoctorsOfficeService {
     @Override
     public DoctorsOfficeBo getById(Integer doctorsOfficeId) {
         LOG.debug("Input parameter -> doctorsOfficeId {}", doctorsOfficeId);
-        DoctorsOffice doctorsOffice = doctorsOfficeRepository.getOne(doctorsOfficeId);
-        DoctorsOfficeBo result = new DoctorsOfficeBo(doctorsOffice);
-        LOG.debug(LOGGING_OUTPUT, result);
-        return result;
+        return doctorsOfficeRepository.findById(doctorsOfficeId).map(doctorsOffice -> {
+			DoctorsOfficeBo result = new DoctorsOfficeBo(doctorsOffice);
+			LOG.debug(LOGGING_OUTPUT, result);
+			return result;
+		}).get();
     }
 }

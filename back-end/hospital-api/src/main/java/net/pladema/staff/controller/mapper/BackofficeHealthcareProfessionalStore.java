@@ -4,43 +4,62 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+import net.pladema.staff.repository.VAvailableProfessionalRepository;
+
+import net.pladema.staff.repository.entity.VAvailableProfessional;
+
 import org.springframework.data.domain.Example;
+import org.springframework.data.domain.ExampleMatcher;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import net.pladema.sgx.backoffice.repository.BackofficeStore;
 import net.pladema.staff.controller.dto.BackofficeHealthcareProfessionalCompleteDto;
-import net.pladema.staff.repository.HealthcareProfessionalRepository;
-import net.pladema.staff.repository.entity.HealthcareProfessional;
 
 @Service
 public class BackofficeHealthcareProfessionalStore implements BackofficeStore<BackofficeHealthcareProfessionalCompleteDto, Integer> {
 
-	private final HealthcareProfessionalRepository healthcareProfessionalRepository;
+	private final VAvailableProfessionalRepository vAvailableProfessionalRepository;
 
-	public BackofficeHealthcareProfessionalStore(HealthcareProfessionalRepository healthcareProfessionalRepository) {
-		this.healthcareProfessionalRepository = healthcareProfessionalRepository;
+	public BackofficeHealthcareProfessionalStore(VAvailableProfessionalRepository vAvailableProfessionalRepository) {
+		this.vAvailableProfessionalRepository = vAvailableProfessionalRepository;
 	}
 
 	@Override
 	public Page<BackofficeHealthcareProfessionalCompleteDto> findAll(BackofficeHealthcareProfessionalCompleteDto example, Pageable pageable) {
-		return null;
+		VAvailableProfessional hp = buildHealthcareProfessionalEntity(example);
+		ExampleMatcher matcher = ExampleMatcher
+				.matching()
+				.withIgnoreCase()
+				.withMatcher("firstName", ExampleMatcher.GenericPropertyMatcher::contains);
+		return vAvailableProfessionalRepository.findAll(
+				Example.of(hp, matcher),
+				PageRequest.of(
+						pageable.getPageNumber(),
+						pageable.getPageSize(),
+						Sort.unsorted()
+				)
+		).map(this::buildHealthcareProfessionalDto);
 	}
 
 	@Override
 	public List<BackofficeHealthcareProfessionalCompleteDto> findAll() {
-		return null;
+		return vAvailableProfessionalRepository.findAll().stream()
+				.map(this::buildHealthcareProfessionalDto)
+				.collect(Collectors.toList());
 	}
 
 	@Override
 	public List<BackofficeHealthcareProfessionalCompleteDto> findAllById(List<Integer> ids) {
-		return healthcareProfessionalRepository.findAllById(ids).stream().map(this::buildHealthcareProfessionalDto).collect(Collectors.toList());
+		return vAvailableProfessionalRepository.findAllById(ids).stream().map(this::buildHealthcareProfessionalDto).collect(Collectors.toList());
 	}
 
 	@Override
 	public Optional<BackofficeHealthcareProfessionalCompleteDto> findById(Integer id) {
-		return toHealthcareProfessionalCreateDto(healthcareProfessionalRepository.findById(id));
+		return toHealthcareProfessionalCreateDto(vAvailableProfessionalRepository.findById(id));
 	}
 
 	@Override
@@ -57,17 +76,29 @@ public class BackofficeHealthcareProfessionalStore implements BackofficeStore<Ba
 		return null;
 	}
 
-	private Optional<BackofficeHealthcareProfessionalCompleteDto> toHealthcareProfessionalCreateDto(Optional<HealthcareProfessional> byId) {
+	private Optional<BackofficeHealthcareProfessionalCompleteDto> toHealthcareProfessionalCreateDto(Optional<VAvailableProfessional> byId) {
 		return byId.map(this::buildHealthcareProfessionalDto);
 	}
 
-	private BackofficeHealthcareProfessionalCompleteDto buildHealthcareProfessionalDto(HealthcareProfessional byId) {
+	private BackofficeHealthcareProfessionalCompleteDto buildHealthcareProfessionalDto(VAvailableProfessional byId) {
 		BackofficeHealthcareProfessionalCompleteDto dto = new BackofficeHealthcareProfessionalCompleteDto();
-		dto.setPersonId(byId.getPersonId());
 		dto.setId(byId.getId());
-		if (byId.getLicenseNumber().isBlank()) dto.setLicenseNumber("Número de matrícula no definido");
-		else dto.setLicenseNumber(byId.getLicenseNumber());
+		dto.setPersonId(byId.getPersonId());
+		dto.setFirstName(byId.getFirstName() != null ? byId.getFirstName().toUpperCase() : null);
+		dto.setLastName(byId.getLastName() != null ? byId.getLastName().toUpperCase(): null);
+		dto.setIdentificationNumber(byId.getIdentificationNumber());
+		dto.setIdentificationTypeId(byId.getIdentificationTypeId());
 		return dto;
 	}
 
+	private VAvailableProfessional buildHealthcareProfessionalEntity(BackofficeHealthcareProfessionalCompleteDto dto){
+		VAvailableProfessional hp = new VAvailableProfessional();
+		hp.setId(dto.getId());
+		hp.setPersonId(dto.getPersonId());
+		hp.setFirstName(dto.getFirstName() != null ? dto.getFirstName().toUpperCase() : null);
+		hp.setLastName(dto.getLastName() != null ? dto.getLastName().toUpperCase(): null);
+		hp.setIdentificationNumber(dto.getIdentificationNumber());
+		hp.setIdentificationTypeId(dto.getIdentificationTypeId());
+		return hp;
+	}
 }

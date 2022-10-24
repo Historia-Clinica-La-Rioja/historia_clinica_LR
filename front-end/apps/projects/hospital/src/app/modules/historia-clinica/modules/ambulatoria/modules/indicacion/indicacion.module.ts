@@ -1,3 +1,4 @@
+import { NursingRecordFacadeService } from './services/nursing-record-facade.service';
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from "@angular/forms";
@@ -22,6 +23,7 @@ import { HistoriaClinicaModule } from '@historia-clinica/historia-clinica.module
 import { PharmacoComponent } from './dialogs/pharmaco/pharmaco.component';
 import { GeneralNursingRecordComponent } from './components/general-nursing-record/general-nursing-record.component';
 import { SpecificNursingRecordComponent } from './components/specific-nursing-record/specific-nursing-record.component';
+import { RegisterNursingRecordComponent } from './dialogs/register-nursing-record/register-nursing-record.component';
 
 @NgModule({
 	declarations: [
@@ -43,6 +45,7 @@ import { SpecificNursingRecordComponent } from './components/specific-nursing-re
 		OtherIndicationComponent,
 		ParenteralPlanComponent,
 		PharmacoComponent,
+		RegisterNursingRecordComponent,
 	],
 	exports: [
 		CardMedicacionesComponent,
@@ -55,6 +58,9 @@ import { SpecificNursingRecordComponent } from './components/specific-nursing-re
 		FormsModule,
 		PresentationModule,
 		HistoriaClinicaModule
+	],
+	providers: [
+		NursingRecordFacadeService
 	]
 })
 export class IndicacionModule { }

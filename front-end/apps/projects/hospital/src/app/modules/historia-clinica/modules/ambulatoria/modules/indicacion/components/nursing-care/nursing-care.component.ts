@@ -1,10 +1,10 @@
 import { NursingRecordDto } from './../../../../../../../api-rest/api-model.d';
-import { InternmentNursingRecordService } from './../../../../../../../api-rest/services/internment-nursing-record.service';
 import { Component, Input, OnInit } from '@angular/core';
 import { dateDtoToDate } from '@api-rest/mapper/date-dto.mapper';
 import { InternmentEpisodeService } from '@api-rest/services/internment-episode.service';
 import { NURSING_CARE } from '@historia-clinica/constants/summaries';
 import { isSameDay } from 'date-fns';
+import { NursingRecordFacadeService } from '../../services/nursing-record-facade.service';
 
 @Component({
 	selector: 'app-nursing-care',
@@ -18,26 +18,29 @@ export class NursingCareComponent implements OnInit {
 	nursingRecords: NursingRecordDto[] = [];
 	generalNursingRecords: NursingRecordDto[] = [];
 	specificNursingRecords: NursingRecordDto[] = [];
+	actualDate = new Date();
 	@Input() internmentEpisodeId: number;
 
 	constructor(
 		private readonly internmentEpisode: InternmentEpisodeService,
-		private readonly internmentNursingRecordService: InternmentNursingRecordService
+		private readonly nursingRecordFacade: NursingRecordFacadeService
 	) { }
 
 	ngOnInit(): void {
+		this.nursingRecordFacade.setInformation(this.internmentEpisodeId);
 		this.internmentEpisode.getInternmentEpisode(this.internmentEpisodeId).subscribe(
 			internmentEpisode => this.entryDate = new Date(internmentEpisode.entryDate)
 		);
-		this.internmentNursingRecordService.getInternmentNursingRecords(this.internmentEpisodeId).subscribe(nursingRecords => {
-			this.nursingRecords = nursingRecords;
-			this.loadActualDateAndFilter(new Date());
+		this.nursingRecordFacade.nursingRecords$.subscribe(nr => {
+			this.nursingRecords = nr;
+			this.loadActualDateAndFilter(this.actualDate);
 		});
 	}
 
 	loadActualDateAndFilter(actualDate: Date) {
 		this.generalNursingRecords = [];
 		this.specificNursingRecords = [];
+		this.actualDate = actualDate;
 		this.filterNursingRecords(actualDate);
 	}
 

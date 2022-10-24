@@ -94,6 +94,18 @@ public class UserStorageImpl implements UserStorage {
         return mapUserBo(user, userPassword);
     }
 
+	@Override
+	public void resetTwoFactorAuthentication(Integer userId) {
+		logger.debug("Reset two factor authentication -> {}", userId);
+		userRepository.resetTwoFactorAuthentication(userId);
+	}
+
+    @Override
+    public Boolean userHasTwoFactorAuthenticationEnabled(Integer userId) {
+        logger.debug("Fetch user has two factor authentication enabled -> {}", userId);
+        return userRepository.userHasTwoFactorAuthenticationEnabled(userId);
+    }
+
 
     private UserBo mapUserBo(User user, UserPassword userPassword) {
         return (userPassword!=null) ?

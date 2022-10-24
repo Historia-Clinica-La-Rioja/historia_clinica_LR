@@ -15,7 +15,9 @@
 			"PERFIL": "Mi cuenta",
 			"TURNOS": "Gestión de turnos",
 			"REPORTES": "Reportes",
-			"REPORTES_PROGRAMAS": "Reportes de programas",
+			"REPORTES_PROGRAMAS": "Reportes Provinciales",
+			"REPORTES_ODONTOLOGICOS":"Reportes Odontológicos",
+			"REPORTES_GENERALES":"Reportes Generales",
 			"LOGOUT": "Cerrar sesión"
 		}
 	},
@@ -96,7 +98,7 @@
 		"CREDENTIAL_NUMBER_LABEL": "N° de credencial",
 		"VOLUNTARY": "Voluntaria",
 		"MANDATORY": "Obligatoria",
-		"CUIT_VIEW" : "CUIT: {{cuit}}",
+		"CUIT_VIEW": "CUIT: {{cuit}}",
 		"SEARCH_HEALTH_INSURANCE": "Buscar obra social",
 		"SEARCH_PRIVATE_HEALTH_INSURANCE": "Buscar prepaga",
 		"SEARCH_ART": "Buscar ART",

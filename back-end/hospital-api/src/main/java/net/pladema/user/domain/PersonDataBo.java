@@ -27,4 +27,9 @@ public class PersonDataBo {
 
     @Nullable
     private String username;
+
+	public PersonDataBo(Integer userId, @Nullable String username) {
+		this.userId = userId;
+		this.username = username;
+	}
 }

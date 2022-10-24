@@ -15,7 +15,7 @@
 				{{ 'ambulatoria.paciente.ordenes_prescripciones.new_prescription_menu.NEW_OUTPATIENT_PRESCRIPTION'  | translate }}
 			</button>
 
-			<button *ngIf="this.patientHasInternmentEpisodeInProgress()" mat-menu-item (click)="openNewInternmentOrderDialog()">
+			<button *ngIf="this.isNewInternmentOrderEnabled()" mat-menu-item (click)="openNewInternmentOrderDialog()">
 				{{ 'ambulatoria.paciente.ordenes_prescripciones.new_prescription_menu.NEW_INTERNMENT_PRESCRIPTION'  | translate }}
 			</button>
 		</ng-container>

@@ -21,10 +21,6 @@ export const POLICE_OFFICER = {
 	}
 };
 
-export const RISK_FACTORS = {
-	min_value: 0
-};
-
 export const TEXT_AREA_MAX_LENGTH = 1024;
 
 export const REMOVEATTENTION = 'removeAttention';

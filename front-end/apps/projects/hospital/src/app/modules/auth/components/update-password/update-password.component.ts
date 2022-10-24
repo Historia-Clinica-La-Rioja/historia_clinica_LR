@@ -1,8 +1,9 @@
-import { Component, OnInit } from '@angular/core';
-import {FormBuilder, FormGroup, ValidatorFn, Validators} from "@angular/forms";
-import {ApiErrorMessageDto, PasswordDto} from "@api-rest/api-model";
+import {Component, OnInit } from '@angular/core';
+import {FormBuilder, FormGroup, Validators} from "@angular/forms";
+import {ApiErrorMessageDto} from "@api-rest/api-model";
 import {AuthService} from "@api-rest/services/auth.service";
 import {Router} from "@angular/router";
+import {patternValidator} from "@core/utils/form.utils";
 
 @Component({
   selector: 'app-update-password',
@@ -30,7 +31,12 @@ export class UpdatePasswordComponent implements OnInit {
   ngOnInit(): void {
 	  this.form = this.formBuilder.group({
 		  password: [null, Validators.required],
-		  newPassword: [null, [Validators.required, Validators.min(8), Validators.pattern('((?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])).{8,}')]],
+		  newPassword: [null, [Validators.required,
+			  Validators.minLength(8),
+			  patternValidator(new RegExp('(?=.*[a-z])'), {'min': true}),
+			  patternValidator(new RegExp('(?=.*[A-Z])'), {'mayus': true}),
+			  patternValidator(new RegExp('(?=.*[0-9])'), {'number': true}),
+		  ]],
 	  });
   }
 

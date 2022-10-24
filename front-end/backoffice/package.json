@@ -1,11 +1,12 @@
 {
   "name": "backoffice",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "private": true,
   "homepage": "/backoffice",
   "proxy": "http://localhost:8080",
   "dependencies": {
-    "@blackbox-vision/ra-language-spanish": "^3.16.2",
+    "@date-io/date-fns": "^2.13.1",
+    "@material-ui/lab": "^4.0.0-alpha.60",
     "@testing-library/jest-dom": "^5.16.1",
     "@testing-library/react": "^12.1.2",
     "@testing-library/user-event": "^13.5.0",

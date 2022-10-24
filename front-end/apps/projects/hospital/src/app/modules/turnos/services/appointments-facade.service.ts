@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { CalendarEvent } from 'angular-calendar';
 import { ReplaySubject, Observable } from 'rxjs';
 import { AppointmentsService } from '@api-rest/services/appointments.service';
-import { AppointmentListDto, BasicPersonalDataDto, CreateAppointmentDto, UpdateAppointmentDto } from '@api-rest/api-model';
+import { AppointmentListDto, BasicPersonalDataDto, CreateAppointmentDto, DateTimeDto, UpdateAppointmentDto } from '@api-rest/api-model';
 import {
 	momentParseTime,
 	DateFormat,
@@ -119,15 +119,6 @@ export class AppointmentsFacadeService {
 			});
 	}
 
-	setInterval() {
-		//this.intervalId = setInterval(() => this.loadAppointments(), 20000);
-	}
-
-	clearInterval() {
-		//clearInterval(this.intervalId);
-	}
-
-
 	private getViewName(person: BasicPersonalDataDto): string {
 		return person ? [person.lastName, this.patientNameService.getPatientName(person.firstName, person.nameSelfDetermination)].
 			filter(val => val).join(', ') : null;
@@ -164,6 +155,23 @@ export class AppointmentsFacadeService {
 						this.appointments$.pipe(first()).subscribe((events: CalendarEvent[]) => {
 							const toEdit: CalendarEvent = events.find(event => event.meta.appointmentId === appointmentId);
 							toEdit.meta.observation = observation;
+							this.appointmenstEmitter.next(events);
+						});
+						return true;
+					}
+					return false;
+				})
+			);
+	}
+
+	updateDate(appointmentId: number, date: DateTimeDto): Observable<boolean> {
+		return this.appointmentService.updateDate(appointmentId, date)
+			.pipe(
+				map((response: boolean) => {
+					if (response) {
+						this.appointments$.pipe(first()).subscribe((events: CalendarEvent[]) => {
+							const toEdit: CalendarEvent = events.find(event => event.meta.appointmentId === appointmentId);
+							toEdit.meta.date = date;
 							this.appointmenstEmitter.next(events);
 						});
 						return true;

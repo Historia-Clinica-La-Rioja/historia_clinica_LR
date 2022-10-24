@@ -11,13 +11,14 @@ import java.util.List;
 
 public interface DiaryOpeningHoursService {
 
-    void load(Integer diaryId, List<DiaryOpeningHoursBo> diaryOpeningHours);
+    void load(Integer diaryId, List<DiaryOpeningHoursBo> diaryOpeningHours, List<Integer>... appointmentIds);
     
     void update(Integer diaryId, List<DiaryOpeningHoursBo> diaryOpeningHours);
 
     List<OccupationBo> findAllWeeklyDoctorsOfficeOccupation(Integer doctorOfficeId, LocalDate startDate, LocalDate endDate, Integer ignoreDiaryId) throws DiaryOpeningHoursException;
 
-    Collection<DiaryOpeningHoursBo> getDiariesOpeningHours(List<Integer> diaryIds);
+	Collection<DiaryOpeningHoursBo> getDiariesOpeningHours(List<Integer> diaryIds);
+	Collection<DiaryOpeningHoursBo> getDiaryOpeningHours(Integer diaryId);
 
     List<Short> overlappingDays(@NotNull LocalDate rangeStart1, @NotNull LocalDate rangeEnd1,
                                 @NotNull LocalDate rangeStart2, @NotNull LocalDate rangeEnd2);

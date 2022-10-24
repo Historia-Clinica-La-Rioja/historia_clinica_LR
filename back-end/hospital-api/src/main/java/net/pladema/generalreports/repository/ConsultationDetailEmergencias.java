@@ -11,6 +11,10 @@ import lombok.ToString;
 @AllArgsConstructor
 public class ConsultationDetailEmergencias {
 
+	private String createdOn;
+
+	private String institutionId;
+
 	private String institution;
 
 	private String ambulance;
@@ -22,6 +26,8 @@ public class ConsultationDetailEmergencias {
 	private String policeIntervention;
 
 	private String attentionDate;
+
+	private String attentionHour;
 
 	private String identification;
 

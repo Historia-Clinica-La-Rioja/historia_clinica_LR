@@ -24,6 +24,8 @@ import net.pladema.medicalconsultation.diary.controller.constraints.DiaryEmptyAp
 import net.pladema.medicalconsultation.diary.controller.constraints.EditDiaryOpeningHoursValid;
 import net.pladema.medicalconsultation.diary.controller.constraints.ExistingDiaryPeriodValid;
 
+import net.pladema.staff.service.HealthcareProfessionalService;
+
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.transaction.annotation.Transactional;
@@ -81,6 +83,8 @@ public class DiaryController {
 
     private final AppointmentService appointmentService;
 
+	private final HealthcareProfessionalService healthcareProfessionalService;
+
     private final LocalDateMapper localDateMapper;
 
     public DiaryController(
@@ -88,12 +92,14 @@ public class DiaryController {
             DiaryService diaryService,
             CreateAppointmentService createAppointmentService,
             AppointmentService appointmentService,
+			HealthcareProfessionalService healthcareProfessionalService,
             LocalDateMapper localDateMapper
     ) {
         this.diaryMapper = diaryMapper;
         this.diaryService = diaryService;
         this.createAppointmentService = createAppointmentService;
         this.appointmentService = appointmentService;
+		this.healthcareProfessionalService = healthcareProfessionalService;
         this.localDateMapper = localDateMapper;
     }
 
@@ -196,7 +202,8 @@ public class DiaryController {
                                                                @RequestParam(name = "healthcareProfessionalId") Integer healthcareProfessionalId,
                                                                @RequestParam(name = "specialtyId", required = false) Integer specialtyId){
         log.debug("Input parameters -> institutionId {}, healthcareProfessionalId {}, specialtyId{}", institutionId, healthcareProfessionalId, specialtyId);
-        Collection<DiaryBo> diaryBos = diaryService.getActiveDiariesBy(healthcareProfessionalId, specialtyId, institutionId);
+		Integer currentUserHealthcareProfessionalId = healthcareProfessionalService.getProfessionalId(UserInfo.getCurrentAuditor());
+        Collection<DiaryBo> diaryBos = diaryService.getActiveDiariesBy(currentUserHealthcareProfessionalId, healthcareProfessionalId, specialtyId, institutionId);
         Collection<DiaryListDto> result = diaryMapper.toCollectionDiaryListDto(diaryBos);
         log.debug(OUTPUT, result);
         return ResponseEntity.ok(result);

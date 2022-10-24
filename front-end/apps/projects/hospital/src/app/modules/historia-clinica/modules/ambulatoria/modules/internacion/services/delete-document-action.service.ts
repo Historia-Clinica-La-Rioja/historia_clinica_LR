@@ -26,6 +26,7 @@ export class DeleteDocumentActionService {
 		const dialogRef = this.dialog.open(DocumentActionReasonComponent, {
 			data: {
 				title: 'internaciones.dialogs.actions-document.DELETE_TITLE',
+				subtitle: 'internaciones.dialogs.actions-document.SUBTITLE', 
 			},
 			width: "50vh",
 			autoFocus: false,

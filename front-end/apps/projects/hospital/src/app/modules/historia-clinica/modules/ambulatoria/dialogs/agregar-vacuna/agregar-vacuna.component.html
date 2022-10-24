@@ -1,13 +1,13 @@
 <div mat-dialog-title fxLayout="row" fxLayoutAlign="space-between">
 	<div class="mat-h2" [translate]="'ambulatoria.paciente.vacunas.agregar_vacunas.agregar_vacuna.TITLE'"></div>
-	<button mat-icon-button color="warn" (click)="dialogRef.close();">
+	<button mat-icon-button (click)="dialogRef.close();">
 		<mat-icon>close</mat-icon>
 	</button>
 </div>
 
 <div mat-dialog-content>
 
-	<mat-tab-group mat-align-tabs="center" [selectedIndex]="selectedTab" (selectedIndexChange)="setSelectedTab($event)">
+	<mat-tab-group mat-align-tabs="start" [selectedIndex]="selectedTab" (selectedIndexChange)="setSelectedTab($event)">
 		<ng-container *appHasRole="['ENFERMERO']">
 			<ng-container *ngIf="this.data.hasConfirmedAppointment">
 				<mat-tab>
@@ -18,7 +18,7 @@
 						</span>
 					</ng-template>
 
-					<form [formGroup]="billableForm" (submit)="submit(vaccineInput)">
+					<form [formGroup]="billableForm" (submit)="submit(vaccineInput)" id="billableForm">
 						<div fxLayout="column">
 							<mat-label>
 								{{ 'ambulatoria.paciente.vacunas.agregar_vacunas.agregar_vacuna.ADMINISTRATION_DATE' |
@@ -26,8 +26,8 @@
 							</mat-label>
 							<mat-form-field appearance="outline">
 								<input readonly placeholder="mm/dd/yyyy" matInput [value]="this.today"
-									[matDatepicker]="newVaccineDatepicker" formControlName="date" [min]=this.minDate [max]="this.today"
-									required>
+									[matDatepicker]="newVaccineDatepicker" formControlName="date" [min]=this.minDate
+									[max]="this.today" required>
 								<mat-datepicker-toggle matSuffix [for]="newVaccineDatepicker"></mat-datepicker-toggle>
 								<mat-datepicker #newVaccineDatepicker
 									(yearSelected)="chosenYearHandler($event,this.billableForm)"
@@ -37,13 +37,13 @@
 							</mat-form-field>
 							<div #vaccineInput>
 								<div fxLayout="column" fxFlex="100%">
+									<mat-label>
+										{{
+										'ambulatoria.paciente.vacunas.agregar_vacunas.agregar_vacuna.IMMUNIZATION' |
+										translate
+										}}
+									</mat-label>
 									<ng-container *ngIf="newVaccineSnomedConcept else searchImmunizations">
-										<mat-label>
-											{{
-											'ambulatoria.paciente.vacunas.agregar_vacunas.agregar_vacuna.IMMUNIZATION' |
-											translate
-											}}
-										</mat-label>
 										<mat-form-field appearance="outline">
 											<input matInput required readonly formControlName="snomed"
 												matTooltip="{{ newVaccineSnomedConcept.pt }}">
@@ -57,20 +57,29 @@
 								</div>
 
 								<ng-template #searchImmunizations>
-									<app-concepts-search
-										[label]="'ambulatoria.paciente.vacunas.agregar_vacunas.agregar_vacuna.IMMUNIZATION'"
-										(search)="onSearchBillableForm($event)">
-									</app-concepts-search>
+									<mat-form-field *ngIf="!searchConceptsLocallyFF else vaccineTypeaheadSearch"
+										appearance="outline" class="search" [formGroup]="searchBillableVaccineForm">
+										<input matInput formControlName="search"
+											(keydown.enter)="openSearchBillableVaccineDialog()">
+										<button type="button" matSuffix mat-flat-button color="primary"
+											(click)="openSearchBillableVaccineDialog()">
+											<span class="uppercase" [translate]="'buttons.SEARCH'"></span>
+										</button>
+									</mat-form-field>
 									<div class="vaccine-error">
 										<div class="mat-error"
 											[translate]="'ambulatoria.paciente.vacunas.agregar_vacunas.agregar_vacuna.NOT_VACCINE_SELECTED_ERROR'"
-											*ngIf="!searchingNew && tryToSubmit">
+											*ngIf="tryToSubmit">
 										</div>
 									</div>
-									<div class="spinner" fxLayoutAlign="center center">
-										<mat-spinner diameter="70" color="primary" *ngIf="searchingNew"></mat-spinner>
-									</div>
-									<app-table *ngIf="!searchingNew" [model]="conceptsResultsTable"></app-table>
+								</ng-template>
+
+								<ng-template #vaccineTypeaheadSearch>
+									<app-concept-typeahead-search [ecl]="ecl" [appearanceOutline]="true"
+										[showSearchIcon]="true"
+										placeholder="ambulatoria.paciente.vacunas.agregar_vacunas.agregar_vacuna.SEARCH_VACCINE"
+										(conceptSelected)="setBillableConcept($event)">
+									</app-concept-typeahead-search>
 								</ng-template>
 							</div>
 
@@ -91,8 +100,10 @@
 										{{ condition.description }}
 									</mat-option>
 								</mat-select>
-								<button id="clear_condition" type="button" mat-button *ngIf="billableForm.value.condition !== null && billableForm.value.condition !== undefined" matSuffix
-									color="warn" mat-icon-button (click)="clear(billableForm.controls.condition, 'condition', billableForm); $event.stopPropagation()">
+								<button id="clear_condition" type="button" mat-button
+									*ngIf="billableForm.value.condition !== null && billableForm.value.condition !== undefined"
+									matSuffix color="warn" mat-icon-button
+									(click)="clear(billableForm.controls.condition, 'condition', billableForm); $event.stopPropagation()">
 									<mat-icon>close</mat-icon>
 								</button>
 							</mat-form-field>
@@ -113,8 +124,10 @@
 												{{ scheme.description }}
 											</mat-option>
 										</mat-select>
-										<button id="clear_scheme" type="button" mat-button *ngIf="billableForm.value.scheme !== null && billableForm.value.scheme !== undefined" matSuffix
-											color="warn" mat-icon-button (click)="clear(billableForm.controls.scheme, 'scheme', billableForm); $event.stopPropagation()">
+										<button id="clear_scheme" type="button" mat-button
+											*ngIf="billableForm.value.scheme !== null && billableForm.value.scheme !== undefined"
+											matSuffix color="warn" mat-icon-button
+											(click)="clear(billableForm.controls.scheme, 'scheme', billableForm); $event.stopPropagation()">
 											<mat-icon>close</mat-icon>
 										</button>
 										<mat-error
@@ -134,8 +147,10 @@
 												{{ dose.description }}
 											</mat-option>
 										</mat-select>
-										<button id="clear_scheme" type="button" mat-button *ngIf="billableForm.value.dose !== null && billableForm.value.dose !== undefined" matSuffix
-											color="warn" mat-icon-button (click)="clear(billableForm.controls.dose, 'dose', billableForm); $event.stopPropagation()">
+										<button id="clear_scheme" type="button" mat-button
+											*ngIf="billableForm.value.dose !== null && billableForm.value.dose !== undefined"
+											matSuffix color="warn" mat-icon-button
+											(click)="clear(billableForm.controls.dose, 'dose', billableForm); $event.stopPropagation()">
 											<mat-icon>close</mat-icon>
 										</button>
 										<mat-error
@@ -171,17 +186,17 @@
 			</ng-container>
 		</ng-container>
 
-		<ng-container *appHasRole="['PROFESIONAL_DE_SALUD', 'ESPECIALISTA_MEDICO', 'ENFERMERO', 'ESPECIALISTA_EN_ODONTOLOGIA']">
+		<ng-container
+			*appHasRole="['PROFESIONAL_DE_SALUD', 'ESPECIALISTA_MEDICO', 'ENFERMERO', 'ESPECIALISTA_EN_ODONTOLOGIA']">
 			<mat-tab>
 				<ng-template mat-tab-label>
 					<span class="color-primary">
-						{{ 'ambulatoria.paciente.vacunas.agregar_vacunas.agregar_vacuna.PREVIOUS_VACCINE_TAB' |
-						translate |
-						uppercase }}
+						{{ 'ambulatoria.paciente.vacunas.agregar_vacunas.agregar_vacuna.PREVIOUS_VACCINE_TAB'
+						| translate | uppercase }}
 					</span>
 				</ng-template>
 
-				<form [formGroup]="previousForm" (submit)="submitPreviousForm(previousVaccineInput)">
+				<form [formGroup]="previousForm" (submit)="submitPreviousForm(previousVaccineInput)" id="previousForm">
 					<div fxLayout="column">
 						<mat-label>
 							{{ 'ambulatoria.paciente.vacunas.agregar_vacunas.agregar_vacuna.ADMINISTRATION_DATE' |
@@ -189,8 +204,8 @@
 						</mat-label>
 						<mat-form-field appearance="outline">
 							<input readonly placeholder="mm/dd/yyyy" matInput [value]="this.today"
-								[matDatepicker]="previousVaccineDatepicker" formControlName="date" [min]=this.minDate [max]="this.today"
-								required>
+								[matDatepicker]="previousVaccineDatepicker" formControlName="date" [min]=this.minDate
+								[max]="this.today" required>
 							<mat-datepicker-toggle matSuffix [for]="previousVaccineDatepicker"></mat-datepicker-toggle>
 							<mat-datepicker #previousVaccineDatepicker
 								(yearSelected)="chosenYearHandler($event,this.previousForm)"
@@ -201,12 +216,12 @@
 
 						<div #previousVaccineInput>
 							<div fxLayout="column" fxFlex="100%">
+								<mat-label>
+									{{ 'ambulatoria.paciente.vacunas.agregar_vacunas.agregar_vacuna.IMMUNIZATION' |
+									translate
+									}}
+								</mat-label>
 								<ng-container *ngIf="previousVaccineSnomedConcept else searchImmunizationsPreviousForm">
-									<mat-label>
-										{{ 'ambulatoria.paciente.vacunas.agregar_vacunas.agregar_vacuna.IMMUNIZATION' |
-										translate
-										}}
-									</mat-label>
 									<mat-form-field appearance="outline">
 										<input matInput required readonly formControlName="snomed"
 											matTooltip="{{ previousVaccineSnomedConcept.pt }}">
@@ -220,21 +235,29 @@
 							</div>
 
 							<ng-template #searchImmunizationsPreviousForm>
-								<app-concepts-search
-									[label]="'ambulatoria.paciente.vacunas.agregar_vacunas.agregar_vacuna.IMMUNIZATION'"
-									(search)="onSearchPreviousForm($event)">
-								</app-concepts-search>
+								<mat-form-field *ngIf="!searchConceptsLocallyFF else previousVaccineTypeaheadSearch"
+									appearance="outline" class="search" [formGroup]="searchPreviousVaccineForm">
+									<input matInput formControlName="search"
+										(keydown.enter)="openSearchPreviousVaccineDialog()">
+									<button type="button" matSuffix mat-flat-button color="primary"
+										(click)="openSearchPreviousVaccineDialog()">
+										<span class="uppercase" [translate]="'buttons.SEARCH'"></span>
+									</button>
+								</mat-form-field>
 								<div class="vaccine-error">
 									<div class="mat-error"
 										[translate]="'ambulatoria.paciente.vacunas.agregar_vacunas.agregar_vacuna.NOT_VACCINE_SELECTED_ERROR'"
-										*ngIf="!searchingPrevious && tryToSubmitPrevious">
+										*ngIf="tryToSubmitPrevious">
 									</div>
 								</div>
-								<div class="spinner" fxLayoutAlign="center center">
-									<mat-spinner diameter="70" color="primary" *ngIf="searchingPrevious"></mat-spinner>
-								</div>
-								<app-table *ngIf="!searchingPrevious && !previousVaccineSnomedConcept"
-									[model]="conceptsResultsTablePreviousForm"></app-table>
+							</ng-template>
+
+							<ng-template #previousVaccineTypeaheadSearch>
+								<app-concept-typeahead-search [ecl]="ecl" [appearanceOutline]="true"
+									[showSearchIcon]="true"
+									placeholder="ambulatoria.paciente.vacunas.agregar_vacunas.agregar_vacuna.SEARCH_VACCINE"
+									(conceptSelected)="setPreviousConcept($event)">
+								</app-concept-typeahead-search>
 							</ng-template>
 						</div>
 
@@ -254,8 +277,10 @@
 									{{ condition.description }}
 								</mat-option>
 							</mat-select>
-							<button id="clear_condition" type="button" mat-button *ngIf="previousForm.value.condition !== null && previousForm.value.condition !== undefined" matSuffix
-								color="warn" mat-icon-button (click)="clear(previousForm.controls.condition, 'condition', previousForm); $event.stopPropagation()">
+							<button id="clear_condition" type="button" mat-button
+								*ngIf="previousForm.value.condition !== null && previousForm.value.condition !== undefined"
+								matSuffix color="warn" mat-icon-button
+								(click)="clear(previousForm.controls.condition, 'condition', previousForm); $event.stopPropagation()">
 								<mat-icon>close</mat-icon>
 							</button>
 						</mat-form-field>
@@ -274,8 +299,10 @@
 											{{ scheme.description }}
 										</mat-option>
 									</mat-select>
-									<button id="clear_scheme" type="button" mat-button *ngIf="previousForm.value.scheme !== null && previousForm.value.scheme !== undefined" matSuffix
-										color="warn" mat-icon-button (click)="clear(previousForm.controls.scheme, 'scheme', previousForm); $event.stopPropagation()">
+									<button id="clear_scheme" type="button" mat-button
+										*ngIf="previousForm.value.scheme !== null && previousForm.value.scheme !== undefined"
+										matSuffix color="warn" mat-icon-button
+										(click)="clear(previousForm.controls.scheme, 'scheme', previousForm); $event.stopPropagation()">
 										<mat-icon>close</mat-icon>
 									</button>
 									<mat-error
@@ -294,11 +321,13 @@
 											{{ dose.description }}
 										</mat-option>
 									</mat-select>
-									<button id="clear_dose" type="button" mat-button *ngIf="this.previousForm.value.dose !== null && this.previousForm.value.dose !== undefined" matSuffix
-										color="warn" mat-icon-button (click)="clear(this.previousForm.controls.dose, 'dose', previousForm); $event.stopPropagation()">
+									<button id="clear_dose" type="button" mat-button
+										*ngIf="this.previousForm.value.dose !== null && this.previousForm.value.dose !== undefined"
+										matSuffix color="warn" mat-icon-button
+										(click)="clear(this.previousForm.controls.dose, 'dose', previousForm); $event.stopPropagation()">
 										<mat-icon>close</mat-icon>
 									</button>
-									 
+
 									<mat-error
 										[translate]="'ambulatoria.paciente.vacunas.agregar_vacunas.agregar_vacuna.NOT_DOSE_SELECTED_ERROR'">
 									</mat-error>

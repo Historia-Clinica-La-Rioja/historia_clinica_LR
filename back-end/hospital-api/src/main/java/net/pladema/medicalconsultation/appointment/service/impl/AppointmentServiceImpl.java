@@ -9,13 +9,13 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-import ar.lamansys.sgh.shared.infrastructure.input.service.SharedStaffPort;
 import ar.lamansys.sgx.shared.dates.configuration.DateTimeProvider;
 import ar.lamansys.sgx.shared.security.UserInfo;
 import net.pladema.establishment.controller.service.InstitutionExternalService;
 
 import net.pladema.establishment.repository.MedicalCoveragePlanRepository;
 import net.pladema.medicalconsultation.appointment.repository.AppointmentObservationRepository;
+import net.pladema.medicalconsultation.appointment.repository.domain.AppointmentDiaryVo;
 import net.pladema.medicalconsultation.appointment.repository.entity.AppointmentObservation;
 import net.pladema.medicalconsultation.appointment.service.ports.AppointmentStorage;
 import net.pladema.patient.controller.dto.PatientMedicalCoverageDto;
@@ -24,20 +24,25 @@ import net.pladema.patient.controller.service.PatientExternalMedicalCoverageServ
 import net.pladema.patient.service.domain.PatientCoverageInsuranceDetailsBo;
 import net.pladema.patient.service.domain.PatientMedicalCoverageBo;
 
+import net.pladema.staff.repository.HealthcareProfessionalRepository;
 
 import org.springframework.stereotype.Service;
 
+import ar.lamansys.sgh.shared.infrastructure.input.service.SharedStaffPort;
 import ar.lamansys.sgx.shared.featureflags.AppFeature;
 import ar.lamansys.sgx.shared.featureflags.application.FeatureFlagsService;
 import lombok.extern.slf4j.Slf4j;
 import net.pladema.medicalconsultation.appointment.repository.AppointmentRepository;
 import net.pladema.medicalconsultation.appointment.repository.HistoricAppointmentStateRepository;
+import net.pladema.medicalconsultation.appointment.repository.domain.AppointmentTicketBo;
 import net.pladema.medicalconsultation.appointment.repository.entity.AppointmentState;
 import net.pladema.medicalconsultation.appointment.repository.entity.HistoricAppointmentState;
 import net.pladema.medicalconsultation.appointment.service.AppointmentService;
 import net.pladema.medicalconsultation.appointment.service.domain.AppointmentAssignedBo;
 import net.pladema.medicalconsultation.appointment.service.domain.AppointmentBo;
 import net.pladema.medicalconsultation.appointment.service.domain.UpdateAppointmentBo;
+import net.pladema.medicalconsultation.appointment.service.exceptions.AppointmentNotFoundEnumException;
+import net.pladema.medicalconsultation.appointment.service.exceptions.AppointmentNotFoundException;
 
 @Slf4j
 @Service
@@ -130,7 +135,14 @@ public class AppointmentServiceImpl implements AppointmentService {
 		log.debug("Input parameters -> diaryId {}, date {}, hour {}", diaryId, date, hour);
 		var res = appointmentRepository.findAppointmentBy(diaryId, date, hour);
 		log.debug(OUTPUT, res);
-		return res.map(AppointmentBo::newFromAppointment);
+		return res.stream().findFirst().map(AppointmentBo::newFromAppointment);
+	}
+
+	public boolean existAppointment(Integer diaryId, LocalDate date, LocalTime hour) {
+		log.debug("Input parameters -> diaryId {}, date {}, hour {}", diaryId, date, hour);
+		boolean result = appointmentRepository.existAppointment(diaryId, date, hour);
+		log.debug(OUTPUT, result);
+		return result;
 	}
 
 	@Override
@@ -183,8 +195,13 @@ public class AppointmentServiceImpl implements AppointmentService {
 		appointmentObservationRepository.save(appointmentObservation);
 		log.debug(OUTPUT, Boolean.TRUE);
 		return Boolean.TRUE;
+	}
 
-
+	@Override
+	public boolean updateDate(Integer appointmentId, LocalDate date, LocalTime time) {
+		appointmentRepository.updateDate(appointmentId, date, time);
+		log.debug(OUTPUT, Boolean.TRUE);
+		return Boolean.TRUE;
 	}
 
 	@Override
@@ -325,5 +342,15 @@ public class AppointmentServiceImpl implements AppointmentService {
 	@Override
 	public void delete(AppointmentBo appointmentBo) {
 		appointmentRepository.deleteById(appointmentBo.getId());
+	}
+
+	@Override
+	public AppointmentTicketBo getAppointmentTicketData(Integer appointmentId) {
+		log.debug("Input parameters -> appointmentId {}", appointmentId);
+		var result = this.appointmentRepository.getAppointmentTicketData(appointmentId).orElseThrow(
+				()-> new AppointmentNotFoundException(AppointmentNotFoundEnumException.APPOINTMENT_ID_NOT_FOUND, "el id no corresponde con ningun turno asignado")
+		);
+		log.trace(OUTPUT, result);
+		return result;
 	}
 }

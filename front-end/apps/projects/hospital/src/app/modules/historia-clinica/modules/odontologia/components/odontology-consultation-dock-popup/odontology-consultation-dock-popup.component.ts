@@ -1,4 +1,4 @@
-import { Component, Inject, OnInit } from '@angular/core';
+import { Component, ElementRef, Inject, OnInit } from '@angular/core';
 import { DockPopupRef } from '@presentation/services/dock-popup-ref';
 import { OVERLAY_DATA } from '@presentation/presentation-model';
 import { MotivoNuevaConsultaService } from '@historia-clinica/modules/ambulatoria/services/motivo-nueva-consulta.service';
@@ -8,7 +8,7 @@ import { AlergiasNuevaConsultaService } from '@historia-clinica/modules/ambulato
 import { InternacionMasterDataService } from '@api-rest/services/internacion-master-data.service';
 import { MedicacionesNuevaConsultaService } from "@historia-clinica/modules/ambulatoria/services/medicaciones-nueva-consulta.service";
 import { TEXT_AREA_MAX_LENGTH } from '@core/constants/validation-constants';
-import { hasError } from '@core/utils/form.utils';
+import { hasError, scrollIntoError } from '@core/utils/form.utils';
 import { PersonalHistoriesNewConsultationService } from "@historia-clinica/modules/ambulatoria/services/personal-histories-new-consultation.service";
 import { newMoment } from "@core/utils/moment.utils";
 import { ClinicalSpecialtyDto, DateDto, OdontologyConceptDto, OdontologyConsultationDto, OdontologyDentalActionDto, OdontologyDiagnosticDto } from '@api-rest/api-model';
@@ -69,7 +69,6 @@ export class OdontologyConsultationDockPopupComponent implements OnInit {
 
 	searchConceptsLocallyFFIsOn = false;
 	public readonly TEXT_AREA_MAX_LENGTH = TEXT_AREA_MAX_LENGTH;
-	errors: string[] = [];
 	public hasError = hasError;
 	public today = newMoment();
 	minDate = MIN_DATE;
@@ -91,6 +90,7 @@ export class OdontologyConsultationDockPopupComponent implements OnInit {
 		private readonly clinicalSpecialtyCareLine: ClinicalSpecialtyCareLineService,
 		private readonly referenceFileService: ReferenceFileService,
 		private readonly featureFlagService: FeatureFlagService,
+		private readonly el: ElementRef,
 	) {
 		this.reasonNewConsultationService = new MotivoNuevaConsultaService(formBuilder, this.snomedService, this.snackBarService);
 		this.allergiesNewConsultationService = new AlergiasNuevaConsultaService(formBuilder, this.snomedService, this.snackBarService);
@@ -128,15 +128,6 @@ export class OdontologyConsultationDockPopupComponent implements OnInit {
 			this.otherDiagnosticsNewConsultationService.setSeverityTypes(healthConditionSeverities);
 		});
 
-
-		this.reasonNewConsultationService.error$.subscribe(reasonError => {
-			this.errors[0] = reasonError;
-		});
-
-		this.otherDiagnosticsNewConsultationService.error$.subscribe(otherDiagnosticsError => {
-			this.errors[1] = otherDiagnosticsError;
-		});
-
 		this.odontologyConsultationService.getConsultationIndices(this.data.patientId).subscribe(odontologyConsultationArray => {
 			const odontologyConsultation = odontologyConsultationArray.find(odontologyConsultation => odontologyConsultation.permanentTeethPresent !== null && odontologyConsultation.temporaryTeethPresent !== null)
 			if (odontologyConsultation) {
@@ -166,6 +157,7 @@ export class OdontologyConsultationDockPopupComponent implements OnInit {
 		}
 		else {
 			this.snackBarService.showError('Error al guardar documento de nueva consulta odontológica');
+			scrollIntoError(this.form, this.el);
 		}
 	}
 
@@ -334,18 +326,20 @@ export class OdontologyConsultationDockPopupComponent implements OnInit {
 		if (filesToUpdate.length) {
 
 			forkJoin(filesToUpdate).subscribe((referenceFileId: number[]) => {
-				let indiceRefFilesIds = 0;
-				references.forEach(reference => {
-
-					const filesLength = reference.referenceFiles.length;
-					for (let a = indiceRefFilesIds; a < indiceRefFilesIds + filesLength; a++)
-						this.odontologyReferenceService.addFileIdAt(reference.referenceNumber, referenceFileId[a]);
-					indiceRefFilesIds += filesLength;
-				});
+				let indexRefFilesIds = 0;
+				references.forEach(
+					(reference: Reference, index: number) => {
+						const filesAmount = reference.referenceFiles.length;
+						for (let i = indexRefFilesIds; i < indexRefFilesIds + filesAmount; i++) {
+							this.odontologyReferenceService.addFileIdAt(index, referenceFileId[i]);
+						}
+						indexRefFilesIds += filesAmount;
+					}
+				);
 				odontologyDto.references = this.odontologyReferenceService.getOdontologyReferences();
 				this.createConsultation(odontologyDto);
 			}, _ => {
-				this.snackBarService.showError('Error al guardar la solicitud de referencia');
+				this.snackBarService.showError('odontologia.odontology-consultation-dock-popup.ERROR_TO_UPLOAD_FILES');
 				this.errorToUploadReferenceFiles();
 			}
 			);
@@ -359,7 +353,7 @@ export class OdontologyConsultationDockPopupComponent implements OnInit {
 	private errorToUploadReferenceFiles() {
 		const filesToDelete = this.odontologyReferenceService.getReferenceFilesIds();
 		this.referenceFileService.deleteReferenceFiles(filesToDelete);
-		this.odontologyReferenceService.setReferenceFilesIds([]);
+		this.odontologyReferenceService.deleteReferenceFilesIds();
 	}
 
 	private problemsToUpdate(odontologyDto: OdontologyConsultationDto): OdontologyDiagnosticDto[] {
@@ -370,8 +364,7 @@ export class OdontologyConsultationDockPopupComponent implements OnInit {
 		const references: Reference[] = this.odontologyReferenceService.getReferences();
 
 		references.forEach(reference => {
-			const referenceProblems = this.odontologyReferenceService.getReferenceProblems(reference.referenceNumber);
-			referenceProblems.forEach(referenceProblem => {
+			reference.referenceProblems.forEach(referenceProblem => {
 				const odontoDiagnosticDto = this.mapToOdontologyDiagnosticDto(referenceProblem);
 				const existProblem = odontologyDiagnosticDto.find(problem => problem.snomed.sctid === odontoDiagnosticDto.snomed.sctid);
 				if (!existProblem) {
