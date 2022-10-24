@@ -220,10 +220,6 @@
 								</ng-template>	
 							</div>	
 
-							<div id="anexosII" fxFlex="30%" fxLayout="column">
-								<button mat-raised-button color="primary">{{'guardia.home.episodes.episode.actions.ANEXOSII' | translate }}</button>
-							</div>
-
 							<div id="actions-container" fxFlex="5%" *ngIf="episode.state.id !== estadosEpisodio.CON_ALTA_MEDICA">
 								<button id="actions" mat-icon-button
 										(click)="$event.stopPropagation()" [matMenuTriggerFor]="actions">

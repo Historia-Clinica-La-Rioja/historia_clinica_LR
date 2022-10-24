@@ -86,7 +86,6 @@ export class AnexosIIComponent implements OnInit {
 		this.isCheckedDownloadFormulario = option;
 	}
 
-	
 	downloadReports() {
 		this.consultationsToDownload.forEach(oc => {
 			if (this.isCheckedDownloadAnexo && this.isCheckedDownloadFormulario) {

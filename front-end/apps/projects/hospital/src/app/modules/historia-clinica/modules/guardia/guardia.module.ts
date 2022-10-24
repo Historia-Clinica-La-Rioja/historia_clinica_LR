@@ -33,6 +33,7 @@ import { SelectConsultorioComponent } from './dialogs/select-consultorio/select-
 import { EpisodeStateService } from './services/episode-state.service';
 import { NewEpisodeService } from './services/new-episode.service';
 import { AnexosIIComponent } from './routes/episode-details/anexos-ii/anexos-ii.component';
+import { CuadroDeDialogoComponent } from './routes/episode-details/cuadro-de-dialogo/cuadro-de-dialogo.component';
 
 @NgModule({
 	declarations: [
@@ -60,6 +61,7 @@ import { AnexosIIComponent } from './routes/episode-details/anexos-ii/anexos-ii.
 		PediatricTriageDialogComponent,
 		SelectConsultorioComponent,
   		AnexosIIComponent,
+    CuadroDeDialogoComponent,
 	],
 	imports: [
 		CommonModule,
