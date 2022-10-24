@@ -55,7 +55,7 @@ sql: `SELECT r.id,
     // Id
     id: {
       sql: `id`,
-      type: `number`,
+      type: `string`,
       title: 'Id',
     },
     // Fecha consulta
