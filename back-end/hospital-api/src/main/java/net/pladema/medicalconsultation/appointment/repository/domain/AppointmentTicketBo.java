@@ -48,29 +48,23 @@ public class AppointmentTicketBo {
 		return medicalCoverage;
 	}
 
-	/*
-	* TODO
-	*  se debe mostrar el nombre completo del paciente y del doctor
-	*  https://taiga.lamansys.com/project/mrisso-hce/task/8129
-	* */
-
 	public String getPatientFullName(){
 		String fullName = patientLastName;
-//		if(!(patientOtherLastNames == null || patientOtherLastNames.isBlank()))
-//			fullName += " " + patientOtherLastNames;
+		if(!(patientOtherLastNames == null || patientOtherLastNames.isBlank()))
+			fullName += " " + patientOtherLastNames;
 		fullName += " " + patientFistName;
-//		if(!(patientMiddleNames == null || patientMiddleNames.isBlank()))
-//			fullName += " " + patientMiddleNames;
+		if(!(patientMiddleNames == null || patientMiddleNames.isBlank()))
+			fullName += " " + patientMiddleNames;
 		return fullName;
 	}
 
 	public String getDoctorFullName(){
 		String fullName = doctorLastName;
-//		if(!(doctorOtherLastNames == null || doctorOtherLastNames.isBlank()))
-//			fullName += " " + doctorOtherLastNames;
+		if(!(doctorOtherLastNames == null || doctorOtherLastNames.isBlank()))
+			fullName += " " + doctorOtherLastNames;
 		fullName += " " + doctorFistName;
-//		if(!(doctorMiddleNames == null || doctorMiddleNames.isBlank()))
-//			fullName += " " + doctorMiddleNames;
+		if(!(doctorMiddleNames == null || doctorMiddleNames.isBlank()))
+			fullName += " " + doctorMiddleNames;
 		return fullName;
 	}
 

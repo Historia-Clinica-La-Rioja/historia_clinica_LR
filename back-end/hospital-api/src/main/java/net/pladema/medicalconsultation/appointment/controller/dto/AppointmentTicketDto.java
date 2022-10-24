@@ -33,7 +33,10 @@ public class AppointmentTicketDto {
 	public AppointmentTicketDto(AppointmentTicketBo bo) {
 		DecimalFormat decimalFormat = new DecimalFormat("###,###.##");
 		final String notMedicalCoverage = "SIN COBERTURA";
-		String medicalCoverage = bo.getMedicalCoverage();
+		String medicalCoverage;
+		if(bo.getMedicalCoverageAcronym() != null && !bo.getMedicalCoverageAcronym().isBlank())
+			medicalCoverage = bo.getMedicalCoverageAcronym();
+		else medicalCoverage = bo.getMedicalCoverage();
 
 		institution = bo.getInstitution().toUpperCase(Locale.ROOT);
 		documentNumber = decimalFormat.format(Integer.parseInt(bo.getDocumentNumber())).replaceAll(",", ".");
