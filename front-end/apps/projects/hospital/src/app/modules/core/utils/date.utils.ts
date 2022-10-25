@@ -68,7 +68,9 @@ export function fromStringToDate(date: string): Date {
 }
 
 export function datePlusDays(date: Date, days: number): Date {
-	const newDate = new Date();
+	let newDate = new Date();
+	newDate.setMonth(date.getMonth());
+	newDate.setFullYear(date.getFullYear())
 	newDate.setDate(date.getDate() + days);
 	return newDate;
 }

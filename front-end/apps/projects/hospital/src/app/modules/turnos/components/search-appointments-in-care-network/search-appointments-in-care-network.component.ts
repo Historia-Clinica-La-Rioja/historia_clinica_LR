@@ -198,13 +198,29 @@ export class SearchAppointmentsInCareNetworkComponent implements OnInit {
   searchAppointments() {
     if (this.searchForm.valid) {
       this.showInvalidFormMessage = false;
+
+      const startDate = new Date(this.searchForm.controls.startDate.value);
+      const endDate = new Date(this.searchForm.controls.endDate.value);
+      const endDateString =
+        [
+          endDate.getFullYear(),
+          ((endDate.getMonth() + 1) > 9 ? '' : '0') + (endDate.getMonth() + 1),
+          (endDate.getDate() > 9 ? '' : '0') + endDate.getDate()
+        ].join('-');
+      const startDateString =
+        [
+          startDate.getFullYear(),
+          ((startDate.getMonth() + 1) > 9 ? '' : '0') + (startDate.getMonth() + 1),
+          (startDate.getDate() > 9 ? '' : '0') + startDate.getDate()
+        ].join('-');
+
       const filters: ProtectedAppointmentsFilter = {
-        careLineId: this.searchForm.value.careLine?.id,
+        careLineId: this.searchForm.value.careLine ? this.searchForm.value.careLine.id : null,
         clinicalSpecialtyId: this.searchForm.value.specialty.id,
         departmentId: this.searchForm.value.department.id,
-        endSearchDate: `${this.searchForm.controls.endDate.value.getFullYear()}-${this.searchForm.controls.endDate.value.getMonth() + 1}-${this.searchForm.controls.endDate.value.getDate()}`,
-        initialSearchDate: `${this.searchForm.controls.startDate.value.getFullYear()}-${this.searchForm.controls.startDate.value.getMonth() + 1}-${this.searchForm.controls.startDate.value.getDate()}`,
-        institutionId: this.searchForm.value.institution.id
+        endSearchDate: endDateString,
+        initialSearchDate: startDateString,
+        institutionId: this.searchForm.value.institution ? this.searchForm.value.institution.id : null
       };
 
       this.diaryAvailableAppointmentsSearchService.getAvailableProtectedAppointments(this.searchForm.value.institution.id, filters).subscribe(
