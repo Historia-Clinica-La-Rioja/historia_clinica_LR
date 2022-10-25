@@ -227,8 +227,17 @@ mat-dialog-actions {
 }
 
 @media only screen and (max-width: 426px) {
-	/* For mobile phones: */
 	.mat-card-patient-image{
 		display: none;
 	}
-  }
+
+	section{
+		width: 58vw;
+	}
+}
+
+@media only screen and (max-width: 320px) {
+	.window{
+		padding-left: 5px;
+	}
+}
