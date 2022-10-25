@@ -1,5 +1,6 @@
 package net.pladema.establishment.controller;
 
+import java.util.Collections;
 import java.util.stream.Collectors;
 
 import org.springframework.data.domain.Page;
@@ -35,12 +36,20 @@ public class BackofficeSnowstormPracticesController extends BackofficeSnomedGrou
 		if(featureFlagsService.isOn(AppFeature.HABILITAR_BUSQUEDA_LOCAL_CONCEPTOS))
 			return super.getList(pageable, entity);
 
-		var apiConcepts = backofficeSnowstormStore.findAll(
-				new BackofficeSnowstormDto(entity.getConceptPt()), pageable, SnomedECL.PROCEDURE)
-				.stream()
+		// avoid calling snowstorm with an invalid search term
+		String conceptPt = entity.getConceptPt();
+		if(conceptPt == null || conceptPt.isBlank() || conceptPt.length() < 3)
+			return new PageImpl<>(Collections.emptyList());
+
+		var apiConcepts = backofficeSnowstormStore.findAll(new BackofficeSnowstormDto(entity.getConceptPt()), pageable, SnomedECL.PROCEDURE).getContent();
+		if(apiConcepts.isEmpty())
+			return new PageImpl<>(Collections.emptyList());
+
+		var result = apiConcepts.stream()
+				.filter(item -> (Long.parseLong(item.getConceptId()) <= Integer.MAX_VALUE))
 				.map(this::mapToSnomedGroupConcept)
 				.collect(Collectors.toList());
-		return new PageImpl<>(apiConcepts, pageable, apiConcepts.size());
+		return new PageImpl<>(result, pageable, result.size());
 	}
 
 	private VSnomedGroupConcept mapToSnomedGroupConcept(BackofficeSnowstormDto dto) {
