@@ -379,7 +379,7 @@
 															<span>{{reference.institution}}</span>
 														</div>
 
-														<div fxLayout="row" fxLayoutGap="10px">
+														<div fxLayout="row" fxLayoutGap="10px" *ngIf="reference.careLine">
 															<strong
 																[translate]="'ambulatoria.paciente.problemas.historical-problems.CARE_LINE'"></strong>
 															<span>{{reference.careLine}}</span>
