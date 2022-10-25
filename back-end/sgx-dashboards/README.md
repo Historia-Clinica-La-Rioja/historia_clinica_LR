@@ -207,3 +207,16 @@ cube(`Referencias`, {
 });
 
 ```
+
+
+## Configuración
+
+El módulo de dashboard usa las siguientes propiedades
+
+| Propiedad | Variable de ambiente | Valor por defecto | Necesidad   | Descripcion                                                                                                                                                          | Desde   |
+| ----------------------- | ---------------|-------------------|-------------|----------------------------------------------------------------------------------------------------------------------------------------------------------------------|---------|
+|app.gateway.cubejs.apiUrl   | CUBEJS_API_URL |                   | Obligatoria | Define la url donde se encuentra el contenedor de cubejs. Por ejemplo, http://localhost:4000/cubejs-api/v1                                                           | v1.43.0 |
+|app.gateway.cubejs.token.secret   | CUBEJS_API_SECRET |                   | Obligatoria | Define la clave de encriptación del token usado en la comunicación backend-cubejs. Este valor debe coincidir con la variable de ambiente CUBEJS_API_SECRET de cubejs | v1.43.0 |
+|app.gateway.cubejs.token.header   | | Authorization     | Obligatoria | Define el header en el que se setea el token                                                                                                                         | v1.43.0 |
+|app.gateway.cubejs.token.expiration   |  | 20d               | Obligatoria | Define el tiempo de duración del token 20                                                                                                                            | v1.43.0 |
+|app.gateway.cubejs.charts.list   |  | tablaReferencia,tablaContraReferencia                  | Obligatoria | Define los cubos definidos en el container de cubejs                                                                | v1.43.0 |

@@ -28,8 +28,8 @@ services:
     environment:
       SPRING_PROFILES_ACTIVE: dev
       DATABASE_IP_PORT: hsi-db:5432
+      CUBEJS_API_URL: http://hsi-cubejs:4000/cubejs-api/v1
       DOCUMENT_ROOT_DIRECTORY: /var/hsi/documents
-      CUBEJS_URL: http://hsi-cubejs:4000/cubejs-api/v1
       # AUTH_DOMAIN: test1-os.dev-env.lamansys.ar
       # AUTH_SECURE: "false"
     volumes:
@@ -88,3 +88,9 @@ networks:
     driver: bridge
 
 
+volumes:
+  tmpdata:
+    driver_opts:
+      type: tmpfs
+      o: size=20485760
+      device: tmpfs

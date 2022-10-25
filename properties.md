@@ -213,6 +213,16 @@ Se crearon las siguientes propiedades para ser usado en las pruebas de estrés.
 |test.stress.disable.validation   |   | false  | Opcional  | Desactiva validaciones en el sistema para facilitar las pruebas  | v1.2.0   |
 
 
+## Configuración de Tableros
+
+Se crearon las siguientes propiedades para configurar los tableros de la aplicación
+
+| Propiedad | Variable de ambiente  | Valor por defecto | Necesidad   | Descripcion                                                                                                                                                          | Desde   |
+| ----------------------- | ----------------|-------------------|-------------|----------------------------------------------------------------------------------------------------------------------------------------------------------------------|---------|
+|app.gateway.cubejs.apiUrl   | CUBEJS_API_URL  |                   | Obligatoria | Define la url donde se encuentra el contenedor de cubejs. Por ejemplo, http://localhost:4000/cubejs-api/v1                                                           | v1.43.0 |
+|app.gateway.cubejs.token.secret   | CUBEJS_API_SECRET  | | Obligatoria | Define la clave de encriptación del token usado en la comunicación backend-cubejs. Este valor debe coincidir con la variable de ambiente CUBEJS_API_SECRET de cubejs | v1.43.0 |
+
+
 ## Scheduled Jobs
 | Propiedad                                                  | Variable de ambiente | Valor por defecto | Necesidad | Descripcion                                                                                                                                                     | Desde   |
 |------------------------------------------------------------| ----------------|-------------------| --------- |-----------------------------------------------------------------------------------------------------------------------------------------------------------------|---------|
