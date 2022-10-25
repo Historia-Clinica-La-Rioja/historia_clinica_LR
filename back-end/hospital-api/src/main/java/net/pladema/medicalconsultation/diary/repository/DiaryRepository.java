@@ -158,8 +158,10 @@ public interface DiaryRepository extends SGXAuditableEntityJPARepository<Diary, 
 	@Transactional(readOnly = true)
 	@Query("SELECT (case when count(d.id)> 0 then true else false end) " +
 			"FROM Diary d " +
+			"LEFT JOIN DiaryAssociatedProfessional dap ON (d.id = dap.diaryId)" +
 			"JOIN DoctorsOffice AS do ON (do.id = d.doctorsOfficeId) " +
-			"WHERE d.healthcareProfessionalId = :healthcareProfessionalId " +
+			"WHERE (d.healthcareProfessionalId = :healthcareProfessionalId " +
+			"OR dap.healthcareProfessionalId = :healthcareProfessionalId) " +
 			"AND do.institutionId = :institutionId " +
 			"AND d.active = true " +
 			"AND d.endDate >= current_date() " +
