@@ -21,6 +21,7 @@ import net.pladema.permissions.repository.enums.ERole;
 import net.pladema.sgx.backoffice.rest.dto.BackofficeDeleteResponse;
 import net.pladema.sgx.exceptions.BackofficeValidationException;
 import net.pladema.snowstorm.repository.SnomedGroupRepository;
+import net.pladema.snowstorm.repository.SnomedRelatedGroupRepository;
 import net.pladema.snowstorm.repository.entity.SnomedGroup;
 import net.pladema.snowstorm.repository.entity.SnomedGroupType;
 import net.pladema.snowstorm.services.domain.semantics.SnomedECL;
@@ -31,11 +32,13 @@ import net.pladema.user.controller.BackofficeAuthoritiesValidator;
 public class BackofficeInstitutionPracticesController extends BackofficeSnomedGroupController{
 
 	private final SnomedGroupRepository snomedGroupRepository;
+	private final SnomedRelatedGroupRepository snomedRelatedGroupRepository;
 	private final BackofficeAuthoritiesValidator authoritiesValidator;
 
-	public BackofficeInstitutionPracticesController(SnomedGroupRepository repository, DateTimeProvider dateTimeProvider, SnomedGroupRepository snomedGroupRepository, BackofficeSnomedGroupValidator backofficeSnomedGroupValidator, BackofficeAuthoritiesValidator authoritiesValidator, BackofficeAuthoritiesValidator authoritiesValidator1) {
+	public BackofficeInstitutionPracticesController(SnomedGroupRepository repository, DateTimeProvider dateTimeProvider, SnomedGroupRepository snomedGroupRepository, BackofficeSnomedGroupValidator backofficeSnomedGroupValidator, BackofficeAuthoritiesValidator authoritiesValidator, SnomedRelatedGroupRepository snomedRelatedGroupRepository, BackofficeAuthoritiesValidator authoritiesValidator1) {
 		super(repository, dateTimeProvider, snomedGroupRepository, backofficeSnomedGroupValidator);
 		this.snomedGroupRepository = snomedGroupRepository;
+		this.snomedRelatedGroupRepository = snomedRelatedGroupRepository;
 		this.authoritiesValidator = authoritiesValidator1;
 	}
 
@@ -73,8 +76,17 @@ public class BackofficeInstitutionPracticesController extends BackofficeSnomedGr
 
 	@Override
 	public BackofficeDeleteResponse<Integer> delete(@PathVariable("id") Integer id) {
-		if(authoritiesValidator.hasRole(ERole.ADMINISTRADOR_INSTITUCIONAL_BACKOFFICE))
-			snomedGroupRepository.deleteById(id);
+		if(authoritiesValidator.hasRole(ERole.ADMINISTRADOR_INSTITUCIONAL_BACKOFFICE)) {
+			if(isDeletable(id))
+				snomedGroupRepository.deleteById(id);
+			else
+				throw new BackofficeValidationException("El grupo tiene prácticas asociadas, por favor elimine las prácticas");
+		}
 		return new BackofficeDeleteResponse<>(id);
+	}
+
+	private Boolean isDeletable(Integer groupId) {
+		Integer lastOrden = snomedRelatedGroupRepository.getLastOrdenByGroupId(groupId).orElse(null);
+		return lastOrden == null;
 	}
 }
