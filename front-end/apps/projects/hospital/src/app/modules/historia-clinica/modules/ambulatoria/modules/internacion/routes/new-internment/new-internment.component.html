@@ -107,7 +107,7 @@
 					<div class="form-row">
 						<div fxFlex="100%">
 							<app-typeahead id="doctorId" [options]="doctorsTypehead"
-								[titleInput]="'internaciones.new-internment.DOCTOR_NAME' | translate" (selectionChange)="setDoctor($event)">
+								[placeholder]="'internaciones.new-internment.DOCTOR_NAME' | translate" (selectionChange)="setDoctor($event)" [required]=true>
 							</app-typeahead>
 						</div>
 						<mat-error class="error-message" *ngIf="!form.value.doctorId && submitForm" [translate]="'pacientes.form.REQUIRED'"></mat-error>
