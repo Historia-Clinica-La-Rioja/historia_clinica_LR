@@ -52,13 +52,30 @@ public interface ClinicalSpecialtyRepository extends JpaRepository<ClinicalSpeci
 			"JOIN UserRole ur ON (ur.userRolePK.userId = up.pk.userId) " +
 			"JOIN Diary d ON (hp.id = d.healthcareProfessionalId) " +
 			"JOIN DoctorsOffice do ON (do.id = d.doctorsOfficeId) " +
-			"WHERE ur.userRolePK.institutionId = :institutionId " +
+			"WHERE do.institutionId = :institutionId " +
+			"AND d.clinicalSpecialtyId = cs.id " +
 			"AND d.active = true " +
 			"AND d.endDate >= current_date() " +
 			"AND (d.deleteable.deleted = false OR d.deleteable.deleted is null) " +
 			"AND hps.deleteable.deleted = false  " +
 			"AND pp.deleteable.deleted = false " +
-			"AND hp.deleteable.deleted = false ")
+			"AND hp.deleteable.deleted = false " +
+			"AND ur.deleteable.deleted = false ")
 	List<ClinicalSpecialty> getAllByInstitutionIdAndActiveDiaries(@Param("institutionId") Integer institutionId);
+
+	@Transactional(readOnly = true)
+	@Query("SELECT DISTINCT cs FROM ClinicalSpecialty as cs " +
+			"JOIN CareLineInstitutionSpecialty clis ON (cs.id = clis.clinicalSpecialtyId)" +
+			"JOIN CareLineInstitution cli ON (cli.id = clis.careLineInstitutionId)" +
+			"JOIN DoctorsOffice do ON (do.institutionId = cli.institutionId) " +
+			"JOIN Diary d ON (do.id = d.doctorsOfficeId) " +
+			"JOIN DiaryCareLine dcl ON (d.id = dcl.pk.diaryId) " +
+			"WHERE cli.careLineId = :careLineId " +
+			"AND cli.institutionId = :destinationInstitutionId " +
+			"AND d.clinicalSpecialtyId = clis.clinicalSpecialtyId " +
+			"AND (d.deleteable.deleted = false) " +
+			"AND (dcl.deleteable.deleted = false)")
+	List<ClinicalSpecialty> getAllByCareLineIdAndDestinationInstitutionId(@Param("careLineId") Integer careLineId,
+																		  @Param("destinationInstitutionId") Integer destinationInstitutionId);
 
 }

@@ -62,7 +62,18 @@ public class ClinicalSpecialtyServiceImpl implements ClinicalSpecialtyService{
 		return clinicalSpecialties;
 	}
 
-    private ClinicalSpecialtyBo mapToBo(ClinicalSpecialty entiy){
+	@Override
+	public List<ClinicalSpecialtyBo> getClinicalSpecialtiesByCareLineIdAndDestinationIntitutionId(Integer careLineId, Integer destinationInstitutionId) {
+		LOG.debug("Input parameters -> careLineId, destinationInstitutionId {}", careLineId, destinationInstitutionId);
+		List <ClinicalSpecialtyBo> clinicalSpecialties = clinicalSpecialtyRepository.getAllByCareLineIdAndDestinationInstitutionId(careLineId, destinationInstitutionId)
+				.stream()
+				.map(clinicalSpecialty -> new ClinicalSpecialtyBo(clinicalSpecialty.getId(), clinicalSpecialty.getName()))
+				.collect(Collectors.toList());
+		LOG.trace(OUTPUT, clinicalSpecialties);
+		return clinicalSpecialties;
+	}
+
+	private ClinicalSpecialtyBo mapToBo(ClinicalSpecialty entiy){
         return new ClinicalSpecialtyBo(entiy.getId(), entiy.getName());
     }
 }

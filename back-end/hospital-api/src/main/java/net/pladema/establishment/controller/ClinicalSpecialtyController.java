@@ -2,6 +2,8 @@ package net.pladema.establishment.controller;
 
 import java.util.List;
 
+import net.pladema.staff.service.domain.ClinicalSpecialtyBo;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
@@ -147,6 +149,17 @@ public class ClinicalSpecialtyController {
 		LOG.debug("Get all Clinical Specialty by active diaries and institution {} => {}", destinationInstitutionId);
 		return ResponseEntity.ok(clinicalSpecialties);
 	}
+
+	@GetMapping("/institution/{institutionId}/clinicalspecialty/careline/{careLineId}/destinationinstitution/{destinationInstitutionId}")
+	@PreAuthorize("hasPermission(#institutionId, 'ESPECIALISTA_MEDICO, PROFESIONAL_DE_SALUD, ESPECIALISTA_EN_ODONTOLOGIA, ENFERMERO')")
+	public ResponseEntity<List<ClinicalSpecialtyDto>> getAllByDestinationInstitution(@PathVariable(name = "institutionId") Integer institutionId,
+																					 @PathVariable(name= "careLineId") Integer careLineId,
+																					 @PathVariable(name= "destinationInstitutionId") Integer destinationInstitutionId) {
+		List<ClinicalSpecialtyBo> clinicalSpecialties = clinicalSpecialtyService.getClinicalSpecialtiesByCareLineIdAndDestinationIntitutionId(careLineId, destinationInstitutionId);
+		LOG.debug("Get all Clinical Specialties by CareLine and Destination Institution {} => {}", careLineId, destinationInstitutionId, clinicalSpecialties);
+		return ResponseEntity.ok(clinicalSpecialtyMapper.fromListClinicalSpecialtyBo(clinicalSpecialties));
+	}
+
 
 }
 
