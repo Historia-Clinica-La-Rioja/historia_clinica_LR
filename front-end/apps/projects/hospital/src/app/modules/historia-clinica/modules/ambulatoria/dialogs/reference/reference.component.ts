@@ -1,12 +1,13 @@
 import { Component, Inject, OnInit } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
-import { CareLineDto, ClinicalSpecialtyDto, DateDto, HCEPersonalHistoryDto, InstitutionBasicInfoDto, ReferenceDto, ReferenceProblemDto } from '@api-rest/api-model';
+import { AddressDto, CareLineDto, ClinicalSpecialtyDto, DateDto, HCEPersonalHistoryDto, InstitutionBasicInfoDto, ReferenceDto, ReferenceProblemDto } from '@api-rest/api-model';
 import { AddressMasterDataService } from '@api-rest/services/address-master-data.service';
 import { CareLineService } from '@api-rest/services/care-line.service';
 import { ClinicalSpecialtyService } from '@api-rest/services/clinical-specialty.service';
 import { HceGeneralStateService } from '@api-rest/services/hce-general-state.service';
 import { InstitutionService } from '@api-rest/services/institution.service';
+import { ContextService } from '@core/services/context.service';
 import { forkJoin, Observable, of } from 'rxjs';
 
 
@@ -23,7 +24,7 @@ export class ReferenceComponent implements OnInit {
 	problemsList$: Observable<any[]>;
 	problemsList: any[] = [];
 	specialties$: Observable<ClinicalSpecialtyDto[]>;
-	careLines$: Observable<CareLineDto[]>;
+	careLines: CareLineDto[];
 	departments$: Observable<any[]>;
 	provinces$: Observable<any[]>;
 	referenceProblemDto: ReferenceProblemDto[] = [];
@@ -41,7 +42,8 @@ export class ReferenceComponent implements OnInit {
 		private readonly dialogRef: MatDialogRef<ReferenceComponent>,
 		private readonly institutionService: InstitutionService,
 		private readonly clinicalSpecialty: ClinicalSpecialtyService,
-		private readonly adressMasterData: AddressMasterDataService
+		private readonly adressMasterData: AddressMasterDataService,
+		private readonly contextService: ContextService
 	) { }
 
 	ngOnInit(): void {
@@ -58,16 +60,24 @@ export class ReferenceComponent implements OnInit {
 			summary: [null],
 		});
 		this.setProblems();
-		
 		this.formReference.controls.clinicalSpecialtyId.disable();
 		this.formReference.controls.procedure.disable();
 		this.formReference.controls.careLine.disable();
+		this.formReference.controls.destinationInstitutionId.disable();
 
 		this.subscribesToChangesInForm();
 
 		this.provinces$ = this.adressMasterData.getByCountry(COUNTRY);
 
-		this.institutions$ = this.institutionService.getAllInstitutions();
+		const homeInstitutionId = this.contextService.institutionId;
+
+		this.institutionService.getAddress(homeInstitutionId).subscribe((institutionInfo: AddressDto) => {
+			const provinceId = institutionInfo?.provinceId;
+			if (provinceId) {
+				this.formReference.controls.provinceId.setValue(provinceId);
+				this.setDepartmentsByProvince(provinceId);
+			}
+		});
 	}
 
 	setProblems() {
@@ -138,7 +148,7 @@ export class ReferenceComponent implements OnInit {
 			id: this.problemsList.find(p => p.hcePersonalHistoryDto.snomed.pt === problem).hcePersonalHistoryDto.id,
 			snomed: this.problemsList.find(p => p.hcePersonalHistoryDto.snomed.pt === problem).hcePersonalHistoryDto.snomed,
 		}));
-		this.setCareLines();
+		this.setInformation();
 	}
 
 	save(): void {
@@ -174,6 +184,7 @@ export class ReferenceComponent implements OnInit {
 	}
 
 	setInformation() {
+		this.clearInformation();
 		if (this.formReference.value.searchByCareLine === this.DEFAULT_RADIO_OPTION)
 			this.setCareLines();
 		else
@@ -210,7 +221,7 @@ export class ReferenceComponent implements OnInit {
 		const institutionId = this.formReference.value.destinationInstitutionId;
 		if (problemSnomedIds.length && institutionId) {
 			this.formReference.controls.careLine.enable();
-			this.careLines$ = this.careLineService.getByProblemSnomedIdsAndInstitutionId(institutionId, problemSnomedIds);
+			this.careLineService.getByProblemSnomedIdsAndInstitutionId(institutionId, problemSnomedIds).subscribe(careLines => this.careLines = careLines);
 		}
 	}
 
@@ -219,6 +230,7 @@ export class ReferenceComponent implements OnInit {
 		if (institutionId) {
 			this.formReference.controls.clinicalSpecialtyId.enable();
 			this.specialties$ = this.clinicalSpecialty.getClinicalSpecialtyByInstitution(institutionId);
+			this.formReference.controls.clinicalSpecialtyId.updateValueAndValidity();
 		}
 	}
 
@@ -234,14 +246,39 @@ export class ReferenceComponent implements OnInit {
 				this.formReference.controls.careLine.removeValidators([Validators.required]);
 				this.formReference.controls.careLine.setValue(null);
 				this.formReference.controls.careLine.disable();
-				this.formReference.controls.careLine.updateValueAndValidity();					
+				this.formReference.controls.careLine.updateValueAndValidity();
 			}
 			this.setInformation();
 		});
 	}
 
 	setDepartmentsByProvince(province: number) {
+		this.clearInformation();
+		this.formReference.controls.destinationInstitutionId.setValue(null);
+		this.formReference.controls.destinationInstitutionId.disable();
 		this.departments$ = this.adressMasterData.getDepartmentsByProvince(province);
+		this.formReference.controls.departmentId.updateValueAndValidity();
+	}
+
+	filterInstitutionsByDepartment(department: number) {
+		this.clearInformation();
+		this.institutions$ = this.institutionService.findByDepartmentId(department);
+		this.formReference.controls.destinationInstitutionId.enable();
+		this.formReference.controls.destinationInstitutionId.updateValueAndValidity();
+	}
+
+	private clearInformation() {
+		if (this.careLines?.length) {
+			this.careLines = [];
+			this.formReference.controls.careLine.setValue(null);
+			this.formReference.controls.careLine.updateValueAndValidity();
+		}
+		this.specialties$?.subscribe(specialties => {
+			if (specialties.length) {
+				this.formReference.controls.clinicalSpecialtyId.setValue(null);
+				this.formReference.controls.clinicalSpecialtyId.updateValueAndValidity();
+			}
+		});
 	}
 
 }

@@ -62,7 +62,7 @@ export class ClinicalSpecialtyService {
 	}
 
 	getAllByDestinationInstitution(careLineId: number, destinationInstitutionId: number): Observable<ClinicalSpecialtyDto[]> {
-		const url = `${environment.apiBase}/institution/${this.contextService.institutionId}/careline/${careLineId}/clinicalspecialties/by-destination-institution/${destinationInstitutionId}`;
+		const url = `${environment.apiBase}/institution/${this.contextService.institutionId}/clinicalspecialty/careline/${careLineId}/destinationinstitution/${destinationInstitutionId}`;
 		return this.http.get<ClinicalSpecialtyDto[]>(url);
 	}
 

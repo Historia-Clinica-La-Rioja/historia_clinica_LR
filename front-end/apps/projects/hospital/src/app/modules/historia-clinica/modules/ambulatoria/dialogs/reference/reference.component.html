@@ -46,7 +46,7 @@
                 <div>
                     <mat-form-field appearance="outline" fxFlex="100%" fxLayoutGap="7px">
                         <mat-label [translate]="'ambulatoria.paciente.nueva-consulta.reference-dialog.DEPARTMENT'"></mat-label>
-                        <mat-select id="department" name="departmentId" formControlName="departmentId">
+                        <mat-select id="department" name="departmentId" formControlName="departmentId" (selectionChange)="filterInstitutionsByDepartment($event.value)">
                             <mat-option *ngFor="let department of departments$ | async" [value]="department.id">
                                 {{department.description | translate}}
                             </mat-option>
@@ -83,11 +83,11 @@
                     <mat-form-field appearance="outline" fxFlex="100%" fxLayoutGap="7px">
                         <mat-label [translate]="'ambulatoria.paciente.nueva-consulta.reference-dialog.PLACEHOLDER_CARE_LINE'"></mat-label>
                         <mat-select id="care_line" name="careLine" formControlName="careLine" (selectionChange)="setSpecialtyCareLine()">
-                            <mat-option *ngFor="let careLine of careLines$ | async" [value]="careLine.id">
+                            <mat-option *ngFor="let careLine of careLines" [value]="careLine.id">
                                 {{careLine.description | translate}}
                             </mat-option>
                         </mat-select>
-                        <mat-error *ngIf="(careLines$ | async)?.length else noCareLines" [translate]="'forms.REQUIRED'"></mat-error>
+                        <mat-error *ngIf="careLines?.length else noCareLines" [translate]="'forms.REQUIRED'"></mat-error>
                         <ng-template #noCareLines>
                             <mat-error [translate]="'ambulatoria.paciente.nueva-consulta.reference-dialog.NO_CARE_LINES'"></mat-error>
                         </ng-template>
