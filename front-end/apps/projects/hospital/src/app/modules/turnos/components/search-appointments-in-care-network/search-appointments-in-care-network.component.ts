@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { AddressDto, CareLineDto, ClinicalSpecialtyDto, DepartmentDto, DiaryAvailableProtectedAppointmentsDto, InstitutionBasicInfoDto, InstitutionDto, ProvinceDto } from '@api-rest/api-model';
+import { AddressDto, CareLineDto, ClinicalSpecialtyDto, DepartmentDto, DiaryAvailableProtectedAppointmentsDto, InstitutionBasicInfoDto, ProvinceDto } from '@api-rest/api-model';
 import { AddressMasterDataService } from '@api-rest/services/address-master-data.service';
 import { CareLineService } from '@api-rest/services/care-line.service';
 import { InstitutionService } from '@api-rest/services/institution.service';
@@ -13,6 +13,7 @@ import { DiaryAvailableAppointmentsSearchService, ProtectedAppointmentsFilter } 
 import { Moment } from 'moment';
 
 const PERIOD_DAYS = 7;
+const PAGE_SIZE_OPTIONS = [5, 10, 25, 100];
 @Component({
   selector: 'app-search-appointments-in-care-network',
   templateUrl: './search-appointments-in-care-network.component.html',
@@ -29,6 +30,12 @@ export class SearchAppointmentsInCareNetworkComponent implements OnInit {
   allSpecialties: ClinicalSpecialtyDto[] = [];
   readonly today = new Date();
   protectedAvaibleAppointments: DiaryAvailableProtectedAppointmentsDto[] = [];
+  appointmentsCurrentPage: DiaryAvailableProtectedAppointmentsDto[] = [];
+  readonly pageSizeOptions = PAGE_SIZE_OPTIONS;
+
+  showAppointmentsNotFoundMessage = false;
+  showAppointmentResults = false;
+  showInvalidFormMessage = false;
 
   careLineTypeaheadOptions: TypeaheadOption<CareLineDto>[] = [];
   specialtyTypeaheadOptions: TypeaheadOption<ClinicalSpecialtyDto>[] = [];
@@ -39,6 +46,7 @@ export class SearchAppointmentsInCareNetworkComponent implements OnInit {
   initialProvinceTypeaheadOptionSelected: TypeaheadOption<ProvinceDto>;
   initialDepartmentTypeaheadOptionSelected: TypeaheadOption<DepartmentDto>;
   initialInstitutionTypeaheadOptionSelected: TypeaheadOption<InstitutionBasicInfoDto>;
+  initialPageSize: number;
 
   constructor(
     private readonly formBuilder: FormBuilder,
@@ -186,28 +194,41 @@ export class SearchAppointmentsInCareNetworkComponent implements OnInit {
   }
 
   searchAppointments() {
-    const filters: ProtectedAppointmentsFilter = {
-      careLineId: this.searchForm.value.careLine?.id,
-      clinicalSpecialtyId: this.searchForm.value.specialty.id,
-      departmentId: this.searchForm.value.department.id,
-      initialSearchDate: {
-        year: this.searchForm.controls.startDate.value.getFullYear(),
-        month: this.searchForm.controls.startDate.value.getMonth() + 1,
-        day: this.searchForm.controls.startDate.value.getDate()
-      },
-      endSearchDate: {
-        year: this.searchForm.controls.endDate.value.getFullYear(),
-        month: this.searchForm.controls.endDate.value.getMonth() + 1,
-        day: this.searchForm.controls.endDate.value.getDate()
-      }
-    };
+    if (this.searchForm.valid) {
+      this.showInvalidFormMessage = false;
+      const filters: ProtectedAppointmentsFilter = {
+        careLineId: this.searchForm.value.careLine?.id,
+        clinicalSpecialtyId: this.searchForm.value.specialty.id,
+        departmentId: this.searchForm.value.department.id,
+        endSearchDate: `${this.searchForm.controls.endDate.value.getFullYear()}-${this.searchForm.controls.endDate.value.getMonth() + 1}-${this.searchForm.controls.endDate.value.getDate()}`,
+        initialSearchDate: `${this.searchForm.controls.startDate.value.getFullYear()}-${this.searchForm.controls.startDate.value.getMonth() + 1}-${this.searchForm.controls.startDate.value.getDate()}`,
+        institutionId: this.searchForm.value.institution.id
+      };
 
-    this.diaryAvailableAppointmentsSearchService.getAvailableProtectedAppointments(this.searchForm.value.institution.id, filters).subscribe(
-      (availableAppointments: DiaryAvailableProtectedAppointmentsDto[]) => {
-        this.protectedAvaibleAppointments = availableAppointments;
-      }
-    );
+      this.diaryAvailableAppointmentsSearchService.getAvailableProtectedAppointments(this.searchForm.value.institution.id, filters).subscribe(
+        (availableAppointments: DiaryAvailableProtectedAppointmentsDto[]) => {
+          this.protectedAvaibleAppointments = availableAppointments;
+          this.showAppointmentsNotFoundMessage = !this.protectedAvaibleAppointments?.length
+          this.showAppointmentResults = !this.showAppointmentsNotFoundMessage;
+          if (this.showAppointmentResults) {
+            this.loadFirstPage();
+          }
+        }
+      );
+    }
+    else {
+      this.showInvalidFormMessage = true;
+    }
 
+  }
+
+  onPageChange($event: any): void {
+    const startPage = $event.pageIndex * $event.pageSize;
+    this.appointmentsCurrentPage = this.protectedAvaibleAppointments.slice(startPage, $event.pageSize + startPage);
+  }
+
+  private loadFirstPage(): void {
+    this.appointmentsCurrentPage = this.protectedAvaibleAppointments.slice(0, PAGE_SIZE_OPTIONS[0]);
   }
 
   private loadSpecialtyTypeaheadOptions(): void {
