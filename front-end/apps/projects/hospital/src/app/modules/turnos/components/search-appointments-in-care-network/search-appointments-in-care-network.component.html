@@ -19,7 +19,8 @@
         <div fxFlex="35" fxLayout="column" fxLayoutGap="5px">
             <strong>{{ 'turnos.search-appointments-in-care-network.SPECIALTY' | translate }}</strong>
             <app-typeahead id="specialty" [placeholder]="'turnos.search-appointments-in-care-network.SPECIALTY'"
-                [options]="specialtyTypeaheadOptions" (selectionChange)="setClinicalSpecialty($event)">
+                [options]="specialtyTypeaheadOptions" [isRequired]="true"
+                (selectionChange)="setClinicalSpecialty($event)">
             </app-typeahead>
         </div>
     </div>
@@ -30,7 +31,7 @@
             <strong> {{ 'turnos.search-appointments-in-care-network.PROVINCE' | translate }} </strong>
             <app-typeahead id="province" [placeholder]="'turnos.search-appointments-in-care-network.PROVINCE'"
                 [options]="provinceTypeaheadOptions" (selectionChange)="setProvince($event)"
-                [externalSetValue]="initialProvinceTypeaheadOptionSelected">
+                [externalSetValue]="initialProvinceTypeaheadOptionSelected" [isRequired]="true">
             </app-typeahead>
         </div>
 
@@ -38,7 +39,7 @@
             <strong> {{ 'turnos.search-appointments-in-care-network.DEPARTMENT' | translate }} </strong>
             <app-typeahead id="department" [placeholder]="'turnos.search-appointments-in-care-network.DEPARTMENT'"
                 [options]="departmentTypeaheadOptions" (selectionChange)="setDepartment($event)"
-                [externalSetValue]="initialDepartmentTypeaheadOptionSelected">
+                [externalSetValue]="initialDepartmentTypeaheadOptionSelected" [isRequired]="true">
             </app-typeahead>
         </div>
 
@@ -81,6 +82,29 @@
         </button>
     </div>
 
+    <span *ngIf="showAppointmentsNotFoundMessage" class="mat-h2">
+        {{ 'turnos.search-appointments-in-care-network.NOT_FOUND_APPOINTMENTS' | translate }}
+    </span>
 
+    <span *ngIf="showInvalidFormMessage" class="mat-h2 color-warn">
+        {{ 'turnos.search-appointments-in-care-network.INVALID_FORM_MESSAGE' | translate }}
+    </span>
+
+    <div *ngIf="showAppointmentResults">
+        <h1 class="mat-h1">
+            {{ 'turnos.search-appointments-in-care-network.AVAILABLE_APPOINTMENTS_TITLE' | translate }}
+        </h1>
+
+        <mat-card>
+            <div *ngFor="let appointment of appointmentsCurrentPage; last as isLast">
+                <app-appointment-result-view [appointment]="appointment">
+                </app-appointment-result-view>
+                <mat-divider class="divider-list" inset *ngIf="!isLast"></mat-divider>
+            </div>
+            <mat-paginator [length]="protectedAvaibleAppointments?.length" [pageSizeOptions]="pageSizeOptions"
+                [pageSize]="pageSizeOptions[0]" (page)="onPageChange($event)">
+            </mat-paginator>
+        </mat-card>
+    </div>
 
 </div>

@@ -190,7 +190,9 @@ export class SearchAppointmentsInCareNetworkComponent implements OnInit {
   }
 
   updateEndDate(initialDate: Moment) {
-    this.searchForm.controls.endDate.setValue(datePlusDays(initialDate.toDate(), PERIOD_DAYS));
+    if (initialDate) {
+      this.searchForm.controls.endDate.setValue(datePlusDays(initialDate.toDate(), PERIOD_DAYS));
+    }
   }
 
   searchAppointments() {
@@ -218,6 +220,7 @@ export class SearchAppointmentsInCareNetworkComponent implements OnInit {
     }
     else {
       this.showInvalidFormMessage = true;
+      this.showAppointmentResults = this.showAppointmentsNotFoundMessage = false;
     }
 
   }

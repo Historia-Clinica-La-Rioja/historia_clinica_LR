@@ -31,6 +31,7 @@ import { NewAttentionComponent } from './dialogs/new-attention/new-attention.com
 import { ConfirmPrintAppointmentComponent } from './dialogs/confirm-print-appointment/confirm-print-appointment.component';
 // services
 import { CustomDateFormatter } from './services/custom-date-formatter.service';
+import { AppointmentResultViewComponent } from './components/appointment-result-view/appointment-result-view.component';
 
 
 @NgModule({
@@ -48,6 +49,7 @@ import { CustomDateFormatter } from './services/custom-date-formatter.service';
 		AppointmentDetailsComponent,
 		ProfessionalSelectComponent,
 		SearchAppointmentsInCareNetworkComponent,
+		AppointmentResultViewComponent,
 		// dialogs
 		AppointmentComponent,
 		BlockAgendaRangeComponent,

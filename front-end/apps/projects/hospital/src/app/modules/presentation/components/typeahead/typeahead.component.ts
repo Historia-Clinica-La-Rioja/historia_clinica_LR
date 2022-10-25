@@ -1,5 +1,5 @@
 import { Component, EventEmitter, Input, OnChanges, OnInit, Output } from '@angular/core';
-import { FormBuilder, FormGroup } from '@angular/forms';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { map, startWith } from 'rxjs/operators';
 import { MatOptionSelectionChange } from '@angular/material/core';
 
@@ -14,6 +14,7 @@ export class TypeaheadComponent implements OnInit, OnChanges {
 	@Input() placeholder: string;
 	@Input() titleInput: string = ' ';
 	@Input() externalSetValue: TypeaheadOption<any>;
+	@Input() isRequired = false;
 	@Output() selectionChange = new EventEmitter();
 
 	form: FormGroup;
@@ -22,12 +23,20 @@ export class TypeaheadComponent implements OnInit, OnChanges {
 
 	constructor(private readonly formBuilder: FormBuilder,
 	) {
-		this.form = this.formBuilder.group({
-			searchValue: [null]
-		});
 	}
 
 	ngOnInit(): void {
+		if (this.isRequired) {
+			this.form = this.formBuilder.group({
+				searchValue: [null, Validators.required]
+			});
+		}
+		else {
+			this.form = this.formBuilder.group({
+				searchValue: [null]
+			});
+		}
+
 		this.form.controls.searchValue.valueChanges
 			.pipe(
 				startWith(''),
@@ -44,6 +53,7 @@ export class TypeaheadComponent implements OnInit, OnChanges {
 			this.optionSelected = this.externalSetValue;
 
 			this.form.controls.searchValue.setValue(this.optionSelected?.compareValue);
+			this.form.controls['searchValue'].markAsTouched({ onlySelf: true });
 			this.selectionChange.emit(this.optionSelected?.value);
 		}
 		else {
@@ -54,6 +64,7 @@ export class TypeaheadComponent implements OnInit, OnChanges {
 	select(event: MatOptionSelectionChange, option: TypeaheadOption<any>): void {
 		if (event.isUserInput) {
 			this.optionSelected = option;
+			this.form.controls['searchValue'].markAsTouched({ onlySelf: true });
 			this.selectionChange.emit(option.value);
 		}
 	}
@@ -66,6 +77,7 @@ export class TypeaheadComponent implements OnInit, OnChanges {
 	private reset(): void {
 		this.optionSelected = null;
 		this.form.controls.searchValue.reset();
+		this.form.controls['searchValue'].markAsTouched({ onlySelf: true });
 		this.selectionChange.emit(null);
 	}
 

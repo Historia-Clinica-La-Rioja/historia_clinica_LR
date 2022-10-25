@@ -1,0 +1,69 @@
+<div fxLayout="row" fxLayoutAlign="space-around stretch" fxLayoutGap="5px" fxLayout.lt-sm="column">
+
+    <div fxLayout="row" fxLayoutAlign="space-around stretch" fxLayoutGap="5px" fxLayout.lt-md="column"
+        fxLayoutGap.lt-md="10px">
+        <div fxLayout="column" fxLayoutAlign="center start" fxLayoutGap="10px">
+
+            <div fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="5px">
+                <mat-icon fontSet="material-icons-outlined">event</mat-icon>
+                <span class="capitalize-first-letter">{{ viewDate }}</span>
+            </div>
+
+            <div fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="5px">
+                <mat-icon fontSet="material-icons-outlined">query_builder</mat-icon>
+                <span>{{ appointment.hour.hours }}:{{ viewMinutes }}</span>
+            </div>
+
+        </div>
+
+        <div fxLayout="column" fxLayoutAlign="center start" fxLayoutGap="10px">
+
+            <div fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="5px">
+                <mat-icon fontSet="material-icons-outlined">domain</mat-icon>
+                <span>{{ appointment.institution.name }}</span>
+            </div>
+
+            <div fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="5px">
+                <mat-icon fontSet="material-icons-outlined">place</mat-icon>
+                <span>{{ appointment.department.description }}</span>
+            </div>
+
+        </div>
+    </div>
+
+    <div fxLayout="row" fxLayoutAlign="space-around stretch" fxLayoutGap="5px" fxLayout.lt-md="column"
+        fxLayoutGap.lt-md="10px">
+        <div fxLayout="column" fxLayoutAlign="center start">
+
+            <div fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="5px">
+                <mat-icon fontSet="material-icons-outlined">person</mat-icon>
+                <span>{{ appointment.professionalFullName }}</span>
+            </div>
+
+        </div>
+
+        <div fxLayout="column" fxLayoutAlign="center start" fxLayoutGap="10px">
+
+            <div fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="5px">
+                <mat-icon fontSet="material-icons-outlined">medical_services</mat-icon>
+                <span>{{ appointment.clinicalSpecialty.name }}</span>
+            </div>
+
+            <div fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="5px">
+                <mat-icon fontSet="material-icons-outlined">meeting_room</mat-icon>
+                <span>{{'turnos.appointment-result-view.OFFICE' | translate}} {{ appointment.doctorOffice }}</span>
+            </div>
+
+        </div>
+    </div>
+
+    <div fxLayout="column" fxLayoutAlign="center center" id="button-section">
+        <div>
+            <button mat-flat-button type="button" id="assign-appointment" color="primary" (click)="assignAppointment()"
+                disabled>
+                {{ 'turnos.appointment-result-view.ASSIGN_APPOINTMENT' | translate | uppercase }}
+            </button>
+        </div>
+    </div>
+
+</div>

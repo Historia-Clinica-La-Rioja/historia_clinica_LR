@@ -46,7 +46,14 @@
 			"INSTITUTION": "Institución",
 			"SPECIALTY": "Especialidad",
 			"DATE_PERIOD_NOTE": "Se traerán resultados desde la fecha seleccionada hasta 7 días en adelante",
-			"SEARCH_START_DATE": "Fecha de inicio de búsqueda"
+			"SEARCH_START_DATE": "Fecha de inicio de búsqueda",
+			"NOT_FOUND_APPOINTMENTS": "No se han encontrado turnos disponibles con esos criterios de búsqueda.",
+			"INVALID_FORM_MESSAGE": "Debe ingresar todos los campos obligatorios marcados para la búsqueda",
+			"AVAILABLE_APPOINTMENTS_TITLE": "Turnos disponibles encontrados"
+		},
+		"appointment-result-view": {
+			"ASSIGN_APPOINTMENT": "Asignar turno",
+			"OFFICE": "Consultorio"
 		},
 		"agenda-setup": {
 			"NEW_AGENDA": "Nueva agenda",
@@ -104,7 +111,7 @@
 			"PHONE_NUMBER": "Número Telefónico",
 			"PHONE_PREFIX": "Prefijo",
 			"ACCEPT": "Aceptar",
-			"PRINT_APPOINTMENT_BUTTON":"Imprimir turno",
+			"PRINT_APPOINTMENT_BUTTON": "Imprimir turno",
 			"ASSIGNED_APPOINTMENT": "Turno asignado",
 			"messages": {
 				"ERROR": "Paciente no encontrado",
