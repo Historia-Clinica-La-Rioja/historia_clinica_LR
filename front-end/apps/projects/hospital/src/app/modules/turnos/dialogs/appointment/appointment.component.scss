@@ -234,6 +234,13 @@ mat-dialog-actions {
 	section{
 		width: 58vw;
 	}
+
+	.appointment-actions{
+		button{
+			min-width: 0;
+			padding: 0;
+		}
+	}
 }
 
 @media only screen and (max-width: 320px) {
