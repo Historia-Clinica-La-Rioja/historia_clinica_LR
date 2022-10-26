@@ -17,7 +17,6 @@ Este documento detalla las propiedades configurables del sistema.
 | Propiedad               | Variable de ambiente       | Valor por defecto       | Necesidad | Descripcion | Desde |
 | ----------------------- | ----------------| ----------------------- | --------- | ----------- | ----- |
 | admin.password | ADMIN_PASS | admin123 | **Obligatorio** | Contraseña del usuario Administrador |  v0.2.0  |
-| internment.document.directory |DOCUMENT_ROOT_DIRECTORY | /temp | **Obligatorio** | Directorio donde se almacenan documentos clínicos y fotos de pacientes | v0.2.0 |
 | spring.profiles.active  |   | default  | **Único**  | Valores posibles: dev, qa, prod   | v0.2.0  |
 | app.env.domain  |  APP_DOMAIN | localhost:4200  | **Opcional**  | Define el dominio. En caso de tener activo el FF HABILITAR_NOTIFICACIONES_TURNOS debe ser **obligatoria**   | v1.42.0  |
 
@@ -268,3 +267,16 @@ Se crearon las siguientes propiedades para el monitoreo del sistema
 | Propiedad                             | Variable de ambiente | Valor por defecto | Necesidad | Descripcion                                                                                                                                             | Desde   |
 |---------------------------------------|----------------------|-------------------| --------- |---------------------------------------------------------------------------------------------------------------------------------------------------------|---------|
 | monitoring.rest-client.storage.enable | -                    | true              | Opcional  | Activa el almacenamiento de la información medida cuando se realizan request a servicios externos | v1.30.0 |
+
+
+
+
+## Configuración de Tableros
+
+Se crearon las siguientes propiedades para configurar los tableros de la aplicación
+
+| Propiedad | Variable de ambiente          | Valor por defecto        | Necesidad   | Descripcion                                                                                                                                                                                                                                                                                                                                    | Desde   |
+| ----------------------- |-------------------------------|--------------------------|-------------|------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|---------|
+|internment.document.directory | DOCUMENT_ROOT_DIRECTORY       | /temp                    | Obligatorio | Directorio donde se almacenan documentos clínicos, resultados de estudios y fotos de pacientes                                                                                                                                                                                                                                                 | v0.2.0  |
+|spring.servlet.multipart.location   | MULTIPART_ABSOLUTE_LOCATION, MULTIPART_RELATIVE_LOCATION | /temp/tmp/multipartfiles | Obligatorio | Define donde se van a almancenar los archivos temporales cuando se suben archivos. Con la variable de ambiente MULTIPART_ABSOLUTE_LOCATION se puede definir una ubicación absoluta, mientras que con MULTIPART_RELATIVE_LOCATION se puede definir una ubicación relativa a la ubicación definida en la propiedad internment.document.directory | v1.45.0 |
+
