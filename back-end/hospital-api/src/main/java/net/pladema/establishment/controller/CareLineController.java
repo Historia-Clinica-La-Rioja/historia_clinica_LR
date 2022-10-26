@@ -47,7 +47,7 @@ public class CareLineController {
 	}
 
 	@GetMapping("/attached")
-	@PreAuthorize("hasPermission(#institutionId, 'ADMINISTRATIVO')")
+	@PreAuthorize("hasPermission(#institutionId, 'ADMINISTRATIVO, ESPECIALISTA_MEDICO, PROFESIONAL_DE_SALUD, ESPECIALISTA_EN_ODONTOLOGIA')")
 	public ResponseEntity<List<CareLineDto>> getCareLinesAttachedToInstitution(@PathVariable(name = "institutionId") Integer institutionId) {
     	List<CareLineBo> careLinesBo = careLineService.getCareLinesAttachedToInstitution();
 		log.debug("Get all care lines with clinical specialties => {}", careLinesBo);
