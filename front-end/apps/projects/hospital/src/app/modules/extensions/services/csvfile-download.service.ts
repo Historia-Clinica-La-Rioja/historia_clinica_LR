@@ -74,7 +74,7 @@ export class CSVFileDownloadService {
               let rowCellsData = [];
               Object.keys(register).forEach(
                 (key: string) => {
-                  rowCellsData.push(register[key] ? register[key].replace(',', '').trim() : '');
+                  rowCellsData.push(register[key] ? register[key].toString().replace(',', '').trim() : '');
                 }
               );
               rows += rowCellsData.join(',') + NEW_LINE;

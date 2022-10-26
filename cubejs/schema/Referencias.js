@@ -41,6 +41,50 @@ sql: `SELECT r.id,
       FROM users as u 
       JOIN user_role ur on u.id = ur.user_id 
       WHERE ur.role_id = 5 
+      AND u.id = ${SECURITY_CONTEXT.userId.unsafeValue()})` : `WHERE r.id IS NULL`}
+UNION ALL
+    SELECT r.id,
+        concat_ws(' ', it.description, p.identification_number) AS documento,
+        concat_ws(', ', concat_ws(' ', p.last_name, p.other_last_names), concat_ws(' ', p.first_name, p.middle_names)) AS paciente,
+        concat_ws('- ', pex.phone_prefix, pex.phone_number) AS telefono,
+        pex.email,
+        oc.institution_id as institucion_origen_id,
+        io.name as institucion_origen,
+        oc.doctor_id,
+        concat_ws(', ', concat_ws(' ', doc.last_name, doc.other_last_names), concat_ws(' ', doc.first_name, doc.middle_names)) AS profesional_solicitante,
+        cl.id as id_linea_cuidado,
+        cl.description as linea_cuidado,
+        cs.id as id_especialidad_clinica,
+        cs.name as especialidad_clinica,
+        oc.performed_date as fecha_consulta,
+        r.destination_institution_id as institucion_destino_id,
+        idest.name as institucion_destino,
+        case when cr.id  is null then 'Referencia pendiente' else 'Contrarreferencia' end as tiene_contra
+    FROM reference r 
+        JOIN odontology_consultation oc ON (r.encounter_id = oc.id) 
+        JOIN institution io ON (io.id = oc.institution_id)
+        LEFT JOIN institution idest ON (idest.id = r.destination_institution_id)
+        JOIN clinical_specialty cs ON (r.clinical_specialty_id = cs.id) 
+        JOIN care_line cl ON (r.care_line_id = cl.id) 
+        JOIN healthcare_professional hp ON (oc.doctor_id = hp.id) 
+        JOIN person doc ON (hp.person_id = doc.id)
+        JOIN patient pa ON (pa.id=oc.patient_id)
+        JOIN person p ON (p.id=pa.person_id)
+        JOIN person_extended pex ON (pex.person_id = p.id)
+        JOIN identification_type it ON (p.identification_type_id = it.id)
+        LEFT JOIN counter_reference cr ON (r.id = cr.reference_id)
+    ${SECURITY_CONTEXT.userId.unsafeValue() ? '' +  `
+    WHERE oc.institution_id IN (
+      SELECT ur.institution_id 
+      FROM users as u 
+      JOIN user_role ur on u.id = ur.user_id 
+      WHERE ur.role_id = 5 
+      AND u.id = ${SECURITY_CONTEXT.userId.unsafeValue()})
+    OR r.destination_institution_id IN (
+      SELECT ur.institution_id 
+      FROM users as u 
+      JOIN user_role ur on u.id = ur.user_id 
+      WHERE ur.role_id = 5 
       AND u.id = ${SECURITY_CONTEXT.userId.unsafeValue()})` : `WHERE r.id IS NULL`}`,
 
   measures: {
