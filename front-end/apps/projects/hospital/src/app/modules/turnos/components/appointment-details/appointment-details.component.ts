@@ -58,7 +58,7 @@ export class AppointmentDetailsComponent implements OnInit {
 						data: {
 							title: 'turnos.new-appointment.ASSIGNED_APPOINTMENT',
 							content: 'Se ha asignado un turno el '+
-							 `<strong>${fullAppointmentDate} ${timeData[0]}:${timeData[1]}hs </strong>`+
+							 `<strong>${fullAppointmentDate} ${timeData[0]}:${timeData[1]} hs </strong>`+
 							 ' para '+
 							 `${this.emptyAppointment.doctorFirstName} ${this.emptyAppointment.doctorLastName}
 							  (${specialtyAndAlias})`+' en ' +
