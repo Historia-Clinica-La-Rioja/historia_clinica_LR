@@ -1,5 +1,5 @@
 import { Component, EventEmitter, Input, OnChanges, OnInit, Output } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { FormBuilder, FormGroup } from '@angular/forms';
 import { map, startWith } from 'rxjs/operators';
 import { MatOptionSelectionChange } from '@angular/material/core';
 
@@ -40,13 +40,15 @@ export class TypeaheadComponent implements OnInit, OnChanges {
 	ngOnChanges(): void {
 		this.optionsFiltered = this.options;
 
-		if (this.externalSetValue && this.optionsIncludes(this.externalSetValue)) {
+		if (this.options) {
+			this.form.controls.searchValue.setValue(this.externalSetValue?.compareValue);
 			this.optionSelected = this.externalSetValue;
-
-			this.form?.controls.searchValue.setValue(this.optionSelected?.compareValue);
-			this.selectionChange.emit(this.optionSelected?.value);
+			if (this.externalSetValue) {
+				this.selectionChange.emit(this.optionSelected?.value);
+			}
 		}
-		else {
+
+		if (this.optionSelected && this.optionsNotIncludesSelected()) {
 			this.reset();
 		}
 	}
@@ -79,9 +81,9 @@ export class TypeaheadComponent implements OnInit, OnChanges {
 		});
 	}
 
-	private optionsIncludes(option: TypeaheadOption<any>): boolean {
-		return this.optionsFiltered && !!this.optionsFiltered
-			.find(o => o.compareValue === option.compareValue);
+	private optionsNotIncludesSelected(): boolean {
+		return this.optionsFiltered && !this.optionsFiltered
+			.find(o => o.compareValue === this.optionSelected.compareValue);
 	}
 
 }

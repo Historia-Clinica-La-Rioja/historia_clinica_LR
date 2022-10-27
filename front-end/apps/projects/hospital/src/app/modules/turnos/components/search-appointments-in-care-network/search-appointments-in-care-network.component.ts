@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { AddressDto, CareLineDto, ClinicalSpecialtyDto, DepartmentDto, DiaryAvailableProtectedAppointmentsDto, InstitutionBasicInfoDto, ProvinceDto } from '@api-rest/api-model';
 import { AddressMasterDataService } from '@api-rest/services/address-master-data.service';
@@ -19,7 +19,7 @@ const PAGE_SIZE_OPTIONS = [5, 10, 25, 100];
   templateUrl: './search-appointments-in-care-network.component.html',
   styleUrls: ['./search-appointments-in-care-network.component.scss']
 })
-export class SearchAppointmentsInCareNetworkComponent implements OnInit {
+export class SearchAppointmentsInCareNetworkComponent {
 
   searchForm: FormGroup;
   provinces: ProvinceDto[] = [];
@@ -29,9 +29,6 @@ export class SearchAppointmentsInCareNetworkComponent implements OnInit {
   specialties: ClinicalSpecialtyDto[] = [];
   allSpecialties: ClinicalSpecialtyDto[] = [];
   readonly today = new Date();
-  protectedAvaibleAppointments: DiaryAvailableProtectedAppointmentsDto[] = [];
-  appointmentsCurrentPage: DiaryAvailableProtectedAppointmentsDto[] = [];
-  readonly pageSizeOptions = PAGE_SIZE_OPTIONS;
 
   showAppointmentsNotFoundMessage = false;
   showAppointmentResults = false;
@@ -50,6 +47,11 @@ export class SearchAppointmentsInCareNetworkComponent implements OnInit {
   initialProvinceTypeaheadOptionSelected: TypeaheadOption<ProvinceDto>;
   initialDepartmentTypeaheadOptionSelected: TypeaheadOption<DepartmentDto>;
   initialInstitutionTypeaheadOptionSelected: TypeaheadOption<InstitutionBasicInfoDto>;
+
+  protectedAvaibleAppointments: DiaryAvailableProtectedAppointmentsDto[] = [];
+
+  appointmentsCurrentPage: DiaryAvailableProtectedAppointmentsDto[] = [];
+  readonly pageSizeOptions = PAGE_SIZE_OPTIONS;
   initialPageSize: number;
 
   constructor(
@@ -66,11 +68,16 @@ export class SearchAppointmentsInCareNetworkComponent implements OnInit {
       (specialties: ClinicalSpecialtyDto[]) => {
         this.allSpecialties = specialties;
         this.specialties = specialties;
+        this.loadSpecialtyTypeaheadOptions();
       }
     );
-  }
 
-  ngOnInit(): void {
+    this.careLineService.getCareLinesAttachedToInstitution(this.contextService.institutionId).subscribe(
+      (careLines: CareLineDto[]) => {
+        this.careLines = careLines;
+        this.loadCareLineTypeaheadOptions();
+      }
+    );
 
     const endDate = datePlusDays(this.today, PERIOD_DAYS);
     this.searchForm = this.formBuilder.group({
@@ -117,19 +124,10 @@ export class SearchAppointmentsInCareNetworkComponent implements OnInit {
         );
       }
     );
-
-    this.careLineService.getCareLinesAttachedToInstitution(this.contextService.institutionId).subscribe(
-      (careLines: CareLineDto[]) => {
-        this.careLines = careLines;
-        this.loadCareLineTypeaheadOptions();
-      }
-    );
-
   }
 
   setCareLine(careLine: CareLineDto) {
     this.searchForm.controls.careLine.setValue(careLine);
-
     this.searchForm.controls.specialty.reset();
     if (careLine) {
       this.specialties = careLine.clinicalSpecialties;
@@ -153,6 +151,7 @@ export class SearchAppointmentsInCareNetworkComponent implements OnInit {
     this.institutionTypeaheadOptions = [];
     this.initialInstitutionTypeaheadOptionSelected = null;
     this.searchForm.controls.institution.reset();
+
     if (department) {
       this.institutionService.findByDepartmentId(department.id).subscribe(
         (institutions) => {
@@ -165,18 +164,6 @@ export class SearchAppointmentsInCareNetworkComponent implements OnInit {
 
   setInstitution(institution: InstitutionBasicInfoDto) {
     this.searchForm.controls.institution.setValue(institution);
-
-    this.careLines = [];
-    this.careLineTypeaheadOptions = [];
-    this.searchForm.controls.careLine.reset();
-    if (institution) {
-      this.careLineService.getCareLinesAttachedToInstitution(institution.id).subscribe(
-        (careLines: CareLineDto[]) => {
-          this.careLines = careLines;
-          this.loadCareLineTypeaheadOptions();
-        }
-      );
-    }
   }
 
   setProvince(province) {
@@ -187,6 +174,8 @@ export class SearchAppointmentsInCareNetworkComponent implements OnInit {
     this.departmentTypeaheadOptions = [];
     this.initialDepartmentTypeaheadOptionSelected = null;
     this.searchForm.controls.department.reset();
+    this.setDepartment(null);
+
     if (province) {
       this.addressMasterDataService.getDepartmentsByProvince(province.id).subscribe(
         departments => {
@@ -279,7 +268,6 @@ export class SearchAppointmentsInCareNetworkComponent implements OnInit {
   private loadInstitutionTypeaheadOptions(): void {
     this.institutionTypeaheadOptions = this.institutions?.map(institutionToTypeaheadOption);
     this.changeDetectorRef.detectChanges();
-
   }
 
   private loadProvinceTypeaheadOptions(): void {
