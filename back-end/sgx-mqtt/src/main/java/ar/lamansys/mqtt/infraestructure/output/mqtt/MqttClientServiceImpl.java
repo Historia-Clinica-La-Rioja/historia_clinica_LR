@@ -31,12 +31,17 @@ public class MqttClientServiceImpl implements MqttClientService {
 
     @Override
     public boolean publish(MqttMetadataBo mqttMetadataBo) {
+		if (mqttClient == null) {
+			log.error("No se puede realizar la siguiente publicación {} no se puede realizar porque no hay conexión al broker", mqttMetadataBo);
+			return false;
+		}
 		try {
 			MqttMessage mqttMessage = new MqttMessage(mqttMetadataBo.getMessageBytes());
 			mqttMessage.setQos(mqttMetadataBo.getQos());
 			mqttMessage.setRetained(mqttMetadataBo.isRetained());
 			mqttClient.publish(mqttMetadataBo.getTopic().toUpperCase(), mqttMessage);
 		} catch (MqttException exc) {
+			log.error("Error al publicar {} => {} ",mqttMetadataBo,  exc.getMessage());
 			return false;
 		}
 		return true;
@@ -44,11 +49,16 @@ public class MqttClientServiceImpl implements MqttClientService {
 
     @Override
     public boolean subscribe(SubscriptionBo subscriptionBo, int qos) {
+		if (mqttClient == null){
+			log.error("La siguiente suscripción {} no se puede realizar porque no hay conexión al broker", subscriptionBo);
+			return false;
+		}
 		try {
 			mqttClient.subscribe(subscriptionBo.getTopic(), qos);
 			callback.addAction(subscriptionBo);
 			topicRegistered.add(subscriptionBo.getTopic());
 		} catch (MqttException exc) {
+			log.error("Error al suscribirse {} => {} ",subscriptionBo,  exc.getMessage());
 			return false;
 		}
 		return true;
