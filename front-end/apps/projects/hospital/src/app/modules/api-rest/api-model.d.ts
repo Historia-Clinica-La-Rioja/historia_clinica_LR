@@ -2917,6 +2917,12 @@ export interface TwoFactorAuthenticationLoginDto {
     code: string;
 }
 
+export interface UpdateAppointmentDateDto {
+    appointmentId: number;
+    date: DateTimeDto;
+    openingHoursId: number;
+}
+
 export interface UpdateAppointmentDto {
     appointmentId: number;
     appointmentStateId: number;

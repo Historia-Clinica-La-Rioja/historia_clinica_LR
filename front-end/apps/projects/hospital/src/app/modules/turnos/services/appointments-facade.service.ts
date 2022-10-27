@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { CalendarEvent } from 'angular-calendar';
 import { ReplaySubject, Observable, forkJoin, BehaviorSubject } from 'rxjs';
 import { AppointmentsService } from '@api-rest/services/appointments.service';
-import { AppointmentListDto, AppointmentShortSummaryDto, BasicPersonalDataDto, CreateAppointmentDto, DateTimeDto, ProfessionalDto, UpdateAppointmentDto } from '@api-rest/api-model';
+import { AppointmentListDto, AppointmentShortSummaryDto, BasicPersonalDataDto, CreateAppointmentDto, DateTimeDto, ProfessionalDto, UpdateAppointmentDateDto, UpdateAppointmentDto } from '@api-rest/api-model';
 import {
 	momentParseTime,
 	DateFormat,
@@ -188,14 +188,14 @@ export class AppointmentsFacadeService {
 			);
 	}
 
-	updateDate(appointmentId: number, date: DateTimeDto): Observable<boolean> {
-		return this.appointmentService.updateDate(appointmentId, date)
+	updateDate(updateAppointmentDate: UpdateAppointmentDateDto): Observable<boolean> {
+		return this.appointmentService.updateDate(updateAppointmentDate)
 			.pipe(
 				map((response: boolean) => {
 					if (response) {
 						this.appointments$.pipe(first()).subscribe((events: CalendarEvent[]) => {
-							const toEdit: CalendarEvent = events.find(event => event.meta?.appointmentId === appointmentId);
-							toEdit.meta.date = date;
+							const toEdit: CalendarEvent = events.find(event => event.meta?.appointmentId === updateAppointmentDate.appointmentId);
+							toEdit.meta.date = updateAppointmentDate.date
 							this.appointmenstEmitter.next(events);
 						});
 						return true;

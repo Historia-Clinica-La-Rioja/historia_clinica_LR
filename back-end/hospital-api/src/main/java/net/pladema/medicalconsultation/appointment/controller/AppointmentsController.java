@@ -16,6 +16,7 @@ import ar.lamansys.sgx.shared.dates.configuration.LocalDateMapper;
 import ar.lamansys.sgx.shared.dates.controller.dto.DateTimeDto;
 
 import net.pladema.medicalconsultation.appointment.controller.dto.AppointmentShortSummaryDto;
+import net.pladema.medicalconsultation.appointment.controller.dto.UpdateAppointmentDateDto;
 import net.pladema.medicalconsultation.appointment.repository.entity.AppointmentState;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
@@ -359,12 +360,14 @@ public class AppointmentsController {
 	public ResponseEntity<Boolean> updateDate(
 			@PathVariable(name = "institutionId") Integer institutionId,
 			@PathVariable(name = "appointmentId") Integer appointmentId,
-			@RequestBody DateTimeDto fullDate) {
-		log.debug("Input parameters -> institutionId {},appointmentId {}, fullDate {}", institutionId, appointmentId, fullDate);
+			@RequestBody UpdateAppointmentDateDto updateAppointmentDate) {
+		log.debug("Input parameters -> institutionId {},appointmentId {}, fullDate {}, openingHoursId {}", institutionId, appointmentId, updateAppointmentDate.getDate(), updateAppointmentDate.getOpeningHoursId());
+		DateTimeDto fullDate = updateAppointmentDate.getDate();
 		LocalDate date = dateMapper.fromDateDto(fullDate.getDate());
 		LocalTime time = dateMapper.fromTimeDto(fullDate.getTime());
+		Integer openingHoursId = updateAppointmentDate.getOpeningHoursId();
 		appointmentValidatorService.validateDateUpdate(institutionId, appointmentId, date, time);
-		boolean result = appointmentService.updateDate(appointmentId, date, time);
+		boolean result = appointmentService.updateDate(appointmentId, date, time, openingHoursId);
 		log.debug(OUTPUT, result);
 		return ResponseEntity.ok().body(result);
 	}

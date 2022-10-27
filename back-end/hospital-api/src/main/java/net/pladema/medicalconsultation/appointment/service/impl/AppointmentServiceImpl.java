@@ -14,7 +14,9 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+import net.pladema.medicalconsultation.appointment.repository.AppointmentAssnRepository;
 import net.pladema.medicalconsultation.appointment.repository.AppointmentUpdateRepository;
+import net.pladema.medicalconsultation.diary.service.DiaryOpeningHoursService;
 import net.pladema.medicalconsultation.diary.service.domain.BlockBo;
 import net.pladema.medicalconsultation.diary.service.domain.DiaryBo;
 import net.pladema.medicalconsultation.diary.service.domain.DiaryOpeningHoursBo;
@@ -60,6 +62,8 @@ public class AppointmentServiceImpl implements AppointmentService {
 
 	private final AppointmentRepository appointmentRepository;
 
+	private final AppointmentAssnRepository appointmentAssnRepository;
+
 	private final AppointmentObservationRepository appointmentObservationRepository;
 
 	private final HistoricAppointmentStateRepository historicAppointmentStateRepository;
@@ -80,8 +84,10 @@ public class AppointmentServiceImpl implements AppointmentService {
 
 	private final AppointmentUpdateRepository appointmentUpdateRepository;
 
+	private final DiaryOpeningHoursService diaryOpeningHoursService;
 
-	public AppointmentServiceImpl(AppointmentRepository appointmentRepository, AppointmentObservationRepository appointmentObservationRepository, HistoricAppointmentStateRepository historicAppointmentStateRepository, SharedStaffPort sharedStaffPort, DateTimeProvider dateTimeProvider, PatientExternalMedicalCoverageService patientExternalMedicalCoverageService, InstitutionExternalService institutionExternalService, MedicalCoveragePlanRepository medicalCoveragePlanRepository, FeatureFlagsService featureFlagsService, AppointmentStorage appointmentStorage, AppointmentUpdateRepository appointmentUpdateRepository) {
+
+	public AppointmentServiceImpl(AppointmentRepository appointmentRepository, AppointmentObservationRepository appointmentObservationRepository, HistoricAppointmentStateRepository historicAppointmentStateRepository, SharedStaffPort sharedStaffPort, DateTimeProvider dateTimeProvider, PatientExternalMedicalCoverageService patientExternalMedicalCoverageService, InstitutionExternalService institutionExternalService, MedicalCoveragePlanRepository medicalCoveragePlanRepository, FeatureFlagsService featureFlagsService, AppointmentStorage appointmentStorage, AppointmentUpdateRepository appointmentUpdateRepository, AppointmentAssnRepository appointmentAssnRepository, DiaryOpeningHoursService diaryOpeningHoursService) {
 		this.appointmentRepository = appointmentRepository;
 		this.appointmentObservationRepository = appointmentObservationRepository;
 		this.historicAppointmentStateRepository = historicAppointmentStateRepository;
@@ -93,6 +99,8 @@ public class AppointmentServiceImpl implements AppointmentService {
 		this.medicalCoveragePlanRepository = medicalCoveragePlanRepository;
 		this.appointmentStorage = appointmentStorage;
 		this.appointmentUpdateRepository = appointmentUpdateRepository;
+		this.appointmentAssnRepository = appointmentAssnRepository;
+		this.diaryOpeningHoursService = diaryOpeningHoursService;
 	}
 
 	@Override
@@ -226,8 +234,9 @@ public class AppointmentServiceImpl implements AppointmentService {
 	}
 
 	@Override
-	public boolean updateDate(Integer appointmentId, LocalDate date, LocalTime time) {
+	public boolean updateDate(Integer appointmentId, LocalDate date, LocalTime time, Integer openingHoursId) {
 		appointmentRepository.updateDate(appointmentId, date, time);
+		appointmentAssnRepository.updateOpeningHoursId(openingHoursId, appointmentId);
 		log.debug(OUTPUT, Boolean.TRUE);
 		return Boolean.TRUE;
 	}

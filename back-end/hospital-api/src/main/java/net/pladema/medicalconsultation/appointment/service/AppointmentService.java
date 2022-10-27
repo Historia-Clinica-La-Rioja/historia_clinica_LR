@@ -43,7 +43,7 @@ public interface AppointmentService {
 
 	boolean updatePhoneNumber(Integer appointmentId, String phonePrefix, String phoneNumber, Integer userId);
 
-	boolean updateDate(Integer appointmentId,  LocalDate date, LocalTime time);
+	boolean updateDate(Integer appointmentId,  LocalDate date, LocalTime time, Integer openingHoursId);
 
 	boolean updateMedicalCoverage(Integer appointmentId, Integer patientMedicalCoverage);
 

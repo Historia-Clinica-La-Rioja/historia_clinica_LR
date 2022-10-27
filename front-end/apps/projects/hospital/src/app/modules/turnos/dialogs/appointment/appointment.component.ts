@@ -7,7 +7,7 @@ import { SnackBarService } from '@presentation/services/snack-bar.service';
 import { APPOINTMENT_STATES_ID, getAppointmentState, MAX_LENGTH_MOTIVE } from '../../constants/appointment';
 import { ContextService } from '@core/services/context.service';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { AppFeature, AppointmentDto, CompleteDiaryDto, DateTimeDto, ERole, IdentificationTypeDto, PatientMedicalCoverageDto, PersonPhotoDto, UpdateAppointmentDto, AppointmentListDto } from '@api-rest/api-model.d';
+import { AppFeature, AppointmentDto, CompleteDiaryDto, DateTimeDto, ERole, IdentificationTypeDto, PatientMedicalCoverageDto, PersonPhotoDto, UpdateAppointmentDto, AppointmentListDto, UpdateAppointmentDateDto } from '@api-rest/api-model.d';
 import { CancelAppointmentComponent } from '../cancel-appointment/cancel-appointment.component';
 import { getError, hasError, processErrors, updateControlValidator } from '@core/utils/form.utils';
 import { AppointmentsFacadeService, toCalendarEvent } from '../../services/appointments-facade.service';
@@ -34,6 +34,7 @@ import { CalendarEvent } from 'angular-calendar';
 import { DiscardWarningComponent } from '@presentation/dialogs/discard-warning/discard-warning.component';
 import { DateFormat, momentFormat, momentParseDate, momentParseTime } from '@core/utils/moment.utils';
 import * as moment from 'moment';
+import { isBefore, isEqual } from 'date-fns';
 
 const TEMPORARY_PATIENT = 3;
 const BELL_LABEL = 'Llamar paciente'
@@ -330,9 +331,25 @@ export class AppointmentComponent implements OnInit {
 			});
 	}
 
+	getAppointmentOpeningHoursId(date: Date): number{
+		const selectedOpeningHour = this.data.agenda.diaryOpeningHours.find(oh => {
+			if (oh.openingHours.dayWeekId === date.getDay()){
+				const hourFrom = momentParseTime(oh.openingHours.from).toDate();
+				hourFrom.setDate(date.getDate());
+				hourFrom.setMonth(date.getMonth());
+				const hourTo = momentParseTime(oh.openingHours.to).toDate();
+				hourTo.setDate(date.getDate());
+				hourTo.setMonth(date.getMonth());
+				return (isBefore(hourFrom, date) || isEqual(hourFrom, date)) && (isBefore(date, hourTo));
+			}
+		});
+		return selectedOpeningHour?.openingHours.id;
+	}
+
 	updateAppointmentDate(): void {
 		const previousDate = new Date(this.data.appointmentData.date);
 		const newDate = this.formDate.get('hour').value;
+		const openingHoursId = this.getAppointmentOpeningHoursId(newDate);
 		const date: DateTimeDto = {
 			date: {
 				year: newDate.getFullYear(),
@@ -345,8 +362,14 @@ export class AppointmentComponent implements OnInit {
 				seconds: newDate.getSeconds()
 			}
 		};
+		const id = this.data.appointmentData.appointmentId;
+		const updateAppointmentDate: UpdateAppointmentDateDto = {
+			appointmentId: id,
+			date: date,
+			openingHoursId: openingHoursId
+		};
 
-		this.appointmentFacade.updateDate(this.data.appointmentData.appointmentId, date).subscribe(() => {
+		this.appointmentFacade.updateDate(updateAppointmentDate).subscribe(() => {
 			const date = momentFormat(moment(previousDate), DateFormat.API_DATE);
 			this.appointmentService.getList([this.data.agenda.id], this.data.agenda.healthcareProfessionalId, date, date)
 				.subscribe((appointments: AppointmentListDto[]) => {
@@ -371,6 +394,7 @@ export class AppointmentComponent implements OnInit {
 					}
 					this.snackBarService.showSuccess('turnos.appointment.date.UPDATE_SUCCESS');
 					this.selectedDate = newDate;
+					this.data.appointmentData.date = newDate;
 				});
 		}, error => {
 			processErrors(error, (msg) => this.snackBarService.showError(msg));
