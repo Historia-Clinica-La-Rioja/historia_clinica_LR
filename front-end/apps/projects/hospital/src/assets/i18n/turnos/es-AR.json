@@ -52,8 +52,7 @@
 			"AVAILABLE_APPOINTMENTS_TITLE": "Turnos disponibles encontrados"
 		},
 		"appointment-result-view": {
-			"ASSIGN_APPOINTMENT": "Asignar turno",
-			"OFFICE": "Consultorio"
+			"JOINT_DIARY": "agenda conjunta"
 		},
 		"agenda-setup": {
 			"NEW_AGENDA": "Nueva agenda",

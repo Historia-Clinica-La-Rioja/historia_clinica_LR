@@ -1,6 +1,6 @@
-<div fxLayout="row" fxLayoutAlign="space-around stretch" fxLayoutGap="5px" fxLayout.lt-sm="column">
+<div fxLayout="row" fxLayoutAlign="start stretch" fxLayoutGap="10px" fxLayout.lt-sm="column">
 
-    <div fxLayout="row" fxLayoutAlign="space-around stretch" fxLayoutGap="5px" fxLayout.lt-md="column"
+    <div fxLayout="row" fxLayoutAlign="start stretch" fxLayoutGap="10px" fxLayout.lt-md="column"
         fxLayoutGap.lt-md="10px">
         <div fxLayout="column" fxLayoutAlign="center start" fxLayoutGap="10px">
 
@@ -31,15 +31,17 @@
         </div>
     </div>
 
-    <div fxLayout="row" fxLayoutAlign="space-around stretch" fxLayoutGap="5px" fxLayout.lt-md="column"
+    <div fxLayout="row" fxLayoutAlign="start stretch" fxLayoutGap="10px" fxLayout.lt-md="column"
         fxLayoutGap.lt-md="10px">
-        <div fxLayout="column" fxLayoutAlign="center start">
 
-            <div fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="5px">
-                <mat-icon fontSet="material-icons-outlined">person</mat-icon>
+        <div fxLayout="row" fxLayoutGap="5px">
+            <mat-icon fontSet="material-icons-outlined">person</mat-icon>
+            <div fxLayout="column">
                 <span>{{ appointment.professionalFullName }}</span>
+                <span *ngIf="appointment.jointDiary" class="reduced-font">
+                    ({{ 'turnos.appointment-result-view.JOINT_DIARY' | translate }})
+                </span>
             </div>
-
         </div>
 
         <div fxLayout="column" fxLayoutAlign="center start" fxLayoutGap="10px">
@@ -51,18 +53,9 @@
 
             <div fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="5px">
                 <mat-icon fontSet="material-icons-outlined">meeting_room</mat-icon>
-                <span>{{'turnos.appointment-result-view.OFFICE' | translate}} {{ appointment.doctorOffice }}</span>
+                <span>{{ appointment.doctorOffice }}</span>
             </div>
 
-        </div>
-    </div>
-
-    <div fxLayout="column" fxLayoutAlign="center center" id="button-section">
-        <div>
-            <button mat-flat-button type="button" id="assign-appointment" color="primary" (click)="assignAppointment()"
-                disabled>
-                {{ 'turnos.appointment-result-view.ASSIGN_APPOINTMENT' | translate | uppercase }}
-            </button>
         </div>
     </div>
 
