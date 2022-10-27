@@ -21,17 +21,18 @@ public class AppointmentUpdateRepositoryImpl implements AppointmentUpdateReposit
 
 	@Override
 	@Transactional(readOnly = true)
-	public List<Integer> getPastAppointmentsByStatesAndUpdatedBeforeDate(List<Short> stateIds, LocalDateTime lastUpdateDate, Short limit) {
+	public List<Integer> getAppointmentsBeforeDateByStates(List<Short> stateIds, LocalDateTime maxAppointmentDate, Short limit) {
 
 		String sqlQuery =
 				"SELECT a.id FROM Appointment a " +
 				"WHERE a.appointmentStateId IN (:stateIds) " +
-				"AND a.dateTypeId < CURRENT_DATE " +
-				"AND NOT EXISTS (SELECT 1 FROM HistoricAppointmentState has WHERE has.pk.appointmentId = a.id AND has.creationable.createdOn >= :lastUpdateDate) ";
+				"AND (a.dateTypeId < :maxAppointmentDate OR (a.dateTypeId = :maxAppointmentDate AND a.hour < :maxAppointmentTime)) " +
+				"AND NOT EXISTS (SELECT 1 FROM HistoricAppointmentState has WHERE has.pk.appointmentId = a.id AND has.creationable.createdOn >= CURRENT_DATE - 1) ";
 
 		List<Integer> result = entityManager.createQuery(sqlQuery)
 				.setParameter("stateIds", stateIds)
-				.setParameter("lastUpdateDate", lastUpdateDate)
+				.setParameter("maxAppointmentDate", maxAppointmentDate.toLocalDate())
+				.setParameter("maxAppointmentTime", maxAppointmentDate.toLocalTime())
 				.setMaxResults(limit)
 				.getResultList();
 

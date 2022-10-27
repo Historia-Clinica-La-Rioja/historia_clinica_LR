@@ -5,6 +5,6 @@ import java.util.List;
 
 public interface AppointmentUpdateRepository {
 
-	List<Integer> getPastAppointmentsByStatesAndUpdatedBeforeDate(List<Short> stateIds, LocalDateTime lastUpdateDate, Short limit);
+	List<Integer> getAppointmentsBeforeDateByStates(List<Short> stateIds, LocalDateTime maxAppointmentDate, Short limit);
 
 }

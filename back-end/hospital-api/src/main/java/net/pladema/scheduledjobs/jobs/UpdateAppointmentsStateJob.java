@@ -36,8 +36,8 @@ public class UpdateAppointmentsStateJob {
 
 	private static final String REASON = "Actualización programada";
 
-	@Value("${scheduledjobs.updateappointmentsstate.hourssincelastchange:24}")
-	private Long HOURS_SINCE_LAST_CHANGE;
+	@Value("${scheduledjobs.updateappointmentsstate.pastdays:1}")
+	private Long PAST_DAYS;
 
 	@Value("${scheduledjobs.updateappointmentsstate.limit:10}")
 	private Short LIMIT;
@@ -54,11 +54,12 @@ public class UpdateAppointmentsStateJob {
 	public void execute(){
 		LOG.debug("Executing UpdateAppointmentsStateJob at {}", new Date());
 		LocalDateTime actualDate = LocalDateTime.now();
-		List<Integer> appointmentIds = appointmentService.getPastAppointmentsByStatesAndUpdatedBeforeDate(STATES, actualDate.minusHours(HOURS_SINCE_LAST_CHANGE), LIMIT);
+		List<Integer> appointmentIds = appointmentService.getAppointmentsBeforeDateByStates(STATES, actualDate.minusDays(PAST_DAYS), LIMIT);
 		appointmentIds.forEach(id ->
 		{
 			try{
 				appointmentService.updateState(id, AppointmentState.ABSENT, ANONYMOUS_USER_ID, REASON);
+				LOG.debug(String.format("Appointment with id %s updated successfully", id));
 			}
 			catch (Exception ex){
 				LOG.error("Exception occurred while updating appointment: " + id.toString(), ex);

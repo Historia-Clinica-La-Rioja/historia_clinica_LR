@@ -2,8 +2,8 @@ package net.pladema.medicalconsultation.appointment.service.impl;
 
 import java.time.DayOfWeek;
 import java.time.LocalDate;
-import java.time.LocalTime;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.time.ZoneId;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
@@ -403,9 +403,9 @@ public class AppointmentServiceImpl implements AppointmentService {
 
 
 	@Override
-	public List<Integer> getPastAppointmentsByStatesAndUpdatedBeforeDate(List<Short> statesIds, LocalDateTime lastUpdateDate, Short limit){
-		log.debug("Input parameters -> stateIds {}, lastUpdateDate {}, limit {}", statesIds, lastUpdateDate, limit);
-		var result = appointmentUpdateRepository.getPastAppointmentsByStatesAndUpdatedBeforeDate(statesIds, lastUpdateDate, limit);
+	public List<Integer> getAppointmentsBeforeDateByStates(List<Short> statesIds, LocalDateTime maxAppointmentDate, Short limit){
+		log.debug("Input parameters -> stateIds {}, maxAppointmentDate {}, limit {}", statesIds, maxAppointmentDate, limit);
+		var result = appointmentUpdateRepository.getAppointmentsBeforeDateByStates(statesIds, maxAppointmentDate, limit);
 		log.debug("Result size {}", result.size());
 		log.trace(OUTPUT, result);
 		return result;
