@@ -387,6 +387,7 @@ public class AppointmentServiceImpl implements AppointmentService {
 		var result = this.appointmentRepository.getAppointmentTicketData(appointmentId).orElseThrow(
 				()-> new AppointmentNotFoundException(AppointmentNotFoundEnumException.APPOINTMENT_ID_NOT_FOUND, "el id no corresponde con ningun turno asignado")
 		);
+		result.setIncludeNameSelfDetermination(AppFeature.HABILITAR_DATOS_AUTOPERCIBIDOS.isActive());
 		log.trace(OUTPUT, result);
 		return result;
 	}

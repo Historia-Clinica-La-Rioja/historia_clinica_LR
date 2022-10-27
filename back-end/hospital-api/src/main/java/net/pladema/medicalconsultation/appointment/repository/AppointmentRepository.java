@@ -232,12 +232,14 @@ public interface AppointmentRepository extends SGXAuditableEntityJPARepository<A
 	@Transactional(readOnly = true)
 	@Query(	"SELECT DISTINCT NEW net.pladema.medicalconsultation.appointment.repository.domain.AppointmentTicketBo(" +
 			"i.name, per.identificationNumber, per.lastName, per.otherLastNames, per.firstName, per.middleNames, " +
-			"mc.name, hi.acronym, a.dateTypeId, a.hour, do2.description, per2.lastName, per2.otherLastNames, per2.firstName, per2.middleNames) " +
+			"pex.nameSelfDetermination, mc.name, hi.acronym, a.dateTypeId, a.hour, do2.description, per2.lastName, " +
+			"per2.otherLastNames, per2.firstName, per2.middleNames, pex2.nameSelfDetermination) " +
 			"FROM Appointment a " +
 			"JOIN AppointmentAssn aa ON(a.id = aa.pk.appointmentId) " +
 			"JOIN Diary d ON(d.id = aa.pk.diaryId) " +
 			"JOIN Patient p ON(p.id = a.patientId) " +
 			"JOIN Person per ON(per.id = p.personId) " +
+			"JOIN PersonExtended pex ON(per.id = pex.id) " +
 			"LEFT JOIN PatientMedicalCoverageAssn pmc ON(pmc.id = a.patientMedicalCoverageId) " +
 			"LEFT JOIN MedicalCoverage mc ON(pmc.medicalCoverageId = mc.id) " +
 			"LEFT JOIN HealthInsurance hi ON(hi.id = mc.id) " +
@@ -245,6 +247,7 @@ public interface AppointmentRepository extends SGXAuditableEntityJPARepository<A
 			"JOIN Institution i On(do2.institutionId = i.id) " +
 			"JOIN HealthcareProfessional hp ON(d.healthcareProfessionalId = hp.id) " +
 			"JOIN Person per2 ON(hp.personId = per2.id) " +
+			"JOIN PersonExtended pex2 ON(per2.id = pex2.id) " +
 			"WHERE a.id = :appointmentId ")
 	Optional<AppointmentTicketBo> getAppointmentTicketData(@Param("appointmentId") Integer appointmentId);
 
