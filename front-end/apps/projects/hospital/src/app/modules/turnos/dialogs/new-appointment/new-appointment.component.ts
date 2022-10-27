@@ -234,7 +234,7 @@ export class NewAppointmentComponent implements OnInit {
 					if (confirmed) {
 						this.createAppointment();
 					} else {
-						this.dialogRef.close(false);
+						this.dialogRef.close(-1);
 					}
 				});
 			} else {
