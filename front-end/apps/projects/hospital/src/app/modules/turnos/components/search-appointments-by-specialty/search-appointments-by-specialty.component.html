@@ -57,7 +57,7 @@
 				</mat-form-field>
 				<mat-form-field style="max-width: 25%;" appearance="outline">
 					<mat-label [translate]="'turnos.home.END_DATE'"></mat-label>
-					<input formControlName="searchEndingDate" matInput [matDatepicker]="endDatePicker" disabled="true">
+					<input formControlName="searchEndingDate" matInput [matDatepicker]="endDatePicker">
 					<mat-error [translate]="'turnos.home.messages.NO_SPECIFIED_DATE'"></mat-error>
 					<mat-datepicker-toggle matSuffix [for]="endDatePicker"></mat-datepicker-toggle>
 					<mat-datepicker #endDatePicker></mat-datepicker>

@@ -59,7 +59,7 @@ export class SearchAppointmentsBySpecialtyComponent implements OnInit {
 			saturdayControl: [false, Validators.nullValidator],
 			sundayControl: [false, Validators.nullValidator],
 			searchInitialDate: [moment(), Validators.required],
-			searchEndingDate: [moment().add(21, "days"), Validators.required]
+			searchEndingDate: [{ value: moment().add(21, "days"), disabled: true }, Validators.required]
 		});
 
 		this.aliasTypeaheadOptions$ = this.getClinicalSpecialtiesTypeaheadOptions$();
