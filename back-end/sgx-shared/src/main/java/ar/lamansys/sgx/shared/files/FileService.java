@@ -1,5 +1,9 @@
 package ar.lamansys.sgx.shared.files;
 
+import ar.lamansys.sgx.shared.files.exception.FileServiceEnumException;
+import ar.lamansys.sgx.shared.files.exception.FileServiceException;
+
+import org.apache.commons.io.FileUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.core.io.Resource;
@@ -7,9 +11,11 @@ import org.springframework.core.io.UrlResource;
 import org.springframework.stereotype.Component;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.ByteArrayOutputStream;
+import java.io.File;
 import java.io.IOException;
 import java.net.MalformedURLException;
+import java.nio.file.FileStore;
+import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.UUID;
 
@@ -39,16 +45,25 @@ public class FileService {
         return result;
     }
 
-    public boolean saveFile(String path, boolean override, MultipartFile file) {
-        ByteArrayOutputStream os = new ByteArrayOutputStream();
+    public boolean saveFile(String path, MultipartFile file) throws IOException {
+		File dirPath = new File(path);
         try {
-            os.writeBytes(file.getBytes());
-            boolean result = streamFile.saveFileInDirectory(path, override, os);
-            LOG.debug(OUTPUT, result);
-            return result;
+			if (!dirPath.getParentFile().exists())
+				if (!dirPath.getParentFile().mkdirs())
+					throw new FileServiceException(FileServiceEnumException.CANNOT_CREATE_FOLDER, String.format("La carpeta %s no puede ser creada", dirPath.getParentFile()));
+			FileStore fs = Files.getFileStore(dirPath.getParentFile().toPath());
+			if (fs.getUsableSpace() < file.getSize())
+				throw new FileServiceException(FileServiceEnumException.INSUFFICIENT_STORAGE,
+						String.format("La carpeta %s no tiene espacio suficiente (%s) para alojar el archivo de tamaño %s",
+								dirPath.getParentFile(),
+								FileUtils.byteCountToDisplaySize(fs.getUsableSpace()),
+								FileUtils.byteCountToDisplaySize(file.getSize())));
+			file.transferTo(dirPath);
+            LOG.debug(OUTPUT, true);
+            return true;
         } catch (IOException e) {
-            LOG.error("Cannot save file at {}", path, e);
-            return false;
+			throw new FileServiceException(FileServiceEnumException.SAVE_IOEXCEPTION,
+					String.format("El guardado del siguiente archivo %s tuvo el siguiente error %s", dirPath.getAbsolutePath(), e.getMessage()));
         }
     }
 

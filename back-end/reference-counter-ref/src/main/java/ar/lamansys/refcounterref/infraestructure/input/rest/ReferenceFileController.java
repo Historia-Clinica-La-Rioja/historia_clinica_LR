@@ -22,6 +22,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.List;
 
 @Slf4j
@@ -42,7 +43,7 @@ public class ReferenceFileController {
     @PreAuthorize("hasPermission(#institutionId, 'ESPECIALISTA_MEDICO, ENFERMERO, PROFESIONAL_DE_SALUD, ESPECIALISTA_EN_ODONTOLOGIA')")
     public Integer uploadFile(@PathVariable(name = "institutionId") Integer institutionId,
                               @PathVariable(name = "patientId") Integer patientId,
-                              @RequestPart("file") MultipartFile file) {
+                              @RequestPart("file") MultipartFile file) throws IOException {
         log.debug("Input parameters -> institutionId {}, patientId {}", institutionId, patientId);
         var result = createReferenceFile.run(institutionId, patientId, file);
         log.debug(OUTPUT, result);

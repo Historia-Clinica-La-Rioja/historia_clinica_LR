@@ -1,5 +1,6 @@
 package net.pladema.sgx.exceptions;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -12,8 +13,12 @@ import javax.validation.ConstraintViolation;
 import javax.validation.ConstraintViolationException;
 import javax.validation.ValidationException;
 
+import ar.lamansys.sgx.shared.files.exception.FileServiceEnumException;
+import ar.lamansys.sgx.shared.files.exception.FileServiceException;
+
 import org.apache.commons.lang3.StringUtils;
 import org.apache.http.MethodNotSupportedException;
+import org.apache.tomcat.util.http.fileupload.impl.IOFileUploadException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.MessageSource;
@@ -199,5 +204,25 @@ public class RestExceptionHandler {
 		return new ApiErrorMessageDto(ex.getCode().toString(), ex.getMessage());
 	}
 
+	@ResponseStatus(HttpStatus.INSUFFICIENT_STORAGE)
+	@ExceptionHandler({ IOFileUploadException.class })
+	public ApiErrorMessageDto handleIOFileUploadException(IOFileUploadException ex) {
+		LOG.debug("IOFileUploadException exception -> {}", ex.getMessage());
+		return new ApiErrorMessageDto("IOFileUploadException", ex.getMessage());
+	}
 
+	@ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
+	@ExceptionHandler({ IOException.class })
+	public ApiErrorMessageDto handleIOException(IOException ex) {
+		LOG.error("IOException exception -> {}", ex.getMessage());
+		return new ApiErrorMessageDto("IOException", ex.getMessage());
+	}
+
+	@ExceptionHandler({ FileServiceException.class })
+	public ResponseEntity<ApiErrorMessageDto> handleFileServiceException(FileServiceException ex) {
+		LOG.error("FileServiceException exception -> {}", ex.getMessage());
+		var error = new ApiErrorMessageDto(ex.getCodeInfo(), ex.getMessage());
+		return new ResponseEntity<>(error, FileServiceEnumException.INSUFFICIENT_STORAGE.equals(ex.getCode()) ?
+				HttpStatus.INSUFFICIENT_STORAGE : HttpStatus.INTERNAL_SERVER_ERROR);
+	}
 }

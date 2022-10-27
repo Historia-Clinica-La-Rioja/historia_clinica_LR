@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -37,11 +38,15 @@ public class UploadDiagnosticReportCompletedFileServiceImpl  implements UploadDi
             String newFileName = fileService.createFileName(FilenameUtils.getExtension(file.getOriginalFilename()));
             String partialPath = buildPartialPath(patientId, newFileName, diagnosticReportId);
             String completePath = buildCompleteFilePath(partialPath);
-            fileService.saveFile(completePath, false, file);
-            return saveDiagnosticReportFileMetadata(partialPath, file);
-        })
-                .boxed()
-                .collect(Collectors.toList());
+			try {
+				fileService.saveFile(completePath, file);
+			} catch (IOException e) {
+				throw new RuntimeException(e);
+			}
+			return saveDiagnosticReportFileMetadata(partialPath, file);
+		})
+		.boxed()
+		.collect(Collectors.toList());
         LOG.debug(OUTPUT, result);
         return result;
 

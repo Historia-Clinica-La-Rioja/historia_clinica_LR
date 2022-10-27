@@ -9,6 +9,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.Optional;
 
 @Service
@@ -26,13 +27,13 @@ public class SettingsServiceImpl implements SettingsService {
     }
 
     @Override
-    public boolean uploadFile(Optional<Assets> newAsset, MultipartFile file) throws MethodNotSupportedException {
+    public boolean uploadFile(Optional<Assets> newAsset, MultipartFile file) throws MethodNotSupportedException, IOException {
         logger.debug("Input parameters -> fileName {}", newAsset);
 
         if (newAsset.isPresent()) {
             String partialPath = PATH.concat(newAsset.get().getNameFile());
             String completePath = fileService.buildRelativePath(partialPath);
-            return fileService.saveFile(completePath, true, file);
+            return fileService.saveFile(completePath, file);
         }
 
         throw new MethodNotSupportedException("Icono/Logo no soportado por el momento");

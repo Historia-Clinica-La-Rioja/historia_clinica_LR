@@ -12,6 +12,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -29,12 +30,12 @@ public class ReferenceCounterReferenceFileStorageImpl implements ReferenceCounte
 
     @Override
 	@Transactional //Transaccion compleja
-    public Integer save(Integer institutionId, Integer patientId, MultipartFile file, Integer type) {
+    public Integer save(Integer institutionId, Integer patientId, MultipartFile file, Integer type) throws IOException {
 
         String newFileName = fileService.createFileName(FilenameUtils.getExtension(file.getOriginalFilename()));
         String partialPath = buildPartialPath(patientId, newFileName);
         String completePath = buildCompleteFilePath(partialPath);
-        fileService.saveFile(completePath, false, file);
+        fileService.saveFile(completePath, file);
 
         Integer result = saveReferenceCounterReferenceFileMetadata(partialPath, file, type);
         log.debug(OUTPUT, result);
