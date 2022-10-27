@@ -1,9 +1,9 @@
-<div id="container" fxLayout="column" fxLayoutGap="25px" [formGroup]="searchForm">
+<div id="container" fxLayout="column" fxLayoutGap="5px" [formGroup]="searchForm">
 
     <span [translate]="'turnos.search-appointments-in-care-network.SEARCH_IN_CARE_NETWORK_CRITERIA'"></span>
 
     <div fxLayout="row" fxLayoutAlign="start end" fxLayoutGap="20px" fxLayout.lt-sm="column"
-        fxLayoutAlign.lt-sm="start start">
+        fxLayoutAlign.lt-sm="start start" fxLayoutGap="0">
         <div fxFlex="35" fxLayout="column" fxLayoutGap="5px">
             <span>
                 <strong>
@@ -14,33 +14,42 @@
             <app-typeahead id="careline" [placeholder]="'turnos.search-appointments-in-care-network.CARELINE'"
                 [options]="careLineTypeaheadOptions" (selectionChange)="setCareLine($event)">
             </app-typeahead>
+            <div class="error-space"></div>
         </div>
 
         <div fxFlex="35" fxLayout="column" fxLayoutGap="5px">
             <strong>{{ 'turnos.search-appointments-in-care-network.SPECIALTY' | translate }}</strong>
             <app-typeahead id="specialty" [placeholder]="'turnos.search-appointments-in-care-network.SPECIALTY'"
-                [options]="specialtyTypeaheadOptions" [isRequired]="true"
-                (selectionChange)="setClinicalSpecialty($event)">
+                [options]="specialtyTypeaheadOptions" (selectionChange)="setClinicalSpecialty($event)">
             </app-typeahead>
+            <div class="error-space">
+                <mat-error *ngIf="showSpecialtyError">{{ 'forms.REQUIRED' | translate }}</mat-error>
+            </div>
         </div>
     </div>
 
     <div fxLayout="row" fxLayoutAlign="start end" fxLayoutGap="20px" fxLayout.lt-sm="column"
-        fxLayoutAlign.lt-sm="start start">
+        fxLayoutAlign.lt-sm="start start" fxLayoutGap="0">
         <div fxFlex="25" fxLayout="column" fxLayoutGap="5px">
             <strong> {{ 'turnos.search-appointments-in-care-network.PROVINCE' | translate }} </strong>
             <app-typeahead id="province" [placeholder]="'turnos.search-appointments-in-care-network.PROVINCE'"
                 [options]="provinceTypeaheadOptions" (selectionChange)="setProvince($event)"
-                [externalSetValue]="initialProvinceTypeaheadOptionSelected" [isRequired]="true">
+                [externalSetValue]="initialProvinceTypeaheadOptionSelected">
             </app-typeahead>
+            <div class="error-space">
+                <mat-error *ngIf="showProvinceError">{{ 'forms.REQUIRED' | translate }}</mat-error>
+            </div>
         </div>
 
         <div fxFlex="25" fxLayout="column" fxLayoutGap="5px">
             <strong> {{ 'turnos.search-appointments-in-care-network.DEPARTMENT' | translate }} </strong>
             <app-typeahead id="department" [placeholder]="'turnos.search-appointments-in-care-network.DEPARTMENT'"
                 [options]="departmentTypeaheadOptions" (selectionChange)="setDepartment($event)"
-                [externalSetValue]="initialDepartmentTypeaheadOptionSelected" [isRequired]="true">
+                [externalSetValue]="initialDepartmentTypeaheadOptionSelected">
             </app-typeahead>
+            <div class="error-space">
+                <mat-error *ngIf="showDepartmentError">{{ 'forms.REQUIRED' | translate }}</mat-error>
+            </div>
         </div>
 
         <div fxFlex="25" fxLayout="column" fxLayoutGap="5px">
@@ -52,6 +61,7 @@
                 [options]="institutionTypeaheadOptions" (selectionChange)="setInstitution($event)"
                 [externalSetValue]="initialInstitutionTypeaheadOptionSelected">
             </app-typeahead>
+            <div class="error-space"></div>
         </div>
     </div>
 

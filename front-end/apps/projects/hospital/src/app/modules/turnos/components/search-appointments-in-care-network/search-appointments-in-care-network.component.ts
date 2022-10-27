@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { AddressDto, CareLineDto, ClinicalSpecialtyDto, DepartmentDto, DiaryAvailableProtectedAppointmentsDto, InstitutionBasicInfoDto, ProvinceDto } from '@api-rest/api-model';
 import { AddressMasterDataService } from '@api-rest/services/address-master-data.service';
@@ -37,6 +37,10 @@ export class SearchAppointmentsInCareNetworkComponent implements OnInit {
   showAppointmentResults = false;
   showInvalidFormMessage = false;
 
+  showSpecialtyError = false;
+  showDepartmentError = false;
+  showProvinceError = false;
+
   careLineTypeaheadOptions: TypeaheadOption<CareLineDto>[] = [];
   specialtyTypeaheadOptions: TypeaheadOption<ClinicalSpecialtyDto>[] = [];
   departmentTypeaheadOptions: TypeaheadOption<DepartmentDto>[] = [];
@@ -56,6 +60,7 @@ export class SearchAppointmentsInCareNetworkComponent implements OnInit {
     private careLineService: CareLineService,
     private specialtyService: SpecialtyService,
     private diaryAvailableAppointmentsSearchService: DiaryAvailableAppointmentsSearchService,
+    private changeDetectorRef: ChangeDetectorRef,
   ) {
     this.specialtyService.getAll().subscribe(
       (specialties: ClinicalSpecialtyDto[]) => {
@@ -137,10 +142,12 @@ export class SearchAppointmentsInCareNetworkComponent implements OnInit {
 
   setClinicalSpecialty(clinicalSpecialty: ClinicalSpecialtyDto) {
     this.searchForm.controls.specialty.setValue(clinicalSpecialty);
+    this.showSpecialtyError = false;
   }
 
   setDepartment(department: DepartmentDto) {
     this.searchForm.controls.department.setValue(department);
+    this.showDepartmentError = false;
 
     this.institutions = [];
     this.institutionTypeaheadOptions = [];
@@ -174,6 +181,7 @@ export class SearchAppointmentsInCareNetworkComponent implements OnInit {
 
   setProvince(province) {
     this.searchForm.controls.state.setValue(province);
+    this.showProvinceError = false;
 
     this.departments = [];
     this.departmentTypeaheadOptions = [];
@@ -223,7 +231,7 @@ export class SearchAppointmentsInCareNetworkComponent implements OnInit {
         institutionId: this.searchForm.value.institution ? this.searchForm.value.institution.id : null
       };
 
-      this.diaryAvailableAppointmentsSearchService.getAvailableProtectedAppointments(this.searchForm.value.institution.id, filters).subscribe(
+      this.diaryAvailableAppointmentsSearchService.getAvailableProtectedAppointments(this.contextService.institutionId, filters).subscribe(
         (availableAppointments: DiaryAvailableProtectedAppointmentsDto[]) => {
           this.protectedAvaibleAppointments = availableAppointments;
           this.showAppointmentsNotFoundMessage = !this.protectedAvaibleAppointments?.length
@@ -237,6 +245,9 @@ export class SearchAppointmentsInCareNetworkComponent implements OnInit {
     else {
       this.showInvalidFormMessage = true;
       this.showAppointmentResults = this.showAppointmentsNotFoundMessage = false;
+      this.showSpecialtyError = !this.searchForm.value.specialty;
+      this.showDepartmentError = !this.searchForm.value.department;
+      this.showProvinceError = !this.searchForm.value.state;
     }
 
   }
@@ -252,22 +263,28 @@ export class SearchAppointmentsInCareNetworkComponent implements OnInit {
 
   private loadSpecialtyTypeaheadOptions(): void {
     this.specialtyTypeaheadOptions = this.specialties?.map(specialtyToTypeaheadOption);
+    this.changeDetectorRef.detectChanges();
   }
 
   private loadCareLineTypeaheadOptions(): void {
     this.careLineTypeaheadOptions = this.careLines?.map(careLineToTypeaheadOption);
+    this.changeDetectorRef.detectChanges();
   }
 
   private loadDepartmentTypeaheadOptions(): void {
     this.departmentTypeaheadOptions = this.departments?.map(departmentToTypeaheadOption);
+    this.changeDetectorRef.detectChanges();
   }
 
   private loadInstitutionTypeaheadOptions(): void {
     this.institutionTypeaheadOptions = this.institutions?.map(institutionToTypeaheadOption);
+    this.changeDetectorRef.detectChanges();
+
   }
 
   private loadProvinceTypeaheadOptions(): void {
     this.provinceTypeaheadOptions = this.provinces?.map(provinceToTypeaheadOption);
+    this.changeDetectorRef.detectChanges();
   }
 
 }

@@ -14,7 +14,6 @@ export class TypeaheadComponent implements OnInit, OnChanges {
 	@Input() placeholder: string;
 	@Input() titleInput: string = ' ';
 	@Input() externalSetValue: TypeaheadOption<any>;
-	@Input() isRequired = false;
 	@Output() selectionChange = new EventEmitter();
 
 	form: FormGroup;
@@ -23,20 +22,12 @@ export class TypeaheadComponent implements OnInit, OnChanges {
 
 	constructor(private readonly formBuilder: FormBuilder,
 	) {
+		this.form = this.formBuilder.group({
+			searchValue: [null]
+		});
 	}
 
 	ngOnInit(): void {
-		if (this.isRequired) {
-			this.form = this.formBuilder.group({
-				searchValue: [null, Validators.required]
-			});
-		}
-		else {
-			this.form = this.formBuilder.group({
-				searchValue: [null]
-			});
-		}
-
 		this.form.controls.searchValue.valueChanges
 			.pipe(
 				startWith(''),
@@ -52,8 +43,7 @@ export class TypeaheadComponent implements OnInit, OnChanges {
 		if (this.externalSetValue && this.optionsIncludes(this.externalSetValue)) {
 			this.optionSelected = this.externalSetValue;
 
-			this.form.controls.searchValue.setValue(this.optionSelected?.compareValue);
-			this.form.controls['searchValue'].markAsTouched({ onlySelf: true });
+			this.form?.controls.searchValue.setValue(this.optionSelected?.compareValue);
 			this.selectionChange.emit(this.optionSelected?.value);
 		}
 		else {
@@ -64,7 +54,6 @@ export class TypeaheadComponent implements OnInit, OnChanges {
 	select(event: MatOptionSelectionChange, option: TypeaheadOption<any>): void {
 		if (event.isUserInput) {
 			this.optionSelected = option;
-			this.form.controls['searchValue'].markAsTouched({ onlySelf: true });
 			this.selectionChange.emit(option.value);
 		}
 	}
@@ -77,7 +66,6 @@ export class TypeaheadComponent implements OnInit, OnChanges {
 	private reset(): void {
 		this.optionSelected = null;
 		this.form.controls.searchValue.reset();
-		this.form.controls['searchValue'].markAsTouched({ onlySelf: true });
 		this.selectionChange.emit(null);
 	}
 

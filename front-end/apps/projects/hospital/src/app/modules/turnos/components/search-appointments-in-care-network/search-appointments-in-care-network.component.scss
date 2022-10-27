@@ -15,3 +15,11 @@ span.mat-h1 {
     margin-top: 16px;
     margin-bottom: 16px;
 }
+
+.error-space {
+    height: 20px;
+
+    mat-error {
+        font-size: 75%;
+    }
+}
