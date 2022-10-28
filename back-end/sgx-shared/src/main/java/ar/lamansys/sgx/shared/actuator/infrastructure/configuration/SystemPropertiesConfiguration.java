@@ -68,7 +68,8 @@ public class SystemPropertiesConfiguration {
 				+ "app\\.*|api\\.*|admin\\.*|token\\.*|management\\.*|"
 				+ "oauth\\.*|externalurl\\.*|integration\\.*|actuator\\.*|"
 				+ "internment\\.*|images\\.*|mail\\.*|recaptcha\\.*|.*\\.cron\\.*|"
-				+ "habilitar\\.*|hsi\\.*"
+				+ "habilitar\\.*|hsi\\.*|booking\\.*|mqtt\\.*|snomed-semantics\\.*|"
+				+ "scheduledjobs\\.*|auth\\.*"
 				+ ")";
 
     }
