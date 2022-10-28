@@ -366,10 +366,10 @@
 			group by oc.id
 			) otherproced on(otherproced.id = oc.id)
 			left join (
-			select oc.id, sum(oci.permanent_c + oci.permanent_p + oci.permanent_o) as cpo, sum(oci.temporary_c + oci.temporary_e + oci.temporary_o) as ceo
+			select oc.id, concat_ws('-', oci.permanent_c, oci.permanent_p, oci.permanent_o) as cpo, concat_ws('-', oci.temporary_c, oci.temporary_e, oci.temporary_o) as ceo
 			from odontology_consultation oc
 			join odontology_consultation_indices oci on(oc.id = oci.odontology_consultation_id)
-			group by oc.id
+			group by oc.id, oci.permanent_c, oci.permanent_p, oci.permanent_o, oci.temporary_c, oci.temporary_e, oci.temporary_o
 			) indexs on(indexs.id = oc.id)
 			WHERE oc.institution_id = :institutionId
 			AND oc.billable = true

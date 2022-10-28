@@ -105,7 +105,7 @@ public class ReportsController {
         String[] headers = new String[]{"Provincia", "Municipio", "Cod_Estable", "Establecimiento", "Apellidos paciente", "Nombres paciente", "Nombre autopercibido", "Tipo documento",
                 "Nro documento", "Fecha de nacimiento", "Género autopercibido", "Domicilio", "Teléfono", "Mail", "Obra social/Prepaga", "Nro de afiliado",
                 "Fecha de atención", "Especialidad", "Profesional", "Motivo de consulta", "Problemas de Salud / Diagnóstico", "Procedimientos", "Peso", "Talla", "Tensión sistólica",
-				"Tensión diastólica", "Riesgo cardiovascular", "Hemoglobina glicosilada", "Glucemia", "Perímetro cefálico", "CPO", "ceo"};
+				"Tensión diastólica", "Riesgo cardiovascular", "Hemoglobina glicosilada", "Glucemia", "Perímetro cefálico", "C-P-O", "c-e-o"};
 
         LocalDate startDate = localDateMapper.fromStringToLocalDate(fromDate);
         LocalDate endDate = localDateMapper.fromStringToLocalDate(toDate);
