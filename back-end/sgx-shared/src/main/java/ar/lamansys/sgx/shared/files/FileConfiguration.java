@@ -23,9 +23,9 @@ public class FileConfiguration {
 	private final File documentsLocation;
 	private final File multipartLocation;
 	private final Long minimumFreeSpace;
-	public FileConfiguration(@Value("${internment.document.directory}") String documentsLocation,
-							 @Value("${spring.servlet.multipart.location}") String multipartLocation,
-							 @Value("${files.folder.freespace.minimum}") Long minimumFreeSpace) throws IOException {
+	public FileConfiguration(@Value("${app.files.folder.documents.location}") String documentsLocation,
+							 @Value("${app.files.folder.multipart.location}") String multipartLocation,
+							 @Value("${app.files.folder.freespace.minimum}") Long minimumFreeSpace) throws IOException {
 		this.documentsLocation = new File(documentsLocation);
 		this.multipartLocation = new File(multipartLocation);
 		checkFolder(this.documentsLocation, minimumFreeSpace);

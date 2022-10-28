@@ -14,7 +14,6 @@ import ar.lamansys.sgx.shared.files.FileService;
 import net.pladema.hsi.extensions.configuration.features.FeatureProperty;
 import net.pladema.hsi.extensions.configuration.features.FeatureStatusService;
 
-
 @Service
 @Order(5)
 public class FilesStatusService extends FeatureStatusService {
