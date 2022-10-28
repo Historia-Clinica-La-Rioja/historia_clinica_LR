@@ -6,7 +6,9 @@ import lombok.Getter;
 @Getter
 public enum GenderEnum {
     FEMALE((short) 1),
-    MALE((short) 2);
+    MALE((short) 2),
+
+	X((short) 3);
 
     private final Short id;
 

@@ -191,35 +191,40 @@ public class ActivitiesMapper {
 
 		Map<Long, List<SingleAttentionInfoDto>> groupedAttentions = resultBo.stream()
 				.filter(res -> res.getSingleDiagnosticDto().getDiagnosis().getPt() != null)
+				.filter(res -> res.getSingleDiagnosticDto().getUpdatedOn() != null)
 				.collect(groupingBy(SingleAttentionInfoDto::getEncounterId));
 
 		for(var key : groupedAttentions.keySet()) {
 			var list = groupedAttentions.get(key);
-			SingleAttentionInfoDto lastMainDiagnosis = list.stream().max(Comparator.comparing(a -> a.getSingleDiagnosticDto().getUpdatedOn())).get();
+			var lastMainDiagnosisOptional = list.stream()
+					.max(Comparator.comparing(a -> a.getSingleDiagnosticDto()
+							.getUpdatedOn()));
+			if(lastMainDiagnosisOptional.isPresent()) {
+				var lastMainDiagnosis = lastMainDiagnosisOptional.get();
+				DiagnosesDto diagnosis = new DiagnosesDto();
+				diagnosis.setMain(lastMainDiagnosis.getSingleDiagnosticDto().getDiagnosis());
+				diagnosis.setOthers(list.stream()
+						.filter(diag -> ProblemTypeEnum.map(diag.getSingleDiagnosticDto().getDiagnosisType()).equals(ProblemTypeEnum.DIAGNOSIS))
+						.filter(diag -> !diag.getSingleDiagnosticDto().getDiagnosis().equals(lastMainDiagnosis.getSingleDiagnosticDto().getDiagnosis()))
+						.map(diag -> diag.getSingleDiagnosticDto().getDiagnosis())
+						.distinct()
+						.collect(Collectors.toList()));
 
-			DiagnosesDto diagnosis = new DiagnosesDto();
-			diagnosis.setMain(lastMainDiagnosis.getSingleDiagnosticDto().getDiagnosis());
-			diagnosis.setOthers(list.stream()
-					.filter(diag -> ProblemTypeEnum.map(diag.getSingleDiagnosticDto().getDiagnosisType()).equals(ProblemTypeEnum.DIAGNOSIS))
-					.filter(diag -> !diag.getSingleDiagnosticDto().getDiagnosis().equals(lastMainDiagnosis.getSingleDiagnosticDto().getDiagnosis()))
-					.map(diag -> diag.getSingleDiagnosticDto().getDiagnosis())
-					.distinct()
-					.collect(Collectors.toList()));
+				AttentionInfoDto attention = AttentionInfoDto.builder()
+						.attentionDate(lastMainDiagnosis.getAttentionDate())
+						.coverage(lastMainDiagnosis.getCoverage())
+						.scope(lastMainDiagnosis.getScope())
+						.responsibleDoctor(lastMainDiagnosis.getResponsibleDoctor())
+						.speciality(lastMainDiagnosis.getSpeciality())
+						.patient(lastMainDiagnosis.getPatient())
+						.encounterId(lastMainDiagnosis.getEncounterId())
+						.internmentInfo(lastMainDiagnosis.getInternmentInfo())
+						.diagnoses(diagnosis)
+						.id(lastMainDiagnosis.getId())
+						.build();
 
-			AttentionInfoDto attention = AttentionInfoDto.builder()
-					.attentionDate(lastMainDiagnosis.getAttentionDate())
-					.coverage(lastMainDiagnosis.getCoverage())
-					.scope(lastMainDiagnosis.getScope())
-					.responsibleDoctor(lastMainDiagnosis.getResponsibleDoctor())
-					.speciality(lastMainDiagnosis.getSpeciality())
-					.patient(lastMainDiagnosis.getPatient())
-					.encounterId(lastMainDiagnosis.getEncounterId())
-					.internmentInfo(lastMainDiagnosis.getInternmentInfo())
-					.diagnoses(diagnosis)
-					.id(lastMainDiagnosis.getId())
-					.build();
-
-			result.add(attention);
+				result.add(attention);
+			}
 		}
 
 
