@@ -269,8 +269,8 @@ public class ActivityStorageImpl implements ActivityStorage {
 		return new PersonInfoBo((String) rawAttention[6],
 				(String) rawAttention[4],
 				(String) rawAttention[5],
-				((Date) rawAttention[8]).toLocalDate(),
-				GenderEnum.map((Short) rawAttention[7]));
+				rawAttention[8] == null ? null : ((Date) rawAttention[8]).toLocalDate(),
+				rawAttention[7] == null ? null : GenderEnum.map((Short) rawAttention[7]));
 	}
 
 	private ProfessionalBo buildProfessionalBo(Object[] rawAttention) {

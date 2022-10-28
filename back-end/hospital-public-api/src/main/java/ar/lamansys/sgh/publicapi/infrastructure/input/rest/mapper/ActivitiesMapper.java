@@ -118,7 +118,7 @@ public class ActivitiesMapper {
 				.firstName(personInfoBo.getFirstName())
 				.lastName(personInfoBo.getLastName())
 				.identificationNumber(personInfoBo.getIdentificationNumber())
-				.genderId(personInfoBo.getGender().getId())
+				.genderId(personInfoBo.getGender() == null ? null : personInfoBo.getGender().getId())
 				.birthDate(localDateMapper.toDateDto(personInfoBo.getBirthDate()))
 				.build();
 	}
