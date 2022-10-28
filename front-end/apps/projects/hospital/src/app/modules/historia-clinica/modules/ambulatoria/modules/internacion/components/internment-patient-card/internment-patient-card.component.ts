@@ -14,7 +14,7 @@ import { RoomService } from '@api-rest/services/room.service';
 import { pushIfNotExists } from '@core/utils/array.utils';
 
 const PAGE_SIZE_OPTIONS = [5, 10, 25];
-const PAGE_MAX_SIZE = 25;
+const PAGE_SIZE_MIN = [5];
 const PAGE_MIN_SIZE = 5;
 
 @Component({
@@ -137,7 +137,6 @@ export class InternmentPatientCardComponent {
 
 	upDateFilters(): void {
 		this.applyFiltes();
-		this.setPageSizeOptions();
 		this.pageSlice = this.pageSlice.slice(0, this.sizePageSelect);
 	}
 
@@ -181,23 +180,9 @@ export class InternmentPatientCardComponent {
 	}
 
 	private setPageSizeOptions(): void {
-		if (this.applySearchFilter === '' && !this.hasFilter()) {
-			this.numberOfPatients = this.internmentPatientCard.length;
-			this.pageSizeOptions = PAGE_SIZE_OPTIONS;
-		} else {
-			const unrepeatedSizeOptions = [...new Set([...PAGE_SIZE_OPTIONS, this.pageSlice.length])];
-			let pageSizeOptions = unrepeatedSizeOptions.filter(opt => this.betweenLimits(opt));
-			pageSizeOptions.forEach(e => (e < PAGE_MIN_SIZE) ? this.pageSizeOptions.push(PAGE_MIN_SIZE) : this.pageSizeOptions.push(e));
-			this.numberOfPatients = this.pageSlice.length;
-		}
-	}
-
-	private hasFilter(): boolean {
-		return this.formFilter?.value.physical || this.formFilter?.value.sector || this.formFilter?.value.room;
-	}
-
-	private betweenLimits(opt: number): boolean {
-		return opt <= this.pageSlice.length && opt <= PAGE_MAX_SIZE;
+		this.pageSizeOptions = (this.pageSlice.length < PAGE_MIN_SIZE) ? PAGE_SIZE_MIN : PAGE_SIZE_OPTIONS;
+		this.numberOfPatients = this.pageSlice.length;
+		this.pageSlice.length = this.numberOfPatients;
 	}
 
 }
