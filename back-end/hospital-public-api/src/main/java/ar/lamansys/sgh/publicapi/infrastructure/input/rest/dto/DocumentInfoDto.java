@@ -1,19 +1,22 @@
 package ar.lamansys.sgh.publicapi.infrastructure.input.rest.dto;
 
-import java.io.Serializable;
-
 import ar.lamansys.sgx.shared.dates.controller.dto.DateTimeDto;
 import lombok.Builder;
 import lombok.Getter;
-import lombok.Setter;
 import lombok.ToString;
 
 @Getter
-@Setter
-@ToString
 @Builder
-public class ProcedureInformationDto implements Serializable {
+@ToString
+public class DocumentInfoDto {
 
-	private SnomedDto snomed;
-	private DateTimeDto date;
+	private final Long id;
+
+	private final String filePath;
+
+	private final String type;
+
+	private final String fileName;
+
+	private final DateTimeDto updateOn;
 }

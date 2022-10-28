@@ -7,7 +7,10 @@ import lombok.*;
 @NoArgsConstructor
 @AllArgsConstructor
 @ToString
+@Builder
 public class CoverageActivityInfoBo {
 
-    private String affiliateNumber;
+	private String affiliateNumber;
+	private Boolean attentionCoverage;
+	private String cuit;
 }

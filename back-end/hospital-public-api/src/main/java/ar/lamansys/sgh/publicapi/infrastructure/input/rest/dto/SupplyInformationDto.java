@@ -6,6 +6,7 @@ import lombok.Setter;
 import lombok.ToString;
 
 import java.io.Serializable;
+import java.time.LocalDateTime;
 
 @Getter
 @Setter
@@ -13,5 +14,8 @@ import java.io.Serializable;
 @Builder
 public class SupplyInformationDto implements Serializable {
 
-    private SnomedDto snomed;
+	private String supplyType;
+	private String status;
+	private SnomedDto snomed;
+	private LocalDateTime administrationTime;
 }

@@ -11,6 +11,8 @@ import java.util.stream.Collectors;
 import javax.persistence.EntityManager;
 import javax.persistence.Query;
 
+import ar.lamansys.sgh.publicapi.domain.SingleDiagnosticBo;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -26,167 +28,253 @@ import ar.lamansys.sgh.publicapi.domain.PersonInfoBo;
 import ar.lamansys.sgh.publicapi.domain.ProfessionalBo;
 import ar.lamansys.sgh.publicapi.domain.ScopeEnum;
 import ar.lamansys.sgh.publicapi.domain.SnomedBo;
-
 @Service
 public class ActivityStorageImpl implements ActivityStorage {
 
-    private static final Logger LOG = LoggerFactory.getLogger(ActivityStorageImpl.class);
+	private static final Logger LOG = LoggerFactory.getLogger(ActivityStorageImpl.class);
 
-    private final EntityManager entityManager;
+	private final EntityManager entityManager;
 
-    public ActivityStorageImpl(EntityManager entityManager) {
-        this.entityManager = entityManager;
-    }
+	public ActivityStorageImpl(EntityManager entityManager) {
+		this.entityManager = entityManager;
+	}
 
-    private static String sqlString =
-            "SELECT va.id as attention_id, va.performed_date as attention_date, " +
-                    "snm.name , snm.sctid_code, " +
-                    "p.first_name as person_name, p.last_name as person_last_name, p.identification_number as person_identification_number, p.gender_id as person_gender_id, p.birth_date as person_birth_date, " +
-                    "pmc.affiliate_number, " +
-                    "va.scope_id, " +
-                    "pd.administrative_discharge_date, " +
-                    "d.doctor_id, d.first_name as doctor_name, d.last_name as doctor_last_name, d.license_number, d.identification_number as doctor_identification_number " +
-                    "FROM {h-schema}v_attention va " +
-                    "LEFT JOIN {h-schema}attention_reads ar ON (%s ar.attention_id = va.id) " +
-                    "JOIN {h-schema}institution i ON (i.sisa_code = :refsetCode AND i.province_code = :provinceCode AND va.institution_id = i.id) " +
-                    "JOIN (SELECT pat.id as patient_id, pp.first_name, pp.last_name, pp.identification_number , pp.gender_id, pp.birth_date " +
-                            "FROM {h-schema}patient pat " +
-                            "JOIN {h-schema}person pp on pp.id = pat.person_id) AS p ON (p.patient_id = va.patient_id) " +
-                    "JOIN (SELECT hp.id as doctor_id, dp.first_name, dp.last_name, hp.license_number, dp.identification_number " +
-                            "FROM {h-schema}healthcare_professional hp " +
-                            "JOIN {h-schema}person dp on hp.person_id = dp.id) AS d ON (d.doctor_id = va.doctor_id) " +
-                    "LEFT JOIN (SELECT cs.id, cs.name, cs.sctid_code " +
-                                "FROM {h-schema}clinical_specialty cs ) snm ON (va.clinical_speciality_id = snm.id) " +
-                    "LEFT JOIN {h-schema}patient_discharge pd ON (va.scope_id = 0 AND pd.internment_episode_id = va.encounter_id) " +
-                    "LEFT JOIN {h-schema}patient_medical_coverage pmc ON (pmc.patient_id = va.patient_id)" +
-                    "WHERE %s ";
+	private static final String JOIN_HOSPITALIZATION = "LEFT JOIN {h-schema}internment_episode event ON event.id = va.encounter_id ";
+	private static final String JOIN_OUTPATIENT = "LEFT JOIN {h-schema}outpatient_consultation event ON event.id = va.encounter_id ";
 
-    @Override
-    public Optional<AttentionInfoBo> getActivityById(String refsetCode, String provinceCode, Long activityId) {
-        LOG.debug("getActivityById ActivityStorage -> refsetCode {}, provinceCode {}, activityId {}", refsetCode, provinceCode, activityId);
+	private static final String JOIN_ODONTOLOGY = "LEFT JOIN {h-schema}odontology_consultation event ON event.id = va.encounter_id ";
+	private static final Integer HOSPITALIZATION = 0;
+	private static final Integer OUTPATIENT_CONSULTATION = 1;
+	private static final Integer ODONTOLOGY = 6;
 
-        Query query = entityManager.createNativeQuery(String.format(sqlString, "", "va.id = :activityId "))
-                .setParameter("refsetCode", refsetCode)
-                .setParameter("provinceCode", provinceCode)
-                .setParameter("activityId", activityId);
+	private static final String SQL_STRING =
+			"SELECT va.id as attention_id, va.performed_date as attention_date, " +
+					"snm.name , snm.sctid_code, " +
+					"p.first_name as person_name, p.last_name as person_last_name, p.identification_number as person_identification_number, p.gender_id as person_gender_id, p.birth_date as person_birth_date, " +
+					"pmc.affiliate_number, " +
+					"va.scope_id, " +
+					"pd.administrative_discharge_date, " +
+					"d.doctor_id, d.first_name as doctor_name, d.last_name as doctor_last_name, d.license_number, d.identification_number as doctor_identification_number, " +
+					"mc.cuit, " +
+					"va.encounter_id AS encounter_id, " +
+					"s3.sctid, " +
+					"s3.pt, " +
+					"hc.main, " +
+					"hc.problem_id, " +
+					"hc.verification_status_id, " +
+					"hc.updated_on " +
+					"FROM {h-schema}v_attention va " +
+					"LEFT JOIN {h-schema}attention_reads ar ON (%s ar.attention_id = va.id) " +
+					"JOIN {h-schema}institution i ON (i.sisa_code = :refsetCode AND va.institution_id = i.id) " +
+					"JOIN (SELECT pat.id as patient_id, pp.first_name, pp.last_name, pp.identification_number , pp.gender_id, pp.birth_date " +
+					"FROM {h-schema}patient pat " +
+					"JOIN {h-schema}person pp on pp.id = pat.person_id) AS p ON (p.patient_id = va.patient_id) " +
+					"JOIN (SELECT hp.id as doctor_id, dp.first_name, dp.last_name, hp.license_number, dp.identification_number " +
+					"FROM {h-schema}healthcare_professional hp " +
+					"JOIN {h-schema}person dp on hp.person_id = dp.id) AS d ON (d.doctor_id = va.doctor_id) " +
+					"LEFT JOIN (SELECT cs.id, cs.name, cs.sctid_code " +
+					"FROM {h-schema}clinical_specialty cs ) snm ON (va.clinical_speciality_id = snm.id) " +
+					"LEFT JOIN {h-schema}patient_discharge pd ON (va.scope_id = 0 AND pd.internment_episode_id = va.encounter_id) " +
+					" %s " +
+					"LEFT JOIN {h-schema}patient_medical_coverage pmc ON (pmc.id = event.patient_medical_coverage_id) " +
+					"LEFT JOIN {h-schema}medical_coverage mc ON (pmc.medical_coverage_id = mc.id) " +
+					"LEFT JOIN {h-schema}document_health_condition dhc on dhc.document_id = va.id " +
+					"LEFT JOIN {h-schema}health_condition hc on hc.id = dhc.health_condition_id " +
+					"LEFT JOIN {h-schema}snomed s3 on s3.id = hc.snomed_id " +
+					"WHERE %s " +
+					"ORDER BY va.id DESC";
 
-        List<Object[]> queryResult = query.getResultList();
+	private static final String SQL_STRING_ODONTOLOGY =
+			"SELECT va.id as attention_id, va.performed_date as attention_date, " +
+					"snm.name , snm.sctid_code, " +
+					"p.first_name as person_name, p.last_name as person_last_name, p.identification_number as person_identification_number, p.gender_id as person_gender_id, p.birth_date as person_birth_date, " +
+					"pmc.affiliate_number, " +
+					"va.scope_id, " +
+					"pd.administrative_discharge_date, " +
+					"d.doctor_id, d.first_name as doctor_name, d.last_name as doctor_last_name, d.license_number, d.identification_number as doctor_identification_number, " +
+					"mc.cuit, " +
+					"va.encounter_id AS encounter_id, " +
+					"s3.sctid, " +
+					"s3.pt, " +
+					"hc.main, " +
+					"hc.problem_id, " +
+					"hc.verification_status_id, " +
+					"hc.updated_on " +
+					"FROM {h-schema} v_attention va " +
+					"LEFT JOIN {h-schema} attention_reads ar ON (%s ar.attention_id = va.id) " +
+					"JOIN {h-schema} institution i ON (i.sisa_code = :refsetCode AND va.institution_id = i.id) " +
+					"JOIN (SELECT pat.id as patient_id, pp.first_name, pp.last_name, pp.identification_number , pp.gender_id, pp.birth_date " +
+					"FROM {h-schema} patient pat " +
+					"JOIN {h-schema} person pp on pp.id = pat.person_id) AS p ON (p.patient_id = va.patient_id) " +
+					"JOIN (SELECT hp.id as doctor_id, dp.first_name, dp.last_name, hp.license_number, dp.identification_number " +
+					"FROM {h-schema} healthcare_professional hp " +
+					"JOIN {h-schema} person dp on hp.person_id = dp.id) AS d ON (d.doctor_id = va.doctor_id) " +
+					"LEFT JOIN (SELECT cs.id, cs.name, cs.sctid_code " +
+					"FROM {h-schema} clinical_specialty cs) snm ON (va.clinical_speciality_id = snm.id) " +
+					"LEFT JOIN {h-schema} patient_discharge pd ON (va.scope_id = 0 AND pd.internment_episode_id = va.encounter_id) " +
+					"LEFT JOIN {h-schema} document_odontology_diagnostic dod ON (dod.document_id = va.id) " +
+					"LEFT JOIN {h-schema} odontology_diagnostic od ON od.id = (dod.odontology_diagnostic_id) " +
+					" %s " +
+					"LEFT JOIN {h-schema} patient_medical_coverage pmc ON (pmc.id = event.patient_medical_coverage_id) " +
+					"LEFT JOIN {h-schema} medical_coverage mc ON (pmc.medical_coverage_id = mc.id) " +
+					"LEFT JOIN {h-schema} document_health_condition dhc ON (dhc.document_id = va.id) " +
+					"LEFT JOIN {h-schema} health_condition hc ON (hc.id = dhc.health_condition_id) " +
+					"LEFT JOIN {h-schema} snomed s3 ON (s3.id = od.snomed_id) " +
+					"WHERE %s " +
+					"ORDER BY va.id DESC";
 
-        Object[] resultSearch = queryResult.size() == 1 ? queryResult.get(0) : null;
-        AttentionInfoBo result = Optional.ofNullable(resultSearch).map(this::parseToAttentionInfoBo)
-                .orElseThrow(() -> new ActivityStorageException(ActivityStorageExceptionEnum.ACTIVITY_NOT_EXISTS,
-                        "La actividad no existe"));
+	@Override
+	public Optional<AttentionInfoBo> getActivityById(String refsetCode, Long activityId) {
+		LOG.debug("getActivityById ActivityStorage -> refsetCode {}, activityId {}", refsetCode, activityId);
 
-        LOG.trace("Output -> {}", result);
-        return Optional.of(result);
-    }
+		Query query = entityManager.createNativeQuery(String.format(SQL_STRING, "", "va.id = :activityId "))
+				.setParameter("refsetCode", refsetCode)
+				.setParameter("activityId", activityId);
 
-    @Override
-    public List<AttentionInfoBo> getActivitiesByInstitution(String refsetCode, String provinceCode, LocalDate fromDate, LocalDate toDate, Boolean reprocessing) {
-        LOG.debug("getActivitiesByInstitution ActivityStorage -> refsetCode {}, provinceCode {}, fromDate {}, toDate {}, reprocessing{}",
-                refsetCode, provinceCode, fromDate, toDate, reprocessing);
+		var queryResult = query.getResultList();
 
-        String proccessed = "ar.processed = :reprocessing AND";
-        String whereClause = "va.performed_date BETWEEN :fromDate AND :toDate ";
+		Object[] resultSearch = queryResult.size() == 1 ? (Object[]) queryResult.get(0) : null;
+		AttentionInfoBo result = Optional.ofNullable(resultSearch).map(this::parseToAttentionInfoBo)
+				.orElseThrow(() -> new ActivityStorageException(ActivityStorageExceptionEnum.ACTIVITY_NOT_EXISTS,
+						"La actividad no existe"));
 
-        Query query = entityManager.createNativeQuery(String.format(sqlString, proccessed, whereClause))
-                .setParameter("refsetCode", refsetCode)
-                .setParameter("provinceCode", provinceCode)
-                .setParameter("fromDate", fromDate)
-                .setParameter("toDate", toDate)
-                .setParameter("reprocessing", reprocessing);
+		LOG.trace("Output -> {}", result);
+		return Optional.of(result);
+	}
 
-        List<Object[]> queryResult = query.getResultList();
+	@Override
+	public List<AttentionInfoBo> getActivitiesByInstitution(String refsetCode, LocalDate fromDate, LocalDate toDate, Boolean reprocessing) {
+		LOG.debug("getActivitiesByInstitution ActivityStorage -> refsetCode {}, fromDate {}, toDate {}, reprocessing{}",
+				refsetCode, fromDate, toDate, reprocessing);
 
-        List<AttentionInfoBo> result = queryResult
-                .stream()
-                .map(this::parseToAttentionInfoBo)
-                .collect(Collectors.toList());
+		String proccessed = "ar.processed IS NULL OR (ar.processed IS NOT NULL AND ar.processed = :reprocessing) AND";
+		String whereClause = "va.updated_on BETWEEN :fromDate AND :toDate AND va.scope_id = ";
+		String finalQuery = "("+String.format(SQL_STRING, proccessed, JOIN_HOSPITALIZATION, whereClause + HOSPITALIZATION) +")"
+				+ " UNION ALL " +
+				"("+String.format(SQL_STRING, proccessed, JOIN_OUTPATIENT, whereClause + OUTPATIENT_CONSULTATION) +")"
+				+ " UNION ALL " +
+				"("+String.format(SQL_STRING_ODONTOLOGY, proccessed, JOIN_ODONTOLOGY, whereClause + ODONTOLOGY) +")";
 
-        LOG.debug("Output size -> {}", result.size());
-        LOG.trace("Output -> {}", result);
-        return result;
-    }
 
-    @Override
-    public List<AttentionInfoBo> getActivitiesByInstitutionAndPatient(
-            String refsetCode, String provinceCode, String identificationNumber, LocalDate fromDate, LocalDate toDate, Boolean reprocessing) {
-        LOG.debug("getActivitiesByInstitutionAndPatient ActivityStorage -> refsetCode {}, provinceCode {}, identificationNumber {}, fromDate {}, toDate {}, reprocessing{}",
-                refsetCode, provinceCode, identificationNumber, fromDate, toDate, reprocessing);
+		Query query = entityManager.createNativeQuery(finalQuery)
+				.setParameter("refsetCode", refsetCode)
+				.setParameter("fromDate", fromDate)
+				.setParameter("toDate", toDate)
+				.setParameter("reprocessing", reprocessing);
 
-        String proccessed = "ar.processed = :reprocessing AND";
-        String whereClause = "va.performed_date BETWEEN :fromDate AND :toDate AND p.identification_number = :identificationNumber";
+		List<Object[]> queryResult = query.getResultList();
 
-        Query query = entityManager.createNativeQuery(String.format(sqlString, proccessed, whereClause))
-                .setParameter("refsetCode", refsetCode)
-                .setParameter("provinceCode", provinceCode)
-                .setParameter("identificationNumber", identificationNumber)
-                .setParameter("fromDate", fromDate)
-                .setParameter("toDate", toDate)
-                .setParameter("reprocessing", reprocessing);
-        List<Object[]> queryResult = query.getResultList();
+		List<AttentionInfoBo> result = queryResult
+				.stream()
+				.map(this::parseToAttentionInfoBo)
+				.collect(Collectors.toList());
 
-        List<AttentionInfoBo> result = queryResult
-                .stream()
-                .map(this::parseToAttentionInfoBo)
-                .collect(Collectors.toList());
+		LOG.debug("Output size -> {}", result.size());
+		LOG.trace("Output -> {}", result);
+		return result;
+	}
 
-        LOG.debug("Output size -> {}", result.size());
-        LOG.trace("Output -> {}", result);
-        return result;
-    }
+	@Override
+	public List<AttentionInfoBo> getActivitiesByInstitutionAndPatient(
+			String refsetCode, String identificationNumber, LocalDate fromDate, LocalDate toDate, Boolean reprocessing) {
+		LOG.debug("getActivitiesByInstitutionAndPatient ActivityStorage -> refsetCode {}, identificationNumber {}, fromDate {}, toDate {}, reprocessing{}",
+				refsetCode, identificationNumber, fromDate, toDate, reprocessing);
 
-    @Override
-    public List<AttentionInfoBo> getActivitiesByInstitutionAndCoverage(
-            String refsetCode, String provinceCode, String coverageCuit, LocalDate fromDate, LocalDate toDate, Boolean reprocessing) {
+		String proccessed = "ar.processed IS NULL OR (ar.processed IS NOT NULL AND ar.processed = :reprocessing) AND";
+		String whereClause = "va.updated_on BETWEEN :fromDate AND :toDate AND p.identification_number = :identificationNumber AND va.scope_id = ";
 
-        LOG.debug("getActivitiesByInstitutionAndCoverage ActivityStorage -> refsetCode {}, provinceCode {}, coverageCuit {}, fromDate {}, toDate {}, reprocessing{}",
-                refsetCode, provinceCode, coverageCuit, fromDate, toDate, reprocessing);
+		String finalQuery = "("+String.format(SQL_STRING, proccessed, JOIN_HOSPITALIZATION, whereClause + HOSPITALIZATION) +")"
+				+ " UNION ALL " +
+				"("+String.format(SQL_STRING, proccessed, JOIN_OUTPATIENT, whereClause + OUTPATIENT_CONSULTATION) +")";
+		Query query = entityManager.createNativeQuery(finalQuery)
+				.setParameter("refsetCode", refsetCode)
+				.setParameter("identificationNumber", identificationNumber)
+				.setParameter("fromDate", fromDate)
+				.setParameter("toDate", toDate)
+				.setParameter("reprocessing", reprocessing);
+		List<Object[]> queryResult = query.getResultList();
 
-        String proccessed = "ar.processed = :reprocessing AND";
-        String whereClause = "va.performed_date BETWEEN :fromDate AND :toDate ";
+		List<AttentionInfoBo> result = queryResult
+				.stream()
+				.map(this::parseToAttentionInfoBo)
+				.collect(Collectors.toList());
 
-        Query query = entityManager.createNativeQuery(String.format(sqlString, proccessed, whereClause))
-                .setParameter("refsetCode", refsetCode)
-                .setParameter("provinceCode", provinceCode)
-                .setParameter("fromDate", fromDate)
-                .setParameter("toDate", toDate)
-                .setParameter("reprocessing", reprocessing);
-        List<Object[]> queryResult = query.getResultList();
+		LOG.debug("Output size -> {}", result.size());
+		LOG.trace("Output -> {}", result);
+		return result;
+	}
 
-        List<AttentionInfoBo> result = queryResult
-                .stream()
-                .map(this::parseToAttentionInfoBo)
-                .collect(Collectors.toList());
+	@Override
+	public List<AttentionInfoBo> getActivitiesByInstitutionAndCoverage(
+			String refsetCode, String coverageCuit, LocalDate fromDate, LocalDate toDate, Boolean reprocessing) {
 
-        LOG.debug("Output size -> {}", result.size());
-        LOG.trace("Output -> {}", result);
-        return result;
-    }
+		LOG.debug("getActivitiesByInstitutionAndCoverage ActivityStorage -> refsetCode {}, coverageCuit {}, fromDate {}, toDate {}, reprocessing{}",
+				refsetCode, coverageCuit, fromDate, toDate, reprocessing);
 
-    private AttentionInfoBo parseToAttentionInfoBo(Object[] rawAttention) {
-        return new AttentionInfoBo(
+		String proccessed = "ar.processed IS NULL OR (ar.processed IS NOT NULL AND ar.processed = :reprocessing) AND";
+		String whereClause = "va.updated_on BETWEEN :fromDate AND :toDate AND va.scope_id = ";
+		String finalQuery = "("+String.format(SQL_STRING, proccessed, JOIN_HOSPITALIZATION, whereClause + HOSPITALIZATION) +")"
+				+ " UNION ALL " +
+				"("+String.format(SQL_STRING, proccessed, JOIN_OUTPATIENT, whereClause + OUTPATIENT_CONSULTATION) +")";
+		Query query = entityManager.createNativeQuery(finalQuery)
+				.setParameter("refsetCode", refsetCode)
+				.setParameter("fromDate", fromDate)
+				.setParameter("toDate", toDate)
+				.setParameter("reprocessing", reprocessing);
+		List<Object[]> queryResult = query.getResultList();
+
+		List<AttentionInfoBo> result = queryResult
+				.stream()
+				.map(this::parseToAttentionInfoBo)
+				.collect(Collectors.toList());
+
+		LOG.debug("Output size -> {}", result.size());
+		LOG.trace("Output -> {}", result);
+		return result;
+	}
+
+	private AttentionInfoBo parseToAttentionInfoBo(Object[] rawAttention) {
+		return new AttentionInfoBo(
 				((BigInteger) rawAttention[0]).longValue(),
+				((Integer)rawAttention[18]).longValue(),
 				((Timestamp) rawAttention[1]).toLocalDateTime().toLocalDate(),
-                new SnomedBo((String) rawAttention[2], (String) rawAttention[3]),
+				new SnomedBo((String) rawAttention[3], (String) rawAttention[2]),
 				buildPersonInfoBo(rawAttention),
-                new CoverageActivityInfoBo((String) rawAttention[9]),
-                ScopeEnum.map((Short) rawAttention[10]),
+				buildCoverageInfoBo(rawAttention),
+				ScopeEnum.map((Short) rawAttention[10]),
 				buildInternmentBo(rawAttention),
-				buildProfessionalBo(rawAttention)
-               );
-    }
+				buildProfessionalBo(rawAttention),
+				buildDiagnoses(rawAttention)
+		);
+	}
+
+	private SingleDiagnosticBo buildDiagnoses(Object[] rawAttention) {
+		return new SingleDiagnosticBo(
+				new SnomedBo((String) rawAttention[19], (String) rawAttention[20]),
+				(Boolean) rawAttention[21],
+				(String) rawAttention[22],
+				(String) rawAttention[23],
+				rawAttention[24] != null ? ((Timestamp) rawAttention[1]).toLocalDateTime() : null
+		);
+	}
+
+	private CoverageActivityInfoBo buildCoverageInfoBo(Object[] rawAttention) {
+		return CoverageActivityInfoBo.builder()
+				.affiliateNumber((String) rawAttention[9])
+				.cuit((String) rawAttention[17])
+				.build();
+	}
 
 	private PersonInfoBo buildPersonInfoBo(Object[] rawAttention) {
-		return new PersonInfoBo((String) rawAttention[4],
+		return new PersonInfoBo((String) rawAttention[6],
+				(String) rawAttention[4],
 				(String) rawAttention[5],
-				(String) rawAttention[6],
 				((Date) rawAttention[8]).toLocalDate(),
 				GenderEnum.map((Short) rawAttention[7]));
 	}
 
 	private ProfessionalBo buildProfessionalBo(Object[] rawAttention) {
-		return  new ProfessionalBo((Integer) rawAttention[12],
+		return new ProfessionalBo((Integer) rawAttention[12],
 				(String) rawAttention[13],
 				(String) rawAttention[14],
 				(String) rawAttention[15],
@@ -194,11 +282,11 @@ public class ActivityStorageImpl implements ActivityStorage {
 	}
 
 	private InternmentBo buildInternmentBo(Object[] rawAttention) {
-		return (rawAttention[11] != null) ?
+		return ScopeEnum.map((Short) rawAttention[10]).equals(ScopeEnum.INTERNACION) ?
 				new InternmentBo(rawAttention[0].toString(),
 						rawAttention[1] != null ? ((Timestamp) rawAttention[1]).toLocalDateTime() : null,
-						rawAttention[11] != null ? ((Timestamp) rawAttention[11]).toLocalDateTime() : null)
-				: new InternmentBo();
+						rawAttention[11] != null ? ((Timestamp) rawAttention[11]).toLocalDateTime() : null) :
+				new InternmentBo();
 	}
 
 }
