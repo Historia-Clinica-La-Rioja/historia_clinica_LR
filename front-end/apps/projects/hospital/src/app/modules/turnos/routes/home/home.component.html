@@ -9,7 +9,7 @@
 		</button>
 	</section>
 
-	<mat-tab-group>
+	<mat-tab-group (selectedTabChange)="tabChanged($event)">
 		<mat-tab label="{{ 'turnos.home.SEARCH_BY_PROFESSIONAL' | translate | uppercase }}">
 			<app-seach-appointments-by-professional></app-seach-appointments-by-professional>
 		</mat-tab>
@@ -19,7 +19,8 @@
 		</mat-tab>
 		<mat-tab label="{{ 'turnos.home.CARE_NETWORK_OFFER' | translate | uppercase }}"
 			*appHasRole="['ADMINISTRATIVO', 'ESPECIALISTA_MEDICO', 'PROFESIONAL_DE_SALUD', 'ESPECIALISTA_EN_ODONTOLOGIA', 'ENFERMERO']">
-			<app-search-appointments-in-care-network></app-search-appointments-in-care-network>
+			<app-search-appointments-in-care-network [isVisible]="tabActiveIndex === 2">
+			</app-search-appointments-in-care-network>
 		</mat-tab>
 	</mat-tab-group>
 </app-content>

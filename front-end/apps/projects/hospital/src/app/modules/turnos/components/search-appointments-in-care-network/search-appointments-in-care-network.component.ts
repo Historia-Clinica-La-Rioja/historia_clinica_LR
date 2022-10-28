@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, Component } from '@angular/core';
+import { ChangeDetectorRef, Component, Input, OnChanges, OnInit, SimpleChanges } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { AddressDto, CareLineDto, ClinicalSpecialtyDto, DepartmentDto, DiaryAvailableProtectedAppointmentsDto, InstitutionBasicInfoDto, ProvinceDto } from '@api-rest/api-model';
 import { AddressMasterDataService } from '@api-rest/services/address-master-data.service';
@@ -19,7 +19,9 @@ const PAGE_SIZE_OPTIONS = [5, 10, 25, 100];
   templateUrl: './search-appointments-in-care-network.component.html',
   styleUrls: ['./search-appointments-in-care-network.component.scss']
 })
-export class SearchAppointmentsInCareNetworkComponent {
+export class SearchAppointmentsInCareNetworkComponent implements OnInit, OnChanges {
+
+  @Input() isVisible = false;
 
   searchForm: FormGroup;
   provinces: ProvinceDto[] = [];
@@ -52,7 +54,6 @@ export class SearchAppointmentsInCareNetworkComponent {
 
   appointmentsCurrentPage: DiaryAvailableProtectedAppointmentsDto[] = [];
   readonly pageSizeOptions = PAGE_SIZE_OPTIONS;
-  initialPageSize: number;
 
   constructor(
     private readonly formBuilder: FormBuilder,
@@ -64,31 +65,55 @@ export class SearchAppointmentsInCareNetworkComponent {
     private diaryAvailableAppointmentsSearchService: DiaryAvailableAppointmentsSearchService,
     private changeDetectorRef: ChangeDetectorRef,
   ) {
-    this.specialtyService.getAll().subscribe(
-      (specialties: ClinicalSpecialtyDto[]) => {
-        this.allSpecialties = specialties;
-        this.specialties = specialties;
-        this.loadSpecialtyTypeaheadOptions();
-      }
-    );
+    this.initSpecialties();
+    this.initCareLines();
+    this.initForm();
+  }
 
-    this.careLineService.getCareLinesAttachedToInstitution(this.contextService.institutionId).subscribe(
-      (careLines: CareLineDto[]) => {
-        this.careLines = careLines;
-        this.loadCareLineTypeaheadOptions();
-      }
-    );
+  ngOnChanges(changes: SimpleChanges): void {
+    if (changes['isVisible'].previousValue && !changes['isVisible'].currentValue) {
+      this.resetAtributtes();
+      this.initSpecialties();
+      this.initCareLines();
+      this.initForm();
+      this.ngOnInit();
+    }
+  }
 
-    const endDate = datePlusDays(this.today, PERIOD_DAYS);
-    this.searchForm = this.formBuilder.group({
-      careLine: [null],
-      specialty: [null, Validators.required],
-      state: [null],
-      department: [null, Validators.required],
-      institution: [null],
-      startDate: [this.today, Validators.required],
-      endDate: [{ value: endDate, disabled: true }, Validators.required]
-    });
+  private resetAtributtes(): void {
+    this.provinces = [];
+    this.departments = [];
+    this.institutions = [];
+    this.careLines = [];
+    this.specialties = [];
+    this.allSpecialties = [];
+
+
+    this.showAppointmentsNotFoundMessage = false;
+    this.showAppointmentResults = false;
+    this.showInvalidFormMessage = false;
+
+    this.showSpecialtyError = false;
+    this.showDepartmentError = false;
+    this.showProvinceError = false;
+
+    this.departmentTypeaheadOptions = [];
+    this.institutionTypeaheadOptions = [];
+    this.provinceTypeaheadOptions = [];
+    this.careLineTypeaheadOptions = [];
+    this.specialtyTypeaheadOptions = [];
+
+    this.initialProvinceTypeaheadOptionSelected = undefined;
+    this.initialDepartmentTypeaheadOptionSelected = undefined;
+    this.initialInstitutionTypeaheadOptionSelected = undefined;
+
+    this.protectedAvaibleAppointments = [];
+
+    this.appointmentsCurrentPage = [];
+  }
+
+  ngOnInit(): void {
+    console.log("entra al init");
 
     this.institutionService.getInstitutionAddress(this.contextService.institutionId).subscribe(
       (institutionAddres: AddressDto) => {
@@ -273,6 +298,38 @@ export class SearchAppointmentsInCareNetworkComponent {
   private loadProvinceTypeaheadOptions(): void {
     this.provinceTypeaheadOptions = this.provinces?.map(provinceToTypeaheadOption);
     this.changeDetectorRef.detectChanges();
+  }
+
+  private initForm(): void {
+    const endDate = datePlusDays(this.today, PERIOD_DAYS);
+    this.searchForm = this.formBuilder.group({
+      careLine: [null],
+      specialty: [null, Validators.required],
+      state: [null],
+      department: [null, Validators.required],
+      institution: [null],
+      startDate: [this.today, Validators.required],
+      endDate: [{ value: endDate, disabled: true }, Validators.required]
+    });
+  }
+
+  private initCareLines(): void {
+    this.careLineService.getCareLinesAttachedToInstitution(this.contextService.institutionId).subscribe(
+      (careLines: CareLineDto[]) => {
+        this.careLines = careLines;
+        this.loadCareLineTypeaheadOptions();
+      }
+    );
+  }
+
+  private initSpecialties(): void {
+    this.specialtyService.getAll().subscribe(
+      (specialties: ClinicalSpecialtyDto[]) => {
+        this.allSpecialties = specialties;
+        this.specialties = specialties;
+        this.loadSpecialtyTypeaheadOptions();
+      }
+    );
   }
 
 }

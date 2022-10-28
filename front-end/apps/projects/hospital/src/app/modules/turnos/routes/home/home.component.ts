@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import { MatTabChangeEvent } from '@angular/material/tabs';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ContextService } from '@core/services/context.service';
 
@@ -12,6 +13,8 @@ export class HomeComponent {
 
 	routePrefix: string;
 
+	tabActiveIndex = 0;
+
 	constructor(
 		private readonly router: Router,
 		public readonly route: ActivatedRoute,
@@ -22,6 +25,10 @@ export class HomeComponent {
 
 	goToNewAgenda(): void {
 		this.router.navigate([`${this.routePrefix}/nueva-agenda/`]);
+	}
+
+	tabChanged(tabChangeEvent: MatTabChangeEvent): void {
+		this.tabActiveIndex = tabChangeEvent.index;
 	}
 
 }

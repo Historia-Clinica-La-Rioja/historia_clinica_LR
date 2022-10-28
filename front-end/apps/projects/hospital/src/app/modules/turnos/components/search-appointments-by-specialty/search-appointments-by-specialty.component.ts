@@ -28,7 +28,7 @@ export class SearchAppointmentsBySpecialtyComponent implements OnInit {
 
 	dateSearchFilter = (d: Moment): boolean => {
 		const parsedDate = d?.toDate();
-		parsedDate?.setHours(0,0,0,0);
+		parsedDate?.setHours(0, 0, 0, 0);
 		return parsedDate >= this.today;
 	};
 
@@ -36,7 +36,7 @@ export class SearchAppointmentsBySpecialtyComponent implements OnInit {
 		private readonly formBuilder: FormBuilder,
 		private readonly diaryService: DiaryService,
 		private readonly route: ActivatedRoute
-	) {}
+	) { }
 
 	ngOnInit(): void {
 		this.route.queryParams.subscribe(qp => {
@@ -44,7 +44,7 @@ export class SearchAppointmentsBySpecialtyComponent implements OnInit {
 		});
 
 		this.today = new Date();
-		this.today.setHours(0,0,0,0);
+		this.today.setHours(0, 0, 0, 0);
 
 		this.initializeTimeFilters();
 		this.searchBySpecialtyForm = this.formBuilder.group({
@@ -154,9 +154,9 @@ export class SearchAppointmentsBySpecialtyComponent implements OnInit {
 					day: this.searchBySpecialtyForm.value.searchInitialDate.date()
 				},
 				endingSearchDate: {
-					year: this.searchBySpecialtyForm.value.searchEndingDate.year(),
-					month: this.searchBySpecialtyForm.value.searchEndingDate.month() + 1,
-					day: this.searchBySpecialtyForm.value.searchEndingDate.date()
+					year: this.searchBySpecialtyForm.controls.searchEndingDate.value.year(),
+					month: this.searchBySpecialtyForm.controls.searchEndingDate.value.month() + 1,
+					day: this.searchBySpecialtyForm.controls.searchEndingDate.value.date()
 				}
 			}
 		).subscribe(emptyAppointments => {
@@ -166,7 +166,7 @@ export class SearchAppointmentsBySpecialtyComponent implements OnInit {
 	}
 
 	onPageChange($event) {
-		this.emptyAppointmentsFiltered = this.emptyAppointments.slice($event.pageIndex*$event.pageSize, $event.pageIndex*$event.pageSize + $event.pageSize);
+		this.emptyAppointmentsFiltered = this.emptyAppointments.slice($event.pageIndex * $event.pageSize, $event.pageIndex * $event.pageSize + $event.pageSize);
 	}
 
 	resetEmptyAppointmentList(event) {
