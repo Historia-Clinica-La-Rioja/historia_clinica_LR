@@ -121,13 +121,23 @@ public class DiaryAvailableAppointmentsServiceImpl implements DiaryAvailableAppo
 		Map<Integer, List<LocalTime>> availableAppointmentTimes = potentialAppointmentTimesByDay.get((short) currentDayOfWeek);
 		if (availableAppointmentTimes != null) {
 			availableAppointmentTimes.forEach((openingHoursId, openingHoursTimeList) -> {
-				openingHoursTimeList.stream().filter(time -> time.compareTo(currentDateTime.toLocalTime()) > 0).collect(toList()).forEach(time -> {
-					if (isPossibleReturnAppointment(assignedAppointments, diaryInfo.getDiaryId(), time, day))
-						result.add(createAvailableProtectedAppointment(time, day, diaryInfo, openingHoursId));
+				openingHoursTimeList
+						.stream()
+						.filter(time -> includeHour(currentDateTime, day, time))
+						.forEach(time -> {
+							if (isPossibleReturnAppointment(assignedAppointments, diaryInfo.getDiaryId(), time, day))
+								result.add(createAvailableProtectedAppointment(time, day, diaryInfo, openingHoursId));
 				});
 			});
 		}
 		return result;
+	}
+
+	private boolean includeHour(LocalDateTime currentDateTime, LocalDate day, LocalTime time) {
+		if (day.compareTo(currentDateTime.toLocalDate()) > 0)
+			return true;
+		else
+			return time.compareTo(currentDateTime.toLocalTime()) > 0;
 	}
 
 	private boolean isPossibleReturnAppointment(Collection<AppointmentBo> assignedAppointments,
