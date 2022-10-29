@@ -46,7 +46,8 @@ export class WCExtensionsService {
 		const valuesToEmit = {
 			[Slot.INSTITUTION_HOME_PAGE]: [],
 			[Slot.CLINIC_HISTORY_TAB]: [],
-			[Slot.HOME_MENU]: []
+			[Slot.HOME_MENU]: [],
+			[Slot.SYSTEM_HOME_PAGE]: [],
 		}
 		const allPlugins$: Observable<ExtensionComponentDto[]> = this.extensionService.getExtensions();
 
@@ -117,7 +118,7 @@ export enum Slot {
 	INSTITUTION_HOME_PAGE = 'INSTITUTION_HOME_PAGE',
 	CLINIC_HISTORY_TAB = 'CLINIC_HISTORY_TAB',
 	SYSTEM_HOME_PAGE = 'SYSTEM_HOME_PAGE',
-	HOME_MENU = 'HOME_MENU'
+	HOME_MENU = 'HOME_MENU',
 }
 
 
