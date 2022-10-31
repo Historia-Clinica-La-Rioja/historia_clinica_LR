@@ -36,7 +36,7 @@ public interface CareLineInstitutionSpecialtyRepository extends JpaRepository<Ca
 																							 @Param("institutionId") Integer institutionId,
 																							 @Param("clinicalSpecialtyId") Integer clinicalSpecialtyId);
 
-	@Query("SELECT new net.pladema.establishment.service.domain.ClinicalSpecialtyBo(cs.id, cs.name) " +
+	@Query("SELECT DISTINCT new net.pladema.establishment.service.domain.ClinicalSpecialtyBo(cs.id, cs.name) " +
 			"FROM CareLineInstitutionSpecialty clis " +
 			"JOIN CareLineInstitution cli ON (clis.careLineInstitutionId = cli.id) " +
 			"JOIN ClinicalSpecialty cs ON (clis.clinicalSpecialtyId = cs.id)" +
