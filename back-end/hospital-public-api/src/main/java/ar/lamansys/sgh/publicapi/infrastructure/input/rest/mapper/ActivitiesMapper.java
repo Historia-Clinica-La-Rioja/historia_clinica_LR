@@ -226,6 +226,7 @@ public class ActivitiesMapper {
 
 				result.add(attention);
 			}
+			result = result.stream().sorted(Comparator.comparingLong(AttentionInfoDto::getId).reversed()).collect(Collectors.toList());
 		}
 
 

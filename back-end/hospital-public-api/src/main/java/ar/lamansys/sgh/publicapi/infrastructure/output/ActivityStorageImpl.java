@@ -11,8 +11,6 @@ import java.util.stream.Collectors;
 import javax.persistence.EntityManager;
 import javax.persistence.Query;
 
-import ar.lamansys.sgh.publicapi.domain.SingleDiagnosticBo;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -27,6 +25,7 @@ import ar.lamansys.sgh.publicapi.domain.InternmentBo;
 import ar.lamansys.sgh.publicapi.domain.PersonInfoBo;
 import ar.lamansys.sgh.publicapi.domain.ProfessionalBo;
 import ar.lamansys.sgh.publicapi.domain.ScopeEnum;
+import ar.lamansys.sgh.publicapi.domain.SingleDiagnosticBo;
 import ar.lamansys.sgh.publicapi.domain.SnomedBo;
 @Service
 public class ActivityStorageImpl implements ActivityStorage {
@@ -65,7 +64,7 @@ public class ActivityStorageImpl implements ActivityStorage {
 					"hc.updated_on, " +
 					"mcp.plan " +
 					"FROM {h-schema}v_attention va " +
-					"LEFT JOIN {h-schema}attention_reads ar ON (%s ar.attention_id = va.id) " +
+					"LEFT JOIN {h-schema}attention_reads ar ON (ar.attention_id = va.id) " +
 					"JOIN {h-schema}institution i ON (i.sisa_code = :refsetCode AND va.institution_id = i.id) " +
 					"JOIN (SELECT pat.id as patient_id, pp.first_name, pp.last_name, pp.identification_number , pp.gender_id, pp.birth_date " +
 					"FROM {h-schema}patient pat " +
@@ -84,7 +83,7 @@ public class ActivityStorageImpl implements ActivityStorage {
 					"LEFT JOIN {h-schema}health_condition hc on hc.id = dhc.health_condition_id " +
 					"LEFT JOIN {h-schema}snomed s3 on s3.id = hc.snomed_id " +
 					"WHERE %s " +
-					"ORDER BY va.id DESC";
+					"ORDER BY encounter_id DESC";
 
 	private static final String SQL_STRING_ODONTOLOGY =
 			"SELECT va.id as attention_id, va.performed_date as attention_date, " +
@@ -104,7 +103,7 @@ public class ActivityStorageImpl implements ActivityStorage {
 					"hc.updated_on, " +
 					"mcp.plan " +
 					"FROM {h-schema} v_attention va " +
-					"LEFT JOIN {h-schema} attention_reads ar ON (%s ar.attention_id = va.id) " +
+					"LEFT JOIN {h-schema} attention_reads ar ON (ar.attention_id = va.id) " +
 					"JOIN {h-schema} institution i ON (i.sisa_code = :refsetCode AND va.institution_id = i.id) " +
 					"JOIN (SELECT pat.id as patient_id, pp.first_name, pp.last_name, pp.identification_number , pp.gender_id, pp.birth_date " +
 					"FROM {h-schema} patient pat " +
@@ -125,7 +124,7 @@ public class ActivityStorageImpl implements ActivityStorage {
 					"LEFT JOIN {h-schema} health_condition hc ON (hc.id = dhc.health_condition_id) " +
 					"LEFT JOIN {h-schema} snomed s3 ON (s3.id = od.snomed_id) " +
 					"WHERE %s " +
-					"ORDER BY va.id DESC";
+					"ORDER BY encounter_id DESC";
 
 	@Override
 	public Optional<AttentionInfoBo> getActivityById(String refsetCode, Long activityId) {
@@ -151,13 +150,14 @@ public class ActivityStorageImpl implements ActivityStorage {
 		LOG.debug("getActivitiesByInstitution ActivityStorage -> refsetCode {}, fromDate {}, toDate {}, reprocessing{}",
 				refsetCode, fromDate, toDate, reprocessing);
 
-		String proccessed = "ar.processed IS NULL OR (ar.processed IS NOT NULL AND ar.processed = :reprocessing) AND";
-		String whereClause = "va.updated_on BETWEEN :fromDate AND :toDate AND va.scope_id = ";
-		String finalQuery = "("+String.format(SQL_STRING, proccessed, JOIN_HOSPITALIZATION, whereClause + HOSPITALIZATION) +")"
+		String whereClause = "va.updated_on BETWEEN :fromDate AND :toDate AND " +
+				"ar.attention_id IS NULL OR NOT ar.processed OR ar.processed AND :reprocessing " +
+				"AND va.scope_id = ";
+		String finalQuery = "("+String.format(SQL_STRING, JOIN_HOSPITALIZATION, whereClause + HOSPITALIZATION) +")"
 				+ " UNION ALL " +
-				"("+String.format(SQL_STRING, proccessed, JOIN_OUTPATIENT, whereClause + OUTPATIENT_CONSULTATION) +")"
+				"("+String.format(SQL_STRING, JOIN_OUTPATIENT, whereClause + OUTPATIENT_CONSULTATION) +")"
 				+ " UNION ALL " +
-				"("+String.format(SQL_STRING_ODONTOLOGY, proccessed, JOIN_ODONTOLOGY, whereClause + ODONTOLOGY) +")";
+				"("+String.format(SQL_STRING_ODONTOLOGY, JOIN_ODONTOLOGY, whereClause + ODONTOLOGY) +")";
 
 
 		Query query = entityManager.createNativeQuery(finalQuery)
@@ -184,12 +184,14 @@ public class ActivityStorageImpl implements ActivityStorage {
 		LOG.debug("getActivitiesByInstitutionAndPatient ActivityStorage -> refsetCode {}, identificationNumber {}, fromDate {}, toDate {}, reprocessing{}",
 				refsetCode, identificationNumber, fromDate, toDate, reprocessing);
 
-		String proccessed = "ar.processed IS NULL OR (ar.processed IS NOT NULL AND ar.processed = :reprocessing) AND";
-		String whereClause = "va.updated_on BETWEEN :fromDate AND :toDate AND p.identification_number = :identificationNumber AND va.scope_id = ";
+		String whereClause = "va.updated_on BETWEEN :fromDate AND :toDate AND " +
+				"p.identification_number = :identificationNumber AND " +
+				"ar.attention_id IS NULL OR NOT ar.processed OR ar.processed AND :reprocessing " +
+				"AND va.scope_id = ";
 
-		String finalQuery = "("+String.format(SQL_STRING, proccessed, JOIN_HOSPITALIZATION, whereClause + HOSPITALIZATION) +")"
+		String finalQuery = "("+String.format(SQL_STRING, JOIN_HOSPITALIZATION, whereClause + HOSPITALIZATION) +")"
 				+ " UNION ALL " +
-				"("+String.format(SQL_STRING, proccessed, JOIN_OUTPATIENT, whereClause + OUTPATIENT_CONSULTATION) +")";
+				"("+String.format(SQL_STRING, JOIN_OUTPATIENT, whereClause + OUTPATIENT_CONSULTATION) +")";
 		Query query = entityManager.createNativeQuery(finalQuery)
 				.setParameter("refsetCode", refsetCode)
 				.setParameter("identificationNumber", identificationNumber)
@@ -215,16 +217,20 @@ public class ActivityStorageImpl implements ActivityStorage {
 		LOG.debug("getActivitiesByInstitutionAndCoverage ActivityStorage -> refsetCode {}, coverageCuit {}, fromDate {}, toDate {}, reprocessing{}",
 				refsetCode, coverageCuit, fromDate, toDate, reprocessing);
 
-		String proccessed = "ar.processed IS NULL OR (ar.processed IS NOT NULL AND ar.processed = :reprocessing) AND";
-		String whereClause = "va.updated_on BETWEEN :fromDate AND :toDate AND va.scope_id = ";
-		String finalQuery = "("+String.format(SQL_STRING, proccessed, JOIN_HOSPITALIZATION, whereClause + HOSPITALIZATION) +")"
+		String whereClause = "va.updated_on BETWEEN :fromDate AND :toDate AND " +
+				"mc.cuit = :coverageCuit AND " +
+				"ar.attention_id IS NULL OR NOT ar.processed OR ar.processed AND :reprocessing " +
+				"AND va.scope_id = ";
+
+		String finalQuery = "("+String.format(SQL_STRING, JOIN_HOSPITALIZATION, whereClause + HOSPITALIZATION) +")"
 				+ " UNION ALL " +
-				"("+String.format(SQL_STRING, proccessed, JOIN_OUTPATIENT, whereClause + OUTPATIENT_CONSULTATION) +")";
+				"("+String.format(SQL_STRING, JOIN_OUTPATIENT, whereClause + OUTPATIENT_CONSULTATION) +")";
 		Query query = entityManager.createNativeQuery(finalQuery)
 				.setParameter("refsetCode", refsetCode)
 				.setParameter("fromDate", fromDate)
 				.setParameter("toDate", toDate)
-				.setParameter("reprocessing", reprocessing);
+				.setParameter("reprocessing", reprocessing)
+				.setParameter("coverageCuit", coverageCuit);
 		List<Object[]> queryResult = query.getResultList();
 
 		List<AttentionInfoBo> result = queryResult

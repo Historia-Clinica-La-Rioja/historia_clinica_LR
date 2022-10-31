@@ -7,6 +7,7 @@ import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.List;
 
+import ar.lamansys.sgh.publicapi.application.port.out.AttentionReadStorage;
 import ar.lamansys.sgh.publicapi.domain.SingleDiagnosticBo;
 
 import org.junit.jupiter.api.Assertions;
@@ -35,9 +36,12 @@ public class FetchActivityByFilterTest {
 	@Mock
 	private ActivityStorage activityStorage;
 
+	@Mock
+	private AttentionReadStorage attentionReadStorage;
+
 	@BeforeEach
 	void setup() {
-		fetchActivitiesByFilter = new FetchActivitiesByFilter(activityStorage);
+		fetchActivitiesByFilter = new FetchActivitiesByFilter(activityStorage, attentionReadStorage);
 	}
 
 	@Test
