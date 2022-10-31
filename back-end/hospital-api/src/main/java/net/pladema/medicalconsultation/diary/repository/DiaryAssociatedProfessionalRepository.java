@@ -41,4 +41,18 @@ public interface DiaryAssociatedProfessionalRepository extends JpaRepository<Dia
 			"WHERE dap.diaryId = :diaryId")
 	List<ProfessionalPersonBo> getDiaryAssociatedProfessionalsInfo(@Param("diaryId") Integer diaryId);
 
+	@Transactional(readOnly = true)
+	@Query("SELECT DISTINCT d.healthcareProfessionalId " +
+			"FROM Diary d " +
+			"JOIN DoctorsOffice do ON (d.doctorsOfficeId = do.id) " +
+			"WHERE d.id IN (SELECT DISTINCT dap.diaryId " +
+			"FROM DiaryAssociatedProfessional dap  " +
+			"WHERE dap.healthcareProfessionalId = :healthcareProfessionalId) " +
+			"AND d.deleteable.deleted = false " +
+			"AND do.institutionId = :institutionId " +
+			"AND d.active = true " +
+			"AND d.endDate >= current_date() ")
+	List<Integer> getAllAssociatedWithHealthcareProfessionalsIdAndActiveDiariesByHealthcareProfessional(@Param("institutionId") Integer institutionId,
+																										@Param("healthcareProfessionalId") Integer healthcareProfessionalId);
+
 }

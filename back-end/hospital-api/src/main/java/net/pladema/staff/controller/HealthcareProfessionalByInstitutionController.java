@@ -119,5 +119,22 @@ public class HealthcareProfessionalByInstitutionController {
 		return ResponseEntity.ok(result);
 	}
 
+	@GetMapping("/associated-healthcare-professionals-with-active-diaries")
+	@PreAuthorize("hasPermission(#institutionId, 'ESPECIALISTA_MEDICO, PROFESIONAL_DE_SALUD, ESPECIALISTA_EN_ODONTOLOGIA, ENFERMERO')")
+	public ResponseEntity<List<ProfessionalDto>> getAllByDiaryActiveAndInstitution(@PathVariable(name = "institutionId") Integer institutionId) {
+		LOG.debug("Input parameters -> institutionId {}", institutionId);
+		List<HealthcareProfessionalBo> healthcareProfessionals = healthcareProfessionalService.getAllByInstitution(institutionId);
+		Integer healthcareProfessionalId = healthcareProfessionalService.getProfessionalId(UserInfo.getCurrentAuditor());
+
+		List<Integer> associatedHealthcareProfessionals = diaryAssociatedProfessionalService.getAllAssociatedWithProfessionalsByHealthcareProfessionalIdAndActiveDiaries(institutionId, healthcareProfessionalId);
+		healthcareProfessionals = healthcareProfessionals.stream().filter(healthcareProfessional ->
+				healthcareProfessional.getId().equals(healthcareProfessionalId) || associatedHealthcareProfessionals.contains(healthcareProfessional.getId())
+		).collect(Collectors.toList());
+
+		List<ProfessionalDto> result = healthcareProfessionalMapper.fromProfessionalBoList(healthcareProfessionals);
+		LOG.debug(OUTPUT, result);
+		return ResponseEntity.ok(result);
+	}
+
 
 }

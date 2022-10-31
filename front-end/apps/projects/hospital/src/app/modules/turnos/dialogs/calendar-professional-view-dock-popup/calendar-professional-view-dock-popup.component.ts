@@ -50,7 +50,7 @@ export class CalendarProfessionalViewDockPopupComponent implements OnInit {
 
 	ngOnInit() {
 		const professionalLogged$ = this.healthcareProfessional.getHealthcareProfessionalByUserId();
-		const asociatedProfessionals$ = this.healthCareProfessionalService.getAllAssociated();
+		const asociatedProfessionals$ = this.healthCareProfessionalService.getAllAssociatedWithActiveDiaries();
 
 		forkJoin([professionalLogged$, asociatedProfessionals$]).subscribe(data => {
 			this.professionals = data[1];

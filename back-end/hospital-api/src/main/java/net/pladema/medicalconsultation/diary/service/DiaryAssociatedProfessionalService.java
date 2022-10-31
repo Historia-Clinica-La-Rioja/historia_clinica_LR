@@ -12,4 +12,6 @@ public interface DiaryAssociatedProfessionalService {
 
 	List<Integer> getAllAssociatedWithProfessionalsByHealthcareProfessionalId(Integer institutionId, Integer healthcareProfessionalId);
 
+	List<Integer> getAllAssociatedWithProfessionalsByHealthcareProfessionalIdAndActiveDiaries(Integer institutionId, Integer healthcareProfessionalId);
+
 }
