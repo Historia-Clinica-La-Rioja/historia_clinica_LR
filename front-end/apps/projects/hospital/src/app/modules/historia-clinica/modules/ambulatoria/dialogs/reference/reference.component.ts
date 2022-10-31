@@ -144,10 +144,15 @@ export class ReferenceComponent implements OnInit {
 
 
 	setProblemsReference(problemsArray: string[]) {
-		this.referenceProblemDto = problemsArray.map(problem => ({
-			id: this.problemsList.find(p => p.hcePersonalHistoryDto.snomed.pt === problem).hcePersonalHistoryDto.id,
-			snomed: this.problemsList.find(p => p.hcePersonalHistoryDto.snomed.pt === problem).hcePersonalHistoryDto.snomed,
-		}));
+		if (problemsArray.length) {
+			this.referenceProblemDto = problemsArray.map(problem => ({
+				id: this.problemsList.find(p => p.hcePersonalHistoryDto.snomed.pt === problem).hcePersonalHistoryDto.id,
+				snomed: this.problemsList.find(p => p.hcePersonalHistoryDto.snomed.pt === problem).hcePersonalHistoryDto.snomed,
+			}));
+		}
+		else {
+			this.referenceProblemDto = [];
+		}
 		this.setInformation();
 	}
 
@@ -219,8 +224,12 @@ export class ReferenceComponent implements OnInit {
 	private setCareLines() {
 		const problemSnomedIds: string[] = this.referenceProblemDto.map(problem => problem.snomed.sctid);
 		const institutionId = this.formReference.value.destinationInstitutionId;
+		if (!problemSnomedIds.length || institutionId) {
+			this.formReference.controls.careLine.disable();
+		}
 		if (problemSnomedIds.length && institutionId) {
 			this.formReference.controls.careLine.enable();
+			this.formReference.controls.careLine.updateValueAndValidity();
 			this.careLineService.getByProblemSnomedIdsAndInstitutionId(institutionId, problemSnomedIds).subscribe(careLines => this.careLines = careLines);
 		}
 	}
@@ -238,17 +247,17 @@ export class ReferenceComponent implements OnInit {
 		this.formReference.controls.searchByCareLine.valueChanges.subscribe(option => {
 			if (option === this.DEFAULT_RADIO_OPTION) {
 				this.formReference.controls.careLine.setValidators([Validators.required]);
-				this.formReference.controls.careLine.enable();
 				this.formReference.controls.clinicalSpecialtyId.setValue(null);
 				this.formReference.controls.clinicalSpecialtyId.disable();
-				this.formReference.controls.careLine.updateValueAndValidity();
+				this.formReference.controls.clinicalSpecialtyId.updateValueAndValidity();
+				this.setCareLines();
 			} else {
 				this.formReference.controls.careLine.removeValidators([Validators.required]);
 				this.formReference.controls.careLine.setValue(null);
 				this.formReference.controls.careLine.disable();
 				this.formReference.controls.careLine.updateValueAndValidity();
+				this.setSpecialties();
 			}
-			this.setInformation();
 		});
 	}
 
@@ -261,6 +270,7 @@ export class ReferenceComponent implements OnInit {
 	}
 
 	filterInstitutionsByDepartment(department: number) {
+		this.formReference.controls.destinationInstitutionId.setValue(null);
 		this.clearInformation();
 		this.institutions$ = this.institutionService.findByDepartmentId(department);
 		this.formReference.controls.destinationInstitutionId.enable();
@@ -279,6 +289,16 @@ export class ReferenceComponent implements OnInit {
 				this.formReference.controls.clinicalSpecialtyId.updateValueAndValidity();
 			}
 		});
+		this.disabledInputs();
+	}
+
+	private disabledInputs() {
+		if (!this.formReference.value.destinationInstitutionId) {
+			this.formReference.controls.clinicalSpecialtyId.disable();
+		}
+		if (!this.referenceProblemDto.length || !this.formReference.value.destinationInstitutionId) {
+			this.formReference.controls.careLine.disable();
+		}
 	}
 
 }
