@@ -98,7 +98,7 @@ public class HealthcareProfessionalByInstitutionController {
 		List<HealthcareProfessionalBo> healthcareProfessionals = healthcareProfessionalService.getAllByInstitution(institutionId);
 		Integer healthcareProfessionalId = healthcareProfessionalService.getProfessionalId(UserInfo.getCurrentAuditor());
 		if (!isAdministrativeRole) {
-			List<Integer> associatedHealthcareProfessionals = diaryAssociatedProfessionalService.getAllAssociatedWithProfessionalsByHealthcareProfessionalId(healthcareProfessionalId);
+			List<Integer> associatedHealthcareProfessionals = diaryAssociatedProfessionalService.getAllAssociatedWithProfessionalsByHealthcareProfessionalId(institutionId, healthcareProfessionalId);
 			healthcareProfessionals = healthcareProfessionals.stream().filter(healthcareProfessional ->
 					healthcareProfessional.getId().equals(healthcareProfessionalId) || associatedHealthcareProfessionals.contains(healthcareProfessional.getId())
 			).collect(Collectors.toList());

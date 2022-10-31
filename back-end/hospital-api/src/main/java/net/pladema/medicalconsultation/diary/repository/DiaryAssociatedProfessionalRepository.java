@@ -21,11 +21,14 @@ public interface DiaryAssociatedProfessionalRepository extends JpaRepository<Dia
 	@Transactional(readOnly = true)
 	@Query("SELECT DISTINCT d.healthcareProfessionalId " +
 			"FROM Diary d " +
-			"WHERE id IN (SELECT DISTINCT dap.diaryId " +
+			"JOIN DoctorsOffice do ON (d.doctorsOfficeId = do.id) " +
+			"WHERE d.id IN (SELECT DISTINCT dap.diaryId " +
 			"FROM DiaryAssociatedProfessional dap  " +
 			"WHERE dap.healthcareProfessionalId = :healthcareProfessionalId) " +
-			"AND d.deleteable.deleted = false")
-	List<Integer> getAllAssociatedWithHealthcareProfessionalsIdByHealthcareProfessional(@Param("healthcareProfessionalId") Integer healthcareProfessionalId);
+			"AND d.deleteable.deleted = false " +
+			"AND do.institutionId = :institutionId ")
+	List<Integer> getAllAssociatedWithHealthcareProfessionalsIdByHealthcareProfessional(@Param("institutionId") Integer institutionId,
+																						@Param("healthcareProfessionalId") Integer healthcareProfessionalId);
 
 
 	@Transactional(readOnly = true)

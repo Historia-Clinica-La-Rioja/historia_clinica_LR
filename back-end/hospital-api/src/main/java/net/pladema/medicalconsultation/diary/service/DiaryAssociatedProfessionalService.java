@@ -10,6 +10,6 @@ public interface DiaryAssociatedProfessionalService {
 
 	List<ProfessionalPersonBo> getAllDiaryAssociatedProfessionalsInfo(Integer diaryId);
 
-	List<Integer> getAllAssociatedWithProfessionalsByHealthcareProfessionalId(Integer healthcareProfessionalId);
+	List<Integer> getAllAssociatedWithProfessionalsByHealthcareProfessionalId(Integer institutionId, Integer healthcareProfessionalId);
 
 }

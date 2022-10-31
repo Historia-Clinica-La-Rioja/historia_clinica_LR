@@ -38,8 +38,8 @@ public class DiaryAssociatedProfessionalServiceImpl implements DiaryAssociatedPr
 	}
 
 	@Override
-	public List<Integer> getAllAssociatedWithProfessionalsByHealthcareProfessionalId(Integer healthcareProfessionalId) {
-		return diaryAssociatedProfessionalsRepository.getAllAssociatedWithHealthcareProfessionalsIdByHealthcareProfessional(healthcareProfessionalId);
+	public List<Integer> getAllAssociatedWithProfessionalsByHealthcareProfessionalId(Integer institutionId, Integer healthcareProfessionalId) {
+		return diaryAssociatedProfessionalsRepository.getAllAssociatedWithHealthcareProfessionalsIdByHealthcareProfessional(institutionId, healthcareProfessionalId);
 	}
 
 

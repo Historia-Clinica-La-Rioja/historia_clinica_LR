@@ -106,7 +106,7 @@ public class AppointmentValidatorServiceImpl implements AppointmentValidatorServ
             DiaryBo diary = diaryService.getDiaryById(apmtOpt.get().getDiaryId());
 
             Integer professionalId = healthcareProfessionalService.getProfessionalId(UserInfo.getCurrentAuditor());
-			List<Integer> associatedHealthcareProfessionals = diaryAssociatedProfessionalService.getAllAssociatedWithProfessionalsByHealthcareProfessionalId(professionalId);;
+			List<Integer> associatedHealthcareProfessionals = diaryAssociatedProfessionalService.getAllAssociatedWithProfessionalsByHealthcareProfessionalId(institutionId, professionalId);
             if (Boolean.TRUE.equals(hasProfessionalRole.apply(institutionId)) && !diary.getHealthcareProfessionalId().equals(professionalId) && !associatedHealthcareProfessionals.contains(diary.getHealthcareProfessionalId())) {
                 throw new ValidationException("appointment.new.professional.id.invalid}");
             }
