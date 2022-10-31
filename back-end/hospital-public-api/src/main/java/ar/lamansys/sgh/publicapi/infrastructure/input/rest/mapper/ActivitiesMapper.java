@@ -128,6 +128,7 @@ public class ActivitiesMapper {
 				.affiliateNumber(coverageActivityInfoBo.getAffiliateNumber())
 				.attentionCoverage(coverageActivityInfoBo.getAffiliateNumber() != null)
 				.cuitCoverage(coverageActivityInfoBo.getCuit())
+				.plan(coverageActivityInfoBo.getPlan())
 				.build();
 	}
 

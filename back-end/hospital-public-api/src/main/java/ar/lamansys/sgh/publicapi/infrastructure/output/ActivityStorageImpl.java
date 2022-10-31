@@ -62,7 +62,8 @@ public class ActivityStorageImpl implements ActivityStorage {
 					"hc.main, " +
 					"hc.problem_id, " +
 					"hc.verification_status_id, " +
-					"hc.updated_on " +
+					"hc.updated_on, " +
+					"mcp.plan " +
 					"FROM {h-schema}v_attention va " +
 					"LEFT JOIN {h-schema}attention_reads ar ON (%s ar.attention_id = va.id) " +
 					"JOIN {h-schema}institution i ON (i.sisa_code = :refsetCode AND va.institution_id = i.id) " +
@@ -78,6 +79,7 @@ public class ActivityStorageImpl implements ActivityStorage {
 					" %s " +
 					"LEFT JOIN {h-schema}patient_medical_coverage pmc ON (pmc.id = event.patient_medical_coverage_id) " +
 					"LEFT JOIN {h-schema}medical_coverage mc ON (pmc.medical_coverage_id = mc.id) " +
+					"LEFT JOIN {h-schema}medical_coverage_plan mcp ON (mc.id = mcp.medical_coverage_id) " +
 					"LEFT JOIN {h-schema}document_health_condition dhc on dhc.document_id = va.id " +
 					"LEFT JOIN {h-schema}health_condition hc on hc.id = dhc.health_condition_id " +
 					"LEFT JOIN {h-schema}snomed s3 on s3.id = hc.snomed_id " +
@@ -99,7 +101,8 @@ public class ActivityStorageImpl implements ActivityStorage {
 					"hc.main, " +
 					"hc.problem_id, " +
 					"hc.verification_status_id, " +
-					"hc.updated_on " +
+					"hc.updated_on, " +
+					"mcp.plan " +
 					"FROM {h-schema} v_attention va " +
 					"LEFT JOIN {h-schema} attention_reads ar ON (%s ar.attention_id = va.id) " +
 					"JOIN {h-schema} institution i ON (i.sisa_code = :refsetCode AND va.institution_id = i.id) " +
@@ -117,6 +120,7 @@ public class ActivityStorageImpl implements ActivityStorage {
 					" %s " +
 					"LEFT JOIN {h-schema} patient_medical_coverage pmc ON (pmc.id = event.patient_medical_coverage_id) " +
 					"LEFT JOIN {h-schema} medical_coverage mc ON (pmc.medical_coverage_id = mc.id) " +
+					"LEFT JOIN {h-schema}medical_coverage_plan mcp ON (mc.id = mcp.medical_coverage_id) " +
 					"LEFT JOIN {h-schema} document_health_condition dhc ON (dhc.document_id = va.id) " +
 					"LEFT JOIN {h-schema} health_condition hc ON (hc.id = dhc.health_condition_id) " +
 					"LEFT JOIN {h-schema} snomed s3 ON (s3.id = od.snomed_id) " +
@@ -262,6 +266,7 @@ public class ActivityStorageImpl implements ActivityStorage {
 		return CoverageActivityInfoBo.builder()
 				.affiliateNumber((String) rawAttention[9])
 				.cuit((String) rawAttention[17])
+				.plan(rawAttention[25] !=  null ? (String) rawAttention[25] : null)
 				.build();
 	}
 
