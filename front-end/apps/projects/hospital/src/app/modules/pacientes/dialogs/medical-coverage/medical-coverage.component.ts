@@ -17,6 +17,7 @@ import { ArtComponent } from "@pacientes/dialogs/art/art.component";
 import { map } from "rxjs/operators";
 import { PatientMedicalCoverageService } from "@api-rest/services/patient-medical-coverage.service";
 import { MapperService } from "@core/services/mapper.service";
+import { pushIfNotExists } from '@core/utils/array.utils';
 
 const DNI_TYPE_ID = 1;
 @Component({
@@ -52,7 +53,6 @@ export class MedicalCoverageComponent implements OnInit {
 
 
 	ngOnInit(): void {
-
 		this.healthInsuranceService.getAll().subscribe((values: MedicalCoverageDto[]) => {
 			this.healthInsuranceMasterData = values;
 			this.personInfo?.patientId ? this.setPatientMedicalCoverages() : this.patientMedicalCoverages = [];
@@ -89,7 +89,16 @@ export class MedicalCoverageComponent implements OnInit {
 						patientMedicalCoveragesDto.map(s => this.mapperService.toPatientMedicalCoverage(s))
 				)
 			)
-			.subscribe((patientMedicalCoverages: PatientMedicalCoverage[]) => this.patientMedicalCoverages = patientMedicalCoverages);
+			.subscribe((patientMedicalCoverages: PatientMedicalCoverage[]) =>
+				patientMedicalCoverages.forEach(item=>{
+				this.patientMedicalCoverages = pushIfNotExists<PatientMedicalCoverage>(this.patientMedicalCoverages, item, this.compareMedicalCorevage);
+				})
+
+			);
+	}
+
+	private compareMedicalCorevage(a1: PatientMedicalCoverage, a2: PatientMedicalCoverage): boolean {
+		return a1.id === a2.id;
 	}
 
 	getFullHealthInsuranceText(healthInsurance: MedicalCoverageDto): string {
