@@ -40,6 +40,6 @@ public class DiaryAvailableProtectedAppointmentsBo {
 
 	private String doctorOffice;
 
-	private Boolean isJointDiary;
+	private boolean isJointDiary;
 
 }
