@@ -171,11 +171,16 @@ public class RestExceptionHandler {
 	}
 
 	private ApiErrorMessageDto handleRuntimeException(RuntimeException ex, Locale locale) {
-		String errorMessage = messageSource.getMessage(ex.getMessage(), null, locale);
-		LOG.error(errorMessage);
-		return new ApiErrorMessageDto(
-				ex.getMessage(),
-				errorMessage
+		String errorMessage = null;
+		try {
+			errorMessage = messageSource.getMessage(ex.getMessage(), null, locale);
+			LOG.error(errorMessage);
+		}
+		catch (Exception e){
+			LOG.error(ex.getMessage());
+		}
+		return new ApiErrorMessageDto("RUNTIME_EXCEPTION",
+				errorMessage != null ? errorMessage : ex.getMessage()
 		);
 	}
 

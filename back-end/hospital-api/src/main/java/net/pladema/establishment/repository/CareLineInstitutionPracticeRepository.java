@@ -1,5 +1,6 @@
 package net.pladema.establishment.repository;
 
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -20,5 +21,11 @@ public interface CareLineInstitutionPracticeRepository extends JpaRepository<Car
 			"AND clip.snomedRelatedGroupId = :snomedRelatedGroupId ")
 	Optional<CareLineInstitutionPractice> findByCareLineInstitutionIdAndSnomedRelatedGroupId(@Param("careLineInstitutionId") Integer careLineInstitutionId,
 																							 @Param("snomedRelatedGroupId") Integer snomedRelatedGroupId);
+
+	@Transactional(readOnly = true)
+	@Query("SELECT clip " +
+			"FROM CareLineInstitutionPractice clip " +
+			"WHERE clip.snomedRelatedGroupId = :snomedRelatedGroupId ")
+	List<CareLineInstitutionPractice> findBySnomedRelatedGroupId(@Param("snomedRelatedGroupId") Integer snomedRelatedGroupId);
 
 }

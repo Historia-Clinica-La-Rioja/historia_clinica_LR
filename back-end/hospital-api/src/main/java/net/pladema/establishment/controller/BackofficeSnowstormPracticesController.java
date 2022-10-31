@@ -35,16 +35,12 @@ public class BackofficeSnowstormPracticesController extends BackofficeSnomedGrou
 	public Page<VSnomedGroupConcept> getList(Pageable pageable, VSnomedGroupConcept entity) {
 		if(featureFlagsService.isOn(AppFeature.HABILITAR_BUSQUEDA_LOCAL_CONCEPTOS))
 			return super.getList(pageable, entity);
-
-		// avoid calling snowstorm with an invalid search term
 		String conceptPt = entity.getConceptPt();
-		if(conceptPt == null || conceptPt.isBlank() || conceptPt.length() < 3)
+		if(conceptPt == null)
 			return new PageImpl<>(Collections.emptyList());
-
-		var apiConcepts = backofficeSnowstormStore.findAll(new BackofficeSnowstormDto(entity.getConceptPt()), pageable, SnomedECL.PROCEDURE).getContent();
+		var apiConcepts = backofficeSnowstormStore.findAll(new BackofficeSnowstormDto(conceptPt), pageable, SnomedECL.PROCEDURE).getContent();
 		if(apiConcepts.isEmpty())
 			return new PageImpl<>(Collections.emptyList());
-
 		var result = apiConcepts.stream()
 				.filter(item -> (Long.parseLong(item.getConceptId()) <= Integer.MAX_VALUE))
 				.map(this::mapToSnomedGroupConcept)

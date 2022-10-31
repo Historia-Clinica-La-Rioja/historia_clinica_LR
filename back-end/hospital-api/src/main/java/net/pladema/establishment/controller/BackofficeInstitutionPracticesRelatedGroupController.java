@@ -12,8 +12,8 @@ import ar.lamansys.sgx.shared.dates.configuration.DateTimeProvider;
 import ar.lamansys.sgx.shared.featureflags.AppFeature;
 import ar.lamansys.sgx.shared.featureflags.application.FeatureFlagsService;
 import net.pladema.establishment.controller.constraints.validator.permissions.BackofficeSnomedRelatedGroupValidator;
-import net.pladema.sgx.exceptions.BackofficeValidationException;
 import net.pladema.establishment.controller.dto.BackofficeSnowstormDto;
+import net.pladema.establishment.repository.CareLineInstitutionPracticeRepository;
 import net.pladema.snowstorm.repository.SnomedRelatedGroupRepository;
 import net.pladema.snowstorm.repository.entity.SnomedRelatedGroup;
 
@@ -37,8 +37,9 @@ public class BackofficeInstitutionPracticesRelatedGroupController extends Backof
 																BackofficeSnomedRelatedGroupValidator backofficeSnomedRelatedGroupValidator,
 																FeatureFlagsService featureFlagsService,
 																SnomedService snomedService,
-																BackofficeSnowstormStore backofficeSnowstormStore) {
-		super(repository, snomedRelatedGroupRepository, dateTimeProvider, backofficeSnomedRelatedGroupValidator);
+																BackofficeSnowstormStore backofficeSnowstormStore,
+																CareLineInstitutionPracticeRepository careLineInstitutionPracticeRepository) {
+		super(repository, snomedRelatedGroupRepository, dateTimeProvider, backofficeSnomedRelatedGroupValidator, careLineInstitutionPracticeRepository);
 		this.snomedRelatedGroupRepository = snomedRelatedGroupRepository;
 		this.featureFlagsService = featureFlagsService;
 		this.snomedService = snomedService;

@@ -33,12 +33,4 @@ public interface SnomedRelatedGroupRepository extends JpaRepository<SnomedRelate
 			"WHERE srg.id = :id ")
 	Optional<Integer> getSnomedIdById(@Param("id") Integer id);
 
-	@Transactional(readOnly = true)
-	@Query("SELECT srg " +
-			"FROM SnomedRelatedGroup srg " +
-			"WHERE srg.snomedId = :snomedId " +
-			"AND srg.groupId = :groupId ")
-	Optional<SnomedRelatedGroup> findBySnomedIdAndGroupId(@Param("snomedId") Integer snomedId,
-														  @Param("groupId") Integer groupId);
-
 }
