@@ -224,7 +224,7 @@ export class ReferenceComponent implements OnInit {
 	private setCareLines() {
 		const problemSnomedIds: string[] = this.referenceProblemDto.map(problem => problem.snomed.sctid);
 		const institutionId = this.formReference.value.destinationInstitutionId;
-		if (!problemSnomedIds.length || institutionId) {
+		if (!problemSnomedIds.length || !institutionId) {
 			this.formReference.controls.careLine.disable();
 		}
 		if (problemSnomedIds.length && institutionId) {
@@ -232,6 +232,7 @@ export class ReferenceComponent implements OnInit {
 			this.formReference.controls.careLine.updateValueAndValidity();
 			this.careLineService.getByProblemSnomedIdsAndInstitutionId(institutionId, problemSnomedIds).subscribe(careLines => this.careLines = careLines);
 		}
+		this.formReference.controls.clinicalSpecialtyId.disable();
 	}
 
 	private setSpecialties() {
