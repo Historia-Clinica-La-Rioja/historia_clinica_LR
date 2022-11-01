@@ -123,30 +123,31 @@ export class SearchAppointmentsInCareNetworkComponent implements OnInit, OnChang
 
             const foundState = this.provinces.find((province: ProvinceDto) => { return (province.id === institutionAddres.provinceId) });
             this.initialProvinceTypeaheadOptionSelected = foundState ? provinceToTypeaheadOption(foundState) : undefined;
-          }
-        );
 
-        if (institutionAddres?.provinceId) {
-          this.addressMasterDataService.getDepartmentsByProvince(institutionAddres.provinceId).subscribe(
-            departments => {
-              this.departments = departments;
-              this.loadDepartmentTypeaheadOptions();
+            if (institutionAddres?.provinceId) {
+              this.addressMasterDataService.getDepartmentsByProvince(institutionAddres.provinceId).subscribe(
+                departments => {
+                  this.departments = departments;
+                  this.loadDepartmentTypeaheadOptions();
 
-              const foundDepartment = departments.find((department: DepartmentDto) => { return (department.id === institutionAddres.departmentId) });
-              this.initialDepartmentTypeaheadOptionSelected = departmentToTypeaheadOption(foundDepartment);
+                  const foundDepartment = departments.find((department: DepartmentDto) => { return (department.id === institutionAddres.departmentId) });
+                  this.initialDepartmentTypeaheadOptionSelected = departmentToTypeaheadOption(foundDepartment);
 
-              this.institutionService.findByDepartmentId(foundDepartment.id).subscribe(
-                (institutions) => {
-                  this.institutions = institutions;
-                  this.loadInstitutionTypeaheadOptions();
+                  this.institutionService.findByDepartmentId(foundDepartment.id).subscribe(
+                    (institutions) => {
+                      this.institutions = institutions;
+                      this.loadInstitutionTypeaheadOptions();
 
-                  const foundInstitution = this.institutions.find((institution: InstitutionBasicInfoDto) => { return (institution.id === this.contextService.institutionId) });
-                  this.initialInstitutionTypeaheadOptionSelected = institutionToTypeaheadOption(foundInstitution)
+                      const foundInstitution = this.institutions.find((institution: InstitutionBasicInfoDto) => { return (institution.id === this.contextService.institutionId) });
+                      this.initialInstitutionTypeaheadOptionSelected = institutionToTypeaheadOption(foundInstitution)
+                    }
+                  );
                 }
               );
             }
-          );
-        }
+          }
+        );
+
       }
     );
   }

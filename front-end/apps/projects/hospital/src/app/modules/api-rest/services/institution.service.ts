@@ -30,10 +30,6 @@ export class InstitutionService {
 		return this.http.get<InstitutionBasicInfoDto[]>(`${environment.apiBase}/institution/all`);
 	}
 
-	public findByDepartmentId(departmentId: number): Observable<InstitutionBasicInfoDto[]> {
-		return this.http.get<InstitutionBasicInfoDto[]>(`${environment.apiBase}/institution/department/${departmentId}`);
-	}
-
 	public getAddress(institutionId: number): Observable<AddressDto> {
 		return this.http.get<AddressDto>(`${environment.apiBase}/institution/${institutionId}/address`);
 	}
