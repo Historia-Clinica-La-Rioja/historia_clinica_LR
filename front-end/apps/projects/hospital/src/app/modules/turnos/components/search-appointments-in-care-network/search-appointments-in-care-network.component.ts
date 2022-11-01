@@ -113,8 +113,6 @@ export class SearchAppointmentsInCareNetworkComponent implements OnInit, OnChang
   }
 
   ngOnInit(): void {
-    console.log("entra al init");
-
     this.institutionService.getInstitutionAddress(this.contextService.institutionId).subscribe(
       (institutionAddres: AddressDto) => {
 

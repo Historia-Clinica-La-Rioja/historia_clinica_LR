@@ -1,6 +1,7 @@
 <div id="container" fxLayout="column" fxLayoutGap="5px" [formGroup]="searchForm">
 
-    <span [translate]="'turnos.search-appointments-in-care-network.SEARCH_IN_CARE_NETWORK_CRITERIA'"></span>
+    <span [translate]="'turnos.search-appointments-in-care-network.SEARCH_IN_CARE_NETWORK_CRITERIA'"
+        class="bottom-separation"></span>
 
     <div fxLayout="row" fxLayoutAlign="start end" fxLayoutGap="20px" fxLayout.lt-sm="column"
         fxLayoutAlign.lt-sm="start start" fxLayoutGap="0">
@@ -11,7 +12,8 @@
                 </strong>
                 {{ 'turnos.search-appointments-in-care-network.OPTIONAL' | translate }}
             </span>
-            <app-typeahead id="careline" [placeholder]="'turnos.search-appointments-in-care-network.CARELINE'"
+            <app-typeahead id="careline"
+                [titleInput]="'turnos.search-appointments-in-care-network.CARELINE' | translate"
                 [options]="careLineTypeaheadOptions" (selectionChange)="setCareLine($event)">
             </app-typeahead>
             <div class="error-space"></div>
@@ -19,7 +21,8 @@
 
         <div fxFlex="35" fxLayout="column" fxLayoutGap="5px">
             <strong>{{ 'turnos.search-appointments-in-care-network.SPECIALTY' | translate }}</strong>
-            <app-typeahead id="specialty" [placeholder]="'turnos.search-appointments-in-care-network.SPECIALTY'"
+            <app-typeahead id="specialty"
+                [titleInput]="'turnos.search-appointments-in-care-network.SPECIALTY' | translate"
                 [options]="specialtyTypeaheadOptions" (selectionChange)="setClinicalSpecialty($event)">
             </app-typeahead>
             <div class="error-space">
@@ -32,7 +35,8 @@
         fxLayoutAlign.lt-sm="start start" fxLayoutGap="0">
         <div fxFlex="25" fxLayout="column" fxLayoutGap="5px">
             <strong> {{ 'turnos.search-appointments-in-care-network.PROVINCE' | translate }} </strong>
-            <app-typeahead id="province" [placeholder]="'turnos.search-appointments-in-care-network.PROVINCE'"
+            <app-typeahead id="province"
+                [titleInput]="'turnos.search-appointments-in-care-network.PROVINCE' | translate"
                 [options]="provinceTypeaheadOptions" (selectionChange)="setProvince($event)"
                 [externalSetValue]="initialProvinceTypeaheadOptionSelected">
             </app-typeahead>
@@ -43,7 +47,8 @@
 
         <div fxFlex="25" fxLayout="column" fxLayoutGap="5px">
             <strong> {{ 'turnos.search-appointments-in-care-network.DEPARTMENT' | translate }} </strong>
-            <app-typeahead id="department" [placeholder]="'turnos.search-appointments-in-care-network.DEPARTMENT'"
+            <app-typeahead id="department"
+                [titleInput]="'turnos.search-appointments-in-care-network.DEPARTMENT' | translate"
                 [options]="departmentTypeaheadOptions" (selectionChange)="setDepartment($event)"
                 [externalSetValue]="initialDepartmentTypeaheadOptionSelected">
             </app-typeahead>
@@ -57,7 +62,8 @@
                 <strong> {{ 'turnos.search-appointments-in-care-network.INSTITUTION' | translate }} </strong>
                 {{ 'turnos.search-appointments-in-care-network.OPTIONAL' | translate }}
             </span>
-            <app-typeahead id="institution" [placeholder]="'turnos.search-appointments-in-care-network.INSTITUTION'"
+            <app-typeahead id="institution"
+                [titleInput]="'turnos.search-appointments-in-care-network.INSTITUTION' | translate"
                 [options]="institutionTypeaheadOptions" (selectionChange)="setInstitution($event)"
                 [externalSetValue]="initialInstitutionTypeaheadOptionSelected">
             </app-typeahead>
@@ -96,7 +102,7 @@
         {{ 'turnos.search-appointments-in-care-network.NOT_FOUND_APPOINTMENTS' | translate }}
     </span>
 
-    <span *ngIf="showInvalidFormMessage" class="mat-h2 color-warn">
+    <span *ngIf="showInvalidFormMessage" class="mat-h3 color-warn">
         {{ 'turnos.search-appointments-in-care-network.INVALID_FORM_MESSAGE' | translate }}
     </span>
 
