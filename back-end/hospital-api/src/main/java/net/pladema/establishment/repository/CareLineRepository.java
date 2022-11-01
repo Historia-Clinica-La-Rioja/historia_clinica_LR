@@ -49,7 +49,8 @@ public interface CareLineRepository extends SGXAuditableEntityJPARepository<Care
 			"AND cli.deleted = false " +
 			"AND d.active = true " +
 			"AND d.endDate >= current_date() " +
-			"AND (d.deleteable.deleted = false OR d.deleteable.deleted is null)" )
+			"AND (d.deleteable.deleted = false OR d.deleteable.deleted is null) " +
+			"ORDER BY cl.description" )
 	List<CareLineBo> getCareLinesByProblemsSctidsAndDestinationInstitutionIdWithActiveDiaries(@Param("problemSnomedIds") List<String> problemSnomedIds,
 																							  @Param("destinationInstitutionId") Integer destinationInstitutionId);
 }

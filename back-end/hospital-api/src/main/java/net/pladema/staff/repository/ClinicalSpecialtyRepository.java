@@ -60,7 +60,8 @@ public interface ClinicalSpecialtyRepository extends JpaRepository<ClinicalSpeci
 			"AND hps.deleteable.deleted = false  " +
 			"AND pp.deleteable.deleted = false " +
 			"AND hp.deleteable.deleted = false " +
-			"AND ur.deleteable.deleted = false ")
+			"AND ur.deleteable.deleted = false " +
+			"ORDER BY cs.name ")
 	List<ClinicalSpecialty> getAllByInstitutionIdAndActiveDiaries(@Param("institutionId") Integer institutionId);
 
 	@Transactional(readOnly = true)
@@ -74,7 +75,8 @@ public interface ClinicalSpecialtyRepository extends JpaRepository<ClinicalSpeci
 			"AND cli.institutionId = :destinationInstitutionId " +
 			"AND d.clinicalSpecialtyId = clis.clinicalSpecialtyId " +
 			"AND (d.deleteable.deleted = false) " +
-			"AND (dcl.deleteable.deleted = false)")
+			"AND (dcl.deleteable.deleted = false) " +
+			"ORDER BY cs.name ")
 	List<ClinicalSpecialty> getAllByCareLineIdAndDestinationInstitutionId(@Param("careLineId") Integer careLineId,
 																		  @Param("destinationInstitutionId") Integer destinationInstitutionId);
 

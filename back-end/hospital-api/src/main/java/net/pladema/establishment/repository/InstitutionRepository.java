@@ -35,6 +35,7 @@ public interface InstitutionRepository extends JpaRepository<Institution, Intege
 			"FROM Institution i " +
 			"JOIN Address a ON (i.addressId = a.id) " +
 			"JOIN City c ON (a.cityId = c.id) " +
-			"WHERE c.departmentId = :departmentId ")
+			"WHERE c.departmentId = :departmentId " +
+			"ORDER BY i.name ")
 	List<InstitutionBasicInfoBo> findByDeparmentId(@Param("departmentId") Short departmentId);
 }
