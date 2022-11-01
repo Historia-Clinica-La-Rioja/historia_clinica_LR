@@ -13,6 +13,7 @@ import { CalendarView } from 'angular-calendar';
 import { HealthcareProfessionalByInstitutionService } from '@api-rest/services/healthcare-professional-by-institution.service';
 import { CalendarProfessionalInformation } from '@turnos/services/calendar-professional-information';
 import { AppointmentsFacadeService } from '@turnos/services/appointments-facade.service';
+import { FormBuilder, FormGroup } from '@angular/forms';
 
 const SINGLE_DIARY = 1;
 
@@ -35,6 +36,8 @@ export class CalendarProfessionalViewDockPopupComponent implements OnInit {
 	professionalSelected: ProfessionalDto;
 	professionals: ProfessionalDto[] = [];
 	calendarDate: Date;
+	loading = true;
+	form: FormGroup;
 	readonly calendarViewEnum = CalendarView;
 	readonly dateFormats = DatePipeFormat;
 
@@ -46,9 +49,13 @@ export class CalendarProfessionalViewDockPopupComponent implements OnInit {
 		private calendarProfessionalInfo: CalendarProfessionalInformation,
 		private readonly healthCareProfessionalService: HealthcareProfessionalByInstitutionService,
 		private readonly appointmentFacade: AppointmentsFacadeService,
+		private readonly formBuilder: FormBuilder
 	) { }
 
 	ngOnInit() {
+		this.form = this.formBuilder.group({
+			diary: [null]
+		});
 		const professionalLogged$ = this.healthcareProfessional.getHealthcareProfessionalByUserId();
 		const asociatedProfessionals$ = this.healthCareProfessionalService.getAllAssociatedWithActiveDiaries();
 
@@ -99,11 +106,13 @@ export class CalendarProfessionalViewDockPopupComponent implements OnInit {
 		this.filterDiaries(diaries);
 		if (this.diaries.length === SINGLE_DIARY) {
 			this.diarySelected = this.diaries[0];
+			this.form.controls.diary.setValue(this.diarySelected);
 			this.showButtonToClear = false;
 		}
 		if (idDiarySelected) {
 			this.diarySelected = this.diaries.find(diary => diary.id === idDiarySelected);
 		}
+		this.loading = false;
 	}
 
 	private filterDiaries(diaries: DiaryListDto[]) {

@@ -1,5 +1,6 @@
 @import '../../../../../assets/styles/variables.scss';
 @import '../../../../../assets/styles/mat-mixins';
+@import "../../../../../assets/styles/mixins";
 
 @include mat-form-field-background-white;
 
@@ -23,5 +24,20 @@
 }
 
 mat-form-field {
+	min-width: 100%;
+}
+
+#no-diary {
 	width: 100%;
+	.mat-card {
+		align-items: center;
+		display: flex;
+		flex-direction: column;
+		padding: 40px 0;
+		text-align: center;
+	}
+}
+
+div.spinner {
+	@include centered-spinner;
 }
