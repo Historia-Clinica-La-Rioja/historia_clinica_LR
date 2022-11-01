@@ -40,7 +40,8 @@ public interface CareLineInstitutionSpecialtyRepository extends JpaRepository<Ca
 			"FROM CareLineInstitutionSpecialty clis " +
 			"JOIN CareLineInstitution cli ON (clis.careLineInstitutionId = cli.id) " +
 			"JOIN ClinicalSpecialty cs ON (clis.clinicalSpecialtyId = cs.id)" +
-			"WHERE cli.careLineId = :careLineId")
+			"WHERE cli.careLineId = :careLineId " +
+			"AND cli.deleted = false")
 	List<ClinicalSpecialtyBo> getClinicalSpecialtiesByCareLineId(@Param("careLineId") Integer careLineId);
 
 
