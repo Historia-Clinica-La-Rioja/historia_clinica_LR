@@ -2,8 +2,8 @@ package ar.lamansys.sgh.clinichistory.infrastructure.input.rest.document;
 
 import ar.lamansys.sgh.clinichistory.application.fetchdocumentfile.FetchDocumentFileById;
 import ar.lamansys.sgx.shared.featureflags.application.FeatureFlagsService;
-import ar.lamansys.sgx.shared.pdf.PDFDocumentException;
-import ar.lamansys.sgx.shared.pdf.PdfService;
+import ar.lamansys.sgx.shared.files.pdf.PDFDocumentException;
+import ar.lamansys.sgx.shared.files.pdf.PdfService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.io.InputStreamResource;
 import org.springframework.http.HttpHeaders;

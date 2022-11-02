@@ -1,14 +1,10 @@
 package ar.lamansys.sgh.clinichistory.infrastructure.input.rest.backoffice;
 
-import ar.lamansys.sgh.clinichistory.application.fetchdocumentfile.FetchDocumentFileById;
-import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.backoffice.BackofficeDocumentFileStore;
-import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.backoffice.dto.DocumentFileDto;
-import ar.lamansys.sgx.shared.featureflags.AppFeature;
-import ar.lamansys.sgx.shared.featureflags.application.FeatureFlagsService;
-import ar.lamansys.sgx.shared.pdf.PDFDocumentException;
-import ar.lamansys.sgx.shared.pdf.PdfService;
-import net.pladema.sgx.backoffice.rest.AbstractBackofficeController;
-import net.pladema.sgx.backoffice.rest.BackofficePermissionValidatorAdapter;
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+
 import org.springframework.core.io.InputStreamResource;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
@@ -21,10 +17,15 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.io.ByteArrayInputStream;
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Paths;
+import ar.lamansys.sgh.clinichistory.application.fetchdocumentfile.FetchDocumentFileById;
+import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.backoffice.BackofficeDocumentFileStore;
+import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.backoffice.dto.DocumentFileDto;
+import ar.lamansys.sgx.shared.featureflags.AppFeature;
+import ar.lamansys.sgx.shared.featureflags.application.FeatureFlagsService;
+import ar.lamansys.sgx.shared.files.pdf.PDFDocumentException;
+import ar.lamansys.sgx.shared.files.pdf.PdfService;
+import net.pladema.sgx.backoffice.rest.AbstractBackofficeController;
+import net.pladema.sgx.backoffice.rest.BackofficePermissionValidatorAdapter;
 
 @RestController
 @RequestMapping("backoffice/documentfiles")

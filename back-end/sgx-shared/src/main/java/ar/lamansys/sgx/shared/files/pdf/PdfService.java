@@ -1,4 +1,4 @@
-package ar.lamansys.sgx.shared.pdf;
+package ar.lamansys.sgx.shared.files.pdf;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;

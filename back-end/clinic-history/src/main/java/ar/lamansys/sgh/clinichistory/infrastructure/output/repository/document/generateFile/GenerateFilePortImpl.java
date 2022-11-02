@@ -21,8 +21,8 @@ import ar.lamansys.sgh.clinichistory.domain.document.event.GenerateFilePort;
 import ar.lamansys.sgh.clinichistory.domain.document.event.OnGenerateDocumentEvent;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.entity.DocumentFile;
 import ar.lamansys.sgx.shared.files.StreamFile;
-import ar.lamansys.sgx.shared.pdf.PDFDocumentException;
-import ar.lamansys.sgx.shared.pdf.PdfService;
+import ar.lamansys.sgx.shared.files.pdf.PDFDocumentException;
+import ar.lamansys.sgx.shared.files.pdf.PdfService;
 
 
 @Component
