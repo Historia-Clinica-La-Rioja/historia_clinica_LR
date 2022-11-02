@@ -13,15 +13,16 @@ import java.util.Base64;
 import java.util.Map;
 import java.util.Optional;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Component;
+
 import ar.lamansys.sgh.clinichistory.domain.document.event.GenerateFilePort;
 import ar.lamansys.sgh.clinichistory.domain.document.event.OnGenerateDocumentEvent;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.entity.DocumentFile;
 import ar.lamansys.sgx.shared.files.StreamFile;
 import ar.lamansys.sgx.shared.pdf.PDFDocumentException;
 import ar.lamansys.sgx.shared.pdf.PdfService;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.stereotype.Component;
 
 
 @Component

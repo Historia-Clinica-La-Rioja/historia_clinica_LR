@@ -1,7 +1,12 @@
 package ar.lamansys.sgx.shared.files;
 
-import ar.lamansys.sgx.shared.files.exception.FileServiceEnumException;
-import ar.lamansys.sgx.shared.files.exception.FileServiceException;
+import java.io.File;
+import java.io.IOException;
+import java.net.MalformedURLException;
+import java.nio.file.FileStore;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.util.UUID;
 
 import org.apache.commons.io.FileUtils;
 import org.slf4j.Logger;
@@ -11,13 +16,12 @@ import org.springframework.core.io.UrlResource;
 import org.springframework.stereotype.Component;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.File;
-import java.io.IOException;
-import java.net.MalformedURLException;
-import java.nio.file.FileStore;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.util.UUID;
+import ar.lamansys.sgx.shared.actuator.infrastructure.configuration.AppNode;
+import ar.lamansys.sgx.shared.context.BeanUtil;
+import ar.lamansys.sgx.shared.files.exception.FileServiceEnumException;
+import ar.lamansys.sgx.shared.files.exception.FileServiceException;
+import ar.lamansys.sgx.shared.files.infrastructure.configuration.interceptors.FileErrorEvent;
+import ar.lamansys.sgx.shared.files.infrastructure.output.repository.FileErrorInfo;
 
 @Component
 public class FileService {
@@ -29,9 +33,13 @@ public class FileService {
     private final StreamFile streamFile;
 
 	private final FileConfiguration fileConfiguration;
-    public FileService(StreamFile streamFile, FileConfiguration fileConfiguration){
+
+	private final AppNode appNode;
+    public FileService(StreamFile streamFile, FileConfiguration fileConfiguration,
+					   AppNode appNode){
         this.streamFile = streamFile;
 		this.fileConfiguration = fileConfiguration;
+		this.appNode = appNode;
 	}
 	public final String getSpaceDocumentLocation() {
 		try {
@@ -79,7 +87,12 @@ public class FileService {
 			file.transferTo(dirPath);
             LOG.debug(OUTPUT, true);
             return true;
-        } catch (IOException e) {
+        }  catch (FileServiceException e) {
+			saveFileError(new FileErrorInfo(path, e.getMessage(), appNode.nodeId));
+			throw e;
+		}
+		catch (IOException e) {
+			saveFileError(new FileErrorInfo(path, e.getMessage(), appNode.nodeId));
 			throw new FileServiceException(FileServiceEnumException.SAVE_IOEXCEPTION,
 					String.format("El guardado del siguiente archivo %s tuvo el siguiente error %s", dirPath.getAbsolutePath(), e.getMessage()));
         }
@@ -90,12 +103,19 @@ public class FileService {
         try {
             return new UrlResource(path.toUri());
         } catch (MalformedURLException e) {
-            e.printStackTrace();
+			saveFileError(new FileErrorInfo(relativeFilePath, e.getMessage(), appNode.nodeId));
+			LOG.error(e.getMessage());
         }
         return null;
     }
 
-    public boolean deleteFile(String path) {
+	private void saveFileError(FileErrorInfo fileErrorInfo) {
+		BeanUtil.publishEvent(new FileErrorEvent(fileErrorInfo));
+	}
+
+	public boolean deleteFile(String path) {
         return streamFile.deleteFileInDirectory(path);
     }
+
+
 }
