@@ -35,7 +35,7 @@ public class ReferenceCounterReferenceFileStorageImpl implements ReferenceCounte
         String newFileName = fileService.createFileName(FilenameUtils.getExtension(file.getOriginalFilename()));
         String partialPath = buildPartialPath(patientId, newFileName);
         String completePath = buildCompleteFilePath(partialPath);
-        fileService.saveFile(completePath, file);
+        fileService.transferMultipartFile(completePath, file);
 
         Integer result = saveReferenceCounterReferenceFileMetadata(partialPath, file, type);
         log.debug(OUTPUT, result);

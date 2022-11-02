@@ -33,7 +33,7 @@ public class SettingsServiceImpl implements SettingsService {
         if (newAsset.isPresent()) {
             String partialPath = PATH.concat(newAsset.get().getNameFile());
             String completePath = fileService.buildRelativePath(partialPath);
-            return fileService.saveFile(completePath, file);
+            return fileService.transferMultipartFile(completePath, file);
         }
 
         throw new MethodNotSupportedException("Icono/Logo no soportado por el momento");

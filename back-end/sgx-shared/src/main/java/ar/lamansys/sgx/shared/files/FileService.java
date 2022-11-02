@@ -71,7 +71,7 @@ public class FileService {
         return result;
     }
 
-    public boolean saveFile(String path, MultipartFile file) throws IOException {
+    public boolean transferMultipartFile(String path, MultipartFile file) throws IOException {
 		File dirPath = new File(path);
         try {
 			if (!dirPath.getParentFile().exists())
