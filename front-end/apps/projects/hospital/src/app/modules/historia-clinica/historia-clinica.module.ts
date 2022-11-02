@@ -43,6 +43,7 @@ import { BackgroundListComponent } from './components/background-list/background
 import { MedicationListComponent } from './components/medication-list/medication-list.component';
 import { ReferenceRequestListComponent } from './components/reference-request-list/reference-request-list.component';
 import { InternmentSummaryFacadeService } from './modules/ambulatoria/modules/internacion/services/internment-summary-facade.service';
+import { LazyMaterialModule } from '../lazy-material/lazy-material.module';
 
 @NgModule({
 	declarations: [
@@ -90,6 +91,7 @@ import { InternmentSummaryFacadeService } from './modules/ambulatoria/modules/in
 		CommonModule,
 		// deps
 		InstitucionModule,
+		LazyMaterialModule,
 		PresentationModule,
 	],
 	exports: [
