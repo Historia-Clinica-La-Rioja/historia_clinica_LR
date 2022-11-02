@@ -94,7 +94,7 @@ public class DiaryAvailableProtectedAppointmentsSearchQuery {
 			whereClause = whereClause + " AND i.id = " + this.institutionId;
 
 		if (this.careLineId != null)
-			whereClause = whereClause + " AND dcl.care_line_id = " + this.careLineId;
+			whereClause = whereClause + " AND dcl.care_line_id = " + this.careLineId + " AND dcl.deleted = false";
 
 		return new QueryPart(whereClause);
 	}
