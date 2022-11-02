@@ -1,19 +1,20 @@
 package net.pladema.person.service.impl;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import ar.lamansys.sgx.shared.files.images.ImageFileService;
 import net.pladema.person.controller.dto.PersonPhotoDto;
 import net.pladema.person.repository.PersonExtendedRepository;
 import net.pladema.person.repository.domain.PersonPhotoVo;
 import net.pladema.person.repository.entity.PersonExtended;
 import net.pladema.person.service.PersonPhotoService;
-import net.pladema.sgx.images.ImageFileService;
-import org.slf4j.LoggerFactory;
-import org.slf4j.Logger;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
 
 @Service
 public class PersonPhotoServiceImpl implements PersonPhotoService {

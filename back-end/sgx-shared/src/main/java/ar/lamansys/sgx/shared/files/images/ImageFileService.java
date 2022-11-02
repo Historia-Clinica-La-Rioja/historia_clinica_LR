@@ -1,15 +1,16 @@
-package net.pladema.sgx.images;
-
-import ar.lamansys.sgx.shared.files.StreamFile;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.stereotype.Component;
+package ar.lamansys.sgx.shared.files.images;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.util.UUID;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Component;
+
+import ar.lamansys.sgx.shared.files.StreamFile;
 
 @Component
 public class ImageFileService {
