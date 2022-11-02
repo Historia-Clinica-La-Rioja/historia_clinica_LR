@@ -21,14 +21,14 @@ public class DiaryAssociatedProfessionalServiceImpl implements DiaryAssociatedPr
 	@Override
 	public void updateDiaryAssociatedProfessionals(List<Integer> associatedProfessionalsId, Integer diaryId) {
 		List<DiaryAssociatedProfessional> diaryAssociatedProfessionals = diaryAssociatedProfessionalsRepository.getDiaryAssociatedProfessionalsByDiary(diaryId);
+		associatedProfessionalsId.forEach(associatedProfessionalId -> {
+			if (!getDiaryAssociatedProfessionalsIds(diaryAssociatedProfessionals).contains(associatedProfessionalId))
+				addDiaryAssociatedProfessional(associatedProfessionalId, diaryId);
+		});
 		diaryAssociatedProfessionals.forEach(diaryAssociatedProfessional -> {
 			if (!associatedProfessionalsId.contains(diaryAssociatedProfessional.getHealthcareProfessionalId())) {
 				deleteDiaryAssociatedProfessionals(diaryAssociatedProfessional);
 			}
-		});
-		associatedProfessionalsId.forEach(associatedProfessionalId -> {
-			if (!getDiaryAssociatedProfessionalsIds(diaryAssociatedProfessionals).contains(associatedProfessionalId))
-				addDiaryAssociatedProfessional(associatedProfessionalId, diaryId);
 		});
 	}
 
@@ -56,6 +56,7 @@ public class DiaryAssociatedProfessionalServiceImpl implements DiaryAssociatedPr
 
 	private void deleteDiaryAssociatedProfessionals(DiaryAssociatedProfessional associatedProfessional) {
 		diaryAssociatedProfessionalsRepository.delete(associatedProfessional);
+		diaryAssociatedProfessionalsRepository.flush();
 	}
 
 	private void addDiaryAssociatedProfessional(Integer diaryAssociatedProfessionalId, Integer diaryId) {

@@ -97,8 +97,8 @@ public class DiaryServiceImpl implements DiaryService {
 		diary = diaryRepository.save(diary);
 		Integer diaryId = diary.getId();
 		diaryOpeningHoursService.update(diaryId, diaryToSave.getDiaryOpeningHours());
-		diaryAssociatedProfessionalService.updateDiaryAssociatedProfessionals(diaryToSave.getDiaryAssociatedProfessionalsId(), diaryId);
 		diaryCareLineService.updateCareLinesAssociatedToDiary(diaryId, diaryToSave.getCareLines());
+		diaryAssociatedProfessionalService.updateDiaryAssociatedProfessionals(diaryToSave.getDiaryAssociatedProfessionalsId(), diaryId);
 		return diaryId;
 	}
 
