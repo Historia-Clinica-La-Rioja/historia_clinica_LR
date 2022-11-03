@@ -1,8 +1,6 @@
 package net.pladema.establishment.controller;
 
-import java.util.Arrays;
 import java.util.List;
-import java.util.Objects;
 import java.util.stream.Collectors;
 
 import javax.validation.Valid;
@@ -44,25 +42,23 @@ public class BackofficeInstitutionPracticesController extends BackofficeSnomedGr
 
 	@Override
 	public Page<SnomedGroup> getList(Pageable pageable, SnomedGroup entity) {
-		var page = super.getList(Pageable.ofSize(Integer.MAX_VALUE), entity);
 		Integer procedureId = snomedGroupRepository.getIdByDescription(SnomedECL.PROCEDURE.toString());
 		String ecl = snomedGroupRepository.getById(procedureId).getEcl();
+		entity.setEcl(ecl);
+		entity.setGroupType(SnomedGroupType.SEARCH_GROUP);
 
-		if (authoritiesValidator.hasRole(ERole.ROOT) || authoritiesValidator.hasRole(ERole.ADMINISTRADOR)) {
-			var practicesList = page.getContent().stream()
-					.filter(item -> (item.getEcl().equals(ecl)
-							&& Objects.equals(item.getGroupType(), SnomedGroupType.SEARCH_GROUP)))
-					.collect(Collectors.toList());
-			return new PageImpl<>(practicesList, pageable, practicesList.size());
-		}
+		if (authoritiesValidator.hasRole(ERole.ROOT) || authoritiesValidator.hasRole(ERole.ADMINISTRADOR))
+			return super.getList(pageable, entity);
 
-		List<Integer> allowedInstitutions = authoritiesValidator.allowedInstitutionIds(Arrays.asList(ERole.ADMINISTRADOR_INSTITUCIONAL_BACKOFFICE));
-		var practicesList = page.getContent().stream()
-				.filter(item -> (item.getEcl().equals(ecl)
-						&& Objects.equals(item.getGroupType(), SnomedGroupType.SEARCH_GROUP)
-						&& allowedInstitutions.contains(item.getInstitutionId())))
+		var allTerms = super.getList(Pageable.ofSize(Integer.MAX_VALUE), entity);
+		var allowedInstitutions = authoritiesValidator.allowedInstitutionIds(List.of(ERole.ADMINISTRADOR_INSTITUCIONAL_BACKOFFICE));
+		var practicesList = allTerms.getContent()
+				.stream()
+				.filter(item -> allowedInstitutions.contains(item.getInstitutionId()))
 				.collect(Collectors.toList());
-		return new PageImpl<>(practicesList, pageable, practicesList.size());
+		int minIndex = pageable.getPageNumber() * pageable.getPageSize();
+		int maxIndex = minIndex + pageable.getPageSize();
+		return new PageImpl<>(practicesList.subList(minIndex, Math.min(maxIndex, practicesList.size())), pageable, practicesList.size());
 	}
 
 	@Override
