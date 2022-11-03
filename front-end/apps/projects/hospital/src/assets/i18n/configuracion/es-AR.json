@@ -41,6 +41,11 @@
 			"client": {
 				"TITLE": "Cliente HTTP"
 			}
+		},
+		"files": {
+			"folder": {
+				"TITLE": "Archivos"
+			}
 		}
 	},
 	"spring": {

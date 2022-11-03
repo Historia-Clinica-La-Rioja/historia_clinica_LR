@@ -28,9 +28,27 @@ public class FileService {
 
     private final StreamFile streamFile;
 
-    public FileService(StreamFile streamFile){
+	private final FileConfiguration fileConfiguration;
+    public FileService(StreamFile streamFile, FileConfiguration fileConfiguration){
         this.streamFile = streamFile;
-    }
+		this.fileConfiguration = fileConfiguration;
+	}
+	public final String getSpaceDocumentLocation() {
+		try {
+			FileStore fs = Files.getFileStore(fileConfiguration.getDocumentsLocation().toPath());
+			return String.format("%s/%s", FileUtils.byteCountToDisplaySize(fs.getUsableSpace()), FileUtils.byteCountToDisplaySize(fs.getTotalSpace()));
+		} catch (IOException e) {
+			return String.format("Error en la lectura del directorio %s", fileConfiguration.getDocumentsLocation().toPath());
+		}
+	}
+	public final String getSpaceMultipartLocation() {
+		try {
+			FileStore fs = Files.getFileStore(fileConfiguration.getMultipartLocation().toPath());
+			return String.format("%s/%s", FileUtils.byteCountToDisplaySize(fs.getUsableSpace()), FileUtils.byteCountToDisplaySize(fs.getTotalSpace()));
+		} catch (IOException e) {
+			return String.format("Error en la lectura del directorio %s", fileConfiguration.getMultipartLocation().toPath());
+		}
+	}
 
     public String buildRelativePath(String fileRelativePath){
         LOG.debug("Input paramenter -> fileRelativePath {}", fileRelativePath);
