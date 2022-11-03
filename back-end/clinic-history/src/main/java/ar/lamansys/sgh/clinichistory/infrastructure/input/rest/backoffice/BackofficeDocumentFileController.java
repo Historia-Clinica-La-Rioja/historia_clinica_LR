@@ -22,8 +22,7 @@ import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.backoffice
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.backoffice.dto.DocumentFileDto;
 import ar.lamansys.sgx.shared.featureflags.AppFeature;
 import ar.lamansys.sgx.shared.featureflags.application.FeatureFlagsService;
-import ar.lamansys.sgx.shared.files.pdf.PDFDocumentException;
-import ar.lamansys.sgx.shared.files.pdf.PdfService;
+import ar.lamansys.sgx.shared.files.FileService;
 import net.pladema.sgx.backoffice.rest.AbstractBackofficeController;
 import net.pladema.sgx.backoffice.rest.BackofficePermissionValidatorAdapter;
 
@@ -33,16 +32,16 @@ public class BackofficeDocumentFileController extends AbstractBackofficeControll
 
 	private final FetchDocumentFileById fetchDocumentFileById;
 
-	private final PdfService pdfService;
+	private final FileService fileService;
 
 	private final FeatureFlagsService featureFlagsService;
 
 	public BackofficeDocumentFileController(
 			BackofficeDocumentFileStore store,
-			FetchDocumentFileById fetchDocumentFileById, PdfService pdfService, FeatureFlagsService featureFlagsService) {
+			FetchDocumentFileById fetchDocumentFileById, FileService fileService, FeatureFlagsService featureFlagsService) {
 		super(store, new BackofficePermissionValidatorAdapter<>(HttpMethod.GET));
 		this.fetchDocumentFileById = fetchDocumentFileById;
-		this.pdfService = pdfService;
+		this.fileService = fileService;
 		this.featureFlagsService = featureFlagsService;
 	}
 
@@ -56,9 +55,9 @@ public class BackofficeDocumentFileController extends AbstractBackofficeControll
 		ByteArrayInputStream pdfFile;
 		long sizeFile;
 		try {
-			pdfFile = pdfService.reader(documentFile.getFilepath());
+			pdfFile = fileService.readStreamFromPath(documentFile.getFilepath());
 			sizeFile = Files.size(Paths.get(documentFile.getFilepath()));
-		} catch (PDFDocumentException | IOException e) {
+		} catch (IOException e) {
 			return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
 		}
 		InputStreamResource resource = new InputStreamResource(pdfFile);

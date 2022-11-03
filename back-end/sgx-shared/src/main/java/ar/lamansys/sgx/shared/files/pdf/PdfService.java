@@ -5,9 +5,6 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.Locale;
 import java.util.Map;
 import java.util.function.Function;
@@ -53,19 +50,6 @@ public class PdfService {
             return writeAndGetOutput(is, os);
         } catch (IOException | DocumentException e){
 			LOG.error("Error para generar el siguiente template {}, en este contexto {}", templateName, contextMap);
-            throw new PDFDocumentException(e);
-        }
-    }
-
-    public ByteArrayInputStream reader(String path) throws PDFDocumentException {
-        LOG.debug("Input parameters -> path {}", path);
-        try {
-            Path pdfPath = Paths.get(path);
-            byte[] pdf = Files.readAllBytes(pdfPath);
-            LOG.debug("Output -> path {}", path);
-            return new ByteArrayInputStream(pdf);
-        }  catch (IOException e){
-            LOG.error("Leyendo PDF file {}", path);
             throw new PDFDocumentException(e);
         }
     }

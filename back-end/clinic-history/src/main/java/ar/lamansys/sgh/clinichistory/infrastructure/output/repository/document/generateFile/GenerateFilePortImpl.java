@@ -20,7 +20,7 @@ import org.springframework.stereotype.Component;
 import ar.lamansys.sgh.clinichistory.domain.document.event.GenerateFilePort;
 import ar.lamansys.sgh.clinichistory.domain.document.event.OnGenerateDocumentEvent;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.entity.DocumentFile;
-import ar.lamansys.sgx.shared.files.StreamFile;
+import ar.lamansys.sgx.shared.files.FileService;
 import ar.lamansys.sgx.shared.files.pdf.PDFDocumentException;
 import ar.lamansys.sgx.shared.files.pdf.PdfService;
 
@@ -32,19 +32,19 @@ public class GenerateFilePortImpl implements GenerateFilePort {
 
     public static final String OUTPUT = "Output -> {}";
 
-    private final StreamFile streamFile;
+    private final FileService fileService;
 
     private final PdfService pdfService;
 
     private final AuditableContextBuilder auditableContextBuilder;
 
     public GenerateFilePortImpl(
-            StreamFile streamFile,
+			FileService fileService,
             PdfService pdfService,
             AuditableContextBuilder auditableContextBuilder
     ) {
         super();
-        this.streamFile = streamFile;
+        this.fileService = fileService;
         this.pdfService = pdfService;
         this.auditableContextBuilder = auditableContextBuilder;
     }
@@ -55,15 +55,15 @@ public class GenerateFilePortImpl implements GenerateFilePort {
 
 		formatStringDates(contextMap);
 
-        String path = streamFile.buildPathAsString(event.getRelativeDirectory());
+        String path = fileService.buildRelativePath(event.getRelativeDirectory());
         String realFileName = event.getUuid();
         String fictitiousFileName = event.buildDownloadName();
         String checksum = null;
         try {
             ByteArrayOutputStream output =  pdfService.writer(event.getTemplateName(), contextMap);
-            streamFile.saveFileInDirectory(path, false, output);
+			fileService.saveStreamInPath(path, false, output);
             checksum = getHash(path);
-        } catch (IOException | PDFDocumentException e) {
+        } catch (PDFDocumentException e) {
             LOG.error("Save document file -> {}", event, e);
         }
         return Optional.of(new DocumentFile(

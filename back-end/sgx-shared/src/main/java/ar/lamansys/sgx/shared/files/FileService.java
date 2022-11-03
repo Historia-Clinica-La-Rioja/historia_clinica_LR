@@ -1,11 +1,15 @@
 package ar.lamansys.sgx.shared.files;
 
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
 import java.net.MalformedURLException;
+import java.nio.charset.Charset;
 import java.nio.file.FileStore;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.UUID;
 
 import org.apache.commons.io.FileUtils;
@@ -33,7 +37,6 @@ public class FileService {
     private final StreamFile streamFile;
 
 	private final FileConfiguration fileConfiguration;
-
 	private final AppNode appNode;
     public FileService(StreamFile streamFile, FileConfiguration fileConfiguration,
 					   AppNode appNode){
@@ -108,6 +111,46 @@ public class FileService {
         }
         return null;
     }
+	public boolean saveStreamInPath(String path, boolean override, ByteArrayOutputStream byteArrayOutputStream) {
+		File dirPath = new File(path);
+		try {
+			streamFile.saveFileInDirectory(path, override, byteArrayOutputStream);
+		} catch (IOException e) {
+			saveFileError(new FileErrorInfo(dirPath.getPath(), e.getMessage(), appNode.nodeId));
+			LOG.error(e.getMessage());
+			throw new FileServiceException(FileServiceEnumException.SAVE_IOEXCEPTION,
+					String.format("El guardado del siguiente archivo %s tuvo el siguiente error %s", dirPath.getAbsolutePath(), e.getMessage()));
+		}
+		return true;
+	}
+
+	public String readFileAsString(String path, Charset encoding) {
+		File dirPath = new File(path);
+		try {
+			return streamFile.readFileAsString(path, encoding);
+		} catch (IOException e) {
+			saveFileError(new FileErrorInfo(dirPath.getPath(), e.getMessage(), appNode.nodeId));
+			LOG.error(e.getMessage());
+			throw new FileServiceException(FileServiceEnumException.SAVE_IOEXCEPTION,
+					String.format("La lectura del siguiente archivo %s tuvo el siguiente error %s", dirPath.getAbsolutePath(), e.getMessage()));
+		}
+	}
+
+	public ByteArrayInputStream readStreamFromPath(String path) {
+		LOG.debug("Input parameters -> path {}", path);
+		File dirPath = new File(path);
+		try {
+			Path pdfPath = Paths.get(path);
+			byte[] pdf = Files.readAllBytes(pdfPath);
+			LOG.debug("Output -> path {}", path);
+			return new ByteArrayInputStream(pdf);
+		}  catch (IOException e){
+			saveFileError(new FileErrorInfo(dirPath.getPath(), e.getMessage(), appNode.nodeId));
+			LOG.error(e.getMessage());
+			throw new FileServiceException(FileServiceEnumException.SAVE_IOEXCEPTION,
+					String.format("La lectura del siguiente archivo %s tuvo el siguiente error %s", dirPath.getAbsolutePath(), e.getMessage()));
+		}
+	}
 
 	private void saveFileError(FileErrorInfo fileErrorInfo) {
 		BeanUtil.publishEvent(new FileErrorEvent(fileErrorInfo));
@@ -116,6 +159,5 @@ public class FileService {
 	public boolean deleteFile(String path) {
         return streamFile.deleteFileInDirectory(path);
     }
-
 
 }

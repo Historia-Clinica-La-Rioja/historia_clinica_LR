@@ -1,16 +1,14 @@
 package ar.lamansys.sgx.shared.files.images;
 
 import java.io.ByteArrayOutputStream;
-import java.io.IOException;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
-import java.util.UUID;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
-import ar.lamansys.sgx.shared.files.StreamFile;
+import ar.lamansys.sgx.shared.files.FileService;
 
 @Component
 public class ImageFileService {
@@ -23,49 +21,36 @@ public class ImageFileService {
 
     private static final Charset ENCODING = StandardCharsets.UTF_8;
 
-    private final StreamFile streamFile;
+	private final FileService fileService;
 
-    public ImageFileService(StreamFile streamFile){
-        this.streamFile = streamFile;
+    public ImageFileService(FileService fileService){
+        this.fileService = fileService;
+    }
+	public String buildPath(String fileRelativePath){
+		LOG.debug("Input paramenter -> fileRelativePath {}", fileRelativePath);
+		String path = fileService.buildRelativePath(fileRelativePath);
+		LOG.debug(OUTPUT, path);
+		return path;
+	}
+
+	public String createFileName(){
+        return fileService.createFileName(FILE_EXTENSION);
     }
 
-    public String buildPath(String fileRelativePath){
-        LOG.debug("Input paramenter -> fileRelativePath {}", fileRelativePath);
-        String path = streamFile.buildPathAsString(fileRelativePath);
-        LOG.debug(OUTPUT, path);
-        return path;
-    }
-
-    public String createFileName(){
-        String result = UUID.randomUUID().toString() + FILE_EXTENSION;
-        LOG.debug(OUTPUT, result);
-        return result;
-    }
-
-    public String readImage(String path){
+    public String readImage(String path) {
         LOG.debug("Input parameter -> path {}", path);
-        String result = null;
-        try {
-            result = streamFile.readFileAsString(path, ENCODING);
-        } catch (IOException e) {
-            LOG.error("Cannot read image file at {}", path, e);
-        }
-        LOG.debug(OUTPUT, imageDataToString(result));
-        return result;
+		String result = fileService.readFileAsString(path, ENCODING);
+		LOG.debug(OUTPUT, imageDataToString(result));
+		return result;
     }
 
     public boolean saveImage(String path, String imageData) {
         LOG.debug("Input parameters -> path {}, imageData {}", path, imageDataToString(imageData));
         ByteArrayOutputStream os = new ByteArrayOutputStream();
         os.writeBytes(imageData.getBytes());
-        try {
-            boolean result = streamFile.saveFileInDirectory(path, false, os);
-            LOG.debug(OUTPUT, result);
-            return result;
-        } catch (IOException e) {
-            LOG.error("Cannot save image file at {}", path, e);
-            return false;
-        }
+		boolean result = fileService.saveStreamInPath(path, false, os);
+		LOG.debug(OUTPUT, result);
+		return result;
     }
 
     private String imageDataToString(String imageData){
