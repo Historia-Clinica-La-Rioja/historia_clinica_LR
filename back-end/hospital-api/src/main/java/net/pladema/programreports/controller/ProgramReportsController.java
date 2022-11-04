@@ -196,4 +196,39 @@ public class ProgramReportsController {
 		out.flush();
 		response.flushBuffer();
 	}
+
+	@GetMapping(value = "/{institutionId}/patientEmergencies")
+	public @ResponseBody
+	void getPatientEmergenciesExcelReport(
+			@PathVariable Integer institutionId,
+	//		@RequestParam(value = "fromDate", required = true) String fromDate,
+	//		@RequestParam(value = "toDate", required = true)String toDate,
+			HttpServletResponse response
+		)throws Exception{
+		LOG.debug("Se creará el excel{}", institutionId);
+		LOG.debug("Inputs parameters -> institutionId {}, fromDate {}, toDate {}", institutionId);
+
+		String title = "Reporte Enfermeria - Emergencias Pacientes";
+		String[] headers = new String[] {"Institucion", "Ambulancia", "Oficina", "Sector", "Intervención Policial","Fecha","Hora",
+		"Profesional que registró la atención", "Ultimo profesional que lo antendió","Identificación","Apellidos","Nombres","Sexo",
+		"Genero","Nombre con el que se identifica","Fecha de nacimiento","Edad a fecha del turno","Edad a hoy","Etnia","Domicilio",
+		"Localidad","Obra social","Medio de Ingreso","Estado","Tipo","Notas del Triage","Triage","Fecha de alta","Ambulancia de alta",
+		"Tipo de alta","Salida"};
+
+	//	LocalDate startDate = localDateMapper.fromStringToLocalDate(fromDate);
+	//	LocalDate endDate = localDateMapper.fromStringToLocalDate(toDate);
+
+		IWorkbook wb = this.excelService.buildExcelPatientEmergencies(title,headers,this.queryFactoryPR.queryPatientEmergencies(institutionId));
+
+		String filename = title + "." + wb.getExtension();
+		response.addHeader("Content-disposition", "attachment;filename= "+ filename);
+		response.setContentType(wb.getContentType());
+
+		OutputStream out = response.getOutputStream();
+		wb.write(out);
+		out.close();
+		out.flush();
+		response.flushBuffer();
+
+	}
 }

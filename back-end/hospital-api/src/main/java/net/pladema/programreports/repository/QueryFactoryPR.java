@@ -89,4 +89,18 @@ public class QueryFactoryPR {
 		List<ConsultationDetailOdontologia> data = query.getResultList();
 		return data;
 	}
+
+	public List<PatientEmergencies> queryPatientEmergencies(Integer institutionId){
+
+		//var startDate = LocalDateTime.of(start.getYear(), start.getMonth(), start.getDayOfMonth(), 0, 0);
+		//var endDate = LocalDateTime.of(end.getYear(), end.getMonth(), end.getDayOfMonth(), 23, 59, 59, LocalTime.MAX.getNano());
+
+		Query query = entityManager.createNamedQuery("ProgramReports.PatientEmergencies");
+		query.setParameter("institutionId", institutionId);
+		//query.setParameter("startDate", startDate);
+		//query.setParameter("endDate", endDate);
+		List<PatientEmergencies>data = query.getResultList();
+		return data;
+
+	}
 }
