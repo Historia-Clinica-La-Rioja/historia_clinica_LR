@@ -7,6 +7,7 @@ import net.pladema.generalreports.service.ExcelServiceGR;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -40,6 +41,7 @@ public class GeneralReportsController {
 	}
 
 	@GetMapping(value = "/{institutionId}/dailyEmergency")
+	@PreAuthorize("hasPermission(#institutionId, 'ADMINISTRADOR_INSTITUCIONAL_BACKOFFICE, PERSONAL_DE_ESTADISTICA')")
 	public @ResponseBody
 	void getDailyEmergencyExcelReport(
 			@PathVariable Integer institutionId,
@@ -66,6 +68,7 @@ public class GeneralReportsController {
 	}
 
 	@GetMapping(value = "/{institutionId}/diabetics")
+	@PreAuthorize("hasPermission(#institutionId, 'ADMINISTRADOR_INSTITUCIONAL_BACKOFFICE, PERSONAL_DE_ESTADISTICA')")
 	public @ResponseBody
 	void getDiabeticsExcelReport(
 			@PathVariable Integer institutionId,
@@ -97,6 +100,7 @@ public class GeneralReportsController {
 	}
 
 	@GetMapping(value = "/{institutionId}/hypertensive")
+	@PreAuthorize("hasPermission(#institutionId, 'ADMINISTRADOR_INSTITUCIONAL_BACKOFFICE, PERSONAL_DE_ESTADISTICA')")
 	public @ResponseBody
 	void getHypertensiveExcelReport(
 			@PathVariable Integer institutionId,
@@ -118,6 +122,41 @@ public class GeneralReportsController {
 
 		String filename = title + "." + wb.getExtension();
 		response.addHeader("Content-disposition", "attachment;filename=" + filename);
+		response.setContentType(wb.getContentType());
+
+		OutputStream out = response.getOutputStream();
+		wb.write(out);
+		out.close();
+		out.flush();
+		response.flushBuffer();
+	}
+
+	@GetMapping(value = "/{institutionId}/patientEmergencies")
+	@PreAuthorize("hasPermission(#institutionId, 'ADMINISTRADOR_INSTITUCIONAL_BACKOFFICE, PERSONAL_DE_ESTADISTICA')")
+	public @ResponseBody
+	void getPatientEmergenciesExcelReport(
+			@PathVariable Integer institutionId,
+			//		@RequestParam(value = "fromDate", required = true) String fromDate,
+			//		@RequestParam(value = "toDate", required = true)String toDate,
+			HttpServletResponse response
+	)throws Exception{
+		LOG.debug("Se creará el excel{}", institutionId);
+		LOG.debug("Inputs parameters -> institutionId {}, fromDate {}, toDate {}", institutionId);
+
+		String title = "Reporte Enfermeria - Emergencias Pacientes";
+		String[] headers = new String[] {"Institucion", "Ambulancia", "Oficina", "Sector", "Intervención Policial","Fecha","Hora",
+				"Profesional que registró la atención", "Ultimo profesional que lo antendió","Identificación","Apellidos","Nombres","Sexo",
+				"Genero","Nombre con el que se identifica","Fecha de nacimiento","Edad a fecha del turno","Edad a hoy","Etnia","Domicilio",
+				"Localidad","Obra social","Medio de Ingreso","Estado","Tipo","Notas del Triage","Triage","Fecha de alta","Ambulancia de alta",
+				"Tipo de alta","Salida"};
+
+		//	LocalDate startDate = localDateMapper.fromStringToLocalDate(fromDate);
+		//	LocalDate endDate = localDateMapper.fromStringToLocalDate(toDate);
+
+		IWorkbook wb = this.excelServiceGR.buildExcelPatientEmergencies(title,headers,this.queryFactoryGR.queryPatientEmergencies(institutionId));
+
+		String filename = title + "." + wb.getExtension();
+		response.addHeader("Content-disposition", "attachment;filename= "+ filename);
 		response.setContentType(wb.getContentType());
 
 		OutputStream out = response.getOutputStream();
