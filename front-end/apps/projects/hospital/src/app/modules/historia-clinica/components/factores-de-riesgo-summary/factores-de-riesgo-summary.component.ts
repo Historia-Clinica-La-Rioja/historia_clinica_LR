@@ -84,7 +84,7 @@ export class FactoresDeRiesgoSummaryComponent implements OnInit {
 		dialogRef.afterClosed().subscribe(submitted => {
 			if (submitted) {
 				this.refreshRiskFactors();
-				this.internmentSummaryFacadeService.setFieldsToUpdate({ riskFactors: true });
+				this.internmentSummaryFacadeService.setFieldsToUpdate({ riskFactors: true, evolutionClinical: true });
 			}
 		});
 	}

@@ -1,11 +1,14 @@
 import { Component, Inject, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { AnthropometricDataDto, EvolutionNoteDto, MasterDataInterface } from '@api-rest/api-model';
+import { ERole } from '@api-rest/api-model';
 import { InternacionMasterDataService } from '@api-rest/services/internacion-master-data.service';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { EvolutionNoteService } from '@api-rest/services/evolution-note.service';
 import { SnackBarService } from '@presentation/services/snack-bar.service';
 import { getError, hasError } from '@core/utils/form.utils';
+import { anyMatch } from "@core/utils/array.utils";
+import { PermissionsService } from "@core/services/permissions.service";
 
 @Component({
 	selector: 'app-add-anthropometric',
@@ -21,6 +24,8 @@ export class AddAnthropometricComponent implements OnInit {
 	loading = false;
 	bloodTypes: MasterDataInterface<string>[];
 
+	isNursingEvolutionNote: boolean;
+
 	constructor(
 		public dialogRef: MatDialogRef<AddAnthropometricComponent>,
 		@Inject(MAT_DIALOG_DATA) public data,
@@ -28,7 +33,11 @@ export class AddAnthropometricComponent implements OnInit {
 		private readonly internacionMasterDataService: InternacionMasterDataService,
 		private readonly evolutionNoteService: EvolutionNoteService,
 		private readonly snackBarService: SnackBarService,
+		private readonly permissionsService: PermissionsService
 	) {
+		this.permissionsService.contextAssignments$().subscribe((userRoles: ERole[]) => {
+			this.isNursingEvolutionNote = !anyMatch<ERole>(userRoles, [ERole.ESPECIALISTA_MEDICO, ERole.ESPECIALISTA_EN_ODONTOLOGIA, ERole.PROFESIONAL_DE_SALUD]) && anyMatch<ERole>(userRoles, [ERole.ENFERMERO]);
+		})
 	}
 
 	ngOnInit(): void {
@@ -72,7 +81,7 @@ export class AddAnthropometricComponent implements OnInit {
 			weight: getValue(anthropometricDataForm.weight),
 		};
 
-		return anthropometricData ? { confirmed: true, anthropometricData } : undefined;
+		return anthropometricData ? { confirmed: true, anthropometricData, isNursingEvolutionNote: this.isNursingEvolutionNote } : undefined;
 
 		function getValue(controlValue: any) {
 			return controlValue ? { value: controlValue } : undefined;

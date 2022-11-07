@@ -45,6 +45,7 @@ public class UpdateEvolutionNoteServiceImpl implements UpdateEvolutionNoteServic
 	@Transactional
 	public Long execute(Integer intermentEpisodeId, Long oldEvolutionId, EvolutionNoteBo newEvolution) {
 		log.debug("Input parameters -> intermentEpisodeId {}, oldEvolutionId {}, newEvolution {} ", intermentEpisodeId, oldEvolutionId, newEvolution);
+		evolutionNoteValidator.validateRolePermission(newEvolution);
 		evolutionNoteValidator.assertContextValid(newEvolution);
 		EvolutionNoteBo oldEvolution = evolutionNoteService.getDocument(oldEvolutionId);
 		newEvolution.setInitialDocumentId(oldEvolution.getInitialDocumentId() != null ? oldEvolution.getInitialDocumentId() : oldEvolution.getId());

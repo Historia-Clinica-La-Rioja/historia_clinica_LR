@@ -1109,12 +1109,12 @@ export interface EvolutionNoteDto extends Serializable {
     confirmed: boolean;
     diagnosis?: DiagnosisDto[];
     immunizations?: ImmunizationDto[];
+    isNursingEvolutionNote?: boolean;
     mainDiagnosis?: HealthConditionDto;
     modificationReason?: string;
     notes?: DocumentObservationsDto;
     procedures?: HospitalizationProcedureDto[];
     riskFactors?: RiskFactorDto;
-    wasMadeByProfessionalNursing?: boolean;
 }
 
 export interface ExternalClinicalHistoryDto extends Serializable {

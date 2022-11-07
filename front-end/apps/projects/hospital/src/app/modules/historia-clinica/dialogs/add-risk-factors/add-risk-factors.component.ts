@@ -3,10 +3,13 @@ import { FormBuilder, FormGroup } from '@angular/forms';
 import { Moment } from 'moment';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { EvolutionNoteDto } from '@api-rest/api-model';
+import { ERole } from '@api-rest/api-model';
 import { EvolutionNoteService } from '@api-rest/services/evolution-note.service';
 import { SnackBarService } from '@presentation/services/snack-bar.service';
 import { FactoresDeRiesgoFormService } from '@historia-clinica/services/factores-de-riesgo-form.service';
 import { TranslateService } from '@ngx-translate/core';
+import { anyMatch } from "@core/utils/array.utils";
+import { PermissionsService } from "@core/services/permissions.service";
 
 @Component({
 	selector: 'app-add-risk-factors',
@@ -18,6 +21,7 @@ export class AddRiskFactorsComponent implements OnInit {
 	form: FormGroup;
 	loading = false;
 	factoresDeRiesgoFormService: FactoresDeRiesgoFormService;
+	isNursingEvolutionNote: boolean;
 
 	constructor(
 		public dialogRef: MatDialogRef<AddRiskFactorsComponent>,
@@ -26,8 +30,12 @@ export class AddRiskFactorsComponent implements OnInit {
 		private readonly snackBarService: SnackBarService,
 		private readonly formBuilder: FormBuilder,
 		private readonly translateService: TranslateService,
+		private readonly permissionsService: PermissionsService
 	) {
 		this.factoresDeRiesgoFormService = new FactoresDeRiesgoFormService(formBuilder, translateService);
+		this.permissionsService.contextAssignments$().subscribe((userRoles: ERole[]) => {
+			this.isNursingEvolutionNote = !anyMatch<ERole>(userRoles, [ERole.ESPECIALISTA_MEDICO, ERole.ESPECIALISTA_EN_ODONTOLOGIA, ERole.PROFESIONAL_DE_SALUD]) && anyMatch<ERole>(userRoles, [ERole.ENFERMERO]);
+		})
 	}
 
 	ngOnInit(): void {
@@ -77,7 +85,7 @@ export class AddRiskFactorsComponent implements OnInit {
 			cardiovascularRisk: getEffectiveValue(riskFactorsForm.cardiovascularRisk)
 		};
 
-		return riskFactors ? { confirmed: true, riskFactors } : undefined;
+		return riskFactors ? { confirmed: true, riskFactors, isNursingEvolutionNote: this.isNursingEvolutionNote } : undefined;
 
 		function isNull(formGroupValues: any): boolean {
 			return Object.values(formGroupValues).every((el: { value: number, effectiveTime: Moment }) => el.value === null);
