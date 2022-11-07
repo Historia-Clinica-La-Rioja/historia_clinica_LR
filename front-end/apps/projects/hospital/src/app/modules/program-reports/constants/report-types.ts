@@ -16,7 +16,7 @@ export const PROGRAM_REPORT_TYPES = [
         id: 4,
     },
     {
-        description: 'Reporte Odontologia General',
+        description: 'Reporte Odontologia - SUMAR',
         id: 5,
     }
 ];

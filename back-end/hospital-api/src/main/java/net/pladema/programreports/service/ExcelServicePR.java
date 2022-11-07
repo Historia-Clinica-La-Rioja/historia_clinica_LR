@@ -5,6 +5,7 @@ import net.pladema.programreports.repository.ConsultationDetailEpiI;
 import net.pladema.programreports.repository.ConsultationDetailEpiII;
 import net.pladema.programreports.repository.ConsultationDetailOdontologia;
 import net.pladema.programreports.repository.ConsultationDetailRecupero;
+import net.pladema.programreports.repository.PatientEmergencies;
 
 import java.util.List;
 
@@ -18,5 +19,5 @@ public interface ExcelServicePR {
 
 	IWorkbook buildExcelOdontologia(String tittle, String[] headers, List<ConsultationDetailOdontologia> query);
 
-
+	IWorkbook buildExcelPatientEmergencies(String tittle, String[] headers, List<PatientEmergencies> query);
 }
