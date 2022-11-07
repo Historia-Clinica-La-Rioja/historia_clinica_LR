@@ -5,11 +5,15 @@ import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
 import java.net.MalformedURLException;
+import java.net.URLConnection;
 import java.nio.charset.Charset;
 import java.nio.file.FileStore;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
+import java.util.Base64;
 import java.util.UUID;
 
 import org.apache.commons.io.FileUtils;
@@ -25,7 +29,10 @@ import ar.lamansys.sgx.shared.context.BeanUtil;
 import ar.lamansys.sgx.shared.files.exception.FileServiceEnumException;
 import ar.lamansys.sgx.shared.files.exception.FileServiceException;
 import ar.lamansys.sgx.shared.files.infrastructure.configuration.interceptors.FileErrorEvent;
+import ar.lamansys.sgx.shared.files.infrastructure.input.rest.backoffice.dto.FileInfoDto;
 import ar.lamansys.sgx.shared.files.infrastructure.output.repository.FileErrorInfo;
+import ar.lamansys.sgx.shared.files.infrastructure.output.repository.FileInfo;
+import ar.lamansys.sgx.shared.files.infrastructure.output.repository.FileInfoRepository;
 
 @Component
 public class FileService {
@@ -35,13 +42,15 @@ public class FileService {
     private static final String OUTPUT = "Output -> {}";
 
     private final StreamFile streamFile;
-
 	private final FileConfiguration fileConfiguration;
+
+	private final FileInfoRepository repository;
 	private final AppNode appNode;
     public FileService(StreamFile streamFile, FileConfiguration fileConfiguration,
-					   AppNode appNode){
+					   FileInfoRepository repository, AppNode appNode){
         this.streamFile = streamFile;
 		this.fileConfiguration = fileConfiguration;
+		this.repository = repository;
 		this.appNode = appNode;
 	}
 	public final String getSpaceDocumentLocation() {
@@ -65,7 +74,7 @@ public class FileService {
 		}
 	}
 
-    public String buildRelativePath(String fileRelativePath){
+    public String buildCompletePath(String fileRelativePath){
         LOG.debug("Input paramenter -> fileRelativePath {}", fileRelativePath);
         String path = streamFile.buildPathAsString(fileRelativePath);
         LOG.debug(OUTPUT, path);
@@ -78,7 +87,8 @@ public class FileService {
         return result;
     }
 
-    public boolean transferMultipartFile(String path, MultipartFile file) throws IOException {
+    public FileInfo transferMultipartFile(String partialPath, String uuid, String generatedFrom, MultipartFile file) throws IOException {
+		String path = buildCompletePath(partialPath);
 		File dirPath = new File(path);
         try {
 			if (!dirPath.getParentFile().exists())
@@ -93,7 +103,7 @@ public class FileService {
 								FileUtils.byteCountToDisplaySize(file.getSize())));
 			file.transferTo(dirPath);
             LOG.debug(OUTPUT, true);
-            return true;
+            return saveFileInfo(partialPath, uuid, generatedFrom, getHash(path), file);
         }  catch (FileServiceException e) {
 			saveFileError(new FileErrorInfo(path, String.format("transferMultipartFile error => %s", e), appNode.nodeId));
 			throw e;
@@ -106,7 +116,18 @@ public class FileService {
         }
     }
 
-    public Resource loadFile(String relativeFilePath) {
+	private FileInfo saveFileInfo(String path, String uuid, String generatedFrom, String checksum, MultipartFile file) {
+		return repository.save(new FileInfo(
+				file.getOriginalFilename(),
+				path,
+				file.getContentType(),
+				file.getSize(),
+				uuid,
+				checksum,
+				generatedFrom));
+	}
+
+	public Resource loadFileRelativePath(String relativeFilePath) {
         Path path = streamFile.buildPath(relativeFilePath);
         try {
             return new UrlResource(path.toUri());
@@ -116,17 +137,45 @@ public class FileService {
         }
         return null;
     }
-	public boolean saveStreamInPath(String path, boolean override, ByteArrayOutputStream byteArrayOutputStream) {
+
+	public Resource loadFileFromAbsolutePath(String absolutePath) {
+		Path path = Paths.get(absolutePath);
+		try {
+			return new UrlResource(path.toUri());
+		} catch (MalformedURLException e) {
+			saveFileError(new FileErrorInfo(absolutePath, e.getMessage(), appNode.nodeId));
+			LOG.error(e.getMessage());
+		}
+		return null;
+	}
+	public FileInfo saveStreamInPath(String partialPath, String uuid, String generatedFrom, boolean override,
+									 ByteArrayOutputStream byteArrayOutputStream) {
+		String path = buildCompletePath(partialPath);
 		File dirPath = new File(path);
 		try {
 			streamFile.saveFileInDirectory(path, override, byteArrayOutputStream);
+			return saveFileInfo(partialPath, uuid, generatedFrom, getHash(path), dirPath);
 		} catch (IOException e) {
 			saveFileError(new FileErrorInfo(dirPath.getPath(), String.format("saveStreamInPath error => %s", e), appNode.nodeId));
 			LOG.error(e.toString());
 			throw new FileServiceException(FileServiceEnumException.SAVE_IOEXCEPTION,
 					String.format("El guardado del siguiente archivo %s tuvo el siguiente error %s", dirPath.getAbsolutePath(), e.getMessage()));
 		}
-		return true;
+	}
+
+	private FileInfo saveFileInfo(String path, String uuid, String generatedFrom, String checksum,  File file) throws IOException {
+		return repository.save(new FileInfo(
+				file.getName(),
+				path,
+				parseToContentType(file.getName()),
+				Files.size(file.toPath()),
+				uuid,
+				checksum,
+				generatedFrom));
+	}
+
+	private String parseToContentType(String fileName) {
+		return URLConnection.guessContentTypeFromName(fileName);
 	}
 
 	public String readFileAsString(String path, Charset encoding) {
@@ -141,13 +190,19 @@ public class FileService {
 		}
 	}
 
-	public ByteArrayInputStream readStreamFromPath(String path) {
-		LOG.debug("Input parameters -> path {}", path);
-		File dirPath = new File(path);
+	public ByteArrayInputStream readStreamFromRelativePath(String partialPath) {
+		LOG.debug("Input parameters -> partialPath {}", partialPath);
+		String path = buildCompletePath(partialPath);
+		return readStreamFromAbsolutePath(path);
+	}
+
+	public ByteArrayInputStream readStreamFromAbsolutePath(String absolutePath) {
+		LOG.debug("Input parameters -> absolutePath {}", absolutePath);
+		File dirPath = new File(absolutePath);
 		try {
-			Path pdfPath = Paths.get(path);
+			Path pdfPath = Paths.get(absolutePath);
 			byte[] pdf = Files.readAllBytes(pdfPath);
-			LOG.debug("Output -> path {}", path);
+			LOG.debug("Output -> path {}", absolutePath);
 			return new ByteArrayInputStream(pdf);
 		}  catch (IOException e){
 			saveFileError(new FileErrorInfo(dirPath.getPath(), String.format("readStreamFromPath error => %s", e), appNode.nodeId));
@@ -161,8 +216,44 @@ public class FileService {
 		BeanUtil.publishEvent(new FileErrorEvent(fileErrorInfo));
 	}
 
-	public boolean deleteFile(String path) {
-        return streamFile.deleteFileInDirectory(path);
+	public boolean deleteFile(String partialPath) {
+		String completePath = buildCompletePath(partialPath);
+		if (!streamFile.deleteFileInDirectory(completePath))
+			return false;
+		repository.deleteByRelativePath(partialPath);
+        return true;
     }
 
+
+	private static String getHash(String path) {
+		LOG.debug("Input parameters -> path {}", path);
+		String result;
+		String algorithm = "SHA-256";
+		try {
+			MessageDigest md = MessageDigest.getInstance(algorithm);
+			byte[] sha256Hash = md.digest(Files.readAllBytes(Paths.get(path)));
+			result = Base64.getEncoder().encodeToString(sha256Hash);
+		} catch (NoSuchAlgorithmException e) {
+			LOG.error("Algorithm doesn't exist -> {} ",algorithm);
+			result = null;
+		}
+		catch (IOException e) {
+			LOG.error("Error with path file {} ", path, e);
+			result = null;
+		}
+		LOG.debug(OUTPUT, result);
+		return result;
+	}
+
+	public long getFileSize(FileInfoDto fileInfo) throws IOException {
+		String completePath = buildCompletePath(fileInfo.getRelativePath());
+		Long unknownSize = -1L;
+		if (!unknownSize.equals(fileInfo.getSize()))
+			return fileInfo.getSize();
+		try {
+			return Files.size(Paths.get(completePath));
+		}  catch (FileServiceException | IOException e){
+			return Files.size(Paths.get(fileInfo.getOriginalPath()));
+		}
+	}
 }

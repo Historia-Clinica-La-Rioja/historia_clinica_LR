@@ -50,27 +50,26 @@ public class GenerateFilePortImpl implements GenerateFilePort {
     }
 
     @Override
-    public Optional<DocumentFile> save(OnGenerateDocumentEvent event)  {
+    public Optional<DocumentFile> save(OnGenerateDocumentEvent event) {
         Map<String,Object> contextMap = auditableContextBuilder.buildContext(event.getDocumentBo(), event.getPatientId());
 
 		formatStringDates(contextMap);
 
-        String path = fileService.buildRelativePath(event.getRelativeDirectory());
+        String path = fileService.buildCompletePath(event.getRelativeDirectory());
         String realFileName = event.getUuid();
         String fictitiousFileName = event.buildDownloadName();
-        String checksum = null;
         try {
             ByteArrayOutputStream output =  pdfService.writer(event.getTemplateName(), contextMap);
-			fileService.saveStreamInPath(path, false, output);
-            checksum = getHash(path);
+			var file = fileService.saveStreamInPath(event.getRelativeDirectory(), realFileName, "DOCUMENTO_DE_ENCUENTRO",false, output);
+			return Optional.of(new DocumentFile(
+					event.getDocumentBo().getId(),
+					event.getEncounterId(),
+					event.getSourceType(),
+					event.getDocumentTypeId(), path, fictitiousFileName, file.getUuidfile(), file.getChecksum()));
         } catch (PDFDocumentException e) {
             LOG.error("Save document file -> {}", event, e);
+			throw e;
         }
-        return Optional.of(new DocumentFile(
-                event.getDocumentBo().getId(),
-                event.getEncounterId(),
-                event.getSourceType(),
-                event.getDocumentTypeId(), path, fictitiousFileName, realFileName, checksum));
     }
 
     private static String getHash(String path) {

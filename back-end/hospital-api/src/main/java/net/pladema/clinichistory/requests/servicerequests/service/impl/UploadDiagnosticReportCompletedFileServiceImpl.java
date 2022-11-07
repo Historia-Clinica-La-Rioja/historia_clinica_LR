@@ -38,9 +38,9 @@ public class UploadDiagnosticReportCompletedFileServiceImpl  implements UploadDi
         List<Integer> result = Arrays.stream(files).mapToInt(file -> {
             String newFileName = fileService.createFileName(FilenameUtils.getExtension(file.getOriginalFilename()));
             String partialPath = buildPartialPath(patientId, newFileName, diagnosticReportId);
-            String completePath = buildCompleteFilePath(partialPath);
+			String uuid = newFileName.split("\\.")[0];
 			try {
-				fileService.transferMultipartFile(completePath, file);
+				fileService.transferMultipartFile(partialPath, uuid, "RESULTADO_ESTUDIO", file);
 			} catch (IOException e) {
 				throw new RuntimeException(e);
 			}
@@ -76,7 +76,7 @@ public class UploadDiagnosticReportCompletedFileServiceImpl  implements UploadDi
 
     private String buildCompleteFilePath(String partialPath){
         LOG.debug("Input parameters -> partialPath {}", partialPath);
-        String result = fileService.buildRelativePath(partialPath);
+        String result = fileService.buildCompletePath(partialPath);
         LOG.debug(OUTPUT, result);
         return result;
     }

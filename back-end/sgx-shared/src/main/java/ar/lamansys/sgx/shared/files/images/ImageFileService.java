@@ -26,9 +26,9 @@ public class ImageFileService {
     public ImageFileService(FileService fileService){
         this.fileService = fileService;
     }
-	public String buildPath(String fileRelativePath){
+	public String buildCompletePath(String fileRelativePath){
 		LOG.debug("Input paramenter -> fileRelativePath {}", fileRelativePath);
-		String path = fileService.buildRelativePath(fileRelativePath);
+		String path = fileService.buildCompletePath(fileRelativePath);
 		LOG.debug(OUTPUT, path);
 		return path;
 	}
@@ -44,13 +44,13 @@ public class ImageFileService {
 		return result;
     }
 
-    public boolean saveImage(String path, String imageData) {
-        LOG.debug("Input parameters -> path {}, imageData {}", path, imageDataToString(imageData));
+    public boolean saveImage(String relativePath, String fileName, String generatedFrom, String imageData) {
+        LOG.debug("Input parameters -> relativePath {}, imageData {}", relativePath, imageDataToString(imageData));
         ByteArrayOutputStream os = new ByteArrayOutputStream();
         os.writeBytes(imageData.getBytes());
-		boolean result = fileService.saveStreamInPath(path, false, os);
+		var result = fileService.saveStreamInPath(relativePath, fileName, generatedFrom,false, os);
 		LOG.debug(OUTPUT, result);
-		return result;
+		return result.getId() != null;
     }
 
     private String imageDataToString(String imageData){

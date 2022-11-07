@@ -84,22 +84,14 @@ public class PersonPhotoServiceImpl implements PersonPhotoService {
             return false;
         }
         String newFileName = imageFileService.createFileName();
-        String completePath = buildCompleteFilePath(personId,  newFileName);
+        String relativePath = RELATIVE_DIRECTORY
+				.replace("{personIdSubdivision}", getNLastDigits(SUBDIVISION_DIGITS, personId))
+				.replace("{personId}", personId.toString())
+				.concat(newFileName);
         PersonExtended personExtended = getPersonExtended(personId);
-        personExtended.setPhotoFilePath(completePath);
+        personExtended.setPhotoFilePath(imageFileService.buildCompletePath(relativePath));
         personExtendedRepository.save(personExtended);
-        boolean result = imageFileService.saveImage(completePath, imageData);
-        LOG.debug(OUTPUT, result);
-        return result;
-    }
-
-    private String buildCompleteFilePath(Integer personId, String relativeFilePath){
-        LOG.debug("Input parameters -> personId {}, relativeFilePath {}", personId, relativeFilePath);
-        String partialPath = RELATIVE_DIRECTORY
-                .replace("{personIdSubdivision}", getNLastDigits(SUBDIVISION_DIGITS, personId))
-                .replace("{personId}", personId.toString())
-                .concat(relativeFilePath);
-        String result = imageFileService.buildPath(partialPath);
+        boolean result = imageFileService.saveImage(relativePath, newFileName, "FOTO_PERSONAL", imageData);
         LOG.debug(OUTPUT, result);
         return result;
     }

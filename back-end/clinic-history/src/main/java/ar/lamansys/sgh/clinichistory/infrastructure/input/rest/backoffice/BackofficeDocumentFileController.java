@@ -55,7 +55,7 @@ public class BackofficeDocumentFileController extends AbstractBackofficeControll
 		ByteArrayInputStream pdfFile;
 		long sizeFile;
 		try {
-			pdfFile = fileService.readStreamFromPath(documentFile.getFilepath());
+			pdfFile = fileService.readStreamFromAbsolutePath(documentFile.getFilepath());
 			sizeFile = Files.size(Paths.get(documentFile.getFilepath()));
 		} catch (IOException e) {
 			return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
