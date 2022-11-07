@@ -29,7 +29,6 @@ import { EmergencyCareMasterDataService } from '@api-rest/services/emergency-car
 import { getError, hasError } from '@core/utils/form.utils';
 import { EmergencyCareEpisodeAdministrativeDischargeService } from '@api-rest/services/emergency-care-episode-administrative-service.service';
 import { PatientNameService } from "@core/services/patient-name.service";
-import { AppointmentsService } from "/home/emeritus/Escritorio/Repositorios/HistorialClinica-LaRioja/front-end/apps/projects/hospital/src/app/modules/api-rest/services/appointments.service"
 
 const TRANSLATE_KEY_PREFIX = 'guardia.home.episodes.episode.actions';
 
