@@ -11,7 +11,7 @@ import net.pladema.programreports.repository.ConsultationDetailEpiI;
 import net.pladema.programreports.repository.ConsultationDetailEpiII;
 import net.pladema.programreports.repository.ConsultationDetailOdontologia;
 import net.pladema.programreports.repository.ConsultationDetailRecupero;
-import net.pladema.programreports.repository.PatientEmergencies;
+import net.pladema.generalreports.repository.PatientEmergencies;
 import net.pladema.programreports.service.ExcelServicePR;
 
 import org.springframework.stereotype.Service;
@@ -126,29 +126,7 @@ public class ExcelServicePRImpl implements ExcelServicePR {
 		return wb;
 	}
 
-	@Override
-	public IWorkbook buildExcelPatientEmergencies(String tittle, String[] headers, List<PatientEmergencies> result) {
-		IWorkbook wb = WorkbookCreator.createExcelWorkbook();
-		createCellStyle(wb);
 
-		ISheet sheet = wb.createSheet(tittle);
-
-		fillRow(sheet, getHeaderData(headers,tittle));
-
-		AtomicInteger rowNumber = new AtomicInteger(sheet.getCantRows());
-
-		ICellStyle styleDataRow = createDataRowStyle(wb);
-
-		result.forEach(
-				resultData -> {
-					IRow newDataRow = sheet.createRow(rowNumber.getAndIncrement());
-					fillRowContent(newDataRow, resultData, styleDataRow);
-				}
-		);
-
-		setDimensions(sheet);
-		return wb;
-	}
 
 	private void createCellStyle(IWorkbook workbook){
 		basicStyle = workbook.createStyle();
@@ -586,131 +564,5 @@ public class ExcelServicePRImpl implements ExcelServicePR {
 
 	}
 
-	private  void fillRowContent(IRow row, PatientEmergencies content, ICellStyle style){
-		AtomicInteger rowNumber = new AtomicInteger(0);
 
-		ICell cell = row.createCell(rowNumber.getAndIncrement());
-		cell.setCellValue(content.getInstitution());
-		cell.setCellStyle(style);
-
-		ICell cell1 = row.createCell(rowNumber.getAndIncrement());
-		cell1.setCellValue(content.getAmbulance());
-		cell1.setCellStyle(style);
-
-		ICell cell2 = row.createCell(rowNumber.getAndIncrement());
-		cell2.setCellValue(content.getOffice());
-		cell2.setCellStyle(style);
-
-		ICell cell3 = row.createCell(rowNumber.getAndIncrement());
-		cell3.setCellValue(content.getSector());
-		cell3.setCellStyle(style);
-
-		ICell cell4 = row.createCell(rowNumber.getAndIncrement());
-		cell4.setCellValue(content.getPoliceIntervention());
-		cell4.setCellStyle(style);
-
-		ICell cell5 = row.createCell(rowNumber.getAndIncrement());
-		cell5.setCellValue(content.getAttentionDate());
-		cell5.setCellStyle(style);
-
-		ICell cell6 = row.createCell(rowNumber.getAndIncrement());
-		cell6.setCellValue(content.getAttentionHour());
-		cell6.setCellStyle(style);
-
-		ICell cell7 = row.createCell(rowNumber.getAndIncrement());
-		cell7.setCellValue(content.getProfessionalRegistering());
-		cell7.setCellStyle(style);
-
-		ICell cell8 = row.createCell(rowNumber.getAndIncrement());
-		cell8.setCellValue(content.getProfessionalAttention());
-		cell8.setCellStyle(style);
-
-		ICell cell9 = row.createCell(rowNumber.getAndIncrement());
-		cell9.setCellValue(content.getIdentification());
-		cell9.setCellStyle(style);
-
-		ICell cell10 = row.createCell(rowNumber.getAndIncrement());
-		cell10.setCellValue(content.getLastName());
-		cell10.setCellStyle(style);
-
-		ICell cell11 = row.createCell(rowNumber.getAndIncrement());
-		cell11.setCellValue(content.getNames());
-		cell11.setCellStyle(style);
-
-		ICell cell12 = row.createCell(rowNumber.getAndIncrement());
-		cell12.setCellValue(content.getGender());
-		cell12.setCellStyle(style);
-
-		ICell cell13 = row.createCell(rowNumber.getAndIncrement());
-		cell13.setCellValue(content.getSelfPerceivedGender());
-		cell13.setCellStyle(style);
-
-		ICell cell14 = row.createCell(rowNumber.getAndIncrement());
-		cell14.setCellValue(content.getSelfPerceivedName());
-		cell14.setCellStyle(style);
-
-		ICell cell15 = row.createCell(rowNumber.getAndIncrement());
-		cell15.setCellValue(content.getBirthDate());
-		cell15.setCellStyle(style);
-
-		ICell cell16 = row.createCell(rowNumber.getAndIncrement());
-		cell16.setCellValue(content.getAgeTurn());
-		cell16.setCellStyle(style);
-
-		ICell cell17 = row.createCell(rowNumber.getAndIncrement());
-		cell17.setCellValue(content.getAgeToday());
-		cell17.setCellStyle(style);
-
-		ICell cell18 = row.createCell(rowNumber.getAndIncrement());
-		cell18.setCellValue(content.getEthnicity());
-		cell18.setCellStyle(style);
-
-		ICell cell19 = row.createCell(rowNumber.getAndIncrement());
-		cell19.setCellValue(content.getAddressPatient());
-		cell19.setCellStyle(style);
-
-		ICell cell20 = row.createCell(rowNumber.getAndIncrement());
-		cell20.setCellValue(content.getLocationPatient());
-		cell20.setCellStyle(style);
-
-		ICell cell21 = row.createCell(rowNumber.getAndIncrement());
-		cell21.setCellValue(content.getMedicalCoverage());
-		cell21.setCellStyle(style);
-
-		ICell cell22 = row.createCell(rowNumber.getAndIncrement());
-		cell22.setCellValue(content.getEmergencyCareEntrance());
-		cell22.setCellStyle(style);
-
-		ICell cell23 = row.createCell(rowNumber.getAndIncrement());
-		cell23.setCellValue(content.getStatePatient());
-		cell23.setCellStyle(style);
-
-		ICell cell24 = row.createCell(rowNumber.getAndIncrement());
-		cell24.setCellValue(content.getAttentionType());
-		cell24.setCellStyle(style);
-
-		ICell cell25 = row.createCell(rowNumber.getAndIncrement());
-		cell25.setCellValue(content.getTriageNote());
-		cell25.setCellStyle(style);
-
-		ICell cell26 = row.createCell(rowNumber.getAndIncrement());
-		cell26.setCellValue(content.getTriageLevel());
-		cell26.setCellStyle(style);
-
-		ICell cell27 = row.createCell(rowNumber.getAndIncrement());
-		cell27.setCellValue(content.getDateDischarge());
-		cell27.setCellStyle(style);
-
-		ICell cell28 = row.createCell(rowNumber.getAndIncrement());
-		cell28.setCellValue(content.getAmbulanceDischarge());
-		cell28.setCellStyle(style);
-
-		ICell cell29 = row.createCell(rowNumber.getAndIncrement());
-		cell29.setCellValue(content.getTypeDischarge());
-		cell29.setCellStyle(style);
-
-		ICell cell30 = row.createCell(rowNumber.getAndIncrement());
-		cell30.setCellValue(content.getPatientExit());
-		cell30.setCellStyle(style);
-	}
 }
