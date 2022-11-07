@@ -67,3 +67,146 @@ databaseChangeLog:
                 - column:
                     name: deleted_on
                     type: datetime
+
+
+    - changeSet:
+        id: 1.47.0-1
+        author: etrapani
+        comment: Create table file_info
+        changes:
+          - createTable:
+              tableName: file_info
+              columns:
+                - column:
+                    autoIncrement: true
+                    constraints:
+                      primaryKey: true
+                      primaryKeyName: PK_file_info
+                    name: id
+                    type: bigint
+                - column:
+                    constraints:
+                      nullable: false
+                    name: name
+                    type: varchar
+                - column:
+                    constraints:
+                      nullable: false
+                    name: relative_path
+                    type: varchar
+                - column:
+                    constraints:
+                      nullable: false
+                    name: original_path
+                    type: varchar
+                - column:
+                    constraints:
+                      nullable: false
+                    name: content_type
+                    type: varchar
+                - column:
+                    constraints:
+                      nullable: false
+                    name: size
+                    type: int8
+                - column:
+                    constraints:
+                      nullable: false
+                    name: uuid_file
+                    type: varchar(36)
+                - column:
+                    name: checksum
+                    type: varchar(512)
+                - column:
+                    name: source
+                    type: varchar
+                    constraints:
+                      nullable: false
+                - column:
+                    name: generated_by
+                    type: varchar
+                - column:
+                    constraints:
+                      nullable: false
+                    name: created_by
+                    type: int
+                    defaultValue: -1
+                - column:
+                    constraints:
+                      nullable: false
+                    name: created_on
+                    type: datetime
+                    defaultValueDate: ${date.now}
+                - column:
+                    constraints:
+                      nullable: false
+                    name: updated_by
+                    type: int
+                    defaultValue: -1
+                - column:
+                    constraints:
+                      nullable: false
+                    name: updated_on
+                    type: datetime
+                    defaultValueDate: ${date.now}
+                - column:
+                    constraints:
+                      nullable: false
+                    name: deleted
+                    type: BOOLEAN
+                    defaultValue: ${boolean.false}
+                - column:
+                    name: deleted_by
+                    type: int
+                - column:
+                    name: deleted_on
+                    type: datetime
+
+
+
+    - changeSet:
+        id: 1.47.0-2
+        author: etrapani
+        comment: Load file_info table
+        context: "!schema-only"
+        changes:
+          - sql:
+              sql: |-
+                INSERT INTO file_info (name, original_path, relative_path, content_type, "size", uuid_file, checksum, created_by,
+                       created_on, updated_by, updated_on, deleted, deleted_by, deleted_on, source, generated_by)
+                (
+                    SELECT name, path as original_path, path as relative_path, content_type, "size", regexp_replace(regexp_replace(path, '.+/', ''), '[/.].+', '') as uuid_file,
+                    null as checksum, created_by,
+                    created_on, updated_by, updated_on, deleted, deleted_by, deleted_on, 'RESULTADO_ESTUDIO' as source, 'INSERT_INCREMENTAL_1_46_0_3' as generated_by
+                    FROM diagnostic_report_file
+                    UNION ALL
+                    SELECT name, path as original_path, path as relative_path, content_type, "size", regexp_replace(regexp_replace(path, '.+/', ''), '[/.].+', '') as uuid_file,
+                    null as checksum, -1 as created_by,
+                    CURRENT_DATE as created_on, -1 as updated_by, CURRENT_DATE as updated_on,
+                    false as deleted , null as deleted_by, null as deleted_on, 'REFERENCIA_CONTRAREFERENCIA' as source, 'INSERT_INCREMENTAL_1_46_0_3' as generated_by
+                    FROM reference_counter_reference_file AS rcrf
+                    UNION ALL
+                    SELECT file_name as name, file_path as original_path,
+                    CASE WHEN substring(substring(file_path,'%#"institution%#"%','#'), '%#".pdf#"','#') IS NULL
+                        THEN CONCAT(CONCAT('/',substring(file_path,'%#"institution%#"%','#')), '.pdf')
+                        ELSE CONCAT('/',substring(file_path,'%#"institution%#"%','#'))
+                    END as relative_path,
+                    'application/pdf' as content_type,
+                    -1 as "size", uuid_file, checksum, created_by, created_on, updated_by, updated_on, deleted, deleted_by,
+                    deleted_on, 'DOCUMENTO_DE_ENCUENTRO' as source, 'INSERT_INCREMENTAL_1_46_0_3' as generated_by
+                    FROM document_file
+                    UNION ALL
+                    SELECT CONCAT(regexp_replace(regexp_replace(photo_file_path, '.+/', ''), '[/.].+', ''), '.b64image') as name,
+                           photo_file_path as original_path,
+                        CASE WHEN substring(substring(photo_file_path,'%#"institution%#"%','#'), '%#".b64image#"','#') IS NULL
+                        THEN CONCAT(CONCAT('/',substring(photo_file_path,'%#"institution%#"%','#')), '.b64image')
+                        ELSE CONCAT('/',substring(photo_file_path,'%#"institution%#"%','#'))
+                        END as relative_path,
+                        'b64image' as content_type,
+                        -1 as "size", regexp_replace(regexp_replace(photo_file_path, '.+/', ''), '[/.].+', '') as uuid_file,
+                        null as checksum, -1 as created_by,
+                        CURRENT_DATE as created_on, -1 as updated_by, CURRENT_DATE as updated_on,
+                        false as deleted , null as deleted_by, null as deleted_on, 'FOTO_PERSONAL' as source, 'INSERT_INCREMENTAL_1_46_0_3' as generated_by
+                    FROM person_extended
+                    WHERE photo_file_path IS NOT NULL
+                )
