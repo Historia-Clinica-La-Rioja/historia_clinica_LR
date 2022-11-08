@@ -63,8 +63,9 @@
       "REQUIRED_GENDER": "Género requerido",
       "SELECT": "Seleccionar",
       "UPDATE_MEDICAL_COVERAGE": "Actualizar cobertura",
-      "NO_INFO": "Sin información",
-      "IDENTIFICATION_NUMBER_MAXLENGHT_ERROR": "Introduzca como máximo 11 caracteres"
+	  "NO_INFO": "Sin información",
+      "IDENTIFICATION_NUMBER_MAXLENGHT_ERROR": "Introduzca como máximo 11 caracteres",
+	  "STATE":"Estado"
     },
     "home": {
       "TITLE": "Pacientes",

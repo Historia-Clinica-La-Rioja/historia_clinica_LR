@@ -83,6 +83,35 @@
 						</div>
 					</div>
 				</ng-template>
+				<div class="form-row">
+					<div>
+						<div>
+							<span [translate]="'pacientes.search_patient.PATIENT_ID'"></span>
+						</div>
+						<mat-form-field appearance="outline">
+							<input id="patientId" name="patientId"
+								formControlName="patientId"
+								placeholder="{{'pacientes.form.ONLY_NUMBERS' | translate}}" matInput>
+						</mat-form-field>
+					</div>
+
+					<div>
+						<div>
+							<span [translate]="'pacientes.form.STATE'"></span>
+						</div>
+						<mat-form-field appearance="outline">
+							<mat-select id="stateId" name="stateId"
+								formControlName="stateId"
+								placeholder="{{'pacientes.form.SELECT' | translate}}">
+								<mat-option *ngFor="let state of identificationTypeList"
+									[value]="state.id">
+									{{state.description}}
+								</mat-option> <!--cambiar array cuando este hecho el servicio-->
+							</mat-select>
+						</mat-form-field>
+
+					</div>
+				</div>
 
 				<div>
 					<div>

@@ -143,6 +143,8 @@ export class EditPatientComponent implements OnInit {
 								this.form.setControl('lastName', new FormControl(completeData.person.lastName, Validators.required));
 								this.form.setControl('otherLastNames', new FormControl(personInformationData.otherLastNames));
 								this.form.setControl('mothersLastName', new FormControl(personInformationData.mothersLastName));
+								this.form.setControl('patientId', new FormControl(completeData.id,Validators.required));
+								this.form.setControl('statetId', new FormControl(completeData.patientType.id,Validators.required));
 								if (completeData.person.gender.id) {
 									this.form.setControl('genderId', new FormControl(Number(completeData.person.gender.id), Validators.required));
 								}
@@ -302,6 +304,8 @@ export class EditPatientComponent implements OnInit {
 			identificationNumber: [null, [Validators.required, Validators.maxLength(VALIDATIONS.MAX_LENGTH.identif_number)]],
 			identificationTypeId: [null, [Validators.required]],
 			birthDate: [null, [Validators.required]],
+			patientId:[null],
+			stateId:[null],
 
 			// Person extended
 			cuil: [null, [Validators.maxLength(VALIDATIONS.MAX_LENGTH.cuil)]],
@@ -521,6 +525,8 @@ export class EditPatientComponent implements OnInit {
 		this.form.controls.lastName.disable();
 		this.form.controls.otherLastNames.disable();
 		this.form.controls.birthDate.disable();
+		this.form.controls.patientId.disable();
+		this.form.controls.stateId.disable();
 	}
 
 	private isLockablePatientType(): boolean {
