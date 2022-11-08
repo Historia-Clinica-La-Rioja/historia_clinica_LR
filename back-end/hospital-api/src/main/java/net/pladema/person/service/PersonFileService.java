@@ -8,4 +8,6 @@ public interface PersonFileService {
 
 	List<Integer> addFiles(MultipartFile[] files, Integer personId, Integer institutionId);
 
+	void deleteFiles(List<Integer> filesIds);
+
 }

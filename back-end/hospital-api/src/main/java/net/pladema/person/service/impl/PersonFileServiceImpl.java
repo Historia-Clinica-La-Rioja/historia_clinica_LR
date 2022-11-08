@@ -56,6 +56,12 @@ public class PersonFileServiceImpl implements PersonFileService {
 		return result;
 	}
 
+	@Override
+	public void deleteFiles(List<Integer> filesIds) {
+		log.debug("Input parameters -> filesIds {}", filesIds);
+		personFileRepository.deleteAllById(filesIds);
+	}
+
 	private Integer savePersonFile(String completePath, MultipartFile file, Integer institutionId, Integer personId) {
 		PersonFile personFile = new PersonFile(
 				completePath,
