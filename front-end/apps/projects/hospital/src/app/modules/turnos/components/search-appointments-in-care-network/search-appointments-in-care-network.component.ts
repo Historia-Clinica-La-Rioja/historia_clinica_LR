@@ -65,9 +65,6 @@ export class SearchAppointmentsInCareNetworkComponent implements OnInit, OnChang
     private diaryAvailableAppointmentsSearchService: DiaryAvailableAppointmentsSearchService,
     private changeDetectorRef: ChangeDetectorRef,
   ) {
-    this.initSpecialties();
-    this.initCareLines();
-    this.initForm();
   }
 
   ngOnChanges(changes: SimpleChanges): void {
@@ -80,39 +77,11 @@ export class SearchAppointmentsInCareNetworkComponent implements OnInit, OnChang
     }
   }
 
-  private resetAtributtes(): void {
-    this.provinces = [];
-    this.departments = [];
-    this.institutions = [];
-    this.careLines = [];
-    this.specialties = [];
-    this.allSpecialties = [];
-
-
-    this.showAppointmentsNotFoundMessage = false;
-    this.showAppointmentResults = false;
-    this.showInvalidFormMessage = false;
-
-    this.showSpecialtyError = false;
-    this.showDepartmentError = false;
-    this.showProvinceError = false;
-
-    this.departmentTypeaheadOptions = [];
-    this.institutionTypeaheadOptions = [];
-    this.provinceTypeaheadOptions = [];
-    this.careLineTypeaheadOptions = [];
-    this.specialtyTypeaheadOptions = [];
-
-    this.initialProvinceTypeaheadOptionSelected = undefined;
-    this.initialDepartmentTypeaheadOptionSelected = undefined;
-    this.initialInstitutionTypeaheadOptionSelected = undefined;
-
-    this.protectedAvaibleAppointments = [];
-
-    this.appointmentsCurrentPage = [];
-  }
-
   ngOnInit(): void {
+    this.initSpecialties();
+    this.initCareLines();
+    this.initForm();
+
     this.institutionService.getInstitutionAddress(this.contextService.institutionId).subscribe(
       (institutionAddres: AddressDto) => {
 
@@ -270,6 +239,38 @@ export class SearchAppointmentsInCareNetworkComponent implements OnInit, OnChang
   onPageChange($event: any): void {
     const startPage = $event.pageIndex * $event.pageSize;
     this.appointmentsCurrentPage = this.protectedAvaibleAppointments.slice(startPage, $event.pageSize + startPage);
+  }
+
+  private resetAtributtes(): void {
+    this.provinces = [];
+    this.departments = [];
+    this.institutions = [];
+    this.careLines = [];
+    this.specialties = [];
+    this.allSpecialties = [];
+
+
+    this.showAppointmentsNotFoundMessage = false;
+    this.showAppointmentResults = false;
+    this.showInvalidFormMessage = false;
+
+    this.showSpecialtyError = false;
+    this.showDepartmentError = false;
+    this.showProvinceError = false;
+
+    this.departmentTypeaheadOptions = [];
+    this.institutionTypeaheadOptions = [];
+    this.provinceTypeaheadOptions = [];
+    this.careLineTypeaheadOptions = [];
+    this.specialtyTypeaheadOptions = [];
+
+    this.initialProvinceTypeaheadOptionSelected = undefined;
+    this.initialDepartmentTypeaheadOptionSelected = undefined;
+    this.initialInstitutionTypeaheadOptionSelected = undefined;
+
+    this.protectedAvaibleAppointments = [];
+
+    this.appointmentsCurrentPage = [];
   }
 
   private loadFirstPage(): void {
