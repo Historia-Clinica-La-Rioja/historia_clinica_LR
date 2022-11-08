@@ -4,6 +4,8 @@ import ar.lamansys.sgx.shared.exceptions.dto.ApiErrorMessageDto;
 import net.pladema.clinichistory.hospitalization.controller.exceptions.HospitalizationExceptionHandler;
 import net.pladema.person.controller.service.exceptions.CreatePersonException;
 
+import net.pladema.person.controller.service.exceptions.CreatePersonFileException;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.core.Ordered;
@@ -23,6 +25,13 @@ public class PersonExceptionHandler {
 	@ExceptionHandler({CreatePersonException.class})
 	protected ApiErrorMessageDto handleCreatePersonException(CreatePersonException ex) {
 		LOG.debug("CreatePersonException exception -> {}", ex.getMessage());
+		return new ApiErrorMessageDto(ex.getCode().name(), ex.getMessage());
+	}
+
+	@ResponseStatus(HttpStatus.BAD_REQUEST)
+	@ExceptionHandler({CreatePersonFileException.class})
+	protected ApiErrorMessageDto handleCreatePersonFileException(CreatePersonFileException ex) {
+		LOG.debug("CreatePersonFileException exception -> {}", ex.getMessage());
 		return new ApiErrorMessageDto(ex.getCode().name(), ex.getMessage());
 	}
 

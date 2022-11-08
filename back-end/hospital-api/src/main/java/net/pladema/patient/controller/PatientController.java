@@ -96,6 +96,7 @@ public class PatientController {
 
 	private final FederarExternalService federarExternalService;
 
+
 	public PatientController(PatientService patientService, PersonExternalService personExternalService,
 							 AddressExternalService addressExternalService, PatientMapper patientMapper, PersonMapper personMapper,
 							 ObjectMapper jackson, PatientTypeRepository patientTypeRepository, AdditionalDoctorService additionalDoctorService,
@@ -151,6 +152,7 @@ public class PatientController {
 		Patient createdPatient = persistPatientData(patientDto, createdPerson, null);
 		if (createdPatient.isValidated()) {
 			Person person = personMapper.fromPersonDto(createdPerson);
+
 			FederarResourceAttributes attributes = new FederarResourceAttributes();
 			BeanUtils.copyProperties(person, attributes);
 			try {
