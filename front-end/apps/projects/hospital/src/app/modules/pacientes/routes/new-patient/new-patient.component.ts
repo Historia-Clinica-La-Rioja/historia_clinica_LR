@@ -355,7 +355,8 @@ export class NewPatientComponent implements OnInit {
 
 			},
 			// Select for an audict
-			toAudit: false
+			toAudit: false,
+			fileIds: []
 		};
 
 		if (patient.genderSelfDeterminationId === this.NONE_SELF_PERCEIVED_GENDER_SELECTED_ID)

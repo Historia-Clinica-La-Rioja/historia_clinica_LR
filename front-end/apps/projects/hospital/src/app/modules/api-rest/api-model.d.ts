@@ -48,6 +48,7 @@ export interface APersonDto {
     educationLevelId: number;
     email: string;
     ethnicityId: number;
+    fileIds: number[];
     firstName: string;
     floor: string;
     genderId: number;

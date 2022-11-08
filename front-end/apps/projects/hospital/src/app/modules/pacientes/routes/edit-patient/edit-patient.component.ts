@@ -494,7 +494,8 @@ export class EditPatientComponent implements OnInit {
 				phoneNumber: this.form.controls.pamiDoctorPhoneNumber.value,
 				generalPractitioner: false
 
-			}
+			},
+			fileIds: []
 		};
 
 		if (this.toAudit) {
