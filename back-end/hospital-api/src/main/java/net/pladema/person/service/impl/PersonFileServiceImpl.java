@@ -6,6 +6,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import net.pladema.person.controller.service.exceptions.CreatePersonFileException;
 import net.pladema.person.controller.service.exceptions.CreatePersonFileExceptionEnum;
+import net.pladema.clinichistory.requests.servicerequests.service.domain.StoredFileBo;
 import net.pladema.person.repository.PersonFileRepository;
 import net.pladema.person.repository.entity.PersonFile;
 
@@ -60,6 +61,18 @@ public class PersonFileServiceImpl implements PersonFileService {
 	public void deleteFiles(List<Integer> filesIds) {
 		log.debug("Input parameters -> filesIds {}", filesIds);
 		personFileRepository.deleteAllById(filesIds);
+	}
+
+	@Override
+	public StoredFileBo getFile(Integer fileId) {
+		log.debug("Input parameters -> fileId {}", fileId);
+		StoredFileBo result = personFileRepository.findById(fileId).stream().map(personFile ->
+				new StoredFileBo(
+						fileService.loadFileRelativePath(personFile.getPath()),
+						personFile.getContentType(),
+						personFile.getSize())).findFirst().orElse(null);
+		log.debug(OUTPUT, result);
+		return result;
 	}
 
 	private Integer savePersonFile(String completePath, MultipartFile file, Integer institutionId, Integer personId) {
