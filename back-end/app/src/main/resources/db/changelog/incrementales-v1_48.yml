@@ -63,6 +63,86 @@ databaseChangeLog:
                   defaultValue: ${boolean.false}
 
   - changeSet:
+      id: person_file-createTable
+      author: jvaldez
+      changes:
+        - createTable:
+            tableName: person_file
+            columns:
+              - column:
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    primaryKeyName: PK_person_file
+                  name: id
+                  type: int
+              - column:
+                  constraints:
+                    nullable: false
+                  name: path
+                  type: varchar
+              - column:
+                  constraints:
+                    nullable: false
+                  name: content_type
+                  type: varchar
+              - column:
+                  constraints:
+                    nullable: false
+                  name: size
+                  type: int8
+              - column:
+                  name: person_id
+                  type: int
+              - column:
+                  constraints:
+                    nullable: false
+                  name: name
+                  type: varchar
+              - column:
+                  constraints:
+                    nullable: false
+                  name: institution_id
+                  type: int
+              - column:
+                  constraints:
+                    nullable: false
+                  name: created_by
+                  type: int
+                  defaultValue: -1
+              - column:
+                  constraints:
+                    nullable: false
+                  name: created_on
+                  type: datetime
+                  defaultValueDate: ${date.now}
+              - column:
+                  constraints:
+                    nullable: false
+                  name: updated_by
+                  type: int
+                  defaultValue: -1
+              - column:
+                  constraints:
+                    nullable: false
+                  name: updated_on
+                  type: datetime
+                  defaultValueDate: ${date.now}
+              - column:
+                  constraints:
+                    nullable: false
+                  name: deleted
+                  type: BOOLEAN
+                  defaultValue: ${boolean.false}
+              - column:
+                  name: deleted_by
+                  type: int
+              - column:
+                  name: deleted_on
+                  type: datetime
+
+
+  - changeSet:
       id: createTable-auditable_patient
       author: bchacon
       changes:
