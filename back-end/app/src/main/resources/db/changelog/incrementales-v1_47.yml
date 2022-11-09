@@ -351,3 +351,60 @@ databaseChangeLog:
                columnName:  institution_id
                tableName:  document
                validate:  true
+
+    - changeSet:
+        id: add-column-synonym-snomed
+        author: fsimaro
+        changes:
+          - addColumn:
+              tableName: snomed
+              columns:
+                - column:
+                    constraints:
+                      nullable: false
+                    name: synonym
+                    type: boolean
+                    defaultValue: ${boolean.false}
+
+    - changeSet:
+        id: snomed_synonym-createTable
+        author: fsimaro
+        comment: Create table snomed_synonym
+        changes:
+          - createTable:
+              tableName: snomed_synonym
+              columns:
+                - column:
+                    constraints:
+                      nullable: false
+                    name: main_concept_id
+                    type: int
+                - column:
+                    constraints:
+                      nullable: false
+                    name: synonym_id
+                    type: int
+          - addPrimaryKey:
+              clustered: true
+              columnNames: main_concept_id, synonym_id
+              constraintName: PK_snomed_synonym
+              tableName: snomed_synonym
+              validate: true
+          - addForeignKeyConstraint:
+              baseColumnNames: main_concept_id
+              baseTableName: snomed_synonym
+              constraintName: FK_snomed_synonym_main_concept_id
+              onDelete: NO ACTION
+              onUpdate: NO ACTION
+              referencedColumnNames: id
+              referencedTableName: snomed
+              validate: true
+          - addForeignKeyConstraint:
+              baseColumnNames: synonym_id
+              baseTableName: snomed_synonym
+              constraintName: FK_snomed_synonym_synonym_id
+              onDelete: NO ACTION
+              onUpdate: NO ACTION
+              referencedColumnNames: id
+              referencedTableName: snomed
+              validate: true

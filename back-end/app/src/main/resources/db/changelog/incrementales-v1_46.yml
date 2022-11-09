@@ -1,5 +1,5 @@
 databaseChangeLog: 
-    - logicalFilePath: incrementales-v1_46 
+    - logicalFilePath: incrementales-v1_46
 
     - changeSet:
         id: addColumn-patient_age_period-document
