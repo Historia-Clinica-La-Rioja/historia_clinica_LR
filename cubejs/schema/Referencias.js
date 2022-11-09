@@ -17,6 +17,12 @@ sql: `SELECT r.id,
         oc.start_date as fecha_consulta,
         r.destination_institution_id as institucion_destino_id,
         idest.name as institucion_destino,
+        io2.name as institucion_turno,
+        concat_ws(', ', concat_ws(' ', doct.last_name, doct.other_last_names), concat_ws(' ', doct.first_name, doct.middle_names)) AS profesional_turno,
+        concat_ws(', ', concat_ws(' ', doc.last_name, doc.other_last_names), concat_ws(' ', doctex.name_self_determination, doc.middle_names)) AS profesional_auto_det,
+        ap.date_type_id as fecha_turno,
+        ap.hour as hora_turno,
+        aps.description as estado_turno,
         case when cr.id  is null then 'Referencia pendiente' else 'Contrarreferencia' end as tiene_contra
     FROM reference r 
         JOIN outpatient_consultation oc ON (r.encounter_id = oc.id) 
@@ -32,6 +38,16 @@ sql: `SELECT r.id,
         JOIN person_extended pex ON (pex.person_id = p.id)
         JOIN identification_type it ON (p.identification_type_id = it.id)
         LEFT JOIN counter_reference cr ON (r.id = cr.reference_id)
+        LEFT JOIN reference_appointment ra ON (r.id = ra.reference_id)
+        LEFT JOIN appointment ap ON (ra.appointment_id = ap.id)
+        LEFT JOIN appointment_assn assn ON (assn.appointment_id = ap.id)
+        LEFT JOIN diary di ON (di.id = assn.diary_id)
+        LEFT JOIN doctors_office dof ON (dof.id = di.doctors_office_id)
+        LEFT JOIN institution io2 ON (dof.institution_id = io2.id)
+        LEFT JOIN healthcare_professional hpr ON (di.healthcare_professional_id = hpr.id)
+        LEFT JOIN person doct ON (hp.person_id = doct.id)
+        JOIN person_extended doctex ON (doctex.person_id = p.id)
+        LEFT JOIN appointment_state aps ON (ap.appointment_state_id = aps.id)
     ${SECURITY_CONTEXT.userId.unsafeValue() ? '' +  `
     WHERE oc.institution_id IN (
       SELECT ur.institution_id 
@@ -64,6 +80,12 @@ UNION ALL
         oc.performed_date as fecha_consulta,
         r.destination_institution_id as institucion_destino_id,
         idest.name as institucion_destino,
+        io2.name as institucion_turno,
+        concat_ws(', ', concat_ws(' ', doct.last_name, doct.other_last_names), concat_ws(' ', doct.first_name, doct.middle_names)) AS profesional_turno,
+        concat_ws(', ', concat_ws(' ', doc.last_name, doc.other_last_names), concat_ws(' ', doctex.name_self_determination, doc.middle_names)) AS profesional_auto_det,
+        ap.date_type_id as fecha_turno,
+        ap.hour as hora_turno,
+        aps.description as estado_turno,
         case when cr.id  is null then 'Referencia pendiente' else 'Contrarreferencia' end as tiene_contra
     FROM reference r 
         JOIN odontology_consultation oc ON (r.encounter_id = oc.id) 
@@ -79,6 +101,16 @@ UNION ALL
         JOIN person_extended pex ON (pex.person_id = p.id)
         JOIN identification_type it ON (p.identification_type_id = it.id)
         LEFT JOIN counter_reference cr ON (r.id = cr.reference_id)
+        LEFT JOIN reference_appointment ra ON (r.id = ra.reference_id)
+        LEFT JOIN appointment ap ON (ra.appointment_id = ap.id)
+        LEFT JOIN appointment_assn assn ON (assn.appointment_id = ap.id)
+        LEFT JOIN diary di ON (di.id = assn.diary_id)
+        LEFT JOIN doctors_office dof ON (dof.id = di.doctors_office_id)
+        LEFT JOIN institution io2 ON (dof.institution_id = io2.id)
+        LEFT JOIN healthcare_professional hpr ON (di.healthcare_professional_id = hpr.id)
+        LEFT JOIN person doct ON (hp.person_id = doct.id)
+        JOIN person_extended doctex ON (doctex.person_id = p.id)
+        LEFT JOIN appointment_state aps ON (ap.appointment_state_id = aps.id)
     ${SECURITY_CONTEXT.userId.unsafeValue() ? '' +  `
     WHERE oc.institution_id IN (
       SELECT ur.institution_id 
@@ -213,6 +245,42 @@ UNION ALL
       sql: `institucion_destino`,
       type: `number`,
       title: 'Institución destino',
+    },
+    // Fecha del turno
+    fecha_turno: {
+      sql: `fecha_turno`,
+      type: `time`,
+      title: 'Fecha turno',
+    },
+    // Hora del turno
+    hora_turno: {
+      sql: `hora_turno`,
+      type: `time`,
+      title: 'Hora turno',
+    },
+    // Institucion del turno
+    institucion_turno: {
+      sql: `institucion_turno`,
+      type: `string`,
+      title: 'Institución del turno',
+    },
+    // Profesional asignado al turno
+    profesional_turno: {
+      sql: `profesional_turno`,
+      type: `string`,
+      title: 'Profesional turno',
+    },
+    // Profesional asignado nombre auto det
+    profesional_auto_det: {
+      sql: `profesional_auto_det`,
+      type: `string`,
+      title: 'Profesional turno',
+    },
+    // Estado del turno
+    estado_turno: {
+      sql: `estado_turno`,
+      type: `string`,
+      title: 'Estado turno',
     },
   },
   title:` `,
