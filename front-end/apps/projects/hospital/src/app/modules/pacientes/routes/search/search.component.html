@@ -2,9 +2,9 @@
 	<mat-spinner *ngIf="showSpinner()"></mat-spinner>
 
     <section *ngIf="viewSearchComponent() && !showSpinner()">
-		<h2  class="page-title" [translate]="'pacientes.search.TITLE'"></h2>
+		<h2  class="page-title">{{ 'pacientes.search.TITLE' | translate | patientToPerson}}</h2>
 		<p>
-			<span [translate]="'pacientes.search.SUBTITLE'"></span>
+			<span>{{ 'pacientes.search.SUBTITLE' | translate | patientToPerson}}</span>
 			<br>
 			<span [translate]="'pacientes.search.SUBTITLE_TWO'"></span>
 		</p>
@@ -150,7 +150,7 @@
 	</section>
 	<div class="table-container" *ngIf="!viewSearchComponent() && !showSpinner()">
 		<section>
-			<h2 class="mat-body-2" [translate]="'pacientes.search.TITLE'"></h2>
+			<h2 class="mat-body-2">{{ 'pacientes.search.TITLE' | translate | patientToPerson}}</h2>
 			<h3 class="mat-body-2" [translate]="'Se encontraron posibles coincidencias.'"></h3>
 
 		<div *ngIf="!ffOfCardsIsOn else patientCard">
