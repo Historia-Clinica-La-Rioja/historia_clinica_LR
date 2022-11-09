@@ -43,7 +43,7 @@ public class FileInfo extends SGXAuditableEntity<Long> {
     private String contentType;
 
     @Column(name="size", nullable = false)
-    private long size;
+    private Long size;
 
 	@Column(name = "uuid_file", length = 36)
 	private String uuidfile;

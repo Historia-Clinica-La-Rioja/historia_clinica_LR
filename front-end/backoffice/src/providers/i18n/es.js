@@ -454,6 +454,22 @@ const messages = {
             },
             downloadFile: 'Descargar pdf'
         },
+        "files": {
+            name: 'Archivos |||| Archivos',
+            fields: {
+                id: 'Identificador',
+                name: 'Nombre de archivo',
+                relativePath: 'Ubicación relativa',
+                originalPath: 'Ubicación usada para calcular la relativa',
+                source: 'Módulo fuente',
+                uuidfile: 'Uuid',
+                size: 'Tamaño(bytes)',
+                generatedBy: 'Forma de creación',
+                contentType: 'Tipo de archivo',
+                "creationable.createdOn": 'Fecha de creación'
+            },
+            downloadFile: 'Descargar pdf'
+        },
         "sourcetypes": {
             name: 'Tipos de atención |||| Tipos de atención',
             fields: {

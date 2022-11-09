@@ -1167,9 +1167,27 @@ export interface FhirCodeDto {
     theDisplay: string;
 }
 
+export interface FileCreationDto extends Serializable {
+    createdOn: Date;
+}
+
 export interface FileDto {
     fileId: number;
     fileName: string;
+}
+
+export interface FileInfoDto {
+    contentType: string;
+    createdOn: Date;
+    creationable: FileCreationDto;
+    generatedBy: string;
+    id: number;
+    name: string;
+    originalPath: string;
+    relativePath: string;
+    size: number;
+    source: string;
+    uuidfile: string;
 }
 
 export interface FormVDto {

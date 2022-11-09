@@ -26,7 +26,6 @@ import passwordReset from './password-reset';
 import careLines from './carelines';
 import clinicalspecialtycarelines from './clinicalspecialtycarelines';
 import documentTypes from './documenttypes';
-import documentFiles from './documentfiles';
 import properties from './properties';
 import restClientMeasures from './rest-client-measures';
 import medicalCoverage from './medicalcoverage';
@@ -56,6 +55,8 @@ import carelineinstitutionspecialty from "./carelineinstitutionspecialty";
 import careLineInstitutionPractice from "./carelineinstitutionpractice";
 import institutionpractices from "./institutionpractices";
 import institutionpracticesrelatedgroups from "./institutionpracticesrelatedgroups";
+import files from "./files";
+import documentFiles from "./documentfiles";
 
 const resourcesAdminInstitucional = (permissions: SGXPermissions) =>
     permissions.isOn('BACKOFFICE_MOSTRAR_ABM_RESERVA_TURNOS') ?
@@ -113,6 +114,7 @@ const resources = (permissions: SGXPermissions) => [
     // debug
     <Resource name="snvs"  {...snvs} />,
     <Resource name="documentfiles" {...documentFiles(permissions)} />,
+    <Resource name="files" {...files(permissions)} />,
     <Resource name="rest-client-measures" {...restClientMeasures(permissions)} />,
     <Resource name="properties" {...properties(permissions)} />,
     // masterData
