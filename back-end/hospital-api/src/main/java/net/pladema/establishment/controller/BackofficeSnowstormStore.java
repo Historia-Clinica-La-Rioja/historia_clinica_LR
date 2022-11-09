@@ -41,8 +41,6 @@ public class BackofficeSnowstormStore implements BackofficeStore<BackofficeSnows
 						.getItems()
 						.stream()
 						.map(this::mapToBackofficeSnowstormDto)
-						.sorted(Comparator.comparing(BackofficeSnowstormDto::getTerm,
-								Comparator.nullsFirst(Comparator.naturalOrder())))
 						.collect(Collectors.toList());
 				int listSize = resultSearch.size();
 				int maxIndex = pageable.getPageSize() < listSize ? (pageable.getPageSize() - 1) : (listSize == 0 ? 0 : listSize - 1);
