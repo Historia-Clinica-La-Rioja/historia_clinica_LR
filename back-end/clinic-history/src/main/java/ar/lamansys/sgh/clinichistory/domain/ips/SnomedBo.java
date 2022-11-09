@@ -32,11 +32,14 @@ public class SnomedBo extends SelfValidating<SnomedBo> {
 
     private String parentFsn;
 
+	private boolean synonym;
+
     public SnomedBo(Snomed snomed) {
         this.sctid = snomed.getSctid();
         this.pt = snomed.getPt();
         this.parentId = snomed.getParentId();
         this.parentFsn = snomed.getParentFsn();
+		this.synonym = snomed.isSynonym();
     }
 
     public SnomedBo(String sctid, String pt) {
@@ -44,6 +47,7 @@ public class SnomedBo extends SelfValidating<SnomedBo> {
         this.pt = pt;
         this.parentId = sctid;
         this.parentFsn = pt;
+		this.synonym = false;
     }
 
     public SnomedBo(Integer id, String sctid, String pt) {
@@ -52,6 +56,7 @@ public class SnomedBo extends SelfValidating<SnomedBo> {
         this.pt = pt;
         this.parentId = sctid;
         this.parentFsn = pt;
+		this.synonym = false;
     }
 
     @Override
@@ -59,7 +64,7 @@ public class SnomedBo extends SelfValidating<SnomedBo> {
         if (this == o) return true;
         if (!(o instanceof SnomedBo)) return false;
         SnomedBo snomedBo = (SnomedBo) o;
-        return Objects.equals(getSctid(), snomedBo.getSctid());
+        return Objects.equals(getSctid(), snomedBo.getSctid()) && Objects.equals(isSynonym(), snomedBo.isSynonym());
     }
 
     @Override

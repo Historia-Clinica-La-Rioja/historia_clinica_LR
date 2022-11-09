@@ -36,10 +36,23 @@ public class Snomed implements Serializable {
 	@Column(name = "parent_fsn", nullable = false)
 	private String parentFsn;
 
+	@Column(name = "synonym", nullable = false)
+	private boolean synonym;
+
 	public Snomed(String sctid, String pt, String parentId, String parentFsn) {
 		this.sctid = sctid;
 		this.pt = pt;
 		this.parentId = parentId;
 		this.parentFsn = parentFsn;
+		this.synonym = false;
 	}
+
+	public Snomed(String sctid, String pt, String parentId, String parentFsn, boolean synonym) {
+		this.sctid = sctid;
+		this.pt = pt;
+		this.parentId = parentId;
+		this.parentFsn = parentFsn;
+		this.synonym = synonym;
+	}
+
 }
