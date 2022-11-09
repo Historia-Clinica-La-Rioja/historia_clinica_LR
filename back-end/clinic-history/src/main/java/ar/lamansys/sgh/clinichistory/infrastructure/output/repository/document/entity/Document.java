@@ -1,14 +1,21 @@
 package ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.entity;
 
+import java.util.Objects;
+
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.EntityListeners;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.Table;
+
+import ar.lamansys.sgx.shared.auditable.entity.SGXAuditableEntity;
 import ar.lamansys.sgx.shared.auditable.listener.SGXAuditListener;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
-import ar.lamansys.sgx.shared.auditable.entity.SGXAuditableEntity;
-
-import javax.persistence.*;
-import java.util.Objects;
 
 @Entity
 @Table(name = "document")
@@ -67,6 +74,9 @@ public class Document extends SGXAuditableEntity<Long> {
 
 	@Column(name = "initial_document_id")
 	private Long initialDocumentId;
+
+	@Column(name = "patient_age_period")
+	private String patientAgePeriod;
 
 	public Document(Integer sourceId, String statusId, Short typeId, Short sourceTypeId, Long initialDocumentId) {
 		this.sourceId = sourceId;

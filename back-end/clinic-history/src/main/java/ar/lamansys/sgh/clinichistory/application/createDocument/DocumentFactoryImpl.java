@@ -1,24 +1,33 @@
 package ar.lamansys.sgh.clinichistory.application.createDocument;
 
-import ar.lamansys.sgh.clinichistory.application.createDocumentFile.CreateDocumentFile;
-import ar.lamansys.sgh.clinichistory.application.document.DocumentService;
-import ar.lamansys.sgh.clinichistory.application.notes.NoteService;
-import ar.lamansys.sgh.clinichistory.domain.document.IDocumentBo;
-import ar.lamansys.sgh.clinichistory.domain.document.event.OnGenerateDocumentEvent;
-import ar.lamansys.sgh.clinichistory.domain.ips.services.*;
-import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.entity.Document;
-import ar.lamansys.sgh.clinichistory.domain.document.PatientInfoBo;
-import ar.lamansys.sgh.clinichistory.domain.ips.DocumentObservationsBo;
-import ar.lamansys.sgx.shared.featureflags.AppFeature;
-
-import ar.lamansys.sgx.shared.featureflags.application.FeatureFlagsService;
+import java.time.LocalDate;
+import java.time.Period;
+import java.util.Optional;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Optional;
+import ar.lamansys.sgh.clinichistory.application.createDocumentFile.CreateDocumentFile;
+import ar.lamansys.sgh.clinichistory.application.document.DocumentService;
+import ar.lamansys.sgh.clinichistory.application.notes.NoteService;
+import ar.lamansys.sgh.clinichistory.domain.document.IDocumentBo;
+import ar.lamansys.sgh.clinichistory.domain.document.PatientInfoBo;
+import ar.lamansys.sgh.clinichistory.domain.document.event.OnGenerateDocumentEvent;
+import ar.lamansys.sgh.clinichistory.domain.ips.DocumentObservationsBo;
+import ar.lamansys.sgh.clinichistory.domain.ips.services.ClinicalObservationService;
+import ar.lamansys.sgh.clinichistory.domain.ips.services.HealthConditionService;
+import ar.lamansys.sgh.clinichistory.domain.ips.services.LoadAllergies;
+import ar.lamansys.sgh.clinichistory.domain.ips.services.LoadDentalActions;
+import ar.lamansys.sgh.clinichistory.domain.ips.services.LoadDiagnosticReports;
+import ar.lamansys.sgh.clinichistory.domain.ips.services.LoadImmunizations;
+import ar.lamansys.sgh.clinichistory.domain.ips.services.LoadMedications;
+import ar.lamansys.sgh.clinichistory.domain.ips.services.LoadProcedures;
+import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.entity.Document;
+import ar.lamansys.sgx.shared.featureflags.AppFeature;
+import ar.lamansys.sgx.shared.featureflags.application.FeatureFlagsService;
+import net.pladema.snvs.application.ports.patient.PatientStorage;
 
 @Service
 public class DocumentFactoryImpl implements DocumentFactory {
@@ -49,6 +58,8 @@ public class DocumentFactoryImpl implements DocumentFactory {
 
 	private final FeatureFlagsService featureFlagsService;
 
+	private final PatientStorage patientStorage;
+
     public DocumentFactoryImpl(DocumentService documentService,
                                CreateDocumentFile createDocumentFile,
                                NoteService noteService,
@@ -60,7 +71,8 @@ public class DocumentFactoryImpl implements DocumentFactory {
                                LoadMedications loadMedications,
                                LoadDiagnosticReports loadDiagnosticReports,
                                LoadDentalActions loadDentalActions,
-							   FeatureFlagsService featureFlagsService) {
+							   FeatureFlagsService featureFlagsService,
+							   PatientStorage patientStorage) {
         this.documentService = documentService;
         this.createDocumentFile = createDocumentFile;
         this.noteService = noteService;
@@ -73,6 +85,7 @@ public class DocumentFactoryImpl implements DocumentFactory {
         this.loadDiagnosticReports = loadDiagnosticReports;
         this.loadDentalActions = loadDentalActions;
 		this.featureFlagsService = featureFlagsService;
+		this.patientStorage = patientStorage;
     }
 
     @Override
@@ -85,9 +98,14 @@ public class DocumentFactoryImpl implements DocumentFactory {
                 documentBo.getDocumentSource(),
 				documentBo.getInitialDocumentId());
         loadNotes(doc, Optional.ofNullable(documentBo.getNotes()));
-        doc = documentService.save(doc);
-        documentBo.setId(doc.getId());
 
+		var patientData = patientStorage.getPatientInfo(documentBo.getPatientId()).orElse(null);
+		if(patientData != null)
+			doc.setPatientAgePeriod(Period.between(patientData.getBirthDate(), LocalDate.now()).toString());
+
+        doc = documentService.save(doc);
+
+        documentBo.setId(doc.getId());
         PatientInfoBo patientInfo = documentBo.getPatientInfo();
         healthConditionService.loadMainDiagnosis(patientInfo, doc.getId(), Optional.ofNullable(documentBo.getMainDiagnosis()));
         healthConditionService.loadDiagnosis(patientInfo, doc.getId(), documentBo.getDiagnosis());
