@@ -36,6 +36,7 @@ import { ScanPatientComponent } from './dialogs/scan-patient/scan-patient.compon
 import { MessageForAuditComponent } from './dialogs/message-for-audit/message-for-audit.component';
 // pipes
 import { ViewNameProfessionAndSpecialtyPipe } from './pipe/view-name-profession-and-specialty.pipe';
+import { FilesUploaderComponent } from './component/files-uploader/files-uploader.component';
 
 @NgModule({
 	declarations: [
@@ -72,6 +73,7 @@ import { ViewNameProfessionAndSpecialtyPipe } from './pipe/view-name-profession-
 		MessageForAuditComponent,
 		// pipes
 		ViewNameProfessionAndSpecialtyPipe,
+  		FilesUploaderComponent,
 	],
 	exports: [
 		CardPatientComponent,

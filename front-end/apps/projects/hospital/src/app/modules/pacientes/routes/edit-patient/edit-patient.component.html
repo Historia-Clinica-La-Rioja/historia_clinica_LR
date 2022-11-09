@@ -1,5 +1,8 @@
 <app-content width="full">
 	<section class="page">
+		<div class="attach_file">
+			<app-files-uploader></app-files-uploader>
+		</div>
 		<div *ngIf="hasInstitutionalAdministratorRole else titleForOtherRoles">
 			<h2 class="page-title" [translate]="'pacientes.edit.TITLE_PERSON'"></h2>
 			<h3 [translate]="'pacientes.edit.SUBTITLE_PERSON'"></h3>
@@ -8,6 +11,9 @@
 			<h2 class="page-title" [translate]="'pacientes.edit.TITLE_PATIENT'"></h2>
 			<h3 [translate]="'pacientes.edit.SUBTITLE_PATIENT'"></h3>
 		</ng-template>
+
+
+
 		<div class="content">
 			<form [formGroup]="form" (ngSubmit)="save()">
 				<div class="form-row">
@@ -515,5 +521,8 @@
 				</div>
 			</form>
 		</div>
+
 	</section>
+
+
 </app-content>
