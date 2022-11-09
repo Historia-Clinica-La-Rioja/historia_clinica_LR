@@ -26,6 +26,7 @@ const CareLineProblemCreate = props => (
                 reference="snowstormproblems"
                 label="resources.carelineproblems.fields.snomedId"
                 filterToQuery={searchText => ({ conceptPt: searchText})}
+                perPage={30}
             >
                 <AutocompleteInput optionText="conceptPt" optionValue="id" validate={[required()]} />
             </ReferenceInput>
