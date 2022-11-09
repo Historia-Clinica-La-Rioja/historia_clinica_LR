@@ -1,3 +1,13 @@
 databaseChangeLog: 
     - logicalFilePath: incrementales-v1_46 
 
+    - changeSet:
+        id: addColumn-patient_age_period-document
+        author: tcepeda
+        changes:
+          - addColumn:
+              tableName: document
+              columns:
+                - column:
+                    name: patient_age_period
+                    type: varchar(12)
