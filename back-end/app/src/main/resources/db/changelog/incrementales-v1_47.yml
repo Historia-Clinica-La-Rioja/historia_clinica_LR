@@ -417,3 +417,65 @@ databaseChangeLog:
               columnName: parent_fsn
               newDataType: varchar(400)
               tableName: snomed
+
+
+    - changeSet:
+        id: addColumn-to_audit-patient
+        author: bchacon
+        changes:
+          - addColumn:
+              tableName: patient
+              columns:
+                - column:
+                    constraints:
+                      nullable: false
+                    name: to_audit
+                    type: boolean
+                    defaultValue: ${boolean.false}
+
+    - changeSet:
+        id: createTable-auditable_patient
+        author: bchacon
+        changes:
+          - createTable:
+              tableName: auditable_patient
+              columns:
+                - column:
+                    autoIncrement: true
+                    constraints:
+                      primaryKey: true
+                      primaryKeyName: PK_auditable_patient
+                    name: id
+                    type: int
+                - column:
+                    constraints:
+                      nullable: false
+                      references: patient(id)
+                      foreignKeyName: FK_auditable_patient_patient_id
+                    name: patient_id
+                    type: int
+                - column:
+                    constraints:
+                      nullable: false
+                      references: institution(id)
+                      foreignKeyName: FK_auditable_patient_institution_id
+                    name: institution_id
+                    type: int
+                - column:
+                    constraints:
+                      nullable: false
+                      references: users(id)
+                      foreignKeyName: FK_auditable_patient_created_by
+                    name: created_by
+                    type: int
+                    defaultValue: -1
+                - column:
+                    constraints:
+                      nullable: false
+                    name: message
+                    type: text
+                - column:
+                    constraints:
+                      nullable: false
+                    name: created_on
+                    type: datetime
