@@ -105,7 +105,7 @@ public class FileService {
             LOG.debug(OUTPUT, true);
             return saveFileInfo(partialPath, uuid, generatedFrom, getHash(path), file);
         }  catch (FileServiceException e) {
-			saveFileError(new FileErrorInfo(path, String.format("transferMultipartFile error => %s", e), appNode.nodeId));
+			saveFileError(new FileErrorInfo(path, String.format("transferMultipartFile error => %s", e.getMessage()), appNode.nodeId));
 			throw e;
 		}
 		catch (IOException e) {
@@ -129,6 +129,13 @@ public class FileService {
 
 	public Resource loadFileRelativePath(String relativeFilePath) {
         Path path = streamFile.buildPath(relativeFilePath);
+		try {
+			validateRelativePath(relativeFilePath);
+		} catch (FileServiceException e) {
+			saveFileError(new FileErrorInfo(relativeFilePath, String.format("loadFileRelativePath error => %s", e.getMessage()), appNode.nodeId));
+			LOG.error(e.getMessage());
+			throw e;
+		}
         try {
             return new UrlResource(path.toUri());
         } catch (MalformedURLException e) {
@@ -140,6 +147,13 @@ public class FileService {
 
 	public Resource loadFileFromAbsolutePath(String absolutePath) {
 		Path path = Paths.get(absolutePath);
+		try {
+			validateAbsolutePath(path.toString());
+		} catch (FileServiceException e) {
+			saveFileError(new FileErrorInfo(absolutePath, String.format("loadFileFromAbsolutePath error => %s", e.getMessage()), appNode.nodeId));
+			LOG.error(e.getMessage());
+			throw e;
+		}
 		try {
 			return new UrlResource(path.toUri());
 		} catch (MalformedURLException e) {
@@ -159,7 +173,7 @@ public class FileService {
 			saveFileError(new FileErrorInfo(dirPath.getPath(), String.format("saveStreamInPath error => %s", e), appNode.nodeId));
 			LOG.error(e.toString());
 			throw new FileServiceException(FileServiceEnumException.SAVE_IOEXCEPTION,
-					String.format("El guardado del siguiente archivo %s tuvo el siguiente error %s", dirPath.getAbsolutePath(), e.getMessage()));
+					String.format("El guardado del siguiente archivo %s tuvo el siguiente error %s", dirPath.getAbsolutePath(), e));
 		}
 	}
 
@@ -186,7 +200,7 @@ public class FileService {
 			saveFileError(new FileErrorInfo(dirPath.getPath(), String.format("readFileAsString error => %s", e), appNode.nodeId));
 			LOG.error(e.toString());
 			throw new FileServiceException(FileServiceEnumException.SAVE_IOEXCEPTION,
-					String.format("La lectura del siguiente archivo %s tuvo el siguiente error %s", dirPath.getAbsolutePath(), e.getMessage()));
+					String.format("La lectura del siguiente archivo %s tuvo el siguiente error %s", dirPath.getAbsolutePath(), e));
 		}
 	}
 
@@ -208,7 +222,7 @@ public class FileService {
 			saveFileError(new FileErrorInfo(dirPath.getPath(), String.format("readStreamFromPath error => %s", e), appNode.nodeId));
 			LOG.error(e.toString());
 			throw new FileServiceException(FileServiceEnumException.SAVE_IOEXCEPTION,
-					String.format("La lectura del siguiente archivo %s tuvo el siguiente error %s", dirPath.getAbsolutePath(), e.getMessage()));
+					String.format("La lectura del siguiente archivo %s tuvo el siguiente error %s", dirPath.getAbsolutePath(), e));
 		}
 	}
 
@@ -253,7 +267,52 @@ public class FileService {
 		try {
 			return Files.size(Paths.get(completePath));
 		}  catch (FileServiceException | IOException e){
-			return Files.size(Paths.get(fileInfo.getOriginalPath()));
+			saveFileError(new FileErrorInfo(fileInfo.getRelativePath(), String.format("getFileSize error => %s", e), appNode.nodeId));
+			LOG.error(e.toString());
+			try {
+				return Files.size(Paths.get(fileInfo.getOriginalPath()));
+			}  catch (IOException e1){
+				saveFileError(new FileErrorInfo(fileInfo.getOriginalPath(), String.format("getFileSize error => %s", e1), appNode.nodeId));
+				LOG.error(e1.toString());
+				throw new FileServiceException(FileServiceEnumException.SAVE_IOEXCEPTION,
+						String.format("La lectura del siguiente archivo %s tuvo el siguiente error %s", fileInfo.getRelativePath(), e));
+			}
 		}
+	}
+
+	public void fixMetadata(Long id) {
+		repository.findById(id)
+				.map(fileInfo -> {
+					String completePath = buildCompletePath(fileInfo.getRelativePath());
+					fileInfo.setChecksum(getHash(completePath));
+					try {
+						fileInfo.setSize(Files.size(Paths.get(completePath)));
+					}  catch (FileServiceException | IOException e){
+						try {
+							saveFileError(new FileErrorInfo(fileInfo.getRelativePath(), String.format("fixMetadata error => %s", e), appNode.nodeId));
+							LOG.error(e.toString());
+							fileInfo.setSize(Files.size(Paths.get(fileInfo.getOriginalPath())));
+						} catch (IOException ex) {
+							saveFileError(new FileErrorInfo(fileInfo.getOriginalPath(), String.format("fixMetadata error => %s", e), appNode.nodeId));
+							LOG.error(e.toString());
+							throw new FileServiceException(FileServiceEnumException.SAVE_IOEXCEPTION,
+									String.format("La lectura del siguiente archivo %s tuvo el siguiente error %s", fileInfo.getRelativePath(), e));
+						}
+					}
+					fileInfo.setContentType(parseToContentType(fileInfo.getName()));
+					return repository.save(fileInfo);
+				});
+	}
+
+	public boolean validateRelativePath(String relativePath) {
+		String path = buildCompletePath(relativePath);
+		return validateAbsolutePath(path);
+	}
+
+	public boolean validateAbsolutePath(String absolutePath) {
+		File dirPath = new File(absolutePath);
+		if (!dirPath.exists())
+			throw new FileServiceException(FileServiceEnumException.NON_EXIST, String.format("El archivo %s no existe", dirPath));
+		return true;
 	}
 }

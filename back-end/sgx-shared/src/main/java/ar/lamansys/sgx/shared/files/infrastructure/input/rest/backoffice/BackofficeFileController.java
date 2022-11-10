@@ -13,7 +13,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 import ar.lamansys.sgx.shared.featureflags.AppFeature;
@@ -35,7 +37,7 @@ public class BackofficeFileController extends AbstractBackofficeController<FileI
 	public BackofficeFileController(
 			BackofficeFileStore store,
 			FileService fileService, FeatureFlagsService featureFlagsService) {
-		super(store, new BackofficePermissionValidatorAdapter<>(HttpMethod.GET));
+		super(store, new BackofficePermissionValidatorAdapter<>(HttpMethod.GET, HttpMethod.PUT));
 		this.fileService = fileService;
 		this.featureFlagsService = featureFlagsService;
 	}
@@ -69,6 +71,13 @@ public class BackofficeFileController extends AbstractBackofficeController<FileI
 				.contentType(contentType)
 				.contentLength(sizeFile)
 				.body(resource);
+	}
+
+	@PutMapping(value = "/{id}/fix-metadata")
+	@PreAuthorize("hasAnyAuthority('ROOT', 'ADMINISTRADOR')")
+	@ResponseStatus(HttpStatus.OK)
+	public void fixMetadata(@PathVariable Long id) {
+		 fileService.fixMetadata(id);
 	}
 
 }

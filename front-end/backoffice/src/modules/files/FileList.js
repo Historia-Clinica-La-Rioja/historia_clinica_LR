@@ -3,7 +3,7 @@ import {
     List,
     Datagrid,
     TextField,
-    ReferenceField, Filter, TextInput, NumberField, NumberInput,
+     Filter, TextInput, NumberField, NumberInput,
 } from 'react-admin';
 import SgxDateField from "../../dateComponents/sgxDateField";
 

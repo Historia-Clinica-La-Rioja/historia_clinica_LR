@@ -11,6 +11,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import ar.lamansys.sgx.shared.dates.configuration.LocalDateMapper;
+import ar.lamansys.sgx.shared.files.FileService;
 import ar.lamansys.sgx.shared.files.infrastructure.input.rest.backoffice.dto.FileInfoDto;
 import ar.lamansys.sgx.shared.files.infrastructure.output.repository.FileInfo;
 import ar.lamansys.sgx.shared.files.infrastructure.output.repository.FileInfoRepository;
@@ -20,10 +21,13 @@ import net.pladema.sgx.backoffice.repository.BackofficeStore;
 public class BackofficeFileStore implements BackofficeStore<FileInfoDto, Long> {
 	private final FileInfoRepository fileInfoRepository;
 
+	private final FileService fileService;
 	private final LocalDateMapper localDateMapper;
 
-	public BackofficeFileStore(FileInfoRepository fileInfoRepository, LocalDateMapper localDateMapper) {
+	public BackofficeFileStore(FileInfoRepository fileInfoRepository, FileService fileService,
+							   LocalDateMapper localDateMapper) {
 		this.fileInfoRepository = fileInfoRepository;
+		this.fileService = fileService;
 		this.localDateMapper = localDateMapper;
 	}
 
@@ -71,11 +75,17 @@ public class BackofficeFileStore implements BackofficeStore<FileInfoDto, Long> {
 	@Override
 	public FileInfoDto save(FileInfoDto dto) {
 		return fileInfoRepository.findById(dto.getId())
-				.map(fileInfoRepository::save)
+				.map(fileInfo -> update(fileInfo, dto))
 				.map(this::mapToDocumentFileDto)
 				.get();
 	}
-	
+
+	private FileInfo update(FileInfo fileInfo, FileInfoDto dto) {
+		fileService.validateRelativePath(dto.getRelativePath());
+		fileInfo.setRelativePath(dto.getRelativePath());
+		return fileInfoRepository.save(fileInfo);
+	}
+
 	@Override
 	public void deleteById(Long id) {
 		fileInfoRepository.deleteById(id);
