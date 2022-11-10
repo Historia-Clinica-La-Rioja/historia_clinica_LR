@@ -8,6 +8,8 @@ import { Label } from 'ng2-charts';
 import { getDisplayedColumns, flattenColumns } from './utils';
 import * as moment from "moment";
 import { CSVFileDownloadService } from '@extensions/services/csvfile-download.service';
+import { FeatureFlagService } from '@core/services/feature-flag.service';
+import { AppFeature } from '@api-rest/api-model';
 
 const formatColumnDate = (tableData: any[], column): any[] => {
 	const dateFormatter = (x) => !x ? x : moment(x).format('DD/MM/YYYY');
@@ -60,7 +62,7 @@ export class QueryRendererComponent {
 	columnTitles: string[] = [];
 	chartData: ChartDataSets[] = [];
 	chartLabels: Label[] = [];
-
+	nameSelfDeterminationFF: boolean;
 
 	noFillChartOptions: ChartOptions = {
 		responsive: true,
@@ -75,9 +77,13 @@ export class QueryRendererComponent {
 	loading = false;
 
 	constructor(
+		private readonly featureFlagService: FeatureFlagService,
 		private cubejsClient: CubejsClient,
 		private fileDownloadService: CSVFileDownloadService
 	) {
+		this.featureFlagService.isActive(AppFeature.HABILITAR_DATOS_AUTOPERCIBIDOS).subscribe(isOn => {
+			this.nameSelfDeterminationFF = isOn
+		});
 	}
 
 	ngOnInit() {
@@ -189,10 +195,31 @@ export class QueryRendererComponent {
 		this.displayedColumns = getDisplayedColumns(
 			resultSet.tableColumns(pivotConfig)
 		);
+
 		this.columnTitles = flattenColumns(resultSet.tableColumns(pivotConfig));
+
+		if (this.nameSelfDeterminationFF) {
+			this.deleteColumn('Referencias.paciente');
+			this.deleteColumn('Referencias.profesional_solicitante');
+		}
+		else {
+			this.deleteColumn('Referencias.paciente_auto_det');
+			this.deleteColumn('Referencias.profesional_auto_det');
+		}
+
 		if (this.listOnTab) {
 			this.fileDownloadService.addTableData(this.listOnTab, this.columnTitles, this.tableData);
 		}
+	}
+
+	deleteColumn(column) {
+		const i = this.displayedColumns.indexOf(column);
+		this.displayedColumns.splice(i, 1);
+		this.columnTitles.splice(i, 1);
+
+		this.tableData.forEach(row => {
+			delete row[column];
+		})
 	}
 
 	updateNumericData(resultSet) {
