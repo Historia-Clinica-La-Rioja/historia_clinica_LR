@@ -8,11 +8,13 @@ import net.pladema.audit.repository.entity.HospitalAudit;
 import net.pladema.audit.service.domain.enums.EActionType;
 import net.pladema.federar.services.FederarService;
 import net.pladema.patient.controller.dto.PatientSearchFilter;
+import net.pladema.patient.repository.AuditablePatientRepository;
 import net.pladema.patient.repository.PatientAuditRepository;
 import net.pladema.patient.repository.PatientMedicalCoverageRepository;
 import net.pladema.patient.repository.PatientRepository;
 import net.pladema.patient.repository.PrivateHealthInsuranceDetailsRepository;
 import net.pladema.patient.repository.domain.PatientPersonVo;
+import net.pladema.patient.repository.entity.AuditablePatient;
 import net.pladema.patient.repository.entity.Patient;
 import net.pladema.patient.repository.entity.PatientAudit;
 import net.pladema.patient.repository.entity.PatientType;
@@ -49,6 +51,7 @@ public class PatientServiceImpl implements PatientService {
 	private final PatientRepository patientRepository;
 	private final HospitalAuditRepository hospitalAuditRepository;
 	private final PatientAuditRepository patientAuditRepository;
+	private final AuditablePatientRepository auditablePatientRepository;
 	private final FeatureFlagsService featureFlagsService;
 
 	public PatientServiceImpl(PatientRepository patientRepository,
@@ -58,11 +61,13 @@ public class PatientServiceImpl implements PatientService {
 							  FederarService federarService,
 							  HospitalAuditRepository hospitalAuditRepository,
 							  PatientAuditRepository patientAuditRepository,
-							  FeatureFlagsService featureFlagsService) {
+							  FeatureFlagsService featureFlagsService,
+							  AuditablePatientRepository auditablePatientRepository) {
 		this.patientRepository = patientRepository;
 		this.hospitalAuditRepository = hospitalAuditRepository;
 		this.patientAuditRepository = patientAuditRepository;
 		this.featureFlagsService = featureFlagsService;
+		this.auditablePatientRepository = auditablePatientRepository;
 	}
 
 	@Override
@@ -160,5 +165,41 @@ public class PatientServiceImpl implements PatientService {
 		return result;
 	}
 
+	@Override
+	public void persistSelectionForAnAudict(Integer patientId, Integer institutionId, String message) {
+		LOG.debug("Input parameter -> patientId {}, institutionId {}, message {}", patientId, institutionId, message);
+		Integer userId = SecurityContextUtils.getUserDetails().userId;
+		AuditablePatient auditablePatient = new AuditablePatient();
+				auditablePatient.setPatientId(patientId);
+				auditablePatient.setInstitutionId(institutionId);
+				auditablePatient.setCreatedBy(userId);
+				auditablePatient.setMessage(message);
+		auditablePatientRepository.save(auditablePatient);
+	}
+
+	@Override
+	@Transactional(readOnly = true)
+	public AuditablePatientInfoDto getAuditablePatientInfo(Integer patientId) {
+		AuditablePatientInfoBo auditablePatientInfo = auditablePatientRepository.getLastSelectionForAnAudict(patientId)
+				.findFirst().orElse(null);
+		if (auditablePatientInfo != null) {
+			auditablePatientInfo.setIncludeNameSelfDetermination(featureFlagsService.isOn(AppFeature.HABILITAR_DATOS_AUTOPERCIBIDOS));
+			AuditablePatientInfoDto result = mapToAuditablePatientInfoDto(auditablePatientInfo);
+			LOG.debug("Output -> {} ", result);
+			return result;
+		}
+		LOG.debug("Output -> No existen mensajes de auditoria para el paciente con id {} ", patientId);
+		return null;
+	}
+
+	private AuditablePatientInfoDto mapToAuditablePatientInfoDto(AuditablePatientInfoBo auditablePatientInfo) {
+		return AuditablePatientInfoDto.builder()
+				.message(auditablePatientInfo.getMessage())
+				.createdBy(auditablePatientInfo.getAutorFullName())
+				.createdOn(localDateMapper.toDateTimeDto(auditablePatientInfo.getCreatedOn()))
+				.institutionName(auditablePatientInfo.getInstitutionName())
+				.build();
+		auditablePatientRepository.save(auditablePatient);
+	}
 
 }

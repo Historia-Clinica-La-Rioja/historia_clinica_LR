@@ -31,4 +31,6 @@ public interface PatientService {
 
 	Optional<String> getIdentificationNumber(Integer patientId);
 
+	void persistSelectionForAnAudict(Integer patientId, Integer institutionId, String message);
+
 }

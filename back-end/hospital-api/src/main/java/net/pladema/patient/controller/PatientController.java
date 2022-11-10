@@ -148,8 +148,7 @@ public class PatientController {
 		BMPersonDto createdPerson = personExternalService.addPerson(patientDto);
 		AddressDto addressToAdd = persistPatientAddress(patientDto, Optional.empty());
 		personExternalService.addPersonExtended(patientDto, createdPerson.getId(), addressToAdd.getId());
-		Patient createdPatient = persistPatientData(patientDto, createdPerson, patient -> {
-		});
+		Patient createdPatient = persistPatientData(patientDto, createdPerson, null);
 		if (createdPatient.isValidated()) {
 			Person person = personMapper.fromPersonDto(createdPerson);
 			FederarResourceAttributes attributes = new FederarResourceAttributes();
@@ -187,9 +186,12 @@ public class PatientController {
 		PersonExtended personExtendedUpdated = personExternalService.updatePersonExtended(patientDto,
 				createdPerson.getId());
 		persistPatientAddress(patientDto, Optional.of(personExtendedUpdated.getAddressId()));
-		Patient createdPatient = persistPatientData(patientDto, createdPerson, (Patient pat) -> pat.setId(patientId));
+		Patient createdPatient = persistPatientData(patientDto, createdPerson, patient);
 
 		patientService.auditActionPatient(institutionId,patientId, EActionType.UPDATE);
+
+		if (patientDto.getToAudit() != null && patientDto.getToAudit())
+			patientService.persistSelectionForAnAudict(patientId, institutionId, patientDto.getMessage());
 
 		return ResponseEntity.created(new URI("")).body(createdPatient.getId());
 	}
@@ -299,15 +301,25 @@ public class PatientController {
 		return addressExternalService.addAddress(addressToAdd);
 	}
 
-	private Patient persistPatientData(APatientDto patientDto, BMPersonDto createdPerson, Consumer<Patient> addIds) {
+	private Patient persistPatientData(APatientDto patientDto, BMPersonDto createdPerson, Patient patientEntity) {
 		Patient patientToAdd = patientMapper.fromPatientDto(patientDto);
 		patientToAdd.setPersonId(createdPerson.getId());
-		addIds.accept(patientToAdd);
+		if (patientEntity != null)
+			setPatientData(patientToAdd, patientEntity);
 		Patient createdPatient = patientService.addPatient(patientToAdd);
 		DoctorsBo doctorsBo = new DoctorsBo(patientDto.getGeneralPractitioner(), patientDto.getPamiDoctor());
 		additionalDoctorService.addAdditionalDoctors(doctorsBo, createdPatient.getId());
 		LOG.debug(OUTPUT, createdPatient.getId());
 		return createdPatient;
+	}
+
+	private void setPatientData (Patient patientToAdd, Patient patientHistory) {
+		if (patientToAdd.getToAudit() == null)
+			patientToAdd.setToAudit(patientHistory.getToAudit());
+		patientToAdd.setId(patientHistory.getId());
+		patientToAdd.setIdentityVerificationStatusId(patientHistory.getIdentityVerificationStatusId());
+		patientToAdd.setComments(patientHistory.getComments());
+		patientToAdd.setNationalId(patientHistory.getNationalId());
 	}
 
 	private List<Integer> getPersonsIds(List<Patient> patients) {
@@ -349,4 +361,5 @@ public class PatientController {
 		});
 		return result;
 	}
+
 }

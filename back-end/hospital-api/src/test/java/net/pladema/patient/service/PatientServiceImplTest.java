@@ -5,6 +5,7 @@ import net.pladema.UnitRepository;
 import net.pladema.audit.repository.HospitalAuditRepository;
 import net.pladema.federar.services.FederarService;
 import net.pladema.patient.controller.dto.PatientSearchFilter;
+import net.pladema.patient.repository.AuditablePatientRepository;
 import net.pladema.patient.repository.PatientAuditRepository;
 import net.pladema.patient.repository.PatientMedicalCoverageRepository;
 import net.pladema.patient.repository.PatientRepository;
@@ -53,7 +54,10 @@ class PatientServiceImplIntegrationTest extends UnitRepository {
 	@Mock
     private FeatureFlagsService featureFlagsService;
 
-    @BeforeEach
+	@Mock
+	private AuditablePatientRepository auditablePatientRepository;
+
+	@BeforeEach
     void setUp(){
         patientService = new PatientServiceImpl(
                 patientRepository,
@@ -63,8 +67,8 @@ class PatientServiceImplIntegrationTest extends UnitRepository {
                 federarService,
                 hospitalAuditRepository,
                 patientAuditRepository,
-                featureFlagsService
-                );
+                featureFlagsService,
+				auditablePatientRepository);
     }
 
     @Test
