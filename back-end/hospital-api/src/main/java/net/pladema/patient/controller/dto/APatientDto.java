@@ -7,6 +7,8 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import net.pladema.person.controller.dto.APersonDto;
 
+import javax.annotation.Nullable;
+
 @Getter
 @Setter
 @NoArgsConstructor
@@ -22,4 +24,10 @@ public class APatientDto extends APersonDto{
     private AAdditionalDoctorDto generalPractitioner;
 
     private AAdditionalDoctorDto pamiDoctor;
+
+    @Nullable
+    private Boolean toAudit;
+
+	@Nullable
+	private String message;
 }

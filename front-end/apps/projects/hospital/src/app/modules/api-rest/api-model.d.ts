@@ -32,7 +32,9 @@ export interface APatientDto extends APersonDto {
     comments: string;
     generalPractitioner: AAdditionalDoctorDto;
     identityVerificationStatusId: number;
+    message?: string;
     pamiDoctor: AAdditionalDoctorDto;
+    toAudit?: boolean;
     typeId: number;
 }
 
