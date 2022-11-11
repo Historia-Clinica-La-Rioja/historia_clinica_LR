@@ -3,7 +3,7 @@
 	<section class="page">
 
 		<div class="attach_file">
-			<app-files-uploader></app-files-uploader>
+			<app-files-uploader [personId]="personId" [hasToSaveFiles]="hasToSaveFiles" (filesId)="subscribeFinishUploadFiles($event)"></app-files-uploader>
 		</div>
 		<div *ngIf="hasInstitutionalAdministratorRole else titleForOtherRoles">
 			<h2 class="page-title"> {{ 'pacientes.new.TITLE_TEMPORARY_PERSON' | translate }} </h2>

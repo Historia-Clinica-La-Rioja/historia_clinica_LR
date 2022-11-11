@@ -1,7 +1,7 @@
 import { Component, OnInit, ElementRef, ViewChild } from '@angular/core';
 import { FormGroup, FormBuilder, Validators, AbstractControl } from '@angular/forms';
 import { ERole } from '@api-rest/api-model';
-import { APatientDto, BMPatientDto, EthnicityDto, PersonOccupationDto, EducationLevelDto, GenderDto, IdentificationTypeDto, PatientMedicalCoverageDto, SelfPerceivedGenderDto } from '@api-rest/api-model';
+import { APatientDto, BMPatientDto, EthnicityDto, PersonOccupationDto, EducationLevelDto, GenderDto, IdentificationTypeDto, PatientMedicalCoverageDto, SelfPerceivedGenderDto, BasicPatientDto } from '@api-rest/api-model';
 import { scrollIntoError, hasError, VALIDATIONS, DEFAULT_COUNTRY_ID, updateControlValidator } from '@core/utils/form.utils';
 import { Router, ActivatedRoute } from '@angular/router';
 import { PatientService } from '@api-rest/services/patient.service';
@@ -18,6 +18,7 @@ import { MapperService } from '@core/services/mapper.service';
 import { PatientMedicalCoverageService } from '@api-rest/services/patient-medical-coverage.service';
 import { PERSON } from '@core/constants/validation-constants';
 import { PermissionsService } from '@core/services/permissions.service';
+import { Observable } from 'rxjs';
 
 const TEMPORARY_PATIENT = 3;
 const ROUTE_HOME = 'pacientes';
@@ -67,6 +68,9 @@ export class NewTemporaryPatientComponent implements OnInit {
 	public otherLastNamesDisabled = false;
 	public birthDateDisabled = false;
 	@ViewChild('startView') startView: ElementRef;
+	hasToSaveFiles: boolean = false;
+	personId: number;
+	patientId: number;
 
 	constructor(
 		private formBuilder: FormBuilder,
@@ -237,13 +241,18 @@ export class NewTemporaryPatientComponent implements OnInit {
 
 	}
 
-	save(): void {
+	save() {
 		this.formSubmitted = true;
 		if (this.form.valid) {
 			const personRequest: APatientDto = this.mapToPersonRequest();
 			this.isSubmitButtonDisabled = true;
 			this.patientService.addPatient(personRequest)
 				.subscribe(patientId => {
+					this.patientId = patientId;
+					this.patientService.getPatientBasicData<BasicPatientDto>(patientId).subscribe((patientBasicData: BasicPatientDto) => {
+						this.personId = patientBasicData.person.id;
+						this.hasToSaveFiles = true;
+					})
 					if (this.patientMedicalCoveragesToAdd) {
 						const patientMedicalCoveragesDto: PatientMedicalCoverageDto[] =
 							this.patientMedicalCoveragesToAdd.map(s => this.mapperService.toPatientMedicalCoverageDto(s));
@@ -269,6 +278,13 @@ export class NewTemporaryPatientComponent implements OnInit {
 		return this.hasInstitutionalAdministratorRole ? 'pacientes.new.messages.ERROR_PERSON' : 'pacientes.new.messages.ERROR_PATIENT' ;
 	}
 
+	subscribeFinishUploadFiles(filesId$: Observable<number[]>) {
+		filesId$?.subscribe((filesIds: number[]) => {
+			if (filesIds.length) {
+				this.router.navigate([this.routePrefix + ROUTE_PROFILE + this.patientId]);
+			}
+		})
+	}
 
 	private mapToPersonRequest(): APatientDto {
 		const patient: APatientDto = {
@@ -429,8 +445,8 @@ export class NewTemporaryPatientComponent implements OnInit {
 		this.showOtherSelfPerceivedGender();
 	}
 
-	updatePhoneValidators(){
-		if (this.form.controls.phoneNumber.value||this.form.controls.phonePrefix.value) {
+	updatePhoneValidators() {
+		if (this.form.controls.phoneNumber.value || this.form.controls.phonePrefix.value) {
 			updateControlValidator(this.form, 'phoneNumber', [Validators.required]);
 			updateControlValidator(this.form, 'phonePrefix', [Validators.required]);
 		} else {

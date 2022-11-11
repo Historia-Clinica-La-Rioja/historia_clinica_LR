@@ -15,6 +15,7 @@ import {
 	PatientMedicalCoverageDto,
 	PersonPhotoDto,
 	SelfPerceivedGenderDto,
+	BasicPatientDto
 } from '@api-rest/api-model';
 import { PatientService } from '@api-rest/services/patient.service';
 import { scrollIntoError, hasError, VALIDATIONS, DEFAULT_COUNTRY_ID, updateControlValidator } from '@core/utils/form.utils';
@@ -29,6 +30,7 @@ import { PatientMedicalCoverageService } from '@api-rest/services/patient-medica
 import { PERSON } from '@core/constants/validation-constants';
 import { NavigationService } from '@pacientes/services/navigation.service';
 import { PermissionsService } from '@core/services/permissions.service';
+import { Observable } from 'rxjs';
 
 const ROUTE_PROFILE = 'pacientes/profile/';
 const ROUTE_HOME_PATIENT = 'pacientes';
@@ -75,6 +77,10 @@ export class NewPatientComponent implements OnInit {
 	public otherLastNamesDisabled = false;
 	public birthDateDisabled = false;
 	hasInstitutionalAdministrativeRole = false;
+	hasToSaveFiles: boolean = false;
+	patientId: number;
+	personId: number;
+
 	constructor(
 		private formBuilder: FormBuilder,
 		private router: Router,
@@ -276,6 +282,11 @@ export class NewPatientComponent implements OnInit {
 			const personRequest: APatientDto = this.mapToPersonRequest();
 			this.patientService.addPatient(personRequest)
 				.subscribe(patientId => {
+					this.patientId = patientId;
+					this.patientService.getPatientBasicData<BasicPatientDto>(patientId).subscribe((patientBasicData: BasicPatientDto) => {
+						this.personId = patientBasicData.person.id;
+						this.hasToSaveFiles = true;
+					})
 					if (this.personPhoto != null) {
 						this.patientService.addPatientPhoto(patientId, this.personPhoto).subscribe();
 					}
@@ -303,6 +314,14 @@ export class NewPatientComponent implements OnInit {
 
 	private getMessagesError(): string {
 		return this.hasInstitutionalAdministrativeRole ? 'pacientes.new.messages.ERROR_PERSON' : 'pacientes.new.messages.ERROR_PATIENT' ;
+	}
+
+	subscribeFinishUploadFiles(filesId$: Observable<number[]>) {
+		filesId$.subscribe((filesIds: number[]) => {
+			if (filesIds.length) {
+				this.router.navigate([this.routePrefix + ROUTE_PROFILE + this.patientId]);
+			}
+		})
 	}
 
 	private mapToPersonRequest(): APatientDto {

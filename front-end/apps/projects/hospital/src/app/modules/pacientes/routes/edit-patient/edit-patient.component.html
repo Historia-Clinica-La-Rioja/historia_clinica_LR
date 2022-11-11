@@ -1,7 +1,7 @@
 <app-content width="full">
 	<section class="page">
 		<div class="attach_file">
-			<app-files-uploader></app-files-uploader>
+			<app-files-uploader [personId]="completeDataPatient?.person.id" [hasToSaveFiles]="hasToSaveFiles" (filesId)="savePatient($event)"></app-files-uploader>
 		</div>
 		<div *ngIf="hasInstitutionalAdministratorRole else titleForOtherRoles">
 			<h2 class="page-title" [translate]="'pacientes.edit.TITLE_PERSON'"></h2>

@@ -78,7 +78,7 @@ export class EditPatientComponent implements OnInit {
 	private toAudit: boolean = null;
 	private wasMarked = false;
 	public patientId: any;
-
+	public filesId: number[];
 	private medicalCoverages: PatientMedicalCoverage[];
 	public ethnicities: EthnicityDto[];
 	public occupations: PersonOccupationDto[];
@@ -86,6 +86,8 @@ export class EditPatientComponent implements OnInit {
 	currentEducationLevelDescription: string;
 	currentOccupationDescription: string;
 	hasInstitutionalAdministratorRole = false;
+	hasToSaveFiles: boolean = false;
+
 	constructor(
 		private formBuilder: FormBuilder,
 		private router: Router,
@@ -143,8 +145,8 @@ export class EditPatientComponent implements OnInit {
 								this.form.setControl('lastName', new FormControl(completeData.person.lastName, Validators.required));
 								this.form.setControl('otherLastNames', new FormControl(personInformationData.otherLastNames));
 								this.form.setControl('mothersLastName', new FormControl(personInformationData.mothersLastName));
-								this.form.setControl('patientId', new FormControl(completeData.id,Validators.required));
-								this.form.setControl('statetId', new FormControl(completeData.patientType.id,Validators.required));
+								this.form.setControl('patientId', new FormControl(completeData.id, Validators.required));
+								this.form.setControl('statetId', new FormControl(completeData.patientType.id, Validators.required));
 								if (completeData.person.gender.id) {
 									this.form.setControl('genderId', new FormControl(Number(completeData.person.gender.id), Validators.required));
 								}
@@ -304,8 +306,8 @@ export class EditPatientComponent implements OnInit {
 			identificationNumber: [null, [Validators.required, Validators.maxLength(VALIDATIONS.MAX_LENGTH.identif_number)]],
 			identificationTypeId: [null, [Validators.required]],
 			birthDate: [null, [Validators.required]],
-			patientId:[null],
-			stateId:[null],
+			patientId: [null],
+			stateId: [null],
 
 			// Person extended
 			cuil: [null, [Validators.maxLength(VALIDATIONS.MAX_LENGTH.cuil)]],
@@ -355,6 +357,7 @@ export class EditPatientComponent implements OnInit {
 					this.router.navigate([this.routePrefix + ROUTE_PROFILE + patientId]);
 					this.snackBarService.showSuccess(this.getMessagesSuccess());
 				}, _ => this.snackBarService.showError(this.getMessagesError()));
+			this.hasToSaveFiles = true;
 		} else {
 			scrollIntoError(this.form, this.el);
 		}
@@ -448,6 +451,22 @@ export class EditPatientComponent implements OnInit {
 		return this.hasInstitutionalAdministratorRole ? 'pacientes.edit.messages.ERROR_PERSON' : 'pacientes.edit.messages.ERROR_PATIENT';
 	}
 
+	savePatient(idFiles: number[]) {
+		this.filesId = idFiles;
+		const personRequest: APatientDto = this.mapToPersonRequest();
+		this.patientService.editPatient(personRequest, this.patientId)
+			.subscribe(patientId => {
+				if (this.medicalCoverages) {
+					const patientMedicalCoveragesDto: PatientMedicalCoverageDto[] =
+						this.medicalCoverages.map(s => this.mapperService.toPatientMedicalCoverageDto(s));
+					this.patientMedicalCoverageService.addPatientMedicalCoverages(this.patientId, patientMedicalCoveragesDto)
+						.subscribe();
+				}
+				this.router.navigate([this.routePrefix + ROUTE_PROFILE + patientId]);
+				this.snackBarService.showSuccess('pacientes.edit.messages.SUCCESS');
+			}, _ => this.snackBarService.showError('pacientes.edit.messages.ERROR'));
+	}
+
 	private mapToPersonRequest(): APatientDto {
 		let patient: APatientDto = {
 			birthDate: this.form.controls.birthDate.value,
@@ -499,7 +518,7 @@ export class EditPatientComponent implements OnInit {
 				generalPractitioner: false
 
 			},
-			fileIds: []
+			fileIds: this.filesId,
 		};
 
 		if (this.toAudit) {
