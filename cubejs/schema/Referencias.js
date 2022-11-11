@@ -2,12 +2,14 @@ cube(`Referencias`, {
 sql: `SELECT r.id,
         concat_ws(' ', it.description, p.identification_number) AS documento,
         concat_ws(', ', concat_ws(' ', p.last_name, p.other_last_names), concat_ws(' ', p.first_name, p.middle_names)) AS paciente,
+        concat_ws(', ', concat_ws(' ', p.last_name, p.other_last_names), CASE WHEN pex.name_self_determination IS NULL THEN concat_ws(' ', p.first_name, p.middle_names) ELSE pex.name_self_determination END) AS paciente_auto_det,
         concat_ws('- ', pex.phone_prefix, pex.phone_number) AS telefono,
         pex.email,
         oc.institution_id as institucion_origen_id,
         io.name as institucion_origen,
         oc.doctor_id,
         concat_ws(', ', concat_ws(' ', doc.last_name, doc.other_last_names), concat_ws(' ', doc.first_name, doc.middle_names)) AS profesional_solicitante,
+        concat_ws(', ', concat_ws(' ', doc.last_name, doc.other_last_names), CASE WHEN docex.name_self_determination IS NULL THEN concat_ws(' ', doc.first_name, doc.middle_names) ELSE docex.name_self_determination END) AS profesional_auto_det,
         cl.id as id_linea_cuidado,
         cl.description as linea_cuidado,
         cs.id as id_especialidad_clinica,
@@ -24,6 +26,7 @@ sql: `SELECT r.id,
         JOIN care_line cl ON (r.care_line_id = cl.id) 
         JOIN healthcare_professional hp ON (oc.doctor_id = hp.id) 
         JOIN person doc ON (hp.person_id = doc.id)
+        JOIN person_extended docex ON (docex.person_id = doc.id)
         JOIN patient pa ON (pa.id=oc.patient_id)
         JOIN person p ON (p.id=pa.person_id)
         JOIN person_extended pex ON (pex.person_id = p.id)
@@ -46,12 +49,14 @@ UNION ALL
     SELECT r.id,
         concat_ws(' ', it.description, p.identification_number) AS documento,
         concat_ws(', ', concat_ws(' ', p.last_name, p.other_last_names), concat_ws(' ', p.first_name, p.middle_names)) AS paciente,
+        concat_ws(', ', concat_ws(' ', p.last_name, p.other_last_names), CASE WHEN pex.name_self_determination IS NULL THEN concat_ws(' ', p.first_name, p.middle_names) ELSE pex.name_self_determination END) AS paciente_auto_det,
         concat_ws('- ', pex.phone_prefix, pex.phone_number) AS telefono,
         pex.email,
         oc.institution_id as institucion_origen_id,
         io.name as institucion_origen,
         oc.doctor_id,
         concat_ws(', ', concat_ws(' ', doc.last_name, doc.other_last_names), concat_ws(' ', doc.first_name, doc.middle_names)) AS profesional_solicitante,
+        concat_ws(', ', concat_ws(' ', doc.last_name, doc.other_last_names), CASE WHEN docex.name_self_determination IS NULL THEN concat_ws(' ', doc.first_name, doc.middle_names) ELSE docex.name_self_determination END) AS profesional_auto_det,
         cl.id as id_linea_cuidado,
         cl.description as linea_cuidado,
         cs.id as id_especialidad_clinica,
@@ -68,6 +73,7 @@ UNION ALL
         JOIN care_line cl ON (r.care_line_id = cl.id) 
         JOIN healthcare_professional hp ON (oc.doctor_id = hp.id) 
         JOIN person doc ON (hp.person_id = doc.id)
+        JOIN person_extended docex ON (docex.person_id = doc.id)
         JOIN patient pa ON (pa.id=oc.patient_id)
         JOIN person p ON (p.id=pa.person_id)
         JOIN person_extended pex ON (pex.person_id = p.id)
@@ -120,6 +126,13 @@ UNION ALL
       type: `string`,
       title: 'Paciente',
     },
+     // Apellido y nombre autopercibido del paciente
+     paciente_auto_det: {
+      sql: `paciente_auto_det`,
+      type: `string`,
+      title: 'Paciente',
+    },
+
     // teléfono del paciente
     telefono: {
       sql: `telefono`,
@@ -161,11 +174,18 @@ UNION ALL
       title: 'Id Profesional solicitante',
     },
     // Apellido y nombre del profesional solicitante
-    doctor_solicitante: {
+    profesional_solicitante: {
       sql: `profesional_solicitante`,
       type: `string`,
       title: `Profesional solicitante`,
     },
+    // Apellido y nombre autopercibido del profesional solicitante
+    profesional_auto_det: {
+      sql: `profesional_auto_det`,
+      type: `string`,
+      title: `Profesional solicitante`,
+    },
+
     // Estado referencia
     tiene_contra: {
       sql: `tiene_contra`,
