@@ -211,6 +211,7 @@ public class AnnexReportServiceImpl implements AnnexReportService {
 		ctx.put("hasProcedures", reportDataDto.getHasProcedures());
 		ctx.put("specialty", reportDataDto.getSpecialty());
 		ctx.put("problems", reportDataDto.getProblems());
+		ctx.put("rnos", reportDataDto.getRnos());
         return ctx;
     }
 

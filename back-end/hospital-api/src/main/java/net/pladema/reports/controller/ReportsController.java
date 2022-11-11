@@ -163,6 +163,7 @@ public class ReportsController {
         ZonedDateTime now = ZonedDateTime.now(ZoneId.of(JacksonDateFormatConfig.ZONE_ID));
         AnnexIIBo reportDataBo = annexReportService.getAppointmentData(appointmentId);
         AnnexIIDto reportDataDto = reportsMapper.toAnexoIIDto(reportDataBo);
+		reportDataDto.setRnos(reportDataBo.getRnos());
         Map<String, Object> context = annexReportService.createAppointmentContext(reportDataDto);
         String outputFileName = annexReportService.createConsultationFileName(appointmentId.longValue(), now);
         ResponseEntity<InputStreamResource> response = generatePdfResponse(context, outputFileName, "annex_report");
