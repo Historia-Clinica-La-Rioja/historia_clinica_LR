@@ -167,7 +167,9 @@ public class DiaryAvailableAppointmentsServiceImpl implements DiaryAvailableAppo
 		).findAny().isEmpty();
 	}
 
-	private DiaryAvailableProtectedAppointmentsBo createAvailableProtectedAppointment(LocalTime availableAppointmentTime, LocalDate availableAppointmentDate, DiaryAvailableProtectedAppointmentsInfoBo diary, Integer openingHoursId) {
+	private DiaryAvailableProtectedAppointmentsBo createAvailableProtectedAppointment(LocalTime availableAppointmentTime, LocalDate availableAppointmentDate,
+																					  DiaryAvailableProtectedAppointmentsInfoBo diary,
+																					  Integer openingHoursId) {
 		return DiaryAvailableProtectedAppointmentsBo.builder()
 				.diaryId(diary.getDiaryId())
 				.openingHoursId(openingHoursId)

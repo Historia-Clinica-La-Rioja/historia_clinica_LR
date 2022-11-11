@@ -34,4 +34,7 @@ public class DiaryAvailableProtectedAppointmentsDto {
 
 	private boolean isJointDiary;
 
+	private Integer openingHoursId;
+
+	private boolean overturnMode;
 }

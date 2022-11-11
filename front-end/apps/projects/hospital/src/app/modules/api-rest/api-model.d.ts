@@ -801,6 +801,8 @@ export interface DiaryAvailableProtectedAppointmentsDto {
     hour: TimeDto;
     institution: InstitutionBasicInfoDto;
     jointDiary: boolean;
+    openingHoursId: number;
+    overturnMode: boolean;
     professionalFullName: string;
 }
 
