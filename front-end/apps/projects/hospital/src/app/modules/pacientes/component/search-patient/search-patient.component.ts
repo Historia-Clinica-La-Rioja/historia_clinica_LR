@@ -4,6 +4,7 @@ import { MatDialogRef } from '@angular/material/dialog';
 import { BasicPatientDto, GenderDto, IdentificationTypeDto, PersonPhotoDto } from '@api-rest/api-model';
 import { PatientService } from '@api-rest/services/patient.service';
 import { PersonMasterDataService } from '@api-rest/services/person-master-data.service';
+import { REMOVE_SUBSTRING_DNI } from '@core/constants/validation-constants';
 import {getError, hasError, VALIDATIONS } from '@core/utils/form.utils';
 import { IDENTIFICATION_TYPE_IDS } from '@core/utils/patient.utils';
 import { PatientBasicData } from '@presentation/components/patient-card/patient-card.component';
@@ -64,7 +65,7 @@ export class SearchPatientComponent implements OnInit {
 			const formSearchValue = this.formSearch.value;
 			const searchRequest = {
 				identificationTypeId: formSearchValue.identificationType,
-				identificationNumber: +formSearchValue.identificationNumber,
+				identificationNumber: +formSearchValue.identificationNumber.replace(REMOVE_SUBSTRING_DNI, ''),
 				genderId: formSearchValue.gender,
 			};
 			this.patientService.getPatientMinimal(searchRequest).subscribe(

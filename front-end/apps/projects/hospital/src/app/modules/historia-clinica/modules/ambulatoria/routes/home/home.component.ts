@@ -9,7 +9,7 @@ import { DateFormat, momentFormat, momentParseDateTime, newMoment } from '@core/
 import { Router } from '@angular/router';
 import { ContextService } from '@core/services/context.service';
 import { PatientService, PersonInformationRequest } from '@api-rest/services/patient.service';
-import { PERSON } from '@core/constants/validation-constants';
+import { PERSON, REMOVE_SUBSTRING_DNI } from '@core/constants/validation-constants';
 import { MIN_DATE } from "@core/utils/date.utils";
 import { FeatureFlagService } from "@core/services/feature-flag.service";
 import { IDENTIFICATION_TYPE_IDS } from '@core/utils/patient.utils';
@@ -116,7 +116,7 @@ export class HomeComponent implements OnInit {
 			this.formSubmitted = true;
 			this.requiringValues = false;
 			this.requiringAtLeastOneMoreValue = false;
-			this.personalInformationForm.value.identificationNumber = this.personalInformationForm.value.identificationNumber ? +this.personalInformationForm.value.identificationNumber : null;
+			this.personalInformationForm.value.identificationNumber = this.personalInformationForm.value.identificationNumber ? +this.personalInformationForm.value.identificationNumber.replace(REMOVE_SUBSTRING_DNI,'') : null;
 			const personalInformationReq: PersonInformationRequest = this.personalInformationForm.value;
 			this.patientService.searchPatientOptionalFilters(personalInformationReq)
 				.subscribe((data: LimitedPatientSearchDto) => {

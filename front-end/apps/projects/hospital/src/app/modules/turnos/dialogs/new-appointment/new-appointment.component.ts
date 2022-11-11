@@ -29,6 +29,7 @@ import { dateDtoToDate, timeDtoToDate } from "@api-rest/mapper/date-dto.mapper";
 import { DatePipeFormat } from "@core/utils/date.utils";
 import { DatePipe } from "@angular/common";
 import { DiscardWarningComponent } from "@presentation/dialogs/discard-warning/discard-warning.component";
+import { REMOVE_SUBSTRING_DNI } from '@core/constants/validation-constants';
 
 const ROUTE_SEARCH = 'pacientes/search';
 const TEMPORARY_PATIENT_ID = 3;
@@ -140,7 +141,7 @@ export class NewAppointmentComponent implements OnInit {
 
 			const searchRequest = {
 				identificationTypeId: formSearchValue.identifType,
-				identificationNumber: +formSearchValue.identifNumber,
+				identificationNumber: +formSearchValue.identifNumber.replace(REMOVE_SUBSTRING_DNI, ''),
 				genderId: formSearchValue.gender,
 			};
 
