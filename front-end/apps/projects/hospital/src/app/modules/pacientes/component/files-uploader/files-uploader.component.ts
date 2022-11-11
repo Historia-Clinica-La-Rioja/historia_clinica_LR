@@ -1,4 +1,5 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { PersonFileDto } from '@api-rest/api-model';
 import { PersonFileService } from '@api-rest/services/person-file.service';
 import { Observable, of } from 'rxjs';
 
@@ -8,6 +9,7 @@ import { Observable, of } from 'rxjs';
 	styleUrls: ['./files-uploader.component.scss']
 })
 export class FilesUploaderComponent implements OnInit {
+	@Input() personFiles: PersonFileDto;
 	@Input() personId: number;
 	@Input()
 	set hasToSaveFiles(value: boolean) {
@@ -45,5 +47,9 @@ export class FilesUploaderComponent implements OnInit {
 		} else {
 			this.filesId.emit();
 		}
+	}
+
+	download(fileId: number, fileName: string): void {
+		this.personFileService.downloadFile(fileId, this.personId, fileName);
 	}
 }

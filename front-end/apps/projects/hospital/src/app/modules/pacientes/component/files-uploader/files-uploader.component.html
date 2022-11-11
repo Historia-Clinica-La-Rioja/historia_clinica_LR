@@ -16,5 +16,13 @@
 			</span>
 			<button mat-icon-button color="warn" (click)="removeSelectedFile(index)"><mat-icon>delete</mat-icon></button>
 		</div>
+		<div *ngFor="let file of personFiles" fxFlex="100%" fxFlexFill>
+			<div fxLayout="column" fxLayoutAlign="space-around start">
+
+				<a mat-button color="primary" (click)="download(file.fileId,file.fileName)" *appHasRole="['ADMINISTRATIVO']">{{file.fileName}}</a>
+
+				<span *appHasRole="['ADMINISTRADOR_INSTITUCIONAL_BACKOFFICE']" class="info-content">{{file.fileName}}</span>
+			</div>
+		</div>
 	</div>
 </div>

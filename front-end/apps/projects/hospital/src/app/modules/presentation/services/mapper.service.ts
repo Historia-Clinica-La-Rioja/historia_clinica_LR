@@ -89,7 +89,10 @@ export class MapperService {
 			phonePrefix: person.phonePrefix,
 			phoneNumber: person.phoneNumber,
 			medicalCoverageName: patient.medicalCoverageName,
-			medicalCoverageAffiliateNumber: patient.medicalCoverageAffiliateNumber
+			medicalCoverageAffiliateNumber: patient.medicalCoverageAffiliateNumber,
+			files: patient.person.files,
+			personId:patient.person.id,
+
 		};
 		personalInformation.address.id = null;
 		return personalInformation;

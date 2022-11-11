@@ -1,7 +1,7 @@
 <app-content width="full">
 	<section class="page">
 		<div class="attach_file">
-			<app-files-uploader [personId]="completeDataPatient?.person.id" [hasToSaveFiles]="hasToSaveFiles" (filesId)="savePatient($event)"></app-files-uploader>
+			<app-files-uploader [personId]="completeDataPatient?.person.id" [personFiles]="completeDataPatient?.person.files" [hasToSaveFiles]="hasToSaveFiles" (filesId)="savePatient($event)"></app-files-uploader>
 		</div>
 		<div *ngIf="hasInstitutionalAdministratorRole else titleForOtherRoles">
 			<h2 class="page-title" [translate]="'pacientes.edit.TITLE_PERSON'"></h2>
@@ -109,10 +109,10 @@
 							<mat-select id="stateId" name="stateId"
 								formControlName="stateId"
 								placeholder="{{'pacientes.form.SELECT' | translate}}">
-								<mat-option *ngFor="let state of identificationTypeList"
+								<mat-option *ngFor="let state of typesPatient"
 									[value]="state.id">
 									{{state.description}}
-								</mat-option> <!--cambiar array cuando este hecho el servicio-->
+								</mat-option>
 							</mat-select>
 						</mat-form-field>
 

@@ -17,7 +17,8 @@ import {
 	EthnicityDto,
 	PersonOccupationDto,
 	EducationLevelDto,
-	SelfPerceivedGenderDto
+	SelfPerceivedGenderDto,
+	PatientType
 } from '@api-rest/api-model';
 
 import { AppFeature, } from '@api-rest/api-model';
@@ -42,6 +43,7 @@ import { DatePipeFormat } from '@core/utils/date.utils';
 import { DatePipe } from '@angular/common';
 import { Observable } from 'rxjs';
 import { DiscardWarningComponent } from '@presentation/dialogs/discard-warning/discard-warning.component';
+import { PatientMasterDataService } from '@api-rest/services/patient-master-data.service';
 
 
 const ROUTE_PROFILE = 'pacientes/profile/';
@@ -87,6 +89,7 @@ export class EditPatientComponent implements OnInit {
 	currentOccupationDescription: string;
 	hasInstitutionalAdministratorRole = false;
 	hasToSaveFiles: boolean = false;
+	typesPatient: PatientType[];
 
 	constructor(
 		private formBuilder: FormBuilder,
@@ -105,6 +108,7 @@ export class EditPatientComponent implements OnInit {
 		private readonly patientMedicalCoverageService: PatientMedicalCoverageService,
 		private permissionsService: PermissionsService,
 		private readonly datePipe: DatePipe,
+		private patientMasterDataService: PatientMasterDataService,
 	) {
 		this.routePrefix = 'institucion/' + this.contextService.institutionId + '/';
 	}
@@ -146,7 +150,8 @@ export class EditPatientComponent implements OnInit {
 								this.form.setControl('otherLastNames', new FormControl(personInformationData.otherLastNames));
 								this.form.setControl('mothersLastName', new FormControl(personInformationData.mothersLastName));
 								this.form.setControl('patientId', new FormControl(completeData.id, Validators.required));
-								this.form.setControl('statetId', new FormControl(completeData.patientType.id, Validators.required));
+								this.form.setControl('stateId', new FormControl(completeData.patientType.id, Validators.required));
+
 								if (completeData.person.gender.id) {
 									this.form.setControl('genderId', new FormControl(Number(completeData.person.gender.id), Validators.required));
 								}
@@ -239,7 +244,9 @@ export class EditPatientComponent implements OnInit {
 										);
 									}
 								);
-
+								this.patientMasterDataService.getTypesPatient().subscribe(res => {
+									this.typesPatient = res;
+								})
 								//Tooltips
 								this.currentOccupationDescription = this.occupations.find(occupation => occupation.id === personInformationData.occupationId)?.description;
 								this.currentEducationLevelDescription = this.educationLevels.find(educationLevel => educationLevel.id === personInformationData.educationLevelId)?.description;

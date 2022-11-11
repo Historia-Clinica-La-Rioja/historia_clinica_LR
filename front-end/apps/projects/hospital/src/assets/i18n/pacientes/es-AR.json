@@ -66,7 +66,8 @@
 	  "NO_INFO": "Sin información",
       "IDENTIFICATION_NUMBER_MAXLENGHT_ERROR": "Introduzca como máximo 11 caracteres",
 	  "STATE":"Estado",
-	  "UPLOAD_FILES": "ADJUNTAR DOCUMENTO"
+	  "UPLOAD_FILES": "ADJUNTAR DOCUMENTO",
+	  "ATTACHED_DOCUMENTS": "Documentos adjuntos"
     },
     "home": {
       "TITLE": "Pacientes",
