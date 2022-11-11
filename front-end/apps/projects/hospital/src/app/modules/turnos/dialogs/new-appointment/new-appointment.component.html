@@ -177,7 +177,7 @@
 		*ngIf="data.protectedAppointment && stepper.selectedIndex === 1" [disabled]="disableNextToStep3()">
 		<span [translate]="'buttons.NEXT'"></span>
 	</button>
-	<button (click)="assignAppointment()" mat-raised-button type="button" color="primary"
+	<button (click)="submit(true)" mat-raised-button type="button" color="primary"
 		*ngIf="data.protectedAppointment && stepper.selectedIndex === 2" [disabled]="disableConfirmButtonStep3()">
 		<span [translate]="'buttons.CONFIRM'"></span>
 	</button>

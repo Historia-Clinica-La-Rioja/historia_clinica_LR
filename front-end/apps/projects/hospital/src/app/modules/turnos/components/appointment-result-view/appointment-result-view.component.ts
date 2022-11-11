@@ -5,6 +5,7 @@ import { DiaryAvailableProtectedAppointmentsDto } from '@api-rest/api-model';
 import { dateDtoToDate, timeDtoToDate } from '@api-rest/mapper/date-dto.mapper';
 import { DatePipeFormat } from '@core/utils/date.utils';
 import { DateFormat, dateToMoment } from '@core/utils/moment.utils';
+import { ConfirmPrintAppointmentComponent } from '@turnos/dialogs/confirm-print-appointment/confirm-print-appointment.component';
 import { NewAppointmentComponent } from '@turnos/dialogs/new-appointment/new-appointment.component';
 
 @Component({
@@ -31,19 +32,42 @@ export class AppointmentResultViewComponent implements OnInit {
   }
 
   assign(): void {
+    const appointmentDate = dateToMoment(dateDtoToDate(this.appointment.date)).format(DateFormat.API_DATE);
+    const appointmentHour = dateToMoment(timeDtoToDate(this.appointment.hour)).format(DateFormat.HOUR_MINUTE_SECONDS);
     const dialogRef = this.dialog.open(NewAppointmentComponent, {
       width: '45%',
       data: {
-        date: dateToMoment(dateDtoToDate(this.appointment.date)).format(DateFormat.API_DATE),
+        date: appointmentDate,
         diaryId: this.appointment.diaryId,
-        hour: dateToMoment(timeDtoToDate(this.appointment.hour)).format(DateFormat.HOUR_MINUTE_SECONDS),
-        openingHoursId: null,
-        overturnMode: null,
+        hour: appointmentHour,
+        openingHoursId: this.appointment.openingHoursId,
+        overturnMode: this.appointment.overturnMode,
         patientId: null,
         protectedAppointment: this.appointment,
       }
     });
-    dialogRef.afterClosed().subscribe(resp => console.log(resp)
+    dialogRef.afterClosed().subscribe(
+      (result: number) => {
+        if (result !== -1) {
+          var fullAppointmentDate = this.datePipe.transform(appointmentDate, DatePipeFormat.FULL_DATE);
+          fullAppointmentDate = fullAppointmentDate[0].toUpperCase() + fullAppointmentDate.slice(1);
+          const timeData = appointmentHour.split(":");
+
+          this.dialog.open(ConfirmPrintAppointmentComponent, {
+            width: '40%',
+            data: {
+              title: 'turnos.new-appointment.ASSIGNED_APPOINTMENT',
+              content: 'Se ha asignado un turno el ' +
+                `<strong>${fullAppointmentDate} ${timeData[0]}:${timeData[1]} hs </strong>` +
+                ' para ' +
+                `${this.appointment.professionalFullName} (${this.appointment?.clinicalSpecialty?.name})` + ' en ' +
+                `${this.appointment.doctorOffice}`,
+              appointmentId: result,
+            },
+
+          });
+        }
+      }
     );
   }
 

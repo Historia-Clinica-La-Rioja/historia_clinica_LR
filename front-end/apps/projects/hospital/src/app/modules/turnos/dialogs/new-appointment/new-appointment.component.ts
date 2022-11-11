@@ -67,6 +67,7 @@ export class NewAppointmentComponent implements OnInit {
 	public isSubmitButtonDisabled = false;
 	VALIDATIONS = VALIDATIONS;
 	viewReferenceDate: string;
+	lastAppointmentId = -1;
 	constructor(
 		@Inject(MAT_DIALOG_DATA) public data: {
 			date: string, diaryId: number, hour: string, openingHoursId: number, overturnMode: boolean, patientId?: number, protectedAppointment?: DiaryAvailableProtectedAppointmentsDto
@@ -232,7 +233,7 @@ export class NewAppointmentComponent implements OnInit {
 		return [medicalCoverageText, patientMedicalCoverage.affiliateNumber, condition].filter(Boolean).join(' / ');
 	}
 
-	submit(): void {
+	submit(itComesFromStep3?: boolean): void {
 		this.isSubmitButtonDisabled = true;
 		this.appointmentFacade.verifyExistingAppointment(this.patientId, this.data.date).subscribe(appointmentShortSummary => {
 			if (appointmentShortSummary) {
@@ -254,18 +255,18 @@ export class NewAppointmentComponent implements OnInit {
 					});
 				warnignComponent.afterClosed().subscribe(confirmed => {
 					if (confirmed) {
-						this.createAppointment();
+						this.createAppointment(itComesFromStep3);
 					} else {
 						this.dialogRef.close(-1);
 					}
 				});
 			} else {
-				this.createAppointment();
+				this.createAppointment(itComesFromStep3);
 			}
 		})
 	}
 
-	private createAppointment() {
+	private createAppointment(itComesFromStep3?: boolean) {
 		const newAppointment: CreateAppointmentDto = {
 			date: this.data.date,
 			diaryId: this.data.diaryId,
@@ -277,9 +278,10 @@ export class NewAppointmentComponent implements OnInit {
 			phonePrefix: this.appointmentInfoForm.controls.phonePrefix.value,
 			phoneNumber: this.appointmentInfoForm.controls.phoneNumber.value
 		};
-		this.appointmentFacade.addAppointment(newAppointment).subscribe(_ => {
+		this.appointmentFacade.addAppointment(newAppointment).subscribe(appointmentId => {
+			this.lastAppointmentId = appointmentId;
+			if (itComesFromStep3) { this.assignAppointment(); }
 			this.snackBarService.showSuccess('turnos.new-appointment.messages.APPOINTMENT_SUCCESS');
-			this.dialogRef.close(_);
 		}, error => {
 			this.isSubmitButtonDisabled = false;
 			processErrors(error, (msg) => this.snackBarService.showError(msg));
@@ -309,14 +311,11 @@ export class NewAppointmentComponent implements OnInit {
 		return !this.appointmentInfoForm.valid || this.stepper.selectedIndex !== 1
 	}
 
-	assignAppointment(): void {
-		this.referenceAppointmentService.associateReferenceAppointment(this.associateReferenceForm.controls.reference.value.referenceId, appointmentId).subscribe(
+	private assignAppointment(): void {
+		this.referenceAppointmentService.associateReferenceAppointment(this.associateReferenceForm.controls.reference.value.referenceId, this.lastAppointmentId).subscribe(
 			successfullyAssociated => {
 				if (successfullyAssociated) {
-					// Open print appointment detail popup
-				}
-				else {
-					// Delete appointment
+					this.dialogRef.close(this.lastAppointmentId);
 				}
 			}
 		);
