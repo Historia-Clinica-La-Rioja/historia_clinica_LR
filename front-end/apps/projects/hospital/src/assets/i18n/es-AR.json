@@ -20,6 +20,7 @@
 	},
 	"buttons": {
 		"ADD": "Agregar",
+		"NEXT": "Siguiente",
 		"BACK": "Volver",
 		"BACK_AND_COMPLETE": "Regresar y completar",
 		"CANCEL": "Cancelar",

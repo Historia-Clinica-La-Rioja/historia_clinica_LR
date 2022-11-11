@@ -16,6 +16,7 @@ import {
 	BasicPersonalDataDto,
 	ReducedPatientDto,
 	PatientMedicalCoverageDto,
+	DiaryAvailableProtectedAppointmentsDto,
 } from '@api-rest/api-model';
 import { AppointmentsFacadeService } from '../../services/appointments-facade.service';
 import { PersonIdentification } from '@presentation/pipes/person-identification.pipe';
@@ -46,6 +47,7 @@ export class NewAppointmentComponent implements OnInit {
 	initialIndex = 0;
 	public formSearch: FormGroup;
 	public appointmentInfoForm: FormGroup;
+	public associateReferenceForm: FormGroup;
 	public identifyTypeArray: IdentificationTypeDto[];
 	public genderOptions: GenderDto[];
 	public healtInsuranceOptions: MedicalCoverageDto[] = [];
@@ -62,7 +64,7 @@ export class NewAppointmentComponent implements OnInit {
 	VALIDATIONS = VALIDATIONS;
 	constructor(
 		@Inject(MAT_DIALOG_DATA) public data: {
-			date: string, diaryId: number, hour: string, openingHoursId: number, overturnMode: boolean, patientId?: number
+			date: string, diaryId: number, hour: string, openingHoursId: number, overturnMode: boolean, patientId?: number, protectedAppointment?: DiaryAvailableProtectedAppointmentsDto
 		},
 		public dialogRef: MatDialogRef<NewAppointmentComponent>,
 		private readonly formBuilder: FormBuilder,
@@ -95,6 +97,11 @@ export class NewAppointmentComponent implements OnInit {
 			phonePrefix: [null, [Validators.maxLength(10)]],
 			phoneNumber: [null, [Validators.maxLength(20)]]
 		});
+
+		this.associateReferenceForm = this.formBuilder.group({
+			reference: [null]
+		});
+
 
 		this.personMasterDataService.getIdentificationTypes().subscribe(
 			identificationTypes => {
@@ -278,7 +285,7 @@ export class NewAppointmentComponent implements OnInit {
 	}
 
 	showConfirmButton(): boolean {
-		return this.formSearch.controls.completed.value && this.appointmentInfoForm.valid;
+		return this.formSearch.controls.completed.value && this.appointmentInfoForm.valid && !this.data.protectedAppointment;
 	}
 
 	disablePreviuosStep(stepperParam: MatHorizontalStepper) {
