@@ -6,6 +6,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import net.pladema.person.controller.service.exceptions.CreatePersonFileException;
 import net.pladema.person.controller.service.exceptions.CreatePersonFileExceptionEnum;
+import ar.lamansys.sgh.shared.infrastructure.input.service.PersonFileDto;
 import net.pladema.clinichistory.requests.servicerequests.service.domain.StoredFileBo;
 import net.pladema.person.repository.PersonFileRepository;
 import net.pladema.person.repository.entity.PersonFile;
@@ -73,6 +74,12 @@ public class PersonFileServiceImpl implements PersonFileService {
 						personFile.getSize())).findFirst().orElse(null);
 		log.debug(OUTPUT, result);
 		return result;
+	}
+
+	@Override
+	public List<PersonFileDto> getFiles(Integer personId) {
+		log.debug("Input parameters -> personId {}", personId);
+		return personFileRepository.getFiles(personId);
 	}
 
 	private Integer savePersonFile(String completePath, MultipartFile file, Integer institutionId, Integer personId) {

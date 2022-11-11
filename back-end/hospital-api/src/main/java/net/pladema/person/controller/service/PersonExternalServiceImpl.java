@@ -1,6 +1,7 @@
 package net.pladema.person.controller.service;
 
 import ar.lamansys.sgh.shared.infrastructure.input.service.BasicDataPersonDto;
+import ar.lamansys.sgh.shared.infrastructure.input.service.PersonFileDto;
 import net.pladema.address.controller.service.AddressExternalService;
 import net.pladema.address.repository.CityRepository;
 import net.pladema.address.service.AddressMasterDataService;
@@ -49,13 +50,16 @@ public class PersonExternalServiceImpl implements PersonExternalService {
 
 	private final AddressMasterDataService addressMasterDataService;
 
-	public PersonExternalServiceImpl(PersonService personService, PersonMasterDataService personMasterDataService, PersonMapper personMapper, PersonPhotoService personPhotoService, AddressExternalService addressExternalService, CityRepository cityRepository, AddressMasterDataService addressMasterDataService) {
+	private final PersonFileExternalService personFileExternalService;
+
+	public PersonExternalServiceImpl(PersonService personService, PersonMasterDataService personMasterDataService, PersonMapper personMapper, PersonPhotoService personPhotoService, AddressExternalService addressExternalService, CityRepository cityRepository, AddressMasterDataService addressMasterDataService, PersonFileExternalService personFileExternalService) {
 		super();
 		this.personService = personService;
 		this.personMasterDataService = personMasterDataService;
 		this.personMapper = personMapper;
 		this.personPhotoService = personPhotoService;
 		this.addressMasterDataService = addressMasterDataService;
+		this.personFileExternalService = personFileExternalService;
 		LOG.debug("{}", "created service");
 	}
 
@@ -122,6 +126,7 @@ public class PersonExternalServiceImpl implements PersonExternalService {
 		LOG.debug(ONE_INPUT_PARAMETER, personId);
 		Person person = personService.getPerson(personId);
 		PersonExtended personExtended = personService.getPersonExtended(personId);
+		List<PersonFileDto> personFileDtoList = personFileExternalService.getFiles(personId);
 		BasicDataPersonDto result = personMapper.basicDataFromPerson(
 				person,
 				getGender(person.getGenderId()),
@@ -129,6 +134,9 @@ public class PersonExternalServiceImpl implements PersonExternalService {
 				getIdentificationType(person.getIdentificationTypeId())
 		);
 		result.setNameSelfDetermination(personExtended.getNameSelfDetermination());
+		if (!personFileDtoList.isEmpty()) {
+			result.setFiles(personFileDtoList);
+		}
 		LOG.debug(OUTPUT, result);
 		return result;
 	}

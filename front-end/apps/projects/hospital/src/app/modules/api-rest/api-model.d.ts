@@ -406,6 +406,7 @@ export interface BackofficeUserRoleDto {
 export interface BasicDataPersonDto extends Serializable {
     age: number;
     birthDate: Date;
+    files: PersonFileDto[];
     firstName: string;
     gender: GenderDto;
     id: number;
@@ -2363,6 +2364,11 @@ export interface PersonDataDto {
     lastName?: string;
     userId: number;
     username?: string;
+}
+
+export interface PersonFileDto {
+    fileId: number;
+    fileName: string;
 }
 
 export interface PersonOccupationDto extends Serializable {
