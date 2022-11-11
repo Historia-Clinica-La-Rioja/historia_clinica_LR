@@ -10,6 +10,7 @@ import ar.lamansys.refcounterref.domain.procedure.CounterReferenceProcedureBo;
 import ar.lamansys.refcounterref.infraestructure.input.service.mapper.CounterReferenceSummaryMapper;
 import ar.lamansys.refcounterref.infraestructure.input.service.mapper.ReferenceMapper;
 import ar.lamansys.refcounterref.infraestructure.input.service.mapper.ReferenceProblemMapper;
+import ar.lamansys.refcounterref.infraestructure.output.repository.referenceappointment.ReferenceAppointmentRepository;
 import ar.lamansys.sgh.shared.infrastructure.input.service.referencecounterreference.CounterReferenceSummaryDto;
 import ar.lamansys.sgh.shared.infrastructure.input.service.referencecounterreference.CounterReferenceSummaryProcedureDto;
 import ar.lamansys.sgh.shared.infrastructure.input.service.referencecounterreference.ReferenceCounterReferenceFileDto;
@@ -22,6 +23,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -37,6 +39,7 @@ public class ReferenceCounterReferenceExternalServiceImpl implements SharedRefer
     private final CounterReferenceSummaryMapper counterReferenceSummaryMapper;
     private final ReferenceMapper referenceMapper;
     private final ReferenceProblemMapper referenceProblemMapper;
+    private final ReferenceAppointmentRepository referenceAppointmentRepository;
 
     @Override
     public List<ReferenceCounterReferenceFileDto> getReferenceFilesData(Integer referenceId) {
@@ -67,7 +70,13 @@ public class ReferenceCounterReferenceExternalServiceImpl implements SharedRefer
         return referenceProblemMapper.fromReferenceProblemBoList(getReferenceProblem.run(patientId));
     }
 
-    private List<ReferenceCounterReferenceFileDto> mapToReferenceCounterReferenceFileDto(List<ReferenceCounterReferenceFileBo> referenceCounterReferenceFileBos) {
+	@Override
+	public Integer getAssignedProtectedAppointmentsQuantity(Integer diaryId, LocalDate day, Short appointmentStateId) {
+		log.debug("Input parameters -> diaryId {}, day {}, appointmentStateId {}", diaryId, day, appointmentStateId);
+        return referenceAppointmentRepository.getAssignedProtectedAppointmentsQuantity(diaryId, day, appointmentStateId);
+	}
+
+	private List<ReferenceCounterReferenceFileDto> mapToReferenceCounterReferenceFileDto(List<ReferenceCounterReferenceFileBo> referenceCounterReferenceFileBos) {
         List<ReferenceCounterReferenceFileDto> referenceCounterReferenceFileDtos = new ArrayList<>();
         referenceCounterReferenceFileBos.stream().forEach(referenceCounterReferenceFileBo ->
                 referenceCounterReferenceFileDtos.add(new ReferenceCounterReferenceFileDto(referenceCounterReferenceFileBo.getFileId(), referenceCounterReferenceFileBo.getFileName()))

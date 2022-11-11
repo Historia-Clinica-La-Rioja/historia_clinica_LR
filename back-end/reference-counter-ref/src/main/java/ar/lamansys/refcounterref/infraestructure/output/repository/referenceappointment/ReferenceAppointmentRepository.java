@@ -3,7 +3,11 @@ package ar.lamansys.refcounterref.infraestructure.output.repository.referenceapp
 import ar.lamansys.sgx.shared.auditable.repository.SGXAuditableEntityJPARepository;
 
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
+
+import java.time.LocalDate;
 
 @Repository
 public interface ReferenceAppointmentRepository extends SGXAuditableEntityJPARepository<ReferenceAppointment, ReferenceAppointmentPk> {
