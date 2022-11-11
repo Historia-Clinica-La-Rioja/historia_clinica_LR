@@ -17,6 +17,7 @@ import {
 	ReducedPatientDto,
 	PatientMedicalCoverageDto,
 	DiaryAvailableProtectedAppointmentsDto,
+	ReferenceSummaryDto,
 } from '@api-rest/api-model';
 import { AppointmentsFacadeService } from '../../services/appointments-facade.service';
 import { PersonIdentification } from '@presentation/pipes/person-identification.pipe';
@@ -30,6 +31,8 @@ import { dateDtoToDate, timeDtoToDate } from "@api-rest/mapper/date-dto.mapper";
 import { DatePipeFormat } from "@core/utils/date.utils";
 import { DatePipe } from "@angular/common";
 import { DiscardWarningComponent } from "@presentation/dialogs/discard-warning/discard-warning.component";
+import { ReferenceService } from '@api-rest/services/reference.service';
+import { ReferenceAppointmentService } from '@turnos/services/reference-appointment.service';
 import { REMOVE_SUBSTRING_DNI } from '@core/constants/validation-constants';
 
 const ROUTE_SEARCH = 'pacientes/search';
@@ -48,7 +51,7 @@ export class NewAppointmentComponent implements OnInit {
 	public formSearch: FormGroup;
 	public appointmentInfoForm: FormGroup;
 	public associateReferenceForm: FormGroup;
-	referenceList: any[] = [];
+	referenceList: ReferenceSummaryDto[] = [];
 	public identifyTypeArray: IdentificationTypeDto[];
 	public genderOptions: GenderDto[];
 	public healtInsuranceOptions: MedicalCoverageDto[] = [];
@@ -63,6 +66,7 @@ export class NewAppointmentComponent implements OnInit {
 	isFormSubmitted = false;
 	public isSubmitButtonDisabled = false;
 	VALIDATIONS = VALIDATIONS;
+	viewReferenceDate: string;
 	constructor(
 		@Inject(MAT_DIALOG_DATA) public data: {
 			date: string, diaryId: number, hour: string, openingHoursId: number, overturnMode: boolean, patientId?: number, protectedAppointment?: DiaryAvailableProtectedAppointmentsDto
@@ -79,6 +83,8 @@ export class NewAppointmentComponent implements OnInit {
 		private readonly mapperService: MapperService,
 		private readonly patientMedicalCoverageService: PatientMedicalCoverageService,
 		private readonly patientNameService: PatientNameService,
+		private readonly referenceService: ReferenceService,
+		private readonly referenceAppointmentService: ReferenceAppointmentService,
 		private readonly datePipe: DatePipe
 	) {
 		this.routePrefix = `institucion/${this.contextService.institutionId}/`;
@@ -180,6 +186,12 @@ export class NewAppointmentComponent implements OnInit {
 		this.patientService.getBasicPersonalData(patientId)
 			.subscribe((reducedPatientDto: ReducedPatientDto) => {
 				this.patientFound();
+				this.referenceService.getReferencesSummary(patientId, this.data.protectedAppointment.clinicalSpecialty.id, this.data.protectedAppointment.diaryId).subscribe(
+					references => {
+						this.referenceList = references ? references : [];
+						this.viewReferenceDate = this.datePipe.transform(dateDtoToDate(this.data.protectedAppointment.date), DatePipeFormat.SHORT_DATE);
+					}
+				);
 				this.patient = reducedPatientDto;
 				this.appointmentInfoForm.controls.phonePrefix.setValue(reducedPatientDto.personalDataDto.phonePrefix);
 				this.appointmentInfoForm.controls.phoneNumber.setValue(reducedPatientDto.personalDataDto.phoneNumber);
@@ -298,7 +310,16 @@ export class NewAppointmentComponent implements OnInit {
 	}
 
 	assignAppointment(): void {
-
+		this.referenceAppointmentService.associateReferenceAppointment(this.associateReferenceForm.controls.reference.value.referenceId, appointmentId).subscribe(
+			successfullyAssociated => {
+				if (successfullyAssociated) {
+					// Open print appointment detail popup
+				}
+				else {
+					// Delete appointment
+				}
+			}
+		);
 	}
 
 	disablePreviuosStep(stepperParam: MatHorizontalStepper) {
