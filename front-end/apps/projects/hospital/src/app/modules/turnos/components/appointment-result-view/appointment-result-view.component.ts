@@ -24,4 +24,8 @@ export class AppointmentResultViewComponent implements OnInit {
       this.appointment.hour.minutes.toString();
   }
 
+  assign(): void {
+
+  }
+
 }

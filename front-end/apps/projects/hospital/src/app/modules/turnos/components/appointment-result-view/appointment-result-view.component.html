@@ -1,6 +1,6 @@
-<div fxLayout="row" fxLayoutAlign="start stretch" fxLayoutGap="10px" fxLayout.lt-md="column">
+<div fxLayout="row" fxLayoutAlign="start stretch" fxLayoutGap="5px" fxLayout.lt-md="column">
 
-    <div fxFlex="25" fxLayout="column" fxLayoutAlign="center start" fxLayoutGap="10px">
+    <div fxFlex="20" fxLayout="column" fxLayoutAlign="center start" fxLayoutGap="10px">
 
         <div fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="5px">
             <mat-icon fontSet="material-icons-outlined">event</mat-icon>
@@ -28,7 +28,7 @@
 
     </div>
 
-    <div fxFlex="20" fxLayout="row" fxLayoutGap="5px">
+    <div fxFlex="16" fxLayout="row" fxLayoutGap="5px">
         <mat-icon fontSet="material-icons-outlined">person</mat-icon>
         <div fxLayout="column">
             <span>{{ appointment.professionalFullName }}</span>
@@ -50,6 +50,12 @@
             <span>{{ appointment.doctorOffice }}</span>
         </div>
 
+    </div>
+
+    <div fxFlex="calc(24% - 20px)" fxLayout="column" fxLayoutAlign="center start">
+        <button mat-flat-button type="button" id="assign-appointment" color="primary" (click)="assign()">
+            {{ 'turnos.home.ASSIGN_APPOINTMENT' | translate | uppercase }}
+        </button>
     </div>
 
 </div>
