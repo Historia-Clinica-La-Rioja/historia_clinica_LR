@@ -105,6 +105,8 @@
 			"BUTTON_SEARCH": "Buscar",
 			"STEP_1": "Búsqueda de paciente",
 			"STEP_2": "Confirmar turno",
+			"STEP_3": "Referencia",
+			"ASSOCIATED_REFERENCE": "Referencia asociada",
 			"TEMPORARY_PATIENT": "Paciente temporal",
 			"PATIENT_ID": "ID del paciente",
 			"PHONE_NUMBER": "Número Telefónico",

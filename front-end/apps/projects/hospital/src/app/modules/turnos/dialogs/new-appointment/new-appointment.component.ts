@@ -48,6 +48,7 @@ export class NewAppointmentComponent implements OnInit {
 	public formSearch: FormGroup;
 	public appointmentInfoForm: FormGroup;
 	public associateReferenceForm: FormGroup;
+	referenceList: any[] = [];
 	public identifyTypeArray: IdentificationTypeDto[];
 	public genderOptions: GenderDto[];
 	public healtInsuranceOptions: MedicalCoverageDto[] = [];
@@ -99,7 +100,7 @@ export class NewAppointmentComponent implements OnInit {
 		});
 
 		this.associateReferenceForm = this.formBuilder.group({
-			reference: [null]
+			reference: [null, Validators.required]
 		});
 
 
@@ -286,6 +287,18 @@ export class NewAppointmentComponent implements OnInit {
 
 	showConfirmButton(): boolean {
 		return this.formSearch.controls.completed.value && this.appointmentInfoForm.valid && !this.data.protectedAppointment;
+	}
+
+	disableConfirmButtonStep3(): boolean {
+		return !(this.formSearch.controls.completed.value && this.appointmentInfoForm.valid && this.data.protectedAppointment && this.associateReferenceForm.valid);
+	}
+
+	disableNextToStep3(): boolean {
+		return !this.appointmentInfoForm.valid || this.stepper.selectedIndex !== 1
+	}
+
+	assignAppointment(): void {
+
 	}
 
 	disablePreviuosStep(stepperParam: MatHorizontalStepper) {

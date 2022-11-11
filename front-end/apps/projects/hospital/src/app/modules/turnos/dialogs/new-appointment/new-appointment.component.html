@@ -145,6 +145,22 @@
 				</div>
 			</mat-card>
 		</mat-step>
+
+		<mat-step [stepControl]="associateReferenceForm" label="{{'turnos.new-appointment.STEP_3' | translate }}"
+			*ngIf="data.protectedAppointment">
+			<mat-card>
+				<form [formGroup]="associateReferenceForm">
+					<mat-form-field appearance="outline">
+						<mat-label>{{ 'turnos.new-appointment.ASSOCIATED_REFERENCE' | translate }}</mat-label>
+						<mat-select formControlName="reference" name="reference">
+							<mat-option *ngFor="let reference of referenceList" [value]="reference">
+								{{ reference.description | translate }}
+							</mat-option>
+						</mat-select>
+					</mat-form-field>
+				</form>
+			</mat-card>
+		</mat-step>
 	</mat-horizontal-stepper>
 </div>
 
@@ -154,6 +170,14 @@
 	</button>
 	<button mat-raised-button color="primary" *ngIf="showConfirmButton()" (click)="submit()"
 		[disabled]="isSubmitButtonDisabled">
+		<span [translate]="'buttons.CONFIRM'"></span>
+	</button>
+	<button (click)="stepper.next()" mat-raised-button type="button" color="primary"
+		*ngIf="data.protectedAppointment && stepper.selectedIndex === 1" [disabled]="disableNextToStep3()">
+		<span [translate]="'buttons.NEXT'"></span>
+	</button>
+	<button (click)="assignAppointment()" mat-raised-button type="button" color="primary"
+		*ngIf="data.protectedAppointment && stepper.selectedIndex === 2" [disabled]="disableConfirmButtonStep3()">
 		<span [translate]="'buttons.CONFIRM'"></span>
 	</button>
 </mat-dialog-actions>

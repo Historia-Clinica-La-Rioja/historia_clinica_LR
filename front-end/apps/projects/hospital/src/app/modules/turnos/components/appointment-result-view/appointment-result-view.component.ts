@@ -2,8 +2,9 @@ import { DatePipe } from '@angular/common';
 import { Component, Input, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { DiaryAvailableProtectedAppointmentsDto } from '@api-rest/api-model';
-import { dateDtoToDate } from '@api-rest/mapper/date-dto.mapper';
+import { dateDtoToDate, timeDtoToDate } from '@api-rest/mapper/date-dto.mapper';
 import { DatePipeFormat } from '@core/utils/date.utils';
+import { DateFormat, dateToMoment } from '@core/utils/moment.utils';
 import { NewAppointmentComponent } from '@turnos/dialogs/new-appointment/new-appointment.component';
 
 @Component({
@@ -31,11 +32,11 @@ export class AppointmentResultViewComponent implements OnInit {
 
   assign(): void {
     const dialogRef = this.dialog.open(NewAppointmentComponent, {
-      width: '35%',
+      width: '45%',
       data: {
-        date: null,
+        date: dateToMoment(dateDtoToDate(this.appointment.date)).format(DateFormat.API_DATE),
         diaryId: this.appointment.diaryId,
-        hour: null,
+        hour: dateToMoment(timeDtoToDate(this.appointment.hour)).format(DateFormat.HOUR_MINUTE_SECONDS),
         openingHoursId: null,
         overturnMode: null,
         patientId: null,
