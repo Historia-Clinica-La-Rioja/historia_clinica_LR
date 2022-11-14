@@ -6,4 +6,6 @@ public interface SharedSnomedPort {
 
     List<Integer> addSnomedConcepts(List<SharedSnomedDto> snomedConcepts);
 
+	List<Integer> addSnomedSynonyms(List<SharedSnomedDto> snomedSynonyms);
+
 }
