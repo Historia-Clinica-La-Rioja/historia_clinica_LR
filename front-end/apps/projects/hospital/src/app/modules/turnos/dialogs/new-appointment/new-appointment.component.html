@@ -155,7 +155,7 @@
 						<mat-select formControlName="reference" name="reference">
 							<mat-option *ngFor="let reference of referenceList; index as i" [value]="reference">
 								{{ reference.institution.name }}, {{ referenceDateViewList[i] }},
-								{{ reference.professional.lastName }} {{ reference.professional.firstName }}
+								{{ reference.professionalFullName }}
 							</mat-option>
 						</mat-select>
 					</mat-form-field>
