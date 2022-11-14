@@ -59,6 +59,7 @@ import { OperationDeniedComponent } from './dialogs/diagnosis-required/operation
 import { CreateOutpatientOrderComponent } from './dialogs/create-outpatient-order/create-outpatient-order.component';
 import { NewConsultationFamilyHistoryFormComponent } from './dialogs/new-consultation-family-history-form/new-consultation-family-history-form.component';
 import { VaccineSearchComponent } from './dialogs/vaccine-search/vaccine-search.component';
+import { TablasPercentilosComponent } from './routes/ambulatoria-paciente/tablas-percentilos/tablas-percentilos.component';
 
 @NgModule({
 	declarations: [
@@ -104,6 +105,7 @@ import { VaccineSearchComponent } from './dialogs/vaccine-search/vaccine-search.
 		CreateOutpatientOrderComponent,
 		NewConsultationFamilyHistoryFormComponent,
 		VaccineSearchComponent,
+  TablasPercentilosComponent,
 	],
 	imports: [
 		CommonModule,
