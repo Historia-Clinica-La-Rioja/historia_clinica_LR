@@ -88,7 +88,7 @@ export class AppointmentsFacadeService {
 	}
 
 	setProfessional(professional: ProfessionalDto) {
-		if (professional.id && this.professional?.id !== professional.id) {
+		if (professional?.id && this.professional?.id !== professional.id) {
 			this.professional = professional;
 			this.professionalSubject.next(professional);
 			if (this.agendaId) {
