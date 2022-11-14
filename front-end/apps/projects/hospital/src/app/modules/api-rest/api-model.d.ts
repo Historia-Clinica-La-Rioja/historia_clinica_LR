@@ -2591,7 +2591,7 @@ export interface ReferenceProblemDto extends Serializable {
 export interface ReferenceSummaryDto {
     date: DateDto;
     institution: InstitutionInfoDto;
-    professional: ProfessionalPersonDto;
+    professionalFullName: string;
     referenceId: number;
 }
 

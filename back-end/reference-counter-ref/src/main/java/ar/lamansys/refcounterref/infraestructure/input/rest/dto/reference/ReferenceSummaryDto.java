@@ -1,7 +1,5 @@
 package ar.lamansys.refcounterref.infraestructure.input.rest.dto.reference;
 
-
-import ar.lamansys.sgh.shared.infrastructure.input.service.ProfessionalPersonDto;
 import ar.lamansys.sgh.shared.infrastructure.input.service.institution.InstitutionInfoDto;
 import ar.lamansys.sgx.shared.dates.controller.dto.DateDto;
 import lombok.Getter;
@@ -17,6 +15,6 @@ public class ReferenceSummaryDto {
 
 	private DateDto date;
 
-	private ProfessionalPersonDto professional;
+	private String professionalFullName;
 
 }

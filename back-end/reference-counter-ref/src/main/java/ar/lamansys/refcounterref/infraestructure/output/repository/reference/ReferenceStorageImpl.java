@@ -17,6 +17,8 @@ import ar.lamansys.refcounterref.infraestructure.output.repository.referencenote
 import ar.lamansys.refcounterref.infraestructure.output.repository.referencenote.ReferenceNoteRepository;
 import ar.lamansys.sgh.clinichistory.application.healthCondition.HealthConditionStorage;
 import ar.lamansys.sgh.shared.infrastructure.input.service.SharedDiaryCareLinePort;
+import ar.lamansys.sgx.shared.featureflags.AppFeature;
+import ar.lamansys.sgx.shared.featureflags.application.FeatureFlagsService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -37,6 +39,7 @@ public class ReferenceStorageImpl implements ReferenceStorage {
     private final HealthConditionStorage healthConditionStorage;
     private final ReferenceCounterReferenceFileStorage referenceCounterReferenceFileStorage;
 	private final SharedDiaryCareLinePort sharedDiaryCareLinePort;
+	private final FeatureFlagsService featureFlagsService;
 
     @Override
 	@Transactional
@@ -95,6 +98,8 @@ public class ReferenceStorageImpl implements ReferenceStorage {
 		List<Integer> careLinesOfDiary = sharedDiaryCareLinePort.getCareLineIdsByDiaryId(diaryId);
 		if (!careLinesOfDiary.isEmpty())
 			queryResult = queryResult.stream().filter(r -> r.getCareLineId() == null || careLinesOfDiary.contains(r.getCareLineId())).collect(Collectors.toList());
+		boolean featureFlagNameSelfDetermination = featureFlagsService.isOn(AppFeature.HABILITAR_DATOS_AUTOPERCIBIDOS);
+		queryResult.stream().forEach(r -> r.setIncludeNameSelfDetermination(featureFlagNameSelfDetermination));
 		log.debug("Output -> references {} ", queryResult);
 		return queryResult;
 	}
