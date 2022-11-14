@@ -153,9 +153,9 @@
 					<mat-form-field appearance="outline">
 						<mat-label>{{ 'turnos.new-appointment.ASSOCIATED_REFERENCE' | translate }}</mat-label>
 						<mat-select formControlName="reference" name="reference">
-							<mat-option *ngFor="let reference of referenceList" [value]="reference">
-								{{ reference.institution.name }}, {{ viewReferenceDate }}, {{
-								reference.professional.lastName }} {{ reference.professional.firstName }}
+							<mat-option *ngFor="let reference of referenceList; index as i" [value]="reference">
+								{{ reference.institution.name }}, {{ referenceDateViewList[i] }},
+								{{ reference.professional.lastName }} {{ reference.professional.firstName }}
 							</mat-option>
 						</mat-select>
 					</mat-form-field>

@@ -66,8 +66,9 @@ export class NewAppointmentComponent implements OnInit {
 	isFormSubmitted = false;
 	public isSubmitButtonDisabled = false;
 	VALIDATIONS = VALIDATIONS;
-	viewReferenceDate: string;
+	referenceDateViewList: string[];
 	lastAppointmentId = -1;
+	readonly dateFormats = DatePipeFormat;
 	constructor(
 		@Inject(MAT_DIALOG_DATA) public data: {
 			date: string, diaryId: number, hour: string, openingHoursId: number, overturnMode: boolean, patientId?: number, protectedAppointment?: DiaryAvailableProtectedAppointmentsDto
@@ -191,7 +192,7 @@ export class NewAppointmentComponent implements OnInit {
 					this.referenceService.getReferencesSummary(patientId, this.data.protectedAppointment.clinicalSpecialty.id, this.data.protectedAppointment.diaryId).subscribe(
 						references => {
 							this.referenceList = references ? references : [];
-							this.viewReferenceDate = this.datePipe.transform(dateDtoToDate(this.data.protectedAppointment.date), DatePipeFormat.SHORT_DATE);
+							this.createReferenceDateViewList();
 						}
 					);
 				}
@@ -207,6 +208,16 @@ export class NewAppointmentComponent implements OnInit {
 				this.patientNotFound();
 			});
 
+	}
+
+	private createReferenceDateViewList(): void {
+		let resultList = [];
+		this.referenceList.forEach(
+			(reference) => {
+				resultList.push(this.datePipe.transform(dateDtoToDate(reference.date), DatePipeFormat.SHORT_DATE));
+			}
+		);
+		this.referenceDateViewList = resultList;
 	}
 
 	mapToPersonIdentification(personalDataDto: BasicPersonalDataDto): PersonIdentification {
