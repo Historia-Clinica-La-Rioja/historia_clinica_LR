@@ -187,12 +187,14 @@ export class NewAppointmentComponent implements OnInit {
 		this.patientService.getBasicPersonalData(patientId)
 			.subscribe((reducedPatientDto: ReducedPatientDto) => {
 				this.patientFound();
-				this.referenceService.getReferencesSummary(patientId, this.data.protectedAppointment.clinicalSpecialty.id, this.data.protectedAppointment.diaryId).subscribe(
-					references => {
-						this.referenceList = references ? references : [];
-						this.viewReferenceDate = this.datePipe.transform(dateDtoToDate(this.data.protectedAppointment.date), DatePipeFormat.SHORT_DATE);
-					}
-				);
+				if (this.data?.protectedAppointment) {
+					this.referenceService.getReferencesSummary(patientId, this.data.protectedAppointment.clinicalSpecialty.id, this.data.protectedAppointment.diaryId).subscribe(
+						references => {
+							this.referenceList = references ? references : [];
+							this.viewReferenceDate = this.datePipe.transform(dateDtoToDate(this.data.protectedAppointment.date), DatePipeFormat.SHORT_DATE);
+						}
+					);
+				}
 				this.patient = reducedPatientDto;
 				this.appointmentInfoForm.controls.phonePrefix.setValue(reducedPatientDto.personalDataDto.phonePrefix);
 				this.appointmentInfoForm.controls.phoneNumber.setValue(reducedPatientDto.personalDataDto.phoneNumber);
@@ -280,8 +282,13 @@ export class NewAppointmentComponent implements OnInit {
 		};
 		this.appointmentFacade.addAppointment(newAppointment).subscribe(appointmentId => {
 			this.lastAppointmentId = appointmentId;
-			if (itComesFromStep3) { this.assignAppointment(); }
-			this.snackBarService.showSuccess('turnos.new-appointment.messages.APPOINTMENT_SUCCESS');
+			if (itComesFromStep3) {
+				this.assignAppointment();
+			}
+			else {
+				this.snackBarService.showSuccess('turnos.new-appointment.messages.APPOINTMENT_SUCCESS');
+				this.dialogRef.close(appointmentId);
+			}
 		}, error => {
 			this.isSubmitButtonDisabled = false;
 			processErrors(error, (msg) => this.snackBarService.showError(msg));
@@ -315,7 +322,11 @@ export class NewAppointmentComponent implements OnInit {
 		this.referenceAppointmentService.associateReferenceAppointment(this.associateReferenceForm.controls.reference.value.referenceId, this.lastAppointmentId).subscribe(
 			successfullyAssociated => {
 				if (successfullyAssociated) {
+					this.snackBarService.showSuccess('turnos.new-appointment.messages.APPOINTMENT_SUCCESS');
 					this.dialogRef.close(this.lastAppointmentId);
+				}
+				else {
+					this.snackBarService.showError('turnos.new-appointment.messages.COULD_NOT_ASSOCIATE')
 				}
 			}
 		);

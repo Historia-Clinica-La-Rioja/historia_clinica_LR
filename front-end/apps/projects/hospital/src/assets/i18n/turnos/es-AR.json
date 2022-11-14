@@ -119,7 +119,8 @@
 				"SUCCESS": "Paciente encontrado",
 				"APPOINTMENT_ERROR": "Error al confirmar el turno",
 				"APPOINTMENT_SUCCESS": "Turno confirmado",
-				"NOT_RESPONSIBLE": "Solo el responsable de la agenda puede crear turnos"
+				"NOT_RESPONSIBLE": "Solo el responsable de la agenda puede crear turnos",
+				"COULD_NOT_ASSOCIATE": "No se pudo asociar el turno creado a la referencia seleccionada"
 			},
 			"appointment-exists": {
 				"TITLE": "Otro turno en la misma fecha",
