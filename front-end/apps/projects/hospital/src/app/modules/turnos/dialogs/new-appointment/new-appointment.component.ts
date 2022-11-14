@@ -139,7 +139,6 @@ export class NewAppointmentComponent implements OnInit {
 		this.formSearch.controls.patientId.patchValue(this.data.patientId);
 		if (this.data.patientId) {
 			this.search();
-			this.initialIndex = 1;
 		}
 
 	}

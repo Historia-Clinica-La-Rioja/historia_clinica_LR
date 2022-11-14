@@ -1,5 +1,6 @@
 import { ChangeDetectorRef, Component, Input, OnChanges, OnInit, SimpleChanges } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { ActivatedRoute } from '@angular/router';
 import { AddressDto, CareLineDto, ClinicalSpecialtyDto, DepartmentDto, DiaryAvailableProtectedAppointmentsDto, InstitutionBasicInfoDto, ProvinceDto } from '@api-rest/api-model';
 import { AddressMasterDataService } from '@api-rest/services/address-master-data.service';
 import { CareLineService } from '@api-rest/services/care-line.service';
@@ -54,6 +55,7 @@ export class SearchAppointmentsInCareNetworkComponent implements OnInit, OnChang
 
   appointmentsCurrentPage: DiaryAvailableProtectedAppointmentsDto[] = [];
   readonly pageSizeOptions = PAGE_SIZE_OPTIONS;
+  patientId: number;
 
   constructor(
     private readonly formBuilder: FormBuilder,
@@ -64,6 +66,7 @@ export class SearchAppointmentsInCareNetworkComponent implements OnInit, OnChang
     private specialtyService: SpecialtyService,
     private diaryAvailableAppointmentsSearchService: DiaryAvailableAppointmentsSearchService,
     private changeDetectorRef: ChangeDetectorRef,
+    private readonly route: ActivatedRoute
   ) {
   }
 
@@ -119,6 +122,11 @@ export class SearchAppointmentsInCareNetworkComponent implements OnInit, OnChang
 
       }
     );
+
+    this.route.queryParams.subscribe(qp => {
+      this.patientId = Number(qp.idPaciente);
+    });
+
   }
 
   setCareLine(careLine: CareLineDto) {

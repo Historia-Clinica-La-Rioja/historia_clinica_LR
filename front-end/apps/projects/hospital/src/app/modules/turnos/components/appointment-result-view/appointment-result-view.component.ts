@@ -16,6 +16,7 @@ import { NewAppointmentComponent } from '@turnos/dialogs/new-appointment/new-app
 export class AppointmentResultViewComponent implements OnInit {
 
   @Input() appointment: DiaryAvailableProtectedAppointmentsDto;
+  @Input() patientId: number;
   viewDate: string = '';
   viewMinutes: string = '';
 
@@ -43,7 +44,7 @@ export class AppointmentResultViewComponent implements OnInit {
         hour: appointmentHour,
         openingHoursId: this.appointment.openingHoursId,
         overturnMode: this.appointment.overturnMode,
-        patientId: null,
+        patientId: this.patientId ? this.patientId : null,
         protectedAppointment: this.appointment,
       }
     });
