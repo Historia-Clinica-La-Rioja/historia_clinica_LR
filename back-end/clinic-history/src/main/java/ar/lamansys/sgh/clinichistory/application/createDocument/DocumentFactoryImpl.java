@@ -100,8 +100,11 @@ public class DocumentFactoryImpl implements DocumentFactory {
         loadNotes(doc, Optional.ofNullable(documentBo.getNotes()));
 
 		var patientData = patientStorage.getPatientInfo(documentBo.getPatientId()).orElse(null);
-		if(patientData != null)
+		LocalDate patientInternmentAge = documentBo.getPatientInternmentAge();
+		if(patientData != null && patientInternmentAge == null)
 			doc.setPatientAgePeriod(Period.between(patientData.getBirthDate(), LocalDate.now()).toString());
+		else if(patientData != null)
+			doc.setPatientAgePeriod(Period.between(patientData.getBirthDate(), patientInternmentAge).toString());
 
         doc = documentService.save(doc);
 

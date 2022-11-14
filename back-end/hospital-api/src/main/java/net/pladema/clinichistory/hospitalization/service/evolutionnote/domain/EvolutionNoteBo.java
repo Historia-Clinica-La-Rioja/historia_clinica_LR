@@ -1,20 +1,28 @@
 package net.pladema.clinichistory.hospitalization.service.evolutionnote.domain;
 
-import ar.lamansys.sgh.clinichistory.domain.ips.*;
-import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.DocumentType;
-import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.SourceType;
-import lombok.Getter;
-import lombok.Setter;
-import lombok.ToString;
-import ar.lamansys.sgh.clinichistory.domain.document.IDocumentBo;
-import ar.lamansys.sgh.clinichistory.domain.document.PatientInfoBo;
-import ar.lamansys.sgx.shared.exceptions.SelfValidating;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.util.List;
 
 import javax.annotation.Nullable;
 import javax.validation.Valid;
 
-import java.time.LocalDateTime;
-import java.util.List;
+import ar.lamansys.sgh.clinichistory.domain.document.IDocumentBo;
+import ar.lamansys.sgh.clinichistory.domain.document.PatientInfoBo;
+import ar.lamansys.sgh.clinichistory.domain.ips.AllergyConditionBo;
+import ar.lamansys.sgh.clinichistory.domain.ips.AnthropometricDataBo;
+import ar.lamansys.sgh.clinichistory.domain.ips.DiagnosisBo;
+import ar.lamansys.sgh.clinichistory.domain.ips.DocumentObservationsBo;
+import ar.lamansys.sgh.clinichistory.domain.ips.HealthConditionBo;
+import ar.lamansys.sgh.clinichistory.domain.ips.ImmunizationBo;
+import ar.lamansys.sgh.clinichistory.domain.ips.ProcedureBo;
+import ar.lamansys.sgh.clinichistory.domain.ips.RiskFactorBo;
+import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.DocumentType;
+import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.SourceType;
+import ar.lamansys.sgx.shared.exceptions.SelfValidating;
+import lombok.Getter;
+import lombok.Setter;
+import lombok.ToString;
 
 @Getter
 @Setter
@@ -32,6 +40,8 @@ public class EvolutionNoteBo extends SelfValidating<EvolutionNoteBo> implements 
     private Integer institutionId;
 
     private DocumentObservationsBo notes;
+
+	private LocalDate patientInternmentAge;
 
     @Nullable
     private HealthConditionBo mainDiagnosis;

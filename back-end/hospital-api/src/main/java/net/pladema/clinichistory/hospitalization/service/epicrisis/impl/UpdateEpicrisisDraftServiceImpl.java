@@ -1,5 +1,10 @@
 package net.pladema.clinichistory.hospitalization.service.epicrisis.impl;
 
+import java.util.Optional;
+
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
 import ar.lamansys.sgh.clinichistory.application.createDocument.DocumentFactory;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.DocumentStatus;
 import ar.lamansys.sgh.shared.infrastructure.input.service.SharedDocumentPort;
@@ -11,11 +16,6 @@ import net.pladema.clinichistory.hospitalization.service.epicrisis.EpicrisisServ
 import net.pladema.clinichistory.hospitalization.service.epicrisis.EpicrisisValidator;
 import net.pladema.clinichistory.hospitalization.service.epicrisis.UpdateEpicrisisDraftService;
 import net.pladema.clinichistory.hospitalization.service.epicrisis.domain.EpicrisisBo;
-
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-
-import java.util.Optional;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -50,6 +50,7 @@ public class UpdateEpicrisisDraftServiceImpl implements UpdateEpicrisisDraftServ
 		Optional.ofNullable(newEpicrisis.getImmunizations()).ifPresent(list->list.forEach(d->d.setId(null)));
 
 		// create new document
+		newEpicrisis.setPatientInternmentAge(internmentEpisodeService.getEntryDate(newEpicrisis.getEncounterId()).toLocalDate());
 		newEpicrisis.setPerformedDate(dateTimeProvider.nowDateTime());
 		newEpicrisis.setId(documentFactory.run(newEpicrisis, newEpicrisis.isConfirmed()));
 		internmentEpisodeService.updateEpicrisisDocumentId(newEpicrisis.getEncounterId(), newEpicrisis.getId());
