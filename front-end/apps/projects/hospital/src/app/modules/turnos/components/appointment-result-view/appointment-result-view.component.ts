@@ -33,7 +33,7 @@ export class AppointmentResultViewComponent implements OnInit {
 
   assign(): void {
     const appointmentDate = dateToMoment(dateDtoToDate(this.appointment.date)).format(DateFormat.API_DATE);
-    const appointmentHour = dateToMoment(timeDtoToDate(this.appointment.hour)).format(DateFormat.HOUR_MINUTE_SECONDS);
+    const appointmentHour = this.datePipe.transform(timeDtoToDate(this.appointment.hour), DatePipeFormat.MEDIUM_TIME);
     const dialogRef = this.dialog.open(NewAppointmentComponent, {
       width: '45%',
       disableClose: true,
