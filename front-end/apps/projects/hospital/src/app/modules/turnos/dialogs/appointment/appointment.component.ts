@@ -35,6 +35,7 @@ import { DiscardWarningComponent } from '@presentation/dialogs/discard-warning/d
 import { DateFormat, momentFormat, momentParseDate, momentParseTime } from '@core/utils/moment.utils';
 import * as moment from 'moment';
 import { isBefore, isEqual } from 'date-fns';
+import { Color } from '@presentation/colored-label/colored-label.component';
 
 const TEMPORARY_PATIENT = 3;
 const BELL_LABEL = 'Llamar paciente'
@@ -53,6 +54,7 @@ export class AppointmentComponent implements OnInit {
 	readonly appointmentStatesIds = APPOINTMENT_STATES_ID;
 	readonly TEMPORARY_PATIENT = TEMPORARY_PATIENT;
 	readonly BELL_LABEL = BELL_LABEL;
+	readonly Color = Color;
 	getAppointmentState = getAppointmentState;
 	getError = getError;
 	hasError = hasError;

@@ -168,6 +168,9 @@
 						</mat-icon>
 						<span class="mat-body subtitle-size"> {{selectedDate | date:"H:mm"}} hs</span>
 					</div>
+					<div fxLayout="column" fxLayoutGap="10px" *ngIf="appointment?.protected">
+						<span class="purple">{{'turnos.appointment.PROTECTED' | translate}}</span>
+					</div>
 				</div>
 				<button type="button" mat-icon-button color="primary"
 					*ngIf="(selectedState === appointmentStatesIds.ASSIGNED) && ( hasRoleToEdit$ | async )" (click)="openDateForm()">
