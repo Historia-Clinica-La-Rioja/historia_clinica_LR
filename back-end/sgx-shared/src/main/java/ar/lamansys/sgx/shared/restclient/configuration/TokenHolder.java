@@ -1,17 +1,19 @@
 package ar.lamansys.sgx.shared.restclient.configuration;
 
+import java.time.Duration;
+
 public class TokenHolder {
-	private long validTime;
+	private Duration validTime;
 	private long tokenDueTimestamp;
 	private String token = null;
 
 
-	public TokenHolder(long seconds) {
-		this.validTime =  1000 * seconds;
+	public TokenHolder(Duration duration) {
+		this.validTime =  duration;
 	}
 
 	public boolean isValid() {
-		if (this.validTime < 0) {
+		if (this.validTime.isNegative()) {
 			return true;
 		}
 		return token != null && (System.currentTimeMillis() < this.tokenDueTimestamp);
@@ -23,6 +25,6 @@ public class TokenHolder {
 
 	public void set(String token) {
 		this.token = token;
-		this.tokenDueTimestamp = System.currentTimeMillis() + validTime;
+		this.tokenDueTimestamp = System.currentTimeMillis() + validTime.toMillis();
 	}
 }
