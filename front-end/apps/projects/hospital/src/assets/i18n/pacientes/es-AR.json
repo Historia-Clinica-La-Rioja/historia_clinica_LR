@@ -88,8 +88,10 @@
       "SUBTITLE": "Ingresá los siguientes datos.",
       "TITLE_TEMPORARY": "Nuevo Paciente Temporal",
       "messages": {
-        "ERROR": "Error al crear un paciente",
-        "SUCCESS": "El paciente se creó exitosamente"
+        "ERROR_PATIENT": "Error al crear un paciente",
+		"ERROR_PERSON": "Error al crear una persona",
+        "SUCCESS_PATIENT": "El paciente se creó exitosamente",
+		"SUCCESS_PERSON": "La persona se creó exitosamente"
       }
     },
     "search": {
@@ -104,8 +106,10 @@
       "TITLE": "Editar paciente",
       "SUBTITLE": "Se editara el paciente seleccionado",
       "messages": {
-        "ERROR": "Error al editar un paciente",
-        "SUCCESS": "El paciente se editó exitosamente"
+		"ERROR_PATIENT": "Error al editar un paciente",
+		"ERROR_PERSON": "Error al editar una persona",
+        "SUCCESS_PATIENT": "El paciente se editó exitosamente",
+		"SUCCESS_PERSON": "La persona fue editada exitosamente"
       }
     },
     "search_patient": {

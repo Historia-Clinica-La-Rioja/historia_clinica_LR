@@ -3,6 +3,7 @@ import { FormBuilder, Validators, FormGroup, AbstractControl } from '@angular/fo
 import { Router, ActivatedRoute } from '@angular/router';
 import { Moment } from 'moment';
 import * as moment from 'moment';
+import { ERole } from '@api-rest/api-model';
 import {
 	APatientDto,
 	BMPatientDto,
@@ -13,7 +14,7 @@ import {
 	IdentificationTypeDto,
 	PatientMedicalCoverageDto,
 	PersonPhotoDto,
-	SelfPerceivedGenderDto
+	SelfPerceivedGenderDto,
 } from '@api-rest/api-model';
 import { PatientService } from '@api-rest/services/patient.service';
 import { scrollIntoError, hasError, VALIDATIONS, DEFAULT_COUNTRY_ID, updateControlValidator } from '@core/utils/form.utils';
@@ -27,6 +28,7 @@ import { MapperService } from '@core/services/mapper.service';
 import { PatientMedicalCoverageService } from '@api-rest/services/patient-medical-coverage.service';
 import { PERSON } from '@core/constants/validation-constants';
 import { NavigationService } from '@pacientes/services/navigation.service';
+import { PermissionsService } from '@core/services/permissions.service';
 
 const ROUTE_PROFILE = 'pacientes/profile/';
 const ROUTE_HOME_PATIENT = 'pacientes';
@@ -72,7 +74,7 @@ export class NewPatientComponent implements OnInit {
 	public lastNameDisabled = false;
 	public otherLastNamesDisabled = false;
 	public birthDateDisabled = false;
-
+	private hasInstitutionalAdministrativeRole = false;
 	constructor(
 		private formBuilder: FormBuilder,
 		private router: Router,
@@ -86,7 +88,9 @@ export class NewPatientComponent implements OnInit {
 		private dialog: MatDialog,
 		private mapperService: MapperService,
 		private patientMedicalCoverageService: PatientMedicalCoverageService,
-		public navigationService: NavigationService
+		public navigationService: NavigationService,
+		private permissionsService: PermissionsService,
+
 	) {
 		this.routePrefix = 'institucion/' + this.contextService.institutionId + '/';
 	}
@@ -231,6 +235,7 @@ export class NewPatientComponent implements OnInit {
 				this.setProvinces();
 			});
 
+		this.permissionsService.hasContextAssignments$([ERole.ADMINISTRADOR_INSTITUCIONAL_BACKOFFICE]).subscribe(hasInstitutionalAdministrativeRole => this.hasInstitutionalAdministrativeRole = hasInstitutionalAdministrativeRole);
 	}
 
 	private lockFormField(params) {
@@ -282,14 +287,22 @@ export class NewPatientComponent implements OnInit {
 							(patientId, patientMedicalCoveragesDto).subscribe();
 					}
 					this.router.navigate([this.routePrefix + ROUTE_PROFILE + patientId]);
-					this.snackBarService.showSuccess('pacientes.new.messages.SUCCESS');
+					this.snackBarService.showSuccess(this.getMessagesSuccess());
 				}, _ => {
 					this.isSubmitButtonDisabled = false;
-					this.snackBarService.showError('pacientes.new.messages.ERROR');
+					this.snackBarService.showError(this.getMessagesError());
 				});
 		} else {
 			scrollIntoError(this.form, this.el);
 		}
+	}
+
+	private getMessagesSuccess(): string {
+		return this.hasInstitutionalAdministrativeRole ? 'pacientes.new.messages.SUCCESS_PERSON' : 'pacientes.new.messages.SUCCESS_PATIENT' ;
+	}
+
+	private getMessagesError(): string {
+		return this.hasInstitutionalAdministrativeRole ? 'pacientes.new.messages.ERROR_PERSON' : 'pacientes.new.messages.ERROR_PATIENT' ;
 	}
 
 	private mapToPersonRequest(): APatientDto {
@@ -416,8 +429,8 @@ export class NewPatientComponent implements OnInit {
 		control.reset();
 	}
 
-	updatePhoneValidators(){
-		if (this.form.controls.phoneNumber.value||this.form.controls.phonePrefix.value) {
+	updatePhoneValidators() {
+		if (this.form.controls.phoneNumber.value || this.form.controls.phonePrefix.value) {
 			updateControlValidator(this.form, 'phoneNumber', [Validators.required]);
 			updateControlValidator(this.form, 'phonePrefix', [Validators.required]);
 		} else {
