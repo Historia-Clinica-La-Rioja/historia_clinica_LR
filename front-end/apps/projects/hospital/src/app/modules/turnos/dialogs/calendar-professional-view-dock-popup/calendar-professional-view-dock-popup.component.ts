@@ -106,12 +106,12 @@ export class CalendarProfessionalViewDockPopupComponent implements OnInit {
 		this.filterDiaries(diaries);
 		if (this.diaries.length === SINGLE_DIARY) {
 			this.diarySelected = this.diaries[0];
-			this.form.controls.diary.setValue(this.diarySelected);
 			this.showButtonToClear = false;
 		}
 		if (idDiarySelected) {
 			this.diarySelected = this.diaries.find(diary => diary.id === idDiarySelected);
 		}
+		this.form.controls.diary.setValue(this.diarySelected);
 		this.loading = false;
 	}
 
