@@ -18,7 +18,7 @@
 			<app-search-appointments-by-specialty></app-search-appointments-by-specialty>
 		</mat-tab>
 		<mat-tab label="{{ 'turnos.home.CARE_NETWORK_OFFER' | translate | uppercase }}"
-			*appHasRole="['ADMINISTRATIVO', 'ESPECIALISTA_MEDICO', 'PROFESIONAL_DE_SALUD', 'ESPECIALISTA_EN_ODONTOLOGIA']">
+			*appHasRole="['ADMINISTRATIVO']">
 			<app-search-appointments-in-care-network [isVisible]="tabActiveIndex === 2">
 			</app-search-appointments-in-care-network>
 		</mat-tab>
