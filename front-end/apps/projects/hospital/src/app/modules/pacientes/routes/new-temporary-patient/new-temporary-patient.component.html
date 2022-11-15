@@ -1,7 +1,13 @@
 <div #startView></div>
 <app-content width="full">
 	<section class="page">
-		<h2 class="page-title"> {{ 'pacientes.new.TITLE_TEMPORARY' | translate | patientToPerson}} </h2>
+		<div *ngIf="hasInstitutionalAdministratorRole else titleForOtherRoles">
+			<h2  #titleForPerson class="page-title"> {{ 'pacientes.new.TITLE_TEMPORARY_PERSON' | translate }} </h2>
+		</div>
+		<ng-template #titleForOtherRoles>
+			<h2 class="page-title"> {{ 'pacientes.new.TITLE_TEMPORARY_PATIENT' | translate }} </h2>
+		</ng-template>
+
 		<h3 [translate]="'pacientes.new.SUBTITLE'"></h3>
 		<form [formGroup]="form" (ngSubmit)="save()" fxLayout="column" fxLayoutGap="10px" fxLayoutGap.lt-sm="15px">
 			<div fxLayout="row" fxLayoutGap="10px" fxLayout.lt-sm="column" fxLayoutGap.lt-sm="0">

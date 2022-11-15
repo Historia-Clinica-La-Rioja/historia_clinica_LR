@@ -1,5 +1,6 @@
 import { Component, OnInit, ElementRef, ViewChild } from '@angular/core';
 import { FormGroup, FormBuilder, Validators, AbstractControl } from '@angular/forms';
+import { ERole } from '@api-rest/api-model';
 import { APatientDto, BMPatientDto, EthnicityDto, PersonOccupationDto, EducationLevelDto, GenderDto, IdentificationTypeDto, PatientMedicalCoverageDto, SelfPerceivedGenderDto } from '@api-rest/api-model';
 import { scrollIntoError, hasError, VALIDATIONS, DEFAULT_COUNTRY_ID, updateControlValidator } from '@core/utils/form.utils';
 import { Router, ActivatedRoute } from '@angular/router';
@@ -16,6 +17,7 @@ import { MedicalCoverageComponent, PatientMedicalCoverage } from '@pacientes/dia
 import { MapperService } from '@core/services/mapper.service';
 import { PatientMedicalCoverageService } from '@api-rest/services/patient-medical-coverage.service';
 import { PERSON } from '@core/constants/validation-constants';
+import { PermissionsService } from '@core/services/permissions.service';
 
 const TEMPORARY_PATIENT = 3;
 const ROUTE_HOME = 'pacientes';
@@ -32,6 +34,7 @@ export class NewTemporaryPatientComponent implements OnInit {
 	readonly GENDER_MAX_LENGTH = VALIDATIONS.MAX_LENGTH.gender;
 	private readonly NONE_SELF_PERCEIVED_GENDER_SELECTED_ID = 10; // Dato Maestro proveniente de género autopercibido "Ninguna de las anteriores"
 
+	hasInstitutionalAdministratorRole = false;
 	public form: FormGroup;
 	public personResponse: BMPatientDto;
 	public formSubmitted = false;
@@ -78,6 +81,8 @@ export class NewTemporaryPatientComponent implements OnInit {
 		private dialog: MatDialog,
 		private mapperService: MapperService,
 		private readonly patientMedicalCoverageService: PatientMedicalCoverageService,
+		private permissionsService: PermissionsService,
+
 	) {
 		this.routePrefix = 'institucion/' + this.contextService.institutionId + '/';
 	}
@@ -227,6 +232,9 @@ export class NewTemporaryPatientComponent implements OnInit {
 			});
 		setTimeout(() => {
 			this.startView.nativeElement.scrollIntoView();}, TIME_TO_PREVENT_SCROLL);
+
+		this.permissionsService.hasContextAssignments$([ERole.ADMINISTRADOR_INSTITUCIONAL_BACKOFFICE]).subscribe(hasInstitutionalAdministratorRole => this.hasInstitutionalAdministratorRole = hasInstitutionalAdministratorRole);
+
 	}
 
 	save(): void {
