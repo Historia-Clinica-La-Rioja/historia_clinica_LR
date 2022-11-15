@@ -281,6 +281,12 @@ export class SearchAppointmentsInCareNetworkComponent implements OnInit, OnChang
     this.appointmentsCurrentPage = [];
   }
 
+  resetResults(event): void {
+    this.protectedAvaibleAppointments = [];
+    this.appointmentsCurrentPage = [];
+    this.showAppointmentResults = false;
+  }
+
   private loadFirstPage(): void {
     this.appointmentsCurrentPage = this.protectedAvaibleAppointments.slice(0, PAGE_SIZE_OPTIONS[0]);
   }

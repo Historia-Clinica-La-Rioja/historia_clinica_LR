@@ -1,5 +1,5 @@
 import { DatePipe } from '@angular/common';
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { DiaryAvailableProtectedAppointmentsDto } from '@api-rest/api-model';
 import { dateDtoToDate, timeDtoToDate } from '@api-rest/mapper/date-dto.mapper';
@@ -17,6 +17,7 @@ export class AppointmentResultViewComponent implements OnInit {
 
   @Input() appointment: DiaryAvailableProtectedAppointmentsDto;
   @Input() patientId: number;
+  @Output() resetAppointmentList = new EventEmitter<void>();
   viewDate: string = '';
   viewMinutes: string = '';
 
@@ -51,6 +52,8 @@ export class AppointmentResultViewComponent implements OnInit {
     dialogRef.afterClosed().subscribe(
       (result: number) => {
         if (result !== -1) {
+          this.resetAppointmentList.emit();
+
           var fullAppointmentDate = this.datePipe.transform(appointmentDate, DatePipeFormat.FULL_DATE);
           fullAppointmentDate = fullAppointmentDate[0].toUpperCase() + fullAppointmentDate.slice(1);
           const timeData = appointmentHour.split(":");
