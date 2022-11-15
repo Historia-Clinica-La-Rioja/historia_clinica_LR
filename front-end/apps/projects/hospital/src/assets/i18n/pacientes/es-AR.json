@@ -84,7 +84,8 @@
       }
     },
     "new": {
-      "TITLE": "Nueva Persona",
+	  "TITLE_PERSON": "Nueva Persona",
+      "TITLE_PATIENT": "Nuevo Paciente",
       "SUBTITLE": "Ingresá los siguientes datos.",
       "TITLE_TEMPORARY_PATIENT": "Nuevo Paciente Temporal",
 	  "TITLE_TEMPORARY_PERSON": "Nueva Persona Temporal",

@@ -74,7 +74,7 @@ export class NewPatientComponent implements OnInit {
 	public lastNameDisabled = false;
 	public otherLastNamesDisabled = false;
 	public birthDateDisabled = false;
-	private hasInstitutionalAdministrativeRole = false;
+	hasInstitutionalAdministrativeRole = false;
 	constructor(
 		private formBuilder: FormBuilder,
 		private router: Router,
