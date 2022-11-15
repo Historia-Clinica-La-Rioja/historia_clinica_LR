@@ -73,8 +73,7 @@
 			</mat-card>
 		</mat-step>
 
-		<mat-step [stepControl]="appointmentInfoForm" label="{{'turnos.new-appointment.STEP_2' | translate}}"
-			[editable]="false">
+		<mat-step [stepControl]="appointmentInfoForm" label="{{'turnos.new-appointment.STEP_2' | translate}}">
 			<mat-card class="mat-typography">
 				<mat-list class="mat-form-field-wrapper">
 					<mat-list-item id="patient" class="patient-data-list">
@@ -138,8 +137,8 @@
 						</div>
 					</div>
 				</form>
-				<div fxLayout="row" fxLayoutAlign="end">
-					<button mat-flat-button matStepperPrevious color="primary" (click)="toFirstStep()">
+				<div fxLayout="row">
+					<button mat-stroked-button matStepperPrevious color="primary" (click)="toFirstStep()">
 						<span [translate]="'buttons.BACK'"></span>
 					</button>
 				</div>
@@ -160,6 +159,11 @@
 						</mat-select>
 					</mat-form-field>
 				</form>
+				<div fxLayout="row">
+					<button mat-stroked-button matStepperPrevious color="primary">
+						<span [translate]="'buttons.BACK'"></span>
+					</button>
+				</div>
 			</mat-card>
 		</mat-step>
 	</mat-horizontal-stepper>
