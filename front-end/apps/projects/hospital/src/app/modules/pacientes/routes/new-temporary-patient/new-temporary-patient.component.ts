@@ -251,14 +251,22 @@ export class NewTemporaryPatientComponent implements OnInit {
 							(patientId, patientMedicalCoveragesDto).subscribe();
 					}
 					this.router.navigate([this.routePrefix + ROUTE_PROFILE + patientId]);
-					this.snackBarService.showSuccess('pacientes.new.messages.SUCCESS');
+					this.snackBarService.showSuccess(this.getMessagesSuccess());
 				}, _ => {
 					this.isSubmitButtonDisabled = false;
-					this.snackBarService.showError('pacientes.new.messages.ERROR');
+					this.snackBarService.showError(this.getMessagesError());
 				});
 		} else {
 			scrollIntoError(this.form, this.el);
 		}
+
+	}
+	private getMessagesSuccess(): string {
+		return this.hasInstitutionalAdministratorRole ? 'pacientes.new.messages.SUCCESS_PERSON' : 'pacientes.new.messages.SUCCESS_PATIENT' ;
+	}
+
+	private getMessagesError(): string {
+		return this.hasInstitutionalAdministratorRole ? 'pacientes.new.messages.ERROR_PERSON' : 'pacientes.new.messages.ERROR_PATIENT' ;
 	}
 
 

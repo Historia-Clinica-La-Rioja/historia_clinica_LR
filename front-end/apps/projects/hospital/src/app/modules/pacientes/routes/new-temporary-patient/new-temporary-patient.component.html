@@ -2,7 +2,7 @@
 <app-content width="full">
 	<section class="page">
 		<div *ngIf="hasInstitutionalAdministratorRole else titleForOtherRoles">
-			<h2  #titleForPerson class="page-title"> {{ 'pacientes.new.TITLE_TEMPORARY_PERSON' | translate }} </h2>
+			<h2 class="page-title"> {{ 'pacientes.new.TITLE_TEMPORARY_PERSON' | translate }} </h2>
 		</div>
 		<ng-template #titleForOtherRoles>
 			<h2 class="page-title"> {{ 'pacientes.new.TITLE_TEMPORARY_PATIENT' | translate }} </h2>
