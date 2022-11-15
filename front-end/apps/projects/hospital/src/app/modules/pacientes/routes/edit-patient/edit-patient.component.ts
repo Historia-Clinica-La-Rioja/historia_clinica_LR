@@ -4,6 +4,9 @@ import { Router, ActivatedRoute } from '@angular/router';
 import { Moment } from 'moment';
 import * as moment from 'moment';
 import {
+	ERole
+} from '@api-rest/api-model';
+import {
 	APatientDto,
 	BMPatientDto,
 	GenderDto,
@@ -34,6 +37,7 @@ import { MapperService } from '@core/services/mapper.service';
 import { PatientMedicalCoverageService } from '@api-rest/services/patient-medical-coverage.service';
 import { PERSON } from '@core/constants/validation-constants';
 import { PersonalInformation } from '@presentation/components/personal-information/personal-information.component';
+import { PermissionsService } from '@core/services/permissions.service';
 
 
 const ROUTE_PROFILE = 'pacientes/profile/';
@@ -73,7 +77,7 @@ export class EditPatientComponent implements OnInit {
 	public educationLevels: EducationLevelDto[];
 	currentEducationLevelDescription: string;
 	currentOccupationDescription: string;
-
+	hasInstitutionalAdministratorRole = false;
 	constructor(
 		private formBuilder: FormBuilder,
 		private router: Router,
@@ -89,6 +93,8 @@ export class EditPatientComponent implements OnInit {
 		private dialog: MatDialog,
 		private readonly mapperService: MapperService,
 		private readonly patientMedicalCoverageService: PatientMedicalCoverageService,
+		private permissionsService: PermissionsService,
+
 	) {
 		this.routePrefix = 'institucion/' + this.contextService.institutionId + '/';
 	}
@@ -261,6 +267,7 @@ export class EditPatientComponent implements OnInit {
 				this.countries = countries;
 			});
 
+			this.permissionsService.hasContextAssignments$([ERole.ADMINISTRADOR_INSTITUCIONAL_BACKOFFICE]).subscribe(hasInstitutionalAdministratorRole => this.hasInstitutionalAdministratorRole = hasInstitutionalAdministratorRole);
 	}
 
 	updatePhoneValidators() {
@@ -330,11 +337,19 @@ export class EditPatientComponent implements OnInit {
 							.subscribe();
 					}
 					this.router.navigate([this.routePrefix + ROUTE_PROFILE + patientId]);
-					this.snackBarService.showSuccess('pacientes.edit.messages.SUCCESS');
-				}, _ => this.snackBarService.showError('pacientes.edit.messages.ERROR'));
+					this.snackBarService.showSuccess(this.getMessagesSuccess());
+				}, _ => this.snackBarService.showError(this.getMessagesError()));
 		} else {
 			scrollIntoError(this.form, this.el);
 		}
+	}
+
+	private getMessagesSuccess(): string {
+		return this.hasInstitutionalAdministratorRole ? 'pacientes.edit.messages.SUCCESS_PERSON' : 'pacientes.edit.messages.SUCCESS_PATIENT' ;
+	}
+
+	private getMessagesError(): string {
+		return this.hasInstitutionalAdministratorRole ? 'pacientes.edit.messages.ERROR_PERSON' : 'pacientes.edit.messages.ERROR_PATIENT' ;
 	}
 
 	private mapToPersonRequest(): APatientDto {

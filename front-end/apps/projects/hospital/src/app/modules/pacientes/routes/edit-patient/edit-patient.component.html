@@ -1,7 +1,13 @@
 <app-content width="full">
 	<section class="page">
-		<h2 class="page-title" [translate]="'pacientes.edit.TITLE'"></h2>
-		<h3 [translate]="'pacientes.edit.SUBTITLE'"></h3>
+		<div *ngIf="hasInstitutionalAdministratorRole else titleForOtherRoles">
+			<h2 class="page-title" [translate]="'pacientes.edit.TITLE_PERSON'"></h2>
+			<h3 [translate]="'pacientes.edit.SUBTITLE_PERSON'"></h3>
+		</div>
+		<ng-template #titleForOtherRoles>
+			<h2 class="page-title" [translate]="'pacientes.edit.TITLE_PATIENT'"></h2>
+			<h3 [translate]="'pacientes.edit.SUBTITLE_PATIENT'"></h3>
+		</ng-template>
 		<div class="content">
 			<form [formGroup]="form" (ngSubmit)="save()">
 				<div class="form-row">
