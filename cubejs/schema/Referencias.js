@@ -19,7 +19,7 @@ sql: `SELECT r.id,
         idest.name as institucion_destino,
         io2.name as institucion_turno,
         concat_ws(', ', concat_ws(' ', doct.last_name, doct.other_last_names), concat_ws(' ', doct.first_name, doct.middle_names)) AS profesional_turno,
-        concat_ws(', ', concat_ws(' ', doc.last_name, doc.other_last_names), concat_ws(' ', doctex.name_self_determination, doc.middle_names)) AS profesional_auto_det,
+        concat_ws(', ', concat_ws(' ', doc.last_name, doc.other_last_names), CASE WHEN docex.name_self_determination IS NULL THEN concat_ws(' ', doc.first_name, doc.middle_names) ELSE docex.name_self_determination END) AS profesional_turno_auto_det,
         ap.date_type_id as fecha_turno,
         ap.hour as hora_turno,
         aps.description as estado_turno,
@@ -82,7 +82,7 @@ UNION ALL
         idest.name as institucion_destino,
         io2.name as institucion_turno,
         concat_ws(', ', concat_ws(' ', doct.last_name, doct.other_last_names), concat_ws(' ', doct.first_name, doct.middle_names)) AS profesional_turno,
-        concat_ws(', ', concat_ws(' ', doc.last_name, doc.other_last_names), concat_ws(' ', doctex.name_self_determination, doc.middle_names)) AS profesional_auto_det,
+        concat_ws(', ', concat_ws(' ', doc.last_name, doc.other_last_names), CASE WHEN docex.name_self_determination IS NULL THEN concat_ws(' ', doc.first_name, doc.middle_names) ELSE docex.name_self_determination END) AS profesional_turno_auto_det,
         ap.date_type_id as fecha_turno,
         ap.hour as hora_turno,
         aps.description as estado_turno,
@@ -271,8 +271,8 @@ UNION ALL
       title: 'Profesional turno',
     },
     // Profesional asignado nombre auto det
-    profesional_auto_det: {
-      sql: `profesional_auto_det`,
+    profesional_turno_auto_det: {
+      sql: `profesional_turno_auto_det`,
       type: `string`,
       title: 'Profesional turno',
     },
