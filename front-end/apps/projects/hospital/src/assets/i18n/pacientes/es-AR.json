@@ -99,6 +99,7 @@
       "SUBTITLE": "No se ha encontrado una persona registrada con ese tipo y número de documento.",
       "SUBTITLE_TWO": "Complete los siguientes datos para una búsqueda avanzada.",
       "NEW_PATIENT": "Crear nuevo paciente",
+	  "NEW_PERSON": "Crear nueva persona",
       "RENAPER_TIMEOUT": "No hubo respuesta del servicio de Renaper",
       "ROW_TABLE": "ID Paciente"
     },

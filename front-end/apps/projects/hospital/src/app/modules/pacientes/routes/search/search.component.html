@@ -161,9 +161,15 @@
 			<app-card-patient [patientData]="patientData" *ngIf="patientData?.length > 0 else noInfo"></app-card-patient>
 		</ng-template>
 
-			<div class="new-patient-button" align="end">
+			<div class="new-patient-button" fxLayoutAlign="end none" >
 				<button *appHasRole="['ADMINISTRATIVO','ADMINISTRADOR_INSTITUCIONAL_BACKOFFICE']" mat-raised-button id="new_patient_button" color="primary" (click)="goToNewPatient()">
-					<span [translate]="'pacientes.search.NEW_PATIENT'"></span>
+					<div *ngIf="hasInstitutionalAdministratorRole else titleForOtherRoles">
+						<span > {{ 'pacientes.search.NEW_PERSON' | translate }} </span>
+					</div>
+					<ng-template #titleForOtherRoles>
+						<span> {{ 'pacientes.search.NEW_PATIENT' | translate }} </span>
+					</ng-template>
+
 				</button>
 			</div>
 		</section>
