@@ -10,6 +10,7 @@ import ar.lamansys.refcounterref.domain.procedure.CounterReferenceProcedureBo;
 import ar.lamansys.refcounterref.infraestructure.input.service.mapper.CounterReferenceSummaryMapper;
 import ar.lamansys.refcounterref.infraestructure.input.service.mapper.ReferenceMapper;
 import ar.lamansys.refcounterref.infraestructure.input.service.mapper.ReferenceProblemMapper;
+import ar.lamansys.refcounterref.infraestructure.output.repository.referenceappointment.ReferenceAppointmentPk;
 import ar.lamansys.refcounterref.infraestructure.output.repository.referenceappointment.ReferenceAppointmentRepository;
 import ar.lamansys.sgh.shared.infrastructure.input.service.referencecounterreference.CounterReferenceSummaryDto;
 import ar.lamansys.sgh.shared.infrastructure.input.service.referencecounterreference.CounterReferenceSummaryProcedureDto;
@@ -26,6 +27,7 @@ import org.springframework.stereotype.Service;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @RequiredArgsConstructor
 @Slf4j
@@ -80,6 +82,17 @@ public class ReferenceCounterReferenceExternalServiceImpl implements SharedRefer
 	public List<Integer> getProtectedAppointmentsIds(List<Integer> diaryIds) {
 		log.debug("Input parameter -> diaryIds {}", diaryIds);
 		return referenceAppointmentRepository.findAppointmentIdsByDiaryIds(diaryIds);
+	}
+
+	@Override
+	public boolean isProtectedAppointment(Integer appointmentId) {
+		return referenceAppointmentRepository.isProtectedAppointment(appointmentId);
+	}
+
+	@Override
+	public void updateProtectedAppointment(Integer appointmentId) {
+    	log.debug("Delete reference appointment {}, ", appointmentId);
+    	referenceAppointmentRepository.deleteByAppointmentId(appointmentId);
 	}
 
 	private List<ReferenceCounterReferenceFileDto> mapToReferenceCounterReferenceFileDto(List<ReferenceCounterReferenceFileBo> referenceCounterReferenceFileBos) {

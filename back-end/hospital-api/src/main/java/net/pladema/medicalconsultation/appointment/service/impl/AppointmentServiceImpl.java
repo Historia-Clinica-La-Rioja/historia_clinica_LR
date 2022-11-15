@@ -263,6 +263,7 @@ public class AppointmentServiceImpl implements AppointmentService {
 	public boolean updateDate(Integer appointmentId, LocalDate date, LocalTime time, Integer openingHoursId) {
 		appointmentRepository.updateDate(appointmentId, date, time);
 		appointmentAssnRepository.updateOpeningHoursId(openingHoursId, appointmentId);
+		verifyProtectedCondition(appointmentId);
 		log.debug(OUTPUT, Boolean.TRUE);
 		return Boolean.TRUE;
 	}
@@ -608,4 +609,11 @@ public class AppointmentServiceImpl implements AppointmentService {
 		});
 		return appointments;
 	}
+	
+	private void verifyProtectedCondition(Integer appointmentId) {
+		boolean isProtected = sharedReferenceCounterReference.isProtectedAppointment(appointmentId);
+		if (isProtected)
+			sharedReferenceCounterReference.updateProtectedAppointment(appointmentId);
+	}
+
 }

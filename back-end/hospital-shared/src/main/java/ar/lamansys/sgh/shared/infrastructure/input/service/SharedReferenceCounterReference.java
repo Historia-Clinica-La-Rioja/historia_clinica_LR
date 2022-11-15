@@ -21,4 +21,8 @@ public interface SharedReferenceCounterReference {
 	Integer getAssignedProtectedAppointmentsQuantity(Integer diaryId, LocalDate day, Short appointmentStateId);
 
 	List<Integer> getProtectedAppointmentsIds(List<Integer> diaryIds);
+
+	boolean isProtectedAppointment(Integer appointmentId);
+
+	void updateProtectedAppointment(Integer appointment);
 }
