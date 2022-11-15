@@ -62,7 +62,7 @@
     },
     "home": {
       "TITLE": "Pacientes",
-      "TITLE_SEARCH": "Búsqueda de personas internadas",
+      "TITLE_SEARCH": "Búsqueda de pacientes internados",
       "SUBTITLE": "Ingrese los siguientes datos para realizar la búsqueda",
       "find_add_section": {
         "BUTTON_ADD": "Crear paciente temporal",
