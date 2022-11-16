@@ -206,10 +206,12 @@ export class QueryRendererComponent {
 		if (this.nameSelfDeterminationFF) {
 			this.deleteColumn('Referencias.paciente');
 			this.deleteColumn('Referencias.profesional_solicitante');
+			this.deleteColumn('Referencias.profesional_turno');
 		}
 		else {
 			this.deleteColumn('Referencias.paciente_auto_det');
 			this.deleteColumn('Referencias.profesional_auto_det');
+			this.deleteColumn('Referencias.profesional_turno_auto_det');
 		}
 
 		if (this.listOnTab) {
