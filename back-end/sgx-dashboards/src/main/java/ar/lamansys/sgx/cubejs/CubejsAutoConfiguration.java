@@ -4,6 +4,9 @@ import java.time.Duration;
 import java.util.HashMap;
 import java.util.Map;
 
+import ar.lamansys.sgx.shared.featureflags.AppFeature;
+import ar.lamansys.sgx.shared.featureflags.application.FeatureFlagsService;
+
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Bean;
@@ -77,8 +80,8 @@ public class CubejsAutoConfiguration {
     }
 
 	@Bean
-	public InstitutionMenuExtensionPlugin reportesEstadisticos() {
-		var result = isEnabled(true) ? InstitutionMenuExtensionPluginBuilder.fromResources("reportesEstadisticos") : null;
+	public InstitutionMenuExtensionPlugin reportesEstadisticos(FeatureFlagsService featureFlagsService){
+    	var result = isEnabled(featureFlagsService.isOn(AppFeature.HABILITAR_REPORTES_ESTADISTICOS)) ? InstitutionMenuExtensionPluginBuilder.fromResources("reportesEstadisticos" ) : null;
 		if (result != null) {
 			log.info("Cubejs InstitutionMenuExtensionPlugin {}", result.menu());
 		} else {
