@@ -44,7 +44,7 @@ export class ChartDefinitionService {
 			},
 		}).pipe(
 			map(definition => {
-				const { filters } = definition.cubeQuery;
+				const filters = definition.cubeQuery.filters || [];
 
 				definition.cubeQuery.filters = [...filters, ...filtersToAdd];
 				return definition;

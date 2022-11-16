@@ -21,6 +21,10 @@ const formatColumnDate = (tableData: any[], column): any[] => {
 	});
 };
 
+const parseIfDate = (value: string): string => {
+	return value.substring(0,10);
+}
+
 @Component({
 	selector: 'app-query-renderer',
 	templateUrl: './query-renderer.component.html',
@@ -50,6 +54,9 @@ export class QueryRendererComponent {
 
 	@Input('defaultColor')
 	defaultColor?: string;
+
+	@Input('showLegend')
+	showLegend?: true;
 
 	@Input() listOnTab: string = null;
 
@@ -177,8 +184,7 @@ export class QueryRendererComponent {
 			});
 		}
 
-		this.chartLabels = resultSet.chartPivot(pivotConfig).map((row) => row.x);
-		if (this.dateFormat) this.formatDate(resultSet);
+		this.chartLabels = resultSet.chartPivot(pivotConfig).map((row) => parseIfDate(row.x));
 	}
 
 	formatDate(resultSet) {
@@ -191,7 +197,6 @@ export class QueryRendererComponent {
 			resultSet.tablePivot(pivotConfig),
 			'Referencias.fecha_consulta'
 		);
-
 		this.displayedColumns = getDisplayedColumns(
 			resultSet.tableColumns(pivotConfig)
 		);

@@ -18,6 +18,7 @@ const toUIComponentDto = (error: any): UIComponentDto => ({
 export class CubejsChartComponent implements OnDestroy {
 
 	@Input() dateFormat?: string;
+	@Input() showLegend?: true;
 	error: UIComponentDto = undefined;
 	chartType = new ReplaySubject<any>(1);
 	cubeQuery = new ReplaySubject<any>(1);

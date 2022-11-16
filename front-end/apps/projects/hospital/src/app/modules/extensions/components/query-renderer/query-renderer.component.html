@@ -28,8 +28,9 @@
 		<canvas
 			*ngIf="chartType === 'bar'"
 			baseChart
-			legend="true"
+			[legend]="showLegend"
 			chartType="bar"
+			height="450"
 			[datasets]="chartData"
 			[labels]="chartLabels"
 			[options]="chartOptions"
@@ -50,8 +51,9 @@
 		<canvas
 			*ngIf="chartType === 'pie'"
 			baseChart
-			legend="true"
+			[legend]="showLegend"
 			chartType="pie"
+			height="350"
 			[datasets]="chartData"
 			[labels]="chartLabels"
 			[options]="chartOptions"

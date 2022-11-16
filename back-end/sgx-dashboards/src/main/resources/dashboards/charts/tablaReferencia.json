@@ -1,7 +1,6 @@
 {
   "cubeQuery": {
-    "measures": [
-    ],
+    "measures": [],
     "timeDimensions": [
       {
         "dimension": "Referencias.fecha_consulta"

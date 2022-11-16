@@ -1,0 +1,34 @@
+{
+  "cubeQuery": {
+    "measures": [
+      "CantidadConsultasAmbulatorias.cantidad_turnos_estado"
+    ],
+    "timeDimensions": [
+      {
+        "dimension": "CantidadConsultasAmbulatorias.fecha_consulta",
+        "granularity": "month",
+        "dateRange": "Last quarter"
+      }
+    ],
+    "order": {
+      "CantidadConsultasAmbulatorias.cantidad_turnos_estado": "desc"
+    },
+    "dimensions": [
+      "CantidadConsultasAmbulatorias.especialidad",
+      "CantidadConsultasAmbulatorias.profesional"
+    ]
+  },
+  "chartType": "bar",
+  "pivotConfig": {
+    "x": [
+      "CantidadConsultasAmbulatorias.especialidad",
+      "CantidadConsultasAmbulatorias.fecha_consulta.month"
+    ],
+    "y": [
+      "CantidadConsultasAmbulatorias.profesional",
+      "measures"
+    ],
+    "fillMissingDates": true,
+    "joinDateRange": false
+  }
+}

@@ -66,8 +66,8 @@ public class CubejsAutoConfiguration {
     }
 
     @Bean
-    public InstitutionMenuExtensionPlugin dashboardsExtensionPlugin() {
-        var result = isEnabled(true) ? InstitutionMenuExtensionPluginBuilder.fromResources("tableros") : null;
+    public InstitutionMenuExtensionPlugin referencias() {
+        var result = isEnabled(true) ? InstitutionMenuExtensionPluginBuilder.fromResources("references") : null;
         if (result != null) {
             log.info("Cubejs InstitutionMenuExtensionPlugin {}", result.menu());
         } else {
@@ -75,5 +75,16 @@ public class CubejsAutoConfiguration {
         }
         return result;
     }
+
+	@Bean
+	public InstitutionMenuExtensionPlugin reportesEstadisticos() {
+		var result = isEnabled(true) ? InstitutionMenuExtensionPluginBuilder.fromResources("reportesEstadisticos") : null;
+		if (result != null) {
+			log.info("Cubejs InstitutionMenuExtensionPlugin {}", result.menu());
+		} else {
+			log.warn("Cubejs InstitutionMenuExtensionPlugin not defined");
+		}
+		return result;
+	}
 
 }

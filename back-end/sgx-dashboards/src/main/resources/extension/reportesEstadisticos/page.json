@@ -1,0 +1,74 @@
+{
+  "layout": "components",
+  "content": [
+    {
+      "type": "cubejs-dashboard",
+      "args": {
+        "filters": {},
+        "content": [
+          {
+            "type": "tabs",
+            "args": {
+              "tabs": [
+                {
+                  "args": {
+                    "label": "Consultas",
+                    "content": [
+                      {
+                        "type": "cubejs-chart",
+                        "args": {
+                          "query": "cantidadConsultasAmbulatorias"
+                        }
+                      },
+                      {
+                        "type": "cubejs-chart",
+                        "args": {
+                          "query": "cantidadConsultasPorEspecialidad",
+                          "showLegend" : false
+                        }
+                      },
+                      {
+                        "type": "cubejs-chart",
+                        "args": {
+                          "query": "cantidadConsultasAmbulatoriasEspecialidadProfesional",
+                          "showLegend" : false
+                        }
+                      }
+                    ]
+                  }
+                },
+                {
+                  "args": {
+                    "label": "Turnos",
+                    "content": [
+                      {
+                        "type": "cubejs-chart",
+                        "args": {
+                          "query": "cantidadTurnos"
+                        }
+                      },
+                      {
+                        "type": "cubejs-chart",
+                        "args": {
+                          "query": "cantidadTurnosPorEspecialidad",
+                          "showLegend" : false
+                        }
+                      },
+                      {
+                        "type": "cubejs-chart",
+                        "args": {
+                          "query": "cantidadTurnosPorProfesional",
+                          "showLegend" : false
+                        }
+                      }
+                    ]
+                  }
+                }
+              ]
+            }
+          }
+        ]
+      }
+    }
+  ]
+}
