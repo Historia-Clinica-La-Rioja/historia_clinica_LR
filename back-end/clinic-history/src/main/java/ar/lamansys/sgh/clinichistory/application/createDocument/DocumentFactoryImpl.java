@@ -96,6 +96,8 @@ public class DocumentFactoryImpl implements DocumentFactory {
                 documentBo.getDocumentStatusId(),
                 documentBo.getDocumentType(),
                 documentBo.getDocumentSource(),
+				documentBo.getPatientId(),
+				documentBo.getInstitutionId(),
 				documentBo.getInitialDocumentId());
         loadNotes(doc, Optional.ofNullable(documentBo.getNotes()));
 
@@ -106,6 +108,7 @@ public class DocumentFactoryImpl implements DocumentFactory {
 		else if(patientData != null)
 			doc.setPatientAgePeriod(Period.between(patientData.getBirthDate(), patientInternmentAge).toString());
 
+		doc.setClinicalSpecialtyId(documentBo.getClinicalSpecialtyId());
         doc = documentService.save(doc);
 
         documentBo.setId(doc.getId());

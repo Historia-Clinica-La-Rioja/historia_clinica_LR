@@ -154,7 +154,7 @@ class CreateEvolutionNoteServiceImplTest extends UnitRepository {
 
     @Test
     void createDocumentWithEpicrisis() {
-		var epicrisisDoc = save (new Document(1, DocumentStatus.FINAL, DocumentType.EPICRISIS, SourceType.HOSPITALIZATION));
+		var epicrisisDoc = save (new Document(1, DocumentStatus.FINAL, DocumentType.EPICRISIS, SourceType.HOSPITALIZATION, -1, -1));
 		var internmentEpisode = save(newInternmentEpisodeWithEpicrisis(epicrisisDoc.getId()));
 		Exception exception = Assertions.assertThrows(ConstraintViolationException.class, () ->
 		        createEvolutionNoteService.execute(validEvolutionNote(8, internmentEpisode.getId()))

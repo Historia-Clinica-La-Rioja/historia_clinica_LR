@@ -42,6 +42,15 @@ public class Document extends SGXAuditableEntity<Long> {
 	@Column(name = "status_id", length = 20, nullable = false)
 	private String statusId;
 
+	@Column(name = "patient_id", nullable = false)
+	private Integer patientId;
+
+	@Column(name = "institution_id", nullable = false)
+	private Integer institutionId;
+
+	@Column(name = "clinical_specialty_id", length = 20)
+	private Integer clinicalSpecialtyId;
+
 	@Column(name = "other_note_id")
 	private Long otherNoteId;
 
@@ -78,16 +87,19 @@ public class Document extends SGXAuditableEntity<Long> {
 	@Column(name = "patient_age_period")
 	private String patientAgePeriod;
 
-	public Document(Integer sourceId, String statusId, Short typeId, Short sourceTypeId, Long initialDocumentId) {
+	public Document(Integer sourceId, String statusId, Short typeId, Short sourceTypeId,
+					Integer patientId, Integer institutionId, Long initialDocumentId) {
 		this.sourceId = sourceId;
 		this.statusId = statusId;
+		this.patientId = patientId;
+		this.institutionId = institutionId;
 		this.typeId = typeId;
 		this.sourceTypeId = sourceTypeId;
 		this.initialDocumentId = initialDocumentId;
 	}
 
-	public Document(Integer sourceId, String statusId, Short typeId, Short sourceTypeId) {
-		this(sourceId, statusId, typeId, sourceTypeId, null);
+	public Document(Integer sourceId, String statusId, Short typeId, Short sourceTypeId, Integer patientId, Integer institutionId) {
+		this(sourceId, statusId, typeId, sourceTypeId, patientId, institutionId, null);
 	}
 
 	public boolean isType(short type){
