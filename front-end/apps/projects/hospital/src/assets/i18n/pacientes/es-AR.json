@@ -107,9 +107,9 @@
     },
     "edit": {
       "TITLE_PATIENT": "Editar paciente",
-      "SUBTITLE_PATIENT": "Se editara el paciente seleccionado",
+      "SUBTITLE_PATIENT": "Se editará el paciente seleccionado",
 	  "TITLE_PERSON": "Editar Persona",
-      "SUBTITLE_PERSON": "Se editara la persona seleccionada",
+      "SUBTITLE_PERSON": "Se editará la persona seleccionada",
       "messages": {
 		"ERROR_PATIENT": "Error al editar un paciente",
 		"ERROR_PERSON": "Error al editar una persona",
