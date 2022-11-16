@@ -1,15 +1,18 @@
 package ar.lamansys.sgh.clinichistory.application.reason;
 
-import ar.lamansys.sgh.clinichistory.domain.ips.ReasonBo;
-import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.ips.ReasonsRepository;
-import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.ips.entity.Reason;
+import java.util.List;
+import java.util.Objects;
+import java.util.stream.Collectors;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
-import java.util.Objects;
-import java.util.stream.Collectors;
+import ar.lamansys.sgh.clinichistory.domain.ips.ReasonBo;
+import ar.lamansys.sgh.clinichistory.domain.ips.SnomedBo;
+import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.ips.ReasonsRepository;
+import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.ips.VReasonsRepository;
+import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.ips.entity.Reason;
 
 @Service
 public class ReasonServiceImpl implements ReasonService {
@@ -20,9 +23,12 @@ public class ReasonServiceImpl implements ReasonService {
 
     private final ReasonsRepository reasonRepository;
 
-    public ReasonServiceImpl(ReasonsRepository reasonRepository) {
+	private final VReasonsRepository vReasonsRepository;
+
+    public ReasonServiceImpl(ReasonsRepository reasonRepository, VReasonsRepository vReasonsRepository) {
         this.reasonRepository = reasonRepository;
-    }
+		this.vReasonsRepository = vReasonsRepository;
+	}
 
     @Override
     public List<String> addReasons(List<ReasonBo> reasons) {
@@ -35,8 +41,20 @@ public class ReasonServiceImpl implements ReasonService {
         return result;
     }
 
+	@Override
+	public List<ReasonBo> fetchFromDocumentId(Long documentId) {
+		return vReasonsRepository.fetchFromDocumentId(documentId)
+				.stream()
+				.map(vReason -> {
+					ReasonBo result = new ReasonBo();
+					result.setSnomed(new SnomedBo(vReason.getId(), vReason.getDescription()));
+					return result;
+				})
+				.collect(Collectors.toList());
+	}
 
-    private ReasonBo saveReason(ReasonBo reasonBo) {
+
+	private ReasonBo saveReason(ReasonBo reasonBo) {
         LOG.debug("Input parameters reasonBo {}", reasonBo);
         Objects.requireNonNull(reasonBo);
         Reason reason = new Reason(reasonBo.getSctid(), reasonBo.getPt());

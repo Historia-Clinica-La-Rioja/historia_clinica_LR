@@ -8,6 +8,7 @@ import {
 } from 'react-admin';
 import SgxDateField from "../../dateComponents/sgxDateField";
 import DownloadButton from '../../libs/sgx/components/DownloadButton';
+import FileRebuildButton from "./DocumentFileRebuildButton";
 
 const filenameSupplier = (record) => record.filename;
 const urlSupplier = (record) => `backoffice/documentfiles/${record.id}/downloadFile`;
@@ -23,6 +24,7 @@ const DocumentFileShow = (props) => {
                 </ReferenceField>
                 <SgxDateField source="creationable.createdOn" showTime/>
                 { permissions && permissions.isOn("HABILITAR_DESCARGA_DOCUMENTOS_PDF") && <DownloadButton filename={filenameSupplier} url={urlSupplier}/> }
+                <FileRebuildButton/>
             </SimpleShowLayout>
         </Show>
     )

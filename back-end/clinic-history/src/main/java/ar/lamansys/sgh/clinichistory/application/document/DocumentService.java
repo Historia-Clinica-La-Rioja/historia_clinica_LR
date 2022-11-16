@@ -5,6 +5,7 @@ import java.util.Optional;
 
 import ar.lamansys.sgh.clinichistory.domain.ips.AllergyConditionBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.AnthropometricDataBo;
+import ar.lamansys.sgh.clinichistory.domain.ips.DentalActionBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.GeneralHealthConditionBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.ImmunizationBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.MedicationBo;
@@ -90,5 +91,7 @@ public interface DocumentService {
     void updateDocumentModificationReason(Long documentId, String reason);
 
 	Short getSourceType(Long documentId);
+
+	List<DentalActionBo> getDentalActionsFromDocument(Long id);
 }
 

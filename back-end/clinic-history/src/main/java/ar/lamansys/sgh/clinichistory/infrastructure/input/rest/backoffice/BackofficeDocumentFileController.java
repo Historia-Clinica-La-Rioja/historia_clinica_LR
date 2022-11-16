@@ -14,10 +14,13 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 import ar.lamansys.sgh.clinichistory.application.fetchdocumentfile.FetchDocumentFileById;
+import ar.lamansys.sgh.clinichistory.application.rebuildFile.RebuildFile;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.backoffice.BackofficeDocumentFileStore;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.backoffice.dto.DocumentFileDto;
 import ar.lamansys.sgx.shared.featureflags.AppFeature;
@@ -36,13 +39,17 @@ public class BackofficeDocumentFileController extends AbstractBackofficeControll
 
 	private final FeatureFlagsService featureFlagsService;
 
+	private final RebuildFile rebuildFile;
+
 	public BackofficeDocumentFileController(
 			BackofficeDocumentFileStore store,
-			FetchDocumentFileById fetchDocumentFileById, FileService fileService, FeatureFlagsService featureFlagsService) {
+			FetchDocumentFileById fetchDocumentFileById, FileService fileService,
+			FeatureFlagsService featureFlagsService, RebuildFile rebuildFile) {
 		super(store, new BackofficePermissionValidatorAdapter<>(HttpMethod.GET));
 		this.fetchDocumentFileById = fetchDocumentFileById;
 		this.fileService = fileService;
 		this.featureFlagsService = featureFlagsService;
+		this.rebuildFile = rebuildFile;
 	}
 
 
@@ -67,5 +74,16 @@ public class BackofficeDocumentFileController extends AbstractBackofficeControll
 				.contentLength(sizeFile)
 				.body(resource);
 	}
+
+	@PutMapping(value = "/{id}/rebuild-file")
+	@PreAuthorize("hasAnyAuthority('ROOT', 'ADMINISTRADOR')")
+	@ResponseStatus(HttpStatus.OK)
+	public void rebuildFile(@PathVariable Long id) {
+		rebuildFile.run(id);
+	}
+
+
+
+
 
 }
