@@ -30,6 +30,7 @@ import java.time.LocalTime;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -73,7 +74,7 @@ public class DiaryAvailableAppointmentsServiceImpl implements DiaryAvailableAppo
 			diaryInfo.setOpeningHours(new ArrayList<>(diaryOpeningHoursService.getDiaryOpeningHours(diaryInfo.getDiaryId())));
 			result.addAll(getDiaryAvailableAppointments(diaryInfo, assignedAppointments, searchCriteria, institutionId));
 		}
-
+		result.sort(Comparator.comparing(DiaryAvailableProtectedAppointmentsBo::getDate).thenComparing(DiaryAvailableProtectedAppointmentsBo::getHour));
 		log.debug(OUTPUT, result);
 		return result;
 	}
