@@ -162,6 +162,7 @@ export interface AnnexIIDto {
     patientGender: string;
     problems: string;
     reportDate: Date;
+    rnos: number;
     sisaCode: string;
     specialty: string;
 }
