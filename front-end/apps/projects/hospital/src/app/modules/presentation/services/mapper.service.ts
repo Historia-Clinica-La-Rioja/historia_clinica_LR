@@ -14,7 +14,7 @@ import {
 import { PatientBasicData } from '../components/patient-card/patient-card.component';
 import { PersonalInformation } from '@presentation/components/personal-information/personal-information.component';
 import { PatientTypeData } from '@presentation/components/patient-type-logo/patient-type-logo.component';
-import { DateFormat, momentParseDate, momentParseDateTime } from '@core/utils/moment.utils';
+import { DateFormat, momentParseDate, momentParseDateTime, momentFormat, dateToMoment } from '@core/utils/moment.utils';
 import { BedManagement } from '../../camas/routes/home/home.component';
 import { HistoricalProblems } from '../../historia-clinica/modules/ambulatoria/services/historical-problems-facade.service';
 import { InternmentPatientTableData } from "@historia-clinica/modules/ambulatoria/modules/internacion/components/internment-patient-table/internment-patient-table.component";
@@ -43,7 +43,7 @@ export class MapperService {
 			sectorDescription: internmentSummary.bed.room.sector.description,
 			totalInternmentDays: internmentSummary.totalInternmentDays,
 			doctor: null,
-			admissionDatetime: momentParseDate(String(internmentSummary.entryDate)).format(DateFormat.VIEW_DATE),
+			admissionDatetime: momentFormat(dateToMoment(internmentSummary.entryDate),DateFormat.VIEW_DATE),
 			probableDischargeDate: internmentSummary.probableDischargeDate ? momentParseDateTime(String(internmentSummary.probableDischargeDate)).format(DateFormat.VIEW_DATE) : 'Sin fecha definida',
 			responsibleContact: null
 		};
