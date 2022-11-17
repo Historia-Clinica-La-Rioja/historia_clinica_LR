@@ -1,16 +1,5 @@
 package ar.lamansys.sgx.shared.pdf;
 
-import ar.lamansys.sgx.shared.flavor.FlavorService;
-import com.lowagie.text.DocumentException;
-import org.apache.commons.io.IOUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.stereotype.Component;
-import org.thymeleaf.context.Context;
-import org.thymeleaf.spring5.SpringTemplateEngine;
-import org.xhtmlrenderer.pdf.ITextRenderer;
-
-
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -22,6 +11,18 @@ import java.nio.file.Paths;
 import java.util.Locale;
 import java.util.Map;
 import java.util.function.Function;
+
+import org.apache.commons.io.IOUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Component;
+import org.thymeleaf.context.Context;
+import org.thymeleaf.spring5.SpringTemplateEngine;
+import org.xhtmlrenderer.pdf.ITextRenderer;
+
+import com.lowagie.text.DocumentException;
+
+import ar.lamansys.sgx.shared.flavor.FlavorService;
 
 @Component
 public class PdfService {
@@ -51,6 +52,7 @@ public class PdfService {
         try (InputStream is = templateEngineProcess(templateName, context); ByteArrayOutputStream os = new ByteArrayOutputStream()) {
             return writeAndGetOutput(is, os);
         } catch (IOException | DocumentException e){
+			LOG.error("Error para generar el siguiente template {}, en este contexto {}", templateName, contextMap);
             throw new PDFDocumentException(e);
         }
     }

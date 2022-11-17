@@ -22,6 +22,6 @@ public class DocumentAuthorFinder {
     public ProfessionalCompleteDto getAuthor(Long documentId) {
 		return documentRepository.findById(documentId)
 				.map(document -> sharedStaffPort.getProfessionalComplete(document.getCreatedBy()))
-				.orElseGet(null);
+				.orElse(null);
 	}
 }
