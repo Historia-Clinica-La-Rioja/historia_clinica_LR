@@ -1,8 +1,10 @@
 package ar.lamansys.sgx.shared;
 
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import java.util.UUID;
+
+import javax.annotation.PostConstruct;
+
 import org.springframework.boot.autoconfigure.domain.EntityScan;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
@@ -11,9 +13,10 @@ import org.springframework.context.annotation.PropertySource;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.web.filter.CommonsRequestLoggingFilter;
 
-import javax.annotation.PostConstruct;
+import ar.lamansys.sgx.shared.actuator.infrastructure.configuration.AppNode;
+import lombok.extern.slf4j.Slf4j;
 
-
+@Slf4j
 @Configuration
 @ComponentScan(basePackages = {"ar.lamansys.sgx.shared"})
 @EnableJpaRepositories(basePackages = {"ar.lamansys.sgx.shared"})
@@ -21,11 +24,9 @@ import javax.annotation.PostConstruct;
 @PropertySource(value = "classpath:sgx_shared.properties", ignoreResourceNotFound = true)
 public class SharedAutoConfiguration {
 
-    private static final Logger LOG = LoggerFactory.getLogger(SharedAutoConfiguration.class);
-
     @PostConstruct
     public void doLog() {
-        LOG.debug("{}", "SharedAutoConfiguration loaded");
+        log.debug("{}", "SharedAutoConfiguration loaded");
     }
 
     @Bean
@@ -39,4 +40,11 @@ public class SharedAutoConfiguration {
         filter.setIncludeClientInfo(true);
         return filter;
     }
+
+	@Bean
+	public AppNode appNode() {
+		return new AppNode(
+				UUID.randomUUID().toString()
+		);
+	}
 }

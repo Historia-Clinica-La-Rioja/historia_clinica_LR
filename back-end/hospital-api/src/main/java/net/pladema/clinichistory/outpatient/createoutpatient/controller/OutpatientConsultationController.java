@@ -132,7 +132,8 @@ public class OutpatientConsultationController implements OutpatientConsultationA
 
         Long documentId = createOutpatientDocumentService.execute(outpatient).getId();
 		Integer appointmentId = null;
-        if (!disableValidation && appointmentExternalService.hasConfirmedAppointment(patientId,doctorId,dateTimeProvider.nowDate())) {
+        if (!disableValidation && (appointmentExternalService.hasCurrentAppointment(patientId,doctorId,dateTimeProvider.nowDate())
+				|| appointmentExternalService.hasOldAppointment(patientId,doctorId))) {
 			appointmentId = appointmentExternalService.serveAppointment(patientId, doctorId, dateTimeProvider.nowDate());
 		}
 		if(appointmentId != null)
@@ -174,7 +175,7 @@ public class OutpatientConsultationController implements OutpatientConsultationA
         createOutpatientDocumentService.execute(outpatient);
 
 
-        if (!disableValidation && appointmentExternalService.hasConfirmedAppointment(patientId,doctorId,dateTimeProvider.nowDate()))
+        if (!disableValidation && appointmentExternalService.hasCurrentAppointment(patientId,doctorId,dateTimeProvider.nowDate()))
             appointmentExternalService.serveAppointment(patientId, doctorId, dateTimeProvider.nowDate());
         LOG.debug(OUTPUT, true);
         return  ResponseEntity.ok().body(true);

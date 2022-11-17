@@ -5,16 +5,16 @@ import { GenderDto, IdentificationTypeDto, LimitedPatientSearchDto, PatientSearc
 import { AppFeature } from '@api-rest/api-model';
 import { atLeastOneValueInFormGroup, hasError, } from '@core/utils/form.utils';
 import { Moment } from 'moment';
-import { ActionDisplays, TableModel } from '@presentation/components/table/table.component';
 import { DateFormat, momentFormat, momentParseDateTime, newMoment } from '@core/utils/moment.utils';
 import { Router } from '@angular/router';
 import { ContextService } from '@core/services/context.service';
 import { PatientService, PersonInformationRequest } from '@api-rest/services/patient.service';
 import { PERSON } from '@core/constants/validation-constants';
 import { MIN_DATE } from "@core/utils/date.utils";
-import { PatientNameService } from "@core/services/patient-name.service";
 import { FeatureFlagService } from "@core/services/feature-flag.service";
 import { IDENTIFICATION_TYPE_IDS } from '@core/utils/patient.utils';
+import { TableModel, ActionDisplays } from '@presentation/components/table/table.component';
+import { PatientNameService } from '@core/services/patient-name.service';
 
 @Component({
 	selector: 'app-home',
@@ -22,48 +22,48 @@ import { IDENTIFICATION_TYPE_IDS } from '@core/utils/patient.utils';
 	styleUrls: ['./home.component.scss']
 })
 export class HomeComponent implements OnInit {
+	patientData: PatientSearchDto[] = [];
+	genderTableView: string[] = [];
+	public personalInformationForm: FormGroup;
+	public genders: GenderDto[];
+	public identificationTypeList: IdentificationTypeDto[];
+	public hasError = hasError;
+	public today: Moment = newMoment();
+	public formSubmitted: boolean;
+	public requiringValues: boolean;
+	public patientResultsLength: number;
+	public readonly validations = PERSON;
+	readonly MAX_RESULT_SIZE: number = 150;
+	nameSelfDeterminationEnabled: boolean;
+	minDate = MIN_DATE;
+	requiringAtLeastOneMoreValue: boolean;
+	ffOfCardsIsOn: boolean;
+	public tableModel: TableModel<PatientSearchDto>;
 
+	private readonly routePrefix;
 
-  public personalInformationForm: FormGroup;
-  public genders: GenderDto[];
-  public identificationTypeList: IdentificationTypeDto[];
-  public hasError = hasError;
-  public today: Moment = newMoment();
-  public tableModel: TableModel<PatientSearchDto>;
-  public formSubmitted: boolean;
-  public requiringValues: boolean;
-  public patientResultsLength: number;
-  public readonly validations = PERSON;
-  readonly MAX_RESULT_SIZE: number = 150;
-  nameSelfDeterminationEnabled: boolean;
-  minDate = MIN_DATE;
-  requiringAtLeastOneMoreValue: boolean;
+	constructor(
+		private readonly formBuilder: FormBuilder,
+		private readonly personMasterDataService: PersonMasterDataService,
+		private readonly patientService: PatientService,
+		private readonly router: Router,
+		private readonly contextService: ContextService,
+		private readonly patientNameService: PatientNameService,
+		private readonly featureFlagService: FeatureFlagService,
+	) {
+		this.routePrefix = `institucion/${this.contextService.institutionId}/`;
+		this.featureFlagService.isActive(AppFeature.HABILITAR_DATOS_AUTOPERCIBIDOS).subscribe(isEnabled => {
+			this.nameSelfDeterminationEnabled = isEnabled
+		});
+	}
 
-  private readonly routePrefix;
-  private genderTableView: string[] = [];
+	ngOnInit(): void {
+		this.initPersonalInformationForm();
+		this.setMasterData();
+	}
 
-  constructor(
-	private readonly formBuilder: FormBuilder,
-	private readonly personMasterDataService: PersonMasterDataService,
-	private readonly patientService: PatientService,
-	private readonly router: Router,
-	private readonly contextService: ContextService,
-	private readonly patientNameService: PatientNameService,
-	private readonly featureFlagService: FeatureFlagService,
-  ) {
-  	this.routePrefix = `institucion/${this.contextService.institutionId}/`;
-  	this.featureFlagService.isActive(AppFeature.HABILITAR_DATOS_AUTOPERCIBIDOS).subscribe(isEnabled =>{
-		  this.nameSelfDeterminationEnabled = isEnabled
-	});
-  }
-
-  ngOnInit(): void {
-	  this.initPersonalInformationForm();
-	  this.setMasterData();
-  }
-
-  private initPersonalInformationForm() {
-	this.personalInformationForm = this.formBuilder.group({
+	private initPersonalInformationForm() {
+		this.personalInformationForm = this.formBuilder.group({
 			firstName: [null, [Validators.maxLength(PERSON.MAX_LENGTH.firstName), Validators.pattern(/^\S*$/)]],
 			middleNames: [null, [Validators.maxLength(PERSON.MAX_LENGTH.middleNames), Validators.pattern(/^\S*$/)]],
 			lastName: [null, [Validators.maxLength(PERSON.MAX_LENGTH.lastName), Validators.pattern(/^\S*$/)]],
@@ -120,15 +120,20 @@ export class HomeComponent implements OnInit {
 			const personalInformationReq: PersonInformationRequest = this.personalInformationForm.value;
 			this.patientService.searchPatientOptionalFilters(personalInformationReq)
 				.subscribe((data: LimitedPatientSearchDto) => {
-					this.tableModel = this.buildTable(data.patientList);
-					this.patientResultsLength = data.actualPatientSearchSize;
+					this.featureFlagService.isActive(AppFeature.HABILITAR_VISUALIZACION_DE_CARDS).subscribe(isEnabled => {
+						this.ffOfCardsIsOn = isEnabled;
+						if (this.ffOfCardsIsOn)
+							this.patientData = data.patientList;
+						else
+							this.tableModel = this.buildTable(data.patientList);
+						this.patientResultsLength = data.actualPatientSearchSize;
+					});
 				});
 		}
-
 	}
 
-  private buildTable(data: PatientSearchDto[]): TableModel<any> {
-		if(this.nameSelfDeterminationEnabled) {
+	private buildTable(data: PatientSearchDto[]): TableModel<any> {
+		if (this.nameSelfDeterminationEnabled) {
 			return {
 				columns: [
 					{

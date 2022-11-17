@@ -51,37 +51,35 @@ public class OutpatientServiceRequestController {
 
 	@PostMapping
 	@ResponseStatus(code = HttpStatus.CREATED)
-	@Transactional
+	@Transactional // Transaccion compleja
 	@PreAuthorize("hasPermission(#institutionId, 'ESPECIALISTA_MEDICO, ESPECIALISTA_EN_ODONTOLOGIA')")
-	public List<Integer> create(@PathVariable(name = "institutionId") Integer institutionId,
-								@PathVariable(name = "patientId") Integer patientId,
-								@RequestBody @Valid PrescriptionDto serviceRequestListDto
-	) {
+	public List<Integer> create(@PathVariable(name = "institutionId") Integer institutionId, @PathVariable(name = "patientId") Integer patientId, @RequestBody @Valid PrescriptionDto serviceRequestListDto) {
 		log.debug("Input parameters -> institutionId {} patientId {}, ServiceRequestListDto {}", institutionId, patientId, serviceRequestListDto);
 		Integer doctorId = healthcareProfessionalExternalService.getProfessionalId(UserInfo.getCurrentAuditor());
-		Map<String, List<PrescriptionItemDto>> srGroupBy = serviceRequestListDto.getItems().stream()
-				.collect(Collectors.groupingBy(PrescriptionItemDto::getCategoryId));
+		Map<String, List<PrescriptionItemDto>> srGroupBy = serviceRequestListDto.getItems().stream().collect(Collectors.groupingBy(PrescriptionItemDto::getCategoryId));
 
 		BasicPatientDto patientDto = patientExternalService.getBasicDataFromPatient(patientId);
 
 		ArrayList<Integer> result = new ArrayList<>();
 
 		srGroupBy.forEach((categoryId, studyListDto) -> {
-			OutpatientServiceRequestBo serviceRequestBo = this.parseTo(
-					studyMapper,
-					doctorId,
-					patientDto,
-					categoryId,
-					serviceRequestListDto.getMedicalCoverageId(),
-					studyListDto);
+			OutpatientServiceRequestBo serviceRequestBo = this.parseTo(studyMapper, doctorId, patientDto, categoryId, serviceRequestListDto.getMedicalCoverageId(), studyListDto);
 			serviceRequestBo.setInstitutionId(institutionId);
 			Integer srId = createOutpatientServiceRequestService.execute(serviceRequestBo);
-			hospitalApiPublisher.publish(serviceRequestBo.getPatientId(), EHospitalApiTopicDto.SOLICITUD_ESTUDIO);
+			hospitalApiPublisher.publish(serviceRequestBo.getPatientId(), institutionId, getTopicToPublish(categoryId));
 			result.add(srId);
 		});
 
 		log.debug("Output -> {}", result);
 		return result;
+	}
+
+	private EHospitalApiTopicDto getTopicToPublish (String categoryId) {
+		if (categoryId.equals("108252007"))
+			return EHospitalApiTopicDto.CLINIC_HISTORY__HOSPITALIZATION__SERVICE_RESQUEST__LABORATORY;
+		if (categoryId.equals("363679005"))
+			return EHospitalApiTopicDto.CLINIC_HISTORY__HOSPITALIZATION__SERVICE_RESQUEST__IMAGE;
+		return EHospitalApiTopicDto.CLINIC_HISTORY__HOSPITALIZATION__SERVICE_RESQUEST;
 	}
 
 	private OutpatientServiceRequestBo parseTo(StudyMapper studyMapper, Integer doctorId, BasicPatientDto patientDto, String categoryId, Integer medicalCoverageId, List<PrescriptionItemDto> studies){

@@ -23,6 +23,8 @@ export class CubejsChartComponent implements OnDestroy {
 	cubeQuery = new ReplaySubject<any>(1);
 	pivotConfig = new ReplaySubject<any>(1);
 
+	@Input() listOnTab: string = null;
+
 	private chartDefinitionSubscription: Subscription;
 
 	constructor(

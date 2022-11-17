@@ -1,25 +1,22 @@
 package ar.lamansys.mqtt.application.publish;
 
-import ar.lamansys.mqtt.application.MqttPublisher;
-import ar.lamansys.mqtt.domain.MqttMetadataBo;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
+import ar.lamansys.mqtt.application.ports.MqttClientService;
+import ar.lamansys.mqtt.domain.MqttMetadataBo;
+import lombok.extern.slf4j.Slf4j;
+
 @Service
+@Slf4j
 public class PublishData {
 
-    private final MqttPublisher mqttPublisher;
-    private final Logger logger;
+	private final MqttClientService mqttClient;
 
-    public PublishData(MqttPublisher mqttPublisher) {
+	public PublishData(MqttClientService mqttClient) {
+		this.mqttClient = mqttClient;
+	}
 
-        this.mqttPublisher = mqttPublisher;
-        this.logger = LoggerFactory.getLogger(this.getClass());
-    }
-
-    public boolean run(MqttMetadataBo metadata) {
-        logger.debug("Publish data {}", metadata);
-        return mqttPublisher.run(metadata);
-    }
+	public boolean run(MqttMetadataBo message) {
+		return mqttClient.publish(message);
+	}
 }

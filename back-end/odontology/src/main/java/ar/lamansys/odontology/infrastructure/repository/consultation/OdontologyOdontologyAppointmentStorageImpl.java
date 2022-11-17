@@ -36,7 +36,7 @@ public class OdontologyOdontologyAppointmentStorageImpl implements OdontologyApp
     @Override
     public Integer serveAppointment(Integer patientId, Integer doctorId, LocalDate date) {
         LOG.debug("Input parameters -> patientId {}, doctorId {}, date {}", patientId, doctorId, date);
-        if (!disableValidation && sharedAppointmentPort.hasConfirmedAppointment(patientId,doctorId,date))
+        if (!disableValidation && sharedAppointmentPort.hasCurrentAppointment(patientId,doctorId,date))
             return sharedAppointmentPort.serveAppointment(patientId, doctorId, date);
 		return null;
     }

@@ -50,7 +50,7 @@ const routes: Routes = [
 				canActivate: [FeatureFlagGuard],
 				data: { featureFlag:AppFeature.HABILITAR_REPORTES_PROGRAMAS }
 			},
-			{ path: 'extension/:menuItemId', component: InstitutionExtensionComponent },
+			{ path: 'extension/:menuItemId', component: InstitutionExtensionComponent, data: { enableDownloadCSV: true } },
 		],
 		canActivate: [RoleGuard],
 		data: {

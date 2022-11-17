@@ -41,7 +41,8 @@
 		"RESET": "Restablecer",
 		"SELECT": "Seleccionar",
 		"APPLY": "Aplicar",
-		"ACCEPT": "Aceptar"
+		"ACCEPT": "Aceptar",
+		"CSV_DOWNLOAD": "DESCARGAR .CSV"
 	},
 	"forms": {
 		"REQUIRED": "El campo es requerido",

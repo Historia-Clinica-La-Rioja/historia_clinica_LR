@@ -15,7 +15,7 @@
 	<mat-sidenav-container class="layout-sidenav-container" [style.marginTop.px]="mobileQuery.matches ? 57 : 0">
 
 		<mat-sidenav #sidenav [(opened)]="opened" [mode]="mobileQuery.matches ? 'over' : 'side'"
-			[fixedInViewport]="mobileQuery.matches" fixedTopGap="57" (mouseover)="toggleSidebarHoverOver()">
+		[ngClass]="{'mat-sidenav-open':!isCollapsed }" fixedTopGap="57" (mouseover)="toggleSidebarHoverOver()">
 
 			<div class="custom-container">
 				<div class="top">

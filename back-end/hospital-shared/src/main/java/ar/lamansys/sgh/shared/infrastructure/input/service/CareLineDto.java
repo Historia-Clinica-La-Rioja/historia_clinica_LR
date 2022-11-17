@@ -5,6 +5,7 @@ import lombok.Setter;
 import lombok.ToString;
 
 import java.io.Serializable;
+import java.util.List;
 
 @Getter
 @Setter
@@ -16,5 +17,7 @@ public class CareLineDto implements Serializable {
     private Integer id;
 
     private String description;
+
+    private List<ClinicalSpecialtyDto> clinicalSpecialties;
 
 }

@@ -56,7 +56,7 @@ export class AntecedentesPersonalesComponent implements OnInit {
 	addToList() {
 		if (this.form.valid && this.snomedConcept) {
 			const antecedentePersonal: HealthHistoryConditionDto = {
-				date: null,
+				startDate: null,
 				note: null,
 				snomed: this.snomedConcept
 			};

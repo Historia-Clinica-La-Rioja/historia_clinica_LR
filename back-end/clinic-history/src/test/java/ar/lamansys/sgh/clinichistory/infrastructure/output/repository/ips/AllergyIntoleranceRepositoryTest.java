@@ -2,9 +2,12 @@ package ar.lamansys.sgh.clinichistory.infrastructure.output.repository.ips;
 
 import ar.lamansys.sgh.clinichistory.UnitRepository;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.ips.entity.AllergyIntolerance;
+import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.masterdata.SnomedRepository;
+
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.mock.mockito.MockBean;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -12,6 +15,9 @@ class AllergyIntoleranceRepositoryTest extends UnitRepository {
 
 	@Autowired
 	private AllergyIntoleranceRepository allergyIntoleranceRepository;
+
+	@MockBean
+	private SnomedRepository snomedRepository;
 
 	@BeforeEach
 	void setUp() throws Exception {

@@ -1,6 +1,6 @@
-import { CalendarDateService } from './../../services/calendar-date.service';
+import { CalendarProfessionalInformation } from '../../services/calendar-professional-information';
 import { Component, Input, OnChanges, OnDestroy, OnInit, SimpleChanges } from '@angular/core';
-import { AppointmentDailyAmountDto, AppointmentListDto, CompleteDiaryDto, DiaryOpeningHoursDto, MedicalCoverageDto } from '@api-rest/api-model';
+import { AppointmentDailyAmountDto, CompleteDiaryDto, DiaryOpeningHoursDto, MedicalCoverageDto, ProfessionalDto, ProfessionalPersonDto } from '@api-rest/api-model';
 import { ERole } from '@api-rest/api-model';
 import { CalendarMonthViewBeforeRenderEvent, CalendarView, CalendarWeekViewBeforeRenderEvent, DAYS_OF_WEEK } from 'angular-calendar';
 import {
@@ -22,11 +22,11 @@ import { MEDICAL_ATTENTION } from '../../constants/descriptions';
 import { AppointmentComponent } from '../../dialogs/appointment/appointment.component';
 import { SnackBarService } from '@presentation/services/snack-bar.service';
 
-import { AppointmentsFacadeService, toCalendarEvent } from '@turnos/services/appointments-facade.service';
+import { AppointmentsFacadeService } from '@turnos/services/appointments-facade.service';
 
 import { APPOINTMENT_STATES_ID, MINUTES_IN_HOUR } from '../../constants/appointment';
 import { map, take } from 'rxjs/operators';
-import { forkJoin, Observable, of, Subject, Subscription } from 'rxjs';
+import { forkJoin, Observable, of, Subject } from 'rxjs';
 import { PermissionsService } from '@core/services/permissions.service';
 import { HealthInsuranceService } from '@api-rest/services/health-insurance.service';
 import { AppointmentsService } from '@api-rest/services/appointments.service';
@@ -39,6 +39,9 @@ import { LoggedUserService } from '../../../auth/services/logged-user.service';
 import * as moment from 'moment';
 import { endOfMonth, endOfWeek, startOfMonth, startOfWeek } from 'date-fns';
 import { DatePipe } from "@angular/common";
+import { DiscardWarningComponent } from '@presentation/dialogs/discard-warning/discard-warning.component';
+import { TranslateService } from '@ngx-translate/core';
+import { PatientNameService } from '../../../core/services/patient-name.service';
 
 const ASIGNABLE_CLASS = 'cursor-pointer';
 const AGENDA_PROGRAMADA_CLASS = 'bg-green';
@@ -66,12 +69,14 @@ export class AgendaComponent implements OnInit, OnDestroy, OnChanges {
 
 	enableAppointmentScheduling = true;
 	appointments: CalendarEvent[];
+	holidays: CalendarEvent[] = [];
 	dailyAmounts: AppointmentDailyAmountDto[];
 	dailyAmounts$: Observable<AppointmentDailyAmountDto[]>;
-	appointmentSubscription: Subscription;
 	refreshCalendar = new Subject<void>();
 	startDate: string;
 	endDate: string;
+	careLinesToShow: string = "";
+	associatedProfessionalsToShow: string = "";
 
 	private readonly routePrefix = 'institucion/' + this.contextService.institutionId;
 	private patientId: number;
@@ -104,8 +109,10 @@ export class AgendaComponent implements OnInit, OnDestroy, OnChanges {
 		private readonly contextService: ContextService,
 		private readonly healthcareProfessionalService: HealthcareProfessionalService,
 		private readonly loggedUserService: LoggedUserService,
-		private readonly calendarDateService: CalendarDateService,
-		private readonly datePipe : DatePipe
+		private readonly calendarProfessionalInfo: CalendarProfessionalInformation,
+		private readonly datePipe: DatePipe,
+		private readonly translateService: TranslateService,
+		private readonly patientNameService: PatientNameService,
 	) {
 	}
 
@@ -120,12 +127,9 @@ export class AgendaComponent implements OnInit, OnDestroy, OnChanges {
 			this.patientId = Number(qp.idPaciente);
 		});
 
-		this.loading = true;
-		this.appointmentSubscription?.unsubscribe();
 		this.appointmentFacade.clear();
-
 		this.loading = true;
-		this.appointmentSubscription = this.appointmentFacade.getAppointments().subscribe(appointments => {
+		this.appointmentFacade.getAppointments().subscribe(appointments => {
 			if (appointments) {
 				if (appointments.length) {
 					this.appointments = this.unifyEvents(appointments);
@@ -133,17 +137,19 @@ export class AgendaComponent implements OnInit, OnDestroy, OnChanges {
 				else {
 					this.appointments = appointments;
 				}
+				this.dailyAmounts$ = this.appointmentsService.getDailyAmounts(this.idAgenda, this.startDate, this.endDate);
 				this.loading = false;
 			}
 		});
+		this.appointmentFacade.getHolidays().subscribe(holidays => this.holidays = holidays);
 		this.permissionsService.hasContextAssignments$(ROLES_TO_CREATE).subscribe(hasRole => this.hasRoleToCreate = hasRole);
 		this.healthcareProfessionalService.getHealthcareProfessionalByUserId().subscribe(healthcareProfessionalId => this.loggedUserHealthcareProfessionalId = healthcareProfessionalId);
 		this.loggedUserService.assignments$.subscribe(response => this.loggedUserRoles = response.map(role => role.role));
-		this.setDateRange(this.viewDate);
 	}
 
 	ngOnDestroy() {
 		this.agendaSearchService.setAgendaSelected(undefined);
+		this.appointmentFacade.clear();
 	}
 
 	ngOnChanges(changes: SimpleChanges) {
@@ -155,7 +161,7 @@ export class AgendaComponent implements OnInit, OnDestroy, OnChanges {
 		if (this.view !== CalendarView.Month) {
 			this.setDateRange(date);
 			this.appointmentFacade.setValues(this.agenda.id, this.agenda.appointmentDuration, this.startDate, this.endDate);
-			this.calendarDateService.setCalendarDate(date);
+			this.calendarProfessionalInfo.setCalendarDate(date);
 		}
 	}
 
@@ -268,31 +274,60 @@ export class AgendaComponent implements OnInit, OnDestroy, OnChanges {
 				if (addingOverturn && (numberOfOverturnsAssigned === diaryOpeningHourDto.overturnCount)) {
 					if (diaryOpeningHourDto.medicalAttentionTypeId !== MEDICAL_ATTENTION.SPONTANEOUS_ID) {
 						this.snackBarService.showError('turnos.overturns.messages.ERROR');
-                        return;
+						return;
 					}
 				}
 
-				if (this.loggedUserHealthcareProfessionalId !== this.appointmentFacade.getProfessionalId() && !this.userHasValidRoles()) {
+				if (this.loggedUserHealthcareProfessionalId !== this.appointmentFacade.getProfessional()?.id && !this.userHasValidRoles()) {
 					this.snackBarService.showError('turnos.new-appointment.messages.NOT_RESPONSIBLE');
+					return;
 				} else {
-					this.dialog.open(NewAppointmentComponent, {
-						width: '35%',
-						data: {
-							date: clickedDate.format(DateFormat.API_DATE),
-							diaryId: this.agenda.id,
-							hour: clickedDate.format(DateFormat.HOUR_MINUTE_SECONDS),
-							openingHoursId: openingHourId,
-							overturnMode: addingOverturn,
-							patientId: this.patientId ? Number(this.patientId) : null,
+						if (!this.holidays?.find(holiday => holiday.start.getDate() === clickedDate.toDate().getDate())) {
+							this.openNewAppointmentDialog(clickedDate, openingHourId, addingOverturn);
 						}
-					});
-				}
+						else {
+							const holidayText = this.translateService.instant('turnos.holiday.HOLIDAY_RELATED');
+							const holidayDateText = this.datePipe.transform(clickedDate.toDate(), DatePipeFormat.FULL_DATE);
+							const dialogRef = this.dialog.open(DiscardWarningComponent, {
+								data: {
+									title: 'turnos.holiday.TITLE',
+									content: `${holidayDateText.charAt(0).toUpperCase() + holidayDateText.slice(1)} ${holidayText}`,
+									contentBold: `turnos.holiday.HOLIDAY_DISCLAIMER`,
+									okButtonLabel: 'turnos.holiday.OK_BUTTON',
+									cancelButtonLabel: 'turnos.holiday.CANCEL_BUTTON',
+								}
+							});
+							dialogRef.afterClosed().subscribe((result: boolean) => {
+								if (result) {
+									dialogRef?.close();
+								}
+								else {
+									this.openNewAppointmentDialog(clickedDate, openingHourId, addingOverturn);
+								}
+							});
+						}
+					}
 			});
 		}
 	}
 
+	private openNewAppointmentDialog(clickedDate: Moment, openingHourId: number, addingOverturn: boolean) {
+		const dialogRef = this.dialog.open(NewAppointmentComponent, {
+			width: '35%',
+			data: {
+				date: clickedDate.format(DateFormat.API_DATE),
+				diaryId: this.agenda.id,
+				hour: clickedDate.format(DateFormat.HOUR_MINUTE_SECONDS),
+				openingHoursId: openingHourId,
+				overturnMode: addingOverturn,
+				patientId: this.patientId ? Number(this.patientId) : null,
+			}
+		});
+		dialogRef.afterClosed().subscribe(() => this.appointmentFacade.loadAppointments());
+	}
+
 	viewAppointment(event: CalendarEvent): void {
-		if (event.meta.appointmentStateId === APPOINTMENT_STATES_ID.BLOCKED) {
+		if (event.meta?.appointmentStateId === APPOINTMENT_STATES_ID.BLOCKED || !event.meta) {
 			return;
 		}
 		if (!event.meta.patient?.id) {
@@ -321,8 +356,7 @@ export class AgendaComponent implements OnInit, OnDestroy, OnChanges {
 							data: {
 								appointmentData: event.meta,
 								professionalPermissions: this.agenda.professionalAssignShift,
-								agenda: this.agenda,
-								appointments: this.appointments
+								agenda: this.agenda
 							}
 						});
 					});
@@ -332,8 +366,7 @@ export class AgendaComponent implements OnInit, OnDestroy, OnChanges {
 					data: {
 						appointmentData: event.meta,
 						hasPermissionToAssignShift: this.agenda.professionalAssignShift,
-						agenda: this.agenda,
-						appointments: this.appointments
+						agenda: this.agenda
 					},
 				});
 			}
@@ -346,11 +379,12 @@ export class AgendaComponent implements OnInit, OnDestroy, OnChanges {
 	}
 
 	setAgenda(agenda: CompleteDiaryDto): void {
-		delete this.dayEndHour;
-		delete this.dayStartHour;
+		this.resetInformation();
 		this.agenda = agenda;
+		this.loadInformationToShow(agenda);
 		this.setEnableAppointmentScheduling();
 		this.viewDate = this._getViewDate();
+		this.setDateRange(this.viewDate);
 		this.hourSegments = MINUTES_IN_HOUR / agenda.appointmentDuration;
 		this.appointmentFacade.setValues(agenda.id, agenda.appointmentDuration, this.startDate, this.endDate);
 		this.diaryOpeningHours = agenda.diaryOpeningHours;
@@ -372,13 +406,12 @@ export class AgendaComponent implements OnInit, OnDestroy, OnChanges {
 	private setDayStartHourAndEndHour(openingHours: DiaryOpeningHoursDto[]) {
 		openingHours.forEach(oh => {
 			const from = momentParseTime(oh.openingHours.from).hour();
-			if (this.dayStartHour === undefined || from < this.dayStartHour) {
+			if (this.dayStartHour === undefined || from <= this.dayStartHour) {
 				this.dayStartHour = (from > 0) ? from - 1 : from;
 			}
 			const to = momentParseTime(oh.openingHours.to).hour();
-			const toMinutes = momentParseTime(oh.openingHours.to).minutes();
 			if (this.dayEndHour === undefined || to >= this.dayEndHour) {
-				this.dayEndHour = (toMinutes > 0) ? to : to - 1;
+				this.dayEndHour = (to < 23) ? to + 1 : to;
 			}
 		});
 	}
@@ -438,7 +471,7 @@ export class AgendaComponent implements OnInit, OnDestroy, OnChanges {
 		return this.appointmentFacade.getAppointments().pipe(
 			map((array: CalendarEvent[]) =>
 				array.filter(event =>
-					event.meta.overturn && dateToMoment(event.start).isBetween(openingHourStart, openingHourEnd, null, '[)')
+					event.meta?.overturn && dateToMoment(event.start).isBetween(openingHourStart, openingHourEnd, null, '[)')
 				).length
 			)
 		);
@@ -477,7 +510,7 @@ export class AgendaComponent implements OnInit, OnDestroy, OnChanges {
 	private unifyEvents(events: CalendarEvent[]): CalendarEvent[] {
 		const notUnifiedEvents = events.sort(
 			(firstEvent, secondEvent) => firstEvent.start.getTime() - secondEvent.start.getTime()
-		);
+		).filter(event => !event.allDay);
 		let unifiedEvents = [];
 		let processedEvents = [notUnifiedEvents[0]];
 		for (let currentNotUnifiedEvent = 1; currentNotUnifiedEvent < notUnifiedEvents.length; currentNotUnifiedEvent++) {
@@ -490,6 +523,7 @@ export class AgendaComponent implements OnInit, OnDestroy, OnChanges {
 			}
 		}
 		unifiedEvents.push(this.unifyBlockedEvents(processedEvents));
+		unifiedEvents = unifiedEvents.concat(events.filter(event => event.allDay));
 		return unifiedEvents;
 	}
 
@@ -524,6 +558,47 @@ export class AgendaComponent implements OnInit, OnDestroy, OnChanges {
 
 		const end = endOfWeek(date, { weekStartsOn: 1 });
 		this.endDate = momentFormat(moment(end), DateFormat.API_DATE);
+	}
+
+	private loadInformationToShow(diary: CompleteDiaryDto) {
+		this.loadCareLinesToShow(diary);
+		this.loadAssociatedProfessionalsToShow(diary);
+	}
+
+	private loadCareLinesToShow(diary: CompleteDiaryDto) {
+		diary.careLinesInfo.forEach((careLine, index) => {
+			if (index === diary.careLinesInfo.length - 1)
+				this.careLinesToShow = this.careLinesToShow.concat(careLine.description);
+			else
+				this.careLinesToShow = this.careLinesToShow.concat(careLine.description + ", ");
+		});
+	}
+
+	private loadAssociatedProfessionalsToShow(diary: CompleteDiaryDto) {
+		if (diary.associatedProfessionalsInfo.length) {
+			this.appointmentFacade.professional$.subscribe(professional => {
+				if (professional) {
+					this.associatedProfessionalsToShow = this.associatedProfessionalsToShow.concat(this.getProfessionalFullName(professional) + ", ");
+					diary.associatedProfessionalsInfo.forEach((associatedProfessional, index) => {
+						if (index === diary.associatedProfessionalsInfo.length - 1)
+							this.associatedProfessionalsToShow = this.associatedProfessionalsToShow.concat(this.getProfessionalFullName(associatedProfessional));
+						else
+							this.associatedProfessionalsToShow = this.associatedProfessionalsToShow.concat(this.getProfessionalFullName(associatedProfessional) + ", ");
+					});
+				}
+			});
+		}
+	}
+
+	private getProfessionalFullName(professional: ProfessionalPersonDto | ProfessionalDto): string {
+		return `${this.patientNameService.getPatientName(professional?.firstName, professional?.nameSelfDetermination)} ${professional?.lastName}`;
+	}
+
+	private resetInformation() {
+		delete this.dayEndHour;
+		delete this.dayStartHour;
+		this.careLinesToShow = "";
+		this.associatedProfessionalsToShow = "";
 	}
 
 }

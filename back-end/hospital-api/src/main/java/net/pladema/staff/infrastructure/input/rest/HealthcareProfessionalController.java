@@ -1,10 +1,9 @@
 package net.pladema.staff.infrastructure.input.rest;
 
 import ar.lamansys.sgx.shared.security.UserInfo;
-import net.pladema.staff.application.createprofessional.CreateHealthcareProfessional;
 import net.pladema.staff.application.gethealthcareprofessional.GetHealthcareProfessional;
 import net.pladema.staff.application.gethealthcareprofessionalbyuserid.GetHealthcareProfessionalByUserId;
-import net.pladema.staff.application.updatehealthcareprofessional.UpdateHealthcareProfessional;
+import net.pladema.staff.application.saveprofessional.SaveHealthcareProfessional;
 import net.pladema.staff.controller.dto.HealthcareProfessionalCompleteDto;
 import net.pladema.staff.controller.dto.ProfessionalDto;
 import net.pladema.staff.controller.mapper.HealthcareProfessionalMapper;
@@ -18,7 +17,6 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
@@ -40,23 +38,19 @@ public class HealthcareProfessionalController {
 
 	private final GetHealthcareProfessional getHealthcareProfessional;
 
-	private final CreateHealthcareProfessional createHealthcareProfessional;
-
-	private final UpdateHealthcareProfessional updateHealthcareProfessional;
+	private final SaveHealthcareProfessional saveHealthcareProfessional;
 
 	private final GetHealthcareProfessionalByUserId getHealthcareProfessionalByUserId;
 
 	public HealthcareProfessionalController(HealthcareProfessionalService healthcareProfessionalService,
 											HealthcareProfessionalMapper healthcareProfessionalMapper,
 											GetHealthcareProfessional getHealthcareProfessional,
-											CreateHealthcareProfessional createHealthcareProfessional,
-											UpdateHealthcareProfessional updateHealthcareProfessional,
+											SaveHealthcareProfessional saveHealthcareProfessional,
 											GetHealthcareProfessionalByUserId getHealthcareProfessionalByUserId) {
 		this.healthcareProfessionalService = healthcareProfessionalService;
 		this.healthcareProfessionalMapper = healthcareProfessionalMapper;
 		this.getHealthcareProfessional = getHealthcareProfessional;
-		this.createHealthcareProfessional = createHealthcareProfessional;
-		this.updateHealthcareProfessional = updateHealthcareProfessional;
+		this.saveHealthcareProfessional = saveHealthcareProfessional;
 		this.getHealthcareProfessionalByUserId = getHealthcareProfessionalByUserId;
 	}
 
@@ -90,20 +84,12 @@ public class HealthcareProfessionalController {
 
 	@PostMapping(value = "/institution/{institutionId}")
 	@PreAuthorize("hasPermission(#institutionId, 'ADMINISTRADOR_INSTITUCIONAL_BACKOFFICE')")
-	public ResponseEntity<Integer> create(@PathVariable(name = "institutionId") Integer institutionId,
+	public ResponseEntity<Integer> save(@PathVariable(name = "institutionId") Integer institutionId,
 										  @RequestBody HealthcareProfessionalCompleteDto professionalDto) {
 		LOG.debug("Input parameters -> {}", professionalDto);
-		Integer result = createHealthcareProfessional.execute(professionalDto);
+		Integer result = saveHealthcareProfessional.run(healthcareProfessionalMapper.fromHealthcareProfessionalCompleteDto(professionalDto));
 		LOG.debug(OUTPUT,result);
 		return ResponseEntity.ok().body(result);
 	}
 
-	@PutMapping("/{healthcareProfessionalId}/institution/{institutionId}")
-	@PreAuthorize("hasPermission(#institutionId, 'ADMINISTRADOR_INSTITUCIONAL_BACKOFFICE')")
-	public void update(@PathVariable(name = "institutionId") Integer institutionId,
-					   @PathVariable(name = "healthcareProfessionalId") Integer healthcareProfessionalId,
-					   @RequestBody HealthcareProfessionalCompleteDto professionalCompleteDto) {
-		LOG.debug("Input parameters -> {}", healthcareProfessionalId);
-		updateHealthcareProfessional.execute(professionalCompleteDto);
-	}
 }

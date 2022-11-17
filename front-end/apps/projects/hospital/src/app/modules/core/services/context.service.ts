@@ -25,6 +25,7 @@ export class ContextService {
 	 */
 	public setInstitutionId(id: number): void {
 		this._institutionId = id;
+		localStorage.setItem("INSTITUTION_ID", id.toString());
 		this.institutionSource.next(id);
 	}
 

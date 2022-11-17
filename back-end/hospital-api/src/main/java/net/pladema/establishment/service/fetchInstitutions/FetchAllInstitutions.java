@@ -2,6 +2,7 @@ package net.pladema.establishment.service.fetchInstitutions;
 
 import net.pladema.establishment.repository.InstitutionRepository;
 import net.pladema.establishment.repository.entity.Institution;
+import net.pladema.establishment.service.domain.InstitutionBasicInfoBo;
 import net.pladema.establishment.service.domain.InstitutionBo;
 import org.springframework.stereotype.Service;
 
@@ -23,6 +24,10 @@ public class FetchAllInstitutions {
                 .map(this::mapTo)
                 .collect(Collectors.toList());
     }
+
+	public List<InstitutionBasicInfoBo> findByDepartmentId(Short departmentId) {
+		return institutionRepository.findByDeparmentId(departmentId);
+	}
 
     private InstitutionBo mapTo(Institution institution){
         InstitutionBo result = new InstitutionBo();

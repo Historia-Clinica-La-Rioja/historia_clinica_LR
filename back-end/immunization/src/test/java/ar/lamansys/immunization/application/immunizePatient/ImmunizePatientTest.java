@@ -115,7 +115,7 @@ class ImmunizePatientTest {
         when(vaccineConsultationRepository.save(any()))
                 .thenReturn(new VaccineConsultation(1, 20,14,45,1,65,
                         LocalDate.of(2020,12,12),true));
-        when(sharedAppointmentPort.hasConfirmedAppointment(any(), any(), any())).thenReturn(true);
+        when(sharedAppointmentPort.hasCurrentAppointment(any(), any(), any())).thenReturn(true);
         when(vaccineRuleStorage.existRule(any(), any(), any(), any(), any())).thenReturn(true);
         immunizePatient.run(validImmunizePatient());
 

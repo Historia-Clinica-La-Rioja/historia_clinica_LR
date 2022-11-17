@@ -21,7 +21,7 @@ public class CounterReferenceAppointmentStorageImpl implements CounterReferenceA
 
     @Override
     public void run(Integer patientId, Integer doctorId, LocalDate date) {
-        if (!disableValidation && sharedAppointmentPort.hasConfirmedAppointment(patientId,doctorId,date))
+        if (!disableValidation && sharedAppointmentPort.hasCurrentAppointment(patientId,doctorId,date))
             sharedAppointmentPort.serveAppointment(patientId, doctorId, date);
     }
 

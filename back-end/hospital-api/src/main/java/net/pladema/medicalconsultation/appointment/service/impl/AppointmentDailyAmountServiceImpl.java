@@ -7,8 +7,10 @@ import net.pladema.medicalconsultation.appointment.service.AppointmentService;
 import net.pladema.medicalconsultation.appointment.service.domain.AppointmentBo;
 import net.pladema.medicalconsultation.appointment.service.domain.AppointmentDailyAmountBo;
 import net.pladema.medicalconsultation.diary.service.DiaryService;
+import net.pladema.medicalconsultation.diary.service.HolidaysService;
 import net.pladema.medicalconsultation.diary.service.domain.CompleteDiaryBo;
 import net.pladema.medicalconsultation.diary.service.domain.DiaryOpeningHoursBo;
+import net.pladema.medicalconsultation.diary.service.domain.HolidayBo;
 import net.pladema.medicalconsultation.diary.service.exception.DiaryNotFoundEnumException;
 import net.pladema.medicalconsultation.diary.service.exception.DiaryNotFoundException;
 import net.pladema.medicalconsultation.repository.entity.MedicalAttentionType;
@@ -20,6 +22,7 @@ import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -33,11 +36,14 @@ public class AppointmentDailyAmountServiceImpl implements AppointmentDailyAmount
 
     private final DiaryService diaryService;
 
+	private final HolidaysService holidaysService;
 
-    public AppointmentDailyAmountServiceImpl(AppointmentService appointmentService, DiaryService diaryService
+
+    public AppointmentDailyAmountServiceImpl(AppointmentService appointmentService, DiaryService diaryService, HolidaysService holidaysService
     ) {
         this.appointmentService = appointmentService;
         this.diaryService = diaryService;
+		this.holidaysService = holidaysService;
     }
 
     @Override
@@ -48,11 +54,14 @@ public class AppointmentDailyAmountServiceImpl implements AppointmentDailyAmount
 			throw new DiaryNotFoundException(DiaryNotFoundEnumException.DIARY_ID_NOT_FOUND, "La Agenda solicitada no existe");
 
 		Collection<AppointmentDailyAmountBo> appointmentsDailyAmount = new ArrayList<>();
-		Optional<CompleteDiaryBo> diary = diaryService.getDiary(diaryId);
+		List<HolidayBo> holidays = holidaysService.getHolidays(from, to);
+        Optional<CompleteDiaryBo> diary = diaryService.getDiary(diaryId);
 
         if (diary.isPresent()) {
 			if(diary.get().getEndDate().isBefore(to))
 				to = diary.get().getEndDate();
+			if(diary.get().getStartDate().isAfter(from))
+				from = diary.get().getStartDate();
 			Collection<AppointmentBo> appointments = appointmentService.getAppointmentsByDiaries(Arrays.asList(diaryId), from, to);
 
             for (LocalDate date = from;
@@ -61,7 +70,7 @@ public class AppointmentDailyAmountServiceImpl implements AppointmentDailyAmount
                 Collection<DiaryOpeningHoursBo> openingHoursDate = this.getOpeningHoursFor(date, diary.get().getDiaryOpeningHours());
 
                 if (!openingHoursDate.isEmpty()) {
-                    AppointmentDailyAmountBo dailyAmount = this.calculateAmountsFor(date, openingHoursDate, appointments, diary.get().getAppointmentDuration());
+                    AppointmentDailyAmountBo dailyAmount = this.calculateAmountsFor(date, openingHoursDate, appointments, diary.get().getAppointmentDuration(), holidays);
                     appointmentsDailyAmount.add(dailyAmount);
                 }
             }
@@ -80,8 +89,9 @@ public class AppointmentDailyAmountServiceImpl implements AppointmentDailyAmount
 
     private AppointmentDailyAmountBo calculateAmountsFor(LocalDate date, Collection<DiaryOpeningHoursBo> openingHours,
                                                          Collection<AppointmentBo> appointments,
-                                                         Short appointmentDuration) {
-        AppointmentDailyAmountBo dailyAmountBo = new AppointmentDailyAmountBo(null, null, null, date);
+                                                         Short appointmentDuration,
+														 List<HolidayBo> holidays) {
+        AppointmentDailyAmountBo dailyAmountBo = new AppointmentDailyAmountBo(null, null, null, null, date);
         Collection<AppointmentBo> appointmentsForDate = appointments.stream().filter(a -> a.getDate().equals(date)).collect(Collectors.toList());
 
         openingHours.forEach(oh -> {
@@ -90,6 +100,9 @@ public class AppointmentDailyAmountServiceImpl implements AppointmentDailyAmount
             } else {
                 calculateProgrammedAmount(appointmentDuration, dailyAmountBo, appointmentsForDate, oh);
             }
+			List<HolidayBo> currentDayHolidays = holidays.stream().filter(holiday -> holiday.getDate().equals(date)).collect(Collectors.toList());
+			if (!currentDayHolidays.isEmpty())
+				dailyAmountBo.setHoliday(currentDayHolidays.size());
         });
 
         return dailyAmountBo;

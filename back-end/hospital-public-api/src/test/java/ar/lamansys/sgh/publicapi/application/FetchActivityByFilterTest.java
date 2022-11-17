@@ -3,8 +3,12 @@ package ar.lamansys.sgh.publicapi.application;
 import static org.mockito.Mockito.when;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.List;
+
+import ar.lamansys.sgh.publicapi.application.port.out.AttentionReadStorage;
+import ar.lamansys.sgh.publicapi.domain.SingleDiagnosticBo;
 
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
@@ -24,109 +28,116 @@ import ar.lamansys.sgh.publicapi.domain.PersonInfoBo;
 import ar.lamansys.sgh.publicapi.domain.ProfessionalBo;
 import ar.lamansys.sgh.publicapi.domain.ScopeEnum;
 import ar.lamansys.sgh.publicapi.domain.SnomedBo;
-
 @ExtendWith(MockitoExtension.class)
 public class FetchActivityByFilterTest {
 
-    private FetchActivitiesByFilter fetchActivitiesByFilter;
+	private FetchActivitiesByFilter fetchActivitiesByFilter;
 
-    @Mock
-    private ActivityStorage activityStorage;
+	@Mock
+	private ActivityStorage activityStorage;
 
-    @BeforeEach
-    void setup() {
-        fetchActivitiesByFilter = new FetchActivitiesByFilter(activityStorage);
-    }
+	@Mock
+	private AttentionReadStorage attentionReadStorage;
 
-    @Test
-    void activitiesInstitution() {
-        ActivitySearchFilter param = new ActivitySearchFilter("", "", null,
-                LocalDate.ofYearDay(2020, 1), LocalDate.ofYearDay(2020, 20), false, null);
+	@BeforeEach
+	void setup() {
+		fetchActivitiesByFilter = new FetchActivitiesByFilter(activityStorage, attentionReadStorage);
+	}
 
-        when(activityStorage.getActivitiesByInstitution(param.getRefsetCode(), param.getProvinceCode(), param.getFrom(), param.getTo(), param.getReprocessing())).thenReturn(
-                Arrays.asList(
-                    new AttentionInfoBo(
-                        10L, LocalDate.ofYearDay(2020, 1),
-                        new SnomedBo("1", "1"),
-                        new PersonInfoBo("35555555", "Juan", "Perez", LocalDate.ofYearDay(1990, 1), GenderEnum.MALE),
-                        new CoverageActivityInfoBo("AN-35555555"), ScopeEnum.AMBULATORIA,
-                        new InternmentBo("100", LocalDate.ofYearDay(2020, 1).atStartOfDay(), LocalDate.ofYearDay(2020, 20).atStartOfDay()),
-                        new ProfessionalBo(1, "Jose", "Fernandez", "DOC-30000000", "30000000")
-                    ),
-                    new AttentionInfoBo(
-                            11L, LocalDate.ofYearDay(2020, 2),
-                            new SnomedBo("2", "2"),
-                            new PersonInfoBo("35555556", "Rocio", "Gonzalez", LocalDate.ofYearDay(1990, 1), GenderEnum.FEMALE),
-                            new CoverageActivityInfoBo("AN-35555556"), ScopeEnum.INTERNACION,
-                            new InternmentBo("100", LocalDate.ofYearDay(2020, 1).atStartOfDay(), LocalDate.ofYearDay(2020, 20).atStartOfDay()),
-                            new ProfessionalBo(1, "Juan", "Perez", "DOC-30000000", "30000000")
-                    ),
-                    new AttentionInfoBo(
-                            12L, LocalDate.ofYearDay(2020, 3),
-                            new SnomedBo("3", "3"),
-                            new PersonInfoBo("35555557", "Pedro", "Rodriguez", LocalDate.ofYearDay(1990, 1), GenderEnum.MALE),
-                            new CoverageActivityInfoBo("AN-35555557"), ScopeEnum.AMBULATORIA,
-                            new InternmentBo("100", LocalDate.ofYearDay(2020, 1).atStartOfDay(), LocalDate.ofYearDay(2020, 20).atStartOfDay()),
-                            new ProfessionalBo(1, "Jose", "Fernandez", "DOC-30000000", "30000000")
-                    )
-                )
-        );
+	@Test
+	void activitiesInstitution() {
+		ActivitySearchFilter param = new ActivitySearchFilter("", "", LocalDate.ofYearDay(2020, 1), LocalDate.ofYearDay(2020, 20), false, null);
 
-        List<AttentionInfoBo> result = fetchActivitiesByFilter.run(param);
-        Assertions.assertEquals(result.size(), 3);
-    }
+		when(activityStorage.getActivitiesByInstitution(param.getRefsetCode(), param.getFrom(), param.getTo(), param.getReprocessing())).thenReturn(
+				Arrays.asList(
+						new AttentionInfoBo(
+								10L, 1L, LocalDate.ofYearDay(2020, 1),
+								new SnomedBo("1", "1"),
+								new PersonInfoBo("35555555", "Juan", "Perez", LocalDate.ofYearDay(1990, 1), GenderEnum.MALE),
+								new CoverageActivityInfoBo(), ScopeEnum.AMBULATORIA,
+								new InternmentBo("100", LocalDate.ofYearDay(2020, 1).atStartOfDay(), LocalDate.ofYearDay(2020, 20).atStartOfDay()),
+								new ProfessionalBo(1, "Jose", "Fernandez", "DOC-30000000", "30000000"),
+								new SingleDiagnosticBo(new SnomedBo("1", "1"), true, "1234345", "2345435", LocalDateTime.now())
+						),
+						new AttentionInfoBo(
+								11L, 2L, LocalDate.ofYearDay(2020, 2),
+								new SnomedBo("2", "2"),
+								new PersonInfoBo("35555556", "Rocio", "Gonzalez", LocalDate.ofYearDay(1990, 1), GenderEnum.FEMALE),
+								new CoverageActivityInfoBo(), ScopeEnum.INTERNACION,
+								new InternmentBo("100", LocalDate.ofYearDay(2020, 1).atStartOfDay(), LocalDate.ofYearDay(2020, 20).atStartOfDay()),
+								new ProfessionalBo(1, "Juan", "Perez", "DOC-30000000", "30000000"),
+								new SingleDiagnosticBo(new SnomedBo("1", "1"), true, "1234345", "2345435", LocalDateTime.now())
+						),
+						new AttentionInfoBo(
+								12L, 3L, LocalDate.ofYearDay(2020, 3),
+								new SnomedBo("3", "3"),
+								new PersonInfoBo("35555557", "Pedro", "Rodriguez", LocalDate.ofYearDay(1990, 1), GenderEnum.MALE),
+								new CoverageActivityInfoBo(), ScopeEnum.AMBULATORIA,
+								new InternmentBo("100", LocalDate.ofYearDay(2020, 1).atStartOfDay(), LocalDate.ofYearDay(2020, 20).atStartOfDay()),
+								new ProfessionalBo(1, "Jose", "Fernandez", "DOC-30000000", "30000000"),
+								new SingleDiagnosticBo(new SnomedBo("1", "1"), true, "1234345", "2345435", LocalDateTime.now())
+						)
+				)
+		);
 
-    @Test
-    void activitiesInstitutionAndPatient() {
-        ActivitySearchFilter param = new ActivitySearchFilter("", "", "35555555",
-                LocalDate.ofYearDay(2020, 1), LocalDate.ofYearDay(2020, 20), false, null);
+		List<AttentionInfoBo> result = fetchActivitiesByFilter.run(param);
+		Assertions.assertEquals(result.size(), 3);
+	}
 
-        when(activityStorage.getActivitiesByInstitutionAndPatient(param.getRefsetCode(), param.getProvinceCode(), param.getIdentificationNumber(),
-                param.getFrom(), param.getTo(), param.getReprocessing())).thenReturn(
-                    Arrays.asList(
-                            new AttentionInfoBo(
-                                    10L, LocalDate.ofYearDay(2020, 1),
-                                    new SnomedBo("1", "1"),
-                                    new PersonInfoBo("35555555", "Juan", "Perez", LocalDate.ofYearDay(1990, 1), GenderEnum.MALE),
-                                    new CoverageActivityInfoBo("AN-35555555"), ScopeEnum.AMBULATORIA,
-                                    new InternmentBo("100", LocalDate.ofYearDay(2020, 1).atStartOfDay(), LocalDate.ofYearDay(2020, 20).atStartOfDay()),
-                                    new ProfessionalBo(1, "Jose", "Fernandez", "DOC-30000000", "30000000")
-                            )
-                    )
-                );
+	@Test
+	void activitiesInstitutionAndPatient() {
+		ActivitySearchFilter param = new ActivitySearchFilter("", "35555555",
+				LocalDate.ofYearDay(2020, 1), LocalDate.ofYearDay(2020, 20), false, null);
 
-        List<AttentionInfoBo> result = fetchActivitiesByFilter.run(param);
-        Assertions.assertEquals(result.size(), 1);
+		when(activityStorage.getActivitiesByInstitutionAndPatient(param.getRefsetCode(), param.getIdentificationNumber(),
+				param.getFrom(), param.getTo(), param.getReprocessing())).thenReturn(
+				Arrays.asList(
+						new AttentionInfoBo(
+								10L, 1L, LocalDate.ofYearDay(2020, 1),
+								new SnomedBo("1", "1"),
+								new PersonInfoBo("35555555", "Juan", "Perez", LocalDate.ofYearDay(1990, 1), GenderEnum.MALE),
+								new CoverageActivityInfoBo(), ScopeEnum.AMBULATORIA,
+								new InternmentBo("100", LocalDate.ofYearDay(2020, 1).atStartOfDay(), LocalDate.ofYearDay(2020, 20).atStartOfDay()),
+								new ProfessionalBo(1, "Jose", "Fernandez", "DOC-30000000", "30000000"),
+								new SingleDiagnosticBo(new SnomedBo("1", "1"), true, "1234345", "2345435", LocalDateTime.now())
+						)
+				)
+		);
 
-        Assertions.assertEquals(result.get(0).getPatient().getIdentificationNumber(), param.getIdentificationNumber());
-    }
+		List<AttentionInfoBo> result = fetchActivitiesByFilter.run(param);
+		Assertions.assertEquals(result.size(), 1);
 
-    @Test
-    void activitiesInstitutionAndCoverage() {
-        ActivitySearchFilter param = new ActivitySearchFilter("", "", null,
-                LocalDate.ofYearDay(2020, 1), LocalDate.ofYearDay(2020, 20), false, "30-25555555-0");
+		Assertions.assertEquals(result.get(0).getPatient().getIdentificationNumber(), param.getIdentificationNumber());
+	}
 
-        when(activityStorage.getActivitiesByInstitutionAndCoverage(param.getRefsetCode(), param.getProvinceCode(), param.getCoverageCuit(), param.getFrom(), param.getTo(), param.getReprocessing())).thenReturn(
-                Arrays.asList(
-                        new AttentionInfoBo(
-                                10L, LocalDate.ofYearDay(2020, 1),
-                                new SnomedBo("1", "1"),
-                                new PersonInfoBo("35555555", "Juan", "Perez", LocalDate.ofYearDay(1990, 1), GenderEnum.MALE),
-                                new CoverageActivityInfoBo("AN-35555555"), ScopeEnum.AMBULATORIA,
-                                new InternmentBo("100", LocalDate.ofYearDay(2020, 1).atStartOfDay(), LocalDate.ofYearDay(2020, 20).atStartOfDay()),
-                                new ProfessionalBo(1, "Jose", "Fernandez", "DOC-30000000", "30000000")
-                        ),
-                        new AttentionInfoBo(
-                                11L, LocalDate.ofYearDay(2020, 2),
-                                new SnomedBo("2", "2"),
-                                new PersonInfoBo("35555556", "Rocio", "Gonzalez", LocalDate.ofYearDay(1990, 1), GenderEnum.FEMALE),
-                                new CoverageActivityInfoBo("AN-35555556"), ScopeEnum.INTERNACION,
-                                new InternmentBo("100", LocalDate.ofYearDay(2020, 1).atStartOfDay(), LocalDate.ofYearDay(2020, 20).atStartOfDay()),
-                                new ProfessionalBo(1, "Juan", "Perez", "DOC-30000000", "30000000")
-                        )
-                ));
+	@Test
+	void activitiesInstitutionAndCoverage() {
+		ActivitySearchFilter param = new ActivitySearchFilter("", "",
+				LocalDate.ofYearDay(2020, 1), LocalDate.ofYearDay(2020, 20), false, "30-25555555-0");
 
-        List<AttentionInfoBo> result = fetchActivitiesByFilter.run(param);
-        Assertions.assertEquals(result.size(), 2);
-    }
+		when(activityStorage.getActivitiesByInstitutionAndCoverage(param.getRefsetCode(), param.getCoverageCuit(), param.getFrom(), param.getTo(), param.getReprocessing())).thenReturn(
+				Arrays.asList(
+						new AttentionInfoBo(
+								10L, 1L, LocalDate.ofYearDay(2020, 1),
+								new SnomedBo("1", "1"),
+								new PersonInfoBo("35555555", "Juan", "Perez", LocalDate.ofYearDay(1990, 1), GenderEnum.MALE),
+								new CoverageActivityInfoBo(), ScopeEnum.AMBULATORIA,
+								new InternmentBo("100", LocalDate.ofYearDay(2020, 1).atStartOfDay(), LocalDate.ofYearDay(2020, 20).atStartOfDay()),
+								new ProfessionalBo(1, "Jose", "Fernandez", "DOC-30000000", "30000000"),
+								new SingleDiagnosticBo(new SnomedBo("1", "1"), true, "1234345", "2345435", LocalDateTime.now())
+						),
+						new AttentionInfoBo(
+								11L,2L, LocalDate.ofYearDay(2020, 2),
+								new SnomedBo("2", "2"),
+								new PersonInfoBo("35555556", "Rocio", "Gonzalez", LocalDate.ofYearDay(1990, 1), GenderEnum.FEMALE),
+								new CoverageActivityInfoBo(), ScopeEnum.INTERNACION,
+								new InternmentBo("100", LocalDate.ofYearDay(2020, 1).atStartOfDay(), LocalDate.ofYearDay(2020, 20).atStartOfDay()),
+								new ProfessionalBo(1, "Juan", "Perez", "DOC-30000000", "30000000"),
+								new SingleDiagnosticBo(new SnomedBo("1", "1"), true, "1234345", "2345435", LocalDateTime.now())
+						)
+				));
+
+		List<AttentionInfoBo> result = fetchActivitiesByFilter.run(param);
+		Assertions.assertEquals(result.size(), 2);
+	}
 }

@@ -8,8 +8,8 @@ import { GenderDto, IdentificationTypeDto, PatientSearchDto } from '@api-rest/ap
 import { AppFeature } from '@api-rest/api-model';
 import { PatientService } from '@api-rest/services/patient.service';
 import { PersonMasterDataService } from '@api-rest/services/person-master-data.service';
-import { ActionDisplays, TableModel } from '@presentation/components/table/table.component';
 import { DateFormat, momentFormat, momentParseDate, momentParseDateTime, newMoment } from '@core/utils/moment.utils';
+import { ActionDisplays, TableModel } from '@presentation/components/table/table.component';
 import { PersonService } from '@api-rest/services/person.service';
 import { finalize } from 'rxjs/operators';
 import { MatDialog } from '@angular/material/dialog';
@@ -20,10 +20,12 @@ import { FeatureFlagService } from '@core/services/feature-flag.service';
 import { PERSON } from '@core/constants/validation-constants';
 import { NavigationService } from '@pacientes/services/navigation.service';
 import { MIN_DATE } from "@core/utils/date.utils";
+import { PatientNameService } from "@core/services/patient-name.service";
 
 const ROUTE_NEW = 'pacientes/new';
 const ROUTE_NEW_TEMPORARY = 'pacientes/temporary';
 const ROUTE_HOME = 'pacientes';
+const TIME_TO_PREVENT_SCROLL = 100;
 
 @Component({
 	selector: 'app-search',
@@ -31,9 +33,9 @@ const ROUTE_HOME = 'pacientes';
 	styleUrls: ['./search.component.scss']
 })
 export class SearchComponent implements OnInit {
-
+	ffOfCardsIsOn = false;
 	readonly PERSON_MAX_LENGHT = PERSON;
-
+	patientData: PatientSearchDto[] = [];
 	minDate = MIN_DATE;
 	today: Moment = newMoment();
 	public formSearchSubmitted = false;
@@ -48,10 +50,10 @@ export class SearchComponent implements OnInit {
 	public identificationTypeId;
 	public identificationNumber;
 	public genderId;
-	public matchingPatient: TableModel<PatientSearchDto>;
 	public searchPatient;
 	public noIdentity: boolean;
 	private readonly routePrefix;
+	public matchingPatient: TableModel<PatientSearchDto>;
 	public genderFieldDisabled = false;
 	public identificationTypeFieldDisabled = false;
 	public identificationNumberFieldDisabled = false;
@@ -67,7 +69,8 @@ export class SearchComponent implements OnInit {
 		public dialog: MatDialog,
 		private contextService: ContextService,
 		private featureFlagService: FeatureFlagService,
-		public navigationService: NavigationService
+		public navigationService: NavigationService,
+		private readonly patientNameService: PatientNameService,
 
 	) {
 		this.routePrefix = 'institucion/' + this.contextService.institutionId + '/';
@@ -93,8 +96,9 @@ export class SearchComponent implements OnInit {
 							}
 						});
 				} else {
-					this.buildFormSearchWithoutValidations(params);
-					this.isLoading = false;
+					setTimeout(() => {
+						this.buildFormSearchWithoutValidations(params);
+					}, TIME_TO_PREVENT_SCROLL);
 				}
 
 				this.personMasterDataService.getIdentificationTypes().subscribe(
@@ -116,66 +120,6 @@ export class SearchComponent implements OnInit {
 		}
 	}
 
-	private buildTable(data: PatientSearchDto[]): TableModel<PatientSearchDto> {
-		return {
-			columns: [
-				{
-					columnDef: 'patiendId',
-					header: 'ID Paciente',
-					text: (row) => row.idPatient
-				},
-				{
-					columnDef: 'firstName',
-					header: 'Nombre',
-					text: (row) => row.person.firstName
-				},
-				{
-					columnDef: 'lastName',
-					header: 'Apellido',
-					text: (row) => row.person.lastName
-				},
-				{
-					columnDef: 'gender',
-					header: 'Sexo',
-					text: (row) => this.genderOptionsViewTable[row.person.genderId]
-				},
-				{
-					columnDef: 'birthDate',
-					header: 'F. Nac',
-					text: (row) => (row.person.birthDate === undefined) ? '' :
-						momentFormat(momentParseDateTime(String(row.person.birthDate)), DateFormat.VIEW_DATE)
-				},
-				{
-					columnDef: 'numberDni',
-					header: 'Nro. Documento',
-					text: (row) => row.person.identificationNumber
-				},
-				{
-					columnDef: 'state',
-					header: 'Estado',
-					text: (row) => (row.activo ? 'Activo' : 'Inactivo')
-				},
-				{
-					columnDef: 'ranking',
-					header: 'Coincidencia',
-					text: (row) => row.ranking + ' %'
-				},
-				{
-					columnDef: 'action',
-					action: {
-						displayType: ActionDisplays.BUTTON,
-						display: 'Ver',
-						matColor: 'primary',
-						do: (patient) => {
-							this.openDialog(patient);
-						}
-					}
-				},
-			],
-			data,
-			enableFilter: true
-		};
-	}
 
 	openDialog(patient: PatientSearchDto): void {
 		this.dialog.open(ViewPatientDetailComponent, {
@@ -218,7 +162,7 @@ export class SearchComponent implements OnInit {
 
 	private buildFormSearchWithoutValidations(params) {
 		this.formSearch = this.formBuilder.group({
-			identificationNumber: [params.identificationNumber, [Validators.maxLength(VALIDATIONS.MAX_LENGTH.identif_number)]],
+			identificationNumber: [params.identificationNumber != 0 ? params.identificationNumber : '', [Validators.maxLength(VALIDATIONS.MAX_LENGTH.identif_number)]],
 			identificationTypeId: [Number(params.identificationTypeId)],
 			firstName: [params.firstName],
 			middleNames: [params.middleNames],
@@ -228,6 +172,7 @@ export class SearchComponent implements OnInit {
 			birthDate: [params.birthDate ? momentParseDate(params.birthDate) : undefined]
 		});
 		this.lockFormField(params);
+		this.isLoading = false;
 	}
 
 	private lockFormField(params) {
@@ -269,13 +214,81 @@ export class SearchComponent implements OnInit {
 		}
 	}
 
+	private buildTable(data: PatientSearchDto[]): TableModel<PatientSearchDto> {
+		return {
+			columns: [
+				{
+					columnDef: 'patiendId',
+					header: 'ID Paciente',
+					text: (row) => row.idPatient
+				},
+				{
+					columnDef: 'firstName',
+					header: 'Nombre',
+					text: (row) => this.patientNameService.getPatientName(row.person.firstName, row.nameSelfDetermination)
+				},
+				{
+					columnDef: 'lastName',
+					header: 'Apellido',
+					text: (row) => row.person.lastName
+				},
+				{
+					columnDef: 'gender',
+					header: 'Sexo documento',
+					text: (row) => this.genderOptionsViewTable[row.person.genderId]
+				},
+				{
+					columnDef: 'birthDate',
+					header: 'F. Nac',
+					text: (row) => (row.person.birthDate === undefined) ? '' :
+						momentFormat(momentParseDateTime(String(row.person.birthDate)), DateFormat.VIEW_DATE)
+				},
+				{
+					columnDef: 'numberDni',
+					header: 'Nro. Documento',
+					text: (row) => row.person.identificationNumber
+				},
+				{
+					columnDef: 'state',
+					header: 'Estado',
+					text: (row) => (row.activo ? 'Activo' : 'Inactivo')
+				},
+				{
+					columnDef: 'ranking',
+					header: 'Coincidencia',
+					text: (row) => row.ranking + ' %'
+				},
+				{
+					columnDef: 'action',
+					action: {
+						displayType: ActionDisplays.BUTTON,
+						display: 'Ver',
+						matColor: 'primary',
+						do: (patient) => {
+							this.openDialog(patient);
+						}
+					}
+				},
+			],
+			data,
+			enableFilter: true
+		};
+	}
+
 	private goToNextState(person) {
 		this.patientService.getPatientByCMD(JSON.stringify(person)).subscribe(
-			patientsFound => {
+			(patientsFound: PatientSearchDto[]) => {
 				if (!patientsFound.length) {
 					this.goToAddPatient(person);
 				} else {
-					this.matchingPatient = this.buildTable(patientsFound);
+					this.featureFlagService.isActive(AppFeature.HABILITAR_VISUALIZACION_DE_CARDS).subscribe(isEnabled => {
+						this.ffOfCardsIsOn = isEnabled;
+						if (this.ffOfCardsIsOn)
+							this.patientData = patientsFound;
+						else
+							this.matchingPatient = this.buildTable(patientsFound);
+					});
+
 					this.viewSearch = false;
 				}
 			}

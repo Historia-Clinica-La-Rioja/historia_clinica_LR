@@ -1,0 +1,31 @@
+<div id="content" fxLayoutGap="5px" fxLayout="row" fxLayout.lt-sm="column" class="card">
+
+	<div fxLayout="column" fxLayout.gt-sm="row" fxFlex="94%">
+		<div fxLayoutAlign="start center" fxLayoutGap="15px" fxFlex="40%">
+			<div fxLayoutAlign="center" fxFlex="20%">
+				<img mat-card-avatar [src]="cardContent?.avatar"
+					onerror="this.src='../../../../../assets/images/empty-profile.png'" alt>
+			</div>
+			<div *ngFor="let header of cardContent.header" fxFlex="55%">
+				<strong> {{header.title | translate}} {{header.value | translate}}</strong>
+			</div>
+
+			<div *ngFor="let headerSimple of cardContent.headerSimple" fxFlex="25%">
+				<span> {{headerSimple?.title | translate}} {{headerSimple.value | translate}}</span>
+			</div>
+		</div>
+
+		<mat-card-content fxFlex="60%">
+			<ng-content></ng-content>
+		</mat-card-content>
+	</div>
+
+	<div id="view" fxLayoutAlign="center start" fxLayout.gt-sm="center start" fxLayoutAlign.lt-sm="start start" fxFlex="6%"
+		class="button">
+		<button id="view-button" mat-flat-button color="primary" (click)="goTo(cardContent.action.do)">
+			<span>{{ cardContent.action.display | translate | uppercase }}</span>
+		</button>
+	</div>
+
+</div>
+

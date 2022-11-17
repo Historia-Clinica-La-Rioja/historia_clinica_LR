@@ -4,7 +4,8 @@
 			<h2 [translate]="'ambulatoria.paciente.vacunas.TITLE'"></h2>
 		</div>
 
-		<div id="add_button" *appHasRole="['PROFESIONAL_DE_SALUD', 'ESPECIALISTA_MEDICO', 'ENFERMERO', 'ESPECIALISTA_EN_ODONTOLOGIA']">
+		<div id="add_button"
+			*appHasRole="['PROFESIONAL_DE_SALUD', 'ESPECIALISTA_MEDICO', 'ENFERMERO', 'ESPECIALISTA_EN_ODONTOLOGIA']">
 			<ng-container>
 				<button mat-flat-button color="primary" onclick="this.blur()" (click)=goToAgregarVacunas()>
 					<span>{{'ambulatoria.paciente.vacunas.ADD' | translate | uppercase }}</span>
@@ -38,32 +39,34 @@
 					</ng-container>
 					<ng-container *ngFor="let vaccine of vaccines; let i = index">
 						<mat-list-item>
-						<div fxLayout="row" fxLayoutAlign="center center">
-							<div class="mat-values" fxFlex="70">
-								<div mat-line class="capitalize-first-letter"> {{vaccine.snomed.pt}}</div>
-							</div>
-							<div fxFlex="15">
-								<ng-container *ngIf="vaccine.dose?.description else noInfo">
-									<strong class="dose">{{vaccine.dose?.description}}</strong>
-								</ng-container>
-							</div>
-							<div fxFlex="10" class="padding-to-align-chip">
-								<ng-container *ngIf="vaccine.administrationDate">
-									<span>{{vaccine.administrationDate | viewDate }}</span>
-								</ng-container>
-							</div>
-							<div fxFlex="5">
-								<button *appHasRole="['ESPECIALISTA_MEDICO', 'PROFESIONAL_DE_SALUD', 'ENFERMERO', 'ESPECIALISTA_EN_ODONTOLOGIA']"
-									mat-icon-button [matMenuTriggerFor]="menu">
-									<mat-icon>more_vert</mat-icon>
-								</button>
-								<mat-menu #menu="matMenu">
-									<button mat-menu-item (click)="goToDetailsVaccine(vaccine)">
-										<span [translate]="'ambulatoria.paciente.vacunas.DETAILS'"></span>
+							<div fxLayout="row" fxLayoutAlign="center center">
+								<div class="mat-values" fxFlex="70">
+									<div mat-line class="capitalize-first-letter"> {{vaccine.snomed.pt}}</div>
+								</div>
+								<div fxFlex="15">
+									<app-colored-label *ngIf="vaccine.dose?.description else noInfo"
+										[description]="vaccine.dose?.description | translate | uppercase"
+										[color]="Color.BLUE">
+									</app-colored-label>
+								</div>
+								<div fxFlex="10" class="padding-to-align-chip">
+									<ng-container *ngIf="vaccine.administrationDate">
+										<span>{{vaccine.administrationDate | viewDate }}</span>
+									</ng-container>
+								</div>
+								<div fxFlex="5">
+									<button
+										*appHasRole="['ESPECIALISTA_MEDICO', 'PROFESIONAL_DE_SALUD', 'ENFERMERO', 'ESPECIALISTA_EN_ODONTOLOGIA']"
+										mat-icon-button [matMenuTriggerFor]="menu">
+										<mat-icon>more_vert</mat-icon>
 									</button>
-								</mat-menu>
+									<mat-menu #menu="matMenu">
+										<button mat-menu-item (click)="goToDetailsVaccine(vaccine)">
+											<span [translate]="'ambulatoria.paciente.vacunas.DETAILS'"></span>
+										</button>
+									</mat-menu>
+								</div>
 							</div>
-						</div>
 						</mat-list-item>
 						<mat-divider></mat-divider>
 					</ng-container>

@@ -53,7 +53,6 @@ public class MainDiagnosesController {
     }
 
     @PostMapping
-    @Transactional
     public ResponseEntity<Boolean> addMainDiagnosis(
             @PathVariable(name = "institutionId") Integer institutionId,
             @PathVariable(name = "internmentEpisodeId") Integer internmentEpisodeId,

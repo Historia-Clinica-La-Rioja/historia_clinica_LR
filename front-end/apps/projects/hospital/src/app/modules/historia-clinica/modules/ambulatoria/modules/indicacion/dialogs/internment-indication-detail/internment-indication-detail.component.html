@@ -1,0 +1,74 @@
+<div id="header" fxLayout="row" fxLayoutAlign="space-between center">
+	<div class="margined">
+		<div fxLayout="row" fxFlex="20px">
+			<mat-icon class="color-primary" fontSet="material-icons-outlined" *ngIf="data.header.matIcon; else svgIcon">
+				{{ data.header.matIcon }}</mat-icon>
+		</div>
+
+		<ng-template #svgIcon>
+			<mat-icon class="color-primary svg-icon" svgIcon={{data.header.svgIcon}}></mat-icon>
+		</ng-template>
+
+		<app-colored-label class="label" [description]="data.status.description | translate | uppercase"
+			[color]="data.status.cssClass">
+		</app-colored-label>
+	</div>
+
+	<div class="close">
+		<button matSuffix mat-icon-button [mat-dialog-close]>
+			<mat-icon>close</mat-icon>
+		</button>
+	</div>
+</div>
+
+<div mat-dialog-title fxLayout="row" fxLayoutAlign="start start">
+	<div class="capitalize-first-letter margined">{{title}}</div>
+</div>
+
+<mat-dialog-content>
+	<div id="indication-info">
+		<div *ngFor="let info of information">
+			<div fxLayout="row" fxLayoutGap="10px">
+				<strong fxFlex="30" *ngIf="info.title">{{info.title | translate }}</strong>
+				<p>{{info.content}} </p>
+			</div>
+		</div>
+		<div *ngIf="data.indication.type == 'PHARMACO'" class="margined">
+			<mat-divider></mat-divider>
+			<div class="margined">
+				<div fxLayout="row" class="green" *ngIf="patientProvided">
+					<mat-icon class="icon" fontSet="material-icons-outlined">check_circle_outline</mat-icon>
+					<p>{{'indicacion.internment-card.dialogs.pharmaco.PATIENT_PROVIDED' | translate }}</p>
+				</div>
+				<div fxLayout="row" class="orange" *ngIf="foodRelationId == 1">
+					<mat-icon class="icon" fontSet="material-icons-outlined">restaurant</mat-icon>
+					<p>{{'indicacion.internment-card.dialogs.pharmaco.AWAY_FROM_FOOD' | translate }}</p>
+				</div>
+				<div fxLayout="row" class="red" *ngIf="foodRelationId == 2">
+					<mat-icon class="icon" fontSet="material-icons-outlined">restaurant</mat-icon>
+					<p>{{'indicacion.internment-card.dialogs.pharmaco.FASTING' | translate }}</p>
+				</div>
+				<div fxLayout="row" fxLayoutGap="10px">
+					<strong>{{'indicacion.internment-card.sections.indication-extra-description.ASSOCIATED_DIAGNOSIS' |
+						translate }}</strong>
+					<p class="capitalize-first-letter">{{healthCondition}}</p>
+				</div>
+			</div>
+		</div>
+		<mat-divider class="margined"></mat-divider>
+		<div id="professional-info" fxLayout="row" fxLayoutAlign="space-between center" class="margined grey">
+			<p>{{data.indication.createdBy}}</p>
+			<p>{{data.indication.createdOn.date.day}}/{{data.indication.createdOn.date.month}}/{{data.indication.createdOn.date.year}}
+			</p>
+		</div>
+		<div *ngIf="data.indication.type == 'PHARMACO'">
+			<mat-divider></mat-divider>
+			<div id="observations" class="capitalize-first-letter margined">
+				<p *ngIf="observations; else no_observations">"{{observations}}"</p>
+				<ng-template #no_observations>
+					<p class="grey">{{'indicacion.internment-card.dialogs.pharmaco.NO_OBSERVATIONS' | translate }}</p>
+				</ng-template>
+			</div>
+		</div>
+	</div>
+</mat-dialog-content>

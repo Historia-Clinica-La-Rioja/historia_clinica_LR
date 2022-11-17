@@ -21,10 +21,10 @@
 		</mat-menu>
 		<app-day-display [minDate]="entryDate" (actualDateEmmiter)="loadActualDateAndFilter($event)"></app-day-display>
 		<div id="sections">
-			<app-internment-diet-card [diets]="diets"></app-internment-diet-card>
-			<app-internment-parenteral-plan-card [parenteralPlans]="parenteralPlan"></app-internment-parenteral-plan-card>
-			<app-internment-pharmaco-card [pharmacos]="pharmacos"></app-internment-pharmaco-card>
-			<app-internment-other-indication-card [otherIndications]="otherIndications"></app-internment-other-indication-card>
+			<app-internment-diet-card [diets]="diets" [internmentEpisodeId]="internmentEpisodeId"></app-internment-diet-card>
+			<app-internment-parenteral-plan-card [parenteralPlans]="parenteralPlan" [internmentEpisodeId]="internmentEpisodeId"></app-internment-parenteral-plan-card>
+			<app-internment-pharmaco-card [pharmacos]="pharmacos" [internmentEpisodeId]="internmentEpisodeId"></app-internment-pharmaco-card>
+			<app-internment-other-indication-card [otherIndications]="otherIndications" [internmentEpisodeId]="internmentEpisodeId"></app-internment-other-indication-card>
 		</div>
 	</app-summary-card>
 </app-content>

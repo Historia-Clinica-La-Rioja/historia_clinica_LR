@@ -12,7 +12,6 @@ export class SpecialtyService {
 	constructor(private http: HttpClient) { }
 
 	getAll(): Observable<ClinicalSpecialtyDto[]> {
-		const institutionId = 1;
 		const url = `${environment.apiBase}/clinicalSpecialty`;
 		return this.http.get<ClinicalSpecialtyDto[]>(url);
 	}

@@ -3,11 +3,12 @@ import { Observable, of } from 'rxjs';
 import {
 	AppointmentDailyAmountDto,
 	AppointmentDto,
-	AppointmentListDto,
+	AppointmentListDto, AppointmentShortSummaryDto,
 	AssignedAppointmentDto,
 	CreateAppointmentDto,
 	DateTimeDto,
 	ExternalPatientCoverageDto,
+	UpdateAppointmentDateDto,
 	UpdateAppointmentDto,
 } from '@api-rest/api-model';
 
@@ -50,7 +51,7 @@ export class AppointmentsService {
 		return this.http.get<AppointmentListDto[]>(url, {
 			params: {
 				diaryIds: `${diaryIds.join(',')}`,
-				from, 
+				from,
 				to
 			}
 		});
@@ -82,7 +83,7 @@ export class AppointmentsService {
 		let queryParams: HttpParams = new HttpParams();
 		queryParams = queryParams.append('patientId', JSON.stringify(patientId));
 
-		const url = `${this.BASE_URL}/confirmed-appointment`;
+		const url = `${this.BASE_URL}/current-appointment`;
 		return this.http.get<boolean>(url, { params: queryParams });
 	}
 
@@ -115,9 +116,9 @@ export class AppointmentsService {
 		return this.http.put<boolean>(url, {}, { params: queryParams });
 	}
 
-	updateDate(appointmentId: number, date: DateTimeDto): Observable<boolean> {
-		const url = `${this.BASE_URL}/${appointmentId}/update-date`;
-		return this.http.put<boolean>(url, date);
+	updateDate(updateAppointmentDate: UpdateAppointmentDateDto): Observable<boolean> {
+		const url = `${this.BASE_URL}/${updateAppointmentDate.appointmentId}/update-date`;
+		return this.http.put<boolean>(url, updateAppointmentDate);
 	}
 
 	mqttCall(appointmentId: number): Observable<any> {
@@ -150,13 +151,10 @@ export class AppointmentsService {
 		return this.getAppointmentReport(url, appointmentData, pdfName);
 	}
 
-	getAppointmentTicketPdf(appointmentData: any): Observable<any> {
-		const url = `${environment.apiBase}/institutions/${this.contextService.institutionId}/medicalConsultations/appointment-ticket-report/${appointmentData.appointmentId}`;
-		const httpOptions = {
-			responseType  : 'arraybuffer' as 'json',
-			params: appointmentData.appointmentId
-		};
-		return this.http.get<any>(url, httpOptions).pipe(
+	getAppointmentTicketPdf(appointmentId: number): Observable<any> {
+		const url = `${environment.apiBase}/institutions/${this.contextService.institutionId}/medicalConsultations/appointment-ticket-report/${appointmentId}`;
+		const responseType = 'arraybuffer' as 'json';
+		return this.http.get<any>(url,{responseType} ).pipe(
 			tap((data: any) => {
 				const blobType = { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' };
 				const file = new Blob([data], blobType);
@@ -181,5 +179,12 @@ export class AppointmentsService {
 	getCurrentAppointmentMedicalCoverage(patientId: number): Observable<ExternalPatientCoverageDto> {
 		const url = `${this.BASE_URL}/patient/${patientId}/get-medical-coverage`;
 		return this.http.get<ExternalPatientCoverageDto>(url);
+	}
+
+	verifyExistingAppointments(patientId: number, date:string): Observable<AppointmentShortSummaryDto> {
+		const url = `${this.BASE_URL}/patient/${patientId}/verify-existing-appointments`;
+		let queryParam: HttpParams = new HttpParams();
+		queryParam = queryParam.append('date', date);
+		return this.http.get<AppointmentShortSummaryDto>(url, { params: queryParam });
 	}
 }

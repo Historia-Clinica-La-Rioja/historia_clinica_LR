@@ -14,5 +14,6 @@ public class PatientSearchDto {
 	private float ranking; 
 	private Integer idPatient;
 	private Boolean activo;
+	private String nameSelfDetermination;
 
 }

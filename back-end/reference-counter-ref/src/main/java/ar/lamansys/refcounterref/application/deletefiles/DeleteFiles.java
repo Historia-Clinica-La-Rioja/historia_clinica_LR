@@ -6,7 +6,6 @@ import ar.lamansys.refcounterref.application.port.ReferenceCounterReferenceFileS
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -17,7 +16,7 @@ public class DeleteFiles {
 
     private final ReferenceCounterReferenceFileStorage referenceCounterReferenceFileStorage;
 
-    @Transactional
+
     public void run(List<Integer> fileIdList) {
         log.debug("Input parameters -> fileIdList {}", fileIdList);
 

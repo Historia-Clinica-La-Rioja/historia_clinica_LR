@@ -36,12 +36,12 @@ export function formatTimeOnlyISO(date: Date) {
 	return formatISO(date, { representation: 'time' });
 }
 
-export function getDayHoursIntervalsByMinuteValue(date: Date, timeRange: number): Date[]{
+export function getDayHoursIntervalsByMinuteValue(date: Date, timeRange: number): Date[] {
 	var dividedDate = [];
 	var dateToDivide = new Date(date);
-	dateToDivide.setHours(0,0,0,0);
+	dateToDivide.setHours(0, 0, 0, 0);
 
-	for (let currentRangeValue = 0; currentRangeValue <= (60/timeRange)*24; currentRangeValue++){
+	for (let currentRangeValue = 0; currentRangeValue <= (60 / timeRange) * 24; currentRangeValue++) {
 		dividedDate[currentRangeValue] = new Date(dateToDivide);
 		dateToDivide = addMinutes(dateToDivide, timeRange);
 	}
@@ -50,14 +50,27 @@ export function getDayHoursIntervalsByMinuteValue(date: Date, timeRange: number)
 	return dividedDate;
 }
 
-export function getDayHoursRangeIntervalsByMinuteValue(startDate: Date, endDate: Date, timeRange: number): Date[]{
+export function getDayHoursRangeIntervalsByMinuteValue(startDate: Date, endDate: Date, timeRange: number): Date[] {
 	const hours = Math.abs(endDate.getTime() - startDate.getTime()) / (1000 * 60 * 60) % 24;
 	var dividedDate = [];
 
-	for (let currentRangeValue = 0; currentRangeValue < (60/timeRange)*hours; currentRangeValue++){
+	for (let currentRangeValue = 0; currentRangeValue < (60 / timeRange) * hours; currentRangeValue++) {
 		dividedDate[currentRangeValue] = new Date(startDate);
 		startDate = addMinutes(startDate, timeRange);
 	}
-	
+
 	return dividedDate;
+}
+
+export function fromStringToDate(date: string): Date {
+	const dateData = date.split("/");
+	return new Date(+dateData[2], +dateData[1] - 1, +dateData[0]);
+}
+
+export function datePlusDays(date: Date, days: number): Date {
+	let newDate = new Date();
+	newDate.setMonth(date.getMonth());
+	newDate.setFullYear(date.getFullYear())
+	newDate.setDate(date.getDate() + days);
+	return newDate;
 }

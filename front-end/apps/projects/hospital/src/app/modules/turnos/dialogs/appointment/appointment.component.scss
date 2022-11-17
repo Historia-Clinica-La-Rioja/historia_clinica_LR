@@ -9,7 +9,6 @@
 	}
 
 	.icon-close {
-		height: 10px;
 		mat-icon {
 			font-size: 24px;
 			color: rgba(0, 0, 0, 0.54);
@@ -33,16 +32,17 @@
 	}
 }
 
-.ventana {
-	@media (min-height: 680px) {
-		min-height: 570px;
+.window {
+	@media (min-height: 600px) {
+		min-height: 500px;
 	}
 }
 
+.header {
+	width: 95%;
+}
+
 .header-content {
-	@media screen and (min-width: 959px) {
-		width: 100%;
-	}
 
 	button {
 		padding: 0;
@@ -77,6 +77,10 @@
 .patient-info {
 	line-height: 17px;
 	max-height: 24px;
+}
+
+.patient-no-info {
+	color: gray;
 }
 
 mat-icon {
@@ -126,7 +130,7 @@ a {
 
 }
 
-.motivo {
+.motive {
 	margin-top: 10px;
 }
 
@@ -153,41 +157,39 @@ section {
 }
 
 .mat-icon-button ::ng-deep .mat-button-focus-overlay {
-    display: none;
+	display: none;
 }
 
 .coverage-text {
 	display: inline-block;
-    max-width: 285px;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
+	max-width: 285px;
+	white-space: nowrap;
+	overflow: hidden;
+	text-overflow: ellipsis;
 }
 
-.dateForm{
-	.date{
+.dateForm {
+	.date {
 		width: 276px;
 	}
 
-	.hour{
+	.hour {
 		width: 90px;
 		height: 50px;
 	}
 
-	.hs{
+	.hs {
 		height: fit-content;
 		margin-top: 20px;
 		margin-left: 5px;
 	}
-	.confirm-buttons{
+
+	.confirm-buttons {
 		margin-top: 15px;
 	}
 }
 
 .observation-section {
-	width: 550px;
-	margin: 15px 0;
-
 	a {
 		cursor: pointer;
 	}
@@ -196,7 +198,7 @@ section {
 		margin: auto;
 		margin-left: 3px;
 		white-space: pre-line;
-    	overflow-wrap: break-word;
+		overflow-wrap: break-word;
 	}
 }
 
@@ -206,4 +208,43 @@ section {
 
 .none {
 	display: none;
+}
+
+.report {
+	margin-bottom: 10px;
+}
+
+mat-divider {
+	width: 95%;
+}
+
+mat-dialog-actions {
+	width: 95%;
+}
+
+.mat-dialog-container {
+	padding-right: 0px;
+}
+
+@media only screen and (max-width: 426px) {
+	.mat-card-patient-image{
+		display: none;
+	}
+
+	section{
+		width: 58vw;
+	}
+
+	.appointment-actions{
+		button{
+			min-width: 0;
+			padding: 0;
+		}
+	}
+}
+
+@media only screen and (max-width: 320px) {
+	.window{
+		padding-left: 5px;
+	}
 }

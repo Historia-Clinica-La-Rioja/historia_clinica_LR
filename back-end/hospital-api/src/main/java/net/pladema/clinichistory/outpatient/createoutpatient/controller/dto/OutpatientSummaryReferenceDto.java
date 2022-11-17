@@ -26,4 +26,6 @@ public class OutpatientSummaryReferenceDto {
 
     private OutpatientSummaryCounterReferenceDto counterReference;
 
+	private String institution;
+
 }

@@ -78,7 +78,6 @@ public class EpicrisisDraftController {
 
 
 	@PostMapping
-	@Transactional
 	public ResponseEntity<Boolean> createDraft(
 			@PathVariable(name = "institutionId") Integer institutionId,
 			@PathVariable(name = "internmentEpisodeId") Integer internmentEpisodeId,
@@ -114,7 +113,6 @@ public class EpicrisisDraftController {
 	}
 
 	@PutMapping("/{epicrisisId}")
-	@Transactional
 	public ResponseEntity<Long> updateDraft(
 			@PathVariable(name = "institutionId") Integer institutionId,
 			@PathVariable(name = "internmentEpisodeId") Integer internmentEpisodeId,
@@ -136,7 +134,6 @@ public class EpicrisisDraftController {
 	}
 
 	@PutMapping("/final/{epicrisisId}")
-	@Transactional
 	public ResponseEntity<Long> closeDraft(
 			@PathVariable(name = "institutionId") Integer institutionId,
 			@PathVariable(name = "internmentEpisodeId") Integer internmentEpisodeId,

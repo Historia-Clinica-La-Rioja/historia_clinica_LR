@@ -8,6 +8,7 @@ import {
 import { AdditionalInfo } from '@pacientes/pacientes.model';
 import { PatientNameService } from '@core/services/patient-name.service';
 import { PatientGenderService } from "@core/services/patient-gender.service";
+import { Color } from '@presentation/colored-label/colored-label.component';
 
 const NO_DOCUMENT_TYPE = 'No posee';
 @Component({
@@ -29,6 +30,7 @@ export class PatientCardComponent {
 	decodedPhoto$: Observable<string>;
 	@Input() internmentEpisodeProcess: InternmentEpisodeProcessDto;
 	@Input() emergencyCareEpisodeInProgress: boolean;
+	Color = Color;
 
 	constructor(
 		private readonly imageDecoderService: ImageDecoderService,

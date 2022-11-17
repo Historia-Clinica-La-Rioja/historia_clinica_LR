@@ -1,9 +1,6 @@
 package net.pladema.snowstorm.repository.entity;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import java.time.LocalDate;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -11,7 +8,11 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
-import java.time.LocalDate;
+
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 @Entity
 @Table(name = "snomed_group")
@@ -48,15 +49,18 @@ public class SnomedGroup {
 	private Integer groupId;
 
 	@Column(name = "template", nullable = false)
-	private Boolean template;
+	private Boolean template = false;
 
-	public SnomedGroup(Integer id, String description, String ecl, String customId, LocalDate lastUpdate, Boolean isTemplate) {
+	@Column(name = "group_type", nullable = false)
+	private Short groupType;
+
+	public SnomedGroup(Integer id, String description, String ecl, String customId, LocalDate lastUpdate, Short groupType) {
 		this.id = id;
 		this.description = description;
 		this.ecl = ecl;
 		this.customId = customId;
 		this.lastUpdate = lastUpdate;
-		this.template = isTemplate;
+		this.groupType = groupType;
 	}
 
 }

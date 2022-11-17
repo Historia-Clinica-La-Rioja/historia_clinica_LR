@@ -24,7 +24,8 @@
 
 		<app-new-consultation-expansion-section id="datos_antropometricos"
 			[title]="'ambulatoria.paciente.nueva-consulta.datos-antropometricos.TITLE' | translate" icon="accessibility"
-			[isEmpty]="!datosAntropometricosNuevaConsultaService.hasAtLeastOneValueLoaded()">
+			[isEmpty]="!datosAntropometricosNuevaConsultaService.hasAtLeastOneValueLoaded()"
+			[(collapsed)]="collapsedAnthropometricDataSection">
 			<app-datos-antropometricos-nueva-consulta
 				[datosAntropometricosNuevaConsultaService]="datosAntropometricosNuevaConsultaService">
 			</app-datos-antropometricos-nueva-consulta>
@@ -32,7 +33,8 @@
 
 		<app-new-consultation-expansion-section id="factores_de_riesgo"
 			[title]="'historia-clinica.factores-de-riesgo-form.TITLE' | translate" icon="favorite_outlined"
-			[isEmpty]="!factoresDeRiesgoFormService.hasAtLeastOneValueLoaded()">
+			[isEmpty]="!factoresDeRiesgoFormService.hasAtLeastOneValueLoaded()"
+			[(collapsed)]="collapsedRiskFactorsSection">
 			<app-factores-de-riesgo-form [showRecomendation]="true" [showTitle]="false"
 				[factoresDeRiesgoFormService]="factoresDeRiesgoFormService">
 			</app-factores-de-riesgo-form>
@@ -59,15 +61,18 @@
 		<app-new-consultation-expansion-section id="procedures"
 			[title]="'ambulatoria.paciente.nueva-consulta.procedimientos.TITLE' | translate" icon="library_add"
 			[isEmpty]="procedimientoNuevaConsultaService.isEmpty()">
-			<div>
-				<app-document-section-table [columns]="procedimientoNuevaConsultaService.getTableColumnConfig()"
-					[data]="procedimientoNuevaConsultaService.getProcedimientos()">
-				</app-document-section-table>
+			<div fxLayout="column" fxLayoutGap="2vh">
+				<app-titled-content-card *ngIf="!procedimientoNuevaConsultaService.isEmpty()"
+					title="{{ 'ambulatoria.paciente.nueva-consulta.procedimientos.TABLE_TITLE' }}">
+					<app-procedure-list [service]="procedimientoNuevaConsultaService"></app-procedure-list>
+				</app-titled-content-card>
 
-				<button mat-button type="button" id="add-procedure-button" color="primary" class="add-button"
-					(click)="addProcedure()">
-					+ {{ 'ambulatoria.paciente.nueva-consulta.procedimientos.buttons.ADD' | translate }}
-				</button>
+				<div>
+					<button mat-button type="button" id="add-procedure-button" color="primary" class="add-button"
+						(click)="addProcedure()">
+						+ {{ 'ambulatoria.paciente.nueva-consulta.procedimientos.buttons.ADD' | translate }}
+					</button>
+				</div>
 			</div>
 		</app-new-consultation-expansion-section>
 

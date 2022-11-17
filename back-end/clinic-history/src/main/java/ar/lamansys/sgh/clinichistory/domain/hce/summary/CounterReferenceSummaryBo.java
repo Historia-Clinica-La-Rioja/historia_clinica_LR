@@ -30,4 +30,7 @@ public class CounterReferenceSummaryBo {
 
     private List<CounterReferenceProcedureBo> procedures;
 
+	private String institution;
+
+	private String closureType;
 }

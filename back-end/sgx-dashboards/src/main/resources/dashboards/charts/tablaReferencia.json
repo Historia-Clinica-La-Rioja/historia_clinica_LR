@@ -7,18 +7,29 @@
         "dimension": "Referencias.fecha_consulta"
       }
     ],
-    "order": {
-      "Referencias.fecha_consulta": "desc"
-    },
+    "order": [
+      [
+        "Referencias.tiene_contra",
+        "desc"
+      ],
+      [
+        "Referencias.fecha_consulta",
+        "desc"
+      ]
+    ],
     "dimensions": [
-      "Referencias.nombre_paciente",
-      "Referencias.apellido_paciente",
-      "Referencias.nombre_doctor_solicitante",
-      "Referencias.apellido_doctor_solicitante",
+      "Referencias.documento",
+      "Referencias.paciente",
+      "Referencias.email",
+      "Referencias.telefono",
+      "Referencias.institucion_origen",
+      "Referencias.doctor_solicitante",
       "Referencias.linea_cuidado",
       "Referencias.especialidad_clinica",
       "Referencias.fecha_consulta",
-      "Referencias.tiene_contra"
+      "Referencias.institucion_destino",
+      "Referencias.tiene_contra",
+      "Referencias.id"
     ],
     "filters": [
       {
@@ -29,18 +40,23 @@
         ]
       }
     ]
+
   },
   "chartType": "table",
   "pivotConfig": {
     "x": [
-      "Referencias.nombre_paciente",
-      "Referencias.apellido_paciente",
-      "Referencias.nombre_doctor_solicitante",
-      "Referencias.apellido_doctor_solicitante",
+      "Referencias.documento",
+      "Referencias.paciente",
+      "Referencias.email",
+      "Referencias.telefono",
+      "Referencias.institucion_origen",
+      "Referencias.doctor_solicitante",
       "Referencias.linea_cuidado",
       "Referencias.especialidad_clinica",
       "Referencias.fecha_consulta",
-      "Referencias.tiene_contra"
+      "Referencias.institucion_destino",
+      "Referencias.tiene_contra",
+      "Referencias.id"
     ],
     "y": [
       "measures"

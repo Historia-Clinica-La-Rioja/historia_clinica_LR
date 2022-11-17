@@ -1,5 +1,4 @@
 import {
-    BooleanField,
     Datagrid,
     DeleteButton,
     Pagination,
@@ -17,7 +16,7 @@ import React from "react";
 import { Link } from 'react-router-dom';
 import Button from "@material-ui/core/Button";
 import SectionTitle from "../components/SectionTitle";
-import { ADMINISTRADOR, ADMINISTRADOR_INSTITUCIONAL_BACKOFFICE } from "../roles";
+import { ADMINISTRADOR_INSTITUCIONAL_BACKOFFICE } from "../roles";
 
 const CreateRelatedButton = ({ record, reference, label, disabled}) => {
     const newRecord = {groupId: record.id, parentGroupId: record.groupId};
@@ -41,15 +40,9 @@ const SnomedGroupShow = props => {
         <ShowController {...props} >
             {controllerProps =>
                 {
-                    const isEditableGroup = controllerProps?.record?.groupId != null;
-                    const isDomainGroup = !controllerProps?.record?.institutionId;
                     const institutionId = controllerProps?.record?.institutionId;
-                    const userIsAdmin = permissions?.roleAssignments?.filter(roleAssignment => (roleAssignment.role === ADMINISTRADOR.role)).length > 0;
                     const userCanEditInstitution = permissions?.roleAssignments?.filter(roleAssignment => (roleAssignment.role === ADMINISTRADOR_INSTITUCIONAL_BACKOFFICE.role && roleAssignment.institutionId === institutionId)).length > 0;
-
-                    const canBeEdited = isDomainGroup ? (isEditableGroup && userIsAdmin) : ((isEditableGroup && userCanEditInstitution) || userIsAdmin);
-
-                    return <ShowView {...props} {...controllerProps} hasEdit={canBeEdited}>
+                    return <ShowView {...props} {...controllerProps} hasEdit={userCanEditInstitution}>
                         <SimpleShowLayout>
 
                             {/* ID */}
@@ -70,8 +63,11 @@ const SnomedGroupShow = props => {
                                 <TextField source="description"/>
                             </ReferenceField>
 
-                            {/* Is template */}
-                            <BooleanField source="template"/>
+                            {/* Snomed Group Type */}
+                            <ReferenceField source="groupType" reference="snomedgrouptypes" link={false}
+                                            emptyText={translate('resources.snomedgroups.noInfo')}>
+                                <TextField source="description"/>
+                            </ReferenceField>
 
                             {/* Institution */}
                             <ReferenceField source="institutionId" reference="institutions" link="show"
@@ -94,7 +90,7 @@ const SnomedGroupShow = props => {
                             <CreateRelatedButton
                                 reference="snomedrelatedgroups"
                                 label="resources.snomedgroups.createRelated"
-                                disabled={!canBeEdited}
+                                disabled={!userCanEditInstitution}
                             />
 
                             <ReferenceManyField
@@ -110,7 +106,7 @@ const SnomedGroupShow = props => {
                                     <TextField source="conceptPt"/>
                                     <TextField source="orden"/>
                                     <SgxDateField source="lastUpdate"/>
-                                    <DeleteButton redirect={false} disabled={!canBeEdited}/>
+                                    <DeleteButton redirect={false} disabled={!userCanEditInstitution}/>
                                 </Datagrid>
                             </ReferenceManyField>
                         </SimpleShowLayout>

@@ -8,11 +8,11 @@ import java.util.Optional;
 
 public interface ActivityStorage {
 
-    Optional<AttentionInfoBo> getActivityById(String refsetCode, String provinceCode, Long activityId);
+	Optional<AttentionInfoBo> getActivityById(String refsetCode, Long activityId);
 
-    List<AttentionInfoBo> getActivitiesByInstitution(String refsetCode, String provinceCode, LocalDate fromDate, LocalDate toDate, Boolean reprocessing);
+	List<AttentionInfoBo> getActivitiesByInstitution(String refsetCode, LocalDate fromDate, LocalDate toDate, Boolean reprocessing);
 
-    List<AttentionInfoBo> getActivitiesByInstitutionAndPatient(String refsetCode, String provinceCode, String identificationNumber, LocalDate fromDate, LocalDate toDate, Boolean reprocessing);
+	List<AttentionInfoBo> getActivitiesByInstitutionAndPatient(String refsetCode, String identificationNumber, LocalDate fromDate, LocalDate toDate, Boolean reprocessing);
 
-    List<AttentionInfoBo> getActivitiesByInstitutionAndCoverage(String refsetCode, String provinceCode, String coverageCuit, LocalDate fromDate, LocalDate toDate, Boolean reprocessing);
+	List<AttentionInfoBo> getActivitiesByInstitutionAndCoverage(String refsetCode, String coverageCuit, LocalDate fromDate, LocalDate toDate, Boolean reprocessing);
 }

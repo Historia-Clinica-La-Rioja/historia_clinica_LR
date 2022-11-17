@@ -8,6 +8,7 @@ import { UIComponentDto } from '@extensions/extensions-model';
 })
 export class UiComponentListComponent {
 	@Input() list: UIComponentDto[];
+	@Input() listOnTab: string = null;
 
 	constructor() { }
 

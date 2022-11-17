@@ -36,9 +36,16 @@ docker rename ${ENV_NAME} ${ENV_NAME}_old 2> /dev/null || true
 echo "Se usara la imagen docker ${DOCKER_IMAGE}"
 echo Crea environment con hash: $(
     docker create -P  \
+        -l traefik.frontend.rule=Host:${REVIEW_APP_URL} \
+        -l traefik.port=8280 \
         -l temporal=${TEMPORAL} \
-        --network=host \
+        --network=web \
         --restart=unless-stopped \
+        -e GLOWROOT_PROJECT=${GLOWROOT_PROJECT} \
+        -e GLOWROOT_AGENT_ID="${ENV_NAME}" \
+        -e APP_DOMAIN=${REVIEW_APP_URL} \
+        -e AUTH_DOMAIN=${REVIEW_APP_URL} \
+        -e AUTH_SECURE=false \
         --name ${ENV_NAME} \
         -v /sgh/${ENV_NAME}:/sgh  \
         --log-opt max-size=10m \

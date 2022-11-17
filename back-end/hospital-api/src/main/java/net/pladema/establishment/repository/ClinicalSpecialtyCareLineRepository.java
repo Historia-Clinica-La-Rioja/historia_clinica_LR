@@ -32,5 +32,5 @@ public interface ClinicalSpecialtyCareLineRepository extends SGXAuditableEntityJ
             "WHERE cscl.careLineId = :careLineId " +
             "AND cscl.deleteable.deleted = false")
     List<ClinicalSpecialty> getAllByCareLineId(@Param("careLineId") Integer careLineId);
-
+    
 }

@@ -2,7 +2,6 @@ package net.pladema.clinichistory.hospitalization.controller;
 
 import java.time.LocalDateTime;
 
-import javax.transaction.Transactional;
 import javax.validation.Valid;
 
 import org.slf4j.Logger;
@@ -10,6 +9,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -143,7 +143,7 @@ public class InternmentEpisodeController {
 		PatientDischargeBo patientDischargeSaved = internmentEpisodeService.saveMedicalDischarge(patientDischarge);
 		PatientDischargeDto result = patientDischargeMapper.toPatientDischargeDto(patientDischargeSaved);
 		internmentEpisodeService.getPatient(patientDischargeSaved.getInternmentEpisodeId())
-				.ifPresent( patientId -> hospitalApiPublisher.publish(patientId, EHospitalApiTopicDto.ALTA_MEDICA) );
+				.ifPresent( patientId -> hospitalApiPublisher.publish(patientId, institutionId,EHospitalApiTopicDto.ALTA_MEDICA) );
 		LOG.debug(OUTPUT, result);
 		return ResponseEntity.ok(result);
 	}
@@ -185,6 +185,8 @@ public class InternmentEpisodeController {
 		PatientDischargeBo patientDischargeSaved = internmentEpisodeService.savePatientPhysicalDischarge(internmentEpisodeId);
 		bedExternalService.freeBed(internmentEpisodeSummary.getBedId());
 		PatientDischargeDto result = patientDischargeMapper.toPatientDischargeDto(patientDischargeSaved);
+		internmentEpisodeService.getPatient(patientDischargeSaved.getInternmentEpisodeId())
+				.ifPresent( patientId -> hospitalApiPublisher.publish(patientId, institutionId, EHospitalApiTopicDto.CLINIC_HISTORY__HOSPITALIZATION__DISCHARGE__PHYSIC) );
 		LOG.debug(OUTPUT, result);
 		return ResponseEntity.ok(result);
 	}

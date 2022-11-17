@@ -40,7 +40,7 @@ public class SnowstormWSConfig extends WSConfig {
     @Value("${ws.snowstorm.url.concepts:/MAIN/concepts}")
     private String conceptsUrl;
 
-    @Value("${ws.snowstorm.url.concept.browser:browser/MAIN/concepts/}")
+    @Value("${ws.snowstorm.url.concept.browser:browser/MAIN/concepts}")
     private String browserConceptUrl;
 
     @Value("${ws.snowstorm.url.refsetMembers:/MAIN/members}")

@@ -17,6 +17,7 @@ public class ProfessionalPersonBo {
 
     private String firstName;
 
-    private String lastName;
+	private String nameSelfDetermination;
 
+    private String lastName;
 }

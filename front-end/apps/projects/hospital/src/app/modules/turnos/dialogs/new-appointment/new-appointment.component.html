@@ -149,7 +149,7 @@
 </div>
 
 <mat-dialog-actions fxLayout="row" fxLayoutAlign="end" fxLayoutGap="10px">
-	<button mat-stroked-button color="primary" mat-dialog-close>
+	<button mat-stroked-button color="primary" [mat-dialog-close]="-1">
 		<span [translate]="'buttons.CANCEL'"></span>
 	</button>
 	<button mat-raised-button color="primary" *ngIf="showConfirmButton()" (click)="submit()"

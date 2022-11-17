@@ -1,0 +1,161 @@
+databaseChangeLog: 
+    - logicalFilePath: incrementales-v1_42 
+
+    - changeSet:
+        id: holiday-createTable
+        comment: Create table holiday
+        author: fsimaro
+        changes:
+          - createTable:
+              tableName: holiday
+              columns:
+                - column:
+                    autoIncrement: true
+                    constraints:
+                      primaryKey: true
+                      primaryKeyName: PK_holiday
+                    name: id
+                    type: int
+                - column:
+                    name: date
+                    type: date
+                    constraints:
+                      nullable: false
+                - column:
+                    constraints:
+                      nullable: false
+                    name: description
+                    type: text
+                - column:
+                    constraints:
+                      nullable: false
+                    name: created_by
+                    type: int
+                    defaultValue: -1
+                - column:
+                    constraints:
+                      nullable: false
+                    name: created_on
+                    type: datetime
+                    defaultValueDate: ${date.now}
+                - column:
+                    constraints:
+                      nullable: false
+                    name: updated_by
+                    type: int
+                    defaultValue: -1
+                - column:
+                    constraints:
+                      nullable: false
+                    name: updated_on
+                    type: datetime
+                    defaultValueDate: ${date.now}
+                - column:
+                    constraints:
+                      nullable: false
+                    name: deleted
+                    type: boolean
+                    defaultValue: ${boolean.false}
+                - column:
+                    name: deleted_by
+                    type: int
+                - column:
+                    name: deleted_on
+                    type: datetime
+
+    - changeSet:
+        id: addColumn-destination_institution_id-reference
+        comment: Add column destination_institution_id to reference table
+        author: bchacon
+        changes:
+          - addColumn:
+              tableName: reference
+              columns:
+                - column:
+                    name: destination_institution_id
+                    type: int
+          - addForeignKeyConstraint:
+              baseColumnNames: destination_institution_id
+              baseTableName: reference
+              constraintName: FK_reference_destination_institution_id
+              onDelete: NO ACTION
+              onUpdate: NO ACTION
+              referencedColumnNames: id
+              referencedTableName: institution
+              validate: true
+
+    - changeSet:
+        id: snomed_group_type-createTable
+        comment: Create table snomed_group_type
+        author: tcepeda
+        changes:
+          - createTable:
+              tableName: snomed_group_type
+              columns:
+                - column:
+                    constraints:
+                      primaryKey: true
+                      primaryKeyName: PK_snomed_group_type
+                    name: id
+                    type: smallint
+                - column:
+                    name: description
+                    type: varchar(20)
+
+    - changeSet:
+        id: snomed_group_type-addMetadata
+        author: tcepeda
+        context: "!schema-only"
+        changes:
+          - sql:
+              sql: |-
+                INSERT INTO snomed_group_type (id,description) VALUES (1,'Default');
+                INSERT INTO snomed_group_type (id,description) VALUES (2,'Plantilla');
+                INSERT INTO snomed_group_type (id,description) VALUES (3,'Grupo de búsqueda');
+
+    - changeSet:
+        id: snomed_group-addColumn-group_type
+        comment: add new column group_type to snomed_group table
+        author: tcepeda
+        changes:
+          - addColumn:
+              tableName: snomed_group
+              columns:
+                - column:
+                    name: group_type
+                    type: smallint
+
+    - changeSet:
+        id: snomed_group-addForeignKeyConstraint-group_type
+        author: tcepeda
+        changes:
+          - addForeignKeyConstraint:
+              baseColumnNames: group_type
+              baseTableName: snomed_group
+              constraintName: FK_snomed_group_group_type
+              onDelete: NO ACTION
+              onUpdate: NO ACTION
+              referencedColumnNames: id
+              referencedTableName: snomed_group_type
+              validate: true
+
+    - changeSet:
+        id: update-snomed_group
+        author: tcepeda
+        dbms: postgresql
+        context: "!schema-only"
+        changes:
+          - sql:
+              sql: |-
+                UPDATE snomed_group sg SET group_type = 1 WHERE sg.template = false;
+                UPDATE snomed_group sg SET group_type = 2 WHERE sg.template = true;
+
+    - changeSet:
+        id: addNotNullConstraint-snomed_group-snomed_group_type
+        author: tcepeda
+        changes:
+          - addNotNullConstraint:
+              columnDataType: smallint
+              columnName: group_type
+              tableName: snomed_group
+              validate: true

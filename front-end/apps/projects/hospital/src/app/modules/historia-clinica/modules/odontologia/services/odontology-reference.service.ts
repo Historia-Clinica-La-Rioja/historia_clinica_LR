@@ -6,8 +6,6 @@ import { ClinicalSpecialtyCareLineService } from '@api-rest/services/clinical-sp
 import { removeFrom } from '@core/utils/array.utils';
 import { HCEPersonalHistory, ReferenceComponent } from '@historia-clinica/modules/ambulatoria/dialogs/reference/reference.component';
 import { ProblemasService } from '@historia-clinica/services/problemas.service';
-import { CellTemplates } from '@presentation/components/cell-templates/cell-templates.component';
-import { TableColumnConfig } from '@presentation/components/document-section-table/document-section-table.component';
 import { OVERLAY_DATA } from '@presentation/presentation-model';
 
 @Injectable({
@@ -19,7 +17,6 @@ export class OdontologyReferenceService {
 
 	specialties: ClinicalSpecialtyDto[] = [];
 	careLines: CareLineDto[];
-	private readonly columns: TableColumnConfig[];
 	odontologyReferences: ReferenceDto[] = [];
 	references: Reference[] = [];
 
@@ -31,14 +28,6 @@ export class OdontologyReferenceService {
 		private readonly clinicalSpecialtyCareLine: ClinicalSpecialtyCareLineService,
 		private readonly careLineService: CareLineService,
 	) {
-		this.columns = [
-			{
-				def: 'references',
-				header: 'ambulatoria.paciente.nueva-consulta.solicitud-referencia.table.columns.REFERENCES',
-				template: CellTemplates.REFERENCE,
-			},
-		];
-
 		this.careLineService.getCareLines().subscribe(
 			careLines => {
 				this.careLines = careLines;
@@ -47,8 +36,8 @@ export class OdontologyReferenceService {
 						specialties.forEach((specialty: ClinicalSpecialtyDto) => this.specialties.push(specialty));
 					});
 				});
-			});
-
+			}
+		);
 	}
 
 	openReferenceDialog(): void {
@@ -78,19 +67,16 @@ export class OdontologyReferenceService {
 		this.references = removeFrom<Reference>(this.references, index);
 	}
 
-	getColumns(): TableColumnConfig[] {
-		return this.columns;
-	}
-
 	getData(): any[] {
 		return (this.odontologyReferences.map(
-			(reference: ReferenceDto) => ({
+			(reference: ReferenceDto, index: number) => ({
 				problems: reference.problems,
 				consultation: reference.consultation,
 				procedure: reference.procedure,
 				careLine: this.careLines.find(careLine => careLine.id === reference.careLineId),
 				clinicalSpecialty: this.specialties.find(specialty => specialty.id === reference.clinicalSpecialtyId),
 				note: reference.note,
+				index: index
 			})
 		));
 	}

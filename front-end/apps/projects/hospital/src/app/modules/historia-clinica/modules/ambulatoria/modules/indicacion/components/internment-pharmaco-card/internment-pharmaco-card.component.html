@@ -1,3 +1,9 @@
 <app-content width="full">
-	<app-indication [header]="PHARMACO" [contents]="indicationContent" [noInformation]="'indicacion.internment-card.sections.no-data.PHARMACO'"></app-indication>
+	<app-indication 
+		[header]="PHARMACO" 
+		[contents]="indicationContent" 
+		[noInformation]="'indicacion.internment-card.sections.no-data.PHARMACO'"
+		[menuOption]= "'indicacion.internment-card.menu-items.DETAILS'"
+		(onMenuOptionClick)="openDetailDialog($event)">
+	</app-indication>
 </app-content>

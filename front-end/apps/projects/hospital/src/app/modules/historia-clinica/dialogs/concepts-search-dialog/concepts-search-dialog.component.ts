@@ -5,6 +5,8 @@ import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { SnowstormService, SNOMED_RESULTS_LIMIT } from '@api-rest/services/snowstorm.service';
 import { SnomedSemanticSearch } from '../../services/snomed.service';
 import { SnackBarService } from '@presentation/services/snack-bar.service';
+import { FarmacosService } from '@historia-clinica/services/farmacos.service';
+import { ContextService } from '@core/services/context.service';
 
 @Component({
 	selector: 'app-concepts-search-dialog',
@@ -24,13 +26,32 @@ export class ConceptsSearchDialogComponent implements OnInit {
 		public dialogRef: MatDialogRef<ConceptsSearchDialogComponent>,
 		private readonly snowstormService: SnowstormService,
 		private readonly snackBarService: SnackBarService,
+		private readonly farmacosService: FarmacosService,
+		private readonly contextService: ContextService
 	) { }
 
 	ngOnInit(): void {
+		this.setVademecumPharmacos();
+	}
+
+	private setVademecumPharmacos() {
+		this.farmacosService.getPharmacos({ term: this.data.searchValue, ecl: this.data.eclFilter, institutionId: this.contextService.institutionId }).subscribe(
+			result => {
+				if (result.total === 0)
+					this.setSnomedPharmacos();
+				else
+					this.buildConcepts(result);
+			}, 
+			error => {
+				this.setSnomedPharmacos();
+			}
+		);
+	}
+
+	private setSnomedPharmacos() {
 		this.snowstormService.getSNOMEDConcepts({ term: this.data.searchValue, ecl: this.data.eclFilter }).subscribe(
 			result => {
-					this.conceptsResultsTable = this.buildConceptsResultsTable(result.items);
-					this.conceptsResultsLength = result.total;
+				this.buildConcepts(result);
 			},
 			error => {
 				this.snackBarService.showError('historia-clinica.snowstorm.CONCEPTS_COULD_NOT_BE_OBTAINED');
@@ -38,6 +59,11 @@ export class ConceptsSearchDialogComponent implements OnInit {
 				this.snowstormServiceNotAvailable = true;
 			}
 		);
+	}
+
+	private buildConcepts(result) {
+		this.conceptsResultsTable = this.buildConceptsResultsTable(result.items);
+		this.conceptsResultsLength = result.total;
 	}
 
 	private buildConceptsResultsTable(data: SnomedDto[]): TableModel<SnomedDto> {

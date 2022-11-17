@@ -3,30 +3,32 @@
 <head th:fragment="headerfiles">
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
     <!-- Bootstrap core CSS -->
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
-          integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous"/>
+<!--    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"-->
+<!--          integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous"/>-->
 
     <style>
+        body {
+            display: flex;
+            flex-flow: row wrap;
+            font-family: Arial, Helvetica, sans-serif;
+        }
         p {
             font-size: 45px;
-            padding: 0 !important;
-            margin: 0 !important;
-            border: 0 !important;
         }
-        .container{
-            margin: 0 !important;
-            padding: 0 !important;
-            border: 0 !important;
+        .container, p, separator {
+            margin: 0;
+            padding: 0;
+            border: 0;
         }
         .separator{
-            margin: 0 !important;
-            padding: 0 !important;
-            border: 0 !important;
-            height: 20px !important;
-            width: min-content !important;
+            height: 30px;
+            width: min-content;
         }
-        .patientData{
-            font-size: 40px !important;
+        .api-data{
+            font-size: 35px;
+        }
+        .data-block {
+            padding-bottom: 8px;
         }
     </style>
 </head>
@@ -34,20 +36,22 @@
 <div class="container">
 
     <p th:text="${'.........................................................'}"></p>
-    <p th:text="${'Hospital: ' + institution}"></p>
+    <p th:text="${'Institución:'}"></p>
+    <p class="api-data" th:text="${institution}"></p>
     <div class="separator"></div>
-    <p class="patientData" th:text="${'Datos del paciente: '}"></p>
-    <p class="patientData" th:text="${'Nro documento: ' + dni}"></p>
-    <p class="patientData" th:text="${'Apellido y nombre:'}"></p>
-    <p class="patientData" th:text="${patientFullName}"></p>
-    <p class="patientData" th:text="${'Cobertura médica:'}"></p>
-    <p class="patientData" th:text="${medicalCoverage}"></p>
+    <p class="data-block" th:text="${'Datos del paciente: '}"></p>
+    <p class="data-block" th:text="${'Nro documento: ' + dni}"></p>
+    <p th:text="${'Apellido y nombre:'}"></p>
+    <p class="api-data data-block" th:text="${patientFullName}"></p>
+    <p th:text="${'Cobertura médica:'}"></p>
+    <p class="api-data" th:text="${medicalCoverage}"></p>
     <div class="separator"></div>
-    <p th:text="${'Fecha turno: ' + date}"></p>
-    <p th:text="${'Hora turno: ' + hour}"></p>
-    <p th:text="${'Consultorio: ' + doctorsOffice}"></p>
+    <p class="data-block" th:text="${'Fecha turno: ' + date}"></p>
+    <p class="data-block" th:text="${'Hora turno: ' + hour}"></p>
+    <p th:text="${'Consultorio:'}"></p>
+    <p class="api-data data-block" th:text="${doctorsOffice}"></p>
     <p th:text="${'Profesional:'}"></p>
-    <p th:text="${doctorFullName}"></p>
+    <p class="api-data data-block" th:text="${doctorFullName}"></p>
     <p th:text="${'.........................................................'}"></p>
 
 </div>

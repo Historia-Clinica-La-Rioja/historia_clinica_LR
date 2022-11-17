@@ -37,4 +37,9 @@ public class AddressServiceImpl implements AddressService {
         return addresses.stream().map(AddressBo::new).collect(Collectors.toList());
     }
 
+	@Override
+	public AddressBo getAddressByInstitution(Integer institutionId) {
+		return addressRepository.findByInstitutionId(institutionId).orElse(null);
+	}
+
 }

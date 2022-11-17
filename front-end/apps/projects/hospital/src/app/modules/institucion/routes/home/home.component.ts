@@ -9,6 +9,8 @@ import { InstitutionService } from '@api-rest/services/institution.service';
 import { AppRoutes } from '../../../../app-routing.module';
 import { mapToAddress } from '@api-presentation/mappers/institution-dto.mapper';
 import { PermissionsService } from '@core/services/permissions.service';
+import { Slot, SlotedInfo, WCExtensionsService } from '@extensions/services/wc-extensions.service';
+
 
 @Component({
 	selector: 'app-home',
@@ -19,11 +21,14 @@ export class HomeComponent implements OnInit {
 	institucion$: Observable<InstitutionDto>;
 	roles = [];
 
+	extensions$: Observable<SlotedInfo[]>;
+
 	constructor(
 		private contextService: ContextService,
 		private institutionService: InstitutionService,
 		private router: Router,
 		private permissionsService: PermissionsService,
+		private wcExtensionsService: WCExtensionsService,
 
 	) { }
 
@@ -38,6 +43,8 @@ export class HomeComponent implements OnInit {
 			roles => this.roles = roles.map(role => role.roleDescription)
 		);
 
+
+		this.extensions$ = this.wcExtensionsService.getComponentsFromSlot(Slot.INSTITUTION_HOME_PAGE);
 	}
 
 	address(institution: InstitutionDto) {

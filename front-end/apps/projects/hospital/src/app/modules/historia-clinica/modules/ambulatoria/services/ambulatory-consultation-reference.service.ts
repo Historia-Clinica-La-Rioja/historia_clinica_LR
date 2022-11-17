@@ -5,8 +5,6 @@ import { CareLineService } from '@api-rest/services/care-line.service';
 import { ClinicalSpecialtyCareLineService } from '@api-rest/services/clinical-specialty-care-line.service';
 import { removeFrom } from '@core/utils/array.utils';
 import { AmbulatoryConsultationProblemsService } from '@historia-clinica/services/ambulatory-consultation-problems.service';
-import { CellTemplates } from '@presentation/components/cell-templates/cell-templates.component';
-import { TableColumnConfig } from '@presentation/components/document-section-table/document-section-table.component';
 import { OVERLAY_DATA } from '@presentation/presentation-model';
 import { HCEPersonalHistory, ReferenceComponent } from '../dialogs/reference/reference.component';
 
@@ -17,7 +15,6 @@ export class AmbulatoryConsultationReferenceService {
 
 	specialties: ClinicalSpecialtyDto[] = [];
 	careLines: CareLineDto[];
-	private readonly columns: TableColumnConfig[];
 	outpatientReferences: ReferenceDto[] = [];
 	references: Reference[] = [];
 	referenceProblems: HCEPersonalHistoryDto[] = [];
@@ -29,14 +26,6 @@ export class AmbulatoryConsultationReferenceService {
 		private readonly clinicalSpecialtyCareLine: ClinicalSpecialtyCareLineService,
 		private readonly careLineService: CareLineService,
 	) {
-		this.columns = [
-			{
-				def: 'references',
-				header: 'ambulatoria.paciente.nueva-consulta.solicitud-referencia.table.columns.REFERENCES',
-				template: CellTemplates.REFERENCE,
-			},
-		];
-
 		this.careLineService.getCareLines().subscribe(
 			careLines => {
 				this.careLines = careLines;
@@ -45,7 +34,8 @@ export class AmbulatoryConsultationReferenceService {
 						specialties.forEach((specialty: ClinicalSpecialtyDto) => this.specialties.push(specialty));
 					});
 				});
-			});
+			}
+		);
 	}
 
 	openReferenceDialog(): void {
@@ -73,10 +63,6 @@ export class AmbulatoryConsultationReferenceService {
 	remove(index: number): void {
 		this.outpatientReferences = removeFrom<ReferenceDto>(this.outpatientReferences, index);
 		this.references = removeFrom<Reference>(this.references, index);
-	}
-
-	getColumns(): TableColumnConfig[] {
-		return this.columns;
 	}
 
 	getData(): any[] {

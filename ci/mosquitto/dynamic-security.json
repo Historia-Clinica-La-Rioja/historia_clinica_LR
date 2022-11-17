@@ -1,0 +1,196 @@
+{
+	"defaultACLAccess":	{
+		"publishClientSend":	false,
+		"publishClientReceive":	false,
+		"subscribe":	true,
+		"unsubscribe":	true
+	},
+	"clients":	[{
+			"username":	"CEDALO_BROKER_USER",
+			"textname":	"Admin user",
+			"roles":	[{
+					"rolename":	"dynsec-admin"
+				}, {
+					"rolename":	"sys-observe"
+				}, {
+					"rolename":	"topic-observe"
+				}],
+			"password":	"7aBnJFBqdGwZgKVUFcLSosN2XgZIpyiAPESYplz89D3nwyrXFhfEhLsUEXTxDKfsp0cE7DB5LDF7UR+dBEz7qQ==",
+			"salt":	"dHBvXoD+FZyCK/w7",
+			"iterations":	101
+		}, {
+			"username":	"HSI",
+			"textname":	"Usuario de hsi",
+			"textdescription":	"",
+			"roles":	[{
+					"rolename":	"PublicadorHSI"
+				}],
+			"password":	"ZO/H6Gn9dqC0u12CryvlWHBEnsvwOd1jjU1QaKoQF0C+OEQeXKvRxbImzvhdJC93MgTU/Tsxo6L2+A5h3zbJZg==",
+			"salt":	"YHWSHcOnlNh4UHbz",
+			"iterations":	101
+		}, {
+			"username":	"HSI_ADDONS",
+			"textname":	"Usuario de hsi addons",
+			"textdescription":	"",
+			"roles":	[{
+					"rolename":	"R_AltaMedicaInternacion"
+				}, {
+					"rolename":	"R_NuevaConsultaOdontologica"
+				}, {
+					"rolename":	"R_SolicitudEstudio"
+				}],
+			"password":	"vSF1LCDn76H5bJC2px6KQZE5Sc/JVRCRa6jkQviHYWjVtojk1kEDZZrRs+AgJBDxiWOQU6bYQna5FNvp/soPVA==",
+			"salt":	"3rOyaOx3lfbNMZ53",
+			"iterations":	101
+		}, {
+			"username":	"LLAMADOR_TURNOS",
+			"textname":	"Usuario llamador de turnos",
+			"textdescription":	"",
+			"roles":	[{
+					"rolename":	"R_LlamadoTurno"
+				}],
+			"password":	"5m1+EQRGbBLNCoNCTHVUDwYVSIEHroxvUpZhBDFAfqpItvF42LWkttOPI7dtaMCzKx9rrEDnPdxayZ2TkvkXdA==",
+			"salt":	"gIF5/gPo5POdUYyC",
+			"iterations":	101
+		}],
+	"groups":	[],
+	"roles":	[{
+			"rolename":	"PublicadorHSI",
+			"textname":	"Permite publicar bajo cualquier topico con el prefijo HSI",
+			"textdescription":	"Permite publicar bajo cualquier topico con el prefijo HSI",
+			"acls":	[{
+					"acltype":	"publishClientSend",
+					"topic":	"HSI/#",
+					"priority":	0,
+					"allow":	true
+				}]
+		}, {
+			"rolename":	"R_AltaMedicaInternacion",
+			"textname":	"",
+			"textdescription":	"",
+			"acls":	[{
+					"acltype":	"publishClientReceive",
+					"topic":	"HSI/HOSPITAL_API/ALTA_MEDICA",
+					"priority":	0,
+					"allow":	true
+				}]
+		}, {
+			"rolename":	"R_LlamadoTurno",
+			"textname":	"",
+			"textdescription":	"",
+			"acls":	[{
+					"acltype":	"publishClientReceive",
+					"topic":	"HSI/HOSPITAL_API/PACIENTE_LLAMADO/#",
+					"priority":	0,
+					"allow":	true
+				}]
+		}, {
+			"rolename":	"R_NuevaConsultaOdontologica",
+			"textname":	"",
+			"textdescription":	"",
+			"acls":	[{
+					"acltype":	"publishClientReceive",
+					"topic":	"HSI/ODONTOLOGY/NUEVA_CONSULTA",
+					"priority":	0,
+					"allow":	true
+				}]
+		}, {
+			"rolename":	"R_SolicitudEstudio",
+			"textname":	"",
+			"textdescription":	"",
+			"acls":	[{
+					"acltype":	"publishClientReceive",
+					"topic":	"HSI/HOSPITAL_API/SOLICITUD_ESTUDIO",
+					"priority":	0,
+					"allow":	true
+				}]
+		}, {
+			"rolename":	"client",
+			"textdescription":	"Read/write access to the full application topic hierarchy.",
+			"acls":	[{
+					"acltype":	"publishClientSend",
+					"topic":	"#",
+					"priority":	0,
+					"allow":	true
+				}, {
+					"acltype":	"publishClientReceive",
+					"topic":	"#",
+					"priority":	0,
+					"allow":	true
+				}, {
+					"acltype":	"subscribePattern",
+					"topic":	"#",
+					"priority":	0,
+					"allow":	true
+				}, {
+					"acltype":	"unsubscribePattern",
+					"topic":	"#",
+					"priority":	0,
+					"allow":	true
+				}]
+		}, {
+			"rolename":	"dynsec-admin",
+			"textname":	"",
+			"textdescription":	"Grants access to administer clients/groups/roles.",
+			"acls":	[{
+					"acltype":	"publishClientSend",
+					"topic":	"$CONTROL/dynamic-security/#",
+					"priority":	0,
+					"allow":	true
+				}, {
+					"acltype":	"publishClientReceive",
+					"topic":	"$CONTROL/dynamic-security/#",
+					"priority":	0,
+					"allow":	true
+				}, {
+					"acltype":	"subscribePattern",
+					"topic":	"$CONTROL/dynamic-security/#",
+					"priority":	0,
+					"allow":	true
+				}]
+		}, {
+			"rolename":	"sys-notify",
+			"textname":	"",
+			"textdescription":	"Allow bridges to publish connection state messages.",
+			"acls":	[{
+					"acltype":	"publishClientSend",
+					"topic":	"$SYS/broker/connection/+/state",
+					"priority":	0,
+					"allow":	true
+				}]
+		}, {
+			"rolename":	"sys-observe",
+			"textname":	"",
+			"textdescription":	"Observe the $SYS topic hierarchy.",
+			"acls":	[{
+					"acltype":	"publishClientReceive",
+					"topic":	"$SYS/#",
+					"priority":	0,
+					"allow":	true
+				}, {
+					"acltype":	"subscribePattern",
+					"topic":	"$SYS/#",
+					"priority":	0,
+					"allow":	true
+				}]
+		}, {
+			"rolename":	"topic-observe",
+			"textdescription":	"Read only access to the full application topic hierarchy.",
+			"acls":	[{
+					"acltype":	"publishClientReceive",
+					"topic":	"#",
+					"priority":	0,
+					"allow":	true
+				}, {
+					"acltype":	"subscribePattern",
+					"topic":	"#",
+					"priority":	0,
+					"allow":	true
+				}, {
+					"acltype":	"unsubscribePattern",
+					"topic":	"#",
+					"priority":	0,
+					"allow":	true
+				}]
+		}]
+}

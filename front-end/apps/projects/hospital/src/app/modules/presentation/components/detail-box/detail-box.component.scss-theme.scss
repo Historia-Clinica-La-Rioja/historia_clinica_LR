@@ -5,8 +5,7 @@
 
     app-detail-box {
         mat-card.mat-card {
-            border: 1px solid mat-color($palette, default);
-            background-color: $primary-bg;
+            background-color: mat-color($palette, 25);
 
             span.value {
                 color: mat-color($palette, default);

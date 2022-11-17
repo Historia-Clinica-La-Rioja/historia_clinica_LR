@@ -46,7 +46,7 @@ public class HasAppointmentValidator implements ConstraintValidator<HasAppointme
     public boolean isValid(Integer patientId, ConstraintValidatorContext context) {
        LOG.debug("Input parameters -> patientId {}", patientId);
        Integer healthcareProfessionalId = healthcareProfessionalExternalService.getProfessionalId(UserInfo.getCurrentAuditor());
-       boolean result = disableValidation || enableNewConsultation || appointmentExternalService.hasConfirmedAppointment(patientId, healthcareProfessionalId, dateTimeProvider.nowDate());
+       boolean result = disableValidation || enableNewConsultation || appointmentExternalService.hasCurrentAppointment(patientId, healthcareProfessionalId, dateTimeProvider.nowDate());
        LOG.debug("OUTPUT -> {}", result);
        return result;
     }

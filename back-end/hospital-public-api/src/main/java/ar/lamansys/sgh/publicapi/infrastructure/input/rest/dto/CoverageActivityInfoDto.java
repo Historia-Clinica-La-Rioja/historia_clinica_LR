@@ -16,4 +16,5 @@ public class CoverageActivityInfoDto implements Serializable {
     private String affiliateNumber;
     private Boolean attentionCoverage;
     private String cuitCoverage;
+	private String plan;
 }

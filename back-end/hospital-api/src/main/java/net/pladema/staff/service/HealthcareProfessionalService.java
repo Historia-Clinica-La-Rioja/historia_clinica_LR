@@ -6,6 +6,7 @@ import net.pladema.staff.service.domain.HealthcareProfessionalBo;
 import net.pladema.staff.service.domain.HealthcareProfessionalCompleteBo;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface HealthcareProfessionalService {
 
@@ -27,4 +28,5 @@ public interface HealthcareProfessionalService {
 
     Integer saveProfessional(HealthcareProfessionalCompleteBo professionalCompleteBo);
 
+	Optional<Integer> getProfessionalIdByPersonId(Integer personId);
 }

@@ -82,7 +82,6 @@ public class PatientMedicalCoverageController {
 	}
 
 	@PostMapping("/{patientId}/coverages")
-	@Transactional
 	public ResponseEntity<List<Integer>> addPatientMedicalCoverages(
 			@PathVariable(name = "patientId") Integer patientId,
 			@RequestBody List<PatientMedicalCoverageDto> coverages) throws URISyntaxException {

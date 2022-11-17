@@ -6,7 +6,7 @@
 		<div fxLayout="row" fxLayoutAlign="center center" fxLayoutGap="5px">
 			<span class="value">{{ detail.registeredValues[0].value }}</span>
 			<mat-icon color="primary" matTooltip="{{ detail.registeredValues[0].date | date: 'short' }}">
-				error_outline
+				info_outline
 			</mat-icon>
 		</div>
 	</div>
@@ -22,7 +22,7 @@
 						{{ detail.registeredValues[1].value }}
 					</span>
 					<mat-icon id="previous-icon" matTooltip="{{ detail.registeredValues[1].date | date: 'short' }}">
-						error_outline
+						info_outline
 					</mat-icon>
 				</div>
 			</ng-container>

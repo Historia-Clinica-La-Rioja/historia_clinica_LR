@@ -16,54 +16,53 @@ import java.util.Arrays;
 import java.util.List;
 
 import static org.mockito.Mockito.when;
-
 @ExtendWith(MockitoExtension.class)
 public class FetchBedRelocationByActivityTest {
 
-    private FetchBedRelocationByActivity fetchBedRelocationByActivity;
+	private FetchBedRelocationByActivity fetchBedRelocationByActivity;
 
-    @Mock
-    private ActivityInfoStorage activityInfoStorage;
+	@Mock
+	private ActivityInfoStorage activityInfoStorage;
 
-    @BeforeEach
-    void setup() {
-        fetchBedRelocationByActivity = new FetchBedRelocationByActivity(activityInfoStorage);
-    }
+	@BeforeEach
+	void setup() {
+		fetchBedRelocationByActivity = new FetchBedRelocationByActivity(activityInfoStorage);
+	}
 
-    @Test
-    void bedRelocationSuccess() {
-        String refsetCode = "";
-        String provinceCode = "";
-        Long activityId = 10L;
+	@Test
+	void bedRelocationSuccess() {
+		String refsetCode = "";
+		Long activityId = 10L;
 
-        when(activityInfoStorage.getBedRelocationsByActivity(refsetCode, provinceCode, activityId)).thenReturn(
-                Arrays.asList(
-                    new BedRelocationInfoBo(
-                            LocalDateTime.now(), 1,
-                            new SnomedBo("1", "1")
-                    ),
-                    new BedRelocationInfoBo(
-                            LocalDateTime.now(), 2,
-                            new SnomedBo("2", "2")
-                    )
-                )
-        );
+		when(activityInfoStorage.getBedRelocationsByActivity(refsetCode, activityId)).thenReturn(
+				Arrays.asList(
+						new BedRelocationInfoBo(
+								1,
+								LocalDateTime.now(), "Cuidados Mínimos",
+								new SnomedBo("1", "1")
+						),
+						new BedRelocationInfoBo(
+								2,
+								LocalDateTime.now(), "Intensiva",
+								new SnomedBo("2", "2")
+						)
+				)
+		);
 
-        List<BedRelocationInfoBo> result = fetchBedRelocationByActivity.run(refsetCode, provinceCode, activityId);
-        Assertions.assertEquals(result.size(), 2);
-    }
+		List<BedRelocationInfoBo> result = fetchBedRelocationByActivity.run(refsetCode, activityId);
+		Assertions.assertEquals(result.size(), 2);
+	}
 
-    @Test
-    void bedRelocationFailed() {
-        String refsetCode = "";
-        String provinceCode = "";
-        Long activityId = 10L;
+	@Test
+	void bedRelocationFailed() {
+		String refsetCode = "";
+		Long activityId = 10L;
 
-        when(activityInfoStorage.getBedRelocationsByActivity(refsetCode, provinceCode, activityId)).thenReturn(
-                new ArrayList<>()
-        );
+		when(activityInfoStorage.getBedRelocationsByActivity(refsetCode, activityId)).thenReturn(
+				new ArrayList<>()
+		);
 
-        List<BedRelocationInfoBo> result = fetchBedRelocationByActivity.run(refsetCode, provinceCode, activityId);
-        Assertions.assertEquals(result.size(), 0);
-    }
+		List<BedRelocationInfoBo> result = fetchBedRelocationByActivity.run(refsetCode, activityId);
+		Assertions.assertEquals(result.size(), 0);
+	}
 }

@@ -9,18 +9,18 @@ import org.springframework.stereotype.Service;
 @Service
 public class FetchActivityById {
 
-    private final Logger logger;
-    private final ActivityStorage activityStorage;
+	private final Logger logger;
+	private final ActivityStorage activityStorage;
 
-    public FetchActivityById(ActivityStorage activityStorage) {
-        this.logger = LoggerFactory.getLogger(FetchActivityById.class);
-        this.activityStorage = activityStorage;
-    }
+	public FetchActivityById(ActivityStorage activityStorage) {
+		this.logger = LoggerFactory.getLogger(FetchActivityById.class);
+		this.activityStorage = activityStorage;
+	}
 
-    public AttentionInfoBo run(String refsetCode, String provinceCode, Long activityId) {
-        logger.debug("Input parameters -> refsetCode {}, provinceCode {}, activityId {}", refsetCode, provinceCode, activityId);
-        AttentionInfoBo result = activityStorage.getActivityById(refsetCode, provinceCode, activityId).orElse(null);
-        logger.debug("Output -> {}", result);
-        return result;
-    }
+	public AttentionInfoBo run(String refsetCode, Long activityId) {
+		logger.debug("Input parameters -> refsetCode {}, activityId {}", refsetCode, activityId);
+		AttentionInfoBo result = activityStorage.getActivityById(refsetCode, activityId).orElse(null);
+		logger.debug("Output -> {}", result);
+		return result;
+	}
 }

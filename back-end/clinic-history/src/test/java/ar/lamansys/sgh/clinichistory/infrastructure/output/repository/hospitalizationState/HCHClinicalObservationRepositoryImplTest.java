@@ -10,6 +10,7 @@ import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.e
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.ips.Snomed;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.ips.entity.ObservationLab;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.ips.entity.ObservationRiskFactor;
+import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.masterdata.SnomedRepository;
 import ar.lamansys.sgh.clinichistory.mocks.ClinicalObservationTestMocks;
 import ar.lamansys.sgh.clinichistory.mocks.DocumentsTestMocks;
 import ar.lamansys.sgh.clinichistory.mocks.SnomedTestMocks;
@@ -17,6 +18,7 @@ import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.mock.mockito.MockBean;
 
 import javax.persistence.EntityManager;
 import java.time.LocalDateTime;
@@ -25,6 +27,9 @@ import java.time.format.DateTimeFormatter;
 class HCHClinicalObservationRepositoryImplTest extends UnitRepository {
 
 	private HCHClinicalObservationRepositoryImpl clinicalObservationRepository;
+
+	@MockBean
+	private SnomedRepository snomedRepository;
 
 	@Autowired
 	private EntityManager entityManager;

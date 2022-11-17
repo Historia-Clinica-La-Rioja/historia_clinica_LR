@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head th:replace="fragments/header :: header"></head>
+<body>
+    <p>Hola <strong th:text="${recipient.firstname}">Sebastián</strong>:</p>
+    <p th:if="${args.institution}">
+        Hospital :
+        <span th:text="${args.institution}">Sanatorio Tandil</span>
+    </p>
+    <strong>
+        Datos del paciente
+    </strong>
+    <p>
+        Nro documento:
+        <span th:if="${args.identificationNumber}" th:text="${args.identificationNumber}">26656565</span>
+        <span th:unless="${args.identificationNumber}">Sin información</span></p>
+
+    <p>
+        Apellido y nombre:
+        <span th:if="${recipient.lastname}" th:text="${recipient.lastname + ' '}">Perruolo</span>
+        <span th:if="${recipient.firstname}" th:text="${recipient.firstname}">Sebastián</span>
+        <span th:if="${recipient.firstname==null && recipient.lastname==null}" >Sin información</span>
+    </p>
+    <p>
+        Cobertura médica:
+        <span th:if="${args.medicalCoverage}" th:text="${args.medicalCoverage}">OSDE</span>
+        <span th:unless="${args.medicalCoverage}">Sin información</span>
+    </p>
+    <p>
+        Fecha turno:
+        <span th:if="${args.day}" th:text="${args.day}">15/08/2022</span>
+    </p>
+    <p>
+        Hora turno:
+        <span th:if="${args.time}" th:text="${args.time}">15:00</span>
+    </p>
+    <p>
+        Consultorio :
+        <span th:if="${args.doctorOffice}" th:text="${args.doctorOffice}">Consultorio 3</span>
+        <span th:unless="${args.doctorOffice}">Sin información</span>
+    </p>
+    <p>
+        Profesional :
+        <span th:if="${args.professionalFullName}" th:text="${args.professionalFullName}">Juan Garcia</span>
+        <span th:unless="${args.professionalFullName}">Sin información</span>
+    </p>
+    <p th:if="${args.fromFullName != null}"> Saludos cordiales, <span th:text="${args.fromFullName}">equipo HSI</span></p>
+
+</body>
+<footer th:replace="fragments/footer :: footer"></footer>
+</html>

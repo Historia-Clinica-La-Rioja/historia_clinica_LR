@@ -18,6 +18,7 @@
 	<div *ngSwitchCase="TYPE_DEFINITIONS.cubejs_dashboard">
 		<app-cubejs-dashboard
 			[content]="uiComponent.args.content"
+			[filters]="uiComponent.args.filters"
 		>
 		</app-cubejs-dashboard>
 	</div>
@@ -25,6 +26,7 @@
 		<app-cubejs-chart
 			[query]="uiComponent.args.query"
 			[dateFormat]="uiComponent.args.dateFormat"
+			[listOnTab]="listOnTab"
 		>
 		</app-cubejs-chart>
 	</div>
@@ -38,10 +40,10 @@
 	</div>
 
 	<div *ngSwitchCase="TYPE_DEFINITIONS.card">
-		<app-card
+		<app-ui-card
 			[title]="uiComponent.args.title"
 			[content]="uiComponent.args.content"
-		></app-card>
+		></app-ui-card>
 	</div>
 
 	<div *ngSwitchCase="TYPE_DEFINITIONS.json">

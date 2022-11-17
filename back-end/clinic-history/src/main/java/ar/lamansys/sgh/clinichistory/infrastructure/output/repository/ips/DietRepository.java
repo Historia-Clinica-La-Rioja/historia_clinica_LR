@@ -23,5 +23,4 @@ public interface DietRepository extends JpaRepository<Diet, Integer> {
 			+ "AND doc.typeId = 12 "
 			+ "ORDER BY i.creationable.createdOn DESC")
 	List<Diet> getByInternmentEpisodeId(@Param("internmentEpisodeId") Integer internmentEpisodeId);
-
 }

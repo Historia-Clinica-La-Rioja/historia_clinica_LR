@@ -6,8 +6,6 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
-import javax.transaction.Transactional;
-
 @Slf4j
 @RequiredArgsConstructor
 @Service
@@ -15,7 +13,6 @@ public class GetCounterReference {
 
     private final CounterReferenceStorage counterReferenceStorage;
 
-    @Transactional
     public CounterReferenceSummaryBo run(Integer referenceId) {
         log.debug("Input parameters -> referenceId {}", referenceId);
         return counterReferenceStorage.getCounterReference(referenceId);

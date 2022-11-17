@@ -20,7 +20,7 @@ import ar.lamansys.sgh.shared.infrastructure.input.service.referencecounterrefer
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
+
 
 import java.util.ArrayList;
 import java.util.List;
@@ -56,7 +56,6 @@ public class ReferenceCounterReferenceExternalServiceImpl implements SharedRefer
     }
 
     @Override
-    @Transactional
     public void saveReferences(Integer encounterId, Integer sourceTypeId, List<ReferenceDto> refrenceDtoList) {
         log.debug("Input parameters -> encounterId {}, sourceTypeId {}, referenceDtoList {}", encounterId, sourceTypeId, refrenceDtoList);
         createReference.run(encounterId, sourceTypeId, referenceMapper.fromReferenceDtoList(refrenceDtoList));

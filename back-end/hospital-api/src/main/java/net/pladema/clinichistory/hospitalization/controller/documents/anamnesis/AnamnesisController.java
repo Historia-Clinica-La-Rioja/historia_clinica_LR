@@ -70,7 +70,6 @@ public class AnamnesisController {
     }
 
     @PostMapping
-    @Transactional
     @PreAuthorize("hasPermission(#institutionId, 'ESPECIALISTA_MEDICO, ENFERMERO_ADULTO_MAYOR')")
     public ResponseEntity<Boolean> createAnamnesis(
             @PathVariable(name = "institutionId") Integer institutionId,
@@ -126,7 +125,6 @@ public class AnamnesisController {
 	}
 
 	@PutMapping("/{anamnesisId}")
-	@Transactional
 	@PreAuthorize("hasPermission(#institutionId, 'ESPECIALISTA_MEDICO, ENFERMERO_ADULTO_MAYOR')")
 	public ResponseEntity<Long> updateAnamnesis(
 			@PathVariable(name = "institutionId") Integer institutionId,

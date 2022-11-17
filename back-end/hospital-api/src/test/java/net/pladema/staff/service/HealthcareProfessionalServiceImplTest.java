@@ -3,6 +3,8 @@ package net.pladema.staff.service;
 import ar.lamansys.sgx.shared.exceptions.NotFoundException;
 import net.pladema.clinichistory.hospitalization.repository.HealthcareProfessionalGroupRepository;
 import net.pladema.staff.repository.HealthcareProfessionalRepository;
+import net.pladema.staff.repository.HealthcareProfessionalSpecialtyRepository;
+import net.pladema.staff.repository.ProfessionalProfessionRepository;
 import net.pladema.staff.repository.domain.HealthcareProfessionalVo;
 import net.pladema.staff.service.domain.HealthcareProfessionalBo;
 import org.junit.jupiter.api.Assertions;
@@ -29,9 +31,18 @@ class HealthcareProfessionalServiceImplTest {
 	@Mock
 	private HealthcareProfessionalRepository healthcareProfessionalRepository;
 
+	@Mock
+	private ProfessionalProfessionRepository professionalProfessionRepository;
+
+	@Mock
+	private HealthcareProfessionalSpecialtyRepository healthcareProfessionalSpecialtyRepository;
+
 	@BeforeEach
 	public void setUp() {
-		healthcareProfessionalService = new HealthcareProfessionalServiceImpl(healthcareProfessionalGroupRepository, healthcareProfessionalRepository);
+		healthcareProfessionalService = new HealthcareProfessionalServiceImpl(healthcareProfessionalGroupRepository,
+				healthcareProfessionalRepository,
+				professionalProfessionRepository,
+				healthcareProfessionalSpecialtyRepository);
 	}
 
 	@Test

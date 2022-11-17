@@ -28,11 +28,14 @@ public class ReferenceSummaryBo {
 
     private CounterReferenceSummaryBo counterReference;
 
-    public ReferenceSummaryBo(Integer id, String careLine, String clinicalSpecialty, String note) {
+	private String institution;
+
+    public ReferenceSummaryBo(Integer id, String careLine, String clinicalSpecialty, String note, String institution) {
         this.id = id;
         this.careLine = careLine;
         this.clinicalSpecialty = clinicalSpecialty;
         this.note = note;
+		this.institution = institution;
     }
 
 }

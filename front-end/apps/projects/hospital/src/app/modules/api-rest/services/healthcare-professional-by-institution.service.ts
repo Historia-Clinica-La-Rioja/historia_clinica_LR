@@ -42,4 +42,10 @@ export class HealthcareProfessionalByInstitutionService {
 		return this.http.get<ProfessionalDto[]>(url);
 	}
 
+	getAllAssociatedWithActiveDiaries(): Observable<ProfessionalDto[]> {
+		const url = `${environment.apiBase}` + BASIC_URL_PREFIX + '/' + `${this.contextService.institutionId}` +
+			BASIC_URL_SUFIX + '/associated-healthcare-professionals-with-active-diaries';
+		return this.http.get<ProfessionalDto[]>(url);
+	}
+
 }

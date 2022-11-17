@@ -18,6 +18,8 @@ public class AppointmentDailyAmountBo {
 
     private Integer programmed;
 
+	private Integer holiday;
+
     private LocalDate date;
 
 }

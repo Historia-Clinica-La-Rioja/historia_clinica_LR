@@ -34,4 +34,6 @@ public class CounterReferenceDto implements Serializable {
 
     private List<Integer> fileIds = new ArrayList<>();
 
+	@NotNull
+	private Short closureTypeId;
 }

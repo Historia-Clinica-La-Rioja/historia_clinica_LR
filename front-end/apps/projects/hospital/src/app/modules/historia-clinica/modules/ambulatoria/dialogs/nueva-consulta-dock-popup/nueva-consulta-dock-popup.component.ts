@@ -80,6 +80,9 @@ export class NuevaConsultaDockPopupComponent implements OnInit {
 	searchConceptsLocallyFFIsOn = false;
 	ambulatoryConsultationReferenceService: AmbulatoryConsultationReferenceService;
 	readonly SEVERITY_CODES = SEVERITY_CODES;
+	collapsedAnthropometricDataSection = false;
+	collapsedRiskFactorsSection = false;
+	isEnablePopUpConfirm: boolean = true;
 	@ViewChild('apiErrorsView') apiErrorsView: ElementRef;
 
 	constructor(
@@ -113,6 +116,7 @@ export class NuevaConsultaDockPopupComponent implements OnInit {
 		this.antecedentesFamiliaresNuevaConsultaService = new AntecedentesFamiliaresNuevaConsultaService(formBuilder, this.snomedService, this.snackBarService);
 		this.alergiasNuevaConsultaService = new AlergiasNuevaConsultaService(formBuilder, this.snomedService, this.snackBarService);
 		this.ambulatoryConsultationReferenceService = new AmbulatoryConsultationReferenceService(this.dialog, this.data, this.ambulatoryConsultationProblemsService, this.clinicalSpecialtyCareLine, this.careLineService);
+		this.featureFlagService.isActive(AppFeature.HABILITAR_GUARDADO_CON_CONFIRMACION_CONSULTA_AMBULATORIA).subscribe(isEnabled => this.isEnablePopUpConfirm = isEnabled);
 	}
 
 	setProfessionalSpecialties() {
@@ -201,16 +205,24 @@ export class NuevaConsultaDockPopupComponent implements OnInit {
 						this.uploadReferencesFileAndCreateConsultation(nuevaConsulta);
 					}
 					else {
-						this.openDialog(fieldsService.nonCompletedFields, fieldsService.presentFields, nuevaConsulta);
+						(this.isEnablePopUpConfirm)
+							? this.openDialog(fieldsService.nonCompletedFields, fieldsService.presentFields, nuevaConsulta)
+							: this.uploadReferencesFileAndCreateConsultation(nuevaConsulta)
 					}
 				} else {
 					this.disableConfirmButton = false;
 					if (!this.isValidConsultation()) {
 						if (this.datosAntropometricosNuevaConsultaService.getForm().invalid) {
-							scrollIntoError(this.datosAntropometricosNuevaConsultaService.getForm(), this.el);
+							this.collapsedAnthropometricDataSection = false;
+							setTimeout(() => {
+								scrollIntoError(this.datosAntropometricosNuevaConsultaService.getForm(), this.el)
+							}, 300);
 						}
 						else if (this.factoresDeRiesgoFormService.getForm().invalid) {
-							scrollIntoError(this.factoresDeRiesgoFormService.getForm(), this.el);
+							this.collapsedRiskFactorsSection = false;
+							setTimeout(() => {
+								scrollIntoError(this.factoresDeRiesgoFormService.getForm(), this.el)
+							}, 300);
 						}
 					}
 
@@ -366,7 +378,7 @@ export class NuevaConsultaDockPopupComponent implements OnInit {
 			}),
 			anthropometricData: this.datosAntropometricosNuevaConsultaService.getDatosAntropometricos(),
 			evolutionNote: this.formEvolucion.value?.evolucion,
-			familyHistories: this.antecedentesFamiliaresNuevaConsultaService.getAntecedentesFamiliares().map((antecedente: AntecedenteFamiliar) => {
+			familyHistories: this.antecedentesFamiliaresNuevaConsultaService.getAntecedentes().map((antecedente: AntecedenteFamiliar) => {
 				return {
 					snomed: antecedente.snomed,
 					startDate: antecedente.fecha ? momentFormat(antecedente.fecha, DateFormat.API_DATE) : undefined
@@ -558,10 +570,6 @@ export class NuevaConsultaDockPopupComponent implements OnInit {
 			width: '35%',
 			disableClose: true,
 		});
-	}
-
-	trackByRequest(index, request) {
-		return request.index;
 	}
 }
 

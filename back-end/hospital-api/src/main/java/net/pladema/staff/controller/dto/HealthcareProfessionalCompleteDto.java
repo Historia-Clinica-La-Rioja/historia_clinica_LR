@@ -20,8 +20,6 @@ public class HealthcareProfessionalCompleteDto {
 
     private Integer personId;
 
-    private String licenseNumber;
-
-    private List<HealthcareProfessionalSpecialtyDto> professionalSpecialtyDtos;
+    private List<ProfessionalProfessionsDto> professionalProfessions;
 
 }

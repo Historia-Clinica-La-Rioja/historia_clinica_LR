@@ -49,8 +49,6 @@ export class OauthAuthenticationService {
 	}
 
 	private storeTokens(): void {
-		localStorage.setItem('token', this.oauthService.getAccessToken());
-		localStorage.setItem('refreshtoken', this.oauthService.getRefreshToken());
 		this.userAuthenticatedEmitter.next(true);
 	}
 

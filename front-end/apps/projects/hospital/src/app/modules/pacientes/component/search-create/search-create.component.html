@@ -23,13 +23,13 @@
 					<mat-label>{{ 'pacientes.home.find_add_section.IDENTIFY_NUMBER_LABEL' | translate }}</mat-label>
 					<input matInput type="text" id="identifNumber" name="identifNumber" formControlName="identifNumber"
 						placeholder="Nro de documento">
-					<mat-error *ngIf="formSearchSubmitted &&  hasError(formSearch, 'required', 'identifNumber')">
+					<mat-error *ngIf="hasError(formSearch, 'required', 'identifNumber')">
 						<span translate="forms.REQUIRED"></span>
 					</mat-error>
-					<mat-error *ngIf="formSearchSubmitted && hasError(formSearch, 'maxlength', 'identifNumber')"
+					<mat-error *ngIf="hasError(formSearch, 'maxlength', 'identifNumber')"
 						translate="forms.MAX_LENGTH_ERROR" [translateParams]="{max: 11}">
 					</mat-error>
-					<mat-error *ngIf="formSearchSubmitted && hasError(formSearch, 'pattern', 'identifNumber')">
+					<mat-error *ngIf="hasError(formSearch, 'pattern', 'identifNumber')">
 						<span translate="forms.FORMAT_WHITOUT_BLANK_SPACES"></span>
 					</mat-error>
 				</mat-form-field>

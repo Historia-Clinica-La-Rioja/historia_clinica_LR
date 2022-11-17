@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.function.Supplier;
 
+import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Service;
 
 import ar.lamansys.sgx.shared.restclient.configuration.HttpClientConfiguration;
@@ -13,6 +14,7 @@ import net.pladema.hsi.extensions.configuration.features.FeatureProperty;
 import net.pladema.hsi.extensions.configuration.features.FeatureStatusService;
 
 @Service
+@Order(1)
 public class HttpClientStatusService extends FeatureStatusService {
 
 	public HttpClientStatusService(

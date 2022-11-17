@@ -36,8 +36,7 @@
 										</button>
 										<mat-select name="healthcareProfessionalId"
 												formControlName="healthcareProfessionalId"
-												placeholder="{{'turnos.agenda-setup.CHOOSE_PROFESSIONAL' | translate}}"
-												(selectionChange)="getProfessionalSpecialties()">
+												placeholder="{{'turnos.agenda-setup.CHOOSE_PROFESSIONAL' | translate}}">
 											<mat-option *ngFor="let professional of getNonResponsibleProfessional()" [value]="professional.id"
 											[disabled]="isProfessionalNonSelectable(professional.id)">
 												<span class="mat-body">{{getFullName(professional)}}</span>
@@ -61,7 +60,8 @@
 						<mat-form-field class="mat-form-field-on-div" appearance="outline">
 							<mat-select id="healthcareProfessionalSpecialtyId" name="healthcareProfessionalSpecialtyId"
 										formControlName="healthcareProfessionalSpecialtyId"
-										placeholder="{{'pacientes.form.SELECT' | translate}}">
+										placeholder="{{'pacientes.form.SELECT' | translate}}"
+										(selectionChange)="getCareLines()">
 								<mat-option *ngFor="let specialty of professionalSpecialties" [value]="specialty.id">
 									<span class="mat-body">{{ specialty.name }}</span>
 								</mat-option>
@@ -75,6 +75,25 @@
 							<input matInput formControlName="alias" type="text" [placeholder]="'turnos.agenda-setup.ALIAS_HINT_TEXT' | translate">
 						</mat-form-field>
 					</div>
+				</div>
+
+				<div fxLayout="column">
+					<span [translate]="'turnos.agenda-setup.OPTIONAL_CARELINE'"></span>
+					<mat-form-field appearance="outline">
+						<mat-select id="care_lines" name="careLines" formControlName="careLines" multiple
+							(selectionChange)="setCareLines($event.value)"
+							placeholder="{{'turnos.agenda-setup.CARELINE' | translate}}" [value]="careLinesAssociated.value">
+							<mat-select-trigger>
+								{{careLinesAssociated.value ? careLinesAssociated.value[0] : ' '}}
+								<span *ngIf=" careLinesAssociated.value?.length > 1" class="additional-selection">
+									(+{{careLinesAssociated.value.length - 1}} {{ 'turnos.agenda-setup.MORE' | translate }})
+								</span>
+							</mat-select-trigger>
+							<mat-option *ngFor="let careLine of careLines" [value]="careLine.description">
+								{{careLine.description | translate}}
+							</mat-option>
+						</mat-select>
+					</mat-form-field>
 				</div>
 
 				<section class="checkbox">
@@ -144,6 +163,27 @@
 					</div>
 				</div>
 
+				<section class="protected-appointments-percentage-container" fxLayout="column">
+					<span translate="turnos.agenda-setup.PROTECTED_APPOINTMENT_PERCENTAGE"></span> 
+					<div fxLayout="column">
+						<mat-form-field appearance="outline">
+							<input id="protected_appointments_percentage" type="number" matInput
+								[placeholder]="'0%'"
+								formControlName="protectedAppointmentsPercentage">
+						</mat-form-field>
+						<mat-error *ngIf="form.hasError('required', 'protectedAppointmentsPercentage')" [translate]="'forms.REQUIRED'" ></mat-error>
+						<mat-error *ngIf="hasError(form, 'pattern', 'protectedAppointmentsPercentage')">
+							{{ 'forms.FORMAT_NUMERIC_INTEGER' | translate }}
+						</mat-error>
+						<mat-error *ngIf="hasError(this.form, 'max', 'protectedAppointmentsPercentage')"
+							[translate]="'forms.MAX_ERROR'"
+							[translateParams]="{max: getError(this.form, 'max', 'protectedAppointmentsPercentage').max}">
+						</mat-error>
+						<span class="color-grey">{{'turnos.agenda-setup.PROTECTED_APPOINTMENT_PERCENTAGE_RANGE' | translate}}</span>
+						<span class="color-grey">{{'turnos.agenda-setup.PROTECTED_APPOINTMENT_PERCENTAGE_RANGE_EXAMPLE' | translate}}</span>
+					</div>
+				</section>
+
 				<div fxLayout="row">
 					<span [translate]="'Duración de la consulta'"></span>
 				</div>
@@ -163,7 +203,7 @@
 
 			</section>
 
-			<section *ngIf="form.valid">
+			<section *ngIf="form.valid" fxLayout="column" fxLayoutAlign="space-around" fxLayoutGap="15px">
 				<h3 [translate]="'turnos.agenda-setup.SELECT_DAYS_TYPE'"></h3>
 				<div fxLayout="row">
 					<span [translate]="'turnos.agenda-setup.SELECT_DAYS_TYPE_SUBTITLE'"></span>
@@ -198,10 +238,12 @@
 										[weekStartsOn]="MONDAY"
 										(eventClicked)="agendaHorarioService.eventClicked($event)">
 				</mwl-calendar-week-view>
+
+				<mat-card *ngIf="errors.length">
+					<mat-error *ngFor="let error of errors" class="mat-body-2">{{error}}</mat-error>
+				</mat-card>
 			</section>
-			<mat-card *ngIf="errors.length">
-				<mat-error *ngFor="let error of errors" class="mat-body-2">{{error}}</mat-error>
-			</mat-card>
+
 
 			<div *ngIf="form.valid" align="end">
 					<button mat-flat-button color="primary" name="confirmAgenda" id="confirmAgenda">

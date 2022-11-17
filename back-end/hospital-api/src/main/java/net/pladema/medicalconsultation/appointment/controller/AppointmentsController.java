@@ -15,11 +15,13 @@ import javax.validation.constraints.Size;
 import ar.lamansys.sgx.shared.dates.configuration.LocalDateMapper;
 import ar.lamansys.sgx.shared.dates.controller.dto.DateTimeDto;
 
+import net.pladema.medicalconsultation.appointment.controller.dto.AppointmentShortSummaryDto;
+import net.pladema.medicalconsultation.appointment.controller.dto.UpdateAppointmentDateDto;
+import net.pladema.medicalconsultation.appointment.repository.entity.AppointmentState;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -130,7 +132,7 @@ public class AppointmentsController {
 		this.localDateMapper = localDateMapper;
 	}
 
-    @Transactional
+
     @PostMapping
     @PreAuthorize("hasPermission(#institutionId, 'ADMINISTRATIVO, ESPECIALISTA_MEDICO, PROFESIONAL_DE_SALUD, ESPECIALISTA_EN_ODONTOLOGIA, ENFERMERO')")
     @ValidAppointment
@@ -141,12 +143,12 @@ public class AppointmentsController {
         log.debug("Input parameters -> institutionId {}, appointmentDto {}", institutionId, createAppointmentDto);
         AppointmentBo newAppointmentBo = appointmentMapper.toAppointmentBo(createAppointmentDto);
         newAppointmentBo = createAppointmentService.execute(newAppointmentBo);
-        Integer result = newAppointmentBo.getId();
+		Integer result = newAppointmentBo.getId();
         log.debug(OUTPUT, result);
         return ResponseEntity.ok().body(result);
     }
 
-    @Transactional
+
     @PostMapping(value = "/update")
     @PreAuthorize("hasPermission(#institutionId, 'ADMINISTRATIVO, ESPECIALISTA_MEDICO, PROFESIONAL_DE_SALUD, ESPECIALISTA_EN_ODONTOLOGIA, ENFERMERO')")
     public ResponseEntity<Integer> update(
@@ -188,9 +190,9 @@ public class AppointmentsController {
         Set<Integer> patientsIds = resultService.stream().
                 filter(appointmentBo -> appointmentBo.getPatientId() != null).
 				map(AppointmentBo::getPatientId).collect(Collectors.toSet());
-        Set<Integer> bookingAppointmentsIds = resultService.stream().
-                filter(appointmentBo -> appointmentBo.getPatientId() == null).
-                map(AppointmentBo::getId).collect(Collectors.toSet());
+		Set<Integer> bookingAppointmentsIds = resultService.stream().
+				filter(appointmentBo -> appointmentBo.getPatientId() == null && !appointmentBo.getAppointmentStateId().equals(AppointmentState.BLOCKED)).
+				map(AppointmentBo::getId).collect(Collectors.toSet());
 
         var bookingPeople = bookingPersonService.getBookingPeople(bookingAppointmentsIds);
         var basicPatientDtoMap = patientExternalService.getBasicDataFromPatientsId(patientsIds);
@@ -201,16 +203,22 @@ public class AppointmentsController {
                 .map(a -> mapData(a, basicPatientDtoMap))
                 .collect(Collectors.toList());
 
-        Collection<AppointmentListDto> resultBooking = resultService.stream()
-                .filter(appointmentDto -> appointmentDto.getPatientId() == null)
-                .parallel()
-                .map(a -> mapDataBooking(a, bookingPeople))
-                .collect(Collectors.toList());
-        log.debug("Result size {}", result.size() + resultBooking.size());
-        result.addAll(resultBooking);
-        log.trace(OUTPUT, result);
-        return ResponseEntity.ok(result);
-    }
+		result.addAll(resultService.stream()
+				.filter(appointmentDto -> appointmentDto.getAppointmentStateId().equals(AppointmentState.BLOCKED))
+				.parallel()
+				.map(this::mapToBlockedAppoinments)
+				.collect(Collectors.toList()));
+
+		Collection<AppointmentListDto> resultBooking = resultService.stream()
+				.filter(appointmentDto -> appointmentDto.getPatientId() == null && !appointmentDto.getAppointmentStateId().equals(AppointmentState.BLOCKED))
+				.parallel()
+				.map(a -> mapDataBooking(a, bookingPeople))
+				.collect(Collectors.toList());
+		log.debug("Result size {}", result.size() + resultBooking.size());
+		result.addAll(resultBooking);
+		log.trace(OUTPUT, result);
+		return ResponseEntity.ok(result);
+	}
 
     private AppointmentListDto mapDataBooking(AppointmentBo appointmentBo, Map<Integer, BookingPersonBo> bookingPeople) {
         var bookingPersonBo = bookingPeople.get(appointmentBo.getId());
@@ -261,8 +269,14 @@ public class AppointmentsController {
         return result;
     }
 
+	private AppointmentListDto mapToBlockedAppoinments(AppointmentBo appointmentBo) {
+		AppointmentListDto result = appointmentMapper.toAppointmentListDto(appointmentBo, null);
+		log.debug("AppointmentListDto id result {}", result.getId());
+		log.trace(OUTPUT, result);
+		return result;
+	}
 
-    @Transactional
+
     @PutMapping(value = "/{appointmentId}/change-state")
     @PreAuthorize("hasPermission(#institutionId, 'ADMINISTRATIVO, ESPECIALISTA_MEDICO, PROFESIONAL_DE_SALUD, ESPECIALISTA_EN_ODONTOLOGIA, ENFERMERO')")
     public ResponseEntity<Boolean> changeState(
@@ -279,7 +293,7 @@ public class AppointmentsController {
     }
 
 
-    @GetMapping("/confirmed-appointment")
+    @GetMapping("/current-appointment")
     @PreAuthorize("hasPermission(#institutionId, 'ESPECIALISTA_MEDICO, PROFESIONAL_DE_SALUD, ESPECIALISTA_EN_ODONTOLOGIA, ENFERMERO, PERSONAL_DE_IMAGENES, PERSONAL_DE_LABORATORIO, PERSONAL_DE_FARMACIA')")
     public ResponseEntity<Boolean> hasNewConsultationEnabled(
             @PathVariable(name = "institutionId") Integer institutionId,
@@ -287,7 +301,7 @@ public class AppointmentsController {
     ) {
         log.debug("Input parameters -> institutionId {}, patientId {}", institutionId, patientId);
         Integer healthProfessionalId = healthcareProfessionalExternalService.getProfessionalId(UserInfo.getCurrentAuditor());
-        boolean result = disableValidation || enableNewConsultation || appointmentService.hasConfirmedAppointment(patientId, healthProfessionalId, dateTimeProvider.nowDate());
+        boolean result = disableValidation || enableNewConsultation || appointmentService.hasCurrentAppointment(patientId, healthProfessionalId, dateTimeProvider.nowDate());
         log.debug(OUTPUT, result);
         return ResponseEntity.ok(result);
     }
@@ -346,12 +360,14 @@ public class AppointmentsController {
 	public ResponseEntity<Boolean> updateDate(
 			@PathVariable(name = "institutionId") Integer institutionId,
 			@PathVariable(name = "appointmentId") Integer appointmentId,
-			@RequestBody DateTimeDto fullDate) {
-		log.debug("Input parameters -> institutionId {},appointmentId {}, fullDate {}", institutionId, appointmentId, fullDate);
+			@RequestBody UpdateAppointmentDateDto updateAppointmentDate) {
+		log.debug("Input parameters -> institutionId {},appointmentId {}, fullDate {}, openingHoursId {}", institutionId, appointmentId, updateAppointmentDate.getDate(), updateAppointmentDate.getOpeningHoursId());
+		DateTimeDto fullDate = updateAppointmentDate.getDate();
 		LocalDate date = dateMapper.fromDateDto(fullDate.getDate());
 		LocalTime time = dateMapper.fromTimeDto(fullDate.getTime());
+		Integer openingHoursId = updateAppointmentDate.getOpeningHoursId();
 		appointmentValidatorService.validateDateUpdate(institutionId, appointmentId, date, time);
-		boolean result = appointmentService.updateDate(appointmentId, date, time);
+		boolean result = appointmentService.updateDate(appointmentId, date, time, openingHoursId);
 		log.debug(OUTPUT, result);
 		return ResponseEntity.ok().body(result);
 	}
@@ -426,6 +442,18 @@ public class AppointmentsController {
 			return ResponseEntity.ok(result);
 		}
 		return ResponseEntity.ok(null);
+	}
+
+	@GetMapping("/patient/{patientId}/verify-existing-appointments")
+	@PreAuthorize("hasPermission(#institutionId, 'ADMINISTRATIVO, ESPECIALISTA_MEDICO, PROFESIONAL_DE_SALUD, ESPECIALISTA_EN_ODONTOLOGIA, ENFERMERO')")
+	public ResponseEntity<AppointmentShortSummaryDto> getAppointmentFromDeterminatedDate(
+			@PathVariable(name = "institutionId") Integer institutionId,
+			@PathVariable(name = "patientId") Integer patientId,
+			@RequestParam String date) {
+		log.debug("Input parameters -> institutionId {}, patientId {}, date {}", institutionId, patientId, date);
+		var appointmentShortSummaryBo = appointmentService.getAppointmentFromDeterminatedDate(patientId, localDateMapper.fromStringToLocalDate(date));
+		var result = appointmentMapper.toAppointmentShortSummaryDto(appointmentShortSummaryBo);
+		return ResponseEntity.ok(result);
 	}
 
 }

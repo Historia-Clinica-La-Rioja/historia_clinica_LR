@@ -1,0 +1,21 @@
+<div fxLayout="row" fxLayoutAlign="end center">
+	<button mat-icon-button [mat-dialog-close]=true>
+		<mat-icon style="margin-right: 0px;">close</mat-icon>
+	</button>
+</div>
+<div fxLayout="column" fxLayoutGap="15px" fxLayoutAlign="center center">
+	<mat-icon [inline]="true" class="material-icons-outlined" id="icon">
+		check_circle
+	</mat-icon>
+	<h1 mat-dialog-title>{{ data.title | translate}}</h1>
+	<div mat-dialog-content fxFill="50" >
+		<div innerHTML="{{ data.content | translate}}"></div>
+	</div>
+	<button id="print-appointment" mat-raised-button color="primary" btn-block type="button"
+	(click)="getAppointmentTicketReport()">
+	<mat-icon fontSet="material-icons-outlined" style="margin-right: 5px;">print</mat-icon>
+	<span class="uppercase">{{'turnos.appointment.PRINT' | translate}}</span>
+	</button>
+	<div class="none" id="pdfPrinter"></div>
+</div>
+

@@ -3,6 +3,8 @@ package net.pladema.staff.repository;
 import java.util.List;
 import java.util.Optional;
 
+import net.pladema.staff.repository.entity.ProfessionalProfessions;
+
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -52,11 +54,11 @@ public interface HealthcareProfessionalSpecialtyRepository extends SGXAuditableE
 
     @Transactional(readOnly = true)
     @Query(value = "SELECT NEW net.pladema.staff.repository.domain.HealthcareProfessionalSpecialtyVo" +
-            "(hps.id,pp.healthcareProfessionalId, pp.professionalSpecialtyId, hps.clinicalSpecialtyId) " +
+            "(hps.id,pp.healthcareProfessionalId, hps.professionalProfessionId, hps.clinicalSpecialtyId, cs.name) " +
             "FROM HealthcareProfessionalSpecialty hps "
 			+ "INNER JOIN ProfessionalProfessions pp ON pp.id = hps.professionalProfessionId "
-			+ "JOIN HealthcareProfessional hp ON (pp.healthcareProfessionalId = hp.id)"
-            + "WHERE hps.id =:professionalId "
+			+ "JOIN ClinicalSpecialty cs ON hps.clinicalSpecialtyId = cs.id "
+            + "WHERE pp.id =:professionalId "
             + "AND hps.deleteable.deleted = false")
     List<HealthcareProfessionalSpecialtyVo> getAllByProfessional(@Param("professionalId") Integer professionalId);
 
@@ -108,4 +110,9 @@ public interface HealthcareProfessionalSpecialtyRepository extends SGXAuditableE
 			+ ", e.deleteable.deletedBy = ?#{ principal.userId } "
 			+ "WHERE e.professionalProfessionId = :professionalProfessionId ")
     void deleteByProfessionalProfessionId(@Param("professionalProfessionId") Integer professionalProfessionId);
+
+	@Query(value = "SELECT hps FROM HealthcareProfessionalSpecialty hps " +
+			"WHERE hps.clinicalSpecialtyId = :clinicalSpecialtyId " +
+			"AND hps.professionalProfessionId = :professionalProfessionId")
+	Optional<HealthcareProfessionalSpecialty> findByProfessionAndSpecialty(@Param("professionalProfessionId") Integer professionalProfessionId, @Param("clinicalSpecialtyId") Integer clinicalSpecialtyId);
 }

@@ -1,13 +1,14 @@
 package net.pladema.snowstorm.repository;
 
-import net.pladema.snowstorm.repository.entity.SnomedRelatedGroup;
+import java.util.Optional;
+
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Optional;
+import net.pladema.snowstorm.repository.entity.SnomedRelatedGroup;
 
 @Repository
 public interface SnomedRelatedGroupRepository extends JpaRepository<SnomedRelatedGroup, Integer> {
@@ -24,5 +25,12 @@ public interface SnomedRelatedGroupRepository extends JpaRepository<SnomedRelate
 			"FROM SnomedRelatedGroup srg " +
 			"WHERE srg.groupId = :groupId ")
 	Optional<Integer> getLastOrdenByGroupId(@Param("groupId") Integer groupId);
+
+
+	@Transactional(readOnly = true)
+	@Query("SELECT srg.snomedId " +
+			"FROM SnomedRelatedGroup srg " +
+			"WHERE srg.id = :id ")
+	Optional<Integer> getSnomedIdById(@Param("id") Integer id);
 
 }

@@ -1,30 +1,60 @@
 <app-dock-popup [dockPopupRef]="dockPopupRef" [header]="HEADER"
     [actions]="{ lockToggle: true, showButtonClose: false, showButtonChevron: true, showActions: false}"
     [style]="STYLE">
-    <div body fxLayout="column">
-        <div *ngIf="agendas?.length" fxLayout="row" fxLayoutAlign="space-between">
-            <mat-form-field appearance="outline">
-                <mat-label [translate]="'turnos.home.SELECT_AGENDA'"></mat-label>
-                <mat-select [(value)]="agendaSelected">
-                    <mat-option *ngFor="let agenda of agendas" [value]="agenda"
-                        (onSelectionChange)="changeAgendaSelected($event, agenda)">
-                        <span class="mat-body-strong">
-                            {{agenda.doctorsOfficeDescription}}
-                        </span>
-                        <span class="mat-body">
-                            {{agenda.startDate | date: dateFormats.SHORT_DATE }} - {{agenda.endDate | date:
-                            dateFormats.SHORT_DATE}}
-                        </span>
-                    </mat-option>
-                </mat-select>
-                <button id="clear_agenda_selected" type="button" mat-button *ngIf="agendaSelected && showButtonToClear" matSuffix
-                    color="warn" mat-icon-button (click)="clear(); $event.stopPropagation()">
-                    <mat-icon>close</mat-icon>
-                </button>
-            </mat-form-field>
+    <div body fxLayout="column" fxLayoutGap="15px">
+        <app-professional-select id="professionals" *ngIf="professionals.length > 1" [professionals]="professionals"
+            [professionalSelected]="professionalSelected" (selectionChange)="setDiaries($event)">
+        </app-professional-select>
+        <div class="spinner" *ngIf="loading else information">
+            <mat-spinner color="primary"></mat-spinner>
         </div>
-        <app-agenda *ngIf="agendaSelected" class="agenda" [canCreateAppoinment]="false" [id]="agendaSelected.id"
-            [showAll]="false" [view]="calendarViewEnum.Day" [viewDate]="calendarDate">
-        </app-agenda>
-    </div>
+        <ng-template #information>
+            <div id="diaries" *ngIf="professionalSelected">
+                <div *ngIf="diaries.length > 0 else noActiveDiaries" fxLayout="column" fxLayoutAlign="space-between">
+                    <form [formGroup]="form">
+                        <mat-form-field appearance="outline" class="select-diary">
+                            <mat-label [translate]="'turnos.home.SELECT_AGENDA'"></mat-label>
+                            <mat-select formControlName="diary" [(value)]="diarySelected">
+                                <mat-option *ngFor="let diary of diaries" [value]="diary"
+                                    (onSelectionChange)="changeDiarySelected($event, diary)">
+
+                                    <div fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="5px">
+                                        <div *ngIf="diary.alias === undefined || diary.alias == '' else showAliasAndClinicalSpecialtyName">
+                                            <span class="mat-body-strong">{{diary.clinicalSpecialtyName}}</span>
+                                        </div>
+                                        <span class="mat-body">
+                                            {{diary.startDate | date:dateFormats.SHORT_DATE }} - {{diary.endDate | date:dateFormats.SHORT_DATE}}
+                                        </span>
+                                    </div>
+
+                                    <ng-template #showAliasAndClinicalSpecialtyName>
+                                        <span class="mat-body-strong">
+                                            {{diary.alias}} ({{diary.clinicalSpecialtyName}})
+                                        </span>
+                                    </ng-template>
+                                </mat-option>
+                            </mat-select>
+                            <button id="clear_agenda_selected" type="button" mat-button *ngIf="diarySelected && showButtonToClear"
+                                matSuffix color="warn" mat-icon-button (click)="clear(); $event.stopPropagation()">
+                                <mat-icon>close</mat-icon>
+                            </button>
+                        </mat-form-field>
+                    </form>
+                </div>
+                <ng-template #noActiveDiaries>
+                    <section id="no-diary">
+                        <mat-card>
+                            <mat-card-header>
+                                <mat-card-title [translate]="'turnos.home.NO_AGENDA_MSG_TITLE'"></mat-card-title>
+                                <mat-card-subtitle [translate]="'turnos.home.NO_AGENDA_MSG_SUBTITLE'"></mat-card-subtitle>
+                            </mat-card-header>
+                        </mat-card>
+                    </section>
+                </ng-template>
+                <app-agenda *ngIf="diarySelected" class="agenda" [canCreateAppoinment]="false" [id]="diarySelected.id"
+                    [showAll]="false" [view]="calendarViewEnum.Day" [viewDate]="calendarDate">
+                </app-agenda>
+            </div>
+        </ng-template>
+    </div> 
 </app-dock-popup>

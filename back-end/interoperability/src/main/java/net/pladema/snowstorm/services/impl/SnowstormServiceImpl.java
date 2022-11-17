@@ -8,6 +8,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import net.pladema.snowstorm.configuration.SnowstormAuthInterceptor;
 import net.pladema.snowstorm.configuration.SnowstormRestTemplateAuth;
 import net.pladema.snowstorm.configuration.SnowstormWSConfig;
 import net.pladema.snowstorm.services.SnowstormService;
@@ -20,6 +21,7 @@ import net.pladema.snowstorm.services.exceptions.SnowstormApiException;
 import net.pladema.snowstorm.services.exceptions.SnowstormEnumException;
 import net.pladema.snowstorm.services.exceptions.SnowstormStatusException;
 
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -79,6 +81,7 @@ public class SnowstormServiceImpl implements SnowstormService {
     @Override
     public List<SnowstormItemResponse> getConceptParents(String conceptId) throws SnowstormApiException {
         String urlWithParams = snowstormWSConfig.getBrowserConceptUrl()
+                .concat("/")
                 .concat(conceptId)
                 .concat("/parents")
                 .concat("?form=inferred");
@@ -97,6 +100,7 @@ public class SnowstormServiceImpl implements SnowstormService {
     @Override
     public List<SnowstormItemResponse> getConceptAncestors(String conceptId) throws SnowstormApiException {
         String urlWithParams = snowstormWSConfig.getBrowserConceptUrl()
+                .concat("/")
                 .concat(conceptId)
                 .concat("/ancestors")
                 .concat("?form=inferred");
@@ -187,7 +191,40 @@ public class SnowstormServiceImpl implements SnowstormService {
         }
     }
 
-    private SnowstormApiException mapException(RestTemplateApiException apiException) {
+	@Override
+	public SnowstormSearchResponse getConcepts(List<Integer> ids) throws SnowstormApiException {
+
+		StringBuilder urlWithParams = new StringBuilder(snowstormWSConfig.getBrowserConceptUrl()).append("?");
+
+		for (Integer id: ids){
+			urlWithParams.append("conceptIds=").append((long) id).append("&");
+		}
+        
+		urlWithParams.append("size=").append(snowstormWSConfig.getConceptsLimit());
+
+		SnowstormSearchResponse result = getSnowstormSearchResponse(urlWithParams);
+		return result;
+	}
+
+	@Override
+	public SnowstormItemResponse getConceptById(String conceptId) throws SnowstormApiException {
+		String urlWithParams = new String(snowstormWSConfig.getBrowserConceptUrl()
+				.concat("/")
+				.concat(conceptId)
+				.concat("?form=inferred"));
+		ResponseEntity<SnowstormItemResponse> response;
+		try {
+			HttpHeaders headers = new HttpHeaders();
+			headers.add("Accept-Language", snowstormWSConfig.getLanguage());
+			response = restClientInterface.exchangeGet(urlWithParams, headers, SnowstormItemResponse.class);
+		} catch (RestTemplateApiException e) {
+			throw mapException(e);
+		}
+		SnowstormItemResponse result = response.getBody();
+		return result;
+	}
+
+	private SnowstormApiException mapException(RestTemplateApiException apiException) {
         if (apiException.getStatusCode().series() == HttpStatus.Series.SERVER_ERROR)
             return new SnowstormApiException(SnowstormEnumException.SERVER_ERROR, apiException.getStatusCode(), "El servicio de Snowstorm tiene un error interno.");
         if (apiException.getStatusCode().series() == HttpStatus.Series.CLIENT_ERROR) {

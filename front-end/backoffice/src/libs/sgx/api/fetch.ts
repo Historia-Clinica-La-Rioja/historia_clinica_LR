@@ -4,27 +4,24 @@
  * It handles JSON decoding. HTTP error will be translated to ApiHttpError.
  */
 import { configureRefreshFetch } from 'refresh-fetch';
-import { retrieveToken, retrieveRefreshToken, saveTokens, clearTokens } from './tokenStorage';
-import { safeParseJson, safeStringifyJson } from '../shared/json';
-import { JWTokenDto, FileInputData } from './model';
 import { saveAs } from 'file-saver';
-
 import { HttpError } from 'react-admin';
+
+import {
+    safeParseJson,
+    safeStringifyJson,
+} from '../shared/json';
+
+import {
+    FileInputData,
+} from './model';
 
 const API_CONTEXT_PATH = '/api/';
 
 const shouldRefreshToken = (error: HttpError) => error.status === 401;
 
-const fetchApiWithToken = <T>(url: string, options: any = {}) => {
-    return sgxFetchApi<T>(
-        url,
-        addAuth(options)
-    );
-};
-
 const downloadApiWithToken = (url: string, filename: string) => {
-    const options = addAuth();
-    return fetch(API_CONTEXT_PATH + url, options)
+    return fetch(API_CONTEXT_PATH + url)
         .then(ifErrorThrow(mapToApiHttpError()))
         .then((response) => {
             return response.blob();
@@ -59,14 +56,9 @@ const mapToApiHttpError = (defaultValue = { code: 'error.generic.title' }) => (b
 };
 
 const doRefreshToken = (): Promise<void> => {
-    const refreshToken = retrieveRefreshToken();
-    const options = jsonPayload('POST', { refreshToken });
-    return sgxFetchApi<JWTokenDto>('auth/refresh', options)
-        .then(({ token, refreshToken }) => {
-            saveTokens(token, refreshToken)
-        })
+    const options = jsonPayload('POST', undefined);
+    return sgxFetchApi<void>('auth/refresh', options)
         .catch(error => {
-            clearTokens()
             throw error
         })
 }
@@ -88,7 +80,7 @@ const sgxFetchApi = <T>(url: string, options: any = {}): Promise<T> => {
 };
 
 const sgxFetchApiWithToken = configureRefreshFetch({
-    fetch: fetchApiWithToken,
+    fetch: sgxFetchApi,
     shouldRefreshToken,
     refreshToken: doRefreshToken,
 });
@@ -102,11 +94,6 @@ const sgxDownload = configureRefreshFetch({
 const withHeader = ({ headers = new Headers(), ...rest }, name: string, value: string) => {
     headers.set(name, value);
     return { headers, ...rest };
-};
-
-const addAuth = (options: any = {}) => {
-    const token = retrieveToken();
-    return (!token) ? options : withHeader(options, 'Authorization', token);
 };
 
 const jsonPayload = (method: string, body: any) => ({ method, body: safeStringifyJson(body) });

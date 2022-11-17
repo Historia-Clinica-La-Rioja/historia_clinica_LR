@@ -68,3 +68,9 @@ sonarlint.json
 front-end/.docker/
 back-end/.docker/
 .docker-data/
+
+#mqtt files
+*.lck
+*.msg
+
+cubejs/node_modules/

@@ -14,7 +14,7 @@ import net.pladema.staff.service.domain.ClinicalSpecialtyBo;
 @Repository
 public interface ClinicalSpecialtyRepository extends JpaRepository<ClinicalSpecialty, Integer>{
 
-    @Transactional(readOnly = true)
+	@Transactional(readOnly = true)
     @Query(value = " SELECT cs "
 			+ "FROM HealthcareProfessionalSpecialty hps "
             + "INNER JOIN ClinicalSpecialty cs ON hps.clinicalSpecialtyId = cs.id "
@@ -38,7 +38,46 @@ public interface ClinicalSpecialtyRepository extends JpaRepository<ClinicalSpeci
     ClinicalSpecialtyBo findClinicalSpecialtyBoById(@Param("clinicalSpecialtyId") Integer clinicalSpecialtyId);
 
     @Transactional(readOnly = true)
-    @Query(value = " SELECT cs FROM ClinicalSpecialty cs where cs.clinicalSpecialtyTypeId = 2")
-    List<ClinicalSpecialty> findAllSpecialties();
+	@Query(value = " SELECT cs FROM ClinicalSpecialty cs where cs.clinicalSpecialtyTypeId = 2")
+	List<ClinicalSpecialty> findAllSpecialties();
+
+	@Transactional(readOnly = true)
+	@Query(value = "SELECT DISTINCT cs " +
+			"FROM ClinicalSpecialty cs " +
+			"JOIN HealthcareProfessionalSpecialty hps ON (hps.clinicalSpecialtyId = cs.id) " +
+			"JOIN ProfessionalProfessions pp ON (pp.id  = hps.professionalProfessionId) " +
+			"JOIN HealthcareProfessional hp ON (hp.id = pp.healthcareProfessionalId) " +
+			"JOIN Person p ON (p.id = hp.personId) " +
+			"JOIN UserPerson up ON (p.id = up.pk.personId) " +
+			"JOIN UserRole ur ON (ur.userRolePK.userId = up.pk.userId) " +
+			"JOIN Diary d ON (hp.id = d.healthcareProfessionalId) " +
+			"JOIN DoctorsOffice do ON (do.id = d.doctorsOfficeId) " +
+			"WHERE do.institutionId = :institutionId " +
+			"AND d.clinicalSpecialtyId = cs.id " +
+			"AND d.active = true " +
+			"AND d.endDate >= current_date() " +
+			"AND (d.deleteable.deleted = false OR d.deleteable.deleted is null) " +
+			"AND hps.deleteable.deleted = false  " +
+			"AND pp.deleteable.deleted = false " +
+			"AND hp.deleteable.deleted = false " +
+			"AND ur.deleteable.deleted = false " +
+			"ORDER BY cs.name ")
+	List<ClinicalSpecialty> getAllByInstitutionIdAndActiveDiaries(@Param("institutionId") Integer institutionId);
+
+	@Transactional(readOnly = true)
+	@Query("SELECT DISTINCT cs FROM ClinicalSpecialty as cs " +
+			"JOIN CareLineInstitutionSpecialty clis ON (cs.id = clis.clinicalSpecialtyId)" +
+			"JOIN CareLineInstitution cli ON (cli.id = clis.careLineInstitutionId)" +
+			"JOIN DoctorsOffice do ON (do.institutionId = cli.institutionId) " +
+			"JOIN Diary d ON (do.id = d.doctorsOfficeId) " +
+			"JOIN DiaryCareLine dcl ON (d.id = dcl.pk.diaryId) " +
+			"WHERE cli.careLineId = :careLineId " +
+			"AND cli.institutionId = :destinationInstitutionId " +
+			"AND d.clinicalSpecialtyId = clis.clinicalSpecialtyId " +
+			"AND (d.deleteable.deleted = false) " +
+			"AND (dcl.deleteable.deleted = false) " +
+			"ORDER BY cs.name ")
+	List<ClinicalSpecialty> getAllByCareLineIdAndDestinationInstitutionId(@Param("careLineId") Integer careLineId,
+																		  @Param("destinationInstitutionId") Integer destinationInstitutionId);
 
 }

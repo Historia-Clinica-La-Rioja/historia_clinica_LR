@@ -7,6 +7,11 @@ export interface ChartDefinitionDto {
     pivotConfig: any;
 }
 
+export interface ExtensionComponentDto {
+    name: string;
+    path: string;
+}
+
 export interface UIComponentDto {
     args: { [index: string]: any };
     type: string;

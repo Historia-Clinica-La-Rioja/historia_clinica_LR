@@ -24,9 +24,6 @@ public enum AppFeature implements Feature {
     @Label("Indica si se debe habilitar la funcionalidad historia clinica ambulatoria")
     HABILITAR_HISTORIA_CLINICA_AMBULATORIA,
 
-    @Label("Indica si esta habilitada la funcionalidad para actualizar documentos de internación")
-    HABILITAR_UPDATE_DOCUMENTS,
-
     @Label("Indica si esta habilitada la funcionalidad para editar un paciente")
     HABILITAR_EDITAR_PACIENTE_COMPLETO,
 
@@ -106,11 +103,23 @@ public enum AppFeature implements Feature {
 	OCULTAR_LISTADO_PROFESIONES_WEBAPP,
     
 	@Label("Muestra en HC la seccion de Enfermeria")
-	HABILITAR_MODULO_ENFERMERIA,
+	HABILITAR_MODULO_ENF_EN_DESARROLLO,
 
     @Label("Indica si está habilitado el doble factor de autenticación")
 	HABILITAR_2FA,
-    ;
+
+	@Label("Indica si están habilitadas las extensiones por web components ")
+	HABILITAR_EXTENSIONES_WEB_COMPONENTS,
+
+    @Label("Indica si esta habilitado el servicio de notificaciones al asignar un turno")
+	HABILITAR_NOTIFICACIONES_TURNOS,
+
+	@Label("Habilita PopUp de guardado en consulta ambulatoria")
+	HABILITAR_GUARDADO_CON_CONFIRMACION_CONSULTA_AMBULATORIA,
+
+	@Label("Indica si esta habilitado el uso de card en HC e INTERNACION")
+	HABILITAR_VISUALIZACION_DE_CARDS
+	;
 
     public boolean isActive() {
         return FeatureContext.getFeatureManager().isActive(this);

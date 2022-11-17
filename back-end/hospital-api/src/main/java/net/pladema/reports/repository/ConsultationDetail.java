@@ -3,6 +3,7 @@ package net.pladema.reports.repository;
 import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 
@@ -10,6 +11,7 @@ import lombok.ToString;
 @Setter
 @ToString
 @AllArgsConstructor
+@NoArgsConstructor
 @EqualsAndHashCode
 public class ConsultationDetail {
 
@@ -72,6 +74,8 @@ public class ConsultationDetail {
 	private String cardiovascularRisk;
 
 	private String glycosylatedHemoglobin;
+
+	private String bloodGlucose;
 
 	private String headCircunference;
 

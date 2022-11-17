@@ -1,24 +1,26 @@
 package net.pladema.snowstorm.services.updateSnomedGroup;
 
+import java.time.LocalDate;
+import java.util.List;
+import java.util.stream.Collectors;
+
+import org.springframework.stereotype.Service;
+
 import ar.lamansys.sgh.shared.infrastructure.input.service.SharedSnomedDto;
 import ar.lamansys.sgh.shared.infrastructure.input.service.SharedSnomedPort;
 import ar.lamansys.sgx.shared.dates.configuration.DateTimeProvider;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import net.pladema.snowstorm.repository.entity.SnomedGroup;
 import net.pladema.snowstorm.repository.SnomedGroupRepository;
-import net.pladema.snowstorm.repository.entity.SnomedRelatedGroup;
 import net.pladema.snowstorm.repository.SnomedRelatedGroupRepository;
+import net.pladema.snowstorm.repository.entity.SnomedGroup;
+import net.pladema.snowstorm.repository.entity.SnomedGroupType;
+import net.pladema.snowstorm.repository.entity.SnomedRelatedGroup;
 import net.pladema.snowstorm.services.SnowstormService;
 import net.pladema.snowstorm.services.domain.SnowstormSearchResponse;
 import net.pladema.snowstorm.services.domain.semantics.SnomedECL;
 import net.pladema.snowstorm.services.domain.semantics.SnomedSemantics;
 import net.pladema.snowstorm.services.exceptions.SnowstormApiException;
-import org.springframework.stereotype.Service;
-
-import java.time.LocalDate;
-import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -77,7 +79,7 @@ public class UpdateSnomedGroup {
         Integer snomedGroupId = snomedGroupRepository.getBaseGroupIdByEclAndDescription(ecl, eclKey);
         String customId = "1";
 
-        SnomedGroup toSave = new SnomedGroup(snomedGroupId, eclKey, ecl, customId, date, false);
+        SnomedGroup toSave = new SnomedGroup(snomedGroupId, eclKey, ecl, customId, date, SnomedGroupType.DEFAULT);
         return snomedGroupRepository.save(toSave).getId();
     }
 

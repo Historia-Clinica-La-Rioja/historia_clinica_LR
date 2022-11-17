@@ -1,0 +1,29 @@
+<form [formGroup]="form" fxLayout="column">
+	<app-typeahead id="select-profession" [options]="professionsTypeahead"
+		[externalSetValue]="initValueTypeaheadProfessions"
+		[titleInput]="'pacientes.edit_prefessions_specialties.profession_specialties.PROFESSION'| translate "
+		(selectionChange)="setProfession($event)" (blur)="onTouched()">
+	</app-typeahead>
+	<mat-error *ngIf="hasErrorProfession()">
+		{{'pacientes.edit_prefessions_specialties.profession_specialties.PROFESSION_ERROR' | translate }}
+	</mat-error>
+
+	<div formArrayName="specialties">
+		<div *ngFor="let p of getCtrl('specialties',form)?.controls;index as formChild" fxLayoutAlign="end">
+			<div class="form-input" [formGroupName]="formChild" fxFlex="90%">
+				<app-typeahead id="select-specialty" [options]="specialtiesTypeahead"
+					[externalSetValue]="initValueTypeaheadSpecialties[formChild]"
+					[titleInput]="'pacientes.edit_prefessions_specialties.profession_specialties.SPECIALTY'| translate "
+					(selectionChange)="setSpecialty($event,formChild)">
+				</app-typeahead>
+				<mat-error *ngIf='hasErrorSpecialty()'>
+					{{'pacientes.edit_prefessions_specialties.profession_specialties.SPECIALTY_ERROR' | translate }}
+				</mat-error>
+			</div>
+		</div>
+	</div>
+
+	<button mat-button [disabled]="isDisableAddSpecialties()" type="button" (click)="addSpecialties()" color="primary" id="add-button" onclick="this.blur()">
+		+ {{ 'pacientes.edit_prefessions_specialties.profession_specialties.ADD_ANOTHER_SPECIALTY' | translate }}
+	</button>
+</form>

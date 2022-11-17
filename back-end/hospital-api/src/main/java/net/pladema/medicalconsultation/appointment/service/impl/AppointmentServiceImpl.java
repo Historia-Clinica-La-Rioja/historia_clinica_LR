@@ -1,40 +1,43 @@
 package net.pladema.medicalconsultation.appointment.service.impl;
 
+import java.time.DayOfWeek;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.ZoneId;
+import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
-import ar.lamansys.sgx.shared.dates.configuration.DateTimeProvider;
-import ar.lamansys.sgx.shared.security.UserInfo;
-import net.pladema.establishment.controller.service.InstitutionExternalService;
-
-import net.pladema.establishment.repository.MedicalCoveragePlanRepository;
-import net.pladema.medicalconsultation.appointment.repository.AppointmentObservationRepository;
-import net.pladema.medicalconsultation.appointment.repository.domain.AppointmentDiaryVo;
-import net.pladema.medicalconsultation.appointment.repository.entity.AppointmentObservation;
-import net.pladema.medicalconsultation.appointment.service.ports.AppointmentStorage;
-import net.pladema.patient.controller.dto.PatientMedicalCoverageDto;
-import net.pladema.patient.controller.service.PatientExternalMedicalCoverageService;
-
-import net.pladema.patient.service.domain.PatientCoverageInsuranceDetailsBo;
-import net.pladema.patient.service.domain.PatientMedicalCoverageBo;
-
-import net.pladema.staff.repository.HealthcareProfessionalRepository;
+import net.pladema.medicalconsultation.appointment.repository.AppointmentAssnRepository;
+import net.pladema.medicalconsultation.appointment.repository.AppointmentUpdateRepository;
+import net.pladema.medicalconsultation.diary.service.DiaryOpeningHoursService;
+import net.pladema.medicalconsultation.diary.service.domain.BlockBo;
+import net.pladema.medicalconsultation.diary.service.domain.DiaryBo;
+import net.pladema.medicalconsultation.diary.service.domain.DiaryOpeningHoursBo;
 
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import ar.lamansys.sgh.shared.infrastructure.input.service.SharedStaffPort;
+import ar.lamansys.sgx.shared.dates.configuration.DateTimeProvider;
 import ar.lamansys.sgx.shared.featureflags.AppFeature;
 import ar.lamansys.sgx.shared.featureflags.application.FeatureFlagsService;
+import ar.lamansys.sgx.shared.security.UserInfo;
 import lombok.extern.slf4j.Slf4j;
+import net.pladema.establishment.controller.service.InstitutionExternalService;
+import net.pladema.establishment.repository.MedicalCoveragePlanRepository;
+import net.pladema.medicalconsultation.appointment.repository.AppointmentObservationRepository;
 import net.pladema.medicalconsultation.appointment.repository.AppointmentRepository;
 import net.pladema.medicalconsultation.appointment.repository.HistoricAppointmentStateRepository;
+import net.pladema.medicalconsultation.appointment.repository.domain.AppointmentShortSummaryBo;
 import net.pladema.medicalconsultation.appointment.repository.domain.AppointmentTicketBo;
+import net.pladema.medicalconsultation.appointment.repository.entity.AppointmentObservation;
 import net.pladema.medicalconsultation.appointment.repository.entity.AppointmentState;
 import net.pladema.medicalconsultation.appointment.repository.entity.HistoricAppointmentState;
 import net.pladema.medicalconsultation.appointment.service.AppointmentService;
@@ -43,6 +46,13 @@ import net.pladema.medicalconsultation.appointment.service.domain.AppointmentBo;
 import net.pladema.medicalconsultation.appointment.service.domain.UpdateAppointmentBo;
 import net.pladema.medicalconsultation.appointment.service.exceptions.AppointmentNotFoundEnumException;
 import net.pladema.medicalconsultation.appointment.service.exceptions.AppointmentNotFoundException;
+import net.pladema.medicalconsultation.appointment.service.ports.AppointmentStorage;
+import net.pladema.patient.controller.dto.PatientMedicalCoverageDto;
+import net.pladema.patient.controller.service.PatientExternalMedicalCoverageService;
+import net.pladema.patient.service.domain.PatientCoverageInsuranceDetailsBo;
+import net.pladema.patient.service.domain.PatientMedicalCoverageBo;
+
+import javax.validation.ConstraintViolationException;
 
 @Slf4j
 @Service
@@ -51,6 +61,8 @@ public class AppointmentServiceImpl implements AppointmentService {
 	private static final String OUTPUT = "Output -> {}";
 
 	private final AppointmentRepository appointmentRepository;
+
+	private final AppointmentAssnRepository appointmentAssnRepository;
 
 	private final AppointmentObservationRepository appointmentObservationRepository;
 
@@ -70,8 +82,12 @@ public class AppointmentServiceImpl implements AppointmentService {
 
 	private final AppointmentStorage appointmentStorage;
 
+	private final AppointmentUpdateRepository appointmentUpdateRepository;
 
-	public AppointmentServiceImpl(AppointmentRepository appointmentRepository, AppointmentObservationRepository appointmentObservationRepository, HistoricAppointmentStateRepository historicAppointmentStateRepository, SharedStaffPort sharedStaffPort, DateTimeProvider dateTimeProvider, PatientExternalMedicalCoverageService patientExternalMedicalCoverageService, InstitutionExternalService institutionExternalService, MedicalCoveragePlanRepository medicalCoveragePlanRepository, FeatureFlagsService featureFlagsService, AppointmentStorage appointmentStorage) {
+	private final DiaryOpeningHoursService diaryOpeningHoursService;
+
+
+	public AppointmentServiceImpl(AppointmentRepository appointmentRepository, AppointmentObservationRepository appointmentObservationRepository, HistoricAppointmentStateRepository historicAppointmentStateRepository, SharedStaffPort sharedStaffPort, DateTimeProvider dateTimeProvider, PatientExternalMedicalCoverageService patientExternalMedicalCoverageService, InstitutionExternalService institutionExternalService, MedicalCoveragePlanRepository medicalCoveragePlanRepository, FeatureFlagsService featureFlagsService, AppointmentStorage appointmentStorage, AppointmentUpdateRepository appointmentUpdateRepository, AppointmentAssnRepository appointmentAssnRepository, DiaryOpeningHoursService diaryOpeningHoursService) {
 		this.appointmentRepository = appointmentRepository;
 		this.appointmentObservationRepository = appointmentObservationRepository;
 		this.historicAppointmentStateRepository = historicAppointmentStateRepository;
@@ -82,6 +98,9 @@ public class AppointmentServiceImpl implements AppointmentService {
 		this.institutionExternalService = institutionExternalService;
 		this.medicalCoveragePlanRepository = medicalCoveragePlanRepository;
 		this.appointmentStorage = appointmentStorage;
+		this.appointmentUpdateRepository = appointmentUpdateRepository;
+		this.appointmentAssnRepository = appointmentAssnRepository;
+		this.diaryOpeningHoursService = diaryOpeningHoursService;
 	}
 
 	@Override
@@ -146,6 +165,7 @@ public class AppointmentServiceImpl implements AppointmentService {
 	}
 
 	@Override
+	@Transactional
 	public boolean updateState(Integer appointmentId, short appointmentStateId, Integer userId, String reason) {
 		log.debug("Input parameters -> appointmentId {}, appointmentStateId {}, userId {}, reason {}", appointmentId, appointmentStateId, userId, reason);
 		appointmentRepository.updateState(appointmentId, appointmentStateId, userId);
@@ -163,9 +183,25 @@ public class AppointmentServiceImpl implements AppointmentService {
 	}
 
 	@Override
-	public boolean hasConfirmedAppointment(Integer patientId, Integer healthProfessionalId, LocalDate date) {
+	public boolean hasCurrentAppointment(Integer patientId, Integer healthProfessionalId, LocalDate date) {
 		log.debug("Input parameters -> patientId {}, healthProfessionalId {}, date {} ", patientId, healthProfessionalId, date);
 		boolean result = !(appointmentRepository.getAppointmentsId(patientId, healthProfessionalId, date).isEmpty());
+		log.debug(OUTPUT, result);
+		return result;
+	}
+
+	@Override
+	public boolean hasOldAppointment(Integer patientId, Integer healthProfessionalId) {
+		log.debug("Input parameters -> patientId {}, healthProfessionalId {}", patientId, healthProfessionalId);
+		boolean result = !(appointmentRepository.getOldAppointmentsId(patientId, healthProfessionalId).isEmpty());
+		log.debug(OUTPUT, result);
+		return result;
+	}
+
+	@Override
+	public List<Integer> getOldAppointments(Integer patientId, Integer healthProfessionalId) {
+		log.debug("Input parameters -> patientId {}, healthProfessionalId {}", patientId, healthProfessionalId);
+		List<Integer> result = appointmentRepository.getOldAppointmentsId(patientId, healthProfessionalId);
 		log.debug(OUTPUT, result);
 		return result;
 	}
@@ -198,8 +234,9 @@ public class AppointmentServiceImpl implements AppointmentService {
 	}
 
 	@Override
-	public boolean updateDate(Integer appointmentId, LocalDate date, LocalTime time) {
+	public boolean updateDate(Integer appointmentId, LocalDate date, LocalTime time, Integer openingHoursId) {
 		appointmentRepository.updateDate(appointmentId, date, time);
+		appointmentAssnRepository.updateOpeningHoursId(openingHoursId, appointmentId);
 		log.debug(OUTPUT, Boolean.TRUE);
 		return Boolean.TRUE;
 	}
@@ -220,7 +257,7 @@ public class AppointmentServiceImpl implements AppointmentService {
 	public Integer getMedicalCoverage(Integer patientId, Integer healthcareProfessionalId,
 									  LocalDate currentDate) {
 		List<Integer> medicalCoverages = appointmentRepository.getMedicalCoverage(patientId, currentDate,
-				AppointmentState.CONFIRMED, healthcareProfessionalId);
+				AppointmentState.CONFIRMED,AppointmentState.ASSIGNED, healthcareProfessionalId);
 		Integer patientMedicalCoverageId = medicalCoverages.stream().findAny().orElse(null);
 		log.debug(OUTPUT, patientMedicalCoverageId);
 		return patientMedicalCoverageId;
@@ -253,12 +290,12 @@ public class AppointmentServiceImpl implements AppointmentService {
 		ZoneId institutionZoneId = institutionExternalService.getTimezone(institutionId);
 		var currentDateTime = dateTimeProvider.nowDateTimeWithZone(institutionZoneId);
 		var userId = UserInfo.getCurrentAuditor();
-		var getConfirmedAppointmentsByPatient = appointmentRepository.getConfirmedAppointmentsByPatient(patientId,
+		var getCurrentAppointmentsByPatient = appointmentRepository.getCurrentAppointmentsByPatient(patientId,
 				institutionId, userId, currentDateTime.toLocalDate());
-		if(getConfirmedAppointmentsByPatient.isEmpty())
+		if(getCurrentAppointmentsByPatient.isEmpty())
 			return null;
 
-		var result = getConfirmedAppointmentsByPatient.get(0);
+		var result = getCurrentAppointmentsByPatient.get(0);
 		log.debug(OUTPUT, result);
 		return result;
 	}
@@ -350,7 +387,189 @@ public class AppointmentServiceImpl implements AppointmentService {
 		var result = this.appointmentRepository.getAppointmentTicketData(appointmentId).orElseThrow(
 				()-> new AppointmentNotFoundException(AppointmentNotFoundEnumException.APPOINTMENT_ID_NOT_FOUND, "el id no corresponde con ningun turno asignado")
 		);
+		result.setIncludeNameSelfDetermination(AppFeature.HABILITAR_DATOS_AUTOPERCIBIDOS.isActive());
 		log.trace(OUTPUT, result);
 		return result;
 	}
+
+	@Override
+	public AppointmentShortSummaryBo getAppointmentFromDeterminatedDate(Integer patientId, LocalDate date) {
+		log.debug("Input parameters -> patientId {}, date {}", patientId, date);
+		AppointmentShortSummaryBo result = null;
+		List<AppointmentShortSummaryBo> appointmentShortSummaryBoList = this.appointmentRepository.getAppointmentFromDeterminatedDate(patientId, date);
+		if (!appointmentShortSummaryBoList.isEmpty())
+			result = appointmentShortSummaryBoList.get(0);
+		return result;
+	}
+
+
+	@Override
+	public List<Integer> getAppointmentsBeforeDateByStates(List<Short> statesIds, LocalDateTime maxAppointmentDate, Short limit){
+		log.debug("Input parameters -> stateIds {}, maxAppointmentDate {}, limit {}", statesIds, maxAppointmentDate, limit);
+		var result = appointmentUpdateRepository.getAppointmentsBeforeDateByStates(statesIds, maxAppointmentDate, limit);
+		log.debug("Result size {}", result.size());
+		log.trace(OUTPUT, result);
+		return result;
+	}
+
+	@Override
+	public List<AppointmentBo> generateBlockedAppointments(Integer diaryId, BlockBo block, DiaryBo diaryBo, LocalDate startingBlockingDate, LocalDate endingBlockingDate) {
+		List<LocalDate> blockedDates = startingBlockingDate.datesUntil(endingBlockingDate).collect(Collectors.toList());
+		blockedDates.add(endingBlockingDate);
+		blockedDates = blockedDates.stream().filter(potentialBlockedDay -> diaryBo.getDiaryOpeningHours()
+						.stream().anyMatch(diaryOpeningHours -> dayIsIncludedInOpeningHours(potentialBlockedDay, diaryOpeningHours)))
+				.collect(Collectors.toList());
+
+		List<AppointmentBo> listAppointments = new ArrayList<>();
+
+		if (block.isFullBlock())
+			completeDiaryBlock(block, diaryBo, blockedDates, listAppointments);
+		else
+			blockedDates.forEach(date -> generateBlockInterval(diaryBo, listAppointments, date, block));
+
+		assertNoAppointments(diaryId, listAppointments);
+		return listAppointments;
+	}
+
+	@Override
+	public List<AppointmentBo> unblockAppointments(BlockBo unblock, DiaryBo diaryBo, LocalDate startingBlockingDate, LocalDate endingBlockingDate) {
+		List<LocalDate> blockedDates = startingBlockingDate.datesUntil(endingBlockingDate).collect(Collectors.toList());
+		blockedDates.add(endingBlockingDate);
+
+		List<AppointmentBo> listAppointments = new ArrayList<>();
+
+		if (unblock.isFullBlock())
+			completeDiaryUnblock(unblock, diaryBo, blockedDates, listAppointments);
+		else
+			blockedDates.forEach(date -> generateUnblockInterval(diaryBo, listAppointments, date, unblock));
+		return listAppointments;
+	}
+
+	private boolean dayIsIncludedInOpeningHours(LocalDate date, DiaryOpeningHoursBo diaryOpeningHours) {
+		final int SUNDAY_DB_VALUE = 0;
+		if (date.getDayOfWeek().getValue() == DayOfWeek.SUNDAY.getValue())
+			return diaryOpeningHours.getOpeningHours().getDayWeekId() == SUNDAY_DB_VALUE;
+		return diaryOpeningHours.getOpeningHours().getDayWeekId() == date.getDayOfWeek().getValue();
+	}
+
+	private void completeDiaryBlock(BlockBo block, DiaryBo diaryBo, List<LocalDate> blockedDates, List<AppointmentBo> listAppointments) {
+		blockedDates.forEach(blockedDate -> {
+			List<DiaryOpeningHoursBo> relatedOpeningHours = diaryBo.getDiaryOpeningHours().stream()
+					.filter(diaryOpeningHours -> dayIsIncludedInOpeningHours(blockedDate, diaryOpeningHours)).collect(Collectors.toList());
+			relatedOpeningHours.forEach(openingHours -> {
+				BlockBo currentBlock = new BlockBo(blockedDate, blockedDate,
+						openingHours.getOpeningHours().getFrom(), openingHours.getOpeningHours().getTo(),
+						block.getAppointmentBlockMotiveId());
+				generateBlockInterval(diaryBo, listAppointments, blockedDate, currentBlock);
+			});
+		});
+	}
+
+	private void generateBlockInterval(DiaryBo diaryBo, List<AppointmentBo> listAppointments, LocalDate blockedDate, BlockBo block) {
+		listAppointments.addAll(getSlots(block, diaryBo).stream().map(slot -> mapTo(blockedDate, diaryBo, slot, block)).collect(Collectors.toList()));
+	}
+
+	private AppointmentBo mapTo(LocalDate date, DiaryBo diaryBo, LocalTime hour, BlockBo block) {
+		var openingHours = diaryBo.getDiaryOpeningHours();
+		AppointmentBo appointmentBo = new AppointmentBo();
+		appointmentBo.setDiaryId(diaryBo.getId());
+		appointmentBo.setDate(LocalDate.of(date.getYear(), date.getMonth(), date.getDayOfMonth()));
+		appointmentBo.setHour(hour);
+		appointmentBo.setAppointmentStateId(AppointmentState.BLOCKED);
+		appointmentBo.setOverturn(false);
+		appointmentBo.setOpeningHoursId(getOpeningHourId(openingHours, date, block).getOpeningHours().getId());
+		appointmentBo.setAppointmentBlockMotiveId(block.getAppointmentBlockMotiveId());
+		return appointmentBo;
+	}
+
+	private DiaryOpeningHoursBo getOpeningHourId(List<DiaryOpeningHoursBo> openingHours, LocalDate date, BlockBo block) {
+		var dayOfWeek =
+				(short)LocalDate.of(date.getYear(),
+						date.getMonth(),
+						date.getDayOfMonth()).getDayOfWeek().getValue();
+		var localTimeInit = block.getInit();
+		var localTimeEnd = block.getEnd();
+
+		return openingHours.stream()
+				.filter(oh -> oh.getOpeningHours().getDayWeekId().equals(dayOfWeek))
+				.filter(oh -> (oh.getOpeningHours().getFrom().isBefore(localTimeInit) || oh.getOpeningHours().getFrom().equals(localTimeInit)) &&
+						(oh.getOpeningHours().getTo().isAfter(localTimeEnd) || oh.getOpeningHours().getTo().equals(localTimeEnd)))
+				.findFirst().orElseThrow((() -> new ConstraintViolationException("Los horarios de inicio y fin deben pertenecer al mismo período de la agenda.",
+						Collections.emptySet())));
+	}
+
+	private List<LocalTime> getSlots(BlockBo block, DiaryBo diaryBo) {
+		var appointmentDuration = diaryBo.getAppointmentDuration();
+		var localTimeInit = block.getInit();
+		var localTimeEnd = block.getEnd();
+
+		assertTimeLimits(localTimeInit, localTimeEnd, appointmentDuration);
+
+		var slots = Stream.iterate(localTimeInit, d -> d.plusMinutes(appointmentDuration))
+				.limit(ChronoUnit.MINUTES.between(localTimeInit, localTimeEnd) / appointmentDuration)
+				.collect(Collectors.toList());
+
+		if (localTimeEnd.getHour() == 23 && localTimeEnd.getMinute() == 59) {
+			var lastTime = slots.get(slots.size()-1).plusMinutes(appointmentDuration);
+			slots.add(lastTime);
+		}
+
+		return slots;
+	}
+
+	private void assertTimeLimits(LocalTime localTimeInit, LocalTime localTimeEnd, Short appointmentDuration) {
+		if (localTimeEnd.isBefore(localTimeInit) || localTimeEnd.equals(localTimeInit))
+			throw new ConstraintViolationException("La segunda hora seleccionada debe ser posterior a la primera.", Collections.emptySet());
+
+		if(localTimeInit.getMinute() % appointmentDuration != 0)
+			throw new ConstraintViolationException("La hora de inicio no es múltiplo de la duración del turno.", Collections.emptySet());
+
+		if(localTimeEnd.getMinute() % appointmentDuration != 0 && (localTimeEnd.getMinute() != 59 && localTimeEnd.getHour() != 23))
+			throw new ConstraintViolationException("La hora de fin no es múltiplo de la duración del turno.", Collections.emptySet());
+	}
+
+	private void assertNoAppointments(Integer diaryId, List<AppointmentBo> listAppointments) {
+		if(listAppointments.stream().anyMatch(appointmentBo ->
+				existAppointment(diaryId,
+						appointmentBo.getOpeningHoursId(),
+						appointmentBo.getDate(),
+						appointmentBo.getHour()
+				)
+		))
+			throw new ConstraintViolationException("Algún horario de la franja horaria seleccionada tiene un turno o ya está bloqueado.", Collections.emptySet());
+	}
+
+	private void completeDiaryUnblock(BlockBo unblock, DiaryBo diaryBo, List<LocalDate> blockedDates, List<AppointmentBo> listAppointments) {
+		blockedDates.forEach(blockedDate -> {
+			List<DiaryOpeningHoursBo> relatedOpeningHours = diaryBo.getDiaryOpeningHours().stream()
+					.filter(diaryOpeningHours -> dayIsIncludedInOpeningHours(blockedDate, diaryOpeningHours)).collect(Collectors.toList());
+			relatedOpeningHours.forEach(openingHours -> {
+				BlockBo currentUnblock = new BlockBo(blockedDate, blockedDate,
+						openingHours.getOpeningHours().getFrom(), openingHours.getOpeningHours().getTo(),
+						unblock.getAppointmentBlockMotiveId());
+				generateUnblockInterval(diaryBo, listAppointments, blockedDate, currentUnblock);
+			});
+		});
+	}
+
+	private void generateUnblockInterval(DiaryBo diaryBo, List<AppointmentBo> listAppointments, LocalDate blockedDate, BlockBo unblock) {
+		listAppointments.addAll(getSlots(unblock, diaryBo).stream().map(slot -> findAppointment(blockedDate, diaryBo, slot))
+				.filter(Optional::isPresent)
+				.map(Optional::get)
+				.filter(this::isBlocked)
+				.collect(Collectors.toList()));
+	}
+
+	private boolean isBlocked(AppointmentBo ap) {
+		return getAppointment(ap.getId())
+				.map(appointmentBo -> appointmentBo.getAppointmentStateId()
+						.equals(AppointmentState.BLOCKED)).orElse(false);
+	}
+
+	private Optional<AppointmentBo> findAppointment(LocalDate date, DiaryBo diaryBo, LocalTime slot) {
+		return findAppointmentBy(diaryBo.getId(),
+				LocalDate.of(date.getYear(), date.getMonth(), date.getDayOfMonth()),
+				slot);
+	}
+
 }

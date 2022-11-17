@@ -7,6 +7,8 @@ public interface SharedIndicationPort {
 
 	List<DietDto> getInternmentEpisodeDiets(Integer internmentEpisodeId);
 
+	DietDto getInternmentEpisodeDiet(Integer dietId);
+
 	Integer addDiet(DietDto dietDto);
 
 	Integer addOtherIndication(OtherIndicationDto otherIndicationDto);
@@ -16,10 +18,13 @@ public interface SharedIndicationPort {
 	Integer addParenteralPlan(ParenteralPlanDto parenteralPlanDto);
 
 	List<OtherIndicationDto> getInternmentEpisodeOtherIndications(Integer internmentEpisodeId);
+	OtherIndicationDto getInternmentEpisodeOtherIndication(Integer otherIndicationId);
 
 	List<PharmacoSummaryDto> getInternmentEpisodePharmacos(Integer internmentEpisodeId);
+	PharmacoDto getInternmentEpisodePharmaco(Integer pharmacoId);
 
 	List<ParenteralPlanDto> getInternmentEpisodeParenteralPlans(Integer internmentEpisodeId);
+	ParenteralPlanDto getInternmentEpisodeParenteralPlan(Integer parenteralPlanId);
 
 	List<NursingRecordDto> getInternmentEpisodeNursingRecords(Integer internmentEpisodeId);
 

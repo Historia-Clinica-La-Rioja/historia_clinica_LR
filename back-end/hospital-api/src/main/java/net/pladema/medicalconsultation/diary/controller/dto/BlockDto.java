@@ -19,11 +19,4 @@ public class BlockDto {
 	private Short appointmentBlockMotiveId;
 	private boolean fullBlock;
 
-	public BlockDto(DateDto initDateDto, DateDto endDateDto, TimeDto init, TimeDto end, Short appointmentBlockMotiveId) {
-		this.initDateDto = initDateDto;
-		this.endDateDto = endDateDto;
-		this.init = init;
-		this.end = end;
-		this.appointmentBlockMotiveId = appointmentBlockMotiveId;
-	}
 }

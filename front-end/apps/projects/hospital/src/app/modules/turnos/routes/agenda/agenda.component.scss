@@ -5,6 +5,7 @@ $green-month-cell: #009b68;
 $blue-month-cell: #2687c5;
 $orange-month-cell: #ff5c00;
 $border-color-calendar: #e1e1e1;
+$border-color-cell: #888;
 
 div.spinner {
 	@include centered-spinner;
@@ -60,6 +61,22 @@ div.spinner {
 				bottom: none;
 			}
 		}
+
+		.cal-week-view {
+			.cal-day-column:last-child {
+				border-right: 1px solid $border-color-cell;
+			}
+	
+			.cal-day-column:first-child {
+				border-left: 1px solid $border-color-cell;
+			}
+		}
+	
+		.cal-week-view .cal-day-column, 
+		.cal-week-view .cal-hour:not(:last-child) .cal-hour-segment, 
+		.cal-week-view .cal-hour:last-child :not(:last-child) .cal-hour-segment {
+			border-color: $border-color-cell;
+		}	
 	}
 }
 
@@ -116,6 +133,12 @@ div.spinner {
 	.no-disponibles {
 		color: $orange-month-cell;
 	}
+
+	.holiday {
+		color: #1E90FF;
+		border-color: #1E90FF;
+		opacity: 0.75;
+	}
 }
 
 ::ng-deep {
@@ -137,4 +160,13 @@ div.spinner {
 .mat-dialog-container {
     padding-top: 10px !important;
     padding-right: 10px !important;
+}
+
+.icon-color {
+	color: #BDBDBD;
+	margin-left: 4px;
+}
+
+.svg-icon {
+	transform: scale(0.8);
 }

@@ -14,12 +14,14 @@ import lombok.ToString;
 @Builder
 public class AttentionInfoDto implements Serializable {
 
-    private Long id;
-    private DateDto attentionDate;
-    private ClinicalSpecialityDto speciality;
-    private PersonInfoDto patient;
-    private CoverageActivityInfoDto coverage;
-    private String scope;
-    private InternmentDto internmentInfo;
-    private ProfessionalDto responsibleDoctor;
+	private Long id;
+	private Long encounterId;
+	private DateDto attentionDate;
+	private ClinicalSpecialityDto speciality;
+	private PersonInfoDto patient;
+	private CoverageActivityInfoDto coverage;
+	private String scope;
+	private InternmentDto internmentInfo;
+	private ProfessionalDto responsibleDoctor;
+	private DiagnosesDto diagnoses;
 }

@@ -18,4 +18,8 @@ export class PatientNameService {
 		return this.nameSelfDeterminationFF && patientNameSelfDetermination ? patientNameSelfDetermination : patientName;
 	}
 
+	getFullName(patientFirstName: string, patientNameSelfDetermination: string, patientSecondsName?: string): string {
+		const secondName =  patientSecondsName ?  ' ' + patientSecondsName : ' ';
+		return this.nameSelfDeterminationFF && patientNameSelfDetermination ? patientNameSelfDetermination : patientFirstName + secondName;
+	}
 }

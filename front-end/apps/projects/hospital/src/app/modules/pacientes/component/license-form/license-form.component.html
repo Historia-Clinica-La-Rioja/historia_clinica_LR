@@ -1,0 +1,72 @@
+<form [formGroup]="form" fxLayout="column" fxLayoutGap="15px">
+
+	<mat-form-field appearance="outline">
+
+		<mat-label>{{'pacientes.edit_license.form_license.LICENSE_NUMBER'| translate}} </mat-label>
+		<input id="license" formControlName="licenseNumber" type="text" matInput>
+		<mat-error *ngIf="hasError(	form, 'pattern', 'licenseNumber')">
+				{{'pacientes.edit_license.form_license.LICENSE_PATTERN_ERROR' | translate }}
+		</mat-error>
+		<mat-error *ngIf="hasError(	form, 'required', 'licenseNumber')">
+				{{'pacientes.edit_license.form_license.LICENSE_REQUIRED_ERROR' | translate }}
+		</mat-error>
+		<mat-error *ngIf="hasError(	form, 'maxlength', 'licenseNumber')">
+			{{'pacientes.edit_license.form_license.LICENSE_MAX_LENGTH_ERROR' | translate }}
+	</mat-error>
+	</mat-form-field>
+
+	<div fxLayout="column" fxLayoutGap="15px">
+
+		<mat-radio-group id="radio-option" aria-label="Select an option" fxLayoutGap="15px" formControlName="typeId"
+			[value]="RADIO_OPTION_NATIONAL">
+			<mat-radio-button [value]="RADIO_OPTION_NATIONAL">{{'pacientes.edit_license.form_license.NATIONAL'|
+				translate}}
+			</mat-radio-button>
+			<mat-radio-button [value]="RADIO_OPTION_PROVINCE">{{'pacientes.edit_license.form_license.PROVINCE'|
+				translate}}
+			</mat-radio-button>
+		</mat-radio-group>
+
+		<strong>{{'pacientes.edit_license.form_license.ASSOCIATED_WITH'| translate}}</strong>
+
+		<form [formGroup]="form">
+			<mat-radio-group id="radio-option-specialty" fxLayoutGap="15px" formControlName="radioButtonOptionSpecialty">
+				<mat-radio-button [value]="false">{{'pacientes.edit_license.form_license.PROFESSION'|
+					translate}}
+				</mat-radio-button>
+				<mat-radio-button [value]="true">{{'pacientes.edit_license.form_license.SPECIALTY'|
+					translate}}
+				</mat-radio-button>
+			</mat-radio-group>
+		</form>
+
+	</div>
+
+	<mat-form-field appearance="outline">
+		<mat-select id="professional-professionId"
+			placeholder="{{'pacientes.edit_license.form_license.SELECT_PROFESSION'| translate}} "
+			formControlName="professionalProfessionId">
+			<mat-option *ngFor="let elem of professionSpecialties" [value]="elem.profession.id">
+				{{elem.profession.description}}
+			</mat-option>
+		</mat-select>
+		<mat-error>
+			{{'pacientes.edit_license.form_license.PROFESSION_ERROR' | translate }}
+		</mat-error>
+	</mat-form-field>
+	<ng-container *ngIf="form.value.radioButtonOptionSpecialty">
+		<mat-form-field appearance="outline">
+			<mat-select id="healthcare-professional-specialtyId"
+				placeholder="{{'pacientes.edit_license.form_license.SELECT_SPECIALTY'| translate}} "
+				formControlName="healthcareProfessionalSpecialtyId">
+				<mat-option *ngFor="let elem of specialtiesOption" [value]="elem.id">
+					{{elem.name}}
+				</mat-option>
+			</mat-select>
+			<mat-error>
+				{{'pacientes.edit_license.form_license.SPECIALTY_ERROR' | translate }}
+			</mat-error>
+		</mat-form-field>
+	</ng-container>
+
+</form>

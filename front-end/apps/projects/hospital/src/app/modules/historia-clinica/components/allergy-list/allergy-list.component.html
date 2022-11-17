@@ -1,0 +1,15 @@
+<div *ngFor="let alergia of service.getAlergias(); index as i; last as isLast">
+    <div fxLayout="row" fxLayoutAlign="space-between center">
+        <div fxLayout="column">
+            <span>{{ alergia.snomed.pt }}</span>
+            <span *ngIf="alergia?.criticalityId" class="mat-caption"
+                [ngClass]="{'gray-caption' : alergia.criticalityId === 1, 'color-warn': alergia.criticalityId === 2}">
+                {{ service.getDisplayName(alergia.criticalityId) }}
+            </span>
+        </div>
+        <button type=" button" mat-icon-button color="warn" (click)="service.removeAlergia(i)">
+            <mat-icon>delete_outline</mat-icon>
+        </button>
+    </div>
+    <mat-divider class="separation" inset *ngIf="!isLast"></mat-divider>
+</div>

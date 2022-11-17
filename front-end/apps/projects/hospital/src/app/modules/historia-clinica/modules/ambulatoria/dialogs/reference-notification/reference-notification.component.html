@@ -16,10 +16,10 @@
 
             <mat-divider></mat-divider>
 
-            <ng-container>
-                <strong class="dose"
-                    [translate]="'ambulatoria.paciente.reference-notification.REFERENCE_REQUEST'"></strong>
-            </ng-container>
+			<app-colored-label
+				[description]="'ambulatoria.paciente.reference-notification.REFERENCE_REQUEST' | translate | uppercase"
+				[color]="Color.RED">
+			</app-colored-label>
 
             <div class="primary" *ngFor="let problem of reference.problems" fxLayout="row" fxLayoutGap="10px">
                 <mat-icon color="primary">assignment</mat-icon>
@@ -41,7 +41,11 @@
             </div>
 
             <div class="grayText" fxLayout="row" fxLayoutAlign="space-between center" fxFlex="50px">
-                <span>{{reference.professional.firstName}} {{reference.professional.lastName}}</span>
+				<span>
+					{{getFullName(reference.professional.firstName,
+						reference.professional.nameSelfDetermination)}}
+						{{reference.professional.lastName}}
+				</span>
                 <span>{{reference.referenceDate.day}}/{{reference.referenceDate.month}}/{{reference.referenceDate.year}}</span>
             </div>
 
@@ -52,7 +56,7 @@
             </div>
 
         </div>
-        
+
     </mat-dialog-content>
 
     <mat-divider></mat-divider>

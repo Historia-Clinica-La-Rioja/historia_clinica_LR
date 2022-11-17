@@ -9,6 +9,7 @@ import ar.lamansys.sgx.auth.jwt.domain.user.UserInfoStorage;
 import ar.lamansys.sgx.auth.oauth.application.RefreshOAuthToken;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import org.springframework.util.ObjectUtils;
 
 
 @Service
@@ -37,6 +38,9 @@ public class RefreshTokenImpl implements RefreshToken {
 
     @Override
     public JWTokenBo execute(String refreshToken) throws BadRefreshTokenException {
+        if (ObjectUtils.isEmpty(refreshToken)) {
+            throw new BadRefreshTokenException();
+        }
         if (oAuthServiceEnabled) {
             return refreshOAuthToken.run(refreshToken).orElseThrow(BadRefreshTokenException::new);
         }

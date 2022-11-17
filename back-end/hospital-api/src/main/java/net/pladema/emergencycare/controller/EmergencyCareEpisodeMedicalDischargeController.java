@@ -24,9 +24,9 @@ import net.pladema.staff.controller.service.HealthcareProfessionalExternalServic
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
-import javax.transaction.Transactional;
 import java.time.ZoneId;
 import java.util.stream.Collectors;
 
@@ -57,7 +57,7 @@ public class EmergencyCareEpisodeMedicalDischargeController {
 		this.hospitalApiPublisher = hospitalApiPublisher;
 	}
 
-    @Transactional
+    @Transactional // Transaccion compleja
     @PostMapping
     public ResponseEntity<Boolean> newMedicalDischarge(
             @PathVariable(name = "institutionId") Integer institutionId,
@@ -78,7 +78,7 @@ public class EmergencyCareEpisodeMedicalDischargeController {
         MedicalDischargeBo medicalDischargeBo = emergencyCareDischargeMapper.toMedicalDischargeBo(medicalDischargeDto,medicalDischargeBy,patientInfo, episodeId);
         boolean saved = emergencyCareEpisodeDischargeService.newMedicalDischarge(medicalDischargeBo, institutionZoneId, institutionId);
         emergencyCareEpisodeStateService.changeState(episodeId, institutionId, EmergencyCareState.CON_ALTA_MEDICA, null);
-		hospitalApiPublisher.publish(medicalDischargeBo.getPatientId(), EHospitalApiTopicDto.ALTA_MEDICA);
+		hospitalApiPublisher.publish(medicalDischargeBo.getPatientId(), institutionId, EHospitalApiTopicDto.ALTA_MEDICA);
         LOG.debug("Output -> {}", saved);
         return ResponseEntity.ok().body(saved);
     }

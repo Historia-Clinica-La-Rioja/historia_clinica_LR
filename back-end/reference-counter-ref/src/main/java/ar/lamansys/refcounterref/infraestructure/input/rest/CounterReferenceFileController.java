@@ -38,7 +38,6 @@ public class CounterReferenceFileController {
     private final GetCounterReferenceFile getCounterReferenceFile;
 
     @PostMapping(value = "/patient/{patientId}/uploadFile", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    @Transactional
     @ResponseStatus(code = HttpStatus.OK)
     @PreAuthorize("hasPermission(#institutionId, 'ESPECIALISTA_MEDICO, ENFERMERO, PROFESIONAL_DE_SALUD, ESPECIALISTA_EN_ODONTOLOGIA')")
     public Integer uploadFile(@PathVariable(name = "institutionId") Integer institutionId,

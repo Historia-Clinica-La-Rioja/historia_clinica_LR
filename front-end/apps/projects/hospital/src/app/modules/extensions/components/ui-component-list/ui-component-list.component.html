@@ -1,8 +1,3 @@
-
-<div
-	*ngFor="let uiComponent of list"
-	class="row"
-	>
-	<app-ui-component [uiComponent]="uiComponent" ></app-ui-component>
+<div *ngFor="let uiComponent of list" class="row">
+	<app-ui-component [uiComponent]="uiComponent" [listOnTab]="listOnTab"></app-ui-component>
 </div>
-

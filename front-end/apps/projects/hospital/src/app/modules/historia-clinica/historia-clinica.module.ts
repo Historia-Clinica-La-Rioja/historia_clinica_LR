@@ -2,7 +2,6 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 // deps
 import { InstitucionModule } from '../institucion/institucion.module';
-import { LazyMaterialModule } from '../lazy-material/lazy-material.module';
 import { PresentationModule } from '@presentation/presentation.module';
 // components
 import { AlergiasSummaryComponent } from './components/alergias-summary/alergias-summary.component';
@@ -18,6 +17,7 @@ import { MedicacionSummaryComponent } from './components/medicacion-summary/medi
 import { FactoresDeRiesgoSummaryComponent } from './components/factores-de-riesgo-summary/factores-de-riesgo-summary.component';
 import { FactoresDeRiesgoFormComponent } from './components/factores-de-riesgo-form/factores-de-riesgo-form.component';
 import { NewConsultationExpansionSectionComponent } from './components/new-consultation-expansion-section/new-consultation-expansion-section.component';
+import { ProcedureListComponent } from './components/procedure-list/procedure-list.component';
 // dialogs
 import { AddAllergyComponent } from './dialogs/add-allergy/add-allergy.component';
 import { AddAnthropometricComponent } from './dialogs/add-anthropometric/add-anthropometric.component';
@@ -36,6 +36,14 @@ import { NewConsultationAddReasonFormComponent } from './dialogs/new-consultatio
 import { NewConsultationProcedureFormComponent } from './dialogs/new-consultation-procedure-form/new-consultation-procedure-form.component';
 import { NewConsultationAllergyFormComponent } from './dialogs/new-consultation-allergy-form/new-consultation-allergy-form.component';
 import { NewConsultationMedicationFormComponent } from './dialogs/new-consultation-medication-form/new-consultation-medication-form.component';
+import { ReasonListComponent } from './components/reason-list/reason-list.component';
+import { ProblemListComponent } from './components/problem-list/problem-list.component';
+import { AllergyListComponent } from './components/allergy-list/allergy-list.component';
+import { BackgroundListComponent } from './components/background-list/background-list.component';
+import { MedicationListComponent } from './components/medication-list/medication-list.component';
+import { ReferenceRequestListComponent } from './components/reference-request-list/reference-request-list.component';
+import { InternmentSummaryFacadeService } from './modules/ambulatoria/modules/internacion/services/internment-summary-facade.service';
+import { LazyMaterialModule } from '../lazy-material/lazy-material.module';
 
 @NgModule({
 	declarations: [
@@ -55,6 +63,13 @@ import { NewConsultationMedicationFormComponent } from './dialogs/new-consultati
 		ConceptTypeaheadSearchComponent,
 		TemplateConceptTypeaheadSearchComponent,
 		NewConsultationExpansionSectionComponent,
+		ProcedureListComponent,
+		ReasonListComponent,
+		ProblemListComponent,
+		AllergyListComponent,
+		BackgroundListComponent,
+		MedicationListComponent,
+		ReferenceRequestListComponent,
 		// dialogs
 		AddAllergyComponent,
 		AddAnthropometricComponent,
@@ -96,10 +111,20 @@ import { NewConsultationMedicationFormComponent } from './dialogs/new-consultati
 		ConceptTypeaheadSearchComponent,
 		TemplateConceptTypeaheadSearchComponent,
 		NewConsultationExpansionSectionComponent,
+		ProcedureListComponent,
+		ReasonListComponent,
+		ProblemListComponent,
+		AllergyListComponent,
+		BackgroundListComponent,
+		MedicationListComponent,
+		ReferenceRequestListComponent,
 		// dialogs
 		ConceptsSearchDialogComponent,
 		ConceptsTypeaheadSearchDialogComponent,
 		NewConsultationAddProblemFormComponent,
+	],
+	providers: [
+		InternmentSummaryFacadeService
 	]
 })
 export class HistoriaClinicaModule {

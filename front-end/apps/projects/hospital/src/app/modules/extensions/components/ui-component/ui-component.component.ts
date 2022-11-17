@@ -22,6 +22,7 @@ export class UiComponentComponent {
 		typography: 'typography',
 	};
 	@Input() uiComponent: UIComponentDto;
+	@Input() listOnTab: string = null;
 	constructor(
 		private sanitizer: DomSanitizer,
 	) { }

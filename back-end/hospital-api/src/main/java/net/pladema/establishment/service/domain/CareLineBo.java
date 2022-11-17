@@ -5,9 +5,10 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.util.List;
+
 @Getter
 @Setter
-@NoArgsConstructor
 @AllArgsConstructor
 public class CareLineBo {
 
@@ -15,4 +16,10 @@ public class CareLineBo {
 
     private String description;
 
+    private List<ClinicalSpecialtyBo> clinicalSpecialties;
+
+    public CareLineBo (Integer id, String description) {
+    	this.id = id;
+    	this.description = description;
+	}
 }

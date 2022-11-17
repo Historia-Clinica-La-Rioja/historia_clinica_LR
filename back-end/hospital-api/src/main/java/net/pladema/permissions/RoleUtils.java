@@ -1,5 +1,8 @@
 package net.pladema.permissions;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -28,5 +31,19 @@ public class RoleUtils {
 				.min(Integer::compareTo)
 				.orElse(CLAIMS_RANK.size());
 		return loggedUserRank < entityUserRank;
+	}
+
+	public static boolean hasProfessionalRole(List<ERole> roles){
+		return !Collections.disjoint(roles, List.of(ERole.ESPECIALISTA_MEDICO, ERole.ENFERMERO, ERole.ESPECIALISTA_EN_ODONTOLOGIA, ERole.PROFESIONAL_DE_SALUD));
+	}
+
+	public static List<Short> getProfessionalERoleIds() {
+		List<Short> professionalRolIds = new ArrayList<>();
+		for(ERole e : ERole.values()) {
+			String rol = e.getValue();
+			if (rol.equals(ERole.PROFESIONAL_DE_SALUD.getValue()) || rol.equals(ERole.ENFERMERO.getValue()) || rol.equals(ERole.ESPECIALISTA_MEDICO.getValue()) || rol.equals(ERole.ESPECIALISTA_EN_ODONTOLOGIA.getValue()))
+				professionalRolIds.add(e.getId());
+		}
+		return professionalRolIds;
 	}
 }

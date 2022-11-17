@@ -77,9 +77,17 @@ public class AppointmentExternalServiceImpl implements AppointmentExternalServic
 	}
 
 	@Override
-	public boolean hasConfirmedAppointment(Integer patientId, Integer healthProfessionalId, LocalDate date) {
+	public boolean hasCurrentAppointment(Integer patientId, Integer healthProfessionalId, LocalDate date) {
 		log.debug("Input parameters -> patientId {}, healthProfessionalId {}, date {}", patientId, healthProfessionalId, date);
-		boolean result = appointmentService.hasConfirmedAppointment(patientId, healthProfessionalId, date);
+		boolean result = appointmentService.hasCurrentAppointment(patientId, healthProfessionalId, date);
+		log.debug(OUTPUT, result);
+		return result;
+	}
+
+	@Override
+	public boolean hasOldAppointment(Integer patientId, Integer healthProfessionalId) {
+		log.debug("Input parameters -> patientId {}, healthProfessionalId {}", patientId, healthProfessionalId);
+		boolean result = appointmentService.hasOldAppointment(patientId, healthProfessionalId);
 		log.debug(OUTPUT, result);
 		return result;
 	}
@@ -87,7 +95,12 @@ public class AppointmentExternalServiceImpl implements AppointmentExternalServic
 	@Override
 	public Integer serveAppointment(Integer patientId, Integer healthcareProfessionalId, LocalDate date) {
 		log.debug("Input parameters -> patientId {}, healthcareProfessionalId {}, date {}", patientId, healthcareProfessionalId, date);
-		Integer appointmentId = appointmentService.getAppointmentsId(patientId, healthcareProfessionalId, date).get(0);
+		Integer appointmentId;
+		List<Integer> currentsAppointments = appointmentService.getAppointmentsId(patientId, healthcareProfessionalId, date);
+			if(!currentsAppointments.isEmpty())
+				appointmentId = currentsAppointments.get(0);
+			else
+				appointmentId = appointmentService.getOldAppointments(patientId, healthcareProfessionalId).get(0);
 		appointmentService.updateState(appointmentId, AppointmentState.SERVED, UserInfo.getCurrentAuditor(), null);
 		log.debug(OUTPUT, Boolean.TRUE);
 		return appointmentId;

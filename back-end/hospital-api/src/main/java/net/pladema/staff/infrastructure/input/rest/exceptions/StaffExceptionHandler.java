@@ -1,8 +1,8 @@
 package net.pladema.staff.infrastructure.input.rest.exceptions;
 
 import ar.lamansys.sgx.shared.exceptions.dto.ApiErrorMessageDto;
-import net.pladema.staff.application.createprofessional.exceptions.CreateHealthcareProfessionalSpecialtyException;
-import net.pladema.staff.application.updatehealthcareprofessional.exceptions.UpdateHealthcareProfessionalException;
+import net.pladema.staff.application.saveprofessional.exceptions.CreateHealthcareProfessionalSpecialtyException;
+import net.pladema.staff.application.saveprofessionallicensesnumber.exceptions.SaveProfessionalLicensesNumberException;
 import net.pladema.staff.service.exceptions.HealthcareProfessionalException;
 import net.pladema.staff.service.exceptions.HealthcareProfessionalSpecialtyException;
 import org.slf4j.Logger;
@@ -43,11 +43,12 @@ public class StaffExceptionHandler {
         return new ApiErrorMessageDto(ex.getCode().name(), ex.getMessage());
     }
 
-    @ResponseStatus(HttpStatus.PRECONDITION_FAILED)
-    @ExceptionHandler({ UpdateHealthcareProfessionalException.class })
-    protected ApiErrorMessageDto handleUpdateHealthcareProfessionalException(UpdateHealthcareProfessionalException ex, Locale locale) {
-        LOG.debug("InputValidationException exception -> {}", ex.getMessage());
-        return new ApiErrorMessageDto(ex.getCode().name(), ex.getMessage());
-    }
+	@ResponseStatus(HttpStatus.PRECONDITION_FAILED)
+	@ExceptionHandler({SaveProfessionalLicensesNumberException.class })
+	protected ApiErrorMessageDto handleSaveProfessionalLicensesNumberException(SaveProfessionalLicensesNumberException ex, Locale locale) {
+		LOG.debug("InputValidationException exception -> {}", ex.getMessage());
+		return new ApiErrorMessageDto(ex.getCode().name(), ex.getMessage());
+	}
+
 }
 

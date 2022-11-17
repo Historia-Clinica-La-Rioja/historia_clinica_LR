@@ -1,0 +1,285 @@
+databaseChangeLog: 
+    - logicalFilePath: incrementales-v1_44
+
+    - changeSet:
+        id: care_line_institution-createTable
+        comment: Create table care_line_institution
+        author: tcepeda
+        changes:
+          - createTable:
+              tableName: care_line_institution
+              columns:
+                - column:
+                    autoIncrement: true
+                    constraints:
+                      primaryKey: true
+                      primaryKeyName: PK_care_line_institution
+                    name: id
+                    type: int
+                - column:
+                    constraints:
+                      nullable: false
+                    name: care_line_id
+                    type: int
+                - column:
+                    constraints:
+                      nullable: false
+                    name: institution_id
+                    type: int
+                - column:
+                    constraints:
+                      nullable: false
+                    name: deleted
+                    type: boolean
+                    defaultValue: ${boolean.false}
+                - addForeignKeyConstraint:
+                    baseColumnNames: care_line_id
+                    baseTableName: care_line_institution
+                    constraintName: FK_care_line_institution_care_line_id
+                    onDelete: NO ACTION
+                    onUpdate: NO ACTION
+                    referencedColumnNames: id
+                    referencedTableName: care_line
+                    validate: true
+                - addForeignKeyConstraint:
+                    baseColumnNames: institution_id
+                    baseTableName: care_line_institution
+                    constraintName: FK_care_line_institution_institution_id
+                    onDelete: NO ACTION
+                    onUpdate: NO ACTION
+                    referencedColumnNames: id
+                    referencedTableName: institution
+                    validate: true
+
+    - changeSet:
+        id: care_line_institution_specialty-createTable
+        comment: Create table care_line_institution_specialty
+        author: tcepeda
+        changes:
+          - createTable:
+              tableName: care_line_institution_specialty
+              columns:
+                - column:
+                    autoIncrement: true
+                    constraints:
+                      primaryKey: true
+                      primaryKeyName: PK_care_line_institution_specialty
+                    name: id
+                    type: int
+                - column:
+                    constraints:
+                        nullable: false
+                    name: care_line_institution_id
+                    type: int
+                - column:
+                    constraints:
+                      nullable: false
+                    name: clinical_specialty_id
+                    type: int
+                - addForeignKeyConstraint:
+                    baseColumnNames: care_line_institution_id
+                    baseTableName: care_line_institution_specialty
+                    constraintName: FK_care_line_institution_specialty_care_line_institution_id
+                    onDelete: NO ACTION
+                    onUpdate: NO ACTION
+                    referencedColumnNames: id
+                    referencedTableName: care_line_institution
+                    validate: true
+                - addForeignKeyConstraint:
+                    baseColumnNames: clinical_specialty_id
+                    baseTableName: care_line_institution_specialty
+                    constraintName: FK_care_line_institution_specialty_clinical_specialty_id
+                    onDelete: NO ACTION
+                    onUpdate: NO ACTION
+                    referencedColumnNames: id
+                    referencedTableName: clinical_specialty
+                    validate: true
+
+    - changeSet:
+        id: care_line_institution_practice-createTable
+        comment: Create table care_line_institution_practice
+        author: tcepeda
+        changes:
+          - createTable:
+              tableName: care_line_institution_practice
+              columns:
+                - column:
+                    autoIncrement: true
+                    constraints:
+                      primaryKey: true
+                      primaryKeyName: PK_care_line_institution_practice
+                    name: id
+                    type: int
+                - column:
+                    constraints:
+                      nullable: false
+                    name: care_line_institution_id
+                    type: int
+                - column:
+                    constraints:
+                      nullable: false
+                    name: snomed_related_group_id
+                    type: int
+                - addForeignKeyConstraint:
+                    baseColumnNames: care_line_institution_id
+                    baseTableName: care_line_institution_practice
+                    constraintName: FK_care_line_institution_practice_care_line_institution_id
+                    onDelete: NO ACTION
+                    onUpdate: NO ACTION
+                    referencedColumnNames: id
+                    referencedTableName: care_line_institution
+                    validate: true
+                - addForeignKeyConstraint:
+                    baseColumnNames: snomed_related_group_id
+                    baseTableName: care_line_institution_practice
+                    constraintName: FK_care_line_institution_practice_snomed_related_group_id
+                    onDelete: NO ACTION
+                    onUpdate: NO ACTION
+                    referencedColumnNames: id
+                    referencedTableName: snomed_related_group
+                    validate: true
+
+    - changeSet:
+        id: createView-v_practice_institution
+        comment: Create view v_practice_institution
+        author: tcepeda
+        changes:
+          - createView:
+              viewName: v_practice_institution
+              fullDefinition: false
+              replaceIfExists: true
+              selectQuery: |-
+                SELECT srg.id AS id, sg.institution_id, s.pt 
+                FROM snomed_related_group srg
+                JOIN snomed_group sg ON (srg.group_id = sg.id)
+                JOIN snomed s ON (srg.snomed_id = s.id)
+                WHERE sg.group_id = 16
+                AND sg.group_type = 3
+
+    - changeSet:
+        id: createView-v_clinical_specialty_institution
+        comment: Create view v_clinical_specialty_institution
+        author: tcepeda
+        changes:
+          - createView:
+              viewName: v_clinical_specialty_institution
+              fullDefinition: false
+              replaceIfExists: true
+              selectQuery: |-
+                SELECT DISTINCT cs.id, cl.id as care_line_id, ur.institution_id, cs.name as clinical_specialty_name
+                FROM healthcare_professional hp
+                JOIN person p ON (hp.person_id = p.id)
+                JOIN user_person up ON (up.person_id = p.id)
+                JOIN user_role ur ON (ur.user_id = up.user_id)
+                JOIN professional_professions pp ON (hp.id = pp.healthcare_professional_id)
+                JOIN healthcare_professional_specialty hps ON (pp.id  = hps.professional_profession_id)
+                JOIN clinical_specialty cs ON (hps.clinical_specialty_id = cs.id)
+                JOIN care_line_clinical_specialty clcs ON (clcs.clinical_specialty_id = cs.id)
+                JOIN care_line cl ON (cl.id = clcs.care_line_id)
+                WHERE hps.deleted = false
+                GROUP BY cs.id, cl.id, ur.institution_id, cs.name
+
+    - changeSet:
+        id: diary_care_line-createTable
+        comment: Create table diary_care_line
+        author: bchacon
+        changes:
+          - createTable:
+              tableName: diary_care_line
+              columns:
+                - column:
+                    name: diary_id
+                    type: int
+                - column:
+                    name: care_line_id
+                    type: int
+                - column:
+                    constraints:
+                      nullable: false
+                    name: created_by
+                    type: int
+                    defaultValue: -1
+                - column:
+                    constraints:
+                      nullable: false
+                    name: created_on
+                    type: datetime
+                    defaultValueDate: ${date.now}
+                - column:
+                    constraints:
+                      nullable: false
+                    name: updated_by
+                    type: int
+                    defaultValue: -1
+                - column:
+                    constraints:
+                      nullable: false
+                    name: updated_on
+                    type: datetime
+                    defaultValueDate: ${date.now}
+                - column:
+                    constraints:
+                      nullable: false
+                    name: deleted
+                    type: BOOLEAN
+                    defaultValue: ${boolean.false}
+                - column:
+                    name: deleted_by
+                    type: int
+                - column:
+                    name: deleted_on
+                    type: datetime
+          - addForeignKeyConstraint:
+              baseColumnNames: diary_id
+              baseTableName: diary_care_line
+              constraintName: FK_diary_care_line_diary_id
+              onDelete: NO ACTION
+              onUpdate: NO ACTION
+              referencedColumnNames: id
+              referencedTableName: diary
+              validate: true
+          - addForeignKeyConstraint:
+              baseColumnNames: care_line_id
+              baseTableName: diary_care_line
+              constraintName: FK_diary_care_line_care_line_id
+              onDelete: NO ACTION
+              onUpdate: NO ACTION
+              referencedColumnNames: id
+              referencedTableName: care_line
+              validate: true
+          - addPrimaryKey:
+              clustered: true
+              columnNames: diary_id, care_line_id
+              constraintName: PK_diary_care_line
+              tableName: diary_care_line
+              validate: true
+
+    - changeSet:
+        id: addColumn-protected_appointments_percentage-diary
+        comment: Add column protected_appointments_percentage to diary table
+        author: bchacon
+        changes:
+          - addColumn:
+              tableName: diary
+              columns:
+                - column:
+                    name: protected_appointments_percentage
+                    type: smallint
+
+    - changeSet:
+        id: updateView-v_practice_institution
+        comment: Update view v_practice_institution
+        author: tcepeda
+        changes:
+          - createView:
+              viewName: v_practice_institution
+              fullDefinition: false
+              replaceIfExists: true
+              selectQuery: |-
+                SELECT srg.id AS id, sg.institution_id, s.pt 
+                FROM snomed_related_group srg
+                JOIN snomed_group sg ON (srg.group_id = sg.id)
+                JOIN snomed_group sg2 on (sg2.id = sg.group_id)
+                JOIN snomed s ON (srg.snomed_id = s.id)
+                WHERE sg2.description = 'PROCEDURE'
+                AND sg.group_type = 3

@@ -30,21 +30,23 @@ export class PwaUpdateService {
 			this.checkForUpdate();
 		});
 
-		updates.available.subscribe(_ => {
-			// console.log('SW updates.available', event);
-			updates.activateUpdate().then(() => {
-				// console.log('SW activateUpdate');
-				this.updateSubject.next({ run: () => document.location.reload() });
+		updates.available.subscribe(event => {
+			console.log('New App version available', event);
+			this.updateSubject.next({
+				run: () => {
+					updates.activateUpdate().then(() => document.location.reload());
+				}
 			});
 		});
 	}
 
 	checkForUpdate() {
-		if (this.updates.isEnabled) {
-			this.updates.checkForUpdate();
-		} else {
-			console.warn('Service Worker not enabled');
+		if (!this.updates.isEnabled) {
+			console.warn('checkForUpdate: Service Worker not enabled');
+			return;
 		}
+		console.debug('Checking App version');
+		this.updates.checkForUpdate();
 	}
 
 }

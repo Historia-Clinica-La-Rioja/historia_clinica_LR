@@ -1,0 +1,40 @@
+<mat-card id="card">
+	<div id="content-card" *ngFor="let patient of pageSlice;last as isLast">
+		<app-card id="patient" [cardContent]="patient">
+			<div id="content-patient" gdAreas="id dni gender date ranking" fxLayoutAlign="space-around start"
+			gdAreas.lt-sm=" id dni dni | gender date ranking" gdRows.lt-sm="auto auto" gdGap.gt-xs="16px">
+
+				<div id="id" gdArea="id">
+					<span>{{'ambulatoria.card-patient.ID' | translate}} {{ patient.id}}</span>
+				</div>
+
+				<div id="dni" gdArea="dni">
+					<span> {{'ambulatoria.card-patient.DNI' | translate}} {{patient.dni}}</span>
+				</div>
+
+				<div id="gender" gdArea="gender" fxLayout.lt-sm="column">
+					<span> {{patient.gender}}</span>
+				</div>
+
+				<div  id="date" gdArea="date"  fxLayout="column">
+					<span>{{'ambulatoria.card-patient.BIRTHDAY_DATE' | translate}} </span>
+					<span>{{patient.date}}</span>
+				</div>
+
+				<div id="ranking" *ngIf="patient?.ranking" fxLayout="column" gdArea="ranking" fxLayoutAlign="center center" class="color-primary">
+					<span class="percentage">{{patient.ranking}}% </span>
+					<span class="ranking"> {{ 'ambulatoria.card-patient.COINCIDENCE' | translate}}</span>
+				</div>
+
+			</div>
+		</app-card>
+		<mat-divider *ngIf="!isLast" insert class="divider"></mat-divider>
+	</div>
+
+	<mat-divider [hidden]="patientContent?.length"></mat-divider>
+
+	<mat-paginator *ngIf="(patientContent?.length !== 0)" [length]="numberOfPatients"
+		[pageSizeOptions]="pageSizeOptions" (page)="onPageChange($event)" showFirstLastButtons>
+	</mat-paginator>
+
+</mat-card>

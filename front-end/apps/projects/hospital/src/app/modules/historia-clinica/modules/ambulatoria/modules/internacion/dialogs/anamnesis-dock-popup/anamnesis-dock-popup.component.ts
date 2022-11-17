@@ -25,8 +25,9 @@ import { OVERLAY_DATA } from "@presentation/presentation-model";
 import { ViewChild, ElementRef } from "@angular/core";
 import { FactoresDeRiesgoFormService } from '@historia-clinica/services/factores-de-riesgo-form.service';
 import { dateToMoment } from "@core/utils/moment.utils";
-import { EditDocumentActionService } from "@historia-clinica/modules/ambulatoria/modules/internacion/services/edit-document-action.service";
 import { TranslateService } from '@ngx-translate/core';
+import { DocumentActionReasonComponent } from '../document-action-reason/document-action-reason.component';
+import { MatDialog } from '@angular/material/dialog';
 
 @Component({
 	selector: 'app-anamnesis-dock-popup',
@@ -68,8 +69,8 @@ export class AnamnesisDockPopupComponent implements OnInit {
 		private readonly anamnesisService: AnamnesisService,
 		private readonly snackBarService: SnackBarService,
 		private readonly snomedService: SnomedService,
-		private readonly editDocumentAction: EditDocumentActionService,
-		private readonly translateService: TranslateService
+		private readonly translateService: TranslateService,
+		private readonly dialog: MatDialog,
 	) {
 		this.mainDiagnosis = data.mainDiagnosis;
 		this.diagnosticos = data.diagnosticos;
@@ -123,14 +124,7 @@ export class AnamnesisDockPopupComponent implements OnInit {
 
 			const anamnesis: AnamnesisDto = this.buildAnamnesisDto();
 			if (this.data.patientInfo.anamnesisId) {
-				this.editDocumentAction.openEditReason().subscribe(reason => {
-					if (reason) {
-						anamnesis.modificationReason = reason;
-						this.anamnesisService.editAnamnesis(anamnesis, this.data.patientInfo.anamnesisId, this.data.patientInfo.internmentEpisodeId).subscribe(success => {
-							this.showSuccesAndClosePopup(anamnesis);
-						}, responseErrors => this.showError(responseErrors));
-					}
-				});
+				this.openEditReason(anamnesis);				
 				return;
 			}
 			this.anamnesisService.createAnamnesis(anamnesis, this.data.patientInfo.internmentEpisodeId)
@@ -281,5 +275,25 @@ export class AnamnesisDockPopupComponent implements OnInit {
 		this.isDisableConfirmButton = false;
 		this.apiErrorsProcess(responseErrors);
 		this.snackBarService.showError('internaciones.anamnesis.messages.ERROR');
+	}
+
+	private openEditReason(anamnesis: AnamnesisDto) {
+		const dialogRef = this.dialog.open(DocumentActionReasonComponent, {
+			data: {
+				title: 'internaciones.dialogs.actions-document.EDIT_TITLE',
+				subtitle: 'internaciones.dialogs.actions-document.SUBTITLE',
+			},
+			width: "50vh",
+			autoFocus: false,
+			disableClose: true
+		});
+		dialogRef.afterClosed().subscribe(reason => {
+			if (reason) {
+				anamnesis.modificationReason = reason;
+				this.anamnesisService.editAnamnesis(anamnesis, this.data.patientInfo.anamnesisId, this.data.patientInfo.internmentEpisodeId).subscribe(success => {
+					this.showSuccesAndClosePopup(anamnesis);
+				}, responseErrors => this.showError(responseErrors));
+			}
+		});
 	}
 }

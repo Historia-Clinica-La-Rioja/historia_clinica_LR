@@ -1,15 +1,16 @@
 import { Injectable } from '@angular/core';
-import { DateTimeDto, DocumentSearchDto, LoggedUserDto } from "@api-rest/api-model";
+import { DateTimeDto, DocumentSearchDto, LoggedUserDto, PatientDischargeDto } from "@api-rest/api-model";
 import { differenceInHours } from "date-fns";
 import { AccountService } from "@api-rest/services/account.service";
-import { InternmentSummaryFacadeService } from "@historia-clinica/modules/ambulatoria/modules/internacion/services/internment-summary-facade.service";
 import { dateTimeDtoToDate, dateTimeDtoToStringDate } from "@api-rest/mapper/date-dto.mapper";
 import { DeleteDocumentActionService } from "@historia-clinica/modules/ambulatoria/modules/internacion/services/delete-document-action.service";
 import { EditDocumentActionService } from './edit-document-action.service';
+import { InternmentEpisodeService } from '@api-rest/services/internment-episode.service';
+import { Observable } from 'rxjs';
+import { InternmentFields } from './internment-summary-facade.service';
+import { InternmentActionsService } from './internment-actions.service';
 
-@Injectable({
-	providedIn: 'root'
-})
+@Injectable()
 export class DocumentActionsService {
 
 	patientDocument: PatientDocument;
@@ -19,15 +20,24 @@ export class DocumentActionsService {
 
 	constructor(
 		private readonly accountService: AccountService,
-		private readonly internmentSummaryFacadeService: InternmentSummaryFacadeService,
 		private readonly deleteDocumentAction: DeleteDocumentActionService,
 		private readonly editDocumentAction: EditDocumentActionService,
-	) { }
+		private readonly internmentEpisodeService: InternmentEpisodeService,
+		readonly internmentActions: InternmentActionsService
+	) { 
+		this.internmentActions.medicalDischarge$.subscribe(medicalDischarge => {
+			if (medicalDischarge) 
+				this.hasMedicalDischarge = true;
+		});
+	}
 
 	setInformation(patientId: number, internmentEpisodeId: number) {
 		this.accountService.getInfo().subscribe((loggedUser: LoggedUserDto) => this.userId = loggedUser.id);
-		this.internmentSummaryFacadeService.hasMedicalDischarge$.subscribe(m => this.hasMedicalDischarge = m);
-		this.internmentSummaryFacadeService.hasPhysicalDischarge$.subscribe(p => this.hasPhysicalDischarge = p);
+		this.internmentEpisodeService.getPatientDischarge(internmentEpisodeId)
+			.subscribe((patientDischarge: PatientDischargeDto) => {
+				this.hasMedicalDischarge = !!patientDischarge.medicalDischargeDate;
+				this.hasPhysicalDischarge = !!patientDischarge.physicalDischargeDate;
+			});
 		this.editDocumentAction.setInformation(patientId, internmentEpisodeId);
 	}
 
@@ -84,8 +94,9 @@ export class DocumentActionsService {
 		return `${date.getDate()}/${date.getMonth() + 1}/${date.getFullYear()} - ${date.getHours()}:${minutes}hs`;
 	}
 
-	deleteDocument(document: DocumentSearchDto, internmentEpisodeId: number) {
+	deleteDocument(document: DocumentSearchDto, internmentEpisodeId: number): Observable<InternmentFields> {
 		this.deleteDocumentAction.delete(document, internmentEpisodeId);
+		return this.deleteDocumentAction.updateFields$;
 	}
 
 	editDocument(document: DocumentSearchDto) {
@@ -93,7 +104,7 @@ export class DocumentActionsService {
 	}
 
 	editEpicrisisDraft(document: DocumentSearchDto) {
-		this.editDocumentAction.editDraftEpicrisis(document,this.isCreatorDocumnt(document));
+		this.editDocumentAction.editDraftEpicrisis(document, this.isCreatorDocumnt(document));
 	}
 
 }

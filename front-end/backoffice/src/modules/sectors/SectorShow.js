@@ -101,6 +101,7 @@ const ShowServiceSectorData = ({ record }) => {
                     record={ record }
                 />
                 <ReferenceManyField
+                    id='clinical-service-sectors'
                     addLabel={false}
                     reference="clinicalservicesectors"
                     target="sectorId"
@@ -120,6 +121,7 @@ const ShowServiceSectorData = ({ record }) => {
         <>
             <SectionTitle label="resources.clinicalservicesectors.name"/>
             <ReferenceManyField
+                    id='clinical-service-sectors'
                     addLabel={false}
                     reference="clinicalservicesectors"
                     target="sectorId"
@@ -158,6 +160,7 @@ const SectorShow = props => (
             <SectionTitle label="resources.sectors.fields.childSectors" />
             <CreateSector />
             <ReferenceManyField
+                id='child-sectors'
                 addLabel={false}
                 reference="sectors"
                 target= { "sectorId" }
@@ -175,6 +178,7 @@ const SectorShow = props => (
             <SectionTitle label="resources.clinicalspecialtysectors.fields.doctorsoffices"/>
             <CreateDoctorsOffice />
             <ReferenceManyField
+                id='doctors-offices'
                 addLabel={false}
                 reference="doctorsoffices"
                 target="sectorId"
@@ -192,6 +196,7 @@ const SectorShow = props => (
             <SectionTitle label="resources.clinicalspecialtysectors.fields.rooms"/>
             <CreateRooms/>
             <ReferenceManyField
+                id='rooms'
                 addLabel={false}
                 reference="rooms"
                 target="sectorId"

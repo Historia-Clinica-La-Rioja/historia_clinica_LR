@@ -12,12 +12,11 @@ import java.time.LocalDate;
 @ToString
 public final class ActivitySearchFilter {
 
-    @NotNull
-    private final String refsetCode;
-    private final String provinceCode;
-    private final String identificationNumber;
-    private final LocalDate from;
-    private final LocalDate to;
-    private final Boolean reprocessing;
-    private final String coverageCuit;
+	@NotNull
+	private final String refsetCode;
+	private final String identificationNumber;
+	private final LocalDate from;
+	private final LocalDate to;
+	private final Boolean reprocessing;
+	private final String coverageCuit;
 }

@@ -106,6 +106,14 @@ const messages = {
         dialog_title: 'Unificar coberturas médicas',
     },
     resources: {
+        wcDefinitionPath: {
+            name: 'Extension |||| Extensiones',
+            fields: {
+                name: 'Nombre',
+                path: 'Ruta'
+            },
+            createRelated: 'Crear wc'
+        },
         beds: {
             name: 'Cama |||| Camas',
             fields: {
@@ -495,7 +503,8 @@ const messages = {
                 userId: 'Usuario',
                 template: 'Plantilla',
                 lastUpdate: 'Última actualización',
-                snomedConcepts: "Conceptos de Snomed"
+                snomedConcepts: "Conceptos de Snomed",
+                groupType: "Tipo de grupo",
             },
             createRelated: 'Agregar concepto Snomed',
             noInfo: 'Sin información',
@@ -578,6 +587,88 @@ const messages = {
                 mandatoryMedicalPracticeId: 'PMO',
             }
         },
+        holidays: {
+            name: 'Feriado |||| Feriados',
+            fields: {
+                date: 'Fecha',
+                description: 'Descripción',
+            }
+        },
+        carelineproblems: {
+            name: 'Problemas',
+            fields: {
+                careLineId: 'Línea de cuidado',
+                snomedId: 'Problema',
+                conceptSctid: 'sctid',
+                pt: 'pt',
+            },
+            addRelated: 'Agregar problema',
+        },
+        carelineinstitution: {
+            name: 'Adhesión a Línea de cuidado',
+            fields: {
+                institutionId: 'Institución',
+                careLineId: 'Línea de cuidado',
+                newspecialty: 'Agregar Especialidad',
+                newpractice: 'Agregar Práctica',
+                specialtys: 'Especialidades',
+                practices: 'Prácticas',
+                specialty: 'Especialidad',
+                practice: 'Práctica',
+            }
+        },
+        carelineinstitutionspecialty: {
+            name: 'Especialidad de adhesión a Línea de cuidado',
+            fields: {
+                institutionId: 'Institución',
+                careLineId: 'Línea de cuidado',
+                clinicalSpecialtyId: 'Especialidad',
+                newspecialty: 'Nueva Especialidad',
+            }
+        },
+        carelineinstitutionpractice: {
+            name: 'Práctica de adhesión a Línea de cuidado',
+            fields: {
+                institutionId: 'Institución',
+                careLineId: 'Línea de cuidado',
+                snomedRelatedGroupId: 'Práctica',
+                newpractice: 'Nueva Práctica',
+            }
+        },
+        institutionpractices: {
+            name: 'Grupo de prácticas |||| Grupos de prácticas',
+            fields: {
+                id: 'ID',
+                description: 'Descripción',
+                ecl: 'ECL',
+                customId: 'ID custom',
+                groupId: 'Grupo padre',
+                institutionId: 'Institución',
+                userId: 'Usuario',
+                template: 'Plantilla',
+                lastUpdate: 'Última actualización',
+                snomedConcepts: "Prácticas",
+                groupType: "Tipo de grupo",
+            },
+            createRelated: 'Agregar práctica',
+            noInfo: 'Sin información',
+        },
+        institutionpracticesrelatedgroups: {
+            name: 'Práctica | Grupo de prácticas',
+            fields: {
+                orden: 'Orden',
+                lastUpdate: 'Última actualización',
+                groupId: 'Grupo de prácticas',
+                snomedId: 'Práctica'
+            },
+        },
+        snowstormproblems: {
+            name: 'Concepto Snowstorm',
+            fields: {
+                conceptId: 'Id Concepto',
+                term: 'Descripción',
+            }
+        }
     }
 };
 

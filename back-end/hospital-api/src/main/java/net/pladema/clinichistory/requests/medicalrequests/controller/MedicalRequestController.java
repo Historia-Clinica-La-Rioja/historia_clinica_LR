@@ -15,7 +15,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
-import javax.transaction.Transactional;
 import javax.validation.Valid;
 import java.util.List;
 
@@ -41,7 +40,6 @@ public class MedicalRequestController {
 
     @PostMapping
     @ResponseStatus(code = HttpStatus.CREATED)
-    @Transactional
     public @ResponseBody
     Integer create(@PathVariable(name = "institutionId") Integer institutionId,
                    @PathVariable(name = "patientId") Integer patientId,
@@ -74,7 +72,6 @@ public class MedicalRequestController {
 
     @PutMapping(value = "/{medicalRequestId}")
     @ResponseStatus(code = HttpStatus.OK)
-    @Transactional
     public void finalize(@PathVariable(name = "institutionId") Integer institutionId,
                          @PathVariable(name = "patientId") Integer patientId,
                          @PathVariable(name = "medicalRequestId") Integer medicalRequestId) {

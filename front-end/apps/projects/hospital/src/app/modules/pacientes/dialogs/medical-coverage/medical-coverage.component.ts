@@ -14,6 +14,10 @@ import { EPatientMedicalCoverageCondition } from '@api-rest/api-model';
 import { HealthInsuranceComponent } from "@pacientes/dialogs/health-insurance/health-insurance.component";
 import { PrivateHealthInsuranceComponent } from "@pacientes/dialogs/private-health-insurance/private-health-insurance.component";
 import { ArtComponent } from "@pacientes/dialogs/art/art.component";
+import { map } from "rxjs/operators";
+import { PatientMedicalCoverageService } from "@api-rest/services/patient-medical-coverage.service";
+import { MapperService } from "@core/services/mapper.service";
+import { pushIfNotExists } from '@core/utils/array.utils';
 
 const DNI_TYPE_ID = 1;
 @Component({
@@ -37,19 +41,21 @@ export class MedicalCoverageComponent implements OnInit {
 			genderId: number;
 			identificationNumber: string;
 			identificationTypeId: number;
-			initValues: PatientMedicalCoverage[]
+			patientId: number;
+			initValues:  PatientMedicalCoverage[];
 		},
-		private readonly dialog: MatDialog
+		private readonly dialog: MatDialog,
+		private readonly patientMedicalCoverageService: PatientMedicalCoverageService,
+		private readonly mapperService: MapperService
 	) {
 		this.patientMedicalCoverages = this.personInfo.initValues ? this.personInfo.initValues : [];
 	}
 
 
 	ngOnInit(): void {
-
 		this.healthInsuranceService.getAll().subscribe((values: MedicalCoverageDto[]) => {
 			this.healthInsuranceMasterData = values;
-
+			this.personInfo?.patientId ? this.setPatientMedicalCoverages() : this.patientMedicalCoverages = [];
 			if (this.personInfo.identificationTypeId === DNI_TYPE_ID && this.personInfo.genderId) {
 				this.renaperService.getHealthInsurance
 					({ genderId: this.personInfo.genderId, identificationNumber: this.personInfo.identificationNumber })
@@ -66,7 +72,6 @@ export class MedicalCoverageComponent implements OnInit {
 							});
 						}
 						this.loading = false;
-
 					}, _ => this.loading = false);
 			} else {
 				this.loading = false;
@@ -74,6 +79,26 @@ export class MedicalCoverageComponent implements OnInit {
 		}
 		);
 
+	}
+
+	private setPatientMedicalCoverages(): void {
+		this.patientMedicalCoverageService.getActivePatientMedicalCoverages(this.personInfo.patientId)
+			.pipe(
+				map(
+					patientMedicalCoveragesDto =>
+						patientMedicalCoveragesDto.map(s => this.mapperService.toPatientMedicalCoverage(s))
+				)
+			)
+			.subscribe((patientMedicalCoverages: PatientMedicalCoverage[]) =>
+				patientMedicalCoverages.forEach(item=>{
+				this.patientMedicalCoverages = pushIfNotExists<PatientMedicalCoverage>(this.patientMedicalCoverages, item, this.compareMedicalCorevage);
+				})
+
+			);
+	}
+
+	private compareMedicalCorevage(a1: PatientMedicalCoverage, a2: PatientMedicalCoverage): boolean {
+		return a1.id === a2.id;
 	}
 
 	getFullHealthInsuranceText(healthInsurance: MedicalCoverageDto): string {

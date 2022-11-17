@@ -13,4 +13,8 @@ public interface ClinicalSpecialtyService {
 
     List<ClinicalSpecialtyBo> getAll();
 
+	List<ClinicalSpecialtyBo> getAllByInstitutionIdAndActiveDiaries(Integer institutionId);
+
+	List<ClinicalSpecialtyBo> getClinicalSpecialtiesByCareLineIdAndDestinationIntitutionId(Integer careLineId, Integer destinationInstitutionId);
+
 }

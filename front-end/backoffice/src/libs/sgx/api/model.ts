@@ -3,6 +3,11 @@ export interface JWTokenDto {
     refreshToken: string;
 }
 
+export interface GetListResponse {
+    content: any;
+    totalElements: any;
+}
+
 export interface LoggedUserDto {
     id: number;
     email: string;

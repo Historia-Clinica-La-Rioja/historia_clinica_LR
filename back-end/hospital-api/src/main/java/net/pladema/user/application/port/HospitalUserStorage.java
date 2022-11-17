@@ -20,5 +20,5 @@ public interface HospitalUserStorage {
     PersonDataBo getPersonDataBoByUserId(Integer userId);
 	Optional<Integer> fetchUserIdFromNormalToken(String token);
 	void resetTwoFactorAuthentication(Integer userId);
-
+	boolean hasProfessionalRole(Integer userId);
 }

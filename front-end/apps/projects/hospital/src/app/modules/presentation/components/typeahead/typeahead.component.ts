@@ -12,6 +12,7 @@ export class TypeaheadComponent implements OnInit, OnChanges {
 
 	@Input() options: TypeaheadOption<any>[] = [];
 	@Input() placeholder: string;
+	@Input() titleInput: string = ' ';
 	@Input() externalSetValue: TypeaheadOption<any>;
 	@Output() selectionChange = new EventEmitter();
 
@@ -19,7 +20,8 @@ export class TypeaheadComponent implements OnInit, OnChanges {
 	optionsFiltered: TypeaheadOption<any>[];
 	optionSelected: TypeaheadOption<any>;
 
-	constructor(private readonly formBuilder: FormBuilder) {
+	constructor(private readonly formBuilder: FormBuilder,
+	) {
 		this.form = this.formBuilder.group({
 			searchValue: [null]
 		});
@@ -41,6 +43,9 @@ export class TypeaheadComponent implements OnInit, OnChanges {
 		if (this.options) {
 			this.form.controls.searchValue.setValue(this.externalSetValue?.compareValue);
 			this.optionSelected = this.externalSetValue;
+			if (this.externalSetValue) {
+				this.selectionChange.emit(this.optionSelected?.value);
+			}
 		}
 
 		if (this.optionSelected && this.optionsNotIncludesSelected()) {

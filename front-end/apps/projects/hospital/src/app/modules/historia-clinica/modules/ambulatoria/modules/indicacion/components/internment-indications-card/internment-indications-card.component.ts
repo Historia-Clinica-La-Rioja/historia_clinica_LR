@@ -60,15 +60,6 @@ export class InternmentIndicationsCardComponent implements OnInit {
 		this.healthcareProfessionalService.getHealthcareProfessionalByUserId().subscribe((professionalId: number) => this.professionalId = professionalId);
 		this.indicationsFacadeService.setInternmentEpisodeId(this.internmentEpisodeId);
 		this.internmentIndicationService.getOtherIndicationTypes().subscribe((othersIndicationsType: OtherIndicationTypeDto[]) => this.othersIndicatiosType = othersIndicationsType);
-		this.internmentStateService.getDiagnosesGeneralState(this.internmentEpisodeId).subscribe((diagnostics: DiagnosesGeneralStateDto[]) => {
-			if (diagnostics)
-				this.internacionMasterdataService.getHealthClinical().subscribe(healthClinical => {
-
-					this.clinicalStatus = healthClinical?.filter(s => s.description === this.ACTIVE_STATE);
-					this.diagnostics = diagnostics?.filter(d => this.clinicalStatus.find(e => e?.id === d?.statusId));
-
-				});
-		});
 	}
 
 	openDietDialog() {
@@ -111,44 +102,52 @@ export class InternmentIndicationsCardComponent implements OnInit {
 	}
 
 	openPharmacoDialog() {
-		if (this.diagnostics?.length > 0) {
-			const dialogRef = this.dialog.open(PharmacoComponent, {
-				data: {
-					entryDate: this.entryDate,
-					actualDate: this.actualDate,
-					patientId: this.patientId,
-					professionalId: this.professionalId,
-					diagnostics: this.diagnostics
-				},
-				autoFocus: true,
-				disableClose: false
-			});
+		this.internmentStateService.getDiagnosesGeneralState(this.internmentEpisodeId).subscribe((diagnostics: DiagnosesGeneralStateDto[]) => {
+			if (diagnostics)
+				this.internacionMasterdataService.getHealthClinical().subscribe(healthClinical => {
+					this.clinicalStatus = healthClinical?.filter(s => s.description === this.ACTIVE_STATE);
+					this.diagnostics = diagnostics?.filter(d => this.clinicalStatus.find(e => e?.id === d?.statusId));
 
-			dialogRef.afterClosed().subscribe((pharmaco: PharmacoDto) => {
-
-				if (pharmaco) {
-					this.indicationsFacadeService.addPharmaco(pharmaco).subscribe(_ => {
-						this.snackBarService.showSuccess('indicacion.internment-card.dialogs.pharmaco.messages.SUCCESS');
-						this.indicationsFacadeService.updateIndication({ pharmaco: true });
-					},
-						error => {
-							error?.text ?
-								this.snackBarService.showError(error.text) : this.snackBarService.showError('indicacion.internment-card.dialogs.pharmaco.messages.ERROR');
+					if (this.diagnostics?.length > 0) {
+						const dialogRef = this.dialog.open(PharmacoComponent, {
+							data: {
+								entryDate: this.entryDate,
+								actualDate: this.actualDate,
+								patientId: this.patientId,
+								professionalId: this.professionalId,
+								diagnostics: this.diagnostics
+							},
+							autoFocus: true,
+							disableClose: false
 						});
-				}
-			});
-		} else {
-			this.dialog.open(ConfirmDialogComponent, { data: getConfirmDataDialog() });
-			function getConfirmDataDialog() {
-				const keyPrefix = 'indicacion.internment-card.dialogs.pharmaco.messages';
-				return {
-					showMatIconError: true,
-					title: `${keyPrefix}.TITLE`,
-					content: `${keyPrefix}.CONTENT`,
-					okButtonLabel: `${keyPrefix}.OK_BUTTON`,
-				};
-			}
-		}
+
+						dialogRef.afterClosed().subscribe((pharmaco: PharmacoDto) => {
+
+							if (pharmaco) {
+								this.indicationsFacadeService.addPharmaco(pharmaco).subscribe(_ => {
+										this.snackBarService.showSuccess('indicacion.internment-card.dialogs.pharmaco.messages.SUCCESS');
+										this.indicationsFacadeService.updateIndication({ pharmaco: true });
+									},
+									error => {
+										error?.text ?
+											this.snackBarService.showError(error.text) : this.snackBarService.showError('indicacion.internment-card.dialogs.pharmaco.messages.ERROR');
+									});
+							}
+						});
+					} else {
+						this.dialog.open(ConfirmDialogComponent, { data: getConfirmDataDialog() });
+						function getConfirmDataDialog() {
+							const keyPrefix = 'indicacion.internment-card.dialogs.pharmaco.messages';
+							return {
+								showMatIconError: true,
+								title: `${keyPrefix}.TITLE`,
+								content: `${keyPrefix}.CONTENT`,
+								okButtonLabel: `${keyPrefix}.OK_BUTTON`,
+							};
+						}
+					}
+				});
+		})
 	}
 
 	openIndicationDialog() {

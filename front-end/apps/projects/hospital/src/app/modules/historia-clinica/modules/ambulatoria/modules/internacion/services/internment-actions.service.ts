@@ -1,17 +1,14 @@
 import { Injectable } from '@angular/core';
 import { AnamnesisDockPopupComponent } from "@historia-clinica/modules/ambulatoria/modules/internacion/dialogs/anamnesis-dock-popup/anamnesis-dock-popup.component";
-import {
-	InternmentFields,
-	InternmentSummaryFacadeService
-} from "@historia-clinica/modules/ambulatoria/modules/internacion/services/internment-summary-facade.service";
+import { InternmentFields } from "@historia-clinica/modules/ambulatoria/modules/internacion/services/internment-summary-facade.service";
 import { EvolutionNoteDockPopupComponent } from "@historia-clinica/modules/ambulatoria/modules/internacion/dialogs/evolution-note-dock-popup/evolution-note-dock-popup.component";
 import { EpicrisisDockPopupComponent } from "@historia-clinica/modules/ambulatoria/modules/internacion/dialogs/epicrisis-dock-popup/epicrisis-dock-popup.component";
 import { MedicalDischargeComponent } from "@historia-clinica/modules/ambulatoria/modules/internacion/dialogs/medical-discharge/medical-discharge.component";
 import { DockPopupRef } from "@presentation/services/dock-popup-ref";
 import { DockPopupService } from "@presentation/services/dock-popup.service";
 import { MatDialog } from "@angular/material/dialog";
-import { PatientAllergiesService } from "@historia-clinica/modules/ambulatoria/services/patient-allergies.service";
 import { DiagnosisDto, HealthConditionDto } from "@api-rest/api-model";
+import { Subject } from 'rxjs';
 
 @Injectable({
 	providedIn: 'root'
@@ -23,12 +20,21 @@ export class InternmentActionsService {
 	dialogRef: DockPopupRef;
 	mainDiagnosis: HealthConditionDto;
 	diagnosticos: DiagnosisDto[];
+	anamnesisSubject = new Subject<InternmentFields>();
+	anamnesis$ = this.anamnesisSubject.asObservable();
+
+	evolutionNoteSubject = new Subject<InternmentFields>();
+	evolutionNote$ = this.evolutionNoteSubject.asObservable();
+
+	epicrisisSubject = new Subject<InternmentFields>();
+	epicrisis$ = this.epicrisisSubject.asObservable();
+
+	medicalDischargeSubject = new Subject<InternmentFields>();
+	medicalDischarge$ = this.medicalDischargeSubject.asObservable();
 
 	constructor(
 		private readonly dockPopupService: DockPopupService,
-		private readonly dialog: MatDialog,
-		private readonly patientAllergies: PatientAllergiesService,
-		readonly internmentSummaryFacadeService: InternmentSummaryFacadeService,
+		private readonly dialog: MatDialog
 	) { }
 
 	setInternmentInformation(patientId: number, internmentEpisodeId: number) {
@@ -38,7 +44,7 @@ export class InternmentActionsService {
 		delete this.diagnosticos;
 	}
 
-	openAnamnesis(anamnesisId?: number): void {
+	openAnamnesis(anamnesisId?: number) {
 		if (!this.dialogRef) {
 			this.dialogRef = this.dockPopupService.open(AnamnesisDockPopupComponent, {
 				patientInfo: {
@@ -53,8 +59,7 @@ export class InternmentActionsService {
 			});
 			this.dialogRef.afterClosed().subscribe((fieldsToUpdate: InternmentFields) => {
 				delete this.dialogRef;
-				if (fieldsToUpdate)
-					this.updateInternmentSummary(fieldsToUpdate);
+				this.anamnesisSubject.next(fieldsToUpdate);
 			});
 		} else {
 			if (this.dialogRef.isMinimized()) {
@@ -76,8 +81,7 @@ export class InternmentActionsService {
 			});
 			this.dialogRef.afterClosed().subscribe((fieldsToUpdate: InternmentFields) => {
 				delete this.dialogRef;
-				if (fieldsToUpdate)
-					this.updateInternmentSummary(fieldsToUpdate);
+				this.evolutionNoteSubject.next(fieldsToUpdate);
 			});
 		} else {
 			if (this.dialogRef.isMinimized()) {
@@ -100,8 +104,7 @@ export class InternmentActionsService {
 			});
 			this.dialogRef.afterClosed().subscribe((epicrisisClose: EpicrisisClose) => {
 				delete this.dialogRef;
-				if (epicrisisClose?.fieldsToUpdate)
-					this.updateInternmentSummary(epicrisisClose.fieldsToUpdate);
+				this.epicrisisSubject.next(epicrisisClose?.fieldsToUpdate);
 				if (epicrisisClose?.openMedicalDischarge)
 					this.openMedicalDischarge();
 			});
@@ -110,28 +113,6 @@ export class InternmentActionsService {
 				this.dialogRef.maximize();
 			}
 		}
-	}
-
-	updateInternmentSummary(fieldsToUpdate: InternmentFields): void {
-		const fields = {
-			personalHistories: fieldsToUpdate?.personalHistories,
-			riskFactors: fieldsToUpdate?.riskFactors,
-			medications: fieldsToUpdate?.medications,
-			heightAndWeight: fieldsToUpdate?.heightAndWeight,
-			bloodType: fieldsToUpdate?.bloodType,
-			immunizations: fieldsToUpdate?.immunizations,
-			mainDiagnosis: fieldsToUpdate?.mainDiagnosis,
-			diagnosis: fieldsToUpdate?.diagnosis,
-			evolutionClinical: fieldsToUpdate?.evolutionClinical
-		}
-		this.internmentSummaryFacadeService.setFieldsToUpdate(fields);
-		if (fieldsToUpdate?.familyHistories)
-			this.internmentSummaryFacadeService.unifyFamilyHistories(this.patientId);
-		if (fieldsToUpdate?.allergies) {
-			this.patientAllergies.updateCriticalAllergies(this.patientId);
-			this.internmentSummaryFacadeService.unifyAllergies(this.patientId);
-		}
-		this.internmentSummaryFacadeService.updateInternmentEpisode();
 	}
 
 	openMedicalDischarge(): void {
@@ -144,9 +125,8 @@ export class InternmentActionsService {
 			disableClose: true,
 		});
 		dialogRef.afterClosed().subscribe(medicalDischarge => {
-			if (medicalDischarge) {
-				this.internmentSummaryFacadeService.updateInternmentEpisode();
-			}
+			if (medicalDischarge)
+				this.medicalDischargeSubject.next(medicalDischarge);
 		});
 	}
 }
