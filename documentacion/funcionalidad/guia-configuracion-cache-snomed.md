@@ -205,26 +205,13 @@ Esto se puede exportar haciendo click en el botón **_Export_** y seleccionando 
 Otra opción para generar el archivo es con un script escrito en Python, el cual genera archivos CSV consultando reiteradamente a un servicio de Snowstorm. A continuación se presenta un script de ejemplo, donde basta con configurar la variable `snowstorm_base_url` con la URL base del servicio Snowstorm que se esté utilizando. Adicionalmente, si el servidor de Snowstorm requiere de autenticación para su uso (lo que es normal para los servidores de producción, modificar también la variable `auth_headers_required` a `True` y configurar las variables `app_id` y `app_key` con los respectivos valores.
 
 ```
-import csv
 import json
 import requests
-import pandas as pd
 
 snowstorm_base_url = ''
 auth_headers_required = False
 app_id = ''
 app_key = ''
-snomed_file_path = ''
-snomed_synonyms_search = False
-
-
-def write_concepts_synonyms_to_file(sf, data, items):
-    for concept in items:
-        conceptId = concept.get('conceptId')
-        sf.write(data.query("conceptId == " + conceptId)
-                 .drop_duplicates("term", keep=False)
-                 .to_csv(index=False, columns=["conceptId", "term"], header=False, quotechar='"',
-                         quoting=csv.QUOTE_NONNUMERIC))
 
 
 def write_concepts_to_file(file, items):
@@ -244,26 +231,22 @@ def do_request(ecl, searchAfter=None):
     url += '&limit=2000'
     url += '&ecl=' + ecl
     url += ("&searchAfter=" + searchAfter) if searchAfter else ''
-    headers = {"Accept": "application/json", "Accept-Language": "es", "app_id": app_id,
-               "app_key": app_key} if auth_headers_required else {"Accept": "application/json", "Accept-Language": "es"}
+    headers = {"Accept": "application/json", "Accept-Language": "es", "app_id": app_id, 
+            "app_key": app_key} if auth_headers_required else {"Accept": "application/json", "Accept-Language": "es"}
     return requests.get(url=url, headers=headers).json()
 
 
-def generate_csv_file(groupName, ecl, data):
-    global sf
+def generate_csv_file(groupName, ecl):
     print('Generating csv file for ' + groupName)
     response = do_request(ecl)
     items = response.get('items')
     searchAfter = response.get('searchAfter')
+
     f = open(groupName + '.csv', "w", encoding="utf-8")
     f.write('conceptId,term' + '\n')
-    if snomed_synonyms_search:
-        sf = open(groupName + '_SYNONYMS.csv', "w", encoding="utf-8")
-        sf.write('conceptId,term' + '\n')
+
     while (items):
         write_concepts_to_file(f, items)
-        if snomed_synonyms_search:
-            write_concepts_synonyms_to_file(sf, data, items)
         response = do_request(ecl, searchAfter)
         items = response.get('items')
         searchAfter = response.get('searchAfter')
@@ -273,21 +256,13 @@ def generate_csv_file(groupName, ecl, data):
 
 f = open('ecls.json')
 groupsData = json.load(f)
-data = pd.DataFrame
-if snomed_synonyms_search:
-    names = ["id", "effectiveTime", "active", "moduleId", "conceptId", "languageCode", "typeId", "term",
-             "caseSignificanceId"]
-    usecols = ["conceptId", "id", "active", "languageCode", "typeId", "term"]
-    snomedFile = pd.read_csv(snomed_file_path, sep='\t', skiprows=1, names=names, usecols=usecols)
-    data = snomedFile.query("active == 1 and languageCode == 'es' and typeId == 900000000000013009")
 
 for group in groupsData:
     name = group.get('key')
     ecl = group.get('value')
-    generate_csv_file(name, ecl, data)
+    generate_csv_file(name, ecl)
 
 f.close()
-
 ```
 
 Antes de ejecutarlo, en el mismo directorio del archivo .py se deberá situar un archivo **_ecls.json_** con claves y ECLs siguiendo el siguiente formato (mismo formato de la respuesta del Backend HSI en el endpoint **/api/snowstorm/ecl**):
@@ -306,11 +281,6 @@ Antes de ejecutarlo, en el mismo directorio del archivo .py se deberá situar un
 ```
 
 Finalizada la ejecución del script, se habrá generado un archivo CSV por cada par (clave, ECL) definida en el archivo _ecls.json_.
-
-## **1.2.2.1 Generar archivo CSV de sinónimos de conceptos**
-
-Para generar el archivo de [sinónimos](https://confluence.ihtsdotools.org/display/DOCEG/Synonym) de conceptos utilizando el script anterior es necesario contar previamente con una [Release](https://confluence.ihtsdotools.org/display/DOCRELFMT)) de Snomed. Adicionalmente, se deberá cambiar la variable snomed_synonyms_search a True y configurar la variable snomed_file_path con la ruta al archivo del [tipo de Release](https://confluence.ihtsdotools.org/display/DOCRELFMT/3+Release+Types%2C+Packages+and+Files) deseada (el mismo deberá ser el correspondiente a la tabla Description).
-Finalizada la ejecución, se habrá generado un archivo CSV adicional por cada par (clave, ECL) definida en el archivos ecls.json con el nombre de la ECL correspondiente y el sufijo SYNONYM.
 
 ## **1.2.3 Cargar archivo CSV a través de endpoint del Backend**
 
