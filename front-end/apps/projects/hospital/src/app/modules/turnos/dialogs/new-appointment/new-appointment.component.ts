@@ -235,7 +235,7 @@ export class NewAppointmentComponent implements OnInit {
 
 	private patientNotFound() {
 		this.snackBarService.showError('turnos.new-appointment.messages.ERROR');
-		this.showAddPatient = true;
+		this.showAddPatient = this.data.protectedAppointment ? false : true;
 	}
 
 	getFullMedicalCoverageText(patientMedicalCoverage): string {
