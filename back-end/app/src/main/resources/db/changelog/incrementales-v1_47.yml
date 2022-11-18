@@ -1,5 +1,5 @@
 databaseChangeLog: 
-    - logicalFilePath: incrementales-v1_47 
+    - logicalFilePath: incrementales-v1_47
 
     - changeSet:
         id: 1.47.0-0

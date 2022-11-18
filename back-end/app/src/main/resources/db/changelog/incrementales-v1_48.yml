@@ -169,3 +169,26 @@ databaseChangeLog:
                     nullable: false
                   name: url_auth
                   type: text
+  - changeSet:
+      id: add-phone_prefix-column-reference
+      author: jvaldez
+      changes:
+        - addColumn:
+            tableName: reference
+            columns:
+              - column:
+                  name: phone_prefix
+                  type: varchar(10)
+
+  - changeSet:
+      id: add-phone_number-column-reference
+      author: jvaldez
+      changes:
+        - addColumn:
+            tableName: reference
+            columns:
+              - column:
+                  name: phone_number
+                  type: varchar(20)
+
+
