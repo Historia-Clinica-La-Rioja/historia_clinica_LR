@@ -2621,6 +2621,8 @@ export interface ReferenceDto extends Serializable {
     destinationInstitutionId: number;
     fileIds: number[];
     note?: string;
+    phoneNumber?: string;
+    phonePrefix?: string;
     problems: ReferenceProblemDto[];
     procedure?: boolean;
 }
