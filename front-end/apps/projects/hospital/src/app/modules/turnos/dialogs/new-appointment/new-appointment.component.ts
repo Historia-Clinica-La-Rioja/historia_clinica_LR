@@ -46,8 +46,8 @@ const TEMPORARY_PATIENT_ID = 3;
 export class NewAppointmentComponent implements OnInit {
 
 	@ViewChild('stepper', { static: false }) stepper: MatStepper;
-
 	initialIndex = 0;
+	preselectedPatient = false;
 	public formSearch: FormGroup;
 	public appointmentInfoForm: FormGroup;
 	public associateReferenceForm: FormGroup;
@@ -93,6 +93,7 @@ export class NewAppointmentComponent implements OnInit {
 	}
 
 	ngOnInit(): void {
+
 		this.formSearch = this.formBuilder.group({
 			identifType: [null, Validators.required],
 			identifNumber: [null, [Validators.required, Validators.maxLength(VALIDATIONS.MAX_LENGTH.identif_number)]],
@@ -138,7 +139,11 @@ export class NewAppointmentComponent implements OnInit {
 
 		this.formSearch.controls.patientId.patchValue(this.data.patientId);
 		if (this.data.patientId) {
-			this.search();
+			this.preselectedPatient = true;
+			this.initialIndex = 1;
+			this.patientId = this.data.patientId;
+			this.isFormSubmitted = true;
+			this.patientSearch(this.data.patientId);
 		}
 
 	}
@@ -230,7 +235,8 @@ export class NewAppointmentComponent implements OnInit {
 	private patientFound() {
 		this.formSearch.controls.completed.setValue(true);
 		this.snackBarService.showSuccess('turnos.new-appointment.messages.SUCCESS');
-		this.stepper.next();
+		if (this.initialIndex !== 1)
+			this.stepper.next();
 	}
 
 	private patientNotFound() {
@@ -279,6 +285,7 @@ export class NewAppointmentComponent implements OnInit {
 	}
 
 	private createAppointment(itComesFromStep3?: boolean) {
+		this.clearQueryParams();
 		const newAppointment: CreateAppointmentDto = {
 			date: this.data.date,
 			diaryId: this.data.diaryId,
@@ -322,10 +329,6 @@ export class NewAppointmentComponent implements OnInit {
 
 	disableConfirmButtonStep3(): boolean {
 		return !(this.formSearch.controls.completed.value && this.appointmentInfoForm.valid && this.data.protectedAppointment && this.associateReferenceForm.valid);
-	}
-
-	disableNextToStep3(): boolean {
-		return !this.appointmentInfoForm.valid || this.stepper.selectedIndex !== 1
 	}
 
 	private assignAppointment(): void {
@@ -401,7 +404,7 @@ export class NewAppointmentComponent implements OnInit {
 			.subscribe((patientMedicalCoverages: PatientMedicalCoverage[]) => this.patientMedicalCoverages = patientMedicalCoverages);
 	}
 
-	private clearQueryParams() {
+	clearQueryParams() {
 		this.router.navigate([]);
 	}
 }
