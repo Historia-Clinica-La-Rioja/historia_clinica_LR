@@ -46,7 +46,7 @@ export const ODONTO_REPORT_TYPES = [
 
 export const GENERAL_REPORT_TYPES = [
     {
-        description: 'Daily Emergencia',
+        description: 'Emergencia',
         id: 1,
     },
     {
@@ -58,10 +58,17 @@ export const GENERAL_REPORT_TYPES = [
         id: 3,
     },
     {
-        description: 'Emergencias',
+        description: 'Enfermería - Emergencias',
         id: 4,
     },
-
+    {
+        description: 'Enfermeria Ambulatorio',
+        id: 5,
+    },
+    {
+        description: 'Enfermeria Internacion',
+        id: 6,
+    },
    
 ]
 
