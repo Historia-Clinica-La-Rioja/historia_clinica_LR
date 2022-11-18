@@ -23,6 +23,7 @@ export class CubejsChartComponent implements OnDestroy {
 	chartType = new ReplaySubject<any>(1);
 	cubeQuery = new ReplaySubject<any>(1);
 	pivotConfig = new ReplaySubject<any>(1);
+	chartTitle: string;
 
 	@Input() listOnTab: string = null;
 
@@ -30,7 +31,7 @@ export class CubejsChartComponent implements OnDestroy {
 
 	constructor(
 		private chartDefinitionService: ChartDefinitionService,
-	) { }
+	) {	}
 
 	@Input()
 	set query(queryName: string) {
@@ -38,7 +39,6 @@ export class CubejsChartComponent implements OnDestroy {
 			console.warn('Chart with undefined queryStream');
 			return;
 		}
-
 		this.chartDefinitionSubscription = this.chartDefinitionService.queryStream$(queryName).subscribe(
 			(queryStream: ChartDefinitionDto) => {
 				this.error = undefined;
@@ -47,13 +47,40 @@ export class CubejsChartComponent implements OnDestroy {
 				this.pivotConfig.next(queryStream.pivotConfig);
 			},
 			(error: any) => this.error = toUIComponentDto(error),
-		);
-
-
+		)
+		this.setChartTitle(queryName);
 	}
 
 	ngOnDestroy() {
 		this.chartDefinitionSubscription?.unsubscribe();
 	}
 
+	setChartTitle(queryName: string) {
+		switch(queryName) {
+			case 'cantidadConsultasAmbulatorias': {
+			   this.chartTitle = 'Evolución consultas'
+			   break;
+			}
+			case 'cantidadConsultasPorEspecialidad': {
+				this.chartTitle = 'Consultas por especialidad'
+				break;
+			}
+			case 'cantidadConsultasAmbulatoriasEspecialidadProfesional': {
+				this.chartTitle = 'Consultas por especialidad y profesional'
+				break;
+			}
+			case 'cantidadTurnos': {
+				this.chartTitle = 'Evolución turnos'
+				break;
+			}
+			case 'cantidadTurnosPorEspecialidad': {
+				this.chartTitle = 'Turnos por especialidad'
+				break;
+			}
+			case 'cantidadTurnosPorProfesional': {
+				this.chartTitle = 'Turnos por  profesional'
+				break;
+			}
+		}
+	}
 }
