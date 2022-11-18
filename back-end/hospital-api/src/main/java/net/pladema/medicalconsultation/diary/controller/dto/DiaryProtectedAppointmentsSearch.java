@@ -20,7 +20,7 @@ import java.time.LocalDate;
 @ToString
 public class DiaryProtectedAppointmentsSearch {
 
-	@Nullable
+	@NotNull
 	private Integer careLineId;
 
 	@NotNull

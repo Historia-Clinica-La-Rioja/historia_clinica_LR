@@ -72,13 +72,11 @@ public class DiaryAvailableProtectedAppointmentsSearchQuery {
 				" 	LEFT JOIN {h-schema}department dp ON (c.department_id = dp.id) " +
 				" 	LEFT JOIN {h-schema}clinical_specialty cs ON (d.clinical_specialty_id = cs.id) " +
 				" 	LEFT JOIN {h-schema}healthcare_professional hp ON (d.healthcare_professional_id = hp.id) " +
-				" 	LEFT JOIN {h-schema}person p ON (hp.person_id = p.id) ";
+				" 	LEFT JOIN {h-schema}person p ON (hp.person_id = p.id) " +
+				"	LEFT JOIN {h-schema}diary_care_line dcl on (d.id = dcl.diary_id) ";
 
 		if (includeNameSelfDetermination)
 			from = from + "LEFT JOIN {h-schema}person_extended pe ON (pe.person_id = p.id) ";
-
-		if (this.careLineId != null)
-			from = from + "LEFT JOIN {h-schema}diary_care_line dcl on (d.id = dcl.diary_id) ";
 
 		return new QueryPart(from);
 	}
@@ -88,13 +86,12 @@ public class DiaryAvailableProtectedAppointmentsSearchQuery {
 				" AND cs.id = " + this.clinicalSpecialtyId +
 				" AND d.active = true " +
 				" AND d.end_date >= CURRENT_DATE" +
-				" AND (d.protected_appointments_percentage > 0) ";
+				" AND (d.protected_appointments_percentage > 0) " +
+				" AND dcl.care_line_id = " + this.careLineId +
+				" AND dcl.deleted = false ";
 
 		if (this.institutionId != null)
 			whereClause = whereClause + " AND i.id = " + this.institutionId;
-
-		if (this.careLineId != null)
-			whereClause = whereClause + " AND dcl.care_line_id = " + this.careLineId + " AND dcl.deleted = false";
 
 		return new QueryPart(whereClause);
 	}

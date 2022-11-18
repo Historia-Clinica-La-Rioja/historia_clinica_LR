@@ -40,6 +40,7 @@ export class SearchAppointmentsInCareNetworkComponent implements OnInit, OnChang
   showSpecialtyError = false;
   showDepartmentError = false;
   showProvinceError = false;
+  showCareLineError = false;
 
   careLineTypeaheadOptions: TypeaheadOption<CareLineDto>[] = [];
   specialtyTypeaheadOptions: TypeaheadOption<ClinicalSpecialtyDto>[] = [];
@@ -131,6 +132,7 @@ export class SearchAppointmentsInCareNetworkComponent implements OnInit, OnChang
 
   setCareLine(careLine: CareLineDto) {
     this.searchForm.controls.careLine.setValue(careLine);
+    this.showCareLineError = false;
     this.searchForm.controls.specialty.reset();
     if (careLine) {
       this.specialties = careLine.clinicalSpecialties;
@@ -215,7 +217,7 @@ export class SearchAppointmentsInCareNetworkComponent implements OnInit, OnChang
         ].join('-');
 
       const filters: ProtectedAppointmentsFilter = {
-        careLineId: this.searchForm.value.careLine ? this.searchForm.value.careLine.id : null,
+        careLineId: this.searchForm.value.careLine.id,
         clinicalSpecialtyId: this.searchForm.value.specialty.id,
         departmentId: this.searchForm.value.department.id,
         endSearchDate: endDateString,
@@ -237,6 +239,7 @@ export class SearchAppointmentsInCareNetworkComponent implements OnInit, OnChang
     else {
       this.showInvalidFormMessage = true;
       this.showAppointmentResults = this.showAppointmentsNotFoundMessage = false;
+      this.showCareLineError = !this.searchForm.value.careLine;
       this.showSpecialtyError = !this.searchForm.value.specialty;
       this.showDepartmentError = !this.searchForm.value.department;
       this.showProvinceError = !this.searchForm.value.state;
@@ -319,7 +322,7 @@ export class SearchAppointmentsInCareNetworkComponent implements OnInit, OnChang
   private initForm(): void {
     const endDate = datePlusDays(this.today, PERIOD_DAYS);
     this.searchForm = this.formBuilder.group({
-      careLine: [null],
+      careLine: [null, Validators.required],
       specialty: [null, Validators.required],
       state: [null],
       department: [null, Validators.required],
