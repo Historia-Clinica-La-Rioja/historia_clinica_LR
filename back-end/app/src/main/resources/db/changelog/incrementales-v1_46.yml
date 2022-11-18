@@ -95,3 +95,12 @@ databaseChangeLog:
               constraintName: PK_reference_appointment
               tableName: reference_appointment
               validate: true
+
+    - changeSet:
+        id: clinical_specialty-metadata3
+        author: bchacon
+        context: "!schema-only"
+        changes:
+          - sql:
+              sql: |-
+                INSERT INTO clinical_specialty(name, sctid_code, clinical_specialty_type_id) VALUES ('Diabetología', '408475000', 2);
