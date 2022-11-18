@@ -17,6 +17,7 @@ export class AppointmentResultViewComponent implements OnInit {
 
   @Input() appointment: DiaryAvailableProtectedAppointmentsDto;
   @Input() patientId: number;
+  @Input() careLineId: number;
   @Output() resetAppointmentList = new EventEmitter<void>();
   viewDate: string = '';
   viewMinutes: string = '';
@@ -47,6 +48,7 @@ export class AppointmentResultViewComponent implements OnInit {
         overturnMode: this.appointment.overturnMode,
         patientId: this.patientId ? this.patientId : null,
         protectedAppointment: this.appointment,
+        careLineId: this.careLineId ? this.careLineId : null
       }
     });
     dialogRef.afterClosed().subscribe(

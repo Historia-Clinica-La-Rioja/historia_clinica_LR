@@ -29,12 +29,12 @@ export class ReferenceService {
 		});
 	}
 
-	getReferencesSummary(patientId: number, diarySpecialtyId: number, diaryId: number): Observable<ReferenceSummaryDto[]> {
+	getReferencesSummary(patientId: number, diarySpecialtyId: number, careLineId: number): Observable<ReferenceSummaryDto[]> {
 		const url = `${this.URL_BASE}${patientId}/requested`
 		return this.http.get<ReferenceSummaryDto[]>(url, {
 			params: {
 				clinicalSpecialtyId: diarySpecialtyId,
-				diaryId: diaryId
+				careLineId: careLineId
 			}
 		});
 	}

@@ -18,20 +18,20 @@ public class GetReferenceSummary {
 
 	private final ReferenceStorage referenceStorage;
 
-	public List<ReferenceSummaryBo> run(Integer patientId, Integer clinicalSpecialtyId, Integer diaryId) {
-		assertContextValid(patientId, clinicalSpecialtyId, diaryId);
-		log.debug("Input parameters -> patientId {}, clinicalSpecialtyId {}, diaryId {}", patientId, clinicalSpecialtyId, diaryId);
-		List<ReferenceSummaryBo> result = referenceStorage.getReferencesSummary(patientId, clinicalSpecialtyId, diaryId);
+	public List<ReferenceSummaryBo> run(Integer patientId, Integer clinicalSpecialtyId, Integer careLineId) {
+		assertContextValid(patientId, clinicalSpecialtyId, careLineId);
+		log.debug("Input parameters -> patientId {}, clinicalSpecialtyId {}, careLineId {}", patientId, clinicalSpecialtyId, careLineId);
+		List<ReferenceSummaryBo> result = referenceStorage.getReferencesSummary(patientId, clinicalSpecialtyId, careLineId);
 		return result;
 	}
 
-	private void assertContextValid(Integer patientId, Integer clinicalSpecialtyId, Integer diaryId) {
+	private void assertContextValid(Integer patientId, Integer clinicalSpecialtyId, Integer careLineId) {
 		if (patientId == null)
 			throw new ReferenceException(ReferenceExceptionEnum.NULL_PATIENT_ID, "El id del paciente es obligatorio");
 		if (clinicalSpecialtyId == null)
 			throw new ReferenceException(ReferenceExceptionEnum.NULL_CLINICAL_SPECIALTY_ID, "El id de especialidad es obligatorio");
-		if (diaryId == null)
-			throw new ReferenceException(ReferenceExceptionEnum.NULL_DIARY_ID, "El id de la agenda es obligatorio");
+		if (careLineId == null)
+			throw new ReferenceException(ReferenceExceptionEnum.NULL_CARE_LINE_ID, "El id de la línea de cuidado es obligatorio");
 	}
 
 }

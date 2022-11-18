@@ -31,7 +31,7 @@ import java.util.List;
 public class ReferenceController {
 
     private final GetReference getReference;
-    private final GetReferenceSummary getreferencesummary;
+    private final GetReferenceSummary getReferenceSummary;
     private final GetReferenceMapper getReferenceMapper;
 
     @GetMapping
@@ -52,9 +52,9 @@ public class ReferenceController {
 	public ResponseEntity<List<ReferenceSummaryDto>> getReferencesSummary(@PathVariable(name = "institutionId") Integer institutionId,
 														  @PathVariable(name = "patientId") Integer patientId,
 														  @RequestParam(name = "clinicalSpecialtyId") Integer clinicalSpecialtyId,
-														  @RequestParam Integer diaryId) {
-		log.debug("Input parameters -> institutionId {}, patientId {}, clinicalSpecialtyId {}, diaryId {}", institutionId, patientId, clinicalSpecialtyId, diaryId);
-		List<ReferenceSummaryBo> referenceSummaryBoList = getreferencesummary.run(patientId, clinicalSpecialtyId, diaryId);
+														  @RequestParam(name = "careLineId") Integer careLineId) {
+		log.debug("Input parameters -> institutionId {}, patientId {}, clinicalSpecialtyId {}, careLineId {}", institutionId, patientId, clinicalSpecialtyId, careLineId);
+		List<ReferenceSummaryBo> referenceSummaryBoList = getReferenceSummary.run(patientId, clinicalSpecialtyId, careLineId);
 		List<ReferenceSummaryDto> result = getReferenceMapper.toReferenceSummaryDtoList(referenceSummaryBoList);
 		log.debug("Output -> result {}", result);
 		return ResponseEntity.ok().body(result);

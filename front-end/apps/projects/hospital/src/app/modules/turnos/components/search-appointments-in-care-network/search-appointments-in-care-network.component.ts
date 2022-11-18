@@ -57,6 +57,7 @@ export class SearchAppointmentsInCareNetworkComponent implements OnInit, OnChang
   appointmentsCurrentPage: DiaryAvailableProtectedAppointmentsDto[] = [];
   readonly pageSizeOptions = PAGE_SIZE_OPTIONS;
   patientId: number;
+  careLineId: number;
 
   constructor(
     private readonly formBuilder: FormBuilder,
@@ -230,6 +231,7 @@ export class SearchAppointmentsInCareNetworkComponent implements OnInit, OnChang
           this.protectedAvaibleAppointments = availableAppointments;
           this.showAppointmentsNotFoundMessage = !this.protectedAvaibleAppointments?.length
           this.showAppointmentResults = !this.showAppointmentsNotFoundMessage;
+          this.careLineId = this.searchForm.value.careLine.id;
           if (this.showAppointmentResults) {
             this.loadFirstPage();
           }

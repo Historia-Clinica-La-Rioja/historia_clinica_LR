@@ -91,13 +91,10 @@ public class ReferenceStorageImpl implements ReferenceStorage {
     }
 
 	@Override
-	public List<ReferenceSummaryBo> getReferencesSummary(Integer patientId, Integer clinicalSpecialtyId, Integer diaryId) {
-    	log.debug("Input parameters -> patientId {}, clinicalSpecialtyid {}, diaryId {} ", patientId, clinicalSpecialtyId, diaryId);
-		List<ReferenceSummaryBo> queryResult = referenceRepository.getReferencesSummaryFromOutpatientConsultation(patientId, clinicalSpecialtyId);
-		queryResult.addAll(referenceRepository.getReferencesSummaryFromOdontologyConsultation(patientId, clinicalSpecialtyId));
-		List<Integer> careLinesOfDiary = sharedDiaryCareLinePort.getCareLineIdsByDiaryId(diaryId);
-		if (!careLinesOfDiary.isEmpty())
-			queryResult = queryResult.stream().filter(r -> r.getCareLineId() == null || careLinesOfDiary.contains(r.getCareLineId())).collect(Collectors.toList());
+	public List<ReferenceSummaryBo> getReferencesSummary(Integer patientId, Integer clinicalSpecialtyId, Integer careLineId) {
+    	log.debug("Input parameters -> patientId {}, clinicalSpecialtyid {}, careLineId {} ", patientId, clinicalSpecialtyId, careLineId);
+		List<ReferenceSummaryBo> queryResult = referenceRepository.getReferencesSummaryFromOutpatientConsultation(patientId, clinicalSpecialtyId, careLineId);
+		queryResult.addAll(referenceRepository.getReferencesSummaryFromOdontologyConsultation(patientId, clinicalSpecialtyId, careLineId));
 		boolean featureFlagNameSelfDetermination = featureFlagsService.isOn(AppFeature.HABILITAR_DATOS_AUTOPERCIBIDOS);
 		queryResult.stream().forEach(r -> r.setIncludeNameSelfDetermination(featureFlagNameSelfDetermination));
 		log.debug("Output -> references {} ", queryResult);

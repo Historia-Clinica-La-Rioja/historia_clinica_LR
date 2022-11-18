@@ -71,7 +71,8 @@ export class NewAppointmentComponent implements OnInit {
 	readonly dateFormats = DatePipeFormat;
 	constructor(
 		@Inject(MAT_DIALOG_DATA) public data: {
-			date: string, diaryId: number, hour: string, openingHoursId: number, overturnMode: boolean, patientId?: number, protectedAppointment?: DiaryAvailableProtectedAppointmentsDto
+			date: string, diaryId: number, hour: string, openingHoursId: number, overturnMode: boolean, patientId?: number,
+			protectedAppointment?: DiaryAvailableProtectedAppointmentsDto, careLineId?: number
 		},
 		public dialogRef: MatDialogRef<NewAppointmentComponent>,
 		private readonly formBuilder: FormBuilder,
@@ -193,7 +194,7 @@ export class NewAppointmentComponent implements OnInit {
 			.subscribe((reducedPatientDto: ReducedPatientDto) => {
 				this.patientFound();
 				if (this.data?.protectedAppointment) {
-					this.referenceService.getReferencesSummary(patientId, this.data.protectedAppointment.clinicalSpecialty.id, this.data.protectedAppointment.diaryId).subscribe(
+					this.referenceService.getReferencesSummary(patientId, this.data.protectedAppointment.clinicalSpecialty.id, this.data.careLineId).subscribe(
 						references => {
 							this.referenceList = references ? references : [];
 							this.createReferenceDateViewList();
