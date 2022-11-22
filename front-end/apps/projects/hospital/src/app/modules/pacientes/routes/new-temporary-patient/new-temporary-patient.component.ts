@@ -43,6 +43,7 @@ export class NewTemporaryPatientComponent implements OnInit {
 	public today: Moment = moment();
 	public hasError = hasError;
 	public genders: GenderDto[];
+	public gendersId: string[];
 	public selfPerceivedGenders: SelfPerceivedGenderDto[];
 	public showOtherGender: boolean = false;
 	public countries: any[];
@@ -199,6 +200,7 @@ export class NewTemporaryPatientComponent implements OnInit {
 			.subscribe(
 				genders => {
 					this.genders = genders;
+					this.loadGendersIdForTest();
 				}
 			);
 
@@ -459,4 +461,12 @@ export class NewTemporaryPatientComponent implements OnInit {
 		control.reset();
 	}
 
+	private loadGendersIdForTest(): void {
+		this.gendersId = [];
+		this.genders.forEach(
+			(gender: GenderDto) => {
+				this.gendersId.push("op_sexo_"+gender.description.toLowerCase());
+			}
+		);	
+	}
 }

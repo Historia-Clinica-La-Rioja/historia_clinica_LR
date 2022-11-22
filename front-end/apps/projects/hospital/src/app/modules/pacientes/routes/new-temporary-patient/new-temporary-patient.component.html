@@ -52,7 +52,7 @@
 					<span [translate]="'pacientes.form.GENDER'"></span>
 				</div>
 				<mat-radio-group formControlName="genderId">
-					<mat-radio-button *ngFor="let gender of genders" [value]="gender.id">{{gender.description}}
+					<mat-radio-button *ngFor="let gender of genders; index as i" [value]="gender.id" id="{{ gendersId[i] }}"> {{gender.description}}
 					</mat-radio-button>
 				</mat-radio-group>
 			</div>
