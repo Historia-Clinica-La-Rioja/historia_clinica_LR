@@ -53,6 +53,35 @@
                                 </mat-form-field>
                             </div>
                         </div>
+
+                        <h2 class="subtitle" [translate]="'ambulatoria.paciente.nueva-consulta.reference-dialog.PATIENT_PHONE'"></h2>
+                        <div fxLayout="row" fxLayoutGap="10px">
+                            <mat-form-field fxFlex="30%" appearance="outline">
+                                <mat-label [translate]="'ambulatoria.paciente.nueva-consulta.reference-dialog.PHONE_PREFIX'"></mat-label>
+                                <input matInput type="text" id="phonePrefix" name="phonePrefix"
+                                    formControlName="phonePrefix"
+                                    placeholder="{{'ambulatoria.paciente.nueva-consulta.reference-dialog.PHONE_PREFIX' | translate }}">
+                                <mat-error *ngIf="formReference.hasError('required', 'phonePrefix')">
+                                    <span translate="forms.REQUIRED"></span>
+                                </mat-error>
+                                <mat-error *ngIf="formReference.hasError('maxlength', 'phonePrefix')"
+                                    translate="forms.MAX_LENGTH_ERROR" [translateParams]="{max: 10}">
+                                </mat-error>
+                            </mat-form-field>
+                        
+                            <mat-form-field fxFlex="70%" appearance="outline">
+                                <mat-label [translate]="'ambulatoria.paciente.nueva-consulta.reference-dialog.PHONE_NUMBER'"></mat-label>
+                                <input matInput type="text" id="phoneNumber" name="phoneNumber"
+                                    formControlName="phoneNumber"
+                                    placeholder="{{'ambulatoria.paciente.nueva-consulta.reference-dialog.PHONE_NUMBER' | translate }}">
+                                <mat-error *ngIf="formReference.hasError('required', 'phoneNumber')">
+                                    <span translate="forms.REQUIRED"></span>
+                                </mat-error>
+                                <mat-error *ngIf="formReference.hasError('maxlength', 'phoneNumber')"
+                                    translate="forms.MAX_LENGTH_ERROR" [translateParams]="{max: 20}">
+                                </mat-error>
+                            </mat-form-field>
+                        </div>
                     </div>
 
                     <div>

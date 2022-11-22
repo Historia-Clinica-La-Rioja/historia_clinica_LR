@@ -324,6 +324,8 @@ export class ReferenceComponent implements OnInit {
 			provinceOrigin: [null],
 			departmentOrigin: [null],
 			institutionOrigin: [null],
+			phoneNumber: [null, [Validators.required, Validators.maxLength(20)]],
+			phonePrefix: [null, [Validators.required, Validators.maxLength(10)]]
 		});
 	}
 

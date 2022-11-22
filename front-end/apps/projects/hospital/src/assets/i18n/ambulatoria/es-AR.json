@@ -227,7 +227,10 @@
                     "PROVINCE": "Provincia",
                     "DEPARTMENT": "Partido",
                     "ORIGIN": "Origen",
-                    "DESTINATION": "Destino"
+                    "DESTINATION": "Destino",
+                    "PATIENT_PHONE": "Teléfono del paciente",
+                    "PHONE_NUMBER": "Número",
+                    "PHONE_PREFIX": "Prefijo"
                 }
             },
             "reference-notification": {
