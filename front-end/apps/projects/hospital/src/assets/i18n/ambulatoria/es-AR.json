@@ -225,7 +225,9 @@
                     "ADD_REFERENCE": "AGREGAR SOLICITUD",
                     "NO_CARE_LINES": "No existen líneas de cuidado para la solicitud",
                     "PROVINCE": "Provincia",
-                    "DEPARTMENT": "Partido"
+                    "DEPARTMENT": "Partido",
+                    "ORIGIN": "Origen",
+                    "DESTINATION": "Destino"
                 }
             },
             "reference-notification": {
