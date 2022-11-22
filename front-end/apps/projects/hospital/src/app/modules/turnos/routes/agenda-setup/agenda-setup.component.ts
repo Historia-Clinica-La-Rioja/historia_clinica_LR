@@ -111,7 +111,7 @@ export class AgendaSetupComponent implements OnInit {
 			conjointDiary: new FormControl(false, [Validators.nullValidator]),
 			alias: new FormControl(null, [Validators.nullValidator]),
 			otherProfessionals: new FormArray([], [this.otherPossibleProfessionals()]),
-			protectedAppointmentsPercentage: new FormControl(null, [Validators.pattern(PATTERN), Validators.max(MAX_INPUT)]),
+			protectedAppointmentsPercentage: new FormControl({value: 0,disabled:true}, [Validators.pattern(PATTERN), Validators.max(MAX_INPUT)]),
 			careLines: new FormControl([null])
 		});
 
@@ -422,7 +422,7 @@ export class AgendaSetupComponent implements OnInit {
 			if (!this.form.controls.protectedAppointmentsPercentage.hasValidator(Validators.required)) {
 				this.addValidators();
 			}
-
+			this.form.controls.protectedAppointmentsPercentage.enable();
 			this.careLinesSelected = careLines.map(careLine => ({
 				id: this.careLines.find(c => c.description === careLine).id,
 				description: careLine,
@@ -431,6 +431,8 @@ export class AgendaSetupComponent implements OnInit {
 		}
 		else {
 			this.form.controls.protectedAppointmentsPercentage.removeValidators([Validators.required]);
+			this.form.controls.protectedAppointmentsPercentage.disable();
+			this.form.controls.protectedAppointmentsPercentage.setValue(0);
 			this.careLinesSelected = [];
 		}
 		this.form.controls.protectedAppointmentsPercentage.updateValueAndValidity();
