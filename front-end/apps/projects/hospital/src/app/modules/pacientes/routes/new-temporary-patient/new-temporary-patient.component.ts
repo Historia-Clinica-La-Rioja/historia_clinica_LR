@@ -19,6 +19,7 @@ import { PatientMedicalCoverageService } from '@api-rest/services/patient-medica
 import { PERSON } from '@core/constants/validation-constants';
 import { PermissionsService } from '@core/services/permissions.service';
 import { Observable } from 'rxjs';
+import { PATTERN_INTEGER_NUMBER } from '@core/utils/pattern.utils';
 
 const TEMPORARY_PATIENT = 3;
 const ROUTE_HOME = 'pacientes';
@@ -110,7 +111,7 @@ export class NewTemporaryPatientComponent implements OnInit {
 					birthDate: [params.birthDate ? momentParseDate(params.birthDate) : undefined],
 
 					// Person extended
-					cuil: [params.cuil, Validators.maxLength(VALIDATIONS.MAX_LENGTH.cuil)],
+					cuil: [params.cuil, [Validators.pattern(PATTERN_INTEGER_NUMBER),Validators.maxLength(VALIDATIONS.MAX_LENGTH.cuil)]],
 					mothersLastName: [],
 					phonePrefix: [],
 					phoneNumber: [],
@@ -446,10 +447,10 @@ export class NewTemporaryPatientComponent implements OnInit {
 		this.showOtherSelfPerceivedGender();
 	}
 
-	updatePhoneValidators() {
-		if (this.form.controls.phoneNumber.value || this.form.controls.phonePrefix.value) {
-			updateControlValidator(this.form, 'phoneNumber', [Validators.required]);
-			updateControlValidator(this.form, 'phonePrefix', [Validators.required]);
+	updatePhoneValidators(){
+		if (this.form.controls.phoneNumber.value||this.form.controls.phonePrefix.value) {
+			updateControlValidator(this.form, 'phoneNumber', [Validators.required,Validators.pattern(PATTERN_INTEGER_NUMBER) ,Validators.maxLength(VALIDATIONS.MAX_LENGTH.phone)]);
+			updateControlValidator(this.form, 'phonePrefix',[Validators.required,Validators.pattern(PATTERN_INTEGER_NUMBER) ,Validators.maxLength(VALIDATIONS.MAX_LENGTH.phonePrefix)]);
 		} else {
 			updateControlValidator(this.form, 'phoneNumber', []);
 			updateControlValidator(this.form, 'phonePrefix', []);
@@ -467,6 +468,6 @@ export class NewTemporaryPatientComponent implements OnInit {
 			(gender: GenderDto) => {
 				this.gendersId.push("op_sexo_"+gender.description.toLowerCase());
 			}
-		);	
+		);
 	}
 }

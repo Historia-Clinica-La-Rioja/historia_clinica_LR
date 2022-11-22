@@ -7,7 +7,9 @@ export const VALIDATIONS = {
 	MAX_LENGTH: {
 		identif_number: 11,
 		cuil: 11,
-		gender: 40
+		gender: 40,
+		phonePrefix:10,
+		phone:15,
 	}
 };
 

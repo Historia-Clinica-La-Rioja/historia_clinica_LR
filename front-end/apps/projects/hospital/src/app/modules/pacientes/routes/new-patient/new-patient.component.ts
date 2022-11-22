@@ -31,6 +31,7 @@ import { PERSON } from '@core/constants/validation-constants';
 import { NavigationService } from '@pacientes/services/navigation.service';
 import { PermissionsService } from '@core/services/permissions.service';
 import { Observable } from 'rxjs';
+import { PATTERN_INTEGER_NUMBER } from '@core/utils/pattern.utils';
 
 const ROUTE_PROFILE = 'pacientes/profile/';
 const ROUTE_HOME_PATIENT = 'pacientes';
@@ -116,7 +117,7 @@ export class NewPatientComponent implements OnInit {
 					birthDate: [params.birthDate ? moment(params.birthDate) : null, [Validators.required]],
 
 					// Person extended
-					cuil: [params.cuil, [Validators.maxLength(VALIDATIONS.MAX_LENGTH.cuil)]],
+					cuil: [params.cuil, [Validators.pattern(PATTERN_INTEGER_NUMBER),Validators.maxLength(VALIDATIONS.MAX_LENGTH.cuil)]],
 					mothersLastName: [],
 					phonePrefix: [],
 					phoneNumber: [],
@@ -452,8 +453,8 @@ export class NewPatientComponent implements OnInit {
 
 	updatePhoneValidators() {
 		if (this.form.controls.phoneNumber.value || this.form.controls.phonePrefix.value) {
-			updateControlValidator(this.form, 'phoneNumber', [Validators.required]);
-			updateControlValidator(this.form, 'phonePrefix', [Validators.required]);
+			updateControlValidator(this.form, 'phoneNumber', [Validators.required,Validators.pattern(PATTERN_INTEGER_NUMBER) ,Validators.maxLength(VALIDATIONS.MAX_LENGTH.phone)]);
+			updateControlValidator(this.form, 'phonePrefix', [Validators.required,Validators.pattern(PATTERN_INTEGER_NUMBER) ,Validators.maxLength(VALIDATIONS.MAX_LENGTH.phonePrefix)]);
 		} else {
 			updateControlValidator(this.form, 'phoneNumber', []);
 			updateControlValidator(this.form, 'phonePrefix', []);

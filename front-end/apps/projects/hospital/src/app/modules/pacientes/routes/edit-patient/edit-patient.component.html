@@ -1,7 +1,9 @@
 <app-content width="full">
 	<section class="page">
 		<div class="attach_file">
-			<app-files-uploader [personId]="completeDataPatient?.person.id" [personFiles]="completeDataPatient?.person.files" [hasToSaveFiles]="hasToSaveFiles" (filesId)="savePatient($event)"></app-files-uploader>
+			<app-files-uploader [personId]="completeDataPatient?.person.id"
+				[personFiles]="completeDataPatient?.person.files" [hasToSaveFiles]="hasToSaveFiles"
+				(filesId)="savePatient($event)"></app-files-uploader>
 		</div>
 		<div *ngIf="hasInstitutionalAdministratorRole else titleForOtherRoles">
 			<h2 class="page-title" [translate]="'pacientes.edit.TITLE_PERSON'"></h2>
@@ -95,8 +97,7 @@
 							<span [translate]="'pacientes.search_patient.PATIENT_ID'"></span>
 						</div>
 						<mat-form-field appearance="outline">
-							<input id="patientId" name="patientId"
-								formControlName="patientId"
+							<input id="patientId" name="patientId" formControlName="patientId"
 								placeholder="{{'pacientes.form.ONLY_NUMBERS' | translate}}" matInput>
 						</mat-form-field>
 					</div>
@@ -106,11 +107,9 @@
 							<span [translate]="'pacientes.form.STATE'"></span>
 						</div>
 						<mat-form-field appearance="outline">
-							<mat-select id="stateId" name="stateId"
-								formControlName="stateId"
+							<mat-select id="stateId" name="stateId" formControlName="stateId"
 								placeholder="{{'pacientes.form.SELECT' | translate}}">
-								<mat-option *ngFor="let state of typesPatient"
-									[value]="state.id">
+								<mat-option *ngFor="let state of typesPatient" [value]="state.id">
 									{{state.description}}
 								</mat-option>
 							</mat-select>
@@ -246,13 +245,14 @@
 					<span [translate]="'pacientes.form.CUIT_CUIL'"></span>
 				</div>
 				<mat-form-field appearance="outline">
-					<input id="cuil" name="cuil" formControlName="cuil"
+					<input id="cuil" name="cuil" formControlName="cuil" maxlength="11"
 						placeholder="{{'pacientes.form.ONLY_NUMBERS' | translate}}" matInput>
+					<mat-error *ngIf="hasError(form, 'maxlength', 'cuil')">
+						Introduzca como máximo 11 caracteres
+					</mat-error>
+					<mat-error *ngIf="hasError(form, 'pattern', 'cuil')" [translate]="'forms.FORMAT_NUMERIC'">
+					</mat-error>
 				</mat-form-field>
-				<mat-error *ngIf="hasError(form, 'maxlength', 'cuil')">
-					Introduzca como máximo 11 caracteres
-				</mat-error>
-
 				<div>
 					<span [translate]="'pacientes.form.ADDRESS'"></span>
 				</div>
@@ -346,17 +346,23 @@
 							placeholder="{{'pacientes.form.ADDRESS_QUARTER' | translate}}" matInput>
 					</mat-form-field>
 				</div>
-				<div class="form-row">
+				<div class="form-row mb-2">
 					<div>
 						<div>
 							<span [translate]="'pacientes.form.PHONE_PREFIX'"></span>
 						</div>
 						<mat-form-field class="prefix-field" appearance="outline">
 							<input id="phonePrefix" name="phonePrefix" (keyup)="updatePhoneValidators()"
-								formControlName="phonePrefix" maxlength="10"
+								formControlName="phonePrefix" maxlength="4" minlength="2"
 								placeholder="{{'pacientes.form.PHONE_PREFIX' | translate}}" matInput>
 							<mat-error *ngIf="hasError(form, 'required', 'phonePrefix')">
 								<span translate="forms.REQUIRED"></span>
+							</mat-error>
+							<mat-error *ngIf="hasError(form, 'minlength', 'phonePrefix')"
+								translate="forms.MAX_LENGTH_ERROR" [translateParams]="{max: 10}">
+							</mat-error>
+							<mat-error *ngIf="hasError(form, 'pattern', 'phonePrefix')"
+								[translate]="'forms.FORMAT_NUMERIC'">
 							</mat-error>
 						</mat-form-field>
 					</div>
@@ -366,10 +372,13 @@
 						</div>
 						<mat-form-field appearance="outline">
 							<input id="phoneNumber" (keyup)="updatePhoneValidators()" name="phoneNumber"
-								formControlName="phoneNumber" maxlength="15"
+								formControlName="phoneNumber" maxlength="15" minlength="15"
 								placeholder="{{'pacientes.form.PHONE_NUMBER' | translate}}" matInput>
 							<mat-error *ngIf="hasError(form, 'required', 'phoneNumber')">
 								<span translate="forms.REQUIRED"></span>
+							</mat-error>
+							<mat-error *ngIf="hasError(form, 'pattern', 'phoneNumber')"
+								[translate]="'forms.FORMAT_NUMERIC'">
 							</mat-error>
 						</mat-form-field>
 					</div>
@@ -523,6 +532,4 @@
 		</div>
 
 	</section>
-
-
 </app-content>

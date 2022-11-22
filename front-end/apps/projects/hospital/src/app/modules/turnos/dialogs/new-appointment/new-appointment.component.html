@@ -108,7 +108,7 @@
 							</mat-select>
 						</mat-form-field>
 						<div fxLayout="row" fxLayoutGap="10px" fxLayout.xs="column">
-							<mat-form-field fxFlex="30%" appearance="outline">
+							<mat-form-field fxFlex="30%" appearance="outline" class="phonePrefix">
 								<mat-label [translate]="'turnos.new-appointment.PHONE_PREFIX'"></mat-label>
 								<input matInput type="text" id="phonePrefix" name="phonePrefix"
 									formControlName="phonePrefix"
@@ -119,6 +119,10 @@
 								</mat-error>
 								<mat-error *ngIf="hasError(appointmentInfoForm, 'maxlength', 'phonePrefix')"
 									translate="forms.MAX_LENGTH_ERROR" [translateParams]="{max: 10}">
+								</mat-error>
+								<mat-error
+								*ngIf="hasError(appointmentInfoForm, 'pattern', 'phonePrefix')"
+								[translate]="'forms.FORMAT_NUMERIC'">
 								</mat-error>
 							</mat-form-field>
 							<mat-form-field fxFlex="70%" appearance="outline">
@@ -131,7 +135,11 @@
 									<span translate="forms.REQUIRED"></span>
 								</mat-error>
 								<mat-error *ngIf="hasError(appointmentInfoForm, 'maxlength', 'phoneNumber')"
-									translate="forms.MAX_LENGTH_ERROR" [translateParams]="{max: 20}">
+									translate="forms.MAX_LENGTH_ERROR" [translateParams]="{max: 15}">
+								</mat-error>
+								<mat-error
+								*ngIf="hasError(appointmentInfoForm, 'pattern', 'phoneNumber')"
+								[translate]="'forms.FORMAT_NUMERIC'">
 								</mat-error>
 							</mat-form-field>
 						</div>

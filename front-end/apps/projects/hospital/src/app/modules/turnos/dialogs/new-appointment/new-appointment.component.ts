@@ -34,6 +34,7 @@ import { DiscardWarningComponent } from "@presentation/dialogs/discard-warning/d
 import { ReferenceService } from '@api-rest/services/reference.service';
 import { ReferenceAppointmentService } from '@turnos/services/reference-appointment.service';
 import { REMOVE_SUBSTRING_DNI } from '@core/constants/validation-constants';
+import { PATTERN_INTEGER_NUMBER } from '@core/utils/pattern.utils';
 
 const ROUTE_SEARCH = 'pacientes/search';
 const TEMPORARY_PATIENT_ID = 3;
@@ -105,8 +106,8 @@ export class NewAppointmentComponent implements OnInit {
 
 		this.appointmentInfoForm = this.formBuilder.group({
 			patientMedicalCoverage: [null],
-			phonePrefix: [null, [Validators.maxLength(10)]],
-			phoneNumber: [null, [Validators.maxLength(20)]]
+			phonePrefix: [null, [Validators.pattern(PATTERN_INTEGER_NUMBER) ,Validators.maxLength(VALIDATIONS.MAX_LENGTH.phonePrefix)]],
+			phoneNumber: [null, [Validators.pattern(PATTERN_INTEGER_NUMBER) ,Validators.maxLength(VALIDATIONS.MAX_LENGTH.phone)]]
 		});
 
 		this.associateReferenceForm = this.formBuilder.group({
@@ -181,8 +182,8 @@ export class NewAppointmentComponent implements OnInit {
 
 	updatePhoneValidators() {
 		if (this.appointmentInfoForm.controls.phoneNumber.value || this.appointmentInfoForm.controls.phonePrefix.value) {
-			updateControlValidator(this.appointmentInfoForm, 'phoneNumber', [Validators.required, Validators.maxLength(20)]);
-			updateControlValidator(this.appointmentInfoForm, 'phonePrefix', [Validators.required, Validators.maxLength(10)]);
+			updateControlValidator(this.appointmentInfoForm, 'phoneNumber', [Validators.required, Validators.pattern(PATTERN_INTEGER_NUMBER) ,Validators.maxLength(VALIDATIONS.MAX_LENGTH.phone)]);
+			updateControlValidator(this.appointmentInfoForm, 'phonePrefix', [Validators.required, Validators.pattern(PATTERN_INTEGER_NUMBER) ,Validators.maxLength(VALIDATIONS.MAX_LENGTH.phonePrefix)]);
 		} else {
 			updateControlValidator(this.appointmentInfoForm, 'phoneNumber', []);
 			updateControlValidator(this.appointmentInfoForm, 'phonePrefix', []);
@@ -205,8 +206,8 @@ export class NewAppointmentComponent implements OnInit {
 				this.appointmentInfoForm.controls.phonePrefix.setValue(reducedPatientDto.personalDataDto.phonePrefix);
 				this.appointmentInfoForm.controls.phoneNumber.setValue(reducedPatientDto.personalDataDto.phoneNumber);
 				if (reducedPatientDto.personalDataDto.phoneNumber) {
-					updateControlValidator(this.appointmentInfoForm, 'phoneNumber', [Validators.required, Validators.maxLength(20)]);
-					updateControlValidator(this.appointmentInfoForm, 'phonePrefix', [Validators.required, Validators.maxLength(10)]);
+					updateControlValidator(this.appointmentInfoForm, 'phoneNumber', [Validators.required, Validators.pattern(PATTERN_INTEGER_NUMBER) ,Validators.maxLength(VALIDATIONS.MAX_LENGTH.phone)]);
+					updateControlValidator(this.appointmentInfoForm, 'phonePrefix', [Validators.required, Validators.pattern(PATTERN_INTEGER_NUMBER) ,Validators.maxLength(VALIDATIONS.MAX_LENGTH.phonePrefix)]);
 				}
 				this.setMedicalCoverages();
 			}, _ => {

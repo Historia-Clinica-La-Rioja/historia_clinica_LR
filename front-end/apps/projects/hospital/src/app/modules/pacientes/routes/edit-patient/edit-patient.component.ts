@@ -44,6 +44,7 @@ import { DatePipe } from '@angular/common';
 import { Observable } from 'rxjs';
 import { DiscardWarningComponent } from '@presentation/dialogs/discard-warning/discard-warning.component';
 import { PatientMasterDataService } from '@api-rest/services/patient-master-data.service';
+import { PATTERN_INTEGER_NUMBER } from '@core/utils/pattern.utils';
 
 
 const ROUTE_PROFILE = 'pacientes/profile/';
@@ -168,10 +169,10 @@ export class EditPatientComponent implements OnInit {
 
 								this.form.setControl('nameSelfDetermination', new FormControl(personInformationData.nameSelfDetermination));
 								this.form.setControl('birthDate', new FormControl(new Date(personInformationData.birthDate), Validators.required));
-								this.form.setControl('cuil', new FormControl(personInformationData.cuil, Validators.maxLength(VALIDATIONS.MAX_LENGTH.cuil)));
+								this.form.setControl('cuil', new FormControl(personInformationData.cuil, [Validators.pattern(PATTERN_INTEGER_NUMBER) ,Validators.maxLength(VALIDATIONS.MAX_LENGTH.cuil)]));
 								this.form.setControl('email', new FormControl(personInformationData.email, Validators.email));
-								this.form.setControl('phonePrefix', new FormControl(personInformationData.phonePrefix));
-								this.form.setControl('phoneNumber', new FormControl(personInformationData.phoneNumber));
+								this.form.setControl('phonePrefix', new FormControl(personInformationData.phonePrefix,[Validators.pattern(PATTERN_INTEGER_NUMBER) ,Validators.maxLength(VALIDATIONS.MAX_LENGTH.phonePrefix)]));
+								this.form.setControl('phoneNumber', new FormControl(personInformationData.phoneNumber,[Validators.pattern(PATTERN_INTEGER_NUMBER) ,Validators.maxLength(VALIDATIONS.MAX_LENGTH.phone)]));
 								if (personInformationData.phoneNumber) {
 									updateControlValidator(this.form, 'phoneNumber', [Validators.required]);
 									updateControlValidator(this.form, 'phonePrefix', [Validators.required]);
@@ -294,8 +295,8 @@ export class EditPatientComponent implements OnInit {
 
 	updatePhoneValidators() {
 		if (this.form.controls.phoneNumber.value || this.form.controls.phonePrefix.value) {
-			updateControlValidator(this.form, 'phoneNumber', [Validators.required]);
-			updateControlValidator(this.form, 'phonePrefix', [Validators.required]);
+			updateControlValidator(this.form, 'phoneNumber', [Validators.required,Validators.pattern(PATTERN_INTEGER_NUMBER) ,Validators.maxLength(VALIDATIONS.MAX_LENGTH.phonePrefix)]);
+			updateControlValidator(this.form, 'phonePrefix', [Validators.required,Validators.pattern(PATTERN_INTEGER_NUMBER) ,Validators.maxLength(VALIDATIONS.MAX_LENGTH.phone)]);
 		} else {
 			updateControlValidator(this.form, 'phoneNumber', []);
 			updateControlValidator(this.form, 'phonePrefix', []);

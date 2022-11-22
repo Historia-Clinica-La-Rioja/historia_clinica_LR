@@ -9,7 +9,7 @@ import { ContextService } from '@core/services/context.service';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { AppFeature, AppointmentDto, CompleteDiaryDto, DateTimeDto, ERole, IdentificationTypeDto, PatientMedicalCoverageDto, PersonPhotoDto, UpdateAppointmentDto, AppointmentListDto, UpdateAppointmentDateDto } from '@api-rest/api-model.d';
 import { CancelAppointmentComponent } from '../cancel-appointment/cancel-appointment.component';
-import { getError, hasError, processErrors, updateControlValidator } from '@core/utils/form.utils';
+import { getError, hasError, processErrors, updateControlValidator, VALIDATIONS } from '@core/utils/form.utils';
 import { AppointmentsFacadeService, toCalendarEvent } from '../../services/appointments-facade.service';
 import { MapperService } from '@core/services/mapper.service';
 import {
@@ -36,6 +36,7 @@ import { DateFormat, momentFormat, momentParseDate, momentParseTime } from '@cor
 import * as moment from 'moment';
 import { isBefore, isEqual } from 'date-fns';
 import { Color } from '@presentation/colored-label/colored-label.component';
+import { PATTERN_INTEGER_NUMBER } from '@core/utils/pattern.utils';
 
 const TEMPORARY_PATIENT = 3;
 const BELL_LABEL = 'Llamar paciente'
@@ -156,8 +157,8 @@ export class AppointmentComponent implements OnInit {
 		this.formEdit.controls.phoneNumber.setValue(this.data.appointmentData.phoneNumber);
 		this.formEdit.controls.phonePrefix.setValue(this.data.appointmentData.phonePrefix);
 		if (this.data.appointmentData.phoneNumber) {
-			updateControlValidator(this.formEdit, 'phoneNumber', [Validators.required, Validators.maxLength(20)]);
-			updateControlValidator(this.formEdit, 'phonePrefix', [Validators.required, Validators.maxLength(10)]);
+			updateControlValidator(this.formEdit, 'phoneNumber', [Validators.required, Validators.pattern(PATTERN_INTEGER_NUMBER) ,Validators.maxLength(VALIDATIONS.MAX_LENGTH.phone)]);
+			updateControlValidator(this.formEdit, 'phonePrefix', [Validators.required, Validators.pattern(PATTERN_INTEGER_NUMBER) ,Validators.maxLength(VALIDATIONS.MAX_LENGTH.phonePrefix)]);
 		}
 
 		this.data.agenda.diaryOpeningHours.forEach(DOH => {
@@ -416,8 +417,8 @@ export class AppointmentComponent implements OnInit {
 
 	updatePhoneValidators() {
 		if (this.formEdit.controls.phoneNumber.value || this.formEdit.controls.phonePrefix.value) {
-			updateControlValidator(this.formEdit, 'phoneNumber', [Validators.required, Validators.maxLength(20)]);
-			updateControlValidator(this.formEdit, 'phonePrefix', [Validators.required, Validators.maxLength(10)]);
+			updateControlValidator(this.formEdit, 'phoneNumber', [Validators.required, Validators.pattern(PATTERN_INTEGER_NUMBER) ,Validators.maxLength(VALIDATIONS.MAX_LENGTH.phone)]);
+			updateControlValidator(this.formEdit, 'phonePrefix', [Validators.required, Validators.pattern(PATTERN_INTEGER_NUMBER) ,Validators.maxLength(VALIDATIONS.MAX_LENGTH.phonePrefix)]);
 		} else {
 			updateControlValidator(this.formEdit, 'phoneNumber', []);
 			updateControlValidator(this.formEdit, 'phonePrefix', []);

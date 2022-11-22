@@ -118,6 +118,10 @@
 							<mat-error *ngIf="hasError(formEdit, 'maxlength', 'phonePrefix')"
 								translate="forms.MAX_LENGTH_ERROR" [translateParams]="{max: 10}">
 							</mat-error>
+							<mat-error
+							*ngIf="hasError(formEdit, 'pattern', 'phonePrefix')"
+							[translate]="'forms.FORMAT_NUMERIC'">
+							</mat-error>
 						</mat-form-field>
 						<mat-form-field fxFlex="70%" appearance="outline">
 							<mat-label [translate]="'turnos.appointment.phoneNumber.PHONE_NUMBER'"></mat-label>
@@ -128,7 +132,11 @@
 								<span translate="forms.REQUIRED"></span>
 							</mat-error>
 							<mat-error *ngIf="hasError(formEdit, 'maxlength', 'phoneNumber')"
-								translate="forms.MAX_LENGTH_ERROR" [translateParams]="{max: 20}">
+								translate="forms.MAX_LENGTH_ERROR" [translateParams]="{max: 15}">
+							</mat-error>
+							<mat-error
+							*ngIf="hasError(formEdit, 'pattern', 'phoneNumber')"
+							[translate]="'forms.FORMAT_NUMERIC'">
 							</mat-error>
 						</mat-form-field>
 					</div>
