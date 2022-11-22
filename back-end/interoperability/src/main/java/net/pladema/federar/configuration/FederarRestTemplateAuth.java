@@ -1,9 +1,10 @@
 package net.pladema.federar.configuration;
 
-import ar.lamansys.sgx.shared.restclient.configuration.HttpClientConfiguration;
-import ar.lamansys.sgx.shared.restclient.configuration.resttemplate.RestTemplateAuth;
 import org.springframework.context.annotation.Conditional;
 import org.springframework.stereotype.Service;
+
+import ar.lamansys.sgx.shared.restclient.configuration.HttpClientConfiguration;
+import ar.lamansys.sgx.shared.restclient.configuration.resttemplate.RestTemplateAuth;
 
 @Service
 @Conditional(FederarCondition.class)
@@ -11,9 +12,10 @@ public class FederarRestTemplateAuth extends RestTemplateAuth<FederarAuthInterce
 
 	public FederarRestTemplateAuth(
 			FederarAuthInterceptor authInterceptor,
+			FederarWSConfig wsConfig,
 			HttpClientConfiguration configuration
 	) throws Exception {
-		super(authInterceptor, configuration);
+		super(authInterceptor, !wsConfig.isSettedTimeout()? configuration : configuration.withTimeout(wsConfig.getRequestTimeOut()));
 	}
 
 	

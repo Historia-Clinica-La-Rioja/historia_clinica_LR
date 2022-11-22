@@ -39,16 +39,15 @@ public class FederarWSConfig extends WSConfig {
 	private Map<String, String> auth;
 	private static final String AUTHENTICATION = "/bus-auth/auth";
 	private static final String AUTHORIZATION = "/bus-auth/tokeninfo";
-
-	private static final long DEFAULT_REQUEST_TIME_OUT = 5000L;
-
-	private long requestTimeOut = DEFAULT_REQUEST_TIME_OUT;
+	private Integer requestTimeOut;
 
 
 	public FederarWSConfig(@Value("${ws.federar.url.base}") String baseUrl,
-						   @Value("${ws.federar.token.expiration}") Duration tokenExpiration) {
+						   @Value("${ws.federar.token.expiration}") Duration tokenExpiration,
+						   @Value("${ws.federar.request.timeout}") Integer requestTimeOut) {
 		super(baseUrl, false);
 		this.tokenExpiration = tokenExpiration;
+		this.requestTimeOut = requestTimeOut;
 	}
 
 	public String getIss() {
@@ -107,7 +106,11 @@ public class FederarWSConfig extends WSConfig {
 		return PATIENT_SERVICE;
 	}
 
-	public Long getRequestTimeOut() {
+	public Integer getRequestTimeOut() {
 		return requestTimeOut;
+	}
+
+	public boolean isSettedTimeout() {
+		return requestTimeOut != null && requestTimeOut > 0;
 	}
 }
