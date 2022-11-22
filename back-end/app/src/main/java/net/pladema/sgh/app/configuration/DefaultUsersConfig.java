@@ -1,29 +1,27 @@
 package net.pladema.sgh.app.configuration;
 
-import ar.lamansys.sgx.auth.user.infrastructure.input.service.UserExternalService;
-import ar.lamansys.sgx.auth.user.infrastructure.input.service.dto.UserInfoDto;
-import net.pladema.permissions.repository.entity.UserRolePK;
-import net.pladema.permissions.repository.enums.ERole;
-import net.pladema.permissions.service.RoleService;
-import net.pladema.permissions.service.UserAssignmentService;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.Profile;
-
-import javax.annotation.PostConstruct;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.annotation.PostConstruct;
+
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Profile;
+
+import ar.lamansys.sgx.auth.user.infrastructure.input.service.UserExternalService;
+import ar.lamansys.sgx.auth.user.infrastructure.input.service.dto.UserInfoDto;
+import lombok.extern.slf4j.Slf4j;
+import net.pladema.permissions.repository.entity.UserRolePK;
+import net.pladema.permissions.repository.enums.ERole;
+import net.pladema.permissions.service.RoleService;
+import net.pladema.permissions.service.UserAssignmentService;
+
+@Slf4j
 @Configuration
 @Profile("!test")
 public class DefaultUsersConfig {
-
-	private static final Logger LOG = LoggerFactory.getLogger(DefaultUsersConfig.class);
-
-	private Map<String, DefaultUserInfoBo> defaultUsers = new HashMap<>();
 
 	@Value("${admin.password}")
 	private String adminPassword;
@@ -34,10 +32,11 @@ public class DefaultUsersConfig {
 
 	private final RoleService roleService;
 
-	public DefaultUsersConfig(UserExternalService userExternalService,
-							  UserAssignmentService userAssignmentService,
-							  RoleService roleService) {
-		super();
+	public DefaultUsersConfig(
+			UserExternalService userExternalService,
+			UserAssignmentService userAssignmentService,
+			RoleService roleService
+	) {
 		this.userExternalService = userExternalService;
 		this.userAssignmentService = userAssignmentService;
 		this.roleService = roleService;
@@ -45,8 +44,15 @@ public class DefaultUsersConfig {
 
 	@PostConstruct
 	public void init() {
-		defaultUsers.put("admin@example.com", new DefaultUserInfoBo(adminPassword,
-				List.of(new DefaultUserRolBo(ERole.ROOT, UserRolePK.UNDEFINED_ID.intValue()))));
+		Map<String, DefaultUserInfoBo> defaultUsers = new HashMap<>();
+
+		defaultUsers.put("admin@example.com", new DefaultUserInfoBo(
+				adminPassword,
+				List.of(
+						new DefaultUserRolBo(ERole.ROOT, UserRolePK.UNDEFINED_ID.intValue())
+				)
+		));
+
 		roleService.updateRolesStore();
 
 		defaultUsers.forEach((key, value) -> {
@@ -67,7 +73,7 @@ public class DefaultUsersConfig {
 		defaultUserInfoBo.getRoles().forEach(eRole ->
 			userAssignmentService.saveUserRole(user.getId(), eRole.getRol(), eRole.getInstitutionId())
 		);
-		LOG.info("User updated {}", user.getUsername());
+		log.info("User updated {}", user.getUsername());
 	}
 
 }
