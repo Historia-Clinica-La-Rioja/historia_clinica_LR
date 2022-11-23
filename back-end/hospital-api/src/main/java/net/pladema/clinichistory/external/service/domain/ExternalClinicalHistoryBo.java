@@ -2,7 +2,6 @@ package net.pladema.clinichistory.external.service.domain;
 
 import lombok.Getter;
 import lombok.Setter;
-import net.pladema.clinichistory.external.repository.domain.ExternalClinicalHistoryVo;
 
 import java.time.LocalDate;
 
@@ -24,13 +23,15 @@ public class ExternalClinicalHistoryBo {
 
     private String institution;
 
-    public ExternalClinicalHistoryBo(ExternalClinicalHistoryVo externalClinicalHistoryVo){
-        this.id = externalClinicalHistoryVo.getId();
-        this.professionalSpecialty = EMPTY.equals(externalClinicalHistoryVo.getProfessionalSpecialty()) ? null: externalClinicalHistoryVo.getProfessionalSpecialty();
-        this.consultationDate = externalClinicalHistoryVo.getConsultationDate();
-        this.professionalName = EMPTY.equals(externalClinicalHistoryVo.getProfessionalName()) ? null: externalClinicalHistoryVo.getProfessionalName();
-        this.notes = externalClinicalHistoryVo.getNotes();
-        this.institution = EMPTY.equals(externalClinicalHistoryVo.getInstitution()) ? null : externalClinicalHistoryVo.getInstitution();
+    public ExternalClinicalHistoryBo(Integer id, String professionalSpecialty,
+									 LocalDate consultationDate, String professionalName,
+									 String notes, String institution){
+        this.id = id;
+        this.professionalSpecialty = EMPTY.equals(professionalSpecialty) ? null : professionalSpecialty;
+        this.consultationDate = consultationDate;
+        this.professionalName = EMPTY.equals(professionalName) ? null : professionalName;
+        this.notes = notes;
+        this.institution = EMPTY.equals(institution) ? null : institution;
     }
 }
 

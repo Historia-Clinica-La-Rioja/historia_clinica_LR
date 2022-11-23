@@ -25,8 +25,7 @@ public class ExternalClinicalHistoryServiceImpl implements ExternalClinicalHisto
     @Override
     public List<ExternalClinicalHistoryBo> getExternalClinicalHistory(Integer patientId) {
         LOG.debug("Input parameter -> patientId {}", patientId);
-        List<ExternalClinicalHistoryBo> result = externalClinicalHistoryRepository.getAllExternalClinicalHistory(patientId).stream().map(ExternalClinicalHistoryBo::new)
-                .collect(Collectors.toList());
+        List<ExternalClinicalHistoryBo> result = externalClinicalHistoryRepository.getAllExternalClinicalHistory(patientId);
         LOG.debug("Output -> {}", result);
         return result;
     }
