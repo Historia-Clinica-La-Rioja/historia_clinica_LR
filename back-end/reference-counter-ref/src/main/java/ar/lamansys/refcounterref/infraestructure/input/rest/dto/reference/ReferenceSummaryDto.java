@@ -17,4 +17,8 @@ public class ReferenceSummaryDto {
 
 	private String professionalFullName;
 
+	private String phonePrefix;
+
+	private String phoneNumber;
+
 }

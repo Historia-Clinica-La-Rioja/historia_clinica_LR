@@ -34,9 +34,14 @@ public class ReferenceSummaryBo {
 
 	private boolean includeNameSelfDetermination;
 
+	private String phonePrefix;
+
+	private String phoneNumber;
+
 	public ReferenceSummaryBo(Integer referenceId, Integer institutionId, String institutionName,
 							  LocalDate date, String firstName, String middleNames, String lastName,
-							  String otherLastNames, String nameSelfDetermination, Integer careLineId) {
+							  String otherLastNames, String nameSelfDetermination, Integer careLineId,
+							  String phonePrefix, String phoneNumber) {
 		this.referenceId = referenceId;
 		this.institution = new InstitutionBo(institutionId, institutionName);
 		this.date = date;
@@ -46,6 +51,8 @@ public class ReferenceSummaryBo {
 		this.otherLastNames = otherLastNames;
 		this.nameSelfDetermination = nameSelfDetermination;
 		this.careLineId = careLineId;
+		this.phonePrefix = phonePrefix;
+		this.phoneNumber = phoneNumber;
 	}
 
 
