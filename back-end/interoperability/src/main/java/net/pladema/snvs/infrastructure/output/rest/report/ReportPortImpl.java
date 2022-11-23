@@ -19,10 +19,13 @@ import net.pladema.snvs.infrastructure.output.rest.report.domain.SnvsNominalCase
 import net.pladema.snvs.infrastructure.output.rest.report.domain.SnvsReportDto;
 import net.pladema.snvs.infrastructure.output.rest.report.domain.SnvsTutorDto;
 import org.springframework.context.annotation.Conditional;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.ResourceAccessException;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
 import static net.pladema.snvs.infrastructure.output.rest.report.SisaEnumException.SISA_TIMEOUT_SERVICE;
@@ -57,7 +60,10 @@ public class ReportPortImpl implements ReportPort {
         } catch (RestTemplateApiException e) {
             log.error("Fallo en la comunicación", e);
             return mapResponse(toReportBo, e.getStatusCode().value(), e.mapErrorBody(SnvsEventRegisterResponse.class));
-        }
+        } catch (ResourceAccessException e){
+			log.error("Fallo en la comunicación", e);
+			return mapResponse(toReportBo, HttpStatus.SERVICE_UNAVAILABLE.value(), null);
+		}
         SnvsEventRegisterResponse result = response.getBody();
         if (result == null)
             throw new SisaTimeoutException(SISA_TIMEOUT_SERVICE, String.format("Fallo en la comunicación %s", sisaWSConfig.getBaseUrl()+relativeUrl));
@@ -86,7 +92,7 @@ public class ReportPortImpl implements ReportPort {
     }
 
     private String buildStatus(SnvsEventRegisterResponse response) {
-        return response == null ? null :
+        return response == null ? "Description=null, Resultado=null, Timestamp=" + LocalDateTime.now().toString() :
                 new StringBuilder()
                         .append("Description=")
                         .append(response.getDescription())
