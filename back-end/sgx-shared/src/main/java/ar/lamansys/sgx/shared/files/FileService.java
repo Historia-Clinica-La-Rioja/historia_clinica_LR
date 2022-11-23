@@ -49,6 +49,8 @@ public class FileService {
 			FileStore fs = Files.getFileStore(fileConfiguration.getDocumentsLocation().toPath());
 			return String.format("%s/%s", FileUtils.byteCountToDisplaySize(fs.getUsableSpace()), FileUtils.byteCountToDisplaySize(fs.getTotalSpace()));
 		} catch (IOException e) {
+			LOG.error(e.toString());
+			saveFileError(new FileErrorInfo(fileConfiguration.getDocumentsLocation().toPath().toString(), String.format("getSpaceDocumentLocation error => %s", e), appNode.nodeId));
 			return String.format("Error en la lectura del directorio %s", fileConfiguration.getDocumentsLocation().toPath());
 		}
 	}
@@ -57,6 +59,8 @@ public class FileService {
 			FileStore fs = Files.getFileStore(fileConfiguration.getMultipartLocation().toPath());
 			return String.format("%s/%s", FileUtils.byteCountToDisplaySize(fs.getUsableSpace()), FileUtils.byteCountToDisplaySize(fs.getTotalSpace()));
 		} catch (IOException e) {
+			LOG.error(e.toString());
+			saveFileError(new FileErrorInfo(fileConfiguration.getMultipartLocation().toPath().toString(), String.format("getSpaceMultipartLocation error => %s", e), appNode.nodeId));
 			return String.format("Error en la lectura del directorio %s", fileConfiguration.getMultipartLocation().toPath());
 		}
 	}
@@ -91,11 +95,12 @@ public class FileService {
             LOG.debug(OUTPUT, true);
             return true;
         }  catch (FileServiceException e) {
-			saveFileError(new FileErrorInfo(path, e.getMessage(), appNode.nodeId));
+			saveFileError(new FileErrorInfo(path, String.format("transferMultipartFile error => %s", e), appNode.nodeId));
 			throw e;
 		}
 		catch (IOException e) {
-			saveFileError(new FileErrorInfo(path, e.getMessage(), appNode.nodeId));
+			saveFileError(new FileErrorInfo(path, String.format("transferMultipartFile error => %s", e), appNode.nodeId));
+			LOG.error(e.toString());
 			throw new FileServiceException(FileServiceEnumException.SAVE_IOEXCEPTION,
 					String.format("El guardado del siguiente archivo %s tuvo el siguiente error %s", dirPath.getAbsolutePath(), e.getMessage()));
         }
@@ -106,8 +111,8 @@ public class FileService {
         try {
             return new UrlResource(path.toUri());
         } catch (MalformedURLException e) {
-			saveFileError(new FileErrorInfo(relativeFilePath, e.getMessage(), appNode.nodeId));
-			LOG.error(e.getMessage());
+			saveFileError(new FileErrorInfo(relativeFilePath, String.format("loadFile error => %s", e), appNode.nodeId));
+			LOG.error(e.toString());
         }
         return null;
     }
@@ -116,8 +121,8 @@ public class FileService {
 		try {
 			streamFile.saveFileInDirectory(path, override, byteArrayOutputStream);
 		} catch (IOException e) {
-			saveFileError(new FileErrorInfo(dirPath.getPath(), e.getMessage(), appNode.nodeId));
-			LOG.error(e.getMessage());
+			saveFileError(new FileErrorInfo(dirPath.getPath(), String.format("saveStreamInPath error => %s", e), appNode.nodeId));
+			LOG.error(e.toString());
 			throw new FileServiceException(FileServiceEnumException.SAVE_IOEXCEPTION,
 					String.format("El guardado del siguiente archivo %s tuvo el siguiente error %s", dirPath.getAbsolutePath(), e.getMessage()));
 		}
@@ -129,8 +134,8 @@ public class FileService {
 		try {
 			return streamFile.readFileAsString(path, encoding);
 		} catch (IOException e) {
-			saveFileError(new FileErrorInfo(dirPath.getPath(), e.getMessage(), appNode.nodeId));
-			LOG.error(e.getMessage());
+			saveFileError(new FileErrorInfo(dirPath.getPath(), String.format("readFileAsString error => %s", e), appNode.nodeId));
+			LOG.error(e.toString());
 			throw new FileServiceException(FileServiceEnumException.SAVE_IOEXCEPTION,
 					String.format("La lectura del siguiente archivo %s tuvo el siguiente error %s", dirPath.getAbsolutePath(), e.getMessage()));
 		}
@@ -145,8 +150,8 @@ public class FileService {
 			LOG.debug("Output -> path {}", path);
 			return new ByteArrayInputStream(pdf);
 		}  catch (IOException e){
-			saveFileError(new FileErrorInfo(dirPath.getPath(), e.getMessage(), appNode.nodeId));
-			LOG.error(e.getMessage());
+			saveFileError(new FileErrorInfo(dirPath.getPath(), String.format("readStreamFromPath error => %s", e), appNode.nodeId));
+			LOG.error(e.toString());
 			throw new FileServiceException(FileServiceEnumException.SAVE_IOEXCEPTION,
 					String.format("La lectura del siguiente archivo %s tuvo el siguiente error %s", dirPath.getAbsolutePath(), e.getMessage()));
 		}
