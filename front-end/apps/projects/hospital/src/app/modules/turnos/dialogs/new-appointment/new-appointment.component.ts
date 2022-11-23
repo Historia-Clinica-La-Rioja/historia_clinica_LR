@@ -287,6 +287,8 @@ export class NewAppointmentComponent implements OnInit {
 
 	private createAppointment(itComesFromStep3?: boolean) {
 		this.clearQueryParams();
+		const phonePrefix = this.setPhonePrefix(itComesFromStep3);
+		const phoneNumber = this.setPhoneNumber(itComesFromStep3);
 		const newAppointment: CreateAppointmentDto = {
 			date: this.data.date,
 			diaryId: this.data.diaryId,
@@ -295,8 +297,8 @@ export class NewAppointmentComponent implements OnInit {
 			overturn: this.data.overturnMode,
 			patientId: this.patientId,
 			patientMedicalCoverageId: this.appointmentInfoForm.value.patientMedicalCoverage?.id,
-			phonePrefix: this.appointmentInfoForm.controls.phonePrefix.value,
-			phoneNumber: this.appointmentInfoForm.controls.phoneNumber.value
+			phonePrefix,
+			phoneNumber
 		};
 		this.appointmentFacade.addAppointment(newAppointment).subscribe(appointmentId => {
 			this.lastAppointmentId = appointmentId;
@@ -407,5 +409,23 @@ export class NewAppointmentComponent implements OnInit {
 
 	clearQueryParams() {
 		this.router.navigate([]);
+	}
+
+	private setPhonePrefix(itComesFromStep3: boolean): string {
+		if (!this.appointmentInfoForm.controls.phonePrefix.value && !itComesFromStep3)
+			return "";
+		if (this.appointmentInfoForm.controls.phonePrefix.value)
+			return this.appointmentInfoForm.controls.phonePrefix.value;
+		if (itComesFromStep3)
+			return this.associateReferenceForm.controls.reference.value.phonePrefix;
+	}
+
+	private setPhoneNumber(itComesFromStep3: boolean): string {
+		if (!this.appointmentInfoForm.controls.phoneNumber.value && !itComesFromStep3)
+			return "";
+		if (this.appointmentInfoForm.controls.phoneNumber.value)
+			return this.appointmentInfoForm.controls.phoneNumber.value;
+		if (itComesFromStep3)
+			return this.associateReferenceForm.controls.reference.value.phoneNumber;
 	}
 }
