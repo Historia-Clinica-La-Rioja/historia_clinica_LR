@@ -22,7 +22,7 @@ public interface ReferenceRepository extends JpaRepository<Reference, Integer> {
             "FROM Reference r " +
             "JOIN OutpatientConsultation oc ON (r.encounterId = oc.id) " +
             "JOIN ClinicalSpecialty cs ON (r.clinicalSpecialtyId = cs.id) " +
-            "JOIN CareLine cl ON (cl.id = r.careLineId) " +
+            "LEFT JOIN CareLine cl ON (cl.id = r.careLineId) " +
             "LEFT JOIN ReferenceNote rn ON (rn.id = r.referenceNoteId) " +
             "JOIN HealthcareProfessional hp ON (hp.id = oc.doctorId) " +
             "JOIN Person p ON (p.id = hp.personId) " +
@@ -39,7 +39,7 @@ public interface ReferenceRepository extends JpaRepository<Reference, Integer> {
             "FROM Reference r " +
             "JOIN OdontologyConsultation oc ON (r.encounterId = oc.id) " +
             "JOIN ClinicalSpecialty cs ON (r.clinicalSpecialtyId = cs.id) " +
-            "JOIN CareLine cl ON (cl.id = r.careLineId) " +
+            "LEFT JOIN CareLine cl ON (cl.id = r.careLineId) " +
             "LEFT JOIN ReferenceNote rn ON (rn.id = r.referenceNoteId) " +
             "JOIN HealthcareProfessional hp ON (hp.id = oc.doctorId) " +
             "JOIN Person p ON (p.id = hp.personId) " +
