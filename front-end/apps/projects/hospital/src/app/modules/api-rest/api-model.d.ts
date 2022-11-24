@@ -737,6 +737,7 @@ export interface DentalActionDto extends ClinicalTermDto {
 
 export interface DepartmentDto extends AbstractMasterdataDto<number> {
     id: number;
+    provinceId: number;
 }
 
 export interface DependencyDto extends Serializable {

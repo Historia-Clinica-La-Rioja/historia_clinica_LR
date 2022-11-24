@@ -1,6 +1,10 @@
 package net.pladema.address.controller;
 
 import io.swagger.v3.oas.annotations.tags.Tag;
+import lombok.AllArgsConstructor;
+import net.pladema.address.controller.dto.DepartmentDto;
+import net.pladema.address.controller.mapper.DepartmentMapper;
+import net.pladema.address.controller.service.domain.DepartmentBo;
 import net.pladema.address.repository.projections.AddressProjection;
 import net.pladema.address.service.AddressMasterDataService;
 import org.slf4j.Logger;
@@ -14,6 +18,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.Collection;
 
 @RestController
+@AllArgsConstructor
 @RequestMapping("/address/masterdata")
 @Tag(name = "Address Master Data", description = "Address Master Data")
 public class AddressMasterDataController {
@@ -21,11 +26,7 @@ public class AddressMasterDataController {
 	private static final Logger LOG = LoggerFactory.getLogger(AddressMasterDataController.class);
 
 	private final AddressMasterDataService addressMasterDataService;
-
-	public AddressMasterDataController(AddressMasterDataService addressMasterDataService) {
-		super();
-		this.addressMasterDataService = addressMasterDataService;
-	}
+	private final DepartmentMapper departmentMapper;
 
 	@GetMapping(value = "/province/{provinceId}/cities")
 	public ResponseEntity<Collection<AddressProjection>> getCitiesByProvince(@PathVariable("provinceId") Short provinceId) {
@@ -55,6 +56,14 @@ public class AddressMasterDataController {
 	public ResponseEntity<Collection<AddressProjection>> getCitiesByDepartment(@PathVariable("departmentId") Short departmentId) {
 		LOG.debug("{}", "All cities by department");
 		return ResponseEntity.ok().body(addressMasterDataService.findCitiesByDepartment(departmentId, AddressProjection.class));
+	}
+
+	@GetMapping(value = "/department/{departmentId}")
+	public ResponseEntity<DepartmentDto> getDepartmentById(@PathVariable("departmentId") Short departmentId) {
+		LOG.debug("{}", "Department by id");
+		DepartmentBo result = addressMasterDataService.findDepartmentById(departmentId);
+		DepartmentDto resultDto = departmentMapper.fromDepartmentBo(result);
+		return ResponseEntity.ok().body(resultDto);
 	}
 
 }
