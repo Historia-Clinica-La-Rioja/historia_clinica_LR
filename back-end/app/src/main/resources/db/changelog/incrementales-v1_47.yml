@@ -1,166 +1,166 @@
-databaseChangeLog: 
-    - logicalFilePath: incrementales-v1_47 
+databaseChangeLog:
+  - logicalFilePath: incrementales-v1_47
 
-    - changeSet:
-        id: 1.47.0-0
-        comment: Create table file_info_error
-        author: etrapani
-        changes:
-          - createTable:
-              tableName: file_info_error
-              columns:
-                - column:
-                    autoIncrement: true
-                    constraints:
-                      primaryKey: true
-                      primaryKeyName: PK_file_info_error
-                    name: id
-                    type: bigint
-                - column:
-                    constraints:
-                      nullable: false
-                    name: relative_path
-                    type: varchar
-                - column:
-                    constraints:
-                      nullable: false
-                    name: error
-                    type: text
-                - column:
-                    constraints:
-                      nullable: false
-                    name: node_id
-                    type: varchar
-                - column:
-                    constraints:
-                      nullable: false
-                    name: created_by
-                    type: int
-                    defaultValue: -1
-                - column:
-                    constraints:
-                      nullable: false
-                    name: created_on
-                    type: datetime
-                    defaultValueDate: ${date.now}
-                - column:
-                    constraints:
-                      nullable: false
-                    name: updated_by
-                    type: int
-                    defaultValue: -1
-                - column:
-                    constraints:
-                      nullable: false
-                    name: updated_on
-                    type: datetime
-                    defaultValueDate: ${date.now}
-                - column:
-                    constraints:
-                      nullable: false
-                    name: deleted
-                    type: BOOLEAN
-                    defaultValue: ${boolean.false}
-                - column:
-                    name: deleted_by
-                    type: int
-                - column:
-                    name: deleted_on
-                    type: datetime
+  - changeSet:
+      id: 1.47.0-0
+      comment: Create table file_info_error
+      author: etrapani
+      changes:
+        - createTable:
+            tableName: file_info_error
+            columns:
+              - column:
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    primaryKeyName: PK_file_info_error
+                  name: id
+                  type: bigint
+              - column:
+                  constraints:
+                    nullable: false
+                  name: relative_path
+                  type: varchar
+              - column:
+                  constraints:
+                    nullable: false
+                  name: error
+                  type: text
+              - column:
+                  constraints:
+                    nullable: false
+                  name: node_id
+                  type: varchar
+              - column:
+                  constraints:
+                    nullable: false
+                  name: created_by
+                  type: int
+                  defaultValue: -1
+              - column:
+                  constraints:
+                    nullable: false
+                  name: created_on
+                  type: datetime
+                  defaultValueDate: ${date.now}
+              - column:
+                  constraints:
+                    nullable: false
+                  name: updated_by
+                  type: int
+                  defaultValue: -1
+              - column:
+                  constraints:
+                    nullable: false
+                  name: updated_on
+                  type: datetime
+                  defaultValueDate: ${date.now}
+              - column:
+                  constraints:
+                    nullable: false
+                  name: deleted
+                  type: BOOLEAN
+                  defaultValue: ${boolean.false}
+              - column:
+                  name: deleted_by
+                  type: int
+              - column:
+                  name: deleted_on
+                  type: datetime
 
 
-    - changeSet:
-        id: 1.47.0-1
-        author: etrapani
-        comment: Create table file_info
-        changes:
-          - createTable:
-              tableName: file_info
-              columns:
-                - column:
-                    autoIncrement: true
-                    constraints:
-                      primaryKey: true
-                      primaryKeyName: PK_file_info
-                    name: id
-                    type: bigint
-                - column:
-                    constraints:
-                      nullable: false
-                    name: name
-                    type: varchar
-                - column:
-                    constraints:
-                      nullable: false
-                    name: relative_path
-                    type: varchar
-                - column:
-                    constraints:
-                      nullable: false
-                    name: original_path
-                    type: varchar
-                - column:
-                    constraints:
-                      nullable: false
-                    name: content_type
-                    type: varchar
-                - column:
-                    constraints:
-                      nullable: false
-                    name: size
-                    type: int8
-                - column:
-                    constraints:
-                      nullable: false
-                    name: uuid_file
-                    type: varchar(36)
-                - column:
-                    name: checksum
-                    type: varchar(512)
-                - column:
-                    name: source
-                    type: varchar
-                    constraints:
-                      nullable: false
-                - column:
-                    name: generated_by
-                    type: varchar
-                - column:
-                    constraints:
-                      nullable: false
-                    name: created_by
-                    type: int
-                    defaultValue: -1
-                - column:
-                    constraints:
-                      nullable: false
-                    name: created_on
-                    type: datetime
-                    defaultValueDate: ${date.now}
-                - column:
-                    constraints:
-                      nullable: false
-                    name: updated_by
-                    type: int
-                    defaultValue: -1
-                - column:
-                    constraints:
-                      nullable: false
-                    name: updated_on
-                    type: datetime
-                    defaultValueDate: ${date.now}
-                - column:
-                    constraints:
-                      nullable: false
-                    name: deleted
-                    type: BOOLEAN
-                    defaultValue: ${boolean.false}
-                - column:
-                    name: deleted_by
-                    type: int
-                - column:
-                    name: deleted_on
-                    type: datetime
+  - changeSet:
+      id: 1.47.0-1
+      author: etrapani
+      comment: Create table file_info
+      changes:
+        - createTable:
+            tableName: file_info
+            columns:
+              - column:
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    primaryKeyName: PK_file_info
+                  name: id
+                  type: bigint
+              - column:
+                  constraints:
+                    nullable: false
+                  name: name
+                  type: varchar
+              - column:
+                  constraints:
+                    nullable: false
+                  name: relative_path
+                  type: varchar
+              - column:
+                  constraints:
+                    nullable: false
+                  name: original_path
+                  type: varchar
+              - column:
+                  constraints:
+                    nullable: false
+                  name: content_type
+                  type: varchar
+              - column:
+                  constraints:
+                    nullable: false
+                  name: size
+                  type: int8
+              - column:
+                  constraints:
+                    nullable: false
+                  name: uuid_file
+                  type: varchar(36)
+              - column:
+                  name: checksum
+                  type: varchar(512)
+              - column:
+                  name: source
+                  type: varchar
+                  constraints:
+                    nullable: false
+              - column:
+                  name: generated_by
+                  type: varchar
+              - column:
+                  constraints:
+                    nullable: false
+                  name: created_by
+                  type: int
+                  defaultValue: -1
+              - column:
+                  constraints:
+                    nullable: false
+                  name: created_on
+                  type: datetime
+                  defaultValueDate: ${date.now}
+              - column:
+                  constraints:
+                    nullable: false
+                  name: updated_by
+                  type: int
+                  defaultValue: -1
+              - column:
+                  constraints:
+                    nullable: false
+                  name: updated_on
+                  type: datetime
+                  defaultValueDate: ${date.now}
+              - column:
+                  constraints:
+                    nullable: false
+                  name: deleted
+                  type: BOOLEAN
+                  defaultValue: ${boolean.false}
+              - column:
+                  name: deleted_by
+                  type: int
+              - column:
+                  name: deleted_on
+                  type: datetime
 
 
 
@@ -212,136 +212,145 @@ databaseChangeLog:
                 )
 
 
-    - changeSet:
-        id: 1.47.0-3
-        comment: Create v_reasons
-        author: etrapani
-        changes:
-          - createView:
-              viewName: v_reasons
-              fullDefinition: false
-              replaceIfExists: true
-              selectQuery: |-
-                SELECT r.id, r.description, d.id as document_id , d.source_type_id, d.type_id as document_type_id, d.source_id
-                FROM emergency_care_episode_reason ecer
-                JOIN reasons r on (ecer.reason_id = r.id)
-                JOIN document d on (d.source_id = ecer.emergency_care_episode_id AND d.source_type_id = 4)
-                UNION
-                SELECT r.id, r.description, d.id as document_id , d.source_type_id, d.type_id as document_type_id, d.source_id
-                FROM odontology_consultation_reason  ocr1
-                JOIN reasons r on (ocr1.reason_id = r.id)
-                JOIN document d on (d.source_id = ocr1.odontology_consultation_id AND d.source_type_id = 6)
-                UNION
-                SELECT r.id, r.description, d.id as document_id , d.source_type_id, d.type_id as document_type_id, d.source_id
-                FROM outpatient_consultation_reasons ocr
-                JOIN reasons r on (ocr.reason_id = r.id)
-                JOIN document d on (d.source_id = ocr.outpatient_consultation_id AND d.source_type_id = 1)
+  - changeSet:
+      id: 1.47.0-3
+      comment: Create v_reasons
+      author: etrapani
+      changes:
+        - createView:
+            viewName: v_reasons
+            fullDefinition: false
+            replaceIfExists: true
+            selectQuery: |-
+              SELECT r.id, r.description, d.id as document_id , d.source_type_id, d.type_id as document_type_id, d.source_id
+              FROM emergency_care_episode_reason ecer
+              JOIN reasons r on (ecer.reason_id = r.id)
+              JOIN document d on (d.source_id = ecer.emergency_care_episode_id AND d.source_type_id = 4)
+              UNION
+              SELECT r.id, r.description, d.id as document_id , d.source_type_id, d.type_id as document_type_id, d.source_id
+              FROM odontology_consultation_reason  ocr1
+              JOIN reasons r on (ocr1.reason_id = r.id)
+              JOIN document d on (d.source_id = ocr1.odontology_consultation_id AND d.source_type_id = 6)
+              UNION
+              SELECT r.id, r.description, d.id as document_id , d.source_type_id, d.type_id as document_type_id, d.source_id
+              FROM outpatient_consultation_reasons ocr
+              JOIN reasons r on (ocr.reason_id = r.id)
+              JOIN document d on (d.source_id = ocr.outpatient_consultation_id AND d.source_type_id = 1)
 
 
-    - changeSet:
-        id: 1.47.0-4
-        comment: Add column patient_id, clinical_specialty_id
-        author: etrapani
-        changes:
-          - addColumn:
-              tableName: document
-              columns:
-                - column:
-                    name: patient_id
-                    type: int
-                - column:
-                    name: clinical_specialty_id
-                    type: int
-                - column:
-                    name: institution_id
-                    type: int
-          - addForeignKeyConstraint:
-              baseColumnNames: patient_id
-              baseTableName: document
-              constraintName: FK_document_patient_id
-              onDelete: NO ACTION
-              onUpdate: NO ACTION
-              referencedColumnNames: id
-              referencedTableName: patient
-              validate: true
-          - addForeignKeyConstraint:
-              baseColumnNames: clinical_specialty_id
-              baseTableName: document
-              constraintName: FK_document_clinical_specialty_id
-              onDelete: NO ACTION
-              onUpdate: NO ACTION
-              referencedColumnNames: id
-              referencedTableName: clinical_specialty
-              validate: true
-          - addForeignKeyConstraint:
-              baseColumnNames: institution_id
-              baseTableName: document
-              constraintName: FK_document_institution_id
-              onDelete: NO ACTION
-              onUpdate: NO ACTION
-              referencedColumnNames: id
-              referencedTableName: institution
-              validate: true
+  - changeSet:
+      id: 1.47.0-4
+      comment: Add column patient_id, clinical_specialty_id
+      author: etrapani
+      changes:
+        - addColumn:
+            tableName: document
+            columns:
+              - column:
+                  name: patient_id
+                  type: int
+              - column:
+                  name: clinical_specialty_id
+                  type: int
+              - column:
+                  name: institution_id
+                  type: int
+        - addForeignKeyConstraint:
+            baseColumnNames: patient_id
+            baseTableName: document
+            constraintName: FK_document_patient_id
+            onDelete: NO ACTION
+            onUpdate: NO ACTION
+            referencedColumnNames: id
+            referencedTableName: patient
+            validate: true
+        - addForeignKeyConstraint:
+            baseColumnNames: clinical_specialty_id
+            baseTableName: document
+            constraintName: FK_document_clinical_specialty_id
+            onDelete: NO ACTION
+            onUpdate: NO ACTION
+            referencedColumnNames: id
+            referencedTableName: clinical_specialty
+            validate: true
+        - addForeignKeyConstraint:
+            baseColumnNames: institution_id
+            baseTableName: document
+            constraintName: FK_document_institution_id
+            onDelete: NO ACTION
+            onUpdate: NO ACTION
+            referencedColumnNames: id
+            referencedTableName: institution
+            validate: true
 
 
-    - changeSet:
-        id: 1.47.0-5
-        author: etrapani
-        comment: Load columns patient_id, clinical_specialty_id document table
-        context: "!schema-only"
-        changes:
-          - sql:
-              sql: |-
-                UPDATE document
-                SET patient_id=subquery.patient_id,
-                clinical_specialty_id=subquery.clinical_specialty_id,
-                institution_id=subquery.institution_id
-                FROM (SELECT oc.patient_id, oc.clinical_specialty_id, oc.institution_id, d.id
-                      FROM outpatient_consultation AS oc
-                      JOIN document d on oc.id = d.source_id AND d.source_type_id = 1
-                      UNION ALL
-                      SELECT ie.patient_id, ie.clinical_specialty_id, ie.institution_id, d.id
-                      FROM internment_episode AS ie
-                      JOIN document d on ie.id = d.source_id AND d.source_type_id = 0
-                      UNION ALL
-                      SELECT ece.patient_id as patientId, null as clinical_specialty_id, ece.institution_id, d.id
-                      FROM emergency_care_episode AS ece
-                      JOIN document d on ece.id = d.source_id AND d.source_type_id = 4
-                      UNION ALL
-                      SELECT nc.patient_id, nc.clinical_specialty_id, nc.institution_id, d.id
-                      FROM nursing_consultation AS nc
-                      JOIN document d on nc.id = d.source_id AND d.source_type_id = 7
-                      UNION ALL
-                      SELECT sr.patient_id, null as clinical_specialty_id, sr.institution_id, d.id
-                      FROM service_request AS sr
-                      JOIN document d on sr.id = d.source_id AND d.source_type_id = 3
-                      UNION ALL
-                      SELECT mr.patient_id, null as clinical_specialty_id, mr.institution_id, d.id
-                      FROM medication_request AS mr
-                      JOIN document d on mr.id = d.source_id AND d.source_type_id = 2
-                      UNION ALL
-                      SELECT vc.patient_id, vc.clinical_specialty_id as clinical_specialty_id, vc.institution_id, d.id
-                      FROM vaccine_consultation AS vc
-                      JOIN document d on vc.id = d.source_id AND d.source_type_id = 5
-                      UNION ALL
-                      SELECT cr.patient_id, cr.clinical_specialty_id as clinical_specialty_id, cr.institution_id, d.id
-                      FROM counter_reference AS cr
-                      JOIN document d on cr.id = d.source_id AND d.source_type_id = 8
-                      UNION ALL
-                      SELECT oc.patient_id, oc.clinical_specialty_id as clinical_specialty_id, oc.institution_id, d.id
-                      FROM odontology_consultation AS oc
-                      JOIN document d on oc.id = d.source_id AND d.source_type_id = 6
-                ) AS subquery
-                WHERE document.id=subquery.id;
+  - changeSet:
+      id: 1.47.0-5
+      author: etrapani
+      comment: Load columns patient_id, clinical_specialty_id document table
+      context: "!schema-only"
+      changes:
+        - sql:
+            sql: |-
+              UPDATE document
+              SET patient_id=subquery.patient_id,
+              clinical_specialty_id=subquery.clinical_specialty_id,
+              institution_id=subquery.institution_id
+              FROM (SELECT oc.patient_id, oc.clinical_specialty_id, oc.institution_id, d.id
+                    FROM outpatient_consultation AS oc
+                    JOIN document d on oc.id = d.source_id AND d.source_type_id = 1
+                    UNION ALL
+                    SELECT ie.patient_id, ie.clinical_specialty_id, ie.institution_id, d.id
+                    FROM internment_episode AS ie
+                    JOIN document d on ie.id = d.source_id AND d.source_type_id = 0
+                    UNION ALL
+                    SELECT ece.patient_id as patientId, null as clinical_specialty_id, ece.institution_id, d.id
+                    FROM emergency_care_episode AS ece
+                    JOIN document d on ece.id = d.source_id AND d.source_type_id = 4
+                    UNION ALL
+                    SELECT nc.patient_id, nc.clinical_specialty_id, nc.institution_id, d.id
+                    FROM nursing_consultation AS nc
+                    JOIN document d on nc.id = d.source_id AND d.source_type_id = 7
+                    UNION ALL
+                    SELECT sr.patient_id, null as clinical_specialty_id, sr.institution_id, d.id
+                    FROM service_request AS sr
+                    JOIN document d on sr.id = d.source_id AND d.source_type_id = 3
+                    UNION ALL
+                    SELECT mr.patient_id, null as clinical_specialty_id, mr.institution_id, d.id
+                    FROM medication_request AS mr
+                    JOIN document d on mr.id = d.source_id AND d.source_type_id = 2
+                    UNION ALL
+                    SELECT vc.patient_id, vc.clinical_specialty_id as clinical_specialty_id, vc.institution_id, d.id
+                    FROM vaccine_consultation AS vc
+                    JOIN document d on vc.id = d.source_id AND d.source_type_id = 5
+                    UNION ALL
+                    SELECT cr.patient_id, cr.clinical_specialty_id as clinical_specialty_id, cr.institution_id, d.id
+                    FROM counter_reference AS cr
+                    JOIN document d on cr.id = d.source_id AND d.source_type_id = 8
+                    UNION ALL
+                    SELECT oc.patient_id, oc.clinical_specialty_id as clinical_specialty_id, oc.institution_id, d.id
+                    FROM odontology_consultation AS oc
+                    JOIN document d on oc.id = d.source_id AND d.source_type_id = 6
+              ) AS subquery
+              WHERE document.id=subquery.id;
 
-    - changeSet:
-        id: 1.47.0-6
-        author: etrapani
-        changes:
-          -  addNotNullConstraint:
-               columnName:  patient_id
-               tableName:  document
-               validate:  true
+  - changeSet:
+      id: 1.47.0-6
+      author: etrapani
+      changes:
+        -  addNotNullConstraint:
+             columnName:  patient_id
+             tableName:  document
+             validate:  true
+
+  - changeSet:
+      id: 1.47.0-7
+      author: etrapani
+      changes:
+        -  addNotNullConstraint:
+             columnName:  institution_id
+             tableName:  document
+             validate:  true
 
     - changeSet:
         id: 1.47.0-7

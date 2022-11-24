@@ -108,3 +108,64 @@ databaseChangeLog:
                     nullable: false
                   name: created_on
                   type: datetime
+
+  - changeSet:
+      id: pac_server-createTable
+      comment: Create table pac_server
+      author: tcepeda
+      changes:
+        - createTable:
+            tableName: pac_server
+            columns:
+              - column:
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    primaryKeyName: PK_pac_server
+                  name: id
+                  type: int
+              - column:
+                  constraints:
+                    nullable: false
+                  name: name
+                  type: varchar(20)
+              - column:
+                  constraints:
+                    nullable: false
+                  name: aetitle
+                  type: varchar(15)
+              - column:
+                  constraints:
+                    nullable: false
+                  name: domain
+                  type: varchar(50)
+              - column:
+                  constraints:
+                    nullable: false
+                  name: pac_server_type_id
+                  type: smallint
+              - column:
+                  constraints:
+                    nullable: false
+                  name: pac_server_protocol_id
+                  type: smallint
+              - column:
+                  constraints:
+                    nullable: false
+                  name: username
+                  type: varchar(50)
+              - column:
+                  constraints:
+                    nullable: false
+                  name: password
+                  type: text
+              - column:
+                  constraints:
+                    nullable: false
+                  name: url_stow
+                  type: text
+              - column:
+                  constraints:
+                    nullable: false
+                  name: url_auth
+                  type: text
