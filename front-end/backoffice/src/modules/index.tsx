@@ -58,6 +58,7 @@ import institutionpracticesrelatedgroups from "./institutionpracticesrelatedgrou
 import files from "./files";
 import documentFiles from "./documentfiles";
 import episodesDocumentTypes from './episode-document-type';
+import globalpacs from "./globalpacservers";
 
 const resourcesAdminInstitucional = (permissions: SGXPermissions) =>
     permissions.isOn('BACKOFFICE_MOSTRAR_ABM_RESERVA_TURNOS') ?
@@ -151,6 +152,9 @@ const resources = (permissions: SGXPermissions) => [
     <Resource name="institutionpractices" {...institutionpractices} />,
     <Resource name="institutionpracticesrelatedgroups" {...institutionpracticesrelatedgroups} />,
     <Resource name="snowstormpractices" />,
+    <Resource name="pacservers" {...globalpacs(permissions)} />,
+    <Resource name="pacservertypes" />,
+    <Resource name="pacserverprotocols" />,
 
     <Resource name="snomedgroupconcepts" />,
     <Resource name="snomedrelatedgroups"  {...snomedrelatedgroups} />,

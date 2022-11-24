@@ -691,6 +691,20 @@ const messages = {
                 description: 'Descripción'
             }
         },
+        pacservers: {
+            name: 'PAC Global',
+            fields: {
+                name: 'Nombre de servidor PAC',
+                aetitle: 'AETITLE',
+                domain: 'Dominio',
+                pacServerType: 'Tipo de Servidor',
+                pacServerProtocol: 'Protocolo imagen',
+                username: 'Usuario',
+                password: 'Contraseña',
+                urlStow: 'url_stow',
+                urlAuth: 'url_auth',
+            },
+        },
     }
 };
 
