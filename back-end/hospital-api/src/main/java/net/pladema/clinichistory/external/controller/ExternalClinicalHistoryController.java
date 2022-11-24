@@ -1,10 +1,10 @@
 package net.pladema.clinichistory.external.controller;
 
 import io.swagger.v3.oas.annotations.tags.Tag;
-import net.pladema.clinichistory.external.controller.dto.ExternalClinicalHistoryDto;
+import net.pladema.clinichistory.external.controller.dto.ExternalClinicalHistorySummaryDto;
 import net.pladema.clinichistory.external.controller.mapper.ExternalClinicalHistoryMapper;
 import net.pladema.clinichistory.external.service.ExternalClinicalHistoryService;
-import net.pladema.clinichistory.external.service.domain.ExternalClinicalHistoryBo;
+import net.pladema.clinichistory.external.service.domain.ExternalClinicalHistorySummaryBo;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
@@ -35,11 +35,11 @@ public class ExternalClinicalHistoryController {
 
     @GetMapping("/getExternalClinicalHistoryList")
     @PreAuthorize("hasPermission(#institutionId, 'ESPECIALISTA_MEDICO, PROFESIONAL_DE_SALUD, ESPECIALISTA_EN_ODONTOLOGIA, ENFERMERO')")
-    public ResponseEntity<List<ExternalClinicalHistoryDto>> getExternalClinicalHistoryList(
+    public ResponseEntity<List<ExternalClinicalHistorySummaryDto>> getExternalClinicalHistoryList(
             @PathVariable(name = "institutionId") Integer institutionId,
             @PathVariable(name = "patientId") Integer patientId) {
-        List<ExternalClinicalHistoryBo> evolutions = externalClinicalHistoryService.getExternalClinicalHistory(patientId);
-        List<ExternalClinicalHistoryDto> result = externalClinicalHistoryMapper.fromListExternalClinicalHistoryBo(evolutions);
+        List<ExternalClinicalHistorySummaryBo> evolutions = externalClinicalHistoryService.getExternalClinicalHistory(patientId);
+        List<ExternalClinicalHistorySummaryDto> result = externalClinicalHistoryMapper.fromListExternalClinicalHistorySummaryBo(evolutions);
         LOG.debug("Get list => {}", result);
         return ResponseEntity.ok(result);
     }

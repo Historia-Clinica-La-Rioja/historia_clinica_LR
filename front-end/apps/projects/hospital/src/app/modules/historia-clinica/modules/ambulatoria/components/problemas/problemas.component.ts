@@ -6,7 +6,7 @@ import {
 	PROBLEMAS_RESUELTOS
 } from '../../../../constants/summaries';
 import {
-	ExternalClinicalHistoryDto,
+	ExternalClinicalHistorySummaryDto,
 	HCEDocumentDataDto,
 	HCEHospitalizationHistoryDto,
 	HCEPersonalHistoryDto,
@@ -82,7 +82,7 @@ export class ProblemasComponent implements OnInit, OnDestroy {
 	public selectedTab: number = 0;
 
 	// External clinical history attributes
-	public externalClinicalHistoryList: ExternalClinicalHistoryDto[];
+	public externalClinicalHistoryList: ExternalClinicalHistorySummaryDto[];
 	public externalClinicalHistoryAmount: number = 0;
 	public showExternalFilters: boolean = false;
 	public showExternalClinicalHistoryTab: boolean = false;
@@ -278,9 +278,9 @@ export class ProblemasComponent implements OnInit, OnDestroy {
 
 	private loadExternalClinicalHistoryList(): void {
 		this.externalClinicalHistoryService.getFilteredHistories$().pipe(
-			tap((filteredHistories: ExternalClinicalHistoryDto[]) => this.externalClinicalHistoryAmount = filteredHistories ? filteredHistories.length : 0)
+			tap((filteredHistories: ExternalClinicalHistorySummaryDto[]) => this.externalClinicalHistoryAmount = filteredHistories ? filteredHistories.length : 0)
 		).subscribe(
-			(filteredHistories: ExternalClinicalHistoryDto[]) =>
+			(filteredHistories: ExternalClinicalHistorySummaryDto[]) =>
 				this.externalClinicalHistoryList = [...filteredHistories].sort(this.compareByDate)
 		);
 
@@ -289,7 +289,7 @@ export class ProblemasComponent implements OnInit, OnDestroy {
 		);
 	}
 
-	private compareByDate(h1: ExternalClinicalHistoryDto, h2: ExternalClinicalHistoryDto) {
+	private compareByDate(h1: ExternalClinicalHistorySummaryDto, h2: ExternalClinicalHistorySummaryDto) {
 		// function used to sort External Clinical Histories by descending date
 		const moment1: Moment = dateToMoment(dateDtoToDate(h1.consultationDate));
 		const moment2: Moment = dateToMoment(dateDtoToDate(h2.consultationDate));

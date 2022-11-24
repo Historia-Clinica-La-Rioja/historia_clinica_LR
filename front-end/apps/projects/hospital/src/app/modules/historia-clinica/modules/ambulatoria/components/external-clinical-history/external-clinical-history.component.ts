@@ -1,5 +1,5 @@
 import { Component, Input, OnInit } from '@angular/core';
-import { DateDto, ExternalClinicalHistoryDto } from '@api-rest/api-model';
+import { DateDto, ExternalClinicalHistorySummaryDto } from '@api-rest/api-model';
 
 @Component({
 	selector: 'app-external-clinical-history',
@@ -8,7 +8,7 @@ import { DateDto, ExternalClinicalHistoryDto } from '@api-rest/api-model';
 })
 export class ExternalClinicalHistoryComponent implements OnInit {
 
-	@Input() externalClinicalHistory: ExternalClinicalHistoryDto;
+	@Input() externalClinicalHistory: ExternalClinicalHistorySummaryDto;
 	public DATE_TO_VIEW: DateDto;
 
 	constructor() { }

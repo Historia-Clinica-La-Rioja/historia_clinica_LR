@@ -7,7 +7,7 @@ import java.time.LocalDate;
 
 @Getter
 @Setter
-public class ExternalClinicalHistoryBo {
+public class ExternalClinicalHistorySummaryBo {
 
     private final String EMPTY = "-";
 
@@ -23,9 +23,9 @@ public class ExternalClinicalHistoryBo {
 
     private String institution;
 
-    public ExternalClinicalHistoryBo(Integer id, String professionalSpecialty,
-									 LocalDate consultationDate, String professionalName,
-									 String notes, String institution){
+    public ExternalClinicalHistorySummaryBo(Integer id, String professionalSpecialty,
+											LocalDate consultationDate, String professionalName,
+											String notes, String institution){
         this.id = id;
         this.professionalSpecialty = EMPTY.equals(professionalSpecialty) ? null : professionalSpecialty;
         this.consultationDate = consultationDate;

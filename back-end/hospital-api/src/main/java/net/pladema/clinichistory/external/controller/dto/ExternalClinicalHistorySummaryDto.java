@@ -12,7 +12,7 @@ import java.io.Serializable;
 @Getter
 @Setter
 @ToString
-public class ExternalClinicalHistoryDto implements Serializable {
+public class ExternalClinicalHistorySummaryDto implements Serializable {
 
     /**
      *

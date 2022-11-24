@@ -2,13 +2,13 @@ package net.pladema.clinichistory.external.service.impl;
 
 import net.pladema.clinichistory.external.repository.ExternalClinicalHistoryRepository;
 import net.pladema.clinichistory.external.service.ExternalClinicalHistoryService;
-import net.pladema.clinichistory.external.service.domain.ExternalClinicalHistoryBo;
+import net.pladema.clinichistory.external.service.domain.ExternalClinicalHistorySummaryBo;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 public class ExternalClinicalHistoryServiceImpl implements ExternalClinicalHistoryService {
@@ -23,9 +23,9 @@ public class ExternalClinicalHistoryServiceImpl implements ExternalClinicalHisto
     }
 
     @Override
-    public List<ExternalClinicalHistoryBo> getExternalClinicalHistory(Integer patientId) {
+    public List<ExternalClinicalHistorySummaryBo> getExternalClinicalHistory(Integer patientId) {
         LOG.debug("Input parameter -> patientId {}", patientId);
-        List<ExternalClinicalHistoryBo> result = externalClinicalHistoryRepository.getAllExternalClinicalHistory(patientId);
+        List<ExternalClinicalHistorySummaryBo> result = externalClinicalHistoryRepository.getAllExternalClinicalHistory(patientId);
         LOG.debug("Output -> {}", result);
         return result;
     }
