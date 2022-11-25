@@ -32,7 +32,7 @@ import { SpecialtyService } from '@api-rest/services/specialty.service';
 import { CareLineService } from '@api-rest/services/care-line.service';
 
 const ROUTE_APPOINTMENT = 'turnos';
-const MAX_INPUT= 100;
+const MAX_INPUT = 100;
 const PATTERN = /^[0-9]\d*$/;
 
 @Component({
@@ -71,6 +71,7 @@ export class AgendaSetupComponent implements OnInit {
 	private editingDiaryId = null;
 	private readonly routePrefix;
 	private mappedCurrentWeek = {};
+	lineOfCareAndPercentageOfProtectedAppointmentsValid = true;
 
 	constructor(
 		private readonly el: ElementRef,
@@ -111,7 +112,7 @@ export class AgendaSetupComponent implements OnInit {
 			conjointDiary: new FormControl(false, [Validators.nullValidator]),
 			alias: new FormControl(null, [Validators.nullValidator]),
 			otherProfessionals: new FormArray([], [this.otherPossibleProfessionals()]),
-			protectedAppointmentsPercentage: new FormControl({value: 0,disabled:true}, [Validators.pattern(PATTERN), Validators.max(MAX_INPUT)]),
+			protectedAppointmentsPercentage: new FormControl({ value: 0, disabled: true }, [Validators.pattern(PATTERN), Validators.max(MAX_INPUT)]),
 			careLines: new FormControl([null])
 		});
 
@@ -127,6 +128,7 @@ export class AgendaSetupComponent implements OnInit {
 						this.minDate = momentParseDate(diary.startDate).toDate();
 						this.setValuesFromExistingAgenda(diary);
 						this.disableNotEditableControls();
+						this.validateLineOfCareAndPercentageOfProtectedAppointments();
 					});
 
 				});
@@ -189,7 +191,7 @@ export class AgendaSetupComponent implements OnInit {
 			this.form.controls.conjointDiary.setValue(true);
 			diary.associatedProfessionalsInfo.forEach(diaryAssociatedProfessional => {
 				professionalsReference.push(this.initializeAnotherProfessional());
-				professionalsReference.controls[professionalsReference.length-1].setValue({ healthcareProfessionalId: diaryAssociatedProfessional.id });
+				professionalsReference.controls[professionalsReference.length - 1].setValue({ healthcareProfessionalId: diaryAssociatedProfessional.id });
 			});
 		}
 
@@ -245,7 +247,7 @@ export class AgendaSetupComponent implements OnInit {
 	}
 
 	save(): void {
-		if (this.form.valid) {
+		if (this.form.valid && this.lineOfCareAndPercentageOfProtectedAppointmentsValid) {
 			this.openDialog();
 		} else {
 			scrollIntoError(this.form, this.el);
@@ -417,7 +419,17 @@ export class AgendaSetupComponent implements OnInit {
 		});
 	}
 
+	validateLineOfCareAndPercentageOfProtectedAppointments() {
+		if (this.form.controls.protectedAppointmentsPercentage.value !== 0 && !this.careLinesSelected.length) {
+			this.lineOfCareAndPercentageOfProtectedAppointmentsValid = false;
+			this.form.controls.protectedAppointmentsPercentage.enable();
+		} else {
+			this.lineOfCareAndPercentageOfProtectedAppointmentsValid = true;
+		}
+	}
+
 	setCareLines(careLines: string[]) {
+		this.validateLineOfCareAndPercentageOfProtectedAppointments();
 		if (careLines.length) {
 			if (!this.form.controls.protectedAppointmentsPercentage.hasValidator(Validators.required)) {
 				this.addValidators();
