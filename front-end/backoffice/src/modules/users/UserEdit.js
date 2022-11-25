@@ -29,10 +29,11 @@ const validateInstitutionRequired = (values, entity) => {
 
         if(roleAndInstitution) {
             let error = {};
-            let isAdmin = (authProvider.getRole(roleAndInstitution.roleId) === 'ROOT' ||
-                                authProvider.getRole(roleAndInstitution.roleId) === 'ADMINISTRADOR');
+            let isJurisdictionalRole = (authProvider.getRole(roleAndInstitution.roleId) === 'ROOT' ||
+                authProvider.getRole(roleAndInstitution.roleId) === 'ADMINISTRADOR' ||
+                authProvider.getRole(roleAndInstitution.roleId) === 'PERFIL_EPIDEMIO_MESO');
 
-            if(!isAdmin && roleAndInstitution.institutionId === -1) {
+            if(!isJurisdictionalRole && roleAndInstitution.institutionId === -1) {
                 error.institutionId = 'La institucion es requerida';
             }
 
