@@ -74,6 +74,8 @@ export class EditPatientComponent implements OnInit {
 	public completeDataPatient: CompletePatientDto;
 	public auditablePatientInfo: AuditablePatientInfo;
 	private auditableFullDate: Date;
+	private toAudit: boolean = null;
+	private wasMarked = false;
 	public patientId: any;
 
 	private medicalCoverages: PatientMedicalCoverage[];
@@ -113,6 +115,7 @@ export class EditPatientComponent implements OnInit {
 					.subscribe(completeData => {
 						this.completeDataPatient = completeData;
 						if (completeData?.auditablePatientInfo) {
+							this.wasMarked = true;
 							this.auditableFullDate = dateTimeDtoToDate(
 								{
 									date: this.completeDataPatient.auditablePatientInfo.createdOn.date,
@@ -439,7 +442,7 @@ export class EditPatientComponent implements OnInit {
 		});
 		dialogRef.afterClosed().subscribe(message => {
 			if (message) {
-				// To do .. save new message for audit
+				this.toAudit = true;
 				this.auditableFullDate = new Date();
 				this.auditablePatientInfo = {
 					message: message,
@@ -459,6 +462,7 @@ export class EditPatientComponent implements OnInit {
 		});
 		dialogRef.afterClosed().subscribe((unmark: boolean) => {
 			if (unmark) {
+				this.toAudit = false;
 				this.auditablePatientInfo = undefined;
 				this.auditableFullDate = undefined;
 			}
@@ -523,7 +527,9 @@ export class EditPatientComponent implements OnInit {
 				phoneNumber: this.form.controls.pamiDoctorPhoneNumber.value,
 				generalPractitioner: false
 
-			}
+			},
+			toAudit: !this.wasMarked && !this.toAudit ? null : this.toAudit,
+			message: this.toAudit && this.auditablePatientInfo?.message ? this.auditablePatientInfo.message : null
 		};
 
 		if (patient.genderSelfDeterminationId === this.NONE_SELF_PERCEIVED_GENDER_SELECTED_ID)
