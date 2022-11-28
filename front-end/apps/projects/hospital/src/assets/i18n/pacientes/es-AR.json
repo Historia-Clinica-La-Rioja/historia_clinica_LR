@@ -5,6 +5,12 @@
       "DESCRIPTION": "Por favor ingrese un mensaje argumentando el motivo por el cual el paciente debe auditarse",
       "MESSAGE_LABEL": "Mensaje"
     },
+    "unmark-patient-for-audit": {
+      "DESCRIPTION": "Si desmarca al paciente, se perderán los motivos por los cuales fue marcado",
+      "QUESTION": "¿Está seguro?",
+      "CANCEL": "No, cancelar",
+      "CONFIRM": "Si, desmarcar"
+    },
     "assigned-appointment": {
       "LICENSE_NUMBER_ACRONYM": "MN N°"
     },

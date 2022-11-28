@@ -37,6 +37,7 @@ import { PatientMedicalCoverageService } from '@api-rest/services/patient-medica
 import { PERSON } from '@core/constants/validation-constants';
 import { PermissionsService } from '@core/services/permissions.service';
 import { MessageForAuditComponent } from '@pacientes/dialogs/message-for-audit/message-for-audit.component';
+import { UnmarkPatientForAuditComponent } from '@pacientes/dialogs/unmark-patient-for-audit/unmark-patient-for-audit.component';
 
 
 const ROUTE_PROFILE = 'pacientes/profile/';
@@ -420,6 +421,19 @@ export class EditPatientComponent implements OnInit {
 		dialogRef.afterClosed().subscribe(message => {
 			if (message) {
 				// To do .. save new message for audit
+			}
+		});
+	}
+
+	openUnmarkPatientWarning(): void {
+		const dialogRef = this.dialog.open(UnmarkPatientForAuditComponent, {
+			disableClose: true,
+			width: '35%',
+			autoFocus: false
+		});
+		dialogRef.afterClosed().subscribe((unmark: boolean) => {
+			if (unmark) {
+				// To do .. unmark patient for audit
 			}
 		});
 	}
