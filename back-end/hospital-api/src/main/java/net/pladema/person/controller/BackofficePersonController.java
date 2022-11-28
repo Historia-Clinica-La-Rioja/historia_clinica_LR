@@ -3,6 +3,8 @@ package net.pladema.person.controller;
 import org.springframework.data.domain.Example;
 import org.springframework.data.domain.ExampleMatcher;
 import org.springframework.data.domain.ExampleMatcher.GenericPropertyMatcher;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -29,9 +31,14 @@ public class BackofficePersonController extends AbstractBackofficeController<Per
 								.withMatcher("lastName", x -> x.ignoreCase().contains());
 						return Example.of(entity, matcher);
 					}
-				}
-			)
-		);
+				}));
+	}
+
+	@Override
+	public Page<Person> getList(Pageable pageable, Person entity) {
+		if ((entity.getIdentificationNumber() != null))
+			entity.setIdentificationNumber(entity.getIdentificationNumber().replace(".", ""));
+		return super.getList(pageable, entity);
 	}
 
 }
