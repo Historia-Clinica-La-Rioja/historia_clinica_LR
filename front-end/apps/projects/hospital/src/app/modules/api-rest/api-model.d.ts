@@ -1118,6 +1118,17 @@ export interface EvolutionNoteDto extends Serializable {
     riskFactors?: RiskFactorDto;
 }
 
+export interface ExternalClinicalHistoryDto {
+    consultationDate: Date;
+    institution?: string;
+    notes: string;
+    patientDocumentNumber: string;
+    patientDocumentType: number;
+    patientGender: number;
+    professionalName?: string;
+    professionalSpecialty?: string;
+}
+
 export interface ExternalClinicalHistorySummaryDto extends Serializable {
     consultationDate: DateDto;
     id: number;
