@@ -407,6 +407,10 @@ export class EditPatientComponent implements OnInit {
 		control.reset();
 	}
 
+	openAuditDialog(): void {
+
+	}
+
 	private getMessagesSuccess(): string {
 		return this.hasInstitutionalAdministratorRole ? 'pacientes.edit.messages.SUCCESS_PERSON' : 'pacientes.edit.messages.SUCCESS_PATIENT';
 	}

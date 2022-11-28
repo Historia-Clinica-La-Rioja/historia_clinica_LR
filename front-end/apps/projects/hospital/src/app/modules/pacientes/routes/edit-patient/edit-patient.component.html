@@ -45,6 +45,12 @@
 					</div>
 				</div>
 
+				<button mat-button type="button" id="mark_for_audit" color="primary" (click)="openAuditDialog()">
+					<mat-icon fontSet="material-icons-outlined">sms_failed</mat-icon>
+					{{ 'pacientes.edit.MARK_FOR_AUDIT' | translate }}
+				</button>
+				<br><br>
+
 				<div>
 					<div>
 						<span [translate]="'pacientes.form.GENDER'"></span>*

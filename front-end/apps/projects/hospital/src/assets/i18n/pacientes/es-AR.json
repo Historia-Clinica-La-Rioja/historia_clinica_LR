@@ -110,6 +110,7 @@
       "SUBTITLE_PATIENT": "Se editará el paciente seleccionado",
       "TITLE_PERSON": "Editar Persona",
       "SUBTITLE_PERSON": "Se editará la persona seleccionada",
+      "MARK_FOR_AUDIT": "Marcar paciente para auditoria",
       "messages": {
         "ERROR_PATIENT": "Error al editar un paciente",
         "ERROR_PERSON": "Error al editar una persona",
