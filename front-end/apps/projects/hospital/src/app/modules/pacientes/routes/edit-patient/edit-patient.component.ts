@@ -559,7 +559,7 @@ export class EditPatientComponent implements OnInit {
 
 }
 
-interface AuditablePatientInfo {
+export interface AuditablePatientInfo {
 	createdBy: string;
 	createdOn: string;
 	institutionName: string;

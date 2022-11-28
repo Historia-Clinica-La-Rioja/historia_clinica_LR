@@ -57,6 +57,10 @@ import { EditPrefessionsSpecialtiesComponent } from '@pacientes/dialogs/edit-pre
 import { Observable } from 'rxjs';
 import { EditLicenseComponent } from '@pacientes/dialogs/edit-license/edit-license.component';
 import { ProfessionalLicenseService } from '@api-rest/services/professional-license.service';
+import { dateTimeDtoToDate } from '@api-rest/mapper/date-dto.mapper';
+import { DatePipeFormat } from '@core/utils/date.utils';
+import { AuditablePatientInfo } from '../edit-patient/edit-patient.component';
+import { DatePipe } from '@angular/common';
 
 const ROUTE_NEW_INTERNMENT = 'internaciones/internacion/new';
 const ROUTE_EDIT_PATIENT = 'pacientes/edit';
@@ -130,6 +134,9 @@ export class ProfileComponent implements OnInit {
 	readonly triages = Triages;
 	readonly episodeStates = EstadosEpisodio;
 
+	public auditablePatientInfo: AuditablePatientInfo;
+	private auditableFullDate: Date;
+
 	constructor(
 		private patientService: PatientService,
 		private mapperService: MapperService,
@@ -154,6 +161,7 @@ export class ProfileComponent implements OnInit {
 		private readonly permissionService: PermissionsService,
 		private readonly internmentService: InternacionService,
 		private readonly emergencyCareEpisodeSummaryService: EmergencyCareEpisodeSummaryService,
+		private readonly datePipe: DatePipe,
 	) {
 		this.routePrefix = 'institucion/' + this.contextService.institutionId + '/';
 		this.featureFlagService.isActive(AppFeature.HABILITAR_INFORMES).subscribe(isOn => this.downloadReportIsEnabled = isOn);
@@ -168,6 +176,20 @@ export class ProfileComponent implements OnInit {
 				this.patientId = Number(params.get('id'));
 				this.patientService.getPatientCompleteData<CompletePatientDto>(this.patientId)
 					.subscribe(completeData => {
+						if (completeData?.auditablePatientInfo) {
+							this.auditableFullDate = dateTimeDtoToDate(
+								{
+									date: completeData.auditablePatientInfo.createdOn.date,
+									time: completeData.auditablePatientInfo.createdOn.time
+								}
+							);
+							this.auditablePatientInfo = {
+								message: completeData.auditablePatientInfo.message,
+								createdBy: completeData.auditablePatientInfo.createdBy,
+								createdOn: this.datePipe.transform(this.auditableFullDate, DatePipeFormat.SHORT),
+								institutionName: completeData.auditablePatientInfo.institutionName
+							};
+						}
 						this.patientTypeData = this.mapperService.toPatientTypeData(completeData.patientType);
 						this.patientBasicData = this.mapperService.toPatientBasicData(completeData);
 						this.personId = completeData.person.id;

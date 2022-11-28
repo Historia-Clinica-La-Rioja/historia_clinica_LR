@@ -21,7 +21,8 @@
     "profile": {
       "INITIATE_INTERNMENT": "Iniciar internación",
       "PATIENT_INTERNMENT_ANOTHER_INSTITUTION": "El paciente se encuentra internado en otra institución.",
-      "REPORTS": "Informes"
+      "REPORTS": "Informes",
+      "MARKED_FOR_AUDIT": "Marcado para auditar"
     },
     "form": {
       "ADDRESS": "Domicilio",

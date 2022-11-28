@@ -58,15 +58,37 @@ mat-card {
 }
 
 #triage-chip {
-    width: fit-content;
-    padding: 1.5px 8px;
-    border-radius: 5px;
+	width: fit-content;
+	padding: 1.5px 8px;
+	border-radius: 5px;
 }
 
 #episode-state {
-    color: #009B68;
+	color: #009B68;
 }
 
 mat-card.box mat-card-content {
-    margin: 10px;
+	margin: 10px;
+}
+
+#marked_for_audit_section {
+	margin-top: 15px;
+	background-color: rgba(255, 165, 0, 0.15);
+	padding: 15px;
+
+	mat-icon.mat-icon {
+		color: rgba(255, 165, 0, 1);
+	}
+
+	div.title {
+		margin-bottom: 5px;
+	}
+
+	#message_for_audit {
+		font-weight: 500;
+	}
+
+	.mat-caption {
+		color: #a8a8a8;
+	}
 }
