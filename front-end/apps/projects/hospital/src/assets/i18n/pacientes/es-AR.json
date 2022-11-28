@@ -1,5 +1,10 @@
 {
   "pacientes": {
+    "message-for-audit": {
+      "TITLE": "Mensaje para auditoría",
+      "DESCRIPTION": "Por favor ingrese un mensaje argumentando el motivo por el cual el paciente debe auditarse",
+      "MESSAGE_LABEL": "Mensaje"
+    },
     "assigned-appointment": {
       "LICENSE_NUMBER_ACRONYM": "MN N°"
     },

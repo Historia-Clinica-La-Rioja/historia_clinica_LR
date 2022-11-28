@@ -33,6 +33,7 @@ import { MedicalCoverageComponent } from "./dialogs/medical-coverage/medical-cov
 import { PrivateHealthInsuranceComponent } from './dialogs/private-health-insurance/private-health-insurance.component';
 import { ReportsComponent } from './dialogs/reports/reports.component';
 import { ScanPatientComponent } from './dialogs/scan-patient/scan-patient.component';
+import { MessageForAuditComponent } from './dialogs/message-for-audit/message-for-audit.component';
 // pipes
 import { ViewNameProfessionAndSpecialtyPipe } from './pipe/view-name-profession-and-specialty.pipe';
 
@@ -68,6 +69,7 @@ import { ViewNameProfessionAndSpecialtyPipe } from './pipe/view-name-profession-
 		ReportsComponent,
 		ScanPatientComponent,
 		ScanPatientComponent,
+		MessageForAuditComponent,
 		// pipes
 		ViewNameProfessionAndSpecialtyPipe,
 	],

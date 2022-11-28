@@ -36,6 +36,7 @@ import { MapperService } from '@core/services/mapper.service';
 import { PatientMedicalCoverageService } from '@api-rest/services/patient-medical-coverage.service';
 import { PERSON } from '@core/constants/validation-constants';
 import { PermissionsService } from '@core/services/permissions.service';
+import { MessageForAuditComponent } from '@pacientes/dialogs/message-for-audit/message-for-audit.component';
 
 
 const ROUTE_PROFILE = 'pacientes/profile/';
@@ -407,8 +408,20 @@ export class EditPatientComponent implements OnInit {
 		control.reset();
 	}
 
-	openAuditDialog(): void {
-
+	openAuditDialog(initialMessage: string): void {
+		const dialogRef = this.dialog.open(MessageForAuditComponent, {
+			disableClose: true,
+			width: '40%',
+			autoFocus: false,
+			data: {
+				initialMessage: initialMessage,
+			}
+		});
+		dialogRef.afterClosed().subscribe(message => {
+			if (message) {
+				// To do .. save new message for audit
+			}
+		});
 	}
 
 	private getMessagesSuccess(): string {

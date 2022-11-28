@@ -40,6 +40,7 @@
 		"SELECT": "Seleccionar",
 		"APPLY": "Aplicar",
 		"ACCEPT": "Aceptar",
+		"SAVE": "Guardar",
 		"CSV_DOWNLOAD": "DESCARGAR .CSV"
 	},
 	"forms": {
