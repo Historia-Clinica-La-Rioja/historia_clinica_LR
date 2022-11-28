@@ -1,7 +1,7 @@
 @import "../../../../../assets/styles/variables";
 
 .default {
-	mat-card.mat-card{
+	mat-card.mat-card {
 		min-height: 120px;
 	}
 }
@@ -17,6 +17,7 @@ mat-card.mat-card {
 mat-card-header {
 	align-items: center;
 	min-width: 250px;
+
 	.header-image {
 		background-image: url("../../../../../assets/images/empty-profile.png");
 		background-size: cover;
@@ -33,13 +34,13 @@ mat-card-header {
 	}
 }
 
-.card-style-1{
+.card-style-1 {
 	display: flex;
 	flex-direction: column;
 	justify-content: center;
 }
 
-.card-style-2{
+.card-style-2 {
 	display: flex;
 	flex-direction: column;
 	justify-content: center;
@@ -71,18 +72,17 @@ mat-card-subtitle {
 	}
 }
 
-.mat-card-patient-image{
+.mat-card-patient-image {
 	width: 80px;
 	height: 80px;
 }
 
-.mat-card-patient-name{
+.mat-card-patient-name {
 	text-transform: capitalize;
 	max-width: 180px;
 	line-height: 24px;
 }
 
-.interment-episode{
+.interment-episode {
 	padding-top: 5px;
 }
-

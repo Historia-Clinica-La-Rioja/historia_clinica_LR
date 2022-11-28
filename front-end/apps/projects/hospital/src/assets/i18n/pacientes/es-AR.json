@@ -57,7 +57,7 @@
       "REQUIRED_GENDER": "Género requerido",
       "SELECT": "Seleccionar",
       "UPDATE_MEDICAL_COVERAGE": "Actualizar cobertura",
-	  "NO_INFO": "Sin información",
+      "NO_INFO": "Sin información",
       "IDENTIFICATION_NUMBER_MAXLENGHT_ERROR": "Introduzca como máximo 11 caracteres"
     },
     "home": {
@@ -84,16 +84,16 @@
       }
     },
     "new": {
-	  "TITLE_PERSON": "Nueva Persona",
+      "TITLE_PERSON": "Nueva Persona",
       "TITLE_PATIENT": "Nuevo Paciente",
       "SUBTITLE": "Ingresá los siguientes datos.",
       "TITLE_TEMPORARY_PATIENT": "Nuevo Paciente Temporal",
-	  "TITLE_TEMPORARY_PERSON": "Nueva Persona Temporal",
+      "TITLE_TEMPORARY_PERSON": "Nueva Persona Temporal",
       "messages": {
         "ERROR_PATIENT": "Error al crear un paciente",
-		"ERROR_PERSON": "Error al crear una persona",
+        "ERROR_PERSON": "Error al crear una persona",
         "SUCCESS_PATIENT": "El paciente se creó exitosamente",
-		"SUCCESS_PERSON": "La persona se creó exitosamente"
+        "SUCCESS_PERSON": "La persona se creó exitosamente"
       }
     },
     "search": {
@@ -101,20 +101,20 @@
       "SUBTITLE": "No se ha encontrado una persona registrada con ese tipo y número de documento.",
       "SUBTITLE_TWO": "Complete los siguientes datos para una búsqueda avanzada.",
       "NEW_PATIENT": "Crear nuevo paciente",
-	  "NEW_PERSON": "Crear nueva persona",
+      "NEW_PERSON": "Crear nueva persona",
       "RENAPER_TIMEOUT": "No hubo respuesta del servicio de Renaper",
       "ROW_TABLE": "ID Paciente"
     },
     "edit": {
       "TITLE_PATIENT": "Editar paciente",
       "SUBTITLE_PATIENT": "Se editará el paciente seleccionado",
-	  "TITLE_PERSON": "Editar Persona",
+      "TITLE_PERSON": "Editar Persona",
       "SUBTITLE_PERSON": "Se editará la persona seleccionada",
       "messages": {
-		"ERROR_PATIENT": "Error al editar un paciente",
-		"ERROR_PERSON": "Error al editar una persona",
+        "ERROR_PATIENT": "Error al editar un paciente",
+        "ERROR_PERSON": "Error al editar una persona",
         "SUCCESS_PATIENT": "El paciente se editó exitosamente",
-		"SUCCESS_PERSON": "La persona fue editada exitosamente"
+        "SUCCESS_PERSON": "La persona fue editada exitosamente"
       }
     },
     "search_patient": {
@@ -206,11 +206,11 @@
         "SELECT_PROFESSION": "Seleccione profesión",
         "SPECIALTY": "Especialidad",
         "ASSOCIATED_WITH": "Asociada a:",
-		"PROFESSION_ERROR": "Requiere al menos una profesión.",
-		"SPECIALTY_ERROR": "Requiere una especialidad.",
-		"LICENSE_REQUIRED_ERROR": "Requiere una matricula.",
-		"LICENSE_PATTERN_ERROR": "La matricula no es válida.",
-		"LICENSE_MAX_LENGTH_ERROR": "Introduzca como máximo 15 caracteres"
+        "PROFESSION_ERROR": "Requiere al menos una profesión.",
+        "SPECIALTY_ERROR": "Requiere una especialidad.",
+        "LICENSE_REQUIRED_ERROR": "Requiere una matricula.",
+        "LICENSE_PATTERN_ERROR": "La matricula no es válida.",
+        "LICENSE_MAX_LENGTH_ERROR": "Introduzca como máximo 15 caracteres"
       }
     },
     "edit_prefessions_specialties": {
@@ -242,9 +242,9 @@
     },
     "card_license": {
       "TITLE": "Matriculas",
-	  "NATIONAL": "Nacional",
-	  "PROVINCE": "Provincial",
-	  "WITHOUT_LICENSE": "Sin matriculas asignadas."
+      "NATIONAL": "Nacional",
+      "PROVINCE": "Provincial",
+      "WITHOUT_LICENSE": "Sin matriculas asignadas."
     },
     "emergency_care_episode_sumamry": {
       "TITLE": "Resumen de Guardia",

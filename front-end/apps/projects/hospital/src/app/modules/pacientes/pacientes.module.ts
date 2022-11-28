@@ -74,16 +74,16 @@ import { ViewNameProfessionAndSpecialtyPipe } from './pipe/view-name-profession-
 	exports: [
 		CardPatientComponent,
 	],
-    imports: [
-        FormsModule,
-        ReactiveFormsModule,
-        // routing
-        PacientesRoutingModule,
-        // deps
-        LazyMaterialModule,
-        PresentationModule,
-        InternacionesModule,
-    ]
+	imports: [
+		FormsModule,
+		ReactiveFormsModule,
+		// routing
+		PacientesRoutingModule,
+		// deps
+		LazyMaterialModule,
+		PresentationModule,
+		InternacionesModule,
+	]
 })
 export class PacientesModule {
 }

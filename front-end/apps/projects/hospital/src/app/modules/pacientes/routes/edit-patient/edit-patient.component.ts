@@ -22,7 +22,7 @@ import {
 
 import { AppFeature, } from '@api-rest/api-model';
 import { PatientService } from '@api-rest/services/patient.service';
-import { scrollIntoError, hasError, VALIDATIONS, DEFAULT_COUNTRY_ID, updateControlValidator } from '@core/utils/form.utils';
+import { scrollIntoError, hasError, VALIDATIONS, updateControlValidator } from '@core/utils/form.utils';
 import { PersonMasterDataService } from '@api-rest/services/person-master-data.service';
 import { AddressMasterDataService } from '@api-rest/services/address-master-data.service';
 import { SnackBarService } from '@presentation/services/snack-bar.service';
@@ -32,11 +32,9 @@ import { FeatureFlagService } from '@core/services/feature-flag.service';
 import { PATIENT_TYPE } from '@core/utils/patient.utils';
 import { MatDialog } from '@angular/material/dialog';
 import { MedicalCoverageComponent, PatientMedicalCoverage, } from '@pacientes/dialogs/medical-coverage/medical-coverage.component';
-import { map } from 'rxjs/operators';
 import { MapperService } from '@core/services/mapper.service';
 import { PatientMedicalCoverageService } from '@api-rest/services/patient-medical-coverage.service';
 import { PERSON } from '@core/constants/validation-constants';
-import { PersonalInformation } from '@presentation/components/personal-information/personal-information.component';
 import { PermissionsService } from '@core/services/permissions.service';
 
 
@@ -216,12 +214,12 @@ export class EditPatientComponent implements OnInit {
 
 								this.form.get("addressCityId").valueChanges.subscribe(
 									_ => {
-											this.clear(this.form.controls.addressNumber);
-											this.clear(this.form.controls.addressFloor);
-											this.clear(this.form.controls.addressApartment);
-											this.clear(this.form.controls.addressQuarter);
-											this.clear(this.form.controls.addressStreet);
-											this.clear(this.form.controls.addressPostcode);
+										this.clear(this.form.controls.addressNumber);
+										this.clear(this.form.controls.addressFloor);
+										this.clear(this.form.controls.addressApartment);
+										this.clear(this.form.controls.addressQuarter);
+										this.clear(this.form.controls.addressStreet);
+										this.clear(this.form.controls.addressPostcode);
 									}
 								);
 
@@ -267,7 +265,7 @@ export class EditPatientComponent implements OnInit {
 				this.countries = countries;
 			});
 
-			this.permissionsService.hasContextAssignments$([ERole.ADMINISTRADOR_INSTITUCIONAL_BACKOFFICE]).subscribe(hasInstitutionalAdministratorRole => this.hasInstitutionalAdministratorRole = hasInstitutionalAdministratorRole);
+		this.permissionsService.hasContextAssignments$([ERole.ADMINISTRADOR_INSTITUCIONAL_BACKOFFICE]).subscribe(hasInstitutionalAdministratorRole => this.hasInstitutionalAdministratorRole = hasInstitutionalAdministratorRole);
 	}
 
 	updatePhoneValidators() {
@@ -280,6 +278,7 @@ export class EditPatientComponent implements OnInit {
 		}
 
 	}
+
 	formBuild() {
 		this.form = this.formBuilder.group({
 			firstName: [null, [Validators.required]],
@@ -344,12 +343,76 @@ export class EditPatientComponent implements OnInit {
 		}
 	}
 
+	setProvinces() {
+		const countryId: number = this.form.controls.addressCountryId.value;
+		this.addressMasterDataService.getByCountry(countryId)
+			.subscribe(provinces => {
+				this.provinces = provinces;
+			});
+	}
+
+	setDepartments() {
+		const provinceId: number = this.form.controls.addressProvinceId.value;
+		this.addressMasterDataService.getDepartmentsByProvince(provinceId)
+			.subscribe(departments => {
+				this.departments = departments;
+			});
+	}
+
+	setCities() {
+		const departmentId: number = this.form.controls.addressDepartmentId.value;
+		this.addressMasterDataService.getCitiesByDepartment(departmentId)
+			.subscribe(cities => {
+				this.cities = cities;
+			});
+	}
+
+	openMedicalCoverageDialog(): void {
+		const dialogRef = this.dialog.open(MedicalCoverageComponent, {
+			data: {
+				genderId: this.form.getRawValue().genderId,
+				identificationNumber: this.form.getRawValue().identificationNumber,
+				identificationTypeId: this.form.getRawValue().identificationTypeId,
+				initValues: this.medicalCoverages,
+				patientId: this.patientId,
+			}
+		});
+		dialogRef.afterClosed().subscribe(medicalCoverages => {
+			if (medicalCoverages) {
+				this.medicalCoverages = medicalCoverages.patientMedicalCoverages;
+			}
+		});
+	}
+
+	goBack(): void {
+		this.formSubmitted = false;
+		this.router.navigate([this.routePrefix + ROUTE_PROFILE + `${this.patientId}`]);
+	}
+
+	showOtherSelfPerceivedGender(): void {
+		this.showOtherGender = (this.form.value.genderSelfDeterminationId === this.NONE_SELF_PERCEIVED_GENDER_SELECTED_ID);
+		this.form.get('otherGenderSelfDetermination').setValue(null);
+		if (this.showOtherGender)
+			this.form.get('otherGenderSelfDetermination').enable();
+		else
+			this.form.get('otherGenderSelfDetermination').disable();
+	}
+
+	clearGenderSelfDetermination(): void {
+		this.form.controls.genderSelfDeterminationId.reset();
+		this.showOtherSelfPerceivedGender();
+	}
+
+	clear(control: AbstractControl): void {
+		control.reset();
+	}
+
 	private getMessagesSuccess(): string {
-		return this.hasInstitutionalAdministratorRole ? 'pacientes.edit.messages.SUCCESS_PERSON' : 'pacientes.edit.messages.SUCCESS_PATIENT' ;
+		return this.hasInstitutionalAdministratorRole ? 'pacientes.edit.messages.SUCCESS_PERSON' : 'pacientes.edit.messages.SUCCESS_PATIENT';
 	}
 
 	private getMessagesError(): string {
-		return this.hasInstitutionalAdministratorRole ? 'pacientes.edit.messages.ERROR_PERSON' : 'pacientes.edit.messages.ERROR_PATIENT' ;
+		return this.hasInstitutionalAdministratorRole ? 'pacientes.edit.messages.ERROR_PERSON' : 'pacientes.edit.messages.ERROR_PATIENT';
 	}
 
 	private mapToPersonRequest(): APatientDto {
@@ -412,52 +475,6 @@ export class EditPatientComponent implements OnInit {
 
 	}
 
-	setProvinces() {
-		const countryId: number = this.form.controls.addressCountryId.value;
-		this.addressMasterDataService.getByCountry(countryId)
-			.subscribe(provinces => {
-				this.provinces = provinces;
-			});
-	}
-
-	setDepartments() {
-		const provinceId: number = this.form.controls.addressProvinceId.value;
-		this.addressMasterDataService.getDepartmentsByProvince(provinceId)
-			.subscribe(departments => {
-				this.departments = departments;
-			});
-	}
-
-	setCities() {
-		const departmentId: number = this.form.controls.addressDepartmentId.value;
-		this.addressMasterDataService.getCitiesByDepartment(departmentId)
-			.subscribe(cities => {
-				this.cities = cities;
-			});
-	}
-
-	openMedicalCoverageDialog(): void {
-		const dialogRef = this.dialog.open(MedicalCoverageComponent, {
-			data: {
-				genderId: this.form.getRawValue().genderId,
-				identificationNumber: this.form.getRawValue().identificationNumber,
-				identificationTypeId: this.form.getRawValue().identificationTypeId,
-				initValues: this.medicalCoverages,
-				patientId: this.patientId,
-			}
-		});
-		dialogRef.afterClosed().subscribe(medicalCoverages => {
-			if (medicalCoverages) {
-				this.medicalCoverages = medicalCoverages.patientMedicalCoverages;
-			}
-		});
-	}
-
-	goBack(): void {
-		this.formSubmitted = false;
-		this.router.navigate([this.routePrefix + ROUTE_PROFILE + `${this.patientId}`]);
-	}
-
 	private disableFormField() {
 		this.form.controls.identificationNumber.disable();
 		this.form.controls.identificationTypeId.disable();
@@ -480,24 +497,6 @@ export class EditPatientComponent implements OnInit {
 					this.disableFormField();
 				}
 			});
-	}
-
-	public showOtherSelfPerceivedGender(): void {
-		this.showOtherGender = (this.form.value.genderSelfDeterminationId === this.NONE_SELF_PERCEIVED_GENDER_SELECTED_ID);
-		this.form.get('otherGenderSelfDetermination').setValue(null);
-		if (this.showOtherGender)
-			this.form.get('otherGenderSelfDetermination').enable();
-		else
-			this.form.get('otherGenderSelfDetermination').disable();
-	}
-
-	public clearGenderSelfDetermination(): void {
-		this.form.controls.genderSelfDeterminationId.reset();
-		this.showOtherSelfPerceivedGender();
-	}
-
-	clear(control: AbstractControl): void {
-		control.reset();
 	}
 
 }

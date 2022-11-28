@@ -5,7 +5,6 @@ import {
 	PatientMedicalCoverageDto,
 	PersonPhotoDto,
 	ProfessionalDto,
-	HealthcareProfessionalSpecialtyDto,
 	ClinicalSpecialtyDto,
 	UserDataDto,
 	UserRoleDto,
