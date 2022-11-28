@@ -38,6 +38,9 @@ import { PERSON } from '@core/constants/validation-constants';
 import { PermissionsService } from '@core/services/permissions.service';
 import { MessageForAuditComponent } from '@pacientes/dialogs/message-for-audit/message-for-audit.component';
 import { UnmarkPatientForAuditComponent } from '@pacientes/dialogs/unmark-patient-for-audit/unmark-patient-for-audit.component';
+import { dateTimeDtoToDate } from '@api-rest/mapper/date-dto.mapper';
+import { DatePipeFormat } from '@core/utils/date.utils';
+import { DatePipe } from '@angular/common';
 
 
 const ROUTE_PROFILE = 'pacientes/profile/';
@@ -69,6 +72,8 @@ export class EditPatientComponent implements OnInit {
 	private readonly routePrefix;
 	public patientType;
 	public completeDataPatient: CompletePatientDto;
+	public auditablePatientInfo: AuditablePatientInfo;
+	private auditableFullDate: Date;
 	public patientId: any;
 
 	private medicalCoverages: PatientMedicalCoverage[];
@@ -94,7 +99,7 @@ export class EditPatientComponent implements OnInit {
 		private readonly mapperService: MapperService,
 		private readonly patientMedicalCoverageService: PatientMedicalCoverageService,
 		private permissionsService: PermissionsService,
-
+		private readonly datePipe: DatePipe,
 	) {
 		this.routePrefix = 'institucion/' + this.contextService.institutionId + '/';
 	}
@@ -107,6 +112,20 @@ export class EditPatientComponent implements OnInit {
 				this.patientService.getPatientCompleteData<CompletePatientDto>(this.patientId)
 					.subscribe(completeData => {
 						this.completeDataPatient = completeData;
+						if (completeData?.auditablePatientInfo) {
+							this.auditableFullDate = dateTimeDtoToDate(
+								{
+									date: this.completeDataPatient.auditablePatientInfo.createdOn.date,
+									time: this.completeDataPatient.auditablePatientInfo.createdOn.time
+								}
+							);
+							this.auditablePatientInfo = {
+								message: this.completeDataPatient.auditablePatientInfo.message,
+								createdBy: this.completeDataPatient.auditablePatientInfo.createdBy,
+								createdOn: this.datePipe.transform(this.auditableFullDate, DatePipeFormat.SHORT),
+								institutionName: this.completeDataPatient.auditablePatientInfo.institutionName
+							};
+						}
 						this.patientType = completeData.patientType.id;
 						this.personService.getCompletePerson<BMPersonDto>(completeData.person.id)
 							.subscribe(personInformationData => {
@@ -421,6 +440,13 @@ export class EditPatientComponent implements OnInit {
 		dialogRef.afterClosed().subscribe(message => {
 			if (message) {
 				// To do .. save new message for audit
+				this.auditableFullDate = new Date();
+				this.auditablePatientInfo = {
+					message: message,
+					createdBy: null,
+					createdOn: this.datePipe.transform(this.auditableFullDate, DatePipeFormat.SHORT),
+					institutionName: null,
+				}
 			}
 		});
 	}
@@ -433,7 +459,8 @@ export class EditPatientComponent implements OnInit {
 		});
 		dialogRef.afterClosed().subscribe((unmark: boolean) => {
 			if (unmark) {
-				// To do .. unmark patient for audit
+				this.auditablePatientInfo = undefined;
+				this.auditableFullDate = undefined;
 			}
 		});
 	}
@@ -530,4 +557,11 @@ export class EditPatientComponent implements OnInit {
 			});
 	}
 
+}
+
+interface AuditablePatientInfo {
+	createdBy: string;
+	createdOn: string;
+	institutionName: string;
+	message: string;
 }

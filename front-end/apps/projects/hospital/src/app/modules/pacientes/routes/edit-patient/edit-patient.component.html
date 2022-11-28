@@ -45,11 +45,42 @@
 					</div>
 				</div>
 
-				<button mat-button type="button" id="mark_for_audit" color="primary" (click)="openAuditDialog(null)">
-					<mat-icon fontSet="material-icons-outlined">sms_failed</mat-icon>
-					{{ 'pacientes.edit.MARK_FOR_AUDIT' | translate }}
-				</button>
-				<br><br>
+				<div *ngIf="!auditablePatientInfo">
+					<button mat-button type="button" id="mark_for_audit" color="primary"
+						(click)="openAuditDialog(null)">
+						<mat-icon fontSet="material-icons-outlined">sms_failed</mat-icon>
+						{{ 'pacientes.edit.MARK_FOR_AUDIT' | translate }}
+					</button>
+					<br><br>
+				</div>
+
+				<div *ngIf="auditablePatientInfo" fxLayout="column" fxLayoutGap="10px" id="message_for_audit_section">
+					<span [translate]="'pacientes.edit.MESSAGE_FOR_AUDIT'"></span>
+
+					<div>
+						<span id="message_for_audit"> "{{ auditablePatientInfo.message }}" </span>
+						<div class="mat-caption">
+							<span *ngIf="auditablePatientInfo.createdBy">{{ auditablePatientInfo.createdBy }} - </span>
+							<span *ngIf="auditablePatientInfo.institutionName">
+								{{ auditablePatientInfo.institutionName }} - </span>
+							<span>{{ auditablePatientInfo.createdOn }}</span>
+						</div>
+					</div>
+
+					<div fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="5px" fxLayout.lt-sm="column"
+						fxLayoutAlign.lt-sm="start start" fxLayoutGap.lt-sm="3px">
+						<button mat-button type="button" id="edit_message_for_audit" color="primary"
+							(click)="openAuditDialog(auditablePatientInfo.message)">
+							<mat-icon fontSet="material-icons-outlined">edit</mat-icon>
+							{{ 'pacientes.edit.EDIT_MESSAGE_FOR_AUDIT' | translate }}
+						</button>
+						<button mat-button type="button" id="unmark_patient_for_audit" color="warn"
+							(click)="openUnmarkPatientWarning()">
+							<mat-icon fontSet="material-icons-outlined">cancel</mat-icon>
+							{{ 'pacientes.edit.UNMARK_PATIENT_FOR_AUDIT' | translate }}
+						</button>
+					</div>
+				</div>
 
 				<div>
 					<div>
