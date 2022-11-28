@@ -1,9 +1,9 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable, of } from 'rxjs';
 import { environment } from '@environments/environment';
 import { ContextService } from '@core/services/context.service';
-import {ClinicalSpecialtyDto, ProfessionalsByClinicalSpecialtyDto} from '@api-rest/api-model';
+import { ClinicalSpecialtyDto, ProfessionalsByClinicalSpecialtyDto } from '@api-rest/api-model';
 
 @Injectable({
 	providedIn: 'root'
@@ -52,6 +52,18 @@ export class ClinicalSpecialtyService {
 
 		}
 		return of([]);
+	}
+
+	getClinicalSpecialtyByInstitution(institutionId: number): Observable<ClinicalSpecialtyDto[]> {
+		const url = `${environment.apiBase}/institution/${this.contextService.institutionId}/clinicalspecialty/by-destination-institution`;
+		let params = new HttpParams();
+		params = params.append('destinationInstitutionId', institutionId);
+		return this.http.get<ClinicalSpecialtyDto[]>(url, { params });
+	}
+
+	getAllByDestinationInstitution(careLineId: number, destinationInstitutionId: number): Observable<ClinicalSpecialtyDto[]> {
+		const url = `${environment.apiBase}/institution/${this.contextService.institutionId}/clinicalspecialty/careline/${careLineId}/destinationinstitution/${destinationInstitutionId}`;
+		return this.http.get<ClinicalSpecialtyDto[]>(url);
 	}
 
 }

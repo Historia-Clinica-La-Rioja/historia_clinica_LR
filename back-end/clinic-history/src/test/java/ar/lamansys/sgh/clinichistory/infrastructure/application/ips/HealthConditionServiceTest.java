@@ -12,6 +12,7 @@ import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.ips.entity
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.ips.entity.HealthCondition;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.masterdata.ConditionClinicalStatusRepository;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.masterdata.ConditionVerificationStatusRepository;
+import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.masterdata.SnomedRepository;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.masterdata.entity.ConditionClinicalStatus;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.masterdata.entity.ConditionVerificationStatus;
 import ar.lamansys.sgx.shared.dates.configuration.DateTimeProvider;
@@ -53,6 +54,9 @@ class HealthConditionServiceTest extends UnitRepository {
 
     @MockBean
     private DateTimeProvider dateTimeProvider;
+
+	@MockBean
+	private SnomedRepository snomedRepository;
 
 
     @Autowired

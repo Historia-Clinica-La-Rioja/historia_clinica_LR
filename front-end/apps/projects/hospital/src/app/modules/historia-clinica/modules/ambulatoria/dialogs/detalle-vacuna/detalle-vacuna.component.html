@@ -18,9 +18,10 @@
 		</div>
 		<div  class="mat-values">
 			<div fxFlex="33%">
-				<ng-container *ngIf="data.appliedDoses else noInfo">
-					<strong class="appliedDoses">{{data.appliedDoses | uppercase}}</strong>
-				</ng-container>
+				<app-colored-label *ngIf="data.appliedDoses else noInfo"
+					[description]="data.appliedDoses | translate | uppercase"
+					[color]="Color.BLUE">
+				</app-colored-label>
 			</div>
 			<div fxFlex="33%">
 				<ng-container *ngIf="data.applicationDate else noInfo"><span >{{data.applicationDate | viewDate }}</span>

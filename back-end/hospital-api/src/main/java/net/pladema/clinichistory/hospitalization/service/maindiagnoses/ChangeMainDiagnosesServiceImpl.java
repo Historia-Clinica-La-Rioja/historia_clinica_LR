@@ -13,6 +13,7 @@ import ar.lamansys.sgh.clinichistory.domain.ips.HealthConditionBo;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.validation.ConstraintViolationException;
 
@@ -46,6 +47,7 @@ public class ChangeMainDiagnosesServiceImpl implements ChangeMainDiagnosesServic
     }
 
     @Override
+	@Transactional
     public MainDiagnosisBo execute(MainDiagnosisBo mainDiagnosisBo) {
         LOG.debug("Input parameters -> mainDiagnosisBo {}", mainDiagnosisBo);
 

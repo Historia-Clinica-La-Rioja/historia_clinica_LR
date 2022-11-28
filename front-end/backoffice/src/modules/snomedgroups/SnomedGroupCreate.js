@@ -8,12 +8,12 @@ import {
     ReferenceInput,
     AutocompleteInput,
     FormDataConsumer,
-    BooleanInput,
     usePermissions,
 } from 'react-admin';
 import CustomToolbar from "../components/CustomToolbar";
 import { ADMINISTRADOR } from "../roles";
 import UserReferenceInput from "../users/UserReferenceInput";
+import SgxSelectInput from "../../sgxSelectInput/SgxSelectInput";
 
 const searchSnomedGroupToFilter = searchText => ({description: searchText ? searchText : ''});
 
@@ -67,8 +67,10 @@ const SnomedGroupCreate = props => (
                 {formDataProps => ( <SnomedGroupSelect {...formDataProps} source="groupId" />)}
             </FormDataConsumer>
 
-            {/* Is template */}
-            <BooleanInput source="template" disabled={false} initialValue={false}/>
+            {/* Snomed Group Type */}
+            <FormDataConsumer>
+                {formDataProps => ( <SgxSelectInput {...formDataProps} source="groupType" element="snomedgrouptypes" optionText="description" allowEmpty={false} />)}
+            </FormDataConsumer>
 
             {/* Institution */}
             <FormDataConsumer>

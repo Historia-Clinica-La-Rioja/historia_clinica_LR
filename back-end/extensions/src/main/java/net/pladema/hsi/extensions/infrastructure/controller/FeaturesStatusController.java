@@ -77,7 +77,10 @@ public class FeaturesStatusController {
 		);
 	}
 
-	private static Stream<UIComponentDto> propertiesToUIComponent(String prefix, List<FeatureProperty> properties) {
+	private static Stream<UIComponentDto> propertiesToUIComponent(
+			String prefix,
+			List<FeatureProperty> properties
+	) {
 		return properties.stream()
 				.map(featureProperty -> propertyToUIComponent(prefix, featureProperty));
 	}

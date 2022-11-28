@@ -115,7 +115,7 @@ export class MapperService {
 				identificationTypeId: patient.identificationTypeId,
 				internmentId: patient.internmentId,
 				lastName: patient.lastName,
-				fullName: `${patient.firstName} ${patient.lastName}`,
+				fullName: getFullName(patient.firstName, patient.lastName),
 				nameSelfDetermination: patient.nameSelfDetermination,
 				bedInfo: {
 					sector: patient.sectorDescription,
@@ -125,6 +125,15 @@ export class MapperService {
 				hasPhysicalDischarge: patient.hasPhysicalDischarge,
 				documentsSummary: patient.documentsSummary,
 				hasMedicalDischarge: patient.hasMedicalDischarge
+			}
+			function getFullName(firstName: string, lastName: string): string {
+				if (firstName && lastName)
+					return `${firstName} ${lastName}`
+				if (firstName)
+					return `${firstName}`
+				if (lastName)
+					return `${lastName}`
+				return undefined
 			}
 		}
 
@@ -136,7 +145,7 @@ export class MapperService {
 				identificationTypeId: info.patient.identificationTypeId,
 				internmentId: info.id,
 				lastName: info.patient.lastName,
-				fullName: `${info.patient.firstName} ${info.patient.lastName}`,
+				fullName: getFullName(info.patient.firstName, info.patient.lastName),
 				nameSelfDetermination: info.patient.nameSelfDetermination,
 				bedInfo: {
 					sector: info.bed.room.sector.description,
@@ -145,6 +154,15 @@ export class MapperService {
 				},
 				hasPhysicalDischarge: info.hasPhysicalDischarge,
 				documentsSummary: info.documentsSummary
+			}
+			function getFullName(firstName: string, lastName: string): string {
+				if (firstName && lastName)
+					return `${firstName} ${lastName}`
+				if (firstName)
+					return `${firstName}`
+				if (lastName)
+					return `${lastName}`
+				return undefined
 			}
 		}
 	}

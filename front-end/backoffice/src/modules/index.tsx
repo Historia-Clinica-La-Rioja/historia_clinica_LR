@@ -18,7 +18,7 @@ import professionalprofessions from './professionalprofessions';
 import professionalSpecialties from './professionalspecialties';
 import healthcareprofessionalspecialties from './healthcareprofessionalspecialties';
 import doctorsoffices from './doctorsoffices';
-
+import holidays from './holidays';
 import person from './person';
 import admin from './admin';
 import users from './users';
@@ -31,6 +31,7 @@ import properties from './properties';
 import restClientMeasures from './rest-client-measures';
 import medicalCoverage from './medicalcoverage';
 import snomedgroups from './snomedgroups';
+import carelineproblems from './carelineproblems';
 
 
 import { ROOT, ADMINISTRADOR } from './roles';
@@ -49,7 +50,12 @@ import healthcareprofessionallicensenumbers from "./healthcareprofessionallicens
 import licensenumbertypes from "./licensenumbertypes";
 import healthcareprofessionalspecialtylicensenumbers from "./healthcareprofessionalspecialtylicensenumbers";
 //
-
+import wcDefinitionPath from './wcDefinitionPathCreate';
+import careLineInstitution from "./carelineinstitution";
+import carelineinstitutionspecialty from "./carelineinstitutionspecialty";
+import careLineInstitutionPractice from "./carelineinstitutionpractice";
+import institutionpractices from "./institutionpractices";
+import institutionpracticesrelatedgroups from "./institutionpracticesrelatedgroups";
 
 const resourcesAdminInstitucional = (permissions: SGXPermissions) =>
     permissions.isOn('BACKOFFICE_MOSTRAR_ABM_RESERVA_TURNOS') ?
@@ -97,6 +103,13 @@ const resources = (permissions: SGXPermissions) => [
     <Resource name="beds" {...beds} />,
     <Resource name="clinicalspecialtycarelines" {...clinicalspecialtycarelines} />,
     <Resource name="carelines" {...careLines(permissions)} />,
+    <Resource name="carelineproblems" {...carelineproblems} />,
+    <Resource name="carelineinstitution" {...careLineInstitution(permissions)} />,
+    <Resource name="carelineinstitutionspecialty" {...carelineinstitutionspecialty(permissions)} />,
+    <Resource name="carelineinstitutionpractice" {...careLineInstitutionPractice(permissions)} />,
+    <Resource name="practicesinstitution" />,
+    <Resource name="carelinespecialtyinstitution" />,
+    <Resource name="snowstormproblems" />,
     // debug
     <Resource name="snvs"  {...snvs} />,
     <Resource name="documentfiles" {...documentFiles(permissions)} />,
@@ -112,6 +125,8 @@ const resources = (permissions: SGXPermissions) => [
     <Resource name="clinicalspecialties" {...clinicalspecialties(permissions)} />,
     <Resource name="clinicalservices" {...clinicalservices(permissions)} />,
     <Resource name="professionalspecialties" {...professionalSpecialties(permissions)} />,
+    <Resource name="holidays" {...holidays(permissions)} />,
+    <Resource name="snomedgrouptypes" />,
     // more
     <Resource name="identificationTypes" />,
     <Resource name="patient" />,
@@ -129,12 +144,18 @@ const resources = (permissions: SGXPermissions) => [
     <Resource name="healthcareprofessionallicensenumbers" {...healthcareprofessionallicensenumbers} />,
     <Resource name="healthcareprofessionalspecialtylicensenumbers" {...healthcareprofessionalspecialtylicensenumbers} />,
     <Resource name="licensenumbertypes" {...licensenumbertypes} />,
+    <Resource name="institutionpractices" {...institutionpractices} />,
+    <Resource name="institutionpracticesrelatedgroups" {...institutionpracticesrelatedgroups} />,
+    <Resource name="snowstormpractices" />,
 
     <Resource name="snomedgroupconcepts" />,
     <Resource name="snomedrelatedgroups"  {...snomedrelatedgroups} />,
     <Resource name="snomedconcepts" {...snomedconcepts} />,
     <Resource name="internmentepisodes" />,
     <Resource name="healthcareprofessionals" />,
+
+    //Extension
+    <Resource name="wcDefinitionPath" {...wcDefinitionPath(permissions)} />,
 ];
 
 export default resources;

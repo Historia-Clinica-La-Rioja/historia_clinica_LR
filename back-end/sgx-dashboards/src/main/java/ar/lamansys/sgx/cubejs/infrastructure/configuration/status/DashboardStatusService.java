@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.function.Supplier;
 
+import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Service;
 
 import ar.lamansys.sgx.cubejs.application.dashboardinfo.DashboardInfoService;
@@ -14,6 +15,7 @@ import net.pladema.hsi.extensions.configuration.features.FeatureStatusService;
 
 
 @Service
+@Order(3)
 public class DashboardStatusService extends FeatureStatusService {
 
 	public DashboardStatusService(
@@ -23,7 +25,7 @@ public class DashboardStatusService extends FeatureStatusService {
 		super(
 				"app.gateway.cubejs",
 				listProperties(configuration),
-				configuration.isEnabled() ? fetchStatusData(dashboardInfoService) : FEATURE_DISABLED
+				configuration.isEnabled(true) ? fetchStatusData(dashboardInfoService) : FEATURE_DISABLED
 		);
 	}
 

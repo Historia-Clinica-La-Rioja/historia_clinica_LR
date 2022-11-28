@@ -1,8 +1,8 @@
 import { Injectable } from '@angular/core';
 import { CalendarEvent } from 'angular-calendar';
-import { ReplaySubject, Observable } from 'rxjs';
+import { ReplaySubject, Observable, forkJoin, BehaviorSubject } from 'rxjs';
 import { AppointmentsService } from '@api-rest/services/appointments.service';
-import { AppointmentListDto, BasicPersonalDataDto, CreateAppointmentDto, DateTimeDto, UpdateAppointmentDto } from '@api-rest/api-model';
+import { AppointmentListDto, AppointmentShortSummaryDto, BasicPersonalDataDto, CreateAppointmentDto, DateTimeDto, ProfessionalDto, UpdateAppointmentDateDto, UpdateAppointmentDto } from '@api-rest/api-model';
 import {
 	momentParseTime,
 	DateFormat,
@@ -14,6 +14,8 @@ import { map, first } from 'rxjs/operators';
 import { CANCEL_STATE_ID, APPOINTMENT_STATES_ID } from '../constants/appointment';
 import { PatientNameService } from "@core/services/patient-name.service";
 import { AppointmentBlockMotivesFacadeService } from './appointment-block-motives-facade.service';
+import { HolidaysService } from '@api-rest/services/holidays.service';
+import { dateDtoToDate } from '@api-rest/mapper/date-dto.mapper';
 
 const enum COLORES {
 	ASSIGNED = '#4187FF',
@@ -63,8 +65,13 @@ export class AppointmentsFacadeService {
 
 
 	private appointmenstEmitter = new ReplaySubject<CalendarEvent[]>(1);
+	private holidayEmitter = new ReplaySubject<CalendarEvent[]>(1);
 	private appointments$: Observable<CalendarEvent[]>;
-	private professionalId: number;
+	private holidays$: Observable<CalendarEvent[]>;
+	private professionalSubject = new BehaviorSubject<ProfessionalDto>(null);
+
+	private professional: ProfessionalDto;
+	professional$ = this.professionalSubject.asObservable();
 
 	private startDate: string;
 	private endDate: string;
@@ -73,19 +80,25 @@ export class AppointmentsFacadeService {
 		private readonly appointmentService: AppointmentsService,
 		private readonly patientNameService: PatientNameService,
 		private readonly appointmentBlockMotivesFacadeService: AppointmentBlockMotivesFacadeService,
+		private readonly holidayService: HolidaysService
 
 	) {
 		this.appointments$ = this.appointmenstEmitter.asObservable();
+		this.holidays$ = this.holidayEmitter.asObservable();
 	}
 
-	setProfessionalId(id: number) {
-		this.professionalId = id;
-		if (this.agendaId)
-			this.loadAppointments();
+	setProfessional(professional: ProfessionalDto) {
+		if (professional.id && this.professional?.id !== professional.id) {
+			this.professional = professional;
+			this.professionalSubject.next(professional);
+			if (this.agendaId) {
+				this.loadAppointments();
+			}
+		}
 	}
 
-	getProfessionalId() {
-		return this.professionalId
+	getProfessional() {
+		return this.professional;
 	}
 
 	setValues(agendaId, appointmentDuration, startDate: string, endDate: string): void {
@@ -98,13 +111,13 @@ export class AppointmentsFacadeService {
 
 	clear(): void {
 		this.appointmenstEmitter.next(undefined);
+		this.agendaId = null;
 	}
 
 	public loadAppointments(): void {
-
-		this.appointmentService.getList([this.agendaId], this.professionalId, this.startDate, this.endDate)
-			.subscribe((appointments: AppointmentListDto[]) => {
-				const appointmentsCalendarEvents: CalendarEvent[] = appointments
+		forkJoin([	this.appointmentService.getList([this.agendaId], this.professional?.id, this.startDate, this.endDate),
+					this.holidayService.getHolidays(this.startDate, this.endDate)]).subscribe((result) => {
+				const appointmentsCalendarEvents: CalendarEvent[] = result[0]
 					.map(appointment => {
 						const from = momentParseTime(appointment.hour).format(DateFormat.HOUR_MINUTE);
 						let to = momentParseTime(from).add(this.appointmentDuration, 'minutes').format(DateFormat.HOUR_MINUTE);
@@ -115,7 +128,15 @@ export class AppointmentsFacadeService {
 						const calendarEvent = toCalendarEvent(from, to, momentParseDate(appointment.date), appointment, viewName, this.appointmentBlockMotivesFacadeService);
 						return calendarEvent;
 					});
-				this.appointmenstEmitter.next(appointmentsCalendarEvents);
+				const holidaysCalendarEvents = result[1].map(holiday => {
+					return {
+						start: dateDtoToDate(holiday.date),
+						title: holiday.description,
+						allDay: true
+					}
+				});
+				this.appointmenstEmitter.next(appointmentsCalendarEvents.concat(holidaysCalendarEvents));
+				this.holidayEmitter.next(holidaysCalendarEvents);
 			});
 	}
 
@@ -128,6 +149,9 @@ export class AppointmentsFacadeService {
 		return this.appointments$;
 	}
 
+	getHolidays(): Observable<CalendarEvent[]> {
+		return this.holidays$;
+	}
 
 	updatePhoneNumber(appointmentId: number, phonePrefix: string, phoneNumber: string): Observable<boolean> {
 		return this.appointmentService.updatePhoneNumber(appointmentId, phonePrefix, phoneNumber)
@@ -135,7 +159,7 @@ export class AppointmentsFacadeService {
 				map((response: boolean) => {
 					if (response) {
 						this.appointments$.pipe(first()).subscribe((events: CalendarEvent[]) => {
-							const toEdit: CalendarEvent = events.find(event => event.meta.appointmentId === appointmentId);
+							const toEdit: CalendarEvent = events.find(event => event.meta?.appointmentId === appointmentId);
 							toEdit.meta.phoneNumber = phoneNumber;
 							toEdit.meta.phonePrefix = phonePrefix;
 							this.appointmenstEmitter.next(events);
@@ -153,7 +177,7 @@ export class AppointmentsFacadeService {
 				map((response: boolean) => {
 					if (response) {
 						this.appointments$.pipe(first()).subscribe((events: CalendarEvent[]) => {
-							const toEdit: CalendarEvent = events.find(event => event.meta.appointmentId === appointmentId);
+							const toEdit: CalendarEvent = events.find(event => event.meta?.appointmentId === appointmentId);
 							toEdit.meta.observation = observation;
 							this.appointmenstEmitter.next(events);
 						});
@@ -164,14 +188,14 @@ export class AppointmentsFacadeService {
 			);
 	}
 
-	updateDate(appointmentId: number, date: DateTimeDto): Observable<boolean> {
-		return this.appointmentService.updateDate(appointmentId, date)
+	updateDate(updateAppointmentDate: UpdateAppointmentDateDto): Observable<boolean> {
+		return this.appointmentService.updateDate(updateAppointmentDate)
 			.pipe(
 				map((response: boolean) => {
 					if (response) {
 						this.appointments$.pipe(first()).subscribe((events: CalendarEvent[]) => {
-							const toEdit: CalendarEvent = events.find(event => event.meta.appointmentId === appointmentId);
-							toEdit.meta.date = date;
+							const toEdit: CalendarEvent = events.find(event => event.meta?.appointmentId === updateAppointmentDate.appointmentId);
+							toEdit.meta.date = updateAppointmentDate.date
 							this.appointmenstEmitter.next(events);
 						});
 						return true;
@@ -185,15 +209,14 @@ export class AppointmentsFacadeService {
 		this.appointmenstEmitter.next(events);
 	}
 
-	addAppointment(newAppointment: CreateAppointmentDto): Observable<boolean> {
+	addAppointment(newAppointment: CreateAppointmentDto): Observable<number> {
 		return this.appointmentService.create(newAppointment)
 			.pipe(
 				map((response: number) => {
 					if (response) {
-						this.loadAppointments(); // TODO En lugar de hacer otro llamado al BE evaluar si se puede agregar appointments$
-						return true;
+						return response;
 					}
-					return false;
+					return -1;
 				})
 			);
 	}
@@ -204,7 +227,7 @@ export class AppointmentsFacadeService {
 				map((response: boolean) => {
 					if (response) {
 						this.appointments$.pipe(first()).subscribe((events: CalendarEvent[]) => {
-							const validEvents = events.filter(event => event.meta.appointmentId !== appointmentId);
+							const validEvents = events.filter(event => event.meta?.appointmentId !== appointmentId);
 							this.appointmenstEmitter.next(validEvents);
 						});
 						return true;
@@ -220,7 +243,7 @@ export class AppointmentsFacadeService {
 				map(() => {
 						this.appointments$.subscribe(
 							(events: CalendarEvent[]) => {
-								const updatedEvent: CalendarEvent = events.find(event => event.meta.appointmentId === appointment.appointmentId);
+								const updatedEvent: CalendarEvent = events.find(event => event.meta?.appointmentId === appointment.appointmentId);
 								updatedEvent.meta.appointmentStateId = appointment.appointmentStateId
 								this.loadAppointments();
 							}
@@ -237,7 +260,7 @@ export class AppointmentsFacadeService {
 					if (response) {
 						this.appointments$.subscribe(
 							(events: CalendarEvent[]) => {
-								const updatedEvent: CalendarEvent = events.find(event => event.meta.appointmentId === appointmentId);
+								const updatedEvent: CalendarEvent = events.find(event => event.meta?.appointmentId === appointmentId);
 								updatedEvent.meta.appointmentStateId = newStateId;
 								this.loadAppointments();
 							}
@@ -248,9 +271,13 @@ export class AppointmentsFacadeService {
 				})
 			);
 	}
+
+	verifyExistingAppointment(patientId: number, date: string): Observable<AppointmentShortSummaryDto> {
+		return this.appointmentService.verifyExistingAppointments(patientId, date);
+	}
 }
 
-export function toCalendarEvent(from: string, to: string, date: Moment, appointment: AppointmentListDto, viewName: string, appointmentBlockMotivesFacadeService?: AppointmentBlockMotivesFacadeService): CalendarEvent {
+export function toCalendarEvent(from: string, to: string, date: Moment, appointment: AppointmentListDto, viewName?: string, appointmentBlockMotivesFacadeService?: AppointmentBlockMotivesFacadeService): CalendarEvent {
 	const fullName = [appointment.patient?.person.lastName, appointment.patient?.person.firstName].
 		filter(val => val).join(', ');
 
@@ -296,9 +323,9 @@ export function toCalendarEvent(from: string, to: string, date: Moment, appointm
 			return appointmentBlockMotivesFacadeService?.getAppointmentBlockMotiveById(appointment.appointmentBlockMotiveId);
 		}
 		if (appointment.patient?.typeId === TEMPORARY_PATIENT) {
-			return `${momentParseTime(from).format(DateFormat.HOUR_MINUTE_12)} ${viewName ? viewName : ''} (Temporal)`;
+			return `${momentParseTime(from).format(DateFormat.HOUR_MINUTE)} ${viewName ? viewName : ''} (Temporal)`;
 		}
-		return `${momentParseTime(from).format(DateFormat.HOUR_MINUTE_12)}	 ${viewName}`;
+		return `${momentParseTime(from).format(DateFormat.HOUR_MINUTE)}	 ${viewName}`;
 	}
 }
 

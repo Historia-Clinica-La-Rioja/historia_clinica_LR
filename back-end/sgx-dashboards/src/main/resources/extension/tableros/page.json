@@ -4,14 +4,48 @@
     {
       "type": "cubejs-dashboard",
       "args": {
-        "form": [
-          
-        ],
+        "filters": {
+          "fecha": {
+            "filter": {
+              "member": "Referencias.fecha_consulta",
+              "operator": "inDateRange"
+            },
+            "type": "dateRangeISO",
+            "label": "Fecha"
+          }
+        },
         "content": [
           {
-            "type": "cubejs-chart",
+            "type": "tabs",
             "args": {
-              "query": "tablaReferencia"
+              "tabs": [
+                {
+                  "args": {
+                    "label": "Solicitadas",
+                    "content": [
+                      {
+                        "type": "cubejs-chart",
+                        "args": {
+                          "query": "tablaReferencia"
+                        }
+                      }
+                    ]
+                  }
+                },
+                {
+                  "args": {
+                    "label": "Recibidas",
+                    "content": [
+                      {
+                        "type": "cubejs-chart",
+                        "args": {
+                          "query": "tablaContraReferencia"
+                        }
+                      }
+                    ]
+                  }
+                }
+              ]
             }
           }
         ]

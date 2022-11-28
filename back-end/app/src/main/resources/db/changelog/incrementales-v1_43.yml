@@ -1,0 +1,146 @@
+databaseChangeLog:
+  - logicalFilePath: incrementales-v1_43
+
+  - changeSet:
+      id: addColumn-closure_type_id-counter_reference
+      author: jirimoldi
+      comment: Add closure_type_id column to counter_reference table
+      changes:
+        - addColumn:
+            tableName: counter_reference
+            columns:
+              - column:
+                  name: closure_type_id
+                  type: int
+
+  - changeSet:
+      id: set-default-closure-type-id
+      comment: Actualiza el tipo de cierre por defecto.
+      author: jirimoldi
+      changes:
+        - sql:
+            sql: |-
+              UPDATE counter_reference SET closure_type_id = 4;
+
+  - changeSet:
+          id: update-closure_type_id-type
+          comment: Actualiza tipo de dato de la columna closure_type_id en counter_reference
+          author: jirimoldi
+          changes:
+            - modifyDataType:
+                columnName: closure_type_id
+                newDataType: smallint
+                tableName: counter_reference
+
+  - changeSet:
+      id: care_line_problem-createTable
+      comment: Create table care_line_problem
+      author: fsimaro
+      changes:
+        - createTable:
+            tableName: care_line_problem
+            columns:
+              - column:
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    primaryKeyName: PK_care_line_problem
+                  name: id
+                  type: int
+              - column:
+                  constraints:
+                    nullable: false
+                  name: care_line_id
+                  type: int
+              - column:
+                  constraints:
+                    nullable: false
+                  name: snomed_id
+                  type: int
+              - column:
+                  constraints:
+                    nullable: false
+                  name: created_by
+                  type: int
+                  defaultValue: -1
+              - column:
+                  constraints:
+                    nullable: false
+                  name: created_on
+                  type: datetime
+                  defaultValueDate: ${date.now}
+              - column:
+                  constraints:
+                    nullable: false
+                  name: updated_by
+                  type: int
+                  defaultValue: -1
+              - column:
+                  constraints:
+                    nullable: false
+                  name: updated_on
+                  type: datetime
+                  defaultValueDate: ${date.now}
+              - column:
+                  constraints:
+                    nullable: false
+                  name: deleted
+                  type: BOOLEAN
+                  defaultValue: ${boolean.false}
+              - column:
+                  name: deleted_by
+                  type: int
+              - column:
+                  name: deleted_on
+                  type: datetime
+        - addForeignKeyConstraint:
+            baseColumnNames: care_line_id
+            baseTableName: care_line_problem
+            constraintName: FK_care_line_problem_care_line
+            onDelete: NO ACTION
+            onUpdate: NO ACTION
+            referencedColumnNames: id
+            referencedTableName: care_line
+            validate: true
+        - addForeignKeyConstraint:
+            baseColumnNames: snomed_id
+            baseTableName: care_line_problem
+            constraintName: FK_care_line_problem_snomed
+            onDelete: NO ACTION
+            onUpdate: NO ACTION
+            referencedColumnNames: id
+            referencedTableName: snomed
+            validate: true
+        - addUniqueConstraint:
+            columnNames: care_line_id, snomed_id
+            constraintName: UQ_care_line_id_snomed_id
+            tableName: care_line_problem
+
+  - changeSet:
+      id: createTable-app_node_data
+      comment: Create table app_node_data
+      author: sperruolo
+      changes:
+        - createTable:
+            tableName: app_node_data
+            columns:
+              - column:
+                  constraints:
+                    primaryKey: true
+                    primaryKeyName: PK_app_node_data
+                  name: uuid
+                  type: varchar(36)
+              - column:
+                  constraints:
+                    nullable: false
+                  name: updated
+                  type: datetime
+              - column:
+                  name: ip
+                  type: varchar(40)
+              - column:
+                  name: hostname
+                  type: varchar(50)
+              - column:
+                  name: interval_in_sec
+                  type: int

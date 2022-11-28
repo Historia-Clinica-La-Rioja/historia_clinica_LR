@@ -1,0 +1,11 @@
+<!DOCTYPE html>
+<html lang="en">
+<head th:replace="fragments/header :: header"></head>
+<body>
+<div>
+    <p>Hola <span th:text="${recipient.firstname}"></span> <span th:text="${recipient.lastname}"></span></p>
+    <p th:text="${args.message}">Encantado de verlo por aquí</p>
+</div>
+</body>
+<footer th:replace="fragments/footer :: footer"></footer>
+</html>

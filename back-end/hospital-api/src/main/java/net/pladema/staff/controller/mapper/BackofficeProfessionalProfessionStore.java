@@ -113,7 +113,7 @@ public class BackofficeProfessionalProfessionStore implements BackofficeStore<Pr
 
 	private ProfessionalProfessionBackofficeDto createAll(ProfessionalProfessionBackofficeDto dto) {
 		var hp = healthcareProfessionalRepository.findByPersonId(dto.getPersonId())
-				.orElseGet(() -> healthcareProfessionalRepository.save(new HealthcareProfessional("prueba", dto.getPersonId())));
+				.orElseGet(() -> healthcareProfessionalRepository.save(new HealthcareProfessional(dto.getPersonId())));
 		dto.setHealthcareProfessionalId(hp.getId());
 		return buildDto(professionalProfessionRepository
 				.findByHealthcareProfessionalIdAndProfessionalSpecialtyId(dto.getHealthcareProfessionalId(), dto.getProfessionalSpecialtyId())

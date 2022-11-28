@@ -8,7 +8,6 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
-import javax.transaction.Transactional;
 import java.util.List;
 
 @Slf4j
@@ -18,7 +17,6 @@ public class GetReference {
 
     private final ReferenceStorage referenceStorage;
 
-    @Transactional
     public List<ReferenceGetBo> run(Integer patientId, List<Integer> clinicalSpecialtyIds) {
         log.debug("Input parameters -> patientId {}, clinicalSpecialtyIds {} ", patientId, clinicalSpecialtyIds);
         assertContextValid(patientId, clinicalSpecialtyIds);

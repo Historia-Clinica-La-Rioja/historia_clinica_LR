@@ -1,5 +1,6 @@
 package net.pladema.address.controller.service.domain;
 
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import net.pladema.address.controller.dto.CityDto;
 import net.pladema.address.repository.domain.AddressVo;
@@ -19,7 +20,7 @@ public class AddressBo {
 
     private String postcode;
 
-    private CityDto city;
+    private CityBo city;
 
 	private Short countryId;
 
@@ -33,10 +34,29 @@ public class AddressBo {
         this.number = addressVo.getNumber();
         this.floor = addressVo.getFloor();
         this.apartment = addressVo.getApartment();
-        this.city = addressVo.getCity();
+        this.city = new CityBo(addressVo.getCityId(), addressVo.getCityDescription());
         this.postcode = addressVo.getPostcode();
 		this.countryId = addressVo.getCountryId();
 		this.provinceId = addressVo.getProvinceId();
 		this.departmentId = addressVo.getDepartmentId();
     }
+
+    public AddressBo(Integer id, String street,
+					 String number, String floor,
+					 String apartment, String postcode,
+					 Integer cityId, String cityDescription,
+					 Short countryId, Short provinceId,
+					 Short departmentId) {
+    	this.id = id;
+    	this.street = street;
+    	this.number = number;
+    	this.floor = floor;
+    	this.apartment = apartment;
+    	this.postcode = postcode;
+    	this.city = new CityBo(cityId, cityDescription);
+		this.postcode = postcode;
+		this.countryId = countryId;
+		this.provinceId = provinceId;
+		this.departmentId = departmentId;
+	}
 }

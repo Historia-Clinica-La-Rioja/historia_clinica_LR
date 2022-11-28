@@ -24,8 +24,9 @@ import { FactoresDeRiesgoFormService } from '@historia-clinica/services/factores
 import { PermissionsService } from "@core/services/permissions.service";
 import { anyMatch } from "@core/utils/array.utils";
 import { dateToMoment } from "@core/utils/moment.utils";
-import { EditDocumentActionService } from '../../services/edit-document-action.service';
 import { TranslateService } from '@ngx-translate/core';
+import { DocumentActionReasonComponent } from '../document-action-reason/document-action-reason.component';
+import { MatDialog } from '@angular/material/dialog';
 
 @Component({
 	selector: 'app-evolution-note-dock-popup',
@@ -65,8 +66,8 @@ export class EvolutionNoteDockPopupComponent implements OnInit {
 		private readonly snackBarService: SnackBarService,
 		private readonly snomedService: SnomedService,
 		private readonly permissionsService: PermissionsService,
-		private readonly editDocumentAction: EditDocumentActionService,
-		private readonly translateService: TranslateService
+		private readonly translateService: TranslateService,
+		private readonly dialog: MatDialog,
 	) {
 		this.mainDiagnosis = data.mainDiagnosis;
 		this.diagnosticos = data.diagnosticos;
@@ -121,17 +122,7 @@ export class EvolutionNoteDockPopupComponent implements OnInit {
 			this.apiErrors = [];
 			const evolutionNote = this.buildEvolutionNoteDto();
 			if (this.data.evolutionNoteId) {
-				this.editDocumentAction.openEditReason().subscribe(reason => {
-					if (reason) {
-						evolutionNote.modificationReason = reason;
-						this.evolutionNoteService.editEvolutionDiagnosis(evolutionNote, this.data.evolutionNoteId, this.data.internmentEpisodeId).subscribe(
-							success => this.showSuccesAndClosePopup(evolutionNote),
-							error => {
-								this.isDisableConfirmButton = false;
-								this.showError(error);
-							});
-					}
-				});
+				this.openEditReason(evolutionNote);
 				return;
 			}
 			this.evolutionNoteService.createDocument(evolutionNote, this.data.internmentEpisodeId)
@@ -267,6 +258,29 @@ export class EvolutionNoteDockPopupComponent implements OnInit {
 			this.apiErrors.push(val);
 		});
 		this.snackBarService.showError('internaciones.nota-evolucion.messages.ERROR');
+	}
+
+	private openEditReason(evolutionNote: EvolutionNoteDto) {
+		const dialogRef = this.dialog.open(DocumentActionReasonComponent, {
+			data: {
+				title: 'internaciones.dialogs.actions-document.EDIT_TITLE',
+				subtitle: 'internaciones.dialogs.actions-document.SUBTITLE',
+			},
+			width: "50vh",
+			autoFocus: false,
+			disableClose: true
+		});
+		dialogRef.afterClosed().subscribe(reason => {
+			if (reason) {
+				evolutionNote.modificationReason = reason;
+				this.evolutionNoteService.editEvolutionDiagnosis(evolutionNote, this.data.evolutionNoteId, this.data.internmentEpisodeId).subscribe(
+					success => this.showSuccesAndClosePopup(evolutionNote),
+					error => {
+						this.isDisableConfirmButton = false;
+						this.showError(error);
+					});
+			}
+		});
 	}
 }
 

@@ -28,7 +28,7 @@ public class OutpatientFamilyHistoryDto {
     private String verificationId;
 
     @JsonFormat(pattern = JacksonDateFormatConfig.DATE_FORMAT)
-    @NotNull
+    @Nullable
     private String startDate;
 
 }

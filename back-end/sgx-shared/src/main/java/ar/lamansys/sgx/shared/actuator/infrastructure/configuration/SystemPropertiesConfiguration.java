@@ -37,7 +37,7 @@ public class SystemPropertiesConfiguration {
 
     private final FlavorService flavorService;
 
-    private final String nodeId;
+	private final AppNode appNode;
 
     private final SystemPropertyRepository systemPropertyRepository;
 
@@ -47,39 +47,35 @@ public class SystemPropertiesConfiguration {
 
 	private final String include;
 
-    public SystemPropertiesConfiguration(Optional<EnvironmentEndpoint> environ,
-                                         SystemPropertyRepository systemPropertyRepository,
-                                         DateTimeProvider dateTimeProvider,
-                                         FlavorService flavorService,
-                                         MessageSource messageSource,
-                                         @Value("${app.default.language:es}") String defaultLanguage
+    public SystemPropertiesConfiguration(
+			Optional<EnvironmentEndpoint> environ,
+		 	SystemPropertyRepository systemPropertyRepository,
+		 	DateTimeProvider dateTimeProvider,
+		 	FlavorService flavorService,
+            MessageSource messageSource,
+			AppNode appNode,
+            @Value("${app.default.language:es}") String defaultLanguage
     ) {
         this.environ = environ;
         this.systemPropertyRepository = systemPropertyRepository;
         this.dateTimeProvider = dateTimeProvider;
         this.messageSource = messageSource;
-        this.nodeId = UUID.randomUUID().toString();
+		this.appNode = appNode;
         this.flavorService = flavorService;
         this.defaultLanguage = defaultLanguage;
 		Locale.setDefault(new Locale(defaultLanguage));
-        systemPropertyRepository.deleteAll();
 		this.include = "(spring\\.*|email-*|ws\\.*|logging\\.*|ws\\.*|jobs\\.*|"
 				+ "app\\.*|api\\.*|admin\\.*|token\\.*|management\\.*|"
 				+ "oauth\\.*|externalurl\\.*|integration\\.*|actuator\\.*|"
 				+ "internment\\.*|images\\.*|mail\\.*|recaptcha\\.*|.*\\.cron\\.*|"
 				+ "habilitar\\.*|hsi\\.*"
 				+ ")";
-		try {
-			loadProperties();
-		} catch (Exception e) {
-			log.error("Loading properties", e);
-		}
+
     }
 
-	@Scheduled(cron = "${app.system.properties.cron.config:-}")
     public void loadProperties() {
 		log.info("Loading properties");
-        systemPropertyRepository.deleteByIpNodeId(nodeId);
+        systemPropertyRepository.deleteByIpNodeId(appNode.nodeId);
         systemPropertyRepository.saveAll(environ.map(env -> env.environment(include))
                 .map(environmentDescriptor -> generateSource(environmentDescriptor.getPropertySources()))
                 .orElse(Collections.emptySet()));
@@ -109,7 +105,7 @@ public class SystemPropertiesConfiguration {
                         entry.getValue().toString(),
                         entry.getKey().getLabel(),
                         "Default feature flag",
-                        nodeId,
+						appNode.nodeId,
                         dateTimeProvider.nowDateTime()))
                 .collect(Collectors.toSet());
     }
@@ -125,12 +121,16 @@ public class SystemPropertiesConfiguration {
         propertySourceDescriptor
                 .getProperties()
                 .forEach((propertyKey, propertyValueDescriptor) -> sortedSet.add(
-                        new PropertyBo(null,
+                        new PropertyBo(
+								null,
                                 propertyKey,
 								StringHelper.toString(propertyValueDescriptor.getValue()),
                                 buildLabel(propertyKey),
                                 propertySourceDescriptor.getName(),
-                                nodeId, dateTimeProvider.nowDateTime())));
+								appNode.nodeId,
+								dateTimeProvider.nowDateTime())
+						)
+				);
         return sortedSet;
     }
 

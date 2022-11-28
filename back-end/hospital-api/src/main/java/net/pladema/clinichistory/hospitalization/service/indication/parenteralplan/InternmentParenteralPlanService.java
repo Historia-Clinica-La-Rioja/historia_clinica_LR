@@ -11,5 +11,6 @@ public interface InternmentParenteralPlanService {
 	Integer add (InternmentParenteralPlanBo parenteralPlanBo);
 
 	List<ParenteralPlanDto> getInternmentEpisodeParenteralPlans(Integer internmentEpisodeId);
+	ParenteralPlanDto getInternmentEpisodeParenteralPlan(Integer parenteralPlanId);
 
 }

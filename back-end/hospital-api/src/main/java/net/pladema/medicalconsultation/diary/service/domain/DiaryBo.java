@@ -45,5 +45,9 @@ public class DiaryBo {
 	protected String alias;
 
 	protected String clinicalSpecialtyName;
+
+	protected List<Integer> careLines;
+
+	protected Integer protectedAppointmentsPercentage;
     
 }

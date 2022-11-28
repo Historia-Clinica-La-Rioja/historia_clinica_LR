@@ -19,14 +19,15 @@ Este documento detalla las propiedades configurables del sistema.
 | admin.password | ADMIN_PASS | admin123 | **Obligatorio** | Contraseña del usuario Administrador |  v0.2.0  |
 | internment.document.directory |DOCUMENT_ROOT_DIRECTORY | /temp | **Obligatorio** | Directorio donde se almacenan documentos clínicos y fotos de pacientes | v0.2.0 |
 | spring.profiles.active  |   | default  | **Único**  | Valores posibles: dev, qa, prod   | v0.2.0  |
-
+| app.env.domain  |  APP_DOMAIN | localhost:4200  | **Opcional**  | Define el dominio. En caso de tener activo el FF HABILITAR_NOTIFICACIONES_TURNOS debe ser **obligatoria**   | v1.42.0  |
 
 # Config de login / auth / token 
 
 | Propiedad               | Variable de ambiente | Valor por defecto       | Necesidad | Descripcion | Desde |
 | ----------------------- | ----------------| ----------------------- | --------- | ----------- | ----- |
-| token.secret | TOKEN_SECRET | ultra_secret_token | **Obligatorio** | La clave secreta de generación de token, usada para validar los tokens recibidos desde los request. | v0.2.0 |
-
+| token.secret | TOKEN_SECRET |  | **Obligatorio** | La clave secreta de generación de token, usada para validar los tokens recibidos desde los request. | v0.2.0 |
+| app.auth.domain | AUTH_DOMAIN | localhost | **Obligatorio** | Define el dominio a autenticar | v0.40.0 |
+| app.auth.cookie.secure | AUTH_SECURE | false | **Obligatorio** | Activar en los ambientes productivos junto al uso de HTTPS | v0.40.0 |
 ## Configuración DDBB (SQL)
 
 | Propiedad | Variable de ambiente | Valor por defecto | Necesidad | Descripcion                                                                                | Desde |
@@ -52,7 +53,7 @@ Este documento detalla las propiedades configurables del sistema.
 |spring.mail.properties.mail.smtp.starttls.enable | SMTP_SSL | true | Opcional | Habilita el envío de mails |v0.38.0 |
 | app.notification.mail.from  | | hsi@pladema.net  | Opcional  |   | v0.38.0  |
 | app.notification.mail.fromFullname  | | HSI  | Opcional  |   | v0.38.0  |
-
+| app.notification.mail.replyTo  | | no-reply@pladema.net  | Opcional  |  Define la dirección de mail a responder | v1.41.0  |
 
 
 ## Configuración util para debug y monitoring 
@@ -217,32 +218,51 @@ Se crearon las siguientes propiedades para ser usado en las pruebas de estrés.
 |test.stress.disable.validation   |   | false  | Opcional  | Desactiva validaciones en el sistema para facilitar las pruebas  | v1.2.0   |
 
 
+## Configuración de Tableros
+
+Se crearon las siguientes propiedades para configurar los tableros de la aplicación
+
+| Propiedad | Variable de ambiente  | Valor por defecto | Necesidad   | Descripcion                                                                                                                                                          | Desde   |
+| ----------------------- | ----------------|-------------------|-------------|----------------------------------------------------------------------------------------------------------------------------------------------------------------------|---------|
+|app.gateway.cubejs.apiUrl   | CUBEJS_API_URL  |                   | Obligatoria | Define la url donde se encuentra el contenedor de cubejs. Por ejemplo, http://localhost:4000/cubejs-api/v1                                                           | v1.43.0 |
+|app.gateway.cubejs.token.secret   | CUBEJS_API_SECRET  | | Obligatoria | Define la clave de encriptación del token usado en la comunicación backend-cubejs. Este valor debe coincidir con la variable de ambiente CUBEJS_API_SECRET de cubejs | v1.43.0 |
+
+
 ## Scheduled Jobs
-| Propiedad | Variable de ambiente | Valor por defecto       | Necesidad | Descripcion                                                                       | Desde |
-| ----------------------- | ----------------| ----------------------- | --------- |-----------------------------------------------------------------------------------| ----- |
-| scheduledjobs.enabled  |   | true  | Opcional  | Des/habilitar la ejecución general de trabajos automáticos                        | v1.13.0   |
-| scheduledjobs.federatepatients.enabled  |   | true  | Opcional  | Des/habilitar la federación de pacientes en estado validado                       | v1.13.0   |
-| scheduledjobs.federatepatients.seconds  |   | 0 | Opcional | Configura los segundos del cron usado para la federación de pacientes.            | v1.13.0   |
-| scheduledjobs.federatepatients.minutes |   | 0 | Opcional | Configura los minutos del cron usado para la federación de pacientes.             | v1.13.0   |
-| scheduledjobs.federatepatients.hours  |   | 3 | Opcional | Configura las horas del cron usado para la federación de pacientes.               | v1.13.0   |
-| scheduledjobs.federatepatients.dayofmonth  |  | * | Opcional | Configura el dia del mes del cron usado para la federación de pacientes.          | v1.13.0   |
-| scheduledjobs.federatepatients.month  |   | * | Opcional | Configura el mes del cron usado para la federación de pacientes.                  | v1.13.0   |
-| scheduledjobs.federatepatients.dayofweek  |  | * | Opcional | Configura el dia de la semana del cron usado para la federación de pacientes.     | v1.13.0   |
-| scheduledjobs.updateethnicities.enabled  |   | true  | Opcional  | Des/habilitar la actualización de etnias desde el servicio de Snowstorm           | v1.15.0 |
-| scheduledjobs.updateethnicities.seconds  |   | 0 | Opcional  | Configura los segundos del cron usado para la actualización de las etnias.        | v1.15.0 |
-| scheduledjobs.updateethnicities.minutes  |   | 0 | Opcional  | Configura los minutos del cron usado para la actualización de las etnias.         | v1.15.0 |
-| scheduledjobs.updateethnicities.hours  |   | 0 | Opcional  | Configura las horas del cron usado para la actualización de las etnias.           | v1.15.0 |
-| scheduledjobs.updateethnicities.dayofmonth  |  | 15 | Opcional  | Configura el dia del mes del cron usado para la actualización de las etnias.      | v1.15.0 |
-| scheduledjobs.updateethnicities.month  |   | * | Opcional | Configura el mes del cron usado para la actualización de las etnias.              | v1.15.0 |
-| scheduledjobs.updateethnicities.dayofweek  |  | * | Opcional  | Configura el dia de la semana del cron usado para la actualización de las etnias. | v1.15.0 |
-| scheduledjobs.updatesnomedcache.enabled  |   | false  | Opcional  | Des/habilitar la actualización de grupos de conceptos Snomed | v1.32.0 |
-| scheduledjobs.updatesnomedcache.eclkeys  |   | -  | Opcional  | Claves de los grupos de conceptos Snomed, separadas por comas (ej. _BLOOD_TYPE,FAMILY_RECORD_) | v1.32.0 |
-| scheduledjobs.updatesnomedcache.seconds  |   | - | Opcional  |  Configura los segundos del cron usado para la actualización de grupos de conceptos Snomed. | v1.32.0 |
-| scheduledjobs.updatesnomedcache.minutes  |   | - | Opcional  |  Configura los minutos del cron usado para la actualización de grupos de conceptos Snomed. | v1.32.0 |
-| scheduledjobs.updatesnomedcache.hours  |   | - | Opcional  |  Configura las horas del cron usado para la actualización de grupos de conceptos Snomed. | v1.32.0 |
-| scheduledjobs.updatesnomedcache.dayofmonth  |  | - | Opcional  | Configura el día del mes del cron usado para la actualización de grupos de conceptos Snomed. | v1.32.0 |
-| scheduledjobs.updatesnomedcache.month  |   | - | Opcional | Configura el mes del cron usado para la actualización de grupos de conceptos Snomed.  | v1.32.0 |
-| scheduledjobs.updatesnomedcache.dayofweek  |  | - | Opcional  |  Configura el día de la semana del cron usado para la actualización de grupos de conceptos Snomed. | v1.32.0 |
+| Propiedad                                                  | Variable de ambiente | Valor por defecto | Necesidad | Descripcion                                                                                                                                                     | Desde   |
+|------------------------------------------------------------| ----------------|-------------------| --------- |-----------------------------------------------------------------------------------------------------------------------------------------------------------------|---------|
+| scheduledjobs.enabled                                      |   | true              | Opcional  | Des/habilitar la ejecución general de trabajos automáticos                                                                                                      | v1.13.0 |
+| scheduledjobs.federatepatients.enabled                     |   | true              | Opcional  | Des/habilitar la federación de pacientes en estado validado                                                                                                     | v1.13.0 |
+| scheduledjobs.federatepatients.seconds                     |   | 0                 | Opcional | Configura los segundos del cron usado para la federación de pacientes.                                                                                          | v1.13.0 |
+| scheduledjobs.federatepatients.minutes                     |   | 0                 | Opcional | Configura los minutos del cron usado para la federación de pacientes.                                                                                           | v1.13.0 |
+| scheduledjobs.federatepatients.hours                       |   | 3                 | Opcional | Configura las horas del cron usado para la federación de pacientes.                                                                                             | v1.13.0 |
+| scheduledjobs.federatepatients.dayofmonth                  |  | *                 | Opcional | Configura el dia del mes del cron usado para la federación de pacientes.                                                                                        | v1.13.0 |
+| scheduledjobs.federatepatients.month                       |   | *                 | Opcional | Configura el mes del cron usado para la federación de pacientes.                                                                                                | v1.13.0 |
+| scheduledjobs.federatepatients.dayofweek                   |  | *                 | Opcional | Configura el dia de la semana del cron usado para la federación de pacientes.                                                                                   | v1.13.0 |
+| scheduledjobs.updateethnicities.enabled                    |   | true              | Opcional  | Des/habilitar la actualización de etnias desde el servicio de Snowstorm                                                                                         | v1.15.0 |
+| scheduledjobs.updateethnicities.seconds                    |   | 0                 | Opcional  | Configura los segundos del cron usado para la actualización de las etnias.                                                                                      | v1.15.0 |
+| scheduledjobs.updateethnicities.minutes                    |   | 0                 | Opcional  | Configura los minutos del cron usado para la actualización de las etnias.                                                                                       | v1.15.0 |
+| scheduledjobs.updateethnicities.hours                      |   | 0                 | Opcional  | Configura las horas del cron usado para la actualización de las etnias.                                                                                         | v1.15.0 |
+| scheduledjobs.updateethnicities.dayofmonth                 |  | 15                | Opcional  | Configura el dia del mes del cron usado para la actualización de las etnias.                                                                                    | v1.15.0 |
+| scheduledjobs.updateethnicities.month                      |   | *                 | Opcional | Configura el mes del cron usado para la actualización de las etnias.                                                                                            | v1.15.0 |
+| scheduledjobs.updateethnicities.dayofweek                  |  | *                 | Opcional  | Configura el dia de la semana del cron usado para la actualización de las etnias.                                                                               | v1.15.0 |
+| scheduledjobs.updatesnomedcache.enabled                    |   | false             | Opcional  | Des/habilitar la actualización de grupos de conceptos Snomed                                                                                                    | v1.32.0 |
+| scheduledjobs.updatesnomedcache.eclkeys                    |   | -                 | Opcional  | Claves de los grupos de conceptos Snomed, separadas por comas (ej. _BLOOD_TYPE,FAMILY_RECORD_)                                                                  | v1.32.0 |
+| scheduledjobs.updatesnomedcache.seconds                    |   | -                 | Opcional  | Configura los segundos del cron usado para la actualización de grupos de conceptos Snomed.                                                                      | v1.32.0 |
+| scheduledjobs.updatesnomedcache.minutes                    |   | -                 | Opcional  | Configura los minutos del cron usado para la actualización de grupos de conceptos Snomed.                                                                       | v1.32.0 |
+| scheduledjobs.updatesnomedcache.hours                      |   | -                 | Opcional  | Configura las horas del cron usado para la actualización de grupos de conceptos Snomed.                                                                         | v1.32.0 |
+| scheduledjobs.updatesnomedcache.dayofmonth                 |  | -                 | Opcional  | Configura el día del mes del cron usado para la actualización de grupos de conceptos Snomed.                                                                    | v1.32.0 |
+| scheduledjobs.updatesnomedcache.month                      |   | -                 | Opcional | Configura el mes del cron usado para la actualización de grupos de conceptos Snomed.                                                                            | v1.32.0 |
+| scheduledjobs.updatesnomedcache.dayofweek                  |  | -                 | Opcional  | Configura el día de la semana del cron usado para la actualización de grupos de conceptos Snomed.                                                               | v1.32.0 |
+| scheduledjobs.updateappointmentsstate.enabled              |   | true              | Opcional  | Des/habilitar la actualización de estado de turnos.                                                                                                             | v1.44.2 |
+| scheduledjobs.updateappointmentsstate.seconds              |   | 0                 | Opcional  | Configura los segundos del cron usado para la actualización de estado de turnos.                                                                                | v1.44.2 |
+| scheduledjobs.updateappointmentsstate.minutes              |   | 0                 | Opcional  | Configura los minutos del cron usado para la actualización de estado de turnos.                                                                                 | v1.44.2 |
+| scheduledjobs.updateappointmentsstate.hours                |   | 0                 | Opcional  | Configura las horas del cron usado para la actualización de estado de turnos.                                                                                   | v1.44.2 |
+| scheduledjobs.updateappointmentsstate.dayofmonth           |  | *                 | Opcional  | Configura el dia del mes del cron usado para la actualización de estado de turnos.                                                                              | v1.44.2 |
+| scheduledjobs.updateappointmentsstate.month                |   | *                 | Opcional | Configura el mes del cron usado para la actualización de estado de turnos.                                                                                      | v1.44.2 |
+| scheduledjobs.updateappointmentsstate.dayofweek            |  | *                 | Opcional  | Configura el dia de la semana del cron usado para la actualización de estado de turnos.                                                                         | v1.44.2 |
+| scheduledjobs.updateappointmentsstate.hourssincelastchange |  | 24                | Opcional  | Configura la mínima cantidad pasados desde el momento de la ejecución respecto a la fecha correspondiente al turno. | v1.44.2 |
+| scheduledjobs.updateappointmentsstate.limit                |  | 10                | Opcional  | Configura la máxima cantidad de turnos seleccionados para actualizar.                                                                                           | v1.44.2 |
 
 
 ## Monitoring

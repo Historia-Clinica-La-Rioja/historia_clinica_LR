@@ -209,7 +209,6 @@ Traducción al lenguaje Java
 ```java
 @PutMapping("/{moduleId}")  
 @ResponseStatus(code = HttpStatus.OK)  
-@Transactional
 @PreAuthorize("hasPermission(#institutionId, 'ADMINISTRATIVO')")   
 public void update(
 			@PathVariable(name = "institutionId") Integer institutionId, 

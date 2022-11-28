@@ -175,7 +175,7 @@ public class HealthConditionService {
         LOG.debug("Input parameters -> patientInfo {}, info {}", patientInfo, info);
         HealthCondition healthCondition = buildBasicHealthCondition(patientInfo, info);
         healthCondition.setProblemId(ProblemType.PROBLEM);
-        LocalDate date = info.getStartDate() == null ? dateTimeProvider.nowDate() : info.getStartDate();
+        LocalDate date = info.getStartDate();
         healthCondition.setStartDate(date);
         healthCondition.setNoteId(noteService.createNote(info.getNote()));
         LOG.debug(OUTPUT, healthCondition);
@@ -206,7 +206,7 @@ public class HealthConditionService {
         LOG.debug("Input parameters -> patientInfo {}, info {}", patientInfo, info);
         HealthCondition healthCondition = buildBasicHealthCondition(patientInfo, info);
         healthCondition.setProblemId(ProblemType.HISTORY);
-        LocalDate date = info.getStartDate() == null ? dateTimeProvider.nowDate() : info.getStartDate();
+        LocalDate date = info.getStartDate();
         healthCondition.setStartDate(date);
         healthCondition.setNoteId(noteService.createNote(info.getNote()));
         LOG.debug(OUTPUT, healthCondition);

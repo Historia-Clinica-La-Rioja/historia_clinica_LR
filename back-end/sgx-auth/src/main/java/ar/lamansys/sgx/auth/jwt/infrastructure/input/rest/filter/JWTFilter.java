@@ -9,28 +9,21 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.filter.OncePerRequestFilter;
 
-import ar.lamansys.sgx.auth.jwt.domain.token.ETokenType;
-import ar.lamansys.sgx.auth.jwt.infrastructure.output.token.TokenUtils;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 public abstract class JWTFilter extends OncePerRequestFilter implements AuthenticationFilter {
-
-	protected final String secret;
 	protected final Function<String, Optional<Authentication>> authenticationLoader;
 	protected final Function<HttpServletRequest, Optional<String>> tokenExtractor;
 
 	protected JWTFilter(
-			@Value("${token.secret}") String secret,
 			Function<String, Optional<Authentication>> authenticationLoader,
 			Function<HttpServletRequest, Optional<String>> tokenExtractor
 	) {
-		this.secret = secret;
 		this.authenticationLoader = authenticationLoader;
 		this.tokenExtractor = tokenExtractor;
 	}
@@ -41,8 +34,7 @@ public abstract class JWTFilter extends OncePerRequestFilter implements Authenti
 
 		tokenExtractor.apply(request)
 				.map(this::removeBearer)
-				.flatMap(token -> TokenUtils.parseToken(token, secret, ETokenType.NORMAL))
-				.flatMap(tokenData -> authenticationLoader.apply(tokenData.username))
+				.flatMap(authenticationLoader::apply)
 				.ifPresent(opA -> SecurityContextHolder.getContext().setAuthentication(opA));
 
 		log.debug("Request {}", request.getRequestURL());

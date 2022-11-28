@@ -14,6 +14,12 @@ import { HomeComponent } from './routes/home/home.component';
 import { CalendarProfessionalViewComponent } from '@turnos/components/calendar-professional-view/calendar-professional-view.component';
 import { SelectAgendaComponent } from './components/select-agenda/select-agenda.component';
 import { DateRangeTimeFormComponent } from './components/date-range-time-form/date-range-time-form.component';
+import { ProfessionalSelectComponent } from './components/professional-select/professional-select.component';
+import { SeachAppointmentsByProfessionalComponent } from './components/seach-appointments-by-professional/seach-appointments-by-professional.component';
+import { SearchAppointmentsBySpecialtyComponent } from './components/search-appointments-by-specialty/search-appointments-by-specialty.component';
+import { AppointmentDetailsComponent } from './components/appointment-details/appointment-details.component';
+import { SearchAppointmentsInCareNetworkComponent } from './components/search-appointments-in-care-network/search-appointments-in-care-network.component';
+
 // dialogs
 import { AppointmentComponent } from './dialogs/appointment/appointment.component';
 import { BlockAgendaRangeComponent } from './dialogs/block-agenda-range/block-agenda-range.component';
@@ -22,8 +28,10 @@ import { CancelAppointmentComponent } from './dialogs/cancel-appointment/cancel-
 import { ConfirmBookingComponent } from './dialogs/confirm-booking/confirm-booking.component';
 import { NewAppointmentComponent } from './dialogs/new-appointment/new-appointment.component';
 import { NewAttentionComponent } from './dialogs/new-attention/new-attention.component';
+import { ConfirmPrintAppointmentComponent } from './dialogs/confirm-print-appointment/confirm-print-appointment.component';
 // services
 import { CustomDateFormatter } from './services/custom-date-formatter.service';
+import { AppointmentResultViewComponent } from './components/appointment-result-view/appointment-result-view.component';
 
 
 @NgModule({
@@ -35,15 +43,22 @@ import { CustomDateFormatter } from './services/custom-date-formatter.service';
 		// components
 		CalendarProfessionalViewComponent,
 		SelectAgendaComponent,
-		BlockAgendaRangeComponent,
 		DateRangeTimeFormComponent,
+		SeachAppointmentsByProfessionalComponent,
+		SearchAppointmentsBySpecialtyComponent,
+		AppointmentDetailsComponent,
+		ProfessionalSelectComponent,
+		SearchAppointmentsInCareNetworkComponent,
+		AppointmentResultViewComponent,
 		// dialogs
 		AppointmentComponent,
+		BlockAgendaRangeComponent,
 		CalendarProfessionalViewDockPopupComponent,
 		CancelAppointmentComponent,
 		ConfirmBookingComponent,
 		NewAppointmentComponent,
 		NewAttentionComponent,
+		ConfirmPrintAppointmentComponent,
 	],
 	imports: [
 		CommonModule,

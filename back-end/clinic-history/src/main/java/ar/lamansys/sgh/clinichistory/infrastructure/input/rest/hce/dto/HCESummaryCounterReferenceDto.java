@@ -29,4 +29,7 @@ public class HCESummaryCounterReferenceDto {
 
     private List<CounterReferenceSummaryProcedureDto> procedures;
 
+	private String institution;
+
+	private String closureType;
 }

@@ -1,0 +1,39 @@
+<div>
+
+	<div fxLayout="row" fxLayoutAlign="end end">
+		<button matSuffix mat-icon-button [mat-dialog-close]>
+			<mat-icon>close</mat-icon>
+		</button>
+	</div>
+
+	<div mat-dialog-title fxLayout="row">
+		<div class="title" class="capitalize-first-letter" translate="pacientes.edit_prefessions_specialties.TITLE">
+		</div>
+	</div>
+
+	<form [formGroup]="form">
+		<div formArrayName="professionalProfessions">
+			<div *ngFor="let p of getCtrl('professionalProfessions',form)?.controls;index as formChild">
+				<div [formGroupName]="formChild">
+					<app-profession-specialties-form [confirmationValidation]="confirmationValidation"
+						[allProfessions]="data.allProfessions" [allSpecialties]="data.allSpecialties" formControlName="combo"
+						[professionalProfessionsDto]="ownProfessionsAndSpecialties.pop()" (isEmptyCombo)="deleteCombo(formChild)">
+					</app-profession-specialties-form>
+				</div>
+				<hr class="divider" />
+			</div>
+		</div>
+	</form>
+
+	<button mat-button [disabled]="isDisableConfirmButton()" type="button" (click)="addCombo()" color="primary"
+		id="add-button" onclick="this.blur()">
+		+ {{ 'pacientes.edit_prefessions_specialties.ADD_ANOTHER_PROFESSION_AND_SPECIALTIES' | translate }}
+	</button>
+
+	<div actions id="confirm-button" fxLayoutAlign="end">
+		<button mat-raised-button color="primary" (click)="save()">
+			<span>{{ 'buttons.CONFIRM' | translate | uppercase }}</span>
+		</button>
+	</div>
+
+</div>

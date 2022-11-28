@@ -1,4 +1,13 @@
 <div class="container-date">
-
+	<ng-container *ngFor="let filterInput of filters | keyvalue">
+		<ng-container [ngSwitch]="filterInput.value.type">
+			<div *ngSwitchCase="'dateRangeISO'">
+				<app-date-only-iso-form-input
+					[label]="filterInput.value.label"
+					[hint]="filterInput.value.hint"
+					(rangeChange)="changeValue(filterInput.key, $event)"></app-date-only-iso-form-input>
+			</div>
+		</ng-container>
+	</ng-container>
 </div>
 <app-ui-component-list [list]="content" ></app-ui-component-list>

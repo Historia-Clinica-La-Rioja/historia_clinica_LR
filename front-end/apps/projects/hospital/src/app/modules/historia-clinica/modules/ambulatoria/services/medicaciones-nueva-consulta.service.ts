@@ -1,11 +1,8 @@
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { SnomedDto, SnomedECL } from '@api-rest/api-model';
-import { ColumnConfig } from '@presentation/components/document-section/document-section.component';
 import { SnomedSemanticSearch, SnomedService } from '../../../services/snomed.service';
 import { pushIfNotExists, removeFrom } from '@core/utils/array.utils';
 import { TEXT_AREA_MAX_LENGTH } from '@core/constants/validation-constants';
-import { TableColumnConfig } from "@presentation/components/document-section-table/document-section-table.component";
-import { CellTemplates } from "@presentation/components/cell-templates/cell-templates.component";
 import { SnackBarService } from '@presentation/services/snack-bar.service';
 export interface Medicacion {
 	snomed: SnomedDto;
@@ -17,8 +14,6 @@ export class MedicacionesNuevaConsultaService {
 
 	private form: FormGroup;
 	private snomedConcept: SnomedDto;
-	private readonly columns: ColumnConfig[];
-	private readonly tableColumnConfig: TableColumnConfig[];
 	private data: Medicacion[];
 	public readonly TEXT_AREA_MAX_LENGTH = TEXT_AREA_MAX_LENGTH;
 	private readonly ECL = SnomedECL.MEDICINE;
@@ -34,39 +29,6 @@ export class MedicacionesNuevaConsultaService {
 			observaciones: [null, [Validators.maxLength(this.TEXT_AREA_MAX_LENGTH)]],
 			suspendido: [false]
 		});
-
-		this.columns = [
-			{
-				def: 'medicacion',
-				header: 'ambulatoria.paciente.nueva-consulta.medicaciones.NOMBRE_MEDICACION',
-				text: v => v.snomed.pt
-			},
-			{
-				def: 'observaciones',
-				header: 'ambulatoria.paciente.nueva-consulta.medicaciones.OBSERVACIONES',
-				text: v => v.observaciones
-			},
-		];
-
-		this.tableColumnConfig = [
-			{
-				def: 'medicacion',
-				header: 'ambulatoria.paciente.nueva-consulta.medicaciones.MEDICATION',
-				template: CellTemplates.TEXT,
-				text: v => v.snomed.pt
-			},
-			{
-				def: 'estado',
-				header: 'ambulatoria.paciente.nueva-consulta.medicaciones.STATE',
-				template: CellTemplates.TEXT,
-				text: (v) => this.getState(v.suspendido)
-			},
-			{
-				def: 'eliminar',
-				template: CellTemplates.REMOVE_BUTTON,
-				action: (rowIndex) => this.remove(rowIndex)
-			}
-		]
 
 		this.data = [];
 	}
@@ -133,14 +95,6 @@ export class MedicacionesNuevaConsultaService {
 
 	getSnomedConcept(): SnomedDto {
 		return this.snomedConcept;
-	}
-
-	getColumns(): ColumnConfig[] {
-		return this.columns;
-	}
-
-	getTableColumnConfig(): TableColumnConfig[] {
-		return this.tableColumnConfig;
 	}
 
 	getMedicaciones(): Medicacion[] {

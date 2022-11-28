@@ -11,7 +11,8 @@ import java.time.LocalDateTime;
 @ToString
 public class BedRelocationInfoBo {
 
-    private LocalDateTime relocationDate;
-    private Integer careTypeId;
-    private SnomedBo service;
+	private Integer bedId;
+	private LocalDateTime relocationDate;
+	private String careType;
+	private SnomedBo service;
 }

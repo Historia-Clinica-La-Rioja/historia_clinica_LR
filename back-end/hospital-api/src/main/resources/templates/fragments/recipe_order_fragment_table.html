@@ -167,7 +167,7 @@
             <div th:if="${!nameSelfDeterminationFF || professional.getNameSelfDetermination() == null || professional.getNameSelfDetermination().isEmpty()}">
                 <strong >Profesional: </strong><label th:text="${professional.getCompleteName(professional.getFirstName())}"></label>
             </div>
-            <p><strong>Matrícula: </strong><label th:text="${professional.licenceNumber}"></label></p>
+            <p><strong>Matrículas: </strong><label th:text="${professional.getCompleteLicenseInfo()}"></label></p>
         </div>
         <div class="footer-right">
             <hr/>

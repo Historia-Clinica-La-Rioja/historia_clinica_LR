@@ -15,7 +15,9 @@ public class HealthcareProfessionalSpecialtyVo {
 
     private Integer healthcareProfessionalId;
 
-    private Integer professionalSpecialtyId;
+    private Integer professionalProfessionId;
 
     private Integer clinicalSpecialtyId;
+
+	private String clinicalSpecialtyName;
 }

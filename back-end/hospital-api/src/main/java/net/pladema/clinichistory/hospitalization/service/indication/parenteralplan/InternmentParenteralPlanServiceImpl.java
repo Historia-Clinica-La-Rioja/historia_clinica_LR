@@ -61,6 +61,14 @@ public class InternmentParenteralPlanServiceImpl implements InternmentParenteral
 		return result;
 	}
 
+	@Override
+	public ParenteralPlanDto getInternmentEpisodeParenteralPlan(Integer parenteralPlanId) {
+		log.debug("Input parameter -> parenteralPlanId {}", parenteralPlanId);
+		ParenteralPlanDto result = sharedIndicationPort.getInternmentEpisodeParenteralPlan(parenteralPlanId);
+		log.debug("Output -> {}", result);
+		return result;
+	}
+
 	private void assertInternmentEpisodeCanCreateIndication(Integer internmentEpisodeId) {
 		if (internmentEpisodeService.haveEpicrisis(internmentEpisodeId)) {
 			throw new ConstraintViolationException("No se puede crear una indicación debido a que existe una epicrisis", Collections.emptySet());

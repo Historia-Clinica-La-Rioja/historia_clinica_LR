@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import { Router } from '@angular/router';
+import { Observable } from 'rxjs';
 
 import { AppRoutes } from '../../../../app-routing.module';
 import { LoggedUserService } from '../../../auth/services/logged-user.service';
@@ -9,8 +10,9 @@ import { ERole, AppFeature } from '@api-rest/api-model';
 
 import { InstitutionService } from '@api-rest/services/institution.service';
 import { FeatureFlagService } from '@core/services/feature-flag.service';
-import { AccountService } from "@api-rest/services/account.service";
-import { dateTimeDtotoLocalDate } from "@api-rest/mapper/date-dto.mapper";
+import { AccountService } from '@api-rest/services/account.service';
+import { dateTimeDtotoLocalDate } from '@api-rest/mapper/date-dto.mapper';
+import { Slot, SlotedInfo, WCExtensionsService } from '@extensions/services/wc-extensions.service';
 
 @Component({
 	selector: 'app-instituciones',
@@ -25,6 +27,7 @@ export class InstitucionesComponent {
 	patientPortalAccess: boolean;
 	previousLogin: Date;
 	enabledPreviousLogin = false;
+	extensions$: Observable<SlotedInfo[]>;
 
 	constructor(
 		loggedUserService: LoggedUserService,
@@ -32,6 +35,7 @@ export class InstitucionesComponent {
 		private featureFlagService: FeatureFlagService,
 		private router: Router,
 		private accountService: AccountService,
+		private wcExtensionsService: WCExtensionsService,
 	) {
 		loggedUserService.assignments$.subscribe((allRoles: RoleAssignmentDto[]) => {
 			const institutionIds = allRoles
@@ -58,6 +62,7 @@ export class InstitucionesComponent {
 		});
 
 		this.featureFlagService.isActive(AppFeature.HABILITAR_MODULO_PORTAL_PACIENTE).subscribe(isOn => this.patientPortalEnabled = isOn);
+		this.extensions$ = this.wcExtensionsService.getComponentsFromSlot(Slot.SYSTEM_HOME_PAGE);
 	}
 
 	ngOnInit(): void {

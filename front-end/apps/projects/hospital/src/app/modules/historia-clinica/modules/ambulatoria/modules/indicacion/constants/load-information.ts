@@ -35,6 +35,7 @@ export function showFrequency(indication: any): ExtraInfo[] {
 			title: 'indicacion.internment-card.sections.indication-extra-description.ONCE',
 			content: "a las " + hour + "hs."
 		}]
+	return [];
 }
 
 export function loadExtraInfoPharmaco(pharmaco: any, loadFrequency: boolean, vias?: any[]): ExtraInfo[] {

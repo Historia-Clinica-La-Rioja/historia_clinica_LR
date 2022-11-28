@@ -77,7 +77,6 @@ public class EpicrisisController {
 
 
     @PostMapping
-    @Transactional
     public ResponseEntity<Boolean> createDocument(
             @PathVariable(name = "institutionId") Integer institutionId,
             @PathVariable(name = "internmentEpisodeId") Integer internmentEpisodeId,
@@ -138,7 +137,6 @@ public class EpicrisisController {
 	}
 
 	@PutMapping("/{epicrisisId}")
-	@Transactional
 	@PreAuthorize("hasPermission(#institutionId, 'ESPECIALISTA_MEDICO, ENFERMERO_ADULTO_MAYOR')")
 	public ResponseEntity<Long> updateEpicrisis(
 			@PathVariable(name = "institutionId") Integer institutionId,

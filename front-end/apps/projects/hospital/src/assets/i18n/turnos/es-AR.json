@@ -4,7 +4,8 @@
 			"TITLE": "Gestión de turnos",
 			"actions": {
 				"CREATE_AGENDA": "Crear agenda",
-				"NEW_AGENDA": "Nueva agenda"
+				"NEW_AGENDA": "Nueva agenda",
+				"SEARCH_APPOINTMENTS": "Buscar turnos"
 			},
 			"PROFESSIONAL_SEARCH": "Profesional",
 			"SPECIALTY_SEARCH": "Especialidad",
@@ -13,7 +14,45 @@
 			"NO_AGENDA_MSG_SUBTITLE": "Creá una agenda para gestionar turnos.",
 			"AGENDA_NOT_FOUND": "Agenda no encontrada",
 			"ACTIVES_AGENDAS_LABEL": "ACTIVAS",
-			"EXPIRED_AGENDAS_LABEL": "VENCIDAS"
+			"EXPIRED_AGENDAS_LABEL": "VENCIDAS",
+			"SEARCH_BY_PROFESSIONAL": "Oferta por profesional",
+			"SEARCH_BY_SPECIALTY": "Oferta por especialidad",
+			"CARE_NETWORK_OFFER": "Oferta en red de atención",
+			"SEARCH_BY_SPECIALTY_CRITERIA": "Seleccione los criterios para la búsqueda de turnos disponibles por especialidad:",
+			"AVAILABLE_DAYS": "Días disponibles",
+			"TIME_RANGE": "Rango horario",
+			"START_DATE": "Fecha de inicio",
+			"END_DATE": "Fecha de fin",
+			"SEARCH_RANGE": "Período de búsqueda:",
+			"SEARCH_DISCLAIMER": "Se traerán resultados desde la fecha seleccionada hasta 21 días en adelante",
+			"ASSIGN_APPOINTMENT": "Asignar turno",
+			"APPOINTMENTS_FOUND": "Turnos disponibles encontrados:",
+			"RESULT_DISCLAIMER": "Si no se encuentra el resultado esperado, por favor refine la búsqueda.",
+			"CARE_LINE_TOOLTIP": "Línea de cuidado",
+			"SECTOR_CONSULTORY_TOOLTIP": "Consultorio y sector",
+			"PROTECTED_APPOINTMENT_TOOLTIP": "Turnos protegidos",
+			"PROFESSIONALS_TOOLTIP": "Profesionales",
+			"PERCENTAGE_PROTECTED_APPOINTMENT": "% de turnos protegidos por día",
+			"messages": {
+				"NO_SPECIFIED_DATE": "Por favor ingrese una fecha para realizar la búsqueda"
+			}
+		},
+		"search-appointments-in-care-network": {
+			"SEARCH_IN_CARE_NETWORK_CRITERIA": "Seleccione los criterios para la búsqueda de turnos disponibles en la red de atención:",
+			"OPTIONAL": "(Opcional)",
+			"CARELINE": "Línea de cuidado",
+			"PROVINCE": "Provincia",
+			"DEPARTMENT": "Partido",
+			"INSTITUTION": "Institución",
+			"SPECIALTY": "Especialidad",
+			"DATE_PERIOD_NOTE": "Se traerán resultados desde la fecha seleccionada hasta 7 días en adelante",
+			"SEARCH_START_DATE": "Fecha de inicio de búsqueda",
+			"NOT_FOUND_APPOINTMENTS": "No se han encontrado turnos disponibles con esos criterios de búsqueda.",
+			"INVALID_FORM_MESSAGE": "Debe ingresar todos los campos obligatorios marcados para la búsqueda",
+			"AVAILABLE_APPOINTMENTS_TITLE": "Turnos disponibles encontrados"
+		},
+		"appointment-result-view": {
+			"JOINT_DIARY": "agenda conjunta"
 		},
 		"agenda-setup": {
 			"NEW_AGENDA": "Nueva agenda",
@@ -31,7 +70,13 @@
 			"CHOOSE_PROFESSIONAL": "Seleccione profesional",
 			"CHOOSE_PROFESSIONAL_ERROR": "Por favor seleccione un profesional adjunto",
 			"OPTIONAL_ALIAS": "Alias (Opcional)",
-			"ALIAS_HINT_TEXT" : "Identificador para la oferta de turnos",
+			"ALIAS_HINT_TEXT": "Identificador para la oferta de turnos",
+			"OPTIONAL_CARELINE": "Línea de cuidado (Opcional)",
+			"CARELINE": "Seleccionar línea de cuidado",
+			"PROTECTED_APPOINTMENT_PERCENTAGE": "Porcentajes de turnos protegidos por día",
+			"PROTECTED_APPOINTMENT_PERCENTAGE_RANGE": "Ingrese un valor entre 0 y 100%. Considere que se redondea hacia abajo.",
+			"PROTECTED_APPOINTMENT_PERCENTAGE_RANGE_EXAMPLE": "Por ej. valores entre 1 y 9% pueden no implicar turnos protegidos en una agenda con menos de 10 turnos totales.",
+			"MORE": "más",
 			"dialog": {
 				"TITLE": "Nueva atención",
 				"EDIT": "Editar atención",
@@ -49,7 +94,7 @@
 			}
 		},
 		"booking": {
-			"VALIDATE":"Validar",
+			"VALIDATE": "Validar",
 			"BOOKING": "Turno online",
 			"SLOT_NOT_AVAILABLE": "Este turno fue ocupado por una reserva online",
 			"CANCEL_BOOKING": "Cancelar turno"
@@ -64,12 +109,23 @@
 			"PATIENT_ID": "ID del paciente",
 			"PHONE_NUMBER": "Número Telefónico",
 			"PHONE_PREFIX": "Prefijo",
+			"ACCEPT": "Aceptar",
+			"PRINT_APPOINTMENT_BUTTON": "Imprimir turno",
+			"ASSIGNED_APPOINTMENT": "Turno asignado",
 			"messages": {
 				"ERROR": "Paciente no encontrado",
 				"SUCCESS": "Paciente encontrado",
 				"APPOINTMENT_ERROR": "Error al confirmar el turno",
 				"APPOINTMENT_SUCCESS": "Turno confirmado",
 				"NOT_RESPONSIBLE": "Solo el responsable de la agenda puede crear turnos"
+			},
+			"appointment-exists": {
+				"TITLE": "Otro turno en la misma fecha",
+				"ASSIGNMENT-QUESTION": "¿Desea conceder el turno de todos modos?",
+				"buttons": {
+					"ASSIGN": "Si, asignar turno",
+					"NOT-ASSIGN": "No, cancelar"
+				}
 			}
 		},
 		"cancel": {
@@ -89,10 +145,13 @@
 			"BUTTON_CLINICAL_HISTORY": "Ver historia clínica",
 			"EDIT_PATIENT_INFO": "Editar información del paciente",
 			"APPOINTMENT_STATE": "Estado de turno",
+			"ABSENCE_MOTIVE": "Motivo de ausencia",
+			"DESCRIBE_MOTIVE": "Describa el motivo",
 			"MOTIVE": "Motivo",
 			"SAVE": "Guardar",
 			"CANCEL": "Cancelar",
-			"date":{
+			"NO-INFO": "Sin información",
+			"date": {
 				"EDIT_DATE_TIME": "Editar fecha y hora del turno",
 				"UPDATE_SUCCESS": "La fecha y hora del turno se actualizaron exitosamente"
 			},
@@ -111,10 +170,16 @@
 				"ADD_OBSERVATION": "+ Agregar observaciones",
 				"ADD_OBSERVATION_SUBTITLE": "Ingrese observaciones..."
 			},
-			"reports":{
+			"reports": {
 				"DOWNLOAD_REPORT": "Descargar informe",
 				"ANEXO": "Anexo II",
 				"FORM": "Formulario V"
+			},
+			"confirm-dialog": {
+				"CONTENT": "Si confirma el turno no podrá actualizar la cobertura luego.",
+				"CANCEL": "Si, actualizar cobertura",
+				"CONFIRM": "No, confirmar turno",
+				"QUESTION": "¿Desea actualizarla ahora?"
 			}
 		},
 		"report": {
@@ -139,6 +204,22 @@
 			"CONFIRM": "CONFIRMAR",
 			"BLOCK_COMPLETE_RANGE": "Bloquear rango horario completo",
 			"COMPLETE_RANGE": "Rango horario completo"
+		},
+		"day-of-week": {
+			"MONDAY": "Lunes",
+			"TUESDAY": "Martes",
+			"WEDNESDAY": "Miércoles",
+			"THURSDAY": "Jueves",
+			"FRIDAY": "Viernes",
+			"SATURDAY": "Sábado",
+			"SUNDAY": "Domingo"
+		},
+		"holiday": {
+			"TITLE": "Día feriado",
+			"HOLIDAY_RELATED": "corresponde a un día feriado.",
+			"HOLIDAY_DISCLAIMER": "¿Desea asignar un turno de todos modos?",
+			"OK_BUTTON": "No, elegir otra fecha",
+			"CANCEL_BUTTON": "Si, asignar turno"
 		}
 	}
 }

@@ -6,6 +6,10 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import ar.lamansys.sgh.clinichistory.application.indication.createpharmaco.CreatePharmaco;
+import ar.lamansys.sgh.clinichistory.application.indication.getInternmentEpisodeOtherIndication.GetInternmentEpisodeOtherIndication;
+import ar.lamansys.sgh.clinichistory.application.indication.getInternmentEpisodeParenteralPlan.GetInternmentEpisodeParenteralPlan;
+import ar.lamansys.sgh.clinichistory.application.indication.getInternmentEpisodePharmaco.GetInternmentEpisodePharmaco;
+import ar.lamansys.sgh.clinichistory.application.indication.getinternmentepisodediet.GetInternmentEpisodeDiet;
 import ar.lamansys.sgh.clinichistory.application.indication.getinternmentepisodenursingrecords.GetInternmentEpisodeNursingRecords;
 import ar.lamansys.sgh.clinichistory.application.indication.getinternmentepisodeotherindications.GetInternmentEpisodeOtherIndications;
 
@@ -66,10 +70,13 @@ import lombok.extern.slf4j.Slf4j;
 public class SharedIndicationPortImpl implements SharedIndicationPort {
 
 	private final GetInternmentEpisodeDiets getInternmentEpisodeDiets;
+	private final GetInternmentEpisodeDiet getInternmentEpisodeDiet;
 
 	private final GetInternmentEpisodeOtherIndications getInternmentEpisodeOtherIndications;
+	private final GetInternmentEpisodeOtherIndication getInternmentEpisodeOtherIndication;
 
 	private final GetInternmentEpisodePharmacos getInternmentEpisodePharmacos;
+	private final GetInternmentEpisodePharmaco getInternmentEpisodePharmaco;
 
 	private final CreateDiet createDiet;
 
@@ -84,6 +91,7 @@ public class SharedIndicationPortImpl implements SharedIndicationPort {
 	private final CreateParenteralPlan createParenteralPlan;
 
 	private final GetInternmentEpisodeParenteralPlans getInternmentEpisodeParenteralPlans;
+	private final GetInternmentEpisodeParenteralPlan getInternmentEpisodeParenteralPlan;
 
 	private final GetInternmentEpisodeNursingRecords getInternmentEpisodeNursingRecords;
 
@@ -101,6 +109,14 @@ public class SharedIndicationPortImpl implements SharedIndicationPort {
 	}
 
 	@Override
+	public DietDto getInternmentEpisodeDiet(Integer dietId) {
+		log.debug("Input parameter -> dietId {}", dietId);
+		DietDto result = mapToDietDto(getInternmentEpisodeDiet.run(dietId));
+		log.debug("Output -> {}", result);
+		return result;
+	}
+
+	@Override
 	public List<OtherIndicationDto> getInternmentEpisodeOtherIndications(Integer internmentEpisodeId) {
 		log.debug("Input parameter -> internmentEpisodeId {}", internmentEpisodeId);
 		List<OtherIndicationDto> result = getInternmentEpisodeOtherIndications.run(internmentEpisodeId)
@@ -112,9 +128,25 @@ public class SharedIndicationPortImpl implements SharedIndicationPort {
 	}
 
 	@Override
+	public OtherIndicationDto getInternmentEpisodeOtherIndication(Integer otherIndicationId) {
+		log.debug("Input parameter -> otherIndicationId {}", otherIndicationId);
+		OtherIndicationDto result = mapToOtherIndicationDto(getInternmentEpisodeOtherIndication.run(otherIndicationId));
+		log.debug("Output -> {}", result);
+		return result;
+	}
+
+	@Override
 	public List<PharmacoSummaryDto> getInternmentEpisodePharmacos(Integer internmentEpisodeId) {
 		log.debug("Input parameter -> internmentEpisodeId {}", internmentEpisodeId);
 		List<PharmacoSummaryDto> result = getInternmentEpisodePharmacos.run(internmentEpisodeId).stream().map(this::mapToPharmacoSummaryDto).collect(Collectors.toList());
+		log.debug("Output -> {}", result);
+		return result;
+	}
+
+	@Override
+	public PharmacoDto getInternmentEpisodePharmaco(Integer pharmacoId) {
+		log.debug("Input parameter -> pharmacoId {}", pharmacoId);
+		PharmacoDto result = mapToPharmacoDto(getInternmentEpisodePharmaco.run(pharmacoId));
 		log.debug("Output -> {}", result);
 		return result;
 	}
@@ -155,6 +187,14 @@ public class SharedIndicationPortImpl implements SharedIndicationPort {
 	public List<ParenteralPlanDto> getInternmentEpisodeParenteralPlans(Integer internmentEpisodeId) {
 		log.debug("Input parameter -> internmentEpisodeId {}", internmentEpisodeId);
 		List<ParenteralPlanDto> result = getInternmentEpisodeParenteralPlans.run(internmentEpisodeId).stream().map(this::mapToParenteralPlanDto).collect(Collectors.toList());
+		log.debug("Output -> {}", result);
+		return result;
+	}
+
+	@Override
+	public ParenteralPlanDto getInternmentEpisodeParenteralPlan(Integer parenteralPlanId) {
+		log.debug("Input parameter -> parenteralPlanId {}", parenteralPlanId);
+		ParenteralPlanDto result = mapToParenteralPlanDto(getInternmentEpisodeParenteralPlan.run(parenteralPlanId));
 		log.debug("Output -> {}", result);
 		return result;
 	}
@@ -386,6 +426,8 @@ public class SharedIndicationPortImpl implements SharedIndicationPort {
 		dosageDto.setQuantity(new QuantityDto(dosageBo.getQuantity().getValue(), dosageBo.getQuantity().getUnit()));
 		SharedSnomedDto snomedDto = new SharedSnomedDto(bo.getSnomed().getSctid(), bo.getSnomed().getPt());
 		FrequencyDto frequencyDto = toFrequencyDto(bo.getFrequency());
+		List<OtherPharmacoDto> otherPharmacos = bo.getPharmacos().stream().map(p-> toOtherPharmacoDto(p)).collect(Collectors.toList());
+
 		return new ParenteralPlanDto(
 				bo.getId(),
 				bo.getPatientId(),
@@ -399,7 +441,7 @@ public class SharedIndicationPortImpl implements SharedIndicationPort {
 				dosageDto,
 				frequencyDto,
 				bo.getVia(),
-				null);
+				otherPharmacos);
 	}
 
 	private PharmacoDto mapToPharmacoDto(PharmacoBo bo){

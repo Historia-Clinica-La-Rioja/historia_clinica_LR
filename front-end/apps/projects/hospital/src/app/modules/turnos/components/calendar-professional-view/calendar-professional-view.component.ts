@@ -4,7 +4,8 @@ import { DockPopupRef } from '@presentation/services/dock-popup-ref';
 import { DockPopupService } from '@presentation/services/dock-popup.service';
 import { HealthcareProfessionalService } from '@api-rest/services/healthcare-professional.service';
 import { DiariesService } from '@api-rest/services/diaries.service';
-import { CalendarDateService } from '@turnos/services/calendar-date.service';
+import { AppointmentsFacadeService } from '@turnos/services/appointments-facade.service';
+import { CalendarProfessionalInformation } from '@turnos/services/calendar-professional-information';
 
 @Component({
 	selector: 'app-calendar-professional-view',
@@ -21,7 +22,8 @@ export class CalendarProfessionalViewComponent implements OnInit, OnDestroy {
 		private readonly dockPopupService: DockPopupService,
 		private readonly healthcareProfessional: HealthcareProfessionalService,
 		private readonly diaryService: DiariesService,
-		private readonly calendarDateService: CalendarDateService
+		private readonly appointmentFacade: AppointmentsFacadeService,
+		private readonly calendarProfessionalInfo: CalendarProfessionalInformation
 	) { }
 
 	ngOnInit(): void {
@@ -36,6 +38,7 @@ export class CalendarProfessionalViewComponent implements OnInit, OnDestroy {
 	}
 
 	ngOnDestroy(): void {
-		this.calendarDateService.setCalendarDate(new Date());
+		this.calendarProfessionalInfo.setCalendarDate(new Date());
+		this.calendarProfessionalInfo.setProfessionalSelected(null);
 	}
 }

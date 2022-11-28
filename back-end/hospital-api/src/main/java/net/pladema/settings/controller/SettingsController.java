@@ -37,7 +37,6 @@ public class SettingsController {
 
     @PostMapping(value = "/assets/{fileName:.+}/**", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     @PreAuthorize("hasAnyAuthority('ROOT')")
-    @Transactional
     public boolean uploadFile(HttpServletRequest request,
                               @RequestPart("file") MultipartFile file) throws MethodNotSupportedException {
         //TODO: en service crear paquete exception con un exception handler en el controller o en otro paquete dentro de la capa de controler. Parserar a apierrordto
@@ -49,7 +48,6 @@ public class SettingsController {
 
     @DeleteMapping(value = "/assets/{fileName:.+}/**")
     @PreAuthorize("hasAnyAuthority('ROOT')")
-    @Transactional
     public boolean deleteFile(HttpServletRequest request) throws MethodNotSupportedException {
         logger.debug("Input parameters -> fileName={}",
                 request.getRequestURL());

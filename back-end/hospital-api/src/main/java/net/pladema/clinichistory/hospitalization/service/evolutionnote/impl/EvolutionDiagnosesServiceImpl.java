@@ -8,6 +8,7 @@ import net.pladema.clinichistory.hospitalization.service.evolutionnote.domain.Ev
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Collections;
 
@@ -33,6 +34,7 @@ public class EvolutionDiagnosesServiceImpl implements EvolutionDiagnosesService 
     }
 
     @Override
+	@Transactional
     public Long execute(EvolutionNoteBo evolutionNote) {
         LOG.debug("Input parameters -> evolutionNote {}", evolutionNote);
 		evolutionNote.getDiagnosis().forEach(diagnosisBo -> diagnosisBo.setId(null));

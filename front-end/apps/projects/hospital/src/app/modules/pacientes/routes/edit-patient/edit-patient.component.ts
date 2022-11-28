@@ -224,7 +224,6 @@ export class EditPatientComponent implements OnInit {
 								this.currentEducationLevelDescription = this.educationLevels.find(educationLevel => educationLevel.id === personInformationData.educationLevelId)?.description;
 							});
 					});
-				this.setPatientMedicalCoverages();
 			});
 
 		this.personMasterDataService.getGenders()
@@ -356,7 +355,7 @@ export class EditPatientComponent implements OnInit {
 			educationLevelId: this.form.controls.educationLevelId.value,
 			genderSelfDeterminationId: this.form.controls.genderSelfDeterminationId.value,
 			mothersLastName: this.form.controls.mothersLastName.value,
-			nameSelfDetermination: this.form.controls.nameSelfDetermination.value,
+			nameSelfDetermination: this.form.controls.nameSelfDetermination.value ? this.form.controls.nameSelfDetermination.value : null,
 			phonePrefix: this.form.controls.phonePrefix.value,
 			phoneNumber: this.form.controls.phoneNumber.value,
 			religion: this.form.controls.religion.value,
@@ -429,6 +428,7 @@ export class EditPatientComponent implements OnInit {
 				identificationNumber: this.form.getRawValue().identificationNumber,
 				identificationTypeId: this.form.getRawValue().identificationTypeId,
 				initValues: this.medicalCoverages,
+				patientId: this.patientId,
 			}
 		});
 		dialogRef.afterClosed().subscribe(medicalCoverages => {
@@ -465,17 +465,6 @@ export class EditPatientComponent implements OnInit {
 					this.disableFormField();
 				}
 			});
-	}
-
-	private setPatientMedicalCoverages(): void {
-		this.patientMedicalCoverageService.getActivePatientMedicalCoverages(this.patientId)
-			.pipe(
-				map(
-					patientMedicalCoveragesDto =>
-						patientMedicalCoveragesDto.map(s => this.mapperService.toPatientMedicalCoverage(s))
-				)
-			)
-			.subscribe((s: PatientMedicalCoverage[]) => { this.medicalCoverages = s; });
 	}
 
 	public showOtherSelfPerceivedGender(): void {

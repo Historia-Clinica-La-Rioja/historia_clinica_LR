@@ -2,7 +2,7 @@ package net.pladema.staff.infrastructure.input.rest;
 
 import lombok.extern.slf4j.Slf4j;
 import net.pladema.staff.application.getprofessionsbyprofessional.GetProfessionsByProfessional;
-import net.pladema.staff.controller.dto.HealthcareProfessionalSpecialtyDto;
+import net.pladema.staff.controller.dto.ProfessionalProfessionsDto;
 import net.pladema.staff.controller.mapper.HealthcareProfessionalSpecialtyMapper;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -27,17 +27,17 @@ public class HealthcareProfessionalSpecialtyController {
     private final HealthcareProfessionalSpecialtyMapper healthcareProfessionalSpecialtyMapper;
 
     public HealthcareProfessionalSpecialtyController(GetProfessionsByProfessional getProfessionsByProfessional,
-                                                     HealthcareProfessionalSpecialtyMapper healthcareProfessionalSpecialtyMapper) {
+													 HealthcareProfessionalSpecialtyMapper healthcareProfessionalSpecialtyMapper) {
         this.getProfessionsByProfessional = getProfessionsByProfessional;
         this.healthcareProfessionalSpecialtyMapper = healthcareProfessionalSpecialtyMapper;
     }
     @GetMapping
     @ResponseStatus(code = HttpStatus.OK)
-    public ResponseEntity<List<HealthcareProfessionalSpecialtyDto>> getProfessionsByProfessional(
+    public ResponseEntity<List<ProfessionalProfessionsDto>> getProfessionsByProfessional(
             @PathVariable(name = "institutionId") Integer institutionId,
             @PathVariable(name = "professionalId") Integer professionalId) {
         log.debug("Input parameters -> {}", professionalId);
-        List<HealthcareProfessionalSpecialtyDto> result = healthcareProfessionalSpecialtyMapper.fromHealthcareProfessionalSpecialtyBoList(getProfessionsByProfessional.execute(professionalId));
+        List<ProfessionalProfessionsDto> result = healthcareProfessionalSpecialtyMapper.fromProfessionalProfessionsBoList(getProfessionsByProfessional.run(professionalId));
         log.debug("Output -> {}", result);
         return ResponseEntity.ok().body(result);
     }

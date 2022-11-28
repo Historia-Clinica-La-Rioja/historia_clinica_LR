@@ -250,8 +250,7 @@
 							</mat-form-field>
 						</div>
 						<div>
-							<mat-label *ngIf="hasError(form, 'required', 'indicationsNote')"
-									   [translate]="'internaciones.epicrisis.observations.STUDIES_SUMMARY'"></mat-label>
+							<mat-label [translate]="'internaciones.epicrisis.observations.STUDIES_SUMMARY'"></mat-label>
 							<mat-form-field [floatLabel]="'never'" appearance="outline">
 								<textarea matInput type="text" id="studiesSummaryNote" name="studiesSummaryNote"
 										  formControlName="studiesSummaryNote"

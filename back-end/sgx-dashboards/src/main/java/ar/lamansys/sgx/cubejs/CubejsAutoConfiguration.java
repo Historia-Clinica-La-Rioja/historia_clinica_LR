@@ -1,11 +1,8 @@
 package ar.lamansys.sgx.cubejs;
 
-
 import java.time.Duration;
 import java.util.HashMap;
 import java.util.Map;
-
-import ar.lamansys.sgx.cubejs.infrastructure.repository.permissions.UserPermissionStorage;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.context.properties.ConfigurationProperties;
@@ -17,6 +14,7 @@ import org.springframework.context.annotation.PropertySource;
 import ar.lamansys.sgx.cubejs.domain.DashboardStorage;
 import ar.lamansys.sgx.cubejs.infrastructure.repository.DashboardStorageImpl;
 import ar.lamansys.sgx.cubejs.infrastructure.repository.DashboardStorageUnavailableImpl;
+import ar.lamansys.sgx.cubejs.infrastructure.repository.permissions.UserPermissionStorage;
 import ar.lamansys.sgx.shared.restclient.configuration.HttpClientConfiguration;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -41,8 +39,8 @@ public class CubejsAutoConfiguration {
 
     private Map<String, String> headers = new HashMap<>();
 
-    public boolean isEnabled() {
-        return apiUrl != null && !apiUrl.isBlank();
+    public boolean isEnabled(boolean featureEnabled) {
+        return apiUrl != null && !apiUrl.isBlank() && featureEnabled;
     }
 
     @Bean
@@ -53,7 +51,7 @@ public class CubejsAutoConfiguration {
 			@Value("${app.gateway.cubejs.token.header:Authorization}") String cubeTokenHeader,
 			@Value("${app.gateway.cubejs.token.expiration:20d}") Duration tokenExpiration
 	) throws Exception {
-        if (!isEnabled()) {
+        if (!isEnabled(true)) {
             log.warn("Cubejs dashboards are disabled");
             return new DashboardStorageUnavailableImpl();
         }
@@ -69,7 +67,7 @@ public class CubejsAutoConfiguration {
 
     @Bean
     public InstitutionMenuExtensionPlugin dashboardsExtensionPlugin() {
-        var result = isEnabled() ? InstitutionMenuExtensionPluginBuilder.fromResources("tableros") : null;
+        var result = isEnabled(true) ? InstitutionMenuExtensionPluginBuilder.fromResources("tableros") : null;
         if (result != null) {
             log.info("Cubejs InstitutionMenuExtensionPlugin {}", result.menu());
         } else {

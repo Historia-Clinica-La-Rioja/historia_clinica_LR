@@ -18,6 +18,7 @@ import ar.lamansys.sgh.clinichistory.application.healthCondition.HealthCondition
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Map;
@@ -35,6 +36,7 @@ public class ReferenceStorageImpl implements ReferenceStorage {
     private final ReferenceCounterReferenceFileStorage referenceCounterReferenceFileStorage;
 
     @Override
+	@Transactional
     public void save(List<ReferenceBo> referenceBoList) {
         log.debug("Input parameters -> referenceBoList {}", referenceBoList);
         referenceBoList.stream().forEach(referenceBo -> {

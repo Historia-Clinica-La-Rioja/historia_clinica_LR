@@ -12,7 +12,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import javax.transaction.Transactional;
 import java.time.ZoneId;
 
 @RestController
@@ -32,7 +31,7 @@ public class EmergencyCareEpisodeAdministrativeDischargeController {
         this.emergencyCareEpisodeAdministrativeDischargeService = emergencyCareEpisodeAdministrativeDischargeService;
     }
 
-    @Transactional
+
     @PostMapping
     public ResponseEntity<Boolean> newAdministrativeDischarge(
             @PathVariable(name = "institutionId") Integer institutionId,
@@ -47,7 +46,7 @@ public class EmergencyCareEpisodeAdministrativeDischargeController {
         return ResponseEntity.ok().body(saved);
     }
 
-    @Transactional
+
     @PostMapping("/absence")
     public ResponseEntity<Boolean> newAdministrativeDischargeByAbsence(
             @PathVariable(name = "institutionId") Integer institutionId,

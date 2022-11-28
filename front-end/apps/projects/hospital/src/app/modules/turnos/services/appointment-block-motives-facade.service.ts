@@ -20,6 +20,9 @@ export class AppointmentBlockMotivesFacadeService {
 	}
 
 	getAppointmentBlockMotiveById(id: number): string {
+		if (id === undefined) {
+			return 'sin motivo';
+		}
 		return this.appointmentBlockMotives.find(appointmentBlockMotive => appointmentBlockMotive.id === id).description;
 	}
 

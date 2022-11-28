@@ -1,0 +1,47 @@
+.icon {
+	margin: 0 10px 0 0;
+	color: #a8a8a8;
+}
+
+.content {
+	@media screen and (max-width: 600px) {
+		margin-left: 20px;
+	}
+	@media screen and (min-width: 700px) {
+		min-width: 100px;
+		margin-left: 25px;
+	}
+}
+
+.green {
+	color: #27ae60;
+}
+
+.red {
+	color: #eb5757;
+}
+
+.grey {
+	color: #a8a8a8;
+}
+
+.serch {
+	height: 100%;
+	min-height: 100%;
+	min-width: 80%;
+	width: 80%;
+	@media screen and (min-width: 960px) {
+		min-width: 40%;
+		width: 40%;
+	}
+}
+
+.button-filter-effect {
+	transform: rotate(180deg);
+	transition: transform 256ms;
+}
+
+.button-filter {
+	margin-top: 10px;
+	height: 30%;
+}

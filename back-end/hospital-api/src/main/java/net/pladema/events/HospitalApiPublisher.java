@@ -1,20 +1,26 @@
 package net.pladema.events;
 
+import org.springframework.stereotype.Service;
+
+import ar.lamansys.sgh.shared.infrastructure.input.service.events.NotifyPatientDto;
 import ar.lamansys.sgh.shared.infrastructure.input.service.events.PublisherFactory;
 import ar.lamansys.sgh.shared.infrastructure.input.service.events.SimplePublishService;
-
-import org.springframework.stereotype.Service;
 
 @Service
 public class HospitalApiPublisher {
 
-	private SimplePublishService simplePublishService;
+	private final SimplePublishService simplePublishService;
 
 	public HospitalApiPublisher(PublisherFactory publisherFactory) {
-		simplePublishService = publisherFactory.getPublisher("hospitalApi");
+		simplePublishService = publisherFactory.getPublisher("HOSPITAL_API");
 	}
 
-	public void publish(Integer patientId, EHospitalApiTopicDto eHospitalApiTopicDto) {
-		simplePublishService.publish(patientId, eHospitalApiTopicDto.toString());
+	public void publish(Integer patientId, Integer institutionId, EHospitalApiTopicDto eHospitalApiTopicDto) {
+		simplePublishService.publish(patientId, institutionId, eHospitalApiTopicDto.toString());
 	}
+
+	public void appointmentCaller(NotifyPatientDto notifyPatientDto) {
+		simplePublishService.appointmentCallerPublish(EHospitalApiTopicDto.PACIENTE_LLAMADO.toString(), notifyPatientDto);
+	}
+
 }

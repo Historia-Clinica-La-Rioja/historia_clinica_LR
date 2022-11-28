@@ -19,4 +19,5 @@ export class ClinicalSpecialtyCareLineService {
 		const url = `${environment.apiBase}/institution/${this.contextService.institutionId}/careline/${careLineId}/clinicalspecialties`;
 		return this.http.get<ClinicalSpecialtyDto[]>(url);
 	}
+
 }

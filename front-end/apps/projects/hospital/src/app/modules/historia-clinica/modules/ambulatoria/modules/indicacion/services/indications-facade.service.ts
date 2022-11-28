@@ -48,10 +48,10 @@ export class IndicationsFacadeService {
 		}
 
 		if (updateIndication.parenteralPlan) {
-			this.internmentIndicationService.getInternmentEpisodeParenteralPlan(this.internmentEpisodeId).subscribe(p => this.parenteralPlansSubject.next(p));
+			this.internmentIndicationService.getInternmentEpisodeParenteralPlans(this.internmentEpisodeId).subscribe(p => this.parenteralPlansSubject.next(p));
 		}
 		if (updateIndication.pharmaco) {
-			this.internmentIndicationService.getInternmentEpisodePharmaco(this.internmentEpisodeId).subscribe(p => this.pharmacoSubject.next(p));
+			this.internmentIndicationService.getInternmentEpisodePharmacos(this.internmentEpisodeId).subscribe(p => this.pharmacoSubject.next(p));
 		}
 	}
 

@@ -1,17 +1,24 @@
 package net.pladema.snowstorm.repository.entity;
 
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 
 import org.hibernate.annotations.Immutable;
+import java.time.LocalDate;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
-import java.time.LocalDate;
+import org.hibernate.annotations.Immutable;
+
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.ToString;
 
 @Entity
 @Immutable
@@ -19,6 +26,7 @@ import java.time.LocalDate;
 @Getter
 @Setter
 @ToString
+@NoArgsConstructor
 public class VSnomedGroupConcept {
 
 	@Id
@@ -42,5 +50,10 @@ public class VSnomedGroupConcept {
 
 	@Column(name = "last_update")
 	private LocalDate lastUpdate;
+
+	public VSnomedGroupConcept(Integer id, String conceptPt) {
+		this.id = id;
+		this.conceptPt = conceptPt;
+	}
 
 }

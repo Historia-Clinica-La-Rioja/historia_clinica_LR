@@ -49,6 +49,13 @@ public class InternmentOtherIndicationServiceImpl implements InternmentOtherIndi
 		return result;
 	}
 
+	@Override
+	public OtherIndicationDto getInternmentEpisodeOtherIndication(Integer otherIndicationId){
+		log.debug("Input parameter -> otherIndicationId {}", otherIndicationId);
+		OtherIndicationDto result = sharedIndicationPort.getInternmentEpisodeOtherIndication(otherIndicationId);
+		log.debug("Output -> {}", result);
+		return result;
+	}
 
 	private void assertInternmentEpisodeCanCreateIndication(Integer internmentEpisodeId) {
 		if (internmentEpisodeService.haveEpicrisis(internmentEpisodeId)) {

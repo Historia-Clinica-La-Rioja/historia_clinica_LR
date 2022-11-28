@@ -39,6 +39,13 @@ public class InternmentDietServiceImpl implements InternmentDietService {
 	}
 
 	@Override
+	public DietDto getInternmentEpisodeDiet(Integer dietId) {
+		log.debug("Input parameter -> dietId {}", dietId);
+		DietDto result = sharedIndicationPort.getInternmentEpisodeDiet(dietId);
+		log.debug("Output -> {}", result);
+		return result;
+	}
+	@Override
 	public Integer addDiet(InternmentDietBo dietBo) {
 		log.debug("Input parameter -> dietBo {}", dietBo);
 		assertInternmentEpisodeCanCreateIndication(dietBo.getEncounterId());

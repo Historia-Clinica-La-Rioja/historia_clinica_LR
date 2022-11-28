@@ -106,7 +106,7 @@ public class AppointmentValidatorServiceImpl implements AppointmentValidatorServ
             DiaryBo diary = diaryService.getDiaryById(apmtOpt.get().getDiaryId());
 
             Integer professionalId = healthcareProfessionalService.getProfessionalId(UserInfo.getCurrentAuditor());
-			List<Integer> associatedHealthcareProfessionals = diaryAssociatedProfessionalService.getAllAssociatedWithProfessionalsByHealthcareProfessionalId(professionalId);;
+			List<Integer> associatedHealthcareProfessionals = diaryAssociatedProfessionalService.getAllAssociatedWithProfessionalsByHealthcareProfessionalId(institutionId, professionalId);
             if (Boolean.TRUE.equals(hasProfessionalRole.apply(institutionId)) && !diary.getHealthcareProfessionalId().equals(professionalId) && !associatedHealthcareProfessionals.contains(diary.getHealthcareProfessionalId())) {
                 throw new ValidationException("appointment.new.professional.id.invalid}");
             }
@@ -159,9 +159,9 @@ public class AppointmentValidatorServiceImpl implements AppointmentValidatorServ
     private static Map<Short, Collection<Short>> buildValidStates() {
         return Map.of(
                 BOOKED, Arrays.asList(ASSIGNED, CONFIRMED, CANCELLED),
-                ASSIGNED, Arrays.asList(CONFIRMED, CANCELLED),
-                CONFIRMED, Arrays.asList(ABSENT, CANCELLED, SERVED),
-                ABSENT, Arrays.asList(CONFIRMED,ABSENT),
+                ASSIGNED, Arrays.asList(CONFIRMED, CANCELLED, ABSENT),
+                CONFIRMED, Arrays.asList(ABSENT, CANCELLED, SERVED, ASSIGNED),
+                ABSENT, Arrays.asList(CONFIRMED,ABSENT, ASSIGNED),
                 SERVED, Collections.emptyList(),
                 CANCELLED, Collections.singletonList(CANCELLED),
 				OUT_OF_DIARY, Arrays.asList(CANCELLED, ASSIGNED, BOOKED)

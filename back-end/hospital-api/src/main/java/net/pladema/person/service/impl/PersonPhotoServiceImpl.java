@@ -9,6 +9,7 @@ import net.pladema.sgx.images.ImageFileService;
 import org.slf4j.LoggerFactory;
 import org.slf4j.Logger;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -74,6 +75,7 @@ public class PersonPhotoServiceImpl implements PersonPhotoService {
     }
 
     @Override
+	@Transactional // Transaccion compleja
     public boolean save(Integer personId, String imageData) {
         LOG.debug("Input parameters -> personId {}, imageData {}", personId, imageData);
         if (imageData == null) {

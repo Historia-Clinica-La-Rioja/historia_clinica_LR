@@ -26,4 +26,5 @@ public class HCEReferenceDto {
 
     private HCESummaryCounterReferenceDto counterReference;
 
+	private String institution;
 }

@@ -2,8 +2,11 @@ package net.pladema.medicalconsultation.appointment.repository;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
+
+import net.pladema.medicalconsultation.appointment.repository.domain.AppointmentShortSummaryBo;
 
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
@@ -43,13 +46,13 @@ public interface AppointmentRepository extends SGXAuditableEntityJPARepository<A
     @Query( "SELECT NEW net.pladema.medicalconsultation.appointment.repository.domain.AppointmentDiaryVo(" +
             "aa.pk.diaryId, a.id, a.patientId, a.dateTypeId, a.hour, a.appointmentStateId, a.isOverturn, " +
             "a.patientMedicalCoverageId,a.phonePrefix, a.phoneNumber, doh.medicalAttentionTypeId, " +
-			"a.appointmentBlockMotiveId) " +
+			"a.appointmentBlockMotiveId, a.updateable.updatedOn) " +
             "FROM Appointment AS a " +
             "JOIN AppointmentAssn AS aa ON (a.id = aa.pk.appointmentId) " +
             "JOIN DiaryOpeningHours  AS doh ON (doh.pk.diaryId = aa.pk.diaryId) " +
             "WHERE aa.pk.diaryId = :diaryId AND a.appointmentStateId <> " + AppointmentState.CANCELLED_STR +
 			"AND aa.pk.openingHoursId = doh.pk.openingHoursId " +
-			"AND a.deleteable.deleted = FALSE OR a.deleteable.deleted IS NULL " +
+			"AND (a.deleteable.deleted = FALSE OR a.deleteable.deleted IS NULL ) " +
             " AND a.dateTypeId >= CURRENT_DATE ")
     List<AppointmentDiaryVo> getFutureActiveAppointmentsByDiary(@Param("diaryId") Integer diaryId);
 
@@ -74,7 +77,7 @@ public interface AppointmentRepository extends SGXAuditableEntityJPARepository<A
 			"AND a.dateTypeId = :date " +
 			"AND a.hour = :hour " +
 			"AND NOT a.appointmentStateId = " + AppointmentState.CANCELLED_STR +
-			" AND NOT a.deleteable.deleted = true")
+			"AND (a.deleteable.deleted = false OR a.deleteable.deleted is null )")
 	boolean existAppointment(@Param("diaryId") Integer diaryId,
 							 @Param("date") LocalDate date, @Param("hour") LocalTime hour);
 
@@ -99,11 +102,26 @@ public interface AppointmentRepository extends SGXAuditableEntityJPARepository<A
             "AND (d.healthcareProfessionalId = :healthProfessionalId " +
 			"OR dap.healthcareProfessionalId = :healthProfessionalId) " +
             "AND a.dateTypeId = :appointmentDate " +
-            "AND a.appointmentStateId = " + AppointmentState.CONFIRMED + " " +
+            "AND ( a.appointmentStateId = " + AppointmentState.CONFIRMED + " " +
+			"OR a.appointmentStateId = " + AppointmentState.ASSIGNED + ") " +
             "ORDER BY a.hour ASC")
     List<Integer> getAppointmentsId(@Param("patientId") Integer patientId,
                                     @Param("healthProfessionalId")  Integer healthProfessionalId,
                                     @Param("appointmentDate")  LocalDate appointmentDate);
+
+	@Transactional(readOnly = true)
+	@Query( "SELECT DISTINCT a.id, a.hour " +
+			"FROM Appointment AS a " +
+			"JOIN AppointmentAssn AS aa ON (a.id = aa.pk.appointmentId) " +
+			"JOIN Diary AS d ON (d.id = aa.pk.diaryId) " +
+			"LEFT JOIN DiaryAssociatedProfessional AS dap ON (dap.diaryId = d.id) " +
+			"WHERE a.patientId = :patientId " +
+			"AND (d.healthcareProfessionalId = :healthProfessionalId " +
+			"OR dap.healthcareProfessionalId = :healthProfessionalId) " +
+			"AND a.appointmentStateId = " + AppointmentState.CONFIRMED + " " +
+			"ORDER BY a.hour ASC")
+	List<Integer> getOldAppointmentsId(@Param("patientId") Integer patientId,
+									@Param("healthProfessionalId")  Integer healthProfessionalId);
 
 
     @Transactional
@@ -143,7 +161,8 @@ public interface AppointmentRepository extends SGXAuditableEntityJPARepository<A
     @Query(name = "Appointment.medicalCoverage")
     List<Integer> getMedicalCoverage(@Param("patientId") Integer patientId,
                                      @Param("currentDate") LocalDate currentDate,
-                                     @Param("appointmentState") Short appointmentState,
+                                     @Param("confirmedAppointmentState") Short confirmedAppointmentState,
+									 @Param("assignedAppointmentState") Short assignedAppointmentState,
                                      @Param("professionalId") Integer professionalId);
 
 	@Transactional(readOnly = true)
@@ -189,13 +208,14 @@ public interface AppointmentRepository extends SGXAuditableEntityJPARepository<A
 			"WHERE a.patientId = :patientId " +
 			"AND do.institutionId = :institutionId " +
 			"AND up.pk.userId = :userId " +
-			"AND a.appointmentStateId = " + AppointmentState.CONFIRMED + " " +
+			"AND ( a.appointmentStateId = " + AppointmentState.CONFIRMED + " " +
+			"OR a.appointmentStateId = " + AppointmentState.ASSIGNED + ") " +
 			"AND a.dateTypeId = :currentDate " +
 			"ORDER BY a.dateTypeId, a.hour ASC ")
-	List<Integer> getConfirmedAppointmentsByPatient(@Param("patientId") Integer patientId,
-													@Param("institutionId") Integer institutionId,
-													@Param("userId") Integer userId,
-													@Param("currentDate") LocalDate currentDate);
+	List<Integer> getCurrentAppointmentsByPatient(@Param("patientId") Integer patientId,
+												  @Param("institutionId") Integer institutionId,
+												  @Param("userId") Integer userId,
+												  @Param("currentDate") LocalDate currentDate);
 
 	@Transactional(readOnly = true)
 	@Query( "SELECT a " +
@@ -212,12 +232,14 @@ public interface AppointmentRepository extends SGXAuditableEntityJPARepository<A
 	@Transactional(readOnly = true)
 	@Query(	"SELECT DISTINCT NEW net.pladema.medicalconsultation.appointment.repository.domain.AppointmentTicketBo(" +
 			"i.name, per.identificationNumber, per.lastName, per.otherLastNames, per.firstName, per.middleNames, " +
-			"mc.name, hi.acronym, a.dateTypeId, a.hour, do2.description, per2.lastName, per2.otherLastNames, per2.firstName, per2.middleNames) " +
+			"pex.nameSelfDetermination, mc.name, hi.acronym, a.dateTypeId, a.hour, do2.description, per2.lastName, " +
+			"per2.otherLastNames, per2.firstName, per2.middleNames, pex2.nameSelfDetermination) " +
 			"FROM Appointment a " +
 			"JOIN AppointmentAssn aa ON(a.id = aa.pk.appointmentId) " +
 			"JOIN Diary d ON(d.id = aa.pk.diaryId) " +
 			"JOIN Patient p ON(p.id = a.patientId) " +
 			"JOIN Person per ON(per.id = p.personId) " +
+			"JOIN PersonExtended pex ON(per.id = pex.id) " +
 			"LEFT JOIN PatientMedicalCoverageAssn pmc ON(pmc.id = a.patientMedicalCoverageId) " +
 			"LEFT JOIN MedicalCoverage mc ON(pmc.medicalCoverageId = mc.id) " +
 			"LEFT JOIN HealthInsurance hi ON(hi.id = mc.id) " +
@@ -225,6 +247,28 @@ public interface AppointmentRepository extends SGXAuditableEntityJPARepository<A
 			"JOIN Institution i On(do2.institutionId = i.id) " +
 			"JOIN HealthcareProfessional hp ON(d.healthcareProfessionalId = hp.id) " +
 			"JOIN Person per2 ON(hp.personId = per2.id) " +
+			"JOIN PersonExtended pex2 ON(per2.id = pex2.id) " +
 			"WHERE a.id = :appointmentId ")
 	Optional<AppointmentTicketBo> getAppointmentTicketData(@Param("appointmentId") Integer appointmentId);
+
+	@Transactional(readOnly = true)
+	@Query("SELECT NEW net.pladema.medicalconsultation.appointment.repository.domain.AppointmentShortSummaryBo(" +
+			"i.name, a.dateTypeId, a.hour, per.lastName, per.otherLastNames, per.firstName, per.middleNames) " +
+			"FROM Appointment a " +
+			"JOIN AppointmentAssn aa ON(a.id = aa.pk.appointmentId) " +
+			"JOIN Diary d ON(d.id = aa.pk.diaryId) " +
+			"JOIN Patient p ON(p.id = a.patientId) " +
+			"JOIN DoctorsOffice do2 ON(d.doctorsOfficeId = do2.id) " +
+			"JOIN Institution i On(do2.institutionId = i.id) " +
+			"JOIN HealthcareProfessional hp ON(d.healthcareProfessionalId = hp.id) " +
+			"JOIN Person per ON (hp.personId = per.id) " +
+			"WHERE a.patientId = :patientId " +
+			"AND a.dateTypeId = :date " +
+			"AND a.appointmentStateId NOT IN (" + AppointmentState.CANCELLED_STR + "," + AppointmentState.SERVED + "," + AppointmentState.ABSENT + ") " +
+			"AND (a.deleteable.deleted = false OR a.deleteable.deleted is null ) " +
+			"ORDER BY a.hour asc")
+	List<AppointmentShortSummaryBo> getAppointmentFromDeterminatedDate(@Param("patientId") Integer patientId,
+																				 @Param("date") LocalDate date);
+
+
 }

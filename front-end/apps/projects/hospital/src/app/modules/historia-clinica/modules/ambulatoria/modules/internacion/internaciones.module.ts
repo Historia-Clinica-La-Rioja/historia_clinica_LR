@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 // deps
 import { HistoriaClinicaModule } from '@historia-clinica/historia-clinica.module';
+import { LazyMaterialModule } from 'projects/hospital/src/app/modules/lazy-material/lazy-material.module';
 import { PresentationModule } from '@presentation/presentation.module';
 // routing
 import { InternacionesRoutingModule } from './internaciones-routing.module';
@@ -20,6 +21,7 @@ import { InternmentEpisodeSummaryComponent } from "@historia-clinica/modules/amb
 import { MedicacionComponent } from './components/medicacion/medicacion.component';
 import { VacunasComponent } from './components/vacunas/vacunas.component';
 import { ElementoDiagnosticoComponent } from './components/elemento-diagnostico/elemento-diagnostico.component';
+import { InternmentPatientCardComponent } from './components/internment-patient-card/internment-patient-card.component';
 // dialogs
 import { AnamnesisDockPopupComponent } from "@historia-clinica/modules/ambulatoria/modules/internacion/dialogs/anamnesis-dock-popup/anamnesis-dock-popup.component";
 import { ChangeMainDiagnosisDockPopupComponent } from './dialogs/change-main-diagnosis-dock-popup/change-main-diagnosis-dock-popup.component';
@@ -45,6 +47,7 @@ import { TurnosModule } from '@turnos/turnos.module';
 		AntecedentesPersonalesComponent,
 		DiagnosticosComponent,
 		InternmentPatientTableComponent,
+		InternmentPatientCardComponent,
 		InternmentEpisodeSummaryComponent,
 		MedicacionComponent,
 		VacunasComponent,
@@ -62,7 +65,8 @@ import { TurnosModule } from '@turnos/turnos.module';
 	],
     exports: [
         InternmentEpisodeSummaryComponent,
-        InternmentPatientTableComponent
+        InternmentPatientTableComponent,
+		InternmentPatientCardComponent,
     ],
 	imports: [
 		CommonModule,
@@ -72,6 +76,7 @@ import { TurnosModule } from '@turnos/turnos.module';
 		// deps
 		HistoriaClinicaModule,
 		PresentationModule,
+		LazyMaterialModule,
 		TurnosModule
 	]
 })

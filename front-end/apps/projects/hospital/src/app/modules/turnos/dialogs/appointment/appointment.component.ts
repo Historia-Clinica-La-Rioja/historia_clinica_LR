@@ -4,13 +4,13 @@ import { MAT_DIALOG_DATA, MatDialog, MatDialogRef } from '@angular/material/dial
 import { NewAttentionComponent } from '../new-attention/new-attention.component';
 import { AppointmentsService } from '@api-rest/services/appointments.service';
 import { SnackBarService } from '@presentation/services/snack-bar.service';
-import { APPOINTMENT_STATES_ID, getAppointmentState, MAX_LENGTH_MOTIVO } from '../../constants/appointment';
+import { APPOINTMENT_STATES_ID, getAppointmentState, MAX_LENGTH_MOTIVE } from '../../constants/appointment';
 import { ContextService } from '@core/services/context.service';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { AppFeature, AppointmentDto, CompleteDiaryDto, DateTimeDto, ERole, IdentificationTypeDto, PatientMedicalCoverageDto, PersonPhotoDto } from '@api-rest/api-model.d';
+import { AppFeature, AppointmentDto, CompleteDiaryDto, DateTimeDto, ERole, IdentificationTypeDto, PatientMedicalCoverageDto, PersonPhotoDto, UpdateAppointmentDto, AppointmentListDto, UpdateAppointmentDateDto } from '@api-rest/api-model.d';
 import { CancelAppointmentComponent } from '../cancel-appointment/cancel-appointment.component';
 import { getError, hasError, processErrors, updateControlValidator } from '@core/utils/form.utils';
-import { AppointmentsFacadeService } from '../../services/appointments-facade.service';
+import { AppointmentsFacadeService, toCalendarEvent } from '../../services/appointments-facade.service';
 import { MapperService } from '@core/services/mapper.service';
 import {
 	determineIfIsHealthInsurance,
@@ -31,6 +31,10 @@ import { PatientService } from '@api-rest/services/patient.service';
 import { ImageDecoderService } from '@presentation/services/image-decoder.service';
 import { getDayHoursRangeIntervalsByMinuteValue } from '@core/utils/date.utils';
 import { CalendarEvent } from 'angular-calendar';
+import { DiscardWarningComponent } from '@presentation/dialogs/discard-warning/discard-warning.component';
+import { DateFormat, momentFormat, momentParseDate, momentParseTime } from '@core/utils/moment.utils';
+import * as moment from 'moment';
+import { isBefore, isEqual } from 'date-fns';
 
 const TEMPORARY_PATIENT = 3;
 const BELL_LABEL = 'Llamar paciente'
@@ -58,8 +62,9 @@ export class AppointmentComponent implements OnInit {
 	decodedPhoto$: Observable<string>;
 
 	appointment: AppointmentDto;
+	appointments: CalendarEvent[];
 	selectedState: APPOINTMENT_STATES_ID;
-	formMotivo: FormGroup;
+	formMotive: FormGroup;
 	formEdit: FormGroup;
 	formDate: FormGroup;
 	formObservations: FormGroup;
@@ -71,7 +76,7 @@ export class AppointmentComponent implements OnInit {
 	phoneNumber: string;
 	summaryCoverageData: SummaryCoverageInformation = {};
 	hasRoleToChangeState$: Observable<boolean>;
-	hasRoleToEditPhoneNumber$: Observable<boolean>;
+	hasRoleToEdit$: Observable<boolean>;
 	hasRoleToDownloadReports$: Observable<boolean>;
 	hasRoleToAddObservations$: Observable<boolean>;
 	patientMedicalCoverages: PatientMedicalCoverage[];
@@ -80,10 +85,11 @@ export class AppointmentComponent implements OnInit {
 	hideFilterPanel = false;
 
 	isDateFormVisible = false;
-	startAgenda = new Date();
-	endAgenda = new Date(this.data.agenda.endDate);
+	startAgenda = moment();
+	endAgenda = momentParseDate(this.data.agenda.endDate);
 	availableDays: number[] = [];
 	disableDays: Date[] = [];
+	openingDateForm = false;
 	possibleScheduleHours: Date[] = [];
 	selectedDate = new Date(this.data.appointmentData.date);
 
@@ -95,13 +101,12 @@ export class AppointmentComponent implements OnInit {
 	hideObservationForm = true;
 	hideObservationTitle = true;
 	observation: string;
-
+	firstCoverage: number;
 	constructor(
 		@Inject(MAT_DIALOG_DATA) public data: {
 			appointmentData: PatientAppointmentInformation,
 			hasPermissionToAssignShift: boolean,
-			agenda: CompleteDiaryDto,
-			appointments: CalendarEvent[]
+			agenda: CompleteDiaryDto
 		},
 		public dialogRef: MatDialogRef<NewAttentionComponent>,
 		private readonly dialog: MatDialog,
@@ -126,8 +131,8 @@ export class AppointmentComponent implements OnInit {
 	}
 
 	ngOnInit(): void {
-		this.formMotivo = this.formBuilder.group({
-			motivo: ['', [Validators.required, Validators.maxLength(MAX_LENGTH_MOTIVO)]]
+		this.formMotive = this.formBuilder.group({
+			motive: ['', [Validators.required, Validators.maxLength(MAX_LENGTH_MOTIVE)]]
 		});
 
 		this.formEdit = this.formBuilder.group({
@@ -138,11 +143,11 @@ export class AppointmentComponent implements OnInit {
 		});
 
 		this.formDate = this.formBuilder.group({
-			hour: ['',[Validators.required]],
+			hour: ['', [Validators.required]],
 		});
 
 		this.formObservations = this.formBuilder.group({
-			observation: ['',[Validators.required]]
+			observation: ['', [Validators.required]]
 		});
 
 		this.setMedicalCoverages();
@@ -155,7 +160,7 @@ export class AppointmentComponent implements OnInit {
 
 		this.data.agenda.diaryOpeningHours.forEach(DOH => {
 			let day = DOH.openingHours.dayWeekId;
-			if(!this.availableDays.includes(day))
+			if (!this.availableDays.includes(day))
 				this.availableDays.push(day);
 		});
 
@@ -164,13 +169,13 @@ export class AppointmentComponent implements OnInit {
 				this.appointment = appointment;
 				this.observation = appointment.observation;
 
-				if(this.observation){
+				if (this.observation) {
 					this.hideObservationTitle = false;
 					this.formObservations.controls.observation.setValue(this.observation);
 				}
 				this.selectedState = this.appointment?.appointmentStateId;
 				if (this.appointment.stateChangeReason) {
-					this.formMotivo.controls.motivo.setValue(this.appointment.stateChangeReason);
+					this.formMotive.controls.motive.setValue(this.appointment.stateChangeReason);
 				}
 				if (this.appointment.patientMedicalCoverageId && this.data.appointmentData.patient?.id) {
 					this.patientMedicalCoverageService.getPatientMedicalCoverage(this.appointment.patientMedicalCoverageId)
@@ -179,16 +184,17 @@ export class AppointmentComponent implements OnInit {
 								this.coverageData = this.mapperService.toPatientMedicalCoverage(coverageData);
 								this.updateSummaryCoverageData();
 								this.formEdit.controls.newCoverageData.setValue(coverageData.id);
+								this.firstCoverage = coverageData.id;
 								this.setCoverageText(coverageData);
 							}
 						});
 				}
-				this.phoneNumber = this.formatPhonePrefixAndNumber(this.data.appointmentData.phonePrefix,this.data.appointmentData.phoneNumber);
+				this.phoneNumber = this.formatPhonePrefixAndNumber(this.data.appointmentData.phonePrefix, this.data.appointmentData.phoneNumber);
 			});
 
 		this.hasRoleToChangeState$ = this.permissionsService.hasContextAssignments$(ROLES_TO_CHANGE_STATE).pipe(take(1));
 
-		this.hasRoleToEditPhoneNumber$ = this.permissionsService.hasContextAssignments$(ROLES_TO_EDIT).pipe(take(1));
+		this.hasRoleToEdit$ = this.permissionsService.hasContextAssignments$(ROLES_TO_EDIT).pipe(take(1));
 
 		this.hasRoleToDownloadReports$ = this.permissionsService.hasContextAssignments$(ROLE_TO_DOWNDLOAD_REPORTS).pipe(take(1));
 
@@ -204,40 +210,65 @@ export class AppointmentComponent implements OnInit {
 					this.decodedPhoto$ = this.imageDecoderService.decode(personPhotoDto.imageData);
 				}
 			});
-}
+	}
 
-	dateFormToggle(): void{
+	dateFormToggle(): void {
 		this.isDateFormVisible = !this.isDateFormVisible;
 	}
 
-	cancelDateForm(): void{
+	cancelDateForm(): void {
 		this.formDate.reset();
 		this.dateFormToggle();
 	}
 
-	openDateForm(): void{
+	openDateForm(): void {
 		this.dateFormToggle();
-		this.setDisableDays();
-		this.setPossibleScheduleHours(this.selectedDate);
-		this.formDate.controls.hour.setValue(this.possibleScheduleHours.find(item => {return item.getTime() ==  this.selectedDate.getTime()}));
+		this.loadAppointments(this.selectedDate);
+		this.openingDateForm = true
 	}
 
-	selectDate(date: Date): void{
-		this.setPossibleScheduleHours(date);
-		this.formDate.controls.hour.setValue(this.possibleScheduleHours[0]);
+	selectDate(date: Date): void {
+		this.loadAppointments(date);
+		this.openingDateForm = false;
 	}
 
-	setPossibleScheduleHours(date: Date): void{
+	loadAppointments(date: Date): void {
+		const d = momentFormat(moment(date), DateFormat.API_DATE);
+		this.formDate.controls['hour'].disable();
+		this.appointmentService.getList([this.data.agenda.id], this.data.agenda.healthcareProfessionalId, d, d)
+			.subscribe((appointments: AppointmentListDto[]) => {
+
+				this.appointments = appointments
+					.map(appointment => {
+						const from = momentParseTime(appointment.hour).format(DateFormat.HOUR_MINUTE);
+						let to = momentParseTime(from).add(this.data.agenda.appointmentDuration, 'minutes').format(DateFormat.HOUR_MINUTE);
+						if (from > to) {
+							to = momentParseTime(from).set({ hour: 23, minute: 59 }).format(DateFormat.HOUR_MINUTE);
+						}
+						const calendarEvent = toCalendarEvent(from, to, momentParseDate(appointment.date), appointment);
+						return calendarEvent;
+					});
+				this.setDisableDays();
+				this.setPossibleScheduleHours(date);
+				if (this.openingDateForm)
+					this.formDate.controls.hour.setValue(this.possibleScheduleHours.find(item => { return item.getTime() == this.selectedDate.getTime() }));
+				else
+					this.formDate.controls.hour.setValue(this.possibleScheduleHours[0]);
+				this.formDate.controls['hour'].enable();
+			});
+	}
+
+	setPossibleScheduleHours(date: Date): void {
 		this.possibleScheduleHours = [];
 		const startDate = new Date(date);
 		const endDate = new Date(date);
 		this.data.agenda.diaryOpeningHours.forEach(DOH => {
 			let day = DOH.openingHours.dayWeekId;
-			if(startDate.getDay() === day){
-				startDate.setHours(Number(DOH.openingHours.from.slice(0,2)));
-				startDate.setMinutes(Number(DOH.openingHours.from.slice(3,5)));
-				endDate.setHours(Number(DOH.openingHours.to.slice(0,2)));
-				endDate.setMinutes(Number(DOH.openingHours.to.slice(3,5)));
+			if (startDate.getDay() === day) {
+				startDate.setHours(Number(DOH.openingHours.from.slice(0, 2)));
+				startDate.setMinutes(Number(DOH.openingHours.from.slice(3, 5)));
+				endDate.setHours(Number(DOH.openingHours.to.slice(0, 2)));
+				endDate.setMinutes(Number(DOH.openingHours.to.slice(3, 5)));
 				const hours = getDayHoursRangeIntervalsByMinuteValue(startDate, endDate, this.data.agenda.appointmentDuration);
 				this.possibleScheduleHours = this.possibleScheduleHours.concat(hours);
 			}
@@ -246,56 +277,125 @@ export class AppointmentComponent implements OnInit {
 		this.deleteHoursBeforeNow();
 	}
 
-	deleteHoursWithAppointment(): void{
-		this.data.appointments.forEach(appointment => {
-			this.possibleScheduleHours = this.possibleScheduleHours.filter(item => {
-				return ((item.getTime() < appointment.start.getTime()) || (item.getTime() >= appointment.end.getTime()) || (item.getTime() == this.selectedDate.getTime()));
-			});
+	deleteHoursWithAppointment(): void {
+		this.appointments.forEach(appointment => {
+			if (!appointment.allDay)
+				this.possibleScheduleHours = this.possibleScheduleHours.filter(item => {
+					return ((item.getTime() < appointment.start.getTime()) || (item.getTime() >= appointment.end.getTime()) || (item.getTime() == this.selectedDate.getTime()));
+				});
 		});
 	}
 
-	deleteHoursBeforeNow(): void{
+	deleteHoursBeforeNow(): void {
 		const now = new Date();
 		this.possibleScheduleHours = this.possibleScheduleHours.filter(item => {
 			return ((item.getTime() >= now.getTime()) || (item.getTime() == this.selectedDate.getTime()));
 		});
 	}
 
-	setDisableDays(){
+	checkDisableDay(date: Date): void {
+		this.setPossibleScheduleHours(date);
+		if (this.possibleScheduleHours.length == 0) {
+			if (!this.disableDays.find(x => x.getTime() == date.getTime())) {
+				this.disableDays.push(date);
+			}
+		}
+	}
+
+	setDisableDays(): void {
 		this.disableDays = [];
 		const today = new Date();
-		this.data.appointments.forEach(appointment => {
+		today.setHours(0, 0, 0, 0);
+		today.setMinutes(0);
+		this.checkDisableDay(today);
+		this.appointments.forEach(appointment => {
 			const appointmentDate = new Date(appointment.start);
-			appointmentDate.setHours(0,0,0,0);
+			appointmentDate.setHours(0, 0, 0, 0);
 			appointmentDate.setMinutes(0);
-			if (today.getTime() <= appointmentDate.getTime()){
-				this.setPossibleScheduleHours(appointmentDate);
-				if (this.possibleScheduleHours.length == 0) {
-					if (!this.disableDays.find(x => x.getTime() == appointmentDate.getTime())){
-						this.disableDays.push(appointmentDate);
-					}
-				}
+			if (today.getTime() <= appointmentDate.getTime()) {
+				this.checkDisableDay(appointmentDate);
 			}
 		});
 	}
 
-	updateAppointmentDate(){
-		const dateAux = this.formDate.get('hour').value;
+	updateAppointmentOverturn(appointmentId: number, appointmentStateId: number, overturn: boolean, patientId: number): void {
+		const appointment: UpdateAppointmentDto = {
+			appointmentId: appointmentId,
+			appointmentStateId: appointmentStateId,
+			overturn: overturn,
+			patientId: patientId,
+		}
+		this.appointmentFacade.updateAppointment(appointment).subscribe(() => { },
+			error => {
+				processErrors(error, (msg) => this.snackBarService.showError(msg));
+			});
+	}
+
+	getAppointmentOpeningHoursId(date: Date): number{
+		const selectedOpeningHour = this.data.agenda.diaryOpeningHours.find(oh => {
+			if (oh.openingHours.dayWeekId === date.getDay()){
+				const hourFrom = momentParseTime(oh.openingHours.from).toDate();
+				hourFrom.setDate(date.getDate());
+				hourFrom.setMonth(date.getMonth());
+				const hourTo = momentParseTime(oh.openingHours.to).toDate();
+				hourTo.setDate(date.getDate());
+				hourTo.setMonth(date.getMonth());
+				return (isBefore(hourFrom, date) || isEqual(hourFrom, date)) && (isBefore(date, hourTo));
+			}
+		});
+		return selectedOpeningHour?.openingHours.id;
+	}
+
+	updateAppointmentDate(): void {
+		const previousDate = new Date(this.data.appointmentData.date);
+		const newDate = this.formDate.get('hour').value;
+		const openingHoursId = this.getAppointmentOpeningHoursId(newDate);
 		const date: DateTimeDto = {
 			date: {
-				year: dateAux.getFullYear(),
-				month: dateAux.getMonth() + 1,
-				day: dateAux.getDate()
+				year: newDate.getFullYear(),
+				month: newDate.getMonth() + 1,
+				day: newDate.getDate()
 			},
 			time: {
-				hours: dateAux.getHours(),
-				minutes: dateAux.getMinutes(),
-				seconds: dateAux.getSeconds()
+				hours: newDate.getHours(),
+				minutes: newDate.getMinutes(),
+				seconds: newDate.getSeconds()
 			}
 		};
-		this.appointmentFacade.updateDate(this.data.appointmentData.appointmentId, date).subscribe(() => {
-			this.snackBarService.showSuccess('turnos.appointment.date.UPDATE_SUCCESS');
-			this.selectedDate = dateAux;
+		const id = this.data.appointmentData.appointmentId;
+		const updateAppointmentDate: UpdateAppointmentDateDto = {
+			appointmentId: id,
+			date: date,
+			openingHoursId: openingHoursId
+		};
+
+		this.appointmentFacade.updateDate(updateAppointmentDate).subscribe(() => {
+			const date = momentFormat(moment(previousDate), DateFormat.API_DATE);
+			this.appointmentService.getList([this.data.agenda.id], this.data.agenda.healthcareProfessionalId, date, date)
+				.subscribe((appointments: AppointmentListDto[]) => {
+					const appointmentsInDate = this.generateEventsFromAppointments(appointments)
+						.filter(appointment => appointment.start.getTime() == previousDate.getTime());
+					if (appointmentsInDate.length > 0 && !this.data.appointmentData.overturn) {
+						this.updateAppointmentOverturn(
+							appointmentsInDate[0].meta.appointmentId,
+							appointmentsInDate[0].meta.appointmentStateId,
+							false,
+							appointmentsInDate[0].meta.patient.id
+						);
+					}
+
+					if (this.data.appointmentData.overturn) {
+						this.updateAppointmentOverturn(
+							this.data.appointmentData.appointmentId,
+							this.data.appointmentData.appointmentStateId,
+							false,
+							this.data.appointmentData.patient.id
+						);
+					}
+					this.snackBarService.showSuccess('turnos.appointment.date.UPDATE_SUCCESS');
+					this.selectedDate = newDate;
+					this.data.appointmentData.date = newDate;
+				});
 		}, error => {
 			processErrors(error, (msg) => this.snackBarService.showError(msg));
 		});
@@ -306,7 +406,7 @@ export class AppointmentComponent implements OnInit {
 		return phoneNumber ? phonePrefix
 			? "(" + phonePrefix + ") " + phoneNumber
 			: phoneNumber
-			: "Sin información";
+			: null;
 	}
 
 	updatePhoneValidators() {
@@ -317,6 +417,11 @@ export class AppointmentComponent implements OnInit {
 			updateControlValidator(this.formEdit, 'phoneNumber', []);
 			updateControlValidator(this.formEdit, 'phonePrefix', []);
 		}
+	}
+
+	isInvalidFormEdit(): boolean {
+		this.formEdit.markAllAsTouched();
+		return this.formEdit.invalid;
 	}
 
 	private setMedicalCoverages(): void {
@@ -336,11 +441,40 @@ export class AppointmentComponent implements OnInit {
 		this.selectedState = newStateId;
 	}
 
+	private coverageIsNotUpdate(): boolean {
+		return this.formEdit.controls.newCoverageData?.value ? this.firstCoverage === this.formEdit.controls.newCoverageData?.value : true;
+	}
+
+	private updateState(newStateId: APPOINTMENT_STATES_ID): void {
+		this.changeState(newStateId);
+		if (this.isANewState(newStateId) && !this.isMotiveRequired()) {
+			this.submitNewState(newStateId);
+		}
+	}
+
+	private confirmChangeState(newStateId: APPOINTMENT_STATES_ID): void {
+		const dialogRefConfirmation = this.dialog.open(DiscardWarningComponent,
+			{
+				data: {
+					content: `turnos.appointment.confirm-dialog.CONTENT`,
+					okButtonLabel: `turnos.appointment.confirm-dialog.CONFIRM`,
+					cancelButtonLabel: `turnos.appointment.confirm-dialog.CANCEL`,
+					contentBold: `turnos.appointment.confirm-dialog.QUESTION`,
+					showMatIconError: true,
+				}
+			});
+		dialogRefConfirmation.afterClosed().subscribe((upDateState: boolean) => {
+			if (upDateState)
+				this.updateState(newStateId);
+		});
+	}
+
 	onClickedState(newStateId: APPOINTMENT_STATES_ID): void {
 		if (this.selectedState !== newStateId) {
-			this.changeState(newStateId);
-			if (this.isANewState(newStateId) && !this.isMotivoRequired()) {
-				this.submitNewState(newStateId);
+			if (this.selectedState === APPOINTMENT_STATES_ID.ASSIGNED && newStateId === APPOINTMENT_STATES_ID.CONFIRMED && this.coverageIsNotUpdate()) {
+				this.confirmChangeState(newStateId);
+			} else {
+				this.updateState(newStateId);
 			}
 		}
 	}
@@ -355,14 +489,29 @@ export class AppointmentComponent implements OnInit {
 		});
 		dialogRefCancelAppointment.afterClosed().subscribe(canceledAppointment => {
 			if (canceledAppointment) {
+				const date = momentFormat(moment(this.data.appointmentData.date), DateFormat.API_DATE);
+				this.appointmentService.getList([this.data.agenda.id], this.data.agenda.healthcareProfessionalId, date, date)
+					.subscribe((appointments: AppointmentListDto[]) => {
+						const appointmentsInDate = this.generateEventsFromAppointments(appointments)
+							.filter(appointment => appointment.start.getTime() == new Date(this.data.appointmentData.date).getTime());
+
+						if (appointmentsInDate.length > 0 && !this.data.appointmentData.overturn) {
+							this.updateAppointmentOverturn(
+								appointmentsInDate[0].meta.appointmentId,
+								appointmentsInDate[0].meta.appointmentStateId,
+								false,
+								appointmentsInDate[0].meta.patient.id
+							);
+						}
+					});
 				this.closeDialog('statuschanged');
 			}
 		});
 	}
 
 	saveAbsent(): void {
-		if (this.formMotivo.valid) {
-			this.submitNewState(APPOINTMENT_STATES_ID.ABSENT, this.formMotivo.value.motivo);
+		if (this.formMotive.valid) {
+			this.submitNewState(APPOINTMENT_STATES_ID.ABSENT, this.formMotive.value.motive);
 		}
 	}
 
@@ -384,13 +533,13 @@ export class AppointmentComponent implements OnInit {
 			}
 			if (this.formEdit.controls.phoneNumber.dirty || this.formEdit.controls.phonePrefix.dirty) {
 				this.updatePhoneNumber(this.formEdit.controls.phonePrefix.value, this.formEdit.controls.phoneNumber.value);
-				this.phoneNumber = this.formatPhonePrefixAndNumber(this.formEdit.controls.phonePrefix.value ,this.formEdit.controls.phoneNumber.value);
+				this.phoneNumber = this.formatPhonePrefixAndNumber(this.formEdit.controls.phonePrefix.value, this.formEdit.controls.phoneNumber.value);
 			}
 			this.hideFilters();
 		}
 	}
 
-	isMotivoRequired(): boolean {
+	isMotiveRequired(): boolean {
 		return this.selectedState === APPOINTMENT_STATES_ID.ABSENT;
 	}
 
@@ -403,17 +552,17 @@ export class AppointmentComponent implements OnInit {
 			this.appointment?.appointmentStateId === APPOINTMENT_STATES_ID.ASSIGNED) ||
 			(this.selectedState === APPOINTMENT_STATES_ID.CONFIRMED &&
 				this.appointment?.appointmentStateId === APPOINTMENT_STATES_ID.CONFIRMED) ||
-				this.appointment?.appointmentStateId === APPOINTMENT_STATES_ID.OUT_OF_DIARY;
+			this.appointment?.appointmentStateId === APPOINTMENT_STATES_ID.OUT_OF_DIARY;
 	}
 
 	isAbsent(): boolean {
 		return this.appointment?.appointmentStateId === APPOINTMENT_STATES_ID.ABSENT;
 	}
 
-	private submitNewState(newStateId: APPOINTMENT_STATES_ID, motivo?: string): void {
-		this.appointmentFacade.changeState(this.data.appointmentData.appointmentId, newStateId, motivo)
+	private submitNewState(newStateId: APPOINTMENT_STATES_ID, motive?: string): void {
+		this.appointmentFacade.changeState(this.data.appointmentData.appointmentId, newStateId, motive)
 			.subscribe(() => {
-				const appointmentInformation = { id: this.data.appointmentData.appointmentId, stateId: newStateId, date: this.selectedDate};
+				const appointmentInformation = { id: this.data.appointmentData.appointmentId, stateId: newStateId, date: this.selectedDate };
 				this.dialogRef.close(appointmentInformation);
 				this.snackBarService.showSuccess(`Estado de turno actualizado a ${getAppointmentState(newStateId).description} exitosamente`);
 			}, _ => {
@@ -463,6 +612,7 @@ export class AppointmentComponent implements OnInit {
 				identificationNumber: this.data.appointmentData.patient.identificationNumber,
 				genderId: this.data.appointmentData.patient.genderId,
 				initValues: this.patientMedicalCoverages,
+				patientId: this.data.appointmentData.patient.id,
 			}
 		});
 
@@ -500,9 +650,9 @@ export class AppointmentComponent implements OnInit {
 	}
 
 	closeDialog(returnValue?: string) {
-		if (!returnValue)
+		if (!returnValue && (this.appointment.appointmentStateId === APPOINTMENT_STATES_ID.ASSIGNED || this.appointment.appointmentStateId === APPOINTMENT_STATES_ID.CONFIRMED))
 			this.medicalCoverageInfo.setAppointmentMCoverage(this.summaryCoverageData);
-		const appointmentInformation = { returnValue: returnValue, date: this.selectedDate};
+		const appointmentInformation = { returnValue: returnValue, date: this.selectedDate };
 		this.dialogRef.close(appointmentInformation);
 	}
 
@@ -515,8 +665,8 @@ export class AppointmentComponent implements OnInit {
 	}
 
 	getAppointmentTicketReport(): void {
-		this.appointmentService.getAppointmentTicketPdf(this.data.appointmentData).subscribe((pdf)=>{
-			const file = new Blob([pdf], {type: 'application/pdf'});
+		this.appointmentService.getAppointmentTicketPdf(this.data.appointmentData.appointmentId).subscribe((pdf) => {
+			const file = new Blob([pdf], { type: 'application/pdf' });
 			const blobUrl = URL.createObjectURL(file);
 			const div = document.querySelector("#pdfPrinter");
 			const iframe = document.createElement("iframe");
@@ -545,15 +695,15 @@ export class AppointmentComponent implements OnInit {
 		this.formEdit.controls.newCoverageData.setValue(null);
 	}
 
-	setHideObservationTitle(value: boolean): void{
+	setHideObservationTitle(value: boolean): void {
 		this.hideObservationTitle = value;
 	}
 
-	setHideObservationForm(value: boolean): void{
+	setHideObservationForm(value: boolean): void {
 		this.hideObservationForm = value;
 	}
 
-	updateObservation(): void{
+	updateObservation(): void {
 		this.observation = this.formObservations.get('observation').value;
 		this.appointmentFacade.updateObservation(this.data.appointmentData.appointmentId, this.formObservations.controls.observation.value).subscribe(() => {
 			this.snackBarService.showSuccess('turnos.appointment.observations.UPDATE_SUCCESS');
@@ -563,9 +713,9 @@ export class AppointmentComponent implements OnInit {
 		this.setHideObservationForm(true);
 	}
 
-	cancelObservation(): void{
+	cancelObservation(): void {
 		this.hideObservationForm = true;
-		if(!this.observation)
+		if (!this.observation)
 			this.hideObservationTitle = true;
 		else
 			this.hideObservationTitle = false;
@@ -583,17 +733,29 @@ export class AppointmentComponent implements OnInit {
 			if (this.coverageData?.planName) {
 				summaryInfo.plan = this.coverageData?.planName;
 			}
-			if(this.coverageData.condition) {
+			if (this.coverageData.condition) {
 				summaryInfo.condition = this.coverageData.condition;
 			}
-			if(this.coverageData.medicalCoverage.cuit) {
+			if (this.coverageData.medicalCoverage.cuit) {
 				summaryInfo.cuit = this.coverageData.medicalCoverage.cuit;
 			}
-			if(this.coverageData.medicalCoverage.type) {
+			if (this.coverageData.medicalCoverage.type) {
 				summaryInfo.type = this.coverageData.medicalCoverage.type;
 			}
 		}
 		this.summaryCoverageData = summaryInfo;
+	}
+
+	private generateEventsFromAppointments(appointments: AppointmentListDto[]): CalendarEvent[] {
+		return appointments.map(appointment => {
+			const from = momentParseTime(appointment.hour).format(DateFormat.HOUR_MINUTE);
+			let to = momentParseTime(from).add(this.data.agenda.appointmentDuration, 'minutes').format(DateFormat.HOUR_MINUTE);
+			if (from > to) {
+				to = momentParseTime(from).set({ hour: 23, minute: 59 }).format(DateFormat.HOUR_MINUTE);
+			}
+			const calendarEvent = toCalendarEvent(from, to, momentParseDate(appointment.date), appointment);
+			return calendarEvent;
+		});
 	}
 
 }
@@ -619,4 +781,5 @@ export interface PatientAppointmentInformation {
 	};
 	medicalCoverageName: string;
 	affiliateNumber: string;
+	overturn: boolean;
 }

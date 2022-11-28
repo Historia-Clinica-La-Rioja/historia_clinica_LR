@@ -10,4 +10,6 @@ public interface AddressService {
     Address addAddress(Address address);
 
     List<AddressBo> getAddressesByIds(List<Integer> addressesIds);
+
+    AddressBo getAddressByInstitution(Integer institutionId);
 }

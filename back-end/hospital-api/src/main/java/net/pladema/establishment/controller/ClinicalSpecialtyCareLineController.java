@@ -4,9 +4,9 @@ import ar.lamansys.sgh.shared.infrastructure.input.service.ClinicalSpecialtyDto;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import net.pladema.staff.controller.mapper.ClinicalSpecialtyMapper;
 import net.pladema.establishment.service.ClinicalSpecialtyCareLineService;
-import net.pladema.staff.service.domain.ClinicalSpecialtyBo;
+import net.pladema.establishment.service.domain.ClinicalSpecialtyBo;
+
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @RestController
 @Slf4j
@@ -24,7 +25,6 @@ import java.util.List;
 public class ClinicalSpecialtyCareLineController {
     
     private final ClinicalSpecialtyCareLineService clinicalSpecialtyCareLineService;
-    private final ClinicalSpecialtyMapper clinicalSpecialtyMapper;
 
     @GetMapping()
     @PreAuthorize("hasPermission(#institutionId, 'ESPECIALISTA_MEDICO, PROFESIONAL_DE_SALUD, ESPECIALISTA_EN_ODONTOLOGIA, ENFERMERO')")
@@ -32,8 +32,15 @@ public class ClinicalSpecialtyCareLineController {
                                                                @PathVariable(name= "careLineId") Integer careLineId) {
         List<ClinicalSpecialtyBo> clinicalSpecialties = clinicalSpecialtyCareLineService.getClinicalSpecialties(careLineId);
         log.debug("Get all Clinical Specialties by CareLine {} => {}", careLineId, clinicalSpecialties);
-        return ResponseEntity.ok(clinicalSpecialtyMapper.fromListClinicalSpecialtyBo(clinicalSpecialties));
+        return ResponseEntity.ok(mapTo(clinicalSpecialties));
     }
+
+	private List<ClinicalSpecialtyDto> mapTo(List<ClinicalSpecialtyBo> clinicalSpecialties) {
+		return clinicalSpecialties
+				.stream()
+				.map(clinicalSpecialtyDto -> new ClinicalSpecialtyDto(clinicalSpecialtyDto.getId(), clinicalSpecialtyDto.getName()))
+				.collect(Collectors.toList());
+	}
 
 }
 

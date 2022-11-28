@@ -53,7 +53,8 @@ public class CreateCounterReference {
                         now,
                         doctorInfoBo.getId(),
                         true,
-                        counterReferenceBo.getFileIds()));
+                        counterReferenceBo.getFileIds(),
+						counterReferenceBo.getClosureTypeId()));
 
         counterReferenceDocumentStorage.save(new CounterReferenceDocumentBo(null, counterReferenceBo, encounterId, doctorInfoBo.getId(), now));
 

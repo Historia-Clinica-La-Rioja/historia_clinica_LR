@@ -18,11 +18,12 @@ public class PatientSearch {
 	private float ranking;
 	private String nameSelfDetermination;
 	
-	public PatientSearch(Person person, int idPatient, boolean activo, int ranking) {
+	public PatientSearch(Person person, int idPatient, boolean activo, int ranking, String nameSelfDetermination) {
 		this.person = person;
 		this.idPatient = idPatient;
 		this.activo = activo;
 		this.ranking = ranking;
+		this.nameSelfDetermination = nameSelfDetermination;
 	}
 	
 }

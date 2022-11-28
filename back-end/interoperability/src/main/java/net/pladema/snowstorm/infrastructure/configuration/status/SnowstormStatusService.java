@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.function.Supplier;
 
+import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Service;
 
 import net.pladema.hsi.extensions.configuration.features.FeatureProperty;
@@ -12,6 +13,7 @@ import net.pladema.snowstorm.configuration.SnowstormWSConfig;
 import net.pladema.snowstorm.services.SnowstormService;
 
 @Service
+@Order(4)
 public class SnowstormStatusService extends FeatureStatusService {
 
 	public SnowstormStatusService(

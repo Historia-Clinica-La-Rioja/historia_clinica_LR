@@ -1,7 +1,9 @@
 package net.pladema.medicalconsultation.diary.controller.mapper;
 
+import net.pladema.medicalconsultation.diary.service.domain.DiaryAvailableProtectedAppointmentsBo;
 import net.pladema.medicalconsultation.diary.controller.dto.CompleteDiaryDto;
 import net.pladema.medicalconsultation.diary.controller.dto.DiaryADto;
+import net.pladema.medicalconsultation.diary.controller.dto.DiaryAvailableProtectedAppointmentsDto;
 import net.pladema.medicalconsultation.diary.controller.dto.DiaryListDto;
 import net.pladema.medicalconsultation.diary.controller.dto.DiaryOpeningHoursDto;
 import net.pladema.medicalconsultation.diary.controller.dto.OccupationDto;
@@ -45,5 +47,8 @@ public interface DiaryMapper {
     @Named("toCompleteDiaryDto")
     @Mapping(target = "diaryOpeningHours", source = "diaryOpeningHours")
     CompleteDiaryDto toCompleteDiaryDto(CompleteDiaryBo completeDiaryBo);
+
+	@Named("toDiaryAvailableProtectedAppointmentsDto")
+	DiaryAvailableProtectedAppointmentsDto toDiaryAvailableProtectedAppointmentsDto(DiaryAvailableProtectedAppointmentsBo diaryAvailableProtectedAppointmentsBo);
 
 }

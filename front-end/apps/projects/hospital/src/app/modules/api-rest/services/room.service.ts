@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from "@angular/common/http";
 import { Observable } from "rxjs";
 import { environment } from "@environments/environment";
-import { BedDto } from "@api-rest/api-model";
+import { BedDto, RoomDto } from "@api-rest/api-model";
 import { ContextService } from '@core/services/context.service';
 
 @Injectable({
@@ -11,6 +11,11 @@ import { ContextService } from '@core/services/context.service';
 export class RoomService {
 
 	constructor(private readonly http: HttpClient, private readonly contextService: ContextService) {
+	}
+
+	getAll(): Observable<RoomDto[]> {
+		const url = `${environment.apiBase}/institution/${this.contextService.institutionId}/room`;
+		return this.http.get<RoomDto[]>(url);
 	}
 
 	getAllBedsByRoom(roomId): Observable<BedDto[]> {

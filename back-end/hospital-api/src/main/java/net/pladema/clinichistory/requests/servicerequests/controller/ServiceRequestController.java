@@ -7,9 +7,13 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 
 import javax.validation.Valid;
+
+import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.generateFile.DocumentAuthorFinder;
+import ar.lamansys.sgh.shared.infrastructure.input.service.staff.ProfessionalCompleteDto;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -102,29 +106,49 @@ public class ServiceRequestController {
     private final GetServiceRequestInfoService getServiceRequestInfoService;
 	private final HospitalApiPublisher hospitalApiPublisher;
 	private final FeatureFlagsService featureFlagsService;
+	private final Function<Long, ProfessionalCompleteDto> authorFromDocumentFunction;
 
 
-	public ServiceRequestController(HealthcareProfessionalExternalService healthcareProfessionalExternalService, CreateServiceRequestService createServiceRequestService, CreateServiceRequestMapper createServiceRequestMapper, PatientExternalService patientExternalService, StudyMapper studyMapper, DiagnosticReportInfoMapper diagnosticReportInfoMapper, ListDiagnosticReportInfoService listDiagnosticReportInfoService, DeleteDiagnosticReportService deleteDiagnosticReportService, CompleteDiagnosticReportService completeDiagnosticReportService, CompleteDiagnosticReportMapper completeDiagnosticReportMapper, UploadDiagnosticReportCompletedFileService uploadDiagnosticReportCompletedFileService, UpdateDiagnosticReportFileService updateDiagnosticReportFileService, DiagnosticReportInfoService diagnosticReportInfoService, FileMapper fileMapper, ServeDiagnosticReportFileService serveDiagnosticReportFileService, PatientExternalMedicalCoverageService patientExternalMedicalCoverageService, PdfService pdfService, GetServiceRequestInfoService getServiceRequestInfoService, HospitalApiPublisher hospitalApiPublisher, FeatureFlagsService featureFlagsService) {
-        this.healthcareProfessionalExternalService = healthcareProfessionalExternalService;
-        this.createServiceRequestService = createServiceRequestService;
-        this.createServiceRequestMapper = createServiceRequestMapper;
-        this.patientExternalService = patientExternalService;
-        this.listDiagnosticReportInfoService = listDiagnosticReportInfoService;
-        this.diagnosticReportInfoMapper = diagnosticReportInfoMapper;
-        this.studyMapper = studyMapper;
-        this.deleteDiagnosticReportService = deleteDiagnosticReportService;
-        this.completeDiagnosticReportService = completeDiagnosticReportService;
-        this.completeDiagnosticReportMapper = completeDiagnosticReportMapper;
-        this.uploadDiagnosticReportCompletedFileService = uploadDiagnosticReportCompletedFileService;
-        this.updateDiagnosticReportFileService = updateDiagnosticReportFileService;
-        this.diagnosticReportInfoService = diagnosticReportInfoService;
-        this.fileMapper = fileMapper;
-        this.serveDiagnosticReportFileService = serveDiagnosticReportFileService;
-        this.patientExternalMedicalCoverageService = patientExternalMedicalCoverageService;
-        this.pdfService = pdfService;
-        this.getServiceRequestInfoService = getServiceRequestInfoService;
+	public ServiceRequestController(HealthcareProfessionalExternalService healthcareProfessionalExternalService,
+									CreateServiceRequestService createServiceRequestService,
+									CreateServiceRequestMapper createServiceRequestMapper,
+									PatientExternalService patientExternalService,
+									StudyMapper studyMapper,
+									DiagnosticReportInfoMapper diagnosticReportInfoMapper,
+									ListDiagnosticReportInfoService listDiagnosticReportInfoService,
+									DeleteDiagnosticReportService deleteDiagnosticReportService,
+									CompleteDiagnosticReportService completeDiagnosticReportService,
+									CompleteDiagnosticReportMapper completeDiagnosticReportMapper,
+									UploadDiagnosticReportCompletedFileService uploadDiagnosticReportCompletedFileService,
+									UpdateDiagnosticReportFileService updateDiagnosticReportFileService,
+									DiagnosticReportInfoService diagnosticReportInfoService,
+									FileMapper fileMapper, ServeDiagnosticReportFileService serveDiagnosticReportFileService,
+									PatientExternalMedicalCoverageService patientExternalMedicalCoverageService,
+									PdfService pdfService, GetServiceRequestInfoService getServiceRequestInfoService,
+									HospitalApiPublisher hospitalApiPublisher, FeatureFlagsService featureFlagsService,
+									DocumentAuthorFinder documentAuthorFinder
+									) {
+		this.healthcareProfessionalExternalService = healthcareProfessionalExternalService;
+		this.createServiceRequestService = createServiceRequestService;
+		this.createServiceRequestMapper = createServiceRequestMapper;
+		this.patientExternalService = patientExternalService;
+		this.listDiagnosticReportInfoService = listDiagnosticReportInfoService;
+		this.diagnosticReportInfoMapper = diagnosticReportInfoMapper;
+		this.studyMapper = studyMapper;
+		this.deleteDiagnosticReportService = deleteDiagnosticReportService;
+		this.completeDiagnosticReportService = completeDiagnosticReportService;
+		this.completeDiagnosticReportMapper = completeDiagnosticReportMapper;
+		this.uploadDiagnosticReportCompletedFileService = uploadDiagnosticReportCompletedFileService;
+		this.updateDiagnosticReportFileService = updateDiagnosticReportFileService;
+		this.diagnosticReportInfoService = diagnosticReportInfoService;
+		this.fileMapper = fileMapper;
+		this.serveDiagnosticReportFileService = serveDiagnosticReportFileService;
+		this.patientExternalMedicalCoverageService = patientExternalMedicalCoverageService;
+		this.pdfService = pdfService;
+		this.getServiceRequestInfoService = getServiceRequestInfoService;
 		this.hospitalApiPublisher = hospitalApiPublisher;
 		this.featureFlagsService = featureFlagsService;
+		this.authorFromDocumentFunction = (Long documentId) -> documentAuthorFinder.getAuthor(documentId);
 	}
 
     @PostMapping
@@ -154,7 +178,7 @@ public class ServiceRequestController {
                     studyListDto);
             serviceRequestBo.setInstitutionId(institutionId);
             Integer srId = createServiceRequestService.execute(serviceRequestBo);
-			hospitalApiPublisher.publish(serviceRequestBo.getPatientId(), EHospitalApiTopicDto.SOLICITUD_ESTUDIO);
+			hospitalApiPublisher.publish(serviceRequestBo.getPatientId(), institutionId, EHospitalApiTopicDto.CLINIC_HISTORY__HOSPITALIZATION__SERVICE_RESQUEST);
             result.add(srId);
         });
 
@@ -198,7 +222,6 @@ public class ServiceRequestController {
     }
 
     @PostMapping(value = "/{diagnosticReportId}/uploadFile", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    @Transactional
     @ResponseStatus(code = HttpStatus.OK)
     @PreAuthorize("hasPermission(#institutionId, 'ESPECIALISTA_MEDICO, ESPECIALISTA_EN_ODONTOLOGIA, PERSONAL_DE_IMAGENES, PERSONAL_DE_LABORATORIO')")
     public List<Integer> uploadFile(@PathVariable(name = "institutionId") Integer institutionId,
@@ -216,7 +239,6 @@ public class ServiceRequestController {
 
 
     @DeleteMapping("/{diagnosticReportId}")
-    @Transactional
     @ResponseStatus(code = HttpStatus.OK)
     @PreAuthorize("hasPermission(#institutionId, 'ESPECIALISTA_MEDICO, PROFESIONAL_DE_SALUD, ESPECIALISTA_EN_ODONTOLOGIA, ENFERMERO')")
     public void delete(@PathVariable(name = "institutionId") Integer institutionId,
@@ -292,9 +314,8 @@ public class ServiceRequestController {
         LOG.debug("medicationRequestList -> institutionId {}, patientId {}, serviceRequestId {}", institutionId, patientId, serviceRequestId);
         var serviceRequestBo = getServiceRequestInfoService.run(serviceRequestId);
         var patientDto = patientExternalService.getBasicDataFromPatient(patientId);
-        var professionalDto = healthcareProfessionalExternalService.findActiveProfessionalById(serviceRequestBo.getDoctorId());
         var patientCoverageDto = patientExternalMedicalCoverageService.getCoverage(serviceRequestBo.getMedicalCoverageId());
-        var context = createContext(serviceRequestBo, patientDto, professionalDto, patientCoverageDto);
+        var context = createContext(serviceRequestBo, patientDto, patientCoverageDto);
 
         String template = "recipe_order_table";
 
@@ -309,16 +330,15 @@ public class ServiceRequestController {
 
     private Map<String, Object> createContext(ServiceRequestBo serviceRequestBo,
                                               BasicPatientDto patientDto,
-                                              ProfessionalDto professionalDto,
                                               PatientMedicalCoverageDto patientCoverageDto) {
-        LOG.debug("Input parameters -> serviceRequestBo {}, patientDto {}, professionalDto {}, patientCoverageDto {}",
-                serviceRequestBo, patientDto, professionalDto, patientCoverageDto);
+        LOG.debug("Input parameters -> serviceRequestBo {}, patientDto {}, patientCoverageDto {}",
+                serviceRequestBo, patientDto, patientCoverageDto);
         Map<String, Object> ctx = new HashMap<>();
         ctx.put("recipe", false);
         ctx.put("order", true);
         ctx.put("request", serviceRequestBo);
         ctx.put("patient", patientDto);
-        ctx.put("professional", professionalDto);
+        ctx.put("professional", authorFromDocumentFunction.apply(serviceRequestBo.getId()));
         ctx.put("patientCoverage", patientCoverageDto);
         var date = serviceRequestBo.getRequestDate().format(DateTimeFormatter.ofPattern("dd-MM-yyyy"));
 		ctx.put("nameSelfDeterminationFF", featureFlagsService.isOn(AppFeature.HABILITAR_DATOS_AUTOPERCIBIDOS));

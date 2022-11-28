@@ -11,6 +11,7 @@ import net.pladema.clinichistory.hospitalization.service.evolutionnote.domain.Ev
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.Optional;
@@ -45,6 +46,7 @@ public class CreateEvolutionNoteServiceImpl implements CreateEvolutionNoteServic
 	}
 
     @Override
+	@Transactional
     public EvolutionNoteBo execute(EvolutionNoteBo evolutionNote) {
         LOG.debug("Input parameters -> evolutionNote {}", evolutionNote);
 		Optional.ofNullable(evolutionNote.getMainDiagnosis()).ifPresent(md -> md.setId(null));

@@ -23,7 +23,7 @@ public class NursingAppointmentStorageImpl implements NursingAppointmentStorage 
 
     @Override
     public Integer run(Integer patientId, Integer doctorId, LocalDate date) {
-        if (!disableValidation && sharedAppointmentPort.hasConfirmedAppointment(patientId,doctorId,date)) {
+        if (!disableValidation && sharedAppointmentPort.hasCurrentAppointment(patientId,doctorId,date)) {
 			return sharedAppointmentPort.serveAppointment(patientId, doctorId, date);
 		}
 		return null;

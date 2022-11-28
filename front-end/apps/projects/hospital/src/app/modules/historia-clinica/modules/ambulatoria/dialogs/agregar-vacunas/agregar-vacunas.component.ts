@@ -8,6 +8,7 @@ import { DateFormat, momentFormat, momentParseDate } from '@core/utils/moment.ut
 import { SnackBarService } from '@presentation/services/snack-bar.service';
 import { AgregarVacunaComponent } from '../agregar-vacuna/agregar-vacuna.component';
 import { AppointmentsService } from "@api-rest/services/appointments.service";
+import { Color } from '@presentation/colored-label/colored-label.component';
 
 @Component({
   selector: 'app-agregar-vacunas',
@@ -20,6 +21,7 @@ export class AgregarVacunasComponent implements OnInit {
   specialties: ClinicalSpecialtyDto[];
   appliedVaccines: ImmunizationDto[];
   loading: boolean = false;
+  Color = Color;
 
   constructor(
     @Inject(MAT_DIALOG_DATA) public data: {

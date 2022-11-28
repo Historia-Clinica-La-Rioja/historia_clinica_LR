@@ -6,6 +6,7 @@ import java.util.Map;
 import java.util.function.Supplier;
 
 import org.springframework.boot.autoconfigure.mail.MailProperties;
+import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Service;
 
 import ar.lamansys.sgx.shared.strings.StringHelper;
@@ -13,6 +14,7 @@ import net.pladema.hsi.extensions.configuration.features.FeatureProperty;
 import net.pladema.hsi.extensions.configuration.features.FeatureStatusService;
 
 @Service
+@Order(2)
 public class NotificationStatusService extends FeatureStatusService {
 
 	public NotificationStatusService(

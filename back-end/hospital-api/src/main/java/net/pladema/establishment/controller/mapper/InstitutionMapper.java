@@ -4,6 +4,7 @@ package net.pladema.establishment.controller.mapper;
 import net.pladema.establishment.controller.dto.InstitutionBasicInfoDto;
 import net.pladema.establishment.controller.dto.InstitutionDto;
 import net.pladema.establishment.repository.entity.Institution;
+import net.pladema.establishment.service.domain.InstitutionBasicInfoBo;
 import net.pladema.establishment.service.domain.InstitutionBo;
 import org.mapstruct.IterableMapping;
 import org.mapstruct.Mapper;
@@ -29,4 +30,7 @@ public interface InstitutionMapper {
 	@Named("toListInstitutionBasicInfoDto")
 	@IterableMapping(qualifiedByName = "toInstitutionBasicInfoDto")
 	List<InstitutionBasicInfoDto> toListInstitutionBasicInfoDto(List<InstitutionBo> roomList);
+
+	@Named("fromListInstitutionBasicInfoBo")
+	List<InstitutionBasicInfoDto>  fromListInstitutionBasicInfoBo(List<InstitutionBasicInfoBo> institutionBasicInfoBoList);
 }

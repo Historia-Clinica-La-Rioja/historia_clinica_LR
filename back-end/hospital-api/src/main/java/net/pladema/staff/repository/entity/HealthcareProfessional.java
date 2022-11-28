@@ -38,8 +38,7 @@ public class HealthcareProfessional extends SGXAuditableEntity<Integer> implemen
 	@Column(name = "person_id", nullable = false, unique = true)
 	private Integer personId;
 
-	public HealthcareProfessional(String licenseNumber, Integer personId){
-		this.licenseNumber = licenseNumber;
+	public HealthcareProfessional(Integer personId){
 		this.personId = personId;
 	}
 }

@@ -1,10 +1,7 @@
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { SnomedSemanticSearch, SnomedService } from '../../../services/snomed.service';
-import { ColumnConfig } from '@presentation/components/document-section/document-section.component';
 import { SnomedDto, SnomedECL } from '@api-rest/api-model';
 import { pushIfNotExists, removeFrom } from '@core/utils/array.utils';
-import { TableColumnConfig } from "@presentation/components/document-section-table/document-section-table.component";
-import { CellTemplates } from "@presentation/components/cell-templates/cell-templates.component";
 import { SnackBarService } from '@presentation/services/snack-bar.service';
 
 export interface Alergia {
@@ -14,8 +11,6 @@ export interface Alergia {
 
 export class AlergiasNuevaConsultaService {
 
-	private readonly columns: ColumnConfig[];
-	private readonly tableColumnConfig: TableColumnConfig[];
 	private form: FormGroup;
 	private data: Alergia[] = [];
 	private snomedConcept: SnomedDto;
@@ -26,45 +21,12 @@ export class AlergiasNuevaConsultaService {
 		private readonly formBuilder: FormBuilder,
 		private readonly snomedService: SnomedService,
 		private readonly snackBarService: SnackBarService
-
 	) {
 
 		this.form = this.formBuilder.group({
 			snomed: [null, Validators.required],
 			criticality: [null, Validators.required],
 		});
-
-		this.columns = [
-			{
-				def: 'problemType',
-				header: 'ambulatoria.paciente.nueva-consulta.alergias.table.columns.ALLERGY',
-				text: a => a.snomed.pt
-			},
-			{
-				def: 'criticality',
-				header: 'ambulatoria.paciente.nueva-consulta.alergias.table.columns.CRITICALITY',
-				text: a => this.getDisplayName(a.criticalityId)
-			}
-		];
-
-		this.tableColumnConfig = [
-			{
-				def: 'problemType',
-				header: 'ambulatoria.paciente.nueva-consulta.alergias.table.columns.ALLERGY',
-				template: CellTemplates.SNOMED_PROBLEM
-			},
-			{
-				def: 'criticality',
-				header: 'ambulatoria.paciente.nueva-consulta.alergias.table.columns.CRITICALITY',
-				text: (row) => this.getDisplayName(row.criticalityId),
-				template: CellTemplates.ALLERGY_CRITICALITY
-			},
-			{
-				def: 'delete',
-				template: CellTemplates.REMOVE_BUTTON,
-				action: (rowIndex) => this.removeAlergia(rowIndex)
-			}
-		]
 
 	}
 
@@ -78,14 +40,6 @@ export class AlergiasNuevaConsultaService {
 
 	getCriticalityTypes() {
 		return this.criticalityTypes;
-	}
-
-	getColumns(): ColumnConfig[] {
-		return this.columns;
-	}
-
-	getTableColumnConfig(): TableColumnConfig[] {
-		return this.tableColumnConfig;
 	}
 
 	getAlergias(): Alergia[] {

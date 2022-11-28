@@ -14,5 +14,5 @@ export class ColoredLabelComponent {
 }
 
 export enum Color {
-	RED = 'red', GREEN = 'green', YELLOW = 'yellow', GREY = 'grey'
+	RED = 'red', GREEN = 'green', YELLOW = 'yellow', GREY = 'grey', BLUE = 'blue'
 }

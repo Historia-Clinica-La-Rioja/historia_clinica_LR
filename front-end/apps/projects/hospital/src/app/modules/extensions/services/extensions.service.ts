@@ -4,8 +4,9 @@ import { Observable, of } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 
 import { environment } from '@environments/environment';
-import { UIMenuItemDto, UIPageDto } from '@extensions/extensions-model';
+import { ExtensionComponentDto, UIMenuItemDto, UIPageDto } from '@extensions/extensions-model';
 import { HttpErrorResponse } from '@angular/common/http';
+import { WCInfo } from './wc-extensions.service';
 
 
 export const EXTENSION_URL = `${environment.apiBase}/extensions`;
@@ -53,6 +54,14 @@ export class ExtensionsService {
 	getPatientPage(patientId: number, menuId: string): Observable<UIPageDto> {
 		const patientPageUrl = `${EXTENSION_URL}/patient/${patientId}/page/${menuId}`;
 		return this.http.get<UIPageDto>(patientPageUrl);
+	}
+
+	getExtensions(): Observable<ExtensionComponentDto[]> {
+		return this.http.get<ExtensionComponentDto[]>(EXTENSION_URL);
+	}
+
+	getDefinition(url: string): Observable<WCInfo[]> {
+		return this.http.get<WCInfo[]>(url);
 	}
 
 }

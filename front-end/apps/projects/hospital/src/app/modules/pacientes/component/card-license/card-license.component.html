@@ -1,0 +1,46 @@
+<div fxLayout="column">
+
+	<ng-container *ngIf="ownProfessionsAndSpecialties?.length > 0 && professionsWithLicense?.length > 0 else noInfo">
+		<div class="flex-container">
+			<mat-list>
+				<div>
+					<strong>{{ 'pacientes.card_license.TITLE' | translate }}:</strong>
+				</div>
+
+				<mat-list fxLayoutGap="16px">
+					<div id="professionsWithLicense" *ngFor="let item of professionsWithLicense" fxLayout="row"
+						fxLayoutGap="16px">
+
+						<div id="licenseNumber" fxLayout="row" >
+							<div fxFlex="20%">
+								<span>{{item.licenseNumber}} </span>
+							</div>
+						</div>
+
+						<div fxFlex="20%">
+							<div id="typeId" fxLayout="row">
+								<span *ngIf="item.typeId === NATIONAL">
+									{{ 'pacientes.card_license.NATIONAL' | translate}}</span>
+								<span *ngIf="item.typeId === PROVINCE">
+									{{ 'pacientes.card_license.PROVINCE' | translate }}</span>
+							</div>
+						</div>
+
+						<div fxFlex="60%">
+							<div id="nameProfessionAndSpecialty" fxLayout="row">
+								<span>{{ownProfessionsAndSpecialties|viewNameProfessionAndSpecialty:
+									convertToProfessionalLicenseNumberDto(item)}}</span>
+							</div>
+						</div>
+					</div>
+				</mat-list>
+			</mat-list>
+
+		</div>
+
+	</ng-container>
+
+	<ng-template #noInfo>
+		<span class="no-info"> {{ 'pacientes.card_license.WITHOUT_LICENSE' | translate }}</span>
+	</ng-template>
+</div>

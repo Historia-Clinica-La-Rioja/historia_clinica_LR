@@ -27,7 +27,7 @@ public interface DiagnosticReportFileRepository extends JpaRepository<Diagnostic
             "WHERE drf.diagnosticReportId IS NULL ")
     List<String> getDanglingFiles();
 
-    @Transactional
+    @Transactional(readOnly = true)
     @Query("SELECT NEW net.pladema.clinichistory.requests.servicerequests.repository.domain.FileVo(drf.id, drf.name) " +
             "FROM DiagnosticReportFile drf " +
             "WHERE drf.diagnosticReportId = :drId ")

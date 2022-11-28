@@ -5,15 +5,22 @@ import ar.lamansys.sgh.clinichistory.application.notes.NoteService;
 import ar.lamansys.sgh.clinichistory.application.notes.NoteServiceImpl;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.NoteRepository;
 
+import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.masterdata.SnomedRepository;
+
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.mockito.Mock;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.mock.mockito.MockBean;
 
 class NoteServiceImplTest extends UnitRepository {
 
     @Autowired
     private NoteRepository noteRepository;
+
+	@MockBean
+	private SnomedRepository snomedRepository;
 
     private NoteService noteService;
 

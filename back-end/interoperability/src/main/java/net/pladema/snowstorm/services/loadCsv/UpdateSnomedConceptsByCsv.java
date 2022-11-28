@@ -1,5 +1,16 @@
 package net.pladema.snowstorm.services.loadCsv;
 
+import java.io.IOException;
+import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.concurrent.Semaphore;
+import java.util.stream.Collectors;
+
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
+
 import ar.lamansys.sgh.shared.infrastructure.input.service.SharedSnomedDto;
 import ar.lamansys.sgh.shared.infrastructure.input.service.SharedSnomedPort;
 import ar.lamansys.sgx.shared.dates.configuration.DateTimeProvider;
@@ -10,24 +21,12 @@ import net.pladema.snowstorm.repository.SnomedGroupRepository;
 import net.pladema.snowstorm.repository.SnomedRelatedGroupRepository;
 import net.pladema.snowstorm.repository.entity.SnomedCacheLog;
 import net.pladema.snowstorm.repository.entity.SnomedGroup;
+import net.pladema.snowstorm.repository.entity.SnomedGroupType;
 import net.pladema.snowstorm.repository.entity.SnomedRelatedGroup;
 import net.pladema.snowstorm.services.domain.semantics.SnomedECL;
 import net.pladema.snowstorm.services.domain.semantics.SnomedSemantics;
-
 import net.pladema.snowstorm.services.loadCsv.exceptions.UpdateSnomedConceptsException;
-
 import net.pladema.snowstorm.services.loadCsv.exceptions.UpdateSnomedConceptsExceptionEnum;
-
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Service;
-import org.springframework.web.multipart.MultipartFile;
-
-import java.io.IOException;
-import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.concurrent.Semaphore;
-import java.util.stream.Collectors;
 
 @Slf4j
 @Service
@@ -177,7 +176,7 @@ public class UpdateSnomedConceptsByCsv {
         String ecl = snomedSemantics.getEcl(SnomedECL.map(eclKey));
         Integer snomedGroupId = snomedGroupRepository.getBaseGroupIdByEclAndDescription(ecl, eclKey);
         String customId = "1";
-        SnomedGroup toSave = new SnomedGroup(snomedGroupId, eclKey, ecl, customId, date, false);
+        SnomedGroup toSave = new SnomedGroup(snomedGroupId, eclKey, ecl, customId, date, SnomedGroupType.DEFAULT);
 		Integer result = snomedGroupRepository.save(toSave).getId();
 		log.debug("Output -> {}", result);
         return result;

@@ -6,7 +6,6 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
-import javax.transaction.Transactional;
 import java.util.List;
 
 @Slf4j
@@ -16,7 +15,6 @@ public class GetReferenceProblem {
 
     private final ReferenceStorage referenceStorage;
 
-    @Transactional
     public List<ReferenceProblemBo> run(Integer patientId) {
         log.debug("Input parameters -> patientId {} ", patientId);
         return referenceStorage.getReferencesProblems(patientId);

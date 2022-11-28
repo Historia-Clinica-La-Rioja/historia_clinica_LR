@@ -25,6 +25,10 @@ import { MapperService } from '@core/services/mapper.service';
 import { PatientMedicalCoverageService } from '@api-rest/services/patient-medical-coverage.service';
 import { PatientNameService } from "@core/services/patient-name.service";
 import { IDENTIFICATION_TYPE_IDS } from '@core/utils/patient.utils';
+import { dateDtoToDate, timeDtoToDate } from "@api-rest/mapper/date-dto.mapper";
+import { DatePipeFormat } from "@core/utils/date.utils";
+import { DatePipe } from "@angular/common";
+import { DiscardWarningComponent } from "@presentation/dialogs/discard-warning/discard-warning.component";
 
 const ROUTE_SEARCH = 'pacientes/search';
 const TEMPORARY_PATIENT_ID = 3;
@@ -71,7 +75,7 @@ export class NewAppointmentComponent implements OnInit {
 		private readonly mapperService: MapperService,
 		private readonly patientMedicalCoverageService: PatientMedicalCoverageService,
 		private readonly patientNameService: PatientNameService,
-
+		private readonly datePipe: DatePipe
 	) {
 		this.routePrefix = `institucion/${this.contextService.institutionId}/`;
 	}
@@ -209,6 +213,38 @@ export class NewAppointmentComponent implements OnInit {
 
 	submit(): void {
 		this.isSubmitButtonDisabled = true;
+		this.appointmentFacade.verifyExistingAppointment(this.patientId, this.data.date).subscribe(appointmentShortSummary => {
+			if (appointmentShortSummary) {
+				const date = this.datePipe.transform(dateDtoToDate(appointmentShortSummary.date), DatePipeFormat.SHORT_DATE)
+				const hour = this.datePipe.transform(timeDtoToDate(appointmentShortSummary.hour), DatePipeFormat.SHORT_TIME)
+				const content = `El paciente ya tiene un turno el ${date} a las ${hour} hs para ${appointmentShortSummary.doctorFullName} en ${appointmentShortSummary.institution}`
+
+				const warnignComponent = this.dialog.open(DiscardWarningComponent,
+					{
+						disableClose:true,
+						data: {
+							title: 'turnos.new-appointment.appointment-exists.TITLE',
+							content: content,
+							contentBold: 'turnos.new-appointment.appointment-exists.ASSIGNMENT-QUESTION',
+							okButtonLabel: 'turnos.new-appointment.appointment-exists.buttons.ASSIGN',
+							cancelButtonLabel: 'turnos.new-appointment.appointment-exists.buttons.NOT-ASSIGN'
+						},
+						maxWidth: '500px'
+					});
+				warnignComponent.afterClosed().subscribe(confirmed => {
+					if (confirmed) {
+						this.createAppointment();
+					} else {
+						this.dialogRef.close(-1);
+					}
+				});
+			} else {
+				this.createAppointment();
+			}
+		})
+	}
+
+	private createAppointment() {
 		const newAppointment: CreateAppointmentDto = {
 			date: this.data.date,
 			diaryId: this.data.diaryId,
@@ -222,7 +258,7 @@ export class NewAppointmentComponent implements OnInit {
 		};
 		this.appointmentFacade.addAppointment(newAppointment).subscribe(_ => {
 			this.snackBarService.showSuccess('turnos.new-appointment.messages.APPOINTMENT_SUCCESS');
-			this.dialogRef.close(true);
+			this.dialogRef.close(_);
 		}, error => {
 			this.isSubmitButtonDisabled = false;
 			processErrors(error, (msg) => this.snackBarService.showError(msg));
@@ -269,6 +305,7 @@ export class NewAppointmentComponent implements OnInit {
 				identificationNumber: this.patient.personalDataDto.identificationNumber,
 				identificationTypeId: this.patient.personalDataDto.identificationTypeId,
 				initValues: this.patientMedicalCoverages,
+				patientId: this.patientId
 			}
 		});
 

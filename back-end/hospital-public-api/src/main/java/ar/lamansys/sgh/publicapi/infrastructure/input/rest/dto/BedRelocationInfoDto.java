@@ -14,7 +14,8 @@ import java.io.Serializable;
 @Builder
 public class BedRelocationInfoDto implements Serializable {
 
-    private DateTimeDto relocationDate;
-    private Integer careTypeId;
-    private ClinicalSpecialityDto service;
+	private Integer bedId;
+	private DateTimeDto relocationDate;
+	private String careType;
+	private ClinicalSpecialityDto service;
 }

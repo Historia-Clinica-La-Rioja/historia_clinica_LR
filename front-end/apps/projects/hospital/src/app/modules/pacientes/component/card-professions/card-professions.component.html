@@ -1,10 +1,6 @@
 <div fxLayout="column" >
 	<ng-container *ngIf="hasProfessions() else noInfo">
 		<div class="flex-container">
-			<div class="sub-title" fxLayout="column" fxLayoutGap="5px" class="sub-title">
-				<strong [translate]="'pacientes.user_data.LICENCE'"></strong>
-				<div>{{license}}</div>
-			</div>
 
 			<mat-list>
 				<div>
@@ -20,13 +16,13 @@
 							<div id="profession" fxLayout="row" fxLayoutGap="16px">
 								<mat-icon color="primary" fontSet="material-icons-outlined">
 									medical_services</mat-icon>
-								<span>{{item.professionDescription}} </span>
+								<span>{{item.profession.description}} </span>
 							</div>
 						</div>
 
 						<div fxFlex="40%">
-							<div id="specialty" fxLayout="row" fxLayoutGap="16px">
-								<span>{{item.specialtyName}} </span>
+							<div id="specialty" *ngFor="let item of item.specialties" fxLayout="row" fxLayoutGap="16px">
+								<span>{{item.clinicalSpecialty.name}} </span>
 							</div>
 						</div>
 

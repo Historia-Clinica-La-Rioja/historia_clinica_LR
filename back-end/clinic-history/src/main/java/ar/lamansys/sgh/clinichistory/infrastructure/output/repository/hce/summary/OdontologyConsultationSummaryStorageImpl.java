@@ -167,9 +167,10 @@ public class OdontologyConsultationSummaryStorageImpl implements OdontologyConsu
 
     @Override
     public List<ReferenceSummaryBo> getReferencesByHealthCondition(Integer healthConditionId, Integer consultationId) {
-        String sqlString = "SELECT r.id, cl.description , cs.name, rn.description"
+        String sqlString = "SELECT r.id, cl.description , cs.name, rn.description, i.name"
                 +"  FROM Reference r"
                 +"  JOIN OdontologyConsultation oc ON (r.encounterId = oc.id)"
+				+"  JOIN Institution i ON (oc.institutionId = i.id)"
                 +"  JOIN CareLine cl ON (r.careLineId = cl.id)"
                 +"  JOIN ClinicalSpecialty cs ON (r.clinicalSpecialtyId = cs.id)"
                 +"  JOIN ReferenceHealthCondition rhc ON (r.id = rhc.pk.referenceId)"
@@ -188,7 +189,8 @@ public class OdontologyConsultationSummaryStorageImpl implements OdontologyConsu
                         (Integer)a[0],
                         (String) a[1],
                         (String) a[2],
-                        a[3] != null ? (String) a[3] : null))
+                        a[3] != null ? (String) a[3] : null,
+						(String) a[4]))
         );
         return result;
     }

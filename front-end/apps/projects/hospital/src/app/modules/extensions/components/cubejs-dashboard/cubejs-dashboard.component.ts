@@ -1,7 +1,28 @@
 import { Component, Input, OnInit } from '@angular/core';
-import { formatDateOnlyISO } from '@core/utils/date.utils';
 import { UIComponentDto } from '@extensions/extensions-model';
-import { ChartDefinitionService, QueryForm } from '@extensions/services/chart-definition.service';
+import {
+	ChartDefinitionService,
+	FilterValue,
+} from '@extensions/services/chart-definition.service';
+
+export interface FilterDefinition {
+	member: string;
+	operator: string;
+}
+
+export interface FilterFormDefinition {
+	filter: FilterDefinition;
+	type: string;
+	label: string;
+}
+
+export interface QueryFilters {
+	[key: string]: FilterFormDefinition;
+}
+
+export interface FilterValues {
+	[key: string]: string[];
+}
 
 @Component({
 	selector: 'app-cubejs-dashboard',
@@ -11,14 +32,28 @@ import { ChartDefinitionService, QueryForm } from '@extensions/services/chart-de
 export class CubejsDashboardComponent implements OnInit {
 
 	@Input() content: UIComponentDto[];
+	@Input() filters: QueryFilters;
+
+	private params: FilterValues = {};
 
 	constructor(
 		private chartDefinitionService: ChartDefinitionService,
 	) { }
 
 	ngOnInit(): void {
-		const queryFormDate = formatDateOnlyISO(new Date());
-		this.chartDefinitionService.next({ date: queryFormDate });
+		this.chartDefinitionService.next([]);
+	}
+
+	changeValue(key: string, values: string[]) {
+		this.params[key] = values;
+
+		const filtersToAdd: FilterValue[] = Object.entries(this.params)
+			.map(([key, values]) => ({
+				...this.filters[key].filter,
+				values,
+			}));
+
+		this.chartDefinitionService.next(filtersToAdd);
 	}
 
 }

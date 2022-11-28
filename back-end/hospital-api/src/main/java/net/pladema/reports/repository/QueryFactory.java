@@ -42,7 +42,6 @@ public class QueryFactory {
         outpatientQuery.setParameter("institutionId", institutionId);
         outpatientQuery.setParameter("startDate", startDate);
         outpatientQuery.setParameter("endDate", endDate);
-        outpatientQuery.setParameter("problemTypes", List.of(ProblemType.PROBLEM, ProblemType.CHRONIC));
         List<ConsultationDetail> data = outpatientQuery.getResultList();
 
 		Query odontologyQuery = entityManager.createNamedQuery("Reports.OdontologyConsultationDetail");

@@ -1,0 +1,41 @@
+<div *ngFor="let request of service.getData(); last as isLast; trackBy: trackByRequest">
+    <div fxLayout="column" fxLayoutGap="15px">
+        <div fxLayout="row" fxLayoutAlign="space-between center">
+            <div fxLayout="column">
+                <span class="bold">
+                    {{
+                    'historia-clinica.reference-request-list.PROBLEMS' | translate
+                    }}
+                </span>
+                <span *ngFor="let problem of request?.problems">{{ problem.snomed.pt }}</span>
+            </div>
+            <button type="button" mat-icon-button color="warn" (click)="service.remove(request.index)">
+                <mat-icon>delete_outline</mat-icon>
+            </button>
+        </div>
+        <div fxLayout="row" fxLayoutGap="5px" fxLayout.lt-md="column" fxLayoutGap.lt-md="5px">
+            <div fxFlex="50" fxLayout="column">
+                <span class="bold">
+                    {{
+                    'historia-clinica.reference-request-list.SPECIALTY' |
+                    translate
+                    }}
+                </span>
+                <span>{{ request.clinicalSpecialty.name }}</span>
+            </div>
+            <div fxFlex="calc(50%-5px)" fxLayout="column" *ngIf="request.careLine?.description">
+                <span class="bold">
+                    {{
+                    'historia-clinica.reference-request-list.CARE_LINE' |
+                    translate
+                    }}
+                </span>
+                <span>{{ request.careLine.description }}</span>
+            </div>
+        </div>
+        <span class="gray-caption" *ngIf="request?.note">
+            "{{ request?.note }}"
+        </span>
+    </div>
+    <mat-divider class="separation" inset *ngIf="!isLast"></mat-divider>
+</div>

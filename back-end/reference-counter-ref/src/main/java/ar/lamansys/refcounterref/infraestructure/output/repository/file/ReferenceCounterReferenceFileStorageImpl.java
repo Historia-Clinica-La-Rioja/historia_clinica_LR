@@ -9,6 +9,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.io.FilenameUtils;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
@@ -27,6 +28,7 @@ public class ReferenceCounterReferenceFileStorageImpl implements ReferenceCounte
     private final ReferenceCounterReferenceFileRepository referenceCounterReferenceFileRepository;
 
     @Override
+	@Transactional //Transaccion compleja
     public Integer save(Integer institutionId, Integer patientId, MultipartFile file, Integer type) {
 
         String newFileName = fileService.createFileName(FilenameUtils.getExtension(file.getOriginalFilename()));
@@ -78,10 +80,9 @@ public class ReferenceCounterReferenceFileStorageImpl implements ReferenceCounte
         log.debug("Input parameters -> referenceCounterReferenceId {}, type {}", referenceCounterReferenceId, type);
         return referenceCounterReferenceFileRepository.findByReferenceCounterReferenceIdAndType(referenceCounterReferenceId, type);
     }
-
     public void deleteFiles(List<Integer> filesIds) {
         log.debug("Input parameters -> filesIds {}", filesIds);
-        filesIds.stream().forEach(fileId ->  referenceCounterReferenceFileRepository.deleteById(fileId));
+        referenceCounterReferenceFileRepository.deleteAllById(filesIds);
     }
 
     private String buildPartialPath(Integer patientId, String relativeFilePath) {

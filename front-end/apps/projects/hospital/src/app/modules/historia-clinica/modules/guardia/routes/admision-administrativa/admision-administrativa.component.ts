@@ -127,6 +127,7 @@ export class AdmisionAdministrativaComponent implements OnInit {
 				identificationNumber: this.selectedPatient.identificationNumber,
 				identificationTypeId: this.selectedPatient.identificationTypeId,
 				initValues: this.patientMedicalCoverages.map(s => this.mapperService.toPatientMedicalCoverage(s)),
+				patientId: this.selectedPatient.id
 			}
 		});
 

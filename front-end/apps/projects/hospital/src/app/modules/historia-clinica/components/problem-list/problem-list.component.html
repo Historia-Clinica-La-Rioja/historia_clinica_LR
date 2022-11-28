@@ -1,0 +1,51 @@
+<div *ngFor="let problema of activeService.getProblemas(); index as i; last as isLast">
+    <div fxLayout="row" fxLayoutAlign="space-between center">
+        <div fxFlex="80" fxLayout="column" fxLayoutGap="2px">
+            <span>{{ problema.snomed.pt }}</span>
+            <div fxLayout="row" fxLayoutGap="3px">
+                <span *ngIf="problema?.cronico" class="gray-caption">
+                    ({{ 'ambulatoria.paciente.nueva-consulta.problemas.CRONICO' | translate }})
+                </span>
+                <span *ngIf="problema?.cronico && problema.codigoSeveridad">-</span>
+                <em *ngIf="problema?.codigoSeveridad"
+                    [ngClass]="{ 'gray-caption': SEVERITY_CODES.LOW === problema.codigoSeveridad, 'color-warn': SEVERITY_CODES.HIGH === problema.codigoSeveridad }">
+                    {{
+                    activeService.getSeverityDisplayName(problema.codigoSeveridad)
+                    }}
+                </em>
+            </div>
+            <div fxLayout="row" fxLayoutGap="5px">
+                <span *ngIf="problema.fechaInicio" class="mat-caption gray-caption">
+                    {{ 'ambulatoria.paciente.nueva-consulta.problemas.FECHA_INICIO_PREFIJO' |
+                    translate }}
+                    {{ momentFormat(problema.fechaInicio, DateFormat.VIEW_DATE) }}
+                </span>
+                <span *ngIf="problema.fechaFin" class="mat-caption gray-caption">
+                    {{ 'ambulatoria.paciente.nueva-consulta.problemas.FECHA_FIN_PREFIJO' |
+                    translate }}
+                    {{ momentFormat(problema.fechaFin, DateFormat.VIEW_DATE) }}
+                </span>
+            </div>
+            <div *ngIf="problema.isReportable">
+                <ng-container *ngIf="problema.epidemiologicalManualClassifications?.length">
+                    <div *ngFor="let classification of problema.epidemiologicalManualClassifications; let i=index">
+                        <span class="color-primary">
+                            {{ problema.epidemiologicalManualClassifications[i] }}
+                        </span>
+                    </div>
+                </ng-container>
+                <span class="color-warn" *ngIf="!problema.epidemiologicalManualClassifications"
+                    translate="ambulatoria.paciente.nueva-consulta.problemas.DO_NOT_REPORT_PROBLEM"></span>
+            </div>
+        </div>
+        <button *ngIf="activeService.canEdit" type="button" mat-icon-button color="primary"
+            (click)="activeService.openEditDialog(i)">
+            <mat-icon>edit</mat-icon>
+        </button>
+        <button type="button" mat-icon-button color="warn" (click)="activeService.remove(i)">
+            <mat-icon>delete_outline</mat-icon>
+        </button>
+    </div>
+
+    <mat-divider class="separation" inset *ngIf="!isLast"></mat-divider>
+</div>

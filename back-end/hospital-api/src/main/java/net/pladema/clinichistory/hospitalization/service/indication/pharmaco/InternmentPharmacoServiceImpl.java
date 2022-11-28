@@ -57,6 +57,14 @@ public class InternmentPharmacoServiceImpl implements InternmentPharmacoService 
 		return result;
 	}
 
+	@Override
+	public PharmacoDto getInternmentEpisodePharmaco(Integer pharmacoId) {
+		log.debug("Input parameter -> pharmacoId {}", pharmacoId);
+		PharmacoDto result = sharedIndicationPort.getInternmentEpisodePharmaco(pharmacoId);
+		log.debug("Output -> {}", result);
+		return result;
+	}
+
 	private void assertInternmentEpisodeCanCreateIndication(Integer internmentEpisodeId) {
 		if (internmentEpisodeService.haveEpicrisis(internmentEpisodeId)) {
 			throw new ConstraintViolationException("No se puede crear una indicación debido a que existe una epicrisis", Collections.emptySet());

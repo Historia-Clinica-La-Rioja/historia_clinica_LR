@@ -28,12 +28,16 @@ public class ProfessionalCompleteDto {
 				.flatMap(professionCompleteDto ->
 						professionCompleteDto.getAllLicenses().stream()
 								.map(LicenseNumberDto::getInfo))
-				.collect(Collectors.joining(","));
+				.collect(Collectors.joining(", "));
 	}
 
 	public List<LicenseNumberDto> getAllLicenses() {
 		return professions.stream()
 				.flatMap(professionCompleteDto -> professionCompleteDto.getAllLicenses().stream())
 				.collect(Collectors.toList());
+	}
+
+	public String getCompleteName(String name){
+		return String.format("%s %s", name, lastName);
 	}
 }

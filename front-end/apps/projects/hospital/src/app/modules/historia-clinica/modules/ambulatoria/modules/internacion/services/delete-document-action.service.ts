@@ -6,27 +6,28 @@ import { AnamnesisService } from "@api-rest/services/anamnesis.service";
 import { EpicrisisService } from "@api-rest/services/epicrisis.service";
 import { EvolutionNoteService } from "@api-rest/services/evolution-note.service";
 import { SnackBarService } from "@presentation/services/snack-bar.service";
-import { InternmentSummaryFacadeService } from "@historia-clinica/modules/ambulatoria/modules/internacion/services/internment-summary-facade.service";
+import { InternmentFields } from "@historia-clinica/modules/ambulatoria/modules/internacion/services/internment-summary-facade.service";
+import { Subject } from 'rxjs';
 
-@Injectable({
-	providedIn: 'root'
-})
+@Injectable()
 export class DeleteDocumentActionService {
+
+	updateFieldsSubject = new Subject<InternmentFields>();
+	updateFields$ = this.updateFieldsSubject.asObservable();
 
 	constructor(
 		private readonly dialog: MatDialog,
 		private readonly anamnesisService: AnamnesisService,
 		private readonly epicrisisService: EpicrisisService,
 		private readonly evolutionNoteService: EvolutionNoteService,
-		private readonly snackBarService: SnackBarService,
-		private readonly internmentSummaryFacadeService: InternmentSummaryFacadeService,
+		private readonly snackBarService: SnackBarService
 	) { }
 
 	delete(document: DocumentSearchDto, internmentEpisodeId: number) {
 		const dialogRef = this.dialog.open(DocumentActionReasonComponent, {
 			data: {
 				title: 'internaciones.dialogs.actions-document.DELETE_TITLE',
-				subtitle: 'internaciones.dialogs.actions-document.SUBTITLE', 
+				subtitle: 'internaciones.dialogs.actions-document.SUBTITLE',
 			},
 			width: "50vh",
 			autoFocus: false,
@@ -56,7 +57,7 @@ export class DeleteDocumentActionService {
 		this.anamnesisService.deleteAnamnesis(documentId, internmentEpisodeId, reason).subscribe(
 			success => {
 				this.snackBarService.showSuccess("internaciones.delete-document.messages.SUCCESS");
-				this.updateInformation();
+				this.updateFieldsSubject.next({ evolutionClinical: true });
 			},
 			error => this.snackBarService.showError("internaciones.delete-document.messages.ERROR"))
 
@@ -67,7 +68,7 @@ export class DeleteDocumentActionService {
 		this.evolutionNoteService.deleteEvolutionDiagnosis(documentId, internmentEpisodeId, reason).subscribe(
 			success => {
 				this.snackBarService.showSuccess("internaciones.delete-document.messages.SUCCESS");
-				this.updateInformation();
+				this.updateFieldsSubject.next({ evolutionClinical: true });
 			},
 			error => this.snackBarService.showError("internaciones.delete-document.messages.ERROR"))
 	}
@@ -76,13 +77,9 @@ export class DeleteDocumentActionService {
 		this.epicrisisService.deleteEpicrisis(documentId, internmentEpisodeId, reason).subscribe(
 			success => {
 				this.snackBarService.showSuccess("internaciones.delete-document.messages.SUCCESS");
-				this.updateInformation();
+				this.updateFieldsSubject.next({ evolutionClinical: true });
 			},
 			error => this.snackBarService.showError("internaciones.delete-document.messages.ERROR"))
 	}
 
-	private updateInformation() {
-		this.internmentSummaryFacadeService.setFieldsToUpdate({ evolutionClinical: true });
-		this.internmentSummaryFacadeService.updateInternmentEpisode();
-	}
 }

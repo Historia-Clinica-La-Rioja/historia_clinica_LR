@@ -36,7 +36,7 @@ export class BlockAgendaRangeComponent implements OnInit {
 		});
 
 		this.unblockForm = this.formBuilder.group({
-			control: [null]
+			control: [null, Validators.required]
 		});
 		this.appointmentBlockMotives = this.appointmentBlockMotivesFacadeService.getAllAppointmentBlockMotives();
 	}
@@ -49,7 +49,7 @@ export class BlockAgendaRangeComponent implements OnInit {
 				this.dialogRef.close(true);
 				},
 				error => {
-					this.snackBarService.showError(error.message);
+					this.snackBarService.showError(error.errors[0]);
 				}
 			);
 

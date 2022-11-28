@@ -1,6 +1,7 @@
-import { Component, Inject, OnInit } from '@angular/core';
+import { Component, ElementRef, Inject, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { CounterReferenceDto, DateDto, ReferenceCounterReferenceFileDto } from '@api-rest/api-model';
+import { AppFeature } from '@api-rest/api-model';
 import { InternacionMasterDataService } from '@api-rest/services/internacion-master-data.service';
 import { TEXT_AREA_MAX_LENGTH } from '@core/constants/validation-constants';
 import { MIN_DATE } from '@core/utils/date.utils';
@@ -9,13 +10,19 @@ import { SnomedService } from '@historia-clinica/services/snomed.service';
 import { OVERLAY_DATA } from '@presentation/presentation-model';
 import { DockPopupRef } from '@presentation/services/dock-popup-ref';
 import { SnackBarService } from '@presentation/services/snack-bar.service';
-import { hasError } from '@core/utils/form.utils';
+import { hasError, scrollIntoError } from '@core/utils/form.utils';
 import { Alergia, AlergiasNuevaConsultaService } from '../../services/alergias-nueva-consulta.service';
 import { Medicacion, MedicacionesNuevaConsultaService } from '../../services/medicaciones-nueva-consulta.service';
 import { CounterreferenceService } from '@api-rest/services/counterreference.service';
 import { ReferenceFileService } from '@api-rest/services/reference-file.service';
 import { CounterreferenceFileService } from '@api-rest/services/counterreference-file.service';
-
+import { Color } from '@presentation/colored-label/colored-label.component';
+import { NewConsultationProcedureFormComponent } from '@historia-clinica/dialogs/new-consultation-procedure-form/new-consultation-procedure-form.component';
+import { MatDialog } from '@angular/material/dialog';
+import { NewConsultationAllergyFormComponent } from '@historia-clinica/dialogs/new-consultation-allergy-form/new-consultation-allergy-form.component';
+import { FeatureFlagService } from '@core/services/feature-flag.service';
+import { NewConsultationMedicationFormComponent } from '@historia-clinica/dialogs/new-consultation-medication-form/new-consultation-medication-form.component';
+import { ReferenceMasterDataService } from '@api-rest/services/reference-master-data.service';
 @Component({
 	selector: 'app-counterreference-dock-popup',
 	templateUrl: './counterreference-dock-popup.component.html',
@@ -25,14 +32,18 @@ export class CounterreferenceDockPopupComponent implements OnInit {
 
 	public minDate = MIN_DATE;
 	public readonly TEXT_AREA_MAX_LENGTH = TEXT_AREA_MAX_LENGTH;
+	readonly Color = Color;
 	medicacionesNuevaConsultaService: MedicacionesNuevaConsultaService;
 	procedimientoNuevaConsultaService: ProcedimientosService;
 	alergiasNuevaConsultaService: AlergiasNuevaConsultaService;
 	criticalityTypes: any[];
-	formDescription: FormGroup;
+	formReferenceClosure: FormGroup;
 	hasError = hasError;
 	selectedFiles: File[] = [];
 	selectedFilesShow: any[] = [];
+	closureTypes: any[] = [];
+	collapsedCounterReference = false;
+	searchConceptsLocallyFFIsOn = false;
 
 	constructor(
 		@Inject(OVERLAY_DATA) public data: any,
@@ -42,8 +53,12 @@ export class CounterreferenceDockPopupComponent implements OnInit {
 		private readonly snackBarService: SnackBarService,
 		private readonly internacionMasterDataService: InternacionMasterDataService,
 		private readonly counterreferenceService: CounterreferenceService,
+		private readonly dialog: MatDialog,
+		private readonly featureFlagService: FeatureFlagService,
 		private readonly referenceFileService: ReferenceFileService,
 		private readonly counterreferenceFileService: CounterreferenceFileService,
+		private readonly referenceMasterDataService: ReferenceMasterDataService,
+		private readonly el: ElementRef,
 	) {
 		this.medicacionesNuevaConsultaService = new MedicacionesNuevaConsultaService(formBuilder, this.snomedService, this.snackBarService);
 		this.procedimientoNuevaConsultaService = new ProcedimientosService(formBuilder, this.snomedService, this.snackBarService);
@@ -51,7 +66,8 @@ export class CounterreferenceDockPopupComponent implements OnInit {
 	}
 
 	ngOnInit(): void {
-		this.formDescription = this.formBuilder.group({
+		this.formReferenceClosure = this.formBuilder.group({
+			closureType: [null, [Validators.required]],
 			description: [null, [Validators.required]]
 		});
 
@@ -60,10 +76,18 @@ export class CounterreferenceDockPopupComponent implements OnInit {
 			this.alergiasNuevaConsultaService.setCriticalityTypes(allergyCriticalities);
 		});
 
+		this.featureFlagService.isActive(AppFeature.HABILITAR_BUSQUEDA_LOCAL_CONCEPTOS).subscribe(isOn => {
+			this.searchConceptsLocallyFFIsOn = isOn;
+		});
+
+		this.referenceMasterDataService.getClosureTypes().subscribe( closureTypes => {
+			this.closureTypes = closureTypes;
+		})
+
 	}
 
 	save(): void {
-		if (this.formDescription.valid) {
+		if (this.formReferenceClosure.valid) {
 			let fileIds: number[] = [];
 			let longFiles = 0;
 			if (!this.selectedFiles.length) {
@@ -90,8 +114,49 @@ export class CounterreferenceDockPopupComponent implements OnInit {
 		}
 
 		else {
-			this.formDescription.controls['description'].markAsTouched();
+			this.formReferenceClosure.controls['closureType'].markAsTouched();
+			this.formReferenceClosure.controls['description'].markAsTouched();
+			this.collapsedCounterReference = false;
+			setTimeout(() => {
+				scrollIntoError(this.formReferenceClosure, this.el)
+			}, 300);
 		}
+	}
+
+	addProcedure(): void {
+		this.dialog.open(NewConsultationProcedureFormComponent, {
+			data: {
+				procedureService: this.procedimientoNuevaConsultaService,
+				searchConceptsLocallyFF: this.searchConceptsLocallyFFIsOn,
+			},
+			autoFocus: false,
+			width: '35%',
+			disableClose: true,
+		});
+	}
+
+	addAllergy(): void {
+		this.dialog.open(NewConsultationAllergyFormComponent, {
+			data: {
+				allergyService: this.alergiasNuevaConsultaService,
+				searchConceptsLocallyFF: this.searchConceptsLocallyFFIsOn,
+			},
+			autoFocus: false,
+			width: '35%',
+			disableClose: true,
+		});
+	}
+
+	addMedication(): void {
+		this.dialog.open(NewConsultationMedicationFormComponent, {
+			data: {
+				medicationService: this.medicacionesNuevaConsultaService,
+				searchConceptsLocallyFF: this.searchConceptsLocallyFFIsOn,
+			},
+			autoFocus: false,
+			width: '35%',
+			disableClose: true,
+		});
 	}
 
 	private buildCounterReferenceDto(fileIds): CounterReferenceDto {
@@ -109,7 +174,7 @@ export class CounterreferenceDockPopupComponent implements OnInit {
 				};
 			}),
 			clinicalSpecialtyId: this.data.reference.clinicalSpecialty.id,
-			counterReferenceNote: this.formDescription.value.description,
+			counterReferenceNote: this.formReferenceClosure.value.description,
 			medications: this.medicacionesNuevaConsultaService.getMedicaciones().map((medicacion: Medicacion) => {
 				return {
 					note: medicacion.observaciones,
@@ -125,6 +190,7 @@ export class CounterreferenceDockPopupComponent implements OnInit {
 				};
 			}),
 			fileIds: fileIds,
+			closureTypeId: this.formReferenceClosure.value.closureType.id,
 		};
 	}
 

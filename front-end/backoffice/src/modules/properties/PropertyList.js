@@ -8,7 +8,7 @@ import {
 
 const PropertyFilter = (props) => (
     <Filter {...props}>
-        <TextInput source="property" />
+        <TextInput source="property" alwaysOn />
         <TextInput source="nodeId" />
     </Filter>
 );

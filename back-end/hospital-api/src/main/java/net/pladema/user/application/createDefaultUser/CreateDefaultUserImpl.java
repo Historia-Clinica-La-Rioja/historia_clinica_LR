@@ -7,6 +7,7 @@ import net.pladema.user.application.port.HospitalUserStorage;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class CreateDefaultUserImpl implements CreateDefaultUser {
@@ -20,6 +21,7 @@ public class CreateDefaultUserImpl implements CreateDefaultUser {
     }
 
     @Override
+	@Transactional
     public Integer run(Integer personId) {
         logger.debug("Input -> {}", personId);
 		hospitalUserStorage.getUserDataByPersonId(personId).ifPresent(u -> {

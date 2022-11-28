@@ -1,9 +1,8 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { HealthcareProfessionalCompleteDto, HealthcareProfessionalSpecialtyDto, ProfessionalDto, ProfessionalsByClinicalSpecialtyDto } from '@api-rest/api-model';
+import { HealthcareProfessionalCompleteDto, ProfessionalDto, ProfessionalProfessionsDto, ProfessionalSpecialtyDto } from '@api-rest/api-model';
 import { ContextService } from '@core/services/context.service';
 import { environment } from '@environments/environment';
-import { ProfessionDto } from '@pacientes/dialogs/edit-professions/edit-professions.component';
 import { Observable } from 'rxjs';
 
 @Injectable({
@@ -23,19 +22,15 @@ export class ProfessionalService {
 		return this.http.post<number>(url, professional);
 	}
 
-	editProfessional(healthcareProfessionalId: number, professional: HealthcareProfessionalCompleteDto): Observable<boolean> {
-		const url = `${environment.apiBase}/healthcareprofessional/${healthcareProfessionalId}/institution/${this.contextService.institutionId}`;
-		return this.http.put<boolean>(url, professional);
-	}
 
-	getProfessionsByProfessional(professionalId): Observable<HealthcareProfessionalSpecialtyDto[]> {
+	getProfessionsByProfessional(professionalId): Observable<ProfessionalProfessionsDto[]> {
 		const url = `${environment.apiBase}/healthcareprofessionalspecialties/institution/${this.contextService.institutionId}/professional/${professionalId}`;
-		return this.http.get<HealthcareProfessionalSpecialtyDto[]>(url);
+		return this.http.get<ProfessionalProfessionsDto[]>(url);
 	}
 
-	getList(): Observable<ProfessionDto[]> {
+	getList(): Observable<ProfessionalSpecialtyDto[]> {
 		const url = `${environment.apiBase}/professionalSpecialty`;
-		return this.http.get<ProfessionDto[]>(url);
+		return this.http.get<ProfessionalSpecialtyDto[]>(url);
 	}
 
 }

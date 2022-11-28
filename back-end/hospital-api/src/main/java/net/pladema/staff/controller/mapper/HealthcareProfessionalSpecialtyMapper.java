@@ -1,16 +1,17 @@
 package net.pladema.staff.controller.mapper;
 
-import net.pladema.staff.controller.dto.HealthcareProfessionalSpecialtyDto;
-import net.pladema.staff.service.domain.HealthcareProfessionalSpecialtyBo;
+import java.util.List;
+
 import org.mapstruct.Mapper;
 import org.mapstruct.Named;
 
-import java.util.List;
+import net.pladema.staff.controller.dto.ProfessionalProfessionsDto;
+import net.pladema.staff.service.domain.ProfessionalProfessionsBo;
 
 @Mapper
 public interface HealthcareProfessionalSpecialtyMapper {
-
-    @Named("fromHealthcareProfessionalSpecialtyBoList")
-    List<HealthcareProfessionalSpecialtyDto> fromHealthcareProfessionalSpecialtyBoList(List<HealthcareProfessionalSpecialtyBo> healthcareProfessionalSpecialtiesBo);
+	
+	@Named("fromProfessionalProfessionsBoList")
+	List<ProfessionalProfessionsDto> fromProfessionalProfessionsBoList(List<ProfessionalProfessionsBo> healthcareProfessionalSpecialtiesBo);
 
 }

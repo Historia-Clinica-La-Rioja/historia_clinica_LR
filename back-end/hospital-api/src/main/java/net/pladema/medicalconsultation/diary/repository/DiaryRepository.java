@@ -140,9 +140,10 @@ public interface DiaryRepository extends SGXAuditableEntityJPARepository<Diary, 
     
     @Transactional(readOnly = true)
     @Query("SELECT NEW net.pladema.medicalconsultation.diary.repository.domain.CompleteDiaryListVo( " +
-            "d, do.description, do.sectorId, d.healthcareProfessionalId, cs.name) " +
+            "d, do.description, s.id, s.description, d.healthcareProfessionalId, cs.name) " +
             "FROM Diary d " +
             "JOIN DoctorsOffice do ON do.id = d.doctorsOfficeId " +
+			"JOIN Sector s ON s.id = do.sectorId " +
 			"JOIN ClinicalSpecialty cs ON cs.id = d.clinicalSpecialtyId " +
             "WHERE d.id = :diaryId ")
     Optional<CompleteDiaryListVo> getDiary(@Param("diaryId") Integer diaryId);
@@ -157,11 +158,49 @@ public interface DiaryRepository extends SGXAuditableEntityJPARepository<Diary, 
 	@Transactional(readOnly = true)
 	@Query("SELECT (case when count(d.id)> 0 then true else false end) " +
 			"FROM Diary d " +
+			"LEFT JOIN DiaryAssociatedProfessional dap ON (d.id = dap.diaryId)" +
 			"JOIN DoctorsOffice AS do ON (do.id = d.doctorsOfficeId) " +
-			"WHERE d.healthcareProfessionalId = :healthcareProfessionalId " +
+			"WHERE (d.healthcareProfessionalId = :healthcareProfessionalId " +
+			"OR dap.healthcareProfessionalId = :healthcareProfessionalId) " +
 			"AND do.institutionId = :institutionId " +
 			"AND d.active = true " +
 			"AND d.endDate >= current_date() " +
 			"AND (d.deleteable.deleted = false OR d.deleteable.deleted is null)")
 	boolean hasActiveDiariesInInstitution(@Param("healthcareProfessionalId")Integer healthcareProfessionalId, @Param("institutionId") Integer institutionId);
+	
+        @Transactional(readOnly = true)
+        @Query("SELECT s.institutionId " +
+			"FROM Diary d " +
+			"JOIN DoctorsOffice do ON d.doctorsOfficeId = do.id " +
+			"JOIN Sector s ON do.sectorId = s.id " +
+			"WHERE d.id = :diaryId ")
+	Optional<Integer> getInstitutionIdByDiary(@Param("diaryId") Integer diaryId);
+
+	@Transactional(readOnly = true)
+	@Query(" SELECT DISTINCT (CASE WHEN d.alias IS NULL THEN cs.name ELSE d.alias END) AS alias " +
+			"FROM Diary d " +
+			"INNER JOIN ClinicalSpecialty cs ON (d.clinicalSpecialtyId = cs.id) " +
+			"INNER JOIN DoctorsOffice dof ON (dof.id = d.doctorsOfficeId) " +
+			"WHERE d.active = TRUE " +
+			"AND dof.institutionId = :institutionId " +
+			"AND d.endDate >= CURRENT_DATE")
+	List<String> getActiveDiariesAliases(@Param("institutionId") Integer institutionId);
+
+	@Transactional(readOnly = true)
+	@Query(" SELECT NEW net.pladema.medicalconsultation.diary.repository.domain.CompleteDiaryListVo( " +
+			"d, dof.description, dof.sectorId, d.healthcareProfessionalId, cs.name, p.firstName, p.lastName)" +
+			"FROM Diary d " +
+			"INNER JOIN ClinicalSpecialty cs ON (cs.id = d.clinicalSpecialtyId) " +
+			"INNER JOIN DoctorsOffice dof ON (dof.id = d.doctorsOfficeId) " +
+			"INNER JOIN HealthcareProfessional hp ON (hp.id = d.healthcareProfessionalId) " +
+			"INNER JOIN Person p ON (p.id = hp.personId) " +
+			"WHERE d.active = true " +
+			"AND dof.institutionId = :institutionId " +
+			"AND (d.alias = :aliasOrClinicalSpecialtyName " +
+			"OR cs.name = :aliasOrClinicalSpecialtyName) " +
+			"AND d.endDate >= CURRENT_DATE ")
+	List<CompleteDiaryListVo> getActiveDiariesByAliasOrClinicalSpecialtyName(
+			@Param("institutionId") Integer institutionId,
+			@Param("aliasOrClinicalSpecialtyName") String aliasOrClinicalSpecialtyName
+	);
 }

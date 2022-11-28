@@ -6,6 +6,7 @@ import { goToInstitutionsHome } from '../providers/utils/webappLink';
 
 const ConfigurationMenu = forwardRef((props, ref) => (
     <MenuItemLink
+        id="access_institutions"
         ref={ref}
         to="/home"
         primaryText="Acceso a Instituciones"

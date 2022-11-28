@@ -1,0 +1,17 @@
+<div id="search" class="actions" fxLayout="row" fxLayoutGap="15px">
+	<app-typeahead
+    	id="specialties"
+		style="width: 26%;"
+		[titleInput]="'turnos.home.SPECIALTY_SEARCH' | translate"
+		[options]="especialidadesTypeaheadOptions$ | async"
+		(selectionChange)="setEspecialidad($event)">
+	</app-typeahead>
+	<app-professional-select
+		style="width: 20%;"
+		[professionals]="professionalsFilteredBySpecialty.length ? professionalsFilteredBySpecialty : profesionales"
+		[professionalSelected]="professionalSelected"
+		(selectionChange)="goBack($event)"
+	>
+	</app-professional-select>
+</div>
+<app-select-agenda ></app-select-agenda>

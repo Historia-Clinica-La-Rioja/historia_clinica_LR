@@ -13,7 +13,7 @@ echo "NPM_CACHE set as ${NPM_CACHE}"
 start_apps=$(date +%s)
 echo "Building Webapp: start"
 cd apps
-npm ci --cache ${NPM_CACHE}
+[ -d "node_modules" ] && npm install || npm ci --cache ${NPM_CACHE}
 npm run build
 cd -
 
@@ -21,7 +21,7 @@ start_backoffice=$(date +%s)
 
 echo "Building Backoffice: start"
 cd backoffice
-npm ci --cache ${NPM_CACHE}
+[ -d "node_modules" ] && npm install || npm ci --cache ${NPM_CACHE}
 npm run build
 cd -
 

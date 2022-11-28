@@ -23,4 +23,6 @@ public class ProfessionalPersonDto implements Serializable {
 
     private String lastName;
 
+    private String nameSelfDetermination;
+
 }

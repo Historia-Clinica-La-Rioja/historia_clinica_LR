@@ -1,0 +1,67 @@
+{
+  "cubeQuery": {
+    "measures": [
+    ],
+    "timeDimensions": [
+      {
+        "dimension": "Referencias.fecha_consulta"
+      }
+    ],
+    "order": [
+      [
+        "Referencias.tiene_contra",
+        "desc"
+      ],
+      [
+        "Referencias.fecha_consulta",
+        "desc"
+      ]
+    ],
+    "dimensions": [
+      "Referencias.documento",
+      "Referencias.paciente",
+      "Referencias.email",
+      "Referencias.telefono",
+      "Referencias.institucion_origen",
+      "Referencias.doctor_solicitante",
+      "Referencias.linea_cuidado",
+      "Referencias.especialidad_clinica",
+      "Referencias.fecha_consulta",
+      "Referencias.institucion_destino",
+      "Referencias.tiene_contra",
+      "Referencias.id"
+    ],
+    "filters": [
+      {
+        "member": "Referencias.institucion_destino_id",
+        "operator": "equals",
+        "values": [
+          "[(${institutionId})]"
+        ]
+      }
+    ]
+  },
+  "chartType": "table",
+  "pivotConfig": {
+    "x": [
+      "Referencias.documento",
+      "Referencias.paciente",
+      "Referencias.email",
+      "Referencias.telefono",
+      "Referencias.institucion_origen",
+      "Referencias.doctor_solicitante",
+      "Referencias.linea_cuidado",
+      "Referencias.especialidad_clinica",
+      "Referencias.fecha_consulta",
+      "Referencias.institucion_destino",
+      "Referencias.tiene_contra",
+      "Referencias.id"
+    ],
+    "y": [
+      "measures"
+    ],
+    "fillMissingDates": true,
+    "joinDateRange": false
+  }
+
+}

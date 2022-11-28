@@ -15,18 +15,20 @@ public class MqttMetadataBo {
 
     private final Integer qos;
 
-    private final MqttTypeBo type;
 
-    public MqttMetadataBo(String topic, String message, boolean retained, Integer qos, String type) {
+    public MqttMetadataBo(String topic, String message, boolean retained, Integer qos) {
         this.message = message;
         this.retained = retained;
         this.topic = topic;
         this.qos = qos;
-        this.type = MqttTypeBo.map(type);
     }
 
-    public byte[] getMessage() {
-        return String.format("{\"type\":\"%s\",%s}",type.getId(),message).getBytes();
+    public byte[] getMessageBytes() {
+        return message.getBytes();
     }
+
+	public String getMessage() {
+		return message;
+	}
 
 }

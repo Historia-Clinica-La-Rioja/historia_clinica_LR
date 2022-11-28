@@ -27,7 +27,7 @@ public class OdontologyPersonalHistoryDto implements Serializable {
     @Nullable
     private String verificationId;
 
-    @NotNull(message = "{value.mandatory}")
+	@Nullable
     private DateDto startDate;
 
 }

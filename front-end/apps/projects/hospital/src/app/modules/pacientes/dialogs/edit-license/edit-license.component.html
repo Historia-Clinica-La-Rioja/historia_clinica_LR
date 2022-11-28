@@ -1,0 +1,41 @@
+<div>
+
+	<div fxLayout="row" fxLayoutAlign="end end">
+		<button matSuffix mat-icon-button [mat-dialog-close]>
+			<mat-icon>close</mat-icon>
+		</button>
+	</div>
+
+	<div mat-dialog-title fxLayout="row">
+		<div class="title" class="capitalize-first-letter" translate="pacientes.edit_license.TITLE">
+		</div>
+	</div>
+
+	<form [formGroup]="form">
+		<div formArrayName="professionalSpecialties">
+			<div *ngFor="let p of getCtrl('professionalSpecialties',form)?.controls;index as formChild">
+				<div [formGroupName]="formChild" fxLayout="row" fxLayoutAlign="space-between" fxLayoutGap="15px">
+					<app-license-form fxFlex="90%" [professionSpecialties]="data.professionSpecialties" [confirmationValidation]="confirmationValidation"
+						formControlName="combo">
+					</app-license-form>
+					<button id="delete-button" color="warn" matSuffix mat-icon-button fxLayoutAlign="end"
+						(click)="delete(formChild)">
+						<mat-icon>delete</mat-icon>
+					</button>
+				</div>
+				<hr class="divider" />
+			</div>
+		</div>
+	</form>
+
+	<button id="add-button" [disabled]="isDisableConfirmButton()" mat-button type="button" (click)="addCombo()" color="primary" onclick="this.blur()">
+		+ {{ 'pacientes.edit_license.ADD_ANOTHER_LICENSE' | translate }}
+	</button>
+
+	<div actions id="confirm-button" fxLayoutAlign="end">
+		<button mat-raised-button color="primary" (click)="save()">
+			<span>{{ 'buttons.CONFIRM' | translate | uppercase }}</span>
+		</button>
+	</div>
+
+</div>

@@ -2,6 +2,8 @@ package net.pladema.establishment.controller;
 
 import java.util.List;
 
+import net.pladema.staff.service.domain.ClinicalSpecialtyBo;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
@@ -136,6 +138,28 @@ public class ClinicalSpecialtyController {
 		LOG.debug("Get all Clinical Specialty by active diaries, Professionals {} and Institution {} => {}", professionalsIds, institutionId, professionalsByClinicalSpecialtyDtos);
 		return ResponseEntity.ok(professionalsByClinicalSpecialtyDtos);
 	}
+
+	@GetMapping(value = "/institution/{institutionId}/clinicalspecialty/by-destination-institution")
+	@PreAuthorize("hasPermission(#institutionId, 'ESPECIALISTA_MEDICO, PROFESIONAL_DE_SALUD, ESPECIALISTA_EN_ODONTOLOGIA, ENFERMERO')")
+	public ResponseEntity<List<ClinicalSpecialtyDto>> getAllByInstitutionIdAndActiveDiaries(
+			@PathVariable(name = "institutionId") Integer institutionId,
+			@RequestParam Integer destinationInstitutionId) {
+		LOG.debug("Input parameters -> institutionId {} and destinationInstitutionId {}", institutionId, destinationInstitutionId);
+		List<ClinicalSpecialtyDto> clinicalSpecialties = clinicalSpecialtyMapper.fromListClinicalSpecialtyBo(clinicalSpecialtyService.getAllByInstitutionIdAndActiveDiaries(destinationInstitutionId));
+		LOG.debug("Get all Clinical Specialty by active diaries and institution {} => {}", destinationInstitutionId);
+		return ResponseEntity.ok(clinicalSpecialties);
+	}
+
+	@GetMapping("/institution/{institutionId}/clinicalspecialty/careline/{careLineId}/destinationinstitution/{destinationInstitutionId}")
+	@PreAuthorize("hasPermission(#institutionId, 'ESPECIALISTA_MEDICO, PROFESIONAL_DE_SALUD, ESPECIALISTA_EN_ODONTOLOGIA, ENFERMERO')")
+	public ResponseEntity<List<ClinicalSpecialtyDto>> getAllByDestinationInstitution(@PathVariable(name = "institutionId") Integer institutionId,
+																					 @PathVariable(name= "careLineId") Integer careLineId,
+																					 @PathVariable(name= "destinationInstitutionId") Integer destinationInstitutionId) {
+		List<ClinicalSpecialtyBo> clinicalSpecialties = clinicalSpecialtyService.getClinicalSpecialtiesByCareLineIdAndDestinationIntitutionId(careLineId, destinationInstitutionId);
+		LOG.debug("Get all Clinical Specialties by CareLine and Destination Institution {} => {}", careLineId, destinationInstitutionId, clinicalSpecialties);
+		return ResponseEntity.ok(clinicalSpecialtyMapper.fromListClinicalSpecialtyBo(clinicalSpecialties));
+	}
+
 
 }
 

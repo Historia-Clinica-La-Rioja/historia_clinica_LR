@@ -1,0 +1,22 @@
+.card {
+	padding: 12px 0 12px 0;
+}
+
+.mat-card-content {
+	align-self: auto;
+	margin: 17px 0 0 0;
+	@media screen and (min-width: 600px) {
+		margin: 17px 0 0 12px;
+	}
+}
+
+.button {
+	margin: 10px;
+}
+
+.mat-flat-button {
+	@media screen and (max-width: 600px) {
+		min-width: 50%;
+	}
+}
+

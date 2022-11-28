@@ -8,9 +8,7 @@ import { momentParseDateTime } from "@core/utils/moment.utils";
 import { InternmentEpisodeService } from "@api-rest/services/internment-episode.service";
 import { HceGeneralStateService } from "@api-rest/services/hce-general-state.service";
 
-@Injectable({
-	providedIn: 'root'
-})
+@Injectable()
 export class InternmentSummaryFacadeService {
 
 	private internmentEpisodeId: number;
@@ -189,7 +187,7 @@ export class InternmentSummaryFacadeService {
 
 	private mapToHealthHistoryConditionDto(familyHistory: HCEPersonalHistoryDto): HealthHistoryConditionDto {
 		return {
-			date: familyHistory.startDate,
+			startDate: familyHistory.startDate,
 			note: null,
 			id: familyHistory.id,
 			snomed: familyHistory.snomed,

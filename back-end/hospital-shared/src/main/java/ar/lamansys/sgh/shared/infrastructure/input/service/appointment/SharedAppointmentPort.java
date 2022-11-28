@@ -12,7 +12,9 @@ import ar.lamansys.sgh.shared.infrastructure.input.service.booking.BookingPerson
 
 public interface SharedAppointmentPort {
 
-	boolean hasConfirmedAppointment(Integer patientId, Integer doctorId, LocalDate date);
+	boolean hasCurrentAppointment(Integer patientId, Integer doctorId, LocalDate date);
+
+	boolean hasOldAppointment(Integer patientId, Integer healthProfessionalId);
 
 	Integer serveAppointment(Integer patientId, Integer doctorId, LocalDate date);
 

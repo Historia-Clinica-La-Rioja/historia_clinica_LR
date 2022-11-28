@@ -6,8 +6,10 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public interface SnomedGroupRepository extends JpaRepository<SnomedGroup, Integer> {
@@ -18,6 +20,11 @@ public interface SnomedGroupRepository extends JpaRepository<SnomedGroup, Intege
 			"	AND sg.description = :description " +
 			" 	AND sg.groupId IS NULL ")
     Integer getBaseGroupIdByEclAndDescription(@Param("ecl") String ecl, @Param("description") String description);
+
+	@Query( " SELECT sg.id " +
+			" FROM SnomedGroup sg " +
+			" WHERE sg.description = :description ")
+	Integer getIdByDescription(@Param("description") String description);
 
 	@Query( " SELECT NEW net.pladema.snowstorm.repository.domain.SnomedTemplateSearchVo(sg.id, sg.description, s.id, s.sctid, s.pt) " +
 			" FROM SnomedGroup sg " +
@@ -52,5 +59,16 @@ public interface SnomedGroupRepository extends JpaRepository<SnomedGroup, Intege
 											  @Param("baseGroupDescription") String baseGroupDescription,
 											  @Param("institutionId") Integer institutionId,
 											  @Param("userId") Integer userId);
+
+
+	@Transactional(readOnly = true)
+	@Query("SELECT sg " +
+			"FROM SnomedGroup sg " +
+			"WHERE sg.institutionId = :institutionId " +
+			"AND sg.groupId = :groupId " +
+			"AND sg.groupType = :groupType ")
+	Optional<SnomedGroup> findByInstitutionIdAndGroupIdAndGroupType(@Param("institutionId") Integer institutionId,
+																	@Param("groupId") Integer groupId,
+																	@Param("groupType") Short groupType);
 
 }

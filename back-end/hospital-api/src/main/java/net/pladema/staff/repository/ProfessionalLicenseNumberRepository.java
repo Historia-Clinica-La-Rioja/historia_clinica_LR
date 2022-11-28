@@ -26,6 +26,7 @@ public interface ProfessionalLicenseNumberRepository extends JpaRepository<Profe
 			"WHERE pln.professionalProfessionId IS NULL " +
 			"AND pln.healthcareProfessionalSpecialtyId IS NOT NULL ")
 	List<ProfessionalLicenseNumber> findAllHealthProfessionalSpecialtyLicenseNumbers();
+
 	@Transactional(readOnly = true)
 	@Query(value = "SELECT (CASE WHEN COUNT(pln.id) = 1 THEN TRUE ELSE FALSE END)  " +
 			"FROM ProfessionalLicenseNumber pln " +
@@ -43,4 +44,19 @@ public interface ProfessionalLicenseNumberRepository extends JpaRepository<Profe
 			"AND pln.type =  :type ")
 	boolean existsProfessionalSpecialtyLicense(@Param("healthcareProfessionalSpecialtyId") Integer healthcareProfessionalSpecialtyId,
 									  @Param("type") ELicenseNumberTypeBo type);
+
+	@Transactional(readOnly = true)
+	@Query(value = "SELECT pln " +
+			"FROM ProfessionalLicenseNumber pln " +
+			"WHERE pln.professionalProfessionId IN " +
+			"(SELECT pp.id FROM ProfessionalProfessions pp " +
+			"WHERE pp.healthcareProfessionalId = :healthcareProfessionalId " +
+			"AND pp.deleteable.deleted = false OR pp.deleteable.deleted IS NULL) " +
+			"OR pln.healthcareProfessionalSpecialtyId IN " +
+			"(SELECT hps.id FROM HealthcareProfessionalSpecialty hps " +
+			"JOIN ProfessionalProfessions pp ON (pp.id = hps.professionalProfessionId) " +
+			"WHERE pp.healthcareProfessionalId = :healthcareProfessionalId " +
+			"AND hps.deleteable.deleted = false OR hps.deleteable.deleted IS NULL) ")
+	List<ProfessionalLicenseNumber> findByHealthcareProfessionalId(@Param("healthcareProfessionalId") Integer healthcareProfessionalId);
+
 }

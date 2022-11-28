@@ -7,14 +7,16 @@ import { ChartDataSets, ChartOptions } from 'chart.js';
 import { Label } from 'ng2-charts';
 import { getDisplayedColumns, flattenColumns } from './utils';
 import * as moment from "moment";
+import { CSVFileDownloadService } from '@extensions/services/csvfile-download.service';
 
 const formatColumnDate = (tableData: any[], column): any[] => {
 	const dateFormatter = (x) => !x ? x : moment(x).format('DD/MM/YYYY');
 	return tableData.map(row => {
 		return {
-		...row,
-		[column]: dateFormatter(row[column]),
-	}});
+			...row,
+			[column]: dateFormatter(row[column]),
+		}
+	});
 };
 
 @Component({
@@ -47,6 +49,8 @@ export class QueryRendererComponent {
 	@Input('defaultColor')
 	defaultColor?: string;
 
+	@Input() listOnTab: string = null;
+
 	chartType: any = null;
 	isQueryPresent = false;
 	error: string | null = null;
@@ -70,7 +74,10 @@ export class QueryRendererComponent {
 	numericValues: number[] = [];
 	loading = false;
 
-	constructor(private cubejsClient: CubejsClient) {
+	constructor(
+		private cubejsClient: CubejsClient,
+		private fileDownloadService: CSVFileDownloadService
+	) {
 	}
 
 	ngOnInit() {
@@ -108,7 +115,7 @@ export class QueryRendererComponent {
 				ResultSet,
 				any,
 				TChartType
-				]) => {
+			]) => {
 				this.chartType = chartType;
 				this.isQueryPresent = isQueryPresent;
 
@@ -116,8 +123,8 @@ export class QueryRendererComponent {
 					this.loading = false;
 				}
 
-				const {onQueryLoad} =
-				window.parent.window['__cubejsPlayground'] || {};
+				const { onQueryLoad } =
+					window.parent.window['__cubejsPlayground'] || {};
 				if (typeof onQueryLoad === 'function') {
 					onQueryLoad({
 						resultSet,
@@ -146,13 +153,13 @@ export class QueryRendererComponent {
 			if (item.title == '  Promedio Sem.') {
 				return {
 					label: item.title,
-					data: item.series.map(({value}) => value),
+					data: item.series.map(({ value }) => value),
 					type: 'line',
 				};
 			} else {
 				return {
 					label: item.title,
-					data: item.series.map(({value}) => value * (this.reverse ? -1 : 1)),
+					data: item.series.map(({ value }) => value * (this.reverse ? -1 : 1)),
 					stack: 'a',
 				};
 			}
@@ -169,7 +176,7 @@ export class QueryRendererComponent {
 	}
 
 	formatDate(resultSet) {
-		const dateFormatter = ({x}) => moment(x).format(this.dateFormat);
+		const dateFormatter = ({ x }) => moment(x).format(this.dateFormat);
 		this.chartLabels = resultSet.chartPivot().map(dateFormatter);
 	}
 
@@ -183,6 +190,9 @@ export class QueryRendererComponent {
 			resultSet.tableColumns(pivotConfig)
 		);
 		this.columnTitles = flattenColumns(resultSet.tableColumns(pivotConfig));
+		if (this.listOnTab) {
+			this.fileDownloadService.addTableData(this.listOnTab, this.columnTitles, this.tableData);
+		}
 	}
 
 	updateNumericData(resultSet) {

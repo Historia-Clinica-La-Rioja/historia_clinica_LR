@@ -3,6 +3,10 @@ package net.pladema.staff.controller.mapper;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import net.pladema.staff.controller.dto.HealthcareProfessionalCompleteDto;
+
+import net.pladema.staff.service.domain.HealthcareProfessionalCompleteBo;
+
 import org.mapstruct.IterableMapping;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
@@ -32,6 +36,9 @@ public interface HealthcareProfessionalMapper {
 	@Mapping(target = "person", source = "person")
 	HealthcareProfessionalDto fromHealthcarePersonBo(HealthcarePersonBo healthcarePerson);
 
+	@Named("fromHealthcareProfessionalCompleteDto")
+	HealthcareProfessionalCompleteBo fromHealthcareProfessionalCompleteDto(HealthcareProfessionalCompleteDto healthcareProfessionalCompleteDto);
+
 	@Named("fromHealthcarePersonList")
 	@IterableMapping(qualifiedByName = "fromHealthcarePersonBo")
 	List<HealthcareProfessionalDto> fromHealthcarePersonList(List<HealthcarePersonBo> healthcarePersonList);
@@ -48,13 +55,6 @@ public interface HealthcareProfessionalMapper {
 	@Mapping(target = "person.lastName", source = "lastName")
 	HealthcareProfessionalDto fromHealthcareProfessionalBo(HealthcareProfessionalBo healthcareProfessionalBo);
 
-
-	@Name("fromListProfessionalCompleteBo")
-	default List<ProfessionalCompleteDto> fromListProfessionalCompleteBo(List<ProfessionalCompleteBo> professionalCompleteBos) {
-		return professionalCompleteBos.stream()
-				.map(this::fromProfessionalCompleteBo)
-				.collect(Collectors.toList());
-	}
 	@Name("fromProfessionalCompleteBo")
 	default ProfessionalCompleteDto fromProfessionalCompleteBo(ProfessionalCompleteBo professionalCompleteBo) {
 		return new ProfessionalCompleteDto(professionalCompleteBo.getId(), professionalCompleteBo.getPersonId(), professionalCompleteBo.getFirstName(),

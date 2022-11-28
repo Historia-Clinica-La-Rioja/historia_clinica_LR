@@ -38,7 +38,7 @@
 						<mat-form-field appearance="outline">
 							<input id="identificationNumber"
 								   formControlName="identificationNumber"
-								   placeholder="Sin puntos"
+								   placeholder= "{{'pacientes.form.NO_INFO' | translate}}"
 								   matInput>
 							<mat-error *ngIf="formSearchSubmitted && hasError(formSearch, 'required', 'identificationNumber')">
 								<span [translate]="'pacientes.form.REQUIRED'"></span>
@@ -152,7 +152,15 @@
 		<section>
 			<h2 class="mat-body-2" [translate]="'pacientes.search.TITLE'"></h2>
 			<h3 class="mat-body-2" [translate]="'Se encontraron posibles coincidencias.'"></h3>
-			<app-table [model]="matchingPatient" [mainStyle]="'primary'"></app-table>
+
+		<div *ngIf="!ffOfCardsIsOn else patientCard">
+			<app-table id="resultTable" [model]="matchingPatient"  *ngIf="matchingPatient?.data.length > 0 else noInfo"></app-table>
+		</div>
+
+		<ng-template #patientCard>
+			<app-card-patient [patientData]="patientData" *ngIf="patientData?.length > 0 else noInfo"></app-card-patient>
+		</ng-template>
+
 			<div class="new-patient-button" align="end">
 				<button *appHasRole="['ADMINISTRATIVO','ADMINISTRADOR_INSTITUCIONAL_BACKOFFICE']" mat-raised-button id="new_patient_button" color="primary" (click)="goToNewPatient()">
 					<span [translate]="'pacientes.search.NEW_PATIENT'"></span>
@@ -161,3 +169,7 @@
 		</section>
 	</div>
 </app-content>
+
+<ng-template #noInfo>
+	<app-no-data></app-no-data>
+</ng-template>

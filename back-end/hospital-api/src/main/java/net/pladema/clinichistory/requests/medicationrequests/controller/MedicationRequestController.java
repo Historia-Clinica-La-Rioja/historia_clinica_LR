@@ -6,10 +6,13 @@ import java.time.format.DateTimeFormatter;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 
-import javax.transaction.Transactional;
 import javax.validation.Valid;
+
+import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.generateFile.DocumentAuthorFinder;
+import ar.lamansys.sgh.shared.infrastructure.input.service.staff.ProfessionalCompleteDto;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -91,7 +94,10 @@ public class MedicationRequestController {
 
 	private final FeatureFlagsService featureFlagsService;
 
-    public MedicationRequestController(CreateMedicationRequestService createMedicationRequestService,
+	private final Function<Long, ProfessionalCompleteDto> authorFromDocumentFunction;
+
+
+	public MedicationRequestController(CreateMedicationRequestService createMedicationRequestService,
 									   HealthcareProfessionalExternalService healthcareProfessionalExternalService,
 									   CreateMedicationRequestMapper createMedicationRequestMapper,
 									   ListMedicationInfoService listMedicationInfoService,
@@ -101,7 +107,8 @@ public class MedicationRequestController {
 									   GetMedicationRequestInfoService getMedicationRequestInfoService,
 									   PatientExternalMedicalCoverageService patientExternalMedicalCoverageService,
 									   PdfService pdfService,
-									   FeatureFlagsService featureFlagsService) {
+									   FeatureFlagsService featureFlagsService,
+									   DocumentAuthorFinder documentAuthorFinder) {
         this.createMedicationRequestService = createMedicationRequestService;
         this.healthcareProfessionalExternalService = healthcareProfessionalExternalService;
         this.createMedicationRequestMapper = createMedicationRequestMapper;
@@ -113,12 +120,12 @@ public class MedicationRequestController {
         this.patientExternalMedicalCoverageService = patientExternalMedicalCoverageService;
         this.pdfService = pdfService;
 		this.featureFlagsService = featureFlagsService;
+		this.authorFromDocumentFunction = (Long documentId) -> documentAuthorFinder.getAuthor(documentId);
 	}
 
 
     @PostMapping
     @ResponseStatus(code = HttpStatus.CREATED)
-    @Transactional
     @PreAuthorize("hasPermission(#institutionId, 'ESPECIALISTA_MEDICO, ESPECIALISTA_EN_ODONTOLOGIA')")
     public @ResponseBody
     Integer create(@PathVariable(name = "institutionId") Integer institutionId,
@@ -139,7 +146,6 @@ public class MedicationRequestController {
     @PutMapping(value = "/suspend")
     @ResponseStatus(code = HttpStatus.OK)
     @PreAuthorize("hasPermission(#institutionId, 'ESPECIALISTA_MEDICO, ESPECIALISTA_EN_ODONTOLOGIA')")
-    @Transactional
     public void suspendMedication(@PathVariable(name = "institutionId") Integer institutionId,
                                   @PathVariable(name = "patientId") Integer patientId,
                                   @RequestBody ChangeStateMedicationRequestDto changeStateRequest) {
@@ -154,7 +160,6 @@ public class MedicationRequestController {
     @PutMapping(value = "/finalize")
     @ResponseStatus(code = HttpStatus.OK)
     @PreAuthorize("hasPermission(#institutionId, 'ESPECIALISTA_MEDICO, ESPECIALISTA_EN_ODONTOLOGIA')")
-    @Transactional
     public void finalizeMedication(@PathVariable(name = "institutionId") Integer institutionId,
                         @PathVariable(name = "patientId") Integer patientId,
                         @RequestBody ChangeStateMedicationRequestDto changeStateRequest) {
@@ -168,7 +173,6 @@ public class MedicationRequestController {
     @PutMapping(value = "/reactivate")
     @ResponseStatus(code = HttpStatus.OK)
     @PreAuthorize("hasPermission(#institutionId, 'ESPECIALISTA_MEDICO, ESPECIALISTA_EN_ODONTOLOGIA')")
-    @Transactional
     public void reactivateMedication(@PathVariable(name = "institutionId") Integer institutionId,
                                      @PathVariable(name = "patientId") Integer patientId,
                                      @RequestBody ChangeStateMedicationRequestDto changeStateRequest) {
@@ -209,9 +213,8 @@ public class MedicationRequestController {
         LOG.debug("medicationRequestList -> institutionId {}, patientId {}, medicationRequestId {}", institutionId, patientId, medicationRequestId);
         var medicationRequestBo = getMedicationRequestInfoService.execute(medicationRequestId);
         var patientDto = patientExternalService.getBasicDataFromPatient(patientId);
-        var professionalDto = healthcareProfessionalExternalService.findFromAllProfessionalsById(medicationRequestBo.getDoctorId());
         var patientCoverageDto = patientExternalMedicalCoverageService.getCoverage(medicationRequestBo.getMedicalCoverageId());
-        var context = createContext(medicationRequestBo, patientDto, professionalDto, patientCoverageDto);
+        var context = createContext(medicationRequestBo, patientDto, patientCoverageDto);
 
         String template = "recipe_order_table";
 
@@ -226,16 +229,15 @@ public class MedicationRequestController {
 
     private Map<String, Object> createContext(MedicationRequestBo medicationRequestBo,
                                               BasicPatientDto patientDto,
-                                              ProfessionalDto professionalDto,
                                               PatientMedicalCoverageDto patientCoverageDto){
         LOG.debug("Input parameters -> medicationRequestBo {}, patientDto {}, professionalDto {}, patientCoverageDto {}",
-                medicationRequestBo, patientDto, professionalDto, patientCoverageDto);
+                medicationRequestBo, patientDto, patientCoverageDto);
         Map<String, Object> ctx = new HashMap<>();
         ctx.put("recipe", true);
         ctx.put("order", false);
         ctx.put("request", medicationRequestBo);
         ctx.put("patient", patientDto);
-        ctx.put("professional", professionalDto);
+		ctx.put("professional", authorFromDocumentFunction.apply(medicationRequestBo.getId()));
         ctx.put("patientCoverage", patientCoverageDto);
         var date = medicationRequestBo.getRequestDate().format(DateTimeFormatter.ofPattern("dd-MM-yyyy"));
 		ctx.put("nameSelfDeterminationFF", featureFlagsService.isOn(AppFeature.HABILITAR_DATOS_AUTOPERCIBIDOS));

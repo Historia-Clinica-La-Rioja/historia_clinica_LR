@@ -2,8 +2,8 @@
 	fxLayout.xs="column" fxLayoutAlign.xs="space-between center">
 	<mat-form-field fxFlex.gt-xs="35%" appearance="outline">
 		<mat-label [translate]="'turnos.home.SELECT_AGENDA'"></mat-label>
-		<mat-select [(value)]="agendaSelected">
-			<mat-optgroup *ngIf="activeAgendas?.length">
+		<mat-select id="agenda-select" [(value)]="agendaSelected">
+			<mat-optgroup id="active-agendas" *ngIf="activeAgendas?.length">
 				<mat-label><strong>{{ 'turnos.home.ACTIVES_AGENDAS_LABEL' | translate }}</strong></mat-label>
 				<mat-option *ngFor="let agenda of activeAgendas" [value]="agenda"
 					(onSelectionChange)="changeAgendaSelected($event, agenda)">

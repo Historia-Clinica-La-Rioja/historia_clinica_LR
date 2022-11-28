@@ -57,7 +57,7 @@ public class DiaryProfessionalIdValidator implements ConstraintValidator<ValidDi
 
             if (hasProfessionalRole.apply(institutionId)) {
                 Integer professionalId = healthcareProfessionalExternalService.getProfessionalId(UserInfo.getCurrentAuditor());
-				List<Integer> associatedHealthcareProfessionals =  diaryAssociatedProfessionalService.getAllAssociatedWithProfessionalsByHealthcareProfessionalId(professionalId);
+				List<Integer> associatedHealthcareProfessionals =  diaryAssociatedProfessionalService.getAllAssociatedWithProfessionalsByHealthcareProfessionalId(institutionId, professionalId);
                 valid = professionalId.equals(healthcareProfessionalId) || associatedHealthcareProfessionals.contains(healthcareProfessionalId);
             }
         }

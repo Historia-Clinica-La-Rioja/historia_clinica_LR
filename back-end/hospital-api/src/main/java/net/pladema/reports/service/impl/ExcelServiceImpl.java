@@ -98,12 +98,12 @@ public class ExcelServiceImpl implements ExcelService {
 		data.add(new CellContent(nRow, 3, 2, 16,
 				"Detalle nominal de consultorios externos", titleStyle));
 		data.add(new CellContent(nRow, 19, 1, 3, "1. Hoja N°", fieldStyle));
-		data.add(new CellContent(nRow, 22, 1, 9, "", basicStyle));
+		data.add(new CellContent(nRow, 22, 1, 10, "", basicStyle));
 
 		nRow++;
 		data.add(new CellContent(nRow, 0, 1, 2, "", basicStyle));
 		data.add(new CellContent(nRow, 19, 1, 3, "", basicStyle));
-		data.add(new CellContent(nRow, 22, 1, 9, "", basicStyle));
+		data.add(new CellContent(nRow, 22, 1, 10, "", basicStyle));
 
 		nRow++;
 		data.add(new CellContent(nRow, 0, 1, 2, "2. ESTABLECIMIENTO", fieldStyle));
@@ -112,7 +112,7 @@ public class ExcelServiceImpl implements ExcelService {
 		data.add(new CellContent(nRow, 17, 1, 1, "", basicStyle));
 		data.add(new CellContent(nRow, 18, 1, 1, "4. AÑO", fieldStyle));
 		data.add(new CellContent(nRow, 19, 1, 3, "", basicStyle));
-		data.add(new CellContent(nRow, 22, 1, 9, "", basicStyle));
+		data.add(new CellContent(nRow, 22, 1, 10, "", basicStyle));
 
 		nRow++;
 		data.add(new CellContent(nRow, 0, 1, 2, "5. PARTIDO", fieldStyle));
@@ -130,6 +130,7 @@ public class ExcelServiceImpl implements ExcelService {
 		data.add(new CellContent(nRow, 28, 1, 1, "", basicStyle));
 		data.add(new CellContent(nRow, 29, 1, 1, "", basicStyle));
 		data.add(new CellContent(nRow, 30, 1, 1, "", basicStyle));
+		data.add(new CellContent(nRow, 31, 1, 1, "", basicStyle));
 
 		nRow++;
 		int column = 0;
@@ -270,6 +271,9 @@ public class ExcelServiceImpl implements ExcelService {
 			ICell cell26 = row.createCell(rowNumber.getAndIncrement());
 			cell26.setCellValue(content.getGlycosylatedHemoglobin());
 			cell26.setCellStyle(style);
+			ICell cell32 = row.createCell(rowNumber.getAndIncrement());
+			cell32.setCellValue(content.getBloodGlucose());
+			cell32.setCellStyle(style);
 			ICell cell27 = row.createCell(rowNumber.getAndIncrement());
 			cell27.setCellValue(content.getHeadCircunference());
 			cell27.setCellStyle(style);

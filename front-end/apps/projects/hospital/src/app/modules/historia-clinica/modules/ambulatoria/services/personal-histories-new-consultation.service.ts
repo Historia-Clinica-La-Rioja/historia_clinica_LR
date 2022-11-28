@@ -31,7 +31,7 @@ export class PersonalHistoriesNewConsultationService {
 
 		this.form = this.formBuilder.group({
 			snomed: [null, Validators.required],
-			fecha: [null, Validators.required]
+			fecha: [null]
 		});
 
 		this.tableColumnConfig = [
@@ -45,12 +45,12 @@ export class PersonalHistoriesNewConsultationService {
 				def: 'date',
 				header: 'ambulatoria.paciente.nueva-consulta.antecedentes-personales.table.columns.FECHA',
 				template: CellTemplates.TEXT,
-				text: (row) => momentFormat(row.fecha, DateFormat.VIEW_DATE)
+				text: (row) =>row.fecha ?  momentFormat(row.fecha, DateFormat.VIEW_DATE) : null
 			},
 			{
 				def: 'delete',
 				template: CellTemplates.REMOVE_BUTTON,
-				action: (rowIndex) => this.removeAntecedente(rowIndex)
+				action: (rowIndex) => this.remove(rowIndex)
 			}
 		]
 
@@ -61,7 +61,7 @@ export class PersonalHistoriesNewConsultationService {
 		return this.tableColumnConfig;
 	}
 
-	getAntecedentesPersonales(): AntecedentePersonal[] {
+	getAntecedentes(): AntecedentePersonal[] {
 		return this.data;
 	}
 
@@ -90,7 +90,7 @@ export class PersonalHistoriesNewConsultationService {
 		return data.snomed.sctid === data1.snomed.sctid;
 	}
 
-	removeAntecedente(index: number): void {
+	remove(index: number): void {
 		this.data = removeFrom<AntecedentePersonal>(this.data, index);
 	}
 

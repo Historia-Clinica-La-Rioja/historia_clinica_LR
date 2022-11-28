@@ -29,4 +29,8 @@ public class OutpatientSummaryCounterReferenceDto {
 
     private List<CounterReferenceSummaryProcedureDto> procedures;
 
+	private String institution;
+
+	private String closureType;
+
 }
