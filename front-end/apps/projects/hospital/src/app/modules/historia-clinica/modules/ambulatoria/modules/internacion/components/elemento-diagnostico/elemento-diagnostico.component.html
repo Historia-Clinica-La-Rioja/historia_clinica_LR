@@ -7,10 +7,13 @@
 	<span *ngIf="diagnosis.presumptive else confirmedDiagnosis" [translate]="'internaciones.anamnesis.diagnosticos.PRESUMPTIVE'"></span>
 	<ng-template #confirmedDiagnosis>
 		<span *ngIf="diagnosis.verificationId == CONFIRMED else discardedDiagnosis" [translate]="'internaciones.anamnesis.diagnosticos.CONFIRMED'"></span>
-	</ng-template>	
+	</ng-template>
 	<button mat-icon-button color="primary" (click)="openDiagnosisEditionDialog()" [disabled]="isMain">
         <mat-icon>edit</mat-icon>
-      </button>
+    </button>
+	<button mat-icon-button color="warn" (click)="remove()">
+        <mat-icon>delete</mat-icon>
+    </button>
 </div>
 
 <ng-template #discardedDiagnosis>

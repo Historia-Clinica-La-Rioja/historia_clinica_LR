@@ -27,7 +27,7 @@
 			</div>
 		</mat-card-subtitle>
 		<div *ngFor="let diagnosis of diagnosticos">
-			<app-elemento-diagnostico [diagnosis]="diagnosis" [isMain]="false"></app-elemento-diagnostico>
+			<app-elemento-diagnostico [diagnosis]="diagnosis" [isMain]="false" (removeDiagnosis)="removeDiagnosis($event)"></app-elemento-diagnostico>
 			<hr *ngIf="diagnosticos.length - 1 != diagnosticos.indexOf(diagnosis)">
 		</div>
 		<br>

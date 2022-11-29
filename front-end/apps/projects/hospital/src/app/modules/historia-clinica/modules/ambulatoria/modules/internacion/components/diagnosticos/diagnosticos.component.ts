@@ -91,4 +91,10 @@ export class DiagnosticosComponent {
 		});
 	}
 
+	removeDiagnosis(event:any){
+		const index =this.diagnosticos.indexOf(event);
+		if(index !== -1){
+			this.diagnosticos.splice(index,1);
+		}
+	}
 }
