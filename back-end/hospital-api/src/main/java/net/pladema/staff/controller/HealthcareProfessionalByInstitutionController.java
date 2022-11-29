@@ -1,6 +1,7 @@
 package net.pladema.staff.controller;
 
 import java.util.List;
+import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
@@ -93,11 +94,12 @@ public class HealthcareProfessionalByInstitutionController {
 	@PreAuthorize("hasPermission(#institutionId, 'ADMINISTRATIVO, ADMINISTRADOR_AGENDA, ESPECIALISTA_MEDICO, PROFESIONAL_DE_SALUD, ESPECIALISTA_EN_ODONTOLOGIA, ENFERMERO, ADMINISTRADOR_INSTITUCIONAL_BACKOFFICE, PERSONAL_DE_ESTADISTICA')")
 	public ResponseEntity<List<ProfessionalDto>> getAllByDiaryAndInstitution(@PathVariable(name = "institutionId") Integer institutionId) {
 		LOG.debug("Input parameters -> institutionId {}", institutionId);
-		boolean isAdministrativeRole = loggedUserExternalService.hasAnyRoleInstitution(institutionId,
-				ERole.ADMINISTRATIVO, ERole.ADMINISTRADOR_AGENDA, ERole.ADMINISTRADOR_INSTITUCIONAL_BACKOFFICE, ERole.PERSONAL_DE_ESTADISTICA);
+		Function<Integer, Boolean> isAdministrativeRole = loggedUserExternalService.hasAnyRoleInstitution(
+				ERole.ADMINISTRATIVO, ERole.ADMINISTRADOR_AGENDA
+		);
 		List<HealthcareProfessionalBo> healthcareProfessionals = healthcareProfessionalService.getAllByInstitution(institutionId);
 		Integer healthcareProfessionalId = healthcareProfessionalService.getProfessionalId(UserInfo.getCurrentAuditor());
-		if (!isAdministrativeRole) {
+		if (!isAdministrativeRole.apply(institutionId)) {
 			List<Integer> associatedHealthcareProfessionals = diaryAssociatedProfessionalService.getAllAssociatedWithProfessionalsByHealthcareProfessionalId(institutionId, healthcareProfessionalId);
 			healthcareProfessionals = healthcareProfessionals.stream().filter(healthcareProfessional ->
 					healthcareProfessional.getId().equals(healthcareProfessionalId) || associatedHealthcareProfessionals.contains(healthcareProfessional.getId())
