@@ -22,6 +22,8 @@ import net.pladema.medicalconsultation.diary.service.domain.DiaryBo;
 import net.pladema.medicalconsultation.diary.service.domain.DiaryOpeningHoursBo;
 import net.pladema.medicalconsultation.diary.service.domain.OpeningHoursBo;
 import net.pladema.medicalconsultation.diary.service.domain.OverturnsLimitException;
+import net.pladema.medicalconsultation.diary.service.exception.DiaryEnumException;
+import net.pladema.medicalconsultation.diary.service.exception.DiaryException;
 import net.pladema.permissions.controller.external.LoggedUserExternalService;
 import net.pladema.permissions.repository.enums.ERole;
 import net.pladema.medicalconsultation.diary.service.exception.DiaryNotFoundEnumException;
@@ -81,8 +83,12 @@ public class DiaryServiceImpl implements DiaryService {
 	private final DateTimeProvider dateTimeProvider;
 
 	@Override
-	public Integer addDiary(DiaryBo diaryToSave) {
+	public Integer addDiary(DiaryBo diaryToSave) throws DiaryException {
 		LOG.debug("Input parameters -> diaryToSave {}", diaryToSave);
+
+		if(diaryToSave.getProtectedAppointmentsPercentage() > 0 && diaryToSave.getCareLines().isEmpty()) {
+			throw new DiaryException(DiaryEnumException.PROTECTED_APPOINTMENTS_PERCENTAGE_WITHOUT_CARELINES, "No se puede ingresar un porcentaje de turnos protegidos mayor a cero sin asociar lineas de cuidado a la agenda");
+		}
 
 		Diary diary = createDiaryInstance(diaryToSave);
 		Integer diaryId = persistDiary(diaryToSave, diary);
@@ -139,8 +145,13 @@ public class DiaryServiceImpl implements DiaryService {
 	}
 
 	@Override
-	public Integer updateDiary(DiaryBo diaryToUpdate) {
+	public Integer updateDiary(DiaryBo diaryToUpdate) throws DiaryException {
 		LOG.debug("Input parameters -> diaryToUpdate {}", diaryToUpdate);
+
+		if(diaryToUpdate.getProtectedAppointmentsPercentage() > 0 && diaryToUpdate.getCareLines().isEmpty()) {
+			throw new DiaryException(DiaryEnumException.PROTECTED_APPOINTMENTS_PERCENTAGE_WITHOUT_CARELINES, "No se puede ingresar un porcentaje de turnos protegidos mayor a cero sin asociar lineas de cuidado a la agenda");
+		}
+
 		return diaryRepository.findById(diaryToUpdate.getId()).map(savedDiary -> {
 			HashMap<DiaryOpeningHoursBo, List<AppointmentBo>> apmtsByNewDOH = new HashMap<>();
 			diaryToUpdate.getDiaryOpeningHours().forEach( doh -> {

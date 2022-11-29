@@ -1,6 +1,7 @@
 package net.pladema.medicalconsultation.diary.controller.exceptions;
 
 import ar.lamansys.sgx.shared.exceptions.dto.ApiErrorMessageDto;
+import net.pladema.medicalconsultation.diary.service.exception.DiaryException;
 import net.pladema.medicalconsultation.diary.service.exception.DiaryOpeningHoursException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -26,6 +27,12 @@ public class DiaryExceptionHandler {
 		return new ApiErrorMessageDto(null, ex.getMessage());
 	}
 
+	@ResponseStatus(HttpStatus.BAD_REQUEST)
+	@ExceptionHandler({ DiaryException.class })
+	protected ApiErrorMessageDto handleDiaryException(DiaryException ex, Locale locale) {
+		LOG.debug("DiaryException exception -> {}", ex.getMessage());
+		return new ApiErrorMessageDto(null, ex.getMessage());
+	}
 
 }
 
