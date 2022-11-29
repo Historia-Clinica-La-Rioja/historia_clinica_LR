@@ -128,7 +128,7 @@ public class AppointmentDailyAmountServiceImpl implements AppointmentDailyAmount
         if (dailyAmountBo.getSpontaneous() == null)
             dailyAmountBo.setSpontaneous(0);
         if (!appointmentsForDate.isEmpty()) {
-            dailyAmountBo.setSpontaneous(this.getAmountBy(oh, appointmentsForDate));
+            dailyAmountBo.setSpontaneous(dailyAmountBo.getSpontaneous() + this.getAmountBy(oh, appointmentsForDate));
         }
     }
 
