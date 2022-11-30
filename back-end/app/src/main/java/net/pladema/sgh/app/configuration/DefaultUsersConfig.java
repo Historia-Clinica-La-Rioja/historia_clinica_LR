@@ -12,6 +12,7 @@ import org.springframework.context.annotation.Profile;
 
 import ar.lamansys.sgx.auth.user.infrastructure.input.service.UserExternalService;
 import ar.lamansys.sgx.auth.user.infrastructure.input.service.dto.UserInfoDto;
+import ar.lamansys.sgx.shared.admin.AdminConfiguration;
 import lombok.extern.slf4j.Slf4j;
 import net.pladema.permissions.repository.entity.UserRolePK;
 import net.pladema.permissions.repository.enums.ERole;
@@ -46,7 +47,7 @@ public class DefaultUsersConfig {
 	public void init() {
 		Map<String, DefaultUserInfoBo> defaultUsers = new HashMap<>();
 
-		defaultUsers.put("admin@example.com", new DefaultUserInfoBo(
+		defaultUsers.put(AdminConfiguration.ADMIN_USERNAME_DEFAULT, new DefaultUserInfoBo(
 				adminPassword,
 				List.of(
 						new DefaultUserRolBo(ERole.ROOT, UserRolePK.UNDEFINED_ID.intValue())
