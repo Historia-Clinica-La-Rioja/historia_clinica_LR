@@ -78,12 +78,8 @@ export class AmbulatoriaSummaryFacadeService {
 		if (fieldsToUpdate.anthropometricData) {
 			this.hceGeneralStateService.getLast2AnthropometricData(this.idPaciente).subscribe(
 				(aD: HCEAnthropometricDataDto[]) => {
-					if (aD?.length > 0) {
-						if (aD[0]?.bloodType?.value) {
-							this.bloodTypeSubject.next(aD[0].bloodType.value);
-						}
-						this.anthropometricDataListSubject.next(aD);
-					}
+					this.bloodTypeSubject.next(aD[0]?.bloodType?.value);
+					this.anthropometricDataListSubject.next(aD);
 				}
 			);
 		}
