@@ -110,3 +110,27 @@ databaseChangeLog:
                 INSERT INTO modality (acronym, description) VALUES('MR', 'Resonancia Magnética');
                 INSERT INTO modality (acronym, description) VALUES('US', 'Ecografía');
 
+    - changeSet:
+        id: add-autoincremenId-user_role-table
+        author: etrapani
+        comment: add autoincrementId user role table
+        changes:
+          - addColumn:
+              tableName: user_role
+              columns:
+                - column:
+                    autoIncrement: true
+                    name: id
+                    type: bigint
+          - dropPrimaryKey:
+              tableName: user_role
+              constraintName: PK_user_role
+          - addPrimaryKey:
+              columnNames: id
+              constraintName: PK_user_role
+              tableName: user_role
+              validate: true
+          - addUniqueConstraint:
+              columnNames: role_id, user_id, institution_id
+              constraintName: UQ_role_user_institution
+              tableName: user_role

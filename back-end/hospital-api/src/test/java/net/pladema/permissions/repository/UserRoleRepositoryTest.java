@@ -1,14 +1,15 @@
 package net.pladema.permissions.repository;
 
-import net.pladema.UnitRepository;
-import net.pladema.permissions.repository.entity.UserRole;
-import net.pladema.permissions.repository.enums.ERole;
+import static net.pladema.TestUtils.assertCreateAuditableEntity;
+import static org.assertj.core.api.Assertions.assertThat;
+
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import static net.pladema.TestUtils.assertCreateAuditableEntity;
-import static org.assertj.core.api.Assertions.assertThat;
+import net.pladema.UnitRepository;
+import net.pladema.permissions.repository.entity.UserRole;
+import net.pladema.permissions.repository.enums.ERole;
 
 class UserRoleRepositoryTest extends UnitRepository {
 	private final static Integer USER_ID = 1008;
@@ -29,9 +30,12 @@ class UserRoleRepositoryTest extends UnitRepository {
 		assertThat(createdUserRole)
 			.isNotNull();
 	
-		assertThat(createdUserRole.getUserRolePK())
+		assertThat(createdUserRole.getUserId())
 			.isNotNull();
-	
+
+		assertThat(createdUserRole.getRoleId())
+				.isNotNull();
+
 		assertCreateAuditableEntity(createdUserRole);
 					
 		assertThat(createdUserRole.getRoleId())

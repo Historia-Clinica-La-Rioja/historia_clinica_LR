@@ -22,9 +22,9 @@ public interface HealthcareProfessionalRepository extends SGXAuditableEntityJPAR
 			+ " INNER JOIN Person p ON hp.personId = p.id"
 			+ " LEFT JOIN PersonExtended pe ON p.id = pe.id"
 			+ " INNER JOIN UserPerson up ON up.pk.personId = p.id"
-			+ " INNER JOIN UserRole ur ON up.pk.userId = ur.userRolePK.userId"
-			+ " WHERE ur.userRolePK.roleId = 3 " // Role 'Especialista Medico'
-			+ " AND ur.userRolePK.institutionId = :institutionId "
+			+ " INNER JOIN UserRole ur ON up.pk.userId = ur.userId"
+			+ " WHERE ur.roleId = 3 " // Role 'Especialista Medico'
+			+ " AND ur.institutionId = :institutionId "
 			+ " AND hp.deleteable.deleted = false")
 	List<HealthcarePersonBo> getAllDoctors(@Param("institutionId") Integer institutionId);
 
@@ -44,9 +44,9 @@ public interface HealthcareProfessionalRepository extends SGXAuditableEntityJPAR
 			+ " INNER JOIN Person p ON hp.personId = p.id"
 			+ " LEFT JOIN PersonExtended pe ON (p.id = pe.id)"
 			+ " INNER JOIN UserPerson up ON up.pk.personId = p.id"
-			+ " INNER JOIN UserRole ur ON up.pk.userId = ur.userRolePK.userId"
-			+ " WHERE ur.userRolePK.institutionId = :institutionId "
-			+ "	AND ur.userRolePK.roleId IN (:professionalERolIds) "
+			+ " INNER JOIN UserRole ur ON up.pk.userId = ur.userId"
+			+ " WHERE ur.institutionId = :institutionId "
+			+ "	AND ur.roleId IN (:professionalERolIds) "
 			+ " AND hp.deleteable.deleted = false "
 			+ " ORDER BY p.lastName, p.firstName")
     List<HealthcareProfessionalVo> findAllByInstitution(@Param("institutionId") Integer institutionId,
