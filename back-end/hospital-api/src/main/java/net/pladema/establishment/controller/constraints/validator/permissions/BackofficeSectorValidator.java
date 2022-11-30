@@ -74,6 +74,7 @@ public class BackofficeSectorValidator implements BackofficePermissionValidator<
 	public void assertCreate(Sector entity) {
 		assertParentSector(entity, entity.getId());
 		assertCareType(entity);
+		assertNotExists(entity);
 	}
 
 	@Override
@@ -81,6 +82,7 @@ public class BackofficeSectorValidator implements BackofficePermissionValidator<
 	public void assertUpdate(Integer id, Sector entity) {
 		assertParentSector(entity, id);
 		assertCareType(entity);
+		assertNotExists(entity);
 	}
 
 	private void assertParentSector(Sector sector, Integer id){
@@ -94,6 +96,13 @@ public class BackofficeSectorValidator implements BackofficePermissionValidator<
 				sector.getSectorOrganizationId().equals(CUIDADOS_PROGRESIVOS) &&
 				sector.getCareTypeId() == null)
 			throw new BackofficeValidationException("sector.mandatoryCareType");
+	}
+
+	private void assertNotExists(Sector sector){
+		var entity = repository.findByInstitutionIdAndDescription(sector.getInstitutionId(), sector.getDescription());
+		if (entity.isPresent() && !entity.get().getId().equals(sector.getId())){
+			throw new BackofficeValidationException("sector.institution.exists");
+		}
 	}
 
 	@Override
