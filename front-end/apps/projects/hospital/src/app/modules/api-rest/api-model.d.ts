@@ -106,6 +106,15 @@ export interface AddressDto extends Serializable {
     street: string;
 }
 
+export interface AdminUserDto {
+    enable: boolean;
+    id: number;
+    lastLogin: Date;
+    personId: number;
+    twoFactorAuthenticationEnabled: boolean;
+    username: string;
+}
+
 export interface AdministrativeDischargeDto {
     administrativeDischargeOn: DateTimeDto;
     ambulanceCompanyId: string;
@@ -3233,6 +3242,7 @@ export const enum AppFeature {
     HABILITAR_REPORTES_ESTADISTICOS = "HABILITAR_REPORTES_ESTADISTICOS",
     HABILITAR_VISUALIZACION_DE_CARDS = "HABILITAR_VISUALIZACION_DE_CARDS",
     HABILITAR_MAIL_RECUPERAR_CONTRASEÑA = "HABILITAR_MAIL_RECUPERAR_CONTRASEÑA",
+    HABILITAR_VISUALIZACION_DE_CARDS = "HABILITAR_VISUALIZACION_DE_CARDS",
 }
 
 export const enum EDocumentSearch {

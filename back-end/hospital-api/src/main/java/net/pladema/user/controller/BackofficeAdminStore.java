@@ -54,7 +54,7 @@ public class BackofficeAdminStore implements BackofficeStore<AdminUserDto, Integ
 
 	@Override
 	public Optional<AdminUserDto> findById(Integer id) {
-		return userRepository.findByUsername("admin@example.com")
+		return userRepository.findByUsername(AdminConfiguration.ADMIN_USERNAME_DEFAULT)
 				.map(userDtoMapper::toAdminUserDto);
 	}
 

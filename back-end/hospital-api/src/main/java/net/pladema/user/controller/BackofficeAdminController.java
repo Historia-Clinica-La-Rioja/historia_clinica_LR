@@ -1,20 +1,22 @@
 package net.pladema.user.controller;
 
-import net.pladema.sgx.backoffice.rest.AbstractBackofficeController;
-import net.pladema.user.controller.dto.BackofficeUserDto;
+import org.springframework.http.HttpMethod;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import net.pladema.sgx.backoffice.rest.AbstractBackofficeController;
+import net.pladema.sgx.backoffice.rest.BackofficePermissionValidatorAdapter;
+import net.pladema.user.controller.dto.AdminUserDto;
+
 @RestController
 @RequestMapping("backoffice/admin")
-public class BackofficeAdminController extends AbstractBackofficeController<BackofficeUserDto, Integer> {
+public class BackofficeAdminController extends AbstractBackofficeController<AdminUserDto, Integer> {
 	public BackofficeAdminController(
-			BackofficeUsersStore backofficeUsersStore,
-			BackofficeAuthoritiesValidator authoritiesValidator
+			BackofficeAdminStore backofficeAdminStore
 	) {
 		super(
-				backofficeUsersStore,
-				new BackofficeUserValidator(authoritiesValidator)
+				backofficeAdminStore,
+				new BackofficePermissionValidatorAdapter<>(HttpMethod.GET)
 		);
 	}
 }
