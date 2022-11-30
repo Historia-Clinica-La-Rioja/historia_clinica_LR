@@ -19,7 +19,7 @@ sql: `SELECT r.id,
         idest.name as institucion_destino,
         io2.name as institucion_turno,
         concat_ws(', ', concat_ws(' ', doct.last_name, doct.other_last_names), concat_ws(' ', doct.first_name, doct.middle_names)) AS profesional_turno,
-        concat_ws(', ', concat_ws(' ', doc.last_name, doc.other_last_names), CASE WHEN docex.name_self_determination IS NULL THEN concat_ws(' ', doc.first_name, doc.middle_names) ELSE docex.name_self_determination END) AS profesional_turno_auto_det,
+        concat_ws(', ', concat_ws(' ', doct.last_name, doct.other_last_names), CASE WHEN doctex.name_self_determination IS NULL THEN concat_ws(' ', doct.first_name, doct.middle_names) ELSE doctex.name_self_determination END) AS profesional_turno_auto_det,
         ap.date_type_id as fecha_turno,
         ap.hour as hora_turno,
         aps.description as estado_turno,
@@ -39,7 +39,7 @@ sql: `SELECT r.id,
         JOIN identification_type it ON (p.identification_type_id = it.id)
         LEFT JOIN counter_reference cr ON (r.id = cr.reference_id)
         LEFT JOIN reference_appointment ra ON (r.id = ra.reference_id)
-        LEFT JOIN appointment ap ON (ra.appointment_id = ap.id)
+        JOIN appointment ap ON (ra.appointment_id = ap.id)
         LEFT JOIN appointment_assn assn ON (assn.appointment_id = ap.id)
         LEFT JOIN diary di ON (di.id = assn.diary_id)
         LEFT JOIN doctors_office dof ON (dof.id = di.doctors_office_id)
@@ -47,9 +47,10 @@ sql: `SELECT r.id,
         LEFT JOIN healthcare_professional hpr ON (di.healthcare_professional_id = hpr.id)
         LEFT JOIN person doct ON (hp.person_id = doct.id)
         JOIN person_extended doctex ON (doctex.person_id = p.id)
-        LEFT JOIN appointment_state aps ON (ap.appointment_state_id = aps.id)
+        JOIN appointment_state aps ON (ap.appointment_state_id = aps.id)
+    WHERE (ap.appointment_state_id NOT IN (4, 6, 7, 8))
     ${SECURITY_CONTEXT.userId.unsafeValue() ? '' +  `
-    WHERE oc.institution_id IN (
+    AND (oc.institution_id IN (
       SELECT ur.institution_id 
       FROM users as u 
       JOIN user_role ur on u.id = ur.user_id 
@@ -60,7 +61,7 @@ sql: `SELECT r.id,
       FROM users as u 
       JOIN user_role ur on u.id = ur.user_id 
       WHERE ur.role_id = 5 
-      AND u.id = ${SECURITY_CONTEXT.userId.unsafeValue()})` : `WHERE r.id IS NULL`}
+      AND u.id = ${SECURITY_CONTEXT.userId.unsafeValue()}))` : `WHERE r.id IS NULL`}
 UNION ALL
     SELECT r.id,
         concat_ws(' ', it.description, p.identification_number) AS documento,
@@ -82,7 +83,7 @@ UNION ALL
         idest.name as institucion_destino,
         io2.name as institucion_turno,
         concat_ws(', ', concat_ws(' ', doct.last_name, doct.other_last_names), concat_ws(' ', doct.first_name, doct.middle_names)) AS profesional_turno,
-        concat_ws(', ', concat_ws(' ', doc.last_name, doc.other_last_names), CASE WHEN docex.name_self_determination IS NULL THEN concat_ws(' ', doc.first_name, doc.middle_names) ELSE docex.name_self_determination END) AS profesional_turno_auto_det,
+        concat_ws(', ', concat_ws(' ', doct.last_name, doct.other_last_names), CASE WHEN doctex.name_self_determination IS NULL THEN concat_ws(' ', doct.first_name, doct.middle_names) ELSE doctex.name_self_determination END) AS profesional_turno_auto_det,
         ap.date_type_id as fecha_turno,
         ap.hour as hora_turno,
         aps.description as estado_turno,
@@ -102,7 +103,7 @@ UNION ALL
         JOIN identification_type it ON (p.identification_type_id = it.id)
         LEFT JOIN counter_reference cr ON (r.id = cr.reference_id)
         LEFT JOIN reference_appointment ra ON (r.id = ra.reference_id)
-        LEFT JOIN appointment ap ON (ra.appointment_id = ap.id)
+        JOIN appointment ap ON (ra.appointment_id = ap.id)
         LEFT JOIN appointment_assn assn ON (assn.appointment_id = ap.id)
         LEFT JOIN diary di ON (di.id = assn.diary_id)
         LEFT JOIN doctors_office dof ON (dof.id = di.doctors_office_id)
@@ -111,8 +112,9 @@ UNION ALL
         LEFT JOIN person doct ON (hp.person_id = doct.id)
         JOIN person_extended doctex ON (doctex.person_id = p.id)
         LEFT JOIN appointment_state aps ON (ap.appointment_state_id = aps.id)
+    WHERE (ap.appointment_state_id NOT IN (4, 6, 7, 8))
     ${SECURITY_CONTEXT.userId.unsafeValue() ? '' +  `
-    WHERE oc.institution_id IN (
+    AND (oc.institution_id IN (
       SELECT ur.institution_id 
       FROM users as u 
       JOIN user_role ur on u.id = ur.user_id 
@@ -123,7 +125,7 @@ UNION ALL
       FROM users as u 
       JOIN user_role ur on u.id = ur.user_id 
       WHERE ur.role_id = 5 
-      AND u.id = ${SECURITY_CONTEXT.userId.unsafeValue()})` : `WHERE r.id IS NULL`}`,
+      AND u.id = ${SECURITY_CONTEXT.userId.unsafeValue()}))` : `WHERE r.id IS NULL`}`,
 
   measures: {
     cant_referencia: {
