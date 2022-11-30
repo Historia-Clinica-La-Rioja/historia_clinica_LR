@@ -25,6 +25,9 @@ import net.pladema.permissions.repository.enums.ERole;
 import net.pladema.sgx.backoffice.repository.BackofficeStore;
 import net.pladema.staff.repository.HealthcareProfessionalRepository;
 import net.pladema.staff.repository.ProfessionalProfessionRepository;
+import net.pladema.permissions.repository.UserRoleRepository;
+import net.pladema.permissions.repository.enums.ERole;
+import net.pladema.sgx.backoffice.repository.BackofficeStore;
 import net.pladema.user.controller.dto.BackofficeUserDto;
 import net.pladema.user.controller.exceptions.BackofficeUserException;
 import net.pladema.user.controller.exceptions.BackofficeUserExceptionEnum;
@@ -40,45 +43,29 @@ public class BackofficeUsersStore implements BackofficeStore<BackofficeUserDto, 
 
 	private final VHospitalUserRepository vHospitalUserRepository;
 
-	private final UserRoleRepository userRoleRepository;
-
 	private final UserDtoMapper userDtoMapper;
 
-	private final UserRoleDtoMapper userRoleDtoMapper;
-
 	private final UserPersonRepository userPersonRepository;
-
-	private final HealthcareProfessionalRepository healthcareProfessionalRepository;
-
-	private final ProfessionalProfessionRepository professionalProfessionRepository;
 
 	private final List<Integer> administratorUserIds;
 
 	private final UserExternalService userExternalService;
 
-	private static final UserRole rootRole = new UserRole(null, ERole.ROOT.getId());
-
 	@Value("${test.stress.disable.validation:false}")
 	private boolean disableValidation;
 
 	public BackofficeUsersStore(UserRepository userRepository,
-								VHospitalUserRepository vHospitalUserRepository, UserRoleRepository userRoleRepository,
+								VHospitalUserRepository vHospitalUserRepository,
+								UserRoleRepository userRoleRepository,
 								UserDtoMapper userDtoMapper,
-								UserRoleDtoMapper userRoleDtoMapper,
 								UserPersonRepository userPersonRepository,
-								HealthcareProfessionalRepository healthcareProfessionalRepository,
-								UserExternalService userExternalService,
-								ProfessionalProfessionRepository professionalProfessionRepository) {
+								UserExternalService userExternalService) {
 		this.vHospitalUserRepository = vHospitalUserRepository;
-		this.userRoleRepository = userRoleRepository;
 		this.userDtoMapper = userDtoMapper;
-		this.userRoleDtoMapper = userRoleDtoMapper;
 		this.userRepository = userRepository;
 		this.userPersonRepository = userPersonRepository;
-		this.healthcareProfessionalRepository = healthcareProfessionalRepository;
 		this.administratorUserIds = userRoleRepository.findAllByRoles(List.of(ERole.ROOT.getId()));
 		this.userExternalService = userExternalService;
-		this.professionalProfessionRepository = professionalProfessionRepository;
 	}
 
 	@Override
@@ -140,7 +127,6 @@ public class BackofficeUsersStore implements BackofficeStore<BackofficeUserDto, 
 
 	@Override
 	public BackofficeUserDto save(BackofficeUserDto dto) {
-		checkValidRoles(dto);
 		if (dto.getId() != null) {
 			return update(dto);
 		}
@@ -148,34 +134,20 @@ public class BackofficeUsersStore implements BackofficeStore<BackofficeUserDto, 
 	}
 
 	private BackofficeUserDto update(BackofficeUserDto dto) {
-		BackofficeUserDto saved = dto;
-		List<UserRole> userRoles = userRoleRepository.findByUserId(dto.getId());
-
-		if (!isRoot(userRoles)) {
-			saved = userRepository.findById(dto.getId())
-					.map(inDb -> userDtoMapper.toModel(dto, inDb))
-					.map(userRepository::save)
-					.map(u -> vHospitalUserRepository.findById(u.getId()).get())
-					.map(userDtoMapper::fromVHospitalUserToDto)
-					.orElseThrow(() -> new BackofficeUserException(BackofficeUserExceptionEnum.UNEXISTED_USER,
-							String.format("El usuario %s no existe", dto.getId())));
-		}
-
-
-		List<UserRole> rolesDelFront = toModel(dto.getRoles());
-		rootRole.setUserId(dto.getId());
-		if (isRoot(userRoles)) {
-			rolesDelFront.add(rootRole);
-		}
-
-		userRoleRepository.deleteAll(roleToDelete(userRoles, rolesDelFront));
-		userRoleRepository.saveAll(roleToAdd(dto.getId(), toModel(dto.getRoles()), userRoles));
-
-		return saved;
-	}
-
-	private boolean isRoot(List<UserRole> roleList) {
-		return roleList.stream().map(UserRole::getRoleId).anyMatch(ERole.ROOT.getId()::equals);
+		return userRepository.findById(dto.getId())
+				.filter(user -> {
+					if ((!user.getUsername().equals(dto.getUsername())) &&
+							userRepository.findByUsername(dto.getUsername()).isPresent()) {
+						throw new BackofficeUserException(BackofficeUserExceptionEnum.USER_ALREADY_EXISTS, "El username ya existe en el sistema");
+					}
+					return true;
+				})
+				.map(inDb -> userDtoMapper.toModel(dto, inDb))
+				.map(userRepository::save)
+				.flatMap(u -> vHospitalUserRepository.findById(u.getId()))
+				.map(userDtoMapper::fromVHospitalUserToDto)
+				.orElseThrow(() -> new BackofficeUserException(BackofficeUserExceptionEnum.UNEXISTED_USER,
+						String.format("El usuario %s no existe", dto.getId())));
 	}
 
 	private BackofficeUserDto create(BackofficeUserDto dto) {
@@ -190,45 +162,11 @@ public class BackofficeUsersStore implements BackofficeStore<BackofficeUserDto, 
 				.map(userDtoMapper::toDto)
 				.orElseThrow(() -> new BackofficeUserException(BackofficeUserExceptionEnum.UNEXISTED_USER, String.format("El usuario %s no existe", dto.getUsername())));
 
-		userRoleRepository.saveAll(roleToAdd(saved.getId(), toModel(dto.getRoles()), new ArrayList<>()));
-		if (dto.getPersonId() != null)
-			userPersonRepository.save(new UserPerson(saved.getId(), dto.getPersonId()));
 		userExternalService.enableUser(dto.getUsername());
+		userPersonRepository.save(new UserPerson(saved.getId(), dto.getPersonId()));
 		return saved;
 	}
 
-	protected List<UserRole> roleToDelete(List<UserRole> userRoles, List<UserRole> roleIds) {
-		return userRoles.stream()
-				.filter(userRole ->
-						roleIds.stream().noneMatch(userRole::equals)
-				)
-				.collect(Collectors.toList());
-	}
-
-	protected List<UserRole> roleToAdd(Integer userId, List<UserRole> newRoles, List<UserRole> userRoles) {
-		return newRoles.stream()
-				.filter(newRole ->
-						userRoles.stream().noneMatch(
-								userRole -> userRole.equals(newRole)
-						)
-				)
-				.map(ur -> createUserRole(userId,ur))
-				.collect(Collectors.toList());
-	}
-
-	private UserRole createUserRole(Integer userId, UserRole userRole) {
-		UserRole result = new UserRole(userId, userRole.getRoleId(), userRole.getInstitutionId());
-		result.setDeleted(false);
-		return result;
-	}
-
-	private List<UserRole> toModel(List<BackofficeUserRoleDto> roles) {
-		return roles
-			.stream()
-			.map(userRoleDtoMapper::toModel)
-			.collect(Collectors.toList());
-	}
-	
 	@Override
 	public void deleteById(Integer id) {
 		userRepository.changeStatusAccount(id, false);
@@ -243,47 +181,8 @@ public class BackofficeUsersStore implements BackofficeStore<BackofficeUserDto, 
 		if(userPersonRepository.existsByPersonId(userDto.getPersonId())) {
 			throw new BackofficeUserException(BackofficeUserExceptionEnum.USER_ALREADY_EXISTS, "La persona ya contiene un usuario en el sistema");
 		}
-	}
-
-	private void checkValidRoles(BackofficeUserDto dto) {
-		dto.getRoles().stream().filter(role -> !isValidRole(role, dto.getPersonId())).findAny()
-				.ifPresent(backofficeUserRoleDto -> {
-					String role = ERole.map(backofficeUserRoleDto.getRoleId()).getValue();
-					throw new BackofficeUserException(BackofficeUserExceptionEnum.PROFESSIONAL_REQUIRED,
-							String.format("El rol %s asignado requiere que el usuario sea un profesional", role));
-				});
-
-
-		if(isROOTUser(dto.getUsername()) && !hasRootRole(dto.getRoles()))
-			throw new BackofficeUserException(BackofficeUserExceptionEnum.ROOT_LOST_PERMISSION, "El admin no puede perder el rol: ROOT");
-		if(!isROOTUser(dto.getUsername()) && hasRootRole(dto.getRoles()))
-			throw new BackofficeUserException(BackofficeUserExceptionEnum.USER_INVALID_ROLE, "El usuario creado no puede tener el siguiente rol: ROOT");
-	}
-
-	private boolean isROOTUser(String username) {
-		return "admin@example.com".equals(username);
-	}
-	private boolean hasRootRole(List<BackofficeUserRoleDto> roles) {
-		return List.of(ERole.ROOT).stream().anyMatch(eRole -> existRole(eRole, roles));
-	}
-
-	private boolean existRole(ERole eRole, List<BackofficeUserRoleDto> roles) {
-		return roles.stream().anyMatch(ur -> eRole.getId().equals(ur.getRoleId()));
-	}
-
-	private boolean isValidRole(BackofficeUserRoleDto role, Integer personId) {
-		if(!isProfessional(role))
-			return true;
-		return healthcareProfessionalRepository.findProfessionalByPersonId(personId).map(hp-> professionalProfessionRepository.countActiveByHealthcareProfessionalId(hp)>0)
-                .orElse(false);
-	}
-
-	private boolean isProfessional(BackofficeUserRoleDto role) {
-		Short roleId = role.getRoleId();
-		return ERole.ENFERMERO.getId().equals(roleId) ||
-			   ERole.ESPECIALISTA_MEDICO.getId().equals(roleId) ||
-			   ERole.ENFERMERO_ADULTO_MAYOR.getId().equals(roleId) ||
-			   ERole.PROFESIONAL_DE_SALUD.getId().equals(roleId) ||
-			   ERole.ESPECIALISTA_EN_ODONTOLOGIA.getId().equals(roleId);
+		if(userRepository.findByUsername(userDto.getUsername()).isPresent()) {
+			throw new BackofficeUserException(BackofficeUserExceptionEnum.USER_ALREADY_EXISTS, "El username ya existe en el sistema");
+		}
 	}
 }

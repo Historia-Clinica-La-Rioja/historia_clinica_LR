@@ -1,35 +1,30 @@
 import React from 'react';
 import {
-    BooleanInput,
-    Edit,
-    required,
-    SimpleForm,
-    TextInput,
+    Show,
+    SimpleShowLayout,
     ReferenceField,
     EmailField,
     useTranslate
 } from 'react-admin';
 
-import CustomToolbar from '../components/CustomToolbar';
 import PersonReferenceField from '../person/PersonReferenceField';
-import Aside from './Aside'
 import SgxDateField from "../../dateComponents/sgxDateField";
 import SectionTitle from "../components/SectionTitle";
 import CreateRelatedButton from "../components/CreateRelatedButton";
 import UserRoleSection from "./UserRoleSection";
+import {TextField} from "react-admin";
+import {BooleanField} from "react-admin";
 
-const redirect = (basePath, id, data) => `/users/${data.id}/show`;
 
-const UserEdit = props => {
+
+const UserShow = props => {
     const translate = useTranslate();
     return (
-        <Edit {...props} 
-            aside={<Aside />} 
-        >
-            <SimpleForm redirect={redirect} toolbar={<CustomToolbar />}>
+        <Show {...props}>
+            <SimpleShowLayout>
                 <PersonReferenceField source="personId" />
-                <TextInput source="username" validate={[required()]}/>
-                <BooleanInput source="enable" validate={[required()]}/>
+                <TextField source="username"/>
+                <BooleanField source="enable"/>
     
                 <ReferenceField source="personId" reference="personextended" label="resources.users.fields.email" link={false}>
                     <EmailField source="email" emptyText={translate('resources.users.noEmail')} />
@@ -43,9 +38,9 @@ const UserEdit = props => {
                     label="resources.users.buttons.linkRole"
                 />
                 <UserRoleSection/>
-            </SimpleForm>
-        </Edit>
+            </SimpleShowLayout>
+        </Show>
     );
 }
 
-export default UserEdit;
+export default UserShow;

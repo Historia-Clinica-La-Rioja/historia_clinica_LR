@@ -31,6 +31,7 @@ import restClientMeasures from './rest-client-measures';
 import medicalCoverage from './medicalcoverage';
 import snomedgroups from './snomedgroups';
 import carelineproblems from './carelineproblems';
+import userroles from './userroles';
 
 
 import { ROOT, ADMINISTRADOR } from './roles';
@@ -98,6 +99,7 @@ const resources = (permissions: SGXPermissions) => [
     <Resource name="admin" {...admin(permissions)}/>,
     <Resource name="users" {...users}/>,
     <Resource name="roles" />,
+    <Resource name="userroles" {...userroles}/>,
     <Resource name="password-reset" {...passwordReset(permissions)} />,
     ...resourcesFor(permissions),
     // facilities

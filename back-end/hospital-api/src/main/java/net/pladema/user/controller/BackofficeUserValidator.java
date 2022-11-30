@@ -1,16 +1,14 @@
 package net.pladema.user.controller;
 
 
-import net.pladema.permissions.controller.dto.BackofficeUserRoleDto;
+import java.util.ArrayList;
+import java.util.List;
+
 import net.pladema.permissions.repository.enums.ERole;
 import net.pladema.sgx.backoffice.permissions.BackofficePermissionValidator;
 import net.pladema.sgx.backoffice.rest.ItemsAllowed;
 import net.pladema.sgx.exceptions.PermissionDeniedException;
 import net.pladema.user.controller.dto.BackofficeUserDto;
-
-import java.util.ArrayList;
-import java.util.List;
-import java.util.stream.Collectors;
 
 public class BackofficeUserValidator
 		implements BackofficePermissionValidator<BackofficeUserDto, Integer> {
@@ -50,14 +48,6 @@ public class BackofficeUserValidator
 			throw new PermissionDeniedException("No te podés editar a vos mismo");
 		}
 		authoritiesValidator.assertLoggedUserOutrank(userId);
-
-		authoritiesValidator.assertLoggedUserOutrank(
-				entity.getRoles().stream()
-						.map(BackofficeUserRoleDto::getRoleId)
-						.map(ERole::map)
-						.map(ERole::getValue)
-						.collect(Collectors.toList())
-		);
 	}
 
 	@Override

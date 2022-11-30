@@ -354,7 +354,8 @@ const messages = {
                 lastLogin: 'Último ingreso',
                 institutionId: 'Institución',
                 roleId: 'Rol',
-                email: "E-mail"
+                email: "E-mail",
+                roles: 'Roles'
             },
             fieldGroups: {
                 passwordResets: 'Establecer clave de acceso',
@@ -367,6 +368,9 @@ const messages = {
             },
             createRelated: 'Crear Usuario',
             noEmail: "Sin información",
+            buttons: {
+                linkRole: 'Asociar rol'
+            }
         },
         admin: {
             name: 'Admin |||| Admins',
@@ -379,6 +383,14 @@ const messages = {
                 email: "E-mail"
             },
             noEmail: "Sin información",
+        },
+        userroles: {
+            name: 'Roles de usuario |||| Roles de usuario',
+            fields: {
+                userId: 'Username',
+                roleId: 'Rol',
+                institutionId: 'Institución'
+            }
         },
         internmentepisodes: {
             name: 'Episodio de internación |||| Episodios de internación',
