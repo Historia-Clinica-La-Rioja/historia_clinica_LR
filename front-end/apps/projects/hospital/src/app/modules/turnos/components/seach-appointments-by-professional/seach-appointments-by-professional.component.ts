@@ -1,5 +1,5 @@
 import { AppointmentsFacadeService } from '@turnos/services/appointments-facade.service';
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, Input, OnDestroy, OnInit, SimpleChanges } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Observable, Subscription } from 'rxjs';
 import { map } from 'rxjs/operators';
@@ -18,6 +18,7 @@ import { AgendaSearchService } from '../../services/agenda-search.service';
 })
 export class SeachAppointmentsByProfessionalComponent implements OnInit, OnDestroy {
 
+	@Input() isVisible = false;
 	professionalsFilteredBySpecialty: ProfessionalDto[] = [];
 	professionalSelected: ProfessionalDto;
 	profesionales: ProfessionalDto[] = [];
@@ -47,9 +48,7 @@ export class SeachAppointmentsByProfessionalComponent implements OnInit, OnDestr
 	}
 
 	ngOnInit(): void {
-
 		this.route.queryParams.subscribe(qp => this.patientId = Number(qp.idPaciente));
-
 		this.healthCareProfessionalService.getAllAssociated().subscribe(doctors => {
 			this.especialidadesTypeaheadOptions$ = this.getEspecialidadesTypeaheadOptions$(doctors);
 			this.profesionales = doctors;
@@ -66,9 +65,25 @@ export class SeachAppointmentsByProfessionalComponent implements OnInit, OnDestr
 		});
 	}
 
+	ngOnChanges(changes: SimpleChanges): void {
+		if (changes['isVisible'].previousValue && !changes['isVisible'].currentValue) {
+			this.resetAtributtes();
+		}
+	}
+
+
 	ngOnDestroy() {
 		this.agendaSearchService.clearAll();
 		this.agendaFiltersSubscription?.unsubscribe();
+	}
+
+	resetAtributtes(){
+		this.idEspecialidad=undefined;
+		this.idProfesional=undefined;
+		this.setEspecialidad(null);
+		this.healthCareProfessionalService.getAllAssociated().subscribe(doctors => {
+			this.especialidadesTypeaheadOptions$ = this.getEspecialidadesTypeaheadOptions$(doctors);
+		})
 	}
 
 	private diaryNotFound() {

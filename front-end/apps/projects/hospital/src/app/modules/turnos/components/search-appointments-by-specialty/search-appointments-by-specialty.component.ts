@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Input, OnInit, SimpleChanges } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import { ClinicalSpecialtyDto, EmptyAppointmentDto, TimeDto } from '@api-rest/api-model';
@@ -16,6 +16,7 @@ import { map } from 'rxjs/operators';
 })
 export class SearchAppointmentsBySpecialtyComponent implements OnInit {
 
+	@Input() isVisible = false;
 	aliasTypeaheadOptions$: Observable<TypeaheadOption<string>[]>;
 	timesToFilter: TimeDto[];
 	initialTimes: TimeDto[];
@@ -65,6 +66,13 @@ export class SearchAppointmentsBySpecialtyComponent implements OnInit {
 		this.aliasTypeaheadOptions$ = this.getClinicalSpecialtiesTypeaheadOptions$();
 	}
 
+	ngOnChanges(changes: SimpleChanges): void {
+		if (changes['isVisible'].previousValue && !changes['isVisible'].currentValue) {
+			this.ngOnInit();
+			this.initializeTimeFilters();
+			this.resetEmptyAppointmentList(null);
+		}
+	}
 	private initializeTimeFilters() {
 		this.timesToFilter = this.generateInitialTimes();
 		this.endingTimes = this.timesToFilter.slice(8);

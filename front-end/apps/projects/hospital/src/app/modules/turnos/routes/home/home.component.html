@@ -27,11 +27,11 @@
 	<mat-tab-group (selectedTabChange)="tabChanged($event)">
 		<mat-tab label="{{ 'turnos.home.SEARCH_BY_PROFESSIONAL' | translate | uppercase }}"
 			*appHasRole="['ADMINISTRATIVO', 'ESPECIALISTA_MEDICO', 'PROFESIONAL_DE_SALUD', 'ESPECIALISTA_EN_ODONTOLOGIA', 'ADMINISTRADOR_AGENDA', 'ENFERMERO']">
-			<app-seach-appointments-by-professional></app-seach-appointments-by-professional>
+			<app-seach-appointments-by-professional [isVisible]="tabActiveIndex === 0"></app-seach-appointments-by-professional>
 		</mat-tab>
 		<mat-tab label="{{ 'turnos.home.SEARCH_BY_SPECIALTY' | translate | uppercase }}"
 			*appHasRole="['ADMINISTRATIVO']">
-			<app-search-appointments-by-specialty></app-search-appointments-by-specialty>
+			<app-search-appointments-by-specialty [isVisible]="tabActiveIndex === 1"></app-search-appointments-by-specialty>
 		</mat-tab>
 		<mat-tab label="{{ 'turnos.home.CARE_NETWORK_OFFER' | translate | uppercase }}"
 			*appHasRole="['ADMINISTRATIVO', 'ESPECIALISTA_MEDICO', 'PROFESIONAL_DE_SALUD', 'ESPECIALISTA_EN_ODONTOLOGIA']">
