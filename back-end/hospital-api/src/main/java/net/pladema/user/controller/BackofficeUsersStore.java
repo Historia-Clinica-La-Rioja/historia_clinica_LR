@@ -51,6 +51,10 @@ public class BackofficeUsersStore implements BackofficeStore<BackofficeUserDto, 
 
 	private final UserExternalService userExternalService;
 
+	private final UserRoleRepository userRoleRepository;
+
+	private final UserRoleDtoMapper userRoleDtoMapper;
+
 	@Value("${test.stress.disable.validation:false}")
 	private boolean disableValidation;
 
@@ -59,13 +63,16 @@ public class BackofficeUsersStore implements BackofficeStore<BackofficeUserDto, 
 								UserRoleRepository userRoleRepository,
 								UserDtoMapper userDtoMapper,
 								UserPersonRepository userPersonRepository,
-								UserExternalService userExternalService) {
+								UserExternalService userExternalService,
+								UserRoleDtoMapper userRoleDtoMapper) {
 		this.vHospitalUserRepository = vHospitalUserRepository;
 		this.userDtoMapper = userDtoMapper;
 		this.userRepository = userRepository;
 		this.userPersonRepository = userPersonRepository;
 		this.administratorUserIds = userRoleRepository.findAllByRoles(List.of(ERole.ROOT.getId()));
 		this.userExternalService = userExternalService;
+		this.userRoleRepository = userRoleRepository;
+		this.userRoleDtoMapper = userRoleDtoMapper;
 	}
 
 	@Override
