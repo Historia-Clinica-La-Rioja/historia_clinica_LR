@@ -2188,6 +2188,16 @@ export interface OutpatientUpdateImmunizationDto {
 export interface Overlapping<T> {
 }
 
+export interface PacServerProtocolDto extends Serializable {
+    description: string;
+    id: number;
+}
+
+export interface PacServerTypeDto extends Serializable {
+    description: string;
+    id: number;
+}
+
 export interface ParenteralPlanDto extends IndicationDto {
     dosage: NewDosageDto;
     frequency: FrequencyDto;
