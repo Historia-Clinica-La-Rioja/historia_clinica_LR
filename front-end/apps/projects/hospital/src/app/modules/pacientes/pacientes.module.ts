@@ -34,7 +34,6 @@ import { PrivateHealthInsuranceComponent } from './dialogs/private-health-insura
 import { ReportsComponent } from './dialogs/reports/reports.component';
 import { ScanPatientComponent } from './dialogs/scan-patient/scan-patient.component';
 import { MessageForAuditComponent } from './dialogs/message-for-audit/message-for-audit.component';
-import { UnmarkPatientForAuditComponent } from './dialogs/unmark-patient-for-audit/unmark-patient-for-audit.component';
 // pipes
 import { ViewNameProfessionAndSpecialtyPipe } from './pipe/view-name-profession-and-specialty.pipe';
 
@@ -71,7 +70,6 @@ import { ViewNameProfessionAndSpecialtyPipe } from './pipe/view-name-profession-
 		ScanPatientComponent,
 		ScanPatientComponent,
 		MessageForAuditComponent,
-		UnmarkPatientForAuditComponent,
 		// pipes
 		ViewNameProfessionAndSpecialtyPipe,
 	],

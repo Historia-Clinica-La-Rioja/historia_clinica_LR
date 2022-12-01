@@ -57,7 +57,7 @@ import { EditPrefessionsSpecialtiesComponent } from '@pacientes/dialogs/edit-pre
 import { Observable } from 'rxjs';
 import { EditLicenseComponent } from '@pacientes/dialogs/edit-license/edit-license.component';
 import { ProfessionalLicenseService } from '@api-rest/services/professional-license.service';
-import { dateTimeDtoToDate } from '@api-rest/mapper/date-dto.mapper';
+import { dateTimeDtotoLocalDate } from '@api-rest/mapper/date-dto.mapper';
 import { DatePipeFormat } from '@core/utils/date.utils';
 import { AuditablePatientInfo } from '../edit-patient/edit-patient.component';
 import { DatePipe } from '@angular/common';
@@ -177,7 +177,7 @@ export class ProfileComponent implements OnInit {
 				this.patientService.getPatientCompleteData<CompletePatientDto>(this.patientId)
 					.subscribe(completeData => {
 						if (completeData?.auditablePatientInfo) {
-							this.auditableFullDate = dateTimeDtoToDate(
+							this.auditableFullDate = dateTimeDtotoLocalDate(
 								{
 									date: completeData.auditablePatientInfo.createdOn.date,
 									time: completeData.auditablePatientInfo.createdOn.time

@@ -5,12 +5,6 @@
       "DESCRIPTION": "Por favor ingrese un mensaje argumentando el motivo por el cual el paciente debe auditarse",
       "MESSAGE_LABEL": "Mensaje"
     },
-    "unmark-patient-for-audit": {
-      "DESCRIPTION": "Si desmarca al paciente, se perderán los motivos por los cuales fue marcado",
-      "QUESTION": "¿Está seguro?",
-      "CANCEL": "No, cancelar",
-      "CONFIRM": "Si, desmarcar"
-    },
     "assigned-appointment": {
       "LICENSE_NUMBER_ACRONYM": "MN N°"
     },
@@ -126,6 +120,13 @@
       "MESSAGE_FOR_AUDIT": "Mensaje para auditoría",
       "EDIT_MESSAGE_FOR_AUDIT": "Editar mensaje",
       "UNMARK_PATIENT_FOR_AUDIT": "Desmarcar paciente para auditoría",
+      "A_MOMENT_AGO": "Hace un momento",
+      "unmark-patient-for-audit": {
+        "DESCRIPTION": "Si desmarca al paciente, se perderán los motivos por los cuales fue marcado",
+        "QUESTION": "¿Está seguro?",
+        "CANCEL": "No, cancelar",
+        "CONFIRM": "Si, desmarcar"
+      },
       "messages": {
         "ERROR_PATIENT": "Error al editar un paciente",
         "ERROR_PERSON": "Error al editar una persona",

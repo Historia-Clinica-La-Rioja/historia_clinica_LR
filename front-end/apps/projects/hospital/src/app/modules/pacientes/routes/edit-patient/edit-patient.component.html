@@ -45,42 +45,44 @@
 					</div>
 				</div>
 
-				<div *ngIf="!auditablePatientInfo">
-					<button mat-button type="button" id="mark_for_audit" color="primary"
-						(click)="openAuditDialog(null)">
+				<div *ngIf="!auditablePatientInfo else messageForAuditSection">
+					<button mat-button type="button" id="mark_for_audit" color="primary" (click)="openAuditDialog()">
 						<mat-icon fontSet="material-icons-outlined">sms_failed</mat-icon>
 						{{ 'pacientes.edit.MARK_FOR_AUDIT' | translate }}
 					</button>
 					<br><br>
 				</div>
 
-				<div *ngIf="auditablePatientInfo" fxLayout="column" fxLayoutGap="10px" id="message_for_audit_section">
-					<span [translate]="'pacientes.edit.MESSAGE_FOR_AUDIT'"></span>
+				<ng-template #messageForAuditSection>
+					<div fxLayout="column" fxLayoutGap="10px" id="message_for_audit_section">
+						<span [translate]="'pacientes.edit.MESSAGE_FOR_AUDIT'"></span>
 
-					<div>
-						<span id="message_for_audit"> "{{ auditablePatientInfo.message }}" </span>
-						<div class="mat-caption">
-							<span *ngIf="auditablePatientInfo.createdBy">{{ auditablePatientInfo.createdBy }} - </span>
-							<span *ngIf="auditablePatientInfo.institutionName">
-								{{ auditablePatientInfo.institutionName }} - </span>
-							<span>{{ auditablePatientInfo.createdOn }}</span>
+						<div>
+							<span id="message_for_audit"> "{{ auditablePatientInfo.message }}" </span>
+							<div class="mat-caption">
+								<span *ngIf="auditablePatientInfo.createdBy">{{ auditablePatientInfo.createdBy }} -
+								</span>
+								<span *ngIf="auditablePatientInfo.institutionName">
+									{{ auditablePatientInfo.institutionName }} - </span>
+								<span>{{ auditablePatientInfo.createdOn | translate }}</span>
+							</div>
+						</div>
+
+						<div fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="5px" fxLayout.lt-sm="column"
+							fxLayoutAlign.lt-sm="start start" fxLayoutGap.lt-sm="3px">
+							<button mat-button type="button" id="edit_message_for_audit" color="primary"
+								(click)="openAuditDialog(auditablePatientInfo.message)">
+								<mat-icon fontSet="material-icons-outlined">edit</mat-icon>
+								{{ 'pacientes.edit.EDIT_MESSAGE_FOR_AUDIT' | translate }}
+							</button>
+							<button mat-button type="button" id="unmark_patient_for_audit" color="warn"
+								(click)="openUnmarkPatientWarning()">
+								<mat-icon fontSet="material-icons-outlined">cancel</mat-icon>
+								{{ 'pacientes.edit.UNMARK_PATIENT_FOR_AUDIT' | translate }}
+							</button>
 						</div>
 					</div>
-
-					<div fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="5px" fxLayout.lt-sm="column"
-						fxLayoutAlign.lt-sm="start start" fxLayoutGap.lt-sm="3px">
-						<button mat-button type="button" id="edit_message_for_audit" color="primary"
-							(click)="openAuditDialog(auditablePatientInfo.message)">
-							<mat-icon fontSet="material-icons-outlined">edit</mat-icon>
-							{{ 'pacientes.edit.EDIT_MESSAGE_FOR_AUDIT' | translate }}
-						</button>
-						<button mat-button type="button" id="unmark_patient_for_audit" color="warn"
-							(click)="openUnmarkPatientWarning()">
-							<mat-icon fontSet="material-icons-outlined">cancel</mat-icon>
-							{{ 'pacientes.edit.UNMARK_PATIENT_FOR_AUDIT' | translate }}
-						</button>
-					</div>
-				</div>
+				</ng-template>
 
 				<div>
 					<div>
@@ -229,7 +231,7 @@
 						</mat-select>
 						<button id="clear_address_country" type="button" mat-button *ngIf="form.value.addressCountryId"
 							matSuffix color="warn" mat-icon-button
-							(click)="clear(form.controls.addressCountryId); $event.stopPropagation()">
+							(click)="form.controls.addressCountryId.reset(); $event.stopPropagation()">
 							<mat-icon>close</mat-icon>
 						</button>
 					</mat-form-field>
@@ -237,13 +239,13 @@
 					<mat-form-field appearance="outline">
 						<mat-select id="addressProvinceId" name="addressProvinceId" formControlName="addressProvinceId"
 							placeholder="{{'pacientes.form.ADDRESS_PROVINCE' | translate}}">
-							<mat-option *ngFor="let province of provinces" [value]="province.id">
+							<mat-option *ngFor="let province of provinces$ | async" [value]="province.id">
 								{{province.description}}
 							</mat-option>
 						</mat-select>
 						<button id="clear_address_province" type="button" mat-button
 							*ngIf="form.value.addressProvinceId" matSuffix color="warn" mat-icon-button
-							(click)="clear(form.controls.addressProvinceId); $event.stopPropagation()">
+							(click)="form.controls.addressProvinceId.reset(); $event.stopPropagation()">
 							<mat-icon>close</mat-icon>
 						</button>
 					</mat-form-field>
@@ -252,13 +254,13 @@
 						<mat-select id="addressDepartmentId" name="addressDepartmentId"
 							formControlName="addressDepartmentId"
 							placeholder="{{'pacientes.form.ADDRESS_DEPARTMENT' | translate}}">
-							<mat-option *ngFor="let department of departments" [value]="department.id">
+							<mat-option *ngFor="let department of departments$ | async" [value]="department.id">
 								{{department.description}}
 							</mat-option>
 						</mat-select>
 						<button id="clear_address_departament" type="button" mat-button
 							*ngIf="form.value.addressDepartmentId" matSuffix color="warn" mat-icon-button
-							(click)="clear(form.controls.addressDepartmentId); $event.stopPropagation()">
+							(click)="form.controls.addressDepartmentId.reset(); $event.stopPropagation()">
 							<mat-icon>close</mat-icon>
 						</button>
 					</mat-form-field>
@@ -266,13 +268,13 @@
 					<mat-form-field appearance="outline">
 						<mat-select id="addressCityId" name="addressCityId" formControlName="addressCityId"
 							placeholder="{{'pacientes.form.ADDRESS_CITY' | translate}}">
-							<mat-option *ngFor="let city of cities" [value]="city.id">
+							<mat-option *ngFor="let city of cities$ | async" [value]="city.id">
 								{{city.description}}
 							</mat-option>
 						</mat-select>
 						<button id="clear_address_city" type="button" mat-button *ngIf="form.value.addressCityId"
 							matSuffix color="warn" mat-icon-button
-							(click)="clear(form.controls.addressCityId); $event.stopPropagation()">
+							(click)="form.controls.addressCityId.reset(); $event.stopPropagation()">
 							<mat-icon>close</mat-icon>
 						</button>
 					</mat-form-field>
@@ -426,7 +428,7 @@
 						</mat-select>
 						<button id="clear_address_ethnicity" type="button" mat-button *ngIf="form.value.ethnicityId"
 							matSuffix color="warn" mat-icon-button
-							(click)="clear(form.controls.ethnicityId); $event.stopPropagation()">
+							(click)="form.controls.ethnicityId.reset(); $event.stopPropagation()">
 							<mat-icon>close</mat-icon>
 						</button>
 					</mat-form-field>

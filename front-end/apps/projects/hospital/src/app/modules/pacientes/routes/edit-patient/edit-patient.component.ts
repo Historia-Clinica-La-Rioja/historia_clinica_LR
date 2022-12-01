@@ -1,5 +1,5 @@
 import { Component, OnInit, ElementRef } from '@angular/core';
-import { FormBuilder, Validators, FormGroup, FormControl, AbstractControl } from '@angular/forms';
+import { FormBuilder, Validators, FormGroup, FormControl } from '@angular/forms';
 import { Router, ActivatedRoute } from '@angular/router';
 import { Moment } from 'moment';
 import * as moment from 'moment';
@@ -37,10 +37,11 @@ import { PatientMedicalCoverageService } from '@api-rest/services/patient-medica
 import { PERSON } from '@core/constants/validation-constants';
 import { PermissionsService } from '@core/services/permissions.service';
 import { MessageForAuditComponent } from '@pacientes/dialogs/message-for-audit/message-for-audit.component';
-import { UnmarkPatientForAuditComponent } from '@pacientes/dialogs/unmark-patient-for-audit/unmark-patient-for-audit.component';
-import { dateTimeDtoToDate } from '@api-rest/mapper/date-dto.mapper';
+import { dateTimeDtotoLocalDate } from '@api-rest/mapper/date-dto.mapper';
 import { DatePipeFormat } from '@core/utils/date.utils';
 import { DatePipe } from '@angular/common';
+import { Observable } from 'rxjs';
+import { DiscardWarningComponent } from '@presentation/dialogs/discard-warning/discard-warning.component';
 
 
 const ROUTE_PROFILE = 'pacientes/profile/';
@@ -65,9 +66,9 @@ export class EditPatientComponent implements OnInit {
 	public selfPerceivedGenders: SelfPerceivedGenderDto[];
 	public showOtherGender: boolean;
 	public countries: any[];
-	public provinces: any[];
-	public departments: any[];
-	public cities: any[];
+	public provinces$: Observable<any[]>;
+	public departments$: Observable<any[]>;
+	public cities$: Observable<any[]>;
 	public identificationTypeList: IdentificationTypeDto[];
 	private readonly routePrefix;
 	public patientType;
@@ -116,7 +117,7 @@ export class EditPatientComponent implements OnInit {
 						this.completeDataPatient = completeData;
 						if (completeData?.auditablePatientInfo) {
 							this.wasMarked = true;
-							this.auditableFullDate = dateTimeDtoToDate(
+							this.auditableFullDate = dateTimeDtotoLocalDate(
 								{
 									date: this.completeDataPatient.auditablePatientInfo.createdOn.date,
 									time: this.completeDataPatient.auditablePatientInfo.createdOn.time
@@ -173,15 +174,15 @@ export class EditPatientComponent implements OnInit {
 								// address
 								if (personInformationData.countryId) {
 									this.form.setControl('addressCountryId', new FormControl(personInformationData.countryId));
-									this.setProvinces();
+									this.provinces$ = this.addressMasterDataService.getByCountry(personInformationData.countryId);
 								}
 								if (personInformationData.provinceId) {
 									this.form.setControl('addressProvinceId', new FormControl(personInformationData.provinceId));
-									this.setDepartments();
+									this.departments$ = this.addressMasterDataService.getDepartmentsByProvince(personInformationData.provinceId);
 								}
 								if (personInformationData.departmentId) {
 									this.form.setControl('addressDepartmentId', new FormControl(personInformationData.departmentId));
-									this.setCities();
+									this.cities$ = this.addressMasterDataService.getCitiesByDepartment(personInformationData.departmentId);
 								}
 								this.form.setControl('addressCityId', new FormControl(personInformationData.cityId));
 								this.form.setControl('addressStreet', new FormControl(personInformationData.street));
@@ -199,51 +200,39 @@ export class EditPatientComponent implements OnInit {
 
 								this.form.get("addressCountryId").valueChanges.subscribe(
 									countryId => {
-										this.clear(this.form.controls.addressProvinceId);
-										delete this.provinces;
-										if (countryId) {
-											this.addressMasterDataService.getByCountry(countryId)
-												.subscribe(provinces => {
-													this.provinces = provinces;
-												});
-										}
+										this.form.controls.addressProvinceId.reset();
+										this.provinces$ = countryId ? this.addressMasterDataService.getByCountry(countryId) : null;
 									}
 								);
 
 								this.form.get("addressProvinceId").valueChanges.subscribe(
 									provinceId => {
-										this.clear(this.form.controls.addressDepartmentId);
-										delete this.departments;
-										if (provinceId) {
-											this.addressMasterDataService.getDepartmentsByProvince(provinceId)
-												.subscribe(departments => {
-													this.departments = departments;
-												});
-										}
+										this.form.controls.addressDepartmentId.reset();
+										this.departments$ = provinceId ? this.addressMasterDataService.getDepartmentsByProvince(provinceId) : null;
 									}
 								);
 
 								this.form.get("addressDepartmentId").valueChanges.subscribe(
 									departmentId => {
-										this.clear(this.form.controls.addressCityId);
-										delete this.cities;
-										if (departmentId) {
-											this.addressMasterDataService.getCitiesByDepartment(departmentId)
-												.subscribe(cities => {
-													this.cities = cities;
-												});
-										}
+										this.form.controls.addressCityId.reset();
+										this.cities$ = departmentId ? this.addressMasterDataService.getCitiesByDepartment(departmentId) : null;
 									}
 								);
 
 								this.form.get("addressCityId").valueChanges.subscribe(
 									_ => {
-										this.clear(this.form.controls.addressNumber);
-										this.clear(this.form.controls.addressFloor);
-										this.clear(this.form.controls.addressApartment);
-										this.clear(this.form.controls.addressQuarter);
-										this.clear(this.form.controls.addressStreet);
-										this.clear(this.form.controls.addressPostcode);
+										([
+											'addressNumber',
+											'addressFloor',
+											'addressApartment',
+											'addressQuarter',
+											'addressStreet',
+											'addressPostcode'
+										]).forEach(
+											controlName => {
+												this.form.controls[controlName].reset();
+											}
+										);
 									}
 								);
 
@@ -367,30 +356,6 @@ export class EditPatientComponent implements OnInit {
 		}
 	}
 
-	setProvinces() {
-		const countryId: number = this.form.controls.addressCountryId.value;
-		this.addressMasterDataService.getByCountry(countryId)
-			.subscribe(provinces => {
-				this.provinces = provinces;
-			});
-	}
-
-	setDepartments() {
-		const provinceId: number = this.form.controls.addressProvinceId.value;
-		this.addressMasterDataService.getDepartmentsByProvince(provinceId)
-			.subscribe(departments => {
-				this.departments = departments;
-			});
-	}
-
-	setCities() {
-		const departmentId: number = this.form.controls.addressDepartmentId.value;
-		this.addressMasterDataService.getCitiesByDepartment(departmentId)
-			.subscribe(cities => {
-				this.cities = cities;
-			});
-	}
-
 	openMedicalCoverageDialog(): void {
 		const dialogRef = this.dialog.open(MedicalCoverageComponent, {
 			data: {
@@ -427,11 +392,7 @@ export class EditPatientComponent implements OnInit {
 		this.showOtherSelfPerceivedGender();
 	}
 
-	clear(control: AbstractControl): void {
-		control.reset();
-	}
-
-	openAuditDialog(initialMessage: string): void {
+	openAuditDialog(initialMessage?: string): void {
 		const dialogRef = this.dialog.open(MessageForAuditComponent, {
 			disableClose: true,
 			width: '40%',
@@ -447,7 +408,7 @@ export class EditPatientComponent implements OnInit {
 				this.auditablePatientInfo = {
 					message: message,
 					createdBy: null,
-					createdOn: this.datePipe.transform(this.auditableFullDate, DatePipeFormat.SHORT),
+					createdOn: 'pacientes.edit.A_MOMENT_AGO',
 					institutionName: null,
 				}
 			}
@@ -455,7 +416,13 @@ export class EditPatientComponent implements OnInit {
 	}
 
 	openUnmarkPatientWarning(): void {
-		const dialogRef = this.dialog.open(UnmarkPatientForAuditComponent, {
+		const dialogRef = this.dialog.open(DiscardWarningComponent, {
+			data: {
+				content: 'pacientes.edit.unmark-patient-for-audit.DESCRIPTION',
+				contentBold: 'pacientes.edit.unmark-patient-for-audit.QUESTION',
+				okButtonLabel: 'pacientes.edit.unmark-patient-for-audit.CONFIRM',
+				cancelButtonLabel: 'pacientes.edit.unmark-patient-for-audit.CANCEL',
+			},
 			disableClose: true,
 			width: '35%',
 			autoFocus: false
@@ -478,7 +445,7 @@ export class EditPatientComponent implements OnInit {
 	}
 
 	private mapToPersonRequest(): APatientDto {
-		const patient: APatientDto = {
+		let patient: APatientDto = {
 			birthDate: this.form.controls.birthDate.value,
 			firstName: this.form.controls.firstName.value,
 			genderId: this.form.controls.genderId.value,
@@ -527,16 +494,21 @@ export class EditPatientComponent implements OnInit {
 				phoneNumber: this.form.controls.pamiDoctorPhoneNumber.value,
 				generalPractitioner: false
 
-			},
-			toAudit: !this.wasMarked && !this.toAudit ? null : this.toAudit,
-			message: this.toAudit && this.auditablePatientInfo?.message ? this.auditablePatientInfo.message : null
+			}
 		};
+
+		if (this.toAudit) {
+			patient.toAudit = true;
+			patient.message = this.auditablePatientInfo?.message ? this.auditablePatientInfo.message : '';
+		}
+		else if (this.wasMarked && this.toAudit === false) {
+			patient.toAudit = false;
+		}
 
 		if (patient.genderSelfDeterminationId === this.NONE_SELF_PERCEIVED_GENDER_SELECTED_ID)
 			patient.otherGenderSelfDetermination = this.form.value.otherGenderSelfDetermination;
 
 		return patient;
-
 	}
 
 	private disableFormField() {
