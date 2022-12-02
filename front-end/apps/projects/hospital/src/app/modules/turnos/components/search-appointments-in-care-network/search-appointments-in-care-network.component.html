@@ -114,7 +114,7 @@
 
         <mat-card>
             <div *ngFor="let appointment of appointmentsCurrentPage; last as isLast">
-                <app-appointment-result-view [appointment]="appointment" [patientId]="patientId"
+                <app-appointment-result-view [appointment]="appointment" [patientId]="patientId" [careLineId]="careLineId"
                     (resetAppointmentList)="resetResults($event)">
                 </app-appointment-result-view>
                 <mat-divider class="divider-list" inset *ngIf="!isLast"></mat-divider>
