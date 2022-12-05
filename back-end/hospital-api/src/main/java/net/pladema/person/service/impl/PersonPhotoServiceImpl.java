@@ -41,7 +41,11 @@ public class PersonPhotoServiceImpl implements PersonPhotoService {
         LOG.debug("Input parameter -> personId {}", personId);
         PersonPhotoDto personPhotoDto = new PersonPhotoDto();
         Optional<String> photoFilePath = personExtendedRepository.getPhotoFilePath(personId);
-        photoFilePath.ifPresent(path -> personPhotoDto.setImageData(imageFileService.readImage(path)));
+        try {
+			photoFilePath.ifPresent(path -> personPhotoDto.setImageData(imageFileService.readImage(path)));
+		} catch (Exception e) {
+			LOG.error("Error al intentar obtener la imagen del paciente con personId -> {} ", personId);
+		}
         LOG.debug(OUTPUT, personPhotoDto);
         return personPhotoDto;
     }
