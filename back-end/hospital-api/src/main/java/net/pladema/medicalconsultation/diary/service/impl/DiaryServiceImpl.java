@@ -24,6 +24,7 @@ import net.pladema.medicalconsultation.diary.service.domain.OpeningHoursBo;
 import net.pladema.medicalconsultation.diary.service.domain.OverturnsLimitException;
 import net.pladema.medicalconsultation.diary.service.exception.DiaryEnumException;
 import net.pladema.medicalconsultation.diary.service.exception.DiaryException;
+import net.pladema.medicalconsultation.diary.service.domain.ProfessionalPersonBo;
 import net.pladema.permissions.controller.external.LoggedUserExternalService;
 import net.pladema.permissions.repository.enums.ERole;
 import net.pladema.medicalconsultation.diary.service.exception.DiaryNotFoundEnumException;
@@ -331,6 +332,9 @@ public class DiaryServiceImpl implements DiaryService {
 		Diary resultQuery = diaryRepository.findById(diaryId)
 				.orElseThrow(() -> new NotFoundException("diaryId", "diaryId -> " + diaryId + " does not exist"));
 		DiaryBo result = createDiaryBoInstance(resultQuery);
+		result.setDiaryAssociatedProfessionalsId(diaryAssociatedProfessionalService.getAllDiaryAssociatedProfessionalsInfo(diaryId)
+				.stream().map(ProfessionalPersonBo::getId)
+				.collect(toList()));
 		LOG.debug(OUTPUT, result);
 		return result;
 	}
