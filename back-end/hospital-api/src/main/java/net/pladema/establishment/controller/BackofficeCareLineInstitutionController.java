@@ -2,6 +2,9 @@ package net.pladema.establishment.controller;
 
 import javax.validation.Valid;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -23,6 +26,14 @@ public class BackofficeCareLineInstitutionController extends AbstractBackofficeC
 												   CareLineInstitutionRepository careLineInstitutionRepository) {
 		super(repository, validator);
 		this.careLineInstitutionRepository = careLineInstitutionRepository;
+	}
+
+	@Override
+	public Page<CareLineInstitution> getList(Pageable pageable, CareLineInstitution entity) {
+		int minIndex = pageable.getPageNumber() * pageable.getPageSize();
+		int maxIndex = minIndex + pageable.getPageSize();
+		var list = super.getList(pageable, entity).getContent();
+		return new PageImpl<>(list.subList(minIndex, Math.min(maxIndex, list.size())), pageable, list.size());
 	}
 
 	@Override
