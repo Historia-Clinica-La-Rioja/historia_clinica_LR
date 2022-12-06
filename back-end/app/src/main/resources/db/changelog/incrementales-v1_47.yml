@@ -408,3 +408,12 @@ databaseChangeLog:
               referencedColumnNames: id
               referencedTableName: snomed
               validate: true
+
+    - changeSet:    
+        id: update-snomed-parent_fsn-length
+        author: fsimaro
+        changes:
+          - modifyDataType:
+              columnName: parent_fsn
+              newDataType: varchar(400)
+              tableName: snomed
