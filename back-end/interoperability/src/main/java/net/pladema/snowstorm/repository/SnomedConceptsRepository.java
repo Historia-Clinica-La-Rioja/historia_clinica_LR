@@ -106,8 +106,9 @@ public class SnomedConceptsRepository {
 		String sqlString = 
 				"SELECT s.id, s.sctid, s.pt " +
 				"FROM Snomed s " +
-				"JOIN SnomedSynonym ss ON (s.id = ss.pk.synonymId) " +
-				"WHERE ss.pk.mainConceptId IN (:conceptIds) "
+				"JOIN SnomedSynonym ss ON (s.id = ss.pk.synonymId OR s.id = ss.pk.mainConceptId) " +
+				"WHERE (ss.pk.mainConceptId IN (:conceptIds) and s.synonym = true) " +
+				"OR (ss.pk.synonymId IN (:conceptIds) AND s.synonym = false)"
 				;
 		
 		Query query = entityManager.createQuery(sqlString)
