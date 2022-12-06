@@ -57,6 +57,7 @@ import institutionpractices from "./institutionpractices";
 import institutionpracticesrelatedgroups from "./institutionpracticesrelatedgroups";
 import files from "./files";
 import documentFiles from "./documentfiles";
+import episodesDocumentTypes from './episode-document-type';
 
 const resourcesAdminInstitucional = (permissions: SGXPermissions) =>
     permissions.isOn('BACKOFFICE_MOSTRAR_ABM_RESERVA_TURNOS') ?
@@ -118,6 +119,7 @@ const resources = (permissions: SGXPermissions) => [
     <Resource name="rest-client-measures" {...restClientMeasures(permissions)} />,
     <Resource name="properties" {...properties(permissions)} />,
     // masterData
+    <Resource name="episodedocumenttypes" {...episodesDocumentTypes(permissions)} />,
     <Resource name="cities" {...cities(permissions)} />,
     <Resource name="departments" {...departments(permissions)} />,
     <Resource name="addresses" {...addresses} />,

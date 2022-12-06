@@ -684,7 +684,13 @@ const messages = {
                 conceptId: 'Id Concepto',
                 term: 'Descripción',
             }
-        }
+        },
+        episodedocumenttypes: {
+            name: 'Tipos de documentación de episodios',
+            fields: {
+                description: 'Descripción'
+            }
+        },
     }
 };
 
