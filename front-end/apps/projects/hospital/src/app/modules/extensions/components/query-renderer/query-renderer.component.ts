@@ -10,6 +10,7 @@ import * as moment from "moment";
 import { CSVFileDownloadService } from '@extensions/services/csvfile-download.service';
 import { FeatureFlagService } from '@core/services/feature-flag.service';
 import { AppFeature } from '@api-rest/api-model';
+import { buildFullDate, DateFormat, momentParse, momentParseDate, momentParseTime, newMoment } from '@core/utils/moment.utils';
 
 const formatColumnDate = (tableData: any[], columns: string[]): any[] => {
 	const dateFormatter = (x) => !x ? x : moment(x).format('DD/MM/YYYY');
@@ -217,6 +218,8 @@ export class QueryRendererComponent {
 			this.deleteColumn('Referencias.profesional_turno_auto_det');
 		}
 
+		this.deleteRepetedRows();
+
 		if (this.listOnTab) {
 			this.fileDownloadService.addTableData(this.listOnTab, this.columnTitles, this.tableData);
 		}
@@ -230,6 +233,61 @@ export class QueryRendererComponent {
 		this.tableData.forEach(row => {
 			delete row[column];
 		})
+	}
+
+	deleteRepetedRows() {
+		let ids: number[] = [];
+		let table = [];
+		let data = [];
+		const today: moment.Moment = newMoment();
+
+		this.tableData.forEach(row => {
+			const id = row['Referencias.id'];
+			if (!ids.includes(id)) {
+				ids.push(id);
+			}
+		})
+
+		ids.forEach(id => {
+			table.push(this.tableData.filter(row => {
+				return id === row['Referencias.id'];
+			}))
+		})
+
+		table.forEach(arr => {
+			let fut = arr.filter(row => {
+				const rowDate = buildFullDate(row['Referencias.hora_turno'], momentParse(row['Referencias.fecha_turno'], DateFormat.VIEW_DATE));
+				return today.isBefore(rowDate);
+			})
+			let aux;
+			if (fut.length) {
+				fut.forEach(row => {
+					if (!aux)
+						aux = row;
+					else {
+						const rowDate = buildFullDate(row['Referencias.hora_turno'], momentParse(row['Referencias.fecha_turno'], DateFormat.VIEW_DATE));
+						const auxDate = buildFullDate(aux['Referencias.hora_turno'], momentParse(aux['Referencias.fecha_turno'], DateFormat.VIEW_DATE));
+						if (rowDate.isBefore(auxDate))
+							aux = row;
+					}
+				})
+			}
+			else {
+				arr.forEach(row => {
+					if (!aux)
+						aux = row;
+					else {
+						const rowDate = buildFullDate(row['Referencias.hora_turno'], momentParse(row['Referencias.fecha_turno'], DateFormat.VIEW_DATE));
+						const auxDate = buildFullDate(aux['Referencias.hora_turno'], momentParse(aux['Referencias.fecha_turno'], DateFormat.VIEW_DATE));
+						if (auxDate.isBefore(rowDate))
+							aux = row;
+					}
+				})
+			}
+			data.push(aux);
+		})
+
+		this.tableData = data;
 	}
 
 	updateNumericData(resultSet) {
