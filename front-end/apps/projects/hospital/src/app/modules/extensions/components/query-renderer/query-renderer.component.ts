@@ -11,18 +11,21 @@ import { CSVFileDownloadService } from '@extensions/services/csvfile-download.se
 import { FeatureFlagService } from '@core/services/feature-flag.service';
 import { AppFeature } from '@api-rest/api-model';
 
-const formatColumnDate = (tableData: any[], column): any[] => {
+const formatColumnDate = (tableData: any[], columns: string[]): any[] => {
 	const dateFormatter = (x) => !x ? x : moment(x).format('DD/MM/YYYY');
-	return tableData.map(row => {
-		return {
-			...row,
-			[column]: dateFormatter(row[column]),
-		}
+	columns.forEach(column => {
+		tableData = tableData.map(row => {
+			return {
+				...row,
+				[column]: dateFormatter(row[column]),
+			}
+		})
 	});
+	return tableData;
 };
 
 const parseIfDate = (value: string): string => {
-	return value.substring(0,10);
+	return value.substring(0, 10);
 }
 
 @Component({
@@ -195,7 +198,7 @@ export class QueryRendererComponent {
 	updateTableData(resultSet, pivotConfig) {
 		this.tableData = formatColumnDate(
 			resultSet.tablePivot(pivotConfig),
-			'Referencias.fecha_consulta'
+			['Referencias.fecha_consulta', 'Referencias.fecha_turno']
 		);
 		this.displayedColumns = getDisplayedColumns(
 			resultSet.tableColumns(pivotConfig)
