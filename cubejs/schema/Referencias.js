@@ -45,8 +45,8 @@ sql: `SELECT r.id,
         LEFT JOIN doctors_office dof ON (dof.id = di.doctors_office_id)
         LEFT JOIN institution io2 ON (dof.institution_id = io2.id)
         LEFT JOIN healthcare_professional hpr ON (di.healthcare_professional_id = hpr.id)
-        LEFT JOIN person doct ON (hp.person_id = doct.id)
-        JOIN person_extended doctex ON (doctex.person_id = p.id)
+        LEFT JOIN person doct ON (hpr.person_id = doct.id)
+        JOIN person_extended doctex ON (doctex.person_id = doct.id)
         JOIN appointment_state aps ON (ap.appointment_state_id = aps.id)
     WHERE (ap.appointment_state_id NOT IN (4, 6, 7, 8))
     ${SECURITY_CONTEXT.userId.unsafeValue() ? '' +  `
@@ -109,8 +109,8 @@ UNION ALL
         LEFT JOIN doctors_office dof ON (dof.id = di.doctors_office_id)
         LEFT JOIN institution io2 ON (dof.institution_id = io2.id)
         LEFT JOIN healthcare_professional hpr ON (di.healthcare_professional_id = hpr.id)
-        LEFT JOIN person doct ON (hp.person_id = doct.id)
-        JOIN person_extended doctex ON (doctex.person_id = p.id)
+        LEFT JOIN person doct ON (hpr.person_id = doct.id)
+        JOIN person_extended doctex ON (doctex.person_id = doct.id)
         LEFT JOIN appointment_state aps ON (ap.appointment_state_id = aps.id)
     WHERE (ap.appointment_state_id NOT IN (4, 6, 7, 8))
     ${SECURITY_CONTEXT.userId.unsafeValue() ? '' +  `
@@ -257,7 +257,7 @@ UNION ALL
     // Hora del turno
     hora_turno: {
       sql: `hora_turno`,
-      type: `time`,
+      type: `string`,
       title: 'Hora turno',
     },
     // Institucion del turno
