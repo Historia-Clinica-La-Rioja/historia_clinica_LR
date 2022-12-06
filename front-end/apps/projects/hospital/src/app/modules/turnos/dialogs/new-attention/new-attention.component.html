@@ -1,19 +1,21 @@
 <div class="attention_dialog">
 
-	<div align="end">
-		<button id="cancel_button" name="cancel_button" mat-icon-button (click)="closeDialog()">
-			<mat-icon>close</mat-icon>
-		</button>
-	</div>
-
-	<div class="attention_dialog_title" mat-dialog-title *ngIf="!data.isEdit else edit">
-		<div class="mat-h2" translate="turnos.agenda-setup.dialog.TITLE"></div>
-	</div>
-	<ng-template #edit>
-		<div class="attention_dialog_title" mat-dialog-title>
-			<div class="mat-h2" translate="turnos.agenda-setup.dialog.EDIT"></div>
+	<div class="header-container" fxLayout="row" fxLayoutAlign="space-between center">	
+		<div class="attention_dialog_title" mat-dialog-title *ngIf="!data.isEdit else edit">
+			<div translate="turnos.agenda-setup.dialog.TITLE"></div>
 		</div>
-	</ng-template>
+		<ng-template #edit>
+			<div class="attention_dialog_title" mat-dialog-title>
+				<div translate="turnos.agenda-setup.dialog.EDIT"></div>
+			</div>
+		</ng-template>
+
+		<div align="end">
+			<button id="cancel_button" name="cancel_button" mat-icon-button (click)="closeDialog()">
+				<mat-icon>close</mat-icon>
+			</button>
+		</div>
+	</div>
 
 
 	<form [formGroup]="form" (ngSubmit)="submit()">
