@@ -48,9 +48,8 @@ sql: `SELECT r.id,
         LEFT JOIN person doct ON (hpr.person_id = doct.id)
         LEFT JOIN person_extended doctex ON (doctex.person_id = doct.id)
         LEFT JOIN appointment_state aps ON (ap.appointment_state_id = aps.id)
-    WHERE (ap.appointment_state_id NOT IN (4, 6, 7, 8) OR (ap.appointment_state_id IS NULL))
     ${SECURITY_CONTEXT.userId.unsafeValue() ? '' +  `
-    AND (oc.institution_id IN (
+    WHERE (oc.institution_id IN (
       SELECT ur.institution_id 
       FROM users as u 
       JOIN user_role ur on u.id = ur.user_id 
@@ -112,9 +111,8 @@ UNION ALL
         LEFT JOIN person doct ON (hpr.person_id = doct.id)
         LEFT JOIN person_extended doctex ON (doctex.person_id = doct.id)
         LEFT JOIN appointment_state aps ON (ap.appointment_state_id = aps.id)
-    WHERE (ap.appointment_state_id NOT IN (4, 6, 7, 8) OR (ap.appointment_state_id IS NULL))
     ${SECURITY_CONTEXT.userId.unsafeValue() ? '' +  `
-    AND (oc.institution_id IN (
+    WHERE (oc.institution_id IN (
       SELECT ur.institution_id 
       FROM users as u 
       JOIN user_role ur on u.id = ur.user_id 
