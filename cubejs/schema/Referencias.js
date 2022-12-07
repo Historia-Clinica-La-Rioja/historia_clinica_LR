@@ -3,7 +3,7 @@ sql: `SELECT r.id,
         concat_ws(' ', it.description, p.identification_number) AS documento,
         concat_ws(', ', concat_ws(' ', p.last_name, p.other_last_names), concat_ws(' ', p.first_name, p.middle_names)) AS paciente,
         concat_ws(', ', concat_ws(' ', p.last_name, p.other_last_names), CASE WHEN pex.name_self_determination IS NULL THEN concat_ws(' ', p.first_name, p.middle_names) ELSE pex.name_self_determination END) AS paciente_auto_det,
-        concat_ws('-', pex.phone_prefix, pex.phone_number) AS telefono,
+        CASE WHEN ap.phone_number IS NULL THEN concat_ws('-', pex.phone_prefix, pex.phone_number) ELSE concat_ws('-', ap.phone_prefix, ap.phone_number) END AS telefono,
         pex.email,
         oc.institution_id as institucion_origen_id,
         io.name as institucion_origen,
@@ -39,16 +39,16 @@ sql: `SELECT r.id,
         JOIN identification_type it ON (p.identification_type_id = it.id)
         LEFT JOIN counter_reference cr ON (r.id = cr.reference_id)
         LEFT JOIN reference_appointment ra ON (r.id = ra.reference_id)
-        JOIN appointment ap ON (ra.appointment_id = ap.id)
+        LEFT JOIN appointment ap ON (ra.appointment_id = ap.id)
         LEFT JOIN appointment_assn assn ON (assn.appointment_id = ap.id)
         LEFT JOIN diary di ON (di.id = assn.diary_id)
         LEFT JOIN doctors_office dof ON (dof.id = di.doctors_office_id)
         LEFT JOIN institution io2 ON (dof.institution_id = io2.id)
         LEFT JOIN healthcare_professional hpr ON (di.healthcare_professional_id = hpr.id)
         LEFT JOIN person doct ON (hpr.person_id = doct.id)
-        JOIN person_extended doctex ON (doctex.person_id = doct.id)
-        JOIN appointment_state aps ON (ap.appointment_state_id = aps.id)
-    WHERE (ap.appointment_state_id NOT IN (4, 6, 7, 8))
+        LEFT JOIN person_extended doctex ON (doctex.person_id = doct.id)
+        LEFT JOIN appointment_state aps ON (ap.appointment_state_id = aps.id)
+    WHERE (ap.appointment_state_id NOT IN (4, 6, 7, 8) OR (ap.appointment_state_id IS NULL))
     ${SECURITY_CONTEXT.userId.unsafeValue() ? '' +  `
     AND (oc.institution_id IN (
       SELECT ur.institution_id 
@@ -67,7 +67,7 @@ UNION ALL
         concat_ws(' ', it.description, p.identification_number) AS documento,
         concat_ws(', ', concat_ws(' ', p.last_name, p.other_last_names), concat_ws(' ', p.first_name, p.middle_names)) AS paciente,
         concat_ws(', ', concat_ws(' ', p.last_name, p.other_last_names), CASE WHEN pex.name_self_determination IS NULL THEN concat_ws(' ', p.first_name, p.middle_names) ELSE pex.name_self_determination END) AS paciente_auto_det,
-        concat_ws('-', pex.phone_prefix, pex.phone_number) AS telefono,
+        CASE WHEN ap.phone_number IS NULL THEN concat_ws('-', pex.phone_prefix, pex.phone_number) ELSE concat_ws('-', ap.phone_prefix, ap.phone_number) END AS telefono,
         pex.email,
         oc.institution_id as institucion_origen_id,
         io.name as institucion_origen,
@@ -103,16 +103,16 @@ UNION ALL
         JOIN identification_type it ON (p.identification_type_id = it.id)
         LEFT JOIN counter_reference cr ON (r.id = cr.reference_id)
         LEFT JOIN reference_appointment ra ON (r.id = ra.reference_id)
-        JOIN appointment ap ON (ra.appointment_id = ap.id)
+        LEFT JOIN appointment ap ON (ra.appointment_id = ap.id)
         LEFT JOIN appointment_assn assn ON (assn.appointment_id = ap.id)
         LEFT JOIN diary di ON (di.id = assn.diary_id)
         LEFT JOIN doctors_office dof ON (dof.id = di.doctors_office_id)
         LEFT JOIN institution io2 ON (dof.institution_id = io2.id)
         LEFT JOIN healthcare_professional hpr ON (di.healthcare_professional_id = hpr.id)
         LEFT JOIN person doct ON (hpr.person_id = doct.id)
-        JOIN person_extended doctex ON (doctex.person_id = doct.id)
+        LEFT JOIN person_extended doctex ON (doctex.person_id = doct.id)
         LEFT JOIN appointment_state aps ON (ap.appointment_state_id = aps.id)
-    WHERE (ap.appointment_state_id NOT IN (4, 6, 7, 8))
+    WHERE (ap.appointment_state_id NOT IN (4, 6, 7, 8) OR (ap.appointment_state_id IS NULL))
     ${SECURITY_CONTEXT.userId.unsafeValue() ? '' +  `
     AND (oc.institution_id IN (
       SELECT ur.institution_id 
