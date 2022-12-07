@@ -2992,6 +2992,14 @@ export interface UpdateConceptsResultDto {
     errorMessages: string[];
 }
 
+export interface UpdateConceptsSynonymsResultDto {
+    conceptsLoaded: number;
+    eclKey: string;
+    erroneousConcepts: number;
+    errorMessages: string[];
+    missingMainConcepts: number;
+}
+
 export interface UserDataDto {
     enable?: boolean;
     id?: number;
