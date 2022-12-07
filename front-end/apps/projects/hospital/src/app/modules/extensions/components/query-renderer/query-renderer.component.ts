@@ -246,7 +246,7 @@ export class QueryRendererComponent {
 			if (!ids.includes(id)) {
 				ids.push(id);
 			}
-			this.deleteEmptyCells(row);
+			this.formatRow(row);
 		})
 
 		ids.forEach(id => {
@@ -291,13 +291,21 @@ export class QueryRendererComponent {
 		this.tableData = data;
 	}
 
-	deleteEmptyCells(row) {
+	formatRow(row) {
 		if (row['Referencias.telefono'] === "-")
 			row['Referencias.telefono'] = "";
 		if (row['Referencias.profesional_turno_auto_det'] === ", ")
 			row['Referencias.profesional_turno_auto_det'] = "";
 		if (row['Referencias.profesional_turno'] === ", ")
 			row['Referencias.profesional_turno'] = "";
+		if (row['Referencias.estado_turno'] === "Cancelado"){
+			row['Referencias.estado_turno'] = "";
+			row['Referencias.fecha_turno'] = "";
+			row['Referencias.hora_turno'] = "";
+			row['Referencias.institucion_turno'] = "";
+			row['Referencias.profesional_turno_auto_det'] = "";
+			row['Referencias.profesional_turno'] = "";
+		}
 	}
 
 	updateNumericData(resultSet) {
