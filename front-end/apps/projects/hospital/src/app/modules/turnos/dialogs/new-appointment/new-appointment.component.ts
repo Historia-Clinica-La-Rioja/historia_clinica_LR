@@ -205,6 +205,9 @@ export class NewAppointmentComponent implements OnInit {
 				this.patient = reducedPatientDto;
 				this.appointmentInfoForm.controls.phonePrefix.setValue(reducedPatientDto.personalDataDto.phonePrefix);
 				this.appointmentInfoForm.controls.phoneNumber.setValue(reducedPatientDto.personalDataDto.phoneNumber);
+				for (let control in this.appointmentInfoForm.controls) {
+					this.appointmentInfoForm.controls[control].setErrors(null);
+				}
 				if (reducedPatientDto.personalDataDto.phoneNumber) {
 					updateControlValidator(this.appointmentInfoForm, 'phoneNumber', [Validators.required, Validators.pattern(PATTERN_INTEGER_NUMBER) ,Validators.maxLength(VALIDATIONS.MAX_LENGTH.phone)]);
 					updateControlValidator(this.appointmentInfoForm, 'phonePrefix', [Validators.required, Validators.pattern(PATTERN_INTEGER_NUMBER) ,Validators.maxLength(VALIDATIONS.MAX_LENGTH.phonePrefix)]);
@@ -361,7 +364,7 @@ export class NewAppointmentComponent implements OnInit {
 			&& this.formSearch.controls.gender.valid) || this.formSearch.controls.patientId.value;
 	}
 
-
+	
 	toFirstStep() {
 		this.formSearch.controls.completed.reset();
 		this.appointmentInfoForm.reset();
