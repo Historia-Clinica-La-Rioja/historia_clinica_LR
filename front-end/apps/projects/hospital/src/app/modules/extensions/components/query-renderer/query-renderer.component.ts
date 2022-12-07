@@ -246,6 +246,7 @@ export class QueryRendererComponent {
 			if (!ids.includes(id)) {
 				ids.push(id);
 			}
+			this.deleteEmptyCells(row);
 		})
 
 		ids.forEach(id => {
@@ -288,6 +289,15 @@ export class QueryRendererComponent {
 		})
 
 		this.tableData = data;
+	}
+
+	deleteEmptyCells(row) {
+		if (row['Referencias.telefono'] === "-")
+			row['Referencias.telefono'] = "";
+		if (row['Referencias.profesional_turno_auto_det'] === ", ")
+			row['Referencias.profesional_turno_auto_det'] = "";
+		if (row['Referencias.profesional_turno'] === ", ")
+			row['Referencias.profesional_turno'] = "";
 	}
 
 	updateNumericData(resultSet) {
