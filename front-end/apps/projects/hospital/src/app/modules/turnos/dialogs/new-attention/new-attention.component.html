@@ -1,11 +1,11 @@
-<div class="attention_dialog">
+<div>
 
 	<div class="header-container" fxLayout="row" fxLayoutAlign="space-between center">	
-		<div class="attention_dialog_title" mat-dialog-title *ngIf="!data.isEdit else edit">
+		<div mat-dialog-title *ngIf="!data.isEdit else edit">
 			<div translate="turnos.agenda-setup.dialog.TITLE"></div>
 		</div>
 		<ng-template #edit>
-			<div class="attention_dialog_title" mat-dialog-title>
+			<div mat-dialog-title>
 				<div translate="turnos.agenda-setup.dialog.EDIT"></div>
 			</div>
 		</ng-template>
