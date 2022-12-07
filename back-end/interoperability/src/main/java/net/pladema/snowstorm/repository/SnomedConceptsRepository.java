@@ -74,7 +74,7 @@ public class SnomedConceptsRepository {
 
 		result.addAll(synonyms);
 
-        return result.stream().sorted(Comparator.comparing(SnomedSearchItemVo::getSctid)).collect(Collectors.toList());
+        return result.stream().distinct().collect(Collectors.toList());
     }
 
     private Long getTotalResultCount(String term, String ecl, String groupDescription) {
@@ -108,7 +108,8 @@ public class SnomedConceptsRepository {
 				"FROM Snomed s " +
 				"JOIN SnomedSynonym ss ON (s.id = ss.pk.synonymId OR s.id = ss.pk.mainConceptId) " +
 				"WHERE (ss.pk.mainConceptId IN (:conceptIds) and s.synonym = true) " +
-				"OR (ss.pk.synonymId IN (:conceptIds) AND s.synonym = false)"
+				"OR (ss.pk.synonymId IN (:conceptIds) AND s.synonym = false) " +
+				"GROUP BY s.id"
 				;
 		
 		Query query = entityManager.createQuery(sqlString)
