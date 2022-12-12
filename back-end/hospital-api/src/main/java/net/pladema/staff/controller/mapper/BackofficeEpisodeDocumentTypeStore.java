@@ -57,7 +57,7 @@ public class BackofficeEpisodeDocumentTypeStore implements BackofficeStore<Episo
 
 	@Override
 	public void deleteById(Integer id) {
-
+		repository.deleteById(id);
 	}
 
 	@Override

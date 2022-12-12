@@ -6,7 +6,7 @@ import {
 } from 'react-admin';
 
 const EpisodeDocumentTypeList = props => (
-    <List {...props}  bulkActionButtons={false}>
+    <List {...props}>
         <Datagrid rowClick="show">
             <TextField source="id" />
             <TextField source="description" />
