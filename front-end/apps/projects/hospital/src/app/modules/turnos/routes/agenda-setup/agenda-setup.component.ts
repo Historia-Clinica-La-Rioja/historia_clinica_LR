@@ -129,6 +129,9 @@ export class AgendaSetupComponent implements OnInit {
 						this.setValuesFromExistingAgenda(diary);
 						this.disableNotEditableControls();
 						this.validateLineOfCareAndPercentageOfProtectedAppointments();
+						if(this.lineOfCareAndPercentageOfProtectedAppointmentsValid){
+							this.form.controls.protectedAppointmentsPercentage.enable();
+						}
 					});
 
 				});
