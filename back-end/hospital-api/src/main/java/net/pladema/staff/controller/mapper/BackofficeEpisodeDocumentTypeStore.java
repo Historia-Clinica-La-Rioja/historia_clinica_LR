@@ -26,7 +26,13 @@ public class BackofficeEpisodeDocumentTypeStore implements BackofficeStore<Episo
 
 	@Override
 	public Page<EpisodeDocumentType> findAll(EpisodeDocumentType example, Pageable pageable) {
-		return null;
+		return repository.findAll(
+				PageRequest.of(
+						pageable.getPageNumber(),
+						pageable.getPageSize(),
+						Sort.by(Sort.Direction.ASC, "description")
+				)
+		);
 	}
 
 	@Override
@@ -41,7 +47,7 @@ public class BackofficeEpisodeDocumentTypeStore implements BackofficeStore<Episo
 
 	@Override
 	public Optional<EpisodeDocumentType> findById(Integer id) {
-		return Optional.empty();
+		return repository.findById(id);
 	}
 
 	@Override
