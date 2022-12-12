@@ -686,7 +686,7 @@ const messages = {
             }
         },
         episodedocumenttypes: {
-            name: 'Tipos de documentación de episodios',
+            name: 'Tipos de documentos de episodios',
             fields: {
                 description: 'Descripción'
             }

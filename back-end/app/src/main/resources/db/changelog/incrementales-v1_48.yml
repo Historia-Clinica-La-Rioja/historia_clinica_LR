@@ -1,3 +1,23 @@
 databaseChangeLog: 
     - logicalFilePath: incrementales-v1_48 
 
+  - changeSet:
+      id: episode_document_types_create
+      comment: Create table episode_document_types
+      author: fdemuguruza
+      changes:
+        - createTable:
+            tableName: episode_document_types
+            columns:
+              - column:
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    primaryKeyName: PK_episode_document_types
+                  name: id
+                  type: int
+              - column:
+                  constraints:
+                    nullable: false
+                  name: description
+                  type: varchar
