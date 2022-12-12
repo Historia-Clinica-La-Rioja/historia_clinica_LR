@@ -2,6 +2,7 @@
 	"reportes-odontologicos": {
 		"TITLE": "Reportes Odontológicos",
 		"form": {
+			
 			"TITLE": "Generar nuevo reporte",
 			"REPORT_TYPE": "Tipo de reporte",
 			"START_DATE": "Fecha de inicio",

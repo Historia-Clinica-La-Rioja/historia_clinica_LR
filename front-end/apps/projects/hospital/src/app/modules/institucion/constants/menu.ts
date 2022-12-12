@@ -99,6 +99,7 @@ export const SIDEBAR_MENU: MenuItemDef[] = [
 		permissions: [
 			ERole.ADMINISTRADOR_INSTITUCIONAL_BACKOFFICE,
 			ERole.PERSONAL_DE_ESTADISTICA
+			
 		],
 		featureFlag: AppFeature.HABILITAR_REPORTES_PROGRAMAS
 	},

@@ -49,6 +49,7 @@ export const GENERAL_REPORT_TYPES = [
         description: 'Emergencia',
         id: 1,
     },
+    
     {
         description: 'Diabéticos Confirmados',
         id: 2,
