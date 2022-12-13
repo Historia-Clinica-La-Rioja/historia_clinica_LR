@@ -432,7 +432,6 @@ export class AgendaSetupComponent implements OnInit {
 	}
 
 	setCareLines(careLines: string[]) {
-		this.validateLineOfCareAndPercentageOfProtectedAppointments();
 		if (careLines.length) {
 			if (!this.form.controls.protectedAppointmentsPercentage.hasValidator(Validators.required)) {
 				this.addValidators();
@@ -451,6 +450,7 @@ export class AgendaSetupComponent implements OnInit {
 			this.careLinesSelected = [];
 		}
 		this.form.controls.protectedAppointmentsPercentage.updateValueAndValidity();
+		this.validateLineOfCareAndPercentageOfProtectedAppointments();
 	}
 
 	private checkCareLinesSelected() {
