@@ -1,23 +1,39 @@
 package net.pladema.programreports.repository;
 
 import lombok.AllArgsConstructor;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
+
+import org.checkerframework.checker.units.qual.C;
+
+import javax.persistence.ColumnResult;
+import javax.persistence.ConstructorResult;
+import javax.persistence.SqlResultSetMapping;
 
 @Getter
 @Setter
 @ToString
 @AllArgsConstructor
+@EqualsAndHashCode
 public class ConsultationDetailRecupero {
 
-	private String operativeUnit;
+	private String institution;
+
+	private Integer clinicalSpecialtyId;
+
+	private String clinicalSpecialty;
+
+	private Integer professionalId;
 
 	private String provider;
 
 	private String providerDni;
 
 	private String attentionDate;
+
+	private String hour;
 
 	private String consultationNumber;
 

@@ -102,7 +102,7 @@ public class ProgramReportsController {
 		response.flushBuffer();
 	}
 
-	String [] headersRecupero = new String[]{"Unidad Operativa", "Prestador", "DNI", "Fecha de atención", "Cons.N°", "DNI Paciente", "Nombre Paciente", "Sexo", "Genero",
+	String [] headersRecupero = new String[]{"Institution", "Hora", "Unidad Operativa", "Prestador", "DNI", "Fecha de atención", "Cons.N°", "DNI Paciente", "Nombre Paciente", "Sexo", "Genero",
 			"Nombre con el que se identifica", "Fecha de nacimiento", "Edad a fecha del turno", "Edad a Hoy", "Etnia", "Obra/s social/es", "Domicilio",
 			"Localidad", "Nivel de Instrucción", "Situación laboral", "Presión sistólica", "Presión diastólica", "Presión arterial media", "Temperatura",
 			"Frecuencia cardíaca", "Presión respiratoria", "Saturación de hemoglobina con oxígeno", "Altura", "Peso", "Indice de masa corporal", "Motivos",
@@ -145,17 +145,25 @@ public class ProgramReportsController {
 			@PathVariable Integer institutionId,
 			@RequestParam(value="fromDate", required = true) String fromDate,
 			@RequestParam(value="toDate", required = true) String toDate,
+			@RequestParam(value = "clinicalSpecialtyId", required = false) Integer clinicalSpecialtyId,
+			@RequestParam(value ="doctorId", required = false) Integer doctorId,
 			HttpServletResponse response
 	) throws Exception {
 		LOG.debug("Se creará el excel {}", institutionId);
 		LOG.debug("Inputs parameters -> institutionId {}, fromDate {}, toDate{}", institutionId);
+
+		String [] headers = new String[]{"Institution", "Unidad Operativa", "Prestador", "DNI", "Fecha de atención","Hora", "Cons.N°", "DNI Paciente", "Nombre Paciente", "Sexo", "Genero",
+				"Nombre con el que se identifica", "Fecha de nacimiento", "Edad a fecha del turno", "Edad a Hoy", "Etnia", "Obra/s social/es", "Domicilio",
+				"Localidad", "Nivel de Instrucción", "Situación laboral", "Presión sistólica", "Presión diastólica", "Presión arterial media", "Temperatura",
+				"Frecuencia cardíaca", "Presión respiratoria", "Saturación de hemoglobina con oxígeno", "Altura", "Peso", "Indice de masa corporal", "Motivos",
+				"Procedimientos", "Problemas", "Medicación", "Evolución"};
 
 		String tittle = "Recupero - Sumar";
 
 		LocalDate startDate = localDateMapper.fromStringToLocalDate(fromDate);
 		LocalDate endDate = localDateMapper.fromStringToLocalDate(toDate);
 
-		IWorkbook wb = this.excelService.buildExcelRecupero(tittle, headersRecupero, this.queryFactoryPR.querySumar(institutionId, startDate, endDate));
+		IWorkbook wb = this.excelService.buildExcelRecupero(tittle, headers, this.queryFactoryPR.querySumar(institutionId, startDate, endDate, clinicalSpecialtyId, doctorId));
 
 		String filename = tittle + "." + wb.getExtension();
 		response.addHeader("Content-disposition", "attachment;filename=" + filename);
