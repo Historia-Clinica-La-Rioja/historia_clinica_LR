@@ -169,6 +169,48 @@ databaseChangeLog:
                     nullable: false
                   name: url_auth
                   type: text
+
+  - changeSet:
+      id: pac_server_image_lvl-createTable
+      comment: Create table pac_server_image_lvl
+      author: tcepeda
+      changes:
+        - createTable:
+            tableName: pac_server_image_lvl
+            columns:
+              - column:
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    primaryKeyName: PK_pac_server_image_lvl
+                  name: id
+                  type: int
+              - column:
+                  constraints:
+                    nullable: false
+                  name: name
+                  type: varchar(20)
+              - column:
+                  constraints:
+                    nullable: false
+                  name: aetitle
+                  type: varchar(15)
+              - column:
+                  constraints:
+                    nullable: false
+                  name: domain
+                  type: varchar(50)
+              - column:
+                  constraints:
+                    nullable: false
+                  name: port
+                  type: varchar(10)
+              - column:
+                  constraints:
+                    nullable: false
+                  name: sector_id
+                  type: int
+
   - changeSet:
       id: add-phone_prefix-column-reference
       author: jvaldez
