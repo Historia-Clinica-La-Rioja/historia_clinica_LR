@@ -1,0 +1,29 @@
+.episode-document-container {
+	padding: 0 1rem 0 1rem;
+	display: flex;
+	flex-direction: column;
+
+	article {
+		margin-top: 1rem;
+
+		.no-documents {
+			color: gray;
+		}
+
+		a {
+			color: #2687c5;
+			text-decoration: none;
+		}
+	}
+}
+
+.episode-document-list {
+	display: grid;
+	grid-template-columns: 1fr 1fr .75fr .50fr;
+
+	p, a {
+		text-overflow: ellipsis;
+		overflow: hidden; 
+		width: 7rem; 
+	}
+}

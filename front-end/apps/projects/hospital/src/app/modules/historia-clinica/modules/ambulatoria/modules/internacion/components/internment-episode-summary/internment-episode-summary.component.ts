@@ -11,6 +11,7 @@ import { InternmentEpisodeService } from "@api-rest/services/internment-episode.
 import { anyMatch } from "@core/utils/array.utils";
 import { ERole } from "@api-rest/api-model";
 import { InternmentSummaryFacadeService } from '../../services/internment-summary-facade.service';
+import { Document } from '../interment-document-episode/interment-document-episode.component';
 
 const ROUTE_INTERNMENT_EPISODE_PREFIX = 'internaciones/internacion/';
 const ROUTE_RELOCATE_PATIENT_BED_PREFIX = '/pase-cama';
@@ -42,6 +43,27 @@ export class InternmentEpisodeSummaryComponent implements OnInit {
 	lastEvolutionNoteDoc: EvaluationNoteSummaryDto;
 	hasMedicalDischarge: boolean;
 	hasAdministrativeDischarge = false;
+
+	documents: Document[] = [
+		{
+			type: 'Epicrisis',
+			fileName: "49584_54343423432_934823948932",
+			date: {
+				day: 13,
+				month: 12,
+				year: 2022
+			}
+		},
+		{
+			type: 'Alta internacion',
+			fileName: "49584_54",
+			date: {
+				day: 7,
+				month: 12,
+				year: 2022
+			}
+		}
+	]
 
 	constructor(
 		private router: Router,

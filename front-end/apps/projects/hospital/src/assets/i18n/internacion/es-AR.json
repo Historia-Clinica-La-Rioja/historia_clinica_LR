@@ -383,6 +383,10 @@
 					"ERROR": "Error al guardar nueva fecha de alta probable"
 				}
 			},
+			"documents": {
+				"TITLE": "Documentos",
+				"NO_DOCUMENTS": "Aún no hay archivos adjuntos cargados"
+			},
 			"pending-document": {
 				"PENDING_EVOLUTION": "Evolución pendiente",
 				"PENDING_EPICRISIS": "Epicrisis pendiente",

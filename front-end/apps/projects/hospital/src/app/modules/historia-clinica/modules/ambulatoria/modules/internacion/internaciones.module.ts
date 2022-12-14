@@ -33,6 +33,7 @@ import { DiagnosisCreationEditionComponent } from './dialogs/diagnosis-creation-
 import { SelectMainDiagnosisComponent } from './dialogs/select-main-diagnosis/select-main-diagnosis.component';
 import { DocumentActionReasonComponent } from "@historia-clinica/modules/ambulatoria/modules/internacion/dialogs/document-action-reason/document-action-reason.component";
 import { TurnosModule } from '@turnos/turnos.module';
+import { IntermentDocumentEpisodeComponent } from './components/interment-document-episode/interment-document-episode.component';
 
 @NgModule({
 	declarations: [
@@ -61,7 +62,8 @@ import { TurnosModule } from '@turnos/turnos.module';
 		ElementoDiagnosticoComponent,
 		DiagnosisCreationEditionComponent,
 		SelectMainDiagnosisComponent,
-		DocumentActionReasonComponent
+		DocumentActionReasonComponent,
+  		IntermentDocumentEpisodeComponent
 	],
     exports: [
         InternmentEpisodeSummaryComponent,
