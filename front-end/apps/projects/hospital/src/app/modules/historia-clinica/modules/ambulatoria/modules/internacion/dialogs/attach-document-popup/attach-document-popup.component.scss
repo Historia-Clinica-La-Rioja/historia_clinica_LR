@@ -1,0 +1,30 @@
+.example-full-width {
+    width: 100%;
+}
+
+div {
+    display: flex;
+    justify-content: flex-end;
+}
+
+.typeahead-required {
+    color: #f44336;
+    font-size: 75%;
+    padding: 0 1em;
+}
+
+section {
+    display: flex;
+    justify-content: flex-end;
+
+    button {
+        margin: .50rem;
+    }
+}
+
+@media (max-width: 360px) {
+    section {
+        align-items: center;
+        flex-direction: column;
+    }
+}

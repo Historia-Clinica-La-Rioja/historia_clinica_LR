@@ -1,0 +1,33 @@
+<div>
+    <button mat-button mat-icon-button [mat-dialog-close]=true>
+        <mat-icon>close</mat-icon>
+    </button>
+</div>
+
+<form [formGroup]="form" (ngSubmit)="save()">
+    <h1 [translate]="'internaciones.internacion-paciente.documents.dialogs.attach.TITLE'"></h1>
+    <mat-form-field class="example-full-width" appearance="outline">
+        <mat-label [translate]="'internaciones.internacion-paciente.documents.dialogs.attach.fields.NAME'"></mat-label>
+        <input matInput disabled formControlName="fileName">
+    </mat-form-field>
+    
+    <app-typeahead 
+        [options]="documentTypes"
+        [titleInput]="'internaciones.internacion-paciente.documents.dialogs.attach.fields.TYPE' | translate"
+        [required]="required"
+        (selectionChange)="setDocumentType($event)">
+    </app-typeahead>
+    <mat-error class="typeahead-required" *ngIf="hasError(form, 'required', 'type')">
+        <span [translate]="'internaciones.internacion-paciente.documents.dialogs.attach.fields.TYPE_REQUIRED'"></span>
+    </mat-error>
+
+    <section>
+        <button mat-stroked-button color="primary" [mat-dialog-close]=true class="uppercase">
+            <span [translate]="'internaciones.internacion-paciente.documents.actions.CANCEL'"></span>
+        </button>
+    
+        <button mat-raised-button color="primary" [disabled]=" ! this.form.valid">
+            <span [translate]="'internaciones.internacion-paciente.documents.actions.ATTACH'"></span>
+        </button>
+    </section>
+</form>

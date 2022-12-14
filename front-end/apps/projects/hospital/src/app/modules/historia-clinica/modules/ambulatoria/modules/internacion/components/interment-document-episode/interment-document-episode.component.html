@@ -1,5 +1,9 @@
 <section class="episode-document-container"> 
-    <span class="mat-body-2" [translate]="'internaciones.internacion-paciente.documents.TITLE'"></span>
+    <div>
+        <span class="mat-body-2" [translate]="'internaciones.internacion-paciente.documents.TITLE'"></span>
+        <button mat-button color="primary" (click)="fileInput.click()"><mat-icon> attach_file</mat-icon>ADJUNTAR</button>
+        <input hidden (change)="onFileSelected($event)" #fileInput type="file" id="file">
+    </div>
     <article>
         <ng-container *ngIf="documents; else noDocuments">
             <div *ngFor="let document of documents" class="episode-document-list">
