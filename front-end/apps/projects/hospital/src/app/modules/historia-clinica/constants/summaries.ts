@@ -54,7 +54,7 @@ export const MEDICACION_HABITUAL: SummaryHeader = {
 
 export const ALERGIAS: SummaryHeader = {
 	title: 'Alergias',
-	matIcon: 'queue'
+	matIcon: 'cancel'
 };
 
 export const VACUNAS: SummaryHeader = {

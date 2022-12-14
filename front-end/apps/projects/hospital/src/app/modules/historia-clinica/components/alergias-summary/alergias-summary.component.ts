@@ -1,53 +1,33 @@
-import { Component, Input, OnChanges, OnInit } from '@angular/core';
-import { AllergyConditionDto, HealthConditionDto } from '@api-rest/api-model';
-import { TableModel } from '@presentation/components/table/table.component';
-import { InternmentStateService } from '@api-rest/services/internment-state.service';
+import { Component, Input } from '@angular/core';
+import { AllergyConditionDto, HCEAllergyDto } from '@api-rest/api-model';
 import { ALERGIAS } from '../../constants/summaries';
 import { MatDialog } from '@angular/material/dialog';
 import { AddAllergyComponent } from '../../dialogs/add-allergy/add-allergy.component';
 import { InternacionMasterDataService } from '@api-rest/services/internacion-master-data.service';
 import { PatientAllergiesService } from '@historia-clinica/modules/ambulatoria/services/patient-allergies.service';
 import { InternmentSummaryFacadeService } from "@historia-clinica/modules/ambulatoria/modules/internacion/services/internment-summary-facade.service";
-
+import { forkJoin } from 'rxjs';
+import { InternmentStateService } from '@api-rest/services/internment-state.service';
 @Component({
 	selector: 'app-alergias-summary',
 	templateUrl: './alergias-summary.component.html',
 	styleUrls: ['./alergias-summary.component.scss']
 })
-export class AlergiasSummaryComponent implements OnInit, OnChanges {
-
+export class AlergiasSummaryComponent {
+	public readonly alergiasSummary = ALERGIAS;
+	readonly LOWCRITICALITY = 1;
+	readonly HIGHCRITICALITY = 2;
+	allergies: Allergy[] = [];
+	private criticalityMasterData = [];
+	private categoryMasterData = [];
 	@Input() internmentEpisodeId: number;
-	@Input() allergies: AllergyConditionDto[];
 	@Input() editable = false;
 	@Input() patientId: number;
-
-	public readonly alergiasSummary = ALERGIAS;
-	private criticalityMasterData: any[];
-	private categoryMasterData: any[];
-
-	tableModel: TableModel<HealthConditionDto>;
-
-	private buildTable(data: AllergyConditionDto[]): TableModel<AllergyConditionDto> {
-		return {
-			columns: [
-				{
-					columnDef: 'tipo',
-					header: 'Tipo de alergia',
-					text: (row) => row.snomed.pt
-				},
-				{
-					columnDef: 'categoria',
-					header: 'Categoría',
-					text: (row) => this.getCategoryDisplayName(row.categoryId)
-				},
-				{
-					columnDef: 'criticidad',
-					header: 'Criticidad',
-					text: (row) => this.getCriticalityDisplayName(row.criticalityId)
-				}
-			],
-			data
-		};
+	@Input()
+	set allergiesDto(allergiesDto: HCEAllergyDto[] | AllergyConditionDto[]) {
+		if (allergiesDto.length) {
+			this.setCategoryAndCriticallyAndAllergies(allergiesDto);
+		}
 	}
 
 	constructor(
@@ -59,28 +39,6 @@ export class AlergiasSummaryComponent implements OnInit, OnChanges {
 	) {
 	}
 
-	ngOnInit(): void {
-		this.internacionMasterDataService.getAllergyCriticality().subscribe(allergyCriticalities =>
-			this.criticalityMasterData = allergyCriticalities
-		);
-
-		this.internacionMasterDataService.getAllergyCategories().subscribe(allergyCategories =>
-			this.categoryMasterData = allergyCategories
-		);
-	}
-
-	getCriticalityDisplayName(criticalityId): string {
-		return (criticalityId && this.criticalityMasterData) ? this.criticalityMasterData.find(c => c.id === criticalityId).display : '';
-	}
-
-	getCategoryDisplayName(categoryId): string {
-		return (categoryId && this.categoryMasterData) ? this.categoryMasterData.find(c => c.id === categoryId).display : '';
-	}
-
-	ngOnChanges(): void {
-		this.tableModel = this.buildTable(this.allergies);
-	}
-
 	openDialog() {
 		const dialogRef = this.dialog.open(AddAllergyComponent, {
 			disableClose: true,
@@ -89,17 +47,66 @@ export class AlergiasSummaryComponent implements OnInit, OnChanges {
 				internmentEpisodeId: this.internmentEpisodeId
 			}
 		});
-
-		dialogRef.afterClosed().subscribe(submitted => {
-			if (submitted) {
+		dialogRef.afterClosed().subscribe((allergies: AllergyConditionDto[]) => {
+			if (allergies.length) {
 				this.internmentStateService.getAllergies(this.internmentEpisodeId)
-					.subscribe(data => this.tableModel = this.buildTable(data));
+					.subscribe(allergies => this.setAllergies(allergies));
 				this.patientAllergies.updateCriticalAllergies(this.patientId);
 				if (this.internmentEpisodeId)
 					this.internmentSummaryFacadeService.unifyAllergies(this.patientId);
 			}
-		}
-		);
+		});
 	}
 
+	setAllergies(allergiesDto: HCEAllergyDto[] | AllergyConditionDto[]) {
+		this.allergies = allergiesDto.map(allergy => {
+			return this.mapToAllergy(allergy);
+		});
+	}
+
+	private getCriticalityDisplayName(criticalityId): string {
+		return (criticalityId && this.criticalityMasterData) ? this.criticalityMasterData.find(c => c.id === criticalityId).display : '';
+	}
+
+	private getCriticalityColor(criticalityId): string {
+		if (criticalityId === this.LOWCRITICALITY) {
+			return 'grey';
+		}
+		if (criticalityId === this.HIGHCRITICALITY) {
+			return 'warn';
+		}
+	}
+
+	private getCategoryDisplayName(categoryId): string {
+		return (categoryId && this.categoryMasterData) ? this.categoryMasterData.find(c => c.id === categoryId).display : '';
+	}
+
+	private setCategoryAndCriticallyAndAllergies(allergiesDto: HCEAllergyDto[] | AllergyConditionDto[]) {
+		if (!this.categoryMasterData.length || !this.criticalityMasterData.length) {
+			const categories$ = this.internacionMasterDataService.getAllergyCategories();
+			const criticalities$ = this.internacionMasterDataService.getAllergyCriticality();
+			forkJoin([categories$, criticalities$]).subscribe(masterdataInfo => {
+				this.categoryMasterData = masterdataInfo[0];
+				this.criticalityMasterData = masterdataInfo[1];
+				this.setAllergies(allergiesDto);
+			});
+		}
+		else
+			this.setAllergies(allergiesDto);
+	}
+
+	private mapToAllergy(allergy: HCEAllergyDto | AllergyConditionDto): Allergy {
+		return {
+			data: allergy,
+			categoryName: this.getCategoryDisplayName(allergy.categoryId),
+			criticality: this.getCriticalityDisplayName(allergy.criticalityId),
+			color: this.getCriticalityColor(allergy.criticalityId)
+		}
+	}
+}
+interface Allergy {
+	data: HCEAllergyDto | AllergyConditionDto;
+	categoryName: string;
+	criticality: string;
+	color: string;
 }
