@@ -2,6 +2,7 @@ import { Component, Input, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { DateDto } from '@api-rest/api-model';
 import { AttachDocumentPopupComponent } from '../../dialogs/attach-document-popup/attach-document-popup.component';
+import { DeleteDocumentPopupComponent } from '../../dialogs/delete-document-popup/delete-document-popup.component';
 
 @Component({
   selector: 'app-interment-document-episode',
@@ -32,6 +33,14 @@ export class IntermentDocumentEpisodeComponent implements OnInit {
 			data: {
         fileName
 			}
+		});
+  }
+
+  openDeleteDialog(event) {
+    const dialogRef = this.dialog.open(DeleteDocumentPopupComponent, {
+			disableClose: true,
+			width: '35%',
+			data: {}
 		});
   }
 }

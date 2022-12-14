@@ -12,6 +12,9 @@
                 <p>{{document.date |
                     viewDateDto:
                     'date' | date: 'dd/MM/yyyy'}}</p>
+                <button mat-button mat-icon-button color="warn" (click)="openDeleteDialog($event)">
+                    <mat-icon>delete_outline</mat-icon>
+                </button>
             </div>
         </ng-container>
         <ng-template #noDocuments>

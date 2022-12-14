@@ -35,6 +35,7 @@ import { DocumentActionReasonComponent } from "@historia-clinica/modules/ambulat
 import { TurnosModule } from '@turnos/turnos.module';
 import { IntermentDocumentEpisodeComponent } from './components/interment-document-episode/interment-document-episode.component';
 import { AttachDocumentPopupComponent } from './dialogs/attach-document-popup/attach-document-popup.component';
+import { DeleteDocumentPopupComponent } from './dialogs/delete-document-popup/delete-document-popup.component';
 
 @NgModule({
 	declarations: [
@@ -65,7 +66,8 @@ import { AttachDocumentPopupComponent } from './dialogs/attach-document-popup/at
 		SelectMainDiagnosisComponent,
 		DocumentActionReasonComponent,
   		IntermentDocumentEpisodeComponent,
-    AttachDocumentPopupComponent
+    AttachDocumentPopupComponent,
+    DeleteDocumentPopupComponent
 	],
     exports: [
         InternmentEpisodeSummaryComponent,

@@ -28,6 +28,7 @@
 	grid-template-columns: 1fr 1fr .75fr .50fr;
 
 	p, a {
+		margin: 0;
 		text-overflow: ellipsis;
 		overflow: hidden; 
 		width: 7rem; 

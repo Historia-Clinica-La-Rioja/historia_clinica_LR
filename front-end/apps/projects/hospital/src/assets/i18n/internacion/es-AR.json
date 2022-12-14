@@ -393,12 +393,20 @@
 							"NAME": "Nombre del archivo",
 							"TYPE": "Tipo de documento",
 							"TYPE_REQUIRED": "El tipo de documento es obligatorio"
+						},
+						"actions": {
+							"CANCEL": "CANCELAR",
+							"ATTACH": "ADJUNTAR"
+						}
+					},
+					"delete": {
+						"TITLE": "¿Eliminar documento adjunto?",
+						"SUCCESS": "Se eliminó exitosamente el archivo adjunto",
+						"actions": {
+							"CANCEL": "NO, CANCELAR",
+							"DELETE": "ELIMINAR"
 						}
 					}
-				},
-				"actions": {
-					"CANCEL": "CANCELAR",
-					"ATTACH": "ADJUNTAR"
 				}
 			},
 			"pending-document": {
