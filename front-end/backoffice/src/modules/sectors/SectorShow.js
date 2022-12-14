@@ -16,6 +16,7 @@ import SgxDateField from "../../dateComponents/sgxDateField";
 const AMBULATORIA = 1;
 const INTERNACION = 2;
 const GUARDIA = 3;
+const DIAGNOSTICO_POR_IMAGENES = 4;
 
 const CreateSector = ({ record }) => {
     return (
@@ -49,6 +50,21 @@ const CreateRooms = ({ record }) => {
             label="resources.rooms.createRelated"
         />
     ) : null;
+}
+
+const CreatePacServer = ({ record }) => {
+    const customRecord = {sectorId: record.id};
+    return record.sectorTypeId === DIAGNOSTICO_POR_IMAGENES ? (
+            <>
+                <SectionTitle label="resources.pacserversimagelvl.name"/>
+                <CreateRelatedButton
+                    customRecord={customRecord}
+                    reference="pacserversimagelvl"
+                    refFieldName="sectorId"
+                    label="resources.pacserversimagelvl.createRelated"
+                />
+            </>
+        ) : null;
 }
 
 const SectorTypeField = (props) => {
@@ -171,6 +187,22 @@ const SectorShow = props => (
                     <ReferenceField source="sectorTypeId"  link={false}  reference="sectortypes">
                         <TextField source="description" />
                     </ReferenceField>
+                    <EditButton />
+                </Datagrid>
+            </ReferenceManyField>
+
+            <CreatePacServer />
+            <ReferenceManyField
+                addLabel={false}
+                reference="pacserversimagelvl"
+                target= { "sectorId" }
+                sort={{ field: 'name', order: 'DESC' }}
+            >
+                <Datagrid rowClick="show">
+                    <TextField source="name" />
+                    <TextField source="aetitle" />
+                    <TextField source="domain" />
+                    <TextField source="port" />
                     <EditButton />
                 </Datagrid>
             </ReferenceManyField>

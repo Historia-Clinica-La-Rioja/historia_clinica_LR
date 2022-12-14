@@ -705,6 +705,17 @@ const messages = {
                 urlAuth: 'url_auth',
             },
         },
+        pacserversimagelvl: {
+            name: 'Servidor PAC a nivel servicio',
+            fields: {
+                name: 'Nombre de servidor PAC',
+                aetitle: 'AETITLE',
+                domain: 'Dominio',
+                port: 'Puerto',
+                sectorId: 'Sector',
+            },
+            createRelated: 'Crear Servidor PAC'
+        },
     }
 };
 

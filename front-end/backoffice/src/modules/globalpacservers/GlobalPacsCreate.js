@@ -13,7 +13,7 @@ import CustomToolbar from "../components/CustomToolbar";
 import { ROOT } from "../roles";
 import SgxSelectInput from "../../sgxSelectInput/SgxSelectInput";
 
-const InstitutionPracticesCreate = props => {
+const GlobalPacsCreate = props => {
     const { permissions } = usePermissions();
     const userIsRoot = permissions?.roleAssignments?.filter(roleAssignment => (roleAssignment.role === ROOT.role)).length > 0;
     return(
@@ -74,4 +74,4 @@ const InstitutionPracticesCreate = props => {
     );
 };
 
-export default InstitutionPracticesCreate;
+export default GlobalPacsCreate;
