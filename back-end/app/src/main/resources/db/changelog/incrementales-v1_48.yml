@@ -192,3 +192,53 @@ databaseChangeLog:
                   type: varchar(20)
 
 
+    - changeSet:
+        id: episode_document_createTable
+        comment: Create table episode_document
+        author: fdemuguruza
+        changes:
+          - createTable:
+              tableName: episode_document
+              columns:
+                - column:
+                    autoIncrement: true
+                    constraints:
+                      primaryKey: true
+                      primaryKeyName: PK_episode_document
+                    name: id
+                    type: bigint
+                - column:
+                    constraints:
+                      nullable: false
+                    name: path
+                    type: varchar
+                - column:
+                    constraints:
+                      nullable: false
+                    name: created_on
+                    type: datetime
+                    defaultValueDate: ${date.now}
+                - column:
+                    name: episode_document_types_id
+                    type: int
+                - column:
+                    name: internment_episode_id
+                    type: int
+          - addForeignKeyConstraint:
+              baseColumnNames: episode_document_types_id
+              baseTableName: episode_document
+              constraintName: FK_episode_document_types_id
+              onDelete: NO ACTION
+              onUpdate: NO ACTION
+              referencedColumnNames: id
+              referencedTableName: episode_document_types
+              validate: true
+          - addForeignKeyConstraint:
+              baseColumnNames: internment_episode_id
+              baseTableName: episode_document
+              constraintName: FK_internment_episode_id
+              onDelete: NO ACTION
+              onUpdate: NO ACTION
+              referencedColumnNames: id
+              referencedTableName: internment_episode
+              validate: true
