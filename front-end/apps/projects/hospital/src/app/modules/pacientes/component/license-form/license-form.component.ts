@@ -35,7 +35,7 @@ export class LicenseFormComponent implements ControlValueAccessor, OnDestroy, On
 
 	form = this.formBuilder.group({
 		id: null,
-		licenseNumber: new FormControl(null, [Validators.required, Validators.pattern(/^([a-zA-Z1-9])+$/), Validators.maxLength(MAX_LENGTH)]),
+		licenseNumber: new FormControl(null, [Validators.required, Validators.pattern(/^([a-zA-Z0-9])+$/), Validators.maxLength(MAX_LENGTH)]),
 
 		typeId: this.RADIO_OPTION_NATIONAL,
 		professionalProfessionId: new FormControl(null, [Validators.required]),
