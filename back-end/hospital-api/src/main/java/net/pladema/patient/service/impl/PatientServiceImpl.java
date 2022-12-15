@@ -1,12 +1,14 @@
 package net.pladema.patient.service.impl;
 
 import ar.lamansys.sgx.shared.auth.user.SecurityContextUtils;
+import ar.lamansys.sgx.shared.dates.configuration.LocalDateMapper;
 import ar.lamansys.sgx.shared.featureflags.AppFeature;
 import ar.lamansys.sgx.shared.featureflags.application.FeatureFlagsService;
 import net.pladema.audit.repository.HospitalAuditRepository;
 import net.pladema.audit.repository.entity.HospitalAudit;
 import net.pladema.audit.service.domain.enums.EActionType;
 import net.pladema.federar.services.FederarService;
+import net.pladema.patient.controller.dto.AuditablePatientInfoDto;
 import net.pladema.patient.controller.dto.PatientSearchFilter;
 import net.pladema.patient.repository.AuditablePatientRepository;
 import net.pladema.patient.repository.PatientAuditRepository;
@@ -19,6 +21,7 @@ import net.pladema.patient.repository.entity.Patient;
 import net.pladema.patient.repository.entity.PatientAudit;
 import net.pladema.patient.repository.entity.PatientType;
 import net.pladema.patient.service.PatientService;
+import net.pladema.patient.service.domain.AuditablePatientInfoBo;
 import net.pladema.patient.service.domain.LimitedPatientSearchBo;
 import net.pladema.patient.service.domain.PatientSearch;
 import net.pladema.patient.repository.MedicalCoverageRepository;
@@ -53,6 +56,7 @@ public class PatientServiceImpl implements PatientService {
 	private final PatientAuditRepository patientAuditRepository;
 	private final AuditablePatientRepository auditablePatientRepository;
 	private final FeatureFlagsService featureFlagsService;
+	private final LocalDateMapper localDateMapper;
 
 	public PatientServiceImpl(PatientRepository patientRepository,
 							  PatientMedicalCoverageRepository patientMedicalCoverageRepository,
@@ -62,12 +66,14 @@ public class PatientServiceImpl implements PatientService {
 							  HospitalAuditRepository hospitalAuditRepository,
 							  PatientAuditRepository patientAuditRepository,
 							  FeatureFlagsService featureFlagsService,
-							  AuditablePatientRepository auditablePatientRepository) {
+							  AuditablePatientRepository auditablePatientRepository,
+							  LocalDateMapper localDateMapper) {
 		this.patientRepository = patientRepository;
 		this.hospitalAuditRepository = hospitalAuditRepository;
 		this.patientAuditRepository = patientAuditRepository;
 		this.featureFlagsService = featureFlagsService;
 		this.auditablePatientRepository = auditablePatientRepository;
+		this.localDateMapper = localDateMapper;
 	}
 
 	@Override
@@ -195,11 +201,10 @@ public class PatientServiceImpl implements PatientService {
 	private AuditablePatientInfoDto mapToAuditablePatientInfoDto(AuditablePatientInfoBo auditablePatientInfo) {
 		return AuditablePatientInfoDto.builder()
 				.message(auditablePatientInfo.getMessage())
-				.createdBy(auditablePatientInfo.getAutorFullName())
+				.createdBy(auditablePatientInfo.getAuthorFullName())
 				.createdOn(localDateMapper.toDateTimeDto(auditablePatientInfo.getCreatedOn()))
 				.institutionName(auditablePatientInfo.getInstitutionName())
 				.build();
-		auditablePatientRepository.save(auditablePatient);
 	}
 
 }

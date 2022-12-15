@@ -299,6 +299,13 @@ export interface AttentionTypeReportItemDto {
     patientMedicalCoverageId: number;
 }
 
+export interface AuditablePatientInfoDto {
+    createdBy: string;
+    createdOn: DateTimeDto;
+    institutionName: string;
+    message: string;
+}
+
 export interface AuthorDto extends Serializable {
     firstName: string;
     id: number;
@@ -586,6 +593,7 @@ export interface CompleteDiaryDto extends DiaryDto {
 }
 
 export interface CompletePatientDto extends BasicPatientDto {
+    auditablePatientInfo: AuditablePatientInfoDto;
     generalPractitioner?: AAdditionalDoctorDto;
     medicalCoverageAffiliateNumber: string;
     medicalCoverageName: string;

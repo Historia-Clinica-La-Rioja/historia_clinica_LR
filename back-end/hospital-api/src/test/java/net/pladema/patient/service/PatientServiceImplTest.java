@@ -1,5 +1,6 @@
 package net.pladema.patient.service;
 
+import ar.lamansys.sgx.shared.dates.configuration.LocalDateMapper;
 import ar.lamansys.sgx.shared.featureflags.application.FeatureFlagsService;
 import net.pladema.UnitRepository;
 import net.pladema.audit.repository.HospitalAuditRepository;
@@ -57,6 +58,9 @@ class PatientServiceImplIntegrationTest extends UnitRepository {
 	@Mock
 	private AuditablePatientRepository auditablePatientRepository;
 
+	@Mock
+	private LocalDateMapper localDateMapper;
+
 	@BeforeEach
     void setUp(){
         patientService = new PatientServiceImpl(
@@ -68,7 +72,8 @@ class PatientServiceImplIntegrationTest extends UnitRepository {
                 hospitalAuditRepository,
                 patientAuditRepository,
                 featureFlagsService,
-				auditablePatientRepository);
+				auditablePatientRepository,
+				localDateMapper);
     }
 
     @Test

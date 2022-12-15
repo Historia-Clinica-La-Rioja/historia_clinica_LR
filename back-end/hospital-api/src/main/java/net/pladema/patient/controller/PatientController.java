@@ -279,6 +279,8 @@ public class PatientController {
 						? new AAdditionalDoctorDto(doctorsBo.getGeneralPractitionerBo())
 						: null,
 				doctorsBo.getPamiDoctorBo() != null ? new AAdditionalDoctorDto(doctorsBo.getPamiDoctorBo()) : null);
+		if(patient.getToAudit())
+			result.setAuditablePatientInfo(patientService.getAuditablePatientInfo(patientId));
 		LOG.debug(OUTPUT, result);
 		return ResponseEntity.ok().body(result);
 	}

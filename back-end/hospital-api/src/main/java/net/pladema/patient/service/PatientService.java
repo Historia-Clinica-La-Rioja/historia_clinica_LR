@@ -1,6 +1,7 @@
 package net.pladema.patient.service;
 
 import net.pladema.audit.service.domain.enums.EActionType;
+import net.pladema.patient.controller.dto.AuditablePatientInfoDto;
 import net.pladema.patient.controller.dto.PatientSearchFilter;
 import net.pladema.patient.repository.domain.PatientPersonVo;
 import net.pladema.patient.repository.entity.Patient;
@@ -32,5 +33,7 @@ public interface PatientService {
 	Optional<String> getIdentificationNumber(Integer patientId);
 
 	void persistSelectionForAnAudict(Integer patientId, Integer institutionId, String message);
+
+	AuditablePatientInfoDto getAuditablePatientInfo(Integer patientId);
 
 }
