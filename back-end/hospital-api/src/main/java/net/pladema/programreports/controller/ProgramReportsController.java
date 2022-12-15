@@ -102,11 +102,7 @@ public class ProgramReportsController {
 		response.flushBuffer();
 	}
 
-	String [] headersRecupero = new String[]{"Institution", "Hora", "Unidad Operativa", "Prestador", "DNI", "Fecha de atención", "Cons.N°", "DNI Paciente", "Nombre Paciente", "Sexo", "Genero",
-			"Nombre con el que se identifica", "Fecha de nacimiento", "Edad a fecha del turno", "Edad a Hoy", "Etnia", "Obra/s social/es", "Domicilio",
-			"Localidad", "Nivel de Instrucción", "Situación laboral", "Presión sistólica", "Presión diastólica", "Presión arterial media", "Temperatura",
-			"Frecuencia cardíaca", "Presión respiratoria", "Saturación de hemoglobina con oxígeno", "Altura", "Peso", "Indice de masa corporal", "Motivos",
-			"Procedimientos", "Problemas", "Medicación", "Evolución"};
+
 
 	@GetMapping(value = "/{institutionId}/monthlyRecupero")
 	@PreAuthorize("hasPermission(#institutionId, 'ADMINISTRADOR_INSTITUCIONAL_BACKOFFICE, PERSONAL_DE_ESTADISTICA')")
@@ -122,10 +118,14 @@ public class ProgramReportsController {
 
 		String tittle = "Recupero";
 
+		String [] headers = new String[]{"Institution", "Unidad Operativa", "Prestador", "DNI", "Fecha de atención","Hora", "Cons.N°", "DNI Paciente", "Nombre Paciente", "Sexo",
+				"Fecha de nacimiento", "Edad a fecha del turno", "Edad a Hoy","Obra/s social/es", "Domicilio", "Localidad", "Indice de masa corporal", "Motivos", "Procedimientos",
+				"Problemas", "Medicación", "Evolución"};
+
 		LocalDate startDate = localDateMapper.fromStringToLocalDate(fromDate);
 		LocalDate endDate = localDateMapper.fromStringToLocalDate(toDate);
 
-		IWorkbook wb = this.excelService.buildExcelRecupero(tittle, headersRecupero, this.queryFactoryPR.queryRecupero(institutionId, startDate, endDate));
+		IWorkbook wb = this.excelService.buildExcelRecupero(tittle, headers, this.queryFactoryPR.queryRecupero(institutionId, startDate, endDate));
 
 		String filename = tittle + "." + wb.getExtension();
 		response.addHeader("Content-disposition", "attachment;filename=" + filename);
@@ -152,11 +152,10 @@ public class ProgramReportsController {
 		LOG.debug("Se creará el excel {}", institutionId);
 		LOG.debug("Inputs parameters -> institutionId {}, fromDate {}, toDate{}", institutionId);
 
-		String [] headers = new String[]{"Institution", "Unidad Operativa", "Prestador", "DNI", "Fecha de atención","Hora", "Cons.N°", "DNI Paciente", "Nombre Paciente", "Sexo", "Genero",
-				"Nombre con el que se identifica", "Fecha de nacimiento", "Edad a fecha del turno", "Edad a Hoy", "Etnia", "Obra/s social/es", "Domicilio",
-				"Localidad", "Nivel de Instrucción", "Situación laboral", "Presión sistólica", "Presión diastólica", "Presión arterial media", "Temperatura",
-				"Frecuencia cardíaca", "Presión respiratoria", "Saturación de hemoglobina con oxígeno", "Altura", "Peso", "Indice de masa corporal", "Motivos",
-				"Procedimientos", "Problemas", "Medicación", "Evolución"};
+		String [] headers = new String[]{"Institution", "Unidad Operativa", "Prestador", "DNI", "Fecha de atención","Hora", "Cons.N°", "DNI Paciente", "Nombre Paciente", "Sexo",
+				"Fecha de nacimiento", "Edad a fecha del turno", "Edad a Hoy","Obra/s social/es", "Domicilio", "Localidad", "Indice de masa corporal", "Motivos", "Procedimientos",
+				"Problemas", "Medicación", "Evolución",  "Genero", "Nombre con el que se identifica","Etnia", "Nivel de Instrucción", "Situación laboral", "Presión sistólica", "Presión diastólica",
+				"Presión arterial media", "Temperatura", "Frecuencia cardíaca", "Presión respiratoria", "Saturación de hemoglobina con oxígeno", "Altura", "Peso"};
 
 		String tittle = "Recupero - Sumar";
 
