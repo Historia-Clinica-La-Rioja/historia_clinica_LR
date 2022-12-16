@@ -68,7 +68,7 @@ public class UpdateSnomedConceptsSynonymsByCsv {
 		Integer batchSize = batchMaxSize;
 		Integer totalConcepts = SnomedConceptsCsvReader.getTotalRecords(csvFile);
 		LocalDate today = dateTimeProvider.nowDate();
-		Integer snomedGroupId = saveSnomedGroup(eclKey, today);
+		Integer snomedGroupId = getSnomedGroupId(eclKey, today);
 		List<SnomedConceptBo> conceptBatch = null;
 
 		while (conceptsProcessed < totalConcepts) {
@@ -127,7 +127,7 @@ public class UpdateSnomedConceptsSynonymsByCsv {
 		return result;
 	}
 
-	private Integer saveSnomedGroup(String eclKey, LocalDate date) {
+	private Integer getSnomedGroupId(String eclKey, LocalDate date) {
 		log.debug("Input parameters -> eclKey {}, date {}", eclKey, date);
 		String ecl = "";
 		try {
@@ -136,10 +136,7 @@ public class UpdateSnomedConceptsSynonymsByCsv {
 			this.semaphore.release();
 			throw e;
 		}
-		Integer snomedGroupId = snomedGroupRepository.getBaseGroupIdByEclAndDescription(ecl, eclKey);
-		String customId = "1";
-		SnomedGroup toSave = new SnomedGroup(snomedGroupId, eclKey, ecl, customId, date, SnomedGroupType.DEFAULT);
-		Integer result = snomedGroupRepository.save(toSave).getId();
+		Integer result = snomedGroupRepository.getBaseGroupIdByEclAndDescription(ecl, eclKey);
 		log.debug("Output -> {}", result);
 		return result;
 	}
