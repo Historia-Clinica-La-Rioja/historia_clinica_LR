@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { DateDto } from '@api-rest/api-model';
 import { AttachDocumentPopupComponent } from '../../dialogs/attach-document-popup/attach-document-popup.component';
@@ -9,29 +9,28 @@ import { DeleteDocumentPopupComponent } from '../../dialogs/delete-document-popu
   templateUrl: './interment-document-episode.component.html',
   styleUrls: ['./interment-document-episode.component.scss']
 })
-export class IntermentDocumentEpisodeComponent implements OnInit {
+export class IntermentDocumentEpisodeComponent {
 
   @Input() documents: Document;
+  @Input() internmentEpisodeId: number;
 
   constructor(public dialog: MatDialog) { }
-
-  ngOnInit(): void {
-  }
 
   onFileSelected(event) {
     const file:File = event.target.files[0];
 
     if (file) 
-      this.openAttachDialog(file.name);
+      this.openAttachDialog(file);
     
   }
 
-  openAttachDialog(fileName: string) {
+  openAttachDialog(file: File) {
     const dialogRef = this.dialog.open(AttachDocumentPopupComponent, {
 			disableClose: true,
 			width: '35%',
 			data: {
-        fileName
+        file,
+        internmentEpisodeId: this.internmentEpisodeId
 			}
 		});
   }

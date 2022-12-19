@@ -1,6 +1,8 @@
 import { Component, Inject, OnInit } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { InternmentEpisodeDocumentService } from '@api-rest/services/internment-episode-document.service';
+import { InternmentEpisodeService } from '@api-rest/services/internment-episode.service';
 import { hasError } from '@core/utils/form.utils';
 import { TypeaheadOption } from '@presentation/components/typeahead/typeahead.component';
 
@@ -25,11 +27,12 @@ export class AttachDocumentPopupComponent implements OnInit {
   ]
 
   constructor(private fb: FormBuilder,
+              private internmentEpisodeDocument: InternmentEpisodeDocumentService,
               @Inject(MAT_DIALOG_DATA) public data) { }
 
   ngOnInit(): void {
     this.form = this.fb.group({
-      fileName: new FormControl({ value: this.data.fileName, disabled: true }),
+      fileName: new FormControl({ value: this.data.file.name, disabled: true }),
       type: new FormControl(null, Validators.required)
     });
     this.setDocumentTypesFilter();
@@ -52,7 +55,13 @@ export class AttachDocumentPopupComponent implements OnInit {
     return opt;
   }
 
-  save() {}
+  save() {
+    if ( ! this.form.valid) return;
+
+    const formDataFile: FormData = new FormData();
+    formDataFile.append('file', this.data.file);
+    this.internmentEpisodeDocument.saveInternmentEpisodeDocument(formDataFile, this.data.internmentEpisodeId, 1).subscribe();
+  }
 
   setDocumentType(type: string) {
     this.form.get('type').setValue(type);
