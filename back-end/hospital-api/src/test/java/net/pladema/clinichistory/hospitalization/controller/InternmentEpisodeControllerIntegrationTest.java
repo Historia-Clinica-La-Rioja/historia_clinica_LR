@@ -9,6 +9,7 @@ import net.pladema.clinichistory.hospitalization.controller.mapper.InternmentEpi
 import net.pladema.clinichistory.hospitalization.controller.mapper.PatientDischargeMapper;
 import net.pladema.clinichistory.hospitalization.controller.mapper.ResponsibleContactMapper;
 import net.pladema.clinichistory.hospitalization.controller.mocks.MocksInternmentPatient;
+import net.pladema.clinichistory.hospitalization.infrastructure.output.repository.FetchEpisodeDocument;
 import net.pladema.clinichistory.hospitalization.repository.InternmentEpisodeRepository;
 import net.pladema.clinichistory.hospitalization.repository.PatientDischargeRepository;
 import net.pladema.clinichistory.hospitalization.service.InternmentEpisodeService;
@@ -84,6 +85,9 @@ class InternmentEpisodeControllerIntegrationTest extends IntegrationController {
 
 	@MockBean
 	private HospitalApiPublisher hospitalApiPublisher;
+
+	@MockBean
+	private FetchEpisodeDocument fetchEpisodeDocument;
 
 	@BeforeEach
 	void setup() {

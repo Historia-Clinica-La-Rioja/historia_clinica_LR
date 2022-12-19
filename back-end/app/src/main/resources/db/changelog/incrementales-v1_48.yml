@@ -206,17 +206,28 @@ databaseChangeLog:
                       primaryKey: true
                       primaryKeyName: PK_episode_document
                     name: id
-                    type: bigint
+                    type: int
                 - column:
                     constraints:
                       nullable: false
-                    name: path
+                    name: file_path
                     type: varchar
                 - column:
                     constraints:
                       nullable: false
+                    name: file_name
+                    type: varchar
+                - column:
+                    constraints:
+                      nullable: false
+                    name: uuid_file
+                    type: varchar(36)
+                    defaultValue: uuid
+                - column:
+                    constraints:
+                      nullable: false
                     name: created_on
-                    type: datetime
+                    type: date
                     defaultValueDate: ${date.now}
                 - column:
                     name: episode_document_types_id

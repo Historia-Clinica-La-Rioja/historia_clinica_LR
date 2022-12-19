@@ -4,9 +4,15 @@ import java.time.LocalDateTime;
 
 import javax.validation.Valid;
 
+import net.pladema.clinichistory.hospitalization.controller.dto.EpisodeDocumentDto;
+
+import net.pladema.clinichistory.hospitalization.controller.dto.EpisodeDocumentResponseDto;
+import net.pladema.clinichistory.hospitalization.infrastructure.output.repository.FetchEpisodeDocument;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.transaction.annotation.Transactional;
@@ -17,6 +23,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
 
 import ar.lamansys.sgx.shared.dates.configuration.LocalDateMapper;
@@ -49,6 +57,8 @@ import net.pladema.establishment.controller.service.BedExternalService;
 import net.pladema.events.EHospitalApiTopicDto;
 import net.pladema.events.HospitalApiPublisher;
 import net.pladema.staff.controller.service.HealthcareProfessionalExternalService;
+
+import org.springframework.web.multipart.MultipartFile;
 
 @RestController
 @RequestMapping("/institutions/{institutionId}/internments")
@@ -84,7 +94,9 @@ public class InternmentEpisodeController {
 
 	private final HospitalApiPublisher hospitalApiPublisher;
 
-	public InternmentEpisodeController(InternmentEpisodeService internmentEpisodeService, HealthcareProfessionalExternalService healthcareProfessionalExternalService, InternmentEpisodeMapper internmentEpisodeMapper, BedExternalService bedExternalService, PatientDischargeMapper patientDischargeMapper, ResponsibleContactService responsibleContactService, FeatureFlagsService featureFlagsService, PatientDischargeService patientDischargeService, ResponsibleContactMapper responsibleContactMapper, LocalDateMapper localDateMapper, HospitalApiPublisher hospitalApiPublisher) {
+	private final FetchEpisodeDocument fetchEpisodeDocument;
+
+	public InternmentEpisodeController(InternmentEpisodeService internmentEpisodeService, HealthcareProfessionalExternalService healthcareProfessionalExternalService, InternmentEpisodeMapper internmentEpisodeMapper, BedExternalService bedExternalService, PatientDischargeMapper patientDischargeMapper, ResponsibleContactService responsibleContactService, FeatureFlagsService featureFlagsService, PatientDischargeService patientDischargeService, ResponsibleContactMapper responsibleContactMapper, LocalDateMapper localDateMapper, HospitalApiPublisher hospitalApiPublisher, FetchEpisodeDocument fetchEpisodeDocument) {
 		this.internmentEpisodeService = internmentEpisodeService;
 		this.healthcareProfessionalExternalService = healthcareProfessionalExternalService;
 		this.internmentEpisodeMapper = internmentEpisodeMapper;
@@ -96,9 +108,22 @@ public class InternmentEpisodeController {
 		this.responsibleContactMapper = responsibleContactMapper;
 		this.localDateMapper = localDateMapper;
 		this.hospitalApiPublisher = hospitalApiPublisher;
+		this.fetchEpisodeDocument = fetchEpisodeDocument;
 	}
 
-	@InternmentValid
+	@PostMapping(value = "{internmentEpisodeId}/episodedocuments/{episodeDocumentTypeId}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+	@Transactional
+	public ResponseEntity<EpisodeDocumentResponseDto> episodeDocument(
+			@PathVariable(name = "episodeDocumentTypeId") Integer episodeDocumentTypeId,
+			@PathVariable(name = "internmentEpisodeId") Integer internmentEpisodeId,
+			@RequestPart("file") MultipartFile file) {
+		LOG.debug("Input parameters -> internmentEpisodeId {}, episodeDocumentTypeId {}, file {}", internmentEpisodeId, episodeDocumentTypeId, file);
+		EpisodeDocumentDto dto = new EpisodeDocumentDto(file, episodeDocumentTypeId, internmentEpisodeId);
+		EpisodeDocumentResponseDto episodeDocumentResponseDto = this.fetchEpisodeDocument.saveEpisodeDocument(dto);
+		LOG.debug(OUTPUT, episodeDocumentResponseDto);
+		return ResponseEntity.ok().body(episodeDocumentResponseDto);
+	}
+
 	@GetMapping("/{internmentEpisodeId}/summary")
 	@PreAuthorize("hasPermission(#institutionId, 'ESPECIALISTA_MEDICO, PROFESIONAL_DE_SALUD, ESPECIALISTA_EN_ODONTOLOGIA, ADMINISTRATIVO, ENFERMERO_ADULTO_MAYOR, ENFERMERO, ADMINISTRADOR_DE_CAMAS, PERSONAL_DE_IMAGENES, PERSONAL_DE_LABORATORIO, PERSONAL_DE_FARMACIA')")
 	public ResponseEntity<InternmentSummaryDto> internmentEpisodeSummary(

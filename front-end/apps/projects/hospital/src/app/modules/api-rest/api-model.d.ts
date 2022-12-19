@@ -582,6 +582,9 @@ export interface ClinicalTermDto extends Serializable {
     statusId?: string;
 }
 
+export interface Comparable<T> {
+}
+
 export interface CompleteDiaryDto extends DiaryDto {
     associatedProfessionalsInfo: ProfessionalPersonDto[];
     careLinesInfo: CareLineDto[];
@@ -1100,6 +1103,22 @@ export interface EpicrisisObservationsDto extends Serializable {
 export interface EpicrisisSummaryDto extends DocumentSummaryDto {
 }
 
+export interface EpisodeDocumentDto {
+    episodeDocumentTypeId: number;
+    file: MultipartFile;
+    internmentEpisodeId: number;
+}
+
+export interface EpisodeDocumentResponseDto {
+    createdOn: Date;
+    episodeDocumentTypeId: number;
+    fileName: string;
+    filePath: string;
+    id: number;
+    internmentEpisodeId: number;
+    uuidFile: string;
+}
+
 export interface EthnicityDto extends Serializable {
     id: number;
     pt: string;
@@ -1561,6 +1580,10 @@ export interface IndicationDto {
     type: EIndicationType;
 }
 
+export interface InputStreamSource {
+    inputStream: any;
+}
+
 export interface InstitutionAddressDto extends Serializable {
     addressId: number;
     apartment: string;
@@ -1811,6 +1834,16 @@ export interface MqttMetadataDto {
     qos: number;
     retained: boolean;
     topic: string;
+}
+
+export interface MultipartFile extends InputStreamSource {
+    bytes: any;
+    contentType?: string;
+    empty: boolean;
+    name: string;
+    originalFilename?: string;
+    resource: Resource;
+    size: number;
 }
 
 export interface NewDosageDto extends Serializable {
@@ -2678,6 +2711,16 @@ export interface RequiredPatientDataDto {
     phoneNumber: string;
 }
 
+export interface Resource extends InputStreamSource {
+    description: string;
+    file: any;
+    filename?: string;
+    open: boolean;
+    readable: boolean;
+    uri: URI;
+    url: URL;
+}
+
 export interface ResponseAnamnesisDto extends AnamnesisDto {
     id: number;
 }
@@ -2994,6 +3037,12 @@ export interface TwoFactorAuthenticationDto {
 
 export interface TwoFactorAuthenticationLoginDto {
     code: string;
+}
+
+export interface URI extends Comparable<URI>, Serializable {
+}
+
+export interface URL extends Serializable {
 }
 
 export interface UpdateAppointmentDateDto {
