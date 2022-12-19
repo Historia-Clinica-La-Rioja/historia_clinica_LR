@@ -1110,7 +1110,7 @@ export interface EpisodeDocumentDto {
 }
 
 export interface EpisodeDocumentResponseDto {
-    createdOn: Date;
+    createdOn: DateDto;
     episodeDocumentTypeId: number;
     fileName: string;
     filePath: string;

@@ -1,6 +1,7 @@
 package net.pladema.clinichistory.hospitalization.controller;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 import javax.validation.Valid;
 
@@ -122,6 +123,14 @@ public class InternmentEpisodeController {
 		EpisodeDocumentResponseDto episodeDocumentResponseDto = this.fetchEpisodeDocument.saveEpisodeDocument(dto);
 		LOG.debug(OUTPUT, episodeDocumentResponseDto);
 		return ResponseEntity.ok().body(episodeDocumentResponseDto);
+	}
+
+	@GetMapping("{internmentEpisodeId}/episodedocuments")
+	public ResponseEntity<List<EpisodeDocumentResponseDto>> getEpisodeDocuments(@PathVariable(name = "internmentEpisodeId") Integer internmentEpisodeId) {
+		LOG.debug("Input parameters -> internmentEpisodeId {}", internmentEpisodeId);
+		List<EpisodeDocumentResponseDto> result = this.fetchEpisodeDocument.getEpisodeDocuments(internmentEpisodeId);
+		LOG.debug(OUTPUT, result);
+		return ResponseEntity.ok().body(result);
 	}
 
 	@GetMapping("/{internmentEpisodeId}/summary")

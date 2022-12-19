@@ -4,7 +4,11 @@ import net.pladema.clinichistory.hospitalization.infrastructure.output.entities.
 import net.pladema.clinichistory.hospitalization.service.domain.EpisodeDocumentBo;
 import net.pladema.clinichistory.hospitalization.service.domain.EpisodeDocumentResponseBo;
 
+import java.util.List;
+
 public interface EpisodeDocumentStorage {
 
 	EpisodeDocumentResponseBo saveEpisodeDocument(EpisodeDocumentBo bo);
+
+	List<EpisodeDocumentResponseBo> getEpisodeDocuments(Integer internmentEpisodeId);
 }

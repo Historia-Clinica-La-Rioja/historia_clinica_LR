@@ -1,18 +1,11 @@
 package net.pladema.clinichistory.hospitalization.service.domain;
 
+import ar.lamansys.sgx.shared.dates.controller.dto.DateDto;
 import lombok.AllArgsConstructor;
-import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
-
-import javax.persistence.Column;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-
-import java.time.LocalDate;
 
 @Getter
 @Setter
@@ -25,7 +18,7 @@ public class EpisodeDocumentResponseBo {
 	private String filePath;
 	private String fileName;
 	private String uuidFile;
-	private LocalDate createdOn;
+	private DateDto createdOn;
 	private Integer episodeDocumentTypeId;
 	private Integer internmentEpisodeId;
 }

@@ -12,9 +12,10 @@ import net.pladema.clinichistory.hospitalization.service.domain.EpisodeDocumentR
 import org.apache.commons.io.FilenameUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
-import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @Slf4j
@@ -48,6 +49,17 @@ public class FetchEpisodeDocumentImpl implements FetchEpisodeDocument {
 		EpisodeDocumentResponseDto episodeDocumentResponseDto = this.mapToDto(bo);
 		log.debug(OUTPUT, episodeDocumentResponseDto);
 		return episodeDocumentResponseDto;
+	}
+
+	@Override
+	public List<EpisodeDocumentResponseDto> getEpisodeDocuments(Integer internmentEpisodeId) {
+		log.debug("Input parameters -> internmentEpisodeId {}", internmentEpisodeId);
+		List<EpisodeDocumentResponseDto> result =  this.episodeDocumentStorage.getEpisodeDocuments(internmentEpisodeId)
+				.stream()
+				.map(bo -> this.mapToDto(bo))
+				.collect(Collectors.toList());
+		log.debug(OUTPUT, result);
+		return result;
 	}
 
 	private EpisodeDocumentResponseDto mapToDto(EpisodeDocumentResponseBo bo) {

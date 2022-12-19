@@ -4,9 +4,11 @@ import net.pladema.clinichistory.hospitalization.controller.dto.EpisodeDocumentD
 
 import net.pladema.clinichistory.hospitalization.controller.dto.EpisodeDocumentResponseDto;
 
-import org.springframework.web.multipart.MultipartFile;
+import java.util.List;
 
 public interface FetchEpisodeDocument {
 
 	EpisodeDocumentResponseDto saveEpisodeDocument(EpisodeDocumentDto dto);
+
+	List<EpisodeDocumentResponseDto> getEpisodeDocuments(Integer internmentEpisodeId);
 }
