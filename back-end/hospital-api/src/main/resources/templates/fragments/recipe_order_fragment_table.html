@@ -73,7 +73,11 @@
         <div th:if="${recipe}">
             <div class="logo"></div>
             <div class="date-header">
-                <strong>Fecha de emisión: </strong>
+                <strong>Institución: </strong>
+                <label th:text="${institution.sisaCode}"></label>
+                <strong> - </strong>
+                <label th:text="${institution.name}"></label>
+                <strong> Fecha de emisión: </strong>
                 <label th:text="${requestDate}"></label>
                 <strong> N° de Receta: </strong>
                 <label th:text="${request.medicationRequestId}"></label>
@@ -82,7 +86,11 @@
         <div th:if="${order}">
             <div class="logo"></div>
             <div class="date-header">
-                <strong>Fecha de emisión: </strong>
+                <strong>Institución: </strong>
+                <label th:text="${institution.sisaCode}"></label>
+                <strong> - </strong>
+                <label th:text="${institution.name}"></label>
+                <strong> Fecha de emisión: </strong>
                 <label th:text="${requestDate}"></label>
                 <strong> N° de Orden: </strong>
                 <label th:text="${request.serviceRequestId}"></label>

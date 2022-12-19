@@ -36,6 +36,8 @@ import ar.lamansys.sgh.clinichistory.domain.document.PatientInfoBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.DiagnosticReportBo;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.generateFile.DocumentAuthorFinder;
 import ar.lamansys.sgh.shared.infrastructure.input.service.BasicPatientDto;
+import ar.lamansys.sgh.shared.infrastructure.input.service.institution.InstitutionInfoDto;
+import ar.lamansys.sgh.shared.infrastructure.input.service.institution.SharedInstitutionPort;
 import ar.lamansys.sgh.shared.infrastructure.input.service.staff.ProfessionalCompleteDto;
 import ar.lamansys.sgx.shared.exceptions.dto.ApiErrorDto;
 import ar.lamansys.sgx.shared.featureflags.AppFeature;
@@ -102,27 +104,28 @@ public class ServiceRequestController {
 	private final HospitalApiPublisher hospitalApiPublisher;
 	private final FeatureFlagsService featureFlagsService;
 	private final Function<Long, ProfessionalCompleteDto> authorFromDocumentFunction;
+    private final SharedInstitutionPort sharedInstitutionPort;
 
 
 	public ServiceRequestController(HealthcareProfessionalExternalService healthcareProfessionalExternalService,
-									CreateServiceRequestService createServiceRequestService,
-									CreateServiceRequestMapper createServiceRequestMapper,
-									PatientExternalService patientExternalService,
-									StudyMapper studyMapper,
-									DiagnosticReportInfoMapper diagnosticReportInfoMapper,
-									ListDiagnosticReportInfoService listDiagnosticReportInfoService,
-									DeleteDiagnosticReportService deleteDiagnosticReportService,
-									CompleteDiagnosticReportService completeDiagnosticReportService,
-									CompleteDiagnosticReportMapper completeDiagnosticReportMapper,
-									UploadDiagnosticReportCompletedFileService uploadDiagnosticReportCompletedFileService,
-									UpdateDiagnosticReportFileService updateDiagnosticReportFileService,
-									DiagnosticReportInfoService diagnosticReportInfoService,
-									FileMapper fileMapper,
-									PatientExternalMedicalCoverageService patientExternalMedicalCoverageService,
-									PdfService pdfService, GetServiceRequestInfoService getServiceRequestInfoService,
-									HospitalApiPublisher hospitalApiPublisher, FeatureFlagsService featureFlagsService,
-									DocumentAuthorFinder documentAuthorFinder
-									) {
+                                    CreateServiceRequestService createServiceRequestService,
+                                    CreateServiceRequestMapper createServiceRequestMapper,
+                                    PatientExternalService patientExternalService,
+                                    StudyMapper studyMapper,
+                                    DiagnosticReportInfoMapper diagnosticReportInfoMapper,
+                                    ListDiagnosticReportInfoService listDiagnosticReportInfoService,
+                                    DeleteDiagnosticReportService deleteDiagnosticReportService,
+                                    CompleteDiagnosticReportService completeDiagnosticReportService,
+                                    CompleteDiagnosticReportMapper completeDiagnosticReportMapper,
+                                    UploadDiagnosticReportCompletedFileService uploadDiagnosticReportCompletedFileService,
+                                    UpdateDiagnosticReportFileService updateDiagnosticReportFileService,
+                                    DiagnosticReportInfoService diagnosticReportInfoService,
+                                    FileMapper fileMapper,
+                                    PatientExternalMedicalCoverageService patientExternalMedicalCoverageService,
+                                    PdfService pdfService, GetServiceRequestInfoService getServiceRequestInfoService,
+                                    HospitalApiPublisher hospitalApiPublisher, FeatureFlagsService featureFlagsService,
+                                    DocumentAuthorFinder documentAuthorFinder,
+                                    SharedInstitutionPort sharedInstitutionPort) {
 		this.healthcareProfessionalExternalService = healthcareProfessionalExternalService;
 		this.createServiceRequestService = createServiceRequestService;
 		this.createServiceRequestMapper = createServiceRequestMapper;
@@ -143,7 +146,8 @@ public class ServiceRequestController {
 		this.hospitalApiPublisher = hospitalApiPublisher;
 		this.featureFlagsService = featureFlagsService;
 		this.authorFromDocumentFunction = (Long documentId) -> documentAuthorFinder.getAuthor(documentId);
-	}
+        this.sharedInstitutionPort = sharedInstitutionPort;
+    }
 
     @PostMapping
     @ResponseStatus(code = HttpStatus.CREATED)
@@ -293,8 +297,9 @@ public class ServiceRequestController {
         LOG.debug("medicationRequestList -> institutionId {}, patientId {}, serviceRequestId {}", institutionId, patientId, serviceRequestId);
         var serviceRequestBo = getServiceRequestInfoService.run(serviceRequestId);
         var patientDto = patientExternalService.getBasicDataFromPatient(patientId);
+        var institutionDto = sharedInstitutionPort.fetchInstitutionById(institutionId);
         var patientCoverageDto = patientExternalMedicalCoverageService.getCoverage(serviceRequestBo.getMedicalCoverageId());
-        var context = createContext(serviceRequestBo, patientDto, patientCoverageDto);
+        var context = createContext(serviceRequestBo, patientDto, patientCoverageDto, institutionDto);
 
         String template = "recipe_order_table";
 
@@ -307,9 +312,10 @@ public class ServiceRequestController {
 
     private Map<String, Object> createContext(ServiceRequestBo serviceRequestBo,
                                               BasicPatientDto patientDto,
-                                              PatientMedicalCoverageDto patientCoverageDto) {
-        LOG.debug("Input parameters -> serviceRequestBo {}, patientDto {}, patientCoverageDto {}",
-                serviceRequestBo, patientDto, patientCoverageDto);
+                                              PatientMedicalCoverageDto patientCoverageDto,
+                                              InstitutionInfoDto institutionDto) {
+        LOG.debug("Input parameters -> serviceRequestBo {}, patientDto {}, patientCoverageDto {}, institutionInfoDto {}",
+                serviceRequestBo, patientDto, patientCoverageDto, institutionDto);
         Map<String, Object> ctx = new HashMap<>();
         ctx.put("recipe", false);
         ctx.put("order", true);
@@ -317,6 +323,7 @@ public class ServiceRequestController {
         ctx.put("patient", patientDto);
         ctx.put("professional", authorFromDocumentFunction.apply(serviceRequestBo.getId()));
         ctx.put("patientCoverage", patientCoverageDto);
+        ctx.put("institution", institutionDto);
         var date = serviceRequestBo.getRequestDate().format(DateTimeFormatter.ofPattern("dd-MM-yyyy"));
 		ctx.put("nameSelfDeterminationFF", featureFlagsService.isOn(AppFeature.HABILITAR_DATOS_AUTOPERCIBIDOS));
 		ctx.put("requestDate", date);
