@@ -1,6 +1,6 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { Router } from "@angular/router";
-import { AnamnesisSummaryDto, EpicrisisSummaryDto, EvaluationNoteSummaryDto } from '@api-rest/api-model';
+import { AnamnesisSummaryDto, EpicrisisSummaryDto, EpisodeDocumentResponseDto, EvaluationNoteSummaryDto } from '@api-rest/api-model';
 import { ContextService } from "@core/services/context.service";
 import { FeatureFlagService } from "@core/services/feature-flag.service";
 import { SnackBarService } from "@presentation/services/snack-bar.service";
@@ -11,7 +11,6 @@ import { InternmentEpisodeService } from "@api-rest/services/internment-episode.
 import { anyMatch } from "@core/utils/array.utils";
 import { ERole } from "@api-rest/api-model";
 import { InternmentSummaryFacadeService } from '../../services/internment-summary-facade.service';
-import { Document } from '../interment-document-episode/interment-document-episode.component';
 import { InternmentEpisodeDocumentService } from '@api-rest/services/internment-episode-document.service';
 
 const ROUTE_INTERNMENT_EPISODE_PREFIX = 'internaciones/internacion/';
@@ -45,7 +44,7 @@ export class InternmentEpisodeSummaryComponent implements OnInit {
 	hasMedicalDischarge: boolean;
 	hasAdministrativeDischarge = false;
 
-	documents: Document[];
+	documents: EpisodeDocumentResponseDto[];
 
 	constructor(
 		private router: Router,

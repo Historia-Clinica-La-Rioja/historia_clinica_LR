@@ -1,6 +1,7 @@
 import { Component, Inject, OnInit } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { DocumentTypeDto } from '@api-rest/api-model';
 import { InternmentEpisodeDocumentService } from '@api-rest/services/internment-episode-document.service';
 import { InternmentEpisodeService } from '@api-rest/services/internment-episode.service';
 import { hasError } from '@core/utils/form.utils';
@@ -17,14 +18,6 @@ export class AttachDocumentPopupComponent implements OnInit {
   form: FormGroup;
   documentTypes: TypeaheadOption<any>[];
   required: boolean = true;
-  response = [
-    {
-      type: "Epicrisis",
-    },
-    {
-      type: "Internación",
-    },
-  ]
 
   constructor(private fb: FormBuilder,
               private internmentEpisodeDocument: InternmentEpisodeDocumentService,
@@ -39,17 +32,19 @@ export class AttachDocumentPopupComponent implements OnInit {
   }
 
   setDocumentTypesFilter() {
-    const options: TypeaheadOption<any>[] = this.setFilterValues(this.response);
-    this.documentTypes = options;
+    this.internmentEpisodeDocument.getDocumentTypes().subscribe(response => {
+      const options: TypeaheadOption<any>[] = this.setFilterValues(response);
+      this.documentTypes = options;
+    })
   }
 
   setFilterValues(response) {
     const opt: TypeaheadOption<any>[] = [];
     response.map(value => {
       opt.push({
-        value: value.type,
-        compareValue: value.type,
-        viewValue: value.type,
+        value: value.id,
+        compareValue: value.description,
+        viewValue: value.description,
       });
     })
     return opt;
@@ -60,10 +55,10 @@ export class AttachDocumentPopupComponent implements OnInit {
 
     const formDataFile: FormData = new FormData();
     formDataFile.append('file', this.data.file);
-    this.internmentEpisodeDocument.saveInternmentEpisodeDocument(formDataFile, this.data.internmentEpisodeId, 1).subscribe();
+    this.internmentEpisodeDocument.saveInternmentEpisodeDocument(formDataFile, this.data.internmentEpisodeId, this.form.get('type').value).subscribe();
   }
 
-  setDocumentType(type: string) {
+  setDocumentType(type: DocumentTypeDto) {
     this.form.get('type').setValue(type);
   }
 

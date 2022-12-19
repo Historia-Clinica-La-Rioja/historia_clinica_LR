@@ -1,6 +1,6 @@
 import { Component, Input } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
-import { DateDto } from '@api-rest/api-model';
+import { DateDto, EpisodeDocumentResponseDto } from '@api-rest/api-model';
 import { AttachDocumentPopupComponent } from '../../dialogs/attach-document-popup/attach-document-popup.component';
 import { DeleteDocumentPopupComponent } from '../../dialogs/delete-document-popup/delete-document-popup.component';
 
@@ -11,7 +11,7 @@ import { DeleteDocumentPopupComponent } from '../../dialogs/delete-document-popu
 })
 export class IntermentDocumentEpisodeComponent {
 
-  @Input() documents: Document;
+  @Input() documents: EpisodeDocumentResponseDto;
   @Input() internmentEpisodeId: number;
 
   constructor(public dialog: MatDialog) { }
@@ -42,10 +42,4 @@ export class IntermentDocumentEpisodeComponent {
 			data: {}
 		});
   }
-}
-
-export interface Document {
-	type: string;
-	fileName: string;
-	date: DateDto;
 }

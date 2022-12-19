@@ -1,10 +1,13 @@
 package net.pladema.clinichistory.hospitalization.infrastructure.output.repository;
 
+import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.DocumentType;
 import ar.lamansys.sgx.shared.dates.configuration.LocalDateMapper;
 import lombok.extern.slf4j.Slf4j;
 
 import net.pladema.clinichistory.hospitalization.infrastructure.output.entities.EpisodeDocument;
 
+import net.pladema.clinichistory.hospitalization.infrastructure.output.entities.EpisodeDocumentType;
+import net.pladema.clinichistory.hospitalization.service.domain.DocumentTypeBo;
 import net.pladema.clinichistory.hospitalization.service.domain.EpisodeDocumentBo;
 
 import net.pladema.clinichistory.hospitalization.service.domain.EpisodeDocumentResponseBo;
@@ -24,9 +27,12 @@ public class EpisodeDocumentStorageImpl implements EpisodeDocumentStorage {
 
 	private final LocalDateMapper localDateMapper;
 
-	public EpisodeDocumentStorageImpl(EpisodeDocumentRepository episodeDocumentRepository, LocalDateMapper localDateMapper) {
+	private final InternmentEpisodeDocumentTypeRepository documentTypeRepository;
+
+	public EpisodeDocumentStorageImpl(EpisodeDocumentRepository episodeDocumentRepository, LocalDateMapper localDateMapper, InternmentEpisodeDocumentTypeRepository documentTypeRepository) {
 		this.episodeDocumentRepository = episodeDocumentRepository;
 		this.localDateMapper = localDateMapper;
+		this.documentTypeRepository = documentTypeRepository;
 	}
 
 	@Override
@@ -44,6 +50,18 @@ public class EpisodeDocumentStorageImpl implements EpisodeDocumentStorage {
 				.collect(Collectors.toList());
 		log.debug(OUTPUT, result);
 		return result;
+	}
+
+	@Override
+	public List<DocumentTypeBo> getDocumentTypes() {
+		return this.documentTypeRepository.findAll()
+				.stream()
+				.map(entity -> this.mapDocumentTypeToBo(entity))
+				.collect(Collectors.toList());
+	}
+
+	private DocumentTypeBo mapDocumentTypeToBo(EpisodeDocumentType entity) {
+		return new DocumentTypeBo(entity.getId(), entity.getDescription());
 	}
 
 	EpisodeDocumentResponseBo mapToBo(EpisodeDocument entity) {

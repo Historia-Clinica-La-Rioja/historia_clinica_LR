@@ -952,6 +952,11 @@ export interface DocumentSummaryDto extends Serializable {
     id: number;
 }
 
+export interface DocumentTypeDto {
+    description: string;
+    id: number;
+}
+
 export interface DocumentsSummaryDto extends Serializable {
     anamnesis: AnamnesisSummaryDto;
     epicrisis: EpicrisisSummaryDto;

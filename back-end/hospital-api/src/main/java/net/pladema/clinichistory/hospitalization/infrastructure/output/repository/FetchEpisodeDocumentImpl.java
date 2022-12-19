@@ -2,9 +2,11 @@ package net.pladema.clinichistory.hospitalization.infrastructure.output.reposito
 
 import ar.lamansys.sgx.shared.files.FileService;
 import lombok.extern.slf4j.Slf4j;
+import net.pladema.clinichistory.hospitalization.controller.dto.DocumentTypeDto;
 import net.pladema.clinichistory.hospitalization.controller.dto.EpisodeDocumentDto;
 
 import net.pladema.clinichistory.hospitalization.controller.dto.EpisodeDocumentResponseDto;
+import net.pladema.clinichistory.hospitalization.service.domain.DocumentTypeBo;
 import net.pladema.clinichistory.hospitalization.service.domain.EpisodeDocumentBo;
 
 import net.pladema.clinichistory.hospitalization.service.domain.EpisodeDocumentResponseBo;
@@ -60,6 +62,18 @@ public class FetchEpisodeDocumentImpl implements FetchEpisodeDocument {
 				.collect(Collectors.toList());
 		log.debug(OUTPUT, result);
 		return result;
+	}
+
+	@Override
+	public List<DocumentTypeDto> getDocumentTypes() {
+		return this.episodeDocumentStorage.getDocumentTypes()
+				.stream()
+				.map(bo -> this.mapDocumentTypeToDto(bo))
+				.collect(Collectors.toList());
+	}
+
+	private DocumentTypeDto mapDocumentTypeToDto(DocumentTypeBo bo) {
+		return new DocumentTypeDto(bo.getId(), bo.getDescription());
 	}
 
 	private EpisodeDocumentResponseDto mapToDto(EpisodeDocumentResponseBo bo) {

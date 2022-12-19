@@ -7,7 +7,7 @@
     <article>
         <ng-container *ngIf="documents; else noDocuments">
             <div *ngFor="let document of documents" class="episode-document-list">
-                <p>{{document.type}}</p>
+                <p>{{document.episodeDocumentTypeId}}</p>
                 <a href="#">{{document.fileName}}</a>
                 <p>{{document.createdOn |
                     viewDateDto:

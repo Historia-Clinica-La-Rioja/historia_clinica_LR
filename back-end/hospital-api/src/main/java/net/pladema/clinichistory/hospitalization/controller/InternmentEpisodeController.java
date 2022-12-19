@@ -5,6 +5,7 @@ import java.util.List;
 
 import javax.validation.Valid;
 
+import net.pladema.clinichistory.hospitalization.controller.dto.DocumentTypeDto;
 import net.pladema.clinichistory.hospitalization.controller.dto.EpisodeDocumentDto;
 
 import net.pladema.clinichistory.hospitalization.controller.dto.EpisodeDocumentResponseDto;
@@ -129,6 +130,13 @@ public class InternmentEpisodeController {
 	public ResponseEntity<List<EpisodeDocumentResponseDto>> getEpisodeDocuments(@PathVariable(name = "internmentEpisodeId") Integer internmentEpisodeId) {
 		LOG.debug("Input parameters -> internmentEpisodeId {}", internmentEpisodeId);
 		List<EpisodeDocumentResponseDto> result = this.fetchEpisodeDocument.getEpisodeDocuments(internmentEpisodeId);
+		LOG.debug(OUTPUT, result);
+		return ResponseEntity.ok().body(result);
+	}
+
+	@GetMapping("/documentstypes")
+	public ResponseEntity<List<DocumentTypeDto>> getDocumentsTypes() {
+		List<DocumentTypeDto> result = this.fetchEpisodeDocument.getDocumentTypes();
 		LOG.debug(OUTPUT, result);
 		return ResponseEntity.ok().body(result);
 	}
