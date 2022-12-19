@@ -12,6 +12,7 @@ import { anyMatch } from "@core/utils/array.utils";
 import { ERole } from "@api-rest/api-model";
 import { InternmentSummaryFacadeService } from '../../services/internment-summary-facade.service';
 import { Document } from '../interment-document-episode/interment-document-episode.component';
+import { InternmentEpisodeDocumentService } from '@api-rest/services/internment-episode-document.service';
 
 const ROUTE_INTERNMENT_EPISODE_PREFIX = 'internaciones/internacion/';
 const ROUTE_RELOCATE_PATIENT_BED_PREFIX = '/pase-cama';
@@ -44,26 +45,7 @@ export class InternmentEpisodeSummaryComponent implements OnInit {
 	hasMedicalDischarge: boolean;
 	hasAdministrativeDischarge = false;
 
-	documents: Document[] = [
-		{
-			type: 'Epicrisis',
-			fileName: "49584_54343423432_934823948932",
-			date: {
-				day: 13,
-				month: 12,
-				year: 2022
-			}
-		},
-		{
-			type: 'Alta internacion',
-			fileName: "49584_54",
-			date: {
-				day: 7,
-				month: 12,
-				year: 2022
-			}
-		}
-	]
+	documents: Document[];
 
 	constructor(
 		private router: Router,
@@ -72,6 +54,7 @@ export class InternmentEpisodeSummaryComponent implements OnInit {
 		private readonly dialog: MatDialog,
 		private readonly permissionsService: PermissionsService,
 		private readonly internmentService: InternmentEpisodeService,
+		private internmentEpisodeDocumentService: InternmentEpisodeDocumentService,
 		readonly internmentSummaryFacadeService: InternmentSummaryFacadeService,
 	) {
 		this.routePrefix = 'institucion/' + this.contextService.institutionId + '/';
@@ -87,6 +70,7 @@ export class InternmentEpisodeSummaryComponent implements OnInit {
 		this.internmentSummaryFacadeService.epicrisis$.subscribe(e => this.epicrisisDoc = e);
 		this.internmentSummaryFacadeService.evolutionNote$.subscribe(evolutionNote => this.lastEvolutionNoteDoc = evolutionNote);
 		this.internmentSummaryFacadeService.hasMedicalDischarge$.subscribe(h => this.hasMedicalDischarge = h);
+		this.internmentEpisodeDocumentService.getInternmentEpisodeDocuments(this.internmentEpisode.id).subscribe(response => this.documents = response);
 	}
 
 	goToPaseCama(): void {
