@@ -1,7 +1,7 @@
 import { Component, Inject, OnInit } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
-import { MAT_DIALOG_DATA } from '@angular/material/dialog';
-import { DocumentTypeDto } from '@api-rest/api-model';
+import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { DocumentTypeDto, SavedEpisodeDocumentResponseDto } from '@api-rest/api-model';
 import { InternmentEpisodeDocumentService } from '@api-rest/services/internment-episode-document.service';
 import { InternmentEpisodeService } from '@api-rest/services/internment-episode.service';
 import { hasError } from '@core/utils/form.utils';
@@ -21,6 +21,7 @@ export class AttachDocumentPopupComponent implements OnInit {
 
   constructor(private fb: FormBuilder,
               private internmentEpisodeDocument: InternmentEpisodeDocumentService,
+              public dialogRef: MatDialogRef<AttachDocumentPopupComponent>,
               @Inject(MAT_DIALOG_DATA) public data) { }
 
   ngOnInit(): void {
@@ -55,7 +56,11 @@ export class AttachDocumentPopupComponent implements OnInit {
 
     const formDataFile: FormData = new FormData();
     formDataFile.append('file', this.data.file);
-    this.internmentEpisodeDocument.saveInternmentEpisodeDocument(formDataFile, this.data.internmentEpisodeId, this.form.get('type').value).subscribe();
+    this.internmentEpisodeDocument.saveInternmentEpisodeDocument(formDataFile, this.data.internmentEpisodeId, this.form.get('type').value)
+      .subscribe(resp => {
+        if (resp)
+          this.dialogRef.close()
+      });
   }
 
   setDocumentType(type: DocumentTypeDto) {

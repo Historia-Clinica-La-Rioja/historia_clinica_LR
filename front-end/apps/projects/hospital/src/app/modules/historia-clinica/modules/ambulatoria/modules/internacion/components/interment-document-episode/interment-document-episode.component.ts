@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { DateDto, EpisodeDocumentResponseDto } from '@api-rest/api-model';
 import { AttachDocumentPopupComponent } from '../../dialogs/attach-document-popup/attach-document-popup.component';
@@ -13,6 +13,7 @@ export class IntermentDocumentEpisodeComponent {
 
   @Input() documents: EpisodeDocumentResponseDto;
   @Input() internmentEpisodeId: number;
+  @Output() newDocument: EventEmitter<any> = new EventEmitter();
 
   constructor(public dialog: MatDialog) { }
 
@@ -33,6 +34,7 @@ export class IntermentDocumentEpisodeComponent {
         internmentEpisodeId: this.internmentEpisodeId
 			}
 		});
+    dialogRef.afterClosed().subscribe(_ => this.newDocument.emit());
   }
 
   openDeleteDialog(event) {

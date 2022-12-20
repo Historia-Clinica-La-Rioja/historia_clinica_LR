@@ -69,7 +69,15 @@ export class InternmentEpisodeSummaryComponent implements OnInit {
 		this.internmentSummaryFacadeService.epicrisis$.subscribe(e => this.epicrisisDoc = e);
 		this.internmentSummaryFacadeService.evolutionNote$.subscribe(evolutionNote => this.lastEvolutionNoteDoc = evolutionNote);
 		this.internmentSummaryFacadeService.hasMedicalDischarge$.subscribe(h => this.hasMedicalDischarge = h);
-		this.internmentEpisodeDocumentService.getInternmentEpisodeDocuments(this.internmentEpisode.id).subscribe((response: EpisodeDocumentResponseDto[]) => this.documents = response);
+		this.setDocuments();
+	}
+	
+	setDocuments() {
+		this.internmentEpisodeDocumentService.getInternmentEpisodeDocuments(this.internmentEpisode.id)
+			.subscribe((response: EpisodeDocumentResponseDto[]) => {
+				if (response)
+					this.documents = response
+			});
 	}
 
 	goToPaseCama(): void {
