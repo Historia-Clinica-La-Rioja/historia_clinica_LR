@@ -1,6 +1,25 @@
 <app-summary-card [header]="personalHistoriesHeader">
-	<app-table [showTableHeader]="true" [model]="tableModel" *ngIf="tableModel?.data?.length > 0 else noInfo"></app-table>
-	<ng-template #noInfo>
-		<app-no-data></app-no-data>
-	</ng-template>
+	<mat-list id="active-problems-list"
+		*ngIf="problems.length > 0 else noInfo">
+		<div fxLayout="row" *ngFor="let problem of problems; first as first">
+			<mat-list-item fxLayout="column" fxLayoutAlign="center">
+				<div fxFlex="60%">
+					<span mat-line class="capitalize-first-letter">
+						{{ problem.data.snomed.pt }}
+					</span>
+				</div>
+				<div fxFlex="20%">
+					{{problem.severityName}}
+				</div>
+
+				<div fxFlex="20%">
+					{{problem.data.startDate}}
+				</div>
+			</mat-list-item>
+			<mat-divider *ngIf="!first"></mat-divider>
+		</div>
+	</mat-list>
+<ng-template #noInfo>
+	<app-no-data></app-no-data>
+</ng-template>
 </app-summary-card>

@@ -1,0 +1,20 @@
+.mat-list .mat-list-item .mat-line {
+	overflow-wrap: break-word;
+	white-space: pre-line;
+}
+
+.mat-list .mat-list-item {
+	height: initial;
+	padding: 0;
+    min-height: 48px;
+}
+
+.mat-list-item {
+	padding-bottom: 5px;
+	padding-top: 5px;
+	font-size: 14px;
+}
+
+.mat-list {
+    padding: 0;
+}
