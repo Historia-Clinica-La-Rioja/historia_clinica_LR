@@ -1,15 +1,19 @@
 package net.pladema.clinichistory.hospitalization.infrastructure.output.repository;
 
+import ar.lamansys.sgx.shared.dates.controller.dto.DateDto;
 import ar.lamansys.sgx.shared.files.FileService;
 import lombok.extern.slf4j.Slf4j;
 import net.pladema.clinichistory.hospitalization.controller.dto.DocumentTypeDto;
 import net.pladema.clinichistory.hospitalization.controller.dto.EpisodeDocumentDto;
 
 import net.pladema.clinichistory.hospitalization.controller.dto.EpisodeDocumentResponseDto;
+import net.pladema.clinichistory.hospitalization.controller.dto.SavedEpisodeDocumentResponseDto;
 import net.pladema.clinichistory.hospitalization.service.domain.DocumentTypeBo;
 import net.pladema.clinichistory.hospitalization.service.domain.EpisodeDocumentBo;
 
 import net.pladema.clinichistory.hospitalization.service.domain.EpisodeDocumentResponseBo;
+
+import net.pladema.clinichistory.hospitalization.service.domain.SavedEpisodeDocumentResponseBo;
 
 import org.apache.commons.io.FilenameUtils;
 import org.springframework.stereotype.Service;
@@ -37,7 +41,7 @@ public class FetchEpisodeDocumentImpl implements FetchEpisodeDocument {
 	}
 
 	@Override
-	public EpisodeDocumentResponseDto saveEpisodeDocument(EpisodeDocumentDto dto) {
+	public SavedEpisodeDocumentResponseDto saveEpisodeDocument(EpisodeDocumentDto dto) {
 		log.debug("Input parameters -> dto {}", dto);
 		String newFileName = fileService.createFileName(FilenameUtils.getExtension(dto.getFile().getOriginalFilename()));
 		String partialPath = buildPartialPath(dto.getInternmentEpisodeId(), newFileName);
@@ -47,8 +51,8 @@ public class FetchEpisodeDocumentImpl implements FetchEpisodeDocument {
 		} catch (IOException e) {
 			throw new RuntimeException(e);
 		}
-		EpisodeDocumentResponseBo bo = this.episodeDocumentStorage.saveEpisodeDocument(new EpisodeDocumentBo(partialPath, StringUtils.cleanPath(dto.getFile().getOriginalFilename()), uuid, dto.getEpisodeDocumentTypeId(), dto.getInternmentEpisodeId()));
-		EpisodeDocumentResponseDto episodeDocumentResponseDto = this.mapToDto(bo);
+		SavedEpisodeDocumentResponseBo bo = this.episodeDocumentStorage.saveEpisodeDocument(new EpisodeDocumentBo(partialPath, StringUtils.cleanPath(dto.getFile().getOriginalFilename()), uuid, dto.getEpisodeDocumentTypeId(), dto.getInternmentEpisodeId()));
+		SavedEpisodeDocumentResponseDto episodeDocumentResponseDto = this.mapBoToDto(bo);
 		log.debug(OUTPUT, episodeDocumentResponseDto);
 		return episodeDocumentResponseDto;
 	}
@@ -76,15 +80,24 @@ public class FetchEpisodeDocumentImpl implements FetchEpisodeDocument {
 		return new DocumentTypeDto(bo.getId(), bo.getDescription());
 	}
 
-	private EpisodeDocumentResponseDto mapToDto(EpisodeDocumentResponseBo bo) {
-		return new EpisodeDocumentResponseDto(
+	private SavedEpisodeDocumentResponseDto mapBoToDto(SavedEpisodeDocumentResponseBo bo) {
+		return new SavedEpisodeDocumentResponseDto(
 				bo.getId(),
 				bo.getFilePath(),
 				bo.getFileName(),
 				bo.getUuidFile(),
 				bo.getCreatedOn(),
-				bo.getEpisodeDocumentTypeId(),
+				bo.getEpisodeDocumentType(),
 				bo.getInternmentEpisodeId()
+		);
+	}
+
+	private EpisodeDocumentResponseDto mapToDto(EpisodeDocumentResponseBo bo) {
+		return new EpisodeDocumentResponseDto(
+				bo.getId(),
+				bo.getDescription(),
+				bo.getFileName(),
+				bo.getCreatedOn()
 		);
 	}
 

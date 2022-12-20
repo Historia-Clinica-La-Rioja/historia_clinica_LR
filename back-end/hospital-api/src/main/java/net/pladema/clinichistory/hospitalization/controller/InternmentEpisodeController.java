@@ -9,6 +9,7 @@ import net.pladema.clinichistory.hospitalization.controller.dto.DocumentTypeDto;
 import net.pladema.clinichistory.hospitalization.controller.dto.EpisodeDocumentDto;
 
 import net.pladema.clinichistory.hospitalization.controller.dto.EpisodeDocumentResponseDto;
+import net.pladema.clinichistory.hospitalization.controller.dto.SavedEpisodeDocumentResponseDto;
 import net.pladema.clinichistory.hospitalization.infrastructure.output.repository.FetchEpisodeDocument;
 
 import org.slf4j.Logger;
@@ -115,13 +116,13 @@ public class InternmentEpisodeController {
 
 	@PostMapping(value = "{internmentEpisodeId}/episodedocuments/{episodeDocumentTypeId}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
 	@Transactional
-	public ResponseEntity<EpisodeDocumentResponseDto> episodeDocument(
+	public ResponseEntity<SavedEpisodeDocumentResponseDto> episodeDocument(
 			@PathVariable(name = "episodeDocumentTypeId") Integer episodeDocumentTypeId,
 			@PathVariable(name = "internmentEpisodeId") Integer internmentEpisodeId,
 			@RequestPart("file") MultipartFile file) {
 		LOG.debug("Input parameters -> internmentEpisodeId {}, episodeDocumentTypeId {}, file {}", internmentEpisodeId, episodeDocumentTypeId, file);
 		EpisodeDocumentDto dto = new EpisodeDocumentDto(file, episodeDocumentTypeId, internmentEpisodeId);
-		EpisodeDocumentResponseDto episodeDocumentResponseDto = this.fetchEpisodeDocument.saveEpisodeDocument(dto);
+		SavedEpisodeDocumentResponseDto episodeDocumentResponseDto = this.fetchEpisodeDocument.saveEpisodeDocument(dto);
 		LOG.debug(OUTPUT, episodeDocumentResponseDto);
 		return ResponseEntity.ok().body(episodeDocumentResponseDto);
 	}

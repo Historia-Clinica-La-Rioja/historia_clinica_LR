@@ -1116,12 +1116,9 @@ export interface EpisodeDocumentDto {
 
 export interface EpisodeDocumentResponseDto {
     createdOn: DateDto;
-    episodeDocumentTypeId: number;
+    description: string;
     fileName: string;
-    filePath: string;
     id: number;
-    internmentEpisodeId: number;
-    uuidFile: string;
 }
 
 export interface EthnicityDto extends Serializable {
@@ -2811,6 +2808,16 @@ export interface RoomDto extends Serializable {
     roomNumber: string;
     sector: SectorDto;
     type: string;
+}
+
+export interface SavedEpisodeDocumentResponseDto {
+    createdOn: DateDto;
+    episodeDocumentTypeId: number;
+    fileName: string;
+    filePath: string;
+    id: number;
+    internmentEpisodeId: number;
+    uuidFile: string;
 }
 
 export interface SectorDto extends Serializable {

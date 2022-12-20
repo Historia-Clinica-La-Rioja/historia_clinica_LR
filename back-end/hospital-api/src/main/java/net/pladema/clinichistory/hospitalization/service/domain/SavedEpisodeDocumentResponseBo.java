@@ -1,4 +1,4 @@
-package net.pladema.clinichistory.hospitalization.controller.dto;
+package net.pladema.clinichistory.hospitalization.service.domain;
 
 import ar.lamansys.sgx.shared.dates.controller.dto.DateDto;
 import lombok.AllArgsConstructor;
@@ -12,10 +12,13 @@ import lombok.ToString;
 @ToString
 @NoArgsConstructor
 @AllArgsConstructor
-public class EpisodeDocumentResponseDto {
+public class SavedEpisodeDocumentResponseBo {
 
 	private Integer id;
-	private String description;
+	private String filePath;
 	private String fileName;
+	private String uuidFile;
 	private DateDto createdOn;
+	private Integer episodeDocumentType;
+	private Integer internmentEpisodeId;
 }

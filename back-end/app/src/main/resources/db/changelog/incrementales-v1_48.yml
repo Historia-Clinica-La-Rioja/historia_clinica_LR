@@ -253,3 +253,19 @@ databaseChangeLog:
               referencedColumnNames: id
               referencedTableName: internment_episode
               validate: true
+
+    - changeSet:
+        id: createView-v-internment-episode-document
+        author: fdemuguruza
+        dbms: postgresql
+        changes:
+          - createView:
+              viewName: v_episode_document
+              fullDefinition: false
+              replaceIfExists: true
+              schemaName: public
+              selectQuery: |-
+                  SELECT ed.id, edt.description, ed.file_name, ed.created_on
+                  FROM episode_document ed
+                  JOIN internment_episode ie ON (ed.internment_episode_id = ie.id)
+                  JOIN episode_document_types edt ON (ed.episode_document_types_id = edt.id)

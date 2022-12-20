@@ -12,10 +12,13 @@ import lombok.ToString;
 @ToString
 @NoArgsConstructor
 @AllArgsConstructor
-public class EpisodeDocumentResponseDto {
+public class SavedEpisodeDocumentResponseDto {
 
 	private Integer id;
-	private String description;
+	private String filePath;
 	private String fileName;
+	private String uuidFile;
 	private DateDto createdOn;
+	private Integer episodeDocumentTypeId;
+	private Integer internmentEpisodeId;
 }

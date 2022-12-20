@@ -15,10 +15,7 @@ import lombok.ToString;
 public class EpisodeDocumentResponseBo {
 
 	private Integer id;
-	private String filePath;
+	private String description;
 	private String fileName;
-	private String uuidFile;
 	private DateDto createdOn;
-	private Integer episodeDocumentTypeId;
-	private Integer internmentEpisodeId;
 }
