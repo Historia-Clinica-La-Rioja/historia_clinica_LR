@@ -5,6 +5,8 @@ import javax.validation.Valid;
 import ar.lamansys.sgx.auth.jwt.application.logintwofactorauthentication.LoginTwoFactorAuthentication;
 
 import ar.lamansys.sgx.auth.jwt.infrastructure.input.rest.dto.TwoFactorAuthenticationLoginDto;
+import ar.lamansys.sgx.auth.user.application.restorepasswordbyusername.RestorePasswordByUsername;
+
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -45,6 +47,7 @@ public class AuthenticationController {
 	private final RefreshToken refreshToken;
 	private final LoginTwoFactorAuthentication loginTwoFactorAuthentication;
 	private final ICaptchaService captchaService;
+	private final RestorePasswordByUsername restorePasswordByUsername;
 
 	private final CookieService cookieService;
 
@@ -98,6 +101,14 @@ public class AuthenticationController {
 	@DeleteMapping(value = "/refresh")
 	public ResponseEntity<Void> logout() {
 		return cookieService.deleteTokensResponse(HttpStatus.OK).build();
+	}
+
+	@PostMapping("/restore-password")
+	public ResponseEntity<String> restorePassword(@RequestParam(name="username") String username){
+		log.debug("Restore password by mail for user {}", username);
+		String result = restorePasswordByUsername.execute(username);
+		log.debug("Password reset link sended to username {} ", username);
+		return ResponseEntity.ok().body(result);
 	}
 
 }
