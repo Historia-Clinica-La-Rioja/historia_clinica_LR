@@ -118,7 +118,10 @@ public enum AppFeature implements Feature {
 	HABILITAR_REPORTES_ESTADISTICOS,
 
 	@Label("Indica si esta habilitado el uso de card en HC e INTERNACION")
-	HABILITAR_VISUALIZACION_DE_CARDS
+	HABILITAR_VISUALIZACION_DE_CARDS,
+
+	@Label("Indica si esta habilitada la recuperación de contraseña por correo")
+	HABILITAR_MAIL_RECUPERAR_CONTRASEÑA
 	;
 
     public boolean isActive() {
