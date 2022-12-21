@@ -16,40 +16,39 @@ export const PROGRAM_REPORT_TYPES = [
         id: 4,
     },
     {
-        description: 'Reporte Odontología - SUMAR',
+        description: 'Reporte Odontologia - SUMAR',
         id: 5,
     }
 ];
 
 export const ODONTO_REPORT_TYPES = [
     {
-        description: 'Consultas de Odontología - Promoción Primer Nivel',
+        description: 'Consultas de Odontologia - Promoción Primer Nivel',
         id: 1,
     },
     {
-        description: 'Consultas de Odontología - Prevención Primer Nivel',
+        description: 'Consultas de Odontologia - Prevención Primer Nivel',
         id: 2,
     },
     {
-        description: 'Consultas de Odontología - Prevención Grupal Primer Nivel',
+        description: 'Consultas de Odontologia - Prevención Grupal Primer Nivel',
         id: 3,
     },
     {
-        description: 'Consultas de Odontología - Operatoria Segundo Nivel',
+        description: 'Consultas de Odontologia - Operatoria Segundo Nivel',
         id: 4,
     },
     {
-        description: 'Consultas de Odontología - Endodoncia Segundo Nivel',
+        description: 'Consultas de Odontologia - Endodoncia Segundo Nivel',
         id: 5,
     },
 ];
 
 export const GENERAL_REPORT_TYPES = [
     {
-        description: 'Emergencia',
+        description: 'Daily Emergencia',
         id: 1,
     },
-    
     {
         description: 'Diabéticos Confirmados',
         id: 2,
@@ -59,17 +58,10 @@ export const GENERAL_REPORT_TYPES = [
         id: 3,
     },
     {
-        description: 'Enfermería - Emergencias',
+        description: 'Emergencias',
         id: 4,
     },
-    {
-        description: 'Enfermería Ambulatorio',
-        id: 5,
-    },
-    {
-        description: 'Enfermería Internación',
-        id: 6,
-    },
+
    
 ]
 

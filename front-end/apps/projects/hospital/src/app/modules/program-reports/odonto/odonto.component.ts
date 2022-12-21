@@ -108,7 +108,7 @@ export class OdontoComponent implements OnInit {
           this.odontoService.getMonthlyOperatoriaReport(params, `${this.ODONTO_REPORT_TYPES[3].description}.xls`).subscribe();
         break;
         case 5:
-          this.odontoService.getMonthlyEndodonciaReport(params, `${this.ODONTO_REPORT_TYPES[4].description}.xls`).subscribe();
+          this.odontoService.getMonthlyEndodonciaReport(params, `${this.ODONTO_REPORT_TYPES[3].description}.xls`).subscribe();
         break;
         default:
       }
