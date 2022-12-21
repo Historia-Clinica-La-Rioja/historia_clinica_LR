@@ -6,12 +6,15 @@ import net.pladema.clinichistory.hospitalization.controller.dto.EpisodeDocumentD
 
 import net.pladema.clinichistory.hospitalization.controller.dto.EpisodeDocumentResponseDto;
 import net.pladema.clinichistory.hospitalization.controller.dto.SavedEpisodeDocumentResponseDto;
+import net.pladema.clinichistory.hospitalization.controller.dto.StoredFileDto;
 import net.pladema.clinichistory.hospitalization.service.domain.DocumentTypeBo;
 import net.pladema.clinichistory.hospitalization.service.domain.EpisodeDocumentBo;
 
 import net.pladema.clinichistory.hospitalization.service.domain.EpisodeDocumentResponseBo;
 
 import net.pladema.clinichistory.hospitalization.service.domain.SavedEpisodeDocumentResponseBo;
+
+import net.pladema.clinichistory.hospitalization.service.domain.StoredFileBo;
 
 import org.springframework.stereotype.Service;
 import java.util.List;
@@ -60,6 +63,12 @@ public class FetchEpisodeDocumentImpl implements FetchEpisodeDocument {
 	@Override
 	public boolean deleteDocument(Integer episodeDocumentId) {
 		return this.episodeDocumentStorage.deleteDocument(episodeDocumentId);
+	}
+
+	@Override
+	public StoredFileDto downloadEpisodeDocument(Integer episodeDocumentId) {
+		StoredFileBo bo = this.episodeDocumentStorage.downloadEpisodeDocument(episodeDocumentId);
+		return new StoredFileDto(bo.getResource());
 	}
 
 	private DocumentTypeDto mapDocumentTypeToDto(DocumentTypeBo bo) {

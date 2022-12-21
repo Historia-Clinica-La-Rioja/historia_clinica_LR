@@ -5,6 +5,7 @@ import net.pladema.clinichistory.hospitalization.controller.dto.EpisodeDocumentD
 
 import net.pladema.clinichistory.hospitalization.controller.dto.EpisodeDocumentResponseDto;
 import net.pladema.clinichistory.hospitalization.controller.dto.SavedEpisodeDocumentResponseDto;
+import net.pladema.clinichistory.hospitalization.controller.dto.StoredFileDto;
 
 import java.util.List;
 
@@ -17,4 +18,6 @@ public interface FetchEpisodeDocument {
 	List<DocumentTypeDto> getDocumentTypes();
 
 	boolean deleteDocument(Integer episodeDocumentId);
+
+	StoredFileDto downloadEpisodeDocument(Integer episodeDocumentId);
 }

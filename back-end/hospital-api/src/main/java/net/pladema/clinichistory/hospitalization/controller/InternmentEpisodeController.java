@@ -10,6 +10,7 @@ import net.pladema.clinichistory.hospitalization.controller.dto.EpisodeDocumentD
 
 import net.pladema.clinichistory.hospitalization.controller.dto.EpisodeDocumentResponseDto;
 import net.pladema.clinichistory.hospitalization.controller.dto.SavedEpisodeDocumentResponseDto;
+import net.pladema.clinichistory.hospitalization.controller.dto.StoredFileDto;
 import net.pladema.clinichistory.hospitalization.infrastructure.output.repository.FetchEpisodeDocument;
 
 import org.slf4j.Logger;
@@ -147,6 +148,19 @@ public class InternmentEpisodeController {
 	public boolean deleteDocument(@PathVariable(name = "episodeDocumentId") Integer episodeDocumentId) {
 		LOG.debug("Input parameters -> episodeDocumentId {}", episodeDocumentId);
 		return this.fetchEpisodeDocument.deleteDocument(episodeDocumentId);
+	}
+
+	@GetMapping("/episodedocuments/download/{episodeDocumentId}")
+	public ResponseEntity downloadEpisodeDocument(@PathVariable(name = "episodeDocumentId") Integer episodeDocumentId) {
+		LOG.debug("Input parameters -> episodeDocumentId {}", episodeDocumentId);
+		if (!featureFlagsService.isOn(AppFeature.HABILITAR_DESCARGA_DOCUMENTOS_PDF))
+			return new ResponseEntity<>(null, HttpStatus.METHOD_NOT_ALLOWED);
+
+		StoredFileDto dto = this.fetchEpisodeDocument.downloadEpisodeDocument(episodeDocumentId);
+		LOG.debug(OUTPUT, dto);
+		return ResponseEntity.ok()
+				.contentType(MediaType.APPLICATION_PDF)
+				.body(dto.getResource());
 	}
 
 	@GetMapping("/{internmentEpisodeId}/summary")

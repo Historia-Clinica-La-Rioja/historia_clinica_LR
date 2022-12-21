@@ -35,4 +35,12 @@ export class InternmentEpisodeDocumentService {
     const url = `${this.url}/episodedocuments/${episodeDocumentId}`;
     return this.http.delete<boolean>(url);
   }
+
+  download(episodeDocumentId: number) {
+    const url = `${this.url}/episodedocuments/download/${episodeDocumentId}`;
+    return this.http.get(
+			url,
+			{ responseType: 'blob' }
+		);
+  }
 }

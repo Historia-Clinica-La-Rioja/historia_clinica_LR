@@ -15,6 +15,8 @@ import net.pladema.clinichistory.hospitalization.service.domain.EpisodeDocumentR
 
 import net.pladema.clinichistory.hospitalization.service.domain.SavedEpisodeDocumentResponseBo;
 
+import net.pladema.clinichistory.hospitalization.service.domain.StoredFileBo;
+
 import org.apache.commons.io.FilenameUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
@@ -93,6 +95,14 @@ public class EpisodeDocumentStorageImpl implements EpisodeDocumentStorage {
 		String partialPath = buildPartialPath(ed.get().getInternmentEpisodeId(), ed.get().getUuidFile());
 		this.savedEpisodeDocumentRepository.deleteById(episodeDocumentId);
 		return fileService.deleteFile(partialPath + PDF);
+	}
+
+	@Override
+	public StoredFileBo downloadEpisodeDocument(Integer episodeDocumentId) {
+		Optional<EpisodeDocument> ed = this.savedEpisodeDocumentRepository.findById(episodeDocumentId);
+		if ( ! ed.isPresent()) return new StoredFileBo();
+
+		return new StoredFileBo(fileService.loadFileRelativePath(ed.get().getFilePath()));
 	}
 
 	private String buildPartialPath(Integer internmentEpisodeId, String relativeFilePath){
