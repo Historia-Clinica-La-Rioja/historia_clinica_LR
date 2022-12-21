@@ -57,7 +57,7 @@ public class HospitalUserStorageImpl implements HospitalUserStorage {
                 .map(userInfoDto -> {
                     UserPersonInfoBo result = new UserPersonInfoBo();
                     result.setId(userInfoDto.getId());
-                    result.setEmail(userInfoDto.getUsername());
+                    result.setUsername(userInfoDto.getUsername());
 					result.setPreviousLogin(userInfoDto.getPreviousLogin());
                     return result;
                 })
@@ -170,9 +170,11 @@ public class HospitalUserStorageImpl implements HospitalUserStorage {
         userPersonRepository.getByUserId(userPersonInfoBo.getId())
                 .map(userPerson -> personExternalService.getBasicDataPerson(userPerson.getPersonId()))
                 .ifPresent(basicDataPersonDto -> {
+					String email = personExternalService.getPersonalInformation(basicDataPersonDto.getId()).getEmail();
                     userPersonInfoBo.setPersonId(basicDataPersonDto.getId());
                     userPersonInfoBo.setFirstName(basicDataPersonDto.getFirstName());
                     userPersonInfoBo.setLastName(basicDataPersonDto.getLastName());
+					userPersonInfoBo.setEmail(email);
 					userPersonInfoBo.setNameSelfDetermination(basicDataPersonDto.getNameSelfDetermination());
                 });
         return userPersonInfoBo;

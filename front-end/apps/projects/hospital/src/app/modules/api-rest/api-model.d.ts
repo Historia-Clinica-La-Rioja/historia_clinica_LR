@@ -1476,6 +1476,7 @@ export interface HospitalUserPersonInfoDto {
     lastName: string;
     nameSelfDetermination: string;
     personId: number;
+    username: string;
 }
 
 export interface HospitalizationProcedureDto {
@@ -3143,6 +3144,7 @@ export const enum AppFeature {
     HABILITAR_GUARDADO_CON_CONFIRMACION_CONSULTA_AMBULATORIA = "HABILITAR_GUARDADO_CON_CONFIRMACION_CONSULTA_AMBULATORIA",
     HABILITAR_REPORTES_ESTADISTICOS = "HABILITAR_REPORTES_ESTADISTICOS",
     HABILITAR_VISUALIZACION_DE_CARDS = "HABILITAR_VISUALIZACION_DE_CARDS",
+    HABILITAR_MAIL_RECUPERAR_CONTRASEÑA = "HABILITAR_MAIL_RECUPERAR_CONTRASEÑA",
 }
 
 export const enum EDocumentSearch {

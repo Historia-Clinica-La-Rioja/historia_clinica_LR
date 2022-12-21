@@ -7,6 +7,7 @@ import ar.lamansys.sgx.auth.user.domain.passwordreset.exceptions.PasswordResetTo
 import ar.lamansys.sgx.auth.user.domain.user.model.UserException;
 import ar.lamansys.sgx.auth.user.domain.user.service.exceptions.UserStorageException;
 import ar.lamansys.sgx.auth.user.domain.userpassword.UserPasswordException;
+import ar.lamansys.sgx.auth.user.infrastructure.output.notification.exceptions.RestorePasswordNotificationException;
 import ar.lamansys.sgx.shared.exceptions.dto.ApiErrorMessageDto;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -65,11 +66,18 @@ public class UserExceptionHandler {
 		return new ApiErrorMessageDto(ex.getCode().name(), ex.getMessage());
 	}
 
-	@ResponseStatus(HttpStatus.BAD_REQUEST)
+	@ResponseStatus(HttpStatus.PRECONDITION_FAILED)
 	@ExceptionHandler({ PasswordException.class })
 	protected ApiErrorMessageDto handleInvalidPasswordException(PasswordException ex) {
 		LOG.debug("InvalidUserException -> {}", ex.getMessage(), ex);
 		return new ApiErrorMessageDto(ex.code.toString(), ex.getMessage());
+	}
+
+	@ResponseStatus(HttpStatus.BAD_REQUEST)
+	@ExceptionHandler({ RestorePasswordNotificationException.class })
+	protected ApiErrorMessageDto handleRestorePasswordNotificationException(RestorePasswordNotificationException ex) {
+		LOG.debug("RestorePasswordNotificationException -> {}", ex.getMessage(), ex);
+		return new ApiErrorMessageDto(ex.getCode().toString(), ex.getMessage());
 	}
 }
 
