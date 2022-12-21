@@ -39,7 +39,7 @@ public interface HealthcareProfessionalRepository extends SGXAuditableEntityJPAR
 
 	@Transactional(readOnly = true)
 	@Query(value = " SELECT DISTINCT new net.pladema.staff.repository.domain.HealthcareProfessionalVo("
-			+ " hp.id, hp.licenseNumber, p.firstName, p.lastName, p.identificationNumber,p.id, pe.nameSelfDetermination)"
+			+ " hp.id, hp.licenseNumber, p.firstName, p.lastName, p.identificationNumber,p.id, pe.nameSelfDetermination, p.middleNames, p.otherLastNames)"
 			+ " FROM  HealthcareProfessional hp "
 			+ " INNER JOIN Person p ON hp.personId = p.id"
 			+ " LEFT JOIN PersonExtended pe ON (p.id = pe.id)"

@@ -15,7 +15,7 @@ export class PatientNameService {
 	}
 
 	getPatientName(patientName: string, patientNameSelfDetermination: string): string {
-		return this.nameSelfDeterminationFF && patientNameSelfDetermination ? patientNameSelfDetermination : patientName;
+		return this.nameSelfDeterminationFF && patientNameSelfDetermination ? patientNameSelfDetermination : patientName ;
 	}
 
 	getFullName(patientFirstName: string, patientNameSelfDetermination: string, patientSecondsName?: string): string {

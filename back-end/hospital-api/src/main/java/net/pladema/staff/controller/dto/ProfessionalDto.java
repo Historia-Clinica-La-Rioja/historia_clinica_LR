@@ -25,7 +25,21 @@ public class ProfessionalDto {
 
 	private String nameSelfDetermination;
 
+	private String middleNames;
+
+	private String otherLastNames;
+
     public String getCompleteName(String name){
 		return String.format("%s %s", name, lastName);
     }
+
+	public ProfessionalDto(Integer id, String licenceNumber, String firstName, String lastName, String identificationNumber, String phoneNumber, String nameSelfDetermination) {
+		this.id = id;
+		this.licenceNumber = licenceNumber;
+		this.firstName = firstName;
+		this.lastName = lastName;
+		this.identificationNumber = identificationNumber;
+		this.phoneNumber = phoneNumber;
+		this.nameSelfDetermination = nameSelfDetermination;
+	}
 }

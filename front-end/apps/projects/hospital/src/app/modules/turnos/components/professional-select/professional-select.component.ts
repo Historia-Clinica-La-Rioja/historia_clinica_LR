@@ -49,7 +49,7 @@ export class ProfessionalSelectComponent {
 	}
 
 	getFullName(profesional: ProfessionalDto): string {
-		return `${profesional.lastName}, ${this.patientNameService.getPatientName(profesional.firstName, profesional.nameSelfDetermination)}`;
+		return `${profesional.lastName} ${profesional?.otherLastNames?profesional?.otherLastNames: ''} ${this.patientNameService.getFullName(profesional.firstName, profesional.nameSelfDetermination,profesional?.middleNames)}`;
 	}
 
 	getFullNameLicence(profesional: ProfessionalDto): string {

@@ -2515,7 +2515,9 @@ export interface ProfessionalDto {
     identificationNumber: string;
     lastName: string;
     licenceNumber: string;
+    middleNames: string;
     nameSelfDetermination: string;
+    otherLastNames: string;
     phoneNumber: string;
 }
 
@@ -2542,7 +2544,9 @@ export interface ProfessionalPersonDto extends Serializable {
     firstName: string;
     id: number;
     lastName: string;
+    middleNames: string;
     nameSelfDetermination: string;
+    otherLastNames: string;
 }
 
 export interface ProfessionalProfessionBackofficeDto {

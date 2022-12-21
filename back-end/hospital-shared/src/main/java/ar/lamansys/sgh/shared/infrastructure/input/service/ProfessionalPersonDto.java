@@ -25,4 +25,14 @@ public class ProfessionalPersonDto implements Serializable {
 
     private String nameSelfDetermination;
 
+	private String middleNames;
+
+	private String otherLastNames;
+
+	public ProfessionalPersonDto(Integer id, String firstName, String lastName, String nameSelfDetermination) {
+		this.id = id;
+		this.firstName = firstName;
+		this.lastName = lastName;
+		this.nameSelfDetermination = nameSelfDetermination;
+	}
 }
