@@ -8,11 +8,12 @@
 						{{ problem.data.snomed.pt }}
 					</span>
 				</div>
-				<div fxFlex="25%">
+				<div fxFlex="25%" class="{{ problem.severityName ? problem.severityColor : '' }}">
 					{{problem.severityName}}
 				</div>
 
-				<div fxFlex="20%">
+				<div fxFlex="20%" class="startDate grey">
+					<span *ngIf="problem.data.startDate">Desde</span>
 					{{problem.data.startDate}}
 				</div>
 

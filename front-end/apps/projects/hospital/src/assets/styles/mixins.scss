@@ -92,6 +92,18 @@
 	.headers-card-background {
 		background-color: mat-color($palette-primary, 50);
 	}
+	
+	.warn {
+		color: mat-color($palette-warn);
+	}
+
+	.black {
+		color: mat-contrast($palette-primary, 50);
+	}
+
+	.grey {
+		color: grey;
+	}
 }
 
 @mixin font-weight-regular {

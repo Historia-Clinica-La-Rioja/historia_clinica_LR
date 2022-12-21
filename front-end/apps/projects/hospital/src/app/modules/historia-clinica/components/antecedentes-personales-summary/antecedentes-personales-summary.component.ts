@@ -18,6 +18,11 @@ import { SolveProblemComponent } from '@historia-clinica/dialogs/solve-problem/s
 	styleUrls: ['./antecedentes-personales-summary.component.scss']
 })
 export class AntecedentesPersonalesSummaryComponent implements OnInit{
+
+	readonly MILD_SEVERITY:string = 'LA6752-5';
+	readonly MODERATE_SEVERITY:string = 'LA6751-7';
+	readonly SEVERE_SEVERITY:string = 'LA6750-9';
+
 	problems: Problem[] = [];
 	hasNewConsultationEnabled$: Observable<boolean>;
 	private patientId: number;
@@ -55,6 +60,18 @@ export class AntecedentesPersonalesSummaryComponent implements OnInit{
 			this.severityTypesMasterData.find(severityType => severityType.code === severityCode).display
 			: '';
 	}
+
+	getSeverityColor(severityCode): string {
+		switch(severityCode) {
+			case this.MILD_SEVERITY:
+				return 'grey';
+			case this.MODERATE_SEVERITY:
+				return 'black';
+			case this.SEVERE_SEVERITY:
+				return 'warn';
+		}
+	}
+
 
 	openNuevaConsulta(problem: Problem): void {
 		if (!this.nuevaConsultaFromProblemaRef) {
@@ -126,7 +143,8 @@ export class AntecedentesPersonalesSummaryComponent implements OnInit{
 	private mapToProblem(problem: HCEPersonalHistoryDto): Problem {
 		return {
 			data: problem,
-			severityName: this.getSeverityTypeDisplayByCode(problem.severity)
+			severityName: this.getSeverityTypeDisplayByCode(problem.severity),
+			severityColor: this.getSeverityColor(problem.severity)
 		}
 	}
 }
@@ -134,4 +152,5 @@ export class AntecedentesPersonalesSummaryComponent implements OnInit{
 interface Problem {
 	data: HCEPersonalHistoryDto;
 	severityName: string;
+	severityColor: string;
 }
