@@ -42,14 +42,6 @@ export class GeneralReportService {
 		const url = `${environment.apiBase}/generalreports/${this.contextService.institutionId}/patientEmergencies`;
 		return this.getGeneralReport(params, fileName, url);
 	}
-  getOutpatientNursingReport(params: any, fileName: string): Observable<any> {
-		const url = `${environment.apiBase}/generalreports/${this.contextService.institutionId}/outpatientNursing`;
-		return this.getGeneralReport(params, fileName, url);
-	}
-  getNursingInternmentReport(params: any, fileName: string): Observable<any> {
-		const url = `${environment.apiBase}/generalreports/${this.contextService.institutionId}/nursingInternment`;
-		return this.getGeneralReport(params, fileName, url);
-	}
 
 
     
