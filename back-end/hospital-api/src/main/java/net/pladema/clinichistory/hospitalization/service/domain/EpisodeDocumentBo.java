@@ -15,9 +15,7 @@ import org.springframework.web.multipart.MultipartFile;
 @AllArgsConstructor
 public class EpisodeDocumentBo {
 
-	private String filePath;
-	private String fileName;
-	private String uuid;
+	private MultipartFile file;
 	private Integer episodeDocumentTypeId;
 	private Integer internmentEpisodeId;
 }

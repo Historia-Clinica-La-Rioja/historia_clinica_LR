@@ -1,4 +1,6 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Inject, OnInit } from '@angular/core';
+import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { InternmentEpisodeDocumentService } from '@api-rest/services/internment-episode-document.service';
 import { SnackBarService } from '@presentation/services/snack-bar.service';
 
 @Component({
@@ -6,15 +8,21 @@ import { SnackBarService } from '@presentation/services/snack-bar.service';
   templateUrl: './delete-document-popup.component.html',
   styleUrls: ['./delete-document-popup.component.scss']
 })
-export class DeleteDocumentPopupComponent implements OnInit {
+export class DeleteDocumentPopupComponent {
 
-  constructor(private readonly snackBarService: SnackBarService) { }
+  constructor(private readonly snackBarService: SnackBarService,
+              private internmentEpisodeDocumentService: InternmentEpisodeDocumentService,
+              public dialogRef: MatDialogRef<DeleteDocumentPopupComponent>,
+              @Inject(MAT_DIALOG_DATA) public data) { }
 
-  ngOnInit(): void {
-  }
-
-  delete(value) {
-    this.snackBarService.showError('internaciones.internacion-paciente.documents.dialogs.delete.SUCCESS');
+  delete() {
+    this.internmentEpisodeDocumentService.deleteDocument(this.data.episodeDocumentId)
+      .subscribe(response => {
+        if (response) {
+          this.snackBarService.showError('internaciones.internacion-paciente.documents.dialogs.delete.SUCCESS');
+          this.dialogRef.close();
+        }
+      })
   }
 
 }

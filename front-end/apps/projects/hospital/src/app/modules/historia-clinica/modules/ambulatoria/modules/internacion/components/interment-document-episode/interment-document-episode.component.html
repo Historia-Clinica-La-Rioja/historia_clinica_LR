@@ -5,14 +5,14 @@
         <input hidden (change)="onFileSelected($event)" #fileInput type="file" id="file">
     </div>
     <article>
-        <ng-container *ngIf="documents; else noDocuments">
+        <ng-container *ngIf="documents?.length > 0; else noDocuments">
             <div *ngFor="let document of documents" class="episode-document-list">
                 <p>{{document.description}}</p>
                 <a href="#">{{document.fileName}}</a>
                 <p>{{document.createdOn |
                     viewDateDto:
                     'date' | date: 'dd/MM/yyyy'}}</p>
-                <button mat-button mat-icon-button color="warn" (click)="openDeleteDialog($event)">
+                <button mat-button mat-icon-button color="warn" (click)="openDeleteDialog(document.id)">
                     <mat-icon>delete_outline</mat-icon>
                 </button>
             </div>

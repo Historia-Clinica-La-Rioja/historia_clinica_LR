@@ -11,9 +11,9 @@ import { DeleteDocumentPopupComponent } from '../../dialogs/delete-document-popu
 })
 export class IntermentDocumentEpisodeComponent {
 
-  @Input() documents: EpisodeDocumentResponseDto;
+  @Input() documents: EpisodeDocumentResponseDto[];
   @Input() internmentEpisodeId: number;
-  @Output() newDocument: EventEmitter<any> = new EventEmitter();
+  @Output() updateDocuments: EventEmitter<any> = new EventEmitter();
 
   constructor(public dialog: MatDialog) { }
 
@@ -34,14 +34,17 @@ export class IntermentDocumentEpisodeComponent {
         internmentEpisodeId: this.internmentEpisodeId
 			}
 		});
-    dialogRef.afterClosed().subscribe(_ => this.newDocument.emit());
+    dialogRef.afterClosed().subscribe(_ => this.updateDocuments.emit());
   }
 
-  openDeleteDialog(event) {
+  openDeleteDialog(episodeDocumentId: number) {
     const dialogRef = this.dialog.open(DeleteDocumentPopupComponent, {
 			disableClose: true,
 			width: '35%',
-			data: {}
+			data: {
+        episodeDocumentId
+      }
 		});
+    dialogRef.afterClosed().subscribe(_ => this.updateDocuments.emit());
   }
 }

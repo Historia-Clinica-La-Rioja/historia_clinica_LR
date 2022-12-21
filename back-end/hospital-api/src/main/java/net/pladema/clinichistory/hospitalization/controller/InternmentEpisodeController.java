@@ -20,6 +20,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -140,6 +141,12 @@ public class InternmentEpisodeController {
 		List<DocumentTypeDto> result = this.fetchEpisodeDocument.getDocumentTypes();
 		LOG.debug(OUTPUT, result);
 		return ResponseEntity.ok().body(result);
+	}
+
+	@DeleteMapping("/episodedocuments/{episodeDocumentId}")
+	public boolean deleteDocument(@PathVariable(name = "episodeDocumentId") Integer episodeDocumentId) {
+		LOG.debug("Input parameters -> episodeDocumentId {}", episodeDocumentId);
+		return this.fetchEpisodeDocument.deleteDocument(episodeDocumentId);
 	}
 
 	@GetMapping("/{internmentEpisodeId}/summary")

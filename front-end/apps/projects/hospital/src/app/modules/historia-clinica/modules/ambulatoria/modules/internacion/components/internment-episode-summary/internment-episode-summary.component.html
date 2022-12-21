@@ -139,7 +139,7 @@
 
 	<mat-divider inset></mat-divider>
 
-	<app-interment-document-episode [documents]="documents" [internmentEpisodeId]="this.internmentEpisode.id" (newDocument)="setDocuments()"></app-interment-document-episode>
+	<app-interment-document-episode [documents]="documents" [internmentEpisodeId]="this.internmentEpisode.id" (updateDocuments)="setDocuments()"></app-interment-document-episode>
 
 </mat-list>
 <ng-template #noInfo>

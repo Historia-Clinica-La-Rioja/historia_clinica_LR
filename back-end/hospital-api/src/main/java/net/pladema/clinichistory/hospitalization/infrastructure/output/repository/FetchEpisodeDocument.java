@@ -15,4 +15,6 @@ public interface FetchEpisodeDocument {
 	List<EpisodeDocumentResponseDto> getEpisodeDocuments(Integer internmentEpisodeId);
 
 	List<DocumentTypeDto> getDocumentTypes();
+
+	boolean deleteDocument(Integer episodeDocumentId);
 }
