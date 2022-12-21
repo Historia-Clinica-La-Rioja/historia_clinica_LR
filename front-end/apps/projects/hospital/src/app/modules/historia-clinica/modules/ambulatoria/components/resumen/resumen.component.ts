@@ -16,6 +16,8 @@ import { ANTECEDENTES_FAMILIARES, MEDICACION_HABITUAL, PROBLEMAS_ANTECEDENTES } 
 import { AmbulatoriaSummaryFacadeService } from '../../services/ambulatoria-summary-facade.service';
 import { TableModel } from '@presentation/components/table/table.component';
 import { SnackBarService } from '@presentation/services/snack-bar.service';
+import { DateFormat, momentFormat, momentParseDate } from '@core/utils/moment.utils';
+import { map } from 'rxjs/operators';
 
 @Component({
 	selector: 'app-resumen',
@@ -65,10 +67,22 @@ export class ResumenComponent implements OnInit, OnChanges {
 	initSummaries(): void {
 		this.allergies$ = this.ambulatoriaSummaryFacadeService.allergies$;
 		this.familyHistories$ = this.ambulatoriaSummaryFacadeService.familyHistories$;
-		this.personalHistory$ = this.ambulatoriaSummaryFacadeService.personalHistories$;
+		this.personalHistory$ = this.ambulatoriaSummaryFacadeService.personalHistories$.pipe(
+			map(this.formatProblemsDates)
+		);;
 		this.medications$ = this.ambulatoriaSummaryFacadeService.medications$;
 		this.riskFactors$ = this.ambulatoriaSummaryFacadeService.riskFactors$;
 		this.anthropometricDataList$ = this.ambulatoriaSummaryFacadeService.anthropometricDataList$;
+	}
+
+	private formatProblemsDates(problemas: HCEPersonalHistoryDto[]) {
+		return problemas.map((problema: HCEPersonalHistoryDto) => {
+			return {
+				...problema,
+				startDate: problema.startDate ? momentFormat(momentParseDate(problema.startDate), DateFormat.VIEW_DATE) : undefined,
+				inactivationDate: problema.inactivationDate ? momentFormat(momentParseDate(problema.inactivationDate), DateFormat.VIEW_DATE) : undefined
+			};
+		});
 	}
 
 	loadExternalTables(fromInit: boolean): void {
