@@ -18,4 +18,6 @@ public interface PatientMedicalCoverageService {
     List<Integer> saveCoverages(List<PatientMedicalCoverageBo> coverages, Integer patientId);
 
     List<Integer> saveExternalCoverages(List<PatientMedicalCoverageBo> coverages, Integer patientId);
+
+	List<Integer> toModifyAppointmentCoverage(List<PatientMedicalCoverageBo> patientMedicalCoverages);
 }

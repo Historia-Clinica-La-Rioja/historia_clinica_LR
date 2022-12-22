@@ -157,6 +157,23 @@ public interface AppointmentRepository extends SGXAuditableEntityJPARepository<A
 						   @Param("observation") String observation,
 						   @Param("observationBy") Integer observationBy);
 
+	@Transactional
+	@Modifying
+	@Query( "UPDATE Appointment AS a " +
+			"SET a.patientMedicalCoverageId = :newPatientMedicalCoverageId " +
+			"WHERE a.patientId = :patientId " +
+			"AND a.patientMedicalCoverageId = :patientMedicalCoverageId " +
+			"AND (a.dateTypeId > :appointmentDate " +
+			"OR (a.dateTypeId = :appointmentDate " +
+			"AND a.hour >= :hour ))" +
+			"AND (a.appointmentStateId = " + AppointmentState.ASSIGNED + " " +
+			"OR a.appointmentStateId = " + AppointmentState.CONFIRMED + ")" )
+	void updateAppointmentsIdByPatientMedicalCoverage(@Param("patientId") Integer patientId,
+													  @Param("patientMedicalCoverageId") Integer patientMedicalCoverageId,
+													  @Param("appointmentDate") LocalDate appointmentDate,
+													  @Param("hour") LocalTime hour,
+													  @Param("newPatientMedicalCoverageId") Integer newPatientMedicalCoverageId);
+
     @Transactional(readOnly = true)
     @Query(name = "Appointment.medicalCoverage")
     List<Integer> getMedicalCoverage(@Param("patientId") Integer patientId,

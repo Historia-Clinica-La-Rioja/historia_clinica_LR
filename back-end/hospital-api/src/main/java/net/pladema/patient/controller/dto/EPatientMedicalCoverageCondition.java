@@ -1,7 +1,9 @@
 package net.pladema.patient.controller.dto;
 
 import ar.lamansys.sgx.shared.exceptions.NotFoundException;
+import lombok.ToString;
 
+@ToString
 public enum EPatientMedicalCoverageCondition {
 
 	VOLUNTARIA(1, "Voluntaria"),

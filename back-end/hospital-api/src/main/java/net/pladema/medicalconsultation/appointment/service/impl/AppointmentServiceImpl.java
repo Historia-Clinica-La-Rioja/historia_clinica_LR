@@ -5,6 +5,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.ZoneId;
+import java.time.ZonedDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -14,6 +15,7 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+import ar.lamansys.sgx.shared.dates.configuration.LocalDateMapper;
 import net.pladema.medicalconsultation.appointment.repository.AppointmentAssnRepository;
 import ar.lamansys.sgh.shared.infrastructure.input.service.SharedReferenceCounterReference;
 import net.pladema.medicalconsultation.appointment.repository.AppointmentUpdateRepository;
@@ -89,6 +91,8 @@ public class AppointmentServiceImpl implements AppointmentService {
 
 	private final SharedReferenceCounterReference sharedReferenceCounterReference;
 
+	private final LocalDateMapper localDateMapper;
+
 
 	public AppointmentServiceImpl(AppointmentRepository appointmentRepository,
 								  AppointmentObservationRepository appointmentObservationRepository,
@@ -103,7 +107,7 @@ public class AppointmentServiceImpl implements AppointmentService {
 								  AppointmentUpdateRepository appointmentUpdateRepository,
 								  AppointmentAssnRepository appointmentAssnRepository,
 								  DiaryOpeningHoursService diaryOpeningHoursService,
-								  SharedReferenceCounterReference sharedReferenceCounterReference) {
+								  SharedReferenceCounterReference sharedReferenceCounterReference, LocalDateMapper localDateMapper) {
 		this.appointmentRepository = appointmentRepository;
 		this.appointmentObservationRepository = appointmentObservationRepository;
 		this.historicAppointmentStateRepository = historicAppointmentStateRepository;
@@ -118,6 +122,7 @@ public class AppointmentServiceImpl implements AppointmentService {
 		this.appointmentAssnRepository = appointmentAssnRepository;
 		this.diaryOpeningHoursService = diaryOpeningHoursService;
 		this.sharedReferenceCounterReference = sharedReferenceCounterReference;
+		this.localDateMapper = localDateMapper;
 	}
 
 	@Override
@@ -309,6 +314,21 @@ public class AppointmentServiceImpl implements AppointmentService {
 		}
 
 		return new PatientMedicalCoverageBo();
+	}
+
+	public boolean setAppointmentPatientMedicalCoverageId(Integer patientId, List<Integer> patientMedicalCoverages, Integer newPatientMedicalCoverageId) {
+		log.debug("Input parameters -> patientId {}, patientMedicalCoverages {}, newValuePMCId {}", patientId, patientMedicalCoverages, newPatientMedicalCoverageId);
+
+		ZonedDateTime zonedDateTime = localDateMapper.fromLocalDateTimeToZonedDateTime(LocalDateTime.now());
+		LocalDate today = zonedDateTime.toLocalDate();
+		LocalTime currentHour = zonedDateTime.toLocalTime();
+
+		patientMedicalCoverages.forEach((patientMedicalCoverageId) ->
+						appointmentRepository.updateAppointmentsIdByPatientMedicalCoverage(patientId, patientMedicalCoverageId, today, currentHour, newPatientMedicalCoverageId)
+				);
+
+		log.debug(OUTPUT, Boolean.TRUE);
+		return Boolean.TRUE;
 	}
 
 	private Integer getCurrentAppointmentId(Integer patientId, Integer institutionId) {
