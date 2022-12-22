@@ -299,6 +299,9 @@ public class DiaryServiceImpl implements DiaryService {
 		result.setDoctorsOfficeDescription(completeDiaryListVo.getDoctorsOfficeDescription());
 		result.setDoctorFirstName(completeDiaryListVo.getDoctorFirstName());
 		result.setDoctorLastName(completeDiaryListVo.getDoctorLastName());
+		result.setDoctorMiddleNames(completeDiaryListVo.getDoctorMiddleNames());
+		result.setDoctorOtherLastNames(completeDiaryListVo.getDoctorOtherLastNames());
+		result.setDoctorNameSelfDetermination(completeDiaryListVo.getDoctorNameSelfDetermination());
 		result.setProtectedAppointmentsPercentage(completeDiaryListVo.getProtectedAppointmentsPercentage() != null ? completeDiaryListVo.getProtectedAppointmentsPercentage().intValue() : 0);
 		LOG.debug(OUTPUT, result);
 		return result;
@@ -483,7 +486,7 @@ public class DiaryServiceImpl implements DiaryService {
 	}
 
 	private EmptyAppointmentBo createEmptyAppointmentBoFromRawData(LocalTime emptyAppointmentTime, LocalDate emptyAppointmentDate, CompleteDiaryBo diary, Integer openingHoursId) {
-		EmptyAppointmentBo result = new EmptyAppointmentBo();
+		EmptyAppointmentBo result = new EmptyAppointmentBo(diary.getDoctorLastName(),diary.getDoctorOtherLastNames(),diary.getDoctorFirstName(),diary.getDoctorMiddleNames(),diary.getDoctorNameSelfDetermination());
 		result.setDiaryId(diary.getId());
 		result.setDate(emptyAppointmentDate);
 		result.setHour(emptyAppointmentTime);
@@ -493,8 +496,6 @@ public class DiaryServiceImpl implements DiaryService {
 		result.setDoctorsOfficeDescription(diary.getDoctorsOfficeDescription());
 		result.setClinicalSpecialtyName(diary.getClinicalSpecialtyName());
 		result.setAlias(diary.getAlias());
-		result.setDoctorFirstName(diary.getDoctorFirstName());
-		result.setDoctorLastName(diary.getDoctorLastName());
 		return result;
 	}
 

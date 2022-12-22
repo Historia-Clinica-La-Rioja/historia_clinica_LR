@@ -1067,8 +1067,7 @@ export interface EmptyAppointmentDto {
     clinicalSpecialtyName: string;
     date: string;
     diaryId: number;
-    doctorFirstName: string;
-    doctorLastName: string;
+    doctorFullName: string;
     doctorsOfficeDescription: string;
     hour: string;
     openingHoursId: number;
