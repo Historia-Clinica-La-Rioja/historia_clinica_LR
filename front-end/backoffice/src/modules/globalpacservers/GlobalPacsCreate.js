@@ -50,7 +50,8 @@ const InstitutionPracticesCreate = props => {
 
                 {/* Username */}
                 <TextInput source="username" validate={[
-                    required()]}
+                    required(),
+                    maxLength(50)]}
                 />
 
                 {/* Password */}
