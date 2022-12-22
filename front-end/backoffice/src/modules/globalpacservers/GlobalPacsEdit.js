@@ -22,17 +22,17 @@ const GlobalPacsEdit = props => {
             {/* Name */}
             <TextInput source="name" validate={[
                 required(),
-                maxLength(100)]}/>
+                maxLength(20)]}/>
 
             {/* AETITLE */}
             <TextInput source="aetitle" validate={[
                 required(),
-                maxLength(100)]}/>
+                maxLength(15)]}/>
 
             {/* Domain */}
             <TextInput source="domain" validate={[
                 required(),
-                maxLength(100)]}/>
+                maxLength(50)]}/>
 
             {/* PAC Server Type */}
             <FormDataConsumer>
@@ -57,14 +57,12 @@ const GlobalPacsEdit = props => {
 
             {/* url_stow */}
             <TextInput source="urlStow" validate={[
-                required(),
-                maxLength(50)]}
+                required()]}
             />
 
             {/* url_auth */}
             <TextInput source="urlAuth" validate={[
-                required(),
-                maxLength(50)]}
+                required()]}
             />
 
         </SimpleForm>
