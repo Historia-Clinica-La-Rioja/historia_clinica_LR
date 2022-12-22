@@ -6,7 +6,7 @@ import {
     required,
     maxLength,
     usePermissions,
-    NumberInput,
+    NumberInput, maxValue,
 } from 'react-admin';
 import CustomToolbar from "../components/CustomToolbar";
 import { ROOT } from "../roles";
@@ -33,8 +33,9 @@ const ImageLvlPacEdit = props => {
                 maxLength(100)]}/>
 
             {/* Port */}
-            <TextInput source={"port"} validate={[
-                required()]}
+            <NumberInput inputProps={{ maxLength: 10 }} source={"port"} validate={[
+                required(),
+                maxValue(9999999999)]}
             />
 
             {/* Sector ID */}

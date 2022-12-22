@@ -5,7 +5,8 @@ import {
     SimpleForm,
     required,
     maxLength,
-    NumberInput
+    NumberInput,
+    maxValue
 } from 'react-admin';
 import CustomToolbar from "../components/CustomToolbar";
 
@@ -34,7 +35,8 @@ const ImageLvlPacCreate = props => {
 
                 {/* Port */}
                 <TextInput source={"port"} validate={[
-                    required()]}
+                    required(),
+                    maxValue(9999999999)]}
                 />
 
                 {/* Sector ID */}
