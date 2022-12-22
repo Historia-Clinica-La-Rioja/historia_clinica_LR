@@ -6,10 +6,17 @@
 
 <form [formGroup]="form" (ngSubmit)="save()">
     <h1 [translate]="'internaciones.internacion-paciente.documents.dialogs.attach.TITLE'"></h1>
-    <mat-form-field class="example-full-width" appearance="outline">
-        <mat-label [translate]="'internaciones.internacion-paciente.documents.dialogs.attach.fields.NAME'"></mat-label>
-        <input matInput formControlName="fileName">
-    </mat-form-field>
+
+    <section class="selected-file">
+        <mat-form-field class="example-full-width" appearance="outline">
+            <mat-label [translate]="'internaciones.internacion-paciente.documents.dialogs.attach.fields.NAME'"></mat-label>
+            <input matInput formControlName="fileName">
+        </mat-form-field>
+        
+        <mat-error class="typeahead-required" *ngIf="hasError(form, 'requiredFileType', 'file')" 
+            [translate]="'internaciones.internacion-paciente.documents.dialogs.attach.fields.FILE'">
+        </mat-error>
+    </section>
     
     <app-typeahead 
         [options]="documentTypes"
@@ -17,11 +24,11 @@
         [required]="required"
         (selectionChange)="setDocumentType($event)">
     </app-typeahead>
-    <mat-error class="typeahead-required" *ngIf="hasError(form, 'required', 'type')">
-        <span [translate]="'internaciones.internacion-paciente.documents.dialogs.attach.fields.TYPE_REQUIRED'"></span>
+    <mat-error class="typeahead-required" *ngIf="hasError(form, 'required', 'type')"
+        [translate]="'internaciones.internacion-paciente.documents.dialogs.attach.fields.TYPE_REQUIRED'">
     </mat-error>
 
-    <section>
+    <section class="actions">
         <button mat-stroked-button color="primary" [mat-dialog-close]=true>
             <span [translate]="'internaciones.internacion-paciente.documents.dialogs.attach.actions.CANCEL'"></span>
         </button>

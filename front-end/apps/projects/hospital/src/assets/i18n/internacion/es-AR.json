@@ -392,7 +392,8 @@
 						"fields": {
 							"NAME": "Nombre del archivo",
 							"TYPE": "Tipo de documento",
-							"TYPE_REQUIRED": "El tipo de documento es obligatorio"
+							"TYPE_REQUIRED": "El tipo de documento es obligatorio",
+							"FILE": "El tipo de archivo debe estar en formato PDF"
 						},
 						"actions": {
 							"CANCEL": "CANCELAR",

@@ -141,3 +141,16 @@ export function patternValidator(regex: RegExp, error: ValidationErrors): Valida
 		return regex.test(control.value) ? null : error;
 	};
 }
+
+export function requiredFileType(type: string): ValidatorFn  {
+    return (control: AbstractControl): ValidationErrors | null => {
+		const file = control.value;
+      	if (file) {
+        	const extension = file.name.split('.')[1].toLowerCase();
+        	if (type.toLowerCase() !== extension.toLowerCase()) {
+          		return {'requiredFileType': true};
+        	}
+      	}
+      return null;
+    };
+}

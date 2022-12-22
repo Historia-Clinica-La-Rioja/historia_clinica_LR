@@ -1,10 +1,9 @@
 import { Component, Inject, OnInit } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
-import { DocumentTypeDto, SavedEpisodeDocumentResponseDto } from '@api-rest/api-model';
+import { DocumentTypeDto } from '@api-rest/api-model';
 import { InternmentEpisodeDocumentService } from '@api-rest/services/internment-episode-document.service';
-import { InternmentEpisodeService } from '@api-rest/services/internment-episode.service';
-import { hasError } from '@core/utils/form.utils';
+import { hasError, requiredFileType } from '@core/utils/form.utils';
 import { TypeaheadOption } from '@presentation/components/typeahead/typeahead.component';
 
 @Component({
@@ -26,7 +25,8 @@ export class AttachDocumentPopupComponent implements OnInit {
 
   ngOnInit(): void {
     this.form = this.fb.group({
-      fileName: new FormControl({ value: this.data.file.name, disabled: true }),
+      fileName: new FormControl({value: this.data.file.name, disabled: true}),
+      file: new FormControl(this.data.file, requiredFileType('pdf')),
       type: new FormControl(null, Validators.required)
     });
     this.setDocumentTypesFilter();
