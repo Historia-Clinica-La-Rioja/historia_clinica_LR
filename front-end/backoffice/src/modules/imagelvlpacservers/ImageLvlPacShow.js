@@ -1,9 +1,12 @@
 import React from 'react';
 import {
-    Button, EditButton,
+    Button,
+    EditButton,
     Show,
     SimpleShowLayout,
-    TextField, TopToolbar,
+    TextField,
+    TopToolbar,
+    useRedirect
 } from 'react-admin';
 import {makeStyles} from "@material-ui/core/styles";
 import ArrowBackIcon from "@material-ui/icons/ArrowBack";
@@ -18,8 +21,9 @@ const PacShowActions = ({ data }) => {
         }
     });
     const classes = useStyles();
+    const redirect = useRedirect();
     const goBack = () => {
-        window.history.back();
+        redirect("/sectors/" + data.id + "/show");
     }
     return (!data || !data.id) ? <TopToolbar/> :
         (
@@ -34,7 +38,7 @@ const PacShowActions = ({ data }) => {
                     <ArrowBackIcon />
                 </Button>
                 <EditButton
-                    basePath="/pacservers"
+                    basePath="/pacserversimagelvl"
                     record={{ id: data.id }}
                     variant="outlined"
                     color="primary"
