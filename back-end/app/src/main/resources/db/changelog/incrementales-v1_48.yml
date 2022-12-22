@@ -21,3 +21,28 @@ databaseChangeLog:
                     nullable: false
                   name: description
                   type: varchar(100)
+
+    - changeSet:
+        id: set-patient_age_period-document
+        comment: Set patient age period to document
+        author: tcepeda
+        dbms: postgresql
+        context: "!schema-only"
+        changes:
+          - sql:
+              sql: |-
+                UPDATE "document" d
+                SET patient_age_period = subquery.patient_age_period 
+                FROM (
+                  SELECT d.id, CASE WHEN d.created_on IS NOT NULL AND per.birth_date IS NOT NULL THEN CONCAT('P', 
+                  CASE WHEN (EXTRACT(years FROM AGE(d.created_on, per.birth_date)) > 0) THEN (CONCAT(EXTRACT(years FROM AGE(d.created_on, per.birth_date)),  'Y')) END,
+                  CASE WHEN (EXTRACT(months FROM AGE(d.created_on, per.birth_date)) > 0) THEN (CONCAT(EXTRACT(months FROM AGE(d.created_on, per.birth_date)),  'M')) END,
+                  CASE WHEN (EXTRACT(days FROM AGE(d.created_on, per.birth_date)) > 0) THEN (CONCAT(EXTRACT(days FROM AGE(d.created_on, per.birth_date)),  'D')) END,
+                  CASE WHEN (EXTRACT(years FROM AGE(d.created_on, per.birth_date)) < 1) AND (EXTRACT(months FROM AGE(d.created_on, per.birth_date)) < 1)
+                  AND (EXTRACT(days FROM AGE(d.created_on, per.birth_date)) < 1) THEN '0D' END) ELSE NULL END AS patient_age_period
+                  FROM "document" d
+                  JOIN patient p ON (d.patient_id = p.id)
+                  JOIN person per ON (p.person_id = per.id)
+                ) subquery
+                WHERE d.id = subquery.id
+                AND d.patient_age_period IS NULL
