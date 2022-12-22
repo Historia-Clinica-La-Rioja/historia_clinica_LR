@@ -7,6 +7,7 @@ import {
     TopToolbar,
     EditButton,
     Button,
+    useRedirect
 } from 'react-admin';
 import ArrowBackIcon from "@material-ui/icons/ArrowBack";
 import {makeStyles} from "@material-ui/core/styles";
@@ -21,8 +22,9 @@ const PacShowActions = ({ data }) => {
         }
     });
     const classes = useStyles();
+    const redirect = useRedirect();
     const goBack = () => {
-        window.history.back();
+        redirect('/pacservers');
     }
     return (!data || !data.id) ? <TopToolbar/> :
         (
