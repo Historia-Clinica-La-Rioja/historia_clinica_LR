@@ -398,7 +398,6 @@ export class AppointmentComponent implements OnInit {
 					this.selectedDate = newDate;
 					this.data.appointmentData.date = newDate;
 
-					
 					const appointmentUpdate = appointments.find(a => a.id = this.data.appointmentData.appointmentId);
 					this.appointment.protected = appointmentUpdate.protected;
 				});
@@ -646,6 +645,9 @@ export class AppointmentComponent implements OnInit {
 
 	hideFilters(): void {
 		this.hideFilterPanel = !this.hideFilterPanel;
+		this.formEdit.controls.newCoverageData.setValue(this.coverageData?.id);
+		this.formEdit.controls.phonePrefix.setValue(this.data.appointmentData.phonePrefix);
+		this.formEdit.controls.phoneNumber.setValue(this.data.appointmentData.phoneNumber);
 	}
 
 	getFullMedicalCoverageText(patientMedicalCoverage): string {

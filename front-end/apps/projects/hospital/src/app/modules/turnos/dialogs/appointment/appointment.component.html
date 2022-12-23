@@ -133,7 +133,7 @@
 						</mat-form-field>
 					</div>
 					<div class="confirm-buttons" fxLayout="row" fxLayoutAlign="end" fxLayoutGap="15px">
-						<button mat-stroked-button color="primary" btn-block type="button" (click)="hideFilters()">
+						<button mat-stroked-button color="primary" btn-block type="button" (click)="hideFilters(); updatePhoneValidators()">
 							<span>{{'turnos.appointment.CANCEL' | translate}}</span>
 						</button>
 						<button mat-flat-button color="primary" [disabled]="isInvalidFormEdit()">
