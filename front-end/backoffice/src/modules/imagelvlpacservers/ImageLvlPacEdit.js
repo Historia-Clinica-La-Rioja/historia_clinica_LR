@@ -20,17 +20,17 @@ const ImageLvlPacEdit = props => {
             {/* Name */}
             <TextInput source="name" validate={[
                 required(),
-                maxLength(100)]}/>
+                maxLength(20)]}/>
 
             {/* AETITLE */}
             <TextInput source="aetitle" validate={[
                 required(),
-                maxLength(100)]}/>
+                maxLength(15)]}/>
 
             {/* Domain */}
             <TextInput source="domain" validate={[
                 required(),
-                maxLength(100)]}/>
+                maxLength(50)]}/>
 
             {/* Port */}
             <NumberInput inputProps={{ maxLength: 10 }} source={"port"} validate={[
