@@ -5,7 +5,7 @@
             <mat-icon> attach_file</mat-icon>
             <span [translate]="'internaciones.internacion-paciente.documents.dialogs.attach.actions.ATTACH'"></span>
         </button>
-        <input hidden (change)="onFileSelected($event)" #fileInput type="file" id="file">
+        <input hidden (change)="onFileSelected($event)" #fileInput type="file" id="file" (click)="$event.target.value=null">
     </div>
     <article>
         <ng-container *ngIf="documents?.length > 0; else noDocuments">

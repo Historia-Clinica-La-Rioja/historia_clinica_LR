@@ -21,11 +21,9 @@ export class IntermentDocumentEpisodeComponent {
               private internmentEpisodeDocumentService: InternmentEpisodeDocumentService) { }
 
   onFileSelected(event) {
-    const file:File = event.target.files[0];
+    const file: File = event.target.files[0];
 
-    if (file) 
-      this.openAttachDialog(file);
-    
+    if (file) this.openAttachDialog(file);
   }
 
   openAttachDialog(file: File) {
