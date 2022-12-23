@@ -1272,11 +1272,9 @@ export interface HCEAnthropometricDataDto extends Serializable {
 
 export interface HCEBasicPersonDataDto extends Serializable {
     birthDate: string;
-    firstName: string;
+    fullName: string;
     id: number;
     identificationNumber: string;
-    lastName: string;
-    nameSelfDetermination: string;
 }
 
 export interface HCEClinicalObservationDto extends Serializable {

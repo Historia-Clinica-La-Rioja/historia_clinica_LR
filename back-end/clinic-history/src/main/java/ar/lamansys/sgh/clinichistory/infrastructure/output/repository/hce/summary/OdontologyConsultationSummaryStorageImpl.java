@@ -41,7 +41,7 @@ public class OdontologyConsultationSummaryStorageImpl implements OdontologyConsu
                 + "hp.id AS healthcarProfessionalId, hp.licenseNumber, hp.personId, "
                 + "p.firstName, p.lastName, p.identificationNumber, pe.nameSelfDetermination, "
                 + "cs.id AS clinicalSpecialtyId, cs.name AS clinicalSpecialtyName, cs.clinicalSpecialtyTypeId, "
-                + "n.description,  docFile.id, docFile.filename "
+                + "n.description,  docFile.id, docFile.filename, p.middleNames,p.otherLastNames"
                 + " FROM OdontologyConsultation oc"
                 + " LEFT JOIN ClinicalSpecialty cs ON (oc.clinicalSpecialtyId = cs.id)"
                 + " JOIN Document doc ON (doc.sourceId = oc.id)"
@@ -63,7 +63,7 @@ public class OdontologyConsultationSummaryStorageImpl implements OdontologyConsu
                 result.add(new OdontologyEvolutionSummaryBo(
                         (Integer)a[0],
                         a[1] != null ? (LocalDate)a[1] : null,
-                        new HealthcareProfessionalBo((Integer) a[2], (String) a[3], (Integer) a[4], (String) a[5], (String) a[6], (String) a[7], (String) a[8]),
+                        new HealthcareProfessionalBo((Integer) a[2], (String) a[3], (Integer) a[4], (String) a[5], (String) a[6], (String) a[7], (String) a[8],(String) a[15], (String) a[16] ),
                         a[9] != null ? new ClinicalSpecialtyBo((Integer)a[9], (String)a[10], (Short) a[11]) : null,
                         (String)a[12],
                         a[13] != null ? new DocumentDataBo((Long)a[13], (String)a[14]) : null))

@@ -18,14 +18,14 @@ public class HCEBasicPersonDataDto implements Serializable{
 
     private Integer id;
 
-	private String firstName;
-
-    private String lastName;
-
     private String birthDate;
 
     private String identificationNumber;
 
-	private String nameSelfDetermination;
+	private String fullName;
+
+
+
+
 
 }
