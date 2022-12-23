@@ -35,8 +35,10 @@ export class AttachDocumentPopupComponent implements OnInit {
 
   setDocumentTypesFilter() {
     this.internmentEpisodeDocument.getDocumentTypes().subscribe(response => {
-      const options: TypeaheadOption<any>[] = this.setFilterValues(response);
-      this.documentTypes = options;
+      if (response.length > 0) {
+        const options: TypeaheadOption<any>[] = this.setFilterValues(response);
+        this.documentTypes = options;
+      }
     })
   }
 

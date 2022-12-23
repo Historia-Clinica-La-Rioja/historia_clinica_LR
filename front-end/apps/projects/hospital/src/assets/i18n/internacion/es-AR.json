@@ -389,6 +389,7 @@
 				"dialogs": {
 					"attach": {
 						"TITLE": "Adjuntar documento",
+						"NO-DOCUMENTS-TYPE": "Aún no se han definido tipos de documentos",
 						"fields": {
 							"NAME": "Nombre del archivo",
 							"TYPE": "Tipo de documento",
