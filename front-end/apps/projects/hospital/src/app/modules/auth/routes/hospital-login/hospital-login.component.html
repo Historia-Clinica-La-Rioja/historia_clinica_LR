@@ -26,10 +26,11 @@
 				<app-form-input>
 					<mat-form-field [floatLabel]="'never'" appearance="outline">
 						<input formControlName="password" autocomplete="current-password"
-							   type="password"
+							   [type]="hidePassword ? 'password' : 'text'"
 							   placeholder="{{'auth.login.form.PASSWORD_PLACEHOLDER' | translate }}"
 							   matInput
 						>
+						<mat-icon matSuffix color="primary" (click)="hidePassword = !hidePassword">{{hidePassword ? 'visibility_off' : 'visibility'}}</mat-icon>
 						<mat-error *ngIf="hasError('required', 'password')">
 							<span translate="auth.login.form.PASSWORD_REQUIRED"></span>
 						</mat-error>

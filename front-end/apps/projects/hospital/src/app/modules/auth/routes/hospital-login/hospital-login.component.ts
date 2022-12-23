@@ -20,6 +20,8 @@ export class HospitalLoginComponent implements OnInit {
 	recaptchaRes: string;
 	recaptchaEnable = false;
 	recaptchaSiteKey = '';
+	hidePassword = true;
+
 	private returnUrl: string;
 
 	constructor(
