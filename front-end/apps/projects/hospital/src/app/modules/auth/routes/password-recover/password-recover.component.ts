@@ -75,6 +75,6 @@ export class PasswordRecoverComponent implements OnInit {
 	}
 
 	goBack() {
-		this.router.navigate(['auth/home']);
+		this.router.navigate(['auth/login']);
 	}
 }
