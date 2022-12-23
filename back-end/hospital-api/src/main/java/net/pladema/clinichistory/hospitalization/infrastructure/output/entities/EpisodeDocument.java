@@ -37,7 +37,7 @@ public class EpisodeDocument {
 	@Column(name = "file_name", nullable = false)
 	private String fileName;
 
-	@Column(name = "uuid_file", nullable = false)
+	@Column(name = "uuid_file", nullable = false, length = 36)
 	private String uuidFile;
 
 	@Column(name = "created_on")
