@@ -5,7 +5,7 @@ import { catchError } from 'rxjs/operators';
 import { ApiErrorMessageDto, RecaptchaPublicConfigDto } from '@api-rest/api-model';
 import { ERole } from '@api-rest/api-model';
 import { PublicService } from '@api-rest/services/public.service';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { MatDialog } from "@angular/material/dialog";
 import { LoginPinCodeComponent } from "../../dialogs/login-pin-code/login-pin-code.component";
 
@@ -27,8 +27,9 @@ export class HospitalLoginComponent implements OnInit {
 		private authenticationService: AuthenticationService,
 		private publicService: PublicService,
 		private route: ActivatedRoute,
+		private router: Router,
 		private readonly dialog: MatDialog,
-		) {
+	) {
 	}
 
 	ngOnInit(): void {
@@ -113,4 +114,8 @@ export class HospitalLoginComponent implements OnInit {
 		this.recaptchaRes = captchaResponse;
 	}
 
+	goToRecoverPassword() {
+		const user = this.form.value?.username || '';
+		this.router.navigate(['auth/password-recover', user]);
+	}
 }

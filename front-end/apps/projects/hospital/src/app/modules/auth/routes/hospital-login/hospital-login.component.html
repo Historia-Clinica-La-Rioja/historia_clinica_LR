@@ -19,7 +19,11 @@
 						</mat-error>
 					</mat-form-field>
 				</app-form-input>
-				<app-form-input label="auth.login.form.PASSWORD_LABEL">
+				<div fxLayout="row" fxLayoutAlign="space-between end">
+					<a>{{ 'auth.login.form.PASSWORD_LABEL' | translate}}</a>
+					<a routerLink (click)="goToRecoverPassword()">{{ 'auth.login.PASSWORD_RECOVER' | translate}}</a>
+				</div>
+				<app-form-input>
 					<mat-form-field [floatLabel]="'never'" appearance="outline">
 						<input formControlName="password" autocomplete="current-password"
 							   type="password"
