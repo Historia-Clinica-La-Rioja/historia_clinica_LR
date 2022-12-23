@@ -118,11 +118,13 @@ public class InternmentEpisodeController {
 
 	@PostMapping(value = "{internmentEpisodeId}/episodedocuments/{episodeDocumentTypeId}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
 	@Transactional
+	@PreAuthorize("hasPermission(#institutionId, 'ADMINISTRATIVO')")
 	public ResponseEntity<SavedEpisodeDocumentResponseDto> episodeDocument(
+			@PathVariable(name = "institutionId") Integer institutionId,
 			@PathVariable(name = "episodeDocumentTypeId") Integer episodeDocumentTypeId,
 			@PathVariable(name = "internmentEpisodeId") Integer internmentEpisodeId,
 			@RequestPart("file") MultipartFile file) {
-		LOG.debug("Input parameters -> internmentEpisodeId {}, episodeDocumentTypeId {}, file {}", internmentEpisodeId, episodeDocumentTypeId, file);
+		LOG.debug("Input parameters -> institutionId {}, internmentEpisodeId {}, episodeDocumentTypeId {}, file {}", institutionId, internmentEpisodeId, episodeDocumentTypeId, file);
 		EpisodeDocumentDto dto = new EpisodeDocumentDto(file, episodeDocumentTypeId, internmentEpisodeId);
 		SavedEpisodeDocumentResponseDto episodeDocumentResponseDto = this.fetchEpisodeDocument.saveEpisodeDocument(dto);
 		LOG.debug(OUTPUT, episodeDocumentResponseDto);
@@ -130,29 +132,37 @@ public class InternmentEpisodeController {
 	}
 
 	@GetMapping("{internmentEpisodeId}/episodedocuments")
-	public ResponseEntity<List<EpisodeDocumentResponseDto>> getEpisodeDocuments(@PathVariable(name = "internmentEpisodeId") Integer internmentEpisodeId) {
-		LOG.debug("Input parameters -> internmentEpisodeId {}", internmentEpisodeId);
+	@PreAuthorize("hasPermission(#institutionId, 'ADMINISTRATIVO')")
+	public ResponseEntity<List<EpisodeDocumentResponseDto>> getEpisodeDocuments(@PathVariable(name = "internmentEpisodeId") Integer internmentEpisodeId,
+																				@PathVariable(name = "institutionId") Integer institutionId) {
+		LOG.debug("Input parameters -> internmentEpisodeId {}, institutionId {}", internmentEpisodeId, institutionId);
 		List<EpisodeDocumentResponseDto> result = this.fetchEpisodeDocument.getEpisodeDocuments(internmentEpisodeId);
 		LOG.debug(OUTPUT, result);
 		return ResponseEntity.ok().body(result);
 	}
 
 	@GetMapping("/documentstypes")
-	public ResponseEntity<List<DocumentTypeDto>> getDocumentsTypes() {
+	@PreAuthorize("hasPermission(#institutionId, 'ADMINISTRATIVO')")
+	public ResponseEntity<List<DocumentTypeDto>> getDocumentsTypes(@PathVariable(name = "institutionId") Integer institutionId) {
+		LOG.debug("Input parameters -> institutionId {}", institutionId);
 		List<DocumentTypeDto> result = this.fetchEpisodeDocument.getDocumentTypes();
 		LOG.debug(OUTPUT, result);
 		return ResponseEntity.ok().body(result);
 	}
 
 	@DeleteMapping("/episodedocuments/{episodeDocumentId}")
-	public boolean deleteDocument(@PathVariable(name = "episodeDocumentId") Integer episodeDocumentId) {
-		LOG.debug("Input parameters -> episodeDocumentId {}", episodeDocumentId);
+	@PreAuthorize("hasPermission(#institutionId, 'ADMINISTRATIVO')")
+	public boolean deleteDocument(@PathVariable(name = "episodeDocumentId") Integer episodeDocumentId,
+								  @PathVariable(name = "institutionId") Integer institutionId) {
+		LOG.debug("Input parameters -> episodeDocumentId {}, institutionId {}", episodeDocumentId, institutionId);
 		return this.fetchEpisodeDocument.deleteDocument(episodeDocumentId);
 	}
 
 	@GetMapping("/episodedocuments/download/{episodeDocumentId}")
-	public ResponseEntity downloadEpisodeDocument(@PathVariable(name = "episodeDocumentId") Integer episodeDocumentId) {
-		LOG.debug("Input parameters -> episodeDocumentId {}", episodeDocumentId);
+	@PreAuthorize("hasPermission(#institutionId, 'ADMINISTRATIVO')")
+	public ResponseEntity downloadEpisodeDocument(@PathVariable(name = "episodeDocumentId") Integer episodeDocumentId,
+												  @PathVariable(name = "institutionId") Integer institutionId) {
+		LOG.debug("Input parameters -> episodeDocumentId {}, institutionId {}", episodeDocumentId, institutionId);
 		if (!featureFlagsService.isOn(AppFeature.HABILITAR_DESCARGA_DOCUMENTOS_PDF))
 			return new ResponseEntity<>(null, HttpStatus.METHOD_NOT_ALLOWED);
 

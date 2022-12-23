@@ -3,6 +3,7 @@ import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms'
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { DocumentTypeDto } from '@api-rest/api-model';
 import { InternmentEpisodeDocumentService } from '@api-rest/services/internment-episode-document.service';
+import { ExtesionFile } from '@core/utils/extensionFile';
 import { hasError, requiredFileType } from '@core/utils/form.utils';
 import { TypeaheadOption } from '@presentation/components/typeahead/typeahead.component';
 
@@ -26,7 +27,7 @@ export class AttachDocumentPopupComponent implements OnInit {
   ngOnInit(): void {
     this.form = this.fb.group({
       fileName: new FormControl({value: this.data.file.name, disabled: true}),
-      file: new FormControl(this.data.file, requiredFileType('pdf')),
+      file: new FormControl(this.data.file, requiredFileType(ExtesionFile.PDF)),
       type: new FormControl(null, Validators.required)
     });
     this.setDocumentTypesFilter();

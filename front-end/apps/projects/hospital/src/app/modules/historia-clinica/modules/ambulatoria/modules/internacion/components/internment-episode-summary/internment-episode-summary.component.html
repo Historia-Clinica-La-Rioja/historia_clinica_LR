@@ -130,7 +130,7 @@
 		</mat-list-item>
 	</div>
 	<ng-container *ngIf="showDischarge">
-		<button mat-flat-button id="administrative_discharge_button" color="primary" *appHasRole="['ADMINISTRATIVO']"
+		<button mat-flat-button id="administrative_discharge_button" color="primary"
 			(click)="goToAdministrativeDischarge()">
 			<span class="uppercase"
 				[translate]="'internaciones.internacion-paciente.actions.ADMINISTRATIVE_DISCHARGE'"></span>
@@ -139,7 +139,12 @@
 
 	<mat-divider inset></mat-divider>
 
-	<app-interment-document-episode [documents]="documents" [internmentEpisodeId]="this.internmentEpisode.id" (updateDocuments)="setDocuments()"></app-interment-document-episode>
+	<app-interment-document-episode 
+		*appHasRole="ROLES_FOR_ACCESS_EPISODE_DOCUMENTS"
+		[documents]="documents" 
+		[internmentEpisodeId]="this.internmentEpisode.id" 
+		(updateDocuments)="setDocuments()">
+	</app-interment-document-episode>
 
 </mat-list>
 <ng-template #noInfo>

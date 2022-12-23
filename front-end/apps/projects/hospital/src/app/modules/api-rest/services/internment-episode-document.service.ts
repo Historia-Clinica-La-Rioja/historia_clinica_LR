@@ -10,8 +10,7 @@ import { Observable } from 'rxjs';
 })
 export class InternmentEpisodeDocumentService {
 
-  url: string = `${environment.apiBase}/institutions/${this.contextService.institutionId}/internments/`;
-
+  url: string = `${environment.apiBase}/institutions/${this.contextService.institutionId}/internments`;
 
   constructor(private http: HttpClient,
               private contextService: ContextService) { }

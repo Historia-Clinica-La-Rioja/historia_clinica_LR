@@ -12,6 +12,7 @@ import { anyMatch } from "@core/utils/array.utils";
 import { ERole } from "@api-rest/api-model";
 import { InternmentSummaryFacadeService } from '../../services/internment-summary-facade.service';
 import { InternmentEpisodeDocumentService } from '@api-rest/services/internment-episode-document.service';
+import { ROLES_FOR_ACCESS_EPISODE_DOCUMENTS } from '../../constants/permissions';
 
 const ROUTE_INTERNMENT_EPISODE_PREFIX = 'internaciones/internacion/';
 const ROUTE_RELOCATE_PATIENT_BED_PREFIX = '/pase-cama';
@@ -45,6 +46,7 @@ export class InternmentEpisodeSummaryComponent implements OnInit {
 	hasAdministrativeDischarge = false;
 
 	documents: EpisodeDocumentResponseDto[];
+	ROLES_FOR_ACCESS_EPISODE_DOCUMENTS: ERole[] = ROLES_FOR_ACCESS_EPISODE_DOCUMENTS;
 
 	constructor(
 		private router: Router,
