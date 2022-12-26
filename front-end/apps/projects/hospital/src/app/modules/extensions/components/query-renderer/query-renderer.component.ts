@@ -10,7 +10,7 @@ import * as moment from "moment";
 import { CSVFileDownloadService } from '@extensions/services/csvfile-download.service';
 import { FeatureFlagService } from '@core/services/feature-flag.service';
 import { AppFeature } from '@api-rest/api-model';
-import { buildFullDate, DateFormat, momentParse, momentParseDate, momentParseTime, newMoment } from '@core/utils/moment.utils';
+import { buildFullDate, DateFormat, momentParse, newMoment, MONTHS_OF_YEAR } from '@core/utils/moment.utils';
 
 const formatColumnDate = (tableData: any[], columns: string[]): any[] => {
 	const dateFormatter = (x) => !x ? x : moment(x).format('DD/MM/YYYY');
@@ -25,8 +25,22 @@ const formatColumnDate = (tableData: any[], columns: string[]): any[] => {
 	return tableData;
 };
 
-const parseIfDate = (value: string): string => {
-	return value.substring(0, 10);
+const parse = (value: string): string => {
+	let splitedValue = value.split(',');
+	splitedValue.forEach(x => {
+		if (isDate(x)) {
+			const month = x[5] + x[6];
+			splitedValue[splitedValue.indexOf(x)] = MONTHS_OF_YEAR[Number(month) - 1];
+		}
+	})
+	return splitedValue.toString();
+}
+
+const isDate = (value: string): boolean => {
+	if (moment(value, moment.ISO_8601, true).isValid()) {
+		return true;
+	}
+	return false;
 }
 
 @Component({
@@ -168,7 +182,7 @@ export class QueryRendererComponent {
 	}
 
 	cleanFilters(cubeQuery) {
-		cubeQuery.filters = cubeQuery.filters.filter( f => {
+		cubeQuery.filters = cubeQuery.filters.filter(f => {
 			return f.member === cubeQuery.timeDimensions[0].dimension;
 		});
 	}
@@ -196,7 +210,7 @@ export class QueryRendererComponent {
 			});
 		}
 
-		this.chartLabels = resultSet.chartPivot(pivotConfig).map((row) => parseIfDate(row.x));
+		this.chartLabels = resultSet.chartPivot(pivotConfig).map((row) => parse(row.x));
 	}
 
 	formatDate(resultSet) {
@@ -306,7 +320,7 @@ export class QueryRendererComponent {
 			row['Referencias.profesional_turno_auto_det'] = "";
 		if (row['Referencias.profesional_turno'] === ", ")
 			row['Referencias.profesional_turno'] = "";
-		if (row['Referencias.estado_turno'] === "Cancelado"){
+		if (row['Referencias.estado_turno'] === "Cancelado") {
 			row['Referencias.estado_turno'] = "";
 			row['Referencias.fecha_turno'] = "";
 			row['Referencias.hora_turno'] = "";
