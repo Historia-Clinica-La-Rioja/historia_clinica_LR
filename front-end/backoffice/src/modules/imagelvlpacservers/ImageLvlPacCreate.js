@@ -34,7 +34,7 @@ const ImageLvlPacCreate = props => {
                 />
 
                 {/* Port */}
-                <TextInput source={"port"} validate={[
+                <NumberInput source={"port"} validate={[
                     required(),
                     maxValue(9999999999)]}
                 />

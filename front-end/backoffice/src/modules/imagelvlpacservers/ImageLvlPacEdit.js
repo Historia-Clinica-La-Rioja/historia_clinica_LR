@@ -33,7 +33,7 @@ const ImageLvlPacEdit = props => {
                 maxLength(50)]}/>
 
             {/* Port */}
-            <NumberInput inputProps={{ maxLength: 10 }} source={"port"} validate={[
+            <NumberInput source={"port"} validate={[
                 required(),
                 maxValue(9999999999)]}
             />
