@@ -160,7 +160,9 @@ export class ReferenceComponent implements OnInit {
 			problems: this.mapProblems(this.referenceProblemDto),
 			procedure: false,
 			fileIds: [],
-			destinationInstitutionId: this.formReference.value.institutionDestinationId
+			destinationInstitutionId: this.formReference.value.institutionDestinationId,
+			phonePrefix: this.formReference.value.phonePrefix,
+			phoneNumber: this.formReference.value.phoneNumber
 		}
 	}
 
