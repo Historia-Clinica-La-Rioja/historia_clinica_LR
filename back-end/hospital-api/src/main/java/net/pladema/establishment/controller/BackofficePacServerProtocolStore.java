@@ -27,6 +27,7 @@ public class BackofficePacServerProtocolStore implements BackofficeStore<PacServ
 	private List<PacServerProtocolDto> getPacServerProtocol() {
 		return Stream.of(EPacServerProtocol.values())
 				.map(psp -> new PacServerProtocolDto(psp.getId(), psp.getDescription()))
+				.filter(psp -> psp.getDescription().equals("DICOM WEB"))
 				.collect(Collectors.toList());
 	}
 
