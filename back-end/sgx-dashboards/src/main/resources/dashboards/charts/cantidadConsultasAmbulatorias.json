@@ -14,7 +14,9 @@
     "order": {
       "CantidadConsultasAmbulatorias.fecha_consulta": "asc"
     },
-    "dimensions": []
+    "dimensions": [
+      "CantidadConsultasAmbulatorias.tipo"
+    ]
   },
   "chartType": "bar",
   "pivotConfig": {
@@ -22,6 +24,7 @@
       "CantidadConsultasAmbulatorias.fecha_consulta.month"
     ],
     "y": [
+      "CantidadConsultasAmbulatorias.tipo",
       "measures"
     ],
     "fillMissingDates": true,
