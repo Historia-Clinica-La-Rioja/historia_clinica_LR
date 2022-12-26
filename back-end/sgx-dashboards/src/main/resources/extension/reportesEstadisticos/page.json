@@ -2,17 +2,26 @@
   "layout": "components",
   "content": [
     {
-      "type": "cubejs-dashboard",
+      "type": "tabs",
       "args": {
-        "filters": {},
-        "content": [
+        "tabs": [
           {
-            "type": "tabs",
             "args": {
-              "tabs": [
+              "label": "Consultas",
+              "content": [
                 {
+                  "type": "cubejs-dashboard",
                   "args": {
-                    "label": "Consultas",
+                    "filters": {
+                      "fecha": {
+                        "filter": {
+                          "member": "CantidadConsultasAmbulatorias.fecha_consulta",
+                          "operator": "inDateRange"
+                        },
+                        "type": "dateRangeISO",
+                        "label": "Fecha"
+                      }
+                    },
                     "content": [
                       {
                         "type": "cubejs-chart",
@@ -24,22 +33,39 @@
                         "type": "cubejs-chart",
                         "args": {
                           "query": "cantidadConsultasPorEspecialidad",
-                          "showLegend" : false
+                          "showLegend": false
                         }
                       },
                       {
                         "type": "cubejs-chart",
                         "args": {
                           "query": "cantidadConsultasAmbulatoriasEspecialidadProfesional",
-                          "showLegend" : false
+                          "showLegend": false
                         }
                       }
                     ]
                   }
-                },
+                }
+              ]
+            }
+          },
+          {
+            "args": {
+              "label": "Turnos",
+              "content": [
                 {
+                  "type": "cubejs-dashboard",
                   "args": {
-                    "label": "Turnos",
+                    "filters": {
+                      "fecha": {
+                        "filter": {
+                          "member": "CantidadTurnos.fecha_consulta",
+                          "operator": "inDateRange"
+                        },
+                        "type": "dateRangeISO",
+                        "label": "Fecha"
+                      }
+                    },
                     "content": [
                       {
                         "type": "cubejs-chart",
@@ -51,14 +77,14 @@
                         "type": "cubejs-chart",
                         "args": {
                           "query": "cantidadTurnosPorEspecialidad",
-                          "showLegend" : false
+                          "showLegend": false
                         }
                       },
                       {
                         "type": "cubejs-chart",
                         "args": {
                           "query": "cantidadTurnosPorProfesional",
-                          "showLegend" : false
+                          "showLegend": false
                         }
                       }
                     ]

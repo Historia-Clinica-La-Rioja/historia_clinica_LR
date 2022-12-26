@@ -101,11 +101,13 @@ export class QueryRendererComponent {
 		combineLatest([
 			this.cubeQuery$.pipe(
 				switchMap((cubeQuery) => {
+					this.cleanFilters(cubeQuery)
 					return of(isQueryPresent(cubeQuery || {}));
 				})
 			),
 			this.cubeQuery$.pipe(
 				switchMap((cubeQuery) => {
+					this.cleanFilters(cubeQuery)
 					this.error = null;
 					if (!isQueryPresent(cubeQuery || {})) {
 						return of(null);
@@ -163,6 +165,12 @@ export class QueryRendererComponent {
 				}
 			}
 		);
+	}
+
+	cleanFilters(cubeQuery) {
+		cubeQuery.filters = cubeQuery.filters.filter( f => {
+			return f.member === cubeQuery.timeDimensions[0].dimension;
+		});
 	}
 
 	updateChartData(resultSet, pivotConfig) {
