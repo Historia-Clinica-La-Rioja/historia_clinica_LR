@@ -30,7 +30,9 @@ const ImageLvlPacEdit = props => {
             {/* Domain */}
             <TextInput source="domain" validate={[
                 required(),
-                maxLength(50)]}/>
+                maxLength(50)]}
+                helperText={"Ingrese dirección IP o URL del dominio"}
+            />
 
             {/* Port */}
             <NumberInput source={"port"} validate={[

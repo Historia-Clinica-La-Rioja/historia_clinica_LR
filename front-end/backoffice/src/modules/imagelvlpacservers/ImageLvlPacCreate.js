@@ -31,6 +31,7 @@ const ImageLvlPacCreate = props => {
                 <TextInput source="domain" validate={[
                     required(),
                     maxLength(50)]}
+                    helperText={"Ingrese dirección IP o URL del dominio"}
                 />
 
                 {/* Port */}
