@@ -236,7 +236,8 @@ export class CardMedicacionesComponent implements OnInit {
 			prescriptionPt: medication.snomed.pt,
 			problemPt: medication.healthCondition.snomed.pt,
 			doctor: medication.doctor,
-			totalDays: medication.totalDays
+			totalDays: medication.totalDays,
+			observation: medication.observations ? medication.observations.trim() : ''
 		};
 	}
 

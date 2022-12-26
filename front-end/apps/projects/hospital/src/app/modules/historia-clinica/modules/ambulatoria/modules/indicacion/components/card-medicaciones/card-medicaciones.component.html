@@ -95,11 +95,11 @@
                 <div fxLayout="row" *ngFor="let medicationInfo of medicationsInfo; let i=index" [formGroupName]="i">
                     <div class="item-padding" fxFlex="100%" fxLayout="row" fxLayoutGap="15px">
 
-                        <div *appHasRole="['ESPECIALISTA_MEDICO', 'ESPECIALISTA_EN_ODONTOLOGIA']" class="checkbox-div-body" fxFlex="5%">
+                        <div *appHasRole="['ESPECIALISTA_MEDICO', 'ESPECIALISTA_EN_ODONTOLOGIA']" class="checkbox-div-body" fxFlex="0 0 3%">
                             <mat-checkbox formControlName="checked" (change)="checkMedication($event.checked, medicationInfo)"></mat-checkbox>
                         </div>
 
-                        <app-item-prescripciones fxFlex="100%" mat-list-item [prescriptionItemData]="prescriptionItemDataBuilder(medicationInfo)">
+                        <app-item-prescripciones fxFlex="0 0 95%" mat-list-item [prescriptionItemData]="prescriptionItemDataBuilder(medicationInfo)">
                             <div actions>
                                 <button mat-icon-button [matMenuTriggerFor]="menu" *ngIf="hasActionsMenu(medicationInfo)">
                                     <mat-icon>more_vert</mat-icon>
