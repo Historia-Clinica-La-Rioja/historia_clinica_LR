@@ -472,6 +472,9 @@
             "internacion": {
                 "TAB_LABEL": "Internación"
             },
+            "guardia": {
+                "TAB_LABEL": "Guardia"
+            },
             "vacunas": {
                 "TAB_LABEL": "Vacunas",
                 "TITLE": "Historial de vacunación",

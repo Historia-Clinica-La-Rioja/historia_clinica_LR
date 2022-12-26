@@ -149,6 +149,14 @@
 							</app-internacion-paciente>
 						</ng-template>
 					</mat-tab>
+					<mat-tab id="tab_guardia">
+						<ng-template mat-tab-label>
+							<span>{{ 'ambulatoria.paciente.guardia.TAB_LABEL' | translate | uppercase }}</span>
+						</ng-template>
+						<ng-template matTabContent>
+							<!-- tab content here -->
+						</ng-template>
+					</mat-tab>
 					<mat-tab id="tab_indications" *ngIf="hasHealthRelatedRole || hasPharmacyStaffRole">
 						<ng-template mat-tab-label>
 							<span>{{ 'indicacion.TITLE' | translate | uppercase }}</span>
