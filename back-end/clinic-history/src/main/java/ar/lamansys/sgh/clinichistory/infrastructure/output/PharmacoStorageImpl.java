@@ -211,6 +211,8 @@ public class PharmacoStorageImpl implements PharmacoStorage {
 		result.setSnomed(snomedBo);
 		result.setDosage(dosageBo);
 		result.setVia(EVia.getById(entity.getViaId()).getDescription());
+		String note = this.getNote(entity.getId());
+		result.setNote(note);
 		return result;
 	}
 
@@ -225,6 +227,11 @@ public class PharmacoStorageImpl implements PharmacoStorage {
 		quantityRepository.findById(entity.getDoseQuantityId()).ifPresent( quantity ->
 				result.setQuantity(new QuantityBo(quantity.getValue().intValue(), quantity.getUnit())));
 		return result;
+	}
+
+	private String getNote(Integer pharmacoId) {
+		log.debug("Go to found indication note");
+		return documentIndicationRepository.getNote(pharmacoId);
 	}
 
 }

@@ -8,6 +8,8 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 
+import javax.annotation.Nullable;
+
 import java.io.Serializable;
 
 @Getter
@@ -23,14 +25,19 @@ public class PharmacoSummaryDto extends IndicationDto implements Serializable {
 
 	private String via;
 
+	@Nullable
+	private String note;
+
 	public PharmacoSummaryDto(Integer id, Integer patientId,
 							  Short typeId, Short statusId,
 							  Integer professionalId, String createdByName,
 							  DateDto indicationDate, DateTimeDto createOn,
-							  SharedSnomedDto snomedDto, NewDosageDto dosageDto, String via) {
+							  SharedSnomedDto snomedDto, NewDosageDto dosageDto, String via,
+							  String note) {
 		super(id, patientId, EIndicationType.map(typeId), EIndicationStatus.map(statusId), professionalId, createdByName, indicationDate, createOn);
 		this.snomed = snomedDto;
 		this.dosage = dosageDto;
 		this.via = via;
+		this.note = note;
 	}
 }

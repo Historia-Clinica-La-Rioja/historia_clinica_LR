@@ -358,7 +358,8 @@ public class SharedIndicationPortImpl implements SharedIndicationPort {
 				localDateMapper.toDateTimeDto(bo.getCreatedOn()),
 				snomedDto,
 				dosageDto,
-				bo.getVia());
+				bo.getVia(),
+				bo.getNote());
 	}
 
 	private NewDosageDto toDosageDto(DosageBo bo) {

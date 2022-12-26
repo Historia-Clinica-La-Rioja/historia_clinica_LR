@@ -2413,6 +2413,7 @@ export interface PharmacoDto extends IndicationDto {
 
 export interface PharmacoSummaryDto extends IndicationDto, Serializable {
     dosage: NewDosageDto;
+    note?: string;
     snomed: SharedSnomedDto;
     via: string;
 }
