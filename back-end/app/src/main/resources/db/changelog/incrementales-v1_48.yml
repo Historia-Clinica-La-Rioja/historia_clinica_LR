@@ -1,5 +1,5 @@
 databaseChangeLog: 
-    - logicalFilePath: incrementales-v1_48 
+  - logicalFilePath: incrementales-v1_48
 
   - changeSet:
       id: episode_document_types_create
@@ -20,4 +20,4 @@ databaseChangeLog:
                   constraints:
                     nullable: false
                   name: description
-                  type: varchar
+                  type: varchar(100)
