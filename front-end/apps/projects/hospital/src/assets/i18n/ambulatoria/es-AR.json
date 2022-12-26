@@ -244,11 +244,11 @@
             "counterreference": {
                 "TITLE": "Responder referencia",
                 "COUNTERREFERENCE": "Contrarreferencia",
-				"REFERENCE_CLOSURE": "Cierre de la referencia",
-				"CLOSURE_TYPE": "Tipo de cierre",
+                "REFERENCE_CLOSURE": "Cierre de la referencia",
+                "CLOSURE_TYPE": "Tipo de cierre",
                 "PLACEHOLDER_DESCRIPTION": "Descripción",
                 "CONFIRM_COUNTERREFERENCE": "Confirmar contrarreferencia",
-				"CONFIRM_CLOSURE": "Confirmar cierre",
+                "CONFIRM_CLOSURE": "Confirmar cierre",
                 "messages": {
                     "ERROR": "Error al guardar documento de contrarreferencia",
                     "SUCCESS": "El documento de contrarreferencia se guardó exitosamente"
@@ -289,11 +289,11 @@
                     "CONSULTATION_DATE": "Fecha de consulta",
                     "REFERENCE_REQUEST": "referencia solicitada",
                     "CARE_LINE": "Línea de cuidado:",
-					"INSTITUTION": "Institución:",
+                    "INSTITUTION": "Institución:",
                     "SUMMARY_REFERENCE": "Resumen de referencia",
                     "COUNTERREFERENCE": "Contrarreferencia",
                     "PROCEDURE": "Procedimientos:",
-					"REFERENCE_CLOSURE": "Cierre de referencia",
+                    "REFERENCE_CLOSURE": "Cierre de referencia",
                     "CONSULTATION_INSTITUTION": "Institución"
                 },
                 "historical-problems-filters": {
@@ -577,12 +577,12 @@
             "OTHER-INDICATION": "Otra indicación",
             "DIET": "Dieta"
         },
-		"card-patient":{
-			"ID": "ID",
-			"DNI": "DNI",
-			"BIRTHDAY_DATE": "Fecha de Nac.",
-			"COINCIDENCE": "coincidencia",
-			"BUTTON": "Ver"
-		}
+        "card-patient": {
+            "ID": "ID",
+            "DNI": "DNI",
+            "BIRTHDAY_DATE": "Fecha de Nac.",
+            "COINCIDENCE": "coincidencia",
+            "BUTTON": "Ver"
+        }
     }
 }

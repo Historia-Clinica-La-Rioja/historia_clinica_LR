@@ -1,7 +1,9 @@
 <app-content width="full">
 	<section id="title" fxLayout="row" fxLayoutAlign="space-between">
 		<h2 class="page-title" [translate]="'ambulatoria.paciente.TITLE'"></h2>
-		<app-calendar-professional-view *appHasRole="['ESPECIALISTA_MEDICO', 'PROFESIONAL_DE_SALUD', 'ESPECIALISTA_EN_ODONTOLOGIA', 'ENFERMERO']"></app-calendar-professional-view>
+		<app-calendar-professional-view
+			*appHasRole="['ESPECIALISTA_MEDICO', 'PROFESIONAL_DE_SALUD', 'ESPECIALISTA_EN_ODONTOLOGIA', 'ENFERMERO']">
+		</app-calendar-professional-view>
 	</section>
 
 	<section id="content" fxLayout="column" fxLayoutGap="20px">
@@ -90,11 +92,8 @@
 			</div>
 
 			<div buttons-content fxLayout="column" fxLayoutGap="10px" fxLayout.xs="row" fxLayoutAlign="center center">
-				<app-clinical-history-actions id="actions"
-					[internmentEpisodeProcess]="internmentEpisodeProcess"
-					[patientId]="patientId"
-					(popUpOpen)="dialogRef = $event"
-					>
+				<app-clinical-history-actions id="actions" [internmentEpisodeProcess]="internmentEpisodeProcess"
+					[patientId]="patientId" (popUpOpen)="dialogRef = $event">
 				</app-clinical-history-actions>
 				<button mat-stroked-button color="primary" (click)="goToPatient()" btn-block>
 					{{ 'ambulatoria.paciente.card.buttons.SHOW_PATIENT' | translate | uppercase }}</button>
@@ -166,21 +165,22 @@
 							</app-card-medicaciones>
 						</ng-template>
 					</mat-tab>
-					<mat-tab id="tab_studies" *ngIf="hasHealthRelatedRole || hasPicturesStaffRole || hasLaboratoryStaffRole">
+					<mat-tab id="tab_studies"
+						*ngIf="hasHealthRelatedRole || hasPicturesStaffRole || hasLaboratoryStaffRole">
 						<ng-template mat-tab-label>
 							<span>{{ 'ambulatoria.paciente.studies.TAB_LABEL' | translate | uppercase }}</span>
 						</ng-template>
 						<ng-template matTabContent>
-							<app-card-estudios [patientId]="patientId"
-								   [epicrisisConfirmed]="epicrisisDoc?.confirmed"
-								   [diagnosticReportsStatus]="diagnosticReportsStatus$ | async"
-								   [categories]="studyCategories$ | async">
+							<app-card-estudios [patientId]="patientId" [epicrisisConfirmed]="epicrisisDoc?.confirmed"
+								[diagnosticReportsStatus]="diagnosticReportsStatus$ | async"
+								[categories]="studyCategories$ | async">
 							</app-card-estudios>
 							<app-card-indicaciones [patientId]="patientId" *ngIf="false"></app-card-indicaciones>
 						</ng-template>
 					</mat-tab>
 					<mat-tab id="tab_nursing" *ngIf="hasInternmentEpisodeInThisInstitution && showNursingSection">
-						<ng-template mat-tab-label *appHasRole="['ESPECIALISTA_MEDICO', 'PROFESIONAL_DE_SALUD', 'ENFERMERO', 'ESPECIALISTA_EN_ODONTOLOGIA', 'PERSONAL_DE_FARMACIA']">
+						<ng-template mat-tab-label
+							*appHasRole="['ESPECIALISTA_MEDICO', 'PROFESIONAL_DE_SALUD', 'ENFERMERO', 'ESPECIALISTA_EN_ODONTOLOGIA', 'PERSONAL_DE_FARMACIA']">
 							<span>{{ 'ambulatoria.paciente.nursing.TAB_LABEL' | translate | uppercase }}</span>
 						</ng-template>
 						<ng-template matTabContent>

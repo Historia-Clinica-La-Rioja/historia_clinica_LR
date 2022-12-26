@@ -113,19 +113,19 @@ export class HomeComponent implements OnInit {
 
 		const dialogRef = this.dialog.open(SelectConsultorioComponent, {
 			width: '25%',
-			data: {title : 'guardia.select_consultorio.ATENDER'}
+			data: { title: 'guardia.select_consultorio.ATENDER' }
 		});
 
 		dialogRef.afterClosed().subscribe(consultorio => {
 			if (consultorio) {
 				this.episodeStateService.atender(episodeId, consultorio.id).subscribe(changed => {
-						if (changed) {
-							this.snackBarService.showSuccess(`${TRANSLATE_KEY_PREFIX}.atender.SUCCESS`);
-							this.goToEpisode(episodeId);
-						} else {
-							this.snackBarService.showError(`${TRANSLATE_KEY_PREFIX}.atender.ERROR`);
-						}
-					}, _ => this.snackBarService.showError(`${TRANSLATE_KEY_PREFIX}.atender.ERROR`)
+					if (changed) {
+						this.snackBarService.showSuccess(`${TRANSLATE_KEY_PREFIX}.atender.SUCCESS`);
+						this.goToEpisode(episodeId);
+					} else {
+						this.snackBarService.showError(`${TRANSLATE_KEY_PREFIX}.atender.ERROR`);
+					}
+				}, _ => this.snackBarService.showError(`${TRANSLATE_KEY_PREFIX}.atender.ERROR`)
 				);
 			}
 		});
@@ -142,16 +142,16 @@ export class HomeComponent implements OnInit {
 		dialogRef.afterClosed().subscribe(confirmed => {
 			if (confirmed) {
 				this.emergencyCareEpisodeAdministrativeDischargeService.newAdministrativeDischargeByAbsence(episodeId).subscribe(changed => {
-						if (changed) {
-							this.snackBarService
-								.showSuccess(`${TRANSLATE_KEY_PREFIX}.finalizar_ausencia.SUCCESS`);
-							this.loadEpisodes();
-						} else {
-							this.snackBarService
-								.showError(`${TRANSLATE_KEY_PREFIX}.finalizar_ausencia.ERROR`);
-						}
-					}, _ => this.snackBarService
-						.showError(`${TRANSLATE_KEY_PREFIX}.finalizar_ausencia.ERROR`)
+					if (changed) {
+						this.snackBarService
+							.showSuccess(`${TRANSLATE_KEY_PREFIX}.finalizar_ausencia.SUCCESS`);
+						this.loadEpisodes();
+					} else {
+						this.snackBarService
+							.showError(`${TRANSLATE_KEY_PREFIX}.finalizar_ausencia.ERROR`);
+					}
+				}, _ => this.snackBarService
+					.showError(`${TRANSLATE_KEY_PREFIX}.finalizar_ausencia.ERROR`)
 				);
 			}
 		});
@@ -159,8 +159,8 @@ export class HomeComponent implements OnInit {
 
 	nuevoTriage(episode: EmergencyCareListDto): void {
 		this.triageDefinitionsService.getTriagePath(episode.type?.id)
-			.subscribe( ({component}) => {
-				const dialogRef = this.dialog.open(component, {data: episode.id});
+			.subscribe(({ component }) => {
+				const dialogRef = this.dialog.open(component, { data: episode.id });
 				dialogRef.afterClosed().subscribe(idReturned => {
 					if (idReturned) {
 						this.loadEpisodes();
@@ -225,9 +225,9 @@ export class HomeComponent implements OnInit {
 		};
 	}
 
-	setPatientNames(episodes: any []) {
+	setPatientNames(episodes: any[]) {
 		return episodes.filter(e => {
-			if(e.patient?.person)
+			if (e.patient?.person)
 				e.patient.person.firstName = this.patientNameService.getPatientName(e.patient.person.firstName, e.patient.person.nameSelfDetermination);
 		})
 	}
