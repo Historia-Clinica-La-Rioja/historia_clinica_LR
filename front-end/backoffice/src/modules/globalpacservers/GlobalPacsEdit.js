@@ -17,7 +17,7 @@ const GlobalPacsEdit = props => {
     const { permissions } = usePermissions();
     const userIsRoot = permissions?.roleAssignments?.filter(roleAssignment => (roleAssignment.role === ROOT.role)).length > 0;
     return (<Edit {...props} hasEdit={userIsRoot}>
-        <SimpleForm redirect="show" toolbar={<CustomToolbar />}>
+        <SimpleForm redirect="show" toolbar={<CustomToolbar isEdit={true} />}>
 
             {/* Name */}
             <TextInput source="name" validate={[
