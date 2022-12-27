@@ -1,8 +1,8 @@
-<div *ngIf="triage" fxLayout="column" fxLayoutGap="30px">
+<div *ngIf="triage" fxLayout="column" fxLayoutGap="15px">
 
 	<section id="basic-triage" fxLayout="column" fxLayoutGap="15px">
 		<div id="header" fxLayout="row" fxLayoutAlign="space-between center">
-			<h2 style="margin: 0">{{ 'guardia.episode.triage.ultimo.TITLE' | translate }}</h2>
+			<h3 class="title-weight" style="margin: 0">{{ 'guardia.episode.triage.ultimo.TITLE' | translate }}</h3>
 			<span>{{ triage.creationDate | date: 'dd/MM/yyyy - HH:mm' }} hs</span>
 		</div>
 
@@ -13,7 +13,7 @@
 			</div>
 
 			<div class="info" fxLayout="column" fxLayoutGap="6px" fxLayoutAlign="space-between">
-				<span>{{ 'guardia.episode.triage.ultimo.REALIZADO_POR' | translate }}</span>
+				<span>{{ 'guardia.episode.triage.ultimo.PROFESIONAL' | translate }}</span>
 				<span *ngIf="triage.createdBy else noInfo" class="padding-to-align-chip">
 					{{getFullName(triage)}}
 				</span>
@@ -30,7 +30,7 @@
 
 	<section *ngIf="emergencyCareType" id="body" fxLayout="column" fxLayoutGap="16px">
 		<div id="pediatric" *ngIf="emergencyCareType === emergencyCareTypes.PEDIATRIA">
-			<h3 class="subtitle-weight">{{ 'guardia.episode.triage.ultimo.APARIENCIA_RESPIRACION_CIRCULACION' |
+			<h3 class="title-weight">{{ 'guardia.episode.triage.ultimo.APARIENCIA_RESPIRACION_CIRCULACION' |
 				translate }}</h3>
 			<div gdColumns="repeat(3, 1fr)" gdGap="20px">
 				<div id="temperatura" class="info" fxLayout="column" fxLayoutGap="5px" fxLayoutAlign="space-between">
@@ -92,7 +92,7 @@
 			</div>
 		</div>
 
-		<div id="risk-factors" *ngIf="riskFactors?.length">
+		<div id="risk-factors" *ngIf="showRiskFactors && riskFactors?.length">
 			<h3 *ngIf="emergencyCareType === emergencyCareTypes.ADULTO ||
 					emergencyCareType === emergencyCareTypes.GINECOLOGIA" class="subtitle-weight">{{
 				'guardia.episode.triage.ultimo.FACTORES_DE_RIESGO' | translate }}
@@ -106,9 +106,11 @@
 	</section>
 
 	<section *ngIf="emergencyCareType">
-		<h3 class="subtitle-weight" style="margin-bottom: 0">
-			{{ 'guardia.episode.triage.ultimo.EVALUACION' | translate }}
-		</h3>
+		<div fxLayout="row">
+			<span class="title-weight" style="margin-bottom: 0">
+				{{ 'guardia.episode.triage.ultimo.EVALUACION' | translate }}
+			</span>
+		</div>
 		<span *ngIf="triage.notes else noInfo">
 			{{ triage.notes }}
 		</span>

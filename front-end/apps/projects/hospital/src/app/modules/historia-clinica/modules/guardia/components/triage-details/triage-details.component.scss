@@ -5,11 +5,11 @@ section {
 }
 
 .info {
-	& > span:first-child {
+	&>span:first-child {
 		@include info-secondary;
 	}
 
-	& > span:last-child {
+	&>span:last-child {
 		@include info-primary;
 	}
 }
@@ -18,6 +18,6 @@ section {
 	padding: 1.5px 0;
 }
 
-.subtitle-weight {
+.title-weight {
 	font-weight: 500;
 }

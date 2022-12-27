@@ -2,7 +2,7 @@ import { Component, Input, OnChanges } from '@angular/core';
 import { EmergencyCareTypes, Triages } from '../../constants/masterdata';
 import { TriageCategory } from '../triage-chip/triage-chip.component';
 import { RiskFactor } from '@presentation/components/factor-de-riesgo-current/factor-de-riesgo.component';
-import {PatientNameService} from "@core/services/patient-name.service";
+import { PatientNameService } from "@core/services/patient-name.service";
 
 @Component({
 	selector: 'app-triage-details',
@@ -14,6 +14,7 @@ export class TriageDetailsComponent implements OnChanges {
 
 	@Input() triage: Triage;
 	@Input() emergencyCareType: EmergencyCareTypes;
+	@Input() showRiskFactors = true;
 
 	readonly triages = Triages;
 	readonly emergencyCareTypes = EmergencyCareTypes;

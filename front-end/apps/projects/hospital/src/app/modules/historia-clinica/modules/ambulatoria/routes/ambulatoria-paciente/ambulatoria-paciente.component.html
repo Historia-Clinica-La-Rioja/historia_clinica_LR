@@ -151,12 +151,13 @@
 						</ng-template>
 					</mat-tab>
 					<mat-tab id="tab_guardia"
-						*ngIf="emergencyCareEpisodeInProgress?.inProgress && !hasInternmentEpisodeInThisInstitution && hasHealthRelatedRole">
+						*ngIf="emergencyCareEpisodeInProgress?.inProgress && hasHealthRelatedRole">
 						<ng-template mat-tab-label>
 							<span>{{ 'ambulatoria.paciente.guardia.TAB_LABEL' | translate | uppercase }}</span>
 						</ng-template>
 						<ng-template matTabContent>
-							<!-- tab content here -->
+							<app-guardia [emergencyCareEpisodeInProgress]="emergencyCareEpisodeInProgress">
+							</app-guardia>
 						</ng-template>
 					</mat-tab>
 					<mat-tab id="tab_indications" *ngIf="hasHealthRelatedRole || hasPharmacyStaffRole">

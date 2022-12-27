@@ -69,6 +69,10 @@ import { NewEpisodeService } from './services/new-episode.service';
 		LazyMaterialModule,
 		PresentationModule,
 	],
+	exports: [
+		TriageDetailsComponent,
+		TriageChipComponent
+	],
 	providers: [
 		// services
 		EpisodeStateService,

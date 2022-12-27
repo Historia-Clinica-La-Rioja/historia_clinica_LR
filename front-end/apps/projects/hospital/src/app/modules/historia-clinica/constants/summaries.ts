@@ -7,6 +7,11 @@ export const INTERNACION: SummaryHeader = {
 	matIcon: 'single_bed'
 };
 
+export const GUARDIA: SummaryHeader = {
+	title: 'Resumen de guardia',
+	matIcon: 'local_hotel'
+};
+
 export const DIAGNOSTICO_PRINCIPAL: SummaryHeader = {
 	title: 'internaciones.internacion-paciente.main-diagnosis.TITLE',
 	matIcon: 'local_hospital'

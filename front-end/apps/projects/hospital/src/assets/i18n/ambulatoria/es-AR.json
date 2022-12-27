@@ -473,7 +473,16 @@
                 "TAB_LABEL": "Internación"
             },
             "guardia": {
-                "TAB_LABEL": "Guardia"
+                "TAB_LABEL": "Guardia",
+                "SUMMARY_TOOLTIP": "Resumen de guardia",
+                "ID": "ID",
+                "REASONS": "Motivos de consulta",
+                "ENTRANCE": "Ingreso",
+                "POLICE_INTERVENTION": "Intervención policial",
+                "UBICACION": "Ubicación",
+                "WITHOUT_POLICE_INTERVENTION": "Sin intervención policial",
+                "WITH_POLICE_INTERVENTION": "Con intervención policial",
+                "PLATE_NUMBER": "Placa. Nº"
             },
             "vacunas": {
                 "TAB_LABEL": "Vacunas",

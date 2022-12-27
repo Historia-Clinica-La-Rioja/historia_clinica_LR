@@ -63,6 +63,8 @@ import { ClinicalHistoryActionsComponent } from './components/clinical-history-a
 import { AmbulatoriaSummaryFacadeService } from './services/ambulatoria-summary-facade.service';
 import { HistoricalProblemsFacadeService } from './services/historical-problems-facade.service';
 import { ClapModule } from './modules/clap/clap.module';
+import { GuardiaComponent } from './components/guardia/guardia.component';
+import { GuardiaModule } from '../guardia/guardia.module';
 
 @NgModule({
 	declarations: [
@@ -108,7 +110,8 @@ import { ClapModule } from './modules/clap/clap.module';
 		CreateOutpatientOrderComponent,
 		NewConsultationFamilyHistoryFormComponent,
 		VaccineSearchComponent,
-  		ClinicalHistoryActionsComponent,
+		ClinicalHistoryActionsComponent,
+		GuardiaComponent,
 	],
 	imports: [
 		CommonModule,
@@ -127,6 +130,7 @@ import { ClapModule } from './modules/clap/clap.module';
 		EstudioModule,
 		TurnosModule,
 		ClapModule,
+		GuardiaModule
 	],
 	providers: [
 		AmbulatoriaSummaryFacadeService,
