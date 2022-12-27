@@ -45,7 +45,7 @@ export class FilesUploaderComponent implements OnInit {
 				this.filesId.emit(of(filesIds));
 			})
 		} else {
-			this.filesId.emit();
+			this.filesId.emit(of([0]));
 		}
 	}
 

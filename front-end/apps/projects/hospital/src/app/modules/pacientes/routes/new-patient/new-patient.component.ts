@@ -297,8 +297,6 @@ export class NewPatientComponent implements OnInit {
 						this.patientMedicalCoverageService.addPatientMedicalCoverages
 							(patientId, patientMedicalCoveragesDto).subscribe();
 					}
-					this.router.navigate([this.routePrefix + ROUTE_PROFILE + patientId]);
-					this.snackBarService.showSuccess(this.getMessagesSuccess());
 				}, _ => {
 					this.isSubmitButtonDisabled = false;
 					this.snackBarService.showError(this.getMessagesError());
@@ -317,9 +315,10 @@ export class NewPatientComponent implements OnInit {
 	}
 
 	subscribeFinishUploadFiles(filesId$: Observable<number[]>) {
-		filesId$.subscribe((filesIds: number[]) => {
+		filesId$?.subscribe((filesIds: number[]) => {
 			if (filesIds.length) {
 				this.router.navigate([this.routePrefix + ROUTE_PROFILE + this.patientId]);
+				this.snackBarService.showSuccess(this.getMessagesSuccess());
 			}
 		})
 	}
