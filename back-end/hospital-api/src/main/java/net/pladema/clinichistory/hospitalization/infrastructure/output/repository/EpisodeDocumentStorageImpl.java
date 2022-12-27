@@ -5,7 +5,7 @@ import ar.lamansys.sgx.shared.files.FileService;
 import lombok.extern.slf4j.Slf4j;
 import net.pladema.clinichistory.hospitalization.application.port.EpisodeDocumentStorage;
 import net.pladema.clinichistory.hospitalization.infrastructure.output.entities.EpisodeDocument;
-import net.pladema.clinichistory.hospitalization.infrastructure.output.entities.EpisodeDocumentType;
+import net.pladema.clinichistory.hospitalization.infrastructure.output.entities.InternmentEpisodeDocumentType;
 import net.pladema.clinichistory.hospitalization.infrastructure.output.entities.VEpisodeDocument;
 import net.pladema.clinichistory.hospitalization.service.domain.DocumentTypeBo;
 import net.pladema.clinichistory.hospitalization.service.domain.EpisodeDocumentBo;
@@ -118,7 +118,7 @@ public class EpisodeDocumentStorageImpl implements EpisodeDocumentStorage {
 		);
 	}
 
-	private DocumentTypeBo mapDocumentTypeToBo(EpisodeDocumentType entity) {
+	private DocumentTypeBo mapDocumentTypeToBo(InternmentEpisodeDocumentType entity) {
 		return new DocumentTypeBo(entity.getId(), entity.getDescription());
 	}
 }

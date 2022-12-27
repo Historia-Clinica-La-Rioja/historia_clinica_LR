@@ -32,20 +32,20 @@ databaseChangeLog:
         - sql:
             sql: |-
               UPDATE "document" d
-                SET patient_age_period = subquery.patient_age_period 
-                FROM (
-                  SELECT d.id, CASE WHEN d.created_on IS NOT NULL AND per.birth_date IS NOT NULL THEN CONCAT('P', 
-                  CASE WHEN (EXTRACT(years FROM AGE(d.created_on, per.birth_date)) > 0) THEN (CONCAT(EXTRACT(years FROM AGE(d.created_on, per.birth_date)),  'Y')) END,
-                  CASE WHEN (EXTRACT(months FROM AGE(d.created_on, per.birth_date)) > 0) THEN (CONCAT(EXTRACT(months FROM AGE(d.created_on, per.birth_date)),  'M')) END,
-                  CASE WHEN (EXTRACT(days FROM AGE(d.created_on, per.birth_date)) > 0) THEN (CONCAT(EXTRACT(days FROM AGE(d.created_on, per.birth_date)),  'D')) END,
-                  CASE WHEN (EXTRACT(years FROM AGE(d.created_on, per.birth_date)) < 1) AND (EXTRACT(months FROM AGE(d.created_on, per.birth_date)) < 1)
-                  AND (EXTRACT(days FROM AGE(d.created_on, per.birth_date)) < 1) THEN '0D' END) ELSE NULL END AS patient_age_period
-                  FROM "document" d
-                  JOIN patient p ON (d.patient_id = p.id)
-                  JOIN person per ON (p.person_id = per.id)
-                ) subquery
-                WHERE d.id = subquery.id
-                AND d.patient_age_period IS NULL
+              SET patient_age_period = subquery.patient_age_period 
+              FROM (
+                SELECT d.id, CASE WHEN d.created_on IS NOT NULL AND per.birth_date IS NOT NULL THEN CONCAT('P', 
+                CASE WHEN (EXTRACT(years FROM AGE(d.created_on, per.birth_date)) > 0) THEN (CONCAT(EXTRACT(years FROM AGE(d.created_on, per.birth_date)),  'Y')) END,
+                CASE WHEN (EXTRACT(months FROM AGE(d.created_on, per.birth_date)) > 0) THEN (CONCAT(EXTRACT(months FROM AGE(d.created_on, per.birth_date)),  'M')) END,
+                CASE WHEN (EXTRACT(days FROM AGE(d.created_on, per.birth_date)) > 0) THEN (CONCAT(EXTRACT(days FROM AGE(d.created_on, per.birth_date)),  'D')) END,
+                CASE WHEN (EXTRACT(years FROM AGE(d.created_on, per.birth_date)) < 1) AND (EXTRACT(months FROM AGE(d.created_on, per.birth_date)) < 1)
+                AND (EXTRACT(days FROM AGE(d.created_on, per.birth_date)) < 1) THEN '0D' END) ELSE NULL END AS patient_age_period
+                FROM "document" d
+                JOIN patient p ON (d.patient_id = p.id)
+                JOIN person per ON (p.person_id = per.id)
+              ) subquery
+              WHERE d.id = subquery.id
+              AND d.patient_age_period IS NULL
 
 
   - changeSet:
@@ -68,42 +68,42 @@ databaseChangeLog:
       changes:
         - createTable:
             tableName: auditable_patient
-            columns:
-              - column:
-                  autoIncrement: true
-                  constraints:
+              columns:
+                - column:
+                    autoIncrement: true
+                    constraints:
                       primaryKey: true
                       primaryKeyName: PK_auditable_patient
-                  name: id
-                  type: int
-              - column:
-                  constraints:
-                    nullable: false
-                    references: patient(id)
-                    foreignKeyName: FK_auditable_patient_patient_id
-                  name: patient_id
-                  type: int
-              - column:
-                  constraints:
-                    nullable: false
-                    references: institution(id)
-                    foreignKeyName: FK_auditable_patient_institution_id
-                  name: institution_id
-                  type: int
-              - column:
-                  constraints:
-                    nullable: false
-                    references: users(id)
-                    foreignKeyName: FK_auditable_patient_created_by
-                  name: created_by
-                  type: int
-                  defaultValue: -1
-              - column:
+                    name: id
+                    type: int
+                - column:
+                    constraints:
+                      nullable: false
+                      references: patient(id)
+                      foreignKeyName: FK_auditable_patient_patient_id
+                    name: patient_id
+                    type: int
+                - column:
+                    constraints:
+                      nullable: false
+                      references: institution(id)
+                      foreignKeyName: FK_auditable_patient_institution_id
+                    name: institution_id
+                    type: int
+                - column:
+                    constraints:
+                      nullable: false
+                      references: users(id)
+                      foreignKeyName: FK_auditable_patient_created_by
+                    name: created_by
+                    type: int
+                    defaultValue: -1
+                - column:
                   constraints:
                     nullable: false
                   name: message
                   type: text
-              - column:
+                - column:
                   constraints:
                     nullable: false
                   name: created_on
@@ -254,18 +254,18 @@ databaseChangeLog:
               referencedTableName: internment_episode
               validate: true
 
-    - changeSet:
-        id: createView-v-internment-episode-document
-        author: fdemuguruza
-        dbms: postgresql
-        changes:
-          - createView:
-              viewName: v_episode_document
-              fullDefinition: false
-              replaceIfExists: true
-              schemaName: public
-              selectQuery: |-
-                  SELECT ed.id, edt.description, ed.file_name, ed.created_on
-                  FROM episode_document ed
-                  JOIN internment_episode ie ON (ed.internment_episode_id = ie.id)
-                  JOIN episode_document_types edt ON (ed.episode_document_types_id = edt.id)
+  - changeSet:
+      id: createView-v-internment-episode-document
+      author: fdemuguruza
+      dbms: postgresql
+      changes:
+        - createView:
+            viewName: v_episode_document
+            fullDefinition: false
+            replaceIfExists: true
+            schemaName: public
+            selectQuery: |-
+                SELECT ed.id, edt.description, ed.file_name, ed.created_on
+                FROM episode_document ed
+                JOIN internment_episode ie ON (ed.internment_episode_id = ie.id)
+                JOIN episode_document_types edt ON (ed.episode_document_types_id = edt.id)

@@ -21,7 +21,7 @@ import javax.persistence.Table;
 @ToString
 @NoArgsConstructor
 @AllArgsConstructor
-public class EpisodeDocumentType {
+public class InternmentEpisodeDocumentType {
 
 	@Id
 	@Column(name = "id")
@@ -29,6 +29,6 @@ public class EpisodeDocumentType {
 	@EqualsAndHashCode.Include
 	private Integer id;
 
-	@Column(name = "description", nullable = false)
+	@Column(name = "description", nullable = false, length = 100)
 	private String description;
 }
