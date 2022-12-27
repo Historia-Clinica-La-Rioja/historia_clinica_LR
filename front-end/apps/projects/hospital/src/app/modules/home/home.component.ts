@@ -34,7 +34,6 @@ export class HomeComponent implements OnInit {
 	userInfo: UserInfo;
 	nameSelfDeterminationFF: boolean;
 
-	private readonly NO_INSTITUTION = -1;
 	homeExtensions$: Observable<any[]>;
 	constructor(
 		private contextService: ContextService,
@@ -69,7 +68,6 @@ export class HomeComponent implements OnInit {
 	}
 
 	ngOnInit(): void {
-		this.contextService.setInstitutionId(this.NO_INSTITUTION);
 
 		this.loggedUserService.assignments$.subscribe(roleAssignment => {
 			const menuItemDefs: MenuItemDef[] = this.userHasAnyRole(roleAssignment) ? ROLES_USER_SIDEBAR_MENU : NO_ROLES_USER_SIDEBAR_MENU;
