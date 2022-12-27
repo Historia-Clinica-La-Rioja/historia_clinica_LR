@@ -458,22 +458,27 @@ export class EditPatientComponent implements OnInit {
 		return this.hasInstitutionalAdministratorRole ? 'pacientes.edit.messages.ERROR_PERSON' : 'pacientes.edit.messages.ERROR_PATIENT';
 	}
 
-	savePatient(idFiles: number[]) {
+	savePatient(idFiles: Observable<number[]>) {
 		if(idFiles){
-			this.filesId = idFiles;
-			const personRequest: APatientDto = this.mapToPersonRequest();
-			this.patientService.editPatient(personRequest, this.patientId)
-				.subscribe(patientId => {
-					if (this.medicalCoverages) {
-						const patientMedicalCoveragesDto: PatientMedicalCoverageDto[] =
-							this.medicalCoverages.map(s => this.mapperService.toPatientMedicalCoverageDto(s));
-						this.patientMedicalCoverageService.addPatientMedicalCoverages(this.patientId, patientMedicalCoveragesDto)
-							.subscribe();
-					}
-					this.router.navigate([this.routePrefix + ROUTE_PROFILE + patientId]);
-					this.snackBarService.showSuccess('pacientes.edit.messages.SUCCESS');
-				}, _ => this.snackBarService.showError('pacientes.edit.messages.ERROR'));
+			idFiles.subscribe( idsFiles =>{
+				this.filesId = idsFiles;
+				const personRequest: APatientDto = this.mapToPersonRequest();
+				this.patientService.editPatient(personRequest, this.patientId)
+					.subscribe(patientId => {
+						if (this.medicalCoverages) {
+							const patientMedicalCoveragesDto: PatientMedicalCoverageDto[] =
+								this.medicalCoverages.map(s => this.mapperService.toPatientMedicalCoverageDto(s));
+							this.patientMedicalCoverageService.addPatientMedicalCoverages(this.patientId, patientMedicalCoveragesDto)
+								.subscribe();
+						}
+						this.router.navigate([this.routePrefix + ROUTE_PROFILE + patientId]);
+						this.snackBarService.showSuccess('pacientes.edit.messages.SUCCESS');
+					}, _ => this.snackBarService.showError('pacientes.edit.messages.ERROR'));
+			})
 		}
+
+
+
 	}
 
 	private mapToPersonRequest(): APatientDto {
