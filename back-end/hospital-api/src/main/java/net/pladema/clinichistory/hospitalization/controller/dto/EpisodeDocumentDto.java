@@ -1,6 +1,5 @@
 package net.pladema.clinichistory.hospitalization.controller.dto;
 
-import ar.lamansys.sgx.shared.dates.controller.dto.DateDto;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -19,5 +18,4 @@ public class EpisodeDocumentDto {
 	private MultipartFile file;
 	private Integer episodeDocumentTypeId;
 	private Integer internmentEpisodeId;
-
 }

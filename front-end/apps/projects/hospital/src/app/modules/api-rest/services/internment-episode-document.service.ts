@@ -15,9 +15,9 @@ export class InternmentEpisodeDocumentService {
   constructor(private http: HttpClient,
               private contextService: ContextService) { }
 
-  saveInternmentEpisodeDocument(file, internmentEpisodeId: number, episodeDocumentTypeId: number): Observable<SavedEpisodeDocumentResponseDto> {
+  saveInternmentEpisodeDocument(file, internmentEpisodeId: number, episodeDocumentTypeId: number): Observable<number> {
     const url = `${this.url}/${internmentEpisodeId}/episodedocuments/${episodeDocumentTypeId}`;
-    return this.http.post<SavedEpisodeDocumentResponseDto>(url, file);
+    return this.http.post<number>(url, file);
   }
 
   getInternmentEpisodeDocuments(internmentEpisodeId: number): Observable<EpisodeDocumentResponseDto[]> {

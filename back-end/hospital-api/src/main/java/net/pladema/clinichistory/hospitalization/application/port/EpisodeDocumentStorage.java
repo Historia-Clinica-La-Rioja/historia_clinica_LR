@@ -1,4 +1,4 @@
-package net.pladema.clinichistory.hospitalization.infrastructure.output.repository;
+package net.pladema.clinichistory.hospitalization.application.port;
 
 import net.pladema.clinichistory.hospitalization.service.domain.DocumentTypeBo;
 import net.pladema.clinichistory.hospitalization.service.domain.EpisodeDocumentBo;
@@ -10,7 +10,7 @@ import java.util.List;
 
 public interface EpisodeDocumentStorage {
 
-	SavedEpisodeDocumentResponseBo saveEpisodeDocument(EpisodeDocumentBo bo);
+	Integer saveEpisodeDocument(String partialPath, String uuid, EpisodeDocumentBo bo);
 
 	List<EpisodeDocumentResponseBo> getEpisodeDocuments(Integer internmentEpisodeId);
 
