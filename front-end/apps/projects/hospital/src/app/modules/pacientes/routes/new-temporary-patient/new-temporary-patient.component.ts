@@ -317,7 +317,9 @@ export class NewTemporaryPatientComponent implements OnInit {
 				fullName: this.form.controls.pamiDoctor.value,
 				phoneNumber: this.form.controls.pamiDoctorPhoneNumber.value,
 				generalPractitioner: false
-			}
+			},
+			// Select for an audict
+			toAudit: false
 		};
 
 		if (patient.genderSelfDeterminationId === this.NONE_SELF_PERCEIVED_GENDER_SELECTED_ID)
