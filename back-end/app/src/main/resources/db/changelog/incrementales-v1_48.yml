@@ -68,42 +68,42 @@ databaseChangeLog:
       changes:
         - createTable:
             tableName: auditable_patient
-              columns:
-                - column:
-                    autoIncrement: true
-                    constraints:
-                      primaryKey: true
-                      primaryKeyName: PK_auditable_patient
-                    name: id
-                    type: int
-                - column:
-                    constraints:
-                      nullable: false
-                      references: patient(id)
-                      foreignKeyName: FK_auditable_patient_patient_id
-                    name: patient_id
-                    type: int
-                - column:
-                    constraints:
-                      nullable: false
-                      references: institution(id)
-                      foreignKeyName: FK_auditable_patient_institution_id
-                    name: institution_id
-                    type: int
-                - column:
-                    constraints:
-                      nullable: false
-                      references: users(id)
-                      foreignKeyName: FK_auditable_patient_created_by
-                    name: created_by
-                    type: int
-                    defaultValue: -1
-                - column:
+            columns:
+              - column:
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    primaryKeyName: PK_auditable_patient
+                  name: id
+                  type: int
+              - column:
+                  constraints:
+                    nullable: false
+                    references: patient(id)
+                    foreignKeyName: FK_auditable_patient_patient_id
+                  name: patient_id
+                  type: int
+              - column:
+                  constraints:
+                    nullable: false
+                    references: institution(id)
+                    foreignKeyName: FK_auditable_patient_institution_id
+                  name: institution_id
+                  type: int
+              - column:
+                  constraints:
+                    nullable: false
+                    references: users(id)
+                    foreignKeyName: FK_auditable_patient_created_by
+                  name: created_by
+                  type: int
+                  defaultValue: -1
+              - column:
                   constraints:
                     nullable: false
                   name: message
                   type: text
-                - column:
+              - column:
                   constraints:
                     nullable: false
                   name: created_on
@@ -192,67 +192,67 @@ databaseChangeLog:
                   type: varchar(20)
 
 
-    - changeSet:
-        id: episode_document_createTable
-        comment: Create table episode_document
-        author: fdemuguruza
-        changes:
-          - createTable:
-              tableName: episode_document
-              columns:
-                - column:
-                    autoIncrement: true
-                    constraints:
-                      primaryKey: true
-                      primaryKeyName: PK_episode_document
-                    name: id
-                    type: int
-                - column:
-                    constraints:
-                      nullable: false
-                    name: file_path
-                    type: varchar
-                - column:
-                    constraints:
-                      nullable: false
-                    name: file_name
-                    type: varchar
-                - column:
-                    constraints:
-                      nullable: false
-                    name: uuid_file
-                    type: varchar(36)
-                    defaultValue: uuid
-                - column:
-                    constraints:
-                      nullable: false
-                    name: created_on
-                    type: date
-                    defaultValueDate: ${date.now}
-                - column:
-                    name: episode_document_types_id
-                    type: int
-                - column:
-                    name: internment_episode_id
-                    type: int
-          - addForeignKeyConstraint:
-              baseColumnNames: episode_document_types_id
-              baseTableName: episode_document
-              constraintName: FK_episode_document_types_id
-              onDelete: NO ACTION
-              onUpdate: NO ACTION
-              referencedColumnNames: id
-              referencedTableName: episode_document_types
-              validate: true
-          - addForeignKeyConstraint:
-              baseColumnNames: internment_episode_id
-              baseTableName: episode_document
-              constraintName: FK_internment_episode_id
-              onDelete: NO ACTION
-              onUpdate: NO ACTION
-              referencedColumnNames: id
-              referencedTableName: internment_episode
-              validate: true
+  - changeSet:
+      id: episode_document_createTable
+      comment: Create table episode_document
+      author: fdemuguruza
+      changes:
+        - createTable:
+            tableName: episode_document
+            columns:
+              - column:
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    primaryKeyName: PK_episode_document
+                  name: id
+                  type: int
+              - column:
+                  constraints:
+                    nullable: false
+                  name: file_path
+                  type: varchar
+              - column:
+                  constraints:
+                    nullable: false
+                  name: file_name
+                  type: varchar
+              - column:
+                  constraints:
+                    nullable: false
+                  name: uuid_file
+                  type: varchar(36)
+                  defaultValue: uuid
+              - column:
+                  constraints:
+                    nullable: false
+                  name: created_on
+                  type: date
+                  defaultValueDate: ${date.now}
+              - column:
+                  name: episode_document_types_id
+                  type: int
+              - column:
+                  name: internment_episode_id
+                  type: int
+        - addForeignKeyConstraint:
+            baseColumnNames: episode_document_types_id
+            baseTableName: episode_document
+            constraintName: FK_episode_document_types_id
+            onDelete: NO ACTION
+            onUpdate: NO ACTION
+            referencedColumnNames: id
+            referencedTableName: episode_document_types
+            validate: true
+        - addForeignKeyConstraint:
+            baseColumnNames: internment_episode_id
+            baseTableName: episode_document
+            constraintName: FK_internment_episode_id
+            onDelete: NO ACTION
+            onUpdate: NO ACTION
+            referencedColumnNames: id
+            referencedTableName: internment_episode
+            validate: true
 
   - changeSet:
       id: createView-v-internment-episode-document
