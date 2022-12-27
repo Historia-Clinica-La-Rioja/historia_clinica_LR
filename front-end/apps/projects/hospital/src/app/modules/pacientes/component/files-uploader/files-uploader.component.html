@@ -19,9 +19,13 @@
 		<div *ngFor="let file of personFiles" fxFlex="100%" fxFlexFill>
 			<div fxLayout="column" fxLayoutAlign="space-around start">
 
-				<a mat-button color="primary" (click)="download(file.fileId,file.fileName)" *appHasRole="['ADMINISTRATIVO']">{{file.fileName}}</a>
+				<ng-container *appHasRole="['ADMINISTRATIVO', 'ADMINISTRADOR_INSTITUCIONAL_BACKOFFICE']">
+					<a mat-button color="primary"  (click)="download(file.fileId,file.fileName)">{{file.fileName}}</a>
+				</ng-container>
+				<ng-template>
+					<span *appHasRole="['ADMINISTRADOR_INSTITUCIONAL_BACKOFFICE']" class="info-content">{{file.fileName}}</span>
+				</ng-template>
 
-				<span *appHasRole="['ADMINISTRADOR_INSTITUCIONAL_BACKOFFICE']" class="info-content">{{file.fileName}}</span>
 			</div>
 		</div>
 	</div>
