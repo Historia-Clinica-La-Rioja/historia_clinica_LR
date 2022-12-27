@@ -9,7 +9,7 @@ import { Observable, of } from 'rxjs';
 	styleUrls: ['./files-uploader.component.scss']
 })
 export class FilesUploaderComponent implements OnInit {
-	@Input() personFiles: PersonFileDto;
+	@Input() personFiles: PersonFileDto[];
 	@Input() personId: number;
 	@Input()
 	set hasToSaveFiles(value: boolean) {
@@ -29,8 +29,10 @@ export class FilesUploaderComponent implements OnInit {
 
 	onSelectFileFormData($event: any) {
 		Array.from($event.target.files).forEach((file: File) => {
-			this.selectedFiles.push(file);
-			this.selectedFilesShow.push(file.name);
+			if(!this.personFiles.find(pf => pf.fileName === file.name )){
+				this.selectedFiles.push(file);
+				this.selectedFilesShow.push(file.name);
+			}
 		});
 	}
 
