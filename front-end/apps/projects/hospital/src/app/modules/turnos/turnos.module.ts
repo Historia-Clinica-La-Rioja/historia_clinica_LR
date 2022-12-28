@@ -52,6 +52,8 @@ import { CancelAppointmentComponent } from './dialogs/cancel-appointment/cancel-
 import { ConfirmBookingComponent } from './dialogs/confirm-booking/confirm-booking.component';
 import { NewAppointmentComponent } from './dialogs/new-appointment/new-appointment.component';
 import { NewAttentionComponent } from './dialogs/new-attention/new-attention.component';
+import { RecurringCancelPopupComponent } from './dialogs/recurring-cancel-popup/recurring-cancel-popup.component';
+import { RecurringCustomizePopupComponent } from './dialogs/recurring-customize-popup/recurring-customize-popup.component';
 // services
 import { CustomDateFormatter } from './services/custom-date-formatter.service';
 import { EquipmentAppointmentsFacadeService } from './services/equipment-appointments-facade.service';
@@ -98,6 +100,8 @@ import { ShowTimeSlotDetailsPipe } from './pipes/show-time-slot-details.pipe';
 		ConfirmBookingComponent,
 		NewAppointmentComponent,
 		NewAttentionComponent,
+		RecurringCustomizePopupComponent,
+	  	RecurringCancelPopupComponent,
 		//pipes
 		PracticesPipe,
 		ShowAppointmentOverTurnPipe,

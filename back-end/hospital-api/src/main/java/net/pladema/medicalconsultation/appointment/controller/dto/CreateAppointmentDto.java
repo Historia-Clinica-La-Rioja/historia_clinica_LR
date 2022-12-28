@@ -26,6 +26,9 @@ import net.pladema.medicalconsultation.appointment.domain.enums.EAppointmentModa
 @NoArgsConstructor
 public class CreateAppointmentDto {
 
+	@Nullable
+	private Integer id;
+
     @NotNull
     private Integer diaryId;
 
@@ -75,4 +78,5 @@ public class CreateAppointmentDto {
 	@Nullable
 	private Integer referenceId;
 
+	private Short appointmentOptionId;
 }

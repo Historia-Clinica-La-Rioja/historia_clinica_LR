@@ -11,6 +11,8 @@ import {
 	CreateAppointmentDto,
 	DetailsOrderImageDto,
 	EquipmentAppointmentListDto,
+	CreateCustomAppointmentDto,
+	CustomRecurringAppointmentDto,
 	ExternalPatientCoverageDto,
 	HierarchicalUnitDto,
 	InstitutionBasicInfoDto,
@@ -19,6 +21,8 @@ import {
 	StudyIntanceUIDDto,
 	UpdateAppointmentDateDto,
 	UpdateAppointmentDto,
+	RecurringTypeDto,
+	WeekDayDto,
 } from '@api-rest/api-model';
 import { Observable, of } from 'rxjs';
 
@@ -349,5 +353,42 @@ export class AppointmentsService {
 	bookAppointment(bookingDto: BookingDto): Observable<SavedBookingAppointmentDto>{
 		const url = `${this.BASE_URL}/third-party`;
 		return this.http.post<SavedBookingAppointmentDto>(url, bookingDto);
+	}
+	
+	getRecurringAppointmentType(): Observable<RecurringTypeDto[]> {
+		const url = `${environment.apiBase}/institutions/${this.contextService.institutionId}/medicalConsultations/recurring-appointment-type`;
+		return this.http.get<RecurringTypeDto[]>(url);
+	}
+
+	getWeekDay(): Observable<WeekDayDto[]> {
+		const url = `${environment.apiBase}/institutions/${this.contextService.institutionId}/medicalConsultations/appointments/week-day`;
+		return this.http.get<WeekDayDto[]>(url);
+	}
+
+	everyWeekSave(createAppointmentDto: CreateAppointmentDto): Observable<boolean> {
+		const url = `${environment.apiBase}/institutions/${this.contextService.institutionId}/medicalConsultations/appointments/every-week-save`;
+		return this.http.post<boolean>(url, createAppointmentDto);
+	}
+
+	customSave(createCustomAppointmentDto: CreateCustomAppointmentDto): Observable<boolean> {
+		const url = `${environment.apiBase}/institutions/${this.contextService.institutionId}/medicalConsultations/appointments/custom-save`;
+		return this.http.post<boolean>(url, createCustomAppointmentDto);
+	}
+
+	noRepeat(appointmentId: number): Observable<boolean> {
+		const url = `${environment.apiBase}/institutions/${this.contextService.institutionId}/medicalConsultations/appointments/${appointmentId}/no-repeat`;
+		return this.http.put<boolean>(url, {});
+	}
+
+	cancelRecurringAppointments(appointmentId: number, cancelAllAppointments: boolean): Observable<boolean> {
+		const url = `${environment.apiBase}/institutions/${this.contextService.institutionId}/medicalConsultations/appointments/${appointmentId}/cancel-recurring-appointments`;
+		let queryParams: HttpParams = new HttpParams();
+		queryParams = queryParams.append('cancelAllAppointments', cancelAllAppointments);
+		return this.http.put<boolean>(url, {}, { params: queryParams });
+	}
+
+	getCustomAppointment(appointmentId: number): Observable<CustomRecurringAppointmentDto> {
+		const url = `${environment.apiBase}/institutions/${this.contextService.institutionId}/medicalConsultations/appointments/${appointmentId}/custom-appointment`;
+		return this.http.get<CustomRecurringAppointmentDto>(url);
 	}
 }

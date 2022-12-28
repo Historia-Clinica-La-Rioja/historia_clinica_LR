@@ -174,6 +174,7 @@
 					<div *ngIf="appointment?.associatedReferenceClosureType || appointment?.hasAssociatedReference" fxLayout="row" fxLayoutGap="5px" fxLayoutAlign="start">
 						<app-reference-state-label [referenceClosureDescription]="appointment.associatedReferenceClosureType?.description"></app-reference-state-label>
 					</div>
+					<span *ngIf="recurringTypeSelected" class="recurring-type-text">{{recurringTypeSelected.value}}</span>
 				</div>
 				<div fxLayout="column" fxLayoutGap="10px" class="motive" *ngIf="isVirtualConsultationModality && selectedState !== appointmentStatesIds.SERVED && (attachProfessional || agendaOwner)">
 						<button type="button" mat-raised-button color="primary" (click)="entryCall()">
@@ -252,6 +253,26 @@
 							[translate]="'pacientes.form.INVALID'"></mat-error>
 						</mat-form-field>
 				</div>
+
+				<div class="recurring-type" *appFeatureFlag="HABILITAR_RECURRENCIA_EN_DESARROLLO">
+					<div *ngIf="isAppointmentAfterToday && !appointment.overturn">
+						<mat-form-field appearance="outline">
+							<mat-label [translate]="'turnos.appointment.RECURRING_TYPE'"></mat-label>
+							<mat-select formControlName="recurringType">
+								<mat-option
+									[disabled]="value.id != NO_REPEAT && (this.appointment.parentAppointmentId || this.appointment.hasAppointmentChilds)"
+									[value]="value.id"
+									*ngFor="let value of recurringTypes"
+									(click)="checkOption(value.id)">
+									{{value.value}}
+								</mat-option>
+							</mat-select>
+							<mat-error *ngIf="hasError(formDate, 'required', 'recurringType')" [translate]="'forms.REQUIRED'"></mat-error>
+							<mat-error *ngIf="hasError(formDate, 'invalid', 'recurringType')">{{this.formDate.controls.recurringType.errors.invalid}}</mat-error>
+						</mat-form-field>
+					</div>
+				</div>
+
 				<div class="confirm-buttons" fxLayout="row" fxLayoutAlign="end" fxLayoutGap="15px" fxFlex="60%">
 					<button id="cancel-edition" mat-stroked-button color="primary" btn-block type="button"
 						(click)="cancelDateForm()">

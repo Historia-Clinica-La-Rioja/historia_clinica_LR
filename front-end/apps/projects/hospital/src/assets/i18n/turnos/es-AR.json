@@ -179,6 +179,7 @@
 				"DOCUMENT_TYPE": "Tipo de documento",
 				"DOCUMENT_NUMBER": "Nº de documento"
 			},
+			"EDIT": "Editar turno recurrente",
 			"messages": {
 				"ERROR": "Paciente no encontrado",
 				"SUCCESS": "Paciente encontrado",
@@ -199,7 +200,15 @@
 		"cancel": {
 			"TITLE": "Cancelar turno",
 			"CONFIRM": "¿Desea cancelar el turno seleccionado?",
-			"SUCCESS": "El turno fue cancelado exitosamente"
+			"SUCCESS": "El turno fue cancelado exitosamente",
+			"PLURAL_SUCCESS": "Los turnos fueron cancelados exitosamente",
+			"CANCEL": "Eliminar turno recurrente",
+			"confirm-cancel": {
+				"TITLE": "Dejar de repetir eliminará los turnos posteriores",
+				"CONTENT": "Si este turno pertenece a una recurrencia se eliminarán los turnos posteriores pertenecientes a la misma. ¿Está seguro que desea dejar de repetir el turno?",
+				"CANCEL": "Cancelar",
+				"CONFIRM": "Confirmar"
+			}
 		},
 		"overturns": {
 			"CREATE": "Crear sobreturno",
@@ -227,6 +236,24 @@
 			"MONTH":"Mes",
 			"YEAR":"Año",
 			"HOUR":"Hora",
+			"RECURRING_TYPE": "Recurrencia",
+			"RECURRING_ERROR": "No hay disponibilidad de turnos en alguno de estos dias",
+			"recurring-dialog": {
+				"TITLE": "Personalizar repeticiones",
+				"REPEAT_EVERY": "Repetir cada",
+				"REPEATS_ON": "Se repite el",
+				"WEEKS": "semana/s",
+				"END_DATE": "Fecha de finalización",
+				"WITHOUT_END_DATE": "Sin fecha de finalización",
+				"AFTER_FEW_WEEKS": "Finaliza en",
+				"CANCEL": "Cancelar",
+				"CONFIRM": "Confirmar"
+			},
+			"cancel-dialog": {
+				"CURRENT_TURN": "Este turno",
+				"CURRENT_AND_NEXTS_TURNS": "Este turno y los posteriores",
+				"ALL_TURNS": "Todos los turnos"
+			},
 			"date": {
 				"EDIT_DATE_TIME": "Editar fecha y hora del turno",
 				"UPDATE_SUCCESS": "La fecha y hora del turno se actualizaron exitosamente"

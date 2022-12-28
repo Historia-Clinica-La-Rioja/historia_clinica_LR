@@ -177,9 +177,15 @@ public enum AppFeature implements Feature {
 	@Label("Indica si está habilitado generar el documento parte anestésico en internación")
 	HABILITAR_PARTE_ANESTESICO_EN_DESARROLLO,
 
-	
 	@Label("Permite flexibilidad a la hora de manipular franjas horarias de las agendas")
 	HABILITAR_AGENDA_DINAMICA,
+
+	@Label("Indica si está habilitada la gestión de Roles de API Pública")
+	ROLES_API_PUBLICA_EN_DESARROLLO,
+
+	@Label("Habilita turnos recurrentes")
+	HABILITAR_RECURRENCIA_EN_DESARROLLO,
+
 	;
 
 	public boolean isActive() {

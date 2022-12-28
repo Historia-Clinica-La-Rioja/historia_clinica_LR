@@ -2,7 +2,6 @@ package net.pladema.medicalconsultation.appointment.controller.dto;
 
 
 import javax.annotation.Nullable;
-
 import ar.lamansys.refcounterref.domain.enums.EReferenceClosureType;
 import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
@@ -45,4 +44,11 @@ public class AppointmentDto extends CreateAppointmentDto {
 
 	private EReferenceClosureType associatedReferenceClosureType;
 
+	private RecurringTypeDto recurringTypeDto;
+
+	@Nullable
+	private boolean hasAppointmentChilds;
+
+	@Nullable
+	private Integer parentAppointmentId;
 }

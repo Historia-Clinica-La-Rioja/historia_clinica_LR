@@ -47,6 +47,8 @@ public class AppointmentDiaryVo {
 
 	private final DiaryLabel diaryLabel;
 	
+	private final Short recurringAppointmentTypeId;
+
 	public AppointmentDiaryVo(
 			Integer diaryId,
 			Integer id,
@@ -87,6 +89,7 @@ public class AppointmentDiaryVo {
 		this.email = email;
 		this.professionalPersonVo = personId != null ? new ProfessionalPersonVo(personId, firstName, lastName, nameSelfDetermination, middleNames, otherLastName) : null;
 		this.diaryLabel = diaryLabel;
+		this.recurringAppointmentTypeId = null;
 	}
 
 }

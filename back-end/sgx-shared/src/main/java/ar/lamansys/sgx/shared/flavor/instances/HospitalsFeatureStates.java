@@ -70,6 +70,8 @@ public class HospitalsFeatureStates implements InitialFeatureStates {
 		map.put(AppFeature.HABILITAR_MONITOREO_CIPRES, false);
 		map.put(AppFeature.HABILITAR_PARTE_ANESTESICO_EN_DESARROLLO, false);
 		map.put(AppFeature.HABILITAR_AGENDA_DINAMICA, false);
+		map.put(AppFeature.ROLES_API_PUBLICA_EN_DESARROLLO, false);
+		map.put(AppFeature.HABILITAR_RECURRENCIA_EN_DESARROLLO, true);
 	}
 
 	@Override

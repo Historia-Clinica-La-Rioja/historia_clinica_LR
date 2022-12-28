@@ -28,6 +28,8 @@ import net.pladema.medicalconsultation.appointment.service.domain.PatientAppoint
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import net.pladema.medicalconsultation.appointment.repository.entity.CustomAppointment;
+
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -47,7 +49,7 @@ import net.pladema.medicalconsultation.appointment.repository.entity.Appointment
 public interface AppointmentRepository extends SGXAuditableEntityJPARepository<Appointment, Integer>, SGXDocumentEntityRepository<Appointment> {
 
     @Transactional(readOnly = true)
-    @Query( "SELECT NEW net.pladema.medicalconsultation.appointment.repository.domain.AppointmentVo(aa.pk.diaryId, a, doh.medicalAttentionTypeId, has.reason, ao.observation, ao.createdBy, dl)" +
+    @Query( "SELECT NEW net.pladema.medicalconsultation.appointment.repository.domain.AppointmentVo(aa.pk.diaryId, a, doh.medicalAttentionTypeId, has.reason, ao.observation, ao.createdBy, dl, a.recurringAppointmentTypeId)" +
             "FROM Appointment AS a " +
             "JOIN AppointmentAssn AS aa ON (a.id = aa.pk.appointmentId) " +
 			"LEFT JOIN AppointmentObservation AS ao ON (a.id = ao.appointmentId) " +
@@ -137,7 +139,7 @@ public interface AppointmentRepository extends SGXAuditableEntityJPARepository<A
 			"AND a.dateTypeId = :date " +
 			"AND a.hour = :hour " +
 			"AND NOT a.appointmentStateId = " + AppointmentState.CANCELLED_STR +
-			"AND (a.deleteable.deleted = false OR a.deleteable.deleted is null )")
+			"AND (a.deleteable.deleted = false OR a.deleteable.deleted is null ) ")
 	boolean existAppointment(@Param("diaryId") Integer diaryId, @Param("openingHoursId") Integer openingHoursId,
 							 @Param("date") LocalDate date, @Param("hour") LocalTime hour);
 
@@ -149,9 +151,12 @@ public interface AppointmentRepository extends SGXAuditableEntityJPARepository<A
 			"AND a.dateTypeId = :date " +
 			"AND a.hour = :hour " +
 			"AND NOT a.appointmentStateId = " + AppointmentState.CANCELLED_STR +
-			"AND (a.deleteable.deleted = false OR a.deleteable.deleted is null )")
+			"AND (a.deleteable.deleted = false OR a.deleteable.deleted is null ) " +
+			"AND NOT a.id = :appointmentId")
 	boolean existAppointment(@Param("diaryId") Integer diaryId,
-							 @Param("date") LocalDate date, @Param("hour") LocalTime hour);
+							 @Param("date") LocalDate date,
+							 @Param("hour") LocalTime hour,
+							 @Param("appointmentId") Integer appointmentId);
 
     @Transactional
     @Modifying
@@ -319,7 +324,7 @@ public interface AppointmentRepository extends SGXAuditableEntityJPARepository<A
 			"AND a.dateTypeId = :date " +
 			"AND a.hour = :hour " +
 			"AND a.appointmentStateId = " + AppointmentState.BLOCKED +
-			"AND (a.deleteable.deleted = false OR a.deleteable.deleted is null)")
+			" AND (a.deleteable.deleted = false OR a.deleteable.deleted is null)")
 	List<Appointment> findBlockedAppointmentBy(@Param("diaryId") Integer diaryId,
 											   @Param("date") LocalDate date, @Param("hour") LocalTime hour);
 
@@ -769,4 +774,112 @@ public interface AppointmentRepository extends SGXAuditableEntityJPARepository<A
 			"AND a.dateTypeId > CURRENT_DATE")
 	Boolean hasFutureAppointmentsByPatientId(@Param("patientId") Integer patientId,
 								 			 @Param("healthcareProfessionalId") Integer healthcareProfessionalId);
+
+	@Query("SELECT a " +
+			"FROM Appointment AS a " +
+			"JOIN AppointmentAssn as aa ON (a.id = aa.pk.appointmentId) " +
+			"JOIN DiaryOpeningHours AS doh ON (doh.pk.diaryId = aa.pk.diaryId AND aa.pk.openingHoursId = doh.pk.openingHoursId) " +
+			"JOIN OpeningHours AS oh ON (doh.pk.openingHoursId = oh.id) " +
+			"WHERE aa.pk.diaryId = :diaryId AND a.appointmentStateId <> " + AppointmentState.CANCELLED_STR +
+			"AND a.hour = :hour " +
+			"AND oh.dayWeekId = :dayWeekId " +
+			"AND a.dateTypeId >= :date " +
+			"AND (a.deleteable.deleted = FALSE OR a.deleteable.deleted IS NULL ) " +
+			"AND a.id <> :appointmentId")
+	List<Appointment> getLaterAppointmentsByHourAndDate(@Param("diaryId") Integer diaryId,
+														@Param("hour") LocalTime hour,
+														@Param("date") LocalDate date,
+														@Param("dayWeekId") Short dayWeekId,
+														@Param("appointmentId") Integer appointmentId);
+
+	@Transactional(readOnly = true)
+	@Query("SELECT a " +
+			"FROM Appointment AS a " +
+			"JOIN AppointmentAssn as aa ON (a.id = aa.pk.appointmentId) " +
+			"JOIN DiaryOpeningHours AS doh ON (doh.pk.diaryId = aa.pk.diaryId AND aa.pk.openingHoursId = doh.pk.openingHoursId) " +
+			"JOIN OpeningHours AS oh ON (doh.pk.openingHoursId = oh.id) " +
+			"WHERE aa.pk.diaryId = :diaryId AND a.appointmentStateId <> " + AppointmentState.CANCELLED_STR +
+			"AND oh.dayWeekId = :dayWeekId " +
+			"AND a.dateTypeId > :date " +
+			"AND (a.deleteable.deleted = FALSE OR a.deleteable.deleted IS NULL ) " +
+			"AND a.parentAppointmentId = :parentAppointmentId")
+	List<Appointment> getLaterAppointmentsByDate(@Param("diaryId") Integer diaryId,
+												 @Param("date") LocalDate date,
+												 @Param("dayWeekId") Short dayWeekId,
+												 @Param("parentAppointmentId") Integer parentAppointmentId);
+
+	@Transactional
+	@Modifying
+	@Query("UPDATE Appointment a " +
+			"SET a.appointmentStateId = " + AppointmentState.CANCELLED +
+			", a.updateable.updatedOn = current_timestamp, " +
+			"a.updateable.updatedBy = :userId " +
+			"WHERE a.parentAppointmentId = :appointmentId " +
+			"AND a.appointmentStateId = " + AppointmentState.ASSIGNED)
+	void cancelAllRecurringAppointments(@Param("appointmentId") Integer appointmentId,
+										@Param("userId") Integer userId);
+
+	@Transactional
+	@Modifying
+	@Query("UPDATE Appointment a " +
+			"SET a.appointmentStateId = " + AppointmentState.CANCELLED +
+			", a.updateable.updatedOn = current_timestamp, " +
+			"a.updateable.updatedBy = :userId " +
+			"WHERE a.parentAppointmentId = :appointmentId " +
+			"AND a.creationable.createdOn >= :createdOn " +
+			"AND a.appointmentStateId = " + AppointmentState.ASSIGNED)
+	void cancelCurrentAndLaterRecurringAppointments(@Param("appointmentId") Integer appointmentId,
+										  @Param("userId") Integer userId,
+										  @Param("createdOn") LocalDateTime createdOn);
+
+	@Transactional
+	@Modifying
+	@Query("UPDATE Appointment a " +
+			"SET a.appointmentStateId = " + AppointmentState.CANCELLED +
+			", a.updateable.updatedOn = current_timestamp, " +
+			"a.updateable.updatedBy = :userId " +
+			"WHERE a.parentAppointmentId = :appointmentId " +
+			"AND a.creationable.createdOn > :createdOn " +
+			"AND a.appointmentStateId = " + AppointmentState.ASSIGNED)
+	void cancelLaterRecurringAppointments(@Param("appointmentId") Integer appointmentId,
+										  @Param("userId") Integer userId,
+										  @Param("createdOn") LocalDateTime createdOn);
+
+	@Transactional(readOnly = true)
+	@Query("SELECT ca " +
+			"FROM CustomAppointment ca " +
+			"WHERE ca.appointmentId = :appointmentId " +
+			"AND ca.deleteable.deleted = FALSE")
+	CustomAppointment getCustomAppointment(@Param("appointmentId") Integer appointmentId);
+
+	@Transactional
+	@Modifying
+	@Query( "UPDATE Appointment AS a " +
+			"SET a.recurringAppointmentTypeId = :recurringAppointmentTypeId " +
+			"WHERE a.id = :appointmentId ")
+	void updateRecurringType(@Param("appointmentId") Integer appointmentId,
+							 @Param("recurringAppointmentTypeId") Short recurringAppointmentTypeId);
+
+	@Transactional(readOnly = true)
+	@Query("SELECT COUNT(a.id) " +
+			"FROM Appointment a " +
+			"WHERE a.parentAppointmentId = :appointmentId " +
+			"AND a.appointmentStateId <> " + AppointmentState.CANCELLED)
+	Integer recurringAppointmentQuantityByParentId(@Param("appointmentId") Integer appointmentId);
+
+	@Transactional
+	@Modifying
+	@Query("UPDATE CustomAppointment as ca " +
+			"SET ca.deleteable.deleted = TRUE " +
+			"WHERE ca.appointmentId = :appointmentId")
+	void deleteCustomAppointment(@Param("appointmentId") Integer appointmentId);
+
+	@Transactional
+	@Modifying
+	@Query("UPDATE Appointment a " +
+			"SET a.parentAppointmentId = null, " +
+			"a.updateable.updatedOn = current_timestamp " +
+			"WHERE a.id = :appointmentId")
+	void deleteParentId(@Param("appointmentId") Integer appointmentId);
 }
+

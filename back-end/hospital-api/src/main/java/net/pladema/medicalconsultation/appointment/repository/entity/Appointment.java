@@ -86,6 +86,11 @@ public class Appointment extends SGXAuditableEntity<Integer> implements SGXDocum
 
 	@Column(name = "diary_label_id")
 	private Integer diaryLabelId;
+	@Column(name = "recurring_appointment_type_id")
+	private Short recurringAppointmentTypeId;
+
+	@Column(name = "appointment_id")
+	private Integer parentAppointmentId;
 
 	public static Appointment newFromAppointmentBo(AppointmentBo appointmentBo) {
 		return Appointment.builder()
@@ -103,6 +108,8 @@ public class Appointment extends SGXAuditableEntity<Integer> implements SGXDocum
 				.callId(appointmentBo.getCallId())
 				.modalityId(appointmentBo.getModalityId())
 				.applicantHealthcareProfessionalEmail(appointmentBo.getApplicantHealthcareProfessionalEmail())
+				.recurringAppointmentTypeId(appointmentBo.getRecurringTypeBo().getId())
+				.parentAppointmentId(appointmentBo.getParentAppointmentId())
 				.build();
 	}
 

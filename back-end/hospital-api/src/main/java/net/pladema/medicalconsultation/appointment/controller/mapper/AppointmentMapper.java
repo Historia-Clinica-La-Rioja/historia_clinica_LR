@@ -7,6 +7,8 @@ import net.pladema.medicalconsultation.appointment.controller.dto.AppointmentEqu
 import net.pladema.medicalconsultation.appointment.controller.dto.AppointmentShortSummaryDto;
 import net.pladema.medicalconsultation.appointment.controller.dto.AssignedAppointmentDto;
 import net.pladema.medicalconsultation.appointment.controller.dto.BookedAppointmentDto;
+import net.pladema.medicalconsultation.appointment.controller.dto.CreateCustomAppointmentDto;
+import net.pladema.medicalconsultation.appointment.controller.dto.CustomRecurringAppointmentDto;
 import net.pladema.medicalconsultation.appointment.controller.dto.EmptyAppointmentDto;
 import net.pladema.medicalconsultation.appointment.controller.dto.EquipmentAppointmentListDto;
 import net.pladema.medicalconsultation.appointment.controller.dto.PatientAppointmentHistoryDto;
@@ -15,6 +17,7 @@ import net.pladema.medicalconsultation.appointment.domain.UpdateAppointmentDateB
 import net.pladema.medicalconsultation.appointment.domain.enums.EAppointmentModality;
 import net.pladema.medicalconsultation.appointment.repository.domain.AppointmentEquipmentShortSummaryBo;
 import net.pladema.medicalconsultation.appointment.service.domain.AppointmentBookingBo;
+import net.pladema.medicalconsultation.appointment.service.domain.CreateCustomAppointmentBo;
 import net.pladema.medicalconsultation.appointment.service.domain.EmptyAppointmentBo;
 import net.pladema.medicalconsultation.appointment.repository.domain.AppointmentShortSummaryBo;
 import net.pladema.medicalconsultation.appointment.service.domain.AppointmentAssignedBo;
@@ -29,6 +32,8 @@ import net.pladema.medicalconsultation.diary.infrastructure.input.dto.FreeAppoin
 import net.pladema.medicalconsultation.diary.service.domain.BlockBo;
 
 import org.mapstruct.IterableMapping;
+import net.pladema.medicalconsultation.diary.service.domain.CustomRecurringAppointmentBo;
+
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.Named;
@@ -83,6 +88,9 @@ public interface AppointmentMapper {
 	@Mapping(target = "callLink", source = "callId", qualifiedByName = "generateCallLink")
 	@Mapping(target = "diaryLabelDto", source = "appointmentBo.diaryLabelBo")
 	@Mapping(target = "associatedReferenceClosureType", source = "associatedReferenceClosureTypeId")
+	@Mapping(target = "recurringTypeDto", source = "appointmentBo.recurringTypeBo")
+	@Mapping(target = "hasAppointmentChilds", source = "appointmentBo.hasAppointmentChilds")
+	@Mapping(target = "parentAppointmentId", source = "appointmentBo.parentAppointmentId")
 	AppointmentDto toAppointmentDto(AppointmentBo appointmentBo);
 
 	@Named("generateCallLink")
@@ -95,6 +103,7 @@ public interface AppointmentMapper {
 
     @Named("toAppointmentBo")
 	@Mapping(target = "modalityId", source = "modality.id")
+	@Mapping(target = "appointmentOptionId", source = "createAppointmentDto.appointmentOptionId")
     AppointmentBo toAppointmentBo(CreateAppointmentDto createAppointmentDto);
 
     @Named("toAppointmentDailyAmountDto")
@@ -142,4 +151,6 @@ public interface AppointmentMapper {
 	@Mapping(target = "date", source = "date.date")
 	UpdateAppointmentDateBo fromUpdateAppointmentDateDto(UpdateAppointmentDateDto updateAppointmentDateDto);
 
+	@Named("toCustomRecurringAppointmentDto")
+	CustomRecurringAppointmentDto toCustomRecurringAppointmentDto(CustomRecurringAppointmentBo customRecurringAppointmentBo);
 }

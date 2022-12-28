@@ -1,3 +1,108 @@
 databaseChangeLog: 
-    - logicalFilePath: incrementales-v2_20 
+    - logicalFilePath: incrementales-v2_20
+        
+    - changeSet:
+        id: add-column-appointment
+        comment: Add column recurring_appointment_type_id
+        author: fdemuguruza
+        changes:
+          - addColumn:
+              tableName: appointment
+              columns:
+                - column:
+                    name: recurring_appointment_type_id
+                    type: smallint
+                    defaultValue: 1
+                - column:
+                    name: appointment_id
+                    type: int
+          - addForeignKeyConstraint:
+              baseColumnNames: appointment_id
+              baseTableName: appointment
+              constraintName: FK_appointment_id
+              onDelete: NO ACTION
+              onUpdate: NO ACTION
+              referencedColumnNames: id
+              referencedTableName: appointment
+              validate: true
 
+    - changeSet:
+        id: customAppointment-createTable
+        comment: Create table custom_appointment
+        author: fdemuguruza
+        changes:
+          - createTable:
+              tableName: custom_appointment
+              columns:
+                - column:
+                    autoIncrement: true
+                    constraints:
+                      primaryKey: true
+                      primaryKeyName: PK_custom_appointment
+                    name: id
+                    type: int
+                - column:
+                    constraints:
+                      nullable: false
+                    name: appointment_id
+                    type: int
+                - column:
+                    constraints:
+                      nullable: false
+                    name: repeat_every
+                    type: smallint
+                - column:
+                    constraints:
+                      nullable: false
+                    name: day_week_id
+                    type: smallint
+                - column:
+                    constraints:
+                      nullable: true
+                    name: end_date
+                    type: date
+                - column:
+                    constraints:
+                      nullable: false
+                    name: created_by
+                    type: int
+                    defaultValue: -1
+                - column:
+                    constraints:
+                      nullable: false
+                    name: created_on
+                    type: datetime
+                    defaultValueDate: ${date.now}
+                - column:
+                    constraints:
+                      nullable: false
+                    name: updated_by
+                    type: int
+                    defaultValue: -1
+                - column:
+                    constraints:
+                      nullable: false
+                    name: updated_on
+                    type: datetime
+                    defaultValueDate: ${date.now}
+                - column:
+                    constraints:
+                      nullable: false
+                    name: deleted
+                    type: BOOLEAN
+                    defaultValue: ${boolean.false}
+                - column:
+                    name: deleted_by
+                    type: int
+                - column:
+                    name: deleted_on
+                    type: datetime
+          - addForeignKeyConstraint:
+              baseColumnNames: appointment_id
+              baseTableName: custom_appointment
+              constraintName: FK_custom_appointment_id
+              onDelete: NO ACTION
+              onUpdate: NO ACTION
+              referencedColumnNames: id
+              referencedTableName: appointment
+              validate: true

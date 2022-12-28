@@ -222,3 +222,14 @@ export interface COLOR {
 	id: number,
 	color: string,
 }
+export enum APPOINTMENT_CANCEL_OPTIONS {
+	CURRENT_TURN = 1,
+	CURRENT_AND_NEXTS_TURNS = 2,
+	ALL_TURNS = 3
+}
+
+export enum RECURRING_APPOINTMENT_OPTIONS {
+	NO_REPEAT = 1,
+	EVERY_WEEK = 2,
+	CUSTOM = 3
+}

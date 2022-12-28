@@ -147,6 +147,12 @@ public class ReferenceCounterReferenceExternalServiceImpl implements SharedRefer
 		updateRuleIdOnReferences.run(ruleId, ruleLevel, ruleIdsToReplace);
 	}
 
+	@Override
+	public void updateProtectedAppointment(Integer appointmentId) {
+		log.debug("Delete reference appointment {}, ", appointmentId);
+		referenceAppointmentRepository.deleteByAppointmentId(appointmentId);
+	}
+
 	private List<ReferenceCounterReferenceFileDto> mapToReferenceCounterReferenceFileDto(List<ReferenceCounterReferenceFileBo> referenceCounterReferenceFileBos) {
         List<ReferenceCounterReferenceFileDto> referenceCounterReferenceFileDtos = new ArrayList<>();
         referenceCounterReferenceFileBos.stream().forEach(referenceCounterReferenceFileBo ->

@@ -277,4 +277,10 @@ export class AppointmentsFacadeService {
 	verifyExistingAppointment(patientId: number, date: string, hour: string, institutionId?: number): Observable<AppointmentShortSummaryDto> {
 		return this.appointmentService.verifyExistingAppointments(patientId, date, hour, institutionId);
 	}
+
+	cancelRecurringAppointments(appointmentId: number, cancelAllAppointments: boolean): Observable<boolean> {
+		return this.appointmentService.cancelRecurringAppointments(appointmentId, cancelAllAppointments);
+	}
+
+	
 }

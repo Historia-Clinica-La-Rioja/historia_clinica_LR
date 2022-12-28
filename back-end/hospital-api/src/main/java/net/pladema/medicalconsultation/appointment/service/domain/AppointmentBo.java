@@ -13,11 +13,14 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
+import net.pladema.medicalconsultation.appointment.infraestructure.output.repository.appointment.RecurringAppointmentType;
 import net.pladema.medicalconsultation.appointment.repository.domain.AppointmentDiaryVo;
 import net.pladema.medicalconsultation.appointment.repository.domain.AppointmentVo;
 import net.pladema.medicalconsultation.appointment.repository.entity.Appointment;
 import net.pladema.medicalconsultation.diary.service.domain.ProfessionalPersonBo;
 import net.pladema.medicalconsultation.diary.service.domain.DiaryLabelBo;
+
+import javax.annotation.Nullable;
 
 @Getter
 @Setter
@@ -85,8 +88,20 @@ public class AppointmentBo {
 
 	private Short associatedReferenceClosureTypeId;
 	
+	private RecurringTypeBo recurringTypeBo;
+
+	private Integer parentAppointmentId;
+
+	@Nullable
+	private Short appointmentOptionId;
+
+	@Nullable
+	private boolean hasAppointmentChilds;
+
+	private Integer referenceId;
+
 	public AppointmentBo(Integer diaryId, Integer patientId, LocalDate date, LocalTime hour, Short modalityId, String patientEmail, String callId,
-						 String applicantHealthcareProfessionalEmail) {
+						String applicantHealthcareProfessionalEmail) {
 		this.diaryId = diaryId;
 		this.patientId = patientId;
 		this.date = date;
@@ -94,10 +109,21 @@ public class AppointmentBo {
 		this.modalityId = modalityId;
 		this.patientEmail = patientEmail;
 		this.callId = callId;
-		this.applicantHealthcareProfessionalEmail = applicantHealthcareProfessionalEmail;
+		this.applicantHealthcareProfessionalEmail = applicantHealthcareProfessionalEmail;				
 	}
 
-	private Integer referenceId;
+	public AppointmentBo(Integer diaryId, Integer patientId, LocalDate date, LocalTime hour, Integer openingHoursId,
+						 boolean isOverturn, Integer patientMedicalCoverageId, String phonePrefix, String phoneNumber) {
+		this.diaryId = diaryId;
+		this.patientId = patientId;
+		this.date = date;
+		this.hour = hour;
+		this.openingHoursId = openingHoursId;
+		this.overturn = isOverturn;
+		this.patientMedicalCoverageId = patientMedicalCoverageId;
+		this.phonePrefix = phonePrefix;
+		this.phoneNumber = phoneNumber;
+	}
 
 	public static AppointmentBo fromAppointmentDiaryVo(AppointmentDiaryVo appointmentDiaryVo) {
 		return AppointmentBo.builder()
@@ -138,6 +164,14 @@ public class AppointmentBo {
 				.modalityId(appointmentVo.getModalityId())
 				.diaryLabelBo(appointmentVo.getDiaryLabel() != null ? new DiaryLabelBo(appointmentVo.getDiaryLabel()): null)
 				.patientEmail(appointmentVo.getPatientEmail())
+				.recurringTypeBo(appointmentVo.getRecurringAppointmentTypeId() != null
+						? new RecurringTypeBo(
+							appointmentVo.getRecurringAppointmentTypeId(),
+							RecurringAppointmentType.map(appointmentVo.getRecurringAppointmentTypeId()).getValue()
+						)
+						: null
+				)
+				.parentAppointmentId(appointmentVo.getAppointment().getParentAppointmentId())
 				.build();
 	}
 

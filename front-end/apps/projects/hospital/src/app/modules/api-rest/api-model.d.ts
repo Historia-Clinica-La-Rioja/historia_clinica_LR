@@ -297,9 +297,12 @@ export interface AppointmentDto extends CreateAppointmentDto {
     diaryLabelDto?: DiaryLabelDto;
     hasAssociatedReference: boolean;
     id: number;
+    hasAppointmentChilds?: boolean;
     observation?: string;
     observationBy?: string;
+    parentAppointmentId?: number;
     protected: boolean;
+    recurringTypeDto: RecurringTypeDto;
     stateChangeReason?: string;
 }
 
@@ -977,6 +980,8 @@ export interface CreateAppointmentDto {
     diaryId: number;
     hour: string;
     modality: EAppointmentModality;
+    appointmentOptionId?: number;
+    id?: number;
     openingHoursId: number;
     orderData?: DiagnosticReportInfoDto;
     overturn: boolean;
@@ -987,6 +992,11 @@ export interface CreateAppointmentDto {
     phonePrefix?: string;
     referenceId?: number;
     transcribedOrderData?: TranscribedDiagnosticReportInfoDto;
+}
+
+export interface CreateCustomAppointmentDto {
+    createAppointmentDto: CreateAppointmentDto;
+    customRecurringAppointmentDto: CustomRecurringAppointmentDto;
 }
 
 export interface CreateOutpatientDto {
@@ -1008,6 +1018,12 @@ export interface CreateOutpatientDto {
 
 export interface CreationableDto extends Serializable {
     createdOn: Date;
+}
+
+export interface CustomRecurringAppointmentDto {
+    endDate: Date;
+    repeatEvery: number;
+    weekDayId: number;
 }
 
 export interface DashboardRoleInfoDto {
@@ -3681,6 +3697,11 @@ export interface RecaptchaPublicConfigDto {
     siteKey: string;
 }
 
+export interface RecurringTypeDto {
+    id: number;
+    value: string;
+}
+
 export interface ReducedPatientDto {
     patientTypeId: number;
     personalDataDto: BasicPersonalDataDto;
@@ -4505,6 +4526,7 @@ export interface UpdateAppointmentDateDto {
     modality: EAppointmentModality;
     openingHoursId: number;
     patientEmail?: string;
+    recurringAppointmentTypeId?: number;
 }
 
 export interface UpdateAppointmentDto {
@@ -4871,7 +4893,11 @@ export interface VirtualConsultationStatusDto {
     status: EVirtualConsultationStatus;
 }
 
-export interface Watchable {
+export interface Watchable {}
+
+export interface WeekDayDto {
+    description: string;
+    id: number;
 }
 
 export interface WorklistDto {
@@ -4944,6 +4970,9 @@ export const enum AppFeature {
     HABILITAR_MONITOREO_CIPRES = "HABILITAR_MONITOREO_CIPRES",
     HABILITAR_PARTE_ANESTESICO_EN_DESARROLLO = "HABILITAR_PARTE_ANESTESICO_EN_DESARROLLO",
     HABILITAR_AGENDA_DINAMICA = "HABILITAR_AGENDA_DINAMICA",
+    HABILITAR_UNIDADES_JERARQUICAS_EN_DESARROLLO = "HABILITAR_UNIDADES_JERARQUICAS_EN_DESARROLLO",
+    ROLES_API_PUBLICA_EN_DESARROLLO = "ROLES_API_PUBLICA_EN_DESARROLLO",
+    HABILITAR_RECURRENCIA_EN_DESARROLLO = "HABILITAR_RECURRENCIA_EN_DESARROLLO",
 }
 
 export const enum EAggressorRelationship {
