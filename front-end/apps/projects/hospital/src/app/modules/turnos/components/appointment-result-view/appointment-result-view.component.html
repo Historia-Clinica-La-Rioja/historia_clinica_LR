@@ -30,7 +30,7 @@
 
     <div fxFlex="16" fxLayout="row" fxLayoutGap="5px">
         <mat-icon fontSet="material-icons-outlined">person</mat-icon>
-        <div fxLayout="column">
+        <div fxLayout="column" fxFlex="0 0 80" class="professional-full-name">
             <span>{{ appointment.professionalFullName }}</span>
             <span *ngIf="appointment.jointDiary" class="reduced-font">
                 ({{ 'turnos.appointment-result-view.JOINT_DIARY' | translate }})
