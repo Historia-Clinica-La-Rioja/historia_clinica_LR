@@ -64,6 +64,8 @@ export class AgendaSetupComponent implements OnInit {
 	sectors;
 	agendaHorarioService: AgendaHorarioService;
 	professionalSpecialties: any[];
+	specialityId: number;
+	alias: string;
 	hasError = hasError;
 	getError = getError;
 	careLines: CareLineDto[] = [];
@@ -207,6 +209,17 @@ export class AgendaSetupComponent implements OnInit {
 
 		if (diary.careLinesInfo.length)
 			this.careLinesSelected = diary.careLinesInfo;
+
+		this.setSpecialityId(diary.clinicalSpecialtyId);
+		this.setAlias(diary.alias);
+	}
+
+	private setSpecialityId (healthcareProfesionalId){
+		this.specialityId = healthcareProfesionalId;
+	}
+
+	private setAlias(alias){
+		this.alias = alias;
 	}
 
 	private disableNotEditableControls(): void {
@@ -420,6 +433,11 @@ export class AgendaSetupComponent implements OnInit {
 			this.careLines = careLines;
 			this.checkCareLinesSelected();
 		});
+		if (specialtyId && specialtyId !== this.specialityId){
+			this.form.controls.alias.setValue('');
+		} else {
+			this.form.controls.alias.setValue(this.alias);
+		}
 	}
 
 	validateLineOfCareAndPercentageOfProtectedAppointments() {
