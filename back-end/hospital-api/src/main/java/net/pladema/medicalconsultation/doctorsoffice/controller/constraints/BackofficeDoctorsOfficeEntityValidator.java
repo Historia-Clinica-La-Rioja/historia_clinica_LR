@@ -1,4 +1,4 @@
-package net.pladema.medicalconsultation.diary.controller.constraints;
+package net.pladema.medicalconsultation.doctorsoffice.controller.constraints;
 
 import net.pladema.establishment.repository.SectorRepository;
 import net.pladema.medicalconsultation.doctorsoffice.service.exception.DoctorOfficeDescriptionException;

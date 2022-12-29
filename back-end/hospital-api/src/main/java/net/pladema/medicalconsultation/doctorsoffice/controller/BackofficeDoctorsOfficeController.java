@@ -1,7 +1,7 @@
-package net.pladema.medicalconsultation.diary.controller;
+package net.pladema.medicalconsultation.doctorsoffice.controller;
 
-import net.pladema.medicalconsultation.diary.controller.constraints.BackofficeDoctorsOfficeEntityValidator;
-import net.pladema.medicalconsultation.diary.controller.permissions.BackofficeDoctorsOfficeValidator;
+import net.pladema.medicalconsultation.doctorsoffice.controller.constraints.BackofficeDoctorsOfficeEntityValidator;
+import net.pladema.medicalconsultation.doctorsoffice.controller.permissions.BackofficeDoctorsOfficeValidator;
 import net.pladema.medicalconsultation.doctorsoffice.repository.DoctorsOfficeRepository;
 import net.pladema.medicalconsultation.doctorsoffice.repository.entity.DoctorsOffice;
 import net.pladema.sgx.backoffice.repository.BackofficeRepository;

@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 @Order(Ordered.HIGHEST_PRECEDENCE)
-@RestControllerAdvice(basePackages = "net.pladema.medicalconsultation.diary")
+@RestControllerAdvice(basePackages = "net.pladema.medicalconsultation.doctorsoffice")
 public class DoctorOfficeExceptionHandler {
 
 	private static final Logger LOG = LoggerFactory.getLogger(DoctorOfficeExceptionHandler.class);

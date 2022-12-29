@@ -1,4 +1,4 @@
-package net.pladema.medicalconsultation.diary.controller.permissions;
+package net.pladema.medicalconsultation.doctorsoffice.controller.permissions;
 
 import net.pladema.medicalconsultation.doctorsoffice.repository.DoctorsOfficeRepository;
 import net.pladema.medicalconsultation.doctorsoffice.repository.entity.DoctorsOffice;
