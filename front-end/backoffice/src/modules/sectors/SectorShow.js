@@ -7,11 +7,13 @@ import {
     ReferenceManyField,
     Show,
     SimpleShowLayout,
-    TextField, useRecordContext
+    TextField, useRecordContext,
+    usePermissions
 } from 'react-admin';
 import CreateRelatedButton from '../components/CreateRelatedButton';
 import SectionTitle from '../components/SectionTitle';
 import SgxDateField from "../../dateComponents/sgxDateField";
+import { ROOT, ADMINISTRADOR, ADMINISTRADOR_INSTITUCIONAL_BACKOFFICE} from "../roles";
 
 const AMBULATORIA = 1;
 const INTERNACION = 2;
@@ -36,6 +38,29 @@ const CreateDoctorsOffice = ({ record }) => {
         reference="doctorsoffices"
         refFieldName="sectorId"
         label="resources.doctorsoffices.createRelated"/>
+    ) : null;
+};
+const UserIsAdmin = function () {
+    const { permissions } = usePermissions();
+    const userAdmin= permissions?.roleAssignments?.filter(roleAssignment => (roleAssignment.role === ADMINISTRADOR_INSTITUCIONAL_BACKOFFICE.role ||
+                    roleAssignment.role === ADMINISTRADOR.role )).length > 0;
+ return userAdmin;
+}
+
+const CreateOrchestrator = ({ record }) => {
+    const { permissions } = usePermissions();
+    const userCanView = permissions?.roleAssignments?.filter(roleAssignment => (roleAssignment.role === ADMINISTRADOR_INSTITUCIONAL_BACKOFFICE.role ||
+                roleAssignment.role === ADMINISTRADOR.role || roleAssignment.role === ROOT.role)).length > 0;
+    const customRecord = {sectorId: record.id};
+    let button = null;
+    if (UserIsAdmin()){
+        button= <CreateRelatedButton customRecord={customRecord} reference="orchestrator" refFieldName="sectorId" label="resources.orchestrator.createRelated" />;
+    }
+    return record.sectorTypeId === DIAGNOSTICO_POR_IMAGENES && userCanView?(
+    <>
+    <SectionTitle label="resources.orchestrator.name"/>
+    {button}
+    </>
     ) : null;
 };
 
@@ -223,6 +248,22 @@ const SectorShow = props => (
                 </Datagrid>
             </ReferenceManyField>
 
+            <CreateOrchestrator />
+            <ReferenceManyField
+                id='orchestrator'
+                addLabel={false}
+                reference="orchestrator"
+                target="sectorId"
+                sort={{ field: 'name', order: 'DESC' }}
+                >
+                <Datagrid rowClick={UserIsAdmin()?"show":""}>
+                    <TextField source="name"/>
+                    <TextField source="baseTopic"/>
+                    <EditButton disabled= {!UserIsAdmin()}/>
+                    <DeleteButton disabled= {!UserIsAdmin()}/>
+                </Datagrid>
+            </ReferenceManyField>
+
             <ShowServiceSectorData />
 
             <SectionTitle label="resources.clinicalspecialtysectors.fields.rooms"/>
@@ -249,4 +290,4 @@ const SectorShow = props => (
 );
 
 export default SectorShow;
-export { CreateSector, CreateDoctorsOffice, CreateRooms, ShowServiceSectorData};
+export { CreateSector, CreateDoctorsOffice, CreateRooms, ShowServiceSectorData,CreateOrchestrator,UserIsAdmin};

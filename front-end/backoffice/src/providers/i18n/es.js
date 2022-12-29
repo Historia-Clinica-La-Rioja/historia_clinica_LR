@@ -716,6 +716,15 @@ const messages = {
             },
             createRelated: 'Crear Servidor PAC'
         },
+        orchestrator: {
+            name: 'Orquestador',
+            fields: {
+                name: 'Nombre',
+                baseTopic:'Tópico Base',
+                sectorId:'Sector'
+            },
+            createRelated: 'Crear Orquestador'
+        }
     }
 };
 

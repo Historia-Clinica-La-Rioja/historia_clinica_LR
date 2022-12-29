@@ -60,6 +60,7 @@ import documentFiles from "./documentfiles";
 import episodesDocumentTypes from './episode-document-type';
 import globalpacs from "./globalpacservers";
 import imagelvlpacservers from "./imagelvlpacservers";
+import orchestrator from "./orchestrator";
 
 const resourcesAdminInstitucional = (permissions: SGXPermissions) =>
     permissions.isOn('BACKOFFICE_MOSTRAR_ABM_RESERVA_TURNOS') ?
@@ -157,6 +158,7 @@ const resources = (permissions: SGXPermissions) => [
     <Resource name="pacservertypes" />,
     <Resource name="pacserverprotocols" />,
     <Resource name="pacserversimagelvl" {...imagelvlpacservers} />,
+    <Resource name="orchestrator" {...orchestrator} />,
 
     <Resource name="snomedgroupconcepts" />,
     <Resource name="snomedrelatedgroups"  {...snomedrelatedgroups} />,
