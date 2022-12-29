@@ -26,13 +26,11 @@ const formatColumnDate = (tableData: any[], columns: string[]): any[] => {
 };
 
 const parse = (value: string): string => {
-	let splitedValue = value.split(',');
-	splitedValue.forEach(x => {
-		if (isDate(x)) {
-			const month = x[5] + x[6];
-			splitedValue[splitedValue.indexOf(x)] = MONTHS_OF_YEAR[Number(month) - 1];
-		}
-	})
+	let splitedValue = value.split(',')[0];
+	if (isDate(splitedValue)){
+		const month = splitedValue[5] + splitedValue[6];
+		splitedValue = MONTHS_OF_YEAR[Number(month) - 1];
+	}
 	return splitedValue.toString();
 }
 
