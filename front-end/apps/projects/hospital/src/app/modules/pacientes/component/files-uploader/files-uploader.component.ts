@@ -29,7 +29,7 @@ export class FilesUploaderComponent implements OnInit {
 
 	onSelectFileFormData($event: any) {
 		Array.from($event.target.files).forEach((file: File) => {
-			if(!this.personFiles.find(pf => pf.fileName === file.name )){
+			if(!this.personFiles?.find(pf => pf.fileName === file.name )){
 				this.selectedFiles.push(file);
 				this.selectedFilesShow.push(file.name);
 			}
