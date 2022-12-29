@@ -45,6 +45,8 @@ import ar.lamansys.sgh.clinichistory.domain.ips.MedicationBo;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.generateFile.DocumentAuthorFinder;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.masterdata.entity.MedicationStatementStatus;
 import ar.lamansys.sgh.shared.infrastructure.input.service.BasicPatientDto;
+import ar.lamansys.sgh.shared.infrastructure.input.service.institution.InstitutionInfoDto;
+import ar.lamansys.sgh.shared.infrastructure.input.service.institution.SharedInstitutionPort;
 import ar.lamansys.sgh.shared.infrastructure.input.service.staff.ProfessionCompleteDto;
 import ar.lamansys.sgh.shared.infrastructure.input.service.staff.ProfessionalCompleteDto;
 import ar.lamansys.sgx.shared.exceptions.dto.ApiErrorDto;
@@ -114,6 +116,8 @@ public class MedicationRequestController {
 
 	private final Function<Long, ProfessionalCompleteDto> authorFromDocumentFunction;
 
+	private final SharedInstitutionPort sharedInstitutionPort;
+
 
 	public MedicationRequestController(CreateMedicationRequestService createMedicationRequestService,
 									   HealthcareProfessionalExternalService healthcareProfessionalExternalService,
@@ -127,7 +131,8 @@ public class MedicationRequestController {
 									   PdfService pdfService,
 									   FeatureFlagsService featureFlagsService,
 									   DocumentAuthorFinder documentAuthorFinder,
-									   ValidateMedicationRequestGenerationService validateMedicationRequestGenerationService) {
+									   ValidateMedicationRequestGenerationService validateMedicationRequestGenerationService,
+                                       SharedInstitutionPort sharedInstitutionPort) {
         this.createMedicationRequestService = createMedicationRequestService;
         this.healthcareProfessionalExternalService = healthcareProfessionalExternalService;
         this.createMedicationRequestMapper = createMedicationRequestMapper;
@@ -141,6 +146,7 @@ public class MedicationRequestController {
 		this.featureFlagsService = featureFlagsService;
 		this.validateMedicationRequestGenerationService = validateMedicationRequestGenerationService;
 		this.authorFromDocumentFunction = (Long documentId) -> documentAuthorFinder.getAuthor(documentId);
+		this.sharedInstitutionPort = sharedInstitutionPort;
 	}
 
 
@@ -255,14 +261,15 @@ public class MedicationRequestController {
         var medicationRequestBo = getMedicationRequestInfoService.execute(medicationRequestId);
         var patientDto = patientExternalService.getBasicDataFromPatient(patientId);
         var patientCoverageDto = patientExternalMedicalCoverageService.getCoverage(medicationRequestBo.getMedicalCoverageId());
-		Map<String, Object> context;
+		var institutionDto = sharedInstitutionPort.fetchInstitutionById(institutionId);
+        Map<String, Object> context;
 		String template;
 		if (!featureFlagsService.isOn(AppFeature.HABILITAR_RECETA_DIGITAL)) {
-			context = createContext(medicationRequestBo, patientDto, patientCoverageDto);
+			context = createContext(medicationRequestBo, patientDto, patientCoverageDto, institutionDto);
 			template = "recipe_order_table";
 		}
 		else {
-			context = createContextDigitalRecipe(medicationRequestBo, patientDto, patientCoverageDto);
+			context = createContextDigitalRecipe(medicationRequestBo, patientDto, patientCoverageDto, institutionDto);
 			template = "digital_recipe";
 		}
 
@@ -285,8 +292,9 @@ public class MedicationRequestController {
 	}
 
     private Map<String, Object> createContext(MedicationRequestBo medicationRequestBo,
-                                              BasicPatientDto patientDto,
-                                              PatientMedicalCoverageDto patientCoverageDto){
+											  BasicPatientDto patientDto,
+											  PatientMedicalCoverageDto patientCoverageDto,
+											  InstitutionInfoDto institutionDto){
         LOG.debug("Input parameters -> medicationRequestBo {}, patientDto {}, professionalDto {}, patientCoverageDto {}",
                 medicationRequestBo, patientDto, patientCoverageDto);
         Map<String, Object> ctx = new HashMap<>();
@@ -294,6 +302,7 @@ public class MedicationRequestController {
         ctx.put("order", false);
         ctx.put("request", medicationRequestBo);
         ctx.put("patient", patientDto);
+		ctx.put("institution", institutionDto);
 		ctx.put("professional", authorFromDocumentFunction.apply(medicationRequestBo.getId()));
         ctx.put("patientCoverage", patientCoverageDto);
         var date = medicationRequestBo.getRequestDate().format(DateTimeFormatter.ofPattern("dd-MM-yyyy"));
@@ -304,7 +313,8 @@ public class MedicationRequestController {
 
 	private Map<String, Object> createContextDigitalRecipe(MedicationRequestBo medicationRequestBo,
 											  BasicPatientDto patientDto,
-											  PatientMedicalCoverageDto patientCoverageDto) {
+											  PatientMedicalCoverageDto patientCoverageDto,
+                                              InstitutionInfoDto institutionDto) {
 		LOG.debug("Input parameters -> medicationRequestBo {}, patientDto {}, patientCoverageDto {}", medicationRequestBo, patientDto, patientCoverageDto);
 		Map<String, Object> ctx = new HashMap<>();
 
@@ -323,6 +333,7 @@ public class MedicationRequestController {
 		var professionalRelatedProfession = professionalInformation.getProfessions().stream().filter(profession -> profession.getSpecialties().stream().anyMatch(specialty -> specialty.getSpecialty().getId().equals(medicationRequestBo.getClinicalSpecialtyId()))).findFirst();
 
 		ctx.put("patient", patientDto);
+        ctx.put("institution", institutionDto);
 		ctx.put("patientCoverage", patientCoverageDto);
 		ctx.put("professional", professionalInformation);
 		ctx.put("medications", medicationRequestBo.getMedications());
