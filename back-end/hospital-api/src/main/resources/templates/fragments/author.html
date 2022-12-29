@@ -1,10 +1,9 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org" lang="es">
-<html lang="es">
     <div th:fragment="author (firstName, lastName, licenseNumber)" style="text-align:right">
         <strong>Profesional: </strong><label class="center-padding" th:text="${lastName + ' '}"></label><label th:text="${firstName}"></label>
     </div>
-    <div th:fragment="author (firstName, lastName, licenseNumber)" style="text-align:right">
+    <div th:fragment="author (firstName, lastName, licenseNumber)" th:if="${!#strings.isEmpty(licenseNumber)}" style="text-align:right">
         <p><strong>Matricula: </strong><label class="center-padding" th:text="${licenseNumber}"></label></p>
     </div>
 </html>
