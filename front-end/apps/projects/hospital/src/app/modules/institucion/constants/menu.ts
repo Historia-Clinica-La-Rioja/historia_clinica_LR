@@ -97,7 +97,9 @@ export const SIDEBAR_MENU: MenuItemDef[] = [
 		id: 'program-reports',
 		url: './program-reports',
 		permissions: [
-			ERole.ADMINISTRADOR_INSTITUCIONAL_BACKOFFICE
+			ERole.ADMINISTRADOR_INSTITUCIONAL_BACKOFFICE,
+			ERole.PERSONAL_DE_ESTADISTICA
+			
 		],
 		featureFlag: AppFeature.HABILITAR_REPORTES_PROGRAMAS
 	},
