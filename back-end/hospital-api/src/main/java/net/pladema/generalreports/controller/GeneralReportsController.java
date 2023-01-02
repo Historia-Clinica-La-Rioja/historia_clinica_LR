@@ -136,8 +136,6 @@ public class GeneralReportsController {
 	public @ResponseBody
 	void getPatientEmergenciesExcelReport(
 			@PathVariable Integer institutionId,
-			//		@RequestParam(value = "fromDate", required = true) String fromDate,
-			//		@RequestParam(value = "toDate", required = true)String toDate,
 			HttpServletResponse response
 	)throws Exception{
 		LOG.debug("Se creará el excel{}", institutionId);
@@ -149,9 +147,6 @@ public class GeneralReportsController {
 				"Genero","Nombre con el que se identifica","Fecha de nacimiento","Edad a fecha del turno","Edad a hoy","Etnia","Domicilio",
 				"Localidad","Obra social","Medio de Ingreso","Estado","Tipo","Notas del Triage","Triage","Fecha de alta","Ambulancia de alta",
 				"Tipo de alta","Salida"};
-
-		//	LocalDate startDate = localDateMapper.fromStringToLocalDate(fromDate);
-		//	LocalDate endDate = localDateMapper.fromStringToLocalDate(toDate);
 
 		IWorkbook wb = this.excelServiceGR.buildExcelPatientEmergencies(title,headers,this.queryFactoryGR.queryPatientEmergencies(institutionId));
 
@@ -166,4 +161,68 @@ public class GeneralReportsController {
 		response.flushBuffer();
 	}
 
+	@GetMapping(value = "/{institutionId}/outpatientNursing")
+	@PreAuthorize("hasPermission(#institutionId, 'ADMINISTRADOR_INSTITUCIONAL_BACKOFFICE, PERSONAL_DE_ESTADISTICA')")
+	public @ResponseBody
+	void getOutpatientNursingExcelReport(
+			@PathVariable Integer institutionId,
+			@RequestParam(value = "fromDate", required = true) String fromDate,
+			@RequestParam(value = "toDate", required = true) String toDate,
+			HttpServletResponse response
+	)throws Exception{
+		LOG.debug("Se creará el excel{}", institutionId);
+		LOG.debug("Inputs parameters -> institutionId {}, fromDate{}, toDate{}", institutionId);
+
+		String title = "Reporte Enfemeria - Enfermeria Ambulatorio";
+		String[] headers = new String[]{"Institucion","Unidad Operativa","Prestador","DNI","Fecha de Atencion","Hora","Const N°","DNI Paciente",
+				"Nombre Paciente","Sexo","Genero","Nombre con el que se identifica","Fecha de Nacimiento","Edad a fecha del turno","Edad a Hoy","Etnia",
+				"Obra/s Social/es","Domicilio","Localidad","Nivel de instruccion","Situacion Labora","Signos vitales","Procedimientos","Evolucion"};
+
+		LocalDate startDate = localDateMapper.fromStringToLocalDate(fromDate);
+		LocalDate endDate = localDateMapper.fromStringToLocalDate(toDate);
+
+		IWorkbook wb = this.excelServiceGR.buildExcelOutpatientNursing(title, headers, this.queryFactoryGR.queryOutpatientNursing(institutionId,startDate,endDate));
+
+		String filename = title + "." + wb.getExtension();
+		response.addHeader("Content-disposition", "attachment;filename= "+ filename);
+		response.setContentType(wb.getContentType());
+
+		OutputStream out = response.getOutputStream();
+		wb.write(out);
+		out.close();
+		out.flush();
+		response.flushBuffer();
+	}
+
+	@GetMapping(value = "/{institutionId}/nursingInternment")
+	@PreAuthorize("hasPermission(#institutionId, 'ADMINISTRADOR_INSTITUCIONAL_BACKOFFICE, PERSONAL_DE_ESTADISTICA')")
+	public @ResponseBody
+	void getNursingInternmentExcelReport(
+			@PathVariable Integer institutionId,
+			@RequestParam(value = "formDate", required = true) String fromDate,
+			@RequestParam(value = "toDate", required = true) String toDate,
+			HttpServletResponse response
+	)throws Exception{
+		LOG.debug("Se creará el excel{}", institutionId);
+		LOG.debug("Inputs parameters -> institutionId {}, fromDate{}, toDate{}", institutionId);
+
+		String title = "Reporte Enfermeria - Enfermeria Internacion";
+		String[] headers = new String[]{"Institucion","Apellidos","Nombres","Genero","Identificacion","Profesional","Matricula",
+				"Ingreso","Alta Probable","Cama","Categoria","Habitacion","Sector","Alta","Procedimientos","Signos Vitales"};
+
+		LocalDate startDate = localDateMapper.fromStringToLocalDate(fromDate);
+		LocalDate endDate = localDateMapper.fromStringToLocalDate(toDate);
+
+		IWorkbook wb = this.excelServiceGR.buildExcelNursingInternment(title, headers, this.queryFactoryGR.queryNursingInternment(institutionId,startDate,endDate));
+
+		String filename = title + "." + wb.getExtension();
+		response.addHeader("Content-disposition", "attachment;filename=" + filename);
+		response.setContentType(wb.getContentType());
+
+		OutputStream out = response.getOutputStream();
+		wb.write(out);
+		out.close();
+		out.flush();
+		response.flushBuffer();
+	}
 }
