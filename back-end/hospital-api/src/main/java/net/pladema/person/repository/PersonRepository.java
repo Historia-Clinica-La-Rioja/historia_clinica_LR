@@ -3,6 +3,8 @@ package net.pladema.person.repository;
 import java.util.List;
 import java.util.Optional;
 
+import net.pladema.person.repository.domain.CompletePersonNameBo;
+
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -60,12 +62,13 @@ public interface PersonRepository extends JpaRepository<Person, Integer> {
     Optional<CompletePersonVo> getCompletePerson(@Param("personId") Integer personId);
 
     @Transactional(readOnly = true)
-    @Query("SELECT p " +
+    @Query("SELECT NEW net.pladema.person.repository.domain.CompletePersonNameBo( p, pe.nameSelfDetermination) " +
     "FROM Diary d " +
     "JOIN HealthcareProfessional hp ON d.healthcareProfessionalId = hp.id " +
     "JOIN Person p ON hp.personId = p.id " +
+	"JOIN PersonExtended pe ON (p.id = pe.id) " +
     "WHERE d.id = :diaryId")
-    Optional<Person> findProfessionalNameByDiaryId(@Param("diaryId") Integer diaryId);
+    Optional<CompletePersonNameBo> findProfessionalNameByDiaryId(@Param("diaryId") Integer diaryId);
 
 	@Transactional(readOnly = true)
 	@Query("SELECT NEW net.pladema.person.repository.domain.PersonRecipientVo(" +

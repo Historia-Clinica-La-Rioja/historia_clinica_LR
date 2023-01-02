@@ -87,7 +87,7 @@ public class BookingPersonServiceImpl implements BookingPersonService {
     @Override
     public Optional<String> getProfessionalName(Integer diaryId) {
         var a = personRepository.findProfessionalNameByDiaryId(diaryId);
-        return a.map(person -> person.getFirstName() + " " + person.getLastName());
+        return a.map(completePersonNameBo -> completePersonNameBo.getPersonFullName());
     }
 
     private BookingPerson mapTo(BookingPersonBo bookingPersonBo) {
