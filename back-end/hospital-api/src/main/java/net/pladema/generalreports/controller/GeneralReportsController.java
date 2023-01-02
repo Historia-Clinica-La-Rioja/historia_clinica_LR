@@ -199,7 +199,7 @@ public class GeneralReportsController {
 	public @ResponseBody
 	void getNursingInternmentExcelReport(
 			@PathVariable Integer institutionId,
-			@RequestParam(value = "formDate", required = true) String fromDate,
+			@RequestParam(value = "fromDate", required = true) String fromDate,
 			@RequestParam(value = "toDate", required = true) String toDate,
 			HttpServletResponse response
 	)throws Exception{
