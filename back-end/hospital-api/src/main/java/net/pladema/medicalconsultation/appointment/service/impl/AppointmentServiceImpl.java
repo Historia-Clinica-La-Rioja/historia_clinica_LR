@@ -577,6 +577,10 @@ public class AppointmentServiceImpl implements AppointmentService {
 			completeDiaryUnblock(unblock, diaryBo, blockedDates, listAppointments);
 		else
 			blockedDates.forEach(date -> generateUnblockInterval(diaryBo, listAppointments, date, unblock));
+
+		if (listAppointments.isEmpty())
+			throw new ConstraintViolationException("No hay ningún bloqueo de agenda en ese día y horario.",Collections.emptySet());
+
 		return listAppointments;
 	}
 
