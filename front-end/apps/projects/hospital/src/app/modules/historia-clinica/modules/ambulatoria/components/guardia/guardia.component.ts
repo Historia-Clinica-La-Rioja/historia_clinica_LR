@@ -154,7 +154,7 @@ export class GuardiaComponent implements OnInit {
   }
 
   goToEditEpisode(): void {
-    this.router.navigate([`${this.router.url}/edit`]);
+    this.router.navigate([`/institucion/${this.contextService.institutionId}/guardia/episodio/${this.episodeId}/edit`]);
   }
 
   getFullName(triage: TriageReduced): string {

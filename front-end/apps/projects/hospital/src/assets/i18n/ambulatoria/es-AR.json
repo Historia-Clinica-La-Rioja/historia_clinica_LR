@@ -482,7 +482,8 @@
                 "UBICACION": "Ubicación",
                 "WITHOUT_POLICE_INTERVENTION": "Sin intervención policial",
                 "WITH_POLICE_INTERVENTION": "Con intervención policial",
-                "PLATE_NUMBER": "Placa. Nº"
+                "PLATE_NUMBER": "Placa. Nº",
+                "EDIT_BUTTON": "Editar atención"
             },
             "vacunas": {
                 "TAB_LABEL": "Vacunas",

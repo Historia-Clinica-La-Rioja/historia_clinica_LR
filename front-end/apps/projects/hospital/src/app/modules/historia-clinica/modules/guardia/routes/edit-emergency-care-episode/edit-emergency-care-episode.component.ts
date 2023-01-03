@@ -24,6 +24,7 @@ export class EditEmergencyCareEpisodeComponent implements OnInit {
 	initData: Observable<AdministrativeAdmission>;
 	isDoctorOfficeEditable: boolean;
 	private episodeId: number;
+	private patientId: number;
 
 	constructor(
 		private router: Router,
@@ -44,6 +45,10 @@ export class EditEmergencyCareEpisodeComponent implements OnInit {
 					pipe(
 						map(GuardiaMapperService._toAdministrativeAdmission),
 					);
+
+				this.initData.subscribe(data => {
+					this.patientId = data.patientId;
+				});
 
 				this.emergencyCareEpisodeStateService.getState(this.episodeId)
 					.subscribe(state => this.isDoctorOfficeEditable = state.id !== EstadosEpisodio.EN_ATENCION
@@ -85,7 +90,10 @@ export class EditEmergencyCareEpisodeComponent implements OnInit {
 	}
 
 	private goToEpisodeDetails(): void {
-		const url = `${this.routePrefix}/guardia/episodio/${this.episodeId}`;
+		const url = this.patientId ?
+			`${this.routePrefix}/ambulatoria/paciente/${this.patientId}` :
+			`${this.routePrefix}/guardia/episodio/${this.episodeId}`;
 		this.router.navigateByUrl(url);
 	}
+
 }

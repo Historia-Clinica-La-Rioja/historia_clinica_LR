@@ -1,107 +1,117 @@
-<div fxLayout="row" fxLayoutAlign="space-between center">
-    <span class="mat-h2"> {{ 'ambulatoria.paciente.guardia.TAB_LABEL' | translate }} </span>
-</div>
+<app-content width="full">
+    <div fxLayout="row" fxLayoutAlign="space-between center" class="margin-bottom">
+        <span class="mat-h2"> {{ 'ambulatoria.paciente.guardia.TAB_LABEL' | translate }} </span>
+        <div>
+            <button *ngIf="episodeState === STATES.EN_ATENCION || episodeState === STATES.EN_ESPERA" id="edit-episode"
+                mat-raised-button color="primary" (click)="goToEditEpisode()">
+                {{ 'ambulatoria.paciente.guardia.EDIT_BUTTON' | translate | uppercase }}
+            </button>
+        </div>
+    </div>
 
-<div fxLayout="row" fxLayout.lt-md="column" fxLayoutGap="20px">
-    <div fxLayout="column" fxFlex="50%" fxLayoutGap="20px">
-        <app-summary-card [header]="guardiaSummary" [tooltip]="'ambulatoria.paciente.guardia.SUMMARY_TOOLTIP'">
-            <mat-card-content>
-                <div fxLayout="column" fxLayoutGap="15px">
+    <div fxLayout="row" fxLayout.lt-md="column" fxLayoutGap="20px">
+        <div fxLayout="column" fxFlex="50%" fxLayoutGap="20px">
+            <app-summary-card [header]="guardiaSummary" [tooltip]="'ambulatoria.paciente.guardia.SUMMARY_TOOLTIP'">
+                <mat-card-content>
+                    <div fxLayout="column" fxLayoutGap="15px">
 
-                    <div fxLayout="row" fxLayoutGap="20px">
-                        <div fxLayout="row" fxLayoutAlign="center center">
-                            <strong>{{ 'ambulatoria.paciente.guardia.ID' | translate }}: {{ episodeId }}</strong>
+                        <div fxLayout="row" fxLayoutGap="20px">
+                            <div fxLayout="row" fxLayoutAlign="center center">
+                                <strong>{{ 'ambulatoria.paciente.guardia.ID' | translate }}: {{ episodeId }}</strong>
+                            </div>
+                            <div fxLayout="row" fxLayoutGap="10px" fxLayoutAlign="center center">
+                                <mat-icon fontSet="material-icons-outlined" class="gray-color">medical_services
+                                </mat-icon>
+                                <strong> {{ responseEmergencyCare?.emergencyCareType.description }} </strong>
+                            </div>
                         </div>
-                        <div fxLayout="row" fxLayoutGap="10px" fxLayoutAlign="center center">
-                            <mat-icon fontSet="material-icons-outlined" class="gray-color">medical_services</mat-icon>
-                            <strong> {{ responseEmergencyCare?.emergencyCareType.description }} </strong>
-                        </div>
-                    </div>
-                    <div fxLayout="row" fxLayoutGap="5px">
-                        <strong>{{ 'ambulatoria.paciente.guardia.REASONS' | translate }}:</strong>
-                        <div fxLayout="column" fxLayoutGap="1px">
-                            <div *ngIf="responseEmergencyCare?.reasons?.length else noInfo">
-                                <div class="content-primary" *ngFor="let reason of responseEmergencyCare.reasons">
-                                    <span>{{ reason.pt }}</span>
+                        <div fxLayout="row" fxLayoutGap="5px">
+                            <strong>{{ 'ambulatoria.paciente.guardia.REASONS' | translate }}:</strong>
+                            <div fxLayout="column" fxLayoutGap="1px">
+                                <div *ngIf="responseEmergencyCare?.reasons?.length else noInfo">
+                                    <div class="content-primary" *ngFor="let reason of responseEmergencyCare.reasons">
+                                        <span>{{ reason.pt }}</span>
+                                    </div>
                                 </div>
                             </div>
                         </div>
-                    </div>
 
-                    <mat-divider inset></mat-divider>
+                        <mat-divider inset></mat-divider>
 
-                    <div fxLayout="row" fxLayoutGap="10px" fxLayoutAlign="start center">
-                        <mat-icon fontSet="material-icons-outlined" class="gray-color">meeting_room</mat-icon>
-                        <strong> {{ doctorsOfficeDescription }} </strong>
-                    </div>
-
-                    <mat-divider inset></mat-divider>
-
-                    <div fxLayout="row" fxLayoutGap="5px" fxLayoutAlign="start center">
-                        <strong> {{ 'ambulatoria.paciente.guardia.ENTRANCE' | translate }}: </strong>
-                        <span *ngIf="responseEmergencyCare?.creationDate as creationDate">
-                            {{ creationDate | viewDateDto : 'datetime' | date: 'dd/MM/yyyy - HH:mm'}}
-                        </span>
-                        <span> ({{ responseEmergencyCare?.entranceType?.description }})</span>
-                    </div>
-                    <div *ngIf="responseEmergencyCare?.hasPoliceIntervention === false else withInfo">
-                        <span class="gray-text">
-                            {{ 'ambulatoria.paciente.guardia.WITHOUT_POLICE_INTERVENTION' | translate }}
-                        </span>
-                    </div>
-
-                    <mat-divider inset></mat-divider>
-
-                    <app-triage-details [triage]="lastTriage" [emergencyCareType]="emergencyCareType"
-                        [showRiskFactors]="false">
-                    </app-triage-details>
-
-                    <div fxLayout="row" fxLayoutAlign="flex-end center" *ngIf="episodeState !== STATES.CON_ALTA_MEDICA">
-                        <button id="nuevo-triage" mat-raised-button color="primary" (click)="newTriage()">
-                            {{ 'guardia.episode.triage.NUEVO' | translate | uppercase }}
-                        </button>
-                    </div>
-
-                    <div id="history">
-                        <h3 class="bold" style="margin-bottom: 0">
-                            {{ 'guardia.episode.triage.HISTORIAL' | translate }}
-                        </h3>
-                        <div *ngIf="triagesHistory?.length else noInfo" style="margin-top: 16px" fxLayout="column"
-                            fxLayoutGap="10px">
-                            <mat-card class="triage-list-item" *ngFor="let triage of triagesHistory">
-                                <mat-card-content>
-                                    <div fxLayout="row" fxLayoutAlign="space-between">
-
-                                        <div id="left-side">
-                                            <span style="margin-right: 20px">
-                                                {{ triage.creationDate | date: 'dd/MM/yyyy - HH:mm' }}
-                                                hs
-                                            </span>
-                                            <app-triage-chip [category]="triage.category"></app-triage-chip>
-                                        </div>
-
-                                        <div id="right-side">
-                                            <span>
-                                                {{getFullName(triage)}}
-                                            </span>
-                                            <span *ngIf="triage.doctorsOfficeDescription">
-                                                • {{ triage.doctorsOfficeDescription }}
-                                            </span>
-                                        </div>
-
-                                    </div>
-                                </mat-card-content>
-                            </mat-card>
+                        <div fxLayout="row" fxLayoutGap="10px" fxLayoutAlign="start center">
+                            <mat-icon fontSet="material-icons-outlined" class="gray-color">meeting_room</mat-icon>
+                            <strong> {{ doctorsOfficeDescription }} </strong>
                         </div>
+
+                        <mat-divider inset></mat-divider>
+
+                        <div fxLayout="row" fxLayoutGap="5px" fxLayoutAlign="start center">
+                            <strong> {{ 'ambulatoria.paciente.guardia.ENTRANCE' | translate }}: </strong>
+                            <span *ngIf="responseEmergencyCare?.creationDate as creationDate">
+                                {{ creationDate | viewDateDto : 'datetime' | date: 'dd/MM/yyyy - HH:mm'}}
+                            </span>
+                            <span> ({{ responseEmergencyCare?.entranceType?.description }})</span>
+                        </div>
+                        <div *ngIf="responseEmergencyCare?.hasPoliceIntervention === false else withInfo">
+                            <span class="gray-text">
+                                {{ 'ambulatoria.paciente.guardia.WITHOUT_POLICE_INTERVENTION' | translate }}
+                            </span>
+                        </div>
+
+                        <mat-divider inset></mat-divider>
+
+                        <app-triage-details [triage]="lastTriage" [emergencyCareType]="emergencyCareType"
+                            [showRiskFactors]="false">
+                        </app-triage-details>
+
+                        <div fxLayout="row" fxLayoutAlign="flex-end center"
+                            *ngIf="episodeState !== STATES.CON_ALTA_MEDICA">
+                            <button id="nuevo-triage" mat-raised-button color="primary" (click)="newTriage()">
+                                {{ 'guardia.episode.triage.NUEVO' | translate | uppercase }}
+                            </button>
+                        </div>
+
+                        <div id="history">
+                            <h3 class="bold" style="margin-bottom: 0">
+                                {{ 'guardia.episode.triage.HISTORIAL' | translate }}
+                            </h3>
+                            <div *ngIf="triagesHistory?.length else noInfo" style="margin-top: 16px" fxLayout="column"
+                                fxLayoutGap="10px">
+                                <mat-card class="triage-list-item" *ngFor="let triage of triagesHistory">
+                                    <mat-card-content>
+                                        <div fxLayout="row" fxLayoutAlign="space-between">
+
+                                            <div id="left-side">
+                                                <span style="margin-right: 20px">
+                                                    {{ triage.creationDate | date: 'dd/MM/yyyy - HH:mm' }}
+                                                    hs
+                                                </span>
+                                                <app-triage-chip [category]="triage.category"></app-triage-chip>
+                                            </div>
+
+                                            <div id="right-side">
+                                                <span>
+                                                    {{getFullName(triage)}}
+                                                </span>
+                                                <span *ngIf="triage.doctorsOfficeDescription">
+                                                    • {{ triage.doctorsOfficeDescription }}
+                                                </span>
+                                            </div>
+
+                                        </div>
+                                    </mat-card-content>
+                                </mat-card>
+                            </div>
+                        </div>
+
                     </div>
+                </mat-card-content>
+            </app-summary-card>
+        </div>
 
-                </div>
-            </mat-card-content>
-        </app-summary-card>
+
     </div>
-
-
-</div>
+</app-content>
 
 <ng-template #noInfo>
     <span class="content-primary" translate="guardia.NO_INFO"></span>
