@@ -6,8 +6,7 @@
     "timeDimensions": [
       {
         "dimension": "CantidadConsultasAmbulatorias.fecha_consulta",
-        "granularity": "month",
-        "dateRange": "Last quarter"
+        "dateRange": "This quarter"
       }
     ],
     "order": {
@@ -21,8 +20,7 @@
   "chartType": "bar",
   "pivotConfig": {
     "x": [
-      "CantidadConsultasAmbulatorias.especialidad",
-      "CantidadConsultasAmbulatorias.fecha_consulta.month"
+      "CantidadConsultasAmbulatorias.especialidad"
     ],
     "y": [
       "CantidadConsultasAmbulatorias.profesional",
