@@ -352,18 +352,6 @@ export class EditPatientComponent implements OnInit {
 	save(): void {
 		this.formSubmitted = true;
 		if (this.form.valid) {
-			const personRequest: APatientDto = this.mapToPersonRequest();
-			this.patientService.editPatient(personRequest, this.patientId)
-				.subscribe(patientId => {
-					if (this.medicalCoverages) {
-						const patientMedicalCoveragesDto: PatientMedicalCoverageDto[] =
-							this.medicalCoverages.map(s => this.mapperService.toPatientMedicalCoverageDto(s));
-						this.patientMedicalCoverageService.addPatientMedicalCoverages(this.patientId, patientMedicalCoveragesDto)
-							.subscribe();
-					}
-					this.router.navigate([this.routePrefix + ROUTE_PROFILE + patientId]);
-					this.snackBarService.showSuccess(this.getMessagesSuccess());
-				}, _ => this.snackBarService.showError(this.getMessagesError()));
 			this.hasToSaveFiles = true;
 		} else {
 			scrollIntoError(this.form, this.el);
@@ -459,8 +447,8 @@ export class EditPatientComponent implements OnInit {
 	}
 
 	savePatient(idFiles: Observable<number[]>) {
-		if(idFiles){
-			idFiles.subscribe( idsFiles =>{
+		if (idFiles) {
+			idFiles.subscribe(idsFiles => {
 				this.filesId = idsFiles;
 				const personRequest: APatientDto = this.mapToPersonRequest();
 				this.patientService.editPatient(personRequest, this.patientId)
@@ -472,9 +460,12 @@ export class EditPatientComponent implements OnInit {
 								.subscribe();
 						}
 						this.router.navigate([this.routePrefix + ROUTE_PROFILE + patientId]);
-					}, _ => this.snackBarService.showError('pacientes.edit.messages.ERROR'));
+						this.snackBarService.showSuccess(this.getMessagesSuccess());
+					}, _ => this.snackBarService.showError(this.getMessagesError()));
+
 			})
 		}
+
 	}
 
 	private mapToPersonRequest(): APatientDto {
