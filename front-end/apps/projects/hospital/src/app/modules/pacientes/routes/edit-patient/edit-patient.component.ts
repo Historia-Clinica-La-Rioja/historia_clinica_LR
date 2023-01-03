@@ -472,13 +472,9 @@ export class EditPatientComponent implements OnInit {
 								.subscribe();
 						}
 						this.router.navigate([this.routePrefix + ROUTE_PROFILE + patientId]);
-						this.snackBarService.showSuccess('pacientes.edit.messages.SUCCESS');
 					}, _ => this.snackBarService.showError('pacientes.edit.messages.ERROR'));
 			})
 		}
-
-
-
 	}
 
 	private mapToPersonRequest(): APatientDto {
