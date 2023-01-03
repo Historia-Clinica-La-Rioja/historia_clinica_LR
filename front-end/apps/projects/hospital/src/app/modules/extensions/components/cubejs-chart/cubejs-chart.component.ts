@@ -24,6 +24,7 @@ export class CubejsChartComponent implements OnDestroy {
 	cubeQuery = new ReplaySubject<any>(1);
 	pivotConfig = new ReplaySubject<any>(1);
 	chartTitle: string;
+	enableFilter = true;
 
 	@Input() listOnTab: string = null;
 
@@ -31,7 +32,7 @@ export class CubejsChartComponent implements OnDestroy {
 
 	constructor(
 		private chartDefinitionService: ChartDefinitionService,
-	) {	}
+	) { }
 
 	@Input()
 	set query(queryName: string) {
@@ -45,6 +46,7 @@ export class CubejsChartComponent implements OnDestroy {
 				this.chartType.next(queryStream.chartType);
 				this.cubeQuery.next(queryStream.cubeQuery);
 				this.pivotConfig.next(queryStream.pivotConfig);
+				this.cleanFilters(queryStream);
 			},
 			(error: any) => this.error = toUIComponentDto(error),
 		)
@@ -56,10 +58,10 @@ export class CubejsChartComponent implements OnDestroy {
 	}
 
 	setChartTitle(queryName: string) {
-		switch(queryName) {
+		switch (queryName) {
 			case 'cantidadConsultasAmbulatorias': {
-			   this.chartTitle = 'Evolución consultas'
-			   break;
+				this.chartTitle = 'Evolución consultas'
+				break;
 			}
 			case 'cantidadConsultasPorEspecialidad': {
 				this.chartTitle = 'Consultas por especialidad'
@@ -67,6 +69,7 @@ export class CubejsChartComponent implements OnDestroy {
 			}
 			case 'cantidadConsultasAmbulatoriasEspecialidadProfesional': {
 				this.chartTitle = 'Consultas por especialidad y profesional'
+				this.enableFilter = false;
 				break;
 			}
 			case 'cantidadTurnos': {
@@ -82,5 +85,11 @@ export class CubejsChartComponent implements OnDestroy {
 				break;
 			}
 		}
+	}
+
+	cleanFilters(queryStream) {
+		queryStream.cubeQuery.filters = queryStream.cubeQuery.filters.filter(f => {
+			return (f.member === queryStream.cubeQuery.timeDimensions[0].dimension) && (this.enableFilter);
+		});
 	}
 }
