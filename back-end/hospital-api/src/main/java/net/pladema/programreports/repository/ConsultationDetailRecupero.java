@@ -1,23 +1,39 @@
 package net.pladema.programreports.repository;
 
 import lombok.AllArgsConstructor;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
+
+import org.checkerframework.checker.units.qual.C;
+
+import javax.persistence.ColumnResult;
+import javax.persistence.ConstructorResult;
+import javax.persistence.SqlResultSetMapping;
 
 @Getter
 @Setter
 @ToString
 @AllArgsConstructor
+@EqualsAndHashCode
 public class ConsultationDetailRecupero {
 
-	private String operativeUnit;
+	private String institution;
+
+	private Integer clinicalSpecialtyId;
+
+	private String clinicalSpecialty;
+
+	private Integer professionalId;
 
 	private String provider;
 
 	private String providerDni;
 
 	private String attentionDate;
+
+	private String hour;
 
 	private String consultationNumber;
 
@@ -79,4 +95,31 @@ public class ConsultationDetailRecupero {
 
 	private String evolution;
 
+	public ConsultationDetailRecupero(String institution,String clinicalSpecialty, String provider,String providerDni, String attentionDate,String hour,
+									 String consultationNumber, String patientDni, String patientName, String gender,
+									  String birthDate, String ageTurn,String ageToday, String medicalCoverage,String address, String location,
+									  String bmi, String reasons, String procedures, String problems, String medication, String evolution) {
+		this.institution = institution;
+		this.clinicalSpecialty = clinicalSpecialty;
+		this.provider = provider;
+		this.providerDni = providerDni;
+		this.attentionDate = attentionDate;
+		this.hour = hour;
+		this.consultationNumber = consultationNumber;
+		this.patientDni = patientDni;
+		this.patientName = patientName;
+		this.gender = gender;
+		this.birthDate = birthDate;
+		this.ageTurn = ageTurn;
+		this.ageToday = ageToday;
+		this.medicalCoverage = medicalCoverage;
+		this.address = address;
+		this.location = location;
+		this.bmi = bmi;
+		this.reasons = reasons;
+		this.procedures = procedures;
+		this.problems = problems;
+		this.medication = medication;
+		this.evolution = evolution;
+	}
 }

@@ -12,6 +12,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Repository
 public class QueryFactoryPR {
@@ -66,7 +67,8 @@ public class QueryFactoryPR {
 	}
 
 	@SuppressWarnings("unchecked")
-	public List<ConsultationDetailRecupero> querySumar(Integer institutionId, LocalDate start, LocalDate end){
+	public List<ConsultationDetailRecupero> querySumar(Integer institutionId, LocalDate start, LocalDate end,
+													   Integer clinicalSpecialtyId, Integer doctorId){
 
 		var startDate = LocalDateTime.of(start.getYear(), start.getMonth(), start.getDayOfMonth(), 0, 0);
 		var endDate = LocalDateTime.of(end.getYear(), end.getMonth(), end.getDayOfMonth(), 23, 59, 59, LocalTime.MAX.getNano());
@@ -76,7 +78,12 @@ public class QueryFactoryPR {
 		query.setParameter("startDate", startDate);
 		query.setParameter("endDate", endDate);
 		List<ConsultationDetailRecupero> data = query.getResultList();
-		return data;
+
+		return data.stream()
+				.filter(doctorId != null ? oc -> oc.getProfessionalId().equals(doctorId) : c -> true)
+				.filter(clinicalSpecialtyId != null ? oc -> oc.getClinicalSpecialtyId() != null : oc -> true)
+					.filter(clinicalSpecialtyId != null ? oc -> oc.getClinicalSpecialtyId().equals(clinicalSpecialtyId) : c -> true)
+				.collect(Collectors.toList());
 	}
 
 	public List<ConsultationDetailOdontologia> queryOdontologia(Integer institutionId, LocalDate start, LocalDate end){
