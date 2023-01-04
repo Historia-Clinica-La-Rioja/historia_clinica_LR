@@ -201,6 +201,10 @@ export class QueryRendererComponent {
 		}
 
 		this.chartLabels = resultSet.chartPivot(pivotConfig).map((row) => parse(row.x));
+
+		if (this.chartType === 'bar'){
+			this.chartData.forEach( x => x.label = (x.label.charAt(0).toUpperCase() + x.label.slice(1)).slice(0, -5))
+		}
 	}
 
 	formatDate(resultSet) {
