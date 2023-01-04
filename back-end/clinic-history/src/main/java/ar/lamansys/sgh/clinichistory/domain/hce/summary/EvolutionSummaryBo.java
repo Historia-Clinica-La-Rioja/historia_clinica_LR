@@ -5,6 +5,7 @@ import ar.lamansys.sgh.clinichistory.domain.ips.ReasonBo;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import lombok.ToString;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -13,6 +14,7 @@ import java.util.List;
 @Getter
 @Setter
 @NoArgsConstructor
+@ToString
 public class EvolutionSummaryBo {
 
     private Integer consultationID;
@@ -32,6 +34,8 @@ public class EvolutionSummaryBo {
     private List<ProcedureBo> procedures = new ArrayList<>();
 
     private String evolutionNote;
+
+	private String institutionName;
 
     public EvolutionSummaryBo(Integer id, LocalDate startDate, HealthcareProfessionalBo professional, String evolutionNote){
         this.consultationID = id;

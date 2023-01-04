@@ -1343,6 +1343,7 @@ export interface HCEEvolutionSummaryDto extends Serializable {
     document: HCEDocumentDataDto;
     evolutionNote: string;
     healthConditions: HCEHealthConditionDto[];
+    institutionName: string;
     procedures: HCEProcedureDto[];
     professional: HCEHealthcareProfessionalDto;
     reasons: HCEReasonDto[];
