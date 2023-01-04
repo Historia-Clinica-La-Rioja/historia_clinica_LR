@@ -1,4 +1,4 @@
-package ar.lamansys.sgx.auth.user.infrastructure.output.notification.exceptions;
+package net.pladema.user.infrastructure.output.notification.exceptions;
 
 import lombok.Getter;
 

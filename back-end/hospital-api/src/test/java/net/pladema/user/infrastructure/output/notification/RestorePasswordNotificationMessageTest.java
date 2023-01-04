@@ -1,7 +1,5 @@
-package ar.lamansys.sgx.auth.user.infraestructure.output.notification;
+package net.pladema.user.infrastructure.output.notification;
 
-import ar.lamansys.sgx.auth.user.infrastructure.output.notification.RestorePasswordNotificationArgs;
-import ar.lamansys.sgx.auth.user.infrastructure.output.notification.RestorePasswordTemplateInput;
 import ar.lamansys.sgx.shared.templating.exceptions.TemplateException;
 import ar.lamansys.sgx.shared.templating.utils.testing.AppTemplateConfig;
 

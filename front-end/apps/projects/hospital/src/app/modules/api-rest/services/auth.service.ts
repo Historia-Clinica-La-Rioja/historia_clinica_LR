@@ -51,6 +51,6 @@ export class AuthService {
 	}
 
 	restorePassword(username: string): Observable<any> {
-		return this.http.post<any>(`${environment.apiBase}/auth/restore-password`,{}, { responseType: 'text' as 'json' , params: { username: username } });
+		return this.http.post<any>(`${environment.apiBase}/auth/public-user/restore-password`,{}, { responseType: 'text' as 'json' , params: { username: username } });
 	}
 }

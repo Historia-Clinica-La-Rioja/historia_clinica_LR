@@ -1,7 +1,9 @@
-package ar.lamansys.sgx.auth.user.application.restorepasswordbyusername;
+package net.pladema.user.application.restorepasswordbyusername;
 
-import ar.lamansys.sgx.auth.user.application.port.RestorePasswordNotification;
-import ar.lamansys.sgx.auth.user.domain.notification.RestorePasswordNotificationBo;
+import ar.lamansys.sgx.auth.user.infrastructure.input.service.UserExternalService;
+import net.pladema.user.application.port.HospitalUserStorage;
+import net.pladema.user.application.port.RestorePasswordNotification;
+import net.pladema.user.domain.notification.RestorePasswordNotificationBo;
 import ar.lamansys.sgx.auth.user.domain.passwordreset.PasswordResetTokenStorage;
 import ar.lamansys.sgx.auth.user.domain.user.model.UserBo;
 import ar.lamansys.sgx.auth.user.domain.user.service.UserStorage;
@@ -17,7 +19,7 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class RestorePasswordByUsername {
 
-	private final UserStorage userStorage;
+	private final HospitalUserStorage hospitalUserStorage;
 	private final RestorePasswordNotification restorePasswordNotification;
 	private final PasswordResetTokenStorage passwordResetTokenStorage;
 
@@ -25,9 +27,9 @@ public class RestorePasswordByUsername {
 
 	public String execute(String username){
 		log.debug("Input parameters -> username {}", username);
-		UserBo user = userStorage.getUser(username);
-		var token = passwordResetTokenStorage.createToken(user.getId());
-		String result = restorePasswordNotification.run(new RestorePasswordNotificationBo(user.getId(), token.getToken()));
+		var userData = hospitalUserStorage.getUserByUsername(username);
+		var token = passwordResetTokenStorage.createToken(userData.getId());
+		String result = restorePasswordNotification.run(new RestorePasswordNotificationBo(userData.getId(), token.getToken()));
 		return result.substring(0, result.indexOf("@")-4).replaceAll(REGEX, "*")
 				+ result.substring(result.indexOf("@")-4, result.length());
 	}

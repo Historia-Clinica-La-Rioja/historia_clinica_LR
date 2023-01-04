@@ -1,4 +1,4 @@
-package ar.lamansys.sgx.auth.user.domain.notification;
+package net.pladema.user.domain.notification;
 
 import lombok.AllArgsConstructor;
 

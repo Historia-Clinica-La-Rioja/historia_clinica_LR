@@ -1,4 +1,4 @@
-package ar.lamansys.sgx.auth.user.infrastructure.output.notification;
+package net.pladema.user.infrastructure.output.notification;
 
 import lombok.AllArgsConstructor;
 

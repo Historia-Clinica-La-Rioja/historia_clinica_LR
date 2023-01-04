@@ -57,7 +57,7 @@ export class PasswordRecoverComponent implements OnInit {
 				error => {
 					let err = JSON.parse(error);
 					switch (err.code) {
-						case ('NOT_FOUND_USER'):
+						case ('UNEXISTED_USER'):
 							{
 								this.form.enable();
 								this.spinner = false;

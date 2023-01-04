@@ -16,6 +16,8 @@ import javax.validation.ValidationException;
 import ar.lamansys.sgx.shared.files.exception.FileServiceEnumException;
 import ar.lamansys.sgx.shared.files.exception.FileServiceException;
 
+import net.pladema.user.infrastructure.output.notification.exceptions.RestorePasswordNotificationException;
+
 import org.apache.commons.lang3.StringUtils;
 import org.apache.http.MethodNotSupportedException;
 import org.apache.tomcat.util.http.fileupload.impl.IOFileUploadException;
@@ -225,4 +227,11 @@ public class RestExceptionHandler {
 		return new ResponseEntity<>(error, FileServiceEnumException.INSUFFICIENT_STORAGE.equals(ex.getCode()) ?
 				HttpStatus.INSUFFICIENT_STORAGE : HttpStatus.INTERNAL_SERVER_ERROR);
 	}
+	@ResponseStatus(HttpStatus.PRECONDITION_FAILED)
+	@ExceptionHandler({ RestorePasswordNotificationException.class })
+	protected ApiErrorMessageDto handleRestorePasswordNotificationException(RestorePasswordNotificationException ex) {
+		LOG.debug("RestorePasswordNotificationException -> {}", ex.getMessage(), ex);
+		return new ApiErrorMessageDto(ex.getCode().toString(), ex.getMessage());
+	}
+
 }

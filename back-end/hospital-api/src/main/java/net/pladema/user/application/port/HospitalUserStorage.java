@@ -7,6 +7,7 @@ import java.util.Optional;
 
 public interface HospitalUserStorage {
     Optional<UserPersonInfoBo> getUserPersonInfo(Integer userId);
+	Optional<UserPersonInfoBo> getUserPersonInfo(String username);
     Optional<UserDataBo> getUserDataByPersonId(Integer personId);
     String getIdentificationNumber(Integer personId);
     void registerUser(String username, String email, String password);
