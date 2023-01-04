@@ -486,7 +486,10 @@
                 "EDIT_BUTTON": "Editar atención",
                 "CANCEL_BUTTON": "Cancelar atención",
                 "CANCEL_ATTENTION_SUCCESS": "La atención fue cancelada exitosamente",
-                "CANCEL_ATTENTION_ERROR": "Ocurrio un error al cancelar la atención"
+                "CANCEL_ATTENTION_ERROR": "Ocurrio un error al cancelar la atención",
+                "PATIENT_REQUIRED": "El episodio de guardia debe tener un paciente asociado",
+                "ADMINISTRATIVE_DISCHARGE_BUTTON": "Alta Administrativa",
+                "MEDICAL_DISCHARGE_BUTTON": "Alta médica"
             },
             "vacunas": {
                 "TAB_LABEL": "Vacunas",

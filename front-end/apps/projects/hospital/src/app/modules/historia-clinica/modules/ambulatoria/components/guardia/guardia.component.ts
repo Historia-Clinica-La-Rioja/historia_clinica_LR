@@ -143,14 +143,14 @@ export class GuardiaComponent implements OnInit {
 
   goToMedicalDischarge(): void {
     if (!this.responseEmergencyCare?.patient) {
-      this.snackBarService.showError('guardia.episode.medical_discharge.PATIENT_REQUIRED');
+      this.snackBarService.showError('ambulatoria.paciente.guardia.PATIENT_REQUIRED');
     } else {
-      this.router.navigate([`${this.router.url}/alta-medica`]);
+      this.router.navigate([`/institucion/${this.contextService.institutionId}/guardia/episodio/${this.episodeId}/alta-medica`]);
     }
   }
 
   goToAdministrativeDischarge(): void {
-    this.router.navigate([`${this.router.url}/alta-administrativa`]);
+    this.router.navigate([`/institucion/${this.contextService.institutionId}/guardia/episodio/${this.episodeId}/alta-administrativa`]);
   }
 
   goToEditEpisode(): void {
