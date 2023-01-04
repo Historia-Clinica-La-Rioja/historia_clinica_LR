@@ -123,19 +123,19 @@ export class GuardiaComponent implements OnInit {
   cancelAttention(): void {
     const dialogRef = this.dialog.open(SelectConsultorioComponent, {
       width: '25%',
-      data: { title: 'guardia.episode.CANCEL_ATTENTION' }
+      data: { title: 'ambulatoria.paciente.guardia.CANCEL_BUTTON' }
     });
 
     dialogRef.afterClosed().subscribe(consultorio => {
       if (consultorio) {
         this.episodeStateService.cancelar(this.episodeId, consultorio.id).subscribe(changed => {
           if (changed) {
-            this.snackBarService.showSuccess(`guardia.episode.cancel_attention.SUCCESS`);
+            this.snackBarService.showSuccess('ambulatoria.paciente.guardia.CANCEL_ATTENTION_SUCCESS');
             this.episodeState = EstadosEpisodio.EN_ESPERA;
           } else {
-            this.snackBarService.showError(`guardia.episode.cancel_attention.ERROR`);
+            this.snackBarService.showError('ambulatoria.paciente.guardia.CANCEL_ATTENTION_ERROR');
           }
-        }, _ => this.snackBarService.showError(`guardia.episode.cancel_attention.ERROR`)
+        }, _ => this.snackBarService.showError('ambulatoria.paciente.guardia.CANCEL_ATTENTION_ERROR')
         );
       }
     });

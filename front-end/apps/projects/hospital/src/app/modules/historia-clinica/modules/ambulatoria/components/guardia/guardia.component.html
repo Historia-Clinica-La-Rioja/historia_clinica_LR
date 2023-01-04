@@ -1,10 +1,14 @@
 <app-content width="full">
     <div fxLayout="row" fxLayoutAlign="space-between center" class="margin-bottom">
         <span class="mat-h2"> {{ 'ambulatoria.paciente.guardia.TAB_LABEL' | translate }} </span>
-        <div>
+        <div fxLayout="row" fxLayoutGap="20px">
             <button *ngIf="episodeState === STATES.EN_ATENCION || episodeState === STATES.EN_ESPERA" id="edit-episode"
                 mat-raised-button color="primary" (click)="goToEditEpisode()">
                 {{ 'ambulatoria.paciente.guardia.EDIT_BUTTON' | translate | uppercase }}
+            </button>
+            <button *ngIf="episodeState === STATES.EN_ATENCION" id="cancel-attention" mat-raised-button color="primary"
+                (click)="cancelAttention()">
+                {{ 'ambulatoria.paciente.guardia.CANCEL_BUTTON' | translate | uppercase }}
             </button>
         </div>
     </div>
