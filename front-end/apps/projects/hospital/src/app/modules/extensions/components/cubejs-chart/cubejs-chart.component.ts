@@ -68,7 +68,7 @@ export class CubejsChartComponent implements OnDestroy {
 				break;
 			}
 			case 'cantidadConsultasAmbulatoriasEspecialidadProfesional': {
-				this.chartTitle = 'Consultas por especialidad y profesional'
+				this.chartTitle = 'Consultas por especialidad y profesional del ultimo trimestre'
 				this.enableFilter = false;
 				break;
 			}
