@@ -29,6 +29,7 @@ const OrchestratorCreate = props => {
                            />
                            <ReferenceInput source="sectorId" reference="sectors"
                                 validate={[required()]}
+                                disabled={true}
                                 filter ={{ sectorTypeId :DIAGNOSTICO_POR_IMAGENES}}
                            >
                                <AutocompleteInput optionText="description" optionValue="id"/>

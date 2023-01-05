@@ -13,7 +13,7 @@ const UserIsAdmin = function () {
 const OrchestratorList = props => {
 
     return (
-        <List {...props} bulkActionButtons={false}  hasCreate={UserIsAdmin()}>
+        <List {...props} bulkActionButtons={false}  hasCreate={false}>
             <Datagrid rowClick={UserIsAdmin()?"show":""}>
                 <TextField source="name" />
                 <TextField source="baseTopic" />
