@@ -60,7 +60,7 @@ export class CubejsChartComponent implements OnDestroy {
 	setChartTitle(queryName: string) {
 		switch (queryName) {
 			case 'cantidadConsultasAmbulatorias': {
-				this.chartTitle = 'Evolución consultas'
+				this.chartTitle = 'Evolución de consultas del año actual'
 				break;
 			}
 			case 'cantidadConsultasPorEspecialidad': {
@@ -73,15 +73,15 @@ export class CubejsChartComponent implements OnDestroy {
 				break;
 			}
 			case 'cantidadTurnos': {
-				this.chartTitle = 'Evolución turnos'
+				this.chartTitle = 'Evolución de turnos del año actual'
 				break;
 			}
 			case 'cantidadTurnosPorEspecialidad': {
-				this.chartTitle = 'Turnos por especialidad'
+				this.chartTitle = 'Turnos por especialidad del año actual'
 				break;
 			}
 			case 'cantidadTurnosPorProfesional': {
-				this.chartTitle = 'Turnos por  profesional'
+				this.chartTitle = 'Turnos por profesional del año actual'
 				break;
 			}
 		}

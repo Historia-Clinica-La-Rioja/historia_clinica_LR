@@ -1,6 +1,6 @@
 cube(`CantidadConsultasAmbulatorias`, {
   sql: `SELECT 
-            oc.id, 'ambulatoria' as tipo, oc.start_date as fecha_consulta, g.description as gender, pe.birth_date, cs.name as especialidad,
+            oc.id, 'Ambulatoria' as tipo, oc.start_date as fecha_consulta, g.description as gender, pe.birth_date, cs.name as especialidad,
             concat_ws(', ', concat_ws(' ', doc.last_name, doc.other_last_names), CASE WHEN pex.name_self_determination IS NULL THEN concat_ws(' ', doc.first_name, doc.middle_names) ELSE pex.name_self_determination END) AS profesional
         FROM 
             outpatient_consultation oc
@@ -13,7 +13,7 @@ cube(`CantidadConsultasAmbulatorias`, {
             JOIN gender g ON (pe.gender_id = g.id)
       UNION ALL
         SELECT 
-            oc.id, 'odontologia' as tipo, oc.performed_date as fecha_consulta, g.description as gender, pe.birth_date, cs.name as especialidad,
+            oc.id, 'Odontología' as tipo, oc.performed_date as fecha_consulta, g.description as gender, pe.birth_date, cs.name as especialidad,
             concat_ws(', ', concat_ws(' ', doc.last_name, doc.other_last_names), CASE WHEN pex.name_self_determination IS NULL THEN concat_ws(' ', doc.first_name, doc.middle_names) ELSE pex.name_self_determination END) AS profesional
         FROM 
             odontology_consultation oc
@@ -26,7 +26,7 @@ cube(`CantidadConsultasAmbulatorias`, {
             JOIN gender g ON (pe.gender_id = g.id)
       UNION ALL
         SELECT 
-            nc.id, 'enfermeria' as tipo, nc.performed_date as fecha_consulta, g.description as gender, pe.birth_date, cs.name as especialidad,
+            nc.id, 'Enfermería' as tipo, nc.performed_date as fecha_consulta, g.description as gender, pe.birth_date, cs.name as especialidad,
             concat_ws(', ', concat_ws(' ', doc.last_name, doc.other_last_names), CASE WHEN pex.name_self_determination IS NULL THEN concat_ws(' ', doc.first_name, doc.middle_names) ELSE pex.name_self_determination END) AS profesional
         FROM 
             nursing_consultation nc
