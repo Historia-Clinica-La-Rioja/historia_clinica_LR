@@ -12,16 +12,7 @@
                 {
                   "type": "cubejs-dashboard",
                   "args": {
-                    "filters": {
-                      "fecha": {
-                        "filter": {
-                          "member": "CantidadConsultasAmbulatorias.fecha_consulta",
-                          "operator": "inDateRange"
-                        },
-                        "type": "dateRangeISO",
-                        "label": "Fecha"
-                      }
-                    },
+                    "filters": {},
                     "content": [
                       {
                         "type": "cubejs-chart",
@@ -32,15 +23,32 @@
                       {
                         "type": "cubejs-chart",
                         "args": {
-                          "query": "cantidadConsultasPorEspecialidad",
+                          "query": "cantidadConsultasAmbulatoriasEspecialidadProfesional",
                           "showLegend": false
                         }
                       },
                       {
-                        "type": "cubejs-chart",
+                        "type": "cubejs-dashboard",
                         "args": {
-                          "query": "cantidadConsultasAmbulatoriasEspecialidadProfesional",
-                          "showLegend": false
+                          "filters": {
+                            "fecha": {
+                              "filter": {
+                                "member": "CantidadConsultasAmbulatorias.fecha_consulta",
+                                "operator": "inDateRange"
+                              },
+                              "type": "dateRangeISO",
+                              "label": "Fecha"
+                            }
+                          },
+                          "content": [
+                            {
+                              "type": "cubejs-chart",
+                              "args": {
+                                "query": "cantidadConsultasPorEspecialidad",
+                                "showLegend": false
+                              }
+                            }
+                          ]
                         }
                       }
                     ]
@@ -56,16 +64,7 @@
                 {
                   "type": "cubejs-dashboard",
                   "args": {
-                    "filters": {
-                      "fecha": {
-                        "filter": {
-                          "member": "CantidadTurnos.fecha_consulta",
-                          "operator": "inDateRange"
-                        },
-                        "type": "dateRangeISO",
-                        "label": "Fecha"
-                      }
-                    },
+                    "filters": {},
                     "content": [
                       {
                         "type": "cubejs-chart",
