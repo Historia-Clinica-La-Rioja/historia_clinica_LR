@@ -58,3 +58,45 @@ databaseChangeLog:
                     name: description
                     type: varchar(100)
 
+    - changeSet:
+        id: equipment-createTable
+        comment: Create table equipment
+        author: amurrie
+        changes:
+          - createTable:
+              tableName: equipment
+              columns:
+                - column:
+                    autoIncrement: true
+                    constraints:
+                      primaryKey: true
+                      primaryKeyName: PK_equipment
+                    name: id
+                    type: int
+                - column:
+                    constraints:
+                      nullable: false
+                    name: ae_title
+                    type: varchar(15)
+                - column:
+                    constraints:
+                      nullable: false
+                    name: sector_id
+                    type: int
+                - column:
+                    constraints:
+                      nullable: false
+                    name: orchestrator_id
+                    type: int
+                - column:
+                    constraints:
+                      nullable: false
+                    name: pac_server_id
+                    type: int
+                - column:
+                    constraints:
+                      nullable: false
+                    name: modality_id
+                    type: int
+
+
