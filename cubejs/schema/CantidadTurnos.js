@@ -1,7 +1,7 @@
 cube(`CantidadTurnos`, {
   sql: `SELECT 
-          has.appointment_id as id, has.changed_state_date as fecha_consulta,
-          concat_ws(', ', concat_ws(' ', p.last_name, p.other_last_names), concat_ws(' ', p.first_name, p.middle_names)) AS profesional, cs.name as especialidad
+          has.appointment_id as id, has.changed_state_date as fecha_consulta, cs.name as especialidad,
+          concat_ws(', ', concat_ws(' ', p.last_name, p.other_last_names), CASE WHEN pex.name_self_determination IS NULL THEN concat_ws(' ', p.first_name, p.middle_names) ELSE pex.name_self_determination END) AS profesional
         FROM 
           historic_appointment_state has
           JOIN appointment ap ON (has.appointment_id = ap.id)
@@ -9,6 +9,7 @@ cube(`CantidadTurnos`, {
           JOIN diary d ON (apss.diary_id = d.id)
           JOIN healthcare_professional hp ON (d.healthcare_professional_id = hp.id)
           JOIN person p ON (hp.person_id = p.id)
+          JOIN person_extended pex ON (pex.person_id = p.id)
           JOIN clinical_specialty cs ON (d.clinical_specialty_id = cs.id)
     WHERE NOT has.appointment_state_id = 4 or has.appointment_state_id = 6 or has.appointment_state_id = 7 or has.appointment_state_id = 8`,
   
