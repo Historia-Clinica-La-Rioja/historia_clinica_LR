@@ -36,6 +36,7 @@ const TIME_TO_PREVENT_SCROLL = 100;
 })
 export class SearchComponent implements OnInit {
 	hasInstitutionalAdministratorRole = false;
+	ffOfCardsIsOn = false;
 	readonly PERSON_MAX_LENGHT = PERSON;
 	patientData: PatientSearchDto[] = [];
 	minDate = MIN_DATE;
@@ -287,7 +288,14 @@ export class SearchComponent implements OnInit {
 				if (!patientsFound.length) {
 					this.goToAddPatient(person);
 				} else {
-					this.patientData = patientsFound;
+					this.featureFlagService.isActive(AppFeature.HABILITAR_VISUALIZACION_DE_CARDS).subscribe(isEnabled => {
+						this.ffOfCardsIsOn = isEnabled;
+						if (this.ffOfCardsIsOn)
+							this.patientData = patientsFound;
+						else
+							this.matchingPatient = this.buildTable(patientsFound);
+					});
+
 					this.viewSearch = false;
 				}
 			}

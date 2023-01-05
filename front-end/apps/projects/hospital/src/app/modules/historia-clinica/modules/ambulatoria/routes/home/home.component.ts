@@ -119,7 +119,16 @@ export class HomeComponent implements OnInit {
 			this.personalInformationForm.value.identificationNumber = this.personalInformationForm.value.identificationNumber?.replace(REMOVE_SUBSTRING_DNI,'');
 			const personalInformationReq: PersonInformationRequest = this.personalInformationForm.value;
 			this.patientService.searchPatientOptionalFilters(personalInformationReq)
-				.subscribe((data: LimitedPatientSearchDto) => this.patientData = data.patientList );
+				.subscribe((data: LimitedPatientSearchDto) => {
+					this.featureFlagService.isActive(AppFeature.HABILITAR_VISUALIZACION_DE_CARDS).subscribe(isEnabled => {
+						this.ffOfCardsIsOn = isEnabled;
+						if (this.ffOfCardsIsOn)
+							this.patientData = data.patientList;
+						else
+							this.tableModel = this.buildTable(data.patientList);
+						this.patientResultsLength = data.actualPatientSearchSize;
+					});
+				});
 		}
 	}
 
