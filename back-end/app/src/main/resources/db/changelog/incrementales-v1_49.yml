@@ -32,3 +32,29 @@ databaseChangeLog:
                     name: sector_id
                     type: int
 
+    - changeSet:
+        id: modality-createTable
+        comment: Create table modality
+        author: amurrie
+        changes:
+          - createTable:
+              tableName: modality
+              columns:
+                - column:
+                    autoIncrement: true
+                    constraints:
+                      primaryKey: true
+                      primaryKeyName: PK_modality
+                    name: id
+                    type: int
+                - column:
+                    constraints:
+                      nullable: false
+                    name: acronym
+                    type: varchar(15)
+                - column:
+                    constraints:
+                      nullable: false
+                    name: description
+                    type: varchar(100)
+
