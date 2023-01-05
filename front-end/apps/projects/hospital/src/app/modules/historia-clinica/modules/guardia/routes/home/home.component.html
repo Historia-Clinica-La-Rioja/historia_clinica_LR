@@ -168,7 +168,8 @@
 				<ng-template #content>
 					<ng-container *ngIf="episodes.length else noData">
 						<mat-card [ngClass]="{ 'en-atencion' : episode.state.id === estadosEpisodio.EN_ATENCION }"
-							class="episode-card" (click)="goToEpisode(episode.id)" *ngFor="let episode of episodes">
+							class="episode-card" (click)="goToEpisode(episode.patient.id)"
+							*ngFor="let episode of episodes">
 							<div fxLayout="row" fxFlexAlign="center" style="padding: 0 15px">
 
 								<div id="patient" fxFlex="40%" fxLayout="row">
@@ -209,8 +210,16 @@
 								</div>
 
 								<div id="status" fxFlex="30%" fxLayout="column">
-									<span *ngIf="episode.state.id === estadosEpisodio.EN_ESPERA else enAtencion">
-										{{ episode.state.description }}: {{ episode.waitingTime }} min</span>
+									<ng-container
+										*ngIf="episode.state.id === estadosEpisodio.EN_ESPERA else enAtencion">
+										<span> {{ episode.state.description }}: </span>
+										<span *ngIf="episode?.waitingTime && episode.waitingTime < 60">
+											{{ episode.waitingTime }} min
+										</span>
+										<span *ngIf="episode?.waitingHours && episode.waitingHours > 0">
+											{{ episode.waitingHours }} hs
+										</span>
+									</ng-container>
 									<span class="mat-small"> {{ episode.doctorsOffice?.description }} </span>
 
 									<ng-template #enAtencion>

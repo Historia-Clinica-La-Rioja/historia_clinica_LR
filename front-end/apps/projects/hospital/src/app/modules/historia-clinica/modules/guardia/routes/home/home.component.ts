@@ -29,6 +29,7 @@ import { EmergencyCareMasterDataService } from '@api-rest/services/emergency-car
 import { getError, hasError } from '@core/utils/form.utils';
 import { EmergencyCareEpisodeAdministrativeDischargeService } from '@api-rest/services/emergency-care-episode-administrative-service.service';
 import { PatientNameService } from "@core/services/patient-name.service";
+import { ContextService } from '@core/services/context.service';
 
 const TRANSLATE_KEY_PREFIX = 'guardia.home.episodes.episode.actions';
 
@@ -55,7 +56,9 @@ export class HomeComponent implements OnInit {
 		public readonly triageMasterDataService: TriageMasterDataService,
 		public readonly emergencyCareMasterDataService: EmergencyCareMasterDataService,
 		private readonly emergencyCareEpisodeAdministrativeDischargeService: EmergencyCareEpisodeAdministrativeDischargeService,
-		private readonly patientNameService: PatientNameService,) {
+		private readonly patientNameService: PatientNameService,
+		private readonly contextService: ContextService,
+	) {
 		this.filterService = new EpisodeFilterService(formBuilder, triageMasterDataService, emergencyCareMasterDataService);
 	}
 
@@ -101,8 +104,9 @@ export class HomeComponent implements OnInit {
 			}, _ => this.loading = false);
 	}
 
-	goToEpisode(id: number) {
-		this.router.navigate([`${this.router.url}/episodio/${id}`]);
+	goToEpisode(patientId: number) {
+		const url = `institucion/${this.contextService.institutionId}/ambulatoria/paciente/${patientId}`;
+		this.router.navigateByUrl(url);
 	}
 
 	goToAdmisionAdministrativa(): void {
@@ -218,10 +222,12 @@ export class HomeComponent implements OnInit {
 	}
 
 	private setWaitingTime(episode: EmergencyCareListDto): Episode {
+		const minWaitingTime = episode.state.id === this.estadosEpisodio.EN_ESPERA ?
+			HomeComponent.calculateWaitingTime(episode.creationDate) : undefined;
 		return {
 			...episode,
-			waitingTime: episode.state.id === this.estadosEpisodio.EN_ESPERA ?
-				HomeComponent.calculateWaitingTime(episode.creationDate) : undefined
+			waitingTime: minWaitingTime,
+			waitingHours: minWaitingTime ? Math.round(minWaitingTime / 60) : undefined
 		};
 	}
 
@@ -235,6 +241,7 @@ export class HomeComponent implements OnInit {
 
 export interface Episode {
 	waitingTime: number;
+	waitingHours: number;
 	decodedPatientPhoto?: Observable<string>;
 	creationDate: DateTimeDto;
 	doctorsOffice: DoctorsOfficeDto;
