@@ -1,3 +1,34 @@
 databaseChangeLog: 
-    - logicalFilePath: incrementales-v1_49 
+    - logicalFilePath: incrementales-v1_49
+
+    - changeSet:
+        id: orchestrator-createTable
+        comment: Create table orchestrator
+        author: amurrie
+        changes:
+          - createTable:
+              tableName: orchestrator
+              columns:
+                - column:
+                    autoIncrement: true
+                    constraints:
+                      primaryKey: true
+                      primaryKeyName: PK_orchestrator
+                    name: id
+                    type: int
+                - column:
+                    constraints:
+                      nullable: false
+                    name: name
+                    type: varchar(40)
+                - column:
+                    constraints:
+                      nullable: false
+                    name: base_topic
+                    type: varchar(250)
+                - column:
+                    constraints:
+                      nullable: false
+                    name: sector_id
+                    type: int
 

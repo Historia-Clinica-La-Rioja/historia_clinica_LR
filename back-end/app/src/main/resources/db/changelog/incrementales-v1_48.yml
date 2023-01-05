@@ -391,33 +391,3 @@ databaseChangeLog:
                 FROM episode_document ed
                 JOIN internment_episode ie ON (ed.internment_episode_id = ie.id)
                 JOIN episode_document_types edt ON (ed.episode_document_types_id = edt.id)
-  - changeSet:
-      id: orchestrator-createTable
-      comment: Create table orchestrator
-      author: amurrie
-      changes:
-        - createTable:
-            tableName: orchestrator
-            columns:
-              - column:
-                  autoIncrement: true
-                  constraints:
-                    primaryKey: true
-                    primaryKeyName: PK_orchestrator
-                  name: id
-                  type: int
-              - column:
-                  constraints:
-                    nullable: false
-                  name: name
-                  type: varchar(40)
-              - column:
-                  constraints:
-                    nullable: false
-                  name: base_topic
-                  type: varchar(250)
-              - column:
-                  constraints:
-                    nullable: false
-                  name: sector_id
-                  type: int
