@@ -11,7 +11,7 @@ cube(`CantidadTurnos`, {
           JOIN person p ON (hp.person_id = p.id)
           JOIN person_extended pex ON (pex.person_id = p.id)
           JOIN clinical_specialty cs ON (d.clinical_specialty_id = cs.id)
-    WHERE NOT has.appointment_state_id = 4 or has.appointment_state_id = 6 or has.appointment_state_id = 7 or has.appointment_state_id = 8`,
+    WHERE has.appointment_state_id = 2`,
   
   measures: {
     cantidad_turnos: {
