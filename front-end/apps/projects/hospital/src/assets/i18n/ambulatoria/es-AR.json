@@ -489,7 +489,10 @@
                 "CANCEL_ATTENTION_ERROR": "Ocurrio un error al cancelar la atención",
                 "PATIENT_REQUIRED": "El episodio de guardia debe tener un paciente asociado",
                 "ADMINISTRATIVE_DISCHARGE_BUTTON": "Alta Administrativa",
-                "MEDICAL_DISCHARGE_BUTTON": "Alta médica"
+                "MEDICAL_DISCHARGE_BUTTON": "Alta médica",
+                "NOT_ACTIVE": "El episodio de guardia no se encuentra activo",
+                "HISTORIAL_TRIAGE": "Historial de triages",
+                "NUEVO_TRIAGE": "Nuevo triage"
             },
             "vacunas": {
                 "TAB_LABEL": "Vacunas",

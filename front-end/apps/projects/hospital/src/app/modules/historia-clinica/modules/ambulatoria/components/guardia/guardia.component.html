@@ -83,13 +83,13 @@
                         <div fxLayout="row" fxLayoutAlign="flex-end center"
                             *ngIf="episodeState !== STATES.CON_ALTA_MEDICA">
                             <button id="nuevo-triage" mat-raised-button color="primary" (click)="newTriage()">
-                                {{ 'guardia.episode.triage.NUEVO' | translate | uppercase }}
+                                {{ 'ambulatoria.paciente.guardia.NUEVO_TRIAGE' | translate | uppercase }}
                             </button>
                         </div>
 
                         <div id="history">
                             <h3 class="bold" style="margin-bottom: 0">
-                                {{ 'guardia.episode.triage.HISTORIAL' | translate }}
+                                {{ 'ambulatoria.paciente.guardia.HISTORIAL_TRIAGE' | translate }}
                             </h3>
                             <div *ngIf="triagesHistory?.length else noInfo" style="margin-top: 16px" fxLayout="column"
                                 fxLayoutGap="10px">

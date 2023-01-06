@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Triage } from '../components/triage-details/triage-details.component';
 import { dateTimeDtoToDate, dateToDateDto, dateToTimeDto, dateToDateTimeDto, dateDtoToDate, timeDtoToDate } from '@api-rest/mapper/date-dto.mapper';
-import { TriageReduced } from '../routes/episode-details/episode-details.component';
+import { TriageReduced } from '@historia-clinica/modules/ambulatoria/components/guardia/guardia.component';
 import {
 	AdministrativeDischargeDto,
 	AMedicalDischargeDto,

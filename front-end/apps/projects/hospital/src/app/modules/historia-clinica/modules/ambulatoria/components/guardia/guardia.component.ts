@@ -15,9 +15,7 @@ import { SelectConsultorioComponent } from '@historia-clinica/modules/guardia/di
 import { EpisodeStateService } from '@historia-clinica/modules/guardia/services/episode-state.service';
 import { GuardiaMapperService } from '@historia-clinica/modules/guardia/services/guardia-mapper.service';
 import { TriageDefinitionsService } from '@historia-clinica/modules/guardia/services/triage-definitions.service';
-import { SearchPatientComponent } from '@pacientes/component/search-patient/search-patient.component';
 import { SummaryHeader } from '@presentation/components/summary-card/summary-card.component';
-import { ConfirmDialogComponent } from '@presentation/dialogs/confirm-dialog/confirm-dialog.component';
 import { SnackBarService } from '@presentation/services/snack-bar.service';
 
 @Component({
@@ -71,41 +69,9 @@ export class GuardiaComponent implements OnInit {
           this.episodeId = this.emergencyCareEpisodeInProgress?.id;
         }
         this.init();
-      });
+      }
+    );
 
-  }
-
-  searchPatient(): void {
-    const dialogRef = this.dialog.open(SearchPatientComponent);
-    dialogRef.afterClosed().subscribe(
-      patient => {
-        if (patient) {
-          const confirmRef = this.dialog.open(ConfirmDialogComponent, {
-            data: {
-              title: 'guardia.episode.search_patient.CONFIRM',
-              content: `¿Está seguro que desea asociar el paciente con ID ${patient.basicData.id} al episodio de guardia?`,
-              okButtonLabel: 'buttons.CONFIRM'
-            }
-          });
-
-          confirmRef.afterClosed().subscribe(confirmed => {
-            if (confirmed) {
-              this.emergencyCareEpisodeService.setPatient(this.episodeId, patient.basicData.id).subscribe(
-                saved => {
-                  if (saved) {
-                    this.snackBarService.showSuccess('guardia.episode.search_patient.update.SUCCESS');
-                    this.responseEmergencyCare.patient = { // TODO La unica info necesaria es el id en realidad.
-                      id: patient.basicData.id,
-                      patientMedicalCoverageId: null,
-                      person: null,
-                      typeId: null
-                    };
-                  }
-                }, error => this.snackBarService.showError(error.text));
-            }
-          });
-        }
-      });
   }
 
   newTriage(): void {
@@ -169,7 +135,7 @@ export class GuardiaComponent implements OnInit {
         if (this.isActive(this.episodeState)) {
           this.loadEpisode();
         } else {
-          this.snackBarService.showError('guardia.episode.NOT_ACTIVE');
+          this.snackBarService.showError('ambulatoria.paciente.guardia.NOT_ACTIVE');
           this.goToEmergencyCareHome();
         }
       }, error => {
