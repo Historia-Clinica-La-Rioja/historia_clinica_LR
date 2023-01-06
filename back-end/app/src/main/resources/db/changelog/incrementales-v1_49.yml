@@ -98,5 +98,15 @@ databaseChangeLog:
                       nullable: false
                     name: modality_id
                     type: int
-
+    - changeSet:
+        id: add-new-modality
+        comment: Agregar nuevas entradas en la tabla de modality
+        author: amurrie
+        changes:
+          - sql:
+              sql: |-
+                INSERT INTO modality (acronym, description) VALUES('CR', 'Radiografía Computarizada');
+                INSERT INTO modality (acronym, description) VALUES('CT', 'Tomografía Computarizada');
+                INSERT INTO modality (acronym, description) VALUES('MR', 'Resonancia Magnética');
+                INSERT INTO modality (acronym, description) VALUES('US', 'Ecografía');
 
