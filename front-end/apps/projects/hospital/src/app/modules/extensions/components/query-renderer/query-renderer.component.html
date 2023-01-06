@@ -1,4 +1,8 @@
 <div *ngIf="isQueryPresent && !loading" style="height: 100%">
+	<div fxLayout="row" *ngIf="chartType === 'pie'">
+		<mat-label>Ver porcentajes</mat-label>
+		<mat-slide-toggle (change)="togglePercentage()"></mat-slide-toggle>
+	</div>
 	<div
 		*ngIf="chartType !== 'table' && chartType !== 'number'"
 		class="chart-container"

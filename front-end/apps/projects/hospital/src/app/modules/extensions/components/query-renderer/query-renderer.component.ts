@@ -27,7 +27,7 @@ const formatColumnDate = (tableData: any[], columns: string[]): any[] => {
 
 const parse = (value: string): string => {
 	let splitedValue = value.split(',')[0];
-	if (isDate(splitedValue)){
+	if (isDate(splitedValue)) {
 		const month = splitedValue[5] + splitedValue[6];
 		splitedValue = MONTHS_OF_YEAR[Number(month) - 1];
 	}
@@ -86,6 +86,8 @@ export class QueryRendererComponent {
 	chartData: ChartDataSets[] = [];
 	chartLabels: Label[] = [];
 	nameSelfDeterminationFF: boolean;
+	pieSum = 0;
+	showPercentage = false;
 
 	noFillChartOptions: ChartOptions = {
 		responsive: true,
@@ -179,6 +181,10 @@ export class QueryRendererComponent {
 
 	updateChartData(resultSet, pivotConfig) {
 		this.chartData = resultSet.series(pivotConfig).map((item) => {
+
+			if (this.chartType === 'pie')
+				this.pieSum = item.series.reduce((partialSum, a) => partialSum + a.value, 0);
+
 			if (item.title == '  Promedio Sem.') {
 				return {
 					label: item.title,
@@ -205,6 +211,17 @@ export class QueryRendererComponent {
 		if (this.chartType === 'bar'){
 			this.chartData.forEach( x => x.label = (x.label.charAt(0).toUpperCase() + x.label.slice(1)).slice(0, -5))
 		}
+	}
+
+	togglePercentage() {
+		const data = this.chartData[0].data;
+		data.forEach(x => {
+			if (this.showPercentage === false)
+				data[data.indexOf(x)] = (Math.round((x * 100 / this.pieSum) * 100) / 100)+'%';
+			else
+				data[data.indexOf(x)] = (Math.round((x.slice(0, -1) * this.pieSum) / 100));
+		})
+		this.showPercentage = !this.showPercentage;
 	}
 
 	formatDate(resultSet) {

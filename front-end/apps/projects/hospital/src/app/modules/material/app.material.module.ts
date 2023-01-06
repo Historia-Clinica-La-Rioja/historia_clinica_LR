@@ -29,6 +29,7 @@ import { MAT_APP_DATE_FORMATS } from '@core/utils/moment.utils';
 import { MatPaginatorIntlAR } from '@presentation/components/table/table.component';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { MatButtonToggleModule } from '@angular/material/button-toggle';
+import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 import { DEFAULT_LANG } from '../../app.component';
 
 @NgModule({
@@ -60,6 +61,7 @@ import { DEFAULT_LANG } from '../../app.component';
 		MatTableModule,
 		MatTabsModule,
 		MatToolbarModule,
+		MatSlideToggleModule,
 	],
 	exports: [
 		MatAutocompleteModule,
@@ -90,6 +92,7 @@ import { DEFAULT_LANG } from '../../app.component';
 		MatTableModule,
 		MatTabsModule,
 		MatToolbarModule,
+		MatSlideToggleModule,
 	],
 	providers: [
 		{
