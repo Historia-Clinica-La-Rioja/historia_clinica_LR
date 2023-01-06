@@ -246,7 +246,7 @@ export class ProblemasComponent implements OnInit, OnDestroy {
 			}
 		}).afterClosed().subscribe(submitted => {
 			if (submitted) {
-				this.ambulatoriaSummaryFacadeService.setFieldsToUpdate({ problems: true });
+				this.ambulatoriaSummaryFacadeService.setFieldsToUpdate({ problems: true, personalHistories: true });
 			}
 		});
 	}

@@ -107,7 +107,7 @@ export class AntecedentesPersonalesSummaryComponent implements OnInit{
 			}
 		}).afterClosed().subscribe(submitted => {
 			if (submitted) {
-				this.ambulatoriaSummaryFacadeService.setFieldsToUpdate({ personalHistories: true });
+				this.ambulatoriaSummaryFacadeService.setFieldsToUpdate({ personalHistories: true, problems: true });
 			}
 		});
 	}
