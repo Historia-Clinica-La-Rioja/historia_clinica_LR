@@ -17,7 +17,7 @@ import SectionTitle from '../components/SectionTitle';
 import SgxSelectInput from "../../sgxSelectInput/SgxSelectInput";
 import CustomToolbar from "../components/CustomToolbar";
 import SgxDateField from "../../dateComponents/sgxDateField";
-import { CreateSector, CreateDoctorsOffice, CreateRooms, ShowServiceSectorData, CreateOrchestrator, UserIsAdmin } from './SectorShow';
+import { CreateSector, CreateDoctorsOffice, CreateRooms, ShowServiceSectorData, CreateOrchestrator, UserIsAdmin, CreateEquipment, RenderModality} from './SectorShow';
 
 const redirect = (basePath, id, data) => `/sectors/${data.id}/show`;
 
@@ -131,6 +131,30 @@ const SectorEdit = props => (
                     <TextField source="baseTopic"/>
                     <EditButton disabled= {!UserIsAdmin()}/>
                     <DeleteButton disabled= {!UserIsAdmin()}/>
+                </Datagrid>
+            </ReferenceManyField>
+
+            <CreateEquipment />
+            <ReferenceManyField
+                id='equipment'
+                addLabel={false}
+                reference="equipment"
+                target="sectorId"
+                sort={{ field: 'aeTitle', order: 'DESC' }}
+            >
+                <Datagrid rowClick={UserIsAdmin()?"show":""}>
+                    <TextField source="aeTitle" />
+                    <ReferenceField link={false} source="pacServerId"  reference="pacserversimagelvl">
+                        <TextField  source="name" />
+                    </ReferenceField>
+                    <ReferenceField link={false}source="orchestratorId" reference="orchestrator">
+                        <TextField  source="name" />
+                    </ReferenceField>
+                    <ReferenceField link={false}source="modalityId" reference="modality">
+                        <RenderModality/>
+                    </ReferenceField>
+                        <EditButton disabled= {!UserIsAdmin()}/>
+                        <DeleteButton disabled= {!UserIsAdmin()}/>
                 </Datagrid>
             </ReferenceManyField>
 

@@ -724,6 +724,18 @@ const messages = {
                 sectorId:'Sector'
             },
             createRelated: 'Crear Orquestador'
+        },
+        equipment: {
+            name: 'Equipos',
+            fields: {
+                aeTitle: 'AE Title',
+                orchestratorId:'Orquestador asociado',
+                sectorId:'Sector',
+                pacServerId:'Nombre del servidor PAC',
+                modalityId:'Modalidad'
+            },
+            createRelated: 'Crear Equipo',
+            detailLabel:'Detalle de Equipo'
         }
     }
 };
