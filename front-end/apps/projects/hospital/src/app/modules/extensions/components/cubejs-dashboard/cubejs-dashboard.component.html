@@ -1,3 +1,4 @@
+<h2 class="title"> {{title}}</h2>
 <div class="container-date">
 	<ng-container *ngFor="let filterInput of filters | keyvalue">
 		<ng-container [ngSwitch]="filterInput.value.type">
@@ -10,4 +11,4 @@
 		</ng-container>
 	</ng-container>
 </div>
-<app-ui-component-list [list]="content" ></app-ui-component-list>
+<app-ui-component-list [list]="content" [disableFilter]="disableFilter"></app-ui-component-list>

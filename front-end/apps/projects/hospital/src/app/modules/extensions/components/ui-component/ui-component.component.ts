@@ -23,6 +23,8 @@ export class UiComponentComponent {
 	};
 	@Input() uiComponent: UIComponentDto;
 	@Input() listOnTab: string = null;
+	@Input() disableFilter: boolean;
+
 	constructor(
 		private sanitizer: DomSanitizer,
 	) { }

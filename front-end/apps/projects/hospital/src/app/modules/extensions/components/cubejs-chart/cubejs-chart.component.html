@@ -1,5 +1,4 @@
 <div *ngIf="!error; else errorChart">
-	<h2 class="chart-title"> {{chartTitle}}</h2>
 	<app-query-renderer
 		[chartType]="chartType.asObservable()"
 		[cubeQuery]="cubeQuery.asObservable()"
