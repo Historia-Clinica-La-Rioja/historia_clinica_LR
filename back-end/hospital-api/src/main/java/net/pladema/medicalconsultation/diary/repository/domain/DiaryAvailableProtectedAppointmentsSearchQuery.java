@@ -154,13 +154,17 @@ public class DiaryAvailableProtectedAppointmentsSearchQuery {
 
 	private String buildProfessionalFullName(String firstName, String middleNames,
 											 String lastName, String otherLastName, String nameSelfDetermination) {
-		String name = firstName;
-		if (includeNameSelfDetermination)
-			name = nameSelfDetermination != null ? nameSelfDetermination : firstName;
 
-		return Stream.of(name, middleNames, lastName, otherLastName)
-				.filter(Objects::nonNull)
-				.collect(Collectors.joining(" "));
+		String fullName = lastName;
+		if(!(otherLastName == null || otherLastName.isBlank()))
+			fullName += " " + otherLastName;
+		if(includeNameSelfDetermination && !(nameSelfDetermination == null || nameSelfDetermination.isBlank()))
+			fullName += " " + nameSelfDetermination;
+		else
+			fullName += " " + firstName;
+		if(!(includeNameSelfDetermination) && !(middleNames == null || middleNames.isBlank()))
+			fullName += " " + middleNames;
+
+		return fullName;
 	}
-
 }
