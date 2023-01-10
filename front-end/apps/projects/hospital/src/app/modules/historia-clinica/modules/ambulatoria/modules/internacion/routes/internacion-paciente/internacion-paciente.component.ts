@@ -116,6 +116,9 @@ export class InternacionPacienteComponent implements OnInit {
 			this.canLoadProbableDischargeDate = isOn;
 		});
 
+		if (this.internmentEpisodeId)
+			this.internmentSummaryFacadeService.unifyAllergies(this.patientId);
+
 	}
 
 	openDialog(): void {

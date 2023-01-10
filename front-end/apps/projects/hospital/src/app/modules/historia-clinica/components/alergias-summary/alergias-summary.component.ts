@@ -48,7 +48,7 @@ export class AlergiasSummaryComponent {
 			}
 		});
 		dialogRef.afterClosed().subscribe((allergies: AllergyConditionDto[]) => {
-			if (allergies.length) {
+			if (allergies) {
 				this.internmentStateService.getAllergies(this.internmentEpisodeId)
 					.subscribe(allergies => this.setAllergies(allergies));
 				this.patientAllergies.updateCriticalAllergies(this.patientId);
