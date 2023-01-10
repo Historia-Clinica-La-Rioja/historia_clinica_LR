@@ -87,7 +87,7 @@ public class BackofficeUserRolesStore implements BackofficeStore<UserRole, Long>
 		if (entity.getInstitutionId() == null)
 			entity.setInstitutionId(-1);
 		return userRoleRepository
-				.findByRoleInstitutionAndUserId(entity.getUserId(), entity.getRoleId(), entity.getInstitutionId())
+				.getUserRoleIfIsDeleted(entity.getUserId(), entity.getRoleId(), entity.getInstitutionId())
 				.map(userRoleRepository::reactivate)
 				.orElseGet( () -> userRoleRepository.save(entity));
 	}

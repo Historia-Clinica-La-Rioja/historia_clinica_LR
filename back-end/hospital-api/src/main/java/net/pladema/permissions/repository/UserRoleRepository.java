@@ -20,12 +20,27 @@ public interface UserRoleRepository extends SGXAuditableEntityJPARepository<User
 	@Transactional(readOnly = true)
 	@Query("SELECT ur " +
 			"FROM UserRole as ur " +
-			"WHERE ur.userId = :userId ")
+			"WHERE ur.userId = :userId " +
+			"AND ur.deleteable.deleted = FALSE")
 	List<UserRole> findByUserId(@Param("userId") Integer userId);
+
+	@Transactional(readOnly = true)
+	@Query("SELECT ur FROM UserRole as ur WHERE ur.institutionId = :institutionId " +
+			"AND ur.deleteable.deleted = FALSE")
+	List<UserRole> findByInstitutionId(@Param("institutionId") Integer institutionId);
+
+	@Transactional(readOnly = true)
+	@Query("SELECT ur FROM UserRole as ur WHERE ur.userId = :userId " +
+			"AND ur.roleId = :roleId " +
+			"AND ur.institutionId = :institutionId " +
+			"AND ur.deleteable.deleted = TRUE")
+	Optional<UserRole> getUserRoleIfIsDeleted(@Param("userId") Integer userId,
+											  @Param("roleId") Short roleId,
+											  @Param("institutionId") Integer institutionId);
 
 	@Transactional
 	@Modifying
-	@Query("DELETE UserRole as ur "
+	@Query("DELETE FROM UserRole as ur "
 			+ "WHERE ur.userId = :userId ")
 	void deleteByUserId(@Param("userId") Integer userId);
 
@@ -36,14 +51,15 @@ public interface UserRoleRepository extends SGXAuditableEntityJPARepository<User
 			" )"
 			+ "FROM UserRole ur "
 			+ "WHERE ur.userId = :userId "
-			+ "AND ur.deleteable.deleted = false"
+			+ "AND ur.deleteable.deleted = FALSE"
 			)
 	List<RoleAssignment> getRoleAssignments(@Param("userId") Integer userId);
 
 	@Transactional(readOnly = true)
 	@Query("SELECT ur.userId "+
 			"FROM UserRole ur " +
-			"WHERE ur.roleId IN :rolesId ")
+			"WHERE ur.roleId IN :rolesId " +
+			"AND ur.deleteable.deleted = FALSE")
 	List<Integer> findAllByRoles(@Param("rolesId") List<Short> rolesId);
 
 
@@ -51,7 +67,8 @@ public interface UserRoleRepository extends SGXAuditableEntityJPARepository<User
 	@Query("SELECT ur " +
 			"FROM UserRole as ur " +
 			"WHERE ur.userId = :userId " +
-			"AND ur.roleId = :roleId ")
+			"AND ur.roleId = :roleId " +
+			"AND ur.deleteable.deleted = FALSE")
 	Optional<UserRole> findByRoleAndUserId(@Param("userId") Integer userId, @Param("roleId") Short roleId);
 
 
@@ -60,7 +77,8 @@ public interface UserRoleRepository extends SGXAuditableEntityJPARepository<User
 			"FROM UserRole as ur " +
 			"WHERE ur.userId = :userId " +
 			"AND ur.roleId = :roleId " +
-			"AND ur.institutionId = :institutionId")
+			"AND ur.institutionId = :institutionId " +
+			"AND ur.deleteable.deleted = FALSE")
 	Optional<UserRole> findByRoleInstitutionAndUserId(@Param("userId") Integer userId,
 													  @Param("roleId") Short roleId,
 													  @Param("institutionId") Integer institutionId);

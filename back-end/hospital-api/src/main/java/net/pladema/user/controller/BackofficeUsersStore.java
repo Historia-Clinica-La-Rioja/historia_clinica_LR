@@ -1,7 +1,6 @@
 package net.pladema.user.controller;
 
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -17,14 +16,7 @@ import org.springframework.stereotype.Service;
 import ar.lamansys.sgx.auth.user.infrastructure.input.service.UserExternalService;
 import ar.lamansys.sgx.auth.user.infrastructure.output.user.User;
 import ar.lamansys.sgx.auth.user.infrastructure.output.user.UserRepository;
-import net.pladema.permissions.controller.dto.BackofficeUserRoleDto;
 import net.pladema.permissions.controller.mappers.UserRoleDtoMapper;
-import net.pladema.permissions.repository.UserRoleRepository;
-import net.pladema.permissions.repository.entity.UserRole;
-import net.pladema.permissions.repository.enums.ERole;
-import net.pladema.sgx.backoffice.repository.BackofficeStore;
-import net.pladema.staff.repository.HealthcareProfessionalRepository;
-import net.pladema.staff.repository.ProfessionalProfessionRepository;
 import net.pladema.permissions.repository.UserRoleRepository;
 import net.pladema.permissions.repository.enums.ERole;
 import net.pladema.sgx.backoffice.repository.BackofficeStore;
