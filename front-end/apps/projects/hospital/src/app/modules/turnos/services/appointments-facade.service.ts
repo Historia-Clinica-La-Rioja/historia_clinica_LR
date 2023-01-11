@@ -25,7 +25,7 @@ const enum COLORES {
 	SERVED = '#A3EBAF',
 	PROGRAMADA = '#7FC681',
 	ESPONTANEA = '#2687C5',
-	SOBRETURNO = '#E3A063',
+	SOBRETURNO = '#1A45DD',
 	RESERVA_ALTA = '#FFFFFF',
 	RESERVA_VALIDACION = '#EB5757',
 	FUERA_DE_AGENDA = '#FF0000',
@@ -342,9 +342,6 @@ export function getColor(appointment: AppointmentListDto): COLORES {
 
 
 
-	if (appointment.overturn) {
-		return COLORES.SOBRETURNO;
-	}
 
 	if (appointment.appointmentStateId === APPOINTMENT_STATES_ID.BOOKED) {
 		return COLORES.RESERVA_VALIDACION;
@@ -368,6 +365,10 @@ export function getColor(appointment: AppointmentListDto): COLORES {
 	
 	if (!appointment?.patient?.id) {
 		return COLORES.RESERVA_ALTA;
+	}
+
+	if (appointment.overturn) {
+		return COLORES.SOBRETURNO;
 	}
 
 	return COLORES.ASSIGNED;
