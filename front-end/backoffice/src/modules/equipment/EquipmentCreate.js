@@ -23,7 +23,8 @@ const EquipmentCreate = props=> {
                    <Create {...props} >
 
                        <SimpleForm redirect="show" toolbar={<CustomToolbar/>}>
-                            <SectionTitle label="resources.equipment.detailLabel"/>
+                           <SectionTitle label="resources.equipment.detailLabel"/>
+                           <TextInput source="name" validate={[required(),maxLength(40)]}/>
                            <TextInput source="aeTitle" validate={[
                                required(),
                                maxLength(15)]}

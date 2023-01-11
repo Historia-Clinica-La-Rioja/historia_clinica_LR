@@ -143,6 +143,7 @@ const SectorEdit = props => (
                 sort={{ field: 'aeTitle', order: 'DESC' }}
             >
                 <Datagrid rowClick={UserIsAdmin()?"show":""}>
+                    <TextField source="name" />
                     <TextField source="aeTitle" />
                     <ReferenceField link={false} source="pacServerId"  reference="pacserversimagelvl">
                         <TextField  source="name" />

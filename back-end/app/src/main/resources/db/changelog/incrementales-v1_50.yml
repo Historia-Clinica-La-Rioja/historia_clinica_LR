@@ -1,3 +1,14 @@
 databaseChangeLog: 
-    - logicalFilePath: incrementales-v1_50 
+    - logicalFilePath: incrementales-v1_50
+
+    - changeSet:
+        id: addColumn-name-equipment
+        author: amurrie
+        changes:
+          - addColumn:
+              tableName: equipment
+              columns:
+                - column:
+                    name: name
+                    type: varchar(40)
 

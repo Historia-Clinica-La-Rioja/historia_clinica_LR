@@ -19,6 +19,9 @@ public class Equipment {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Integer id;
 
+	@Column(name = "name", nullable = false, length = 40)
+	private String name;
+
 	@Column(name = "ae_title", nullable = false, length = 15)
 	private String aeTitle;
 

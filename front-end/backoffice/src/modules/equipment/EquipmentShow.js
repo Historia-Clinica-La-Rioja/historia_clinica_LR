@@ -60,6 +60,7 @@ const EquipmentShow = (props) => (
     <Show actions={<EquipmentActions />} {...props}>
         <SimpleForm>
             <SectionTitle label="resources.equipment.detailLabel"/>
+            <TextField source="name" />
             <TextField source="aeTitle" />
             <ReferenceField link={false}  source="sectorId" reference="sectors">
                 <TextField source="description"/>

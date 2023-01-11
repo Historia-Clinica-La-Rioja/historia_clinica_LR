@@ -18,6 +18,7 @@ const EquipmentList = props => {
     return (
         <List {...props} bulkActionButtons={false}  hasCreate={false}>
             <Datagrid rowClick={UserIsAdmin()?"show":""}>
+                <TextField source="name" />
                 <TextField source="aeTitle" />
                 <ReferenceField link={false}  source="sectorId" reference="sectors">
                     <TextField source="description"/>

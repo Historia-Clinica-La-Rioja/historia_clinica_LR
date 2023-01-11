@@ -22,6 +22,7 @@ const EquipmentEdit = props => {
     return (
         <Edit {...props}>
             <SimpleForm redirect="show" toolbar={<CustomToolbar  />}>
+                <TextInput source="name" validate={[required(), maxLength(40)]} />
                 <TextInput source="aeTitle" validate={[required(), maxLength(15)]} />
                 <ReferenceInput source="sectorId" reference="sectors"disabled={true}>
                     <SelectInput optionText="description" optionValue="id" />

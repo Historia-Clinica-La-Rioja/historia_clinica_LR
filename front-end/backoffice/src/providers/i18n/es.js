@@ -740,6 +740,7 @@ const messages = {
         equipment: {
             name: 'Equipos',
             fields: {
+                name: 'Nombre',
                 aeTitle: 'AE Title',
                 orchestratorId:'Orquestador asociado',
                 sectorId:'Sector',
