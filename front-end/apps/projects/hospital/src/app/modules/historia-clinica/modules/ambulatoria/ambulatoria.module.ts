@@ -62,6 +62,7 @@ import { VaccineSearchComponent } from './dialogs/vaccine-search/vaccine-search.
 import { ClinicalHistoryActionsComponent } from './components/clinical-history-actions/clinical-history-actions.component';
 import { AmbulatoriaSummaryFacadeService } from './services/ambulatoria-summary-facade.service';
 import { HistoricalProblemsFacadeService } from './services/historical-problems-facade.service';
+import { ClapModule } from './modules/clap/clap.module';
 
 @NgModule({
 	declarations: [
@@ -124,7 +125,8 @@ import { HistoricalProblemsFacadeService } from './services/historical-problems-
 		IndicacionModule,
 		InternacionesModule,
 		EstudioModule,
-		TurnosModule
+		TurnosModule,
+		ClapModule,
 	],
 	providers: [
 		AmbulatoriaSummaryFacadeService,

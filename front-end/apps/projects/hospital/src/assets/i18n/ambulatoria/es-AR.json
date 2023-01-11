@@ -562,7 +562,10 @@
             },
             "nursing": {
                 "TAB_LABEL": "enfermería"
-            }
+            },
+			"clap":{
+				"TAB_LABEL":"Clap"
+			}
         },
         "screen_change_warning_dialog": {
             "CONTENT": "Usted ha iniciado una consulta, si cambia de pantalla la información cargada se perderá.",

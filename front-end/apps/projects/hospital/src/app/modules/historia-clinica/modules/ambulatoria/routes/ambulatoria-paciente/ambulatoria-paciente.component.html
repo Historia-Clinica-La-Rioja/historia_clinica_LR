@@ -88,7 +88,7 @@
 
 				</div>
 			</div>
-			
+
 			<div buttons-content fxLayout="column" fxLayoutGap="10px" fxLayout.xs="row" fxLayoutAlign="center center">
 				<app-clinical-history-actions id="actions"
 					[internmentEpisodeProcess]="internmentEpisodeProcess"
@@ -234,7 +234,14 @@
 							</app-ui-external-component>
 						</ng-template>
 					</mat-tab>
-
+					<mat-tab id="tab_clap" *ngIf="patient.gender === 'Femenino' && hasHealthRelatedRole">
+						<ng-template mat-tab-label>
+							<span>{{ 'ambulatoria.paciente.clap.TAB_LABEL' | translate | uppercase }}</span>
+						</ng-template>
+						<ng-template matTabContent>
+						<app-clap></app-clap>
+						</ng-template>
+					</mat-tab>
 				</mat-tab-group>
 			</mat-card-content>
 		</mat-card>
