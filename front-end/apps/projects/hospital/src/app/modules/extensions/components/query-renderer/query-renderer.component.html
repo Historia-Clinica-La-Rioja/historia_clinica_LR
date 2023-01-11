@@ -1,8 +1,14 @@
 <div *ngIf="isQueryPresent && !loading" style="height: 100%">
-	<div fxLayout="row" *ngIf="chartType === 'pie'">
-		<mat-label>Ver porcentajes</mat-label>
-		<mat-slide-toggle (change)="togglePercentage()"></mat-slide-toggle>
-	</div>
+	<ng-container *ngIf="chartType === 'pie'">
+		<div fxLayout="row" fxLayoutAlign="space-between center" class="toggle">
+			<mat-label>Ver porcentajes</mat-label>
+			<mat-slide-toggle (change)="togglePercentage()"></mat-slide-toggle>
+		</div>
+		<div fxLayout="row" fxLayoutAlign="space-between center" *ngIf="showGroupSmallData" class="toggle">
+			<mat-label>Agrupar datos</mat-label>
+			<mat-slide-toggle (change)="toggleGroupSmallData()" [disabled]="showPercentage"></mat-slide-toggle>
+		</div>
+	</ng-container>
 	<div
 		*ngIf="chartType !== 'table' && chartType !== 'number'"
 		class="chart-container"

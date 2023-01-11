@@ -83,11 +83,17 @@ export class QueryRendererComponent {
 	displayedColumns: string[] = [];
 	tableData: any[] = [];
 	columnTitles: string[] = [];
-	chartData: ChartDataSets[] = [];
+
 	chartLabels: Label[] = [];
+	chartData: any[] = [];
+	percentageData: any[] = [];
+	others: any[] = [];
+
 	nameSelfDeterminationFF: boolean;
 	pieSum = 0;
-	showPercentage = false;
+	showPercentage: boolean;
+	groupSmallData: boolean;
+	showGroupSmallData: boolean;
 
 	noFillChartOptions: ChartOptions = {
 		responsive: true,
@@ -211,17 +217,69 @@ export class QueryRendererComponent {
 		if (this.chartType === 'bar'){
 			this.chartData.forEach( x => x.label = (x.label.charAt(0).toUpperCase() + x.label.slice(1)).slice(0, -5))
 		}
+
+		if (this.chartType === 'pie') {
+			this.loadPieData();
+		}
+	}
+
+	loadPieData() {
+		this.percentageData = [...this.chartData[0].data];
+		this.percentageData.forEach((element, i, array) => array[i] = Math.round((element  * 100 / this.pieSum) * 100) / 100);
+
+		const i = this.percentageData.findIndex(x => x < 1);
+
+		if (i > 1)
+			this.showGroupSmallData = true;
+		else
+			this.showGroupSmallData = false;
+
+		this.showPercentage = false;
+		this.groupSmallData = false;
 	}
 
 	togglePercentage() {
+		this.showPercentage = !this.showPercentage;
 		const data = this.chartData[0].data;
 		data.forEach(x => {
-			if (this.showPercentage === false)
-				data[data.indexOf(x)] = (Math.round((x * 100 / this.pieSum) * 100) / 100)+'%';
+			if (this.showPercentage === true)
+				data[data.indexOf(x)] = (Math.round((x * 100 / this.pieSum) * 100) / 100) + '%';
 			else
 				data[data.indexOf(x)] = (Math.round((x.slice(0, -1) * this.pieSum) / 100));
 		})
-		this.showPercentage = !this.showPercentage;
+	}
+
+	toggleGroupSmallData() {
+		this.groupSmallData = !this.groupSmallData;
+		const data = this.chartData[0].data;
+		if (this.groupSmallData === true)
+			this.groupData(data);
+		if (this.groupSmallData === false)
+			this.unGroupData(data);
+	}
+
+	groupData(data: any[]) {
+		const i = this.percentageData.findIndex(x => x < 1);
+		this.others = data.slice(i);
+		let othersSum = this.others.reduce((partialSum, a) => partialSum + a, 0);
+		data = data.slice(0, i);
+		data.push(othersSum);
+		data = data.sort((a,b) => b-a);
+		const index = data.indexOf(othersSum);
+		for (let i = this.chartLabels.length; i > index; i--) {
+			this.chartLabels[i] = this.chartLabels[i-1];
+		}
+		this.chartLabels[index] = 'Otros';
+		this.chartData[0].data = data;
+	}
+
+	unGroupData(data: any[]) {
+		const i = this.chartLabels.indexOf('Otros');
+		this.chartLabels.splice(i, 1);
+		data.splice(i, 1);
+		this.others.forEach( x => data.push(x));
+		data = data.sort((a,b) => b-a);
+		this.chartData[0].data = data;
 	}
 
 	formatDate(resultSet) {
