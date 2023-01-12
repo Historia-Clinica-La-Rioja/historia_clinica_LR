@@ -2548,6 +2548,7 @@ export interface ProfessionalLicenseNumberDto extends Serializable {
 
 export interface ProfessionalPersonDto extends Serializable {
     firstName: string;
+    fullName: string;
     id: number;
     lastName: string;
     middleNames: string;
