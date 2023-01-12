@@ -176,6 +176,7 @@ export class HistoricalProblems {
 	consultationProfessionalId: number;
 	consultationProfessionalPersonId: number;
 	professionalFullName: string;
+	institutionName: string;
 	document:{
 		id: number;
 		filename: string;

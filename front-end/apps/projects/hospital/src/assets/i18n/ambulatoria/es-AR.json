@@ -293,7 +293,8 @@
                     "SUMMARY_REFERENCE": "Resumen de referencia",
                     "COUNTERREFERENCE": "Contrarreferencia",
                     "PROCEDURE": "Procedimientos:",
-					"REFERENCE_CLOSURE": "Cierre de referencia"
+					"REFERENCE_CLOSURE": "Cierre de referencia",
+                    "CONSULTATION_INSTITUTION": "Institución"
                 },
                 "historical-problems-filters": {
                     "SPECIALTY": "Especialidad",
