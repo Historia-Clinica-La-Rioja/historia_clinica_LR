@@ -1,5 +1,6 @@
 package net.pladema.patient.repository;
 
+import ar.lamansys.sgx.shared.auditable.repository.SGXAuditableEntityJPARepository;
 import net.pladema.patient.repository.domain.PatientPersonVo;
 import net.pladema.patient.repository.entity.Patient;
 import net.pladema.patient.service.domain.PatientSearch;
@@ -14,7 +15,7 @@ import java.util.Optional;
 import java.util.stream.Stream;
 
 @Repository
-public interface PatientRepository extends JpaRepository<Patient, Integer>, PatientRepositoryCustom, PatientRepositorySearch {
+public interface PatientRepository extends SGXAuditableEntityJPARepository<Patient, Integer>, PatientRepositoryCustom, PatientRepositorySearch {
 
 	@Query(value = " SELECT new net.pladema.patient.service.domain.PatientSearch(person, patient.id, patientType.active, 0, personExtended.nameSelfDetermination) " +
 			" FROM Patient patient JOIN Person person ON patient.personId = person.id " +

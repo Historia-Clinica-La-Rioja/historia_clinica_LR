@@ -1,7 +1,11 @@
 package net.pladema.patient.repository.entity;
 
+import ar.lamansys.sgx.shared.auditable.entity.SGXAuditableEntity;
+import ar.lamansys.sgx.shared.auditable.listener.SGXAuditListener;
 import lombok.*;
 import net.pladema.patient.repository.domain.PatientPersonVo;
+
+import org.hibernate.annotations.Where;
 
 import javax.persistence.*;
 import java.io.Serializable;
@@ -12,8 +16,10 @@ import java.io.Serializable;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
+@Where(clause = "deleted=false")
 @ToString
-public class Patient implements Serializable{
+@EntityListeners(SGXAuditListener.class)
+public class Patient extends SGXAuditableEntity<Integer> {
 
     /**
      *
