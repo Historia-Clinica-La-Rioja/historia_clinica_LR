@@ -12,3 +12,179 @@ databaseChangeLog:
                     name: name
                     type: varchar(40)
 
+
+    - changeSet:
+        id: equipment-diary-createTable
+        comment: Create table equipment_diary
+        author: amurrie
+        changes:
+          - createTable:
+              tableName: equipment_diary
+              columns:
+                - column:
+                    autoIncrement: true
+                    constraints:
+                      primaryKey: true
+                      primaryKeyName: PK_equipment_diary
+                    name: id
+                    type: int
+                - column:
+                    constraints:
+                      nullable: false
+                    name: start_date
+                    type: date
+                - column:
+                    constraints:
+                      nullable: false
+                    name: end_date
+                    type: date
+                - column:
+                    constraints:
+                      nullable: false
+                    name: appointment_duration
+                    type: smallint
+                - column:
+                    constraints:
+                      nullable: false
+                    name: automatic_renewal
+                    type: boolean
+                    defaultValue: ${boolean.false}
+                - column:
+                    constraints:
+                      nullable: false
+                    name: days_before_renew
+                    type: smallint
+                    defaultValue: -1
+                - column:
+                    constraints:
+                      nullable: false
+                    name: include_holiday
+                    type: boolean
+                    defaultValue: ${boolean.false}
+                - column:
+                    constraints:
+                      nullable: false
+                    name: active
+                    type: boolean
+                    defaultValue: ${boolean.true}
+                - column:
+                    constraints:
+                      nullable: false
+                    name: created_by
+                    type: int
+                    defaultValue: -1
+                - column:
+                    constraints:
+                      nullable: false
+                    name: created_on
+                    type: datetime
+                    defaultValueDate: ${date.now}
+                - column:
+                    constraints:
+                      nullable: false
+                    name: updated_by
+                    type: int
+                    defaultValue: -1
+                - column:
+                    constraints:
+                      nullable: false
+                    name: updated_on
+                    type: datetime
+                    defaultValueDate: ${date.now}
+                - column:
+                    constraints:
+                      nullable: false
+                    name: equipment_id
+                    type: int
+                - column:
+                    constraints:
+                      nullable: false
+                    name: deleted
+                    type: boolean
+                    defaultValue: ${boolean.false}
+                - column:
+                    constraints:
+                      nullable: true
+                    name: deleted_by
+                    type: int
+                    defaultValue: -1
+                - column:
+                    constraints:
+                      nullable: true
+                    name: deleted_on
+                    type: datetime
+                    defaultValueDate: ${date.now}
+          - addForeignKeyConstraint:
+              baseColumnNames: equipment_id
+              baseTableName: equipment_diary
+              constraintName: FK_equipment_diary_equipment_id
+              onDelete: NO ACTION
+              onUpdate: NO ACTION
+              referencedColumnNames: id
+              referencedTableName: equipment
+              validate: true
+    - changeSet:
+        id: equipment_diary_opening_hours-createTable
+        comment: Create table equipment_diary_opening_hours
+        author: amurrie
+        changes:
+          - createTable:
+              tableName: equipment_diary_opening_hours
+              columns:
+                - column:
+                    constraints:
+                      nullable: false
+                    name: equipment_diary_id
+                    type: int
+                - column:
+                    constraints:
+                      nullable: false
+                    name: opening_hours_id
+                    type: int
+                - column:
+                    constraints:
+                      nullable: false
+                    name: medical_attention_type_id
+                    type: smallint
+                - column:
+                    constraints:
+                      nullable: false
+                    name: overturn_count
+                    type: smallint
+                    defaultValue: 0
+                - column:
+                    name: external_appointments_allowed
+                    type: bool
+          - addPrimaryKey:
+              clustered: true
+              columnNames: equipment_diary_id, opening_hours_id
+              constraintName: PK_equipment_diary_opening_hours
+              tableName: equipment_diary_opening_hours
+              validate: true
+          - addForeignKeyConstraint:
+              baseColumnNames: equipment_diary_id
+              baseTableName: equipment_diary_opening_hours
+              constraintName: FK_equipment_diary_opening_hours_diary_id
+              onDelete: NO ACTION
+              onUpdate: NO ACTION
+              referencedColumnNames: id
+              referencedTableName: equipment_diary
+              validate: true
+          - addForeignKeyConstraint:
+              baseColumnNames: opening_hours_id
+              baseTableName: equipment_diary_opening_hours
+              constraintName: FK_equipment_diary_opening_hours_id
+              onDelete: NO ACTION
+              onUpdate: NO ACTION
+              referencedColumnNames: id
+              referencedTableName: opening_hours
+              validate: true
+          - addForeignKeyConstraint:
+              baseColumnNames: medical_attention_type_id
+              baseTableName: equipment_diary_opening_hours
+              constraintName: FK_equipment_diary_opening_hours_medical_attention_type_id
+              onDelete: NO ACTION
+              onUpdate: NO ACTION
+              referencedColumnNames: id
+              referencedTableName: medical_attention_type
+              validate: true
