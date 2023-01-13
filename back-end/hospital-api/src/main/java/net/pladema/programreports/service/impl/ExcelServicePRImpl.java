@@ -376,80 +376,84 @@ public class ExcelServicePRImpl implements ExcelServicePR {
 		cell16.setCellStyle(style);
 
 		ICell cell17 = row.createCell(rowNumber.getAndIncrement());
-		cell17.setCellValue(content.getReasons());
+		cell17.setCellValue(content.getHeadCircunference());
 		cell17.setCellStyle(style);
 
 		ICell cell18 = row.createCell(rowNumber.getAndIncrement());
-		cell18.setCellValue(content.getProcedures());
+		cell18.setCellValue(content.getReasons());
 		cell18.setCellStyle(style);
 
 		ICell cell19 = row.createCell(rowNumber.getAndIncrement());
-		cell19.setCellValue(content.getProblems());
+		cell19.setCellValue(content.getProcedures());
 		cell19.setCellStyle(style);
 
 		ICell cell20 = row.createCell(rowNumber.getAndIncrement());
-		cell20.setCellValue(content.getMedication());
+		cell20.setCellValue(content.getProblems());
 		cell20.setCellStyle(style);
 
 		ICell cell21 = row.createCell(rowNumber.getAndIncrement());
-		cell21.setCellValue(content.getEvolution());
+		cell21.setCellValue(content.getMedication());
 		cell21.setCellStyle(style);
 
 		ICell cell22 = row.createCell(rowNumber.getAndIncrement());
-		cell22.setCellValue(content.getSelfPerceivedGender());
+		cell22.setCellValue(content.getEvolution());
 		cell22.setCellStyle(style);
 
 		ICell cell23 = row.createCell(rowNumber.getAndIncrement());
-		cell23.setCellValue(content.getSelfPerceivedName());
+		cell23.setCellValue(content.getSelfPerceivedGender());
 		cell23.setCellStyle(style);
 
 		ICell cell24 = row.createCell(rowNumber.getAndIncrement());
-		cell24.setCellValue(content.getEthnicity());
+		cell24.setCellValue(content.getSelfPerceivedName());
 		cell24.setCellStyle(style);
 
 		ICell cell25 = row.createCell(rowNumber.getAndIncrement());
-		cell25.setCellValue(content.getEducationLevel());
+		cell25.setCellValue(content.getEthnicity());
 		cell25.setCellStyle(style);
 
 		ICell cell26 = row.createCell(rowNumber.getAndIncrement());
-		cell26.setCellValue(content.getOccupation());
+		cell26.setCellValue(content.getEducationLevel());
 		cell26.setCellStyle(style);
 
 		ICell cell27 = row.createCell(rowNumber.getAndIncrement());
-		cell27.setCellValue(content.getSystolicBloodPressure());
+		cell27.setCellValue(content.getOccupation());
 		cell27.setCellStyle(style);
 
 		ICell cell28 = row.createCell(rowNumber.getAndIncrement());
-		cell28.setCellValue(content.getDiastolicBloodPressure());
+		cell28.setCellValue(content.getSystolicBloodPressure());
 		cell28.setCellStyle(style);
 
 		ICell cell29 = row.createCell(rowNumber.getAndIncrement());
-		cell29.setCellValue(content.getMeanArterialPressure());
+		cell29.setCellValue(content.getDiastolicBloodPressure());
 		cell29.setCellStyle(style);
 
 		ICell cell30 = row.createCell(rowNumber.getAndIncrement());
-		cell30.setCellValue(content.getTemperature());
+		cell30.setCellValue(content.getMeanArterialPressure());
 		cell30.setCellStyle(style);
 
 		ICell cell31 = row.createCell(rowNumber.getAndIncrement());
-		cell31.setCellValue(content.getHeartRate());
+		cell31.setCellValue(content.getTemperature());
 		cell31.setCellStyle(style);
 
 		ICell cell32 = row.createCell(rowNumber.getAndIncrement());
-		cell32.setCellValue(content.getRespirationRate());
+		cell32.setCellValue(content.getHeartRate());
 		cell32.setCellStyle(style);
 
 		ICell cell33 = row.createCell(rowNumber.getAndIncrement());
-		cell33.setCellValue(content.getOxygenSaturationHemoglobin());
+		cell33.setCellValue(content.getRespirationRate());
 		cell33.setCellStyle(style);
 
 		ICell cell34 = row.createCell(rowNumber.getAndIncrement());
-		cell34.setCellValue(content.getHeight());
+		cell34.setCellValue(content.getOxygenSaturationHemoglobin());
 		cell34.setCellStyle(style);
 
 		ICell cell35 = row.createCell(rowNumber.getAndIncrement());
-		cell35.setCellValue(content.getWeight());
+		cell35.setCellValue(content.getHeight());
 		cell35.setCellStyle(style);
+
+		ICell cell36 = row.createCell(rowNumber.getAndIncrement());
+		cell36.setCellValue(content.getWeight());
+		cell36.setCellStyle(style);
 	}
 
 	private void fillRowContent(IRow row, ConsultationDetailOdontologia content, ICellStyle style) {
