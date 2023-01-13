@@ -716,6 +716,7 @@
 			(SELECT ovs.value FROM document_vital_sign dvs INNER JOIN observation_vital_sign ovs ON dvs.observation_vital_sign_id=ovs.id INNER JOIN snomed s_vs ON ovs.snomed_id=s_vs.id WHERE dvs.document_id=d.id AND s_vs.id=8) AS height,
 			(SELECT ovs.value FROM document_vital_sign dvs INNER JOIN observation_vital_sign ovs ON dvs.observation_vital_sign_id=ovs.id INNER JOIN snomed s_vs ON ovs.snomed_id=s_vs.id WHERE dvs.document_id=d.id AND s_vs.id=9) AS weight,
 			(SELECT ovs.value FROM document_vital_sign dvs INNER JOIN observation_vital_sign ovs ON dvs.observation_vital_sign_id=ovs.id INNER JOIN snomed s_vs ON ovs.snomed_id=s_vs.id WHERE dvs.document_id=d.id AND s_vs.id=10) AS bmi,
+			(SELECT ovs.value FROM document_vital_sign dvs INNER JOIN observation_vital_sign ovs on dvs.observation_vital_sign_id=ovs.id INNER JOIN snomed s_vs on ovs.snomed_id=s_vs.id WHERE dvs.document_id=d.id AND s_vs.id=1409) AS headCircunference,
 			(SELECT string_agg(r.description, ', ') FROM outpatient_consultation_reasons ocr INNER JOIN reasons r ON ocr.reason_id=r.id WHERE ocr.outpatient_consultation_id=oc.id) AS reasons,
 			(SELECT string_agg(concat(s_proc.pt, '(', ps.description, ' | SNOMED: ', s_proc.sctid, ' | CIE10: ', proc.cie10_codes, ')'), ', ') FROM document_procedure dp INNER JOIN procedures proc ON dp.procedure_id=proc.id INNER JOIN procedures_status ps ON proc.status_id=ps.id INNER JOIN snomed s_proc ON proc.snomed_id=s_proc.id WHERE dp.document_id=d.id) AS procedures,
 			(SELECT string_agg(concat(s_prob.pt,' (',ccs.description,' &amp; ',cvs.description,' - Fecha: ',hc.start_date ,')', '[SNOMED: ', s_prob.sctid, ' | CIE10: ', hc.cie10_codes, ']'), ', ')
@@ -1585,6 +1586,7 @@
 			<column name="height" class="java.lang.String"/>
 			<column name="weight" class="java.lang.String"/>
 			<column name="bmi" class="java.lang.String"/>
+			<column name="headCircunference" class="java.lang.String"/>
 			<column name="reasons" class="java.lang.String"/>
 			<column name="procedures" class="java.lang.String"/>
 			<column name="problems" class="java.lang.String"/>
