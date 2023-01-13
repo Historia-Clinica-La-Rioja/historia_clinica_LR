@@ -4,9 +4,15 @@
 			<h2 id="title" class="page-title" [translate]="'turnos.home.TITLE'"></h2>
 		</div>
 		<button mat-flat-button color="primary" id="goToNewAgendaButton" *appHasRole="['ADMINISTRADOR_AGENDA']"
-			(click)="goToNewAgenda()" fxFlexFill.xs>
+			fxFlexFill.xs [matMenuTriggerFor]="menu">
 			<span class="uppercase" [translate]="'turnos.home.actions.NEW_AGENDA'"></span>
 		</button>
+		<mat-menu #menu="matMenu">
+			<button mat-menu-item (click)="goToNewProfessionalDiary()">
+				{{'turnos.home.actions.PROFESSONAL' | translate}}</button>
+			<button mat-menu-item (click)="goToNewEquipmentDiary()">
+				{{'turnos.home.actions.PICTURES' | translate}}</button>
+		</mat-menu>
 	</section>
 
 	<mat-tab-group (selectedTabChange)="tabChanged($event)">

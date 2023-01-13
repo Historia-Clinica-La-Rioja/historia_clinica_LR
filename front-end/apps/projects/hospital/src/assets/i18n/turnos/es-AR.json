@@ -4,6 +4,8 @@
 			"TITLE": "Gestión de turnos",
 			"actions": {
 				"CREATE_AGENDA": "Crear agenda",
+				"PROFESSONAL": "Profesionales",
+				"PICTURES": "Imágenes",
 				"NEW_AGENDA": "Nueva agenda",
 				"SEARCH_APPOINTMENTS": "Buscar turnos"
 			},

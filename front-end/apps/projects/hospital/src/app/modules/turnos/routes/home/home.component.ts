@@ -23,8 +23,12 @@ export class HomeComponent {
 		this.routePrefix = `institucion/${this.contextService.institutionId}/turnos`;
 	}
 
-	goToNewAgenda(): void {
-		this.router.navigate([`${this.routePrefix}/nueva-agenda/`]);
+	goToNewProfessionalDiary(): void {
+		this.router.navigate([`${this.routePrefix}/nueva-agenda`]);
+	}
+
+	goToNewEquipmentDiary(): void {
+		this.router.navigate([`${this.routePrefix}/imagenes/nueva-agenda`]);
 	}
 
 	tabChanged(tabChangeEvent: MatTabChangeEvent): void {
