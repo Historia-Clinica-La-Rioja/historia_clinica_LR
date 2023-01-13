@@ -1131,6 +1131,33 @@ export interface EpisodeDocumentResponseDto {
     id: number;
 }
 
+export interface EquipmentDiaryADto {
+    appointmentDuration: number;
+    automaticRenewal?: boolean;
+    endDate: string;
+    equipmentDiaryOpeningHours: EquipmentDiaryOpeningHoursDto[];
+    equipmentId: number;
+    includeHoliday?: boolean;
+    startDate: string;
+}
+
+export interface EquipmentDiaryOpeningHoursDto extends Overlapping<EquipmentDiaryOpeningHoursDto> {
+    externalAppointmentsAllowed: boolean;
+    medicalAttentionTypeId: number;
+    openingHours: EquipmentOpeningHoursDto;
+    overturnCount?: number;
+}
+
+export interface EquipmentDto extends Serializable {
+    id: number;
+    name: string;
+}
+
+export interface EquipmentOpeningHoursDto extends TimeRangeDto {
+    dayWeekId: number;
+    id?: number;
+}
+
 export interface EthnicityDto extends Serializable {
     id: number;
     pt: string;
