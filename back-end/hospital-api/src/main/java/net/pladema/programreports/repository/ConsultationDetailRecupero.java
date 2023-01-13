@@ -100,7 +100,7 @@ public class ConsultationDetailRecupero {
 	public ConsultationDetailRecupero(String institution,String clinicalSpecialty, String provider,String providerDni, String attentionDate,String hour,
 									 String consultationNumber, String patientDni, String patientName, String gender,
 									  String birthDate, String ageTurn,String ageToday, String medicalCoverage,String address, String location,
-									  String bmi, String headCircunference, String reasons, String procedures, String problems, String medication, String evolution) {
+									  String bmi, String reasons, String procedures, String problems, String medication, String evolution) {
 		this.institution = institution;
 		this.clinicalSpecialty = clinicalSpecialty;
 		this.provider = provider;
@@ -118,7 +118,6 @@ public class ConsultationDetailRecupero {
 		this.address = address;
 		this.location = location;
 		this.bmi = bmi;
-		this.headCircunference = headCircunference;
 		this.reasons = reasons;
 		this.procedures = procedures;
 		this.problems = problems;
