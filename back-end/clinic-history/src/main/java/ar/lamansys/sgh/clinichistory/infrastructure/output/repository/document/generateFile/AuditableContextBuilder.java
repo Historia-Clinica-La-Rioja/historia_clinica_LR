@@ -7,6 +7,8 @@ import java.util.Map;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
+import ar.lamansys.sgh.shared.infrastructure.input.service.institution.SharedInstitutionPort;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -38,6 +40,8 @@ public class AuditableContextBuilder {
 	private final LocalDateMapper localDateMapper;
 	private final FeatureFlagsService featureFlagsService;
 
+	private final SharedInstitutionPort sharedInstitutionPort;
+
 	public AuditableContextBuilder(
 			SharedPatientPort sharedPatientPort,
 			DocumentAuthorFinder documentAuthorFinder,
@@ -45,9 +49,10 @@ public class AuditableContextBuilder {
 			SharedImmunizationPort sharedImmunizationPort,
 			RiskFactorMapper riskFactorMapper,
 			LocalDateMapper localDateMapper,
-			FeatureFlagsService featureFlagsService) {
+			FeatureFlagsService featureFlagsService, SharedInstitutionPort sharedInstitutionPort) {
 		this.sharedImmunizationPort = sharedImmunizationPort;
 		this.localDateMapper = localDateMapper;
+		this.sharedInstitutionPort = sharedInstitutionPort;
 		this.logger = LoggerFactory.getLogger(getClass());
 		this.basicDataFromPatientLoader = sharedPatientPort::getBasicDataFromPatient;
 		this.authorFromDocumentFunction = (Long documentId) -> documentAuthorFinder.getAuthor(documentId);
@@ -59,7 +64,6 @@ public class AuditableContextBuilder {
 
 	public <T extends IDocumentBo> Map<String,Object> buildContext(T document, Integer patientId){
 		logger.debug("Input parameters -> document {}", document);
-
 		Map<String,Object> contextMap = new HashMap<>();
 		addPatientInfo(contextMap, patientId);
 		addDocumentInfo(contextMap, document);
@@ -84,7 +88,7 @@ public class AuditableContextBuilder {
 		var immunizations =  mapImmunizations(document.getImmunizations());
 		contextMap.put("billableImmunizations", immunizations.stream().filter(ImmunizationInfoDto::isBillable).collect(Collectors.toList()));
 		contextMap.put("nonBillableImmunizations", immunizations.stream().filter(i -> !i.isBillable()).collect(Collectors.toList()));
-
+		contextMap.put("institutionName",sharedInstitutionPort.fetchInstitutionById(document.getInstitutionId()).getName());
 		contextMap.put("medications", document.getMedications());
 		contextMap.put("anthropometricData", document.getAnthropometricData());
 		contextMap.put("riskFactors", riskFactorMapper.toRiskFactorsReportDto(document.getRiskFactors()));
