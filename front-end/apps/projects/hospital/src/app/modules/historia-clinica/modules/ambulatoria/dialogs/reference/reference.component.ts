@@ -255,11 +255,22 @@ export class ReferenceComponent implements OnInit {
 		});
 	}
 
+	setInfoByProvince(province: number) {
+		this.setDepartmentsByProvince(province);
+		this.setInstitutionsByProvince(province);
+	}
+
 	setDepartmentsByProvince(province: number) {
 		this.clearInformation();
 		this.departments$ = this.adressMasterData.getDepartmentsByProvince(province);
 		this.formReference.controls.departmentId.enable();
 		this.formReference.controls.departmentId.updateValueAndValidity();
+	}
+
+	setInstitutionsByProvince(province: number){
+		this.clearInformation();
+		this.institutions$ = this.institutionService.findByProvinceId(province);
+		this.formReference.controls.institutionDestinationId.updateValueAndValidity();
 	}
 
 	filterInstitutionsByDepartment(department: number) {

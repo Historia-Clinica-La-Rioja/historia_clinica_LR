@@ -89,7 +89,7 @@
                         <div>
                             <mat-form-field appearance="outline" fxFlex="100%" fxLayoutGap="7px">
                                 <mat-label [translate]="'ambulatoria.paciente.nueva-consulta.reference-dialog.PROVINCE'"></mat-label>
-                                <mat-select id="provinceDestination" formControlName="provinceId" (selectionChange)="setDepartmentsByProvince($event.value)">
+                                <mat-select id="provinceDestination" formControlName="provinceId" (selectionChange)="setInfoByProvince($event.value)">
                                     <mat-option *ngFor="let province of provinces" [value]="province.id">
                                         {{province.description | translate}}
                                     </mat-option>
