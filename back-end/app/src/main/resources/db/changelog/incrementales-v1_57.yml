@@ -1,2 +1,83 @@
 databaseChangeLog: 
     - logicalFilePath: incrementales-v1_57
+
+    - changeSet:
+        id: merged_patient_item-createTable
+        comment: Create table merged_patient_item
+        author: mvenere
+        changes:
+          - createTable:
+              tableName: merged_patient_item
+              columns:
+                - column:
+                    autoIncrement: true
+                    constraints:
+                      primaryKey: true
+                      primaryKeyName: PK_merged_patient_item
+                    name: id
+                    type: int
+                - column:
+                    constraints:
+                      nullable: false
+                    name: merged_table_name
+                    type: varchar(100)
+                - column:
+                    constraints:
+                      nullable: false
+                    name: merged_id_name
+                    type: varchar(50)
+                - column:
+                    constraints:
+                      nullable: false
+                    name: merged_id_value
+                    type: int
+                - column:
+                    constraints:
+                      nullable: false
+                      references: patient(id)
+                      foreignKeyName: FK_merged_patient_item_old_patient
+                    name: old_patient_id
+                    type: int
+                - column:
+                    constraints:
+                      nullable: false
+                      references: patient(id)
+                      foreignKeyName: FK_merged_patient_item_new_patient
+                    name: new_patient_id
+                    type: int
+                - column:
+                    constraints:
+                      nullable: false
+                    name: created_by
+                    type: int
+                    defaultValue: -1
+                - column:
+                    constraints:
+                      nullable: false
+                    name: created_on
+                    type: datetime
+                    defaultValueDate: ${date.now}
+                - column:
+                    constraints:
+                      nullable: false
+                    name: updated_by
+                    type: int
+                    defaultValue: -1
+                - column:
+                    constraints:
+                      nullable: false
+                    name: updated_on
+                    type: datetime
+                    defaultValueDate: ${date.now}
+                - column:
+                    constraints:
+                      nullable: false
+                    name: deleted
+                    type: BOOLEAN
+                    defaultValue: ${boolean.false}
+                - column:
+                    name: deleted_by
+                    type: int
+                - column:
+                    name: deleted_on
+                    type: datetime
