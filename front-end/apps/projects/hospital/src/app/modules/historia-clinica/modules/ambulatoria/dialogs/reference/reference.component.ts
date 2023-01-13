@@ -55,6 +55,8 @@ export class ReferenceComponent implements OnInit {
 
 		this.subscribesToChangesInForm();
 
+		this.institutions$ = this.institutionService.getAllInstitutions();
+
 		this.adressMasterData.getByCountry(COUNTRY).subscribe(provinces => {
 			this.provinces = provinces;
 
@@ -277,14 +279,12 @@ export class ReferenceComponent implements OnInit {
 		this.formReference.controls.institutionDestinationId.setValue(null);
 		this.clearCareLinesAndSpecialties();
 		this.institutions$ = this.institutionService.findByDepartmentId(department);
-		this.formReference.controls.institutionDestinationId.enable();
 		this.formReference.controls.institutionDestinationId.updateValueAndValidity();
 	}
 
 	private clearInformation() {
 		this.formReference.controls.departmentId.setValue(null);
 		this.formReference.controls.institutionDestinationId.setValue(null);
-		this.formReference.controls.institutionDestinationId.disable();
 		this.clearCareLinesAndSpecialties();
 	}
 
@@ -347,7 +347,7 @@ export class ReferenceComponent implements OnInit {
 			problems: [null, [Validators.required]],
 			searchByCareLine: [this.DEFAULT_RADIO_OPTION],
 			provinceId: [null, [Validators.required]],
-			departmentId: [null, [Validators.required]],
+			departmentId: [null],
 			consultation: [null],
 			procedure: [null],
 			careLine: [null, [Validators.required]],
@@ -367,7 +367,6 @@ export class ReferenceComponent implements OnInit {
 		this.formReference.controls.clinicalSpecialty.disable();
 		this.formReference.controls.procedure.disable();
 		this.formReference.controls.careLine.disable();
-		this.formReference.controls.institutionDestinationId.disable();
 		this.formReference.controls.provinceOrigin.disable();
 		this.formReference.controls.departmentOrigin.disable();
 		this.formReference.controls.institutionOrigin.disable();
