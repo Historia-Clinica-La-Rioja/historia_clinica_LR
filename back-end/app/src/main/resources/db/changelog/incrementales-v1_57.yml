@@ -126,4 +126,67 @@ databaseChangeLog:
                     name: deleted_on
                     type: datetime
 
+    - changeSet:
+        id: person_history-createTable
+        comment: Create table person_history
+        author: mvenere
+        changes:
+          - createTable:
+              tableName: person_history
+              columns:
+                - column:
+                    autoIncrement: true
+                    constraints:
+                      primaryKey: true
+                      primaryKeyName: PK_person_history
+                    name: id
+                    type: int
+                - column:
+                    constraints:
+                      nullable: false
+                    name: person_id
+                    type: int
+                - column:
+                    name: first_name
+                    type: varchar(40)
+                - column:
+                    name: middle_names
+                    type: varchar(40)
+                - column:
+                    name: last_name
+                    type: varchar(40)
+                - column:
+                    name: other_last_names
+                    type: varchar(40)
+                - column:
+                    constraints:
+                      references: identification_type(id)
+                      foreignKeyName: FK_person_history_identification_type_id
+                    name: identification_type_id
+                    type: smallint
+                - column:
+                    name: identification_number
+                    type: varchar(11)
+                - column:
+                    constraints:
+                      references: gender(id)
+                      foreignKeyName: FK_person_history_gender
+                    name: gender_id
+                    type: smallint
+                - column:
+                    name: birth_date
+                    type: date
+                - column:
+                    constraints:
+                      nullable: false
+                    name: created_by
+                    type: int
+                    defaultValue: -1
+                - column:
+                    constraints:
+                      nullable: false
+                    name: created_on
+                    type: datetime
+                    defaultValueDate: ${date.now}
+
     
