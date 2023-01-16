@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Observable } from 'rxjs';
+import { Observable, of } from 'rxjs';
 import { environment } from '@environments/environment';
 import { ContextService } from '@core/services/context.service';
 
@@ -21,4 +21,12 @@ export class SectorService {
 		const url = `${environment.apiBase}/institution/${this.contextService.institutionId}/sector/${sectorId}/specialty/${specialtyId}/rooms`;
 		return this.http.get<any[]>(url);
 	}
+
+	getDiagnosticImagingType(sector: SectorType): Observable<any[]> {
+		return of([{id: 1, description: "Diagnostico por imagenes"}]);
+	}
+}
+
+export enum SectorType {
+	DIAGNOSTIC_IMAGING = 1
 }
