@@ -305,7 +305,7 @@ export class AgendaSetupComponent implements OnInit {
 		const ocupations$: Observable<OccupationDto[]> = this.diaryOpeningHoursService
 			.getAllWeeklyDoctorsOfficeOcupation(formValue.doctorOffice.id, this.editingDiaryId, startDate, endDate);
 
-		this.agendaHorarioService.setWeeklyDoctorsOfficeOcupation(ocupations$);
+		this.agendaHorarioService.setWeeklyOcupation(ocupations$);
 	}
 
 	private processSuccess(agendaId: number) {

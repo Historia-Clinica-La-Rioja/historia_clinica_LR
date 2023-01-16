@@ -207,7 +207,7 @@ export class AgendaHorarioService {
 		this.refresh();
 	}
 
-	setWeeklyDoctorsOfficeOcupation(occupations$: Observable<OccupationDto[]>): void {
+	setWeeklyOcupation(occupations$: Observable<OccupationDto[]>): void {
 		occupations$.pipe(
 			map(occupations => this.occupationsToCalendarEvents(occupations))
 		).subscribe((doctorsOfficeEvents: CalendarEvent[]) => {
