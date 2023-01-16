@@ -6,8 +6,12 @@ import { PROGRAM_REPORT_TYPES } from '../../constants/report-types';
 import { Moment } from 'moment';
 import { dateToMoment, newMoment } from '@core/utils/moment.utils';
 import { MIN_DATE } from '@core/utils/date.utils';
-
-
+import { TypeaheadOption } from '@presentation/components/typeahead/typeahead.component';
+import { ProfessionalDto, ProfessionalsByClinicalSpecialtyDto } from '@api-rest/api-model';
+import { Observable } from 'rxjs';
+import { map } from 'rxjs/operators';
+import { HealthcareProfessionalByInstitutionService } from '@api-rest/services/healthcare-professional-by-institution.service';
+import { ClinicalSpecialtyService } from '@api-rest/services/clinical-specialty.service';
 
 @Component({
   selector: 'app-home',
@@ -21,12 +25,25 @@ export class HomeComponent implements OnInit {
 
   public hasError = hasError;
 
+  professionalsTypeahead: TypeaheadOption<ProfessionalDto>[];
+	professionalInitValue: TypeaheadOption<ProfessionalDto>;
+	professionals: ProfessionalDto[] = [];
+
+	specialtiesTypeahead: TypeaheadOption<ProfessionalsByClinicalSpecialtyDto>[];
+	specialtiesTypeaheadOptions$: Observable<TypeaheadOption<ProfessionalsByClinicalSpecialtyDto>[]>;
+
+	idProfessional: number;
+	idSpecialty: number;
+
+
   PROGRAM_REPORT_TYPES = PROGRAM_REPORT_TYPES;
   minDate = MIN_DATE;
 
   constructor(
     private readonly formBuilder: FormBuilder,
     private readonly reportsService: ProgramReportsService,
+    private readonly healthcareProfessionalService: HealthcareProfessionalByInstitutionService,
+		private readonly clinicalSpecialtyService: ClinicalSpecialtyService
     
   ) { }
 
@@ -36,7 +53,14 @@ export class HomeComponent implements OnInit {
       programReportType: [null, Validators.required],
       startDate: [this.firstDayOfThisMonth(), Validators.required],
 			endDate: [this.lastDayOfThisMonth(), Validators.required],
+      specialtyId: [null],
+			professionalId: [null],
     });
+    this.healthcareProfessionalService.getAll().subscribe(professionals => {
+			this.professionals = professionals;
+			this.specialtiesTypeaheadOptions$ = this.getSpecialtiesTypeaheadOptions$(professionals);
+			this.professionalsTypeahead = professionals.map(d => this.toProfessionalTypeahead(d));
+		});
   }
 
   private firstDayOfThisMonth(): Moment {
@@ -57,6 +81,60 @@ export class HomeComponent implements OnInit {
 		}
 		return today;
 	}
+
+  private getSpecialtiesTypeaheadOptions$(doctors: ProfessionalDto[]) {
+		return this.clinicalSpecialtyService.getClinicalSpecialties(doctors.map(d => d.id))
+			.pipe(map(toTypeaheadOptionList));
+
+		function toTypeaheadOptionList(prosBySpecialtyList: ProfessionalsByClinicalSpecialtyDto[]):
+			TypeaheadOption<ProfessionalsByClinicalSpecialtyDto>[] {
+			return prosBySpecialtyList.map(toTypeaheadOption);
+
+			function toTypeaheadOption(s: ProfessionalsByClinicalSpecialtyDto): TypeaheadOption<ProfessionalsByClinicalSpecialtyDto> {
+				return {
+					compareValue: s.clinicalSpecialty.name,
+					value: s
+				};
+			}
+		}
+	}
+
+	setSpecialty(professionalsByClinicalSpecialtyDto: ProfessionalsByClinicalSpecialtyDto) {
+		this.professionalInitValue = null;
+		this.idSpecialty = professionalsByClinicalSpecialtyDto?.clinicalSpecialty?.id;
+		this.form.controls.specialtyId.setValue(professionalsByClinicalSpecialtyDto?.clinicalSpecialty?.id);
+
+		const professionalsFilteredBy = this.getProfessionalsFilteredBy(professionalsByClinicalSpecialtyDto);
+		this.professionalsTypeahead = professionalsFilteredBy.map(d => this.toProfessionalTypeahead(d));
+	}
+
+	setProfessional(professional: ProfessionalDto) {
+		this.idProfessional = professional?.id;
+		this.form.controls.professionalId.setValue(professional?.id);
+	}
+
+	private getProfessionalsFilteredBy(specialty: ProfessionalsByClinicalSpecialtyDto): ProfessionalDto[] {
+		if (specialty?.professionalsIds) {
+			return this.professionals.filter(p => specialty.professionalsIds.find(e => e === p.id));
+		}
+		return this.professionals;
+	}
+
+	private toProfessionalTypeahead(professionalDto: ProfessionalDto): TypeaheadOption<ProfessionalDto> {
+		return {
+			compareValue: this.getFullNameLicence(professionalDto),
+			value: professionalDto
+		};
+	}
+
+	getFullNameLicence(professional: ProfessionalDto): string {
+		return `${this.getFullName(professional)} - ${professional.licenceNumber}`;
+	}
+
+	getFullName(professional: ProfessionalDto): string {
+		return `${professional.lastName}, ${professional.firstName}`;
+	}
+
 
   checkValidDates() {
 		// if both are present, check that the end date is not after the start date
@@ -83,17 +161,22 @@ export class HomeComponent implements OnInit {
 			: this.form.controls.startDate.setErrors({ afterToday: true });
 	}
 
+ 
+
+
 
   generateProgramReport() {
     this.submitted = true;
     if (this.form.valid) {
       const params = {
-
         startDate: this.form.controls.startDate.value,
-				endDate: this.form.controls.endDate.value,
-
+		endDate: this.form.controls.endDate.value,
+        specialtyId: this.form.controls.specialtyId.value,
+		professionalId: this.form.controls.professionalId.value
       }
+
       const programReportId = this.form.controls.programReportType.value;
+	  
       switch (programReportId) {
         case 1:
           this.reportsService.getMonthlyEpiIReport(params, `${this.PROGRAM_REPORT_TYPES[0].description}.xls`).subscribe();
