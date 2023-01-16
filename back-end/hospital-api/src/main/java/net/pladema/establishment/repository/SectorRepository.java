@@ -18,6 +18,12 @@ public interface SectorRepository extends JpaRepository<Sector, Integer> {
             "FROM Sector AS s " +
             "WHERE s.institutionId = :institutionId ")
     List<Sector> getSectorsByInstitution(@Param("institutionId") Integer institutionId);
+    @Transactional(readOnly = true)
+    @Query("SELECT s "+
+			"FROM Sector AS s " +
+			"WHERE s.institutionId = :institutionId " +
+			"AND s.sectorTypeId = :sectorTypeId")
+    List<Sector> getSectorsOfTypeByInstitution(@Param("institutionId") Integer institutionId, @Param("sectorTypeId") Short sectorTypeId);
 
     @Transactional(readOnly = true)
     @Query("SELECT s.institutionId "+
