@@ -225,7 +225,7 @@ public class RestExceptionHandler {
 		LOG.error("FileServiceException exception -> {}", ex.getMessage());
 		var error = new ApiErrorMessageDto(ex.getCodeInfo(), ex.getMessage());
 		return new ResponseEntity<>(error, FileServiceEnumException.INSUFFICIENT_STORAGE.equals(ex.getCode()) ?
-				HttpStatus.INSUFFICIENT_STORAGE : HttpStatus.INTERNAL_SERVER_ERROR);
+				HttpStatus.INSUFFICIENT_STORAGE : HttpStatus.BAD_REQUEST);
 	}
 	@ResponseStatus(HttpStatus.PRECONDITION_FAILED)
 	@ExceptionHandler({ RestorePasswordNotificationException.class })
