@@ -34,4 +34,6 @@ public interface PersonService {
 	String getCountryIsoCodeFromPerson(Integer personId);
 
 	List<DuplicatePersonVo> getDuplicatePersonsByFilter(AuditPatientSearch auditPatientSearch);
+    
+	Optional<Person> findByPatientId(Integer patientId);
 }

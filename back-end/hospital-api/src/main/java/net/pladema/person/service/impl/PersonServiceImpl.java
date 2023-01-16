@@ -12,16 +12,20 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
+import ar.lamansys.sgx.shared.exceptions.NotFoundException;
+import lombok.RequiredArgsConstructor;
 import net.pladema.person.repository.PersonExtendedRepository;
+import net.pladema.person.repository.PersonHistoryRepository;
 import net.pladema.person.repository.PersonRepository;
 import net.pladema.person.repository.domain.CompletePersonVo;
 import net.pladema.person.repository.domain.PersonalInformation;
 import net.pladema.person.repository.entity.Person;
 import net.pladema.person.repository.entity.PersonExtended;
+import net.pladema.person.repository.entity.PersonHistory;
 import net.pladema.person.service.PersonService;
-import ar.lamansys.sgx.shared.exceptions.NotFoundException;
 
 @Service
+@RequiredArgsConstructor
 public class PersonServiceImpl implements PersonService {
 
     private static final Logger LOG = LoggerFactory.getLogger(PersonServiceImpl.class);
@@ -29,17 +33,14 @@ public class PersonServiceImpl implements PersonService {
 
     private final PersonRepository personRepository;
     private final PersonExtendedRepository personExtendedRepository;
+	private final PersonHistoryRepository personHistoryRepository;
 
-    public PersonServiceImpl(PersonRepository personRepository, PersonExtendedRepository personExtendedRepository) {
-        super();
-        this.personRepository = personRepository;
-        this.personExtendedRepository = personExtendedRepository;
-    }
 
     @Override
     public Person addPerson(Person person) {
         LOG.debug("Going to save -> {}", person);
         Person personSaved = personRepository.save(person);
+		personHistoryRepository.save(new PersonHistory(personSaved));
         LOG.debug("Person saved -> {}", personSaved);
         return personSaved;
     }
@@ -125,5 +126,13 @@ public class PersonServiceImpl implements PersonService {
 	private Supplier<NotFoundException> personNotFound(Integer personId) {
         return () -> new NotFoundException("person-not-exists", String.format("La persona %s no existe", personId));
     }
+    
+    @Override
+	public Optional<Person> findByPatientId(Integer patientId) {
+		LOG.debug("Input parameter -> patientId {}", patientId);
+		Optional<Person> result = personRepository.findPersonByPatientId(patientId);
+		LOG.debug("Output result -> {}", result);
+		return result;
+	}
 
 }

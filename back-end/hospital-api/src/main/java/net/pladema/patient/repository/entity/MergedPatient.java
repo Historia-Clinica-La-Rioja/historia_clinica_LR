@@ -34,6 +34,9 @@ public class MergedPatient extends SGXAuditableEntity<Integer> {
 	@Column(name = "active_patient_id")
 	private Integer activePatientId;
 
+	public MergedPatient(Integer activePatientId) {
+		this.activePatientId = activePatientId;
+	}
 }
 
 

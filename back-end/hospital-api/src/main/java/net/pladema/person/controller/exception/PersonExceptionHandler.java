@@ -6,6 +6,8 @@ import net.pladema.person.controller.service.exceptions.CreatePersonException;
 
 import net.pladema.person.controller.service.exceptions.CreatePersonFileException;
 
+import net.pladema.person.controller.service.exceptions.PersonException;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.core.Ordered;
@@ -32,6 +34,13 @@ public class PersonExceptionHandler {
 	@ExceptionHandler({CreatePersonFileException.class})
 	protected ApiErrorMessageDto handleCreatePersonFileException(CreatePersonFileException ex) {
 		LOG.debug("CreatePersonFileException exception -> {}", ex.getMessage());
+		return new ApiErrorMessageDto(ex.getCode().name(), ex.getMessage());
+	}
+
+	@ResponseStatus(HttpStatus.BAD_REQUEST)
+	@ExceptionHandler({PersonException.class})
+	protected ApiErrorMessageDto handlePersonException(PersonException ex) {
+		LOG.debug("PersonException exception -> {}", ex.getMessage());
 		return new ApiErrorMessageDto(ex.getCode().name(), ex.getMessage());
 	}
 

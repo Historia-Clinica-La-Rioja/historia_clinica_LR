@@ -92,4 +92,11 @@ public interface PersonRepository extends JpaRepository<Person, Integer>, AuditP
 			"WHERE p.id = :personId")
 	String getCountryIsoCodeFromPerson(@Param("personId") Integer personId);
 
+
+	@Transactional(readOnly = true)
+	@Query("SELECT p " +
+			"FROM Person p " +
+			"JOIN Patient pa ON pa.personId = p.id " +
+			"WHERE pa.id = :patientId ")
+	Optional<Person> findPersonByPatientId(@Param("patientId") Integer patientId);
 }

@@ -12,7 +12,8 @@ import java.util.stream.Stream;
 public enum EActionType {
 
     CREATE(1, "Alta"),
-    UPDATE(2, "Edición");
+    UPDATE(2, "Edición"),
+	DELETE(3,"Baja");
 
     private final Short id;
     private final String description;

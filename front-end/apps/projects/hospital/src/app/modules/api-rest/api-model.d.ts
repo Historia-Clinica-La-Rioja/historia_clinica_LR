@@ -1599,10 +1599,13 @@ export interface HospitalizationProcedureDto {
 }
 
 export interface IBasicPersonalData {
+    birthDate: Date;
     firstName: string;
     identificationNumber: string;
     identificationTypeId: number;
     lastName: string;
+    middleNames: string;
+    otherLastNames: string;
     phoneNumber: string;
 }
 
@@ -2448,6 +2451,12 @@ export interface PatientSummaryDto {
     medications: MedicationInteroperabilityDto[];
     organization: OrganizationDto;
     patient: PatientInteroperabilityDto;
+}
+
+export interface PatientToMergeDto {
+    activePatientId: number;
+    activePerson: BasicPersonalDataDto;
+    oldPatientsIds: number[];
 }
 
 export interface PatientType extends Serializable {

@@ -18,8 +18,8 @@ import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import net.pladema.medicalconsultation.appointment.application.port.NewAppointmentNotification;
 import net.pladema.medicalconsultation.appointment.domain.NewAppointmentNotificationBo;
-import net.pladema.patient.infraestructure.output.notification.PatientNotificationSender;
-import net.pladema.patient.infraestructure.output.notification.PatientRecipient;
+import net.pladema.patient.infrastructure.output.notification.PatientNotificationSender;
+import net.pladema.patient.infrastructure.output.notification.PatientRecipient;
 
 import java.sql.Date;
 import java.text.SimpleDateFormat;
