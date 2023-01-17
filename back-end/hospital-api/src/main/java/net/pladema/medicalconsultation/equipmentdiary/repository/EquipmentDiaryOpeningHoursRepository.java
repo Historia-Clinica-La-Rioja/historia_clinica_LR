@@ -28,64 +28,40 @@ public interface EquipmentDiaryOpeningHoursRepository extends JpaRepository<Equi
 
 
 
-    @Transactional(readOnly = true)
-    @Query("SELECT NEW net.pladema.medicalconsultation.diary.repository.domain.DiaryOpeningHoursVo( " +
-            "d.id, oh, doh.medicalAttentionTypeId, doh.overturnCount, doh.externalAppointmentsAllowed) " +
-            "FROM DiaryOpeningHours AS doh " +
-            "JOIN Diary AS d ON ( doh.pk.diaryId = d.id ) " +
-            "JOIN OpeningHours AS oh ON ( doh.pk.openingHoursId = oh.id ) " +
-            "WHERE doh.pk.diaryId IN (:diaryIds) " +
-            "AND d.deleteable.deleted = false " +
-            "ORDER BY oh.dayWeekId, oh.from")
-    List<DiaryOpeningHoursVo> getDiariesOpeningHours(@Param("diaryIds") List<Integer> diaryIds);
-
 	@Transactional(readOnly = true)
 	@Query("SELECT NEW net.pladema.medicalconsultation.diary.repository.domain.DiaryOpeningHoursVo( " +
-			"d.id, oh, doh.medicalAttentionTypeId, doh.overturnCount, doh.externalAppointmentsAllowed) " +
-			"FROM DiaryOpeningHours AS doh " +
-			"JOIN Diary AS d ON ( doh.pk.diaryId = d.id ) " +
-			"JOIN OpeningHours AS oh ON ( doh.pk.openingHoursId = oh.id ) " +
-			"WHERE doh.pk.diaryId = :diaryId " +
-			"AND d.deleteable.deleted = false " +
+			"ed.id, oh, edoh.medicalAttentionTypeId, edoh.overturnCount, edoh.externalAppointmentsAllowed) " +
+			"FROM EquipmentDiaryOpeningHours AS edoh " +
+			"JOIN EquipmentDiary AS ed ON ( edoh.pk.equipmentDiaryId = ed.id ) " +
+			"JOIN OpeningHours AS oh ON ( edoh.pk.openingHoursId = oh.id ) " +
+			"WHERE edoh.pk.equipmentDiaryId = :equipmentDiaryId " +
+			"AND ed.deleteable.deleted = false " +
 			"ORDER BY oh.dayWeekId, oh.from")
-	List<DiaryOpeningHoursVo> getDiaryOpeningHours(@Param("diaryId") Integer diaryId);
+	List<DiaryOpeningHoursVo> getDiaryOpeningHours(@Param("equipmentDiaryId") Integer diaryId);
 
 
-	@Transactional(readOnly = true)
-    @Query( "SELECT (case when count(doh) > 0 then true else false end) " +
-            "FROM DiaryOpeningHours AS doh " +
-            "WHERE doh.pk.diaryId = :diaryId " +
-            "AND doh.pk.openingHoursId = :openingHoursId " +
-            "AND doh.overturnCount > (SELECT COUNT(a.id) " +
-            "                           FROM Appointment AS a " +
-            "                           JOIN AppointmentAssn AS aa ON (a.id = aa.pk.appointmentId) " +
-            "                           WHERE aa.pk.diaryId = :diaryId " +
-            "                           AND aa.pk.openingHoursId = :openingHoursId " +
-            "							AND a.dateTypeId = :newAppointmentDate"+
-            "                           AND a.isOverturn = true  " +
-            "                           AND NOT a.appointmentStateId = " + AppointmentState.CANCELLED_STR + ")" )
-	boolean allowNewOverturn(@NotNull @Param("diaryId") Integer diaryId,
-                             @NotNull @Param("openingHoursId") Integer openingHoursId,
-                             @NotNull @Param("newAppointmentDate") LocalDate newAppointmentDate);
 
 	@Transactional
 	@Modifying
-	@Query("DELETE FROM DiaryOpeningHours doh WHERE doh.pk.diaryId = :diaryId ")
-	void deleteAll(@Param("diaryId") Integer diaryId);
+	@Query("DELETE FROM EquipmentDiaryOpeningHours doh WHERE doh.pk.equipmentDiaryId = :equipmentDiaryId ")
+	void deleteAll(@Param("equipmentDiaryId") Integer equipmentDiaryId);
 
 
 
-    @Transactional(readOnly = true)
-    @Query( "SELECT (case when count(doh) > 0 then true else false end) " +
-            "FROM DiaryOpeningHours AS doh " +
-            "JOIN Diary AS d ON (d.id = doh.pk.diaryId) " +
-            "JOIN OpeningHours  AS oh ON (doh.pk.openingHoursId = oh.id) " +
-            "WHERE d.id = :diaryId " +
-            "AND oh.dayWeekId = :dayWeekId " +
-            "AND d.doctorsOfficeId = :doctorsOfficeId " +
-            "AND ((oh.from < :to) AND (oh.to > :from) )" )
-    boolean overlapDiaryOpeningHoursFromOtherDiary(@NotNull @Param("diaryId") Integer diaryId,
-                                                   @NotNull @Param("doctorsOfficeId") Integer doctorsOfficeId,
-                                                   @NotNull @Param("dayWeekId") Short dayWeekId,
-                                                   @NotNull @Param("from") LocalTime from, @Param("to") LocalTime to);
+
+
+	@Transactional(readOnly = true)
+	@Query("SELECT new net.pladema.medicalconsultation.diary.repository.domain.OccupationVo( " +
+			"ed.id, ed.startDate, ed.endDate, oh.dayWeekId, oh.from, oh.to) " +
+			"FROM EquipmentDiaryOpeningHours AS edoh " +
+			"JOIN EquipmentDiary AS ed ON ( edoh.pk.equipmentDiaryId = ed.id ) " +
+			"JOIN OpeningHours AS oh ON ( edoh.pk.openingHoursId = oh.id ) " +
+			"WHERE ed.equipmentId = :equipmentId " +
+			"AND ed.startDate <= :endDate " +
+			"AND ed.endDate >= :startDate " +
+			"AND ed.deleteable.deleted = false " +
+			"ORDER BY oh.dayWeekId, oh.from")
+	List<OccupationVo> findAllWeeklyEquipmentOccupation(@Param("equipmentId") Integer equipmentId,
+															@Param("startDate")LocalDate startDate,
+															@Param("endDate")LocalDate endDate);
 }
