@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import { Observable } from 'rxjs';
 import { ImageDecoderService } from '@presentation/services/image-decoder.service';
 import {
@@ -9,6 +9,12 @@ import { AdditionalInfo } from '@pacientes/pacientes.model';
 import { PatientNameService } from '@core/services/patient-name.service';
 import { PatientGenderService } from "@core/services/patient-gender.service";
 import { Color } from '@presentation/colored-label/colored-label.component';
+import { PatientService } from '@api-rest/services/patient.service';
+import { CompletePatientDto, PersonalInformationDto, TriageListDto, ResponseEmergencyCareDto } from '@api-rest/api-model';
+import { Router, ActivatedRoute } from '@angular/router';
+import { FormBuilder, Validators, FormGroup, FormControl, AbstractControl } from '@angular/forms';
+import { PersonService } from '@api-rest/services/person.service';
+import { BMPersonDto } from '@api-rest/api-model';
 
 const NO_DOCUMENT_TYPE = 'No posee';
 @Component({
@@ -16,7 +22,7 @@ const NO_DOCUMENT_TYPE = 'No posee';
 	templateUrl: './patient-card.component.html',
 	styleUrls: ['./patient-card.component.scss']
 })
-export class PatientCardComponent {
+export class PatientCardComponent implements OnInit{
 
 	@Input() patient: PatientBasicData;
 	@Input() set personPhoto(personPhotoDto: PersonPhotoDto) {
@@ -31,12 +37,37 @@ export class PatientCardComponent {
 	@Input() internmentEpisodeProcess: InternmentEpisodeProcessDto;
 	@Input() emergencyCareEpisodeInProgress: boolean;
 	Color = Color;
+	
+	public patientId: any;
+	public form: FormGroup;
+	public completeDataPatient: CompletePatientDto;
+	public patientType;
 
 	constructor(
 		private readonly imageDecoderService: ImageDecoderService,
 		private readonly patientNameService: PatientNameService,
-		private readonly patientGenderService: PatientGenderService
+		private readonly patientGenderService: PatientGenderService,
+		private route: ActivatedRoute,
+		private formBuilder: FormBuilder,
+		private patientService: PatientService,
+		private personService: PersonService,
 	) { }
+
+	ngOnInit(): void {
+		this.route.queryParams
+			.subscribe(params => {
+				this.formBuild();
+				this.patientService.getPatientCompleteData<CompletePatientDto>(this.patient?.id)
+					.subscribe(completeData => {
+						this.completeDataPatient = completeData;
+						this.patientType = completeData.patientType.id;
+						this.personService.getCompletePerson<BMPersonDto>(completeData.person.id)
+							.subscribe(personInformationData => {
+								this.form.setControl('birthDate', new FormControl(new Date(personInformationData.birthDate), Validators.required));
+							});
+					});
+			});
+	}
 
 	public showID(): string {
 		if (this.patient?.id === undefined) {
@@ -71,10 +102,30 @@ export class PatientCardComponent {
 		return (this.showID());
 	}
 
+	formBuild() {
+		this.form = this.formBuilder.group({
+			birthDate: [null, [Validators.required]]
+		});
+	}
+
 	public viewGenderAge(): string {
 		let gender = this.patientGenderService.getPatientGender(this.patient?.gender, this.patient?.selfPerceivedGender);
 		gender = gender ? gender : 'Sin género';
-		const age = (this.patient?.age) || (this.patient?.age === 0) ? (this.patient.age + ' años') : 'Sin edad';
+		var age = 'Sin edad';
+		if ((this.patient?.age < 2) && (this.form.valid)){
+			let fecha1 = new Date();
+			let fecha2 = this.form.get('birthDate').value;
+			console.log(fecha2)
+			let milisegundosXdia = 24 * 60 * 60 * 1000;
+			let milisegundosTranscurridos = Math.abs((fecha1.getTime())-(fecha2.getTime()));
+			let diasTranscurridos = Math.round(milisegundosTranscurridos/milisegundosXdia);
+			let meses = Math.round(diasTranscurridos/30);
+			age = (this.patient?.age) || (this.patient?.age === 0) ? (meses + ' meses') : 'Sin edad';
+		}
+		else{
+			age = (this.patient?.age) || (this.patient?.age === 0) ? (this.patient.age + ' años') : 'Sin edad';
+		}
+		console.log(age);
 		return gender + ' · ' + age;
 	}
 
