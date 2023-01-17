@@ -16,6 +16,7 @@ export class TypeaheadComponent implements OnInit, OnChanges {
 	@Input() externalSetValue: TypeaheadOption<any>;
 	@Output() selectionChange = new EventEmitter();
 	@Input() required :boolean;
+	@Input() disabled? :boolean;
 
 	form: FormGroup;
 	optionsFiltered: TypeaheadOption<any>[];
@@ -53,6 +54,12 @@ export class TypeaheadComponent implements OnInit, OnChanges {
 		if (this.optionSelected && this.optionsNotIncludesSelected()) {
 			this.reset();
 		}
+
+		if (this.disabled) {
+			this.form.controls.searchValue.disable();
+		} else {
+			this.form.controls.searchValue.enable();
+		}
 	}
 
 	isRequired() :void {
@@ -64,9 +71,12 @@ export class TypeaheadComponent implements OnInit, OnChanges {
 	}
 
 	select(event: MatOptionSelectionChange, option: TypeaheadOption<any>): void {
-		if (event.isUserInput) {
+		if (!this.disabled && event.isUserInput) {
 			this.optionSelected = option;
 			this.selectionChange.emit(option.value);
+		} 
+		if (this.disabled) {
+			this.reset();
 		}
 	}
 
