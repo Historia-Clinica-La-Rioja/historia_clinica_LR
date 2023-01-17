@@ -15,6 +15,8 @@ export class HomeComponent {
 
 	tabActiveIndex = 0;
 
+	ffIsOn = false;
+
 	constructor(
 		private readonly router: Router,
 		public readonly route: ActivatedRoute,
