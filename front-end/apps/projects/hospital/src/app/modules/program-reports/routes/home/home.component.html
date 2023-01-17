@@ -77,6 +77,27 @@
 				</mat-form-field>
 			</div>
 		</div>
+
+		<div *ngIf = "this.form.controls.programReportType.value == 4 " fxLayout="row" fxLayoutGap="30px">
+			<div id="specialty" fxFlex="50%" fxLayoutGap="5px">
+				<mat-label [translate]="'reportes.form.SPECIALTY'"></mat-label>
+
+				<app-typeahead
+					[placeholder]="'reportes.form.SPECIALTY_PLACEHOLDER'"
+					[options]="specialtiesTypeaheadOptions$ | async"
+					(selectionChange)="setSpecialty($event)">
+				</app-typeahead>
+			</div>
+
+			<div id="professional" fxFlex="50%" fxLayoutGap="5px">
+				<mat-label [translate]="'reportes.form.PROFESSIONAL'"></mat-label>
+
+				<app-typeahead
+					[options]="professionalsTypeahead" [placeholder]="'reportes.form.PROFESSIONAL_PLACEHOLDER'"
+					(selectionChange)="setProfessional($event)">
+				</app-typeahead>
+			</div>
+		</div>
 		
 				<div fxLayout="row" fxLayoutAlign="end" style="margin-top: 20px">
 					<button class="uppercase" mat-raised-button color="primary" (click)="generateProgramReport()">

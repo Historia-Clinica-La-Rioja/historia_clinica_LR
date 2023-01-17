@@ -21,8 +21,14 @@ export class ProgramReportsService {
     let requestParams: HttpParams = new HttpParams();
     requestParams = requestParams.append('fromDate', momentFormat(params.startDate, DateFormat.API_DATE));
 		requestParams = requestParams.append('toDate', momentFormat(params.endDate, DateFormat.API_DATE));
+    if (params.specialtyId) {
+			requestParams = requestParams.append('clinicalSpecialtyId', params.specialtyId);
+		}
+		if (params.professionalId) {
+			requestParams = requestParams.append('doctorId', params.professionalId);
+		}
+		return this.downloadService.downloadXlsWithRequestParams(url, fileName, requestParams);
 
-    return this.downloadService.downloadXlsWithRequestParams(url, fileName, requestParams);
   }
 
   getMonthlyEpiIReport(params: any, fileName: string): Observable<any> {
