@@ -36,7 +36,8 @@ public class PatientRepositoryImpl implements PatientRepositoryCustom {
                 .concat(" FROM ")
                 .concatPart(patientSearchQuery.from())
                 .concat("WHERE ")
-                .concatPart(patientSearchQuery.whereWithAllAttributes(AND_JOINING_OPERATOR, LIKE_COMPARATOR));
+                .concatPart(patientSearchQuery.whereWithAllAttributes(AND_JOINING_OPERATOR, LIKE_COMPARATOR))
+				.concat(" AND patient.deleted = false ");
 
         if (searchFilter.getFilterByNameSelfDetermination()) {
 			queryPart.concat("UNION ");
@@ -60,7 +61,8 @@ public class PatientRepositoryImpl implements PatientRepositoryCustom {
 				.concat("	FROM \n")
                 .concatPart(patientSearchQuery.from())
                 .concat("	WHERE \n")
-                .concatPart(patientSearchQuery.whereWithAllAttributes(AND_JOINING_OPERATOR, LIKE_COMPARATOR));
+                .concatPart(patientSearchQuery.whereWithAllAttributes(AND_JOINING_OPERATOR, LIKE_COMPARATOR))
+				.concat(" AND patient.deleted = false ");
 
         if (searchFilter.getFilterByNameSelfDetermination()) {
 			queryPart.concat("UNION \n" +

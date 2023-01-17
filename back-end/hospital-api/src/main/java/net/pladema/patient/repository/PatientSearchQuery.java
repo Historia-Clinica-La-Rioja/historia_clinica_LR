@@ -109,7 +109,10 @@ public class PatientSearchQuery {
         }
 
         String joiningOperatorString = getJoiningOperator(joiningOperator);
-        return new QueryPart(String.join(joiningOperatorString, whereString));
+		QueryPart result = new QueryPart(" AND ( ")
+				.concatPart(new QueryPart(String.join(joiningOperatorString, whereString)))
+				.concat(" )");
+        return result;
     }
 
     public QueryPart whereWithAllAttributes(Integer joiningOperator, Integer clauseComparator) {

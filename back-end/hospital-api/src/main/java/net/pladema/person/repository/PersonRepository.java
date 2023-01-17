@@ -24,7 +24,8 @@ public interface PersonRepository extends JpaRepository<Person, Integer>, AuditP
             "JOIN Person as pe ON (pe.id = pa.personId) " +
             "WHERE pe.identificationTypeId = :identificationTypeId " +
             "AND pe.identificationNumber = :identificationNumber " +
-            "AND pe.genderId = :genderId")
+            "AND pe.genderId = :genderId " +
+			"AND pa.deleteable.deleted = false")
     List<Integer> findByDniAndGender(
             @Param("identificationTypeId") Short identificationTypeId,
             @Param("identificationNumber") String identificationNumber,
@@ -99,4 +100,12 @@ public interface PersonRepository extends JpaRepository<Person, Integer>, AuditP
 			"JOIN Patient pa ON pa.personId = p.id " +
 			"WHERE pa.id = :patientId ")
 	Optional<Person> findPersonByPatientId(@Param("patientId") Integer patientId);
+
+	@Transactional(readOnly = true)
+	@Query("SELECT p.id " +
+			"FROM Person p " +
+			"JOIN Patient pa ON pa.personId = p.id " +
+			"WHERE pa.deleteable.deleted = false ")
+	List<Integer> findAllActive();
+
 }

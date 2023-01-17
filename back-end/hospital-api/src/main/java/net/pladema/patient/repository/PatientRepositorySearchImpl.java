@@ -36,9 +36,9 @@ public class PatientRepositorySearchImpl implements PatientRepositorySearch {
                 .concatPart(patientSearchQuery.select())
                 .concat(" FROM ")
                 .concatPart(patientSearchQuery.from());
+		queryPart.concat("WHERE patient.deleted = false");
         if (hasBasicSearchAttributes(searchFilter))
-                queryPart.concat("WHERE ")
-                .concatPart(patientSearchQuery.whereWithBasicAttributes(OR_JOINING_OPERATOR));
+                queryPart.concatPart(patientSearchQuery.whereWithBasicAttributes(OR_JOINING_OPERATOR));
         return queryPart;
     }
 
