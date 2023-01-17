@@ -1,5 +1,7 @@
 package ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document;
 
+import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.ips.entity.indication.Indication;
+
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -9,6 +11,8 @@ import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.e
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.entity.DocumentIndicationPK;
 
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
 
 @Repository
 public interface DocumentIndicationRepository extends JpaRepository<DocumentIndication, DocumentIndicationPK> {
@@ -20,4 +24,11 @@ public interface DocumentIndicationRepository extends JpaRepository<DocumentIndi
 			+ "JOIN Note n ON n.id = doc.otherNoteId "
 			+ "WHERE di.pk.indicationId = :indicationId ")
 	String getNote(@Param("indicationId") Integer indicationId);
+
+	@Transactional(readOnly = true)
+	@Query(value = "SELECT i "
+			+ "FROM DocumentIndication di "
+			+ "JOIN Indication i ON di.pk.indicationId = i.id "
+			+ "WHERE di.pk.documentId IN :documentIds")
+	List<Indication> getIndicationFromDocuments(@Param("documentIds") List<Long> documentIds);
 }

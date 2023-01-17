@@ -3,6 +3,7 @@ package ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.entity.DocumentInmunization;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.entity.DocumentInmunizationPK;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.hospitalizationState.entity.ImmunizationVo;
+import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.ips.entity.Inmunization;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.masterdata.entity.InmunizationStatus;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -40,4 +41,11 @@ public interface DocumentImmunizationRepository extends JpaRepository<DocumentIn
             "LEFT JOIN Note n ON (n.id = i.noteId) " +
             "WHERE di.pk.documentId = :documentId ")
     List<ImmunizationVo> getImmunizationStateFromDocumentToReport(@Param("documentId") Long documentId);
+
+	@Transactional(readOnly = true)
+	@Query("SELECT i " +
+			"FROM DocumentInmunization di " +
+			"JOIN Inmunization i ON di.pk.inmunizationId = i.id " +
+			"WHERE di.pk.documentId IN :documentIds")
+	List<Inmunization> getImmunizationFromDocuments(@Param("documentIds") List<Long> documentIds);
 }

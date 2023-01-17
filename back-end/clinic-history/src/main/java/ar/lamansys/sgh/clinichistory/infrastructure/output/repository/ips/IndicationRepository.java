@@ -10,6 +10,7 @@ import ar.lamansys.sgx.shared.auditable.repository.SGXAuditableEntityJPAReposito
 
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
 import java.util.Optional;
 
 @Repository
@@ -31,5 +32,12 @@ public interface IndicationRepository extends SGXAuditableEntityJPARepository<In
 	void updateStatus(@Param("indicationId") Integer indicationId,
 					  @Param("statusId") short statusId,
 					  @Param("userId") Integer userId);
+
+	@Transactional
+	@Modifying
+	@Query("UPDATE Indication AS i " +
+			"SET i.patientId = :newPatientId " +
+			"WHERE i.id IN :iIds")
+	void updatePatient(@Param("iIds") List<Integer> iIds, @Param("newPatientId") Integer newPatientId);
 
 }

@@ -18,5 +18,5 @@ public interface AdditionalDoctorRepository extends JpaRepository<AdditionalDoct
             "FROM AdditionalDoctor AS ad " +
             "WHERE ad.patientId = :patientId ")
     Collection<AdditionalDoctor> getAdditionalDoctors(@Param("patientId") Integer patientId);
-	
+
 }

@@ -14,13 +14,18 @@ public class MergePatient {
 
 	private final MergePatientStorage mergePatientStorage;
 
+	private final MigrateClinicHistory migrateClinicHistory;
+
 	public Integer run(Integer institutionId, PatientToMergeDto patientToMerge) {
 		log.debug("Input parameters -> institutionId {}, patientToMerge {}", institutionId, patientToMerge);
 		mergePatientStorage.assertBasicPersonData(patientToMerge.getRegistrationDataPerson());
 		Integer activePatientId = patientToMerge.getActivePatientId();
 		patientToMerge.getOldPatientsIds().forEach(id -> mergePatientStorage.inactivatePatient(id, activePatientId, institutionId));
 		mergePatientStorage.updatePersonByPatientId(activePatientId, patientToMerge.getRegistrationDataPerson(), institutionId);
-		mergePatientStorage.saveMergeHistoricData(activePatientId, patientToMerge.getOldPatientsIds());
+		mergePatientStorage.saveMergeHistoricData(activePatientId,patientToMerge.getOldPatientsIds());
+
+		migrateClinicHistory.execute(patientToMerge.getOldPatientsIds(), patientToMerge.getActivePatientId());
+
 		log.debug("Output result -> {}", activePatientId);
 		return activePatientId;
 	}

@@ -2,6 +2,8 @@ package ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document;
 
 import java.util.List;
 
+import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.ips.entity.OdontologyProcedure;
+
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -23,4 +25,11 @@ public interface DocumentOdontologyProcedureRepository extends JpaRepository<Doc
 			"JOIN Snomed s2 ON (op.surfaceId = s2.id) " +
 			"WHERE dp.pk.documentId = :documentId ")
     List<Object[]> getOdontologyProcedureFromDocument(@Param("documentId") Long documentId);
+
+	@Transactional(readOnly = true)
+	@Query("SELECT op " +
+			"FROM DocumentOdontologyProcedure dop " +
+			"JOIN OdontologyProcedure op ON (dop.pk.odontologyProcedureId = op.id) " +
+			"WHERE dop.pk.documentId IN :documentIds ")
+	List<OdontologyProcedure> getOdontologyProcedureFromDocuments(@Param("documentIds") List<Long> documentIds);
 }

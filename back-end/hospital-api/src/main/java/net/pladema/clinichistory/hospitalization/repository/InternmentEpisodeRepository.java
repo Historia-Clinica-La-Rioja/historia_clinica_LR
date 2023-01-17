@@ -30,6 +30,19 @@ public interface InternmentEpisodeRepository extends JpaRepository<InternmentEpi
             "WHERE ie.id = :internmentEpisodeId")
     Optional<Integer> getPatient(@Param("internmentEpisodeId") Integer internmentEpisodeId);
 
+	@Transactional(readOnly = true)
+	@Query("SELECT ie.id " +
+			"FROM InternmentEpisode ie " +
+			"WHERE ie.patientId IN (:patientIds)")
+	List<Integer> getInternmentEpisodeFromPatients(@Param("patientIds") List<Integer> patientIds);
+
+	@Transactional(readOnly = true)
+	@Modifying
+	@Query("UPDATE InternmentEpisode AS ie " +
+			"SET ie.patientId = :newPatient " +
+			"WHERE ie.id IN (:ieIds)")
+	void updatePatient(@Param("ieIds") List<Integer> ieIds, @Param("newPatient") Integer newPatient);
+
     @Transactional
     @Modifying
     @Query("UPDATE InternmentEpisode AS ie " +
