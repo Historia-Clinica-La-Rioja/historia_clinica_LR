@@ -30,15 +30,16 @@ export class ReferenceComponent implements OnInit {
 	selectedFiles: File[] = [];
 	selectedFilesShow: any[] = [];
 	DEFAULT_RADIO_OPTION = '0';
-	provinces: TypeaheadOption<any>[]
+	provinces: TypeaheadOption<any>[];
 	departments: TypeaheadOption<any>[];
 	institutions: TypeaheadOption<any>[];
 	defaultProvince: TypeaheadOption<any>;
 	defaultDepartment: TypeaheadOption<any>;
 	defaultInstitution: TypeaheadOption<any>;
-	required: boolean = true;
-	departmentDisable: boolean = false;
-	submitForm: boolean = false;
+	required = true;
+	departmentDisable = false;
+	submitForm = false;
+	originalDestinationDepartment: TypeaheadOption<any>;
 
 	constructor(
 		@Inject(MAT_DIALOG_DATA) public data: any,
@@ -61,37 +62,28 @@ export class ReferenceComponent implements OnInit {
 
 		this.subscribesToChangesInForm();
 
-		this.getAllInstitutions();
-
 		this.adressMasterData.getByCountry(COUNTRY).subscribe(provinces => {
 			this.provinces = this.setFilterValues(provinces, "description");
 
 			this.institutionService.getAddress(this.contextService.institutionId).subscribe((institutionInfo: AddressDto) => {
-				const provinceId = institutionInfo?.provinceId;
-				if (provinceId) {
-					this.setProvinceAndSearchDepartments(provinceId);
-				}
-				this.loadOriginInstitutionInformation(institutionInfo);
+				this.loadDefaultInstitutionInformation(institutionInfo);
 			});
 		})
 	}
 
-	getAllInstitutions(){
-		this.institutionService.getAllInstitutions().subscribe(response => {
-			if (response){
-				const options: TypeaheadOption<any>[] = this.setFilterValues(response, "name");
-        		this.institutions = options;
-			}
+	private getAllInstitutions() {
+		this.institutionService.getAllInstitutions().subscribe((institutions: InstitutionBasicInfoDto[]) => {
+			this.institutions = this.institutionsToTypeaheadOption(institutions);
 		});
 	}
 
 	setFilterValues(response, attribute: string) {
 		const opt: TypeaheadOption<any>[] = [];
 		response.map(value => {
-		opt.push({
-			value: value.id,
-			compareValue: value[attribute],
-			viewValue: value[attribute]
+			opt.push({
+				value: value.id,
+				compareValue: value[attribute],
+				viewValue: value[attribute]
 			});
 		})
 		return opt;
@@ -208,7 +200,7 @@ export class ReferenceComponent implements OnInit {
 		this.selectedFilesShow.splice(index, 1);
 	}
 
-	setInformationByInstitution(institutionId:number){
+	setInformationByInstitution(institutionId: number) {
 		this.formReference.controls.institutionDestinationId.setValue(institutionId);
 		this.setInformation()
 	}
@@ -251,13 +243,14 @@ export class ReferenceComponent implements OnInit {
 
 	private setCareLines() {
 		const problemSnomedIds: string[] = this.referenceProblemDto.map(problem => problem.snomed.sctid);
-		if (!problemSnomedIds.length || !this.formReference.value.institutionDestinationId) {
+		const institutionId = this.formReference.value.institutionDestinationId;
+		if (!problemSnomedIds.length || !institutionId) {
 			this.formReference.controls.careLine.disable();
 		}
-		if (problemSnomedIds.length && this.formReference.value.institutionDestinationId) {
+		if (problemSnomedIds.length && institutionId) {
 			this.formReference.controls.careLine.enable();
 			this.formReference.controls.careLine.updateValueAndValidity();
-			this.careLineService.getByProblemSnomedIdsAndInstitutionId(this.formReference.value.institutionDestinationId, problemSnomedIds).subscribe(careLines => this.careLines = careLines);
+			this.careLineService.getByProblemSnomedIdsAndInstitutionId(institutionId, problemSnomedIds).subscribe(careLines => this.careLines = careLines);
 		}
 		this.formReference.controls.clinicalSpecialty.disable();
 	}
@@ -292,17 +285,17 @@ export class ReferenceComponent implements OnInit {
 	setInfoByProvince(province: number) {
 		this.clearInformation();
 		this.setDepartmentsByProvince(province);
-		this.setInstitutionsByProvince(province);
 		this.formReference.controls.provinceId.setValue(province);
 	}
 
-	setDepartmentsByProvince(province: number) {
-		if (province){
+	private setDepartmentsByProvince(province: number) {
+		if (province) {
 			this.adressMasterData.getDepartmentsByProvince(province).subscribe(response => {
-				if (response){
+				if (response) {
 					const options: TypeaheadOption<any>[] = this.setFilterValues(response, "description");
 					this.departments = options;
 					this.departmentDisable = false;
+					this.updateDepartmentValue();
 				};
 			})
 		} else {
@@ -310,38 +303,51 @@ export class ReferenceComponent implements OnInit {
 		}
 	}
 
-	setInstitutionsByProvince(province: number){
-		if(province){
-			this.institutionService.findByProvinceId(province).subscribe(response => {
-				if (response){
-					const options: TypeaheadOption<any>[] = this.setFilterValues(response, "name");
-					this.institutions = options;
-				};
-			});
+	private updateDepartmentValue() {
+		if (this.originalDestinationDepartment){
+			this.defaultDepartment = this.originalDestinationDepartment;
+			this.originalDestinationDepartment = null;
 		} else {
-			this.getAllInstitutions();
+			this.defaultDepartment = this.clearTypeahead();
 		}
+	}
+
+	setInstitutionsByProvince(province: number) {
+		this.institutionService.findByProvinceId(province).subscribe((institutions: InstitutionBasicInfoDto[]) => {
+			this.institutions = this.institutionsToTypeaheadOption(institutions);
+		});
+	}
+
+	private clearTypeahead() {
+		return { value: null, viewValue: null, compareValue: null }
 	}
 
 	filterInstitutionsByDepartment(department: number) {
 		this.formReference.controls.departmentId.setValue(department);
-		this.defaultInstitution = {value: null, viewValue: null, compareValue: null};
+		this.defaultInstitution = this.clearTypeahead();
 		if (department) {
 			this.clearCareLinesAndSpecialties();
-			this.institutionService.findByDepartmentId(department).subscribe(response => {
-				if (response){
-					const options: TypeaheadOption<any>[] = this.setFilterValues(response, "name");
-					this.institutions = options;
-				};
+			this.institutionService.findByDepartmentId(department).subscribe((institutions: InstitutionBasicInfoDto[]) =>{
+				this.institutions = this.institutionsToTypeaheadOption(institutions);
 			});
 		} else {
-			this.getAllInstitutions();
+			if (this.formReference.value.provinceId) {
+				this.setInstitutionsByProvince(this.formReference.value.provinceId);
+			} else {
+				this.getAllInstitutions();
+			}
+		}
+	}
+
+	private institutionsToTypeaheadOption(institutions: InstitutionBasicInfoDto[]): TypeaheadOption<any>[]{
+		if (institutions) {
+			const options: TypeaheadOption<any>[] = this.setFilterValues(institutions, "name");
+			return options;
 		}
 	}
 
 	private clearInformation() {
-		this.defaultDepartment = {value: null, viewValue: null, compareValue: null};
-		this.defaultInstitution = {value: null, viewValue: null, compareValue: null};
+		this.defaultDepartment = this.clearTypeahead();
 		this.clearCareLinesAndSpecialties();
 	}
 
@@ -370,18 +376,18 @@ export class ReferenceComponent implements OnInit {
 		}
 	}
 
-	private loadOriginInstitutionInformation(institutionInfo: AddressDto) {
+	private loadDefaultInstitutionInformation(institutionInfo: AddressDto) {
 		if (institutionInfo.provinceId) {
-			this.adressMasterData.getDepartmentsByProvince(institutionInfo.provinceId).subscribe(
-				departments => {
-					const department = departments.find((department: DepartmentDto) => department.id === institutionInfo.departmentId);
-					this.formReference.controls.departmentOrigin.setValue(department.description);
-					if (department.id) {
-						this.institutionService.findByDepartmentId(department.id).subscribe((institutions: InstitutionBasicInfoDto[]) =>
-							this.setInstitutionOrigin(institutions)
-						);
-					}
-				});
+			this.setProvince(institutionInfo.provinceId);
+			this.adressMasterData.getDepartmentById(institutionInfo.departmentId).subscribe((department: DepartmentDto) => {
+				this.formReference.controls.departmentOrigin.setValue(department.description);
+				this.setDefaultDestinationDepartment(department);
+				if (department.id) {
+					this.institutionService.findByDepartmentId(department.id).subscribe((institutions: InstitutionBasicInfoDto[]) =>
+						this.setInstitutionOrigin(institutions)
+					);
+				}
+			});
 		}
 		else {
 			if (institutionInfo.departmentId) {
@@ -390,12 +396,20 @@ export class ReferenceComponent implements OnInit {
 				information$.push(this.institutionService.findByDepartmentId(institutionInfo.departmentId));
 				forkJoin(information$).subscribe(info => {
 					if (info[0].provinceId) {
-						this.setProvinceAndSearchDepartments(info[0].provinceId);
+						this.setProvince(info[0].provinceId);
 					}
 					this.formReference.controls.departmentOrigin.setValue(info[0].description);
+					this.setDefaultDestinationDepartment(info[0]);
 					this.setInstitutionOrigin(info[1]);
 				});
 			}
+		}
+	}
+
+	private setDefaultDestinationDepartment(department: DepartmentDto) {
+		if (department) {
+			this.formReference.controls.departmentId.setValue(department.id);
+			this.originalDestinationDepartment = { value: department.id, viewValue: department.description, compareValue: department.description };
 		}
 	}
 
@@ -428,11 +442,9 @@ export class ReferenceComponent implements OnInit {
 		this.formReference.controls.institutionOrigin.disable();
 	}
 
-	private setProvinceAndSearchDepartments(provinceId: number) {
-		this.clearInformation();
-		this.setDepartmentsByProvince(provinceId);
+	private setProvince(provinceId: number) {
 		const provinceOrigin = this.provinces.find(p => p.value === provinceId);
-		this.defaultProvince = {value: provinceOrigin.value, compareValue: provinceOrigin.compareValue, viewValue: provinceOrigin.viewValue}
+		this.defaultProvince = { value: provinceOrigin.value, compareValue: provinceOrigin.compareValue, viewValue: provinceOrigin.viewValue }
 		this.formReference.controls.provinceOrigin.setValue(provinceOrigin.viewValue);
 	}
 
