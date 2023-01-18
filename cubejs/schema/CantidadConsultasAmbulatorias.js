@@ -11,7 +11,15 @@ cube(`CantidadConsultasAmbulatorias`, {
             JOIN patient pa ON (oc.patient_id = pa.id)
             JOIN person pe ON (pa.person_id = pe.id)
             JOIN gender g ON (pe.gender_id = g.id)
-      UNION ALL
+        ${SECURITY_CONTEXT.userId.unsafeValue() ? '' +  `
+          WHERE (oc.institution_id IN (
+            SELECT ur.institution_id 
+            FROM users as u 
+            JOIN user_role ur on u.id = ur.user_id 
+            WHERE ur.role_id = 8
+            AND ur.deleted = false
+            AND u.id = ${SECURITY_CONTEXT.userId.unsafeValue()}))` : ''}
+    UNION ALL
         SELECT 
             oc.id, 'Odontología' as tipo, oc.performed_date as fecha_consulta, g.description as gender, pe.birth_date, cs.name as especialidad,
             concat_ws(', ', concat_ws(' ', doc.last_name, doc.other_last_names), CASE WHEN pex.name_self_determination IS NULL THEN concat_ws(' ', doc.first_name, doc.middle_names) ELSE pex.name_self_determination END) AS profesional
@@ -24,6 +32,14 @@ cube(`CantidadConsultasAmbulatorias`, {
             JOIN patient pa ON (oc.patient_id = pa.id)
             JOIN person pe ON (pa.person_id = pe.id)
             JOIN gender g ON (pe.gender_id = g.id)
+        ${SECURITY_CONTEXT.userId.unsafeValue() ? '' +  `
+          WHERE (oc.institution_id IN (
+            SELECT ur.institution_id 
+            FROM users as u 
+            JOIN user_role ur on u.id = ur.user_id 
+            WHERE ur.role_id = 8
+            AND ur.deleted = false
+            AND u.id = ${SECURITY_CONTEXT.userId.unsafeValue()}))` : ''}
       UNION ALL
         SELECT 
             nc.id, 'Enfermería' as tipo, nc.performed_date as fecha_consulta, g.description as gender, pe.birth_date, cs.name as especialidad,
@@ -36,7 +52,15 @@ cube(`CantidadConsultasAmbulatorias`, {
             JOIN person_extended pex ON (pex.person_id = doc.id)
             JOIN patient pa ON (nc.patient_id = pa.id)
             JOIN person pe ON (pa.person_id = pe.id)
-            JOIN gender g ON (pe.gender_id = g.id)`,
+            JOIN gender g ON (pe.gender_id = g.id)
+        ${SECURITY_CONTEXT.userId.unsafeValue() ? '' +  `
+          WHERE (nc.institution_id IN (
+            SELECT ur.institution_id 
+            FROM users as u 
+            JOIN user_role ur on u.id = ur.user_id 
+            WHERE ur.role_id = 8
+            AND ur.deleted = false
+            AND u.id = ${SECURITY_CONTEXT.userId.unsafeValue()}))` : ''}`,
   
   measures: {
     cantidad_turnos_estado: {

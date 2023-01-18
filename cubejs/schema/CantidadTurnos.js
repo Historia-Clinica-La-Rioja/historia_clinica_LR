@@ -7,11 +7,20 @@ cube(`CantidadTurnos`, {
           JOIN appointment ap ON (has.appointment_id = ap.id)
           JOIN appointment_assn apss ON (apss.appointment_id = ap.id)
           JOIN diary d ON (apss.diary_id = d.id)
+          JOIN doctors_office dof ON (d.doctors_office_id = dof.id)
           JOIN healthcare_professional hp ON (d.healthcare_professional_id = hp.id)
           JOIN person p ON (hp.person_id = p.id)
           JOIN person_extended pex ON (pex.person_id = p.id)
           JOIN clinical_specialty cs ON (d.clinical_specialty_id = cs.id)
-    WHERE has.appointment_state_id = 5`,
+    WHERE has.appointment_state_id = 5
+  ${SECURITY_CONTEXT.userId.unsafeValue() ? '' +  `
+    AND (dof.institution_id IN (
+      SELECT ur.institution_id 
+      FROM users as u 
+      JOIN user_role ur on u.id = ur.user_id 
+      WHERE ur.role_id = 8
+      AND ur.deleted = false
+      AND u.id = ${SECURITY_CONTEXT.userId.unsafeValue()}))` : ''}`,
   
   measures: {
     cantidad_turnos: {
