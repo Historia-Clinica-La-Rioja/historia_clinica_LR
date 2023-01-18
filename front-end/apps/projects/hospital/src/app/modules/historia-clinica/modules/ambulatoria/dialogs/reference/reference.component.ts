@@ -8,6 +8,7 @@ import { ClinicalSpecialtyService } from '@api-rest/services/clinical-specialty.
 import { HceGeneralStateService } from '@api-rest/services/hce-general-state.service';
 import { InstitutionService } from '@api-rest/services/institution.service';
 import { ContextService } from '@core/services/context.service';
+import { TypeaheadOption } from '@presentation/components/typeahead/typeahead.component';
 import { forkJoin, Observable, of } from 'rxjs';
 
 
@@ -25,14 +26,19 @@ export class ReferenceComponent implements OnInit {
 	problemsList: any[] = [];
 	specialties$: Observable<ClinicalSpecialtyDto[]>;
 	careLines: CareLineDto[];
-	departments$: Observable<any[]>;
 	referenceProblemDto: ReferenceProblemDto[] = [];
-	institutions$: Observable<InstitutionBasicInfoDto[]>;
 	selectedFiles: File[] = [];
 	selectedFilesShow: any[] = [];
-	institutionDestinationId: number;
-	provinces: any[];
 	DEFAULT_RADIO_OPTION = '0';
+	provinces: TypeaheadOption<any>[]
+	departments: TypeaheadOption<any>[];
+	institutions: TypeaheadOption<any>[];
+	defaultProvince: TypeaheadOption<any>;
+	defaultDepartment: TypeaheadOption<any>;
+	defaultInstitution: TypeaheadOption<any>;
+	required: boolean = true;
+	departmentDisable: boolean = false;
+	submitForm: boolean = false;
 
 	constructor(
 		@Inject(MAT_DIALOG_DATA) public data: any,
@@ -55,10 +61,10 @@ export class ReferenceComponent implements OnInit {
 
 		this.subscribesToChangesInForm();
 
-		this.institutions$ = this.institutionService.getAllInstitutions();
+		this.getAllInstitutions();
 
 		this.adressMasterData.getByCountry(COUNTRY).subscribe(provinces => {
-			this.provinces = provinces;
+			this.provinces = this.setFilterValues(provinces, "description");
 
 			this.institutionService.getAddress(this.contextService.institutionId).subscribe((institutionInfo: AddressDto) => {
 				const provinceId = institutionInfo?.provinceId;
@@ -68,6 +74,27 @@ export class ReferenceComponent implements OnInit {
 				this.loadOriginInstitutionInformation(institutionInfo);
 			});
 		})
+	}
+
+	getAllInstitutions(){
+		this.institutionService.getAllInstitutions().subscribe(response => {
+			if (response){
+				const options: TypeaheadOption<any>[] = this.setFilterValues(response, "name");
+        		this.institutions = options;
+			}
+		});
+	}
+
+	setFilterValues(response, attribute: string) {
+		const opt: TypeaheadOption<any>[] = [];
+		response.map(value => {
+		opt.push({
+			value: value.id,
+			compareValue: value[attribute],
+			viewValue: value[attribute]
+			});
+		})
+		return opt;
 	}
 
 	setProblems() {
@@ -147,6 +174,7 @@ export class ReferenceComponent implements OnInit {
 	}
 
 	save(): void {
+		this.submitForm = true;
 		if (this.formReference.valid) {
 			const reference = { data: this.buildReference(), files: this.selectedFiles, problems: this.getReferenceProblems() };
 			this.dialogRef.close(reference);
@@ -178,6 +206,11 @@ export class ReferenceComponent implements OnInit {
 	removeSelectedFile(index): void {
 		this.selectedFiles.splice(index, 1);
 		this.selectedFilesShow.splice(index, 1);
+	}
+
+	setInformationByInstitution(institutionId:number){
+		this.formReference.controls.institutionDestinationId.setValue(institutionId);
+		this.setInformation()
 	}
 
 	setInformation() {
@@ -218,14 +251,13 @@ export class ReferenceComponent implements OnInit {
 
 	private setCareLines() {
 		const problemSnomedIds: string[] = this.referenceProblemDto.map(problem => problem.snomed.sctid);
-		const institutionId = this.formReference.value.institutionDestinationId;
-		if (!problemSnomedIds.length || !institutionId) {
+		if (!problemSnomedIds.length || !this.formReference.value.institutionDestinationId) {
 			this.formReference.controls.careLine.disable();
 		}
-		if (problemSnomedIds.length && institutionId) {
+		if (problemSnomedIds.length && this.formReference.value.institutionDestinationId) {
 			this.formReference.controls.careLine.enable();
 			this.formReference.controls.careLine.updateValueAndValidity();
-			this.careLineService.getByProblemSnomedIdsAndInstitutionId(institutionId, problemSnomedIds).subscribe(careLines => this.careLines = careLines);
+			this.careLineService.getByProblemSnomedIdsAndInstitutionId(this.formReference.value.institutionDestinationId, problemSnomedIds).subscribe(careLines => this.careLines = careLines);
 		}
 		this.formReference.controls.clinicalSpecialty.disable();
 	}
@@ -258,33 +290,58 @@ export class ReferenceComponent implements OnInit {
 	}
 
 	setInfoByProvince(province: number) {
+		this.clearInformation();
 		this.setDepartmentsByProvince(province);
 		this.setInstitutionsByProvince(province);
+		this.formReference.controls.provinceId.setValue(province);
 	}
 
 	setDepartmentsByProvince(province: number) {
-		this.clearInformation();
-		this.departments$ = this.adressMasterData.getDepartmentsByProvince(province);
-		this.formReference.controls.departmentId.enable();
-		this.formReference.controls.departmentId.updateValueAndValidity();
+		if (province){
+			this.adressMasterData.getDepartmentsByProvince(province).subscribe(response => {
+				if (response){
+					const options: TypeaheadOption<any>[] = this.setFilterValues(response, "description");
+					this.departments = options;
+					this.departmentDisable = false;
+				};
+			})
+		} else {
+			this.departmentDisable = true;
+		}
 	}
 
 	setInstitutionsByProvince(province: number){
-		this.clearInformation();
-		this.institutions$ = this.institutionService.findByProvinceId(province);
-		this.formReference.controls.institutionDestinationId.updateValueAndValidity();
+		if(province){
+			this.institutionService.findByProvinceId(province).subscribe(response => {
+				if (response){
+					const options: TypeaheadOption<any>[] = this.setFilterValues(response, "name");
+					this.institutions = options;
+				};
+			});
+		} else {
+			this.getAllInstitutions();
+		}
 	}
 
 	filterInstitutionsByDepartment(department: number) {
-		this.formReference.controls.institutionDestinationId.setValue(null);
-		this.clearCareLinesAndSpecialties();
-		this.institutions$ = this.institutionService.findByDepartmentId(department);
-		this.formReference.controls.institutionDestinationId.updateValueAndValidity();
+		this.formReference.controls.departmentId.setValue(department);
+		this.defaultInstitution = {value: null, viewValue: null, compareValue: null};
+		if (department) {
+			this.clearCareLinesAndSpecialties();
+			this.institutionService.findByDepartmentId(department).subscribe(response => {
+				if (response){
+					const options: TypeaheadOption<any>[] = this.setFilterValues(response, "name");
+					this.institutions = options;
+				};
+			});
+		} else {
+			this.getAllInstitutions();
+		}
 	}
 
 	private clearInformation() {
-		this.formReference.controls.departmentId.setValue(null);
-		this.formReference.controls.institutionDestinationId.setValue(null);
+		this.defaultDepartment = {value: null, viewValue: null, compareValue: null};
+		this.defaultInstitution = {value: null, viewValue: null, compareValue: null};
 		this.clearCareLinesAndSpecialties();
 	}
 
@@ -346,7 +403,7 @@ export class ReferenceComponent implements OnInit {
 		this.formReference = this.formBuilder.group({
 			problems: [null, [Validators.required]],
 			searchByCareLine: [this.DEFAULT_RADIO_OPTION],
-			provinceId: [null, [Validators.required]],
+			provinceId: [null],
 			departmentId: [null],
 			consultation: [null],
 			procedure: [null],
@@ -363,8 +420,7 @@ export class ReferenceComponent implements OnInit {
 	}
 
 	private disableInputs() {
-		this.formReference.controls.departmentId.disable();
-		this.formReference.controls.clinicalSpecialty.disable();
+		this.formReference.controls.clinicalSpecialtyId.disable();
 		this.formReference.controls.procedure.disable();
 		this.formReference.controls.careLine.disable();
 		this.formReference.controls.provinceOrigin.disable();
@@ -373,10 +429,11 @@ export class ReferenceComponent implements OnInit {
 	}
 
 	private setProvinceAndSearchDepartments(provinceId: number) {
-		this.formReference.controls.provinceId.setValue(provinceId);
+		this.clearInformation();
 		this.setDepartmentsByProvince(provinceId);
-		const provinceOrigin = this.provinces.find(p => p.id === provinceId).description;
-		this.formReference.controls.provinceOrigin.setValue(provinceOrigin);
+		const provinceOrigin = this.provinces.find(p => p.value === provinceId);
+		this.defaultProvince = {value: provinceOrigin.value, compareValue: provinceOrigin.compareValue, viewValue: provinceOrigin.viewValue}
+		this.formReference.controls.provinceOrigin.setValue(provinceOrigin.viewValue);
 	}
 
 	private setInstitutionOrigin(institutions: InstitutionBasicInfoDto[]) {

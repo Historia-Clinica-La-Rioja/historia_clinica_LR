@@ -86,39 +86,34 @@
 
                     <div>
                         <h2 class="subtitle" [translate]="'ambulatoria.paciente.nueva-consulta.reference-dialog.DESTINATION'"></h2>
-                        <div>
-                            <mat-form-field appearance="outline" fxFlex="100%" fxLayoutGap="7px">
-                                <mat-label [translate]="'ambulatoria.paciente.nueva-consulta.reference-dialog.PROVINCE'"></mat-label>
-                                <mat-select id="provinceDestination" formControlName="provinceId" (selectionChange)="setInfoByProvince($event.value)">
-                                    <mat-option *ngFor="let province of provinces" [value]="province.id">
-                                        {{province.description | translate}}
-                                    </mat-option>
-                                </mat-select>
-                                <mat-error [translate]="'forms.REQUIRED'"></mat-error>
-                            </mat-form-field>
+                        <div class="typeaheadField">
+                            <app-typeahead 
+                                [options]="provinces"
+                                [externalSetValue]="defaultProvince"
+                                [titleInput]="'ambulatoria.paciente.nueva-consulta.reference-dialog.PROVINCE' | translate"
+                                (selectionChange)="setInfoByProvince($event)">
+                            </app-typeahead>
                         </div>
 
-                        <div>
-                            <mat-form-field appearance="outline" fxFlex="100%" fxLayoutGap="7px">
-                                <mat-label [translate]="'ambulatoria.paciente.nueva-consulta.reference-dialog.DEPARTMENT'"></mat-label>
-                                <mat-select id="departmentDestination" formControlName="departmentId" (selectionChange)="filterInstitutionsByDepartment($event.value)">
-                                    <mat-option *ngFor="let department of departments$ | async" [value]="department.id">
-                                        {{department.description | translate}}
-                                    </mat-option>
-                                </mat-select>
-                            </mat-form-field>
+                        <div class="typeaheadField">
+                            <app-typeahead 
+                                [options]="departments"
+                                [externalSetValue]="defaultDepartment"
+                                [titleInput]="'ambulatoria.paciente.nueva-consulta.reference-dialog.DEPARTMENT' | translate"
+                                [disabled]="departmentDisable"
+                                (selectionChange)="filterInstitutionsByDepartment($event)">
+                            </app-typeahead>
                         </div>
 
-                        <div>
-                            <mat-form-field appearance="outline" fxFlex="100%" fxLayoutGap="7px">
-                                <mat-label [translate]="'ambulatoria.paciente.nueva-consulta.reference-dialog.PLACEHOLDER_INSTITUTION'"></mat-label>
-                                <mat-select id="institutionDestination" formControlName="institutionDestinationId" (selectionChange)="setInformation()">
-                                    <mat-option *ngFor="let institution of institutions$ | async" [value]="institution.id">
-                                        {{institution.name | translate}}
-                                    </mat-option>
-                                </mat-select>
-                                <mat-error [translate]="'forms.REQUIRED'"></mat-error>
-                            </mat-form-field>
+                        <div class="typeaheadField">
+                            <app-typeahead 
+                                [options]="institutions"
+                                [externalSetValue]="defaultInstitution"
+                                [titleInput]="'ambulatoria.paciente.nueva-consulta.reference-dialog.PLACEHOLDER_INSTITUTION' | translate"
+                                (selectionChange)="setInformationByInstitution($event)"
+                                [required]=true>
+                            </app-typeahead>
+                            <mat-error class="error-message" *ngIf="!formReference.value.institutionDestinationId && submitForm" [translate]="'forms.REQUIRED'"></mat-error>
                         </div>
 
                         <div class="reference-type" fxLayoutGap="10px">
