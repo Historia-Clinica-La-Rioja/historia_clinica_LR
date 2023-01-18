@@ -31,4 +31,6 @@ public interface PersonService {
     Optional<CompletePersonVo> getCompletePerson(Integer personId);
 
 	PersonInformationBo getPersonInformationByIdentificationData(String identificationType, String identificationNumber, Short genderId);
+
+	String getCountryIsoCodeFromPerson(Integer personId);
 }

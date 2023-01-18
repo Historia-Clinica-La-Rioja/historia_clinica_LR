@@ -22,6 +22,11 @@ public class SharedPersonImpl implements SharedPersonPort {
 		return mapTo(result);
 	}
 
+	@Override
+	public String getCountryIsoCodeFromPerson(Integer personId) {
+		return personService.getCountryIsoCodeFromPerson(personId);
+	}
+
 	private PersonInfoDto mapTo(PersonInformationBo personInformationBo) {
 		return PersonInfoDto.builder()
 				.firstName(personInformationBo.getFirstName())

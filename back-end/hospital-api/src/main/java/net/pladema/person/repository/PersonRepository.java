@@ -104,4 +104,13 @@ public interface PersonRepository extends JpaRepository<Person, Integer> {
 																	   @Param("identificationNumber") String identificationNumber,
 																	   @Param("genderId") Short genderId);
 
+	@Transactional(readOnly = true)
+	@Query("SELECT c.isoCode " +
+			"FROM Person as p " +
+			"LEFT JOIN PersonExtended as pe ON (p.id = pe.id) " +
+			"LEFT JOIN Address as a ON (pe.addressId = a.id) " +
+			"LEFT JOIN Country as c ON (a.countryId = c.id) " +
+			"WHERE p.id = :personId")
+	String getCountryIsoCodeFromPerson(@Param("personId") Integer personId);
+
 }

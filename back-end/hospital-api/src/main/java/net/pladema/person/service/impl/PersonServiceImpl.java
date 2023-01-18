@@ -123,6 +123,12 @@ public class PersonServiceImpl implements PersonService {
 			return persons.get(0);
 	}
 
+	@Override
+	public String getCountryIsoCodeFromPerson(Integer personId) {
+		LOG.debug("Input parameter -> personId {} ", personId);
+		return personRepository.getCountryIsoCodeFromPerson(personId);
+	}
+
 	private PersonInformationBo determinePatient(List<PersonInformationBo> persons) {
 		List<PersonInformationBo> permanentPerson = persons.stream()
 				.filter(p -> p.getPatientTypeId().equals(PatientType.PERMANENT))
