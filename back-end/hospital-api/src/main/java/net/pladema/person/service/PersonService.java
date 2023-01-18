@@ -4,6 +4,7 @@ import net.pladema.person.repository.domain.CompletePersonVo;
 import net.pladema.person.repository.domain.PersonalInformation;
 import net.pladema.person.repository.entity.Person;
 import net.pladema.person.repository.entity.PersonExtended;
+import net.pladema.person.service.domain.PersonInformationBo;
 
 import java.util.List;
 import java.util.Optional;
@@ -28,4 +29,6 @@ public interface PersonService {
     Optional<PersonalInformation> getPersonalInformation(Integer personId);
     
     Optional<CompletePersonVo> getCompletePerson(Integer personId);
+
+	PersonInformationBo getPersonInformationByIdentificationData(String identificationType, String identificationNumber, Short genderId);
 }
