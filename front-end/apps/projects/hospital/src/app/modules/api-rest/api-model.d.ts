@@ -433,6 +433,7 @@ export interface BasicPatientDto extends Serializable {
     firstName: string;
     id: number;
     identificationNumber: string;
+    identificationType: string;
     lastName: string;
     middleName: string;
     person: BasicDataPersonDto;
