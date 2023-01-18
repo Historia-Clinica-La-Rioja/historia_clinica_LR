@@ -1,6 +1,8 @@
 package net.pladema.medicalconsultation.equipmentdiary.controller;
 
 import ar.lamansys.sgx.shared.dates.configuration.LocalDateMapper;
+import ar.lamansys.sgx.shared.featureflags.AppFeature;
+import ar.lamansys.sgx.shared.featureflags.application.FeatureFlagsService;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import net.pladema.medicalconsultation.diary.controller.dto.DiaryOpeningHoursDto;
 import net.pladema.medicalconsultation.diary.controller.dto.OccupationDto;
@@ -16,6 +18,7 @@ import net.pladema.medicalconsultation.equipmentdiary.service.exception.Equipmen
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
@@ -38,13 +41,19 @@ public class EquipmentDiaryOpeningHoursController {
 
     private final LocalDateMapper localDateMapper;
 
-    public EquipmentDiaryOpeningHoursController(EquipmentDiaryOpeningHoursService diaryOpeningHoursService,
-                                                DiaryMapper diaryMapper,
-                                                LocalDateMapper localDateMapper){
+	private final FeatureFlagsService featureFlagsService;
+
+    public EquipmentDiaryOpeningHoursController(
+			EquipmentDiaryOpeningHoursService diaryOpeningHoursService,
+            DiaryMapper diaryMapper,
+            LocalDateMapper localDateMapper,
+			FeatureFlagsService featureFlagsService
+	) {
         super();
         this.diaryOpeningHoursService = diaryOpeningHoursService;
         this.diaryMapper = diaryMapper;
         this.localDateMapper = localDateMapper;
+		this.featureFlagsService = featureFlagsService;
     }
 
     /**
@@ -66,6 +75,9 @@ public class EquipmentDiaryOpeningHoursController {
 			@RequestParam(name = "startDate") String startDateStr,
 			@RequestParam(name = "endDate") String endDateStr,
 			@RequestParam(name = "equipmentDiaryId", required = false) String equipmentDiaryId) throws EquipmentDiaryOpeningHoursException {
+
+		if (!featureFlagsService.isOn(AppFeature.HABILITAR_DESARROLLO_RED_IMAGENES))
+			return new ResponseEntity<>(null, HttpStatus.METHOD_NOT_ALLOWED);
 		LOG.debug("Input parameters -> equipmentId {}, startDateStr {}, endDateStr {}, equipmentDiaryId {}",
 				equipmentId, startDateStr, endDateStr, equipmentDiaryId);
 

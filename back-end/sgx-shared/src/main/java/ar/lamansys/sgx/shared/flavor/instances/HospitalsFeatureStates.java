@@ -51,6 +51,7 @@ public class HospitalsFeatureStates implements InitialFeatureStates {
 		map.put(AppFeature.HABILITAR_REPORTES_ESTADISTICOS, false);
 		map.put(AppFeature.HABILITAR_VISUALIZACION_DE_CARDS, true);
 		map.put(AppFeature.HABILITAR_MAIL_RECUPERAR_CONTRASEÑA, true);
+		map.put(AppFeature.HABILITAR_DESARROLLO_RED_IMAGENES, false);
 	}
 
 	@Override

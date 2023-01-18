@@ -121,7 +121,10 @@ public enum AppFeature implements Feature {
 	HABILITAR_VISUALIZACION_DE_CARDS,
 
 	@Label("Indica si esta habilitada la recuperación de contraseña por correo")
-	HABILITAR_MAIL_RECUPERAR_CONTRASEÑA
+	HABILITAR_MAIL_RECUPERAR_CONTRASEÑA,
+
+	@Label("Indica si esta habilitada la funcionalidad de red de imágenes")
+	HABILITAR_DESARROLLO_RED_IMAGENES
 	;
 
     public boolean isActive() {
