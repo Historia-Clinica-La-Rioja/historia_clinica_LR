@@ -234,14 +234,16 @@
 							</app-ui-external-component>
 						</ng-template>
 					</mat-tab>
-					<mat-tab id="tab_clap" *ngIf="patient.gender === 'Femenino' && hasHealthRelatedRole">
-						<ng-template mat-tab-label>
-							<span>{{ 'ambulatoria.paciente.clap.TAB_LABEL' | translate | uppercase }}</span>
-						</ng-template>
-						<ng-template matTabContent>
-						<app-clap></app-clap>
-						</ng-template>
-					</mat-tab>
+					<section  *appFeatureFlag="'HABILITAR_SIP_PLUS_EN_DESARROLLO'">
+						<mat-tab id="tab_clap" *ngIf="patient.gender === 'Femenino' && hasHealthRelatedRole">
+							<ng-template mat-tab-label>
+								<span>{{ 'ambulatoria.paciente.clap.TAB_LABEL' | translate | uppercase }}</span>
+							</ng-template>
+							<ng-template matTabContent>
+							<app-clap [patientId]="patientId"></app-clap>
+							</ng-template>
+						</mat-tab>
+					</section>
 				</mat-tab-group>
 			</mat-card-content>
 		</mat-card>

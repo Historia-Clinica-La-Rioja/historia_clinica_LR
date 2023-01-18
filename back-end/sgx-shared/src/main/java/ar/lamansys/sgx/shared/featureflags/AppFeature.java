@@ -124,7 +124,10 @@ public enum AppFeature implements Feature {
 	HABILITAR_MAIL_RECUPERAR_CONTRASEÑA,
 
 	@Label("Indica si esta habilitada la funcionalidad de red de imágenes")
-	HABILITAR_DESARROLLO_RED_IMAGENES
+	HABILITAR_DESARROLLO_RED_IMAGENES,
+
+	@Label("Indica si esta habilitada la integración con SIP PLUS")
+	HABILITAR_SIP_PLUS_EN_DESARROLLO
 	;
 
     public boolean isActive() {
