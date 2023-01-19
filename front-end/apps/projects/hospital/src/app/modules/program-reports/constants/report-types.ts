@@ -46,7 +46,7 @@ export const ODONTO_REPORT_TYPES = [
 
 export const GENERAL_REPORT_TYPES = [
     {
-        description: 'Daily Emergencias',
+        description: 'Emergencias Diarias',
         id: 1,
     },
     
