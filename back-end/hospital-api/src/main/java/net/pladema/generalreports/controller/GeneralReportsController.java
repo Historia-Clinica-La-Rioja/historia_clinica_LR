@@ -51,7 +51,7 @@ public class GeneralReportsController {
 		LOG.debug("Inputs parameters -> institutionId {}, fromDate {}, toDate{}", institutionId);
 
 		String title = "Emergencias";
-		String[] headers = new String[] {"Institución", "Ambulancia", "Oficina", "Sector", "Intervención Policial", "Fecha", "Identificación", "Apellidos", "Nombres",
+		String[] headers = new String[] {"Fecha de creación", "ID", "Institución", "Ambulancia", "Oficina", "Sector", "Intervención Policial", "Fecha de atención", "Hora de atención", "Identificación", "Apellidos", "Nombres",
 				"Obra social", "Medio de Ingreso", "Estado", "Tipo", "Notas del Triage", "Triage", "Fecha de Alta", "Ambulancia de Alta", "Tipo de Alta", "Salida"};
 
 		IWorkbook wb = this.excelServiceGR.buildExcelEmergencias(title, headers, this.queryFactoryGR.queryEmergencias(institutionId));
@@ -176,7 +176,7 @@ public class GeneralReportsController {
 		String title = "Reporte Enfemeria - Enfermeria Ambulatorio";
 		String[] headers = new String[]{"Institucion","Unidad Operativa","Prestador","DNI","Fecha de Atencion","Hora","Const N°","DNI Paciente",
 				"Nombre Paciente","Sexo","Genero","Nombre con el que se identifica","Fecha de Nacimiento","Edad a fecha del turno","Edad a Hoy","Etnia",
-				"Obra/s Social/es","Domicilio","Localidad","Nivel de instruccion","Situacion Labora","Signos vitales","Procedimientos","Evolucion"};
+				"Obra/s Social/es","Domicilio","Localidad","Nivel de instruccion","Situacion Laboral","Signos vitales","Procedimientos","Evolucion"};
 
 		LocalDate startDate = localDateMapper.fromStringToLocalDate(fromDate);
 		LocalDate endDate = localDateMapper.fromStringToLocalDate(toDate);
