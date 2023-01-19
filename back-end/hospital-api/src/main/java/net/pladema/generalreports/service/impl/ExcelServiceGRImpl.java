@@ -583,48 +583,44 @@ public class ExcelServiceGRImpl implements ExcelServiceGR {
 		cell13.setCellStyle(style);
 
 		ICell cell14 = row.createCell(rowNumber.getAndIncrement());
-		cell14.setCellValue(content.getAgeTurn());
+		cell14.setCellValue(content.getAgeToday());
 		cell14.setCellStyle(style);
 
 		ICell cell15 = row.createCell(rowNumber.getAndIncrement());
-		cell15.setCellValue(content.getAgeToday());
+		cell15.setCellValue(content.getEthnicity());
 		cell15.setCellStyle(style);
 
 		ICell cell16 = row.createCell(rowNumber.getAndIncrement());
-		cell16.setCellValue(content.getEthnicity());
+		cell16.setCellValue(content.getMedicalCoverage());
 		cell16.setCellStyle(style);
 
 		ICell cell17 = row.createCell(rowNumber.getAndIncrement());
-		cell17.setCellValue(content.getMedicalCoverage());
+		cell17.setCellValue(content.getPatientAddress());
 		cell17.setCellStyle(style);
 
 		ICell cell18 = row.createCell(rowNumber.getAndIncrement());
-		cell18.setCellValue(content.getPatientAddress());
+		cell18.setCellValue(content.getPatientLocation());
 		cell18.setCellStyle(style);
 
 		ICell cell19 = row.createCell(rowNumber.getAndIncrement());
-		cell19.setCellValue(content.getPatientLocation());
+		cell19.setCellValue(content.getEducationLevel());
 		cell19.setCellStyle(style);
 
 		ICell cell20 = row.createCell(rowNumber.getAndIncrement());
-		cell20.setCellValue(content.getEducationLevel());
+		cell20.setCellValue(content.getOccupation());
 		cell20.setCellStyle(style);
 
 		ICell cell21 = row.createCell(rowNumber.getAndIncrement());
-		cell21.setCellValue(content.getOccupation());
+		cell21.setCellValue(content.getVitalSign());
 		cell21.setCellStyle(style);
 
 		ICell cell22 = row.createCell(rowNumber.getAndIncrement());
-		cell22.setCellValue(content.getVitalSign());
+		cell22.setCellValue(content.getProcedures());
 		cell22.setCellStyle(style);
 
 		ICell cell23 = row.createCell(rowNumber.getAndIncrement());
-		cell23.setCellValue(content.getProcedures());
+		cell23.setCellValue(content.getEvolution());
 		cell23.setCellStyle(style);
-
-		ICell cell24 = row.createCell(rowNumber.getAndIncrement());
-		cell24.setCellValue(content.getEvolution());
-		cell24.setCellStyle(style);
 	}
 
 	private void fillRowContent(IRow row, NursingInternment content, ICellStyle style){
