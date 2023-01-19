@@ -5,6 +5,7 @@ import { FormsModule } from "@angular/forms";
 import { PresentationModule } from "@presentation/presentation.module";
 
 import { CardMedicacionesComponent } from "@historia-clinica/modules/ambulatoria/modules/indicacion/components/card-medicaciones/card-medicaciones.component";
+import { CardPharmacoComponent } from './components/card-pharmaco/card-pharmaco.component';
 import { DayDisplayComponent } from './components/day-display/day-display.component';
 import { NursingCareComponent } from './components/nursing-care/nursing-care.component';
 import { NursingRecordComponent } from './components/nursing-record/nursing-record.component';
@@ -19,6 +20,7 @@ import { SuspenderMedicacionComponent } from "@historia-clinica/modules/ambulato
 import { DietComponent } from "@historia-clinica/modules/ambulatoria/modules/indicacion/dialogs/diet/diet.component";
 import { OtherIndicationComponent } from './dialogs/other-indication/other-indication.component';
 import { ParenteralPlanComponent } from './dialogs/parenteral-plan/parenteral-plan.component';
+import { PharmacosFrequentComponent } from './dialogs/pharmacos-frequent/pharmacos-frequent.component';
 import { HistoriaClinicaModule } from '@historia-clinica/historia-clinica.module';
 import { PharmacoComponent } from './dialogs/pharmaco/pharmaco.component';
 import { GeneralNursingRecordComponent } from './components/general-nursing-record/general-nursing-record.component';
@@ -29,6 +31,7 @@ import { InternmentIndicationDetailComponent } from './dialogs/internment-indica
 @NgModule({
 	declarations: [
 		CardMedicacionesComponent,
+		CardPharmacoComponent,
 		DayDisplayComponent,
 		GeneralNursingRecordComponent,
 		ItemPrescripcionesComponent,
@@ -45,6 +48,7 @@ import { InternmentIndicationDetailComponent } from './dialogs/internment-indica
 		DietComponent,
 		OtherIndicationComponent,
 		ParenteralPlanComponent,
+		PharmacosFrequentComponent,
 		PharmacoComponent,
 		RegisterNursingRecordComponent,
 		InternmentIndicationDetailComponent,
