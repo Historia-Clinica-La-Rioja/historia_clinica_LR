@@ -1,10 +1,7 @@
 package net.pladema.medicalconsultation.equipmentdiary.repository;
 
-import net.pladema.medicalconsultation.appointment.repository.entity.AppointmentState;
 import net.pladema.medicalconsultation.diary.repository.domain.DiaryOpeningHoursVo;
 import net.pladema.medicalconsultation.diary.repository.domain.OccupationVo;
-import net.pladema.medicalconsultation.diary.repository.entity.DiaryOpeningHours;
-import net.pladema.medicalconsultation.diary.repository.entity.DiaryOpeningHoursPK;
 
 import net.pladema.medicalconsultation.equipmentdiary.repository.entity.EquipmentDiaryOpeningHours;
 
@@ -64,4 +61,19 @@ public interface EquipmentDiaryOpeningHoursRepository extends JpaRepository<Equi
 	List<OccupationVo> findAllWeeklyEquipmentOccupation(@Param("equipmentId") Integer equipmentId,
 															@Param("startDate")LocalDate startDate,
 															@Param("endDate")LocalDate endDate);
+
+
+	@Transactional(readOnly = true)
+	@Query( "SELECT (case when count(edoh) > 0 then true else false end) " +
+			"FROM EquipmentDiaryOpeningHours AS edoh " +
+			"JOIN EquipmentDiary AS ed ON (ed.id = edoh.pk.equipmentDiaryId) " +
+			"JOIN OpeningHours  AS oh ON (edoh.pk.openingHoursId = oh.id) " +
+			"WHERE ed.id = :equipmentDiaryId " +
+			"AND oh.dayWeekId = :dayWeekId " +
+			"AND ed.equipmentId = :equipmentId " +
+			"AND ((oh.from < :to) AND (oh.to > :from) )" )
+	boolean overlapDiaryOpeningHoursFromOtherDiary(@NotNull @Param("equipmentDiaryId") Integer equipmentDiaryId,
+												   @NotNull @Param("equipmentId") Integer equipmentId,
+												   @NotNull @Param("dayWeekId") Short dayWeekId,
+												   @NotNull @Param("from") LocalTime from, @Param("to") LocalTime to);
 }

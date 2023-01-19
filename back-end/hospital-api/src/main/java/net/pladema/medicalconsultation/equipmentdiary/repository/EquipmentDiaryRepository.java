@@ -40,6 +40,30 @@ public interface EquipmentDiaryRepository extends SGXAuditableEntityJPARepositor
 																	  @Param("endDate") LocalDate newDiaryEnd,
 																	  @Param("appointmentDuration") Short appointmentDuration,
 																	  @Param("excludeDiaryId") Integer excludeDiaryId);
+	@Transactional(readOnly = true)
+	@Query("SELECT ed " +
+			"FROM EquipmentDiary AS ed " +
+			"WHERE ed.equipmentId = :eqId " +
+			"AND ed.startDate <= :endDate " +
+			"AND ed.endDate >= :startDate " +
+			"AND ed.deleteable.deleted = false")
+	List<EquipmentDiary> findAllOverlappingDiary(@Param("eqId") Integer equipmentId,
+										@Param("startDate") LocalDate newDiaryStart,
+										@Param("endDate") LocalDate newDiaryEnd);
+
+	@Transactional(readOnly = true)
+	@Query("SELECT ed " +
+			"FROM EquipmentDiary AS ed " +
+			"WHERE ed.equipmentId = :eqId " +
+			"AND ed.startDate <= :endDate " +
+			"AND ed.endDate >= :startDate " +
+			"AND ed.id <> :excludeDiaryId " +
+			"AND ed.deleteable.deleted = false")
+	List<EquipmentDiary> findAllOverlappingDiaryExcludingDiary(@Param("eqId") Integer equipmentId,
+													  @Param("startDate") LocalDate newDiaryStart,
+													  @Param("endDate") LocalDate newDiaryEnd,
+													  @Param("excludeDiaryId") Integer excludeDiaryId);
+
 
 
 

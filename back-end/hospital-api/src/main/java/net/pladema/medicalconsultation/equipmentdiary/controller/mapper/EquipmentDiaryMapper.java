@@ -12,9 +12,10 @@ import org.mapstruct.Mapping;
 import org.mapstruct.Named;
 
 @Mapper(uses = {LocalDateMapper.class, DiaryOpeningHoursMapper.class})
-public interface EquipmetDiaryMapper {
+public interface EquipmentDiaryMapper {
 
 	@Named("toEquipmentDiaryBo")
 	@Mapping(target = "equipmentDiaryOpeningHours", source = "equipmentDiaryOpeningHours")
 	EquipmentDiaryBo toEquipmentDiaryBo(EquipmentDiaryADto equipmentDiaryADto);
+
 }

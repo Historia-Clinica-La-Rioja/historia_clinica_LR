@@ -14,14 +14,14 @@ import java.lang.annotation.Annotation;
 import java.time.LocalDate;
 import java.util.List;
 
-public abstract class AbstractDiaryPeriodValidator<A extends Annotation, T extends EquipmentDiaryADto>
+public abstract class AbstractEquipmentDiaryPeriodValidator<A extends Annotation, T extends EquipmentDiaryADto>
 		implements ConstraintValidator<A, T> {
 
-	private static final Logger LOG = LoggerFactory.getLogger(AbstractDiaryPeriodValidator.class);
+	private static final Logger LOG = LoggerFactory.getLogger(AbstractEquipmentDiaryPeriodValidator.class);
 
 	private final LocalDateMapper localDateMapper;
 
-	public AbstractDiaryPeriodValidator(LocalDateMapper localDateMapper) {
+	public AbstractEquipmentDiaryPeriodValidator(LocalDateMapper localDateMapper) {
 		this.localDateMapper = localDateMapper;
 	}
 

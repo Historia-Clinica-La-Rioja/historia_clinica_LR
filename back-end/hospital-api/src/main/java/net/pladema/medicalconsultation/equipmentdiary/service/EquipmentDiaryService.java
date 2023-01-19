@@ -6,10 +6,12 @@ import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
-public interface EquipmetDiaryService {
+public interface EquipmentDiaryService {
 	Integer addDiary(EquipmentDiaryBo equipmentDiaryBo);
 
 	List<Integer> getAllOverlappingEquipmentDiaryByEquipment(Integer equipmentId,LocalDate newDiaryStart,
 															 LocalDate newDiaryEnd, Short appointmentDuration, Optional<Integer> excludeDiaryId);
+	List<EquipmentDiaryBo> getAllOverlappingDiary(Integer doctorsOfficeId,
+										 LocalDate newDiaryStart, LocalDate newDiaryEnd, Optional<Integer> excludeDiaryId);
 
 }

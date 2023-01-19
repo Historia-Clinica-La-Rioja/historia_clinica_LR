@@ -1,8 +1,6 @@
 package net.pladema.medicalconsultation.equipmentdiary.controller.constraints;
 
-
-
-import net.pladema.medicalconsultation.equipmentdiary.controller.constraints.validator.NewEquipmentDiaryPeriodValidator;
+import net.pladema.medicalconsultation.equipmentdiary.controller.constraints.validator.EquipmentDiaryOpeningHoursValidator;
 
 import javax.validation.Constraint;
 import javax.validation.Payload;
@@ -10,10 +8,10 @@ import javax.validation.Payload;
 import java.lang.annotation.*;
 
 @Documented
-@Constraint(validatedBy = NewEquipmentDiaryPeriodValidator.class)
+@Constraint(validatedBy = EquipmentDiaryOpeningHoursValidator.class)
 @Target({ElementType.PARAMETER})
 @Retention(RetentionPolicy.RUNTIME)
-public @interface NewDiaryPeriodValid {
+public @interface EquipmentDiaryOpeningHoursValid {
 
     String message() default "{}";
 

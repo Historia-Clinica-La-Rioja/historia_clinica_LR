@@ -9,14 +9,13 @@ import lombok.extern.slf4j.Slf4j;
 
 import net.pladema.medicalconsultation.diary.service.exception.DiaryException;
 
+import net.pladema.medicalconsultation.equipmentdiary.controller.constraints.EquipmentDiaryOpeningHoursValid;
 import net.pladema.medicalconsultation.equipmentdiary.controller.constraints.NewDiaryPeriodValid;
 import net.pladema.medicalconsultation.equipmentdiary.controller.dto.EquipmentDiaryADto;
 
-import net.pladema.medicalconsultation.equipmentdiary.controller.mapper.EquipmetDiaryMapper;
-import net.pladema.medicalconsultation.equipmentdiary.service.EquipmetDiaryService;
+import net.pladema.medicalconsultation.equipmentdiary.controller.mapper.EquipmentDiaryMapper;
+import net.pladema.medicalconsultation.equipmentdiary.service.EquipmentDiaryService;
 import net.pladema.medicalconsultation.equipmentdiary.service.domain.EquipmentDiaryBo;
-
-import net.pladema.staff.service.HealthcareProfessionalService;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -39,21 +38,21 @@ public class EquipmentDiaryController {
 
 	public static final String OUTPUT = "Output -> {}";
 
-	private final EquipmetDiaryMapper equipmetDiaryMapper;
-	private final EquipmetDiaryService  equipmetDiaryService;
+	private final EquipmentDiaryMapper equipmentDiaryMapper;
+	private final EquipmentDiaryService equipmentDiaryService;
 
 	private final LocalDateMapper localDateMapper;
 
 	private final FeatureFlagsService featureFlagsService;
 
 	public EquipmentDiaryController(
-			EquipmetDiaryMapper equipmetDiaryMapper,
-			EquipmetDiaryService  equipmetDiaryService,
+			EquipmentDiaryMapper equipmentDiaryMapper,
+			EquipmentDiaryService equipmentDiaryService,
 			LocalDateMapper localDateMapper,
 			FeatureFlagsService featureFlagsService
 	) {
-		this.equipmetDiaryMapper = equipmetDiaryMapper;
-		this.equipmetDiaryService = equipmetDiaryService;
+		this.equipmentDiaryMapper = equipmentDiaryMapper;
+		this.equipmentDiaryService = equipmentDiaryService;
 		this.localDateMapper = localDateMapper;
 		this.featureFlagsService = featureFlagsService;
 	}
@@ -62,12 +61,12 @@ public class EquipmentDiaryController {
 	@PreAuthorize("hasPermission(#institutionId, 'ADMINISTRATIVO, ADMINISTRADOR_AGENDA')")
 	public ResponseEntity<Integer> addDiary(
 			@PathVariable(name = "institutionId") Integer institutionId,
-			@RequestBody @Valid @NewDiaryPeriodValid EquipmentDiaryADto  equipmentDiaryADto) throws DiaryException {
+			@RequestBody @Valid @NewDiaryPeriodValid @EquipmentDiaryOpeningHoursValid EquipmentDiaryADto  equipmentDiaryADto) throws DiaryException {
 		if (!featureFlagsService.isOn(AppFeature.HABILITAR_DESARROLLO_RED_IMAGENES))
 			return new ResponseEntity<>(null, HttpStatus.METHOD_NOT_ALLOWED);
 		log.debug("Input parameters -> diaryADto {}", equipmentDiaryADto);
-		EquipmentDiaryBo equipmentdiaryToSave = equipmetDiaryMapper.toEquipmentDiaryBo(equipmentDiaryADto);
-		Integer result = equipmetDiaryService.addDiary(equipmentdiaryToSave);
+		EquipmentDiaryBo equipmentdiaryToSave = equipmentDiaryMapper.toEquipmentDiaryBo(equipmentDiaryADto);
+		Integer result = equipmentDiaryService.addDiary(equipmentdiaryToSave);
 		log.debug(OUTPUT, result);
 		return ResponseEntity.ok().body(result);
 	}
