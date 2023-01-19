@@ -29,7 +29,7 @@ import java.util.List;
 
 @RestController
 @Tag(name = "Equipment", description = "Equipment")
-@RequestMapping("/institution/{institutionId}/equipment")
+@RequestMapping("/institutions/{institutionId}/equipment")
 public class EquipmentController {
 
 	private static final Logger LOG = LoggerFactory.getLogger(EquipmentController.class);
@@ -49,7 +49,7 @@ public class EquipmentController {
 
 
 	@GetMapping("/sector/{sectorId}")
-	@PreAuthorize("hasPermission(#sectorId, 'ADMINISTRATIVO, ADMINISTRADOR_AGENDA')")
+	@PreAuthorize("hasPermission(#institutionId, 'ADMINISTRATIVO, ADMINISTRADOR_AGENDA')")
 	public ResponseEntity<List<EquipmentDto>>  getAllBySector(
 			@PathVariable(name = "institutionId") Integer institutionId,
 			@PathVariable(name = "sectorId") Integer sectorId) {
