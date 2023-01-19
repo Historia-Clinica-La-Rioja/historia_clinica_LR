@@ -2,7 +2,7 @@ import { Component, Input, OnInit } from '@angular/core';
 import { INTERNMENT_INDICATIONS } from "@historia-clinica/constants/summaries";
 import { isSameDay } from "date-fns";
 import { InternmentEpisodeService } from "@api-rest/services/internment-episode.service";
-import { DiagnosesGeneralStateDto, DietDto, MasterDataInterface, OtherIndicationDto, ParenteralPlanDto, PharmacoDto } from "@api-rest/api-model";
+import { DiagnosesGeneralStateDto, DietDto, MasterDataInterface, OtherIndicationDto, ParenteralPlanDto, PharmacoDto, PharmacoSummaryDto } from "@api-rest/api-model";
 import { DietComponent } from '../../dialogs/diet/diet.component';
 import { MatDialog } from '@angular/material/dialog';
 import { SnackBarService } from '@presentation/services/snack-bar.service';
@@ -12,10 +12,12 @@ import { dateDtoToDate } from "@api-rest/mapper/date-dto.mapper";
 import { OtherIndicationComponent } from '../../dialogs/other-indication/other-indication.component';
 import { InternmentIndicationService, OtherIndicationTypeDto } from '@api-rest/services/internment-indication.service';
 import { ParenteralPlanComponent } from "@historia-clinica/modules/ambulatoria/modules/indicacion/dialogs/parenteral-plan/parenteral-plan.component";
-import { PharmacoComponent } from '../../dialogs/pharmaco/pharmaco.component';
+import { Pharmaco, PharmacoComponent } from '../../dialogs/pharmaco/pharmaco.component';
 import { InternmentStateService } from '@api-rest/services/internment-state.service';
 import { InternacionMasterDataService } from '@api-rest/services/internacion-master-data.service';
 import { ConfirmDialogComponent } from '@presentation/dialogs/confirm-dialog/confirm-dialog.component';
+import { IndicationByProfessionalService } from '@api-rest/services/indication-by-professional.service';
+import { PharmacosFrequentComponent } from '../../dialogs/pharmacos-frequent/pharmacos-frequent.component';
 
 const DIALOG_SIZE = '45%';
 
@@ -25,7 +27,8 @@ const DIALOG_SIZE = '45%';
 	styleUrls: ['./internment-indications-card.component.scss']
 })
 export class InternmentIndicationsCardComponent implements OnInit {
-
+	vias: MasterDataInterface<number>[] = [];
+	units: MasterDataInterface<number>[] = [];
 	internmentIndication = INTERNMENT_INDICATIONS;
 	actualDate: Date;
 	entryDate: Date;
@@ -36,6 +39,7 @@ export class InternmentIndicationsCardComponent implements OnInit {
 	othersIndicatiosType: OtherIndicationTypeDto[];
 	parenteralPlan: ParenteralPlanDto[] = [];
 	pharmacos: PharmacoDto[] = [];
+	mostFrequentPharmacos = [];
 	@Input() internmentEpisodeId: number;
 	@Input() epicrisisConfirmed: boolean;
 	@Input() patientId: number;
@@ -50,8 +54,12 @@ export class InternmentIndicationsCardComponent implements OnInit {
 		private readonly internmentIndicationService: InternmentIndicationService,
 		private readonly internmentStateService: InternmentStateService,
 		private readonly internacionMasterdataService: InternacionMasterDataService,
+		private readonly indicationByProfessionalService: IndicationByProfessionalService,
 		private readonly healthcareProfessionalService: HealthcareProfessionalService
-	) { }
+	) {
+		this.internacionMasterdataService.getVias().subscribe(v => this.vias = v);
+		this.internacionMasterdataService.getUnits().subscribe(u => this.units = u);
+	}
 
 	ngOnInit(): void {
 		this.internmentEpisode.getInternmentEpisode(this.internmentEpisodeId).subscribe(
@@ -102,6 +110,17 @@ export class InternmentIndicationsCardComponent implements OnInit {
 	}
 
 	openPharmacoDialog() {
+		this.indicationByProfessionalService.getMostFrequentPharmacos().subscribe((pharmacos: PharmacoSummaryDto[]) => {
+			this.mostFrequentPharmacos = this.pharmacoSummaryToPharmaco(pharmacos);
+			const dialogPharmacosFrequent = this.dialog.open(PharmacosFrequentComponent, { width: '50%', data: { pharmacos: this.mostFrequentPharmacos } });
+			dialogPharmacosFrequent.afterClosed().subscribe((result: DialogPharmacosFrequent) => {
+				if (result.openFormPharmaco)
+					this.openFormPharmacoDialog(result.pharmaco);
+			});
+		});
+	}
+
+	openFormPharmacoDialog(pharmaco: Pharmaco) {
 		this.internmentStateService.getDiagnosesGeneralState(this.internmentEpisodeId).subscribe((diagnostics: DiagnosesGeneralStateDto[]) => {
 			if (diagnostics)
 				this.internacionMasterdataService.getHealthClinical().subscribe(healthClinical => {
@@ -110,12 +129,16 @@ export class InternmentIndicationsCardComponent implements OnInit {
 
 					if (this.diagnostics?.length > 0) {
 						const dialogRef = this.dialog.open(PharmacoComponent, {
+							width: '100%',
 							data: {
 								entryDate: this.entryDate,
 								actualDate: this.actualDate,
 								patientId: this.patientId,
 								professionalId: this.professionalId,
-								diagnostics: this.diagnostics
+								diagnostics: this.diagnostics,
+								vias: this.vias,
+								units: this.units,
+								pharmaco: pharmaco
 							},
 							autoFocus: true,
 							disableClose: false
@@ -125,9 +148,9 @@ export class InternmentIndicationsCardComponent implements OnInit {
 
 							if (pharmaco) {
 								this.indicationsFacadeService.addPharmaco(pharmaco).subscribe(_ => {
-										this.snackBarService.showSuccess('indicacion.internment-card.dialogs.pharmaco.messages.SUCCESS');
-										this.indicationsFacadeService.updateIndication({ pharmaco: true });
-									},
+									this.snackBarService.showSuccess('indicacion.internment-card.dialogs.pharmaco.messages.SUCCESS');
+									this.indicationsFacadeService.updateIndication({ pharmaco: true });
+								},
 									error => {
 										error?.text ?
 											this.snackBarService.showError(error.text) : this.snackBarService.showError('indicacion.internment-card.dialogs.pharmaco.messages.ERROR');
@@ -202,4 +225,23 @@ export class InternmentIndicationsCardComponent implements OnInit {
 			}
 		});
 	}
+	private pharmacoSummaryToPharmaco(mostFrequentPharmacos: PharmacoSummaryDto[]): Pharmaco[] {
+		return mostFrequentPharmacos.map((pharmaco: PharmacoSummaryDto) => this.mapPharmaco(pharmaco));
+	}
+
+	private mapPharmaco(pharmaco: PharmacoSummaryDto): Pharmaco {
+		return {
+			snomed: {
+				sctid: pharmaco.snomed.sctid,
+				pt: pharmaco.snomed.pt
+			},
+			dosage: pharmaco.dosage,
+			via: pharmaco.via,
+		}
+	}
+}
+
+export interface DialogPharmacosFrequent {
+	openFormPharmaco: boolean;
+	pharmaco: Pharmaco;
 }
