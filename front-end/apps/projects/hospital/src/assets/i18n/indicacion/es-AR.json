@@ -164,6 +164,15 @@
 				}
 			}
 		},
+		"card-pharmaco": {
+			"SELECTION": "Seleccionar"
+		},
+		"card-pharmaco-frequent": {
+			"TITLE": "Fármacos recetados más frecuentes",
+			"SUBTITLE": "Descripción SNOMED",
+			"SEARCH": "Buscar entre los más frecuentes...",
+			"ADD_NEW": "+ Agregar nuevo"
+		},
 		"nursing-care": {
 			"TITLE": "Enfermería",
 			"TITLE_CARD": "Indicaciones de internación",
@@ -172,7 +181,7 @@
 			},
 			"status": {
 				"PENDING": "Pendiente"
-			}, 
+			},
 			"buttons": {
 				"TO_REGISTER": "registrar",
 				"REGISTER": "marcar como completado",
