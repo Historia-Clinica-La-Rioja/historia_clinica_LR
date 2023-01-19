@@ -66,6 +66,66 @@
                             }
                           ]
                         }
+                      },
+                      {
+                        "type": "cubejs-dashboard",
+                        "args": {
+                          "filters": {},
+                          "content": [
+                            {
+                              "type": "cubejs-chart",
+                              "args": {
+                                "query": "cantidadConsultasTotal",
+                                "showLegend": false
+                              }
+                            }
+                          ]
+                        }
+                      },
+                      {
+                        "type": "cubejs-dashboard",
+                        "args": {
+                          "filters": {},
+                          "content": [
+                            {
+                              "type": "cubejs-chart",
+                              "args": {
+                                "query": "cantidadConsultasTotalSexoF",
+                                "showLegend": false
+                              }
+                            }
+                          ]
+                        }
+                      },
+                      {
+                        "type": "cubejs-dashboard",
+                        "args": {
+                          "filters": {},
+                          "content": [
+                            {
+                              "type": "cubejs-chart",
+                              "args": {
+                                "query": "cantidadConsultasTotalSexoM",
+                                "showLegend": false
+                              }
+                            }
+                          ]
+                        }
+                      },
+                      {
+                        "type": "cubejs-dashboard",
+                        "args": {
+                          "filters": {},
+                          "content": [
+                            {
+                              "type": "cubejs-chart",
+                              "args": {
+                                "query": "cantidadConsultasTotalSexoX",
+                                "showLegend": false
+                              }
+                            }
+                          ]
+                        }
                       }
                     ]
                   }
