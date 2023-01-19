@@ -28,7 +28,7 @@
                     <mat-form-field appearance="outline">
                         <mat-select id="equipmentId" name="equipmentId" formControlName="equipmentId"
                             placeholder="{{'pacientes.form.SELECT' | translate}}" (selectionChange)="loadCalendar()">
-                            <mat-option *ngFor="let equipment of equipments$ | async" [value]="equipment">
+                            <mat-option *ngFor="let equipment of equipments$ | async" [value]="equipment.id">
                                 {{equipment.name}}
                             </mat-option>
                         </mat-select>

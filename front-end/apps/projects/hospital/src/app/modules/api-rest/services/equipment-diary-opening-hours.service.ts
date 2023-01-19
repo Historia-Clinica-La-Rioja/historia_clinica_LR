@@ -1,36 +1,30 @@
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Observable, of } from 'rxjs';
-
-const MOCK = [
-	{
-		description: "lunes",
-		id: 1,
-		timeRanges: [{
-			from: "05:00:00",
-			to: "08:40:00"
-		}]
-	}
-];
+import { OccupationDto } from '@api-rest/api-model';
+import { ContextService } from '@core/services/context.service';
+import { environment } from '@environments/environment';
+import { Observable } from 'rxjs';
 
 @Injectable({
 	providedIn: 'root'
 })
 export class EquipmentDiaryOpeningHoursService {
 
-	constructor() { }
+	constructor(
+		private readonly http: HttpClient, 
+		private readonly contextService: ContextService
+	) { }
 
-
-	getAllWeeklyEquipmentOcupation(equipmentId: number, diaryId: number, startDate, endDate): Observable<any[]> {
-		/*let queryParams: HttpParams = new HttpParams();
+	getAllWeeklyEquipmentOcupation(equipmentId: number, diaryId: number, startDate: string, endDate: string): Observable<OccupationDto[]> {
+		let queryParams: HttpParams = new HttpParams();
 		queryParams = queryParams.append('startDate', startDate);
 		queryParams = queryParams.append('endDate', endDate);
 		queryParams = (diaryId) ? queryParams.append('diaryId', JSON.stringify(diaryId)) : queryParams;
 
-		const url = `${environment.apiBase}/institutions/${this.contextService.institutionId}/medicalConsultations/diaryOpeningHours/equipment/${equipmentId}`;
+		const url = `${environment.apiBase}/institutions/${this.contextService.institutionId}/medicalConsultations/equipmentDiaryOpeningHours/equipment/${equipmentId}`;
 		return this.http.get<OccupationDto[]>(url,
 			{
 				params: queryParams
-			});*/
-		return of(MOCK);
+			});
 	}
 }

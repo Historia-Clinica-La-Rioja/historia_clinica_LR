@@ -10,16 +10,18 @@ import { ContextService } from '@core/services/context.service';
 import { currentWeek, DateFormat, momentFormat } from '@core/utils/moment.utils';
 import { ConfirmDialogComponent } from '@presentation/dialogs/confirm-dialog/confirm-dialog.component';
 import { SnackBarService } from '@presentation/services/snack-bar.service';
-import { SectorService, SectorType } from '@api-rest/services/sector.service';
-import { EquipmentDiary, EquipmentDiaryService } from '@api-rest/services/equipment-diary.service';
+import { SectorService } from '@api-rest/services/sector.service';
+import { EquipmentDiaryService } from '@api-rest/services/equipment-diary.service';
 import { APPOINTMENT_DURATIONS, MINUTES_IN_HOUR } from '@turnos/constants/appointment';
 import { AgendaHorarioService } from '@turnos/services/agenda-horario.service';
 import { EquipmentService } from '@api-rest/services/equipment.service';
 import { EquipmentDiaryOpeningHoursService } from '@api-rest/services/equipment-diary-opening-hours.service';
+import { EquipmentDiaryADto, EquipmentDto, SectorDto } from '@api-rest/api-model';
 
 const ROUTE_APPOINTMENT = 'turnos';
 const START = 0;
 const END = 23;
+const DIAGNOSTIC_IMAGING = "Diagnóstico por imagen";
 
 @Component({
 	selector: 'app-equipment-diary-setup',
@@ -44,9 +46,9 @@ export class EquipmentDiarySetupComponent implements OnInit {
 	minDate = new Date();
 	openingTime: number;
 
-	sectors$: Observable<any[]>;
+	sectors$: Observable<SectorDto[]>;
 	agendaHorarioService: AgendaHorarioService;
-	equipments$: Observable<any[]>;
+	equipments$: Observable<EquipmentDto[]>;
 
 	hasError = hasError;
 	getError = getError;
@@ -90,8 +92,10 @@ export class EquipmentDiarySetupComponent implements OnInit {
 		this.form.controls.appointmentDuration.valueChanges
 			.subscribe(newDuration => this.hourSegments = MINUTES_IN_HOUR / newDuration);
 
-		this.sectors$ = this.sectorService.getDiagnosticImagingType(SectorType.DIAGNOSTIC_IMAGING);
-		
+		this.sectorService.getTypes().subscribe(types => {
+			const diagnosticImagingId = types.find(type => type.description === DIAGNOSTIC_IMAGING).id;
+			this.sectors$ = this.sectorService.getDiagnosticImagingType(diagnosticImagingId);
+		});
 	}
 
 	loadCalendar() {
@@ -117,11 +121,11 @@ export class EquipmentDiarySetupComponent implements OnInit {
 			return;
 		}
 
-		const startDate = momentFormat(formValue.startDate, DateFormat.API_DATE);
-		const endDate = momentFormat(formValue.endDate, DateFormat.API_DATE);
+		const startDate: string = momentFormat(formValue.startDate, DateFormat.API_DATE);
+		const endDate: string = momentFormat(formValue.endDate, DateFormat.API_DATE);
 
 		const ocupations$: Observable<any[]> = this.equipmentDiaryOpeningHoursService
-			.getAllWeeklyEquipmentOcupation(1, null, startDate, endDate);
+			.getAllWeeklyEquipmentOcupation(this.form.value.equipmentId, null, startDate, endDate);
 
 		this.agendaHorarioService.setWeeklyOcupation(ocupations$);
 	}
@@ -153,7 +157,7 @@ export class EquipmentDiarySetupComponent implements OnInit {
 			dialogRef.afterClosed().subscribe(confirmed => {
 				if (confirmed) {
 					this.errors = [];
-					const diary: EquipmentDiary = this.buildEquipmentDiaryDto();
+					const diary: EquipmentDiaryADto = this.buildEquipmentDiaryDto();
 					this.equipmentDiaryService.addEquipmentDiary(diary)
 						.subscribe((diaryId: number) => {
 							this.processSuccess(diaryId);
@@ -171,7 +175,7 @@ export class EquipmentDiarySetupComponent implements OnInit {
 		}
 	}
 
-	private buildEquipmentDiaryDto(): EquipmentDiary {
+	private buildEquipmentDiaryDto(): EquipmentDiaryADto {
 		return {
 			appointmentDuration: this.form.value.appointmentDuration,
 			startDate: momentFormat(this.form.value.startDate, DateFormat.API_DATE),
