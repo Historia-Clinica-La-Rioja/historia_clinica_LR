@@ -40,6 +40,7 @@ export class AgregarPrescripcionItemComponent implements OnInit, AfterViewInit, 
 	studyCategoryOptions = [];
 	DEFAULT_RADIO_OPTION = 1;
 	OTHER_RADIO_OPTION = 0;
+	MONTHS_QUANTITY: number[] = [1, 2, 3, 4];
 	hasError = hasError;
 	intervalValidation = intervalValidation;
 
@@ -119,7 +120,7 @@ export class AgregarPrescripcionItemComponent implements OnInit, AfterViewInit, 
 				searchConceptsLocallyFF: this.searchConceptsLocallyFFIsOn,
 			},
 		}).afterClosed().subscribe((data: AmbulatoryConsultationProblem) => {
-			
+
 		})
 	}
 
@@ -160,7 +161,7 @@ export class AgregarPrescripcionItemComponent implements OnInit, AfterViewInit, 
 			unitDose: this.prescriptionItemForm.controls.unitDose.value,
 			dayDose: this.prescriptionItemForm.controls.dayDose.value,
 			treatmentDays: this.prescriptionItemForm.controls.treatmentDays.value,
-			postadata: this.prescriptionItemForm.controls.postadata.value,
+			posdatadas: this.prescriptionItemForm.controls.posdatadas.value,
 			studyCategory: {
 				id: showStudyCategory ? this.prescriptionItemForm.controls.studyCategory.value : null,
 				description: showStudyCategory ? this.studyCategoryOptions.find(sc => sc.id === this.prescriptionItemForm.controls.studyCategory.value).description : null
@@ -196,12 +197,7 @@ export class AgregarPrescripcionItemComponent implements OnInit, AfterViewInit, 
 		this.snomedConcept = selectedConcept;
 		const pt = selectedConcept ? selectedConcept.pt : '';
 		this.prescriptionItemForm.controls.snomed.setValue(pt);
-	}
-
-	toggleConceptsView(snomed) {
-		this.snomedConcept = snomed;
-		this.prescriptionItemForm.get('snomed').setValue(this.snomedConcept);
-		this.conceptsView = ! this.conceptsView;
+		this.prescriptionItemForm.controls.snomed.disable();
 	}
 
 	private setItemData(prescriptionItem: NewPrescriptionItem): void {
@@ -209,7 +205,7 @@ export class AgregarPrescripcionItemComponent implements OnInit, AfterViewInit, 
 		this.prescriptionItemForm.controls.unitDose.setValue(prescriptionItem.unitDose);
 		this.prescriptionItemForm.controls.dayDose.setValue(prescriptionItem.dayDose);
 		this.prescriptionItemForm.controls.treatmentDays.setValue(prescriptionItem.treatmentDays);
-		this.prescriptionItemForm.controls.postadata.setValue(prescriptionItem.postadata);
+		this.prescriptionItemForm.controls.posdatadas.setValue(prescriptionItem.posdatadas);
 		this.prescriptionItemForm.controls.observations.setValue(prescriptionItem.observations);
 
 		if (this.data.showDosage) {
@@ -230,6 +226,7 @@ export class AgregarPrescripcionItemComponent implements OnInit, AfterViewInit, 
 		this.snomedConcept = prescriptionItem.snomed;
 		const pt = prescriptionItem.snomed ? prescriptionItem.snomed.pt : '';
 		this.prescriptionItemForm.controls.snomed.setValue(pt);
+		this.prescriptionItemForm.controls.snomed.disable();
 	}
 
 	private  formConfiguration() {
@@ -239,7 +236,7 @@ export class AgregarPrescripcionItemComponent implements OnInit, AfterViewInit, 
 			dayDose: [null, Validators.required],
 			treatmentDays: [null, Validators.required],
 			healthProblem: [null, Validators.required],
-			postadata: [null, Validators.required],
+			posdatadas: [this.MONTHS_QUANTITY[0], Validators.required],
 			interval: [this.DEFAULT_RADIO_OPTION],
 			intervalHours: [null],
 			observations: [null, [Validators.maxLength(this.TEXT_AREA_MAX_LENGTH)]],
@@ -253,6 +250,10 @@ export class AgregarPrescripcionItemComponent implements OnInit, AfterViewInit, 
 		if (this.data.showStudyCategory) {
 			this.prescriptionItemForm.controls.studyCategory.setValidators([Validators.required]);
 		}
+	}
+
+	isValidForm() {
+		return ! this.prescriptionItemForm.valid || this.snomedConcept === undefined;
 	}
 
 	private buildConceptsResultsTable(data: SnomedDto[]): TableModel<SnomedDto> {
@@ -300,7 +301,7 @@ export class NewPrescriptionItem {
 	unitDose: number;
 	dayDose: number;
 	treatmentDays: number;
-	postadata: number
+	posdatadas: number
 	studyCategory: {
 		id: string;
 		description: string;

@@ -14,6 +14,7 @@ import { PatientService } from '@api-rest/services/patient.service';
 
 import { AgregarPrescripcionItemComponent, NewPrescriptionItem } from '../../../../dialogs/ordenes-prescripciones/agregar-prescripcion-item/agregar-prescripcion-item.component';
 import { PrescripcionesService, PrescriptionTypes } from '../../../../services/prescripciones.service';
+import { RecetaCreadaDialogComponent } from '@historia-clinica/modules/ambulatoria/dialogs/receta-creada-dialog/receta-creada-dialog.component';
 
 @Component({
 	selector: 'app-nueva-prescripcion',
@@ -49,6 +50,7 @@ export class NuevaPrescripcionComponent implements OnInit {
 		this.patientService.getPatientBasicData(Number(this.data.patientId)).subscribe((basicData: BasicPatientDto) => {
 			this.patientData = basicData;
 		});
+		this.openPrescriptionItemDialog();
 	}
 
 	closeModal(newPrescription?: NewPrescription): void {
@@ -109,9 +111,10 @@ export class NuevaPrescripcionComponent implements OnInit {
 	savePrescription(prescriptionDto: PrescriptionDto) {
 		if (prescriptionDto) {
 			this.prescripcionesService.createPrescription(this.data.prescriptionType, prescriptionDto, this.data.patientId)
-				.subscribe(prescriptionRequestResponse => {
-						this.closeModal({prescriptionDto, prescriptionRequestResponse});
-					},
+			.subscribe(prescriptionRequestResponse => {
+					this.dialog.open(RecetaCreadaDialogComponent);
+					this.closeModal({prescriptionDto, prescriptionRequestResponse});
+				},
 					(err: ApiErrorDto) => {
 						this.snackBarService.showError(err.errors[0]);
 					});
@@ -157,7 +160,7 @@ export class NuevaPrescripcionComponent implements OnInit {
 		editPrescriptionItem.unitDose = prescriptionItem.unitDose;
 		editPrescriptionItem.dayDose = prescriptionItem.dayDose;
 		editPrescriptionItem.treatmentDays - prescriptionItem.treatmentDays;
-		editPrescriptionItem.postadata = prescriptionItem.postadata;
+		editPrescriptionItem.posdatadas = prescriptionItem.posdatadas;
 		editPrescriptionItem.administrationTimeDays = prescriptionItem.administrationTimeDays;
 		editPrescriptionItem.isChronicAdministrationTime = prescriptionItem.isChronicAdministrationTime;
 		editPrescriptionItem.intervalHours = prescriptionItem.intervalHours;

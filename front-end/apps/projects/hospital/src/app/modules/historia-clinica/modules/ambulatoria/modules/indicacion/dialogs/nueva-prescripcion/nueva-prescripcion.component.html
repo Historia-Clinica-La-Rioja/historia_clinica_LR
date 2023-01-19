@@ -52,7 +52,7 @@
             </div>
             <section class="prescription-list gray">
                 <div>
-                    <span 
+                    <span
                         [translate]="'ambulatoria.paciente.ordenes_prescripciones.new_prescription_dialog.UNIT_DOSE'"
                         [translateParams]="{unitDose: prescriptionItem.unitDose}">
                     </span>
@@ -60,10 +60,16 @@
                         [translate]="'ambulatoria.paciente.ordenes_prescripciones.new_prescription_dialog.TREATMENT_DAYS'"
                         [translateParams]="{treatmentDays: prescriptionItem.treatmentDays}">
                     </span>
-                    <span
-                        [translate]="'ambulatoria.paciente.ordenes_prescripciones.new_prescription_dialog.POSTADATA'"
-                        [translateParams]="{postadata: prescriptionItem.postadata}">
+                    <span *ngIf="prescriptionItem.posdatadas > 1 else posdatadasMes"
+                        [translate]="'ambulatoria.paciente.ordenes_prescripciones.new_prescription_dialog.POSDATADAS'"
+                        [translateParams]="{posdatadas: prescriptionItem.posdatadas}">
                     </span>
+                    <ng-template #posdatadasMes>
+                        <span
+                            [translate]="'ambulatoria.paciente.ordenes_prescripciones.new_prescription_dialog.POSDATADA'"
+                            [translateParams]="{posdatadas: prescriptionItem.posdatadas}">
+                        </span>
+                    </ng-template>
                 </div>
                 <div>
                     <span
@@ -94,6 +100,6 @@
 
 <mat-dialog-actions fxLayout="row" fxLayoutAlign="end start">
     <button mat-flat-button color="primary" *ngIf="prescriptionItems.length" (click)="confirmPrescription()" fxFlexFill.xs>
-        <span class="uppercase">{{'buttons.CONFIRM' | translate}}</span>
+        <span class="uppercase">{{'buttons.ELECTRONIC_FIRM' | translate}}</span>
     </button>
 </mat-dialog-actions>

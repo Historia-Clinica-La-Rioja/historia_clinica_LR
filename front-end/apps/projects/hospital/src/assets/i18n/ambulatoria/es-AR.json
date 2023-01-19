@@ -376,7 +376,9 @@
                     "UNIT_DOSE": "Dosis / Unidad",
                     "DAY_DOSE": "Dosis / Día",
                     "TREATMENT_DAYS": "Días de tratamiento",
-                    "POSTADATA": "Repeticiones (postadata)",
+                    "POSDATADAS": "Repeticiones (posdatadas)",
+                    "POSDATADAS_MONTHS": "{{quantity}} Meses",
+                    "POSDATADA_MONTH": "{{quantity}} Mes",
                     "ADD_CHARACTERS": "Ingrese al menos 3 caracteres",
                     "ADD_NEW_PROBLEM": "+ Agregar nuevo problema asociado"
                 },
@@ -391,7 +393,8 @@
                     "UNIT_DOSE": "Dosis / Unidad: {{unitDose}}",
                     "DAY_DOSE": "Dosis / Día: {{dayDose}}",
                     "TREATMENT_DAYS": "Días de tratamiento: {{treatmentDays}}",
-                    "POSTADATA": "Repeticiones: {{postadata}}",
+                    "POSDATADAS": "Repeticiones: {{posdatadas}} meses",
+                    "POSDATADA": "Repeticiones: {{posdatadas}} mes",
                     "INTERVAL": "Cada {{interval}} hs.",
                     "DAILY": "Diario",
                     "DIAGNOSIS": "Diagnóstico: {{healthProblem}}"
@@ -399,7 +402,9 @@
                 "confirm_prescription_dialog": {
                     "MEDICATION_TITLE": "Su medicación fue agregada correctamente",
                     "STUDY_TITLE": "Su orden fue realizada correctamente",
+                    "TITLE": "Su receta fue realizada correctamente",
                     "DOWNLOAD_BUTTON_MEDICATION": "Descargar receta",
+                    "SEND_EMAIL": "Enviar por email",
                     "DOWNLOAD_BUTTON_STUDY": "Descargar orden"
                 },
                 "suspend_medication_dialog": {
