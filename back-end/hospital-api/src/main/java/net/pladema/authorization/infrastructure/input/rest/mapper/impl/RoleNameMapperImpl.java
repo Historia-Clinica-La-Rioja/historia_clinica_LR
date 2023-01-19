@@ -44,6 +44,8 @@ public class RoleNameMapperImpl implements RoleNameMapper {
 			case PERFIL_EPIDEMIO_MESO: return "Perfil epidemiológico mesogestión";
 			case PERFIL_EPIDEMIO_INSTITUCION: return "Perfil epidemiológico institucional";
 			case ADMINISTRATIVO_RED_DE_IMAGENES: return "Administrativo red de imágenes";
+			case PRESCRIPTOR: return "Prescriptor";
+			case ADMINISTRADOR_INSTITUCIONAL_PRESCRIPTOR: return "Administrador Institucional Prescriptor";
 		}
 		throw new NotFoundException("role-not-exists", String.format("El rol %s no existe", eRole));
 	}
