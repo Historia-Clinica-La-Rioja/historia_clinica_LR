@@ -372,7 +372,13 @@
                     "ADMINISTRATION_TIME_DEFAULT_OPTION": "Habitual",
                     "OBSERVATIONS": "Observaciones",
                     "INTERVAL_HOURS_REQUIRED": "Ingrese cantidad de horas válidas",
-                    "ADMINISTRATION_TIME_DAYS_REQUIRED": "Ingrese cantidad de días"
+                    "ADMINISTRATION_TIME_DAYS_REQUIRED": "Ingrese cantidad de días",
+                    "UNIT_DOSE": "Dosis / Unidad",
+                    "DAY_DOSE": "Dosis / Día",
+                    "TREATMENT_DAYS": "Días de tratamiento",
+                    "POSTADATA": "Repeticiones (postadata)",
+                    "ADD_CHARACTERS": "Ingrese al menos 3 caracteres",
+                    "ADD_NEW_PROBLEM": "+ Agregar nuevo problema asociado"
                 },
                 "new_prescription_dialog": {
                     "MEDICATION_TITLE": "Nueva medicación",
@@ -381,7 +387,14 @@
                     "ADD_STUDY_LABEL": "Agregar estudio",
                     "SELECT_MEDICAL_COVERAGE": "Seleccione cobertura médica",
                     "WITHOUT_RECIPE": "Sin receta",
-                    "UPDATE_COVERAGE": "Actualizar cobertura"
+                    "UPDATE_COVERAGE": "Actualizar cobertura",
+                    "UNIT_DOSE": "Dosis / Unidad: {{unitDose}}",
+                    "DAY_DOSE": "Dosis / Día: {{dayDose}}",
+                    "TREATMENT_DAYS": "Días de tratamiento: {{treatmentDays}}",
+                    "POSTADATA": "Repeticiones: {{postadata}}",
+                    "INTERVAL": "Cada {{interval}} hs.",
+                    "DAILY": "Diario",
+                    "DIAGNOSIS": "Diagnóstico: {{healthProblem}}"
                 },
                 "confirm_prescription_dialog": {
                     "MEDICATION_TITLE": "Su medicación fue agregada correctamente",

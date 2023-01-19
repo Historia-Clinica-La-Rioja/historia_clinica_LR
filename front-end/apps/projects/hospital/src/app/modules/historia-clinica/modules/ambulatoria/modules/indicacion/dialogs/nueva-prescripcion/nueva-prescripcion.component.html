@@ -50,10 +50,39 @@
                     </button>
                 </div>
             </div>
+            <section class="prescription-list gray">
+                <div>
+                    <span 
+                        [translate]="'ambulatoria.paciente.ordenes_prescripciones.new_prescription_dialog.UNIT_DOSE'"
+                        [translateParams]="{unitDose: prescriptionItem.unitDose}">
+                    </span>
+                    <span
+                        [translate]="'ambulatoria.paciente.ordenes_prescripciones.new_prescription_dialog.TREATMENT_DAYS'"
+                        [translateParams]="{treatmentDays: prescriptionItem.treatmentDays}">
+                    </span>
+                    <span
+                        [translate]="'ambulatoria.paciente.ordenes_prescripciones.new_prescription_dialog.POSTADATA'"
+                        [translateParams]="{postadata: prescriptionItem.postadata}">
+                    </span>
+                </div>
+                <div>
+                    <span
+                        [translate]="'ambulatoria.paciente.ordenes_prescripciones.new_prescription_dialog.DAY_DOSE'"
+                        [translateParams]="{dayDose: prescriptionItem.dayDose}">
+                    </span>
+                    <span
+                        [translate]="'ambulatoria.paciente.ordenes_prescripciones.new_prescription_dialog.DIAGNOSIS'"
+                        [translateParams]="{healthProblem: prescriptionItem.healthProblem.description}">
+                    </span>
+                    <span *ngIf="prescriptionItem.intervalHours"
+                        [translate]="'ambulatoria.paciente.ordenes_prescripciones.new_prescription_dialog.INTERVAL'"
+                        [translateParams]="{interval: prescriptionItem.intervalHours}">
+                    </span>
+                    <span *ngIf=" ! prescriptionItem.intervalHours" [translate]="'ambulatoria.paciente.ordenes_prescripciones.new_prescription_dialog.DAILY'"></span>
+                </div>
+            </section>
+            <span class="gray" *ngIf="prescriptionItem.observations">{{prescriptionItem.observations}}</span>
             <span class="mat-body-1" *ngIf="data.addPrescriptionItemDialogData.showStudyCategory">{{prescriptionItem.studyCategory.description}}</span>
-            <span class="mat-body-1" *ngIf="data.addPrescriptionItemDialogData.showDosage && isDailyMedication(prescriptionItem)">{{getDosage(prescriptionItem)}}</span>
-            <h3 class="mat-subheading-2 capitalize-first-letter color-primary">{{prescriptionItem.healthProblem.description}}</h3>
-            <span class="mat-body-1" *ngIf="prescriptionItem.observations">{{prescriptionItem.observations}}</span>
         </div>
         <mat-divider></mat-divider>
     </div>

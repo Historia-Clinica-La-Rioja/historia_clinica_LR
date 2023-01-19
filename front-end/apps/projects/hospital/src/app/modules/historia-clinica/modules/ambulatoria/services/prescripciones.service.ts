@@ -112,6 +112,10 @@ export class PrescripcionesService {
 			intervalHours: medicationItem.dosage?.frequency ? String(medicationItem.dosage.frequency) : null,
 			administrationTimeDays: medicationItem.dosage?.duration ? String(medicationItem.dosage.duration) : null,
 			observations: medicationItem.observations,
+			unitDose: null,
+			dayDose: null,
+			treatmentDays: null,
+			postadata: null
 		};
 	}
 
@@ -127,6 +131,10 @@ export class PrescripcionesService {
 			isDailyInterval: null,
 			isChronicAdministrationTime: null,
 			observations: studyItem.observations,
+			unitDose: null,
+			dayDose: null,
+			treatmentDays: null,
+			postadata: null
 		};
 	}
 

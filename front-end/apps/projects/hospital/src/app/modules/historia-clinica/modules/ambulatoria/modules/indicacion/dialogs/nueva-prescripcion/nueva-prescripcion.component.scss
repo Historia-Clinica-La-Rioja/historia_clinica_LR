@@ -21,3 +21,17 @@ h3#prescriptionItemName {
 .item-container {
     margin-bottom: 25px;
 }
+
+.gray {
+    color: gray;
+}
+
+.prescription-list {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+
+    div {
+        display: flex;
+        flex-direction: column;
+    }
+}
