@@ -3,7 +3,6 @@ package net.pladema.medicalconsultation.equipmentdiary.service.domain;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
-import net.pladema.medicalconsultation.diary.service.domain.DiaryOpeningHoursBo;
 
 import java.time.LocalDate;
 import java.util.List;

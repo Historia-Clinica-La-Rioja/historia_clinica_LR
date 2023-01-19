@@ -34,14 +34,11 @@ public class EquipmentController {
 
 	private static final Logger LOG = LoggerFactory.getLogger(EquipmentController.class);
 
-	private EquipmentRepository equipmentRepository;
-
 	private EquipmentService equipmentService;
 
 	private EquipmentBOMapper equipmentBOMapper;
 
-	public EquipmentController(EquipmentRepository equipmentRepository, EquipmentService equipmentService, EquipmentBOMapper equipmentBOMapper) {
-		this.equipmentRepository = equipmentRepository;
+	public EquipmentController(EquipmentService equipmentService, EquipmentBOMapper equipmentBOMapper) {
 		this.equipmentService = equipmentService;
 		this.equipmentBOMapper = equipmentBOMapper;
 	}

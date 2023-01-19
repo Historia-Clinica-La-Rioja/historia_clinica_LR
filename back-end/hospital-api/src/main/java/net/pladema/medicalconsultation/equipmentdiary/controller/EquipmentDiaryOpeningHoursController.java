@@ -4,13 +4,9 @@ import ar.lamansys.sgx.shared.dates.configuration.LocalDateMapper;
 import ar.lamansys.sgx.shared.featureflags.AppFeature;
 import ar.lamansys.sgx.shared.featureflags.application.FeatureFlagsService;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import net.pladema.medicalconsultation.diary.controller.dto.DiaryOpeningHoursDto;
 import net.pladema.medicalconsultation.diary.controller.dto.OccupationDto;
 import net.pladema.medicalconsultation.diary.controller.mapper.DiaryMapper;
-import net.pladema.medicalconsultation.diary.service.DiaryOpeningHoursService;
-import net.pladema.medicalconsultation.diary.service.domain.DiaryOpeningHoursBo;
 import net.pladema.medicalconsultation.diary.service.domain.OccupationBo;
-import net.pladema.medicalconsultation.diary.service.exception.DiaryOpeningHoursException;
 
 import net.pladema.medicalconsultation.equipmentdiary.service.EquipmentDiaryOpeningHoursService;
 
@@ -24,7 +20,6 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
-import java.util.Collection;
 import java.util.List;
 
 @RestController
@@ -35,7 +30,7 @@ public class EquipmentDiaryOpeningHoursController {
     private static final Logger LOG = LoggerFactory.getLogger(EquipmentDiaryOpeningHoursController.class);
     public static final String OUTPUT = "Output -> {}";
 
-    private final EquipmentDiaryOpeningHoursService diaryOpeningHoursService;
+    private final EquipmentDiaryOpeningHoursService equipmentDiaryOpeningHoursService;
 
     private final DiaryMapper diaryMapper;
 
@@ -44,13 +39,13 @@ public class EquipmentDiaryOpeningHoursController {
 	private final FeatureFlagsService featureFlagsService;
 
     public EquipmentDiaryOpeningHoursController(
-			EquipmentDiaryOpeningHoursService diaryOpeningHoursService,
+			EquipmentDiaryOpeningHoursService equipmentDiaryOpeningHoursService,
             DiaryMapper diaryMapper,
             LocalDateMapper localDateMapper,
 			FeatureFlagsService featureFlagsService
 	) {
         super();
-        this.diaryOpeningHoursService = diaryOpeningHoursService;
+        this.equipmentDiaryOpeningHoursService = equipmentDiaryOpeningHoursService;
         this.diaryMapper = diaryMapper;
         this.localDateMapper = localDateMapper;
 		this.featureFlagsService = featureFlagsService;
@@ -84,7 +79,7 @@ public class EquipmentDiaryOpeningHoursController {
 		LocalDate startDate = localDateMapper.fromStringToLocalDate(startDateStr);
 		LocalDate endDate = localDateMapper.fromStringToLocalDate(endDateStr);
 		Integer equipmentDiaryIdParam = (equipmentDiaryId != null) ? Integer.parseInt(equipmentDiaryId) : null;
-		List<OccupationBo> occupationBos = diaryOpeningHoursService
+		List<OccupationBo> occupationBos = equipmentDiaryOpeningHoursService
 				.findAllWeeklyEquipmentOccupation(equipmentId, startDate, endDate, equipmentDiaryIdParam);
 		List<OccupationDto> result = diaryMapper.toListOccupationDto(occupationBos);
 		LOG.debug(OUTPUT, result);

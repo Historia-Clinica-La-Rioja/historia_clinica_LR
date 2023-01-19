@@ -8,11 +8,8 @@ import net.pladema.medicalconsultation.diary.repository.domain.DiaryOpeningHours
 import net.pladema.medicalconsultation.diary.repository.domain.OccupationVo;
 import net.pladema.medicalconsultation.diary.repository.entity.OpeningHours;
 
-import net.pladema.medicalconsultation.diary.service.domain.DiaryOpeningHoursBo;
 import net.pladema.medicalconsultation.diary.service.domain.OccupationBo;
 import net.pladema.medicalconsultation.diary.service.domain.TimeRangeBo;
-import net.pladema.medicalconsultation.diary.service.exception.DiaryOpeningHoursEnumException;
-import net.pladema.medicalconsultation.diary.service.exception.DiaryOpeningHoursException;
 import net.pladema.medicalconsultation.equipmentdiary.repository.EquipmentDiaryOpeningHoursRepository;
 import net.pladema.medicalconsultation.equipmentdiary.repository.entity.EquipmentDiaryOpeningHours;
 import net.pladema.medicalconsultation.equipmentdiary.repository.entity.EquipmentDiaryOpeningHoursPK;
@@ -51,22 +48,25 @@ public class EquipmentDiaryOpeningHoursServiceImpl implements EquipmentDiaryOpen
 
     public static final String OUTPUT = "Output -> {}";
 
-    private final EquipmentDiaryOpeningHoursRepository diaryOpeningHoursRepository;
+    private final EquipmentDiaryOpeningHoursRepository equipmentDiaryOpeningHoursRepository;
 
     private final OpeningHoursRepository openingHoursRepository;
 
 	private final AppointmentAssnRepository appointmentAssnRepository;
 
-    private final EquipmentDiaryBoMapper diaryBoMapper;
+    private final EquipmentDiaryBoMapper equipmentDiaryBoMapper;
 
     @Override
-    public void load(Integer diaryId, List<EquipmentDiaryOpeningHoursBo> diaryOpeningHours, List<EquipmentDiaryOpeningHoursBo>... oldOpeningHours) {
-        Sort sort = Sort.by("dayWeekId", "from");
+    public void load(Integer equipmentDiaryId, List<EquipmentDiaryOpeningHoursBo> equipmentDiaryOpeningHours, List<EquipmentDiaryOpeningHoursBo>... oldOpeningHours) {
+
+		LOG.debug("Input parameters -> equipmentDiaryId {}, equipmentDiaryOpeningHours {} , oldOpeningHours {}",equipmentDiaryId, equipmentDiaryOpeningHours, oldOpeningHours);
+
+		Sort sort = Sort.by("dayWeekId", "from");
         List<OpeningHours> savedOpeningHours = openingHoursRepository.findAll(sort);
 
-        diaryOpeningHours.forEach(doh -> {
+		equipmentDiaryOpeningHours.forEach(doh -> {
             OpeningHoursBo openingHoursBo = doh.getOpeningHours();
-            OpeningHours newOpeningHours = diaryBoMapper.toOpeningHours(openingHoursBo);
+            OpeningHours newOpeningHours = equipmentDiaryBoMapper.toOpeningHours(openingHoursBo);
             Integer openingHoursId;
 
             //Si los horarios de atención definidos para la agenda ya existen en la BBDD
@@ -86,24 +86,26 @@ public class EquipmentDiaryOpeningHoursServiceImpl implements EquipmentDiaryOpen
 			}
 
             openingHoursBo.setId(openingHoursId);
-            diaryOpeningHoursRepository.saveAndFlush(createDiaryOpeningHoursInstance(diaryId, openingHoursId, doh));
+			equipmentDiaryOpeningHoursRepository.saveAndFlush(createDiaryOpeningHoursInstance(equipmentDiaryId, openingHoursId, doh));
 
         });
     }
 
 	@Override
-	public void update(Integer equipmentDiaryId, List<EquipmentDiaryOpeningHoursBo> diaryOpeningHours) {
-		List<EquipmentDiaryOpeningHoursBo> oldOpeningHours = diaryOpeningHoursRepository.getDiaryOpeningHours(equipmentDiaryId).stream().map(this::createDiaryOpeningHoursBo).collect(Collectors.toList());
-		diaryOpeningHoursRepository.deleteAll(equipmentDiaryId);
-		load(equipmentDiaryId, diaryOpeningHours, oldOpeningHours);
+	public void update(Integer equipmentDiaryId, List<EquipmentDiaryOpeningHoursBo> equipmentDiaryOpeningHours) {
+		LOG.debug("Input parameters -> equipmentDiaryId {}, equipmentDiaryOpeningHours {} ",equipmentDiaryId, equipmentDiaryOpeningHours);
+
+		List<EquipmentDiaryOpeningHoursBo> oldOpeningHours = equipmentDiaryOpeningHoursRepository.getDiaryOpeningHours(equipmentDiaryId).stream().map(this::createDiaryOpeningHoursBo).collect(Collectors.toList());
+		equipmentDiaryOpeningHoursRepository.deleteAll(equipmentDiaryId);
+		load(equipmentDiaryId, equipmentDiaryOpeningHours, oldOpeningHours);
 	}
     
-    private EquipmentDiaryOpeningHours createDiaryOpeningHoursInstance(Integer diaryId, Integer openingHoursId, EquipmentDiaryOpeningHoursBo doh){
+    private EquipmentDiaryOpeningHours createDiaryOpeningHoursInstance(Integer equipmentDiaryId, Integer openingHoursId, EquipmentDiaryOpeningHoursBo edoh){
 		EquipmentDiaryOpeningHours diaryOpeningHours = new EquipmentDiaryOpeningHours();
-        diaryOpeningHours.setPk(new EquipmentDiaryOpeningHoursPK(diaryId, openingHoursId));
-        diaryOpeningHours.setMedicalAttentionTypeId(doh.getMedicalAttentionTypeId());
-        diaryOpeningHours.setOverturnCount((doh.getOverturnCount() != null) ? doh.getOverturnCount() : 0);
-        diaryOpeningHours.setExternalAppointmentsAllowed(doh.getExternalAppointmentsAllowed());
+        diaryOpeningHours.setPk(new EquipmentDiaryOpeningHoursPK(equipmentDiaryId, openingHoursId));
+        diaryOpeningHours.setMedicalAttentionTypeId(edoh.getMedicalAttentionTypeId());
+        diaryOpeningHours.setOverturnCount((edoh.getOverturnCount() != null) ? edoh.getOverturnCount() : 0);
+        diaryOpeningHours.setExternalAppointmentsAllowed(edoh.getExternalAppointmentsAllowed());
         return diaryOpeningHours;
     }
 
@@ -129,7 +131,7 @@ public class EquipmentDiaryOpeningHoursServiceImpl implements EquipmentDiaryOpen
 
 		validations(equipmentId, newDiaryStart, newDiaryEnd);
 
-		List<OccupationVo> queryResults = diaryOpeningHoursRepository
+		List<OccupationVo> queryResults = equipmentDiaryOpeningHoursRepository
 				.findAllWeeklyEquipmentOccupation(equipmentId, newDiaryStart, newDiaryEnd);
 
 		//Se consideran únicamente los horarios de agendas alcanzados (según calendario)
