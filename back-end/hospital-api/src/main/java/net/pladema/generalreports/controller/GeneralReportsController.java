@@ -174,9 +174,9 @@ public class GeneralReportsController {
 		LOG.debug("Inputs parameters -> institutionId {}, fromDate{}, toDate{}", institutionId);
 
 		String title = "Reporte Enfemeria - Enfermeria Ambulatorio";
-		String[] headers = new String[]{"Institucion","Unidad Operativa","Prestador","DNI","Fecha de Atencion","Hora","Const N°","DNI Paciente",
-				"Nombre Paciente","Sexo","Genero","Nombre con el que se identifica","Fecha de Nacimiento","Edad a fecha del turno","Edad a Hoy","Etnia",
-				"Obra/s Social/es","Domicilio","Localidad","Nivel de instruccion","Situacion Laboral","Signos vitales","Procedimientos","Evolucion"};
+		String[] headers = new String[]{"Institución","Unidad Operativa","Prestador","DNI","Fecha de Atención","Hora","N° Consulta","DNI Paciente",
+				"Nombre Paciente","Sexo","Género","Nombre con el que se identifica","Fecha de Nacimiento","Edad a fecha del turno","Edad a Hoy","Etnia",
+				"Obra/s Social/es","Domicilio","Localidad","Nivel de instrucción","Situación Laboral","Signos vitales","Procedimientos","Evolución"};
 
 		LocalDate startDate = localDateMapper.fromStringToLocalDate(fromDate);
 		LocalDate endDate = localDateMapper.fromStringToLocalDate(toDate);
