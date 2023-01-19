@@ -1,4 +1,4 @@
-<ng-container *ngIf="searchSnomedConcept.pharmacoSnomedConcept else SearchPharmacoSnomedConcept">
+<ng-container *ngIf="(searchSnomedConcept.pharmacoSnomedConcept || data.pharmaco) else SearchPharmacoSnomedConcept">
 
 	<div mat-dialog-title fxLayoutAlign="space-between">
 		<div class="mat-h2" [translate]="'indicacion.internment-card.dialogs.pharmaco.TITLE'"></div>

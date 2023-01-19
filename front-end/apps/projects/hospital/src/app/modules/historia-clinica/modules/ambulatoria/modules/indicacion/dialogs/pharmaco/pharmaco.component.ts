@@ -1,7 +1,7 @@
 import { Component, Inject, OnInit } from '@angular/core';
 import { AbstractControl, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
-import { DiagnosesGeneralStateDto, MasterDataInterface, NewDosageDto, PharmacoDto, QuantityDto, } from '@api-rest/api-model';
+import { DiagnosesGeneralStateDto, MasterDataInterface, NewDosageDto, PharmacoDto, QuantityDto, TimeDto } from '@api-rest/api-model';
 import { SharedSnomedDto } from '@api-rest/api-model';
 import { SnomedDto } from '@api-rest/api-model';
 import { EIndicationType } from '@api-rest/api-model';
@@ -23,7 +23,7 @@ import { HOURS_LIST, INTERVALS_TIME, openConfirmDialog, OTHER_FREQUENCY, OTHER_I
 	styleUrls: ['./pharmaco.component.scss']
 })
 export class PharmacoComponent implements OnInit {
-
+	pharmaco: Pharmaco = null;
 	form: FormGroup;
 	searchSnomedConcept: SearchSnomedConceptsPharmacoService;
 	indicationDate: Date;
@@ -51,7 +51,10 @@ export class PharmacoComponent implements OnInit {
 	DOSAGE = "d";
 
 	constructor(
-		@Inject(MAT_DIALOG_DATA) public data: { entryDate: Date, actualDate: Date, patientId: number, professionalId: number, diagnostics: DiagnosesGeneralStateDto[] },
+		@Inject(MAT_DIALOG_DATA) public data: {
+			entryDate: Date, actualDate: Date, patientId: number, professionalId: number, diagnostics: DiagnosesGeneralStateDto[], vias: MasterDataInterface<number>[],
+			units: MasterDataInterface<number>[], pharmaco?: Pharmaco
+		},
 		private readonly dialogRef: MatDialogRef<PharmacoComponent>,
 		public formBuilder: FormBuilder,
 		private readonly snowstormService: SnowstormService,
@@ -61,20 +64,20 @@ export class PharmacoComponent implements OnInit {
 		private readonly dialog: MatDialog,
 
 	) {
+		this.internacionMasterdataService.getVias().subscribe(v => this.vias = v);
+		this.internacionMasterdataService.getUnits().subscribe(u => this.units = u);
 		this.searchSnomedConcept = new SearchSnomedConceptsPharmacoService(formBuilder, snowstormService, snomedService, snackBarService);
 	}
 
 	ngOnInit(): void {
 		this.indicationDate = this.data.actualDate;
 		this.diagnostics = this.data.diagnostics;
-		this.internacionMasterdataService.getVias().subscribe(v => this.vias = v);
-		this.internacionMasterdataService.getUnits().subscribe(u => this.units = u);
 
 
 		this.form = this.formBuilder.group({
-			dosage: [null, Validators.required],
-			unit: [null, Validators.required],
-			via: [null, Validators.required],
+			dosage: [this.data?.pharmaco ? this.data?.pharmaco.dosage.quantity.value : null, Validators.required],
+			unit: [this.data?.pharmaco ? this.data?.pharmaco.dosage.quantity.unit : null, Validators.required],
+			via: [this.data?.pharmaco ? this.getVia(this.data?.pharmaco.via) : null, Validators.required],
 			hasSolvent: [false],
 			dosageSolvent: [null],
 
@@ -84,11 +87,11 @@ export class PharmacoComponent implements OnInit {
 			patientProvided: [false],
 			note: [null],
 
-			frequencyOption: [this.FREQUENCY_OPTION_INTERVAL],
-			interval: [null, Validators.required],
-			startTime: [null, Validators.required],
+			frequencyOption: [this.data?.pharmaco?.dosage.periodUnit ? this.getPeriodUnit(this.data?.pharmaco.dosage.periodUnit) : this.FREQUENCY_OPTION_INTERVAL],
+			interval: [this.data?.pharmaco?.dosage.frequency ? this.data?.pharmaco.dosage.frequency : null, Validators.required],
+			startTime: [this.data?.pharmaco?.dosage.startDateTime ? this.hoursList.find(e => e === this.data?.pharmaco.dosage.startDateTime.time.hours) : null, Validators.required],
 			frequencyHour: [null],
-			event: [null],
+			event: [this.data?.pharmaco ? this.data?.pharmaco.dosage.event : null],
 
 			frequency: this.formBuilder.group({
 				duration: this.formBuilder.group({
@@ -167,7 +170,8 @@ export class PharmacoComponent implements OnInit {
 				}
 			}
 		});
-
+		if (this.data?.pharmaco)
+			this.searchSnomedConcept.setForm(this.data?.pharmaco.snomed);
 	}
 
 	setDefaultMainDiagnosis(): DiagnosesGeneralStateDto {
@@ -195,8 +199,8 @@ export class PharmacoComponent implements OnInit {
 
 	private toSharedSnomedDto(snomed: SnomedDto): SharedSnomedDto {
 		return {
-			sctid: snomed.sctid,
-			pt: snomed.pt,
+			sctid: this.data?.pharmaco ? this.data.pharmaco.snomed.sctid : snomed.sctid,
+			pt: this.data?.pharmaco ? this.data.pharmaco.snomed.pt : snomed.pt,
 			parentId: "",
 			parentFsn: ""
 		}
@@ -284,6 +288,7 @@ export class PharmacoComponent implements OnInit {
 	}
 
 	resetForm(): void {
+		this.data.pharmaco = null;
 		this.searchSnomedConcept.resetAllForms();
 		this.form.reset();
 		this.setDefault();
@@ -318,5 +323,31 @@ export class PharmacoComponent implements OnInit {
 				return null;
 		}
 	}
+
+	private getPeriodUnit(frequency: string): number {
+		switch (frequency) {
+			case ("h"):
+				return this.FREQUENCY_OPTION_INTERVAL;
+			case ("d"):
+				return this.FREQUENCY_OPTION_START_TIME;
+			case ("e"):
+				return this.FREQUENCY_OPTION_EVENT;
+			default:
+				return null;
+		}
+	}
+	private getVia(via: string): number {
+		return this.data.vias.find(v => v.description === via).id;
+	}
 }
 
+
+export interface Pharmaco {
+	snomed: {
+		sctid: string,
+		pt: string
+	};
+
+	dosage: NewDosageDto,
+	via: string;
+}
