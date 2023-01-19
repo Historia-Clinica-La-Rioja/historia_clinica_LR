@@ -3255,6 +3255,11 @@ export interface VaccineSchemeInfoDto extends AbstractMasterdataDto<number> {
     id: number;
 }
 
+export interface ValidatedLicenseNumberDto {
+    isValid: boolean;
+    licenseNumber: string;
+}
+
 export interface VerificationCodeDto {
     code: string;
 }

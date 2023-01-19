@@ -19,6 +19,11 @@ public class RestClient implements RestClientInterface {
 		this.wsConfig = wsConfig;
 	}
 
+	public RestClient(RestTemplate restTemplate, WSConfig wsConfig) {
+		this.restTemplate = restTemplate;
+		this.wsConfig = wsConfig;
+	}
+
 	@Override
 	public <T> ResponseEntity<T> exchangeGet(String relUrl, Class<T> responseType) {
 		String fullUrl = wsConfig.getAbsoluteURL(relUrl);
