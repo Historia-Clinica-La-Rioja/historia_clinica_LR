@@ -15,7 +15,7 @@ const SectorFilter = (props) => (
 );
 
 const SectorList = props => (
-    <List {...props} filters={<SectorFilter />}>
+    <List {...props} filters={<SectorFilter />} bulkActionButtons={false}>
         <Datagrid rowClick="show">
             <TextField source="description" />
             <TextField source="descriptionProfessionRef" />
