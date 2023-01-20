@@ -168,7 +168,7 @@
 				<ng-template #content>
 					<ng-container *ngIf="episodes.length else noData">
 						<mat-card [ngClass]="{ 'en-atencion' : episode.state.id === estadosEpisodio.EN_ATENCION }"
-							class="episode-card" (click)="goToEpisode(episode.patient.id)"
+							class="episode-card" (click)="goToEpisode(episode.id, episode?.patient?.id)"
 							*ngFor="let episode of episodes">
 							<div fxLayout="row" fxFlexAlign="center" style="padding: 0 15px">
 
@@ -241,7 +241,7 @@
 
 										<button id="atender" mat-menu-item
 											*ngIf="episode.state.id === estadosEpisodio.EN_ESPERA"
-											(click)="atender(episode.id)">
+											(click)="atender(episode.id, episode.patient.id)">
 											{{ 'guardia.home.episodes.episode.actions.atender.TITLE' | translate }}
 										</button>
 

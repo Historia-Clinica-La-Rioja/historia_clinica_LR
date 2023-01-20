@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { ECAdministrativeDto, TriageAdministrativeDto } from '@api-rest/api-model';
+import { ECAdministrativeDto, ResponseEmergencyCareDto, TriageAdministrativeDto } from '@api-rest/api-model';
 import { NewEpisodeService } from '../../services/new-episode.service';
 import { EmergencyCareEpisodeService } from '@api-rest/services/emergency-care-episode.service';
 import { Router } from '@angular/router';
@@ -34,9 +34,17 @@ export class NewEpisodeAdminTriageComponent {
 		this.emergencyCareDto.administrative = this.newEpisodeService.getAdministrativeAdmissionDto();
 		this.emergencyCareEpisodeService.createAdministrative(this.emergencyCareDto).subscribe(
 			emergencyCareId => {
-					this.router.navigate([this.routePrefix + ROUTE_EMERGENCY_CARE + '/episodio/' + emergencyCareId])
+				this.emergencyCareEpisodeService.getAdministrative(emergencyCareId).subscribe((dto: ResponseEmergencyCareDto) => {
+					const patientId = dto.patient ? dto.patient.id : null;
+					if (patientId) {
+						this.router.navigate([this.routePrefix + "/ambulatoria/paciente/" + patientId])
+					}
+					else {
+						this.router.navigate([this.routePrefix + ROUTE_EMERGENCY_CARE + '/episodio/' + emergencyCareId]);
+					}
 					this.snackBarService.showSuccess('guardia.new-episode.SUCCESS');
-				},
+				});
+			},
 			error =>
 				error?.text ?
 					this.snackBarService.showError(error.text) : this.snackBarService.showError('guardia.new-episode.ERROR')

@@ -90,10 +90,14 @@ export class EditEmergencyCareEpisodeComponent implements OnInit {
 	}
 
 	private goToEpisodeDetails(): void {
-		const url = this.patientId ?
-			`${this.routePrefix}/ambulatoria/paciente/${this.patientId}` :
-			`${this.routePrefix}/guardia/episodio/${this.episodeId}`;
-		this.router.navigateByUrl(url);
+		if (this.patientId) {
+			const url = `${this.routePrefix}/ambulatoria/paciente/${this.patientId}`;
+			this.router.navigateByUrl(url, { state: { toEmergencyCareTab: true } });
+		}
+		else {
+			const url = `${this.routePrefix}/guardia/episodio/${this.episodeId}`;
+			this.router.navigateByUrl(url);
+		}
 	}
 
 }

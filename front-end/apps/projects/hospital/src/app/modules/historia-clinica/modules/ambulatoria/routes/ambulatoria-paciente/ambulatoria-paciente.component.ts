@@ -82,6 +82,9 @@ export class AmbulatoriaPacienteComponent implements OnInit, OnDestroy {
 	showNursingSection = false;
 	femenino = FEMENINO;
 
+	selectedTab = 0;
+	emergencyCareTabIndex: number;
+
 	private timeOut = 15000;
 	private isOpenOdontologyConsultation = false;
 
@@ -108,6 +111,7 @@ export class AmbulatoriaPacienteComponent implements OnInit, OnDestroy {
 		private readonly medicalCoverageInfo: MedicalCoverageInfoService,
 		private readonly wcExtensionsService: WCExtensionsService,
 	) {
+		const toEmergencyCareTab = this.router.getCurrentNavigation()?.extras?.state?.toEmergencyCareTab;
 		this.route.paramMap.subscribe(
 			(params) => {
 				this.patientId = Number(params.get('idPaciente'));
@@ -146,10 +150,19 @@ export class AmbulatoriaPacienteComponent implements OnInit, OnDestroy {
 								});
 						}
 						this.hasInternmentEpisodeInThisInstitution = internmentEpisodeProcess.inProgress && !!internmentEpisodeProcess.id;
+						this.emergencyCareTabIndex = this.hasInternmentEpisodeInThisInstitution ? 1 : 0;
+
+						this.emergencyCareEpisodeSummaryService.getEmergencyCareEpisodeInProgress(this.patientId).subscribe(
+							emergencyCareEpisodeInProgressDto => {
+								this.emergencyCareEpisodeInProgress = emergencyCareEpisodeInProgressDto;
+								if (toEmergencyCareTab) {
+									this.selectedTab = this.emergencyCareTabIndex;
+								}
+							}
+						);
 					})
 
-				this.emergencyCareEpisodeSummaryService.getEmergencyCareEpisodeInProgress(this.patientId)
-					.subscribe(emergencyCareEpisodeInProgressDto => this.emergencyCareEpisodeInProgress = emergencyCareEpisodeInProgressDto);
+
 			}
 		);
 	}

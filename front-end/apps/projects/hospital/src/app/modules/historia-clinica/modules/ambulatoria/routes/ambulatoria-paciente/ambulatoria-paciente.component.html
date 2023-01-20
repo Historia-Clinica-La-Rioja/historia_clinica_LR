@@ -130,7 +130,7 @@
 
 		<mat-card id="tab_container" class="mat-typography">
 			<mat-card-content>
-				<mat-tab-group (selectedTabChange)="onTabChanged($event)"
+				<mat-tab-group (selectedTabChange)="onTabChanged($event)" [(selectedIndex)]="selectedTab"
 					*ngIf="hasInternmentEpisodeInThisInstitution !== undefined">
 					<mat-tab id="tab_resumen"
 						*ngIf="!hasInternmentEpisodeInThisInstitution && !emergencyCareEpisodeInProgress?.inProgress && hasHealthRelatedRole">

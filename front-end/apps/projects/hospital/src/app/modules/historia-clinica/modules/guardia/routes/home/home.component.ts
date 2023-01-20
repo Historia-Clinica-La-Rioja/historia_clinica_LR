@@ -104,16 +104,21 @@ export class HomeComponent implements OnInit {
 			}, _ => this.loading = false);
 	}
 
-	goToEpisode(patientId: number) {
-		const url = `institucion/${this.contextService.institutionId}/ambulatoria/paciente/${patientId}`;
-		this.router.navigateByUrl(url);
+	goToEpisode(episodeId: number, patientId?: number) {
+		if (patientId) {
+			const url = `institucion/${this.contextService.institutionId}/ambulatoria/paciente/${patientId}`;
+			this.router.navigateByUrl(url, { state: { toEmergencyCareTab: true } });
+		}
+		else {
+			this.router.navigate([`${this.router.url}/episodio/${episodeId}`]);
+		}
 	}
 
 	goToAdmisionAdministrativa(): void {
 		this.router.navigate([`${this.router.url}/nuevo-episodio/administrativa`]);
 	}
 
-	atender(episodeId: number): void {
+	atender(episodeId: number, patientId: number): void {
 
 		const dialogRef = this.dialog.open(SelectConsultorioComponent, {
 			width: '25%',
@@ -125,7 +130,7 @@ export class HomeComponent implements OnInit {
 				this.episodeStateService.atender(episodeId, consultorio.id).subscribe(changed => {
 					if (changed) {
 						this.snackBarService.showSuccess(`${TRANSLATE_KEY_PREFIX}.atender.SUCCESS`);
-						this.goToEpisode(episodeId);
+						this.goToEpisode(episodeId, patientId);
 					} else {
 						this.snackBarService.showError(`${TRANSLATE_KEY_PREFIX}.atender.ERROR`);
 					}
