@@ -194,7 +194,8 @@ export class PharmacoComponent implements OnInit {
 	}
 
 	close() {
-		this.dialogRef.close(null);
+		const openDialogPharmacosFrequent = false;
+		this.dialogRef.close({ openDialogPharmacosFrequent });
 	}
 
 	private toSharedSnomedDto(snomed: SnomedDto): SharedSnomedDto {
@@ -266,20 +267,21 @@ export class PharmacoComponent implements OnInit {
 	}
 
 	save() {
+		const openDialogPharmacosFrequent = false;
 		if (this.isValidForm()) {
 			if (this.form.controls.frequencyHour?.value)
 				this.form.controls.interval.setValue(this.form.controls.frequencyHour.value);
-			const pharmacoDto = this.toPharmacoDto();
-			const pharmacoDate = dateDtoToDate(pharmacoDto.indicationDate);
+			const pharmaco = this.toPharmacoDto();
+			const pharmacoDate = dateDtoToDate(pharmaco.indicationDate);
 			if (!isToday(pharmacoDate) && isSameDay(pharmacoDate, this.data.actualDate)) {
 				openConfirmDialog(this.dialog, pharmacoDate).subscribe(confirm => {
 					if (confirm) {
-						this.dialogRef.close(pharmacoDto);
+						this.dialogRef.close({ openDialogPharmacosFrequent, pharmaco });
 					}
 				});
 			}
 			else
-				this.dialogRef.close(pharmacoDto);
+				this.dialogRef.close({ openDialogPharmacosFrequent, pharmaco });
 		} else {
 			this.form.markAllAsTouched();
 			this.searchSnomedConcept.solventForm.markAllAsTouched();
@@ -338,6 +340,11 @@ export class PharmacoComponent implements OnInit {
 	}
 	private getVia(via: string): number {
 		return this.data.vias.find(v => v.description === via).id;
+	}
+
+	comeBackPharmacoFrequency() {
+		const openDialogPharmacosFrequent = true;
+		this.dialogRef.close({ openDialogPharmacosFrequent });
 	}
 }
 

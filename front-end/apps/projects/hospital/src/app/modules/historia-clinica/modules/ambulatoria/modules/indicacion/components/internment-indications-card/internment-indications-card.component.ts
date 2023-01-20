@@ -144,10 +144,9 @@ export class InternmentIndicationsCardComponent implements OnInit {
 							disableClose: false
 						});
 
-						dialogRef.afterClosed().subscribe((pharmaco: PharmacoDto) => {
-
-							if (pharmaco) {
-								this.indicationsFacadeService.addPharmaco(pharmaco).subscribe(_ => {
+						dialogRef.afterClosed().subscribe((result: ResultDialogPharmaco) => {
+							if (result?.pharmaco) {
+								this.indicationsFacadeService.addPharmaco(result.pharmaco).subscribe(_ => {
 									this.snackBarService.showSuccess('indicacion.internment-card.dialogs.pharmaco.messages.SUCCESS');
 									this.indicationsFacadeService.updateIndication({ pharmaco: true });
 								},
@@ -156,6 +155,8 @@ export class InternmentIndicationsCardComponent implements OnInit {
 											this.snackBarService.showError(error.text) : this.snackBarService.showError('indicacion.internment-card.dialogs.pharmaco.messages.ERROR');
 									});
 							}
+							if (result.openDialogPharmacosFrequent)
+								this.openPharmacoDialog();
 						});
 					} else {
 						this.dialog.open(ConfirmDialogComponent, { data: getConfirmDataDialog() });
@@ -244,4 +245,9 @@ export class InternmentIndicationsCardComponent implements OnInit {
 export interface DialogPharmacosFrequent {
 	openFormPharmaco: boolean;
 	pharmaco: Pharmaco;
+}
+
+interface ResultDialogPharmaco {
+	openDialogPharmacosFrequent: boolean;
+	pharmaco?: PharmacoDto;
 }

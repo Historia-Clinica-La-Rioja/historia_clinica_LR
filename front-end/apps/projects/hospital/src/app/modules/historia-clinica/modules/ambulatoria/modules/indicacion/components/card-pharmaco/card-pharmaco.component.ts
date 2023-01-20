@@ -8,7 +8,7 @@ import { Pharmaco } from '../../dialogs/pharmaco/pharmaco.component';
 })
 export class CardPharmacoComponent {
 	@Input() pharmacos: [];
-	@Output() selectionChange = new EventEmitter();
+	@Output() selectionChange = new EventEmitter<PharmacoSummaryDto>();
 
 	emit(pharmaco: Pharmaco) {
 		return this.selectionChange.emit(pharmaco);
