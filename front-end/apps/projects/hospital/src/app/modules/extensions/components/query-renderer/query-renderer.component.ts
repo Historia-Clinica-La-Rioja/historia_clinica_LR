@@ -94,6 +94,7 @@ export class QueryRendererComponent {
 	showPercentage: boolean;
 	groupSmallData: boolean;
 	showGroupSmallData: boolean;
+	noData = true;
 
 	noFillChartOptions: ChartOptions = {
 		responsive: true,
@@ -205,6 +206,7 @@ export class QueryRendererComponent {
 				};
 			}
 		});
+
 		if (this.defaultColor) {
 			this.chartData.forEach(value => {
 				value.backgroundColor = this.defaultColor;
@@ -214,12 +216,14 @@ export class QueryRendererComponent {
 
 		this.chartLabels = resultSet.chartPivot(pivotConfig).map((row) => parse(row.x));
 
-		if (this.chartType === 'bar'){
-			this.chartData.forEach( x => x.label = (x.label.charAt(0).toUpperCase() + x.label.slice(1)).slice(0, -5))
-		}
+		if (this.chartData.length){
+			this.noData = false;
 
-		if (this.chartType === 'pie') {
-			this.loadPieData();
+			if (this.chartType === 'bar')
+				this.chartData.forEach( x => x.label = (x.label.charAt(0).toUpperCase() + x.label.slice(1)).slice(0, -5))
+
+			if (this.chartType === 'pie')
+				this.loadPieData();
 		}
 	}
 
