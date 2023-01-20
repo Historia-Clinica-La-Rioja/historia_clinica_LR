@@ -123,8 +123,8 @@ export class ReferenceComponent implements OnInit {
 	setSpecialtyCareLine(): void {
 		const careLineId = this.formReference.value.careLine;
 		if (careLineId) {
-			this.formReference.controls.clinicalSpecialtyId.enable();
-			this.formReference.controls.clinicalSpecialtyId.setValidators([Validators.required]);
+			this.formReference.controls.clinicalSpecialty.enable();
+			this.formReference.controls.clinicalSpecialty.setValidators([Validators.required]);
 			this.formReference.updateValueAndValidity();
 			this.specialties$ = this.clinicalSpecialty.getAllByDestinationInstitution(careLineId, this.formReference.value.institutionDestinationId);
 		}
@@ -151,10 +151,10 @@ export class ReferenceComponent implements OnInit {
 		}
 	}
 
-	private buildReference(): ReferenceDto {
+	private buildReference(): Reference {
 		return {
-			careLineId: this.formReference.value.careLine,
-			clinicalSpecialtyId: this.formReference.value.clinicalSpecialtyId,
+			careLine: this.formReference.controls.careLine.value,
+			clinicalSpecialty: this.formReference.controls.clinicalSpecialty.value,
 			consultation: true,
 			note: this.formReference.value.summary,
 			problems: this.mapProblems(this.referenceProblemDto),
@@ -225,15 +225,15 @@ export class ReferenceComponent implements OnInit {
 			this.formReference.controls.careLine.updateValueAndValidity();
 			this.careLineService.getByProblemSnomedIdsAndInstitutionId(institutionId, problemSnomedIds).subscribe(careLines => this.careLines = careLines);
 		}
-		this.formReference.controls.clinicalSpecialtyId.disable();
+		this.formReference.controls.clinicalSpecialty.disable();
 	}
 
 	private setSpecialties() {
 		const institutionId = this.formReference.value.institutionDestinationId;
 		if (institutionId) {
-			this.formReference.controls.clinicalSpecialtyId.enable();
+			this.formReference.controls.clinicalSpecialty.enable();
 			this.specialties$ = this.clinicalSpecialty.getClinicalSpecialtyByInstitution(institutionId);
-			this.formReference.controls.clinicalSpecialtyId.updateValueAndValidity();
+			this.formReference.controls.clinicalSpecialty.updateValueAndValidity();
 		}
 	}
 
@@ -241,9 +241,9 @@ export class ReferenceComponent implements OnInit {
 		this.formReference.controls.searchByCareLine.valueChanges.subscribe(option => {
 			if (option === this.DEFAULT_RADIO_OPTION) {
 				this.formReference.controls.careLine.setValidators([Validators.required]);
-				this.formReference.controls.clinicalSpecialtyId.setValue(null);
-				this.formReference.controls.clinicalSpecialtyId.disable();
-				this.formReference.controls.clinicalSpecialtyId.updateValueAndValidity();
+				this.formReference.controls.clinicalSpecialty.setValue(null);
+				this.formReference.controls.clinicalSpecialty.disable();
+				this.formReference.controls.clinicalSpecialty.updateValueAndValidity();
 				this.setCareLines();
 			} else {
 				this.formReference.controls.careLine.removeValidators([Validators.required]);
@@ -285,8 +285,8 @@ export class ReferenceComponent implements OnInit {
 		}
 		this.specialties$?.subscribe(specialties => {
 			if (specialties.length) {
-				this.formReference.controls.clinicalSpecialtyId.setValue(null);
-				this.formReference.controls.clinicalSpecialtyId.updateValueAndValidity();
+				this.formReference.controls.clinicalSpecialty.setValue(null);
+				this.formReference.controls.clinicalSpecialty.updateValueAndValidity();
 			}
 		});
 
@@ -294,7 +294,7 @@ export class ReferenceComponent implements OnInit {
 
 		function disableInputs(formReference: FormGroup, referenceProblemDto: ReferenceProblemDto[]) {
 			if (!formReference.value.institutionDestinationId) {
-				formReference.controls.clinicalSpecialtyId.disable();
+				formReference.controls.clinicalSpecialty.disable();
 			}
 			if (!referenceProblemDto.length || !formReference.value.institutionDestinationId) {
 				formReference.controls.careLine.disable();
@@ -340,7 +340,7 @@ export class ReferenceComponent implements OnInit {
 			consultation: [null],
 			procedure: [null],
 			careLine: [null, [Validators.required]],
-			clinicalSpecialtyId: [null, [Validators.required]],
+			clinicalSpecialty: [null, [Validators.required]],
 			institutionDestinationId: [null, [Validators.required]],
 			summary: [null],
 			provinceOrigin: [null],
@@ -353,7 +353,7 @@ export class ReferenceComponent implements OnInit {
 
 	private disableInputs() {
 		this.formReference.controls.departmentId.disable();
-		this.formReference.controls.clinicalSpecialtyId.disable();
+		this.formReference.controls.clinicalSpecialty.disable();
 		this.formReference.controls.procedure.disable();
 		this.formReference.controls.careLine.disable();
 		this.formReference.controls.institutionDestinationId.disable();
@@ -373,9 +373,23 @@ export class ReferenceComponent implements OnInit {
 		const institution = institutions.find((i: InstitutionBasicInfoDto) => i.id === this.contextService.institutionId);
 		this.formReference.controls.institutionOrigin.setValue(institution.name);
 	}
+
 }
 
 export interface HCEPersonalHistory {
 	hcePersonalHistoryDto: HCEPersonalHistoryDto;
 	chronic: boolean
+}
+
+export interface Reference {
+	careLine: CareLineDto,
+	clinicalSpecialty: ClinicalSpecialtyDto,
+	consultation: boolean;
+	destinationInstitutionId: number;
+	fileIds: number[];
+	note?: string;
+	problems: ReferenceProblemDto[];
+	procedure?: boolean;
+	phoneNumber: string;
+	phonePrefix: string;
 }

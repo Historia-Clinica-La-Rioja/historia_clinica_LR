@@ -29,14 +29,12 @@ import { NewConsultationSuggestedFieldsService } from '../../services/new-consul
 import { TranslateService } from '@ngx-translate/core';
 import { AmbulatoryConsultationProblem, AmbulatoryConsultationProblemsService, SEVERITY_CODES } from '@historia-clinica/services/ambulatory-consultation-problems.service';
 import { FeatureFlagService } from '@core/services/feature-flag.service';
-import { AmbulatoryConsultationReferenceService, Reference } from '../../services/ambulatory-consultation-reference.service';
-import { CareLineService } from '@api-rest/services/care-line.service';
+import { AmbulatoryConsultationReferenceService, ReferenceInformation } from '../../services/ambulatory-consultation-reference.service';
 
 import { HceGeneralStateService } from '@api-rest/services/hce-general-state.service';
 import { DatePipe } from '@angular/common';
 import { PreviousDataComponent } from '../previous-data/previous-data.component';
 import { forkJoin, Observable, of } from 'rxjs';
-import { ClinicalSpecialtyCareLineService } from '@api-rest/services/clinical-specialty-care-line.service';
 import { SnvsMasterDataService } from "@api-rest/services/snvs-masterdata.service";
 import { ReferenceFileService } from '@api-rest/services/reference-file.service';
 import { SnvsReportsResultComponent } from '../snvs-reports-result/snvs-reports-result.component';
@@ -101,8 +99,6 @@ export class NuevaConsultaDockPopupComponent implements OnInit {
 		private readonly snvsMasterDataService: SnvsMasterDataService,
 		private readonly datePipe: DatePipe,
 		private readonly featureFlagService: FeatureFlagService,
-		private readonly careLineService: CareLineService,
-		private readonly clinicalSpecialtyCareLine: ClinicalSpecialtyCareLineService,
 		private readonly referenceFileService: ReferenceFileService,
 		private readonly el: ElementRef,
 	) {
@@ -115,7 +111,7 @@ export class NuevaConsultaDockPopupComponent implements OnInit {
 		this.factoresDeRiesgoFormService = new FactoresDeRiesgoFormService(formBuilder, translateService, this.hceGeneralStateService, this.data.idPaciente, this.datePipe);
 		this.antecedentesFamiliaresNuevaConsultaService = new AntecedentesFamiliaresNuevaConsultaService(formBuilder, this.snomedService, this.snackBarService);
 		this.alergiasNuevaConsultaService = new AlergiasNuevaConsultaService(formBuilder, this.snomedService, this.snackBarService);
-		this.ambulatoryConsultationReferenceService = new AmbulatoryConsultationReferenceService(this.dialog, this.data, this.ambulatoryConsultationProblemsService, this.clinicalSpecialtyCareLine, this.careLineService);
+		this.ambulatoryConsultationReferenceService = new AmbulatoryConsultationReferenceService(this.dialog, this.data, this.ambulatoryConsultationProblemsService);
 		this.featureFlagService.isActive(AppFeature.HABILITAR_GUARDADO_CON_CONFIRMACION_CONSULTA_AMBULATORIA).subscribe(isEnabled => this.isEnablePopUpConfirm = isEnabled);
 	}
 
@@ -247,7 +243,7 @@ export class NuevaConsultaDockPopupComponent implements OnInit {
 	}
 
 	private uploadReferencesFileAndCreateConsultation(nuevaConsulta: CreateOutpatientDto) {
-		let references: Reference[] = this.ambulatoryConsultationReferenceService.getReferences();
+		let references: ReferenceInformation[] = this.ambulatoryConsultationReferenceService.getReferences();
 		if (!references.length) {
 			this.goToCreateConsultation(nuevaConsulta);
 			return;
@@ -267,7 +263,7 @@ export class NuevaConsultaDockPopupComponent implements OnInit {
 			forkJoin(filesToUpdate).subscribe((referenceFileId: number[]) => {
 				let indexRefFilesIds = 0;
 				references.forEach(
-					(reference: Reference, index: number) => {
+					(reference: ReferenceInformation, index: number) => {
 						const filesAmount = reference.referenceFiles.length;
 						for (let i = indexRefFilesIds; i < indexRefFilesIds + filesAmount; i++) {
 							this.ambulatoryConsultationReferenceService.addFileIdAt(index, referenceFileId[i]);
@@ -477,10 +473,10 @@ export class NuevaConsultaDockPopupComponent implements OnInit {
 
 		nuevaConsultaDto.problems?.forEach(problem => outpatientProblemDto.push(problem));
 
-		const references: Reference[] = this.ambulatoryConsultationReferenceService.getReferences();
+		const references: ReferenceInformation[] = this.ambulatoryConsultationReferenceService.getReferences();
 
 		references.forEach(
-			(reference: Reference) => {
+			(reference: ReferenceInformation) => {
 				reference.referenceProblems.forEach(referenceProblem => {
 					const outProblemDto = this.mapToOutpatientProblemDto(referenceProblem);
 					const existProblem = outpatientProblemDto.find(problem => problem.snomed.sctid === outProblemDto.snomed.sctid);

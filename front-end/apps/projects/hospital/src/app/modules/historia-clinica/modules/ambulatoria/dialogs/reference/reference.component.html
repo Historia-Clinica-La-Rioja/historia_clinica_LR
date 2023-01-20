@@ -152,8 +152,8 @@
                         <div>
                             <mat-form-field appearance="outline" fxFlex="100%" fxLayoutGap="7px">
                                 <mat-label [translate]="'ambulatoria.paciente.nueva-consulta.reference-dialog.PLACEHOLDER_SPECIALITY'"></mat-label>
-                                <mat-select id="specialty" name="clinicalSpecialtyId" formControlName="clinicalSpecialtyId">
-                                    <mat-option *ngFor="let specialty of specialties$ | async" [value]="specialty.id">
+                                <mat-select id="specialty" name="clinicalSpecialty" formControlName="clinicalSpecialty">
+                                    <mat-option *ngFor="let specialty of specialties$ | async" [value]="specialty">
                                         {{specialty.name | translate}}
                                     </mat-option>
                                 </mat-select>

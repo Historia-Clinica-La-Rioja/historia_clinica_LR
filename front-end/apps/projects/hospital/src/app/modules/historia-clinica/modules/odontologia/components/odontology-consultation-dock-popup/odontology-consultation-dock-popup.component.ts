@@ -30,9 +30,7 @@ import { SnackBarService } from '@presentation/services/snack-bar.service';
 import { take } from 'rxjs/operators';
 import { ProcedimientosService } from '@historia-clinica/services/procedimientos.service';
 import { MIN_DATE } from "@core/utils/date.utils";
-import { OdontologyReferenceService, Reference } from '../../services/odontology-reference.service';
-import { CareLineService } from '@api-rest/services/care-line.service';
-import { ClinicalSpecialtyCareLineService } from '@api-rest/services/clinical-specialty-care-line.service';
+import { OdontologyReferenceService } from '../../services/odontology-reference.service';
 import { ReferenceFileService } from '@api-rest/services/reference-file.service';
 import { HCEPersonalHistory } from '@historia-clinica/modules/ambulatoria/dialogs/reference/reference.component';
 import { FeatureFlagService } from "@core/services/feature-flag.service";
@@ -42,6 +40,7 @@ import { NewConsultationAddDiagnoseFormComponent } from '../../dialogs/new-consu
 import { NewConsultationAllergyFormComponent } from '@historia-clinica/dialogs/new-consultation-allergy-form/new-consultation-allergy-form.component';
 import { NewConsultationPersonalHistoryFormComponent } from '../../dialogs/new-consultation-personal-history-form/new-consultation-personal-history-form.component';
 import { NewConsultationMedicationFormComponent } from '@historia-clinica/dialogs/new-consultation-medication-form/new-consultation-medication-form.component';
+import { ReferenceInformation } from '@historia-clinica/modules/ambulatoria/services/ambulatory-consultation-reference.service';
 
 @Component({
 	selector: 'app-odontology-consultation-dock-popup',
@@ -86,8 +85,6 @@ export class OdontologyConsultationDockPopupComponent implements OnInit {
 		private readonly odontologyConsultationService: OdontologyConsultationService,
 		private readonly dialog: MatDialog,
 		private readonly snackBarService: SnackBarService,
-		private readonly careLineService: CareLineService,
-		private readonly clinicalSpecialtyCareLine: ClinicalSpecialtyCareLineService,
 		private readonly referenceFileService: ReferenceFileService,
 		private readonly featureFlagService: FeatureFlagService,
 		private readonly el: ElementRef,
@@ -100,7 +97,7 @@ export class OdontologyConsultationDockPopupComponent implements OnInit {
 		this.diagnosticsNewConsultationService = new ActionsNewConsultationService(this.odontogramService, this.surfacesNamesFacadeService, ActionType.DIAGNOSTIC, this.conceptsFacadeService);
 		this.proceduresNewConsultationService = new ActionsNewConsultationService(this.odontogramService, this.surfacesNamesFacadeService, ActionType.PROCEDURE, this.conceptsFacadeService);
 		this.otherProceduresService = new ProcedimientosService(formBuilder, this.snomedService, this.snackBarService);
-		this.odontologyReferenceService = new OdontologyReferenceService(this.dialog, this.data, this.otherDiagnosticsNewConsultationService, this.clinicalSpecialtyCareLine, this.careLineService);
+		this.odontologyReferenceService = new OdontologyReferenceService(this.dialog, this.data, this.otherDiagnosticsNewConsultationService);
 	}
 
 	ngOnInit(): void {
@@ -308,7 +305,7 @@ export class OdontologyConsultationDockPopupComponent implements OnInit {
 
 	private uploadRefFilesAndCreateConsultation(odontologyDto: OdontologyConsultationDto) {
 
-		let references: Reference[] = this.odontologyReferenceService.getReferences();
+		let references: ReferenceInformation[] = this.odontologyReferenceService.getReferences();
 		if (!references.length) {
 			this.createConsultation(odontologyDto);
 			return;
@@ -328,7 +325,7 @@ export class OdontologyConsultationDockPopupComponent implements OnInit {
 			forkJoin(filesToUpdate).subscribe((referenceFileId: number[]) => {
 				let indexRefFilesIds = 0;
 				references.forEach(
-					(reference: Reference, index: number) => {
+					(reference: ReferenceInformation, index: number) => {
 						const filesAmount = reference.referenceFiles.length;
 						for (let i = indexRefFilesIds; i < indexRefFilesIds + filesAmount; i++) {
 							this.odontologyReferenceService.addFileIdAt(index, referenceFileId[i]);
@@ -361,7 +358,7 @@ export class OdontologyConsultationDockPopupComponent implements OnInit {
 
 		odontologyDto.diagnostics?.forEach(diagnostic => odontologyDiagnosticDto.push(diagnostic));
 
-		const references: Reference[] = this.odontologyReferenceService.getReferences();
+		const references: ReferenceInformation[] = this.odontologyReferenceService.getReferences();
 
 		references.forEach(reference => {
 			reference.referenceProblems.forEach(referenceProblem => {
