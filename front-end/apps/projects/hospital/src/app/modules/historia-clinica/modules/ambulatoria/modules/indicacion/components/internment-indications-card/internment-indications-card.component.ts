@@ -129,8 +129,7 @@ export class InternmentIndicationsCardComponent implements OnInit {
 
 					if (this.diagnostics?.length > 0) {
 						const dialogRef = this.dialog.open(PharmacoComponent, {
-							width: '100%',
-							data: {
+						data: {
 								entryDate: this.entryDate,
 								actualDate: this.actualDate,
 								patientId: this.patientId,
