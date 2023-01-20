@@ -38,6 +38,7 @@ import { Slot, SlotedInfo, WCExtensionsService } from '@extensions/services/wc-e
 
 const RESUMEN_INDEX = 0;
 const VOLUNTARY_ID = 1;
+const FEMENINO = 'Femenino';
 
 @Component({
 	selector: 'app-ambulatoria-paciente',
@@ -79,6 +80,7 @@ export class AmbulatoriaPacienteComponent implements OnInit, OnDestroy {
 	hasLaboratoryStaffRole = false;
 	hasPharmacyStaffRole = false;
 	showNursingSection = false;
+	femenino = FEMENINO;
 
 	private timeOut = 15000;
 	private isOpenOdontologyConsultation = false;
