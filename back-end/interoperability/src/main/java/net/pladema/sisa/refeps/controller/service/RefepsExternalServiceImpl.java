@@ -7,6 +7,9 @@ import net.pladema.sisa.refeps.services.RefepsService;
 import net.pladema.sisa.refeps.services.domain.ValidatedLicenseNumberBo;
 import net.pladema.sisa.refeps.services.domain.RefepsResourceAttributes;
 
+import net.pladema.sisa.refeps.services.exceptions.RefepsApiException;
+import net.pladema.sisa.refeps.services.exceptions.RefepsLicenseException;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -25,7 +28,7 @@ public class RefepsExternalServiceImpl implements RefepsExternalService {
 	}
 
 	@Override
-	public List<ValidatedLicenseNumberBo> validateLicenseNumber(RefepsResourceAttributes attributes, List<String> licenseNumbers) throws Exception {
+	public List<ValidatedLicenseNumberBo> validateLicenseNumber(RefepsResourceAttributes attributes, List<String> licenseNumbers) throws RefepsApiException, RefepsLicenseException {
 		LOG.debug("Validating license numbers => {}", licenseNumbers);
 		return refepsService.validateLicenseNumber(attributes, licenseNumbers);
 	}

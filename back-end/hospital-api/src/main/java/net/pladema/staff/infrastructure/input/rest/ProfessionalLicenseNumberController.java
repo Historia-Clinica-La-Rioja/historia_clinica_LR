@@ -27,6 +27,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -73,12 +74,13 @@ public class ProfessionalLicenseNumberController {
 		log.debug("Input parameters -> healthcareProfessionalId: {}, licenseNumbers {}", healthcareProfessionalId, licenseNumbers);
 		HealthcareProfessionalBo currentProfessional = healthcareProfessionalService.findActiveProfessionalById(healthcareProfessionalId);
 		RefepsResourceAttributes attributes = new RefepsResourceAttributes(currentProfessional.getIdentificationNumber(), currentProfessional.getLastName());
+		List<ValidatedLicenseNumberBo> validatedLicenceNumbers = new ArrayList<>();
 		try {
-			List<ValidatedLicenseNumberBo> validatedLicenceNumbers = refepsExternalService.validateLicenseNumber(attributes, licenseNumbers);
-			return validatedLicenceNumberMapper.toListValidatedLicenseNumberDto(validatedLicenceNumbers);
+			validatedLicenceNumbers = refepsExternalService.validateLicenseNumber(attributes, licenseNumbers);
 		} catch (Exception e) {
-			throw new RuntimeException(e);
+			log.error("Fallo en la comunicación => {}", e.getMessage());
 		}
+		return validatedLicenceNumberMapper.toListValidatedLicenseNumberDto(validatedLicenceNumbers);
 	}
 
 	private ProfessionalLicenseNumberBo mapToBo(ProfessionalLicenseNumberDto dto){
