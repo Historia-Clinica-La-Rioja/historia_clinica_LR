@@ -20,4 +20,12 @@ public class PharmacoSummaryBo extends IndicationBo {
 	@Nullable
 	private String note;
 
+	public String getSnomedSctid() {
+		return getSnomed() != null ? this.snomed.getSctid() : null;
+	}
+
+	public String getSnomedPt() {
+		return getSnomed() != null ? this.snomed.getPt() : null;
+	}
+
 }

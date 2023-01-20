@@ -14,4 +14,6 @@ public interface PharmacoStorage {
 
 	Optional<PharmacoBo> findById(Integer id);
 
+	List<PharmacoSummaryBo> getMostFrequentPharmacos(Integer professionalId, Integer institutionId, Integer limit);
+
 }

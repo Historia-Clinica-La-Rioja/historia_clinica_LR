@@ -1,13 +1,25 @@
 package ar.lamansys.sgh.clinichistory.infrastructure.output;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
+import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
+
+import ar.lamansys.sgh.clinichistory.domain.ips.PharmacoMinimalBo;
+
+import org.springframework.data.domain.PageRequest;
+import org.springframework.stereotype.Service;
+
 import ar.lamansys.sgh.clinichistory.application.ports.PharmacoStorage;
+import ar.lamansys.sgh.clinichistory.domain.ips.DosageBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.EUnitsOfTimeBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.EVia;
-import ar.lamansys.sgh.clinichistory.domain.ips.PharmacoSummaryBo;
-import ar.lamansys.sgh.clinichistory.domain.ips.QuantityBo;
-import ar.lamansys.sgh.clinichistory.domain.ips.DosageBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.OtherPharmacoBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.PharmacoBo;
+import ar.lamansys.sgh.clinichistory.domain.ips.PharmacoSummaryBo;
+import ar.lamansys.sgh.clinichistory.domain.ips.QuantityBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.SnomedBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.services.SnomedService;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.DocumentIndicationRepository;
@@ -26,12 +38,6 @@ import ar.lamansys.sgx.shared.featureflags.AppFeature;
 import ar.lamansys.sgx.shared.featureflags.application.FeatureFlagsService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-
-import org.springframework.stereotype.Service;
-
-import java.util.List;
-import java.util.Optional;
-import java.util.stream.Collectors;
 
 @Service
 @Slf4j
@@ -79,6 +85,42 @@ public class PharmacoStorageImpl implements PharmacoStorage {
 		Optional<PharmacoBo> result = pharmacoRepository.findById(id).map(this::mapToBo);
 		log.debug("Output -> {}", result.toString());
 		return result;
+	}
+
+	@Override
+	public List<PharmacoSummaryBo> getMostFrequentPharmacos(Integer professionalId, Integer institutionId, Integer limit) {
+		log.debug("Input parameter -> professionalId {}, institutionId {}, limit {}", professionalId, institutionId, limit);
+		List<PharmacoSummaryBo> result = pharmacoRepository
+				.getMostFrequent(professionalId, institutionId, PageRequest.of(0, limit))
+				.stream()
+				.map(this::completeAdministrationOfPharmaco)
+				.map(this::mapToImpersonalPharmacoSummaryBo)
+				.collect(Collectors.toList());
+		log.debug("Output -> {}", result);
+		return result;
+	}
+
+	private Object[] completeAdministrationOfPharmaco(PharmacoMinimalBo oneFrequentPharmaco) {
+
+		PageRequest top1 = PageRequest.of(0, 1);
+		Integer snomedId = oneFrequentPharmaco.getSnomedId();
+		Double value = oneFrequentPharmaco.getValue();
+		String unit = oneFrequentPharmaco.getUnit();
+		Short via = oneFrequentPharmaco.getVia();
+		String periodUnit = (String) pharmacoRepository.getMostPeriodUnitIndicated(snomedId, value, unit, via, top1).get(0)[0];
+
+		if (periodUnit.equals("e"))
+			return new Object[] { snomedId, value, unit, via, periodUnit };
+
+		Object startTime = pharmacoRepository.getMostStartDateTimeIndicated(snomedId, value, unit, via, periodUnit, top1).get(0)[0];
+
+		if (periodUnit.equals("h")) {
+			Object frequency = pharmacoRepository.getMostFrequencyIndicated(snomedId, value, unit, via, top1).get(0)[0];
+			return new Object[] { snomedId, value, unit, via, periodUnit, startTime, frequency };
+		}
+
+		return new Object[] { snomedId, value, unit, via, periodUnit, startTime };
+
 	}
 
 	private PharmacoBo mapToBo(Pharmaco entity) {
@@ -213,6 +255,32 @@ public class PharmacoStorageImpl implements PharmacoStorage {
 		result.setVia(EVia.getById(entity.getViaId()).getDescription());
 		String note = this.getNote(entity.getId());
 		result.setNote(note);
+		return result;
+	}
+
+	private PharmacoSummaryBo mapToImpersonalPharmacoSummaryBo(Object[] pharmaco) {
+		PharmacoSummaryBo result = new PharmacoSummaryBo();
+		SnomedBo snomedBo = snomedService.getSnomed((Integer) pharmaco[0]);
+		DosageBo dosageBo = new DosageBo();
+		QuantityBo quantityBo = new QuantityBo();
+
+		quantityBo.setValue((int) Math.round((Double) pharmaco[1]));
+		quantityBo.setUnit(String.valueOf(pharmaco[2]));
+
+		dosageBo.setQuantity(quantityBo);
+		dosageBo.setPeriodUnit(EUnitsOfTimeBo.map(String.valueOf(pharmaco[4])));
+
+		if (pharmaco.length > 5) {
+			LocalTime localTime = (LocalTime) pharmaco[5];
+			LocalDateTime startTime = localTime.atDate(LocalDate.now());
+			dosageBo.setStartDate(startTime);
+			if (pharmaco.length > 6)
+				dosageBo.setFrequency((Integer) pharmaco[6]);
+		}
+
+		result.setSnomed(snomedBo);
+		result.setDosage(dosageBo);
+		result.setVia(EVia.getById((Short) pharmaco[3]).getDescription());
 		return result;
 	}
 
