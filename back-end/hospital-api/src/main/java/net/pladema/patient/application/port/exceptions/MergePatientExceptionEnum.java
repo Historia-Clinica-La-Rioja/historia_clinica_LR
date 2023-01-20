@@ -1,4 +1,4 @@
-package net.pladema.patient.application.mergepatient.exceptions;
+package net.pladema.patient.application.port.exceptions;
 
 public enum MergePatientExceptionEnum {
 
@@ -9,5 +9,6 @@ public enum MergePatientExceptionEnum {
 	NULL_IDENTIFICATION_TYPE,
 	NULL_IDENTIFICATION_NUMBER,
 	NULL_BIRTH_DATE,
+	PATIENT_INACTIVE_NOT_EXISTS,
 
 }

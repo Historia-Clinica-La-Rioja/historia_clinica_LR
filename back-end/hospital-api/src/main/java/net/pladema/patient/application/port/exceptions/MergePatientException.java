@@ -1,4 +1,4 @@
-package net.pladema.patient.application.mergepatient.exceptions;
+package net.pladema.patient.application.port.exceptions;
 
 import lombok.Getter;
 

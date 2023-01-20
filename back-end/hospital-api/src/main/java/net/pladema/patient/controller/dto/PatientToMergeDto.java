@@ -20,5 +20,5 @@ public class PatientToMergeDto {
 
 	private Integer activePatientId;
 
-	private BasicPersonalDataDto activePerson;
+	private BasicPersonalDataDto registrationDataPerson;
 }
