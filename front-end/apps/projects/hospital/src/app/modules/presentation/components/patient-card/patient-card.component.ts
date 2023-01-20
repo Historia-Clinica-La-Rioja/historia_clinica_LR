@@ -115,12 +115,21 @@ export class PatientCardComponent implements OnInit{
 		if ((this.patient?.age < 2) && (this.form.valid)){
 			let fecha1 = new Date();
 			let fecha2 = this.form.get('birthDate').value;
-			console.log(fecha2)
+			//console.log(fecha1)
 			let milisegundosXdia = 24 * 60 * 60 * 1000;
-			let milisegundosTranscurridos = Math.abs((fecha1.getTime())-(fecha2.getTime()));
+			let milisegundosTranscurridos = (fecha1.getTime())-(fecha2.getTime());
 			let diasTranscurridos = Math.round(milisegundosTranscurridos/milisegundosXdia);
-			let meses = Math.round(diasTranscurridos/30);
-			age = (this.patient?.age) || (this.patient?.age === 0) ? (meses + ' meses') : 'Sin edad';
+			let meses = Math.trunc(diasTranscurridos/30.44);
+			//console.log(diasTranscurridos)
+			//console.log(meses)
+			let restoDias = Math.round(diasTranscurridos - meses*30.44);
+			//console.log(restoDias)
+			if (restoDias == 0){
+				age = (this.patient?.age) || (this.patient?.age === 0) ? (meses + ' meses') : 'Sin edad';
+			}
+			else{
+				age = (this.patient?.age) || (this.patient?.age === 0) ? (meses + ' meses y ' + restoDias + ' dias') : 'Sin edad';
+			}
 		}
 		else{
 			age = (this.patient?.age) || (this.patient?.age === 0) ? (this.patient.age + ' años') : 'Sin edad';
