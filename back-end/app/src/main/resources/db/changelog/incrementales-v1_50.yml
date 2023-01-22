@@ -12,7 +12,6 @@ databaseChangeLog:
                     name: name
                     type: varchar(40)
 
-
     - changeSet:
         id: equipment-diary-createTable
         comment: Create table equipment_diary
@@ -123,71 +122,72 @@ databaseChangeLog:
               referencedColumnNames: id
               referencedTableName: equipment
               validate: true
-    - changeSet:
-        id: equipment_diary_opening_hours-createTable
-        comment: Create table equipment_diary_opening_hours
-        author: amurrie
-        changes:
-          - createTable:
-              tableName: equipment_diary_opening_hours
-              columns:
-                - column:
-                    constraints:
-                      nullable: false
-                    name: equipment_diary_id
-                    type: int
-                - column:
-                    constraints:
-                      nullable: false
-                    name: opening_hours_id
-                    type: int
-                - column:
-                    constraints:
-                      nullable: false
-                    name: medical_attention_type_id
-                    type: smallint
-                - column:
-                    constraints:
-                      nullable: false
-                    name: overturn_count
-                    type: smallint
-                    defaultValue: 0
-                - column:
-                    name: external_appointments_allowed
-                    type: bool
-          - addPrimaryKey:
-              clustered: true
-              columnNames: equipment_diary_id, opening_hours_id
-              constraintName: PK_equipment_diary_opening_hours
-              tableName: equipment_diary_opening_hours
-              validate: true
-          - addForeignKeyConstraint:
-              baseColumnNames: equipment_diary_id
-              baseTableName: equipment_diary_opening_hours
-              constraintName: FK_equipment_diary_opening_hours_diary_id
-              onDelete: NO ACTION
-              onUpdate: NO ACTION
-              referencedColumnNames: id
-              referencedTableName: equipment_diary
-              validate: true
-          - addForeignKeyConstraint:
-              baseColumnNames: opening_hours_id
-              baseTableName: equipment_diary_opening_hours
-              constraintName: FK_equipment_diary_opening_hours_id
-              onDelete: NO ACTION
-              onUpdate: NO ACTION
-              referencedColumnNames: id
-              referencedTableName: opening_hours
-              validate: true
-          - addForeignKeyConstraint:
-              baseColumnNames: medical_attention_type_id
-              baseTableName: equipment_diary_opening_hours
-              constraintName: FK_equipment_diary_opening_hours_medical_attention_type_id
-              onDelete: NO ACTION
-              onUpdate: NO ACTION
-              referencedColumnNames: id
-              referencedTableName: medical_attention_type
-              validate: true
+          - changeSet:
+              id: equipment_diary_opening_hours-createTable
+              comment: Create table equipment_diary_opening_hours
+              author: amurrie
+              changes:
+                - createTable:
+                    tableName: equipment_diary_opening_hours
+                    columns:
+                      - column:
+                          constraints:
+                            nullable: false
+                          name: equipment_diary_id
+                          type: int
+                      - column:
+                          constraints:
+                            nullable: false
+                          name: opening_hours_id
+                          type: int
+                      - column:
+                          constraints:
+                            nullable: false
+                          name: medical_attention_type_id
+                          type: smallint
+                      - column:
+                          constraints:
+                            nullable: false
+                          name: overturn_count
+                          type: smallint
+                          defaultValue: 0
+                      - column:
+                          name: external_appointments_allowed
+                          type: bool
+                - addPrimaryKey:
+                    clustered: true
+                    columnNames: equipment_diary_id, opening_hours_id
+                    constraintName: PK_equipment_diary_opening_hours
+                    tableName: equipment_diary_opening_hours
+                    validate: true
+                - addForeignKeyConstraint:
+                    baseColumnNames: equipment_diary_id
+                    baseTableName: equipment_diary_opening_hours
+                    constraintName: FK_equipment_diary_opening_hours_diary_id
+                    onDelete: NO ACTION
+                    onUpdate: NO ACTION
+                    referencedColumnNames: id
+                    referencedTableName: equipment_diary
+                    validate: true
+                - addForeignKeyConstraint:
+                    baseColumnNames: opening_hours_id
+                    baseTableName: equipment_diary_opening_hours
+                    constraintName: FK_equipment_diary_opening_hours_id
+                    onDelete: NO ACTION
+                    onUpdate: NO ACTION
+                    referencedColumnNames: id
+                    referencedTableName: opening_hours
+                    validate: true
+                - addForeignKeyConstraint:
+                    baseColumnNames: medical_attention_type_id
+                    baseTableName: equipment_diary_opening_hours
+                    constraintName: FK_equipment_diary_opening_hours_medical_attention_type_id
+                    onDelete: NO ACTION
+                    onUpdate: NO ACTION
+                    referencedColumnNames: id
+                    referencedTableName: medical_attention_type
+                    validate: true
+
     - changeSet:
         id: addColumn-iso_code-country
         author: bchacon
@@ -453,3 +453,165 @@ databaseChangeLog:
                 UPDATE country SET iso_code = 'YE' WHERE description = 'Yemen del norte';
                 UPDATE country SET iso_code = 'YE' WHERE description = 'Yemen del sur';
                 UPDATE country SET iso_code = 'MK' WHERE description = 'Yugoslavia';
+
+    - changeSet:
+        id: addColumns-medication-statement
+        author: lmanterola
+        changes:
+          - addColumn:
+              tableName: medication_statement
+              columns:
+                - column:
+                    name: due_date
+                    type: date
+                - column:
+                    name: prescription_line_number
+                    type: int
+                - column:
+                    name: prescription_line_state
+                    type: smallint
+                - column:
+                    name: is_digital
+                    type: boolean
+                    defaultValue: ${boolean.true}
+                    constraints:
+                      nullable: false
+
+    - changeSet:
+        id: medication_statement_commercial_dispensation-createTable
+        author: lmanterola
+        changes:
+          - createTable:
+              tableName: medication_statement_commercial
+              columns:
+                - column:
+                    autoIncrement: true
+                    constraints:
+                      primaryKey: true
+                      primaryKeyName: PK_medication_statement_commercial
+                    name: id
+                    type: int
+                - column:
+                    constraints:
+                      nullable: false
+                    name: snomed_id
+                    type: int
+                - column:
+                    constraints:
+                      nullable: false
+                    name: commercial_name
+                    type: varchar(512)
+                - column:
+                    constraints:
+                      nullable: false
+                    name: commercial_presentation
+                    type: varchar(128)
+                - column:
+                    name: presentation_quantity
+                    type: int
+                - column:
+                    constraints:
+                      nullable: false
+                    name: brand
+                    type: varchar(256)
+                - column:
+                    constraints:
+                      nullable: false
+                    name: price
+                    type: float
+                - column:
+                    constraints:
+                      nullable: false
+                    name: affiliate_payment
+                    type: float
+                - column:
+                    constraints:
+                      nullable: false
+                    name: medical_coverage_payment
+                    type: float
+                - column:
+                    constraints:
+                      nullable: false
+                    name: created_by
+                    type: int
+                    defaultValue: -1
+                - column:
+                    constraints:
+                      nullable: false
+                    name: created_on
+                    type: datetime
+                    defaultValueDate: ${date.now}
+                - column:
+                    constraints:
+                      nullable: false
+                    name: updated_by
+                    type: int
+                    defaultValue: -1
+                - column:
+                    constraints:
+                      nullable: false
+                    name: updated_on
+                    type: datetime
+                    defaultValueDate: ${date.now}
+                - column:
+                    constraints:
+                      nullable: false
+                    name: deleted
+                    type: BOOLEAN
+                    defaultValue: ${boolean.false}
+                - column:
+                    name: deleted_by
+                    type: int
+                - column:
+                    name: deleted_on
+                    type: datetime
+                - addForeignKeyConstraint:
+                    baseColumnNames: id
+                    baseTableName: medication_statement_commercial
+                    constraintName: FK_medication_statement_commercial_medication_statement
+                    onDelete: NO ACTION
+                    onUpdate: NO ACTION
+                    referencedColumnNames: id
+                    referencedTableName: medication_statement
+                    validate: true
+
+    - changeSet:
+        id: medication_statement_line_state-createTable
+        author: lmanterola
+        changes:
+          - createTable:
+              tableName: medication_statement_line_state
+              columns:
+                - column:
+                    autoIncrement: true
+                    constraints:
+                      primaryKey: true
+                      primaryKeyName: PK_medication_statement_line_state
+                    name: id
+                    type: smallint
+                - column:
+                    constraints:
+                      nullable: false
+                    name: description
+                    type: varchar(64)
+                - addForeignKeyConstraint:
+                    baseColumnNames: id
+                    baseTableName: medication_statement_line_state
+                    constraintName: FK_medication_statement_line_state
+                    referencedColumnNames: prescription_line_state
+                    referencedTableName: medication_statement
+                    validate: true
+
+    - changeSet:
+        id: medication_statement_line_state-metadata
+        author: lmanterola
+        context: "!schema-only"
+        changes:
+          - sql:
+              sql: |-
+                INSERT INTO medication_statement_line_state (id,description) VALUES (1,'Activo'); 
+                INSERT INTO medication_statement_line_state (id,description) VALUES (2,'Dispensado cerrado');
+                INSERT INTO medication_statement_line_state (id,description) VALUES (3,'Dispensado provisorio');
+                INSERT INTO medication_statement_line_state (id,description) VALUES (4,'Vencido');
+                INSERT INTO medication_statement_line_state (id,description) VALUES (5,'Cancelado');
+  
