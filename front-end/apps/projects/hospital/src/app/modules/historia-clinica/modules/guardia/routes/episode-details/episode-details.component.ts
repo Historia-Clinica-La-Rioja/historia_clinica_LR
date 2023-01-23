@@ -23,7 +23,7 @@ import { EpisodeStateService } from '../../services/episode-state.service';
 import { SelectConsultorioComponent } from '../../dialogs/select-consultorio/select-consultorio.component';
 import { EmergencyCareEpisodeStateService } from '@api-rest/services/emergency-care-episode-state.service';
 import { ContextService } from '@core/services/context.service';
-import {PatientNameService} from "@core/services/patient-name.service";
+import { PatientNameService } from "@core/services/patient-name.service";
 
 @Component({
 	selector: 'app-episode-details',
@@ -48,6 +48,8 @@ export class EpisodeDetailsComponent implements OnInit {
 	lastTriage: Triage;
 	triagesHistory: TriageReduced[];
 	episodeState: EstadosEpisodio;
+	fullNamesHistoryTriage: string[];
+
 	constructor(
 		private readonly router: Router,
 		private readonly route: ActivatedRoute,
@@ -120,6 +122,7 @@ export class EpisodeDetailsComponent implements OnInit {
 			if (hasHistory(triages)) {
 				this.triagesHistory = triages.map(this.guardiaMapperService.triageListDtoToTriageReduced);
 				this.triagesHistory.shift();
+				this.loadFullNames();
 			}
 		});
 
@@ -232,7 +235,16 @@ export class EpisodeDetailsComponent implements OnInit {
 		this.router.navigate([`${this.router.url}/edit`]);
 	}
 
-	getFullName(triage: TriageReduced): string {
+	private loadFullNames(): void {
+		this.fullNamesHistoryTriage = [];
+		this.triagesHistory.forEach(
+			(triage: TriageReduced) => {
+				this.fullNamesHistoryTriage.push(this.getFullName(triage));
+			}
+		);
+	}
+
+	private getFullName(triage: TriageReduced): string {
 		return `${this.patientNameService.getPatientName(triage.createdBy.firstName, triage.createdBy.nameSelfDetermination)}, ${triage.createdBy.lastName}`;
 	}
 

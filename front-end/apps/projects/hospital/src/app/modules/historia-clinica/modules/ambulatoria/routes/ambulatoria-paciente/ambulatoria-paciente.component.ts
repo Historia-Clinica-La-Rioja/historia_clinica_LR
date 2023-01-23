@@ -39,6 +39,8 @@ import { Slot, SlotedInfo, WCExtensionsService } from '@extensions/services/wc-e
 const RESUMEN_INDEX = 0;
 const VOLUNTARY_ID = 1;
 const FEMENINO = 'Femenino';
+const EMERGENCY_CARE_INDEX = 0;
+const EMERGENCY_CARE_INDEX_WHEN_INTERNED = 1;
 
 @Component({
 	selector: 'app-ambulatoria-paciente',
@@ -150,7 +152,7 @@ export class AmbulatoriaPacienteComponent implements OnInit, OnDestroy {
 								});
 						}
 						this.hasInternmentEpisodeInThisInstitution = internmentEpisodeProcess.inProgress && !!internmentEpisodeProcess.id;
-						this.emergencyCareTabIndex = this.hasInternmentEpisodeInThisInstitution ? 1 : 0;
+						this.emergencyCareTabIndex = this.hasInternmentEpisodeInThisInstitution ? EMERGENCY_CARE_INDEX_WHEN_INTERNED : EMERGENCY_CARE_INDEX;
 
 						this.emergencyCareEpisodeSummaryService.getEmergencyCareEpisodeInProgress(this.patientId).subscribe(
 							emergencyCareEpisodeInProgressDto => {

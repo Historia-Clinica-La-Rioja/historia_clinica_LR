@@ -4,8 +4,8 @@
 		<h1 translate="guardia.episode.TITLE"></h1>
 		<div fxLayoutGap="5px" style="height: 90%;" fxLayout="row">
 
-			<button *ngIf="episodeState === STATES.EN_ATENCION || episodeState === STATES.EN_ESPERA" id="edit-episode" mat-raised-button color="primary"
-				(click)="goToEditEpisode()">
+			<button *ngIf="episodeState === STATES.EN_ATENCION || episodeState === STATES.EN_ESPERA" id="edit-episode"
+				mat-raised-button color="primary" (click)="goToEditEpisode()">
 				{{ 'guardia.episode.EDIT_EPISODE' | translate | uppercase }}
 			</button>
 			<button *ngIf="episodeState === STATES.EN_ATENCION" id="cancel-attention" mat-raised-button color="primary"
@@ -127,7 +127,7 @@
 					</h3>
 					<div *ngIf="triagesHistory?.length else noInfo" style="margin-top: 16px" fxLayout="column"
 						fxLayoutGap="10px">
-						<mat-card class="triage-list-item" *ngFor="let triage of triagesHistory">
+						<mat-card class="triage-list-item" *ngFor="let triage of triagesHistory; index as i">
 							<mat-card-content>
 								<div fxLayout="row" fxLayoutAlign="space-between">
 
@@ -141,7 +141,7 @@
 
 									<div id="right-side">
 										<span>
-											{{getFullName(triage)}}
+											{{ fullNamesHistoryTriage[i] }}
 										</span>
 										<span *ngIf="triage.doctorsOfficeDescription">
 											• {{ triage.doctorsOfficeDescription }}

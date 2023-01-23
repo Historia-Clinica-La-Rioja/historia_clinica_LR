@@ -99,7 +99,7 @@
                             </h3>
                             <div *ngIf="triagesHistory?.length else noInfo" style="margin-top: 16px" fxLayout="column"
                                 fxLayoutGap="10px">
-                                <mat-card class="triage-list-item" *ngFor="let triage of triagesHistory">
+                                <mat-card class="triage-list-item" *ngFor="let triage of triagesHistory; index as i">
                                     <mat-card-content>
                                         <div fxLayout="row" fxLayoutAlign="space-between">
 
@@ -113,7 +113,7 @@
 
                                             <div id="right-side">
                                                 <span>
-                                                    {{getFullName(triage)}}
+                                                    {{ fullNamesHistoryTriage[i] }}
                                                 </span>
                                                 <span *ngIf="triage.doctorsOfficeDescription">
                                                     • {{ triage.doctorsOfficeDescription }}
