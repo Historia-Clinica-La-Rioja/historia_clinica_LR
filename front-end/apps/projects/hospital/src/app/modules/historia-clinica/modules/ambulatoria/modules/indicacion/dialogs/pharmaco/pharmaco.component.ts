@@ -1,7 +1,7 @@
 import { Component, Inject, OnInit } from '@angular/core';
 import { AbstractControl, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
-import { DiagnosesGeneralStateDto, MasterDataInterface, NewDosageDto, PharmacoDto, QuantityDto, TimeDto } from '@api-rest/api-model';
+import { DiagnosesGeneralStateDto, MasterDataInterface, NewDosageDto, PharmacoDto, PharmacoSummaryDto, QuantityDto, TimeDto } from '@api-rest/api-model';
 import { SharedSnomedDto } from '@api-rest/api-model';
 import { SnomedDto } from '@api-rest/api-model';
 import { EIndicationType } from '@api-rest/api-model';
@@ -23,7 +23,7 @@ import { HOURS_LIST, INTERVALS_TIME, openConfirmDialog, OTHER_FREQUENCY, OTHER_I
 	styleUrls: ['./pharmaco.component.scss']
 })
 export class PharmacoComponent implements OnInit {
-	pharmaco: Pharmaco = null;
+	pharmaco: PharmacoDto = null;
 	form: FormGroup;
 	searchSnomedConcept: SearchSnomedConceptsPharmacoService;
 	indicationDate: Date;
@@ -53,7 +53,7 @@ export class PharmacoComponent implements OnInit {
 	constructor(
 		@Inject(MAT_DIALOG_DATA) public data: {
 			entryDate: Date, actualDate: Date, patientId: number, professionalId: number, diagnostics: DiagnosesGeneralStateDto[], vias: MasterDataInterface<number>[],
-			units: MasterDataInterface<number>[], pharmaco?: Pharmaco
+			units: MasterDataInterface<number>[], pharmaco?: PharmacoSummaryDto
 		},
 		private readonly dialogRef: MatDialogRef<PharmacoComponent>,
 		public formBuilder: FormBuilder,
@@ -72,34 +72,7 @@ export class PharmacoComponent implements OnInit {
 	ngOnInit(): void {
 		this.indicationDate = this.data.actualDate;
 		this.diagnostics = this.data.diagnostics;
-
-
-		this.form = this.formBuilder.group({
-			dosage: [this.data?.pharmaco ? this.data?.pharmaco.dosage.quantity.value : null, Validators.required],
-			unit: [this.data?.pharmaco ? this.data?.pharmaco.dosage.quantity.unit : null, Validators.required],
-			via: [this.data?.pharmaco ? this.getVia(this.data?.pharmaco.via) : null, Validators.required],
-			hasSolvent: [false],
-			dosageSolvent: [null],
-
-			diagnoses: [this.setDefaultMainDiagnosis()?.id, Validators.required],
-
-			foodRelation: [this.NEGATIVE_OPTION],
-			patientProvided: [false],
-			note: [null],
-
-			frequencyOption: [this.data?.pharmaco?.dosage.periodUnit ? this.getPeriodUnit(this.data?.pharmaco.dosage.periodUnit) : this.FREQUENCY_OPTION_INTERVAL],
-			interval: [this.data?.pharmaco?.dosage.frequency ? this.data?.pharmaco.dosage.frequency : null, Validators.required],
-			startTime: [this.data?.pharmaco?.dosage.startDateTime ? this.hoursList.find(e => e === this.data?.pharmaco.dosage.startDateTime.time.hours) : null, Validators.required],
-			frequencyHour: [null],
-			event: [this.data?.pharmaco ? this.data?.pharmaco.dosage.event : null],
-
-			frequency: this.formBuilder.group({
-				duration: this.formBuilder.group({
-					hours: [null, [Validators.min(0), Validators.max(23)]],
-					minutes: [null],
-				}),
-			}),
-		});
+		this.setForm();
 
 		this.form.controls.hasSolvent.valueChanges.subscribe((hasSolvent: boolean) => {
 			if (!hasSolvent) {
@@ -173,6 +146,57 @@ export class PharmacoComponent implements OnInit {
 		if (this.data?.pharmaco)
 			this.searchSnomedConcept.setForm(this.data?.pharmaco.snomed);
 	}
+	private setForm() {
+		const pharmaco = this.data?.pharmaco;
+		const dosage = pharmaco ? pharmaco.dosage.quantity.value : null;
+		const unit = pharmaco ? pharmaco.dosage.quantity.unit : null;
+		const via = pharmaco ? this.getVia(pharmaco.via) : null;
+		const frequencyOption = pharmaco?.dosage.periodUnit ? this.getPeriodUnit(pharmaco.dosage.periodUnit) : this.FREQUENCY_OPTION_INTERVAL;
+		let interval = pharmaco?.dosage.frequency ? pharmaco.dosage.frequency : null;
+		const startTime = pharmaco?.dosage.startDateTime ? this.hoursList.find(e => e === pharmaco.dosage.startDateTime.time.hours) : null;
+		let frequencyHour = null;
+
+		if ((frequencyOption === this.FREQUENCY_OPTION_INTERVAL) && interval && (!this.intervals.some(e => e === interval))) {
+			frequencyHour = interval;
+			interval = OTHER_FREQUENCY.value;
+		}
+		const event = pharmaco ? pharmaco.dosage.event : null;
+
+		this.form = this.formBuilder.group({
+			dosage: [dosage, Validators.required],
+			unit: [unit, Validators.required],
+			via: [via, Validators.required],
+			hasSolvent: [false],
+			dosageSolvent: [null],
+			diagnoses: [this.setDefaultMainDiagnosis()?.id, Validators.required],
+			foodRelation: [this.NEGATIVE_OPTION],
+			patientProvided: [false],
+			note: [null],
+			frequencyOption: [frequencyOption],
+			interval: [interval, this.isRequiredInterval(frequencyOption)],
+			startTime: [startTime, this.isRequiredStartDateTime(frequencyOption)],
+			frequencyHour: [frequencyHour],
+			event: [event, this.isRequiredEvent(frequencyOption)],
+			frequency: this.formBuilder.group({
+				duration: this.formBuilder.group({
+					hours: [null, [Validators.min(0), Validators.max(23)]],
+					minutes: [null],
+				}),
+			}),
+		});
+	}
+
+	private isRequiredInterval(frequencyOption: number): Validators {
+		return frequencyOption === this.FREQUENCY_OPTION_INTERVAL ? Validators.required : [];
+	}
+
+	private isRequiredStartDateTime(frequencyOption: number): Validators {
+		return (frequencyOption === this.FREQUENCY_OPTION_START_TIME || frequencyOption === this.FREQUENCY_OPTION_INTERVAL) ? Validators.required : [];
+	}
+
+	private isRequiredEvent(frequencyOption: number): Validators {
+		return frequencyOption === this.FREQUENCY_OPTION_EVENT ? Validators.required : [];
+	}
 
 	setDefaultMainDiagnosis(): DiagnosesGeneralStateDto {
 		return this.diagnostics.find(e => e.main === true);
@@ -205,9 +229,6 @@ export class PharmacoComponent implements OnInit {
 			parentId: "",
 			parentFsn: ""
 		}
-	}
-	private setHours(hours: number): number {
-		return hours === this.TIME_CORRECTION ? 0 : hours;
 	}
 
 	private toDosageDto(quantity: QuantityDto, periodUnit?: string): NewDosageDto {
@@ -342,19 +363,9 @@ export class PharmacoComponent implements OnInit {
 		return this.data.vias.find(v => v.description === via).id;
 	}
 
-	comeBackPharmacoFrequency() {
+	returnToPharmacosDialog() {
 		const openDialogPharmacosFrequent = true;
 		this.dialogRef.close({ openDialogPharmacosFrequent });
 	}
 }
 
-
-export interface Pharmaco {
-	snomed: {
-		sctid: string,
-		pt: string
-	};
-
-	dosage: NewDosageDto,
-	via: string;
-}

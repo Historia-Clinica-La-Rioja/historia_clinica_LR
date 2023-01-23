@@ -1,5 +1,5 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
-import { Pharmaco } from '../../dialogs/pharmaco/pharmaco.component';
+import { PharmacoSummaryDto } from '@api-rest/api-model';
 
 @Component({
 	selector: 'app-card-pharmaco',
@@ -10,7 +10,7 @@ export class CardPharmacoComponent {
 	@Input() pharmacos: [];
 	@Output() selectionChange = new EventEmitter<PharmacoSummaryDto>();
 
-	emit(pharmaco: Pharmaco) {
+	emit(pharmaco: PharmacoSummaryDto) {
 		return this.selectionChange.emit(pharmaco);
 	}
 }
