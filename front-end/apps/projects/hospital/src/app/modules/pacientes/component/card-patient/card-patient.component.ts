@@ -41,9 +41,17 @@ export class CardPatientComponent {
 		this.pageSlice = this.patientContent.slice(0, PAGE_MIN_SIZE);
 	}
 	private mapToPatientContent(): CardModel[] {
-		let isAdministrative = false;
-		this.permissionsService.contextAssignments$().subscribe((userRoles: ERole[]) => isAdministrative = anyMatch<ERole>(userRoles, [ERole.ADMINISTRATIVO]));
-		
+		let medicalSpecialist = false;
+		this.permissionsService.contextAssignments$().subscribe((userRoles: ERole[]) => medicalSpecialist = anyMatch<ERole>(userRoles,
+			[
+				ERole.ESPECIALISTA_MEDICO,
+				ERole.PROFESIONAL_DE_SALUD,
+				ERole.ENFERMERO,
+				ERole.ESPECIALISTA_EN_ODONTOLOGIA,
+				ERole.PERSONAL_DE_LABORATORIO,
+				ERole.PERSONAL_DE_IMAGENES,
+				ERole.PERSONAL_DE_FARMACIA]));
+
 		return this.patientData?.map((patient: PatientSearchDto) => {
 			return {
 				header: [{ title: " ", value: this.patientNameService.getFullName(patient.person.firstName, patient.person.nameSelfDetermination, patient.person?.middleNames) + ' ' + this.getLastNames(patient) }],
@@ -52,7 +60,7 @@ export class CardPatientComponent {
 				gender: this.genderTableView[patient.person.genderId],
 				date: patient.person.birthDate ? this.datePipe.transform(patient.person.birthDate, DatePipeFormat.SHORT_DATE) : '',
 				ranking: patient?.ranking,
-				action: this.setActionByRole(isAdministrative, patient.idPatient)
+				action: this.setActionByRole(medicalSpecialist, patient.idPatient)
 			}
 		});
 	}
@@ -65,16 +73,16 @@ export class CardPatientComponent {
 		this.pageSlice = this.patientContent.slice(startPage, $event.pageSize + startPage);
 	}
 
-	private setActionByRole(isAdministrative: boolean, idPatient: number): ValueAction {
-		if (!isAdministrative)
-            return {
-                display: 'ambulatoria.card-patient.BUTTON',
-                do: `${this.routePrefix}ambulatoria/paciente/${idPatient}`
-            }
-        else
-            return {
-                display: 'ambulatoria.card-patient.BUTTON',
-                do: `${this.routePrefix}pacientes/profile/${idPatient}`
-            }
-    }
+	private setActionByRole(medicalSpecialist: boolean, idPatient: number): ValueAction {
+		if (medicalSpecialist)
+			return {
+				display: 'ambulatoria.card-patient.BUTTON',
+				do: `${this.routePrefix}ambulatoria/paciente/${idPatient}`
+			}
+		else
+			return {
+				display: 'ambulatoria.card-patient.BUTTON',
+				do: `${this.routePrefix}pacientes/profile/${idPatient}`
+			}
+	}
 }
