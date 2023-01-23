@@ -90,6 +90,10 @@ export class CubejsDashboardComponent implements OnInit {
 				this.disableFilter = true;
 				break;
 			}
+			case 'cantidadConsultasTotal': {
+				this.title = 'Consultas por género'
+				break;
+			}
 		}
 	}
 }

@@ -94,7 +94,7 @@ export class QueryRendererComponent {
 	showPercentage: boolean;
 	groupSmallData: boolean;
 	showGroupSmallData: boolean;
-	noData = true;
+	noData = false;
 
 	noFillChartOptions: ChartOptions = {
 		responsive: true,
@@ -106,6 +106,7 @@ export class QueryRendererComponent {
 		},
 	};
 	numericValues: number[] = [];
+	numericTitle: string;
 	loading = false;
 
 	constructor(
@@ -217,14 +218,14 @@ export class QueryRendererComponent {
 		this.chartLabels = resultSet.chartPivot(pivotConfig).map((row) => parse(row.x));
 
 		if (this.chartData.length){
-			this.noData = false;
-
 			if (this.chartType === 'bar')
 				this.chartData.forEach( x => x.label = (x.label.charAt(0).toUpperCase() + x.label.slice(1)).slice(0, -5))
 
 			if (this.chartType === 'pie')
 				this.loadPieData();
 		}
+		else
+			this.noData = true;
 	}
 
 	loadPieData() {
@@ -407,5 +408,13 @@ export class QueryRendererComponent {
 		this.numericValues = resultSet
 			.seriesNames()
 			.map((s) => resultSet.totalRow()[s.key]);
+
+		this.numericTitle = resultSet.totalRow()?.x.toUpperCase();
+
+		if (this.numericTitle === "")
+			this.numericTitle = "CONSULTAS";
+
+		if (this.numericTitle === "MASCULINO" || this.numericTitle === "FEMENINO")
+			this.numericTitle += 'S';
 	}
 }
