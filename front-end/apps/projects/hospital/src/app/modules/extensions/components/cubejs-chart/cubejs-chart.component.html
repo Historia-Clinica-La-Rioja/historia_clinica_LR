@@ -1,3 +1,4 @@
+<h2 class="title"> {{title}}</h2>
 <div *ngIf="!error; else errorChart">
 	<app-query-renderer
 		[chartType]="chartType.asObservable()"

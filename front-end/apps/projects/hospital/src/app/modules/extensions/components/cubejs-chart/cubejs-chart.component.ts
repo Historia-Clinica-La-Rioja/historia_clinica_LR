@@ -19,11 +19,13 @@ export class CubejsChartComponent implements OnDestroy {
 
 	@Input() dateFormat?: string;
 	@Input() showLegend?: true;
-	@Input() disableFilter: boolean;
 	error: UIComponentDto = undefined;
 	chartType = new ReplaySubject<any>(1);
 	cubeQuery = new ReplaySubject<any>(1);
 	pivotConfig = new ReplaySubject<any>(1);
+
+	title: string;
+	disableFilter = false;
 
 	@Input() listOnTab: string = null;
 
@@ -45,10 +47,12 @@ export class CubejsChartComponent implements OnDestroy {
 				this.chartType.next(queryStream.chartType);
 				this.cubeQuery.next(queryStream.cubeQuery);
 				this.pivotConfig.next(queryStream.pivotConfig);
+				this.setTitle(queryName);
 				this.cleanFilters(queryStream);
 			},
 			(error: any) => this.error = toUIComponentDto(error),
 		)
+
 	}
 
 	ngOnDestroy() {
@@ -58,5 +62,43 @@ export class CubejsChartComponent implements OnDestroy {
 	cleanFilters(queryStream) {
 		if (this.disableFilter)
 			queryStream.cubeQuery.filters = [];
+	}
+
+	setTitle(queryName: string) {
+		switch (queryName) {
+			case 'cantidadConsultasAmbulatorias': {
+				this.title = 'Evolución de consultas del año actual'
+				this.disableFilter = true;
+				break;
+			}
+			case 'cantidadConsultasAmbulatoriasEspecialidadProfesional': {
+				this.title = 'Consultas por especialidad y profesional del último trimestre'
+				this.disableFilter = true;
+				break;
+			}
+			case 'cantidadConsultasPorEspecialidad': {
+				this.title = 'Consultas por especialidad'
+				break;
+			}
+			case 'cantidadTurnos': {
+				this.title = 'Evolución de turnos del año actual'
+				this.disableFilter = true;
+				break;
+			}
+			case 'cantidadTurnosPorEspecialidad': {
+				this.title = 'Turnos por especialidad del año actual'
+				this.disableFilter = true;
+				break;
+			}
+			case 'cantidadTurnosPorProfesional': {
+				this.title = 'Turnos por profesional del año actual'
+				this.disableFilter = true;
+				break;
+			}
+			case 'cantidadConsultasTotal': {
+				this.title = 'Consultas por género'
+				break;
+			}
+		}
 	}
 }

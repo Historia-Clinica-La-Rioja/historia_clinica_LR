@@ -15,32 +15,16 @@
                     "filters": {},
                     "content": [
                       {
-                        "type": "cubejs-dashboard",
+                        "type": "cubejs-chart",
                         "args": {
-                          "filters": {},
-                          "content": [
-                            {
-                              "type": "cubejs-chart",
-                              "args": {
-                                "query": "cantidadConsultasAmbulatorias"
-                              }
-                            }
-                          ]
+                          "query": "cantidadConsultasAmbulatorias"
                         }
                       },
                       {
-                        "type": "cubejs-dashboard",
+                        "type": "cubejs-chart",
                         "args": {
-                          "filters": {},
-                          "content": [
-                            {
-                              "type": "cubejs-chart",
-                              "args": {
-                                "query": "cantidadConsultasAmbulatoriasEspecialidadProfesional",
-                                "showLegend": false
-                              }
-                            }
-                          ]
+                          "query": "cantidadConsultasAmbulatoriasEspecialidadProfesional",
+                          "showLegend": false
                         }
                       },
                       {
@@ -63,15 +47,7 @@
                                 "query": "cantidadConsultasPorEspecialidad",
                                 "showLegend": false
                               }
-                            }
-                          ]
-                        }
-                      },
-                      {
-                        "type": "cubejs-dashboard",
-                        "args": {
-                          "filters": {},
-                          "content": [
+                            },
                             {
                               "type": "cubejs-chart",
                               "args": {
@@ -123,30 +99,14 @@
                         "args": {
                           "query": "cantidadTurnos"
                         }
-                      }
-                    ]
-                  }
-                },
-                {
-                  "type": "cubejs-dashboard",
-                  "args": {
-                    "filters": {},
-                    "content": [
+                      },
                       {
                         "type": "cubejs-chart",
                         "args": {
                           "query": "cantidadTurnosPorEspecialidad",
                           "showLegend": false
                         }
-                      }
-                    ]
-                  }
-                },
-                {
-                  "type": "cubejs-dashboard",
-                  "args": {
-                    "filters": {},
-                    "content": [
+                      },
                       {
                         "type": "cubejs-chart",
                         "args": {
