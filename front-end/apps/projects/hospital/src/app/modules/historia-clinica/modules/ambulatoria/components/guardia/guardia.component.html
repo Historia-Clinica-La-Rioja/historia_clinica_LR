@@ -38,7 +38,9 @@
                             <div fxLayout="row" fxLayoutGap="10px" fxLayoutAlign="center center">
                                 <mat-icon fontSet="material-icons-outlined" class="gray-color">medical_services
                                 </mat-icon>
-                                <strong> {{ responseEmergencyCare?.emergencyCareType?.description }} </strong>
+                                <div *ngIf="responseEmergencyCare?.emergencyCareType?.description else noInfo">
+                                    <strong> {{ responseEmergencyCare?.emergencyCareType?.description }} </strong>
+                                </div>
                             </div>
                         </div>
                         <div fxLayout="row" fxLayoutGap="5px">
@@ -56,7 +58,9 @@
 
                         <div fxLayout="row" fxLayoutGap="10px" fxLayoutAlign="start center">
                             <mat-icon fontSet="material-icons-outlined" class="gray-color">meeting_room</mat-icon>
-                            <strong> {{ doctorsOfficeDescription }} </strong>
+                            <div *ngIf="doctorsOfficeDescription else noInfo">
+                                <strong> {{ doctorsOfficeDescription }} </strong>
+                            </div>
                         </div>
 
                         <mat-divider inset></mat-divider>
@@ -66,7 +70,9 @@
                             <span *ngIf="responseEmergencyCare?.creationDate as creationDate">
                                 {{ creationDate | viewDateDto : 'datetime' | date: 'dd/MM/yyyy - HH:mm'}}
                             </span>
-                            <span> ({{ responseEmergencyCare?.entranceType?.description }})</span>
+                            <ng-container *ngIf="responseEmergencyCare?.entranceType?.description">
+                                <span> ({{ responseEmergencyCare?.entranceType?.description }})</span>
+                            </ng-container>
                         </div>
                         <div *ngIf="responseEmergencyCare?.hasPoliceIntervention === false else withInfo">
                             <span class="gray-text">
