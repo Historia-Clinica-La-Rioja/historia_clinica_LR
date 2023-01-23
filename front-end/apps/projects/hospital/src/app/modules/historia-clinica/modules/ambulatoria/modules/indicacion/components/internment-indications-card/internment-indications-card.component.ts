@@ -114,7 +114,7 @@ export class InternmentIndicationsCardComponent implements OnInit {
 			this.mostFrequentPharmacos = pharmacos;
 			const dialogPharmacosFrequent = this.dialog.open(PharmacosFrequentComponent, { width: '50%', data: { pharmacos: this.mostFrequentPharmacos } });
 			dialogPharmacosFrequent.afterClosed().subscribe((result: DialogPharmacosFrequent) => {
-				if (result.openFormPharmaco)
+				if (result?.openFormPharmaco)
 					this.openFormPharmacoDialog(result.pharmaco);
 			});
 		});
@@ -154,7 +154,7 @@ export class InternmentIndicationsCardComponent implements OnInit {
 											this.snackBarService.showError(error.text) : this.snackBarService.showError('indicacion.internment-card.dialogs.pharmaco.messages.ERROR');
 									});
 							}
-							if (result.openDialogPharmacosFrequent)
+							if (result?.openDialogPharmacosFrequent)
 								this.openPharmacoDialog();
 						});
 					} else {
