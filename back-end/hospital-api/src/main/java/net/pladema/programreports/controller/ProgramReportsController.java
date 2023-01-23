@@ -188,10 +188,10 @@ public class ProgramReportsController {
 		LOG.debug("Inputs parameters -> institutionID {}, fromDate {}, toDate{}", institutionId);
 
 		String title = "Reporte Odontologia General";
-		String[] headers = new String[]{"Institucion", "Unidad Operativa", "Prestador", "DNI", "Fecha de atencion", "Cons. N°",
+		String[] headers = new String[]{"Institucion", "Unidad Operativa", "Prestador", "DNI", "Fecha de atencion", "N° Consulta",
 				"DNI Paciente", "Nombre Paciente", "Sexo", "Genero", "Nombre con el que se identifica", "Fecha de nacimiento",
 				"Edad a fecha del turno", "Edad a Hoy", "Etnia", "Obra/s social/es", "Indice CPO - Permanentes", "Indice CEO - Temporarios",
-				"Domicilio", "Localidad", "Nivel de Instruccion", "Dientes Permanentes Presentes", "Dientes Temporales Presentes",
+				"Dientes Permanentes Presentes", "Dientes Temporales Presentes", "Domicilio", "Localidad", "Nivel de Instruccion",
 				"Situacion laboral", "Motivos", "Procedimientos", "problemas", "Medicacion", "Evolucion"};
 
 		LocalDate startDate = localDateMapper.fromStringToLocalDate(fromDate);
