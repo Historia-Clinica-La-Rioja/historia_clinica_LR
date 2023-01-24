@@ -6,6 +6,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
@@ -13,6 +14,12 @@ import javax.validation.Valid;
 
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.generateFile.DocumentAuthorFinder;
 import ar.lamansys.sgh.shared.infrastructure.input.service.staff.ProfessionalCompleteDto;
+
+import net.pladema.clinichistory.requests.medicationrequests.service.ValidateMedicationRequestGenerationService;
+
+import net.pladema.patient.service.PatientService;
+
+import net.pladema.staff.controller.dto.ProfessionalLicenseNumberValidationResponseDto;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -94,6 +101,10 @@ public class MedicationRequestController {
 
 	private final FeatureFlagsService featureFlagsService;
 
+	private final ValidateMedicationRequestGenerationService validateMedicationRequestGenerationService;
+
+	private final PatientService patientService;
+
 	private final Function<Long, ProfessionalCompleteDto> authorFromDocumentFunction;
 
 
@@ -108,7 +119,9 @@ public class MedicationRequestController {
 									   PatientExternalMedicalCoverageService patientExternalMedicalCoverageService,
 									   PdfService pdfService,
 									   FeatureFlagsService featureFlagsService,
-									   DocumentAuthorFinder documentAuthorFinder) {
+									   DocumentAuthorFinder documentAuthorFinder,
+									   ValidateMedicationRequestGenerationService validateMedicationRequestGenerationService,
+									   PatientService patientService) {
         this.createMedicationRequestService = createMedicationRequestService;
         this.healthcareProfessionalExternalService = healthcareProfessionalExternalService;
         this.createMedicationRequestMapper = createMedicationRequestMapper;
@@ -120,6 +133,8 @@ public class MedicationRequestController {
         this.patientExternalMedicalCoverageService = patientExternalMedicalCoverageService;
         this.pdfService = pdfService;
 		this.featureFlagsService = featureFlagsService;
+		this.validateMedicationRequestGenerationService = validateMedicationRequestGenerationService;
+		this.patientService = patientService;
 		this.authorFromDocumentFunction = (Long documentId) -> documentAuthorFinder.getAuthor(documentId);
 	}
 
@@ -226,6 +241,16 @@ public class MedicationRequestController {
                 .contentLength(os.size())
                 .body(resource);
     }
+
+	@GetMapping(value = "/validate")
+	public ResponseEntity<ProfessionalLicenseNumberValidationResponseDto> validateMedicationRequestGeneration(@PathVariable(name = "institutionId") Integer institutionId,
+																											  @PathVariable(name = "patientId") Integer patientId) {
+		LOG.debug("medicationRequestList -> institutionId {}, patientId {}", institutionId, patientId);
+		Integer healthcareProfessionalUserId = UserInfo.getCurrentAuditor();
+		ProfessionalDto healthcareProfessionalData = healthcareProfessionalExternalService.findProfessionalByUserId(UserInfo.getCurrentAuditor());
+		ProfessionalLicenseNumberValidationResponseDto response = validateMedicationRequestGenerationService.execute(healthcareProfessionalUserId, healthcareProfessionalData);
+		return ResponseEntity.of(Optional.of(response));
+	}
 
     private Map<String, Object> createContext(MedicationRequestBo medicationRequestBo,
                                               BasicPatientDto patientDto,

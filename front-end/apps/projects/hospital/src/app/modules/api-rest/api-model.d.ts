@@ -2602,6 +2602,12 @@ export interface ProfessionalLicenseNumberDto extends Serializable {
     typeId: number;
 }
 
+export interface ProfessionalLicenseNumberValidationResponseDto {
+    healthcareProfessionalCompleteContactData: boolean;
+    healthcareProfessionalLicenseNumberValid: boolean;
+    twoFactorAuthenticationEnabled: boolean;
+}
+
 export interface ProfessionalPersonDto extends Serializable {
     firstName: string;
     fullName: string;
