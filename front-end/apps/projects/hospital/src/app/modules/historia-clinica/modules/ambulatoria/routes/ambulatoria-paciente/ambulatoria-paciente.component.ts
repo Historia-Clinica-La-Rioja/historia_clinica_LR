@@ -35,6 +35,8 @@ import { SummaryCoverageInformation } from '../../components/medical-coverage-su
 import { EMedicalCoverageType } from "@pacientes/dialogs/medical-coverage/medical-coverage.component";
 import { InternmentActionsService } from "@historia-clinica/modules/ambulatoria/modules/internacion/services/internment-actions.service";
 import { Slot, SlotedInfo, WCExtensionsService } from '@extensions/services/wc-extensions.service';
+import { EmergencyCareEpisodeStateService } from '@api-rest/services/emergency-care-episode-state.service';
+import { EstadosEpisodio } from '@historia-clinica/modules/guardia/constants/masterdata';
 
 const RESUMEN_INDEX = 0;
 const VOLUNTARY_ID = 1;
@@ -86,6 +88,7 @@ export class AmbulatoriaPacienteComponent implements OnInit, OnDestroy {
 
 	selectedTab = 0;
 	emergencyCareTabIndex: number;
+	showEmergencyCareTab: boolean;
 
 	private timeOut = 15000;
 	private isOpenOdontologyConsultation = false;
@@ -106,6 +109,7 @@ export class AmbulatoriaPacienteComponent implements OnInit, OnDestroy {
 		private readonly contextService: ContextService,
 		private readonly router: Router,
 		private readonly emergencyCareEpisodeSummaryService: EmergencyCareEpisodeSummaryService,
+		private readonly emergencyCareEpisodeStateService: EmergencyCareEpisodeStateService,
 		readonly internmentSummaryFacadeService: InternmentSummaryFacadeService,
 		readonly patientAllergies: PatientAllergiesService,
 		private readonly requestMasterDataService: RequestMasterDataService,
@@ -160,11 +164,19 @@ export class AmbulatoriaPacienteComponent implements OnInit, OnDestroy {
 								if (toEmergencyCareTab) {
 									this.selectedTab = this.emergencyCareTabIndex;
 								}
+								this.emergencyCareEpisodeStateService.getState(emergencyCareEpisodeInProgressDto.id).subscribe(
+									state => {
+										const episodeState = state.id;
+										const emergencyEpisodeWithMedicalDischarge = (EstadosEpisodio.CON_ALTA_MEDICA === episodeState);
+										this.showEmergencyCareTab = (this.emergencyCareEpisodeInProgress?.inProgress && !emergencyEpisodeWithMedicalDischarge);
+									}
+								);
 							}
 						);
-					})
 
 
+					}
+				);
 			}
 		);
 	}

@@ -9,6 +9,7 @@ import {
 	MasterDataDto, MasterDataInterface,
 	PatientPhotoDto
 } from '@api-rest/api-model';
+import { ERole } from '@api-rest/api-model';
 import { dateTimeDtoToDate } from '@api-rest/mapper/date-dto.mapper';
 import { differenceInMinutes } from 'date-fns';
 import { EstadosEpisodio, Triages } from '../../constants/masterdata';
@@ -30,6 +31,8 @@ import { getError, hasError } from '@core/utils/form.utils';
 import { EmergencyCareEpisodeAdministrativeDischargeService } from '@api-rest/services/emergency-care-episode-administrative-service.service';
 import { PatientNameService } from "@core/services/patient-name.service";
 import { ContextService } from '@core/services/context.service';
+import { anyMatch } from '@core/utils/array.utils';
+import { PermissionsService } from '@core/services/permissions.service';
 
 const TRANSLATE_KEY_PREFIX = 'guardia.home.episodes.episode.actions';
 
@@ -42,6 +45,28 @@ export class HomeComponent implements OnInit {
 
 	getError = getError;
 	hasError = hasError;
+
+	filterService: EpisodeFilterService;
+
+	readonly estadosEpisodio = EstadosEpisodio;
+	readonly triages = Triages;
+	readonly PACIENTE_TEMPORAL = 3;
+
+	loading = true;
+	episodes: Episode[];
+	episodesOriginal: Episode[];
+	patientsPhotos: PatientPhotoDto[];
+
+	triageCategories$: Observable<TriageCategoryDto[]>;
+	emergencyCareTypes$: Observable<MasterDataInterface<number>[]>;
+
+	hasRoleAdministrative: boolean;
+
+	private static calculateWaitingTime(dateTime: DateTimeDto): number {
+		const creationDate = dateTimeDtoToDate(dateTime);
+		const now = new Date();
+		return differenceInMinutes(now, creationDate);
+	}
 
 	constructor(
 		private router: Router,
@@ -58,34 +83,18 @@ export class HomeComponent implements OnInit {
 		private readonly emergencyCareEpisodeAdministrativeDischargeService: EmergencyCareEpisodeAdministrativeDischargeService,
 		private readonly patientNameService: PatientNameService,
 		private readonly contextService: ContextService,
+		private readonly permissionsService: PermissionsService,
 	) {
 		this.filterService = new EpisodeFilterService(formBuilder, triageMasterDataService, emergencyCareMasterDataService);
-	}
-
-	filterService: EpisodeFilterService;
-
-	readonly estadosEpisodio = EstadosEpisodio;
-	readonly triages = Triages;
-	readonly PACIENTE_TEMPORAL = 3;
-
-	loading = true;
-	episodes: Episode[];
-	episodesOriginal: Episode[];
-	patientsPhotos: PatientPhotoDto[];
-
-	triageCategories$: Observable<TriageCategoryDto[]>;
-	emergencyCareTypes$: Observable<MasterDataInterface<number>[]>;
-
-	private static calculateWaitingTime(dateTime: DateTimeDto): number {
-		const creationDate = dateTimeDtoToDate(dateTime);
-		const now = new Date();
-		return differenceInMinutes(now, creationDate);
 	}
 
 	ngOnInit(): void {
 		this.loadEpisodes();
 		this.triageCategories$ = this.filterService.getTriageCategories();
 		this.emergencyCareTypes$ = this.filterService.getEmergencyCareTypes();
+		this.permissionsService.contextAssignments$().subscribe((userRoles: ERole[]) => {
+			this.hasRoleAdministrative = anyMatch<ERole>(userRoles, [ERole.ADMINISTRATIVO]);
+		});
 	}
 
 	loadEpisodes(): void {
@@ -104,13 +113,13 @@ export class HomeComponent implements OnInit {
 			}, _ => this.loading = false);
 	}
 
-	goToEpisode(episodeId: number, patientId?: number) {
-		if (patientId) {
+	goToEpisode(episode: Episode, patientId?: number) {
+		if (patientId && (episode.state.id !== EstadosEpisodio.CON_ALTA_MEDICA) && (!this.hasRoleAdministrative)) {
 			const url = `institucion/${this.contextService.institutionId}/ambulatoria/paciente/${patientId}`;
 			this.router.navigateByUrl(url, { state: { toEmergencyCareTab: true } });
 		}
 		else {
-			this.router.navigate([`${this.router.url}/episodio/${episodeId}`]);
+			this.router.navigate([`${this.router.url}/episodio/${episode.id}`]);
 		}
 	}
 
@@ -118,7 +127,7 @@ export class HomeComponent implements OnInit {
 		this.router.navigate([`${this.router.url}/nuevo-episodio/administrativa`]);
 	}
 
-	atender(episodeId: number, patientId: number): void {
+	atender(episode: Episode, patientId: number): void {
 
 		const dialogRef = this.dialog.open(SelectConsultorioComponent, {
 			width: '25%',
@@ -127,10 +136,10 @@ export class HomeComponent implements OnInit {
 
 		dialogRef.afterClosed().subscribe(consultorio => {
 			if (consultorio) {
-				this.episodeStateService.atender(episodeId, consultorio.id).subscribe(changed => {
+				this.episodeStateService.atender(episode.id, consultorio.id).subscribe(changed => {
 					if (changed) {
 						this.snackBarService.showSuccess(`${TRANSLATE_KEY_PREFIX}.atender.SUCCESS`);
-						this.goToEpisode(episodeId, patientId);
+						this.goToEpisode(episode, patientId);
 					} else {
 						this.snackBarService.showError(`${TRANSLATE_KEY_PREFIX}.atender.ERROR`);
 					}

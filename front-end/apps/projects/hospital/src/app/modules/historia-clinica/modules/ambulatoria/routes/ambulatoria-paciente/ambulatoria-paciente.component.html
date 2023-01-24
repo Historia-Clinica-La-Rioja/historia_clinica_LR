@@ -133,7 +133,7 @@
 				<mat-tab-group (selectedTabChange)="onTabChanged($event)" [(selectedIndex)]="selectedTab"
 					*ngIf="hasInternmentEpisodeInThisInstitution !== undefined">
 					<mat-tab id="tab_resumen"
-						*ngIf="!hasInternmentEpisodeInThisInstitution && !emergencyCareEpisodeInProgress?.inProgress && hasHealthRelatedRole">
+						*ngIf="!hasInternmentEpisodeInThisInstitution && !showEmergencyCareTab && hasHealthRelatedRole">
 						<ng-template mat-tab-label>
 							<span>{{ 'ambulatoria.paciente.resumen.TAB_LABEL' | translate | uppercase }}</span>
 						</ng-template>
@@ -150,8 +150,7 @@
 							</app-internacion-paciente>
 						</ng-template>
 					</mat-tab>
-					<mat-tab id="tab_guardia"
-						*ngIf="emergencyCareEpisodeInProgress?.inProgress && hasHealthRelatedRole">
+					<mat-tab id="tab_guardia" *ngIf="showEmergencyCareTab && hasHealthRelatedRole">
 						<ng-template mat-tab-label>
 							<span>{{ 'ambulatoria.paciente.guardia.TAB_LABEL' | translate | uppercase }}</span>
 						</ng-template>
