@@ -1,5 +1,6 @@
 package ar.lamansys.sgh.clinichistory.infrastructure.output.repository.ips;
 
+
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -9,12 +10,10 @@ import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.ips.entity
 import ar.lamansys.sgx.shared.auditable.repository.SGXAuditableEntityJPARepository;
 
 import org.springframework.transaction.annotation.Transactional;
-
-import java.util.List;
 import java.util.Optional;
 
 @Repository
-public interface IndicationRepository extends SGXAuditableEntityJPARepository<Indication, Integer> {
+public interface IndicationRepository extends SGXAuditableEntityJPARepository<Indication, Integer>{
 
 	@Transactional(readOnly=true)
 	@Query(value="SELECT i.typeId "
@@ -32,12 +31,5 @@ public interface IndicationRepository extends SGXAuditableEntityJPARepository<In
 	void updateStatus(@Param("indicationId") Integer indicationId,
 					  @Param("statusId") short statusId,
 					  @Param("userId") Integer userId);
-
-	@Transactional
-	@Modifying
-	@Query("UPDATE Indication AS i " +
-			"SET i.patientId = :newPatientId " +
-			"WHERE i.id IN :iIds")
-	void updatePatient(@Param("iIds") List<Integer> iIds, @Param("newPatientId") Integer newPatientId);
 
 }
