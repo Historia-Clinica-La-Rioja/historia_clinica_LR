@@ -77,7 +77,7 @@ public class EmergencyCareEpisodeController {
     }
 
     @GetMapping
-    @PreAuthorize("hasPermission(#institutionId, 'ADMINISTRATIVO, ENFERMERO, ESPECIALISTA_MEDICO, PROFESIONAL_DE_SALUD')")
+    @PreAuthorize("hasPermission(#institutionId, 'ADMINISTRATIVO, ADMINISTRATIVO_RED_DE_IMAGENES, ENFERMERO, ESPECIALISTA_MEDICO, PROFESIONAL_DE_SALUD')")
     public ResponseEntity<Collection<EmergencyCareListDto>> getAll(
             @PathVariable(name = "institutionId") Integer institutionId) {
         LOG.debug("Input parameters -> institutionId {}", institutionId);
@@ -89,7 +89,7 @@ public class EmergencyCareEpisodeController {
 
     @Transactional
     @PostMapping
-    @PreAuthorize("hasPermission(#institutionId, 'ADMINISTRATIVO, ENFERMERO, ESPECIALISTA_MEDICO, PROFESIONAL_DE_SALUD')")
+    @PreAuthorize("hasPermission(#institutionId, 'ADMINISTRATIVO, ADMINISTRATIVO_RED_DE_IMAGENES, ENFERMERO, ESPECIALISTA_MEDICO, PROFESIONAL_DE_SALUD')")
     public ResponseEntity<Integer> createAdministrative(
             @PathVariable(name = "institutionId") Integer institutionId,
             @Valid @RequestBody ECAdministrativeDto body) {
@@ -106,7 +106,7 @@ public class EmergencyCareEpisodeController {
 
     @Transactional
     @PutMapping("/{emergencyCareEpisodeId}")
-    @PreAuthorize("hasPermission(#institutionId, 'ADMINISTRATIVO, ENFERMERO, ESPECIALISTA_MEDICO, PROFESIONAL_DE_SALUD')")
+    @PreAuthorize("hasPermission(#institutionId, 'ADMINISTRATIVO, ADMINISTRATIVO_RED_DE_IMAGENES, ENFERMERO, ESPECIALISTA_MEDICO, PROFESIONAL_DE_SALUD')")
     public ResponseEntity<Integer> updateAdministrative(
             @PathVariable(name = "institutionId") Integer institutionId,
             @PathVariable(name = "emergencyCareEpisodeId") Integer emergencyCareEpisodeId,
@@ -124,7 +124,7 @@ public class EmergencyCareEpisodeController {
 
     @Transactional
     @PostMapping("/adult-gynecological")
-    @PreAuthorize("hasPermission(#institutionId, 'ADMINISTRATIVO, ENFERMERO, ESPECIALISTA_MEDICO, PROFESIONAL_DE_SALUD')")
+    @PreAuthorize("hasPermission(#institutionId, 'ADMINISTRATIVO, ADMINISTRATIVO_RED_DE_IMAGENES, ENFERMERO, ESPECIALISTA_MEDICO, PROFESIONAL_DE_SALUD')")
     public ResponseEntity<Integer> createAdult(
             @PathVariable(name = "institutionId") Integer institutionId,
             @RequestBody ECAdultGynecologicalDto body) {

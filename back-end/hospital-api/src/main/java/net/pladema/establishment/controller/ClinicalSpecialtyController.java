@@ -59,7 +59,7 @@ public class ClinicalSpecialtyController {
     }
 
     @GetMapping("/institution/{institutionId}/clinicalspecialty/professional/{professionalId}")
-    @PreAuthorize("hasPermission(#institutionId, 'ADMINISTRATIVO, ADMINISTRADOR_AGENDA')")
+    @PreAuthorize("hasPermission(#institutionId, 'ADMINISTRATIVO, ADMINISTRATIVO_RED_DE_IMAGENES, ADMINISTRADOR_AGENDA')")
     public ResponseEntity<List<ClinicalSpecialtyDto>> getAllSpecialtyByProfessional(
             @PathVariable(name = "institutionId") Integer institutionId,
             @PathVariable(name = "professionalId") Integer professionalId) {
@@ -71,7 +71,7 @@ public class ClinicalSpecialtyController {
     }
 
     @GetMapping(value = "/institution/{institutionId}/clinicalspecialty/professional", params = "professionalsIds")
-    @PreAuthorize("hasPermission(#institutionId, 'ADMINISTRATIVO, ADMINISTRADOR_AGENDA, ADMINISTRADOR_INSTITUCIONAL_BACKOFFICE, ESPECIALISTA_MEDICO, PROFESIONAL_DE_SALUD, ESPECIALISTA_EN_ODONTOLOGIA, ENFERMERO, PERSONAL_DE_ESTADISTICA')")
+    @PreAuthorize("hasPermission(#institutionId, 'ADMINISTRATIVO, ADMINISTRATIVO_RED_DE_IMAGENES, ADMINISTRADOR_AGENDA, ADMINISTRADOR_INSTITUCIONAL_BACKOFFICE, ESPECIALISTA_MEDICO, PROFESIONAL_DE_SALUD, ESPECIALISTA_EN_ODONTOLOGIA, ENFERMERO, PERSONAL_DE_ESTADISTICA')")
     public ResponseEntity<List<ProfessionalsByClinicalSpecialtyDto>> getManyByProfessionals(
             @PathVariable(name = "institutionId") Integer institutionId,
             @RequestParam List<Integer> professionalsIds) {
@@ -126,7 +126,7 @@ public class ClinicalSpecialtyController {
     }
 
 	@GetMapping(value = "/institution/{institutionId}/clinicalspecialty/diary/professional", params = "professionalsIds")
-	@PreAuthorize("hasPermission(#institutionId, 'ADMINISTRATIVO, ADMINISTRADOR_AGENDA, ADMINISTRADOR_INSTITUCIONAL_BACKOFFICE, ESPECIALISTA_MEDICO, PROFESIONAL_DE_SALUD, ESPECIALISTA_EN_ODONTOLOGIA, ENFERMERO, PERSONAL_DE_ESTADISTICA')")
+	@PreAuthorize("hasPermission(#institutionId, 'ADMINISTRATIVO, ADMINISTRATIVO_RED_DE_IMAGENES, ADMINISTRADOR_AGENDA, ADMINISTRADOR_INSTITUCIONAL_BACKOFFICE, ESPECIALISTA_MEDICO, PROFESIONAL_DE_SALUD, ESPECIALISTA_EN_ODONTOLOGIA, ENFERMERO, PERSONAL_DE_ESTADISTICA')")
 	public ResponseEntity<List<ProfessionalsByClinicalSpecialtyDto>> getManyByActiveDiariesAndProfessionals(
 			@PathVariable(name = "institutionId") Integer institutionId,
 			@RequestParam List<Integer> professionalsIds) {

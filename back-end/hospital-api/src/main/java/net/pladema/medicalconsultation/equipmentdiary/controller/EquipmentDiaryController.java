@@ -58,7 +58,7 @@ public class EquipmentDiaryController {
 	}
 
 	@PostMapping
-	@PreAuthorize("hasPermission(#institutionId, 'ADMINISTRATIVO, ADMINISTRADOR_AGENDA')")
+	@PreAuthorize("hasPermission(#institutionId, 'ADMINISTRATIVO, ADMINISTRATIVO_RED_DE_IMAGENES, ADMINISTRADOR_AGENDA')")
 	public ResponseEntity<Integer> addDiary(
 			@PathVariable(name = "institutionId") Integer institutionId,
 			@RequestBody @Valid @NewDiaryPeriodValid @EquipmentDiaryOpeningHoursValid EquipmentDiaryADto  equipmentDiaryADto) throws DiaryException {

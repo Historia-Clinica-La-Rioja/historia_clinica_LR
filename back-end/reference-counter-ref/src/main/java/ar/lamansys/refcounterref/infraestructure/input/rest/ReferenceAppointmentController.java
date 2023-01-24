@@ -27,7 +27,7 @@ public class ReferenceAppointmentController {
 
 	@PostMapping
 	@ResponseStatus(code = HttpStatus.OK)
-	@PreAuthorize("hasPermission(#institutionId, 'ADMINISTRATIVO, ESPECIALISTA_MEDICO, PROFESIONAL_DE_SALUD, ESPECIALISTA_EN_ODONTOLOGIA')")
+	@PreAuthorize("hasPermission(#institutionId, 'ADMINISTRATIVO, ADMINISTRATIVO_RED_DE_IMAGENES, ESPECIALISTA_MEDICO, PROFESIONAL_DE_SALUD, ESPECIALISTA_EN_ODONTOLOGIA')")
 	public boolean associateReferenceAppointment(@PathVariable(name = "institutionId") Integer institutionId,
 												 @RequestParam(name = "referenceId") Integer referenceId,
 												 @RequestParam(name = "appointmentId") Integer appointmentId

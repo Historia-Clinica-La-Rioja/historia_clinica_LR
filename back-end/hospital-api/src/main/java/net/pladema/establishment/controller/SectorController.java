@@ -56,7 +56,7 @@ public class SectorController  {
 	}
 
 	@GetMapping
-	@PreAuthorize("hasPermission(#institutionId, 'ADMINISTRATIVO, ADMINISTRADOR_AGENDA, ESPECIALISTA_MEDICO, ENFERMERO, PROFESIONAL_DE_SALUD, ESPECIALISTA_EN_ODONTOLOGIA')")
+	@PreAuthorize("hasPermission(#institutionId, 'ADMINISTRATIVO, ADMINISTRATIVO_RED_DE_IMAGENES, ADMINISTRADOR_AGENDA, ESPECIALISTA_MEDICO, ENFERMERO, PROFESIONAL_DE_SALUD, ESPECIALISTA_EN_ODONTOLOGIA')")
 	public ResponseEntity<List<Sector>> getAll(@PathVariable(name = "institutionId") Integer institutionId) {
 		List<Sector> sectors = sectorRepository.getSectorsByInstitution(institutionId);
 		LOG.debug("Get all Sectors => {}", sectors);
@@ -64,7 +64,7 @@ public class SectorController  {
 	}
 	
 	@GetMapping("/{sectorId}/specialty/{specialtyId}/rooms")
-	@PreAuthorize("hasPermission(#institutionId, 'ADMINISTRATIVO')")
+	@PreAuthorize("hasPermission(#institutionId, 'ADMINISTRATIVO, ADMINISTRATIVO_RED_DE_IMAGENES')")
 	public ResponseEntity<List<RoomDto>> getAllRoomsBySectorAndSpecialty(
 			@PathVariable(name = "institutionId") Integer institutionId,
 			@PathVariable(name = "sectorId") Integer sectorId,

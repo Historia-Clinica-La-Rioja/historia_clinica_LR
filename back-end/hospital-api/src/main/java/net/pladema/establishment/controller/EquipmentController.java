@@ -46,7 +46,7 @@ public class EquipmentController {
 
 
 	@GetMapping("/sector/{sectorId}")
-	@PreAuthorize("hasPermission(#institutionId, 'ADMINISTRATIVO, ADMINISTRADOR_AGENDA')")
+	@PreAuthorize("hasPermission(#institutionId, 'ADMINISTRATIVO, ADMINISTRATIVO_RED_DE_IMAGENES, ADMINISTRADOR_AGENDA')")
 	public ResponseEntity<List<EquipmentDto>>  getAllBySector(
 			@PathVariable(name = "institutionId") Integer institutionId,
 			@PathVariable(name = "sectorId") Integer sectorId) {

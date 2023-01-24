@@ -29,7 +29,7 @@ public class ClinicalSpecialtySectorController {
 	}
 
 	@GetMapping
-	@PreAuthorize("hasPermission(#institutionId, 'ADMINISTRATIVO, ADMINISTRADOR_AGENDA')")
+	@PreAuthorize("hasPermission(#institutionId, 'ADMINISTRATIVO, ADMINISTRATIVO_RED_DE_IMAGENES, ADMINISTRADOR_AGENDA')")
 	public ResponseEntity<List<ClinicalSpecialty>> getAllSpecialtyBySector(
 			@PathVariable(name = "institutionId") Integer institutionId,
 			@PathVariable(name = "sectorId") Integer sectorId) {

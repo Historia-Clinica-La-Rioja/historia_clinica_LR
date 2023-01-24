@@ -46,7 +46,7 @@ public class PersonFileController {
 
 	@PostMapping(value = "/upload", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
 	@ResponseStatus(code = HttpStatus.OK)
-	@PreAuthorize("hasPermission(#institutionId, 'ADMINISTRATIVO')")
+	@PreAuthorize("hasPermission(#institutionId, 'ADMINISTRATIVO, ADMINISTRATIVO_RED_DE_IMAGENES')")
 	public List<Integer> uploadFile(@PathVariable(name = "institutionId") Integer institutionId,
 									@PathVariable(name = "personId") Integer personId,
 									@RequestPart("files") MultipartFile[] files) throws CreatePersonFileException {
@@ -57,7 +57,7 @@ public class PersonFileController {
 	}
 
 	@DeleteMapping("/delete")
-	@PreAuthorize("hasPermission(#institutionId, 'ADMINISTRATIVO')")
+	@PreAuthorize("hasPermission(#institutionId, 'ADMINISTRATIVO, ADMINISTRATIVO_RED_DE_IMAGENES')")
 	public boolean delete(@PathVariable(name = "institutionId") Integer institutionId,
 						  @RequestParam(name = "fileIds") List<Integer> fileIds) {
 		log.debug("Input parameters -> institutionId {}, fileIds {}", institutionId, fileIds);
@@ -66,7 +66,7 @@ public class PersonFileController {
 	}
 
 	@GetMapping("/download/{fileId}")
-	@PreAuthorize("hasPermission(#institutionId, 'ADMINISTRATIVO')")
+	@PreAuthorize("hasPermission(#institutionId, 'ADMINISTRATIVO, ADMINISTRATIVO_RED_DE_IMAGENES')")
 	public ResponseEntity download(@PathVariable(name = "institutionId") Integer institutionId,
 								   @PathVariable(name = "personId") Integer personId,
 								   @PathVariable(name = "fileId") Integer fileId

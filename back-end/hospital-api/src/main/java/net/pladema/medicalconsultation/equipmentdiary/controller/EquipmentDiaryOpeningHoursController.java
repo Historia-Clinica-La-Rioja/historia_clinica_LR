@@ -63,7 +63,7 @@ public class EquipmentDiaryOpeningHoursController {
 
 
 	@GetMapping(value = "/equipment/{equipmentId}")
-	@PreAuthorize("hasPermission(#institutionId, 'ADMINISTRATIVO, ESPECIALISTA_MEDICO, PROFESIONAL_DE_SALUD, ESPECIALISTA_EN_ODONTOLOGIA, ENFERMERO, ADMINISTRADOR_AGENDA')")
+	@PreAuthorize("hasPermission(#institutionId, 'ADMINISTRATIVO, ADMINISTRATIVO_RED_DE_IMAGENES, ESPECIALISTA_MEDICO, PROFESIONAL_DE_SALUD, ESPECIALISTA_EN_ODONTOLOGIA, ENFERMERO, ADMINISTRADOR_AGENDA')")
 	public ResponseEntity<List<OccupationDto>> getAllWeeklyEquipmentOccupation(
 			@PathVariable(name = "institutionId") Integer institutionId,
 			@PathVariable(name = "equipmentId") Integer equipmentId,
