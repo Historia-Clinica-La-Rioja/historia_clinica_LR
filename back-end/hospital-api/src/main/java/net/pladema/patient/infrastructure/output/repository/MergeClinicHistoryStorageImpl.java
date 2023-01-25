@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import ar.lamansys.refcounterref.infraestructure.output.repository.counterreference.CounterReferenceRepository;
+import ar.lamansys.sgh.shared.infrastructure.input.service.nursing.SharedNursingConsultationPort;
 import net.pladema.clinichistory.requests.medicationrequests.repository.MedicationRequestRepository;
 
 import net.pladema.clinichistory.requests.servicerequests.repository.ServiceRequestRepository;
@@ -42,6 +43,7 @@ public class MergeClinicHistoryStorageImpl implements MergeClinicHistoryStorage 
 	private final OutpatientConsultationRepository outpatientConsultationRepository;
 	private final MedicationRequestRepository medicationRequestRepository;
 	private final ServiceRequestRepository serviceRequestRepository;
+	private final SharedNursingConsultationPort sharedNursingConsultationPort;
 	private final CounterReferenceRepository counterReferenceRepository;
 	private final SnvsReportRepository snvsReportRepository;
 	private final DocumentRepository documentRepository;
@@ -78,6 +80,11 @@ public class MergeClinicHistoryStorageImpl implements MergeClinicHistoryStorage 
 	@Override
 	public List<Integer> getServiceRequestIds(List<Integer> oldPatients) {
 		return serviceRequestRepository.getServiceRequestIdsFromPatients(oldPatients);
+	}
+
+	@Override
+	public List<Integer> getNursingConsultationIds(List<Integer> oldPatients) {
+		return sharedNursingConsultationPort.getNursingConsultationIdsFromPatients(oldPatients);
 	}
 
 
@@ -210,6 +217,13 @@ public class MergeClinicHistoryStorageImpl implements MergeClinicHistoryStorage 
 		log.debug("Service request ids to modify {}", ids);
 		serviceRequestRepository.findAllById(ids)
 				.forEach(item -> migratePatientStorage.migrateItem(item.getId(), item.getPatientId(), newPatientId, EMergeTable.SERVICE_REQUEST));
+	}
+
+	@Override
+	public void modifyNursingConsultation(List<Integer> ids, Integer newPatientId) {
+		log.debug("Nursing consultation ids to modify {}", ids);
+		sharedNursingConsultationPort.findAllById(ids)
+				.forEach(item -> migratePatientStorage.migrateItem(item.getId(), item.getPatientId(), newPatientId, EMergeTable.NURSING_CONSULTATION));
 	}
 
 

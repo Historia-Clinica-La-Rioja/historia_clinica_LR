@@ -10,6 +10,7 @@ public interface MergeClinicHistoryStorage {
 	List<Integer> getOutpatientConsultationIds(List<Integer> oldPatients);
 	List<Integer> getMedicationRequestIds(List<Integer> oldPatients);
 	List<Integer> getServiceRequestIds(List<Integer> oldPatients);
+	List<Integer> getNursingConsultationIds(List<Integer> oldPatients);
 	List<Integer> getCounterReferenceIds(List<Integer> oldPatients);
 	void modifyDocument(List<Long> dIds, Integer newPatientId);
 	List<Long> getDocumentsIds(List<Integer> ids, List<ESourceType> sourceTypes);
@@ -29,6 +30,7 @@ public interface MergeClinicHistoryStorage {
 	void modifyOutpatientConsultation(List<Integer> ocIds, Integer newPatientId);
 	void modifyMedicationRequest(List<Integer> mrIds, Integer newPatientId);
 	void modifyServiceRequest(List<Integer> mrIds, Integer newPatientId);
+	void modifyNursingConsultation(List<Integer> ncIds, Integer newPatientId);
 	void modifyCounterReference(List<Integer> crIds, Integer newPatientId);
 	void modifySnvsReport(List<Integer> oldPatients, Integer newPatientId);
 

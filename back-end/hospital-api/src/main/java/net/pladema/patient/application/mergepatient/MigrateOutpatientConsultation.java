@@ -23,12 +23,14 @@ public class MigrateOutpatientConsultation {
 		log.debug("Input parameters -> oldPatients{}, newPatient{}",oldPatients,newPatient);
 
 		List<Integer> ocIds = mergeClinicHistoryStorage.getOutpatientConsultationIds(oldPatients);
+		List<Integer> ncIds = mergeClinicHistoryStorage.getNursingConsultationIds(oldPatients);
 		List<Integer> mrIds = mergeClinicHistoryStorage.getMedicationRequestIds(oldPatients);
 		List<Integer> srIds = mergeClinicHistoryStorage.getServiceRequestIds(oldPatients);
 		List<Integer> crIds = mergeClinicHistoryStorage.getCounterReferenceIds(oldPatients);
 
 		List<Integer> consultationIds = new ArrayList<>() {{
 			addAll(ocIds);
+			addAll(ncIds);
 			addAll(mrIds);
 			addAll(srIds);
 			addAll(crIds);
@@ -61,6 +63,7 @@ public class MigrateOutpatientConsultation {
 			}
 
 			mergeClinicHistoryStorage.modifyOutpatientConsultation(ocIds,newPatient);
+			mergeClinicHistoryStorage.modifyNursingConsultation(ncIds, newPatient);
 			mergeClinicHistoryStorage.modifyMedicationRequest(mrIds,newPatient);
 			mergeClinicHistoryStorage.modifyServiceRequest(srIds,newPatient);
 			mergeClinicHistoryStorage.modifyCounterReference(crIds,newPatient);

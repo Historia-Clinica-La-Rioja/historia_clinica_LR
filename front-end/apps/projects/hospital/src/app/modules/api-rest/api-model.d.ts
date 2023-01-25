@@ -2024,6 +2024,17 @@ export interface NursingConsultationDto extends Serializable {
     riskFactors?: NursingRiskFactorDto;
 }
 
+export interface NursingConsultationInfoDto {
+    billable: boolean;
+    clinicalSpecialtyId: number;
+    doctorId: number;
+    id: number;
+    institutionId: number;
+    patientId: number;
+    patientMedicalCoverageId: number;
+    performedDate: Date;
+}
+
 export interface NursingHealtConditionDto extends Serializable {
     id?: number;
     snomed: SnomedDto;
