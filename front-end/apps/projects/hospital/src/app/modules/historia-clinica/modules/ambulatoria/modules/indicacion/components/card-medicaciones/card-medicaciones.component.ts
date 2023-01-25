@@ -1,6 +1,6 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
-import { MedicationInfoDto } from '@api-rest/api-model';
+import { MedicationInfoDto, ProfessionalLicenseNumberValidationResponseDto } from '@api-rest/api-model';
 import { SnomedECL } from '@api-rest/api-model';
 import { SnackBarService } from '@presentation/services/snack-bar.service';
 import { ORDENES_MEDICACION } from '@historia-clinica/constants/summaries';
@@ -100,8 +100,20 @@ export class CardMedicacionesComponent implements OnInit {
 
 	openDialogNewMedication(isNewMedication: boolean, medication?: MedicationInfoDto) {
 		this.prescripcionesService.validateProfessional(this.patientId)
-			.subscribe((result: boolean) => {
-				if ( ! result) return;
+			.subscribe((result: ProfessionalLicenseNumberValidationResponseDto) => {
+				if (! result.healthcareProfessionalCompleteContactData 
+					|| ! result.healthcareProfessionalLicenseNumberValid
+					|| ! result.twoFactorAuthenticationEnabled) {
+						this.dialog.open(PrescripcionValidatorPopupComponent, {
+							data: {
+								twoFactorAuthenticationEnabled: result.twoFactorAuthenticationEnabled,
+								healthcareProfessionalLicenseNumberValid: result.healthcareProfessionalLicenseNumberValid,
+								healthcareProfessionalCompleteContactData: result.healthcareProfessionalCompleteContactData,
+							},
+							width: '35%',
+						});
+						return;
+					}
 
 				const medicationList = isNewMedication ? null : this.getMedicationList(medication);
 		
@@ -145,18 +157,7 @@ export class CardMedicacionesComponent implements OnInit {
 					this.getMedication();
 					this.cleanSelectedMedicationList();
 				});
-			},
-			error => {
-				this.dialog.open(PrescripcionValidatorPopupComponent, {
-					data: {
-						twoFactorAutentication: true,
-						licenseNumber: false,
-						professionalData: true,
-					},
-					width: '35%',
-				});
 			});
-
 	}
 
 	openSuspendMedicationDialog(medication?: MedicationInfoDto) {

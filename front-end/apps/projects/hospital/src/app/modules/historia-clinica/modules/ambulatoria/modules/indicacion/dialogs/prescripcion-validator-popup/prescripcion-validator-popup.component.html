@@ -6,19 +6,19 @@
     </header>
     
     <div class="validators">
-        <section *ngIf="this.data.twoFactorAutentication else noTwoFactorAutentication">
+        <section *ngIf="this.data.twoFactorAuthenticationEnabled else noTwoFactorAutentication">
             <mat-icon class="gray">check_circle_outline</mat-icon>
             <div>
                 <span class="gray" [translate]="'ambulatoria.paciente.ordenes_prescripciones.validators_dialog.2FA_TITLE_ENABLED'"></span>
             </div>
         </section>
-        <section *ngIf="this.data.licenseNumber else noLicenseNumber">
+        <section *ngIf="this.data.healthcareProfessionalLicenseNumberValid else noLicenseNumber">
             <mat-icon class="gray">check_circle_outline</mat-icon>
             <div>
                 <span class="gray" [translate]="'ambulatoria.paciente.ordenes_prescripciones.validators_dialog.LICENSE_NUMBER_TITLE_VALID'"></span>
             </div>
         </section>
-        <section *ngIf="this.data.professionalData else noProfessionalData">
+        <section *ngIf="this.data.healthcareProfessionalCompleteContactData else noProfessionalData">
             <mat-icon class="gray">check_circle_outline</mat-icon>
             <div>
                 <span class="gray" [translate]="'ambulatoria.paciente.ordenes_prescripciones.validators_dialog.PROFESSIONAL_DATA_TITLE_COMPLETE'"></span>

@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-import { CompleteRequestDto, DiagnosticReportInfoDto, DiagnosticReportInfoWithFilesDto, MedicationInfoDto, PrescriptionDto } from '@api-rest/api-model';
+import { CompleteRequestDto, DiagnosticReportInfoDto, DiagnosticReportInfoWithFilesDto, MedicationInfoDto, PrescriptionDto, ProfessionalLicenseNumberValidationResponseDto } from '@api-rest/api-model';
 import { MedicationRequestService } from '@api-rest/services/medication-request.service';
 import { ServiceRequestService } from '@api-rest/services/service-request.service';
 import { MEDICATION_STATUS, MedicationStatusChange, STUDY_STATUS } from '../constants/prescripciones-masterdata';
@@ -87,7 +87,7 @@ export class PrescripcionesService {
 		this.serviceRequestService.download(patientId, fileId, fileName);
 	}
 
-	validateProfessional(patientId: number): Observable<boolean> {
+	validateProfessional(patientId: number): Observable<ProfessionalLicenseNumberValidationResponseDto> {
 		return this.medicationRequestService.validateProfessional(patientId);
 	}
 

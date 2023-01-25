@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { environment } from '@environments/environment';
 import { Observable } from 'rxjs';
-import { MedicationInfoDto, PrescriptionDto } from '@api-rest/api-model';
+import { MedicationInfoDto, PrescriptionDto, ProfessionalLicenseNumberValidationResponseDto } from '@api-rest/api-model';
 import { ContextService } from '@core/services/context.service';
 import { of } from 'rxjs';
 
@@ -73,8 +73,8 @@ export class MedicationRequestService {
 		);
 	}
 
-	validateProfessional(patientId: number): Observable<boolean> {
+	validateProfessional(patientId: number): Observable<ProfessionalLicenseNumberValidationResponseDto> {
 		const url = `${environment.apiBase}/institutions/${this.contextService.institutionId}/patient/${patientId}/medication-requests/validate`;
-		return this.http.get<boolean>(url);
+		return this.http.get<ProfessionalLicenseNumberValidationResponseDto>(url);
 	}
 }
