@@ -55,7 +55,20 @@ public class RestorePasswordNotificationMessageTest {
 				"requiredArgs",
 				new RestorePasswordTemplateInput(RestorePasswordNotificationArgs.builder()
 						.fullname("Nombre completo del usuario")
-						.link("www.google.com")
+						.link("/un-path/absoluto")
+						.build())
+		);
+		assertThat(mail.subject).isNotNull();
+	}
+
+	@Test
+	void requiredArgsPladema() throws TemplateException {
+		var mail = this.templateMailTestingHelper.renderTemplate(
+				TemplateMailTestingHelper.Domain.PLADEMA,
+				"requiredArgsPladema",
+				new RestorePasswordTemplateInput(RestorePasswordNotificationArgs.builder()
+						.fullname("Nombre completo del usuario")
+						.link(RestorePasswordNotificationImpl.ROUTE + "T0K3N")
 						.build())
 		);
 		assertThat(mail.subject).isNotNull();

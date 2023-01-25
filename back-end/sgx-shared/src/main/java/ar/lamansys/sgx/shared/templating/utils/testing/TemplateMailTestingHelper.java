@@ -17,9 +17,9 @@ public class TemplateMailTestingHelper<T> {
 	private final MessageSource messageSource;
 	protected ApplicationContext applicationContext;
 
-    public MailMessageBo renderTemplate(String scenario, NotificationTemplateInput<T> notificationArgs) throws TemplateException {
+    public MailMessageBo renderTemplate(Domain domain, String scenario, NotificationTemplateInput<T> notificationArgs) throws TemplateException {
 		var mailTemplateEngine = new MailTemplateEngine(
-				"localhost:5005",
+				domain.value,
 				messageSource,
 				"classpath:/templates/mails/",
 				applicationContext
@@ -29,5 +29,23 @@ public class TemplateMailTestingHelper<T> {
 		mailBodyResultAsserter.accept(scenario, mail.body);
 		return mail;
     }
+
+	public MailMessageBo renderTemplate(String scenario, NotificationTemplateInput<T> notificationArgs) throws TemplateException {
+		return renderTemplate(Domain.LOCALHOST, scenario, notificationArgs);
+	}
+
+	public enum Domain {
+		LOCALHOST("localhost:5005"),
+		PLADEMA("sgh.pladema.net"),
+		;
+
+		public final String value;
+
+		Domain(String value) {
+			this.value = value;
+		}
+
+
+	}
 
 }

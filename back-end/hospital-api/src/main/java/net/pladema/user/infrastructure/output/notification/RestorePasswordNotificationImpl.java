@@ -23,7 +23,7 @@ public class RestorePasswordNotificationImpl implements RestorePasswordNotificat
 	private final HospitalUserStorage hospitalUserStorage;
 	private final UserNotificationSender userNotificationSender;
 	private final FeatureFlagsService featureFlagsService;
-	private final String ROUTE = "auth/password-reset/";
+	protected static final String ROUTE = "/auth/password-reset/";
 
  	@Override
 	public String run(RestorePasswordNotificationBo restorePasswordNotificationBo) {
@@ -33,8 +33,7 @@ public class RestorePasswordNotificationImpl implements RestorePasswordNotificat
 		}
 		var notificationArgs = RestorePasswordNotificationArgs.builder();
 
-		String path = ServletUriComponentsBuilder.fromCurrentContextPath().toUriString();
-		String link = (path.substring(0, path.length()-3)).concat(ROUTE).concat(restorePasswordNotificationBo.token);
+		String link = ROUTE + restorePasswordNotificationBo.token;
 
 		String fullName = (featureFlagsService.isOn(AppFeature.HABILITAR_DATOS_AUTOPERCIBIDOS) && userPersonInfo.getNameSelfDetermination() != null)
 				? userPersonInfo.getNameSelfDetermination()+ " " + userPersonInfo.getLastName() + (userPersonInfo.getOtherLastNames() != null ? " " + userPersonInfo.getOtherLastNames() : "")
