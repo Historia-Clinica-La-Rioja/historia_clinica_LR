@@ -17,8 +17,6 @@ import ar.lamansys.sgh.shared.infrastructure.input.service.staff.ProfessionalCom
 
 import net.pladema.clinichistory.requests.medicationrequests.service.ValidateMedicationRequestGenerationService;
 
-import net.pladema.patient.service.PatientService;
-
 import net.pladema.staff.controller.dto.ProfessionalLicenseNumberValidationResponseDto;
 
 import org.slf4j.Logger;
@@ -103,8 +101,6 @@ public class MedicationRequestController {
 
 	private final ValidateMedicationRequestGenerationService validateMedicationRequestGenerationService;
 
-	private final PatientService patientService;
-
 	private final Function<Long, ProfessionalCompleteDto> authorFromDocumentFunction;
 
 
@@ -120,8 +116,7 @@ public class MedicationRequestController {
 									   PdfService pdfService,
 									   FeatureFlagsService featureFlagsService,
 									   DocumentAuthorFinder documentAuthorFinder,
-									   ValidateMedicationRequestGenerationService validateMedicationRequestGenerationService,
-									   PatientService patientService) {
+									   ValidateMedicationRequestGenerationService validateMedicationRequestGenerationService) {
         this.createMedicationRequestService = createMedicationRequestService;
         this.healthcareProfessionalExternalService = healthcareProfessionalExternalService;
         this.createMedicationRequestMapper = createMedicationRequestMapper;
@@ -134,7 +129,6 @@ public class MedicationRequestController {
         this.pdfService = pdfService;
 		this.featureFlagsService = featureFlagsService;
 		this.validateMedicationRequestGenerationService = validateMedicationRequestGenerationService;
-		this.patientService = patientService;
 		this.authorFromDocumentFunction = (Long documentId) -> documentAuthorFinder.getAuthor(documentId);
 	}
 

@@ -10,6 +10,7 @@ import net.pladema.clinichistory.requests.medicationrequests.service.ChangeState
 import net.pladema.clinichistory.requests.medicationrequests.service.CreateMedicationRequestService;
 import net.pladema.clinichistory.requests.medicationrequests.service.GetMedicationRequestInfoService;
 import net.pladema.clinichistory.requests.medicationrequests.service.ListMedicationInfoService;
+import net.pladema.clinichistory.requests.medicationrequests.service.ValidateMedicationRequestGenerationService;
 import net.pladema.patient.controller.service.PatientExternalMedicalCoverageService;
 import net.pladema.patient.controller.service.PatientExternalService;
 import net.pladema.staff.controller.service.HealthcareProfessionalExternalService;
@@ -61,6 +62,9 @@ class MedicationRequestControllerIntegrationTest extends IntegrationController {
 
 	@MockBean
 	private FeatureFlagsService featureFlagsService;
+	
+	@MockBean
+	private ValidateMedicationRequestGenerationService validateMedicationRequestGenerationService;
 
 	@MockBean
 	private DocumentAuthorFinder documentAuthorFinder;
