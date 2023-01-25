@@ -34,7 +34,7 @@ public interface InternmentEpisodeRepository extends JpaRepository<InternmentEpi
 	@Query("SELECT ie.id " +
 			"FROM InternmentEpisode ie " +
 			"WHERE ie.patientId IN (:patientIds)")
-	List<Integer> getInternmentEpisodeFromPatients(@Param("patientIds") List<Integer> patientIds);
+	List<Integer> getInternmentEpisodeIdsFromPatients(@Param("patientIds") List<Integer> patientIds);
 
     @Transactional
     @Modifying

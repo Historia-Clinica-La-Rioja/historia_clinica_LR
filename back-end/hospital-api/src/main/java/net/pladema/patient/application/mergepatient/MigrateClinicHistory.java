@@ -12,10 +12,12 @@ import java.util.List;
 public class MigrateClinicHistory {
 
 	private final MigrateInternmentEpisode migrateInternmentEpisode;
+	private final MigrateOutpatientConsultation migrateOutpatientConsultation;
 
 	public void execute(List<Integer> oldPatients, Integer newPatient) {
+		log.debug("Modify, oldPatients {}, newPatient {}", oldPatients, newPatient);
 
 		migrateInternmentEpisode.execute(oldPatients,newPatient);
-
+		migrateOutpatientConsultation.execute(oldPatients,newPatient);
 	}
 }

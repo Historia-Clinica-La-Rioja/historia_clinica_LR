@@ -1,6 +1,9 @@
 package net.pladema.medicalconsultation.appointment.repository;
 
+import java.util.List;
 import java.util.Optional;
+
+import net.pladema.medicalconsultation.appointment.repository.entity.Appointment;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -30,4 +33,11 @@ public interface DocumentAppointmentRepository extends JpaRepository<DocumentApp
 			"WHERE da.pk.documentId = :documentId "
 	)
 	Optional<DocumentAppointmentBo> getDocumentAppointmentByDocumentId(@Param("documentId")	Long documentId);
+
+	@Transactional(readOnly = true)
+	@Query("SELECT a " +
+			"FROM DocumentAppointment da " +
+			"JOIN Appointment a ON da.pk.appointmentId = a.id " +
+			"WHERE da.pk.documentId IN :documentIds")
+	List<Appointment> getAppointmentFromDocuments(@Param("documentIds") List<Long> documentIds);
 }

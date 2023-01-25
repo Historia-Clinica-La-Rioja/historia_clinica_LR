@@ -42,4 +42,10 @@ public interface SnvsReportRepository extends JpaRepository<SnvsReport, Integer>
 			"WHERE s.institutionId IN :institutionsIds")
 	List<SnvsReport> getAllReportsByInstitutions(List<Integer> allowedInstitutions);
 
+	@Transactional(readOnly = true)
+	@Query("SELECT s " +
+			"FROM SnvsReport s " +
+			"WHERE s.patientId IN :patients")
+	List<SnvsReport> findAllByPatients(@Param("patients") List<Integer> patients);
+
 }

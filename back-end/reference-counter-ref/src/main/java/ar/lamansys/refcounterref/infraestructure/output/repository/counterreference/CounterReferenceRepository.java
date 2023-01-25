@@ -14,6 +14,8 @@ import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.D
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.DocumentType;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.SourceType;
 
+import org.springframework.transaction.annotation.Transactional;
+
 @Repository
 public interface CounterReferenceRepository extends JpaRepository<CounterReference, Integer> {
 
@@ -45,5 +47,11 @@ public interface CounterReferenceRepository extends JpaRepository<CounterReferen
             +"  AND d.typeId = "+ DocumentType.COUNTER_REFERENCE
             +"  AND d.sourceTypeId =" + SourceType.COUNTER_REFERENCE)
     List<CounterReferenceProcedureBo> getProcedures(@Param("counterReferenceId") Integer counterReferenceId);
+
+	@Transactional(readOnly = true)
+	@Query("SELECT cr.id " +
+			"FROM CounterReference cr " +
+			"WHERE cr.patientId IN :patients")
+	List<Integer> getCounterReferenceIdsFromPatients(@Param("patients") List<Integer> patients);
 
 }

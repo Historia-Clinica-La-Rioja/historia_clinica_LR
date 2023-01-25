@@ -1,6 +1,13 @@
 package net.pladema.patient.infrastructure.output.repository;
 
 import java.util.List;
+import java.util.stream.Collectors;
+
+import ar.lamansys.refcounterref.infraestructure.output.repository.counterreference.CounterReferenceRepository;
+import net.pladema.clinichistory.requests.medicationrequests.repository.MedicationRequestRepository;
+
+import net.pladema.clinichistory.requests.servicerequests.repository.ServiceRequestRepository;
+import net.pladema.snvs.infrastructure.output.repository.report.SnvsReportRepository;
 
 import org.springframework.stereotype.Service;
 
@@ -20,6 +27,8 @@ import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.E
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import net.pladema.clinichistory.hospitalization.repository.InternmentEpisodeRepository;
+import net.pladema.clinichistory.outpatient.repository.OutpatientConsultationRepository;
+import net.pladema.medicalconsultation.appointment.repository.DocumentAppointmentRepository;
 import net.pladema.patient.application.port.MergeClinicHistoryStorage;
 import net.pladema.patient.application.port.MigratePatientStorage;
 import net.pladema.patient.infrastructure.output.repository.entity.EMergeTable;
@@ -30,6 +39,11 @@ import net.pladema.patient.infrastructure.output.repository.entity.EMergeTable;
 public class MergeClinicHistoryStorageImpl implements MergeClinicHistoryStorage {
 
 	private final InternmentEpisodeRepository internmentEpisodeRepository;
+	private final OutpatientConsultationRepository outpatientConsultationRepository;
+	private final MedicationRequestRepository medicationRequestRepository;
+	private final ServiceRequestRepository serviceRequestRepository;
+	private final CounterReferenceRepository counterReferenceRepository;
+	private final SnvsReportRepository snvsReportRepository;
 	private final DocumentRepository documentRepository;
 	private final DocumentHealthConditionRepository documentHealthConditionRepository;
 	private final DocumentAllergyIntoleranceRepository documentAllergyIntoleranceRepository;
@@ -42,18 +56,47 @@ public class MergeClinicHistoryStorageImpl implements MergeClinicHistoryStorage 
 	private final DocumentLabRepository documentLabRepository;
 	private final DocumentDiagnosticReportRepository documentDiagnosticReportRepository;
 	private final DocumentIndicationRepository documentIndicationRepository;
+	private final DocumentAppointmentRepository documentAppointmentRepository;
 	private final MigratePatientStorage migratePatientStorage;
 
 	@Override
 	public List<Integer> getInternmentEpisodesIds(List<Integer> oldPatientsIds) {
 		log.debug("Input parameters -> oldPatientsIds{}", oldPatientsIds);
-		return internmentEpisodeRepository.getInternmentEpisodeFromPatients(oldPatientsIds);
+		return internmentEpisodeRepository.getInternmentEpisodeIdsFromPatients(oldPatientsIds);
 	}
 
 	@Override
-	public List<Long> getDocumentsIds(List<Integer> ids) {
+	public List<Integer> getOutpatientConsultationIds(List<Integer> oldPatients) {
+		return outpatientConsultationRepository.getOutpatientConsultationIdsFromPatients(oldPatients);
+	}
+
+	@Override
+	public List<Integer> getMedicationRequestIds(List<Integer> oldPatients) {
+		return medicationRequestRepository.getMedicatoinRequestIdsFromPatients(oldPatients);
+	}
+
+	@Override
+	public List<Integer> getServiceRequestIds(List<Integer> oldPatients) {
+		return serviceRequestRepository.getServiceRequestIdsFromPatients(oldPatients);
+	}
+
+
+	@Override
+	public List<Integer> getCounterReferenceIds(List<Integer> oldPatients) {
+		return counterReferenceRepository.getCounterReferenceIdsFromPatients(oldPatients);
+	}
+
+	@Override
+	public void modifyDocument(List<Long> ids, Integer newPatientId) {
+		log.debug("Document ids to modify {}", ids);
+		documentRepository.findAllById(ids)
+				.forEach(item -> migratePatientStorage.migrateItem(item.getId().intValue(), item.getPatientId(), newPatientId, EMergeTable.DOCUMENT));
+	}
+
+	@Override
+	public List<Long> getDocumentsIds(List<Integer> ids, List<ESourceType> sourceTypes) {
 		log.debug("Input parameters -> ids{}", ids);
-		return documentRepository.getIdsBySourceIdType(ids, ESourceType.HOSPITALIZATION.getId());
+		return documentRepository.getIdsBySourceIdType(ids, sourceTypes.stream().map(sts -> sts.getId()).collect(Collectors.toList()));
 	}
 
 	@Override
@@ -139,4 +182,49 @@ public class MergeClinicHistoryStorageImpl implements MergeClinicHistoryStorage 
 		documentIndicationRepository.getIndicationFromDocuments(ids)
 				.forEach(item -> migratePatientStorage.migrateItem(item.getId(), item.getPatientId(), newPatientId, EMergeTable.INDICATION));
 	}
+
+	@Override
+	public void modifyAppointment(List<Long> ids, Integer newPatientId) {
+		log.debug("Appointment ids to modify {}", ids);
+		documentAppointmentRepository.getAppointmentFromDocuments(ids)
+				.forEach(item -> migratePatientStorage.migrateItem(item.getId(), item.getPatientId(), newPatientId, EMergeTable.APPOINTMENT));
+	}
+
+	@Override
+	public void modifyOutpatientConsultation(List<Integer> ids, Integer newPatientId) {
+		log.debug("Outpatient consultation ids to modify {}", ids);
+		outpatientConsultationRepository.findAllById(ids)
+				.forEach(item -> migratePatientStorage.migrateItem(item.getId(), item.getPatientId(), newPatientId, EMergeTable.OUTPATIENT_CONSULTATION));
+	}
+
+
+	@Override
+	public void modifyMedicationRequest(List<Integer> ids, Integer newPatientId) {
+		log.debug("Medication request ids to modify {}", ids);
+		medicationRequestRepository.findAllById(ids)
+				.forEach(item -> migratePatientStorage.migrateItem(item.getId(), item.getPatientId(), newPatientId, EMergeTable.MEDICATION_REQUEST));
+	}
+
+	@Override
+	public void modifyServiceRequest(List<Integer> ids, Integer newPatientId) {
+		log.debug("Service request ids to modify {}", ids);
+		serviceRequestRepository.findAllById(ids)
+				.forEach(item -> migratePatientStorage.migrateItem(item.getId(), item.getPatientId(), newPatientId, EMergeTable.SERVICE_REQUEST));
+	}
+
+
+	@Override
+	public void modifyCounterReference(List<Integer> ids, Integer newPatientId) {
+		log.debug("Counter reference ids to modify {}",ids);
+		counterReferenceRepository.findAllById(ids)
+				.forEach(item -> migratePatientStorage.migrateItem(item.getId(), item.getPatientId(), newPatientId, EMergeTable.COUNTER_REFERENCE));
+	}
+
+	@Override
+	public void modifySnvsReport(List<Integer> oldPatients, Integer newPatientId) {
+		snvsReportRepository.findAllByPatients(oldPatients)
+				.forEach(item -> migratePatientStorage.migrateItem(item.getId(), item.getPatientId(), newPatientId, EMergeTable.SNVS_REPORT));
+	}
+
+
 }

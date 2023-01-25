@@ -3,28 +3,48 @@ package net.pladema.patient.application.mergepatient;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.ESourceType;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+
 import net.pladema.patient.application.port.MergeClinicHistoryStorage;
+
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
 @Service
 @RequiredArgsConstructor
 @Slf4j
-public class MigrateInternmentEpisode {
+public class MigrateOutpatientConsultation {
 
 	private final MergeClinicHistoryStorage mergeClinicHistoryStorage;
 
 	public void execute(List<Integer> oldPatients, Integer newPatient) {
+		log.debug("Input parameters -> oldPatients{}, newPatient{}",oldPatients,newPatient);
 
-		List<Integer> ieIds = mergeClinicHistoryStorage.getInternmentEpisodesIds(oldPatients);
+		List<Integer> ocIds = mergeClinicHistoryStorage.getOutpatientConsultationIds(oldPatients);
+		List<Integer> mrIds = mergeClinicHistoryStorage.getMedicationRequestIds(oldPatients);
+		List<Integer> srIds = mergeClinicHistoryStorage.getServiceRequestIds(oldPatients);
+		List<Integer> crIds = mergeClinicHistoryStorage.getCounterReferenceIds(oldPatients);
 
-		if ((ieIds != null) && (!ieIds.isEmpty())) {
+		List<Integer> consultationIds = new ArrayList<>() {{
+			addAll(ocIds);
+			addAll(mrIds);
+			addAll(srIds);
+			addAll(crIds);
+		}};
 
-			List<Long> documentsIds = mergeClinicHistoryStorage.getDocumentsIds(ieIds, Arrays.asList(
-					ESourceType.HOSPITALIZATION
-			));
+		if (!consultationIds.isEmpty()) {
+
+			List<Long> documentsIds = mergeClinicHistoryStorage.getDocumentsIds(consultationIds, Arrays.asList(
+					ESourceType.OUTPATIENT,
+					ESourceType.NURSING,
+					ESourceType.RECIPE,
+					ESourceType.ORDER,
+					ESourceType.IMMUNIZATION,
+					ESourceType.COUNTER_REFERENCE));
+
+			log.debug("Documents to search and modify documentsIds{}", documentsIds);
 			if ((documentsIds != null) && (!documentsIds.isEmpty())) {
 
 				mergeClinicHistoryStorage.modifyHealthCondition(documentsIds, newPatient);
@@ -37,10 +57,15 @@ public class MigrateInternmentEpisode {
 				mergeClinicHistoryStorage.modifyDiagnosticReport(documentsIds, newPatient);
 				mergeClinicHistoryStorage.modifyIndication(documentsIds, newPatient);
 
-				mergeClinicHistoryStorage.modifyInternmentEpisode(ieIds, newPatient);
-
 				mergeClinicHistoryStorage.modifyDocument(documentsIds,newPatient);
 			}
+
+			mergeClinicHistoryStorage.modifyOutpatientConsultation(ocIds,newPatient);
+			mergeClinicHistoryStorage.modifyMedicationRequest(mrIds,newPatient);
+			mergeClinicHistoryStorage.modifyServiceRequest(srIds,newPatient);
+			mergeClinicHistoryStorage.modifyCounterReference(crIds,newPatient);
+
+			mergeClinicHistoryStorage.modifySnvsReport(oldPatients, newPatient);
 		}
 
 	}
