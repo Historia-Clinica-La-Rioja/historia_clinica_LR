@@ -1868,6 +1868,12 @@ export interface MedicationInteroperabilityDto {
     unitTime: string;
 }
 
+export interface ModalityDto {
+    acronym: string;
+    description: string;
+    id: number;
+}
+
 export interface MqttMetadataDto {
     message: string;
     qos: number;
