@@ -25,7 +25,7 @@
 			</button>
 		</div>
 		<div *ngIf="!patientDocuments.hasEpicrisis && !physicalDischargeDate">
-			<button id="btnPaseCama" name="btnPaseCama" mat-flat-button color="primary" *appHasRole="['ADMINISTRATIVO']"
+			<button id="btnPaseCama" name="btnPaseCama" mat-flat-button color="primary" *appHasRole="['ADMINISTRATIVO, ERole.ADMINISTRATIVO_RED_DE_IMAGENES']"
 					(click)="goToPaseCama()">
 							<span class="uppercase"
 								  [translate]="'internaciones.internacion-paciente.actions.RELOCATE_PATIENT_BED'"></span>

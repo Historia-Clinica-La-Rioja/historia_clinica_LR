@@ -65,7 +65,7 @@ export class InternmentEpisodeSummaryComponent implements OnInit {
 		this.permissionsService.contextAssignments$().subscribe((userRoles: ERole[]) => {
 			this.currentUserHasPermissionToAccessDocuments = anyMatch<ERole>(userRoles, [ERole.ADMINISTRATIVO]);
 			this.currentUserIsAllowToDoAPhysicalDischarge = (anyMatch<ERole>(userRoles, [ERole.ADMINISTRADOR_DE_CAMAS]) &&
-				(anyMatch<ERole>(userRoles, [ERole.ADMINISTRATIVO, ERole.ENFERMERO])));
+				(anyMatch<ERole>(userRoles, [ERole.ADMINISTRATIVO, ERole.ENFERMERO, ERole.ADMINISTRATIVO_RED_DE_IMAGENES])));
 		});
 		this.loadPhysicalDischarge();
 		this.internmentSummaryFacadeService.setInternmentEpisodeId(this.internmentEpisode.id);

@@ -18,7 +18,7 @@
 					{{ 'guardia.episode.medical_discharge.TITLE' | translate | uppercase }}
 				</button>
 			</div>
-			<div *appHasRole="['ADMINISTRATIVO']">
+			<div *appHasRole="['ADMINISTRATIVO', 'ADMINISTRATIVO_RED_DE_IMAGENES']">
 				<button *ngIf="episodeState === STATES.CON_ALTA_MEDICA" id="administrative-discharge" mat-raised-button
 					color="primary" (click)="goToAdministrativeDischarge()">
 					{{ 'guardia.episode.administrative_discharge.TITLE' | translate | uppercase }}

@@ -11,7 +11,7 @@
 			></app-search-create>
 		</div>
 	</section>
-	<section *appHasRole="['ADMINISTRATIVO']">
+	<section *appHasRole="['ADMINISTRATIVO', 'ADMINISTRATIVO_RED_DE_IMAGENES']">
 		<h2 class="page-title">{{ 'pacientes.home.TITLE_SEARCH' | translate}}</h2>
 		<div  *ngIf="!ffOfCardsIsOn else internmentCard" fxLayout="row">
 			<app-internment-patient-table fxFlex="100%" [redirect]="redirect"></app-internment-patient-table>

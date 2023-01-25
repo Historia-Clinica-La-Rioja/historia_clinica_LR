@@ -43,7 +43,7 @@ const routes: Routes = [
 			},
 		],
 		canActivate: [RoleGuard],
-		data: { allowedRoles: [ERole.ADMINISTRATIVO, ERole.ADMINISTRADOR_INSTITUCIONAL_BACKOFFICE] }
+		data: { allowedRoles: [ERole.ADMINISTRATIVO, ERole.ADMINISTRADOR_INSTITUCIONAL_BACKOFFICE, ERole.ADMINISTRATIVO_RED_DE_IMAGENES] }
 	}
 ];
 

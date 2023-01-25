@@ -19,7 +19,7 @@
 		<div *ngFor="let file of personFiles" fxFlex="100%" fxFlexFill>
 			<div fxLayout="column" fxLayoutAlign="space-around start">
 
-				<ng-container *appHasRole="['ADMINISTRATIVO', 'ADMINISTRADOR_INSTITUCIONAL_BACKOFFICE']">
+				<ng-container *appHasRole="['ADMINISTRATIVO', 'ADMINISTRADOR_INSTITUCIONAL_BACKOFFICE', 'ADMINISTRATIVO_RED_DE_IMAGENES']">
 					<a mat-button color="primary"  (click)="download(file.fileId,file.fileName)">{{file.fileName}}</a>
 				</ng-container>
 				<ng-template>

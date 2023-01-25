@@ -59,7 +59,7 @@ const routes: Routes = [{
 	canActivate: [RoleGuard, FeatureFlagGuard],
 	data: {
 		allowedRoles: [ERole.ADMINISTRADOR, ERole.ADMINISTRATIVO, ERole.ENFERMERO, ERole.ESPECIALISTA_MEDICO,
-		ERole.PROFESIONAL_DE_SALUD, ERole.ROOT],
+			ERole.PROFESIONAL_DE_SALUD, ERole.ROOT, ERole.ADMINISTRATIVO_RED_DE_IMAGENES],
 		featureFlag: AppFeature.HABILITAR_MODULO_GUARDIA
 	}
 }];

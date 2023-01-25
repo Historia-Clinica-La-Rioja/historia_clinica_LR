@@ -245,8 +245,8 @@
 											{{ 'guardia.home.episodes.episode.actions.atender.TITLE' | translate }}
 										</button>
 
-										<ng-container *appHasRole="['ADMINISTRATIVO']">
-											<button id="finalizar-ausencia" mat-menu-item
+									<ng-container *appHasRole="['ADMINISTRATIVO', 'ADMINISTRATIVO_RED_DE_IMAGENES']" >
+										<button id="finalizar-ausencia" mat-menu-item
 												*ngIf="episode.state.id === estadosEpisodio.EN_ESPERA"
 												(click)="finalizar(episode.id)">
 												{{ 'guardia.home.episodes.episode.actions.finalizar_ausencia.TITLE' |

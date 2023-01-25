@@ -6,7 +6,7 @@
 		<span class="no-information" [translate]="'pacientes.user_data.NO_INFO'"></span>
 	</ng-template>
 
-	<div *appHasRole="['ADMINISTRATIVO']">
+	<div *appHasRole="['ADMINISTRATIVO', 'ADMINISTRATIVO_RED_DE_IMAGENES']">
 		<button *ngIf="(!internmentEpisode?.patientHospitalized && !internmentEpisode?.id)" mat-raised-button
 			color="primary" (click)="goNewInternment()">
 			<span class="uppercase"> {{ 'pacientes.profile.INITIATE_INTERNMENT' | translate }} </span>
@@ -21,13 +21,13 @@
 					<div header class="header">
 						<app-patient-type-logo [patientTypeData]="patientTypeData"></app-patient-type-logo>
 						<ng-container>
-							<button mat-icon-button color="primary" *appHasRole="['ADMINISTRATIVO']"
+							<button mat-icon-button color="primary" *appHasRole="['ADMINISTRATIVO', 'ADMINISTRATIVO_RED_DE_IMAGENES']"
 								(click)="goToEditProfile()">
 								<mat-icon>edit</mat-icon>
 							</button>
 						</ng-container>
 					</div>
-					<div content *appHasRole="['ADMINISTRATIVO', 'ADMINISTRADOR_INSTITUCIONAL_BACKOFFICE']">
+					<div content *appHasRole="['ADMINISTRATIVO', 'ADMINISTRADOR_INSTITUCIONAL_BACKOFFICE', 'ADMINISTRATIVO_RED_DE_IMAGENES']">
 						<div *ngIf="auditablePatientInfo" id="marked_for_audit_section">
 							<div fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="5px" class="title">
 								<mat-icon>error</mat-icon>
@@ -48,7 +48,7 @@
 							</div>
 						</div>
 					</div>
-					<div content *appHasRole="['ADMINISTRATIVO']">
+					<div content *appHasRole="['ADMINISTRATIVO', 'ADMINISTRATIVO_RED_DE_IMAGENES']">
 						<button mat-stroked-button color="primary" class="reports" *ngIf="downloadReportIsEnabled"
 							(click)="reports()">
 							<span class="uppercase"> {{ 'pacientes.profile.REPORTS' | translate }} </span>
@@ -183,7 +183,7 @@
 					</mat-card>
 				</div>
 			</div>
-			<div *appHasRole="['ADMINISTRATIVO']" fxLayout="column" fxLayoutGap="20px">
+			<div *appHasRole="['ADMINISTRATIVO', 'ADMINISTRATIVO_RED_DE_IMAGENES']" fxLayout="column" fxLayoutGap="20px">
 				<app-summary-card *ngIf="internmentEpisodeSummary" id="internment_summary_card"
 					[header]="internacionSummary">
 					<mat-card-content>
@@ -248,7 +248,7 @@
 						</div>
 					</mat-card-content>
 				</mat-card>
-				<app-assigned-appointments [patientId]="patientId" (newAppointmentRequired)="newAppointment()">
+				<app-assigned-appointments *appHasRole="['ADMINISTRATIVO']" [patientId]="patientId" (newAppointmentRequired)="newAppointment()">
 				</app-assigned-appointments>
 			</div>
 		</div>
