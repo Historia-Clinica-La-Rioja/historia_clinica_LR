@@ -382,6 +382,20 @@
                     "ADD_CHARACTERS": "Ingrese al menos 3 caracteres",
                     "ADD_NEW_PROBLEM": "+ Agregar nuevo problema asociado"
                 },
+                "validators_dialog": {
+                    "TITLE": "Sin permiso para recetar",
+                    "SUBTITLE": "Para realizar una receta digital es necesario resolver las siguientes situaciones:",
+                    "2FA_TITLE_DISABLED": "Doble factor de autentificación desactivado",
+                    "2FA_TITLE_ENABLED": "Doble factor de autentificación activado",
+                    "2FA_CFG": "Configurar autenficación por doble factor",
+                    "2FA_DESCRIPTION": "Su doble factor de autentificación se encuentra desactivado, para activarlo dirijase a la pantalla “Mi cuenta” y elija la opción:",
+                    "LICENSE_NUMBER_TITLE_OVERDUE": "Matrícula vencida",
+                    "LICENSE_NUMBER_TITLE_VALID": "Matrícula vigente",
+                    "LICENSE_NUMBER_DESCRIPTION": "Sus matriculas se encuentran vencidas por favor contactarse con 045-8411155 para consultar por el estado de sus matrículas.",
+                    "PROFESSIONAL_DATA_TITLE_INCOMPLETE": "Datos de contacto incompletos",
+                    "PROFESSIONAL_DATA_TITLE_COMPLETE": "Datos de contacto completos",
+                    "PROFESSIONAL_DATA_DESCRIPTION": "Para recetar necesita tener su mail y teléfono cargados en el sistema, comuniquese con un administrador insitucional para que actualice los mismos."
+                },
                 "new_prescription_dialog": {
                     "MEDICATION_TITLE": "Nueva medicación",
                     "ADD_MEDICATION_LABEL": "Agregar medicación",

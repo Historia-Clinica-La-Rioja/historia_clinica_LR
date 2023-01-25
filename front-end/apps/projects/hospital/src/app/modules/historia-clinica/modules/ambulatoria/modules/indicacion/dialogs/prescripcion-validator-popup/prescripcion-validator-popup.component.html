@@ -1,0 +1,69 @@
+<div mat-dialog-content>
+    <mat-icon class="error-outline" color="warn">error_outline</mat-icon>
+    <header>
+        <h1 [translate]="'ambulatoria.paciente.ordenes_prescripciones.validators_dialog.TITLE'"></h1>
+        <h2 [translate]="'ambulatoria.paciente.ordenes_prescripciones.validators_dialog.SUBTITLE'"></h2>
+    </header>
+    
+    <div class="validators">
+        <section *ngIf="this.data.twoFactorAutentication else noTwoFactorAutentication">
+            <mat-icon class="gray">check_circle_outline</mat-icon>
+            <div>
+                <span class="gray" [translate]="'ambulatoria.paciente.ordenes_prescripciones.validators_dialog.2FA_TITLE_ENABLED'"></span>
+            </div>
+        </section>
+        <section *ngIf="this.data.licenseNumber else noLicenseNumber">
+            <mat-icon class="gray">check_circle_outline</mat-icon>
+            <div>
+                <span class="gray" [translate]="'ambulatoria.paciente.ordenes_prescripciones.validators_dialog.LICENSE_NUMBER_TITLE_VALID'"></span>
+            </div>
+        </section>
+        <section *ngIf="this.data.professionalData else noProfessionalData">
+            <mat-icon class="gray">check_circle_outline</mat-icon>
+            <div>
+                <span class="gray" [translate]="'ambulatoria.paciente.ordenes_prescripciones.validators_dialog.PROFESSIONAL_DATA_TITLE_COMPLETE'"></span>
+            </div>
+        </section>
+    </div>
+</div>
+
+<ng-template #noTwoFactorAutentication>
+    <section>
+        <mat-icon color="warn">cancel</mat-icon>
+        <div>
+            <span class="warn" [translate]="'ambulatoria.paciente.ordenes_prescripciones.validators_dialog.2FA_TITLE_DISABLED'"></span>
+            <p [translate]="'ambulatoria.paciente.ordenes_prescripciones.validators_dialog.2FA_DESCRIPTION'"></p>
+            <button mat-button color="primary" (click)="toAccount()">
+                <span [translate]="'ambulatoria.paciente.ordenes_prescripciones.validators_dialog.2FA_CFG'"></span>
+            </button>
+        </div>
+    </section>
+</ng-template>
+
+<ng-template #noLicenseNumber>
+    <section>
+        <mat-icon color="warn">cancel</mat-icon>
+        <div>
+            <span class="warn" [translate]="'ambulatoria.paciente.ordenes_prescripciones.validators_dialog.LICENSE_NUMBER_TITLE_OVERDUE'"></span>
+            <p [translate]="'ambulatoria.paciente.ordenes_prescripciones.validators_dialog.LICENSE_NUMBER_DESCRIPTION'"></p>
+        </div>
+    </section>
+</ng-template>
+
+<ng-template #noProfessionalData>
+    <section>
+        <mat-icon color="warn">cancel</mat-icon>
+        <div>
+            <span class="warn" [translate]="'ambulatoria.paciente.ordenes_prescripciones.validators_dialog.PROFESSIONAL_DATA_TITLE_INCOMPLETE'"></span>
+            <p [translate]="'ambulatoria.paciente.ordenes_prescripciones.validators_dialog.PROFESSIONAL_DATA_DESCRIPTION'"></p>
+        </div>
+    </section>
+</ng-template>
+
+<div fxLayout="row" fxLayoutAlign="end start">
+	<button mat-flat-button color="primary" type="submit" fxFlexFill.xs mat-dialog-close="true">
+		<span class="uppercase">{{'buttons.ACCEPT' | translate}}</span>
+	</button>
+</div>
+
+

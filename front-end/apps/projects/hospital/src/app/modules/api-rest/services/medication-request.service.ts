@@ -72,4 +72,9 @@ export class MedicationRequestService {
 			{ responseType: 'blob' }
 		);
 	}
+
+	validateProfessional(patientId: number): Observable<boolean> {
+		const url = `${environment.apiBase}/institutions/${this.contextService.institutionId}/patient/${patientId}/medication-requests/validate`;
+		return this.http.get<boolean>(url);
+	}
 }

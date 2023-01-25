@@ -87,6 +87,10 @@ export class PrescripcionesService {
 		this.serviceRequestService.download(patientId, fileId, fileName);
 	}
 
+	validateProfessional(patientId: number): Observable<boolean> {
+		return this.medicationRequestService.validateProfessional(patientId);
+	}
+
 	toNewPrescriptionItem(prescriptionType: PrescriptionTypes, prescriptionItem: any): NewPrescriptionItem {
 		switch (prescriptionType) {
 			case PrescriptionTypes.MEDICATION:

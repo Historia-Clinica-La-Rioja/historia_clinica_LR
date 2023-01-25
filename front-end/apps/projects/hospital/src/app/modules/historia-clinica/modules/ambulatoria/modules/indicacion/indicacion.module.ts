@@ -27,6 +27,7 @@ import { GeneralNursingRecordComponent } from './components/general-nursing-reco
 import { SpecificNursingRecordComponent } from './components/specific-nursing-record/specific-nursing-record.component';
 import { RegisterNursingRecordComponent } from './dialogs/register-nursing-record/register-nursing-record.component';
 import { InternmentIndicationDetailComponent } from './dialogs/internment-indication-detail/internment-indication-detail.component';
+import { PrescripcionValidatorPopupComponent } from './dialogs/prescripcion-validator-popup/prescripcion-validator-popup.component';
 
 @NgModule({
 	declarations: [
@@ -52,6 +53,7 @@ import { InternmentIndicationDetailComponent } from './dialogs/internment-indica
 		PharmacoComponent,
 		RegisterNursingRecordComponent,
 		InternmentIndicationDetailComponent,
+  PrescripcionValidatorPopupComponent,
 	],
 	exports: [
 		CardMedicacionesComponent,
