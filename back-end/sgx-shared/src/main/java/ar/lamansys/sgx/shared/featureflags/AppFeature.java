@@ -131,6 +131,9 @@ public enum AppFeature implements Feature {
 	
 	@Label("Indica si esta habilitada la validacion de matriculas mediante SISA-REFEPS")
 	HABILITAR_VALIDACION_MATRICULAS_SISA,
+	
+	@Label("Indica si esta habilitada la emision de recetas digitales")
+	HABILITAR_RECETA_DIGITAL
 	;
 
     public boolean isActive() {
