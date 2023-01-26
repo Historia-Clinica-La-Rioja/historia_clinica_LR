@@ -3325,6 +3325,17 @@ export interface VaccineConditionsDto {
     schemes: VaccineSchemeDto[];
 }
 
+export interface VaccineConsultationInfoDto {
+    billable: boolean;
+    clinicalSpecialtyId: number;
+    doctorId: number;
+    id: number;
+    institutionId: number;
+    patientId: number;
+    patientMedicalCoverageId: number;
+    performedDate: Date;
+}
+
 export interface VaccineDoseInfoDto {
     description: string;
     order: number;

@@ -26,6 +26,7 @@ public class MigrateOutpatientConsultation {
 		List<Integer> ncIds = mergeClinicHistoryStorage.getNursingConsultationIds(oldPatients);
 		List<Integer> mrIds = mergeClinicHistoryStorage.getMedicationRequestIds(oldPatients);
 		List<Integer> srIds = mergeClinicHistoryStorage.getServiceRequestIds(oldPatients);
+		List<Integer> vcIds = mergeClinicHistoryStorage.getVaccineConsultationIds(oldPatients);
 		List<Integer> crIds = mergeClinicHistoryStorage.getCounterReferenceIds(oldPatients);
 
 		List<Integer> consultationIds = new ArrayList<>() {{
@@ -33,6 +34,7 @@ public class MigrateOutpatientConsultation {
 			addAll(ncIds);
 			addAll(mrIds);
 			addAll(srIds);
+			addAll(vcIds);
 			addAll(crIds);
 		}};
 
@@ -66,6 +68,7 @@ public class MigrateOutpatientConsultation {
 			mergeClinicHistoryStorage.modifyNursingConsultation(ncIds, newPatient);
 			mergeClinicHistoryStorage.modifyMedicationRequest(mrIds,newPatient);
 			mergeClinicHistoryStorage.modifyServiceRequest(srIds,newPatient);
+			mergeClinicHistoryStorage.modifyVaccineConsultation(vcIds,newPatient);
 			mergeClinicHistoryStorage.modifyCounterReference(crIds,newPatient);
 
 			mergeClinicHistoryStorage.modifySnvsReport(oldPatients, newPatient);

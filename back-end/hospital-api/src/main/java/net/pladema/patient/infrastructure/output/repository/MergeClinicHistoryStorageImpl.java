@@ -5,6 +5,8 @@ import java.util.stream.Collectors;
 
 import ar.lamansys.refcounterref.infraestructure.output.repository.counterreference.CounterReferenceRepository;
 import ar.lamansys.sgh.shared.infrastructure.input.service.nursing.SharedNursingConsultationPort;
+import ar.lamansys.sgh.shared.infrastructure.input.service.immunization.SharedImmunizationPort;
+
 import net.pladema.clinichistory.requests.medicationrequests.repository.MedicationRequestRepository;
 
 import net.pladema.clinichistory.requests.servicerequests.repository.ServiceRequestRepository;
@@ -44,6 +46,7 @@ public class MergeClinicHistoryStorageImpl implements MergeClinicHistoryStorage 
 	private final MedicationRequestRepository medicationRequestRepository;
 	private final ServiceRequestRepository serviceRequestRepository;
 	private final SharedNursingConsultationPort sharedNursingConsultationPort;
+	private final SharedImmunizationPort sharedImmunizationPort;
 	private final CounterReferenceRepository counterReferenceRepository;
 	private final SnvsReportRepository snvsReportRepository;
 	private final DocumentRepository documentRepository;
@@ -86,7 +89,11 @@ public class MergeClinicHistoryStorageImpl implements MergeClinicHistoryStorage 
 	public List<Integer> getNursingConsultationIds(List<Integer> oldPatients) {
 		return sharedNursingConsultationPort.getNursingConsultationIdsFromPatients(oldPatients);
 	}
-
+	
+	@Override
+	public List<Integer> getVaccineConsultationIds(List<Integer> oldPatients) {
+		return sharedImmunizationPort.getVaccineConsultationIdsFromPatients(oldPatients);
+	}
 
 	@Override
 	public List<Integer> getCounterReferenceIds(List<Integer> oldPatients) {
@@ -226,6 +233,12 @@ public class MergeClinicHistoryStorageImpl implements MergeClinicHistoryStorage 
 				.forEach(item -> migratePatientStorage.migrateItem(item.getId(), item.getPatientId(), newPatientId, EMergeTable.NURSING_CONSULTATION));
 	}
 
+	@Override
+	public void modifyVaccineConsultation(List<Integer> ids, Integer newPatientId) {
+		log.debug("Vaccine consultation ids to modify {}", ids);
+		sharedImmunizationPort.findAllVaccineConsultationByIds(ids)
+				.forEach(item -> migratePatientStorage.migrateItem(item.getId(), item.getPatientId(), newPatientId, EMergeTable.VACCINE_CONSULTATION));
+	}
 
 	@Override
 	public void modifyCounterReference(List<Integer> ids, Integer newPatientId) {
