@@ -1,0 +1,23 @@
+<h2 class="subtitle" [translate]="'ambulatoria.paciente.nueva-consulta.reference-dialog.DESTINATION'"></h2>
+<div class="typeahead-field">
+    <app-typeahead id="provinceDestination" [options]="provinces" [externalSetValue]="defaultProvince"
+        [titleInput]="'ambulatoria.paciente.nueva-consulta.reference-dialog.PROVINCE' | translate"
+        (selectionChange)="onProvinceSelectionChange($event)">
+    </app-typeahead>
+</div>
+
+<div class="typeahead-field">
+    <app-typeahead id="departmentDestination" [options]="departments" [externalSetValue]="defaultDepartment"
+        [titleInput]="'ambulatoria.paciente.nueva-consulta.reference-dialog.DEPARTMENT' | translate"
+        [disabled]="departmentDisable" (selectionChange)="onDepartmentSelectionChange($event)">
+    </app-typeahead>
+</div>
+
+<div class="typeahead-field">
+    <app-typeahead id="institutionDestination" [options]="institutions" [externalSetValue]="defaultInstitution"
+        [titleInput]="'ambulatoria.paciente.nueva-consulta.reference-dialog.PLACEHOLDER_INSTITUTION' | translate"
+        (selectionChange)="onInstitutionSelectionChange($event)" [required]=true>
+    </app-typeahead>
+    <mat-error class="error-message" *ngIf="!institutionDestinationId && submitForm"
+        [translate]="'forms.REQUIRED'"></mat-error>
+</div>

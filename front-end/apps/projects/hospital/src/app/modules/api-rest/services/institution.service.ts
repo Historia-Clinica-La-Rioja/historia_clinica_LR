@@ -50,9 +50,6 @@ export class InstitutionService {
 	}
 
 	public findByProvinceId (provinceId: number): Observable<InstitutionBasicInfoDto[]> {
-		if (!provinceId) {
-			return of([]);
-		}
 		//return this.http.get<InstitutionBasicInfoDto[]>(`${environment.apiBase}/institution/province/${provinceId}`);
 		return this.getAllInstitutions()
 	}

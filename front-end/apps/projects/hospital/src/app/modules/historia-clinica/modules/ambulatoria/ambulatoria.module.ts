@@ -66,6 +66,7 @@ import { ClapModule } from './modules/clap/clap.module';
 import { GuardiaComponent } from './components/guardia/guardia.component';
 import { GuardiaModule } from '../guardia/guardia.module';
 import { EnviarRecetaDigitalPorEmailComponent } from './dialogs/enviar-receta-digital-por-email/enviar-receta-digital-por-email.component';
+import { DestinationInstitutionReferenceComponent } from './components/destination-institution-reference/destination-institution-reference.component';
 
 @NgModule({
 	declarations: [
@@ -114,6 +115,7 @@ import { EnviarRecetaDigitalPorEmailComponent } from './dialogs/enviar-receta-di
 		ClinicalHistoryActionsComponent,
 		GuardiaComponent,
     	EnviarRecetaDigitalPorEmailComponent,
+    	DestinationInstitutionReferenceComponent,
 	],
 	imports: [
 		CommonModule,
