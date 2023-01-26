@@ -20,7 +20,7 @@ public class ProfessionalPharmacoServiceImpl implements ProfessionalPharmacoServ
 	private final SharedIndicationPort sharedIndicationPort;
 	private final HealthcareProfessionalExternalService healthcareProfessionalExternalService;
 
-	@Value("${indication.medication.most-frequent.max:15}")
+	@Value("${app.indication.medication.most-frequent.max:15}")
 	private Integer indicationMedicationMostFrequentMax;
 
 	@Override
