@@ -127,7 +127,10 @@ public enum AppFeature implements Feature {
 	HABILITAR_DESARROLLO_RED_IMAGENES,
 
 	@Label("Indica si esta habilitada la integración con SIP PLUS")
-	HABILITAR_SIP_PLUS_EN_DESARROLLO
+	HABILITAR_SIP_PLUS_EN_DESARROLLO,
+	
+	@Label("Indica si esta habilitada la validacion de matriculas mediante SISA-REFEPS")
+	HABILITAR_VALIDACION_MATRICULAS_SISA,
 	;
 
     public boolean isActive() {

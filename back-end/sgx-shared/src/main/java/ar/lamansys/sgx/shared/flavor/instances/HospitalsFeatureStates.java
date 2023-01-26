@@ -53,6 +53,7 @@ public class HospitalsFeatureStates implements InitialFeatureStates {
 		map.put(AppFeature.HABILITAR_MAIL_RECUPERAR_CONTRASEÑA, true);
 		map.put(AppFeature.HABILITAR_DESARROLLO_RED_IMAGENES, false);
 		map.put(AppFeature.HABILITAR_SIP_PLUS_EN_DESARROLLO, false);
+		map.put(AppFeature.HABILITAR_VALIDACION_MATRICULAS_SISA, false);
 	}
 
 	@Override
