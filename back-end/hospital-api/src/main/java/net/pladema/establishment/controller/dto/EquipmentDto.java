@@ -14,4 +14,6 @@ public class EquipmentDto implements Serializable {
 	private Integer id;
 
     private String name;
+
+	private Integer modalityId;
 }

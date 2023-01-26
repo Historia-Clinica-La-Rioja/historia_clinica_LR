@@ -1151,6 +1151,7 @@ export interface EquipmentDiaryOpeningHoursDto extends Overlapping<EquipmentDiar
 
 export interface EquipmentDto extends Serializable {
     id: number;
+    modalityId: number;
     name: string;
 }
 

@@ -1,13 +1,9 @@
 package net.pladema.establishment.service.impl;
 
 import net.pladema.establishment.repository.EquipmentRepository;
-import net.pladema.establishment.repository.SectorRepository;
 import net.pladema.establishment.repository.entity.Equipment;
-import net.pladema.establishment.repository.entity.Sector;
 import net.pladema.establishment.service.EquipmentService;
-import net.pladema.establishment.service.SectorService;
 import net.pladema.establishment.service.domain.EquipmentBO;
-import net.pladema.establishment.service.domain.SectorBO;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -53,6 +49,16 @@ public  class EquipmentServiceImpl implements EquipmentService {
 		result.setOrchestratorId(equipment.getOrchestratorId());
 		result.setPacServerId(equipment.getPacServerId());
 		LOG.debug(OUTPUT, result);
+		return result;
+	}
+
+
+	@Override
+	public List<EquipmentBO> getEquipmentByInstitution(Integer institutionId){
+		LOG.debug("Input parameter ->, institutionId {}", institutionId);
+		List <Equipment> equipments = equipmentRepository.getEquipmentByInstitution(institutionId);
+		List<EquipmentBO> result = equipments.stream().map(this::createEquipmentBoInstance).collect(Collectors.toList());
+		LOG.trace(OUTPUT, result);
 		return result;
 	}
 }
