@@ -34,7 +34,7 @@ public class GeneralReportsController {
 
 	private final LocalDateMapper localDateMapper;
 
-	public GeneralReportsController(QueryFactoryGR queryFactoryGR, ExcelServiceGR excelServiceGR, LocalDateMapper localDateMapper){
+	public GeneralReportsController(QueryFactoryGR queryFactoryGR, ExcelServiceGR excelServiceGR, LocalDateMapper localDateMapper) {
 		this.queryFactoryGR = queryFactoryGR;
 		this.excelServiceGR = excelServiceGR;
 		this.localDateMapper = localDateMapper;
@@ -42,17 +42,12 @@ public class GeneralReportsController {
 
 	@GetMapping(value = "/{institutionId}/dailyEmergency")
 	@PreAuthorize("hasPermission(#institutionId, 'ADMINISTRADOR_INSTITUCIONAL_BACKOFFICE, PERSONAL_DE_ESTADISTICA')")
-	public @ResponseBody
-	void getDailyEmergencyExcelReport(
-			@PathVariable Integer institutionId,
-			HttpServletResponse response
-	)throws Exception{
+	public @ResponseBody void getDailyEmergencyExcelReport(@PathVariable Integer institutionId, HttpServletResponse response) throws Exception {
 		LOG.debug("Se creará el excel {}", institutionId);
 		LOG.debug("Inputs parameters -> institutionId {}, fromDate {}, toDate{}", institutionId);
 
 		String title = "Emergencias";
-		String[] headers = new String[] {"Fecha de creación", "ID", "Institución", "Ambulancia", "Oficina", "Sector", "Intervención Policial", "Fecha de atención", "Hora de atención", "Identificación", "Apellidos", "Nombres",
-				"Obra social", "Medio de Ingreso", "Estado", "Tipo", "Notas del Triage", "Triage", "Fecha de Alta", "Ambulancia de Alta", "Tipo de Alta", "Salida"};
+		String[] headers = new String[]{"Fecha de creación", "ID", "Institución", "Ambulancia", "Oficina", "Sector", "Intervención Policial", "Fecha de atención", "Hora de atención", "Identificación", "Apellidos", "Nombres", "Obra social", "Medio de Ingreso", "Estado", "Tipo", "Notas del Triage", "Triage", "Fecha de Alta", "Ambulancia de Alta", "Tipo de Alta", "Salida"};
 
 		IWorkbook wb = this.excelServiceGR.buildExcelEmergencias(title, headers, this.queryFactoryGR.queryEmergencias(institutionId));
 
@@ -69,19 +64,12 @@ public class GeneralReportsController {
 
 	@GetMapping(value = "/{institutionId}/diabetics")
 	@PreAuthorize("hasPermission(#institutionId, 'ADMINISTRADOR_INSTITUCIONAL_BACKOFFICE, PERSONAL_DE_ESTADISTICA')")
-	public @ResponseBody
-	void getDiabeticsExcelReport(
-			@PathVariable Integer institutionId,
-			@RequestParam(value="fromDate", required = true) String fromDate,
-			@RequestParam(value="toDate", required = true) String toDate,
-			HttpServletResponse response
-	)throws Exception{
+	public @ResponseBody void getDiabeticsExcelReport(@PathVariable Integer institutionId, @RequestParam(value = "fromDate", required = true) String fromDate, @RequestParam(value = "toDate", required = true) String toDate, HttpServletResponse response) throws Exception {
 		LOG.debug("Se creará el excel {}", institutionId);
 		LOG.debug("Inputs parameters -> institutionId {}, fromDate {}, toDate{}", institutionId);
 
 		String title = "Diabéticos Confirmados";
-		String[] headers = new String[] {"ID", "Institución", "Fecha", "Prestador", "DNI-Prestador", "Paciente", "DNI-Paciente", "Problema", "Motivos",
-			"Hemoglobina Glicosilada", "Medicación"};
+		String[] headers = new String[]{"ID", "Institución", "Fecha", "Prestador", "DNI-Prestador", "Paciente", "DNI-Paciente", "Problema", "Motivos", "Hemoglobina Glicosilada", "Medicación"};
 
 		LocalDate startDate = localDateMapper.fromStringToLocalDate(fromDate);
 		LocalDate endDate = localDateMapper.fromStringToLocalDate(toDate);
@@ -101,19 +89,12 @@ public class GeneralReportsController {
 
 	@GetMapping(value = "/{institutionId}/hypertensive")
 	@PreAuthorize("hasPermission(#institutionId, 'ADMINISTRADOR_INSTITUCIONAL_BACKOFFICE, PERSONAL_DE_ESTADISTICA')")
-	public @ResponseBody
-	void getHypertensiveExcelReport(
-			@PathVariable Integer institutionId,
-			@RequestParam(value="fromDate", required = true) String fromDate,
-			@RequestParam(value="toDate", required = true) String toDate,
-			HttpServletResponse response
-	)throws Exception{
+	public @ResponseBody void getHypertensiveExcelReport(@PathVariable Integer institutionId, @RequestParam(value = "fromDate", required = true) String fromDate, @RequestParam(value = "toDate", required = true) String toDate, HttpServletResponse response) throws Exception {
 		LOG.debug("Se creará el excel {}", institutionId);
 		LOG.debug("Inputs parameters -> institutionId {}, fromDate {}, toDate{}", institutionId);
 
 		String title = "Hipertensos Confirmados";
-		String[] headers = new String[] {"ID", "Institución", "Fecha", "Prestador", "DNI-Prestador", "Paciente", "DNI-Paciente", "Problema", "Motivos",
-				"Presión Arterial", "Medicación"};
+		String[] headers = new String[]{"ID", "Institución", "Fecha", "Prestador", "DNI-Prestador", "Paciente", "DNI-Paciente", "Problema", "Motivos", "Presión Arterial", "Medicación"};
 
 		LocalDate startDate = localDateMapper.fromStringToLocalDate(fromDate);
 		LocalDate endDate = localDateMapper.fromStringToLocalDate(toDate);
@@ -133,25 +114,17 @@ public class GeneralReportsController {
 
 	@GetMapping(value = "/{institutionId}/patientEmergencies")
 	@PreAuthorize("hasPermission(#institutionId, 'ADMINISTRADOR_INSTITUCIONAL_BACKOFFICE, PERSONAL_DE_ESTADISTICA')")
-	public @ResponseBody
-	void getPatientEmergenciesExcelReport(
-			@PathVariable Integer institutionId,
-			HttpServletResponse response
-	)throws Exception{
+	public @ResponseBody void getPatientEmergenciesExcelReport(@PathVariable Integer institutionId, HttpServletResponse response) throws Exception {
 		LOG.debug("Se creará el excel{}", institutionId);
 		LOG.debug("Inputs parameters -> institutionId {}, fromDate {}, toDate {}", institutionId);
 
 		String title = "Reporte Enfermeria - Emergencias Pacientes";
-		String[] headers = new String[] {"Institucion", "Ambulancia", "Oficina", "Sector", "Intervención Policial","Fecha","Hora",
-				"Profesional que registró la atención", "Ultimo profesional que lo antendió","Identificación","Apellidos","Nombres","Sexo",
-				"Genero","Nombre con el que se identifica","Fecha de nacimiento","Edad a fecha del turno","Edad a hoy","Etnia","Domicilio",
-				"Localidad","Obra social","Medio de Ingreso","Estado","Tipo","Notas del Triage","Triage","Fecha de alta","Ambulancia de alta",
-				"Tipo de alta","Salida"};
+		String[] headers = new String[]{"Institucion", "Ambulancia", "Oficina", "Sector", "Intervención Policial", "Fecha", "Hora", "Profesional que registró la atención", "Ultimo profesional que lo antendió", "Identificación", "Apellidos", "Nombres", "Sexo", "Genero", "Nombre con el que se identifica", "Fecha de nacimiento", "Edad a fecha del turno", "Edad a hoy", "Etnia", "Domicilio", "Localidad", "Obra social", "Medio de Ingreso", "Estado", "Tipo", "Notas del Triage", "Triage", "Fecha de alta", "Ambulancia de alta", "Tipo de alta", "Salida"};
 
-		IWorkbook wb = this.excelServiceGR.buildExcelPatientEmergencies(title,headers,this.queryFactoryGR.queryPatientEmergencies(institutionId));
+		IWorkbook wb = this.excelServiceGR.buildExcelPatientEmergencies(title, headers, this.queryFactoryGR.queryPatientEmergencies(institutionId));
 
 		String filename = title + "." + wb.getExtension();
-		response.addHeader("Content-disposition", "attachment;filename= "+ filename);
+		response.addHeader("Content-disposition", "attachment;filename= " + filename);
 		response.setContentType(wb.getContentType());
 
 		OutputStream out = response.getOutputStream();
@@ -163,28 +136,20 @@ public class GeneralReportsController {
 
 	@GetMapping(value = "/{institutionId}/outpatientNursing")
 	@PreAuthorize("hasPermission(#institutionId, 'ADMINISTRADOR_INSTITUCIONAL_BACKOFFICE, PERSONAL_DE_ESTADISTICA')")
-	public @ResponseBody
-	void getOutpatientNursingExcelReport(
-			@PathVariable Integer institutionId,
-			@RequestParam(value = "fromDate", required = true) String fromDate,
-			@RequestParam(value = "toDate", required = true) String toDate,
-			HttpServletResponse response
-	)throws Exception{
+	public @ResponseBody void getOutpatientNursingExcelReport(@PathVariable Integer institutionId, @RequestParam(value = "fromDate", required = true) String fromDate, @RequestParam(value = "toDate", required = true) String toDate, HttpServletResponse response) throws Exception {
 		LOG.debug("Se creará el excel{}", institutionId);
 		LOG.debug("Inputs parameters -> institutionId {}, fromDate{}, toDate{}", institutionId);
 
 		String title = "Reporte Enfemeria - Enfermeria Ambulatorio";
-		String[] headers = new String[]{"Institución","Unidad Operativa","Prestador","DNI","Fecha de Atención","Hora","N° Consulta","DNI Paciente",
-				"Nombre Paciente","Sexo","Género","Nombre con el que se identifica","Fecha de Nacimiento","Edad a fecha del turno","Edad a Hoy","Etnia",
-				"Obra/s Social/es","Domicilio","Localidad","Nivel de instrucción","Situación Laboral","Signos vitales","Procedimientos","Evolución"};
+		String[] headers = new String[]{"Institución", "Unidad Operativa", "Prestador", "DNI", "Fecha de Atención", "Hora", "N° Consulta", "DNI Paciente", "Nombre Paciente", "Sexo", "Género", "Nombre con el que se identifica", "Fecha de Nacimiento", "Edad a fecha del turno", "Edad a Hoy", "Etnia", "Obra/s Social/es", "Domicilio", "Localidad", "Nivel de instrucción", "Situación Laboral", "Signos vitales", "Procedimientos", "Evolución"};
 
 		LocalDate startDate = localDateMapper.fromStringToLocalDate(fromDate);
 		LocalDate endDate = localDateMapper.fromStringToLocalDate(toDate);
 
-		IWorkbook wb = this.excelServiceGR.buildExcelOutpatientNursing(title, headers, this.queryFactoryGR.queryOutpatientNursing(institutionId,startDate,endDate));
+		IWorkbook wb = this.excelServiceGR.buildExcelOutpatientNursing(title, headers, this.queryFactoryGR.queryOutpatientNursing(institutionId, startDate, endDate));
 
 		String filename = title + "." + wb.getExtension();
-		response.addHeader("Content-disposition", "attachment;filename= "+ filename);
+		response.addHeader("Content-disposition", "attachment;filename= " + filename);
 		response.setContentType(wb.getContentType());
 
 		OutputStream out = response.getOutputStream();
@@ -196,24 +161,49 @@ public class GeneralReportsController {
 
 	@GetMapping(value = "/{institutionId}/nursingInternment")
 	@PreAuthorize("hasPermission(#institutionId, 'ADMINISTRADOR_INSTITUCIONAL_BACKOFFICE, PERSONAL_DE_ESTADISTICA')")
-	public @ResponseBody
-	void getNursingInternmentExcelReport(
-			@PathVariable Integer institutionId,
-			@RequestParam(value = "fromDate", required = true) String fromDate,
-			@RequestParam(value = "toDate", required = true) String toDate,
-			HttpServletResponse response
-	)throws Exception{
+	public @ResponseBody void getNursingInternmentExcelReport(@PathVariable Integer institutionId, @RequestParam(value = "fromDate", required = true) String fromDate, @RequestParam(value = "toDate", required = true) String toDate, HttpServletResponse response) throws Exception {
 		LOG.debug("Se creará el excel{}", institutionId);
 		LOG.debug("Inputs parameters -> institutionId {}, fromDate{}, toDate{}", institutionId);
 
 		String title = "Reporte Enfermeria - Enfermeria Internacion";
-		String[] headers = new String[]{"Institucion","Apellidos","Nombres","Genero","Identificacion","Profesional","Matricula",
-				"Ingreso","Alta Probable","Cama","Categoria","Habitacion","Sector","Alta","Procedimientos","Signos Vitales"};
+		String[] headers = new String[]{"Institucion", "Apellidos", "Nombres", "Genero", "Identificacion", "Profesional", "Matricula", "Ingreso", "Alta Probable", "Cama", "Categoria", "Habitacion", "Sector", "Alta", "Procedimientos", "Signos Vitales"};
 
 		LocalDate startDate = localDateMapper.fromStringToLocalDate(fromDate);
 		LocalDate endDate = localDateMapper.fromStringToLocalDate(toDate);
 
-		IWorkbook wb = this.excelServiceGR.buildExcelNursingInternment(title, headers, this.queryFactoryGR.queryNursingInternment(institutionId,startDate,endDate));
+		IWorkbook wb = this.excelServiceGR.buildExcelNursingInternment(title, headers, this.queryFactoryGR.queryNursingInternment(institutionId, startDate, endDate));
+
+		String filename = title + "." + wb.getExtension();
+		response.addHeader("Content-disposition", "attachment;filename=" + filename);
+		response.setContentType(wb.getContentType());
+
+		OutputStream out = response.getOutputStream();
+		wb.write(out);
+		out.close();
+		out.flush();
+		response.flushBuffer();
+	}
+
+	@GetMapping(value = "/{institutionId}/complementaryStudies")
+	@PreAuthorize("hasPermission(#institutionId, 'ADMINISTRADOR_INSTITUCIONAL_BACKOFFICE, PERSONAL_DE_ESTADISTICA')")
+	public @ResponseBody void getComplementaryStudiesExcelReport(@PathVariable Integer institutionId,
+																 @RequestParam(value = "fromDate", required = true) String fromDate,
+																 @RequestParam(value = "toDate", required = true) String toDate,
+																 HttpServletResponse response) throws Exception{
+		LOG.debug("Se creará el excel{}", institutionId);
+		LOG.debug("Inputs parameters -> institutionId {}, fromDate{}, toDate{}", institutionId);
+
+		String title = "Reportes de Estudios Complementarios";
+		String[] headers = new String[]{"Institución", "Fecha", "created_on", "Source_Id", "Categoria", "Orden", "Estado", "Tipo de Solicitud",
+										"Origen de Solicitud", "Nombre del Paciente", "Tipo de Documento", "Numero del Documento del Paciente", "Obra Social",
+										"Numero de Afiliado", "Nombre del Profesional", "Tipo de Documento del Profesional",
+										"Numero de Documento del Profesional", "Licencia", "Nota", "Estado de la Orden",
+										"Fecha de Emisión", "Nombre del Estudio", "Notas Adicionales", "Problema Asociado"};
+
+		LocalDate startDate = localDateMapper.fromStringToLocalDate(fromDate);
+		LocalDate endDate = localDateMapper.fromStringToLocalDate(toDate);
+
+		IWorkbook wb = this.excelServiceGR.buildExcelComplementaryStudies(title,headers,this.queryFactoryGR.queryComplementaryStudies(institutionId, startDate, endDate));
 
 		String filename = title + "." + wb.getExtension();
 		response.addHeader("Content-disposition", "attachment;filename=" + filename);
