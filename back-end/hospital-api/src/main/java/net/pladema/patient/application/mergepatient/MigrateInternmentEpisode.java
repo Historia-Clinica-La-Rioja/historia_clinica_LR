@@ -6,6 +6,7 @@ import lombok.extern.slf4j.Slf4j;
 import net.pladema.patient.application.port.MergeClinicHistoryStorage;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -17,14 +18,23 @@ public class MigrateInternmentEpisode {
 	private final MergeClinicHistoryStorage mergeClinicHistoryStorage;
 
 	public void execute(List<Integer> oldPatients, Integer newPatient) {
+		log.debug("Input parameters -> oldPatients{}, newPatient{}",oldPatients,newPatient);
 
 		List<Integer> ieIds = mergeClinicHistoryStorage.getInternmentEpisodesIds(oldPatients);
+		List<Integer> srIds = mergeClinicHistoryStorage.getServiceRequestIdsFromIdSourceType(ieIds,ESourceType.HOSPITALIZATION.getId());
 
-		if ((ieIds != null) && (!ieIds.isEmpty())) {
+		List<Integer> consultationIds = new ArrayList<>() {{
+			addAll(ieIds);
+			addAll(srIds);
+		}};
 
-			List<Long> documentsIds = mergeClinicHistoryStorage.getDocumentsIds(ieIds, Arrays.asList(
-					ESourceType.HOSPITALIZATION
-			));
+		if (!consultationIds.isEmpty()) {
+
+			List<Long> documentsIds = mergeClinicHistoryStorage.getDocumentsIds(consultationIds, Arrays.asList(
+					ESourceType.HOSPITALIZATION,
+					ESourceType.ORDER));
+
+			log.debug("Documents to search and modify documentsIds{}", documentsIds);
 			if ((documentsIds != null) && (!documentsIds.isEmpty())) {
 
 				mergeClinicHistoryStorage.modifyHealthCondition(documentsIds, newPatient);
@@ -32,12 +42,13 @@ public class MigrateInternmentEpisode {
 				mergeClinicHistoryStorage.modifyImmunization(documentsIds, newPatient);
 				mergeClinicHistoryStorage.modifyMedicationStatement(documentsIds, newPatient);
 				mergeClinicHistoryStorage.modifyProcedure(documentsIds, newPatient);
-				mergeClinicHistoryStorage.modifyObservationVitalSign(documentsIds, newPatient);
+				mergeClinicHistoryStorage.modifyObservationRiskFactor(documentsIds, newPatient);
 				mergeClinicHistoryStorage.modifyObservationLab(documentsIds, newPatient);
 				mergeClinicHistoryStorage.modifyDiagnosticReport(documentsIds, newPatient);
 				mergeClinicHistoryStorage.modifyIndication(documentsIds, newPatient);
 
 				mergeClinicHistoryStorage.modifyInternmentEpisode(ieIds, newPatient);
+				mergeClinicHistoryStorage.modifyServiceRequest(srIds,newPatient);
 
 				mergeClinicHistoryStorage.modifyDocument(documentsIds,newPatient);
 			}

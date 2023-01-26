@@ -101,6 +101,11 @@ public class MergeClinicHistoryStorageImpl implements MergeClinicHistoryStorage 
 	}
 
 	@Override
+	public List<Integer> getServiceRequestIdsFromIdSourceType(List<Integer> ids, Short sourceType) {
+		return serviceRequestRepository.getServiceRequestIdsFromIdSourceType(ids,sourceType);
+	}
+
+	@Override
 	public void modifyDocument(List<Long> ids, Integer newPatientId) {
 		log.debug("Document ids to modify {}", ids);
 		documentRepository.findAllById(ids)
@@ -170,7 +175,7 @@ public class MergeClinicHistoryStorageImpl implements MergeClinicHistoryStorage 
 	}
 
 	@Override
-	public void modifyObservationVitalSign(List<Long> ids, Integer newPatientId) {
+	public void modifyObservationRiskFactor(List<Long> ids, Integer newPatientId) {
 		log.debug("Observation Vital Signs ids to modify {}", ids);
 		documentRiskFactorRepository.getRiskFactorFromDocuments(ids)
 				.forEach(item-> migratePatientStorage.migrateItem(item.getId(), item.getPatientId(), newPatientId, EMergeTable.OBSERVATION_VITAL_SIGN));

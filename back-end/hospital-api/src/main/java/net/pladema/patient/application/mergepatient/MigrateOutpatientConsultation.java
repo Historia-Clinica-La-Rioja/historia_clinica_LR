@@ -56,7 +56,7 @@ public class MigrateOutpatientConsultation {
 				mergeClinicHistoryStorage.modifyImmunization(documentsIds, newPatient);
 				mergeClinicHistoryStorage.modifyMedicationStatement(documentsIds, newPatient);
 				mergeClinicHistoryStorage.modifyProcedure(documentsIds, newPatient);
-				mergeClinicHistoryStorage.modifyObservationVitalSign(documentsIds, newPatient);
+				mergeClinicHistoryStorage.modifyObservationRiskFactor(documentsIds, newPatient);
 				mergeClinicHistoryStorage.modifyObservationLab(documentsIds, newPatient);
 				mergeClinicHistoryStorage.modifyDiagnosticReport(documentsIds, newPatient);
 				mergeClinicHistoryStorage.modifyIndication(documentsIds, newPatient);
