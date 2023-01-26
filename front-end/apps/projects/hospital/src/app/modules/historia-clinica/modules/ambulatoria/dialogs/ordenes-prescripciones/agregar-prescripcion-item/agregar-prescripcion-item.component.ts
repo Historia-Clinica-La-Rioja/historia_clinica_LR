@@ -1,7 +1,7 @@
 import { Component, Inject, OnInit, ViewChild, ElementRef, AfterViewInit, AfterContentChecked, ChangeDetectorRef } from '@angular/core';
 import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { AppFeature, HCEPersonalHistoryDto, SnomedDto, SnomedECL } from '@api-rest/api-model.d';
+import { AppFeature, CreateOutpatientDto, HCEPersonalHistoryDto, OutpatientProblemDto, SnomedDto, SnomedECL } from '@api-rest/api-model.d';
 import { SnowstormService } from '@api-rest/services/snowstorm.service';
 import { HceGeneralStateService } from '@api-rest/services/hce-general-state.service';
 import { RequestMasterDataService } from '@api-rest/services/request-masterdata.service';
@@ -16,6 +16,8 @@ import { InternacionMasterDataService } from '@api-rest/services/internacion-mas
 import { FeatureFlagService } from '@core/services/feature-flag.service';
 import { SnomedService } from '@historia-clinica/services/snomed.service';
 import { SnvsMasterDataService } from '@api-rest/services/snvs-masterdata.service';
+import { OutpatientConsultationService } from '@api-rest/services/outpatient-consultation.service';
+import { DateFormat, momentFormat } from '@core/utils/moment.utils';
 
 @Component({
   selector: 'app-agregar-prescripcion-item',
@@ -63,6 +65,7 @@ export class AgregarPrescripcionItemComponent implements OnInit, AfterViewInit, 
 		private readonly internacionMasterDataService: InternacionMasterDataService,
 		private readonly snomedService: SnomedService,
 		private readonly snvsMasterDataService: SnvsMasterDataService,
+		private readonly outpatientConsultationService: OutpatientConsultationService,
 		@Inject(MAT_DIALOG_DATA) public data: NewPrescriptionItemData) {
 			this.ambulatoryConsultationProblemsService = new AmbulatoryConsultationProblemsService(formBuilder, this.snomedService, this.snackBarService, this.snvsMasterDataService, this.dialog);
 		}
@@ -70,18 +73,7 @@ export class AgregarPrescripcionItemComponent implements OnInit, AfterViewInit, 
 	ngOnInit(): void {
 		this.formConfiguration();
 
-		this.hceGeneralStateService.getActiveProblems(this.data.patientId).subscribe((activeProblems: HCEPersonalHistoryDto[]) => {
-			const activeProblemsList = activeProblems.map(problem => ({id: problem.id, description: problem.snomed.pt, sctId: problem.snomed.sctid}));
-
-			this.hceGeneralStateService.getChronicConditions(this.data.patientId).subscribe((chronicProblems: HCEPersonalHistoryDto[]) => {
-				const chronicProblemsList = chronicProblems.map(problem => ({id: problem.id, description: problem.snomed.pt,  sctId: problem.snomed.sctid}));
-				this.healthProblemOptions = activeProblemsList.concat(chronicProblemsList);
-				if (this.data.item) {
-					this.updateSelectedHealthProblem(this.data.item.healthProblem.sctId);
-				}
-			});
-
-		});
+		this.getProblems();
 
 		this.requestMasterDataService.categories().subscribe(categories => {
 			this.studyCategoryOptions = categories;
@@ -107,6 +99,20 @@ export class AgregarPrescripcionItemComponent implements OnInit, AfterViewInit, 
 		});
 	}
 
+	getProblems() {
+		this.hceGeneralStateService.getActiveProblems(this.data.patientId).subscribe((activeProblems: HCEPersonalHistoryDto[]) => {
+			const activeProblemsList = activeProblems.map(problem => ({id: problem.id, description: problem.snomed.pt, sctId: problem.snomed.sctid}));
+
+			this.hceGeneralStateService.getChronicConditions(this.data.patientId).subscribe((chronicProblems: HCEPersonalHistoryDto[]) => {
+				const chronicProblemsList = chronicProblems.map(problem => ({id: problem.id, description: problem.snomed.pt,  sctId: problem.snomed.sctid}));
+				this.healthProblemOptions = activeProblemsList.concat(chronicProblemsList);
+				if (this.data.item) {
+					this.updateSelectedHealthProblem(this.data.item.healthProblem.sctId);
+				}
+			});
+		});
+	}
+
 	ngAfterContentChecked(): void {
 		this.changeDetector.detectChanges();
 	}
@@ -119,9 +125,45 @@ export class AgregarPrescripcionItemComponent implements OnInit, AfterViewInit, 
 				epidemiologicalReportFF: this.reportFFIsOn,
 				searchConceptsLocallyFF: this.searchConceptsLocallyFFIsOn,
 			},
-		}).afterClosed().subscribe((data: AmbulatoryConsultationProblem) => {
+		}).afterClosed().subscribe((data: AmbulatoryConsultationProblem[]) => {
+			if (data === undefined || data.length === 0) return;
 
+			// El ultimo que se agregó
+			const problem: AmbulatoryConsultationProblem = data[data.length - 1];
+			const createOutpatientDto: CreateOutpatientDto = this.createOutpatientDto(problem);
+			this.outpatientConsultationService.createOutpatientConsultation(createOutpatientDto, this.data.patientId)
+			.subscribe((result: boolean) => {
+				if (! result) return;
+
+					this.prescriptionItemForm.controls.healthProblem.setValue(problem.snomed.sctid);
+					this.getProblems();
+				});
 		})
+	}
+
+	private createOutpatientDto(problem: AmbulatoryConsultationProblem): CreateOutpatientDto {
+		const outpatientProblemDto: OutpatientProblemDto[] = [{
+			chronic: problem.cronico,
+			severity: problem.codigoSeveridad,
+			snomed: problem.snomed,
+			startDate: problem.fechaInicio ? momentFormat(problem.fechaInicio, DateFormat.API_DATE) : undefined,
+			endDate: problem.fechaFin ? momentFormat(problem.fechaFin, DateFormat.API_DATE) : undefined
+		}];
+
+		const createOutpatientDto: CreateOutpatientDto = {
+			allergies: [],
+			anthropometricData: null,
+			clinicalSpecialtyId: null,
+			evolutionNote: null,
+			familyHistories: [],
+			medications: [],
+			problems: outpatientProblemDto,
+			procedures: [],
+			reasons: [],
+			references: [],
+			riskFactors: null
+		};
+		return createOutpatientDto;
 	}
 
 	private updateSelectedHealthProblem(actualSctid: string): void {

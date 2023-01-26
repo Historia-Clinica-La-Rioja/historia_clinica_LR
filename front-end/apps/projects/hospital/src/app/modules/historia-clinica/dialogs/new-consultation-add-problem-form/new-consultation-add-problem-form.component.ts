@@ -31,7 +31,7 @@ export class NewConsultationAddProblemFormComponent implements OnInit {
 
   addProblem(): void {
     this.data.ambulatoryConsultationProblemsService.addToList(this.data.epidemiologicalReportFF);
-    this.dialogRef.close(this.data.ambulatoryConsultationProblemsService.getProblemas()[0]);
+    this.dialogRef.close(this.data.ambulatoryConsultationProblemsService.getProblemas());
   }
 
   close(): void {
