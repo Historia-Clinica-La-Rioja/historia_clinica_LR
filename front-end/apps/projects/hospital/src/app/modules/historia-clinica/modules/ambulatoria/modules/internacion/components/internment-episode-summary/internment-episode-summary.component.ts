@@ -28,6 +28,7 @@ const ROUTE_ADMINISTRATIVE_DISCHARGE_PREFIX = '/alta';
 export class InternmentEpisodeSummaryComponent implements OnInit {
 
 	currentUserIsAllowToDoAPhysicalDischarge = false;
+	currentUserHasPermissionToAccessDocuments = false;
 	physicalDischargeDate: string;
 	@Input() internmentEpisode: InternmentEpisodeSummary;
 	@Input() canLoadProbableDischargeDate: boolean;
@@ -62,6 +63,7 @@ export class InternmentEpisodeSummaryComponent implements OnInit {
 	}
 	ngOnInit(): void {
 		this.permissionsService.contextAssignments$().subscribe((userRoles: ERole[]) => {
+			this.currentUserHasPermissionToAccessDocuments = anyMatch<ERole>(userRoles, [ERole.ADMINISTRATIVO]);
 			this.currentUserIsAllowToDoAPhysicalDischarge = (anyMatch<ERole>(userRoles, [ERole.ADMINISTRADOR_DE_CAMAS]) &&
 				(anyMatch<ERole>(userRoles, [ERole.ADMINISTRATIVO, ERole.ENFERMERO])));
 		});
@@ -71,9 +73,9 @@ export class InternmentEpisodeSummaryComponent implements OnInit {
 		this.internmentSummaryFacadeService.epicrisis$.subscribe(e => this.epicrisisDoc = e);
 		this.internmentSummaryFacadeService.evolutionNote$.subscribe(evolutionNote => this.lastEvolutionNoteDoc = evolutionNote);
 		this.internmentSummaryFacadeService.hasMedicalDischarge$.subscribe(h => this.hasMedicalDischarge = h);
-		this.setDocuments();
+		if (this.currentUserHasPermissionToAccessDocuments)
+			this.setDocuments();
 	}
-	
 	setDocuments() {
 		this.internmentEpisodeDocumentService.getInternmentEpisodeDocuments(this.internmentEpisode.id)
 			.subscribe((response: EpisodeDocumentResponseDto[]) => {
