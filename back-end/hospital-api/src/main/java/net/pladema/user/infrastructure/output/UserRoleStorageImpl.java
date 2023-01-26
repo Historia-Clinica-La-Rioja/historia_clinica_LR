@@ -53,9 +53,22 @@ public class UserRoleStorageImpl implements UserRoleStorage {
         checkValidRoles(userRolesBo);
         List<UserRole> userRoles = userRoleRepository.findByUserId(userId).stream()
                 .filter(userRole -> userRole.getInstitutionId().equals(institutionId)).collect(Collectors.toList());
+		List<Short> deletedUserRoles = userRoleRepository.findDeletedByUserId(userId).stream()
+				.filter(userRole -> userRole.getInstitutionId().equals(institutionId))
+				.map(UserRole::getRoleId)
+				.collect(Collectors.toList());
         List<UserRole> newUserRoles = new ArrayList<>();
-        userRolesBo.forEach(userRoleBo -> newUserRoles.add(new UserRole(userId, userRoleBo.getRoleId(), userRoleBo.getInstitutionId())));
+		List<UserRole> rolesToUpdate = new ArrayList<>();
+        userRolesBo.forEach(userRoleBo -> {
+			if (deletedUserRoles.contains(userRoleBo.getRoleId()))
+				rolesToUpdate.add(new UserRole(userId, userRoleBo.getRoleId(), userRoleBo.getInstitutionId()));
+			else
+				newUserRoles.add(new UserRole(userId, userRoleBo.getRoleId(), userRoleBo.getInstitutionId()));
+		});
         userRoleRepository.deleteAll(roleToDelete(userRoles, newUserRoles));
+		rolesToUpdate.forEach(userRole ->
+				userRoleRepository.setDeletedFalse(userRole.getUserId(), userRole.getRoleId(), userRole.getInstitutionId())
+		);
         userRoleRepository.saveAll(roleToCreate(newUserRoles, userRoles));
     }
 	private List<UserRole> roleToCreate(List<UserRole> newRoles, List<UserRole> currentRoles) {
@@ -102,4 +115,5 @@ public class UserRoleStorageImpl implements UserRoleStorage {
                 ERole.PROFESIONAL_DE_SALUD.getId().equals(roleId) ||
                 ERole.ESPECIALISTA_EN_ODONTOLOGIA.getId().equals(roleId);
     }
+
 }

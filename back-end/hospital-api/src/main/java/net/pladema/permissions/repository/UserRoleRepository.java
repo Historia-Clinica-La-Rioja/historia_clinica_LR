@@ -25,6 +25,13 @@ public interface UserRoleRepository extends SGXAuditableEntityJPARepository<User
 	List<UserRole> findByUserId(@Param("userId") Integer userId);
 
 	@Transactional(readOnly = true)
+	@Query("SELECT ur " +
+			"FROM UserRole as ur " +
+			"WHERE ur.userId = :userId " +
+			"AND ur.deleteable.deleted = TRUE")
+	List<UserRole> findDeletedByUserId(@Param("userId") Integer userId);
+
+	@Transactional(readOnly = true)
 	@Query("SELECT ur FROM UserRole as ur WHERE ur.institutionId = :institutionId " +
 			"AND ur.deleteable.deleted = FALSE")
 	List<UserRole> findByInstitutionId(@Param("institutionId") Integer institutionId);
@@ -82,6 +89,13 @@ public interface UserRoleRepository extends SGXAuditableEntityJPARepository<User
 	Optional<UserRole> findByRoleInstitutionAndUserId(@Param("userId") Integer userId,
 													  @Param("roleId") Short roleId,
 													  @Param("institutionId") Integer institutionId);
+
+	@Transactional
+	@Modifying
+	@Query(value = "UPDATE UserRole ur " +
+			"SET ur.deleteable.deleted = false " +
+			"WHERE ur.userId = :userId AND ur.roleId = :roleId AND ur.institutionId = :institutionId")
+	void setDeletedFalse(@Param("userId") Integer userId, @Param("roleId") Short roleId, @Param("institutionId") Integer institutionId);
 
 	// @formatter:on
 }
