@@ -1,0 +1,19 @@
+{
+  "cubeQuery": {
+    "measures": [
+      "CantidadTurnos.cantidad_turnos"
+    ],
+    "timeDimensions": [],
+    "order": {},
+    "dimensions": []
+  },
+  "chartType": "number",
+  "pivotConfig": {
+    "x": [],
+    "y": [
+      "measures"
+    ],
+    "fillMissingDates": true,
+    "joinDateRange": false
+  }
+}

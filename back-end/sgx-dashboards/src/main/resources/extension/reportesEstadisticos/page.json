@@ -116,6 +116,41 @@
                       }
                     ]
                   }
+                },
+                {
+                  "type": "cubejs-chart",
+                  "args": {
+                    "query": "cantidadTurnosTotal",
+                    "showLegend": false
+                  }
+                },
+                {
+                  "type": "cubejs-chart",
+                  "args": {
+                    "query": "cantidadTurnosTotalAsignados",
+                    "showLegend": false
+                  }
+                },
+                {
+                  "type": "cubejs-chart",
+                  "args": {
+                    "query": "cantidadTurnosTotalCancelados",
+                    "showLegend": false
+                  }
+                },
+                {
+                  "type": "cubejs-chart",
+                  "args": {
+                    "query": "cantidadTurnosTotalAtendidos",
+                    "showLegend": false
+                  }
+                },
+                {
+                  "type": "cubejs-chart",
+                  "args": {
+                    "query": "cantidadTurnosTotalAusentes",
+                    "showLegend": false
+                  }
                 }
               ]
             }
