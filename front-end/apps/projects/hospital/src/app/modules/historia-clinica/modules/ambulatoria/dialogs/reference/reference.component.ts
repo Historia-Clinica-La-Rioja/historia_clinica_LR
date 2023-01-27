@@ -1,10 +1,8 @@
 import { Component, Inject, OnInit, ChangeDetectorRef, AfterContentChecked } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
-import { AddressDto, CareLineDto, ClinicalSpecialtyDto, DateDto, DepartmentDto, HCEPersonalHistoryDto, InstitutionBasicInfoDto, ReferenceDto, ReferenceProblemDto } from '@api-rest/api-model';
+import { AddressDto, DateDto, DepartmentDto, HCEPersonalHistoryDto, InstitutionBasicInfoDto, ReferenceDto, ReferenceProblemDto } from '@api-rest/api-model';
 import { AddressMasterDataService } from '@api-rest/services/address-master-data.service';
-import { CareLineService } from '@api-rest/services/care-line.service';
-import { ClinicalSpecialtyService } from '@api-rest/services/clinical-specialty.service';
 import { HceGeneralStateService } from '@api-rest/services/hce-general-state.service';
 import { InstitutionService } from '@api-rest/services/institution.service';
 import { ContextService } from '@core/services/context.service';
@@ -24,8 +22,6 @@ export class ReferenceComponent implements OnInit, AfterContentChecked {
 	formReference: FormGroup;
 	problemsList$: Observable<any[]>;
 	problemsList: any[] = [];
-	specialties$: Observable<ClinicalSpecialtyDto[]>;
-	careLines: CareLineDto[];
 	referenceProblemDto: ReferenceProblemDto[] = [];
 	selectedFiles: File[] = [];
 	selectedFilesShow: any[] = [];
@@ -34,15 +30,15 @@ export class ReferenceComponent implements OnInit, AfterContentChecked {
 	submitForm = false;
 	originInstitutionInfo: AddressDto;
 	originDepartment: DepartmentDto;
+	updateSpecialtesAndCarelineFields = false;
+	clearCarelinesAndSpecialties = false;
 
 	constructor(
 		@Inject(MAT_DIALOG_DATA) public data: any,
 		private readonly formBuilder: FormBuilder,
 		private readonly hceGeneralStateService: HceGeneralStateService,
-		private readonly careLineService: CareLineService,
 		private readonly dialogRef: MatDialogRef<ReferenceComponent>,
 		private readonly institutionService: InstitutionService,
-		private readonly clinicalSpecialty: ClinicalSpecialtyService,
 		private readonly adressMasterData: AddressMasterDataService,
 		private readonly contextService: ContextService,
 		private changeDetector: ChangeDetectorRef
@@ -54,8 +50,6 @@ export class ReferenceComponent implements OnInit, AfterContentChecked {
 		this.setProblems();
 
 		this.disableInputs();
-
-		this.subscribesToChangesInForm();
 
 		this.adressMasterData.getByCountry(COUNTRY).subscribe(provinces => {
 			this.provinces = this.toTypeaheadOptions(provinces, 'description');
@@ -133,17 +127,6 @@ export class ReferenceComponent implements OnInit, AfterContentChecked {
 		return this.formReference.get('problems') as FormControl;
 	}
 
-	setSpecialtyCareLine(): void {
-		const careLineId = this.formReference.value.careLine;
-		if (careLineId) {
-			this.formReference.controls.clinicalSpecialty.enable();
-			this.formReference.controls.clinicalSpecialty.setValidators([Validators.required]);
-			this.formReference.updateValueAndValidity();
-			this.specialties$ = this.clinicalSpecialty.getAllByDestinationInstitution(careLineId, this.formReference.value.institutionDestinationId);
-		}
-	}
-
-
 	setProblemsReference(problemsArray: string[]) {
 		if (problemsArray.length) {
 			this.referenceProblemDto = problemsArray.map(problem => ({
@@ -154,21 +137,23 @@ export class ReferenceComponent implements OnInit, AfterContentChecked {
 		else {
 			this.referenceProblemDto = [];
 		}
-		this.setInformation();
+		this.updateSpecialtesAndCarelineFields = true;
 	}
 
 	save(): void {
 		this.submitForm = true;
+		this.formReference.controls.careLine.markAllAsTouched();
+		this.formReference.controls.clinicalSpecialtyId.markAllAsTouched();
 		if (this.formReference.valid) {
 			const reference = { data: this.buildReference(), files: this.selectedFiles, problems: this.getReferenceProblems() };
 			this.dialogRef.close(reference);
 		}
 	}
 
-	private buildReference(): Reference {
+	private buildReference(): ReferenceDto {
 		return {
-			careLine: this.formReference.controls.careLine.value,
-			clinicalSpecialty: this.formReference.controls.clinicalSpecialty.value,
+			careLineId: this.formReference.controls.careLine.value,
+			clinicalSpecialtyId: this.formReference.controls.clinicalSpecialty.value,
 			consultation: true,
 			note: this.formReference.value.summary,
 			problems: this.mapProblems(this.referenceProblemDto),
@@ -190,17 +175,6 @@ export class ReferenceComponent implements OnInit, AfterContentChecked {
 	removeSelectedFile(index): void {
 		this.selectedFiles.splice(index, 1);
 		this.selectedFilesShow.splice(index, 1);
-	}
-
-	setInformation() {
-		if (!this.formReference.value.institutionDestinationId) {
-			this.clearCareLinesAndSpecialties();
-			return;
-		}
-		if (this.formReference.value.searchByCareLine === this.DEFAULT_RADIO_OPTION)
-			this.setCareLines();
-		else
-			this.setSpecialties();
 	}
 
 	private getReferenceProblems(): HCEPersonalHistory[] {
@@ -228,91 +202,27 @@ export class ReferenceComponent implements OnInit, AfterContentChecked {
 
 	}
 
-	private setCareLines() {
-		const problemSnomedIds: string[] = this.referenceProblemDto.map(problem => problem.snomed.sctid);
-		const institutionId = this.formReference.value.institutionDestinationId;
-		if (!problemSnomedIds.length || !institutionId) {
-			this.formReference.controls.careLine.disable();
-		}
-		if (problemSnomedIds.length && institutionId) {
-			this.formReference.controls.careLine.enable();
-			this.formReference.controls.careLine.updateValueAndValidity();
-			this.careLineService.getByProblemSnomedIdsAndInstitutionId(institutionId, problemSnomedIds).subscribe(careLines => this.careLines = careLines);
-		}
-		this.formReference.controls.clinicalSpecialty.disable();
-	}
-
-	private setSpecialties() {
-		const institutionId = this.formReference.value.institutionDestinationId;
-		if (institutionId) {
-			this.formReference.controls.clinicalSpecialty.enable();
-			this.specialties$ = this.clinicalSpecialty.getClinicalSpecialtyByInstitution(institutionId);
-			this.formReference.controls.clinicalSpecialty.updateValueAndValidity();
-		}
-	}
-
-	private subscribesToChangesInForm() {
-		this.formReference.controls.searchByCareLine.valueChanges.subscribe(option => {
-			if (option === this.DEFAULT_RADIO_OPTION) {
-				this.formReference.controls.careLine.setValidators([Validators.required]);
-				this.formReference.controls.clinicalSpecialty.setValue(null);
-				this.formReference.controls.clinicalSpecialty.disable();
-				this.formReference.controls.clinicalSpecialty.updateValueAndValidity();
-				this.setCareLines();
-			} else {
-				this.formReference.controls.careLine.removeValidators([Validators.required]);
-				this.formReference.controls.careLine.setValue(null);
-				this.formReference.controls.careLine.disable();
-				this.formReference.controls.careLine.updateValueAndValidity();
-				this.setSpecialties();
-			}
-		});
-	}
-
 	onProvinceSelectionChange(province: number) {
 		this.formReference.controls.provinceId.setValue(province);
-		this.clearInformation();
+		this.clearCarelinesAndSpecialties = true;
 	}
 
 	onDepartmentSelectionChange(department: number) {
 		this.formReference.controls.departmentId.setValue(department);
 		if (department) {
-			this.clearCareLinesAndSpecialties();
+			this.clearCarelinesAndSpecialties = true;
 		}
 	}
 
 	onInstitutionSelectionChange(institutionId: number) {
 		this.formReference.controls.institutionDestinationId.setValue(institutionId);
-		this.setInformation()
+		this.updateSpecialtesAndCarelineFields = true;
 	}
 
-	private clearInformation() {
-		this.clearCareLinesAndSpecialties();
-	}
-
-	private clearCareLinesAndSpecialties() {
-		if (this.careLines?.length) {
-			this.careLines = [];
-			this.formReference.controls.careLine.setValue(null);
-			this.formReference.controls.careLine.updateValueAndValidity();
-		}
-		this.specialties$?.subscribe(specialties => {
-			if (specialties.length) {
-				this.formReference.controls.clinicalSpecialty.setValue(null);
-				this.formReference.controls.clinicalSpecialty.updateValueAndValidity();
-			}
-		});
-
-		disableInputs(this.formReference, this.referenceProblemDto);
-
-		function disableInputs(formReference: FormGroup, referenceProblemDto: ReferenceProblemDto[]) {
-			if (!formReference.value.institutionDestinationId) {
-				formReference.controls.clinicalSpecialty.disable();
-			}
-			if (!referenceProblemDto.length || !formReference.value.institutionDestinationId) {
-				formReference.controls.careLine.disable();
-			}
-		}
+	resetControls(){
+		this.updateSpecialtesAndCarelineFields = false;
+		this.clearCarelinesAndSpecialties = false;
+		this.changeDetector.detectChanges();
 	}
 
 	private loadOriginInstitutionInfo() {
@@ -388,17 +298,4 @@ export class ReferenceComponent implements OnInit, AfterContentChecked {
 export interface HCEPersonalHistory {
 	hcePersonalHistoryDto: HCEPersonalHistoryDto;
 	chronic: boolean
-}
-
-export interface Reference {
-	careLine: CareLineDto,
-	clinicalSpecialty: ClinicalSpecialtyDto,
-	consultation: boolean;
-	destinationInstitutionId: number;
-	fileIds: number[];
-	note?: string;
-	problems: ReferenceProblemDto[];
-	procedure?: boolean;
-	phoneNumber: string;
-	phonePrefix: string;
 }

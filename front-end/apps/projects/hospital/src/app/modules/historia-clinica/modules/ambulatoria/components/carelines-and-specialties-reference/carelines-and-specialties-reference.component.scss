@@ -1,0 +1,14 @@
+.reference-type {
+	font-size: 15px;
+	
+	.mat-radio-button ~ .mat-radio-button {
+		margin-left: 50px;
+    }
+
+	mat-label {
+		font-weight: 500;
+		height: 30px;
+	}
+
+	height: 60px;
+}
