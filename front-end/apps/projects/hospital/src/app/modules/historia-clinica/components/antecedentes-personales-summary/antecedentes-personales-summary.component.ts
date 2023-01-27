@@ -31,12 +31,12 @@ export class AntecedentesPersonalesSummaryComponent implements OnInit{
 	private nuevaConsultaFromProblemaRef: DockPopupRef;
 	private dockPopupService: DockPopupService;
 	@Input() personalHistoriesHeader: SummaryHeader;
-	@Input() 
+	@Input()
 	set personalHistory(personalHistory: HCEPersonalHistoryDto[]){
-		if (personalHistory.length){
-			this.setSeverityMasterData(personalHistory); 
-		} 
-		this.setProblems(personalHistory);
+		if (personalHistory?.length){
+			this.setSeverityMasterData(personalHistory);
+			this.setProblems(personalHistory);
+		}
 	};
 
 	constructor(
