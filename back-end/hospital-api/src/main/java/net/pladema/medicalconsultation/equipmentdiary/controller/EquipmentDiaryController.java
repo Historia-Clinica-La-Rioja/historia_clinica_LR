@@ -13,7 +13,9 @@ import net.pladema.medicalconsultation.equipmentdiary.controller.constraints.Equ
 import net.pladema.medicalconsultation.equipmentdiary.controller.constraints.NewDiaryPeriodValid;
 import net.pladema.medicalconsultation.equipmentdiary.controller.dto.EquipmentDiaryADto;
 
+import net.pladema.medicalconsultation.equipmentdiary.controller.dto.EquipmentDiaryDto;
 import net.pladema.medicalconsultation.equipmentdiary.controller.mapper.EquipmentDiaryMapper;
+import net.pladema.medicalconsultation.equipmentdiary.service.EquipmentDiaryBoMapper;
 import net.pladema.medicalconsultation.equipmentdiary.service.EquipmentDiaryService;
 import net.pladema.medicalconsultation.equipmentdiary.service.domain.EquipmentDiaryBo;
 
@@ -21,6 +23,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -28,6 +31,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.validation.Valid;
+
+import java.util.List;
 
 @Slf4j
 @RestController
@@ -41,6 +46,8 @@ public class EquipmentDiaryController {
 	private final EquipmentDiaryMapper equipmentDiaryMapper;
 	private final EquipmentDiaryService equipmentDiaryService;
 
+	private final EquipmentDiaryBoMapper equipmentDiaryBoMapper;
+
 	private final LocalDateMapper localDateMapper;
 
 	private final FeatureFlagsService featureFlagsService;
@@ -49,12 +56,14 @@ public class EquipmentDiaryController {
 			EquipmentDiaryMapper equipmentDiaryMapper,
 			EquipmentDiaryService equipmentDiaryService,
 			LocalDateMapper localDateMapper,
-			FeatureFlagsService featureFlagsService
+			FeatureFlagsService featureFlagsService,
+			EquipmentDiaryBoMapper equipmentDiaryBoMapper
 	) {
 		this.equipmentDiaryMapper = equipmentDiaryMapper;
 		this.equipmentDiaryService = equipmentDiaryService;
 		this.localDateMapper = localDateMapper;
 		this.featureFlagsService = featureFlagsService;
+		this.equipmentDiaryBoMapper = equipmentDiaryBoMapper;
 	}
 
 	@PostMapping
@@ -70,4 +79,14 @@ public class EquipmentDiaryController {
 		log.debug(OUTPUT, result);
 		return ResponseEntity.ok().body(result);
 	}
+	@GetMapping("/equipment/{equipmentId}")
+	@PreAuthorize("hasPermission(#institutionId, 'ADMINISTRATIVO_RED_DE_IMAGENES, ADMINISTRADOR_AGENDA')")
+	public ResponseEntity<List<EquipmentDiaryDto>> getEquipmentDiariesFromEquipment(
+			@PathVariable(name = "institutionId") Integer institutionId,
+			@PathVariable(name = "equipmentId") Integer equipmentId){
+		List<EquipmentDiaryBo> equipmentDiariesBOActive = equipmentDiaryService.getEquipmentDiariesFromEquipment(equipmentId, true);
+		List<EquipmentDiaryDto> result = equipmentDiaryBoMapper.toListEquipmentDiaryDto(equipmentDiariesBOActive);
+		return ResponseEntity.ok().body(result);
+	}
+
 }

@@ -90,7 +90,7 @@ public class EquipmentDiaryServiceImpl implements EquipmentDiaryService {
 	public List<EquipmentDiaryBo> getAllOverlappingDiary(@NotNull Integer equipmentId,
 												@NotNull LocalDate newDiaryStart, @NotNull  LocalDate newDiaryEnd, Optional<Integer> excludeDiaryId) {
 		LOG.debug(
-				"Input parameters -> doctorsOfficeId {}, newDiaryStart {}, newDiaryEnd {}",
+				"Input parameters -> equipmentId {}, newDiaryStart {}, newDiaryEnd {}",
 				equipmentId, newDiaryStart, newDiaryEnd);
 		List<EquipmentDiary> diaries = excludeDiaryId.isPresent()
 				? equipmentDiaryRepository.findAllOverlappingDiaryExcludingDiary(equipmentId,
@@ -101,6 +101,16 @@ public class EquipmentDiaryServiceImpl implements EquipmentDiaryService {
 		LOG.debug(OUTPUT, result);
 		return result;
 	}
+
+	@Override
+	public List<EquipmentDiaryBo> getEquipmentDiariesFromEquipment(Integer equipmentId, Boolean active) {
+		LOG.debug("Input parameters -> equipmentId {}, active {}",equipmentId, active);
+		List<EquipmentDiary> equipmentDiaries = equipmentDiaryRepository.getEquipmentDiariesFromEquipment(equipmentId, active);
+		List<EquipmentDiaryBo> result = equipmentDiaries.stream().map(this::createEquipmentDiaryBoInstance).collect(Collectors.toList());
+		LOG.debug(OUTPUT, result);
+		return result;
+	}
+
 
 	private EquipmentDiaryBo createEquipmentDiaryBoInstance(EquipmentDiary equipmentDiary) {
 		LOG.debug("Input parameters -> equipmentDiary {}", equipmentDiary);

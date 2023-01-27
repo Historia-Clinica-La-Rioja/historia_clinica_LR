@@ -65,7 +65,14 @@ public interface EquipmentDiaryRepository extends SGXAuditableEntityJPARepositor
 													  @Param("excludeDiaryId") Integer excludeDiaryId);
 
 
-
+	@Transactional(readOnly = true)
+	@Query("SELECT ed " +
+			"FROM EquipmentDiary ed " +
+			"WHERE ed.equipmentId = :equipmentId " +
+			"AND ed.active =:active "+
+			"AND ed.deleteable.deleted = false")
+	List<EquipmentDiary> getEquipmentDiariesFromEquipment(@Param("equipmentId") Integer equipmentId,
+																 @Param("active") Boolean active);
 
 
 }

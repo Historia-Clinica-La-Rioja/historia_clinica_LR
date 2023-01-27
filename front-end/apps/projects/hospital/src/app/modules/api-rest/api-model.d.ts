@@ -1142,6 +1142,10 @@ export interface EquipmentDiaryADto {
     startDate: string;
 }
 
+export interface EquipmentDiaryDto extends EquipmentDiaryADto {
+    id: number;
+}
+
 export interface EquipmentDiaryOpeningHoursDto extends Overlapping<EquipmentDiaryOpeningHoursDto> {
     externalAppointmentsAllowed: boolean;
     medicalAttentionTypeId: number;

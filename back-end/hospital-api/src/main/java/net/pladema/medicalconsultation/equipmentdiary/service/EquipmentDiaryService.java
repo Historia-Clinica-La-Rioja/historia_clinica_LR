@@ -14,4 +14,6 @@ public interface EquipmentDiaryService {
 	List<EquipmentDiaryBo> getAllOverlappingDiary(Integer doctorsOfficeId,
 										 LocalDate newDiaryStart, LocalDate newDiaryEnd, Optional<Integer> excludeDiaryId);
 
+	List<EquipmentDiaryBo> getEquipmentDiariesFromEquipment(Integer equipmentId,
+														  Boolean active);
 }
