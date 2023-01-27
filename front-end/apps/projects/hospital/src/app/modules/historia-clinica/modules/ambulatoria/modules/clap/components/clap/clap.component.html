@@ -1,13 +1,46 @@
 <app-content width="full">
 	<div id="header" fxLayout="row" fxLayoutAlign="space-between center">
-		<div id="title">
+		<div id="title" fxLayout="row" >
+			<button mat-icon-button *ngIf="viewSip" (click)="backViewGestations()">
+				<mat-icon>arrow_back</mat-icon>
+			</button>
 			<h2 [translate]="'ambulatoria.paciente.clap.TAB_LABEL'"></h2>
 		</div>
 
 	</div>
-	<div>
-		<iframe width="1000" height="400"
-			 [src]="trustedUrlSIP">
+	<div fxLayout="row" *ngIf="!viewSip">
+		<div fxLayout="column" fxFlex="50">
+			<mat-card class="box">
+				<mat-card-header>
+					<mat-card-title>
+						<div fxLayout="row" fxLayoutAlign="center center" fxLayoutGap="16px">
+							<span [translate]="'ambulatoria.paciente.clap.TITLE_PERINATAL_CLINICAL_HISTORY'"></span>
+						</div>
+					</mat-card-title>
+				</mat-card-header>
+				<mat-list id="lista-gestaciones">
+					<div fxLayout="row" *ngFor="let gesta of gestations">
+						<mat-list-item>
+							<mat-divider></mat-divider>
+							<div fxFlex="10%"><mat-icon class="icon-color"
+									fontSet="material-icons-outlined">person</mat-icon>
+							</div>
+							<div fxFlex="50%"><span class="bold">{{gesta}}° {{'ambulatoria.paciente.clap.GESTATION' |
+									translate}}</span>
+							</div>
+							<div fxFlex="40%" fxLayout="column" fxLayoutAlign="space-around end"> <button class="button-view"
+									(click)="viewGestation(gesta)" mat-flat-button color="primary" mat-button>
+									{{ 'ambulatoria.paciente.clap.VIEW' | translate }}
+								</button></div>
+						</mat-list-item>
+
+					</div>
+				</mat-list>
+			</mat-card>
+		</div>
+	</div>
+	<div *ngIf="viewSip">
+		<iframe width="1000" height="400" [src]="trustedUrlSIP">
 		</iframe>
 	</div>
 </app-content>

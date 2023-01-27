@@ -16,6 +16,8 @@ export class ClapComponent implements OnInit {
 	tokenSIP: string;
 	urlBaseSip: string;
 	embedSystem: string;
+	viewSip:boolean= false;
+	gestations= [1,2,3];
 
 	constructor(private contextService: ContextService,
 		private sanitizer: DomSanitizer,
@@ -36,5 +38,15 @@ export class ClapComponent implements OnInit {
 	makeUrlTrusted() {
 		const url = this.urlBaseSip + '?embedSystem='+`${this.embedSystem}&embedToken=`  + `${this.tokenSIP}$` + `${this.institucionId}$` + `${this.patientId}`;
 		this.trustedUrlSIP = this.sanitizer.bypassSecurityTrustResourceUrl(url);
+	}
+
+	viewGestation(gestationId:number) {
+		const url = this.trustedUrlSIP + '$'+ gestationId;
+		this.trustedUrlSIP = this.sanitizer.bypassSecurityTrustResourceUrl(url);
+		this.viewSip=true;
+	}
+
+	backViewGestations() {
+		this.viewSip=false;
 	}
 }

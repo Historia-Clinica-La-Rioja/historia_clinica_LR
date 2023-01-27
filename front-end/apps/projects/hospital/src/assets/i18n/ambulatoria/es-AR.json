@@ -633,9 +633,13 @@
             "nursing": {
                 "TAB_LABEL": "enfermería"
             },
-            "clap": {
-                "TAB_LABEL": "Clap"
-            }
+			"clap":{
+				"TAB_LABEL":"Clap",
+				"TITLE_PERINATAL_CLINICAL_HISTORY": "Historia clínica perinatal",
+				"GESTATION": "Gesta",
+				"VIEW" :"Ver"
+
+			}
         },
         "screen_change_warning_dialog": {
             "CONTENT": "Usted ha iniciado una consulta, si cambia de pantalla la información cargada se perderá.",
