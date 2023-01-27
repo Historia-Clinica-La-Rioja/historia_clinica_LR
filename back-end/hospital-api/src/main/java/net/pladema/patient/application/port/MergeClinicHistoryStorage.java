@@ -27,6 +27,7 @@ public interface MergeClinicHistoryStorage {
 	void modifyVaccineConsultation(List<Integer> ids, Integer newPatientId);
 	void modifyCounterReference(List<Integer> crIds, Integer newPatientId);
 	void modifySnvsReport(List<Integer> oldPatients, Integer newPatientId);
+	void unmergeClinicData(Integer inactivePatientId);
 
 
 	}

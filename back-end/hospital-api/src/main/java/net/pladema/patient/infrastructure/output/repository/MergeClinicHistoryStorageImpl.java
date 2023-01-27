@@ -156,6 +156,12 @@ public class MergeClinicHistoryStorageImpl implements MergeClinicHistoryStorage 
 		snvsReportRepository.findAllByPatients(oldPatients)
 				.forEach(item -> migratePatientStorage.migrateItem(item.getId(), item.getPatientId(), newPatientId, EMergeTable.SNVS_REPORT));
 	}
+	
+	@Override
+	public void unmergeClinicData(Integer inactivePatientId) {
+		log.debug("Input parameters -> inactivePatientId {}", inactivePatientId);
+		migratePatientStorage.undoMigrateByInactivePatient(inactivePatientId);
+	}
 
 
 }
