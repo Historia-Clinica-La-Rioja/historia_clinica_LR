@@ -2,10 +2,13 @@ package net.pladema.sgx.exceptions;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Objects;
+import java.util.stream.Collectors;
 
 import javax.mail.MessagingException;
 import javax.persistence.EntityNotFoundException;
@@ -30,6 +33,7 @@ import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.validation.BindException;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -232,6 +236,19 @@ public class RestExceptionHandler {
 	protected ApiErrorMessageDto handleRestorePasswordNotificationException(RestorePasswordNotificationException ex) {
 		LOG.debug("RestorePasswordNotificationException -> {}", ex.getMessage(), ex);
 		return new ApiErrorMessageDto(ex.getCode().toString(), ex.getMessage());
+	}
+
+	@ResponseStatus(HttpStatus.BAD_REQUEST)
+	@ExceptionHandler(BindException.class)
+	protected ApiErrorMessageDto handleBindException(BindException ex) {
+		LOG.debug(ex.getMessage());
+		LOG.error("BindException -> Error binding request values");
+		String[] fieldsAndValues = ex.getBindingResult()
+				.getAllErrors()
+				.stream()
+				.map(error -> String.format("%s=%s", ((FieldError) error).getField(),((FieldError) error).getRejectedValue()))
+				.toArray(String[]::new);
+		return new ApiErrorMessageDto("BindException", String.format("Error al leer el valor de %s", Arrays.toString(fieldsAndValues)));
 	}
 
 }

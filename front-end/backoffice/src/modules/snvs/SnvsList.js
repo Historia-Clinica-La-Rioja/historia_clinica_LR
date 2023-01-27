@@ -6,22 +6,27 @@ import {
     Filter,
     TextInput,
     ReferenceField,
-    FunctionField
+    FunctionField,
+    ReferenceInput,
+    AutocompleteInput,
+    NumberInput
 } from 'react-admin';
 import SgxDateField from "../../dateComponents/sgxDateField";
 
 const SnvsFilter = (props) => (
     <Filter {...props}>
-        <TextInput source="id" />
-        <TextInput source="groupEventId" />
-        <TextInput source="eventId" />
-        <TextInput source="patientId" />
-        <TextInput source="snomedSctid" />
-        <TextInput source="status" />
-        <TextInput source="responseCode" />
-        <TextInput source="professionalId" />
-        <TextInput source="institutionId" />
-        <TextInput source="sisaRegisteredId" />
+        <NumberInput source="id"/>
+        <NumberInput source="groupEventId"/>
+        <NumberInput source="eventId"/>
+        <NumberInput source="patientId"/>
+        <TextInput source="snomedSctid"/>
+        <TextInput source="status"/>
+        <NumberInput source="responseCode"/>
+        <NumberInput source="professionalId"/>
+        <ReferenceInput source="institutionId" reference="institutions" allowEmpty={false} filterToQuery={searchText => ({name: searchText})}>
+            <AutocompleteInput optionText={"name"} optionValue={"id"} resettable={true}/>
+        </ReferenceInput>
+        <NumberInput source="sisaRegisteredId"/>
     </Filter>
 );
 
@@ -32,7 +37,8 @@ const SnvsList = props => (
             <TextField source="groupEventId" />
             <TextField source="eventId" />
             <TextField source="manualClassificationId" />
-            <ReferenceField source="patientId" reference="patient" link={false}>
+            <TextField source="patientId" />
+            <ReferenceField label="resources.snvs.patient" source="patientId" reference="patient" link={false}>
                 <ReferenceField source="personId" reference="person" link={false}>
                     <FunctionField render={p => `${p.firstName} ${p.lastName}`} />
                 </ReferenceField>
@@ -41,7 +47,8 @@ const SnvsList = props => (
             <TextField source="snomedPt" />
             <TextField source="status" />
             <TextField source="responseCode" />
-            <ReferenceField source="professionalId" reference="healthcareprofessionals" link={false}>
+            <TextField source="professionalId" />
+            <ReferenceField label="resources.snvs.professional" source="professionalId" reference="healthcareprofessionals" link={false}>
                 <ReferenceField source="personId" reference="person" link={false}>
                     <FunctionField render={professional => `${professional.firstName} ${professional.lastName}`} />
                 </ReferenceField>
