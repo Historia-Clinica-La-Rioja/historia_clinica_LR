@@ -51,7 +51,7 @@
                 </div>
             </div>
             <section class="prescription-list gray">
-                <div>
+                <div *ngIf="prescriptionItem.unitDose && prescriptionItem.treatmentDays && prescriptionItem.posdatadas">
                     <span
                         [translate]="'ambulatoria.paciente.ordenes_prescripciones.new_prescription_dialog.UNIT_DOSE'"
                         [translateParams]="{unitDose: prescriptionItem.unitDose}">
@@ -72,11 +72,11 @@
                     </ng-template>
                 </div>
                 <div>
-                    <span
+                    <span *ngIf="prescriptionItem.dayDose"
                         [translate]="'ambulatoria.paciente.ordenes_prescripciones.new_prescription_dialog.DAY_DOSE'"
                         [translateParams]="{dayDose: prescriptionItem.dayDose}">
                     </span>
-                    <span
+                    <span *ngIf="prescriptionItem.healthProblem"
                         [translate]="'ambulatoria.paciente.ordenes_prescripciones.new_prescription_dialog.DIAGNOSIS'"
                         [translateParams]="{healthProblem: prescriptionItem.healthProblem.description}">
                     </span>
@@ -85,6 +85,11 @@
                         [translateParams]="{interval: prescriptionItem.intervalHours}">
                     </span>
                     <span *ngIf=" ! prescriptionItem.intervalHours" [translate]="'ambulatoria.paciente.ordenes_prescripciones.new_prescription_dialog.DAILY'"></span>
+                    <span *ngIf="prescriptionItem.administrationTimeDays"
+                        [translate]="'ambulatoria.paciente.ordenes_prescripciones.new_prescription_dialog.ADMINISTRATION_TIME_DAYS'"
+                        [translateParams]="{days: prescriptionItem.administrationTimeDays}">
+                    </span>
+                    <span *ngIf=" ! prescriptionItem.administrationTimeDays && ! prescriptionItem.posdatadas" [translate]="'ambulatoria.paciente.ordenes_prescripciones.new_prescription_dialog.USUAL'"></span>
                 </div>
             </section>
             <span class="gray" *ngIf="prescriptionItem.observations">{{prescriptionItem.observations}}</span>

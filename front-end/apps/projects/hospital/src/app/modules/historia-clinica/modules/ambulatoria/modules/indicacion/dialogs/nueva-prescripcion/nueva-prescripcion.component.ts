@@ -14,7 +14,6 @@ import { PatientService } from '@api-rest/services/patient.service';
 
 import { AgregarPrescripcionItemComponent, NewPrescriptionItem } from '../../../../dialogs/ordenes-prescripciones/agregar-prescripcion-item/agregar-prescripcion-item.component';
 import { PrescripcionesService, PrescriptionTypes } from '../../../../services/prescripciones.service';
-import { RecetaCreadaDialogComponent } from '@historia-clinica/modules/ambulatoria/dialogs/receta-creada-dialog/receta-creada-dialog.component';
 
 @Component({
 	selector: 'app-nueva-prescripcion',
@@ -38,7 +37,7 @@ export class NuevaPrescripcionComponent implements OnInit {
 		private readonly patientService: PatientService,
 		private prescripcionesService: PrescripcionesService,
 		public dialogRef: MatDialogRef<NuevaPrescripcionComponent>,
-		@Inject(MAT_DIALOG_DATA) public data: NewPrescriptionData) { }
+		@Inject(MAT_DIALOG_DATA) public data: NewPrescriptionData) {}
 
 	ngOnInit(): void {
 		this.prescriptionForm = this.formBuilder.group({
@@ -112,7 +111,6 @@ export class NuevaPrescripcionComponent implements OnInit {
 		if (prescriptionDto) {
 			this.prescripcionesService.createPrescription(this.data.prescriptionType, prescriptionDto, this.data.patientId)
 			.subscribe(prescriptionRequestResponse => {
-					this.dialog.open(RecetaCreadaDialogComponent);
 					this.closeModal({prescriptionDto, prescriptionRequestResponse});
 				},
 					(err: ApiErrorDto) => {
@@ -159,7 +157,7 @@ export class NuevaPrescripcionComponent implements OnInit {
 		editPrescriptionItem.healthProblem = prescriptionItem.healthProblem;
 		editPrescriptionItem.unitDose = prescriptionItem.unitDose;
 		editPrescriptionItem.dayDose = prescriptionItem.dayDose;
-		editPrescriptionItem.treatmentDays - prescriptionItem.treatmentDays;
+		editPrescriptionItem.treatmentDays = prescriptionItem.treatmentDays;
 		editPrescriptionItem.posdatadas = prescriptionItem.posdatadas;
 		editPrescriptionItem.administrationTimeDays = prescriptionItem.administrationTimeDays;
 		editPrescriptionItem.isChronicAdministrationTime = prescriptionItem.isChronicAdministrationTime;

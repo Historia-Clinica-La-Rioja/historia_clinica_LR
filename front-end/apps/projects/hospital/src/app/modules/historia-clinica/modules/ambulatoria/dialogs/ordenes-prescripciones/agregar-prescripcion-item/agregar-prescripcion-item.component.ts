@@ -30,6 +30,7 @@ export class AgregarPrescripcionItemComponent implements OnInit, AfterViewInit, 
 	searching = false;
 	conceptsView: boolean = false;
 	ambulatoryConsultationProblemsService: AmbulatoryConsultationProblemsService;
+	isHabilitarRecetaDigitalFFActive: boolean = false;
 	severityTypes: any[];
 	reportFFIsOn;
 	searchConceptsLocallyFFIsOn;
@@ -49,6 +50,7 @@ export class AgregarPrescripcionItemComponent implements OnInit, AfterViewInit, 
 	public readonly TEXT_AREA_MAX_LENGTH = TEXT_AREA_MAX_LENGTH;
 
 	@ViewChild('intervalHoursInput') intervalHoursInput: ElementRef;
+	@ViewChild('administrationTimeDaysInput') administrationTimeDaysInput: ElementRef;
 
 	private MIN_INPUT_LENGTH = 1;
 
@@ -67,7 +69,28 @@ export class AgregarPrescripcionItemComponent implements OnInit, AfterViewInit, 
 		private readonly snvsMasterDataService: SnvsMasterDataService,
 		private readonly outpatientConsultationService: OutpatientConsultationService,
 		@Inject(MAT_DIALOG_DATA) public data: NewPrescriptionItemData) {
-			this.ambulatoryConsultationProblemsService = new AmbulatoryConsultationProblemsService(formBuilder, this.snomedService, this.snackBarService, this.snvsMasterDataService, this.dialog);
+			this.featureFlagService.isActive(AppFeature.HABILITAR_RECETA_DIGITAL)
+				.subscribe((isFFActive: boolean) => {
+					this.isHabilitarRecetaDigitalFFActive = isFFActive
+					if (this.isHabilitarRecetaDigitalFFActive) {
+						this.ambulatoryConsultationProblemsService = new AmbulatoryConsultationProblemsService(formBuilder, this.snomedService, this.snackBarService, this.snvsMasterDataService, this.dialog);
+
+						this.internacionMasterDataService.getHealthSeverity().subscribe(healthConditionSeverities => {
+							this.severityTypes = healthConditionSeverities;
+							this.ambulatoryConsultationProblemsService.setSeverityTypes(healthConditionSeverities);
+						});
+
+						this.featureFlagService.isActive(AppFeature.HABILITAR_REPORTE_EPIDEMIOLOGICO).subscribe(isOn => {
+							this.reportFFIsOn = isOn;
+							this.ambulatoryConsultationProblemsService.setReportFF(isOn);
+						});
+
+						this.featureFlagService.isActive(AppFeature.HABILITAR_BUSQUEDA_LOCAL_CONCEPTOS).subscribe(isOn => {
+							this.searchConceptsLocallyFFIsOn = isOn;
+							this.ambulatoryConsultationProblemsService.setSearchConceptsLocallyFF(isOn);
+						});
+					}
+				});
 		}
 
 	ngOnInit(): void {
@@ -82,21 +105,6 @@ export class AgregarPrescripcionItemComponent implements OnInit, AfterViewInit, 
 		if (this.data.item) {
 			this.setItemData(this.data.item);
 		}
-
-		this.internacionMasterDataService.getHealthSeverity().subscribe(healthConditionSeverities => {
-			this.severityTypes = healthConditionSeverities;
-			this.ambulatoryConsultationProblemsService.setSeverityTypes(healthConditionSeverities);
-		});
-
-		this.featureFlagService.isActive(AppFeature.HABILITAR_REPORTE_EPIDEMIOLOGICO).subscribe(isOn => {
-			this.reportFFIsOn = isOn;
-			this.ambulatoryConsultationProblemsService.setReportFF(isOn);
-		});
-
-		this.featureFlagService.isActive(AppFeature.HABILITAR_BUSQUEDA_LOCAL_CONCEPTOS).subscribe(isOn => {
-			this.searchConceptsLocallyFFIsOn = isOn;
-			this.ambulatoryConsultationProblemsService.setSearchConceptsLocallyFF(isOn);
-		});
 	}
 
 	getProblems() {
@@ -141,6 +149,14 @@ export class AgregarPrescripcionItemComponent implements OnInit, AfterViewInit, 
 		})
 	}
 
+	resetForm(): void {
+		this.snomedConcept = undefined;
+		this.prescriptionItemForm.reset({
+			interval: this.DEFAULT_RADIO_OPTION,
+			administrationTime: this.DEFAULT_RADIO_OPTION
+		});
+	}
+
 	private createOutpatientDto(problem: AmbulatoryConsultationProblem): CreateOutpatientDto {
 		const outpatientProblemDto: OutpatientProblemDto[] = [{
 			chronic: problem.cronico,
@@ -182,6 +198,17 @@ export class AgregarPrescripcionItemComponent implements OnInit, AfterViewInit, 
 				this.prescriptionItemForm.controls.intervalHours.updateValueAndValidity();
 			}
 		});
+
+		this.prescriptionItemForm.controls.administrationTime.valueChanges.subscribe((newValue) => {
+			if (newValue !== this.DEFAULT_RADIO_OPTION) {
+				this.administrationTimeDaysInput.nativeElement.focus();
+				this.prescriptionItemForm.controls.administrationTimeDays.setValidators([Validators.required]);
+				this.prescriptionItemForm.controls.administrationTimeDays.updateValueAndValidity();
+			} else {
+				this.prescriptionItemForm.controls.administrationTimeDays.clearValidators();
+				this.prescriptionItemForm.controls.administrationTimeDays.updateValueAndValidity();
+			}
+		});
 	}
 
 	getInputNumberWidth(formControl: string) {
@@ -189,7 +216,9 @@ export class AgregarPrescripcionItemComponent implements OnInit, AfterViewInit, 
 	}
 
 	addPrescriptionItem() {
-		if ( ! this.prescriptionItemForm.valid) return;
+		if ( ! this.prescriptionItemForm.valid
+			&& intervalValidation(this.prescriptionItemForm, 'intervalHours','interval')
+			&& intervalValidation(this.prescriptionItemForm, 'administrationTimeDays','administrationTime')) return;
 
 		const {item, showDosage, showStudyCategory} = this.data;
 		const newItem: NewPrescriptionItem = {
@@ -200,17 +229,19 @@ export class AgregarPrescripcionItemComponent implements OnInit, AfterViewInit, 
 				description: this.healthProblemOptions.find(hp => hp.sctId === this.prescriptionItemForm.controls.healthProblem.value).description,
 				sctId: this.prescriptionItemForm.controls.healthProblem.value
 			},
-			unitDose: this.prescriptionItemForm.controls.unitDose.value,
-			dayDose: this.prescriptionItemForm.controls.dayDose.value,
-			treatmentDays: this.prescriptionItemForm.controls.treatmentDays.value,
-			posdatadas: this.prescriptionItemForm.controls.posdatadas.value,
+			administrationTimeDays: showDosage ? this.prescriptionItemForm.controls.administrationTime.value !== this.DEFAULT_RADIO_OPTION ? this.prescriptionItemForm.controls.administrationTimeDays.value : null : null,
+			isChronicAdministrationTime: showDosage ? this.prescriptionItemForm.controls.administrationTime.value === this.DEFAULT_RADIO_OPTION : null,
 			studyCategory: {
 				id: showStudyCategory ? this.prescriptionItemForm.controls.studyCategory.value : null,
 				description: showStudyCategory ? this.studyCategoryOptions.find(sc => sc.id === this.prescriptionItemForm.controls.studyCategory.value).description : null
 			},
 			isDailyInterval: showDosage ? this.prescriptionItemForm.controls.interval.value === this.DEFAULT_RADIO_OPTION : null,
 			intervalHours: showDosage ? this.prescriptionItemForm.controls.interval.value !== this.DEFAULT_RADIO_OPTION ? this.prescriptionItemForm.controls.intervalHours.value : null : null,
-			observations: this.prescriptionItemForm.controls.observations.value
+			observations: this.prescriptionItemForm.controls.observations.value,
+			unitDose: this.prescriptionItemForm.controls.unitDose.value,
+			dayDose: this.prescriptionItemForm.controls.dayDose.value,
+			treatmentDays: this.prescriptionItemForm.controls.treatmentDays.value,
+			posdatadas: this.prescriptionItemForm.controls.posdatadas.value,
 		};
 
 		this.dialogRef.close(newItem);
@@ -259,6 +290,15 @@ export class AgregarPrescripcionItemComponent implements OnInit, AfterViewInit, 
 				this.prescriptionItemForm.controls.intervalHours.setValidators([Validators.required]);
 				this.prescriptionItemForm.controls.intervalHours.updateValueAndValidity();
 			}
+
+			if (prescriptionItem.isChronicAdministrationTime) {
+				this.prescriptionItemForm.controls.administrationTime.setValue(this.DEFAULT_RADIO_OPTION);
+			} else {
+				this.prescriptionItemForm.controls.administrationTime.setValue(this.OTHER_RADIO_OPTION);
+				this.prescriptionItemForm.controls.administrationTimeDays.setValue(prescriptionItem.administrationTimeDays);
+				this.prescriptionItemForm.controls.administrationTimeDays.setValidators([Validators.required]);
+				this.prescriptionItemForm.controls.administrationTimeDays.updateValueAndValidity();
+			}
 		}
 
 		if (prescriptionItem.studyCategory?.id) {
@@ -271,16 +311,18 @@ export class AgregarPrescripcionItemComponent implements OnInit, AfterViewInit, 
 		this.prescriptionItemForm.controls.snomed.disable();
 	}
 
-	private  formConfiguration() {
+	private formConfiguration() {
 		this.prescriptionItemForm = this.formBuilder.group({
 			snomed: [null, Validators.required],
-			unitDose: [null, Validators.required],
-			dayDose: [null, Validators.required],
-			treatmentDays: [null, Validators.required],
+			unitDose: [null],
+			dayDose: [null],
+			treatmentDays: [null],
 			healthProblem: [null, Validators.required],
-			posdatadas: [this.MONTHS_QUANTITY[0], Validators.required],
+			posdatadas: [null],
 			interval: [this.DEFAULT_RADIO_OPTION],
 			intervalHours: [null],
+			administrationTime: [this.DEFAULT_RADIO_OPTION],
+			administrationTimeDays: [null],
 			observations: [null, [Validators.maxLength(this.TEXT_AREA_MAX_LENGTH)]],
 			studyCategory: [null],
 		});
@@ -291,6 +333,14 @@ export class AgregarPrescripcionItemComponent implements OnInit, AfterViewInit, 
 
 		if (this.data.showStudyCategory) {
 			this.prescriptionItemForm.controls.studyCategory.setValidators([Validators.required]);
+		}
+
+		if (this.isHabilitarRecetaDigitalFFActive) {
+			this.prescriptionItemForm.controls.unitDose.setValidators([Validators.required]);
+			this.prescriptionItemForm.controls.dayDose.setValidators([Validators.required]);
+			this.prescriptionItemForm.controls.treatmentDays.setValidators([Validators.required]);
+			this.prescriptionItemForm.controls.posdatadas.setValidators([Validators.required]);
+			this.prescriptionItemForm.controls.posdatadas.setValue(this.MONTHS_QUANTITY[0]);
 		}
 	}
 
@@ -340,10 +390,6 @@ export class NewPrescriptionItem {
 		description: string;
 		sctId?: string;
 	};
-	unitDose: number;
-	dayDose: number;
-	treatmentDays: number;
-	posdatadas: number
 	studyCategory: {
 		id: string;
 		description: string;
@@ -353,4 +399,8 @@ export class NewPrescriptionItem {
 	intervalHours?: string;
 	administrationTimeDays?: string;
 	observations: string;
+	unitDose: number;
+	dayDose: number;
+	treatmentDays: number;
+	posdatadas: number;
 }

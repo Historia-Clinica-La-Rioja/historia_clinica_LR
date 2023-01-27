@@ -65,7 +65,6 @@ import { HistoricalProblemsFacadeService } from './services/historical-problems-
 import { ClapModule } from './modules/clap/clap.module';
 import { GuardiaComponent } from './components/guardia/guardia.component';
 import { GuardiaModule } from '../guardia/guardia.module';
-import { RecetaCreadaDialogComponent } from './dialogs/receta-creada-dialog/receta-creada-dialog.component';
 
 @NgModule({
 	declarations: [
@@ -113,7 +112,6 @@ import { RecetaCreadaDialogComponent } from './dialogs/receta-creada-dialog/rece
 		VaccineSearchComponent,
 		ClinicalHistoryActionsComponent,
 		GuardiaComponent,
-    	RecetaCreadaDialogComponent,
 	],
 	imports: [
 		CommonModule,

@@ -158,17 +158,15 @@ export class CardMedicacionesComponent implements OnInit {
 
 	openDialogNewMedication(isNewMedication: boolean, medication?: MedicationInfoDto) {
 		this.featureFlagService.isActive(AppFeature.HABILITAR_RECETA_DIGITAL)
-			.subscribe((result: boolean) => {
-				if (result) {
+			.subscribe((isFFActive: boolean) => {
+				if (isFFActive) {
 					this.validateProfessional(isNewMedication, medication);
 					return;
 				}
-				
-				this.openNuevaPrescripcionWitoutFF();
+
+				this.openNuevaPrescripcion(isNewMedication, medication);
 			})
 	}
-
-	private openNuevaPrescripcionWitoutFF() {}
 		
 	private validateProfessional(isNewMedication: boolean, medication?: MedicationInfoDto) {
 		this.prescripcionesService.validateProfessional(this.patientId)

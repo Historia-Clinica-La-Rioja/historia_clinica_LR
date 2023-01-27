@@ -38,7 +38,7 @@
 				<mat-hint>{{'ambulatoria.paciente.ordenes_prescripciones.add_prescription_item_dialog.ADD_CHARACTERS' | translate}}</mat-hint>
 			</mat-form-field>
 
-			<section class="dose-data">
+			<section *ngIf="this.isHabilitarRecetaDigitalFFActive" class="dose-data">
 				<mat-form-field appearance="outline">
 					<mat-label>{{'ambulatoria.paciente.ordenes_prescripciones.add_prescription_item_dialog.UNIT_DOSE' | translate}}</mat-label>
 					<input type="number" matInput autocomplete="off" formControlName="unitDose">
@@ -73,7 +73,7 @@
 				<mat-error *ngIf="hasError(prescriptionItemForm, 'required', 'healthProblem')" translate="forms.REQUIRED"></mat-error>
 			</mat-form-field>
 
-			<mat-form-field appearance="outline">
+			<mat-form-field *ngIf="this.isHabilitarRecetaDigitalFFActive" appearance="outline">
 				<mat-label>{{'ambulatoria.paciente.ordenes_prescripciones.add_prescription_item_dialog.POSDATADAS' | translate}}</mat-label>
 				<mat-select formControlName="posdatadas" name="posdatadas">
 					<mat-option *ngFor="let value of MONTHS_QUANTITY" [value]="value">
@@ -92,7 +92,7 @@
 				<mat-error *ngIf="hasError(prescriptionItemForm, 'required', 'posdatadas')" translate="forms.REQUIRED"></mat-error>
 			</mat-form-field>
 
-			<mat-form-field appearance="outline" *ngIf="data.showStudyCategory">
+			<mat-form-field *ngIf="data.showStudyCategory" appearance="outline">
 				<mat-label>{{'ambulatoria.paciente.ordenes_prescripciones.add_prescription_item_dialog.STUDY_CATEGORY' | translate}}</mat-label>
 				<mat-select formControlName="studyCategory" name="studyCategory">
 					<mat-option *ngFor="let studyCategory of studyCategoryOptions" [value]="studyCategory.id">
@@ -101,7 +101,7 @@
 				</mat-select>
 			</mat-form-field>
 
-			<div class="mat-form-field-wrapper" fxLayout="column" fxLayout.gt-md="row" fxLayoutGap="50px" *ngIf="data.showDosage">
+			<div *ngIf="data.showDosage" class="mat-form-field-wrapper" fxLayout="column" fxLayout.gt-md="row" fxLayoutGap="50px">
 				<div fxLayout="column" fxLayoutGap="10px">
 					<mat-label class="mat-subheading-2">{{'ambulatoria.paciente.ordenes_prescripciones.add_prescription_item_dialog.INTERVAL' | translate}}</mat-label>
 					<mat-radio-group formControlName="interval" fxLayout="column" fxLayoutGap="10px">
@@ -119,6 +119,22 @@
 				</div>
 			</div>
 
+			<div *ngIf="! this.isHabilitarRecetaDigitalFFActive" fxLayout="column" fxLayoutGap="10px">
+				<mat-label class="mat-subheading-2">{{'ambulatoria.paciente.ordenes_prescripciones.add_prescription_item_dialog.ADMINISTRATION_TIME' | translate}}</mat-label>
+				<mat-radio-group formControlName="administrationTime" fxLayout="column" fxLayoutGap="10px">
+					<mat-radio-button color="primary" [value]="DEFAULT_RADIO_OPTION">
+						{{'ambulatoria.paciente.ordenes_prescripciones.add_prescription_item_dialog.ADMINISTRATION_TIME_DEFAULT_OPTION' | translate}}
+					</mat-radio-button>
+					<mat-radio-button color="primary" [value]="OTHER_RADIO_OPTION">
+						Durante <input #administrationTimeDaysInput [style.width.ch]="getInputNumberWidth('administrationTimeDays')"
+									formControlName="administrationTimeDays" type="number" matInput> días.
+						<mat-error *ngIf="intervalValidation(prescriptionItemForm, 'administrationTimeDays', 'administrationTime')">
+							<span translate="ambulatoria.paciente.ordenes_prescripciones.add_prescription_item_dialog.ADMINISTRATION_TIME_DAYS_REQUIRED"></span>
+						</mat-error>
+					</mat-radio-button>
+				</mat-radio-group>
+			</div>
+
 			<mat-form-field appearance="outline">
 				<mat-label>{{'ambulatoria.paciente.ordenes_prescripciones.add_prescription_item_dialog.OBSERVATIONS' | translate}}</mat-label>
 				<textarea matInput type="text" id="observations" name="observations"
@@ -130,8 +146,6 @@
 				</mat-error>
 
 			</mat-form-field>
-
-
 		</form>
 	</ng-template>
 </div>
