@@ -39,7 +39,7 @@ public class MigratePatientStorageImpl implements MigratePatientStorage {
 		log.debug("Input parameters -> inactivePatientId {}", inactivePatientId);
 		List<MergedPatientItem> mpis = mergedPatientItemRepository.findAllByInactivePatientId(inactivePatientId);
 		mpis.forEach(mpi -> migrate(mpi.getMergedIdValue(), mpi.getOldPatientId(), mpi.getMergedTableName()));
-		mergedPatientItemRepository.deleteAllById(mpis.stream().map(MergedPatientItem::getId).collect(Collectors.toList()));
+		mergedPatientItemRepository.deleteAll(mpis);
 	}
 
 
@@ -51,6 +51,8 @@ public class MigratePatientStorageImpl implements MigratePatientStorage {
 				.setParameter("id", id)
 				.setParameter("newPatientId", newPatientId)
 				.executeUpdate();
+		entityManager.flush();
+		entityManager.clear();
 	}
 
 

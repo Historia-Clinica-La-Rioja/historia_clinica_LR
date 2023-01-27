@@ -1,6 +1,7 @@
 package ar.lamansys.sgh.clinichistory.infrastructure.output.repository.ips.entity;
 
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.masterdata.entity.ConditionVerificationStatus;
+import ar.lamansys.sgx.shared.migratable.SGXDocumentEntity;
 import lombok.*;
 import ar.lamansys.sgx.shared.auditable.entity.SGXAuditableEntity;
 import ar.lamansys.sgx.shared.auditable.listener.SGXAuditListener;
@@ -16,7 +17,7 @@ import java.util.Objects;
 @ToString
 @NoArgsConstructor
 @AllArgsConstructor
-public class HealthCondition extends SGXAuditableEntity<Integer> implements Cloneable{
+public class HealthCondition extends SGXAuditableEntity<Integer> implements Cloneable, SGXDocumentEntity {
 
 	/**
 	 * 

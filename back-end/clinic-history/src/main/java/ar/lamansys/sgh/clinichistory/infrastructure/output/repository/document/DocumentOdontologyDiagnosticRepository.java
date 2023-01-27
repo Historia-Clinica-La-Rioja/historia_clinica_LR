@@ -2,8 +2,6 @@ package ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document;
 
 import java.util.List;
 
-import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.ips.entity.OdontologyDiagnostic;
-
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -25,10 +23,4 @@ public interface DocumentOdontologyDiagnosticRepository extends JpaRepository<Do
 			"WHERE dp.pk.documentId = :documentId ")
 	List<Object[]> getOdontologyDiagnosticFromDocument(@Param("documentId") Long documentId);
 
-	@Transactional(readOnly = true)
-	@Query("SELECT od " +
-			"FROM DocumentOdontologyDiagnostic dod " +
-			"JOIN OdontologyDiagnostic od ON dod.pk.odontologyDiagnosticId = od.id " +
-			"WHERE dod.pk.documentId IN :documentIds")
-	List<OdontologyDiagnostic> getOdontologyDiagnosticFromDocuments(@Param("documentIds") List<Long> documentIds);
 }

@@ -1,17 +1,17 @@
 package ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document;
 
-import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.entity.DocumentMedicamentionStatement;
-import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.entity.DocumentMedicamentionStatementPK;
-import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.hospitalizationState.entity.MedicationVo;
-import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.ips.entity.MedicationStatement;
-import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.masterdata.entity.MedicationStatementStatus;
+import java.util.List;
+
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.List;
+import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.entity.DocumentMedicamentionStatement;
+import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.entity.DocumentMedicamentionStatementPK;
+import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.hospitalizationState.entity.MedicationVo;
+import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.masterdata.entity.MedicationStatementStatus;
 
 @Repository
 public interface DocumentMedicamentionStatementRepository extends JpaRepository<DocumentMedicamentionStatement, DocumentMedicamentionStatementPK> {
@@ -48,10 +48,4 @@ public interface DocumentMedicamentionStatementRepository extends JpaRepository<
     DocumentMedicamentionStatement findByMedicationId(@Param("mid")  Integer mid);
 
 
-	@Transactional(readOnly = true)
-	@Query("SELECT ms " +
-			"FROM DocumentMedicamentionStatement dms " +
-			"JOIN MedicationStatement ms ON dms.pk.medicationStatementId = ms.id " +
-			"WHERE dms.pk.documentId IN :documentIds")
-	List<MedicationStatement> getMedicationStatementFromDocuments(@Param("documentIds") List<Long> documentIds);
 }

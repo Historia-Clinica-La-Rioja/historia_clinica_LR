@@ -2,10 +2,13 @@ package net.pladema.patient.application.port;
 
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.ESourceType;
 
+import ar.lamansys.sgx.shared.migratable.SGXDocumentEntityRepository;
+
 import java.util.List;
 
 public interface MergeClinicHistoryStorage {
 
+	<T extends SGXDocumentEntityRepository> void migratePatientIdFromItem(Class<T> clazz, List<Long> ids, Integer newPatientId);
 	List<Integer> getInternmentEpisodesIds(List<Integer> oldPatients);
 	List<Integer> getOutpatientConsultationIds(List<Integer> oldPatients);
 	List<Integer> getMedicationRequestIds(List<Integer> oldPatients);
@@ -17,18 +20,6 @@ public interface MergeClinicHistoryStorage {
 	void modifyDocument(List<Long> dIds, Integer newPatientId);
 	List<Long> getDocumentsIds(List<Integer> ids, List<ESourceType> sourceTypes);
 	void modifyInternmentEpisode(List<Integer> ieIds, Integer newPatientId);
-	void modifyHealthCondition(List<Long> dIds, Integer newPatientId);
-	void modifyAllergyIntolerance(List<Long> dIds, Integer newPatientId);
-	void modifyImmunization(List<Long> dIds, Integer newPatientId);
-	void modifyMedicationStatement(List<Long> dIds, Integer newPatientId);
-	void modifyProcedure(List<Long> dIds, Integer newPatientId);
-	void modifyOdontologyDiagnostic(List<Long> dIds, Integer newPatientId);
-	void modifyOdontologyProcedure(List<Long> dIds, Integer newPatientId);
-	void modifyObservationRiskFactor(List<Long> dIds, Integer newPatientId);
-	void modifyObservationLab(List<Long> dIds, Integer newPatientId);
-	void modifyDiagnosticReport(List<Long> dIds, Integer newPatientId);
-	void modifyIndication(List<Long> dIds, Integer newPatientId);
-	void modifyAppointment(List<Long> dIds, Integer newPatientId);
 	void modifyOutpatientConsultation(List<Integer> ocIds, Integer newPatientId);
 	void modifyMedicationRequest(List<Integer> mrIds, Integer newPatientId);
 	void modifyServiceRequest(List<Integer> mrIds, Integer newPatientId);
@@ -38,4 +29,4 @@ public interface MergeClinicHistoryStorage {
 	void modifySnvsReport(List<Integer> oldPatients, Integer newPatientId);
 
 
-}
+	}

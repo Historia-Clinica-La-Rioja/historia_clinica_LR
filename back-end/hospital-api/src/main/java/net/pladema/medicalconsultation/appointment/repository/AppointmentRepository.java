@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Optional;
 
 import net.pladema.medicalconsultation.appointment.repository.domain.AppointmentEquipmentShortSummaryBo;
+import ar.lamansys.sgx.shared.migratable.SGXDocumentEntityRepository;
 import net.pladema.medicalconsultation.appointment.repository.domain.AppointmentShortSummaryBo;
 
 import org.springframework.data.jpa.repository.Modifying;
@@ -24,7 +25,7 @@ import net.pladema.medicalconsultation.appointment.repository.entity.Appointment
 import net.pladema.medicalconsultation.appointment.repository.entity.AppointmentState;
 
 @Repository
-public interface AppointmentRepository extends SGXAuditableEntityJPARepository<Appointment, Integer> {
+public interface AppointmentRepository extends SGXAuditableEntityJPARepository<Appointment, Integer>, SGXDocumentEntityRepository<Appointment> {
 
     @Transactional(readOnly = true)
     @Query( "SELECT NEW net.pladema.medicalconsultation.appointment.repository.domain.AppointmentVo(aa.pk.diaryId, a, doh.medicalAttentionTypeId, has.reason, ao.observation, ao.createdBy)" +
@@ -327,6 +328,13 @@ public interface AppointmentRepository extends SGXAuditableEntityJPARepository<A
 			"ORDER BY a.hour asc")
 	List<AppointmentShortSummaryBo> getAppointmentFromDeterminatedDate(@Param("patientId") Integer patientId,
 																				 @Param("date") LocalDate date);
+	@Override
+	@Transactional(readOnly = true)
+	@Query("SELECT a " +
+			"FROM DocumentAppointment da " +
+			"JOIN Appointment a ON da.pk.appointmentId = a.id " +
+			"WHERE da.pk.documentId IN :documentIds")
+	List<Appointment> getEntitiesByDocuments(@Param("documentIds") List<Long> documentIds);
 
 	@Transactional(readOnly = true)
 	@Query("SELECT NEW net.pladema.medicalconsultation.appointment.repository.domain.AppointmentEquipmentShortSummaryBo(" +

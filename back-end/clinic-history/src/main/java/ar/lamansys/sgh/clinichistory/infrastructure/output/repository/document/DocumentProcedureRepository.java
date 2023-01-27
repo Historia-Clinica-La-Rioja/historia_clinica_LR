@@ -1,11 +1,6 @@
 package ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document;
 
-import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.entity.DocumentProcedure;
-import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.entity.DocumentProcedurePK;
-import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.hospitalizationState.entity.ProcedureVo;
-
-import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.ips.entity.Procedure;
-import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.masterdata.entity.ProceduresStatus;
+import java.util.List;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -13,7 +8,10 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.List;
+import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.entity.DocumentProcedure;
+import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.entity.DocumentProcedurePK;
+import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.hospitalizationState.entity.ProcedureVo;
+import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.masterdata.entity.ProceduresStatus;
 
 @Repository
 public interface DocumentProcedureRepository extends JpaRepository<DocumentProcedure, DocumentProcedurePK> {
@@ -27,12 +25,5 @@ public interface DocumentProcedureRepository extends JpaRepository<DocumentProce
 			"WHERE dp.pk.documentId = :documentId " +
 			"AND p.statusId NOT IN ('"+ ProceduresStatus.ERROR+"')")
 	List<ProcedureVo> getProcedureStateFromDocument(@Param("documentId") Long documentId);
-
-	@Transactional(readOnly = true)
-	@Query("SELECT p " +
-			"FROM DocumentProcedure dp " +
-			"JOIN Procedure p ON (dp.pk.procedureId = p.id) " +
-			"WHERE dp.pk.documentId IN :documentIds")
-	List<Procedure> getProcedureFromDocuments(@Param("documentIds") List<Long> documentIds);
 
 }

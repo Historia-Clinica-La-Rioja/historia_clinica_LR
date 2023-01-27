@@ -15,6 +15,7 @@ import javax.persistence.Table;
 
 import ar.lamansys.sgx.shared.auditable.entity.SGXAuditableEntity;
 import ar.lamansys.sgx.shared.auditable.listener.SGXAuditListener;
+import ar.lamansys.sgx.shared.migratable.SGXDocumentEntity;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -26,7 +27,7 @@ import lombok.Setter;
 @Setter
 @Inheritance(strategy = InheritanceType.JOINED)
 @NoArgsConstructor
-public class Indication extends SGXAuditableEntity<Integer> implements Serializable {
+public class Indication extends SGXAuditableEntity<Integer> implements Serializable, SGXDocumentEntity {
 	
 	private static final long serialVersionUID = -3053291021636483828L;
 

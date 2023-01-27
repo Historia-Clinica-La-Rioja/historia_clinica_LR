@@ -42,10 +42,4 @@ public interface DocumentImmunizationRepository extends JpaRepository<DocumentIn
             "WHERE di.pk.documentId = :documentId ")
     List<ImmunizationVo> getImmunizationStateFromDocumentToReport(@Param("documentId") Long documentId);
 
-	@Transactional(readOnly = true)
-	@Query("SELECT i " +
-			"FROM DocumentInmunization di " +
-			"JOIN Inmunization i ON di.pk.inmunizationId = i.id " +
-			"WHERE di.pk.documentId IN :documentIds")
-	List<Inmunization> getImmunizationFromDocuments(@Param("documentIds") List<Long> documentIds);
 }

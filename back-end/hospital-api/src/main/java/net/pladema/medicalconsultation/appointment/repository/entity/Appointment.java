@@ -11,6 +11,8 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
+import ar.lamansys.sgx.shared.migratable.SGXDocumentEntity;
+
 import org.hibernate.annotations.ColumnDefault;
 
 import ar.lamansys.sgx.shared.auditable.entity.SGXAuditableEntity;
@@ -32,7 +34,7 @@ import net.pladema.medicalconsultation.appointment.service.domain.AppointmentBo;
 @AllArgsConstructor
 @Builder
 @NoArgsConstructor
-public class Appointment extends SGXAuditableEntity<Integer> {
+public class Appointment extends SGXAuditableEntity<Integer> implements SGXDocumentEntity {
 
 	@Id
 	@Column(name = "id")

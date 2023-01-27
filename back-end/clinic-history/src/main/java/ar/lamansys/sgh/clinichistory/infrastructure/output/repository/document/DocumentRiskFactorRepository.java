@@ -1,17 +1,17 @@
 package ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document;
 
-import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.entity.DocumentRiskFactor;
-import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.entity.DocumentRiskFactorPK;
-import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.hospitalizationState.entity.ClinicalObservationVo;
-import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.ips.entity.ObservationRiskFactor;
-import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.masterdata.entity.ObservationStatus;
+import java.util.List;
+
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.List;
+import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.entity.DocumentRiskFactor;
+import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.entity.DocumentRiskFactorPK;
+import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.hospitalizationState.entity.ClinicalObservationVo;
+import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.masterdata.entity.ObservationStatus;
 
 @Repository
 public interface DocumentRiskFactorRepository extends JpaRepository<DocumentRiskFactor, DocumentRiskFactorPK> {
@@ -26,12 +26,5 @@ public interface DocumentRiskFactorRepository extends JpaRepository<DocumentRisk
             "WHERE drf.pk.documentId = :documentId " +
             "AND ovs.statusId NOT IN ('"+ ObservationStatus.ERROR+"')")
     List<ClinicalObservationVo> getRiskFactorStateFromDocument(@Param("documentId") Long documentId);
-
-	@Transactional(readOnly = true)
-	@Query("SELECT orf " +
-			"FROM DocumentRiskFactor drf " +
-			"JOIN ObservationRiskFactor orf ON (drf.pk.observationRiskFactorId = orf.id) " +
-			"WHERE drf.pk.documentId IN :documentIds")
-	List<ObservationRiskFactor> getRiskFactorFromDocuments(@Param("documentIds") List<Long> documentIds);
 
 }

@@ -3,7 +3,6 @@ package ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.entity.DocumentAllergyIntolerance;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.entity.DocumentAllergyIntolerancePK;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.hospitalizationState.entity.AllergyConditionVo;
-import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.ips.entity.AllergyIntolerance;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.masterdata.entity.AllergyIntoleranceVerificationStatus;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -40,10 +39,4 @@ public interface DocumentAllergyIntoleranceRepository extends JpaRepository<Docu
             "WHERE da.pk.documentId = :documentId ")
     List<AllergyConditionVo> getAllergyIntoleranceStateFromDocumentToReport(@Param("documentId") Long documentId);
 
-	@Transactional(readOnly = true)
-	@Query("SELECT ai " +
-			"FROM DocumentAllergyIntolerance dai " +
-			"JOIN AllergyIntolerance ai ON dai.pk.allergyIntoleranceId = ai.id " +
-			"WHERE dai.pk.documentId IN :documentIds")
-	List<AllergyIntolerance> getAllergyIntoleranceFromDocuments(@Param("documentIds") List<Long> documentIds);
 }

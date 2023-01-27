@@ -1,6 +1,8 @@
 package ar.lamansys.sgh.clinichistory.infrastructure.output.repository.ips;
 
 
+import ar.lamansys.sgx.shared.migratable.SGXDocumentEntityRepository;
+
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -10,10 +12,12 @@ import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.ips.entity
 import ar.lamansys.sgx.shared.auditable.repository.SGXAuditableEntityJPARepository;
 
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
 import java.util.Optional;
 
 @Repository
-public interface IndicationRepository extends SGXAuditableEntityJPARepository<Indication, Integer>{
+public interface IndicationRepository extends SGXAuditableEntityJPARepository<Indication, Integer>, SGXDocumentEntityRepository<Indication> {
 
 	@Transactional(readOnly=true)
 	@Query(value="SELECT i.typeId "
@@ -31,5 +35,14 @@ public interface IndicationRepository extends SGXAuditableEntityJPARepository<In
 	void updateStatus(@Param("indicationId") Integer indicationId,
 					  @Param("statusId") short statusId,
 					  @Param("userId") Integer userId);
+
+	@Override
+	@Transactional(readOnly = true)
+	@Query(value = "SELECT i "
+			+ "FROM DocumentIndication di "
+			+ "JOIN Indication i ON di.pk.indicationId = i.id "
+			+ "WHERE di.pk.documentId IN :documentIds")
+	List<Indication> getEntitiesByDocuments(@Param("documentIds") List<Long> documentIds);
+
 
 }

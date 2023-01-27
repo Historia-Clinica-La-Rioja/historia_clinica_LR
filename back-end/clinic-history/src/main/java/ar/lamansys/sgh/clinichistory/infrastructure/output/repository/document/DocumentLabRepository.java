@@ -1,17 +1,17 @@
 package ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document;
 
-import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.entity.DocumentLab;
-import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.entity.DocumentLabPK;
-import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.hospitalizationState.entity.ClinicalObservationVo;
-import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.ips.entity.ObservationLab;
-import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.masterdata.entity.ObservationStatus;
+import java.util.List;
+
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.List;
+import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.entity.DocumentLab;
+import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.entity.DocumentLabPK;
+import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.hospitalizationState.entity.ClinicalObservationVo;
+import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.masterdata.entity.ObservationStatus;
 
 @Repository
 public interface DocumentLabRepository extends JpaRepository<DocumentLab, DocumentLabPK> {
@@ -25,12 +25,5 @@ public interface DocumentLabRepository extends JpaRepository<DocumentLab, Docume
             "WHERE dl.pk.documentId = :documentId " +
             "AND ol.statusId NOT IN ('"+ ObservationStatus.ERROR+"')")
     List<ClinicalObservationVo> getLabStateFromDocument(@Param("documentId") Long documentId);
-
-	@Transactional(readOnly = true)
-	@Query("SELECT ol " +
-			"FROM DocumentLab dl " +
-			"JOIN ObservationLab ol ON dl.pk.observationLabId = ol.id " +
-			"WHERE dl.pk.documentId IN :documentIds")
-	List<ObservationLab> getObservationLabFromDocuments(@Param("documentIds")List<Long> documentIds);
 
 }

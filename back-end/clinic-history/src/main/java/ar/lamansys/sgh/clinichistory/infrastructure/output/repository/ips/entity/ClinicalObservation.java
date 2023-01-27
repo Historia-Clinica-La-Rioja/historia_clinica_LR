@@ -1,6 +1,7 @@
 package ar.lamansys.sgh.clinichistory.infrastructure.output.repository.ips.entity;
 
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.masterdata.entity.ObservationStatus;
+import ar.lamansys.sgx.shared.migratable.SGXDocumentEntity;
 import lombok.*;
 import ar.lamansys.sgx.shared.auditable.entity.SGXAuditableEntity;
 
@@ -14,7 +15,7 @@ import java.util.Objects;
 @ToString
 @NoArgsConstructor
 @AllArgsConstructor
-public abstract class ClinicalObservation extends SGXAuditableEntity<Integer> {
+public abstract class ClinicalObservation extends SGXAuditableEntity<Integer> implements SGXDocumentEntity {
 
     @Id
     @Column(name = "id")

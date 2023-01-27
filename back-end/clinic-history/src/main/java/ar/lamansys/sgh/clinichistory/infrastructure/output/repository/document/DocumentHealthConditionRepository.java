@@ -3,7 +3,6 @@ package ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.entity.DocumentHealthCondition;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.entity.DocumentHealthConditionPK;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.hospitalizationState.entity.HealthConditionVo;
-import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.ips.entity.HealthCondition;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.masterdata.entity.ConditionVerificationStatus;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -43,12 +42,5 @@ public interface DocumentHealthConditionRepository extends JpaRepository<Documen
             "LEFT JOIN Note n ON (n.id = hc.noteId) " +
             "WHERE dh.pk.documentId = :documentId ")
     List<HealthConditionVo> getHealthConditionFromDocumentToReport(@Param("documentId") Long documentId);
-
-	@Transactional(readOnly = true)
-	@Query("SELECT hc " +
-			"FROM DocumentHealthCondition dhc " +
-			"JOIN HealthCondition hc ON dhc.pk.healthConditionId = hc.id " +
-			"WHERE dhc.pk.documentId IN :documentIds")
-	List<HealthCondition> getHealthConditionFromDocuments(@Param("documentIds") List<Long> documentIds);
 
 }
