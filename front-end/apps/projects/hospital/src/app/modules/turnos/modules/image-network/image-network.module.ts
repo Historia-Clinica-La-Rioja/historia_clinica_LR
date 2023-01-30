@@ -5,16 +5,21 @@ import { EquipmentDiarySetupComponent } from './routes/equipment-diary-setup/equ
 import { PresentationModule } from '@presentation/presentation.module';
 import { CalendarModule, DateAdapter } from 'angular-calendar';
 import { adapterFactory } from 'angular-calendar/date-adapters/date-fns';
+import { SearchAppointmentsByEquipmentComponent } from './components/search-appointments-by-equipment/search-appointments-by-equipment.component';
 
 @NgModule({
 	declarations: [
-		EquipmentDiarySetupComponent
+		EquipmentDiarySetupComponent,
+		SearchAppointmentsByEquipmentComponent
 	],
 	imports: [
 		CommonModule,
 		CalendarModule.forRoot({ provide: DateAdapter, useFactory: adapterFactory }),
 		PresentationModule,
 		ImageNetworkRoutingModule
+	],
+	exports: [
+		SearchAppointmentsByEquipmentComponent
 	]
 })
 

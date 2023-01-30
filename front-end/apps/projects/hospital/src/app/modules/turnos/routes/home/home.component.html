@@ -37,5 +37,12 @@
 			<app-search-appointments-in-care-network [isVisible]="tabActiveIndex === 2">
 			</app-search-appointments-in-care-network>
 		</mat-tab>
+		<div *ngIf="ffIsOn">
+			<mat-tab label="{{ 'image-network.home.SEARCH_BY_EQUIPMENT' | translate | uppercase }}"
+				*appHasRole="['ADMINISTRATIVO_RED_DE_IMAGENES', 'ADMINISTRADOR_AGENDA']">
+				<app-search-appointments-by-equipment>
+				</app-search-appointments-by-equipment>
+			</mat-tab>
+		</div>
 	</mat-tab-group>
 </app-content>
