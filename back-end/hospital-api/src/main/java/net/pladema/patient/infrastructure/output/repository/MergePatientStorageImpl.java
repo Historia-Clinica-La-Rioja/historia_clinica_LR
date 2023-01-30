@@ -3,6 +3,9 @@ package net.pladema.patient.infrastructure.output.repository;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import ar.lamansys.sgx.auth.user.infrastructure.input.service.UserExternalService;
+import net.pladema.user.repository.UserPersonRepository;
+
 import org.springframework.stereotype.Service;
 
 import lombok.RequiredArgsConstructor;
@@ -31,9 +34,14 @@ public class MergePatientStorageImpl implements MergePatientStorage {
 	private final PatientService patientService;
 
 	private final PersonService personService;
+	
 	private final MergedPatientRepository mergedPatientRepository;
 
 	private final MergedInactivePatientRepository mergedInactivePatientRepository;
+
+	private final UserPersonRepository userPersonRepository;
+
+	private final UserExternalService userExternalService;
 
 	@Override
 	public void inactivatePatient(Integer patientIdToInactivate, Integer referencePatientId, Integer institutionId) {
@@ -41,6 +49,8 @@ public class MergePatientStorageImpl implements MergePatientStorage {
 		patientRepository.findById(patientIdToInactivate).orElseThrow(() -> new MergePatientException(MergePatientExceptionEnum.PATIENT_NOT_EXISTS, String.format("El paciente a inactivar con id %s no se encuentra", patientIdToInactivate)));
 		patientRepository.deleteById(patientIdToInactivate);
 		auditActionPatient(institutionId, patientIdToInactivate, EActionType.DELETE);
+		personService.findByPatientId(patientIdToInactivate)
+				.ifPresent(person -> disableUserByPersonId(person.getId()));
 	}
 
 	@Override
@@ -50,6 +60,8 @@ public class MergePatientStorageImpl implements MergePatientStorage {
 				.orElseThrow(() -> new MergePatientException(MergePatientExceptionEnum.PATIENT_INACTIVE_NOT_EXISTS, String.format("El paciente con id %s no se encuentra inactivo", patientIdToReactivate)));
 		patientRepository.reactivate(mip.getInactivePatientId());
 		auditActionPatient(institutionId, patientIdToReactivate, EActionType.UPDATE);
+		personService.findByPatientId(patientIdToReactivate)
+				.ifPresent(person -> enableUserByPersonId(person.getId()));
 	}
 
 	@Override
@@ -129,4 +141,17 @@ public class MergePatientStorageImpl implements MergePatientStorage {
 		return result;
 	}
 
+	private void disableUserByPersonId(Integer personId) {
+		log.debug("Input parameters -> disable user by personId {}", personId);
+		userPersonRepository.getUserIdByPersonId(personId)
+				.flatMap(userExternalService::getUser)
+				.ifPresent(user -> userExternalService.disableUser(user.getUsername()));
+	}
+
+	private void enableUserByPersonId(Integer personId) {
+		log.debug("Input parameters -> enable user by personId {}", personId);
+		userPersonRepository.getUserIdByPersonId(personId)
+				.flatMap(userExternalService::getUser)
+				.ifPresent(user -> userExternalService.enableUser(user.getUsername()));
+	}
 }
