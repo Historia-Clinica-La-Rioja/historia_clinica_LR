@@ -376,6 +376,7 @@
                     "UNIT_DOSE": "Dosis / Unidad",
                     "DAY_DOSE": "Dosis / Día",
                     "TREATMENT_DAYS": "Días de tratamiento",
+                    "PROLONGED_TREATMENT": "Tratamiento prolongado",
                     "POSDATADAS": "Repeticiones (posdatadas)",
                     "POSDATADAS_MONTHS": "{{quantity}} Meses",
                     "POSDATADA_MONTH": "{{quantity}} Mes",

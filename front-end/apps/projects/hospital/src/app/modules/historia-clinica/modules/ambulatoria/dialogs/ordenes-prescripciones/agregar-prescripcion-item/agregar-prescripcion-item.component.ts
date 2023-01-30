@@ -1,6 +1,6 @@
 import { Component, Inject, OnInit, ViewChild, ElementRef, AfterViewInit, AfterContentChecked, ChangeDetectorRef } from '@angular/core';
 import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { AbstractControl, FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { AppFeature, CreateOutpatientDto, HCEPersonalHistoryDto, OutpatientProblemDto, SnomedDto, SnomedECL } from '@api-rest/api-model.d';
 import { SnowstormService } from '@api-rest/services/snowstorm.service';
 import { HceGeneralStateService } from '@api-rest/services/hce-general-state.service';
@@ -33,6 +33,7 @@ export class AgregarPrescripcionItemComponent implements OnInit, AfterViewInit, 
 	isHabilitarRecetaDigitalFFActive: boolean = false;
 	severityTypes: any[];
 	reportFFIsOn;
+	isProlongedTreatmentOn: boolean = false;
 	searchConceptsLocallyFFIsOn;
 	snowstormServiceNotAvailable = false;
 	snowstormServiceErrorMessage: string;
@@ -318,7 +319,8 @@ export class AgregarPrescripcionItemComponent implements OnInit, AfterViewInit, 
 			dayDose: [null],
 			treatmentDays: [null],
 			healthProblem: [null, Validators.required],
-			posdatadas: [null],
+			prolongedTreatment: [this.isProlongedTreatmentOn],
+			posdatadas: [{value: null, disabled: true}],
 			interval: [this.DEFAULT_RADIO_OPTION],
 			intervalHours: [null],
 			administrationTime: [this.DEFAULT_RADIO_OPTION],
@@ -342,6 +344,17 @@ export class AgregarPrescripcionItemComponent implements OnInit, AfterViewInit, 
 			this.prescriptionItemForm.controls.posdatadas.setValidators([Validators.required]);
 			this.prescriptionItemForm.controls.posdatadas.setValue(this.MONTHS_QUANTITY[0]);
 		}
+	}
+
+	setProlongedTreatment(isOn: boolean) {
+		this.prescriptionItemForm.controls.prolongedTreatment.setValue(isOn);
+		const posdatadas = this.prescriptionItemForm.controls.posdatadas;
+		(isOn) ? posdatadas.enable() : this.disablePosdatadas(posdatadas)
+	}
+	
+	disablePosdatadas(posdatadas: AbstractControl) {
+		posdatadas.disable();
+		posdatadas.setValue(this.MONTHS_QUANTITY[0]);
 	}
 
 	isValidForm() {

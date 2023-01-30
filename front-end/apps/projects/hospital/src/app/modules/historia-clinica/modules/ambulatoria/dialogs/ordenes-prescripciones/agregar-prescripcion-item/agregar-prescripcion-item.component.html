@@ -73,6 +73,13 @@
 				<mat-error *ngIf="hasError(prescriptionItemForm, 'required', 'healthProblem')" translate="forms.REQUIRED"></mat-error>
 			</mat-form-field>
 
+			<mat-checkbox
+				*ngIf="this.isHabilitarRecetaDigitalFFActive"
+				formControlName="prolongedTreatment"
+				(change)="setProlongedTreatment($event.checked)">
+				<span translate="ambulatoria.paciente.ordenes_prescripciones.add_prescription_item_dialog.PROLONGED_TREATMENT"></span>
+			</mat-checkbox>
+
 			<mat-form-field *ngIf="this.isHabilitarRecetaDigitalFFActive" appearance="outline">
 				<mat-label>{{'ambulatoria.paciente.ordenes_prescripciones.add_prescription_item_dialog.POSDATADAS' | translate}}</mat-label>
 				<mat-select formControlName="posdatadas" name="posdatadas">
