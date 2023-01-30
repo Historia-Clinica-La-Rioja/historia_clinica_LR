@@ -1,16 +1,12 @@
 package ar.lamansys.sgh.publicapi.domain.prescription;
 
-import ar.lamansys.sgh.publicapi.domain.exceptions.PrescriptionBoEnumException;
-import ar.lamansys.sgh.publicapi.domain.exceptions.PrescriptionBoException;
-import lombok.AllArgsConstructor;
+import java.time.LocalDateTime;
+import java.util.List;
+
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
-
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.util.List;
 
 @NoArgsConstructor
 @ToString

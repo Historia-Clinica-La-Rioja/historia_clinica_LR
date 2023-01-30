@@ -1,7 +1,5 @@
 package ar.lamansys.sgh.publicapi.application.fetchprescriptionsbyidanddni;
 
-import ar.lamansys.sgh.publicapi.domain.exceptions.PrescriptionBoException;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
