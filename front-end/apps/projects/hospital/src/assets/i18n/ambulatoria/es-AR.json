@@ -416,8 +416,15 @@
                     "DAILY": "Diario",
                     "DIAGNOSIS": "Diagnóstico: {{healthProblem}}"
                 },
+                "send_digital_recipe_email_dialog": {
+                    "TITLE": "Enviar receta digital por email",
+                    "INPUT_TEXT": "Por favor confirme el mail de paciente:",
+                    "LABEL": "Email del paciente",
+                    "SEND_RECIPE": "Enviar receta",
+                    "REQUIRED_EMAIL": "El email del paciente es obligatorio"
+                },
                 "confirm_prescription_dialog": {
-                    "MEDICATION_TITLE": "Su medicación fue agregada correctamente",
+                    "MEDICATION_TITLE": "Su receta fue realizada correctamente",
                     "STUDY_TITLE": "Su orden fue realizada correctamente",
                     "TITLE": "Su receta fue realizada correctamente",
                     "DOWNLOAD_BUTTON_MEDICATION": "Descargar receta",

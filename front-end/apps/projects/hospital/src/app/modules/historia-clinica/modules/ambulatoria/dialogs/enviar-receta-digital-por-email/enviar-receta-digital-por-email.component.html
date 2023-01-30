@@ -1,0 +1,27 @@
+<div fxLayout="row" fxLayoutAlign="end">
+    <button id="close-modal" mat-button mat-icon-button aria-label="close" mat-dialog-close>
+        <mat-icon>close</mat-icon>
+    </button>
+</div>
+
+<div mat-dialog-content>
+    <h1 translate="ambulatoria.paciente.ordenes_prescripciones.send_digital_recipe_email_dialog.TITLE"></h1>
+
+    <form [formGroup]="emailForm">
+        <p translate="ambulatoria.paciente.ordenes_prescripciones.send_digital_recipe_email_dialog.INPUT_TEXT"></p>
+        <mat-form-field appearance="outline">
+            <mat-label translate="ambulatoria.paciente.ordenes_prescripciones.send_digital_recipe_email_dialog.LABEL"></mat-label>
+            <input matInput type="text" formControlName="email">
+            <mat-error *ngIf="hasError(emailForm, 'required', 'email')" translate="ambulatoria.paciente.ordenes_prescripciones.send_digital_recipe_email_dialog.REQUIRED_EMAIL"></mat-error>
+        </mat-form-field>
+    </form>
+</div>
+
+<mat-dialog-actions align="end">
+    <button mat-stroked-button color="primary" mat-dialog-close>
+        <span translate="buttons.CANCEL"></span>
+    </button>
+    <button mat-flat-button color="primary" [disabled]=" ! this.emailForm.valid">
+        <span translate="ambulatoria.paciente.ordenes_prescripciones.send_digital_recipe_email_dialog.SEND_RECIPE"></span>
+    </button>
+</mat-dialog-actions>

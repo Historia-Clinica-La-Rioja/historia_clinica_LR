@@ -1,7 +1,8 @@
 import { Component, Inject, OnInit } from '@angular/core';
-import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { SnackBarService } from '@presentation/services/snack-bar.service';
 import { PrescripcionesService, PrescriptionTypes } from '../../../services/prescripciones.service';
+import { EnviarRecetaDigitalPorEmailComponent } from '../../enviar-receta-digital-por-email/enviar-receta-digital-por-email.component';
 
 @Component({
   selector: 'app-confirmar-prescripcion',
@@ -14,6 +15,7 @@ export class ConfirmarPrescripcionComponent implements OnInit {
 
 	constructor(
 		private snackBarService: SnackBarService,
+		private readonly dialog: MatDialog,
 		private prescripcionesService: PrescripcionesService,
 		public dialogRef: MatDialogRef<ConfirmarPrescripcionComponent>,
 		@Inject(MAT_DIALOG_DATA) public data: ConfirmPrescriptionData) { }
@@ -29,6 +31,12 @@ export class ConfirmarPrescripcionComponent implements OnInit {
 		this.closeModal();
 	}
 
+	openDialog() {
+		this.dialog.open(EnviarRecetaDigitalPorEmailComponent, {
+			width: '35%',
+		})
+	}
+
 	closeModal() {
 		this.dialogRef.close();
 	}
@@ -38,6 +46,7 @@ export class ConfirmarPrescripcionComponent implements OnInit {
 export class ConfirmPrescriptionData {
 	titleLabel: string;
 	downloadButtonLabel: string;
+	sendEmail: string;
 	successLabel: string;
 	prescriptionType: PrescriptionTypes;
 	patientId: number;

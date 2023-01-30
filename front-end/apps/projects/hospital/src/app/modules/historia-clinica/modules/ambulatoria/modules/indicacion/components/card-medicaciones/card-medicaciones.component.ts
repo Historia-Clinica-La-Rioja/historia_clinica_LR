@@ -141,6 +141,7 @@ export class CardMedicacionesComponent implements OnInit {
 							data: {
 								titleLabel: 'ambulatoria.paciente.ordenes_prescripciones.confirm_prescription_dialog.MEDICATION_TITLE',
 								downloadButtonLabel: 'ambulatoria.paciente.ordenes_prescripciones.confirm_prescription_dialog.DOWNLOAD_BUTTON_MEDICATION',
+								sendEmail: 'ambulatoria.paciente.ordenes_prescripciones.confirm_prescription_dialog.SEND_EMAIL',
 								successLabel: 'ambulatoria.paciente.ordenes_prescripciones.toast_messages.POST_MEDICATION_SUCCESS',
 								prescriptionType: PrescriptionTypes.MEDICATION,
 								patientId: this.patientId,
