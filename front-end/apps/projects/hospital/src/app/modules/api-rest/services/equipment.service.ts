@@ -19,4 +19,9 @@ export class EquipmentService {
 		const url = `${environment.apiBase}/institutions/${this.contextService.institutionId}/equipment/sector/${sectorId}`;
 		return this.http.get<EquipmentDto[]>(url);
 	}
+
+	getAll(): Observable<EquipmentDto[]> {
+		const url = `${environment.apiBase}/institutions/${this.contextService.institutionId}/equipment/equipmentbyinstitution`;
+		return this.http.get<EquipmentDto[]>(url);
+	}
 }
