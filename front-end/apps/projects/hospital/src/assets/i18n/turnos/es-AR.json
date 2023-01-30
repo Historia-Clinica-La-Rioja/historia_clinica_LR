@@ -5,7 +5,6 @@
 			"actions": {
 				"CREATE_AGENDA": "Crear agenda",
 				"PROFESSONAL": "Profesionales",
-				"PICTURES": "Imágenes",
 				"NEW_AGENDA": "Nueva agenda",
 				"SEARCH_APPOINTMENTS": "Buscar turnos"
 			},
@@ -80,8 +79,6 @@
 			"PROTECTED_APPOINTMENT_PERCENTAGE_RANGE_EXAMPLE": "Por ej. valores entre 1 y 9% pueden no implicar turnos protegidos en una agenda con menos de 10 turnos totales.",
 			"VALIDATION_PROTECTED_APPOINTMENT_PERCENTAGE_AND_CARELINE": "Ingrese 0 como porcentaje de turnos protegidos o agregue al menos una linea de cuidado.",
 			"MORE": "más",
-			"EQUIPMENT": "Equipo",
-			"NO_EQUIPMENT": "No existen equipos para ese sector",
 			"DURATION_OF_THE_CONSULTATION":"Duración de la consulta",
 			"SECTOR": "Sector",
 			"dialog": {

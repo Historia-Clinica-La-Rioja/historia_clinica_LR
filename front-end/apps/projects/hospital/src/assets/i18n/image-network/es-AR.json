@@ -1,0 +1,12 @@
+{
+    "image-network": {
+        "home": {
+            "PICTURES": "Imágenes",
+            "SEARCH_BY_EQUIPMENT": "Red de Imágenes"
+        },
+        "equipment-diary-setup": {
+            "EQUIPMENT": "Equipo",
+			"NO_EQUIPMENT": "No existen equipos para ese sector"
+        }
+    }
+}
