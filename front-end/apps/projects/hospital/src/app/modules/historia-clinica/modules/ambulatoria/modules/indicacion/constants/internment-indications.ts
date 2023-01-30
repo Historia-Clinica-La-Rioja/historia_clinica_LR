@@ -140,3 +140,7 @@ export const OTHER_FREQUENCY = { title: "Otra Frecuencia", value: 0 };
 export const OTHER_INDICATION_ID = 11;
 
 export const INTERVALS_TIME = [4, 6, 8, 12, 24, OTHER_FREQUENCY.value];
+
+export const PAGE_SIZE_OPTIONS = [5, 10, 25];
+
+export const PAGE_MIN_SIZE = 5;

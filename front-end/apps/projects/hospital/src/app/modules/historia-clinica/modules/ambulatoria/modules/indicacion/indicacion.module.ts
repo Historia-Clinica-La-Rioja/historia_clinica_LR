@@ -16,6 +16,7 @@ import { InternmentPharmacoCardComponent } from './components/internment-pharmac
 import { InternmentOtherIndicationCardComponent } from './components/internment-other-indication-card/internment-other-indication-card.component';
 import { InternmentParenteralPlanCardComponent } from './components/internment-parenteral-plan-card/internment-parenteral-plan-card.component';
 import { NuevaPrescripcionComponent } from "@historia-clinica/modules/ambulatoria/modules/indicacion/dialogs/nueva-prescripcion/nueva-prescripcion.component";
+import { MostFrequentComponent } from './dialogs/most-frequent/most-frequent.component';
 import { SuspenderMedicacionComponent } from "@historia-clinica/modules/ambulatoria/modules/indicacion/dialogs/suspender-medicacion/suspender-medicacion.component";
 import { DietComponent } from "@historia-clinica/modules/ambulatoria/modules/indicacion/dialogs/diet/diet.component";
 import { OtherIndicationComponent } from './dialogs/other-indication/other-indication.component';
@@ -41,6 +42,7 @@ import { PrescripcionValidatorPopupComponent } from './dialogs/prescripcion-vali
 		InternmentPharmacoCardComponent,
 		InternmentOtherIndicationCardComponent,
 		InternmentParenteralPlanCardComponent,
+		MostFrequentComponent,
 		NuevaPrescripcionComponent,
 		NursingCareComponent,
 		NursingRecordComponent,
