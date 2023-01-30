@@ -18,6 +18,7 @@ import { InternacionMasterDataService } from '@api-rest/services/internacion-mas
 import { ConfirmDialogComponent } from '@presentation/dialogs/confirm-dialog/confirm-dialog.component';
 import { IndicationByProfessionalService } from '@api-rest/services/indication-by-professional.service';
 import { PharmacosFrequentComponent } from '../../dialogs/pharmacos-frequent/pharmacos-frequent.component';
+import { MostFrequentComponent } from '../../dialogs/most-frequent/most-frequent.component';
 
 const DIALOG_SIZE = '45%';
 
@@ -112,8 +113,17 @@ export class InternmentIndicationsCardComponent implements OnInit {
 	openPharmacoDialog() {
 		this.indicationByProfessionalService.getMostFrequentPharmacos().subscribe((pharmacos: PharmacoSummaryDto[]) => {
 			this.mostFrequentPharmacos = pharmacos;
-			const dialogPharmacosFrequent = this.dialog.open(PharmacosFrequentComponent, { width: '50%', data: { pharmacos: this.mostFrequentPharmacos } });
-			dialogPharmacosFrequent.afterClosed().subscribe((result: DialogPharmacosFrequent) => {
+			const mostFrequent = pharmacos.map((p: PharmacoSummaryDto) => {
+				return { description: p.snomed.pt, value: p }
+			});
+			const dialogPharmacosFrequent = this.dialog.open(MostFrequentComponent, {
+				width: '50%',
+				data: {
+					items: mostFrequent,
+					title: 'indicacion.card-pharmaco-frequent.TITLE'
+				}
+			});
+			dialogPharmacosFrequent.afterClosed().subscribe((result: DialogPharmacosFrequent<PharmacoSummaryDto>) => {
 				if (result?.openFormPharmaco)
 					this.openFormPharmacoDialog(result.pharmaco);
 			});
@@ -129,7 +139,7 @@ export class InternmentIndicationsCardComponent implements OnInit {
 
 					if (this.diagnostics?.length) {
 						const dialogRef = this.dialog.open(PharmacoComponent, {
-						data: {
+							data: {
 								entryDate: this.entryDate,
 								actualDate: this.actualDate,
 								patientId: this.patientId,
@@ -228,9 +238,9 @@ export class InternmentIndicationsCardComponent implements OnInit {
 
 }
 
-export interface DialogPharmacosFrequent {
+export interface DialogPharmacosFrequent<T> {
 	openFormPharmaco: boolean;
-	pharmaco: PharmacoSummaryDto;
+	pharmaco: T;
 }
 
 interface ResultDialogPharmaco {
