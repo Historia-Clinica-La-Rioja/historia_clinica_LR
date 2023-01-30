@@ -4,6 +4,9 @@ import ar.lamansys.sgx.shared.auditable.repository.SGXAuditableEntityJPAReposito
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
 
 @Repository
 public interface OdontologyConsultationRepository extends SGXAuditableEntityJPARepository<OdontologyConsultation, Integer> {
@@ -12,5 +15,11 @@ public interface OdontologyConsultationRepository extends SGXAuditableEntityJPAR
            " FROM OdontologyConsultation oc " +
            " WHERE patientId = :patientId ")
     boolean patientHasPreviousConsultations(@Param("patientId") Integer patientId);
+
+	@Transactional(readOnly = true)
+	@Query("SELECT oc.id " +
+			"FROM OdontologyConsultation oc " +
+			"WHERE oc.patientId IN :patients")
+	List<Integer> getOdontologyConsultationIdFromPatients(@Param("patients")List<Integer> patients);
 
 }

@@ -3,6 +3,7 @@ package net.pladema.patient.infrastructure.output.repository;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import ar.lamansys.sgh.shared.infrastructure.input.service.odontology.SharedOdontologyConsultationPort;
 import net.pladema.emergencycare.repository.EmergencyCareEpisodeRepository;
 
 import org.springframework.stereotype.Service;
@@ -37,6 +38,7 @@ public class MergeClinicHistoryStorageImpl implements MergeClinicHistoryStorage 
 	private final ServiceRequestRepository serviceRequestRepository;
 	private final SharedNursingConsultationPort sharedNursingConsultationPort;
 	private final SharedImmunizationPort sharedImmunizationPort;
+	private final SharedOdontologyConsultationPort sharedOdontologyConsultationPort;
 	private final CounterReferenceRepository counterReferenceRepository;
 	private final SnvsReportRepository snvsReportRepository;
 	private final DocumentRepository documentRepository;
@@ -94,6 +96,11 @@ public class MergeClinicHistoryStorageImpl implements MergeClinicHistoryStorage 
 	@Override
 	public List<Integer> getServiceRequestIdsFromIdSourceType(List<Integer> ids, Short sourceType) {
 		return serviceRequestRepository.getServiceRequestIdsFromIdSourceType(ids,sourceType);
+	}
+
+	@Override
+	public List<Integer> getOdontologyConsultationIds(List<Integer> oldPatients) {
+		return sharedOdontologyConsultationPort.getOdontologyConsultationIdsFromPatients(oldPatients);
 	}
 
 	@Override
@@ -177,7 +184,14 @@ public class MergeClinicHistoryStorageImpl implements MergeClinicHistoryStorage 
 		snvsReportRepository.findAllByPatients(oldPatients)
 				.forEach(item -> migratePatientStorage.migrateItem(item.getId(), item.getPatientId(), newPatientId, EMergeTable.SNVS_REPORT));
 	}
-	
+
+	@Override
+	public void modifyOdontologyConsultation(List<Integer> ids, Integer newPatientId) {
+		log.debug("Odontology consultation ids to modify {}",ids);
+		sharedOdontologyConsultationPort.findAllById(ids)
+				.forEach(item -> migratePatientStorage.migrateItem(item.getId(), item.getPatientId(), newPatientId, EMergeTable.ODONTOLOGY_CONSULTATION));
+	}
+
 	@Override
 	public void unmergeClinicData(Integer inactivePatientId) {
 		log.debug("Input parameters -> inactivePatientId {}", inactivePatientId);

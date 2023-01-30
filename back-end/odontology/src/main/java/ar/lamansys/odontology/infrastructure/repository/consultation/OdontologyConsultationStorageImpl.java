@@ -54,4 +54,20 @@ public class OdontologyConsultationStorageImpl implements OdontologyConsultation
         return result;
     }
 
+	@Override
+	public List<Integer> getOdontologyConsultationIdsFromPatients(List<Integer> patients) {
+		LOG.debug("Input parameter -> patients {}", patients);
+		List<Integer> result = odontologyConsultationRepository.getOdontologyConsultationIdFromPatients(patients);
+		LOG.debug("Output -> {}", result);
+		return result;
+	}
+
+	@Override
+	public List<OdontologyConsultation> findAllById(List<Integer> ids) {
+		LOG.debug("Input parameter -> OdontologyConsultationIds {}", ids);
+		List<OdontologyConsultation> result = odontologyConsultationRepository.findAllById(ids);
+		LOG.debug("Output -> {}", result);
+		return result;
+	}
+
 }

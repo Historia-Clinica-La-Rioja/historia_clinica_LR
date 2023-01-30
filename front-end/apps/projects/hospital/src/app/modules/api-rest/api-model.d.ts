@@ -2162,6 +2162,17 @@ export interface OdontologyConsultationIndicesDto extends Serializable {
     temporaryTeethPresent: number;
 }
 
+export interface OdontologyConsultationInfoDto {
+    billable: boolean;
+    clinicalSpecialtyId: number;
+    doctorId: number;
+    id: number;
+    institutionId: number;
+    patientId: number;
+    patientMedicalCoverageId: number;
+    performedDate: Date;
+}
+
 export interface OdontologyDentalActionDto extends Serializable {
     diagnostic: boolean;
     snomed: SnomedDto;
@@ -2466,8 +2477,8 @@ export interface PatientSummaryDto {
 
 export interface PatientToMergeDto {
     activePatientId: number;
-    activePerson: BasicPersonalDataDto;
     oldPatientsIds: number[];
+    registrationDataPerson: BasicPersonalDataDto;
 }
 
 export interface PatientType extends Serializable {
