@@ -11,6 +11,7 @@ import net.pladema.medicalconsultation.diary.repository.entity.OpeningHours;
 import net.pladema.medicalconsultation.diary.service.domain.OccupationBo;
 import net.pladema.medicalconsultation.diary.service.domain.TimeRangeBo;
 import net.pladema.medicalconsultation.equipmentdiary.repository.EquipmentDiaryOpeningHoursRepository;
+import net.pladema.medicalconsultation.equipmentdiary.repository.domain.EquipmentDiaryOpeningHoursVo;
 import net.pladema.medicalconsultation.equipmentdiary.repository.entity.EquipmentDiaryOpeningHours;
 import net.pladema.medicalconsultation.equipmentdiary.repository.entity.EquipmentDiaryOpeningHoursPK;
 import net.pladema.medicalconsultation.equipmentdiary.service.EquipmentDiaryBoMapper;
@@ -191,6 +192,18 @@ public class EquipmentDiaryOpeningHoursServiceImpl implements EquipmentDiaryOpen
 		return validDaysWeek;
 	}
 
+	@Override
+	public Collection<EquipmentDiaryOpeningHoursBo> getDiariesOpeningHours(List<Integer> equipmentDiaryIds) {
+		LOG.debug("Input parameters -> diaryIds {} ", equipmentDiaryIds);
+		Collection<EquipmentDiaryOpeningHoursBo> result = new ArrayList<>();
+		if (!equipmentDiaryIds.isEmpty()) {
+			List<EquipmentDiaryOpeningHoursVo> resultQuery = equipmentDiaryOpeningHoursRepository.getDiariesOpeningHours(equipmentDiaryIds);
+			result = resultQuery.stream().map(this::createEquipmentDiaryOpeningHoursBo).collect(Collectors.toList());
+		}
+		LOG.debug(OUTPUT, result);
+		return result;
+	}
+
 	private OccupationBo mergeRangeTimeOfOpeningHours(Short dayWeekId, @NotEmpty List<OpeningHours> openingHours){
 		Comparator<OpeningHours> ascendingOrder = Comparator
 				.comparing(OpeningHours::getFrom, LocalTime::compareTo)
@@ -222,6 +235,18 @@ public class EquipmentDiaryOpeningHoursServiceImpl implements EquipmentDiaryOpen
 			throw new EquipmentDiaryOpeningHoursException(EEquipmentDiaryOpeningHoursEnumException.NULL_EQUIPMENT_ID, "El id del equipo es obligatorio");
 		if (newDiaryEnd.isBefore(newDiaryStart))
 			throw new EquipmentDiaryOpeningHoursException(EEquipmentDiaryOpeningHoursEnumException.DIARY_END_DATE_BEFORE_START_DATE, String.format("La fecha de fin (%s) de agenda no puede ser previa al inicio (%s)", newDiaryEnd, newDiaryStart));
+	}
+
+	private EquipmentDiaryOpeningHoursBo createEquipmentDiaryOpeningHoursBo(EquipmentDiaryOpeningHoursVo equipmentDiaryOpeningHoursVo) {
+		LOG.debug("Input parameters -> equipmentDiaryOpeningHoursVo {} ", equipmentDiaryOpeningHoursVo);
+		EquipmentDiaryOpeningHoursBo result = new EquipmentDiaryOpeningHoursBo();
+		result.setDiaryId(equipmentDiaryOpeningHoursVo.getEquipmentDiaryId());
+		result.setMedicalAttentionTypeId(equipmentDiaryOpeningHoursVo.getMedicalAttentionTypeId());
+		result.setOverturnCount(equipmentDiaryOpeningHoursVo.getOverturnCount());
+		result.setOpeningHours(new net.pladema.medicalconsultation.equipmentdiary.service.domain.OpeningHoursBo(equipmentDiaryOpeningHoursVo.getOpeningHours()));
+		result.setExternalAppointmentsAllowed(equipmentDiaryOpeningHoursVo.getExternalAppointmentsAllowed());
+		LOG.debug(OUTPUT, result);
+		return result;
 	}
 
 

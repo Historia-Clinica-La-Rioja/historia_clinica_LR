@@ -1,6 +1,7 @@
 package net.pladema.medicalconsultation.equipmentdiary.repository;
 
 import ar.lamansys.sgx.shared.auditable.repository.SGXAuditableEntityJPARepository;
+import net.pladema.medicalconsultation.equipmentdiary.repository.domain.CompleteEquipmentDiaryListVo;
 import net.pladema.medicalconsultation.equipmentdiary.repository.entity.EquipmentDiary;
 
 import org.springframework.data.jpa.repository.Query;
@@ -9,6 +10,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Optional;
 
 public interface EquipmentDiaryRepository extends SGXAuditableEntityJPARepository<EquipmentDiary, Integer> {
 
@@ -73,6 +75,15 @@ public interface EquipmentDiaryRepository extends SGXAuditableEntityJPARepositor
 			"AND ed.deleteable.deleted = false")
 	List<EquipmentDiary> getEquipmentDiariesFromEquipment(@Param("equipmentId") Integer equipmentId,
 																 @Param("active") Boolean active);
+
+	@Transactional(readOnly = true)
+	@Query("SELECT NEW net.pladema.medicalconsultation.equipmentdiary.repository.domain.CompleteEquipmentDiaryListVo( " +
+			"ed, s.id, s.description) " +
+			"FROM EquipmentDiary ed " +
+			"JOIN Equipment e ON e.id = ed.equipmentId " +
+			"JOIN Sector s ON s.id = e.sectorId " +
+			"WHERE ed.id = :equipmentDiaryId ")
+	Optional<CompleteEquipmentDiaryListVo> getEquipmentDiary(@Param("equipmentDiaryId") Integer equipmentDiaryId);
 
 
 }

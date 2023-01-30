@@ -3,6 +3,7 @@ package net.pladema.medicalconsultation.equipmentdiary.repository;
 import net.pladema.medicalconsultation.diary.repository.domain.DiaryOpeningHoursVo;
 import net.pladema.medicalconsultation.diary.repository.domain.OccupationVo;
 
+import net.pladema.medicalconsultation.equipmentdiary.repository.domain.EquipmentDiaryOpeningHoursVo;
 import net.pladema.medicalconsultation.equipmentdiary.repository.entity.EquipmentDiaryOpeningHours;
 
 import net.pladema.medicalconsultation.equipmentdiary.repository.entity.EquipmentDiaryOpeningHoursPK;
@@ -76,4 +77,15 @@ public interface EquipmentDiaryOpeningHoursRepository extends JpaRepository<Equi
 												   @NotNull @Param("equipmentId") Integer equipmentId,
 												   @NotNull @Param("dayWeekId") Short dayWeekId,
 												   @NotNull @Param("from") LocalTime from, @Param("to") LocalTime to);
+
+	@Transactional(readOnly = true)
+	@Query("SELECT NEW net.pladema.medicalconsultation.equipmentdiary.repository.domain.EquipmentDiaryOpeningHoursVo( " +
+			"ed.id, oh, edoh.medicalAttentionTypeId, edoh.overturnCount, edoh.externalAppointmentsAllowed) " +
+			"FROM EquipmentDiaryOpeningHours AS edoh " +
+			"JOIN EquipmentDiary AS ed ON ( edoh.pk.equipmentDiaryId = ed.id ) " +
+			"JOIN OpeningHours AS oh ON ( edoh.pk.openingHoursId = oh.id ) " +
+			"WHERE edoh.pk.equipmentDiaryId IN (:equipmentDiaryIds) " +
+			"AND ed.deleteable.deleted = false " +
+			"ORDER BY oh.dayWeekId, oh.from")
+	List<EquipmentDiaryOpeningHoursVo> getDiariesOpeningHours(@Param("equipmentDiaryIds") List<Integer> equipmentDiaryIds);
 }

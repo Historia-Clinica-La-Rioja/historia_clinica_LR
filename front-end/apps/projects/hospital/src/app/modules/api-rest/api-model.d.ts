@@ -607,6 +607,11 @@ export interface CompleteDiaryDto extends DiaryDto {
     specialtyName: string;
 }
 
+export interface CompleteEquipmentDiaryDto extends EquipmentDiaryDto {
+    sectorDescription: string;
+    sectorId: number;
+}
+
 export interface CompletePatientDto extends BasicPatientDto {
     auditablePatientInfo: AuditablePatientInfoDto;
     generalPractitioner?: AAdditionalDoctorDto;

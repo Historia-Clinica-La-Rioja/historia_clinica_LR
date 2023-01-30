@@ -4,13 +4,19 @@ package net.pladema.medicalconsultation.equipmentdiary.service.impl;
 
 import lombok.RequiredArgsConstructor;
 
+
 import net.pladema.medicalconsultation.diary.service.exception.DiaryException;
 import net.pladema.medicalconsultation.equipmentdiary.repository.EquipmentDiaryRepository;
+import net.pladema.medicalconsultation.equipmentdiary.repository.domain.CompleteEquipmentDiaryListVo;
+import net.pladema.medicalconsultation.equipmentdiary.repository.domain.EquipmentDiaryListVo;
 import net.pladema.medicalconsultation.equipmentdiary.repository.entity.EquipmentDiary;
 import net.pladema.medicalconsultation.equipmentdiary.service.EquipmentDiaryOpeningHoursService;
 import net.pladema.medicalconsultation.equipmentdiary.service.EquipmentDiaryService;
+import net.pladema.medicalconsultation.equipmentdiary.service.domain.CompleteEquipmentDiaryBo;
 import net.pladema.medicalconsultation.equipmentdiary.service.domain.EquipmentDiaryBo;
 
+
+import net.pladema.medicalconsultation.equipmentdiary.service.domain.EquipmentDiaryOpeningHoursBo;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -21,7 +27,11 @@ import javax.validation.constraints.NotNull;
 
 import java.time.LocalDate;
 import java.util.*;
+import java.util.function.Function;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
+
+import static java.util.stream.Collectors.toList;
 
 @Service
 @RequiredArgsConstructor
@@ -111,6 +121,24 @@ public class EquipmentDiaryServiceImpl implements EquipmentDiaryService {
 		return result;
 	}
 
+	@Override
+	public Optional<CompleteEquipmentDiaryBo> getEquipmentDiary(Integer equipmentDiaryId) {
+		LOG.debug(INPUT_DIARY_ID, equipmentDiaryId);
+		Optional<CompleteEquipmentDiaryBo> result = equipmentDiaryRepository.getEquipmentDiary(equipmentDiaryId).map(this::createCompleteEquipmentDiaryBoInstance)
+				.map(completeOpeningHours());
+
+		LOG.debug(OUTPUT, result);
+		return result;
+	}
+
+	private Function<CompleteEquipmentDiaryBo, CompleteEquipmentDiaryBo> completeOpeningHours() {
+		return completeDiary -> {
+			Collection<EquipmentDiaryOpeningHoursBo> diaryOpeningHours = equipmentDiaryOpeningHoursService
+					.getDiariesOpeningHours(Stream.of(completeDiary.getId()).collect(toList()));
+			completeDiary.setEquipmentDiaryOpeningHours(new ArrayList<>(diaryOpeningHours));
+			return completeDiary;
+		};
+	}
 
 	private EquipmentDiaryBo createEquipmentDiaryBoInstance(EquipmentDiary equipmentDiary) {
 		LOG.debug("Input parameters -> equipmentDiary {}", equipmentDiary);
@@ -126,6 +154,30 @@ public class EquipmentDiaryServiceImpl implements EquipmentDiaryService {
 		LOG.debug(OUTPUT, result);
 		return result;
 	}
+
+	private CompleteEquipmentDiaryBo createCompleteEquipmentDiaryBoInstance(CompleteEquipmentDiaryListVo completeEquipmentDiaryListVo) {
+		LOG.debug("Input parameters -> completeEquipmentDiaryListVo {}", completeEquipmentDiaryListVo);
+		CompleteEquipmentDiaryBo result = new CompleteEquipmentDiaryBo(createDiaryBoInstanceFromVO(completeEquipmentDiaryListVo));
+		result.setSectorId(completeEquipmentDiaryListVo.getSectorId());
+		result.setSectorDescription(completeEquipmentDiaryListVo.getSectorDescription());
+		LOG.debug(OUTPUT, result);
+		return result;
+	}
+
+	private EquipmentDiaryBo createDiaryBoInstanceFromVO(EquipmentDiaryListVo equipmentDiaryListVo) {
+		LOG.debug("Input parameters -> diaryListVo {}", equipmentDiaryListVo);
+		EquipmentDiaryBo result	 = new EquipmentDiaryBo();
+		result.setId(equipmentDiaryListVo.getId());
+		result.setStartDate(equipmentDiaryListVo.getStartDate());
+		result.setEndDate(equipmentDiaryListVo.getEndDate());
+		result.setAppointmentDuration(equipmentDiaryListVo.getAppointmentDuration());
+		result.setAutomaticRenewal(equipmentDiaryListVo.isAutomaticRenewal());
+		result.setIncludeHoliday(equipmentDiaryListVo.isIncludeHoliday());
+		LOG.debug(OUTPUT, result);
+		return result;
+	}
+
+
 
 
 }

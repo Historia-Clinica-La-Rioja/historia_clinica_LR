@@ -1,5 +1,7 @@
 package net.pladema.medicalconsultation.equipmentdiary.service;
 
+import net.pladema.medicalconsultation.equipmentdiary.controller.dto.CompleteEquipmentDiaryDto;
+import net.pladema.medicalconsultation.equipmentdiary.service.domain.CompleteEquipmentDiaryBo;
 import net.pladema.medicalconsultation.equipmentdiary.service.domain.EquipmentDiaryBo;
 
 import java.time.LocalDate;
@@ -16,4 +18,5 @@ public interface EquipmentDiaryService {
 
 	List<EquipmentDiaryBo> getEquipmentDiariesFromEquipment(Integer equipmentId,
 														  Boolean active);
+	Optional<CompleteEquipmentDiaryBo> getEquipmentDiary(Integer equipmentDiaryId);
 }

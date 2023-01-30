@@ -11,12 +11,15 @@ import net.pladema.medicalconsultation.diary.service.exception.DiaryException;
 
 import net.pladema.medicalconsultation.equipmentdiary.controller.constraints.EquipmentDiaryOpeningHoursValid;
 import net.pladema.medicalconsultation.equipmentdiary.controller.constraints.NewDiaryPeriodValid;
+import net.pladema.medicalconsultation.equipmentdiary.controller.constraints.ValidEquipmentDiary;
+import net.pladema.medicalconsultation.equipmentdiary.controller.dto.CompleteEquipmentDiaryDto;
 import net.pladema.medicalconsultation.equipmentdiary.controller.dto.EquipmentDiaryADto;
 
 import net.pladema.medicalconsultation.equipmentdiary.controller.dto.EquipmentDiaryDto;
 import net.pladema.medicalconsultation.equipmentdiary.controller.mapper.EquipmentDiaryMapper;
 import net.pladema.medicalconsultation.equipmentdiary.service.EquipmentDiaryBoMapper;
 import net.pladema.medicalconsultation.equipmentdiary.service.EquipmentDiaryService;
+import net.pladema.medicalconsultation.equipmentdiary.service.domain.CompleteEquipmentDiaryBo;
 import net.pladema.medicalconsultation.equipmentdiary.service.domain.EquipmentDiaryBo;
 
 import org.springframework.http.HttpStatus;
@@ -33,6 +36,7 @@ import org.springframework.web.bind.annotation.RestController;
 import javax.validation.Valid;
 
 import java.util.List;
+import java.util.Optional;
 
 @Slf4j
 @RestController
@@ -87,6 +91,18 @@ public class EquipmentDiaryController {
 		List<EquipmentDiaryBo> equipmentDiariesBOActive = equipmentDiaryService.getEquipmentDiariesFromEquipment(equipmentId, true);
 		List<EquipmentDiaryDto> result = equipmentDiaryBoMapper.toListEquipmentDiaryDto(equipmentDiariesBOActive);
 		return ResponseEntity.ok().body(result);
+	}
+
+	@GetMapping("/{equipmentDiaryId}")
+	@PreAuthorize("hasPermission(#institutionId, 'ADMINISTRATIVO_RED_DE_IMAGENES, ADMINISTRADOR_AGENDA')")
+	public ResponseEntity<CompleteEquipmentDiaryDto> getDiary(
+			@PathVariable(name = "institutionId") Integer institutionId,
+			@ValidEquipmentDiary @PathVariable(name = "equipmentDiaryId") Integer equipmentDiaryId) {
+		log.debug("Input parameters -> institutionId {}, equipmentDiaryId {}", institutionId, equipmentDiaryId);
+        Optional<CompleteEquipmentDiaryBo> completeEquipmnetDiaryBo = equipmentDiaryService.getEquipmentDiary(equipmentDiaryId);
+		CompleteEquipmentDiaryDto result = completeEquipmnetDiaryBo.map(equipmentDiaryMapper::toCompleteEquipmentDiaryDto).orElse(new CompleteEquipmentDiaryDto());
+        log.debug(OUTPUT, result);
+		return ResponseEntity.ok(result);
 	}
 
 }

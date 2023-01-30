@@ -1,11 +1,13 @@
 package net.pladema.medicalconsultation.equipmentdiary.service;
 
+
 import net.pladema.medicalconsultation.diary.service.domain.OccupationBo;
 import net.pladema.medicalconsultation.equipmentdiary.service.domain.EquipmentDiaryOpeningHoursBo;
 import net.pladema.medicalconsultation.equipmentdiary.service.exception.EquipmentDiaryOpeningHoursException;
 
 import javax.validation.constraints.NotNull;
 import java.time.LocalDate;
+import java.util.Collection;
 import java.util.List;
 
 public interface EquipmentDiaryOpeningHoursService {
@@ -18,5 +20,7 @@ public interface EquipmentDiaryOpeningHoursService {
 
 	List<Short> overlappingDays(@NotNull LocalDate rangeStart1, @NotNull LocalDate rangeEnd1,
 								@NotNull LocalDate rangeStart2, @NotNull LocalDate rangeEnd2);
+
+	Collection<EquipmentDiaryOpeningHoursBo> getDiariesOpeningHours(List<Integer> equipmentDiaryIds);
 
 }
