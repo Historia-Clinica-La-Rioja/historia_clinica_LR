@@ -1,0 +1,47 @@
+<form [formGroup]="formReference">
+    <h2 class="subtitle" [translate]="'ambulatoria.paciente.nueva-consulta.reference-dialog.ORIGIN'">
+    </h2>
+    <div fxLayout="column">
+        <div>
+            <mat-form-field appearance="outline" fxFlex="100%" fxLayoutGap="7px">
+                <mat-label [translate]="'ambulatoria.paciente.nueva-consulta.reference-dialog.PROVINCE'"></mat-label>
+                <input id="provinceOrigin" formControlName="provinceOrigin" matInput>
+            </mat-form-field>
+        </div>
+        <div>
+            <mat-form-field appearance="outline" fxFlex="100%" fxLayoutGap="7px">
+                <mat-label [translate]="'ambulatoria.paciente.nueva-consulta.reference-dialog.DEPARTMENT'"></mat-label>
+                <input id="departmentOrigin" formControlName="departmentOrigin" matInput>
+            </mat-form-field>
+        </div>
+        <div>
+            <mat-form-field appearance="outline" fxFlex="100%" fxLayoutGap="7px">
+                <mat-label
+                    [translate]="'ambulatoria.paciente.nueva-consulta.reference-dialog.PLACEHOLDER_INSTITUTION'"></mat-label>
+                <input id="institutionOrigin" formControlName="institutionOrigin" matInput>
+            </mat-form-field>
+        </div>
+        <div id="problems">
+            <mat-form-field appearance="outline" fxFlex="100%">
+                <mat-label
+                    [translate]="'ambulatoria.paciente.nueva-consulta.reference-dialog.PLACEHOLDER_ASSOCIATED_PROBLEM'">
+                </mat-label>
+                <mat-select name="problems" formControlName="problems" multiple
+                    (selectionChange)="setProblemsReference($event.value)">
+                    <mat-select-trigger>
+                        {{associatedProblemsControls.value ? associatedProblemsControls.value[0] : ' '}}
+                        <span *ngIf="associatedProblemsControls.value?.length > 1"
+                            class="example-additional-selection">
+                            (+{{associatedProblemsControls.value.length - 1}} {{'más'}})
+                        </span>
+                    </mat-select-trigger>
+                    <mat-option *ngFor="let problem of problemsList$ | async"
+                        [value]="problem.hcePersonalHistoryDto.snomed.pt">
+                        {{problem.hcePersonalHistoryDto.snomed.pt | translate}}
+                    </mat-option>
+                </mat-select>
+                <mat-error [translate]="'forms.REQUIRED'"></mat-error>
+            </mat-form-field>
+        </div>
+    </div>
+</form>

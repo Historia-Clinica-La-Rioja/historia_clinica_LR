@@ -68,6 +68,7 @@ import { GuardiaModule } from '../guardia/guardia.module';
 import { EnviarRecetaDigitalPorEmailComponent } from './dialogs/enviar-receta-digital-por-email/enviar-receta-digital-por-email.component';
 import { DestinationInstitutionReferenceComponent } from './components/destination-institution-reference/destination-institution-reference.component';
 import { CarelinesAndSpecialtiesReferenceComponent } from './components/carelines-and-specialties-reference/carelines-and-specialties-reference.component';
+import { OriginInstitutionReferenceComponent } from './components/origin-institution-reference/origin-institution-reference.component';
 
 @NgModule({
 	declarations: [
@@ -118,6 +119,7 @@ import { CarelinesAndSpecialtiesReferenceComponent } from './components/careline
     	EnviarRecetaDigitalPorEmailComponent,
     	DestinationInstitutionReferenceComponent,
    		CarelinesAndSpecialtiesReferenceComponent,
+    	OriginInstitutionReferenceComponent,
 	],
 	imports: [
 		CommonModule,

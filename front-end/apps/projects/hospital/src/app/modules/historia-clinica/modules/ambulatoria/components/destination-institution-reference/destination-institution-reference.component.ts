@@ -1,8 +1,9 @@
-import { Component, OnChanges, Input, Output, EventEmitter } from '@angular/core';
+import { Component, Input, Output, EventEmitter, OnInit, Inject } from '@angular/core';
 import { AddressDto, DepartmentDto, InstitutionBasicInfoDto } from '@api-rest/api-model';
 import { AddressMasterDataService } from '@api-rest/services/address-master-data.service';
 import { InstitutionService } from '@api-rest/services/institution.service';
 import { TypeaheadOption } from '@presentation/components/typeahead/typeahead.component';
+import { ReferenceOriginInstitutionService } from '../../services/reference-origin-institution.service';
 
 const COUNTRY = 14;
 
@@ -11,12 +12,9 @@ const COUNTRY = 14;
     templateUrl: './destination-institution-reference.component.html',
     styleUrls: ['./destination-institution-reference.component.scss']
 })
-export class DestinationInstitutionReferenceComponent implements OnChanges {
+export class DestinationInstitutionReferenceComponent implements OnInit {
 
-    @Input() provinces: TypeaheadOption<any>[];
     @Input() submitForm: boolean;
-    @Input() originInstitutionInfo: AddressDto;
-    @Input() originDepartment: DepartmentDto;
     @Output() provinceSelected = new EventEmitter<number>();
     @Output() departmentSelected = new EventEmitter<number>();
     @Output() institutionSelected = new EventEmitter<number>();
@@ -30,16 +28,25 @@ export class DestinationInstitutionReferenceComponent implements OnChanges {
     departmentDisable = false;
     originalDestinationDepartment: TypeaheadOption<any>;
     institutionDestinationId: number;
+	originDepartment: DepartmentDto;
+	originInstitutionInfo: AddressDto;
+	provinces: TypeaheadOption<any>[];
 
     constructor(
         private readonly institutionService: InstitutionService,
-		private readonly adressMasterData: AddressMasterDataService) { }
+		private readonly adressMasterData: AddressMasterDataService,
+        private readonly referenceOriginInstitutionService: ReferenceOriginInstitutionService) { }
 
-    ngOnChanges(): void {
-        if (!this.submitForm && this.provinces && this.originInstitutionInfo && this.originDepartment){
-            this.loadDestinationInstitutionInformation();
-        }
-    }
+	ngOnInit(): void {
+		//this.originInstitutionInfo = this.referenceOriginInstitutionService.getOriginInstitutionInfo();
+		//this.provinces = this.referenceOriginInstitutionService.getProvinces();
+		this.referenceOriginInstitutionService.originInstitutionInfo$.subscribe(info => this.originInstitutionInfo = info);
+		this.referenceOriginInstitutionService.provinces$.subscribe(info => this.provinces = info);
+		this.referenceOriginInstitutionService.originDepartment$.subscribe(department => {
+			this.originDepartment = department;
+			this.loadDestinationInstitutionInformation();
+		})
+	}
 
     private getAllInstitutions() {
 		this.institutionService.getAllInstitutions().subscribe((institutions: InstitutionBasicInfoDto[]) => {
@@ -73,8 +80,9 @@ export class DestinationInstitutionReferenceComponent implements OnChanges {
 	}
 
     private setDestinationProvince(provinceId: number) {
-		const province = this.provinces.find(p => p.value === provinceId);
-		this.defaultProvince = { value: province.value, compareValue: province.compareValue, viewValue: province.viewValue }
+		this.referenceOriginInstitutionService.getProvinceById(provinceId).subscribe(province => {
+			this.defaultProvince = { value: province.value, compareValue: province.compareValue, viewValue: province.viewValue }
+		})
 	}
 
     private setDefaultDestinationDepartment(department: DepartmentDto) {
