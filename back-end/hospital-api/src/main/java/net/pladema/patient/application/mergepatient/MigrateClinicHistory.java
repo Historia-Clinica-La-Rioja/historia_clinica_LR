@@ -13,11 +13,13 @@ public class MigrateClinicHistory {
 
 	private final MigrateInternmentEpisode migrateInternmentEpisode;
 	private final MigrateOutpatientConsultation migrateOutpatientConsultation;
+	private final MigrateEmergencyCareEpisode migrateEmergencyCareEpisode;
 
 	public void execute(List<Integer> oldPatients, Integer newPatient) {
 		log.debug("Modify, oldPatients {}, newPatient {}", oldPatients, newPatient);
 
 		migrateInternmentEpisode.execute(oldPatients,newPatient);
 		migrateOutpatientConsultation.execute(oldPatients,newPatient);
+		migrateEmergencyCareEpisode.execute(oldPatients,newPatient);
 	}
 }

@@ -1,5 +1,6 @@
 package net.pladema.emergencycare.repository;
 
+import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.ips.entity.ObservationRiskFactor;
 import ar.lamansys.sgx.shared.auditable.repository.SGXAuditableEntityJPARepository;
 import net.pladema.emergencycare.repository.domain.EmergencyCareVo;
 import net.pladema.emergencycare.repository.entity.EmergencyCareEpisode;
@@ -93,4 +94,18 @@ public interface EmergencyCareEpisodeRepository extends SGXAuditableEntityJPARep
 				" or ece.emergencyCareStateId = " + EmergencyCareState.CON_ALTA_MEDICA + " ) " +
 			"AND ece.institutionId = :institutionId")
 	boolean existsActiveEpisodeByPatientIdAndInstitutionId(@Param("patientId") Integer patientId, @Param("institutionId") Integer institutionId);
+
+	@Transactional(readOnly = true)
+	@Query("SELECT ece.id " +
+			"FROM EmergencyCareEpisode ece " +
+			"WHERE ece.patientId IN :patients")
+	List<Integer> getEmergencyCareEpisodeIdsFromPatients(@Param("patients")List<Integer> patients);
+
+	@Transactional(readOnly = true)
+	@Query("SELECT orf " +
+			"FROM Triage t " +
+			"JOIN TriageRiskFactors trf ON (t.id = trf.pk.triageId) " +
+			"JOIN ObservationRiskFactor orf ON (trf.pk.observationRiskFactorId = orf.id) " +
+			"WHERE t.emergencyCareEpisodeId IN :eceIds")
+	List<ObservationRiskFactor> getObservationRiskFactorFromEmergencyCareEpisodes(@Param("eceIds") List<Integer> eceIds);
 }

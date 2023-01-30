@@ -3,6 +3,8 @@ package net.pladema.patient.infrastructure.output.repository;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import net.pladema.emergencycare.repository.EmergencyCareEpisodeRepository;
+
 import org.springframework.stereotype.Service;
 
 import ar.lamansys.refcounterref.infraestructure.output.repository.counterreference.CounterReferenceRepository;
@@ -30,6 +32,7 @@ public class MergeClinicHistoryStorageImpl implements MergeClinicHistoryStorage 
 
 	private final InternmentEpisodeRepository internmentEpisodeRepository;
 	private final OutpatientConsultationRepository outpatientConsultationRepository;
+	private final EmergencyCareEpisodeRepository emergencyCareEpisodeRepository;
 	private final MedicationRequestRepository medicationRequestRepository;
 	private final ServiceRequestRepository serviceRequestRepository;
 	private final SharedNursingConsultationPort sharedNursingConsultationPort;
@@ -56,6 +59,11 @@ public class MergeClinicHistoryStorageImpl implements MergeClinicHistoryStorage 
 	@Override
 	public List<Integer> getOutpatientConsultationIds(List<Integer> oldPatients) {
 		return outpatientConsultationRepository.getOutpatientConsultationIdsFromPatients(oldPatients);
+	}
+
+	@Override
+	public List<Integer> getEmergencyCareEpisodeIds(List<Integer> oldPatients) {
+		return emergencyCareEpisodeRepository.getEmergencyCareEpisodeIdsFromPatients(oldPatients);
 	}
 
 	@Override
@@ -115,6 +123,13 @@ public class MergeClinicHistoryStorageImpl implements MergeClinicHistoryStorage 
 				.forEach(item -> migratePatientStorage.migrateItem(item.getId(), item.getPatientId(), newPatientId, EMergeTable.OUTPATIENT_CONSULTATION));
 	}
 
+	@Override
+	public void modifyEmergencyCareEpisode(List<Integer> ids, Integer newPatientId) {
+		log.debug("Emergency care episode ids to modify {}", ids);
+		emergencyCareEpisodeRepository.findAllById(ids)
+				.forEach(item -> migratePatientStorage.migrateItem(item.getId(), item.getPatientId(), newPatientId, EMergeTable.EMERGENCY_CARE_EPISODE));
+	}
+
 
 	@Override
 	public void modifyMedicationRequest(List<Integer> ids, Integer newPatientId) {
@@ -149,6 +164,12 @@ public class MergeClinicHistoryStorageImpl implements MergeClinicHistoryStorage 
 		log.debug("Counter reference ids to modify {}",ids);
 		counterReferenceRepository.findAllById(ids)
 				.forEach(item -> migratePatientStorage.migrateItem(item.getId(), item.getPatientId(), newPatientId, EMergeTable.COUNTER_REFERENCE));
+	}
+
+	@Override
+	public void modifyTriageRiskFactor(List<Integer> ids, Integer newPatientId) {
+		emergencyCareEpisodeRepository.getObservationRiskFactorFromEmergencyCareEpisodes(ids)
+				.forEach(item -> migratePatientStorage.migrateItem(item.getId(), item.getPatientId(), newPatientId, EMergeTable.OBSERVATION_VITAL_SIGN));
 	}
 
 	@Override
