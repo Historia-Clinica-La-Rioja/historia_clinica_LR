@@ -1,5 +1,6 @@
 package net.pladema.sipplus.infrastructure.output;
 
+import ar.lamansys.sgh.shared.infrastructure.input.service.BasicDataPersonDto;
 import ar.lamansys.sgh.shared.infrastructure.input.service.BasicPatientDto;
 import ar.lamansys.sgh.shared.infrastructure.input.service.SharedPatientPort;
 import ar.lamansys.sgh.shared.infrastructure.input.service.SharedPersonPort;
@@ -8,11 +9,14 @@ import ar.lamansys.sgx.shared.restclient.services.RestClient;
 import ar.lamansys.sgx.shared.restclient.services.RestClientInterface;
 
 import lombok.extern.slf4j.Slf4j;
+import net.minidev.json.JSONObject;
 import net.pladema.sipplus.application.port.SipPlusWSStorage;
 
 import net.pladema.sipplus.domain.SipPlusPregnancieResponse;
+import net.pladema.sipplus.domain.SipPlusPregnancyCode;
 import net.pladema.sipplus.infrastructure.input.rest.exception.SipPlusApiException;
 import net.pladema.sipplus.infrastructure.input.rest.exception.SipPlusApiExceptionEnum;
+import net.pladema.sipplus.infrastructure.output.rest.SipPlusPregnancyPayload;
 import net.pladema.sipplus.infrastructure.output.rest.SipPlusRestTemplate;
 
 import net.pladema.sipplus.infrastructure.output.rest.SipPlusWSConfig;
@@ -22,7 +26,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -66,6 +72,37 @@ public class SipPlusWSStorageImpl implements SipPlusWSStorage {
 			throw mapException(e);
 		}
 		return pregnancies;
+	}
+
+	@Override
+	public void createPregnancy(Integer patientId, Integer pregnancyNumber) {
+		BasicPatientDto patientData = sharedPatientPort.getBasicDataFromPatient(patientId);
+		String countryIsoCode = sharedPersonPort.getCountryIsoCodeFromPerson(patientData.getPerson().getId());
+
+		String urlWithParams = getUrlWithParams(patientData, countryIsoCode);
+		SipPlusPregnancyPayload body = createPregnancyBody(patientData.getPerson(), pregnancyNumber.toString());
+		try {
+			restClientInterface.exchangePost(urlWithParams, body, Object.class);
+		} catch (RestTemplateApiException e) {
+			throw mapException(e);
+		}
+	}
+
+	private SipPlusPregnancyPayload createPregnancyBody(BasicDataPersonDto basicDataPerson, String pregnancyNumber) {
+		Map<String, JSONObject> pregnancies = new HashMap<>();
+		pregnancies.put(pregnancyNumber, getPregnancyData(basicDataPerson));
+		return SipPlusPregnancyPayload.builder()
+				.pregnancies(pregnancies)
+				.build();
+	}
+
+
+	private JSONObject getPregnancyData(BasicDataPersonDto basicDataPerson) {
+		log.debug("Get pregnancy data");
+		Short patientAge = basicDataPerson.getAge();
+		JSONObject pregnancyData = new JSONObject();
+		pregnancyData.put(SipPlusPregnancyCode.MOTHER_AGE, patientAge);
+		return pregnancyData;
 	}
 	
 	private String getUrlWithParams(BasicPatientDto patientData, String countryIsoCode) {
