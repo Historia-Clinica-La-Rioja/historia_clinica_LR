@@ -50,6 +50,7 @@ import { CtrlTemplateDirective } from './directives/ctrl-template.directive';
 import { DayTimeRangePipe } from './pipes/day-time-range.pipe';
 import { FullHouseAddressPipe } from './pipes/fullHouseAddress.pipe';
 import { PatientToPersonPipe } from "./pipes/PatientToPersonPipe";
+import { PaginatePipe } from './pipes/paginate.pipe';
 import { PersonIdentificationPipe } from './pipes/person-identification.pipe';
 import { ViewDateDtoPipe } from './pipes/view-date-dto.pipe';
 import { ViewDatePipe } from './pipes/view-date.pipe';
@@ -103,6 +104,7 @@ import { ViewHourMinutePipe } from './pipes/view-hour-minute.pipe';
 		DayTimeRangePipe,
 		FullHouseAddressPipe,
 		PatientToPersonPipe,
+		PaginatePipe,
 		PersonIdentificationPipe,
 		ViewDateDtoPipe,
 		ViewDatePipe,
@@ -162,6 +164,7 @@ import { ViewHourMinutePipe } from './pipes/view-hour-minute.pipe';
 		DayTimeRangePipe,
 		FullHouseAddressPipe,
 		PatientToPersonPipe,
+		PaginatePipe,
 		PersonIdentificationPipe,
 		ViewDateDtoPipe,
 		ViewDatePipe,
