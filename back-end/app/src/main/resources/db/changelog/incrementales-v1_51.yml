@@ -77,3 +77,121 @@ databaseChangeLog:
                 - column:
                     name: observations
                     type: text
+
+    - changeSet:
+        id: dropTable-medication_statement_commercial
+        author: lmanterola
+        changes:
+          - dropTable:
+              cascadeConstraints: true
+              tableName: medication_statement_commercial
+
+    - changeSet:
+        id: medication_statement_commercial-createTable
+        author: lmanterola
+        changes:
+          - createTable:
+              tableName: medication_statement_commercial
+              columns:
+                - column:
+                    constraints:
+                      primaryKey: true
+                      primaryKeyName: PK_medication_statement_commercial
+                    name: id
+                    type: int
+                - column:
+                    constraints:
+                      nullable: false
+                    name: snomed_id
+                    type: int
+                - column:
+                    constraints:
+                      nullable: false
+                    name: commercial_name
+                    type: varchar(512)
+                - column:
+                    constraints:
+                      nullable: false
+                    name: commercial_presentation
+                    type: varchar(128)
+                - column:
+                    name: presentation_quantity
+                    type: int
+                - column:
+                    constraints:
+                      nullable: false
+                    name: brand
+                    type: varchar(256)
+                - column:
+                    constraints:
+                      nullable: false
+                    name: price
+                    type: float
+                - column:
+                    constraints:
+                      nullable: false
+                    name: affiliate_payment
+                    type: float
+                - column:
+                    constraints:
+                      nullable: false
+                    name: medical_coverage_payment
+                    type: float
+                - column:
+                    name: pharmacy_name
+                    type: varchar(512)
+                    constraints:
+                      nullable: false
+                - column:
+                    name: pharmacist_name
+                    type: varchar(256)
+                    constraints:
+                      nullable: false
+                - column:
+                    name: observations
+                    type: text
+                - column:
+                    constraints:
+                      nullable: false
+                    name: created_by
+                    type: int
+                    defaultValue: -1
+                - column:
+                    constraints:
+                      nullable: false
+                    name: created_on
+                    type: datetime
+                    defaultValueDate: ${date.now}
+                - column:
+                    constraints:
+                      nullable: false
+                    name: updated_by
+                    type: int
+                    defaultValue: -1
+                - column:
+                    constraints:
+                      nullable: false
+                    name: updated_on
+                    type: datetime
+                    defaultValueDate: ${date.now}
+                - column:
+                    constraints:
+                      nullable: false
+                    name: deleted
+                    type: BOOLEAN
+                    defaultValue: ${boolean.false}
+                - column:
+                    name: deleted_by
+                    type: int
+                - column:
+                    name: deleted_on
+                    type: datetime
+                - addForeignKeyConstraint:
+                    baseColumnNames: id
+                    baseTableName: medication_statement_commercial
+                    constraintName: FK_medication_statement_commercial_medication_statement
+                    onDelete: NO ACTION
+                    onUpdate: NO ACTION
+                    referencedColumnNames: id
+                    referencedTableName: medication_statement
+                    validate: true

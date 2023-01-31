@@ -139,6 +139,7 @@ public class PrescriptionStorageImpl implements PrescriptionStorage {
 		changeMedicationsStatement(prescriptionLineNumbers, newStatus, prescriptionIdInt);
 		medicationStatementCommercialRepository.deleteAllInBatch(entities);
 		medicationStatementCommercialRepository.saveAll(entities);
+		medicationStatementCommercialRepository.flush();
 	}
 
 	private boolean isInNewStatus(Integer prescriptionLineNumber, List<LineStatusBo> newStatus) {
@@ -149,33 +150,44 @@ public class PrescriptionStorageImpl implements PrescriptionStorage {
 		boolean valid;
 		boolean validPharmacyName = true;
 		int i = 0;
-		String lastStatus = "";
-		String lastNewStatus = "";
+		String lastStatusStr = "";
+		String lastNewStatusStr = "";
+
 		while (i < linesStatus.size()) {
+			LineStatusBo oldS = linesStatus.get(i);
+			LineStatusBo newS = findCorrespondingStatus(newStatus, oldS.getPrescriptionLineNumber());
 			valid = PrescriptionValidStatesEnum.isValidTransition(
-					linesStatus.get(i).getPrescriptionLineState(),
-					newStatus.get(i).getPrescriptionLineState()
+					oldS.getPrescriptionLineState(),
+					newS.getPrescriptionLineState()
 			);
-			lastStatus = PrescriptionValidStatesEnum.map(linesStatus.get(i).getPrescriptionLineState()).toString();
-			lastNewStatus = PrescriptionValidStatesEnum.map(newStatus.get(i).getPrescriptionLineState()).toString();
-			if(PrescriptionValidStatesEnum.map(newStatus.get(i).getPrescriptionLineState()).equals(PrescriptionValidStatesEnum.CANCELADO)) {
-				Integer id = getMedicationStamentId(linesStatus, newStatus.get(i).getPrescriptionLineNumber());
+
+			lastStatusStr = PrescriptionValidStatesEnum.map(oldS.getPrescriptionLineState()).toString();
+			lastNewStatusStr = PrescriptionValidStatesEnum.map(newS.getPrescriptionLineState()).toString();
+			if(PrescriptionValidStatesEnum.map(newS.getPrescriptionLineState()).equals(PrescriptionValidStatesEnum.CANCELADO)) {
+				Integer id = getMedicationStamentId(linesStatus, newS.getPrescriptionLineNumber());
 				if(id != null) {
 					var medication = medicationStatementCommercialRepository.findById(id);
-					if (medication.isPresent() && medication.get().getPharmacyName() != null && !medication.get().getPharmacyName().equals(newStatus.get(i).getPharmacyName())) {
+					if (medication.isPresent() && medication.get().getPharmacyName() != null && !medication.get().getPharmacyName().equals(newS.getPharmacyName())) {
 						validPharmacyName = false;
 					}
 				}
 			}
-			i++;
 
 			if(!validPharmacyName) {
-				throw new ConstraintViolationException(String.format("Para cancelar el renglón %s se debe mantener el mismo nombre de farmacia", i), Collections.emptySet());
+				throw new ConstraintViolationException(String.format("Para cancelar el renglón %s se debe mantener el mismo nombre de farmacia", linesStatus.get(i).getPrescriptionLineNumber()), Collections.emptySet());
 			}
 			if(!valid) {
-				throw new ConstraintViolationException(String.format("El renglón %s no puede cambiar del estado %s al estado %s", i, lastStatus, lastNewStatus), Collections.emptySet());
+				throw new ConstraintViolationException(String.format("El renglón %s no puede cambiar del estado %s al estado %s", linesStatus.get(i).getPrescriptionLineNumber(), lastStatusStr, lastNewStatusStr), Collections.emptySet());
 			}
+
+			i++;
 		}
+	}
+
+	private LineStatusBo findCorrespondingStatus(List<LineStatusBo> newStatus, Integer prescriptionLineNumber) {
+		return newStatus.stream()
+				.filter(ls -> ls.getPrescriptionLineNumber().equals(prescriptionLineNumber))
+				.findFirst().orElse(null);
 	}
 
 	private Integer getMedicationStamentId(List<LineStatusBo> linesStatus, Integer prescriptionLineNumber) {
@@ -241,6 +253,8 @@ public class PrescriptionStorageImpl implements PrescriptionStorage {
 					.setParameter("prescriptionId", prescriptionId)
 					.setParameter("lineNumber", prescriptionLineNumbers.get(i))
 					.executeUpdate();
+			entityManager.flush();
+			entityManager.clear();
 		}
 	}
 
