@@ -6,6 +6,8 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 
+import javax.annotation.Nullable;
+
 @Getter
 @Setter
 @ToString
@@ -17,6 +19,9 @@ public class ProfessionalLicenseNumberValidationResponseDto {
 	private Boolean healthcareProfessionalLicenseNumberValid;
 
 	private Boolean healthcareProfessionalCompleteContactData;
+
+	@Nullable
+	private String patientEmail;
 
 	public ProfessionalLicenseNumberValidationResponseDto() {
 		this.twoFactorAuthenticationEnabled = true;

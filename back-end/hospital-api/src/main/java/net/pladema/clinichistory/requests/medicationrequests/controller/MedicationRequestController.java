@@ -240,9 +240,10 @@ public class MedicationRequestController {
 	public ResponseEntity<ProfessionalLicenseNumberValidationResponseDto> validateMedicationRequestGeneration(@PathVariable(name = "institutionId") Integer institutionId,
 																											  @PathVariable(name = "patientId") Integer patientId) {
 		LOG.debug("medicationRequestList -> institutionId {}, patientId {}", institutionId, patientId);
+		BasicPatientDto patientBasicData = patientExternalService.getBasicDataFromPatient(patientId);
 		Integer healthcareProfessionalUserId = UserInfo.getCurrentAuditor();
 		ProfessionalDto healthcareProfessionalData = healthcareProfessionalExternalService.findProfessionalByUserId(UserInfo.getCurrentAuditor());
-		ProfessionalLicenseNumberValidationResponseDto response = validateMedicationRequestGenerationService.execute(healthcareProfessionalUserId, healthcareProfessionalData);
+		ProfessionalLicenseNumberValidationResponseDto response = validateMedicationRequestGenerationService.execute(healthcareProfessionalUserId, healthcareProfessionalData, patientBasicData);
 		return ResponseEntity.of(Optional.of(response));
 	}
 

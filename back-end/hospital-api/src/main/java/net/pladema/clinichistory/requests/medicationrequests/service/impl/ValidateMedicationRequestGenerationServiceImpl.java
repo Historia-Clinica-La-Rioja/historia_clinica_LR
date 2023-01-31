@@ -1,5 +1,6 @@
 package net.pladema.clinichistory.requests.medicationrequests.service.impl;
 
+import ar.lamansys.sgh.shared.infrastructure.input.service.BasicPatientDto;
 import ar.lamansys.sgx.auth.user.infrastructure.output.user.User;
 import ar.lamansys.sgx.auth.user.infrastructure.output.user.UserRepository;
 import lombok.AllArgsConstructor;
@@ -34,11 +35,12 @@ public class ValidateMedicationRequestGenerationServiceImpl implements ValidateM
 	private final HealthcareProfessionalService healthcareProfessionalService;
 
 	@Override
-	public ProfessionalLicenseNumberValidationResponseDto execute(Integer userId, ProfessionalDto healthcareProfessionalData) {
+	public ProfessionalLicenseNumberValidationResponseDto execute(Integer userId, ProfessionalDto healthcareProfessionalData, BasicPatientDto patientBasicData) {
 		LOG.debug("Input parameters -> userId {}, healthcareProfessional {}", userId, healthcareProfessionalData);
 		ProfessionalLicenseNumberValidationResponseDto response = new ProfessionalLicenseNumberValidationResponseDto();
 		validateTwoFactorAuthentication(userId, response);
 		validateContactData(healthcareProfessionalData, response);
+		addPatientEmail(patientBasicData, response);
 		return response;
 	}
 
@@ -57,6 +59,11 @@ public class ValidateMedicationRequestGenerationServiceImpl implements ValidateM
 		PersonExtended personData = personService.getPersonExtended(healthcareProfessional.getPersonId());
 		if (personData.getEmail() == null || personData.getPhoneNumber() == null)
 			response.setHealthcareProfessionalCompleteContactData(false);
+	}
+
+	private void addPatientEmail(BasicPatientDto basicPatientData, ProfessionalLicenseNumberValidationResponseDto response) {
+		PersonExtended person = personService.getPersonExtended(basicPatientData.getPerson().getId());
+		response.setPatientEmail(person.getEmail());
 	}
 
 }
