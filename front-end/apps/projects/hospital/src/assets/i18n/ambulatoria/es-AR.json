@@ -636,8 +636,12 @@
 			"clap":{
 				"TAB_LABEL":"Clap",
 				"TITLE_PERINATAL_CLINICAL_HISTORY": "Historia clínica perinatal",
-				"GESTATION": "Gesta",
-				"VIEW" :"Ver"
+				"GESTATION": "Gesta n°",
+				"VIEW" :"Ver",
+				"NEW_GESTATION": "Nueva gesta",
+				"CREATE": "CREAR",
+				"LABEL_DIALOG_GESTATION":"Cargue el número de gesta que desea crear",
+				"VALUE_ERROR":"Ingrese un numero entre 1 y 30."
 
 			}
         },

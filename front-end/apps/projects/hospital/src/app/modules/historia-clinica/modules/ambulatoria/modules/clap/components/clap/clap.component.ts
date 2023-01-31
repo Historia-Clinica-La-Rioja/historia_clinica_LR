@@ -1,8 +1,10 @@
 import { Component, Input, OnInit } from '@angular/core';
+import { MatDialog } from '@angular/material/dialog';
 import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
 import { SipPlusUrlDataDto } from '@api-rest/api-model';
 import { SipPlusService } from '@api-rest/services/sip-plus.service';
 import { ContextService } from '@core/services/context.service';
+import { NewGestationPopupComponent } from '../../dialogs/new-gestation-popup/new-gestation-popup.component';
 
 @Component({
 	selector: 'app-clap',
@@ -21,7 +23,8 @@ export class ClapComponent implements OnInit {
 
 	constructor(private contextService: ContextService,
 		private sanitizer: DomSanitizer,
-		private sipPlusService: SipPlusService) {
+		private sipPlusService: SipPlusService,
+		public dialog: MatDialog) {
 		this.institucionId = this.contextService.institutionId;
 	}
 
@@ -48,5 +51,20 @@ export class ClapComponent implements OnInit {
 
 	backViewGestations() {
 		this.viewSip=false;
+	}
+
+	newGestation() {
+		const dialogRef = this.dialog.open(NewGestationPopupComponent, {
+			disableClose: true ,
+			width: '30%',
+		  });
+
+		  dialogRef.afterClosed().subscribe(result => {
+			if(result){
+				this.viewSip=true;
+				let aux = result;
+			}
+		  });
+
 	}
 }

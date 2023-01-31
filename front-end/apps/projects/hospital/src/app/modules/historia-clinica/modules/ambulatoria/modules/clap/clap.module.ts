@@ -2,13 +2,14 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ClapComponent } from './components/clap/clap.component';
 import { PresentationModule } from '@presentation/presentation.module';
-import { CoreModule } from '@core/core.module';
+import { NewGestationPopupComponent } from './dialogs/new-gestation-popup/new-gestation-popup.component';
 
 
 
 @NgModule({
   declarations: [
-    ClapComponent
+    ClapComponent,
+    NewGestationPopupComponent
   ],
   imports: [
     CommonModule,

@@ -1,0 +1,21 @@
+<div fxLayout="row" fxLayoutAlign="space-between start">
+
+	<div fxLayout="column">
+		<h1 mat-dialog-title>{{ 'ambulatoria.paciente.clap.NEW_GESTATION' | translate }}</h1>
+		<span>{{ 'ambulatoria.paciente.clap.LABEL_DIALOG_GESTATION' | translate }}</span>
+	</div>
+	<button type="button" mat-button mat-icon-button mat-dialog-close>
+		<mat-icon>close</mat-icon>
+	</button>
+</div>
+<div mat-dialog-content id="content">
+	<span class="bold">{{'ambulatoria.paciente.clap.GESTATION' |
+		translate}}</span>
+	<mat-form-field appearance="outline">
+		<input matInput type="number" [max]=max  [min]=min [(ngModel)]="valueGestation">
+	</mat-form-field>
+	<mat-error *ngIf="valueGestation < min || valueGestation > max" [translate]="'ambulatoria.paciente.clap.VALUE_ERROR'"></mat-error>
+</div>
+<div mat-dialog-actions>
+	<button  mat-raised-button color="primary" [mat-dialog-close]="valueGestation"> {{ 'ambulatoria.paciente.clap.CREATE' | translate }}</button>
+</div>
