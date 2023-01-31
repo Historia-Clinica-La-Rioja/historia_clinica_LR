@@ -2960,6 +2960,11 @@ export interface SharedSnowstormSearchItemDto {
     pt: string;
 }
 
+export interface SipPlusUrlDataDto {
+    token: string;
+    urlBase: string;
+}
+
 export interface SnomedDto extends Serializable {
     id?: number;
     parentFsn?: string;

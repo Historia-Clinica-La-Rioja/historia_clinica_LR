@@ -5,7 +5,11 @@ import lombok.RequiredArgsConstructor;
 
 import lombok.extern.slf4j.Slf4j;
 
-import net.pladema.clinichistory.sipplus.application.GetSipUrlBase;
+import net.pladema.clinichistory.sipplus.application.GetSipPlusUrlData;
+
+import net.pladema.clinichistory.sipplus.domain.SipPlusUrlDataBo;
+
+import net.pladema.clinichistory.sipplus.infrastructure.input.rest.dto.SipPlusUrlDataDto;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -19,12 +23,19 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 public class SipPlusController {
 
-	private final GetSipUrlBase getSipUrlBase;
+	private final GetSipPlusUrlData getSipPlusUrlData;
 
-	@GetMapping(value = "/url-base")
-	public ResponseEntity<String> getSipPlusURLBase() {
-		String url = getSipUrlBase.run();
-		log.debug("Get sip plus url ", url);
-		return ResponseEntity.ok().body(url);
+	@GetMapping(value = "/url-info")
+	public ResponseEntity<SipPlusUrlDataDto> getUrlData() {
+		SipPlusUrlDataDto urlData = mapToDto(getSipPlusUrlData.run());
+		log.debug("Get data to create sip embedded session url ", urlData);
+		return ResponseEntity.ok().body(urlData);
+	}
+
+	private SipPlusUrlDataDto mapToDto(SipPlusUrlDataBo sipPlusUrlDataBo) {
+		return SipPlusUrlDataDto.builder()
+				.token(sipPlusUrlDataBo.getToken())
+				.urlBase(sipPlusUrlDataBo.getUrlBase())
+				.build();
 	}
 }

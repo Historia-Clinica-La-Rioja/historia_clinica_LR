@@ -4,5 +4,5 @@ import lombok.Getter;
 
 @Getter
 public enum SipPlusExceptionEnum {
-	MISSING_PROPERTY
+	MISSING_SIP_URL_PROPERTY
 }

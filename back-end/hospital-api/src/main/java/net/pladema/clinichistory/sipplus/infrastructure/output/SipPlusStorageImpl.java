@@ -1,5 +1,8 @@
 package net.pladema.clinichistory.sipplus.infrastructure.output;
 
+import ar.lamansys.sgx.auth.jwt.infrastructure.input.service.TokenExternalService;
+import ar.lamansys.sgx.shared.auth.user.SecurityContextUtils;
+import ar.lamansys.sgx.shared.auth.user.SgxUserDetails;
 import lombok.RequiredArgsConstructor;
 
 import lombok.extern.slf4j.Slf4j;
@@ -10,6 +13,8 @@ import net.pladema.clinichistory.sipplus.application.port.exceptions.SipPlusExce
 
 import net.pladema.clinichistory.sipplus.application.port.exceptions.SipPlusExceptionEnum;
 
+import net.pladema.clinichistory.sipplus.domain.SipPlusUrlDataBo;
+
 import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Service;
 
@@ -19,12 +24,28 @@ import org.springframework.stereotype.Service;
 public class SipPlusStorageImpl implements SipPlusStorage {
 
 	private final Environment env;
+	private final TokenExternalService tokenExternalService;
 
 	@Override
-	public String getUrlBase() {
+	public SipPlusUrlDataBo getUrlData() {
+		return SipPlusUrlDataBo.builder()
+				.urlBase(getUrlBase())
+				.token(getToken())
+				.build();
+	}
+
+	private String getToken() {
+		SgxUserDetails userDetails = SecurityContextUtils.getUserDetails();
+		Integer userId = userDetails.userId;
+		String username = userDetails.getUsername();
+		String token = tokenExternalService.generateToken(userId, username);
+		return token;
+	}
+
+	private String getUrlBase() {
 		String sipUrlBase = env.getProperty("ws.sip.plus.url.base");
 		if (sipUrlBase == null || sipUrlBase.isBlank())
-			throw new SipPlusException(SipPlusExceptionEnum.MISSING_PROPERTY, "La url no se encuentra configurada en el archivo de propiedades");
+			throw new SipPlusException(SipPlusExceptionEnum.MISSING_SIP_URL_PROPERTY, "La url de sip no se encuentra configurada en el archivo de propiedades");
 		return sipUrlBase;
 	}
 

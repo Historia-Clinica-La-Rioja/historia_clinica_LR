@@ -34,6 +34,11 @@ public class GenerateTokenImpl implements GenerateToken {
         return new JWTokenBo(token, refreshToken);
     }
 
+	@Override
+	public String generateToken(Integer userId, String username) {
+		return createNormalToken(userId, username);
+	}
+
     private String createRefreshToken(String username) {
         Map<String, Object> claims = Map.of(
                 JWTUtils.TOKEN_CLAIM_TYPE, ETokenType.REFRESH
