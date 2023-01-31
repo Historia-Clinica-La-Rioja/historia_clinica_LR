@@ -26,6 +26,7 @@ public interface SharedIndicationPort {
 
 	List<ParenteralPlanDto> getInternmentEpisodeParenteralPlans(Integer internmentEpisodeId);
 	ParenteralPlanDto getInternmentEpisodeParenteralPlan(Integer parenteralPlanId);
+	List<ParenteralPlanDto> getMostFrequentParenteralPlans(Integer professionalId, Integer institutionId, Integer limit);
 
 	List<NursingRecordDto> getInternmentEpisodeNursingRecords(Integer internmentEpisodeId);
 

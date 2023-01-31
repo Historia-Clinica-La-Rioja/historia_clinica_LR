@@ -36,4 +36,12 @@ public class ParenteralPlanBo extends IndicationBo {
 		this.pharmacos = pharmacos;
 	}
 
+	public String getSnomedSctid() {
+		return getSnomed() != null ? this.snomed.getSctid() : null;
+	}
+
+	public String getSnomedPt() {
+		return getSnomed() != null ? this.snomed.getPt() : null;
+	}
+
 }

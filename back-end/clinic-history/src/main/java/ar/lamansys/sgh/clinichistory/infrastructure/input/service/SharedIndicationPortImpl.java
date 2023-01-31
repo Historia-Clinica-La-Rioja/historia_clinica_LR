@@ -15,6 +15,7 @@ import ar.lamansys.sgh.clinichistory.application.indication.getinternmentepisode
 
 import ar.lamansys.sgh.clinichistory.application.indication.getinternmentepisodeparenteralplans.GetInternmentEpisodeParenteralPlans;
 import ar.lamansys.sgh.clinichistory.application.indication.getinternmentepisodepharamacos.GetInternmentEpisodePharmacos;
+import ar.lamansys.sgh.clinichistory.application.indication.getmostfrequentparenteralplanindicated.GetMostFrequentParenteralPlanIndicated;
 import ar.lamansys.sgh.clinichistory.application.indication.getmostfrequentpharmacoindicated.GetMostFrequentPharmacoIndicated;
 import ar.lamansys.sgh.clinichistory.application.indication.updatenursingrecordstatus.UpdateNursingRecordStatus;
 import ar.lamansys.sgh.clinichistory.domain.ips.FrequencyBo;
@@ -94,6 +95,7 @@ public class SharedIndicationPortImpl implements SharedIndicationPort {
 
 	private final GetInternmentEpisodeParenteralPlans getInternmentEpisodeParenteralPlans;
 	private final GetInternmentEpisodeParenteralPlan getInternmentEpisodeParenteralPlan;
+	private final GetMostFrequentParenteralPlanIndicated getMostFrequentParenteralPlanIndicated;
 
 	private final GetInternmentEpisodeNursingRecords getInternmentEpisodeNursingRecords;
 
@@ -216,6 +218,17 @@ public class SharedIndicationPortImpl implements SharedIndicationPort {
 	public List<NursingRecordDto> getInternmentEpisodeNursingRecords(Integer internmentEpisodeId) {
 		log.debug("Input parameter -> internmentEpisodeId {}", internmentEpisodeId);
 		List<NursingRecordDto> result = getInternmentEpisodeNursingRecords.run(internmentEpisodeId).stream().map(this::mapToNursingRecordDto).collect(Collectors.toList());
+		log.debug("Output -> {}", result);
+		return result;
+	}
+
+	@Override
+	public List<ParenteralPlanDto> getMostFrequentParenteralPlans(Integer professionalId, Integer institutionId, Integer limit) {
+		log.debug("Input parameter -> professionalId {}, institutionId {}", professionalId, institutionId);
+		List<ParenteralPlanDto> result = getMostFrequentParenteralPlanIndicated.run(professionalId, institutionId, limit)
+				.stream()
+				.map(this::mapToImpersonalParenteralPlanDto)
+				.collect(Collectors.toList());
 		log.debug("Output -> {}", result);
 		return result;
 	}
@@ -466,6 +479,16 @@ public class SharedIndicationPortImpl implements SharedIndicationPort {
 				frequencyDto,
 				bo.getVia(),
 				otherPharmacos);
+	}
+
+	private ParenteralPlanDto mapToImpersonalParenteralPlanDto(ParenteralPlanBo bo) {
+		SharedSnomedDto snomedDto = new SharedSnomedDto(bo.getSnomedSctid(), bo.getSnomedPt());
+		NewDosageDto dosageDto = toDosageDto(bo.getDosage());
+		ParenteralPlanDto result = new ParenteralPlanDto();
+		result.setSnomed(snomedDto);
+		result.setDosage(dosageDto);
+		result.setVia(bo.getVia());
+		return result;
 	}
 
 	private PharmacoDto mapToPharmacoDto(PharmacoBo bo){
