@@ -7,7 +7,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-import ar.lamansys.sgh.clinichistory.domain.ips.PharmacoMinimalBo;
+import ar.lamansys.sgh.clinichistory.domain.ips.IndicationMinimalBo;
 
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
@@ -100,7 +100,7 @@ public class PharmacoStorageImpl implements PharmacoStorage {
 		return result;
 	}
 
-	private Object[] completeAdministrationOfPharmaco(PharmacoMinimalBo oneFrequentPharmaco) {
+	private Object[] completeAdministrationOfPharmaco(IndicationMinimalBo oneFrequentPharmaco) {
 
 		PageRequest top1 = PageRequest.of(0, 1);
 		Integer snomedId = oneFrequentPharmaco.getSnomedId();

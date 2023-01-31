@@ -5,7 +5,7 @@ import lombok.Setter;
 
 @Getter
 @Setter
-public class PharmacoMinimalBo {
+public class IndicationMinimalBo {
 
 	private Integer snomedId;
 	private Double value;
@@ -13,7 +13,7 @@ public class PharmacoMinimalBo {
 	private Short via;
 	private Long total;
 
-	public PharmacoMinimalBo(Integer snomedId, Double value, String unit, Short via, Long total) {
+	public IndicationMinimalBo(Integer snomedId, Double value, String unit, Short via, Long total) {
 		this.snomedId = snomedId;
 		this.value = value;
 		this.unit = unit;

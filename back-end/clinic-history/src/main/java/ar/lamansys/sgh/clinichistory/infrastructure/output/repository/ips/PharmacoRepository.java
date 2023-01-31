@@ -1,7 +1,7 @@
 
 package ar.lamansys.sgh.clinichistory.infrastructure.output.repository.ips;
 
-import ar.lamansys.sgh.clinichistory.domain.ips.PharmacoMinimalBo;
+import ar.lamansys.sgh.clinichistory.domain.ips.IndicationMinimalBo;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.ips.entity.indication.Pharmaco;
 
 import org.springframework.data.domain.Pageable;
@@ -30,7 +30,7 @@ public interface PharmacoRepository extends JpaRepository<Pharmaco, Integer> {
 												   @Param("documentTypeId") Short documentTypeId);
 
 	@Transactional(readOnly = true)
-	@Query(value = "SELECT NEW ar.lamansys.sgh.clinichistory.domain.ips.PharmacoMinimalBo(p.snomedId, q.value, q.unit, p.viaId, count(*) AS total) "
+	@Query(value = "SELECT NEW ar.lamansys.sgh.clinichistory.domain.ips.IndicationMinimalBo(p.snomedId, q.value, q.unit, p.viaId, count(*) AS total) "
 			+ "FROM Pharmaco p "
 			+ "JOIN Indication i ON (p.id = i.id AND p.professionalId = :professionalId) "
 			+ "JOIN DocumentIndication di ON (di.pk.indicationId = i.id) "
@@ -39,9 +39,9 @@ public interface PharmacoRepository extends JpaRepository<Pharmaco, Integer> {
 			+ "JOIN Quantity q ON (q.id = d.doseQuantityId) "
 			+ "GROUP BY p.snomedId, q.value, q.unit, p.viaId "
 			+ "ORDER BY total DESC")
-	List<PharmacoMinimalBo> getMostFrequent(@Param("professionalId") Integer professionalId,
-											@Param("institutionId") Integer institutionId,
-											Pageable page);
+	List<IndicationMinimalBo> getMostFrequent(@Param("professionalId") Integer professionalId,
+											  @Param("institutionId") Integer institutionId,
+											  Pageable page);
 
 	@Transactional(readOnly = true)
 	@Query(value = "SELECT d.periodUnit, count(*) AS total "
