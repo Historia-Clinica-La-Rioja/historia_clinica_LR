@@ -38,4 +38,11 @@ public interface InstitutionRepository extends JpaRepository<Institution, Intege
 			"WHERE c.departmentId = :departmentId " +
 			"ORDER BY i.name ")
 	List<InstitutionBasicInfoBo> findByDeparmentId(@Param("departmentId") Short departmentId);
+
+	@Query("SELECT NEW net.pladema.establishment.service.domain.InstitutionBasicInfoBo(i.id, i.name) "+
+			"FROM Institution i " +
+			"JOIN Address a ON (i.addressId = a.id) " +
+			"WHERE a.provinceId = :provinceId " +
+			"ORDER BY i.name ")
+	List<InstitutionBasicInfoBo> findByProvinceId(@Param("provinceId") Short provinceId);
 }

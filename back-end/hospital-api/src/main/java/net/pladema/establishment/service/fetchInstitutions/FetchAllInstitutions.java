@@ -29,6 +29,10 @@ public class FetchAllInstitutions {
 		return institutionRepository.findByDeparmentId(departmentId);
 	}
 
+	public List<InstitutionBasicInfoBo> findByProvinceId(Short provinceId) {
+		return institutionRepository.findByProvinceId(provinceId);
+	}
+
     private InstitutionBo mapTo(Institution institution){
         InstitutionBo result = new InstitutionBo();
         result.setId(institution.getId());

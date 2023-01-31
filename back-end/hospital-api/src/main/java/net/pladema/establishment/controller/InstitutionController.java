@@ -24,6 +24,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -85,7 +86,7 @@ public class InstitutionController {
 		var result = mapper.toListInstitutionBasicInfoDto(institutionBos);
 		logger.debug("Ids results -> {}", result.stream().map(InstitutionBasicInfoDto::getId));
 		logger.trace("Results -> {}", result);
-		return result;
+		return result.stream().sorted(Comparator.comparing(InstitutionBasicInfoDto::getName)).collect(Collectors.toList());
 	}
 
 	@GetMapping("/{institutionId}/address")
@@ -103,6 +104,16 @@ public class InstitutionController {
 	List<InstitutionBasicInfoDto> findByDepartmentId(@PathVariable(name = "departmentId") Short departmentId) {
 		logger.debug("Input parameter -> departmentId {}", departmentId);
 		List<InstitutionBasicInfoBo> institutionBasicInfoBoList = fetchAllInstitutions.findByDepartmentId(departmentId);
+		var result = mapper.fromListInstitutionBasicInfoBo(institutionBasicInfoBoList);
+		logger.trace("result -> {}", result);
+		return result;
+	}
+
+	@GetMapping("/province/{provinceId}")
+	public @ResponseBody
+	List<InstitutionBasicInfoDto> findByProvinceId(@PathVariable(name = "provinceId") Short provinceId) {
+		logger.debug("Input parameter -> provinceId {}", provinceId);
+		List<InstitutionBasicInfoBo> institutionBasicInfoBoList = fetchAllInstitutions.findByProvinceId(provinceId);
 		var result = mapper.fromListInstitutionBasicInfoBo(institutionBasicInfoBoList);
 		logger.trace("result -> {}", result);
 		return result;
