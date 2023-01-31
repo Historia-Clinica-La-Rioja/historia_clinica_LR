@@ -2,6 +2,10 @@ package net.pladema.clinichistory.hospitalization.controller.documents.indicatio
 
 import java.util.List;
 
+import ar.lamansys.sgh.shared.infrastructure.input.service.ParenteralPlanDto;
+
+import net.pladema.clinichistory.hospitalization.service.indication.parenteralplan.ProfessionalParenteralPlanService;
+
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
@@ -25,12 +29,22 @@ import net.pladema.clinichistory.hospitalization.service.indication.pharmaco.Pro
 public class IndicationProfessionalController {
 
 	private final ProfessionalPharmacoService professionalPharmacoService;
+	private final ProfessionalParenteralPlanService professionalParenteralPlanService;
 
 	@GetMapping("/pharmacos/most-frequent")
 	@PreAuthorize("hasPermission(#institutionId, 'ESPECIALISTA_MEDICO, ESPECIALISTA_EN_ODONTOLOGIA')")
 	public ResponseEntity<List<PharmacoSummaryDto>> getMostFrequentPharmacosIndicatedByProfessional(@PathVariable(name = "institutionId") Integer institutionId) {
 		log.debug("Input parameters -> institutionId {}", institutionId);
 		List<PharmacoSummaryDto> result = professionalPharmacoService.getMostFrequentPharmacos(institutionId);
+		log.debug("Output -> {}", result);
+		return ResponseEntity.ok(result);
+	}
+
+	@GetMapping("/parenteralplans/most-frequent")
+	@PreAuthorize("hasPermission(#institutionId, 'ESPECIALISTA_MEDICO, ESPECIALISTA_EN_ODONTOLOGIA')")
+	public ResponseEntity<List<ParenteralPlanDto>> getMostFrequentParenteralPlansIndicatedByProfessional(@PathVariable(name = "institutionId") Integer institutionId) {
+		log.debug("Input parameters -> institutionId {}", institutionId);
+		List<ParenteralPlanDto> result = professionalParenteralPlanService.getMostFrequentParenteralPlans(institutionId);
 		log.debug("Output -> {}", result);
 		return ResponseEntity.ok(result);
 	}

@@ -1,14 +1,20 @@
 package ar.lamansys.sgh.clinichistory.infrastructure.output;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
+
+import org.springframework.data.domain.PageRequest;
+import org.springframework.stereotype.Service;
+
 import ar.lamansys.sgh.clinichistory.application.ports.ParenteralPlanStorage;
 import ar.lamansys.sgh.clinichistory.domain.ips.DosageBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.EUnitsOfTimeBo;
-import ar.lamansys.sgh.clinichistory.domain.ips.EVia;
 import ar.lamansys.sgh.clinichistory.domain.ips.FrequencyBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.IndicationMinimalBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.OtherPharmacoBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.ParenteralPlanBo;
-import ar.lamansys.sgh.clinichistory.domain.ips.PharmacoSummaryBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.QuantityBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.SnomedBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.services.SnomedService;
@@ -29,17 +35,6 @@ import ar.lamansys.sgx.shared.featureflags.AppFeature;
 import ar.lamansys.sgx.shared.featureflags.application.FeatureFlagsService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-
-import org.springframework.data.domain.PageRequest;
-import org.springframework.stereotype.Service;
-
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.LocalTime;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.stream.Collectors;
-import java.util.Optional;
 
 @Service
 @Slf4j
