@@ -20,7 +20,7 @@ export class NewEpisodeAdminTriageComponent {
 	private triage: TriageAdministrativeDto;
 	private emergencyCareDto = {} as ECAdministrativeDto;
 	private readonly routePrefix;
-	hasRoleAdministrative: boolean;
+	private hasRoleAdministrative: boolean;
 
 	constructor(
 		private readonly newEpisodeService: NewEpisodeService,

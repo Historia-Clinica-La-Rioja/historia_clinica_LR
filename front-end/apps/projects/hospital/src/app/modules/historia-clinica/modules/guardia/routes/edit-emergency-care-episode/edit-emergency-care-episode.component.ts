@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { ActivatedRoute, Router } from '@angular/router';
 import { NewEmergencyCareDto } from '@api-rest/api-model';
+import { ERole } from '@api-rest/api-model';
 import { EmergencyCareEpisodeStateService } from '@api-rest/services/emergency-care-episode-state.service';
 import { EmergencyCareEpisodeService } from '@api-rest/services/emergency-care-episode.service';
 import { ConfirmDialogComponent } from '@presentation/dialogs/confirm-dialog/confirm-dialog.component';
@@ -12,6 +13,8 @@ import { map } from 'rxjs/operators';
 import { EstadosEpisodio } from '../../constants/masterdata';
 import { GuardiaMapperService } from '../../services/guardia-mapper.service';
 import { AdministrativeAdmission } from '../../services/new-episode.service';
+import { PermissionsService } from '@core/services/permissions.service';
+import { anyMatch } from '@core/utils/array.utils';
 
 @Component({
 	selector: 'app-edit-emergency-care-episode',
@@ -25,6 +28,7 @@ export class EditEmergencyCareEpisodeComponent implements OnInit {
 	isDoctorOfficeEditable: boolean;
 	private episodeId: number;
 	private patientId: number;
+	private hasRoleAdministrative: boolean;
 
 	constructor(
 		private router: Router,
@@ -33,7 +37,13 @@ export class EditEmergencyCareEpisodeComponent implements OnInit {
 		private readonly route: ActivatedRoute,
 		private readonly emergencyCareEpisodeStateService: EmergencyCareEpisodeStateService,
 		private readonly dialog: MatDialog,
-		private readonly snackBarService: SnackBarService,) { }
+		private readonly snackBarService: SnackBarService,
+		private readonly permissionsService: PermissionsService,
+	) {
+		this.permissionsService.contextAssignments$().subscribe((userRoles: ERole[]) => {
+			this.hasRoleAdministrative = anyMatch<ERole>(userRoles, [ERole.ADMINISTRATIVO]);
+		});
+	}
 
 	ngOnInit(): void {
 
@@ -90,7 +100,7 @@ export class EditEmergencyCareEpisodeComponent implements OnInit {
 	}
 
 	private goToEpisodeDetails(): void {
-		if (this.patientId) {
+		if (this.patientId && !this.hasRoleAdministrative) {
 			const url = `${this.routePrefix}/ambulatoria/paciente/${this.patientId}`;
 			this.router.navigateByUrl(url, { state: { toEmergencyCareTab: true } });
 		}
