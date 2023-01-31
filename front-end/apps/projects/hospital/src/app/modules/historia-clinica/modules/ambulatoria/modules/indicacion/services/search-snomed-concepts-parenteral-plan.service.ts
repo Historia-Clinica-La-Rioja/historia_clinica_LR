@@ -144,4 +144,13 @@ export class SearchSnomedConceptsParenteralPlanService {
 		this.showPharmacoTitle = true;
 		this.showToSearchSnomedConcept = true;
 	}
+
+	setForm(selectedConcept: SnomedDto): void {
+		if (selectedConcept) {
+			this.salineSnomedConcept = selectedConcept;
+			const pt = selectedConcept ? selectedConcept.pt : '';
+			this.salineForm.controls.snomed.setValue(pt);
+		}
+	}
+
 }

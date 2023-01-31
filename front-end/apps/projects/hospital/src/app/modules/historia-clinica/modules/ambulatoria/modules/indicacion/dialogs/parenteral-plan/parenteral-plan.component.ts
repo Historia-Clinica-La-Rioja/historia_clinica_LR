@@ -44,7 +44,7 @@ export class ParenteralPlanComponent implements OnInit {
 	HOURS_LIST = HOURS_LIST;
 
 	constructor(
-		@Inject(MAT_DIALOG_DATA) public data: { entryDate: Date, actualDate: Date, patientId: number, professionalId: number },
+		@Inject(MAT_DIALOG_DATA) public data: { entryDate: Date, actualDate: Date, patientId: number, professionalId: number, parenteralPlan?: ParenteralPlanDto },
 		private readonly dialogRef: MatDialogRef<ParenteralPlanComponent>,
 		private readonly formBuilder: FormBuilder,
 		private readonly snowstormService: SnowstormService,
@@ -59,9 +59,13 @@ export class ParenteralPlanComponent implements OnInit {
 	ngOnInit(): void {
 		this.indicationDate = this.data.actualDate;
 		this.internacionMasterdataService.getVias().subscribe(v => this.vias = v);
+		const pharmaco = this.data?.parenteralPlan;
+		const dosage = pharmaco ? pharmaco.dosage.quantity.value : null;
+		const via = pharmaco ? this.data?.parenteralPlan.via : null;
+
 		this.parenteralPlanForm = this.formBuilder.group({
-			volumen: [null, [Validators.required]],
-			via: [null],
+			volumen: [dosage, [Validators.required]],
+			via: [via],
 			frequency: this.formBuilder.group({
 				duration: this.formBuilder.group({
 					hours: [null, [Validators.min(0), Validators.max(23)]],
@@ -75,6 +79,9 @@ export class ParenteralPlanComponent implements OnInit {
 			}),
 			startTime: [null],
 		});
+
+		if (this.data?.parenteralPlan)
+			this.searchSnomedConcept.setForm(this.data?.parenteralPlan.snomed);
 	}
 
 	clear(control: AbstractControl): void {
