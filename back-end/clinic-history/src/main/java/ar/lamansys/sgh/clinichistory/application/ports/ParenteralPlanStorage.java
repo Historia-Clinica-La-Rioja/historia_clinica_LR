@@ -13,4 +13,6 @@ public interface ParenteralPlanStorage {
 
 	Optional<ParenteralPlanBo> findById(Integer id);
 
+	List<ParenteralPlanBo> getMostFrequentParenteralPlans(Integer professionalId, Integer institutionId, Integer limit);
+
 }

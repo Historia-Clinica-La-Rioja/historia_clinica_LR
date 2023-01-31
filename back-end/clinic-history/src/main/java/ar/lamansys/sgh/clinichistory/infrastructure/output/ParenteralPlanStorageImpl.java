@@ -3,9 +3,12 @@ package ar.lamansys.sgh.clinichistory.infrastructure.output;
 import ar.lamansys.sgh.clinichistory.application.ports.ParenteralPlanStorage;
 import ar.lamansys.sgh.clinichistory.domain.ips.DosageBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.EUnitsOfTimeBo;
+import ar.lamansys.sgh.clinichistory.domain.ips.EVia;
 import ar.lamansys.sgh.clinichistory.domain.ips.FrequencyBo;
+import ar.lamansys.sgh.clinichistory.domain.ips.IndicationMinimalBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.OtherPharmacoBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.ParenteralPlanBo;
+import ar.lamansys.sgh.clinichistory.domain.ips.PharmacoSummaryBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.QuantityBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.SnomedBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.services.SnomedService;
@@ -27,8 +30,12 @@ import ar.lamansys.sgx.shared.featureflags.application.FeatureFlagsService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -92,6 +99,18 @@ public class ParenteralPlanStorageImpl implements ParenteralPlanStorage {
 			result.get().setCreatedByName(p.getNameSelfDetermination() + " " + p.getLastName());
 		else
 			result.get().setCreatedByName(p.getFirstName() + " " + p.getLastName());
+		log.debug("Output -> {}", result);
+		return result;
+	}
+
+	@Override
+	public List<ParenteralPlanBo> getMostFrequentParenteralPlans(Integer professionalId, Integer institutionId, Integer limit) {
+		log.debug("Input parameter -> professionalId {}, institutionId {}, limit {}", professionalId, institutionId, limit);
+		List<ParenteralPlanBo> result = parenteralPlanRepository
+				.getMostFrequent(professionalId, institutionId, PageRequest.of(0, limit))
+				.stream()
+				.map(this::mapToMinimalParenteralPlanBo)
+				.collect(Collectors.toList());
 		log.debug("Output -> {}", result);
 		return result;
 	}
@@ -211,6 +230,23 @@ public class ParenteralPlanStorageImpl implements ParenteralPlanStorage {
 		result.setDailyVolume(entity.getDailyVolume());
 		result.setFlowDropsHour(entity.getFlowDropsHour());
 		result.setFlowMlHour(entity.getFlowMlHour());
+		return result;
+	}
+
+	private ParenteralPlanBo mapToMinimalParenteralPlanBo(IndicationMinimalBo indicationMinimalBo) {
+		ParenteralPlanBo result = new ParenteralPlanBo();
+		SnomedBo snomedBo = snomedService.getSnomed(indicationMinimalBo.getSnomedId());
+		DosageBo dosageBo = new DosageBo();
+		QuantityBo quantityBo = new QuantityBo();
+
+		quantityBo.setValue((int) Math.round(indicationMinimalBo.getValue()));
+		quantityBo.setUnit(indicationMinimalBo.getUnit());
+
+		dosageBo.setQuantity(quantityBo);
+
+		result.setSnomed(snomedBo);
+		result.setDosage(dosageBo);
+		result.setVia(indicationMinimalBo.getVia());
 		return result;
 	}
 
