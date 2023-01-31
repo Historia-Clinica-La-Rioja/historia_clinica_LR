@@ -92,7 +92,7 @@
 			</div>
 		</div>
 
-		<div id="risk-factors" *ngIf="showRiskFactors && riskFactors?.length">
+		<div id="risk-factors" *ngIf="riskFactors?.length">
 			<h3 *ngIf="emergencyCareType === emergencyCareTypes.ADULTO ||
 					emergencyCareType === emergencyCareTypes.GINECOLOGIA" class="subtitle-weight">{{
 				'guardia.episode.triage.ultimo.FACTORES_DE_RIESGO' | translate }}

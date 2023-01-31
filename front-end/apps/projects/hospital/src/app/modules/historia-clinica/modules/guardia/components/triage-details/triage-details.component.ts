@@ -14,7 +14,6 @@ export class TriageDetailsComponent implements OnChanges {
 
 	@Input() triage: Triage;
 	@Input() emergencyCareType: EmergencyCareTypes;
-	@Input() showRiskFactors = true;
 
 	readonly triages = Triages;
 	readonly emergencyCareTypes = EmergencyCareTypes;
