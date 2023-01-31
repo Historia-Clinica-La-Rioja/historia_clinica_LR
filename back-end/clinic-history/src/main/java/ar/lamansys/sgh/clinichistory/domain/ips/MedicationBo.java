@@ -33,6 +33,10 @@ public class MedicationBo extends ClinicalTerm {
 
     private LocalDate createdOn;
 
+	private Boolean isDigital;
+
+	private Integer prescriptionLineNumber;
+
     public MedicationBo(MedicationVo medicationVo) {
         super();
         setId(medicationVo.getId());

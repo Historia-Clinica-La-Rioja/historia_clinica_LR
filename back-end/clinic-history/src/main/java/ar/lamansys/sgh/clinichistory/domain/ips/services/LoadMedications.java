@@ -14,6 +14,9 @@ import ar.lamansys.sgh.clinichistory.domain.document.PatientInfoBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.DosageBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.MedicationBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.EUnitsOfTimeBo;
+import ar.lamansys.sgx.shared.featureflags.AppFeature;
+import ar.lamansys.sgx.shared.featureflags.application.FeatureFlagsService;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -90,7 +93,9 @@ public class LoadMedications {
                 medicationBo.getStatusId(),
                 medicationBo.getNoteId() != null ? medicationBo.getNoteId()  : noteService.createNote(medicationBo.getNote()),
                 medicationBo.getHealthCondition() != null ? medicationBo.getHealthCondition().getId() : null,
-                newDosage != null ? newDosage.getId() : null);
+                newDosage != null ? newDosage.getId() : null,
+				medicationBo.getPrescriptionLineNumber(),
+				medicationBo.getIsDigital());
 
         medicationStatement = medicationStatementRepository.save(medicationStatement);
         LOG.debug("medicationStatement saved -> {}", medicationStatement.getId());

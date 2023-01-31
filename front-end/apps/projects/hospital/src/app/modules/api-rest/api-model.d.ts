@@ -2505,6 +2505,7 @@ export interface PrescriptionItemDto extends Serializable {
     dosage?: NewDosageDto;
     healthConditionId: number;
     observations?: string;
+    prescriptionLineNumber: number;
     snomed: SnomedDto;
 }
 

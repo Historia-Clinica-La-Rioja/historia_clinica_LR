@@ -8,6 +8,8 @@ import ar.lamansys.sgh.clinichistory.domain.ips.SnomedBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.EUnitsOfTimeBo;
 import ar.lamansys.sgh.clinichistory.infrastructure.input.rest.ips.dto.SnomedDto;
 import ar.lamansys.sgh.shared.infrastructure.input.service.BasicPatientDto;
+import ar.lamansys.sgx.shared.featureflags.AppFeature;
+import ar.lamansys.sgx.shared.featureflags.application.FeatureFlagsService;
 import net.pladema.clinichistory.requests.controller.dto.PrescriptionDto;
 import net.pladema.clinichistory.requests.controller.dto.PrescriptionItemDto;
 import ar.lamansys.sgh.shared.infrastructure.input.service.NewDosageDto;
@@ -16,6 +18,7 @@ import org.mapstruct.Mapper;
 import org.mapstruct.Named;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import java.time.LocalDateTime;
 import java.util.stream.Collectors;
@@ -25,6 +28,9 @@ public class CreateMedicationRequestMapper {
 
     private static final Logger LOG = LoggerFactory.getLogger(CreateMedicationRequestMapper.class);
     private static final String OUTPUT = "OUTPUT -> {}";
+
+	@Autowired
+	private FeatureFlagsService featureFlagsService;
 
     @Named("parseTo")
     public MedicationRequestBo parseTo(Integer doctorId, BasicPatientDto patientDto, PrescriptionDto medicationRequest) {
@@ -48,6 +54,8 @@ public class CreateMedicationRequestMapper {
         healthCondition.setId(pid.getHealthConditionId());
         result.setHealthCondition(healthCondition);
         result.setDosage(parseTo(pid.getDosage()));
+		result.setPrescriptionLineNumber(pid.getPrescriptionLineNumber());
+		result.setIsDigital(featureFlagsService.isOn(AppFeature.HABILITAR_RECETA_DIGITAL));
         LOG.debug(OUTPUT, result);
         return result;
     }
