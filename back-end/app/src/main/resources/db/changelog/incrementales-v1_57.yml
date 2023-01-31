@@ -313,3 +313,12 @@ databaseChangeLog:
                 - column:
                     name: deleted_on
                     type: datetime
+
+    - changeSet:
+        id: person_history-update-data
+        author: mvenere
+        changes:
+          - sql:
+              sql: |-
+                INSERT INTO person_history (person_id, first_name, middle_names, last_name, other_last_names, identification_type_id, identification_number, gender_id, birth_date, created_by, created_on)
+                SELECT id, first_name, middle_names, last_name, other_last_names, identification_type_id, identification_number, gender_id, birth_date, -1, current_timestamp FROM person;
