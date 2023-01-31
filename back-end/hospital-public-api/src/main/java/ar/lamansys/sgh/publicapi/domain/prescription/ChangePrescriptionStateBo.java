@@ -11,10 +11,10 @@ import lombok.Setter;
 @Getter
 @Setter
 public class ChangePrescriptionStateBo {
-	String prescriptionId;
-	String pharmacyName;
-	String pharmacistName;
-	String pharmacistRegistration;
-	LocalDateTime changeDate;
+	private String prescriptionId;
+	private String pharmacyName;
+	private String pharmacistName;
+	private String pharmacistRegistration;
+	private LocalDateTime changeDate;
 	List<ChangePrescriptionStateMedicationBo> changePrescriptionStateLineMedicationList;
 }

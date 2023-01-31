@@ -13,6 +13,5 @@ public class ChangePrescriptionStateDto {
 	String pharmacistRegistration;
 	LocalDateTime changeDate;
 	List<ChangePrescriptionStateMedicationDto> changePrescriptionStateLineMedicationList;
-	String observations;
 
 }

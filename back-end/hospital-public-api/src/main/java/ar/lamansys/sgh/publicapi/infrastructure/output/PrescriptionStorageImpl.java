@@ -1,5 +1,22 @@
 package ar.lamansys.sgh.publicapi.infrastructure.output;
 
+import java.sql.Date;
+import java.sql.Timestamp;
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
+
+import javax.persistence.EntityManager;
+import javax.persistence.Query;
+import javax.validation.ConstraintViolationException;
+
+import org.springframework.data.jpa.repository.Modifying;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
 import ar.lamansys.sgh.publicapi.application.port.out.PrescriptionStorage;
 import ar.lamansys.sgh.publicapi.domain.prescription.ChangePrescriptionStateBo;
 import ar.lamansys.sgh.publicapi.domain.prescription.ChangePrescriptionStateMedicationBo;
@@ -17,22 +34,6 @@ import ar.lamansys.sgh.publicapi.domain.prescription.PrescriptionValidStatesEnum
 import ar.lamansys.sgh.publicapi.domain.prescription.ProfessionalPrescriptionBo;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-
-import org.springframework.data.jpa.repository.Modifying;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-
-import javax.persistence.EntityManager;
-import javax.persistence.Query;
-import javax.validation.ConstraintViolationException;
-
-import java.sql.Date;
-import java.sql.Timestamp;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Optional;
-import java.util.stream.Collectors;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -117,84 +118,148 @@ public class PrescriptionStorageImpl implements PrescriptionStorage {
 
 		List<LineStatusBo> newStatus = changePrescriptionLineStateBo.getChangePrescriptionStateLineMedicationList()
 				.stream()
-				.map(cpb -> new LineStatusBo(null, cpb.getPrescriptionLine(), cpb.getPrescriptionStateId()))
+				.map(cpb -> new LineStatusBo(null, cpb.getPrescriptionLine(), cpb.getPrescriptionStateId(), cpb.getDispensedMedicationBo().getPharmacyName()))
 				.collect(Collectors.toList());
 
-		List<LineStatusBo> linesStatus = getLineStatus(prescriptionIdInt, prescriptionLineNumbers);
+		List<LineStatusBo> linesStatus = getLineStatus(prescriptionIdInt, identificationNumber);
 
-		assertPrescriptionExists(linesStatus);
 		assertAllLinesExists(linesStatus, newStatus);
-		assertValidStatusChanges(linesStatus, newStatus);
+
+		var actualLinesStatus = linesStatus.stream()
+				.filter(ls -> isInNewStatus(ls.getPrescriptionLineNumber(), newStatus))
+				.collect(Collectors.toList());
+
+		assertValidStatusChanges(actualLinesStatus, newStatus);
 
 		var entities = changePrescriptionLineStateBo.getChangePrescriptionStateLineMedicationList()
 				.stream()
-				.map(medicationBo -> mapTo(medicationBo, linesStatus))
+				.map(medicationBo -> mapTo(medicationBo, actualLinesStatus))
 				.collect(Collectors.toList());
 
 		changeMedicationsStatement(prescriptionLineNumbers, newStatus, prescriptionIdInt);
+		medicationStatementCommercialRepository.deleteAllInBatch(entities);
 		medicationStatementCommercialRepository.saveAll(entities);
 	}
 
+	private boolean isInNewStatus(Integer prescriptionLineNumber, List<LineStatusBo> newStatus) {
+		return newStatus.stream().anyMatch(ns -> ns.getPrescriptionLineNumber().equals(prescriptionLineNumber));
+	}
+
 	private void assertValidStatusChanges(List<LineStatusBo> linesStatus, List<LineStatusBo> newStatus) {
-		boolean valid = true;
+		boolean valid;
+		boolean validPharmacyName = true;
 		int i = 0;
-		while (i < linesStatus.size() && valid) {
+		String lastStatus = "";
+		String lastNewStatus = "";
+		while (i < linesStatus.size()) {
 			valid = PrescriptionValidStatesEnum.isValidTransition(
 					linesStatus.get(i).getPrescriptionLineState(),
 					newStatus.get(i).getPrescriptionLineState()
 			);
+			lastStatus = PrescriptionValidStatesEnum.map(linesStatus.get(i).getPrescriptionLineState()).toString();
+			lastNewStatus = PrescriptionValidStatesEnum.map(newStatus.get(i).getPrescriptionLineState()).toString();
+			if(PrescriptionValidStatesEnum.map(newStatus.get(i).getPrescriptionLineState()).equals(PrescriptionValidStatesEnum.CANCELADO)) {
+				Integer id = getMedicationStamentId(linesStatus, newStatus.get(i).getPrescriptionLineNumber());
+				if(id != null) {
+					var medication = medicationStatementCommercialRepository.findById(id);
+					if (medication.isPresent() && medication.get().getPharmacyName() != null && !medication.get().getPharmacyName().equals(newStatus.get(i).getPharmacyName())) {
+						validPharmacyName = false;
+					}
+				}
+			}
 			i++;
+
+			if(!validPharmacyName) {
+				throw new ConstraintViolationException(String.format("Para cancelar el renglón %s se debe mantener el mismo nombre de farmacia", i), Collections.emptySet());
+			}
+			if(!valid) {
+				throw new ConstraintViolationException(String.format("El renglón %s no puede cambiar del estado %s al estado %s", i, lastStatus, lastNewStatus), Collections.emptySet());
+			}
 		}
-		if(!valid) {
-			throw new ConstraintViolationException("Alguno o todos los cambios de estado son inválidos", Collections.emptySet());
-		}
+	}
+
+	private Integer getMedicationStamentId(List<LineStatusBo> linesStatus, Integer prescriptionLineNumber) {
+		return linesStatus.stream()
+				.filter(ls -> ls.getPrescriptionLineNumber().equals(prescriptionLineNumber))
+				.map(LineStatusBo::getMedicationStatementId)
+				.findFirst().orElse(-1);
 	}
 
 	private void assertAllLinesExists(List<LineStatusBo> linesStatus, List<LineStatusBo> newStatus) {
-		if(linesStatus.size() != newStatus.size()) {
-			throw new ConstraintViolationException("Algunos o todos los renglones de esta receta no existen", Collections.emptySet());
-		}
-	}
 
-	private void assertPrescriptionExists(List<LineStatusBo> linesStatus) {
-		if(linesStatus.isEmpty()) {
-			throw new ConstraintViolationException("La receta indicada no existe", Collections.emptySet());
+		var foundLines = linesStatus.stream()
+				.map(LineStatusBo::getPrescriptionLineNumber)
+				.collect(Collectors.toSet());
+
+		var unexistentLines = newStatus.stream()
+				.map(LineStatusBo::getPrescriptionLineNumber)
+				.filter(ns -> !foundLines.contains(ns))
+				.collect(Collectors.toList());
+
+		if(unexistentLines.isEmpty()) {
+			return;
 		}
+
+		if(unexistentLines.size() == 1) {
+			throw new ConstraintViolationException("El renglón " + unexistentLines.get(0) + " no existe en la receta indicada", Collections.emptySet());
+		} else {
+			StringBuilder message = new StringBuilder().append("Los renglones ");
+			for (int i = 0; i < unexistentLines.size(); i++) {
+				message.append(unexistentLines.get(i));
+				if(i == unexistentLines.size() - 2)
+					message.append(" y ");
+				else if(i < unexistentLines.size() - 1)
+						message.append(", ");
+			}
+			message.append(" no existen en la receta indicada.");
+			throw  new ConstraintViolationException(message.toString(), Collections.emptySet());
+		}
+		
+
 	}
 
 	private void changeMedicationsStatement(List<Integer> prescriptionLineNumbers, List<LineStatusBo> newStatus, Integer prescriptionId) {
+
 		String updateQuery = "UPDATE medication_statement " +
 				"SET prescription_line_state = :status " +
 				"WHERE id = ( " +
 					"SELECT ms2.id " +
 					"FROM medication_statement ms2 " +
 					"JOIN document_medicamention_statement dms ON ms2.id = dms.medication_statement_id " +
-					" JOIN document d on d.id = dms.document_id " +
+					"JOIN document d on d.id = dms.document_id " +
 					"JOIN medication_request mr ON mr.id = d.source_id " +
 					"WHERE mr.id = :prescriptionId and d.type_id = " + RECETA + " AND ms2.prescription_line_number = :lineNumber " +
 				")";
 
 		Query query = entityManager.createNativeQuery(updateQuery);
 		for(int i = 0; i < prescriptionLineNumbers.size(); i++) {
-			query.setParameter("status", newStatus.get(i).getPrescriptionLineState())
+			var stateId = newStatus.get(i).getPrescriptionLineState();
+			var state = PrescriptionValidStatesEnum.map(stateId);
+			var stateToSave = state.equals(PrescriptionValidStatesEnum.CANCELADO) ?
+					1 : stateId;
+			query.setParameter("status", stateToSave)
 					.setParameter("prescriptionId", prescriptionId)
 					.setParameter("lineNumber", prescriptionLineNumbers.get(i))
 					.executeUpdate();
 		}
 	}
 
-	private List<LineStatusBo> getLineStatus(Integer prescriptionId, List<Integer> prescriptionLineNumbers) {
-		String getQuery = "select ms.id, ms.prescription_line_number, ms.prescription_line_state " +
+	private List<LineStatusBo> getLineStatus(Integer prescriptionId, String idNumber) {
+		String getQuery = "select ms.id, ms.prescription_line_number, ms.prescription_line_state, pp.identification_number, msc.pharmacy_name " +
 				"from medication_statement ms " +
 				"join document_medicamention_statement dms on ms.id = dms.medication_statement_id " +
 				"join document d on d.id = dms.document_id " +
 				"join medication_request mr on mr.id = d.source_id " +
-				"where mr.id = :prescriptionId and ms.prescription_line_number IN :lineNumbers and d.type_id = " + RECETA;
+				"join patient p on p.id = d.patient_id " +
+				"join person pp on pp.id = p.person_id " +
+				"left join medication_statement_commercial msc on msc.id = ms.id " +
+				"where mr.id = :prescriptionId  and d.type_id = " + RECETA;
 
 		List<Object[]> queryResult = entityManager.createNativeQuery(getQuery)
 				.setParameter("prescriptionId", prescriptionId)
-				.setParameter("lineNumbers", prescriptionLineNumbers)
 				.getResultList();
+
+		assertExistsPrescriptionAndDni(queryResult, idNumber);
 
 		return queryResult.stream()
 				.map(this::mapTo)
@@ -202,11 +267,18 @@ public class PrescriptionStorageImpl implements PrescriptionStorage {
 
 	}
 
+	private void assertExistsPrescriptionAndDni(List<Object[]> queryResult, String idNumber) {
+		if(queryResult.isEmpty() || !queryResult.get(0)[3].toString().equals(idNumber)) {
+			throw new ConstraintViolationException("La receta y/o el dni suministrados no existen", Collections.emptySet());
+		}
+	}
+
 	private LineStatusBo mapTo(Object[] line) {
 		return LineStatusBo.builder()
 				.medicationStatementId((Integer)line[0])
 				.prescriptionLineNumber((Integer)line[1])
 				.prescriptionLineState((Short)line[2])
+				.pharmacyName((String)line[4])
 				.build();
 	}
 
@@ -226,7 +298,10 @@ public class PrescriptionStorageImpl implements PrescriptionStorage {
 				changePrescriptionStateMedicationBo.getDispensedMedicationBo().getBrand(),
 				changePrescriptionStateMedicationBo.getDispensedMedicationBo().getPrice(),
 				changePrescriptionStateMedicationBo.getDispensedMedicationBo().getAffiliatePayment(),
-				changePrescriptionStateMedicationBo.getDispensedMedicationBo().getMedicalCoveragePayment()
+				changePrescriptionStateMedicationBo.getDispensedMedicationBo().getMedicalCoveragePayment(),
+				changePrescriptionStateMedicationBo.getDispensedMedicationBo().getPharmacyName(),
+				changePrescriptionStateMedicationBo.getDispensedMedicationBo().getPharmacistName(),
+				changePrescriptionStateMedicationBo.getDispensedMedicationBo().getObservations()
 		);
 	}
 
@@ -270,11 +345,15 @@ public class PrescriptionStorageImpl implements PrescriptionStorage {
 	}
 
 	private PrescriptionBo processPrescriptionQuery(Object[] queryResult) {
+
+		var dueDate = queryResult[2] != null ?
+				((Timestamp)queryResult[2]).toLocalDateTime() : ((Timestamp)queryResult[1]).toLocalDateTime().plusDays(30);
+
 		return new PrescriptionBo(
 				"1.",
 				(Integer)queryResult[0],
 				((Timestamp)queryResult[1]).toLocalDateTime(),
-				queryResult[2] != null ? ((Timestamp)queryResult[2]).toLocalDateTime() : ((Timestamp)queryResult[1]).toLocalDateTime().plusDays(30),
+				dueDate,
 				new PatientPrescriptionBo(
 						(String)queryResult[3],
 						(String)queryResult[4],
@@ -313,7 +392,7 @@ public class PrescriptionStorageImpl implements PrescriptionStorage {
 				),
 				List.of(new PrescriptionLineBo(
 						(Integer)queryResult[29],
-						(String)queryResult[30],
+						dueDate.isBefore(LocalDateTime.now()) ? "VENCIDA" : (String)queryResult[30],
 						new PrescriptionProblemBo(
 								(String)queryResult[31],
 								(Integer)queryResult[32],

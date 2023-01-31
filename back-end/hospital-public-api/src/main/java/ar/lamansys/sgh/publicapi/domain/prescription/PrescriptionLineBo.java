@@ -12,15 +12,15 @@ import java.util.Objects;
 @ToString
 @Getter
 public class PrescriptionLineBo {
-	Integer prescriptionLineNumber;
-	String prescriptionLineStatus;
-	PrescriptionProblemBo prescriptionProblemBo;
-	GenericMedicationBo genericMedicationBo;
-	CommercialMedicationBo commercialMedicationBo;
-	Integer unitDosis;
-	Integer dayDosis;
-	Double duration;
-	String presentation;
+	private Integer prescriptionLineNumber;
+	private String prescriptionLineStatus;
+	private PrescriptionProblemBo prescriptionProblemBo;
+	private GenericMedicationBo genericMedicationBo;
+	private CommercialMedicationBo commercialMedicationBo;
+	private Integer unitDosis;
+	private Integer dayDosis;
+	private Double duration;
+	private String presentation;
 
 	@Override
 	public boolean equals(Object o) {

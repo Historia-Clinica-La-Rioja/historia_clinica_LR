@@ -13,14 +13,14 @@ import lombok.ToString;
 @Getter
 @Setter
 public class PrescriptionBo {
-	String domain;
-	Integer prescriptionId;
-	LocalDateTime prescriptionDate;
-	LocalDateTime dueDate;
-	PatientPrescriptionBo patientPrescriptionBo;
-	InstitutionPrescriptionBo institutionPrescriptionBo;
-	ProfessionalPrescriptionBo professionalPrescriptionBo;
-	List<PrescriptionLineBo> prescriptionsLineBo;
+	private String domain;
+	private Integer prescriptionId;
+	private LocalDateTime prescriptionDate;
+	private LocalDateTime dueDate;
+	private PatientPrescriptionBo patientPrescriptionBo;
+	private InstitutionPrescriptionBo institutionPrescriptionBo;
+	private ProfessionalPrescriptionBo professionalPrescriptionBo;
+	private List<PrescriptionLineBo> prescriptionsLineBo;
 
 	public PrescriptionBo(String domain,
 						  Integer prescriptionId,

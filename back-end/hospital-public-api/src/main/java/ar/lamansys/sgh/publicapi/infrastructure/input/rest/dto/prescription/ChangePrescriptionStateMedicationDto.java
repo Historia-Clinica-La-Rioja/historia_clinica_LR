@@ -13,4 +13,5 @@ public class ChangePrescriptionStateMedicationDto {
 	Integer prescriptionLine;
 	Short prescriptionStateId;
 	DispensedMedicationDto dispensedMedicationDto;
+	String observations;
 }

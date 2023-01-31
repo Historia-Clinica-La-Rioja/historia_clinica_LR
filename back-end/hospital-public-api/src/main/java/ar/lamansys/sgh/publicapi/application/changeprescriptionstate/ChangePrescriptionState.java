@@ -35,33 +35,37 @@ public class ChangePrescriptionState {
 		logger.debug("Output -> success");
 	}
 
-	private ChangePrescriptionStateBo mapTo(ChangePrescriptionStateDto changePrescriptionLineStateDto) {
+	private ChangePrescriptionStateBo mapTo(ChangePrescriptionStateDto changePrescriptionStateDto) {
 		var returnBo = ChangePrescriptionStateBo.builder()
-				.prescriptionId(changePrescriptionLineStateDto.getPrescriptionId())
-				.changeDate(changePrescriptionLineStateDto.getChangeDate())
-				.pharmacistName(changePrescriptionLineStateDto.getPharmacistName())
-				.pharmacyName(changePrescriptionLineStateDto.getPharmacyName())
-				.pharmacistRegistration(changePrescriptionLineStateDto.getPharmacistRegistration())
+				.prescriptionId(changePrescriptionStateDto.getPrescriptionId())
+				.changeDate(changePrescriptionStateDto.getChangeDate())
+				.pharmacistName(changePrescriptionStateDto.getPharmacistName())
+				.pharmacyName(changePrescriptionStateDto.getPharmacyName())
+				.pharmacistRegistration(changePrescriptionStateDto.getPharmacistRegistration())
 				.build();
 
 		returnBo.setChangePrescriptionStateLineMedicationList(
-				changePrescriptionLineStateDto.getChangePrescriptionStateLineMedicationList().stream()
-						.map(this::mapTo)
+				changePrescriptionStateDto.getChangePrescriptionStateLineMedicationList().stream()
+						.map(ob -> mapTo(ob, changePrescriptionStateDto))
 						.collect(Collectors.toList())
 		);
 		return returnBo;
 	}
 
-	private ChangePrescriptionStateMedicationBo mapTo(ChangePrescriptionStateMedicationDto changePrescriptionStateMedicationDto) {
+	private ChangePrescriptionStateMedicationBo mapTo(ChangePrescriptionStateMedicationDto changePrescriptionStateMedicationDto,
+													  ChangePrescriptionStateDto changePrescriptionStateDto) {
 
 		return new ChangePrescriptionStateMedicationBo(
 				changePrescriptionStateMedicationDto.getPrescriptionLine(),
 				changePrescriptionStateMedicationDto.getPrescriptionStateId(),
-				mapTo(changePrescriptionStateMedicationDto.getDispensedMedicationDto())
+				mapTo(changePrescriptionStateMedicationDto.getDispensedMedicationDto(), changePrescriptionStateDto),
+				changePrescriptionStateMedicationDto.getObservations(),
+				changePrescriptionStateDto.getPharmacyName(),
+				changePrescriptionStateDto.getPharmacistName()
 		);
 	}
 
-	private DispensedMedicationBo mapTo(DispensedMedicationDto dispensedMedicationDto) {
+	private DispensedMedicationBo mapTo(DispensedMedicationDto dispensedMedicationDto, ChangePrescriptionStateDto changePrescriptionStateDto) {
 		return new DispensedMedicationBo(
 				dispensedMedicationDto.getSnomedId(),
 				dispensedMedicationDto.getCommercialName(),
@@ -70,6 +74,9 @@ public class ChangePrescriptionState {
 				dispensedMedicationDto.getBrand(),
 				dispensedMedicationDto.getPrice(),
 				dispensedMedicationDto.getAffiliatePayment(),
-				dispensedMedicationDto.getMedicalCoveragePayment());
+				dispensedMedicationDto.getMedicalCoveragePayment(),
+				changePrescriptionStateDto.getPharmacyName(),
+				changePrescriptionStateDto.getPharmacistName(),
+				dispensedMedicationDto.getObservations());
 	}
 }

@@ -10,12 +10,15 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class DispensedMedicationDto {
-	Integer snomedId;
-	String commercialName;
-	String commercialPresentation;
-	Integer soldUnits;
-	String brand;
-	Double price;
-	Double affiliatePayment;
-	Double medicalCoveragePayment;
+	private Integer snomedId;
+	private String commercialName;
+	private String commercialPresentation;
+	private Integer soldUnits;
+	private String brand;
+	private Double price;
+	private Double affiliatePayment;
+	private Double medicalCoveragePayment;
+	private String pharmacyName;
+	private String pharmacistName;
+	private String observations;
 }

@@ -8,6 +8,7 @@ import ar.lamansys.sgh.publicapi.infrastructure.input.rest.exceptions.validators
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -30,6 +31,7 @@ import java.util.Collections;
 @RestController
 @RequestMapping("/public-api/prescriptions")
 @Tag(name = "Public Api", description = "Public Api Digital Prescription Access")
+@Validated
 public class PrescriptionAccessController {
 
 	private static final Logger LOG = LoggerFactory.getLogger(PrescriptionAccessController.class);
@@ -78,7 +80,7 @@ public class PrescriptionAccessController {
 	}
 
 	private void assertSamePrescriptionId(String prescriptionId, ChangePrescriptionStateDto changePrescriptionLineDto) {
-		if(!prescriptionId.equals(changePrescriptionLineDto.getPrescriptionId().split("\\.")[1])) {
+		if(!prescriptionId.equals(changePrescriptionLineDto.getPrescriptionId())) {
 			throw new ConstraintViolationException("El identificador de receta no coincide con los de los renglones", Collections.emptySet());
 		}
 	}

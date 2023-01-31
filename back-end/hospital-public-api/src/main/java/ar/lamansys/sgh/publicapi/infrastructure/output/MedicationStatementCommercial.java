@@ -48,6 +48,15 @@ public class MedicationStatementCommercial extends SGXAuditableEntity<Integer> {
 	@Column(name = "medical_coverage_payment")
 	private Double medical_coverage;
 
+	@Column(name = "pharmacy_name")
+	private String pharmacyName;
+
+	@Column(name = "pharmacist_name")
+	private String pharmacistName;
+
+	@Column(name = "observations")
+	private String observations;
+
 	public MedicationStatementCommercial(Integer id,
 										 Integer snomedId,
 										 String commercialName,
@@ -55,8 +64,11 @@ public class MedicationStatementCommercial extends SGXAuditableEntity<Integer> {
 										 Integer presentationQuantity,
 										 String brand,
 										 Double price,
-										 Double affiliate_payment,
-										 Double medical_coverage) {
+										 Double affiliatePayment,
+										 Double medicalCoverage,
+										 String pharmacyName,
+										 String pharmacistName,
+										 String observations) {
 		this.id = id;
 		this.snomedId = snomedId;
 		this.commercialName = commercialName;
@@ -64,8 +76,11 @@ public class MedicationStatementCommercial extends SGXAuditableEntity<Integer> {
 		this.presentationQuantity = presentationQuantity;
 		this.brand = brand;
 		this.price = price;
-		this.affiliate_payment = affiliate_payment;
-		this.medical_coverage = medical_coverage;
+		this.affiliate_payment = affiliatePayment;
+		this.medical_coverage = medicalCoverage;
+		this.pharmacistName = pharmacistName;
+		this.pharmacyName = pharmacyName;
+		this.observations = observations;
 		this.initializeAuditableFields();
 	}
 }

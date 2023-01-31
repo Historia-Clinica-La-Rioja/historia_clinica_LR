@@ -56,3 +56,24 @@ databaseChangeLog:
                 UPDATE blood_type SET description = '0+' WHERE id = 2;
                 UPDATE observation_lab SET value = '0-' WHERE value = 'O-';
                 UPDATE observation_lab SET value = '0+' WHERE value = 'O+';
+    
+    - changeSet:
+        id: addColumns-medication-statement_commercial
+        author: lmanterola
+        changes:
+          - addColumn:
+              tableName: medication_statement_commercial
+              columns:
+                - column:
+                    name: pharmacy_name
+                    type: varchar(512)
+                    constraints:
+                      nullable: false
+                - column:
+                    name: pharmacist_name
+                    type: varchar(256)
+                    constraints:
+                      nullable: false
+                - column:
+                    name: observations
+                    type: text

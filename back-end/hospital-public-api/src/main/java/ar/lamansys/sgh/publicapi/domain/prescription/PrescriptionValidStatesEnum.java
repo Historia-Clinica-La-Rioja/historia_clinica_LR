@@ -30,11 +30,11 @@ public enum PrescriptionValidStatesEnum {
 			return false;
 		}
 
-		if(CANCELADO.equals(map(e1))) {
+		if(VENCIDO.equals(map(e1)) || VENCIDO.equals(map(e2))) {
 			return false;
 		}
 
-		if(VENCIDO.equals(map(e1)) || VENCIDO.equals(map(e2))) {
+		if(ACTIVO.equals(map(e1)) && CANCELADO.equals(map(e2))) {
 			return false;
 		}
 

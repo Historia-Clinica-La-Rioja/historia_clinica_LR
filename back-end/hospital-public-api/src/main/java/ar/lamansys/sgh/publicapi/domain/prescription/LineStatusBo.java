@@ -12,7 +12,8 @@ import lombok.ToString;
 @Getter
 @Builder
 public class LineStatusBo {
-	Integer medicationStatementId;
-	Integer prescriptionLineNumber;
-	Short prescriptionLineState;
+	private Integer medicationStatementId;
+	private Integer prescriptionLineNumber;
+	private Short prescriptionLineState;
+	private String pharmacyName;
 }
