@@ -7,6 +7,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -24,10 +25,22 @@ public class OdontogramDrawingStorageImpl implements OdontogramDrawingStorage {
     public void save(Integer patientId, List<ToothDrawingsBo> teethDrawings) {
         LOG.debug("Input parameters -> patientId {}, teethDrawings {}", patientId, teethDrawings);
         teethDrawings.forEach(
-                toothDrawings -> lastOdontogramDrawingRepository.save(new LastOdontogramDrawing(patientId, toothDrawings))
+                toothDrawings -> {
+					Optional<LastOdontogramDrawing> lod = lastOdontogramDrawingRepository.getByPatientToothId(patientId, toothDrawings.getToothId());
+					if (lod.isPresent())
+						update(lod.get(),toothDrawings);
+					else
+						lastOdontogramDrawingRepository.save(new LastOdontogramDrawing(patientId, toothDrawings));
+				}
         );
         LOG.debug("No output");
     }
+
+	private void update(LastOdontogramDrawing lod, ToothDrawingsBo toothDrawings) {
+		LastOdontogramDrawing newLod = new LastOdontogramDrawing(lod.getPatientId(), toothDrawings);
+		newLod.setId(lod.getId());
+		lastOdontogramDrawingRepository.save(newLod);
+	}
 
     @Override
     public List<ToothDrawingsBo> getDrawings(Integer patientId) {

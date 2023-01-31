@@ -1,3 +1,46 @@
 databaseChangeLog: 
-    - logicalFilePath: incrementales-v1_51 
+    - logicalFilePath: incrementales-v1_51
 
+    - changeSet:
+        id: modifyPrimaryKey-tooth_indices
+        author: mvalin
+        changes:
+          - dropPrimaryKey:
+              constraintName: PK_tooth_indices
+              dropIndex: true
+              tableName: tooth_indices
+          - addUniqueConstraint:
+              tableName: tooth_indices
+              columnNames: patient_id, tooth_id
+              constraintName: UQ_tooth_indices_p_id_t_id
+          - addColumn:
+              tableName: tooth_indices
+              columns:
+                name: id
+                type: int
+                autoIncrement: true
+                constraints:
+                  primaryKey: true
+                  primaryKeyName: PK_tooth_indices
+
+    - changeSet:
+        id: modifyPrimaryKey-last_odontogram_drawing
+        author: mvalin
+        changes:
+          - dropPrimaryKey:
+              constraintName: PK_last_odontogram_drawing
+              dropIndex: true
+              tableName: last_odontogram_drawing
+          - addUniqueConstraint:
+              tableName: last_odontogram_drawing
+              columnNames: patient_id, tooth_id
+              constraintName: UQ_last_odontogram_drawing_p_id_t_id
+          - addColumn:
+              tableName: last_odontogram_drawing
+              columns:
+                name: id
+                type: int
+                autoIncrement: true
+                constraints:
+                  primaryKey: true
+                  primaryKeyName: PK_last_odontogram_drawing
