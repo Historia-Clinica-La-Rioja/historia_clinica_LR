@@ -84,6 +84,7 @@ export class NuevaPrescripcionComponent implements OnInit {
 	}
 
 	confirmPrescription(): void {
+		let prescriptionLineNumberAux = 0;
 		const newPrescription: PrescriptionDto = {
 			hasRecipe: this.isMedication ? !this.prescriptionForm.controls.withoutRecipe.value : true,
 			medicalCoverageId: this.prescriptionForm.controls.patientMedicalCoverage.value?.id,
@@ -98,7 +99,8 @@ export class NuevaPrescripcionComponent implements OnInit {
 						diary: pi.isDailyInterval,
 						duration: Number(pi.administrationTimeDays),
 						frequency: Number(pi.intervalHours)
-					}
+					},
+					prescriptionLineNumber: ++prescriptionLineNumberAux,
 				};
 			})
 		};

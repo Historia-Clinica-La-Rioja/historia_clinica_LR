@@ -141,6 +141,7 @@ export class CreateInternmentOrderComponent implements OnInit {
 	}
 
 	confirmOrder() {
+		let prescriptionLineNumberAux = 0;
 		const newInternmentOrder: PrescriptionDto = {
 			medicalCoverageId: null,
 			hasRecipe: true,
@@ -150,6 +151,7 @@ export class CreateInternmentOrderComponent implements OnInit {
 					observations: this.form.controls.notes.value,
 					snomed: study.snomed,
 					categoryId: this.form.controls.studyCategory.value,
+					prescriptionLineNumber: ++prescriptionLineNumberAux,
 				};
 			})
 		};
