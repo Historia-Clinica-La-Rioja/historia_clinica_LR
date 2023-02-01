@@ -83,12 +83,14 @@ export class AmbulatoriaPacienteComponent implements OnInit, OnDestroy {
 	hasPicturesStaffRole = false;
 	hasLaboratoryStaffRole = false;
 	hasPharmacyStaffRole = false;
+	hasEmergencyCareRelatedRole = false;
 	showNursingSection = false;
 	femenino = FEMENINO;
 
 	selectedTab = 0;
 	emergencyCareTabIndex: number;
 	showEmergencyCareTab: boolean;
+	hasEpisodeToShow: boolean;
 
 	private timeOut = 15000;
 	private isOpenOdontologyConsultation = false;
@@ -168,7 +170,10 @@ export class AmbulatoriaPacienteComponent implements OnInit, OnDestroy {
 									state => {
 										const episodeState = state.id;
 										const emergencyEpisodeWithMedicalDischarge = (EstadosEpisodio.CON_ALTA_MEDICA === episodeState);
-										this.showEmergencyCareTab = (this.emergencyCareEpisodeInProgress?.inProgress && !emergencyEpisodeWithMedicalDischarge);
+										this.hasEpisodeToShow = (this.emergencyCareEpisodeInProgress?.inProgress && !emergencyEpisodeWithMedicalDischarge);
+										this.featureFlagService.isActive(AppFeature.HABILITAR_MODULO_GUARDIA)
+											.subscribe(isOn => this.showEmergencyCareTab = this.hasEpisodeToShow && isOn);
+
 									}
 								);
 							}
@@ -282,6 +287,7 @@ export class AmbulatoriaPacienteComponent implements OnInit, OnDestroy {
 			this.hasMedicalRole = anyMatch<ERole>(userRoles, [ERole.ESPECIALISTA_MEDICO]);
 			this.hasNurseRole = anyMatch<ERole>(userRoles, [ERole.ENFERMERO]);
 			this.hasHealthProfessionalRole = anyMatch<ERole>(userRoles, [ERole.PROFESIONAL_DE_SALUD]);
+			this.hasEmergencyCareRelatedRole = (this.hasMedicalRole || this.hasNurseRole || this.hasHealthProfessionalRole);
 			this.hasOdontologyRole = anyMatch<ERole>(userRoles, [ERole.ESPECIALISTA_EN_ODONTOLOGIA]);
 			this.hasHealthRelatedRole = anyMatch<ERole>(userRoles, [ERole.PROFESIONAL_DE_SALUD, ERole.ESPECIALISTA_MEDICO, ERole.ENFERMERO, ERole.ESPECIALISTA_EN_ODONTOLOGIA, ERole.ENFERMERO_ADULTO_MAYOR]);
 			this.hasPicturesStaffRole = anyMatch<ERole>(userRoles, [ERole.PERSONAL_DE_IMAGENES]);

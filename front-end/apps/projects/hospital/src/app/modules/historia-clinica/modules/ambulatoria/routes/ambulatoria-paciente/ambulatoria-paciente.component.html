@@ -150,7 +150,7 @@
 							</app-internacion-paciente>
 						</ng-template>
 					</mat-tab>
-					<mat-tab id="tab_guardia" *ngIf="showEmergencyCareTab && hasHealthRelatedRole">
+					<mat-tab id="tab_guardia" *ngIf="showEmergencyCareTab && hasEmergencyCareRelatedRole">
 						<ng-template mat-tab-label>
 							<span>{{ 'ambulatoria.paciente.guardia.TAB_LABEL' | translate | uppercase }}</span>
 						</ng-template>
@@ -244,13 +244,13 @@
 							</app-ui-external-component>
 						</ng-template>
 					</mat-tab>
-					<section  *appFeatureFlag="'HABILITAR_SIP_PLUS_EN_DESARROLLO'">
+					<section *appFeatureFlag="'HABILITAR_SIP_PLUS_EN_DESARROLLO'">
 						<mat-tab id="tab_clap" *ngIf="patient.gender === femenino && hasHealthRelatedRole">
 							<ng-template mat-tab-label>
 								<span>{{ 'ambulatoria.paciente.clap.TAB_LABEL' | translate | uppercase }}</span>
 							</ng-template>
 							<ng-template matTabContent>
-							<app-clap [patientId]="patientId"></app-clap>
+								<app-clap [patientId]="patientId"></app-clap>
 							</ng-template>
 						</mat-tab>
 					</section>
