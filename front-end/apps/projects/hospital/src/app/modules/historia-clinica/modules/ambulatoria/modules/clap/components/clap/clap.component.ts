@@ -12,26 +12,26 @@ export class ClapComponent implements OnInit {
 	@Input() patientId: Number;
 	trustedUrlSIP: SafeResourceUrl;
 	institucionId: Number;
-	token: String;
+	tokenSIP: String;
 	urlBaseSip: String;
 
 	constructor(private contextService: ContextService,
 		private sanitizer: DomSanitizer,
 		private sipPlusService: SipPlusService) {
 		this.institucionId = this.contextService.institutionId;
-		this.token = localStorage.getItem('token');
 	}
 
 	ngOnInit(): void {
-		this.sipPlusService.getSipPlusURLBase().subscribe(url => {
-			this.urlBaseSip = url;
+		this.sipPlusService.getInfoSipPlus().subscribe(data => {
+			this.urlBaseSip = data.urlBase;
+			this.tokenSIP = data.token;
 			this.makeUrlTrusted()
 		})
 	}
 
 
 	makeUrlTrusted() {
-		const url = this.urlBaseSip + '?embedSystem=HSI&embedToken=' + `${this.token}$` + `${this.institucionId}$` + `${this.patientId}`;
+		const url = this.urlBaseSip + '?embedSystem=HSI&embedToken=' + `${this.tokenSIP}$` + `${this.institucionId}$` + `${this.patientId}`;
 		this.trustedUrlSIP = this.sanitizer.bypassSecurityTrustResourceUrl(url);
 	}
 }

@@ -37,13 +37,10 @@ export class AuthenticationService {
 	}
 
 	login(username: string, password: string, recaptchaResponse: string): Observable<any> {
-		let login = this.authService.login({ username, password }, recaptchaResponse);
-		login.subscribe(res => {
-			localStorage.setItem('token',res.token);
-		})
-		return login.pipe(
-			switchMap(() => this.loggedUserService.load()),
-		);
+		return this.authService.login({ username, password }, recaptchaResponse).
+			pipe(
+				switchMap(() => this.loggedUserService.load()),
+			);
 	}
 
 	tokenRefresh(): Observable<any> {

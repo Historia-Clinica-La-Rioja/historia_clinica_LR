@@ -1,5 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
+import { SipPlusUrlDataDto } from '@api-rest/api-model';
 import { environment } from '@environments/environment';
 import { Observable } from 'rxjs';
 
@@ -12,8 +13,8 @@ export class SipPlusService {
 
   private baseUrl = `${environment.apiBase}/sip-plus`;
 
-  getSipPlusURLBase(): Observable<string>{
-	const url = this.baseUrl + '/url-base';
-	return this.http.get<string>(url, {responseType: 'text' as 'json'})
+  getInfoSipPlus(): Observable<SipPlusUrlDataDto>{
+	const url = this.baseUrl + '/url-info';
+	return this.http.get<SipPlusUrlDataDto >(url)
   }
 }
