@@ -4,6 +4,10 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import ar.lamansys.sgx.auth.user.infrastructure.input.service.UserExternalService;
+import net.pladema.patient.application.port.MigratePatientStorage;
+import net.pladema.patient.infrastructure.output.repository.entity.EMergeTable;
+import net.pladema.patient.repository.AdditionalDoctorRepository;
+import net.pladema.patient.repository.PatientMedicalCoverageRepository;
 import net.pladema.user.repository.UserPersonRepository;
 
 import org.springframework.stereotype.Service;
@@ -42,6 +46,12 @@ public class MergePatientStorageImpl implements MergePatientStorage {
 	private final UserPersonRepository userPersonRepository;
 
 	private final UserExternalService userExternalService;
+
+	private final MigratePatientStorage migratePatientStorage;
+
+	private final AdditionalDoctorRepository additionalDoctorRepository;
+
+	private final PatientMedicalCoverageRepository patientMedicalCoverageRepository;
 
 	@Override
 	public void inactivatePatient(Integer patientIdToInactivate, Integer referencePatientId, Integer institutionId) {
@@ -120,6 +130,18 @@ public class MergePatientStorageImpl implements MergePatientStorage {
 		if (basicData.getBirthDate() == null)
 			throw new MergePatientException(MergePatientExceptionEnum.NULL_BIRTH_DATE, "La fecha de nacimiento de la persona es obligatoria");
 
+	}
+
+	@Override
+	public void modifyAdditionalDoctor(List<Integer> oldPatients, Integer newPatient) {
+		additionalDoctorRepository.getAdditionalDoctorsFromPatients(oldPatients)
+				.forEach(item -> migratePatientStorage.migrateItem(item.getId(), item.getPatientId(), newPatient, EMergeTable.ADDITIONAL_DOCTOR));
+	}
+
+	@Override
+	public void modifyPatientMedicalCoverage(List<Integer> oldPatients, Integer newPatient) {
+		patientMedicalCoverageRepository.getByPatients(oldPatients)
+				.forEach(item -> migratePatientStorage.migrateItem(item.getId(), item.getPatientId(), newPatient, EMergeTable.PATIENT_MEDICAL_COVERAGE));
 	}
 
 	private Boolean existPatientById(Integer id) {

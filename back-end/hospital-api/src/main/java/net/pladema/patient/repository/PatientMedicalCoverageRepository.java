@@ -36,4 +36,10 @@ public interface PatientMedicalCoverageRepository extends JpaRepository<PatientM
 	@Query(value = "SELECT pmc FROM PatientMedicalCoverageAssn pmc WHERE pmc.planId =:planId")
 	List<PatientMedicalCoverageAssn> findByPlanId(@Param("planId") Integer planId);
 
+	@Transactional(readOnly = true)
+	@Query("SELECT pmc " +
+			"FROM PatientMedicalCoverageAssn pmc " +
+			"WHERE pmc.patientId IN :patients")
+	List<PatientMedicalCoverageAssn> getByPatients(@Param("patients")List<Integer> patients);
+
 }

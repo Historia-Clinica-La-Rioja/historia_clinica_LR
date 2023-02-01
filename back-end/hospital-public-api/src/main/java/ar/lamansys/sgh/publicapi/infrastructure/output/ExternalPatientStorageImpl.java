@@ -73,7 +73,7 @@ public class ExternalPatientStorageImpl implements ExternalPatientStorage {
         sharedPatientPort.saveMedicalCoverages(mapToExternalPatientCoverageListDto(epeBo.getMedicalCoverages()), epeBo.getPatientId());
     }
 
-    private List<ExternalPatientCoverageDto> mapToExternalPatientCoverageListDto(List<ExternalPatientCoverageBo> medicalCoverageListBo) {
+	private List<ExternalPatientCoverageDto> mapToExternalPatientCoverageListDto(List<ExternalPatientCoverageBo> medicalCoverageListBo) {
         List<ExternalPatientCoverageDto> result = new ArrayList<>();
         medicalCoverageListBo
                 .forEach(mc -> result.add(new ExternalPatientCoverageDto(

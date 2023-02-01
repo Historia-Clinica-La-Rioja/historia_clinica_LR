@@ -20,4 +20,8 @@ public interface MergePatientStorage {
 
 	void assertBasicPersonData(BasicPersonalDataDto basicData);
 
+	void modifyAdditionalDoctor(List<Integer> oldPatients, Integer newPatient);
+
+	void modifyPatientMedicalCoverage(List<Integer> oldPatients, Integer newPatient);
+
 }

@@ -7,6 +7,8 @@ import lombok.extern.slf4j.Slf4j;
 import net.pladema.patient.application.port.MergePatientStorage;
 import net.pladema.patient.controller.dto.PatientToMergeDto;
 
+import java.util.List;
+
 @Service
 @RequiredArgsConstructor
 @Slf4j
@@ -25,9 +27,17 @@ public class MergePatient {
 		mergePatientStorage.saveMergeHistoricData(activePatientId,patientToMerge.getOldPatientsIds());
 
 		migrateClinicHistory.execute(patientToMerge.getOldPatientsIds(), patientToMerge.getActivePatientId());
-
+		migratePatientData(patientToMerge.getOldPatientsIds(), patientToMerge.getActivePatientId());
+		
 		log.debug("Output result -> {}", activePatientId);
 		return activePatientId;
+	}
+
+	private void migratePatientData(List<Integer> oldPatients, Integer newPatient) {
+		log.debug("Input parameters -> oldPatients{}, newPatient{}",oldPatients,newPatient);
+
+		mergePatientStorage.modifyAdditionalDoctor(oldPatients, newPatient);
+		mergePatientStorage.modifyPatientMedicalCoverage(oldPatients, newPatient);
 	}
 
 }
