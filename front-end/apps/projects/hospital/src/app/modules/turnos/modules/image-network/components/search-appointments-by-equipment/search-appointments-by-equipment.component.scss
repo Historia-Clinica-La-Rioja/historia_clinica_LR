@@ -1,0 +1,30 @@
+@import '../../../../../../../assets/styles/mat-mixins';
+
+@include mat-form-field-background-white;
+
+.actions {
+	margin-bottom: 16px;
+	padding-top: 16px;
+
+	button {
+		height: 42px;
+		width: 42px;
+	}
+}
+
+.no-diary{
+	.mat-card {
+		align-items: center;
+		display: flex;
+		flex-direction: column;
+		padding: 40px 0;
+		text-align: center;
+	}
+}
+
+#expired_equipment_diaries {
+	mat-label strong,
+	mat-option span {
+		color: rgba(0, 0, 0, 0.38);
+	}
+}

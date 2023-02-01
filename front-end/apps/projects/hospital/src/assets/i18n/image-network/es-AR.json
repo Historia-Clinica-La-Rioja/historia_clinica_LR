@@ -2,7 +2,8 @@
     "image-network": {
         "home": {
             "PICTURES": "Imágenes",
-            "SEARCH_BY_EQUIPMENT": "Diagnóstico por Imágenes"
+            "SEARCH_BY_EQUIPMENT": "Diagnóstico por Imágenes",
+            "NO_EQUIPMENT_MSG_TITLE": "El equipo no posee una agenda activa"
         },
         "equipment-diary-setup": {
             "EQUIPMENT": "Equipo",
