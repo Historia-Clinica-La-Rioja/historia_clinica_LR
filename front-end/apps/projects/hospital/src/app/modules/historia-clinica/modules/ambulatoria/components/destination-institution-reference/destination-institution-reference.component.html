@@ -16,7 +16,7 @@
 <div class="typeahead-field">
     <app-typeahead id="institutionDestination" [options]="institutions" [externalSetValue]="defaultInstitution"
         [titleInput]="'ambulatoria.paciente.nueva-consulta.reference-dialog.PLACEHOLDER_INSTITUTION' | translate"
-        (selectionChange)="onInstitutionSelectionChange($event)" [required]=true>
+        (selectionChange)="onInstitutionSelectionChange($event)" [required]=true spellcheck="false">
     </app-typeahead>
     <mat-error class="error-message" *ngIf="!institutionDestinationId && submitForm"
         [translate]="'forms.REQUIRED'"></mat-error>

@@ -30,8 +30,7 @@
                     (selectionChange)="setProblemsReference($event.value)">
                     <mat-select-trigger>
                         {{associatedProblemsControls.value ? associatedProblemsControls.value[0] : ' '}}
-                        <span *ngIf="associatedProblemsControls.value?.length > 1"
-                            class="example-additional-selection">
+                        <span *ngIf="associatedProblemsControls.value?.length > 1" class="example-additional-selection">
                             (+{{associatedProblemsControls.value.length - 1}} {{'más'}})
                         </span>
                     </mat-select-trigger>
@@ -40,7 +39,7 @@
                         {{problem.hcePersonalHistoryDto.snomed.pt | translate}}
                     </mat-option>
                 </mat-select>
-                <mat-error [translate]="'forms.REQUIRED'"></mat-error>
+                <mat-error *ngIf="!referenceProblems.length" [translate]="'forms.REQUIRED'"></mat-error>
             </mat-form-field>
         </div>
     </div>

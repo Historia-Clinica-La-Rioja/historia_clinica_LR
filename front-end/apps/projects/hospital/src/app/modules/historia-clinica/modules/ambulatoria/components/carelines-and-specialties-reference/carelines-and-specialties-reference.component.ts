@@ -1,9 +1,10 @@
-import { Component, OnInit, OnChanges, Input, Output, EventEmitter} from '@angular/core';
+import { Component, OnInit, OnChanges, Input, Output, EventEmitter } from '@angular/core';
 import { FormGroup, Validators } from '@angular/forms';
 import { CareLineDto, ClinicalSpecialtyDto, ReferenceProblemDto } from '@api-rest/api-model';
 import { CareLineService } from '@api-rest/services/care-line.service';
 import { ClinicalSpecialtyService } from '@api-rest/services/clinical-specialty.service';
 import { Observable } from 'rxjs';
+import { ReferenceProblemsService } from '../../services/reference-problems.service';
 
 @Component({
     selector: 'app-carelines-and-specialties-reference',
@@ -12,7 +13,6 @@ import { Observable } from 'rxjs';
 })
 export class CarelinesAndSpecialtiesReferenceComponent implements OnInit, OnChanges {
 
-    @Input() referenceProblemDto: ReferenceProblemDto[] = [];
     @Input() formReference: FormGroup;
     @Input() set updateFormFields(updateSpecialtiesAndCarelineFields: boolean) {
         if (updateSpecialtiesAndCarelineFields) {
@@ -29,11 +29,12 @@ export class CarelinesAndSpecialtiesReferenceComponent implements OnInit, OnChan
 
     specialties$: Observable<ClinicalSpecialtyDto[]>;
     DEFAULT_RADIO_OPTION = '0';
-	careLines: CareLineDto[];
+    careLines: CareLineDto[];
 
     constructor(
         private readonly careLineService: CareLineService,
-        private readonly clinicalSpecialty: ClinicalSpecialtyService) { }
+        private readonly clinicalSpecialty: ClinicalSpecialtyService,
+        private readonly referenceProblemsService: ReferenceProblemsService) { }
 
     ngOnInit(): void {
         this.subscribesToChangesInForm();
@@ -65,7 +66,7 @@ export class CarelinesAndSpecialtiesReferenceComponent implements OnInit, OnChan
     }
 
     private setCareLines() {
-        const problemSnomedIds: string[] = this.referenceProblemDto.map(problem => problem.snomed.sctid);
+        const problemSnomedIds: string[] = this.referenceProblemsService.mapProblems().map(problem => problem.snomed.sctid);
         const institutionId = this.formReference.value.institutionDestinationId;
         if (!problemSnomedIds.length || !institutionId) {
             this.formReference.controls.careLine.disable();
@@ -126,7 +127,7 @@ export class CarelinesAndSpecialtiesReferenceComponent implements OnInit, OnChan
             }
         });
 
-        disableInputs(this.formReference, this.referenceProblemDto);
+        disableInputs(this.formReference, this.referenceProblemsService.mapProblems());
 
         function disableInputs(formReference: FormGroup, referenceProblemDto: ReferenceProblemDto[]) {
             if (!formReference.value.institutionDestinationId) {

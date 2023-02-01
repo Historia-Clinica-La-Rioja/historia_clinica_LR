@@ -5,8 +5,6 @@ import { InstitutionService } from '@api-rest/services/institution.service';
 import { TypeaheadOption } from '@presentation/components/typeahead/typeahead.component';
 import { ReferenceOriginInstitutionService } from '../../services/reference-origin-institution.service';
 
-const COUNTRY = 14;
-
 @Component({
     selector: 'app-destination-institution-reference',
     templateUrl: './destination-institution-reference.component.html',
@@ -38,8 +36,6 @@ export class DestinationInstitutionReferenceComponent implements OnInit {
         private readonly referenceOriginInstitutionService: ReferenceOriginInstitutionService) { }
 
 	ngOnInit(): void {
-		//this.originInstitutionInfo = this.referenceOriginInstitutionService.getOriginInstitutionInfo();
-		//this.provinces = this.referenceOriginInstitutionService.getProvinces();
 		this.referenceOriginInstitutionService.originInstitutionInfo$.subscribe(info => this.originInstitutionInfo = info);
 		this.referenceOriginInstitutionService.provinces$.subscribe(info => this.provinces = info);
 		this.referenceOriginInstitutionService.originDepartment$.subscribe(department => {

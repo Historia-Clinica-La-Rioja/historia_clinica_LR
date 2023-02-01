@@ -77,3 +77,7 @@ export const stringToTimeDto = (date: string): TimeDto => {
 		seconds: +timeArray[2]
 	}
 }
+
+export const mapToString = (date: DateDto): string => {
+	return date.year.toString() + date.month.toString() + date.day.toString();
+}

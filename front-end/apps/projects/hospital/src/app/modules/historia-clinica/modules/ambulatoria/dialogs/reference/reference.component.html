@@ -13,10 +13,9 @@
 
             <div fxLayout="row" fxLayout.lt-lg="column" fxLayoutGap="20px">
                 <div>
-                    <app-origin-institution-reference [formReference]="formReference" [data]="data"
-                        (updateSpecialtiesAndCarelineFields)="activateSpecialtiesAndCarelineFields()"
-                        (referenceProblemDto)="setReferenceProblemsDto($event)"
-                        (problems)="setProblemsList($event)">
+                    <app-origin-institution-reference [formReference]="formReference"
+                        [data]="data"
+                        (updateSpecialtiesAndCarelineFields)="activateSpecialtiesAndCarelineFields()">
                     </app-origin-institution-reference>
 
                     <span class="phone-title"
@@ -59,7 +58,7 @@
                         (institutionSelected)="onInstitutionSelectionChange($event)">
                     </app-destination-institution-reference>
 
-                    <app-carelines-and-specialties-reference [referenceProblemDto]="referenceProblemDto"
+                    <app-carelines-and-specialties-reference
                         [formReference]="formReference" [updateFormFields]="updateSpecialtiesAndCarelineFields"
                         [clearCarelinesAndSpecialties]="clearCarelinesAndSpecialties" (resetControls)="resetControls()">
                     </app-carelines-and-specialties-reference>

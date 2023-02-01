@@ -1,20 +1,19 @@
 import { Component, Inject, OnInit, ChangeDetectorRef, AfterContentChecked } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
-import { CareLineDto, ClinicalSpecialtyDto, HCEPersonalHistoryDto, ReferenceDto, ReferenceProblemDto } from '@api-rest/api-model';
+import { CareLineDto, ClinicalSpecialtyDto, HCEPersonalHistoryDto, ReferenceProblemDto } from '@api-rest/api-model';
 import { ReferenceOriginInstitutionService } from '../../services/reference-origin-institution.service';
+import { ReferenceProblemsService } from '../../services/reference-problems.service';
 
 @Component({
 	selector: 'app-reference',
 	templateUrl: './reference.component.html',
 	styleUrls: ['./reference.component.scss'],
-	providers: [ReferenceOriginInstitutionService]
+	providers: [ReferenceOriginInstitutionService, ReferenceProblemsService]
 })
 export class ReferenceComponent implements OnInit, AfterContentChecked {
 
 	formReference: FormGroup;
-	problemsList: any[] = [];
-	referenceProblemDto: ReferenceProblemDto[] = [];
 	selectedFiles: File[] = [];
 	selectedFilesShow: any[] = [];
 	DEFAULT_RADIO_OPTION = '0';
@@ -26,7 +25,8 @@ export class ReferenceComponent implements OnInit, AfterContentChecked {
 		@Inject(MAT_DIALOG_DATA) public data: any,
 		private readonly formBuilder: FormBuilder,
 		private readonly dialogRef: MatDialogRef<ReferenceComponent>,
-		private changeDetector: ChangeDetectorRef
+		private changeDetector: ChangeDetectorRef,
+		private readonly referenceProblemsService: ReferenceProblemsService
 	) { }
 
 	ngOnInit(): void {
@@ -39,30 +39,28 @@ export class ReferenceComponent implements OnInit, AfterContentChecked {
 		this.changeDetector.detectChanges();
 	}
 
-	private mapProblems(problems: any[]): ReferenceProblemDto[] {
-		return problems.map(problem => ({
-			id: problem.id,
-			snomed: problem.snomed,
-		}));
-	}
-
 	save(): void {
 		this.submitForm = true;
-		this.formReference.controls.careLine.markAllAsTouched();
-		this.formReference.controls.clinicalSpecialtyId.markAllAsTouched();
+		this.markInputsAsTouched();
 		if (this.formReference.valid) {
-			const reference = { data: this.buildReference(), files: this.selectedFiles, problems: this.getReferenceProblems() };
+			const reference = { data: this.buildReference(), files: this.selectedFiles, problems: this.referenceProblemsService.getReferenceProblems() };
 			this.dialogRef.close(reference);
 		}
 	}
 
-	private buildReference(): ReferenceDto {
+	private markInputsAsTouched() {
+		this.formReference.controls.careLine.markAllAsTouched();
+		this.formReference.controls.clinicalSpecialtyId.markAllAsTouched();
+		this.formReference.controls.problems.markAsTouched();
+	}
+
+	private buildReference(): Reference {
 		return {
-			careLineId: this.formReference.controls.careLine.value,
-			clinicalSpecialtyId: this.formReference.controls.clinicalSpecialtyId.value,
+			careLine: this.formReference.controls.careLine.value,
+			clinicalSpecialty: this.formReference.controls.clinicalSpecialtyId.value,
 			consultation: true,
 			note: this.formReference.value.summary,
-			problems: this.mapProblems(this.referenceProblemDto),
+			problems: this.referenceProblemsService.mapProblems(),
 			procedure: false,
 			fileIds: [],
 			destinationInstitutionId: this.formReference.value.institutionDestinationId,
@@ -81,16 +79,6 @@ export class ReferenceComponent implements OnInit, AfterContentChecked {
 	removeSelectedFile(index): void {
 		this.selectedFiles.splice(index, 1);
 		this.selectedFilesShow.splice(index, 1);
-	}
-
-	private getReferenceProblems(): HCEPersonalHistory[] {
-		let referenceProblems: HCEPersonalHistory[] = [];
-		this.referenceProblemDto.forEach(referenceProblemDto => {
-			const problemToAdd = this.problemsList.find(problem => problem.hcePersonalHistoryDto.snomed.sctid === referenceProblemDto.snomed.sctid)
-			referenceProblems.push(problemToAdd);
-
-		});
-		return referenceProblems;
 	}
 
 	onProvinceSelectionChange(province: number) {
@@ -112,14 +100,6 @@ export class ReferenceComponent implements OnInit, AfterContentChecked {
 
 	activateSpecialtiesAndCarelineFields() {
 		this.updateSpecialtiesAndCarelineFields = true;
-	}
-
-	setReferenceProblemsDto(referenceProblemDto: ReferenceProblemDto[]) {
-		this.referenceProblemDto = referenceProblemDto;
-	}
-
-	setProblemsList(problems: any[]) {
-		this.problemsList = problems;
 	}
 
 	resetControls() {
