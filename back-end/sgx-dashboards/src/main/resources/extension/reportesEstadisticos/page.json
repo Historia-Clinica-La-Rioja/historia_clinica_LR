@@ -49,31 +49,41 @@
                               }
                             },
                             {
-                              "type": "cubejs-chart",
+                              "type": "card",
                               "args": {
-                                "query": "cantidadConsultasTotal",
-                                "showLegend": false
-                              }
-                            },
-                            {
-                              "type": "cubejs-chart",
-                              "args": {
-                                "query": "cantidadConsultasTotalSexoF",
-                                "showLegend": false
-                              }
-                            },
-                            {
-                              "type": "cubejs-chart",
-                              "args": {
-                                "query": "cantidadConsultasTotalSexoM",
-                                "showLegend": false
-                              }
-                            },
-                            {
-                              "type": "cubejs-chart",
-                              "args": {
-                                "query": "cantidadConsultasTotalSexoX",
-                                "showLegend": false
+                                "title": {
+                                  "text": "Consultas por género"
+                                },
+                                "content": [
+                                  {
+                                    "type": "cubejs-chart",
+                                    "args": {
+                                      "query": "cantidadConsultasTotal",
+                                      "showLegend": false
+                                    }
+                                  },
+                                  {
+                                    "type": "cubejs-chart",
+                                    "args": {
+                                      "query": "cantidadConsultasTotalSexoF",
+                                      "showLegend": false
+                                    }
+                                  },
+                                  {
+                                    "type": "cubejs-chart",
+                                    "args": {
+                                      "query": "cantidadConsultasTotalSexoM",
+                                      "showLegend": false
+                                    }
+                                  },
+                                  {
+                                    "type": "cubejs-chart",
+                                    "args": {
+                                      "query": "cantidadConsultasTotalSexoX",
+                                      "showLegend": false
+                                    }
+                                  }
+                                ]
                               }
                             }
                           ]
@@ -118,38 +128,65 @@
                   }
                 },
                 {
-                  "type": "cubejs-chart",
+                  "type": "cubejs-dashboard",
                   "args": {
-                    "query": "cantidadTurnosTotal",
-                    "showLegend": false
-                  }
-                },
-                {
-                  "type": "cubejs-chart",
-                  "args": {
-                    "query": "cantidadTurnosTotalAsignados",
-                    "showLegend": false
-                  }
-                },
-                {
-                  "type": "cubejs-chart",
-                  "args": {
-                    "query": "cantidadTurnosTotalCancelados",
-                    "showLegend": false
-                  }
-                },
-                {
-                  "type": "cubejs-chart",
-                  "args": {
-                    "query": "cantidadTurnosTotalAtendidos",
-                    "showLegend": false
-                  }
-                },
-                {
-                  "type": "cubejs-chart",
-                  "args": {
-                    "query": "cantidadTurnosTotalAusentes",
-                    "showLegend": false
+                    "filters": {
+                      "fecha": {
+                        "filter": {
+                          "member": "CantidadTurnos.fecha_consulta",
+                          "operator": "inDateRange"
+                        },
+                        "type": "dateRangeISO",
+                        "label": "Fecha"
+                      }
+                    },
+                    "content": [
+                      {
+                        "type": "card",
+                        "args": {
+                          "title": {
+                            "text": "Turnos por estado"
+                          },
+                          "content": [
+                            {
+                              "type": "cubejs-chart",
+                              "args": {
+                                "query": "cantidadTurnosTotal",
+                                "showLegend": false
+                              }
+                            },
+                            {
+                              "type": "cubejs-chart",
+                              "args": {
+                                "query": "cantidadTurnosTotalAsignados",
+                                "showLegend": false
+                              }
+                            },
+                            {
+                              "type": "cubejs-chart",
+                              "args": {
+                                "query": "cantidadTurnosTotalCancelados",
+                                "showLegend": false
+                              }
+                            },
+                            {
+                              "type": "cubejs-chart",
+                              "args": {
+                                "query": "cantidadTurnosTotalAtendidos",
+                                "showLegend": false
+                              }
+                            },
+                            {
+                              "type": "cubejs-chart",
+                              "args": {
+                                "query": "cantidadTurnosTotalAusentes",
+                                "showLegend": false
+                              }
+                            }
+                          ]
+                        }
+                      }
+                    ]
                   }
                 }
               ]
