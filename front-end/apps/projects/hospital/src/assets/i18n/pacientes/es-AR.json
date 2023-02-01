@@ -230,7 +230,10 @@
         "SPECIALTY_ERROR": "Requiere una especialidad.",
         "LICENSE_REQUIRED_ERROR": "Requiere una matricula.",
         "LICENSE_PATTERN_ERROR": "La matricula no es válida.",
-        "LICENSE_MAX_LENGTH_ERROR": "Introduzca como máximo 15 caracteres"
+        "LICENSE_MAX_LENGTH_ERROR": "Introduzca como máximo 15 caracteres",
+        "buttons": {
+          "VALIDATE": "Validar"
+        }
       }
     },
     "edit_prefessions_specialties": {

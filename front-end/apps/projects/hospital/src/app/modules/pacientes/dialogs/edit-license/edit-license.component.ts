@@ -1,9 +1,11 @@
+import { newArray } from '@angular/compiler/src/util';
 import { Component, Inject, OnInit } from '@angular/core';
 import { FormArray, FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
-import { ProfessionalLicenseNumberDto } from '@api-rest/api-model';
+import { ProfessionalLicenseNumberDto, ValidatedLicenseNumberDto } from '@api-rest/api-model';
 import { ProfessionalLicenseService } from '@api-rest/services/professional-license.service';
 import { ProfessionalSpecialties } from '@pacientes/routes/profile/profile.component';
+import { MatriculaService } from '@pacientes/services/matricula.service';
 
 @Component({
 	selector: 'app-edit-license',
@@ -22,7 +24,7 @@ export class EditLicenseComponent implements OnInit {
 		public dialog: MatDialogRef<EditLicenseComponent>,
 		private formBuilder: FormBuilder,
 		private readonly professionalLicenseService: ProfessionalLicenseService,
-
+		private readonly licenseNumberService: MatriculaService
 	) {
 
 	}
@@ -73,6 +75,7 @@ export class EditLicenseComponent implements OnInit {
 	addCombo(): void {
 		const array = this.form.get('professionalSpecialties') as FormArray;
 		array.push(this.add());
+		this.confirmationValidation = false;
 	}
 
 	getCtrl(key: string, form: FormGroup): any {
@@ -81,7 +84,8 @@ export class EditLicenseComponent implements OnInit {
 
 	delete(pointIndex: number): void {
 		const array = this.form.get('professionalSpecialties') as FormArray;
-		array.removeAt(pointIndex)
+		array.removeAt(pointIndex);
+		this.confirmButtonEnabled();
 	}
 
 	isDisableConfirmButton(): boolean {
@@ -89,12 +93,28 @@ export class EditLicenseComponent implements OnInit {
 		return array.at(array.length - 1)?.value.combo === null;
 	}
 
-	save(): void {
+	save(): void {	
 		this.confirmationValidation = !this.form.valid;
 		if (this.form.valid) {
 			const professional: ProfessionalLicenseNumberDto[] = this.buildCreateProfessionalLicenseNumberDto();
 			this.dialog.close(professional);
 		}
+	}
+	
+	validateLicenseNumbers() {
+		const licenseNumbers: string[] = this.form.controls.professionalSpecialties.value.map(value => value.combo?.licenseNumber);
+		this.professionalLicenseService.validateLicenseNumber(this.data.healthcareProfessionalId, licenseNumbers)
+			.subscribe((licenseNumbers: ValidatedLicenseNumberDto[]) => {
+				this.licenseNumberService.setLicenseNumbers(licenseNumbers);
+
+				if (licenseNumbers.some(combo => ! combo.isValid)) return;
+
+				this.save();
+			});
+	}
+
+	confirmButtonEnabled() {
+		this.confirmationValidation = true;
 	}
 
 	private convertToProfessionalLicenseNumberDto(combo: any): ProfessionalLicenseNumberDto {

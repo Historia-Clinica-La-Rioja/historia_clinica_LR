@@ -1,8 +1,9 @@
-import { ChangeDetectionStrategy, Component, forwardRef, Input, OnChanges, OnDestroy } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, EventEmitter, forwardRef, Input, OnChanges, OnDestroy, Output } from '@angular/core';
 import { ControlValueAccessor, FormBuilder, FormControl, NG_VALUE_ACCESSOR, Validators } from '@angular/forms';
-import { ClinicalSpecialtyDto } from '@api-rest/api-model';
+import { ClinicalSpecialtyDto, ValidatedLicenseNumberDto } from '@api-rest/api-model';
 import { hasError } from '@core/utils/form.utils';
 import { ProfessionalSpecialties } from '@pacientes/routes/profile/profile.component';
+import { MatriculaService } from '@pacientes/services/matricula.service';
 import { Subscription } from 'rxjs';
 
 const MAX_LENGTH = 15;
@@ -30,6 +31,8 @@ export class LicenseFormComponent implements ControlValueAccessor, OnDestroy, On
 	specialtiesOption: ClinicalSpecialtyDto[] = [];
 	@Input() professionSpecialties: ProfessionalSpecialties[] = [];
 	@Input() confirmationValidation = false;
+	@Input() index: number = 0;
+	@Output() professionalProfessionId: EventEmitter<number> = new EventEmitter();
 	onChangeSub: Subscription;
 
 
@@ -45,15 +48,28 @@ export class LicenseFormComponent implements ControlValueAccessor, OnDestroy, On
 
 	constructor(
 		private formBuilder: FormBuilder,
-
-	) { }
+		private readonly licenseNumberService: MatriculaService,
+		private cdRef: ChangeDetectorRef
+	) {}
 
 	ngOnChanges(): void {
 		if (this.confirmationValidation)
 			this.form.markAllAsTouched();
 	}
 
+	setUpLicenseNumberError() {
+		this.licenseNumberService.getLicenseNumbers()
+			.subscribe((result: ValidatedLicenseNumberDto[]) => {
+				(result[this.index]?.isValid) 
+					? this.form.controls.licenseNumber.setErrors(null)
+					: this.form.controls.licenseNumber.setErrors({invalid: true});
+					
+				this.cdRef.detectChanges();
+			})
+	}
+
 	ngOnInit(): void {
+		this.setUpLicenseNumberError();
 
 		this.form.controls.professionalProfessionId?.valueChanges.subscribe((professionalProfessionId: number) => {
 			this.form.controls.healthcareProfessionalSpecialtyId.setValue(null);
@@ -72,6 +88,10 @@ export class LicenseFormComponent implements ControlValueAccessor, OnDestroy, On
 			}
 		});
 
+	}
+
+	emitProfessionalProfessionId() {
+		this.professionalProfessionId.emit(this.form.controls.professionalProfessionId.value);
 	}
 
 	writeValue(obj: any): void {

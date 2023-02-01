@@ -16,13 +16,13 @@
 			<div *ngFor="let p of getCtrl('professionalSpecialties',form)?.controls;index as formChild">
 				<div [formGroupName]="formChild" fxLayout="row" fxLayoutAlign="space-between" fxLayoutGap="15px">
 					<app-license-form fxFlex="90%" [professionSpecialties]="data.professionSpecialties" [confirmationValidation]="confirmationValidation"
-						formControlName="combo">
+						formControlName="combo" [index]="formChild" (professionalProfessionId)="confirmButtonEnabled()">
 					</app-license-form>
 					<button id="delete-button" color="warn" matSuffix mat-icon-button fxLayoutAlign="end"
-						(click)="delete(formChild)">
-						<mat-icon>delete</mat-icon>
-					</button>
-				</div>
+					(click)="delete(formChild)">
+					<mat-icon>delete</mat-icon>
+				</button>
+			</div>
 				<hr class="divider" />
 			</div>
 		</div>
@@ -32,10 +32,12 @@
 		+ {{ 'pacientes.edit_license.ADD_ANOTHER_LICENSE' | translate }}
 	</button>
 
-	<div actions id="confirm-button" fxLayoutAlign="end">
-		<button mat-raised-button color="primary" (click)="save()">
-			<span>{{ 'buttons.CONFIRM' | translate | uppercase }}</span>
-		</button>
+	<div fxLayout="row" fxLayoutAlign="end center" fxLayoutGap="17px">
+		<mat-card-actions>
+			<button mat-flat-button (click)="validateLicenseNumbers()" color="primary" [disabled]="! confirmationValidation">
+				<span>{{ 'buttons.CONFIRM' | translate | uppercase }}</span>
+			</button>
+		</mat-card-actions>
 	</div>
 
 </div>
