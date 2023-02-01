@@ -15,6 +15,7 @@ public class MigrateClinicHistory {
 	private final MigrateOutpatientConsultation migrateOutpatientConsultation;
 	private final MigrateEmergencyCareEpisode migrateEmergencyCareEpisode;
 	private final MigrateOdontologyConsultation migrateOdontologyConsultation;
+	private final MigrateAppointment migrateAppointment;
 
 	public void execute(List<Integer> oldPatients, Integer newPatient) {
 		log.debug("Modify, oldPatients {}, newPatient {}", oldPatients, newPatient);
@@ -23,5 +24,6 @@ public class MigrateClinicHistory {
 		migrateOutpatientConsultation.execute(oldPatients,newPatient);
 		migrateEmergencyCareEpisode.execute(oldPatients,newPatient);
 		migrateOdontologyConsultation.execute(oldPatients, newPatient);
+		migrateAppointment.execute(oldPatients, newPatient);
 	}
 }

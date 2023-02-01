@@ -6,6 +6,8 @@ import java.util.stream.Collectors;
 import ar.lamansys.sgh.shared.infrastructure.input.service.odontology.SharedOdontologyConsultationPort;
 import net.pladema.emergencycare.repository.EmergencyCareEpisodeRepository;
 
+import net.pladema.medicalconsultation.appointment.repository.AppointmentRepository;
+
 import org.springframework.stereotype.Service;
 
 import ar.lamansys.refcounterref.infraestructure.output.repository.counterreference.CounterReferenceRepository;
@@ -34,6 +36,7 @@ public class MergeClinicHistoryStorageImpl implements MergeClinicHistoryStorage 
 	private final InternmentEpisodeRepository internmentEpisodeRepository;
 	private final OutpatientConsultationRepository outpatientConsultationRepository;
 	private final EmergencyCareEpisodeRepository emergencyCareEpisodeRepository;
+	private final AppointmentRepository appointmentRepository;
 	private final MedicationRequestRepository medicationRequestRepository;
 	private final ServiceRequestRepository serviceRequestRepository;
 	private final SharedNursingConsultationPort sharedNursingConsultationPort;
@@ -190,6 +193,12 @@ public class MergeClinicHistoryStorageImpl implements MergeClinicHistoryStorage 
 		log.debug("Odontology consultation ids to modify {}",ids);
 		sharedOdontologyConsultationPort.findAllById(ids)
 				.forEach(item -> migratePatientStorage.migrateItem(item.getId(), item.getPatientId(), newPatientId, EMergeTable.ODONTOLOGY_CONSULTATION));
+	}
+
+	@Override
+	public void modifyAppointment(List<Integer> oldPatients, Integer newPatientId) {
+		appointmentRepository.getAppointmentsFromPatients(oldPatients)
+				.forEach(item -> migratePatientStorage.migrateItem(item.getId(), item.getPatientId(), newPatientId, EMergeTable.APPOINTMENT));
 	}
 
 	@Override

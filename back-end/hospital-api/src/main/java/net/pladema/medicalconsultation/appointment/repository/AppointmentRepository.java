@@ -353,6 +353,12 @@ public interface AppointmentRepository extends SGXAuditableEntityJPARepository<A
 			"ORDER BY a.hour asc")
 	List<AppointmentEquipmentShortSummaryBo> getAppointmentEquipmentFromDeterminatedDate(@Param("patientId") Integer patientId,
 																						 @Param("date") LocalDate date);
+	
+	@Transactional(readOnly = true)
+	@Query("SELECT a " +
+			"FROM Appointment a " +
+			"WHERE a.patientId IN :patients")
+	List<Appointment> getAppointmentsFromPatients(@Param("patients") List<Integer> patients);
 
 
 }
