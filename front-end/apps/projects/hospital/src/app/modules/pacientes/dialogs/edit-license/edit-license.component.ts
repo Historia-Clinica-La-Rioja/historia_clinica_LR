@@ -1,9 +1,9 @@
-import { newArray } from '@angular/compiler/src/util';
 import { Component, Inject, OnInit } from '@angular/core';
 import { FormArray, FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
-import { ProfessionalLicenseNumberDto, ValidatedLicenseNumberDto } from '@api-rest/api-model';
+import { AppFeature, ProfessionalLicenseNumberDto, ValidatedLicenseNumberDto } from '@api-rest/api-model.d';
 import { ProfessionalLicenseService } from '@api-rest/services/professional-license.service';
+import { FeatureFlagService } from '@core/services/feature-flag.service';
 import { ProfessionalSpecialties } from '@pacientes/routes/profile/profile.component';
 import { MatriculaService } from '@pacientes/services/matricula.service';
 
@@ -18,18 +18,22 @@ export class EditLicenseComponent implements OnInit {
 	professionSpecialtiesSinMatriculas: ProfessionalSpecialties[] = [];
 	professionsWithLicense: ProfessionalLicenseNumberDto[] = [];
 	confirmationValidation = false;
+	isHabilitarValidacionMatriculasSisaEnabled: boolean = false;
 
 	constructor(
 		@Inject(MAT_DIALOG_DATA) public data: { personId: number, professionSpecialties: ProfessionalSpecialties[], healthcareProfessionalId: number },
 		public dialog: MatDialogRef<EditLicenseComponent>,
 		private formBuilder: FormBuilder,
 		private readonly professionalLicenseService: ProfessionalLicenseService,
-		private readonly licenseNumberService: MatriculaService
+		private readonly licenseNumberService: MatriculaService,
+		private readonly featureFlagService: FeatureFlagService
 	) {
 
 	}
 
 	ngOnInit(): void {
+		this.featureFlagService.isActive(AppFeature.HABILITAR_VALIDACION_MATRICULAS_SISA)
+			.subscribe((result: boolean) => this.isHabilitarValidacionMatriculasSisaEnabled = result);
 
 		this.form = this.formBuilder.group({
 			professionalSpecialties: new FormArray([]),
@@ -102,6 +106,9 @@ export class EditLicenseComponent implements OnInit {
 	}
 	
 	validateLicenseNumbers() {
+		if (! this.isHabilitarValidacionMatriculasSisaEnabled) 
+			return this.save();
+
 		const licenseNumbers: string[] = this.form.controls.professionalSpecialties.value.map(value => value.combo?.licenseNumber);
 		this.professionalLicenseService.validateLicenseNumber(this.data.healthcareProfessionalId, licenseNumbers)
 			.subscribe((licenseNumbers: ValidatedLicenseNumberDto[]) => {
