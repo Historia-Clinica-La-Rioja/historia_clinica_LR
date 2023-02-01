@@ -16,4 +16,6 @@ public class SipPlusCoordinatesBo {
 	private SipPlusMotherIdentificationBo motherIdentification;
 
 	private Boolean ignoreLocks;
+
+	private Integer pregnancy;
 }

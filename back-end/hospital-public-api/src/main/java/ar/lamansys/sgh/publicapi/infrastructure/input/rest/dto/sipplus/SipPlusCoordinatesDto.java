@@ -25,6 +25,8 @@ public class SipPlusCoordinatesDto {
 
 	private Boolean ignoreLocks;
 
+	private Integer pregnancy;
+
 	public SipPlusCoordinatesDto(SipPlusCoordinatesBo sipPlusCoordinatesBo) {
 		SipPlusMotherIdentificationDto sipPlusMotherIdentificationDto = SipPlusMotherIdentificationDto.builder()
 				.countryCode(sipPlusCoordinatesBo.getMotherIdentification().getCountryCode())
@@ -35,6 +37,7 @@ public class SipPlusCoordinatesDto {
 		this.embedId = sipPlusCoordinatesBo.getEmbedId();
 		this.motherIdentification = sipPlusMotherIdentificationDto;
 		this.ignoreLocks = sipPlusCoordinatesBo.getIgnoreLocks();
+		this.pregnancy = sipPlusCoordinatesBo.getPregnancy();
 	}
 
 }

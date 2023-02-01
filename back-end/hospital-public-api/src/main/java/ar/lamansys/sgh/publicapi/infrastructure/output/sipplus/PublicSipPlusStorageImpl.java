@@ -79,10 +79,15 @@ public class PublicSipPlusStorageImpl implements PublicSipPlusStorage {
 
 	@Override
 	public EmbeddedAuthenticationDataBo getDataForAuthentication(String accessData) {
+		Integer pregnancy = null;
+
 		String [] accessDataInfo = accessData.split("\\$");
 		String token = accessDataInfo[0];
 		Integer institutionId = Integer.valueOf(accessDataInfo[1]);
 		Integer patientId = Integer.valueOf(accessDataInfo[2]);
+
+		if (accessDataInfo.length > 3)
+			pregnancy = Integer.valueOf(accessDataInfo[3]);
 
 		Integer userId = sharedHospitalUserPort.fetchUserInfoFromNormalToken(token)
 				.orElseThrow( () -> new SipPlusException(SipPlusExceptionEnum.INVALID_TOKEN, "Error en el token - Es posible que la sesión del usuario haya expirado"))
@@ -91,13 +96,13 @@ public class PublicSipPlusStorageImpl implements PublicSipPlusStorage {
 		SipPlusInstitutionBo sipPlusInstitutionBo = getUserInstitution(institutionId);
 
 		return EmbeddedAuthenticationDataBo.builder()
-				.embedCoordinates(getCoordinates(patientId))
+				.embedCoordinates(getCoordinates(patientId, pregnancy))
 				.user(getUserData(userId, institutionId, sipPlusInstitutionBo))
 				.institution(sipPlusInstitutionBo)
 				.build();
 	}
 
-	private SipPlusCoordinatesBo getCoordinates(Integer patientId) {
+	private SipPlusCoordinatesBo getCoordinates(Integer patientId, Integer pregnancy) {
 		BasicPatientDto patientData = sharedPatientPort.getBasicDataFromPatient(patientId);
 		String countryIsoCode = getCountryIsoCode(patientData.getPerson().getId());
 
@@ -116,6 +121,7 @@ public class PublicSipPlusStorageImpl implements PublicSipPlusStorage {
 				.embedId(embedId)
 				.motherIdentification(motherIdentification)
 				.ignoreLocks(IGNORE_LOCKS)
+				.pregnancy(pregnancy)
 				.build();
 
 	}
