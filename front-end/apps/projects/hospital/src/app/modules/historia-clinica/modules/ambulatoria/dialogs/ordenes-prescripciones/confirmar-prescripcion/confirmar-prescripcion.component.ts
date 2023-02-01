@@ -34,6 +34,9 @@ export class ConfirmarPrescripcionComponent implements OnInit {
 	openDialog() {
 		this.dialog.open(EnviarRecetaDigitalPorEmailComponent, {
 			width: '35%',
+			data: {
+				patientEmail: this.data.patientEmail
+			}
 		})
 	}
 
@@ -51,4 +54,5 @@ export class ConfirmPrescriptionData {
 	prescriptionType: PrescriptionTypes;
 	patientId: number;
 	prescriptionRequest: number | number[];
+	patientEmail?: string;
 }

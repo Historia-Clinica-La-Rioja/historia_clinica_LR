@@ -111,7 +111,7 @@ export class CardMedicacionesComponent implements OnInit {
 		});
 	}
 
-	private openNuevaPrescripcion(isNewMedication: boolean, medication?: MedicationInfoDto) {
+	private openNuevaPrescripcion(isNewMedication: boolean, medication?: MedicationInfoDto, patientEmail?: string) {
 		const medicationList = isNewMedication ? null : this.getMedicationList(medication);
 		
 		const newMedicationDialog = this.dialog.open(NuevaPrescripcionComponent,
@@ -146,6 +146,7 @@ export class CardMedicacionesComponent implements OnInit {
 								prescriptionType: PrescriptionTypes.MEDICATION,
 								patientId: this.patientId,
 								prescriptionRequest: newPrescription.prescriptionRequestResponse,
+								patientEmail,
 							},
 							width: '35%'
 						});
@@ -179,7 +180,7 @@ export class CardMedicacionesComponent implements OnInit {
 						return;
 					}
 
-				this.openNuevaPrescripcion(isNewMedication, medication);
+				this.openNuevaPrescripcion(isNewMedication, medication, result?.patientEmail);
 			});
 	}
 
