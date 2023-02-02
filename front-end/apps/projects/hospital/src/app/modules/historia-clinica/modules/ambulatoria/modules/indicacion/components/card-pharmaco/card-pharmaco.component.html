@@ -2,27 +2,30 @@
 	<mat-card *ngIf="pharmacos?.length else noInfo">
 		<div *ngFor="let pharmaco of pharmacos;last as isLast">
 
-			<div fxLayoutAlign="space-between center">
-				<div fxFlex="45%">
+			<div fxLayout="column" fxLayout.gt-md="row" fxLayoutAlign.gt-md="space-between center"
+				fxLayoutAlign="start start" fxLayoutGap="5px" fxLayoutGap.gt-md="10px">
+				<div fxFlex.gt-md="25%">
 					<span class="bold-text">{{pharmaco.snomed.pt | translate | titlecase}}</span>
 				</div>
-
-				<div fxFlex="row" fxLayoutAlign="space-around" fxFlex="35%" class="info">
-					<span fxFlex="50%" color="grey"> {{pharmaco.dosage.quantity.value}}
+				<div fxFlex.gt-md="55%" fxlayout="row" class="inf" fxLayoutGap="10px" fxLayoutAlign="start center">
+					<span fxFlex="15%" class="value" color="grey"> {{pharmaco.dosage.quantity.value}}
 						{{pharmaco.dosage.quantity.unit}}</span>
 
-					<span fxFlex="50%"> {{pharmaco.via | translate}}</span>
+					<span fxFlex="25%" fxLayoutAlign="start"> {{pharmaco.via | translate | showVia : vias }}</span>
 
+					<div fxFlex="60%" *ngIf="pharmaco?.patientId" fxLayoutAlign="start center">
+						<mat-icon color="primary">schedule</mat-icon>
+						<span class="color-primary bold line-height" id="date"
+							[translate]="pharmaco.dosage.startDateTime.date|relativeDate">
+						</span>
+					</div>
 				</div>
-
-				<div fxFlex="20%" fxLayoutAlign="end">
+				<div fxFlex.gt-md="20%" fxLayoutAlign="start" fxLayoutAlign.gt-md="end">
 					<button mat-flat-button color="primary"
 						(click)=emit(pharmaco)>{{'indicacion.card-pharmaco.SELECTION' | translate | titlecase}}</button>
 				</div>
 			</div>
-
 			<mat-divider *ngIf="!isLast"></mat-divider>
-
 		</div>
 	</mat-card>
 </div>

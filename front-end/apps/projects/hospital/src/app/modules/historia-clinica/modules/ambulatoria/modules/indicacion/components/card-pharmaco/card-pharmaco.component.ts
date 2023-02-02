@@ -1,16 +1,17 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
-import { PharmacoSummaryDto } from '@api-rest/api-model';
+import { MasterDataDto } from '@api-rest/api-model';
 
 @Component({
 	selector: 'app-card-pharmaco',
 	templateUrl: './card-pharmaco.component.html',
 	styleUrls: ['./card-pharmaco.component.scss']
 })
-export class CardPharmacoComponent {
+export class CardPharmacoComponent<T> {
 	@Input() pharmacos: [];
-	@Output() selectionChange = new EventEmitter<PharmacoSummaryDto>();
+	@Input() vias: MasterDataDto[] = [];
+	@Output() selectionChange = new EventEmitter<T>();
 
-	emit(pharmaco: PharmacoSummaryDto) {
+	emit(pharmaco: T) {
 		return this.selectionChange.emit(pharmaco);
 	}
 }
