@@ -1,16 +1,18 @@
 package ar.lamansys.sgh.publicapi.infrastructure.input.rest.mapper.prescription;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import ar.lamansys.sgh.publicapi.domain.prescription.CommercialMedicationBo;
-import ar.lamansys.sgh.publicapi.domain.prescription.GenericMedicationBo;
-import ar.lamansys.sgh.publicapi.infrastructure.input.rest.dto.prescription.CommercialMedicationDto;
-import ar.lamansys.sgh.publicapi.infrastructure.input.rest.dto.prescription.GenericMedicationDto;
+import ar.lamansys.sgh.publicapi.domain.prescription.PrescriptionValidStatesEnum;
 
 import org.springframework.stereotype.Component;
 
+import ar.lamansys.sgh.publicapi.domain.exceptions.PrescriptionBoEnumException;
+import ar.lamansys.sgh.publicapi.domain.exceptions.PrescriptionBoException;
+import ar.lamansys.sgh.publicapi.domain.prescription.CommercialMedicationBo;
+import ar.lamansys.sgh.publicapi.domain.prescription.GenericMedicationBo;
 import ar.lamansys.sgh.publicapi.domain.prescription.InstitutionPrescriptionBo;
 import ar.lamansys.sgh.publicapi.domain.prescription.PatientPrescriptionBo;
 import ar.lamansys.sgh.publicapi.domain.prescription.PrescriptionBo;
@@ -19,6 +21,8 @@ import ar.lamansys.sgh.publicapi.domain.prescription.PrescriptionProblemBo;
 import ar.lamansys.sgh.publicapi.domain.prescription.PrescriptionProfessionBo;
 import ar.lamansys.sgh.publicapi.domain.prescription.PrescriptionProfessionalRegistrationBo;
 import ar.lamansys.sgh.publicapi.domain.prescription.ProfessionalPrescriptionBo;
+import ar.lamansys.sgh.publicapi.infrastructure.input.rest.dto.prescription.CommercialMedicationDto;
+import ar.lamansys.sgh.publicapi.infrastructure.input.rest.dto.prescription.GenericMedicationDto;
 import ar.lamansys.sgh.publicapi.infrastructure.input.rest.dto.prescription.InstitutionPrescriptionDto;
 import ar.lamansys.sgh.publicapi.infrastructure.input.rest.dto.prescription.PatientPrescriptionDto;
 import ar.lamansys.sgh.publicapi.infrastructure.input.rest.dto.prescription.PrescriptionDto;
@@ -32,12 +36,15 @@ import ar.lamansys.sgx.shared.dates.configuration.LocalDateMapper;
 @Component
 public class PrescriptionMapper {
 	private final LocalDateMapper localDateMapper;
-
+	private static final short VENCIDO = 4;
 	public PrescriptionMapper(LocalDateMapper localDateMapper) {
 		this.localDateMapper = localDateMapper;
 	}
 
-	public PrescriptionDto mapTo(PrescriptionBo prescriptionBo) {
+	public PrescriptionDto mapTo(PrescriptionBo prescriptionBo) throws PrescriptionBoException {
+		if (prescriptionBo.getPrescriptionId() == null) {
+			throw new PrescriptionBoException(PrescriptionBoEnumException.NOT_EXISTS_ID_OR_DNI, "No se encontró información sobre ese dni o id de receta");
+		}
 		return PrescriptionDto.builder()
 				.domain(prescriptionBo.getDomain())
 				.prescriptionId(prescriptionBo.getPrescriptionId())
@@ -46,21 +53,22 @@ public class PrescriptionMapper {
 				.prescriptionDate(prescriptionBo.getPrescriptionDate())
 				.patientPrescriptionDto(mapTo(prescriptionBo.getPatientPrescriptionBo()))
 				.professionalPrescriptionDto(mapTo(prescriptionBo.getProfessionalPrescriptionBo()))
-				.prescriptionsLineDto(mapToPrescriptionLineDtoList(prescriptionBo.getPrescriptionsLineBo()))
+				.prescriptionsLineDto(mapToPrescriptionLineDtoList(prescriptionBo.getPrescriptionsLineBo(), prescriptionBo.getDueDate()))
 				.build();
 	}
 
-	private List<PrescriptionLineDto> mapToPrescriptionLineDtoList(List<PrescriptionLineBo> prescriptionsLineBo) {
+	private List<PrescriptionLineDto> mapToPrescriptionLineDtoList(List<PrescriptionLineBo> prescriptionsLineBo, LocalDateTime dueDate) {
 		if(prescriptionsLineBo == null) {
 			return new ArrayList<>();
 		}
-		return prescriptionsLineBo.stream().map(this::mapTo).collect(Collectors.toList());
+		return prescriptionsLineBo.stream().map(line -> mapTo(line, dueDate)).collect(Collectors.toList());
 	}
 
-	private PrescriptionLineDto mapTo(PrescriptionLineBo prescriptionLineBo) {
+	private PrescriptionLineDto mapTo(PrescriptionLineBo prescriptionLineBo, LocalDateTime dueDate) {
+		var due = localDateMapper.fromLocalDateTime(LocalDateTime.now()).plusDays(30).isAfter(localDateMapper.fromLocalDateTime(dueDate));
 		return PrescriptionLineDto.builder()
 				.prescriptionLineNumber(prescriptionLineBo.getPrescriptionLineNumber())
-				.prescriptionLineStatus(prescriptionLineBo.getPrescriptionLineStatus())
+				.prescriptionLineStatus(due ? PrescriptionValidStatesEnum.map(VENCIDO).toString() : prescriptionLineBo.getPrescriptionLineStatus())
 				.dayDosis(prescriptionLineBo.getDayDosis())
 				.presentation(prescriptionLineBo.getPresentation())
 				.presentationQuantity(prescriptionLineBo.getPresentationQuantity())

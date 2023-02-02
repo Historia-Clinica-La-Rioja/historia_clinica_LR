@@ -5,11 +5,11 @@ import java.util.stream.Collectors;
 
 import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;
+import javax.validation.Valid;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import ar.lamansys.sgh.publicapi.application.port.out.PrescriptionStorage;
 import ar.lamansys.sgh.publicapi.domain.prescription.PrescriptionValidStatesEnum;
 import ar.lamansys.sgh.publicapi.infrastructure.input.rest.dto.prescription.ChangePrescriptionStateDto;
 import ar.lamansys.sgh.publicapi.infrastructure.input.rest.dto.prescription.ChangePrescriptionStateMedicationDto;
@@ -26,7 +26,7 @@ public class PrescriptionStatusValidator implements ConstraintValidator<ValidPre
 	}
 
 	@Override
-	public boolean isValid(ChangePrescriptionStateDto changePrescriptionLineDto, ConstraintValidatorContext constraintValidatorContext) {
+	public boolean isValid(@Valid ChangePrescriptionStateDto changePrescriptionLineDto, ConstraintValidatorContext constraintValidatorContext) {
 
 		boolean valid = true;
 
