@@ -1,5 +1,5 @@
 import { Component, Inject, OnInit } from '@angular/core';
-import { AbstractControl, FormBuilder, FormGroup } from '@angular/forms';
+import { AbstractControl, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { map } from 'rxjs/operators';
 
@@ -8,12 +8,14 @@ import { MapperService } from '@core/services/mapper.service';
 import { MedicalCoverageComponent, PatientMedicalCoverage } from '@pacientes/dialogs/medical-coverage/medical-coverage.component';
 import { SnackBarService } from '@presentation/services/snack-bar.service';
 
-import { ApiErrorDto, BasicPatientDto, PatientMedicalCoverageDto, PrescriptionDto } from '@api-rest/api-model';
+import { ApiErrorDto, AppFeature, BasicPatientDto, ClinicalSpecialtyDto, PatientMedicalCoverageDto, PrescriptionDto } from '@api-rest/api-model.d';
 import { PatientMedicalCoverageService } from '@api-rest/services/patient-medical-coverage.service';
 import { PatientService } from '@api-rest/services/patient.service';
 
 import { AgregarPrescripcionItemComponent, NewPrescriptionItem } from '../../../../dialogs/ordenes-prescripciones/agregar-prescripcion-item/agregar-prescripcion-item.component';
 import { PrescripcionesService, PrescriptionTypes } from '../../../../services/prescripciones.service';
+import { ClinicalSpecialtyService } from '@api-rest/services/clinical-specialty.service';
+import { FeatureFlagService } from '@core/services/feature-flag.service';
 
 @Component({
 	selector: 'app-nueva-prescripcion',
@@ -25,8 +27,12 @@ export class NuevaPrescripcionComponent implements OnInit {
 	prescriptionItems: NewPrescriptionItem[];
 	patientMedicalCoverages: PatientMedicalCoverage[];
 	prescriptionForm: FormGroup;
+	fixedSpecialty = true;
+	defaultSpecialty: ClinicalSpecialtyDto;
+	specialties: ClinicalSpecialtyDto[];
 	itemCount = 0;
 	private patientData: BasicPatientDto;
+	isHabilitarRecetaDigitalEnabled: boolean = false;
 
 	constructor(
 		private readonly formBuilder: FormBuilder,
@@ -37,12 +43,21 @@ export class NuevaPrescripcionComponent implements OnInit {
 		private readonly patientService: PatientService,
 		private prescripcionesService: PrescripcionesService,
 		public dialogRef: MatDialogRef<NuevaPrescripcionComponent>,
-		@Inject(MAT_DIALOG_DATA) public data: NewPrescriptionData) {}
+		private readonly clinicalSpecialtyService: ClinicalSpecialtyService,
+		private readonly featureFlagService: FeatureFlagService,
+		@Inject(MAT_DIALOG_DATA) public data: NewPrescriptionData) {
+			this.featureFlagService.isActive(AppFeature.HABILITAR_RECETA_DIGITAL)
+				.subscribe((result: boolean) => this.isHabilitarRecetaDigitalEnabled = result);
+		}
 
 	ngOnInit(): void {
+		this.setProfessionalSpecialties();
+
 		this.prescriptionForm = this.formBuilder.group({
 			patientMedicalCoverage: [null],
 			withoutRecipe: [false],
+			evolucion: [],
+			clinicalSpecialty: [null, [Validators.required]],
 		});
 		this.prescriptionItems = this.data.prescriptionItemList ? this.data.prescriptionItemList : [];
 		this.setMedicalCoverages();
@@ -50,6 +65,23 @@ export class NuevaPrescripcionComponent implements OnInit {
 			this.patientData = basicData;
 		});
 		this.openPrescriptionItemDialog();
+	}
+
+	setProfessionalSpecialties() {
+		this.clinicalSpecialtyService.getLoggedInProfessionalClinicalSpecialties().subscribe(specialties => {
+			this.setSpecialtyFields(specialties);
+		});
+	}
+
+	setSpecialtyFields(specialtyArray) {
+		this.specialties = specialtyArray;
+		this.defaultSpecialty = specialtyArray[0];
+		this.prescriptionForm.get('clinicalSpecialty').setValue(this.defaultSpecialty);
+		this.prescriptionForm.controls['clinicalSpecialty'].markAsTouched();
+	}
+
+	setDefaultSpecialty() {
+		this.defaultSpecialty = this.prescriptionForm.controls.clinicalSpecialty.value;
 	}
 
 	closeModal(newPrescription?: NewPrescription): void {

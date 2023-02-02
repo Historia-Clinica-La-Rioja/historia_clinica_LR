@@ -33,6 +33,26 @@
                     <span [translate]="'ambulatoria.paciente.ordenes_prescripciones.new_prescription_dialog.WITHOUT_RECIPE'"></span>
                 </mat-checkbox>
             </div>
+
+            <app-new-consultation-expansion-section id="specialty" *ngIf="isHabilitarRecetaDigitalEnabled"
+			    [title]="'ambulatoria.paciente.nueva-consulta.SPECIALTY' | translate" icon="medical_services"
+			    [isEmpty]="!prescriptionForm.value.clinicalSpecialty" [collapsed]="false" [hideBorder]="true">
+                    <ng-container concept-form>
+                        <div fxLayout="row" [formGroup]="prescriptionForm">
+                            <mat-form-field appearance="outline">
+                                <mat-select id="clinicalSpecialtyId" name="clinicalSpecialty"
+                                    formControlName="clinicalSpecialty" (selectionChange)="setDefaultSpecialty()"
+                                    [attr.disabled]="fixedSpecialty">
+                                    <mat-option *ngFor="let clinicalSpecialty of this.specialties"
+                                        [value]="clinicalSpecialty">
+                                        <span class="mat-body">{{clinicalSpecialty.name}}</span>
+                                    </mat-option>
+                                </mat-select>
+                                <mat-error [translate]="'forms.REQUIRED'"></mat-error>
+                            </mat-form-field>
+                        </div>
+                    </ng-container>
+		    </app-new-consultation-expansion-section>
         </div>
     </form>
 
