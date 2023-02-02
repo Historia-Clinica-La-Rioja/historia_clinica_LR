@@ -2,6 +2,7 @@ import { Component, Input, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
 import { SipPlusUrlDataDto } from '@api-rest/api-model';
+import { SipPlusPregnanciesService } from '@api-rest/services/sip-plus-pregnancies.service';
 import { SipPlusService } from '@api-rest/services/sip-plus.service';
 import { ContextService } from '@core/services/context.service';
 import { NewGestationPopupComponent } from '../../dialogs/new-gestation-popup/new-gestation-popup.component';
@@ -19,16 +20,20 @@ export class ClapComponent implements OnInit {
 	urlBaseSip: string;
 	embedSystem: string;
 	viewSip:boolean= false;
-	gestations= [1,2,3];
+	pregnancies: any[];
+	viewError:boolean =false;
 
 	constructor(private contextService: ContextService,
 		private sanitizer: DomSanitizer,
 		private sipPlusService: SipPlusService,
-		public dialog: MatDialog) {
+		public dialog: MatDialog,
+		private sipPlusPregnanciesService: SipPlusPregnanciesService
+		) {
 		this.institucionId = this.contextService.institutionId;
 	}
 
 	ngOnInit() {
+		this.getPregnancies();
 		this.sipPlusService.getUrlInfo().subscribe((sipUrlData : SipPlusUrlDataDto) => {
 			this.urlBaseSip = sipUrlData.urlBase;
 			this.tokenSIP = sipUrlData.token;
@@ -37,15 +42,20 @@ export class ClapComponent implements OnInit {
 		})
 	}
 
-
 	makeUrlTrusted() {
 		const url = this.urlBaseSip + '?embedSystem='+`${this.embedSystem}&embedToken=`  + `${this.tokenSIP}$` + `${this.institucionId}$` + `${this.patientId}`;
 		this.trustedUrlSIP = this.sanitizer.bypassSecurityTrustResourceUrl(url);
 	}
 
+	getPregnancies(){
+		this.sipPlusPregnanciesService.getPregnancies(this.patientId).subscribe(data=>{
+				this.pregnancies=data;
+		},error=>{
+			this.viewError=true;
+		})
+	}
 	viewGestation(gestationId:number) {
-		const url = this.trustedUrlSIP + '$'+ gestationId;
-		this.trustedUrlSIP = this.sanitizer.bypassSecurityTrustResourceUrl(url);
+		this.trustedUrlSIP + '$'+ gestationId;
 		this.viewSip=true;
 	}
 
@@ -57,12 +67,16 @@ export class ClapComponent implements OnInit {
 		const dialogRef = this.dialog.open(NewGestationPopupComponent, {
 			disableClose: true ,
 			width: '30%',
+			data: this.pregnancies,
 		  });
 
 		  dialogRef.afterClosed().subscribe(result => {
 			if(result){
-				this.viewSip=true;
-				let aux = result;
+				this.sipPlusPregnanciesService.createPregnancy(this.patientId,result).subscribe(res=>{
+					this.getPregnancies();
+					this.viewError=false;
+					this.viewGestation(result);
+				})
 			}
 		  });
 

@@ -10,7 +10,7 @@
 			{{ 'ambulatoria.paciente.clap.NEW_GESTATION' | translate | uppercase }}</button>
 	</div>
 
-	<div fxLayout="row" *ngIf="!viewSip">
+	<div fxLayout="row" *ngIf="!viewSip && !viewError">
 		<div fxLayout="column" fxFlex="50">
 			<mat-card class="box">
 				<mat-card-header>
@@ -21,10 +21,10 @@
 					</mat-card-title>
 				</mat-card-header>
 				<mat-list id="lista-gestaciones">
-					<div fxLayout="row" *ngFor="let gesta of gestations">
+					<div fxLayout="row" *ngFor="let gesta of pregnancies">
 						<mat-list-item>
 							<mat-divider></mat-divider>
-							<div fxFlex="10%"><mat-icon class="icon-color"
+							<div fxFlex="10%"><mat-icon class="grey-color"
 									fontSet="material-icons-outlined">person</mat-icon>
 							</div>
 							<div fxFlex="50%"><span class="bold">{{'ambulatoria.paciente.clap.GESTATION' |
@@ -42,10 +42,11 @@
 			</mat-card>
 		</div>
 	</div>
+	<div *ngIf="viewError">
+		<h3 class="grey-color"> {{ 'ambulatoria.paciente.clap.ERROR_NOT_HAS_GESTATION' | translate }}</h3>
+	</div>
 	<div *ngIf="viewSip">
 		<iframe width="1000" height="400" [src]="trustedUrlSIP">
 		</iframe>
 	</div>
 </app-content>
-
-

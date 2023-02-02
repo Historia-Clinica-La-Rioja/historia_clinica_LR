@@ -641,8 +641,9 @@
 				"NEW_GESTATION": "Nueva gesta",
 				"CREATE": "CREAR",
 				"LABEL_DIALOG_GESTATION":"Cargue el número de gesta que desea crear",
-				"VALUE_ERROR":"Ingrese un numero entre 1 y 30."
-
+				"VALUE_ERROR":"Ingrese un numero entre 1 y 30.",
+				"ERROR_NOT_HAS_GESTATION": "Aún no se han registrado gestas",
+				"ERROR_REPEAT_VALUE": "No es posible sobrescribir gestas"
 			}
         },
         "screen_change_warning_dialog": {
