@@ -16,6 +16,7 @@ import { AgregarPrescripcionItemComponent, NewPrescriptionItem } from '../../../
 import { PrescripcionesService, PrescriptionTypes } from '../../../../services/prescripciones.service';
 import { ClinicalSpecialtyService } from '@api-rest/services/clinical-specialty.service';
 import { FeatureFlagService } from '@core/services/feature-flag.service';
+import { hasError } from '@core/utils/form.utils';
 
 @Component({
 	selector: 'app-nueva-prescripcion',
@@ -23,7 +24,7 @@ import { FeatureFlagService } from '@core/services/feature-flag.service';
 	styleUrls: ['./nueva-prescripcion.component.scss']
 })
 export class NuevaPrescripcionComponent implements OnInit {
-
+	
 	prescriptionItems: NewPrescriptionItem[];
 	patientMedicalCoverages: PatientMedicalCoverage[];
 	prescriptionForm: FormGroup;
@@ -33,6 +34,10 @@ export class NuevaPrescripcionComponent implements OnInit {
 	itemCount = 0;
 	private patientData: BasicPatientDto;
 	isHabilitarRecetaDigitalEnabled: boolean = false;
+	POSDATADAS_DEFAULT = 1;
+	POSDATADAS_MIN = 0;
+	POSDATADAS_MAX = 11;
+	hasError = hasError;
 
 	constructor(
 		private readonly formBuilder: FormBuilder,
@@ -58,6 +63,8 @@ export class NuevaPrescripcionComponent implements OnInit {
 			withoutRecipe: [false],
 			evolucion: [],
 			clinicalSpecialty: [null, [Validators.required]],
+			prolongedTreatment: [null],
+			posdatadas: [{value: this.POSDATADAS_DEFAULT, disabled: true}, [Validators.min(this.POSDATADAS_MIN), Validators.max(this.POSDATADAS_MAX)]],
 		});
 		this.prescriptionItems = this.data.prescriptionItemList ? this.data.prescriptionItemList : [];
 		this.setMedicalCoverages();
@@ -65,6 +72,21 @@ export class NuevaPrescripcionComponent implements OnInit {
 			this.patientData = basicData;
 		});
 		this.openPrescriptionItemDialog();
+	}
+
+	setProlongedTreatment(isOn: boolean) {
+		this.prescriptionForm.controls.prolongedTreatment.setValue(isOn);
+		const posdatadas = this.prescriptionForm.controls.posdatadas;
+		if (isOn) {
+			posdatadas.enable()
+			posdatadas.addValidators(Validators.required);
+		} else 
+			this.disablePosdatadas(posdatadas)
+	}
+	
+	disablePosdatadas(posdatadas: AbstractControl) {
+		posdatadas.disable();
+		posdatadas.setValue(this.POSDATADAS_DEFAULT);
 	}
 
 	setProfessionalSpecialties() {
@@ -177,7 +199,7 @@ export class NuevaPrescripcionComponent implements OnInit {
 	}
 
 	isMedication(): boolean {
-		return this.data.prescriptionType === PrescriptionTypes.MEDICATION;
+		return this.data.prescriptionType === PrescriptionTypes.MEDICATION && ! this.isHabilitarRecetaDigitalEnabled;
 	}
 
 	isDailyMedication(prescriptionItem: NewPrescriptionItem): boolean {
@@ -192,7 +214,6 @@ export class NuevaPrescripcionComponent implements OnInit {
 		editPrescriptionItem.unitDose = prescriptionItem.unitDose;
 		editPrescriptionItem.dayDose = prescriptionItem.dayDose;
 		editPrescriptionItem.treatmentDays = prescriptionItem.treatmentDays;
-		editPrescriptionItem.posdatadas = prescriptionItem.posdatadas;
 		editPrescriptionItem.administrationTimeDays = prescriptionItem.administrationTimeDays;
 		editPrescriptionItem.isChronicAdministrationTime = prescriptionItem.isChronicAdministrationTime;
 		editPrescriptionItem.intervalHours = prescriptionItem.intervalHours;

@@ -119,7 +119,6 @@ export class PrescripcionesService {
 			unitDose: null,
 			dayDose: null,
 			treatmentDays: null,
-			posdatadas: null
 		};
 	}
 
@@ -138,7 +137,6 @@ export class PrescripcionesService {
 			unitDose: null,
 			dayDose: null,
 			treatmentDays: null,
-			posdatadas: null
 		};
 	}
 

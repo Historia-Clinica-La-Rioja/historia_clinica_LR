@@ -34,7 +34,7 @@
                 </mat-checkbox>
             </div>
 
-            <app-new-consultation-expansion-section id="specialty" *ngIf="isHabilitarRecetaDigitalEnabled"
+            <app-new-consultation-expansion-section id="specialty" *ngIf="isHabilitarRecetaDigitalEnabled" class="mb-1"
 			    [title]="'ambulatoria.paciente.nueva-consulta.SPECIALTY' | translate" icon="medical_services"
 			    [isEmpty]="!prescriptionForm.value.clinicalSpecialty" [collapsed]="false" [hideBorder]="true">
                     <ng-container concept-form>
@@ -53,6 +53,38 @@
                         </div>
                     </ng-container>
 		    </app-new-consultation-expansion-section>
+
+            <mat-checkbox class="mb-1"
+				*ngIf="isHabilitarRecetaDigitalEnabled"
+				formControlName="prolongedTreatment"
+				(change)="setProlongedTreatment($event.checked)">
+				<span translate="ambulatoria.paciente.ordenes_prescripciones.new_prescription_dialog.PROLONGED_TREATMENT"></span>
+			</mat-checkbox>
+
+			<mat-form-field *ngIf="isHabilitarRecetaDigitalEnabled" appearance="outline">
+				<mat-label [translate]="'ambulatoria.paciente.ordenes_prescripciones.new_prescription_dialog.POSDATADAS_LABEL'">
+                </mat-label>
+                <input formControlName="posdatadas" type="number" matInput>
+                <mat-hint *ngIf="prescriptionForm.controls.posdatadas.value <= POSDATADAS_DEFAULT else posdatadasHintPlural"
+                    [translate]="'ambulatoria.paciente.ordenes_prescripciones.new_prescription_dialog.POSDATADAS_HINT_SINGULAR'"
+                    [translateParams]="{posdatadas: prescriptionForm.controls.posdatadas.value}">
+                </mat-hint>
+                <ng-template #posdatadasHintPlural>
+                    <mat-hint
+                        [translate]="'ambulatoria.paciente.ordenes_prescripciones.new_prescription_dialog.POSDATADAS_HINT_PLURAL'"
+                        [translateParams]="{posdatadas: prescriptionForm.controls.posdatadas.value}">
+                    </mat-hint>
+                </ng-template>
+				<mat-error *ngIf="hasError(prescriptionForm, 'required', 'posdatadas')" translate="forms.REQUIRED"></mat-error>
+                <mat-error *ngIf="hasError(prescriptionForm, 'min', 'posdatadas')" 
+                    [translate]="'ambulatoria.paciente.ordenes_prescripciones.new_prescription_dialog.POSDATADAS_ERROR'"
+                    [translateParams]="{min: POSDATADAS_MIN, max: POSDATADAS_MAX}">
+                </mat-error>
+                <mat-error *ngIf="hasError(prescriptionForm, 'max', 'posdatadas')" 
+                    [translate]="'ambulatoria.paciente.ordenes_prescripciones.new_prescription_dialog.POSDATADAS_ERROR'"
+                    [translateParams]="{min: POSDATADAS_MIN, max: POSDATADAS_MAX}">
+                </mat-error>
+			</mat-form-field>
         </div>
     </form>
 
@@ -71,7 +103,7 @@
                 </div>
             </div>
             <section class="prescription-list gray">
-                <div *ngIf="prescriptionItem.unitDose && prescriptionItem.treatmentDays && prescriptionItem.posdatadas">
+                <div *ngIf="prescriptionItem.unitDose && prescriptionItem.treatmentDays && prescriptionItem.dayDose">
                     <span
                         [translate]="'ambulatoria.paciente.ordenes_prescripciones.new_prescription_dialog.UNIT_DOSE'"
                         [translateParams]="{unitDose: prescriptionItem.unitDose}">
@@ -80,22 +112,12 @@
                         [translate]="'ambulatoria.paciente.ordenes_prescripciones.new_prescription_dialog.TREATMENT_DAYS'"
                         [translateParams]="{treatmentDays: prescriptionItem.treatmentDays}">
                     </span>
-                    <span *ngIf="prescriptionItem.posdatadas > 1 else posdatadasMes"
-                        [translate]="'ambulatoria.paciente.ordenes_prescripciones.new_prescription_dialog.POSDATADAS'"
-                        [translateParams]="{posdatadas: prescriptionItem.posdatadas}">
-                    </span>
-                    <ng-template #posdatadasMes>
-                        <span
-                            [translate]="'ambulatoria.paciente.ordenes_prescripciones.new_prescription_dialog.POSDATADA'"
-                            [translateParams]="{posdatadas: prescriptionItem.posdatadas}">
-                        </span>
-                    </ng-template>
-                </div>
-                <div>
-                    <span *ngIf="prescriptionItem.dayDose"
+                    <span
                         [translate]="'ambulatoria.paciente.ordenes_prescripciones.new_prescription_dialog.DAY_DOSE'"
                         [translateParams]="{dayDose: prescriptionItem.dayDose}">
                     </span>
+                </div>
+                <div>
                     <span *ngIf="prescriptionItem.healthProblem"
                         [translate]="'ambulatoria.paciente.ordenes_prescripciones.new_prescription_dialog.DIAGNOSIS'"
                         [translateParams]="{healthProblem: prescriptionItem.healthProblem.description}">

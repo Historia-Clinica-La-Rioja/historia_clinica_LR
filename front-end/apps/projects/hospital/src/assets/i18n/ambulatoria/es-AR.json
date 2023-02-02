@@ -376,10 +376,6 @@
                     "UNIT_DOSE": "Dosis / Unidad",
                     "DAY_DOSE": "Dosis / Día",
                     "TREATMENT_DAYS": "Días de tratamiento",
-                    "PROLONGED_TREATMENT": "Tratamiento prolongado",
-                    "POSDATADAS": "Repeticiones (posdatadas)",
-                    "POSDATADAS_MONTHS": "{{quantity}} Meses",
-                    "POSDATADA_MONTH": "{{quantity}} Mes",
                     "ADD_CHARACTERS": "Ingrese al menos 3 caracteres",
                     "ADD_NEW_PROBLEM": "+ Agregar nuevo problema asociado"
                 },
@@ -409,12 +405,15 @@
                     "UNIT_DOSE": "Dosis / Unidad: {{unitDose}}",
                     "DAY_DOSE": "Dosis / Día: {{dayDose}}",
                     "TREATMENT_DAYS": "Días de tratamiento: {{treatmentDays}}",
-                    "POSDATADAS": "Repeticiones: {{posdatadas}} meses",
-                    "POSDATADA": "Repeticiones: {{posdatadas}} mes",
                     "INTERVAL": "Cada {{interval}} hs.",
                     "USUAL": "Habitual",
                     "DAILY": "Diario",
-                    "DIAGNOSIS": "Diagnóstico: {{healthProblem}}"
+                    "DIAGNOSIS": "Diagnóstico: {{healthProblem}}",
+                    "PROLONGED_TREATMENT": "Tratamiento prolongado",
+                    "POSDATADAS_LABEL": "Repeticiones (posdatadas)",
+                    "POSDATADAS_HINT_SINGULAR": "Se generará {{posdatadas}} receta posdatada, adicional a la original",
+                    "POSDATADAS_HINT_PLURAL": "Se generarán {{posdatadas}} recetas posdatadas, adicionales a la original",
+                    "POSDATADAS_ERROR": "Las posdatadas deben ir entre {{min}} y {{max}}"
                 },
                 "send_digital_recipe_email_dialog": {
                     "TITLE": "Enviar receta digital por email",

@@ -33,7 +33,6 @@ export class AgregarPrescripcionItemComponent implements OnInit, AfterViewInit, 
 	isHabilitarRecetaDigitalFFActive: boolean = false;
 	severityTypes: any[];
 	reportFFIsOn;
-	isProlongedTreatmentOn: boolean = false;
 	searchConceptsLocallyFFIsOn;
 	snowstormServiceNotAvailable = false;
 	snowstormServiceErrorMessage: string;
@@ -44,7 +43,6 @@ export class AgregarPrescripcionItemComponent implements OnInit, AfterViewInit, 
 	studyCategoryOptions = [];
 	DEFAULT_RADIO_OPTION = 1;
 	OTHER_RADIO_OPTION = 0;
-	MONTHS_QUANTITY: number[] = [1, 2, 3, 4];
 	hasError = hasError;
 	intervalValidation = intervalValidation;
 
@@ -242,7 +240,6 @@ export class AgregarPrescripcionItemComponent implements OnInit, AfterViewInit, 
 			unitDose: this.prescriptionItemForm.controls.unitDose.value,
 			dayDose: this.prescriptionItemForm.controls.dayDose.value,
 			treatmentDays: this.prescriptionItemForm.controls.treatmentDays.value,
-			posdatadas: this.prescriptionItemForm.controls.posdatadas.value,
 		};
 
 		this.dialogRef.close(newItem);
@@ -279,7 +276,6 @@ export class AgregarPrescripcionItemComponent implements OnInit, AfterViewInit, 
 		this.prescriptionItemForm.controls.unitDose.setValue(prescriptionItem.unitDose);
 		this.prescriptionItemForm.controls.dayDose.setValue(prescriptionItem.dayDose);
 		this.prescriptionItemForm.controls.treatmentDays.setValue(prescriptionItem.treatmentDays);
-		this.prescriptionItemForm.controls.posdatadas.setValue(prescriptionItem.posdatadas);
 		this.prescriptionItemForm.controls.observations.setValue(prescriptionItem.observations);
 
 		if (this.data.showDosage) {
@@ -319,8 +315,6 @@ export class AgregarPrescripcionItemComponent implements OnInit, AfterViewInit, 
 			dayDose: [null],
 			treatmentDays: [null],
 			healthProblem: [null, Validators.required],
-			prolongedTreatment: [this.isProlongedTreatmentOn],
-			posdatadas: [{value: null, disabled: true}],
 			interval: [this.DEFAULT_RADIO_OPTION],
 			intervalHours: [null],
 			administrationTime: [this.DEFAULT_RADIO_OPTION],
@@ -341,20 +335,7 @@ export class AgregarPrescripcionItemComponent implements OnInit, AfterViewInit, 
 			this.prescriptionItemForm.controls.unitDose.setValidators([Validators.required]);
 			this.prescriptionItemForm.controls.dayDose.setValidators([Validators.required]);
 			this.prescriptionItemForm.controls.treatmentDays.setValidators([Validators.required]);
-			this.prescriptionItemForm.controls.posdatadas.setValidators([Validators.required]);
-			this.prescriptionItemForm.controls.posdatadas.setValue(this.MONTHS_QUANTITY[0]);
 		}
-	}
-
-	setProlongedTreatment(isOn: boolean) {
-		this.prescriptionItemForm.controls.prolongedTreatment.setValue(isOn);
-		const posdatadas = this.prescriptionItemForm.controls.posdatadas;
-		(isOn) ? posdatadas.enable() : this.disablePosdatadas(posdatadas)
-	}
-	
-	disablePosdatadas(posdatadas: AbstractControl) {
-		posdatadas.disable();
-		posdatadas.setValue(this.MONTHS_QUANTITY[0]);
 	}
 
 	isValidForm() {
@@ -415,5 +396,4 @@ export class NewPrescriptionItem {
 	unitDose: number;
 	dayDose: number;
 	treatmentDays: number;
-	posdatadas: number;
 }
