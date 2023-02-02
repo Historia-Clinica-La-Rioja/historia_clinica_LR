@@ -3,7 +3,8 @@
         "home": {
             "PICTURES": "Imágenes",
             "SEARCH_BY_EQUIPMENT": "Diagnóstico por Imágenes",
-            "NO_EQUIPMENT_MSG_TITLE": "El equipo no posee una agenda activa"
+            "NO_EQUIPMENT_MSG_TITLE": "El equipo no posee una agenda activa",
+            "NO_PERMISSION":  "El módulo de red de imágenes no se encuentra activado en su dominio"
         },
         "equipment-diary-setup": {
             "EQUIPMENT": "Equipo",
