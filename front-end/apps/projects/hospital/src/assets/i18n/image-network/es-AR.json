@@ -8,6 +8,14 @@
         "equipment-diary-setup": {
             "EQUIPMENT": "Equipo",
 			"NO_EQUIPMENT": "No existen equipos para ese sector"
+        },
+        "equipment-calendar": {
+            "TODAY": "hoy",
+            "PREVIOUS": "anterior",
+            "NEXT": "próximo",
+            "MONTH": "mes",
+            "WEEK": "semana",
+            "DAY": "día"
         }
     }
 }

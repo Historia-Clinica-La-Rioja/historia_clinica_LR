@@ -6,11 +6,13 @@ import { PresentationModule } from '@presentation/presentation.module';
 import { CalendarModule, DateAdapter } from 'angular-calendar';
 import { adapterFactory } from 'angular-calendar/date-adapters/date-fns';
 import { SearchAppointmentsByEquipmentComponent } from './components/search-appointments-by-equipment/search-appointments-by-equipment.component';
+import { EquipmentDiaryComponent } from './components/equipment-diary/equipment-diary.component';
 
 @NgModule({
 	declarations: [
 		EquipmentDiarySetupComponent,
-		SearchAppointmentsByEquipmentComponent
+		SearchAppointmentsByEquipmentComponent,
+		EquipmentDiaryComponent
 	],
 	imports: [
 		CommonModule,
@@ -19,7 +21,8 @@ import { SearchAppointmentsByEquipmentComponent } from './components/search-appo
 		ImageNetworkRoutingModule
 	],
 	exports: [
-		SearchAppointmentsByEquipmentComponent
+		SearchAppointmentsByEquipmentComponent,
+		EquipmentDiaryComponent
 	]
 })
 
