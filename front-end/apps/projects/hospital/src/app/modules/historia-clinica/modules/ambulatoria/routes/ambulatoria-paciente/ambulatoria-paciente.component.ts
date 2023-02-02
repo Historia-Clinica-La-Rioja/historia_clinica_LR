@@ -166,16 +166,21 @@ export class AmbulatoriaPacienteComponent implements OnInit, OnDestroy {
 								if (toEmergencyCareTab) {
 									this.selectedTab = this.emergencyCareTabIndex;
 								}
-								this.emergencyCareEpisodeStateService.getState(emergencyCareEpisodeInProgressDto.id).subscribe(
-									state => {
-										const episodeState = state.id;
-										const emergencyEpisodeWithMedicalDischarge = (EstadosEpisodio.CON_ALTA_MEDICA === episodeState);
-										this.hasEpisodeToShow = (this.emergencyCareEpisodeInProgress?.inProgress && !emergencyEpisodeWithMedicalDischarge);
-										this.featureFlagService.isActive(AppFeature.HABILITAR_MODULO_GUARDIA)
-											.subscribe(isOn => this.showEmergencyCareTab = this.hasEpisodeToShow && isOn);
+								if (emergencyCareEpisodeInProgressDto?.id) {
+									this.emergencyCareEpisodeStateService.getState(emergencyCareEpisodeInProgressDto.id).subscribe(
+										state => {
+											const episodeState = state.id;
+											const emergencyEpisodeWithMedicalDischarge = (EstadosEpisodio.CON_ALTA_MEDICA === episodeState);
+											this.hasEpisodeToShow = (this.emergencyCareEpisodeInProgress?.inProgress && !emergencyEpisodeWithMedicalDischarge);
+											this.featureFlagService.isActive(AppFeature.HABILITAR_MODULO_GUARDIA)
+												.subscribe(isOn => this.showEmergencyCareTab = this.hasEpisodeToShow && isOn);
 
-									}
-								);
+										}
+									);
+								}
+								else {
+									this.showEmergencyCareTab = false;
+								}
 							}
 						);
 
