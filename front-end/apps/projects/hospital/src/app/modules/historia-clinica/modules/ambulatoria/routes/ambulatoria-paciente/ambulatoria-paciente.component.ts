@@ -163,9 +163,6 @@ export class AmbulatoriaPacienteComponent implements OnInit, OnDestroy {
 						this.emergencyCareEpisodeSummaryService.getEmergencyCareEpisodeInProgress(this.patientId).subscribe(
 							emergencyCareEpisodeInProgressDto => {
 								this.emergencyCareEpisodeInProgress = emergencyCareEpisodeInProgressDto;
-								if (toEmergencyCareTab) {
-									this.selectedTab = this.emergencyCareTabIndex;
-								}
 								if (emergencyCareEpisodeInProgressDto?.id) {
 									this.emergencyCareEpisodeStateService.getState(emergencyCareEpisodeInProgressDto.id).subscribe(
 										state => {
@@ -173,7 +170,13 @@ export class AmbulatoriaPacienteComponent implements OnInit, OnDestroy {
 											const emergencyEpisodeWithMedicalDischarge = (EstadosEpisodio.CON_ALTA_MEDICA === episodeState);
 											this.hasEpisodeToShow = (this.emergencyCareEpisodeInProgress?.inProgress && !emergencyEpisodeWithMedicalDischarge);
 											this.featureFlagService.isActive(AppFeature.HABILITAR_MODULO_GUARDIA)
-												.subscribe(isOn => this.showEmergencyCareTab = this.hasEpisodeToShow && isOn);
+												.subscribe(isOn => {
+													this.showEmergencyCareTab = this.hasEpisodeToShow && isOn;
+													if (toEmergencyCareTab) {
+														this.selectedTab = this.emergencyCareTabIndex;
+													}
+												}
+												);
 
 										}
 									);
