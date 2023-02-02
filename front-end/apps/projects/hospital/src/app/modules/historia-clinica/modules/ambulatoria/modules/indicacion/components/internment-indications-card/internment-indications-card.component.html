@@ -11,7 +11,7 @@
 				<span>{{'ambulatoria.dialog-title.OTHER-INDICATION' | translate }}</span>
 			</button>
 			<ng-container *appHasRole="['ESPECIALISTA_MEDICO', 'ESPECIALISTA_EN_ODONTOLOGIA']">
-				<button mat-menu-item (click)="openParenteralPlanDialog()">
+				<button mat-menu-item (click)="openMostFrequentParenteralPlansDialog()">
 					<span>{{'indicacion.internment-card.menu-items.PARENTERAL_PLAN' | translate }}</span>
 				</button>
 				<button mat-menu-item (click)="openPharmacoDialog()">

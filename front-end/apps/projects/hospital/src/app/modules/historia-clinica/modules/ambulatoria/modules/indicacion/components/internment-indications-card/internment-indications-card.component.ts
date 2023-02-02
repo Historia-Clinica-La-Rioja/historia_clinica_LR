@@ -2,7 +2,7 @@ import { Component, Input, OnInit } from '@angular/core';
 import { INTERNMENT_INDICATIONS } from "@historia-clinica/constants/summaries";
 import { isSameDay } from "date-fns";
 import { InternmentEpisodeService } from "@api-rest/services/internment-episode.service";
-import { DiagnosesGeneralStateDto, DietDto, MasterDataInterface, OtherIndicationDto, ParenteralPlanDto, PharmacoDto, PharmacoSummaryDto } from "@api-rest/api-model";
+import { DateDto, DiagnosesGeneralStateDto, DietDto, FrequencyDto, MasterDataInterface, NewDosageDto, OtherIndicationDto, OtherPharmacoDto, ParenteralPlanDto, PharmacoDto, PharmacoSummaryDto, SharedSnomedDto } from "@api-rest/api-model";
 import { DietComponent } from '../../dialogs/diet/diet.component';
 import { MatDialog } from '@angular/material/dialog';
 import { SnackBarService } from '@presentation/services/snack-bar.service';
@@ -19,6 +19,7 @@ import { ConfirmDialogComponent } from '@presentation/dialogs/confirm-dialog/con
 import { IndicationByProfessionalService } from '@api-rest/services/indication-by-professional.service';
 import { PharmacosFrequentComponent } from '../../dialogs/pharmacos-frequent/pharmacos-frequent.component';
 import { MostFrequentComponent } from '../../dialogs/most-frequent/most-frequent.component';
+import { Item } from '@presentation/pipes/paginate.pipe';
 
 const DIALOG_SIZE = '45%';
 
@@ -212,13 +213,31 @@ export class InternmentIndicationsCardComponent implements OnInit {
 		});
 	}
 
-	openParenteralPlanDialog() {
+	openMostFrequentParenteralPlansDialog() {
+		this.indicationByProfessionalService.getMostFrequentParenteralPlan().subscribe((parenteralPLanSpecialist: ParenteralPlanDto[]) => {
+			const dialogPharmacosFrequent = this.dialog.open(MostFrequentComponent,
+				{
+					width: '50%',
+					data: {
+						items: this.getParenteralPlansFrequent(parenteralPLanSpecialist),
+						title: 'indicacion.most-frequent.TITLE_PARENTERAL'
+					}
+				});
+			dialogPharmacosFrequent.afterClosed().subscribe((result: DialogPharmacosFrequent<ParenteralPlanDto>) => {
+				if (result?.openFormPharmaco)
+					this.openParenteralPlanDialog(result.pharmaco);
+			});
+		});
+	}
+
+	openParenteralPlanDialog(parenteralPlan?: ParenteralPlanDto) {
 		const dialogRef = this.dialog.open(ParenteralPlanComponent, {
 			data: {
 				entryDate: this.entryDate,
 				actualDate: this.actualDate,
 				patientId: this.patientId,
-				professionalId: this.professionalId
+				professionalId: this.professionalId,
+				parenteralPlan
 			},
 			autoFocus: false,
 			disableClose: true,
@@ -236,6 +255,35 @@ export class InternmentIndicationsCardComponent implements OnInit {
 		});
 	}
 
+	private getParenteralPlansFrequent(parenteralPLanSpecialist: ParenteralPlanDto[]): Item<ParenteralPlanDto>[] {
+
+		let parenteralPlan: ParenteralPlanDto[];
+		let mostFrequentParenteralPlan: Item<ParenteralPlanDto>[];
+
+		this.indicationsFacadeService.parenteralPlans$.subscribe(p => parenteralPlan =
+			p.filter((plan: ParenteralPlanDto) => this.getLastThreeDays(plan.indicationDate)));
+
+		const mostFrequent = parenteralPlan.concat(parenteralPLanSpecialist);
+
+		mostFrequentParenteralPlan = mostFrequent.map((p: ParenteralPlanDto) => {
+			return { description: p.snomed.pt, value: p, showDate: this.patientId === p.patientId }
+		});
+
+		return mostFrequentParenteralPlan;
+	}
+
+	private getLastThreeDays(valueDate: DateDto): boolean {
+		const value = dateDtoToDate(valueDate);
+		const today = new Date();
+		const yesterday = new Date(today);
+		yesterday.setDate(yesterday.getDate() - 1);
+		const dayBeforeYesterday = new Date(yesterday);
+		dayBeforeYesterday.setDate(dayBeforeYesterday.getDate() - 1);
+
+		return (value.toDateString() === today.toDateString()) || (value.toDateString() === yesterday.toDateString())
+			|| (value.toDateString() === dayBeforeYesterday.toDateString());
+	}
+
 }
 
 export interface DialogPharmacosFrequent<T> {
@@ -247,3 +295,4 @@ interface ResultDialogPharmaco {
 	openDialogPharmacosFrequent: boolean;
 	pharmaco?: PharmacoDto;
 }
+
