@@ -466,6 +466,7 @@
                 },
                 "menu_items": {
                     "DOWNLOAD": "Descargar receta",
+                    "SEND_EMAIL": "Enviar por email",
                     "DOWNLOAD_STUDY": "Descargar orden",
                     "RE_PRESCRIBE": "Volver a recetar",
                     "SUSPEND": "Suspender",

@@ -14,11 +14,11 @@ export class EnviarRecetaDigitalPorEmailComponent implements OnInit {
   hasError = hasError;
 
   constructor(private readonly formBuilder: FormBuilder,
-              @Inject(MAT_DIALOG_DATA) public data) { }
+              @Inject(MAT_DIALOG_DATA) public data?) { }
 
   ngOnInit(): void {
     this.emailForm = this.formBuilder.group({
-			email: [this.data.patientEmail, [Validators.required, Validators.email]],
+			email: [this.data?.patientEmail, [Validators.required, Validators.email]],
 		});
   }
 

@@ -20,6 +20,7 @@ import { MedicacionesService } from '../../../../services/medicaciones.service';
 import { ERole } from '@api-rest/api-model';
 import { PrescripcionValidatorPopupComponent } from '../../dialogs/prescripcion-validator-popup/prescripcion-validator-popup.component';
 import { FeatureFlagService } from '@core/services/feature-flag.service';
+import { EnviarRecetaDigitalPorEmailComponent } from '@historia-clinica/modules/ambulatoria/dialogs/enviar-receta-digital-por-email/enviar-receta-digital-por-email.component';
 
 const ROLES_TO_EDIT: ERole[] = [ERole.ESPECIALISTA_MEDICO];
 
@@ -39,6 +40,7 @@ export class CardMedicacionesComponent implements OnInit {
 	public hideFilterPanel = false;
 	public formFilter: FormGroup;
 	private hasRoleToEdit: boolean;
+	isHabilitarRecetaDigitalEnabled: boolean = false;
 
 	@Input() patientId: number;
 	@Input()
@@ -58,7 +60,10 @@ export class CardMedicacionesComponent implements OnInit {
 		private snackBarService: SnackBarService,
 		private medicacionesService: MedicacionesService,
 		private readonly featureFlagService: FeatureFlagService
-	) { }
+	) {
+		this.featureFlagService.isActive(AppFeature.HABILITAR_RECETA_DIGITAL)
+			.subscribe((result: boolean) => this.isHabilitarRecetaDigitalEnabled = result);
+	}
 
 	ngOnInit(): void {
 		this.formFilter = this.formBuilder.group({
@@ -222,6 +227,12 @@ export class CardMedicacionesComponent implements OnInit {
 
 	downloadRecipe(medicationRequestId: number) {
 		this.prescripcionesService.downloadPrescriptionPdf(this.patientId, [medicationRequestId], PrescriptionTypes.MEDICATION);
+	}
+
+	openSendEmailDialog() {
+		this.dialog.open(EnviarRecetaDigitalPorEmailComponent, {
+			width: '35%',
+		})
 	}
 
 	checkMedication(checked: boolean, medicationInfo: MedicationInfoDto) {

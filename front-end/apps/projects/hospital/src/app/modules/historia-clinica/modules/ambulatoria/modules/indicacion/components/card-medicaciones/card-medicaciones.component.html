@@ -110,6 +110,11 @@
 											<span [translate]="'ambulatoria.paciente.ordenes_prescripciones.menu_items.DOWNLOAD'"></span>
 										</button>
 									</ng-container>
+									<ng-container *appHasRole="['ESPECIALISTA_MEDICO', 'ENFERMERO', 'PROFESIONAL_DE_SALUD', 'ESPECIALISTA_EN_ODONTOLOGIA', 'PERSONAL_DE_FARMACIA']">
+										<button mat-menu-item *ngIf="hasRecipe(medicationInfo) && isHabilitarRecetaDigitalEnabled" (click)="openSendEmailDialog()">
+											<span [translate]="'ambulatoria.paciente.ordenes_prescripciones.menu_items.SEND_EMAIL'"></span>
+										</button>
+									</ng-container>
 									<ng-container *appHasRole="['ESPECIALISTA_MEDICO', 'ESPECIALISTA_EN_ODONTOLOGIA']">
 										<button mat-menu-item (click)="openDialogNewMedication(false, medicationInfo)">
 											<span [translate]="'ambulatoria.paciente.ordenes_prescripciones.menu_items.RE_PRESCRIBE'"></span>
