@@ -1,0 +1,23 @@
+@mixin background-primary($theme) {
+	$palette-primary: map-get($theme, primary);
+
+	.background-primary {
+		background-color: mat-color($palette-primary, 50);
+	}
+}
+
+mat-icon {
+	margin: 10px;
+}
+
+.details {
+	font-weight: 500;
+}
+
+.content {
+	margin: 10px;
+}
+
+#date {
+	font-weight: 500;
+}

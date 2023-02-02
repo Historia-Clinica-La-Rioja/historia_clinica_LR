@@ -1,0 +1,40 @@
+<div fxLayout="row" fxLayoutGap="16px" class="background-primary">
+	<mat-icon color="primary">error_outline</mat-icon>
+	<div class="content" fxLayoutGap="10px">
+		<span class="color-primary bold line-height" id="date"
+			[translate]="parenteralPlan.dosage.startDateTime.date | relativeDate">
+		</span>
+		<span>
+			{{ 'indicacion.warning-message.DURATION'| translate }}
+			<span class="details">
+				{{ 'indicacion.warning-message.DURATION_DETAILS'
+				| translate: { hour: parenteralPlan.frequency.duration.hours, minutes:
+				parenteralPlan.frequency.duration.minutes } }}
+			</span>
+		</span>
+		<span>
+			{{ 'indicacion.warning-message.FREQUENCY'| translate }}
+			<span class="details">
+				{{ 'indicacion.warning-message.FREQUENCY_DETAILS'
+				| translate: { flowDropsHour: parenteralPlan.frequency.flowDropsHour, flowMlHour:
+				parenteralPlan.frequency.flowMlHour } }}
+			</span>
+		</span>
+		<div>
+			<span *ngIf="parenteralPlan.frequency?.dailyVolume">
+				{{ 'indicacion.warning-message.DAILY_VOLUME'| translate }}
+				<span class="details">
+					{{ 'indicacion.warning-message.DAILY_VOLUME_DETAILS'
+					| translate: { dailyVolume: parenteralPlan.frequency?.dailyVolume } }}
+				</span>
+			</span>
+			<span>
+				{{ 'indicacion.warning-message.START_TIME'| translate }}
+				<span class="details">
+					{{ 'indicacion.warning-message.START_TIME_DETAILS'
+					| translate: { hour: parenteralPlan.dosage.startDateTime.time.hours } }}
+				</span>
+			</span>
+		</div>
+	</div>
+</div>

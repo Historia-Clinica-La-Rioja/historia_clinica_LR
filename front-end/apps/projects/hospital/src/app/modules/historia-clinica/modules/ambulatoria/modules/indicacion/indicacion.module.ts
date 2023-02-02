@@ -30,6 +30,7 @@ import { RegisterNursingRecordComponent } from './dialogs/register-nursing-recor
 import { RelativeDatePipe } from './pipes/relative-date.pipe';
 import { InternmentIndicationDetailComponent } from './dialogs/internment-indication-detail/internment-indication-detail.component';
 import { PrescripcionValidatorPopupComponent } from './dialogs/prescripcion-validator-popup/prescripcion-validator-popup.component';
+import { WarningMessageComponent } from './components/warning-message/warning-message.component';
 
 @NgModule({
 	declarations: [
@@ -57,7 +58,8 @@ import { PrescripcionValidatorPopupComponent } from './dialogs/prescripcion-vali
 		RegisterNursingRecordComponent,
 		RelativeDatePipe,
 		InternmentIndicationDetailComponent,
-  PrescripcionValidatorPopupComponent,
+ 		PrescripcionValidatorPopupComponent,
+  		WarningMessageComponent,
 	],
 	exports: [
 		CardMedicacionesComponent,
