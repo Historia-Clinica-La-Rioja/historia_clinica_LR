@@ -7,9 +7,9 @@ import { EmergencyCareEpisodeService } from '@api-rest/services/emergency-care-e
 import { TriageService } from '@api-rest/services/triage.service';
 import { ContextService } from '@core/services/context.service';
 import { PatientNameService } from '@core/services/patient-name.service';
-import { GUARDIA } from '@historia-clinica/constants/summaries';
+import { FACTORES_DE_RIESGO, GUARDIA } from '@historia-clinica/constants/summaries';
 import { TriageCategory } from '@historia-clinica/modules/guardia/components/triage-chip/triage-chip.component';
-import { Triage } from '@historia-clinica/modules/guardia/components/triage-details/triage-details.component';
+import { Triage, RiskFactorFull } from '@historia-clinica/modules/guardia/components/triage-details/triage-details.component';
 import { Triages, EstadosEpisodio, EmergencyCareTypes } from '@historia-clinica/modules/guardia/constants/masterdata';
 import { SelectConsultorioComponent } from '@historia-clinica/modules/guardia/dialogs/select-consultorio/select-consultorio.component';
 import { EpisodeStateService } from '@historia-clinica/modules/guardia/services/episode-state.service';
@@ -27,6 +27,7 @@ export class GuardiaComponent implements OnInit {
 
     @Input() emergencyCareEpisodeInProgress: EmergencyCareEpisodeInProgressDto;
     guardiaSummary: SummaryHeader = GUARDIA;
+    factoresDeRiesgoSummary: SummaryHeader = FACTORES_DE_RIESGO;
 
     readonly triages = Triages;
     readonly STATES = EstadosEpisodio;
@@ -41,6 +42,8 @@ export class GuardiaComponent implements OnInit {
     triagesHistory: TriageReduced[];
     episodeState: EstadosEpisodio;
     fullNamesHistoryTriage: string[];
+
+    riskFactors: RiskFactorFull[];
 
     constructor(
         private readonly router: Router,
@@ -122,6 +125,10 @@ export class GuardiaComponent implements OnInit {
 
     goToEditEpisode() {
         this.router.navigate([`/institucion/${this.contextService.institutionId}/guardia/episodio/${this.episodeId}/edit`]);
+    }
+
+    updateRiskFactors(triageRiskFactors: RiskFactorFull[]): void {
+        this.riskFactors = triageRiskFactors;
     }
 
     private getFullName(triage: TriageReduced): string {

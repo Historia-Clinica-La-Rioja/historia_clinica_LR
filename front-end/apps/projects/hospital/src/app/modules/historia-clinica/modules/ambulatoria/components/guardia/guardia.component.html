@@ -82,7 +82,8 @@
 
                         <mat-divider inset></mat-divider>
 
-                        <app-triage-details [triage]="lastTriage" [emergencyCareType]="emergencyCareType">
+                        <app-triage-details [triage]="lastTriage" [emergencyCareType]="emergencyCareType"
+                            [showRiskFactors]="false" (triageRiskFactors)="updateRiskFactors($event)">
                         </app-triage-details>
 
                         <div fxLayout="row" fxLayoutAlign="flex-end center"
@@ -130,9 +131,24 @@
             </app-summary-card>
         </div>
 
-
+        <div fxLayout="column" fxFlex="50%" fxLayoutGap="20px">
+            <app-summary-card [header]="factoresDeRiesgoSummary"
+                [tooltip]="'ambulatoria.paciente.guardia.RISK_FACTORS_TOOLTIP'">
+                <mat-card-content>
+                    <div fxLayout="row wrap" *ngIf="riskFactors?.length else noData">
+                        <app-factor-de-riesgo *ngFor="let riskFactor of riskFactors" [riskFactor]="riskFactor.value"
+                            [description]="riskFactor.description">
+                        </app-factor-de-riesgo>
+                    </div>
+                </mat-card-content>
+            </app-summary-card>
+        </div>
     </div>
 </app-content>
+
+<ng-template #noData>
+    <app-no-data></app-no-data>
+</ng-template>
 
 <ng-template #noInfo>
     <span class="content-primary" translate="guardia.NO_INFO"></span>

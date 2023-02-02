@@ -492,7 +492,8 @@
                 "MEDICAL_DISCHARGE_BUTTON": "Alta médica",
                 "NOT_ACTIVE": "El episodio de guardia no se encuentra activo",
                 "HISTORIAL_TRIAGE": "Historial de triages",
-                "NUEVO_TRIAGE": "Nuevo triage"
+                "NUEVO_TRIAGE": "Nuevo triage",
+                "RISK_FACTORS_TOOLTIP": "Factores de riesgo"
             },
             "vacunas": {
                 "TAB_LABEL": "Vacunas",
@@ -585,9 +586,9 @@
             "nursing": {
                 "TAB_LABEL": "enfermería"
             },
-			"clap":{
-				"TAB_LABEL":"Clap"
-			}
+            "clap": {
+                "TAB_LABEL": "Clap"
+            }
         },
         "screen_change_warning_dialog": {
             "CONTENT": "Usted ha iniciado una consulta, si cambia de pantalla la información cargada se perderá.",
