@@ -5,7 +5,9 @@ import ar.lamansys.sgh.clinichistory.domain.document.DocumentFileBo;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.entity.DocumentFile;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class DocumentFileStorageImpl implements DocumentFileStorage {
@@ -22,7 +24,12 @@ public class DocumentFileStorageImpl implements DocumentFileStorage {
                 .map(this::mapToDocumentFileBo);
     }
 
-    private DocumentFileBo mapToDocumentFileBo(DocumentFile documentFile) {
+	@Override
+	public List<Long> getIdsByDocumentsIds(List<Long> ids) {
+		return documentRepository.findAllById(ids).stream().map(DocumentFile::getId).collect(Collectors.toList());
+	}
+
+	private DocumentFileBo mapToDocumentFileBo(DocumentFile documentFile) {
         return new DocumentFileBo(
                 documentFile.getId(),
                 documentFile.getSourceId(),

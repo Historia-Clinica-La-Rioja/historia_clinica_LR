@@ -1,5 +1,6 @@
 package net.pladema.patient.infrastructure.output.repository;
 
+import ar.lamansys.sgh.shared.infrastructure.input.service.SharedDocumentPort;
 import net.pladema.patient.application.port.MigratePatientStorage;
 import net.pladema.patient.infrastructure.output.repository.entity.EMergeTable;
 
@@ -15,7 +16,6 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 @Slf4j
@@ -26,6 +26,7 @@ public class MigratePatientStorageImpl implements MigratePatientStorage {
 	private final EntityManager entityManager;
 
 	private final MergedPatientItemRepository mergedPatientItemRepository;
+	private final SharedDocumentPort sharedDocumentPort;
 
 	@Modifying
 	public void migrateItem(Integer id, Integer oldPatientId, Integer newPatientId, EMergeTable table) {
@@ -40,6 +41,8 @@ public class MigratePatientStorageImpl implements MigratePatientStorage {
 		List<MergedPatientItem> mpis = mergedPatientItemRepository.findAllByInactivePatientId(inactivePatientId);
 		mpis.forEach(mpi -> migrate(mpi.getMergedIdValue(), mpi.getOldPatientId(), mpi.getMergedTableName()));
 		mergedPatientItemRepository.deleteAll(mpis);
+
+		sharedDocumentPort.rebuildFilesFromPatient(inactivePatientId);
 	}
 
 

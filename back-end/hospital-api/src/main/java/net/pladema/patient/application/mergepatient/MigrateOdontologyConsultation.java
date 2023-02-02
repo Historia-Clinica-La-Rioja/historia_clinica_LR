@@ -56,6 +56,8 @@ public class MigrateOdontologyConsultation {
 				mergeClinicHistoryStorage.migratePatientIdFromItem(IndicationRepository.class, documentsIds, newPatient);
 
 				mergeClinicHistoryStorage.modifyDocument(documentsIds,newPatient);
+
+				mergeClinicHistoryStorage.rebuildDocumentsFiles(documentsIds);
 			}
 
 			mergeClinicHistoryStorage.modifyOdontologyConsultation(ocIds,newPatient);

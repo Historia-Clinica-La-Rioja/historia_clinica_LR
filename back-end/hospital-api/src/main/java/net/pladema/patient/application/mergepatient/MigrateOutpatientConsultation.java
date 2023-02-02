@@ -74,6 +74,8 @@ public class MigrateOutpatientConsultation {
 				mergeClinicHistoryStorage.migratePatientIdFromItem(IndicationRepository.class, documentsIds, newPatient);
 
 				mergeClinicHistoryStorage.modifyDocument(documentsIds,newPatient);
+
+				mergeClinicHistoryStorage.rebuildDocumentsFiles(documentsIds);
 			}
 
 			mergeClinicHistoryStorage.modifyOutpatientConsultation(ocIds,newPatient);

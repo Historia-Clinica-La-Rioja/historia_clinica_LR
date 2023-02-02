@@ -35,6 +35,8 @@ public class MigrateEmergencyCareEpisode {
 				mergeClinicHistoryStorage.migratePatientIdFromItem(HealthConditionRepository.class, documentsIds, newPatient);
 
 				mergeClinicHistoryStorage.modifyDocument(documentsIds,newPatient);
+
+				mergeClinicHistoryStorage.rebuildDocumentsFiles(documentsIds);
 			}
 
 			mergeClinicHistoryStorage.modifyTriageRiskFactor(eceIds,newPatient);

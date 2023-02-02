@@ -62,6 +62,8 @@ public class MigrateInternmentEpisode {
 				mergeClinicHistoryStorage.modifyServiceRequest(srIds,newPatient);
 
 				mergeClinicHistoryStorage.modifyDocument(documentsIds,newPatient);
+
+				mergeClinicHistoryStorage.rebuildDocumentsFiles(documentsIds);
 			}
 		}
 

@@ -106,5 +106,6 @@ public interface DocumentService {
 
 	ObstetricEventBo getObstetricEventFromDocument(Long documentId);
 
+	List<Long> getDocumentsIdsFromPatient(Integer patient);
 }
 

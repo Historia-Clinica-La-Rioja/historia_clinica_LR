@@ -436,6 +436,14 @@ public class  DocumentServiceImpl implements DocumentService {
 			return null;
 		ExternalCauseBo result = new ExternalCauseBo(externalCauseVo);
 		LOG.debug(OUTPUT, result);
+        return result;
+	}
+    
+	@Override
+    public List<Long> getDocumentsIdsFromPatient(Integer patient) {
+		LOG.debug("Input parameters -> patientId {}", patient);
+		List<Long> result = documentRepository.getIdsByPatientId(patient);
+		LOG.debug("Output -> {}", result);
 		return result;
 	}
 

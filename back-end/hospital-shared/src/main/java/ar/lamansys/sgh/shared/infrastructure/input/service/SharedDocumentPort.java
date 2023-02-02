@@ -8,4 +8,7 @@ public interface SharedDocumentPort {
 
 	DocumentReduceInfoDto getDocument(Long documentId);
 
+	void rebuildFilesFromPatient(Integer patient);
+
+	void rebuildFile(Long documentId);
 }

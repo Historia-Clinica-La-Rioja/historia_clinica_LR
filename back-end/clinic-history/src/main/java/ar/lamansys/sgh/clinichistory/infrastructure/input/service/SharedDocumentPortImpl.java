@@ -1,6 +1,8 @@
 package ar.lamansys.sgh.clinichistory.infrastructure.input.service;
 
 import ar.lamansys.sgh.clinichistory.application.document.DocumentService;
+import ar.lamansys.sgh.clinichistory.application.ports.DocumentFileStorage;
+import ar.lamansys.sgh.clinichistory.application.rebuildFile.RebuildFile;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.entity.Document;
 import ar.lamansys.sgh.shared.infrastructure.input.service.DocumentReduceInfoDto;
 import ar.lamansys.sgh.shared.infrastructure.input.service.SharedDocumentPort;
@@ -10,12 +12,16 @@ import lombok.extern.slf4j.Slf4j;
 
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Slf4j
 @Service
 @RequiredArgsConstructor
 public class SharedDocumentPortImpl implements SharedDocumentPort {
 
 	private final DocumentService documentService;
+	private final RebuildFile rebuildFile;
+	private final DocumentFileStorage documentFileStorage;
 
 	@Override
 	public void deleteDocument(Long documentId, String newDocumentStatus) {
@@ -40,6 +46,19 @@ public class SharedDocumentPortImpl implements SharedDocumentPort {
 		result.setCreatedOn(document.getCreatedOn());
 		result.setTypeId(document.getTypeId());
 		return result;
+	}
+
+	@Override
+	public void rebuildFilesFromPatient(Integer patient) {
+		List<Long> documentsIds = documentService.getDocumentsIdsFromPatient(patient);
+		List<Long> documentFilesIds = documentFileStorage.getIdsByDocumentsIds(documentsIds);
+		documentFilesIds.forEach(this::rebuildFile);
+	}
+
+	@Override
+	public void rebuildFile(Long documentId) {
+		log.debug("Input parameter documentId {}", documentId);
+		rebuildFile.run(documentId);
 	}
 
 }

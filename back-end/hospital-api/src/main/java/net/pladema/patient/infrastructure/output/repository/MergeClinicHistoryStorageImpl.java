@@ -3,6 +3,8 @@ package net.pladema.patient.infrastructure.output.repository;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import ar.lamansys.sgh.clinichistory.application.ports.DocumentFileStorage;
+import ar.lamansys.sgh.shared.infrastructure.input.service.SharedDocumentPort;
 import ar.lamansys.sgh.shared.infrastructure.input.service.odontology.SharedOdontologyConsultationPort;
 import net.pladema.emergencycare.repository.EmergencyCareEpisodeRepository;
 
@@ -46,6 +48,8 @@ public class MergeClinicHistoryStorageImpl implements MergeClinicHistoryStorage 
 	private final SnvsReportRepository snvsReportRepository;
 	private final DocumentRepository documentRepository;
 	private final MigratePatientStorage migratePatientStorage;
+	private final DocumentFileStorage documentFileStorage;
+	private final SharedDocumentPort sharedDocumentPort;
 	private final MigratableRepositoryMap repositoryMap;
 
 
@@ -199,6 +203,13 @@ public class MergeClinicHistoryStorageImpl implements MergeClinicHistoryStorage 
 	public void modifyAppointment(List<Integer> oldPatients, Integer newPatientId) {
 		appointmentRepository.getAppointmentsFromPatients(oldPatients)
 				.forEach(item -> migratePatientStorage.migrateItem(item.getId(), item.getPatientId(), newPatientId, EMergeTable.APPOINTMENT));
+	}
+
+	@Override
+	public void rebuildDocumentsFiles(List<Long> documentsIds) {
+		log.debug("Document files ids to modify {}",documentsIds);
+		List<Long> documentFileIds = documentFileStorage.getIdsByDocumentsIds(documentsIds);
+		documentFileIds.forEach(sharedDocumentPort::rebuildFile);
 	}
 
 	@Override
