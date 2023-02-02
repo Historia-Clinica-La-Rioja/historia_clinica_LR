@@ -27,6 +27,7 @@ import { PharmacoComponent } from './dialogs/pharmaco/pharmaco.component';
 import { GeneralNursingRecordComponent } from './components/general-nursing-record/general-nursing-record.component';
 import { SpecificNursingRecordComponent } from './components/specific-nursing-record/specific-nursing-record.component';
 import { RegisterNursingRecordComponent } from './dialogs/register-nursing-record/register-nursing-record.component';
+import { RelativeDatePipe } from './pipes/relative-date.pipe';
 import { InternmentIndicationDetailComponent } from './dialogs/internment-indication-detail/internment-indication-detail.component';
 import { PrescripcionValidatorPopupComponent } from './dialogs/prescripcion-validator-popup/prescripcion-validator-popup.component';
 
@@ -54,6 +55,7 @@ import { PrescripcionValidatorPopupComponent } from './dialogs/prescripcion-vali
 		PharmacosFrequentComponent,
 		PharmacoComponent,
 		RegisterNursingRecordComponent,
+		RelativeDatePipe,
 		InternmentIndicationDetailComponent,
   PrescripcionValidatorPopupComponent,
 	],
