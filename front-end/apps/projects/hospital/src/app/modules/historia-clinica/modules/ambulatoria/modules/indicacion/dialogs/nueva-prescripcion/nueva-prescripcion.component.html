@@ -34,25 +34,19 @@
                 </mat-checkbox>
             </div>
 
-            <app-new-consultation-expansion-section id="specialty" *ngIf="isHabilitarRecetaDigitalEnabled" class="mb-1"
-			    [title]="'ambulatoria.paciente.nueva-consulta.SPECIALTY' | translate" icon="medical_services"
-			    [isEmpty]="!prescriptionForm.value.clinicalSpecialty" [collapsed]="false" [hideBorder]="true">
-                    <ng-container concept-form>
-                        <div fxLayout="row" [formGroup]="prescriptionForm">
-                            <mat-form-field appearance="outline">
-                                <mat-select id="clinicalSpecialtyId" name="clinicalSpecialty"
-                                    formControlName="clinicalSpecialty" (selectionChange)="setDefaultSpecialty()"
-                                    [attr.disabled]="fixedSpecialty">
-                                    <mat-option *ngFor="let clinicalSpecialty of this.specialties"
-                                        [value]="clinicalSpecialty">
-                                        <span class="mat-body">{{clinicalSpecialty.name}}</span>
-                                    </mat-option>
-                                </mat-select>
-                                <mat-error [translate]="'forms.REQUIRED'"></mat-error>
-                            </mat-form-field>
-                        </div>
-                    </ng-container>
-		    </app-new-consultation-expansion-section>
+            <mat-form-field appearance="outline" *ngIf="isHabilitarRecetaDigitalEnabled">
+                <mat-label translate="ambulatoria.paciente.ordenes_prescripciones.new_prescription_dialog.SPECIALTY"></mat-label>
+                <mat-select id="clinicalSpecialtyId" name="clinicalSpecialty"
+                    formControlName="clinicalSpecialty">
+                    <mat-option *ngFor="let clinicalSpecialty of this.specialties"
+                        [value]="clinicalSpecialty">
+                        <span class="mat-body">{{clinicalSpecialty.name}}</span>
+                    </mat-option>
+                </mat-select>
+                <mat-error *ngIf="hasError(prescriptionForm, 'required', 'clinicalSpecialty')"
+                    translate="ambulatoria.paciente.ordenes_prescripciones.new_prescription_dialog.SPECIALTY_REQUIRED">
+                </mat-error>
+            </mat-form-field>
 
             <mat-checkbox class="mb-1"
 				*ngIf="isHabilitarRecetaDigitalEnabled"
@@ -146,7 +140,7 @@
 </div>
 
 <mat-dialog-actions fxLayout="row" fxLayoutAlign="end start">
-    <button mat-flat-button color="primary" *ngIf="prescriptionItems.length" (click)="confirmPrescription()" fxFlexFill.xs>
+    <button mat-flat-button color="primary" *ngIf="prescriptionItems.length" (click)="confirmPrescription()" fxFlexFill.xs [disabled]="! this.prescriptionForm.valid">
         <span class="uppercase">{{'buttons.ELECTRONIC_FIRM' | translate}}</span>
     </button>
 </mat-dialog-actions>

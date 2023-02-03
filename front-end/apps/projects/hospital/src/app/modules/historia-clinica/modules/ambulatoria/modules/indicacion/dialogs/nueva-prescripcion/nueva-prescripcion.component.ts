@@ -28,8 +28,6 @@ export class NuevaPrescripcionComponent implements OnInit {
 	prescriptionItems: NewPrescriptionItem[];
 	patientMedicalCoverages: PatientMedicalCoverage[];
 	prescriptionForm: FormGroup;
-	fixedSpecialty = true;
-	defaultSpecialty: ClinicalSpecialtyDto;
 	specialties: ClinicalSpecialtyDto[];
 	itemCount = 0;
 	private patientData: BasicPatientDto;
@@ -91,19 +89,17 @@ export class NuevaPrescripcionComponent implements OnInit {
 
 	setProfessionalSpecialties() {
 		this.clinicalSpecialtyService.getLoggedInProfessionalClinicalSpecialties().subscribe(specialties => {
-			this.setSpecialtyFields(specialties);
+			this.setSpecialtyFields(specialties);	
 		});
 	}
 
 	setSpecialtyFields(specialtyArray) {
 		this.specialties = specialtyArray;
-		this.defaultSpecialty = specialtyArray[0];
-		this.prescriptionForm.get('clinicalSpecialty').setValue(this.defaultSpecialty);
+		const clinicalSpecialty = this.prescriptionForm.get('clinicalSpecialty');
+		clinicalSpecialty.setValue(specialtyArray[0]);
+		if (this.specialties.length === 1) 
+			clinicalSpecialty.disable();
 		this.prescriptionForm.controls['clinicalSpecialty'].markAsTouched();
-	}
-
-	setDefaultSpecialty() {
-		this.defaultSpecialty = this.prescriptionForm.controls.clinicalSpecialty.value;
 	}
 
 	closeModal(newPrescription?: NewPrescription): void {
@@ -163,7 +159,6 @@ export class NuevaPrescripcionComponent implements OnInit {
 			isPostDated: this.prescriptionForm.controls.posdatadas.value > this.POSDATADAS_MIN,
 			clinicalSpecialtyId: this.prescriptionForm.controls.clinicalSpecialty.value.id,
 		};
-
 		this.savePrescription(newPrescription);
 
 	}

@@ -413,7 +413,9 @@
                     "POSDATADAS_LABEL": "Repeticiones (posdatadas)",
                     "POSDATADAS_HINT_SINGULAR": "Se generará {{posdatadas}} receta posdatada, adicional a la original",
                     "POSDATADAS_HINT_PLURAL": "Se generarán {{posdatadas}} recetas posdatadas, adicionales a la original",
-                    "POSDATADAS_ERROR": "Las posdatadas deben ir entre {{min}} y {{max}}"
+                    "POSDATADAS_ERROR": "Las posdatadas deben ir entre {{min}} y {{max}}",
+                    "SPECIALTY": "Especialidad",
+                    "SPECIALTY_REQUIRED": "El profesional no tiene especialidades asociadas"
                 },
                 "send_digital_recipe_email_dialog": {
                     "TITLE": "Enviar receta digital por email",
