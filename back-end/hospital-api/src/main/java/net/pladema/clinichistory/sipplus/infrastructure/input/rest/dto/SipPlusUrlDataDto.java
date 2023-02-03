@@ -11,4 +11,6 @@ public class SipPlusUrlDataDto {
 
 	private String urlBase;
 
+	private String embedSystem;
+
 }

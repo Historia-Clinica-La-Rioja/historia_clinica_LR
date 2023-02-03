@@ -36,6 +36,7 @@ public class SipPlusController {
 		return SipPlusUrlDataDto.builder()
 				.token(sipPlusUrlDataBo.getToken())
 				.urlBase(sipPlusUrlDataBo.getUrlBase())
+				.embedSystem(sipPlusUrlDataBo.getEmbedSystem())
 				.build();
 	}
 }

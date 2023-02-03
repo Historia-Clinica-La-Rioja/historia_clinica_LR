@@ -2961,6 +2961,7 @@ export interface SharedSnowstormSearchItemDto {
 }
 
 export interface SipPlusUrlDataDto {
+    embedSystem: string;
     token: string;
     urlBase: string;
 }

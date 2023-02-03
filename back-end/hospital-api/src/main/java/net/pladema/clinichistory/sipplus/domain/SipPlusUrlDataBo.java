@@ -11,4 +11,6 @@ public class SipPlusUrlDataBo {
 
 	private String urlBase;
 
+	private String embedSystem;
+
 }
