@@ -15,7 +15,7 @@ public class PharmacoSummaryBo extends IndicationBo {
 
 	private DosageBo dosage;
 
-	private String via;
+	private Short via;
 
 	@Nullable
 	private String note;

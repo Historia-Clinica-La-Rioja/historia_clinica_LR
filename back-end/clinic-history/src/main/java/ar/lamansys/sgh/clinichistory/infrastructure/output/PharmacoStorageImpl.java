@@ -252,7 +252,7 @@ public class PharmacoStorageImpl implements PharmacoStorage {
 		result.setCreatedOn(entity.getCreatedOn());
 		result.setSnomed(snomedBo);
 		result.setDosage(dosageBo);
-		result.setVia(EVia.getById(entity.getViaId()).getDescription());
+		result.setVia(entity.getViaId());
 		String note = this.getNote(entity.getId());
 		result.setNote(note);
 		return result;
@@ -280,7 +280,7 @@ public class PharmacoStorageImpl implements PharmacoStorage {
 
 		result.setSnomed(snomedBo);
 		result.setDosage(dosageBo);
-		result.setVia(EVia.getById((Short) pharmaco[3]).getDescription());
+		result.setVia((Short) pharmaco[3]);
 		return result;
 	}
 

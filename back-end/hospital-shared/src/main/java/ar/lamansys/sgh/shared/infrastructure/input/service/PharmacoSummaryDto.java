@@ -23,7 +23,7 @@ public class PharmacoSummaryDto extends IndicationDto implements Serializable {
 
 	private NewDosageDto dosage;
 
-	private String via;
+	private Short via;
 
 	@Nullable
 	private String note;
@@ -32,7 +32,7 @@ public class PharmacoSummaryDto extends IndicationDto implements Serializable {
 							  Short typeId, Short statusId,
 							  Integer professionalId, String createdByName,
 							  DateDto indicationDate, DateTimeDto createOn,
-							  SharedSnomedDto snomedDto, NewDosageDto dosageDto, String via,
+							  SharedSnomedDto snomedDto, NewDosageDto dosageDto, Short via,
 							  String note) {
 		super(id, patientId, EIndicationType.map(typeId), EIndicationStatus.map(statusId), professionalId, createdByName, indicationDate, createOn);
 		this.snomed = snomedDto;
