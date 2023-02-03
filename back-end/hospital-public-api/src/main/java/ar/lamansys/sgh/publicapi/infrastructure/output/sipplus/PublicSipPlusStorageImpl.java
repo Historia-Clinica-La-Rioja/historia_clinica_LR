@@ -4,7 +4,6 @@ import ar.lamansys.sgh.publicapi.application.port.out.PublicSipPlusStorage;
 import ar.lamansys.sgh.publicapi.application.port.out.exceptions.SipPlusException;
 import ar.lamansys.sgh.publicapi.application.port.out.exceptions.SipPlusExceptionEnum;
 import ar.lamansys.sgh.publicapi.domain.sipplus.EmbeddedAuthenticationDataBo;
-import ar.lamansys.sgh.publicapi.domain.sipplus.SipPlusCodes;
 import ar.lamansys.sgh.publicapi.domain.sipplus.SipPlusCoordinatesBo;
 import ar.lamansys.sgh.publicapi.domain.sipplus.SipPlusInstitutionBo;
 import ar.lamansys.sgh.publicapi.domain.sipplus.SipPlusInstitutionIdBo;
@@ -13,7 +12,6 @@ import ar.lamansys.sgh.publicapi.domain.sipplus.SipPlusPermission;
 import ar.lamansys.sgh.publicapi.domain.sipplus.SipPlusUserBo;
 import ar.lamansys.sgh.shared.infrastructure.input.service.BasicPatientDto;
 import ar.lamansys.sgh.shared.infrastructure.input.service.HospitalUserPersonInfoDto;
-import ar.lamansys.sgh.shared.infrastructure.input.service.PersonInfoDto;
 import ar.lamansys.sgh.shared.infrastructure.input.service.RoleInfoDto;
 import ar.lamansys.sgh.shared.infrastructure.input.service.SharedHospitalUserPort;
 import ar.lamansys.sgh.shared.infrastructure.input.service.SharedPatientPort;
@@ -51,31 +49,6 @@ public class PublicSipPlusStorageImpl implements PublicSipPlusStorage {
 	private final SharedHospitalUserPort sharedHospitalUserPort;
 	private final SharedInstitutionPort sharedInstitutionPort;
 	private final SharedPatientPort sharedPatientPort;
-
-	@Override
-	public JSONObject getMotherBasicData(String documentType, String documentNumber) {
-		log.debug("Input parameters -> documentType {}, documentNumber {}", documentType, documentNumber);
-
-		PersonInfoDto motherInfo = sharedPersonPort.getPersonByIdentificationInfo(documentType, documentNumber);
-
-		String lastNames = Stream.of(motherInfo.getLastName(), motherInfo.getOtherLastNames())
-				.filter(Objects::nonNull)
-				.collect(Collectors.joining(" "));
-
-		String names = Stream.of(motherInfo.getFirstName(), motherInfo.getMiddleNames())
-				.filter(Objects::nonNull)
-				.collect(Collectors.joining(" "));
-
-		JSONObject result = new JSONObject();
-		result.put(SipPlusCodes.NAME, names);
-		result.put(SipPlusCodes.LAST_NAME, lastNames);
-		result.put(SipPlusCodes.BIRTH_DATE, motherInfo.getBirthDate().format(DateTimeFormatter.ofPattern("dd/MM/yy")));
-		result.put(SipPlusCodes.DOCUMENT_TYPE, motherInfo.getIdentificationTypeDescription());
-		result.put(SipPlusCodes.DOCUMENT_NUMBER, motherInfo.getIdentificationNumber());
-
-		log.debug("Get basic mother information", result.toJSONString());
-		return result;
-	}
 
 	@Override
 	public EmbeddedAuthenticationDataBo getDataForAuthentication(String accessData) {

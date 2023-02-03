@@ -2424,16 +2424,6 @@ export interface PersonFileDto {
     fileName: string;
 }
 
-export interface PersonInfoDto {
-    birthDate: Date;
-    firstName: string;
-    identificationNumber: string;
-    identificationTypeDescription: string;
-    lastName: string;
-    middleNames: string;
-    otherLastNames: string;
-}
-
 export interface PersonOccupationDto extends Serializable {
     code: number;
     description: string;

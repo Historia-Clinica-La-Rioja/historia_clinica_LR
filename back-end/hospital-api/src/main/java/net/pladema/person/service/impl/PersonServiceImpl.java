@@ -4,10 +4,6 @@ import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 import java.util.function.Supplier;
-import java.util.stream.Collectors;
-
-import net.pladema.patient.repository.entity.PatientType;
-import net.pladema.person.service.domain.PersonInformationBo;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -110,47 +106,10 @@ public class PersonServiceImpl implements PersonService {
 	}
 
 	@Override
-	public PersonInformationBo getPersonInformationByIdentificationData(String identificationType, String identificationNumber,
-																		Short genderId) {
-		LOG.debug("Input parameters -> identificationType {}, identificationNumber {}, genderId {} ", identificationType, identificationNumber, genderId);
-		List<PersonInformationBo> persons = personRepository.getPersonInformationByIdentificationData(identificationType, identificationNumber, genderId);
-		if (persons.isEmpty())
-			throw new NotFoundException("person-not-exists", String.format("La persona con tipo de identificación %s, número de identificacion %s y genero id %s no existe",
-					identificationType, identificationNumber, genderId));
-		if (persons.size() > 1)
-			return determinePatient(persons);
-		else
-			return persons.get(0);
-	}
-
-	@Override
 	public String getCountryIsoCodeFromPerson(Integer personId) {
 		LOG.debug("Input parameter -> personId {} ", personId);
 		return personRepository.getCountryIsoCodeFromPerson(personId);
 	}
-
-	private PersonInformationBo determinePatient(List<PersonInformationBo> persons) {
-		List<PersonInformationBo> permanentPerson = persons.stream()
-				.filter(p -> p.getPatientTypeId().equals(PatientType.PERMANENT))
-				.collect(Collectors.toList());
-		if (!permanentPerson.isEmpty())
-			return permanentPerson.get(0);
-
-		List<PersonInformationBo> permanentNotValidatedPerson = persons.stream()
-				.filter(p -> p.getPatientTypeId().equals(PatientType.PERMANENT_NOT_VALIDATED))
-				.collect(Collectors.toList());
-		if (!permanentNotValidatedPerson.isEmpty())
-			return permanentNotValidatedPerson.get(0);
-
-		List<PersonInformationBo> validatedPerson = persons.stream()
-				.filter(p -> p.getPatientTypeId().equals(PatientType.VALIDATED))
-				.collect(Collectors.toList());
-		if (!validatedPerson.isEmpty())
-			return validatedPerson.get(0);
-
-		return persons.get(0);
-	}
-
 
     private Supplier<NotFoundException> personNotFound(Integer personId) {
         return () -> new NotFoundException("person-not-exists", String.format("La persona %s no existe", personId));
