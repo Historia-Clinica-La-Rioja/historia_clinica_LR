@@ -118,7 +118,6 @@ export class PrescripcionesService {
 			observations: medicationItem.observations,
 			unitDose: null,
 			dayDose: null,
-			treatmentDays: null,
 		};
 	}
 
@@ -136,7 +135,6 @@ export class PrescripcionesService {
 			observations: studyItem.observations,
 			unitDose: null,
 			dayDose: null,
-			treatmentDays: null,
 		};
 	}
 

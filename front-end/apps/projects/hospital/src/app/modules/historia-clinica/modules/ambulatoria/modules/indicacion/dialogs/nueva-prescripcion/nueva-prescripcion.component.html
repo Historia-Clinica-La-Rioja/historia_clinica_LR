@@ -103,14 +103,14 @@
                 </div>
             </div>
             <section class="prescription-list gray">
-                <div *ngIf="prescriptionItem.unitDose && prescriptionItem.treatmentDays && prescriptionItem.dayDose">
+                <div *ngIf="prescriptionItem.unitDose && prescriptionItem.administrationTimeDays && prescriptionItem.dayDose">
                     <span
                         [translate]="'ambulatoria.paciente.ordenes_prescripciones.new_prescription_dialog.UNIT_DOSE'"
                         [translateParams]="{unitDose: prescriptionItem.unitDose}">
                     </span>
                     <span
                         [translate]="'ambulatoria.paciente.ordenes_prescripciones.new_prescription_dialog.TREATMENT_DAYS'"
-                        [translateParams]="{treatmentDays: prescriptionItem.treatmentDays}">
+                        [translateParams]="{treatmentDays: prescriptionItem.administrationTimeDays}">
                     </span>
                     <span
                         [translate]="'ambulatoria.paciente.ordenes_prescripciones.new_prescription_dialog.DAY_DOSE'"
@@ -127,7 +127,7 @@
                         [translateParams]="{interval: prescriptionItem.intervalHours}">
                     </span>
                     <span *ngIf=" ! prescriptionItem.intervalHours" [translate]="'ambulatoria.paciente.ordenes_prescripciones.new_prescription_dialog.DAILY'"></span>
-                    <span *ngIf="prescriptionItem.administrationTimeDays"
+                    <span *ngIf="prescriptionItem.administrationTimeDays && ! isHabilitarRecetaDigitalEnabled"
                         [translate]="'ambulatoria.paciente.ordenes_prescripciones.new_prescription_dialog.ADMINISTRATION_TIME_DAYS'"
                         [translateParams]="{days: prescriptionItem.administrationTimeDays}">
                     </span>

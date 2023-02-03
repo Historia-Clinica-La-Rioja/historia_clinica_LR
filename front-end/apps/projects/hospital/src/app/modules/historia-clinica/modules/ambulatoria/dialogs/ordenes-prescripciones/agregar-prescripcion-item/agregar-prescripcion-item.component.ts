@@ -239,9 +239,7 @@ export class AgregarPrescripcionItemComponent implements OnInit, AfterViewInit, 
 			observations: this.prescriptionItemForm.controls.observations.value,
 			unitDose: this.prescriptionItemForm.controls.unitDose.value,
 			dayDose: this.prescriptionItemForm.controls.dayDose.value,
-			treatmentDays: this.prescriptionItemForm.controls.treatmentDays.value,
 		};
-
 		this.dialogRef.close(newItem);
 	}
 
@@ -275,7 +273,6 @@ export class AgregarPrescripcionItemComponent implements OnInit, AfterViewInit, 
 
 		this.prescriptionItemForm.controls.unitDose.setValue(prescriptionItem.unitDose);
 		this.prescriptionItemForm.controls.dayDose.setValue(prescriptionItem.dayDose);
-		this.prescriptionItemForm.controls.treatmentDays.setValue(prescriptionItem.treatmentDays);
 		this.prescriptionItemForm.controls.observations.setValue(prescriptionItem.observations);
 
 		if (this.data.showDosage) {
@@ -313,15 +310,17 @@ export class AgregarPrescripcionItemComponent implements OnInit, AfterViewInit, 
 			snomed: [null, Validators.required],
 			unitDose: [null],
 			dayDose: [null],
-			treatmentDays: [null],
 			healthProblem: [null, Validators.required],
 			interval: [this.DEFAULT_RADIO_OPTION],
 			intervalHours: [null],
-			administrationTime: [this.DEFAULT_RADIO_OPTION],
+			administrationTime: [null],
 			administrationTimeDays: [null],
 			observations: [null, [Validators.maxLength(this.TEXT_AREA_MAX_LENGTH)]],
 			studyCategory: [null],
 		});
+
+		if (! this.isHabilitarRecetaDigitalFFActive)
+			this.prescriptionItemForm.controls.administrationTime.setValue(this.DEFAULT_RADIO_OPTION);
 
 		if (this.data.showDosage) {
 			this.prescriptionItemForm.controls.interval.setValidators([Validators.required]);
@@ -334,7 +333,6 @@ export class AgregarPrescripcionItemComponent implements OnInit, AfterViewInit, 
 		if (this.isHabilitarRecetaDigitalFFActive) {
 			this.prescriptionItemForm.controls.unitDose.setValidators([Validators.required]);
 			this.prescriptionItemForm.controls.dayDose.setValidators([Validators.required]);
-			this.prescriptionItemForm.controls.treatmentDays.setValidators([Validators.required]);
 		}
 	}
 
@@ -395,5 +393,4 @@ export class NewPrescriptionItem {
 	observations: string;
 	unitDose: number;
 	dayDose: number;
-	treatmentDays: number;
 }

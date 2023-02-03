@@ -53,8 +53,8 @@
 
 				<mat-form-field appearance="outline">
 					<mat-label>{{'ambulatoria.paciente.ordenes_prescripciones.add_prescription_item_dialog.TREATMENT_DAYS' | translate}}</mat-label>
-					<input type="number" matInput autocomplete="off" formControlName="treatmentDays">
-					<mat-error *ngIf="hasError(prescriptionItemForm, 'required', 'treatmentDays')" translate="forms.REQUIRED"></mat-error>
+					<input type="number" matInput autocomplete="off" formControlName="administrationTimeDays">
+					<mat-error *ngIf="hasError(prescriptionItemForm, 'required', 'administrationTimeDays')" translate="forms.REQUIRED"></mat-error>
 				</mat-form-field>
 			</section>
 

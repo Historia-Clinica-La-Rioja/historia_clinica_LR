@@ -213,7 +213,6 @@ export class NuevaPrescripcionComponent implements OnInit {
 		editPrescriptionItem.healthProblem = prescriptionItem.healthProblem;
 		editPrescriptionItem.unitDose = prescriptionItem.unitDose;
 		editPrescriptionItem.dayDose = prescriptionItem.dayDose;
-		editPrescriptionItem.treatmentDays = prescriptionItem.treatmentDays;
 		editPrescriptionItem.administrationTimeDays = prescriptionItem.administrationTimeDays;
 		editPrescriptionItem.isChronicAdministrationTime = prescriptionItem.isChronicAdministrationTime;
 		editPrescriptionItem.intervalHours = prescriptionItem.intervalHours;
