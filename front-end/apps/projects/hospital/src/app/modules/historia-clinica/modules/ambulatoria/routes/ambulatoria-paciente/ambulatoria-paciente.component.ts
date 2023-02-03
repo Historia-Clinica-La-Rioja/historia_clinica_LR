@@ -37,6 +37,7 @@ import { InternmentActionsService } from "@historia-clinica/modules/ambulatoria/
 import { Slot, SlotedInfo, WCExtensionsService } from '@extensions/services/wc-extensions.service';
 import { EmergencyCareEpisodeStateService } from '@api-rest/services/emergency-care-episode-state.service';
 import { EstadosEpisodio } from '@historia-clinica/modules/guardia/constants/masterdata';
+import { PatientType } from '@historia-clinica/constants/summaries';
 
 const RESUMEN_INDEX = 0;
 const VOLUNTARY_ID = 1;
@@ -86,8 +87,9 @@ export class AmbulatoriaPacienteComponent implements OnInit, OnDestroy {
 	hasEmergencyCareRelatedRole = false;
 	showNursingSection = false;
 	femenino = FEMENINO;
-
 	selectedTab = 0;
+	isTemporaryPatient: boolean = false;
+	isHabilitarRecetaDigitalEnabled: boolean = false;
 	emergencyCareTabIndex: number;
 	showEmergencyCareTab: boolean;
 	hasEpisodeToShow: boolean;
@@ -119,12 +121,19 @@ export class AmbulatoriaPacienteComponent implements OnInit, OnDestroy {
 		private readonly medicalCoverageInfo: MedicalCoverageInfoService,
 		private readonly wcExtensionsService: WCExtensionsService,
 	) {
+		this.featureFlagService.isActive(AppFeature.HABILITAR_RECETA_DIGITAL)
+			.subscribe((result: boolean) => this.isHabilitarRecetaDigitalEnabled = result)
+			
 		const toEmergencyCareTab = this.router.getCurrentNavigation()?.extras?.state?.toEmergencyCareTab;
 		this.route.paramMap.subscribe(
 			(params) => {
 				this.patientId = Number(params.get('idPaciente'));
 				this.patientService.getPatientBasicData<BasicPatientDto>(this.patientId).subscribe(
 					patient => {
+						(patient.typeId === PatientType.TEMPORARY)
+							? this.isTemporaryPatient = true
+							: this.isTemporaryPatient = false
+
 						this.personInformation.push({ description: patient.person.identificationType, data: patient.person.identificationNumber });
 						this.patient = this.mapperService.toPatientBasicData(patient);
 					}

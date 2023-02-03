@@ -170,7 +170,8 @@
 									[internmentEpisodeId]="internmentEpisodeProcess.id">
 								</app-internment-indications-card>
 							</div>
-							<app-card-medicaciones [patientId]="patientId"
+							<app-card-medicaciones *ngIf="! isHabilitarRecetaDigitalEnabled || (! isTemporaryPatient && isHabilitarRecetaDigitalEnabled)"
+								[patientId]="patientId"
 								[medicamentStatus]="medicamentStatus$ | async">
 							</app-card-medicaciones>
 						</ng-template>
