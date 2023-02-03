@@ -47,10 +47,19 @@ public class MedicationRequest extends SGXAuditableEntity<Integer> {
 	private Boolean hasRecipe = false;
 
 	@Column(name = "request_date")
-	private LocalDate requestDate = LocalDate.now();
+	private LocalDate requestDate;
 
 	@Column(name = "note_id")
 	private Long noteId;
+
+	@Column(name = "is_post_dated")
+	private Boolean isPostDated;
+
+	@Column(name = "repetitions")
+	private Integer repetitions;
+
+	@Column(name = "clinical_specialty_id")
+	private Integer clinicalSpecialtyId;
 
 
 	public MedicationRequest(Integer patientId, Integer institutionId, String statusId,

@@ -195,3 +195,24 @@ databaseChangeLog:
                     referencedColumnNames: id
                     referencedTableName: medication_statement
                     validate: true
+
+    - changeSet:
+        id: addColumns_medication_request
+        author: mmalyvarni
+        changes:
+          - addColumn:
+              tableName: medication_request
+              columns:
+                - column:
+                    name: is_post_dated
+                    type: boolean
+                - column:
+                    name: repetitions
+                    type: int
+                - column:
+                    constraints:
+                      foreignKeyName: FK_medication_request_clinical_specialty_id
+                      references: clinical_specialty(id)
+                      nullable: true
+                    name: clinical_specialty_id
+                    type: int

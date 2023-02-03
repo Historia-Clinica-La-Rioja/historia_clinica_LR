@@ -37,6 +37,12 @@ public class MedicationRequestBo implements IDocumentBo {
 
     private LocalDate requestDate = LocalDate.now();
 
+	private Boolean isPostDated;
+
+	private Integer repetitions;
+
+	private Integer clinicalSpecialtyId;
+
     public short getDocumentType() {
         return DocumentType.RECIPE;
     }

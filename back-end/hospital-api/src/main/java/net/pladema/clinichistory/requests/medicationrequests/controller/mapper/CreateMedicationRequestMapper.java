@@ -41,6 +41,9 @@ public class CreateMedicationRequestMapper {
         result.setHasRecipe(medicationRequest.isHasRecipe());
         result.setMedicalCoverageId(medicationRequest.getMedicalCoverageId());
         result.setMedications(medicationRequest.getItems().stream().map(this::parseTo).collect(Collectors.toList()));
+		result.setRepetitions(medicationRequest.getRepetitions());
+		result.setIsPostDated(medicationRequest.getIsPostDated());
+		result.setClinicalSpecialtyId(medicationRequest.getClinicalSpecialtyId());
         LOG.debug(OUTPUT, result);
         return result;
     }

@@ -2495,9 +2495,12 @@ export interface PreferredTermDto {
 }
 
 export interface PrescriptionDto extends Serializable {
+    clinicalSpecialtyId?: number;
     hasRecipe: boolean;
+    isPostDated?: boolean;
     items: PrescriptionItemDto[];
-    medicalCoverageId: number;
+    medicalCoverageId?: number;
+    repetitions?: number;
 }
 
 export interface PrescriptionItemDto extends Serializable {

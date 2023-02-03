@@ -24,7 +24,7 @@ import { hasError } from '@core/utils/form.utils';
 	styleUrls: ['./nueva-prescripcion.component.scss']
 })
 export class NuevaPrescripcionComponent implements OnInit {
-	
+
 	prescriptionItems: NewPrescriptionItem[];
 	patientMedicalCoverages: PatientMedicalCoverage[];
 	prescriptionForm: FormGroup;
@@ -80,10 +80,10 @@ export class NuevaPrescripcionComponent implements OnInit {
 		if (isOn) {
 			posdatadas.enable()
 			posdatadas.addValidators(Validators.required);
-		} else 
+		} else
 			this.disablePosdatadas(posdatadas)
 	}
-	
+
 	disablePosdatadas(posdatadas: AbstractControl) {
 		posdatadas.disable();
 		posdatadas.setValue(this.POSDATADAS_DEFAULT);
@@ -156,7 +156,10 @@ export class NuevaPrescripcionComponent implements OnInit {
 					},
 					prescriptionLineNumber: ++prescriptionLineNumberAux,
 				};
-			})
+			}),
+			repetitions: this.prescriptionForm.controls.posdatadas.value,
+			isPostDated: this.prescriptionForm.controls.posdatadas.value > this.POSDATADAS_MIN,
+			clinicalSpecialtyId: this.prescriptionForm.controls.clinicalSpecialty.value.id,
 		};
 
 		this.savePrescription(newPrescription);

@@ -4,6 +4,8 @@ import ar.lamansys.sgh.clinichistory.application.createDocument.DocumentFactory;
 import ar.lamansys.sgh.clinichistory.domain.ips.HealthConditionBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.MedicationBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.services.HealthConditionService;
+import ar.lamansys.sgx.shared.featureflags.AppFeature;
+import ar.lamansys.sgx.shared.featureflags.application.FeatureFlagsService;
 import net.pladema.clinichistory.hospitalization.service.documents.validation.DosageValidator;
 import net.pladema.clinichistory.hospitalization.service.documents.validation.PatientInfoValidator;
 import net.pladema.clinichistory.hospitalization.service.documents.validation.SnomedValidator;
@@ -18,6 +20,7 @@ import org.springframework.data.util.Pair;
 import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -33,12 +36,16 @@ public class CreateMedicationRequestServiceImpl implements CreateMedicationReque
 
     private final HealthConditionService healthConditionService;
 
+	private final FeatureFlagsService featureFlagsService;
+
     public CreateMedicationRequestServiceImpl(MedicationRequestRepository medicationRequestRepository,
                                               DocumentFactory documentFactory,
-                                              HealthConditionService healthConditionService) {
+                                              HealthConditionService healthConditionService,
+											  FeatureFlagsService featureFlagsService) {
         this.medicationRequestRepository = medicationRequestRepository;
         this.documentFactory = documentFactory;
         this.healthConditionService = healthConditionService;
+		this.featureFlagsService = featureFlagsService;
     }
 
     @Override
@@ -61,11 +68,11 @@ public class CreateMedicationRequestServiceImpl implements CreateMedicationReque
                 Assert.isTrue(md.getHealthCondition().isActive(),
                         "El problema asociado tiene que estar activo"));
 
-        MedicationRequest newMR = createMedicationRequest(medicationRequest);
-        medicationRequest.setEncounterId(newMR.getId());
+        Integer newMRId = createMedicationRequest(medicationRequest);
+        medicationRequest.setEncounterId(newMRId);
         documentFactory.run(medicationRequest, false);
 
-        return newMR.getId();
+        return newMRId;
     }
 
     private void assertRequiredFields(MedicationRequestBo medicationRequest) {
@@ -93,14 +100,44 @@ public class CreateMedicationRequestServiceImpl implements CreateMedicationReque
         result.forEach((k,v) -> Assert.isTrue(v.size() == 1, "La receta no puede contener más de un medicamento con el mismo problema y el mismo concepto snomed"));
     }
 
-    private MedicationRequest createMedicationRequest(MedicationRequestBo medicationRequest) {
-        MedicationRequest result = new MedicationRequest();
-        result.setPatientId(medicationRequest.getPatientId());
-        result.setInstitutionId(medicationRequest.getInstitutionId());
-        result.setMedicalCoverageId(medicationRequest.getMedicalCoverageId());
-        result.setDoctorId(medicationRequest.getDoctorId());
-        result.setHasRecipe(medicationRequest.isHasRecipe());
-        result = medicationRequestRepository.save(result);
-        return result;
+    private Integer createMedicationRequest(MedicationRequestBo medicationRequest) {
+		Integer originalMedicationRequestId = -1;
+		LocalDate iterationDate = LocalDate.now();
+		if (featureFlagsService.isOn(AppFeature.HABILITAR_RECETA_DIGITAL)) {
+			originalMedicationRequestId = generateMultipleMedicationRequests(medicationRequest, originalMedicationRequestId, iterationDate);
+		}
+		else {
+			MedicationRequest result = generateBasicMedicationrequest(medicationRequest);
+			result.setRequestDate(LocalDate.now());
+			result = medicationRequestRepository.save(result);
+			originalMedicationRequestId = result.getId();
+		}
+        return originalMedicationRequestId;
     }
+
+	private Integer generateMultipleMedicationRequests(MedicationRequestBo medicationRequest, Integer originalMedicationRequestId, LocalDate iterationDate) {
+		for (int currentRequest = 0; currentRequest < medicationRequest.getRepetitions(); currentRequest++) {
+			MedicationRequest result = generateBasicMedicationrequest(medicationRequest);
+			result.setClinicalSpecialtyId(medicationRequest.getClinicalSpecialtyId());
+			result.setRepetitions(currentRequest == 0 ? medicationRequest.getRepetitions() : 0);
+			result.setIsPostDated(currentRequest == 0);
+			result.setRequestDate(iterationDate);
+			result = medicationRequestRepository.save(result);
+			if (currentRequest == 0)
+				originalMedicationRequestId = result.getId();
+			iterationDate = iterationDate.plusDays(30);
+		}
+		return originalMedicationRequestId;
+	}
+
+	private static MedicationRequest generateBasicMedicationrequest(MedicationRequestBo medicationRequest) {
+		MedicationRequest result = new MedicationRequest();
+		result.setPatientId(medicationRequest.getPatientId());
+		result.setInstitutionId(medicationRequest.getInstitutionId());
+		result.setMedicalCoverageId(medicationRequest.getMedicalCoverageId());
+		result.setDoctorId(medicationRequest.getDoctorId());
+		result.setHasRecipe(medicationRequest.isHasRecipe());
+		return result;
+	}
+
 }
