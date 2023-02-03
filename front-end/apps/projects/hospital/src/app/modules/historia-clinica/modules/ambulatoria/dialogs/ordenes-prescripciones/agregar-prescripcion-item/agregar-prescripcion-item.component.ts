@@ -1,7 +1,7 @@
 import { Component, Inject, OnInit, ViewChild, ElementRef, AfterViewInit, AfterContentChecked, ChangeDetectorRef } from '@angular/core';
 import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { AbstractControl, FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
-import { AppFeature, CreateOutpatientDto, HCEPersonalHistoryDto, OutpatientProblemDto, SnomedDto, SnomedECL } from '@api-rest/api-model.d';
+import { AppFeature, CreateOutpatientDto, ERole, HCEPersonalHistoryDto, OutpatientProblemDto, SnomedDto, SnomedECL } from '@api-rest/api-model.d';
 import { SnowstormService } from '@api-rest/services/snowstorm.service';
 import { HceGeneralStateService } from '@api-rest/services/hce-general-state.service';
 import { RequestMasterDataService } from '@api-rest/services/request-masterdata.service';
@@ -31,6 +31,7 @@ export class AgregarPrescripcionItemComponent implements OnInit, AfterViewInit, 
 	conceptsView: boolean = false;
 	ambulatoryConsultationProblemsService: AmbulatoryConsultationProblemsService;
 	isHabilitarRecetaDigitalFFActive: boolean = false;
+	PRESCRIPTOR: ERole = ERole.PRESCRIPTOR;
 	severityTypes: any[];
 	reportFFIsOn;
 	searchConceptsLocallyFFIsOn;
