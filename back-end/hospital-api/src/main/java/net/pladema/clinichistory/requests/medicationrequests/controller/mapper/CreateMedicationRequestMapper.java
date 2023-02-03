@@ -86,6 +86,8 @@ public class CreateMedicationRequestMapper {
         result.setDuration(dosage.getDuration());
         result.setPeriodUnit(dosage.isDiary() ? EUnitsOfTimeBo.DAY : EUnitsOfTimeBo.HOUR);
         result.setChronic(dosage.isChronic());
+		result.setDosesByDay(dosage.getDosesByDay());
+		result.setDosesByUnit(dosage.getDosesByUnit());
         LOG.debug(OUTPUT, result);
         return result;
     }

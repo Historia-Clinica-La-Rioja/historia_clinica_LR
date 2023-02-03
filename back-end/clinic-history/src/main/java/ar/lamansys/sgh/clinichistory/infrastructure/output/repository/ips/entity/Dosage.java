@@ -59,6 +59,12 @@ public class Dosage {
 	@Column(name = "event", length = 100)
 	private String event;
 
+	@Column(name = "doses_by_day")
+	private Integer dosesByDay;
+
+	@Column(name = "doses_by_unit")
+	private Integer dosesByUnit;
+
 
 	public Dosage(Double duration, String durationUnit,
 				  Integer frequency, String periodUnit, Boolean chronic,

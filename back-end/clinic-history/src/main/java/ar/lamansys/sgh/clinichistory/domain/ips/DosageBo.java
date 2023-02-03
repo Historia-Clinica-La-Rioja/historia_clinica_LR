@@ -34,6 +34,10 @@ public class DosageBo {
 
 	private QuantityBo quantity;
 
+	private Integer dosesByUnit;
+
+	private Integer dosesByDay;
+
     public String getPeriodUnit(){
         return periodUnit != null ? periodUnit.getValue() : null;
     }

@@ -1904,6 +1904,8 @@ export interface MultipartFile extends InputStreamSource {
 export interface NewDosageDto extends Serializable {
     chronic: boolean;
     diary: boolean;
+    dosesByDay?: number;
+    dosesByUnit?: number;
     duration?: number;
     event?: string;
     frequency?: number;

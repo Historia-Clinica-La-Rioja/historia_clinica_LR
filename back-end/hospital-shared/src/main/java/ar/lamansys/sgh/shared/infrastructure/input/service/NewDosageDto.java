@@ -40,4 +40,10 @@ public class NewDosageDto implements Serializable {
 	@Nullable
 	private QuantityDto quantity;
 
+	@Nullable
+	private Integer dosesByUnit;
+
+	@Nullable
+	private Integer dosesByDay;
+
 }

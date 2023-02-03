@@ -216,3 +216,17 @@ databaseChangeLog:
                       nullable: true
                     name: clinical_specialty_id
                     type: int
+
+    - changeSet:
+        id: addColumns_dosage
+        author: mmalyvarni
+        changes:
+          - addColumn:
+              tableName: dosage
+              columns:
+                - column:
+                    name: doses_by_day
+                    type: int
+                - column:
+                    name: doses_by_unit
+                    type: int

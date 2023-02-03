@@ -121,6 +121,8 @@ public class LoadMedications {
         newDosage.setDuration(!dosage.isChronic() ? dosage.getDuration() : null);
         newDosage.setDurationUnit(EUnitsOfTimeBo.DAY.getValue());
         newDosage.setPeriodUnit(dosage.getPeriodUnit());
+		newDosage.setDosesByDay(dosage.getDosesByDay());
+		newDosage.setDosesByUnit(dosage.getDosesByUnit());
         if (EUnitsOfTimeBo.DAY.getValue().equals(dosage.getPeriodUnit()))
             newDosage.setFrequency(1);
         else newDosage.setFrequency(dosage.getFrequency());

@@ -152,7 +152,9 @@ export class NuevaPrescripcionComponent implements OnInit {
 						chronic: pi.isChronicAdministrationTime,
 						diary: pi.isDailyInterval,
 						duration: Number(pi.administrationTimeDays),
-						frequency: Number(pi.intervalHours)
+						frequency: Number(pi.intervalHours),
+						dosesByDay: pi.dayDose,
+						dosesByUnit: pi.unitDose
 					},
 					prescriptionLineNumber: ++prescriptionLineNumberAux,
 				};
