@@ -215,4 +215,37 @@ public class GeneralReportsController {
 		out.flush();
 		response.flushBuffer();
 	}
+
+	@GetMapping(value = "/{institutionId}/totalNursingRecovery")
+	@PreAuthorize("hasPermission(#institutionId, 'ADMINISTRADOR_INSTITUCIONAL_BACKOFFICE, PERSONAL_DE_ESTADISTICA')")
+	public @ResponseBody void getTotalNursingRecoveryExcelReport(@PathVariable Integer institutionId,
+																 @RequestParam(value = "fromDate", required = true) String fromDate,
+																 @RequestParam(value = "toDate", required = true) String toDate,
+																 HttpServletResponse response) throws Exception {
+		LOG.debug("Se creará el excel{}", institutionId);
+		LOG.debug("Inputs parameters -> institutionId {}, fromDate{}, toDate{}", institutionId);
+
+		String title = "Reporte de procedimientos realizados por Enfermeria";
+		String[] headers= new String[]{"Institución", "Origen", "Prestador", "DNI", "Fecha de atencion", "Hora", "DNI paciente", "Nombre paciente", "Sexo",
+		"Genero", "Nombre con el que se identifica","Fecha de nacimiento", "Edad a fecha del turno", "Edad a Hoy", "Etnia","Obra/s sociale/es", "Domicilio","Localidad",
+		"Nivel de instruccion", "Situacion laboral", "Presión sistólica", "Presión diastólica", "Presión arterial media", "Temperatura", "Frecuencia cardiaca",
+		"Frecuencia respiratoria", "Saturación de hemoglobina con oxígeno", "Altura" ,"Peso", "Índice de Masa Corporal", "Procedimientos", "Problemas","Medicacion", "Evolución"};
+
+
+		LocalDate startDate = localDateMapper.fromStringToLocalDate(fromDate);
+		LocalDate endDate = localDateMapper.fromStringToLocalDate(toDate);
+
+		IWorkbook wb = this.excelServiceGR.buildExcelTotalNursingRecovery(title, headers, this.queryFactoryGR.queryTotalNursingRecovery(institutionId, startDate, endDate));
+
+		String filename = title + "." + wb.getExtension();
+		response.addHeader("Content-disposition", "attachment;filename=" + filename);
+		response.setContentType(wb.getContentType());
+
+		OutputStream out = response.getOutputStream();
+		wb.write(out);
+		out.close();
+		out.flush();
+		response.flushBuffer();
+	}
+
 }

@@ -7,6 +7,7 @@ import net.pladema.generalreports.repository.ConsultationDetailEmergencias;
 import net.pladema.generalreports.repository.NursingInternment;
 import net.pladema.generalreports.repository.OutpatientNursing;
 import net.pladema.generalreports.repository.PatientEmergencies;
+import net.pladema.generalreports.repository.TotalNursingRecovery;
 
 import java.util.List;
 
@@ -23,5 +24,7 @@ public interface ExcelServiceGR {
 	IWorkbook buildExcelNursingInternment(String tittle, String[] headers, List<NursingInternment> query);
 
 	IWorkbook buildExcelComplementaryStudies(String tittle, String[] headers, List<ComplementaryStudies> query);
+
+	IWorkbook buildExcelTotalNursingRecovery(String tittle, String[] headers, List<TotalNursingRecovery> query);
 
 }
