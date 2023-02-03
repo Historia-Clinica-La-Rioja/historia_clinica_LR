@@ -11,4 +11,6 @@ public interface SharedPatientPort {
     Integer createPatient(RequiredPatientDataDto requiredPatientDataDto);
 
     void saveMedicalCoverages(List<ExternalPatientCoverageDto> externalPatientCoverages, Integer patientId);
+
+	boolean isValidatedOrPermanentPatient(Short patientTypeId);
 }

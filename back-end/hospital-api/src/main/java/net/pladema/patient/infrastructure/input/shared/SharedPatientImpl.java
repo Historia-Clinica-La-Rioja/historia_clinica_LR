@@ -6,6 +6,7 @@ import net.pladema.patient.controller.dto.APatientDto;
 import net.pladema.patient.controller.mapper.PatientMapper;
 import net.pladema.patient.controller.service.PatientExternalService;
 import net.pladema.patient.repository.entity.Patient;
+import net.pladema.patient.repository.entity.PatientType;
 import net.pladema.patient.service.PatientMedicalCoverageService;
 import net.pladema.patient.service.PatientService;
 import net.pladema.patient.service.domain.HealthInsuranceBo;
@@ -75,6 +76,11 @@ public class SharedPatientImpl implements SharedPatientPort {
         externalPatientCoverages.stream().map(this::mapToPatientMedicalCoverage);
         patientMedicalCoverageService.saveExternalCoverages(externalPatientCoverages.stream().map(this::mapToPatientMedicalCoverage).collect(Collectors.toList()), patientId);
     }
+
+	@Override
+	public boolean isValidatedOrPermanentPatient(Short patientTypeId) {
+		return patientTypeId == PatientType.VALIDATED || patientTypeId == PatientType.PERMANENT;
+	}
 
     private PatientMedicalCoverageBo mapToPatientMedicalCoverage(ExternalPatientCoverageDto externalPatientCoverageDto) {
         PatientMedicalCoverageBo pmc = new PatientMedicalCoverageBo();

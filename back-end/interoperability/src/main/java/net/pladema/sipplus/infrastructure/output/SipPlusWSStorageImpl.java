@@ -58,6 +58,8 @@ public class SipPlusWSStorageImpl implements SipPlusWSStorage {
 		BasicPatientDto patientData = sharedPatientPort.getBasicDataFromPatient(patientId);
 		String countryIsoCode = sharedPersonPort.getCountryIsoCodeFromPerson(patientData.getPerson().getId());
 
+		assertPatientData(patientData, countryIsoCode);
+
 		String urlWithParams = getUrlWithParams(patientData, countryIsoCode);
 		ResponseEntity<SipPlusPregnancieResponse> response;
 		List<Integer> pregnancies = new ArrayList<>();
@@ -86,6 +88,13 @@ public class SipPlusWSStorageImpl implements SipPlusWSStorage {
 		} catch (RestTemplateApiException e) {
 			throw mapException(e);
 		}
+	}
+
+	private void assertPatientData(BasicPatientDto patientData, String countryIsoCode) {
+		if (!(sharedPatientPort.isValidatedOrPermanentPatient(patientData.getTypeId())))
+			throw new SipPlusApiException(SipPlusApiExceptionEnum.UNVALIDATED_PATIENT, "Para acceder, la paciente debe estar en el sistema como paciente validado o permanente");
+		if (countryIsoCode == null || countryIsoCode.isBlank())
+			throw new SipPlusApiException(SipPlusApiExceptionEnum.NULL_COUNTRY_ISO_CODE, "Para acceder, la paciente debe tener cargado el país de residencia en los datos de su domicilio");
 	}
 
 	private SipPlusPregnancyPayload createPregnancyBody(BasicDataPersonDto basicDataPerson, String pregnancyNumber) {
