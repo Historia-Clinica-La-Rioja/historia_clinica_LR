@@ -72,12 +72,13 @@ public class HealthcareProfessionalByInstitutionController {
 	}
 
 	@GetMapping
-	@PreAuthorize("hasPermission(#institutionId, 'ADMINISTRATIVO, ADMINISTRATIVO_RED_DE_IMAGENES, ADMINISTRADOR_AGENDA, ESPECIALISTA_MEDICO, PROFESIONAL_DE_SALUD, ESPECIALISTA_EN_ODONTOLOGIA, ENFERMERO, ADMINISTRADOR_INSTITUCIONAL_BACKOFFICE, PERSONAL_DE_ESTADISTICA')")
+	@PreAuthorize("hasPermission(#institutionId, 'ADMINISTRATIVO, ADMINISTRATIVO_RED_DE_IMAGENES, ADMINISTRADOR_AGENDA, ESPECIALISTA_MEDICO, PROFESIONAL_DE_SALUD, ESPECIALISTA_EN_ODONTOLOGIA, ENFERMERO, ADMINISTRADOR_INSTITUCIONAL_BACKOFFICE, PERSONAL_DE_ESTADISTICA, ADMINISTRADOR_INSTITUCIONAL_PRESCRIPTOR')")
 	public ResponseEntity<List<ProfessionalDto>> getAllByInstitution(
 			@PathVariable(name = "institutionId")  Integer institutionId){
 		LOG.debug("Input parameters -> institutionId {}", institutionId);
 		boolean isAdministrativeRole = loggedUserExternalService.hasAnyRoleInstitution(institutionId,
-				ERole.ADMINISTRATIVO, ERole.ADMINISTRADOR_AGENDA, ERole.ADMINISTRADOR_INSTITUCIONAL_BACKOFFICE, ERole.PERSONAL_DE_ESTADISTICA);
+				ERole.ADMINISTRATIVO, ERole.ADMINISTRADOR_AGENDA, ERole.ADMINISTRADOR_INSTITUCIONAL_BACKOFFICE, ERole.PERSONAL_DE_ESTADISTICA,
+				ERole.ADMINISTRADOR_INSTITUCIONAL_PRESCRIPTOR);
 		List<HealthcareProfessionalBo> healthcareProfessionals = healthcareProfessionalService.getAllByInstitution(institutionId);
 		if (!isAdministrativeRole) {
 			Integer healthcareProfessionalId = healthcareProfessionalService.getProfessionalId(UserInfo.getCurrentAuditor());
@@ -91,7 +92,7 @@ public class HealthcareProfessionalByInstitutionController {
 	}
 
 	@GetMapping("/associated-healthcare-professionals")
-	@PreAuthorize("hasPermission(#institutionId, 'ADMINISTRATIVO, ADMINISTRADOR_AGENDA, ESPECIALISTA_MEDICO, PROFESIONAL_DE_SALUD, ESPECIALISTA_EN_ODONTOLOGIA, ENFERMERO, ADMINISTRADOR_INSTITUCIONAL_BACKOFFICE, PERSONAL_DE_ESTADISTICA')")
+	@PreAuthorize("hasPermission(#institutionId, 'ADMINISTRATIVO, ADMINISTRADOR_AGENDA, ESPECIALISTA_MEDICO, PROFESIONAL_DE_SALUD, ESPECIALISTA_EN_ODONTOLOGIA, ENFERMERO, ADMINISTRADOR_INSTITUCIONAL_BACKOFFICE, PERSONAL_DE_ESTADISTICA, ADMINISTRADOR_INSTITUCIONAL_PRESCRIPTOR')")
 	public ResponseEntity<List<ProfessionalDto>> getAllByDiaryAndInstitution(@PathVariable(name = "institutionId") Integer institutionId) {
 		LOG.debug("Input parameters -> institutionId {}", institutionId);
 		Function<Integer, Boolean> isAdministrativeRole = loggedUserExternalService.hasAnyRoleInstitution(

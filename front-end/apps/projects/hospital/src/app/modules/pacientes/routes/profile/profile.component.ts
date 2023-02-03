@@ -54,7 +54,7 @@ import { EmergencyCareEpisodeSummaryService } from "@api-rest/services/emergency
 import { AppRoutes } from "../../../../app-routing.module";
 import { InternmentDocuments, InternmentEpisodeSummary } from "@historia-clinica/modules/ambulatoria/modules/internacion/components/internment-episode-summary/internment-episode-summary.component";
 import { EditPrefessionsSpecialtiesComponent } from '@pacientes/dialogs/edit-prefessions-specialties/edit-prefessions-specialties.component';
-import { Observable } from 'rxjs';
+import { combineLatest, Observable } from 'rxjs';
 import { EditLicenseComponent } from '@pacientes/dialogs/edit-license/edit-license.component';
 import { ProfessionalLicenseService } from '@api-rest/services/professional-license.service';
 import { dateTimeDtotoLocalDate } from '@api-rest/mapper/date-dto.mapper';
@@ -65,8 +65,10 @@ import { DatePipe } from '@angular/common';
 const ROUTE_NEW_INTERNMENT = 'internaciones/internacion/new';
 const ROUTE_EDIT_PATIENT = 'pacientes/edit';
 const ROUTE_EMERGENCY_CARE_EPISODE_PREFIX = 'guardia/episodio/';
-const ROLES_TO_VIEW_USER_DATA: ERole[] = [ERole.ADMINISTRADOR_INSTITUCIONAL_BACKOFFICE];
+const ROLES_TO_VIEW_USER_DATA: ERole[] = [ERole.ADMINISTRADOR_INSTITUCIONAL_BACKOFFICE, ERole.ADMINISTRADOR_INSTITUCIONAL_PRESCRIPTOR];
 const ROLES_TO_VIEW_CLINIC_HISTORY_DATA: ERole[] = [ERole.ADMINISTRATIVO, ERole.ADMINISTRATIVO_RED_DE_IMAGENES];
+const ROLES_TO_ASSIGN_PERSCRIPTOR_ROLE: ERole[] = [ERole.ADMINISTRADOR_INSTITUCIONAL_PRESCRIPTOR];
+const ROLES_THAT_CAN_ASSIGN_ANY_ROLE_BUT_PRESCRIPTOR: ERole[] = [ERole.ADMINISTRADOR_INSTITUCIONAL_BACKOFFICE];
 const DIALOG_SIZE = '30%';
 const DIALOG_SIZE_HEIGHT = '80%';
 
@@ -90,6 +92,7 @@ export interface ProfessionalSpecialties {
 export class ProfileComponent implements OnInit {
 	userRoles: string[] = [];
 	roles: RoleDto[] = [];
+	assignableRoles: RoleDto[] = [];
 	userId: number = null;
 	rolesByUser: UserRoleDto[] = [];
 	patientId: number;
@@ -223,6 +226,16 @@ export class ProfileComponent implements OnInit {
 								});
 								this.rolesService.getAllInstitutionalRoles().subscribe((roles: RoleDto[]) => {
 									this.roles = roles;
+									combineLatest([this.permissionService.hasContextAssignments$(ROLES_TO_ASSIGN_PERSCRIPTOR_ROLE),
+									this.permissionService.hasContextAssignments$(ROLES_THAT_CAN_ASSIGN_ANY_ROLE_BUT_PRESCRIPTOR)])
+									.subscribe(([hasRoleToAssignPrescriptorRole, hasRoleThatCanAssignAnyRoleButPrescriptor]) => {
+										if (!hasRoleToAssignPrescriptorRole)
+											this.assignableRoles = this.roles.filter(role => role.id !== 20);
+										if (hasRoleThatCanAssignAnyRoleButPrescriptor && hasRoleToAssignPrescriptorRole)
+											this.assignableRoles = this.roles;
+										if (!hasRoleThatCanAssignAnyRoleButPrescriptor && hasRoleToAssignPrescriptorRole)
+											this.assignableRoles = this.roles.filter(role => role.id === 20);
+									});
 								});
 
 								this.institution.push(this.contextService.institutionId);
@@ -353,7 +366,7 @@ export class ProfileComponent implements OnInit {
 			data: {
 				personId: this.personId,
 				isProfessional: this.isProfessional,
-				roles: this.roles,
+				roles: this.assignableRoles,
 				userId: this.userData.id,
 				rolesByUser: this.rolesByUser
 			}

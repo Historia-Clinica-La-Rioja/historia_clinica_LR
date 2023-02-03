@@ -17,7 +17,7 @@ import java.util.List;
 
 @Slf4j
 @RequestMapping("/healthcareprofessionalspecialties/institution/{institutionId}/professional/{professionalId}")
-@PreAuthorize("hasPermission(#institutionId, 'ADMINISTRADOR_INSTITUCIONAL_BACKOFFICE')")
+@PreAuthorize("hasPermission(#institutionId, 'ADMINISTRADOR_INSTITUCIONAL_BACKOFFICE, ADMINISTRADOR_INSTITUCIONAL_PRESCRIPTOR')")
 @RestController
 //@Api(value = "Healthcare professional specialties", tags = {"Healthcare professional specialties"})
 public class HealthcareProfessionalSpecialtyController {

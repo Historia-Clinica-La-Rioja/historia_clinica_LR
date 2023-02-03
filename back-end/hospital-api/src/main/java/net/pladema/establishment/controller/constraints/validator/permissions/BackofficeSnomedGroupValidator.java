@@ -52,7 +52,7 @@ public class BackofficeSnomedGroupValidator implements BackofficePermissionValid
 	}
 
 	@Override
-	@PreAuthorize("hasPermission(#entity.institutionId, 'ADMINISTRADOR_INSTITUCIONAL_BACKOFFICE') || hasAnyAuthority('ADMINISTRADOR')")
+	@PreAuthorize("hasPermission(#entity.institutionId, 'ADMINISTRADOR_INSTITUCIONAL_BACKOFFICE, ADMINISTRADOR_INSTITUCIONAL_PRESCRIPTOR') || hasAnyAuthority('ADMINISTRADOR')")
 	public void assertCreate(SnomedGroup entity) {
 		if (authoritiesValidator.hasRole(ERole.ADMINISTRADOR))
 			return;
@@ -60,7 +60,7 @@ public class BackofficeSnomedGroupValidator implements BackofficePermissionValid
 	}
 
 	@Override
-	@PreAuthorize("hasPermission(#entity.institutionId, 'ADMINISTRADOR_INSTITUCIONAL_BACKOFFICE') || hasAnyAuthority('ADMINISTRADOR')")
+	@PreAuthorize("hasPermission(#entity.institutionId, 'ADMINISTRADOR_INSTITUCIONAL_BACKOFFICE, ADMINISTRADOR_INSTITUCIONAL_PRESCRIPTOR') || hasAnyAuthority('ADMINISTRADOR')")
 	public void assertUpdate(Integer id, SnomedGroup entity) {
 		if (authoritiesValidator.hasRole(ERole.ADMINISTRADOR))
 			return;
@@ -73,7 +73,7 @@ public class BackofficeSnomedGroupValidator implements BackofficePermissionValid
 	}
 
 	@Override
-	@PreAuthorize("hasPermission(#entity.institutionId, 'ADMINISTRADOR_INSTITUCIONAL_BACKOFFICE') || hasAnyAuthority('ADMINISTRADOR')")
+	@PreAuthorize("hasPermission(#entity.institutionId, 'ADMINISTRADOR_INSTITUCIONAL_BACKOFFICE, ADMINISTRADOR_INSTITUCIONAL_PRESCRIPTOR') || hasAnyAuthority('ADMINISTRADOR')")
 	public void assertDelete(Integer id) {
 		if (authoritiesValidator.hasRole(ERole.ADMINISTRADOR))
 			return;
@@ -99,7 +99,7 @@ public class BackofficeSnomedGroupValidator implements BackofficePermissionValid
 		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 		if (authentication == null || !authentication.isAuthenticated() || authentication.getPrincipal().equals("anonymousUser"))
 			throw new PermissionDeniedException(NO_CUENTA_CON_SUFICIENTES_PRIVILEGIOS);
-		if (!permissionEvaluator.hasPermission(authentication, institutionId, "Institution", "ADMINISTRADOR_INSTITUCIONAL_BACKOFFICE"))
+		if (!permissionEvaluator.hasPermission(authentication, institutionId, "Institution", "ADMINISTRADOR_INSTITUCIONAL_BACKOFFICE") && !permissionEvaluator.hasPermission(authentication, institutionId, "Institution", "ADMINISTRADOR_INSTITUCIONAL_PRESCRIPTOR"))
 			throw new PermissionDeniedException(NO_CUENTA_CON_SUFICIENTES_PRIVILEGIOS);
 	}
 

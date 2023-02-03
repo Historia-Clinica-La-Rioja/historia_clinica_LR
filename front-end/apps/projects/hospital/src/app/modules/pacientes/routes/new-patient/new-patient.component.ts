@@ -242,7 +242,7 @@ export class NewPatientComponent implements OnInit {
 				this.setProvinces();
 			});
 
-		this.permissionsService.hasContextAssignments$([ERole.ADMINISTRADOR_INSTITUCIONAL_BACKOFFICE]).subscribe(hasInstitutionalAdministrativeRole => this.hasInstitutionalAdministrativeRole = hasInstitutionalAdministrativeRole);
+		this.permissionsService.hasContextAssignments$([ERole.ADMINISTRADOR_INSTITUCIONAL_BACKOFFICE, ERole.ADMINISTRADOR_INSTITUCIONAL_PRESCRIPTOR]).subscribe(hasInstitutionalAdministrativeRole => this.hasInstitutionalAdministrativeRole = hasInstitutionalAdministrativeRole);
 	}
 
 	private lockFormField(params) {

@@ -16,7 +16,7 @@ public class BackofficeCareLineValidator implements BackofficePermissionValidato
     }
 
     @Override
-    @PreAuthorize("hasAnyAuthority('ROOT', 'ADMINISTRADOR', 'ADMINISTRADOR_INSTITUCIONAL_BACKOFFICE')")
+    @PreAuthorize("hasAnyAuthority('ROOT', 'ADMINISTRADOR', 'ADMINISTRADOR_INSTITUCIONAL_BACKOFFICE', 'ADMINISTRADOR_INSTITUCIONAL_PRESCRIPTOR')")
     public void assertGetList(CareLine entity) {
     }
 
@@ -26,7 +26,7 @@ public class BackofficeCareLineValidator implements BackofficePermissionValidato
     }
 
     @Override
-    @PreAuthorize("hasAnyAuthority('ROOT', 'ADMINISTRADOR', 'ADMINISTRADOR_INSTITUCIONAL_BACKOFFICE')")
+    @PreAuthorize("hasAnyAuthority('ROOT', 'ADMINISTRADOR', 'ADMINISTRADOR_INSTITUCIONAL_BACKOFFICE', 'ADMINISTRADOR_INSTITUCIONAL_PRESCRIPTOR')")
     public void assertGetOne(Integer id) {
     }
 

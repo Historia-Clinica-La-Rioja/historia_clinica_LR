@@ -19,7 +19,7 @@ public class ExtensionSecurityConfiguration {
 	)  {
 		return buildExtensionAuthorization()
 				.isInstitutionMenuAllowed("references", loggedUser.hasAnyInstitutionRole(ERole.ADMINISTRATIVO))
-				.isInstitutionMenuAllowed("reportesEstadisticos", loggedUser.hasAnyInstitutionRole(ERole.ADMINISTRADOR_INSTITUCIONAL_BACKOFFICE))
+				.isInstitutionMenuAllowed("reportesEstadisticos", loggedUser.hasAnyInstitutionRole(ERole.ADMINISTRADOR_INSTITUCIONAL_BACKOFFICE, ERole.ADMINISTRADOR_INSTITUCIONAL_PRESCRIPTOR))
 				.systemMenu(DemoExtensionService.PUBLIC_MENU_LIST, () -> true)
 				.build();
 	}

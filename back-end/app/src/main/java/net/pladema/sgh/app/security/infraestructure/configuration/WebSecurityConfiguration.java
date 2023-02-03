@@ -95,7 +95,8 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
 				.antMatchers(BACKOFFICE + "/**").hasAnyAuthority(
 					ERole.ROOT.getValue(),
 					ERole.ADMINISTRADOR.getValue(),
-					ERole.ADMINISTRADOR_INSTITUCIONAL_BACKOFFICE.getValue())
+					ERole.ADMINISTRADOR_INSTITUCIONAL_BACKOFFICE.getValue(),
+					ERole.ADMINISTRADOR_INSTITUCIONAL_PRESCRIPTOR.getValue())
 				.antMatchers(RECAPTCHA + "/**").permitAll()
 				.antMatchers("/oauth/**").permitAll()
 				.antMatchers(HttpMethod.GET,PUBLIC + "/**").permitAll()

@@ -40,7 +40,7 @@ public class BackofficeInstitutionValidator implements BackofficePermissionValid
 
 
 	@Override
-	@PreAuthorize("hasPermission(#entity.id, 'ADMINISTRADOR_INSTITUCIONAL_BACKOFFICE') || hasAnyAuthority('ROOT', 'ADMINISTRADOR')")
+	@PreAuthorize("hasPermission(#entity.id, 'ADMINISTRADOR_INSTITUCIONAL_BACKOFFICE, ADMINISTRADOR_INSTITUCIONAL_PRESCRIPTOR') || hasAnyAuthority('ROOT', 'ADMINISTRADOR')")
 	public void assertGetList(Institution entity) {
 		// nothing to do
 	}
@@ -60,7 +60,7 @@ public class BackofficeInstitutionValidator implements BackofficePermissionValid
 	}
 
 	@Override
-	@PreAuthorize("hasPermission(#id, 'ADMINISTRADOR_INSTITUCIONAL_BACKOFFICE') || hasAnyAuthority('ROOT', 'ADMINISTRADOR')")
+	@PreAuthorize("hasPermission(#id, 'ADMINISTRADOR_INSTITUCIONAL_BACKOFFICE, ADMINISTRADOR_INSTITUCIONAL_PRESCRIPTOR') || hasAnyAuthority('ROOT', 'ADMINISTRADOR')")
 	public void assertGetOne(Integer id) {
 		// Do nothing
 	}
@@ -72,7 +72,7 @@ public class BackofficeInstitutionValidator implements BackofficePermissionValid
 	}
 
 	@Override
-	@PreAuthorize("hasPermission(#id, 'ADMINISTRADOR_INSTITUCIONAL_BACKOFFICE') || hasAnyAuthority('ROOT', 'ADMINISTRADOR')")
+	@PreAuthorize("hasPermission(#id, 'ADMINISTRADOR_INSTITUCIONAL_BACKOFFICE, ADMINISTRADOR_INSTITUCIONAL_PRESCRIPTOR') || hasAnyAuthority('ROOT', 'ADMINISTRADOR')")
 	public void assertUpdate(Integer id, Institution entity) {
 		// Do nothing
 	}
@@ -87,7 +87,7 @@ public class BackofficeInstitutionValidator implements BackofficePermissionValid
 	public ItemsAllowed itemsAllowedToList(Institution entity) {
 		if (authoritiesValidator.hasRole(ERole.ROOT) || authoritiesValidator.hasRole(ERole.ADMINISTRADOR))
 			return new ItemsAllowed<>();
-		List<Integer> allowedInstitutions = authoritiesValidator.allowedInstitutionIds(Arrays.asList(ERole.ADMINISTRADOR_INSTITUCIONAL_BACKOFFICE));
+		List<Integer> allowedInstitutions = authoritiesValidator.allowedInstitutionIds(Arrays.asList(ERole.ADMINISTRADOR_INSTITUCIONAL_BACKOFFICE, ERole.ADMINISTRADOR_INSTITUCIONAL_PRESCRIPTOR));
 		if (allowedInstitutions.isEmpty())
 			return new ItemsAllowed<>(false, Collections.emptyList());
 		List<Institution> entitiesByExample = repository.findAll(buildExample(entity));
@@ -100,7 +100,7 @@ public class BackofficeInstitutionValidator implements BackofficePermissionValid
 	public ItemsAllowed itemsAllowedToList() {
 		if (authoritiesValidator.hasRole(ERole.ROOT) || authoritiesValidator.hasRole(ERole.ADMINISTRADOR))
 			return new ItemsAllowed<>();
-		List<Integer> allowedInstitutions = authoritiesValidator.allowedInstitutionIds(Arrays.asList(ERole.ADMINISTRADOR_INSTITUCIONAL_BACKOFFICE));
+		List<Integer> allowedInstitutions = authoritiesValidator.allowedInstitutionIds(Arrays.asList(ERole.ADMINISTRADOR_INSTITUCIONAL_BACKOFFICE, ERole.ADMINISTRADOR_INSTITUCIONAL_PRESCRIPTOR));
 		if (allowedInstitutions.isEmpty())
 			return new ItemsAllowed<>(false, Collections.emptyList());
 		return new ItemsAllowed<>(false, allowedInstitutions);
@@ -112,7 +112,7 @@ public class BackofficeInstitutionValidator implements BackofficePermissionValid
 		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 		if (authentication == null || !authentication.isAuthenticated() || authentication.getPrincipal().equals("anonymousUser"))
 			throw new PermissionDeniedException(NO_CUENTA_CON_SUFICIENTES_PRIVILEGIOS);
-		if (!permissionEvaluator.hasPermission(authentication, institutionId, "ADMINISTRADOR_INSTITUCIONAL_BACKOFFICE"))
+		if (!permissionEvaluator.hasPermission(authentication, institutionId, "ADMINISTRADOR_INSTITUCIONAL_BACKOFFICE") && !permissionEvaluator.hasPermission(authentication, institutionId, "ADMINISTRADOR_INSTITUCIONAL_PRESCRIPTOR"))
 			throw new PermissionDeniedException(NO_CUENTA_CON_SUFICIENTES_PRIVILEGIOS);
 	}
 

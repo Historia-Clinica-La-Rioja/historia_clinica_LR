@@ -27,7 +27,7 @@
 							</button>
 						</ng-container>
 					</div>
-					<div content *appHasRole="['ADMINISTRATIVO', 'ADMINISTRADOR_INSTITUCIONAL_BACKOFFICE', 'ADMINISTRATIVO_RED_DE_IMAGENES']">
+					<div content *appHasRole="['ADMINISTRATIVO', 'ADMINISTRADOR_INSTITUCIONAL_BACKOFFICE', 'ADMINISTRATIVO_RED_DE_IMAGENES', 'ADMINISTRADOR_INSTITUCIONAL_PRESCRIPTOR']">
 						<div *ngIf="auditablePatientInfo" id="marked_for_audit_section">
 							<div fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="5px" class="title">
 								<mat-icon>error</mat-icon>
@@ -66,7 +66,7 @@
 			</em>
 		</div>
 		<div fxLayout="column" fxFlex="50" fxFlex.lt-md="100" fxLayoutGap="20px">
-			<div *appHasRole="['ADMINISTRADOR_INSTITUCIONAL_BACKOFFICE']">
+			<div *appHasRole="['ADMINISTRADOR_INSTITUCIONAL_BACKOFFICE', 'ADMINISTRADOR_INSTITUCIONAL_PRESCRIPTOR']">
 				<div *ngIf="createUsersIsEnable">
 					<mat-card class="box user-data">
 						<mat-card-header>

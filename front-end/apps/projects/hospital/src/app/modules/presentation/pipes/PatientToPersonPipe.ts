@@ -3,7 +3,7 @@ import { ERole } from '@api-rest/api-model';
 import { PermissionsService } from '@core/services/permissions.service';
 import { capitalize } from '@core/utils/core.utils';
 
-const ROLES_THAT_NEED_TO_CHANGE_WORD = [ERole.ADMINISTRADOR_INSTITUCIONAL_BACKOFFICE];
+const ROLES_THAT_NEED_TO_CHANGE_WORD = [ERole.ADMINISTRADOR_INSTITUCIONAL_BACKOFFICE, ERole.ADMINISTRADOR_INSTITUCIONAL_PRESCRIPTOR];
 
 const PATIENT = 'paciente';
 const PATIENTS = 'pacientes';

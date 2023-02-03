@@ -23,7 +23,7 @@
 					<a mat-button color="primary"  (click)="download(file.fileId,file.fileName)">{{file.fileName}}</a>
 				</ng-container>
 				<ng-template>
-					<span *appHasRole="['ADMINISTRADOR_INSTITUCIONAL_BACKOFFICE']" class="info-content">{{file.fileName}}</span>
+					<span *appHasRole="['ADMINISTRADOR_INSTITUCIONAL_BACKOFFICE', 'ADMINISTRADOR_INSTITUCIONAL_PRESCRIPTOR']" class="info-content">{{file.fileName}}</span>
 				</ng-template>
 
 			</div>

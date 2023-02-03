@@ -90,16 +90,16 @@
 		</span>
 	</div>
 </div>
-<div fxLayout="row" fxLayoutGap="15px" fxLayoutAlign="space-between" class="form-row" *appHasRole="['ADMINISTRATIVO','ADMINISTRADOR_INSTITUCIONAL_BACKOFFICE', 'ADMINISTRATIVO_RED_DE_IMAGENES']">
+<div fxLayout="row" fxLayoutGap="15px" fxLayoutAlign="space-between" class="form-row" *appHasRole="['ADMINISTRATIVO','ADMINISTRADOR_INSTITUCIONAL_BACKOFFICE', 'ADMINISTRATIVO_RED_DE_IMAGENES', 'ADMINISTRADOR_INSTITUCIONAL_PRESCRIPTOR']">
 	<div fxFlex="100%" fxLayout="column" fxLayoutAlign="space-around start" fxLayoutGap="10px">
 		<span class="info-title"  [translate]="'pacientes.form.ATTACHED_DOCUMENTS'"></span>
 		<span *ngFor="let file of personalInformation?.files" fxFlex="100%" fxFlexFill>
 			<div fxLayout="column" fxLayoutAlign="space-around start">
-				<ng-container *appHasRole="['ADMINISTRATIVO','ADMINISTRADOR_INSTITUCIONAL_BACKOFFICE', 'ADMINISTRATIVO_RED_DE_IMAGENES']">
+				<ng-container *appHasRole="['ADMINISTRATIVO','ADMINISTRADOR_INSTITUCIONAL_BACKOFFICE', 'ADMINISTRATIVO_RED_DE_IMAGENES', 'ADMINISTRADOR_INSTITUCIONAL_PRESCRIPTOR']">
 					<a mat-button color="primary"  (click)="downloadFile(file.fileId,file.fileName)">{{file.fileName}}</a>
 				</ng-container>
 				<ng-template >
-					<span *appHasRole="['ADMINISTRADOR_INSTITUCIONAL_BACKOFFICE']" class="info-content">{{file.fileName}}</span>
+					<span *appHasRole="['ADMINISTRADOR_INSTITUCIONAL_BACKOFFICE', 'ADMINISTRADOR_INSTITUCIONAL_PRESCRIPTOR']" class="info-content">{{file.fileName}}</span>
 				</ng-template>
 			</div>
 		</span>

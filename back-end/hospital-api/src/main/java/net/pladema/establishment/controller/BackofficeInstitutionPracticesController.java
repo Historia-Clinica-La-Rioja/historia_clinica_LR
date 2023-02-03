@@ -51,7 +51,7 @@ public class BackofficeInstitutionPracticesController extends BackofficeSnomedGr
 			return super.getList(pageable, entity);
 
 		var allTerms = super.getList(Pageable.ofSize(Integer.MAX_VALUE), entity);
-		var allowedInstitutions = authoritiesValidator.allowedInstitutionIds(List.of(ERole.ADMINISTRADOR_INSTITUCIONAL_BACKOFFICE));
+		var allowedInstitutions = authoritiesValidator.allowedInstitutionIds(List.of(ERole.ADMINISTRADOR_INSTITUCIONAL_BACKOFFICE, ERole.ADMINISTRADOR_INSTITUCIONAL_PRESCRIPTOR));
 		var practicesList = allTerms.getContent()
 				.stream()
 				.filter(item -> allowedInstitutions.contains(item.getInstitutionId()))
@@ -72,7 +72,7 @@ public class BackofficeInstitutionPracticesController extends BackofficeSnomedGr
 
 	@Override
 	public BackofficeDeleteResponse<Integer> delete(@PathVariable("id") Integer id) {
-		if(authoritiesValidator.hasRole(ERole.ADMINISTRADOR_INSTITUCIONAL_BACKOFFICE)) {
+		if(authoritiesValidator.hasRole(ERole.ADMINISTRADOR_INSTITUCIONAL_BACKOFFICE) || authoritiesValidator.hasRole(ERole.ADMINISTRADOR_INSTITUCIONAL_PRESCRIPTOR)) {
 			if(isDeletable(id))
 				snomedGroupRepository.deleteById(id);
 			else
