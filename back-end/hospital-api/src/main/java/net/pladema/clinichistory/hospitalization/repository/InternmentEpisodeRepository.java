@@ -258,5 +258,13 @@ public interface InternmentEpisodeRepository extends JpaRepository<InternmentEpi
 			" AND ie.statusId = " +InternmentEpisodeStatus.ACTIVE+" " +
 			" AND pd.physicalDischargeDate is NULL and pd.medicalDischargeDate is NULL")
 	boolean isPatientHospitalized (@Param("patientId") Integer patientId);
+
+	@Transactional(readOnly = true)
+	@Query("SELECT (case when count(ie.id)> 1 then true else false end) " +
+			"FROM InternmentEpisode ie " +
+			"WHERE ie.patientId IN :patientIds " +
+			"AND ie.statusId = :statusId " +
+			"AND (ie.deleteable.deleted = false or ie.deleteable.deleted is null)")
+	boolean haveMoreThanOneFromPatients(@Param("patientIds") List<Integer> patientIds, @Param("statusId") Short statusId);
 	
 }

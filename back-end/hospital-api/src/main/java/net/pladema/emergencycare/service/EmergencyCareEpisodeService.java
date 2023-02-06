@@ -24,4 +24,6 @@ public interface  EmergencyCareEpisodeService {
     Integer updateAdministrative(EmergencyCareBo newEmergencyCare, Integer institutionId);
 
     Boolean validateAndSetPatient(Integer episodeId, Integer patientId, Integer institutionId);
+
+	boolean haveMoreThanOneEmergencyCareEpisodeFromPatients(List<Integer> patients);
 }

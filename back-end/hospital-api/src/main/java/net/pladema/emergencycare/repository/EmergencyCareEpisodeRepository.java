@@ -108,4 +108,12 @@ public interface EmergencyCareEpisodeRepository extends SGXAuditableEntityJPARep
 			"JOIN ObservationRiskFactor orf ON (trf.pk.observationRiskFactorId = orf.id) " +
 			"WHERE t.emergencyCareEpisodeId IN :eceIds")
 	List<ObservationRiskFactor> getObservationRiskFactorFromEmergencyCareEpisodes(@Param("eceIds") List<Integer> eceIds);
+
+	@Transactional(readOnly = true)
+	@Query("SELECT ece " +
+			"FROM EmergencyCareEpisode ece " +
+			"WHERE ece.patientId IN :patientIds " +
+			"AND ece.emergencyCareStateId IN :statusIds " +
+			"AND (ece.deleteable.deleted = false or ece.deleteable.deleted is null)")
+	List<EmergencyCareEpisode> getFromPatientsAndStatus(@Param("patientIds") List<Integer> patientIds, @Param("statusIds") List<Short> statusIds);
 }

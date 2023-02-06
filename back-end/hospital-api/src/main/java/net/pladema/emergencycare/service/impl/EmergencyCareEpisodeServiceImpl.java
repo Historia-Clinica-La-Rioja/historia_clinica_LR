@@ -28,8 +28,12 @@ import org.springframework.stereotype.Service;
 import javax.validation.ValidationException;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Comparator;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.function.Function;
 import java.util.stream.Collectors;
@@ -135,7 +139,22 @@ public class EmergencyCareEpisodeServiceImpl implements EmergencyCareEpisodeServ
         return true;
     }
 
-    @Override
+	@Override
+	public boolean haveMoreThanOneEmergencyCareEpisodeFromPatients(List<Integer> patients) {
+		LOG.debug("Input parameters -> patientId {}", patients);
+		List<EmergencyCareEpisode> ece = emergencyCareEpisodeRepository.getFromPatientsAndStatus(patients, Arrays.asList(
+				EmergencyCareState.EN_ESPERA,
+				EmergencyCareState.EN_ATENCION,
+				EmergencyCareState.CON_ALTA_MEDICA
+		));
+		if (ece.isEmpty()) {
+			LOG.debug(OUTPUT, false);
+			return false;
+		}
+		return ece.stream().map(EmergencyCareEpisode::getInstitutionId).distinct().count() != ece.size();
+	}
+
+	@Override
     public EmergencyCareBo createAdministrative(EmergencyCareBo newEmergencyCare, Integer institutionId) {
         return createEpisode(newEmergencyCare, institutionId, this::saveTriageAdministrative);
     }

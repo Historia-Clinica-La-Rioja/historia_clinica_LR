@@ -1,5 +1,10 @@
 package net.pladema.patient.application.mergepatient;
 
+import net.pladema.clinichistory.hospitalization.service.InternmentEpisodeService;
+import net.pladema.emergencycare.service.EmergencyCareEpisodeService;
+import net.pladema.patient.application.port.exceptions.MergePatientException;
+import net.pladema.patient.application.port.exceptions.MergePatientExceptionEnum;
+
 import org.springframework.stereotype.Service;
 
 import lombok.RequiredArgsConstructor;
@@ -8,6 +13,8 @@ import net.pladema.patient.application.port.MergePatientStorage;
 import net.pladema.patient.controller.dto.PatientToMergeDto;
 
 import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 @Service
 @RequiredArgsConstructor
@@ -18,10 +25,19 @@ public class MergePatient {
 
 	private final MigrateClinicHistory migrateClinicHistory;
 
+	private final InternmentEpisodeService internmentEpisodeService;
+
+	private final EmergencyCareEpisodeService emergencyCareEpisodeService;
+
 	public Integer run(Integer institutionId, PatientToMergeDto patientToMerge) {
 		log.debug("Input parameters -> institutionId {}, patientToMerge {}", institutionId, patientToMerge);
 		mergePatientStorage.assertBasicPersonData(patientToMerge.getRegistrationDataPerson());
 		Integer activePatientId = patientToMerge.getActivePatientId();
+
+		List<Integer> patients = Stream.concat(patientToMerge.getOldPatientsIds().stream(), Stream.of(activePatientId)).collect(Collectors.toList());
+		validatePatientsInternmentEpisodes(patients);
+		validatePatientsEmergencyCareEpisodes(patients);
+
 		patientToMerge.getOldPatientsIds().forEach(id -> mergePatientStorage.inactivatePatient(id, activePatientId, institutionId));
 		mergePatientStorage.updatePersonByPatientId(activePatientId, patientToMerge.getRegistrationDataPerson(), institutionId);
 		mergePatientStorage.saveMergeHistoricData(activePatientId,patientToMerge.getOldPatientsIds());
@@ -38,6 +54,18 @@ public class MergePatient {
 
 		mergePatientStorage.modifyAdditionalDoctor(oldPatients, newPatient);
 		mergePatientStorage.modifyPatientMedicalCoverage(oldPatients, newPatient);
+	}
+
+	private void validatePatientsInternmentEpisodes(List<Integer> patients) {
+		if (internmentEpisodeService.haveMoreThanOneIntermentEpisodesFromPatients(patients)) {
+			throw new MergePatientException(MergePatientExceptionEnum.MULTIPLE_INTERNMENT_EPISODES, "Existen episodios de internación activos en más de un paciente.");
+		}
+	}
+
+	private void validatePatientsEmergencyCareEpisodes(List<Integer> patients) {
+		if (emergencyCareEpisodeService.haveMoreThanOneEmergencyCareEpisodeFromPatients(patients)) {
+			throw new MergePatientException(MergePatientExceptionEnum.MULTIPLE_EMERGENCY_CARE_EPISODES, "Existen episodios de guardia activos en más de un paciente.");
+		}
 	}
 
 }

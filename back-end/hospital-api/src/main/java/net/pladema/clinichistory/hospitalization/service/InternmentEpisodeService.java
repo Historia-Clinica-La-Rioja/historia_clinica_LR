@@ -66,4 +66,6 @@ public interface InternmentEpisodeService {
 	
 	PatientDischargeBo savePatientPhysicalDischarge(Integer internmentEpisodeId);
 
+	boolean haveMoreThanOneIntermentEpisodesFromPatients(List<Integer> patients);
+
 }

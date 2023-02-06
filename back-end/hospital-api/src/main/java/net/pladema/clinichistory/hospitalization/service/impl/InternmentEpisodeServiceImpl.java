@@ -6,6 +6,8 @@ import java.util.Optional;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.stream.Collectors;
 
+import net.pladema.clinichistory.hospitalization.repository.domain.InternmentEpisodeStatus;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
@@ -410,6 +412,14 @@ public class InternmentEpisodeServiceImpl implements InternmentEpisodeService {
 				LOG.debug(LOGGING_OUTPUT, result);
 				return result;
 			});
+	}
+
+	@Override
+	public boolean haveMoreThanOneIntermentEpisodesFromPatients(List<Integer> patients) {
+		LOG.debug("Input parameters -> patients {}", patients);
+		boolean result = internmentEpisodeRepository.haveMoreThanOneFromPatients(patients, InternmentEpisodeStatus.ACTIVE_ID);
+		LOG.debug(LOGGING_OUTPUT, result);
+		return result;
 	}
 
 }
