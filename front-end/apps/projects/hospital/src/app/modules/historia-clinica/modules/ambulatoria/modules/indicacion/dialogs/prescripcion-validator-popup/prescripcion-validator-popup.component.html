@@ -12,7 +12,7 @@
                 <span class="gray" [translate]="'ambulatoria.paciente.ordenes_prescripciones.validators_dialog.2FA_TITLE_ENABLED'"></span>
             </div>
         </section>
-        <section *ngIf="this.data.healthcareProfessionalLicenseNumberValid else noLicenseNumber">
+        <section *ngIf="(this.data.healthcareProfessionalLicenseNumberValid && this.data.healthcareProfessionalHasLicenses) else noLicenseNumber">
             <mat-icon class="gray">check_circle_outline</mat-icon>
             <div>
                 <span class="gray" [translate]="'ambulatoria.paciente.ordenes_prescripciones.validators_dialog.LICENSE_NUMBER_TITLE_VALID'"></span>
@@ -41,11 +41,18 @@
 </ng-template>
 
 <ng-template #noLicenseNumber>
-    <section>
+    <section *ngIf="! this.data.healthcareProfessionalLicenseNumberValid">
         <mat-icon color="warn">cancel</mat-icon>
         <div>
             <span class="warn" [translate]="'ambulatoria.paciente.ordenes_prescripciones.validators_dialog.LICENSE_NUMBER_TITLE_OVERDUE'"></span>
             <p [translate]="'ambulatoria.paciente.ordenes_prescripciones.validators_dialog.LICENSE_NUMBER_DESCRIPTION'"></p>
+        </div>
+    </section>
+    <section *ngIf="! this.data.healthcareProfessionalHasLicenses">
+        <mat-icon color="warn">cancel</mat-icon>
+        <div>
+            <span class="warn" [translate]="'ambulatoria.paciente.ordenes_prescripciones.validators_dialog.LICENSE_NUMBER_NOT_LOADED_TITLE'"></span>
+            <p [translate]="'ambulatoria.paciente.ordenes_prescripciones.validators_dialog.LICENSE_NUMBER_NOT_LOADED_DESCRIPTION'"></p>
         </div>
     </section>
 </ng-template>
@@ -60,10 +67,18 @@
     </section>
 </ng-template>
 
+<ng-template #licenseNumberNotLoaded>
+    <section>
+        <mat-icon color="warn">cancel</mat-icon>
+        <div>
+            <span class="warn" [translate]="'ambulatoria.paciente.ordenes_prescripciones.validators_dialog.LICENSE_NUMBER_NOT_LOADED_TITLE'"></span>
+            <p [translate]="'ambulatoria.paciente.ordenes_prescripciones.validators_dialog.LICENSE_NUMBER_NOT_LOADED_DESCRIPTION'"></p>
+        </div>
+    </section>
+</ng-template>
+
 <div fxLayout="row" fxLayoutAlign="end start">
 	<button mat-flat-button color="primary" type="submit" fxFlexFill.xs mat-dialog-close="true">
 		<span class="uppercase">{{'buttons.ACCEPT' | translate}}</span>
 	</button>
 </div>
-
-

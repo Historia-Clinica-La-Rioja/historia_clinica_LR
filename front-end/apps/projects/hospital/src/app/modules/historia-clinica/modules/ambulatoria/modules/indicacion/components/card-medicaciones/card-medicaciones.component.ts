@@ -111,6 +111,7 @@ export class CardMedicacionesComponent implements OnInit {
 				twoFactorAuthenticationEnabled: result.twoFactorAuthenticationEnabled,
 				healthcareProfessionalLicenseNumberValid: result.healthcareProfessionalLicenseNumberValid,
 				healthcareProfessionalCompleteContactData: result.healthcareProfessionalCompleteContactData,
+				healthcareProfessionalHasLicenses: result.healthcareProfessionalHasLicenses
 			},
 			width: '35%',
 		});
@@ -180,7 +181,8 @@ export class CardMedicacionesComponent implements OnInit {
 			.subscribe((result: ProfessionalLicenseNumberValidationResponseDto) => {
 				if (! result.healthcareProfessionalCompleteContactData 
 					|| ! result.healthcareProfessionalLicenseNumberValid
-					|| ! result.twoFactorAuthenticationEnabled) {
+					|| ! result.twoFactorAuthenticationEnabled
+					|| ! result.healthcareProfessionalHasLicenses) {
 						this.openDailogPrescriptionValidator(result);
 						return;
 					}

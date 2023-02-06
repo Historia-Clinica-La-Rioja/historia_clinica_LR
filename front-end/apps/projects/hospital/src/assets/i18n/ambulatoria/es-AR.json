@@ -389,6 +389,8 @@
                     "LICENSE_NUMBER_TITLE_OVERDUE": "Matrícula vencida",
                     "LICENSE_NUMBER_TITLE_VALID": "Matrícula vigente",
                     "LICENSE_NUMBER_DESCRIPTION": "Sus matriculas se encuentran vencidas por favor contactarse con 045-8411155 para consultar por el estado de sus matrículas.",
+                    "LICENSE_NUMBER_NOT_LOADED_TITLE": "Matricula inexistente",
+                    "LICENSE_NUMBER_NOT_LOADED_DESCRIPTION": "Sus matriculas no fueron cargadas en el sistema, comuniquese con un administrador institucional para que actualice los mismos.",
                     "PROFESSIONAL_DATA_TITLE_INCOMPLETE": "Datos de contacto incompletos",
                     "PROFESSIONAL_DATA_TITLE_COMPLETE": "Datos de contacto completos",
                     "PROFESSIONAL_DATA_DESCRIPTION": "Para recetar necesita tener su mail y teléfono cargados en el sistema, comuniquese con un administrador insitucional para que actualice los mismos."
