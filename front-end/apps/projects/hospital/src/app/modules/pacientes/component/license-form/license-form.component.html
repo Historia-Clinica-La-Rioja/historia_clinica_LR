@@ -48,8 +48,7 @@
 	<mat-form-field appearance="outline">
 		<mat-select id="professional-professionId"
 			placeholder="{{'pacientes.edit_license.form_license.SELECT_PROFESSION'| translate}} "
-			formControlName="professionalProfessionId"
-			(selectionChange)="emitProfessionalProfessionId()">
+			formControlName="professionalProfessionId">
 			<mat-option *ngFor="let elem of professionSpecialties" [value]="elem.profession.id">
 				{{elem.profession.description}}
 			</mat-option>

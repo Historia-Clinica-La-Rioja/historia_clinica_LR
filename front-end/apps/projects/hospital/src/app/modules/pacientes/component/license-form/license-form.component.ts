@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, EventEmitter, forwardRef, Input, OnChanges, OnDestroy, Output } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, EventEmitter, forwardRef, Input, OnDestroy, Output } from '@angular/core';
 import { ControlValueAccessor, FormBuilder, FormControl, NG_VALUE_ACCESSOR, Validators } from '@angular/forms';
 import { ClinicalSpecialtyDto, ValidatedLicenseNumberDto } from '@api-rest/api-model';
 import { hasError } from '@core/utils/form.utils';
@@ -22,7 +22,7 @@ const MAX_LENGTH = 15;
 	changeDetection: ChangeDetectionStrategy.OnPush
 })
 
-export class LicenseFormComponent implements ControlValueAccessor, OnDestroy, OnChanges {
+export class LicenseFormComponent implements ControlValueAccessor, OnDestroy {
 
 	hasError = hasError;
 	onTouched = () => { };
@@ -30,9 +30,7 @@ export class LicenseFormComponent implements ControlValueAccessor, OnDestroy, On
 	RADIO_OPTION_PROVINCE = 2;
 	specialtiesOption: ClinicalSpecialtyDto[] = [];
 	@Input() professionSpecialties: ProfessionalSpecialties[] = [];
-	@Input() confirmationValidation = false;
 	@Input() index: number = 0;
-	@Output() professionalProfessionId: EventEmitter<number> = new EventEmitter();
 	onChangeSub: Subscription;
 
 
@@ -51,11 +49,6 @@ export class LicenseFormComponent implements ControlValueAccessor, OnDestroy, On
 		private readonly licenseNumberService: MatriculaService,
 		private cdRef: ChangeDetectorRef
 	) {}
-
-	ngOnChanges(): void {
-		if (this.confirmationValidation)
-			this.form.markAllAsTouched();
-	}
 
 	setUpLicenseNumberError() {
 		this.licenseNumberService.getLicenseNumbers()
@@ -88,10 +81,6 @@ export class LicenseFormComponent implements ControlValueAccessor, OnDestroy, On
 			}
 		});
 
-	}
-
-	emitProfessionalProfessionId() {
-		this.professionalProfessionId.emit(this.form.controls.professionalProfessionId.value);
 	}
 
 	writeValue(obj: any): void {

@@ -15,8 +15,7 @@
 		<div formArrayName="professionalSpecialties">
 			<div *ngFor="let p of getCtrl('professionalSpecialties',form)?.controls;index as formChild">
 				<div [formGroupName]="formChild" fxLayout="row" fxLayoutAlign="space-between" fxLayoutGap="15px">
-					<app-license-form fxFlex="90%" [professionSpecialties]="data.professionSpecialties" [confirmationValidation]="confirmationValidation"
-						formControlName="combo" [index]="formChild" (professionalProfessionId)="confirmButtonEnabled()">
+					<app-license-form fxFlex="90%" [professionSpecialties]="data.professionSpecialties" formControlName="combo" [index]="formChild">
 					</app-license-form>
 					<button id="delete-button" color="warn" matSuffix mat-icon-button fxLayoutAlign="end"
 					(click)="delete(formChild)">
@@ -34,7 +33,7 @@
 
 	<div fxLayout="row" fxLayoutAlign="end center" fxLayoutGap="17px">
 		<mat-card-actions>
-			<button mat-flat-button (click)="validateLicenseNumbers()" color="primary" [disabled]="! confirmationValidation">
+			<button mat-flat-button (click)="validateLicenseNumbers()" color="primary" [disabled]="! this.form.valid">
 				<span>{{ 'buttons.CONFIRM' | translate | uppercase }}</span>
 			</button>
 		</mat-card-actions>

@@ -17,7 +17,6 @@ export class EditLicenseComponent implements OnInit {
 	form: FormGroup;
 	professionSpecialtiesSinMatriculas: ProfessionalSpecialties[] = [];
 	professionsWithLicense: ProfessionalLicenseNumberDto[] = [];
-	confirmationValidation = false;
 	isHabilitarValidacionMatriculasSisaEnabled: boolean = false;
 
 	constructor(
@@ -28,7 +27,7 @@ export class EditLicenseComponent implements OnInit {
 		private readonly licenseNumberService: MatriculaService,
 		private readonly featureFlagService: FeatureFlagService
 	) {
-
+	
 	}
 
 	ngOnInit(): void {
@@ -47,7 +46,7 @@ export class EditLicenseComponent implements OnInit {
 		} else {
 			this.addCombo();
 		}
-
+	
 	}
 
 	private setPreviousLicenses(): void {
@@ -79,7 +78,6 @@ export class EditLicenseComponent implements OnInit {
 	addCombo(): void {
 		const array = this.form.get('professionalSpecialties') as FormArray;
 		array.push(this.add());
-		this.confirmationValidation = false;
 	}
 
 	getCtrl(key: string, form: FormGroup): any {
@@ -89,7 +87,6 @@ export class EditLicenseComponent implements OnInit {
 	delete(pointIndex: number): void {
 		const array = this.form.get('professionalSpecialties') as FormArray;
 		array.removeAt(pointIndex);
-		this.confirmButtonEnabled();
 	}
 
 	isDisableConfirmButton(): boolean {
@@ -98,7 +95,6 @@ export class EditLicenseComponent implements OnInit {
 	}
 
 	save(): void {	
-		this.confirmationValidation = !this.form.valid;
 		if (this.form.valid) {
 			const professional: ProfessionalLicenseNumberDto[] = this.buildCreateProfessionalLicenseNumberDto();
 			this.dialog.close(professional);
@@ -118,10 +114,6 @@ export class EditLicenseComponent implements OnInit {
 
 				this.save();
 			});
-	}
-
-	confirmButtonEnabled() {
-		this.confirmationValidation = true;
 	}
 
 	private convertToProfessionalLicenseNumberDto(combo: any): ProfessionalLicenseNumberDto {
