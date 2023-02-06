@@ -12,6 +12,7 @@ import lombok.extern.slf4j.Slf4j;
 import net.minidev.json.JSONObject;
 import net.pladema.sipplus.application.port.SipPlusWSStorage;
 
+import net.pladema.sipplus.domain.SipPlusCodes;
 import net.pladema.sipplus.domain.SipPlusPregnancieResponse;
 import net.pladema.sipplus.domain.SipPlusPregnancyCode;
 import net.pladema.sipplus.infrastructure.input.rest.exception.SipPlusApiException;
@@ -25,10 +26,12 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -90,6 +93,21 @@ public class SipPlusWSStorageImpl implements SipPlusWSStorage {
 		}
 	}
 
+	@Override
+	public void createMother(Integer patientId, Integer pregnancyNumber) {
+		BasicPatientDto patientData = sharedPatientPort.getBasicDataFromPatient(patientId);
+		String countryIsoCode = sharedPersonPort.getCountryIsoCodeFromPerson(patientData.getPerson().getId());
+		assertPatientData(patientData, countryIsoCode);
+		
+		String urlWithParams = getUrlWithParams(patientData, countryIsoCode);
+		JSONObject body = createMotherBody(patientData.getPerson(), pregnancyNumber.toString(), countryIsoCode);
+		try {
+			restClientInterface.exchangePost(urlWithParams, body, Object.class);
+		} catch (RestTemplateApiException e) {
+			throw mapException(e);
+		}
+	}
+
 	private void assertPatientData(BasicPatientDto patientData, String countryIsoCode) {
 		if (!(sharedPatientPort.isValidatedOrPermanentPatient(patientData.getTypeId())))
 			throw new SipPlusApiException(SipPlusApiExceptionEnum.UNVALIDATED_PATIENT, "Para acceder, la paciente debe estar en el sistema como paciente validado o permanente");
@@ -105,6 +123,33 @@ public class SipPlusWSStorageImpl implements SipPlusWSStorage {
 				.build();
 	}
 
+	private JSONObject createMotherBody(BasicDataPersonDto basicDataPerson,
+										String pregnancyNumber,
+										String countryIsoCode) {
+		String lastNames = Stream.of(basicDataPerson.getLastName(), basicDataPerson.getOtherLastNames())
+				.filter(Objects::nonNull)
+				.collect(Collectors.joining(" "));
+
+		String names = Stream.of(basicDataPerson.getFirstName(), basicDataPerson.getMiddleNames())
+				.filter(Objects::nonNull)
+				.collect(Collectors.joining(" "));
+
+		JSONObject result = new JSONObject();
+		result.put(SipPlusCodes.NAME, names);
+		result.put(SipPlusCodes.IDENTIFICATION_COUNTRY, countryIsoCode);
+		result.put(SipPlusCodes.LAST_NAME, lastNames);
+		result.put(SipPlusCodes.BIRTH_DATE, basicDataPerson.getBirthDate().format(DateTimeFormatter.ofPattern("dd/MM/yy")));
+		result.put(SipPlusCodes.IDENTIFICATION_TYPE, basicDataPerson.getIdentificationType());
+		result.put(SipPlusCodes.IDENTIFICATION_NUMBER, basicDataPerson.getIdentificationNumber());
+
+		JSONObject pregnancy = new JSONObject();
+		pregnancy.put(pregnancyNumber, getPregnancyData(basicDataPerson));
+		result.put("pregnancies", pregnancy);
+
+		log.debug("Get mother data to create form in sip plus", result.toJSONString());
+
+		return result;
+	}
 
 	private JSONObject getPregnancyData(BasicDataPersonDto basicDataPerson) {
 		log.debug("Get pregnancy data");

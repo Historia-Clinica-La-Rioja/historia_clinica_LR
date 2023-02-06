@@ -10,4 +10,6 @@ public interface SipPlusWSStorage {
 
 	void createPregnancy(Integer patientId, Integer pregnancyNumber);
 
+	void createMother(Integer patientId, Integer pregnancyNumber);
+
 }
