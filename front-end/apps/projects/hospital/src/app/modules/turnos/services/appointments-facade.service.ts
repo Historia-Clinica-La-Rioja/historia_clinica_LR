@@ -11,51 +11,11 @@ import {
 } from '@core/utils/moment.utils';
 import { Moment } from 'moment';
 import { map, first } from 'rxjs/operators';
-import { CANCEL_STATE_ID, APPOINTMENT_STATES_ID } from '../constants/appointment';
+import { CANCEL_STATE_ID, APPOINTMENT_STATES_ID, TEMPORARY_PATIENT, COLORES, BLUE_TEXT, GREY_TEXT, PURPLE_TEXT, WHITE_TEXT } from '../constants/appointment';
 import { PatientNameService } from "@core/services/patient-name.service";
 import { AppointmentBlockMotivesFacadeService } from './appointment-block-motives-facade.service';
 import { HolidaysService } from '@api-rest/services/holidays.service';
 import { dateDtoToDate } from '@api-rest/mapper/date-dto.mapper';
-
-const enum COLORES {
-	ASSIGNED = '#4187FF',
-	CONFIRMED = '#FFA500',
-	ABSENT = '#D5E0D5',
-	BLOCKED = '#7D807D',
-	SERVED = '#A3EBAF',
-	PROGRAMADA = '#7FC681',
-	ESPONTANEA = '#2687C5',
-	SOBRETURNO = '#1A45DD',
-	RESERVA_ALTA = '#FFFFFF',
-	RESERVA_VALIDACION = '#EB5757',
-	FUERA_DE_AGENDA = '#FF0000',
-	PROTECTED = '#AF26C5'
-}
-
-const TEMPORARY_PATIENT = 3;
-const GREY_TEXT = 'calendar-event-grey-text';
-const WHITE_TEXT = 'calendar-event-white-text';
-const BLUE_TEXT = 'calendar-event-blue-text';
-const PURPLE_TEXT = 'calendar-event-purple-text';
-
-const APPOINTMENT_COLORS_STATES: AppointmentColorsStates[] = [
-	{
-		id: APPOINTMENT_STATES_ID.ASSIGNED,
-		color: COLORES.ASSIGNED
-	},
-	{
-		id: APPOINTMENT_STATES_ID.CONFIRMED,
-		color: COLORES.CONFIRMED
-	},
-	{
-		id: APPOINTMENT_STATES_ID.ABSENT,
-		color: COLORES.ABSENT
-	},
-	{
-		id: APPOINTMENT_STATES_ID.SERVED,
-		color: COLORES.SERVED
-	}
-];
 
 @Injectable({
 	providedIn: 'root'
@@ -394,7 +354,3 @@ function showProtectedAppointment(appointment: AppointmentListDto) {
 	return appointment.appointmentStateId === APPOINTMENT_STATES_ID.ASSIGNED && appointment.protected
 }
 
-interface AppointmentColorsStates {
-	id: APPOINTMENT_STATES_ID,
-	color: COLORES
-}
