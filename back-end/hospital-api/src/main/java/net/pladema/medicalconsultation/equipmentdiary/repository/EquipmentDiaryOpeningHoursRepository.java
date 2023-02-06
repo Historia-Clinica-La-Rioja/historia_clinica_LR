@@ -1,5 +1,6 @@
 package net.pladema.medicalconsultation.equipmentdiary.repository;
 
+import net.pladema.medicalconsultation.appointment.repository.entity.AppointmentState;
 import net.pladema.medicalconsultation.diary.repository.domain.DiaryOpeningHoursVo;
 import net.pladema.medicalconsultation.diary.repository.domain.OccupationVo;
 
@@ -88,4 +89,21 @@ public interface EquipmentDiaryOpeningHoursRepository extends JpaRepository<Equi
 			"AND ed.deleteable.deleted = false " +
 			"ORDER BY oh.dayWeekId, oh.from")
 	List<EquipmentDiaryOpeningHoursVo> getDiariesOpeningHours(@Param("equipmentDiaryIds") List<Integer> equipmentDiaryIds);
+
+	@Transactional(readOnly = true)
+	@Query( "SELECT (case when count(edoh) > 0 then true else false end) " +
+			"FROM EquipmentDiaryOpeningHours AS edoh " +
+			"WHERE edoh.pk.equipmentDiaryId = :equipmentDiaryId " +
+			"AND edoh.pk.openingHoursId = :openingHoursId " +
+			"AND edoh.overturnCount > (SELECT COUNT(a.id) " +
+			"                           FROM Appointment AS a " +
+			"                           JOIN EquipmentAppointmentAssn AS eaa ON (a.id = eaa.pk.appointmentId) " +
+			"                           WHERE eaa.pk.equipmentDiaryId = :equipmentDiaryId " +
+			"                           AND eaa.pk.openingHoursId = :openingHoursId " +
+			"							AND a.dateTypeId = :newAppointmentDate"+
+			"                           AND a.isOverturn = true  " +
+			"                           AND NOT a.appointmentStateId = " + AppointmentState.CANCELLED_STR + ")" )
+	boolean allowNewOverturn(@NotNull @Param("equipmentDiaryId") Integer equipmentDiaryId,
+							 @NotNull @Param("openingHoursId") Integer openingHoursId,
+							 @NotNull @Param("newAppointmentDate") LocalDate newAppointmentDate);
 }

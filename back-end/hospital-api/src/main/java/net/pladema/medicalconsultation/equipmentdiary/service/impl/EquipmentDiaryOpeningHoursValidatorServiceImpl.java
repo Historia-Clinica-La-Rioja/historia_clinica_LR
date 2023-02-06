@@ -17,6 +17,7 @@ import org.springframework.stereotype.Service;
 
 import javax.validation.constraints.NotNull;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
@@ -102,6 +103,14 @@ public class EquipmentDiaryOpeningHoursValidatorServiceImpl implements Equipment
         LOG.debug(OUTPUT, result);
         return result;
     }
+
+	@Override
+	public boolean allowNewOverturn(Integer equipmentDiaryId, Integer openingHoursId, LocalDate newApmtDate) {
+		LOG.debug("Input parameters -> equipmentDiaryId {}, openingHoursId {}", equipmentDiaryId, openingHoursId);
+		boolean result = equipmentDiaryOpeningHoursRepository.allowNewOverturn(equipmentDiaryId, openingHoursId, newApmtDate);
+		LOG.debug(OUTPUT, result);
+		return result;
+	}
 
 
 }

@@ -15,9 +15,12 @@ import javax.validation.constraints.Size;
 import ar.lamansys.sgx.shared.dates.configuration.LocalDateMapper;
 import ar.lamansys.sgx.shared.dates.controller.dto.DateTimeDto;
 
+import net.pladema.medicalconsultation.appointment.controller.constraints.ValidEquipmentAppointment;
 import net.pladema.medicalconsultation.appointment.controller.dto.AppointmentShortSummaryDto;
 import net.pladema.medicalconsultation.appointment.controller.dto.UpdateAppointmentDateDto;
 import net.pladema.medicalconsultation.appointment.repository.entity.AppointmentState;
+import net.pladema.medicalconsultation.appointment.service.CreateEquipmentAppointmentService;
+
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -83,6 +86,8 @@ public class AppointmentsController {
 
     private final CreateAppointmentService createAppointmentService;
 
+	private final CreateEquipmentAppointmentService createEquipmentAppointmentService;
+
     private final AppointmentMapper appointmentMapper;
 
     private final PatientExternalService patientExternalService;
@@ -110,6 +115,7 @@ public class AppointmentsController {
             AppointmentService appointmentService,
             AppointmentValidatorService appointmentValidatorService,
             CreateAppointmentService createAppointmentService,
+			CreateEquipmentAppointmentService createEquipmentAppointmentService,
             AppointmentMapper appointmentMapper,
             PatientExternalService patientExternalService,
             HealthcareProfessionalExternalService healthcareProfessionalExternalService,
@@ -122,6 +128,7 @@ public class AppointmentsController {
         this.appointmentService = appointmentService;
         this.appointmentValidatorService = appointmentValidatorService;
         this.createAppointmentService = createAppointmentService;
+		this.createEquipmentAppointmentService = createEquipmentAppointmentService;
         this.appointmentMapper = appointmentMapper;
         this.patientExternalService = patientExternalService;
         this.healthcareProfessionalExternalService = healthcareProfessionalExternalService;
@@ -147,6 +154,21 @@ public class AppointmentsController {
         log.debug(OUTPUT, result);
         return ResponseEntity.ok().body(result);
     }
+
+	@PostMapping(value="equipment")
+	@PreAuthorize("hasPermission(#institutionId, 'ADMINISTRATIVO_RED_DE_IMAGENES')")
+	@ValidEquipmentAppointment
+	public ResponseEntity<Integer> createEquipmentAppoiment(
+			@PathVariable(name = "institutionId") Integer institutionId,
+			@RequestBody @Valid CreateAppointmentDto createAppointmentDto
+	) {
+		log.debug("Input parameters -> institutionId {}, appointmentDto {}", institutionId, createAppointmentDto);
+		AppointmentBo newAppointmentBo = appointmentMapper.toAppointmentBo(createAppointmentDto);
+		newAppointmentBo = createEquipmentAppointmentService.execute(newAppointmentBo);
+		Integer result = newAppointmentBo.getId();
+		log.debug(OUTPUT, result);
+		return ResponseEntity.ok().body(result);
+	}
 
 
     @PostMapping(value = "/update")
