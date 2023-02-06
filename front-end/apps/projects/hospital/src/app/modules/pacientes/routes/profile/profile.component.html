@@ -21,7 +21,7 @@
 					<div header class="header">
 						<app-patient-type-logo [patientTypeData]="patientTypeData"></app-patient-type-logo>
 						<ng-container>
-							<button mat-icon-button color="primary" *appHasRole="['ADMINISTRATIVO', 'ADMINISTRATIVO_RED_DE_IMAGENES']"
+							<button mat-icon-button color="primary" *appHasRole="['ADMINISTRATIVO', 'ADMINISTRADOR_INSTITUCIONAL_BACKOFFICE', 'ADMINISTRATIVO_RED_DE_IMAGENES', 'ADMINISTRADOR_INSTITUCIONAL_PRESCRIPTOR']"
 								(click)="goToEditProfile()">
 								<mat-icon>edit</mat-icon>
 							</button>
