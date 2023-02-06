@@ -13,7 +13,7 @@ export class SipPlusService {
 
   private baseUrl = `${environment.apiBase}/sip-plus`;
 
-  getInfoSipPlus(): Observable<SipPlusUrlDataDto>{
+  getUrlInfo(): Observable<SipPlusUrlDataDto>{
 	const url = this.baseUrl + '/url-info';
 	return this.http.get<SipPlusUrlDataDto >(url)
   }

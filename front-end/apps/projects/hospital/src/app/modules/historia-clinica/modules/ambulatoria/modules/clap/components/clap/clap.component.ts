@@ -1,5 +1,6 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
+import { SipPlusUrlDataDto } from '@api-rest/api-model';
 import { SipPlusService } from '@api-rest/services/sip-plus.service';
 import { ContextService } from '@core/services/context.service';
 
@@ -9,11 +10,12 @@ import { ContextService } from '@core/services/context.service';
 	styleUrls: ['./clap.component.scss']
 })
 export class ClapComponent implements OnInit {
-	@Input() patientId: Number;
+	@Input() patientId: number;
 	trustedUrlSIP: SafeResourceUrl;
-	institucionId: Number;
-	tokenSIP: String;
-	urlBaseSip: String;
+	institucionId: number;
+	tokenSIP: string;
+	urlBaseSip: string;
+	embedSystem: string;
 
 	constructor(private contextService: ContextService,
 		private sanitizer: DomSanitizer,
@@ -21,17 +23,18 @@ export class ClapComponent implements OnInit {
 		this.institucionId = this.contextService.institutionId;
 	}
 
-	ngOnInit(): void {
-		this.sipPlusService.getInfoSipPlus().subscribe(data => {
-			this.urlBaseSip = data.urlBase;
-			this.tokenSIP = data.token;
+	ngOnInit() {
+		this.sipPlusService.getUrlInfo().subscribe((sipUrlData : SipPlusUrlDataDto) => {
+			this.urlBaseSip = sipUrlData.urlBase;
+			this.tokenSIP = sipUrlData.token;
+			this.embedSystem = sipUrlData.embedSystem;
 			this.makeUrlTrusted()
 		})
 	}
 
 
 	makeUrlTrusted() {
-		const url = this.urlBaseSip + '?embedSystem=HSI&embedToken=' + `${this.tokenSIP}$` + `${this.institucionId}$` + `${this.patientId}`;
+		const url = this.urlBaseSip + '?embedSystem='+`${this.embedSystem}&embedToken=`  + `${this.tokenSIP}$` + `${this.institucionId}$` + `${this.patientId}`;
 		this.trustedUrlSIP = this.sanitizer.bypassSecurityTrustResourceUrl(url);
 	}
 }
