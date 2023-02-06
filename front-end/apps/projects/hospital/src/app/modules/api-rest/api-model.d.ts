@@ -2610,6 +2610,7 @@ export interface ProfessionalLicenseNumberDto extends Serializable {
 
 export interface ProfessionalLicenseNumberValidationResponseDto {
     healthcareProfessionalCompleteContactData: boolean;
+    healthcareProfessionalHasLicenses: boolean;
     healthcareProfessionalLicenseNumberValid: boolean;
     patientEmail?: string;
     twoFactorAuthenticationEnabled: boolean;

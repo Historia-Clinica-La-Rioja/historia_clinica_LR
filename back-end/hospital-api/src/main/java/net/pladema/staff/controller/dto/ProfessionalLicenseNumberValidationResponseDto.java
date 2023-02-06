@@ -20,6 +20,8 @@ public class ProfessionalLicenseNumberValidationResponseDto {
 
 	private Boolean healthcareProfessionalCompleteContactData;
 
+	private Boolean healthcareProfessionalHasLicenses;
+
 	@Nullable
 	private String patientEmail;
 
@@ -27,6 +29,7 @@ public class ProfessionalLicenseNumberValidationResponseDto {
 		this.twoFactorAuthenticationEnabled = true;
 		this.healthcareProfessionalLicenseNumberValid = true;
 		this.healthcareProfessionalCompleteContactData = true;
+		this.healthcareProfessionalHasLicenses = true;
 	}
 
 
