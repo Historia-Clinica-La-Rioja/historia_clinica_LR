@@ -16,3 +16,59 @@ databaseChangeLog:
                 SELECT ed.id, edt.description, ed.file_name, ed.created_on, ed.internment_episode_id
                 FROM episode_document ed
                 JOIN episode_document_types edt ON (ed.episode_document_types_id = edt.id)
+    - changeSet:
+        id: equipment_appointment_assn-createTable
+        comment: Create table equipment_appointment_assn
+        author: amurrie
+        changes:
+          - createTable:
+              tableName: equipment_appointment_assn
+              columns:
+                - column:
+                    constraints:
+                      nullable: false
+                    name: equipment_diary_id
+                    type: int
+                - column:
+                    constraints:
+                      nullable: false
+                    name: opening_hours_id
+                    type: int
+                - column:
+                    constraints:
+                      nullable: false
+                    name: appointment_id
+                    type: int
+          - addPrimaryKey:
+              clustered: true
+              columnNames: equipment_diary_id, opening_hours_id, appointment_id
+              constraintName: PK_equipment_appointment_assn
+              tableName: equipment_appointment_assn
+              validate: true
+          - addForeignKeyConstraint:
+              baseColumnNames: equipment_diary_id
+              baseTableName: equipment_appointment_assn
+              constraintName: FK_equipment_appointment_assn_equipment_diary_id
+              onDelete: NO ACTION
+              onUpdate: NO ACTION
+              referencedColumnNames: id
+              referencedTableName: equipment_diary
+              validate: true
+          - addForeignKeyConstraint:
+              baseColumnNames: opening_hours_id
+              baseTableName: equipment_appointment_assn
+              constraintName: FK_equipment_appointment_assn_opening_hours_id
+              onDelete: NO ACTION
+              onUpdate: NO ACTION
+              referencedColumnNames: id
+              referencedTableName: opening_hours
+              validate: true
+          - addForeignKeyConstraint:
+              baseColumnNames: appointment_id
+              baseTableName: equipment_appointment_assn
+              constraintName: FK_equipment_appointment_assn_appointment_id
+              onDelete: NO ACTION
+              onUpdate: NO ACTION
+              referencedColumnNames: id
+              referencedTableName: appointment
+              validate: true
