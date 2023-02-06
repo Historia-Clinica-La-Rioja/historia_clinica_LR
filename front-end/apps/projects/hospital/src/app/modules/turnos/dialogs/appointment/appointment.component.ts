@@ -9,8 +9,8 @@ import { ContextService } from '@core/services/context.service';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { AppFeature, AppointmentDto, CompleteDiaryDto, DateTimeDto, ERole, IdentificationTypeDto, PatientMedicalCoverageDto, PersonPhotoDto, UpdateAppointmentDto, AppointmentListDto, UpdateAppointmentDateDto } from '@api-rest/api-model.d';
 import { CancelAppointmentComponent } from '../cancel-appointment/cancel-appointment.component';
-import { getError, hasError, processErrors, updateControlValidator, VALIDATIONS } from '@core/utils/form.utils';
-import { AppointmentsFacadeService, toCalendarEvent } from '../../services/appointments-facade.service';
+import { VALIDATIONS, getError, hasError, processErrors, updateControlValidator } from '@core/utils/form.utils';
+import { AppointmentsFacadeService } from '../../services/appointments-facade.service';
 import { MapperService } from '@core/services/mapper.service';
 import {
 	determineIfIsHealthInsurance,
@@ -37,6 +37,7 @@ import * as moment from 'moment';
 import { isBefore, isEqual } from 'date-fns';
 import { Color } from '@presentation/colored-label/colored-label.component';
 import { PATTERN_INTEGER_NUMBER } from '@core/utils/pattern.utils';
+import { toCalendarEvent } from '@turnos/modules/image-network/utils/appointment.utils';
 
 const TEMPORARY_PATIENT = 3;
 const BELL_LABEL = 'Llamar paciente'
