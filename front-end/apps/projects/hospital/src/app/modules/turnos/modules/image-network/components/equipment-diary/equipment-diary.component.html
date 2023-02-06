@@ -37,14 +37,16 @@
 		</mwl-calendar-month-view>
 
 		<mwl-calendar-week-view class="title-black" *ngSwitchCase="calendarViewEnum.Week" [viewDate]="viewDate"
-			[refresh]="refreshCalendar" [dayStartHour]="dayStartHour" [dayEndHour]="dayEndHour"
+			[refresh]="refreshCalendar" [dayStartHour]="openingHoursService.dayStartHour" [dayEndHour]="openingHoursService.dayEndHour"
 			[hourSegmentTemplate]="hourSegmentTemplate" [headerTemplate]="headerTemplate" [hourSegments]="hourSegments"
-			[weekStartsOn]="MONDAY" (beforeViewRender)="loadCalendar($event)">
+			[weekStartsOn]="MONDAY" (beforeViewRender)="loadCalendar($event)"
+			>
 		</mwl-calendar-week-view>
 
 		<mwl-calendar-day-view class="title-black" *ngSwitchCase="calendarViewEnum.Day" [viewDate]="viewDate"
-			[hourSegments]="hourSegments" [hourSegmentTemplate]="hourSegmentTemplate" [dayStartHour]="dayStartHour"
-			[dayEndHour]="dayEndHour" (beforeViewRender)="loadCalendar($event)">
+			[hourSegments]="hourSegments" [hourSegmentTemplate]="hourSegmentTemplate" [dayStartHour]="openingHoursService.dayStartHour"
+			[dayEndHour]="openingHoursService.dayEndHour" (beforeViewRender)="loadCalendar($event)"
+			>
 		</mwl-calendar-day-view>
 	</div>
 
