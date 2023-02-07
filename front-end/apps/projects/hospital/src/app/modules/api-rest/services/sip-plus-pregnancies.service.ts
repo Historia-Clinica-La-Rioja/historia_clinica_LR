@@ -19,7 +19,7 @@ export class SipPlusPregnanciesService {
   }
 
   createPregnancy(patientId:number,valuePregnancy:number){
-	const url = this.baseUrl +patientId+'/sip-plus/pregnancy/'+valuePregnancy;
+	const url = this.baseUrl +patientId+'/sip-plus/pregnancies/'+valuePregnancy;
 	return this.http.post(url, valuePregnancy);
   }
 

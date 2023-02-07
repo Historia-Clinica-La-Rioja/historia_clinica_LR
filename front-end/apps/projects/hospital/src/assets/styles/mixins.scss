@@ -85,8 +85,8 @@
     }
 
 	.warn-background {
-        background-color: mat-color($palette-warn);
-		color: mat-color($palette-warn, 50);
+        background-color: mat-color($palette-warn,100);
+		color: mat-color($palette-warn);
 	}
 
 	.headers-card-background {

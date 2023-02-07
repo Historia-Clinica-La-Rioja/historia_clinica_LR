@@ -22,6 +22,7 @@ export class ClapComponent implements OnInit {
 	viewSip:boolean= false;
 	pregnancies: any[];
 	viewError:boolean =false;
+	messageError:String;
 
 	constructor(private contextService: ContextService,
 		private sanitizer: DomSanitizer,
@@ -49,9 +50,14 @@ export class ClapComponent implements OnInit {
 
 	getPregnancies(){
 		this.sipPlusPregnanciesService.getPregnancies(this.patientId).subscribe(data=>{
+			if(data.length){
 				this.pregnancies=data;
-		},error=>{
+			}else{
 			this.viewError=true;
+			}
+
+		},error=>{
+			this.messageError =error.text;
 		})
 	}
 	viewGestation(gestationId:number) {

@@ -14,9 +14,9 @@
 	<mat-form-field appearance="outline">
 		<input matInput type="number" [max]=max name="gestationValue" [min]=min [(ngModel)]="valueGestation">
 	</mat-form-field>
-	<mat-error *ngIf="data.includes(valueGestation)" [translate]="'ambulatoria.paciente.clap.ERROR_REPEAT_VALUE'"></mat-error>
+	<mat-error *ngIf="data?.includes(valueGestation)" [translate]="'ambulatoria.paciente.clap.ERROR_REPEAT_VALUE'"></mat-error>
 	<mat-error *ngIf="valueGestation < min || valueGestation > max" [translate]="'ambulatoria.paciente.clap.VALUE_ERROR'"></mat-error>
 </div>
 <div mat-dialog-actions>
-	<button  mat-raised-button color="primary" [disabled]="(data.includes(valueGestation) || (valueGestation < min || valueGestation > max))" [mat-dialog-close]="valueGestation"> {{ 'ambulatoria.paciente.clap.CREATE' | translate }}</button>
+	<button  mat-raised-button color="primary" [disabled]="(data?.includes(valueGestation) || (valueGestation < min || valueGestation > max))" [mat-dialog-close]="valueGestation"> {{ 'ambulatoria.paciente.clap.CREATE' | translate }}</button>
 </div>

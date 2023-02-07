@@ -6,7 +6,7 @@
 			</button>
 			<h2 [translate]="'ambulatoria.paciente.clap.TAB_LABEL'"></h2>
 		</div>
-		<button *ngIf="!viewSip" mat-stroked-button color="primary" (click)="newGestation()">
+		<button *ngIf="!viewSip && !messageError" mat-stroked-button color="primary" (click)="newGestation()">
 			{{ 'ambulatoria.paciente.clap.NEW_GESTATION' | translate | uppercase }}</button>
 	</div>
 
@@ -42,9 +42,16 @@
 			</mat-card>
 		</div>
 	</div>
-	<div *ngIf="viewError">
-		<h3 class="grey-color"> {{ 'ambulatoria.paciente.clap.ERROR_NOT_HAS_GESTATION' | translate }}</h3>
-	</div>
+	<mat-card class="warn-background" *ngIf="messageError">
+		<mat-card-content>
+			<div fxLayout="row" fxLayoutAlign="start center">
+				<mat-icon id="icon-error">error_outline</mat-icon>
+				{{messageError}}
+			</div>
+		</mat-card-content>
+	</mat-card>
+	<h3 *ngIf="viewError && !messageError" class="grey-color"> {{ 'ambulatoria.paciente.clap.ERROR_NOT_HAS_GESTATION' | translate }}</h3>
+
 	<div *ngIf="viewSip">
 		<iframe width="1000" height="400" [src]="trustedUrlSIP">
 		</iframe>
