@@ -44,6 +44,7 @@
 
 			<div fxLayout="column" fxLayoutAlign="center" formGroupName="frequency">
 				<span class="title">{{'indicacion.internment-card.dialogs.parenteral-plan.FREQUENCY' | translate | titlecase}}</span>
+				<app-warning-message *ngIf="data?.parenteralPlan?.patientId" [parenteralPlan]="data.parenteralPlan"></app-warning-message>
 				<div id="duration" fxLayoutGap="10px" formGroupName="duration">
 					<span class="subtitle">{{'indicacion.internment-card.dialogs.parenteral-plan.DURATION' | translate | titlecase}}:</span>
 					<mat-form-field appearance="outline">
