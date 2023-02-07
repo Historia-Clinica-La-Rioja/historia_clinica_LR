@@ -150,7 +150,7 @@ export class PharmacoComponent implements OnInit {
 		const pharmaco = this.data?.pharmaco;
 		const dosage = pharmaco ? pharmaco.dosage.quantity.value : null;
 		const unit = pharmaco ? pharmaco.dosage.quantity.unit : null;
-		const via = pharmaco ? this.getVia(pharmaco.via) : null;
+		const via = pharmaco ? pharmaco.via : null;
 		const frequencyOption = pharmaco?.dosage.periodUnit ? this.getPeriodUnit(pharmaco.dosage.periodUnit) : this.FREQUENCY_OPTION_INTERVAL;
 		let interval = pharmaco?.dosage.frequency ? pharmaco.dosage.frequency : null;
 		const startTime = pharmaco?.dosage.startDateTime ? this.hoursList.find(e => e === pharmaco.dosage.startDateTime.time.hours) : null;
@@ -359,9 +359,7 @@ export class PharmacoComponent implements OnInit {
 				return null;
 		}
 	}
-	private getVia(via: string): number {
-		return this.data.vias.find(v => v.description === via).id;
-	}
+
 
 	returnToPharmacosDialog() {
 		const openDialogPharmacosFrequent = true;

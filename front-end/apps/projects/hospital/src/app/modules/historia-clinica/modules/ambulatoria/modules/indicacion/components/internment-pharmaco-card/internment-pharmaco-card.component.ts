@@ -1,6 +1,6 @@
 import { Component, Input, OnChanges } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
-import { PharmacoDto } from '@api-rest/api-model';
+import { MasterDataDto, PharmacoDto } from '@api-rest/api-model';
 import { InternacionMasterDataService } from '@api-rest/services/internacion-master-data.service';
 import { InternmentIndicationService } from '@api-rest/services/internment-indication.service';
 import { IndicationStatus, IndicationStatusScss, PHARMACO, showTimeElapsed } from "@historia-clinica/modules/ambulatoria/modules/indicacion/constants/internment-indications";
@@ -19,17 +19,17 @@ export class InternmentPharmacoCardComponent implements OnChanges {
 
 	PHARMACO = PHARMACO;
 	indicationContent: Content[] = [];
-	vias: any[] = [];
+	vias: MasterDataDto[] = [];
 	@Input() pharmacos: PharmacoDto[];
 	@Input() internmentEpisodeId: number;
-	
 	constructor(
 		private readonly internacionMasterdataService: InternacionMasterDataService,
 		private readonly dialog: MatDialog,
 		private readonly internmentIndicationService: InternmentIndicationService,
-	) { }
-	ngOnChanges(): void {
+	) {
 		this.internacionMasterdataService.getVias().subscribe(v => this.vias = v);
+	}
+	ngOnChanges(): void {
 		this.indicationContent = this.mapToIndicationContent();
 	}
 
@@ -43,7 +43,7 @@ export class InternmentPharmacoCardComponent implements OnChanges {
 				},
 				id: pharmaco.id,
 				description: pharmaco.snomed.pt,
-				extra_info: loadExtraInfoPharmaco(pharmaco, true),
+				extra_info: loadExtraInfoPharmaco(pharmaco, true, this.vias),
 				createdBy: pharmaco.createdBy,
 				timeElapsed: showTimeElapsed(pharmaco.createdOn),
 				observations: pharmaco.note ? pharmaco.note.trim() : ''

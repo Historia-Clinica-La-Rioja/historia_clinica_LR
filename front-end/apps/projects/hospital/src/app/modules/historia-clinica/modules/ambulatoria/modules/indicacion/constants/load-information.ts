@@ -46,16 +46,10 @@ export function loadExtraInfoPharmaco(pharmaco: any, loadFrequency: boolean, via
 			content: pharmaco.dosage.quantity.value + " " + pharmaco.dosage.quantity.unit + " "
 		})
 	}
-	if (pharmaco.viaId)
-		extra_info.push({
-			title: 'indicacion.internment-card.sections.indication-extra-description.VIA',
-			content: vias.find(v => v.id === pharmaco.viaId)?.description
-		})
-	else
-		extra_info.push({
-			title: 'indicacion.internment-card.sections.indication-extra-description.VIA',
-			content: pharmaco.via
-		})
+	extra_info.push({
+		title: 'indicacion.internment-card.sections.indication-extra-description.VIA',
+		content: vias.find(v => v.id === pharmaco.via)?.description
+	})
 	if (loadFrequency)
 		return extra_info.concat(showFrequency(pharmaco.dosage));
 	return extra_info;
