@@ -512,12 +512,14 @@
             from appointment ap
             join appointment_assn apassn on (ap.id = apassn.appointment_id)
             join diary d on (apassn.diary_id = d.id)
-            where ap.patient_id = :patientId and
-            ap.date_type_id = :currentDate and
-            ap.patient_medical_coverage_id is not null and
+			left join diary_associated_professional dap on (dap.diary_id = d.id)
+			where ap.patient_id = :patientId and
+			ap.date_type_id = :currentDate and
+			ap.patient_medical_coverage_id is not null and
             (ap.appointment_state_id = :confirmedAppointmentState or
 			ap.appointment_state_id = :assignedAppointmentState ) and
-            d.healthcare_professional_id = :professionalId
+            (d.healthcare_professional_id = :professionalId or
+			dap.healthcare_professional_id = :professionalId)
             order by hour asc
             limit 1
         </query>
