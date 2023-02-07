@@ -133,7 +133,10 @@ public enum AppFeature implements Feature {
 	HABILITAR_VALIDACION_MATRICULAS_SISA,
 	
 	@Label("Indica si esta habilitada la emision de recetas digitales")
-	HABILITAR_RECETA_DIGITAL
+	HABILITAR_RECETA_DIGITAL,
+
+	@Label("Indica si esta habilitado el rol prescriptor")
+	HABILITAR_PRESCRIPCION_RECETA
 	;
 
     public boolean isActive() {
