@@ -49,6 +49,19 @@ public class ListMedicationInfoServiceImpl implements ListMedicationInfoService 
         return result;
     }
 
+	@Override
+	public List<MedicationBo> execute(MedicationFilterBo filter, Integer userId) {
+		LOG.debug("Input parameters -> filter {}", filter);
+		var filterVo = new MedicationFilterVo(filter.getPatientId(), filter.getStatusId(),
+				filter.getMedicationStatement(), filter.getHealthCondition());
+		List<MedicationBo> result = listMedicationRepository.execute(filterVo).stream()
+				.map(this::createMedicationBo)
+				.filter(mb -> byStatus(mb, filter.getStatusId()))
+				.collect(Collectors.toList());
+		LOG.trace("OUTPUT List -> {}", result);
+		return result;
+	}
+
     private MedicationBo createMedicationBo(Object[] row) {
         LOG.debug("Input parameters -> row {}", row);
         MedicationBo result = new MedicationBo();

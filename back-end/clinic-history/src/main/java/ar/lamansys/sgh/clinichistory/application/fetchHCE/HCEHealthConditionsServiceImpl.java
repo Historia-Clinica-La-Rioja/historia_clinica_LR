@@ -7,6 +7,7 @@ import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.hce.entity
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.hce.entity.HCEHospitalizationVo;
 import ar.lamansys.sgh.clinichistory.domain.hce.HCEHospitalizationBo;
 import ar.lamansys.sgh.clinichistory.domain.hce.HCEPersonalHistoryBo;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -45,6 +46,19 @@ public class HCEHealthConditionsServiceImpl implements HCEHealthConditionsServic
         LOG.debug(LOGGING_OUTPUT, result);
         return result;
     }
+
+	@Override
+	public List<HCEPersonalHistoryBo> getActivePersonalHistoriesByUser(Integer patientId, Integer userId) {
+		LOG.debug(LOGGING_INPUT, patientId);
+		List<HCEHealthConditionVo> resultQuery = hceHealthConditionRepository.getPersonalHistoriesByUser(patientId, userId);
+		List<HCEPersonalHistoryBo> result = resultQuery.stream()
+				.map(HCEPersonalHistoryBo::new)
+				.filter(HCEPersonalHistoryBo::isActive)
+				.sorted(Comparator.comparing(HCEPersonalHistoryBo::getStartDate, Comparator.nullsFirst(Comparator.naturalOrder())).reversed())
+				.collect(Collectors.toList());
+		LOG.debug(LOGGING_OUTPUT, result);
+		return result;
+	}
 
     @Override
     public List<HCEPersonalHistoryBo> getFamilyHistories(Integer patientId) {

@@ -106,7 +106,7 @@ public class ClinicalSpecialtyController {
     }
 
     @GetMapping("/institution/{institutionId}/clinicalspecialty/loggedProfessionalClinicalSpecialty")
-    @PreAuthorize("hasPermission(#institutionId, 'ESPECIALISTA_MEDICO, PROFESIONAL_DE_SALUD, ESPECIALISTA_EN_ODONTOLOGIA, ENFERMERO')")
+    @PreAuthorize("hasPermission(#institutionId, 'ESPECIALISTA_MEDICO, PROFESIONAL_DE_SALUD, ESPECIALISTA_EN_ODONTOLOGIA, ENFERMERO, PRESCRIPTOR')")
     public ResponseEntity<List<ClinicalSpecialtyDto>> getLoggedInProfessionalClinicalSpecialties(
             @PathVariable(name = "institutionId") Integer institutionId) {
         Integer professionalId = healthcareProfessionalExternalService.getProfessionalId(UserInfo.getCurrentAuditor());

@@ -149,7 +149,7 @@ public class MedicationRequestController {
 
     @PostMapping
     @ResponseStatus(code = HttpStatus.CREATED)
-    @PreAuthorize("hasPermission(#institutionId, 'ESPECIALISTA_MEDICO, ESPECIALISTA_EN_ODONTOLOGIA')")
+    @PreAuthorize("hasPermission(#institutionId, 'ESPECIALISTA_MEDICO, ESPECIALISTA_EN_ODONTOLOGIA, PRESCRIPTOR')")
     public @ResponseBody
     Integer create(@PathVariable(name = "institutionId") Integer institutionId,
                    @PathVariable(name = "patientId") Integer patientId,
@@ -207,7 +207,7 @@ public class MedicationRequestController {
     }
 
 
-    @GetMapping
+	@GetMapping("/medicationRequestList")
     @ResponseStatus(code = HttpStatus.OK)
     public @ResponseBody
     @PreAuthorize("hasPermission(#institutionId, 'ESPECIALISTA_MEDICO, PROFESIONAL_DE_SALUD, ESPECIALISTA_EN_ODONTOLOGIA, ENFERMERO, PERSONAL_DE_FARMACIA')")
@@ -227,6 +227,27 @@ public class MedicationRequestController {
         LOG.debug("medicationRequestList result -> {}", result);
         return result;
     }
+
+	@GetMapping("/medicationRequestListByUser")
+	@ResponseStatus(code = HttpStatus.OK)
+	public @ResponseBody
+	@PreAuthorize("hasPermission(#institutionId, 'ESPECIALISTA_MEDICO, PROFESIONAL_DE_SALUD, ESPECIALISTA_EN_ODONTOLOGIA, ENFERMERO, PERSONAL_DE_FARMACIA, PRESCRIPTOR')")
+	List<MedicationInfoDto> medicationRequestListByUser(@PathVariable(name = "institutionId") Integer institutionId,
+												  @PathVariable(name = "patientId") Integer patientId,
+												  @RequestParam(value = "statusId", required = false) String statusId,
+												  @RequestParam(value = "medicationStatement", required = false) String medicationStatement,
+												  @RequestParam(value = "healthCondition", required = false) String healthCondition) {
+		LOG.debug("medicationRequestList -> institutionId {}, patientId {}, statusId {}, medicationStatement {}, healthCondition {}", institutionId, patientId, statusId, medicationStatement, healthCondition);
+		List<MedicationBo> resultService = listMedicationInfoService.execute(new MedicationFilterBo(patientId, statusId, medicationStatement, healthCondition), UserInfo.getCurrentAuditor());
+		List<MedicationInfoDto> result = resultService.stream()
+				.map(mid -> {
+					ProfessionalDto professionalDto = healthcareProfessionalExternalService.findProfessionalByUserId(mid.getUserId());
+					return listMedicationInfoMapper.parseTo(mid, professionalDto);
+				})
+				.collect(Collectors.toList());
+		LOG.debug("medicationRequestList result -> {}", result);
+		return result;
+	}
 
     @GetMapping(value = "/{medicationRequestId}/download")
     @PreAuthorize("hasPermission(#institutionId, 'ESPECIALISTA_MEDICO, PROFESIONAL_DE_SALUD, ESPECIALISTA_EN_ODONTOLOGIA, ENFERMERO, PERSONAL_DE_FARMACIA')")
