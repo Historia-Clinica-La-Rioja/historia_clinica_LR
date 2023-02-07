@@ -16,6 +16,7 @@ import ar.lamansys.sgx.shared.dates.configuration.LocalDateMapper;
 import ar.lamansys.sgx.shared.dates.controller.dto.DateTimeDto;
 
 import net.pladema.medicalconsultation.appointment.controller.constraints.ValidEquipmentAppointment;
+import net.pladema.medicalconsultation.appointment.controller.dto.AppointmentEquipmentShortSummaryDto;
 import net.pladema.medicalconsultation.appointment.controller.dto.AppointmentShortSummaryDto;
 import net.pladema.medicalconsultation.appointment.controller.dto.UpdateAppointmentDateDto;
 import net.pladema.medicalconsultation.appointment.repository.entity.AppointmentState;
@@ -476,6 +477,18 @@ public class AppointmentsController {
 		log.debug("Input parameters -> institutionId {}, patientId {}, date {}", institutionId, patientId, date);
 		var appointmentShortSummaryBo = appointmentService.getAppointmentFromDeterminatedDate(patientId, localDateMapper.fromStringToLocalDate(date));
 		var result = appointmentMapper.toAppointmentShortSummaryDto(appointmentShortSummaryBo);
+		return ResponseEntity.ok(result);
+	}
+
+	@GetMapping("/patient/{patientId}/verify-existing-appointments-equipment")
+	@PreAuthorize("hasPermission(#institutionId, 'ADMINISTRATIVO_RED_DE_IMAGENES')")
+	public ResponseEntity<AppointmentEquipmentShortSummaryDto> getAppointmentEquipmentFromDeterminatedDate(
+			@PathVariable(name = "institutionId") Integer institutionId,
+			@PathVariable(name = "patientId") Integer patientId,
+			@RequestParam String date) {
+		log.debug("Input parameters -> institutionId {}, patientId {}, date {}", institutionId, patientId, date);
+		var appointmentShortSummaryBo = appointmentService.getAppointmentEquipmentFromDeterminatedDate(patientId, localDateMapper.fromStringToLocalDate(date));
+		var result = appointmentMapper.toAppointmentEquipmentShortSummaryDto(appointmentShortSummaryBo);
 		return ResponseEntity.ok(result);
 	}
 

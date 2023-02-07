@@ -234,6 +234,13 @@ export interface AppointmentDto extends CreateAppointmentDto {
     stateChangeReason?: string;
 }
 
+export interface AppointmentEquipmentShortSummaryDto {
+    date: DateDto;
+    equipmentName: string;
+    hour: TimeDto;
+    institution: string;
+}
+
 export interface AppointmentListDto {
     appointmentBlockMotiveId: number;
     appointmentStateId: number;

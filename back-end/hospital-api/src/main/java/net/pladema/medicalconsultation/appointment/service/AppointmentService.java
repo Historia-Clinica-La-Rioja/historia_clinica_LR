@@ -7,6 +7,7 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 
+import net.pladema.medicalconsultation.appointment.repository.domain.AppointmentEquipmentShortSummaryBo;
 import net.pladema.medicalconsultation.appointment.repository.domain.AppointmentShortSummaryBo;
 import net.pladema.medicalconsultation.appointment.repository.domain.AppointmentTicketBo;
 import net.pladema.medicalconsultation.appointment.service.domain.AppointmentAssignedBo;
@@ -62,6 +63,8 @@ public interface AppointmentService {
 	AppointmentTicketBo getAppointmentTicketData(Integer appointmentId);
 
 	AppointmentShortSummaryBo getAppointmentFromDeterminatedDate(Integer patientId, LocalDate date);
+
+	AppointmentEquipmentShortSummaryBo getAppointmentEquipmentFromDeterminatedDate(Integer patientId, LocalDate date);
 
 	List<Integer> getAppointmentsBeforeDateByStates(List<Short> statesIds, LocalDateTime maxAppointmentDate, Short limit);
 

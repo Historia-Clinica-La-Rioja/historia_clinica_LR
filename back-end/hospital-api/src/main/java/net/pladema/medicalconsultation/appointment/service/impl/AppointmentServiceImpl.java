@@ -19,6 +19,7 @@ import ar.lamansys.sgx.shared.dates.configuration.LocalDateMapper;
 import net.pladema.medicalconsultation.appointment.repository.AppointmentAssnRepository;
 import ar.lamansys.sgh.shared.infrastructure.input.service.SharedReferenceCounterReference;
 import net.pladema.medicalconsultation.appointment.repository.AppointmentUpdateRepository;
+import net.pladema.medicalconsultation.appointment.repository.domain.AppointmentEquipmentShortSummaryBo;
 import net.pladema.medicalconsultation.diary.service.DiaryOpeningHoursService;
 import net.pladema.medicalconsultation.diary.service.domain.BlockBo;
 import net.pladema.medicalconsultation.diary.service.domain.DiaryBo;
@@ -446,6 +447,16 @@ public class AppointmentServiceImpl implements AppointmentService {
 		List<AppointmentShortSummaryBo> appointmentShortSummaryBoList = this.appointmentRepository.getAppointmentFromDeterminatedDate(patientId, date);
 		if (!appointmentShortSummaryBoList.isEmpty())
 			result = appointmentShortSummaryBoList.get(0);
+		return result;
+	}
+
+	@Override
+	public AppointmentEquipmentShortSummaryBo getAppointmentEquipmentFromDeterminatedDate(Integer patientId, LocalDate date) {
+		log.debug("Input parameters -> patientId {}, date {}", patientId, date);
+		AppointmentEquipmentShortSummaryBo result = null;
+		List<AppointmentEquipmentShortSummaryBo> appointmentEquipmentShortSummaryBoList = this.appointmentRepository.getAppointmentEquipmentFromDeterminatedDate(patientId, date);
+		if (!appointmentEquipmentShortSummaryBoList.isEmpty())
+			result = appointmentEquipmentShortSummaryBoList.get(0);
 		return result;
 	}
 
