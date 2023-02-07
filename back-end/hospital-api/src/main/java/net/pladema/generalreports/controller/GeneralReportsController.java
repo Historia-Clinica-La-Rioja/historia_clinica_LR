@@ -194,10 +194,10 @@ public class GeneralReportsController {
 		LOG.debug("Inputs parameters -> institutionId {}, fromDate{}, toDate{}", institutionId);
 
 		String title = "Reportes de Estudios Complementarios";
-		String[] headers = new String[]{"Institución", "Fecha", "created_on", "Source_Id", "Categoria", "Orden", "Estado", "Tipo de Solicitud",
+		String[] headers = new String[]{"Institución", "Fecha", "Categoria", "Orden","Tipo de Solicitud",
 										"Origen de Solicitud", "Nombre del Paciente", "Tipo de Documento", "Numero del Documento del Paciente", "Obra Social",
 										"Numero de Afiliado", "Nombre del Profesional", "Tipo de Documento del Profesional",
-										"Numero de Documento del Profesional", "Licencia", "Nota", "Estado de la Orden",
+										"Numero de Documento del Profesional", "Licencia", "Nota",
 										"Fecha de Emisión", "Nombre del Estudio", "Notas Adicionales", "Problema Asociado"};
 
 		LocalDate startDate = localDateMapper.fromStringToLocalDate(fromDate);

@@ -1188,14 +1188,22 @@
 	</named-native-query>
 
 	<named-native-query name="GeneralReports.ComplementaryStudies" result-set-mapping="GeneralReports.ComplementaryStudiesResult">
-		<query>SELECT concat(i.name, '(SISA: ', i.sisa_code, ' | CUIT: ', i.cuit, ')') AS institution,
-			sr.request_date AS date , sr.created_on AS createdOn, sr.source_id AS sourceId, sr_cat.description AS category, sr_cat.orden AS order, sr_st.description AS status, ri.description AS typeOfRequest,
+		<query>
+			SELECT concat(i.name, '(SISA: ', i.sisa_code, ' | CUIT: ', i.cuit, ')') AS institution,
+			sr.request_date as date, sr_cat.description AS category,
+			CASE
+			WHEN dr_st.id='1' THEN 'Pendiente'
+			WHEN dr_st.id='261782000' THEN 'Completado'
+			WHEN dr_st.id='89925002' THEN 'Eliminado'
+			ELSE 'Otro'
+			END AS order,
+			ri.description AS typeOfRequest,
 			src.description AS origin,
 			concat(pe_pat.last_name, ' ', pe_pat.other_last_names, ', ', pe_pat.first_name, ' ', pe_pat.middle_names) AS patientName, id_t.description AS documentTypePatient, pe_pat.identification_number AS documentNumberPatient,
 			mc.name AS socialWork, pmc.affiliate_number AS affiliateNumber,
 			concat(pe_hp.last_name, ' ', pe_hp.other_last_names, ', ', pe_hp.first_name, ' ', pe_hp.middle_names) AS professionalName, id_tt.description AS documentTypeProfessional, pe_hp.identification_number AS documentNumberProfessional,
 			hp.license_number AS license, n.description AS note,
-			dr_st.description AS orderStatus, d_r.effective_time AS dateOfIssue, concat(s_dr.pt, ' (SNOMED: ', s_dr.sctid, ' | CIE10: ', d_r.cie10_codes, ')') AS studyName, n_dr.description AS additionalNotes,
+			d_r.effective_time AS dateOfIssue, concat(s_dr.pt, ' (SNOMED: ', s_dr.sctid, ' | CIE10: ', d_r.cie10_codes, ')') AS studyName, n_dr.description AS additionalNotes,
 			concat(s_hc.pt, ' [Estado: ', hc_st.description, ', Verificación: ', hc_ver.description, ', Severidad:', hc_sev.display, ', Tipo: ', hc_t.description, '] (SNOMED: ', s_hc.sctid, ' | CIE10: ', hc.cie10_codes, ') Fecha: ', hc.start_date) AS associatedProblems
 			FROM document d
 			INNER JOIN service_request sr ON d.source_id=sr.id AND d.source_type_id=3 AND d.type_id=6
@@ -1214,7 +1222,7 @@
 			INNER JOIN identification_type id_tt ON pe_hp.identification_type_id=id_tt.id
 			INNER JOIN institution i ON sr.institution_id=i.id
 			LEFT JOIN note n ON sr.note_id=n.id
-			INNER JOIN document_diagnostic_report ddr ON ddr.document_id=d.id
+			INNER JOIN (select * from document_diagnostic_report ddr_ WHERE ddr_.diagnostic_report_id IN (SELECT MAX(ddrr.diagnostic_report_id) FROM document_diagnostic_report ddrr GROUP BY ddrr.document_id)) ddr ON ddr.document_id=d.id
 			INNER JOIN diagnostic_report d_r ON ddr.diagnostic_report_id=d_r.id
 			INNER JOIN diagnostic_report_status dr_st ON d_r.status_id=dr_st.id
 			INNER JOIN snomed s_dr ON d_r.snomed_id=s_dr.id
@@ -1227,7 +1235,7 @@
 			INNER JOIN snomed s_hc ON hc.snomed_id=s_hc.id
 			WHERE d.created_on BETWEEN :startDate AND :endDate
 			AND i.id= :institutionId
-			order by d.created_on
+			order by d.created_on;
 		</query>
 	</named-native-query>
 	
@@ -1904,11 +1912,8 @@
 		<constructor-result target-class="net.pladema.generalreports.repository.ComplementaryStudies">
 			<column name="institution" class="java.lang.String"/>
 			<column name="date" class="java.lang.String"/>
-			<column name="createdOn" class="java.lang.String"/>
-			<column name="sourceId" class="java.lang.String"/>
 			<column name="category" class="java.lang.String"/>
 			<column name="order" class="java.lang.String"/>
-			<column name="status" class="java.lang.String"/>
 			<column name="typeOfRequest" class="java.lang.String"/>
 			<column name="origin" class="java.lang.String"/>
 			<column name="patientName" class="java.lang.String"/>
@@ -1921,7 +1926,6 @@
 			<column name="documentNumberProfessional" class="java.lang.String"/>
 			<column name="license" class="java.lang.String"/>
 			<column name="note" class="java.lang.String"/>
-			<column name="orderStatus" class="java.lang.String"/>
 			<column name="dateOfIssue" class="java.lang.String"/>
 			<column name="studyName" class="java.lang.String"/>
 			<column name="additionalNotes" class="java.lang.String"/>

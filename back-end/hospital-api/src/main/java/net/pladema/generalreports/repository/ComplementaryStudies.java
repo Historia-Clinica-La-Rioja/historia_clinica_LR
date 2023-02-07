@@ -15,15 +15,9 @@ public class ComplementaryStudies {
 
 	private String date;
 
-	private String createdOn;
-
-	private String sourceId;
-
 	private String category;
 
 	private String order;
-
-	private String status;
 
 	private String typeOfRequest;
 
@@ -48,8 +42,6 @@ public class ComplementaryStudies {
 	private String license;
 
 	private String note;
-
-	private String orderStatus;
 
 	private String dateOfIssue;
 

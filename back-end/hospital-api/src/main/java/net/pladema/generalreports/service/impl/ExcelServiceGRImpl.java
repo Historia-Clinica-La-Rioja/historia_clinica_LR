@@ -732,48 +732,36 @@ public class ExcelServiceGRImpl implements ExcelServiceGR {
 		cell1.setCellStyle(style);
 
 		ICell cell2 = row.createCell(rowNumber.getAndIncrement());
-		cell2.setCellValue(content.getCreatedOn());
+		cell2.setCellValue(content.getCategory());
 		cell2.setCellStyle(style);
 
-		ICell cell23 = row.createCell(rowNumber.getAndIncrement());
-		cell23.setCellValue(content.getSourceId());
-		cell23.setCellStyle(style);
-
 		ICell cell3 = row.createCell(rowNumber.getAndIncrement());
-		cell3.setCellValue(content.getCategory());
+		cell3.setCellValue(content.getOrder());
 		cell3.setCellStyle(style);
 
 		ICell cell4 = row.createCell(rowNumber.getAndIncrement());
-		cell4.setCellValue(content.getOrder());
+		cell4.setCellValue(content.getTypeOfRequest());
 		cell4.setCellStyle(style);
 
 		ICell cell5 = row.createCell(rowNumber.getAndIncrement());
-		cell5.setCellValue(content.getStatus());
+		cell5.setCellValue(content.getOrigin());
 		cell5.setCellStyle(style);
 
 		ICell cell6 = row.createCell(rowNumber.getAndIncrement());
-		cell6.setCellValue(content.getTypeOfRequest());
+		cell6.setCellValue(content.getPatientName());
 		cell6.setCellStyle(style);
 
 		ICell cell7 = row.createCell(rowNumber.getAndIncrement());
-		cell7.setCellValue(content.getOrigin());
+		cell7.setCellValue(content.getDocumentTypePatient());
 		cell7.setCellStyle(style);
 
 		ICell cell8 = row.createCell(rowNumber.getAndIncrement());
-		cell8.setCellValue(content.getPatientName());
+		cell8.setCellValue(content.getDocumentNumberPatient());
 		cell8.setCellStyle(style);
 
 		ICell cell9 = row.createCell(rowNumber.getAndIncrement());
-		cell9.setCellValue(content.getDocumentTypePatient());
+		cell9.setCellValue(content.getSocialWork());
 		cell9.setCellStyle(style);
-
-		ICell cell10 = row.createCell(rowNumber.getAndIncrement());
-		cell10.setCellValue(content.getDocumentNumberPatient());
-		cell10.setCellStyle(style);
-
-		ICell cell11 = row.createCell(rowNumber.getAndIncrement());
-		cell11.setCellValue(content.getSocialWork());
-		cell11.setCellStyle(style);
 
 		ICell cell12 = row.createCell(rowNumber.getAndIncrement());
 		cell12.setCellValue(content.getAffiliateNumber());
@@ -798,10 +786,6 @@ public class ExcelServiceGRImpl implements ExcelServiceGR {
 		ICell cell17 = row.createCell(rowNumber.getAndIncrement());
 		cell17.setCellValue(content.getNote());
 		cell17.setCellStyle(style);
-
-		ICell cell18 = row.createCell(rowNumber.getAndIncrement());
-		cell18.setCellValue(content.getOrderStatus());
-		cell18.setCellStyle(style);
 
 		ICell cell19 = row.createCell(rowNumber.getAndIncrement());
 		cell19.setCellValue(content.getDateOfIssue());
