@@ -21,7 +21,6 @@ import { SuspenderMedicacionComponent } from "@historia-clinica/modules/ambulato
 import { DietComponent } from "@historia-clinica/modules/ambulatoria/modules/indicacion/dialogs/diet/diet.component";
 import { OtherIndicationComponent } from './dialogs/other-indication/other-indication.component';
 import { ParenteralPlanComponent } from './dialogs/parenteral-plan/parenteral-plan.component';
-import { PharmacosFrequentComponent } from './dialogs/pharmacos-frequent/pharmacos-frequent.component';
 import { HistoriaClinicaModule } from '@historia-clinica/historia-clinica.module';
 import { PharmacoComponent } from './dialogs/pharmaco/pharmaco.component';
 import { GeneralNursingRecordComponent } from './components/general-nursing-record/general-nursing-record.component';
@@ -55,7 +54,6 @@ import { ShowViaPipe } from './pipes/show-via.pipe';
 		DietComponent,
 		OtherIndicationComponent,
 		ParenteralPlanComponent,
-		PharmacosFrequentComponent,
 		PharmacoComponent,
 		RegisterNursingRecordComponent,
 		RelativeDatePipe,

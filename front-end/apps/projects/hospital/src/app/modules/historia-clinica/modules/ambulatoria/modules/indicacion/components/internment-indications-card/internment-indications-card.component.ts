@@ -17,7 +17,6 @@ import { InternmentStateService } from '@api-rest/services/internment-state.serv
 import { InternacionMasterDataService } from '@api-rest/services/internacion-master-data.service';
 import { ConfirmDialogComponent } from '@presentation/dialogs/confirm-dialog/confirm-dialog.component';
 import { IndicationByProfessionalService } from '@api-rest/services/indication-by-professional.service';
-import { PharmacosFrequentComponent } from '../../dialogs/pharmacos-frequent/pharmacos-frequent.component';
 import { MostFrequentComponent } from '../../dialogs/most-frequent/most-frequent.component';
 import { Item } from '@presentation/pipes/paginate.pipe';
 
