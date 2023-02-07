@@ -20,6 +20,7 @@ export class HomeComponent implements OnInit {
 
 	ffIsOn = false;
 	noPermission = false;
+	hasRoleToViewTab = false;
 
 	readonly mssg = 'image-network.home.NO_PERMISSION';
 
@@ -35,10 +36,11 @@ export class HomeComponent implements OnInit {
 	}
 
 	ngOnInit() {
-		this.permissionsService.hasContextAssignments$([ERole.ADMINISTRATIVO_RED_DE_IMAGENES]).subscribe(hasRole => {
+		this.permissionsService.hasContextAssignments$([ERole.ADMINISTRATIVO_RED_DE_IMAGENES, ERole.ADMINISTRADOR_AGENDA]).subscribe(hasRole => {
 			this.featureFlagService.isActive(AppFeature.HABILITAR_DESARROLLO_RED_IMAGENES).subscribe(ffIsOn => {
 				this.ffIsOn = ffIsOn;
 				this.noPermission = (hasRole && !ffIsOn);
+				this.hasRoleToViewTab = hasRole;
 			})
 		})
 	}
