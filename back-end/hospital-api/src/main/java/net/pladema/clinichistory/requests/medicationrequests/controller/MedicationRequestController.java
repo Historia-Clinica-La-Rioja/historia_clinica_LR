@@ -2,7 +2,9 @@ package net.pladema.clinichistory.requests.medicationrequests.controller;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 import java.time.format.DateTimeFormatter;
+import java.util.Base64;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -13,14 +15,23 @@ import java.util.stream.Collectors;
 import javax.validation.Valid;
 
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.generateFile.DocumentAuthorFinder;
+import ar.lamansys.sgh.shared.infrastructure.input.service.staff.ProfessionCompleteDto;
 import ar.lamansys.sgh.shared.infrastructure.input.service.staff.ProfessionalCompleteDto;
+
+import com.google.zxing.common.BitMatrix;
 
 import net.pladema.clinichistory.requests.medicationrequests.service.ValidateMedicationRequestGenerationService;
 
 import net.pladema.staff.controller.dto.ProfessionalLicenseNumberValidationResponseDto;
+import com.google.zxing.BarcodeFormat;
+import com.google.zxing.client.j2se.MatrixToImageConfig;
+import com.google.zxing.client.j2se.MatrixToImageWriter;
+import com.google.zxing.oned.Code128Writer;
+import net.pladema.staff.service.domain.ELicenseNumberTypeBo;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.InputStreamResource;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -76,6 +87,9 @@ public class MedicationRequestController {
 
     private static final Logger LOG = LoggerFactory.getLogger(MedicationRequestController.class);
     public static final String CHANGE_STATE_REQUEST = "change-state -> institutionId {}, patientId {}, changeStateRequest {}";
+
+	@Value("${prescription.domain.number}")
+	private Integer recipeDomain;
 
     private final CreateMedicationRequestService createMedicationRequestService;
 
@@ -223,9 +237,16 @@ public class MedicationRequestController {
         var medicationRequestBo = getMedicationRequestInfoService.execute(medicationRequestId);
         var patientDto = patientExternalService.getBasicDataFromPatient(patientId);
         var patientCoverageDto = patientExternalMedicalCoverageService.getCoverage(medicationRequestBo.getMedicalCoverageId());
-        var context = createContext(medicationRequestBo, patientDto, patientCoverageDto);
-
-        String template = "recipe_order_table";
+		Map<String, Object> context;
+		String template;
+		if (!featureFlagsService.isOn(AppFeature.HABILITAR_RECETA_DIGITAL)) {
+			context = createContext(medicationRequestBo, patientDto, patientCoverageDto);
+			template = "recipe_order_table";
+		}
+		else {
+			context = createContextDigitalRecipe(medicationRequestBo, patientDto, patientCoverageDto);
+			template = "digital_recipe";
+		}
 
         ByteArrayOutputStream os = pdfService.writer(template, context);
         ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(os.toByteArray());
@@ -264,6 +285,57 @@ public class MedicationRequestController {
         ctx.put("requestDate", date); LOG.debug("Output -> {}", ctx);
         return ctx;
     }
+
+	private Map<String, Object> createContextDigitalRecipe(MedicationRequestBo medicationRequestBo,
+											  BasicPatientDto patientDto,
+											  PatientMedicalCoverageDto patientCoverageDto) {
+		LOG.debug("Input parameters -> medicationRequestBo {}, patientDto {}, patientCoverageDto {}", medicationRequestBo, patientDto, patientCoverageDto);
+		Map<String, Object> ctx = new HashMap<>();
+
+		var date = medicationRequestBo.getRequestDate().format(DateTimeFormatter.ofPattern("dd-MM-yyyy"));
+		var dateUntil = medicationRequestBo.getRequestDate().plusDays(30).format(DateTimeFormatter.ofPattern("dd-MM-yyyy"));
+		ctx.put("requestDate", date);
+		ctx.put("dateUntil", dateUntil);
+
+		var patientIdentificationNumberBarCode = generateDigitalRecipeBarCode(patientDto.getIdentificationNumber());
+		ctx.put("patientIdentificationNumberBarCode", patientIdentificationNumberBarCode);
+
+		var recipeNumberBarCode = generateDigitalRecipeBarCode(recipeDomain + "." + medicationRequestBo.getMedicationRequestId().toString());
+		ctx.put("recipeNumberBarCode", recipeNumberBarCode);
+
+		var professionalInformation = authorFromDocumentFunction.apply(medicationRequestBo.getId());
+		var professionalRelatedProfession = professionalInformation.getProfessions().stream().filter(profession -> profession.getSpecialties().stream().anyMatch(specialty -> specialty.getSpecialty().getId().equals(medicationRequestBo.getClinicalSpecialtyId()))).findFirst();
+
+		ctx.put("patient", patientDto);
+		ctx.put("patientCoverage", patientCoverageDto);
+		ctx.put("professional", professionalInformation);
+		ctx.put("medications", medicationRequestBo.getMedications());
+		ctx.put("professionalProfession", professionalRelatedProfession.<Object>map(ProfessionCompleteDto::getDescription).orElse(null));
+
+		if (professionalRelatedProfession.isPresent()) {
+			var clinicalSpecialty = professionalRelatedProfession.get().getSpecialties().stream().filter(specialty -> specialty.getSpecialty().getId().equals(medicationRequestBo.getClinicalSpecialtyId())).findFirst();
+			ctx.put("clinicalSpecialty", clinicalSpecialty.<Object>map(professionSpecialtyDto -> professionSpecialtyDto.getSpecialty().getName()).orElse(null));
+
+			var nationalLicenseData = professionalRelatedProfession.get().getAllLicenses().stream().filter(license -> license.getType().equals(ELicenseNumberTypeBo.NATIONAL.getAcronym())).findFirst();
+			nationalLicenseData.ifPresent(licenseNumberDto -> ctx.put("nationalLicense", licenseNumberDto.getNumber()));
+
+			var stateProvinceData = professionalRelatedProfession.get().getAllLicenses().stream().filter(license -> license.getType().equals(ELicenseNumberTypeBo.PROVINCE.getAcronym())).findFirst();
+			stateProvinceData.ifPresent(licenseNumberDto -> ctx.put("stateLicense", licenseNumberDto.getNumber()));
+		}
+		return ctx;
+	}
+
+	private String generateDigitalRecipeBarCode(String dataToEncode) {
+		Code128Writer writer = new Code128Writer();
+		BitMatrix barCode = writer.encode(dataToEncode, BarcodeFormat.CODE_128, 200, 100);
+		ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+		try {
+			MatrixToImageWriter.writeToStream(barCode, "JPEG" , outputStream, new MatrixToImageConfig());
+			return Base64.getEncoder().encodeToString(outputStream.toByteArray());
+		} catch (IOException e) {
+			throw new RuntimeException(e);
+		}
+	}
 
 
     @ResponseStatus(HttpStatus.BAD_REQUEST)

@@ -38,7 +38,13 @@ public class DosageBo {
 
 	private Integer dosesByDay;
 
-    public String getPeriodUnit(){
+	public DosageBo(Double duration, Integer dosesByUnit, Integer dosesByDay) {
+		this.duration = duration;
+		this.dosesByUnit = dosesByUnit;
+		this.dosesByDay = dosesByDay;
+	}
+
+	public String getPeriodUnit(){
         return periodUnit != null ? periodUnit.getValue() : null;
     }
 

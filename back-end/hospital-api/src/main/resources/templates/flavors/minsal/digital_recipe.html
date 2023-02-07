@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="es">
+<head th:fragment="headerfiles">
+    <title>Report</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+
+    <style>
+        .centered-content {
+            text-align: center;
+        }
+	</style>
+</head>
+<body>
+    <div class="centered-content">
+        <strong>FECHA DE PRESCRIPCIÓN</strong><br/>
+        <span th:text="${requestDate}"></span><br/>
+        <strong>FECHA DE VENCIMIENTO</strong><br/>
+        <span th:text="${dateUntil}"></span><br/>
+        <strong>NÚMERO DE RECETA</strong><br/>
+        <img th:src="${'data:image/jpeg;charset=utf-8;base64,' + recipeNumberBarCode}" alt=""></img><br/>
+        <strong>NÚMERO DE DNI</strong><br/>
+        <img th:src="${'data:image/jpeg;charset=utf-8;base64,' + patientIdentificationNumberBarCode}" alt=""></img><br/>
+        <strong>DNI</strong><br/>
+        <span th:text="${patient.person.identificationNumber}"></span><br/>
+        <strong>APELLIDO Y NOMBRE</strong><br/>
+        <span th:text="${patient.person.completeName()}"></span><br/>
+        <strong>COBERTURA DE SALUD</strong><br/>
+        <span th:text="${patientCoverage?.medicalCoverage?.name}"></span><br/>
+        <strong>NÚMERO DE AFILIADO</strong><br/>
+        <span th:text="${patientCoverage?.affiliateNumber}"></span><br/>
+        <strong>EDAD</strong><br/>
+        <span th:text="${patient.person.age}"></span><br/>
+        <strong>FIRMADO ELECTRÓNICAMENTE por:</strong><br/>
+        <strong>APELLIDO Y NOMBRE</strong><br/>
+        <span th:text="${professional.getCompleteName(professional.getNameSelfDetermination())}"></span><br/>
+        <strong>MATRÍCULA NACIONAL N°</strong><br/>
+        <span th:text="${nationalLicense}">?</span><br/>
+        <strong>MATRÍCULA PROVINCIAL N°</strong><br/>
+        <span th:text="${stateLicense}">?</span><br/>
+        <strong>PROFESIÓN</strong><br/>
+        <span th:text="${professionalProfession}">?</span><br/>
+        <strong>ESPECIALIDAD</strong><br/>
+        <span th:text="${clinicalSpecialty}">?</span><br/>
+        <div id="medication-list">
+            <div th:each="medication : ${medications}">
+                <strong>Rp.</strong><strong th:text="${medication.prescriptionLineNumber}"></strong><br/>
+                <strong>GENÉRICO</strong><br/>
+                <span th:text="${medication.snomed.pt}"></span><br/>
+                <strong>DOSIS/UNIDAD</strong><br/>
+                <span th:text="${medication.dosage.dosesByUnit}"></span><br/>
+                <strong>DOSIS/DIA</strong><br/>
+                <span th:text="${medication.dosage.dosesByDay}"></span><br/>
+                <strong>DURACIÓN DE TRATAMIENTO EN DÍAS</strong><br/>
+                <span th:text="${medication.dosage.duration}"></span><br/>
+                <strong>DIAGNÓSTICO</strong><br/>
+                <span th:text="${medication.healthCondition.snomed.pt}"></span><br/>
+                <strong>OBSERVACIONES:</strong><br/>
+                <span th:text="${medication.note}"></span><br/>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

@@ -1,5 +1,6 @@
 package net.pladema.clinichistory.requests.medicationrequests.service.impl;
 
+import ar.lamansys.sgh.clinichistory.domain.ips.DosageBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.HealthConditionBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.MedicationBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.SnomedBo;
@@ -49,6 +50,7 @@ public class GetMedicationRequestInfoServiceImpl implements GetMedicationRequest
                         .map(this::createMedicationBo)
                         .collect(Collectors.toList()));
 		result.setId(((BigInteger) resultQuery.get(0)[13]).longValue());
+		result.setClinicalSpecialtyId((Integer) resultQuery.get(0)[18]);
         return result;
     }
 
@@ -65,6 +67,8 @@ public class GetMedicationRequestInfoServiceImpl implements GetMedicationRequest
         healthConditionBo.setSnomed(new SnomedBo((Integer) row[9], (String) row[10], (String) row[11]));
         healthConditionBo.setCie10codes((String) row[12]);
         result.setHealthCondition(healthConditionBo);
+		result.setPrescriptionLineNumber((Integer) row[14]);
+		result.setDosage(new DosageBo((Double) row[15], (Integer) row[16], (Integer) row[17]));
         return result;
     }
 }
