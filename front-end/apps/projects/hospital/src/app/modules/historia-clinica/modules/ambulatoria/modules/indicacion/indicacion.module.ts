@@ -31,6 +31,7 @@ import { RelativeDatePipe } from './pipes/relative-date.pipe';
 import { InternmentIndicationDetailComponent } from './dialogs/internment-indication-detail/internment-indication-detail.component';
 import { PrescripcionValidatorPopupComponent } from './dialogs/prescripcion-validator-popup/prescripcion-validator-popup.component';
 import { WarningMessageComponent } from './components/warning-message/warning-message.component';
+import { ShowViaPipe } from './pipes/show-via.pipe';
 
 @NgModule({
 	declarations: [
@@ -50,6 +51,7 @@ import { WarningMessageComponent } from './components/warning-message/warning-me
 		NursingRecordComponent,
 		SpecificNursingRecordComponent,
 		SuspenderMedicacionComponent,
+		ShowViaPipe,
 		DietComponent,
 		OtherIndicationComponent,
 		ParenteralPlanComponent,
