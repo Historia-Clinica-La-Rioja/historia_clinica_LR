@@ -3,13 +3,14 @@ import {
     List,
     Datagrid,
     TextField,
-    ReferenceField, Filter,
+    ReferenceField, Filter, TextInput,
 } from 'react-admin';
 import SgxDateField from "../../dateComponents/sgxDateField";
 import SgxSelectInput from "../../sgxSelectInput/SgxSelectInput";
 
 const DocumentFileFilter = (props) => (
     <Filter {...props}>
+        <TextInput source="filename"/>
         <SgxSelectInput source="typeId" element="documenttypes" optionText="description" allowEmpty={false} />
     </Filter>
 );

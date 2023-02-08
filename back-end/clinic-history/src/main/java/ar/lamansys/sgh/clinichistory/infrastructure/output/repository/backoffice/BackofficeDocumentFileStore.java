@@ -6,6 +6,7 @@ import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.e
 import ar.lamansys.sgx.shared.dates.configuration.LocalDateMapper;
 import net.pladema.sgx.backoffice.repository.BackofficeStore;
 import org.springframework.data.domain.Example;
+import org.springframework.data.domain.ExampleMatcher;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
@@ -45,7 +46,11 @@ public class BackofficeDocumentFileStore implements BackofficeStore<DocumentFile
 		documentFile.setFilename(dto.getFilename());
 		documentFile.setSourceId(dto.getSourceId());
 		documentFile.setTypeId(dto.getTypeId());
-		return Example.of(documentFile);
+
+		ExampleMatcher matcher = ExampleMatcher
+				.matching()
+				.withMatcher("filename", x -> x.ignoreCase().contains());
+		return Example.of(documentFile, matcher);
 	}
 
 	@Override
