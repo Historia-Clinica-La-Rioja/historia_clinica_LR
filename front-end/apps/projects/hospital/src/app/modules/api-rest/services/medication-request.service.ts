@@ -61,7 +61,7 @@ export class MedicationRequestService {
 
 		queryParams = healthCondition ? queryParams.append('healthCondition', healthCondition) : queryParams;
 
-		const url = `${environment.apiBase}/institutions/${this.contextService.institutionId}/patient/${patientId}/medicationRequestList`;
+		const url = `${environment.apiBase}/institutions/${this.contextService.institutionId}/patient/${patientId}/medication-requests/medicationRequestList`;
 		return this.http.get<MedicationInfoDto[]>(url, {params : queryParams});
 	}
 
@@ -74,7 +74,7 @@ export class MedicationRequestService {
 
 		queryParams = healthCondition ? queryParams.append('healthCondition', healthCondition) : queryParams;
 
-		const url = `${environment.apiBase}/institutions/${this.contextService.institutionId}/patient/${patientId}/medicationRequestListByUser`;
+		const url = `${environment.apiBase}/institutions/${this.contextService.institutionId}/patient/${patientId}/medication-requests/medicationRequestListByUser`;
 
 		return this.http.get<MedicationInfoDto[]>(url, {params : queryParams});
 	}
