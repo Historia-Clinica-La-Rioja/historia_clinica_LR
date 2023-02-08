@@ -31,7 +31,7 @@ public interface SnomedGroupRepository extends JpaRepository<SnomedGroup, Intege
 			" JOIN SnomedGroup baseGroup ON (sg.groupId = baseGroup.id) " +
 			" JOIN SnomedRelatedGroup srg ON (sg.id = srg.groupId) " +
 			" JOIN Snomed s ON (srg.snomedId = s.id) " +
-			" WHERE sg.template = TRUE " +
+			" WHERE sg.groupType = :templateGroupType" +
 			" 	AND fts(sg.description, :searchTerm ) = TRUE " +
 			" 	AND baseGroup.ecl = :baseGroupEcl " +
 			" 	AND baseGroup.description = :baseGroupDescription " +
@@ -42,14 +42,15 @@ public interface SnomedGroupRepository extends JpaRepository<SnomedGroup, Intege
 													  @Param("baseGroupEcl") String baseGroupEcl,
 													  @Param("baseGroupDescription") String baseGroupDescription,
 													  @Param("institutionId") Integer institutionId,
-													  @Param("userId") Integer userId);
+													  @Param("userId") Integer userId,
+													  @Param("templateGroupType") Short templateGroupType);
 
 	@Query( " SELECT NEW net.pladema.snowstorm.repository.domain.SnomedTemplateSearchVo(sg.id, sg.description, s.id, s.sctid, s.pt) " +
 			" FROM SnomedGroup sg " +
 			" JOIN SnomedGroup baseGroup ON (sg.groupId = baseGroup.id) " +
 			" JOIN SnomedRelatedGroup srg ON (sg.id = srg.groupId) " +
 			" JOIN Snomed s ON (srg.snomedId = s.id) " +
-			" WHERE sg.template = TRUE " +
+			" WHERE sg.groupType = :templateGroupType" +
 			" 	AND baseGroup.ecl = :baseGroupEcl " +
 			" 	AND baseGroup.description = :baseGroupDescription " +
 			" 	AND baseGroup.groupId IS NULL " +
@@ -58,7 +59,8 @@ public interface SnomedGroupRepository extends JpaRepository<SnomedGroup, Intege
 	List<SnomedTemplateSearchVo> getTemplates(@Param("baseGroupEcl") String baseGroupEcl,
 											  @Param("baseGroupDescription") String baseGroupDescription,
 											  @Param("institutionId") Integer institutionId,
-											  @Param("userId") Integer userId);
+											  @Param("userId") Integer userId,
+											  @Param("templateGroupType") Short templateGroupType);
 
 
 	@Transactional(readOnly = true)
