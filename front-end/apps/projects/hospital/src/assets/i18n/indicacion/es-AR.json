@@ -167,6 +167,13 @@
 		"card-pharmaco": {
 			"SELECTION": "Seleccionar"
 		},
+		"most-frequent": {
+			"TITLE": "Fármacos recetados más frecuentes",
+			"TITLE_PARENTERAL": "Planes parenterales | Fármacos recetados más frecuentes",
+			"SUBTITLE": "Descripción SNOMED",
+			"SEARCH": "Buscar entre los más frecuentes...",
+			"ADD_NEW": "+ Agregar nuevo"
+		},
 		"card-pharmaco-frequent": {
 			"TITLE": "Fármacos recetados más frecuentes",
 			"SUBTITLE": "Descripción SNOMED",
@@ -203,6 +210,21 @@
 					"SUBTITLE": "Ingrese el motivo por el que la indicación no puede completarse."
 				}
 			}
+		},
+		"warning-message": {
+			"DURATION": "Duracíon:",
+			"DURATION_DETAILS": "{{hour}} Hs {{minutes}} min.",
+			"FREQUENCY": "Flujo:",
+			"FREQUENCY_DETAILS": "{{flowDropsHour}} Ml/h {{flowMlHour}} hp. Gotas.",
+			"DAILY_VOLUME": "Vol/Día:",
+			"DAILY_VOLUME_DETAILS": "{{dailyVolume}} ml.",
+			"START_TIME":"Inicio de administración",
+			"START_TIME_DETAILS":"{{hour}} Hs."
+		},
+		"relative-date-pipe": {
+			"PRESCRIBED_TODAY_TO_THIS_PATIENT":"Recetado hoy a este paciente.",
+			"PRESCRIBED_YESTERDAY_TO_THIS_PATIENT":"Recetado ayer a este paciente.",
+			"PRESCRIBED_THE_DAY_BEFORE_YESTERDAY_TO_THIS_PATIENT":"Recetado antes de ayer a este paciente."
 		}
 	}
 }
