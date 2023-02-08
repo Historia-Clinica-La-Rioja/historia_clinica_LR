@@ -121,6 +121,7 @@ export class ProfileComponent implements OnInit {
 	public internacionSummary = INTERNACION;
 	public internmentEpisodeSummary: InternmentEpisodeSummary;
 	private readonly routePrefix;
+	private clinicalHistoryRoute;
 	public internmentEpisode;
 	public userData: UserDataDto;
 	public personId: number;
@@ -177,6 +178,7 @@ export class ProfileComponent implements OnInit {
 		this.route.paramMap.subscribe(
 			(params) => {
 				this.patientId = Number(params.get('id'));
+				this.clinicalHistoryRoute = 'institucion/' + this.contextService.institutionId + '/ambulatoria/paciente/' + this.patientId;
 				this.patientService.getPatientCompleteData<CompletePatientDto>(this.patientId)
 					.subscribe(completeData => {
 						if (completeData?.auditablePatientInfo) {
@@ -344,6 +346,10 @@ export class ProfileComponent implements OnInit {
 			{
 				queryParams: { patientId: this.patientId }
 			});
+	}
+
+	goToClinicalHistory(): void {
+		this.router.navigate([this.clinicalHistoryRoute]);
 	}
 
 	goToEditProfile(): void {

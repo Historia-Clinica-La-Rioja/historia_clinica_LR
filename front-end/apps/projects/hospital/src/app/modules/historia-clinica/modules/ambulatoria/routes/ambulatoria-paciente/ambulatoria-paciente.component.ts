@@ -93,6 +93,9 @@ export class AmbulatoriaPacienteComponent implements OnInit, OnDestroy {
 	emergencyCareTabIndex: number;
 	showEmergencyCareTab: boolean;
 	hasEpisodeToShow: boolean;
+	hasPrescriptorRole = false;
+	canOnlyViewSelfAddedProblems = false;
+	rolesThatCanOnlyViewSelfAddedProblems = [ERole.PRESCRIPTOR];
 
 	private timeOut = 15000;
 	private isOpenOdontologyConsultation = false;
@@ -125,6 +128,7 @@ export class AmbulatoriaPacienteComponent implements OnInit, OnDestroy {
 			.subscribe((result: boolean) => this.isHabilitarRecetaDigitalEnabled = result)
 			
 		const toEmergencyCareTab = this.router.getCurrentNavigation()?.extras?.state?.toEmergencyCareTab;
+		this.setPermissions();
 		this.route.paramMap.subscribe(
 			(params) => {
 				this.patientId = Number(params.get('idPaciente'));
@@ -233,6 +237,11 @@ export class AmbulatoriaPacienteComponent implements OnInit, OnDestroy {
 		this.medicalCoverageInfo.clearAll();
 	}
 
+	private setPermissions(): void {
+		this.permissionsService.contextAssignments$().subscribe((userRoles: ERole[]) => {
+			this.canOnlyViewSelfAddedProblems = anyMatch<ERole>(userRoles, this.rolesThatCanOnlyViewSelfAddedProblems);});
+	}
+
 	loadExternalInstitutions(): void {
 		const externalInstitutions = this.interoperabilityBusService.getPatientLocation(this.patientId.toString())
 			.subscribe(
@@ -310,6 +319,7 @@ export class AmbulatoriaPacienteComponent implements OnInit, OnDestroy {
 			this.hasPicturesStaffRole = anyMatch<ERole>(userRoles, [ERole.PERSONAL_DE_IMAGENES]);
 			this.hasLaboratoryStaffRole = anyMatch<ERole>(userRoles, [ERole.PERSONAL_DE_LABORATORIO]);
 			this.hasPharmacyStaffRole = anyMatch<ERole>(userRoles, [ERole.PERSONAL_DE_FARMACIA]);
+			this.hasPrescriptorRole = anyMatch<ERole>(userRoles, [ERole.PRESCRIPTOR]);
 		});
 	}
 

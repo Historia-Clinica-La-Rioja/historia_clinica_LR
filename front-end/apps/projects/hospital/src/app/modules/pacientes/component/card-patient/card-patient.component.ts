@@ -50,7 +50,8 @@ export class CardPatientComponent {
 				ERole.ESPECIALISTA_EN_ODONTOLOGIA,
 				ERole.PERSONAL_DE_LABORATORIO,
 				ERole.PERSONAL_DE_IMAGENES,
-				ERole.PERSONAL_DE_FARMACIA]));
+				ERole.PERSONAL_DE_FARMACIA,
+				ERole.PRESCRIPTOR]));
 
 		return this.patientData?.map((patient: PatientSearchDto) => {
 			return {

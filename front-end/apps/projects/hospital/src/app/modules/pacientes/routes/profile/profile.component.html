@@ -6,6 +6,12 @@
 		<span class="no-information" [translate]="'pacientes.user_data.NO_INFO'"></span>
 	</ng-template>
 
+	<div *appHasRole="['PRESCRIPTOR']">
+		<button mat-raised-button
+			color="primary" (click)="goToClinicalHistory()">
+			<span class="uppercase"> {{ 'pacientes.profile.SEE_CLINICAL_HISTORY' | translate }} </span>
+		</button>
+	</div>
 	<div *appHasRole="['ADMINISTRATIVO', 'ADMINISTRATIVO_RED_DE_IMAGENES']">
 		<button *ngIf="(!internmentEpisode?.patientHospitalized && !internmentEpisode?.id)" mat-raised-button
 			color="primary" (click)="goNewInternment()">
@@ -21,7 +27,7 @@
 					<div header class="header">
 						<app-patient-type-logo [patientTypeData]="patientTypeData"></app-patient-type-logo>
 						<ng-container>
-							<button mat-icon-button color="primary" *appHasRole="['ADMINISTRATIVO', 'ADMINISTRADOR_INSTITUCIONAL_BACKOFFICE', 'ADMINISTRATIVO_RED_DE_IMAGENES', 'ADMINISTRADOR_INSTITUCIONAL_PRESCRIPTOR']"
+							<button mat-icon-button color="primary" *appHasRole="['ADMINISTRATIVO', 'ADMINISTRADOR_INSTITUCIONAL_BACKOFFICE', 'ADMINISTRATIVO_RED_DE_IMAGENES', 'ADMINISTRADOR_INSTITUCIONAL_PRESCRIPTOR', 'PRESCRIPTOR']"
 								(click)="goToEditProfile()">
 								<mat-icon>edit</mat-icon>
 							</button>

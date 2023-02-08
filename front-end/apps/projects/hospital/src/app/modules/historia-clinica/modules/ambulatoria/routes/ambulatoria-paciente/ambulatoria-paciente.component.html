@@ -11,7 +11,7 @@
 			[personPhoto]="personPhoto" [showAdditionalInformation]="true"
 			[internmentEpisodeProcess]="internmentEpisodeProcess"
 			[emergencyCareEpisodeInProgress]="emergencyCareEpisodeInProgress?.inProgress">
-			<div info-content fxLayout="row" fxLayout.xs="column">
+			<div info-content fxLayout="row" fxLayout.xs="column" *ngIf="!canOnlyViewSelfAddedProblems">
 				<div fxLayout="row">
 					<mat-divider class="header-divider" [vertical]="true"></mat-divider>
 					<div class="sided_spaced_content" *ngIf="bloodType?.length" fxLayout="column"
@@ -132,13 +132,12 @@
 			<mat-card-content>
 				<mat-tab-group (selectedTabChange)="onTabChanged($event)" [(selectedIndex)]="selectedTab"
 					*ngIf="hasInternmentEpisodeInThisInstitution !== undefined">
-					<mat-tab id="tab_resumen"
-						*ngIf="!hasInternmentEpisodeInThisInstitution && !showEmergencyCareTab && hasHealthRelatedRole">
+					<mat-tab id="tab_resumen" *ngIf="!hasInternmentEpisodeInThisInstitution && (hasHealthRelatedRole || hasPrescriptorRole)">
 						<ng-template mat-tab-label>
 							<span>{{ 'ambulatoria.paciente.resumen.TAB_LABEL' | translate | uppercase }}</span>
 						</ng-template>
 						<ng-template matTabContent>
-							<app-resumen [patientExternalSummary]="patientExternalSummary"></app-resumen>
+							<app-resumen [patientExternalSummary]="patientExternalSummary"  [canOnlyViewSelfAddedProblems]="canOnlyViewSelfAddedProblems"></app-resumen>
 						</ng-template>
 					</mat-tab>
 					<mat-tab id="tab_internacion" *ngIf="hasInternmentEpisodeInThisInstitution && hasHealthRelatedRole">
@@ -159,12 +158,12 @@
 							</app-guardia>
 						</ng-template>
 					</mat-tab>
-					<mat-tab id="tab_indications" *ngIf="hasHealthRelatedRole || hasPharmacyStaffRole">
+					<mat-tab id="tab_indications" *ngIf="hasHealthRelatedRole || hasPharmacyStaffRole || hasPrescriptorRole">
 						<ng-template mat-tab-label>
 							<span>{{ 'indicacion.TITLE' | translate | uppercase }}</span>
 						</ng-template>
 						<ng-template matTabContent>
-							<div *ngIf="hasInternmentEpisodeInThisInstitution">
+							<div *ngIf="hasInternmentEpisodeInThisInstitution && !canOnlyViewSelfAddedProblems">
 								<app-internment-indications-card [patientId]="patientId"
 									[epicrisisConfirmed]="epicrisisDoc?.confirmed"
 									[internmentEpisodeId]="internmentEpisodeProcess.id">

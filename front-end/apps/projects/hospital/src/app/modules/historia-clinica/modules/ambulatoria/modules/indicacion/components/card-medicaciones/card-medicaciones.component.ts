@@ -21,8 +21,9 @@ import { ERole } from '@api-rest/api-model';
 import { PrescripcionValidatorPopupComponent } from '../../dialogs/prescripcion-validator-popup/prescripcion-validator-popup.component';
 import { FeatureFlagService } from '@core/services/feature-flag.service';
 import { EnviarRecetaDigitalPorEmailComponent } from '@historia-clinica/modules/ambulatoria/dialogs/enviar-receta-digital-por-email/enviar-receta-digital-por-email.component';
+import { anyMatch } from '@core/utils/array.utils';
 
-const ROLES_TO_EDIT: ERole[] = [ERole.ESPECIALISTA_MEDICO];
+const ROLES_TO_EDIT: ERole[] = [ERole.ESPECIALISTA_MEDICO, ERole.PRESCRIPTOR];
 
 @Component({
 	selector: 'app-card-medicaciones',
@@ -41,6 +42,8 @@ export class CardMedicacionesComponent implements OnInit {
 	public formFilter: FormGroup;
 	private hasRoleToEdit: boolean;
 	isHabilitarRecetaDigitalEnabled: boolean = false;
+	canOnlyViewSelfAddedProblems = false;
+	rolesThatCanOnlyViewSelfAddedProblems = [ERole.PRESCRIPTOR];
 
 	@Input() patientId: number;
 	@Input()
@@ -72,6 +75,8 @@ export class CardMedicacionesComponent implements OnInit {
 			healthCondition: [null],
 		});
 
+		this.setPermissions();
+
 		this.medicationCheckboxes = this.formBuilder.group({
 			checkboxArray: this.formBuilder.array([])
 		});
@@ -94,11 +99,24 @@ export class CardMedicacionesComponent implements OnInit {
 
 	}
 
+	private setPermissions(): void {
+		this.permissionsService.contextAssignments$().subscribe((userRoles: ERole[]) => {
+			this.canOnlyViewSelfAddedProblems = anyMatch<ERole>(userRoles, this.rolesThatCanOnlyViewSelfAddedProblems);
+		});
+	}
+
 	private getMedication(): void {
-		this.medicacionesService.updateMedicationFilter(this.patientId,
-			this.formFilter.controls.statusId.value,
-			this.formFilter.controls.medicationStatement.value,
-			this.formFilter.controls.healthCondition.value);
+		if (this.canOnlyViewSelfAddedProblems) {
+			this.medicacionesService.updateMedicationFilterByRoles(this.patientId,
+				this.formFilter.controls.statusId.value,
+				this.formFilter.controls.medicationStatement.value,
+				this.formFilter.controls.healthCondition.value);
+		} else {
+			this.medicacionesService.updateMedicationFilter(this.patientId,
+				this.formFilter.controls.statusId.value,
+				this.formFilter.controls.medicationStatement.value,
+				this.formFilter.controls.healthCondition.value);
+		}
 	}
 
 	private getMedicationList(medication?: MedicationInfoDto) {

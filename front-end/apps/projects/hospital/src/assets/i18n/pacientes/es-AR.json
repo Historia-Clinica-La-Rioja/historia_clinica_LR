@@ -16,7 +16,8 @@
       "INITIATE_INTERNMENT": "Iniciar internación",
       "PATIENT_INTERNMENT_ANOTHER_INSTITUTION": "El paciente se encuentra internado en otra institución.",
       "REPORTS": "Informes",
-      "MARKED_FOR_AUDIT": "Marcado para auditar"
+      "MARKED_FOR_AUDIT": "Marcado para auditar",
+      "SEE_CLINICAL_HISTORY": "Ver historia clínica"
     },
     "form": {
       "ADDRESS": "Domicilio",
