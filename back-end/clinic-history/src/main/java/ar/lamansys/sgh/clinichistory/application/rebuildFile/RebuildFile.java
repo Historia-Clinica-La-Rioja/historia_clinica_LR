@@ -1,5 +1,9 @@
 package ar.lamansys.sgh.clinichistory.application.rebuildFile;
 
+import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.DocumentFileHistoryRepository;
+
+import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.entity.DocumentFileHistory;
+
 import org.springframework.stereotype.Service;
 
 import ar.lamansys.sgh.clinichistory.application.fetchAllDocumentInfo.FetchAllDocumentInfo;
@@ -16,13 +20,15 @@ public class RebuildFile {
     private final FetchAllDocumentInfo fetchAllDocumentInfo;
 	private final DocumentFileRepository documentFileRepository;
 	private final GenerateFilePort generateFilePort;
+	private final DocumentFileHistoryRepository documentFileHistoryRepository;
 
 	public RebuildFile(FetchAllDocumentInfo fetchAllDocumentInfo,
 					   DocumentFileRepository documentFileRepository,
-					   GenerateFilePort generateFilePort) {
+					   GenerateFilePort generateFilePort, DocumentFileHistoryRepository documentFileHistoryRepository) {
 		this.fetchAllDocumentInfo = fetchAllDocumentInfo;
 		this.documentFileRepository = documentFileRepository;
 		this.generateFilePort = generateFilePort;
+		this.documentFileHistoryRepository = documentFileHistoryRepository;
 	}
 
 	public void run(Long id) {
@@ -40,6 +46,7 @@ public class RebuildFile {
 	private void update(DocumentFile documentFile, Long id) {
 		documentFileRepository.findById(id)
 				.map(oldDocument -> {
+					documentFileHistoryRepository.save(new DocumentFileHistory(oldDocument));
 					oldDocument.setFilename(documentFile.getFilename());
 					oldDocument.setFilepath(documentFile.getFilepath());
 					oldDocument.setChecksum(documentFile.getChecksum());

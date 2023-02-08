@@ -66,5 +66,15 @@ public class DocumentFileHistory extends SGXAuditableEntity<Long> {
 		this.uuidfile = uuidFile;
 		this.checksum = checksum;
 	}
+	public DocumentFileHistory(DocumentFile df) {
+		this.documentId = df.getId();
+		this.sourceId = df.getSourceId();
+		this.sourceTypeId = df.getSourceTypeId();
+		this.typeId = df.getTypeId();
+		this.filepath = df.getFilepath();
+		this.filename = df.getFilename();
+		this.uuidfile = df.getUuidfile();
+		this.checksum = df.getChecksum();
+	}
 
 }
