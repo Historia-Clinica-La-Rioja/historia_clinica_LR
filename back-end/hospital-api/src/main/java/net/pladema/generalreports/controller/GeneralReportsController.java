@@ -34,7 +34,7 @@ public class GeneralReportsController {
 
 	private final LocalDateMapper localDateMapper;
 
-	public GeneralReportsController(QueryFactoryGR queryFactoryGR, ExcelServiceGR excelServiceGR, LocalDateMapper localDateMapper) {
+	public GeneralReportsController(QueryFactoryGR queryFactoryGR, ExcelServiceGR excelServiceGR, LocalDateMapper localDateMapper){
 		this.queryFactoryGR = queryFactoryGR;
 		this.excelServiceGR = excelServiceGR;
 		this.localDateMapper = localDateMapper;
