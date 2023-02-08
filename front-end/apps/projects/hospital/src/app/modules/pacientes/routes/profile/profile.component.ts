@@ -232,11 +232,11 @@ export class ProfileComponent implements OnInit {
 									this.permissionService.hasContextAssignments$(ROLES_THAT_CAN_ASSIGN_ANY_ROLE_BUT_PRESCRIPTOR)])
 									.subscribe(([hasRoleToAssignPrescriptorRole, hasRoleThatCanAssignAnyRoleButPrescriptor]) => {
 										if (!hasRoleToAssignPrescriptorRole)
-											this.assignableRoles = this.roles.filter(role => role.id !== 20);
+											this.assignableRoles = this.roles.filter(role => role.id !== 21);
 										if (hasRoleThatCanAssignAnyRoleButPrescriptor && hasRoleToAssignPrescriptorRole)
 											this.assignableRoles = this.roles;
 										if (!hasRoleThatCanAssignAnyRoleButPrescriptor && hasRoleToAssignPrescriptorRole)
-											this.assignableRoles = this.roles.filter(role => role.id === 20);
+											this.assignableRoles = this.roles.filter(role => role.id === 21);
 									});
 								});
 
