@@ -322,3 +322,99 @@ databaseChangeLog:
               sql: |-
                 INSERT INTO person_history (person_id, first_name, middle_names, last_name, other_last_names, identification_type_id, identification_number, gender_id, birth_date, created_by, created_on)
                 SELECT id, first_name, middle_names, last_name, other_last_names, identification_type_id, identification_number, gender_id, birth_date, -1, current_timestamp FROM person;
+
+    - changeSet:
+        id: document_file_history-createTable
+        comment: Create table document_file_history
+        author: mvalin
+        changes:
+          - createTable:
+              tableName: document_file_history
+              columns:
+                - column:
+                    autoIncrement: true
+                    constraints:
+                      primaryKey: true
+                      primaryKeyName: PK_document_file_history
+                    name: id
+                    type: bigint
+                - column:
+                    constraints:
+                      nullable: false
+                      references: document(id)
+                      foreignKeyName: FK_document_file_history_document
+                    name: document_id
+                    type: bigint
+                - column:
+                    constraints:
+                      nullable: false
+                    name: source_id
+                    type: int
+                - column:
+                    constraints:
+                      nullable: false
+                      references: document_type(id)
+                      foreignKeyName: FK_document_file_history_type
+                    name: type_id
+                    type: smallint
+                - column:
+                    constraints:
+                      nullable: false
+                    name: file_path
+                    type: varchar(200)
+                - column:
+                    constraints:
+                      nullable: false
+                    name: file_name
+                    type: varchar(50)
+                - column:
+                    constraints:
+                      nullable: false
+                    name: created_by
+                    type: int
+                    defaultValue: -1
+                - column:
+                    constraints:
+                      nullable: false
+                    name: created_on
+                    type: datetime
+                    defaultValueDate: ${date.now}
+                - column:
+                    constraints:
+                      nullable: false
+                    name: updated_by
+                    type: int
+                    defaultValue: -1
+                - column:
+                    constraints:
+                      nullable: false
+                    name: updated_on
+                    type: datetime
+                    defaultValueDate: ${date.now}
+                - column:
+                    constraints:
+                      nullable: false
+                    name: uuid_file
+                    type: varchar(36)
+                - column:
+                    constraints:
+                      nullable: false
+                    name: source_type_id
+                    type: smallint
+                - column:
+                    constraints:
+                      nullable: false
+                    name: checksum
+                    type: varchar(512)
+                - column:
+                    constraints:
+                      nullable: false
+                    name: deleted
+                    type: BOOLEAN
+                    defaultValue: ${boolean.false}
+                - column:
+                    name: deleted_by
+                    type: int
+                - column:
+                    name: deleted_on
+                    type: datetime
