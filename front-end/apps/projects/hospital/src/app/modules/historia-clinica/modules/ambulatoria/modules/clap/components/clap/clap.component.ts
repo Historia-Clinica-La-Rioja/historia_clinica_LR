@@ -2,6 +2,7 @@ import { Component, Input, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
 import { SipPlusUrlDataDto } from '@api-rest/api-model';
+import { SipPlusMotherService } from '@api-rest/services/sip-plus-mother.service';
 import { SipPlusPregnanciesService } from '@api-rest/services/sip-plus-pregnancies.service';
 import { SipPlusService } from '@api-rest/services/sip-plus.service';
 import { ContextService } from '@core/services/context.service';
@@ -21,15 +22,17 @@ export class ClapComponent implements OnInit {
 	embedSystem: string;
 	viewSip:boolean= false;
 	pregnancies: any[];
-	viewError:boolean =false;
-	messageError:String;
+	viewError: boolean = false;
+	messageError: String;
+	dischargeMother: boolean = false;
 
 	constructor(private contextService: ContextService,
 		private sanitizer: DomSanitizer,
 		private sipPlusService: SipPlusService,
 		public dialog: MatDialog,
-		private sipPlusPregnanciesService: SipPlusPregnanciesService
-		) {
+		private sipPlusPregnanciesService: SipPlusPregnanciesService,
+		private sipPlusMotherService: SipPlusMotherService
+	) {
 		this.institucionId = this.contextService.institutionId;
 	}
 
@@ -43,48 +46,70 @@ export class ClapComponent implements OnInit {
 		})
 	}
 
-	makeUrlTrusted() {
-		const url = this.urlBaseSip + '?embedSystem='+`${this.embedSystem}&embedToken=`  + `${this.tokenSIP}$` + `${this.institucionId}$` + `${this.patientId}`;
+
+	makeUrlTrusted(gestationId?:number) {
+		let url = this.urlBaseSip + '?embedSystem=' + `${this.embedSystem}&embedToken=` + `${this.tokenSIP}$` + `${this.institucionId}$` + `${this.patientId}`;
+		if(gestationId){
+			url += '$' + gestationId;
+		}
 		this.trustedUrlSIP = this.sanitizer.bypassSecurityTrustResourceUrl(url);
 	}
 
-	getPregnancies(){
-		this.sipPlusPregnanciesService.getPregnancies(this.patientId).subscribe(data=>{
-			if(data.length){
-				this.pregnancies=data;
-			}else{
-			this.viewError=true;
+	getPregnancies() {
+		this.sipPlusPregnanciesService.getPregnancies(this.patientId).subscribe(data => {
+			if (data.length) {
+				this.pregnancies = data;
+			} else {
+				this.viewError = true;
 			}
 
-		},error=>{
-			this.messageError =error.text;
+		}, error => {
+			this.messageError = error.text;
+			if (error.code === 'NOT_FOUND') {
+				this.dischargeMother = true;
+				this.messageError= null;
+				this.viewError=true;
+			} else {
+				this.dischargeMother = false;
+			}
 		})
 	}
-	viewGestation(gestationId:number) {
-		this.trustedUrlSIP + '$'+ gestationId;
-		this.viewSip=true;
+	viewGestation(gestationId: number) {
+		this.makeUrlTrusted(gestationId);
+		this.viewSip = true;
 	}
 
 	backViewGestations() {
-		this.viewSip=false;
+		this.viewSip = false;
 	}
 
 	newGestation() {
 		const dialogRef = this.dialog.open(NewGestationPopupComponent, {
-			disableClose: true ,
+			disableClose: true,
 			width: '30%',
 			data: this.pregnancies,
-		  });
+		});
 
-		  dialogRef.afterClosed().subscribe(result => {
-			if(result){
-				this.sipPlusPregnanciesService.createPregnancy(this.patientId,result).subscribe(res=>{
-					this.getPregnancies();
-					this.viewError=false;
-					this.viewGestation(result);
-				})
+		dialogRef.afterClosed().subscribe(result => {
+			if (result) {
+				if (this.dischargeMother) {
+					this.sipPlusMotherService.createMother(this.patientId, result).subscribe(res => {
+						this.getPregnancies();
+						this.viewGestation(result);
+						this.viewError = false;
+						this.messageError= null;
+						this.dischargeMother=false;
+
+					})
+				} else {
+					this.sipPlusPregnanciesService.createPregnancy(this.patientId, result).subscribe(res => {
+						this.getPregnancies();
+						this.viewError = false;
+						this.viewGestation(result);
+					})
+				}
 			}
-		  });
+		});
 
 	}
 }

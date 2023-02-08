@@ -6,11 +6,11 @@
 			</button>
 			<h2 [translate]="'ambulatoria.paciente.clap.TAB_LABEL'"></h2>
 		</div>
-		<button *ngIf="!viewSip && !messageError" mat-stroked-button color="primary" (click)="newGestation()">
+		<button *ngIf="(!viewSip && !messageError) || dischargeMother" mat-stroked-button color="primary" (click)="newGestation()">
 			{{ 'ambulatoria.paciente.clap.NEW_GESTATION' | translate | uppercase }}</button>
 	</div>
 
-	<div fxLayout="row" *ngIf="!viewSip && !viewError">
+	<div fxLayout="row" *ngIf="!viewSip && !viewError && !messageError">
 		<div fxLayout="column" fxFlex="50">
 			<mat-card class="box">
 				<mat-card-header>
