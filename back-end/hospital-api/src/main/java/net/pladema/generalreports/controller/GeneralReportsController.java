@@ -42,7 +42,11 @@ public class GeneralReportsController {
 
 	@GetMapping(value = "/{institutionId}/dailyEmergency")
 	@PreAuthorize("hasPermission(#institutionId, 'ADMINISTRADOR_INSTITUCIONAL_BACKOFFICE, PERSONAL_DE_ESTADISTICA')")
-	public @ResponseBody void getDailyEmergencyExcelReport(@PathVariable Integer institutionId, HttpServletResponse response) throws Exception {
+	public @ResponseBody
+	void getDailyEmergencyExcelReport(
+			@PathVariable Integer institutionId,
+			HttpServletResponse response
+	) throws Exception{
 		LOG.debug("Se creará el excel {}", institutionId);
 		LOG.debug("Inputs parameters -> institutionId {}, fromDate {}, toDate{}", institutionId);
 
@@ -64,7 +68,13 @@ public class GeneralReportsController {
 
 	@GetMapping(value = "/{institutionId}/diabetics")
 	@PreAuthorize("hasPermission(#institutionId, 'ADMINISTRADOR_INSTITUCIONAL_BACKOFFICE, PERSONAL_DE_ESTADISTICA')")
-	public @ResponseBody void getDiabeticsExcelReport(@PathVariable Integer institutionId, @RequestParam(value = "fromDate", required = true) String fromDate, @RequestParam(value = "toDate", required = true) String toDate, HttpServletResponse response) throws Exception {
+	public @ResponseBody
+	void getDiabeticsExcelReport(
+			@PathVariable Integer institutionId,
+			@RequestParam(value = "fromDate", required = true) String fromDate,
+			@RequestParam(value = "toDate", required = true) String toDate,
+			HttpServletResponse response
+	) throws Exception {
 		LOG.debug("Se creará el excel {}", institutionId);
 		LOG.debug("Inputs parameters -> institutionId {}, fromDate {}, toDate{}", institutionId);
 
@@ -89,7 +99,12 @@ public class GeneralReportsController {
 
 	@GetMapping(value = "/{institutionId}/hypertensive")
 	@PreAuthorize("hasPermission(#institutionId, 'ADMINISTRADOR_INSTITUCIONAL_BACKOFFICE, PERSONAL_DE_ESTADISTICA')")
-	public @ResponseBody void getHypertensiveExcelReport(@PathVariable Integer institutionId, @RequestParam(value = "fromDate", required = true) String fromDate, @RequestParam(value = "toDate", required = true) String toDate, HttpServletResponse response) throws Exception {
+	public @ResponseBody void getHypertensiveExcelReport(
+			@PathVariable Integer institutionId,
+			@RequestParam(value = "fromDate", required = true) String fromDate,
+			@RequestParam(value = "toDate", required = true) String toDate,
+			HttpServletResponse response
+	) throws Exception {
 		LOG.debug("Se creará el excel {}", institutionId);
 		LOG.debug("Inputs parameters -> institutionId {}, fromDate {}, toDate{}", institutionId);
 
@@ -114,7 +129,10 @@ public class GeneralReportsController {
 
 	@GetMapping(value = "/{institutionId}/patientEmergencies")
 	@PreAuthorize("hasPermission(#institutionId, 'ADMINISTRADOR_INSTITUCIONAL_BACKOFFICE, PERSONAL_DE_ESTADISTICA')")
-	public @ResponseBody void getPatientEmergenciesExcelReport(@PathVariable Integer institutionId, HttpServletResponse response) throws Exception {
+	public @ResponseBody void getPatientEmergenciesExcelReport(
+			@PathVariable Integer institutionId,
+			HttpServletResponse response
+	) throws Exception {
 		LOG.debug("Se creará el excel{}", institutionId);
 		LOG.debug("Inputs parameters -> institutionId {}, fromDate {}, toDate {}", institutionId);
 
@@ -136,7 +154,12 @@ public class GeneralReportsController {
 
 	@GetMapping(value = "/{institutionId}/outpatientNursing")
 	@PreAuthorize("hasPermission(#institutionId, 'ADMINISTRADOR_INSTITUCIONAL_BACKOFFICE, PERSONAL_DE_ESTADISTICA')")
-	public @ResponseBody void getOutpatientNursingExcelReport(@PathVariable Integer institutionId, @RequestParam(value = "fromDate", required = true) String fromDate, @RequestParam(value = "toDate", required = true) String toDate, HttpServletResponse response) throws Exception {
+	public @ResponseBody void getOutpatientNursingExcelReport(
+			@PathVariable Integer institutionId,
+			@RequestParam(value = "fromDate", required = true) String fromDate,
+			@RequestParam(value = "toDate", required = true) String toDate,
+			HttpServletResponse response
+	) throws Exception {
 		LOG.debug("Se creará el excel{}", institutionId);
 		LOG.debug("Inputs parameters -> institutionId {}, fromDate{}, toDate{}", institutionId);
 
@@ -161,7 +184,12 @@ public class GeneralReportsController {
 
 	@GetMapping(value = "/{institutionId}/nursingInternment")
 	@PreAuthorize("hasPermission(#institutionId, 'ADMINISTRADOR_INSTITUCIONAL_BACKOFFICE, PERSONAL_DE_ESTADISTICA')")
-	public @ResponseBody void getNursingInternmentExcelReport(@PathVariable Integer institutionId, @RequestParam(value = "fromDate", required = true) String fromDate, @RequestParam(value = "toDate", required = true) String toDate, HttpServletResponse response) throws Exception {
+	public @ResponseBody void getNursingInternmentExcelReport(
+			@PathVariable Integer institutionId,
+			@RequestParam(value = "fromDate", required = true) String fromDate,
+			@RequestParam(value = "toDate", required = true) String toDate,
+			HttpServletResponse response
+	) throws Exception {
 		LOG.debug("Se creará el excel{}", institutionId);
 		LOG.debug("Inputs parameters -> institutionId {}, fromDate{}, toDate{}", institutionId);
 
@@ -186,19 +214,20 @@ public class GeneralReportsController {
 
 	@GetMapping(value = "/{institutionId}/complementaryStudies")
 	@PreAuthorize("hasPermission(#institutionId, 'ADMINISTRADOR_INSTITUCIONAL_BACKOFFICE, PERSONAL_DE_ESTADISTICA')")
-	public @ResponseBody void getComplementaryStudiesExcelReport(@PathVariable Integer institutionId,
-																 @RequestParam(value = "fromDate", required = true) String fromDate,
-																 @RequestParam(value = "toDate", required = true) String toDate,
-																 HttpServletResponse response) throws Exception{
+	public @ResponseBody void getComplementaryStudiesExcelReport(
+			@PathVariable Integer institutionId,
+			@RequestParam(value = "fromDate", required = true) String fromDate,
+			@RequestParam(value = "toDate", required = true) String toDate,
+			HttpServletResponse response
+	) throws Exception{
 		LOG.debug("Se creará el excel{}", institutionId);
 		LOG.debug("Inputs parameters -> institutionId {}, fromDate{}, toDate{}", institutionId);
 
 		String title = "Reportes de Estudios Complementarios";
-		String[] headers = new String[]{"Institución", "Fecha", "Categoria", "Orden","Tipo de Solicitud",
-										"Origen de Solicitud", "Nombre del Paciente", "Tipo de Documento", "Numero del Documento del Paciente", "Obra Social",
-										"Numero de Afiliado", "Nombre del Profesional", "Tipo de Documento del Profesional",
-										"Numero de Documento del Profesional", "Licencia", "Nota",
-										"Fecha de Emisión", "Nombre del Estudio", "Notas Adicionales", "Problema Asociado"};
+		String[] headers = new String[]{"Institución", "Fecha", "Categoria", "Orden","Tipo de Solicitud", "Origen de Solicitud",
+				"Nombre del Paciente", "Tipo de Documento", "Numero del Documento del Paciente", "Obra Social", "Numero de Afiliado",
+				"Nombre del Profesional", "Tipo de Documento", "Numero de Documento", "Licencia", "Nota", "Fecha de Emisión",
+				"Nombre del Estudio", "Notas Adicionales", "Problema Asociado"};
 
 		LocalDate startDate = localDateMapper.fromStringToLocalDate(fromDate);
 		LocalDate endDate = localDateMapper.fromStringToLocalDate(toDate);
@@ -218,10 +247,12 @@ public class GeneralReportsController {
 
 	@GetMapping(value = "/{institutionId}/totalNursingRecovery")
 	@PreAuthorize("hasPermission(#institutionId, 'ADMINISTRADOR_INSTITUCIONAL_BACKOFFICE, PERSONAL_DE_ESTADISTICA')")
-	public @ResponseBody void getTotalNursingRecoveryExcelReport(@PathVariable Integer institutionId,
-																 @RequestParam(value = "fromDate", required = true) String fromDate,
-																 @RequestParam(value = "toDate", required = true) String toDate,
-																 HttpServletResponse response) throws Exception {
+	public @ResponseBody void getTotalNursingRecoveryExcelReport(
+			@PathVariable Integer institutionId,
+			@RequestParam(value = "fromDate", required = true) String fromDate,
+			@RequestParam(value = "toDate", required = true) String toDate,
+			HttpServletResponse response
+	) throws Exception {
 		LOG.debug("Se creará el excel{}", institutionId);
 		LOG.debug("Inputs parameters -> institutionId {}, fromDate{}, toDate{}", institutionId);
 
