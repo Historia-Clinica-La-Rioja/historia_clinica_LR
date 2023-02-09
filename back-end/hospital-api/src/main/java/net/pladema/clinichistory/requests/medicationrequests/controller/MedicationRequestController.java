@@ -8,10 +8,12 @@ import java.util.Base64;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
+import javax.imageio.ImageIO;
 import javax.validation.Valid;
 
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.generateFile.DocumentAuthorFinder;
@@ -343,6 +345,10 @@ public class MedicationRequestController {
 			var stateProvinceData = professionalRelatedProfession.get().getAllLicenses().stream().filter(license -> license.getType().equals(ELicenseNumberTypeBo.PROVINCE.getAcronym())).findFirst();
 			stateProvinceData.ifPresent(licenseNumberDto -> ctx.put("stateLicense", licenseNumberDto.getNumber()));
 		}
+
+		ctx.put("logo", generatePdfImage("/assets/webapp/pdf/health_ministry_logo.png"));
+		ctx.put("headerLogos", generatePdfImage("/assets/webapp/pdf/digital_recipe_header_logo.png"));
+
 		return ctx;
 	}
 
@@ -352,6 +358,17 @@ public class MedicationRequestController {
 		ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
 		try {
 			MatrixToImageWriter.writeToStream(barCode, "JPEG" , outputStream, new MatrixToImageConfig());
+			return Base64.getEncoder().encodeToString(outputStream.toByteArray());
+		} catch (IOException e) {
+			throw new RuntimeException(e);
+		}
+	}
+
+	private String generatePdfImage(String path) {
+		try {
+			var image = ImageIO.read(Objects.requireNonNull(getClass().getResource(path)));
+			ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+			ImageIO.write(image, "png", outputStream);
 			return Base64.getEncoder().encodeToString(outputStream.toByteArray());
 		} catch (IOException e) {
 			throw new RuntimeException(e);

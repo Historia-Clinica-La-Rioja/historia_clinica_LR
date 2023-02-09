@@ -38,7 +38,8 @@ public class GetMedicationRequestInfoRepositoryImpl implements GetMedicationRequ
                 "JOIN {h-schema}medication_statement ms ON (dms.medication_statement_id = ms.id) " +
 				"JOIN {h-schema}dosage dos ON (dos.id = ms.dosage_id) " +
                 "LEFT JOIN {h-schema}note n ON (ms.note_id = n.id) " +
-                "WHERE mr.id = :medicationRequestId  " +
+                "WHERE mr.id = :medicationRequestId " +
+				"ORDER BY ms.prescription_line_number " +
                 ")" +
                 "SELECT t.mr_id, t.doctor_id, t.request_date, t.medical_coverage_id, t.note, " +
                 "s.id AS m_s_id, s.sctid AS m_s_sctid, s.pt AS m_s_pt,  " +
