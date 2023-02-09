@@ -32,6 +32,7 @@ public class BackofficeProfessionalLicenseNumbersValidator extends BackofficeEnt
 
     @Override
     public void assertCreate(ProfessionalLicenseNumberDto dto) {
+		validateNotNullBlankEmpty(dto.getLicenseNumber());
 		if (professionalLicenseNumberRepository.existsProfessionalLicense(
 				dto.getProfessionalProfessionId(),
 				ELicenseNumberTypeBo.map(dto.getTypeId())))
@@ -41,6 +42,12 @@ public class BackofficeProfessionalLicenseNumbersValidator extends BackofficeEnt
 				ELicenseNumberTypeBo.map(dto.getTypeId())))
 			throw new BackofficeValidationException("professional.specialty.licensenumbers.repeated");
     }
+
+	private void validateNotNullBlankEmpty(String licenseNumber) {
+		if ((licenseNumber == null) || (licenseNumber.isBlank()) || (licenseNumber.isEmpty())) {
+			throw new BackofficeValidationException("professional.licensenumbres.blank");
+		}
+	}
 
     @Override
     public void assertDelete(Integer id){
