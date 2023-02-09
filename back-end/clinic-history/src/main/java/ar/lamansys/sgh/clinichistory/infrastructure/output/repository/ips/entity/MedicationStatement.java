@@ -117,6 +117,8 @@ public class MedicationStatement extends SGXAuditableEntity<Integer> {
 	public void setPrecalculatedData() {
 		this.dueDate = LocalDate.now().plusDays(MEDICATION_STATEMENT_DUE_DATE);
 		this.prescriptionLineState = MEDICATION_STATEMENT_INITIAL_STATE;
+		if (this.isDigital == null)
+			this.isDigital = false;
 	}
 
 }
