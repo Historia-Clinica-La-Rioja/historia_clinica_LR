@@ -1,0 +1,9 @@
+<mat-form-field appearance="fill" [formGroup]="specialtyForm" >
+	<mat-label>{{label}}</mat-label>
+	<mat-select placeholder="Especialidad" formControlName="specialty">
+		<mat-option *ngFor="let specialty of specialtyList" [value]="specialty.name">
+			{{specialty.name | translate}}
+		</mat-option>
+	</mat-select>
+	<mat-hint>{{hint}}</mat-hint>
+</mat-form-field>

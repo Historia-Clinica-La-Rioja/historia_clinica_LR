@@ -1,11 +1,21 @@
-<div class="container-date">
-	<ng-container *ngFor="let filterInput of filters | keyvalue">
+<div class="container-filters" fxLayout="row">
+	<ng-container *ngFor="let filterInput of filters | keyvalue" >
 		<ng-container [ngSwitch]="filterInput.value.type">
 			<div *ngSwitchCase="'dateRangeISO'">
 				<app-date-only-iso-form-input
+					class="filter"
 					[label]="filterInput.value.label"
 					[hint]="filterInput.value.hint"
-					(rangeChange)="changeValue(filterInput.key, $event)"></app-date-only-iso-form-input>
+					(rangeChange)="changeValue(filterInput.key, $event)">
+				</app-date-only-iso-form-input>
+			</div>
+			<div *ngSwitchCase="'specialty'">
+				<app-specialty-form-input
+					class="filter"
+					[label]="filterInput.value.label"
+					[hint]="filterInput.value.hint"
+					(specialtyChange)="changeValue(filterInput.key, $event)">
+				</app-specialty-form-input>
 			</div>
 		</ng-container>
 	</ng-container>

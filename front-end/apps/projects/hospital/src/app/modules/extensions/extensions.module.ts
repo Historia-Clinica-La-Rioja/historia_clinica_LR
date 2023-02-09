@@ -22,6 +22,7 @@ import { UiExternalComponentComponent } from './components/ui-external-component
 // config options
 import { cubejsOptions } from './extensions-cubejs';
 import { RoutedExternalComponent } from './components/routed-external/routed-external.component';
+import { SpecialtyFormInputComponent } from './components/specialty-form-input/specialty-form-input.component';
 
 @NgModule({
 	imports: [
@@ -49,6 +50,8 @@ import { RoutedExternalComponent } from './components/routed-external/routed-ext
 		UiComponentListComponent,
 		UiExternalComponentComponent,
   RoutedExternalComponent,
+  SpecialtyFormInputComponent,
+  ProfessionalFormInputComponent,
 	],
 	exports: [
 		// components

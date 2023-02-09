@@ -131,6 +131,14 @@
                   "type": "cubejs-dashboard",
                   "args": {
                     "filters": {
+                      "specialty": {
+                        "filter": {
+                          "member": "CantidadTurnosTotal.especialidad",
+                          "operator": "equals"
+                        },
+                        "type": "specialty",
+                        "label": "Especialidad"
+                      },
                       "fecha": {
                         "filter": {
                           "member": "CantidadTurnos.fecha_consulta",
