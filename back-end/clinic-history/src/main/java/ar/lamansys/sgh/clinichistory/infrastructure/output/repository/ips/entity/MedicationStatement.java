@@ -88,7 +88,7 @@ public class MedicationStatement extends SGXAuditableEntity<Integer> {
 	}
 
 	public MedicationStatement(Integer patientId, Integer snomedId, String cie10Codes, String statusId, Long noteId,
-							   Integer healthConditionId, Integer dosageId, Integer prescriptionLineNumber, Boolean isDigital, LocalDate prescriptionDate) {
+							   Integer healthConditionId, Integer dosageId, Integer prescriptionLineNumber, Boolean isDigital, LocalDate prescriptionDate, LocalDate dueDate) {
 		super();
 		this.patientId = patientId;
 		this.snomedId = snomedId;
@@ -101,6 +101,7 @@ public class MedicationStatement extends SGXAuditableEntity<Integer> {
 		this.prescriptionLineNumber = prescriptionLineNumber;
 		this.isDigital = isDigital;
 		this.prescriptionDate = prescriptionDate;
+		this.dueDate = dueDate;
 	}
 
 	@Override
@@ -119,10 +120,13 @@ public class MedicationStatement extends SGXAuditableEntity<Integer> {
 
 	@PrePersist
 	public void setPrecalculatedData() {
-		this.dueDate = LocalDate.now().plusDays(MEDICATION_STATEMENT_DUE_DATE);
 		this.prescriptionLineState = MEDICATION_STATEMENT_INITIAL_STATE;
 		if (this.isDigital == null)
 			this.isDigital = false;
+		if (this.dueDate == null)
+			this.dueDate = LocalDate.now();
+		if (this.prescriptionDate == null)
+			this.prescriptionDate = LocalDate.now();
 	}
 
 }

@@ -96,7 +96,8 @@ public class LoadMedications {
                 newDosage != null ? newDosage.getId() : null,
 				medicationBo.getPrescriptionLineNumber(),
 				medicationBo.getIsDigital(),
-				medicationBo.getPrescriptionDate());
+				medicationBo.getPrescriptionDate(),
+				medicationBo.getDueDate());
 
         medicationStatement = medicationStatementRepository.save(medicationStatement);
         LOG.debug("medicationStatement saved -> {}", medicationStatement.getId());

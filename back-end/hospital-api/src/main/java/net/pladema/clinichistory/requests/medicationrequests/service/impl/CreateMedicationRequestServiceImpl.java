@@ -21,6 +21,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
 
 import java.time.LocalDate;
+import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -68,11 +70,18 @@ public class CreateMedicationRequestServiceImpl implements CreateMedicationReque
                 Assert.isTrue(md.getHealthCondition().isActive(),
                         "El problema asociado tiene que estar activo"));
 
-        Integer newMRId = createMedicationRequest(medicationRequest);
-        medicationRequest.setEncounterId(newMRId);
-        documentFactory.run(medicationRequest, false);
-
-        return newMRId;
+        Map<Integer, LocalDate> newMRIds = createMedicationRequest(medicationRequest);
+		newMRIds.forEach((key, value) -> {
+			medicationRequest.setEncounterId(key);
+			medicationRequest.setRequestDate(value);
+			medicationRequest.getMedications().forEach(medication -> {
+				medication.setPrescriptionDate(value);
+				medication.setDueDate(value.plusDays(30));
+				medication.setId(null);
+			});
+			documentFactory.run(medicationRequest, false);
+		});
+        return Collections.min(newMRIds.keySet());
     }
 
     private void assertRequiredFields(MedicationRequestBo medicationRequest) {
@@ -100,34 +109,32 @@ public class CreateMedicationRequestServiceImpl implements CreateMedicationReque
         result.forEach((k,v) -> Assert.isTrue(v.size() == 1, "La receta no puede contener más de un medicamento con el mismo problema y el mismo concepto snomed"));
     }
 
-    private Integer createMedicationRequest(MedicationRequestBo medicationRequest) {
-		Integer originalMedicationRequestId = -1;
+    private Map<Integer, LocalDate> createMedicationRequest(MedicationRequestBo medicationRequest) {
+		Map<Integer, LocalDate> medicationRequestIds = new HashMap<>();
 		LocalDate iterationDate = LocalDate.now();
 		if (featureFlagsService.isOn(AppFeature.HABILITAR_RECETA_DIGITAL)) {
-			originalMedicationRequestId = generateMultipleMedicationRequests(medicationRequest, originalMedicationRequestId, iterationDate);
+			generateMultipleMedicationRequests(medicationRequest, medicationRequestIds, iterationDate);
 		}
 		else {
 			MedicationRequest result = generateBasicMedicationrequest(medicationRequest);
 			result.setRequestDate(LocalDate.now());
 			result = medicationRequestRepository.save(result);
-			originalMedicationRequestId = result.getId();
+			medicationRequestIds.put(result.getId(), medicationRequest.getRequestDate());
 		}
-        return originalMedicationRequestId;
+        return medicationRequestIds;
     }
 
-	private Integer generateMultipleMedicationRequests(MedicationRequestBo medicationRequest, Integer originalMedicationRequestId, LocalDate iterationDate) {
-		for (int currentRequest = 0; currentRequest < medicationRequest.getRepetitions(); currentRequest++) {
+	private void generateMultipleMedicationRequests(MedicationRequestBo medicationRequest, Map<Integer, LocalDate> originalMedicationRequestId, LocalDate iterationDate) {
+		for (int currentRequest = 0; currentRequest < medicationRequest.getRepetitions() + 1; currentRequest++) {
 			MedicationRequest result = generateBasicMedicationrequest(medicationRequest);
 			result.setClinicalSpecialtyId(medicationRequest.getClinicalSpecialtyId());
 			result.setRepetitions(currentRequest == 0 ? medicationRequest.getRepetitions() : 0);
 			result.setIsPostDated(currentRequest == 0);
 			result.setRequestDate(iterationDate);
 			result = medicationRequestRepository.save(result);
-			if (currentRequest == 0)
-				originalMedicationRequestId = result.getId();
+			originalMedicationRequestId.put(result.getId(), iterationDate);
 			iterationDate = iterationDate.plusDays(30);
 		}
-		return originalMedicationRequestId;
 	}
 
 	private static MedicationRequest generateBasicMedicationrequest(MedicationRequestBo medicationRequest) {

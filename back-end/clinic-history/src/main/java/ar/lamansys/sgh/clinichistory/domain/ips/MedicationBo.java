@@ -38,6 +38,8 @@ public class MedicationBo extends ClinicalTerm {
 	private Integer prescriptionLineNumber;
 
 	private LocalDate prescriptionDate;
+	
+	private LocalDate dueDate;
 
     public MedicationBo(MedicationVo medicationVo) {
         super();
