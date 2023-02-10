@@ -11,7 +11,7 @@ public class RestorePasswordTemplateInput extends NotificationTemplateInput<Rest
 	public final static String TEMPLATE_ID = "restore-password";
 
 	public RestorePasswordTemplateInput(RestorePasswordNotificationArgs args){
-		super(TEMPLATE_ID, args, AppFeature.HABILITAR_MAIL_RECUPERAR_CONTRASEÑA);
+		super(TEMPLATE_ID, args, AppFeature.HABILITAR_RECUPERAR_PASSWORD);
 	}
 
 }
