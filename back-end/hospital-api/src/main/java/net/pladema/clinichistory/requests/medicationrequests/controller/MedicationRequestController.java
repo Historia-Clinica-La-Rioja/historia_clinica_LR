@@ -170,7 +170,7 @@ public class MedicationRequestController {
 
     @PutMapping(value = "/suspend")
     @ResponseStatus(code = HttpStatus.OK)
-    @PreAuthorize("hasPermission(#institutionId, 'ESPECIALISTA_MEDICO, ESPECIALISTA_EN_ODONTOLOGIA')")
+    @PreAuthorize("hasPermission(#institutionId, 'ESPECIALISTA_MEDICO, ESPECIALISTA_EN_ODONTOLOGIA, PRESCRIPTOR')")
     public void suspendMedication(@PathVariable(name = "institutionId") Integer institutionId,
                                   @PathVariable(name = "patientId") Integer patientId,
                                   @RequestBody ChangeStateMedicationRequestDto changeStateRequest) {
@@ -184,7 +184,7 @@ public class MedicationRequestController {
 
     @PutMapping(value = "/finalize")
     @ResponseStatus(code = HttpStatus.OK)
-    @PreAuthorize("hasPermission(#institutionId, 'ESPECIALISTA_MEDICO, ESPECIALISTA_EN_ODONTOLOGIA')")
+    @PreAuthorize("hasPermission(#institutionId, 'ESPECIALISTA_MEDICO, ESPECIALISTA_EN_ODONTOLOGIA, PRESCRIPTOR')")
     public void finalizeMedication(@PathVariable(name = "institutionId") Integer institutionId,
                         @PathVariable(name = "patientId") Integer patientId,
                         @RequestBody ChangeStateMedicationRequestDto changeStateRequest) {
@@ -252,7 +252,7 @@ public class MedicationRequestController {
 	}
 
     @GetMapping(value = "/{medicationRequestId}/download")
-    @PreAuthorize("hasPermission(#institutionId, 'ESPECIALISTA_MEDICO, PROFESIONAL_DE_SALUD, ESPECIALISTA_EN_ODONTOLOGIA, ENFERMERO, PERSONAL_DE_FARMACIA')")
+    @PreAuthorize("hasPermission(#institutionId, 'ESPECIALISTA_MEDICO, PROFESIONAL_DE_SALUD, ESPECIALISTA_EN_ODONTOLOGIA, ENFERMERO, PERSONAL_DE_FARMACIA, PRESCRIPTOR')")
     public ResponseEntity<InputStreamResource> download(@PathVariable(name = "institutionId") Integer institutionId,
                                                         @PathVariable(name = "patientId") Integer patientId,
                                                         @PathVariable(name = "medicationRequestId") Integer medicationRequestId) throws PDFDocumentException {

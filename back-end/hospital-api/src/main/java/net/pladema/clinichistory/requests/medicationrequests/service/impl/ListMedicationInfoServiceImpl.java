@@ -54,7 +54,7 @@ public class ListMedicationInfoServiceImpl implements ListMedicationInfoService 
 		LOG.debug("Input parameters -> filter {}", filter);
 		var filterVo = new MedicationFilterVo(filter.getPatientId(), filter.getStatusId(),
 				filter.getMedicationStatement(), filter.getHealthCondition());
-		List<MedicationBo> result = listMedicationRepository.execute(filterVo).stream()
+		List<MedicationBo> result = listMedicationRepository.execute(filterVo, userId).stream()
 				.map(this::createMedicationBo)
 				.filter(mb -> byStatus(mb, filter.getStatusId()))
 				.collect(Collectors.toList());
