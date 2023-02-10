@@ -38,13 +38,24 @@ public class ActivityStorageImpl implements ActivityStorage {
 		this.entityManager = entityManager;
 	}
 
-	private static final String JOIN_HOSPITALIZATION = "LEFT JOIN {h-schema}internment_episode event ON event.id = va.encounter_id ";
-	private static final String JOIN_OUTPATIENT = "LEFT JOIN {h-schema}outpatient_consultation event ON event.id = va.encounter_id ";
+	private static final String JOIN_PATIENT_MEDICAL_COVERAGE = "LEFT JOIN {h-schema}patient_medical_coverage pmc ON (pmc.id = event.patient_medical_coverage_id)";
 
-	private static final String JOIN_ODONTOLOGY = "LEFT JOIN {h-schema}odontology_consultation event ON event.id = va.encounter_id ";
+	private static final String JOIN_HOSPITALIZATION = "LEFT JOIN {h-schema}internment_episode event ON event.id = va.encounter_id " + JOIN_PATIENT_MEDICAL_COVERAGE;
+	private static final String JOIN_OUTPATIENT = "LEFT JOIN {h-schema}outpatient_consultation event ON event.id = va.encounter_id " + JOIN_PATIENT_MEDICAL_COVERAGE;
+	private static final String JOIN_ODONTOLOGY = "LEFT JOIN {h-schema}odontology_consultation event ON event.id = va.encounter_id " + JOIN_PATIENT_MEDICAL_COVERAGE;
+
 	private static final Integer HOSPITALIZATION = 0;
 	private static final Integer OUTPATIENT_CONSULTATION = 1;
 	private static final Integer ODONTOLOGY = 6;
+
+	private static final String JOIN_ANY_EVENT = "LEFT JOIN {h-schema}internment_episode ie ON ie.id = va.encounter_id AND va.scope_id =" + HOSPITALIZATION + " " +
+			"LEFT JOIN {h-schema}outpatient_consultation oc ON oc.id = va.encounter_id and va.scope_id =" + OUTPATIENT_CONSULTATION + " " +
+			"LEFT JOIN {h-schema}odontology_consultation odc ON odc.id = va.encounter_id and va.scope_id = " + ODONTOLOGY + " " +
+			"LEFT JOIN {h-schema}patient_medical_coverage pmc ON (" +
+			"(ie.id IS NOT NULL AND pmc.id = ie.patient_medical_coverage_id) " +
+			"OR (oc.id IS NOT NULL AND pmc.id = oc.patient_medical_coverage_id) " +
+			"OR (odc.id  IS NOT NULL AND pmc.id = odc.patient_medical_coverage_id)" +
+			")";
 
 	private static final String SQL_STRING =
 			"SELECT va.id as attention_id, va.performed_date as attention_date, " +
@@ -76,7 +87,6 @@ public class ActivityStorageImpl implements ActivityStorage {
 					"FROM {h-schema}clinical_specialty cs ) snm ON (va.clinical_speciality_id = snm.id) " +
 					"LEFT JOIN {h-schema}patient_discharge pd ON (va.scope_id = 0 AND pd.internment_episode_id = va.encounter_id) " +
 					" %s " +
-					"LEFT JOIN {h-schema}patient_medical_coverage pmc ON (pmc.id = event.patient_medical_coverage_id) " +
 					"LEFT JOIN {h-schema}medical_coverage mc ON (pmc.medical_coverage_id = mc.id) " +
 					"LEFT JOIN {h-schema}medical_coverage_plan mcp ON (mc.id = mcp.medical_coverage_id) " +
 					"LEFT JOIN {h-schema}document_health_condition dhc on dhc.document_id = va.id " +
@@ -130,7 +140,7 @@ public class ActivityStorageImpl implements ActivityStorage {
 	public Optional<AttentionInfoBo> getActivityById(String refsetCode, Long activityId) {
 		LOG.debug("getActivityById ActivityStorage -> refsetCode {}, activityId {}", refsetCode, activityId);
 
-		Query query = entityManager.createNativeQuery(String.format(SQL_STRING, "", "va.id = :activityId "))
+		Query query = entityManager.createNativeQuery(String.format(SQL_STRING, JOIN_ANY_EVENT, "va.id = :activityId "))
 				.setParameter("refsetCode", refsetCode)
 				.setParameter("activityId", activityId);
 
@@ -151,7 +161,7 @@ public class ActivityStorageImpl implements ActivityStorage {
 				refsetCode, fromDate, toDate, reprocessing);
 
 		String whereClause = "va.updated_on BETWEEN :fromDate AND :toDate AND " +
-				"ar.attention_id IS NULL OR NOT ar.processed OR ar.processed AND :reprocessing " +
+				"(ar.attention_id IS NULL OR NOT ar.processed OR ar.processed AND :reprocessing )" +
 				"AND va.scope_id = ";
 		String finalQuery = "("+String.format(SQL_STRING, JOIN_HOSPITALIZATION, whereClause + HOSPITALIZATION) +")"
 				+ " UNION ALL " +
@@ -186,7 +196,7 @@ public class ActivityStorageImpl implements ActivityStorage {
 
 		String whereClause = "va.updated_on BETWEEN :fromDate AND :toDate AND " +
 				"p.identification_number = :identificationNumber AND " +
-				"ar.attention_id IS NULL OR NOT ar.processed OR ar.processed AND :reprocessing " +
+				"(ar.attention_id IS NULL OR NOT ar.processed OR ar.processed AND :reprocessing) " +
 				"AND va.scope_id = ";
 
 		String finalQuery = "("+String.format(SQL_STRING, JOIN_HOSPITALIZATION, whereClause + HOSPITALIZATION) +")"
@@ -219,7 +229,7 @@ public class ActivityStorageImpl implements ActivityStorage {
 
 		String whereClause = "va.updated_on BETWEEN :fromDate AND :toDate AND " +
 				"mc.cuit = :coverageCuit AND " +
-				"ar.attention_id IS NULL OR NOT ar.processed OR ar.processed AND :reprocessing " +
+				"(ar.attention_id IS NULL OR NOT ar.processed OR ar.processed AND :reprocessing)" +
 				"AND va.scope_id = ";
 
 		String finalQuery = "("+String.format(SQL_STRING, JOIN_HOSPITALIZATION, whereClause + HOSPITALIZATION) +")"

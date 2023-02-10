@@ -75,7 +75,7 @@ public class ActivityInfoController {
 
 		LOG.debug(OUTPUT, result);
 
-		return ResponseEntity.ok().body(null);
+		return ResponseEntity.ok().body(result);
 	}
 
 	@PutMapping("/process")
