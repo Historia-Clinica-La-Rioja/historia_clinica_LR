@@ -18,11 +18,15 @@ import lombok.ToString;
 public class RefepsLicensePayload {
 
 	private String licenseNumber;
+
+	private String status;
+
 	private String state;
 
 	@JsonCreator(mode = JsonCreator.Mode.PROPERTIES)
-	public RefepsLicensePayload(@JsonProperty("matricula") String licenseNumber, @JsonProperty("estado") String state) {
+	public RefepsLicensePayload(@JsonProperty("matricula") String licenseNumber, @JsonProperty("estado") String status,  @JsonProperty("jurisdiccion") String state) {
 		this.licenseNumber = licenseNumber;
+		this.status = status;
 		this.state = state;
 	}
 }

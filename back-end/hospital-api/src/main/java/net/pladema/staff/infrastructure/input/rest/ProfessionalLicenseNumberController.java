@@ -6,7 +6,6 @@ import lombok.extern.slf4j.Slf4j;
 import net.pladema.sisa.refeps.controller.RefepsExternalService;
 import net.pladema.sisa.refeps.controller.dto.ValidatedLicenseNumberDto;
 import net.pladema.sisa.refeps.controller.mapper.ValidatedLicenceNumberMapper;
-import net.pladema.sisa.refeps.services.domain.RefepsResourceAttributes;
 import net.pladema.sisa.refeps.services.domain.ValidatedLicenseNumberBo;
 import net.pladema.staff.application.getlicensenumberbyprofessional.GetLicenseNumberByProfessional;
 import net.pladema.staff.application.saveprofessionallicensesnumber.SaveProfessionalLicensesNumber;
@@ -73,12 +72,12 @@ public class ProfessionalLicenseNumberController {
 																  @RequestBody List<String> licenseNumbers) {
 		log.debug("Input parameters -> healthcareProfessionalId: {}, licenseNumbers {}", healthcareProfessionalId, licenseNumbers);
 		HealthcareProfessionalBo currentProfessional = healthcareProfessionalService.findActiveProfessionalById(healthcareProfessionalId);
-		RefepsResourceAttributes attributes = new RefepsResourceAttributes(currentProfessional.getIdentificationNumber(), currentProfessional.getLastName());
 		List<ValidatedLicenseNumberBo> validatedLicenceNumbers = new ArrayList<>();
 		try {
-			validatedLicenceNumbers = refepsExternalService.validateLicenseNumber(attributes, licenseNumbers);
+			validatedLicenceNumbers = refepsExternalService.validateLicenseNumber(currentProfessional.getIdentificationNumber(), licenseNumbers);
 		} catch (Exception e) {
 			log.error("Fallo en la comunicación => {}", e.getMessage());
+			throw new RuntimeException(e);
 		}
 		return validatedLicenceNumberMapper.toListValidatedLicenseNumberDto(validatedLicenceNumbers);
 	}

@@ -13,12 +13,12 @@ import net.pladema.sisa.refeps.configuration.RefepsWSConfig;
 import net.pladema.sisa.refeps.services.domain.ValidatedLicenseNumberBo;
 import net.pladema.sisa.refeps.services.domain.RefepsLicensePayload;
 import net.pladema.sisa.refeps.services.domain.RefepsLicenseSearchResponse;
-import net.pladema.sisa.refeps.services.domain.RefepsResourceAttributes;
 
 import net.pladema.sisa.refeps.services.exceptions.RefepsApiException;
 import net.pladema.sisa.refeps.services.exceptions.RefepsExceptionsEnum;
 import net.pladema.sisa.refeps.services.exceptions.RefepsLicenseException;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.http.HttpStatus;
@@ -45,6 +45,9 @@ public class RefepsServiceImpl implements RefepsService {
 
 	private final String MULTIPLE_RESULTS = "MULTIPLE_RESULTADO";
 
+	@Value("${valid.license.states:#{''}}")
+	private List<String> validStates;
+
 
 	public RefepsServiceImpl(RestTemplateBuilder restTemplateBuilder,
 							 RefepsWSConfig wsConfig) {
@@ -53,11 +56,11 @@ public class RefepsServiceImpl implements RefepsService {
 	}
 
 	@Override
-	public List<ValidatedLicenseNumberBo> validateLicenseNumber(RefepsResourceAttributes attributes, List<String> licenses) throws RefepsApiException, RefepsLicenseException {
-		log.debug("Parameters: {}", attributes);
+	public List<ValidatedLicenseNumberBo> validateLicenseNumber(String identificationNumber, List<String> licenses) throws RefepsApiException, RefepsLicenseException {
+		log.debug("Parameters: identificationNumber {}, licenses {}", identificationNumber, licenses);
 		List<ValidatedLicenseNumberBo> processedLicenses = new ArrayList<>();
 		String responseMessage = null;
-		String url = "&apellido=" + attributes.getLastName() + "&dni=" + attributes.getId();
+		String url = "&nrodoc=" + identificationNumber;
 		try {
 			RefepsLicenseSearchResponse response = restClientInterface.exchangeGet(url, RefepsLicenseSearchResponse.class).getBody();
 			if (response != null) {
@@ -77,7 +80,9 @@ public class RefepsServiceImpl implements RefepsService {
 		licenses.forEach(license -> {
 			Optional<RefepsLicensePayload> relatedLicenseData = response.getResponse().stream().filter(licenseData -> licenseData.getLicenseNumber().equals(license)).findFirst();
 			if (relatedLicenseData.isPresent()) {
-				if (!relatedLicenseData.get().getState().equals(refepsWSConfig.ENABLED))
+				if (validStates.stream().filter(state -> state.equals(relatedLicenseData.get().getState())).findFirst().isEmpty())
+					throw new RefepsLicenseException(RefepsExceptionsEnum.WRONG_STATE, "La/s matricula/s ingresadas pertenecen a otra jurisdiccion de la permitida");
+				if (!relatedLicenseData.get().getStatus().equals(refepsWSConfig.ENABLED))
 					processedLicenses.add(new ValidatedLicenseNumberBo(license, false));
 				else processedLicenses.add(new ValidatedLicenseNumberBo(license, true));
 			}
