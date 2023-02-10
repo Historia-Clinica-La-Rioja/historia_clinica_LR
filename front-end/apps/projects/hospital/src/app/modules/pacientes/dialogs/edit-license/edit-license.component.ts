@@ -1,11 +1,13 @@
 import { Component, Inject, OnInit } from '@angular/core';
 import { FormArray, FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
-import { AppFeature, ProfessionalLicenseNumberDto, ValidatedLicenseNumberDto } from '@api-rest/api-model.d';
+import { ApiErrorMessageDto, AppFeature, ProfessionalLicenseNumberDto, ValidatedLicenseNumberDto } from '@api-rest/api-model.d';
 import { ProfessionalLicenseService } from '@api-rest/services/professional-license.service';
 import { FeatureFlagService } from '@core/services/feature-flag.service';
+import { processErrors } from '@core/utils/form.utils';
 import { ProfessionalSpecialties } from '@pacientes/routes/profile/profile.component';
 import { MatriculaService } from '@pacientes/services/matricula.service';
+import { SnackBarService } from '@presentation/services/snack-bar.service';
 
 @Component({
 	selector: 'app-edit-license',
@@ -25,9 +27,10 @@ export class EditLicenseComponent implements OnInit {
 		private formBuilder: FormBuilder,
 		private readonly professionalLicenseService: ProfessionalLicenseService,
 		private readonly licenseNumberService: MatriculaService,
-		private readonly featureFlagService: FeatureFlagService
+		private readonly featureFlagService: FeatureFlagService,
+		private readonly snackBarService: SnackBarService
 	) {
-	
+
 	}
 
 	ngOnInit(): void {
@@ -46,7 +49,7 @@ export class EditLicenseComponent implements OnInit {
 		} else {
 			this.addCombo();
 		}
-	
+
 	}
 
 	private setPreviousLicenses(): void {
@@ -94,15 +97,15 @@ export class EditLicenseComponent implements OnInit {
 		return array.at(array.length - 1)?.value.combo === null;
 	}
 
-	save(): void {	
+	save(): void {
 		if (this.form.valid) {
 			const professional: ProfessionalLicenseNumberDto[] = this.buildCreateProfessionalLicenseNumberDto();
 			this.dialog.close(professional);
 		}
 	}
-	
+
 	validateLicenseNumbers() {
-		if (! this.isHabilitarValidacionMatriculasSisaEnabled) 
+		if (! this.isHabilitarValidacionMatriculasSisaEnabled)
 			return this.save();
 
 		const licenseNumbers: string[] = this.form.controls.professionalSpecialties.value.map(value => value.combo?.licenseNumber);
@@ -113,6 +116,9 @@ export class EditLicenseComponent implements OnInit {
 				if (licenseNumbers.some(combo => ! combo.isValid)) return;
 
 				this.save();
+			},
+			(error: ApiErrorMessageDto) => {
+				processErrors(error, (msg) => this.snackBarService.showError(msg));
 			});
 	}
 

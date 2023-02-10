@@ -11,7 +11,6 @@ import ar.lamansys.sgx.shared.featureflags.application.FeatureFlagsService;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import net.pladema.sisa.refeps.services.RefepsService;
-import net.pladema.sisa.refeps.services.domain.RefepsResourceAttributes;
 import net.pladema.sisa.refeps.services.domain.ValidatedLicenseNumberBo;
 import net.pladema.sisa.refeps.services.exceptions.RefepsApiException;
 import net.pladema.sisa.refeps.services.exceptions.RefepsExceptionsEnum;
@@ -30,8 +29,8 @@ public class RefepsServiceVoid implements RefepsService {
 
 
 	@Override
-	public List<ValidatedLicenseNumberBo> validateLicenseNumber(RefepsResourceAttributes attributes, List<String> licenses) throws RefepsApiException, RefepsLicenseException {
-		if (featureFlagsService.isOn(AppFeature.HABILITAR_VALIDACION_MATRICULAS_SISA)) {
+	public List<ValidatedLicenseNumberBo> validateLicenseNumber(String identificationNumber, List<String> licenses) throws RefepsApiException, RefepsLicenseException {
+		if (!featureFlagsService.isOn(AppFeature.HABILITAR_VALIDACION_MATRICULAS_SISA)) {
 			throw new RefepsLicenseException(RefepsExceptionsEnum.GENERIC_ERROR, "El servicio de REFEPS no se encuentra habilitado");
 		}
 		return licenses.stream()

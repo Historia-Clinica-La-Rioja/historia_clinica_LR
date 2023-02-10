@@ -12,7 +12,6 @@ import net.pladema.person.repository.entity.PersonExtended;
 import net.pladema.person.service.PersonService;
 
 import net.pladema.sisa.refeps.controller.RefepsExternalService;
-import net.pladema.sisa.refeps.services.domain.RefepsResourceAttributes;
 import net.pladema.sisa.refeps.services.domain.ValidatedLicenseNumberBo;
 import net.pladema.sisa.refeps.services.exceptions.RefepsApiException;
 import net.pladema.staff.application.getlicensenumberbyprofessional.GetLicenseNumberByProfessional;
@@ -84,9 +83,8 @@ public class ValidateMedicationRequestGenerationServiceImpl implements ValidateM
 				.map(ProfessionalLicenseNumberBo::getLicenseNumber).collect(Collectors.toList());
 		if (!healthcareProfessionalLicenses.isEmpty()) {
 			if (featureFlagsService.isOn(AppFeature.HABILITAR_VALIDACION_MATRICULAS_SISA)) {
-				RefepsResourceAttributes attributes = new RefepsResourceAttributes(healthcareProfessionalData.getIdentificationNumber(), healthcareProfessionalData.getLastName());
 				try {
-					boolean result = refepsExternalService.validateLicenseNumber(attributes, healthcareProfessionalLicenses).stream().filter(ValidatedLicenseNumberBo::getIsValid).findFirst().isEmpty();
+					boolean result = refepsExternalService.validateLicenseNumber(healthcareProfessionalData.getIdentificationNumber(), healthcareProfessionalLicenses).stream().filter(ValidatedLicenseNumberBo::getIsValid).findFirst().isEmpty();
 					response.setHealthcareProfessionalLicenseNumberValid(!result);
 				} catch (RefepsApiException e) {
 					throw new RuntimeException(e);

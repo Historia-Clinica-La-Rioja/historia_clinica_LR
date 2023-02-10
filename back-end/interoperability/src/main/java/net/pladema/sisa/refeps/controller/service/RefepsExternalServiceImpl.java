@@ -5,7 +5,6 @@ import net.pladema.sisa.refeps.controller.RefepsExternalService;
 import net.pladema.sisa.refeps.services.RefepsService;
 
 import net.pladema.sisa.refeps.services.domain.ValidatedLicenseNumberBo;
-import net.pladema.sisa.refeps.services.domain.RefepsResourceAttributes;
 
 import net.pladema.sisa.refeps.services.exceptions.RefepsApiException;
 import net.pladema.sisa.refeps.services.exceptions.RefepsLicenseException;
@@ -28,8 +27,8 @@ public class RefepsExternalServiceImpl implements RefepsExternalService {
 	}
 
 	@Override
-	public List<ValidatedLicenseNumberBo> validateLicenseNumber(RefepsResourceAttributes attributes, List<String> licenseNumbers) throws RefepsApiException, RefepsLicenseException {
+	public List<ValidatedLicenseNumberBo> validateLicenseNumber(String identificationNumber, List<String> licenseNumbers) throws RefepsApiException, RefepsLicenseException {
 		LOG.debug("Validating license numbers => {}", licenseNumbers);
-		return refepsService.validateLicenseNumber(attributes, licenseNumbers);
+		return refepsService.validateLicenseNumber(identificationNumber, licenseNumbers);
 	}
 }
