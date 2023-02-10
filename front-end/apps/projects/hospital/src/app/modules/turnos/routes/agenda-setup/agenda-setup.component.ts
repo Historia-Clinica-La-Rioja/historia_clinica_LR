@@ -32,6 +32,7 @@ import { SpecialtyService } from '@api-rest/services/specialty.service';
 import { CareLineService } from '@api-rest/services/care-line.service';
 
 const ROUTE_APPOINTMENT = 'turnos';
+const ROUTE_AGENDAS = "agenda";
 const MAX_INPUT = 100;
 const PATTERN = /^[0-9]\d*$/;
 
@@ -324,7 +325,7 @@ export class AgendaSetupComponent implements OnInit {
 	private processSuccess(agendaId: number) {
 		if (agendaId) {
 			this.snackBarService.showSuccess('turnos.agenda-setup.messages.SUCCESS');
-			const url = `${this.routePrefix}${ROUTE_APPOINTMENT}`;
+			const url = `${this.routePrefix}${ROUTE_APPOINTMENT}/${ROUTE_AGENDAS}/${agendaId}`;
 			this.router.navigate([url]);
 		}
 	}
