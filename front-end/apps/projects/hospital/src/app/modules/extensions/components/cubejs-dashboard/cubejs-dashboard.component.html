@@ -1,7 +1,7 @@
-<div class="container-filters" fxLayout="row">
+<div class="container-filters" fxLayout="column" fxLayout.gt-md="row" fxLayoutAlign="start center">
 	<ng-container *ngFor="let filterInput of filters | keyvalue" >
 		<ng-container [ngSwitch]="filterInput.value.type">
-			<div *ngSwitchCase="'dateRangeISO'">
+			<div  *ngSwitchCase="'dateRangeISO'">
 				<app-date-only-iso-form-input
 					class="filter"
 					[label]="filterInput.value.label"
@@ -9,7 +9,7 @@
 					(rangeChange)="changeValue(filterInput.key, $event)">
 				</app-date-only-iso-form-input>
 			</div>
-			<div *ngSwitchCase="'specialty'">
+			<div  *ngSwitchCase="'specialty'">
 				<app-specialty-form-input
 					class="filter"
 					[label]="filterInput.value.label"
@@ -17,7 +17,15 @@
 					(specialtyChange)="changeValue(filterInput.key, $event)">
 				</app-specialty-form-input>
 			</div>
+			<div *ngSwitchCase="'professional'">
+				<app-professional-form-input
+					class="filter"
+					[label]="filterInput.value.label"
+					[hint]="filterInput.value.hint"
+					(professionalChange)="changeValue(filterInput.key, $event)">
+				</app-professional-form-input>
+			</div>
 		</ng-container>
 	</ng-container>
 </div>
-<app-ui-component-list [list]="content" ></app-ui-component-list>
+<app-ui-component-list [list]="content"></app-ui-component-list>

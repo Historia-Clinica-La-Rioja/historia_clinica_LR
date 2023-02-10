@@ -23,6 +23,7 @@ import { UiExternalComponentComponent } from './components/ui-external-component
 import { cubejsOptions } from './extensions-cubejs';
 import { RoutedExternalComponent } from './components/routed-external/routed-external.component';
 import { SpecialtyFormInputComponent } from './components/specialty-form-input/specialty-form-input.component';
+import { ProfessionalFormInputComponent } from './components/professional-form-input/professional-form-input.component';
 
 @NgModule({
 	imports: [

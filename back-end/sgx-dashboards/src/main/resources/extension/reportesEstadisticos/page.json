@@ -139,9 +139,17 @@
                         "type": "specialty",
                         "label": "Especialidad"
                       },
-                      "fecha": {
+                      "professional": {
                         "filter": {
-                          "member": "CantidadTurnos.fecha_consulta",
+                          "member": "CantidadTurnosTotal.profesional",
+                          "operator": "equals"
+                        },
+                        "type": "professional",
+                        "label": "Profesional"
+                      },
+                      "date": {
+                        "filter": {
+                          "member": "CantidadTurnosTotal.fecha_consulta",
                           "operator": "inDateRange"
                         },
                         "type": "dateRangeISO",

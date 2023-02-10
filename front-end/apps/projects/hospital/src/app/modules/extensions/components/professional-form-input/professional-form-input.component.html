@@ -1,0 +1,9 @@
+<mat-form-field appearance="fill" [formGroup]="professionalForm" >
+	<mat-label>{{label}}</mat-label>
+	<mat-select placeholder={{label}} formControlName="professional">
+		<mat-option *ngFor="let professional of professionalList" [value]="professional">
+			{{professional | translate}}
+		</mat-option>
+	</mat-select>
+	<mat-hint>{{hint}}</mat-hint>
+</mat-form-field>
