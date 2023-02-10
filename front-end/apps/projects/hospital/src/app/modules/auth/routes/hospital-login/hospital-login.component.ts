@@ -3,11 +3,13 @@ import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { AuthenticationService } from '../../services/authentication.service';
 import { catchError } from 'rxjs/operators';
 import { ApiErrorMessageDto, RecaptchaPublicConfigDto } from '@api-rest/api-model';
+import { AppFeature } from '@api-rest/api-model';
 import { ERole } from '@api-rest/api-model';
 import { PublicService } from '@api-rest/services/public.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { MatDialog } from "@angular/material/dialog";
 import { LoginPinCodeComponent } from "../../dialogs/login-pin-code/login-pin-code.component";
+import { FeatureFlagService } from "@core/services/feature-flag.service";
 
 @Component({
 	selector: 'app-hospital-login',
@@ -21,6 +23,7 @@ export class HospitalLoginComponent implements OnInit {
 	recaptchaEnable = false;
 	recaptchaSiteKey = '';
 	hidePassword = true;
+	ffRecoverPasswordIsOn: boolean;
 
 	private returnUrl: string;
 
@@ -31,6 +34,7 @@ export class HospitalLoginComponent implements OnInit {
 		private route: ActivatedRoute,
 		private router: Router,
 		private readonly dialog: MatDialog,
+		private readonly featureFlagService: FeatureFlagService
 	) {
 	}
 
@@ -58,6 +62,7 @@ export class HospitalLoginComponent implements OnInit {
 			}
 		});
 
+		this.featureFlagService.isActive(AppFeature.HABILITAR_RECUPERAR_PASSWORD).subscribe(isOn => this.ffRecoverPasswordIsOn = isOn);
 	}
 
 	hasError(type: string, control: string): boolean {
