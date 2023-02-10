@@ -69,7 +69,9 @@ export class NuevaPrescripcionComponent implements OnInit {
 		this.patientService.getPatientBasicData(Number(this.data.patientId)).subscribe((basicData: BasicPatientDto) => {
 			this.patientData = basicData;
 		});
-		this.openPrescriptionItemDialog();
+
+		if (this.isHabilitarRecetaDigitalEnabled)
+			this.openPrescriptionItemDialog();
 	}
 
 	setProlongedTreatment(isOn: boolean) {
