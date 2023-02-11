@@ -18,6 +18,11 @@ export class ProfessionalLicenseService {
 		return this.http.post<number>(url, professionalLicenses);
 	}
 
+	removeProfessionalLicenseNumber(healthcareProfessionalId: number, professionalLicenses: ProfessionalLicenseNumberDto): Observable<number> {
+		const url = this.URL_PREFIX + `${healthcareProfessionalId}/delete`;
+		return this.http.post<number>(url, professionalLicenses);
+	}
+
 	getLicenseNumberByProfessional(healthcareProfessionalId: number): Observable<ProfessionalLicenseNumberDto[]> {
 		const url =  this.URL_PREFIX + `${healthcareProfessionalId}`;
 		return this.http.get<ProfessionalLicenseNumberDto[]>(url);
