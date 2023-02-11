@@ -1,5 +1,7 @@
-import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
+import { ChangeDetectionStrategy, Component, EventEmitter, Input, Output } from '@angular/core';
 import { ProfessionalLicenseNumberDto, ProfessionalProfessionsDto } from '@api-rest/api-model';
+import { ProfessionalLicenseService } from '@api-rest/services/professional-license.service';
+import { SnackBarService } from '@presentation/services/snack-bar.service';
 
 const NATIONAL = 1;
 const PROVINCE = 2;
@@ -16,6 +18,15 @@ export class CardLicenseComponent  {
 	PROVINCE = PROVINCE;
 	@Input() professionsWithLicense: ProfessionalLicenseNumberDto[];
 	@Input() ownProfessionsAndSpecialties: ProfessionalProfessionsDto[];
+	@Input() healthcareProfessionalId: number;
+	@Output() itemEvent = new EventEmitter<ProfessionalLicenseNumberDto>();
+
+	constructor(
+		private readonly professionalLicenseService: ProfessionalLicenseService,
+		private readonly snackBarService: SnackBarService,
+	) {
+
+	}
 
 	convertToProfessionalLicenseNumberDto(elem: ProfessionalLicenseNumberDto): ProfessionalLicenseNumberDto {
 		return {
@@ -25,6 +36,13 @@ export class CardLicenseComponent  {
 			typeId: elem.typeId,
 			healthcareProfessionalSpecialtyId: elem?.healthcareProfessionalSpecialtyId || null,
 		}
+	}
+
+	delete(item: ProfessionalLicenseNumberDto) {
+		this.professionalLicenseService.removeProfessionalLicenseNumber(this.healthcareProfessionalId, item).subscribe(data => {
+			this.itemEvent.emit(item);
+			this.snackBarService.showSuccess('pacientes.edit_professions.messages.SUCCESS');
+		});
 	}
 
 }

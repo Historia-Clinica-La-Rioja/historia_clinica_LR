@@ -173,7 +173,9 @@
 								<div fxLayout="column" fxLayoutGap="10px">
 									<div content>
 										<app-card-license [professionsWithLicense]="professionsWithLicense$ | async"
-											[ownProfessionsAndSpecialties]="ownProfessionsAndSpecialties$ | async">
+											[ownProfessionsAndSpecialties]="ownProfessionsAndSpecialties$ | async"
+											[healthcareProfessionalId]="getHealthcareProfessionalId()"
+											(itemEvent)="reloadLicenses($event)">
 										</app-card-license>
 									</div>
 									<div content>

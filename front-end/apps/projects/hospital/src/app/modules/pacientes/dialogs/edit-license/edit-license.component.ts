@@ -61,6 +61,7 @@ export class EditLicenseComponent implements OnInit {
 		} while (length > 0);
 	}
 
+
 	private getComboProfessionLicense(elem: ProfessionalLicenseNumberDto): any {
 		return {
 			id: elem?.id || null,
@@ -85,11 +86,6 @@ export class EditLicenseComponent implements OnInit {
 
 	getCtrl(key: string, form: FormGroup): any {
 		return form.get(key);
-	}
-
-	delete(pointIndex: number): void {
-		const array = this.form.get('professionalSpecialties') as FormArray;
-		array.removeAt(pointIndex);
 	}
 
 	isDisableConfirmButton(): boolean {

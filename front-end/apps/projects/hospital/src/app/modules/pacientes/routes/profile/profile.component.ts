@@ -503,4 +503,12 @@ export class ProfileComponent implements OnInit {
 		this.router.navigate([url], { queryParams: { idPaciente: this.patientId } });
 	}
 
+	getHealthcareProfessionalId(): number {
+		return this.healthcareProfessionalId;
+	}
+
+	reloadLicenses(removedLicense: ProfessionalLicenseNumberDto) {
+		this.professionsWithLicense$ = this.professionalLicenseService.getLicenseNumberByProfessional(this.healthcareProfessionalId);
+	}
+
 }
