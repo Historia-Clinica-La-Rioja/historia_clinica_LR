@@ -1,6 +1,11 @@
 <app-content>
 	<form [formGroup]="form" (ngSubmit)="submit()">
 		<mat-card>
+			<section class="logos">
+				<app-logo></app-logo>
+				<app-logo [isSecondaryLogo]="true"></app-logo>
+			</section>
+			<mat-divider></mat-divider>
 			<mat-card-header fxLayoutAlign="center center" style="padding: 15px;">
 				<mat-card-title>
 					<span translate="auth.login.form.TITLE"></span>

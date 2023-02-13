@@ -155,6 +155,7 @@ import { ViewHourMinutePipe } from './pipes/view-hour-minute.pipe';
 		TableComponent,
 		TypeaheadComponent,
 		UserBadgeComponent,
+		LogoComponent,
 		// dialogs
 		// directives
 		CtrlTemplateDirective,
