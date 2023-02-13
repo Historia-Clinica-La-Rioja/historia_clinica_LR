@@ -40,4 +40,6 @@ public interface PersonExternalService {
 
     boolean savePersonPhoto(Integer personId, String imageData);
 
+	boolean saveEmail(Integer personId, String email);
+
 }

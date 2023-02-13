@@ -2,6 +2,7 @@ package net.pladema.clinichistory.requests.medicationrequests.controller;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 import java.time.format.DateTimeFormatter;
 import java.util.HashMap;
 import java.util.List;
@@ -12,16 +13,13 @@ import java.util.stream.Collectors;
 
 import javax.validation.Valid;
 
-import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.generateFile.DocumentAuthorFinder;
-import ar.lamansys.sgh.shared.infrastructure.input.service.staff.ProfessionalCompleteDto;
+import net.pladema.clinichistory.requests.medicationrequests.service.GetMedicationRequestByDocument;
 
-import net.pladema.clinichistory.requests.medicationrequests.service.ValidateMedicationRequestGenerationService;
-
-import net.pladema.staff.controller.dto.ProfessionalLicenseNumberValidationResponseDto;
-
+import org.apache.commons.compress.utils.IOUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.io.ByteArrayResource;
 import org.springframework.core.io.InputStreamResource;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -42,8 +40,11 @@ import org.springframework.web.bind.annotation.RestController;
 
 import ar.lamansys.sgh.clinichistory.domain.document.PatientInfoBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.MedicationBo;
+import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.generateFile.DocumentAuthorFinder;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.masterdata.entity.MedicationStatementStatus;
 import ar.lamansys.sgh.shared.infrastructure.input.service.BasicPatientDto;
+import ar.lamansys.sgh.shared.infrastructure.input.service.SharedDocumentPort;
+import ar.lamansys.sgh.shared.infrastructure.input.service.staff.ProfessionalCompleteDto;
 import ar.lamansys.sgx.shared.exceptions.dto.ApiErrorDto;
 import ar.lamansys.sgx.shared.featureflags.AppFeature;
 import ar.lamansys.sgx.shared.featureflags.application.FeatureFlagsService;
@@ -60,13 +61,17 @@ import net.pladema.clinichistory.requests.medicationrequests.service.ChangeState
 import net.pladema.clinichistory.requests.medicationrequests.service.CreateMedicationRequestService;
 import net.pladema.clinichistory.requests.medicationrequests.service.GetMedicationRequestInfoService;
 import net.pladema.clinichistory.requests.medicationrequests.service.ListMedicationInfoService;
+import net.pladema.clinichistory.requests.medicationrequests.service.NewMedicationRequestNotification;
+import net.pladema.clinichistory.requests.medicationrequests.service.ValidateMedicationRequestGenerationService;
 import net.pladema.clinichistory.requests.medicationrequests.service.domain.ChangeStateMedicationRequestBo;
 import net.pladema.clinichistory.requests.medicationrequests.service.domain.MedicationFilterBo;
 import net.pladema.clinichistory.requests.medicationrequests.service.domain.MedicationRequestBo;
+import net.pladema.clinichistory.requests.medicationrequests.service.impl.notification.NewMedicationRequestNotificationArgs;
 import net.pladema.patient.controller.dto.PatientMedicalCoverageDto;
 import net.pladema.patient.controller.service.PatientExternalMedicalCoverageService;
 import net.pladema.patient.controller.service.PatientExternalService;
 import net.pladema.staff.controller.dto.ProfessionalDto;
+import net.pladema.staff.controller.dto.ProfessionalLicenseNumberValidationResponseDto;
 import net.pladema.staff.controller.service.HealthcareProfessionalExternalService;
 
 @RestController
@@ -107,6 +112,11 @@ public class MedicationRequestController {
 
 	private final Function<Long, ProfessionalCompleteDto> authorFromDocumentFunction;
 
+	private final NewMedicationRequestNotification newMedicationRequestNotification;
+
+	private final SharedDocumentPort sharedDocumentPort;
+
+	private final GetMedicationRequestByDocument getMedicationRequestByDocument;
 
 	public MedicationRequestController(CreateMedicationRequestService createMedicationRequestService,
 									   HealthcareProfessionalExternalService healthcareProfessionalExternalService,
@@ -120,7 +130,10 @@ public class MedicationRequestController {
 									   PdfService pdfService,
 									   FeatureFlagsService featureFlagsService,
 									   DocumentAuthorFinder documentAuthorFinder,
-									   ValidateMedicationRequestGenerationService validateMedicationRequestGenerationService) {
+									   ValidateMedicationRequestGenerationService validateMedicationRequestGenerationService,
+									   NewMedicationRequestNotification newMedicationRequestNotification,
+									   SharedDocumentPort sharedDocumentPort,
+									   GetMedicationRequestByDocument getMedicationRequestByDocument) {
         this.createMedicationRequestService = createMedicationRequestService;
         this.healthcareProfessionalExternalService = healthcareProfessionalExternalService;
         this.createMedicationRequestMapper = createMedicationRequestMapper;
@@ -134,6 +147,9 @@ public class MedicationRequestController {
 		this.featureFlagsService = featureFlagsService;
 		this.validateMedicationRequestGenerationService = validateMedicationRequestGenerationService;
 		this.authorFromDocumentFunction = (Long documentId) -> documentAuthorFinder.getAuthor(documentId);
+		this.newMedicationRequestNotification = newMedicationRequestNotification;
+		this.sharedDocumentPort = sharedDocumentPort;
+		this.getMedicationRequestByDocument = getMedicationRequestByDocument;
 	}
 
 
@@ -260,6 +276,21 @@ public class MedicationRequestController {
 				.body(resource);
     }
 
+	@GetMapping(value = "/documentId/{documentId}/notify")
+	@PreAuthorize("hasPermission(#institutionId, 'ESPECIALISTA_MEDICO, PROFESIONAL_DE_SALUD, ESPECIALISTA_EN_ODONTOLOGIA, ENFERMERO, PERSONAL_DE_FARMACIA')")
+	public void notify(@PathVariable(name = "institutionId") Integer institutionId,
+														@PathVariable(name = "patientId") Integer patientId,
+														@PathVariable(name = "documentId") Long documentId,
+					   									@RequestParam(value = "patientEmail") String patientEmail) throws PDFDocumentException, IOException {
+		LOG.debug("medicationRequestList -> institutionId {}, patientId {}, documentId {}, patientEmail {}", institutionId, patientId, documentId, patientEmail);
+		patientExternalService.setPatientEmail(patientId, patientEmail);
+		var patientDto = patientExternalService.getBasicDataFromPatient(patientId);
+		InputStreamResource resource = sharedDocumentPort.getFileById(documentId);
+		Integer medicationRequestId = getMedicationRequestByDocument.run(documentId);
+		NewMedicationRequestNotificationArgs args = mapToMedicationRequestNotificationBo(medicationRequestId, patientDto, new ByteArrayResource(IOUtils.toByteArray(resource.getInputStream())));
+		newMedicationRequestNotification.run(args);
+	}
+
 	@GetMapping(value = "/validate")
 	public ResponseEntity<ProfessionalLicenseNumberValidationResponseDto> validateMedicationRequestGeneration(@PathVariable(name = "institutionId") Integer institutionId,
 																											  @PathVariable(name = "patientId") Integer patientId) {
@@ -296,4 +327,15 @@ public class MedicationRequestController {
         LOG.error("Constraint violation -> {}", ex.getMessage());
         return new ApiErrorDto("Constraint violation", ex.getMessage());
     }
+
+	private NewMedicationRequestNotificationArgs mapToMedicationRequestNotificationBo(Integer recipeId, BasicPatientDto patientDto, ByteArrayResource resource) {
+		LOG.debug("Input parameters -> recipeId {}, patientDto {}, resource {}", recipeId, patientDto, resource);
+		NewMedicationRequestNotificationArgs result = new NewMedicationRequestNotificationArgs();
+		result.setRecipeId(recipeId);
+		result.setPatient(patientDto);
+		HashMap<String, ByteArrayResource> attachments = new HashMap<>();
+		attachments.put("Receta_"+recipeId+".pdf", resource);
+		result.setResources(attachments);
+		return result;
+	}
 }

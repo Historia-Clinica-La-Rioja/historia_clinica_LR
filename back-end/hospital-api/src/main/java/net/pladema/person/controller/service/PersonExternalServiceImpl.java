@@ -253,6 +253,14 @@ public class PersonExternalServiceImpl implements PersonExternalService {
 		return result;
 	}
 
+	@Override
+	public boolean saveEmail(Integer personId, String email) {
+		PersonExtended entity = personService.getPersonExtended(personId);
+		entity.setEmail(email);
+		personService.addPersonExtended(entity);
+		return Boolean.TRUE;
+	}
+
 	private Gender getGender(Short genderId) {
 		return personMasterDataService.getGender(genderId).orElse(new Gender());
 	}
