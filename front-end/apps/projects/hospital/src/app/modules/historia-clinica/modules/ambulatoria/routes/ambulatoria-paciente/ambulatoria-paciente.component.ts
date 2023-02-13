@@ -88,7 +88,7 @@ export class AmbulatoriaPacienteComponent implements OnInit, OnDestroy {
 	showNursingSection = false;
 	femenino = FEMENINO;
 	selectedTab = 0;
-	isTemporaryPatient: boolean = false;
+	isNoValidatedOrTemporary: boolean = false;
 	isHabilitarRecetaDigitalEnabled: boolean = false;
 	emergencyCareTabIndex: number;
 	showEmergencyCareTab: boolean;
@@ -134,9 +134,9 @@ export class AmbulatoriaPacienteComponent implements OnInit, OnDestroy {
 				this.patientId = Number(params.get('idPaciente'));
 				this.patientService.getPatientBasicData<BasicPatientDto>(this.patientId).subscribe(
 					patient => {
-						(patient.typeId === PatientType.TEMPORARY)
-							? this.isTemporaryPatient = true
-							: this.isTemporaryPatient = false
+						(patient.typeId === PatientType.TEMPORARY || patient.typeId === PatientType.PERMANENT_NO_VALIDATED)
+							? this.isNoValidatedOrTemporary = true
+							: this.isNoValidatedOrTemporary = false
 
 						this.personInformation.push({ description: patient.person.identificationType, data: patient.person.identificationNumber });
 						this.patient = this.mapperService.toPatientBasicData(patient);

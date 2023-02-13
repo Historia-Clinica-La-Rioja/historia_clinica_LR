@@ -160,7 +160,7 @@
 							</app-guardia>
 						</ng-template>
 					</mat-tab>
-					<mat-tab id="tab_indications"
+					<mat-tab id="tab_indications" [disabled]="isNoValidatedOrTemporary && isHabilitarRecetaDigitalEnabled"
 						*ngIf="hasHealthRelatedRole || hasPharmacyStaffRole || hasPrescriptorRole">
 						<ng-template mat-tab-label>
 							<span>{{ 'indicacion.TITLE' | translate | uppercase }}</span>
@@ -173,7 +173,6 @@
 								</app-internment-indications-card>
 							</div>
 							<app-card-medicaciones
-								*ngIf="! isHabilitarRecetaDigitalEnabled || (! isTemporaryPatient && isHabilitarRecetaDigitalEnabled)"
 								[patientId]="patientId" [medicamentStatus]="medicamentStatus$ | async">
 							</app-card-medicaciones>
 						</ng-template>
