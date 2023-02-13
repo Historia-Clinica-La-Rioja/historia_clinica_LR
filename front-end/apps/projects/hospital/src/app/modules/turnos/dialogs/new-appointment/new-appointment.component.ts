@@ -18,6 +18,7 @@ import {
 	PatientMedicalCoverageDto,
 	DiaryAvailableProtectedAppointmentsDto,
 	ReferenceSummaryDto,
+	AppointmentShortSummaryDto,
 } from '@api-rest/api-model';
 import { AppointmentsFacadeService } from '../../services/appointments-facade.service';
 import { PersonIdentification } from '@presentation/pipes/person-identification.pipe';
@@ -35,6 +36,8 @@ import { ReferenceService } from '@api-rest/services/reference.service';
 import { ReferenceAppointmentService } from '@turnos/services/reference-appointment.service';
 import { REMOVE_SUBSTRING_DNI } from '@core/constants/validation-constants';
 import { PATTERN_INTEGER_NUMBER } from '@core/utils/pattern.utils';
+import { EquipmentAppointmentsFacadeService } from '@turnos/modules/image-network/services/equipment-appointments-facade.service';
+import { Observable } from 'rxjs';
 
 const ROUTE_SEARCH = 'pacientes/search';
 const TEMPORARY_PATIENT_ID = 3;
@@ -42,7 +45,8 @@ const TEMPORARY_PATIENT_ID = 3;
 @Component({
 	selector: 'app-new-appointment',
 	templateUrl: './new-appointment.component.html',
-	styleUrls: ['./new-appointment.component.scss']
+	styleUrls: ['./new-appointment.component.scss'],
+	providers: [EquipmentAppointmentsFacadeService]
 })
 export class NewAppointmentComponent implements OnInit {
 
@@ -73,7 +77,7 @@ export class NewAppointmentComponent implements OnInit {
 	constructor(
 		@Inject(MAT_DIALOG_DATA) public data: {
 			date: string, diaryId: number, hour: string, openingHoursId: number, overturnMode: boolean, patientId?: number,
-			protectedAppointment?: DiaryAvailableProtectedAppointmentsDto, careLineId?: number
+			protectedAppointment?: DiaryAvailableProtectedAppointmentsDto, careLineId?: number, isEquipmentAppointment?: boolean,
 		},
 		public dialogRef: MatDialogRef<NewAppointmentComponent>,
 		private readonly formBuilder: FormBuilder,
@@ -89,7 +93,8 @@ export class NewAppointmentComponent implements OnInit {
 		private readonly patientNameService: PatientNameService,
 		private readonly referenceService: ReferenceService,
 		private readonly referenceAppointmentService: ReferenceAppointmentService,
-		private readonly datePipe: DatePipe
+		private readonly datePipe: DatePipe,
+		private readonly equipmentAppointmentFacade: EquipmentAppointmentsFacadeService,
 	) {
 		this.routePrefix = `institucion/${this.contextService.institutionId}/`;
 	}
@@ -258,7 +263,7 @@ export class NewAppointmentComponent implements OnInit {
 
 	submit(itComesFromStep3?: boolean): void {
 		this.isSubmitButtonDisabled = true;
-		this.appointmentFacade.verifyExistingAppointment(this.patientId, this.data.date).subscribe(appointmentShortSummary => {
+		this.verifyExistingAppointment().subscribe((appointmentShortSummary: AppointmentShortSummaryDto) => {
 			if (appointmentShortSummary) {
 				const date = this.datePipe.transform(dateDtoToDate(appointmentShortSummary.date), DatePipeFormat.SHORT_DATE)
 				const hour = this.datePipe.transform(timeDtoToDate(appointmentShortSummary.hour), DatePipeFormat.SHORT_TIME)
@@ -304,7 +309,7 @@ export class NewAppointmentComponent implements OnInit {
 			phonePrefix,
 			phoneNumber
 		};
-		this.appointmentFacade.addAppointment(newAppointment).subscribe(appointmentId => {
+		this.addAppointment(newAppointment).subscribe((appointmentId: number) => {
 			this.lastAppointmentId = appointmentId;
 			if (itComesFromStep3) {
 				this.assignAppointment();
@@ -431,5 +436,23 @@ export class NewAppointmentComponent implements OnInit {
 			return this.appointmentInfoForm.controls.phoneNumber.value;
 		if (itComesFromStep3)
 			return this.associateReferenceForm.controls.reference.value.phoneNumber;
+	}
+
+	private verifyExistingAppointment(): Observable<AppointmentShortSummaryDto> {
+		if (this.data.isEquipmentAppointment) {
+			return this.equipmentAppointmentFacade.verifyExistingEquipmentAppointment(this.patientId, this.data.date)
+
+		}
+		else {
+			return this.appointmentFacade.verifyExistingAppointment(this.patientId, this.data.date)
+		}
+	}
+
+	private addAppointment(newAppointment: CreateAppointmentDto): Observable<number> {
+		if (this.data.isEquipmentAppointment) {
+			return this.equipmentAppointmentFacade.addAppointment(newAppointment);
+		}
+		else
+			return this.appointmentFacade.addAppointment(newAppointment);
 	}
 }

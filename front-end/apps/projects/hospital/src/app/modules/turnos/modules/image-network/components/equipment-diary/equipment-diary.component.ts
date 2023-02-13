@@ -1,16 +1,22 @@
 import { Component, Input, OnInit } from '@angular/core';
-import { CompleteEquipmentDiaryDto } from '@api-rest/api-model';
+import { CompleteEquipmentDiaryDto, DiaryOpeningHoursDto } from '@api-rest/api-model';
+import { ERole } from '@api-rest/api-model';
 import { CalendarEvent, CalendarView, CalendarWeekViewBeforeRenderEvent, DAYS_OF_WEEK } from 'angular-calendar';
 import { SnackBarService } from '@presentation/services/snack-bar.service';
 import { Subject } from 'rxjs';
 import { DatePipeFormat } from '@core/utils/date.utils';
 import * as moment from 'moment';
 import { MINUTES_IN_HOUR } from '@turnos/constants/appointment';
+import { MEDICAL_ATTENTION } from '@turnos/constants/descriptions';
 import { EquipmentDiaryService } from '@api-rest/services/equipment-diary.service';
 import { SearchEquipmentDiaryService } from '../../services/search-equipment-diary.service';
+import { PermissionsService } from '@core/services/permissions.service';
+import { MatDialog } from '@angular/material/dialog';
 import { OpeningHoursDiaryService } from '../../services/opening-hours-diary.service';
+import { NewAppointmentComponent } from '@turnos/dialogs/new-appointment/new-appointment.component';
 import { EquipmentAppointmentsFacadeService } from '../../services/equipment-appointments-facade.service';
-import { DateFormat, momentFormat, momentParseDate } from '@core/utils/moment.utils';
+import { DateFormat, buildFullDate, dateToMoment, dateToMomentTimeZone, momentFormat, momentParseDate } from '@core/utils/moment.utils';
+import { Moment } from 'moment';
 import { endOfMonth, endOfWeek, startOfMonth, startOfWeek } from 'date-fns';
 
 @Component({
@@ -29,6 +35,7 @@ export class EquipmentDiaryComponent implements OnInit {
 
 	refreshCalendar = new Subject<void>();
 
+	hasRoleToCreate = false;
 	appointments: CalendarEvent[] = [];
 	holidays: CalendarEvent[] = [];
 
@@ -51,10 +58,14 @@ export class EquipmentDiaryComponent implements OnInit {
 		private readonly equipmentDiaryService: EquipmentDiaryService,
 		private readonly searchEquipmentDiary: SearchEquipmentDiaryService,
 		readonly openingHoursService: OpeningHoursDiaryService,
+		private readonly permissionService: PermissionsService,
+		private readonly dialog: MatDialog,
 		private readonly equipmentAppointmentsFacade: EquipmentAppointmentsFacadeService,
 	) { }
 
 	ngOnInit() {
+		this.permissionService.hasContextAssignments$([ERole.ADMINISTRATIVO_RED_DE_IMAGENES]).subscribe(hasRole => this.hasRoleToCreate = hasRole);
+
 		this.equipmentAppointmentsFacade.getAppointments().subscribe(appointments => {
 			if (appointments) {
 				this.appointments = appointments;
@@ -85,11 +96,42 @@ export class EquipmentDiaryComponent implements OnInit {
 		this.setDateRange(date);
 	}
 
+	onClickedSegment(event) {
+		const openingHourId = this.openingHoursService.getOpeningHoursId(this.diary.startDate, this.diary.endDate, event.date);
+		if (openingHourId) {
+			const clickedDate: Moment = dateToMomentTimeZone(event.date);
+			const diaryOpeningHourDto: DiaryOpeningHoursDto = this.openingHoursService.getEquipmentDiaryOpeningHours().find(diaryOpeningHour => diaryOpeningHour.openingHours.id === openingHourId);
+
+			const busySlot = this.getAppointmentAt(event.date)
+			const numberOfOverturnsAssigned = this.allOverturnsAssignedForDiaryOpeningHour(diaryOpeningHourDto, clickedDate)
+
+			const addingOverturn = !!busySlot;
+
+			if (this.verifyOverturns(addingOverturn, numberOfOverturnsAssigned, diaryOpeningHourDto)) {
+				return;
+			}
+
+			this.openNewAppointmentDialog(clickedDate, openingHourId, addingOverturn);		
+		}
+	}
+
 	changeViewDate(date: Date) {
 		if (this.view !== CalendarView.Month) {
 			this.setDateRange(date);
 			this.equipmentAppointmentsFacade.setValues(this.diary.id, this.diary.appointmentDuration, this.startDate, this.endDate);
 		}
+	}
+
+	private getAppointmentAt(date: Date): CalendarEvent {
+		return this.appointments.find(appointment => appointment.start.getTime() === date.getTime());
+	}
+
+	private allOverturnsAssignedForDiaryOpeningHour(diaryOpeningHourDto: DiaryOpeningHoursDto, clickedDate: Moment): number {
+		const openingHourStart = buildFullDate(diaryOpeningHourDto.openingHours.from, clickedDate);
+		const openingHourEnd = buildFullDate(diaryOpeningHourDto.openingHours.to, clickedDate);
+		return this.appointments.filter(event =>
+			event.meta?.overturn && dateToMoment(event.start).isBetween(openingHourStart, openingHourEnd, null, '[)')
+		).length
 	}
 
 	private _getViewDate(): Date {
@@ -115,6 +157,22 @@ export class EquipmentDiaryComponent implements OnInit {
 		});
 	}
 
+	private openNewAppointmentDialog(clickedDate: Moment, openingHourId: number, addingOverturn: boolean) {
+		const dialogRef = this.dialog.open(NewAppointmentComponent, {
+			width: '35%',
+			data: {
+				date: clickedDate.format(DateFormat.API_DATE),
+				diaryId: this.diary.id,
+				hour: clickedDate.format(DateFormat.HOUR_MINUTE_SECONDS),
+				openingHoursId: openingHourId,
+				overturnMode: addingOverturn,
+				patientId: null,
+				isEquipmentAppointment: true
+			}
+		});
+		dialogRef.afterClosed().subscribe(() => this.equipmentAppointmentsFacade.loadAppointments());
+	}
+
 	private setDateRange(date: Date) {
 		if (CalendarView.Day === this.view) {
 			const d = moment(date);
@@ -134,6 +192,17 @@ export class EquipmentDiaryComponent implements OnInit {
 
 		const end = endOfWeek(date, { weekStartsOn: 1 });
 		this.endDate = momentFormat(moment(end), DateFormat.API_DATE);
+	}
+
+	private verifyOverturns(addingOverturn: boolean, numberOfOverturnsAssigned: number, diaryOpeningHourDto: DiaryOpeningHoursDto) {
+		if (addingOverturn && (numberOfOverturnsAssigned === diaryOpeningHourDto.overturnCount)) {
+			if (diaryOpeningHourDto.medicalAttentionTypeId !== MEDICAL_ATTENTION.SPONTANEOUS_ID) {
+				this.snackBarService.showError('turnos.overturns.messages.ERROR');
+				return true;
+			}
+		}
+		else
+			return false;
 	}
 
 }
