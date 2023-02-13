@@ -173,6 +173,7 @@ public class EquipmentDiaryServiceImpl implements EquipmentDiaryService {
 		result.setAppointmentDuration(equipmentDiaryListVo.getAppointmentDuration());
 		result.setAutomaticRenewal(equipmentDiaryListVo.isAutomaticRenewal());
 		result.setIncludeHoliday(equipmentDiaryListVo.isIncludeHoliday());
+		result.setEquipmentId(equipmentDiaryListVo.getEquipmentId());
 		LOG.debug(OUTPUT, result);
 		return result;
 	}

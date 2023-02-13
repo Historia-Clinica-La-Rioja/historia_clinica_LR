@@ -22,6 +22,7 @@ public class CompleteEquipmentDiaryBo extends EquipmentDiaryBo {
 		endDate = equipmentDiaryBo.getEndDate();
 		automaticRenewal = equipmentDiaryBo.isAutomaticRenewal();
 		includeHoliday = equipmentDiaryBo.isIncludeHoliday();
+		equipmentId = equipmentDiaryBo.getEquipmentId();
 	}
 
 }
