@@ -11,7 +11,7 @@ import java.util.List;
 
 public interface DiaryOpeningHoursService {
 
-    void load(Integer diaryId, List<DiaryOpeningHoursBo> diaryOpeningHours, List<DiaryOpeningHoursBo>... oldOpeningHours);
+    void load(Integer diaryId, List<DiaryOpeningHoursBo> diaryOpeningHours);
     
     void update(Integer diaryId, List<DiaryOpeningHoursBo> diaryOpeningHours);
 

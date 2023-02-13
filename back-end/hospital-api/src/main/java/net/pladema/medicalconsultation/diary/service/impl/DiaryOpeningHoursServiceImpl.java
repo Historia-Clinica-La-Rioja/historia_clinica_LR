@@ -4,23 +4,24 @@ import static java.util.stream.Collectors.toList;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Comparator;
+import java.util.List;
+import java.util.Optional;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 
-import lombok.RequiredArgsConstructor;
-import net.pladema.medicalconsultation.appointment.repository.AppointmentAssnRepository;
-import net.pladema.medicalconsultation.diary.service.domain.*;
-import net.pladema.medicalconsultation.diary.service.exception.DiaryOpeningHoursEnumException;
-import net.pladema.medicalconsultation.diary.service.exception.DiaryOpeningHoursException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
+import ar.lamansys.sgx.shared.dates.repository.entity.EDayOfWeek;
+import lombok.RequiredArgsConstructor;
 import net.pladema.medicalconsultation.diary.repository.DiaryOpeningHoursRepository;
 import net.pladema.medicalconsultation.diary.repository.OpeningHoursRepository;
 import net.pladema.medicalconsultation.diary.repository.domain.DiaryOpeningHoursVo;
@@ -30,7 +31,12 @@ import net.pladema.medicalconsultation.diary.repository.entity.DiaryOpeningHours
 import net.pladema.medicalconsultation.diary.repository.entity.OpeningHours;
 import net.pladema.medicalconsultation.diary.service.DiaryBoMapper;
 import net.pladema.medicalconsultation.diary.service.DiaryOpeningHoursService;
-import ar.lamansys.sgx.shared.dates.repository.entity.EDayOfWeek;
+import net.pladema.medicalconsultation.diary.service.domain.DiaryOpeningHoursBo;
+import net.pladema.medicalconsultation.diary.service.domain.OccupationBo;
+import net.pladema.medicalconsultation.diary.service.domain.OpeningHoursBo;
+import net.pladema.medicalconsultation.diary.service.domain.TimeRangeBo;
+import net.pladema.medicalconsultation.diary.service.exception.DiaryOpeningHoursEnumException;
+import net.pladema.medicalconsultation.diary.service.exception.DiaryOpeningHoursException;
 
 @Service
 @RequiredArgsConstructor
@@ -44,12 +50,10 @@ public class DiaryOpeningHoursServiceImpl implements DiaryOpeningHoursService {
 
     private final OpeningHoursRepository openingHoursRepository;
 
-	private final AppointmentAssnRepository appointmentAssnRepository;
-
     private final DiaryBoMapper diaryBoMapper;
 
     @Override
-    public void load(Integer diaryId, List<DiaryOpeningHoursBo> diaryOpeningHours, List<DiaryOpeningHoursBo>... oldOpeningHours) {
+    public void load(Integer diaryId, List<DiaryOpeningHoursBo> diaryOpeningHours) {
         Sort sort = Sort.by("dayWeekId", "from");
         List<OpeningHours> savedOpeningHours = openingHoursRepository.findAll(sort);
 
@@ -64,16 +68,8 @@ public class DiaryOpeningHoursServiceImpl implements DiaryOpeningHoursService {
                     .filter(oh -> oh.equals(newOpeningHours)).findAny();
             if(existingOpeningHours.isPresent())
                 openingHoursId = existingOpeningHours.get().getId();
-            else {
+            else
 				openingHoursId = openingHoursRepository.save(newOpeningHours).getId();
-				if (oldOpeningHours.length > 0) {
-					Optional<DiaryOpeningHoursBo> recoveredOpeningHours = oldOpeningHours[0].stream()
-							.filter(openingHours -> Objects.equals(openingHours.getOpeningHours().getDayWeekId(), newOpeningHours.getDayWeekId()) && openingHours.getOpeningHours().getFrom().equals(newOpeningHours.getFrom()))
-							.findFirst();
-					recoveredOpeningHours.ifPresent(diaryOpeningHoursBo -> appointmentAssnRepository.updateOldWithNewOpeningHoursId(diaryOpeningHoursBo.getOpeningHours().getId(), openingHoursId));
-				}
-			}
-
             openingHoursBo.setId(openingHoursId);
             diaryOpeningHoursRepository.saveAndFlush(createDiaryOpeningHoursInstance(diaryId, openingHoursId, doh));
 
@@ -82,9 +78,8 @@ public class DiaryOpeningHoursServiceImpl implements DiaryOpeningHoursService {
 
 	@Override
 	public void update(Integer diaryId, List<DiaryOpeningHoursBo> diaryOpeningHours) {
-		List<DiaryOpeningHoursBo> oldOpeningHours = diaryOpeningHoursRepository.getDiaryOpeningHours(diaryId).stream().map(this::createDiaryOpeningHoursBo).collect(Collectors.toList());
 		diaryOpeningHoursRepository.deleteAll(diaryId);
-		load(diaryId, diaryOpeningHours, oldOpeningHours);
+		load(diaryId, diaryOpeningHours);
 	}
     
     private DiaryOpeningHours createDiaryOpeningHoursInstance(Integer diaryId, Integer openingHoursId, DiaryOpeningHoursBo doh){

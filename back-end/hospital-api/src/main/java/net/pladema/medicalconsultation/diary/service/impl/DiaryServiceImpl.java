@@ -159,7 +159,7 @@ public class DiaryServiceImpl implements DiaryService {
 				doh.setDiaryId(savedDiary.getId());
 				apmtsByNewDOH.put(doh, new ArrayList<>());
 			});
-			Collection<AppointmentBo> apmts = appointmentService.getFutureActiveAppointmentsByDiary(diaryToUpdate.getId());
+			Collection<AppointmentBo> apmts = appointmentService.getAppointmentsByDiaries(List.of(diaryToUpdate.getId()), diaryToUpdate.getStartDate(), diaryToUpdate.getEndDate());
 			adjustExistingAppointmentsOpeningHours(apmtsByNewDOH, apmts);
 			persistDiary(diaryToUpdate, mapDiaryBo(diaryToUpdate, savedDiary));
 			updatedExistingAppointments(diaryToUpdate, apmtsByNewDOH);
@@ -189,13 +189,8 @@ public class DiaryServiceImpl implements DiaryService {
 				savedDoh -> apmts.forEach(apmt -> apmt.setOpeningHoursId(savedDoh.getOpeningHours().getId()))));
 		List<AppointmentBo> apmtsToUpdate = apmtsByNewDOH.values().stream().flatMap(Collection::stream)
 				.collect(toList());
-		apmtsToUpdate = apmtsToUpdate.stream().filter(this::inTheFuture).collect(Collectors.toList());
 		apmtsToUpdate.forEach(updateApmtOHService::execute);
 
-	}
-
-	private boolean inTheFuture(AppointmentBo appointmentBo) {
-		return appointmentBo.getDate().isAfter(LocalDate.now());
 	}
 
 	private boolean overturnsOutOfLimit(DiaryOpeningHoursBo doh, List<AppointmentBo> apmtsList) {

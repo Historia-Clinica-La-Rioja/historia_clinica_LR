@@ -12,7 +12,7 @@ import java.util.List;
 
 public interface EquipmentDiaryOpeningHoursService {
 
-    void load(Integer equipmentDiaryId, List<EquipmentDiaryOpeningHoursBo> equipmentDiaryOpeningHours, List<EquipmentDiaryOpeningHoursBo>... oldOpeningHours);
+    void load(Integer equipmentDiaryId, List<EquipmentDiaryOpeningHoursBo> equipmentDiaryOpeningHour);
     
     void update(Integer diaryId, List<EquipmentDiaryOpeningHoursBo> equipmentDiaryOpeningHours);
 

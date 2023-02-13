@@ -23,11 +23,4 @@ public interface AppointmentAssnRepository extends JpaRepository<AppointmentAssn
     void updateOpeningHoursId(@Param("openingHoursId") Integer openingHoursId,
                                    @Param("appointmentId") Integer appointmentId);
 
-	@Transactional
-	@Modifying
-	@Query("UPDATE AppointmentAssn AS assn " +
-			"SET assn.pk.openingHoursId = :newOpeningHoursId " +
-			"WHERE assn.pk.openingHoursId = :oldOpeningHoursId")
-	void updateOldWithNewOpeningHoursId(@Param("oldOpeningHoursId") Integer oldOpeningHoursId, @Param("newOpeningHoursId") Integer newOpeningHoursId);
-
 }

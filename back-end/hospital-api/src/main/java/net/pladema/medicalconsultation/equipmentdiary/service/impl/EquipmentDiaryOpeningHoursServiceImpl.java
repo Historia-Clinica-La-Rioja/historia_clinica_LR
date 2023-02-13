@@ -2,7 +2,6 @@ package net.pladema.medicalconsultation.equipmentdiary.service.impl;
 
 import ar.lamansys.sgx.shared.dates.repository.entity.EDayOfWeek;
 import lombok.RequiredArgsConstructor;
-import net.pladema.medicalconsultation.appointment.repository.AppointmentAssnRepository;
 import net.pladema.medicalconsultation.diary.repository.OpeningHoursRepository;
 import net.pladema.medicalconsultation.diary.repository.domain.DiaryOpeningHoursVo;
 import net.pladema.medicalconsultation.diary.repository.domain.OccupationVo;
@@ -53,14 +52,12 @@ public class EquipmentDiaryOpeningHoursServiceImpl implements EquipmentDiaryOpen
 
     private final OpeningHoursRepository openingHoursRepository;
 
-	private final AppointmentAssnRepository appointmentAssnRepository;
-
     private final EquipmentDiaryBoMapper equipmentDiaryBoMapper;
 
     @Override
-    public void load(Integer equipmentDiaryId, List<EquipmentDiaryOpeningHoursBo> equipmentDiaryOpeningHours, List<EquipmentDiaryOpeningHoursBo>... oldOpeningHours) {
+    public void load(Integer equipmentDiaryId, List<EquipmentDiaryOpeningHoursBo> equipmentDiaryOpeningHours) {
 
-		LOG.debug("Input parameters -> equipmentDiaryId {}, equipmentDiaryOpeningHours {} , oldOpeningHours {}",equipmentDiaryId, equipmentDiaryOpeningHours, oldOpeningHours);
+		LOG.debug("Input parameters -> equipmentDiaryId {}, equipmentDiaryOpeningHours {}",equipmentDiaryId, equipmentDiaryOpeningHours);
 
 		Sort sort = Sort.by("dayWeekId", "from");
         List<OpeningHours> savedOpeningHours = openingHoursRepository.findAll(sort);
@@ -76,16 +73,8 @@ public class EquipmentDiaryOpeningHoursServiceImpl implements EquipmentDiaryOpen
                     .filter(oh -> oh.equals(newOpeningHours)).findAny();
             if(existingOpeningHours.isPresent())
                 openingHoursId = existingOpeningHours.get().getId();
-            else {
+            else
 				openingHoursId = openingHoursRepository.save(newOpeningHours).getId();
-				if (oldOpeningHours.length > 0) {
-					Optional<EquipmentDiaryOpeningHoursBo> recoveredOpeningHours = oldOpeningHours[0].stream()
-							.filter(openingHours -> Objects.equals(openingHours.getOpeningHours().getDayWeekId(), newOpeningHours.getDayWeekId()) && openingHours.getOpeningHours().getFrom().equals(newOpeningHours.getFrom()))
-							.findFirst();
-					recoveredOpeningHours.ifPresent(diaryOpeningHoursBo -> appointmentAssnRepository.updateOldWithNewOpeningHoursId(diaryOpeningHoursBo.getOpeningHours().getId(), openingHoursId));
-				}
-			}
-
             openingHoursBo.setId(openingHoursId);
 			equipmentDiaryOpeningHoursRepository.saveAndFlush(createDiaryOpeningHoursInstance(equipmentDiaryId, openingHoursId, doh));
 
@@ -95,10 +84,8 @@ public class EquipmentDiaryOpeningHoursServiceImpl implements EquipmentDiaryOpen
 	@Override
 	public void update(Integer equipmentDiaryId, List<EquipmentDiaryOpeningHoursBo> equipmentDiaryOpeningHours) {
 		LOG.debug("Input parameters -> equipmentDiaryId {}, equipmentDiaryOpeningHours {} ",equipmentDiaryId, equipmentDiaryOpeningHours);
-
-		List<EquipmentDiaryOpeningHoursBo> oldOpeningHours = equipmentDiaryOpeningHoursRepository.getDiaryOpeningHours(equipmentDiaryId).stream().map(this::createDiaryOpeningHoursBo).collect(Collectors.toList());
 		equipmentDiaryOpeningHoursRepository.deleteAll(equipmentDiaryId);
-		load(equipmentDiaryId, equipmentDiaryOpeningHours, oldOpeningHours);
+		load(equipmentDiaryId, equipmentDiaryOpeningHours);
 	}
     
     private EquipmentDiaryOpeningHours createDiaryOpeningHoursInstance(Integer equipmentDiaryId, Integer openingHoursId, EquipmentDiaryOpeningHoursBo edoh){
