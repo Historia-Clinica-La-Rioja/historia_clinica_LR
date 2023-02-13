@@ -1,0 +1,16 @@
+databaseChangeLog: 
+    - logicalFilePath: incrementales-v1_52
+
+    - changeSet:
+        id: addColumn_prescription_date
+        author: lmanterola
+        changes:
+          - addColumn:
+              tableName: medication_statement
+              columns:
+                - column:
+                    name: prescription_date
+                    type: date
+                    defaultValueDate: ${date.now}
+                    constraints:
+                      nullable: false

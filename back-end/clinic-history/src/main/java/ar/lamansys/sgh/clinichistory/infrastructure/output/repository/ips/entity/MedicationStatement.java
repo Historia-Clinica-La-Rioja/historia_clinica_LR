@@ -44,7 +44,7 @@ public class MedicationStatement extends SGXAuditableEntity<Integer> {
 	@Column(name = "snomed_id", nullable = false)
 	private Integer snomedId;
 
-	@Column(name = "cie10_codes", length = 255, nullable = true)
+	@Column(name = "cie10_codes")
 	private String cie10Codes;
 
 	@Column(name = "status_id", length = 20, nullable = false)
@@ -61,6 +61,9 @@ public class MedicationStatement extends SGXAuditableEntity<Integer> {
 
 	@Column(name = "due_date")
 	private LocalDate dueDate;
+
+	@Column(name = "prescription_date")
+	private LocalDate prescriptionDate;
 
 	@Column(name = "is_digital")
 	private Boolean isDigital;
@@ -85,7 +88,7 @@ public class MedicationStatement extends SGXAuditableEntity<Integer> {
 	}
 
 	public MedicationStatement(Integer patientId, Integer snomedId, String cie10Codes, String statusId, Long noteId,
-							   Integer healthConditionId, Integer dosageId, Integer prescriptionLineNumber, Boolean isDigital) {
+							   Integer healthConditionId, Integer dosageId, Integer prescriptionLineNumber, Boolean isDigital, LocalDate prescriptionDate) {
 		super();
 		this.patientId = patientId;
 		this.snomedId = snomedId;
@@ -97,6 +100,7 @@ public class MedicationStatement extends SGXAuditableEntity<Integer> {
 		this.dosageId = dosageId;
 		this.prescriptionLineNumber = prescriptionLineNumber;
 		this.isDigital = isDigital;
+		this.prescriptionDate = prescriptionDate;
 	}
 
 	@Override
