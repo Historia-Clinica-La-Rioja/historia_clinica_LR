@@ -14,8 +14,14 @@ const routes: Routes = [
 				canActivate: [RoleGuard],
 				data: { allowedRoles: [ERole.ADMINISTRADOR_AGENDA] }
 			},
+			{
+				path: 'agenda/:agendaId/editar',
+				component: EquipmentDiarySetupComponent,
+				canActivate: [RoleGuard],
+				data: { allowedRoles: [ERole.ADMINISTRADOR_AGENDA] , editMode: true}
+			}
 		]
-	}	
+	}
 ];
 
 @NgModule({

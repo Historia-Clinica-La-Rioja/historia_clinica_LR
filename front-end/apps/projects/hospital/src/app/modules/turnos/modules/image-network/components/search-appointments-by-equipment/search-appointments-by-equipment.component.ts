@@ -133,4 +133,7 @@ export class SearchAppointmentsByEquipmentComponent implements OnInit {
 			);
 	}
 
+	goToEditAgenda(){
+		this.router.navigate([`institucion/${this.contextService.institutionId}/turnos/imagenes/agenda/${this.diarySelected.id}/editar`]);
+	}
 }

@@ -1,6 +1,6 @@
 import { ChangeDetectorRef, Component, ElementRef, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { MatDialog } from '@angular/material/dialog';
 import { TranslateService } from '@ngx-translate/core';
 import { DAYS_OF_WEEK } from 'angular-calendar';
@@ -56,6 +56,9 @@ export class EquipmentDiarySetupComponent implements OnInit {
 	private readonly routePrefix;
 	private mappedCurrentWeek = {};
 
+	editMode = false;
+	editingDiaryId:number;
+
 	constructor(
 		private readonly el: ElementRef,
 		private readonly sectorService: SectorService,
@@ -69,13 +72,22 @@ export class EquipmentDiarySetupComponent implements OnInit {
 		private readonly equipmentDiaryOpeningHoursService: EquipmentDiaryOpeningHoursService,
 		private readonly equipmentService: EquipmentService,
 		private readonly formBuilder: FormBuilder,
-
+		private readonly route: ActivatedRoute
 	) {
 		this.routePrefix = `institucion/${this.contextService.institutionId}/`;
 		this.agendaHorarioService = new AgendaHorarioService(this.dialog, this.cdr, this.TODAY, this.MONDAY, snackBarService);
 	}
 
 	ngOnInit(): void {
+
+		this.route.data.subscribe(data => {
+			if (data.editMode) {
+				this.editMode = true;
+				this.route.paramMap.subscribe((params) => {
+					this.editingDiaryId = Number(params.get('agendaId'));
+				});
+			}
+		});
 
 		currentWeek().forEach(day => {
 			this.mappedCurrentWeek[day.day()] = day;

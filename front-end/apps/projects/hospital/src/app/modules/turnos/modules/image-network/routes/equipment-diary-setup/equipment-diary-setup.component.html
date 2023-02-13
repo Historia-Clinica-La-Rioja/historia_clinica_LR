@@ -1,6 +1,6 @@
 <app-content width="full">
     <section class="page">
-        <h2 class="page-title" [translate]="'turnos.agenda-setup.NEW_AGENDA'"></h2>
+        <h2 class="page-title" [translate]="editMode ? 'turnos.agenda-setup.EDIT_AGENDA' : 'turnos.agenda-setup.NEW_AGENDA' "></h2>
         <br>
         <form [formGroup]="form" (ngSubmit)="save()">
             <section>

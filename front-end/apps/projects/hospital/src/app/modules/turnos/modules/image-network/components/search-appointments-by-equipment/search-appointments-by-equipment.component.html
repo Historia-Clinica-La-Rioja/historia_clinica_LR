@@ -41,6 +41,13 @@
 				<mat-icon>close</mat-icon>
 			</button>
 		</mat-form-field>
+
+		<div class="actions" *ngIf="diarySelected" fxLayoutGap="3px">
+			<button mat-flat-button color="primary" *appHasRole="['ADMINISTRADOR_AGENDA']" id="edit_agenda"
+				name="edit_agenda" (click)="goToEditAgenda()">
+				<mat-icon>edit</mat-icon>
+			</button>
+		</div>
 	</div>
 	<ng-template #noEquipmentDiaries>
 		<div *ngIf="diaries?.length === 0" class="no-diary">
