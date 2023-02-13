@@ -1,5 +1,7 @@
 import { Component, Inject, OnInit } from '@angular/core';
 import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { AppFeature } from '@api-rest/api-model';
+import { FeatureFlagService } from '@core/services/feature-flag.service';
 import { SnackBarService } from '@presentation/services/snack-bar.service';
 import { PrescripcionesService, PrescriptionTypes } from '../../../services/prescripciones.service';
 import { EnviarRecetaDigitalPorEmailComponent } from '../../enviar-receta-digital-por-email/enviar-receta-digital-por-email.component';
@@ -12,13 +14,18 @@ import { EnviarRecetaDigitalPorEmailComponent } from '../../enviar-receta-digita
 export class ConfirmarPrescripcionComponent implements OnInit {
 
 	prescriptionPdfInfo: number[];
+	isHabilitarRecetaDigital: boolean = false;
 
 	constructor(
 		private snackBarService: SnackBarService,
 		private readonly dialog: MatDialog,
 		private prescripcionesService: PrescripcionesService,
+		private readonly featureFlagService: FeatureFlagService,
 		public dialogRef: MatDialogRef<ConfirmarPrescripcionComponent>,
-		@Inject(MAT_DIALOG_DATA) public data: ConfirmPrescriptionData) { }
+		@Inject(MAT_DIALOG_DATA) public data: ConfirmPrescriptionData) {
+			featureFlagService.isActive(AppFeature.HABILITAR_RECETA_DIGITAL)
+			.subscribe((result: boolean) => this.isHabilitarRecetaDigital = result);
+		}
 
 	ngOnInit(): void {
 		this.snackBarService.showSuccess(this.data.successLabel);
