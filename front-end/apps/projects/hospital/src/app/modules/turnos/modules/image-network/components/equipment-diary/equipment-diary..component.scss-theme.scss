@@ -2,7 +2,7 @@
     $palette-primary: map-get($theme, primary);
 
     app-equipment-diary {
-        .appointments {
+        .turnos {
             .navigation.mat-button-toggle-appearance-standard {
                 background-color: mat-color($palette-primary);
                 color: white;

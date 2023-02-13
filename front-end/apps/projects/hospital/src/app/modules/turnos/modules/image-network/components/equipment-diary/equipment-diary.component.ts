@@ -1,8 +1,6 @@
-import { Component, Input } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import { CompleteEquipmentDiaryDto } from '@api-rest/api-model';
-import { CalendarView, CalendarWeekViewBeforeRenderEvent, DAYS_OF_WEEK } from 'angular-calendar';
-import { momentParseDate } from '@core/utils/moment.utils';
-
+import { CalendarEvent, CalendarView, CalendarWeekViewBeforeRenderEvent, DAYS_OF_WEEK } from 'angular-calendar';
 import { SnackBarService } from '@presentation/services/snack-bar.service';
 import { Subject } from 'rxjs';
 import { DatePipeFormat } from '@core/utils/date.utils';
@@ -11,16 +9,17 @@ import { MINUTES_IN_HOUR } from '@turnos/constants/appointment';
 import { EquipmentDiaryService } from '@api-rest/services/equipment-diary.service';
 import { SearchEquipmentDiaryService } from '../../services/search-equipment-diary.service';
 import { OpeningHoursDiaryService } from '../../services/opening-hours-diary.service';
-
+import { EquipmentAppointmentsFacadeService } from '../../services/equipment-appointments-facade.service';
+import { DateFormat, momentFormat, momentParseDate } from '@core/utils/moment.utils';
+import { endOfMonth, endOfWeek, startOfMonth, startOfWeek } from 'date-fns';
 
 @Component({
 	selector: 'app-equipment-diary',
 	templateUrl: './equipment-diary.component.html',
 	styleUrls: ['./equipment-diary.component.scss'],
-	providers: [SearchEquipmentDiaryService, OpeningHoursDiaryService]
+	providers: [SearchEquipmentDiaryService, OpeningHoursDiaryService, EquipmentAppointmentsFacadeService]
 })
-
-export class EquipmentDiaryComponent {
+export class EquipmentDiaryComponent implements OnInit {
 
 	hourSegments: number;
 	diary: CompleteEquipmentDiaryDto;
@@ -29,6 +28,12 @@ export class EquipmentDiaryComponent {
 	viewDate: Date = new Date();
 
 	refreshCalendar = new Subject<void>();
+
+	appointments: CalendarEvent[] = [];
+	holidays: CalendarEvent[] = [];
+
+	startDate: string;
+	endDate: string;
 
 	readonly calendarViewEnum = CalendarView;
 	readonly MONDAY = DAYS_OF_WEEK.MONDAY;
@@ -45,8 +50,18 @@ export class EquipmentDiaryComponent {
 		private snackBarService: SnackBarService,
 		private readonly equipmentDiaryService: EquipmentDiaryService,
 		private readonly searchEquipmentDiary: SearchEquipmentDiaryService,
-		readonly openingHoursService: OpeningHoursDiaryService
+		readonly openingHoursService: OpeningHoursDiaryService,
+		private readonly equipmentAppointmentsFacade: EquipmentAppointmentsFacadeService,
 	) { }
+
+	ngOnInit() {
+		this.equipmentAppointmentsFacade.getAppointments().subscribe(appointments => {
+			if (appointments) {
+				this.appointments = appointments;
+			}
+		})
+		this.equipmentAppointmentsFacade.getHolidays().subscribe(holidays => this.holidays = holidays);
+	}
 
 	loadCalendar(renderEvent: CalendarWeekViewBeforeRenderEvent) {
 		if (this.diary) {
@@ -57,16 +72,25 @@ export class EquipmentDiaryComponent {
 	setAgenda(agenda: CompleteEquipmentDiaryDto) {
 		this.diary = agenda;
 		this.viewDate = this._getViewDate();
+		this.setDateRange(this.viewDate);
 		this.hourSegments = MINUTES_IN_HOUR / agenda.appointmentDuration;
 		this.openingHoursService.setDiaryOpeningHours(agenda.equipmentDiaryOpeningHours);
 		this.openingHoursService.setDayStartHourAndEndHour();
+		this.equipmentAppointmentsFacade.setValues(agenda.id, agenda.appointmentDuration, this.startDate, this.endDate);
 	}
 
 	goToDayViewOn(date: Date) {
 		this.viewDate = date;
 		this.view = this.calendarViewEnum.Day;
+		this.setDateRange(date);
 	}
 
+	changeViewDate(date: Date) {
+		if (this.view !== CalendarView.Month) {
+			this.setDateRange(date);
+			this.equipmentAppointmentsFacade.setValues(this.diary.id, this.diary.appointmentDuration, this.startDate, this.endDate);
+		}
+	}
 
 	private _getViewDate(): Date {
 		const momentStartDate = momentParseDate(this.diary.startDate);
@@ -90,4 +114,26 @@ export class EquipmentDiaryComponent {
 			this.snackBarService.showError('turnos.home.AGENDA_NOT_FOUND');
 		});
 	}
+
+	private setDateRange(date: Date) {
+		if (CalendarView.Day === this.view) {
+			const d = moment(date);
+			this.startDate = momentFormat(d, DateFormat.API_DATE);
+			this.endDate = momentFormat(d, DateFormat.API_DATE);
+			return;
+		}
+		if (CalendarView.Month === this.view) {
+			const from = startOfMonth(date);
+			const to = endOfMonth(date);
+			this.startDate = momentFormat(moment(from), DateFormat.API_DATE);
+			this.endDate = momentFormat(moment(to), DateFormat.API_DATE);
+			return;
+		}
+		const start = startOfWeek(date, { weekStartsOn: 1 });
+		this.startDate = momentFormat(moment(start), DateFormat.API_DATE);
+
+		const end = endOfWeek(date, { weekStartsOn: 1 });
+		this.endDate = momentFormat(moment(end), DateFormat.API_DATE);
+	}
+
 }

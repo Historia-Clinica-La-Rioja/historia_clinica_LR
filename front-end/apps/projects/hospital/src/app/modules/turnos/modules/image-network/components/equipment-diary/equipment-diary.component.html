@@ -1,14 +1,16 @@
-<section class="appointments" id="equipment-calendar">
+<section class="turnos" id="equipment-calendar">
 	<div class="header" id="header" fxLayout="row wrap" fxLayoutAlign="space-between center" fxLayout.xs="column">
 		<mat-button-toggle-group>
 			<mat-button-toggle id="previous" class="navigation" mwlCalendarPreviousView [view]=view
-				[(viewDate)]="viewDate">
+				[(viewDate)]="viewDate" (viewDateChange)="changeViewDate($event)">
 				{{ 'image-network.equipment-calendar.PREVIOUS' | translate | titlecase }}
 			</mat-button-toggle>
-			<mat-button-toggle id="today" class="today" mwlCalendarToday [(viewDate)]="viewDate">
+			<mat-button-toggle id="today" class="today" mwlCalendarToday [(viewDate)]="viewDate"
+				(viewDateChange)="changeViewDate($event)">
 				{{ 'image-network.equipment-calendar.TODAY' | translate | titlecase }}
 			</mat-button-toggle>
-			<mat-button-toggle id="next" class="navigation" mwlCalendarNextView [view]=view [(viewDate)]="viewDate">
+			<mat-button-toggle id="next" class="navigation" mwlCalendarNextView [view]=view [(viewDate)]="viewDate"
+				(viewDateChange)="changeViewDate($event)">
 				{{ 'image-network.equipment-calendar.NEXT' | translate | titlecase }}
 			</mat-button-toggle>
 		</mat-button-toggle-group>
@@ -21,10 +23,10 @@
 			<mat-button-toggle-group class="toggle-view" [(value)]="view">
 				<mat-button-toggle value="{{calendarViewEnum.Month}}">{{ 'image-network.equipment-calendar.MONTH' |
 					translate | titlecase }}</mat-button-toggle>
-				<mat-button-toggle value="{{calendarViewEnum.Week}}">{{ 'image-network.equipment-calendar.WEEK' |
-					translate | titlecase }}</mat-button-toggle>
-				<mat-button-toggle value="{{calendarViewEnum.Day}}">{{ 'image-network.equipment-calendar.DAY' |
-					translate | titlecase }}</mat-button-toggle>
+				<mat-button-toggle value="{{calendarViewEnum.Week}}" (click)="changeViewDate(viewDate)">
+					{{ 'image-network.equipment-calendar.WEEK' | translate | titlecase }} </mat-button-toggle>
+				<mat-button-toggle value="{{calendarViewEnum.Day}}" (click)="changeViewDate(viewDate)">
+					{{ 'image-network.equipment-calendar.DAY' | translate | titlecase }}</mat-button-toggle>
 			</mat-button-toggle-group>
 		</div>
 	</div>
@@ -37,16 +39,16 @@
 		</mwl-calendar-month-view>
 
 		<mwl-calendar-week-view class="title-black" *ngSwitchCase="calendarViewEnum.Week" [viewDate]="viewDate"
-			[refresh]="refreshCalendar" [dayStartHour]="openingHoursService.dayStartHour" [dayEndHour]="openingHoursService.dayEndHour"
-			[hourSegmentTemplate]="hourSegmentTemplate" [headerTemplate]="headerTemplate" [hourSegments]="hourSegments"
-			[weekStartsOn]="MONDAY" (beforeViewRender)="loadCalendar($event)"
-			>
+			[refresh]="refreshCalendar" [dayStartHour]="openingHoursService.dayStartHour"
+			[dayEndHour]="openingHoursService.dayEndHour" [hourSegmentTemplate]="hourSegmentTemplate"
+			[headerTemplate]="headerTemplate" [hourSegments]="hourSegments" [weekStartsOn]="MONDAY"
+			[events]="appointments" (beforeViewRender)="loadCalendar($event)">
 		</mwl-calendar-week-view>
 
 		<mwl-calendar-day-view class="title-black" *ngSwitchCase="calendarViewEnum.Day" [viewDate]="viewDate"
-			[hourSegments]="hourSegments" [hourSegmentTemplate]="hourSegmentTemplate" [dayStartHour]="openingHoursService.dayStartHour"
-			[dayEndHour]="openingHoursService.dayEndHour" (beforeViewRender)="loadCalendar($event)"
-			>
+			[hourSegments]="hourSegments" [hourSegmentTemplate]="hourSegmentTemplate"
+			[dayStartHour]="openingHoursService.dayStartHour" [dayEndHour]="openingHoursService.dayEndHour"
+			[events]="appointments" (beforeViewRender)="loadCalendar($event)">
 		</mwl-calendar-day-view>
 	</div>
 
