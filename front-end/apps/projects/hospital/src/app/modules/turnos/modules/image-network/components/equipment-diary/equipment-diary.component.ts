@@ -18,6 +18,9 @@ import { EquipmentAppointmentsFacadeService } from '../../services/equipment-app
 import { DateFormat, buildFullDate, dateToMoment, dateToMomentTimeZone, momentFormat, momentParseDate } from '@core/utils/moment.utils';
 import { Moment } from 'moment';
 import { endOfMonth, endOfWeek, startOfMonth, startOfWeek } from 'date-fns';
+import { TranslateService } from '@ngx-translate/core';
+import { DatePipe } from '@angular/common';
+import { DiscardWarningComponent } from '@presentation/dialogs/discard-warning/discard-warning.component';
 
 @Component({
 	selector: 'app-equipment-diary',
@@ -61,6 +64,8 @@ export class EquipmentDiaryComponent implements OnInit {
 		private readonly permissionService: PermissionsService,
 		private readonly dialog: MatDialog,
 		private readonly equipmentAppointmentsFacade: EquipmentAppointmentsFacadeService,
+		private readonly translateService: TranslateService,
+		private readonly datePipe: DatePipe,
 	) { }
 
 	ngOnInit() {
@@ -111,7 +116,14 @@ export class EquipmentDiaryComponent implements OnInit {
 				return;
 			}
 
-			this.openNewAppointmentDialog(clickedDate, openingHourId, addingOverturn);		
+			const isHoliday = this.holidays.find(holiday => holiday.start.getDate() === clickedDate.toDate().getDate());
+
+			if (!isHoliday) {
+				this.openNewAppointmentDialog(clickedDate, openingHourId, addingOverturn);
+			}
+			else {
+				this.openWarningHoliday(clickedDate, openingHourId, addingOverturn);
+			}
 		}
 	}
 
@@ -203,6 +215,28 @@ export class EquipmentDiaryComponent implements OnInit {
 		}
 		else
 			return false;
+	}
+
+	private openWarningHoliday(clickedDate: Moment, openingHourId: number, addingOverturn: boolean) {
+		const holidayText = this.translateService.instant('turnos.holiday.HOLIDAY_RELATED');
+		const holidayDateText = this.datePipe.transform(clickedDate.toDate(), DatePipeFormat.FULL_DATE);
+		const dialogRef = this.dialog.open(DiscardWarningComponent, {
+			data: {
+				title: 'turnos.holiday.TITLE',
+				content: `${holidayDateText.charAt(0).toUpperCase() + holidayDateText.slice(1)} ${holidayText}`,
+				contentBold: `turnos.holiday.HOLIDAY_DISCLAIMER`,
+				okButtonLabel: 'turnos.holiday.OK_BUTTON',
+				cancelButtonLabel: 'turnos.holiday.CANCEL_BUTTON',
+			}
+		});
+		dialogRef.afterClosed().subscribe(result => {
+			if (result) {
+				dialogRef?.close();
+			}
+			else {
+				this.openNewAppointmentDialog(clickedDate, openingHourId, addingOverturn);
+			}
+		})
 	}
 
 }
