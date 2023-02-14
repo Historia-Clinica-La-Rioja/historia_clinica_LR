@@ -10,4 +10,8 @@ public interface ToothIndicesStorage {
 
     List<ToothIndicesBo> getTeethIndices(Integer patientId);
 
+	void deleteByPatientId(Integer patientId);
+
+	CpoCeoIndicesBo computeIndices(Integer patientId, List<ConsultationDentalActionBo> dentalActions);
+
 }

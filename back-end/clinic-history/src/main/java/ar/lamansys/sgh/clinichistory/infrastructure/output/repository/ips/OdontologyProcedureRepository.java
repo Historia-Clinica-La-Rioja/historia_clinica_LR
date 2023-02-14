@@ -22,4 +22,11 @@ public interface OdontologyProcedureRepository extends SGXAuditableEntityJPARepo
 			"WHERE dop.pk.documentId IN :documentIds ")
 	List<OdontologyProcedure> getEntitiesByDocuments(@Param("documentIds") List<Long> documentIds);
 
+	@Transactional(readOnly = true)
+	@Query("SELECT op " +
+			"FROM OdontologyProcedure op " +
+			"WHERE op.patientId = :patientId " +
+			"ORDER BY op.performedDate")
+	List<OdontologyProcedure> findAllByPatientId(@Param("patientId") Integer patientId);
+
 }

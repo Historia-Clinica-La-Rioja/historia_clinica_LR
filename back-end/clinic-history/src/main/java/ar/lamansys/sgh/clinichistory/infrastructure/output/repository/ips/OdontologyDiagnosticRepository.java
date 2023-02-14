@@ -22,4 +22,11 @@ public interface OdontologyDiagnosticRepository extends SGXAuditableEntityJPARep
 			"WHERE dod.pk.documentId IN :documentIds")
 	List<OdontologyDiagnostic> getEntitiesByDocuments(@Param("documentIds") List<Long> documentIds);
 
+	@Transactional(readOnly = true)
+	@Query("SELECT od " +
+			"FROM OdontologyDiagnostic od " +
+			"WHERE od.patientId = :patientId " +
+			"ORDER BY od.performedDate")
+	List<OdontologyDiagnostic> findAllByPatientId(@Param("patientId") Integer patientId);
+
 }

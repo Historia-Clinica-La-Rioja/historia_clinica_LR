@@ -19,7 +19,7 @@ public interface OdontologyConsultationRepository extends SGXAuditableEntityJPAR
 	@Transactional(readOnly = true)
 	@Query("SELECT oc.id " +
 			"FROM OdontologyConsultation oc " +
-			"WHERE oc.patientId IN :patients")
-	List<Integer> getOdontologyConsultationIdFromPatients(@Param("patients")List<Integer> patients);
+			"WHERE oc.patientId IN :patientsIds")
+	List<Integer> getOdontologyConsultationIdFromPatients(@Param("patientsIds")List<Integer> patientsIds);
 
 }

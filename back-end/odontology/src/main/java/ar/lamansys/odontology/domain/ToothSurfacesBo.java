@@ -33,4 +33,18 @@ public class ToothSurfacesBo {
         }
     }
 
+	public ESurfacePositionBo getSurfacePosition(OdontologySnomedBo surface) {
+		if (surface.equals(left))
+			return ESurfacePositionBo.LEFT;
+		if (surface.equals(right))
+			return ESurfacePositionBo.RIGHT;
+		if (surface.equals(central))
+			return ESurfacePositionBo.CENTRAL;
+		if (surface.equals(external))
+			return ESurfacePositionBo.EXTERNAL;
+		if (surface.equals(internal))
+			return ESurfacePositionBo.INTERNAL;
+		return null;
+	}
+
 }

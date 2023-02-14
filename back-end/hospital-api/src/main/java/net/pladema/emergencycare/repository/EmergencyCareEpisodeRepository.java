@@ -98,8 +98,8 @@ public interface EmergencyCareEpisodeRepository extends SGXAuditableEntityJPARep
 	@Transactional(readOnly = true)
 	@Query("SELECT ece.id " +
 			"FROM EmergencyCareEpisode ece " +
-			"WHERE ece.patientId IN :patients")
-	List<Integer> getEmergencyCareEpisodeIdsFromPatients(@Param("patients")List<Integer> patients);
+			"WHERE ece.patientId IN :patientsIds")
+	List<Integer> getEmergencyCareEpisodeIdsFromPatients(@Param("patientsIds")List<Integer> patientsIds);
 
 	@Transactional(readOnly = true)
 	@Query("SELECT orf " +

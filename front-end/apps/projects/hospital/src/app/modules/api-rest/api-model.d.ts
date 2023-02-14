@@ -2188,6 +2188,18 @@ export interface OdontologyDiagnosticDto extends Serializable {
     startDate?: DateDto;
 }
 
+export interface OdontologyDiagnosticProcedureInfoDto {
+    cie10Codes: string;
+    diagnostic: boolean;
+    id: number;
+    noteId: number;
+    patientId: number;
+    performedDate: Date;
+    snomedId: number;
+    surfaceId: number;
+    toothId: number;
+}
+
 export interface OdontologyMedicationDto {
     id?: number;
     note: string;

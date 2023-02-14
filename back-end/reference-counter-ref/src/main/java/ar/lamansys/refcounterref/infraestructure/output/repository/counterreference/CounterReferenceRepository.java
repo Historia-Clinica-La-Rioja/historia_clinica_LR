@@ -51,7 +51,7 @@ public interface CounterReferenceRepository extends JpaRepository<CounterReferen
 	@Transactional(readOnly = true)
 	@Query("SELECT cr.id " +
 			"FROM CounterReference cr " +
-			"WHERE cr.patientId IN :patients")
-	List<Integer> getCounterReferenceIdsFromPatients(@Param("patients") List<Integer> patients);
+			"WHERE cr.patientId IN :patientsIds")
+	List<Integer> getCounterReferenceIdsFromPatients(@Param("patientsIds") List<Integer> patientsIds);
 
 }

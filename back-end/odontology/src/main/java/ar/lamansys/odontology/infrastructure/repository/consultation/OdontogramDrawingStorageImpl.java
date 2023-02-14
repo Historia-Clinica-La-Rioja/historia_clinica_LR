@@ -53,4 +53,11 @@ public class OdontogramDrawingStorageImpl implements OdontogramDrawingStorage {
         LOG.trace("Output -> {}", result);
         return result;
     }
+
+	@Override
+	public void deleteByPatientId(Integer patientId) {
+		LOG.debug("Input parameter -> patient {}", patientId);
+		lastOdontogramDrawingRepository.deleteByPatientId(patientId);
+		LOG.debug("No output");
+	}
 }

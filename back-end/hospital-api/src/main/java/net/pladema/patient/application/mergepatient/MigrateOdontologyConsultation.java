@@ -60,6 +60,8 @@ public class MigrateOdontologyConsultation {
 				mergeClinicHistoryStorage.rebuildDocumentsFiles(documentsIds);
 			}
 
+			mergeClinicHistoryStorage.modifyOdontogram(newPatient);
+
 			mergeClinicHistoryStorage.modifyOdontologyConsultation(ocIds,newPatient);
 		}
 

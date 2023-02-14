@@ -32,6 +32,9 @@ public class UnmergePatient {
 		});
 		mergePatientStorage.deleteMergeHistoricData(patientId, inactivePatientIds);
 		mergePatientStorage.updatePersonByPatientId(patientId, patientToUnmerge.getRegistrationDataPerson(), institutionId);
+
+		mergeClinicHistoryStorage.modifyOdontogram(patientId);
+
 		List<Integer> result = new ArrayList<>(inactivePatientIds);
 		result.add(patientId);
 		log.debug("Output result {}", result);

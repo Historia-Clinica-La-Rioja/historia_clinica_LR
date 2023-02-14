@@ -16,7 +16,7 @@ public interface MedicationRequestRepository extends SGXAuditableEntityJPAReposi
 	@Transactional(readOnly = true)
 	@Query("SELECT mr.id " +
 			"FROM MedicationRequest mr " +
-			"WHERE mr.patientId IN :patients")
-	List<Integer> getMedicatoinRequestIdsFromPatients(@Param("patients") List<Integer> patients);
+			"WHERE mr.patientId IN :patientsIds")
+	List<Integer> getMedicatoinRequestIdsFromPatients(@Param("patientsIds") List<Integer> patientsIds);
 
 }

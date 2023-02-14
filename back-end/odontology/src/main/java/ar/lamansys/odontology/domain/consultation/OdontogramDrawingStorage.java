@@ -10,4 +10,6 @@ public interface OdontogramDrawingStorage {
 
     List<ToothDrawingsBo> getDrawings(Integer patientId);
 
+	void deleteByPatientId(Integer patientId);
+
 }

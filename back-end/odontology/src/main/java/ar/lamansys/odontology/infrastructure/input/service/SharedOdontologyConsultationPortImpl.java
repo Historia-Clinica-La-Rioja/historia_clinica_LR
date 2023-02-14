@@ -5,8 +5,12 @@ import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Service;
 
+import ar.lamansys.odontology.application.modifyOdontogramAndIndices.ModifyOdontogramAndIndices;
+import ar.lamansys.odontology.domain.consultation.OdontogramDrawingStorage;
 import ar.lamansys.odontology.domain.consultation.OdontologyConsultationStorage;
+import ar.lamansys.odontology.domain.consultation.ToothIndicesStorage;
 import ar.lamansys.sgh.shared.infrastructure.input.service.odontology.OdontologyConsultationInfoDto;
+import ar.lamansys.sgh.shared.infrastructure.input.service.odontology.OdontologyDiagnosticProcedureInfoDto;
 import ar.lamansys.sgh.shared.infrastructure.input.service.odontology.SharedOdontologyConsultationPort;
 import lombok.AllArgsConstructor;
 
@@ -15,6 +19,9 @@ import lombok.AllArgsConstructor;
 public class SharedOdontologyConsultationPortImpl implements SharedOdontologyConsultationPort {
 
 	private final OdontologyConsultationStorage odontologyConsultationStorage;
+	private final OdontogramDrawingStorage odontogramDrawingStorage;
+	private final ToothIndicesStorage toothIndicesStorage;
+	private final ModifyOdontogramAndIndices modifyOdontogramAndIndices;
 
 	@Override
 	public List<Integer> getOdontologyConsultationIdsFromPatients(List<Integer> patients) {
@@ -32,5 +39,20 @@ public class SharedOdontologyConsultationPortImpl implements SharedOdontologyCon
 				oc.getDoctorId(),
 				oc.getPerformedDate(),
 				oc.getBillable())).collect(Collectors.toList());
+	}
+
+	@Override
+	public void deleteLastOdontogramDrawingFromPatient(Integer patientId) {
+		odontogramDrawingStorage.deleteByPatientId(patientId);
+	}
+
+	@Override
+	public void deleteToothIndicesFromPatient(Integer patientId) {
+		toothIndicesStorage.deleteByPatientId(patientId);
+	}
+
+	@Override
+	public void modifyLastOdontogramDrawing(List<OdontologyDiagnosticProcedureInfoDto> odp, Integer newPatientId) {
+		modifyOdontogramAndIndices.run(odp,newPatientId);
 	}
 }

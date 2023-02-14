@@ -1,22 +1,24 @@
 package net.pladema.patient.infrastructure.output.repository;
 
+import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
-
-import ar.lamansys.sgh.clinichistory.application.ports.DocumentFileStorage;
-import ar.lamansys.sgh.shared.infrastructure.input.service.SharedDocumentPort;
-import ar.lamansys.sgh.shared.infrastructure.input.service.odontology.SharedOdontologyConsultationPort;
-import net.pladema.emergencycare.repository.EmergencyCareEpisodeRepository;
-
-import net.pladema.medicalconsultation.appointment.repository.AppointmentRepository;
 
 import org.springframework.stereotype.Service;
 
 import ar.lamansys.refcounterref.infraestructure.output.repository.counterreference.CounterReferenceRepository;
+import ar.lamansys.sgh.clinichistory.application.ports.DocumentFileStorage;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.DocumentRepository;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.ESourceType;
+import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.ips.OdontologyDiagnosticRepository;
+import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.ips.OdontologyProcedureRepository;
+import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.ips.entity.OdontologyDiagnostic;
+import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.ips.entity.OdontologyProcedure;
+import ar.lamansys.sgh.shared.infrastructure.input.service.SharedDocumentPort;
 import ar.lamansys.sgh.shared.infrastructure.input.service.immunization.SharedImmunizationPort;
 import ar.lamansys.sgh.shared.infrastructure.input.service.nursing.SharedNursingConsultationPort;
+import ar.lamansys.sgh.shared.infrastructure.input.service.odontology.OdontologyDiagnosticProcedureInfoDto;
+import ar.lamansys.sgh.shared.infrastructure.input.service.odontology.SharedOdontologyConsultationPort;
 import ar.lamansys.sgx.shared.migratable.SGXDocumentEntity;
 import ar.lamansys.sgx.shared.migratable.SGXDocumentEntityRepository;
 import lombok.RequiredArgsConstructor;
@@ -25,6 +27,8 @@ import net.pladema.clinichistory.hospitalization.repository.InternmentEpisodeRep
 import net.pladema.clinichistory.outpatient.repository.OutpatientConsultationRepository;
 import net.pladema.clinichistory.requests.medicationrequests.repository.MedicationRequestRepository;
 import net.pladema.clinichistory.requests.servicerequests.repository.ServiceRequestRepository;
+import net.pladema.emergencycare.repository.EmergencyCareEpisodeRepository;
+import net.pladema.medicalconsultation.appointment.repository.AppointmentRepository;
 import net.pladema.patient.application.port.MergeClinicHistoryStorage;
 import net.pladema.patient.application.port.MigratePatientStorage;
 import net.pladema.patient.infrastructure.output.repository.entity.EMergeTable;
@@ -51,6 +55,8 @@ public class MergeClinicHistoryStorageImpl implements MergeClinicHistoryStorage 
 	private final DocumentFileStorage documentFileStorage;
 	private final SharedDocumentPort sharedDocumentPort;
 	private final MigratableRepositoryMap repositoryMap;
+	private final OdontologyProcedureRepository odontologyProcedureRepository;
+	private final OdontologyDiagnosticRepository odontologyDiagnosticRepository;
 
 
 	@Override
@@ -66,38 +72,38 @@ public class MergeClinicHistoryStorageImpl implements MergeClinicHistoryStorage 
 	}
 
 	@Override
-	public List<Integer> getOutpatientConsultationIds(List<Integer> oldPatients) {
-		return outpatientConsultationRepository.getOutpatientConsultationIdsFromPatients(oldPatients);
+	public List<Integer> getOutpatientConsultationIds(List<Integer> oldPatientsIds) {
+		return outpatientConsultationRepository.getOutpatientConsultationIdsFromPatients(oldPatientsIds);
 	}
 
 	@Override
-	public List<Integer> getEmergencyCareEpisodeIds(List<Integer> oldPatients) {
-		return emergencyCareEpisodeRepository.getEmergencyCareEpisodeIdsFromPatients(oldPatients);
+	public List<Integer> getEmergencyCareEpisodeIds(List<Integer> oldPatientsIds) {
+		return emergencyCareEpisodeRepository.getEmergencyCareEpisodeIdsFromPatients(oldPatientsIds);
 	}
 
 	@Override
-	public List<Integer> getMedicationRequestIds(List<Integer> oldPatients) {
-		return medicationRequestRepository.getMedicatoinRequestIdsFromPatients(oldPatients);
+	public List<Integer> getMedicationRequestIds(List<Integer> oldPatientsIds) {
+		return medicationRequestRepository.getMedicatoinRequestIdsFromPatients(oldPatientsIds);
 	}
 
 	@Override
-	public List<Integer> getServiceRequestIds(List<Integer> oldPatients) {
-		return serviceRequestRepository.getServiceRequestIdsFromPatients(oldPatients);
+	public List<Integer> getServiceRequestIds(List<Integer> oldPatientsIds) {
+		return serviceRequestRepository.getServiceRequestIdsFromPatients(oldPatientsIds);
 	}
 
 	@Override
-	public List<Integer> getNursingConsultationIds(List<Integer> oldPatients) {
-		return sharedNursingConsultationPort.getNursingConsultationIdsFromPatients(oldPatients);
+	public List<Integer> getNursingConsultationIds(List<Integer> oldPatientsIds) {
+		return sharedNursingConsultationPort.getNursingConsultationIdsFromPatients(oldPatientsIds);
 	}
 	
 	@Override
-	public List<Integer> getVaccineConsultationIds(List<Integer> oldPatients) {
-		return sharedImmunizationPort.getVaccineConsultationIdsFromPatients(oldPatients);
+	public List<Integer> getVaccineConsultationIds(List<Integer> oldPatientsIds) {
+		return sharedImmunizationPort.getVaccineConsultationIdsFromPatients(oldPatientsIds);
 	}
 
 	@Override
-	public List<Integer> getCounterReferenceIds(List<Integer> oldPatients) {
-		return counterReferenceRepository.getCounterReferenceIdsFromPatients(oldPatients);
+	public List<Integer> getCounterReferenceIds(List<Integer> oldPatientsIds) {
+		return counterReferenceRepository.getCounterReferenceIdsFromPatients(oldPatientsIds);
 	}
 
 	@Override
@@ -106,8 +112,8 @@ public class MergeClinicHistoryStorageImpl implements MergeClinicHistoryStorage 
 	}
 
 	@Override
-	public List<Integer> getOdontologyConsultationIds(List<Integer> oldPatients) {
-		return sharedOdontologyConsultationPort.getOdontologyConsultationIdsFromPatients(oldPatients);
+	public List<Integer> getOdontologyConsultationIds(List<Integer> oldPatientsIds) {
+		return sharedOdontologyConsultationPort.getOdontologyConsultationIdsFromPatients(oldPatientsIds);
 	}
 
 	@Override
@@ -138,9 +144,9 @@ public class MergeClinicHistoryStorageImpl implements MergeClinicHistoryStorage 
 	}
 
 	@Override
-	public void modifyEmergencyCareEpisode(List<Integer> ids, Integer newPatientId) {
-		log.debug("Emergency care episode ids to modify {}", ids);
-		emergencyCareEpisodeRepository.findAllById(ids)
+	public void modifyEmergencyCareEpisode(List<Integer> eceIds, Integer newPatientId) {
+		log.debug("Emergency care episode ids to modify {}", eceIds);
+		emergencyCareEpisodeRepository.findAllById(eceIds)
 				.forEach(item -> migratePatientStorage.migrateItem(item.getId(), item.getPatientId(), newPatientId, EMergeTable.EMERGENCY_CARE_EPISODE));
 	}
 
@@ -153,9 +159,9 @@ public class MergeClinicHistoryStorageImpl implements MergeClinicHistoryStorage 
 	}
 
 	@Override
-	public void modifyServiceRequest(List<Integer> ids, Integer newPatientId) {
-		log.debug("Service request ids to modify {}", ids);
-		serviceRequestRepository.findAllById(ids)
+	public void modifyServiceRequest(List<Integer> srIds, Integer newPatientId) {
+		log.debug("Service request ids to modify {}", srIds);
+		serviceRequestRepository.findAllById(srIds)
 				.forEach(item -> migratePatientStorage.migrateItem(item.getId(), item.getPatientId(), newPatientId, EMergeTable.SERVICE_REQUEST));
 	}
 
@@ -167,9 +173,9 @@ public class MergeClinicHistoryStorageImpl implements MergeClinicHistoryStorage 
 	}
 
 	@Override
-	public void modifyVaccineConsultation(List<Integer> ids, Integer newPatientId) {
-		log.debug("Vaccine consultation ids to modify {}", ids);
-		sharedImmunizationPort.findAllVaccineConsultationByIds(ids)
+	public void modifyVaccineConsultation(List<Integer> vcIds, Integer newPatientId) {
+		log.debug("Vaccine consultation ids to modify {}", vcIds);
+		sharedImmunizationPort.findAllVaccineConsultationByIds(vcIds)
 				.forEach(item -> migratePatientStorage.migrateItem(item.getId(), item.getPatientId(), newPatientId, EMergeTable.VACCINE_CONSULTATION));
 	}
 
@@ -187,8 +193,8 @@ public class MergeClinicHistoryStorageImpl implements MergeClinicHistoryStorage 
 	}
 
 	@Override
-	public void modifySnvsReport(List<Integer> oldPatients, Integer newPatientId) {
-		snvsReportRepository.findAllByPatients(oldPatients)
+	public void modifySnvsReport(List<Integer> oldPatientsIds, Integer newPatientId) {
+		snvsReportRepository.findAllByPatients(oldPatientsIds)
 				.forEach(item -> migratePatientStorage.migrateItem(item.getId(), item.getPatientId(), newPatientId, EMergeTable.SNVS_REPORT));
 	}
 
@@ -200,8 +206,8 @@ public class MergeClinicHistoryStorageImpl implements MergeClinicHistoryStorage 
 	}
 
 	@Override
-	public void modifyAppointment(List<Integer> oldPatients, Integer newPatientId) {
-		appointmentRepository.getAppointmentsFromPatients(oldPatients)
+	public void modifyAppointment(List<Integer> oldPatientsIds, Integer newPatientId) {
+		appointmentRepository.getAppointmentsFromPatients(oldPatientsIds)
 				.forEach(item -> migratePatientStorage.migrateItem(item.getId(), item.getPatientId(), newPatientId, EMergeTable.APPOINTMENT));
 	}
 
@@ -210,6 +216,45 @@ public class MergeClinicHistoryStorageImpl implements MergeClinicHistoryStorage 
 		log.debug("Document files ids to modify {}",documentsIds);
 		List<Long> documentFileIds = documentFileStorage.getIdsByDocumentsIds(documentsIds);
 		documentFileIds.forEach(sharedDocumentPort::rebuildFile);
+	}
+
+	@Override
+	public void modifyOdontogram(Integer newPatientId) {
+		sharedOdontologyConsultationPort.deleteLastOdontogramDrawingFromPatient(newPatientId);
+		sharedOdontologyConsultationPort.deleteToothIndicesFromPatient(newPatientId);
+
+		List<OdontologyDiagnostic> od = odontologyDiagnosticRepository.findAllByPatientId(newPatientId);
+		List<OdontologyProcedure> op = odontologyProcedureRepository.findAllByPatientId(newPatientId);
+
+		List<OdontologyDiagnosticProcedureInfoDto> odp = od.stream().map(o -> new OdontologyDiagnosticProcedureInfoDto(
+				o.getId(),
+				o.getPatientId(),
+				o.getSnomedId(),
+				o.getToothId(),
+				o.getSurfaceId(),
+				o.getCie10Codes(),
+				o.getPerformedDate(),
+				o.getNoteId(),
+				true
+		)).collect(Collectors.toList());
+
+		odp.addAll(op.stream().map(o -> new OdontologyDiagnosticProcedureInfoDto(
+				o.getId(),
+				o.getPatientId(),
+				o.getSnomedId(),
+				o.getToothId(),
+				o.getSurfaceId(),
+				o.getCie10Codes(),
+				o.getPerformedDate(),
+				o.getNoteId(),
+				false
+		)).collect(Collectors.toList()));
+
+		odp.sort(Comparator.comparing(OdontologyDiagnosticProcedureInfoDto::getPerformedDate));
+
+		if (!odp.isEmpty())
+			sharedOdontologyConsultationPort.modifyLastOdontogramDrawing(odp,newPatientId);
+
 	}
 
 	@Override

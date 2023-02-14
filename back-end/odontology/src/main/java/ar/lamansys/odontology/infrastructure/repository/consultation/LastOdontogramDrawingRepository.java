@@ -1,6 +1,7 @@
 package ar.lamansys.odontology.infrastructure.repository.consultation;
 
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.transaction.annotation.Transactional;
@@ -21,5 +22,11 @@ public interface LastOdontogramDrawingRepository extends JpaRepository<LastOdont
 			"WHERE lod.patientId = :patientId " +
 			"AND lod.toothId = :toothId")
 	Optional<LastOdontogramDrawing> getByPatientToothId(@Param("patientId") Integer patientId, @Param("toothId") String toothId);
+
+	@Transactional
+	@Modifying
+	@Query("DELETE FROM LastOdontogramDrawing lod " +
+			"WHERE lod.patientId = :patientId ")
+	void deleteByPatientId(@Param("patientId") Integer patientId);
 
 }

@@ -12,6 +12,10 @@ import ar.lamansys.odontology.domain.consultation.OdontologyConsultationStorage;
 import ar.lamansys.odontology.domain.consultation.ToothIndicesStorage;
 import ar.lamansys.odontology.domain.consultation.cpoCeoIndices.ECeoIndexBo;
 import ar.lamansys.odontology.domain.consultation.cpoCeoIndices.ECpoIndexBo;
+import ar.lamansys.odontology.infrastructure.repository.consultation.ToothIndicesRepository;
+
+import ar.lamansys.odontology.infrastructure.repository.consultation.ToothIndicesStorageImpl;
+
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -43,11 +47,17 @@ class CpoCeoIndicesCalculatorTest {
     @Mock
     private OdontologyConsultationStorage odontologyConsultationStorage;
 
-    @Mock
     private ToothIndicesStorage toothIndicesStorage;
+
+	@Mock
+	private ToothIndicesRepository toothIndicesRepository;
 
     @BeforeEach
     void setUp() {
+		toothIndicesStorage = new ToothIndicesStorageImpl
+				(toothIndicesRepository,
+				getToothService);
+
         cpoCeoIndicesCalculator = new CpoCeoIndicesCalculator(
                 getToothService,
                 consultationCpoCeoIndicesStorage,

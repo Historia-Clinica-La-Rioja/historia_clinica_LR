@@ -41,6 +41,13 @@ public class ConsultationDentalActionBo extends ClinicalTermBo {
         this.surfacePosition = surfacePosition;
         this.diagnostic = isDiagnostic;
     }
+	public ConsultationDentalActionBo(OdontologySnomedBo action, OdontologySnomedBo tooth, OdontologySnomedBo surface, boolean appliedToTemporaryTooth, boolean isDiagnostic) {
+		super(action);
+		this.tooth = tooth;
+		this.surface = surface;
+		this.appliedToTemporaryTooth = appliedToTemporaryTooth;
+		this.diagnostic = isDiagnostic;
+	}
 
     public String getToothSctid() {
         return this.tooth.getSctid();

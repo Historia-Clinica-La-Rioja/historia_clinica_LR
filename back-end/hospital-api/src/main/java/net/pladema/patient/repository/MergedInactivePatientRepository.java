@@ -15,25 +15,28 @@ public interface MergedInactivePatientRepository extends SGXAuditableEntityJPARe
 
 	@Query(value = "SELECT mip.inactivePatientId " +
 			"FROM Patient pa " +
-			"JOIN MergedPatient mp ON pa.id = mp.activePatientId " +
-			"JOIN MergedInactivePatient mip ON mp.id = mip.mergedPatientId " +
+			"JOIN MergedPatient mp ON pa.id = mp.activePatientId AND mp.deleteable.deleted = false " +
+			"JOIN MergedInactivePatient mip ON mp.id = mip.mergedPatientId AND mip.deleteable.deleted = false " +
 			"WHERE mp.activePatientId = :activePatientId")
 	List<Integer> findAllInactivePatientIdByActivePatientId(@Param("activePatientId") Integer activePatientId);
 
 	@Query(value = "SELECT mip "
 			+ "FROM MergedInactivePatient mip " +
-			"WHERE mip.inactivePatientId = :inactivePatientId")
+			"WHERE mip.inactivePatientId = :inactivePatientId " +
+			"AND mip.deleteable.deleted = false")
 	Optional<MergedInactivePatient> findByInactivePatientId(@Param("inactivePatientId") Integer inactivePatientId);
 
 	@Query(value = "SELECT mip "
 			+ "FROM MergedInactivePatient mip " +
-			"WHERE mip.inactivePatientId IN :inactivePatientId")
+			"WHERE mip.inactivePatientId IN :inactivePatientId " +
+			"AND mip.deleteable.deleted = false")
 	List<MergedInactivePatient> findAlldByInactivePatientIds(@Param("inactivePatientId") List<Integer> inactivePatientId);
 
 
 	@Query(value = "SELECT (case when count(mip.id)> 0 then true else false end) " +
 			"FROM MergedInactivePatient mip " +
-			"WHERE mip.mergedPatientId IN :mergedPatientId")
+			"WHERE mip.mergedPatientId IN :mergedPatientId " +
+			"AND mip.deleteable.deleted = false")
 	Boolean existsByMergePatientId(@Param("mergedPatientId") Integer mergedPatientId);
 
 }

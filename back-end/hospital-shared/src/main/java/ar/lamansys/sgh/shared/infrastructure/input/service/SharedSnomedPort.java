@@ -8,4 +8,5 @@ public interface SharedSnomedPort {
 
 	List<Integer> addSnomedSynonyms(List<SharedSnomedDto> snomedSynonyms);
 
+	SharedSnomedDto getSnomed(Integer id);
 }

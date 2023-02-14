@@ -16,8 +16,8 @@ public interface ServiceRequestRepository extends SGXAuditableEntityJPARepositor
 	@Transactional(readOnly = true)
 	@Query("SELECT sr.id " +
 			"FROM ServiceRequest sr " +
-			"WHERE sr.patientId IN :patients")
-	List<Integer> getServiceRequestIdsFromPatients(@Param("patients") List<Integer> patients);
+			"WHERE sr.patientId IN :patientsIds")
+	List<Integer> getServiceRequestIdsFromPatients(@Param("patientsIds") List<Integer> patientsIds);
 
 	@Transactional
 	@Query("SELECT sr.id " +

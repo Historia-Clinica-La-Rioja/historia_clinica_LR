@@ -15,7 +15,7 @@ public interface VaccineConsultationRepository extends SGXAuditableEntityJPARepo
 	@Transactional(readOnly = true)
 	@Query("SELECT vc.id " +
 			"FROM VaccineConsultation vc " +
-			"WHERE vc.patientId IN :patients")
-	List<Integer> getVaccineConsultationIdsFromPatients(@Param("patients") List<Integer> patients);
+			"WHERE vc.patientId IN :patientsIds")
+	List<Integer> getVaccineConsultationIdsFromPatients(@Param("patientsIds") List<Integer> patientsIds);
 
 }
