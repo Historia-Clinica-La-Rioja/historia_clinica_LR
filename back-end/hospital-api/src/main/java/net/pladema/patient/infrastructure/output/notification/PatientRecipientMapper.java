@@ -1,4 +1,4 @@
-package net.pladema.patient.infraestructure.output.notification;
+package net.pladema.patient.infrastructure.output.notification;
 
 import java.util.Optional;
 
