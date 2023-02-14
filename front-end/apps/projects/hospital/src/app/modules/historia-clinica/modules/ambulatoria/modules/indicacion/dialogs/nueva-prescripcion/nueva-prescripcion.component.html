@@ -50,6 +50,12 @@
 
             <mat-checkbox class="mb-1"
 				*ngIf="isHabilitarRecetaDigitalEnabled"
+				formControlName="archived">
+				<span translate="ambulatoria.paciente.ordenes_prescripciones.new_prescription_dialog.ARCHIVED"></span>
+			</mat-checkbox>
+
+            <mat-checkbox class="mb-1"
+				*ngIf="isHabilitarRecetaDigitalEnabled"
 				formControlName="prolongedTreatment"
 				(change)="setProlongedTreatment($event.checked)">
 				<span translate="ambulatoria.paciente.ordenes_prescripciones.new_prescription_dialog.PROLONGED_TREATMENT"></span>

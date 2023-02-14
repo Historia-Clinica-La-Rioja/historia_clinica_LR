@@ -63,6 +63,7 @@ export class NuevaPrescripcionComponent implements OnInit {
 			clinicalSpecialty: [null, [Validators.required]],
 			prolongedTreatment: [false],
 			posdatadas: [{value: this.POSDATADAS_DEFAULT, disabled: true}, [Validators.min(this.POSDATADAS_MIN), Validators.max(this.POSDATADAS_MAX)]],
+			archived: [false]
 		});
 		this.prescriptionItems = this.data.prescriptionItemList ? this.data.prescriptionItemList : [];
 		this.setMedicalCoverages();

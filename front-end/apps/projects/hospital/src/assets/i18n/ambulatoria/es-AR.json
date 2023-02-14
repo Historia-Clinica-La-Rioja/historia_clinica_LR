@@ -412,6 +412,7 @@
                     "DAILY": "Diario",
                     "DIAGNOSIS": "Diagnóstico: {{healthProblem}}",
                     "PROLONGED_TREATMENT": "Tratamiento prolongado",
+                    "ARCHIVED": "Archivada",
                     "POSDATADAS_LABEL": "Repeticiones (posdatadas)",
                     "POSDATADAS_HINT_SINGULAR": "Se generará {{posdatadas}} receta posdatada, adicional a la original",
                     "POSDATADAS_HINT_PLURAL": "Se generarán {{posdatadas}} recetas posdatadas, adicionales a la original",
