@@ -136,7 +136,10 @@ public enum AppFeature implements Feature {
 	HABILITAR_RECETA_DIGITAL,
 
 	@Label("Indica si esta habilitado el rol prescriptor")
-	HABILITAR_PRESCRIPCION_RECETA
+	HABILITAR_PRESCRIPCION_RECETA,
+
+	@Label("Indica si está habilitada la seccion otras circunstancias en epicrisis")
+	HABILITAR_OTRAS_CIRCUNSTANCIAS_EPICRISIS
 	;
 
     public boolean isActive() {
