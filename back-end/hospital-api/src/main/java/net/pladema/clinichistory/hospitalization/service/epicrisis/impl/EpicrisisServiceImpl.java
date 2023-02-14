@@ -48,6 +48,7 @@ public class EpicrisisServiceImpl implements EpicrisisService {
             result.setRiskFactors(documentService.getRiskFactorStateFromDocument(document.getId()));
 			result.setMedications(documentService.getMedicationStateFromDocument(document.getId()));
             result.setNotes(loadNotes(document));
+			result.setOtherProblems(generalHealthConditionBo.getOtherProblems());
         });
         LOG.debug(OUTPUT, result);
         return result;

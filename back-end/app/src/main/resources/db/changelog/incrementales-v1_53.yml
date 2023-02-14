@@ -1,3 +1,12 @@
 databaseChangeLog: 
     - logicalFilePath: incrementales-v1_53 
 
+    - changeSet:
+        id: problem_type-metadata
+        comment: Add data in problem_data
+        author: fsimaro
+        context: "!schema-only"
+        changes:
+          - sql:
+              sql: |-
+                INSERT INTO problem_type (id, description) VALUES('00000001', 'Otro');

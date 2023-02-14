@@ -54,6 +54,7 @@ public class FetchAllDocumentInfo {
 		result.setPersonalHistories(healthCondition.getPersonalHistories());
 		result.setFamilyHistories(healthCondition.getFamilyHistories());
 		result.setProblems(healthCondition.getProblems());
+		result.setOtherProblems(healthCondition.getOtherProblems());
 
 		result.setReasons(reasonService.fetchFromDocumentId(document.getId()));
 		result.setAllergies(documentService.getAllergyIntoleranceStateFromDocument(document.getId()));

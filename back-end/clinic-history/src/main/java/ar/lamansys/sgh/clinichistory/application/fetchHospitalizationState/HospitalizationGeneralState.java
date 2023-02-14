@@ -27,6 +27,8 @@ public class HospitalizationGeneralState implements Serializable {
 
     private List<AllergyConditionBo> allergies;
 
+	private List<HealthConditionBo> otherProblems;
+
     private AnthropometricDataBo anthropometricData;
 
     private Last2RiskFactorsBo riskFactors;

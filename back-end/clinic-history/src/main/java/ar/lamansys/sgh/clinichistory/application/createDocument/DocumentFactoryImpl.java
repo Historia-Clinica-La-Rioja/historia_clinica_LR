@@ -118,7 +118,8 @@ public class DocumentFactoryImpl implements DocumentFactory {
         healthConditionService.loadPersonalHistories(patientInfo, doc.getId(), documentBo.getPersonalHistories());
         healthConditionService.loadFamilyHistories(patientInfo, doc.getId(), documentBo.getFamilyHistories());
         healthConditionService.loadProblems(patientInfo, doc.getId(), documentBo.getProblems());
-        loadAllergies.run(patientInfo, doc.getId(), documentBo.getAllergies());
+        healthConditionService.loadOtherProblems(patientInfo, doc.getId(), documentBo.getOtherProblems());
+		loadAllergies.run(patientInfo, doc.getId(), documentBo.getAllergies());
         loadImmunizations.run(patientInfo, doc.getId(), documentBo.getImmunizations());
         loadMedications.run(patientInfo, doc.getId(), documentBo.getMedications());
         loadProcedures.run(patientInfo, doc.getId(), documentBo.getProcedures());

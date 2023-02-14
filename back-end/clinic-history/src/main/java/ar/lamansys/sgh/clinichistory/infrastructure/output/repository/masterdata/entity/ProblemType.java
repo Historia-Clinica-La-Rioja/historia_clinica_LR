@@ -23,6 +23,7 @@ public class ProblemType implements Serializable {
     public static final String PROBLEM = "55607006";
     public static final String HISTORY = "57177007";
     public static final String CHRONIC = "-55607006";
+	public static final String OTHER = "00000001";
 
 
     @Id

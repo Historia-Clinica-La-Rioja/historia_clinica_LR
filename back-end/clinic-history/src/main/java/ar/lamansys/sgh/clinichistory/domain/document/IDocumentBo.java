@@ -125,4 +125,6 @@ public interface IDocumentBo {
 
 	default Long getInitialDocumentId() { return null; }
 
+	default List<HealthConditionBo> getOtherProblems() { return Collections.emptyList(); }
+
 }

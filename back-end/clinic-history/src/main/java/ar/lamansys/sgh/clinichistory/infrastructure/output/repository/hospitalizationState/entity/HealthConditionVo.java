@@ -74,6 +74,8 @@ public class HealthConditionVo extends ClinicalTermVo {
     public boolean isPresumptive() {
         return (verificationId != null && verificationId.equalsIgnoreCase(ConditionVerificationStatus.PRESUMPTIVE));
     }
+
+	public boolean isOtherProblem() { return ProblemType.OTHER.equals(problemId); };
     
 	@Override
 	public int hashCode() {

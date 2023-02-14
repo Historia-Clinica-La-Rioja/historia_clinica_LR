@@ -57,6 +57,8 @@ public class EpicrisisBo extends SelfValidating<EpicrisisBo> implements IDocumen
     @NotNull(message = "{value.mandatory}")
     private List<@Valid AllergyConditionBo> allergies;
 
+	private List<@Valid HealthConditionBo> otherProblems;
+
     @Valid
     private AnthropometricDataBo anthropometricData;
 

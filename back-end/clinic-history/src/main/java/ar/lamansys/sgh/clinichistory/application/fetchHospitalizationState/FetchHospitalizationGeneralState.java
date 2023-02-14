@@ -59,6 +59,7 @@ public class FetchHospitalizationGeneralState {
         hospitalizationGeneralState.setDiagnosis(generalHealthCondition.getDiagnosis());
         hospitalizationGeneralState.setPersonalHistories(generalHealthCondition.getPersonalHistories());
         hospitalizationGeneralState.setFamilyHistories(generalHealthCondition.getFamilyHistories());
+		hospitalizationGeneralState.setOtherProblems(generalHealthCondition.getOtherProblems());
     }
 
     private List<MedicationBo> getMedicationsState(Integer internmentEpisodeId){

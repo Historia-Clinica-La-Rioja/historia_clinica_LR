@@ -28,4 +28,6 @@ public class EpicrisisGeneralStateDto implements Serializable {
 
     private List<AllergyConditionDto> allergies = new ArrayList<>();
 
+	private List<HealthConditionDto> otherProblems = new ArrayList<>();
+
 }

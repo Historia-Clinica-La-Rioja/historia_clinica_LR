@@ -213,6 +213,34 @@ public class HealthConditionService {
         return healthCondition;
     }
 
+	public List<HealthConditionBo> loadOtherProblems(PatientInfoBo patientInfo, Long documentId, List<HealthConditionBo> otherProblems){
+		LOG.debug("Input parameters -> patientInfo {}, documentId {}, otherProblems {}", patientInfo, documentId, otherProblems);
+		otherProblems.forEach(op -> {
+			HealthCondition healthCondition = buildOtherProblem(patientInfo, op);
+			if (op.getId() == null)
+				healthCondition = healthConditionRepository.save(healthCondition);
+
+			op.setId(healthCondition.getId());
+			op.setVerificationId(healthCondition.getVerificationStatusId());
+			op.setVerification(getVerification(op.getVerificationId()));
+			op.setStatusId(healthCondition.getStatusId());
+			op.setStatus(getStatus(op.getStatusId()));
+
+			documentService.createDocumentHealthCondition(documentId, healthCondition.getId());
+		});
+
+		LOG.debug(OUTPUT, otherProblems);
+		return otherProblems;
+	}
+
+	private HealthCondition buildOtherProblem (PatientInfoBo patientInfo, HealthConditionBo info){
+		LOG.debug("Input parameters -> patientInfo {}, info {}", patientInfo, info);
+		HealthCondition healthCondition = buildBasicHealthCondition(patientInfo, info);
+		healthCondition.setProblemId(ProblemType.OTHER);
+		LOG.debug(OUTPUT, healthCondition);
+		return healthCondition;
+	}
+
     private HealthCondition buildBasicHealthCondition(PatientInfoBo patientInfo, HealthConditionBo info) {
         LOG.debug("Input parameters -> patientInfo {}, info {}", patientInfo, info);
         Integer snomedId = snomedService.getSnomedId(info.getSnomed())

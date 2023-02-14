@@ -56,6 +56,7 @@ public class CreateEpicrisisServiceImpl implements CreateEpicrisisService {
 		Optional.ofNullable(epicrisis.getFamilyHistories()).ifPresent(list->list.forEach(d->d.setId(null)));
 		Optional.ofNullable(epicrisis.getAllergies()).ifPresent(list->list.forEach(d->d.setId(null)));
 		Optional.ofNullable(epicrisis.getImmunizations()).ifPresent(list->list.forEach(d->d.setId(null)));
+		Optional.ofNullable(epicrisis.getOtherProblems()).ifPresent(list->list.forEach(d->d.setId(null)));
 
         LocalDateTime now = dateTimeProvider.nowDateTime();
         epicrisis.setPerformedDate(now);

@@ -36,6 +36,8 @@ public class GeneralHealthConditionBo implements Serializable {
 
 	private List<ProblemBo> problems = new ArrayList<>();
 
+	private List<HealthConditionBo> otherProblems = new ArrayList<>();
+
     public GeneralHealthConditionBo(List<HealthConditionVo> healthConditionVos) {
         setMainDiagnosis(buildMainDiagnosis(healthConditionVos.stream().filter(HealthConditionVo::isMain).findAny()));
         setDiagnosis(buildGeneralState(
@@ -56,6 +58,11 @@ public class GeneralHealthConditionBo implements Serializable {
 				healthConditionVos,
 				HealthConditionVo::isProblem,
 				this::buildProblem));
+		setOtherProblems(buildGeneralState(
+				healthConditionVos,
+				HealthConditionVo::isOtherProblem,
+				this::mapToHealthConditionBo
+		));
     }
 	private <T extends HealthConditionBo> List<T> buildGeneralState(List<HealthConditionVo> data,
                                                                     Predicate<? super HealthConditionVo> filterFunction,
@@ -128,6 +135,20 @@ public class GeneralHealthConditionBo implements Serializable {
 		result.setMain(healthConditionVo.isMain());
 		result.setStartDate(healthConditionVo.getStartDate());
 		result.setChronic(healthConditionVo.isChronic());
+		LOG.debug(OUTPUT, result);
+		return result;
+	}
+
+	private HealthConditionBo mapToHealthConditionBo(HealthConditionVo healthConditionVo){
+		LOG.debug("Input parameters -> HealthConditionVo {}", healthConditionVo);
+		HealthHistoryConditionBo result = new HealthHistoryConditionBo();
+		result.setId(healthConditionVo.getId());
+		result.setStatusId(healthConditionVo.getStatusId());
+		result.setStatus(healthConditionVo.getStatus());
+		result.setVerificationId(healthConditionVo.getVerificationId());
+		result.setVerification(healthConditionVo.getVerification());
+		result.setSnomed(new SnomedBo(healthConditionVo.getSnomed()));
+		result.setMain(healthConditionVo.isMain());
 		LOG.debug(OUTPUT, result);
 		return result;
 	}

@@ -72,6 +72,8 @@ public class DocumentBo implements IDocumentBo {
 
     private List<DentalActionBo> dentalActions = new ArrayList<>();
 
+	private List<HealthConditionBo> otherProblems = new ArrayList<>();
+
     private RiskFactorBo riskFactors;
 
     private AnthropometricDataBo anthropometricData;
