@@ -24,7 +24,7 @@
 						<mat-icon>more_vert</mat-icon>
 					</button>
 					<mat-menu #menu="matMenu">
-						<button *ngIf="hasNewConsultationEnabled$ | async" mat-menu-item
+						<button *ngIf="!canOnlyViewSelfAddedProblems && hasNewConsultationEnabled$ | async" mat-menu-item
 							(click)="openNuevaConsulta(problem)">
 							<span
 								[translate]="'ambulatoria.paciente.nueva-consulta.TITLE_MENU'"></span>

@@ -37,7 +37,7 @@ export class MedicacionesService {
 
 	updateMedicationByRoles(){
 		if (this.patientId) {
-			this.prescripcionesService.getPrescriptionByRoles( PrescriptionTypes.MEDICATION,
+			this.prescripcionesService.getPrescriptionByRoles(
 				this.patientId,
 				this.statusId,
 				this.medicationStatement,

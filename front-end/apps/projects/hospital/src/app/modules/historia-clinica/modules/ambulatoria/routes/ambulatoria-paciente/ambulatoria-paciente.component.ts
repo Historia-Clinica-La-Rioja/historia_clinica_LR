@@ -296,6 +296,7 @@ export class AmbulatoriaPacienteComponent implements OnInit, OnDestroy {
 				allergies: false,
 				familyHistories: false,
 				personalHistories: false,
+				personalHistoriesByRole: true,
 				riskFactors: false,
 				medications: true,
 				anthropometricData: false,

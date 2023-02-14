@@ -40,13 +40,8 @@ export class PrescripcionesService {
 		}
 	}
 
-	getPrescriptionByRoles(prescriptionType: PrescriptionTypes, patientId: number, statusId: string, medicationStatement: string, healthCondition: string, study?: string, categoryId?: string): Observable<any> {
-		switch (prescriptionType) {
-			case PrescriptionTypes.MEDICATION:
-				return this.medicationRequestService.medicationRequestListByRoles(patientId, statusId, medicationStatement, healthCondition);
-			case PrescriptionTypes.STUDY:
-				return this.serviceRequestService.getListByRoles(patientId, statusId, study, healthCondition, categoryId);
-		}
+	getPrescriptionByRoles(patientId: number, statusId: string, medicationStatement: string, healthCondition: string): Observable<any> {
+			return this.medicationRequestService.medicationRequestListByRoles(patientId, statusId, medicationStatement, healthCondition);
 	}
 
 	changeMedicationStatus(statusChange: string, patientId: number, medicationsIds: number[], dayQuantity?: number, observations?: string): Observable<void> {

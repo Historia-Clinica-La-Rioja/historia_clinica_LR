@@ -69,7 +69,9 @@ export class ResumenComponent implements OnInit, OnChanges {
 
 	initSummaries(): void {
 		if (this.canOnlyViewSelfAddedProblems){
-			this.personalHistory$ = this.hceGeneralStateService.getPersonalHistoriesByRole(this.patientId);
+			this.personalHistory$ = this.ambulatoriaSummaryFacadeService.personalHistoriesByRole$.pipe(
+				map(this.formatProblemsDates)
+				);
 		} else {
 			this.allergies$ = this.ambulatoriaSummaryFacadeService.allergies$;
 			this.familyHistories$ = this.ambulatoriaSummaryFacadeService.familyHistories$;
