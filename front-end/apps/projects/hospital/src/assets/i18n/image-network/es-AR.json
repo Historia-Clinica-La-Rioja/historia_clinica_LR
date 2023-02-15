@@ -17,6 +17,13 @@
             "MONTH": "mes",
             "WEEK": "semana",
             "DAY": "día"
-        }
+        },
+		"form": {
+			"EDIT_DIARY": "Editar agenda",
+			"NEW_DIARY": "Nueva agenda",
+			"CONFIRM_EDIT_DIARY": "¿Desea confirmar la edición de esta agenda?",
+			"CONFIRM_NEW_DIARY": "¿Desea confirmar la creación de esta agenda?"
+		}
+
     }
 }

@@ -16,7 +16,7 @@ import { APPOINTMENT_DURATIONS, MINUTES_IN_HOUR } from '@turnos/constants/appoin
 import { AgendaHorarioService } from '@turnos/services/agenda-horario.service';
 import { EquipmentService } from '@api-rest/services/equipment.service';
 import { EquipmentDiaryOpeningHoursService } from '@api-rest/services/equipment-diary-opening-hours.service';
-import { EquipmentDiaryADto, EquipmentDto, SectorDto } from '@api-rest/api-model';
+import { CompleteEquipmentDiaryDto, EquipmentDiaryADto, EquipmentDiaryDto, EquipmentDto, SectorDto } from '@api-rest/api-model';
 
 const ROUTE_APPOINTMENT = 'turnos';
 const START = 0;
@@ -57,7 +57,8 @@ export class EquipmentDiarySetupComponent implements OnInit {
 	private mappedCurrentWeek = {};
 
 	editMode = false;
-	editingDiaryId:number;
+	editingDiaryId: number;
+	editingDiary: CompleteEquipmentDiaryDto;
 
 	constructor(
 		private readonly el: ElementRef,
@@ -80,15 +81,6 @@ export class EquipmentDiarySetupComponent implements OnInit {
 
 	ngOnInit(): void {
 
-		this.route.data.subscribe(data => {
-			if (data.editMode) {
-				this.editMode = true;
-				this.route.paramMap.subscribe((params) => {
-					this.editingDiaryId = Number(params.get('agendaId'));
-				});
-			}
-		});
-
 		currentWeek().forEach(day => {
 			this.mappedCurrentWeek[day.day()] = day;
 		});
@@ -108,6 +100,20 @@ export class EquipmentDiarySetupComponent implements OnInit {
 			const diagnosticImagingId = types.find(type => type.description === DIAGNOSTIC_IMAGING).id;
 			this.sectors$ = this.sectorService.getDiagnosticImagingType(diagnosticImagingId);
 		});
+
+		this.route.data.subscribe(data => {
+			if (data.editMode) {
+				this.editMode = true;
+				this.route.paramMap.subscribe((params) => {
+					this.editingDiaryId = Number(params.get('agendaId'));
+					this.equipmentDiaryService.getBy(this.editingDiaryId).subscribe((diary: CompleteEquipmentDiaryDto) => {
+						this.minDate = new Date(diary.startDate);
+						this.setValuesFromExistingAgenda(diary);
+					})
+				});
+			}
+		});
+
 	}
 
 	loadCalendar() {
@@ -155,12 +161,20 @@ export class EquipmentDiarySetupComponent implements OnInit {
 	}
 
 	private openDialog() {
-		const confirmMessage = 'turnos.agenda-setup.CONFIRM_NEW_AGENDA';
+		let confirmMessage: string;
+		let title:string;
+		if(this.editMode){
+			confirmMessage = 'image-network.form.CONFIRM_EDIT_DIARY';
+			title = 'image-network.form.EDIT_DIARY';
+		}else{
+			confirmMessage = 'image-network.form.CONFIRM_NEW_DIARY';
+			title = 'image-network.form.NEW_DIARY';
+		}
 		this.translator.get(confirmMessage).subscribe((res: string) => {
 			const dialogRef = this.dialog.open(ConfirmDialogComponent, {
 				width: '450px',
 				data: {
-					title: 'turnos.agenda-setup.NEW_AGENDA',
+					title: title,
 					content: `${res}`,
 					okButtonLabel: 'buttons.CONFIRM'
 				}
@@ -170,10 +184,15 @@ export class EquipmentDiarySetupComponent implements OnInit {
 				if (confirmed) {
 					this.errors = [];
 					const diary: EquipmentDiaryADto = this.buildEquipmentDiaryDto();
-					this.equipmentDiaryService.addEquipmentDiary(diary)
+					if(this.editMode){
+
+					}else{
+						this.equipmentDiaryService.addEquipmentDiary(diary)
 						.subscribe((diaryId: number) => {
 							this.processSuccess(diaryId);
 						}, error => processErrors(error, (msg) => this.errors.push(msg)));
+					}
+
 				}
 			});
 		});
@@ -204,4 +223,25 @@ export class EquipmentDiarySetupComponent implements OnInit {
 		this.closingTime = END;
 	}
 
+	setValuesFromExistingAgenda(diary: CompleteEquipmentDiaryDto) {
+		this.form.controls.sectorId.setValue(diary.sectorId);
+		this.setEquipmentsBySector();
+		this.form.controls.equipmentId.setValue(diary.equipmentId);
+		this.loadCalendar();
+		this.form.controls.startDate.setValue(diary.startDate);
+		this.form.controls.endDate.setValue(diary.endDate);
+		this.form.controls.appointmentDuration.setValue(diary.appointmentDuration);
+
+		this.disableNotEditableControls();
+		this.agendaHorarioService.setAppointmentDuration(diary.appointmentDuration);
+		this.agendaHorarioService.setDiaryOpeningHours(diary.equipmentDiaryOpeningHours);
+
+	}
+
+	private disableNotEditableControls() {
+		this.form.get('sectorId').disable();
+		this.form.get('equipmentId').disable();
+		this.form.get('appointmentDuration').disable();
+
+	}
 }
