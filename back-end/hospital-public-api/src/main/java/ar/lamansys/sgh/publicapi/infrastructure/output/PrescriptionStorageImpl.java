@@ -2,7 +2,7 @@ package ar.lamansys.sgh.publicapi.infrastructure.output;
 
 import java.sql.Date;
 import java.sql.Timestamp;
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -65,7 +65,7 @@ public class PrescriptionStorageImpl implements PrescriptionStorage {
 		"join document d on d.id = dms.document_id " +
 		"join medication_request mr on mr.id = d.source_id join patient p on p.id = ms.patient_id " +
 		"join person p2 on p2.id = p.person_id " +
-		"join person_extended pe on pe.person_id = p.id " +
+		"left join person_extended pe on pe.person_id = p2.id " +
 		"join gender g on g.id = p2.gender_id " +
 		"left join self_perceived_gender spg on spg.id = pe.gender_self_determination " +
 		"join identification_type it on it.id = p2.identification_type_id " +
@@ -77,7 +77,7 @@ public class PrescriptionStorageImpl implements PrescriptionStorage {
 		"join healthcare_professional hp on hp.id = mr.doctor_id " +
 		"join person p3 on p3.id = hp.person_id " +
 		"join identification_type it2 on it2.id = p3.identification_type_id " +
-		"join person_extended pe2 on pe2.person_id = p3.id " +
+		"left join person_extended pe2 on pe2.person_id = p3.id " +
 		"join professional_professions pp on pp.healthcare_professional_id = hp.id " +
 		"join professional_specialty ps on ps.id = pp.professional_specialty_id " +
 		"join professional_license_numbers pln on pln.professional_profession_id = pp.id " +
@@ -361,13 +361,13 @@ public class PrescriptionStorageImpl implements PrescriptionStorage {
 	private PrescriptionBo processPrescriptionQuery(Object[] queryResult) {
 
 		var dueDate = queryResult[2] != null ?
-				((Timestamp)queryResult[2]).toLocalDateTime() : ((Timestamp)queryResult[1]).toLocalDateTime().plusDays(30);
+				((Date)queryResult[2]).toLocalDate() : ((Timestamp)queryResult[1]).toLocalDateTime().plusDays(30).toLocalDate();
 
 		return new PrescriptionBo(
 				"1.",
 				(Integer)queryResult[0],
 				((Timestamp)queryResult[1]).toLocalDateTime(),
-				dueDate,
+				dueDate.atStartOfDay(),
 				new PatientPrescriptionBo(
 						(String)queryResult[3],
 						(String)queryResult[4],
@@ -406,7 +406,7 @@ public class PrescriptionStorageImpl implements PrescriptionStorage {
 				),
 				List.of(new PrescriptionLineBo(
 						(Integer)queryResult[29],
-						dueDate.isBefore(LocalDateTime.now()) ? "VENCIDA" : (String)queryResult[30],
+						dueDate.isBefore(LocalDate.now()) ? "VENCIDO" : (String)queryResult[30],
 						new PrescriptionProblemBo(
 								(String)queryResult[31],
 								(Integer)queryResult[32],

@@ -65,7 +65,7 @@ public class PrescriptionMapper {
 	}
 
 	private PrescriptionLineDto mapTo(PrescriptionLineBo prescriptionLineBo, LocalDateTime dueDate) {
-		var due = localDateMapper.fromLocalDateTime(LocalDateTime.now()).plusDays(30).isAfter(localDateMapper.fromLocalDateTime(dueDate));
+		var due = localDateMapper.fromLocalDateTime(LocalDateTime.now()).plusDays(30).isBefore(localDateMapper.fromLocalDateTime(dueDate));
 		return PrescriptionLineDto.builder()
 				.prescriptionLineNumber(prescriptionLineBo.getPrescriptionLineNumber())
 				.prescriptionLineStatus(due ? PrescriptionValidStatesEnum.map(VENCIDO).toString() : prescriptionLineBo.getPrescriptionLineStatus())
