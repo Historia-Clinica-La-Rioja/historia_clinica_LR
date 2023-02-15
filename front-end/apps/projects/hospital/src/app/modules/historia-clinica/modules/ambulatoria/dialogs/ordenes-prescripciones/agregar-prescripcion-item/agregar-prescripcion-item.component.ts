@@ -1,6 +1,6 @@
 import { Component, Inject, OnInit, ViewChild, ElementRef, AfterViewInit, AfterContentChecked, ChangeDetectorRef } from '@angular/core';
 import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
-import { AbstractControl, FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { AppFeature, CreateOutpatientDto, ERole, HCEPersonalHistoryDto, OutpatientProblemDto, SnomedDto, SnomedECL } from '@api-rest/api-model.d';
 import { SnowstormService } from '@api-rest/services/snowstorm.service';
 import { HceGeneralStateService } from '@api-rest/services/hce-general-state.service';
@@ -40,7 +40,7 @@ export class AgregarPrescripcionItemComponent implements OnInit, AfterViewInit, 
 	snomedConcept: SnomedDto;
 	prescriptionItemForm: FormGroup;
 	conceptsResultsTable: TableModel<any>;
-	healthProblemOptions = [];
+	healthProblemOptions: HCEPersonalHistoryDto[] = [];
 	studyCategoryOptions = [];
 	DEFAULT_RADIO_OPTION = 1;
 	OTHER_RADIO_OPTION = 0;
@@ -108,17 +108,8 @@ export class AgregarPrescripcionItemComponent implements OnInit, AfterViewInit, 
 	}
 
 	getProblems() {
-		this.hceGeneralStateService.getActiveProblems(this.data.patientId).subscribe((activeProblems: HCEPersonalHistoryDto[]) => {
-			const activeProblemsList = activeProblems.map(problem => ({id: problem.id, description: problem.snomed.pt, sctId: problem.snomed.sctid}));
-
-			this.hceGeneralStateService.getChronicConditions(this.data.patientId).subscribe((chronicProblems: HCEPersonalHistoryDto[]) => {
-				const chronicProblemsList = chronicProblems.map(problem => ({id: problem.id, description: problem.snomed.pt,  sctId: problem.snomed.sctid}));
-				this.healthProblemOptions = activeProblemsList.concat(chronicProblemsList);
-				if (this.data.item) {
-					this.updateSelectedHealthProblem(this.data.item.healthProblem.sctId);
-				}
-			});
-		});
+		this.hceGeneralStateService.getPersonalHistoriesByRole(this.data.patientId)
+			.subscribe((result: HCEPersonalHistoryDto[]) => this.healthProblemOptions = result);
 	}
 
 	ngAfterContentChecked(): void {
@@ -132,6 +123,7 @@ export class AgregarPrescripcionItemComponent implements OnInit, AfterViewInit, 
 				severityTypes: this.severityTypes,
 				epidemiologicalReportFF: this.reportFFIsOn,
 				searchConceptsLocallyFF: this.searchConceptsLocallyFFIsOn,
+				isFromRecetaDigital: true
 			},
 		}).afterClosed().subscribe((data: AmbulatoryConsultationProblem[]) => {
 			if (data === undefined || data.length === 0) return;
@@ -182,11 +174,6 @@ export class AgregarPrescripcionItemComponent implements OnInit, AfterViewInit, 
 		return createOutpatientDto;
 	}
 
-	private updateSelectedHealthProblem(actualSctid: string): void {
-		const problemExists = this.healthProblemOptions.find(hpo => hpo.sctId === actualSctid);
-		this.prescriptionItemForm.controls.healthProblem.setValue(problemExists ? actualSctid : null);
-	}
-
 	ngAfterViewInit(): void {
 		this.prescriptionItemForm.controls.interval.valueChanges.subscribe((newValue) => {
 			if (newValue !== this.DEFAULT_RADIO_OPTION) {
@@ -225,8 +212,8 @@ export class AgregarPrescripcionItemComponent implements OnInit, AfterViewInit, 
 			id: item ? item.id : null,
 			snomed: this.snomedConcept,
 			healthProblem: {
-				id: this.healthProblemOptions.find(hp => hp.sctId === this.prescriptionItemForm.controls.healthProblem.value).id,
-				description: this.healthProblemOptions.find(hp => hp.sctId === this.prescriptionItemForm.controls.healthProblem.value).description,
+				id: this.healthProblemOptions.find(hpo => hpo.snomed.sctid === this.prescriptionItemForm.controls.healthProblem.value).id,
+				description: this.healthProblemOptions.find(hpo => hpo.snomed.sctid === this.prescriptionItemForm.controls.healthProblem.value).snomed.pt,
 				sctId: this.prescriptionItemForm.controls.healthProblem.value
 			},
 			administrationTimeDays: showDosage ? this.prescriptionItemForm.controls.administrationTime.value !== this.DEFAULT_RADIO_OPTION ? this.prescriptionItemForm.controls.administrationTimeDays.value : null : null,
@@ -334,6 +321,7 @@ export class AgregarPrescripcionItemComponent implements OnInit, AfterViewInit, 
 		if (this.isHabilitarRecetaDigitalFFActive) {
 			this.prescriptionItemForm.controls.unitDose.setValidators([Validators.required]);
 			this.prescriptionItemForm.controls.dayDose.setValidators([Validators.required]);
+			this.prescriptionItemForm.controls.administrationTimeDays.setValidators([Validators.required]);
 		}
 	}
 
