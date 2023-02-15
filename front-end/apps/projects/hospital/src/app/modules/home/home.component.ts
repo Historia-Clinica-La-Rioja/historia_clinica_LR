@@ -2,8 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { Observable } from 'rxjs';
 import { map, switchMap } from 'rxjs/operators';
 
-import { PermissionsService } from '@core/services/permissions.service';
-import { ContextService } from '@core/services/context.service';
+import { filterItems } from '@core/services/permissions.service';
 import { FeatureFlagService } from '@core/services/feature-flag.service';
 import { AccountService } from '@api-rest/services/account.service';
 import { RoleAssignmentDto } from '@api-rest/api-model';
@@ -36,9 +35,7 @@ export class HomeComponent implements OnInit {
 
 	homeExtensions$: Observable<any[]>;
 	constructor(
-		private contextService: ContextService,
 		private extensionMenuService: MenuService,
-		private permissionsService: PermissionsService,
 		private accountService: AccountService,
 		private featureFlagService: FeatureFlagService,
 		private loggedUserService: LoggedUserService,
@@ -74,8 +71,8 @@ export class HomeComponent implements OnInit {
 
 			this.menuItems$ = this.featureFlagService.filterItems$(menuItemDefs)
 				.pipe(
-					switchMap(menu => this.permissionsService.filterItems$(menu)),
-					map(menu => menu.map(defToMenuItem)),
+					map(menu => filterItems<MenuItemDef>(menu, roleAssignment.map(r => r.role))),
+					map((menu: MenuItemDef[]) => menu.map(defToMenuItem)),
 					switchMap(items => this.extensionMenuService.getSystemMenuItems().pipe(
 						map((extesionItems: MenuItem[]) => [...items, ...extesionItems]),
 					)),
