@@ -122,6 +122,36 @@ public class AppointmentStorageImpl implements AppointmentStorage {
 				.collect(Collectors.toList());
 	}
 
+	@Override
+	public Collection<AppointmentBo> getAppointmentsByEquipmentDiary(Integer equipmentDiaryId, LocalDate from, LocalDate to) {
+		String sqlString =
+				"SELECT  NEW net.pladema.medicalconsultation.appointment.repository.domain.AppointmentDiaryVo(" +
+						"eaa.pk.equipmentDiaryId, a.id, a.patientId, a.dateTypeId, a.hour, a.appointmentStateId, a.isOverturn, " +
+						"a.patientMedicalCoverageId,a.phonePrefix, a.phoneNumber, edoh.medicalAttentionTypeId, " +
+						"a.appointmentBlockMotiveId, a.updateable.updatedOn)" +
+						"FROM Appointment AS a " +
+						"JOIN EquipmentAppointmentAssn AS eaa ON (a.id = eaa.pk.appointmentId) " +
+						"JOIN EquipmentDiary ed ON (ed.id = eaa.pk.equipmentDiaryId ) " +
+						"JOIN EquipmentDiaryOpeningHours  AS edoh ON (edoh.pk.equipmentDiaryId = ed.id) " +
+						"WHERE eaa.pk.equipmentDiaryId = :equipmentDiaryId" +
+						" AND (ed.deleteable.deleted = false OR ed.deleteable.deleted is null ) " +
+						(from!=null ? "AND a.dateTypeId >= :from " : "") +
+						(to!=null ? "AND a.dateTypeId <= :to " : "") +
+						"AND NOT a.appointmentStateId = " + AppointmentState.CANCELLED_STR +
+						"AND (a.deleteable.deleted = FALSE OR a.deleteable.deleted IS NULL) " +
+
+						"ORDER BY ed.id,a.isOverturn";
+		Query query = entityManager.createQuery(sqlString, AppointmentDiaryVo.class)
+				.setParameter("equipmentDiaryId", equipmentDiaryId);
+		if (from != null)
+			query.setParameter("from", from);
+		if (to != null)
+			query.setParameter("to", to);
+		return ((List<AppointmentDiaryVo>) query.getResultList()).stream()
+				.map(AppointmentBo::fromAppointmentDiaryVo)
+				.collect(Collectors.toList());
+	}
+
 	private AppointmentInfoBo mapTo(VAppointmentSummary row) {
 		var result = new AppointmentInfoBo();
 		result.setId(row.getId());

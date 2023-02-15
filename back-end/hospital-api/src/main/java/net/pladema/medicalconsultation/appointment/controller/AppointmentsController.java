@@ -210,21 +210,47 @@ public class AppointmentsController {
 		Collection<AppointmentBo> resultService = diaryIds.isEmpty() ?
 				appointmentService.getAppointmentsByProfessionalInInstitution(healthcareProfessionalId, institutionId, startDate, endDate) :
 				appointmentService.getAppointmentsByDiaries(diaryIds, startDate, endDate);
-        Set<Integer> patientsIds = resultService.stream().
-                filter(appointmentBo -> appointmentBo.getPatientId() != null).
+		Collection<AppointmentListDto> result= dataProcess(resultService);
+		log.trace(OUTPUT, result);
+		return ResponseEntity.ok(result);
+	}
+
+	@GetMapping(value="/list-appoiments-equipment/{equipmentDiaryId}")
+	@PreAuthorize("hasPermission(#institutionId, 'ADMINISTRATIVO_RED_DE_IMAGENES, ADMINISTRADOR_AGENDA')")
+	public ResponseEntity<Collection<AppointmentListDto>> getListAppoitmentsEquipment(
+			@PathVariable(name = "institutionId") Integer institutionId,
+			@PathVariable(name = "equipmentDiaryId") Integer equipmentDiaryId,
+			@RequestParam(name = "from", required = false) String from,
+			@RequestParam(name = "to", required = false) String to
+	) {
+		log.debug("Input parameters -> institutionId {}, equipmentDiaryId {}", institutionId, equipmentDiaryId);
+		LocalDate startDate = (from!=null) ? localDateMapper.fromStringToLocalDate(from) : null;
+		LocalDate endDate = (to!=null) ? localDateMapper.fromStringToLocalDate(to) : null;
+		Collection<AppointmentBo> resultService = appointmentService.getAppointmentsByEquipmentDiary(equipmentDiaryId, startDate, endDate);
+
+		Collection<AppointmentListDto> result= dataProcess(resultService);
+
+		log.trace(OUTPUT, result);
+		return ResponseEntity.ok(result);
+	}
+
+	private Collection<AppointmentListDto> dataProcess(Collection<AppointmentBo> resultService){
+		log.debug("Input parameters -> AppointmentsBo {}", resultService);
+		Set<Integer> patientsIds = resultService.stream().
+				filter(appointmentBo -> appointmentBo.getPatientId() != null).
 				map(AppointmentBo::getPatientId).collect(Collectors.toSet());
 		Set<Integer> bookingAppointmentsIds = resultService.stream().
 				filter(appointmentBo -> appointmentBo.getPatientId() == null && !appointmentBo.getAppointmentStateId().equals(AppointmentState.BLOCKED)).
 				map(AppointmentBo::getId).collect(Collectors.toSet());
 
-        var bookingPeople = bookingPersonService.getBookingPeople(bookingAppointmentsIds);
-        var basicPatientDtoMap = patientExternalService.getBasicDataFromPatientsId(patientsIds);
+		var bookingPeople = bookingPersonService.getBookingPeople(bookingAppointmentsIds);
+		var basicPatientDtoMap = patientExternalService.getBasicDataFromPatientsId(patientsIds);
 
-        Collection<AppointmentListDto> result = resultService.stream()
-                .filter(appointmentDto -> appointmentDto.getPatientId() != null)
-                .parallel()
-                .map(a -> mapData(a, basicPatientDtoMap))
-                .collect(Collectors.toList());
+		Collection<AppointmentListDto> result = resultService.stream()
+				.filter(appointmentDto -> appointmentDto.getPatientId() != null)
+				.parallel()
+				.map(a -> mapData(a, basicPatientDtoMap))
+				.collect(Collectors.toList());
 
 		result.addAll(resultService.stream()
 				.filter(appointmentDto -> appointmentDto.getAppointmentStateId().equals(AppointmentState.BLOCKED))
@@ -239,8 +265,7 @@ public class AppointmentsController {
 				.collect(Collectors.toList());
 		log.debug("Result size {}", result.size() + resultBooking.size());
 		result.addAll(resultBooking);
-		log.trace(OUTPUT, result);
-		return ResponseEntity.ok(result);
+		return result;
 	}
 
     private AppointmentListDto mapDataBooking(AppointmentBo appointmentBo, Map<Integer, BookingPersonBo> bookingPeople) {

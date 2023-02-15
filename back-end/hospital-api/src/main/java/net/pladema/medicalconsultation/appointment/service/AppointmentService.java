@@ -23,6 +23,9 @@ public interface AppointmentService {
 
 	Collection<AppointmentBo> getAppointmentsByDiaries(List<Integer> diaryIds, LocalDate from, LocalDate to);
 
+	Collection<AppointmentBo> getAppointmentsByEquipmentDiary(Integer equipmentDiaryId, LocalDate from, LocalDate to);
+
+
 	Collection<AppointmentBo> getAppointmentsByProfessionalInInstitution(Integer healthcareProfessionalId, Integer institutionId, LocalDate from, LocalDate to);
 
 	boolean existAppointment(Integer diaryId, Integer openingHoursId, LocalDate date, LocalTime hour);

@@ -141,6 +141,18 @@ public class AppointmentServiceImpl implements AppointmentService {
 	}
 
 	@Override
+	public Collection<AppointmentBo> getAppointmentsByEquipmentDiary(Integer equipmentDiaryId, LocalDate from, LocalDate to) {
+		log.debug("Input parameters -> equipmentDiaryId {}", equipmentDiaryId);
+		Collection<AppointmentBo> result = new ArrayList<>();
+		result = appointmentStorage.getAppointmentsByEquipmentDiary(equipmentDiaryId, from, to).stream().distinct()
+				.collect(Collectors.toList());
+
+		log.debug("Result size {}", result.size());
+		log.trace(OUTPUT, result);
+		return result;
+	}
+
+	@Override
 	public Collection<AppointmentBo> getAppointmentsByProfessionalInInstitution(Integer healthcareProfessionalId, Integer institutionId, LocalDate from, LocalDate to) {
 		log.debug("Input parameters -> diaryIds {}", healthcareProfessionalId);
 		Collection<AppointmentBo> result = new ArrayList<>();
