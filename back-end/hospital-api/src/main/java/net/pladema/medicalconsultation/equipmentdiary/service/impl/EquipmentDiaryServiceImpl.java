@@ -5,6 +5,14 @@ package net.pladema.medicalconsultation.equipmentdiary.service.impl;
 import lombok.RequiredArgsConstructor;
 
 
+import net.pladema.medicalconsultation.appointment.repository.entity.Appointment;
+import net.pladema.medicalconsultation.appointment.service.AppointmentService;
+import net.pladema.medicalconsultation.appointment.service.UpdateAppointmentOpeningHoursService;
+import net.pladema.medicalconsultation.appointment.service.domain.AppointmentBo;
+import net.pladema.medicalconsultation.diary.service.domain.DiaryBo;
+import net.pladema.medicalconsultation.diary.service.domain.DiaryOpeningHoursBo;
+import net.pladema.medicalconsultation.diary.service.domain.OverturnsLimitException;
+import net.pladema.medicalconsultation.diary.service.exception.DiaryEnumException;
 import net.pladema.medicalconsultation.diary.service.exception.DiaryException;
 import net.pladema.medicalconsultation.equipmentdiary.repository.EquipmentDiaryRepository;
 import net.pladema.medicalconsultation.equipmentdiary.repository.domain.CompleteEquipmentDiaryListVo;
@@ -31,6 +39,10 @@ import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+import static ar.lamansys.sgx.shared.dates.utils.DateUtils.getWeekDay;
+import static ar.lamansys.sgx.shared.dates.utils.DateUtils.isBetween;
+import static java.util.stream.Collectors.counting;
+import static java.util.stream.Collectors.groupingBy;
 import static java.util.stream.Collectors.toList;
 
 @Service
@@ -44,6 +56,10 @@ public class EquipmentDiaryServiceImpl implements EquipmentDiaryService {
 	private final EquipmentDiaryOpeningHoursService equipmentDiaryOpeningHoursService;
 
 	private final EquipmentDiaryRepository equipmentDiaryRepository;
+
+	private final AppointmentService appointmentService;
+
+	private final UpdateAppointmentOpeningHoursService updateApmtOHService;
 
 	@Override
 	public Integer addDiary(EquipmentDiaryBo equipmentDiaryToSave) throws DiaryException {
@@ -129,6 +145,58 @@ public class EquipmentDiaryServiceImpl implements EquipmentDiaryService {
 
 		LOG.debug(OUTPUT, result);
 		return result;
+	}
+
+	@Override
+	public Integer updateDiary(EquipmentDiaryBo equipmentDiaryToUpdate) {
+		LOG.debug("Input parameters -> equipmentDiaryToUpdate {}", equipmentDiaryToUpdate);
+
+		return equipmentDiaryRepository.findById(equipmentDiaryToUpdate.getId()).map(savedEquipmentDiary -> {
+			HashMap<EquipmentDiaryOpeningHoursBo, List<AppointmentBo>> apmtsByNewDOH = new HashMap<>();
+			equipmentDiaryToUpdate.getEquipmentDiaryOpeningHours().forEach( doh -> {
+				doh.setDiaryId(savedEquipmentDiary.getId());
+				apmtsByNewDOH.put(doh, new ArrayList<>());
+			});
+			Collection<AppointmentBo> apmts = appointmentService.getAppointmentsByEquipmentDiary(equipmentDiaryToUpdate.getId(), equipmentDiaryToUpdate.getStartDate(),
+					equipmentDiaryToUpdate.getEndDate());
+			adjustExistingAppointmentsOpeningHours(apmtsByNewDOH, apmts);
+			persistDiary(equipmentDiaryToUpdate, mapDiaryBo(equipmentDiaryToUpdate, savedEquipmentDiary));
+			updatedExistingAppointments(equipmentDiaryToUpdate, apmtsByNewDOH);
+			LOG.debug("Diary updated -> {}", equipmentDiaryToUpdate);
+			return equipmentDiaryToUpdate.getId();
+		}).get();
+
+	}
+
+	private void updatedExistingAppointments(EquipmentDiaryBo diaryToUpdate,
+											 HashMap<EquipmentDiaryOpeningHoursBo, List<AppointmentBo>> apmtsByNewDOH) {
+		Collection<EquipmentDiaryOpeningHoursBo> dohSavedList = equipmentDiaryOpeningHoursService
+				.getDiariesOpeningHours(Stream.of(diaryToUpdate.getId()).collect(toList()));
+		apmtsByNewDOH.forEach((doh, apmts) -> dohSavedList.stream().filter(doh::equals).findAny().ifPresent(
+				savedDoh -> apmts.forEach(apmt -> apmt.setOpeningHoursId(savedDoh.getOpeningHours().getId()))));
+		List<AppointmentBo> apmtsToUpdate = apmtsByNewDOH.values().stream().flatMap(Collection::stream)
+				.collect(toList());
+		apmtsToUpdate.forEach(appointment -> updateApmtOHService.execute(appointment, true));
+	}
+	private void adjustExistingAppointmentsOpeningHours(HashMap<EquipmentDiaryOpeningHoursBo, List<AppointmentBo>> apmtsByNewDOH,
+														Collection<AppointmentBo> apmts) {
+		apmtsByNewDOH.forEach((doh, apmtsList) -> {
+			apmtsList.addAll(apmts.stream().filter(apmt -> belong(apmt, doh)).collect(toList()));
+			if (overturnsOutOfLimit(doh, apmtsList)) {
+				throw new OverturnsLimitException();
+			}
+		});
+	}
+
+	private boolean belong(AppointmentBo apmt, EquipmentDiaryOpeningHoursBo edoh) {
+		return getWeekDay(apmt.getDate()).equals(edoh.getOpeningHours().getDayWeekId())
+				&& isBetween(apmt.getHour(), edoh.getOpeningHours().getFrom(), edoh.getOpeningHours().getTo());
+	}
+
+	private boolean overturnsOutOfLimit(EquipmentDiaryOpeningHoursBo edoh, List<AppointmentBo> apmtsList) {
+		Map<LocalDate, Long> overturnsByDate = apmtsList.stream().filter(AppointmentBo::isOverturn)
+				.collect(groupingBy(AppointmentBo::getDate, counting()));
+		return overturnsByDate.values().stream().anyMatch(overturns -> overturns > edoh.getOverturnCount().intValue());
 	}
 
 	private Function<CompleteEquipmentDiaryBo, CompleteEquipmentDiaryBo> completeOpeningHours() {

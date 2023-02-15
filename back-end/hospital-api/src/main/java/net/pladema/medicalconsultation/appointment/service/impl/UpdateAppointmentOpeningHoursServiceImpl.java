@@ -3,7 +3,10 @@ package net.pladema.medicalconsultation.appointment.service.impl;
 import ar.lamansys.sgx.shared.security.UserInfo;
 import net.pladema.medicalconsultation.appointment.repository.AppointmentRepository;
 
+import net.pladema.medicalconsultation.appointment.repository.EquipmentAppointmentAssnRepository;
 import net.pladema.medicalconsultation.appointment.repository.entity.AppointmentState;
+
+import net.pladema.medicalconsultation.appointment.repository.entity.EquipmentAppointmentAssn;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -24,10 +27,17 @@ public class UpdateAppointmentOpeningHoursServiceImpl implements UpdateAppointme
 
 	private final AppointmentRepository appointmentRepository;
 
+	private final EquipmentAppointmentAssnRepository equipmentAppointmentAssnRepository;
+
 	@Override
-	public AppointmentBo execute(AppointmentBo appointmentBo) {
+	public AppointmentBo execute(AppointmentBo appointmentBo, boolean isAppointmentInEquipmentDiary) {
 		LOG.debug("Input parameters -> appointmentBo {}", appointmentBo);
-		appointmentAssnRepository.updateOpeningHoursId(appointmentBo.getOpeningHoursId(), appointmentBo.getId());
+
+		if (isAppointmentInEquipmentDiary)
+			equipmentAppointmentAssnRepository.updateOpeningHoursId(appointmentBo.getOpeningHoursId(), appointmentBo.getId());
+		else
+			appointmentAssnRepository.updateOpeningHoursId(appointmentBo.getOpeningHoursId(), appointmentBo.getId());
+
 		if(appointmentBo.getAppointmentStateId().equals(AppointmentState.OUT_OF_DIARY)) {
 			if(appointmentBo.getPatientId() != null)
 				appointmentRepository.updateState(appointmentBo.getId(), AppointmentState.ASSIGNED, UserInfo.getCurrentAuditor());

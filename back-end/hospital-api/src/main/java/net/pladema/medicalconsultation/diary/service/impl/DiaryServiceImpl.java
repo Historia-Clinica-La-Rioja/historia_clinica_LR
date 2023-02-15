@@ -189,8 +189,7 @@ public class DiaryServiceImpl implements DiaryService {
 				savedDoh -> apmts.forEach(apmt -> apmt.setOpeningHoursId(savedDoh.getOpeningHours().getId()))));
 		List<AppointmentBo> apmtsToUpdate = apmtsByNewDOH.values().stream().flatMap(Collection::stream)
 				.collect(toList());
-		apmtsToUpdate.forEach(updateApmtOHService::execute);
-
+		apmtsToUpdate.forEach(appointment -> updateApmtOHService.execute(appointment, false));
 	}
 
 	private boolean overturnsOutOfLimit(DiaryOpeningHoursBo doh, List<AppointmentBo> apmtsList) {

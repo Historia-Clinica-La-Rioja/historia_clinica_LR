@@ -57,6 +57,20 @@ public interface AppointmentRepository extends SGXAuditableEntityJPARepository<A
     List<AppointmentDiaryVo> getFutureActiveAppointmentsByDiary(@Param("diaryId") Integer diaryId);
 
 	@Transactional(readOnly = true)
+	@Query( "SELECT NEW net.pladema.medicalconsultation.appointment.repository.domain.AppointmentDiaryVo(" +
+			"eaa.pk.equipmentDiaryId, a.id, a.patientId, a.dateTypeId, a.hour, a.appointmentStateId, a.isOverturn, " +
+			"a.patientMedicalCoverageId,a.phonePrefix, a.phoneNumber, edoh.medicalAttentionTypeId, " +
+			"a.appointmentBlockMotiveId, a.updateable.updatedOn) " +
+			"FROM Appointment AS a " +
+			"JOIN EquipmentAppointmentAssn AS eaa ON (a.id = eaa.pk.appointmentId) " +
+			"JOIN EquipmentDiaryOpeningHours AS edoh ON (edoh.pk.equipmentDiaryId = eaa.pk.equipmentDiaryId) " +
+			"WHERE eaa.pk.equipmentDiaryId = :diaryId AND a.appointmentStateId <> " + AppointmentState.CANCELLED_STR +
+			"AND eaa.pk.openingHoursId = edoh.pk.openingHoursId " +
+			"AND (a.deleteable.deleted = FALSE OR a.deleteable.deleted IS NULL ) " +
+			" AND a.dateTypeId >= CURRENT_DATE ")
+	List<AppointmentDiaryVo> getFutureActiveAppointmentsByEquipmentDiary(@Param("diaryId") Integer diaryId);
+
+	@Transactional(readOnly = true)
 	@Query( "SELECT (case when count(a.id)> 0 then true else false end) " +
 			"FROM Appointment AS a " +
 			"JOIN AppointmentAssn AS aa ON (a.id = aa.pk.appointmentId) " +

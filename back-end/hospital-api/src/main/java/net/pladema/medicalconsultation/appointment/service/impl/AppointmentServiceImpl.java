@@ -344,6 +344,17 @@ public class AppointmentServiceImpl implements AppointmentService {
 		return Boolean.TRUE;
 	}
 
+	@Override
+	public Collection<AppointmentBo> getFutureActiveAppointmentsByEquipmentDiary(Integer equipmentDiaryId) {
+		log.debug("Input parameters -> equipmentDiaryId {}", equipmentDiaryId);
+		Collection<AppointmentBo> result = appointmentRepository.getFutureActiveAppointmentsByEquipmentDiary(equipmentDiaryId).stream()
+				.map(AppointmentBo::fromAppointmentDiaryVo)
+				.distinct()
+				.collect(Collectors.toList());
+		log.debug(OUTPUT, result);
+		return result;
+	}
+
 	private Integer getCurrentAppointmentId(Integer patientId, Integer institutionId) {
 		log.debug("Input parameters -> patientId {}, institutionId {}", patientId, institutionId);
 

@@ -18,4 +18,6 @@ public interface EquipmentDiaryService {
 	List<EquipmentDiaryBo> getEquipmentDiariesFromEquipment(Integer equipmentId,
 														  Boolean active);
 	Optional<CompleteEquipmentDiaryBo> getEquipmentDiary(Integer equipmentDiaryId);
+
+	Integer updateDiary(EquipmentDiaryBo equipmentDiaryBo);
 }
