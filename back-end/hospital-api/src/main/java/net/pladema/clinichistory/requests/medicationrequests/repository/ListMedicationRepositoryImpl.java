@@ -66,7 +66,7 @@ public class ListMedicationRepositoryImpl implements ListMedicationRepository {
 
         query.setParameter("documentStatusId", DocumentStatus.FINAL)
              .setParameter("patientId", filter.getPatientId())
-             .setParameter("documentType", List.of(DocumentType.RECIPE, DocumentType.OUTPATIENT, DocumentType.EPICRISIS, DocumentType.COUNTER_REFERENCE));
+             .setParameter("documentType", List.of(DocumentType.RECIPE, DocumentType.OUTPATIENT, DocumentType.EPICRISIS, DocumentType.COUNTER_REFERENCE, DocumentType.DIGITAL_RECIPE));
 
         if (filter.getMedicationStatement() != null)
             query.setParameter("medication", "%"+filter.getMedicationStatement().toUpperCase()+"%");
@@ -124,7 +124,7 @@ public class ListMedicationRepositoryImpl implements ListMedicationRepository {
 		query.setParameter("documentStatusId", DocumentStatus.FINAL)
 				.setParameter("patientId", filter.getPatientId())
 				.setParameter("userId", userId)
-				.setParameter("documentType", List.of(DocumentType.RECIPE, DocumentType.OUTPATIENT, DocumentType.EPICRISIS, DocumentType.COUNTER_REFERENCE));
+				.setParameter("documentType", List.of(DocumentType.RECIPE, DocumentType.OUTPATIENT, DocumentType.EPICRISIS, DocumentType.COUNTER_REFERENCE, DocumentType.DIGITAL_RECIPE));
 
 		if (filter.getMedicationStatement() != null)
 			query.setParameter("medication", "%"+filter.getMedicationStatement().toUpperCase()+"%");

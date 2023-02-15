@@ -9,7 +9,7 @@ public enum EDocumentType {
     EVALUATION_NOTE(2, "evolutionNote", "evolutionnote"),
     EPICRISIS(3, "epicrisis", "epicrisis"),
     OUTPATIENT(4, "ambulatoria", "outpatient"),
-    RECIPE(5, "receta", "recipe_order"),
+    RECIPE(5, "receta", "recipe_order_table"),
     ORDER(6, "orden", "recipe_order"),
     EMERGENCY_CARE(7, "guardia", "emergency_care"),
     IMMUNIZATION(8, "inmunización", "immunization"),

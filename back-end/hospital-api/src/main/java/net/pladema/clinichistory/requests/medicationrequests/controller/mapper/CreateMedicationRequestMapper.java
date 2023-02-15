@@ -13,6 +13,7 @@ import ar.lamansys.sgx.shared.featureflags.application.FeatureFlagsService;
 import net.pladema.clinichistory.requests.controller.dto.PrescriptionDto;
 import net.pladema.clinichistory.requests.controller.dto.PrescriptionItemDto;
 import ar.lamansys.sgh.shared.infrastructure.input.service.NewDosageDto;
+import net.pladema.clinichistory.requests.medicationrequests.service.domain.DigitalRecipeMedicationRequestBo;
 import net.pladema.clinichistory.requests.medicationrequests.service.domain.MedicationRequestBo;
 import org.mapstruct.Mapper;
 import org.mapstruct.Named;
@@ -35,7 +36,11 @@ public class CreateMedicationRequestMapper {
     @Named("parseTo")
     public MedicationRequestBo parseTo(Integer doctorId, BasicPatientDto patientDto, PrescriptionDto medicationRequest) {
         LOG.debug("parseTo -> doctorId {}, patientDto {}, medicationRequest {} ", doctorId, patientDto, medicationRequest);
-        MedicationRequestBo result = new MedicationRequestBo();
+		MedicationRequestBo result;
+		if (!featureFlagsService.isOn(AppFeature.HABILITAR_RECETA_DIGITAL))
+			result = new MedicationRequestBo();
+		else
+			result = new DigitalRecipeMedicationRequestBo();
         result.setDoctorId(doctorId);
         result.setPatientInfo(new PatientInfoBo(patientDto.getId(), patientDto.getPerson().getGender().getId(), patientDto.getPerson().getAge()));
         result.setHasRecipe(medicationRequest.isHasRecipe());

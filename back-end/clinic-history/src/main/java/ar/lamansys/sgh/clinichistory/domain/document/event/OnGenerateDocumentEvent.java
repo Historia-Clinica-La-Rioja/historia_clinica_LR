@@ -29,7 +29,7 @@ public class OnGenerateDocumentEvent extends ApplicationEvent {
 
     private final String uuid;
 
-    private EDocumentType documentType;
+    private final EDocumentType documentType;
 
     private final ESourceType eSourceType;
 
@@ -100,9 +100,5 @@ public class OnGenerateDocumentEvent extends ApplicationEvent {
     }
 
     public LocalDateTime getPerformedDate() { return documentBo.getPerformedDate(); }
-
-	public void setDocumentType(EDocumentType documentType) {
-		this.documentType = documentType;
-	}
 }
 

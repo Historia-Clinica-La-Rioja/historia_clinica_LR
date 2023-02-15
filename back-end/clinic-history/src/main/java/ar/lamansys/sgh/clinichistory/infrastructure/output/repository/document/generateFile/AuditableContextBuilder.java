@@ -12,6 +12,7 @@ import java.util.Objects;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
+import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.DocumentType;
 import ar.lamansys.sgh.shared.infrastructure.input.service.institution.SharedInstitutionPort;
 
 import ar.lamansys.sgh.shared.infrastructure.input.service.medicalcoverage.PatientMedicalCoverageService;
@@ -89,6 +90,16 @@ public class AuditableContextBuilder {
 		logger.debug("Input parameters -> document {}", document);
 		Map<String,Object> contextMap = new HashMap<>();
 		addPatientInfo(contextMap, patientId);
+		if (document.getDocumentType() == DocumentType.DIGITAL_RECIPE) {
+			addDigitalRecipeContextDocumentData(contextMap, document);
+			logger.debug("Built context for patient {} and document {} is {}", patientId, document.getId(), contextMap);
+			return contextMap;
+		}
+		if (document.getDocumentType() == DocumentType.RECIPE) {
+			addRecipeContextDocumentData(contextMap, document);
+			logger.debug("Built context for patient {} and document {} is {}", patientId, document.getId(), contextMap);
+			return contextMap;
+		}
 		addDocumentInfo(contextMap, document);
 		logger.debug("Built context for patient {} and document {} is {}", patientId, document.getId(), contextMap);
 		return contextMap;
@@ -124,9 +135,20 @@ public class AuditableContextBuilder {
 		contextMap.put("clinicalSpecialty", clinicalSpecialtyDtoFunction.apply(document.getClinicalSpecialtyId()));
 		contextMap.put("performedDate", document.getPerformedDate().atZone(ZoneId.of("UTC")).withZoneSameInstant(ZoneId.of("UTC-3")));
 		contextMap.put("nameSelfDeterminationFF", featureFlagsService.isOn(AppFeature.HABILITAR_DATOS_AUTOPERCIBIDOS));
+	}
 
-		if (featureFlagsService.isOn(AppFeature.HABILITAR_RECETA_DIGITAL))
-			addDigitalRecipeContextDocumentData(contextMap, document);
+	private <T extends IDocumentBo> void addRecipeContextDocumentData(Map<String, Object> ctx, T document) {
+		ctx.put("recipe", true);
+		ctx.put("order", false);
+		ctx.put("request", document);
+		ctx.put("professional", authorFromDocumentFunction.apply(document.getEncounterId().longValue()));
+
+		var patientCoverage = patientMedicalCoverageService.getCoverage(document.getMedicalCoverageId());
+		patientCoverage.ifPresent(sharedPatientMedicalCoverageBo -> ctx.put("patientCoverage", sharedPatientMedicalCoverageBo));
+
+		var date = document.getPerformedDate().format(DateTimeFormatter.ofPattern("dd-MM-yyyy"));
+		ctx.put("nameSelfDeterminationFF", featureFlagsService.isOn(AppFeature.HABILITAR_DATOS_AUTOPERCIBIDOS));
+		ctx.put("requestDate", date);
 	}
 
 	private <T extends IDocumentBo> void addDigitalRecipeContextDocumentData(Map<String, Object> ctx, T document) {

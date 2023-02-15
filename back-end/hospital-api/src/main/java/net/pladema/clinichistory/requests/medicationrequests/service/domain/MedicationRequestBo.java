@@ -44,11 +44,14 @@ public class MedicationRequestBo implements IDocumentBo {
 
 	private Integer clinicalSpecialtyId;
 
-	private LocalDateTime performedDate;
-
     public short getDocumentType() {
         return DocumentType.RECIPE;
     }
+
+	@Override
+	public LocalDateTime getPerformedDate() {
+		return requestDate.atStartOfDay();
+	}
 
     @Override
     public Short getDocumentSource() {

@@ -80,8 +80,7 @@ public class CreateMedicationRequestServiceImpl implements CreateMedicationReque
 				medication.setId(null);
 				medication.getHealthCondition().setSnomed(healthConditionService.getHealthCondition(medication.getHealthCondition().getId()).getSnomed());
 			});
-			medicationRequest.setPerformedDate(value.atStartOfDay());
-			documentFactory.run(medicationRequest, featureFlagsService.isOn(AppFeature.HABILITAR_RECETA_DIGITAL));
+			documentFactory.run(medicationRequest, true);
 		});
         return Collections.min(newMRIds.keySet());
     }
