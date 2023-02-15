@@ -9,7 +9,11 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.function.Predicate;
 import java.util.stream.Collectors;
+import java.util.function.Function;
 
 @Service
 public class HCEMedicationServiceImpl implements HCEMedicationService {
@@ -35,9 +39,16 @@ public class HCEMedicationServiceImpl implements HCEMedicationService {
         List<HCEMedicationVo> resultQuery = hceMedicationStatementRepository.getMedication(patientId);
         List<HCEMedicationBo> result = resultQuery.stream()
                 .map(HCEMedicationBo::new)
+				.filter(distinctByKey(HCEMedicationBo::getSnomedSctid))
                 .collect(Collectors.toList());
         result.forEach((hceMedicationBo -> hceMedicationBo.setStatus(medicationCalculateStatus.execute(hceMedicationBo.getStatusId(), hceMedicationBo.getDosage()))));
         LOG.debug(LOGGING_OUTPUT, result);
         return result;
     }
+
+	private static <T> Predicate<T> distinctByKey(Function<? super T, ?> keyExtractor) {
+		Map<Object, Boolean> seen = new ConcurrentHashMap<>();
+		return t -> seen.putIfAbsent(keyExtractor.apply(t), Boolean.TRUE) == null;
+	}
+
 }

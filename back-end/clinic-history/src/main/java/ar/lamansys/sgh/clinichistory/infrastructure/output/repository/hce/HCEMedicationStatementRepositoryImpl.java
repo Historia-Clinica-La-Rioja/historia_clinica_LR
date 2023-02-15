@@ -31,7 +31,7 @@ public class HCEMedicationStatementRepositoryImpl implements HCEMedicationStatem
         String sqlString = "with temporal as (" +
                 "SELECT DISTINCT " +
                 "ms.id, ms.snomed_id, ms.status_id, ms.updated_on, ms.dosage_id, " +
-                "row_number() OVER (PARTITION by ms.snomed_id ORDER BY ms.updated_on desc) AS rw " +
+                "row_number() OVER (PARTITION by ms.snomed_id, ms.health_condition_id ORDER BY ms.updated_on desc) AS rw " +
                 "FROM {h-schema}document d " +
                 "JOIN {h-schema}document_medicamention_statement dms ON d.id = dms.document_id " +
                 "JOIN {h-schema}medication_statement ms ON dms.medication_statement_id = ms.id " +
