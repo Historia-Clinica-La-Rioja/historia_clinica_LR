@@ -14,3 +14,13 @@ databaseChangeLog:
                     defaultValueDate: ${date.now}
                     constraints:
                       nullable: false
+
+    - changeSet:
+        id: document_type-digital_recipe-data
+        comment: Actualizar datos document_type
+        author: mmalyvarni
+        context: "!schema-only"
+        changes:
+          - sql:
+              sql: |-
+                INSERT INTO document_type VALUES (14, 'Receta Digital');

@@ -4,6 +4,8 @@ import java.time.LocalDate;
 import java.time.Period;
 import java.util.Optional;
 
+import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.EDocumentType;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -150,6 +152,8 @@ public class DocumentFactoryImpl implements DocumentFactory {
 
     private void generateDocument(IDocumentBo documentBo) {
         OnGenerateDocumentEvent event = new OnGenerateDocumentEvent(documentBo);
+		if (event.getDocumentTypeId() == 5 && featureFlagsService.isOn(AppFeature.HABILITAR_RECETA_DIGITAL))
+			event.setDocumentType(EDocumentType.DIGITAL_RECIPE);
 		if (featureFlagsService.isOn(AppFeature.HABILITAR_GENERACION_ASINCRONICA_DOCUMENTOS_PDF))
         	createDocumentFile.execute(event);
 		else

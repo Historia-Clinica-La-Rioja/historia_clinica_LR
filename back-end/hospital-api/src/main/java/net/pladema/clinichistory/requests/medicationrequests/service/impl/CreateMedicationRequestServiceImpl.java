@@ -78,8 +78,10 @@ public class CreateMedicationRequestServiceImpl implements CreateMedicationReque
 				medication.setPrescriptionDate(value);
 				medication.setDueDate(value.plusDays(30));
 				medication.setId(null);
+				medication.getHealthCondition().setSnomed(healthConditionService.getHealthCondition(medication.getHealthCondition().getId()).getSnomed());
 			});
-			documentFactory.run(medicationRequest, false);
+			medicationRequest.setPerformedDate(value.atStartOfDay());
+			documentFactory.run(medicationRequest, featureFlagsService.isOn(AppFeature.HABILITAR_RECETA_DIGITAL));
 		});
         return Collections.min(newMRIds.keySet());
     }
@@ -125,7 +127,8 @@ public class CreateMedicationRequestServiceImpl implements CreateMedicationReque
     }
 
 	private void generateMultipleMedicationRequests(MedicationRequestBo medicationRequest, Map<Integer, LocalDate> originalMedicationRequestId, LocalDate iterationDate) {
-		for (int currentRequest = 0; currentRequest < medicationRequest.getRepetitions() + 1; currentRequest++) {
+		int iterations = medicationRequest.getIsPostDated() ? medicationRequest.getRepetitions() + 1 : medicationRequest.getRepetitions();
+		for (int currentRequest = 0; currentRequest < iterations; currentRequest++) {
 			MedicationRequest result = generateBasicMedicationrequest(medicationRequest);
 			result.setClinicalSpecialtyId(medicationRequest.getClinicalSpecialtyId());
 			result.setRepetitions(currentRequest == 0 ? medicationRequest.getRepetitions() : 0);

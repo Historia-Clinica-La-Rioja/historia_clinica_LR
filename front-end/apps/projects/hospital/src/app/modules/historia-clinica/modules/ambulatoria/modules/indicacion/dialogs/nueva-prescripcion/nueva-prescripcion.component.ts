@@ -61,7 +61,7 @@ export class NuevaPrescripcionComponent implements OnInit {
 			withoutRecipe: [false],
 			evolucion: [],
 			clinicalSpecialty: [null, [Validators.required]],
-			prolongedTreatment: [null],
+			prolongedTreatment: [false],
 			posdatadas: [{value: this.POSDATADAS_DEFAULT, disabled: true}, [Validators.min(this.POSDATADAS_MIN), Validators.max(this.POSDATADAS_MAX)]],
 		});
 		this.prescriptionItems = this.data.prescriptionItemList ? this.data.prescriptionItemList : [];
@@ -91,7 +91,7 @@ export class NuevaPrescripcionComponent implements OnInit {
 
 	setProfessionalSpecialties() {
 		this.clinicalSpecialtyService.getLoggedInProfessionalClinicalSpecialties().subscribe(specialties => {
-			this.setSpecialtyFields(specialties);	
+			this.setSpecialtyFields(specialties);
 		});
 	}
 
@@ -99,7 +99,7 @@ export class NuevaPrescripcionComponent implements OnInit {
 		this.specialties = specialtyArray;
 		const clinicalSpecialty = this.prescriptionForm.get('clinicalSpecialty');
 		clinicalSpecialty.setValue(specialtyArray[0]);
-		if (this.specialties.length === 1) 
+		if (this.specialties.length === 1)
 			clinicalSpecialty.disable();
 		this.prescriptionForm.controls['clinicalSpecialty'].markAsTouched();
 	}
@@ -158,7 +158,7 @@ export class NuevaPrescripcionComponent implements OnInit {
 				};
 			}),
 			repetitions: this.prescriptionForm.controls.posdatadas.value,
-			isPostDated: this.prescriptionForm.controls.posdatadas.value > this.POSDATADAS_MIN,
+			isPostDated: this.prescriptionForm.controls.prolongedTreatment.value,
 			clinicalSpecialtyId: this.prescriptionForm.controls.clinicalSpecialty.value.id,
 		};
 		this.savePrescription(newPrescription);
