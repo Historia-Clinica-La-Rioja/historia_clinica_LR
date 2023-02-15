@@ -11,6 +11,8 @@ import net.pladema.clinichistory.hospitalization.service.domain.DocumentTypeBo;
 import net.pladema.clinichistory.hospitalization.service.domain.EpisodeDocumentBo;
 import net.pladema.clinichistory.hospitalization.service.domain.EpisodeDocumentResponseBo;
 import net.pladema.clinichistory.hospitalization.service.domain.StoredFileBo;
+
+import org.springframework.data.domain.Example;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 import java.util.List;
@@ -57,9 +59,9 @@ public class EpisodeDocumentStorageImpl implements EpisodeDocumentStorage {
 	@Override
 	public List<EpisodeDocumentResponseBo> getEpisodeDocuments(Integer internmentEpisodeId) {
 		log.debug("Input parameters -> internmentEpisodeId {}", internmentEpisodeId);
-		List<EpisodeDocumentResponseBo> result = this.episodeDocumentRepository.findAll()
+		List<EpisodeDocumentResponseBo> result = this.episodeDocumentRepository.findAllByInternmentEpisodeId(internmentEpisodeId)
 				.stream()
-				.map(entity -> this.mapEntityToBo(entity))
+				.map(this::mapEntityToBo)
 				.collect(Collectors.toList());
 		log.debug(OUTPUT, result);
 		return result;

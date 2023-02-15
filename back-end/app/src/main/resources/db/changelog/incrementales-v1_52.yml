@@ -1,3 +1,18 @@
 databaseChangeLog: 
     - logicalFilePath: incrementales-v1_52 
 
+    - changeSet:
+        id: modifyView-v-internment-episode-document
+        author: mromero
+        dbms: postgresql
+        comment: Adding internment_episode_id column on select and delete join operation with internment_episode because it was unuse
+        changes:
+          - createView:
+              viewName: v_episode_document
+              fullDefinition: false
+              replaceIfExists: true
+              schemaName: public
+              selectQuery: |-
+                SELECT ed.id, edt.description, ed.file_name, ed.created_on, ed.internment_episode_id
+                FROM episode_document ed
+                JOIN episode_document_types edt ON (ed.episode_document_types_id = edt.id)

@@ -32,4 +32,8 @@ public class VEpisodeDocument {
 
 	@Column(name = "created_on", nullable = false)
 	private LocalDate createdOn;
+
+	@Column(name = "internment_episode_id")
+	private Integer internmentEpisodeId;
+
 }
