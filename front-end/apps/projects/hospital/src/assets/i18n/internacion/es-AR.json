@@ -232,6 +232,12 @@
 				"OTHERS": "Otras observaciones",
 				"DESCRIPTION": "Descripción"
 			},
+			"problems":{
+				"TITLE": "Otras circunstancias que prolongan la internación",
+				"SUBTITLE": "Tipo de problema",
+				"CONCEPT_LABEL": "problema",
+				"ADD": "Agregar problema"
+			},
 			"warning-dialog": {
 				"FIRST_TEXT": "Se han realizado evoluciones sobre el episodio de internación posteriores a la última versión del borrador.",
 				"SECOND_TEXT": "Por favor, revise los últimos datos cargados."

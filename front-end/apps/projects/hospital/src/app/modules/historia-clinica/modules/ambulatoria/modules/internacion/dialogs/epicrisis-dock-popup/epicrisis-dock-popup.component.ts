@@ -4,6 +4,7 @@ import {
 	DiagnosisDto,
 	EpicrisisDto,
 	EpicrisisObservationsDto,
+	HealthConditionDto,
 	HealthHistoryConditionDto,
 	ImmunizationDto,
 	MasterDataInterface,
@@ -32,6 +33,7 @@ import { InternmentFields } from "@historia-clinica/modules/ambulatoria/modules/
 import { Observable } from 'rxjs';
 import { DocumentActionReasonComponent } from '../document-action-reason/document-action-reason.component';
 import { MatDialog } from '@angular/material/dialog';
+import { ProblemEpicrisisService } from '../../services/problem-epicrisis.service';
 
 @Component({
 	selector: 'app-epicrisis-dock-popup',
@@ -49,12 +51,14 @@ export class EpicrisisDockPopupComponent implements OnInit {
 	public hasError = hasError;
 
 	diagnosticsEpicrisisService: DiagnosisEpicrisisService;
-
+	problemEpicrisisService: ProblemEpicrisisService;
 	snomedConcept: SnomedDto;
+	snomedConceptProblem: SnomedDto;
 	verifications: MasterDataInterface<string>[];
 	anamnesis: ResponseAnamnesisDto;
 	form: FormGroup;
 	formDiagnosis: FormGroup;
+	formProblem: FormGroup;
 	showWarning: boolean = false;
 	isDraft = false;
 	isDisableConfirmButton = false;
@@ -140,7 +144,11 @@ export class EpicrisisDockPopupComponent implements OnInit {
 		this.isDraft = this.data.patientInfo.isDraft;
 		this.canConfirmedDocument = this.data.patientInfo.isDraft;
 		this.diagnosticsEpicrisisService = new DiagnosisEpicrisisService(this.internacionMasterDataService, this.internmentStateService, this.tableService, this.data.patientInfo.internmentEpisodeId);
+		this.problemEpicrisisService = new ProblemEpicrisisService();
 
+		this.formProblem = this.formBuilder.group({
+			snomedProblem: [null, Validators.required]
+		});
 		this.formDiagnosis = this.formBuilder.group({
 			snomed: [null, Validators.required]
 		});
@@ -169,6 +177,7 @@ export class EpicrisisDockPopupComponent implements OnInit {
 			this.waitToResponse = true;
 			this.form.controls.mainDiagnosis.setValue(response.mainDiagnosis);
 			this.diagnosticsEpicrisisService.setInternmentMainDiagnosis(response.mainDiagnosis);
+			this.problemEpicrisisService.setProblems(response.problems);
 			this.diagnosticsEpicrisisService.initTable(response.diagnosis);
 			this.personalHistories.data = response.personalHistories;
 			this.familyHistories.data = response.familyHistories;
@@ -291,7 +300,8 @@ export class EpicrisisDockPopupComponent implements OnInit {
 			personalHistories: this.personalHistories.selection.selected,
 			medications: this.medications,
 			immunizations: this.immunizations.selection.selected,
-			allergies: this.allergies.selection.selected
+			allergies: this.allergies.selection.selected,
+			problems: this.problemEpicrisisService.getProblems()
 		}
 	}
 
@@ -332,6 +342,17 @@ export class EpicrisisDockPopupComponent implements OnInit {
 		}
 	}
 
+	openSearchDialogProblem(searchValue: string) {
+		if (searchValue) {
+			const search: SnomedSemanticSearch = {
+				searchValue,
+				eclFilter: SnomedECL.DIAGNOSIS
+			};
+			this.snomedService.openConceptsSearchDialog(search)
+				.subscribe((selectedConcept: SnomedDto) => this.setConceptProblem(selectedConcept));
+		}
+	}
+
 	addToList(): void {
 		if (this.formDiagnosis.valid && this.snomedConcept) {
 			const newDiagnosis: DiagnosisDto = {
@@ -344,15 +365,36 @@ export class EpicrisisDockPopupComponent implements OnInit {
 		}
 	}
 
+	addToListProblem() {
+		if (this.formProblem.valid && this.snomedConceptProblem) {
+			const newHealthCondition: HealthConditionDto = {
+				snomed: this.snomedConceptProblem
+			};
+			this.problemEpicrisisService.addProblem(newHealthCondition);
+			this.resetFormProblem();
+		}
+	}
+
 	setConcept(selectedConcept: SnomedDto): void {
 		this.snomedConcept = selectedConcept;
 		const pt = selectedConcept ? selectedConcept.pt : '';
 		this.formDiagnosis.controls.snomed.setValue(pt);
 	}
 
+	setConceptProblem(selectedConcept: SnomedDto): void {
+		this.snomedConceptProblem = selectedConcept;
+		const pt = selectedConcept ? selectedConcept.pt : '';
+		this.formProblem.controls.snomedProblem.setValue(pt);
+	}
+
 	resetForm(): void {
 		delete this.snomedConcept;
 		this.formDiagnosis.reset();
+	}
+
+	resetFormProblem() {
+		delete this.snomedConceptProblem;
+		this.formProblem.reset();
 	}
 
 	showSuccesAndClosePopup(epicrisis: EpicrisisDto) {
