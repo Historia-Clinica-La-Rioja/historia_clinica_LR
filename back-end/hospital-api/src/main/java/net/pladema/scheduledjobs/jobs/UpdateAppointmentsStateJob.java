@@ -3,6 +3,7 @@ package net.pladema.scheduledjobs.jobs;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
+import net.javacrumbs.shedlock.core.SchedulerLock;
 import net.pladema.medicalconsultation.appointment.repository.entity.AppointmentState;
 import net.pladema.medicalconsultation.appointment.service.AppointmentService;
 
@@ -51,8 +52,9 @@ public class UpdateAppointmentsStateJob {
 			"${scheduledjobs.updateappointmentsstate.dayofmonth} " +
 			"${scheduledjobs.updateappointmentsstate.month} " +
 			"${scheduledjobs.updateappointmentsstate.dayofweek}")
+	@SchedulerLock(name = "UpdateAppointmentsStateJob")
 	public void execute(){
-		LOG.debug("Executing UpdateAppointmentsStateJob at {}", new Date());
+		LOG.warn("Scheduled UpdateAppointmentsStateJob starting at {}", new Date());
 		LocalDateTime actualDate = LocalDateTime.now();
 		List<Integer> appointmentIds = appointmentService.getAppointmentsBeforeDateByStates(STATES, actualDate.minusDays(PAST_DAYS), LIMIT);
 		appointmentIds.forEach(id ->
@@ -65,7 +67,7 @@ public class UpdateAppointmentsStateJob {
 				LOG.error("Exception occurred while updating appointment: " + id.toString(), ex);
 			}
 		});
-		LOG.debug("Finishing UpdateAppointmentsStateJob at {}", new Date());
+		LOG.warn("Scheduled UpdateAppointmentsStateJob done at {}", new Date());
 	}
 
 }
