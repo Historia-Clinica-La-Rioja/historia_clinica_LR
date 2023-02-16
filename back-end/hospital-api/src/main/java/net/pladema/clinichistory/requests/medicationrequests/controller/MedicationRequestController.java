@@ -377,8 +377,8 @@ public class MedicationRequestController {
 
 
     @ResponseStatus(HttpStatus.BAD_REQUEST)
-    @ExceptionHandler({ IllegalArgumentException.class })
-    public ApiErrorDto handleValidationExceptions(IllegalArgumentException ex) {
+    @ExceptionHandler({ RuntimeException.class })
+    public ApiErrorDto handleValidationExceptions(RuntimeException ex) {
         LOG.error("Constraint violation -> {}", ex.getMessage());
         return new ApiErrorDto("Constraint violation", ex.getMessage());
     }

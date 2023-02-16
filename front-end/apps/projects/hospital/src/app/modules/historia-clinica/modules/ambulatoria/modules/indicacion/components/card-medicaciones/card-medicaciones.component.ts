@@ -1,6 +1,6 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
-import { AppFeature, MedicationInfoDto, ProfessionalLicenseNumberValidationResponseDto } from '@api-rest/api-model.d';
+import { ApiErrorMessageDto, AppFeature, MedicationInfoDto, ProfessionalLicenseNumberValidationResponseDto } from '@api-rest/api-model.d';
 import { SnomedECL } from '@api-rest/api-model';
 import { SnackBarService } from '@presentation/services/snack-bar.service';
 import { ORDENES_MEDICACION } from '@historia-clinica/constants/summaries';
@@ -22,6 +22,7 @@ import { PrescripcionValidatorPopupComponent } from '../../dialogs/prescripcion-
 import { FeatureFlagService } from '@core/services/feature-flag.service';
 import { EnviarRecetaDigitalPorEmailComponent } from '@historia-clinica/modules/ambulatoria/dialogs/enviar-receta-digital-por-email/enviar-receta-digital-por-email.component';
 import { anyMatch } from '@core/utils/array.utils';
+import { processErrors } from '@core/utils/form.utils';
 
 const ROLES_TO_EDIT: ERole[] = [ERole.ESPECIALISTA_MEDICO, ERole.PRESCRIPTOR];
 
@@ -206,6 +207,8 @@ export class CardMedicacionesComponent implements OnInit {
 					}
 
 				this.openNuevaPrescripcion(isNewMedication, medication, result?.patientEmail);
+			}, (error: ApiErrorMessageDto) => {
+				processErrors(error, (msg) => this.snackBarService.showError(msg));
 			});
 	}
 
