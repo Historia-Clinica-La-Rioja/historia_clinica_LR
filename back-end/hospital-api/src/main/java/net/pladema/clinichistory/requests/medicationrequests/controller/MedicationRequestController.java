@@ -2,34 +2,22 @@ package net.pladema.clinichistory.requests.medicationrequests.controller;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
-import java.io.IOException;
 import java.time.format.DateTimeFormatter;
-import java.util.Base64;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Objects;
 import java.util.Optional;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
-import javax.imageio.ImageIO;
 import javax.validation.Valid;
 
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.generateFile.DocumentAuthorFinder;
-import ar.lamansys.sgh.shared.infrastructure.input.service.staff.ProfessionCompleteDto;
 import ar.lamansys.sgh.shared.infrastructure.input.service.staff.ProfessionalCompleteDto;
-
-import com.google.zxing.common.BitMatrix;
 
 import net.pladema.clinichistory.requests.medicationrequests.service.ValidateMedicationRequestGenerationService;
 
 import net.pladema.staff.controller.dto.ProfessionalLicenseNumberValidationResponseDto;
-import com.google.zxing.BarcodeFormat;
-import com.google.zxing.client.j2se.MatrixToImageConfig;
-import com.google.zxing.client.j2se.MatrixToImageWriter;
-import com.google.zxing.oned.Code128Writer;
-import net.pladema.staff.service.domain.ELicenseNumberTypeBo;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -153,7 +141,7 @@ public class MedicationRequestController {
     @ResponseStatus(code = HttpStatus.CREATED)
     @PreAuthorize("hasPermission(#institutionId, 'ESPECIALISTA_MEDICO, ESPECIALISTA_EN_ODONTOLOGIA, PRESCRIPTOR')")
     public @ResponseBody
-    Integer create(@PathVariable(name = "institutionId") Integer institutionId,
+    Long create(@PathVariable(name = "institutionId") Integer institutionId,
                    @PathVariable(name = "patientId") Integer patientId,
                    @RequestBody @Valid PrescriptionDto medicationRequest){
         LOG.debug("create -> institutionId {}, patientId {}, medicationRequest {}", institutionId, patientId, medicationRequest);
@@ -161,7 +149,7 @@ public class MedicationRequestController {
         var patientDto = patientExternalService.getBasicDataFromPatient(patientId);
         MedicationRequestBo medicationRequestBo = createMedicationRequestMapper.parseTo(doctorId, patientDto, medicationRequest);
         medicationRequestBo.setInstitutionId(institutionId);
-        Integer result = createMedicationRequestService.execute(medicationRequestBo);
+        Long result = createMedicationRequestService.execute(medicationRequestBo);
         LOG.debug("create result -> {}", result);
         return result;
     }
@@ -260,24 +248,16 @@ public class MedicationRequestController {
         var medicationRequestBo = getMedicationRequestInfoService.execute(medicationRequestId);
         var patientDto = patientExternalService.getBasicDataFromPatient(patientId);
         var patientCoverageDto = patientExternalMedicalCoverageService.getCoverage(medicationRequestBo.getMedicalCoverageId());
-		Map<String, Object> context;
-		String template;
-		if (!featureFlagsService.isOn(AppFeature.HABILITAR_RECETA_DIGITAL)) {
-			context = createContext(medicationRequestBo, patientDto, patientCoverageDto);
-			template = "recipe_order_table";
-		}
-		else {
-			context = createContextDigitalRecipe(medicationRequestBo, patientDto, patientCoverageDto);
-			template = "digital_recipe";
-		}
+		Map<String, Object> context = createContext(medicationRequestBo, patientDto, patientCoverageDto);
+		String template = "recipe_order_table";
 
-        ByteArrayOutputStream os = pdfService.writer(template, context);
-        ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(os.toByteArray());
-        InputStreamResource resource = new InputStreamResource(byteArrayInputStream);
-        return ResponseEntity.ok()
-                .contentType(MediaType.APPLICATION_PDF)
-                .contentLength(os.size())
-                .body(resource);
+		ByteArrayOutputStream os = pdfService.writer(template, context);
+		ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(os.toByteArray());
+		InputStreamResource resource = new InputStreamResource(byteArrayInputStream);
+		return ResponseEntity.ok()
+				.contentType(MediaType.APPLICATION_PDF)
+				.contentLength(os.size())
+				.body(resource);
     }
 
 	@GetMapping(value = "/validate")
@@ -308,72 +288,6 @@ public class MedicationRequestController {
         ctx.put("requestDate", date); LOG.debug("Output -> {}", ctx);
         return ctx;
     }
-
-	private Map<String, Object> createContextDigitalRecipe(MedicationRequestBo medicationRequestBo,
-											  BasicPatientDto patientDto,
-											  PatientMedicalCoverageDto patientCoverageDto) {
-		LOG.debug("Input parameters -> medicationRequestBo {}, patientDto {}, patientCoverageDto {}", medicationRequestBo, patientDto, patientCoverageDto);
-		Map<String, Object> ctx = new HashMap<>();
-
-		var date = medicationRequestBo.getRequestDate().format(DateTimeFormatter.ofPattern("dd-MM-yyyy"));
-		var dateUntil = medicationRequestBo.getRequestDate().plusDays(30).format(DateTimeFormatter.ofPattern("dd-MM-yyyy"));
-		ctx.put("requestDate", date);
-		ctx.put("dateUntil", dateUntil);
-
-		var patientIdentificationNumberBarCode = generateDigitalRecipeBarCode(patientDto.getIdentificationNumber());
-		ctx.put("patientIdentificationNumberBarCode", patientIdentificationNumberBarCode);
-
-		var recipeNumberBarCode = generateDigitalRecipeBarCode(recipeDomain + "." + medicationRequestBo.getMedicationRequestId().toString());
-		ctx.put("recipeNumberBarCode", recipeNumberBarCode);
-
-		var professionalInformation = authorFromDocumentFunction.apply(medicationRequestBo.getId());
-		var professionalRelatedProfession = professionalInformation.getProfessions().stream().filter(profession -> profession.getSpecialties().stream().anyMatch(specialty -> specialty.getSpecialty().getId().equals(medicationRequestBo.getClinicalSpecialtyId()))).findFirst();
-
-		ctx.put("patient", patientDto);
-		ctx.put("patientCoverage", patientCoverageDto);
-		ctx.put("professional", professionalInformation);
-		ctx.put("medications", medicationRequestBo.getMedications());
-		ctx.put("professionalProfession", professionalRelatedProfession.<Object>map(ProfessionCompleteDto::getDescription).orElse(null));
-
-		if (professionalRelatedProfession.isPresent()) {
-			var clinicalSpecialty = professionalRelatedProfession.get().getSpecialties().stream().filter(specialty -> specialty.getSpecialty().getId().equals(medicationRequestBo.getClinicalSpecialtyId())).findFirst();
-			ctx.put("clinicalSpecialty", clinicalSpecialty.<Object>map(professionSpecialtyDto -> professionSpecialtyDto.getSpecialty().getName()).orElse(null));
-
-			var nationalLicenseData = professionalRelatedProfession.get().getAllLicenses().stream().filter(license -> license.getType().equals(ELicenseNumberTypeBo.NATIONAL.getAcronym())).findFirst();
-			nationalLicenseData.ifPresent(licenseNumberDto -> ctx.put("nationalLicense", licenseNumberDto.getNumber()));
-
-			var stateProvinceData = professionalRelatedProfession.get().getAllLicenses().stream().filter(license -> license.getType().equals(ELicenseNumberTypeBo.PROVINCE.getAcronym())).findFirst();
-			stateProvinceData.ifPresent(licenseNumberDto -> ctx.put("stateLicense", licenseNumberDto.getNumber()));
-		}
-
-		ctx.put("logo", generatePdfImage("/assets/webapp/pdf/health_ministry_logo.png"));
-		ctx.put("headerLogos", generatePdfImage("/assets/webapp/pdf/digital_recipe_header_logo.png"));
-
-		return ctx;
-	}
-
-	private String generateDigitalRecipeBarCode(String dataToEncode) {
-		Code128Writer writer = new Code128Writer();
-		BitMatrix barCode = writer.encode(dataToEncode, BarcodeFormat.CODE_128, 200, 100);
-		ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
-		try {
-			MatrixToImageWriter.writeToStream(barCode, "JPEG" , outputStream, new MatrixToImageConfig());
-			return Base64.getEncoder().encodeToString(outputStream.toByteArray());
-		} catch (IOException e) {
-			throw new RuntimeException(e);
-		}
-	}
-
-	private String generatePdfImage(String path) {
-		try {
-			var image = ImageIO.read(Objects.requireNonNull(getClass().getResource(path)));
-			ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
-			ImageIO.write(image, "png", outputStream);
-			return Base64.getEncoder().encodeToString(outputStream.toByteArray());
-		} catch (IOException e) {
-			throw new RuntimeException(e);
-		}
-	}
 
 
     @ResponseStatus(HttpStatus.BAD_REQUEST)

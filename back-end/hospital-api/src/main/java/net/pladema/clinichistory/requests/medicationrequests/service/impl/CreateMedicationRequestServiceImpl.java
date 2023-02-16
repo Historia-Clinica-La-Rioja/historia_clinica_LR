@@ -21,7 +21,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
 
 import java.time.LocalDate;
-import java.util.Collections;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -51,7 +51,7 @@ public class CreateMedicationRequestServiceImpl implements CreateMedicationReque
     }
 
     @Override
-    public Integer execute(MedicationRequestBo medicationRequest) {
+    public Long execute(MedicationRequestBo medicationRequest) {
         LOG.debug("Input parameters -> medicationRequest {} ", medicationRequest);
         assertRequiredFields(medicationRequest);
         assertNoDuplicatedMedications(medicationRequest);
@@ -71,6 +71,7 @@ public class CreateMedicationRequestServiceImpl implements CreateMedicationReque
                         "El problema asociado tiene que estar activo"));
 
         Map<Integer, LocalDate> newMRIds = createMedicationRequest(medicationRequest);
+		List<Long> assignedDocumentIds = new ArrayList<>();
 		newMRIds.forEach((key, value) -> {
 			medicationRequest.setEncounterId(key);
 			medicationRequest.setRequestDate(value);
@@ -80,9 +81,9 @@ public class CreateMedicationRequestServiceImpl implements CreateMedicationReque
 				medication.setId(null);
 				medication.getHealthCondition().setSnomed(healthConditionService.getHealthCondition(medication.getHealthCondition().getId()).getSnomed());
 			});
-			documentFactory.run(medicationRequest, true);
+			assignedDocumentIds.add(documentFactory.run(medicationRequest, true));
 		});
-        return Collections.min(newMRIds.keySet());
+        return assignedDocumentIds.get(0);
     }
 
     private void assertRequiredFields(MedicationRequestBo medicationRequest) {

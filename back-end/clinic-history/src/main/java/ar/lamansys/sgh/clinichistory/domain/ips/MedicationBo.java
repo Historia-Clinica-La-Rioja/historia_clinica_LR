@@ -7,6 +7,7 @@ import lombok.Setter;
 import lombok.ToString;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.hospitalizationState.entity.MedicationVo;
 
+import java.math.BigInteger;
 import java.time.LocalDate;
 
 @Getter
@@ -40,6 +41,10 @@ public class MedicationBo extends ClinicalTerm {
 	private LocalDate prescriptionDate;
 	
 	private LocalDate dueDate;
+
+	private BigInteger relatedDocumentId;
+
+	private String relatedDocumentName;
 
     public MedicationBo(MedicationVo medicationVo) {
         super();

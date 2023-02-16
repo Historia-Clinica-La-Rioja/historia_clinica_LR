@@ -141,7 +141,7 @@ public class AuditableContextBuilder {
 		ctx.put("recipe", true);
 		ctx.put("order", false);
 		ctx.put("request", document);
-		ctx.put("professional", authorFromDocumentFunction.apply(document.getEncounterId().longValue()));
+		ctx.put("professional", authorFromDocumentFunction.apply(document.getId()));
 
 		var patientCoverage = patientMedicalCoverageService.getCoverage(document.getMedicalCoverageId());
 		patientCoverage.ifPresent(sharedPatientMedicalCoverageBo -> ctx.put("patientCoverage", sharedPatientMedicalCoverageBo));

@@ -33,8 +33,9 @@ public class ListMedicationRepositoryImpl implements ListMedicationRepository {
         String sqlString = "with temporal as (" +
                 "SELECT DISTINCT " +
                 "ms.id, ms.snomed_id, ms.status_id, ms.health_condition_id, ms.note_id, ms.dosage_id, ms.created_on, d.source_id, d.source_type_id, d.created_by, ms.updated_on, " +
-                "row_number() OVER (PARTITION by ms.snomed_id, ms.health_condition_id, ms.due_date ORDER BY ms.updated_on desc) AS rw " +
+                "row_number() OVER (PARTITION by ms.snomed_id, ms.health_condition_id, ms.due_date ORDER BY ms.updated_on desc) AS rw, d.id as document_id, df.file_name " +
                 "FROM document d " +
+				"JOIN document_file df ON (d.id = df.id) " +
                 "JOIN document_medicamention_statement dms ON d.id = dms.document_id " +
                 "JOIN medication_statement ms ON dms.medication_statement_id = ms.id " +
                 "WHERE ms.patient_id = :patientId  " +
@@ -47,7 +48,7 @@ public class ListMedicationRepositoryImpl implements ListMedicationRepository {
                 ", d.id AS d_id, d.duration AS duration, d.frequency, d.period_unit, d.chronic, d.start_date, d.end_date " +
                 ", d.suspended_start_date, d.suspended_end_date " +
                 ", mr.id AS mr_id, CASE WHEN mr.has_recipe IS NULL THEN false ELSE mr.has_recipe END, t.created_by AS user_id " +
-                ", t.created_on AS m_created_on " +
+                ", t.created_on AS m_created_on, t.document_id, t.file_name " +
                 "FROM temporal t " +
                 "JOIN {h-schema}snomed s ON (t.snomed_id = s.id) " +
                 "LEFT JOIN {h-schema}medication_request mr ON (mr.id = t.source_id AND t.source_type_id = "+ SourceType.RECIPE + ") " +
@@ -86,8 +87,9 @@ public class ListMedicationRepositoryImpl implements ListMedicationRepository {
 		String sqlString = "with temporal as (" +
 				"SELECT DISTINCT " +
 				"ms.id, ms.snomed_id, ms.status_id, ms.health_condition_id, ms.note_id, ms.dosage_id, ms.created_on, d.source_id, d.source_type_id, d.created_by, ms.updated_on, " +
-				"row_number() OVER (PARTITION by ms.snomed_id, ms.health_condition_id ORDER BY ms.updated_on desc) AS rw " +
+				"row_number() OVER (PARTITION by ms.snomed_id, ms.health_condition_id ORDER BY ms.updated_on desc) AS rw, d.id as document_id, df.file_name " +
 				"FROM document d " +
+				"JOIN document_file df ON (d.id = df.id) " +
 				"JOIN document_medicamention_statement dms ON d.id = dms.document_id " +
 				"JOIN medication_statement ms ON dms.medication_statement_id = ms.id " +
 				"WHERE ms.patient_id = :patientId  " +
@@ -100,7 +102,7 @@ public class ListMedicationRepositoryImpl implements ListMedicationRepository {
 				", d.id AS d_id, d.duration AS duration, d.frequency, d.period_unit, d.chronic, d.start_date, d.end_date " +
 				", d.suspended_start_date, d.suspended_end_date " +
 				", mr.id AS mr_id, CASE WHEN mr.has_recipe IS NULL THEN false ELSE mr.has_recipe END, t.created_by AS user_id " +
-				", t.created_on AS m_created_on " +
+				", t.created_on AS m_created_on, t.document_id, t.file_name " +
 				"FROM temporal t " +
 				"JOIN {h-schema}snomed s ON (t.snomed_id = s.id) " +
 				"LEFT JOIN {h-schema}medication_request mr ON (mr.id = t.source_id AND t.source_type_id = "+ SourceType.RECIPE + ") " +

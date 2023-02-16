@@ -1,6 +1,6 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
-import { ApiErrorMessageDto, AppFeature, MedicationInfoDto, ProfessionalLicenseNumberValidationResponseDto } from '@api-rest/api-model.d';
+import { HCEDocumentDataDto, ApiErrorMessageDto, AppFeature, MedicationInfoDto, ProfessionalLicenseNumberValidationResponseDto } from '@api-rest/api-model.d';
 import { SnomedECL } from '@api-rest/api-model';
 import { SnackBarService } from '@presentation/services/snack-bar.service';
 import { ORDENES_MEDICACION } from '@historia-clinica/constants/summaries';
@@ -23,6 +23,7 @@ import { FeatureFlagService } from '@core/services/feature-flag.service';
 import { EnviarRecetaDigitalPorEmailComponent } from '@historia-clinica/modules/ambulatoria/dialogs/enviar-receta-digital-por-email/enviar-receta-digital-por-email.component';
 import { anyMatch } from '@core/utils/array.utils';
 import { processErrors } from '@core/utils/form.utils';
+import { DocumentService } from '@api-rest/services/document.service';
 
 const ROLES_TO_EDIT: ERole[] = [ERole.ESPECIALISTA_MEDICO, ERole.PRESCRIPTOR];
 
@@ -63,7 +64,8 @@ export class CardMedicacionesComponent implements OnInit {
 		private prescripcionesService: PrescripcionesService,
 		private snackBarService: SnackBarService,
 		private medicacionesService: MedicacionesService,
-		private readonly featureFlagService: FeatureFlagService
+		private readonly featureFlagService: FeatureFlagService,
+		private documentService: DocumentService
 	) {
 		this.featureFlagService.isActive(AppFeature.HABILITAR_RECETA_DIGITAL)
 			.subscribe((result: boolean) => this.isHabilitarRecetaDigitalEnabled = result);
@@ -138,7 +140,7 @@ export class CardMedicacionesComponent implements OnInit {
 
 	private openNuevaPrescripcion(isNewMedication: boolean, medication?: MedicationInfoDto, patientEmail?: string) {
 		const medicationList = isNewMedication ? null : this.getMedicationList(medication);
-		
+
 		const newMedicationDialog = this.dialog.open(NuevaPrescripcionComponent,
 			{
 				data: {
@@ -194,11 +196,11 @@ export class CardMedicacionesComponent implements OnInit {
 				this.openNuevaPrescripcion(isNewMedication, medication);
 			})
 	}
-		
+
 	private validateProfessional(isNewMedication: boolean, medication?: MedicationInfoDto) {
 		this.prescripcionesService.validateProfessional(this.patientId)
 			.subscribe((result: ProfessionalLicenseNumberValidationResponseDto) => {
-				if (! result.healthcareProfessionalCompleteContactData 
+				if (! result.healthcareProfessionalCompleteContactData
 					|| ! result.healthcareProfessionalLicenseNumberValid
 					|| ! result.twoFactorAuthenticationEnabled
 					|| ! result.healthcareProfessionalHasLicenses) {
@@ -248,8 +250,8 @@ export class CardMedicacionesComponent implements OnInit {
 		}
 	}
 
-	downloadRecipe(medicationRequestId: number) {
-		this.prescripcionesService.downloadPrescriptionPdf(this.patientId, [medicationRequestId], PrescriptionTypes.MEDICATION);
+	downloadRecipe(documentData: HCEDocumentDataDto) {
+		this.documentService.downloadFile(documentData);
 	}
 
 	openSendEmailDialog() {

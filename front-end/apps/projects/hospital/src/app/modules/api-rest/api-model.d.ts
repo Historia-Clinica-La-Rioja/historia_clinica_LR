@@ -1840,6 +1840,7 @@ export interface MedicationInfoDto extends Serializable {
     doctor: DoctorInfoDto;
     dosage: DosageInfoDto;
     hasRecipe: boolean;
+    hceDocumentData: HCEDocumentDataDto;
     healthCondition: HealthConditionInfoDto;
     id: number;
     medicationRequestId: number;

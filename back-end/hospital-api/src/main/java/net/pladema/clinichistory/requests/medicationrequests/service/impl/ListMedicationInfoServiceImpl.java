@@ -15,6 +15,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
+import java.math.BigInteger;
 import java.sql.Date;
 import java.sql.Timestamp;
 import java.util.List;
@@ -100,6 +101,8 @@ public class ListMedicationInfoServiceImpl implements ListMedicationInfoService 
 
         result.setUserId((Integer) row[22]);
         result.setCreatedOn(row[23] != null ? ((Timestamp) row[23]).toLocalDateTime().toLocalDate() : null);
+		result.setRelatedDocumentId((BigInteger) row[24]);
+		result.setRelatedDocumentName((String) row[25]);
         LOG.trace("OUTPUT -> {}", result);
         return result;
     }

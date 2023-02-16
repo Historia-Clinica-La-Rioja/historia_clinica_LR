@@ -22,4 +22,12 @@ export class DocumentService {
 		).subscribe(blob =>
 			saveAs(blob, document.filename));
 	}
+
+	public downloadUnnamedFile(fileId: number): void {
+		const url = `${environment.apiBase}/institutions/${this.contextService.institutionId}/documents/${fileId}/downloadFile`;
+		this.http.get(url,
+			{ responseType: 'blob' }
+		).subscribe(blob =>
+			saveAs(blob, 'HSI_NEW_DOCUMENT'));
+	}
 }
