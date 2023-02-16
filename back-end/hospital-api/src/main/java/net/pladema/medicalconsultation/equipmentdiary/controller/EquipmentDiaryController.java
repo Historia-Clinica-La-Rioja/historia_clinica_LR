@@ -13,7 +13,10 @@ import net.pladema.medicalconsultation.appointment.service.AppointmentService;
 import net.pladema.medicalconsultation.appointment.service.domain.AppointmentBo;
 import net.pladema.medicalconsultation.diary.service.exception.DiaryException;
 
+import net.pladema.medicalconsultation.equipmentdiary.controller.constraints.EditEquipmentDiaryOpeningHoursValid;
+import net.pladema.medicalconsultation.equipmentdiary.controller.constraints.EquipmentDiaryEmptyAppointmentsValid;
 import net.pladema.medicalconsultation.equipmentdiary.controller.constraints.EquipmentDiaryOpeningHoursValid;
+import net.pladema.medicalconsultation.equipmentdiary.controller.constraints.ExistingEquipmentDiaryPeriodValid;
 import net.pladema.medicalconsultation.equipmentdiary.controller.constraints.NewDiaryPeriodValid;
 import net.pladema.medicalconsultation.equipmentdiary.controller.constraints.ValidEquipmentDiary;
 import net.pladema.medicalconsultation.equipmentdiary.controller.dto.CompleteEquipmentDiaryDto;
