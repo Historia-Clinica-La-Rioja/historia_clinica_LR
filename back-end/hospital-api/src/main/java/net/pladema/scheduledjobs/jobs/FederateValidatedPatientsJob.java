@@ -10,6 +10,7 @@ import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
+import net.javacrumbs.shedlock.core.SchedulerLock;
 import net.pladema.federar.controller.FederarExternalService;
 import net.pladema.federar.services.domain.FederarResourceAttributes;
 import net.pladema.patient.service.PatientService;
@@ -40,8 +41,9 @@ public class FederateValidatedPatientsJob {
             "${scheduledjobs.federatepatients.dayofmonth} " +
             "${scheduledjobs.federatepatients.month} " +
             "${scheduledjobs.federatepatients.dayofweek}")
+	@SchedulerLock(name = "FederateValidatedPatientsJob")
     public void execute() {
-        LOG.debug("Executing FederateValidatedPatientsJob at {}", new Date());
+        LOG.warn("Scheduled FederateValidatedPatientsJob starting at {}", new Date());
         patientService.getAllValidatedPatients().forEach(p -> {
             FederarResourceAttributes attributes = new FederarResourceAttributes();
             BeanUtils.copyProperties(p, attributes);
@@ -54,7 +56,7 @@ public class FederateValidatedPatientsJob {
 			}
 
         });
-        LOG.debug("Finishing FederateValidatedPatientsJob at {}", new Date());
+        LOG.warn("Scheduled FederateValidatedPatientsJob done at {}", new Date());
     }
 
 }

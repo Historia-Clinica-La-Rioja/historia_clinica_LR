@@ -2,6 +2,7 @@ package net.pladema.scheduledjobs.jobs;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import net.javacrumbs.shedlock.core.SchedulerLock;
 import net.pladema.snowstorm.controller.service.UpdateSnomedGroupExternalService;
 import net.pladema.snowstorm.services.exceptions.SnowstormApiException;
 import org.springframework.beans.factory.annotation.Value;
@@ -33,8 +34,9 @@ public class UpdateSnomedCachedConceptsJob {
             "${scheduledjobs.updatesnomedcache.dayofmonth} " +
             "${scheduledjobs.updatesnomedcache.month} " +
             "${scheduledjobs.updatesnomedcache.dayofweek}")
+	@SchedulerLock(name = "UpdateSnomedCachedConceptsJob")
     public void execute() throws SnowstormApiException {
-        log.debug("Executing UpdateSnomedCachedConceptsJob at {}", new Date());
+        log.warn("Scheduled UpdateSnomedCachedConceptsJob starting at {}", new Date());
 
         List<String> eclKeyList = Arrays.stream(eclKeys.split(","))
                 .filter(s -> !s.isEmpty())
@@ -44,7 +46,7 @@ public class UpdateSnomedCachedConceptsJob {
             updateSnomedGroupExternalService.run(eclKey);
         }
 
-        log.debug("Finished executing UpdateSnomedCachedConceptsJob at {}", new Date());
+        log.warn("Scheduled executing UpdateSnomedCachedConceptsJob done at {}", new Date());
     }
 
 }
