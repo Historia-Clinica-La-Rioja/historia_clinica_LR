@@ -18,9 +18,9 @@ public class SipPlusWSConfig extends WSConfig {
 
 	private final String password;
 
-	public SipPlusWSConfig(@Value("${ws.sip.plus.url.base}") String baseUrl,
-						   @Value("${ws.sip.plus.username}") String username,
-						   @Value("${ws.sip.plus.password}") String password) {
+	public SipPlusWSConfig(@Value("${ws.sip.plus.url.base:}") String baseUrl,
+						   @Value("${ws.sip.plus.username:}") String username,
+						   @Value("${ws.sip.plus.password:}") String password) {
 		super(baseUrl, false);
 		this.username = username;
 		this.password = password;

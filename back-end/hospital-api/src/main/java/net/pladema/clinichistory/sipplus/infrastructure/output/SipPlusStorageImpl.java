@@ -15,16 +15,20 @@ import net.pladema.clinichistory.sipplus.application.port.exceptions.SipPlusExce
 
 import net.pladema.clinichistory.sipplus.domain.SipPlusUrlDataBo;
 
-import org.springframework.core.env.Environment;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 @Service
 @RequiredArgsConstructor
 @Slf4j
 public class SipPlusStorageImpl implements SipPlusStorage {
-
-	private final Environment env;
 	private final TokenExternalService tokenExternalService;
+
+	@Value("${ws.sip.plus.url.base:}")
+	private String sipUrlBase;
+
+	@Value("${ws.sip.plus.embed-system:}")
+	private String embedSystem;
 
 	@Override
 	public SipPlusUrlDataBo getUrlData() {
@@ -44,14 +48,12 @@ public class SipPlusStorageImpl implements SipPlusStorage {
 	}
 
 	private String getUrlBase() {
-		String sipUrlBase = env.getProperty("ws.sip.plus.url.base");
 		if (sipUrlBase == null || sipUrlBase.isBlank())
 			throw new SipPlusException(SipPlusExceptionEnum.MISSING_SIP_URL_PROPERTY, "La url de sip no se encuentra configurada en el archivo de propiedades");
 		return sipUrlBase;
 	}
 
 	private String getEmbedSystem() {
-		String embedSystem = env.getProperty("ws.sip.plus.embed-system");
 		if (embedSystem == null || embedSystem.isBlank())
 			throw new SipPlusException(SipPlusExceptionEnum.MISSING_EMBED_SYSTEM_NAME_PROPERTY, "Es necesario ingresar el nombre de sistema embedido definido en el archivo de configuracion de sip");
 		return embedSystem;
