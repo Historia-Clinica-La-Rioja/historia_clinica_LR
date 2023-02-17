@@ -107,6 +107,7 @@ public class SharedPatientImpl implements SharedPatientPort {
         aPatientDto.setIdentificationNumber(requiredPatientDataDto.getIdentificationNumber());
         aPatientDto.setPhoneNumber(requiredPatientDataDto.getPhoneNumber());
         aPatientDto.setEmail(requiredPatientDataDto.getEmail());
+		aPatientDto.setToAudit(false);
         return aPatientDto;
     }
 
