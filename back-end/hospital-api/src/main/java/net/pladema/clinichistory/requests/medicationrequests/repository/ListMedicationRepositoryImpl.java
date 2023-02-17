@@ -35,9 +35,9 @@ public class ListMedicationRepositoryImpl implements ListMedicationRepository {
                 "ms.id, ms.snomed_id, ms.status_id, ms.health_condition_id, ms.note_id, ms.dosage_id, ms.created_on, d.source_id, d.source_type_id, d.created_by, ms.updated_on, " +
                 "row_number() OVER (PARTITION by ms.snomed_id, ms.health_condition_id, ms.due_date ORDER BY ms.updated_on desc) AS rw, d.id as document_id, df.file_name " +
                 "FROM document d " +
-				"JOIN document_file df ON (d.id = df.id) " +
                 "JOIN document_medicamention_statement dms ON d.id = dms.document_id " +
                 "JOIN medication_statement ms ON dms.medication_statement_id = ms.id " +
+				"LEFT JOIN document_file df ON (d.id = df.id) " +
                 "WHERE ms.patient_id = :patientId  " +
                 "AND d.type_id IN :documentType "+
                 "AND d.status_id = :documentStatusId " +
@@ -87,11 +87,11 @@ public class ListMedicationRepositoryImpl implements ListMedicationRepository {
 		String sqlString = "with temporal as (" +
 				"SELECT DISTINCT " +
 				"ms.id, ms.snomed_id, ms.status_id, ms.health_condition_id, ms.note_id, ms.dosage_id, ms.created_on, d.source_id, d.source_type_id, d.created_by, ms.updated_on, " +
-				"row_number() OVER (PARTITION by ms.snomed_id, ms.health_condition_id ORDER BY ms.updated_on desc) AS rw, d.id as document_id, df.file_name " +
+				"row_number() OVER (PARTITION by ms.snomed_id, ms.health_condition_id, ms.due_date ORDER BY ms.updated_on desc) AS rw, d.id as document_id, df.file_name " +
 				"FROM document d " +
-				"JOIN document_file df ON (d.id = df.id) " +
 				"JOIN document_medicamention_statement dms ON d.id = dms.document_id " +
 				"JOIN medication_statement ms ON dms.medication_statement_id = ms.id " +
+				"LEFT JOIN document_file df ON (d.id = df.id) " +
 				"WHERE ms.patient_id = :patientId  " +
 				"AND d.type_id IN :documentType "+
 				"AND d.status_id = :documentStatusId " +

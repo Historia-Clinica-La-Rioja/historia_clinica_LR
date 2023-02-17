@@ -36,7 +36,7 @@ public class DocumentController {
     }
 
     @GetMapping(value = "/{id}/downloadFile")
-    @PreAuthorize("hasPermission(#institutionId, 'ESPECIALISTA_MEDICO, PROFESIONAL_DE_SALUD, ESPECIALISTA_EN_ODONTOLOGIA, ENFERMERO')")
+    @PreAuthorize("hasPermission(#institutionId, 'ESPECIALISTA_MEDICO, PROFESIONAL_DE_SALUD, ESPECIALISTA_EN_ODONTOLOGIA, ENFERMERO, PRESCRIPTOR')")
     public ResponseEntity<InputStreamResource> downloadPdf(@PathVariable(name = "institutionId") Integer institutionId,
                                                            @PathVariable(name = "id") Long id) {
         var documentFile = fetchDocumentFileById.run(id);
