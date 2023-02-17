@@ -15,7 +15,7 @@ export class EquipmentDiaryService {
 	constructor(
 		private readonly http: HttpClient,
 		private readonly contextService: ContextService
-	) { 
+	) {
 		this.BASE_URL =  `${environment.apiBase}/institutions/${this.contextService.institutionId}/medicalConsultations/equipmentDiary`;
 	}
 
@@ -31,5 +31,10 @@ export class EquipmentDiaryService {
 	getBy(equipmentDiaryId: number): Observable<CompleteEquipmentDiaryDto> {
 		const url = `${this.BASE_URL}/${equipmentDiaryId}`;
 		return this.http.get<CompleteEquipmentDiaryDto>(url);
+	}
+
+	updateEquipmentDiary(equipmentDiary: EquipmentDiaryADto,equipmentDiaryId:number): Observable<number> {
+		const url = `${this.BASE_URL}/${equipmentDiaryId}`;
+			return this.http.put<number>(url, equipmentDiary);
 	}
 }

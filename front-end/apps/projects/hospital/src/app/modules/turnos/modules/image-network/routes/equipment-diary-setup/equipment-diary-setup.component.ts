@@ -7,7 +7,7 @@ import { DAYS_OF_WEEK } from 'angular-calendar';
 import { Observable } from 'rxjs';
 import { getError, hasError, processErrors, scrollIntoError } from '@core/utils/form.utils';
 import { ContextService } from '@core/services/context.service';
-import { currentWeek, DateFormat, momentFormat } from '@core/utils/moment.utils';
+import { currentWeek, DateFormat, momentFormat, momentParseDate } from '@core/utils/moment.utils';
 import { ConfirmDialogComponent } from '@presentation/dialogs/confirm-dialog/confirm-dialog.component';
 import { SnackBarService } from '@presentation/services/snack-bar.service';
 import { SectorService } from '@api-rest/services/sector.service';
@@ -143,8 +143,7 @@ export class EquipmentDiarySetupComponent implements OnInit {
 		const endDate: string = momentFormat(formValue.endDate, DateFormat.API_DATE);
 
 		const ocupations$: Observable<any[]> = this.equipmentDiaryOpeningHoursService
-			.getAllWeeklyEquipmentOcupation(this.form.value.equipmentId, null, startDate, endDate);
-
+			.getAllWeeklyEquipmentOcupation(this.form.controls.equipmentId.value, null, startDate, endDate);
 		this.agendaHorarioService.setWeeklyOcupation(ocupations$);
 	}
 
@@ -162,11 +161,11 @@ export class EquipmentDiarySetupComponent implements OnInit {
 
 	private openDialog() {
 		let confirmMessage: string;
-		let title:string;
-		if(this.editMode){
+		let title: string;
+		if (this.editMode) {
 			confirmMessage = 'image-network.form.CONFIRM_EDIT_DIARY';
 			title = 'image-network.form.EDIT_DIARY';
-		}else{
+		} else {
 			confirmMessage = 'image-network.form.CONFIRM_NEW_DIARY';
 			title = 'image-network.form.NEW_DIARY';
 		}
@@ -184,13 +183,16 @@ export class EquipmentDiarySetupComponent implements OnInit {
 				if (confirmed) {
 					this.errors = [];
 					const diary: EquipmentDiaryADto = this.buildEquipmentDiaryDto();
-					if(this.editMode){
-
-					}else{
+					if (this.editMode) {
+						this.equipmentDiaryService.updateEquipmentDiary(diary, this.editingDiaryId)
+							.subscribe((diaryId: number) => {
+								this.processSuccess(diaryId);
+							}, error => processErrors(error, (msg) => this.errors.push(msg)))
+					} else {
 						this.equipmentDiaryService.addEquipmentDiary(diary)
-						.subscribe((diaryId: number) => {
-							this.processSuccess(diaryId);
-						}, error => processErrors(error, (msg) => this.errors.push(msg)));
+							.subscribe((diaryId: number) => {
+								this.processSuccess(diaryId);
+							}, error => processErrors(error, (msg) => this.errors.push(msg)));
 					}
 
 				}
@@ -206,15 +208,16 @@ export class EquipmentDiarySetupComponent implements OnInit {
 		}
 	}
 
-	private buildEquipmentDiaryDto(): EquipmentDiaryADto {
+	private buildEquipmentDiaryDto(): EquipmentDiaryDto {
 		return {
-			appointmentDuration: this.form.value.appointmentDuration,
-			startDate: momentFormat(this.form.value.startDate, DateFormat.API_DATE),
-			endDate: momentFormat(this.form.value.endDate, DateFormat.API_DATE),
+			id:this.editingDiaryId,
+			appointmentDuration: this.form.controls.appointmentDuration.value,
+			startDate: momentFormat(this.form.controls.startDate.value, DateFormat.API_DATE),
+			endDate: momentFormat(this.form.controls.endDate.value, DateFormat.API_DATE),
 			automaticRenewal: this.autoRenew,
 			includeHoliday: this.holidayWork,
 			equipmentDiaryOpeningHours: this.agendaHorarioService.getDiaryOpeningHours(),
-			equipmentId: this.form.value.equipmentId
+			equipmentId: this.form.controls.equipmentId.value,
 		};
 	}
 
@@ -228,8 +231,8 @@ export class EquipmentDiarySetupComponent implements OnInit {
 		this.setEquipmentsBySector();
 		this.form.controls.equipmentId.setValue(diary.equipmentId);
 		this.loadCalendar();
-		this.form.controls.startDate.setValue(diary.startDate);
-		this.form.controls.endDate.setValue(diary.endDate);
+		this.form.controls.startDate.setValue(momentParseDate(diary.startDate));
+		this.form.controls.endDate.setValue(momentParseDate(diary.endDate));
 		this.form.controls.appointmentDuration.setValue(diary.appointmentDuration);
 
 		this.disableNotEditableControls();
