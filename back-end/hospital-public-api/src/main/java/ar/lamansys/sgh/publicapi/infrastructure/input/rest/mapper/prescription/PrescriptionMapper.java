@@ -152,6 +152,7 @@ public class PrescriptionMapper {
 				.identificationNumber(patientPrescriptionBo.getIdentificationNumber())
 				.identificationType(patientPrescriptionBo.getIdentificationType())
 				.lastName(patientPrescriptionBo.getLastName())
+				.name(patientPrescriptionBo.getName())
 				.medicalCoverage(patientPrescriptionBo.getMedicalCoverage())
 				.medicalCoverageCuit(patientPrescriptionBo.getMedicalCoverageCuit())
 				.medicalCoveragePlan(patientPrescriptionBo.getMedicalCoveragePlan())

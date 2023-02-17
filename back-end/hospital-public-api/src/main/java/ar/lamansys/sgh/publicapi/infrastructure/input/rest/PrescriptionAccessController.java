@@ -66,7 +66,7 @@ public class PrescriptionAccessController {
 			assertFormatPrescriptionId(parts);
 			assertDomainNumber(parts[0]);
 
-			var result = prescriptionMapper.mapTo(fetchPrescriptionsByIdAndDni.run(parts[1], identificationNumber));
+			var result = prescriptionMapper.mapTo(fetchPrescriptionsByIdAndDni.run(prescriptionId, identificationNumber));
 
 			LOG.debug(OUTPUT, result);
 			return ResponseEntity.ok().body(result);

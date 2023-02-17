@@ -12,7 +12,7 @@ import lombok.ToString;
 @Getter
 public class PrescriptionDto {
 	String domain;
-	Integer prescriptionId;
+	String prescriptionId;
 	LocalDateTime prescriptionDate;
 	LocalDateTime dueDate;
 	PatientPrescriptionDto patientPrescriptionDto;

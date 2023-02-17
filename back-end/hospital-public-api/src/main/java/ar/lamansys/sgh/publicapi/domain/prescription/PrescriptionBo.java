@@ -14,7 +14,7 @@ import lombok.ToString;
 @Setter
 public class PrescriptionBo {
 	private String domain;
-	private Integer prescriptionId;
+	private String prescriptionId;
 	private LocalDateTime prescriptionDate;
 	private LocalDateTime dueDate;
 	private PatientPrescriptionBo patientPrescriptionBo;
@@ -23,7 +23,7 @@ public class PrescriptionBo {
 	private List<PrescriptionLineBo> prescriptionsLineBo;
 
 	public PrescriptionBo(String domain,
-						  Integer prescriptionId,
+						  String prescriptionId,
 						  LocalDateTime prescriptionDate,
 						  LocalDateTime dueDate,
 						  PatientPrescriptionBo patientPrescriptionBo,

@@ -42,7 +42,8 @@ public class PrescriptionStorageImpl implements PrescriptionStorage {
 
 	private final EntityManager entityManager;
 
-	private final static Integer RECETA = 5;
+	private final static Short RECETA = 5;
+	private final static Short RECETA_DIGITAL = 14;
 	private final static String CONFIRMADO = "59156000";
 	private final static String ACTIVO = "55561003";
 	private final static String COMPLETO = "255594003";
@@ -51,7 +52,8 @@ public class PrescriptionStorageImpl implements PrescriptionStorage {
 
 	@Override
 	public Optional<PrescriptionBo> getPrescriptionByIdAndDni(String prescriptionId, String identificationNumber) {
-		Integer numericPrescriptionId = Integer.valueOf(prescriptionId);
+		String domainNumber = prescriptionId.split("\\.")[0];
+		Integer numericPrescriptionId = Integer.valueOf(prescriptionId.split("\\.")[1]);
 		String stringQuery = "select mr.id as mrid, ms.created_on, ms.due_date, " +
 		"p2.first_name as p2fn, p2.last_name as p2ln, pe.name_self_determination, g.description as gd, spg.description as spgd, p2.birth_date, it.description as itd, p2.identification_number, " +
 		"mc.name as mcn, mc.cuit, mcp.plan, pmc.affiliate_number, i.name, i.sisa_code, i.province_code, " +
@@ -89,7 +91,7 @@ public class PrescriptionStorageImpl implements PrescriptionStorage {
 		"left join medication_statement_line_state msls on msls.id = ms.prescription_line_state " +
 		"where p2.identification_number LIKE :identificationNumber " +
 		"and mr.id = :numericPrescriptionId " +
-		"and d.type_id = " + RECETA + " and hc.verification_status_id LIKE CAST(" + CONFIRMADO + "AS VARCHAR) " +
+		"and (d.type_id = " + RECETA + " or d.type_id = " + RECETA_DIGITAL + ") and hc.verification_status_id LIKE CAST(" + CONFIRMADO + "AS VARCHAR) " +
 				"and (ms.status_id LIKE CAST(" + COMPLETO + "AS varchar) OR ms.status_id LIKE CAST(" + ACTIVO + "AS varchar)) " +
 		"order by mr.id desc";
 
@@ -102,6 +104,8 @@ public class PrescriptionStorageImpl implements PrescriptionStorage {
 				.map(this::processPrescriptionQuery)
 				.collect(Collectors.toList());
 		PrescriptionBo mergedResult = mergeResults(result);
+		mergedResult.setPrescriptionId(domainNumber + "." + mergedResult.getPrescriptionId());
+		mergedResult.setDomain(domainNumber);
 		return Optional.of(mergedResult);
 	}
 
@@ -364,8 +368,8 @@ public class PrescriptionStorageImpl implements PrescriptionStorage {
 				((Date)queryResult[2]).toLocalDate() : ((Timestamp)queryResult[1]).toLocalDateTime().plusDays(30).toLocalDate();
 
 		return new PrescriptionBo(
-				"1.",
-				(Integer)queryResult[0],
+				"1",
+				((Integer)queryResult[0]).toString(),
 				((Timestamp)queryResult[1]).toLocalDateTime(),
 				dueDate.atStartOfDay(),
 				new PatientPrescriptionBo(
@@ -410,7 +414,7 @@ public class PrescriptionStorageImpl implements PrescriptionStorage {
 						new PrescriptionProblemBo(
 								(String)queryResult[31],
 								(Integer)queryResult[32],
-								(String)queryResult[33]
+								queryResult[33].equals("-55607006") ? "Crónico" : "Agudo"
 						),
 						new GenericMedicationBo(
 								(String)queryResult[34],
