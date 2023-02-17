@@ -260,7 +260,7 @@ export class InternmentIndicationsCardComponent implements OnInit {
 		let mostFrequentParenteralPlan: Item<ParenteralPlanDto>[];
 
 		this.indicationsFacadeService.parenteralPlans$.subscribe(p => parenteralPlan =
-			p.filter((plan: ParenteralPlanDto) => this.getLastThreeDays(plan.indicationDate)));
+			p.filter((plan: ParenteralPlanDto) => this.getLastThreeDays(plan.indicationDate) && plan.professionalId === this.professionalId));
 
 		const mostFrequent = parenteralPlan.concat(parenteralPLanSpecialist);
 
