@@ -4,6 +4,15 @@
       "CantidadConsultasAmbulatorias.cantidad_turnos_estado"
     ],
     "timeDimensions": [],
+    "filters": [
+      {
+        "dimension": "CantidadConsultasAmbulatorias.institucion_id",
+        "operator": "equals",
+        "values": [
+          "[(${institutionId})]"
+        ]
+      }
+    ],
     "order": {}
   },
   "chartType": "number",

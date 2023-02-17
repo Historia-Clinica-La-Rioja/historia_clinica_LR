@@ -68,12 +68,10 @@ export class CubejsChartComponent implements OnDestroy {
 		switch (queryName) {
 			case 'cantidadConsultasAmbulatorias': {
 				this.title = 'Evolución de consultas del año actual'
-				this.disableFilter = true;
 				break;
 			}
 			case 'cantidadConsultasAmbulatoriasEspecialidadProfesional': {
 				this.title = 'Consultas por especialidad y profesional del último trimestre'
-				this.disableFilter = true;
 				break;
 			}
 			case 'cantidadConsultasPorEspecialidad': {
@@ -82,17 +80,14 @@ export class CubejsChartComponent implements OnDestroy {
 			}
 			case 'cantidadTurnos': {
 				this.title = 'Evolución de turnos del año actual'
-				this.disableFilter = true;
 				break;
 			}
 			case 'cantidadTurnosPorEspecialidad': {
 				this.title = 'Turnos por especialidad del año actual'
-				this.disableFilter = true;
 				break;
 			}
 			case 'cantidadTurnosPorProfesional': {
 				this.title = 'Turnos por profesional del año actual'
-				this.disableFilter = true;
 				break;
 			}
 			case 'cantidadConsultasTotal': {

@@ -10,6 +10,15 @@
         "dateRange": "This year"
       }
     ],
+    "filters": [
+      {
+        "dimension": "CantidadTurnos.institucion_id",
+        "operator": "equals",
+        "values": [
+          "[(${institutionId})]"
+        ]
+      }
+    ],
     "order": {
       "CantidadTurnos.fecha_consulta": "asc"
     },

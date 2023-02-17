@@ -9,6 +9,15 @@
         "dateRange": "This quarter"
       }
     ],
+    "filters": [
+      {
+        "dimension": "CantidadConsultasAmbulatorias.institucion_id",
+        "operator": "equals",
+        "values": [
+          "[(${institutionId})]"
+        ]
+      }
+    ],
     "order": {
       "CantidadConsultasAmbulatorias.cantidad_turnos_estado": "desc"
     },
