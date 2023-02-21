@@ -1,5 +1,6 @@
 import { NgModule } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { GuardiaModule } from '@historia-clinica/modules/guardia/guardia.module';
 // deps
 import { LazyMaterialModule } from '../lazy-material/lazy-material.module';
 import { PresentationModule } from '@presentation/presentation.module';
@@ -23,6 +24,7 @@ import { LicenseFormComponent } from './component/license-form/license-form.comp
 import { ProfessionSpecialtiesFormComponent } from './component/profession-specialties-form/profession-specialties-form.component';
 import { SearchCreateComponent } from './component/search-create/search-create.component';
 import { ViewPatientDetailComponent } from './component/view-patient-detail/view-patient-detail.component';
+import { ResumenDeGuardiaComponent } from './component/resumen-de-guardia/resumen-de-guardia.component';
 // dialogs
 import { ArtComponent } from './dialogs/art/art.component';
 import { EditLicenseComponent } from './dialogs/edit-license/edit-license.component';
@@ -74,9 +76,11 @@ import { FilesUploaderComponent } from './component/files-uploader/files-uploade
 		// pipes
 		ViewNameProfessionAndSpecialtyPipe,
   		FilesUploaderComponent,
+   		ResumenDeGuardiaComponent,
 	],
 	exports: [
 		CardPatientComponent,
+		ResumenDeGuardiaComponent,
 	],
 	imports: [
 		FormsModule,
@@ -87,6 +91,7 @@ import { FilesUploaderComponent } from './component/files-uploader/files-uploade
 		LazyMaterialModule,
 		PresentationModule,
 		InternacionesModule,
+		GuardiaModule
 	]
 })
 export class PacientesModule {

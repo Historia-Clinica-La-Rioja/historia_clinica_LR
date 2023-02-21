@@ -1,7 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Triage } from '../components/triage-details/triage-details.component';
 import { dateTimeDtoToDate, dateToDateDto, dateToTimeDto, dateToDateTimeDto, dateDtoToDate, timeDtoToDate } from '@api-rest/mapper/date-dto.mapper';
-import { TriageReduced } from '@historia-clinica/modules/ambulatoria/components/guardia/guardia.component';
 import {
 	AdministrativeDischargeDto,
 	AMedicalDischargeDto,
@@ -19,6 +18,7 @@ import { MedicalDischargeForm } from '../routes/medical-discharge/medical-discha
 import { AdministrativeForm } from '../routes/administrative-discharge/administrative-discharge.component';
 import { AdministrativeAdmission } from './new-episode.service';
 import { EffectiveObservation, RiskFactorsValue } from '@historia-clinica/services/factores-de-riesgo-form.service';
+import { TriageReduced } from '@pacientes/component/resumen-de-guardia/resumen-de-guardia.component';
 
 @Injectable({
 	providedIn: 'root'

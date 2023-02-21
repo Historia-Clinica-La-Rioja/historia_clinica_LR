@@ -1,20 +1,14 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { Router, ActivatedRoute } from '@angular/router';
-import { EmergencyCareEpisodeInProgressDto, ResponseEmergencyCareDto, TriageListDto } from '@api-rest/api-model';
+import { EmergencyCareEpisodeInProgressDto, ResponseEmergencyCareDto } from '@api-rest/api-model';
 import { EmergencyCareEpisodeStateService } from '@api-rest/services/emergency-care-episode-state.service';
-import { EmergencyCareEpisodeService } from '@api-rest/services/emergency-care-episode.service';
-import { TriageService } from '@api-rest/services/triage.service';
 import { ContextService } from '@core/services/context.service';
-import { PatientNameService } from '@core/services/patient-name.service';
-import { FACTORES_DE_RIESGO, GUARDIA } from '@historia-clinica/constants/summaries';
-import { TriageCategory } from '@historia-clinica/modules/guardia/components/triage-chip/triage-chip.component';
-import { Triage, RiskFactorFull } from '@historia-clinica/modules/guardia/components/triage-details/triage-details.component';
-import { Triages, EstadosEpisodio, EmergencyCareTypes } from '@historia-clinica/modules/guardia/constants/masterdata';
+import { FACTORES_DE_RIESGO } from '@historia-clinica/constants/summaries';
+import { RiskFactorFull } from '@historia-clinica/modules/guardia/components/triage-details/triage-details.component';
+import { Triages, EstadosEpisodio } from '@historia-clinica/modules/guardia/constants/masterdata';
 import { SelectConsultorioComponent } from '@historia-clinica/modules/guardia/dialogs/select-consultorio/select-consultorio.component';
 import { EpisodeStateService } from '@historia-clinica/modules/guardia/services/episode-state.service';
-import { GuardiaMapperService } from '@historia-clinica/modules/guardia/services/guardia-mapper.service';
-import { TriageDefinitionsService } from '@historia-clinica/modules/guardia/services/triage-definitions.service';
 import { SummaryHeader } from '@presentation/components/summary-card/summary-card.component';
 import { SnackBarService } from '@presentation/services/snack-bar.service';
 
@@ -26,7 +20,6 @@ import { SnackBarService } from '@presentation/services/snack-bar.service';
 export class GuardiaComponent implements OnInit {
 
     @Input() emergencyCareEpisodeInProgress: EmergencyCareEpisodeInProgressDto;
-    guardiaSummary: SummaryHeader = GUARDIA;
     factoresDeRiesgoSummary: SummaryHeader = FACTORES_DE_RIESGO;
 
     readonly triages = Triages;
@@ -35,29 +28,22 @@ export class GuardiaComponent implements OnInit {
 
     episodeId: number;
     responseEmergencyCare: ResponseEmergencyCareDto;
-    doctorsOfficeDescription: string;
 
-    emergencyCareType: EmergencyCareTypes;
-    lastTriage: Triage;
-    triagesHistory: TriageReduced[];
     episodeState: EstadosEpisodio;
-    fullNamesHistoryTriage: string[];
 
     riskFactors: RiskFactorFull[];
+
+    showEmergencyCareSummary = false;
+    withoutMedicalDischarge: boolean;
 
     constructor(
         private readonly router: Router,
         private readonly route: ActivatedRoute,
-        private readonly emergencyCareEpisodeService: EmergencyCareEpisodeService,
         private readonly dialog: MatDialog,
-        private readonly triageService: TriageService,
-        private readonly guardiaMapperService: GuardiaMapperService,
         private snackBarService: SnackBarService,
-        private readonly triageDefinitionsService: TriageDefinitionsService,
         private readonly episodeStateService: EpisodeStateService,
         private readonly emergencyCareEpisodeStateService: EmergencyCareEpisodeStateService,
         private readonly contextService: ContextService,
-        private readonly patientNameService: PatientNameService,
     ) {
         this.routePrefix = 'institucion/' + this.contextService.institutionId;
     }
@@ -76,18 +62,6 @@ export class GuardiaComponent implements OnInit {
             }
         );
 
-    }
-
-    newTriage() {
-        this.triageDefinitionsService.getTriagePath(this.emergencyCareType)
-            .subscribe(({ component }) => {
-                const dialogRef = this.dialog.open(component, { data: this.episodeId });
-                dialogRef.afterClosed().subscribe(idReturned => {
-                    if (idReturned) {
-                        this.loadTriages();
-                    }
-                });
-            });
     }
 
     cancelAttention() {
@@ -131,17 +105,15 @@ export class GuardiaComponent implements OnInit {
         this.riskFactors = triageRiskFactors;
     }
 
-    private getFullName(triage: TriageReduced): string {
-        return `${this.patientNameService.getPatientName(triage.createdBy.firstName, triage.createdBy.nameSelfDetermination)}, ${triage.createdBy.lastName}`;
-    }
-
     private init() {
         this.emergencyCareEpisodeStateService.getState(this.episodeId).subscribe(
             state => {
                 this.episodeState = state.id;
 
+                this.withoutMedicalDischarge = (this.episodeState !== this.STATES.CON_ALTA_MEDICA);
+
                 if (this.isActive(this.episodeState)) {
-                    this.loadEpisode();
+                    this.showEmergencyCareSummary = true;
                 } else {
                     this.snackBarService.showError('ambulatoria.paciente.guardia.NOT_ACTIVE');
                     this.goToEmergencyCareHome();
@@ -159,54 +131,8 @@ export class GuardiaComponent implements OnInit {
             || episodeStateId === this.STATES.CON_ALTA_MEDICA;
     }
 
-    private loadEpisode() {
-        this.emergencyCareEpisodeService.getAdministrative(this.episodeId)
-            .subscribe((responseEmergencyCare: ResponseEmergencyCareDto) => {
-                this.responseEmergencyCare = responseEmergencyCare;
-                this.emergencyCareType = responseEmergencyCare.emergencyCareType?.id;
-                this.doctorsOfficeDescription = responseEmergencyCare.doctorsOffice?.description;
-            });
-
-        this.loadTriages();
-    }
-
-    private loadTriages() {
-        this.triageService.getAll(this.episodeId).subscribe((triages: TriageListDto[]) => {
-            this.lastTriage = this.guardiaMapperService.triageListDtoToTriage(triages[0]);
-            if (hasHistory(triages)) {
-                this.triagesHistory = triages.map(this.guardiaMapperService.triageListDtoToTriageReduced);
-                this.triagesHistory.shift();
-                this.loadFullNames();
-            }
-        });
-
-        function hasHistory(triages: TriageListDto[]) {
-            return triages?.length > 1;
-        }
-    }
-
-    private loadFullNames() {
-        this.fullNamesHistoryTriage = [];
-        this.triagesHistory.forEach(
-            (triage: TriageReduced) => {
-                this.fullNamesHistoryTriage.push(this.getFullName(triage));
-            }
-        );
-    }
-
     private goToEmergencyCareHome() {
         this.router.navigateByUrl(this.routePrefix + '/guardia');
     }
 
-}
-
-export interface TriageReduced {
-    creationDate: Date;
-    category: TriageCategory;
-    createdBy: {
-        firstName: string,
-        lastName: string,
-        nameSelfDetermination: string
-    };
-    doctorsOfficeDescription: string;
 }

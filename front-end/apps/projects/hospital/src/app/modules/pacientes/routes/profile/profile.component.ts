@@ -13,7 +13,6 @@ import {
 	PatientDischargeDto,
 	InstitutionDto,
 	EmergencyCareEpisodeInProgressDto,
-	EmergencyCareListDto,
 	HealthcareProfessionalCompleteDto,
 	ProfessionalProfessionsDto,
 	ProfessionalSpecialtyDto,
@@ -64,7 +63,6 @@ import { DatePipe } from '@angular/common';
 
 const ROUTE_NEW_INTERNMENT = 'internaciones/internacion/new';
 const ROUTE_EDIT_PATIENT = 'pacientes/edit';
-const ROUTE_EMERGENCY_CARE_EPISODE_PREFIX = 'guardia/episodio/';
 const ROLES_TO_VIEW_USER_DATA: ERole[] = [ERole.ADMINISTRADOR_INSTITUCIONAL_BACKOFFICE, ERole.ADMINISTRADOR_INSTITUCIONAL_PRESCRIPTOR];
 const ROLES_TO_VIEW_CLINIC_HISTORY_DATA: ERole[] = [ERole.ADMINISTRATIVO, ERole.ADMINISTRATIVO_RED_DE_IMAGENES];
 const ROLES_TO_ASSIGN_PERSCRIPTOR_ROLE: ERole[] = [ERole.ADMINISTRADOR_INSTITUCIONAL_PRESCRIPTOR];
@@ -134,7 +132,8 @@ export class ProfileComponent implements OnInit {
 	hideProfessions: boolean;
 
 	emergencyCareEpisodeInProgress: EmergencyCareEpisodeInProgressDto;
-	emergencyCareEpisodeSummary: EmergencyCareListDto;
+	episodeId: number;
+	showEmergencyCareSummary = false;
 	readonly triages = Triages;
 	readonly episodeStates = EstadosEpisodio;
 
@@ -284,15 +283,13 @@ export class ProfileComponent implements OnInit {
 									}
 								}
 							});
-
+							
 
 						this.emergencyCareEpisodeSummaryService.getEmergencyCareEpisodeInProgress(this.patientId)
 							.subscribe(emergencyCareEpisodeInProgressDto => {
-								this.emergencyCareEpisodeInProgress = emergencyCareEpisodeInProgressDto
-								if (this.emergencyCareEpisodeInProgress?.inProgress) {
-									this.emergencyCareEpisodeSummaryService.getEmergencyCareEpisodeSummary(this.emergencyCareEpisodeInProgress.id)
-										.subscribe(emergencyCareEpisodeListDto => this.emergencyCareEpisodeSummary = emergencyCareEpisodeListDto);
-								}
+								this.emergencyCareEpisodeInProgress = emergencyCareEpisodeInProgressDto;
+								this.episodeId = this.emergencyCareEpisodeInProgress?.id;
+								this.showEmergencyCareSummary = emergencyCareEpisodeInProgressDto?.inProgress;
 							});
 					}
 				})
@@ -490,12 +487,6 @@ export class ProfileComponent implements OnInit {
 			}, (error) => {
 				processErrors(JSON.parse(error), (msg) => this.snackBarService.showError(msg));
 			});
-	}
-
-
-	goToEmergencyCareEpisode(): void {
-		const url = `${AppRoutes.Institucion}/${this.contextService.institutionId}/${ROUTE_EMERGENCY_CARE_EPISODE_PREFIX}/${this.emergencyCareEpisodeSummary.id}`;
-		this.router.navigate([url]);
 	}
 
 	newAppointment() {

@@ -166,7 +166,7 @@
 					<mat-spinner color="primary"></mat-spinner>
 				</div>
 				<ng-template #content>
-					<ng-container *ngIf="episodes.length else noData">
+					<ng-container *ngIf="episodes?.length else noData">
 						<mat-card [ngClass]="{ 'en-atencion' : episode.state.id === estadosEpisodio.EN_ATENCION }"
 							class="episode-card" (click)="goToEpisode(episode, episode?.patient?.id)"
 							*ngFor="let episode of episodes">
