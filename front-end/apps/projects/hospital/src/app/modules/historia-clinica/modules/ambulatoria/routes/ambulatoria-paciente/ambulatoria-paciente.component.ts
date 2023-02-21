@@ -180,8 +180,8 @@ export class AmbulatoriaPacienteComponent implements OnInit, OnDestroy {
 									this.emergencyCareEpisodeStateService.getState(emergencyCareEpisodeInProgressDto.id).subscribe(
 										state => {
 											const episodeState = state.id;
-											const emergencyEpisodeWithMedicalDischarge = (EstadosEpisodio.CON_ALTA_MEDICA === episodeState);
-											this.hasEpisodeToShow = (this.emergencyCareEpisodeInProgress?.inProgress && !emergencyEpisodeWithMedicalDischarge);
+											const emergencyEpisodeWithAdminDischarge = (EstadosEpisodio.CON_ALTA_ADMINISTRATIVA === episodeState);
+											this.hasEpisodeToShow = (this.emergencyCareEpisodeInProgress?.inProgress && !emergencyEpisodeWithAdminDischarge);
 											this.featureFlagService.isActive(AppFeature.HABILITAR_MODULO_GUARDIA)
 												.subscribe(isOn => {
 													this.showEmergencyCareTab = this.hasEpisodeToShow && isOn;
