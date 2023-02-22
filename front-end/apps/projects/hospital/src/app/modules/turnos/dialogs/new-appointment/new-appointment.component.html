@@ -58,7 +58,7 @@
 							</mat-form-field>
 						</div>
 						<div fxLayout="row" fxLayoutAlign="end" fxLayoutGap="10px">
-							<ng-container *appHasRole="['ADMINISTRATIVO']">
+							<ng-container *appHasRole="['ADMINISTRATIVO', 'ADMINISTRATIVO_RED_DE_IMAGENES']">
 								<button mat-flat-button [mat-dialog-close]="-1" color="primary"
 									(click)="goCreatePatient()" *ngIf="showAddPatient">
 									<span [translate]="'turnos.new-appointment.BUTTON_ADD_PATIENT'"></span>
