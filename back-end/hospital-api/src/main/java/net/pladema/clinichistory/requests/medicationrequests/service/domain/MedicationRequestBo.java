@@ -44,6 +44,8 @@ public class MedicationRequestBo implements IDocumentBo {
 
 	private Integer clinicalSpecialtyId;
 
+	private Boolean isArchived;
+
     public short getDocumentType() {
         return DocumentType.RECIPE;
     }

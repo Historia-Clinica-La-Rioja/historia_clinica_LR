@@ -49,6 +49,7 @@ public class CreateMedicationRequestMapper {
 		result.setRepetitions(medicationRequest.getRepetitions());
 		result.setIsPostDated(medicationRequest.getIsPostDated());
 		result.setClinicalSpecialtyId(medicationRequest.getClinicalSpecialtyId());
+		result.setIsArchived(medicationRequest.getIsArchived());
         LOG.debug(OUTPUT, result);
         return result;
     }

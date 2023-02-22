@@ -184,6 +184,7 @@ public class AuditableContextBuilder {
 
 		ctx.put("logo", generatePdfImage("/assets/webapp/pdf/health_ministry_logo.png"));
 		ctx.put("headerLogos", generatePdfImage("/assets/webapp/pdf/digital_recipe_header_logo.png"));
+		ctx.put("isArchived", document.getIsArchived());
 	}
 
 	private List<ImmunizationInfoDto> mapImmunizations(List<ImmunizationBo> immunizations) {

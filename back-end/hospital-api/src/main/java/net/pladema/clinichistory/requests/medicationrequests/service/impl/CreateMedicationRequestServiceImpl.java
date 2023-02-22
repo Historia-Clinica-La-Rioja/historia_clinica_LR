@@ -147,6 +147,7 @@ public class CreateMedicationRequestServiceImpl implements CreateMedicationReque
 		result.setMedicalCoverageId(medicationRequest.getMedicalCoverageId());
 		result.setDoctorId(medicationRequest.getDoctorId());
 		result.setHasRecipe(medicationRequest.isHasRecipe());
+		result.setIsArchived(medicationRequest.getIsArchived());
 		return result;
 	}
 

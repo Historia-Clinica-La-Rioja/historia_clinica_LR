@@ -24,3 +24,17 @@ databaseChangeLog:
           - sql:
               sql: |-
                 INSERT INTO document_type VALUES (14, 'Receta Digital');
+
+    - changeSet:
+        id: addColumn_is_archived_medication_request
+        author: mmalyvarni
+        changes:
+          - addColumn:
+              tableName: medication_request
+              columns:
+                - column:
+                    name: is_archived
+                    type: boolean
+                    defaultValueDate: false
+                    constraints:
+                      nullable: false

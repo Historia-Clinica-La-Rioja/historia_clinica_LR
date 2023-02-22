@@ -161,6 +161,7 @@ export class NuevaPrescripcionComponent implements OnInit {
 			repetitions: this.prescriptionForm.controls.posdatadas.value,
 			isPostDated: this.prescriptionForm.controls.prolongedTreatment.value,
 			clinicalSpecialtyId: this.prescriptionForm.controls.clinicalSpecialty.value.id,
+			isArchived: this.prescriptionForm.controls.archived.value,
 		};
 		this.savePrescription(newPrescription);
 

@@ -215,8 +215,139 @@
             </div>
         </div>
     </div>
-</body>
-<footer>
     <div th:replace="fragments/digital_recipe_footer.html :: footer"></div>
-</footer>
+    <div style="page-break-after: always;" th:if="${isArchived}">
+        <div style="margin-bottom: 60px;">
+            <div th:replace="fragments/digital_recipe_header.html :: header"></div>
+            <div style="text-align: right; margin-right: 20px;">
+                <strong class="text">DUPLICADO</strong>
+            </div>
+        </div>
+        <div>
+            <div class="element-box centered-content" th:classappend="white-color">
+                <strong class="text">FECHA DE PRESCRIPCIÓN</strong><br/>
+                <span class="text" th:text="${requestDate}"></span><br/>
+            </div>
+            <div class="element-box centered-content" th:classappend="white-color">
+                <strong class="text">FECHA DE VENCIMIENTO</strong><br/>
+                <span class="text" th:text="${dateUntil}"></span><br/>
+            </div>
+            <div class="element-box centered-content" th:classappend="white-color">
+                <strong class="text">CÓDIGO DE RECETA</strong><br/>
+                <img th:src="${'data:image/jpeg;charset=utf-8;base64,' + recipeNumberBarCode}" alt=""></img><br/>
+            </div>
+            <div class="element-box centered-content" th:classappend="white-color">
+                <strong class="text">NÚMERO DE RECETA</strong><br/>
+                <span th:text="${recipeNumber}"></span><br/>
+            </div>
+            <div class="element-box centered-content" th:classappend="white-color">
+                <strong class="text">NÚMERO DE DNI</strong><br/>
+                <img th:src="${'data:image/jpeg;charset=utf-8;base64,' + patientIdentificationNumberBarCode}" alt=""></img><br/>
+            </div>
+            <div class="element-box centered-content" th:classappend="white-color">
+                <strong class="blue-text text">DNI</strong><br/>
+                <span class="text" th:text="${patient.person.identificationNumber}"></span><br/>
+            </div>
+            <div class="element-box centered-content" th:classappend="white-color">
+                <strong class="blue-text text">APELLIDO Y NOMBRE</strong><br/>
+                <span class="text" th:text="${patient.person.completeName()}"></span><br/>
+            </div>
+            <div class="centered-content">
+                <div class="element-box" th:classappend="white-color">
+                    <div style="float:left; width: 50%;">
+                        <strong class="blue-text text">COBERTURA DE SALUD</strong><br/>
+                        <span class="text" th:text="${patientCoverage?.medicalCoverage?.name} ?: 'Sin información'"></span><br/>
+                    </div>
+                    <div style="float:left; width: 50%">
+                        <strong class="blue-text text">PLAN</strong><br/>
+                        <span class="text" th:text="${patientCoverage?.planName} ?: 'Sin información'"></span><br/>
+                    </div>
+                </div>
+            </div>
+            <div class="centered-content">
+                <div class="element-box" th:classappend="white-color">
+                    <div style="float:left; width: 50%;">
+                        <strong class="blue-text text">NÚMERO DE AFILIADO</strong><br/>
+                        <span class="text" th:text="${patientCoverage?.affiliateNumber} ?: 'Sin información'"></span><br/>
+                    </div>
+                    <div style="float:left; width: 50%;">
+                        <strong class="blue-text text">EDAD</strong><br/>
+                        <span class="text" th:text="${patient.person.age}"></span><br/>
+                    </div>
+                </div>
+            </div>
+            <div class="centered-content" style="padding:30px;">
+                <strong class="white-text" style="font-size: xx-large;">FIRMADO ELECTRÓNICAMENTE por:</strong><br/>
+            </div>
+            <div class="element-box centered-content" th:classappend="pink-color">
+                <strong class="white-text text">APELLIDO Y NOMBRE</strong><br/>
+                <span class="white-text text" th:text="${professional.getCompleteName(professional.getNameSelfDetermination())}"></span><br/>
+            </div>
+            <div class="centered-content">
+                <div class="element-box" th:classappend="pink-color">
+                    <div style="float:left; margin-left: 20px;">
+                        <strong class="white-text text">MATRÍCULA NACIONAL N°</strong><br/>
+                        <span class="white-text text" th:text="${nationalLicense} ?: 'Sin información'">?</span><br/>
+                    </div>
+                    <div style="float:right; margin-right: 20px;">
+                        <strong class="white-text text">MATRÍCULA PROVINCIAL N°</strong><br/>
+                        <span class="white-text text" th:text="${stateLicense} ?: 'Sin información'">?</span><br/>
+                    </div>
+                </div>
+            </div>
+            <div class="centered-content">
+                <div class="element-box" th:classappend="pink-color">
+                    <div style="float:left; margin-left: 60px;">
+                        <strong class="white-text text">PROFESIÓN</strong><br/>
+                        <span class="white-text text" th:text="${professionalProfession}">?</span><br/>
+                    </div>
+                    <div style="float:right; margin-right: 60px;">
+                        <strong class="text white-text">ESPECIALIDAD</strong><br/>
+                        <span class="text white-text" th:text="${clinicalSpecialty}">?</span><br/>
+                    </div>
+                </div>
+            </div>
+            <div id="medication-list-duplicated">
+                <div th:each="medication : ${medications}">
+                    <div class="medication-box" th:classappend="${medication.prescriptionLineNumber % 2 == 0} ? light-pink-color : light-blue-color">
+                        <div class="centered-content" style="margin-top: 5px; margin-bottom: 5px;">
+                            <strong class="white-text text">Rp.</strong><strong class="white-text text" th:text="${medication.prescriptionLineNumber}"></strong><br/>
+                        </div>
+                        <div class="element-box centered-content" th:classappend="white-color">
+                            <strong class="text">GENÉRICO</strong><br/>
+                            <span class="text" th:text="${medication.snomed.pt}"></span><br/>
+                        </div>
+                        <div class="centered-content">
+                            <div class="element-box" th:classappend="white-color">
+                                <div style="float:left; margin-left: 60px;">
+                                    <strong class="text">DOSIS/UNIDAD</strong><br/>
+                                    <span class="text" th:text="${medication.dosage.dosesByUnit}"></span><br/>
+                                </div>
+                                <div style="float:right; margin-right: 60px;">
+                                    <strong class="text">DOSIS/DIA</strong><br/>
+                                    <span class="text" th:text="${medication.dosage.dosesByDay}"></span><br/>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="element-box centered-content" th:classappend="white-color">
+                            <strong class="text">DURACIÓN DE TRATAMIENTO EN DÍAS</strong><br/>
+                            <span class="text" th:text="${#numbers.formatDecimal(medication.dosage.duration, 0, 0)}"></span><br/>
+                        </div>
+                        <div class="element-box centered-content" th:classappend="white-color">
+                            <strong class="text">DIAGNÓSTICO</strong><br/>
+                            <span class="text" th:text="${medication.healthCondition.snomed.pt}"></span><br/>
+                        </div>
+                        <div class="observation-box" th:classappend="${medication.prescriptionLineNumber % 2 == 0} ? lighter-pink-color : lighter-blue-color">
+                            <strong class="content">OBSERVACIONES:</strong><br/>
+                            <div style="padding: 10px;">
+                                <span class="text" th:text="${medication.note}  ?: 'Sin información'"></span><br/>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div th:replace="fragments/digital_recipe_footer.html :: footer"></div>
+    </div>
+</body>
 </html>
