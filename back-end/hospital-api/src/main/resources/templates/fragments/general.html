@@ -343,6 +343,22 @@
         </div>
     </div>
 
+    <!-- Otras circunstancias que prolongan la internación -->
+
+    <div th:fragment="otherProblems (title)">
+        <h3 th:text="${title}"></h3>
+        <div th:if="${#lists.isEmpty(otherProblems)}">
+            <dl>
+                <dd><p>Sin cambios registrados</p></dd>
+            </dl>
+        </div>
+        <div th:if="${not #lists.isEmpty(otherProblems)}">
+            <dl th:each="medication,iter: ${otherProblems}">
+                <dd><p  th:text="${'- ' + medication.snomed.pt}"></p></dd>
+            </dl>
+        </div>
+    </div>
+
     <!-- Factores de riesgo -->
 
     <div th:fragment="riskFactors">
