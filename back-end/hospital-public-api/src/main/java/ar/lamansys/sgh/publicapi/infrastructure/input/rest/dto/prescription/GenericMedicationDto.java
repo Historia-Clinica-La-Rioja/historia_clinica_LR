@@ -11,5 +11,5 @@ import lombok.ToString;
 @Builder
 public class GenericMedicationDto {
 	String name;
-	Integer snomedId;
+	String snomedId;
 }

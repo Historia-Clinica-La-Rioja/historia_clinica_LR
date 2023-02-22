@@ -60,8 +60,8 @@ public class PrescriptionStorageImpl implements PrescriptionStorage {
 		"CONCAT(a.street, ' ', a.number, ' ', case WHEN a.floor is not null THEN CONCAT('Piso ', a.floor) else '' END)," +
 		"p3.first_name as p3fn, p3.last_name, it2.description as it2d, p3.identification_number as p3d, pe2.phone_number, pe2.email as EMAIL, ps.description as psd, " +
 		"ps.sctid_code, " +
-		"pln.license_number, case when pln.type_license_number = 1 then 'NACIONAL' else 'PROVINCIAL' end, ms.prescription_line_number as msid, msls.description as mssd, s.pt as spt, s.id as sid, " +
-		"pt.description as ptd, s2.pt as s2pt, s2.id as s2id, " +
+		"pln.license_number, case when pln.type_license_number = 1 then 'NACIONAL' else 'PROVINCIAL' end, ms.prescription_line_number as msid, msls.description as mssd, s.pt as spt, s.sctid as sid, " +
+		"pt.description as ptd, s2.pt as s2pt, s2.sctid as s2id, " +
 		"1 as unit_dose, d2.frequency, d2.duration, '' as presentation, 0 as presentation_quantity " +
 		"from medication_statement ms join document_medicamention_statement dms on ms.id = dms.medication_statement_id " +
 		"join document d on d.id = dms.document_id " +
@@ -104,7 +104,9 @@ public class PrescriptionStorageImpl implements PrescriptionStorage {
 				.map(this::processPrescriptionQuery)
 				.collect(Collectors.toList());
 		PrescriptionBo mergedResult = mergeResults(result);
-		mergedResult.setPrescriptionId(domainNumber + "." + mergedResult.getPrescriptionId());
+		if(mergedResult.getPrescriptionId() != null) {
+			mergedResult.setPrescriptionId(domainNumber + "." + mergedResult.getPrescriptionId());
+		}
 		mergedResult.setDomain(domainNumber);
 		return Optional.of(mergedResult);
 	}
@@ -413,12 +415,12 @@ public class PrescriptionStorageImpl implements PrescriptionStorage {
 						dueDate.isBefore(LocalDate.now()) ? "VENCIDO" : (String)queryResult[30],
 						new PrescriptionProblemBo(
 								(String)queryResult[31],
-								(Integer)queryResult[32],
+								(String)queryResult[32],
 								queryResult[33].equals("-55607006") ? "Crónico" : "Agudo"
 						),
 						new GenericMedicationBo(
 								(String)queryResult[34],
-								(Integer)queryResult[35]
+								(String)queryResult[35]
 						),
 						new CommercialMedicationBo(),
 						(Integer)queryResult[36],
