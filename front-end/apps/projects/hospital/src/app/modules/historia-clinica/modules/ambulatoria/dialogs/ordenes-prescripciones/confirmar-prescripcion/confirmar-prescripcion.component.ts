@@ -23,7 +23,7 @@ export class ConfirmarPrescripcionComponent implements OnInit {
 		private readonly featureFlagService: FeatureFlagService,
 		public dialogRef: MatDialogRef<ConfirmarPrescripcionComponent>,
 		@Inject(MAT_DIALOG_DATA) public data: ConfirmPrescriptionData) {
-			featureFlagService.isActive(AppFeature.HABILITAR_RECETA_DIGITAL)
+			this.featureFlagService.isActive(AppFeature.HABILITAR_RECETA_DIGITAL)
 			.subscribe((result: boolean) => this.isHabilitarRecetaDigital = result);
 		}
 
@@ -38,13 +38,15 @@ export class ConfirmarPrescripcionComponent implements OnInit {
 		this.closeModal();
 	}
 
-	openDialog() {
+	sendEmail() {
 		this.dialog.open(EnviarRecetaDigitalPorEmailComponent, {
 			width: '35%',
 			data: {
-				patientEmail: this.data.patientEmail
+				patientId: this.data.patientId,
+				patientEmail: this.data.patientEmail,
+				prescriptionRequest: this.data.prescriptionRequest
 			}
-		})
+		}).afterClosed().subscribe(_ => this.closeModal());
 	}
 
 	closeModal() {

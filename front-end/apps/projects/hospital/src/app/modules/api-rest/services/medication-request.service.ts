@@ -91,4 +91,11 @@ export class MedicationRequestService {
 		const url = `${environment.apiBase}/institutions/${this.contextService.institutionId}/patient/${patientId}/medication-requests/validate`;
 		return this.http.get<ProfessionalLicenseNumberValidationResponseDto>(url);
 	}
+
+	sendEmail(patientId: number, patientEmail: string, documentId: number): Observable<any> {
+		const url = `${environment.apiBase}/institutions/${this.contextService.institutionId}/patient/${patientId}/medication-requests/documentId/${documentId}/notify`;
+		let queryParams: HttpParams = new HttpParams();
+		queryParams = queryParams.append('patientEmail', patientEmail);
+		return this.http.get<any>(url, {params: queryParams});
+	}
 }
