@@ -43,18 +43,21 @@
 					<mat-label>{{'ambulatoria.paciente.ordenes_prescripciones.add_prescription_item_dialog.UNIT_DOSE' | translate}}</mat-label>
 					<input type="number" matInput autocomplete="off" formControlName="unitDose">
 					<mat-error *ngIf="hasError(prescriptionItemForm, 'required', 'unitDose')" translate="forms.REQUIRED"></mat-error>
+					<mat-error *ngIf="hasError(prescriptionItemForm, 'max', 'unitDose')" translate="forms.MAX_ERROR" [translateParams]="{max: MAX_VALUE}"></mat-error>
 				</mat-form-field>
 
 				<mat-form-field appearance="outline">
 					<mat-label>{{'ambulatoria.paciente.ordenes_prescripciones.add_prescription_item_dialog.DAY_DOSE' | translate}}</mat-label>
 					<input type="number" matInput autocomplete="off" formControlName="dayDose">
 					<mat-error *ngIf="hasError(prescriptionItemForm, 'required', 'dayDose')" translate="forms.REQUIRED"></mat-error>
+					<mat-error *ngIf="hasError(prescriptionItemForm, 'max', 'dayDose')" translate="forms.MAX_ERROR" [translateParams]="{max: MAX_VALUE}"></mat-error>
 				</mat-form-field>
 
 				<mat-form-field appearance="outline">
 					<mat-label>{{'ambulatoria.paciente.ordenes_prescripciones.add_prescription_item_dialog.TREATMENT_DAYS' | translate}}</mat-label>
 					<input type="number" matInput autocomplete="off" formControlName="administrationTimeDays">
 					<mat-error *ngIf="hasError(prescriptionItemForm, 'required', 'administrationTimeDays')" translate="forms.REQUIRED"></mat-error>
+					<mat-error *ngIf="hasError(prescriptionItemForm, 'max', 'administrationTimeDays')" translate="forms.MAX_ERROR" [translateParams]="{max: MAX_VALUE}"></mat-error>
 				</mat-form-field>
 			</section>
 

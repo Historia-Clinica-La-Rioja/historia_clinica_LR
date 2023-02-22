@@ -46,6 +46,7 @@ export class AgregarPrescripcionItemComponent implements OnInit, AfterViewInit, 
 	OTHER_RADIO_OPTION = 0;
 	hasError = hasError;
 	intervalValidation = intervalValidation;
+	MAX_VALUE = 99;
 
 	public readonly TEXT_AREA_MAX_LENGTH = TEXT_AREA_MAX_LENGTH;
 
@@ -319,9 +320,9 @@ export class AgregarPrescripcionItemComponent implements OnInit, AfterViewInit, 
 		}
 
 		if (this.isHabilitarRecetaDigitalFFActive) {
-			this.prescriptionItemForm.controls.unitDose.setValidators([Validators.required]);
-			this.prescriptionItemForm.controls.dayDose.setValidators([Validators.required]);
-			this.prescriptionItemForm.controls.administrationTimeDays.setValidators([Validators.required]);
+			this.prescriptionItemForm.controls.unitDose.setValidators([Validators.required, Validators.max(this.MAX_VALUE)]);
+			this.prescriptionItemForm.controls.dayDose.setValidators([Validators.required, Validators.max(this.MAX_VALUE)]);
+			this.prescriptionItemForm.controls.administrationTimeDays.setValidators([Validators.required, Validators.max(this.MAX_VALUE)]);
 		}
 	}
 
