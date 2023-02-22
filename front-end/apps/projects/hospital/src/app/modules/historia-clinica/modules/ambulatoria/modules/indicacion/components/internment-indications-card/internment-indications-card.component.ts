@@ -153,7 +153,7 @@ export class InternmentIndicationsCardComponent implements OnInit {
 							disableClose: false
 						});
 
-						dialogRef.afterClosed().subscribe((result: ResultDialogPharmaco) => {
+						dialogRef.afterClosed().subscribe((result: ResultDialogPharmaco<PharmacoDto>) => {
 							if (result?.pharmaco) {
 								this.indicationsFacadeService.addPharmaco(result.pharmaco).subscribe(_sucess => {
 									this.snackBarService.showSuccess('indicacion.internment-card.dialogs.pharmaco.messages.SUCCESS');
@@ -241,15 +241,18 @@ export class InternmentIndicationsCardComponent implements OnInit {
 			autoFocus: false,
 			disableClose: true,
 		});
-		dialogRef.afterClosed().subscribe((parenteralPlan: ParenteralPlanDto) => {
-			if (parenteralPlan) {
-				this.indicationsFacadeService.addParenteralPlan(parenteralPlan).subscribe(
+		dialogRef.afterClosed().subscribe((resultDialogPharmaco: ResultDialogPharmaco<ParenteralPlanDto>) => {
+			if (resultDialogPharmaco?.pharmaco) {
+				this.indicationsFacadeService.addParenteralPlan(resultDialogPharmaco.pharmaco).subscribe(
 					success => {
 						this.snackBarService.showSuccess('indicacion.internment-card.dialogs.parenteral-plan.messages.SUCCESS');
 						this.indicationsFacadeService.updateIndication({ parenteralPlan: true });
 					},
 					error => error?.text ? this.snackBarService.showError(error.text) : this.snackBarService.showError('indicacion.internment-card.dialogs.parenteral-plan.messages.ERROR')
 				);
+			} else {
+				if (resultDialogPharmaco?.openDialogPharmacosFrequent)
+					this.openMostFrequentParenteralPlansDialog();
 			}
 		});
 	}
@@ -290,8 +293,8 @@ export interface DialogPharmacosFrequent<T> {
 	pharmaco: T;
 }
 
-interface ResultDialogPharmaco {
+interface ResultDialogPharmaco<T> {
 	openDialogPharmacosFrequent: boolean;
-	pharmaco?: PharmacoDto;
+	pharmaco?: T;
 }
 

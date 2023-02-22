@@ -98,15 +98,16 @@ export class ParenteralPlanComponent implements OnInit {
 		if (formsValid) {
 			const parenteralPlanDto = this.toParenteralPlanDto();
 			const parenteralIndicationDate = dateDtoToDate(parenteralPlanDto.indicationDate);
+			const response = { openDialogPharmacosFrequent:false, pharmaco:parenteralPlanDto };
 			if (!isToday(parenteralIndicationDate) && isSameDay(parenteralIndicationDate, this.data.actualDate)) {
 				openConfirmDialog(this.dialog, parenteralIndicationDate).subscribe(confirm => {
 					if (confirm) {
-						this.dialogRef.close(parenteralPlanDto);
+						this.dialogRef.close(response);
 					}
 				});
 			}
 			else
-				this.dialogRef.close(parenteralPlanDto);
+				this.dialogRef.close(response);
 		}
 		else {
 			this.parenteralPlanForm.markAllAsTouched();
@@ -116,7 +117,8 @@ export class ParenteralPlanComponent implements OnInit {
 	}
 
 	close() {
-		this.dialogRef.close(null);
+		const openDialogPharmacosFrequent = false;
+		this.dialogRef.close({ openDialogPharmacosFrequent });
 	}
 
 	private getFrequencyForm(): FormGroup {
@@ -211,5 +213,10 @@ export class ParenteralPlanComponent implements OnInit {
 			})
 		}
 		return otherPharmaco
+	}
+
+	returnToMostFrequentDialog(){
+		const openDialogPharmacosFrequent = true;
+		this.dialogRef.close({ openDialogPharmacosFrequent });
 	}
 }
