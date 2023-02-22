@@ -215,7 +215,7 @@
 			"DURATION": "Duracíon:",
 			"DURATION_DETAILS": "{{hour}} Hs {{minutes}} min.",
 			"FREQUENCY": "Flujo:",
-			"FREQUENCY_DETAILS": "{{flowDropsHour}} Ml/h {{flowMlHour}} hp. Gotas.",
+			"FREQUENCY_DETAILS": "{{flowMlHour}} Ml/h {{flowDropsHour}} hp. Gotas.",
 			"DAILY_VOLUME": "Vol/Día:",
 			"DAILY_VOLUME_DETAILS": "{{dailyVolume}} ml.",
 			"START_TIME":"Inicio de administración",
