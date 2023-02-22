@@ -120,7 +120,7 @@
 											<span [translate]="'ambulatoria.paciente.ordenes_prescripciones.menu_items.RE_PRESCRIBE'"></span>
 										</button>
 									</ng-container>
-									<ng-container *appHasRole="['ESPECIALISTA_MEDICO', 'ESPECIALISTA_EN_ODONTOLOGIA', 'PRESCRIPTOR']">
+									<ng-container *appHasRole="['ESPECIALISTA_MEDICO', 'ESPECIALISTA_EN_ODONTOLOGIA', 'PRESCRIPTOR']" ngIf="isHabilitarRecetaDigitalEnabled">
 										<button mat-menu-item *ngIf="medicationInfo.statusId === MEDICATION_STATUS.ACTIVE.id" (click)="openSuspendMedicationDialog(medicationInfo)">
 											<span [translate]="'ambulatoria.paciente.ordenes_prescripciones.menu_items.SUSPEND'"></span>
 										</button>
@@ -130,7 +130,7 @@
 											<span [translate]="'ambulatoria.paciente.ordenes_prescripciones.menu_items.REACTIVATE'"></span>
 										</button>
 									</ng-container>
-									<ng-container *appHasRole="['ESPECIALISTA_MEDICO', 'ESPECIALISTA_EN_ODONTOLOGIA', 'PRESCRIPTOR']">
+									<ng-container *appHasRole="['ESPECIALISTA_MEDICO', 'ESPECIALISTA_EN_ODONTOLOGIA', 'PRESCRIPTOR']" ngIf="isHabilitarRecetaDigitalEnabled">
 										<button mat-menu-item *ngIf="medicationInfo.statusId !== MEDICATION_STATUS.STOPPED.id" (click)="changeMedicationStatus(medicationStatusChange.FINALIZE, medicationInfo)">
 											<span [translate]="'ambulatoria.paciente.ordenes_prescripciones.menu_items.FINALIZE'"></span>
 										</button>
