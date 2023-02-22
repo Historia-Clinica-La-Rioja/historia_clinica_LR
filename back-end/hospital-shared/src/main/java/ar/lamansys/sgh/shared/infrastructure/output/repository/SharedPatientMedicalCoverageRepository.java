@@ -16,12 +16,13 @@ import java.util.Optional;
 public interface SharedPatientMedicalCoverageRepository extends JpaRepository<SharedPatientMedicalCoverageAssn, Integer> {
 
 	@Transactional(readOnly = true)
-	@Query(value = "SELECT NEW ar.lamansys.sgh.shared.domain.medicalcoverage.SharedPatientMedicalCoverageBo(pmc.affiliateNumber, " +
-			"mc.id, mc.name, mc.cuit, mc.type, hi.rnos, hi.acronym)"+
+	@Query(value = "SELECT NEW ar.lamansys.sgh.shared.domain.medicalcoverage.SharedPatientMedicalCoverageBo(pmc.affiliateNumber, mcp.plan, " +
+			"mc.id, mc.name, mc.cuit, mc.type, hi.rnos, hi.acronym) "+
 			"FROM SharedPatientMedicalCoverageAssn pmc " +
 			"JOIN SharedMedicalCoverage mc ON (pmc.medicalCoverageId = mc.id) " +
 			"LEFT JOIN SharedHealthInsurance hi ON (mc.id = hi.id) " +
-			"LEFT JOIN SharedPrivateHealthInsurance phi ON (mc.id = phi.id) "+
+			"LEFT JOIN SharedPrivateHealthInsurance phi ON (mc.id = phi.id) " +
+			"LEFT JOIN SharedMedicalCoveragePlan mcp ON (mcp.id = pmc.planId) " +
 			"WHERE pmc.id = :patientMedicalCoverageId ")
 	Optional<SharedPatientMedicalCoverageBo> getPatientMedicalCoverageById(@Param("patientMedicalCoverageId") Integer medicalCoverageId);
 

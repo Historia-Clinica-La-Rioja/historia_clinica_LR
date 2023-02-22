@@ -18,8 +18,11 @@ public class SharedPatientMedicalCoverageBo {
 
 	private String affiliateNumber;
 
-	public SharedPatientMedicalCoverageBo(String affiliateNumber, Integer medicalCoverageId, String name, String cuit, Short type, Integer rnos, String acronym) {
+	private String planName;
+
+	public SharedPatientMedicalCoverageBo(String affiliateNumber, String planName, Integer medicalCoverageId, String name, String cuit, Short type, Integer rnos, String acronym) {
 		this.affiliateNumber = affiliateNumber;
+		this.planName = planName;
 		switch (EMedicalCoverageTypeDto.map(type)){
 			case PREPAGA: this.medicalCoverage =  new SharedPrivateHealthInsuranceBo(medicalCoverageId, name, cuit, type);
 				break;

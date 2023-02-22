@@ -101,8 +101,12 @@
             <span class="text" th:text="${dateUntil}"></span><br/>
         </div>
         <div class="element-box centered-content" th:classappend="white-color">
-            <strong class="text">NÚMERO DE RECETA</strong><br/>
+            <strong class="text">CÓDIGO DE RECETA</strong><br/>
             <img th:src="${'data:image/jpeg;charset=utf-8;base64,' + recipeNumberBarCode}" alt=""></img><br/>
+        </div>
+        <div class="element-box centered-content" th:classappend="white-color">
+            <strong class="text">NÚMERO DE RECETA</strong><br/>
+            <span th:text="${recipeNumber}"></span><br/>
         </div>
         <div class="element-box centered-content" th:classappend="white-color">
             <strong class="text">NÚMERO DE DNI</strong><br/>
@@ -116,17 +120,25 @@
             <strong class="blue-text text">APELLIDO Y NOMBRE</strong><br/>
             <span class="text" th:text="${patient.person.completeName()}"></span><br/>
         </div>
-        <div class="element-box centered-content" th:classappend="white-color">
-            <strong class="blue-text text">COBERTURA DE SALUD</strong><br/>
-            <span class="text" th:text="${patientCoverage?.medicalCoverage?.name}"></span><br/>
+        <div class="centered-content">
+            <div class="element-box" th:classappend="white-color">
+                <div style="float:left; width: 50%;">
+                    <strong class="blue-text text">COBERTURA DE SALUD</strong><br/>
+                    <span class="text" th:text="${patientCoverage?.medicalCoverage?.name} ?: 'Sin información'"></span><br/>
+                </div>
+                <div style="float:left; width: 50%">
+                    <strong class="blue-text text">PLAN</strong><br/>
+                    <span class="text" th:text="${patientCoverage?.planName} ?: 'Sin información'"></span><br/>
+                </div>
+            </div>
         </div>
         <div class="centered-content">
             <div class="element-box" th:classappend="white-color">
-                <div style="float:left; margin-left: 60px;">
+                <div style="float:left; width: 50%;">
                     <strong class="blue-text text">NÚMERO DE AFILIADO</strong><br/>
-                    <span class="text" th:text="${patientCoverage?.affiliateNumber}"></span><br/>
+                    <span class="text" th:text="${patientCoverage?.affiliateNumber} ?: 'Sin información'"></span><br/>
                 </div>
-                <div style="float:right; margin-right: 60px;">
+                <div style="float:left; width: 50%;">
                     <strong class="blue-text text">EDAD</strong><br/>
                     <span class="text" th:text="${patient.person.age}"></span><br/>
                 </div>
@@ -143,11 +155,11 @@
             <div class="element-box" th:classappend="pink-color">
                 <div style="float:left; margin-left: 20px;">
                     <strong class="white-text text">MATRÍCULA NACIONAL N°</strong><br/>
-                    <span class="white-text text" th:text="${nationalLicense}">?</span><br/>
+                    <span class="white-text text" th:text="${nationalLicense} ?: 'Sin información'">?</span><br/>
                 </div>
                 <div style="float:right; margin-right: 20px;">
                     <strong class="white-text text">MATRÍCULA PROVINCIAL N°</strong><br/>
-                    <span class="white-text text" th:text="${stateLicense}">?</span><br/>
+                    <span class="white-text text" th:text="${stateLicense} ?: 'Sin información'">?</span><br/>
                 </div>
             </div>
         </div>
@@ -187,7 +199,7 @@
                     </div>
                     <div class="element-box centered-content" th:classappend="white-color">
                         <strong class="text">DURACIÓN DE TRATAMIENTO EN DÍAS</strong><br/>
-                        <span class="text" th:text="${medication.dosage.duration}"></span><br/>
+                        <span class="text" th:text="${#numbers.formatDecimal(medication.dosage.duration, 0, 0)}"></span><br/>
                     </div>
                     <div class="element-box centered-content" th:classappend="white-color">
                         <strong class="text">DIAGNÓSTICO</strong><br/>
@@ -195,7 +207,9 @@
                     </div>
                     <div class="observation-box" th:classappend="${medication.prescriptionLineNumber % 2 == 0} ? lighter-pink-color : lighter-blue-color">
                         <strong class="content">OBSERVACIONES:</strong><br/>
-                        <span class="text" th:text="${medication.note}"></span><br/>
+                        <div style="padding: 10px;">
+                            <span class="text" th:text="${medication.note}  ?: 'Sin información'"></span><br/>
+                        </div>
                     </div>
                 </div>
             </div>
