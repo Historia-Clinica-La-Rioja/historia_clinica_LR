@@ -13,7 +13,7 @@ import javax.validation.constraints.NotNull;
 @AllArgsConstructor
 public class DispensedMedicationDto {
 	@NotNull(message = "Este campo no puede ser nulo")
-	private Integer snomedId;
+	private String snomedId;
 	@NotNull(message = "Este campo no puede ser nulo")
 	private String commercialName;
 	@NotNull(message = "Este campo no puede ser nulo")

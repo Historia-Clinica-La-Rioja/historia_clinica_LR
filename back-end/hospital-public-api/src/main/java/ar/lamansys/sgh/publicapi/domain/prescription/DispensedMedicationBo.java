@@ -11,7 +11,7 @@ import java.util.Collections;
 
 @Getter
 public class DispensedMedicationBo {
-	private Integer snomedId;
+	private String snomedId;
 	private String commercialName;
 	private String commercialPresentation;
 	private Integer soldUnits;
@@ -26,7 +26,7 @@ public class DispensedMedicationBo {
 
 	private String observations;
 
-	public DispensedMedicationBo(Integer snomedId,
+	public DispensedMedicationBo(String snomedId,
 								 String commercialName,
 								 String commercialPresentation,
 								 Integer soldUnits,

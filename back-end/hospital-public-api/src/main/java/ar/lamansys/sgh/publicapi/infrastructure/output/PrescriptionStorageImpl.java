@@ -47,6 +47,7 @@ public class PrescriptionStorageImpl implements PrescriptionStorage {
 	private final static String CONFIRMADO = "59156000";
 	private final static String ACTIVO = "55561003";
 	private final static String COMPLETO = "255594003";
+	private final static String CRONICO = "-55607006";
 
 	private final MedicationStatementCommercialRepository medicationStatementCommercialRepository;
 
@@ -62,7 +63,7 @@ public class PrescriptionStorageImpl implements PrescriptionStorage {
 		"ps.sctid_code, " +
 		"pln.license_number, case when pln.type_license_number = 1 then 'NACIONAL' else 'PROVINCIAL' end, ms.prescription_line_number as msid, msls.description as mssd, s.pt as spt, s.sctid as sid, " +
 		"pt.description as ptd, s2.pt as s2pt, s2.sctid as s2id, " +
-		"1 as unit_dose, d2.frequency, d2.duration, '' as presentation, 0 as presentation_quantity " +
+		"d2.doses_by_unit as unit_dose, d2.doses_by_day, d2.duration, '' as presentation, 0 as presentation_quantity " +
 		"from medication_statement ms join document_medicamention_statement dms on ms.id = dms.medication_statement_id " +
 		"join document d on d.id = dms.document_id " +
 		"join medication_request mr on mr.id = d.source_id join patient p on p.id = ms.patient_id " +
@@ -232,7 +233,7 @@ public class PrescriptionStorageImpl implements PrescriptionStorage {
 			message.append(" no existen en la receta indicada.");
 			throw  new ConstraintViolationException(message.toString(), Collections.emptySet());
 		}
-		
+
 
 	}
 
@@ -416,16 +417,16 @@ public class PrescriptionStorageImpl implements PrescriptionStorage {
 						new PrescriptionProblemBo(
 								(String)queryResult[31],
 								(String)queryResult[32],
-								queryResult[33].equals("-55607006") ? "Crónico" : "Agudo"
+								queryResult[33].equals(CRONICO) ? "Crónico" : "Agudo"
 						),
 						new GenericMedicationBo(
 								(String)queryResult[34],
 								(String)queryResult[35]
 						),
 						new CommercialMedicationBo(),
-						(Integer)queryResult[36],
-						(Integer)queryResult[37],
-						queryResult[38] != null ? (Double)queryResult[38] : null,
+						queryResult[36] != null ? (Integer)queryResult[36] : 0,
+						queryResult[37] != null ? (Integer)queryResult[37] : 0,
+						queryResult[38] != null ? (Double)queryResult[38] : 1,
 						(String)queryResult[39],
 						(Integer)queryResult[40]
 				))

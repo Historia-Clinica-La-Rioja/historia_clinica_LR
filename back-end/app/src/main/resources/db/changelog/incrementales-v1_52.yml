@@ -38,3 +38,12 @@ databaseChangeLog:
                     defaultValueDate: false
                     constraints:
                       nullable: false
+
+    - changeSet:                  
+        id: update-type-snomed-concept-id_medication_statement_commercial
+        author: lmanterola
+        changes:
+          - modifyDataType:
+              columnName:  snomed_id
+              newDataType:  varchar(255)
+              tableName:  medication_statement_commercial
