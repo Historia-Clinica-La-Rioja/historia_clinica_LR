@@ -28,6 +28,71 @@
                 </button>
 			</mat-form-field>
 
+            <section formGroupName="patientData" *ngIf="isHabilitarRecetaDigitalEnabled">
+                <section class="phone-container">
+					<mat-form-field appearance="outline" class="prefix">
+						<mat-label [translate]="'ambulatoria.paciente.ordenes_prescripciones.new_prescription_dialog.PHONE_PREFIX'"></mat-label>
+						<input matInput formControlName="phonePrefix" type="text">
+					</mat-form-field>
+					<mat-form-field appearance="outline" class="number">
+						<mat-label [translate]="'ambulatoria.paciente.ordenes_prescripciones.new_prescription_dialog.PHONE_NUMBER'"></mat-label>
+						<input matInput formControlName="phoneNumber" type="text">
+					</mat-form-field>
+                </section>
+
+                <section class="countries-container">
+                    <mat-form-field appearance="outline" class="country">
+                        <mat-select id="country" name="country" formControlName="country"
+                                    placeholder="{{'ambulatoria.paciente.ordenes_prescripciones.new_prescription_dialog.COUNTRY' | translate}}">
+                            <mat-option *ngFor="let country of countries$ | async" [value]="country.id">
+                                {{country.description}}
+                            </mat-option>
+                        </mat-select>
+                    </mat-form-field>
+                </section>
+
+				<section class="provinces-departments-container">
+					<mat-form-field appearance="outline" class="province">
+						<mat-select id="province" name="province" formControlName="province" (selectionChange)="setDepartments($event.value)"
+									placeholder="{{'ambulatoria.paciente.ordenes_prescripciones.new_prescription_dialog.PROVINCE' | translate}}">
+							<mat-option *ngFor="let province of provinces$ | async" [value]="province.id">
+								{{province.description}}
+							</mat-option>
+						</mat-select>
+					</mat-form-field>
+
+                    <mat-form-field appearance="outline" class="locality">
+						<mat-select id="locality" name="locality" formControlName="locality" (selectionChange)="setCities($event.value)"
+									placeholder="{{'ambulatoria.paciente.ordenes_prescripciones.new_prescription_dialog.LOCALITY' | translate}}">
+							<mat-option *ngFor="let department of departments$ | async" [value]="department.id">
+								{{department.description}}
+							</mat-option>
+						</mat-select>
+					</mat-form-field>
+
+                    <mat-form-field appearance="outline" class="city">
+						<mat-select id="city" name="city" formControlName="city"
+									placeholder="{{'ambulatoria.paciente.ordenes_prescripciones.new_prescription_dialog.CITY' | translate}}">
+							<mat-option *ngFor="let city of cities$ | async" [value]="city.id">
+								{{city.description}}
+							</mat-option>
+						</mat-select>
+					</mat-form-field>
+				</section>
+
+                <section class="street-container">
+                    <mat-form-field appearance="outline" class="street">
+						<mat-label [translate]="'ambulatoria.paciente.ordenes_prescripciones.new_prescription_dialog.STREET'"></mat-label>
+						<input matInput formControlName="street" type="text">
+					</mat-form-field>
+
+                    <mat-form-field appearance="outline" class="streetNumber">
+						<mat-label [translate]="'ambulatoria.paciente.ordenes_prescripciones.new_prescription_dialog.STREET_NUMBER'"></mat-label>
+						<input matInput formControlName="streetNumber" type="text">
+					</mat-form-field>
+                </section>
+            </section>
+
             <div class="margin-checkbox" *ngIf="isMedication()">
                 <mat-checkbox formControlName="withoutRecipe">
                     <span [translate]="'ambulatoria.paciente.ordenes_prescripciones.new_prescription_dialog.WITHOUT_RECIPE'"></span>
@@ -76,11 +141,11 @@
                     </mat-hint>
                 </ng-template>
 				<mat-error *ngIf="hasError(prescriptionForm, 'required', 'posdatadas')" translate="forms.REQUIRED"></mat-error>
-                <mat-error *ngIf="hasError(prescriptionForm, 'min', 'posdatadas')" 
+                <mat-error *ngIf="hasError(prescriptionForm, 'min', 'posdatadas')"
                     [translate]="'ambulatoria.paciente.ordenes_prescripciones.new_prescription_dialog.POSDATADAS_ERROR'"
                     [translateParams]="{min: POSDATADAS_MIN, max: POSDATADAS_MAX}">
                 </mat-error>
-                <mat-error *ngIf="hasError(prescriptionForm, 'max', 'posdatadas')" 
+                <mat-error *ngIf="hasError(prescriptionForm, 'max', 'posdatadas')"
                     [translate]="'ambulatoria.paciente.ordenes_prescripciones.new_prescription_dialog.POSDATADAS_ERROR'"
                     [translateParams]="{min: POSDATADAS_MIN, max: POSDATADAS_MAX}">
                 </mat-error>

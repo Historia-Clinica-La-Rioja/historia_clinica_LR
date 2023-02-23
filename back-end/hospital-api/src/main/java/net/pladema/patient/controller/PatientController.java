@@ -8,7 +8,6 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
-import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
 import javax.persistence.EntityNotFoundException;
@@ -311,8 +310,10 @@ public class PatientController {
 		if (patientEntity != null)
 			setPatientData(patientToAdd, patientEntity);
 		Patient createdPatient = patientService.addPatient(patientToAdd);
-		DoctorsBo doctorsBo = new DoctorsBo(patientDto.getGeneralPractitioner(), patientDto.getPamiDoctor());
-		additionalDoctorService.addAdditionalDoctors(doctorsBo, createdPatient.getId());
+		if (patientDto.getGeneralPractitioner() != null && patientDto.getPamiDoctor() != null) {
+			DoctorsBo doctorsBo = new DoctorsBo(patientDto.getGeneralPractitioner(), patientDto.getPamiDoctor());
+			additionalDoctorService.addAdditionalDoctors(doctorsBo, createdPatient.getId());
+		}
 		LOG.debug(OUTPUT, createdPatient.getId());
 		return createdPatient;
 	}

@@ -8,7 +8,7 @@ import { MapperService } from '@core/services/mapper.service';
 import { MedicalCoverageComponent, PatientMedicalCoverage } from '@pacientes/dialogs/medical-coverage/medical-coverage.component';
 import { SnackBarService } from '@presentation/services/snack-bar.service';
 
-import { ApiErrorDto, AppFeature, BasicPatientDto, ClinicalSpecialtyDto, PatientMedicalCoverageDto, PrescriptionDto } from '@api-rest/api-model.d';
+import { APatientDto, ApiErrorDto, AppFeature, BasicPatientDto, BMPersonDto, ClinicalSpecialtyDto, PatientMedicalCoverageDto, PrescriptionDto } from '@api-rest/api-model.d';
 import { PatientMedicalCoverageService } from '@api-rest/services/patient-medical-coverage.service';
 import { PatientService } from '@api-rest/services/patient.service';
 
@@ -16,7 +16,10 @@ import { AgregarPrescripcionItemComponent, NewPrescriptionItem } from '../../../
 import { PrescripcionesService, PrescriptionTypes } from '../../../../services/prescripciones.service';
 import { ClinicalSpecialtyService } from '@api-rest/services/clinical-specialty.service';
 import { FeatureFlagService } from '@core/services/feature-flag.service';
-import { hasError } from '@core/utils/form.utils';
+import {hasError, NUMBER_PATTERN} from '@core/utils/form.utils';
+import {Observable} from "rxjs";
+import {AddressMasterDataService} from "@api-rest/services/address-master-data.service";
+import { PersonService } from '@api-rest/services/person.service';
 
 @Component({
 	selector: 'app-nueva-prescripcion',
@@ -36,6 +39,14 @@ export class NuevaPrescripcionComponent implements OnInit {
 	POSDATADAS_MIN = 0;
 	POSDATADAS_MAX = 11;
 	hasError = hasError;
+	provinces$: Observable<any[]>;
+	departments$: Observable<any[]>;
+	countries$: Observable<any[]>;
+	cities$: Observable<any[]>;
+	person: BMPersonDto;
+	maxPhonePrefix: number = 10;
+	maxPhoneNumber: number = 15;
+	argentinaId: number = 14;
 
 	constructor(
 		private readonly formBuilder: FormBuilder,
@@ -48,6 +59,8 @@ export class NuevaPrescripcionComponent implements OnInit {
 		public dialogRef: MatDialogRef<NuevaPrescripcionComponent>,
 		private readonly clinicalSpecialtyService: ClinicalSpecialtyService,
 		private readonly featureFlagService: FeatureFlagService,
+		private readonly addressMasterDataService: AddressMasterDataService,
+		private readonly personService: PersonService,
 		@Inject(MAT_DIALOG_DATA) public data: NewPrescriptionData) {
 			this.featureFlagService.isActive(AppFeature.HABILITAR_RECETA_DIGITAL)
 				.subscribe((result: boolean) => this.isHabilitarRecetaDigitalEnabled = result);
@@ -55,7 +68,69 @@ export class NuevaPrescripcionComponent implements OnInit {
 
 	ngOnInit(): void {
 		this.setProfessionalSpecialties();
+		this.formConfiguration();
+		
+		this.prescriptionItems = this.data.prescriptionItemList ? this.data.prescriptionItemList : [];
+		this.setMedicalCoverages();
+		this.patientService.getPatientBasicData(Number(this.data.patientId)).subscribe((basicData: BasicPatientDto) => {
+			this.patientData = basicData;
+		});
+		
+		if (this.isHabilitarRecetaDigitalEnabled) {
+			this.openPrescriptionItemDialog();
+			this.setCountries();
+		}
+	}
 
+	setDepartments(provinceId: number) {
+		if (provinceId) {
+			this.departments$ = this.addressMasterDataService.getDepartmentsByProvince(provinceId);
+			this.prescriptionForm.get('patientData.locality').setValue(null);
+			this.prescriptionForm.get('patientData.city').setValue(null);
+			this.cities$ = null;
+		}
+	}
+	
+	private setProvinces() {
+		this.provinces$ = this.addressMasterDataService.getByCountry(this.argentinaId);
+	}
+
+	setCities(departmentId: number) {
+		if (departmentId)
+			this.cities$ = this.addressMasterDataService.getCitiesByDepartment(departmentId);
+	}
+
+	private setCountries() {
+		this.getCompletePerson()
+			.subscribe((person: BMPersonDto) => {
+				this.person = person;
+				this.countries$ = this.addressMasterDataService.getAllCountries();
+				this.countries$.subscribe(_ => {
+					this.setProvinces();
+					this.setDepartments(person.provinceId);
+					this.setCities(person.departmentId);
+					this.setPatientDataValues(person);
+				})
+
+			});
+	}
+
+	private setPatientDataValues(person: BMPersonDto) {
+		this.prescriptionForm.get('patientData.country').setValue(this.argentinaId);
+		this.prescriptionForm.get('patientData.province').setValue(person.provinceId);
+		this.prescriptionForm.get('patientData.locality').setValue(person.departmentId);
+		this.prescriptionForm.get('patientData.city').setValue(person.cityId);
+		this.prescriptionForm.get('patientData.street').setValue(person.street);
+		this.prescriptionForm.get('patientData.streetNumber').setValue(person.number);
+		this.prescriptionForm.get('patientData.phonePrefix').setValue(person.phonePrefix);
+		this.prescriptionForm.get('patientData.phoneNumber').setValue(person.phoneNumber);
+	}
+
+	private getCompletePerson(): Observable<BMPersonDto> {
+		return this.personService.getCompletePerson<BMPersonDto>(this.data.personId);
+	}
+
+	private formConfiguration() {
 		this.prescriptionForm = this.formBuilder.group({
 			patientMedicalCoverage: [null],
 			withoutRecipe: [false],
@@ -63,16 +138,24 @@ export class NuevaPrescripcionComponent implements OnInit {
 			clinicalSpecialty: [null, [Validators.required]],
 			prolongedTreatment: [false],
 			posdatadas: [{value: this.POSDATADAS_DEFAULT, disabled: true}, [Validators.min(this.POSDATADAS_MIN), Validators.max(this.POSDATADAS_MAX)]],
-			archived: [false]
+			archived: [false],
+			patientData: this.setPatientDataGroup()
 		});
-		this.prescriptionItems = this.data.prescriptionItemList ? this.data.prescriptionItemList : [];
-		this.setMedicalCoverages();
-		this.patientService.getPatientBasicData(Number(this.data.patientId)).subscribe((basicData: BasicPatientDto) => {
-			this.patientData = basicData;
-		});
+	}
 
-		if (this.isHabilitarRecetaDigitalEnabled)
-			this.openPrescriptionItemDialog();
+	private setPatientDataGroup(): FormGroup | null {
+		return (this.isHabilitarRecetaDigitalEnabled)
+			? this.formBuilder.group({
+				phonePrefix: [null, [Validators.required, Validators.maxLength(this.maxPhonePrefix), Validators.pattern(NUMBER_PATTERN)]],
+				country: [{value: null, disabled: true}, [Validators.required]],
+				phoneNumber: [null, [Validators.required, Validators.maxLength(this.maxPhoneNumber), Validators.pattern(NUMBER_PATTERN)]],
+				province: [null, Validators.required],
+				locality: [null, Validators.required],
+				city: [null, Validators.required],
+				street: [null, Validators.required],
+				streetNumber: [null, Validators.required]
+			})
+			: null;
 	}
 
 	setProlongedTreatment(isOn: boolean) {
@@ -164,7 +247,49 @@ export class NuevaPrescripcionComponent implements OnInit {
 			isArchived: this.prescriptionForm.controls.archived.value,
 		};
 		this.savePrescription(newPrescription);
+		const patientDto: APatientDto = this.mapToAPatientDto();
+		this.patientService.editPatient(patientDto, this.data.patientId).subscribe();
+	}
 
+	private mapToAPatientDto() {
+		const patientDto: APatientDto = {
+			comments: null,
+			generalPractitioner: null,
+			identityVerificationStatusId: null,
+			pamiDoctor: null,
+			typeId: this.patientData.typeId,
+			apartment: this.person.apartment,
+			birthDate: this.person.birthDate,
+			cityId: this.prescriptionForm.get('patientData.city').value,
+			countryId: this.prescriptionForm.get('patientData.country').value,
+			cuil: this.person.cuil,
+			departmentId: this.prescriptionForm.get('patientData.locality').value,
+			educationLevelId: this.person.educationLevelId,
+			email: this.person.email,
+			ethnicityId: this.person.ethnicityId,
+			fileIds: this.person.fileIds,
+			firstName: this.person.firstName,
+			floor: this.person.floor,
+			genderId: this.person.genderId,
+			genderSelfDeterminationId: this.person.genderSelfDeterminationId,
+			identificationNumber: this.person.identificationNumber,
+			identificationTypeId: this.person.identificationTypeId,
+			lastName: this.person.lastName,
+			middleNames: this.person.middleNames,
+			mothersLastName: this.person.mothersLastName,
+			nameSelfDetermination: this.person.nameSelfDetermination,
+			number: this.prescriptionForm.get('patientData.streetNumber').value,
+			occupationId: this.person.occupationId,
+			otherLastNames: this.person.otherLastNames,
+			phoneNumber: this.prescriptionForm.get('patientData.phoneNumber').value,
+			phonePrefix: this.prescriptionForm.get('patientData.phonePrefix').value,
+			postcode: this.person.postcode,
+			provinceId: this.prescriptionForm.get('patientData.province').value,
+			quarter: this.person.quarter,
+			religion: this.person.religion,
+			street: this.prescriptionForm.get('patientData.street').value,
+		}
+		return patientDto;
 	}
 
 	savePrescription(prescriptionDto: PrescriptionDto) {
@@ -273,6 +398,7 @@ export class NuevaPrescripcionComponent implements OnInit {
 
 export class NewPrescriptionData {
 	patientId: number;
+	personId: number;
 	titleLabel: string;
 	addLabel: string;
 	prescriptionType: PrescriptionTypes;

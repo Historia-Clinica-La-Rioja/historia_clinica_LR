@@ -56,6 +56,7 @@ export class AmbulatoriaPacienteComponent implements OnInit, OnDestroy {
 	dialogRef: DockPopupRef;
 	patient: PatientBasicData;
 	patientId: number;
+	personId: number;
 	extensionTabs$: Observable<{ head: MenuItem, body$: Observable<UIPageDto> }[]>;
 	extensionWCTabs$: Observable<SlotedInfo[]>;
 	medicamentStatus$: Observable<any>;
@@ -140,6 +141,7 @@ export class AmbulatoriaPacienteComponent implements OnInit, OnDestroy {
 
 						this.personInformation.push({ description: patient.person.identificationType, data: patient.person.identificationNumber });
 						this.patient = this.mapperService.toPatientBasicData(patient);
+						this.personId = patient.person.id;
 					}
 				);
 				this.ambulatoriaSummaryFacadeService.setIdPaciente(this.patientId);

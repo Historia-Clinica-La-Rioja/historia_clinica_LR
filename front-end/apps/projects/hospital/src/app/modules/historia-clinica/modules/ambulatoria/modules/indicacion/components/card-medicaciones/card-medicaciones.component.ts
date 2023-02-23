@@ -48,6 +48,7 @@ export class CardMedicacionesComponent implements OnInit {
 	rolesThatCanOnlyViewSelfAddedProblems = [ERole.PRESCRIPTOR];
 
 	@Input() patientId: number;
+	@Input() personId?: number;
 	@Input()
 	set medicamentStatus(medicamentStatus: any[]) {
 		this._medicamentStatus = medicamentStatus;
@@ -145,6 +146,7 @@ export class CardMedicacionesComponent implements OnInit {
 			{
 				data: {
 					patientId: this.patientId,
+					personId: this.personId,
 					titleLabel: 'ambulatoria.paciente.ordenes_prescripciones.new_prescription_dialog.MEDICATION_TITLE',
 					addLabel: 'ambulatoria.paciente.ordenes_prescripciones.new_prescription_dialog.ADD_MEDICATION_LABEL',
 					prescriptionType: PrescriptionTypes.MEDICATION,
