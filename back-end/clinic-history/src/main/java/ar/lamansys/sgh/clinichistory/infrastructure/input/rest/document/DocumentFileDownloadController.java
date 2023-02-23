@@ -24,13 +24,13 @@ import lombok.extern.slf4j.Slf4j;
 @RequestMapping("/institutions/{institutionId}/documents")
 @Slf4j
 //@Api(value = "Documents", tags = {"Documents"})
-public class DocumentController {
+public class DocumentFileDownloadController {
 
     private final FetchDocumentFileById fetchDocumentFileById;
 
 	private final FileService fileService;
 
-    public DocumentController(FetchDocumentFileById fetchDocumentFileById, FileService fileService){
+    public DocumentFileDownloadController(FetchDocumentFileById fetchDocumentFileById, FileService fileService){
         this.fetchDocumentFileById = fetchDocumentFileById;
         this.fileService = fileService;
     }

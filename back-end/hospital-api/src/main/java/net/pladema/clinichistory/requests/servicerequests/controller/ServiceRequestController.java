@@ -63,7 +63,6 @@ import net.pladema.clinichistory.requests.servicerequests.service.DeleteDiagnost
 import net.pladema.clinichistory.requests.servicerequests.service.DiagnosticReportInfoService;
 import net.pladema.clinichistory.requests.servicerequests.service.GetServiceRequestInfoService;
 import net.pladema.clinichistory.requests.servicerequests.service.ListDiagnosticReportInfoService;
-import net.pladema.clinichistory.requests.servicerequests.service.ServeDiagnosticReportFileService;
 import net.pladema.clinichistory.requests.servicerequests.service.UpdateDiagnosticReportFileService;
 import net.pladema.clinichistory.requests.servicerequests.service.UploadDiagnosticReportCompletedFileService;
 import net.pladema.clinichistory.requests.servicerequests.service.domain.DiagnosticReportFilterBo;
@@ -100,7 +99,6 @@ public class ServiceRequestController {
     private final UpdateDiagnosticReportFileService updateDiagnosticReportFileService;
     private final DiagnosticReportInfoService diagnosticReportInfoService;
     private final FileMapper fileMapper;
-    private final ServeDiagnosticReportFileService serveDiagnosticReportFileService;
     private final PatientExternalMedicalCoverageService patientExternalMedicalCoverageService;
     private final PdfService pdfService;
     private final GetServiceRequestInfoService getServiceRequestInfoService;
@@ -122,7 +120,7 @@ public class ServiceRequestController {
 									UploadDiagnosticReportCompletedFileService uploadDiagnosticReportCompletedFileService,
 									UpdateDiagnosticReportFileService updateDiagnosticReportFileService,
 									DiagnosticReportInfoService diagnosticReportInfoService,
-									FileMapper fileMapper, ServeDiagnosticReportFileService serveDiagnosticReportFileService,
+									FileMapper fileMapper,
 									PatientExternalMedicalCoverageService patientExternalMedicalCoverageService,
 									PdfService pdfService, GetServiceRequestInfoService getServiceRequestInfoService,
 									HospitalApiPublisher hospitalApiPublisher, FeatureFlagsService featureFlagsService,
@@ -142,7 +140,6 @@ public class ServiceRequestController {
 		this.updateDiagnosticReportFileService = updateDiagnosticReportFileService;
 		this.diagnosticReportInfoService = diagnosticReportInfoService;
 		this.fileMapper = fileMapper;
-		this.serveDiagnosticReportFileService = serveDiagnosticReportFileService;
 		this.patientExternalMedicalCoverageService = patientExternalMedicalCoverageService;
 		this.pdfService = pdfService;
 		this.getServiceRequestInfoService = getServiceRequestInfoService;
@@ -184,21 +181,6 @@ public class ServiceRequestController {
 
         LOG.debug(OUTPUT, result);
         return result;
-    }
-
-    @GetMapping("/download/{fileId}")
-    @PreAuthorize("hasPermission(#institutionId, 'ESPECIALISTA_MEDICO, PROFESIONAL_DE_SALUD, ESPECIALISTA_EN_ODONTOLOGIA, ENFERMERO, PERSONAL_DE_IMAGENES, PERSONAL_DE_LABORATORIO')")
-    public ResponseEntity download(@PathVariable(name = "institutionId") Integer institutionId,
-                                   @PathVariable(name = "patientId") Integer patientId,
-                                   @PathVariable(name = "fileId") Integer fileId
-    ) {
-        LOG.debug("Input parameters -> institutionId {} patientId {}, fileId {}", institutionId, patientId, fileId);
-        StoredFileBo result = serveDiagnosticReportFileService.run(fileId);
-        LOG.debug(OUTPUT, result);
-        return ResponseEntity.ok()
-                .contentType(MediaType.parseMediaType(result.getContentType()))
-                .contentLength(result.getContentLenght())
-                .body(result.getResource());
     }
 
     @PutMapping("/{diagnosticReportId}/complete")

@@ -274,30 +274,6 @@ public class FileService {
 		}
 	}
 
-	public void fixMetadata(Long id) {
-		repository.findById(id)
-				.map(fileInfo -> {
-					String completePath = buildCompletePath(fileInfo.getRelativePath());
-					fileInfo.setChecksum(getHash(completePath));
-					try {
-						fileInfo.setSize(Files.size(Paths.get(completePath)));
-					}  catch (FileServiceException | IOException e){
-						try {
-							saveFileError(new FileErrorInfo(fileInfo.getRelativePath(), String.format("fixMetadata error => %s", e), appNode.nodeId));
-							log.error(e.toString());
-							fileInfo.setSize(Files.size(Paths.get(fileInfo.getOriginalPath())));
-						} catch (IOException ex) {
-							saveFileError(new FileErrorInfo(fileInfo.getOriginalPath(), String.format("fixMetadata error => %s", e), appNode.nodeId));
-							log.error(e.toString());
-							throw new FileServiceException(FileServiceEnumException.SAVE_IOEXCEPTION,
-									String.format("La lectura del siguiente archivo %s tuvo el siguiente error %s", fileInfo.getRelativePath(), e));
-						}
-					}
-					fileInfo.setContentType(parseToContentType(fileInfo.getName()));
-					return repository.save(fileInfo);
-				});
-	}
-
 	public boolean validateRelativePath(String relativePath) {
 		String path = buildCompletePath(relativePath);
 		return validateAbsolutePath(path);

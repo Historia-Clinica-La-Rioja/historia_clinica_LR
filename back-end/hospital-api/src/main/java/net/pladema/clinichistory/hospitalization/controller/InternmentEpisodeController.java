@@ -6,18 +6,6 @@ import java.util.stream.Collectors;
 
 import javax.validation.Valid;
 
-import net.pladema.clinichistory.hospitalization.application.createEpisodeDocument.CreateEpisodeDocument;
-import net.pladema.clinichistory.hospitalization.application.deleteEpisodeDocument.DeleteEpisodeDocument;
-import net.pladema.clinichistory.hospitalization.application.downloadEpisodeDocument.DownloadEpisodeDocument;
-import net.pladema.clinichistory.hospitalization.application.getDocumentType.FetchDocumentType;
-import net.pladema.clinichistory.hospitalization.application.getEpisodeDocument.FetchEpisodeDocument;
-import net.pladema.clinichistory.hospitalization.controller.dto.DocumentTypeDto;
-import net.pladema.clinichistory.hospitalization.controller.dto.EpisodeDocumentDto;
-
-import net.pladema.clinichistory.hospitalization.controller.dto.EpisodeDocumentResponseDto;
-import net.pladema.clinichistory.hospitalization.controller.dto.StoredFileDto;
-import net.pladema.clinichistory.hospitalization.infrastructure.input.rest.mapper.EpisodeDocumentDtoMapper;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
@@ -35,6 +23,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 
 import ar.lamansys.sgx.shared.dates.configuration.LocalDateMapper;
 import ar.lamansys.sgx.shared.dates.controller.dto.DateTimeDto;
@@ -42,9 +31,16 @@ import ar.lamansys.sgx.shared.exceptions.NotFoundException;
 import ar.lamansys.sgx.shared.featureflags.AppFeature;
 import ar.lamansys.sgx.shared.featureflags.application.FeatureFlagsService;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import net.pladema.clinichistory.hospitalization.application.createEpisodeDocument.CreateEpisodeDocument;
+import net.pladema.clinichistory.hospitalization.application.deleteEpisodeDocument.DeleteEpisodeDocument;
+import net.pladema.clinichistory.hospitalization.application.getDocumentType.FetchDocumentType;
+import net.pladema.clinichistory.hospitalization.application.getEpisodeDocument.FetchEpisodeDocument;
 import net.pladema.clinichistory.hospitalization.controller.constraints.InternmentDischargeValid;
 import net.pladema.clinichistory.hospitalization.controller.constraints.InternmentPhysicalDischargeValid;
 import net.pladema.clinichistory.hospitalization.controller.constraints.ProbableDischargeDateValid;
+import net.pladema.clinichistory.hospitalization.controller.dto.DocumentTypeDto;
+import net.pladema.clinichistory.hospitalization.controller.dto.EpisodeDocumentDto;
+import net.pladema.clinichistory.hospitalization.controller.dto.EpisodeDocumentResponseDto;
 import net.pladema.clinichistory.hospitalization.controller.dto.InternmentEpisodeADto;
 import net.pladema.clinichistory.hospitalization.controller.dto.InternmentEpisodeDto;
 import net.pladema.clinichistory.hospitalization.controller.dto.InternmentSummaryDto;
@@ -54,6 +50,7 @@ import net.pladema.clinichistory.hospitalization.controller.dto.summary.Internme
 import net.pladema.clinichistory.hospitalization.controller.mapper.InternmentEpisodeMapper;
 import net.pladema.clinichistory.hospitalization.controller.mapper.PatientDischargeMapper;
 import net.pladema.clinichistory.hospitalization.controller.mapper.ResponsibleContactMapper;
+import net.pladema.clinichistory.hospitalization.infrastructure.input.rest.mapper.EpisodeDocumentDtoMapper;
 import net.pladema.clinichistory.hospitalization.repository.domain.InternmentEpisode;
 import net.pladema.clinichistory.hospitalization.repository.domain.InternmentEpisodeStatus;
 import net.pladema.clinichistory.hospitalization.service.InternmentEpisodeService;
@@ -65,8 +62,6 @@ import net.pladema.establishment.controller.service.BedExternalService;
 import net.pladema.events.EHospitalApiTopicDto;
 import net.pladema.events.HospitalApiPublisher;
 import net.pladema.staff.controller.service.HealthcareProfessionalExternalService;
-
-import org.springframework.web.multipart.MultipartFile;
 
 @RestController
 @RequestMapping("/institutions/{institutionId}/internments")
@@ -110,11 +105,9 @@ public class InternmentEpisodeController {
 
 	private final DeleteEpisodeDocument deleteEpisodeDocument;
 
-	private final DownloadEpisodeDocument downloadEpisodeDocument;
-
 	private final EpisodeDocumentDtoMapper mapper;
 
-	public InternmentEpisodeController(InternmentEpisodeService internmentEpisodeService, HealthcareProfessionalExternalService healthcareProfessionalExternalService, InternmentEpisodeMapper internmentEpisodeMapper, BedExternalService bedExternalService, PatientDischargeMapper patientDischargeMapper, ResponsibleContactService responsibleContactService, FeatureFlagsService featureFlagsService, PatientDischargeService patientDischargeService, ResponsibleContactMapper responsibleContactMapper, LocalDateMapper localDateMapper, HospitalApiPublisher hospitalApiPublisher, FetchEpisodeDocument fetchEpisodeDocument, CreateEpisodeDocument createEpisodeDocument, FetchDocumentType fetchDocumentType, DeleteEpisodeDocument deleteEpisodeDocument, DownloadEpisodeDocument downloadEpisodeDocument, EpisodeDocumentDtoMapper mapper) {
+	public InternmentEpisodeController(InternmentEpisodeService internmentEpisodeService, HealthcareProfessionalExternalService healthcareProfessionalExternalService, InternmentEpisodeMapper internmentEpisodeMapper, BedExternalService bedExternalService, PatientDischargeMapper patientDischargeMapper, ResponsibleContactService responsibleContactService, FeatureFlagsService featureFlagsService, PatientDischargeService patientDischargeService, ResponsibleContactMapper responsibleContactMapper, LocalDateMapper localDateMapper, HospitalApiPublisher hospitalApiPublisher, FetchEpisodeDocument fetchEpisodeDocument, CreateEpisodeDocument createEpisodeDocument, FetchDocumentType fetchDocumentType, DeleteEpisodeDocument deleteEpisodeDocument, EpisodeDocumentDtoMapper mapper) {
 		this.internmentEpisodeService = internmentEpisodeService;
 		this.healthcareProfessionalExternalService = healthcareProfessionalExternalService;
 		this.internmentEpisodeMapper = internmentEpisodeMapper;
@@ -130,7 +123,6 @@ public class InternmentEpisodeController {
 		this.createEpisodeDocument = createEpisodeDocument;
 		this.fetchDocumentType = fetchDocumentType;
 		this.deleteEpisodeDocument = deleteEpisodeDocument;
-		this.downloadEpisodeDocument = downloadEpisodeDocument;
 		this.mapper = mapper;
 	}
 
@@ -182,21 +174,6 @@ public class InternmentEpisodeController {
 		Boolean result = deleteEpisodeDocument.run(episodeDocumentId);
 		LOG.debug(OUTPUT, result);
 		return ResponseEntity.ok().body(result);
-	}
-
-	@GetMapping("/episodedocuments/download/{episodeDocumentId}")
-	@PreAuthorize("hasPermission(#institutionId, 'ADMINISTRATIVO, ADMINISTRATIVO_RED_DE_IMAGENES')")
-	public ResponseEntity downloadEpisodeDocument(@PathVariable(name = "episodeDocumentId") Integer episodeDocumentId,
-												  @PathVariable(name = "institutionId") Integer institutionId) {
-		LOG.debug("Input parameters -> episodeDocumentId {}, institutionId {}", episodeDocumentId, institutionId);
-		if (!featureFlagsService.isOn(AppFeature.HABILITAR_DESCARGA_DOCUMENTOS_PDF))
-			return new ResponseEntity<>(null, HttpStatus.METHOD_NOT_ALLOWED);
-
-		StoredFileDto dto = mapper.StoredFileBoToStoredFileDto(downloadEpisodeDocument.run(episodeDocumentId));
-		LOG.debug(OUTPUT, dto);
-		return ResponseEntity.ok()
-				.contentType(MediaType.APPLICATION_PDF)
-				.body(dto.getResource());
 	}
 
 	@GetMapping("/{internmentEpisodeId}/summary")
