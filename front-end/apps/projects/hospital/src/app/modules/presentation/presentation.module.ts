@@ -52,6 +52,7 @@ import { FullHouseAddressPipe } from './pipes/fullHouseAddress.pipe';
 import { PatientToPersonPipe } from "./pipes/PatientToPersonPipe";
 import { PaginatePipe } from './pipes/paginate.pipe';
 import { PersonIdentificationPipe } from './pipes/person-identification.pipe';
+import { TimeDtoToLocalTimePipe } from './pipes/time-dto-to-local-time.pipe';
 import { ViewDateDtoPipe } from './pipes/view-date-dto.pipe';
 import { ViewDatePipe } from './pipes/view-date.pipe';
 import { ViewHourMinutePipe } from './pipes/view-hour-minute.pipe';
@@ -106,6 +107,7 @@ import { ViewHourMinutePipe } from './pipes/view-hour-minute.pipe';
 		PatientToPersonPipe,
 		PaginatePipe,
 		PersonIdentificationPipe,
+		TimeDtoToLocalTimePipe,
 		ViewDateDtoPipe,
 		ViewDatePipe,
 		ViewHourMinutePipe,
@@ -166,6 +168,7 @@ import { ViewHourMinutePipe } from './pipes/view-hour-minute.pipe';
 		PatientToPersonPipe,
 		PaginatePipe,
 		PersonIdentificationPipe,
+		TimeDtoToLocalTimePipe,
 		ViewDateDtoPipe,
 		ViewDatePipe,
 		ViewHourMinutePipe,

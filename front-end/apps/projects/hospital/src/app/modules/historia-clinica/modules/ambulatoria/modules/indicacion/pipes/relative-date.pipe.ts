@@ -22,7 +22,7 @@ export class RelativeDatePipe implements PipeTransform {
 		} else if (value.toDateString() === dayBeforeYesterday.toDateString()) {
 			return 'indicacion.relative-date-pipe.PRESCRIBED_THE_DAY_BEFORE_YESTERDAY_TO_THIS_PATIENT';
 		} else {
-			return value.toDateString();
+			return undefined;
 		}
 	}
 

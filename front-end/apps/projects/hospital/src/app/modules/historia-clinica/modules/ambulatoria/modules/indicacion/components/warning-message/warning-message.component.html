@@ -32,7 +32,7 @@
 				{{ 'indicacion.warning-message.START_TIME'| translate }}
 				<span class="details">
 					{{ 'indicacion.warning-message.START_TIME_DETAILS'
-					| translate: { hour: parenteralPlan.dosage.startDateTime.time.hours } }}
+					| translate: { hour: parenteralPlan.dosage.startDateTime | timeDtoToLocalTime } }}
 				</span>
 			</span>
 		</div>

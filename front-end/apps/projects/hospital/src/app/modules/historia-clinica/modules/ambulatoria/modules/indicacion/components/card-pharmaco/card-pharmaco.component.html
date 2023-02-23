@@ -1,7 +1,6 @@
 <div fxLayout="column">
 	<mat-card *ngIf="pharmacos?.length else noInfo">
 		<div *ngFor="let pharmaco of pharmacos;last as isLast">
-
 			<div fxLayout="column" fxLayout.gt-md="row" fxLayoutAlign.gt-md="space-between center"
 				fxLayoutAlign="start start" fxLayoutGap="5px" fxLayoutGap.gt-md="10px">
 				<div fxFlex.gt-md="25%">
@@ -16,7 +15,7 @@
 					<div fxFlex="60%" *ngIf="pharmaco?.patientId" fxLayoutAlign="start center">
 						<mat-icon color="primary">schedule</mat-icon>
 						<span class="color-primary bold line-height" id="date"
-							[translate]="pharmaco.dosage.startDateTime.date|relativeDate">
+							[translate]="pharmaco.indicationDate|relativeDate">
 						</span>
 					</div>
 				</div>
