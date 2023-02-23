@@ -254,9 +254,13 @@ export class CardMedicacionesComponent implements OnInit {
 		this.documentService.downloadFile(documentData);
 	}
 
-	openSendEmailDialog() {
+	openSendEmailDialog(medicationInfo: MedicationInfoDto) {
 		this.dialog.open(EnviarRecetaDigitalPorEmailComponent, {
 			width: '35%',
+			data: {
+				patientId: this.patientId,
+				prescriptionRequest: medicationInfo.hceDocumentData.id,
+			}
 		})
 	}
 
