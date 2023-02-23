@@ -277,7 +277,7 @@ public class MedicationRequestController {
     }
 
 	@GetMapping(value = "/documentId/{documentId}/notify")
-	@PreAuthorize("hasPermission(#institutionId, 'ESPECIALISTA_MEDICO, PROFESIONAL_DE_SALUD, ESPECIALISTA_EN_ODONTOLOGIA, ENFERMERO, PERSONAL_DE_FARMACIA')")
+	@PreAuthorize("hasPermission(#institutionId, 'ESPECIALISTA_MEDICO, PROFESIONAL_DE_SALUD, ESPECIALISTA_EN_ODONTOLOGIA, ENFERMERO, PERSONAL_DE_FARMACIA, PRESCRIPTOR')")
 	public void notify(@PathVariable(name = "institutionId") Integer institutionId,
 														@PathVariable(name = "patientId") Integer patientId,
 														@PathVariable(name = "documentId") Long documentId,
