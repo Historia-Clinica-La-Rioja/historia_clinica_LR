@@ -157,9 +157,10 @@ public class AuditableContextBuilder {
 		ctx.put("requestDate", date);
 		ctx.put("dateUntil", dateUntil);
 
-		var recipeNumberBarCode = generateDigitalRecipeBarCode(recipeDomain + "." + document.getEncounterId().toString());
+		var recipeNumberWithDomain = recipeDomain + "." + document.getEncounterId().toString();
+		var recipeNumberBarCode = generateDigitalRecipeBarCode(recipeNumberWithDomain);
 		ctx.put("recipeNumberBarCode", recipeNumberBarCode);
-		ctx.put("recipeNumber", document.getEncounterId().toString());
+		ctx.put("recipeNumber", recipeNumberWithDomain);
 
 		var professionalInformation = authorFromDocumentFunction.apply(document.getId());
 		var professionalRelatedProfession = professionalInformation.getProfessions().stream().filter(profession -> profession.getSpecialties().stream().anyMatch(specialty -> specialty.getSpecialty().getId().equals(document.getClinicalSpecialtyId()))).findFirst();
