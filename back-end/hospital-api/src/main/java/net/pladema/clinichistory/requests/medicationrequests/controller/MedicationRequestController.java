@@ -331,10 +331,11 @@ public class MedicationRequestController {
 	private NewMedicationRequestNotificationArgs mapToMedicationRequestNotificationBo(Integer recipeId, BasicPatientDto patientDto, ByteArrayResource resource) {
 		LOG.debug("Input parameters -> recipeId {}, patientDto {}, resource {}", recipeId, patientDto, resource);
 		NewMedicationRequestNotificationArgs result = new NewMedicationRequestNotificationArgs();
-		result.setRecipeId(recipeId);
+		String repiceIdWithDomain = recipeDomain + "." + recipeId;
+		result.setRecipeId(repiceIdWithDomain);
 		result.setPatient(patientDto);
 		HashMap<String, ByteArrayResource> attachments = new HashMap<>();
-		attachments.put("Receta_"+recipeId+".pdf", resource);
+		attachments.put("Receta_"+repiceIdWithDomain+".pdf", resource);
 		result.setResources(attachments);
 		return result;
 	}

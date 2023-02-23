@@ -16,7 +16,7 @@ public class NewMedicationRequestNotificationArgs {
 
 	private BasicPatientDto patient;
 
-	private Integer recipeId;
+	private String recipeId;
 
 	private HashMap<String, ByteArrayResource> resources;
 }
