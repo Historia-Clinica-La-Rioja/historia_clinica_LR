@@ -1,7 +1,6 @@
 package ar.lamansys.sgh.publicapi.infrastructure.output;
 
 import java.sql.Date;
-import java.sql.Timestamp;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -55,7 +54,7 @@ public class PrescriptionStorageImpl implements PrescriptionStorage {
 	public Optional<PrescriptionBo> getPrescriptionByIdAndDni(String prescriptionId, String identificationNumber) {
 		String domainNumber = prescriptionId.split("\\.")[0];
 		Integer numericPrescriptionId = Integer.valueOf(prescriptionId.split("\\.")[1]);
-		String stringQuery = "select mr.id as mrid, ms.created_on, ms.due_date, " +
+		String stringQuery = "select mr.id as mrid, ms.prescription_date, ms.due_date, " +
 		"p2.first_name as p2fn, p2.last_name as p2ln, pe.name_self_determination, g.description as gd, spg.description as spgd, p2.birth_date, it.description as itd, p2.identification_number, " +
 		"mc.name as mcn, mc.cuit, mcp.plan, pmc.affiliate_number, i.name, i.sisa_code, i.province_code, " +
 		"CONCAT(a.street, ' ', a.number, ' ', case WHEN a.floor is not null THEN CONCAT('Piso ', a.floor) else '' END)," +
@@ -247,7 +246,7 @@ public class PrescriptionStorageImpl implements PrescriptionStorage {
 					"JOIN document_medicamention_statement dms ON ms2.id = dms.medication_statement_id " +
 					"JOIN document d on d.id = dms.document_id " +
 					"JOIN medication_request mr ON mr.id = d.source_id " +
-					"WHERE mr.id = :prescriptionId and d.type_id = " + RECETA + " AND ms2.prescription_line_number = :lineNumber " +
+					"WHERE mr.id = :prescriptionId and (d.type_id = " + RECETA + " or d.type_id = " + RECETA_DIGITAL + ") AND ms2.prescription_line_number = :lineNumber " +
 				")";
 
 		Query query = entityManager.createNativeQuery(updateQuery);
@@ -368,12 +367,12 @@ public class PrescriptionStorageImpl implements PrescriptionStorage {
 	private PrescriptionBo processPrescriptionQuery(Object[] queryResult) {
 
 		var dueDate = queryResult[2] != null ?
-				((Date)queryResult[2]).toLocalDate() : ((Timestamp)queryResult[1]).toLocalDateTime().plusDays(30).toLocalDate();
+				((Date)queryResult[2]).toLocalDate() : ((Date)queryResult[1]).toLocalDate().plusDays(30);
 
 		return new PrescriptionBo(
 				"1",
 				((Integer)queryResult[0]).toString(),
-				((Timestamp)queryResult[1]).toLocalDateTime(),
+				((Date)queryResult[1]).toLocalDate().atStartOfDay(),
 				dueDate.atStartOfDay(),
 				new PatientPrescriptionBo(
 						(String)queryResult[3],
