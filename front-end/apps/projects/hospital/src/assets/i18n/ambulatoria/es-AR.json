@@ -422,7 +422,7 @@
                 },
                 "send_digital_recipe_email_dialog": {
                     "TITLE": "Enviar receta digital por email",
-                    "INPUT_TEXT": "Por favor confirme el mail de paciente:",
+                    "INPUT_TEXT": "Por favor confirme el mail del paciente:",
                     "LABEL": "Email del paciente",
                     "SEND_RECIPE": "Enviar receta",
                     "REQUIRED_EMAIL": "El email del paciente es obligatorio"
