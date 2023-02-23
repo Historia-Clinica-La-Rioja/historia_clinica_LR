@@ -1,20 +1,6 @@
 package ar.lamansys.sgh.publicapi.infrastructure.input.rest;
 
-import java.util.ArrayList;
-import java.util.Comparator;
 import java.util.List;
-import java.util.Map;
-import java.util.stream.Collectors;
-
-import ar.lamansys.sgh.publicapi.infrastructure.input.rest.dto.DiagnosesDto;
-import ar.lamansys.sgh.publicapi.infrastructure.input.rest.dto.SingleAttentionInfoDto;
-
-import ar.lamansys.sgh.publicapi.infrastructure.input.rest.dto.SingleDiagnosticDto;
-
-import ar.lamansys.sgh.publicapi.infrastructure.input.rest.dto.SnomedDto;
-import ar.lamansys.sgh.publicapi.infrastructure.input.rest.mapper.ProblemTypeEnum;
-
-import jdk.jshell.Diag;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -31,9 +17,6 @@ import ar.lamansys.sgh.publicapi.infrastructure.input.rest.dto.AttentionInfoDto;
 import ar.lamansys.sgh.publicapi.infrastructure.input.rest.mapper.ActivitiesMapper;
 import ar.lamansys.sgx.shared.dates.configuration.LocalDateMapper;
 import io.swagger.v3.oas.annotations.tags.Tag;
-
-import static java.util.stream.Collectors.groupingBy;
-import static java.util.stream.Collectors.maxBy;
 
 @RestController
 @RequestMapping("/public-api")

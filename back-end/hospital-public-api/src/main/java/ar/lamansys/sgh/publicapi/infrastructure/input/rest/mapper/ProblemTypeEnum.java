@@ -1,6 +1,5 @@
 package ar.lamansys.sgh.publicapi.infrastructure.input.rest.mapper;
 
-import ar.lamansys.sgh.publicapi.domain.GenderEnum;
 import ar.lamansys.sgx.shared.exceptions.NotFoundException;
 import lombok.Getter;
 

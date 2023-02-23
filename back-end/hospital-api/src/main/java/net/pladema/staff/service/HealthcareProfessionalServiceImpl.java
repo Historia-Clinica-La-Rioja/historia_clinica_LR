@@ -1,7 +1,6 @@
 package net.pladema.staff.service;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -9,12 +8,6 @@ import java.util.stream.Collectors;
 import net.pladema.permissions.RoleUtils;
 import net.pladema.staff.repository.HealthcareProfessionalSpecialtyRepository;
 import net.pladema.staff.repository.ProfessionalProfessionRepository;
-import net.pladema.staff.repository.domain.HealthcareProfessionalSpecialtyVo;
-import net.pladema.staff.repository.domain.ProfessionalProfessionsVo;
-import net.pladema.staff.service.domain.HealthcareProfessionalSpecialtyBo;
-import net.pladema.staff.service.domain.ProfessionalProfessionsBo;
-
-import net.pladema.staff.service.domain.ProfessionalSpecialtyBo;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

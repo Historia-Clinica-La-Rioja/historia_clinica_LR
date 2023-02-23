@@ -1,6 +1,5 @@
 package net.pladema.medicalconsultation.diary.service.domain;
 
-import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
 

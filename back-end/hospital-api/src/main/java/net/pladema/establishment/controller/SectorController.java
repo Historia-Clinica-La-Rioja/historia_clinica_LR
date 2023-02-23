@@ -1,6 +1,5 @@
 package net.pladema.establishment.controller;
 
-import ar.lamansys.sgh.clinichistory.domain.ips.EUnit;
 import ar.lamansys.sgx.shared.masterdata.domain.EnumWriter;
 import ar.lamansys.sgx.shared.masterdata.infrastructure.input.rest.dto.MasterDataDto;
 import io.swagger.v3.oas.annotations.tags.Tag;

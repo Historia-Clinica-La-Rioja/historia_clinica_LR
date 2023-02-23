@@ -2,7 +2,6 @@ package net.pladema.emergencycare.triage.service.impl;
 
 import net.pladema.emergencycare.triage.repository.TriageCategoryRepository;
 
-import net.pladema.emergencycare.triage.repository.entity.TriageCategory;
 import net.pladema.emergencycare.triage.service.TriageMasterDataService;
 import net.pladema.emergencycare.triage.service.domain.TriageCategoryBo;
 

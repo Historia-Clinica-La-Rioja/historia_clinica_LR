@@ -1,7 +1,6 @@
 package net.pladema.medicalconsultation.equipmentdiary.service;
 
 import net.pladema.medicalconsultation.diary.repository.entity.OpeningHours;
-import net.pladema.medicalconsultation.equipmentdiary.controller.dto.EquipmentDiaryADto;
 import net.pladema.medicalconsultation.equipmentdiary.controller.dto.EquipmentDiaryDto;
 import net.pladema.medicalconsultation.equipmentdiary.service.domain.EquipmentDiaryBo;
 import net.pladema.medicalconsultation.equipmentdiary.service.domain.OpeningHoursBo;

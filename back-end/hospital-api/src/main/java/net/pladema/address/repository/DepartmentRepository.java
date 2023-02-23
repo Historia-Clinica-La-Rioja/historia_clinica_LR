@@ -1,6 +1,5 @@
 package net.pladema.address.repository;
 
-import net.pladema.address.controller.service.domain.DepartmentBo;
 import net.pladema.address.repository.entity.Department;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.repository.JpaRepository;

@@ -3,8 +3,6 @@ package ar.lamansys.sgx.cubejs.infrastructure.repository;
 import java.time.Duration;
 import java.util.Map;
 
-import org.slf4j.LoggerFactory;
-
 import ar.lamansys.sgx.cubejs.CubejsAutoConfiguration;
 import ar.lamansys.sgx.cubejs.domain.DashboardBoInfo;
 import ar.lamansys.sgx.cubejs.domain.DashboardStorage;

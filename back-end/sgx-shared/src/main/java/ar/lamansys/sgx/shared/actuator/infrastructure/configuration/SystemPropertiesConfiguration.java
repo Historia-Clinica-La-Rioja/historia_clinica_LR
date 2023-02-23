@@ -6,7 +6,6 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Optional;
 import java.util.Set;
-import java.util.UUID;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
@@ -14,7 +13,6 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.actuate.env.EnvironmentEndpoint;
 import org.springframework.context.MessageSource;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.scheduling.annotation.Scheduled;
 
 import ar.lamansys.sgx.shared.actuator.domain.PropertyBo;
 import ar.lamansys.sgx.shared.actuator.infrastructure.output.repository.SystemProperty;

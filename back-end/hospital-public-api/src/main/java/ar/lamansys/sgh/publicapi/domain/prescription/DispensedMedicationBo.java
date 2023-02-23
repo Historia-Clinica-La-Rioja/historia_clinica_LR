@@ -1,13 +1,6 @@
 package ar.lamansys.sgh.publicapi.domain.prescription;
 
-import lombok.Builder;
 import lombok.Getter;
-
-import javax.persistence.Column;
-import javax.validation.ConstraintViolationException;
-import javax.validation.constraints.NotNull;
-
-import java.util.Collections;
 
 @Getter
 public class DispensedMedicationBo {

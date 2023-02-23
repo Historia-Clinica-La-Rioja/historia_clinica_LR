@@ -1,7 +1,5 @@
 package net.pladema.medicalconsultation.diary.controller.dto;
 
-import ar.lamansys.sgx.shared.dates.controller.dto.DateDto;
-
 import com.fasterxml.jackson.annotation.JsonFormat;
 
 import lombok.Getter;

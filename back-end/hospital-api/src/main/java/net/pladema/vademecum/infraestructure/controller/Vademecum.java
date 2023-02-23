@@ -1,6 +1,5 @@
 package net.pladema.vademecum.infraestructure.controller;
 
-import ar.lamansys.sgh.clinichistory.infrastructure.input.rest.ips.dto.SnomedDto;
 import ar.lamansys.sgh.shared.infrastructure.input.service.SharedSnomedDto;
 import net.pladema.vademecum.application.FetchVademecum;
 

@@ -14,7 +14,6 @@ import org.springframework.core.io.Resource;
 import org.springframework.util.FileCopyUtils;
 
 import ar.lamansys.sgx.shared.notifications.domain.RecipientBo;
-import ar.lamansys.sgx.shared.templating.impl.NotificationTemplateEngine;
 
 public class TemplateTestingUtils {
 

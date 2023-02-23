@@ -1,6 +1,5 @@
 package net.pladema.staff.service;
 
-import net.pladema.establishment.service.domain.CareLineBo;
 import net.pladema.establishment.service.impl.CareLineServiceImpl;
 import net.pladema.staff.repository.ClinicalSpecialtyRepository;
 import net.pladema.staff.repository.entity.ClinicalSpecialty;

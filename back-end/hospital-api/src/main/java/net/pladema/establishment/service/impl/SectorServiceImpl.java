@@ -1,14 +1,10 @@
 package net.pladema.establishment.service.impl;
 
-import lombok.RequiredArgsConstructor;
 import net.pladema.establishment.repository.SectorRepository;
 import net.pladema.establishment.repository.entity.Sector;
 import net.pladema.establishment.service.SectorService;
 
 import net.pladema.establishment.service.domain.SectorBO;
-
-import net.pladema.medicalconsultation.diary.repository.entity.Diary;
-import net.pladema.medicalconsultation.diary.service.domain.DiaryBo;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

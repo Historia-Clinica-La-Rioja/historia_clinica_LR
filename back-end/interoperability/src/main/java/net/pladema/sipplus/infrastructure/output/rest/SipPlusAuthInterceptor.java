@@ -1,10 +1,7 @@
 package net.pladema.sipplus.infrastructure.output.rest;
 
 import lombok.extern.slf4j.Slf4j;
-import net.pladema.snvs.infrastructure.configuration.SnvsCondition;
-import net.pladema.snvs.infrastructure.output.rest.report.SisaWSConfig;
 
-import org.springframework.context.annotation.Conditional;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpRequest;
 import org.springframework.http.client.ClientHttpRequestExecution;

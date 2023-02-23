@@ -1,7 +1,5 @@
 package ar.lamansys.sgh.publicapi.infrastructure.input.rest.dto.prescription;
 
-import ar.lamansys.sgh.publicapi.domain.prescription.PrescriptionProfessionBo;
-import ar.lamansys.sgh.publicapi.domain.prescription.PrescriptionProfessionalRegistrationBo;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;

@@ -1,7 +1,6 @@
 package ar.lamansys.sgh.clinichistory.application.indication.getInternmentEpisodeOtherIndication;
 
 import ar.lamansys.sgh.clinichistory.application.ports.OtherIndicationStorage;
-import ar.lamansys.sgh.clinichistory.domain.ips.DietBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.OtherIndicationBo;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -9,8 +8,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import javax.persistence.EntityNotFoundException;
-
-import java.util.List;
 
 @Service
 @Slf4j

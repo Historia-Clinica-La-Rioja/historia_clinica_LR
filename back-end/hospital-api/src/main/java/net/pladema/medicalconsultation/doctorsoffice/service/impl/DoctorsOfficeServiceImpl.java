@@ -2,7 +2,6 @@ package net.pladema.medicalconsultation.doctorsoffice.service.impl;
 
 import net.pladema.medicalconsultation.doctorsoffice.repository.DoctorsOfficeRepository;
 import net.pladema.medicalconsultation.doctorsoffice.repository.domain.DoctorsOfficeVo;
-import net.pladema.medicalconsultation.doctorsoffice.repository.entity.DoctorsOffice;
 import net.pladema.medicalconsultation.doctorsoffice.service.DoctorsOfficeService;
 import net.pladema.medicalconsultation.doctorsoffice.service.domain.DoctorsOfficeBo;
 import org.slf4j.Logger;

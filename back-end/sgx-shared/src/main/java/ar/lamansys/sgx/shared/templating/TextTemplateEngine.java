@@ -7,7 +7,6 @@ import org.springframework.context.MessageSource;
 import ar.lamansys.sgx.shared.templating.domain.NotificationContext;
 import ar.lamansys.sgx.shared.templating.domain.NotificationEnv;
 import ar.lamansys.sgx.shared.templating.impl.NotificationTemplateEngine;
-import lombok.AllArgsConstructor;
 
 
 public class TextTemplateEngine extends NotificationTemplateEngine<String> {

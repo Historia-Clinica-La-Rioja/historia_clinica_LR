@@ -2,7 +2,6 @@ package ar.lamansys.sgh.publicapi.infrastructure.input.rest.dto.sipplus;
 
 import lombok.Builder;
 import lombok.Getter;
-import lombok.Setter;
 import lombok.ToString;
 import net.minidev.json.JSONArray;
 

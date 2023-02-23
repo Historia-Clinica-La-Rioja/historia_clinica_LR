@@ -1,9 +1,7 @@
 package net.pladema.establishment.controller;
 
 import net.pladema.establishment.repository.EquipmentRepository;
-import net.pladema.establishment.repository.OrchestratorRepository;
 import net.pladema.establishment.repository.entity.Equipment;
-import net.pladema.establishment.repository.entity.Orchestrator;
 import net.pladema.sgx.backoffice.rest.AbstractBackofficeController;
 
 import org.springframework.web.bind.annotation.RequestBody;

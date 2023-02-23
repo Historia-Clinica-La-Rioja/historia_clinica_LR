@@ -10,8 +10,6 @@ import org.springframework.transaction.annotation.Transactional;
 import net.pladema.medicalconsultation.appointment.repository.entity.AppointmentAssn;
 import net.pladema.medicalconsultation.appointment.repository.entity.AppointmentAssnPK;
 
-import java.util.List;
-
 @Repository
 public interface AppointmentAssnRepository extends JpaRepository<AppointmentAssn, AppointmentAssnPK> {
 	

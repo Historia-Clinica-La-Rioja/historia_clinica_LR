@@ -2,7 +2,6 @@ package net.pladema.medicalconsultation.appointment.repository;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
-import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 

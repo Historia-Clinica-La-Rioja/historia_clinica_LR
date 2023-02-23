@@ -2,7 +2,6 @@ package net.pladema.patient.service.impl;
 
 import ar.lamansys.sgx.shared.exceptions.NotFoundException;
 import net.pladema.establishment.repository.MedicalCoveragePlanRepository;
-import net.pladema.medicalconsultation.appointment.service.AppointmentService;
 import net.pladema.patient.repository.PatientMedicalCoverageRepository;
 import net.pladema.patient.repository.domain.PatientMedicalCoverageVo;
 import net.pladema.patient.repository.entity.MedicalCoverage;

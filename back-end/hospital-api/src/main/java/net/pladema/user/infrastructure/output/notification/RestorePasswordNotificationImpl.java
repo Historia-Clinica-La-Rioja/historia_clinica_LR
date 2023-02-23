@@ -13,7 +13,6 @@ import net.pladema.user.infrastructure.output.notification.exceptions.RestorePas
 import net.pladema.user.infrastructure.output.notification.exceptions.RestorePasswordNotificationExceptionEnum;
 
 import org.springframework.stereotype.Service;
-import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 @AllArgsConstructor
 @Slf4j

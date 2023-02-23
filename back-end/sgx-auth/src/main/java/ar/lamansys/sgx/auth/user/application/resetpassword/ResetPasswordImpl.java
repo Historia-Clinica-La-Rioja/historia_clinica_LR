@@ -9,8 +9,6 @@ import ar.lamansys.sgx.auth.user.domain.user.service.UserStorage;
 import ar.lamansys.sgx.auth.user.application.updateuserpassword.UpdateUserPassword;
 import ar.lamansys.sgx.auth.user.domain.userpassword.PasswordValidator;
 
-import lombok.AllArgsConstructor;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;

@@ -1,15 +1,11 @@
 package net.pladema.snowstorm.repository.domain;
 
 import lombok.AllArgsConstructor;
-import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.ToString;
 
 import org.apache.commons.lang3.StringUtils;
-import org.hibernate.validator.constraints.Normalized;
 
-import java.text.Normalizer;
-import java.util.Locale;
 import java.util.Objects;
 
 @AllArgsConstructor

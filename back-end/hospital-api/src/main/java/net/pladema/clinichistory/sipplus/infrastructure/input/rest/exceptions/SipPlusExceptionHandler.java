@@ -1,6 +1,5 @@
 package net.pladema.clinichistory.sipplus.infrastructure.input.rest.exceptions;
 
-import ar.lamansys.refcounterref.application.getreference.exceptions.ReferenceException;
 import ar.lamansys.sgx.shared.exceptions.dto.ApiErrorMessageDto;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

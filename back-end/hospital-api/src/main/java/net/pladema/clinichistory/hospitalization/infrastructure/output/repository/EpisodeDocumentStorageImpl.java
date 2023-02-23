@@ -12,7 +12,6 @@ import net.pladema.clinichistory.hospitalization.service.domain.EpisodeDocumentB
 import net.pladema.clinichistory.hospitalization.service.domain.EpisodeDocumentResponseBo;
 import net.pladema.clinichistory.hospitalization.service.domain.StoredFileBo;
 
-import org.springframework.data.domain.Example;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 import java.util.List;

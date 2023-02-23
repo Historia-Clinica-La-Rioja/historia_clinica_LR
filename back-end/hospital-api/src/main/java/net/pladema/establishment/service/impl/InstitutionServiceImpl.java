@@ -12,9 +12,6 @@ import net.pladema.establishment.service.InstitutionBoMapper;
 import net.pladema.establishment.service.InstitutionService;
 import net.pladema.establishment.service.domain.InstitutionBo;
 
-import java.util.List;
-import java.util.Optional;
-
 @Service
 public class InstitutionServiceImpl implements InstitutionService {
 

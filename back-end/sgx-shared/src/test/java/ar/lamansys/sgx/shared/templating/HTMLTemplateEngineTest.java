@@ -3,10 +3,6 @@ package ar.lamansys.sgx.shared.templating;
 import static ar.lamansys.sgx.shared.templating.utils.testing.TemplateTestingUtils.classpathFileContent;
 import static org.assertj.core.api.Assertions.assertThat;
 import static ar.lamansys.sgx.shared.templating.SpringTemplateUtils.createHtmlTemplateEngine;
-import static org.mockito.ArgumentMatchers.any;
-
-import java.util.Collections;
-import java.util.Map;
 
 import ar.lamansys.sgx.shared.featureflags.AppFeature;
 

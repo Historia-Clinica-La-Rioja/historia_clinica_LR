@@ -2,9 +2,7 @@ package net.pladema.medicalconsultation.appointment.controller.dto;
 
 import ar.lamansys.sgx.shared.dates.controller.dto.DateTimeDto;
 import lombok.*;
-import org.hibernate.validator.constraints.Length;
 
-import javax.annotation.Nullable;
 import javax.validation.constraints.NotNull;
 
 @Getter

@@ -1,8 +1,6 @@
 package net.pladema.address.controller.service.domain;
 
-import lombok.AllArgsConstructor;
 import lombok.Getter;
-import net.pladema.address.controller.dto.CityDto;
 import net.pladema.address.repository.domain.AddressVo;
 
 @Getter

@@ -1,12 +1,9 @@
 package net.pladema.user.application.restorepasswordbyusername;
 
-import ar.lamansys.sgx.auth.user.infrastructure.input.service.UserExternalService;
 import net.pladema.user.application.port.HospitalUserStorage;
 import net.pladema.user.application.port.RestorePasswordNotification;
 import net.pladema.user.domain.notification.RestorePasswordNotificationBo;
 import ar.lamansys.sgx.auth.user.domain.passwordreset.PasswordResetTokenStorage;
-import ar.lamansys.sgx.auth.user.domain.user.model.UserBo;
-import ar.lamansys.sgx.auth.user.domain.user.service.UserStorage;
 
 import lombok.RequiredArgsConstructor;
 

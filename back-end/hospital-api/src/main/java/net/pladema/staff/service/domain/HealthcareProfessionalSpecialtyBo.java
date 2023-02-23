@@ -7,7 +7,6 @@ import lombok.Setter;
 import net.pladema.staff.repository.domain.HealthcareProfessionalSpecialtyVo;
 
 import javax.annotation.Nullable;
-import java.util.Objects;
 
 @Setter
 @Getter
