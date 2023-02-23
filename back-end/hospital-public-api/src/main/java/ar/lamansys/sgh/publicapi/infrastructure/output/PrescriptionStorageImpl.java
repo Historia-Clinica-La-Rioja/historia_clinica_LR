@@ -274,7 +274,7 @@ public class PrescriptionStorageImpl implements PrescriptionStorage {
 				"join patient p on p.id = d.patient_id " +
 				"join person pp on pp.id = p.person_id " +
 				"left join medication_statement_commercial msc on msc.id = ms.id " +
-				"where mr.id = :prescriptionId  and d.type_id = " + RECETA;
+				"where mr.id = :prescriptionId and (d.type_id = " + RECETA + " or d.type_id = " + RECETA_DIGITAL +")";
 
 		List<Object[]> queryResult = entityManager.createNativeQuery(getQuery)
 				.setParameter("prescriptionId", prescriptionId)
