@@ -30,7 +30,7 @@
 			</span>
 			<span>
 				{{ 'indicacion.warning-message.START_TIME'| translate }}
-				<span class="details">
+				<span class="details" *ngIf="parenteralPlan.dosage?.periodUnit === 'd'">
 					{{ 'indicacion.warning-message.START_TIME_DETAILS'
 					| translate: { hour: parenteralPlan.dosage.startDateTime | timeDtoToLocalTime } }}
 				</span>
