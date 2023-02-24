@@ -1,13 +1,13 @@
 FROM nginx:1.21.3
 
-LABEL org.opencontainers.image.authors="desarrollo@lamansys.com.ar"
+LABEL org.opencontainers.image.authors="historia_clinica@pladema.exa.unicen.edu.ar"
 
 COPY nginx-template.conf /nginx-template.conf
 
 WORKDIR /app
 
-COPY apps/dist/hospital/ /app/front-end/
-COPY backoffice/build/   /app/backoffice/
+COPY .docker/front-end     /app/front-end/
+COPY .docker/backoffice    /app/backoffice/
 
 COPY entrypoint.sh /entrypoint.sh
 

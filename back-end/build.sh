@@ -23,5 +23,8 @@ end_all=$(date +%s)
 
 echo "Elapsed Time for backend: $(($end_all-$start_all)) seconds"
 
+mkdir -p .docker
+cp app/target/app*.jar .docker/app.jar
+
 echo "Building Backend: output"
-ls -lha app/target/
+ls -lha .docker/

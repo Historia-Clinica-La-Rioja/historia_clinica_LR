@@ -1,9 +1,9 @@
 FROM openjdk:11-jre-slim
 
-LABEL org.opencontainers.image.authors="desarrollo@lamansys.com.ar"
+LABEL org.opencontainers.image.authors="historia_clinica@pladema.exa.unicen.edu.ar"
 
 WORKDIR /app
-COPY app/target/app*.jar /app/app.jar
+COPY .docker/app.jar /app/app.jar
 
 ENV SERVER_PORT=80
 EXPOSE 80

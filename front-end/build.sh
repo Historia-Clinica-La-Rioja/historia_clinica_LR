@@ -24,9 +24,13 @@ end_all=$(date +%s)
 echo "Elapsed Time for app: $(($start_backoffice-$start_apps)) seconds"
 echo "Elapsed Time for backoffice: $(($end_all-$start_backoffice)) seconds"
 
+[ -d ".docker" ] && mv .docker .docker_$(date +%F'-'%T)
+mkdir .docker
 
-echo "el built-commit es $(git rev-parse HEAD)" > apps/dist/hospital/git-sha
+mv backoffice/build .docker/backoffice
+mv apps/dist/hospital .docker/front-end
+
+echo "el built-commit es $(git rev-parse HEAD)" > .docker/front-end/git-sha
 
 echo "Building Frontend: output"
-ls -lha apps/dist/hospital
-ls -lha backoffice/build
+ls -lha .docker/*

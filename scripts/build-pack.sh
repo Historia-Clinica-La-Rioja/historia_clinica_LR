@@ -7,8 +7,6 @@ cd "$BASEDIR"
 ./front-end/build.sh
 ./back-end/build.sh
 
-cp back-end/app/target/app*.jar hospital.jar
-
 echo "Running tests"
 
 ./front-end/run-tests.sh

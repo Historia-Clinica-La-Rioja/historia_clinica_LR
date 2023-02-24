@@ -1,5 +1,7 @@
 FROM cubejs/cube:v0.26
 
+LABEL org.opencontainers.image.authors="historia_clinica@pladema.exa.unicen.edu.ar"
+
 ENV CUBEJS_DB_HOST=postgresql
 ENV CUBEJS_DB_NAME=hospitalDB
 ENV CUBEJS_DB_USER=postgres

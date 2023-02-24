@@ -1,6 +1,6 @@
 FROM openjdk:11-jre
 
-MAINTAINER Pladema
+LABEL org.opencontainers.image.authors="historia_clinica@pladema.exa.unicen.edu.ar"
 
 # install glowroot
 ENV GLOWROOT_VERSION=0.13.6
@@ -20,14 +20,14 @@ RUN apt-get update && apt-get install -y nginx
 COPY nginx.conf /etc/nginx/sites-enabled/default 
 
 WORKDIR /app
-COPY  *.jar .  
 
-COPY front-end-dist/hospital/ ./front-end
-COPY backoffice-dist/ ./backoffice
+COPY app.jar        /app/app.jar
+COPY front-end     /app/front-end/
+COPY backoffice    /app/backoffice/
+COPY docker.properties /app/env.properties
 
-
-COPY  docker.properties ./env.properties  
 EXPOSE 8280
 EXPOSE 8080
 ENTRYPOINT [ "/entrypoint.sh" ]
-CMD ["java","-javaagent:/glowroot/glowroot.jar","-jar","./hospital.jar", "--spring.config.additional-location=file:./env.properties"]  
+
+CMD ["java","-javaagent:/glowroot/glowroot.jar","-jar","/app/app.jar","--spring.config.additional-location=file:./env.properties"]   
