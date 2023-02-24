@@ -48,6 +48,7 @@ export class NuevaPrescripcionComponent implements OnInit {
 	maxPhoneNumber: number = 15;
 	argentinaId: number = 14;
 	submitted: boolean = false;
+	showCoverageMessage: boolean = false;
 
 	constructor(
 		private readonly formBuilder: FormBuilder,
@@ -360,7 +361,15 @@ export class NuevaPrescripcionComponent implements OnInit {
 						patientMedicalCoveragesDto.map(s => this.mapperService.toPatientMedicalCoverage(s))
 				)
 			)
-			.subscribe((patientMedicalCoverages: PatientMedicalCoverage[]) => this.patientMedicalCoverages = patientMedicalCoverages);
+			.subscribe((patientMedicalCoverages: PatientMedicalCoverage[]) => {
+				this.patientMedicalCoverages = patientMedicalCoverages;
+			});
+	}
+
+	selectPatientMedicalCoverage(patientMedicalCoverage: PatientMedicalCoverage) {
+		(! patientMedicalCoverage.affiliateNumber && patientMedicalCoverage.medicalCoverage.type != 3)
+			? this.showCoverageMessage = true
+			: this.showCoverageMessage = false
 	}
 
 	openMedicalCoverageDialog(): void {
@@ -394,6 +403,7 @@ export class NuevaPrescripcionComponent implements OnInit {
 
 	clear(control: AbstractControl): void {
 		control.reset();
+		this.showCoverageMessage = false;
 	}
 
 }

@@ -8,10 +8,10 @@
 <div mat-dialog-content>
     <form [formGroup]="prescriptionForm" class="form">
         <div fxLayout="column">
-            <mat-form-field appearance="outline">
+            <mat-form-field appearance="outline" class="margin-bottom">
                 <mat-label>{{'ambulatoria.paciente.ordenes_prescripciones.new_prescription_dialog.SELECT_MEDICAL_COVERAGE' | translate}}</mat-label>
                 <mat-select formControlName="patientMedicalCoverage">
-                    <mat-option
+                    <mat-option (click)="selectPatientMedicalCoverage(patientMedicalCoverage)"
                         id="medicalCoverage"
                         name="medicalCoverage"
                         *ngFor="let patientMedicalCoverage of patientMedicalCoverages" [value]="patientMedicalCoverage">
@@ -26,6 +26,9 @@
                     color="warn" mat-icon-button (click)="clear(prescriptionForm.controls.patientMedicalCoverage); $event.stopPropagation()">
                     <mat-icon>close</mat-icon>
                 </button>
+                <mat-hint *ngIf="this.showCoverageMessage"
+                    translate="ambulatoria.paciente.ordenes_prescripciones.new_prescription_dialog.MEDICAL_COVERAGE_SUGGESTION">
+                </mat-hint>
 			</mat-form-field>
 
             <section formGroupName="patientData" *ngIf="isHabilitarRecetaDigitalEnabled">

@@ -426,7 +426,8 @@
 					"LOCALITY": "Localidad",
                     "CITY": "Ciudad",
 					"STREET": "Calle",
-                    "STREET_NUMBER": "Número"
+                    "STREET_NUMBER": "Número",
+                    "MEDICAL_COVERAGE_SUGGESTION": "Atención: no está cargado el número de afiliado"
                 },
                 "send_digital_recipe_email_dialog": {
                     "TITLE": "Enviar receta digital por email",
