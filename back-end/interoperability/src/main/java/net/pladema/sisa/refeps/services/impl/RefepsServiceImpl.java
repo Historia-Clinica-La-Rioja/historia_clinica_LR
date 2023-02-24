@@ -78,13 +78,11 @@ public class RefepsServiceImpl implements RefepsService {
 
 	private void processExistingLicenses(List<String> licenses, List<ValidatedLicenseNumberBo> processedLicenses, RefepsLicenseSearchResponse response) {
 		licenses.forEach(license -> {
-			Optional<RefepsLicensePayload> relatedLicenseData = response.getResponse().stream().filter(licenseData -> licenseData.getLicenseNumber().equals(license)).findFirst();
+			Optional<RefepsLicensePayload> relatedLicenseData = response.getResponse().stream().filter(licenseData -> licenseData.getLicenseNumber().equals(license) && licenseData.getStatus().equals(refepsWSConfig.ENABLED)).findFirst();
 			if (relatedLicenseData.isPresent()) {
 				if (validStates.stream().filter(state -> state.equals(relatedLicenseData.get().getState())).findFirst().isEmpty())
 					throw new RefepsLicenseException(RefepsExceptionsEnum.WRONG_STATE, "La/s matricula/s ingresadas pertenecen a otra jurisdiccion de la permitida");
-				if (!relatedLicenseData.get().getStatus().equals(refepsWSConfig.ENABLED))
-					processedLicenses.add(new ValidatedLicenseNumberBo(license, false));
-				else processedLicenses.add(new ValidatedLicenseNumberBo(license, true));
+				processedLicenses.add(new ValidatedLicenseNumberBo(license, true));
 			}
 			else
 				processedLicenses.add(new ValidatedLicenseNumberBo(license, false));
