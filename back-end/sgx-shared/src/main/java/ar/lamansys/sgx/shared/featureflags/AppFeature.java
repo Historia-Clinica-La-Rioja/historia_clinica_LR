@@ -142,7 +142,10 @@ public enum AppFeature implements Feature {
 	HABILITAR_OTRAS_CIRCUNSTANCIAS_EPICRISIS,
 
 	@Label("Indica si esta habilitada la seccion de auditoria de pacientes")
-	HABILITAR_MODULO_AUDITORIA
+	HABILITAR_MODULO_AUDITORIA,
+    
+	@Label("Indica si esta habilitada la seccion causa externa de traumatismo en epicrisis")
+	HABILITAR_CAUSA_EXTERNA_EPICRISIS
 	;
 
     public boolean isActive() {
