@@ -1,5 +1,6 @@
 package net.pladema.generalreports.repository;
 
+import org.apache.tomcat.jni.Local;
 import org.springframework.stereotype.Repository;
 
 import javax.persistence.EntityManager;
@@ -89,6 +90,35 @@ public class QueryFactoryGR {
 		query.setParameter("endDate", endDate);
 		List<NursingInternment> data = query.getResultList();
 		return data;
+	}
+
+	public List<OutPatientOlderAdults> queryOutPatientOlderAdults(Integer institutionId, LocalDate start, LocalDate end){
+
+		var startDate = LocalDateTime.of(start.getYear(),start.getMonth(),start.getDayOfMonth(), 0, 0);
+		var endDate = LocalDateTime.of(end.getYear(), end.getMonth(), end.getDayOfMonth(), 23, 59, 59);
+
+		Query query = entityManager.createNamedQuery("GeneralReports.OutPatientOlderAdults");
+		query.setParameter("institutionId", institutionId);
+		query.setParameter("startDate", startDate);
+		query.setParameter("endDate", endDate);
+		List<OutPatientOlderAdults> data = query.getResultList();
+
+		return data;
+	}
+
+	public List<HospitalizationOlderAdults> queryHospitalizationOlderAdults(Integer institutionId, LocalDate start, LocalDate end){
+
+		var startDate = LocalDateTime.of(start.getYear(),start.getMonth(),start.getDayOfMonth(),0, 0);
+		var endDate = LocalDateTime.of(end.getYear(),end.getMonth(),end.getDayOfMonth(), 23, 59, 59);
+
+		Query query = entityManager.createNamedQuery("GeneralReports.HospitalizationOlderAdults");
+		query.setParameter("institutionId", institutionId);
+		query.setParameter("startDate", startDate);
+		query.setParameter("endDate", endDate);
+		List<HospitalizationOlderAdults> data = query.getResultList();
+
+		return data;
+
 	}
 
 }
