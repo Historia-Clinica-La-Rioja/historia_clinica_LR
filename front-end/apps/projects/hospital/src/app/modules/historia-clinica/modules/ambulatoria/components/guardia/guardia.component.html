@@ -1,28 +1,6 @@
 <app-content width="full">
-    <div fxLayout="row" fxLayoutAlign="space-between center" class="margin-bottom">
+    <div fxLayout="row" fxLayoutAlign="start center" class="margin-bottom">
         <span class="mat-h2"> {{ 'ambulatoria.paciente.guardia.TAB_LABEL' | translate }} </span>
-        <div fxLayout="row" fxLayoutGap="20px">
-            <button *ngIf="episodeState === STATES.EN_ATENCION || episodeState === STATES.EN_ESPERA" id="edit-episode"
-                mat-raised-button color="primary" (click)="goToEditEpisode()">
-                {{ 'ambulatoria.paciente.guardia.EDIT_BUTTON' | translate | uppercase }}
-            </button>
-            <button *ngIf="episodeState === STATES.EN_ATENCION" id="cancel-attention" mat-raised-button color="primary"
-                (click)="cancelAttention()">
-                {{ 'ambulatoria.paciente.guardia.CANCEL_BUTTON' | translate | uppercase }}
-            </button>
-            <div *appHasRole="['ESPECIALISTA_MEDICO', 'ENFERMERO', 'PROFESIONAL_DE_SALUD']">
-                <button *ngIf="episodeState === STATES.EN_ATENCION" id="alta-medica" mat-raised-button color="primary"
-                    (click)="goToMedicalDischarge()">
-                    {{ 'ambulatoria.paciente.guardia.MEDICAL_DISCHARGE_BUTTON' | translate | uppercase }}
-                </button>
-            </div>
-            <div *appHasRole="['ADMINISTRATIVO']">
-                <button *ngIf="episodeState === STATES.CON_ALTA_MEDICA" id="administrative-discharge" mat-raised-button
-                    color="primary" (click)="goToAdministrativeDischarge()">
-                    {{ 'ambulatoria.paciente.guardia.ADMINISTRATIVE_DISCHARGE_BUTTON' | translate | uppercase }}
-                </button>
-            </div>
-        </div>
     </div>
 
     <div fxLayout="row" fxLayout.lt-md="column" fxLayoutGap="20px">

@@ -51,6 +51,33 @@
                 </span>
             </div>
 
+            <div fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="10px">
+
+                <button fxFlex="40" *ngIf="avaibleActions.length >= 1" id="avaibleActions[0].id" mat-stroked-button
+                    color="primary" (click)="avaibleActions[0].callback()">
+                    {{ avaibleActions[0].label | translate | uppercase }}
+                </button>
+                <button fxFlex="40" *ngIf="avaibleActions.length >= 2" id="avaibleActions[1].id" mat-stroked-button
+                    color="primary" (click)="avaibleActions[1].callback()">
+                    {{ avaibleActions[1].label | translate | uppercase }}
+                </button>
+
+                <div fxFlex="20" *ngIf="avaibleActions.length > 2">
+                    <button id="more-actions" mat-icon-button (click)="$event.stopPropagation()"
+                        [matMenuTriggerFor]="actions">
+                        <mat-icon>more_vert</mat-icon>
+                    </button>
+
+                    <mat-menu #actions="matMenu">
+                        <button *ngFor="let action of avaibleActions | slice:2;" id="action.id" mat-menu-item
+                            (click)="action.callback()">
+                            {{ action.label | translate }}
+                        </button>
+                    </mat-menu>
+                </div>
+
+            </div>
+
             <mat-divider inset></mat-divider>
 
             <app-triage-details [triage]="lastTriage" [emergencyCareType]="emergencyCareType" [showRiskFactors]="false"
