@@ -23,7 +23,7 @@ import { FeatureFlagService } from '@core/services/feature-flag.service';
 import { EnviarRecetaDigitalPorEmailComponent } from '@historia-clinica/modules/ambulatoria/dialogs/enviar-receta-digital-por-email/enviar-receta-digital-por-email.component';
 import { anyMatch } from '@core/utils/array.utils';
 
-const ROLES_TO_EDIT: ERole[] = [ERole.ESPECIALISTA_MEDICO, ERole.PRESCRIPTOR];
+const ROLES_TO_EDIT: ERole[] = [ERole.ESPECIALISTA_MEDICO, ERole.ESPECIALISTA_EN_ODONTOLOGIA, ERole.PRESCRIPTOR];
 
 @Component({
 	selector: 'app-card-medicaciones',
@@ -137,7 +137,7 @@ export class CardMedicacionesComponent implements OnInit {
 
 	private openNuevaPrescripcion(isNewMedication: boolean, medication?: MedicationInfoDto, patientEmail?: string) {
 		const medicationList = isNewMedication ? null : this.getMedicationList(medication);
-		
+
 		const newMedicationDialog = this.dialog.open(NuevaPrescripcionComponent,
 			{
 				data: {
@@ -193,11 +193,11 @@ export class CardMedicacionesComponent implements OnInit {
 				this.openNuevaPrescripcion(isNewMedication, medication);
 			})
 	}
-		
+
 	private validateProfessional(isNewMedication: boolean, medication?: MedicationInfoDto) {
 		this.prescripcionesService.validateProfessional(this.patientId)
 			.subscribe((result: ProfessionalLicenseNumberValidationResponseDto) => {
-				if (! result.healthcareProfessionalCompleteContactData 
+				if (! result.healthcareProfessionalCompleteContactData
 					|| ! result.healthcareProfessionalLicenseNumberValid
 					|| ! result.twoFactorAuthenticationEnabled
 					|| ! result.healthcareProfessionalHasLicenses) {
