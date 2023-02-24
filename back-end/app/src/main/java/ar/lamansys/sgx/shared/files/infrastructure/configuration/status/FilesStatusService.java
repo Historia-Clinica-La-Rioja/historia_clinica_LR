@@ -10,7 +10,8 @@ import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Service;
 
 import ar.lamansys.sgx.shared.files.FileConfiguration;
-import ar.lamansys.sgx.shared.files.FileService;
+import ar.lamansys.sgx.shared.filestorage.infrastructure.output.repository.BlobStorage;
+import ar.lamansys.sgx.shared.filestorage.infrastructure.output.repository.nfs.NFSUtils;
 import net.pladema.hsi.extensions.configuration.features.FeatureProperty;
 import net.pladema.hsi.extensions.configuration.features.FeatureStatusService;
 
@@ -20,22 +21,20 @@ public class FilesStatusService extends FeatureStatusService {
 
 	public FilesStatusService(
 			FileConfiguration configuration,
-			FileService fileService
+			BlobStorage blobStorage
 	) {
 		super(
 				"app.files.folder",
 				listProperties(configuration),
-				fetchStatusData(fileService)
+				fetchStatusData(blobStorage)
 		);
 	}
 
-	private static Supplier<Map<String, Object>> fetchStatusData(FileService fileService) {
+	private static Supplier<Map<String, Object>> fetchStatusData(BlobStorage blobStorage) {
 		Map<String, Object> map = new LinkedHashMap<>();
-		map.put("Espacio libre/espacio total asignado a los documentos", fileService.getSpaceDocumentLocation());
-		map.put("Espacio libre/espacio total asignado a los multipartfiles", fileService.getSpaceMultipartLocation());
+		map.put("status", blobStorage.status());
 		return () -> map;
 	}
-
 	private static Supplier<List<FeatureProperty>> listProperties(FileConfiguration configuration) {
 		return () -> List.of(
 				new FeatureProperty("documents.location", configuration.getDocumentsLocation().getAbsolutePath()),

@@ -17,6 +17,7 @@ import ar.lamansys.sgx.shared.files.exception.FileServiceException;
 import ar.lamansys.sgx.shared.files.infrastructure.configuration.interceptors.FileErrorEvent;
 import ar.lamansys.sgx.shared.files.infrastructure.output.repository.FileErrorInfo;
 import ar.lamansys.sgx.shared.files.infrastructure.output.repository.FileInfoRepository;
+import ar.lamansys.sgx.shared.filestorage.infrastructure.output.repository.BlobStorage;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -27,14 +28,14 @@ public class FixFileService {
 
 	private static final String OUTPUT = "Output -> {}";
 
-	private final StreamFile streamFile;
+	private final BlobStorage blobStorage;
 
 	private final FileInfoRepository repository;
 	private final AppNode appNode;
 
 	public String buildCompletePath(String fileRelativePath){
 		log.debug("Input paramenter -> fileRelativePath {}", fileRelativePath);
-		String path = streamFile.buildPathAsString(fileRelativePath);
+		String path = blobStorage.buildPathAsString(fileRelativePath);
 		log.debug(OUTPUT, path);
 		return path;
 	}

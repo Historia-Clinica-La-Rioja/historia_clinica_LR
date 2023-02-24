@@ -31,6 +31,7 @@ import ar.lamansys.sgx.shared.files.infrastructure.input.rest.backoffice.dto.Fil
 import ar.lamansys.sgx.shared.files.infrastructure.output.repository.FileErrorInfo;
 import ar.lamansys.sgx.shared.files.infrastructure.output.repository.FileInfo;
 import ar.lamansys.sgx.shared.files.infrastructure.output.repository.FileInfoRepository;
+import ar.lamansys.sgx.shared.filestorage.infrastructure.output.repository.BlobStorage;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -41,7 +42,7 @@ public class FileService {
 
 	private static final String OUTPUT = "Output -> {}";
 
-	private final StreamFile streamFile;
+	private final BlobStorage blobStorage;
 	private final FileConfiguration fileConfiguration;
 
 	private final FileInfoRepository repository;
@@ -70,7 +71,7 @@ public class FileService {
 
 	public String buildCompletePath(String fileRelativePath){
 		log.debug("Input paramenter -> fileRelativePath {}", fileRelativePath);
-		String path = streamFile.buildPathAsString(fileRelativePath);
+		String path = blobStorage.buildPathAsString(fileRelativePath);
 		log.debug(OUTPUT, path);
 		return path;
 	}
@@ -122,7 +123,7 @@ public class FileService {
 	}
 
 	public Resource loadFileRelativePath(String relativeFilePath) {
-		Path path = streamFile.buildPath(relativeFilePath);
+		Path path = blobStorage.buildPath(relativeFilePath);
 		try {
 			validateRelativePath(relativeFilePath);
 		} catch (FileServiceException e) {
@@ -161,7 +162,7 @@ public class FileService {
 		String path = buildCompletePath(partialPath);
 		File dirPath = new File(path);
 		try {
-			streamFile.saveFileInDirectory(path, override, byteArrayOutputStream);
+			blobStorage.saveFileInDirectory(path, override, byteArrayOutputStream);
 			return saveFileInfo(partialPath, uuid, generatedFrom, getHash(path), dirPath);
 		} catch (IOException e) {
 			saveFileError(new FileErrorInfo(dirPath.getPath(), String.format("saveStreamInPath error => %s", e), appNode.nodeId));
@@ -189,7 +190,7 @@ public class FileService {
 	public String readFileAsString(String path, Charset encoding) {
 		File dirPath = new File(path);
 		try {
-			return streamFile.readFileAsString(path, encoding);
+			return blobStorage.readFileAsString(path, encoding);
 		} catch (IOException e) {
 			saveFileError(new FileErrorInfo(dirPath.getPath(), String.format("readFileAsString error => %s", e), appNode.nodeId));
 			log.error(e.toString());
@@ -226,7 +227,7 @@ public class FileService {
 
 	public boolean deleteFile(String partialPath) {
 		String completePath = buildCompletePath(partialPath);
-		if (!streamFile.deleteFileInDirectory(completePath))
+		if (!blobStorage.deleteFileInDirectory(completePath))
 			return false;
 		repository.deleteByRelativePath(partialPath);
 		return true;

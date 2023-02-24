@@ -1,4 +1,4 @@
-package ar.lamansys.sgx.shared.files;
+package ar.lamansys.sgx.shared.filestorage.infrastructure.output.repository;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -10,17 +10,20 @@ import java.nio.charset.Charset;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.Map;
 
 import org.springframework.stereotype.Component;
 
+import ar.lamansys.sgx.shared.files.FileConfiguration;
+import ar.lamansys.sgx.shared.filestorage.infrastructure.output.repository.nfs.NFSUtils;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 @Component
-public class StreamFile {
+public class BlobStorage {
 
 	private final FileConfiguration fileConfiguration;
-    public StreamFile(FileConfiguration fileConfiguration){
+    public BlobStorage(FileConfiguration fileConfiguration){
         super();
 		this.fileConfiguration = fileConfiguration;
 	}
@@ -97,4 +100,17 @@ public class StreamFile {
     private String bytesToString(byte[] data){
         return "(Byte array length='" + (data.length) + '\'' + ')';
     }
+
+	public Map<String, Object> status() {
+		return Map.of(
+				"Espacio libre/espacio total asignado a los documentos",
+				NFSUtils.getSpaceLocation(
+						fileConfiguration.getDocumentsLocation().toPath()
+				),
+				"Espacio libre/espacio total asignado a los multipartfiles",
+				NFSUtils.getSpaceLocation(
+						fileConfiguration.getMultipartLocation().toPath()
+				)
+		);
+	}
 }

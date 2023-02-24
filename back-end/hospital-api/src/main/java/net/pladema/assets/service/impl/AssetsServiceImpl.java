@@ -9,7 +9,7 @@ import org.springframework.core.io.ClassPathResource;
 import org.springframework.stereotype.Service;
 
 import ar.lamansys.sgx.shared.files.FileService;
-import ar.lamansys.sgx.shared.files.StreamFile;
+import ar.lamansys.sgx.shared.filestorage.infrastructure.output.repository.BlobStorage;
 import lombok.extern.slf4j.Slf4j;
 import net.pladema.assets.service.AssetsService;
 import net.pladema.assets.service.domain.Assets;
@@ -41,16 +41,16 @@ public class AssetsServiceImpl implements AssetsService {
 
 
     private final FileService fileService;
-    private final StreamFile streamFile;
+    private final BlobStorage blobStorage;
 
     List<Assets> assetsList = new ArrayList<>(Arrays.asList(
             SPONSOR_LOGO, FAVICON,
             ICON_72, ICON_96, ICON_128, ICON_144, ICON_152, ICON_192, ICON_384, ICON_512,
             FOOTER_LEFT, FOOTER_CENTER, FOOTER_RIGHT, APP_LOGO));
 
-    public AssetsServiceImpl(FileService fileService, StreamFile streamFile) {
+    public AssetsServiceImpl(FileService fileService, BlobStorage blobStorage) {
         this.fileService = fileService;
-        this.streamFile = streamFile;
+        this.blobStorage = blobStorage;
     }
 
     @Override
@@ -67,7 +67,7 @@ public class AssetsServiceImpl implements AssetsService {
         String partialPath = CUSTOM_PATH.concat(newAsset.getNameFile());
         String completePath = fileService.buildCompletePath(partialPath);
         
-        if (this.streamFile.existFile(completePath)) {
+        if (this.blobStorage.existFile(completePath)) {
 			log.debug("Using custom {}", fileName);
             return new AssetsFileBo(
                     this.fileService.loadFileRelativePath(partialPath),
