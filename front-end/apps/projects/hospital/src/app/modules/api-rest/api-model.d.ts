@@ -2469,7 +2469,7 @@ export interface PharmacoSummaryDto extends IndicationDto, Serializable {
     dosage: NewDosageDto;
     note?: string;
     snomed: SharedSnomedDto;
-    via: string;
+    via: number;
 }
 
 export interface PoliceInterventionDetailsDto extends Serializable {

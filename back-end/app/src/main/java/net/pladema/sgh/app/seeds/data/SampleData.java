@@ -1,7 +1,17 @@
 package net.pladema.sgh.app.seeds.data;
 
+import java.util.Arrays;
+import java.util.List;
+import java.util.stream.Collectors;
+
+import org.springframework.core.env.Environment;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
 import ar.lamansys.sgx.auth.user.infrastructure.input.service.UserExternalService;
 import ar.lamansys.sgx.shared.auditable.entity.SGXAuditableEntity;
+import lombok.AllArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import net.pladema.address.repository.AddressRepository;
 import net.pladema.address.repository.entity.Address;
 import net.pladema.establishment.repository.InstitutionRepository;
@@ -14,20 +24,11 @@ import net.pladema.staff.repository.HealthcareProfessionalRepository;
 import net.pladema.staff.repository.entity.HealthcareProfessional;
 import net.pladema.user.repository.UserPersonRepository;
 import net.pladema.user.repository.entity.UserPerson;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.context.annotation.Profile;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
-import java.util.List;
-import java.util.stream.Collectors;
-
+@Slf4j
+@AllArgsConstructor
 @Service
-@Profile("dev")
 public class SampleData {
-
-	private static final Logger LOG = LoggerFactory.getLogger(SampleData.class);
 
 	private final SampleProperties sampleProperties;
 	private final AddressRepository addressRepository;
@@ -38,35 +39,36 @@ public class SampleData {
 	private final UserPersonRepository userPersonRepository;
 	private final HealthcareProfessionalRepository healthcareProfessionalRepository;
 
-	public SampleData(
-			SampleProperties sampleProperties,
-			InstitutionRepository institutionRepository,
-			AddressRepository addressRepository,
-			UserExternalService userExternalService,
-			UserAssignmentService userAssignmentService,
-			PersonRepository personRepository,
-			UserPersonRepository userPersonRepository,
-			HealthcareProfessionalRepository healthcareProfessionalRepository) {
-		this.sampleProperties = sampleProperties;
-		this.institutionRepository = institutionRepository;
-		this.addressRepository = addressRepository;
-		this.userExternalService = userExternalService;
-		this.userAssignmentService = userAssignmentService;
-		this.personRepository = personRepository;
-		this.userPersonRepository = userPersonRepository;
-		this.healthcareProfessionalRepository = healthcareProfessionalRepository;
+	private final Environment environment;
+
+	public boolean shouldRun() {
+		// debería correr solo en ambientes específicos
+		return isDevProfileActivated(this.environment) && isDBLocal(this.environment);
 	}
+
+	private static boolean isDevProfileActivated(Environment environment) {
+		return Arrays.stream(environment.getActiveProfiles()).anyMatch(
+				env -> "dev".equals(env.toLowerCase())
+		);
+	}
+
+	private static boolean isDBLocal(Environment environment) {
+		// el chequeo es rudimentario para que se cumpla solo en este caso
+		return environment.getProperty("spring.datasource.url")
+				.equals("jdbc:postgresql://localhost:5432/hospitalDB");
+	}
+
 
 	@Transactional
 	public void populateDB() {
-		LOG.warn("Updating sample data");
+		log.warn("Updating sample data");
 		sampleProperties.getInstitutions().forEach(institutionInfoSeed -> {
 			var address = loadAddress(institutionInfoSeed.getAddress());
 			var institution = loadInstitution(institutionInfoSeed, address.getId());
 			institutionInfoSeed.getUsers()
 					.forEach(userInfoSeed -> populateUser(userInfoSeed, institution.getId()));
 		});
-		LOG.warn("Sample data loaded");
+		log.warn("Sample data loaded");
 
 	}
 
@@ -165,5 +167,6 @@ public class SampleData {
 	private void fixEntity(SGXAuditableEntity auditableEntity) {
 		auditableEntity.initializeAuditableFields();
 	}
+
 
 }

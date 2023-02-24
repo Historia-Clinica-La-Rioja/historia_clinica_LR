@@ -17,7 +17,6 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @Configuration
-@Profile("dev")
 @ConfigurationProperties(prefix = "app.data.sample")
 @PropertySource(value = "classpath:sample-data.properties")
 public class SampleProperties {
