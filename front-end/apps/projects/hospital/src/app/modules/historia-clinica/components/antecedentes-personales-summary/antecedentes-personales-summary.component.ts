@@ -33,10 +33,8 @@ export class AntecedentesPersonalesSummaryComponent implements OnInit{
 	@Input() personalHistoriesHeader: SummaryHeader;
 	@Input()
 	set personalHistory(personalHistory: HCEPersonalHistoryDto[]){
-		if (personalHistory?.length){
-			this.setSeverityMasterData(personalHistory);
-			this.setProblems(personalHistory);
-		}
+		this.setSeverityMasterData();
+		this.setProblems(personalHistory);
 	};
 
 	constructor(
@@ -129,12 +127,11 @@ export class AntecedentesPersonalesSummaryComponent implements OnInit{
 		});
 	}
 
-	private setSeverityMasterData(problems: HCEPersonalHistoryDto[]){
+	private setSeverityMasterData(){
 		if (!this.severityTypesMasterData.length){
 			this.internacionMasterDataService.getHealthSeverity().subscribe(
 				severityTypes => {
 					this.severityTypesMasterData = severityTypes;
-					this.setProblems(problems);
 				}
 			);
 		}
