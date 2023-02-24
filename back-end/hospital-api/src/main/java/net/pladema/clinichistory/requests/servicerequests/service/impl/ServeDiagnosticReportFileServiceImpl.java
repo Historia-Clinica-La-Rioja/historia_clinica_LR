@@ -7,7 +7,7 @@ import org.springframework.stereotype.Service;
 import ar.lamansys.sgx.shared.files.FileService;
 import net.pladema.clinichistory.requests.servicerequests.repository.DiagnosticReportFileRepository;
 import net.pladema.clinichistory.requests.servicerequests.service.ServeDiagnosticReportFileService;
-import net.pladema.clinichistory.requests.servicerequests.service.domain.StoredFileBo;
+import ar.lamansys.sgx.shared.filestorage.infrastructure.input.rest.StoredFileBo;
 
 @Service
 public class ServeDiagnosticReportFileServiceImpl implements ServeDiagnosticReportFileService {

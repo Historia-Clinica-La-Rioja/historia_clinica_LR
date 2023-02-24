@@ -1,6 +1,6 @@
 package net.pladema.person.service;
 
-import net.pladema.clinichistory.requests.servicerequests.service.domain.StoredFileBo;
+import ar.lamansys.sgx.shared.filestorage.infrastructure.input.rest.StoredFileBo;
 
 public interface GetPersonFileService {
 

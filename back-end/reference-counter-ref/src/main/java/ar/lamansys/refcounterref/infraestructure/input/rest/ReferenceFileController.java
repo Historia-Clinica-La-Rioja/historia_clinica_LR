@@ -3,7 +3,7 @@ package ar.lamansys.refcounterref.infraestructure.input.rest;
 import ar.lamansys.refcounterref.application.createreferencefile.CreateReferenceFile;
 import ar.lamansys.refcounterref.application.deletefiles.DeleteFiles;
 import ar.lamansys.refcounterref.application.getreferencefile.GetReferenceFile;
-import ar.lamansys.refcounterref.domain.file.StoredFileBo;
+import ar.lamansys.sgx.shared.filestorage.infrastructure.input.rest.StoredFileBo;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;

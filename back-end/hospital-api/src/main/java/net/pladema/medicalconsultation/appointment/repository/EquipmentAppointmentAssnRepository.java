@@ -1,8 +1,5 @@
 package net.pladema.medicalconsultation.appointment.repository;
 
-import net.pladema.medicalconsultation.appointment.repository.entity.AppointmentAssn;
-import net.pladema.medicalconsultation.appointment.repository.entity.AppointmentAssnPK;
-
 import net.pladema.medicalconsultation.appointment.repository.entity.EquipmentAppointmentAssn;
 
 import net.pladema.medicalconsultation.appointment.repository.entity.EquipmentAppointmentAssnPK;

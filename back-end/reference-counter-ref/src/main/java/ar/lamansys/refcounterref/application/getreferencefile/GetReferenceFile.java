@@ -5,7 +5,7 @@ import ar.lamansys.refcounterref.application.getreferencefile.exceptions.GetRefe
 import ar.lamansys.refcounterref.application.port.ReferenceCounterReferenceFileStorage;
 import ar.lamansys.refcounterref.domain.enums.EReferenceCounterReferenceType;
 import ar.lamansys.refcounterref.domain.file.ReferenceCounterReferenceFileBo;
-import ar.lamansys.refcounterref.domain.file.StoredFileBo;
+import ar.lamansys.sgx.shared.filestorage.infrastructure.input.rest.StoredFileBo;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;

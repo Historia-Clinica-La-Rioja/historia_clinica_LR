@@ -3,7 +3,7 @@ FROM openjdk:11-jre
 MAINTAINER Pladema
 
 # install glowroot
-ENV GLOWROOT_VERSION=0.13.4
+ENV GLOWROOT_VERSION=0.13.6
 COPY entrypoint.sh /entrypoint.sh
 RUN apt-get update && \
     apt-get -y install wget unzip && \

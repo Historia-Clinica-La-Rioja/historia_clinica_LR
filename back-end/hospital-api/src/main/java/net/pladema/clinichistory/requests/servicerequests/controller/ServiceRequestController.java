@@ -68,7 +68,7 @@ import net.pladema.clinichistory.requests.servicerequests.service.UpdateDiagnost
 import net.pladema.clinichistory.requests.servicerequests.service.UploadDiagnosticReportCompletedFileService;
 import net.pladema.clinichistory.requests.servicerequests.service.domain.DiagnosticReportFilterBo;
 import net.pladema.clinichistory.requests.servicerequests.service.domain.ServiceRequestBo;
-import net.pladema.clinichistory.requests.servicerequests.service.domain.StoredFileBo;
+import ar.lamansys.sgx.shared.filestorage.infrastructure.input.rest.StoredFileBo;
 import net.pladema.events.EHospitalApiTopicDto;
 import net.pladema.events.HospitalApiPublisher;
 import net.pladema.patient.controller.dto.PatientMedicalCoverageDto;

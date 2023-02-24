@@ -2,7 +2,7 @@ package net.pladema.person.service.impl;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import net.pladema.clinichistory.requests.servicerequests.service.domain.StoredFileBo;
+import ar.lamansys.sgx.shared.filestorage.infrastructure.input.rest.StoredFileBo;
 import net.pladema.person.service.GetPersonFileService;
 
 import net.pladema.person.service.PersonFileService;

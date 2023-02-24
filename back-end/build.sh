@@ -19,9 +19,9 @@ start_all=$(date +%s)
 echo "Building Backend: start"
 mvn clean package -DskipTests
 
-echo "Building Backend: output"
-ls -lha app/target/app*.jar
-
 end_all=$(date +%s)
 
 echo "Elapsed Time for backend: $(($end_all-$start_all)) seconds"
+
+echo "Building Backend: output"
+ls -lha app/target/

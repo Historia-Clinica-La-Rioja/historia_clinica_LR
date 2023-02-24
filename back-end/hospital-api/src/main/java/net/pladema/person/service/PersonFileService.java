@@ -1,7 +1,7 @@
 package net.pladema.person.service;
 
 import ar.lamansys.sgh.shared.infrastructure.input.service.PersonFileDto;
-import net.pladema.clinichistory.requests.servicerequests.service.domain.StoredFileBo;
+import ar.lamansys.sgx.shared.filestorage.infrastructure.input.rest.StoredFileBo;
 
 import org.springframework.web.multipart.MultipartFile;
 
