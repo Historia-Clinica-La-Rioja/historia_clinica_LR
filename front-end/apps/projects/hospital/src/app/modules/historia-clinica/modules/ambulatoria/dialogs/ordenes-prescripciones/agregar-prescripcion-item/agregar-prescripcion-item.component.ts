@@ -18,6 +18,8 @@ import { SnomedService } from '@historia-clinica/services/snomed.service';
 import { SnvsMasterDataService } from '@api-rest/services/snvs-masterdata.service';
 import { OutpatientConsultationService } from '@api-rest/services/outpatient-consultation.service';
 import { DateFormat, momentFormat } from '@core/utils/moment.utils';
+import { PermissionsService } from '@core/services/permissions.service';
+import { anyMatch } from '@core/utils/array.utils';
 
 @Component({
   selector: 'app-agregar-prescripcion-item',
@@ -48,6 +50,8 @@ export class AgregarPrescripcionItemComponent implements OnInit, AfterViewInit, 
 	intervalValidation = intervalValidation;
 	MAX_VALUE = 99;
 
+	private hasPrescriptorRole: boolean;
+
 	public readonly TEXT_AREA_MAX_LENGTH = TEXT_AREA_MAX_LENGTH;
 
 	@ViewChild('intervalHoursInput') intervalHoursInput: ElementRef;
@@ -69,10 +73,11 @@ export class AgregarPrescripcionItemComponent implements OnInit, AfterViewInit, 
 		private readonly snomedService: SnomedService,
 		private readonly snvsMasterDataService: SnvsMasterDataService,
 		private readonly outpatientConsultationService: OutpatientConsultationService,
+		private readonly permissionService: PermissionsService,
 		@Inject(MAT_DIALOG_DATA) public data: NewPrescriptionItemData) {
 			this.featureFlagService.isActive(AppFeature.HABILITAR_RECETA_DIGITAL)
 				.subscribe((isFFActive: boolean) => {
-					this.isHabilitarRecetaDigitalFFActive = isFFActive
+					this.isHabilitarRecetaDigitalFFActive = isFFActive;
 					if (this.isHabilitarRecetaDigitalFFActive) {
 						this.ambulatoryConsultationProblemsService = new AmbulatoryConsultationProblemsService(formBuilder, this.snomedService, this.snackBarService, this.snvsMasterDataService, this.dialog);
 
@@ -92,6 +97,7 @@ export class AgregarPrescripcionItemComponent implements OnInit, AfterViewInit, 
 						});
 					}
 				});
+			this.permissionService.contextAssignments$().subscribe((userRoles: ERole[]) => this.hasPrescriptorRole = anyMatch<ERole>(userRoles, [ERole.PRESCRIPTOR]));
 		}
 
 	ngOnInit(): void {
@@ -109,8 +115,11 @@ export class AgregarPrescripcionItemComponent implements OnInit, AfterViewInit, 
 	}
 
 	getProblems() {
-		this.hceGeneralStateService.getPersonalHistoriesByRole(this.data.patientId)
-			.subscribe((result: HCEPersonalHistoryDto[]) => this.healthProblemOptions = result);
+		if (this.hasPrescriptorRole)
+			this.hceGeneralStateService.getPersonalHistoriesByRole(this.data.patientId)
+				.subscribe((result: HCEPersonalHistoryDto[]) => this.healthProblemOptions = result);
+		else
+			this.hceGeneralStateService.getPersonalHistories(this.data.patientId).subscribe((result: HCEPersonalHistoryDto[]) => this.healthProblemOptions = result);
 	}
 
 	ngAfterContentChecked(): void {
