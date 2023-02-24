@@ -72,3 +72,57 @@ databaseChangeLog:
               referencedColumnNames: id
               referencedTableName: appointment
               validate: true
+
+    - changeSet:
+        id: addDeletableToDoctorsOffices
+        comment: Add auditable data columns to doctors_office table
+        author: mmalyvarni
+        changes:
+          - addColumn:
+              tableName: doctors_office
+              columns:
+                - column:
+                    constraints:
+                      nullable: false
+                    name: created_by
+                    type: int
+                    defaultValue: -1
+                - column:
+                    constraints:
+                      nullable: false
+                    name: created_on
+                    type: datetime
+                    defaultValueDate: ${date.now}
+                - column:
+                    constraints:
+                      nullable: false
+                    name: updated_by
+                    type: int
+                    defaultValue: -1
+                - column:
+                    constraints:
+                      nullable: false
+                    name: updated_on
+                    type: datetime
+                    defaultValueDate: ${date.now}
+                - column:
+                    constraints:
+                      nullable: false
+                    name: deleted
+                    type: BOOLEAN
+                    defaultValue: ${boolean.false}
+                - column:
+                    name: deleted_by
+                    type: int
+                - column:
+                    name: deleted_on
+                    type: datetime
+
+    - changeSet:
+        id: createIndexIdAndDeleted-diary
+        author: mmalyvarni
+        dbms: postgresql
+        changes:
+          - sql:
+              sql: |-
+                CREATE INDEX IF NOT EXISTS "IDX_diary_id_deleted" ON diary (id, deleted);

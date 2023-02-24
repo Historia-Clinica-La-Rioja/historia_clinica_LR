@@ -1,11 +1,14 @@
 package net.pladema.medicalconsultation.doctorsoffice.repository.entity;
 
+import ar.lamansys.sgx.shared.auditable.entity.SGXAuditableEntity;
+import ar.lamansys.sgx.shared.auditable.listener.SGXAuditListener;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EntityListeners;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -18,7 +21,8 @@ import java.time.LocalTime;
 @Getter
 @Setter
 @ToString
-public class DoctorsOffice implements Serializable {
+@EntityListeners(SGXAuditListener.class)
+public class DoctorsOffice extends SGXAuditableEntity<Integer> implements Serializable {
 
     @Id
     @Column(name = "id")

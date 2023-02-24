@@ -14,7 +14,7 @@ const DoctorsOfficeFilter = props => (
 const DoctorsOfficeList = (props) => {
     const { permissions } = usePermissions();
     return (
-        <List {...props} hasCreate={false} filters={<DoctorsOfficeFilter />} >
+        <List {...props} hasCreate={false} filters={<DoctorsOfficeFilter />} filter={{ deleted: false }} >
             <Datagrid rowClick="show">
 
                 <TextField source="description" />

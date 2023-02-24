@@ -204,4 +204,11 @@ public interface DiaryRepository extends SGXAuditableEntityJPARepository<Diary, 
 			@Param("institutionId") Integer institutionId,
 			@Param("aliasOrClinicalSpecialtyName") String aliasOrClinicalSpecialtyName
 	);
+
+	@Transactional(readOnly = true)
+	@Query(" SELECT d " +
+			"FROM Diary d " +
+			"WHERE doctorsOfficeId = :doctorsOfficeId " +
+			"AND deleted = :isDeleted ")
+	List<Diary> findByDoctorsOfficeId(@Param("doctorsOfficeId") Integer doctorsOfficeId, @Param("isDeleted") Boolean isDeleted);
 }
