@@ -12,10 +12,13 @@ import { SnomedECL, SnomedDto } from "@api-rest/api-model";
 })
 export class ConceptTypeaheadSearchComponent {
 
+	private snomedConcept: SnomedDto;
 	@Input() ecl: SnomedECL;
 	@Input() placeholder = '';
 	@Input() debounceTime = 300;
 	@Input() appearanceOutline = false;
+	@Input() enableSubmitButton = false;
+	@Input() buttonMessage = '';
 	@Input() showSearchIcon = false;
 	@Output() conceptSelected = new EventEmitter<SnomedDto>();
 
@@ -51,14 +54,24 @@ export class ConceptTypeaheadSearchComponent {
 		return option && option.pt.term ? option.pt.term : '';
 	}
 
-	handleOptionSelected(event) {
-		const selectedOption = event.option.value;
-		const snomedConcept: SnomedDto = {
-			sctid: selectedOption.conceptId,
-			pt: selectedOption.pt.term
-		};
-		this.conceptSelected.emit(snomedConcept)
+	handleOptionSelected(event: any) {
+		const selectedOption = event.option?.value;
+		if (selectedOption) {
+			this.snomedConcept = {
+				sctid: selectedOption.conceptId,
+				pt: selectedOption.pt.term
+			};
+			!this.enableSubmitButton && this.conceptSelected.emit(this.snomedConcept);
+		}
 	}
 
+	emitButton() {
+		this.conceptSelected.emit(this.snomedConcept);
+		this.clear();
+	}
+
+	clear() {
+		this.myControl.reset();
+	}
 }
 

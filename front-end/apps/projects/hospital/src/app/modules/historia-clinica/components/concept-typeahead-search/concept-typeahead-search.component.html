@@ -1,4 +1,4 @@
-<form class="full-width">
+<form class="full-width" fxLayout="row" fxLayoutGap="10px">
 	<mat-form-field class="full-width" [appearance]="appearanceOutline ? 'outline' : 'legacy'">
 		<input type="text" placeholder="{{ this.placeholder | translate }}" aria-label="Number" matInput
 			[formControl]="myControl" [matAutocomplete]="auto">
@@ -13,6 +13,14 @@
 		</mat-hint>
 		<button type="button" matSuffix mat-icon-button *ngIf="showSearchIcon">
 			<mat-icon>search</mat-icon>
+		</button>
+		<button *ngIf="enableSubmitButton" id="clear" type="button" mat-button matSuffix color="warn" mat-icon-button
+			(click)="clear()">
+			<mat-icon>close</mat-icon>
+		</button>
+		<button *ngIf="enableSubmitButton" id="submit" mat-flat-button type="submit" color="primary"
+			(click)="emitButton()" matSuffix>
+			{{buttonMessage | translate | uppercase}}
 		</button>
 	</mat-form-field>
 </form>
