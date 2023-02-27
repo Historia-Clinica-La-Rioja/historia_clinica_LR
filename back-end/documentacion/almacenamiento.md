@@ -2,6 +2,12 @@
 
 El paquete [ar.lamansys.sgx.shared.filtestorage](../sgx-shared/src/main/java/ar/lamansys/sgx/shared/filestorage/) del módulo [sgx-shared](../sgx-shared/) contiene la abstracción que permite configurar el almacenamiento final a utilizar, esta abstracción es materializada en la interfaz [BlobStorage](../sgx-shared/src/main/java/ar/lamansys/sgx/shared/filestorage/infrastructure/output/repository/BlobStorage.java). 
 
+Las dos implementaciones existentes son:
+
+1. NFS [infrastructure.output.repository.nfs.NFSBlobStorage](../sgx-shared/src/main/java/ar/lamansys/sgx/shared/filtestorage/infrastructure/output/repository/nfs/NFSBlobStorage.java)
+
+La interfaz define un funcionamiento similar a un Map donde por cada clave (la ruta del archivo) se obtiene el contenido binario.
+
 ## API Rest
 
 Los endpoints que responden archivos son todos aquellos que arman la respuesta usando [infrastructure.input.rest.StoredFileResponse](../sgx-shared/src/main/java/ar/lamansys/sgx/shared/filestorage/infrastructure/input/rest/StoredFileResponse.java).

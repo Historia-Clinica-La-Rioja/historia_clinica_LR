@@ -34,7 +34,8 @@ public class SettingsServiceImpl implements SettingsService {
 
         if (newAsset.isPresent()) {
             String partialPath = PATH.concat(newAsset.get().getNameFile());
-			var fileCreated = fileService.transferMultipartFile(partialPath, UUID.randomUUID().toString(), "ASSETS_FILE", file);
+			var path = fileService.buildCompletePath(partialPath);
+			var fileCreated = fileService.transferMultipartFile(path, UUID.randomUUID().toString(), "ASSETS_FILE", file);
             return fileCreated.getId() != null;
         }
 
@@ -46,8 +47,10 @@ public class SettingsServiceImpl implements SettingsService {
         logger.debug("Input parameters -> fileName {}", newAsset);
 
         if (newAsset.isPresent()) {
-            String partialPath = PATH.concat(newAsset.get().getNameFile());
-            return fileService.deleteFile(partialPath);
+			var path = fileService.buildCompletePath(
+					PATH.concat(newAsset.get().getNameFile())
+			);
+            return fileService.deleteFile(path);
         }
 
         throw new MethodNotSupportedException("Icono/Logo no soportado por el momento");

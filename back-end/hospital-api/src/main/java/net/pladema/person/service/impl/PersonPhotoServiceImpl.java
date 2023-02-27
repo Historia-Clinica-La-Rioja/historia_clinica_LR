@@ -9,6 +9,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import ar.lamansys.sgx.shared.filestorage.application.FilePathBo;
 import ar.lamansys.sgx.shared.files.images.ImageFileService;
 import net.pladema.person.controller.dto.PersonPhotoDto;
 import net.pladema.person.repository.PersonExtendedRepository;
@@ -40,7 +41,8 @@ public class PersonPhotoServiceImpl implements PersonPhotoService {
     public PersonPhotoDto get(Integer personId) {
         LOG.debug("Input parameter -> personId {}", personId);
         PersonPhotoDto personPhotoDto = new PersonPhotoDto();
-        Optional<String> photoFilePath = personExtendedRepository.getPhotoFilePath(personId);
+        Optional<FilePathBo> photoFilePath = personExtendedRepository.getPhotoFilePath(personId)
+				.map(imageFileService::buildCompletePath);
         try {
 			photoFilePath.ifPresent(path -> personPhotoDto.setImageData(imageFileService.readImage(path)));
 		} catch (Exception e) {
@@ -93,12 +95,15 @@ public class PersonPhotoServiceImpl implements PersonPhotoService {
         String relativePath = RELATIVE_DIRECTORY
 				.replace("{personIdSubdivision}", getNLastDigits(SUBDIVISION_DIGITS, personId))
 				.replace("{personId}", personId.toString())
-				.concat(newFileName);
+				.concat(uuid)
+				.concat(FILE_EXTENSION);
+		var path = imageFileService.buildCompletePath(relativePath);
+
+        boolean result = imageFileService.saveImage(path, uuid, "FOTO_PERSONAL", imageData);
 
         PersonExtended personExtended = getPersonExtended(personId);
-        personExtended.setPhotoFilePath(imageFileService.buildCompletePath(relativePath));
+        personExtended.setPhotoFilePath(path.relativePath);
         personExtendedRepository.save(personExtended);
-        boolean result = imageFileService.saveImage(relativePath, uuid, "FOTO_PERSONAL", imageData);
         LOG.debug(OUTPUT, result);
         return result;
     }

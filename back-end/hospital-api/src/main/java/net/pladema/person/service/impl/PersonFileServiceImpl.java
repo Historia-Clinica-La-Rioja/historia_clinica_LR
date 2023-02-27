@@ -12,6 +12,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import ar.lamansys.sgh.shared.infrastructure.input.service.PersonFileDto;
 import ar.lamansys.sgx.shared.files.FileService;
+import ar.lamansys.sgx.shared.filestorage.application.FilePathBo;
 import ar.lamansys.sgx.shared.filestorage.infrastructure.input.rest.StoredFileBo;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -41,10 +42,12 @@ public class PersonFileServiceImpl implements PersonFileService {
 
 		List<Integer> result = Arrays.stream(files).mapToInt(file -> {
 					String newFileName = fileService.createFileName(FilenameUtils.getExtension(file.getOriginalFilename()));
-					String partialPath = buildPartialPath(personId, newFileName);
 					String uuid = newFileName.split("\\.")[0];
-					fileService.transferMultipartFile(partialPath, uuid, "PACIENTE", file);
-					return savePersonFile(partialPath, file, institutionId, personId);
+					var path = fileService.buildCompletePath(
+							buildPartialPath(personId, newFileName)
+					);
+					fileService.transferMultipartFile(path, uuid, "PACIENTE", file);
+					return savePersonFile(path, file, institutionId, personId);
 				})
 				.boxed()
 				.collect(Collectors.toList());
@@ -78,9 +81,9 @@ public class PersonFileServiceImpl implements PersonFileService {
 		return personFileRepository.getFiles(personId);
 	}
 
-	private Integer savePersonFile(String completePath, MultipartFile file, Integer institutionId, Integer personId) {
+	private Integer savePersonFile(FilePathBo path, MultipartFile file, Integer institutionId, Integer personId) {
 		PersonFile personFile = new PersonFile(
-				completePath,
+				path.relativePath,
 				file.getContentType(),
 				file.getSize(),
 				file.getOriginalFilename(),

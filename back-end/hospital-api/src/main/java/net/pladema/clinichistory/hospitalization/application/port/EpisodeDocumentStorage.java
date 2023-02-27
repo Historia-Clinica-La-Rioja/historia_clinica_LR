@@ -2,6 +2,7 @@ package net.pladema.clinichistory.hospitalization.application.port;
 
 import java.util.List;
 
+import ar.lamansys.sgx.shared.filestorage.application.FilePathBo;
 import ar.lamansys.sgx.shared.filestorage.infrastructure.input.rest.StoredFileBo;
 import net.pladema.clinichistory.hospitalization.service.domain.DocumentTypeBo;
 import net.pladema.clinichistory.hospitalization.service.domain.EpisodeDocumentBo;
@@ -9,7 +10,7 @@ import net.pladema.clinichistory.hospitalization.service.domain.EpisodeDocumentR
 
 public interface EpisodeDocumentStorage {
 
-	Integer saveEpisodeDocument(String partialPath, String uuid, EpisodeDocumentBo bo);
+	Integer saveEpisodeDocument(FilePathBo path, String uuid, EpisodeDocumentBo bo);
 
 	List<EpisodeDocumentResponseBo> getEpisodeDocuments(Integer internmentEpisodeId);
 

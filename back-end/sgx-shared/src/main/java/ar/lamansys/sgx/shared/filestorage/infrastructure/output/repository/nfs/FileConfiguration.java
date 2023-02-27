@@ -1,4 +1,4 @@
-package ar.lamansys.sgx.shared.files;
+package ar.lamansys.sgx.shared.filestorage.infrastructure.output.repository.nfs;
 
 import java.io.File;
 import java.io.IOException;

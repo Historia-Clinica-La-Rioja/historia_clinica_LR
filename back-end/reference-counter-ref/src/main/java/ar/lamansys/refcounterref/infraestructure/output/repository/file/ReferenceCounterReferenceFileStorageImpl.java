@@ -34,11 +34,13 @@ public class ReferenceCounterReferenceFileStorageImpl implements ReferenceCounte
     public Integer save(Integer institutionId, Integer patientId, MultipartFile file, Integer type) throws IOException {
 
         String newFileName = fileService.createFileName(FilenameUtils.getExtension(file.getOriginalFilename()));
-        String partialPath = buildPartialPath(patientId, newFileName);
 		String uuid = newFileName.split("\\.")[0];
-        fileService.transferMultipartFile(partialPath, uuid, "REFERENCIA_CONTRAREFERENCIA", file);
+		var path = fileService.buildCompletePath(
+				buildPartialPath(patientId, newFileName)
+		);
+        fileService.transferMultipartFile(path, uuid, "REFERENCIA_CONTRAREFERENCIA", file);
 
-        Integer result = saveReferenceCounterReferenceFileMetadata(partialPath, file, type);
+        Integer result = saveReferenceCounterReferenceFileMetadata(path.relativePath, file, type);
         log.debug(OUTPUT, result);
         return result;
 

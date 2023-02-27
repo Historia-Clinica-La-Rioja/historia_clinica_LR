@@ -31,7 +31,7 @@ public class FetchDocumentFileById {
 
 	private StoredFileBo loadFile(DocumentFileBo documentFile) {
 		var path = fileService.buildCompletePath(documentFile.getFilepath());
-		var pdfFile = fileService.loadFileRelativePath(path);
+		var pdfFile = fileService.loadFile(path);
 		return new StoredFileBo(
 				pdfFile,
 				MediaType.APPLICATION_PDF.toString(),

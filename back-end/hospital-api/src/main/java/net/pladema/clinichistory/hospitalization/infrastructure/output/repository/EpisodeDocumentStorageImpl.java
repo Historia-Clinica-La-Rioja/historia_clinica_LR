@@ -10,6 +10,7 @@ import org.springframework.util.StringUtils;
 
 import ar.lamansys.sgx.shared.dates.configuration.LocalDateMapper;
 import ar.lamansys.sgx.shared.files.FileService;
+import ar.lamansys.sgx.shared.filestorage.application.FilePathBo;
 import ar.lamansys.sgx.shared.filestorage.infrastructure.input.rest.StoredFileBo;
 import lombok.extern.slf4j.Slf4j;
 import net.pladema.clinichistory.hospitalization.application.port.EpisodeDocumentStorage;
@@ -49,9 +50,9 @@ public class EpisodeDocumentStorageImpl implements EpisodeDocumentStorage {
 	}
 
 	@Override
-	public Integer saveEpisodeDocument(String partialPath, String uuid, EpisodeDocumentBo bo) {
-		log.debug("Input parameters -> partialPath {}, uuid {}, bo {}", partialPath, uuid, bo);
-		EpisodeDocument ed = new EpisodeDocument(partialPath, StringUtils.cleanPath(bo.getOriginalFilename()), uuid, bo.getEpisodeDocumentTypeId(), bo.getInternmentEpisodeId());
+	public Integer saveEpisodeDocument(FilePathBo path, String uuid, EpisodeDocumentBo bo) {
+		log.debug("Input parameters -> partialPath {}, uuid {}, bo {}", path.relativePath, uuid, bo);
+		EpisodeDocument ed = new EpisodeDocument(path.relativePath, StringUtils.cleanPath(bo.getOriginalFilename()), uuid, bo.getEpisodeDocumentTypeId(), bo.getInternmentEpisodeId());
 		EpisodeDocument entity = this.savedEpisodeDocumentRepository.save(ed);
 		log.debug(OUTPUT, entity);
 		return entity.getId();
@@ -84,9 +85,10 @@ public class EpisodeDocumentStorageImpl implements EpisodeDocumentStorage {
 		Optional<EpisodeDocument> ed = this.savedEpisodeDocumentRepository.findById(episodeDocumentId);
 		if ( ! ed.isPresent()) return false;
 
-		String partialPath = buildPartialPath(ed.get().getInternmentEpisodeId(), ed.get().getUuidFile());
 		this.savedEpisodeDocumentRepository.deleteById(episodeDocumentId);
-		Boolean result = fileService.deleteFile(partialPath + PDF);
+
+		var path = fileService.buildCompletePath(ed.get().getFilePath());
+		Boolean result = fileService.deleteFile(path);
 		log.debug(OUTPUT, result);
 		return result;
 	}
@@ -99,21 +101,12 @@ public class EpisodeDocumentStorageImpl implements EpisodeDocumentStorage {
 		var episodeDocument = ed.get();
 		var path = fileService.buildCompletePath(episodeDocument.getFilePath());
 		var bo = new StoredFileBo(
-				fileService.loadFileRelativePath(path),
+				fileService.loadFile(path),
 				MediaType.APPLICATION_PDF.toString(),
 				episodeDocument.getFileName()
 		);
 		log.debug(OUTPUT, bo);
 		return bo;
-	}
-
-	private String buildPartialPath(Integer internmentEpisodeId, String relativeFilePath){
-		log.debug("Input parameters -> internmentEpisodeId {}, relativeFilePath {}", internmentEpisodeId, relativeFilePath);
-		String result = RELATIVE_DIRECTORY
-				.replace("{internmentEpisodeId}", internmentEpisodeId.toString())
-				.concat(relativeFilePath);
-		log.debug(OUTPUT, result);
-		return result;
 	}
 
 	private EpisodeDocumentResponseBo mapEntityToBo(VEpisodeDocument entity) {

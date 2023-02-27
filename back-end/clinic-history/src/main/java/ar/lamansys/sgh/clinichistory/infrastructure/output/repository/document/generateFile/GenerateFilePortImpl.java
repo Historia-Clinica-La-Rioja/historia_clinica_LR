@@ -1,6 +1,5 @@
 package ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.generateFile;
 
-import java.io.ByteArrayOutputStream;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
@@ -34,17 +33,17 @@ public class GenerateFilePortImpl implements GenerateFilePort {
 
 		formatStringDates(contextMap);
 
-		String path = fileService.buildCompletePath(event.getRelativeDirectory());
+		var path = fileService.buildCompletePath(event.getRelativeDirectory());
 		String realFileName = event.getUuid();
 		String fictitiousFileName = event.buildDownloadName();
 		try {
-			ByteArrayOutputStream output =  pdfService.writer(event.getTemplateName(), contextMap);
-			var file = fileService.saveStreamInPath(event.getRelativeDirectory(), realFileName, "DOCUMENTO_DE_ENCUENTRO",false, output);
+			var pdfStream = pdfService.generate(event.getTemplateName(), contextMap);
+			var file = fileService.saveStreamInPath(path, realFileName, "DOCUMENTO_DE_ENCUENTRO",false, pdfStream);
 			return Optional.of(new DocumentFile(
 					event.getDocumentBo().getId(),
 					event.getEncounterId(),
 					event.getSourceType(),
-					event.getDocumentTypeId(), path, fictitiousFileName, file.getUuidfile(), file.getChecksum()));
+					event.getDocumentTypeId(), path.relativePath, fictitiousFileName, file.getUuidfile(), file.getChecksum()));
 		} catch (PDFDocumentException e) {
 			log.error("Save document file -> {}", event, e);
 			throw e;

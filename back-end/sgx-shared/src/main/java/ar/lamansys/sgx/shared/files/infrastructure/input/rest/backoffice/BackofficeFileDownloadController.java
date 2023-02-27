@@ -18,6 +18,7 @@ import ar.lamansys.sgx.shared.files.FileService;
 import ar.lamansys.sgx.shared.files.exception.FileServiceException;
 import ar.lamansys.sgx.shared.files.infrastructure.output.repository.FileInfo;
 import ar.lamansys.sgx.shared.files.infrastructure.output.repository.FileInfoRepository;
+import ar.lamansys.sgx.shared.filestorage.application.FileContentBo;
 import ar.lamansys.sgx.shared.filestorage.infrastructure.input.rest.StoredFileBo;
 import ar.lamansys.sgx.shared.filestorage.infrastructure.input.rest.StoredFileResponse;
 import lombok.AllArgsConstructor;
@@ -50,13 +51,13 @@ public class BackofficeFileDownloadController {
 	}
 
 	private StoredFileBo loadFile(FileInfo fileInfo) {
-		Resource resource;
+		FileContentBo resource;
 		try {
-			resource = fileService.loadFileRelativePath(
+			resource = fileService.loadFile(
 					fileService.buildCompletePath(fileInfo.getRelativePath())
 			);
 		}  catch (FileServiceException e){
-			resource = fileService.loadFileFromAbsolutePath(
+			resource = fileService.loadFile(
 					fileService.buildCompletePath(fileInfo.getOriginalPath())
 			);
 		}

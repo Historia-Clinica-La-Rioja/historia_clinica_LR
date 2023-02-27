@@ -1,17 +1,18 @@
 package net.pladema.assets.service.impl;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
 import org.springframework.core.io.ClassPathResource;
-import org.springframework.core.io.Resource;
 import org.springframework.stereotype.Service;
 
 import ar.lamansys.sgx.shared.files.FileService;
 import ar.lamansys.sgx.shared.files.exception.FileServiceEnumException;
 import ar.lamansys.sgx.shared.files.exception.FileServiceException;
+import ar.lamansys.sgx.shared.filestorage.application.FileContentBo;
 import ar.lamansys.sgx.shared.filestorage.infrastructure.input.rest.StoredFileBo;
 import ar.lamansys.sgx.shared.filestorage.infrastructure.output.repository.BlobStorage;
 import lombok.AllArgsConstructor;
@@ -48,7 +49,7 @@ public class AssetsServiceImpl implements AssetsService {
     private final FileService fileService;
     private final BlobStorage blobStorage;
 
-    List<Assets> assetsList = new ArrayList<>(Arrays.asList(
+    private final List<Assets> assetsList = new ArrayList<>(Arrays.asList(
             SPONSOR_LOGO, FAVICON,
             ICON_72, ICON_96, ICON_128, ICON_144, ICON_152, ICON_192, ICON_384, ICON_512,
             FOOTER_LEFT, FOOTER_CENTER, FOOTER_RIGHT, APP_LOGO));
@@ -70,7 +71,7 @@ public class AssetsServiceImpl implements AssetsService {
         if (this.blobStorage.existFile(path)) {
 			log.debug("Using custom {}", fileName);
             return new StoredFileBo(
-                    this.fileService.loadFileRelativePath(path),
+                    this.fileService.loadFile(path),
                     newAsset.getContentType(),
 					newAsset.getNameFile()
 			);
@@ -86,11 +87,11 @@ public class AssetsServiceImpl implements AssetsService {
 		);
     }
 
-	private static Resource fromClassPath(String partialPath) {
+	private static FileContentBo fromClassPath(String partialPath) {
 		try {
 			var resource = new ClassPathResource(partialPath);
-			return resource;
-		}  catch (Exception e){
+			return FileContentBo.fromResource(resource);
+		}  catch (IOException e){
 			log.error(e.getMessage(), e);
 			throw new FileServiceException(
 					FileServiceEnumException.SAVE_IOEXCEPTION,

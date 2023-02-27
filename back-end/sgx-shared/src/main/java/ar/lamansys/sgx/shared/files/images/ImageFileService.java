@@ -1,6 +1,7 @@
 package ar.lamansys.sgx.shared.files.images;
 
-import java.io.ByteArrayOutputStream;
+import static ar.lamansys.sgx.shared.filestorage.application.FileContentBo.fromString;
+
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 
@@ -9,6 +10,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
 import ar.lamansys.sgx.shared.files.FileService;
+import ar.lamansys.sgx.shared.filestorage.application.FilePathBo;
 import lombok.AllArgsConstructor;
 
 @AllArgsConstructor
@@ -23,9 +25,9 @@ public class ImageFileService {
 
 	private final FileService fileService;
 
-	public String buildCompletePath(String fileRelativePath){
+	public FilePathBo buildCompletePath(String fileRelativePath){
 		LOG.debug("Input paramenter -> fileRelativePath {}", fileRelativePath);
-		String path = fileService.buildCompletePath(fileRelativePath);
+		var path = fileService.buildCompletePath(fileRelativePath);
 		LOG.debug(OUTPUT, path);
 		return path;
 	}
@@ -34,18 +36,17 @@ public class ImageFileService {
         return fileService.createUuid();
     }
 
-    public String readImage(String path) {
+    public String readImage(FilePathBo path) {
         LOG.debug("Input parameter -> path {}", path);
 		String result = fileService.readFileAsString(path, ENCODING);
 		LOG.debug(OUTPUT, imageDataToString(result));
 		return result;
     }
 
-    public boolean saveImage(String relativePath, String uuid, String generatedFrom, String imageData) {
-        LOG.debug("Input parameters -> relativePath {}, imageData {}", relativePath, imageDataToString(imageData));
-        ByteArrayOutputStream os = new ByteArrayOutputStream();
-        os.writeBytes(imageData.getBytes());
-		var result = fileService.saveStreamInPath(relativePath, uuid, generatedFrom,false, os);
+    public boolean saveImage(FilePathBo path, String fileName, String generatedFrom, String imageData) {
+        LOG.debug("Input parameters -> relativePath {}, imageData {}", path.relativePath, imageDataToString(imageData));
+
+		var result = fileService.saveStreamInPath(path, fileName, generatedFrom,false, fromString(imageData));
 		LOG.debug(OUTPUT, result);
 		return result.getId() != null;
     }

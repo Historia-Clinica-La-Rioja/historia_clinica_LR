@@ -25,13 +25,17 @@ public class CreateEpisodeDocumentImpl implements CreateEpisodeDocument {
 	public Integer run(EpisodeDocumentDto dto) {
 		log.debug("Input parameters -> dto {}", dto);
 		String newFileName = fileService.createFileName(FilenameUtils.getExtension(dto.getFile().getOriginalFilename()));
-		String partialPath = buildPartialPath(dto.getInternmentEpisodeId(), newFileName);
+
+		var path = fileService.buildCompletePath(
+				buildPartialPath(dto.getInternmentEpisodeId(), newFileName)
+		);
 		String uuid = newFileName.split("\\.")[0];
-		fileService.transferMultipartFile(partialPath, uuid, "DOCUMENTO_EPISODIO", dto.getFile());
+		var fileInfo = fileService.transferMultipartFile(path, uuid, "DOCUMENTO_DE_ENCUENTRO", dto.getFile());
+
 		Integer result = episodeDocumentStorage.saveEpisodeDocument(
-				partialPath,
+				path,
 				uuid,
-				new EpisodeDocumentBo(dto.getFile().getOriginalFilename(), dto.getEpisodeDocumentTypeId(), dto.getInternmentEpisodeId())
+				new EpisodeDocumentBo(fileInfo.getOriginalPath(), dto.getEpisodeDocumentTypeId(), dto.getInternmentEpisodeId())
 		);
 		log.debug(OUTPUT, result);
 		return result;

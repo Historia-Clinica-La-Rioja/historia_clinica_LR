@@ -28,6 +28,7 @@ import ar.lamansys.sgx.shared.featureflags.application.FeatureFlagsService;
 import ar.lamansys.sgx.shared.files.StreamsUtils;
 import ar.lamansys.sgx.shared.files.pdf.PDFDocumentException;
 import ar.lamansys.sgx.shared.files.pdf.PdfService;
+import ar.lamansys.sgx.shared.filestorage.application.FileContentBo;
 import ar.lamansys.sgx.shared.filestorage.infrastructure.input.rest.StoredFileResponse;
 import ar.lamansys.sgx.shared.reports.util.struct.IWorkbook;
 import net.pladema.reports.controller.dto.AnnexIIDto;
@@ -144,8 +145,8 @@ public class ReportsController {
 		);
     }
 
-	private Resource buildReport(IWorkbook workbook) {
-		return StreamsUtils.writeToInputStream((out) -> {
+	private FileContentBo buildReport(IWorkbook workbook) {
+		return StreamsUtils.writeToContent((out) -> {
 			try {
 				workbook.write(out);
 			} catch (Exception e) {

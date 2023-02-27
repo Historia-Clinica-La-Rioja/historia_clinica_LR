@@ -81,8 +81,9 @@ public class BackofficeFileStore implements BackofficeStore<FileInfoDto, Long> {
 	}
 
 	private FileInfo update(FileInfo fileInfo, FileInfoDto dto) {
-		fileService.validateRelativePath(dto.getRelativePath());
-		fileInfo.setRelativePath(dto.getRelativePath());
+		var path = fileService.buildCompletePath(dto.getRelativePath());
+		fileService.validateFileExists(path);
+		fileInfo.setRelativePath(path.relativePath);
 		return fileInfoRepository.save(fileInfo);
 	}
 

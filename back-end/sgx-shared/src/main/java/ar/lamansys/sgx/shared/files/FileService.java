@@ -1,24 +1,11 @@
 package ar.lamansys.sgx.shared.files;
 
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
-import java.net.MalformedURLException;
 import java.net.URLConnection;
 import java.nio.charset.Charset;
-import java.nio.file.FileStore;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
-import java.util.Base64;
 import java.util.UUID;
 
-import org.apache.commons.io.FileUtils;
-import org.springframework.core.io.Resource;
-import org.springframework.core.io.UrlResource;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -27,11 +14,13 @@ import ar.lamansys.sgx.shared.context.BeanUtil;
 import ar.lamansys.sgx.shared.files.exception.FileServiceEnumException;
 import ar.lamansys.sgx.shared.files.exception.FileServiceException;
 import ar.lamansys.sgx.shared.files.infrastructure.configuration.interceptors.FileErrorEvent;
-import ar.lamansys.sgx.shared.files.infrastructure.input.rest.backoffice.dto.FileInfoDto;
 import ar.lamansys.sgx.shared.files.infrastructure.output.repository.FileErrorInfo;
 import ar.lamansys.sgx.shared.files.infrastructure.output.repository.FileInfo;
 import ar.lamansys.sgx.shared.files.infrastructure.output.repository.FileInfoRepository;
+import ar.lamansys.sgx.shared.filestorage.application.FileContentBo;
+import ar.lamansys.sgx.shared.filestorage.application.FilePathBo;
 import ar.lamansys.sgx.shared.filestorage.infrastructure.output.repository.BlobStorage;
+import ar.lamansys.sgx.shared.filestorage.infrastructure.output.repository.BucketObjectInfo;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -45,9 +34,9 @@ public class FileService {
 	private final FileInfoRepository repository;
 	private final AppNode appNode;
 
-	public String buildCompletePath(String fileRelativePath){
+	public FilePathBo buildCompletePath(String fileRelativePath){
 		log.debug("Input paramenter -> fileRelativePath {}", fileRelativePath);
-		String path = blobStorage.buildPathAsString(fileRelativePath);
+		FilePathBo path = blobStorage.buildPath(fileRelativePath);
 		log.debug(OUTPUT, path);
 		return path;
 	}
@@ -64,84 +53,52 @@ public class FileService {
 		return result;
 	}
 
-	public FileInfo transferMultipartFile(String partialPath, String uuid, String generatedFrom, MultipartFile file) {
-		String path = buildCompletePath(partialPath);
-		File dirPath = new File(path);
+	public FileInfo transferMultipartFile(FilePathBo path, String uuid, String generatedFrom, MultipartFile file) {
+		File dirPath = path.toFile();
 		try {
-			if (!dirPath.getParentFile().exists())
-				if (!dirPath.getParentFile().mkdirs())
-					throw new FileServiceException(FileServiceEnumException.CANNOT_CREATE_FOLDER, String.format("La carpeta %s no puede ser creada", dirPath.getParentFile()));
-			FileStore fs = Files.getFileStore(dirPath.getParentFile().toPath());
-			if (fs.getUsableSpace() < file.getSize())
-				throw new FileServiceException(FileServiceEnumException.INSUFFICIENT_STORAGE,
-						String.format("La carpeta %s no tiene espacio suficiente (%s) para alojar el archivo de tamaño %s",
-								dirPath.getParentFile(),
-								FileUtils.byteCountToDisplaySize(fs.getUsableSpace()),
-								FileUtils.byteCountToDisplaySize(file.getSize())));
-			file.transferTo(dirPath);
+			var info = blobStorage.put(path, FileContentBo.fromResource(file.getResource()));
 			log.debug(OUTPUT, true);
-			return saveFileInfo(partialPath, uuid, generatedFrom, getHash(path), file);
+			var fileInfoDB = buildFileInfo(uuid, generatedFrom, info, file.getOriginalFilename(), file.getContentType());
+			return saveFileInfo(fileInfoDB);
 		} catch (IOException e) {
-			saveFileError(new FileErrorInfo(path, String.format("transferMultipartFile error => %s", e), appNode.nodeId));
+			saveFileError(new FileErrorInfo(path.relativePath, String.format("transferMultipartFile error => %s", e), appNode.nodeId));
 			log.error(e.toString());
-			throw new FileServiceException(FileServiceEnumException.SAVE_IOEXCEPTION,
-					String.format("El guardado del siguiente archivo %s tuvo el siguiente error %s", dirPath.getAbsolutePath(), e.getMessage()));
+			throw new FileServiceException(
+					FileServiceEnumException.SAVE_IOEXCEPTION,
+					String.format("El guardado del siguiente archivo %s tuvo el siguiente error %s", dirPath.getAbsolutePath(), e.getMessage())
+			);
 		}
 	}
 
-	private FileInfo saveFileInfo(String path, String uuid, String generatedFrom, String checksum, MultipartFile file) {
-		return repository.save(new FileInfo(
-				file.getOriginalFilename(),
-				path,
-				file.getContentType(),
-				file.getSize(),
-				uuid,
-				checksum,
-				generatedFrom));
+	public FileContentBo loadFileRelativePath(String relativeFilePath) {
+		return loadFile(blobStorage.buildPath(relativeFilePath));
 	}
 
-	public Resource loadFileRelativePath(String relativeFilePath) {
-		Path path = blobStorage.buildPath(relativeFilePath);
+	public FileContentBo loadFile(FilePathBo path) {
 		try {
-			validateRelativePath(relativeFilePath);
-		} catch (FileServiceException e) {
-			saveFileError(new FileErrorInfo(relativeFilePath, String.format("loadFileRelativePath error => %s", e.getMessage()), appNode.nodeId));
+			return blobStorage.get(path);
+		} catch (Exception e) {
 			log.error(e.getMessage());
-			throw e;
+			saveFileError(new FileErrorInfo(
+					path.relativePath,
+					String.format("loadFileRelativePath error => %s", e.getMessage()),
+					appNode.nodeId
+			));
+			throw new FileServiceException(
+					FileServiceEnumException.SAVE_IOEXCEPTION,
+					String.format("El guardado del siguiente archivo %s tuvo el siguiente error %s", path.relativePath, e)
+			);
 		}
-		try {
-			return new UrlResource(path.toUri());
-		} catch (MalformedURLException e) {
-			saveFileError(new FileErrorInfo(relativeFilePath, String.format("loadFile error => %s", e), appNode.nodeId));
-			log.error(e.toString());
-		}
-		return null;
 	}
 
-	public Resource loadFileFromAbsolutePath(String absolutePath) {
-		Path path = Paths.get(absolutePath);
+	public FileInfo saveStreamInPath(FilePathBo path, String uuid, String generatedFrom, boolean override,
+									 FileContentBo content) {
+
+		File dirPath = path.toFile();
 		try {
-			validateAbsolutePath(path.toString());
-		} catch (FileServiceException e) {
-			saveFileError(new FileErrorInfo(absolutePath, String.format("loadFileFromAbsolutePath error => %s", e.getMessage()), appNode.nodeId));
-			log.error(e.getMessage());
-			throw e;
-		}
-		try {
-			return new UrlResource(path.toUri());
-		} catch (MalformedURLException e) {
-			saveFileError(new FileErrorInfo(absolutePath, e.getMessage(), appNode.nodeId));
-			log.error(e.getMessage());
-		}
-		return null;
-	}
-	public FileInfo saveStreamInPath(String partialPath, String uuid, String generatedFrom, boolean override,
-									 ByteArrayOutputStream byteArrayOutputStream) {
-		String path = buildCompletePath(partialPath);
-		File dirPath = new File(path);
-		try {
-			blobStorage.saveFileInDirectory(path, override, byteArrayOutputStream);
-			return saveFileInfo(partialPath, uuid, generatedFrom, getHash(path), dirPath);
+			var info = blobStorage.put(path, content, override);
+			var fileInfoDB = buildFileInfo(uuid, generatedFrom, info, dirPath.getName(), parseToContentType(dirPath.getName()));
+			return saveFileInfo(fileInfoDB);
 		} catch (IOException e) {
 			saveFileError(new FileErrorInfo(dirPath.getPath(), String.format("saveStreamInPath error => %s", e), appNode.nodeId));
 			log.error(e.toString());
@@ -150,52 +107,41 @@ public class FileService {
 		}
 	}
 
-	private FileInfo saveFileInfo(String path, String uuid, String generatedFrom, String checksum,  File file) throws IOException {
-		return repository.save(new FileInfo(
-				file.getName(),
-				path,
-				parseToContentType(file.getName()),
-				Files.size(file.toPath()),
+	private static FileInfo buildFileInfo(String uuid, String generatedFrom, BucketObjectInfo objectInfo, String originalName, String contentType) {
+		return new FileInfo(
+				originalName,
+				objectInfo.path.relativePath,
+				contentType,
+				objectInfo.size,
 				uuid,
-				checksum,
-				generatedFrom));
+				objectInfo.checksum,
+				generatedFrom
+		);
 	}
 
-	private String parseToContentType(String fileName) {
+	private FileInfo saveFileInfo(FileInfo fileInfo) {
+		return repository.save(fileInfo);
+	}
+
+	private static String parseToContentType(String fileName) {
 		return URLConnection.guessContentTypeFromName(fileName);
 	}
 
-	public String readFileAsString(String path, Charset encoding) {
-		File dirPath = new File(path);
+	public String readFileAsString(FilePathBo path, Charset encoding) {
+
 		try {
 			return blobStorage.readFileAsString(path, encoding);
 		} catch (IOException e) {
-			saveFileError(new FileErrorInfo(dirPath.getPath(), String.format("readFileAsString error => %s", e), appNode.nodeId));
-			log.error(e.toString());
-			throw new FileServiceException(FileServiceEnumException.SAVE_IOEXCEPTION,
-					String.format("La lectura del siguiente archivo %s tuvo el siguiente error %s", dirPath.getAbsolutePath(), e));
-		}
-	}
-
-	public ByteArrayInputStream readStreamFromRelativePath(String partialPath) {
-		log.debug("Input parameters -> partialPath {}", partialPath);
-		String path = buildCompletePath(partialPath);
-		return readStreamFromAbsolutePath(path);
-	}
-
-	public ByteArrayInputStream readStreamFromAbsolutePath(String absolutePath) {
-		log.debug("Input parameters -> absolutePath {}", absolutePath);
-		File dirPath = new File(absolutePath);
-		try {
-			Path pdfPath = Paths.get(absolutePath);
-			byte[] pdf = Files.readAllBytes(pdfPath);
-			log.debug("Output -> path {}", absolutePath);
-			return new ByteArrayInputStream(pdf);
-		}  catch (IOException e){
-			saveFileError(new FileErrorInfo(dirPath.getPath(), String.format("readStreamFromPath error => %s", e), appNode.nodeId));
-			log.error(e.toString());
-			throw new FileServiceException(FileServiceEnumException.SAVE_IOEXCEPTION,
-					String.format("La lectura del siguiente archivo %s tuvo el siguiente error %s", dirPath.getAbsolutePath(), e));
+			log.error(e.getMessage());
+			saveFileError(new FileErrorInfo(
+					path.relativePath,
+					String.format("readFileAsString error => %s", e),
+					appNode.nodeId
+			));
+			throw new FileServiceException(
+					FileServiceEnumException.SAVE_IOEXCEPTION,
+					String.format("La lectura del siguiente archivo %s tuvo el siguiente error %s", path.relativePath, e)
+			);
 		}
 	}
 
@@ -203,65 +149,39 @@ public class FileService {
 		BeanUtil.publishEvent(new FileErrorEvent(fileErrorInfo));
 	}
 
-	public boolean deleteFile(String partialPath) {
-		String completePath = buildCompletePath(partialPath);
-		if (!blobStorage.deleteFileInDirectory(completePath))
-			return false;
-		repository.deleteByRelativePath(partialPath);
+	public boolean deleteFile(FilePathBo path) {
+		blobStorage.delete(path);
+		repository.deleteByRelativePath(path.relativePath);
 		return true;
 	}
 
-	private static String getHash(String path) {
-		log.debug("Input parameters -> path {}", path);
-		String result;
-		String algorithm = "SHA-256";
-		try {
-			MessageDigest md = MessageDigest.getInstance(algorithm);
-			byte[] sha256Hash = md.digest(Files.readAllBytes(Paths.get(path)));
-			result = Base64.getEncoder().encodeToString(sha256Hash);
-		} catch (NoSuchAlgorithmException e) {
-			log.error("Algorithm doesn't exist -> {} ",algorithm);
-			result = null;
-		}
-		catch (IOException e) {
-			log.error("Error with path file {} ", path, e);
-			result = null;
-		}
-		log.debug(OUTPUT, result);
-		return result;
-	}
-
-	public long getFileSize(FileInfoDto fileInfo) throws IOException {
-		String completePath = buildCompletePath(fileInfo.getRelativePath());
-		Long unknownSize = -1L;
-		if (!unknownSize.equals(fileInfo.getSize()))
-			return fileInfo.getSize();
-		try {
-			return Files.size(Paths.get(completePath));
-		}  catch (FileServiceException | IOException e){
-			saveFileError(new FileErrorInfo(fileInfo.getRelativePath(), String.format("getFileSize error => %s", e), appNode.nodeId));
-			log.error(e.toString());
-			try {
-				return Files.size(Paths.get(fileInfo.getOriginalPath()));
-			}  catch (IOException e1){
-				saveFileError(new FileErrorInfo(fileInfo.getOriginalPath(), String.format("getFileSize error => %s", e1), appNode.nodeId));
-				log.error(e1.toString());
-				throw new FileServiceException(FileServiceEnumException.SAVE_IOEXCEPTION,
-						String.format("La lectura del siguiente archivo %s tuvo el siguiente error %s", fileInfo.getRelativePath(), e));
-			}
-		}
-	}
-
-	public boolean validateRelativePath(String relativePath) {
-		String path = buildCompletePath(relativePath);
-		return validateAbsolutePath(path);
-	}
-
-	public boolean validateAbsolutePath(String absolutePath) {
-		File dirPath = new File(absolutePath);
-		if (!dirPath.exists())
-			throw new FileServiceException(FileServiceEnumException.NON_EXIST, String.format("El archivo %s no existe", dirPath));
+	public boolean validateFileExists(FilePathBo path) {
+		if (blobStorage.existFile(path))
+			throw new FileServiceException(FileServiceEnumException.NON_EXIST, String.format("El archivo %s no existe", path.relativePath));
 		return true;
 	}
 
+//	public void migrateFiles(StorageFacade fromStorage) {
+//		Stream<FileInfo> streamToMigrate = repository.findAll().stream()
+//			.filter(fileInfo -> fromStorage.fileExist(fileInfo.getRelativePath()));
+//
+//		streamToMigrate.forEach(
+//				fileInfo -> {
+//					if (streamFile.storageFacade.fileExist(fileInfo.getRelativePath())) {
+//						System.out.println("EXISTE " + fileInfo.getRelativePath());
+//						return;
+//					}
+//					System.out.println("PARA MIGRAR " + fileInfo.getRelativePath());
+//					try {
+//						streamFile.storageFacade.put(
+//								fileInfo.getRelativePath(),
+//								fromStorage.get(fileInfo.getRelativePath())
+//						);
+//					} catch (Exception e) {
+//						log.error(e.getMessage(), e);
+//					}
+//
+//				}
+//		);
+//	}
 }

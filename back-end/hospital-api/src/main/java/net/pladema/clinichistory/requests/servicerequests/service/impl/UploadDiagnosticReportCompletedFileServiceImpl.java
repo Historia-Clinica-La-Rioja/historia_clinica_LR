@@ -12,6 +12,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import ar.lamansys.sgx.shared.files.FileService;
+import ar.lamansys.sgx.shared.filestorage.application.FilePathBo;
 import net.pladema.clinichistory.requests.servicerequests.repository.DiagnosticReportFileRepository;
 import net.pladema.clinichistory.requests.servicerequests.repository.entity.DiagnosticReportFile;
 import net.pladema.clinichistory.requests.servicerequests.service.UploadDiagnosticReportCompletedFileService;
@@ -36,10 +37,12 @@ public class UploadDiagnosticReportCompletedFileServiceImpl  implements UploadDi
 	public List<Integer> execute(MultipartFile[] files, Integer diagnosticReportId, Integer patientId) {
 		List<Integer> result = Arrays.stream(files).mapToInt(file -> {
 					String newFileName = fileService.createFileName(FilenameUtils.getExtension(file.getOriginalFilename()));
-			String partialPath = buildPartialPath(patientId, newFileName, diagnosticReportId);
+					var path = fileService.buildCompletePath(
+							buildPartialPath(patientId, newFileName, diagnosticReportId)
+					);
 					String uuid = newFileName.split("\\.")[0];
-			fileService.transferMultipartFile(partialPath, uuid, "RESULTADO_ESTUDIO", file);
-			return saveDiagnosticReportFileMetadata(partialPath, file);
+					fileService.transferMultipartFile(path, uuid, "RESULTADO_ESTUDIO", file);
+					return saveDiagnosticReportFileMetadata(path, file);
 				})
 				.boxed()
 				.collect(Collectors.toList());
@@ -48,9 +51,9 @@ public class UploadDiagnosticReportCompletedFileServiceImpl  implements UploadDi
 
 	}
 
-	private Integer saveDiagnosticReportFileMetadata(String completePath, MultipartFile file) {
+	private Integer saveDiagnosticReportFileMetadata(FilePathBo path, MultipartFile file) {
 		DiagnosticReportFile diagnosticReportFile = new DiagnosticReportFile(
-				completePath,
+				path.relativePath,
 				file.getContentType(),
 				file.getSize(),
 				file.getOriginalFilename());
@@ -69,11 +72,5 @@ public class UploadDiagnosticReportCompletedFileServiceImpl  implements UploadDi
 		return result;
 	}
 
-	private String buildCompleteFilePath(String partialPath){
-		LOG.debug("Input parameters -> partialPath {}", partialPath);
-		String result = fileService.buildCompletePath(partialPath);
-		LOG.debug(OUTPUT, result);
-		return result;
-	}
 
 }
