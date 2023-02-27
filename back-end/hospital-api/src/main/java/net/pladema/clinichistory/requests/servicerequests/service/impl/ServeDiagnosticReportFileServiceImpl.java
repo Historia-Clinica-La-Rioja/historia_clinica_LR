@@ -5,9 +5,9 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import ar.lamansys.sgx.shared.files.FileService;
+import ar.lamansys.sgx.shared.filestorage.infrastructure.input.rest.StoredFileBo;
 import net.pladema.clinichistory.requests.servicerequests.repository.DiagnosticReportFileRepository;
 import net.pladema.clinichistory.requests.servicerequests.service.ServeDiagnosticReportFileService;
-import ar.lamansys.sgx.shared.filestorage.infrastructure.input.rest.StoredFileBo;
 
 @Service
 public class ServeDiagnosticReportFileServiceImpl implements ServeDiagnosticReportFileService {
@@ -26,11 +26,13 @@ public class ServeDiagnosticReportFileServiceImpl implements ServeDiagnosticRepo
     @Override
     public StoredFileBo run(Integer fileId) {
         LOG.debug("input -> fileId {}", fileId);
-        StoredFileBo result = diagnosticReportFileRepository.findById(fileId).stream().map(drf ->
+        StoredFileBo result = diagnosticReportFileRepository.findById(fileId).map(drf ->
                 new StoredFileBo(
                         fileService.loadFileRelativePath(drf.getPath()),
                         drf.getContentType(),
-                        drf.getSize())).findFirst().orElse(null);
+						drf.getName()
+				)
+		).orElse(null);
         LOG.debug(OUTPUT, result);
         return result;
     }

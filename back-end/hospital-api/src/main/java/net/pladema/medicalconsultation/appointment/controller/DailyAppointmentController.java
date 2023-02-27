@@ -1,6 +1,7 @@
 package net.pladema.medicalconsultation.appointment.controller;
 
 import ar.lamansys.sgh.shared.infrastructure.input.service.BasicDataPersonDto;
+import ar.lamansys.sgx.shared.filestorage.infrastructure.input.rest.StoredFileResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import ar.lamansys.sgx.shared.featureflags.AppFeature;
 import ar.lamansys.sgx.shared.featureflags.application.FeatureFlagsService;
@@ -22,15 +23,12 @@ import net.pladema.staff.controller.dto.ProfessionalDto;
 import net.pladema.staff.controller.service.HealthcareProfessionalExternalService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.core.io.InputStreamResource;
-import org.springframework.http.HttpHeaders;
+import org.springframework.core.io.Resource;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
 import java.time.LocalDate;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
@@ -80,9 +78,9 @@ public class DailyAppointmentController {
 
     @GetMapping("/")
     @PreAuthorize("hasPermission(#institutionId, 'ADMINISTRATIVO, ESPECIALISTA_MEDICO, PROFESIONAL_DE_SALUD, ESPECIALISTA_EN_ODONTOLOGIA, ENFERMERO, ADMINISTRADOR_AGENDA')")
-    public ResponseEntity<InputStreamResource> getDailyAppointmentsByDiaryIdAndDate(@PathVariable(name = "institutionId") Integer institutionId,
-                                                                                    @RequestParam(name = "diaryId") Integer diaryId,
-                                                                                    @RequestParam(name = "date") String date)
+    public ResponseEntity<Resource> getDailyAppointmentsByDiaryIdAndDate(@PathVariable(name = "institutionId") Integer institutionId,
+																		 @RequestParam(name = "diaryId") Integer diaryId,
+																		 @RequestParam(name = "date") String date)
                                                             throws PDFDocumentException {
         LOG.debug("Input parameters -> institutionId {}, diaryId {}, date {}", institutionId, diaryId, date);
         LocalDate consultedDate = localDateMapper.fromStringToLocalDate(date);
@@ -92,23 +90,12 @@ public class DailyAppointmentController {
         Integer healthCareProfessionalId = diaryService.getDiary(diaryId).map(DiaryBo::getHealthcareProfessionalId).orElse(null);
         ProfessionalDto professionalDto = healthcareProfessionalExternalService.findActiveProfessionalById(healthCareProfessionalId);
         Map<String, Object> context = createContext(professionalDto, attentionTypeReportDtos, consultedDate, now);
-        String outputFileName = createOutputFileName(professionalDto, consultedDate);
-		System.out.println("outputFileName " + outputFileName);
-        ResponseEntity<InputStreamResource> response = generatePdfResponse(context, outputFileName);
-        LOG.debug(OUTPUT, response);
-        return response;
-    }
 
-    private ResponseEntity<InputStreamResource> generatePdfResponse(Map<String, Object> context, String outputFileName) throws PDFDocumentException {
-        LOG.debug("Input parameters -> context {}, outputFileName {}", context, outputFileName);
-        ByteArrayOutputStream outputStream = pdfService.writer("daily-appointments", context);
-        ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(outputStream.toByteArray());
-        InputStreamResource resource = new InputStreamResource(byteArrayInputStream);
-        ResponseEntity<InputStreamResource> response;
-        response = ResponseEntity.ok()
-                .header(HttpHeaders.CONTENT_DISPOSITION, "attachment;filename=" + outputFileName)
-                .contentType(MediaType.APPLICATION_PDF).contentLength(outputStream.size()).body(resource);
-        return response;
+		return StoredFileResponse.sendFile(
+				pdfService.generate("daily-appointments", context),
+				createOutputFileName(professionalDto, consultedDate),
+				MediaType.APPLICATION_PDF
+		);
     }
 
 
@@ -191,7 +178,7 @@ public class DailyAppointmentController {
 		}else {
 			name = professionalDto.getCompleteName(professionalDto.getFirstName());
 		}
-		String outputFileName = String.format("%s. Turnos %s", name, formattedDate);
+		String outputFileName = String.format("%s-Turnos %s.pdf", name, formattedDate);
         LOG.debug(OUTPUT, outputFileName);
         return outputFileName;
     }

@@ -1,12 +1,9 @@
 package ar.lamansys.sgx.shared.files.infrastructure.input.rest.backoffice;
 
 import java.io.IOException;
-import java.net.URLConnection;
 
 import org.springframework.core.io.Resource;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.InvalidMediaTypeException;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -19,7 +16,10 @@ import ar.lamansys.sgx.shared.featureflags.AppFeature;
 import ar.lamansys.sgx.shared.featureflags.application.FeatureFlagsService;
 import ar.lamansys.sgx.shared.files.FileService;
 import ar.lamansys.sgx.shared.files.exception.FileServiceException;
+import ar.lamansys.sgx.shared.files.infrastructure.output.repository.FileInfo;
 import ar.lamansys.sgx.shared.files.infrastructure.output.repository.FileInfoRepository;
+import ar.lamansys.sgx.shared.filestorage.infrastructure.input.rest.StoredFileBo;
+import ar.lamansys.sgx.shared.filestorage.infrastructure.input.rest.StoredFileResponse;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -36,31 +36,35 @@ public class BackofficeFileDownloadController {
 
 	@GetMapping(value = "/{id}/downloadFile")
 	@PreAuthorize("hasAnyAuthority('ROOT', 'ADMINISTRADOR')")
-	public ResponseEntity downloadPdf(@PathVariable Long id) throws IOException {
+	public ResponseEntity<Resource> downloadPdf(@PathVariable Long id) throws IOException {
 		if (!featureFlagsService.isOn(AppFeature.HABILITAR_DESCARGA_DOCUMENTOS_PDF))
 			return new ResponseEntity<>(null, HttpStatus.METHOD_NOT_ALLOWED);
 		var optFile = fileInfoRepository.findById(id);
 		if (optFile.isEmpty())
 			return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
 		var fileInfo = optFile.get();
+
+		return StoredFileResponse.sendFile(
+				loadFile(fileInfo)
+		);
+	}
+
+	private StoredFileBo loadFile(FileInfo fileInfo) {
 		Resource resource;
 		try {
-			resource = fileService.loadFileRelativePath(fileInfo.getRelativePath());
+			resource = fileService.loadFileRelativePath(
+					fileService.buildCompletePath(fileInfo.getRelativePath())
+			);
 		}  catch (FileServiceException e){
-			resource = fileService.loadFileFromAbsolutePath(fileInfo.getOriginalPath());
+			resource = fileService.loadFileFromAbsolutePath(
+					fileService.buildCompletePath(fileInfo.getOriginalPath())
+			);
 		}
-		var contentType = MediaType.APPLICATION_OCTET_STREAM;
-		try {
-			contentType = MediaType.parseMediaType(fileInfo.getContentType());
-		} catch (InvalidMediaTypeException ex) {
-			log.error(ex.getMessage());
-			contentType = MediaType.parseMediaType(URLConnection.guessContentTypeFromName(fileInfo.getName()));
-		}
-		return ResponseEntity.ok()
-				.header(HttpHeaders.CONTENT_DISPOSITION, "attachment;filename=" + fileInfo.getName())
-				.contentType(contentType)
-				.contentLength(resource.contentLength())
-				.body(resource);
+		return new StoredFileBo(
+				resource,
+				MediaType.APPLICATION_OCTET_STREAM.toString(),
+				fileInfo.getName()
+		);
 	}
 
 }

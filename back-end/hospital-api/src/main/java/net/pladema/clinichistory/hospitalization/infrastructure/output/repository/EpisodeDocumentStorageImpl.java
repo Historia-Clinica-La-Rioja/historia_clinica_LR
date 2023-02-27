@@ -1,7 +1,16 @@
 package net.pladema.clinichistory.hospitalization.infrastructure.output.repository;
 
+import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
+
+import org.springframework.http.MediaType;
+import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
+
 import ar.lamansys.sgx.shared.dates.configuration.LocalDateMapper;
 import ar.lamansys.sgx.shared.files.FileService;
+import ar.lamansys.sgx.shared.filestorage.infrastructure.input.rest.StoredFileBo;
 import lombok.extern.slf4j.Slf4j;
 import net.pladema.clinichistory.hospitalization.application.port.EpisodeDocumentStorage;
 import net.pladema.clinichistory.hospitalization.infrastructure.output.entities.EpisodeDocument;
@@ -10,13 +19,6 @@ import net.pladema.clinichistory.hospitalization.infrastructure.output.entities.
 import net.pladema.clinichistory.hospitalization.service.domain.DocumentTypeBo;
 import net.pladema.clinichistory.hospitalization.service.domain.EpisodeDocumentBo;
 import net.pladema.clinichistory.hospitalization.service.domain.EpisodeDocumentResponseBo;
-import net.pladema.clinichistory.hospitalization.service.domain.StoredFileBo;
-
-import org.springframework.stereotype.Service;
-import org.springframework.util.StringUtils;
-import java.util.List;
-import java.util.Optional;
-import java.util.stream.Collectors;
 
 @Service
 @Slf4j
@@ -49,7 +51,7 @@ public class EpisodeDocumentStorageImpl implements EpisodeDocumentStorage {
 	@Override
 	public Integer saveEpisodeDocument(String partialPath, String uuid, EpisodeDocumentBo bo) {
 		log.debug("Input parameters -> partialPath {}, uuid {}, bo {}", partialPath, uuid, bo);
-		EpisodeDocument ed = new EpisodeDocument(partialPath, StringUtils.cleanPath(bo.getFile().getOriginalFilename()), uuid, bo.getEpisodeDocumentTypeId(), bo.getInternmentEpisodeId());
+		EpisodeDocument ed = new EpisodeDocument(partialPath, StringUtils.cleanPath(bo.getOriginalFilename()), uuid, bo.getEpisodeDocumentTypeId(), bo.getInternmentEpisodeId());
 		EpisodeDocument entity = this.savedEpisodeDocumentRepository.save(ed);
 		log.debug(OUTPUT, entity);
 		return entity.getId();
@@ -93,10 +95,14 @@ public class EpisodeDocumentStorageImpl implements EpisodeDocumentStorage {
 	public StoredFileBo downloadEpisodeDocument(Integer episodeDocumentId) {
 		log.debug("Input parameters -> episodeDocumentId {}", episodeDocumentId);
 		Optional<EpisodeDocument> ed = this.savedEpisodeDocumentRepository.findById(episodeDocumentId);
-		StoredFileBo bo = new StoredFileBo();
-		if ( ! ed.isPresent()) return bo;
-
-		bo.setResource(fileService.loadFileRelativePath(ed.get().getFilePath()));
+		if ( ! ed.isPresent()) return null;
+		var episodeDocument = ed.get();
+		var path = fileService.buildCompletePath(episodeDocument.getFilePath());
+		var bo = new StoredFileBo(
+				fileService.loadFileRelativePath(path),
+				MediaType.APPLICATION_PDF.toString(),
+				episodeDocument.getFileName()
+		);
 		log.debug(OUTPUT, bo);
 		return bo;
 	}

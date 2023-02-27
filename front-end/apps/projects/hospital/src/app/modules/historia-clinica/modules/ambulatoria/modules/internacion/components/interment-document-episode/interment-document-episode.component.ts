@@ -1,6 +1,5 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
-import { saveAs } from 'file-saver';
 import { EpisodeDocumentResponseDto } from '@api-rest/api-model';
 import { InternmentEpisodeDocumentService } from '@api-rest/services/internment-episode-document.service';
 import { AttachDocumentPopupComponent } from '../../dialogs/attach-document-popup/attach-document-popup.component';
@@ -17,8 +16,10 @@ export class IntermentDocumentEpisodeComponent {
   @Input() internmentEpisodeId: number;
   @Output() updateDocuments: EventEmitter<any> = new EventEmitter();
 
-  constructor(public dialog: MatDialog,
-              private internmentEpisodeDocumentService: InternmentEpisodeDocumentService) { }
+  constructor(
+    public dialog: MatDialog,
+    private internmentEpisodeDocumentService: InternmentEpisodeDocumentService,
+  ) { }
 
   onFileSelected(event) {
     const file: File = event.target.files[0];
@@ -28,31 +29,28 @@ export class IntermentDocumentEpisodeComponent {
 
   openAttachDialog(file: File) {
     const dialogRef = this.dialog.open(AttachDocumentPopupComponent, {
-			disableClose: true,
-			width: '35%',
-			data: {
+      disableClose: true,
+      width: '35%',
+      data: {
         file,
         internmentEpisodeId: this.internmentEpisodeId
-			}
-		});
+      }
+    });
     dialogRef.afterClosed().subscribe(_ => this.updateDocuments.emit());
   }
 
   openDeleteDialog(episodeDocumentId: number) {
     const dialogRef = this.dialog.open(DeleteDocumentPopupComponent, {
-			disableClose: true,
-			width: '35%',
-			data: {
+      disableClose: true,
+      width: '35%',
+      data: {
         episodeDocumentId,
       }
-		});
+    });
     dialogRef.afterClosed().subscribe(_ => this.updateDocuments.emit());
   }
 
   download(episodeDocumentId: number, fileName: string) {
-    this.internmentEpisodeDocumentService.download(episodeDocumentId)
-      .subscribe(resp => {
-        saveAs(resp, fileName);
-      });
+    this.internmentEpisodeDocumentService.download(episodeDocumentId, fileName);
   }
 }

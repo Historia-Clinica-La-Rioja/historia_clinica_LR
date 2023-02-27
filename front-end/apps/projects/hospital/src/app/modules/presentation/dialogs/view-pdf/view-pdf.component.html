@@ -1,0 +1,58 @@
+<mat-toolbar>
+	<span class="title">{{filename}}</span>
+	<span class="spacer"></span>
+	<button mat-icon-button aria-label="Opciones" color="primary" [matMenuTriggerFor]="menu" >
+		<mat-icon>send</mat-icon>
+	</button>
+	<button mat-icon-button aria-label="close" (click)="closeModal()">
+		<mat-icon>close</mat-icon>
+	</button>
+</mat-toolbar>
+<mat-dialog-content>
+	<mat-progress-bar
+		*ngIf="isLoading"
+		class="example-margin"
+		color="primary"
+		mode="determinate"
+		[value]="progressValue"
+	></mat-progress-bar>
+	<mat-card class="error" *ngIf="error">
+		<mat-card-header>
+			<img mat-card-avatar src="assets/images/error_outline.png">
+			<mat-card-title>
+				Error al cargar el PDF
+			</mat-card-title>
+		</mat-card-header>
+		<mat-card-content>
+			<mat-list>
+				<mat-list-item  *ngIf="error?.name">
+				  <div mat-line>{{error.name}}</div>
+				  <div mat-line>Nombre</div>
+				</mat-list-item>
+				<mat-list-item *ngIf="error?.message">
+				  <div mat-line>{{error.message}}</div>
+				  <div mat-line>Mensaje</div>
+				</mat-list-item>
+			  </mat-list>
+		</mat-card-content>
+	</mat-card>
+	<pdf-viewer [src]="data.url.toString()"
+	[render-text]="true"
+
+	[original-size]="true"
+	(on-progress)="onProgress($event)"
+	(after-load-complete)="afterLoadComplete($event)"
+	(error)="onError($event)"
+	></pdf-viewer>
+</mat-dialog-content>
+
+<mat-menu #menu="matMenu">
+	<button mat-menu-item [disabled]="isLoading" (click)="download()">
+		<mat-icon>download</mat-icon>
+		<span>Descargar</span>
+	</button>
+	<button mat-menu-item [disabled]="isLoading || !canShareFile" (click)="share()">
+		<mat-icon>share</mat-icon>
+		<span>Compartir</span>
+	</button>
+</mat-menu>

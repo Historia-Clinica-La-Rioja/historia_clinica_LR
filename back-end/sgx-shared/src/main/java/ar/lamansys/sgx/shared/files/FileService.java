@@ -19,7 +19,7 @@ import java.util.UUID;
 import org.apache.commons.io.FileUtils;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.UrlResource;
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import ar.lamansys.sgx.shared.actuator.infrastructure.configuration.AppNode;
@@ -37,37 +37,13 @@ import lombok.extern.slf4j.Slf4j;
 
 @AllArgsConstructor
 @Slf4j
-@Component
+@Service
 public class FileService {
 
 	private static final String OUTPUT = "Output -> {}";
-
 	private final BlobStorage blobStorage;
-	private final FileConfiguration fileConfiguration;
-
 	private final FileInfoRepository repository;
 	private final AppNode appNode;
-
-	public final String getSpaceDocumentLocation() {
-		try {
-			FileStore fs = Files.getFileStore(fileConfiguration.getDocumentsLocation().toPath());
-			return String.format("%s/%s", FileUtils.byteCountToDisplaySize(fs.getUsableSpace()), FileUtils.byteCountToDisplaySize(fs.getTotalSpace()));
-		} catch (IOException e) {
-			log.error(e.toString());
-			saveFileError(new FileErrorInfo(fileConfiguration.getDocumentsLocation().toPath().toString(), String.format("getSpaceDocumentLocation error => %s", e), appNode.nodeId));
-			return String.format("Error en la lectura del directorio %s", fileConfiguration.getDocumentsLocation().toPath());
-		}
-	}
-	public final String getSpaceMultipartLocation() {
-		try {
-			FileStore fs = Files.getFileStore(fileConfiguration.getMultipartLocation().toPath());
-			return String.format("%s/%s", FileUtils.byteCountToDisplaySize(fs.getUsableSpace()), FileUtils.byteCountToDisplaySize(fs.getTotalSpace()));
-		} catch (IOException e) {
-			log.error(e.toString());
-			saveFileError(new FileErrorInfo(fileConfiguration.getMultipartLocation().toPath().toString(), String.format("getSpaceMultipartLocation error => %s", e), appNode.nodeId));
-			return String.format("Error en la lectura del directorio %s", fileConfiguration.getMultipartLocation().toPath());
-		}
-	}
 
 	public String buildCompletePath(String fileRelativePath){
 		log.debug("Input paramenter -> fileRelativePath {}", fileRelativePath);
@@ -77,12 +53,18 @@ public class FileService {
 	}
 
 	public String createFileName(String extension){
-		String result = UUID.randomUUID().toString() + '.' + extension;
+		String result = this.createUuid() + '.' + extension;
 		log.debug(OUTPUT, result);
 		return result;
 	}
 
-	public FileInfo transferMultipartFile(String partialPath, String uuid, String generatedFrom, MultipartFile file) throws IOException {
+	public String createUuid(){
+		String result = UUID.randomUUID().toString();
+		log.debug(OUTPUT, result);
+		return result;
+	}
+
+	public FileInfo transferMultipartFile(String partialPath, String uuid, String generatedFrom, MultipartFile file) {
 		String path = buildCompletePath(partialPath);
 		File dirPath = new File(path);
 		try {
@@ -99,11 +81,7 @@ public class FileService {
 			file.transferTo(dirPath);
 			log.debug(OUTPUT, true);
 			return saveFileInfo(partialPath, uuid, generatedFrom, getHash(path), file);
-		}  catch (FileServiceException e) {
-			saveFileError(new FileErrorInfo(path, String.format("transferMultipartFile error => %s", e.getMessage()), appNode.nodeId));
-			throw e;
-		}
-		catch (IOException e) {
+		} catch (IOException e) {
 			saveFileError(new FileErrorInfo(path, String.format("transferMultipartFile error => %s", e), appNode.nodeId));
 			log.error(e.toString());
 			throw new FileServiceException(FileServiceEnumException.SAVE_IOEXCEPTION,
@@ -233,7 +211,6 @@ public class FileService {
 		return true;
 	}
 
-
 	private static String getHash(String path) {
 		log.debug("Input parameters -> path {}", path);
 		String result;
@@ -286,4 +263,5 @@ public class FileService {
 			throw new FileServiceException(FileServiceEnumException.NON_EXIST, String.format("El archivo %s no existe", dirPath));
 		return true;
 	}
+
 }

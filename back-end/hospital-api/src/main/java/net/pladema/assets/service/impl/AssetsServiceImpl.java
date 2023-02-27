@@ -6,16 +6,21 @@ import java.util.List;
 import java.util.Optional;
 
 import org.springframework.core.io.ClassPathResource;
+import org.springframework.core.io.Resource;
 import org.springframework.stereotype.Service;
 
 import ar.lamansys.sgx.shared.files.FileService;
+import ar.lamansys.sgx.shared.files.exception.FileServiceEnumException;
+import ar.lamansys.sgx.shared.files.exception.FileServiceException;
+import ar.lamansys.sgx.shared.filestorage.infrastructure.input.rest.StoredFileBo;
 import ar.lamansys.sgx.shared.filestorage.infrastructure.output.repository.BlobStorage;
+import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import net.pladema.assets.service.AssetsService;
 import net.pladema.assets.service.domain.Assets;
-import net.pladema.assets.service.domain.AssetsFileBo;
 
 @Slf4j
+@AllArgsConstructor
 @Service
 public class AssetsServiceImpl implements AssetsService {
 
@@ -48,11 +53,6 @@ public class AssetsServiceImpl implements AssetsService {
             ICON_72, ICON_96, ICON_128, ICON_144, ICON_152, ICON_192, ICON_384, ICON_512,
             FOOTER_LEFT, FOOTER_CENTER, FOOTER_RIGHT, APP_LOGO));
 
-    public AssetsServiceImpl(FileService fileService, BlobStorage blobStorage) {
-        this.fileService = fileService;
-        this.blobStorage = blobStorage;
-    }
-
     @Override
     public Optional<Assets> findByName(String name) {
         log.debug(INPUT_LOG, name);
@@ -60,26 +60,42 @@ public class AssetsServiceImpl implements AssetsService {
     }
 
     @Override
-    public AssetsFileBo getFile(String fileName) {
+    public StoredFileBo getFile(String fileName) {
         log.debug(INPUT_LOG, fileName);
 
         Assets newAsset = this.findByName(fileName).get();
         String partialPath = CUSTOM_PATH.concat(newAsset.getNameFile());
-        String completePath = fileService.buildCompletePath(partialPath);
+        var path = fileService.buildCompletePath(partialPath);
         
-        if (this.blobStorage.existFile(completePath)) {
+        if (this.blobStorage.existFile(path)) {
 			log.debug("Using custom {}", fileName);
-            return new AssetsFileBo(
-                    this.fileService.loadFileRelativePath(partialPath),
-                    newAsset.getContentType()
+            return new StoredFileBo(
+                    this.fileService.loadFileRelativePath(path),
+                    newAsset.getContentType(),
+					newAsset.getNameFile()
 			);
         }
 
         String newPartialPath = ORIGINAL_PATH.concat(newAsset.getNameFile());
 		log.debug("Using original {}", fileName);
-        return new AssetsFileBo(
-                new ClassPathResource(newPartialPath),
-                newAsset.getContentType()
+
+		return new StoredFileBo(
+				fromClassPath(newPartialPath),
+				newAsset.getContentType(),
+				newAsset.getNameFile()
 		);
     }
+
+	private static Resource fromClassPath(String partialPath) {
+		try {
+			var resource = new ClassPathResource(partialPath);
+			return resource;
+		}  catch (Exception e){
+			log.error(e.getMessage(), e);
+			throw new FileServiceException(
+					FileServiceEnumException.SAVE_IOEXCEPTION,
+					String.format("La lectura del siguiente archivo %s tuvo el siguiente error %s", partialPath, e)
+			);
+		}
+	}
 }

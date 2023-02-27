@@ -1,14 +1,6 @@
 package ar.lamansys.sgh.clinichistory.infrastructure.input.rest.document;
 
-import java.io.ByteArrayInputStream;
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Paths;
-
-import org.springframework.core.io.InputStreamResource;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
+import org.springframework.core.io.Resource;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -17,42 +9,28 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import ar.lamansys.sgh.clinichistory.application.fetchdocumentfile.FetchDocumentFileById;
-import ar.lamansys.sgx.shared.files.FileService;
+import ar.lamansys.sgx.shared.filestorage.infrastructure.input.rest.StoredFileResponse;
+import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
+@AllArgsConstructor
+//@Api(value = "Documents", tags = {"Documents"})
 @RestController
 @RequestMapping("/institutions/{institutionId}/documents")
-@Slf4j
-//@Api(value = "Documents", tags = {"Documents"})
 public class DocumentFileDownloadController {
 
     private final FetchDocumentFileById fetchDocumentFileById;
 
-	private final FileService fileService;
-
-    public DocumentFileDownloadController(FetchDocumentFileById fetchDocumentFileById, FileService fileService){
-        this.fetchDocumentFileById = fetchDocumentFileById;
-        this.fileService = fileService;
-    }
 
     @GetMapping(value = "/{id}/downloadFile")
     @PreAuthorize("hasPermission(#institutionId, 'ESPECIALISTA_MEDICO, PROFESIONAL_DE_SALUD, ESPECIALISTA_EN_ODONTOLOGIA, ENFERMERO')")
-    public ResponseEntity<InputStreamResource> downloadPdf(@PathVariable(name = "institutionId") Integer institutionId,
-                                                           @PathVariable(name = "id") Long id) {
-        var documentFile = fetchDocumentFileById.run(id);
-        ByteArrayInputStream pdfFile;
-        long sizeFile;
-        try {
-            pdfFile = fileService.readStreamFromAbsolutePath(documentFile.getFilepath());
-            sizeFile = Files.size(Paths.get(documentFile.getFilepath()));
-        } catch (IOException e) {
-            return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
-        }
-        InputStreamResource resource = new InputStreamResource(pdfFile);
-        return ResponseEntity.ok()
-                .header(HttpHeaders.CONTENT_DISPOSITION, "attachment;filename=" + documentFile.getFilename())
-                .contentType(MediaType.APPLICATION_PDF)
-                .contentLength(sizeFile)
-                .body(resource);
+    public ResponseEntity<Resource> downloadPdf(
+			@PathVariable(name = "institutionId") Integer institutionId,
+			@PathVariable(name = "id") Long id)
+	{
+        var storedFileBo = fetchDocumentFileById.run(id);
+
+		return StoredFileResponse.sendFile(storedFileBo);
     }
 }

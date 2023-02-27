@@ -85,3 +85,11 @@ div.cdk-global-overlay-wrapper div.cdk-overlay-pane {
 	@include custom-components-color($candy-app-theme);
 	@include material-mixins($candy-app-theme);
 }
+
+
+.view-pdf-panel {
+	mat-dialog-container.mat-dialog-container {
+		padding: 0;
+		margin: 0;
+	}
+}

@@ -1,7 +1,5 @@
 package net.pladema.clinichistory.requests.servicerequests.controller;
 
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -12,12 +10,9 @@ import java.util.stream.Collectors;
 
 import javax.validation.Valid;
 
-import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.generateFile.DocumentAuthorFinder;
-import ar.lamansys.sgh.shared.infrastructure.input.service.staff.ProfessionalCompleteDto;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.core.io.InputStreamResource;
+import org.springframework.core.io.Resource;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -39,12 +34,15 @@ import org.springframework.web.multipart.MultipartFile;
 
 import ar.lamansys.sgh.clinichistory.domain.document.PatientInfoBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.DiagnosticReportBo;
+import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.generateFile.DocumentAuthorFinder;
 import ar.lamansys.sgh.shared.infrastructure.input.service.BasicPatientDto;
+import ar.lamansys.sgh.shared.infrastructure.input.service.staff.ProfessionalCompleteDto;
 import ar.lamansys.sgx.shared.exceptions.dto.ApiErrorDto;
 import ar.lamansys.sgx.shared.featureflags.AppFeature;
 import ar.lamansys.sgx.shared.featureflags.application.FeatureFlagsService;
 import ar.lamansys.sgx.shared.files.pdf.PDFDocumentException;
 import ar.lamansys.sgx.shared.files.pdf.PdfService;
+import ar.lamansys.sgx.shared.filestorage.infrastructure.input.rest.StoredFileResponse;
 import ar.lamansys.sgx.shared.security.UserInfo;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import net.pladema.clinichistory.requests.controller.dto.PrescriptionDto;
@@ -67,7 +65,6 @@ import net.pladema.clinichistory.requests.servicerequests.service.UpdateDiagnost
 import net.pladema.clinichistory.requests.servicerequests.service.UploadDiagnosticReportCompletedFileService;
 import net.pladema.clinichistory.requests.servicerequests.service.domain.DiagnosticReportFilterBo;
 import net.pladema.clinichistory.requests.servicerequests.service.domain.ServiceRequestBo;
-import ar.lamansys.sgx.shared.filestorage.infrastructure.input.rest.StoredFileBo;
 import net.pladema.events.EHospitalApiTopicDto;
 import net.pladema.events.HospitalApiPublisher;
 import net.pladema.patient.controller.dto.PatientMedicalCoverageDto;
@@ -290,9 +287,9 @@ public class ServiceRequestController {
 
     @GetMapping(value = "/{serviceRequestId}/download-pdf")
     @PreAuthorize("hasPermission(#institutionId, 'ESPECIALISTA_MEDICO, PROFESIONAL_DE_SALUD, ESPECIALISTA_EN_ODONTOLOGIA, ENFERMERO')")
-    public ResponseEntity<InputStreamResource> downloadPdf(@PathVariable(name = "institutionId") Integer institutionId,
-                                                           @PathVariable(name = "patientId") Integer patientId,
-                                                           @PathVariable(name = "serviceRequestId") Integer serviceRequestId) throws PDFDocumentException {
+    public ResponseEntity<Resource> downloadPdf(@PathVariable(name = "institutionId") Integer institutionId,
+												@PathVariable(name = "patientId") Integer patientId,
+												@PathVariable(name = "serviceRequestId") Integer serviceRequestId) throws PDFDocumentException {
         LOG.debug("medicationRequestList -> institutionId {}, patientId {}, serviceRequestId {}", institutionId, patientId, serviceRequestId);
         var serviceRequestBo = getServiceRequestInfoService.run(serviceRequestId);
         var patientDto = patientExternalService.getBasicDataFromPatient(patientId);
@@ -301,13 +298,11 @@ public class ServiceRequestController {
 
         String template = "recipe_order_table";
 
-        ByteArrayOutputStream os = pdfService.writer(template, context);
-        ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(os.toByteArray());
-        InputStreamResource resource = new InputStreamResource(byteArrayInputStream);
-        return ResponseEntity.ok()
-                .contentType(MediaType.APPLICATION_PDF)
-                .contentLength(os.size())
-                .body(resource);
+		return StoredFileResponse.sendFile(
+				pdfService.generate(template, context),
+				String.format("%s_%s.pdf", patientDto.getIdentificationNumber(), serviceRequestId),
+				MediaType.APPLICATION_PDF
+		);
     }
 
     private Map<String, Object> createContext(ServiceRequestBo serviceRequestBo,

@@ -4,6 +4,7 @@ import { FlexLayoutModule, FlexModule } from '@angular/flex-layout';
 // deps
 import { CoreModule } from '@core/core.module';
 import { AppMaterialModule } from '@material/app.material.module';
+import { PdfViewerModule } from 'ng2-pdf-viewer';
 // components
 import { BarComponent } from './components/bar/bar.component';
 import { CategoryHeaderDividerComponent } from './components/category-header-divider/category-header-divider.component';
@@ -56,6 +57,7 @@ import { TimeDtoToLocalTimePipe } from './pipes/time-dto-to-local-time.pipe';
 import { ViewDateDtoPipe } from './pipes/view-date-dto.pipe';
 import { ViewDatePipe } from './pipes/view-date.pipe';
 import { ViewHourMinutePipe } from './pipes/view-hour-minute.pipe';
+import { ViewPdfComponent } from './dialogs/view-pdf/view-pdf.component';
 
 @NgModule({
 	declarations: [
@@ -95,6 +97,7 @@ import { ViewHourMinutePipe } from './pipes/view-hour-minute.pipe';
 		TypeaheadComponent,
 		UserBadgeComponent,
 		TitledContentCardComponent,
+		ViewPdfComponent,
 		// dialogs
 		ConfirmDialogComponent,
 		DatePickerComponent,
@@ -119,6 +122,7 @@ import { ViewHourMinutePipe } from './pipes/view-hour-minute.pipe';
 		// deps
 		CoreModule,
 		AppMaterialModule,
+		PdfViewerModule,
 	],
 	exports: [
 		FlexModule,

@@ -241,7 +241,7 @@ public class AnnexReportServiceImpl implements AnnexReportService {
     public String createConsultationFileName(Long documentId, ZonedDateTime consultedDate){
         LOG.debug("Input parameters -> documentId {}, consultedDate {}", documentId, consultedDate);
         String formattedDate = consultedDate.format(DateTimeFormatter.ofPattern("dd-MM-yyyy"));
-        String outputFileName = String.format("%s. AnexoII %s.pdf", documentId, formattedDate);
+        String outputFileName = String.format("%s-AnexoII %s.pdf", documentId, formattedDate);
         LOG.debug(OUTPUT, outputFileName);
         return outputFileName;
     }

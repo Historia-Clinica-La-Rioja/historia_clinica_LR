@@ -13,8 +13,8 @@ import org.springframework.web.multipart.MultipartFile;
 import ar.lamansys.refcounterref.application.port.ReferenceCounterReferenceFileStorage;
 import ar.lamansys.refcounterref.domain.enums.EReferenceCounterReferenceType;
 import ar.lamansys.refcounterref.domain.file.ReferenceCounterReferenceFileBo;
-import ar.lamansys.sgx.shared.filestorage.infrastructure.input.rest.StoredFileBo;
 import ar.lamansys.sgx.shared.files.FileService;
+import ar.lamansys.sgx.shared.filestorage.infrastructure.input.rest.StoredFileBo;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -57,11 +57,12 @@ public class ReferenceCounterReferenceFileStorageImpl implements ReferenceCounte
     @Override
     public StoredFileBo getFile(Integer fileId, Integer type) {
         log.debug("Input parameters -> fileId {}, type {}", fileId, type);
-        StoredFileBo result = referenceCounterReferenceFileRepository.findByIdAndType(fileId, type).stream().map(rcrf ->
+        StoredFileBo result = referenceCounterReferenceFileRepository.findByIdAndType(fileId, type).map(rcrf ->
                 new StoredFileBo(
                         fileService.loadFileRelativePath(rcrf.getPath()),
                         rcrf.getContentType(),
-                        rcrf.getSize())).findFirst().orElse(null);
+						rcrf.getName()
+				)).orElse(null);
         log.debug(OUTPUT, result);
         return result;
     }

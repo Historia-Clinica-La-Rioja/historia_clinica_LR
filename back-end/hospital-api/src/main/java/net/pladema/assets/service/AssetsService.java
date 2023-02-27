@@ -1,13 +1,13 @@
 package net.pladema.assets.service;
 
-import net.pladema.assets.service.domain.AssetsFileBo;
-import net.pladema.assets.service.domain.Assets;
-
 import java.util.Optional;
+
+import ar.lamansys.sgx.shared.filestorage.infrastructure.input.rest.StoredFileBo;
+import net.pladema.assets.service.domain.Assets;
 
 public interface AssetsService {
 
     Optional<Assets> findByName(String name);
 
-    AssetsFileBo getFile(String fileName);
+	StoredFileBo getFile(String fileName);
 }

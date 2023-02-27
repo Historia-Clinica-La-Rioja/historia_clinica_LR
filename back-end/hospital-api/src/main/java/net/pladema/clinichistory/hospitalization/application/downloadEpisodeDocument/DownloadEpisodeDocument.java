@@ -1,6 +1,7 @@
 package net.pladema.clinichistory.hospitalization.application.downloadEpisodeDocument;
 
-import net.pladema.clinichistory.hospitalization.service.domain.StoredFileBo;
+
+import ar.lamansys.sgx.shared.filestorage.infrastructure.input.rest.StoredFileBo;
 
 public interface DownloadEpisodeDocument {
 

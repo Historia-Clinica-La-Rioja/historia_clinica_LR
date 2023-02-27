@@ -5,6 +5,7 @@ import { Observable } from 'rxjs';
 import { MedicationInfoDto, PrescriptionDto, ProfessionalLicenseNumberValidationResponseDto } from '@api-rest/api-model';
 import { ContextService } from '@core/services/context.service';
 import { of } from 'rxjs';
+import { ViewPdfService } from '@presentation/dialogs/view-pdf/view-pdf.service';
 
 @Injectable({
   providedIn: 'root'
@@ -13,7 +14,8 @@ export class MedicationRequestService {
 
 	constructor(
 		private http: HttpClient,
-		private readonly contextService: ContextService
+		private readonly contextService: ContextService,
+		private readonly viewPdfService: ViewPdfService,
 	  ) { }
 
 
@@ -79,12 +81,9 @@ export class MedicationRequestService {
 		return this.http.get<MedicationInfoDto[]>(url, {params : queryParams});
 	}
 
-	download(patientId: number, medicationRequestId: number): Observable<any> {
+	download(patientId: number, medicationRequestId: number) {
 		const url = `${environment.apiBase}/institutions/${this.contextService.institutionId}/patient/${patientId}/medication-requests/${medicationRequestId}/download`;
-		return this.http.get(
-			url,
-			{ responseType: 'blob' }
-		);
+		this.viewPdfService.showDialog(url, 'Receta ' + medicationRequestId);
 	}
 
 	validateProfessional(patientId: number): Observable<ProfessionalLicenseNumberValidationResponseDto> {

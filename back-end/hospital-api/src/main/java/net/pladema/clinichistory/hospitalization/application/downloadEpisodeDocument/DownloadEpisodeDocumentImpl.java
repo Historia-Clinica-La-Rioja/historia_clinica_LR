@@ -1,8 +1,9 @@
 package net.pladema.clinichistory.hospitalization.application.downloadEpisodeDocument;
 
+import ar.lamansys.sgx.shared.filestorage.infrastructure.input.rest.StoredFileBo;
 import lombok.extern.slf4j.Slf4j;
 import net.pladema.clinichistory.hospitalization.application.port.EpisodeDocumentStorage;
-import net.pladema.clinichistory.hospitalization.service.domain.StoredFileBo;
+
 
 import org.springframework.stereotype.Service;
 

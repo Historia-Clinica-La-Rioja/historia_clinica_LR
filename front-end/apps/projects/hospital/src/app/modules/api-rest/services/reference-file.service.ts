@@ -3,7 +3,7 @@ import { Injectable } from '@angular/core';
 import { ContextService } from '@core/services/context.service';
 import { environment } from '@environments/environment';
 import { Observable } from 'rxjs';
-import { saveAs } from 'file-saver';
+import { DownloadService } from '@core/services/download.service';
 
 @Injectable({
 	providedIn: 'root'
@@ -13,6 +13,7 @@ export class ReferenceFileService {
 	constructor(
 		private readonly http: HttpClient,
 		private readonly contextService: ContextService,
+		private readonly downloadService: DownloadService,
 	) { }
 
 	uploadReferenceFiles(patientId: number, referenceFile: File): Observable<number> {
@@ -34,8 +35,9 @@ export class ReferenceFileService {
 
 	downloadReferenceFiles(fileId: number, fileName: string): void {
 		const url = `${environment.apiBase}/institutions/${this.contextService.institutionId}/reference-file/download/${fileId}`;
-		this.http.get(url,
-			{ responseType: 'blob' }
-		).subscribe(blob => saveAs(blob, fileName));
+		this.downloadService.downloadPdf(
+			url,
+			fileName,
+		);
 	}
 }

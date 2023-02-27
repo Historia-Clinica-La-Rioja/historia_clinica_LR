@@ -22,7 +22,7 @@ public class PersonPhotoServiceImpl implements PersonPhotoService {
     private final Logger LOG = LoggerFactory.getLogger(PersonPhotoServiceImpl.class);
 
     private final String OUTPUT = "Output -> {}";
-
+	private static final String FILE_EXTENSION = ".b64image";
     private static final String RELATIVE_DIRECTORY = "/institution/person/{personIdSubdivision}/{personId}/";
 
     private static final Integer SUBDIVISION_DIGITS = 2;
@@ -70,9 +70,10 @@ public class PersonPhotoServiceImpl implements PersonPhotoService {
     private PersonPhotoDto buildPersonPhotoDto(PersonPhotoVo personPhotoVo) {
         LOG.debug("Input parameter -> personPhotoVo {}", personPhotoVo);
 
-        if (personPhotoVo.getImageData() != null) {
-            String image = imageFileService.readImage(personPhotoVo.getImageData());
-            PersonPhotoDto result = (image != null) ? new PersonPhotoDto(personPhotoVo.getPersonId(), image) : null;
+        if (personPhotoVo.relativePath != null) {
+			var path = imageFileService.buildCompletePath(personPhotoVo.relativePath);
+            String image = imageFileService.readImage(path);
+            PersonPhotoDto result = (image != null) ? new PersonPhotoDto(personPhotoVo.personId, image) : null;
             LOG.debug(OUTPUT, result);
             return result;
         }
@@ -87,15 +88,17 @@ public class PersonPhotoServiceImpl implements PersonPhotoService {
             LOG.debug(OUTPUT, false);
             return false;
         }
-        String newFileName = imageFileService.createFileName();
+        String uuid = imageFileService.createUuid();
+		String newFileName = uuid.concat(FILE_EXTENSION);
         String relativePath = RELATIVE_DIRECTORY
 				.replace("{personIdSubdivision}", getNLastDigits(SUBDIVISION_DIGITS, personId))
 				.replace("{personId}", personId.toString())
 				.concat(newFileName);
+
         PersonExtended personExtended = getPersonExtended(personId);
         personExtended.setPhotoFilePath(imageFileService.buildCompletePath(relativePath));
         personExtendedRepository.save(personExtended);
-        boolean result = imageFileService.saveImage(relativePath, newFileName, "FOTO_PERSONAL", imageData);
+        boolean result = imageFileService.saveImage(relativePath, uuid, "FOTO_PERSONAL", imageData);
         LOG.debug(OUTPUT, result);
         return result;
     }

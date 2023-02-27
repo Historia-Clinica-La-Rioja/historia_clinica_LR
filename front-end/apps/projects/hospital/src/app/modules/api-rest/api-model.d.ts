@@ -3034,10 +3034,6 @@ export interface SnvsToReportDto {
     problem: SnvsSnomedDto;
 }
 
-export interface StoredFileDto {
-    resource: Resource;
-}
-
 export interface StudyDto extends Serializable {
     diagosticReportCategoryId: string;
     healthConditionId: number;

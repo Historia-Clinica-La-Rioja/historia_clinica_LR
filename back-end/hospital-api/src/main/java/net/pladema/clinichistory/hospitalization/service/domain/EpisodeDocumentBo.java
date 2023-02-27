@@ -6,16 +6,14 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 
-import org.springframework.web.multipart.MultipartFile;
-
 @Getter
 @Setter
 @ToString
 @NoArgsConstructor
 @AllArgsConstructor
 public class EpisodeDocumentBo {
+	private String originalFilename;
 
-	private MultipartFile file;
 	private Integer episodeDocumentTypeId;
 	private Integer internmentEpisodeId;
 }

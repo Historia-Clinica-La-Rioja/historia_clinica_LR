@@ -225,7 +225,7 @@ public class FormReportServiceImpl implements FormReportService {
     public String createConsultationFileName(Long id, ZonedDateTime consultedDate){
         LOG.debug("Input parameters -> id {}, consultedDate {}", id, consultedDate);
         String formattedDate = consultedDate.format(DateTimeFormatter.ofPattern("dd-MM-yyyy"));
-        String outputFileName = String.format("%s. FormV %s.pdf", id, formattedDate);
+        String outputFileName = String.format("%s-FormV %s.pdf", id, formattedDate);
         LOG.debug(OUTPUT, outputFileName);
         return outputFileName;
     }

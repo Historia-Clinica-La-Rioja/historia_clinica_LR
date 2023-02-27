@@ -1,5 +1,7 @@
 package ar.lamansys.sgx.shared.files.pdf;
 
+import static ar.lamansys.sgx.shared.files.StreamsUtils.streamException;
+
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -12,6 +14,7 @@ import java.util.function.Function;
 import org.apache.commons.io.IOUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.core.io.Resource;
 import org.springframework.stereotype.Component;
 import org.thymeleaf.context.Context;
 import org.thymeleaf.spring5.SpringTemplateEngine;
@@ -19,6 +22,7 @@ import org.xhtmlrenderer.pdf.ITextRenderer;
 
 import com.lowagie.text.DocumentException;
 
+import ar.lamansys.sgx.shared.files.StreamsUtils;
 import ar.lamansys.sgx.shared.flavor.FlavorService;
 
 @Component
@@ -42,6 +46,13 @@ public class PdfService {
         this.templateEngine = templateEngine;
 
     }
+
+	public Resource generate(String templateName, Map<String,Object> contextMap) throws PDFDocumentException {
+		Context context = buildContext(contextMap);
+		String templateNameWithFlavor = calculateTemplateNameWithFlavor.apply(templateName);
+		String generatedHTML = templateEngine.process(templateNameWithFlavor, context);
+		return buildResponse(generatedHTML);
+	}
 
     public ByteArrayOutputStream writer(String templateName, Map<String,Object> contextMap) throws PDFDocumentException {
         Context context = buildContext(contextMap);
@@ -76,6 +87,19 @@ public class PdfService {
         return os;
     }
 
+	private Resource buildResponse(String processedHtml) {
+		return StreamsUtils.writeToInputStream((out) -> {
+			try {
+				ITextRenderer renderer = new ITextRenderer();
+				renderer.setDocumentFromString(processedHtml, "");
+				renderer.layout();
+				renderer.createPDF(out, false);
+				renderer.finishPDF();
+			} catch (Exception e) {
+				throw streamException(e);
+			}
+		});
+	}
 
 
 }

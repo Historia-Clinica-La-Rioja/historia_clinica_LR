@@ -3,6 +3,8 @@ package ar.lamansys.sgh.clinichistory.application.fetchDocumentFile;
 import ar.lamansys.sgh.clinichistory.application.fetchdocumentfile.FetchDocumentFileById;
 import ar.lamansys.sgh.clinichistory.application.fetchdocumentfile.exceptions.FetchDocumentFileException;
 import ar.lamansys.sgh.clinichistory.application.ports.DocumentFileStorage;
+import ar.lamansys.sgx.shared.files.FileService;
+
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -24,9 +26,12 @@ class FetchDocumentFileByIdTest {
     @Mock
     private DocumentFileStorage documentFileStorage;
 
+	@Mock
+	private FileService fileService;
+
     @BeforeEach
     void setUp(){
-        fetchDocumentFileById = new FetchDocumentFileById(documentFileStorage);
+        fetchDocumentFileById = new FetchDocumentFileById(documentFileStorage, fileService);
     }
 
     @Test

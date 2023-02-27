@@ -1,27 +1,25 @@
 package net.pladema.person.service.impl;
 
-import ar.lamansys.sgx.shared.files.FileService;
 
-import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
-import net.pladema.person.controller.service.exceptions.CreatePersonFileException;
-import net.pladema.person.controller.service.exceptions.CreatePersonFileExceptionEnum;
-import ar.lamansys.sgh.shared.infrastructure.input.service.PersonFileDto;
-import ar.lamansys.sgx.shared.filestorage.infrastructure.input.rest.StoredFileBo;
-import net.pladema.person.repository.PersonFileRepository;
-import net.pladema.person.repository.entity.PersonFile;
-
-import net.pladema.person.service.PersonFileService;
+import java.util.Arrays;
+import java.util.List;
+import java.util.stream.Collectors;
 
 import org.apache.commons.io.FilenameUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.IOException;
-import java.util.Arrays;
-import java.util.List;
-import java.util.stream.Collectors;
+import ar.lamansys.sgh.shared.infrastructure.input.service.PersonFileDto;
+import ar.lamansys.sgx.shared.files.FileService;
+import ar.lamansys.sgx.shared.filestorage.infrastructure.input.rest.StoredFileBo;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import net.pladema.person.controller.service.exceptions.CreatePersonFileException;
+import net.pladema.person.controller.service.exceptions.CreatePersonFileExceptionEnum;
+import net.pladema.person.repository.PersonFileRepository;
+import net.pladema.person.repository.entity.PersonFile;
+import net.pladema.person.service.PersonFileService;
 
 @RequiredArgsConstructor
 @Slf4j
@@ -45,11 +43,7 @@ public class PersonFileServiceImpl implements PersonFileService {
 					String newFileName = fileService.createFileName(FilenameUtils.getExtension(file.getOriginalFilename()));
 					String partialPath = buildPartialPath(personId, newFileName);
 					String uuid = newFileName.split("\\.")[0];
-					try {
-						fileService.transferMultipartFile(partialPath, uuid, "PACIENTE", file);
-					} catch (IOException e) {
-						throw new RuntimeException(e);
-					}
+					fileService.transferMultipartFile(partialPath, uuid, "PACIENTE", file);
 					return savePersonFile(partialPath, file, institutionId, personId);
 				})
 				.boxed()
@@ -67,11 +61,13 @@ public class PersonFileServiceImpl implements PersonFileService {
 	@Override
 	public StoredFileBo getFile(Integer fileId) {
 		log.debug("Input parameters -> fileId {}", fileId);
-		StoredFileBo result = personFileRepository.findById(fileId).stream().map(personFile ->
+		StoredFileBo result = personFileRepository.findById(fileId).map(personFile ->
 				new StoredFileBo(
 						fileService.loadFileRelativePath(personFile.getPath()),
 						personFile.getContentType(),
-						personFile.getSize())).findFirst().orElse(null);
+						personFile.getName()
+				)
+		).orElse(null);
 		log.debug(OUTPUT, result);
 		return result;
 	}

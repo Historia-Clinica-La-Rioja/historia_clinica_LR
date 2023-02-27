@@ -8,8 +8,9 @@ import {
 	DiagnosticReportInfoDto, DiagnosticReportInfoWithFilesDto,
 	PrescriptionDto
 } from '@api-rest/api-model';
-import { saveAs } from 'file-saver';
+
 import { switchMap } from 'rxjs/operators';
+import { ViewPdfService } from '@presentation/dialogs/view-pdf/view-pdf.service';
 
 @Injectable({
 	providedIn: 'root'
@@ -18,7 +19,8 @@ export class ServiceRequestService {
 
 	constructor(
 		private readonly http: HttpClient,
-		private readonly contextService: ContextService
+		private readonly contextService: ContextService,
+		private readonly viewPdfService: ViewPdfService,
 	) { }
 
 	getList(patientId: number, statusId: string, study: string, healthCondition: string, categoryId: string): Observable<DiagnosticReportInfoDto[]> {
@@ -75,18 +77,12 @@ export class ServiceRequestService {
 
 	download(patientId: number, fileId: number, fileName: string) {
 		const url = `${environment.apiBase}/institutions/${this.contextService.institutionId}/patient/${patientId}/service-requests/download/${fileId}`;
-		this.http.get(
-			url,
-			{ responseType: 'blob' }
-		).subscribe(blob => saveAs(blob, fileName));
+		this.viewPdfService.showDialog(url, fileName);
 	}
 
-	downloadPdf(patientId: number, serviceRequestId: number): Observable<any> {
+	downloadPdf(patientId: number, serviceRequestId: number) {
 		const url = `${environment.apiBase}/institutions/${this.contextService.institutionId}/patient/${patientId}/service-requests/${serviceRequestId}/download-pdf`;
-		return this.http.get(
-			url,
-			{ responseType: 'blob' }
-		);
+		this.viewPdfService.showDialog(url, 'Orden ' + serviceRequestId);
 	}
 
 }

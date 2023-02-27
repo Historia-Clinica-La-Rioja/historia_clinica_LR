@@ -1,6 +1,5 @@
 package net.pladema.clinichistory.requests.servicerequests.service.impl;
 
-import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -20,65 +19,61 @@ import net.pladema.clinichistory.requests.servicerequests.service.UploadDiagnost
 @Service
 public class UploadDiagnosticReportCompletedFileServiceImpl  implements UploadDiagnosticReportCompletedFileService {
 
-    private final FileService fileService;
-    private final DiagnosticReportFileRepository diagnosticReportFileRepository;
+	private final FileService fileService;
+	private final DiagnosticReportFileRepository diagnosticReportFileRepository;
 
-    private static final String RELATIVE_DIRECTORY = "/patient/{patiendId}/diagnostic-reports/{studyId}/";
-    private static final Logger LOG = LoggerFactory.getLogger(UploadDiagnosticReportCompletedFileServiceImpl.class);
-    private final String OUTPUT = "Output -> {}";
+	private static final String RELATIVE_DIRECTORY = "/patient/{patiendId}/diagnostic-reports/{studyId}/";
+	private static final Logger LOG = LoggerFactory.getLogger(UploadDiagnosticReportCompletedFileServiceImpl.class);
+	private final String OUTPUT = "Output -> {}";
 
-    public UploadDiagnosticReportCompletedFileServiceImpl(FileService fileService, DiagnosticReportFileRepository diagnosticReportFileRepository) {
-        this.fileService = fileService;
-        this.diagnosticReportFileRepository = diagnosticReportFileRepository;
-    }
+	public UploadDiagnosticReportCompletedFileServiceImpl(FileService fileService, DiagnosticReportFileRepository diagnosticReportFileRepository) {
+		this.fileService = fileService;
+		this.diagnosticReportFileRepository = diagnosticReportFileRepository;
+	}
 
-    @Override
+	@Override
 	@Transactional // Transaccion compleja
-    public List<Integer> execute(MultipartFile[] files, Integer diagnosticReportId, Integer patientId) {
-        List<Integer> result = Arrays.stream(files).mapToInt(file -> {
-            String newFileName = fileService.createFileName(FilenameUtils.getExtension(file.getOriginalFilename()));
-            String partialPath = buildPartialPath(patientId, newFileName, diagnosticReportId);
-			String uuid = newFileName.split("\\.")[0];
-			try {
-				fileService.transferMultipartFile(partialPath, uuid, "RESULTADO_ESTUDIO", file);
-			} catch (IOException e) {
-				throw new RuntimeException(e);
-			}
+	public List<Integer> execute(MultipartFile[] files, Integer diagnosticReportId, Integer patientId) {
+		List<Integer> result = Arrays.stream(files).mapToInt(file -> {
+					String newFileName = fileService.createFileName(FilenameUtils.getExtension(file.getOriginalFilename()));
+			String partialPath = buildPartialPath(patientId, newFileName, diagnosticReportId);
+					String uuid = newFileName.split("\\.")[0];
+			fileService.transferMultipartFile(partialPath, uuid, "RESULTADO_ESTUDIO", file);
 			return saveDiagnosticReportFileMetadata(partialPath, file);
-		})
-		.boxed()
-		.collect(Collectors.toList());
-        LOG.debug(OUTPUT, result);
-        return result;
+				})
+				.boxed()
+				.collect(Collectors.toList());
+		LOG.debug(OUTPUT, result);
+		return result;
 
-    }
+	}
 
-    private Integer saveDiagnosticReportFileMetadata(String completePath, MultipartFile file) {
-        DiagnosticReportFile diagnosticReportFile = new DiagnosticReportFile(
-                completePath,
-                file.getContentType(),
-                file.getSize(),
-                file.getOriginalFilename());
-        Integer result = diagnosticReportFileRepository.save(diagnosticReportFile).getId();
-        LOG.debug(OUTPUT, result);
-        return result;
-    }
+	private Integer saveDiagnosticReportFileMetadata(String completePath, MultipartFile file) {
+		DiagnosticReportFile diagnosticReportFile = new DiagnosticReportFile(
+				completePath,
+				file.getContentType(),
+				file.getSize(),
+				file.getOriginalFilename());
+		Integer result = diagnosticReportFileRepository.save(diagnosticReportFile).getId();
+		LOG.debug(OUTPUT, result);
+		return result;
+	}
 
-    private String buildPartialPath(Integer patientId, String relativeFilePath, Integer studyId){
-        LOG.debug("Input parameters -> patientId {}, relativeFilePath {}", patientId, relativeFilePath);
-        String result = RELATIVE_DIRECTORY
-                .replace("{patiendId}", patientId.toString())
-                .replace("{studyId}", studyId.toString())
-                .concat(relativeFilePath);
-        LOG.debug(OUTPUT, result);
-        return result;
-    }
+	private String buildPartialPath(Integer patientId, String relativeFilePath, Integer studyId){
+		LOG.debug("Input parameters -> patientId {}, relativeFilePath {}", patientId, relativeFilePath);
+		String result = RELATIVE_DIRECTORY
+				.replace("{patiendId}", patientId.toString())
+				.replace("{studyId}", studyId.toString())
+				.concat(relativeFilePath);
+		LOG.debug(OUTPUT, result);
+		return result;
+	}
 
-    private String buildCompleteFilePath(String partialPath){
-        LOG.debug("Input parameters -> partialPath {}", partialPath);
-        String result = fileService.buildCompletePath(partialPath);
-        LOG.debug(OUTPUT, result);
-        return result;
-    }
+	private String buildCompleteFilePath(String partialPath){
+		LOG.debug("Input parameters -> partialPath {}", partialPath);
+		String result = fileService.buildCompletePath(partialPath);
+		LOG.debug(OUTPUT, result);
+		return result;
+	}
 
 }

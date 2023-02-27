@@ -51,6 +51,7 @@ export class InstitucionComponent implements OnInit {
 	}
 
 	ngOnInit(): void {
+
 		this.activatedRoute.paramMap.subscribe(params => {
 			const institutionId = Number(params.get('id'));
 			this.contextService.setInstitutionId(institutionId);

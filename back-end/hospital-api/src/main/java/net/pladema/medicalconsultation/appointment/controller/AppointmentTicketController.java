@@ -1,12 +1,9 @@
 package net.pladema.medicalconsultation.appointment.controller;
 
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.springframework.core.io.InputStreamResource;
-import org.springframework.http.HttpHeaders;
+import org.springframework.core.io.Resource;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -17,6 +14,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import ar.lamansys.sgx.shared.files.pdf.PDFDocumentException;
 import ar.lamansys.sgx.shared.files.pdf.PdfService;
+import ar.lamansys.sgx.shared.filestorage.infrastructure.input.rest.StoredFileResponse;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import net.pladema.medicalconsultation.appointment.controller.dto.AppointmentTicketDto;
@@ -36,29 +34,20 @@ public class AppointmentTicketController {
 
 	@GetMapping("/{appointmentId}")
 	@PreAuthorize("hasPermission(#institutionId, 'ADMINISTRATIVO, ESPECIALISTA_MEDICO, PROFESIONAL_DE_SALUD, ESPECIALISTA_EN_ODONTOLOGIA, ENFERMERO, ADMINISTRADOR_AGENDA')")
-	public ResponseEntity<InputStreamResource> getTicket(@PathVariable(name = "institutionId") Integer institutionId,
-			@PathVariable(name = "appointmentId") Integer appointmentId) throws PDFDocumentException {
+	public ResponseEntity<Resource> getTicket(@PathVariable(name = "institutionId") Integer institutionId,
+											  @PathVariable(name = "appointmentId") Integer appointmentId) throws PDFDocumentException {
 		log.debug("Input parameters -> appointmentId {}", appointmentId);
 		var bo = appointmentService.getAppointmentTicketData(appointmentId);
 		var dto = new AppointmentTicketDto(bo);
 		Map<String, Object> context = createContext(dto);
 		String outputFileName = createOutputFileName(dto);
 		log.debug("outputFileName " + outputFileName);
-		ResponseEntity<InputStreamResource> response = generatePdfResponse(context, outputFileName);
-		log.debug(OUTPUT, response);
-		return response;
-	}
 
-	private ResponseEntity<InputStreamResource> generatePdfResponse(Map<String, Object> context, String outputFileName) throws PDFDocumentException {
-		log.debug("Input parameters -> context {}, outputFileName {}", context, outputFileName);
-		ByteArrayOutputStream outputStream = pdfService.writer("appointment-ticket", context);
-		ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(outputStream.toByteArray());
-		InputStreamResource resource = new InputStreamResource(byteArrayInputStream);
-		ResponseEntity<InputStreamResource> response;
-		response = ResponseEntity.ok()
-				.header(HttpHeaders.CONTENT_DISPOSITION, "attachment;filename=" + outputFileName)
-				.contentType(MediaType.APPLICATION_PDF).contentLength(outputStream.size()).body(resource);
-		return response;
+		return StoredFileResponse.sendFile(
+				pdfService.generate("appointment-ticket", context),
+				outputFileName,
+				MediaType.APPLICATION_PDF
+		);
 	}
 
 	private Map<String, Object> createContext(AppointmentTicketDto dto){

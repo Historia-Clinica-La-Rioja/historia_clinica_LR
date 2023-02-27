@@ -1,17 +1,21 @@
 package ar.lamansys.sgx.shared.filestorage.infrastructure.input.rest;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.ToString;
 import org.springframework.core.io.Resource;
 
-@Getter
-@ToString
+import lombok.AllArgsConstructor;
+
 @AllArgsConstructor
 public class StoredFileBo {
+    public final Resource resource;;
+	public final String contentType;
+    public final String filename;
 
-    private Resource resource;
-    private String contentType;
-    private long contentLenght;
-
+	@Override
+	public String toString() {
+		final StringBuilder sb = new StringBuilder("StoredFileBo{");
+		sb.append("contentType='").append(contentType).append('\'');
+		sb.append(", filename='").append(filename).append('\'');
+		sb.append('}');
+		return sb.toString();
+	}
 }

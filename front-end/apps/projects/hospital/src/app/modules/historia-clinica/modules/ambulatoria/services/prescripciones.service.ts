@@ -5,8 +5,6 @@ import { MedicationRequestService } from '@api-rest/services/medication-request.
 import { ServiceRequestService } from '@api-rest/services/service-request.service';
 import { MEDICATION_STATUS, MedicationStatusChange, STUDY_STATUS } from '../constants/prescripciones-masterdata';
 import { NewPrescriptionItem } from '../dialogs/ordenes-prescripciones/agregar-prescripcion-item/agregar-prescripcion-item.component';
-import { SnackBarService } from '@presentation/services/snack-bar.service';
-import { saveAs } from 'file-saver';
 
 @Injectable({
   providedIn: 'root'
@@ -19,7 +17,6 @@ export class PrescripcionesService {
 	constructor(
 		private medicationRequestService: MedicationRequestService,
 		private serviceRequestService: ServiceRequestService,
-		private snackBarService: SnackBarService,
 	) { }
 
 	createPrescription(prescriptionType: PrescriptionTypes, newPrescription: PrescriptionDto, patientId: number): Observable<number | number[]> {
@@ -64,17 +61,11 @@ export class PrescripcionesService {
 		switch (prescriptionType) {
 			case PrescriptionTypes.MEDICATION:
 				const recipeId = prescriptionPdfInfo[0];
-				this.medicationRequestService.download(patientId, recipeId).subscribe((blob) => {
-					saveAs(blob, 'Receta ' + recipeId);
-					this.snackBarService.showSuccess('ambulatoria.paciente.ordenes_prescripciones.toast_messages.DOWNLOAD_RECIPE_SUCCESS');
-				});
+				this.medicationRequestService.download(patientId, recipeId);
 				break;
 			case PrescriptionTypes.STUDY:
 				prescriptionPdfInfo.forEach(orderId => {
-					this.serviceRequestService.downloadPdf(patientId, orderId).subscribe((blob) => {
-						saveAs(blob, 'Orden ' + orderId);
-						this.snackBarService.showSuccess('ambulatoria.paciente.ordenes_prescripciones.toast_messages.DOWNLOAD_ORDER_SUCCESS');
-					});
+					this.serviceRequestService.downloadPdf(patientId, orderId);
 				});
 				break;
 		}

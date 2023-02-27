@@ -1,11 +1,11 @@
 package net.pladema.clinichistory.hospitalization.application.port;
 
+import java.util.List;
+
+import ar.lamansys.sgx.shared.filestorage.infrastructure.input.rest.StoredFileBo;
 import net.pladema.clinichistory.hospitalization.service.domain.DocumentTypeBo;
 import net.pladema.clinichistory.hospitalization.service.domain.EpisodeDocumentBo;
 import net.pladema.clinichistory.hospitalization.service.domain.EpisodeDocumentResponseBo;
-import net.pladema.clinichistory.hospitalization.service.domain.StoredFileBo;
-
-import java.util.List;
 
 public interface EpisodeDocumentStorage {
 

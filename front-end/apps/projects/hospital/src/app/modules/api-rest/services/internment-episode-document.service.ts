@@ -1,8 +1,9 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { DocumentTypeDto, EpisodeDocumentResponseDto, SavedEpisodeDocumentResponseDto } from '@api-rest/api-model';
+import { DocumentTypeDto, EpisodeDocumentResponseDto } from '@api-rest/api-model';
 import { ContextService } from '@core/services/context.service';
 import { environment } from '@environments/environment';
+import { ViewPdfService } from '@presentation/dialogs/view-pdf/view-pdf.service';
 import { Observable } from 'rxjs';
 
 @Injectable({
@@ -12,8 +13,11 @@ export class InternmentEpisodeDocumentService {
 
   url: string = `${environment.apiBase}/institutions/${this.contextService.institutionId}/internments`;
 
-  constructor(private http: HttpClient,
-              private contextService: ContextService) { }
+  constructor(
+    private http: HttpClient,
+    private contextService: ContextService,
+    private viewPdfService: ViewPdfService,
+  ) { }
 
   saveInternmentEpisodeDocument(file, internmentEpisodeId: number, episodeDocumentTypeId: number): Observable<number> {
     const url = `${this.url}/${internmentEpisodeId}/episodedocuments/${episodeDocumentTypeId}`;
@@ -35,11 +39,11 @@ export class InternmentEpisodeDocumentService {
     return this.http.delete<boolean>(url);
   }
 
-  download(episodeDocumentId: number) {
+  download(episodeDocumentId: number, fileName: string) {
     const url = `${this.url}/episodedocuments/download/${episodeDocumentId}`;
-    return this.http.get(
-			url,
-			{ responseType: 'blob' }
-		);
+    this.viewPdfService.showDialog(
+      url,
+      fileName,
+    );
   }
 }

@@ -1,6 +1,5 @@
 package net.pladema.clinichistory.requests.medicationrequests.controller;
 
-import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.time.format.DateTimeFormatter;
@@ -14,25 +13,10 @@ import java.util.stream.Collectors;
 
 import javax.validation.Valid;
 
-import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.generateFile.DocumentAuthorFinder;
-import ar.lamansys.sgh.shared.infrastructure.input.service.staff.ProfessionCompleteDto;
-import ar.lamansys.sgh.shared.infrastructure.input.service.staff.ProfessionalCompleteDto;
-
-import com.google.zxing.common.BitMatrix;
-
-import net.pladema.clinichistory.requests.medicationrequests.service.ValidateMedicationRequestGenerationService;
-
-import net.pladema.staff.controller.dto.ProfessionalLicenseNumberValidationResponseDto;
-import com.google.zxing.BarcodeFormat;
-import com.google.zxing.client.j2se.MatrixToImageConfig;
-import com.google.zxing.client.j2se.MatrixToImageWriter;
-import com.google.zxing.oned.Code128Writer;
-import net.pladema.staff.service.domain.ELicenseNumberTypeBo;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.core.io.InputStreamResource;
+import org.springframework.core.io.Resource;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -50,15 +34,25 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.google.zxing.BarcodeFormat;
+import com.google.zxing.client.j2se.MatrixToImageConfig;
+import com.google.zxing.client.j2se.MatrixToImageWriter;
+import com.google.zxing.common.BitMatrix;
+import com.google.zxing.oned.Code128Writer;
+
 import ar.lamansys.sgh.clinichistory.domain.document.PatientInfoBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.MedicationBo;
+import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.generateFile.DocumentAuthorFinder;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.masterdata.entity.MedicationStatementStatus;
 import ar.lamansys.sgh.shared.infrastructure.input.service.BasicPatientDto;
+import ar.lamansys.sgh.shared.infrastructure.input.service.staff.ProfessionCompleteDto;
+import ar.lamansys.sgh.shared.infrastructure.input.service.staff.ProfessionalCompleteDto;
 import ar.lamansys.sgx.shared.exceptions.dto.ApiErrorDto;
 import ar.lamansys.sgx.shared.featureflags.AppFeature;
 import ar.lamansys.sgx.shared.featureflags.application.FeatureFlagsService;
 import ar.lamansys.sgx.shared.files.pdf.PDFDocumentException;
 import ar.lamansys.sgx.shared.files.pdf.PdfService;
+import ar.lamansys.sgx.shared.filestorage.infrastructure.input.rest.StoredFileResponse;
 import ar.lamansys.sgx.shared.security.UserInfo;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import net.pladema.clinichistory.requests.controller.dto.PrescriptionDto;
@@ -70,6 +64,7 @@ import net.pladema.clinichistory.requests.medicationrequests.service.ChangeState
 import net.pladema.clinichistory.requests.medicationrequests.service.CreateMedicationRequestService;
 import net.pladema.clinichistory.requests.medicationrequests.service.GetMedicationRequestInfoService;
 import net.pladema.clinichistory.requests.medicationrequests.service.ListMedicationInfoService;
+import net.pladema.clinichistory.requests.medicationrequests.service.ValidateMedicationRequestGenerationService;
 import net.pladema.clinichistory.requests.medicationrequests.service.domain.ChangeStateMedicationRequestBo;
 import net.pladema.clinichistory.requests.medicationrequests.service.domain.MedicationFilterBo;
 import net.pladema.clinichistory.requests.medicationrequests.service.domain.MedicationRequestBo;
@@ -77,7 +72,9 @@ import net.pladema.patient.controller.dto.PatientMedicalCoverageDto;
 import net.pladema.patient.controller.service.PatientExternalMedicalCoverageService;
 import net.pladema.patient.controller.service.PatientExternalService;
 import net.pladema.staff.controller.dto.ProfessionalDto;
+import net.pladema.staff.controller.dto.ProfessionalLicenseNumberValidationResponseDto;
 import net.pladema.staff.controller.service.HealthcareProfessionalExternalService;
+import net.pladema.staff.service.domain.ELicenseNumberTypeBo;
 
 @RestController
 @RequestMapping("/institutions/{institutionId}/patient/{patientId}/medication-requests")
@@ -251,9 +248,9 @@ public class MedicationRequestController {
 
     @GetMapping(value = "/{medicationRequestId}/download")
     @PreAuthorize("hasPermission(#institutionId, 'ESPECIALISTA_MEDICO, PROFESIONAL_DE_SALUD, ESPECIALISTA_EN_ODONTOLOGIA, ENFERMERO, PERSONAL_DE_FARMACIA')")
-    public ResponseEntity<InputStreamResource> download(@PathVariable(name = "institutionId") Integer institutionId,
-                                                        @PathVariable(name = "patientId") Integer patientId,
-                                                        @PathVariable(name = "medicationRequestId") Integer medicationRequestId) throws PDFDocumentException {
+    public ResponseEntity<Resource> download(@PathVariable(name = "institutionId") Integer institutionId,
+											 @PathVariable(name = "patientId") Integer patientId,
+											 @PathVariable(name = "medicationRequestId") Integer medicationRequestId) throws PDFDocumentException {
         LOG.debug("medicationRequestList -> institutionId {}, patientId {}, medicationRequestId {}", institutionId, patientId, medicationRequestId);
         var medicationRequestBo = getMedicationRequestInfoService.execute(medicationRequestId);
         var patientDto = patientExternalService.getBasicDataFromPatient(patientId);
@@ -269,13 +266,11 @@ public class MedicationRequestController {
 			template = "digital_recipe";
 		}
 
-        ByteArrayOutputStream os = pdfService.writer(template, context);
-        ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(os.toByteArray());
-        InputStreamResource resource = new InputStreamResource(byteArrayInputStream);
-        return ResponseEntity.ok()
-                .contentType(MediaType.APPLICATION_PDF)
-                .contentLength(os.size())
-                .body(resource);
+		return StoredFileResponse.sendFile(
+				pdfService.generate(template, context),
+				String.format("%s_%s.pdf", patientDto.getIdentificationNumber(), medicationRequestId),
+				MediaType.APPLICATION_PDF
+		);
     }
 
 	@GetMapping(value = "/validate")

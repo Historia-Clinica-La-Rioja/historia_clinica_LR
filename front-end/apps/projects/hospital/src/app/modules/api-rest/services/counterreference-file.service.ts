@@ -3,7 +3,7 @@ import { Injectable } from '@angular/core';
 import { ContextService } from '@core/services/context.service';
 import { environment } from '@environments/environment';
 import { Observable } from 'rxjs';
-import { saveAs } from 'file-saver';
+import { ViewPdfService } from '@presentation/dialogs/view-pdf/view-pdf.service';
 
 
 
@@ -17,6 +17,7 @@ export class CounterreferenceFileService {
 	constructor(
 		private readonly http: HttpClient,
 		private readonly contextService: ContextService,
+		private viewPdfService: ViewPdfService,
 	) { }
 
 	uploadCounterreferenceFiles(patientId: number, counterreferenceFile: File): Observable<number> {
@@ -34,8 +35,9 @@ export class CounterreferenceFileService {
 
 	downloadCounterreferenceFiles(fileId: number, fileName: string): void {
 		const url = this.URL_PREFIX + `download/${fileId}`;
-		this.http.get(url,
-			{ responseType: 'blob' }
-		).subscribe(blob => saveAs(blob, fileName));
+		this.viewPdfService.showDialog(
+			url,
+			fileName,
+		);
 	}
 }

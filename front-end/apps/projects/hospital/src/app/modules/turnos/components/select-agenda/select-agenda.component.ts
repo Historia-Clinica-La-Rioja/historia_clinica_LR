@@ -174,8 +174,7 @@ export class SelectAgendaComponent implements OnInit, OnDestroy {
 		dialogRef.afterClosed()
 			.subscribe(value => {
 				if (value) {
-					this.dailyAppointmentService.getDailyAppointmentsByDiaryIdAndDate(this.agendaSelected.id, value)
-						.subscribe();
+					this.dailyAppointmentService.getDailyAppointmentsByDiaryIdAndDate(this.agendaSelected.id, value);
 				}
 			});
 	}
