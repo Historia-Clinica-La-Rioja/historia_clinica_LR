@@ -1,6 +1,6 @@
 import { AppointmentListDto } from "@api-rest/api-model";
 import { DateFormat, buildFullDate, momentParseDate, momentParseTime } from "@core/utils/moment.utils";
-import { APPOINTMENT_STATES_ID, BLUE_TEXT, COLORES, GREY_TEXT, TEMPORARY_PATIENT, WHITE_TEXT } from "@turnos/constants/appointment";
+import { APPOINTMENT_STATES_ID, BLUE_TEXT, COLORES, GREY_TEXT, PURPLE_TEXT, TEMPORARY_PATIENT, WHITE_TEXT } from "@turnos/constants/appointment";
 import { AppointmentBlockMotivesFacadeService } from "@turnos/services/appointment-block-motives-facade.service";
 import { CalendarEvent } from "angular-calendar";
 import { Moment } from "moment";
@@ -105,6 +105,10 @@ export function getSpanColor(appointment: AppointmentListDto): string {
     if (appointment.appointmentStateId === APPOINTMENT_STATES_ID.BOOKED) {
         return BLUE_TEXT;
     }
+
+    if (showProtectedAppointment(appointment)) {
+		return PURPLE_TEXT;
+	}
 
     return WHITE_TEXT;
 }
