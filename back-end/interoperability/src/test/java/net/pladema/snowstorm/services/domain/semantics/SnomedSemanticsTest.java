@@ -28,5 +28,6 @@ class SnomedSemanticsTest {
         Assertions.assertEquals("< 609328004 |disposición alérgica (hallazgo)|", snomedSemantics.getEcl(SnomedECL.ALLERGY));
         Assertions.assertEquals("^ 2281000221106 |conjunto de referencias simples de inmunizaciones notificables (metadato fundacional)|", snomedSemantics.getEcl(SnomedECL.VACCINE));
         Assertions.assertEquals("< 763158003: 732943007 |tiene base de sustancia de la potencia (atributo)|=*, [0..0] 774159003 |tiene proveedor (atributo)|=*", snomedSemantics.getEcl(SnomedECL.MEDICINE));
+		Assertions.assertEquals("< 272379006 | evento (evento)|", snomedSemantics.getEcl(SnomedECL.EVENT));
     }
 }

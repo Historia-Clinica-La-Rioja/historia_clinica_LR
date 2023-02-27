@@ -4,7 +4,7 @@ import ar.lamansys.sgx.shared.exceptions.NotFoundException;
 
 public enum SnomedECL {
     BLOOD_TYPE, PERSONAL_RECORD, FAMILY_RECORD, ALLERGY, HOSPITAL_REASON,
-    VACCINE, MEDICINE, PROCEDURE, CONSULTATION_REASON, DIAGNOSIS;
+    VACCINE, MEDICINE, PROCEDURE, CONSULTATION_REASON, DIAGNOSIS, EVENT;
 
     public static SnomedECL map(String id) {
         try {

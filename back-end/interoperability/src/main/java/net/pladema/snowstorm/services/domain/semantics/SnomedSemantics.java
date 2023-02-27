@@ -147,6 +147,10 @@ public class SnomedSemantics {
     @ToString.Include
     private String illegalAbortionSecondaryBleedingEcl;
 
+	@Value("${snomed-semantics.eventGroup.ecl}")
+	@ToString.Include
+	private String eventGroupEcl;
+
     private Map<SnomedECL, String> snomedECLStringMap;
 
     @PostConstruct
@@ -162,6 +166,7 @@ public class SnomedSemantics {
         snomedECLStringMap.put(SnomedECL.MEDICINE, medicineEcl);
         snomedECLStringMap.put(SnomedECL.PROCEDURE, procedureGroupEcl);
         snomedECLStringMap.put(SnomedECL.CONSULTATION_REASON, consultationReasonEcl);
+		snomedECLStringMap.put(SnomedECL.EVENT, eventGroupEcl);
     }
 
     public String getEcl(SnomedECL key) {
