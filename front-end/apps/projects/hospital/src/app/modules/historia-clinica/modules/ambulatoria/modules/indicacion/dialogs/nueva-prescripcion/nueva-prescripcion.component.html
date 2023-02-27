@@ -159,10 +159,10 @@
                 <h3 fxFlex="80%" id="prescriptionItemName" class="mat-subheading-2 capitalize-first-letter">{{prescriptionItem.snomed.pt}}</h3>
 
                 <div fxFlex="20%" fxLayoutAlign="end start">
-                    <button mat-icon-button color="primary" (click)="openPrescriptionItemDialog(prescriptionItem)">
+                    <button mat-icon-button color="primary" (click)="openPrescriptionItemDialog(prescriptionItem)" [disabled]="submitted">
                         <mat-icon>edit</mat-icon>
                     </button>
-                    <button mat-icon-button color="warn" (click)="deletePrescriptionItem(prescriptionItem)">
+                    <button mat-icon-button color="warn" (click)="deletePrescriptionItem(prescriptionItem)" [disabled]="submitted">
                         <mat-icon>delete_outline</mat-icon>
                     </button>
                 </div>
@@ -205,13 +205,13 @@
         <mat-divider></mat-divider>
     </div>
 
-    <button mat-stroked-button color="primary" (click)="openPrescriptionItemDialog()" fxFlexFill.xs>
+    <button mat-stroked-button color="primary" (click)="openPrescriptionItemDialog()" [disabled]="submitted" fxFlexFill.xs>
         <span class="uppercase">{{data.addLabel | translate}}</span>
     </button>
 </div>
 
 <mat-dialog-actions fxLayout="row" fxLayoutAlign="end start">
-    <button mat-flat-button color="primary" *ngIf="prescriptionItems.length" (click)="confirmPrescription()" fxFlexFill.xs [disabled]="! this.prescriptionForm.valid">
+    <button mat-flat-button color="primary" *ngIf="prescriptionItems.length" (click)="confirmPrescription()" fxFlexFill.xs [disabled]="! this.prescriptionForm.valid || submitted">
         <span class="uppercase" *ngIf="isHabilitarRecetaDigitalEnabled">{{'buttons.ELECTRONIC_FIRM' | translate}}</span>
         <span class="uppercase" *ngIf="! isHabilitarRecetaDigitalEnabled">{{'buttons.CONFIRM' | translate}}</span>
     </button>

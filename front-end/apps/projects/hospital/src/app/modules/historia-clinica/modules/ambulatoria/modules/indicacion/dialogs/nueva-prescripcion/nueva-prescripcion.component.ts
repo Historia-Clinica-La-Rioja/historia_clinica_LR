@@ -47,6 +47,7 @@ export class NuevaPrescripcionComponent implements OnInit {
 	maxPhonePrefix: number = 10;
 	maxPhoneNumber: number = 15;
 	argentinaId: number = 14;
+	submitted: boolean = false;
 
 	constructor(
 		private readonly formBuilder: FormBuilder,
@@ -220,6 +221,7 @@ export class NuevaPrescripcionComponent implements OnInit {
 	}
 
 	confirmPrescription(): void {
+		this.submitted = true;
 		let prescriptionLineNumberAux = 0;
 		const newPrescription: PrescriptionDto = {
 			hasRecipe: this.isMedication ? !this.prescriptionForm.controls.withoutRecipe.value : true,
