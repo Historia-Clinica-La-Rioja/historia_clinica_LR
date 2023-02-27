@@ -4,10 +4,6 @@ mat-card.mat-card {
 	@include card-centered;
 }
 
-mat-card-title {
-	margin-top: 2rem;
-}
-
 .logos {
 	@include space-around;
 
