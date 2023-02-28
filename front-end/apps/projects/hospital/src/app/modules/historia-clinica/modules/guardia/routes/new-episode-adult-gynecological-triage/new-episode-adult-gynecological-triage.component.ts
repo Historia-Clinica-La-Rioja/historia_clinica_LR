@@ -18,7 +18,7 @@ import { ROUTE_EMERGENCY_CARE } from '../../services/triage-definitions.service'
 export class NewEpisodeAdultGynecologicalTriageComponent {
 
 	private readonly routePrefix = 'institucion/' + this.contextService.institutionId;
-	private hasRoleAdministrative: boolean;
+	private hasEmergencyCareRelatedRole: boolean;
 
 	constructor(
 		private readonly newEpisodeService: NewEpisodeService,
@@ -29,7 +29,7 @@ export class NewEpisodeAdultGynecologicalTriageComponent {
 		private readonly permissionsService: PermissionsService,
 	) {
 		this.permissionsService.contextAssignments$().subscribe((userRoles: ERole[]) => {
-			this.hasRoleAdministrative = anyMatch<ERole>(userRoles, [ERole.ADMINISTRATIVO]);
+			this.hasEmergencyCareRelatedRole = anyMatch<ERole>(userRoles, [ERole.ESPECIALISTA_MEDICO, ERole.ENFERMERO, ERole.PROFESIONAL_DE_SALUD]);
 		});
 	}
 
@@ -42,8 +42,12 @@ export class NewEpisodeAdultGynecologicalTriageComponent {
 		this.emergencyCareEpisodeService.createAdult(dto)
 			.subscribe((episodeId: number) => {
 				const patientId = dto.administrative?.patient?.id ? dto.administrative.patient.id : null;
-				if (patientId && !this.hasRoleAdministrative) {
+				if (patientId && this.hasEmergencyCareRelatedRole) {
 					this.router.navigate([this.routePrefix + "/ambulatoria/paciente/" + patientId])
+				}
+				else if (patientId) {
+					const url = `${this.routePrefix}/pacientes/profile/${patientId}`;
+					this.router.navigateByUrl(url);
 				}
 				else {
 					this.router.navigate([this.routePrefix + ROUTE_EMERGENCY_CARE + '/episodio/' + episodeId]);

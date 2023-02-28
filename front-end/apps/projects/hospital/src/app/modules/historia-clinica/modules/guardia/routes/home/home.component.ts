@@ -48,6 +48,7 @@ export class HomeComponent implements OnInit {
 
 	filterService: EpisodeFilterService;
 
+	private readonly routePrefix = 'institucion/' + this.contextService.institutionId;
 	readonly estadosEpisodio = EstadosEpisodio;
 	readonly triages = Triages;
 	readonly PACIENTE_TEMPORAL = 3;
@@ -60,6 +61,7 @@ export class HomeComponent implements OnInit {
 	triageCategories$: Observable<TriageCategoryDto[]>;
 	emergencyCareTypes$: Observable<MasterDataInterface<number>[]>;
 
+	hasEmergencyCareRelatedRole: boolean;
 	hasRoleAdministrative: boolean;
 
 	private static calculateWaitingTime(dateTime: DateTimeDto): number {
@@ -94,6 +96,7 @@ export class HomeComponent implements OnInit {
 		this.emergencyCareTypes$ = this.filterService.getEmergencyCareTypes();
 		this.permissionsService.contextAssignments$().subscribe((userRoles: ERole[]) => {
 			this.hasRoleAdministrative = anyMatch<ERole>(userRoles, [ERole.ADMINISTRATIVO]);
+			this.hasEmergencyCareRelatedRole = anyMatch<ERole>(userRoles, [ERole.ESPECIALISTA_MEDICO, ERole.ENFERMERO, ERole.PROFESIONAL_DE_SALUD]);
 		});
 	}
 
@@ -114,9 +117,15 @@ export class HomeComponent implements OnInit {
 	}
 
 	goToEpisode(episode: Episode, patientId?: number) {
-		if (patientId && (episode.state.id !== EstadosEpisodio.CON_ALTA_MEDICA) && (!this.hasRoleAdministrative)) {
-			const url = `institucion/${this.contextService.institutionId}/ambulatoria/paciente/${patientId}`;
-			this.router.navigateByUrl(url, { state: { toEmergencyCareTab: true } });
+		if (patientId) {
+			if (episode.state.id !== EstadosEpisodio.CON_ALTA_ADMINISTRATIVA && this.hasEmergencyCareRelatedRole) {
+				const url = `${this.routePrefix}/ambulatoria/paciente/${patientId}`;
+				this.router.navigateByUrl(url, { state: { toEmergencyCareTab: true } });
+			}
+			else {
+				const url = `${this.routePrefix}/pacientes/profile/${patientId}`;
+				this.router.navigateByUrl(url);
+			}
 		}
 		else {
 			this.router.navigate([`${this.router.url}/episodio/${episode.id}`]);

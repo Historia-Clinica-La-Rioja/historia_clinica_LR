@@ -18,7 +18,7 @@ import { ROUTE_EMERGENCY_CARE } from '../../services/triage-definitions.service'
 export class NewEpisodePediatricTriageComponent {
 
 	private readonly routePrefix = 'institucion/' + this.contextService.institutionId;
-	private hasRoleAdministrative: boolean;
+	private hasEmergencyCareRelatedRole: boolean;
 
 	constructor(
 		private readonly newEpisodeService: NewEpisodeService,
@@ -29,7 +29,7 @@ export class NewEpisodePediatricTriageComponent {
 		private readonly permissionsService: PermissionsService,
 	) {
 		this.permissionsService.contextAssignments$().subscribe((userRoles: ERole[]) => {
-			this.hasRoleAdministrative = anyMatch<ERole>(userRoles, [ERole.ADMINISTRATIVO]);
+			this.hasEmergencyCareRelatedRole = anyMatch<ERole>(userRoles, [ERole.ESPECIALISTA_MEDICO, ERole.ENFERMERO, ERole.PROFESIONAL_DE_SALUD]);
 		});
 	}
 
@@ -44,8 +44,12 @@ export class NewEpisodePediatricTriageComponent {
 		this.emergercyCareEpisodeService.createPediatric(body).subscribe(
 			episodeId => {
 				const patientId = body.administrative?.patient?.id ? body.administrative.patient.id : null;
-				if (patientId && !this.hasRoleAdministrative) {
+				if (patientId && this.hasEmergencyCareRelatedRole) {
 					this.router.navigate([this.routePrefix + "/ambulatoria/paciente/" + patientId])
+				}
+				else if (patientId) {
+					const url = `${this.routePrefix}/pacientes/profile/${patientId}`;
+					this.router.navigateByUrl(url);
 				}
 				else {
 					this.router.navigate([this.routePrefix + ROUTE_EMERGENCY_CARE + '/episodio/' + episodeId]);

@@ -28,7 +28,8 @@ export class EditEmergencyCareEpisodeComponent implements OnInit {
 	isDoctorOfficeEditable: boolean;
 	private episodeId: number;
 	private patientId: number;
-	private hasRoleAdministrative: boolean;
+	private hasEmergencyCareRelatedRole: boolean;
+
 
 	constructor(
 		private router: Router,
@@ -41,7 +42,7 @@ export class EditEmergencyCareEpisodeComponent implements OnInit {
 		private readonly permissionsService: PermissionsService,
 	) {
 		this.permissionsService.contextAssignments$().subscribe((userRoles: ERole[]) => {
-			this.hasRoleAdministrative = anyMatch<ERole>(userRoles, [ERole.ADMINISTRATIVO]);
+			this.hasEmergencyCareRelatedRole = anyMatch<ERole>(userRoles, [ERole.ESPECIALISTA_MEDICO, ERole.ENFERMERO, ERole.PROFESIONAL_DE_SALUD]);
 		});
 	}
 
@@ -100,9 +101,13 @@ export class EditEmergencyCareEpisodeComponent implements OnInit {
 	}
 
 	private goToEpisodeDetails(): void {
-		if (this.patientId && !this.hasRoleAdministrative) {
+		if (this.patientId && this.hasEmergencyCareRelatedRole) {
 			const url = `${this.routePrefix}/ambulatoria/paciente/${this.patientId}`;
 			this.router.navigateByUrl(url, { state: { toEmergencyCareTab: true } });
+		}
+		else if (this.patientId) {
+			const url = `${this.routePrefix}/pacientes/profile/${this.patientId}`;
+			this.router.navigateByUrl(url);
 		}
 		else {
 			const url = `${this.routePrefix}/guardia/episodio/${this.episodeId}`;
