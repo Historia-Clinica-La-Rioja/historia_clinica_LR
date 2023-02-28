@@ -319,7 +319,7 @@
 				<h2 class="mat-h2">{{'internaciones.epicrisis.problems.TITLE' | translate}}</h2>
 				<mat-card>
 					<mat-card-content>
- 						<ng-container>
+ 						<ng-container *ngIf="!searchConceptsLocallyFF else problemTypeaheadSearch">
 							<app-concepts-search *ngIf="!snomedConceptProblem else problemForm"
 								[label]="'internaciones.epicrisis.problems.CONCEPT_LABEL'"
 								(search)="openSearchDialogProblem($event)">

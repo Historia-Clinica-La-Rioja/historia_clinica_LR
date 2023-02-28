@@ -1,3 +1,4 @@
+import { AppFeature } from '@api-rest/api-model';
 import {
 	AllergyConditionDto,
 	DiagnosisDto,
@@ -68,6 +69,7 @@ export class EpicrisisDockPopupComponent implements OnInit {
 	medications: MedicationDto[] = [];
 	canConfirmedDocument = false;
 	ECL = SnomedECL.DIAGNOSIS;
+	searchConceptsLocallyFF = false;
 	personalHistories: TableCheckbox<HealthHistoryConditionDto> = {
 		data: [],
 		columns: [
@@ -126,6 +128,7 @@ export class EpicrisisDockPopupComponent implements OnInit {
 
 	constructor(
 		@Inject(OVERLAY_DATA) public data: any,
+		private readonly featureFlagService: FeatureFlagService,
 		public dockPopupRef: DockPopupRef,
 		private readonly formBuilder: FormBuilder,
 		private readonly epicrisisService: EpicrisisService,
@@ -141,6 +144,7 @@ export class EpicrisisDockPopupComponent implements OnInit {
 		this.personalHistories.displayedColumns = this.personalHistories.columns?.map(c => c.def).concat(['select']);
 		this.allergies.displayedColumns = this.allergies.columns?.map(c => c.def).concat(['select']);
 		this.immunizations.displayedColumns = this.immunizations.columns?.map(c => c.def).concat(['select']);
+		this.featureFlagService.isActive(AppFeature.HABILITAR_BUSQUEDA_LOCAL_CONCEPTOS).subscribe(isOn => this.searchConceptsLocallyFF = isOn);
 	}
 
 	ngOnInit(): void {
