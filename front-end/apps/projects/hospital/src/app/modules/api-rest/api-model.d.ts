@@ -167,6 +167,7 @@ export interface AnnexIIDto {
     documentType: string;
     establishment: string;
     existsConsultation: boolean;
+    formalPatientName: string;
     hasProcedures: boolean;
     medicalCoverage: string;
     patientAge: number;
@@ -1673,6 +1674,7 @@ export interface FormVDto {
     documentType: string;
     establishment: string;
     establishmentProvinceCode: string;
+    formalPatientName: string;
     hcnId: number;
     licenses: string[];
     medicalCoverage: string;

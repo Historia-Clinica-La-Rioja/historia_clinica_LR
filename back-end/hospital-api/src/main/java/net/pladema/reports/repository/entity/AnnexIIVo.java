@@ -16,6 +16,8 @@ public class AnnexIIVo {
 
     private String completePatientName;
 
+	private String formalPatientName;
+
     private String patientGender;
 
     private LocalDate patientBirthDate;
@@ -32,6 +34,9 @@ public class AnnexIIVo {
         this.completePatientName = Stream.of(firstName, middleNames, lastName, otherLastNames)
                 .filter(Objects::nonNull)
                 .collect(Collectors.joining(" "));
+		this.formalPatientName = Stream.of(lastName, otherLastNames, firstName, middleNames)
+				.filter(Objects::nonNull)
+				.collect(Collectors.joining(" "));
         this.documentType = documentType;
         this.documentNumber = documentNumber;
         this.patientGender = patientGender;

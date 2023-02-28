@@ -17,6 +17,8 @@ public class FormVDto {
 
     private String completePatientName;
 
+	private String formalPatientName;
+
     private String address;
 
     private LocalDate reportDate;

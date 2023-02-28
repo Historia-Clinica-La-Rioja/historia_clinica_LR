@@ -227,6 +227,7 @@ public class AnnexReportServiceImpl implements AnnexReportService {
         Map<String, Object> ctx = new HashMap<>();
         ctx.put("establishment", reportDataDto.getEstablishment());
         ctx.put("completePatientName", reportDataDto.getCompletePatientName());
+		ctx.put("formalPatientName", reportDataDto.getFormalPatientName());
         ctx.put("documentType", reportDataDto.getDocumentType());
         ctx.put("documentNumber", reportDataDto.getDocumentNumber());
         ctx.put("patientGender", reportDataDto.getPatientGender());

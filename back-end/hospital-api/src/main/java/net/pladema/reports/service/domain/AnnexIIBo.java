@@ -15,6 +15,8 @@ public class AnnexIIBo {
 
     private String completePatientName;
 
+	private String formalPatientName;
+
     private String documentType;
 
     private String documentNumber;
@@ -52,6 +54,7 @@ public class AnnexIIBo {
     public AnnexIIBo(AnnexIIOutpatientVo annexIIOutpatientVo){
         this.establishment = annexIIOutpatientVo.getEstablishment();
         this.completePatientName = annexIIOutpatientVo.getCompletePatientName();
+		this.formalPatientName = annexIIOutpatientVo.getFormalPatientName();
         this.documentType = annexIIOutpatientVo.getDocumentType ();
         this.documentNumber = annexIIOutpatientVo.getDocumentNumber();
         this.patientGender = annexIIOutpatientVo.getPatientGender();
@@ -71,6 +74,7 @@ public class AnnexIIBo {
     public AnnexIIBo(AnnexIIAppointmentVo annexIIAppointmentVo){
         this.establishment = annexIIAppointmentVo.getEstablishment();
         this.completePatientName = annexIIAppointmentVo.getCompletePatientName();
+		this.formalPatientName = annexIIAppointmentVo.getFormalPatientName();
         this.documentType = annexIIAppointmentVo.getDocumentType ();
         this.documentNumber = annexIIAppointmentVo.getDocumentNumber();
         this.patientGender = annexIIAppointmentVo.getPatientGender();

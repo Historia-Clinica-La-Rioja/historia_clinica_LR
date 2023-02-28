@@ -211,6 +211,7 @@ public class FormReportServiceImpl implements FormReportService {
         Map<String, Object> ctx = new HashMap<>();
         ctx.put("establishment", reportDataDto.getEstablishment());
         ctx.put("completePatientName", reportDataDto.getCompletePatientName());
+		ctx.put("formalPatientName", reportDataDto.getFormalPatientName());
         ctx.put("address", reportDataDto.getAddress());
         ctx.put("reportDate", reportDataDto.getReportDate().format(DateTimeFormatter.ofPattern("dd/MM/yyyy")));
         ctx.put("patientGender", reportDataDto.getPatientGender());
