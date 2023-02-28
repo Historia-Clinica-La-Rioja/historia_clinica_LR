@@ -1218,6 +1218,13 @@ export interface EvolutionNoteDto extends Serializable {
     riskFactors?: RiskFactorDto;
 }
 
+export interface ExternalCauseDto {
+    eventLocation?: EEventLocation;
+    externalCauseType?: EExternalCauseType;
+    id?: number;
+    snomed?: SnomedDto;
+}
+
 export interface ExternalClinicalHistoryDto {
     consultationDate: Date;
     institution?: string;
@@ -3351,6 +3358,20 @@ export const enum EDocumentSearch {
     DIAGNOSIS = "DIAGNOSIS",
     DOCTOR = "DOCTOR",
     CREATED_ON = "CREATED_ON",
+}
+
+export const enum EEventLocation {
+    DOMICILIO_PARTICULAR = "DOMICILIO_PARTICULAR",
+    VIA_PUBLICA = "VIA_PUBLICA",
+    LUGAR_DE_TRABAJO = "LUGAR_DE_TRABAJO",
+    OTRO = "OTRO",
+}
+
+export const enum EExternalCauseType {
+    ACCIDENT = "ACCIDENT",
+    SELF_INFLICTED_INJURY = "SELF_INFLICTED_INJURY",
+    AGRESSION = "AGRESSION",
+    IGNORED = "IGNORED",
 }
 
 export const enum EIndicationStatus {
