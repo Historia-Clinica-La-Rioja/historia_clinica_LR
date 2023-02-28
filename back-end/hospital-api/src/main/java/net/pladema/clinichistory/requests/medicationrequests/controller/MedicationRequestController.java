@@ -331,7 +331,7 @@ public class MedicationRequestController {
 	private NewMedicationRequestNotificationArgs mapToMedicationRequestNotificationBo(Integer recipeId, BasicPatientDto patientDto, ByteArrayResource resource) {
 		LOG.debug("Input parameters -> recipeId {}, patientDto {}, resource {}", recipeId, patientDto, resource);
 		NewMedicationRequestNotificationArgs result = new NewMedicationRequestNotificationArgs();
-		String repiceIdWithDomain = recipeDomain + "." + recipeId;
+		String repiceIdWithDomain = recipeDomain + "-" + recipeId;
 		result.setRecipeId(repiceIdWithDomain);
 		result.setPatient(patientDto);
 		HashMap<String, ByteArrayResource> attachments = new HashMap<>();

@@ -48,12 +48,14 @@ public class PrescriptionStorageImpl implements PrescriptionStorage {
 	private final static String COMPLETO = "255594003";
 	private final static String CRONICO = "-55607006";
 
+	private static final String ID_DIVIDER = "-";
+
 	private final MedicationStatementCommercialRepository medicationStatementCommercialRepository;
 
 	@Override
 	public Optional<PrescriptionBo> getPrescriptionByIdAndDni(String prescriptionId, String identificationNumber) {
-		String domainNumber = prescriptionId.split("\\.")[0];
-		Integer numericPrescriptionId = Integer.valueOf(prescriptionId.split("\\.")[1]);
+		String domainNumber = prescriptionId.split(ID_DIVIDER)[0];
+		Integer numericPrescriptionId = Integer.valueOf(prescriptionId.split(ID_DIVIDER)[1]);
 		String stringQuery = "select mr.id as mrid, ms.prescription_date, ms.due_date, " +
 		"p2.first_name as p2fn, p2.last_name as p2ln, pe.name_self_determination, g.description as gd, spg.description as spgd, p2.birth_date, it.description as itd, p2.identification_number, " +
 		"mc.name as mcn, mc.cuit, mcp.plan, pmc.affiliate_number, i.name, i.sisa_code, i.province_code, " +
@@ -105,7 +107,7 @@ public class PrescriptionStorageImpl implements PrescriptionStorage {
 				.collect(Collectors.toList());
 		PrescriptionBo mergedResult = mergeResults(result);
 		if(mergedResult.getPrescriptionId() != null) {
-			mergedResult.setPrescriptionId(domainNumber + "." + mergedResult.getPrescriptionId());
+			mergedResult.setPrescriptionId(domainNumber + ID_DIVIDER + mergedResult.getPrescriptionId());
 		}
 		mergedResult.setDomain(domainNumber);
 		return Optional.of(mergedResult);
@@ -116,7 +118,7 @@ public class PrescriptionStorageImpl implements PrescriptionStorage {
 	@Modifying
 	public void changePrescriptionState(ChangePrescriptionStateBo changePrescriptionLineStateBo, String prescriptionId, String identificationNumber) {
 
-		Integer prescriptionIdInt = Integer.valueOf(changePrescriptionLineStateBo.getPrescriptionId().split("\\.")[1]);
+		Integer prescriptionIdInt = Integer.valueOf(changePrescriptionLineStateBo.getPrescriptionId().split(ID_DIVIDER)[1]);
 		List<Integer> prescriptionLineNumbers = changePrescriptionLineStateBo.getChangePrescriptionStateLineMedicationList()
 				.stream()
 				.map(ChangePrescriptionStateMedicationBo::getPrescriptionLine)

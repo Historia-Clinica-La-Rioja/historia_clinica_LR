@@ -157,7 +157,7 @@ public class AuditableContextBuilder {
 		ctx.put("requestDate", date);
 		ctx.put("dateUntil", dateUntil);
 
-		var recipeNumberWithDomain = recipeDomain + "." + document.getEncounterId().toString();
+		var recipeNumberWithDomain = recipeDomain + "-" + document.getEncounterId().toString();
 		var recipeNumberBarCode = generateDigitalRecipeBarCode(recipeNumberWithDomain);
 		ctx.put("recipeNumberBarCode", recipeNumberBarCode);
 		ctx.put("recipeNumber", recipeNumberWithDomain);
