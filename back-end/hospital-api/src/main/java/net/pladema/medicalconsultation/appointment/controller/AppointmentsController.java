@@ -22,6 +22,8 @@ import net.pladema.medicalconsultation.appointment.controller.dto.UpdateAppointm
 import net.pladema.medicalconsultation.appointment.repository.entity.AppointmentState;
 import net.pladema.medicalconsultation.appointment.service.CreateEquipmentAppointmentService;
 
+import net.pladema.medicalconsultation.appointment.service.EquipmentAppointmentService;
+
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -83,6 +85,8 @@ public class AppointmentsController {
 
     private final AppointmentService appointmentService;
 
+	private final EquipmentAppointmentService equipmentAppointmentService;
+
     private final AppointmentValidatorService appointmentValidatorService;
 
     private final CreateAppointmentService createAppointmentService;
@@ -112,22 +116,22 @@ public class AppointmentsController {
 	private final LocalDateMapper localDateMapper;
 
 	public AppointmentsController(
-            AppointmentDailyAmountService appointmentDailyAmountService,
-            AppointmentService appointmentService,
-            AppointmentValidatorService appointmentValidatorService,
-            CreateAppointmentService createAppointmentService,
+			AppointmentDailyAmountService appointmentDailyAmountService,
+			AppointmentService appointmentService, EquipmentAppointmentService equipmentAppointmentService, AppointmentValidatorService appointmentValidatorService,
+			CreateAppointmentService createAppointmentService,
 			CreateEquipmentAppointmentService createEquipmentAppointmentService,
-            AppointmentMapper appointmentMapper,
-            PatientExternalService patientExternalService,
-            HealthcareProfessionalExternalService healthcareProfessionalExternalService,
-            DateTimeProvider dateTimeProvider,
-            NotifyPatient notifyPatient,
-            BookingPersonService bookingPersonService,
+			AppointmentMapper appointmentMapper,
+			PatientExternalService patientExternalService,
+			HealthcareProfessionalExternalService healthcareProfessionalExternalService,
+			DateTimeProvider dateTimeProvider,
+			NotifyPatient notifyPatient,
+			BookingPersonService bookingPersonService,
 			LocalDateMapper dateMapper,
 			LocalDateMapper localDateMapper) {
         this.appointmentDailyAmountService = appointmentDailyAmountService;
         this.appointmentService = appointmentService;
-        this.appointmentValidatorService = appointmentValidatorService;
+		this.equipmentAppointmentService = equipmentAppointmentService;
+		this.appointmentValidatorService = appointmentValidatorService;
         this.createAppointmentService = createAppointmentService;
 		this.createEquipmentAppointmentService = createEquipmentAppointmentService;
         this.appointmentMapper = appointmentMapper;
@@ -186,13 +190,23 @@ public class AppointmentsController {
 
     @GetMapping(value = "/{appointmentId}")
     @PreAuthorize("hasPermission(#institutionId, 'ADMINISTRATIVO, ESPECIALISTA_MEDICO, PROFESIONAL_DE_SALUD, ESPECIALISTA_EN_ODONTOLOGIA, ADMINISTRADOR_AGENDA, ENFERMERO')")
-    public ResponseEntity<AppointmentDto> get(@PathVariable(name = "institutionId") Integer institutionId, @PathVariable(name = "appointmentId") Integer appointmentId) {
+    public ResponseEntity<AppointmentDto> getAppointment(@PathVariable(name = "institutionId") Integer institutionId, @PathVariable(name = "appointmentId") Integer appointmentId) {
         log.debug("Input parameters -> institutionId {}, appointmentId {}", institutionId, appointmentId);
         Optional<AppointmentBo> resultService = appointmentService.getAppointment(appointmentId);
         Optional<AppointmentDto> result = resultService.map(appointmentMapper::toAppointmentDto);
         log.debug(OUTPUT, result);
         return result.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.noContent().build());
     }
+
+	@GetMapping(value = "/equipmentAppointment/{appointmentId}")
+	@PreAuthorize("hasPermission(#institutionId, 'ADMINISTRATIVO, ESPECIALISTA_MEDICO, PROFESIONAL_DE_SALUD, ESPECIALISTA_EN_ODONTOLOGIA, ADMINISTRADOR_AGENDA, ENFERMERO, ADMINISTRATIVO_RED_DE_IMAGENES, ADMINISTRADOR_AGENDA')")
+	public ResponseEntity<AppointmentDto> getEquipmentAppointment(@PathVariable(name = "institutionId") Integer institutionId, @PathVariable(name = "appointmentId") Integer appointmentId) {
+		log.debug("Input parameters -> institutionId {}, appointmentId {}", institutionId, appointmentId);
+		Optional<AppointmentBo> resultService = equipmentAppointmentService.getEquipmentAppointment(appointmentId);
+		Optional<AppointmentDto> result = resultService.map(appointmentMapper::toAppointmentDto);
+		log.debug(OUTPUT, result);
+		return result.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.noContent().build());
+	}
 
 
 	@GetMapping(value="/list/{healthcareProfessionalId}")
