@@ -319,10 +319,22 @@
 				<h2 class="mat-h2">{{'internaciones.epicrisis.problems.TITLE' | translate}}</h2>
 				<mat-card>
 					<mat-card-content>
-						<app-concepts-search *ngIf="!snomedConceptProblem else problemForm"
-							[label]="'internaciones.epicrisis.problems.CONCEPT_LABEL'"
-							(search)="openSearchDialogProblem($event)">
-						</app-concepts-search>
+ 						<ng-container>
+							<app-concepts-search *ngIf="!snomedConceptProblem else problemForm"
+								[label]="'internaciones.epicrisis.problems.CONCEPT_LABEL'"
+								(search)="openSearchDialogProblem($event)">
+							</app-concepts-search>
+						</ng-container>
+
+						<ng-template #problemTypeaheadSearch>
+							<app-concept-typeahead-search
+								[ecl]="ECL"
+								[placeholder]="'ambulatoria.paciente.nueva-consulta.problemas.SEARCH_PLACEHOLDER'"
+								[enableSubmitButton]="true"
+								[buttonMessage]="'internaciones.epicrisis.problems.ADD'"
+								(conceptSelected)="setConceptProblem($event)">
+							</app-concept-typeahead-search>
+						</ng-template>
 
 						<ng-template #problemForm>
 							<form [formGroup]="formProblem" (ngSubmit)="addToListProblem()">
@@ -337,9 +349,9 @@
 										<mat-icon>close</mat-icon>
 									</button>
 								</mat-form-field>
-								<div>
+								<div fxLayoutAlign="end">
 									<button class="uppercase" mat-raised-button color="primary" type="submit">
-										<span [translate]="'internaciones.epicrisis.problems.ADD'"></span>
+										{{'internaciones.epicrisis.problems.ADD' | translate | uppercase}}
 									</button>
 								</div>
 							</form>
@@ -370,7 +382,7 @@
 					<tr mat-row *matRowDef="let row; columns: problemEpicrisisService?.getTable().displayedColumns;">
 					</tr>
 				</table>
-				<app-no-data class="secondary" *ngIf="problemEpicrisisService?.getTable().data.length === 0">
+				<app-no-data class="secondary" *ngIf="problemEpicrisisService?.getTable().data?.length === 0">
 				</app-no-data>
 			</div>
 		</form>

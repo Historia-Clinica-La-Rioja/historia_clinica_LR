@@ -1,8 +1,8 @@
-import { Component, Inject, OnInit } from '@angular/core';
 import {
 	AllergyConditionDto,
 	DiagnosisDto,
 	EpicrisisDto,
+	EpicrisisGeneralStateDto,
 	EpicrisisObservationsDto,
 	HealthConditionDto,
 	HealthHistoryConditionDto,
@@ -13,6 +13,8 @@ import {
 	ResponseEpicrisisDto,
 	SnomedDto,
 } from '@api-rest/api-model';
+import { Inject, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { SnomedECL } from '@api-rest/api-model';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { EpicrisisService } from '@api-rest/services/epicrisis.service';
@@ -34,6 +36,7 @@ import { Observable } from 'rxjs';
 import { DocumentActionReasonComponent } from '../document-action-reason/document-action-reason.component';
 import { MatDialog } from '@angular/material/dialog';
 import { ProblemEpicrisisService } from '../../services/problem-epicrisis.service';
+import { FeatureFlagService } from '@core/services/feature-flag.service';
 
 @Component({
 	selector: 'app-epicrisis-dock-popup',
@@ -64,6 +67,7 @@ export class EpicrisisDockPopupComponent implements OnInit {
 	isDisableConfirmButton = false;
 	medications: MedicationDto[] = [];
 	canConfirmedDocument = false;
+	ECL = SnomedECL.DIAGNOSIS;
 	personalHistories: TableCheckbox<HealthHistoryConditionDto> = {
 		data: [],
 		columns: [
@@ -173,11 +177,12 @@ export class EpicrisisDockPopupComponent implements OnInit {
 		});
 
 		const epicrisisInternmentGeneralState$ = this.epicrisisService.getInternmentGeneralState(this.data.patientInfo.internmentEpisodeId);
-		epicrisisInternmentGeneralState$.subscribe(response => {
+		epicrisisInternmentGeneralState$.subscribe((response: EpicrisisGeneralStateDto) => {
 			this.waitToResponse = true;
 			this.form.controls.mainDiagnosis.setValue(response.mainDiagnosis);
 			this.diagnosticsEpicrisisService.setInternmentMainDiagnosis(response.mainDiagnosis);
-			this.problemEpicrisisService.setProblems(response.problems);
+			this.problemEpicrisisService.setProblems(response.otherProblems);
+			this.problemEpicrisisService.initTable(response.otherProblems);
 			this.diagnosticsEpicrisisService.initTable(response.diagnosis);
 			this.personalHistories.data = response.personalHistories;
 			this.familyHistories.data = response.familyHistories;
@@ -301,7 +306,7 @@ export class EpicrisisDockPopupComponent implements OnInit {
 			medications: this.medications,
 			immunizations: this.immunizations.selection.selected,
 			allergies: this.allergies.selection.selected,
-			problems: this.problemEpicrisisService.getProblems()
+			otherProblems: this.problemEpicrisisService.getProblems()
 		}
 	}
 
@@ -349,7 +354,7 @@ export class EpicrisisDockPopupComponent implements OnInit {
 				eclFilter: SnomedECL.DIAGNOSIS
 			};
 			this.snomedService.openConceptsSearchDialog(search)
-				.subscribe((selectedConcept: SnomedDto) => this.setConceptProblem(selectedConcept));
+				.subscribe((selectedConcept: SnomedDto) => this.setConceptProblemSnomed(selectedConcept));
 		}
 	}
 
@@ -381,10 +386,17 @@ export class EpicrisisDockPopupComponent implements OnInit {
 		this.formDiagnosis.controls.snomed.setValue(pt);
 	}
 
+	setConceptProblemSnomed(selectedConcept: SnomedDto): void {
+		this.snomedConceptProblem = selectedConcept;
+		const pt = selectedConcept ? selectedConcept.pt : '';
+		this.formProblem.controls.snomedProblem.setValue(pt);
+	}
+
 	setConceptProblem(selectedConcept: SnomedDto): void {
 		this.snomedConceptProblem = selectedConcept;
 		const pt = selectedConcept ? selectedConcept.pt : '';
 		this.formProblem.controls.snomedProblem.setValue(pt);
+		this.addToListProblem();
 	}
 
 	resetForm(): void {
