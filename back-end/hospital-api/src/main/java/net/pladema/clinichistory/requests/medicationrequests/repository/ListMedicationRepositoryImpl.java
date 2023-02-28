@@ -62,7 +62,7 @@ public class ListMedicationRepositoryImpl implements ListMedicationRepository {
                 "WHERE rw = 1 " +
                 (filter.getMedicationStatement() != null ? "AND UPPER(s.pt) LIKE :medication " : "") +
                 (filter.getHealthCondition() != null ? "AND UPPER(h.pt) LIKE :healthCondition " : "") +
-                "ORDER BY t.updated_on";
+                "ORDER BY t.created_on DESC";
         Query query = entityManager.createNativeQuery(sqlString);
 
         query.setParameter("documentStatusId", DocumentStatus.FINAL)
@@ -120,7 +120,7 @@ public class ListMedicationRepositoryImpl implements ListMedicationRepository {
 				"AND up.user_id = (:userId)" +
 				(filter.getMedicationStatement() != null ? "AND UPPER(s.pt) LIKE :medication " : "") +
 				(filter.getHealthCondition() != null ? "AND UPPER(h.pt) LIKE :healthCondition " : "") +
-				"ORDER BY t.updated_on";
+				"ORDER BY t.created_on DESC";
 		Query query = entityManager.createNativeQuery(sqlString);
 
 		query.setParameter("documentStatusId", DocumentStatus.FINAL)
