@@ -135,10 +135,11 @@ export class AmbulatoriaPacienteComponent implements OnInit, OnDestroy {
 				this.patientId = Number(params.get('idPaciente'));
 				this.patientService.getPatientBasicData<BasicPatientDto>(this.patientId).subscribe(
 					patient => {
-						(patient.typeId === PatientType.TEMPORARY || patient.typeId === PatientType.PERMANENT_NO_VALIDATED)
-							? this.isNoValidatedOrTemporary = true
-							: this.isNoValidatedOrTemporary = false
-
+						if (this.isHabilitarRecetaDigitalEnabled && (patient.typeId === PatientType.TEMPORARY || patient.typeId === PatientType.PERMANENT_NO_VALIDATED)) {
+							this.isNoValidatedOrTemporary = true
+							this.snackBarService.showError('indicacion.INDICACIONES_DISABLED');
+						}
+						
 						this.personInformation.push({ description: patient.person.identificationType, data: patient.person.identificationNumber });
 						this.patient = this.mapperService.toPatientBasicData(patient);
 						this.personId = patient.person.id;

@@ -1,6 +1,7 @@
 {
 	"indicacion": {
 		"TITLE": "Indicaciones",
+		"INDICACIONES_DISABLED": "La opción de INDICACIONES se encuentra deshabilitada ya que el paciente es temporal o no está validado",
 		"internment-card": {
 			"TITLE": "Indicaciones de internación",
 			"TODAY": "Hoy, ",

@@ -160,12 +160,12 @@
 							</app-guardia>
 						</ng-template>
 					</mat-tab>
-					<mat-tab id="tab_indications" [disabled]="isNoValidatedOrTemporary && isHabilitarRecetaDigitalEnabled"
+					<mat-tab id="tab_indications" [disabled]="isNoValidatedOrTemporary"
 						*ngIf="hasHealthRelatedRole || hasPharmacyStaffRole || hasPrescriptorRole">
 						<ng-template mat-tab-label>
 							<span>{{ 'indicacion.TITLE' | translate | uppercase }}</span>
 						</ng-template>
-						<ng-template matTabContent>
+						<ng-template matTabContent [ngIf]=" ! isNoValidatedOrTemporary">
 							<div *ngIf="hasInternmentEpisodeInThisInstitution && !canOnlyViewSelfAddedProblems">
 								<app-internment-indications-card [patientId]="patientId"
 									[epicrisisConfirmed]="epicrisisDoc?.confirmed"
