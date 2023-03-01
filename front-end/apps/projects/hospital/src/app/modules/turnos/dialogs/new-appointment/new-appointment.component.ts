@@ -291,6 +291,10 @@ export class NewAppointmentComponent implements OnInit {
 			} else {
 				this.createAppointment(itComesFromStep3);
 			}
+		}, error => {
+			this.dialogRef.close();
+			this.isSubmitButtonDisabled = false;
+			processErrors(error, (msg) => this.snackBarService.showError(msg));
 		})
 	}
 
@@ -444,7 +448,7 @@ export class NewAppointmentComponent implements OnInit {
 
 		}
 		else {
-			return this.appointmentFacade.verifyExistingAppointment(this.patientId, this.data.date)
+			return this.appointmentFacade.verifyExistingAppointment(this.patientId, this.data.date, this.data.hour)
 		}
 	}
 

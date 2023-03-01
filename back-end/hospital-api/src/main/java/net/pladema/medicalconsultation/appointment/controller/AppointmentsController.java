@@ -512,9 +512,10 @@ public class AppointmentsController {
 	public ResponseEntity<AppointmentShortSummaryDto> getAppointmentFromDeterminatedDate(
 			@PathVariable(name = "institutionId") Integer institutionId,
 			@PathVariable(name = "patientId") Integer patientId,
-			@RequestParam String date) {
+			@RequestParam String date,
+			@RequestParam String hour) {
 		log.debug("Input parameters -> institutionId {}, patientId {}, date {}", institutionId, patientId, date);
-		var appointmentShortSummaryBo = appointmentService.getAppointmentFromDeterminatedDate(patientId, localDateMapper.fromStringToLocalDate(date));
+		var appointmentShortSummaryBo = appointmentService.getAppointmentFromDeterminatedDate(patientId, institutionId, localDateMapper.fromStringToLocalDate(date), localDateMapper.fromStringToLocalTime(hour));
 		var result = appointmentMapper.toAppointmentShortSummaryDto(appointmentShortSummaryBo);
 		return ResponseEntity.ok(result);
 	}

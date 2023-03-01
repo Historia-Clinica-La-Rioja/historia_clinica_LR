@@ -20,6 +20,8 @@ import net.pladema.medicalconsultation.appointment.repository.AppointmentAssnRep
 import ar.lamansys.sgh.shared.infrastructure.input.service.SharedReferenceCounterReference;
 import net.pladema.medicalconsultation.appointment.repository.AppointmentUpdateRepository;
 import net.pladema.medicalconsultation.appointment.repository.domain.AppointmentEquipmentShortSummaryBo;
+import net.pladema.medicalconsultation.appointment.service.impl.exceptions.UpdateAppointmentDateException;
+import net.pladema.medicalconsultation.appointment.service.impl.exceptions.UpdateAppointmentDateExceptionEnum;
 import net.pladema.medicalconsultation.diary.service.DiaryOpeningHoursService;
 import net.pladema.medicalconsultation.diary.service.domain.BlockBo;
 import net.pladema.medicalconsultation.diary.service.domain.DiaryBo;
@@ -464,13 +466,25 @@ public class AppointmentServiceImpl implements AppointmentService {
 	}
 
 	@Override
-	public AppointmentShortSummaryBo getAppointmentFromDeterminatedDate(Integer patientId, LocalDate date) {
+	public AppointmentShortSummaryBo getAppointmentFromDeterminatedDate(Integer patientId, Integer institutionId, LocalDate date, LocalTime hour) {
 		log.debug("Input parameters -> patientId {}, date {}", patientId, date);
+		validateAppointmentDate(institutionId,date,hour);
 		AppointmentShortSummaryBo result = null;
 		List<AppointmentShortSummaryBo> appointmentShortSummaryBoList = this.appointmentRepository.getAppointmentFromDeterminatedDate(patientId, date);
 		if (!appointmentShortSummaryBoList.isEmpty())
 			result = appointmentShortSummaryBoList.get(0);
 		return result;
+	}
+
+	private void validateAppointmentDate(Integer institutionId, LocalDate date, LocalTime hour) {
+		ZoneId institutionZoneId = institutionExternalService.getTimezone(institutionId);
+		LocalDate todayDate = dateTimeProvider.nowDate();
+		LocalTime todayTime = dateTimeProvider.nowDateTimeWithZone(institutionZoneId).toLocalTime();
+
+		if (date.isBefore(todayDate))
+			throw new UpdateAppointmentDateException(UpdateAppointmentDateExceptionEnum.APPOINTMENT_DATE_BEFORE_NOW, "La fecha del turno es anterior a la fecha actual.");
+		if (date.isEqual(todayDate) && hour.isBefore(todayTime))
+			throw new UpdateAppointmentDateException(UpdateAppointmentDateExceptionEnum.APPOINTMENT_DATE_BEFORE_NOW, "El horario del turno es anterior al horario actual.");
 	}
 
 	@Override

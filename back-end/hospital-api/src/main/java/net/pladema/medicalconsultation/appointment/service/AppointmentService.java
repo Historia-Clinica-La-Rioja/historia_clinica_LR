@@ -67,7 +67,7 @@ public interface AppointmentService {
 
 	AppointmentTicketBo getAppointmentTicketData(Integer appointmentId);
 
-	AppointmentShortSummaryBo getAppointmentFromDeterminatedDate(Integer patientId, LocalDate date);
+	AppointmentShortSummaryBo getAppointmentFromDeterminatedDate(Integer patientId, Integer institutionId, LocalDate date, LocalTime hour);
 
 	AppointmentEquipmentShortSummaryBo getAppointmentEquipmentFromDeterminatedDate(Integer patientId, LocalDate date);
 
