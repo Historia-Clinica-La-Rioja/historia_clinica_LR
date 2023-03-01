@@ -296,7 +296,7 @@ class CreateMedicationRequestServiceImplTest extends UnitRepository {
                         createDosageBo(7d, 12, EUnitsOfTimeBo.HOUR))));
 		when(healthConditionService.getHealthCondition(any())).thenReturn(mockActiveHealthCondition());
 		when(healthConditionService.getLastHealthCondition(any(), any())).thenReturn(mockHealthConditionMap());
-		Long medicationRequestDocumentId = createMedicationRequestService.execute(medicationRequest);
+		Long[] medicationRequestDocumentId = createMedicationRequestService.execute(medicationRequest);
 
 		Assertions.assertEquals(1, medicationRequestRepository.count());
 		Assertions.assertNotNull(medicationRequestDocumentId);

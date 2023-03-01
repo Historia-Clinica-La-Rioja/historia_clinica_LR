@@ -57,11 +57,14 @@ export class PrescripcionesService {
 		}
 	}
 
-	downloadPrescriptionPdf(patientId: number, prescriptionPdfInfo: number[], prescriptionType: PrescriptionTypes): void {
+	downloadPrescriptionPdf(patientId: number, prescriptionPdfInfo: number[], prescriptionType: PrescriptionTypes, fileName?: string): void {
 		switch (prescriptionType) {
 			case PrescriptionTypes.MEDICATION:
 				const documentId = prescriptionPdfInfo[0];
-				this.documentService.downloadUnnamedFile(documentId);
+				if (fileName)
+					this.documentService.downloadFile({ id: documentId, filename: fileName });
+				else
+					this.documentService.downloadUnnamedFile(documentId);
 				break;
 			case PrescriptionTypes.STUDY:
 				prescriptionPdfInfo.forEach(orderId => {

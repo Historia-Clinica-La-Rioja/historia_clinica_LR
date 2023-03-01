@@ -176,6 +176,7 @@ export class CardMedicacionesComponent implements OnInit {
 								patientId: this.patientId,
 								prescriptionRequest: newPrescription.prescriptionRequestResponse,
 								patientEmail,
+								identificationNumber: newPrescription.identificationNumber
 							},
 							width: '35%'
 						});

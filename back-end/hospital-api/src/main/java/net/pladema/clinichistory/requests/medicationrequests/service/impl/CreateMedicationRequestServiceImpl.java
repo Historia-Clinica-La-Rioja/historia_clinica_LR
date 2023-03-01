@@ -22,6 +22,7 @@ import org.springframework.util.Assert;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -51,8 +52,10 @@ public class CreateMedicationRequestServiceImpl implements CreateMedicationReque
     }
 
     @Override
-    public Long execute(MedicationRequestBo medicationRequest) {
+    public Long[] execute(MedicationRequestBo medicationRequest) {
         LOG.debug("Input parameters -> medicationRequest {} ", medicationRequest);
+		Long[] result = new Long[2];
+
         assertRequiredFields(medicationRequest);
         assertNoDuplicatedMedications(medicationRequest);
 
@@ -83,7 +86,10 @@ public class CreateMedicationRequestServiceImpl implements CreateMedicationReque
 			});
 			assignedDocumentIds.add(documentFactory.run(medicationRequest, true));
 		});
-        return assignedDocumentIds.get(0);
+
+		result[0] = assignedDocumentIds.get(0);
+		result[1] = Collections.min(newMRIds.keySet()).longValue();
+        return result;
     }
 
     private void assertRequiredFields(MedicationRequestBo medicationRequest) {

@@ -4,5 +4,5 @@ import net.pladema.clinichistory.requests.medicationrequests.service.domain.Medi
 
 public interface CreateMedicationRequestService {
 
-    Long execute(MedicationRequestBo medicationRequest);
+    Long[] execute(MedicationRequestBo medicationRequest);
 }

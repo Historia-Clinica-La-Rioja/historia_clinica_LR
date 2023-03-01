@@ -13,6 +13,10 @@ import java.util.Base64;
 import java.util.Map;
 import java.util.Optional;
 
+import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.EDocumentType;
+
+import ar.lamansys.sgh.shared.infrastructure.input.service.BasicPatientDto;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
@@ -57,7 +61,11 @@ public class GenerateFilePortImpl implements GenerateFilePort {
 
         String path = fileService.buildCompletePath(event.getRelativeDirectory());
         String realFileName = event.getUuid();
-        String fictitiousFileName = event.buildDownloadName();
+		String fictitiousFileName;
+		if (event.getDocumentType().equals(EDocumentType.DIGITAL_RECIPE.getValue()))
+			fictitiousFileName = generateDigitalRecipeFileName(contextMap);
+		else
+        	fictitiousFileName = event.buildDownloadName();
         try {
             ByteArrayOutputStream output =  pdfService.writer(event.getTemplateName(), contextMap);
 			var file = fileService.saveStreamInPath(event.getRelativeDirectory(), realFileName, "DOCUMENTO_DE_ENCUENTRO",false, output);
@@ -99,6 +107,12 @@ public class GenerateFilePortImpl implements GenerateFilePort {
 		if (vaccinesData != null)
 			vaccinesData.stream().filter(immunizationInfoDto -> immunizationInfoDto.getAdministrationDate() != null)
 				.forEach(immunizationInfoDto -> immunizationInfoDto.setAdministrationDate(LocalDate.parse(immunizationInfoDto.getAdministrationDate()).format(dateTimeFormatter)));
+	}
+
+	private String generateDigitalRecipeFileName(Map<String,Object> context) {
+		String recipeNumber = (String) context.get("recipeNumber");
+		String identificationNumber = ((BasicPatientDto) context.get("patient")).getIdentificationNumber();
+		return identificationNumber + "_" + recipeNumber + ".pdf";
 	}
 
 }

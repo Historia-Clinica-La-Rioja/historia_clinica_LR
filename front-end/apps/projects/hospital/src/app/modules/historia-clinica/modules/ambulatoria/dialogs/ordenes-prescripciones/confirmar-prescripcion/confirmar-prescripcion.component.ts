@@ -1,6 +1,7 @@
 import { Component, Inject, OnInit } from '@angular/core';
 import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { AppFeature } from '@api-rest/api-model';
+import { EnvironmentVariableService } from '@api-rest/services/environment-variable.service';
 import { FeatureFlagService } from '@core/services/feature-flag.service';
 import { SnackBarService } from '@presentation/services/snack-bar.service';
 import { PrescripcionesService, PrescriptionTypes } from '../../../services/prescripciones.service';
@@ -21,6 +22,7 @@ export class ConfirmarPrescripcionComponent implements OnInit {
 		private readonly dialog: MatDialog,
 		private prescripcionesService: PrescripcionesService,
 		private readonly featureFlagService: FeatureFlagService,
+		private readonly environmentVariableService: EnvironmentVariableService,
 		public dialogRef: MatDialogRef<ConfirmarPrescripcionComponent>,
 		@Inject(MAT_DIALOG_DATA) public data: ConfirmPrescriptionData) {
 			this.featureFlagService.isActive(AppFeature.HABILITAR_RECETA_DIGITAL)
@@ -33,8 +35,15 @@ export class ConfirmarPrescripcionComponent implements OnInit {
 	}
 
 	downloadPrescription() {
-		const { patientId, prescriptionType } = this.data;
-		this.prescripcionesService.downloadPrescriptionPdf(patientId, this.prescriptionPdfInfo, prescriptionType);
+		const { patientId, prescriptionType, identificationNumber, prescriptionRequest } = this.data;
+		if (this.isHabilitarRecetaDigital) {
+			this.environmentVariableService.getDigitalRecipeDomainNumber().subscribe(result => {
+				const fileName = `${identificationNumber}_${result}-${prescriptionRequest[1]}`;
+				this.prescripcionesService.downloadPrescriptionPdf(patientId, this.prescriptionPdfInfo, prescriptionType, fileName);
+			});
+		}
+		else
+			this.prescripcionesService.downloadPrescriptionPdf(patientId, this.prescriptionPdfInfo, prescriptionType);
 		this.closeModal();
 	}
 
@@ -64,4 +73,5 @@ export class ConfirmPrescriptionData {
 	patientId: number;
 	prescriptionRequest: number | number[];
 	patientEmail?: string;
+	identificationNumber: string;
 }

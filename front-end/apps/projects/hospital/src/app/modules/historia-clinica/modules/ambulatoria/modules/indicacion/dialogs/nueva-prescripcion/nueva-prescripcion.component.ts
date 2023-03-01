@@ -71,13 +71,13 @@ export class NuevaPrescripcionComponent implements OnInit {
 	ngOnInit(): void {
 		this.setProfessionalSpecialties();
 		this.formConfiguration();
-		
+
 		this.prescriptionItems = this.data.prescriptionItemList ? this.data.prescriptionItemList : [];
 		this.setMedicalCoverages();
 		this.patientService.getPatientBasicData(Number(this.data.patientId)).subscribe((basicData: BasicPatientDto) => {
 			this.patientData = basicData;
 		});
-		
+
 		if (this.isHabilitarRecetaDigitalEnabled) {
 			this.openPrescriptionItemDialog();
 			this.setCountries();
@@ -92,7 +92,7 @@ export class NuevaPrescripcionComponent implements OnInit {
 			this.cities$ = null;
 		}
 	}
-	
+
 	private setProvinces() {
 		this.provinces$ = this.addressMasterDataService.getByCountry(this.argentinaId);
 	}
@@ -301,7 +301,7 @@ export class NuevaPrescripcionComponent implements OnInit {
 		if (prescriptionDto) {
 			this.prescripcionesService.createPrescription(this.data.prescriptionType, prescriptionDto, this.data.patientId)
 			.subscribe(prescriptionRequestResponse => {
-					this.closeModal({prescriptionDto, prescriptionRequestResponse});
+					this.closeModal({prescriptionDto, prescriptionRequestResponse, identificationNumber: this.person?.identificationNumber});
 				},
 					(err: ApiErrorDto) => {
 						this.snackBarService.showError(err.errors[0]);
@@ -429,4 +429,5 @@ export class NewPrescriptionData {
 export class NewPrescription {
 	prescriptionDto: PrescriptionDto;
 	prescriptionRequestResponse: number | number[];
+	identificationNumber: string;
 }

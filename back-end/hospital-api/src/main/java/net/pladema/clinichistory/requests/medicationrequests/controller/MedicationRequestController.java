@@ -157,7 +157,7 @@ public class MedicationRequestController {
     @ResponseStatus(code = HttpStatus.CREATED)
     @PreAuthorize("hasPermission(#institutionId, 'ESPECIALISTA_MEDICO, ESPECIALISTA_EN_ODONTOLOGIA, PRESCRIPTOR')")
     public @ResponseBody
-    Long create(@PathVariable(name = "institutionId") Integer institutionId,
+    Long[] create(@PathVariable(name = "institutionId") Integer institutionId,
                    @PathVariable(name = "patientId") Integer patientId,
                    @RequestBody @Valid PrescriptionDto medicationRequest){
         LOG.debug("create -> institutionId {}, patientId {}, medicationRequest {}", institutionId, patientId, medicationRequest);
@@ -165,7 +165,7 @@ public class MedicationRequestController {
         var patientDto = patientExternalService.getBasicDataFromPatient(patientId);
         MedicationRequestBo medicationRequestBo = createMedicationRequestMapper.parseTo(doctorId, patientDto, medicationRequest);
         medicationRequestBo.setInstitutionId(institutionId);
-        Long result = createMedicationRequestService.execute(medicationRequestBo);
+        Long[] result = createMedicationRequestService.execute(medicationRequestBo);
         LOG.debug("create result -> {}", result);
         return result;
     }
