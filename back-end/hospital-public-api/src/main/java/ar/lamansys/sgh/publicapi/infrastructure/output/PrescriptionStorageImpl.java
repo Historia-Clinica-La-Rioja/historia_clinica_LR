@@ -425,8 +425,8 @@ public class PrescriptionStorageImpl implements PrescriptionStorage {
 								(String)queryResult[35]
 						),
 						new CommercialMedicationBo(),
-						queryResult[36] != null ? (Integer)queryResult[36] : 0,
-						queryResult[37] != null ? (Integer)queryResult[37] : 0,
+						queryResult[36] != null ? (Double)queryResult[36] : 0,
+						queryResult[37] != null ? (Double) queryResult[37] : 0,
 						queryResult[38] != null ? (Double)queryResult[38] : 1,
 						(String)queryResult[39],
 						(Integer)queryResult[40]

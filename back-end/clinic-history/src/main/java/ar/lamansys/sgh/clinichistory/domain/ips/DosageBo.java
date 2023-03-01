@@ -34,11 +34,11 @@ public class DosageBo {
 
 	private QuantityBo quantity;
 
-	private Integer dosesByUnit;
+	private Double dosesByUnit;
 
-	private Integer dosesByDay;
+	private Double dosesByDay;
 
-	public DosageBo(Double duration, Integer dosesByUnit, Integer dosesByDay) {
+	public DosageBo(Double duration, Double dosesByUnit, Double dosesByDay) {
 		this.duration = duration;
 		this.dosesByUnit = dosesByUnit;
 		this.dosesByDay = dosesByDay;

@@ -60,10 +60,10 @@ public class Dosage {
 	private String event;
 
 	@Column(name = "doses_by_day")
-	private Integer dosesByDay;
+	private Double dosesByDay;
 
 	@Column(name = "doses_by_unit")
-	private Integer dosesByUnit;
+	private Double dosesByUnit;
 
 
 	public Dosage(Double duration, String durationUnit,

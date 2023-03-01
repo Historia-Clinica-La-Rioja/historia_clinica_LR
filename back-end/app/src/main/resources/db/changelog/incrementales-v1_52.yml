@@ -47,3 +47,16 @@ databaseChangeLog:
               columnName:  snomed_id
               newDataType:  varchar(255)
               tableName:  medication_statement_commercial
+
+    - changeSet:
+        id: update-type-units-dosage
+        author: lmanterola
+        changes:
+          - modifyDataType:
+              columnName: doses_by_day
+              newDataType: float
+              tableName: dosage
+          - modifyDataType:
+              columnName: doses_by_unit
+              newDataType: float
+              tableName: dosage

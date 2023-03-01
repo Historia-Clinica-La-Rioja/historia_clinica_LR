@@ -199,7 +199,7 @@
                     </div>
                     <div class="element-box centered-content" th:classappend="white-color">
                         <strong class="text">DURACIÓN DE TRATAMIENTO EN DÍAS</strong><br/>
-                        <span class="text" th:text="${#numbers.formatDecimal(medication.dosage.duration, 0, 0)}"></span><br/>
+                        <span class="text" th:text="${medication.dosage.duration}"></span><br/>
                     </div>
                     <div class="element-box centered-content" th:classappend="white-color">
                         <strong class="text">DIAGNÓSTICO</strong><br/>
@@ -331,7 +331,7 @@
                         </div>
                         <div class="element-box centered-content" th:classappend="white-color">
                             <strong class="text">DURACIÓN DE TRATAMIENTO EN DÍAS</strong><br/>
-                            <span class="text" th:text="${#numbers.formatDecimal(medication.dosage.duration, 0, 0)}"></span><br/>
+                            <span class="text" th:text="${medication.dosage.duration}"></span><br/>
                         </div>
                         <div class="element-box centered-content" th:classappend="white-color">
                             <strong class="text">DIAGNÓSTICO</strong><br/>

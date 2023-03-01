@@ -17,8 +17,8 @@ public class PrescriptionLineBo {
 	private PrescriptionProblemBo prescriptionProblemBo;
 	private GenericMedicationBo genericMedicationBo;
 	private CommercialMedicationBo commercialMedicationBo;
-	private Integer unitDosis;
-	private Integer dayDosis;
+	private Double unitDosis;
+	private Double dayDosis;
 	private Double duration;
 	private String presentation;
 

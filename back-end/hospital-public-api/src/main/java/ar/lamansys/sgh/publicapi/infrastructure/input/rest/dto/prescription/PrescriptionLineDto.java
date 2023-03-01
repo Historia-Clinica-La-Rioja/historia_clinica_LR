@@ -15,8 +15,8 @@ public class PrescriptionLineDto {
 	PrescriptionProblemDto prescriptionProblemDto;
 	GenericMedicationDto genericMedicationDto;
 	CommercialMedicationDto commercialMedicationDto;
-	Integer unitDosis;
-	Integer dayDosis;
+	Double unitDosis;
+	Double dayDosis;
 	Double duration;
 	String presentation;
 	Integer presentationQuantity;
