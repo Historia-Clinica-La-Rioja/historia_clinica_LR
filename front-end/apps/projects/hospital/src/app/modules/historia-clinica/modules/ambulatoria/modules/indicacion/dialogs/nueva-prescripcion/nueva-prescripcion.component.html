@@ -214,7 +214,7 @@
 </div>
 
 <mat-dialog-actions fxLayout="row" fxLayoutAlign="end start">
-    <button mat-flat-button color="primary" *ngIf="prescriptionItems.length" (click)="confirmPrescription()" fxFlexFill.xs [disabled]="! this.prescriptionForm.valid || submitted">
+    <button mat-flat-button color="primary" (click)="confirmPrescription()" fxFlexFill.xs [disabled]="! this.prescriptionForm.valid || submitted || this.prescriptionItems.length == 0">
         <span class="uppercase" *ngIf="isHabilitarRecetaDigitalEnabled">{{'buttons.ELECTRONIC_FIRM' | translate}}</span>
         <span class="uppercase" *ngIf="! isHabilitarRecetaDigitalEnabled">{{'buttons.CONFIRM' | translate}}</span>
     </button>

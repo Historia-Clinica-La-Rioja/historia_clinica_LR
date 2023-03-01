@@ -250,8 +250,10 @@ export class NuevaPrescripcionComponent implements OnInit {
 			isArchived: this.prescriptionForm.controls.archived.value,
 		};
 		this.savePrescription(newPrescription);
-		const patientDto: APatientDto = this.mapToAPatientDto();
-		this.patientService.editPatient(patientDto, this.data.patientId).subscribe();
+		if (this.isHabilitarRecetaDigitalEnabled) {
+			const patientDto: APatientDto = this.mapToAPatientDto();
+			this.patientService.editPatient(patientDto, this.data.patientId).subscribe();
+		}
 	}
 
 	private mapToAPatientDto() {
