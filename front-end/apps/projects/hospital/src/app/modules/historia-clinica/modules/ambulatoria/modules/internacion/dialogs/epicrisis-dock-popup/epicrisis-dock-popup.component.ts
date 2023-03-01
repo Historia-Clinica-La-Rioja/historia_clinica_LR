@@ -70,6 +70,7 @@ export class EpicrisisDockPopupComponent implements OnInit {
 	canConfirmedDocument = false;
 	ECL = SnomedECL.DIAGNOSIS;
 	searchConceptsLocallyFF = false;
+	otherCircustancesFF = false;
 	personalHistories: TableCheckbox<HealthHistoryConditionDto> = {
 		data: [],
 		columns: [
@@ -145,6 +146,7 @@ export class EpicrisisDockPopupComponent implements OnInit {
 		this.allergies.displayedColumns = this.allergies.columns?.map(c => c.def).concat(['select']);
 		this.immunizations.displayedColumns = this.immunizations.columns?.map(c => c.def).concat(['select']);
 		this.featureFlagService.isActive(AppFeature.HABILITAR_BUSQUEDA_LOCAL_CONCEPTOS).subscribe(isOn => this.searchConceptsLocallyFF = isOn);
+		this.featureFlagService.isActive(AppFeature.HABILITAR_OTRAS_CIRCUNSTANCIAS_EPICRISIS).subscribe(isOn => this.otherCircustancesFF = isOn);
 	}
 
 	ngOnInit(): void {
