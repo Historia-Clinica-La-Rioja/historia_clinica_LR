@@ -406,7 +406,7 @@ public class AppointmentsController {
 		return ResponseEntity.ok().body(result);
 	}
 
-    @PreAuthorize("hasPermission(#institutionId, 'ADMINISTRATIVO, ESPECIALISTA_MEDICO, PROFESIONAL_DE_SALUD, ESPECIALISTA_EN_ODONTOLOGIA, ENFERMERO')")
+    @PreAuthorize("hasPermission(#institutionId, 'ADMINISTRATIVO, ESPECIALISTA_MEDICO, PROFESIONAL_DE_SALUD, ESPECIALISTA_EN_ODONTOLOGIA, ENFERMERO, ADMINISTRATIVO_RED_DE_IMAGENES')")
     @PutMapping(value = "/{appointmentId}/update-medical-coverage")
     public ResponseEntity<Boolean> updateMedicalCoverage(
 			@PathVariable(name = "institutionId") Integer institutionId,
