@@ -319,19 +319,19 @@
                         </div>
                         <div class="centered-content">
                             <div class="element-box" th:classappend="white-color">
-                                <div style="float:left; margin-left: 60px;">
+                                <div style="float:left; margin-left: 60px;" >
                                     <strong class="text">DOSIS/UNIDAD</strong><br/>
-                                    <span class="text" th:text="${medication.dosage.dosesByUnit}"></span><br/>
+                                    <span class="text" th:text="${medication.dosage.dosesByUnit % 1 == 0 ? #numbers.formatDecimal(medication.dosage.dosesByUnit,0,0) : medication.dosage.dosesByUnit}"></span><br/>
                                 </div>
-                                <div style="float:right; margin-right: 60px;">
+                                <div style="float:right; margin-right: 60px;" >
                                     <strong class="text">DOSIS/DIA</strong><br/>
-                                    <span class="text" th:text="${medication.dosage.dosesByDay}"></span><br/>
+                                    <span class="text" th:text="${medication.dosage.dosesByDay % 1 == 0 ? #numbers.formatDecimal(medication.dosage.dosesByDay,0,0) : medication.dosage.dosesByDay}"></span><br/>
                                 </div>
                             </div>
                         </div>
                         <div class="element-box centered-content" th:classappend="white-color">
                             <strong class="text">DURACIÓN DE TRATAMIENTO EN DÍAS</strong><br/>
-                            <span class="text" th:text="${medication.dosage.duration}"></span><br/>
+                            <span class="text" th:text="${medication.dosage.duration % 1 == 0 ? #numbers.formatDecimal(medication.dosage.duration,0,0) : medication.dosage.duration}"></span><br/>
                         </div>
                         <div class="element-box centered-content" th:classappend="white-color">
                             <strong class="text">DIAGNÓSTICO</strong><br/>
