@@ -50,4 +50,7 @@ public class EpicrisisDto implements Serializable {
 	@Nullable
 	private String modificationReason;
 
+	@Nullable
+	private ExternalCauseDto externalCause;
+
 }

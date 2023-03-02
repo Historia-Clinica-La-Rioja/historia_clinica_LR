@@ -65,6 +65,8 @@ public class EpicrisisBo extends SelfValidating<EpicrisisBo> implements IDocumen
     @Valid
     private RiskFactorBo riskFactors;
 
+	private ExternalCauseBo externalCause;
+
     private LocalDateTime performedDate;
 
 	private Long initialDocumentId;

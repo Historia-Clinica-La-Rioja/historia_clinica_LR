@@ -4,6 +4,8 @@ import java.time.LocalDate;
 import java.time.Period;
 import java.util.Optional;
 
+import ar.lamansys.sgh.clinichistory.domain.ips.services.LoadExternalCause;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -60,6 +62,8 @@ public class DocumentFactoryImpl implements DocumentFactory {
 
 	private final PatientStorage patientStorage;
 
+	private final LoadExternalCause loadExternalCause;
+
     public DocumentFactoryImpl(DocumentService documentService,
                                CreateDocumentFile createDocumentFile,
                                NoteService noteService,
@@ -72,7 +76,8 @@ public class DocumentFactoryImpl implements DocumentFactory {
                                LoadDiagnosticReports loadDiagnosticReports,
                                LoadDentalActions loadDentalActions,
 							   FeatureFlagsService featureFlagsService,
-							   PatientStorage patientStorage) {
+							   PatientStorage patientStorage,
+							   LoadExternalCause loadExternalCause) {
         this.documentService = documentService;
         this.createDocumentFile = createDocumentFile;
         this.noteService = noteService;
@@ -86,6 +91,7 @@ public class DocumentFactoryImpl implements DocumentFactory {
         this.loadDentalActions = loadDentalActions;
 		this.featureFlagsService = featureFlagsService;
 		this.patientStorage = patientStorage;
+		this.loadExternalCause = loadExternalCause;
     }
 
     @Override
@@ -130,6 +136,8 @@ public class DocumentFactoryImpl implements DocumentFactory {
         clinicalObservationService.loadAnthropometricData(patientId, doc.getId(), Optional.ofNullable(documentBo.getAnthropometricData()));
 
         loadDiagnosticReports.run(doc.getId(), patientId, documentBo.getDiagnosticReports());
+
+		loadExternalCause.run(doc.getId(), Optional.ofNullable(documentBo.getExternalCause()));
 
         if (createFile)
             generateDocument(documentBo);

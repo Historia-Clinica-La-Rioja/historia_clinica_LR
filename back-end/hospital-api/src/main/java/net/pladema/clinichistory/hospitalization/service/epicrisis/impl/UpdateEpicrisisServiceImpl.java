@@ -52,6 +52,7 @@ public class UpdateEpicrisisServiceImpl implements UpdateEpicrisisService {
 		Optional.ofNullable(newEpicrisis.getAllergies()).ifPresent(list->list.forEach(d->d.setId(null)));
 		Optional.ofNullable(newEpicrisis.getImmunizations()).ifPresent(list->list.forEach(d->d.setId(null)));
 		Optional.ofNullable(newEpicrisis.getOtherProblems()).ifPresent(list->list.forEach(d -> d.setId(null)));
+		if (newEpicrisis.getExternalCause() != null) newEpicrisis.getExternalCause().setId(null);
 
 		// create new document
 		newEpicrisis.setPatientInternmentAge(internmentEpisodeService.getEntryDate(newEpicrisis.getEncounterId()).toLocalDate());

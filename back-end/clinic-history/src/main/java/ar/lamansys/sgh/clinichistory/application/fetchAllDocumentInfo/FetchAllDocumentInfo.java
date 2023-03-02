@@ -64,6 +64,7 @@ public class FetchAllDocumentInfo {
 		result.setNotes(fetchNotes(document));
 		result.setRiskFactors(documentService.getRiskFactorStateFromDocument(document.getId()));
 		result.setDentalActions(documentService.getDentalActionsFromDocument(document.getId()));
+		result.setExternalCause(documentService.getExternalCauseFromDocument(document.getId()));
 		return result;
 	}
 

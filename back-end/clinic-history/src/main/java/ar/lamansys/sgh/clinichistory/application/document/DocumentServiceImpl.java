@@ -4,6 +4,13 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+import ar.lamansys.sgh.clinichistory.domain.ips.ExternalCauseBo;
+import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.DocumentExternalCauseRepository;
+
+import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.entity.DocumentExternalCause;
+
+import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.hospitalizationState.entity.ExternalCauseVo;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -85,6 +92,8 @@ public class  DocumentServiceImpl implements DocumentService {
 
     private final DocumentOdontologyDiagnosticRepository documentOdontologyDiagnosticRepository;
 
+	private final DocumentExternalCauseRepository documentExternalCauseRepository;
+
 	public DocumentServiceImpl(DocumentRepository documentRepository,
                                DocumentHealthConditionRepository documentHealthConditionRepository,
                                DocumentImmunizationRepository documentImmunizationRepository,
@@ -95,7 +104,8 @@ public class  DocumentServiceImpl implements DocumentService {
                                DocumentMedicamentionStatementRepository documentMedicamentionStatementRepository,
                                DocumentDiagnosticReportRepository documentDiagnosticReportRepository,
                                DocumentOdontologyProcedureRepository documentOdontologyProcedureRepository,
-							   DocumentOdontologyDiagnosticRepository documentOdontologyDiagnosticRepository) {
+							   DocumentOdontologyDiagnosticRepository documentOdontologyDiagnosticRepository,
+							   DocumentExternalCauseRepository documentExternalCauseRepository) {
         this.documentRepository = documentRepository;
         this.documentHealthConditionRepository = documentHealthConditionRepository;
         this.documentImmunizationRepository = documentImmunizationRepository;
@@ -107,6 +117,7 @@ public class  DocumentServiceImpl implements DocumentService {
         this.documentDiagnosticReportRepository = documentDiagnosticReportRepository;
         this.documentOdontologyProcedureRepository = documentOdontologyProcedureRepository;
         this.documentOdontologyDiagnosticRepository = documentOdontologyDiagnosticRepository;
+		this.documentExternalCauseRepository = documentExternalCauseRepository;
     }
 
     @Override
@@ -396,6 +407,26 @@ public class  DocumentServiceImpl implements DocumentService {
 		LOG.debug(OUTPUT, resultOdontologyProcedure);
 		return resultOdontologyProcedure;
 
+	}
+
+	@Override
+	public DocumentExternalCause createDocumentExternalCause(Long documentId, Integer externalCauseId) {
+		LOG.debug("Input parameters -> documentId {}, externalCauseId {}", documentId, externalCauseId);
+		DocumentExternalCause result = new DocumentExternalCause(documentId, externalCauseId);
+		result = documentExternalCauseRepository.save(result);
+		LOG.debug(OUTPUT, result);
+		return result;
+	}
+
+	@Override
+	public ExternalCauseBo getExternalCauseFromDocument(Long documentId){
+		LOG.debug(LOGGING_DOCUMENT_ID, documentId);
+		ExternalCauseVo externalCauseVo = documentExternalCauseRepository.getExternalCauseFromDocument(documentId);
+		if (externalCauseVo == null)
+			return null;
+		ExternalCauseBo result = new ExternalCauseBo(externalCauseVo);
+		LOG.debug(OUTPUT, result);
+		return result;
 	}
 
 	private DentalActionBo mapToOdontologyProcedure(Object[] row) {

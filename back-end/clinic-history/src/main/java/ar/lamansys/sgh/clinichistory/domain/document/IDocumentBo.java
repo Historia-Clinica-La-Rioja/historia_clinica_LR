@@ -11,6 +11,7 @@ import ar.lamansys.sgh.clinichistory.domain.ips.DentalActionBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.DiagnosisBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.DiagnosticReportBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.DocumentObservationsBo;
+import ar.lamansys.sgh.clinichistory.domain.ips.ExternalCauseBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.HealthConditionBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.HealthHistoryConditionBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.ImmunizationBo;
@@ -126,5 +127,7 @@ public interface IDocumentBo {
 	default Long getInitialDocumentId() { return null; }
 
 	default List<HealthConditionBo> getOtherProblems() { return Collections.emptyList(); }
+    
+	default ExternalCauseBo getExternalCause() { return null; }
 
 }

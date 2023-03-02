@@ -1112,6 +1112,7 @@ export interface EpicrisisDto extends Serializable {
     allergies: AllergyConditionDto[];
     confirmed: boolean;
     diagnosis: DiagnosisDto[];
+    externalCause?: ExternalCauseDto;
     familyHistories: HealthHistoryConditionDto[];
     immunizations: ImmunizationDto[];
     mainDiagnosis: DiagnosisDto;

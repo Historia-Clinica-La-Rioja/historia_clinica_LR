@@ -358,6 +358,31 @@
             </dl>
         </div>
     </div>
+                
+    <!-- Causa externa de traumatismo, envenenamiento y otros efectos adversos -->
+
+    <div th:fragment="externalCause">
+        <h3 Causa externa de traumatismo, envenenamiento y otros efectos adversos></h3>
+            <div th:if="${externalCause == null}">
+                <dl>
+                    <dd><p>Sin cambios registrados</p></dd>
+                </dl>
+            </div>
+            <div th:if="${externalCause  != null}">
+                - Producido por:
+                <strong><label  th:if="${externalCause.externalCauseType  != null}" th:text="${externalCause.externalCauseType.value}"></label></strong>
+                <strong><span  th:if="${externalCause.externalCauseType  == null}">Sin cambios registrados</span></strong><br/>
+
+                - Lugar donde ocurrió:
+                <strong><label  th:if="${externalCause.eventLocation  != null}" th:text="${externalCause.eventLocation.value}"></label></strong>
+                <strong><span  th:if="${externalCause.eventLocation  == null}">Sin cambios registrados</span></strong><br/>
+
+                - Como se produjo:
+                <strong><label  th:if="${externalCause.snomed  != null}" th:text="${externalCause.snomed.pt}"></label></strong>
+                <strong><span  th:if="${externalCause.snomed  == null}">Sin cambios registrados</span></strong><br/>
+            </div>
+        </div>
+    </div>
 
     <!-- Factores de riesgo -->
 

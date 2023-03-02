@@ -87,6 +87,7 @@ public class AuditableContextBuilder {
 		contextMap.put("dentalDiagnostics", document.getDentalActions().stream().filter(DentalActionBo::isDiagnostic).collect(Collectors.toList()));
 		contextMap.put("dentalProcedures", document.getDentalActions().stream().filter(DentalActionBo::isProcedure).collect(Collectors.toList()));
 		contextMap.put("otherProblems", document.getOtherProblems());
+		contextMap.put("externalCause", document.getExternalCause());
 
 		var immunizations =  mapImmunizations(document.getImmunizations());
 		contextMap.put("billableImmunizations", immunizations.stream().filter(ImmunizationInfoDto::isBillable).collect(Collectors.toList()));

@@ -3,6 +3,7 @@ package ar.lamansys.sgh.clinichistory.infrastructure.application.document;
 import ar.lamansys.sgh.clinichistory.application.document.DocumentServiceImpl;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.DocumentAllergyIntoleranceRepository;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.DocumentDiagnosticReportRepository;
+import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.DocumentExternalCauseRepository;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.DocumentHealthConditionRepository;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.DocumentImmunizationRepository;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.DocumentLabRepository;
@@ -60,12 +61,14 @@ class DocumentServiceImplTest {
 	@MockBean
 	private DocumentOdontologyDiagnosticRepository documentOdontologyDiagnosticRepository;
 
+	@MockBean
+	private DocumentExternalCauseRepository documentExternalCauseRepository;
 	@BeforeEach
 	void setUp() {
 		documentServiceImpl = new DocumentServiceImpl(documentRepository, documentHealthConditionRepository,
                 documentImmunizationRepository, documentProcedureRepository, documentRiskFactorRepository, documentLabRepository,
 				documentAllergyIntoleranceRepository, documentMedicamentionStatementRepository, documentDiagnosticReportRepository,
-				documentOdontologyProcedureRepository, documentOdontologyDiagnosticRepository);
+				documentOdontologyProcedureRepository, documentOdontologyDiagnosticRepository, documentExternalCauseRepository);
 	}
 
 	@Test

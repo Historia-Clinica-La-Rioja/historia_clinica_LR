@@ -49,6 +49,7 @@ public class EpicrisisServiceImpl implements EpicrisisService {
 			result.setMedications(documentService.getMedicationStateFromDocument(document.getId()));
             result.setNotes(loadNotes(document));
 			result.setOtherProblems(generalHealthConditionBo.getOtherProblems());
+			result.setExternalCause(documentService.getExternalCauseFromDocument(document.getId()));
         });
         LOG.debug(OUTPUT, result);
         return result;
