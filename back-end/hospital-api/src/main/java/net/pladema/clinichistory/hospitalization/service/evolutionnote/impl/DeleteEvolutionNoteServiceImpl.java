@@ -46,14 +46,13 @@ public class DeleteEvolutionNoteServiceImpl implements DeleteEvolutionNoteServic
 	private void assertContextValid(Integer intermentEpisodeId, Long evolutionNoteId, String reason) {
 		Integer userId = UserInfo.getCurrentAuditor();
 
-		Boolean isNursingProfessional = userRoleStorage.getRolesByUser(userId).stream()
-				.filter(userRoleBo -> (
-						userRoleBo.getRoleId() == ERole.ENFERMERO.getId() &&
-								userRoleBo.getRoleId() != ERole.ESPECIALISTA_EN_ODONTOLOGIA.getId() &&
-								userRoleBo.getRoleId() != ERole.ESPECIALISTA_MEDICO.getId())
-				).collect(Collectors.toList()).stream().findAny().isPresent();
-		EDocumentType documentType = isNursingProfessional ? EDocumentType.NURSING_EVOLUTION_NOTE : EDocumentType.EVALUATION_NOTE;
-
+		boolean isNurse = userRoleStorage.getRolesByUser(userId).stream()
+				.anyMatch(userRoleBo -> (userRoleBo.getRoleId() == ERole.ENFERMERO.getId()));
+		boolean isDoctor = userRoleStorage.getRolesByUser(userId).stream()
+				.anyMatch(userRoleBo -> (userRoleBo.getRoleId() == ERole.ESPECIALISTA_MEDICO.getId() ||
+						userRoleBo.getRoleId() == ERole.ESPECIALISTA_EN_ODONTOLOGIA.getId()));
+		EDocumentType documentType = isNurse && !isDoctor
+				? EDocumentType.NURSING_EVOLUTION_NOTE : isDoctor && isNurse ? EDocumentType.map(sharedDocumentPort.getDocument(evolutionNoteId).getTypeId()) :  EDocumentType.EVALUATION_NOTE;
 		internmentDocumentModificationValidator.execute(intermentEpisodeId, evolutionNoteId, reason, documentType);
 
 		if (internmentEpisodeService.haveEpicrisis(intermentEpisodeId))
