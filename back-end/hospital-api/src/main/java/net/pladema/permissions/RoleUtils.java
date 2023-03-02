@@ -16,8 +16,7 @@ public class RoleUtils {
 	private static final List<String> CLAIMS_RANK = Stream.of(
 			ERole.ROOT, // mayor rango, index 0
 			ERole.ADMINISTRADOR,
-			ERole.ADMINISTRADOR_INSTITUCIONAL_BACKOFFICE,
-			ERole.ADMINISTRADOR_INSTITUCIONAL_PRESCRIPTOR
+			ERole.ADMINISTRADOR_INSTITUCIONAL_BACKOFFICE
 	).map(ERole::getValue).collect(Collectors.toList());
 
 	public static boolean loggedUserHasHigherRank(List<String> loggedUserClaims, List<String> entityUserClaims) {
