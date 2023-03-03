@@ -53,16 +53,16 @@
 
             <div fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="10px">
 
-                <button fxFlex="40" *ngIf="avaibleActions.length >= 1" id="avaibleActions[0].id" mat-stroked-button
+                <button *ngIf="avaibleActions.length >= 1" id="avaibleActions[0].id" mat-stroked-button
                     color="primary" (click)="avaibleActions[0].callback()">
                     {{ avaibleActions[0].label | translate | uppercase }}
                 </button>
-                <button fxFlex="40" *ngIf="avaibleActions.length >= 2" id="avaibleActions[1].id" mat-stroked-button
+                <button *ngIf="avaibleActions.length >= 2" id="avaibleActions[1].id" mat-stroked-button
                     color="primary" (click)="avaibleActions[1].callback()">
                     {{ avaibleActions[1].label | translate | uppercase }}
                 </button>
 
-                <div fxFlex="20" *ngIf="avaibleActions.length > 2">
+                <div *ngIf="avaibleActions.length > 2">
                     <button id="more-actions" mat-icon-button (click)="$event.stopPropagation()"
                         [matMenuTriggerFor]="actions">
                         <mat-icon>more_vert</mat-icon>
