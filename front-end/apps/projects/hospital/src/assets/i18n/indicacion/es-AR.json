@@ -64,7 +64,7 @@
 				},
 				"other-indication":{
 					"TITLE": "agregar otra indicación",
-					"NOTE": "Notas",
+					"OBSERVATIONS": "Observaciones",
 					"DETAIL": "Detalle",
 					"DETAIL-EVENT": "Detalle evento",
 					"SELECTION-TYPE-INDICATION": "Seleccionar tipo de indicación",
