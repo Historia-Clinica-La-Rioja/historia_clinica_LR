@@ -36,6 +36,10 @@ export class HomeComponent implements OnInit {
 	}
 
 	ngOnInit() {
+		if (window.history.state.tab) {
+			this.tabActiveIndex = window.history.state.tab;
+		}
+
 		this.permissionsService.hasContextAssignments$([ERole.ADMINISTRATIVO_RED_DE_IMAGENES, ERole.ADMINISTRADOR_AGENDA]).subscribe(hasRole => {
 			this.featureFlagService.isActive(AppFeature.HABILITAR_DESARROLLO_RED_IMAGENES).subscribe(ffIsOn => {
 				this.ffIsOn = ffIsOn;
@@ -57,5 +61,10 @@ export class HomeComponent implements OnInit {
 		this.tabActiveIndex = tabChangeEvent.index;
 	}
 
+
+}
+
+export enum Tabs {
+	DIAGNOSTICO_POR_IMAGEN = 3
 }
 

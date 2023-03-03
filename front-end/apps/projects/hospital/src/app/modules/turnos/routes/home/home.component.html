@@ -24,7 +24,7 @@
 		</mat-menu>
 	</section>
 
-	<mat-tab-group (selectedTabChange)="tabChanged($event)">
+	<mat-tab-group (selectedTabChange)="tabChanged($event)" [selectedIndex]="tabActiveIndex">
 		<mat-tab label="{{ 'turnos.home.SEARCH_BY_PROFESSIONAL' | translate | uppercase }}"
 			*appHasRole="['ADMINISTRATIVO', 'ESPECIALISTA_MEDICO', 'PROFESIONAL_DE_SALUD', 'ESPECIALISTA_EN_ODONTOLOGIA', 'ADMINISTRADOR_AGENDA', 'ENFERMERO']">
 			<app-seach-appointments-by-professional [isVisible]="tabActiveIndex === 0"></app-seach-appointments-by-professional>

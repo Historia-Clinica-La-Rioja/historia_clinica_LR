@@ -17,6 +17,7 @@ import { AgendaHorarioService } from '@turnos/services/agenda-horario.service';
 import { EquipmentService } from '@api-rest/services/equipment.service';
 import { EquipmentDiaryOpeningHoursService } from '@api-rest/services/equipment-diary-opening-hours.service';
 import { CompleteEquipmentDiaryDto, EquipmentDiaryADto, EquipmentDiaryDto, EquipmentDto, SectorDto } from '@api-rest/api-model';
+import { Tabs } from '@turnos/routes/home/home.component';
 
 const ROUTE_APPOINTMENT = 'turnos';
 const START = 0;
@@ -204,7 +205,7 @@ export class EquipmentDiarySetupComponent implements OnInit {
 		if (agendaId) {
 			this.snackBarService.showSuccess('turnos.agenda-setup.messages.SUCCESS');
 			const url = `${this.routePrefix}${ROUTE_APPOINTMENT}`;
-			this.router.navigate([url]);
+			this.router.navigate([url],{ state: { tab: Tabs.DIAGNOSTICO_POR_IMAGEN  }});
 		}
 	}
 
