@@ -1,25 +1,25 @@
 <div *ngIf="triage" fxLayout="column" fxLayoutGap="15px">
 
-	<section id="basic-triage" fxLayout="column" fxLayoutGap="15px">
+	<section id="basic-triage" fxLayout="column">
 		<div id="header" fxLayout="row" fxLayoutAlign="space-between center">
 			<h3 class="title-weight" style="margin: 0">{{ 'guardia.episode.triage.ultimo.TITLE' | translate }}</h3>
 			<span>{{ triage.creationDate | date: 'dd/MM/yyyy - HH:mm' }} hs</span>
 		</div>
 
-		<div id="basic-data" fxLayout="row" fxLayoutGap="50px">
-			<div class="info" fxLayout="column" fxLayoutGap="5px" fxLayoutAlign="space-between">
+		<div id="basic-data" fxLayout="row wrap" fxLayoutAlign="space-between" fxLayoutGap="15px">
+			<div class="info" fxLayout="column" fxLayoutGap="3px">
 				<span>{{ 'guardia.episode.triage.ultimo.NIVEL' | translate }}</span>
 				<app-triage-chip [category]="triage.category"></app-triage-chip>
 			</div>
 
-			<div class="info" fxLayout="column" fxLayoutGap="6px" fxLayoutAlign="space-between">
+			<div class="info" fxLayout="column" fxLayoutGap="3px">
 				<span>{{ 'guardia.episode.triage.ultimo.PROFESIONAL' | translate }}</span>
 				<span *ngIf="triage.createdBy else noInfo" class="padding-to-align-chip">
 					{{getFullName(triage)}}
 				</span>
 			</div>
 
-			<div class="info" fxLayout="column" fxLayoutGap="6px" fxLayoutAlign="space-between">
+			<div class="info" fxLayout="column" fxLayoutGap="3px">
 				<span>{{ 'guardia.episode.triage.ultimo.UBICACION' | translate }}</span>
 				<span *ngIf="triage.doctorsOfficeDescription else noInfo" class="padding-to-align-chip">
 					{{ triage.doctorsOfficeDescription }}
@@ -28,7 +28,9 @@
 		</div>
 	</section>
 
-	<section *ngIf="emergencyCareType" id="body" fxLayout="column" fxLayoutGap="16px">
+	<section
+		*ngIf="emergencyCareType && ( emergencyCareType === emergencyCareTypes.PEDIATRIA || (showRiskFactors && riskFactors?.length))"
+		id="body" fxLayout="column" fxLayoutGap="16px">
 		<div id="pediatric" *ngIf="emergencyCareType === emergencyCareTypes.PEDIATRIA">
 			<h3 class="title-weight">{{ 'guardia.episode.triage.ultimo.APARIENCIA_RESPIRACION_CIRCULACION' |
 				translate }}</h3>
