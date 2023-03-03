@@ -229,14 +229,14 @@ export class ProfileComponent implements OnInit {
 									this.roles = roles;
 									combineLatest([this.permissionService.hasContextAssignments$(ROLES_TO_ASSIGN_PERSCRIPTOR_ROLE),
 									this.permissionService.hasContextAssignments$(ROLES_THAT_CAN_ASSIGN_ANY_ROLE_BUT_PRESCRIPTOR)])
-									.subscribe(([hasRoleToAssignPrescriptorRole, hasRoleThatCanAssignAnyRoleButPrescriptor]) => {
-										if (!hasRoleToAssignPrescriptorRole)
-											this.assignableRoles = this.roles.filter(role => role.id !== 21);
-										if (hasRoleThatCanAssignAnyRoleButPrescriptor && hasRoleToAssignPrescriptorRole)
-											this.assignableRoles = this.roles;
-										if (!hasRoleThatCanAssignAnyRoleButPrescriptor && hasRoleToAssignPrescriptorRole)
-											this.assignableRoles = this.roles.filter(role => role.id === 21);
-									});
+										.subscribe(([hasRoleToAssignPrescriptorRole, hasRoleThatCanAssignAnyRoleButPrescriptor]) => {
+											if (!hasRoleToAssignPrescriptorRole)
+												this.assignableRoles = this.roles.filter(role => role.id !== 21);
+											if (hasRoleThatCanAssignAnyRoleButPrescriptor && hasRoleToAssignPrescriptorRole)
+												this.assignableRoles = this.roles;
+											if (!hasRoleThatCanAssignAnyRoleButPrescriptor && hasRoleToAssignPrescriptorRole)
+												this.assignableRoles = this.roles.filter(role => role.id === 21);
+										});
 								});
 
 								this.institution.push(this.contextService.institutionId);
@@ -283,14 +283,16 @@ export class ProfileComponent implements OnInit {
 									}
 								}
 							});
-							
 
-						this.emergencyCareEpisodeSummaryService.getEmergencyCareEpisodeInProgress(this.patientId)
-							.subscribe(emergencyCareEpisodeInProgressDto => {
-								this.emergencyCareEpisodeInProgress = emergencyCareEpisodeInProgressDto;
-								this.episodeId = this.emergencyCareEpisodeInProgress?.id;
-								this.showEmergencyCareSummary = emergencyCareEpisodeInProgressDto?.inProgress;
-							});
+
+						this.featureFlagService.isActive(AppFeature.HABILITAR_MODULO_GUARDIA).subscribe(isOn => {
+							this.emergencyCareEpisodeSummaryService.getEmergencyCareEpisodeInProgress(this.patientId)
+								.subscribe(emergencyCareEpisodeInProgressDto => {
+									this.emergencyCareEpisodeInProgress = emergencyCareEpisodeInProgressDto;
+									this.episodeId = this.emergencyCareEpisodeInProgress?.id;
+									this.showEmergencyCareSummary = isOn && emergencyCareEpisodeInProgressDto?.inProgress;
+								});
+						});
 					}
 				})
 				this.patientService.getPatientPhoto(this.patientId)
