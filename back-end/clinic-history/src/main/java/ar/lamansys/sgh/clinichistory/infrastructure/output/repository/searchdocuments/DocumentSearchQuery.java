@@ -88,6 +88,7 @@ public class DocumentSearchQuery {
 				"					where hc.id = hc2.id \n" +
 				"					and (hc2.problemId = '" + ProblemType.HISTORY +"' \n"+
 				"					or hc2.problemId = '" + ProblemType.PROBLEM +"' \n"+
+				"					or hc2.problemId = '" + ProblemType.OTHER +"' \n"+
 				"					or hc2.verificationStatusId = '" + ConditionVerificationStatus.ERROR +"' \n))");
     }
 
