@@ -62,7 +62,6 @@ export class HomeComponent implements OnInit {
 	emergencyCareTypes$: Observable<MasterDataInterface<number>[]>;
 
 	hasEmergencyCareRelatedRole: boolean;
-	hasRoleAdministrative: boolean;
 
 	private static calculateWaitingTime(dateTime: DateTimeDto): number {
 		const creationDate = dateTimeDtoToDate(dateTime);
@@ -95,7 +94,6 @@ export class HomeComponent implements OnInit {
 		this.triageCategories$ = this.filterService.getTriageCategories();
 		this.emergencyCareTypes$ = this.filterService.getEmergencyCareTypes();
 		this.permissionsService.contextAssignments$().subscribe((userRoles: ERole[]) => {
-			this.hasRoleAdministrative = anyMatch<ERole>(userRoles, [ERole.ADMINISTRATIVO]);
 			this.hasEmergencyCareRelatedRole = anyMatch<ERole>(userRoles, [ERole.ESPECIALISTA_MEDICO, ERole.ENFERMERO, ERole.PROFESIONAL_DE_SALUD]);
 		});
 	}
