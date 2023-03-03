@@ -33,12 +33,12 @@ const TRANSLATE_KEY_PREFIX = 'guardia.home.episodes.episode.actions';
 export class ResumenDeGuardiaComponent implements OnInit {
 
   @Input() episodeId: number;
-  @Input() withoutMedicalDischarge: boolean;
   @Output() triageRiskFactors = new EventEmitter<RiskFactorFull[]>();
 
   guardiaSummary: SummaryHeader = GUARDIA;
   readonly STATES = EstadosEpisodio;
   episodeState: EstadosEpisodio;
+  withoutMedicalDischarge: boolean;
 
   responseEmergencyCare: ResponseEmergencyCareDto;
   emergencyCareType: EmergencyCareTypes;
@@ -81,6 +81,7 @@ export class ResumenDeGuardiaComponent implements OnInit {
           state => {
             this.episodeState = state.id;
             this.calculateAvaibleActions();
+            this.withoutMedicalDischarge = (this.episodeState !== this.STATES.CON_ALTA_MEDICA);
           }
         );
 
@@ -179,7 +180,7 @@ export class ResumenDeGuardiaComponent implements OnInit {
             if (changed) {
               this.snackBarService.showSuccess(`${TRANSLATE_KEY_PREFIX}.finalizar_ausencia.SUCCESS`);
               const currentUrl = this.router.url;
-              this.router.navigateByUrl('/', {skipLocationChange: true}).then(() => {
+              this.router.navigateByUrl('/', { skipLocationChange: true }).then(() => {
                 this.router.navigate([currentUrl]);
               });
             }
