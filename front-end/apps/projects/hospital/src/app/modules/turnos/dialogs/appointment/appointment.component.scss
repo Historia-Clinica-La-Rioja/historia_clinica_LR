@@ -4,62 +4,6 @@
 	height: auto;
 }
 
-.appointment-details {
-	margin: 10px 0;
-
-	.appointment-title {
-		margin-bottom: 10px;
-	}
-}
-
-.assigned-appointment {
-	padding: 20px;
-	color: #545454;
-	line-height: 14px;
-}
-
-.appointment-actions {
-
-	margin-top: 10px;
-
-	button {
-		border: 1px solid #979797;
-		height: 48px;
-		width: 48px;
-	}
-
-	.mat-icon.mat-primary {
-		color: #979797;
-	}
-
-	mat-icon {
-		font-size: 25px;
-	}
-
-	.selected {
-		.mat-icon.mat-primary {
-			color: white;
-		}
-	}
-
-	.confirmed {
-		background-color: #FFA500;
-	}
-
-	.absent {
-		background-color: #7D807D;
-	}
-
-	.served {
-		background-color: #2DC64F;
-	}
-
-}
-
-.motive {
-	margin-top: 10px;
-}
-
 .hide-borders {
 	border-top-style: hidden;
 	border-left-style: hidden;
@@ -86,19 +30,6 @@
 
 	.confirm-buttons {
 		margin-top: 15px;
-	}
-}
-
-.observation-section {
-	a {
-		cursor: pointer;
-	}
-
-	p {
-		margin: auto;
-		margin-left: 3px;
-		white-space: pre-line;
-		overflow-wrap: break-word;
 	}
 }
 

@@ -15,7 +15,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { OpeningHoursDiaryService } from '../../services/opening-hours-diary.service';
 import { NewAppointmentComponent } from '@turnos/dialogs/new-appointment/new-appointment.component';
 import { EquipmentAppointmentsFacadeService } from '../../services/equipment-appointments-facade.service';
-import { DateFormat, buildFullDate, dateToMoment, dateToMomentTimeZone, momentFormat, momentParseDate } from '@core/utils/moment.utils';
+import { DateFormat, buildFullDate, dateToMoment, dateToMomentTimeZone, momentFormat, momentParseDate, momentParseTime } from '@core/utils/moment.utils';
 import { Moment } from 'moment';
 import { endOfMonth, endOfWeek, startOfMonth, startOfWeek } from 'date-fns';
 import { TranslateService } from '@ngx-translate/core';

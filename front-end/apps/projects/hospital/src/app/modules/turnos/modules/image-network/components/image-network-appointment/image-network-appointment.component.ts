@@ -4,7 +4,7 @@ import { AppointmentsService } from '@api-rest/services/appointments.service';
 import { SnackBarService } from '@presentation/services/snack-bar.service';
 import { ContextService } from '@core/services/context.service';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { AppointmentDto, ERole, IdentificationTypeDto, PatientMedicalCoverageDto, PersonPhotoDto, CompleteEquipmentDiaryDto } from '@api-rest/api-model.d';
+import { AppointmentDto, ERole, IdentificationTypeDto, PatientMedicalCoverageDto, PersonPhotoDto, CompleteEquipmentDiaryDto, AppFeature } from '@api-rest/api-model.d';
 import { VALIDATIONS, getError, hasError, processErrors, updateControlValidator } from '@core/utils/form.utils';
 import { MapperService } from '@core/services/mapper.service';
 import {
@@ -24,17 +24,22 @@ import { SummaryCoverageInformation } from '@historia-clinica/modules/ambulatori
 import { PatientService } from '@api-rest/services/patient.service';
 import { ImageDecoderService } from '@presentation/services/image-decoder.service';
 import { CalendarEvent } from 'angular-calendar';
+import { DiscardWarningComponent } from '@presentation/dialogs/discard-warning/discard-warning.component';
 import { momentParseDate } from '@core/utils/moment.utils';
 import * as moment from 'moment';
 import { Color } from '@presentation/colored-label/colored-label.component';
 import { PATTERN_INTEGER_NUMBER } from '@core/utils/pattern.utils';
-import { APPOINTMENT_STATES_ID } from '@turnos/constants/appointment';
+import { MedicalCoverageInfoService } from '@historia-clinica/modules/ambulatoria/services/medical-coverage-info.service';
+import { APPOINTMENT_STATES_ID, getAppointmentState, MAX_LENGTH_MOTIVE} from '@turnos/constants/appointment';
 import { NewAttentionComponent } from '@turnos/dialogs/new-attention/new-attention.component';
 import { PatientAppointmentInformation } from '@turnos/dialogs/appointment/appointment.component';
 import { EquipmentAppointmentsFacadeService } from '../../services/equipment-appointments-facade.service';
+import { FeatureFlagService } from '@core/services/feature-flag.service';
+import { AppointmentsFacadeService } from '@turnos/services/appointments-facade.service';
 
-const ROLES_TO_EDIT: ERole[]
-	= [ERole.ADMINISTRATIVO_RED_DE_IMAGENES];
+const BELL_LABEL = 'Llamar paciente'
+const ROLES_TO_CHANGE_STATE: ERole[] = [ERole.ADMINISTRATIVO_RED_DE_IMAGENES];
+const ROLES_TO_EDIT: ERole[] = [ERole.ADMINISTRATIVO_RED_DE_IMAGENES];
 
 @Component({
   selector: 'app-image-network-appointment',
@@ -43,7 +48,9 @@ const ROLES_TO_EDIT: ERole[]
 })
 export class ImageNetworkAppointmentComponent implements OnInit {
 	readonly appointmentStatesIds = APPOINTMENT_STATES_ID;
+	readonly BELL_LABEL = BELL_LABEL;
 	readonly Color = Color;
+	getAppointmentState = getAppointmentState;
 	getError = getError;
 	hasError = hasError;
 	medicalCoverageId: number;
@@ -53,6 +60,8 @@ export class ImageNetworkAppointmentComponent implements OnInit {
 
 	appointment: AppointmentDto;
 	appointments: CalendarEvent[];
+	selectedState: APPOINTMENT_STATES_ID;
+	formMotive: FormGroup;
 	formEdit: FormGroup;
 	institutionId = this.contextService.institutionId;
 	coverageText: string;
@@ -61,6 +70,7 @@ export class ImageNetworkAppointmentComponent implements OnInit {
 	coverageData: PatientMedicalCoverage;
 	phoneNumber: string;
 	summaryCoverageData: SummaryCoverageInformation = {};
+	hasRoleToChangeState$: Observable<boolean>;
 	hasRoleToEdit$: Observable<boolean>;
 	patientMedicalCoverages: PatientMedicalCoverage[];
 	identificationType: IdentificationTypeDto;
@@ -90,17 +100,27 @@ export class ImageNetworkAppointmentComponent implements OnInit {
 		private readonly snackBarService: SnackBarService,
 		private readonly contextService: ContextService,
 		private readonly formBuilder: FormBuilder,
+		private readonly appointmentFacade: AppointmentsFacadeService,
 		private readonly equimentAppointmentFacade: EquipmentAppointmentsFacadeService,
 		private readonly mapperService: MapperService,
 		private readonly patientMedicalCoverageService: PatientMedicalCoverageService,
 		private readonly permissionsService: PermissionsService,
+		private readonly featureFlagService: FeatureFlagService,
 		private readonly patientNameService: PatientNameService,
 		private readonly personMasterDataService: PersonMasterDataService,
 		private readonly patientService: PatientService,
-		private readonly imageDecoderService: ImageDecoderService
-	) {	}
+		private readonly imageDecoderService: ImageDecoderService,
+		private readonly medicalCoverageInfo: MedicalCoverageInfoService
+
+	) {
+		this.featureFlagService.isActive(AppFeature.HABILITAR_LLAMADO).subscribe(isEnabled => this.isMqttCallEnabled = isEnabled);
+	}
 
 	ngOnInit(): void {
+		this.formMotive = this.formBuilder.group({
+			motive: ['', [Validators.required, Validators.maxLength(MAX_LENGTH_MOTIVE)]]
+		});
+		
 		this.formEdit = this.formBuilder.group({
 			//Medical Coverage selected in Edit Mode
 			newCoverageData: null,
@@ -126,6 +146,10 @@ export class ImageNetworkAppointmentComponent implements OnInit {
 			.subscribe(appointment => {
 
 				this.appointment = appointment;
+				this.selectedState = this.appointment?.appointmentStateId;
+				if (this.appointment.stateChangeReason) {
+					this.formMotive.controls.motive.setValue(this.appointment.stateChangeReason);
+				}
 				if (this.appointment.patientMedicalCoverageId && this.data.appointmentData.patient?.id) {
 					this.patientMedicalCoverageService.getPatientMedicalCoverage(this.appointment.patientMedicalCoverageId)
 						.subscribe(coverageData => {
@@ -140,6 +164,8 @@ export class ImageNetworkAppointmentComponent implements OnInit {
 				}
 				this.phoneNumber = this.formatPhonePrefixAndNumber(this.data.appointmentData.phonePrefix, this.data.appointmentData.phoneNumber);
 			});
+
+		this.hasRoleToChangeState$ = this.permissionsService.hasContextAssignments$(ROLES_TO_CHANGE_STATE).pipe(take(1));
 
 		this.hasRoleToEdit$ = this.permissionsService.hasContextAssignments$(ROLES_TO_EDIT).pipe(take(1));
 
@@ -192,6 +218,58 @@ export class ImageNetworkAppointmentComponent implements OnInit {
 		}
 	}
 
+	changeState(newStateId: APPOINTMENT_STATES_ID): void {
+		this.selectedState = newStateId;
+	}
+
+	private coverageIsNotUpdate(): boolean {
+		return this.formEdit.controls.newCoverageData?.value ? this.firstCoverage === this.formEdit.controls.newCoverageData?.value : true;
+	}
+
+	private updateState(newStateId: APPOINTMENT_STATES_ID): void {
+		this.changeState(newStateId);
+		if (this.isANewState(newStateId) && !this.isMotiveRequired()) {
+			this.submitNewState(newStateId);
+		}
+	}
+
+	private confirmChangeState(newStateId: APPOINTMENT_STATES_ID): void {
+		const dialogRefConfirmation = this.dialog.open(DiscardWarningComponent,
+			{
+				data: {
+					content: `turnos.appointment.confirm-dialog.CONTENT`,
+					okButtonLabel: `turnos.appointment.confirm-dialog.CONFIRM`,
+					cancelButtonLabel: `turnos.appointment.confirm-dialog.CANCEL`,
+					contentBold: `turnos.appointment.confirm-dialog.QUESTION`,
+					showMatIconError: true,
+				}
+			});
+		dialogRefConfirmation.afterClosed().subscribe((upDateState: boolean) => {
+			if (upDateState)
+				this.updateState(newStateId);
+		});
+	}
+
+	onClickedState(newStateId: APPOINTMENT_STATES_ID): void {
+		if (this.selectedState !== newStateId) {
+			if (this.selectedState === APPOINTMENT_STATES_ID.ASSIGNED && newStateId === APPOINTMENT_STATES_ID.CONFIRMED && this.coverageIsNotUpdate()) {
+				this.confirmChangeState(newStateId);
+			} else {
+				this.updateState(newStateId);
+			}
+		}
+	}
+
+	private isANewState(newStateId: APPOINTMENT_STATES_ID) {
+		return newStateId !== this.appointment?.appointmentStateId;
+	}
+
+	saveAbsent(): void {
+		if (this.formMotive.valid) {
+			this.submitNewState(APPOINTMENT_STATES_ID.ABSENT, this.formMotive.value.motive);
+		}
+	}
+
 	edit(): void {
 		if (this.formEdit.valid) {
 			if (this.isAssigned()) {
@@ -216,8 +294,25 @@ export class ImageNetworkAppointmentComponent implements OnInit {
 		}
 	}
 
+	isMotiveRequired(): boolean {
+		return this.selectedState === APPOINTMENT_STATES_ID.ABSENT;
+	}
+
 	isAssigned(): boolean {
 		return this.appointment?.appointmentStateId === APPOINTMENT_STATES_ID.ASSIGNED;
+	}
+
+	private submitNewState(newStateId: APPOINTMENT_STATES_ID, motive?: string): void {
+		this.appointmentFacade.changeState(this.data.appointmentData.appointmentId, newStateId, motive)
+			.subscribe(() => {
+				const appointmentInformation = { id: this.data.appointmentData.appointmentId, stateId: newStateId, date: this.selectedDate };
+				this.dialogRef.close(appointmentInformation);
+				this.snackBarService.showSuccess(`Estado de turno actualizado a ${getAppointmentState(newStateId).description} exitosamente`);
+			}, _ => {
+				this.changeState(this.appointment?.appointmentStateId);
+				this.snackBarService.showError(`Error al actualizar estado de turno
+				${getAppointmentState(this.appointment?.appointmentStateId).description} a ${getAppointmentState(newStateId).description}`);
+			});
 	}
 
 	updatePhoneNumber(phonePrefix: string, phoneNumber: string) {
@@ -305,6 +400,8 @@ export class ImageNetworkAppointmentComponent implements OnInit {
 	}
 
 	closeDialog(returnValue?: string) {
+		if (!returnValue && (this.appointment.appointmentStateId === APPOINTMENT_STATES_ID.ASSIGNED || this.appointment.appointmentStateId === APPOINTMENT_STATES_ID.CONFIRMED))
+			this.medicalCoverageInfo.setAppointmentMCoverage(this.summaryCoverageData);
 		const appointmentInformation = { returnValue: returnValue, date: this.selectedDate };
 		this.dialogRef.close(appointmentInformation);
 	}

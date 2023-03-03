@@ -7,8 +7,7 @@
 	<div mat-dialog-content class="window" id="window"
 		gdAreas="personal-data personal-data | coverage appointment | div-sup div-sup | div-inf div-inf "
 		gdColumns="1fr 1fr" gdRows="auto" gdGap="10px 50px"
-		gdAreas.lt-md="personal-data | coverage | appointment"
-		gdColumns.lt-md="auto"
+		gdAreas.lt-md="personal-data | coverage | appointment | state-observations | reports" gdColumns.lt-md="auto"
 		gdGap.lt-md="0px">
 
 		<section gdArea="personal-data" id="personal-data" fxLayout="column" fxLayoutGap="5px">
@@ -41,7 +40,7 @@
 				<div fxLayout="column" fxLayoutGap="5px">
 					<span class="mat-caption normal-size">{{'turnos.appointment.coverageData.COVERAGE_DATA' |
 						translate}}</span>
-					<div fxLayout="row" fxLayoutGap="5px" fxLayout.xs="column" >
+					<div fxLayout="row" fxLayoutGap="5px" fxLayout.xs="column">
 						<span class="mat-body patient-info coverage-text subtitle-size" *ngIf="coverageData else noInfo"
 							matTooltip="{{coverageData.medicalCoverage.name}}">{{coverageText}}</span>
 						<span class="mat-body patient-info coverage-text subtitle-size" *ngIf="coverageNumber">/
@@ -68,7 +67,7 @@
 				</button>
 			</ng-container>
 
-            <ng-template #editAppointment>
+			<ng-template #editAppointment>
 				<form [formGroup]="formEdit" fxLayout="column" fxLayoutGap="5px" (ngSubmit)="edit()">
 					<mat-form-field appearance="outline" *ngIf="isAssigned()">
 						<button type="button" mat-button matSuffix color="warn" mat-icon-button
@@ -101,9 +100,8 @@
 							<mat-error *ngIf="hasError(formEdit, 'maxlength', 'phonePrefix')"
 								translate="forms.MAX_LENGTH_ERROR" [translateParams]="{max: 10}">
 							</mat-error>
-							<mat-error
-							*ngIf="hasError(formEdit, 'pattern', 'phonePrefix')"
-							[translate]="'forms.FORMAT_NUMERIC'">
+							<mat-error *ngIf="hasError(formEdit, 'pattern', 'phonePrefix')"
+								[translate]="'forms.FORMAT_NUMERIC'">
 							</mat-error>
 						</mat-form-field>
 						<mat-form-field fxFlex="70%" appearance="outline">
@@ -117,14 +115,14 @@
 							<mat-error *ngIf="hasError(formEdit, 'maxlength', 'phoneNumber')"
 								translate="forms.MAX_LENGTH_ERROR" [translateParams]="{max: 15}">
 							</mat-error>
-							<mat-error
-							*ngIf="hasError(formEdit, 'pattern', 'phoneNumber')"
-							[translate]="'forms.FORMAT_NUMERIC'">
+							<mat-error *ngIf="hasError(formEdit, 'pattern', 'phoneNumber')"
+								[translate]="'forms.FORMAT_NUMERIC'">
 							</mat-error>
 						</mat-form-field>
 					</div>
 					<div class="confirm-buttons" fxLayout="row" fxLayoutAlign="end" fxLayoutGap="15px">
-						<button mat-stroked-button color="primary" btn-block type="button" (click)="hideFilters(); updatePhoneValidators()">
+						<button mat-stroked-button color="primary" btn-block type="button"
+							(click)="hideFilters(); updatePhoneValidators()">
 							<span>{{'turnos.appointment.CANCEL' | translate}}</span>
 						</button>
 						<button mat-flat-button color="primary" [disabled]="isInvalidFormEdit()">
@@ -134,6 +132,83 @@
 				</form>
 			</ng-template>
 		</section>
+
+		<section gdArea="state-observations">
+
+			<section id="state">
+				<span class="mat-body-strong strong-size">{{'turnos.appointment.APPOINTMENT_STATE' | translate}}</span>
+				<div class="appointment-actions" fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="8px">
+
+					<button type="button"
+						[disabled]="(hasRoleToChangeState$ | async) === false || selectedState === appointmentStatesIds.SERVED"
+						[ngClass]="{'selected assigned': selectedState === appointmentStatesIds.ASSIGNED }"
+						(click)="onClickedState(appointmentStatesIds.ASSIGNED)" mat-stroked-button>
+						<mat-icon matTooltip="{{getAppointmentState(appointmentStatesIds.ASSIGNED).description}}"
+							color="primary">event_available</mat-icon>
+					</button>
+
+					<button type="button"
+						[disabled]="(hasRoleToChangeState$ | async) === false || selectedState === appointmentStatesIds.SERVED"
+						[ngClass]="{'selected confirmed': selectedState === appointmentStatesIds.CONFIRMED }"
+						(click)="onClickedState(appointmentStatesIds.CONFIRMED)" mat-stroked-button>
+						<mat-icon matTooltip="{{getAppointmentState(appointmentStatesIds.CONFIRMED).description}}"
+							color="primary">meeting_room
+						</mat-icon>
+					</button>
+
+					<button type="button" [disabled]="(hasRoleToChangeState$ | async) === false"
+						[ngClass]="{ 'assigned': selectedState === appointmentStatesIds.CONFIRMED }"
+						(click)="callPatient()"
+						*ngIf="isMqttCallEnabled && selectedState === appointmentStatesIds.CONFIRMED"
+						mat-stroked-button>
+						<mat-icon matTooltip="{{BELL_LABEL}}" color="primary" svgIcon="bell_appointment_call">
+						</mat-icon>
+					</button>
+
+					<button type="button"
+						[ngClass]="{'selected absent': selectedState === appointmentStatesIds.ABSENT }"
+						(click)="onClickedState(appointmentStatesIds.ABSENT)" mat-stroked-button
+						[disabled]="(hasRoleToChangeState$ | async) === false || selectedState === appointmentStatesIds.SERVED">
+						<mat-icon matTooltip="{{getAppointmentState(appointmentStatesIds.ABSENT).description}}"
+							color="primary" svgIcon="person_cancel_outlined">
+						</mat-icon>
+					</button>
+
+					<button type="button" disabled
+						[ngClass]="{'selected served': selectedState === appointmentStatesIds.SERVED }"
+						mat-stroked-button>
+						<mat-icon color="primary" svgIcon="person_check_outlined"
+							matTooltip="{{getAppointmentState(appointmentStatesIds.SERVED).description}}"></mat-icon>
+					</button>
+
+				</div>
+
+				<form [formGroup]="formMotive" (ngSubmit)="saveAbsent()" class="motive" *ngIf="isMotiveRequired()"
+					fxLayout="column">
+					<span class="mat-body-strong strong-size">{{'turnos.appointment.ABSENCE_MOTIVE' | translate}}</span>
+					<mat-form-field appearance="outline">
+						<textarea formControlName="motive"
+							placeholder="{{'turnos.appointment.ABSENCE_MOTIVE' | translate }}" matInput type="text"
+							id="motive"></textarea>
+						<mat-error *ngIf="hasError(formMotive, 'required', 'motive')" [translate]="'forms.REQUIRED'">
+						</mat-error>
+						<mat-error *ngIf="hasError(formMotive, 'maxlength', 'motive')"
+							[translate]="'forms.MAX_LENGTH_ERROR'"
+							[translateParams]="{max: getError(formMotive, 'maxlength', 'motive')?.requiredLength}">
+						</mat-error>
+					</mat-form-field>
+					<div fxLayoutAlign="end">
+						<button mat-flat-button color="primary" id="save">
+							<span> {{'turnos.appointment.SAVE' | translate}}</span>
+						</button>
+					</div>
+
+				</form>
+			</section>
+		</section>
+
+		<mat-divider gdArea="div-sup"></mat-divider>
+		<mat-divider gdArea="div-inf"></mat-divider>
 	</div>
 </div>
 
