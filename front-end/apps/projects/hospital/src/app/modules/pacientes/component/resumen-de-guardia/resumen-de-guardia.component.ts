@@ -178,7 +178,10 @@ export class ResumenDeGuardiaComponent implements OnInit {
           changed => {
             if (changed) {
               this.snackBarService.showSuccess(`${TRANSLATE_KEY_PREFIX}.finalizar_ausencia.SUCCESS`);
-              window.location.reload();
+              const currentUrl = this.router.url;
+              this.router.navigateByUrl('/', {skipLocationChange: true}).then(() => {
+                this.router.navigate([currentUrl]);
+              });
             }
             else {
               this.snackBarService.showError(`${TRANSLATE_KEY_PREFIX}.finalizar_ausencia.ERROR`);
