@@ -53,11 +53,11 @@
 
             <div fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="10px">
 
-                <button *ngIf="avaibleActions.length >= 1" id="avaibleActions[0].id" mat-stroked-button
+                <button *ngIf="avaibleActions.length >= 1" id="avaibleActions[0].id" mat-raised-button
                     color="primary" (click)="avaibleActions[0].callback()">
                     {{ avaibleActions[0].label | translate | uppercase }}
                 </button>
-                <button *ngIf="avaibleActions.length >= 2" id="avaibleActions[1].id" mat-stroked-button
+                <button *ngIf="avaibleActions.length >= 2" id="avaibleActions[1].id" mat-raised-button
                     color="primary" (click)="avaibleActions[1].callback()">
                     {{ avaibleActions[1].label | translate | uppercase }}
                 </button>
