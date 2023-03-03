@@ -107,7 +107,7 @@ export class EquipmentDiarySetupComponent implements OnInit {
 				this.route.paramMap.subscribe((params) => {
 					this.editingDiaryId = Number(params.get('agendaId'));
 					this.equipmentDiaryService.getBy(this.editingDiaryId).subscribe((diary: CompleteEquipmentDiaryDto) => {
-						this.minDate = new Date(diary.startDate);
+						this.minDate =  momentParseDate(diary.startDate).toDate();
 						this.setValuesFromExistingAgenda(diary);
 					})
 				});
@@ -143,8 +143,8 @@ export class EquipmentDiarySetupComponent implements OnInit {
 		const endDate: string = momentFormat(formValue.endDate, DateFormat.API_DATE);
 
 		const ocupations$: Observable<any[]> = this.equipmentDiaryOpeningHoursService
-			.getAllWeeklyEquipmentOcupation(this.form.controls.equipmentId.value, null, startDate, endDate);
-		this.agendaHorarioService.setWeeklyOcupation(ocupations$);
+			.getAllWeeklyEquipmentOcupation(this.form.controls.equipmentId.value, this.editingDiaryId, startDate, endDate);
+			this.agendaHorarioService.setWeeklyOcupation(ocupations$);
 	}
 
 	scrollToDefaultStartingHour() {
