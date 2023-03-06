@@ -70,6 +70,14 @@ export const GENERAL_REPORT_TYPES = [
         description: 'Enfermería Internación',
         id: 6,
     },
+    {
+        description: 'Reportes complementarios',
+        id: 7,
+    },
+    {
+        description: 'Reporte de procedimientos realizados por Enfermería',
+        id: 8,
+    },
    
 ]
 

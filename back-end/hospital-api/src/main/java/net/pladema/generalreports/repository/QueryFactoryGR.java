@@ -1,5 +1,7 @@
 package net.pladema.generalreports.repository;
 
+import org.apache.tomcat.jni.Local;
+import org.apache.xmlbeans.impl.xb.xsdschema.Public;
 import org.springframework.stereotype.Repository;
 
 import javax.persistence.EntityManager;
@@ -90,5 +92,33 @@ public class QueryFactoryGR {
 		List<NursingInternment> data = query.getResultList();
 		return data;
 	}
+
+	public List<ComplementaryStudies> queryComplementaryStudies(Integer institutionId, LocalDate start, LocalDate end){
+
+		var startDate = LocalDateTime.of(start.getYear(),start.getMonth(),start.getDayOfMonth(), 0, 0);
+		var endDate = LocalDateTime.of(end.getYear(), end.getMonth(), end.getDayOfMonth(), 23, 59, 59);
+
+		Query query = entityManager.createNamedQuery("GeneralReports.ComplementaryStudies");
+		query.setParameter("institutionId", institutionId);
+		query.setParameter("startDate", startDate);
+		query.setParameter("endDate", endDate);
+		List<ComplementaryStudies> data = query.getResultList();
+		return data;
+	}
+
+	public List<TotalNursingRecovery> queryTotalNursingRecovery(Integer institutionId, LocalDate start, LocalDate end){
+
+		var startDate = LocalDateTime.of(start.getYear(),start.getMonth(),start.getDayOfMonth(), 0, 0);
+		var endDate = LocalDateTime.of(end.getYear(), end.getMonth(), end.getDayOfMonth(), 23, 59, 59);
+
+		Query query = entityManager.createNamedQuery("GeneralReports.TotalNursingRecovery");
+		query.setParameter("institutionId", institutionId);
+		query.setParameter("startDate", startDate);
+		query.setParameter("endDate", endDate);
+		List<TotalNursingRecovery> data = query.getResultList();
+		return data;
+
+	}
+
 
 }
