@@ -11,7 +11,7 @@ import { Observable } from 'rxjs';
 export class EquipmentDiaryOpeningHoursService {
 
 	constructor(
-		private readonly http: HttpClient, 
+		private readonly http: HttpClient,
 		private readonly contextService: ContextService
 	) { }
 
@@ -19,7 +19,7 @@ export class EquipmentDiaryOpeningHoursService {
 		let queryParams: HttpParams = new HttpParams();
 		queryParams = queryParams.append('startDate', startDate);
 		queryParams = queryParams.append('endDate', endDate);
-		queryParams = (diaryId) ? queryParams.append('diaryId', JSON.stringify(diaryId)) : queryParams;
+		queryParams = (diaryId) ? queryParams.append('equipmentDiaryId', JSON.stringify(diaryId)) : queryParams;
 
 		const url = `${environment.apiBase}/institutions/${this.contextService.institutionId}/medicalConsultations/equipmentDiaryOpeningHours/equipment/${equipmentId}`;
 		return this.http.get<OccupationDto[]>(url,
