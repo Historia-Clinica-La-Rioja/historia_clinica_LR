@@ -80,7 +80,7 @@ public class PublicSipPlusStorageImpl implements PublicSipPlusStorage {
 
 		validatePatientData(patientData);
 
-		String embedId = countryIsoCode + patientData.getIdentificationType() + patientData.getIdentificationNumber();
+		String embedId = getEmbedId(countryIsoCode, patientData, pregnancy);
 
 		SipPlusMotherIdentificationBo motherIdentification = SipPlusMotherIdentificationBo.builder()
 				.number(patientData.getIdentificationNumber())
@@ -96,6 +96,10 @@ public class PublicSipPlusStorageImpl implements PublicSipPlusStorage {
 				.pregnancy(pregnancy)
 				.build();
 
+	}
+
+	private String getEmbedId(String countryIsoCode, BasicPatientDto patientData, Integer pregnancy) {
+		return countryIsoCode + patientData.getIdentificationType() + patientData.getIdentificationNumber() + pregnancy;
 	}
 
 	private String getCountryIsoCode(Integer personId){
