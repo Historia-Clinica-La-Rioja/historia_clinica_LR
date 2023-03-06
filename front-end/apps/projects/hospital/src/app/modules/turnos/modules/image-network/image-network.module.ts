@@ -15,7 +15,7 @@ import { EquipmentAppointmentsFacadeService } from './services/equipment-appoint
 		EquipmentDiarySetupComponent,
 		SearchAppointmentsByEquipmentComponent,
 		EquipmentDiaryComponent,
-  ImageNetworkAppointmentComponent
+  		ImageNetworkAppointmentComponent
 	],
 	imports: [
 		CommonModule,

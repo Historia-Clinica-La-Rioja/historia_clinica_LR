@@ -4,7 +4,7 @@ import { AppointmentsService } from '@api-rest/services/appointments.service';
 import { SnackBarService } from '@presentation/services/snack-bar.service';
 import { ContextService } from '@core/services/context.service';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { AppointmentDto, ERole, IdentificationTypeDto, PatientMedicalCoverageDto, PersonPhotoDto, CompleteEquipmentDiaryDto, AppFeature } from '@api-rest/api-model.d';
+import { AppFeature, AppointmentDto, ERole, IdentificationTypeDto, PatientMedicalCoverageDto, PersonPhotoDto, CompleteEquipmentDiaryDto, UpdateAppointmentDto, AppointmentListDto } from '@api-rest/api-model.d';
 import { VALIDATIONS, getError, hasError, processErrors, updateControlValidator } from '@core/utils/form.utils';
 import { MapperService } from '@core/services/mapper.service';
 import {
@@ -25,7 +25,7 @@ import { PatientService } from '@api-rest/services/patient.service';
 import { ImageDecoderService } from '@presentation/services/image-decoder.service';
 import { CalendarEvent } from 'angular-calendar';
 import { DiscardWarningComponent } from '@presentation/dialogs/discard-warning/discard-warning.component';
-import { momentParseDate } from '@core/utils/moment.utils';
+import { DateFormat, momentFormat, momentParseDate, momentParseTime } from '@core/utils/moment.utils';
 import * as moment from 'moment';
 import { Color } from '@presentation/colored-label/colored-label.component';
 import { PATTERN_INTEGER_NUMBER } from '@core/utils/pattern.utils';
@@ -35,7 +35,8 @@ import { NewAttentionComponent } from '@turnos/dialogs/new-attention/new-attenti
 import { PatientAppointmentInformation } from '@turnos/dialogs/appointment/appointment.component';
 import { EquipmentAppointmentsFacadeService } from '../../services/equipment-appointments-facade.service';
 import { FeatureFlagService } from '@core/services/feature-flag.service';
-import { AppointmentsFacadeService } from '@turnos/services/appointments-facade.service';
+import { CancelAppointmentComponent } from '@turnos/dialogs/cancel-appointment/cancel-appointment.component';
+import { toCalendarEvent } from '../../utils/appointment.utils';
 
 const BELL_LABEL = 'Llamar paciente'
 const ROLES_TO_CHANGE_STATE: ERole[] = [ERole.ADMINISTRATIVO_RED_DE_IMAGENES];
@@ -100,8 +101,7 @@ export class ImageNetworkAppointmentComponent implements OnInit {
 		private readonly snackBarService: SnackBarService,
 		private readonly contextService: ContextService,
 		private readonly formBuilder: FormBuilder,
-		private readonly appointmentFacade: AppointmentsFacadeService,
-		private readonly equimentAppointmentFacade: EquipmentAppointmentsFacadeService,
+		private readonly equipmentAppointmensFacade: EquipmentAppointmentsFacadeService,
 		private readonly mapperService: MapperService,
 		private readonly patientMedicalCoverageService: PatientMedicalCoverageService,
 		private readonly permissionsService: PermissionsService,
@@ -111,7 +111,6 @@ export class ImageNetworkAppointmentComponent implements OnInit {
 		private readonly patientService: PatientService,
 		private readonly imageDecoderService: ImageDecoderService,
 		private readonly medicalCoverageInfo: MedicalCoverageInfoService
-
 	) {
 		this.featureFlagService.isActive(AppFeature.HABILITAR_LLAMADO).subscribe(isEnabled => this.isMqttCallEnabled = isEnabled);
 	}
@@ -264,6 +263,45 @@ export class ImageNetworkAppointmentComponent implements OnInit {
 		return newStateId !== this.appointment?.appointmentStateId;
 	}
 
+	cancelAppointment(): void {
+		const dialogRefCancelAppointment = this.dialog.open(CancelAppointmentComponent, {
+			data: this.data.appointmentData.appointmentId
+		});
+		dialogRefCancelAppointment.afterClosed().subscribe(canceledAppointment => {
+			if (canceledAppointment) {
+				const date = momentFormat(moment(this.data.appointmentData.date), DateFormat.API_DATE);
+				this.appointmentService.getList([this.data.agenda.id], this.data.agenda.equipmentId, date, date)
+					.subscribe((appointments: AppointmentListDto[]) => {
+						const appointmentsInDate = this.generateEventsFromAppointments(appointments)
+							.filter(appointment => appointment.start.getTime() == new Date(this.data.appointmentData.date).getTime());
+
+						if (appointmentsInDate.length > 0 && !this.data.appointmentData.overturn) {
+							this.updateAppointmentOverturn(
+								appointmentsInDate[0].meta.appointmentId,
+								appointmentsInDate[0].meta.appointmentStateId,
+								false,
+								appointmentsInDate[0].meta.patient.id
+							);
+						}
+					});
+				this.closeDialog('statuschanged');
+			}
+		});
+	}
+
+	updateAppointmentOverturn(appointmentId: number, appointmentStateId: number, overturn: boolean, patientId: number): void {
+		const appointment: UpdateAppointmentDto = {
+			appointmentId: appointmentId,
+			appointmentStateId: appointmentStateId,
+			overturn: overturn,
+			patientId: patientId,
+		}
+		this.equipmentAppointmensFacade.updateAppointment(appointment).subscribe(() => { },
+			error => {
+				processErrors(error, (msg) => this.snackBarService.showError(msg));
+			});
+	}
+
 	saveAbsent(): void {
 		if (this.formMotive.valid) {
 			this.submitNewState(APPOINTMENT_STATES_ID.ABSENT, this.formMotive.value.motive);
@@ -302,8 +340,16 @@ export class ImageNetworkAppointmentComponent implements OnInit {
 		return this.appointment?.appointmentStateId === APPOINTMENT_STATES_ID.ASSIGNED;
 	}
 
+	isCancelable(): boolean {
+		return (this.selectedState === APPOINTMENT_STATES_ID.ASSIGNED &&
+			this.appointment?.appointmentStateId === APPOINTMENT_STATES_ID.ASSIGNED) ||
+			(this.selectedState === APPOINTMENT_STATES_ID.CONFIRMED &&
+				this.appointment?.appointmentStateId === APPOINTMENT_STATES_ID.CONFIRMED) ||
+			this.appointment?.appointmentStateId === APPOINTMENT_STATES_ID.OUT_OF_DIARY;
+	}
+
 	private submitNewState(newStateId: APPOINTMENT_STATES_ID, motive?: string): void {
-		this.appointmentFacade.changeState(this.data.appointmentData.appointmentId, newStateId, motive)
+		this.equipmentAppointmensFacade.changeState(this.data.appointmentData.appointmentId, newStateId, motive)
 			.subscribe(() => {
 				const appointmentInformation = { id: this.data.appointmentData.appointmentId, stateId: newStateId, date: this.selectedDate };
 				this.dialogRef.close(appointmentInformation);
@@ -316,7 +362,7 @@ export class ImageNetworkAppointmentComponent implements OnInit {
 	}
 
 	updatePhoneNumber(phonePrefix: string, phoneNumber: string) {
-		this.equimentAppointmentFacade.updatePhoneNumber(this.data.appointmentData.appointmentId, phonePrefix, phoneNumber).subscribe(() => {
+		this.equipmentAppointmensFacade.updatePhoneNumber(this.data.appointmentData.appointmentId, phonePrefix, phoneNumber).subscribe(() => {
 			this.snackBarService.showSuccess('turnos.appointment.coverageData.UPDATE_SUCCESS');
 			this.formEdit.controls.phonePrefix.setValue(phonePrefix);
 			this.formEdit.controls.phoneNumber.setValue(phoneNumber);
@@ -437,5 +483,17 @@ export class ImageNetworkAppointmentComponent implements OnInit {
 			}
 		}
 		this.summaryCoverageData = summaryInfo;
+	}
+
+	private generateEventsFromAppointments(appointments: AppointmentListDto[]): CalendarEvent[] {
+		return appointments.map(appointment => {
+			const from = momentParseTime(appointment.hour).format(DateFormat.HOUR_MINUTE);
+			let to = momentParseTime(from).add(this.data.agenda.appointmentDuration, 'minutes').format(DateFormat.HOUR_MINUTE);
+			if (from > to) {
+				to = momentParseTime(from).set({ hour: 23, minute: 59 }).format(DateFormat.HOUR_MINUTE);
+			}
+			const calendarEvent = toCalendarEvent(from, to, momentParseDate(appointment.date), appointment);
+			return calendarEvent;
+		});
 	}
 }

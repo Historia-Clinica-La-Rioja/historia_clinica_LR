@@ -5,7 +5,7 @@
 		</button>
 	</div>
 	<div mat-dialog-content class="window" id="window"
-		gdAreas="personal-data personal-data | coverage appointment | div-sup div-sup | div-inf div-inf "
+		gdAreas="personal-data personal-data | coverage appointment | div-sup div-sup | state-observations reports | div-inf div-inf "
 		gdColumns="1fr 1fr" gdRows="auto" gdGap="10px 50px"
 		gdAreas.lt-md="personal-data | coverage | appointment | state-observations | reports" gdColumns.lt-md="auto"
 		gdGap.lt-md="0px">
@@ -210,6 +210,13 @@
 		<mat-divider gdArea="div-sup"></mat-divider>
 		<mat-divider gdArea="div-inf"></mat-divider>
 	</div>
+
+	<mat-dialog-actions *appHasRole="['ADMINISTRATIVO_RED_DE_IMAGENES']" align="end">
+		<button type="button" *ngIf="isCancelable()" mat-flat-button color="warn" id="cancel-appointment"
+			(click)="cancelAppointment()">
+			<span class="uppercase">{{'turnos.cancel.TITLE' | translate}}</span>
+		</button>
+	</mat-dialog-actions>
 </div>
 
 <ng-template #noInfo>

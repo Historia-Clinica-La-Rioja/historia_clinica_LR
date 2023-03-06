@@ -2,13 +2,14 @@ import { Injectable } from '@angular/core';
 import { DateFormat, momentParseDate, momentParseTime } from '@core/utils/moment.utils';
 import { CalendarEvent } from 'angular-calendar';
 import { toCalendarEvent } from '../utils/appointment.utils';
-import { CreateAppointmentDto, BasicPersonalDataDto, AppointmentShortSummaryDto, AppointmentListDto, HolidayDto } from '@api-rest/api-model';
+import { CreateAppointmentDto, BasicPersonalDataDto, AppointmentShortSummaryDto, AppointmentListDto, HolidayDto, UpdateAppointmentDto } from '@api-rest/api-model';
 import { AppointmentsService } from '@api-rest/services/appointments.service';
 import { PatientNameService } from '@core/services/patient-name.service';
 import { ReplaySubject, Observable, forkJoin } from 'rxjs';
 import { first, map } from 'rxjs/operators';
 import { HolidaysService } from '@api-rest/services/holidays.service';
 import { dateDtoToDate } from '@api-rest/mapper/date-dto.mapper';
+import { APPOINTMENT_STATES_ID } from '@turnos/constants/appointment';
 
 @Injectable()
 export class EquipmentAppointmentsFacadeService {
@@ -100,6 +101,41 @@ export class EquipmentAppointmentsFacadeService {
 
 	getHolidays(): Observable<CalendarEvent[]> {
 		return this.holidays$;
+	}
+
+	changeState(appointmentId: number, newStateId: APPOINTMENT_STATES_ID, motivo?: string): Observable<boolean> {
+		return this.appointmentsService.changeStateAppointmentEquipment(appointmentId, newStateId, motivo)
+			.pipe(
+				map((response: boolean) => {
+					if (response) {
+						this.appointments$.subscribe(
+							(events: CalendarEvent[]) => {
+								const updatedEvent: CalendarEvent = events.find(event => event.meta?.appointmentId === appointmentId);
+								updatedEvent.meta.appointmentStateId = newStateId;
+								this.loadAppointments();
+							}
+						).unsubscribe();
+						return true;
+					}
+					return false;
+				})
+			);
+	}
+
+	updateAppointment(appointment: UpdateAppointmentDto) {
+		return this.appointmentsService.updateAppointmentEquipment(appointment)
+			.pipe(
+				map(() => {
+						this.appointments$.subscribe(
+							(events: CalendarEvent[]) => {
+								const updatedEvent: CalendarEvent = events.find(event => event.meta?.appointmentId === appointment.appointmentId);
+								updatedEvent.meta.appointmentStateId = appointment.appointmentStateId
+								this.loadAppointments();
+							}
+						).unsubscribe();
+						return true;
+				})
+			);
 	}
 
 	private getViewName(person: BasicPersonalDataDto): string {

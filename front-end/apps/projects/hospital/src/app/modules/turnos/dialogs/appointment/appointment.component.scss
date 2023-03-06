@@ -36,3 +36,219 @@
 .none {
 	display: none;
 }
+
+// Styles for appointment and image-network-appointment
+.appointment-body {
+	margin: 0 15px;
+
+	.icon-grey {
+		color: #A8A8A8;
+		font-size: 20px;
+	}
+
+	.icon-close {
+		mat-icon {
+			font-size: 24px;
+			color: rgba(0, 0, 0, 0.54);
+		}
+	}
+
+	.title-size {
+		font-size: 18px;
+	}
+
+	.subtitle-size {
+		font-size: 16px;
+	}
+
+	.strong-size {
+		font-size: 14px;
+	}
+
+	.normal-size {
+		font-size: 12px;
+	}
+
+	.purple {
+		color: #AA4EF2;
+	}
+}
+
+.appointment-details {
+	margin: 10px 0;
+
+	.appointment-title {
+		margin-bottom: 10px;
+	}
+}
+
+.assigned-appointment {
+	padding: 20px;
+	color: #545454;
+	line-height: 14px;
+}
+
+.appointment-actions {
+
+	margin-top: 10px;
+
+	button {
+		border: 1px solid #979797;
+		height: 48px;
+		width: 48px;
+	}
+
+	.mat-icon.mat-primary {
+		color: #979797;
+	}
+
+	mat-icon {
+		font-size: 25px;
+	}
+
+	.selected {
+		.mat-icon.mat-primary {
+			color: white;
+		}
+	}
+
+	.confirmed {
+		background-color: #FFA500;
+	}
+
+	.absent {
+		background-color: #7D807D;
+	}
+
+	.served {
+		background-color: #2DC64F;
+	}
+
+}
+
+.motive {
+	margin-top: 10px;
+}
+
+.observation-section {
+	a {
+		cursor: pointer;
+	}
+
+	p {
+		margin: auto;
+		margin-left: 3px;
+		white-space: pre-line;
+		overflow-wrap: break-word;
+	}
+}
+
+.window {
+	@media (min-height: 600px) {
+		min-height: 500px;
+	}
+}
+
+.header {
+	width: 95%;
+}
+
+.header-content {
+
+	button {
+		padding: 0;
+		height: fit-content;
+	}
+
+	.mat-card-patient-image {
+		width: 60px;
+		height: 60px;
+		border-radius: 50%;
+	}
+}
+
+.patient-info {
+	line-height: 17px;
+	max-height: 24px;
+}
+
+.patient-no-info {
+	color: gray;
+}
+
+mat-icon {
+	font-size: 20px;
+}
+
+a {
+	text-decoration: none;
+	color: #2687C5;
+}
+
+mat-form-field {
+	width: 100%;
+}
+
+section {
+	margin: 0;
+	margin-top: 10px;
+}
+
+.phone-text {
+	margin-left: 3px;
+}
+
+.mat-icon-button ::ng-deep .mat-button-focus-overlay {
+	display: none;
+}
+
+.coverage-text {
+	display: inline-block;
+	max-width: 285px;
+	white-space: nowrap;
+	overflow: hidden;
+	text-overflow: ellipsis;
+}
+
+.confirm-buttons {
+	margin-bottom: 15px;
+}
+
+.report {
+	margin-bottom: 10px;
+}
+
+mat-divider {
+	width: 95%;
+}
+
+mat-dialog-actions {
+	width: 95%;
+}
+
+.mat-dialog-container {
+	padding-right: 0px;
+}
+
+@media only screen and (max-width: 426px) {
+	.mat-card-patient-image{
+		display: none;
+	}
+
+	section{
+		width: 58vw;
+	}
+
+	.appointment-actions{
+		button{
+			min-width: 0;
+			padding: 0;
+		}
+	}
+}
+
+@media only screen and (max-width: 320px) {
+	.window{
+		padding-left: 5px;
+	}
+}

@@ -76,6 +76,16 @@ export class AppointmentsService {
 	}
 
 	changeState(appointmentId: number, appointmentStateId: number, reason?: string): Observable<boolean> {
+		const url = `${environment.apiBase}/institutions/${this.contextService.institutionId}/medicalConsultations/appointments/${appointmentId}/change-state`;
+		return this.http.put<boolean>(url, {}, { params: this.getChangeStateParams(appointmentStateId, reason) });
+	}
+
+	changeStateAppointmentEquipment(appointmentId: number, appointmentStateId: number, reason?: string): Observable<boolean> {
+		const url = `${environment.apiBase}/institutions/${this.contextService.institutionId}/medicalConsultations/appointments/${appointmentId}/change-state`;
+		return this.http.put<boolean>(url, {}, { params: this.getChangeStateParams(appointmentStateId, reason) });
+	}
+
+	private getChangeStateParams(appointmentStateId: number, reason?: string): HttpParams{
 		let queryParams: HttpParams = new HttpParams();
 		queryParams = queryParams.append('appointmentStateId', JSON.stringify(appointmentStateId));
 
@@ -83,11 +93,15 @@ export class AppointmentsService {
 			queryParams = queryParams.append('reason', reason);
 		}
 
-		const url = `${environment.apiBase}/institutions/${this.contextService.institutionId}/medicalConsultations/appointments/${appointmentId}/change-state`;
-		return this.http.put<boolean>(url, {}, { params: queryParams });
+		return queryParams
 	}
 
 	updateAppointment(appointment: UpdateAppointmentDto) {
+		const url = `${environment.apiBase}/institutions/${this.contextService.institutionId}/medicalConsultations/appointments/update`;
+		return this.http.post<number>(url, appointment);
+	}
+
+	updateAppointmentEquipment(appointment: UpdateAppointmentDto) {
 		const url = `${environment.apiBase}/institutions/${this.contextService.institutionId}/medicalConsultations/appointments/update`;
 		return this.http.post<number>(url, appointment);
 	}
