@@ -48,8 +48,8 @@ export class ResumenDeGuardiaComponent implements OnInit {
   fullNamesHistoryTriage: string[];
   lastTriage: Triage;
 
-  hasEmergencyCareRelatedRole: boolean;
-  hasRoleAdministrative: boolean;
+  private hasEmergencyCareRelatedRole: boolean;
+  private hasRoleAdministrative: boolean;
 
   avaibleActions: ActionInfo[] = [];
 

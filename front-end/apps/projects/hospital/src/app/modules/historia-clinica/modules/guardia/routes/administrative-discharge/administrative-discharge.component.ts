@@ -18,6 +18,9 @@ import { Moment } from 'moment';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { GuardiaMapperService } from '../../services/guardia-mapper.service';
+import { ERole } from '@api-rest/api-model';
+import { anyMatch } from '@core/utils/array.utils';
+import { PermissionsService } from '@core/services/permissions.service';
 
 @Component({
 	selector: 'app-administrative-discharge',
@@ -39,6 +42,8 @@ export class AdministrativeDischargeComponent implements OnInit {
 
 	private episodeId: number;
 	private patientId: number;
+	private hasEmergencyCareRelatedRole: boolean;
+	private readonly routePrefix = 'institucion/' + this.contextService.institutionId;
 
 	constructor(
 		private readonly router: Router,
@@ -51,6 +56,7 @@ export class AdministrativeDischargeComponent implements OnInit {
 		private readonly guardiaMapperService: GuardiaMapperService,
 		private readonly snackBarService: SnackBarService,
 		private readonly emergencyCareEpisodeService: EmergencyCareEpisodeService,
+		private readonly permissionsService: PermissionsService,
 	) { }
 
 	ngOnInit(): void {
@@ -80,6 +86,11 @@ export class AdministrativeDischargeComponent implements OnInit {
 
 		});
 
+		this.permissionsService.contextAssignments$().subscribe(
+			(userRoles: ERole[]) => {
+				this.hasEmergencyCareRelatedRole = anyMatch<ERole>(userRoles, [ERole.ESPECIALISTA_MEDICO, ERole.ENFERMERO, ERole.PROFESIONAL_DE_SALUD]);
+			}
+		);
 
 	}
 
@@ -89,7 +100,20 @@ export class AdministrativeDischargeComponent implements OnInit {
 			this.emergencyCareEpisodeAdministrativeDischargeService.newAdministrativeDischarge(this.episodeId, administrativeDischargeDto).subscribe(
 				saved => {
 					this.snackBarService.showSuccess('guardia.episode.administrative_discharge.messages.SUCCESS');
-					this.router.navigateByUrl(`institucion/${this.contextService.institutionId}/guardia`);
+					if (this.patientId) {
+						if (this.hasEmergencyCareRelatedRole) {
+							const url = `${this.routePrefix}/ambulatoria/paciente/${this.patientId}`;
+							this.router.navigateByUrl(url);
+						}
+						else {
+							const url = `${this.routePrefix}/pacientes/profile/${this.patientId}`;
+							this.router.navigateByUrl(url);
+						}
+					}
+					else {
+						// TO DO .. This "else" code block can be removed as it is not possible to "Medical Discharge" or "Administrative Discharge" to the emergency care episode without linking the patient
+						this.router.navigateByUrl(`${this.routePrefix}/guardia`);
+					}
 				}, error => error?.text ? this.snackBarService.showError(error.text)
 					: this.snackBarService.showError('guardia.episode.administrative_discharge.messages.ERROR')
 			);
@@ -98,11 +122,17 @@ export class AdministrativeDischargeComponent implements OnInit {
 
 	goToEpisodeDetails(): void {
 		if (this.patientId) {
-			const url = `institucion/${this.contextService.institutionId}/ambulatoria/paciente/${this.patientId}`;
-			this.router.navigateByUrl(url, { state: { toEmergencyCareTab: true } });
+			if (this.hasEmergencyCareRelatedRole) {
+				const url = `${this.routePrefix}/ambulatoria/paciente/${this.patientId}`;
+				this.router.navigateByUrl(url, { state: { toEmergencyCareTab: true } });
+			}
+			else {
+				const url = `${this.routePrefix}/pacientes/profile/${this.patientId}`;
+				this.router.navigateByUrl(url);
+			}
 		}
 		else {
-			const url = `institucion/${this.contextService.institutionId}/guardia/episodio/${this.episodeId}`;
+			const url = `${this.routePrefix}/guardia/episodio/${this.episodeId}`;
 			this.router.navigateByUrl(url);
 		}
 	}
