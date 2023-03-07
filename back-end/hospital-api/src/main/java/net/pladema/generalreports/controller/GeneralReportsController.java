@@ -2,8 +2,11 @@ package net.pladema.generalreports.controller;
 
 import ar.lamansys.sgx.shared.dates.configuration.LocalDateMapper;
 import ar.lamansys.sgx.shared.reports.util.struct.IWorkbook;
+import net.pladema.generalreports.repository.OutPatientOlderAdults;
 import net.pladema.generalreports.repository.QueryFactoryGR;
 import net.pladema.generalreports.service.ExcelServiceGR;
+
+import net.pladema.medicalconsultation.appointment.application.port.NewAppointmentNotification;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -245,7 +248,7 @@ public class GeneralReportsController {
 		response.flushBuffer();
 	}
 
-	@GetMapping(value = "/{institutionId}/totalNursingRecovery")
+		@GetMapping(value = "/{institutionId}/totalNursingRecovery")
 	@PreAuthorize("hasPermission(#institutionId, 'ADMINISTRADOR_INSTITUCIONAL_BACKOFFICE, PERSONAL_DE_ESTADISTICA')")
 	public @ResponseBody void getTotalNursingRecoveryExcelReport(
 			@PathVariable Integer institutionId,
@@ -267,6 +270,76 @@ public class GeneralReportsController {
 		LocalDate endDate = localDateMapper.fromStringToLocalDate(toDate);
 
 		IWorkbook wb = this.excelServiceGR.buildExcelTotalNursingRecovery(title, headers, this.queryFactoryGR.queryTotalNursingRecovery(institutionId, startDate, endDate));
+
+		String filename = title + "." + wb.getExtension();
+		response.addHeader("Content-disposition", "attachment;filename=" + filename);
+		response.setContentType(wb.getContentType());
+
+		OutputStream out = response.getOutputStream();
+		wb.write(out);
+		out.close();
+		out.flush();
+		response.flushBuffer();
+	}
+
+	@GetMapping(value = "/{institutionId}/outPatientOlderAdults")
+	@PreAuthorize("hasPermission(#institutionId, 'ADMINISTRADOR_INSTITUCIONAL_BACKOFFICE, PERSONAL_DE_ESTADISTICA')")
+	public @ResponseBody
+	void getOutPatientOlderAdults(
+			@PathVariable Integer institutionId,
+			@RequestParam(value = "fromDate", required = true)String fromDate,
+			@RequestParam(value = "toDate", required = true) String toDate,
+			HttpServletResponse response
+	)throws Exception{
+		LOG.debug("Se creará el excel{}", institutionId);
+		LOG.debug("Inputs parameters -> institutionId {}, fromDate{}, toDate{}", institutionId);
+
+		String fechaInicio = fromDate;
+		String fechaFin = toDate;
+
+		String title = "Consultas ambulatorias del Adulto Mayor";
+		String headers[] = new String[]{"Institution", "Prestador", "DNI", "Fecha de Atencion", "Hora", "Cons. N°",
+		"DNI Paciente", "Nombre Paciente", "Sexo", "Fecha de Nacimiento", "Edad a Fecha del Turno", "Edad a Hoy", "Obra/s social/es", "Domicilio",
+		"Localidad", "Telefono", "Problemas"};
+
+
+		LocalDate startDate = localDateMapper.fromStringToLocalDate(fromDate);
+		LocalDate endDate = localDateMapper.fromStringToLocalDate(toDate);
+
+		IWorkbook wb = this.excelServiceGR.buildExcelOutPatientOlderAdults(title, headers, this.queryFactoryGR.queryOutPatientOlderAdults(institutionId, startDate, endDate),fechaInicio , fechaFin);
+
+		String filename = title + "." + wb.getExtension();
+		response.addHeader("Content-disposition", "attachment;filename=" + filename);
+		response.setContentType(wb.getContentType());
+
+		OutputStream out = response.getOutputStream();
+		wb.write(out);
+		out.close();
+		out.flush();
+		response.flushBuffer();
+	}
+
+	@GetMapping(value = "/{institutionId}/hospitalizationOlderAdults")
+	@PreAuthorize("hasPermission(#institutionId, 'ADMINISTRADOR_INSTITUCIONAL_BACKOFFICE, PERSONAL_DE_ESTADISTICA')")
+	public @ResponseBody
+	void getHospitalizationOlderAdults(
+			@PathVariable Integer institutionId,
+			@RequestParam(value = "fromDate", required = true)String fromDate,
+			@RequestParam(value = "toDate", required = true) String toDate,
+			HttpServletResponse response
+	)throws Exception{
+
+		String fechaInicio = fromDate;
+		String fechaFin = toDate;
+
+		String title = "Internaciones del Adulto Mayor";
+		String[] headers =  new String[]{"Institution","Apellidos","Nombres","Genero","Identificación","Fecha de Nacimiento",
+		"Edad a fecha de turno","Edad a hoy","Telefono","Ingreso","Alta probable","Cama","Categoria","Habitacion","Sector","Alta","Problemas"};
+
+		LocalDate startDate = localDateMapper.fromStringToLocalDate(fromDate);
+		LocalDate endDate = localDateMapper.fromStringToLocalDate(toDate);
+
+		IWorkbook wb = this.excelServiceGR.buildExcelHospitalizationOlderAdults(title,headers, this.queryFactoryGR.queryHospitalizationOlderAdults(institutionId, startDate, endDate), fechaInicio, fechaFin);
 
 		String filename = title + "." + wb.getExtension();
 		response.addHeader("Content-disposition", "attachment;filename=" + filename);
