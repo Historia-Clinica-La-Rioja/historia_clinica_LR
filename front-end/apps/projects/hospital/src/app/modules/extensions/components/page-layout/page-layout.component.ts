@@ -1,5 +1,5 @@
 import { Component, Input } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { UIPageDto } from '@extensions/extensions-model';
 import { CSVFileDownloadService } from '@extensions/services/csvfile-download.service';
 
@@ -14,10 +14,14 @@ export class PageLayoutComponent {
 
 	constructor(
 		activatedRoute: ActivatedRoute,
+		router: Router,
 		public fileDownloadService: CSVFileDownloadService,
 	) {
 		activatedRoute.data.subscribe((data: Boolean) => {
 			fileDownloadService.enabledDownload = data.valueOf();
+			if(router.url.includes('reportesEstadisticos')){
+				fileDownloadService.enabledDownload=false;
+			}
 		}
 		);
 	}
