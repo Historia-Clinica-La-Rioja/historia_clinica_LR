@@ -248,7 +248,7 @@ public class GeneralReportsController {
 		response.flushBuffer();
 	}
 
-		@GetMapping(value = "/{institutionId}/totalNursingRecovery")
+	@GetMapping(value = "/{institutionId}/totalNursingRecovery")
 	@PreAuthorize("hasPermission(#institutionId, 'ADMINISTRADOR_INSTITUCIONAL_BACKOFFICE, PERSONAL_DE_ESTADISTICA')")
 	public @ResponseBody void getTotalNursingRecoveryExcelReport(
 			@PathVariable Integer institutionId,
