@@ -97,6 +97,11 @@ export class AppointmentsService {
 		return this.http.get<AppointmentDto>(url);
 	}
 
+	getAppointmentEquipment(appoinmentId: number): Observable<AppointmentDto> {
+		const url = `${this.BASE_URL}/equipmentAppointment/${appoinmentId}`;
+		return this.http.get<AppointmentDto>(url);
+	}
+	
 	hasNewConsultationEnabled(patientId: number): Observable<boolean> {
 		let queryParams: HttpParams = new HttpParams();
 		queryParams = queryParams.append('patientId', JSON.stringify(patientId));

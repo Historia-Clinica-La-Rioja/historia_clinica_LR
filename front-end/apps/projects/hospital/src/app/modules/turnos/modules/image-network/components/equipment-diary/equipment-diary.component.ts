@@ -1,12 +1,12 @@
 import { Component, Input, OnInit } from '@angular/core';
-import { CompleteEquipmentDiaryDto, DiaryOpeningHoursDto } from '@api-rest/api-model';
+import { CompleteEquipmentDiaryDto, DiaryOpeningHoursDto, MedicalCoverageDto } from '@api-rest/api-model';
 import { ERole } from '@api-rest/api-model';
 import { CalendarEvent, CalendarView, CalendarWeekViewBeforeRenderEvent, DAYS_OF_WEEK } from 'angular-calendar';
 import { SnackBarService } from '@presentation/services/snack-bar.service';
 import { Subject } from 'rxjs';
 import { DatePipeFormat } from '@core/utils/date.utils';
 import * as moment from 'moment';
-import { MINUTES_IN_HOUR } from '@turnos/constants/appointment';
+import { APPOINTMENT_STATES_ID, MINUTES_IN_HOUR } from '@turnos/constants/appointment';
 import { MEDICAL_ATTENTION } from '@turnos/constants/descriptions';
 import { EquipmentDiaryService } from '@api-rest/services/equipment-diary.service';
 import { SearchEquipmentDiaryService } from '../../services/search-equipment-diary.service';
@@ -21,6 +21,9 @@ import { endOfMonth, endOfWeek, startOfMonth, startOfWeek } from 'date-fns';
 import { TranslateService } from '@ngx-translate/core';
 import { DatePipe } from '@angular/common';
 import { DiscardWarningComponent } from '@presentation/dialogs/discard-warning/discard-warning.component';
+import { ConfirmBookingComponent } from '@turnos/dialogs/confirm-booking/confirm-booking.component';
+import { HealthInsuranceService } from '@api-rest/services/health-insurance.service';
+import { ImageNetworkAppointmentComponent } from '../image-network-appointment/image-network-appointment.component';
 
 @Component({
 	selector: 'app-equipment-diary',
@@ -62,6 +65,7 @@ export class EquipmentDiaryComponent implements OnInit {
 		private readonly searchEquipmentDiary: SearchEquipmentDiaryService,
 		readonly openingHoursService: OpeningHoursDiaryService,
 		private readonly permissionService: PermissionsService,
+		private readonly healthInsuranceService: HealthInsuranceService,
 		private readonly dialog: MatDialog,
 		private readonly equipmentAppointmentsFacade: EquipmentAppointmentsFacadeService,
 		private readonly translateService: TranslateService,
@@ -82,6 +86,7 @@ export class EquipmentDiaryComponent implements OnInit {
 	loadCalendar(renderEvent: CalendarWeekViewBeforeRenderEvent) {
 		if (this.diary) {
 			this.openingHoursService.loadOpeningHoursOfCalendar(renderEvent, this.diary.startDate, this.diary.endDate);
+			this.openingHoursService.setDiaryOpeningHours(this.diary.equipmentDiaryOpeningHours);
 		}
 	}
 
@@ -183,6 +188,58 @@ export class EquipmentDiaryComponent implements OnInit {
 			}
 		});
 		dialogRef.afterClosed().subscribe(() => this.equipmentAppointmentsFacade.loadAppointments());
+	}
+
+	viewAppointment(event: CalendarEvent): void {
+		if (event.meta?.appointmentStateId === APPOINTMENT_STATES_ID.BLOCKED || !event.meta) {
+			return;
+		}
+		if (!event.meta.patient?.id) {
+			this.dialog.open(ConfirmBookingComponent, {
+				width: '30%',
+				data: {
+					date: event.meta.date.format(DateFormat.API_DATE),
+					diaryId: this.diary.id,
+					hour: event.meta.date.format(DateFormat.HOUR_MINUTE_SECONDS),
+					openingHoursId: this.openingHoursService.getOpeningHoursId(this.diary.startDate, this.diary.endDate, event.meta.date.toDate()),
+					overturnMode: false,
+					identificationTypeId: event.meta.patient.typeId ? event.meta.patient.typeId : 1,
+					idNumber: event.meta.patient.identificationNumber,
+					appointmentId: event.meta.appointmentId,
+					phoneNumber: event.meta.phoneNumber
+				}
+			});
+		} else {
+			let dialogRef;
+			if (event.meta.rnos) {
+				this.healthInsuranceService.get(event.meta.rnos)
+					.subscribe((medicalCoverageDto: MedicalCoverageDto) => {
+						event.meta.healthInsurance = medicalCoverageDto;
+						dialogRef = this.dialog.open(ImageNetworkAppointmentComponent, {
+							disableClose: true,
+							data: {
+								appointmentData: event.meta,
+								professionalPermissions: this.hasRoleToCreate,
+								agenda: this.diary
+							}
+						});
+					});
+			} else {
+				dialogRef = this.dialog.open(ImageNetworkAppointmentComponent, {
+					disableClose: true,
+					data: {
+						appointmentData: event.meta,
+						hasPermissionToAssignShift: this.hasRoleToCreate,
+						agenda: this.diary
+					},
+				});
+			}
+			dialogRef.afterClosed().subscribe((appointmentInformation) => {
+				this.viewDate = appointmentInformation.date;
+				this.setDateRange(this.viewDate);
+				this.equipmentAppointmentsFacade.setValues(this.diary.id, this.diary.appointmentDuration, this.startDate, this.endDate);
+			});
+		}
 	}
 
 	private setDateRange(date: Date) {

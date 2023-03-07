@@ -43,14 +43,16 @@
 			[dayEndHour]="openingHoursService.dayEndHour" [hourSegmentTemplate]="hourSegmentTemplate"
 			[headerTemplate]="headerTemplate" [hourSegments]="hourSegments" [weekStartsOn]="MONDAY"
 			[events]="appointments" (beforeViewRender)="loadCalendar($event)"
-			(hourSegmentClicked)="hasRoleToCreate ? onClickedSegment($event) : null">
+			(hourSegmentClicked)="hasRoleToCreate ? onClickedSegment($event) : null"
+			(eventClicked)="viewAppointment($event.event)">
 		</mwl-calendar-week-view>
 
 		<mwl-calendar-day-view class="title-black" *ngSwitchCase="calendarViewEnum.Day" [viewDate]="viewDate"
 			[hourSegments]="hourSegments" [hourSegmentTemplate]="hourSegmentTemplate"
 			[dayStartHour]="openingHoursService.dayStartHour" [dayEndHour]="openingHoursService.dayEndHour"
 			[events]="appointments" (beforeViewRender)="loadCalendar($event)"
-			(hourSegmentClicked)="hasRoleToCreate ? onClickedSegment($event) : null">
+			(hourSegmentClicked)="hasRoleToCreate ? onClickedSegment($event) : null"
+			(eventClicked)="viewAppointment($event.event)">
 		</mwl-calendar-day-view>
 	</div>
 

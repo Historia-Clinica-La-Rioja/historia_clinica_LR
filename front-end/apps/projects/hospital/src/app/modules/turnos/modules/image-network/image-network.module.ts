@@ -7,12 +7,15 @@ import { CalendarModule, DateAdapter } from 'angular-calendar';
 import { adapterFactory } from 'angular-calendar/date-adapters/date-fns';
 import { SearchAppointmentsByEquipmentComponent } from './components/search-appointments-by-equipment/search-appointments-by-equipment.component';
 import { EquipmentDiaryComponent } from './components/equipment-diary/equipment-diary.component';
+import { ImageNetworkAppointmentComponent } from './components/image-network-appointment/image-network-appointment.component';
+import { EquipmentAppointmentsFacadeService } from './services/equipment-appointments-facade.service';
 
 @NgModule({
 	declarations: [
 		EquipmentDiarySetupComponent,
 		SearchAppointmentsByEquipmentComponent,
-		EquipmentDiaryComponent
+		EquipmentDiaryComponent,
+  ImageNetworkAppointmentComponent
 	],
 	imports: [
 		CommonModule,
@@ -23,6 +26,9 @@ import { EquipmentDiaryComponent } from './components/equipment-diary/equipment-
 	exports: [
 		SearchAppointmentsByEquipmentComponent,
 		EquipmentDiaryComponent
+	],
+	providers: [
+		EquipmentAppointmentsFacadeService
 	]
 })
 

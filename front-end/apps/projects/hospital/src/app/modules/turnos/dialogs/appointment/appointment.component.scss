@@ -1,64 +1,4 @@
-@import "../../../../../assets/styles/mixins.scss";
-
-.appointment-body {
-	margin: 0 15px;
-
-	.icon-grey {
-		color: #A8A8A8;
-		font-size: 20px;
-	}
-
-	.icon-close {
-		mat-icon {
-			font-size: 24px;
-			color: rgba(0, 0, 0, 0.54);
-		}
-	}
-
-	.title-size {
-		font-size: 18px;
-	}
-
-	.subtitle-size {
-		font-size: 16px;
-	}
-
-	.strong-size {
-		font-size: 14px;
-	}
-
-	.normal-size {
-		font-size: 12px;
-	}
-
-	.purple {
-		color: #AA4EF2;
-	}
-}
-
-.window {
-	@media (min-height: 600px) {
-		min-height: 500px;
-	}
-}
-
-.header {
-	width: 95%;
-}
-
-.header-content {
-
-	button {
-		padding: 0;
-		height: fit-content;
-	}
-
-	.mat-card-patient-image {
-		width: 60px;
-		height: 60px;
-		border-radius: 50%;
-	}
-}
+@import "../../turnos-mixins.scss";
 
 .appointment-information {
 	height: auto;
@@ -76,24 +16,6 @@
 	padding: 20px;
 	color: #545454;
 	line-height: 14px;
-}
-
-.patient-info {
-	line-height: 17px;
-	max-height: 24px;
-}
-
-.patient-no-info {
-	color: gray;
-}
-
-mat-icon {
-	font-size: 20px;
-}
-
-a {
-	text-decoration: none;
-	color: #2687C5;
 }
 
 .appointment-actions {
@@ -138,38 +60,12 @@ a {
 	margin-top: 10px;
 }
 
-mat-form-field {
-	width: 100%;
-}
-
-section {
-	margin: 0;
-	margin-top: 10px;
-}
-
-
 .hide-borders {
 	border-top-style: hidden;
 	border-left-style: hidden;
 	border-right-style: hidden;
 	outline: none;
 	margin-left: 3px;
-}
-
-.phone-text {
-	margin-left: 3px;
-}
-
-.mat-icon-button ::ng-deep .mat-button-focus-overlay {
-	display: none;
-}
-
-.coverage-text {
-	display: inline-block;
-	max-width: 285px;
-	white-space: nowrap;
-	overflow: hidden;
-	text-overflow: ellipsis;
 }
 
 .dateForm {
@@ -206,49 +102,6 @@ section {
 	}
 }
 
-.confirm-buttons {
-	margin-bottom: 15px;
-}
-
 .none {
 	display: none;
-}
-
-.report {
-	margin-bottom: 10px;
-}
-
-mat-divider {
-	width: 95%;
-}
-
-mat-dialog-actions {
-	width: 95%;
-}
-
-.mat-dialog-container {
-	padding-right: 0px;
-}
-
-@media only screen and (max-width: 426px) {
-	.mat-card-patient-image{
-		display: none;
-	}
-
-	section{
-		width: 58vw;
-	}
-
-	.appointment-actions{
-		button{
-			min-width: 0;
-			padding: 0;
-		}
-	}
-}
-
-@media only screen and (max-width: 320px) {
-	.window{
-		padding-left: 5px;
-	}
 }

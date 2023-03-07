@@ -6,7 +6,7 @@ import { CreateAppointmentDto, BasicPersonalDataDto, AppointmentShortSummaryDto,
 import { AppointmentsService } from '@api-rest/services/appointments.service';
 import { PatientNameService } from '@core/services/patient-name.service';
 import { ReplaySubject, Observable, forkJoin } from 'rxjs';
-import { map } from 'rxjs/operators';
+import { first, map } from 'rxjs/operators';
 import { HolidaysService } from '@api-rest/services/holidays.service';
 import { dateDtoToDate } from '@api-rest/mapper/date-dto.mapper';
 
@@ -72,6 +72,24 @@ export class EquipmentAppointmentsFacadeService {
 						return response;
 					}
 					return -1;
+				})
+			);
+	}
+
+	updatePhoneNumber(appointmentId: number, phonePrefix: string, phoneNumber: string): Observable<boolean> {
+		return this.appointmentsService.updatePhoneNumber(appointmentId, phonePrefix, phoneNumber)
+			.pipe(
+				map((response: boolean) => {
+					if (response) {
+						this.appointments$.pipe(first()).subscribe((events: CalendarEvent[]) => {
+							const toEdit: CalendarEvent = events.find(event => event.meta?.appointmentId === appointmentId);
+							toEdit.meta.phoneNumber = phoneNumber;
+							toEdit.meta.phonePrefix = phonePrefix;
+							this.appointmenstEmitter.next(events);
+						});
+						return true;
+					}
+					return false;
 				})
 			);
 	}

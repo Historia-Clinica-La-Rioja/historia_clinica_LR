@@ -1,0 +1,144 @@
+<div class="appointment-body">
+	<div fxLayout="row" fxLayoutAlign="end">
+		<button id="close-dialog" mat-icon-button (click)="closeDialog()" type="button" class="icon-close">
+			<mat-icon>close</mat-icon>
+		</button>
+	</div>
+	<div mat-dialog-content class="window" id="window"
+		gdAreas="personal-data personal-data | coverage appointment | div-sup div-sup | div-inf div-inf "
+		gdColumns="1fr 1fr" gdRows="auto" gdGap="10px 50px"
+		gdAreas.lt-md="personal-data | coverage | appointment"
+		gdColumns.lt-md="auto"
+		gdGap.lt-md="0px">
+
+		<section gdArea="personal-data" id="personal-data" fxLayout="column" fxLayoutGap="5px">
+			<div class="header" fxLayout="row" fxLayoutAlign="space-between" fxLayout.lt-md="column">
+				<div class="header-content" fxLayout="row" fxLayoutAlign="start " fxLayoutGap="20px">
+					<img mat-card-md-image mat-card-avatar class="mat-card-patient-image" [src]="decodedPhoto$ | async"
+						onerror="this.src='../../../../../../../assets/images/empty-profile.png'">
+					<div fxLayout="column" fxLayoutAlign="center start">
+						<span class="mat-body-strong capitalize title-size"
+							*ngIf="data.appointmentData.patient.fullName">
+							{{ viewPatientName(data.appointmentData) | uppercase }}
+						</span>
+						<div>
+							<span id="patient_id" class="mat-body-strong subtitle-size">ID
+								{{data.appointmentData.patient.id}}
+							</span>•
+							<span class="mat-body-strong subtitle-size"
+								*ngIf="data.appointmentData.patient.identificationNumber">
+								{{identificationType?.description}}
+								{{data.appointmentData.patient.identificationNumber | number:'3.0-0'}}
+							</span>
+						</div>
+					</div>
+				</div>
+			</div>
+		</section>
+
+		<section gdArea="coverage">
+			<ng-container *ngIf="!hideFilterPanel else editAppointment">
+				<div fxLayout="column" fxLayoutGap="5px">
+					<span class="mat-caption normal-size">{{'turnos.appointment.coverageData.COVERAGE_DATA' |
+						translate}}</span>
+					<div fxLayout="row" fxLayoutGap="5px" fxLayout.xs="column" >
+						<span class="mat-body patient-info coverage-text subtitle-size" *ngIf="coverageData else noInfo"
+							matTooltip="{{coverageData.medicalCoverage.name}}">{{coverageText}}</span>
+						<span class="mat-body patient-info coverage-text subtitle-size" *ngIf="coverageNumber">/
+							{{coverageNumber}}
+						</span>
+						<span class="mat-body patient-info coverage-text lowercase subtitle-size"
+							*ngIf="coverageCondition">/
+							{{coverageCondition}}
+						</span>
+					</div>
+				</div>
+				<div fxLayout="column" fxLayoutGap="5px">
+					<span class="mat-caption normal-size">{{'turnos.appointment.phoneNumber.PHONE_NUMBER' |
+						translate}}</span>
+					<span *ngIf="phoneNumber else noInfo"
+						class="mat-body patient-info coverage-text subtitle-size">{{phoneNumber}}</span>
+				</div>
+				<button type="button" mat-icon-button color="primary" *ngIf="( hasRoleToEdit$ | async )"
+					(click)="hideFilters()">
+					<mat-icon class="material-icons-outlined">edit</mat-icon>
+					<span class="mat-body strong-size">
+						{{'turnos.appointment.EDIT_PATIENT_INFO' | translate}}
+					</span>
+				</button>
+			</ng-container>
+
+            <ng-template #editAppointment>
+				<form [formGroup]="formEdit" fxLayout="column" fxLayoutGap="5px" (ngSubmit)="edit()">
+					<mat-form-field appearance="outline" *ngIf="isAssigned()">
+						<button type="button" mat-button matSuffix color="warn" mat-icon-button
+							*ngIf="formEdit.value.newCoverageData" (click)="clear(); $event.stopPropagation()">
+							<mat-icon>close</mat-icon>
+						</button>
+						<mat-label>{{'pacientes.form.MEDICAL_COVERAGE' | translate}}</mat-label>
+						<mat-select formControlName="newCoverageData">
+							<mat-option *ngFor="let patientMedicalCoverage of patientMedicalCoverages"
+								[value]="patientMedicalCoverage.id">
+								{{getFullMedicalCoverageText(patientMedicalCoverage)}}
+							</mat-option>
+							<mat-option (click)="openMedicalCoverageDialog()">
+								<span class="color-primary">
+									{{'ambulatoria.paciente.ordenes_prescripciones.new_prescription_dialog.UPDATE_COVERAGE'
+									| translate}}
+								</span>
+							</mat-option>
+						</mat-select>
+					</mat-form-field>
+					<div fxLayout="row" fxLayoutGap="10px" fxLayout.xs="column">
+						<mat-form-field fxFlex="30%" appearance="outline">
+							<mat-label>{{'turnos.appointment.phoneNumber.PHONE_PREFIX' | translate}}</mat-label>
+							<input matInput type="text" id="phonePrefix" formControlName="phonePrefix"
+								placeholder="{{'turnos.appointment.phoneNumber.PHONE_PREFIX' | translate }}"
+								(keyup)="updatePhoneValidators()">
+							<mat-error *ngIf="hasError(formEdit, 'required', 'phonePrefix')">
+								<span translate="forms.REQUIRED"></span>
+							</mat-error>
+							<mat-error *ngIf="hasError(formEdit, 'maxlength', 'phonePrefix')"
+								translate="forms.MAX_LENGTH_ERROR" [translateParams]="{max: 10}">
+							</mat-error>
+							<mat-error
+							*ngIf="hasError(formEdit, 'pattern', 'phonePrefix')"
+							[translate]="'forms.FORMAT_NUMERIC'">
+							</mat-error>
+						</mat-form-field>
+						<mat-form-field fxFlex="70%" appearance="outline">
+							<mat-label [translate]="'turnos.appointment.phoneNumber.PHONE_NUMBER'"></mat-label>
+							<input matInput type="text" id="phoneNumber" formControlName="phoneNumber"
+								placeholder="{{'turnos.appointment.phoneNumber.PHONE_NUMBER' | translate }}"
+								(keyup)="updatePhoneValidators()">
+							<mat-error *ngIf="hasError(formEdit, 'required', 'phoneNumber')">
+								<span translate="forms.REQUIRED"></span>
+							</mat-error>
+							<mat-error *ngIf="hasError(formEdit, 'maxlength', 'phoneNumber')"
+								translate="forms.MAX_LENGTH_ERROR" [translateParams]="{max: 15}">
+							</mat-error>
+							<mat-error
+							*ngIf="hasError(formEdit, 'pattern', 'phoneNumber')"
+							[translate]="'forms.FORMAT_NUMERIC'">
+							</mat-error>
+						</mat-form-field>
+					</div>
+					<div class="confirm-buttons" fxLayout="row" fxLayoutAlign="end" fxLayoutGap="15px">
+						<button mat-stroked-button color="primary" btn-block type="button" (click)="hideFilters(); updatePhoneValidators()">
+							<span>{{'turnos.appointment.CANCEL' | translate}}</span>
+						</button>
+						<button mat-flat-button color="primary" [disabled]="isInvalidFormEdit()">
+							<span>{{'turnos.appointment.SAVE' | translate}}</span>
+						</button>
+					</div>
+				</form>
+			</ng-template>
+		</section>
+	</div>
+</div>
+
+<ng-template #noInfo>
+	<span class="mat-body patient-no-info coverage-text subtitle-size">
+		{{'turnos.appointment.NO-INFO' | translate}}
+	</span>
+</ng-template>
