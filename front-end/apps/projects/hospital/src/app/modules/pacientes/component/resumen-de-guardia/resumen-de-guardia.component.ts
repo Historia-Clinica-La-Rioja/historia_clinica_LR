@@ -111,6 +111,7 @@ export class ResumenDeGuardiaComponent implements OnInit {
 
     dialogRef.afterClosed().subscribe(consultorio => {
       if (consultorio) {
+        this.doctorsOfficeDescription = consultorio?.description;
         this.episodeStateService.cancelar(this.episodeId, consultorio.id).subscribe(changed => {
           if (changed) {
             this.snackBarService.showSuccess('ambulatoria.paciente.guardia.CANCEL_ATTENTION_SUCCESS');
@@ -150,6 +151,7 @@ export class ResumenDeGuardiaComponent implements OnInit {
 
     dialogRef.afterClosed().subscribe(consultorio => {
       if (consultorio) {
+        this.doctorsOfficeDescription = consultorio?.description;
         this.episodeStateService.atender(this.episodeId, consultorio.id).subscribe(changed => {
           if (changed) {
             this.snackBarService.showSuccess(`${TRANSLATE_KEY_PREFIX}.atender.SUCCESS`);
