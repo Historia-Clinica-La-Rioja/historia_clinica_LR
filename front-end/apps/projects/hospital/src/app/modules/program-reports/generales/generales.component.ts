@@ -122,6 +122,12 @@ export class GeneralesComponent implements OnInit {
         case 8:
           this.generalService.getTotalNursingRecoveryReport(params, `${this.GENERAL_REPORT_TYPES[7].description}.xls`).subscribe();
         break;
+        case 9:
+          this.generalService.getOutPatientOlderAdults(params, `${this.GENERAL_REPORT_TYPES[8].description}.xls`).subscribe();
+        break;
+        case 10:
+          this.generalService.getHospitalizationOlderAdults(params, `${this.GENERAL_REPORT_TYPES[9].description}.xls`).subscribe();
+        break;
         default:
       }
     }
