@@ -53,7 +53,7 @@ export class ConfirmarPrescripcionComponent implements OnInit {
 			data: {
 				patientId: this.data.patientId,
 				patientEmail: this.data.patientEmail,
-				prescriptionRequest: this.data.prescriptionRequest
+				prescriptionRequest: this.data.prescriptionRequest[0]
 			}
 		}).afterClosed().subscribe(_ => this.closeModal());
 	}

@@ -174,7 +174,7 @@ export class CardMedicacionesComponent implements OnInit {
 								successLabel: 'ambulatoria.paciente.ordenes_prescripciones.toast_messages.POST_MEDICATION_SUCCESS',
 								prescriptionType: PrescriptionTypes.MEDICATION,
 								patientId: this.patientId,
-								prescriptionRequest: newPrescription.prescriptionRequestResponse[0],
+								prescriptionRequest: newPrescription.prescriptionRequestResponse,
 								patientEmail,
 								identificationNumber: newPrescription.identificationNumber
 							},
