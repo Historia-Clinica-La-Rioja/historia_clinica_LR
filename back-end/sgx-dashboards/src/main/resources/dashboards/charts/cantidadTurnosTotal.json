@@ -1,7 +1,7 @@
 {
   "cubeQuery": {
     "measures": [
-      "CantidadTurnos.cantidad_turnos"
+      "CantidadTurnosTotal.cantidad_turnos"
     ],
     "timeDimensions": [],
     "order": {},
