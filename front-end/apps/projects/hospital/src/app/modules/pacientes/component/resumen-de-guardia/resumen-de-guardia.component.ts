@@ -51,7 +51,7 @@ export class ResumenDeGuardiaComponent implements OnInit {
   private hasEmergencyCareRelatedRole: boolean;
   private hasRoleAdministrative: boolean;
 
-  avaibleActions: ActionInfo[] = [];
+  availableActions: ActionInfo[] = [];
 
   constructor(
     private readonly emergencyCareEpisodeService: EmergencyCareEpisodeService,
@@ -80,7 +80,7 @@ export class ResumenDeGuardiaComponent implements OnInit {
         this.emergencyCareEpisodeStateService.getState(this.episodeId).subscribe(
           state => {
             this.episodeState = state.id;
-            this.calculateAvaibleActions();
+            this.calculateAvailableActions();
             this.withoutMedicalDischarge = (this.episodeState !== this.STATES.CON_ALTA_MEDICA);
           }
         );
@@ -116,7 +116,7 @@ export class ResumenDeGuardiaComponent implements OnInit {
           if (changed) {
             this.snackBarService.showSuccess('ambulatoria.paciente.guardia.CANCEL_ATTENTION_SUCCESS');
             this.episodeState = EstadosEpisodio.EN_ESPERA;
-            this.calculateAvaibleActions();
+            this.calculateAvailableActions();
           } else {
             this.snackBarService.showError('ambulatoria.paciente.guardia.CANCEL_ATTENTION_ERROR');
           }
@@ -156,7 +156,7 @@ export class ResumenDeGuardiaComponent implements OnInit {
           if (changed) {
             this.snackBarService.showSuccess(`${TRANSLATE_KEY_PREFIX}.atender.SUCCESS`);
             this.episodeState = EstadosEpisodio.EN_ATENCION;
-            this.calculateAvaibleActions();
+            this.calculateAvailableActions();
           }
           else {
             this.snackBarService.showError(`${TRANSLATE_KEY_PREFIX}.atender.ERROR`);
@@ -196,63 +196,63 @@ export class ResumenDeGuardiaComponent implements OnInit {
     });
   }
 
-  private calculateAvaibleActions() {
-    this.avaibleActions = [];
+  private calculateAvailableActions() {
+    this.availableActions = [];
 
     // Following code within this function must be in this order
 
     if (this.hasEmergencyCareRelatedRole && this.episodeState === this.STATES.EN_ATENCION) {
       let action: ActionInfo = {
         label: 'ambulatoria.paciente.guardia.MEDICAL_DISCHARGE_BUTTON',
-        id: 'alta-medica',
+        id: 'medical_discharge',
         callback: this.goToMedicalDischarge.bind(this)
       }
-      this.avaibleActions.push(action);
+      this.availableActions.push(action);
     }
 
     if (this.hasRoleAdministrative && this.episodeState === this.STATES.CON_ALTA_MEDICA) {
       let action: ActionInfo = {
         label: 'ambulatoria.paciente.guardia.ADMINISTRATIVE_DISCHARGE_BUTTON',
-        id: 'administrative-discharge',
+        id: 'administrative_discharge',
         callback: this.goToAdministrativeDischarge.bind(this)
       }
-      this.avaibleActions.push(action);
+      this.availableActions.push(action);
     }
 
     if (this.episodeState === this.STATES.EN_ATENCION || this.episodeState === this.STATES.EN_ESPERA) {
       let action: ActionInfo = {
         label: 'ambulatoria.paciente.guardia.EDIT_BUTTON',
-        id: 'edit-episode',
+        id: 'edit_episode',
         callback: this.goToEditEpisode.bind(this).bind(this)
       }
-      this.avaibleActions.push(action);
+      this.availableActions.push(action);
     }
 
     if (this.episodeState === this.STATES.EN_ESPERA) {
       let action: ActionInfo = {
         label: 'guardia.home.episodes.episode.actions.atender.TITLE',
-        id: 'atender',
+        id: 'attend',
         callback: this.atender.bind(this)
       }
-      this.avaibleActions.push(action);
+      this.availableActions.push(action);
     }
 
     if (this.episodeState === this.STATES.EN_ATENCION) {
       let action: ActionInfo = {
         label: 'ambulatoria.paciente.guardia.CANCEL_BUTTON',
-        id: 'cancel-attention',
+        id: 'cancel_attention',
         callback: this.cancelAttention.bind(this)
       }
-      this.avaibleActions.push(action);
+      this.availableActions.push(action);
     }
 
     if (this.hasRoleAdministrative && this.episodeState === this.STATES.EN_ESPERA) {
       let action: ActionInfo = {
         label: 'guardia.home.episodes.episode.actions.finalizar_ausencia.TITLE',
-        id: 'finalizar-ausencia',
+        id: 'finish_by_absence',
         callback: this.finalizar.bind(this)
       }
-      this.avaibleActions.push(action);
+      this.availableActions.push(action);
     }
   }
 

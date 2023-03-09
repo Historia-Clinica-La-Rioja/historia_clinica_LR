@@ -11,7 +11,7 @@
         </div>
 
         <div fxLayout="column" fxFlex="50%" fxLayoutGap="20px">
-            <app-summary-card [header]="factoresDeRiesgoSummary"
+            <app-summary-card [header]="factoresDeRiesgoSummary" id="risk_factors_summary"
                 [tooltip]="'ambulatoria.paciente.guardia.RISK_FACTORS_TOOLTIP'">
                 <mat-card-content>
                     <div fxLayout="row wrap" *ngIf="riskFactors?.length else noData">

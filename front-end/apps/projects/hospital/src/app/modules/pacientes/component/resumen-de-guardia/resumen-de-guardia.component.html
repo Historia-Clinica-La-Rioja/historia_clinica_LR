@@ -1,4 +1,5 @@
-<app-summary-card [header]="guardiaSummary" [tooltip]="'ambulatoria.paciente.guardia.SUMMARY_TOOLTIP'">
+<app-summary-card [header]="guardiaSummary" [tooltip]="'ambulatoria.paciente.guardia.SUMMARY_TOOLTIP'"
+    id="emergency_care_summary">
     <mat-card-content>
         <div fxLayout="column" fxLayoutGap="15px" id="container">
 
@@ -53,23 +54,23 @@
 
             <div fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="10px">
 
-                <button *ngIf="avaibleActions.length >= 1" id="avaibleActions[0].id" mat-raised-button
-                    color="primary" (click)="avaibleActions[0].callback()">
-                    {{ avaibleActions[0].label | translate | uppercase }}
+                <button *ngIf="availableActions.length >= 1" id="{{ availableActions[0].id }}" mat-raised-button
+                    color="primary" (click)="availableActions[0].callback()">
+                    {{ availableActions[0].label | translate | uppercase }}
                 </button>
-                <button *ngIf="avaibleActions.length >= 2" id="avaibleActions[1].id" mat-raised-button
-                    color="primary" (click)="avaibleActions[1].callback()">
-                    {{ avaibleActions[1].label | translate | uppercase }}
+                <button *ngIf="availableActions.length >= 2" id="{{ availableActions[1].id }}" mat-raised-button
+                    color="primary" (click)="availableActions[1].callback()">
+                    {{ availableActions[1].label | translate | uppercase }}
                 </button>
 
-                <div *ngIf="avaibleActions.length > 2">
-                    <button id="more-actions" mat-icon-button (click)="$event.stopPropagation()"
+                <div *ngIf="availableActions.length > 2">
+                    <button id="more_actions" mat-icon-button (click)="$event.stopPropagation()"
                         [matMenuTriggerFor]="actions">
                         <mat-icon>more_vert</mat-icon>
                     </button>
 
                     <mat-menu #actions="matMenu">
-                        <button *ngFor="let action of avaibleActions | slice:2;" id="action.id" mat-menu-item
+                        <button *ngFor="let action of availableActions | slice:2;" id="{{ action.id }}" mat-menu-item
                             (click)="action.callback()">
                             {{ action.label | translate }}
                         </button>
@@ -85,7 +86,7 @@
             </app-triage-details>
 
             <div fxLayout="row" fxLayoutAlign="flex-end center" *ngIf="withoutMedicalDischarge">
-                <button id="nuevo-triage" mat-raised-button color="primary" (click)="newTriage()">
+                <button id="new_triage" mat-raised-button color="primary" (click)="newTriage()">
                     {{ 'ambulatoria.paciente.guardia.NUEVO_TRIAGE' | translate | uppercase }}
                 </button>
             </div>
