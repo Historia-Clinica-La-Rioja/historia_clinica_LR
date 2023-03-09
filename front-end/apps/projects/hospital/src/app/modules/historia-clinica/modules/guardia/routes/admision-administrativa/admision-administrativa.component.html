@@ -13,7 +13,7 @@
 		</app-patient-card>
 		<mat-form-field appearance="outline">
 			<mat-label translate="guardia.administrative_admision.SELECT_MEDICAL_COVERAGE"></mat-label>
-			<mat-select formControlName="patientMedicalCoverageId" name="patientMedicalCoverageId">
+			<mat-select formControlName="patientMedicalCoverageId" name="patientMedicalCoverageId" id="patientMedicalCoverageId">
 				<mat-option *ngFor="let patientMedicalCoverage of patientMedicalCoverages"
 					[value]="patientMedicalCoverage.id">
 					{{getFullMedicalCoverageText(patientMedicalCoverage)}}
