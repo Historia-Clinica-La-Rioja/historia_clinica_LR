@@ -57,7 +57,7 @@ export class DeleteDocumentActionService {
 		this.anamnesisService.deleteAnamnesis(documentId, internmentEpisodeId, reason).subscribe(
 			success => {
 				this.snackBarService.showSuccess("internaciones.delete-document.messages.SUCCESS");
-				this.updateFieldsSubject.next({ evolutionClinical: true });
+				this.updateFieldsSubject.next({ evolutionClinical: true, diagnosis: true, mainDiagnosis: true });
 			},
 			error => this.snackBarService.showError("internaciones.delete-document.messages.ERROR"))
 
@@ -68,7 +68,7 @@ export class DeleteDocumentActionService {
 		this.evolutionNoteService.deleteEvolutionDiagnosis(documentId, internmentEpisodeId, reason).subscribe(
 			success => {
 				this.snackBarService.showSuccess("internaciones.delete-document.messages.SUCCESS");
-				this.updateFieldsSubject.next({ evolutionClinical: true });
+				this.updateFieldsSubject.next({evolutionClinical: true,diagnosis: true, mainDiagnosis: true});
 			},
 			error => this.snackBarService.showError("internaciones.delete-document.messages.ERROR"))
 	}
@@ -77,7 +77,7 @@ export class DeleteDocumentActionService {
 		this.epicrisisService.deleteEpicrisis(documentId, internmentEpisodeId, reason).subscribe(
 			success => {
 				this.snackBarService.showSuccess("internaciones.delete-document.messages.SUCCESS");
-				this.updateFieldsSubject.next({ evolutionClinical: true });
+				this.updateFieldsSubject.next({ evolutionClinical: true, diagnosis: true, mainDiagnosis: true });
 			},
 			error => this.snackBarService.showError("internaciones.delete-document.messages.ERROR"))
 	}

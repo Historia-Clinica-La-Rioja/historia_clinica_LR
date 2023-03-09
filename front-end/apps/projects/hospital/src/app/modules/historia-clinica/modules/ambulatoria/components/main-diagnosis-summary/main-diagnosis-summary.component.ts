@@ -46,7 +46,7 @@ export class MainDiagnosisSummaryComponent implements OnInit {
 	}
 
 	ngOnChanges() {
-		if (this.mainDiagnosis) {
+		if (this.mainDiagnosis || this.mainDiagnosis$) {
 			this.mainDiagnosis$ = of(this.mainDiagnosis);
 		}
 	}
