@@ -10,7 +10,8 @@ export DOCKER_IMAGE=$2
 export REVIEW_APP_URL=$3
 # optional parameter with default value
 export TEMPORAL=${4:-true}
-export USE_LOCAL_BUILD=${5:-false}
+export PATH_DIR=$5
+export USE_LOCAL_BUILD=${6:-false}
 GLOWROOT_PROJECT="sgh"
 
 if [ -z $ENV_NAME ] || [ -z $DOCKER_IMAGE ] || 
@@ -47,7 +48,7 @@ echo Crea environment con hash: $(
         -e AUTH_DOMAIN=${REVIEW_APP_URL} \
         -e AUTH_SECURE=false \
         --name ${ENV_NAME} \
-        -v /sgh/${ENV_NAME}:/sgh  \
+        -v ${PATH_DIR}${ENV_NAME}:/sgh  \
         --log-opt max-size=10m \
         ${DOCKER_IMAGE} #docker image to run
 )
