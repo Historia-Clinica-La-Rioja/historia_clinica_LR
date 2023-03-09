@@ -414,7 +414,7 @@ export class QueryRendererComponent {
 			.map((s) => resultSet.totalRow()[s.key]);
 
 		switch (resultSet.loadResponse.results[0].query.measures[0]){
-			case 'CantidadTurnos.cantidad_turnos': {
+			case 'CantidadTurnosTotal.cantidad_turnos': {
 				this.numericTitle = 'TURNOS';
 
 				switch (resultSet.loadResponse.results[0].query.filters[0]?.values[0]) {
