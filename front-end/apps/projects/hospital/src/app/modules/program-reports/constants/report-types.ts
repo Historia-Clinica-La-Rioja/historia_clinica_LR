@@ -78,6 +78,14 @@ export const GENERAL_REPORT_TYPES = [
         description: 'Reporte de procedimientos realizados por Enfermería',
         id: 8,
     },
+    {
+        description: 'Consultas ambulatorias del Adulto Mayor',
+        id: 9,
+    },
+    {
+        description: 'Internaciones del Adulto Mayor',
+        id: 10,
+    },
    
 ]
 

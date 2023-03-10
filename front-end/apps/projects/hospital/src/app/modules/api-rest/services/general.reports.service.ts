@@ -58,6 +58,15 @@ export class GeneralReportService {
 		const url = `${environment.apiBase}/generalreports/${this.contextService.institutionId}/totalNursingRecovery`;
 		return this.getGeneralReport(params, fileName, url);
 	}
+  getOutPatientOlderAdults(params: any, fileName: string): Observable<any> {
+		const url = `${environment.apiBase}/generalreports/${this.contextService.institutionId}/outPatientOlderAdults`;
+		return this.getGeneralReport(params, fileName, url);
+	}
+  getHospitalizationOlderAdults(params: any, fileName: string): Observable<any> {
+		const url = `${environment.apiBase}/generalreports/${this.contextService.institutionId}/hospitalizationOlderAdults`;
+		return this.getGeneralReport(params, fileName, url);
+	}
+
   
 
 
