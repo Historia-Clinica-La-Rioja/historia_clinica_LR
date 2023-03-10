@@ -16,12 +16,15 @@ import { AlergiasComponent } from './components/alergias/alergias.component';
 import { AntecedentesFamiliaresComponent } from './components/antecedentes-familiares/antecedentes-familiares.component';
 import { AntecedentesPersonalesComponent } from './components/antecedentes-personales/antecedentes-personales.component';
 import { DiagnosticosComponent } from './components/diagnosticos/diagnosticos.component';
+import { EventSerchComponent } from './components/event-serch/event-serch.component';
+import { ExternalCauseComponent } from './components/external-cause/external-cause.component';
 import { InternmentPatientTableComponent } from './components/internment-patient-table/internment-patient-table.component';
 import { InternmentEpisodeSummaryComponent } from "@historia-clinica/modules/ambulatoria/modules/internacion/components/internment-episode-summary/internment-episode-summary.component";
 import { MedicacionComponent } from './components/medicacion/medicacion.component';
 import { VacunasComponent } from './components/vacunas/vacunas.component';
 import { ElementoDiagnosticoComponent } from './components/elemento-diagnostico/elemento-diagnostico.component';
 import { InternmentPatientCardComponent } from './components/internment-patient-card/internment-patient-card.component';
+import { TableEventComponent } from './components/table-event/table-event.component';
 // dialogs
 import { AnamnesisDockPopupComponent } from "@historia-clinica/modules/ambulatoria/modules/internacion/dialogs/anamnesis-dock-popup/anamnesis-dock-popup.component";
 import { ChangeMainDiagnosisDockPopupComponent } from './dialogs/change-main-diagnosis-dock-popup/change-main-diagnosis-dock-popup.component';
@@ -49,11 +52,14 @@ import { DeleteDocumentPopupComponent } from './dialogs/delete-document-popup/de
 		AntecedentesFamiliaresComponent,
 		AntecedentesPersonalesComponent,
 		DiagnosticosComponent,
+		ExternalCauseComponent,
+		EventSerchComponent,
 		InternmentPatientTableComponent,
 		InternmentPatientCardComponent,
 		InternmentEpisodeSummaryComponent,
 		MedicacionComponent,
 		VacunasComponent,
+		TableEventComponent,
 		// dialogs
 		AnamnesisDockPopupComponent,
 		ChangeMainDiagnosisDockPopupComponent,
