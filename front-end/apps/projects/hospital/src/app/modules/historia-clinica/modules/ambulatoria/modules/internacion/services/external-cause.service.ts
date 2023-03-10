@@ -16,16 +16,16 @@ import { Observable } from 'rxjs';
 })
 
 export class ExternalCauseService {
-
+	ecl = SnomedECL.EVENT;
 	snomedConceptEvent: SnomedDto;
 	snomedConceptEvent$: Subject<SnomedDto> = new Subject<SnomedDto>();
 	externalCause: Subject<ExternalCauseDto> = new Subject<ExternalCauseDto>();
 
+	private tableSubject = new BehaviorSubject<BasicTable<SnomedDto>>(null);
+
 	formEvent = new FormGroup({
 		snomedEvent: new FormControl('', Validators.required)
 	});
-
-	ecl = SnomedECL.EVENT;
 
 	table: BasicTable<SnomedDto> = {
 		data: [],
@@ -39,7 +39,6 @@ export class ExternalCauseService {
 		displayedColumns: ['pt', 'remove'],
 	};
 
-	private tableSubject = new BehaviorSubject<BasicTable<SnomedDto>>(null);
 	table$ = this.tableSubject.asObservable();
 
 	constructor(
@@ -56,6 +55,7 @@ export class ExternalCauseService {
 
 	remove(index: number) {
 		this.table.data = removeFrom<SnomedDto>(this.table.data, index);
+		this.tableSubject.next(this.table);
 		this.formEvent.reset();
 		this.snomedConceptEvent = null;
 		this.snomedConceptEvent$.next(null);
@@ -85,7 +85,7 @@ export class ExternalCauseService {
 		if (this.formEvent.valid) {
 			this.formEvent.reset();
 		}
-		this.getTableInit();
+		this.tableSubject.next(this.getTable());
 	}
 
 	resetForm() {
@@ -94,12 +94,15 @@ export class ExternalCauseService {
 	}
 
 	getTableInit() {
-		const table = {
+		this.tableSubject.next(this.getTable());
+	}
+
+	getTable(): BasicTable<SnomedDto> {
+		return {
 			data: this.table.data,
 			columns: this.table.columns,
 			displayedColumns: this.table.displayedColumns
 		};
-		this.tableSubject.next(table);
 	}
 
 	getSnomedConceptEvent() {
