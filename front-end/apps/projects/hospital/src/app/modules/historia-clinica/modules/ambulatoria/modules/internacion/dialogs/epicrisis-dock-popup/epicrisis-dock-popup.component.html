@@ -386,6 +386,9 @@
 				</app-no-data>
 			</div>
 		</form>
+		<div *ngIf="otherCircustancesFF">
+			<app-external-cause [searchConceptsLocallyFF]="searchConceptsLocallyFF" (event)="setExternalCause($event)"></app-external-cause>
+		</div>
 	</div>
 
 	<div actions id="buttons" fxLayoutGap="10px" fxLayoutAlign="end">

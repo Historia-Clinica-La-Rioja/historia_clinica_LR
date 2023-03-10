@@ -13,6 +13,7 @@ import {
 	ResponseAnamnesisDto,
 	ResponseEpicrisisDto,
 	SnomedDto,
+	ExternalCauseDto
 } from '@api-rest/api-model';
 import { Inject, OnInit } from '@angular/core';
 import { Component } from '@angular/core';
@@ -38,6 +39,7 @@ import { DocumentActionReasonComponent } from '../document-action-reason/documen
 import { MatDialog } from '@angular/material/dialog';
 import { ProblemEpicrisisService } from '../../services/problem-epicrisis.service';
 import { FeatureFlagService } from '@core/services/feature-flag.service';
+import { ExternalCauseService } from '../../services/external-cause.service';
 
 @Component({
 	selector: 'app-epicrisis-dock-popup',
@@ -71,6 +73,9 @@ export class EpicrisisDockPopupComponent implements OnInit {
 	ECL = SnomedECL.DIAGNOSIS;
 	searchConceptsLocallyFF = false;
 	otherCircustancesFF = false;
+	externalCauseDto: ExternalCauseDto = {};
+	externalCause: ExternalCauseDto = {};
+	event$: Observable<ExternalCauseDto>;
 	personalHistories: TableCheckbox<HealthHistoryConditionDto> = {
 		data: [],
 		columns: [
@@ -140,6 +145,7 @@ export class EpicrisisDockPopupComponent implements OnInit {
 		private readonly internmentStateService: InternmentStateService,
 		private readonly snomedService: SnomedService,
 		private readonly dialog: MatDialog,
+		private readonly externalCauseServise: ExternalCauseService
 	) {
 		this.familyHistories.displayedColumns = this.familyHistories.columns?.map(c => c.def).concat(['select']);
 		this.personalHistories.displayedColumns = this.personalHistories.columns?.map(c => c.def).concat(['select']);
@@ -214,6 +220,8 @@ export class EpicrisisDockPopupComponent implements OnInit {
 	}
 
 	private setValues(e: ResponseEpicrisisDto): void {
+		if(e?.externalCause)
+		this.externalCauseServise.setValue(e.externalCause);
 		this.personalHistories.data.forEach(ph => {
 			const existEqual = !!e.personalHistories.find((p) => ph.snomed.sctid === p.snomed.sctid);
 			if (existEqual)
@@ -307,6 +315,7 @@ export class EpicrisisDockPopupComponent implements OnInit {
 			notes: this.toEpicrisisObservationsDto(this.form),
 			mainDiagnosis: this.form.value.mainDiagnosis,
 			diagnosis: this.diagnosticsEpicrisisService.getSelectedAlternativeDiagnostics(),
+			externalCause: this.externalCauseDto,
 			familyHistories: this.familyHistories.selection.selected,
 			personalHistories: this.personalHistories.selection.selected,
 			medications: this.medications,
@@ -390,6 +399,10 @@ export class EpicrisisDockPopupComponent implements OnInit {
 		this.snomedConcept = selectedConcept;
 		const pt = selectedConcept ? selectedConcept.pt : '';
 		this.formDiagnosis.controls.snomed.setValue(pt);
+	}
+
+	setExternalCause(event: ExternalCauseDto) {
+		this.externalCauseDto = event;
 	}
 
 	setConceptProblemSnomed(selectedConcept: SnomedDto): void {
