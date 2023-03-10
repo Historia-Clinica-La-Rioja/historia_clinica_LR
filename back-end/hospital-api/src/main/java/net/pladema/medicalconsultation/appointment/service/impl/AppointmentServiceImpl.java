@@ -558,26 +558,24 @@ public class AppointmentServiceImpl implements AppointmentService {
 		appointmentBo.setHour(hour);
 		appointmentBo.setAppointmentStateId(AppointmentState.BLOCKED);
 		appointmentBo.setOverturn(false);
-		appointmentBo.setOpeningHoursId(getOpeningHourId(openingHours, date, block).getOpeningHours().getId());
+		appointmentBo.setOpeningHoursId(getOpeningHourId(openingHours, date, hour).getOpeningHours().getId());
 		appointmentBo.setAppointmentBlockMotiveId(block.getAppointmentBlockMotiveId());
 		return appointmentBo;
 	}
 
-	private DiaryOpeningHoursBo getOpeningHourId(List<DiaryOpeningHoursBo> openingHours, LocalDate date, BlockBo block) {
+	private DiaryOpeningHoursBo getOpeningHourId(List<DiaryOpeningHoursBo> openingHours, LocalDate date, LocalTime hour) {
 		var dayOfWeek =
 				(short)LocalDate.of(date.getYear(),
 						date.getMonth(),
 						date.getDayOfMonth()).getDayOfWeek().getValue();
-		var localTimeInit = block.getInit();
-		var localTimeEnd = block.getEnd();
-
 		return openingHours.stream()
 				.filter(oh -> oh.getOpeningHours().getDayWeekId().equals(dayOfWeek))
-				.filter(oh -> (oh.getOpeningHours().getFrom().isBefore(localTimeInit) || oh.getOpeningHours().getFrom().equals(localTimeInit)) &&
-						(oh.getOpeningHours().getTo().isAfter(localTimeEnd) || oh.getOpeningHours().getTo().equals(localTimeEnd)))
+				.filter(oh -> (oh.getOpeningHours().getFrom().isBefore(hour) || oh.getOpeningHours().getFrom().equals(hour)) &&
+						(oh.getOpeningHours().getTo().isAfter(hour)))
 				.findFirst().orElseThrow((() -> new ConstraintViolationException("Los horarios de inicio y fin deben pertenecer al mismo período de la agenda.",
 						Collections.emptySet())));
 	}
+
 
 	private List<LocalTime> getSlots(BlockBo block, DiaryBo diaryBo) {
 		var appointmentDuration = diaryBo.getAppointmentDuration();
