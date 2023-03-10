@@ -1,0 +1,45 @@
+<h2 class="mat-h2">{{'internaciones.anamnesis.externalCause.TITLE'|translate}} </h2>
+<mat-card>
+	<mat-card-content fxLayout="column" fxLayoutGap="15px">
+		<h2>{{'internaciones.anamnesis.externalCause.PRODUCED_BY'|translate}}</h2>
+		<mat-radio-group fxLayout="column" fxLayoutGap="15px" [(ngModel)]="selectedOptionExternalCauseType"
+			(change)="emmitEvent()">
+			<mat-radio-button value=ACCIDENT>
+				{{'internaciones.anamnesis.externalCause.produced_by.ACCIDENT'|translate}}
+			</mat-radio-button>
+			<mat-radio-button value=SELF_INFLICTED_INJURY>
+				{{'internaciones.anamnesis.externalCause.produced_by.SELF_INFLICTED_INJURY'|translate}}
+			</mat-radio-button>
+			<mat-radio-button value=AGRESSION>
+				{{'internaciones.anamnesis.externalCause.produced_by.AGRESSION'|translate}}
+			</mat-radio-button>
+			<mat-radio-button value=IGNORED>
+				{{'internaciones.anamnesis.externalCause.produced_by.IGNORED'|translate}}
+			</mat-radio-button>
+		</mat-radio-group>
+
+		<h2>{{'internaciones.anamnesis.externalCause.EVENT_LOCATION'|translate}}</h2>
+		<mat-radio-group fxLayout="column" fxLayoutGap="15px" [(ngModel)]="selectedOptionEventLocation"
+			(change)="emmitEvent()">
+			<mat-radio-button value=DOMICILIO_PARTICULAR>
+				{{'internaciones.anamnesis.externalCause.eventLocation.DOMICILIO_PARTICULAR'|translate}}
+			</mat-radio-button>
+			<mat-radio-button value=VIA_PUBLICA>
+				{{'internaciones.anamnesis.externalCause.eventLocation.VIA_PUBLICA'|translate}}
+			</mat-radio-button>
+			<mat-radio-button value=LUGAR_DE_TRABAJO>
+				{{'internaciones.anamnesis.externalCause.eventLocation.LUGAR_DE_TRABAJO'|translate}}
+			</mat-radio-button>
+			<mat-radio-button value=OTRO>
+				{{'internaciones.anamnesis.externalCause.eventLocation.OTRO'|translate}}
+			</mat-radio-button>
+		</mat-radio-group>
+
+		<h2>{{'internaciones.anamnesis.externalCause.HOW_IT_HAPPEND'|translate}}</h2>
+
+		<app-event-serch (eventSelected)="onEventSelected($event)"></app-event-serch>
+
+		<app-table-event></app-table-event>
+
+	</mat-card-content>
+</mat-card>
