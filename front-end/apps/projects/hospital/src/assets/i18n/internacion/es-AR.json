@@ -140,6 +140,27 @@
 				"TIPO": "Tipo de procedimiento",
 				"PROCEDIMIENTO": "Procedimiento",
 				"PROCEDIMIENTOS": "Procedimientos"
+			},
+			"externalCause":{
+				"TITLE": "Causa externa de traumatismo, envenenamiento y otros efectos adversos",
+				"PRODUCED_BY": "Producido por...",
+				"EVENT_LOCATION": "Lugar donde ocurrió",
+				"HOW_IT_HAPPEND": "Cómo se produjo",
+				"EVENT": "Evento",
+				"SERCH_EVENT": "Buscar evento",
+				"ADD_EVENT": "añadir evento",
+				"produced_by":{
+					"ACCIDENT" : "Accidente",
+					"SELF_INFLICTED_INJURY" :"Lesión autoinfligida",
+					"AGRESSION" : "Agresión",
+					"IGNORED": "Se ignora"
+				},
+				"eventLocation":{
+					"DOMICILIO_PARTICULAR": "Domicilio particular",
+					"VIA_PUBLICA": "Vía pública",
+					"LUGAR_DE_TRABAJO": "Lugar de trabajo",
+					"OTRO": "Otro"
+				}
 			}
 		},
 		"epicrisis": {
