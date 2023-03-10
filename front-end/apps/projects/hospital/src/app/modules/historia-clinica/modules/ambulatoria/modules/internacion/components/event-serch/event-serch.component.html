@@ -1,0 +1,42 @@
+<ng-container *ngIf="!(table$ | async)?.data?.length ">
+
+	<ng-container *ngIf="!searchConceptsLocallyFF else eventTypeaheadSearch">
+		<app-concepts-search *ngIf="!externalCauseServise.snomedConceptEvent else eventForm"
+			[label]="'internaciones.anamnesis.externalCause.EVENT'|translate"
+			(search)="externalCauseServise.openSearchDialogEvent($event)">
+		</app-concepts-search>
+	</ng-container>
+
+	<ng-template #eventTypeaheadSearch>
+		<ng-container  *ngIf="!externalCauseServise.snomedConceptEvent else eventForm">
+			<app-concept-typeahead-search [ecl]="ECL"
+			[placeholder]="'internaciones.anamnesis.externalCause.EVENT'|translate"
+			[enableSubmitButton]="true"
+			[buttonMessage]="'internaciones.anamnesis.externalCause.ADD_EVENT'"
+			(conceptSelected)="externalCauseServise.setConceptEventSnomed($event)">
+		</app-concept-typeahead-search>
+		</ng-container>
+	</ng-template>
+
+	<ng-template #eventForm>
+		<form [formGroup]="externalCauseServise.formEvent" (ngSubmit)="externalCauseServise.addEvent()"
+			fxLayout="column">
+			<mat-form-field appearance="outline" fxFlex="100%">
+				<mat-label>
+					{{'internaciones.anamnesis.externalCause.SERCH_EVENT'|translate}}
+				</mat-label>
+				<input matInput type="text" formControlName="snomedEvent" readonly
+					matTooltip="{{ externalCauseServise.getSnomedConceptEvent()?.pt}}">
+				<button id="clear" mat-button matSuffix color="warn" mat-icon-button
+					(click)="externalCauseServise.resetForm()">
+					<mat-icon>close</mat-icon>
+				</button>
+			</mat-form-field>
+			<div fxLayoutAlign="end">
+				<button class="uppercase" mat-raised-button color="primary" type="submit">
+					{{'internaciones.anamnesis.externalCause.ADD_EVENT'|translate}}
+				</button>
+			</div>
+		</form>
+	</ng-template>
+</ng-container>
