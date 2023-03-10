@@ -64,7 +64,7 @@ export class PharmacoComponent implements OnInit {
 		private readonly dialog: MatDialog,
 
 	) {
-		this.internacionMasterdataService.getVias().subscribe(v => this.vias = v);
+		this.internacionMasterdataService.getViasPharmaco().subscribe(v => this.vias = v);
 		this.internacionMasterdataService.getUnits().subscribe(u => this.units = u);
 		this.searchSnomedConcept = new SearchSnomedConceptsPharmacoService(formBuilder, snowstormService, snomedService, snackBarService);
 	}

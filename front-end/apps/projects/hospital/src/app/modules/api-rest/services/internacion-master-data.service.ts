@@ -88,6 +88,11 @@ export class InternacionMasterDataService {
 		return this.http.get<any[]>(url);
 	}
 
+	getViasPharmaco(): Observable<any[]> {
+		const url = `${environment.apiBase}/internments/masterdata/vias-pharmaco`;
+		return this.http.get<any[]>(url);
+	}
+
 	getOtherIndicationTypes(): Observable<OtherIndicationTypeDto[]> {
 		const url = `${environment.apiBase}/internments/masterdata/other-indication-type`;
 		return this.http.get<OtherIndicationTypeDto[]>(url);

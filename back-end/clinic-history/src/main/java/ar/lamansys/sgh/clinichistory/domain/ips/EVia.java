@@ -14,7 +14,10 @@ public enum EVia {
 
 	PERIFERICA(1, "Periférica"),
 	SUBCUTANEA(2, "Subcutánea"),
-	CENTRAL(3, "Central");
+	CENTRAL(3, "Central"),
+	ORAL(4,"Oral"),
+	INHALATION(5,"Inhalatoria");
+
 
 	private final Short id;
 	private final String description;
@@ -27,6 +30,11 @@ public enum EVia {
 	@JsonCreator
 	public static List<EVia> getAll(){
 		return Stream.of(EVia.values()).collect(Collectors.toList());
+	}
+
+	@JsonCreator
+	public static List<EVia> getAllParenteral(){
+		return Stream.of(EVia.PERIFERICA,EVia.SUBCUTANEA,EVia.CENTRAL).collect(Collectors.toList());
 	}
 
 	@JsonCreator

@@ -168,6 +168,12 @@ public class InternmentMasterdataController {
 	@GetMapping(value = "/vias")
 	public ResponseEntity<Collection<MasterDataDto>> getVias() {
 		LOG.debug("{}", "All via types");
+		return ResponseEntity.ok().body(EnumWriter.writeList(EVia.getAllParenteral()));
+	}
+
+	@GetMapping(value = "/vias-pharmaco")
+	public ResponseEntity<Collection<MasterDataDto>> getViasPharmaco() {
+		LOG.debug("{}", "All via types");
 		return ResponseEntity.ok().body(EnumWriter.writeList(EVia.getAll()));
 	}
 

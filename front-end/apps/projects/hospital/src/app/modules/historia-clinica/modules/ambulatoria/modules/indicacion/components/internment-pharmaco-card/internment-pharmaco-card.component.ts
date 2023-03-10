@@ -27,7 +27,7 @@ export class InternmentPharmacoCardComponent implements OnChanges {
 		private readonly dialog: MatDialog,
 		private readonly internmentIndicationService: InternmentIndicationService,
 	) {
-		this.internacionMasterdataService.getVias().subscribe(v => this.vias = v);
+		this.internacionMasterdataService.getViasPharmaco().subscribe(v => this.vias = v);
 	}
 	ngOnChanges(): void {
 		this.indicationContent = this.mapToIndicationContent();
