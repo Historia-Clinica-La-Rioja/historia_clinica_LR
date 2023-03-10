@@ -9,4 +9,7 @@ public interface EquipmentService {
 	List<EquipmentBO> getEquipmentBySector(Integer sectorId);
 
 	List<EquipmentBO> getEquipmentByInstitution(Integer institutionId);
+
+	EquipmentBO getEquipment (Integer equipmentId);
+
 }

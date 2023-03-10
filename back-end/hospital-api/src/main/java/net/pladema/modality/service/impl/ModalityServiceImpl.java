@@ -10,6 +10,7 @@ import net.pladema.modality.service.domain.ModalityBO;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -24,6 +25,14 @@ public class ModalityServiceImpl implements ModalityService {
 		List<Modality> modalities = modalityRepository.getAllModality();
 		List<ModalityBO> result = modalities.stream().map(this::createModalityBoInstance).collect(Collectors.toList());
 		return result;
+	}
+
+	public ModalityBO getModality(Integer modalityId) {
+		Modality modality = modalityRepository.findById(modalityId).orElse(null);
+		if (modality != null){
+			return createModalityBoInstance(modality);
+		}
+		return null;
 	}
 
 	private ModalityBO createModalityBoInstance(Modality modality) {

@@ -61,4 +61,12 @@ public  class EquipmentServiceImpl implements EquipmentService {
 		LOG.trace(OUTPUT, result);
 		return result;
 	}
+
+	public EquipmentBO getEquipment(Integer equipmentId){
+		Equipment equipment = equipmentRepository.findById(equipmentId).orElse(null);
+		if (equipment != null){
+			return createEquipmentBoInstance(equipment);
+		}
+		return null;
+	}
 }

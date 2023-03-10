@@ -20,6 +20,7 @@ import net.pladema.medicalconsultation.appointment.repository.AppointmentAssnRep
 import ar.lamansys.sgh.shared.infrastructure.input.service.SharedReferenceCounterReference;
 import net.pladema.medicalconsultation.appointment.repository.AppointmentUpdateRepository;
 import net.pladema.medicalconsultation.appointment.repository.domain.AppointmentEquipmentShortSummaryBo;
+import net.pladema.medicalconsultation.appointment.repository.entity.Appointment;
 import net.pladema.medicalconsultation.appointment.service.impl.exceptions.UpdateAppointmentDateException;
 import net.pladema.medicalconsultation.appointment.service.impl.exceptions.UpdateAppointmentDateExceptionEnum;
 import net.pladema.medicalconsultation.diary.service.DiaryOpeningHoursService;
@@ -232,6 +233,19 @@ public class AppointmentServiceImpl implements AppointmentService {
 	public Optional<AppointmentBo> getAppointmentSummary(Integer appointmentId) {
 		log.debug("Input parameters -> appointmentId {}", appointmentId);
 		Optional<AppointmentBo>	result = appointmentRepository.getAppointmentSummary(appointmentId).stream().findFirst().map(AppointmentBo::fromAppointmentVo);
+		log.debug(OUTPUT, result);
+		return result;
+	}
+
+	@Override
+	public Optional<AppointmentBo> getEquipmentAppointment(Integer appointmentId) {
+		log.debug("Input parameters -> appointmentId {}", appointmentId);
+		Optional<AppointmentBo>	result = appointmentRepository.getEquipmentAppointment(appointmentId).stream().findFirst().map(AppointmentBo::fromAppointmentVo);
+		if (result.isPresent()) {
+			List<Integer> diaryIds = result.stream().map(AppointmentBo::getDiaryId).collect(Collectors.toList());
+			result = setIsAppointmentProtected(result.stream().collect(Collectors.toList()), diaryIds)
+					.stream().findFirst();
+		}
 		log.debug(OUTPUT, result);
 		return result;
 	}

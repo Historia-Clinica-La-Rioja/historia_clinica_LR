@@ -7,4 +7,6 @@ import java.util.List;
 public interface ModalityService {
 
 	List<ModalityBO> getAllModality();
+
+	ModalityBO getModality(Integer modalityId);
 }

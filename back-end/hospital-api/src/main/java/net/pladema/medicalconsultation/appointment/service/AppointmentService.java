@@ -23,6 +23,8 @@ public interface AppointmentService {
 
 	Optional<AppointmentBo> getAppointmentSummary(Integer appointmentId);
 
+	Optional<AppointmentBo> getEquipmentAppointment(Integer appointmentId);
+
 	Collection<AppointmentBo> getAppointmentsByDiaries(List<Integer> diaryIds, LocalDate from, LocalDate to);
 
 	Collection<AppointmentBo> getAppointmentsByEquipmentDiary(Integer equipmentDiaryId, LocalDate from, LocalDate to);

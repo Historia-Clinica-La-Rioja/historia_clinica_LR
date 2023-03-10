@@ -12,9 +12,16 @@ import java.util.stream.Collectors;
 import javax.validation.Valid;
 import javax.validation.constraints.Size;
 
+import ar.lamansys.mqtt.application.ports.MqttClientService;
+import ar.lamansys.mqtt.domain.MqttMetadataBo;
 import ar.lamansys.sgx.shared.dates.configuration.LocalDateMapper;
 import ar.lamansys.sgx.shared.dates.controller.dto.DateTimeDto;
 
+
+import net.pladema.establishment.service.EquipmentService;
+import net.pladema.establishment.service.OrchestratorService;
+import net.pladema.establishment.service.domain.EquipmentBO;
+import net.pladema.establishment.service.domain.OrchestratorBO;
 import net.pladema.medicalconsultation.appointment.controller.constraints.ValidEquipmentAppointment;
 import net.pladema.medicalconsultation.appointment.controller.constraints.ValidEquipmentAppointmentDiary;
 import net.pladema.medicalconsultation.appointment.controller.dto.AppointmentEquipmentShortSummaryDto;
@@ -24,6 +31,14 @@ import net.pladema.medicalconsultation.appointment.repository.entity.Appointment
 import net.pladema.medicalconsultation.appointment.service.CreateEquipmentAppointmentService;
 
 import net.pladema.medicalconsultation.appointment.service.EquipmentAppointmentService;
+
+import net.pladema.medicalconsultation.equipmentdiary.service.EquipmentDiaryService;
+
+import net.pladema.medicalconsultation.equipmentdiary.service.domain.CompleteEquipmentDiaryBo;
+
+import net.pladema.modality.service.ModalityService;
+
+import net.pladema.modality.service.domain.ModalityBO;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
@@ -88,6 +103,14 @@ public class AppointmentsController {
 
 	private final EquipmentAppointmentService equipmentAppointmentService;
 
+	private final EquipmentService equipmentService;
+
+	private final EquipmentDiaryService equipmentDiaryService;
+
+	private final OrchestratorService orchestratorService;
+
+	private final ModalityService modalityService;
+
     private final AppointmentValidatorService appointmentValidatorService;
 
     private final CreateAppointmentService createAppointmentService;
@@ -116,6 +139,8 @@ public class AppointmentsController {
 
 	private final LocalDateMapper localDateMapper;
 
+	private final MqttClientService mqttClientService;
+
 	public AppointmentsController(
 			AppointmentDailyAmountService appointmentDailyAmountService,
 			AppointmentService appointmentService, EquipmentAppointmentService equipmentAppointmentService, AppointmentValidatorService appointmentValidatorService,
@@ -128,7 +153,12 @@ public class AppointmentsController {
 			NotifyPatient notifyPatient,
 			BookingPersonService bookingPersonService,
 			LocalDateMapper dateMapper,
-			LocalDateMapper localDateMapper) {
+			LocalDateMapper localDateMapper,
+			EquipmentService equipmentService,
+			EquipmentDiaryService equipmentDiaryService,
+			OrchestratorService orchestratorService,
+			MqttClientService mqttClientService,
+			ModalityService modalityService) {
         this.appointmentDailyAmountService = appointmentDailyAmountService;
         this.appointmentService = appointmentService;
 		this.equipmentAppointmentService = equipmentAppointmentService;
@@ -143,6 +173,11 @@ public class AppointmentsController {
         this.bookingPersonService = bookingPersonService;
 		this.dateMapper = dateMapper;
 		this.localDateMapper = localDateMapper;
+		this.equipmentService = equipmentService;
+		this.equipmentDiaryService = equipmentDiaryService;
+		this.orchestratorService = orchestratorService;
+		this.mqttClientService = mqttClientService;
+		this.modalityService = modalityService;
 	}
 
 
@@ -395,6 +430,73 @@ public class AppointmentsController {
         log.debug(OUTPUT, result);
         return ResponseEntity.ok(result);
     }
+
+	@GetMapping("/publish-work-list/{appointmentId}")
+	@PreAuthorize("hasPermission(#institutionId, 'ADMINISTRATIVO_RED_DE_IMAGENES')")
+	public ResponseEntity<Boolean> publishWorkList(
+			@PathVariable(name = "institutionId") Integer institutionId,
+			@PathVariable(name = "appointmentId") Integer appointmentId
+	) {
+		log.debug("Input parameters -> institutionId {},appointmentId {}", institutionId, appointmentId);
+		AppointmentBo appointment = appointmentService.getEquipmentAppointment(appointmentId).orElse(null);
+		if (appointment == null){
+			return ResponseEntity.ok().body(false);
+		}
+
+		Integer diaryId = appointment.getDiaryId();
+		CompleteEquipmentDiaryBo equipmentDiary = equipmentDiaryService.getEquipmentDiary(diaryId).orElse(null);
+		if (equipmentDiary == null){
+			return ResponseEntity.ok().body(false);
+		}
+
+		Integer equipmentId = equipmentDiary.getEquipmentId();
+		EquipmentBO equipmentBO =equipmentService.getEquipment(equipmentId);
+		if (equipmentBO == null){
+			return ResponseEntity.ok().body(false);
+		}
+
+		Integer orchestratorId = equipmentBO.getOrchestratorId();
+		OrchestratorBO orchestrator = orchestratorService.getOrchestrator(orchestratorId);
+		if (orchestrator == null){
+			return ResponseEntity.ok().body(false);
+		}
+
+		ModalityBO modalityBO = modalityService.getModality(equipmentBO.getModalityId());
+		if (modalityBO == null){
+			return ResponseEntity.ok().body(false);
+		}
+
+		Integer patientId =appointment.getPatientId();
+		BasicPatientDto basicDataPatient = patientExternalService.getBasicDataFromPatient(patientId);
+		if (basicDataPatient == null){
+			return ResponseEntity.ok().body(false);
+		}
+
+
+		String date = appointment.getDate().toString().replace("-","");
+		String time = appointment.getHour().toString().replace(":","") + "00";
+		String aeTitle =   "    \"ScheduledStationAETitle\": \"" + equipmentBO.getAeTitle() + "\",\n";
+		String startDate = "    \"ScheduledProcedureStepStartDate\": \"" + date + "\",\n";
+		String startTime = "    \"ScheduledProcedureStepStartTime\": \"" + time + "\",\n";
+		String patientIdStr = "    \"PatientID\": \"" + basicDataPatient.getIdentificationNumber() + "\",\n";
+		String patientName = "    \"PatientName\": \"" + basicDataPatient.getFirstName() + " " + basicDataPatient.getLastName() + "\",\n";
+		String modality = "    \"Modality\": \"" + modalityBO.getAcronym() + "\"\n";
+		String json =  "{\n"
+							+ aeTitle
+							+ startDate
+							+ startTime
+							+ patientIdStr
+							+ patientName
+							+ modality
+						+ "}";
+
+		String topic = orchestrator.getBaseTopic() + "/LISTATRABAJO";
+
+
+		MqttMetadataBo data = new MqttMetadataBo(topic, json,true,1);
+		mqttClientService.publish(data);
+		return ResponseEntity.ok().body(true);
+	}
 
     @PreAuthorize("hasPermission(#institutionId, 'ADMINISTRATIVO, ESPECIALISTA_MEDICO, PROFESIONAL_DE_SALUD, ESPECIALISTA_EN_ODONTOLOGIA, ENFERMERO, ADMINISTRATIVO_RED_DE_IMAGENES')")
     @PutMapping(value = "/{appointmentId}/update-phone-number")
