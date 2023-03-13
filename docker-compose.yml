@@ -21,6 +21,10 @@ services:
         - 4000:4000
     environment:
       CUBEJS_DB_HOST: hsi-db
+      CUBEJS_DB_PORT: 5432
+      DATABASE_NAME: hospitalDB
+      CUBEJS_DB_USER: postgres
+      CUBEJS_DB_PASS: Local123
 
   hsi-backend:
     build: ./back-end

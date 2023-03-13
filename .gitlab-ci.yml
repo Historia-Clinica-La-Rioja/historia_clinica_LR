@@ -1,0 +1,16 @@
+include:
+  - project: 'lamansys/cicd'
+    ref: gian
+    file:
+      - '/gitlab/integration.yml'
+
+build_frontend:
+  extends: .build_frontend_base
+  cache:
+    key:
+      files:
+        - front-end/apps/package-lock.json
+        - front-end/backoffice/package-lock.json
+    paths:
+      - front-end/apps/node_modules
+      - front-end/backoffice/node_modules
