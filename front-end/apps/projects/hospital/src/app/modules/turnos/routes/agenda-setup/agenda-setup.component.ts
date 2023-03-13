@@ -123,7 +123,7 @@ export class AgendaSetupComponent implements OnInit {
 			.subscribe(newDuration => this.hourSegments = MINUTES_IN_HOUR / newDuration);
 
 		this.route.data.subscribe(data => {
-			if (data.editMode) {
+			if (data["editMode"]) {
 				this.editMode = true;
 				this.route.paramMap.subscribe((params) => {
 					this.editingDiaryId = Number(params.get('agendaId'));
@@ -132,7 +132,7 @@ export class AgendaSetupComponent implements OnInit {
 						this.setValuesFromExistingAgenda(diary);
 						this.disableNotEditableControls();
 						this.validateLineOfCareAndPercentageOfProtectedAppointments();
-						if(this.lineOfCareAndPercentageOfProtectedAppointmentsValid){
+						if (this.lineOfCareAndPercentageOfProtectedAppointmentsValid) {
 							this.form.controls.protectedAppointmentsPercentage.enable();
 						}
 					});
@@ -215,11 +215,11 @@ export class AgendaSetupComponent implements OnInit {
 		this.setAlias(diary.alias);
 	}
 
-	private setSpecialityId (healthcareProfesionalId){
+	private setSpecialityId(healthcareProfesionalId) {
 		this.specialityId = healthcareProfesionalId;
 	}
 
-	private setAlias(alias){
+	private setAlias(alias) {
 		this.alias = alias;
 	}
 
@@ -434,7 +434,7 @@ export class AgendaSetupComponent implements OnInit {
 			this.careLines = careLines;
 			this.checkCareLinesSelected();
 		});
-		if (specialtyId && specialtyId !== this.specialityId){
+		if (specialtyId && specialtyId !== this.specialityId) {
 			this.form.controls.alias.setValue('');
 		} else {
 			this.form.controls.alias.setValue(this.alias);

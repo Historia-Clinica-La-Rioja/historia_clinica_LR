@@ -24,7 +24,7 @@ export class RoutedExternalComponent implements OnInit {
 		const params$ = this.activatedRoute.paramMap;
 		combineLatest([data$, params$]).subscribe(
 			([data, params]) => {
-				this.wCExtensionsService.getComponentsFromSlot(data.slot)
+				this.wCExtensionsService.getComponentsFromSlot(data["slot"])
 					.pipe(
 						map(filter)
 					)

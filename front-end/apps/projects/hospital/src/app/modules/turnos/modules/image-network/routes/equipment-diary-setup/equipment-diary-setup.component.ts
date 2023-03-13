@@ -103,12 +103,12 @@ export class EquipmentDiarySetupComponent implements OnInit {
 		});
 
 		this.route.data.subscribe(data => {
-			if (data.editMode) {
+			if (data["editMode"]) {
 				this.editMode = true;
 				this.route.paramMap.subscribe((params) => {
 					this.editingDiaryId = Number(params.get('agendaId'));
 					this.equipmentDiaryService.getBy(this.editingDiaryId).subscribe((diary: CompleteEquipmentDiaryDto) => {
-						this.minDate =  momentParseDate(diary.startDate).toDate();
+						this.minDate = momentParseDate(diary.startDate).toDate();
 						this.setValuesFromExistingAgenda(diary);
 					})
 				});
@@ -145,7 +145,7 @@ export class EquipmentDiarySetupComponent implements OnInit {
 
 		const ocupations$: Observable<any[]> = this.equipmentDiaryOpeningHoursService
 			.getAllWeeklyEquipmentOcupation(this.form.controls.equipmentId.value, this.editingDiaryId, startDate, endDate);
-			this.agendaHorarioService.setWeeklyOcupation(ocupations$);
+		this.agendaHorarioService.setWeeklyOcupation(ocupations$);
 	}
 
 	scrollToDefaultStartingHour() {
@@ -205,13 +205,13 @@ export class EquipmentDiarySetupComponent implements OnInit {
 		if (agendaId) {
 			this.snackBarService.showSuccess('turnos.agenda-setup.messages.SUCCESS');
 			const url = `${this.routePrefix}${ROUTE_APPOINTMENT}`;
-			this.router.navigate([url],{ state: { tab: Tabs.DIAGNOSTICO_POR_IMAGEN  }});
+			this.router.navigate([url], { state: { tab: Tabs.DIAGNOSTICO_POR_IMAGEN } });
 		}
 	}
 
 	private buildEquipmentDiaryDto(): EquipmentDiaryDto {
 		return {
-			id:this.editingDiaryId,
+			id: this.editingDiaryId,
 			appointmentDuration: this.form.controls.appointmentDuration.value,
 			startDate: momentFormat(this.form.controls.startDate.value, DateFormat.API_DATE),
 			endDate: momentFormat(this.form.controls.endDate.value, DateFormat.API_DATE),
