@@ -68,4 +68,6 @@ public interface AppointmentService {
 	List<AppointmentBo> generateBlockedAppointments(Integer diaryId, BlockBo blockBo, DiaryBo diaryBo, LocalDate startingBlockingDate, LocalDate endingBlockingDate);
 
 	List<AppointmentBo> unblockAppointments(BlockBo unblockDto, DiaryBo diaryBo, LocalDate startingBlockingDate, LocalDate endingBlockingDate);
+
+	boolean setAppointmentPatientMedicalCoverageId(Integer patientId, List<Integer> patientMedicalCoverages, Integer newPatientMedicalCoverageId);
 }

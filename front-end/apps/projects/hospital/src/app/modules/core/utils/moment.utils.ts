@@ -19,6 +19,21 @@ export enum DateFormat {
 	YEAR_MONTH = 'YYYYMM',
 }
 
+export enum MONTHS_OF_YEAR {
+	Enero,
+	Febrero,
+	Marzo,
+	Abril,
+	Mayo,
+	Junio,
+	Julio,
+	Agosto,
+	Septiembre,
+	Octubre,
+	Noviembre,
+	Diciembre
+}
+
 export const MAT_APP_DATE_FORMATS = {
 	parse: {
 		dateInput: 'L',

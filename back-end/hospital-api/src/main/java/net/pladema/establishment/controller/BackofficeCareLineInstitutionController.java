@@ -2,6 +2,10 @@ package net.pladema.establishment.controller;
 
 import javax.validation.Valid;
 
+import net.pladema.sgx.backoffice.repository.BackofficeRepository;
+import net.pladema.sgx.backoffice.rest.BackofficeQueryAdapter;
+
+import org.springframework.data.domain.Example;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -19,12 +23,17 @@ public class BackofficeCareLineInstitutionController extends AbstractBackofficeC
 	private final CareLineInstitutionRepository careLineInstitutionRepository;
 
 	public BackofficeCareLineInstitutionController(CareLineInstitutionRepository repository,
-												   BackofficeCareLineInstitutionValidator validator,
-												   CareLineInstitutionRepository careLineInstitutionRepository) {
-		super(repository, validator);
-		this.careLineInstitutionRepository = careLineInstitutionRepository;
+												   BackofficeCareLineInstitutionValidator validator) {
+		super(new BackofficeRepository<CareLineInstitution, Integer>(
+				repository,
+				new BackofficeQueryAdapter<CareLineInstitution>() {
+					@Override
+					public Example<CareLineInstitution> buildExample(CareLineInstitution entity) {
+						return Example.of(entity);
+					}
+				}), validator);
+		this.careLineInstitutionRepository = repository;
 	}
-
 	@Override
 	public CareLineInstitution create(@Valid @RequestBody CareLineInstitution entity) {
 		if(entity.getInstitutionId() == null || entity.getCareLineId() == null)
@@ -36,4 +45,5 @@ public class BackofficeCareLineInstitutionController extends AbstractBackofficeC
 			throw new BackofficeValidationException("La asociación ya existe");
 		return super.create(entity);
 	}
+
 }

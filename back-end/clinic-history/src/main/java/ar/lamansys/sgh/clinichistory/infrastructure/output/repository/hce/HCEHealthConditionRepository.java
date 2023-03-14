@@ -9,6 +9,8 @@ public interface HCEHealthConditionRepository {
 
     List<HCEHealthConditionVo> getPersonalHistories(Integer patientId);
 
+	List<HCEHealthConditionVo> getPersonalHistoriesByUser(Integer patientId, Integer userId);
+
     List<HCEHealthConditionVo> getFamilyHistories(Integer patientId);
 
     List<HCEHospitalizationVo> getHospitalizationHistory(Integer patientId);

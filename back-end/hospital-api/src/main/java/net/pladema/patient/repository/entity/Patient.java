@@ -43,6 +43,9 @@ public class Patient implements Serializable{
     @Column(name = "identity_verification_status_id")
     private Short identityVerificationStatusId;
 
+    @Column(name = "to_audit", nullable = false)
+	private Boolean toAudit = false;
+
     public Patient(PatientPersonVo patientPersonVo) {
         this.id = patientPersonVo.getId();
         this.personId = patientPersonVo.getPersonId();

@@ -1,5 +1,10 @@
 {
   "pacientes": {
+    "message-for-audit": {
+      "TITLE": "Mensaje para auditoría",
+      "DESCRIPTION": "Por favor ingrese un mensaje argumentando el motivo por el cual el paciente debe auditarse",
+      "MESSAGE_LABEL": "Mensaje"
+    },
     "assigned-appointment": {
       "LICENSE_NUMBER_ACRONYM": "MN N°"
     },
@@ -10,7 +15,9 @@
     "profile": {
       "INITIATE_INTERNMENT": "Iniciar internación",
       "PATIENT_INTERNMENT_ANOTHER_INSTITUTION": "El paciente se encuentra internado en otra institución.",
-      "REPORTS": "Informes"
+      "REPORTS": "Informes",
+      "MARKED_FOR_AUDIT": "Marcado para auditar",
+      "SEE_CLINICAL_HISTORY": "Ver historia clínica"
     },
     "form": {
       "ADDRESS": "Domicilio",
@@ -58,12 +65,15 @@
       "SELECT": "Seleccionar",
       "UPDATE_MEDICAL_COVERAGE": "Actualizar cobertura",
 	  "NO_INFO": "Sin información",
-      "IDENTIFICATION_NUMBER_MAXLENGHT_ERROR": "Introduzca como máximo 11 caracteres"
+      "IDENTIFICATION_NUMBER_MAXLENGHT_ERROR": "Introduzca como máximo 11 caracteres",
+	  "STATE":"Estado",
+	  "UPLOAD_FILES": "ADJUNTAR DOCUMENTO",
+	  "ATTACHED_DOCUMENTS": "Documentos adjuntos"
     },
     "home": {
       "TITLE": "Pacientes",
       "TITLE_SEARCH": "Búsqueda de pacientes internados",
-      "SUBTITLE": "Ingresá un nuevo paciente",
+      "SUBTITLE": "Ingrese los siguientes datos para realizar la búsqueda",
       "find_add_section": {
         "BUTTON_ADD": "Crear paciente temporal",
         "BUTTON_SEARCH": "Buscar",
@@ -84,28 +94,48 @@
       }
     },
     "new": {
-      "TITLE": "Nuevo Paciente",
+      "TITLE_PERSON": "Nueva Persona",
+      "TITLE_PATIENT": "Nuevo Paciente",
       "SUBTITLE": "Ingresá los siguientes datos.",
-      "TITLE_TEMPORARY": "Nuevo Paciente Temporal",
+      "TITLE_TEMPORARY_PATIENT": "Nuevo Paciente Temporal",
+      "TITLE_TEMPORARY_PERSON": "Nueva Persona Temporal",
       "messages": {
-        "ERROR": "Error al crear un paciente",
-        "SUCCESS": "El paciente se creó exitosamente"
+        "ERROR_PATIENT": "Error al crear un paciente",
+        "ERROR_PERSON": "Error al crear una persona",
+        "SUCCESS_PATIENT": "El paciente se creó exitosamente",
+        "SUCCESS_PERSON": "La persona se creó exitosamente"
       }
     },
     "search": {
       "TITLE": "Búsqueda de pacientes",
-      "SUBTITLE": "No se ha encontrado un paciente registrado con ese tipo y número de documento.--",
+      "SUBTITLE": "No se ha encontrado una persona registrada con ese tipo y número de documento.",
       "SUBTITLE_TWO": "Complete los siguientes datos para una búsqueda avanzada.",
       "NEW_PATIENT": "Crear nuevo paciente",
+      "NEW_PERSON": "Crear nueva persona",
       "RENAPER_TIMEOUT": "No hubo respuesta del servicio de Renaper",
       "ROW_TABLE": "ID Paciente"
     },
     "edit": {
-      "TITLE": "Editar paciente",
-      "SUBTITLE": "Se editara el paciente seleccionado",
+      "TITLE_PATIENT": "Editar paciente",
+      "SUBTITLE_PATIENT": "Se editará el paciente seleccionado",
+      "TITLE_PERSON": "Editar Persona",
+      "SUBTITLE_PERSON": "Se editará la persona seleccionada",
+      "MARK_FOR_AUDIT": "Marcar paciente para auditoria",
+      "MESSAGE_FOR_AUDIT": "Mensaje para auditoría",
+      "EDIT_MESSAGE_FOR_AUDIT": "Editar mensaje",
+      "UNMARK_PATIENT_FOR_AUDIT": "Desmarcar paciente para auditoría",
+      "A_MOMENT_AGO": "Hace un momento",
+      "unmark-patient-for-audit": {
+        "DESCRIPTION": "Si desmarca al paciente, se perderán los motivos por los cuales fue marcado",
+        "QUESTION": "¿Está seguro?",
+        "CANCEL": "No, cancelar",
+        "CONFIRM": "Si, desmarcar"
+      },
       "messages": {
-        "ERROR": "Error al editar un paciente",
-        "SUCCESS": "El paciente se editó exitosamente"
+        "ERROR_PATIENT": "Error al editar un paciente",
+        "ERROR_PERSON": "Error al editar una persona",
+        "SUCCESS_PATIENT": "El paciente se editó exitosamente",
+        "SUCCESS_PERSON": "La persona fue editada exitosamente"
       }
     },
     "search_patient": {
@@ -197,11 +227,14 @@
         "SELECT_PROFESSION": "Seleccione profesión",
         "SPECIALTY": "Especialidad",
         "ASSOCIATED_WITH": "Asociada a:",
-		"PROFESSION_ERROR": "Requiere al menos una profesión.",
-		"SPECIALTY_ERROR": "Requiere una especialidad.",
-		"LICENSE_REQUIRED_ERROR": "Requiere una matricula.",
-		"LICENSE_PATTERN_ERROR": "La matricula no es válida.",
-		"LICENSE_MAX_LENGTH_ERROR": "Introduzca como máximo 15 caracteres"
+        "PROFESSION_ERROR": "Requiere al menos una profesión.",
+        "SPECIALTY_ERROR": "Requiere una especialidad.",
+        "LICENSE_REQUIRED_ERROR": "Requiere una matricula.",
+        "LICENSE_PATTERN_ERROR": "La matricula no es válida.",
+        "LICENSE_MAX_LENGTH_ERROR": "Introduzca como máximo 15 caracteres",
+        "buttons": {
+          "VALIDATE": "Validar"
+        }
       }
     },
     "edit_prefessions_specialties": {
@@ -233,9 +266,9 @@
     },
     "card_license": {
       "TITLE": "Matriculas",
-	  "NATIONAL": "Nacional",
-	  "PROVINCE": "Provincial",
-	  "WITHOUT_LICENSE": "Sin matriculas asignadas."
+      "NATIONAL": "Nacional",
+      "PROVINCE": "Provincial",
+      "WITHOUT_LICENSE": "Sin matriculas asignadas."
     },
     "emergency_care_episode_sumamry": {
       "TITLE": "Resumen de Guardia",

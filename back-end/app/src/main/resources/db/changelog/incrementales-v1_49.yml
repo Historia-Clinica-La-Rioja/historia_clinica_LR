@@ -1,0 +1,136 @@
+databaseChangeLog: 
+    - logicalFilePath: incrementales-v1_49
+
+    - changeSet:
+        id: orchestrator-createTable
+        comment: Create table orchestrator
+        author: amurrie
+        changes:
+          - createTable:
+              tableName: orchestrator
+              columns:
+                - column:
+                    autoIncrement: true
+                    constraints:
+                      primaryKey: true
+                      primaryKeyName: PK_orchestrator
+                    name: id
+                    type: int
+                - column:
+                    constraints:
+                      nullable: false
+                    name: name
+                    type: varchar(40)
+                - column:
+                    constraints:
+                      nullable: false
+                    name: base_topic
+                    type: varchar(250)
+                - column:
+                    constraints:
+                      nullable: false
+                    name: sector_id
+                    type: int
+
+    - changeSet:
+        id: modality-createTable
+        comment: Create table modality
+        author: amurrie
+        changes:
+          - createTable:
+              tableName: modality
+              columns:
+                - column:
+                    autoIncrement: true
+                    constraints:
+                      primaryKey: true
+                      primaryKeyName: PK_modality
+                    name: id
+                    type: int
+                - column:
+                    constraints:
+                      nullable: false
+                    name: acronym
+                    type: varchar(15)
+                - column:
+                    constraints:
+                      nullable: false
+                    name: description
+                    type: varchar(100)
+
+    - changeSet:
+        id: equipment-createTable
+        comment: Create table equipment
+        author: amurrie
+        changes:
+          - createTable:
+              tableName: equipment
+              columns:
+                - column:
+                    autoIncrement: true
+                    constraints:
+                      primaryKey: true
+                      primaryKeyName: PK_equipment
+                    name: id
+                    type: int
+                - column:
+                    constraints:
+                      nullable: false
+                    name: ae_title
+                    type: varchar(15)
+                - column:
+                    constraints:
+                      nullable: false
+                    name: sector_id
+                    type: int
+                - column:
+                    constraints:
+                      nullable: false
+                    name: orchestrator_id
+                    type: int
+                - column:
+                    constraints:
+                      nullable: false
+                    name: pac_server_id
+                    type: int
+                - column:
+                    constraints:
+                      nullable: false
+                    name: modality_id
+                    type: int
+    - changeSet:
+        id: add-new-modality
+        comment: Agregar nuevas entradas en la tabla de modality
+        author: amurrie
+        changes:
+          - sql:
+              sql: |-
+                INSERT INTO modality (acronym, description) VALUES('CR', 'Radiografía Computarizada');
+                INSERT INTO modality (acronym, description) VALUES('CT', 'Tomografía Computarizada');
+                INSERT INTO modality (acronym, description) VALUES('MR', 'Resonancia Magnética');
+                INSERT INTO modality (acronym, description) VALUES('US', 'Ecografía');
+
+    - changeSet:
+        id: add-autoincremenId-user_role-table
+        author: etrapani
+        comment: add autoincrementId user role table
+        changes:
+          - addColumn:
+              tableName: user_role
+              columns:
+                - column:
+                    autoIncrement: true
+                    name: id
+                    type: bigint
+          - dropPrimaryKey:
+              tableName: user_role
+              constraintName: PK_user_role
+          - addPrimaryKey:
+              columnNames: id
+              constraintName: PK_user_role
+              tableName: user_role
+              validate: true
+          - addUniqueConstraint:
+              columnNames: role_id, user_id, institution_id
+              constraintName: UQ_role_user_institution
+              tableName: user_role

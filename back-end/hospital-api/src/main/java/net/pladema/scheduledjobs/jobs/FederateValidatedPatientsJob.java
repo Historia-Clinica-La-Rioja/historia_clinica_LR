@@ -1,8 +1,8 @@
 package net.pladema.scheduledjobs.jobs;
 
-import net.pladema.federar.controller.FederarExternalService;
-import net.pladema.federar.services.domain.FederarResourceAttributes;
-import net.pladema.patient.service.PatientService;
+import java.util.Date;
+import java.util.Optional;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
@@ -10,8 +10,10 @@ import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
-import java.util.Date;
-import java.util.Optional;
+import net.javacrumbs.shedlock.core.SchedulerLock;
+import net.pladema.federar.controller.FederarExternalService;
+import net.pladema.federar.services.domain.FederarResourceAttributes;
+import net.pladema.patient.service.PatientService;
 
 @Service
 @ConditionalOnProperty(
@@ -39,8 +41,9 @@ public class FederateValidatedPatientsJob {
             "${scheduledjobs.federatepatients.dayofmonth} " +
             "${scheduledjobs.federatepatients.month} " +
             "${scheduledjobs.federatepatients.dayofweek}")
+	@SchedulerLock(name = "FederateValidatedPatientsJob")
     public void execute() {
-        LOG.debug("Executing FederateValidatedPatientsJob at {}", new Date());
+        LOG.warn("Scheduled FederateValidatedPatientsJob starting at {}", new Date());
         patientService.getAllValidatedPatients().forEach(p -> {
             FederarResourceAttributes attributes = new FederarResourceAttributes();
             BeanUtils.copyProperties(p, attributes);
@@ -49,11 +52,11 @@ public class FederateValidatedPatientsJob {
 				Optional<Integer> optionalNationalId = federarExternalService.federatePatient(attributes, p.getId());
 				optionalNationalId.ifPresent(nationalId -> patientService.updatePatientPermanent(p, nationalId));
 			} catch (Exception ex) {
-				LOG.error("Fallo en la comunicación", ex);
+				LOG.error("Fallo en la comunicación => {}", ex.getMessage());
 			}
 
         });
-        LOG.debug("Finishing FederateValidatedPatientsJob at {}", new Date());
+        LOG.warn("Scheduled FederateValidatedPatientsJob done at {}", new Date());
     }
 
 }

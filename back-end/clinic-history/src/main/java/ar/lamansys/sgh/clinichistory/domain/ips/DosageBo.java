@@ -34,7 +34,17 @@ public class DosageBo {
 
 	private QuantityBo quantity;
 
-    public String getPeriodUnit(){
+	private Double dosesByUnit;
+
+	private Double dosesByDay;
+
+	public DosageBo(Double duration, Double dosesByUnit, Double dosesByDay) {
+		this.duration = duration;
+		this.dosesByUnit = dosesByUnit;
+		this.dosesByDay = dosesByDay;
+	}
+
+	public String getPeriodUnit(){
         return periodUnit != null ? periodUnit.getValue() : null;
     }
 

@@ -10,7 +10,6 @@ import { MatDialog } from '@angular/material/dialog';
 	providedIn: 'root'
 })
 export class AuthenticationService {
-
 	constructor(
 		private router: Router,
 		private authService: AuthService,
@@ -38,12 +37,16 @@ export class AuthenticationService {
 	}
 
 	login(username: string, password: string, recaptchaResponse: string): Observable<any> {
-		return this.authService.login({username, password}, recaptchaResponse).pipe(
+		let login = this.authService.login({ username, password }, recaptchaResponse);
+		login.subscribe(res => {
+			localStorage.setItem('token',res.token);
+		})
+		return login.pipe(
 			switchMap(() => this.loggedUserService.load()),
 		);
 	}
 
-	tokenRefresh(): Observable<any>  {
+	tokenRefresh(): Observable<any> {
 		return this.authService.tokenRefresh();
 	}
 }

@@ -13,15 +13,20 @@ import java.util.Base64;
 import java.util.Map;
 import java.util.Optional;
 
-import ar.lamansys.sgh.clinichistory.domain.document.event.GenerateFilePort;
-import ar.lamansys.sgh.clinichistory.domain.document.event.OnGenerateDocumentEvent;
-import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.entity.DocumentFile;
-import ar.lamansys.sgx.shared.files.StreamFile;
-import ar.lamansys.sgx.shared.pdf.PDFDocumentException;
-import ar.lamansys.sgx.shared.pdf.PdfService;
+import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.EDocumentType;
+
+import ar.lamansys.sgh.shared.infrastructure.input.service.BasicPatientDto;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
+
+import ar.lamansys.sgh.clinichistory.domain.document.event.GenerateFilePort;
+import ar.lamansys.sgh.clinichistory.domain.document.event.OnGenerateDocumentEvent;
+import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.entity.DocumentFile;
+import ar.lamansys.sgx.shared.files.FileService;
+import ar.lamansys.sgx.shared.files.pdf.PDFDocumentException;
+import ar.lamansys.sgx.shared.files.pdf.PdfService;
 
 
 @Component
@@ -31,45 +36,48 @@ public class GenerateFilePortImpl implements GenerateFilePort {
 
     public static final String OUTPUT = "Output -> {}";
 
-    private final StreamFile streamFile;
+    private final FileService fileService;
 
     private final PdfService pdfService;
 
     private final AuditableContextBuilder auditableContextBuilder;
 
     public GenerateFilePortImpl(
-            StreamFile streamFile,
+			FileService fileService,
             PdfService pdfService,
             AuditableContextBuilder auditableContextBuilder
     ) {
         super();
-        this.streamFile = streamFile;
+        this.fileService = fileService;
         this.pdfService = pdfService;
         this.auditableContextBuilder = auditableContextBuilder;
     }
 
     @Override
-    public Optional<DocumentFile> save(OnGenerateDocumentEvent event)  {
+    public Optional<DocumentFile> save(OnGenerateDocumentEvent event) {
         Map<String,Object> contextMap = auditableContextBuilder.buildContext(event.getDocumentBo(), event.getPatientId());
 
 		formatStringDates(contextMap);
 
-        String path = streamFile.buildPathAsString(event.getRelativeDirectory());
+        String path = fileService.buildCompletePath(event.getRelativeDirectory());
         String realFileName = event.getUuid();
-        String fictitiousFileName = event.buildDownloadName();
-        String checksum = null;
+		String fictitiousFileName;
+		if (event.getDocumentType().equals(EDocumentType.DIGITAL_RECIPE.getValue()))
+			fictitiousFileName = generateDigitalRecipeFileName(contextMap);
+		else
+        	fictitiousFileName = event.buildDownloadName();
         try {
             ByteArrayOutputStream output =  pdfService.writer(event.getTemplateName(), contextMap);
-            streamFile.saveFileInDirectory(path, false, output);
-            checksum = getHash(path);
-        } catch (IOException | PDFDocumentException e) {
+			var file = fileService.saveStreamInPath(event.getRelativeDirectory(), realFileName, "DOCUMENTO_DE_ENCUENTRO",false, output);
+			return Optional.of(new DocumentFile(
+					event.getDocumentBo().getId(),
+					event.getEncounterId(),
+					event.getSourceType(),
+					event.getDocumentTypeId(), path, fictitiousFileName, file.getUuidfile(), file.getChecksum()));
+        } catch (PDFDocumentException e) {
             LOG.error("Save document file -> {}", event, e);
+			throw e;
         }
-        return Optional.of(new DocumentFile(
-                event.getDocumentBo().getId(),
-                event.getEncounterId(),
-                event.getSourceType(),
-                event.getDocumentTypeId(), path, fictitiousFileName, realFileName, checksum));
     }
 
     private static String getHash(String path) {
@@ -96,8 +104,15 @@ public class GenerateFilePortImpl implements GenerateFilePort {
 		DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
 
 		ArrayList<ImmunizationInfoDto> vaccinesData = (ArrayList<ImmunizationInfoDto>) context.get("nonBillableImmunizations");
-		vaccinesData.stream().filter(immunizationInfoDto -> immunizationInfoDto.getAdministrationDate() != null)
+		if (vaccinesData != null)
+			vaccinesData.stream().filter(immunizationInfoDto -> immunizationInfoDto.getAdministrationDate() != null)
 				.forEach(immunizationInfoDto -> immunizationInfoDto.setAdministrationDate(LocalDate.parse(immunizationInfoDto.getAdministrationDate()).format(dateTimeFormatter)));
+	}
+
+	private String generateDigitalRecipeFileName(Map<String,Object> context) {
+		String recipeNumber = (String) context.get("recipeNumber");
+		String identificationNumber = ((BasicPatientDto) context.get("patient")).getIdentificationNumber();
+		return identificationNumber + "_" + recipeNumber + ".pdf";
 	}
 
 }

@@ -1,0 +1,46 @@
+<div>
+    <button mat-button mat-icon-button [mat-dialog-close]=true>
+        <mat-icon>close</mat-icon>
+    </button>
+</div>
+
+<form [formGroup]="form" (ngSubmit)="save()">
+    <h1 [translate]="'internaciones.internacion-paciente.documents.dialogs.attach.TITLE'"></h1>
+
+    <section class="selected-file">
+        <mat-form-field class="example-full-width" appearance="outline">
+            <mat-label [translate]="'internaciones.internacion-paciente.documents.dialogs.attach.fields.NAME'"></mat-label>
+            <input matInput formControlName="fileName">
+        </mat-form-field>
+        
+        <mat-error class="typeahead-required" *ngIf="hasError(form, 'requiredFileType', 'file')" 
+            [translate]="'internaciones.internacion-paciente.documents.dialogs.attach.fields.FILE'">
+        </mat-error>
+    </section>
+    
+    <app-typeahead 
+        *ngIf="documentTypes?.length > 0; else noDocumentsType"
+        [options]="documentTypes"
+        [titleInput]="'internaciones.internacion-paciente.documents.dialogs.attach.fields.TYPE' | translate"
+        [required]="required"
+        (selectionChange)="setDocumentType($event)">
+    </app-typeahead>
+    <mat-error class="typeahead-required" *ngIf="hasError(form, 'required', 'type') && documentTypes?.length > 0"
+        [translate]="'internaciones.internacion-paciente.documents.dialogs.attach.fields.TYPE_REQUIRED'">
+    </mat-error>
+
+    <section class="actions">
+        <button mat-stroked-button color="primary" [mat-dialog-close]=true>
+            <span [translate]="'internaciones.internacion-paciente.documents.dialogs.attach.actions.CANCEL'"></span>
+        </button>
+    
+        <button mat-raised-button color="primary" [disabled]=" ! this.form.valid">
+            <span [translate]="'internaciones.internacion-paciente.documents.dialogs.attach.actions.ATTACH'"></span>
+        </button>
+    </section>
+
+    <ng-template #noDocumentsType>
+        <p [translate]="'internaciones.internacion-paciente.documents.dialogs.attach.NO-DOCUMENTS-TYPE'">
+        </p>
+    </ng-template>
+</form>

@@ -57,12 +57,26 @@ public class HospitalUserStorageImpl implements HospitalUserStorage {
                 .map(userInfoDto -> {
                     UserPersonInfoBo result = new UserPersonInfoBo();
                     result.setId(userInfoDto.getId());
-                    result.setEmail(userInfoDto.getUsername());
+                    result.setUsername(userInfoDto.getUsername());
 					result.setPreviousLogin(userInfoDto.getPreviousLogin());
                     return result;
                 })
                 .map(this::loadPersonInfo);
     }
+
+	@Override
+	public Optional<UserPersonInfoBo> getUserPersonInfo(String username) {
+		return userExternalService.getUser(username)
+				.map(userInfoDto -> {
+					UserPersonInfoBo result = new UserPersonInfoBo();
+					result.setId(userInfoDto.getId());
+					result.setUsername(userInfoDto.getUsername());
+					result.setPreviousLogin(userInfoDto.getPreviousLogin());
+					return result;
+				})
+				.map(this::loadPersonInfo);
+	}
+
     @Override
     public String getIdentificationNumber(Integer personId) {
         return personExternalService.getBasicDataPerson(personId).getIdentificationNumber();
@@ -170,12 +184,17 @@ public class HospitalUserStorageImpl implements HospitalUserStorage {
         userPersonRepository.getByUserId(userPersonInfoBo.getId())
                 .map(userPerson -> personExternalService.getBasicDataPerson(userPerson.getPersonId()))
                 .ifPresent(basicDataPersonDto -> {
+					String email = personExternalService.getPersonalInformation(basicDataPersonDto.getId()).getEmail();
                     userPersonInfoBo.setPersonId(basicDataPersonDto.getId());
                     userPersonInfoBo.setFirstName(basicDataPersonDto.getFirstName());
+					userPersonInfoBo.setMiddleNames(basicDataPersonDto.getMiddleNames());
                     userPersonInfoBo.setLastName(basicDataPersonDto.getLastName());
+					userPersonInfoBo.setOtherLastNames(basicDataPersonDto.getOtherLastNames());
+					userPersonInfoBo.setEmail(email);
 					userPersonInfoBo.setNameSelfDetermination(basicDataPersonDto.getNameSelfDetermination());
                 });
         return userPersonInfoBo;
     }
+
 }
 

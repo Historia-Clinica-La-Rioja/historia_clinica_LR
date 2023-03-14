@@ -1,22 +1,39 @@
 package net.pladema.clinichistory.hospitalization.controller;
 
 import java.time.LocalDateTime;
+import java.util.List;
+import java.util.stream.Collectors;
 
 import javax.validation.Valid;
+
+import net.pladema.clinichistory.hospitalization.application.createEpisodeDocument.CreateEpisodeDocument;
+import net.pladema.clinichistory.hospitalization.application.deleteEpisodeDocument.DeleteEpisodeDocument;
+import net.pladema.clinichistory.hospitalization.application.downloadEpisodeDocument.DownloadEpisodeDocument;
+import net.pladema.clinichistory.hospitalization.application.getDocumentType.FetchDocumentType;
+import net.pladema.clinichistory.hospitalization.application.getEpisodeDocument.FetchEpisodeDocument;
+import net.pladema.clinichistory.hospitalization.controller.dto.DocumentTypeDto;
+import net.pladema.clinichistory.hospitalization.controller.dto.EpisodeDocumentDto;
+
+import net.pladema.clinichistory.hospitalization.controller.dto.EpisodeDocumentResponseDto;
+import net.pladema.clinichistory.hospitalization.controller.dto.StoredFileDto;
+import net.pladema.clinichistory.hospitalization.infrastructure.input.rest.mapper.EpisodeDocumentDtoMapper;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
 
 import ar.lamansys.sgx.shared.dates.configuration.LocalDateMapper;
@@ -27,7 +44,6 @@ import ar.lamansys.sgx.shared.featureflags.application.FeatureFlagsService;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import net.pladema.clinichistory.hospitalization.controller.constraints.InternmentDischargeValid;
 import net.pladema.clinichistory.hospitalization.controller.constraints.InternmentPhysicalDischargeValid;
-import net.pladema.clinichistory.hospitalization.controller.constraints.InternmentValid;
 import net.pladema.clinichistory.hospitalization.controller.constraints.ProbableDischargeDateValid;
 import net.pladema.clinichistory.hospitalization.controller.dto.InternmentEpisodeADto;
 import net.pladema.clinichistory.hospitalization.controller.dto.InternmentEpisodeDto;
@@ -49,6 +65,8 @@ import net.pladema.establishment.controller.service.BedExternalService;
 import net.pladema.events.EHospitalApiTopicDto;
 import net.pladema.events.HospitalApiPublisher;
 import net.pladema.staff.controller.service.HealthcareProfessionalExternalService;
+
+import org.springframework.web.multipart.MultipartFile;
 
 @RestController
 @RequestMapping("/institutions/{institutionId}/internments")
@@ -84,7 +102,19 @@ public class InternmentEpisodeController {
 
 	private final HospitalApiPublisher hospitalApiPublisher;
 
-	public InternmentEpisodeController(InternmentEpisodeService internmentEpisodeService, HealthcareProfessionalExternalService healthcareProfessionalExternalService, InternmentEpisodeMapper internmentEpisodeMapper, BedExternalService bedExternalService, PatientDischargeMapper patientDischargeMapper, ResponsibleContactService responsibleContactService, FeatureFlagsService featureFlagsService, PatientDischargeService patientDischargeService, ResponsibleContactMapper responsibleContactMapper, LocalDateMapper localDateMapper, HospitalApiPublisher hospitalApiPublisher) {
+	private final FetchEpisodeDocument fetchEpisodeDocument;
+
+	private final CreateEpisodeDocument createEpisodeDocument;
+
+	private final FetchDocumentType fetchDocumentType;
+
+	private final DeleteEpisodeDocument deleteEpisodeDocument;
+
+	private final DownloadEpisodeDocument downloadEpisodeDocument;
+
+	private final EpisodeDocumentDtoMapper mapper;
+
+	public InternmentEpisodeController(InternmentEpisodeService internmentEpisodeService, HealthcareProfessionalExternalService healthcareProfessionalExternalService, InternmentEpisodeMapper internmentEpisodeMapper, BedExternalService bedExternalService, PatientDischargeMapper patientDischargeMapper, ResponsibleContactService responsibleContactService, FeatureFlagsService featureFlagsService, PatientDischargeService patientDischargeService, ResponsibleContactMapper responsibleContactMapper, LocalDateMapper localDateMapper, HospitalApiPublisher hospitalApiPublisher, FetchEpisodeDocument fetchEpisodeDocument, CreateEpisodeDocument createEpisodeDocument, FetchDocumentType fetchDocumentType, DeleteEpisodeDocument deleteEpisodeDocument, DownloadEpisodeDocument downloadEpisodeDocument, EpisodeDocumentDtoMapper mapper) {
 		this.internmentEpisodeService = internmentEpisodeService;
 		this.healthcareProfessionalExternalService = healthcareProfessionalExternalService;
 		this.internmentEpisodeMapper = internmentEpisodeMapper;
@@ -96,11 +126,81 @@ public class InternmentEpisodeController {
 		this.responsibleContactMapper = responsibleContactMapper;
 		this.localDateMapper = localDateMapper;
 		this.hospitalApiPublisher = hospitalApiPublisher;
+		this.fetchEpisodeDocument = fetchEpisodeDocument;
+		this.createEpisodeDocument = createEpisodeDocument;
+		this.fetchDocumentType = fetchDocumentType;
+		this.deleteEpisodeDocument = deleteEpisodeDocument;
+		this.downloadEpisodeDocument = downloadEpisodeDocument;
+		this.mapper = mapper;
 	}
 
-	@InternmentValid
+	@PostMapping(value = "{internmentEpisodeId}/episodedocuments/{episodeDocumentTypeId}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+	@Transactional
+	@PreAuthorize("hasPermission(#institutionId, 'ADMINISTRATIVO, ADMINISTRATIVO_RED_DE_IMAGENES')")
+	public ResponseEntity<Integer> createEpisodeDocument(
+			@PathVariable(name = "institutionId") Integer institutionId,
+			@PathVariable(name = "episodeDocumentTypeId") Integer episodeDocumentTypeId,
+			@PathVariable(name = "internmentEpisodeId") Integer internmentEpisodeId,
+			@RequestPart("file") MultipartFile file) {
+		LOG.debug("Input parameters -> institutionId {}, internmentEpisodeId {}, episodeDocumentTypeId {}, file {}", institutionId, internmentEpisodeId, episodeDocumentTypeId, file);
+		EpisodeDocumentDto dto = new EpisodeDocumentDto(file, episodeDocumentTypeId, internmentEpisodeId);
+		Integer result = createEpisodeDocument.run(dto);
+		LOG.debug(OUTPUT, result);
+		return ResponseEntity.ok().body(result);
+	}
+
+	@GetMapping("{internmentEpisodeId}/episodedocuments")
+	@PreAuthorize("hasPermission(#institutionId, 'ADMINISTRATIVO, ADMINISTRATIVO_RED_DE_IMAGENES')")
+	public ResponseEntity<List<EpisodeDocumentResponseDto>> getEpisodeDocuments(@PathVariable(name = "internmentEpisodeId") Integer internmentEpisodeId,
+																				@PathVariable(name = "institutionId") Integer institutionId) {
+		LOG.debug("Input parameters -> internmentEpisodeId {}, institutionId {}", internmentEpisodeId, institutionId);
+		List<EpisodeDocumentResponseDto> result = fetchEpisodeDocument.run(internmentEpisodeId)
+				.stream()
+				.map(bo -> mapper.EpisodeDocumentBoToEpisodeDocumentDto(bo))
+				.collect(Collectors.toList());
+		LOG.debug(OUTPUT, result);
+		return ResponseEntity.ok().body(result);
+	}
+
+	@GetMapping("/documentstypes")
+	@PreAuthorize("hasPermission(#institutionId, 'ADMINISTRATIVO, ADMINISTRATIVO_RED_DE_IMAGENES')")
+	public ResponseEntity<List<DocumentTypeDto>> getDocumentsTypes(@PathVariable(name = "institutionId") Integer institutionId) {
+		LOG.debug("Input parameters -> institutionId {}", institutionId);
+		List<DocumentTypeDto> result = fetchDocumentType.run()
+				.stream()
+				.map(bo -> mapper.DocumentTypeBoToDocumentTypeDto(bo))
+				.collect(Collectors.toList());
+		LOG.debug(OUTPUT, result);
+		return ResponseEntity.ok().body(result);
+	}
+
+	@DeleteMapping("/episodedocuments/{episodeDocumentId}")
+	@PreAuthorize("hasPermission(#institutionId, 'ADMINISTRATIVO, ADMINISTRATIVO_RED_DE_IMAGENES')")
+	public ResponseEntity<Boolean> deleteDocument(@PathVariable(name = "episodeDocumentId") Integer episodeDocumentId,
+								  @PathVariable(name = "institutionId") Integer institutionId) {
+		LOG.debug("Input parameters -> episodeDocumentId {}, institutionId {}", episodeDocumentId, institutionId);
+		Boolean result = deleteEpisodeDocument.run(episodeDocumentId);
+		LOG.debug(OUTPUT, result);
+		return ResponseEntity.ok().body(result);
+	}
+
+	@GetMapping("/episodedocuments/download/{episodeDocumentId}")
+	@PreAuthorize("hasPermission(#institutionId, 'ADMINISTRATIVO, ADMINISTRATIVO_RED_DE_IMAGENES')")
+	public ResponseEntity downloadEpisodeDocument(@PathVariable(name = "episodeDocumentId") Integer episodeDocumentId,
+												  @PathVariable(name = "institutionId") Integer institutionId) {
+		LOG.debug("Input parameters -> episodeDocumentId {}, institutionId {}", episodeDocumentId, institutionId);
+		if (!featureFlagsService.isOn(AppFeature.HABILITAR_DESCARGA_DOCUMENTOS_PDF))
+			return new ResponseEntity<>(null, HttpStatus.METHOD_NOT_ALLOWED);
+
+		StoredFileDto dto = mapper.StoredFileBoToStoredFileDto(downloadEpisodeDocument.run(episodeDocumentId));
+		LOG.debug(OUTPUT, dto);
+		return ResponseEntity.ok()
+				.contentType(MediaType.APPLICATION_PDF)
+				.body(dto.getResource());
+	}
+
 	@GetMapping("/{internmentEpisodeId}/summary")
-	@PreAuthorize("hasPermission(#institutionId, 'ESPECIALISTA_MEDICO, PROFESIONAL_DE_SALUD, ESPECIALISTA_EN_ODONTOLOGIA, ADMINISTRATIVO, ENFERMERO_ADULTO_MAYOR, ENFERMERO, ADMINISTRADOR_DE_CAMAS, PERSONAL_DE_IMAGENES, PERSONAL_DE_LABORATORIO, PERSONAL_DE_FARMACIA')")
+	@PreAuthorize("hasPermission(#institutionId, 'ESPECIALISTA_MEDICO, PROFESIONAL_DE_SALUD, ESPECIALISTA_EN_ODONTOLOGIA, ADMINISTRATIVO, ADMINISTRATIVO_RED_DE_IMAGENES, ENFERMERO_ADULTO_MAYOR, ENFERMERO, ADMINISTRADOR_DE_CAMAS, PERSONAL_DE_IMAGENES, PERSONAL_DE_LABORATORIO, PERSONAL_DE_FARMACIA')")
 	public ResponseEntity<InternmentSummaryDto> internmentEpisodeSummary(
 			@PathVariable(name = "institutionId") Integer institutionId,
 			@PathVariable(name = "internmentEpisodeId") Integer internmentEpisodeId) {
@@ -113,7 +213,7 @@ public class InternmentEpisodeController {
 	}
 
     @PostMapping
-    @PreAuthorize("hasPermission(#institutionId, 'ADMINISTRATIVO')")
+    @PreAuthorize("hasPermission(#institutionId, 'ADMINISTRATIVO, ADMINISTRATIVO_RED_DE_IMAGENES')")
 	@Transactional
     public ResponseEntity<InternmentEpisodeDto> addInternmentEpisode(
             @PathVariable(name = "institutionId") Integer institutionId,
@@ -149,7 +249,7 @@ public class InternmentEpisodeController {
 	}
 
 	@Transactional
-	@PreAuthorize("hasPermission(#institutionId, 'ADMINISTRATIVO')")
+	@PreAuthorize("hasPermission(#institutionId, 'ADMINISTRATIVO, ADMINISTRATIVO_RED_DE_IMAGENES')")
 	@PostMapping("/{internmentEpisodeId}/administrativedischarge")
 	public ResponseEntity<PatientDischargeDto> dischargeInternmentEpisode(
 			@PathVariable(name = "institutionId") Integer institutionId,

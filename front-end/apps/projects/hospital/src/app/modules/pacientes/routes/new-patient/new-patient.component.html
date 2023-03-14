@@ -1,7 +1,16 @@
 <app-content width="full">
 	<section class="page">
-		<h2 class="page-title" [translate]="'pacientes.new.TITLE'"></h2>
-		<h3 [translate]="'pacientes.new.SUBTITLE'"></h3>
+
+		<div class="attach_file">
+			<app-files-uploader [personId]="personId" [hasToSaveFiles]="hasToSaveFiles" (filesId)="subscribeFinishUploadFiles($event)" ></app-files-uploader>
+		</div>
+		<div *ngIf="hasInstitutionalAdministrativeRole else titleForOtherRoles">
+			<h2 class="page-title"> {{ 'pacientes.new.TITLE_PERSON' | translate }}</h2>
+		</div>
+		<ng-template #titleForOtherRoles>
+			<h2 class="page-title"> {{ 'pacientes.new.TITLE_PATIENT' | translate }}</h2>
+		</ng-template>
+
 		<form [formGroup]="form" (ngSubmit)="save()" fxLayout="column" fxLayoutGap="10px" fxLayoutGap.lt-sm="15px">
 			<div fxLayout="row" fxLayoutGap="10px" fxLayout.lt-sm="column" fxLayoutGap.lt-sm="0">
 				<div fxFlex="30" fxFlex.lt-md="100" fxLayout="column" fxLayoutGap="0" fxLayoutGap.lt-sm="10px"
@@ -177,11 +186,15 @@
 				<div fxLayout="row" class="white-bg-color">
 					<mat-form-field appearance="outline" fxFlex="30" fxFlex.lt-md="100">
 						<input id="cuil" name="cuil" formControlName="cuil"
-							placeholder="{{'pacientes.form.ONLY_NUMBERS' | translate}}" matInput>
+							placeholder="{{'pacientes.form.ONLY_NUMBERS' | translate}}"  matInput>
+							<mat-error *ngIf="hasError(form, 'maxlength', 'cuil')">
+								{{ 'pacientes.form.IDENTIFICATION_NUMBER_MAXLENGHT_ERROR' | translate }}
+							</mat-error>
+							<mat-error *ngIf="hasError(form, 'pattern', 'cuil')"
+							[translate]="'forms.FORMAT_NUMERIC'">
+							</mat-error>
 					</mat-form-field>
-					<mat-error *ngIf="hasError(form, 'maxlength', 'cuil')">
-						{{ 'pacientes.form.IDENTIFICATION_NUMBER_MAXLENGHT_ERROR' | translate }}
-					</mat-error>
+
 				</div>
 			</div>
 
@@ -278,16 +291,19 @@
 					</mat-form-field>
 				</div>
 			</div>
-			<div class="form-row white-bg-color" fxLayoutGap="10px">
+			<div class="form-row white-bg-color mb-2" fxLayoutGap="10px">
 				<div>
 					<div>
 						<span [translate]="'pacientes.form.PHONE_PREFIX'"></span>
 					</div>
 					<mat-form-field class="prefix-field" appearance="outline">
-						<input id="phonePrefix" name="phonePrefix" (keyup)="updatePhoneValidators()" formControlName="phonePrefix" maxlength="10"
+						<input id="phonePrefix" name="phonePrefix" (keyup)="updatePhoneValidators()" formControlName="phonePrefix"
 							   placeholder="{{'pacientes.form.PHONE_PREFIX' | translate}}" matInput>
 						<mat-error *ngIf="hasError(form, 'required', 'phonePrefix')">
 							<span translate="forms.REQUIRED"></span>
+						</mat-error>
+						<mat-error *ngIf="hasError(form, 'pattern', 'phonePrefix')"
+						[translate]="'forms.FORMAT_NUMERIC'">
 						</mat-error>
 					</mat-form-field>
 				</div>
@@ -296,10 +312,13 @@
 						<span [translate]="'pacientes.form.PHONE_NUMBER'"></span>
 					</div>
 					<mat-form-field appearance="outline">
-						<input id="phoneNumber" (keyup)="updatePhoneValidators()" name="phoneNumber" formControlName="phoneNumber" maxlength="15"
+						<input id="phoneNumber" (keyup)="updatePhoneValidators()" name="phoneNumber" formControlName="phoneNumber"
 							   placeholder="{{'pacientes.form.PHONE_NUMBER' | translate}}" matInput>
 						<mat-error *ngIf="hasError(form, 'required', 'phoneNumber')">
 							<span translate="forms.REQUIRED"></span>
+						</mat-error>
+						<mat-error *ngIf="hasError(form, 'pattern', 'phoneNumber')"
+						[translate]="'forms.FORMAT_NUMERIC'">
 						</mat-error>
 					</mat-form-field>
 				</div>
@@ -452,7 +471,7 @@
 				</div>
 			</div>
 
-			<div *appHasRole="['ADMINISTRATIVO','ADMINISTRADOR_INSTITUCIONAL_BACKOFFICE']" class="form-buttons">
+			<div *appHasRole="['ADMINISTRATIVO','ADMINISTRADOR_INSTITUCIONAL_BACKOFFICE', 'ADMINISTRATIVO_RED_DE_IMAGENES', 'ADMINISTRADOR_INSTITUCIONAL_PRESCRIPTOR', 'PRESCRIPTOR']" class="form-buttons">
 				<button mat-stroked-button type="button" (click)="goBack()">
 					<span [translate]="'buttons.BACK'"></span>
 				</button>

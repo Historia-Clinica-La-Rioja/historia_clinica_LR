@@ -2,10 +2,9 @@ package net.pladema.clinichistory.hospitalization.service.maindiagnoses;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-import javax.validation.ConstraintViolationException;
+import java.util.Collections;
 
-import net.pladema.clinichistory.hospitalization.repository.InternmentEpisodeStorage;
-import net.pladema.clinichistory.hospitalization.repository.domain.InternmentEpisode;
+import javax.validation.ConstraintViolationException;
 
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
@@ -29,12 +28,12 @@ import ar.lamansys.sgx.shared.featureflags.application.FeatureFlagsService;
 import net.pladema.UnitRepository;
 import net.pladema.clinichistory.hospitalization.repository.EvolutionNoteDocumentRepository;
 import net.pladema.clinichistory.hospitalization.repository.InternmentEpisodeRepository;
+import net.pladema.clinichistory.hospitalization.repository.InternmentEpisodeStorage;
 import net.pladema.clinichistory.hospitalization.repository.PatientDischargeRepository;
+import net.pladema.clinichistory.hospitalization.repository.domain.InternmentEpisode;
 import net.pladema.clinichistory.hospitalization.service.impl.InternmentEpisodeServiceImpl;
 import net.pladema.clinichistory.hospitalization.service.maindiagnoses.domain.MainDiagnosisBo;
 import net.pladema.establishment.repository.MedicalCoveragePlanRepository;
-
-import java.util.Collections;
 
 class ChangeMainDiagnosesServiceImplTest extends UnitRepository {
 
@@ -129,7 +128,7 @@ class ChangeMainDiagnosesServiceImplTest extends UnitRepository {
 
     @Test
     void createDocumentWithEpicrisis() {
-		var epicrisisDoc = save (new Document(1, DocumentStatus.FINAL, DocumentType.EPICRISIS, SourceType.HOSPITALIZATION));
+		var epicrisisDoc = save (new Document(1, DocumentStatus.FINAL, DocumentType.EPICRISIS, SourceType.HOSPITALIZATION, -1, -1));
         var internmentEpisode = save(newInternmentEpisodeWithEpicrisis(epicrisisDoc.getId()));
         Exception exception = Assertions.assertThrows(ConstraintViolationException.class, () ->
                 changeMainDiagnosesService.execute(validMainDiagnosisBo(8, internmentEpisode.getId()))

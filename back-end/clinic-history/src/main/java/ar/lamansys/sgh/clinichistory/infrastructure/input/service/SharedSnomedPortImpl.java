@@ -1,6 +1,7 @@
 package ar.lamansys.sgh.clinichistory.infrastructure.input.service;
 
 
+import ar.lamansys.sgh.clinichistory.application.saveSnomedConceptSynonyms.SaveSnomedConceptSynonyms;
 import ar.lamansys.sgh.clinichistory.application.saveSnomedConcepts.SaveSnomedConcepts;
 import ar.lamansys.sgh.clinichistory.domain.ips.SnomedBo;
 import ar.lamansys.sgh.shared.infrastructure.input.service.SharedSnomedDto;
@@ -9,6 +10,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -18,6 +20,8 @@ import java.util.stream.Collectors;
 public class SharedSnomedPortImpl implements SharedSnomedPort {
 
     private final SaveSnomedConcepts saveSnomedConcept;
+
+	private final SaveSnomedConceptSynonyms saveSnomedConceptSynonyms;
 
     @Override
     public List<Integer> addSnomedConcepts(List<SharedSnomedDto> concepts) {
@@ -29,7 +33,17 @@ public class SharedSnomedPortImpl implements SharedSnomedPort {
         return result;
     }
 
-    private List<SnomedBo> mapToSnomedBoList(List<SharedSnomedDto> concepts) {
+	@Override
+	public List<Integer> addSnomedSynonyms(List<SharedSnomedDto> synonyms) {
+		log.debug("Input parameter -> concepts size {}", synonyms.size());
+		log.trace("Input parameter -> concepts {}", synonyms);
+		List<Integer> result = saveSnomedConceptSynonyms.run(mapToSnomedBoList(synonyms));
+		log.debug("Output size -> {}", result.size());
+		log.trace("Output -> {}", result);
+		return result;
+	}
+
+	private List<SnomedBo> mapToSnomedBoList(List<SharedSnomedDto> concepts) {
         return concepts.stream()
                 .map(this::mapToSnomedBo)
                 .collect(Collectors.toList());
@@ -40,7 +54,8 @@ public class SharedSnomedPortImpl implements SharedSnomedPort {
                 snomedDto.getSctid(),
                 snomedDto.getPt(),
                 snomedDto.getParentId(),
-                snomedDto.getParentFsn());
+                snomedDto.getParentFsn(),
+				false);
     }
 
 }

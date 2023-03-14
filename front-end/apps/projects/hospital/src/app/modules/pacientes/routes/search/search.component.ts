@@ -4,6 +4,7 @@ import { hasError, VALIDATIONS } from '@core/utils/form.utils';
 import { IDENTIFICATION_TYPE_IDS, PATIENT_TYPE } from '@core/utils/patient.utils';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Moment } from 'moment';
+import { ERole } from '@api-rest/api-model';
 import { GenderDto, IdentificationTypeDto, PatientSearchDto } from '@api-rest/api-model';
 import { AppFeature } from '@api-rest/api-model';
 import { PatientService } from '@api-rest/services/patient.service';
@@ -21,6 +22,7 @@ import { PERSON } from '@core/constants/validation-constants';
 import { NavigationService } from '@pacientes/services/navigation.service';
 import { MIN_DATE } from "@core/utils/date.utils";
 import { PatientNameService } from "@core/services/patient-name.service";
+import { PermissionsService } from '@core/services/permissions.service';
 
 const ROUTE_NEW = 'pacientes/new';
 const ROUTE_NEW_TEMPORARY = 'pacientes/temporary';
@@ -33,6 +35,7 @@ const TIME_TO_PREVENT_SCROLL = 100;
 	styleUrls: ['./search.component.scss']
 })
 export class SearchComponent implements OnInit {
+	hasInstitutionalAdministratorRole = false;
 	ffOfCardsIsOn = false;
 	readonly PERSON_MAX_LENGHT = PERSON;
 	patientData: PatientSearchDto[] = [];
@@ -71,6 +74,7 @@ export class SearchComponent implements OnInit {
 		private featureFlagService: FeatureFlagService,
 		public navigationService: NavigationService,
 		private readonly patientNameService: PatientNameService,
+		private permissionsService: PermissionsService,
 
 	) {
 		this.routePrefix = 'institucion/' + this.contextService.institutionId + '/';
@@ -118,6 +122,9 @@ export class SearchComponent implements OnInit {
 					});
 			});
 		}
+
+		this.permissionsService.hasContextAssignments$([ERole.ADMINISTRADOR_INSTITUCIONAL_BACKOFFICE, ERole.ADMINISTRADOR_INSTITUCIONAL_PRESCRIPTOR]).subscribe(hasInstitutionalAdministratorRole => this.hasInstitutionalAdministratorRole = hasInstitutionalAdministratorRole);
+
 	}
 
 

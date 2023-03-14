@@ -207,16 +207,18 @@ const messages = {
                 groupEventId: 'Grupo evento',
                 eventId: 'Evento',
                 manualClassificationId: 'Clasificación manual',
-                patientId: 'Paciente',
+                patientId: 'Id Paciente',
                 snomedSctid: 'Id Snomed',
                 snomedPt: 'Término Snomed',
                 status: 'Estado',
                 responseCode: 'Código de respuesta',
-                professionalId: 'Profesional',
+                professionalId: 'Id Profesional',
                 institutionId: 'Institución',
                 sisaRegisteredId: 'Id Sisa',
                 lastUpdate: 'Última actualización'
             },
+            patient: 'Nombre y apellido Paciente',
+            professional: 'Nombre y apellido Profesional'
         },
         sectors: sectorMessages,
         rootsectors: sectorMessages,
@@ -354,7 +356,8 @@ const messages = {
                 lastLogin: 'Último ingreso',
                 institutionId: 'Institución',
                 roleId: 'Rol',
-                email: "E-mail"
+                email: "E-mail",
+                roles: 'Roles'
             },
             fieldGroups: {
                 passwordResets: 'Establecer clave de acceso',
@@ -367,6 +370,9 @@ const messages = {
             },
             createRelated: 'Crear Usuario',
             noEmail: "Sin información",
+            buttons: {
+                linkRole: 'Asociar rol'
+            }
         },
         admin: {
             name: 'Admin |||| Admins',
@@ -379,6 +385,14 @@ const messages = {
                 email: "E-mail"
             },
             noEmail: "Sin información",
+        },
+        userroles: {
+            name: 'Roles de usuario |||| Roles de usuario',
+            fields: {
+                userId: 'Username',
+                roleId: 'Rol',
+                institutionId: 'Institución'
+            }
         },
         internmentepisodes: {
             name: 'Episodio de internación |||| Episodios de internación',
@@ -450,6 +464,22 @@ const messages = {
                 typeId: 'Tipo de documento',
                 filename: 'Nombre de archivo',
                 createdOn: 'Fecha de creación',
+                "creationable.createdOn": 'Fecha de creación'
+            },
+            downloadFile: 'Descargar pdf'
+        },
+        "files": {
+            name: 'Archivos |||| Archivos',
+            fields: {
+                id: 'Identificador',
+                name: 'Nombre de archivo',
+                relativePath: 'Ubicación relativa',
+                originalPath: 'Ubicación usada para calcular la relativa',
+                source: 'Módulo fuente',
+                uuidfile: 'Uuid',
+                size: 'Tamaño(bytes)',
+                generatedBy: 'Forma de creación',
+                contentType: 'Tipo de archivo',
                 "creationable.createdOn": 'Fecha de creación'
             },
             downloadFile: 'Descargar pdf'
@@ -668,6 +698,59 @@ const messages = {
                 conceptId: 'Id Concepto',
                 term: 'Descripción',
             }
+        },
+        episodedocumenttypes: {
+            name: 'Tipos de documentos de episodios',
+            fields: {
+                description: 'Descripción'
+            }
+        },
+        pacservers: {
+            name: 'PAC Global',
+            fields: {
+                name: 'Nombre de servidor PAC',
+                aetitle: 'AETITLE',
+                domain: 'Dominio',
+                pacServerType: 'Tipo de Servidor',
+                pacServerProtocol: 'Protocolo imagen',
+                username: 'Usuario',
+                password: 'Contraseña',
+                urlStow: 'url_stow',
+                urlAuth: 'url_auth',
+            },
+        },
+        pacserversimagelvl: {
+            name: 'Servidor PAC a nivel servicio',
+            fields: {
+                name: 'Nombre de servidor PAC',
+                aetitle: 'AETITLE',
+                domain: 'Dominio',
+                port: 'Puerto',
+                sectorId: 'Sector',
+            },
+            createRelated: 'Crear Servidor PAC'
+        },
+        orchestrator: {
+            name: 'Orquestador',
+            fields: {
+                name: 'Nombre',
+                baseTopic:'Tópico Base',
+                sectorId:'Sector'
+            },
+            createRelated: 'Crear Orquestador'
+        },
+        equipment: {
+            name: 'Equipos',
+            fields: {
+                name: 'Nombre',
+                aeTitle: 'AE Title',
+                orchestratorId:'Orquestador asociado',
+                sectorId:'Sector',
+                pacServerId:'Nombre del servidor PAC',
+                modalityId:'Modalidad'
+            },
+            createRelated: 'Crear Equipo',
+            detailLabel:'Detalle de Equipo'
         }
     }
 };

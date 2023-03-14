@@ -1,5 +1,6 @@
 package net.pladema.scheduledjobs.jobs;
 
+import net.javacrumbs.shedlock.core.SchedulerLock;
 import net.pladema.person.controller.mapper.EthnicityMapper;
 import net.pladema.person.controller.service.PersonMasterDataExternalService;
 import net.pladema.snowstorm.services.SnowstormService;
@@ -44,11 +45,12 @@ public class UpdateEthnicityMasterDataJob {
             "${scheduledjobs.updateethnicities.dayofmonth} " +
             "${scheduledjobs.updateethnicities.month} " +
             "${scheduledjobs.updateethnicities.dayofweek}")
+	@SchedulerLock(name = "UpdateEthnicityMasterDataJob")
     public void execute() throws SnowstormApiException {
-        LOG.debug("Executing UpdateEthnicityMasterDataJob at {}", new Date());
+        LOG.warn("Scheduled UpdateEthnicityMasterDataJob starting at {}", new Date());
         SnowstormSearchResponse response = snowstormService.getConceptsByEcl(ECL);
         personMasterDataExternalService.updateActiveEthnicities(ethnicityMapper.fromSnowstormItemResponseList(response.getItems()));
-        LOG.debug("Finishing UpdateEthnicityMasterDataJob at {}", new Date());
+        LOG.warn("Scheduled UpdateEthnicityMasterDataJob done at {}", new Date());
     }
 
 }

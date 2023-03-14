@@ -25,16 +25,18 @@ const enum COLORES {
 	SERVED = '#A3EBAF',
 	PROGRAMADA = '#7FC681',
 	ESPONTANEA = '#2687C5',
-	SOBRETURNO = '#E3A063',
+	SOBRETURNO = '#1A45DD',
 	RESERVA_ALTA = '#FFFFFF',
 	RESERVA_VALIDACION = '#EB5757',
-	FUERA_DE_AGENDA = '#FF0000'
+	FUERA_DE_AGENDA = '#FF0000',
+	PROTECTED = '#AF26C5'
 }
 
 const TEMPORARY_PATIENT = 3;
 const GREY_TEXT = 'calendar-event-grey-text';
 const WHITE_TEXT = 'calendar-event-white-text';
 const BLUE_TEXT = 'calendar-event-blue-text';
+const PURPLE_TEXT = 'calendar-event-purple-text';
 
 const APPOINTMENT_COLORS_STATES: AppointmentColorsStates[] = [
 	{
@@ -88,7 +90,7 @@ export class AppointmentsFacadeService {
 	}
 
 	setProfessional(professional: ProfessionalDto) {
-		if (professional.id && this.professional?.id !== professional.id) {
+		if (professional?.id && this.professional?.id !== professional.id) {
 			this.professional = professional;
 			this.professionalSubject.next(professional);
 			if (this.agendaId) {
@@ -292,9 +294,9 @@ export function toCalendarEvent(from: string, to: string, date: Moment, appointm
 		title,
 		color: {
 			primary: getColor(appointment),
-			secondary: getColor(appointment)
+			secondary: showProtectedAppointment(appointment) ? 'transparent' : getColor(appointment)
 		},
-		cssClass: getSpanColor(appointment.appointmentStateId),
+		cssClass: getSpanColor(appointment),
 		meta: {
 			patient: {
 				id: appointment.patient?.id,
@@ -340,9 +342,6 @@ export function getColor(appointment: AppointmentListDto): COLORES {
 
 
 
-	if (appointment.overturn) {
-		return COLORES.SOBRETURNO;
-	}
 
 	if (appointment.appointmentStateId === APPOINTMENT_STATES_ID.BOOKED) {
 		return COLORES.RESERVA_VALIDACION;
@@ -359,23 +358,40 @@ export function getColor(appointment: AppointmentListDto): COLORES {
 	if(appointment.appointmentStateId === APPOINTMENT_STATES_ID.SERVED) {
 		return COLORES.SERVED;
 	}
+
+	if(showProtectedAppointment(appointment)) {
+		return COLORES.PROTECTED;
+	}
+	
 	if (!appointment?.patient?.id) {
 		return COLORES.RESERVA_ALTA;
+	}
+
+	if (appointment.overturn) {
+		return COLORES.SOBRETURNO;
 	}
 
 	return COLORES.ASSIGNED;
 }
 
-export function getSpanColor(appointmentStateId: number): string {
-	if (appointmentStateId === APPOINTMENT_STATES_ID.ABSENT || appointmentStateId === APPOINTMENT_STATES_ID.SERVED) {
+export function getSpanColor(appointment: AppointmentListDto): string {
+	if (appointment.appointmentStateId === APPOINTMENT_STATES_ID.ABSENT || appointment.appointmentStateId === APPOINTMENT_STATES_ID.SERVED) {
 		return GREY_TEXT;
 	}
 
-	if (appointmentStateId === APPOINTMENT_STATES_ID.BOOKED) {
+	if (appointment.appointmentStateId === APPOINTMENT_STATES_ID.BOOKED) {
 		return BLUE_TEXT;
 	}
 
+	if (showProtectedAppointment(appointment)) {
+		return PURPLE_TEXT;
+	}
+
 	return WHITE_TEXT;
+}
+
+function showProtectedAppointment(appointment: AppointmentListDto) {
+	return appointment.appointmentStateId === APPOINTMENT_STATES_ID.ASSIGNED && appointment.protected
 }
 
 interface AppointmentColorsStates {

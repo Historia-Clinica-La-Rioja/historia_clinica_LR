@@ -12,9 +12,12 @@
 		</mat-error>
 		<mat-error *ngIf="hasError(	form, 'maxlength', 'licenseNumber')">
 			{{'pacientes.edit_license.form_license.LICENSE_MAX_LENGTH_ERROR' | translate }}
-	</mat-error>
+		</mat-error>
+		<mat-error *ngIf="hasError( form, 'invalid', 'licenseNumber')">
+			{{'pacientes.edit_license.form_license.LICENSE_PATTERN_ERROR' | translate }}
+		</mat-error>
 	</mat-form-field>
-
+	
 	<div fxLayout="column" fxLayoutGap="15px">
 
 		<mat-radio-group id="radio-option" aria-label="Select an option" fxLayoutGap="15px" formControlName="typeId"

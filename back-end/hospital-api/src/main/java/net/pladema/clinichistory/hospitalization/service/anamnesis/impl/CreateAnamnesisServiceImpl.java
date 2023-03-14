@@ -1,19 +1,19 @@
 package net.pladema.clinichistory.hospitalization.service.anamnesis.impl;
 
-import ar.lamansys.sgh.clinichistory.application.createDocument.DocumentFactory;
-import ar.lamansys.sgx.shared.dates.configuration.DateTimeProvider;
-import net.pladema.clinichistory.hospitalization.service.InternmentEpisodeService;
-import net.pladema.clinichistory.hospitalization.service.anamnesis.AnamnesisValidator;
-import net.pladema.clinichistory.hospitalization.service.anamnesis.CreateAnamnesisService;
-import net.pladema.clinichistory.hospitalization.service.anamnesis.domain.AnamnesisBo;
+import java.time.LocalDateTime;
+import java.util.Optional;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.time.LocalDateTime;
-import java.util.Optional;
+import ar.lamansys.sgh.clinichistory.application.createDocument.DocumentFactory;
+import ar.lamansys.sgx.shared.dates.configuration.DateTimeProvider;
+import net.pladema.clinichistory.hospitalization.service.InternmentEpisodeService;
+import net.pladema.clinichistory.hospitalization.service.anamnesis.AnamnesisValidator;
+import net.pladema.clinichistory.hospitalization.service.anamnesis.CreateAnamnesisService;
+import net.pladema.clinichistory.hospitalization.service.anamnesis.domain.AnamnesisBo;
 
 @Service
 public class CreateAnamnesisServiceImpl implements CreateAnamnesisService {
@@ -53,6 +53,9 @@ public class CreateAnamnesisServiceImpl implements CreateAnamnesisService {
         anamnesis.setPerformedDate(now);
 
         anamnesis.setPatientId(internmentEpisode.getPatientId());
+		LocalDateTime patientEntryDate = internmentEpisodeService.getEntryDate(anamnesis.getEncounterId());
+		if(patientEntryDate != null)
+			anamnesis.setPatientInternmentAge(patientEntryDate.toLocalDate());
 
 		anamnesisValidator.assertAnamnesisValid(anamnesis);
 		anamnesisValidator.assertDoesNotHaveAnamnesis(internmentEpisode);

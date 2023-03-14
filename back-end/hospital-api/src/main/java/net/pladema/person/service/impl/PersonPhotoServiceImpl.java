@@ -1,19 +1,20 @@
 package net.pladema.person.service.impl;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import ar.lamansys.sgx.shared.files.images.ImageFileService;
 import net.pladema.person.controller.dto.PersonPhotoDto;
 import net.pladema.person.repository.PersonExtendedRepository;
 import net.pladema.person.repository.domain.PersonPhotoVo;
 import net.pladema.person.repository.entity.PersonExtended;
 import net.pladema.person.service.PersonPhotoService;
-import net.pladema.sgx.images.ImageFileService;
-import org.slf4j.LoggerFactory;
-import org.slf4j.Logger;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
 
 @Service
 public class PersonPhotoServiceImpl implements PersonPhotoService {
@@ -40,7 +41,11 @@ public class PersonPhotoServiceImpl implements PersonPhotoService {
         LOG.debug("Input parameter -> personId {}", personId);
         PersonPhotoDto personPhotoDto = new PersonPhotoDto();
         Optional<String> photoFilePath = personExtendedRepository.getPhotoFilePath(personId);
-        photoFilePath.ifPresent(path -> personPhotoDto.setImageData(imageFileService.readImage(path)));
+        try {
+			photoFilePath.ifPresent(path -> personPhotoDto.setImageData(imageFileService.readImage(path)));
+		} catch (Exception e) {
+			LOG.error("Error al intentar obtener la imagen del paciente con personId -> {} ", personId);
+		}
         LOG.debug(OUTPUT, personPhotoDto);
         return personPhotoDto;
     }
@@ -83,22 +88,14 @@ public class PersonPhotoServiceImpl implements PersonPhotoService {
             return false;
         }
         String newFileName = imageFileService.createFileName();
-        String completePath = buildCompleteFilePath(personId,  newFileName);
+        String relativePath = RELATIVE_DIRECTORY
+				.replace("{personIdSubdivision}", getNLastDigits(SUBDIVISION_DIGITS, personId))
+				.replace("{personId}", personId.toString())
+				.concat(newFileName);
         PersonExtended personExtended = getPersonExtended(personId);
-        personExtended.setPhotoFilePath(completePath);
+        personExtended.setPhotoFilePath(imageFileService.buildCompletePath(relativePath));
         personExtendedRepository.save(personExtended);
-        boolean result = imageFileService.saveImage(completePath, imageData);
-        LOG.debug(OUTPUT, result);
-        return result;
-    }
-
-    private String buildCompleteFilePath(Integer personId, String relativeFilePath){
-        LOG.debug("Input parameters -> personId {}, relativeFilePath {}", personId, relativeFilePath);
-        String partialPath = RELATIVE_DIRECTORY
-                .replace("{personIdSubdivision}", getNLastDigits(SUBDIVISION_DIGITS, personId))
-                .replace("{personId}", personId.toString())
-                .concat(relativeFilePath);
-        String result = imageFileService.buildPath(partialPath);
+        boolean result = imageFileService.saveImage(relativePath, newFileName, "FOTO_PERSONAL", imageData);
         LOG.debug(OUTPUT, result);
         return result;
     }

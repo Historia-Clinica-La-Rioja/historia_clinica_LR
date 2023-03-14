@@ -1,5 +1,5 @@
 <app-summary-card id="assigned-appointments-summary-card" [header]="assignedAppointmentsSummary" [editable]="true"
-	[canEdit]="['ADMINISTRATIVO', 'ESPECIALISTA_MEDICO', 'PROFESIONAL_DE_SALUD', 'ESPECIALISTA_EN_ODONTOLOGIA', 'ENFERMERO']"
+	[canEdit]="['ADMINISTRATIVO', 'ESPECIALISTA_MEDICO', 'PROFESIONAL_DE_SALUD', 'ESPECIALISTA_EN_ODONTOLOGIA', 'ENFERMERO', 'ADMINISTRATIVO_RED_DE_IMAGENES']"
 	(openInNew)="newAppointment()">
 	<mat-card-content>
 		<ng-container *ngIf="appointmentsList.length else noAppointments">

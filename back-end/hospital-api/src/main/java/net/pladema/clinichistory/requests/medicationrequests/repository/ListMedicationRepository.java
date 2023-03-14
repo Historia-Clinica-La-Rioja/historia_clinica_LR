@@ -8,4 +8,6 @@ public interface ListMedicationRepository {
 
     List<Object[]> execute(MedicationFilterVo filter);
 
+	List<Object[]> execute(MedicationFilterVo filter, Integer userId);
+
 }

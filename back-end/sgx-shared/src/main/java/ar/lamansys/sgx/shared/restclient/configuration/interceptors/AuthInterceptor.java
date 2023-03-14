@@ -1,9 +1,8 @@
 package ar.lamansys.sgx.shared.restclient.configuration.interceptors;
 
-import ar.lamansys.sgx.shared.restclient.configuration.TokenHolder;
-import ar.lamansys.sgx.shared.restclient.services.AuthService;
-import ar.lamansys.sgx.shared.restclient.services.domain.LoginResponse;
-import ar.lamansys.sgx.shared.restclient.services.domain.WSResponseException;
+import java.io.IOException;
+import java.util.Arrays;
+
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpRequest;
 import org.springframework.http.HttpStatus;
@@ -12,8 +11,10 @@ import org.springframework.http.client.ClientHttpRequestExecution;
 import org.springframework.http.client.ClientHttpRequestInterceptor;
 import org.springframework.http.client.ClientHttpResponse;
 
-import java.io.IOException;
-import java.util.Arrays;
+import ar.lamansys.sgx.shared.restclient.configuration.TokenHolder;
+import ar.lamansys.sgx.shared.restclient.services.AuthService;
+import ar.lamansys.sgx.shared.restclient.services.domain.LoginResponse;
+import ar.lamansys.sgx.shared.restclient.services.domain.WSResponseException;
 
 public abstract class AuthInterceptor<R extends LoginResponse, S extends AuthService<R>>
 		implements ClientHttpRequestInterceptor {

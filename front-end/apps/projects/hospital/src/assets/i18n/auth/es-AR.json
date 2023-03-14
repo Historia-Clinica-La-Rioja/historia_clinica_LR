@@ -21,7 +21,8 @@
 				"VERIFICATION_CODE_MINIMUM_LENGTH": "El código debe contener 6 dígitos",
 				"VERIFICATION_CODE_INVALID": "Código incorrecto",
 				"VERIFY": "Verificar"
-			}
+			},
+			"PASSWORD_RECOVER": "¿Olvidaste tu contraseña?"
 		},
 		"LOGOUT": "Cerrar Sesión",
 		"password-reset": {
@@ -40,6 +41,20 @@
 				"ERROR": "Error definiendo nueva clave",
 				"OK": "Se definió correctamente la clave para el usuario",
 				"TITLE": "Definiendo nueva clave"
+			}
+		},
+		"password-recover": {
+			"TITLE": "Recuperar contraseña",
+			"SUBTITLE":"Por favor ingresá tu usuario y te enviaremos un link vía email para restablecer tu contraseña.",
+			"USER_LABEL": "Nombre de usuario",
+			"ERROR": "Nombre de usuario inexistente. Revise los datos ingresados o, caso contrario, comuníquese con el administrador del sistema.",
+			"RECOVER_PASSWORD": "Recuperar contraseña",
+			"BACK": "Volver al inicio",
+			"USER_ERROR": "Debe ingresar su usuario",
+			"USER_VERIFICATION":"Verificando usuario",
+			"result": {
+				"ERROR": "Su usuario no tiene email registrado, por favor comuníquese con el administrador del sistema",
+				"OK": "Se ha enviado un email a {{email}} con un link para restablecer la contraseña"
 			}
 		},
 		"access-data-reset": {
@@ -86,7 +101,9 @@
 				"PERSONAL_DE_LABORATORIO": "Personal de laboratorio",
 				"PERSONAL_DE_FARMACIA": "Personal de farmacia",
 				"PERSONAL_DE_IMAGENES": "Personal de imágenes",
-				"PERSONAL_DE_ESTADISTICA": "Personal de estadística"
+				"PERSONAL_DE_ESTADISTICA": "Personal de estadística",
+				"ADMINISTRATIVO_RED_DE_IMAGENES": "Administrativo Red de Imágenes",
+				"PRESCRIPTOR": "Prescriptor"
 			}
 		}
 	}

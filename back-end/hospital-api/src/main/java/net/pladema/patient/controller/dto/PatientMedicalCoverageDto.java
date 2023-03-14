@@ -6,6 +6,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import ar.lamansys.sgx.shared.dates.configuration.JacksonDateFormatConfig;
+import lombok.ToString;
 
 import javax.annotation.Nullable;
 
@@ -13,6 +14,7 @@ import javax.annotation.Nullable;
 @Setter
 @Getter
 @NoArgsConstructor
+@ToString
 public class PatientMedicalCoverageDto {
 
     @Nullable

@@ -1,7 +1,21 @@
 <app-content width="full">
 	<section class="page">
-		<h2 class="page-title" [translate]="'pacientes.edit.TITLE'"></h2>
-		<h3 [translate]="'pacientes.edit.SUBTITLE'"></h3>
+		<div class="attach_file">
+			<app-files-uploader [personId]="completeDataPatient?.person.id"
+				[personFiles]="completeDataPatient?.person.files" [hasToSaveFiles]="hasToSaveFiles"
+				(filesId)="savePatient($event)"></app-files-uploader>
+		</div>
+		<div *ngIf="hasInstitutionalAdministratorRole else titleForOtherRoles">
+			<h2 class="page-title" [translate]="'pacientes.edit.TITLE_PERSON'"></h2>
+			<h3 [translate]="'pacientes.edit.SUBTITLE_PERSON'"></h3>
+		</div>
+		<ng-template #titleForOtherRoles>
+			<h2 class="page-title" [translate]="'pacientes.edit.TITLE_PATIENT'"></h2>
+			<h3 [translate]="'pacientes.edit.SUBTITLE_PATIENT'"></h3>
+		</ng-template>
+
+
+
 		<div class="content">
 			<form [formGroup]="form" (ngSubmit)="save()">
 				<div class="form-row">
@@ -36,6 +50,71 @@
 								Introduzca como máximo 11 caracteres
 							</mat-error>
 						</mat-form-field>
+					</div>
+				</div>
+
+				<div *ngIf="!auditablePatientInfo else messageForAuditSection">
+					<button mat-button type="button" id="mark_for_audit" color="primary" (click)="openAuditDialog()">
+						<mat-icon fontSet="material-icons-outlined">sms_failed</mat-icon>
+						{{ 'pacientes.edit.MARK_FOR_AUDIT' | translate }}
+					</button>
+					<br><br>
+				</div>
+
+				<ng-template #messageForAuditSection>
+					<div fxLayout="column" fxLayoutGap="10px" id="message_for_audit_section">
+						<span [translate]="'pacientes.edit.MESSAGE_FOR_AUDIT'"></span>
+
+						<div>
+							<span id="message_for_audit"> "{{ auditablePatientInfo.message }}" </span>
+							<div class="mat-caption">
+								<span *ngIf="auditablePatientInfo.createdBy">{{ auditablePatientInfo.createdBy }} -
+								</span>
+								<span *ngIf="auditablePatientInfo.institutionName">
+									{{ auditablePatientInfo.institutionName }} - </span>
+								<span>{{ auditablePatientInfo.createdOn | translate }}</span>
+							</div>
+						</div>
+
+						<div fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="5px" fxLayout.lt-sm="column"
+							fxLayoutAlign.lt-sm="start start" fxLayoutGap.lt-sm="3px">
+							<button mat-button type="button" id="edit_message_for_audit" color="primary"
+								(click)="openAuditDialog(auditablePatientInfo.message)">
+								<mat-icon fontSet="material-icons-outlined">edit</mat-icon>
+								{{ 'pacientes.edit.EDIT_MESSAGE_FOR_AUDIT' | translate }}
+							</button>
+							<button mat-button type="button" id="unmark_patient_for_audit" color="warn"
+								(click)="openUnmarkPatientWarning()">
+								<mat-icon fontSet="material-icons-outlined">cancel</mat-icon>
+								{{ 'pacientes.edit.UNMARK_PATIENT_FOR_AUDIT' | translate }}
+							</button>
+						</div>
+					</div>
+				</ng-template>
+				<div class="form-row">
+					<div>
+						<div>
+							<span [translate]="'pacientes.search_patient.PATIENT_ID'"></span>
+						</div>
+						<mat-form-field appearance="outline">
+							<input id="patientId" name="patientId" formControlName="patientId"
+								placeholder="{{'pacientes.form.ONLY_NUMBERS' | translate}}" matInput>
+						</mat-form-field>
+					</div>
+
+					<div>
+						<div>
+							<span [translate]="'pacientes.form.STATE'"></span>
+						</div>
+						<mat-form-field appearance="outline">
+							<mat-select id="stateId" name="stateId" formControlName="stateId"
+								placeholder="{{'pacientes.form.SELECT' | translate}}">
+								<mat-option *ngFor="let state of typesPatient" [value]="state.id">
+									{{state.description}}
+								</mat-option>
+							</mat-select>
+						</mat-form-field>
+
 					</div>
 				</div>
 
@@ -166,13 +245,14 @@
 					<span [translate]="'pacientes.form.CUIT_CUIL'"></span>
 				</div>
 				<mat-form-field appearance="outline">
-					<input id="cuil" name="cuil" formControlName="cuil"
+					<input id="cuil" name="cuil" formControlName="cuil" maxlength="11"
 						placeholder="{{'pacientes.form.ONLY_NUMBERS' | translate}}" matInput>
+					<mat-error *ngIf="hasError(form, 'maxlength', 'cuil')">
+						Introduzca como máximo 11 caracteres
+					</mat-error>
+					<mat-error *ngIf="hasError(form, 'pattern', 'cuil')" [translate]="'forms.FORMAT_NUMERIC'">
+					</mat-error>
 				</mat-form-field>
-				<mat-error *ngIf="hasError(form, 'maxlength', 'cuil')">
-					Introduzca como máximo 11 caracteres
-				</mat-error>
-
 				<div>
 					<span [translate]="'pacientes.form.ADDRESS'"></span>
 				</div>
@@ -184,8 +264,9 @@
 								{{country.description}}
 							</mat-option>
 						</mat-select>
-						<button id="clear_address_country" type="button" mat-button *ngIf="form.value.addressCountryId" matSuffix
-							color="warn" mat-icon-button (click)="clear(form.controls.addressCountryId); $event.stopPropagation()">
+						<button id="clear_address_country" type="button" mat-button *ngIf="form.value.addressCountryId"
+							matSuffix color="warn" mat-icon-button
+							(click)="form.controls.addressCountryId.reset(); $event.stopPropagation()">
 							<mat-icon>close</mat-icon>
 						</button>
 					</mat-form-field>
@@ -193,12 +274,13 @@
 					<mat-form-field appearance="outline">
 						<mat-select id="addressProvinceId" name="addressProvinceId" formControlName="addressProvinceId"
 							placeholder="{{'pacientes.form.ADDRESS_PROVINCE' | translate}}">
-							<mat-option *ngFor="let province of provinces" [value]="province.id">
+							<mat-option *ngFor="let province of provinces$ | async" [value]="province.id">
 								{{province.description}}
 							</mat-option>
 						</mat-select>
-						<button id="clear_address_province" type="button" mat-button *ngIf="form.value.addressProvinceId" matSuffix
-							color="warn" mat-icon-button (click)="clear(form.controls.addressProvinceId); $event.stopPropagation()">
+						<button id="clear_address_province" type="button" mat-button
+							*ngIf="form.value.addressProvinceId" matSuffix color="warn" mat-icon-button
+							(click)="form.controls.addressProvinceId.reset(); $event.stopPropagation()">
 							<mat-icon>close</mat-icon>
 						</button>
 					</mat-form-field>
@@ -207,12 +289,13 @@
 						<mat-select id="addressDepartmentId" name="addressDepartmentId"
 							formControlName="addressDepartmentId"
 							placeholder="{{'pacientes.form.ADDRESS_DEPARTMENT' | translate}}">
-							<mat-option *ngFor="let department of departments" [value]="department.id">
+							<mat-option *ngFor="let department of departments$ | async" [value]="department.id">
 								{{department.description}}
 							</mat-option>
 						</mat-select>
-						<button id="clear_address_departament" type="button" mat-button *ngIf="form.value.addressDepartmentId" matSuffix
-							color="warn" mat-icon-button (click)="clear(form.controls.addressDepartmentId); $event.stopPropagation()">
+						<button id="clear_address_departament" type="button" mat-button
+							*ngIf="form.value.addressDepartmentId" matSuffix color="warn" mat-icon-button
+							(click)="form.controls.addressDepartmentId.reset(); $event.stopPropagation()">
 							<mat-icon>close</mat-icon>
 						</button>
 					</mat-form-field>
@@ -220,12 +303,13 @@
 					<mat-form-field appearance="outline">
 						<mat-select id="addressCityId" name="addressCityId" formControlName="addressCityId"
 							placeholder="{{'pacientes.form.ADDRESS_CITY' | translate}}">
-							<mat-option *ngFor="let city of cities" [value]="city.id">
+							<mat-option *ngFor="let city of cities$ | async" [value]="city.id">
 								{{city.description}}
 							</mat-option>
 						</mat-select>
-						<button id="clear_address_city" type="button" mat-button *ngIf="form.value.addressCityId" matSuffix
-							color="warn" mat-icon-button (click)="clear(form.controls.addressCityId); $event.stopPropagation()">
+						<button id="clear_address_city" type="button" mat-button *ngIf="form.value.addressCityId"
+							matSuffix color="warn" mat-icon-button
+							(click)="form.controls.addressCityId.reset(); $event.stopPropagation()">
 							<mat-icon>close</mat-icon>
 						</button>
 					</mat-form-field>
@@ -262,16 +346,23 @@
 							placeholder="{{'pacientes.form.ADDRESS_QUARTER' | translate}}" matInput>
 					</mat-form-field>
 				</div>
-				<div class="form-row">
+				<div class="form-row mb-2">
 					<div>
 						<div>
 							<span [translate]="'pacientes.form.PHONE_PREFIX'"></span>
 						</div>
 						<mat-form-field class="prefix-field" appearance="outline">
-							<input id="phonePrefix" name="phonePrefix" (keyup)="updatePhoneValidators()" formControlName="phonePrefix" maxlength="10"
-								   placeholder="{{'pacientes.form.PHONE_PREFIX' | translate}}" matInput>
+							<input id="phonePrefix" name="phonePrefix" (keyup)="updatePhoneValidators()"
+								formControlName="phonePrefix" maxlength="4" minlength="2"
+								placeholder="{{'pacientes.form.PHONE_PREFIX' | translate}}" matInput>
 							<mat-error *ngIf="hasError(form, 'required', 'phonePrefix')">
 								<span translate="forms.REQUIRED"></span>
+							</mat-error>
+							<mat-error *ngIf="hasError(form, 'minlength', 'phonePrefix')"
+								translate="forms.MAX_LENGTH_ERROR" [translateParams]="{max: 10}">
+							</mat-error>
+							<mat-error *ngIf="hasError(form, 'pattern', 'phonePrefix')"
+								[translate]="'forms.FORMAT_NUMERIC'">
 							</mat-error>
 						</mat-form-field>
 					</div>
@@ -280,10 +371,14 @@
 							<span [translate]="'pacientes.form.PHONE_NUMBER'"></span>
 						</div>
 						<mat-form-field appearance="outline">
-							<input id="phoneNumber" (keyup)="updatePhoneValidators()" name="phoneNumber" formControlName="phoneNumber" maxlength="15"
-								   placeholder="{{'pacientes.form.PHONE_NUMBER' | translate}}" matInput>
+							<input id="phoneNumber" (keyup)="updatePhoneValidators()" name="phoneNumber"
+								formControlName="phoneNumber" maxlength="15" minlength="15"
+								placeholder="{{'pacientes.form.PHONE_NUMBER' | translate}}" matInput>
 							<mat-error *ngIf="hasError(form, 'required', 'phoneNumber')">
 								<span translate="forms.REQUIRED"></span>
+							</mat-error>
+							<mat-error *ngIf="hasError(form, 'pattern', 'phoneNumber')"
+								[translate]="'forms.FORMAT_NUMERIC'">
 							</mat-error>
 						</mat-form-field>
 					</div>
@@ -375,8 +470,9 @@
 								{{ethnicity.pt | titlecase}}
 							</mat-option>
 						</mat-select>
-						<button id="clear_address_ethnicity" type="button" mat-button *ngIf="form.value.ethnicityId" matSuffix
-							color="warn" mat-icon-button (click)="clear(form.controls.ethnicityId); $event.stopPropagation()">
+						<button id="clear_address_ethnicity" type="button" mat-button *ngIf="form.value.ethnicityId"
+							matSuffix color="warn" mat-icon-button
+							(click)="form.controls.ethnicityId.reset(); $event.stopPropagation()">
 							<mat-icon>close</mat-icon>
 						</button>
 					</mat-form-field>
@@ -387,9 +483,11 @@
 					</div>
 					<mat-form-field appearance="outline">
 						<mat-select id="occupation-select" formControlName="occupationId"
-							placeholder="{{'pacientes.form.OCCUPATION' | translate}}" matTooltip="{{ currentOccupationDescription }}">
+							placeholder="{{'pacientes.form.OCCUPATION' | translate}}"
+							matTooltip="{{ currentOccupationDescription }}">
 							<mat-option *ngFor="let occupation of occupations" [value]="occupation.id"
-								matTooltip="{{ occupation.description }}" (click)="currentOccupationDescription = occupation.description">
+								matTooltip="{{ occupation.description }}"
+								(click)="currentOccupationDescription = occupation.description">
 								{{occupation.description}}
 							</mat-option>
 
@@ -407,9 +505,11 @@
 					</div>
 					<mat-form-field appearance="outline">
 						<mat-select id="educationLevel-select" formControlName="educationLevelId"
-							placeholder="{{'pacientes.form.EDUCATION_LEVEL' | translate}}" matTooltip="{{ currentEducationLevelDescription }}">
+							placeholder="{{'pacientes.form.EDUCATION_LEVEL' | translate}}"
+							matTooltip="{{ currentEducationLevelDescription }}">
 							<mat-option *ngFor="let educationLevel of educationLevels" [value]="educationLevel.id"
-								matTooltip="{{ educationLevel.description }}" (click)="currentEducationLevelDescription = educationLevel.description">
+								matTooltip="{{ educationLevel.description }}"
+								(click)="currentEducationLevelDescription = educationLevel.description">
 								{{educationLevel.description}}
 							</mat-option>
 						</mat-select>
@@ -420,7 +520,7 @@
 						</button>
 					</mat-form-field>
 				</div>
-				<div *appHasRole="['ADMINISTRATIVO']" class="form-buttons">
+				<div *appHasRole="['ADMINISTRATIVO', 'ADMINISTRADOR_INSTITUCIONAL_BACKOFFICE', 'ADMINISTRATIVO_RED_DE_IMAGENES', 'ADMINISTRADOR_INSTITUCIONAL_PRESCRIPTOR', 'PRESCRIPTOR']" class="form-buttons">
 					<button mat-stroked-button type="button" (click)="goBack()">
 						<span [translate]="'buttons.BACK'"></span>
 					</button>
@@ -430,5 +530,6 @@
 				</div>
 			</form>
 		</div>
+
 	</section>
 </app-content>

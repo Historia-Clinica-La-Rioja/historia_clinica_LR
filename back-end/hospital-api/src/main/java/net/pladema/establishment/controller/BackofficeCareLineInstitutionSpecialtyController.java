@@ -2,13 +2,16 @@ package net.pladema.establishment.controller;
 
 import javax.validation.Valid;
 
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import lombok.Synchronized;
 import net.pladema.establishment.repository.CareLineInstitutionSpecialtyRepository;
 import net.pladema.establishment.repository.entity.CareLineInstitutionSpecialty;
 import net.pladema.sgx.backoffice.rest.AbstractBackofficeController;
+import net.pladema.sgx.backoffice.rest.dto.BackofficeDeleteResponse;
 import net.pladema.sgx.exceptions.BackofficeValidationException;
 
 @RestController
@@ -33,5 +36,11 @@ public class BackofficeCareLineInstitutionSpecialtyController extends AbstractBa
 		if(hasPersistedEntity)
 			throw new BackofficeValidationException("La especialidad ya fue agregada");
 		return super.create(entity);
+	}
+
+	@Override
+	@Synchronized
+	public BackofficeDeleteResponse<Integer> delete(@PathVariable("id") Integer id) {
+		return super.delete(id);
 	}
 }

@@ -70,7 +70,7 @@ export class SelectAgendaComponent implements OnInit, OnDestroy {
 	}
 
 	ngOnDestroy() {
-		this.agendaFiltersSubscription.unsubscribe();
+		this.agendaFiltersSubscription?.unsubscribe();
 	}
 
 	changeAgendaSelected(event: MatOptionSelectionChange, agenda: DiaryListDto): void {

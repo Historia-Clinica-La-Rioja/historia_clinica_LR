@@ -1,6 +1,7 @@
 import { Component, OnInit, ElementRef, ViewChild } from '@angular/core';
 import { FormGroup, FormBuilder, Validators, AbstractControl } from '@angular/forms';
-import { APatientDto, BMPatientDto, EthnicityDto, PersonOccupationDto, EducationLevelDto, GenderDto, IdentificationTypeDto, PatientMedicalCoverageDto, SelfPerceivedGenderDto } from '@api-rest/api-model';
+import { ERole } from '@api-rest/api-model';
+import { APatientDto, BMPatientDto, EthnicityDto, PersonOccupationDto, EducationLevelDto, GenderDto, IdentificationTypeDto, PatientMedicalCoverageDto, SelfPerceivedGenderDto, BasicPatientDto } from '@api-rest/api-model';
 import { scrollIntoError, hasError, VALIDATIONS, DEFAULT_COUNTRY_ID, updateControlValidator } from '@core/utils/form.utils';
 import { Router, ActivatedRoute } from '@angular/router';
 import { PatientService } from '@api-rest/services/patient.service';
@@ -16,6 +17,9 @@ import { MedicalCoverageComponent, PatientMedicalCoverage } from '@pacientes/dia
 import { MapperService } from '@core/services/mapper.service';
 import { PatientMedicalCoverageService } from '@api-rest/services/patient-medical-coverage.service';
 import { PERSON } from '@core/constants/validation-constants';
+import { PermissionsService } from '@core/services/permissions.service';
+import { Observable } from 'rxjs';
+import { PATTERN_INTEGER_NUMBER } from '@core/utils/pattern.utils';
 
 const TEMPORARY_PATIENT = 3;
 const ROUTE_HOME = 'pacientes';
@@ -32,6 +36,7 @@ export class NewTemporaryPatientComponent implements OnInit {
 	readonly GENDER_MAX_LENGTH = VALIDATIONS.MAX_LENGTH.gender;
 	private readonly NONE_SELF_PERCEIVED_GENDER_SELECTED_ID = 10; // Dato Maestro proveniente de género autopercibido "Ninguna de las anteriores"
 
+	hasInstitutionalAdministratorRole = false;
 	public form: FormGroup;
 	public personResponse: BMPatientDto;
 	public formSubmitted = false;
@@ -39,6 +44,7 @@ export class NewTemporaryPatientComponent implements OnInit {
 	public today: Moment = moment();
 	public hasError = hasError;
 	public genders: GenderDto[];
+	public gendersId: string[];
 	public selfPerceivedGenders: SelfPerceivedGenderDto[];
 	public showOtherGender: boolean = false;
 	public countries: any[];
@@ -64,6 +70,9 @@ export class NewTemporaryPatientComponent implements OnInit {
 	public otherLastNamesDisabled = false;
 	public birthDateDisabled = false;
 	@ViewChild('startView') startView: ElementRef;
+	hasToSaveFiles: boolean = false;
+	personId: number;
+	patientId: number;
 
 	constructor(
 		private formBuilder: FormBuilder,
@@ -78,6 +87,8 @@ export class NewTemporaryPatientComponent implements OnInit {
 		private dialog: MatDialog,
 		private mapperService: MapperService,
 		private readonly patientMedicalCoverageService: PatientMedicalCoverageService,
+		private permissionsService: PermissionsService,
+
 	) {
 		this.routePrefix = 'institucion/' + this.contextService.institutionId + '/';
 	}
@@ -100,7 +111,7 @@ export class NewTemporaryPatientComponent implements OnInit {
 					birthDate: [params.birthDate ? momentParseDate(params.birthDate) : undefined],
 
 					// Person extended
-					cuil: [params.cuil, Validators.maxLength(VALIDATIONS.MAX_LENGTH.cuil)],
+					cuil: [params.cuil, [Validators.pattern(PATTERN_INTEGER_NUMBER),Validators.maxLength(VALIDATIONS.MAX_LENGTH.cuil)]],
 					mothersLastName: [],
 					phonePrefix: [],
 					phoneNumber: [],
@@ -190,6 +201,7 @@ export class NewTemporaryPatientComponent implements OnInit {
 			.subscribe(
 				genders => {
 					this.genders = genders;
+					this.loadGendersIdForTest();
 				}
 			);
 
@@ -227,32 +239,54 @@ export class NewTemporaryPatientComponent implements OnInit {
 			});
 		setTimeout(() => {
 			this.startView.nativeElement.scrollIntoView();}, TIME_TO_PREVENT_SCROLL);
+
+		this.permissionsService.hasContextAssignments$([ERole.ADMINISTRADOR_INSTITUCIONAL_BACKOFFICE, ERole.ADMINISTRADOR_INSTITUCIONAL_PRESCRIPTOR]).subscribe(hasInstitutionalAdministratorRole => this.hasInstitutionalAdministratorRole = hasInstitutionalAdministratorRole);
+
 	}
 
-	save(): void {
+	save() {
 		this.formSubmitted = true;
 		if (this.form.valid) {
 			const personRequest: APatientDto = this.mapToPersonRequest();
 			this.isSubmitButtonDisabled = true;
 			this.patientService.addPatient(personRequest)
 				.subscribe(patientId => {
+					this.patientId = patientId;
+					this.patientService.getPatientBasicData<BasicPatientDto>(patientId).subscribe((patientBasicData: BasicPatientDto) => {
+						this.personId = patientBasicData.person.id;
+						this.hasToSaveFiles = true;
+					})
 					if (this.patientMedicalCoveragesToAdd) {
 						const patientMedicalCoveragesDto: PatientMedicalCoverageDto[] =
 							this.patientMedicalCoveragesToAdd.map(s => this.mapperService.toPatientMedicalCoverageDto(s));
 						this.patientMedicalCoverageService.addPatientMedicalCoverages
 							(patientId, patientMedicalCoveragesDto).subscribe();
 					}
-					this.router.navigate([this.routePrefix + ROUTE_PROFILE + patientId]);
-					this.snackBarService.showSuccess('pacientes.new.messages.SUCCESS');
 				}, _ => {
 					this.isSubmitButtonDisabled = false;
-					this.snackBarService.showError('pacientes.new.messages.ERROR');
+					this.snackBarService.showError(this.getMessagesError());
 				});
 		} else {
 			scrollIntoError(this.form, this.el);
 		}
+
+	}
+	private getMessagesSuccess(): string {
+		return this.hasInstitutionalAdministratorRole ? 'pacientes.new.messages.SUCCESS_PERSON' : 'pacientes.new.messages.SUCCESS_PATIENT' ;
 	}
 
+	private getMessagesError(): string {
+		return this.hasInstitutionalAdministratorRole ? 'pacientes.new.messages.ERROR_PERSON' : 'pacientes.new.messages.ERROR_PATIENT' ;
+	}
+
+	subscribeFinishUploadFiles(filesId$: Observable<number[]>) {
+		filesId$?.subscribe((filesIds: number[]) => {
+			if (filesIds.length) {
+				this.router.navigate([this.routePrefix + ROUTE_PROFILE + this.patientId]);
+				this.snackBarService.showSuccess(this.getMessagesSuccess());
+			}
+		})
+	}
 
 	private mapToPersonRequest(): APatientDto {
 		const patient: APatientDto = {
@@ -301,7 +335,10 @@ export class NewTemporaryPatientComponent implements OnInit {
 				fullName: this.form.controls.pamiDoctor.value,
 				phoneNumber: this.form.controls.pamiDoctorPhoneNumber.value,
 				generalPractitioner: false
-			}
+			},
+			// Select for an audict
+			toAudit: false,
+			fileIds: []
 		};
 
 		if (patient.genderSelfDeterminationId === this.NONE_SELF_PERCEIVED_GENDER_SELECTED_ID)
@@ -412,8 +449,8 @@ export class NewTemporaryPatientComponent implements OnInit {
 
 	updatePhoneValidators(){
 		if (this.form.controls.phoneNumber.value||this.form.controls.phonePrefix.value) {
-			updateControlValidator(this.form, 'phoneNumber', [Validators.required]);
-			updateControlValidator(this.form, 'phonePrefix', [Validators.required]);
+			updateControlValidator(this.form, 'phoneNumber', [Validators.required,Validators.pattern(PATTERN_INTEGER_NUMBER) ,Validators.maxLength(VALIDATIONS.MAX_LENGTH.phone)]);
+			updateControlValidator(this.form, 'phonePrefix',[Validators.required,Validators.pattern(PATTERN_INTEGER_NUMBER) ,Validators.maxLength(VALIDATIONS.MAX_LENGTH.phonePrefix)]);
 		} else {
 			updateControlValidator(this.form, 'phoneNumber', []);
 			updateControlValidator(this.form, 'phonePrefix', []);
@@ -425,4 +462,12 @@ export class NewTemporaryPatientComponent implements OnInit {
 		control.reset();
 	}
 
+	private loadGendersIdForTest(): void {
+		this.gendersId = [];
+		this.genders.forEach(
+			(gender: GenderDto) => {
+				this.gendersId.push("op_sexo_"+gender.description.toLowerCase());
+			}
+		);
+	}
 }

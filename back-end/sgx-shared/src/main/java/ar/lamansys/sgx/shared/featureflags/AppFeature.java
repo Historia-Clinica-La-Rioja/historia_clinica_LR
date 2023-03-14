@@ -117,8 +117,29 @@ public enum AppFeature implements Feature {
 	@Label("Habilita PopUp de guardado en consulta ambulatoria")
 	HABILITAR_GUARDADO_CON_CONFIRMACION_CONSULTA_AMBULATORIA,
 
+	@Label("Habilita reportes estadísticos de consultas ambulatorias y turnos")
+	HABILITAR_REPORTES_ESTADISTICOS,
+
 	@Label("Indica si esta habilitado el uso de card en HC e INTERNACION")
-	HABILITAR_VISUALIZACION_DE_CARDS
+	HABILITAR_VISUALIZACION_DE_CARDS,
+
+	@Label("Indica si esta habilitada la recuperación de contraseña por correo")
+	HABILITAR_RECUPERAR_PASSWORD,
+
+	@Label("Indica si esta habilitada la funcionalidad de red de imágenes")
+	HABILITAR_DESARROLLO_RED_IMAGENES,
+
+	@Label("Indica si esta habilitada la integración con SIP PLUS")
+	HABILITAR_SIP_PLUS_EN_DESARROLLO,
+	
+	@Label("Indica si esta habilitada la validacion de matriculas mediante SISA-REFEPS")
+	HABILITAR_VALIDACION_MATRICULAS_SISA,
+	
+	@Label("Indica si esta habilitada la emision de recetas digitales")
+	HABILITAR_RECETA_DIGITAL,
+
+	@Label("Indica si esta habilitado el rol prescriptor")
+	HABILITAR_PRESCRIPCION_RECETA
 	;
 
     public boolean isActive() {

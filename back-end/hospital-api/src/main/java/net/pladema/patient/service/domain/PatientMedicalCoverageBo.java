@@ -4,15 +4,18 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import lombok.ToString;
 import net.pladema.patient.controller.dto.EPatientMedicalCoverageCondition;
 import net.pladema.patient.repository.domain.PatientMedicalCoverageVo;
 
 import java.time.LocalDate;
+import java.util.Objects;
 
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
+@ToString
 public class PatientMedicalCoverageBo {
 
     private Integer id;
@@ -48,4 +51,12 @@ public class PatientMedicalCoverageBo {
 		this.endDate = patientMedicalCoverageVo.getEndDate();
 		this.planId = patientMedicalCoverageVo.getPlanId();
     }
+
+	@Override
+	public boolean equals(Object o) {
+		if (this == o) return true;
+		if (!(o instanceof PatientMedicalCoverageBo)) return false;
+		PatientMedicalCoverageBo that = (PatientMedicalCoverageBo) o;
+		return Objects.equals(getId(), that.getId());
+	}
 }

@@ -2,22 +2,36 @@ package ar.lamansys.odontology.infrastructure.repository.consultation;
 
 import ar.lamansys.odontology.domain.consultation.cpoCeoIndices.EOdontologyIndexBo;
 import ar.lamansys.odontology.domain.consultation.cpoCeoIndices.ToothIndicesBo;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import javax.persistence.Column;
-import javax.persistence.EmbeddedId;
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
 import javax.persistence.Table;
 
 @Entity
 @Table(name = "tooth_indices")
 @Getter
+@AllArgsConstructor
 @NoArgsConstructor
+@Setter
 public class ToothIndices {
 
-    @EmbeddedId
-    private ToothIndicesPK pk;
+	@Id
+	@Column(name = "id")
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	private Integer id;
+
+	@Column(name = "patient_id", nullable = false)
+	private Integer patientId;
+
+	@Column(name = "tooth_id", nullable = false, length = 20)
+	private String toothId;
 
     @Column(name = "temporary", nullable = false)
     private boolean temporary;
@@ -41,7 +55,8 @@ public class ToothIndices {
     private String rightSurface;
 
     public ToothIndices(Integer patientId, ToothIndicesBo toothIndicesBo) {
-        this.pk = new ToothIndicesPK(patientId, toothIndicesBo.getToothId());
+        this.patientId = patientId;
+		this.toothId = toothIndicesBo.getToothId();
         this.temporary = toothIndicesBo.isTemporary();
         this.wholeTooth = mapValue(toothIndicesBo.getWholeToothIndex());
         this.internalSurface = mapValue(toothIndicesBo.getInternalIndex());
@@ -69,7 +84,7 @@ public class ToothIndices {
     }
 
     public ToothIndicesBo toToothIndicesBo() {
-        ToothIndicesBo result = new ToothIndicesBo(this.pk.getToothId(), this.temporary);
+        ToothIndicesBo result = new ToothIndicesBo(this.getToothId(), this.temporary);
         result.setWholeToothIndex(mapValue(this.wholeTooth));
         result.setInternalIndex(mapValue(this.internalSurface));
         result.setExternalIndex(mapValue(this.externalSurface));

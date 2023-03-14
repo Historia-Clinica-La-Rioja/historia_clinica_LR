@@ -1,12 +1,5 @@
 package ar.lamansys.sgh.clinichistory.domain.ips;
 
-import lombok.Getter;
-import lombok.Setter;
-import lombok.ToString;
-import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.hospitalizationState.entity.HealthConditionVo;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
@@ -15,6 +8,14 @@ import java.util.concurrent.atomic.AtomicReference;
 import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.hospitalizationState.entity.HealthConditionVo;
+import lombok.Getter;
+import lombok.Setter;
+import lombok.ToString;
 
 @Getter
 @Setter
@@ -33,6 +34,8 @@ public class GeneralHealthConditionBo implements Serializable {
 
     private List<HealthHistoryConditionBo> familyHistories = new ArrayList<>();
 
+	private List<ProblemBo> problems = new ArrayList<>();
+
     public GeneralHealthConditionBo(List<HealthConditionVo> healthConditionVos) {
         setMainDiagnosis(buildMainDiagnosis(healthConditionVos.stream().filter(HealthConditionVo::isMain).findAny()));
         setDiagnosis(buildGeneralState(
@@ -49,9 +52,12 @@ public class GeneralHealthConditionBo implements Serializable {
                 healthConditionVos,
                 HealthConditionVo::isFamilyHistory,
                 this::mapHealthHistoryConditionBo));
+		setProblems(buildGeneralState(
+				healthConditionVos,
+				HealthConditionVo::isProblem,
+				this::buildProblem));
     }
-
-    private <T extends HealthConditionBo> List<T> buildGeneralState(List<HealthConditionVo> data,
+	private <T extends HealthConditionBo> List<T> buildGeneralState(List<HealthConditionVo> data,
                                                                     Predicate<? super HealthConditionVo> filterFunction,
                                                                     Function<? super HealthConditionVo, ? extends T> mapFunction){
         return data.stream()
@@ -109,5 +115,21 @@ public class GeneralHealthConditionBo implements Serializable {
         LOG.debug(OUTPUT, result);
         return result.get();
     }
+
+	public ProblemBo buildProblem(HealthConditionVo healthConditionVo) {
+		LOG.debug("Input parameters -> healthConditionVo {}", healthConditionVo);
+		ProblemBo result = new ProblemBo();
+		result.setId(healthConditionVo.getId());
+		result.setStatusId(healthConditionVo.getStatusId());
+		result.setStatus(healthConditionVo.getStatus());
+		result.setVerificationId(healthConditionVo.getVerificationId());
+		result.setVerification(healthConditionVo.getVerification());
+		result.setSnomed(new SnomedBo(healthConditionVo.getSnomed()));
+		result.setMain(healthConditionVo.isMain());
+		result.setStartDate(healthConditionVo.getStartDate());
+		result.setChronic(healthConditionVo.isChronic());
+		LOG.debug(OUTPUT, result);
+		return result;
+	}
 
 }

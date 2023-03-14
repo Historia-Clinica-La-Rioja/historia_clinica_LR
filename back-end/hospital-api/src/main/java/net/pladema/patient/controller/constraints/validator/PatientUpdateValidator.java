@@ -53,7 +53,7 @@ public class PatientUpdateValidator implements ConstraintValidator<PatientUpdate
         }
         else{
             Patient patient = optPatient.get();
-            return patientUpdateIsAllowed(patient, newPatientData);
+            return patientUpdateIsAllowed(patient, newPatientData) && auditablePatientDataIsComplete(context, newPatientData);
         }
     }
 
@@ -117,4 +117,11 @@ public class PatientUpdateValidator implements ConstraintValidator<PatientUpdate
         context.buildConstraintViolationWithTemplate(message)
                 .addConstraintViolation();
     }
+
+    private boolean auditablePatientDataIsComplete(ConstraintValidatorContext context, APatientDto patientDto) {
+		boolean auditablePatientDataIsComplete = patientDto.getToAudit() == null || (!patientDto.getToAudit() || (patientDto.getToAudit() == true && patientDto.getMessage() != null));
+    	if (!auditablePatientDataIsComplete)
+			buildResponse(context, "{patient.auditable.message.null}");
+    	return auditablePatientDataIsComplete;
+	}
 }

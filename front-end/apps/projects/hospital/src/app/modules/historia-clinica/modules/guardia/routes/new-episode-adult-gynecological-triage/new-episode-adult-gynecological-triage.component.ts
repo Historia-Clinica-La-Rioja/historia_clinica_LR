@@ -1,8 +1,11 @@
 import { Component } from '@angular/core';
 import { Router } from '@angular/router';
 import { ECAdultGynecologicalDto, NewEmergencyCareDto, TriageAdultGynecologicalDto } from '@api-rest/api-model';
+import { ERole } from '@api-rest/api-model';
 import { EmergencyCareEpisodeService } from '@api-rest/services/emergency-care-episode.service';
 import { ContextService } from '@core/services/context.service';
+import { PermissionsService } from '@core/services/permissions.service';
+import { anyMatch } from '@core/utils/array.utils';
 import { SnackBarService } from '@presentation/services/snack-bar.service';
 import { NewEpisodeService } from '../../services/new-episode.service';
 import { ROUTE_EMERGENCY_CARE } from '../../services/triage-definitions.service';
@@ -15,6 +18,7 @@ import { ROUTE_EMERGENCY_CARE } from '../../services/triage-definitions.service'
 export class NewEpisodeAdultGynecologicalTriageComponent {
 
 	private readonly routePrefix = 'institucion/' + this.contextService.institutionId;
+	private hasRoleAdministrative: boolean;
 
 	constructor(
 		private readonly newEpisodeService: NewEpisodeService,
@@ -22,7 +26,11 @@ export class NewEpisodeAdultGynecologicalTriageComponent {
 		private readonly router: Router,
 		private readonly contextService: ContextService,
 		private readonly snackBarService: SnackBarService,
+		private readonly permissionsService: PermissionsService,
 	) {
+		this.permissionsService.contextAssignments$().subscribe((userRoles: ERole[]) => {
+			this.hasRoleAdministrative = anyMatch<ERole>(userRoles, [ERole.ADMINISTRATIVO]);
+		});
 	}
 
 	confirmEvent(triage: TriageAdultGynecologicalDto): void {
@@ -33,7 +41,13 @@ export class NewEpisodeAdultGynecologicalTriageComponent {
 		};
 		this.emergencyCareEpisodeService.createAdult(dto)
 			.subscribe((episodeId: number) => {
-				this.router.navigate([this.routePrefix + ROUTE_EMERGENCY_CARE + '/episodio/' + episodeId]);
+				const patientId = dto.administrative?.patient?.id ? dto.administrative.patient.id : null;
+				if (patientId && !this.hasRoleAdministrative) {
+					this.router.navigate([this.routePrefix + "/ambulatoria/paciente/" + patientId])
+				}
+				else {
+					this.router.navigate([this.routePrefix + ROUTE_EMERGENCY_CARE + '/episodio/' + episodeId]);
+				}
 				this.snackBarService.showSuccess('guardia.new-episode.SUCCESS');
 
 			}, error =>

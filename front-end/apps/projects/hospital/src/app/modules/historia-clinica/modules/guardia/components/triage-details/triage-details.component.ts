@@ -1,8 +1,8 @@
-import { Component, Input, OnChanges } from '@angular/core';
+import { Component, EventEmitter, Input, OnChanges, Output } from '@angular/core';
 import { EmergencyCareTypes, Triages } from '../../constants/masterdata';
 import { TriageCategory } from '../triage-chip/triage-chip.component';
 import { RiskFactor } from '@presentation/components/factor-de-riesgo-current/factor-de-riesgo.component';
-import {PatientNameService} from "@core/services/patient-name.service";
+import { PatientNameService } from "@core/services/patient-name.service";
 
 @Component({
 	selector: 'app-triage-details',
@@ -14,24 +14,27 @@ export class TriageDetailsComponent implements OnChanges {
 
 	@Input() triage: Triage;
 	@Input() emergencyCareType: EmergencyCareTypes;
+	@Input() showRiskFactors = true;
+	@Output() triageRiskFactors = new EventEmitter<RiskFactorFull[]>();
 
 	readonly triages = Triages;
 	readonly emergencyCareTypes = EmergencyCareTypes;
 
-	riskFactors: { description: string, value: RiskFactor }[];
+	riskFactors: RiskFactorFull[];
 
 	constructor(private readonly patientNameService: PatientNameService,) {
 	}
 
 	ngOnChanges() {
 		this.riskFactors = this.includesRiskFactors() ? this.mapToRiskFactor(this.triage) : undefined;
+		this.triageRiskFactors.emit(this.riskFactors);
 	}
 
 	private includesRiskFactors(): boolean {
 		return !!this.emergencyCareType && !!this.triage;
 	}
 
-	private mapToRiskFactor(triage: Triage): { description: string, value: RiskFactor }[] {
+	private mapToRiskFactor(triage: Triage): RiskFactorFull[] {
 		const riskFactors = [];
 		const LABELS = this.emergencyCareType === EmergencyCareTypes.PEDIATRIA ?
 			{
@@ -157,4 +160,9 @@ export interface Triage {
 		}
 	};
 	notes?: string;
+}
+
+export interface RiskFactorFull {
+	description: string,
+	value: RiskFactor
 }

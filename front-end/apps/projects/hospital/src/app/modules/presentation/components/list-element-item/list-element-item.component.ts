@@ -9,6 +9,7 @@ import { Content } from '../indication/indication.component';
 export class ListElementItemComponent implements OnInit {
 
 	@Input() content: Content;
+	@Input() indication?: boolean;
 
 	constructor() { }
 

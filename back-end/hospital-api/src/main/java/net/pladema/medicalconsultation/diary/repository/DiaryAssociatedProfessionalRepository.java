@@ -33,7 +33,7 @@ public interface DiaryAssociatedProfessionalRepository extends JpaRepository<Dia
 
 	@Transactional(readOnly = true)
 	@Query("SELECT NEW net.pladema.medicalconsultation.diary.service.domain.ProfessionalPersonBo( hp.id, " +
-			"p.firstName, p.lastName, pe.nameSelfDetermination) " +
+			"p.firstName, p.lastName, pe.nameSelfDetermination, p.middleNames, p.otherLastNames) " +
 			"FROM DiaryAssociatedProfessional as dap " +
 			"JOIN HealthcareProfessional as hp ON (dap.healthcareProfessionalId = hp.id ) " +
 			"JOIN Person p ON (hp.personId = p.id) " +

@@ -13,6 +13,7 @@ import { FeatureFlagService } from '@core/services/feature-flag.service';
 import { AccountService } from '@api-rest/services/account.service';
 import { dateTimeDtotoLocalDate } from '@api-rest/mapper/date-dto.mapper';
 import { Slot, SlotedInfo, WCExtensionsService } from '@extensions/services/wc-extensions.service';
+import { SnackBarService } from '@presentation/services/snack-bar.service';
 
 @Component({
 	selector: 'app-instituciones',
@@ -28,6 +29,7 @@ export class InstitucionesComponent {
 	previousLogin: Date;
 	enabledPreviousLogin = false;
 	extensions$: Observable<SlotedInfo[]>;
+	userRoles: RoleAssignmentDto[];
 
 	constructor(
 		loggedUserService: LoggedUserService,
@@ -36,8 +38,10 @@ export class InstitucionesComponent {
 		private router: Router,
 		private accountService: AccountService,
 		private wcExtensionsService: WCExtensionsService,
+		private readonly snackBarService: SnackBarService
 	) {
 		loggedUserService.assignments$.subscribe((allRoles: RoleAssignmentDto[]) => {
+			this.userRoles = allRoles;
 			const institutionIds = allRoles
 				.filter((ra) => ra.institutionId !== -1)
 				.map(r => r.institutionId);
@@ -76,11 +80,29 @@ export class InstitucionesComponent {
 				});
 	}
 
+	private hasAccessToInstitution(institutionId: number): boolean{
+		let hasAccess = true;
+		this.featureFlagService.isActive(AppFeature.HABILITAR_PRESCRIPCION_RECETA).subscribe(isOn => {
+			if (!isOn){
+				this.userRoles.map(userRole => {
+					if (userRole.institutionId === institutionId && userRole.role === 'PRESCRIPTOR'){
+						hasAccess = false;
+					}
+				})
+			}
+		})
+		return hasAccess;
+	}
+
 	ingresar(institutionDto: { id: number }, backoffice): void {
 		if (backoffice) {
 			this.router.navigate([AppRoutes.Backoffice]);
 		} else {
-			this.router.navigate([AppRoutes.Institucion, institutionDto.id]);
+			if (this.hasAccessToInstitution(institutionDto.id)){
+				this.router.navigate([AppRoutes.Institucion, institutionDto.id]);
+			} else {
+				this.snackBarService.showError("No es posible acceder a Receta Digital todavia");
+			}
 		}
 	}
 

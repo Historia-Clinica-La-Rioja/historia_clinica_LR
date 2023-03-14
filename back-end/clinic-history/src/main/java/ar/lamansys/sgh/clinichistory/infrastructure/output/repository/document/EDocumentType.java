@@ -9,7 +9,7 @@ public enum EDocumentType {
     EVALUATION_NOTE(2, "evolutionNote", "evolutionnote"),
     EPICRISIS(3, "epicrisis", "epicrisis"),
     OUTPATIENT(4, "ambulatoria", "outpatient"),
-    RECIPE(5, "receta", "recipe_order"),
+    RECIPE(5, "receta", "recipe_order_table"),
     ORDER(6, "orden", "recipe_order"),
     EMERGENCY_CARE(7, "guardia", "emergency_care"),
     IMMUNIZATION(8, "inmunización", "immunization"),
@@ -17,7 +17,8 @@ public enum EDocumentType {
     NURSING(10, "enfermería", "nursing_consultation"),
     COUNTER_REFERENCE(11, "contrarreferencia", "counter_reference"),
     INDICATION(12,"indicación","indication"),
-    NURSING_EVOLUTION_NOTE(13, "nursingEvolutionNote", "nursing_evolution_note");
+    NURSING_EVOLUTION_NOTE(13, "nursingEvolutionNote", "nursing_evolution_note"),
+	DIGITAL_RECIPE(14, "digitalRecipe", "digital_recipe");
 
     private Short id;
     private String value;

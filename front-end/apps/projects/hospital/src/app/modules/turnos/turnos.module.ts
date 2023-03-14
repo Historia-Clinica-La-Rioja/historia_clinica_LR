@@ -32,6 +32,7 @@ import { ConfirmPrintAppointmentComponent } from './dialogs/confirm-print-appoin
 // services
 import { CustomDateFormatter } from './services/custom-date-formatter.service';
 import { AppointmentResultViewComponent } from './components/appointment-result-view/appointment-result-view.component';
+import { ImageNetworkModule } from "./modules/image-network/image-network.module";
 
 
 @NgModule({
@@ -68,6 +69,7 @@ import { AppointmentResultViewComponent } from './components/appointment-result-
 		// deps
 		PresentationModule,
 		LazyMaterialModule,
+		ImageNetworkModule
 	],
 	exports: [
 		CalendarProfessionalViewComponent

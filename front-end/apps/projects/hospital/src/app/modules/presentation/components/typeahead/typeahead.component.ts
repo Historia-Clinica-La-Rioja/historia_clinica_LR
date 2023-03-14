@@ -1,5 +1,5 @@
 import { Component, EventEmitter, Input, OnChanges, OnInit, Output } from '@angular/core';
-import { FormBuilder, FormGroup } from '@angular/forms';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { map, startWith } from 'rxjs/operators';
 import { MatOptionSelectionChange } from '@angular/material/core';
 
@@ -15,6 +15,7 @@ export class TypeaheadComponent implements OnInit, OnChanges {
 	@Input() titleInput: string = ' ';
 	@Input() externalSetValue: TypeaheadOption<any>;
 	@Output() selectionChange = new EventEmitter();
+	@Input() required :boolean;
 
 	form: FormGroup;
 	optionsFiltered: TypeaheadOption<any>[];
@@ -35,6 +36,7 @@ export class TypeaheadComponent implements OnInit, OnChanges {
 			.subscribe(filtered => {
 				this.optionsFiltered = filtered;
 			});
+			this.isRequired();
 	}
 
 	ngOnChanges(): void {
@@ -50,6 +52,14 @@ export class TypeaheadComponent implements OnInit, OnChanges {
 
 		if (this.optionSelected && this.optionsNotIncludesSelected()) {
 			this.reset();
+		}
+	}
+
+	isRequired() :void {
+		if(this.required){
+		this.form.controls.searchValue.setValidators(Validators.required);
+		this.form.controls.searchValue.setValue(null);
+		this.form.controls.searchValue.updateValueAndValidity();
 		}
 	}
 

@@ -8,4 +8,6 @@ import java.util.List;
 public interface ListMedicationInfoService {
 
     List<MedicationBo> execute(MedicationFilterBo filter);
+
+	List<MedicationBo> execute(MedicationFilterBo filter, Integer userId);
 }

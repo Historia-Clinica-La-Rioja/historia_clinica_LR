@@ -192,6 +192,7 @@ export class CreateOutpatientOrderComponent implements OnInit {
 	}
 
 	confirmOrder() {
+		let prescriptionLineNumberAux = 0;
 		const newOutpatientOrder: PrescriptionDto = {
 			medicalCoverageId: this.form.controls.patientMedicalCoverage.value?.id,
 			hasRecipe: true,
@@ -201,6 +202,7 @@ export class CreateOutpatientOrderComponent implements OnInit {
 					observations: this.form.controls.notes.value,
 					snomed: study.snomed,
 					categoryId: this.form.controls.studyCategory.value,
+					prescriptionLineNumber: ++prescriptionLineNumberAux,
 				};
 			})
 		};

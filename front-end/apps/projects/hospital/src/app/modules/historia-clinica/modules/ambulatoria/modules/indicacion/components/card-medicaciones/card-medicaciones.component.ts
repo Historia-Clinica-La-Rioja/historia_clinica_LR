@@ -1,6 +1,6 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
-import { MedicationInfoDto } from '@api-rest/api-model';
+import { HCEDocumentDataDto, ApiErrorMessageDto, AppFeature, MedicationInfoDto, ProfessionalLicenseNumberValidationResponseDto } from '@api-rest/api-model.d';
 import { SnomedECL } from '@api-rest/api-model';
 import { SnackBarService } from '@presentation/services/snack-bar.service';
 import { ORDENES_MEDICACION } from '@historia-clinica/constants/summaries';
@@ -18,8 +18,14 @@ import { MEDICATION_STATUS } from '../../../../constants/prescripciones-masterda
 import { PermissionsService } from '@core/services/permissions.service';
 import { MedicacionesService } from '../../../../services/medicaciones.service';
 import { ERole } from '@api-rest/api-model';
+import { PrescripcionValidatorPopupComponent } from '../../dialogs/prescripcion-validator-popup/prescripcion-validator-popup.component';
+import { FeatureFlagService } from '@core/services/feature-flag.service';
+import { EnviarRecetaDigitalPorEmailComponent } from '@historia-clinica/modules/ambulatoria/dialogs/enviar-receta-digital-por-email/enviar-receta-digital-por-email.component';
+import { anyMatch } from '@core/utils/array.utils';
+import { processErrors } from '@core/utils/form.utils';
+import { DocumentService } from '@api-rest/services/document.service';
 
-const ROLES_TO_EDIT: ERole[] = [ERole.ESPECIALISTA_MEDICO];
+const ROLES_TO_EDIT: ERole[] = [ERole.ESPECIALISTA_MEDICO, ERole.PRESCRIPTOR];
 
 @Component({
 	selector: 'app-card-medicaciones',
@@ -37,8 +43,12 @@ export class CardMedicacionesComponent implements OnInit {
 	public hideFilterPanel = false;
 	public formFilter: FormGroup;
 	private hasRoleToEdit: boolean;
+	isHabilitarRecetaDigitalEnabled: boolean = false;
+	canOnlyViewSelfAddedProblems = false;
+	rolesThatCanOnlyViewSelfAddedProblems = [ERole.PRESCRIPTOR];
 
 	@Input() patientId: number;
+	@Input() personId?: number;
 	@Input()
 	set medicamentStatus(medicamentStatus: any[]) {
 		this._medicamentStatus = medicamentStatus;
@@ -55,7 +65,12 @@ export class CardMedicacionesComponent implements OnInit {
 		private prescripcionesService: PrescripcionesService,
 		private snackBarService: SnackBarService,
 		private medicacionesService: MedicacionesService,
-	) { }
+		private readonly featureFlagService: FeatureFlagService,
+		private documentService: DocumentService
+	) {
+		this.featureFlagService.isActive(AppFeature.HABILITAR_RECETA_DIGITAL)
+			.subscribe((result: boolean) => this.isHabilitarRecetaDigitalEnabled = result);
+	}
 
 	ngOnInit(): void {
 		this.formFilter = this.formBuilder.group({
@@ -63,6 +78,8 @@ export class CardMedicacionesComponent implements OnInit {
 			medicationStatement: [null],
 			healthCondition: [null],
 		});
+
+		this.setPermissions();
 
 		this.medicationCheckboxes = this.formBuilder.group({
 			checkboxArray: this.formBuilder.array([])
@@ -86,24 +103,50 @@ export class CardMedicacionesComponent implements OnInit {
 
 	}
 
+	private setPermissions(): void {
+		this.permissionsService.contextAssignments$().subscribe((userRoles: ERole[]) => {
+			this.canOnlyViewSelfAddedProblems = anyMatch<ERole>(userRoles, this.rolesThatCanOnlyViewSelfAddedProblems);
+		});
+	}
+
 	private getMedication(): void {
-		this.medicacionesService.updateMedicationFilter(this.patientId,
-			this.formFilter.controls.statusId.value,
-			this.formFilter.controls.medicationStatement.value,
-			this.formFilter.controls.healthCondition.value);
+		if (this.canOnlyViewSelfAddedProblems) {
+			this.medicacionesService.updateMedicationFilterByRoles(this.patientId,
+				this.formFilter.controls.statusId.value,
+				this.formFilter.controls.medicationStatement.value,
+				this.formFilter.controls.healthCondition.value);
+		} else {
+			this.medicacionesService.updateMedicationFilter(this.patientId,
+				this.formFilter.controls.statusId.value,
+				this.formFilter.controls.medicationStatement.value,
+				this.formFilter.controls.healthCondition.value);
+		}
 	}
 
 	private getMedicationList(medication?: MedicationInfoDto) {
 		return medication ? [medication] : this.selectedMedicationList.length ? this.selectedMedicationList : null;
 	}
 
-	openDialogNewMedication(isNewMedication: boolean, medication?: MedicationInfoDto) {
+	private openDailogPrescriptionValidator(result: ProfessionalLicenseNumberValidationResponseDto) {
+		this.dialog.open(PrescripcionValidatorPopupComponent, {
+			data: {
+				twoFactorAuthenticationEnabled: result.twoFactorAuthenticationEnabled,
+				healthcareProfessionalLicenseNumberValid: result.healthcareProfessionalLicenseNumberValid,
+				healthcareProfessionalCompleteContactData: result.healthcareProfessionalCompleteContactData,
+				healthcareProfessionalHasLicenses: result.healthcareProfessionalHasLicenses
+			},
+			width: '35%',
+		});
+	}
+
+	private openNuevaPrescripcion(isNewMedication: boolean, medication?: MedicationInfoDto, patientEmail?: string) {
 		const medicationList = isNewMedication ? null : this.getMedicationList(medication);
 
 		const newMedicationDialog = this.dialog.open(NuevaPrescripcionComponent,
 			{
 				data: {
 					patientId: this.patientId,
+					personId: this.personId,
 					titleLabel: 'ambulatoria.paciente.ordenes_prescripciones.new_prescription_dialog.MEDICATION_TITLE',
 					addLabel: 'ambulatoria.paciente.ordenes_prescripciones.new_prescription_dialog.ADD_MEDICATION_LABEL',
 					prescriptionType: PrescriptionTypes.MEDICATION,
@@ -119,7 +162,7 @@ export class CardMedicacionesComponent implements OnInit {
 				width: '35%',
 			});
 
-		newMedicationDialog.afterClosed().subscribe((newPrescription: NewPrescription) => {
+			newMedicationDialog.afterClosed().subscribe((newPrescription: NewPrescription) => {
 				if (newPrescription?.prescriptionDto.hasRecipe) {
 					this.dialog.open(ConfirmarPrescripcionComponent,
 						{
@@ -127,10 +170,13 @@ export class CardMedicacionesComponent implements OnInit {
 							data: {
 								titleLabel: 'ambulatoria.paciente.ordenes_prescripciones.confirm_prescription_dialog.MEDICATION_TITLE',
 								downloadButtonLabel: 'ambulatoria.paciente.ordenes_prescripciones.confirm_prescription_dialog.DOWNLOAD_BUTTON_MEDICATION',
+								sendEmail: 'ambulatoria.paciente.ordenes_prescripciones.confirm_prescription_dialog.SEND_EMAIL',
 								successLabel: 'ambulatoria.paciente.ordenes_prescripciones.toast_messages.POST_MEDICATION_SUCCESS',
 								prescriptionType: PrescriptionTypes.MEDICATION,
 								patientId: this.patientId,
 								prescriptionRequest: newPrescription.prescriptionRequestResponse,
+								patientEmail,
+								identificationNumber: newPrescription.identificationNumber
 							},
 							width: '35%'
 						});
@@ -140,6 +186,35 @@ export class CardMedicacionesComponent implements OnInit {
 			this.getMedication();
 			this.cleanSelectedMedicationList();
 		});
+	}
+
+	openDialogNewMedication(isNewMedication: boolean, medication?: MedicationInfoDto) {
+		this.featureFlagService.isActive(AppFeature.HABILITAR_RECETA_DIGITAL)
+			.subscribe((isFFActive: boolean) => {
+				if (isFFActive) {
+					this.validateProfessional(isNewMedication, medication);
+					return;
+				}
+
+				this.openNuevaPrescripcion(isNewMedication, medication);
+			})
+	}
+
+	private validateProfessional(isNewMedication: boolean, medication?: MedicationInfoDto) {
+		this.prescripcionesService.validateProfessional(this.patientId)
+			.subscribe((result: ProfessionalLicenseNumberValidationResponseDto) => {
+				if (! result.healthcareProfessionalCompleteContactData
+					|| ! result.healthcareProfessionalLicenseNumberValid
+					|| ! result.twoFactorAuthenticationEnabled
+					|| ! result.healthcareProfessionalHasLicenses) {
+						this.openDailogPrescriptionValidator(result);
+						return;
+					}
+
+				this.openNuevaPrescripcion(isNewMedication, medication, result?.patientEmail);
+			}, (error: ApiErrorMessageDto) => {
+				processErrors(error, (msg) => this.snackBarService.showError(msg));
+			});
 	}
 
 	openSuspendMedicationDialog(medication?: MedicationInfoDto) {
@@ -178,8 +253,18 @@ export class CardMedicacionesComponent implements OnInit {
 		}
 	}
 
-	downloadRecipe(medicationRequestId: number) {
-		this.prescripcionesService.downloadPrescriptionPdf(this.patientId, [medicationRequestId], PrescriptionTypes.MEDICATION);
+	downloadRecipe(documentData: HCEDocumentDataDto) {
+		this.documentService.downloadFile(documentData);
+	}
+
+	openSendEmailDialog(medicationInfo: MedicationInfoDto) {
+		this.dialog.open(EnviarRecetaDigitalPorEmailComponent, {
+			width: '35%',
+			data: {
+				patientId: this.patientId,
+				prescriptionRequest: medicationInfo.hceDocumentData.id,
+			}
+		})
 	}
 
 	checkMedication(checked: boolean, medicationInfo: MedicationInfoDto) {
@@ -236,7 +321,8 @@ export class CardMedicacionesComponent implements OnInit {
 			prescriptionPt: medication.snomed.pt,
 			problemPt: medication.healthCondition.snomed.pt,
 			doctor: medication.doctor,
-			totalDays: medication.totalDays
+			totalDays: medication.totalDays,
+			observation: medication.observations ? medication.observations.trim() : ''
 		};
 	}
 

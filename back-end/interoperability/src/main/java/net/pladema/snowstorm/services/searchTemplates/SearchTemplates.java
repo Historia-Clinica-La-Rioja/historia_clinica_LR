@@ -5,6 +5,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import net.pladema.snowstorm.repository.SnomedGroupRepository;
 import net.pladema.snowstorm.repository.domain.SnomedTemplateSearchVo;
+import net.pladema.snowstorm.repository.entity.SnomedGroupType;
 import net.pladema.snowstorm.services.domain.SnomedSearchItemBo;
 import net.pladema.snowstorm.services.domain.SnomedTemplateSearchItemBo;
 
@@ -30,8 +31,8 @@ public class SearchTemplates {
 		String ecl = snomedSemantics.getEcl(SnomedECL.map(eclKey));
 		Integer userId = SecurityContextUtils.getUserDetails().getUserId();
 		List<SnomedTemplateSearchVo> queryResult = (term != null) ?
-				snomedGroupRepository.searchByTemplateName(term, ecl, eclKey, institutionId, userId)
-				: snomedGroupRepository.getTemplates(ecl, eclKey, institutionId, userId);
+				snomedGroupRepository.searchByTemplateName(term, ecl, eclKey, institutionId, userId, SnomedGroupType.TEMPLATE)
+				: snomedGroupRepository.getTemplates(ecl, eclKey, institutionId, userId, SnomedGroupType.TEMPLATE);
 		List<SnomedTemplateSearchItemBo> result = groupConceptsByTemplate(queryResult);
 		log.debug("Output size -> {}", result.size());
 		log.trace("Output -> {}", result);

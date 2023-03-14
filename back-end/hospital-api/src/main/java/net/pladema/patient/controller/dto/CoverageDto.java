@@ -6,6 +6,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import lombok.ToString;
 import net.pladema.patient.service.domain.MedicalCoverageBo;
 
 import java.io.Serializable;
@@ -19,6 +20,7 @@ import java.io.Serializable;
         @JsonSubTypes.Type(value= HealthInsuranceDto.class, name="2"),
         @JsonSubTypes.Type(value= PrivateHealthInsuranceDto.class, name="1")
 })
+@ToString
 public abstract class CoverageDto implements Serializable {
 
     private Integer id;

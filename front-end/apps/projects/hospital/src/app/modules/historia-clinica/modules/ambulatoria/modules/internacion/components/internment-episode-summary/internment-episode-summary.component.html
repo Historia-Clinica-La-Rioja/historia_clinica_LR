@@ -25,7 +25,7 @@
 			</button>
 		</div>
 		<div *ngIf="!patientDocuments.hasEpicrisis && !physicalDischargeDate">
-			<button id="btnPaseCama" name="btnPaseCama" mat-flat-button color="primary" *appHasRole="['ADMINISTRATIVO']"
+			<button id="btnPaseCama" name="btnPaseCama" mat-flat-button color="primary" *appHasRole="['ADMINISTRATIVO', 'ADMINISTRATIVO_RED_DE_IMAGENES']"
 					(click)="goToPaseCama()">
 							<span class="uppercase"
 								  [translate]="'internaciones.internacion-paciente.actions.RELOCATE_PATIENT_BED'"></span>
@@ -130,12 +130,22 @@
 		</mat-list-item>
 	</div>
 	<ng-container *ngIf="showDischarge">
-		<button mat-flat-button id="administrative_discharge_button" color="primary" *appHasRole="['ADMINISTRATIVO']"
+		<button mat-flat-button id="administrative_discharge_button" color="primary"
 			(click)="goToAdministrativeDischarge()">
 			<span class="uppercase"
 				[translate]="'internaciones.internacion-paciente.actions.ADMINISTRATIVE_DISCHARGE'"></span>
 		</button>
 	</ng-container>
+
+	<mat-divider inset></mat-divider>
+
+	<app-interment-document-episode 
+		*appHasRole="ROLES_FOR_ACCESS_EPISODE_DOCUMENTS"
+		[documents]="documents" 
+		[internmentEpisodeId]="this.internmentEpisode.id" 
+		(updateDocuments)="setDocuments()">
+	</app-interment-document-episode>
+
 </mat-list>
 <ng-template #noInfo>
 	<span class="mat-body-2">-</span>

@@ -22,6 +22,12 @@ public class CompleteDiaryBo extends DiaryBo {
 
 	private String doctorLastName;
 
+	private String doctorMiddleNames;
+
+	private String doctorOtherLastNames;
+
+	private String doctorNameSelfDetermination;
+
 	private List<CareLineBo> careLinesInfo;
 
 	private List<ProfessionalPersonBo> associatedProfessionalsInfo;

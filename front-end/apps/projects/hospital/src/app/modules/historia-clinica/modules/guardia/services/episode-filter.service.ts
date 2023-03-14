@@ -6,7 +6,7 @@ import { Observable } from 'rxjs';
 import { MasterDataInterface } from '@api-rest/api-model';
 import { tap } from 'rxjs/operators';
 import { atLeastOneValueInFormGroup } from '@core/utils/form.utils';
-import { PERSON } from '@core/constants/validation-constants';
+import { PERSON, REMOVE_SUBSTRING_DNI } from '@core/constants/validation-constants';
 
 const NO_INFO: MasterDataInterface<number> = {
 	id: -1,
@@ -53,7 +53,7 @@ export class EpisodeFilterService {
 	}
 
 	static filterByIdentificationNumber(episode: Episode, filters: EpisodeFilters): boolean {
-		const identificationNumberWithoutZeros = Number(filters.identificationNumber).toString();
+		const identificationNumberWithoutZeros = Number(filters.identificationNumber?.replace(REMOVE_SUBSTRING_DNI, '')).toString();
 		return (filters.identificationNumber ?
 			this.filterString(episode.patient?.person?.identificationNumber, identificationNumberWithoutZeros) : true);
 	}

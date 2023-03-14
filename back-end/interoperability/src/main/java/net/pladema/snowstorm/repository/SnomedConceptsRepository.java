@@ -8,6 +8,8 @@ import org.springframework.stereotype.Service;
 
 import javax.persistence.EntityManager;
 import javax.persistence.Query;
+
+import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -61,10 +63,18 @@ public class SnomedConceptsRepository {
 
         List<Object[]> queryResult = query.getResultList();
 
+
         List<SnomedSearchItemVo> result = queryResult.stream()
-                .map(o -> new SnomedSearchItemVo((Integer) o[0], (String) o[1], (String) o[2]))
-                .collect(Collectors.toList());
-        return result;
+				.map(o -> new SnomedSearchItemVo((Integer) o[0], (String) o[1], (String) o[2]))
+				.collect(Collectors.toList());
+
+		List<Integer> conceptIds = result.stream().map(item -> item.getSnomedId()).collect(Collectors.toList());
+
+		List<SnomedSearchItemVo> synonyms = getConceptsSynonyms(conceptIds);
+
+		result.addAll(synonyms);
+
+        return result.stream().distinct().collect(Collectors.toList());
     }
 
     private Long getTotalResultCount(String term, String ecl, String groupDescription) {
@@ -91,5 +101,27 @@ public class SnomedConceptsRepository {
         return (Long) queryResult.get(0);
 
     }
+	
+	private List<SnomedSearchItemVo> getConceptsSynonyms(List<Integer> conceptIds){
+		String sqlString = 
+				"SELECT s.id, s.sctid, s.pt " +
+				"FROM Snomed s " +
+				"JOIN SnomedSynonym ss ON (s.id = ss.pk.synonymId OR s.id = ss.pk.mainConceptId) " +
+				"WHERE (ss.pk.mainConceptId IN (:conceptIds) and s.synonym = true) " +
+				"OR (ss.pk.synonymId IN (:conceptIds) AND s.synonym = false) " +
+				"GROUP BY s.id"
+				;
+		
+		Query query = entityManager.createQuery(sqlString)
+				.setParameter("conceptIds", conceptIds)
+				;
+
+		List<Object[]> queryResult = query.getResultList();
+
+		List<SnomedSearchItemVo> result = queryResult.stream()
+				.map(o -> new SnomedSearchItemVo((Integer) o[0], (String) o[1], (String) o[2]))
+				.collect(Collectors.toList());
+		return result;
+	} 
 
 }

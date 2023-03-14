@@ -116,7 +116,7 @@ public class EvolutionNoteController {
 		evolutionNote.setInstitutionId(institutionId);
 		evolutionNote.setPatientId(patientId);
 		evolutionNote.setEncounterId(internmentEpisodeId);
-		evolutionNote.setWasMadeByProfessionalNursing(false);
+		evolutionNote.setIsNursingEvolutionNote(false);
         evolutionDiagnosesService.execute(evolutionNote);
 
         LOG.debug(OUTPUT, Boolean.TRUE);

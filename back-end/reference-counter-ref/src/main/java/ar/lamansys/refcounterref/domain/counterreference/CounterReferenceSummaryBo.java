@@ -40,12 +40,12 @@ public class CounterReferenceSummaryBo {
 
     public CounterReferenceSummaryBo(Integer id, LocalDate performedDate, Integer professionalId,
                                      String professionalName, String professionalNameSelfDetermination, String professionalLastName,
-                                     String clinicalSpecialty, String note, String institution, Short closureTypeId) {
+                                     String clinicalSpecialty, String note, String institution, Short closureTypeId,String professionalMiddleNames, String professionalOtherLastNames ) {
         this.id = id;
         this.performedDate = performedDate;
         this.clinicalSpecialty = clinicalSpecialty;
         this.note = note;
-        this.professional = new ProfessionalPersonBo(professionalId, professionalName, professionalNameSelfDetermination, professionalLastName);
+        this.professional = new ProfessionalPersonBo(professionalId, professionalName, professionalNameSelfDetermination, professionalLastName,professionalOtherLastNames,professionalMiddleNames );
     	this.institution = institution;
 		this.closureType = EReferenceClosureType.getById(closureTypeId).getDescription();
 	}

@@ -35,7 +35,6 @@ export class ChartDefinitionService {
 	}
 
 	private fetchChartDefinition(name: string, filtersToAdd: FilterValue[]): Observable<ChartDefinitionDto> {
-		console.log('fetchChartDefinition', filtersToAdd);
 		const url = `${environment.apiBase}/dashboards/charts/${name}`;
 
 		return this.http.get<ChartDefinitionDto>(url, {
@@ -44,7 +43,7 @@ export class ChartDefinitionService {
 			},
 		}).pipe(
 			map(definition => {
-				const { filters } = definition.cubeQuery;
+				const filters = definition.cubeQuery.filters || [];
 
 				definition.cubeQuery.filters = [...filters, ...filtersToAdd];
 				return definition;

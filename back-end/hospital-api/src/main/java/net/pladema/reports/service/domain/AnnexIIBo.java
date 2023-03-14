@@ -1,11 +1,11 @@
 package net.pladema.reports.service.domain;
 
+import java.time.LocalDate;
+
 import lombok.Getter;
 import lombok.Setter;
 import net.pladema.reports.repository.entity.AnnexIIAppointmentVo;
 import net.pladema.reports.repository.entity.AnnexIIOutpatientVo;
-
-import java.time.LocalDate;
 
 @Getter
 @Setter
@@ -45,6 +45,8 @@ public class AnnexIIBo {
 
     private String problems;
 
+	private Integer rnos;
+
     public AnnexIIBo(AnnexIIOutpatientVo annexIIOutpatientVo){
         this.reportDate = LocalDate.now();
         this.establishment = annexIIOutpatientVo.getEstablishment();
@@ -76,6 +78,7 @@ public class AnnexIIBo {
         this.appointmentState = annexIIAppointmentVo.getAppointmentState();
         this.medicalCoverage = annexIIAppointmentVo.getMedicalCoverage();
         this.affiliateNumber = annexIIAppointmentVo.getAffiliateNumber();
+		this.rnos = annexIIAppointmentVo.getRnos();
     }
 
 }

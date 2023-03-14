@@ -33,8 +33,10 @@ import { MedicalCoverageComponent } from "./dialogs/medical-coverage/medical-cov
 import { PrivateHealthInsuranceComponent } from './dialogs/private-health-insurance/private-health-insurance.component';
 import { ReportsComponent } from './dialogs/reports/reports.component';
 import { ScanPatientComponent } from './dialogs/scan-patient/scan-patient.component';
+import { MessageForAuditComponent } from './dialogs/message-for-audit/message-for-audit.component';
 // pipes
 import { ViewNameProfessionAndSpecialtyPipe } from './pipe/view-name-profession-and-specialty.pipe';
+import { FilesUploaderComponent } from './component/files-uploader/files-uploader.component';
 
 @NgModule({
 	declarations: [
@@ -68,22 +70,24 @@ import { ViewNameProfessionAndSpecialtyPipe } from './pipe/view-name-profession-
 		ReportsComponent,
 		ScanPatientComponent,
 		ScanPatientComponent,
+		MessageForAuditComponent,
 		// pipes
 		ViewNameProfessionAndSpecialtyPipe,
+  		FilesUploaderComponent,
 	],
 	exports: [
 		CardPatientComponent,
 	],
-    imports: [
-        FormsModule,
-        ReactiveFormsModule,
-        // routing
-        PacientesRoutingModule,
-        // deps
-        LazyMaterialModule,
-        PresentationModule,
-        InternacionesModule,
-    ]
+	imports: [
+		FormsModule,
+		ReactiveFormsModule,
+		// routing
+		PacientesRoutingModule,
+		// deps
+		LazyMaterialModule,
+		PresentationModule,
+		InternacionesModule,
+	]
 })
 export class PacientesModule {
 }

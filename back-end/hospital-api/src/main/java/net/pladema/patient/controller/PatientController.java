@@ -1,9 +1,37 @@
 package net.pladema.patient.controller;
 
+import java.io.IOException;
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Objects;
+import java.util.Optional;
+import java.util.Set;
+import java.util.stream.Collectors;
+
+import javax.persistence.EntityNotFoundException;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.BeanUtils;
+import org.springframework.http.ResponseEntity;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
+
+import com.fasterxml.jackson.databind.ObjectMapper;
+
 import ar.lamansys.sgh.shared.infrastructure.input.service.BasicDataPersonDto;
 import ar.lamansys.sgh.shared.infrastructure.input.service.BasicPatientDto;
 import ar.lamansys.sgx.shared.exceptions.NotFoundException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import net.pladema.address.controller.dto.AddressDto;
 import net.pladema.address.controller.service.AddressExternalService;
@@ -35,32 +63,6 @@ import net.pladema.person.controller.mapper.PersonMapper;
 import net.pladema.person.controller.service.PersonExternalService;
 import net.pladema.person.repository.entity.Person;
 import net.pladema.person.repository.entity.PersonExtended;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.BeanUtils;
-import org.springframework.http.ResponseEntity;
-import org.springframework.transaction.annotation.Transactional;
-import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
-
-import javax.persistence.EntityNotFoundException;
-import java.io.IOException;
-import java.net.URI;
-import java.net.URISyntaxException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
-import java.util.Optional;
-import java.util.Set;
-import java.util.function.Consumer;
-import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/patient")
@@ -92,6 +94,7 @@ public class PatientController {
 	private final ObjectMapper jackson;
 
 	private final FederarExternalService federarExternalService;
+
 
 	public PatientController(PatientService patientService, PersonExternalService personExternalService,
 							 AddressExternalService addressExternalService, PatientMapper patientMapper, PersonMapper personMapper,
@@ -145,10 +148,10 @@ public class PatientController {
 		BMPersonDto createdPerson = personExternalService.addPerson(patientDto);
 		AddressDto addressToAdd = persistPatientAddress(patientDto, Optional.empty());
 		personExternalService.addPersonExtended(patientDto, createdPerson.getId(), addressToAdd.getId());
-		Patient createdPatient = persistPatientData(patientDto, createdPerson, patient -> {
-		});
+		Patient createdPatient = persistPatientData(patientDto, createdPerson, null);
 		if (createdPatient.isValidated()) {
 			Person person = personMapper.fromPersonDto(createdPerson);
+
 			FederarResourceAttributes attributes = new FederarResourceAttributes();
 			BeanUtils.copyProperties(person, attributes);
 			try {
@@ -161,7 +164,7 @@ public class PatientController {
 				);
 			}
 			catch (Exception ex){
-				LOG.error(ex.getMessage(), ex);
+				LOG.error("Fallo en la comunicación => {}", ex.getMessage());
 			}
 			patientService.addPatient(createdPatient);
 		}
@@ -184,9 +187,12 @@ public class PatientController {
 		PersonExtended personExtendedUpdated = personExternalService.updatePersonExtended(patientDto,
 				createdPerson.getId());
 		persistPatientAddress(patientDto, Optional.of(personExtendedUpdated.getAddressId()));
-		Patient createdPatient = persistPatientData(patientDto, createdPerson, (Patient pat) -> pat.setId(patientId));
+		Patient createdPatient = persistPatientData(patientDto, createdPerson, patient);
 
 		patientService.auditActionPatient(institutionId,patientId, EActionType.UPDATE);
+
+		if (patientDto.getToAudit() != null && patientDto.getToAudit())
+			patientService.persistSelectionForAnAudict(patientId, institutionId, patientDto.getMessage());
 
 		return ResponseEntity.created(new URI("")).body(createdPatient.getId());
 	}
@@ -274,6 +280,8 @@ public class PatientController {
 						? new AAdditionalDoctorDto(doctorsBo.getGeneralPractitionerBo())
 						: null,
 				doctorsBo.getPamiDoctorBo() != null ? new AAdditionalDoctorDto(doctorsBo.getPamiDoctorBo()) : null);
+		if(patient.getToAudit())
+			result.setAuditablePatientInfo(patientService.getAuditablePatientInfo(patientId));
 		LOG.debug(OUTPUT, result);
 		return ResponseEntity.ok().body(result);
 	}
@@ -296,15 +304,27 @@ public class PatientController {
 		return addressExternalService.addAddress(addressToAdd);
 	}
 
-	private Patient persistPatientData(APatientDto patientDto, BMPersonDto createdPerson, Consumer<Patient> addIds) {
+	private Patient persistPatientData(APatientDto patientDto, BMPersonDto createdPerson, Patient patientEntity) {
 		Patient patientToAdd = patientMapper.fromPatientDto(patientDto);
 		patientToAdd.setPersonId(createdPerson.getId());
-		addIds.accept(patientToAdd);
+		if (patientEntity != null)
+			setPatientData(patientToAdd, patientEntity);
 		Patient createdPatient = patientService.addPatient(patientToAdd);
-		DoctorsBo doctorsBo = new DoctorsBo(patientDto.getGeneralPractitioner(), patientDto.getPamiDoctor());
-		additionalDoctorService.addAdditionalDoctors(doctorsBo, createdPatient.getId());
+		if (patientDto.getGeneralPractitioner() != null && patientDto.getPamiDoctor() != null) {
+			DoctorsBo doctorsBo = new DoctorsBo(patientDto.getGeneralPractitioner(), patientDto.getPamiDoctor());
+			additionalDoctorService.addAdditionalDoctors(doctorsBo, createdPatient.getId());
+		}
 		LOG.debug(OUTPUT, createdPatient.getId());
 		return createdPatient;
+	}
+
+	private void setPatientData (Patient patientToAdd, Patient patientHistory) {
+		if (patientToAdd.getToAudit() == null)
+			patientToAdd.setToAudit(patientHistory.getToAudit());
+		patientToAdd.setId(patientHistory.getId());
+		patientToAdd.setIdentityVerificationStatusId(patientHistory.getIdentityVerificationStatusId());
+		patientToAdd.setComments(patientHistory.getComments());
+		patientToAdd.setNationalId(patientHistory.getNationalId());
 	}
 
 	private List<Integer> getPersonsIds(List<Patient> patients) {
@@ -346,4 +366,5 @@ public class PatientController {
 		});
 		return result;
 	}
+
 }

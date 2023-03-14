@@ -9,6 +9,7 @@ import org.springframework.lang.Nullable;
 
 import javax.validation.constraints.NotNull;
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Getter
 @Setter
@@ -87,5 +88,7 @@ public class APersonDto {
 	private Short provinceId;
 
 	private Short departmentId;
+
+	private List<Integer> fileIds;
 
 }

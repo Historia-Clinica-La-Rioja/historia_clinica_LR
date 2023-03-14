@@ -1,5 +1,11 @@
 package net.pladema.user.infrastructure.output;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Collectors;
+
+import org.springframework.stereotype.Service;
+
 import lombok.RequiredArgsConstructor;
 import net.pladema.permissions.repository.UserRoleRepository;
 import net.pladema.permissions.repository.entity.UserRole;
@@ -14,11 +20,6 @@ import net.pladema.user.application.port.exceptions.UserRoleStorageEnumException
 import net.pladema.user.application.port.exceptions.UserRoleStorageException;
 import net.pladema.user.domain.UserRoleBo;
 import net.pladema.user.repository.UserPersonRepository;
-import org.springframework.stereotype.Service;
-
-import java.util.ArrayList;
-import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -52,21 +53,44 @@ public class UserRoleStorageImpl implements UserRoleStorage {
         checkValidRoles(userRolesBo);
         List<UserRole> userRoles = userRoleRepository.findByUserId(userId).stream()
                 .filter(userRole -> userRole.getInstitutionId().equals(institutionId)).collect(Collectors.toList());
+		List<Short> deletedUserRoles = userRoleRepository.findDeletedByUserId(userId).stream()
+				.filter(userRole -> userRole.getInstitutionId().equals(institutionId))
+				.map(UserRole::getRoleId)
+				.collect(Collectors.toList());
         List<UserRole> newUserRoles = new ArrayList<>();
-        userRolesBo.forEach(userRoleBo -> newUserRoles.add(new UserRole(userId, userRoleBo.getRoleId(), userRoleBo.getInstitutionId())));
+		List<UserRole> rolesToUpdate = new ArrayList<>();
+        userRolesBo.forEach(userRoleBo -> {
+			if (deletedUserRoles.contains(userRoleBo.getRoleId()))
+				rolesToUpdate.add(new UserRole(userId, userRoleBo.getRoleId(), userRoleBo.getInstitutionId()));
+			else
+				newUserRoles.add(new UserRole(userId, userRoleBo.getRoleId(), userRoleBo.getInstitutionId()));
+		});
         userRoleRepository.deleteAll(roleToDelete(userRoles, newUserRoles));
-        userRoleRepository.saveAll(newUserRoles);
+		rolesToUpdate.forEach(userRole ->
+				userRoleRepository.setDeletedFalse(userRole.getUserId(), userRole.getRoleId(), userRole.getInstitutionId())
+		);
+        userRoleRepository.saveAll(roleToCreate(newUserRoles, userRoles));
     }
-
+	private List<UserRole> roleToCreate(List<UserRole> newRoles, List<UserRole> currentRoles) {
+		return newRoles.stream()
+				.filter(userRole ->
+						currentRoles.stream().noneMatch(userRole1 -> areEquals(userRole, userRole1))
+				)
+				.collect(Collectors.toList());
+	}
     private List<UserRole> roleToDelete(List<UserRole> currentRoles, List<UserRole> newRoles) {
         return currentRoles.stream()
                 .filter(userRole ->
-                        newRoles.stream().noneMatch(userRole::equals)
+                        newRoles.stream().noneMatch(userRole1 -> areEquals(userRole, userRole1))
                 )
                 .collect(Collectors.toList());
     }
 
-
+	private boolean areEquals(UserRole userRole, UserRole userRole1) {
+		return userRole.getUserId().equals(userRole1.getUserId()) &&
+				userRole.getRoleId().equals(userRole1.getRoleId()) &&
+				userRole.getInstitutionId().equals(userRole1.getInstitutionId());
+	}
     private void checkValidRoles(List<UserRoleBo> userRolesBo) {
         userRolesBo.stream().filter(role -> !isValidRole(role)).findAny()
                 .ifPresent(userRoleDto -> {
@@ -89,6 +113,8 @@ public class UserRoleStorageImpl implements UserRoleStorage {
                 ERole.ESPECIALISTA_MEDICO.getId().equals(roleId) ||
                 ERole.ENFERMERO_ADULTO_MAYOR.getId().equals(roleId) ||
                 ERole.PROFESIONAL_DE_SALUD.getId().equals(roleId) ||
-                ERole.ESPECIALISTA_EN_ODONTOLOGIA.getId().equals(roleId);
+                ERole.ESPECIALISTA_EN_ODONTOLOGIA.getId().equals(roleId) ||
+				ERole.PRESCRIPTOR.getId().equals(roleId);
     }
+
 }

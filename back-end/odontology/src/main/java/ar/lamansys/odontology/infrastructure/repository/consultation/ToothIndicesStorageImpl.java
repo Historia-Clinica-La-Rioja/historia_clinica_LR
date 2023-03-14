@@ -7,6 +7,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -23,8 +24,20 @@ public class ToothIndicesStorageImpl implements ToothIndicesStorage {
     @Override
     public void save(Integer patientId, List<ToothIndicesBo> teethIndices) {
         LOG.debug("Input parameters -> patientId {}, teethIndices {}", patientId, teethIndices);
-        toothIndicesRepository.saveAll(teethIndices.stream().map(t -> new ToothIndices(patientId, t)).collect(Collectors.toList()));
+		teethIndices.forEach( toothIndices -> {
+			Optional<ToothIndices> ti = toothIndicesRepository.getByPatientToothId(patientId, toothIndices.getToothId());
+			if (ti.isPresent())
+				update(ti.get(),toothIndices);
+			else
+				toothIndicesRepository.save(new ToothIndices(patientId,toothIndices));
+		});
     }
+
+	private void update(ToothIndices ti, ToothIndicesBo toothIndicesBo) {
+		ToothIndices newTi = new ToothIndices(ti.getPatientId(),toothIndicesBo);
+		newTi.setId(ti.getId());
+		toothIndicesRepository.save(newTi);
+	}
 
     @Override
     public List<ToothIndicesBo> getTeethIndices(Integer patientId) {

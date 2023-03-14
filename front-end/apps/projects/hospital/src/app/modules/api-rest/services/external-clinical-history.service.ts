@@ -1,6 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { ExternalClinicalHistoryDto } from '@api-rest/api-model';
+import { ExternalClinicalHistorySummaryDto } from '@api-rest/api-model';
 import { ContextService } from '@core/services/context.service';
 import { environment } from '@environments/environment';
 import { Observable } from 'rxjs';
@@ -21,9 +21,9 @@ export class ExternalClinicalHistoryService {
 		this.SUFFIX_URL = 'outpatient/consultations';
 	}
 
-	public getExternalClinicalHistoryList(patientId: number): Observable<ExternalClinicalHistoryDto[]> {
+	public getExternalClinicalHistoryList(patientId: number): Observable<ExternalClinicalHistorySummaryDto[]> {
 		const url = `${this.URL_BASE}/${patientId}/${this.SUFFIX_URL}/getExternalClinicalHistoryList`;
-		return this.http.get<ExternalClinicalHistoryDto[]>(url);
+		return this.http.get<ExternalClinicalHistorySummaryDto[]>(url);
 	}
 
 }

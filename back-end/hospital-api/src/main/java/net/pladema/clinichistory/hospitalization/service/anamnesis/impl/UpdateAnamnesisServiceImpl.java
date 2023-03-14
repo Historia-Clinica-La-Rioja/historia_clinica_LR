@@ -4,9 +4,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.masterdata.entity.AllergyIntoleranceVerificationStatus;
-import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.masterdata.entity.ConditionClinicalStatus;
-
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -15,6 +12,8 @@ import ar.lamansys.sgh.clinichistory.domain.ips.ClinicalTerm;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.DocumentStatus;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.EDocumentType;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.masterdata.entity.AllergyIntoleranceClinicalStatus;
+import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.masterdata.entity.AllergyIntoleranceVerificationStatus;
+import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.masterdata.entity.ConditionClinicalStatus;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.masterdata.entity.ConditionVerificationStatus;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.masterdata.entity.InmunizationStatus;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.masterdata.entity.MedicationStatementStatus;
@@ -73,6 +72,7 @@ public class UpdateAnamnesisServiceImpl implements UpdateAnamnesisService {
 		sharedDocumentPort.updateDocumentModificationReason(oldAnamnesis.getId(), newAnamnesis.getModificationReason());
 		sharedDocumentPort.deleteDocument(oldAnamnesis.getId(), DocumentStatus.ERROR);
 		// create new document
+		newAnamnesis.setPatientInternmentAge(internmentEpisodeService.getEntryDate(newAnamnesis.getEncounterId()).toLocalDate());
 		newAnamnesis.setId(documentFactory.run(newAnamnesis, true));
 		internmentEpisodeService.updateAnamnesisDocumentId(newAnamnesis.getEncounterId(), newAnamnesis.getId());
 		log.debug("Output -> {}", newAnamnesis.getId());

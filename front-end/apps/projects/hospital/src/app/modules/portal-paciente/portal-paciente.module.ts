@@ -10,6 +10,9 @@ import { MyPersonalDataComponent } from './routes/my-personal-data/my-personal-d
 // components
 import { PortalPacienteComponent } from './portal-paciente.component';
 import { ResumenHistoriaClinicaComponent } from './components/resumen-historia-clinica/resumen-historia-clinica.component';
+// services
+import { AmbulatoriaSummaryFacadeService } from '@historia-clinica/modules/ambulatoria/services/ambulatoria-summary-facade.service';
+import { HistoricalProblemsFacadeService } from '@historia-clinica/modules/ambulatoria/services/historical-problems-facade.service';
 
 @NgModule({
 	declarations: [
@@ -27,7 +30,8 @@ import { ResumenHistoriaClinicaComponent } from './components/resumen-historia-c
 		// deps
 		PresentationModule,
 		HistoriaClinicaModule,
-	]
+	],
+	providers: [AmbulatoriaSummaryFacadeService,HistoricalProblemsFacadeService]
 })
 export class PortalPacienteModule {
 }

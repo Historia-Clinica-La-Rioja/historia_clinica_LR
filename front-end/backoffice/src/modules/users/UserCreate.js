@@ -3,17 +3,21 @@ import {
     Create,
     SimpleForm,
     TextInput,
-    required,
+    required, ReferenceField, FunctionField,
 } from 'react-admin';
 
-import PersonReferenceInput from '../person/PersonReferenceInput';
+const renderPerson = (choice) => `${choice.identificationNumber} ${choice.lastName} ${choice.firstName}`;
+
+const redirect = (basePath, id, data) => `/users/${data.id}/show`;
 
 const UserCreate = props => (
     <Create {...props}>
-        <SimpleForm>
-            <PersonReferenceInput source="personId" validate={[required()]} />
+        <SimpleForm  redirect={redirect}>
+            <ReferenceField source="personId" reference="person" link={false}>
+                <FunctionField render={renderPerson}/>
+            </ReferenceField>
             <TextInput source="username" validate={[required()]}/>
-        </SimpleForm>
+        </SimpleForm >
     </Create>
 );
 

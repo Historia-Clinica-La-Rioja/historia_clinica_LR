@@ -10,12 +10,14 @@ import org.springframework.stereotype.Service;
 
 import ar.lamansys.sgh.clinichistory.domain.ips.AllergyConditionBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.AnthropometricDataBo;
+import ar.lamansys.sgh.clinichistory.domain.ips.DentalActionBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.GeneralHealthConditionBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.ImmunizationBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.MapClinicalObservationVo;
 import ar.lamansys.sgh.clinichistory.domain.ips.MedicationBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.ProcedureBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.RiskFactorBo;
+import ar.lamansys.sgh.clinichistory.domain.ips.SnomedBo;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.DocumentAllergyIntoleranceRepository;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.DocumentDiagnosticReportRepository;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.DocumentHealthConditionRepository;
@@ -44,6 +46,7 @@ import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.hospitaliz
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.hospitalizationState.entity.ImmunizationVo;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.hospitalizationState.entity.MedicationVo;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.hospitalizationState.entity.ProcedureVo;
+import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.ips.Snomed;
 import ar.lamansys.sgx.shared.auditable.entity.Updateable;
 import ar.lamansys.sgx.shared.exceptions.NotFoundException;
 
@@ -372,6 +375,44 @@ public class  DocumentServiceImpl implements DocumentService {
 		LOG.debug("Input parameters -> documentId {}", documentId);
 		Short result = this.documentRepository.getSourceTypeId(documentId);
 		LOG.debug(OUTPUT, result);
+		return result;
+	}
+
+	@Override
+	public List<DentalActionBo> getDentalActionsFromDocument(Long documentId) {
+		LOG.debug(LOGGING_DOCUMENT_ID, documentId);
+
+		List<DentalActionBo> resultOdontologyProcedure = documentOdontologyProcedureRepository
+				.getOdontologyProcedureFromDocument(documentId)
+				.stream()
+				.map(this::mapToOdontologyProcedure)
+				.collect(Collectors.toList());
+		List<DentalActionBo> resultOdontologyDiagnostic = documentOdontologyDiagnosticRepository
+				.getOdontologyDiagnosticFromDocument(documentId)
+				.stream()
+				.map(this::mapToOdontologyDiagnostic)
+				.collect(Collectors.toList());
+		resultOdontologyProcedure.addAll(resultOdontologyDiagnostic);
+		LOG.debug(OUTPUT, resultOdontologyProcedure);
+		return resultOdontologyProcedure;
+
+	}
+
+	private DentalActionBo mapToOdontologyProcedure(Object[] row) {
+		var result = new DentalActionBo();
+		result.setDiagnostic(false);
+		result.setSnomed(new SnomedBo((Snomed)row[1]));
+		result.setTooth(new SnomedBo((Snomed)row[2]));
+		result.setSurface(new SnomedBo((Snomed)row[3]));
+		return result;
+	}
+
+	private DentalActionBo mapToOdontologyDiagnostic(Object[] row) {
+		var result = new DentalActionBo();
+		result.setDiagnostic(true);
+		result.setSnomed(new SnomedBo((Snomed)row[1]));
+		result.setTooth(new SnomedBo((Snomed)row[2]));
+		result.setSurface(new SnomedBo((Snomed)row[3]));
 		return result;
 	}
 

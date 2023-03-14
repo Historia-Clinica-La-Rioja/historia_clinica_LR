@@ -2,6 +2,7 @@ package net.pladema.patient.controller.service;
 
 import ar.lamansys.sgh.shared.infrastructure.input.service.BasicDataPersonDto;
 import ar.lamansys.sgh.shared.infrastructure.input.service.BasicPatientDto;
+import ar.lamansys.sgx.shared.exceptions.NotFoundException;
 import net.pladema.patient.controller.dto.PatientMedicalCoverageDto;
 import net.pladema.patient.controller.mapper.PatientMedicalCoverageMapper;
 import net.pladema.patient.repository.entity.Patient;
@@ -85,5 +86,13 @@ public class PatientPortImpl implements PatientExternalService {
         LOG.debug(OUTPUT, result);
         return result;
     }
+
+	@Override
+	public void setPatientEmail(Integer patientId, String email) {
+		LOG.debug("Input parameter -> patientId {}, email {}", patientId, email);
+		patientService.getPatient(patientId)
+				.map(patient -> personExternalService.saveEmail(patient.getPersonId(), email))
+				.orElseThrow(()-> new NotFoundException("patient-not-exists", String.format("El paciente con id %s no existe", patientId)));
+	}
 
 }

@@ -38,7 +38,7 @@ public class PatientBedRelocationController {
 
 
 	@PostMapping("/bed/relocation")
-	@PreAuthorize("hasPermission(#institutionId, 'ADMINISTRATIVO')")
+	@PreAuthorize("hasPermission(#institutionId, 'ADMINISTRATIVO, ADMINISTRATIVO_RED_DE_IMAGENES')")
 	public ResponseEntity<PatientBedRelocationDto> addPatientBedRelocation(@PathVariable(name = "institutionId") Integer institutionId,
 			@RequestBody PatientBedRelocationDto patientBedRelocationDto) {
 		LOG.debug("Add bed relocation => {}", patientBedRelocationDto);
@@ -48,7 +48,7 @@ public class PatientBedRelocationController {
 	}
 
 	@GetMapping("/internment/{internmentEpisodeId}/bed/relocation/last")
-	@PreAuthorize("hasPermission(#institutionId, 'ADMINISTRATIVO')")
+	@PreAuthorize("hasPermission(#institutionId, 'ADMINISTRATIVO, ADMINISTRATIVO_RED_DE_IMAGENES')")
 	public ResponseEntity<PatientBedRelocationDto> getLastPatientBedRelocation(
 			@PathVariable(name = "institutionId") Integer institutionId,
 			@PathVariable(name = "internmentEpisodeId") Integer internmentEpisodeId) {

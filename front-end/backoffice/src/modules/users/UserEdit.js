@@ -1,14 +1,9 @@
 import React from 'react';
 import {
-    ArrayInput,
-    AutocompleteInput,
     BooleanInput,
     Edit,
-    ReferenceInput,
     required,
-    SelectInput,
     SimpleForm,
-    SimpleFormIterator,
     TextInput,
     ReferenceField,
     EmailField,
@@ -18,30 +13,12 @@ import {
 import CustomToolbar from '../components/CustomToolbar';
 import PersonReferenceField from '../person/PersonReferenceField';
 import Aside from './Aside'
-import authProvider from '../../providers/legacyAuthProvider';
 import SgxDateField from "../../dateComponents/sgxDateField";
+import SectionTitle from "../components/SectionTitle";
+import CreateRelatedButton from "../components/CreateRelatedButton";
+import UserRoleSection from "./UserRoleSection";
 
-const redirect = (basePath, id, data) => (data.personId !== -1) ? `/person/${data.personId}/show/1` : '/users';
-
-const validateInstitutionRequired = (values, entity) => {
-    const errors = new Array(values.length);
-    values.forEach(function (roleAndInstitution, index) {
-
-        if(roleAndInstitution) {
-            let error = {};
-            let isAdmin = (authProvider.getRole(roleAndInstitution.roleId) === 'ROOT' ||
-                                authProvider.getRole(roleAndInstitution.roleId) === 'ADMINISTRADOR');
-
-            if(!isAdmin && roleAndInstitution.institutionId === -1) {
-                error.institutionId = 'La institucion es requerida';
-            }
-
-            errors[index] = error;
-        }
-    });
-
-    return errors
-};
+const redirect = (basePath, id, data) => `/users/${data.id}/show`;
 
 const UserEdit = props => {
     const translate = useTranslate();
@@ -59,21 +36,13 @@ const UserEdit = props => {
                 </ReferenceField>
 
                 <SgxDateField source="lastLogin" showTime/>
-                <ArrayInput source="roles" validate={validateInstitutionRequired}>
-                    <SimpleFormIterator>
-                        <ReferenceInput source="roleId" reference="roles" validate={[required()]}>
-                            <SelectInput optionText="description" optionValue="id"/>
-                        </ReferenceInput>
-                        <ReferenceInput
-                            source="institutionId"
-                            reference="institutions"
-                            sort={{ field: 'name', order: 'ASC' }}
-                            filterToQuery={searchText => ({name: searchText})}
-                        >
-                            <AutocompleteInput optionText="name" optionValue="id"/>
-                        </ReferenceInput>
-                    </SimpleFormIterator>
-                </ArrayInput>
+                <SectionTitle label="resources.users.fields.roles"/>
+                <CreateRelatedButton
+                    reference="userroles"
+                    refFieldName="userId"
+                    label="resources.users.buttons.linkRole"
+                />
+                <UserRoleSection/>
             </SimpleForm>
         </Edit>
     );

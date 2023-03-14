@@ -1,7 +1,7 @@
 import { Component, Inject, OnInit } from '@angular/core';
 import { AbstractControl, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
-import { DiagnosesGeneralStateDto, MasterDataInterface, NewDosageDto, PharmacoDto, QuantityDto, } from '@api-rest/api-model';
+import { DiagnosesGeneralStateDto, MasterDataInterface, NewDosageDto, PharmacoDto, PharmacoSummaryDto, QuantityDto, TimeDto } from '@api-rest/api-model';
 import { SharedSnomedDto } from '@api-rest/api-model';
 import { SnomedDto } from '@api-rest/api-model';
 import { EIndicationType } from '@api-rest/api-model';
@@ -23,7 +23,7 @@ import { HOURS_LIST, INTERVALS_TIME, openConfirmDialog, OTHER_FREQUENCY, OTHER_I
 	styleUrls: ['./pharmaco.component.scss']
 })
 export class PharmacoComponent implements OnInit {
-
+	pharmaco: PharmacoDto = null;
 	form: FormGroup;
 	searchSnomedConcept: SearchSnomedConceptsPharmacoService;
 	indicationDate: Date;
@@ -51,7 +51,10 @@ export class PharmacoComponent implements OnInit {
 	DOSAGE = "d";
 
 	constructor(
-		@Inject(MAT_DIALOG_DATA) public data: { entryDate: Date, actualDate: Date, patientId: number, professionalId: number, diagnostics: DiagnosesGeneralStateDto[] },
+		@Inject(MAT_DIALOG_DATA) public data: {
+			entryDate: Date, actualDate: Date, patientId: number, professionalId: number, diagnostics: DiagnosesGeneralStateDto[], vias: MasterDataInterface<number>[],
+			units: MasterDataInterface<number>[], pharmaco?: PharmacoSummaryDto
+		},
 		private readonly dialogRef: MatDialogRef<PharmacoComponent>,
 		public formBuilder: FormBuilder,
 		private readonly snowstormService: SnowstormService,
@@ -61,42 +64,15 @@ export class PharmacoComponent implements OnInit {
 		private readonly dialog: MatDialog,
 
 	) {
+		this.internacionMasterdataService.getVias().subscribe(v => this.vias = v);
+		this.internacionMasterdataService.getUnits().subscribe(u => this.units = u);
 		this.searchSnomedConcept = new SearchSnomedConceptsPharmacoService(formBuilder, snowstormService, snomedService, snackBarService);
 	}
 
 	ngOnInit(): void {
 		this.indicationDate = this.data.actualDate;
 		this.diagnostics = this.data.diagnostics;
-		this.internacionMasterdataService.getVias().subscribe(v => this.vias = v);
-		this.internacionMasterdataService.getUnits().subscribe(u => this.units = u);
-
-
-		this.form = this.formBuilder.group({
-			dosage: [null, Validators.required],
-			unit: [null, Validators.required],
-			via: [null, Validators.required],
-			hasSolvent: [false],
-			dosageSolvent: [null],
-
-			diagnoses: [this.setDefaultMainDiagnosis()?.id, Validators.required],
-
-			foodRelation: [this.NEGATIVE_OPTION],
-			patientProvided: [false],
-			note: [null],
-
-			frequencyOption: [this.FREQUENCY_OPTION_INTERVAL],
-			interval: [null, Validators.required],
-			startTime: [null, Validators.required],
-			frequencyHour: [null],
-			event: [null],
-
-			frequency: this.formBuilder.group({
-				duration: this.formBuilder.group({
-					hours: [null, [Validators.min(0), Validators.max(23)]],
-					minutes: [null],
-				}),
-			}),
-		});
+		this.setForm();
 
 		this.form.controls.hasSolvent.valueChanges.subscribe((hasSolvent: boolean) => {
 			if (!hasSolvent) {
@@ -167,7 +143,59 @@ export class PharmacoComponent implements OnInit {
 				}
 			}
 		});
+		if (this.data?.pharmaco)
+			this.searchSnomedConcept.setForm(this.data?.pharmaco.snomed);
+	}
+	private setForm() {
+		const pharmaco = this.data?.pharmaco;
+		const dosage = pharmaco ? pharmaco.dosage.quantity.value : null;
+		const unit = pharmaco ? pharmaco.dosage.quantity.unit : null;
+		const via = pharmaco ? this.getVia(pharmaco.via) : null;
+		const frequencyOption = pharmaco?.dosage.periodUnit ? this.getPeriodUnit(pharmaco.dosage.periodUnit) : this.FREQUENCY_OPTION_INTERVAL;
+		let interval = pharmaco?.dosage.frequency ? pharmaco.dosage.frequency : null;
+		const startTime = pharmaco?.dosage.startDateTime ? this.hoursList.find(e => e === pharmaco.dosage.startDateTime.time.hours) : null;
+		let frequencyHour = null;
 
+		if ((frequencyOption === this.FREQUENCY_OPTION_INTERVAL) && interval && (!this.intervals.some(e => e === interval))) {
+			frequencyHour = interval;
+			interval = OTHER_FREQUENCY.value;
+		}
+		const event = pharmaco ? pharmaco.dosage.event : null;
+
+		this.form = this.formBuilder.group({
+			dosage: [dosage, Validators.required],
+			unit: [unit, Validators.required],
+			via: [via, Validators.required],
+			hasSolvent: [false],
+			dosageSolvent: [null],
+			diagnoses: [this.setDefaultMainDiagnosis()?.id, Validators.required],
+			foodRelation: [this.NEGATIVE_OPTION],
+			patientProvided: [false],
+			note: [null],
+			frequencyOption: [frequencyOption],
+			interval: [interval, this.isRequiredInterval(frequencyOption)],
+			startTime: [startTime, this.isRequiredStartDateTime(frequencyOption)],
+			frequencyHour: [frequencyHour],
+			event: [event, this.isRequiredEvent(frequencyOption)],
+			frequency: this.formBuilder.group({
+				duration: this.formBuilder.group({
+					hours: [null, [Validators.min(0), Validators.max(23)]],
+					minutes: [null],
+				}),
+			}),
+		});
+	}
+
+	private isRequiredInterval(frequencyOption: number): Validators {
+		return frequencyOption === this.FREQUENCY_OPTION_INTERVAL ? Validators.required : [];
+	}
+
+	private isRequiredStartDateTime(frequencyOption: number): Validators {
+		return (frequencyOption === this.FREQUENCY_OPTION_START_TIME || frequencyOption === this.FREQUENCY_OPTION_INTERVAL) ? Validators.required : [];
+	}
+
+	private isRequiredEvent(frequencyOption: number): Validators {
+		return frequencyOption === this.FREQUENCY_OPTION_EVENT ? Validators.required : [];
 	}
 
 	setDefaultMainDiagnosis(): DiagnosesGeneralStateDto {
@@ -190,19 +218,17 @@ export class PharmacoComponent implements OnInit {
 	}
 
 	close() {
-		this.dialogRef.close(null);
+		const openDialogPharmacosFrequent = false;
+		this.dialogRef.close({ openDialogPharmacosFrequent });
 	}
 
 	private toSharedSnomedDto(snomed: SnomedDto): SharedSnomedDto {
 		return {
-			sctid: snomed.sctid,
-			pt: snomed.pt,
+			sctid: this.data?.pharmaco ? this.data.pharmaco.snomed.sctid : snomed.sctid,
+			pt: this.data?.pharmaco ? this.data.pharmaco.snomed.pt : snomed.pt,
 			parentId: "",
 			parentFsn: ""
 		}
-	}
-	private setHours(hours: number): number {
-		return hours === this.TIME_CORRECTION ? 0 : hours;
 	}
 
 	private toDosageDto(quantity: QuantityDto, periodUnit?: string): NewDosageDto {
@@ -262,20 +288,21 @@ export class PharmacoComponent implements OnInit {
 	}
 
 	save() {
+		const openDialogPharmacosFrequent = false;
 		if (this.isValidForm()) {
 			if (this.form.controls.frequencyHour?.value)
 				this.form.controls.interval.setValue(this.form.controls.frequencyHour.value);
-			const pharmacoDto = this.toPharmacoDto();
-			const pharmacoDate = dateDtoToDate(pharmacoDto.indicationDate);
+			const pharmaco = this.toPharmacoDto();
+			const pharmacoDate = dateDtoToDate(pharmaco.indicationDate);
 			if (!isToday(pharmacoDate) && isSameDay(pharmacoDate, this.data.actualDate)) {
 				openConfirmDialog(this.dialog, pharmacoDate).subscribe(confirm => {
 					if (confirm) {
-						this.dialogRef.close(pharmacoDto);
+						this.dialogRef.close({ openDialogPharmacosFrequent, pharmaco });
 					}
 				});
 			}
 			else
-				this.dialogRef.close(pharmacoDto);
+				this.dialogRef.close({ openDialogPharmacosFrequent, pharmaco });
 		} else {
 			this.form.markAllAsTouched();
 			this.searchSnomedConcept.solventForm.markAllAsTouched();
@@ -284,6 +311,7 @@ export class PharmacoComponent implements OnInit {
 	}
 
 	resetForm(): void {
+		this.data.pharmaco = null;
 		this.searchSnomedConcept.resetAllForms();
 		this.form.reset();
 		this.setDefault();
@@ -317,6 +345,27 @@ export class PharmacoComponent implements OnInit {
 			default:
 				return null;
 		}
+	}
+
+	private getPeriodUnit(frequency: string): number {
+		switch (frequency) {
+			case ("h"):
+				return this.FREQUENCY_OPTION_INTERVAL;
+			case ("d"):
+				return this.FREQUENCY_OPTION_START_TIME;
+			case ("e"):
+				return this.FREQUENCY_OPTION_EVENT;
+			default:
+				return null;
+		}
+	}
+	private getVia(via: string): number {
+		return this.data.vias.find(v => v.description === via).id;
+	}
+
+	returnToPharmacosDialog() {
+		const openDialogPharmacosFrequent = true;
+		this.dialogRef.close({ openDialogPharmacosFrequent });
 	}
 }
 

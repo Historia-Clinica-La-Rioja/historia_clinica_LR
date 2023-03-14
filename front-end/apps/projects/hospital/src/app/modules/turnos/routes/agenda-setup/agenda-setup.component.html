@@ -164,13 +164,14 @@
 				</div>
 
 				<section class="protected-appointments-percentage-container" fxLayout="column">
-					<span translate="turnos.agenda-setup.PROTECTED_APPOINTMENT_PERCENTAGE"></span> 
+					<span translate="turnos.agenda-setup.PROTECTED_APPOINTMENT_PERCENTAGE"></span>
 					<div fxLayout="column">
 						<mat-form-field appearance="outline">
 							<input id="protected_appointments_percentage" type="number" matInput
 								[placeholder]="'0%'"
-								formControlName="protectedAppointmentsPercentage">
+								formControlName="protectedAppointmentsPercentage" (change)="validateLineOfCareAndPercentageOfProtectedAppointments()">
 						</mat-form-field>
+						<mat-error *ngIf="!lineOfCareAndPercentageOfProtectedAppointmentsValid" class="required">{{'turnos.agenda-setup.VALIDATION_PROTECTED_APPOINTMENT_PERCENTAGE_AND_CARELINE' | translate}}</mat-error>
 						<mat-error *ngIf="form.hasError('required', 'protectedAppointmentsPercentage')" [translate]="'forms.REQUIRED'" ></mat-error>
 						<mat-error *ngIf="hasError(form, 'pattern', 'protectedAppointmentsPercentage')">
 							{{ 'forms.FORMAT_NUMERIC_INTEGER' | translate }}
@@ -203,7 +204,7 @@
 
 			</section>
 
-			<section *ngIf="form.valid" fxLayout="column" fxLayoutAlign="space-around" fxLayoutGap="15px">
+			<section *ngIf="form.valid && lineOfCareAndPercentageOfProtectedAppointmentsValid" fxLayout="column" fxLayoutAlign="space-around" fxLayoutGap="15px">
 				<h3 [translate]="'turnos.agenda-setup.SELECT_DAYS_TYPE'"></h3>
 				<div fxLayout="row">
 					<span [translate]="'turnos.agenda-setup.SELECT_DAYS_TYPE_SUBTITLE'"></span>
@@ -245,11 +246,11 @@
 			</section>
 
 
-			<div *ngIf="form.valid" align="end">
+			<div *ngIf="form.valid && lineOfCareAndPercentageOfProtectedAppointmentsValid" align="end">
 					<button mat-flat-button color="primary" name="confirmAgenda" id="confirmAgenda">
 						<span [translate]="'buttons.CONFIRM'"></span>
 					</button>
-				</div>
+			</div>
 		</form>
 	</section>
 </app-content>

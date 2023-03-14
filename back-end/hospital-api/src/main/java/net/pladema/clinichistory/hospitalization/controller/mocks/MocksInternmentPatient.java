@@ -1,6 +1,8 @@
 package net.pladema.clinichistory.hospitalization.controller.mocks;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
 import java.util.List;
 
 import ar.lamansys.sgh.shared.infrastructure.input.service.ClinicalSpecialtyDto;
@@ -60,7 +62,7 @@ public class MocksInternmentPatient {
         InternmentSummaryDto result = new InternmentSummaryDto();
         result.setId(internmentEpisodeId);
         result.setBed(mockBed(internmentEpisodeId));
-        result.setEntryDate(LocalDate.now());
+        result.setEntryDate(LocalDateTime.now());
         result.setDoctor(mockDoctorDto(internmentEpisodeId));
         result.setSpecialty(mockSpeciality(internmentEpisodeId));
         result.setTotalInternmentDays(50);

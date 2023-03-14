@@ -86,6 +86,62 @@ public class HCEHealthConditionRepositoryImpl implements HCEHealthConditionRepos
         return result;
     }
 
+	@Override
+	@Transactional(readOnly = true)
+	public List<HCEHealthConditionVo> getPersonalHistoriesByUser(Integer patientId, Integer userId) {
+		LOG.debug(INPUT_PARAMETERS_PATIENT_ID, patientId);
+		String sqlString = "WITH t AS (" +
+				"   SELECT hc.id, snomed_id, hc.status_id, hc.main, verification_status_id, problem_id, severity, hc.start_date, inactivation_date, hc.note_id, hc.updated_on, hc.patient_id, " +
+				"   row_number() over (partition by snomed_id order by hc.updated_on desc) as rw  " +
+				"   FROM {h-schema}document d " +
+				"   JOIN {h-schema}document_health_condition dhc on d.id = dhc.document_id " +
+				"   JOIN {h-schema}health_condition hc on dhc.health_condition_id = hc.id " +
+				"	JOIN {h-schema}outpatient_consultation oc on d.id = oc.document_id " +
+				"	JOIN {h-schema}healthcare_professional hcp on oc.doctor_id = hcp.id " +
+				"	JOIN {h-schema}person p on hcp.person_id = p.id " +
+				"	JOIN {h-schema}user_person up on up.person_id = p.id " +
+				"   WHERE d.status_id IN (:docStatusId) " +
+				"   AND d.type_id in (:documentTypes) "+
+				"   AND hc.patient_id = :patientId " +
+				"   AND hc.problem_id IN (:validProblemTypes) " +
+				"	AND up.user_id = (:userId) "+
+				") " +
+				"SELECT t.id as id, s.sctid as sctid, s.pt, status_id, t.main, verification_status_id, problem_id," +
+				"severity, start_date, inactivation_date, patient_id " +
+				"FROM t " +
+				"JOIN {h-schema}snomed s ON snomed_id = s.id " +
+				"WHERE rw = 1 " +
+				"AND NOT verification_status_id = :verificationId  " +
+				"ORDER BY t.updated_on DESC";
+
+		List<Object[]> queryResult = entityManager.createNativeQuery(sqlString)
+				.setParameter("docStatusId", List.of(DocumentStatus.FINAL, DocumentStatus.DRAFT))
+				.setParameter("verificationId", ConditionVerificationStatus.ERROR)
+				.setParameter("patientId", patientId)
+				.setParameter("validProblemTypes", Arrays.asList(ProblemType.PROBLEM, ProblemType.CHRONIC))
+				.setParameter("documentTypes", List.of(DocumentType.OUTPATIENT, DocumentType.ODONTOLOGY))
+				.setParameter("userId", userId)
+				.getResultList();
+
+		List<HCEHealthConditionVo> result = new ArrayList<>();
+
+		queryResult.forEach(h ->
+				result.add(
+						new HCEHealthConditionVo(
+								(Integer)h[0],
+								new Snomed((String)h[1], (String)h[2], null, null),
+								(String)h[3],
+								(boolean)h[4],
+								(String)h[5],
+								(String)h[6],
+								(String)h[7],
+								h[8] != null ? ((Date)h[8]).toLocalDate() : null,
+								h[9] != null ? ((Date)h[9]).toLocalDate() : null,
+								(Integer) h[10]))
+		);
+		return result;
+	}
+
     @SuppressWarnings("unchecked")
     @Override
     @Transactional(readOnly = true)

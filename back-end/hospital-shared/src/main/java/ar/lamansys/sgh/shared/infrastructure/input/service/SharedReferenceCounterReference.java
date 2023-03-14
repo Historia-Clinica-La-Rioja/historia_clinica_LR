@@ -5,6 +5,7 @@ import ar.lamansys.sgh.shared.infrastructure.input.service.referencecounterrefer
 import ar.lamansys.sgh.shared.infrastructure.input.service.referencecounterreference.ReferenceDto;
 import ar.lamansys.sgh.shared.infrastructure.input.service.referencecounterreference.ReferenceProblemDto;
 
+import java.time.LocalDate;
 import java.util.List;
 
 public interface SharedReferenceCounterReference {
@@ -17,4 +18,11 @@ public interface SharedReferenceCounterReference {
 
     List<ReferenceProblemDto> getReferencesProblemsByPatient(Integer patientId);
 
+	Integer getAssignedProtectedAppointmentsQuantity(Integer diaryId, LocalDate day, Short appointmentStateId);
+
+	List<Integer> getProtectedAppointmentsIds(List<Integer> diaryIds);
+
+	boolean isProtectedAppointment(Integer appointmentId);
+
+	void updateProtectedAppointment(Integer appointment);
 }

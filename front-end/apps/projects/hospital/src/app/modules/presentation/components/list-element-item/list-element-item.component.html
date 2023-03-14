@@ -6,13 +6,15 @@
     </app-colored-label>
 
 	<div fxLayout="column" fxFlex="60%" fxLayoutGap="10px">
-		<span class="content">{{content.description}}</span>
+		<span class="content medication">{{content.description}}</span>
 		<div fxLayout="row" fxLayoutGap="20px">
 			<div *ngFor="let extraInfo of content.extra_info" class="color-grey extra-info" fxLayoutGap="5px">
 				<span class="extra-info-title">{{extraInfo.title | translate}}</span>
 				<span>{{extraInfo.content}}</span>
 			</div>
-
+		</div>
+		<div *ngIf="indication && content.observations" class="color-grey observation">
+			"{{content.observations}}"
 		</div>
 	</div>
 	

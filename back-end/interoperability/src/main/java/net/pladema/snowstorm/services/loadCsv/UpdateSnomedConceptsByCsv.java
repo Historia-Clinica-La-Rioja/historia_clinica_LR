@@ -7,6 +7,8 @@ import java.util.List;
 import java.util.concurrent.Semaphore;
 import java.util.stream.Collectors;
 
+import ar.lamansys.sgx.shared.exceptions.NotFoundException;
+
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -53,12 +55,12 @@ public class UpdateSnomedConceptsByCsv {
 			throw new UpdateSnomedConceptsException(UpdateSnomedConceptsExceptionEnum.UPDATE_ALREADY_IN_PROGRESS,
 					"Hay otra actualización en marcha. Intente nuevamente más tarde");
 		}
-		UpdateConceptsResultBo result = updateSnomedConcepst(csvFile, eclKey);
+		UpdateConceptsResultBo result = updateSnomedConcepts(csvFile, eclKey);
 		this.semaphore.release();
 		return result;
     }
 
-	private UpdateConceptsResultBo updateSnomedConcepst(MultipartFile csvFile, String eclKey) {
+	private UpdateConceptsResultBo updateSnomedConcepts(MultipartFile csvFile, String eclKey) {
 		Integer conceptsProcessed = 0;
 		Integer erroneousConcepts = 0;
 		List<String> errorMessages = new ArrayList<>();
@@ -173,11 +175,17 @@ public class UpdateSnomedConceptsByCsv {
 
     private Integer saveSnomedGroup(String eclKey, LocalDate date) {
 		log.debug("Input parameters -> eclKey {}, date {}", eclKey, date);
-        String ecl = snomedSemantics.getEcl(SnomedECL.map(eclKey));
-        Integer snomedGroupId = snomedGroupRepository.getBaseGroupIdByEclAndDescription(ecl, eclKey);
-        String customId = "1";
-        SnomedGroup toSave = new SnomedGroup(snomedGroupId, eclKey, ecl, customId, date, SnomedGroupType.DEFAULT);
-		Integer result = snomedGroupRepository.save(toSave).getId();
+		String ecl = "";
+		try {
+			ecl = snomedSemantics.getEcl(SnomedECL.map(eclKey));
+		} catch (NotFoundException e){
+			this.semaphore.release();
+			throw e;
+		}
+		Integer snomedGroupId = snomedGroupRepository.getBaseGroupIdByEclAndDescription(ecl, eclKey);
+		String customId = "1";
+		SnomedGroup toSave = new SnomedGroup(snomedGroupId, eclKey, ecl, customId, date, SnomedGroupType.DEFAULT);
+		Integer	result = snomedGroupRepository.save(toSave).getId();
 		log.debug("Output -> {}", result);
         return result;
     }

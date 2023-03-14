@@ -5,12 +5,13 @@ import ar.lamansys.refcounterref.domain.file.ReferenceCounterReferenceFileBo;
 import ar.lamansys.refcounterref.domain.file.StoredFileBo;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 
 public interface ReferenceCounterReferenceFileStorage {
 
-    Integer save(Integer institutionId, Integer patientId, MultipartFile file, Integer type);
+    Integer save(Integer institutionId, Integer patientId, MultipartFile file, Integer type) throws IOException;
 
     void updateReferenceCounterReferenceId(Integer referenceCounterReferenceId, List<Integer> filesIds);
 

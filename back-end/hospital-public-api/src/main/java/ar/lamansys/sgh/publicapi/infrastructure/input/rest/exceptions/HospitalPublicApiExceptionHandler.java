@@ -2,6 +2,7 @@ package ar.lamansys.sgh.publicapi.infrastructure.input.rest.exceptions;
 
 import ar.lamansys.sgh.publicapi.application.deleteexternalencounter.exceptions.DeleteExternalEncounterException;
 import ar.lamansys.sgh.publicapi.application.port.out.exceptions.ActivityStorageException;
+import ar.lamansys.sgh.publicapi.application.port.out.exceptions.ExternalClinicalHistoryStorageException;
 import ar.lamansys.sgh.publicapi.application.port.out.exceptions.ExternalEncounterStorageException;
 import ar.lamansys.sgh.publicapi.application.saveexternalencounter.exceptions.SaveExternalEncounterException;
 import ar.lamansys.sgh.publicapi.domain.exceptions.ExternalEncounterBoException;
@@ -77,4 +78,11 @@ public class HospitalPublicApiExceptionHandler {
         logger.error("ExternalEncounterBoException exception -> {}", ex.getMessage());
         return new ApiErrorMessageDto(ex.getCode().name(), ex.getMessage());
     }
+
+	@ExceptionHandler({ExternalClinicalHistoryStorageException.class})
+	@ResponseStatus(HttpStatus.BAD_REQUEST)
+	protected ApiErrorMessageDto handleExternalClinicalHistoryStorageException(ExternalClinicalHistoryStorageException ex) {
+		logger.error("ExternalClinicalHistoryStorageException exception -> {}", ex.getMessage());
+		return new ApiErrorMessageDto(ex.getCode().name(), ex.getMessage());
+	}
 }

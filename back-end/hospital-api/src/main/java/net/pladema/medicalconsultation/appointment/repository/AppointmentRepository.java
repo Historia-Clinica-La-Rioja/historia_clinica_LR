@@ -157,6 +157,23 @@ public interface AppointmentRepository extends SGXAuditableEntityJPARepository<A
 						   @Param("observation") String observation,
 						   @Param("observationBy") Integer observationBy);
 
+	@Transactional
+	@Modifying
+	@Query( "UPDATE Appointment AS a " +
+			"SET a.patientMedicalCoverageId = :newPatientMedicalCoverageId " +
+			"WHERE a.patientId = :patientId " +
+			"AND a.patientMedicalCoverageId = :patientMedicalCoverageId " +
+			"AND (a.dateTypeId > :appointmentDate " +
+			"OR (a.dateTypeId = :appointmentDate " +
+			"AND a.hour >= :hour ))" +
+			"AND (a.appointmentStateId = " + AppointmentState.ASSIGNED + " " +
+			"OR a.appointmentStateId = " + AppointmentState.CONFIRMED + ")" )
+	void updateAppointmentsIdByPatientMedicalCoverage(@Param("patientId") Integer patientId,
+													  @Param("patientMedicalCoverageId") Integer patientMedicalCoverageId,
+													  @Param("appointmentDate") LocalDate appointmentDate,
+													  @Param("hour") LocalTime hour,
+													  @Param("newPatientMedicalCoverageId") Integer newPatientMedicalCoverageId);
+
     @Transactional(readOnly = true)
     @Query(name = "Appointment.medicalCoverage")
     List<Integer> getMedicalCoverage(@Param("patientId") Integer patientId,
@@ -253,7 +270,7 @@ public interface AppointmentRepository extends SGXAuditableEntityJPARepository<A
 
 	@Transactional(readOnly = true)
 	@Query("SELECT NEW net.pladema.medicalconsultation.appointment.repository.domain.AppointmentShortSummaryBo(" +
-			"i.name, a.dateTypeId, a.hour, per.lastName, per.otherLastNames, per.firstName, per.middleNames) " +
+			"i.name, a.dateTypeId, a.hour, per.lastName, per.otherLastNames, per.firstName, per.middleNames, pe.nameSelfDetermination) " +
 			"FROM Appointment a " +
 			"JOIN AppointmentAssn aa ON(a.id = aa.pk.appointmentId) " +
 			"JOIN Diary d ON(d.id = aa.pk.diaryId) " +
@@ -262,6 +279,7 @@ public interface AppointmentRepository extends SGXAuditableEntityJPARepository<A
 			"JOIN Institution i On(do2.institutionId = i.id) " +
 			"JOIN HealthcareProfessional hp ON(d.healthcareProfessionalId = hp.id) " +
 			"JOIN Person per ON (hp.personId = per.id) " +
+			"JOIN PersonExtended pe ON (per.id = pe.id) " +
 			"WHERE a.patientId = :patientId " +
 			"AND a.dateTypeId = :date " +
 			"AND a.appointmentStateId NOT IN (" + AppointmentState.CANCELLED_STR + "," + AppointmentState.SERVED + "," + AppointmentState.ABSENT + ") " +

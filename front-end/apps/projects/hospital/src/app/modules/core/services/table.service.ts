@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import { SelectionModel } from '@angular/cdk/collections';
+import { REMOVE_SUBSTRING_DNI } from '@core/constants/validation-constants';
 
 @Injectable({
 	providedIn: 'root'
@@ -27,7 +28,7 @@ export class TableService {
 		};
 		const dataStr = Object.keys(data).reduce(accumulator, '').toLowerCase();
 		// Transform the filter by converting it to lowercase and removing whitespace.
-		const transformedFilter = filter.trim().toLowerCase();
+		const transformedFilter = filter.trim().toLowerCase().replace(REMOVE_SUBSTRING_DNI, '');
 		return dataStr.indexOf(transformedFilter) !== -1;
 	}
 

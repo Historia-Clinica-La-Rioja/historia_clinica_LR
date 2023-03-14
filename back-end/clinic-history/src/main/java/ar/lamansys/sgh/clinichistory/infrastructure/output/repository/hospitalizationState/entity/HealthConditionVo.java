@@ -1,12 +1,16 @@
 package ar.lamansys.sgh.clinichistory.infrastructure.output.repository.hospitalizationState.entity;
 
+import java.time.LocalDate;
+import java.util.Objects;
+
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.ips.Snomed;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.masterdata.entity.ConditionVerificationStatus;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.masterdata.entity.ProblemType;
-import lombok.*;
-
-import java.time.LocalDate;
-import java.util.Objects;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.ToString;
 
 @Getter
 @Setter
@@ -59,6 +63,13 @@ public class HealthConditionVo extends ClinicalTermVo {
     public boolean isFamilyHistory() {
         return problemId.equals(ProblemType.HISTORY);
     }
+
+	public boolean isProblem() {
+		return ProblemType.PROBLEM.equals(problemId) || ProblemType.CHRONIC.equals(problemId);
+	}
+	public boolean isChronic() {
+		return ProblemType.CHRONIC.equals(problemId);
+	}
 
     public boolean isPresumptive() {
         return (verificationId != null && verificationId.equalsIgnoreCase(ConditionVerificationStatus.PRESUMPTIVE));

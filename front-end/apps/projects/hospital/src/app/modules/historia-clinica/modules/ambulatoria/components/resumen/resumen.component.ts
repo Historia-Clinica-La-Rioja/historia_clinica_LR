@@ -16,6 +16,9 @@ import { ANTECEDENTES_FAMILIARES, MEDICACION_HABITUAL, PROBLEMAS_ANTECEDENTES } 
 import { AmbulatoriaSummaryFacadeService } from '../../services/ambulatoria-summary-facade.service';
 import { TableModel } from '@presentation/components/table/table.component';
 import { SnackBarService } from '@presentation/services/snack-bar.service';
+import { DateFormat, momentFormat, momentParseDate } from '@core/utils/moment.utils';
+import { map } from 'rxjs/operators';
+import { HceGeneralStateService } from '@api-rest/services/hce-general-state.service';
 
 @Component({
 	selector: 'app-resumen',
@@ -39,9 +42,11 @@ export class ResumenComponent implements OnInit, OnChanges {
 	allergiesTable: TableModel<AllergyIntoleranceDto>;
 	medicationsTable: TableModel<MedicationInteroperabilityDto>;
 	@Input() patientExternalSummary: PatientSummaryDto;
+	@Input() canOnlyViewSelfAddedProblems: boolean;
 
 	constructor(
 		private route: ActivatedRoute,
+		private readonly hceGeneralStateService: HceGeneralStateService,
 		private readonly ambulatoriaSummaryFacadeService: AmbulatoriaSummaryFacadeService,
 		private readonly snackBarService: SnackBarService
 	) {
@@ -63,24 +68,44 @@ export class ResumenComponent implements OnInit, OnChanges {
 	}
 
 	initSummaries(): void {
-		this.allergies$ = this.ambulatoriaSummaryFacadeService.allergies$;
-		this.familyHistories$ = this.ambulatoriaSummaryFacadeService.familyHistories$;
-		this.personalHistory$ = this.ambulatoriaSummaryFacadeService.personalHistories$;
-		this.medications$ = this.ambulatoriaSummaryFacadeService.medications$;
-		this.riskFactors$ = this.ambulatoriaSummaryFacadeService.riskFactors$;
-		this.anthropometricDataList$ = this.ambulatoriaSummaryFacadeService.anthropometricDataList$;
+		if (this.canOnlyViewSelfAddedProblems){
+			this.personalHistory$ = this.ambulatoriaSummaryFacadeService.personalHistoriesByRole$.pipe(
+				map(this.formatProblemsDates)
+				);
+		} else {
+			this.allergies$ = this.ambulatoriaSummaryFacadeService.allergies$;
+			this.familyHistories$ = this.ambulatoriaSummaryFacadeService.familyHistories$;
+			this.personalHistory$ = this.ambulatoriaSummaryFacadeService.personalHistories$.pipe(
+				map(this.formatProblemsDates)
+				);
+			this.medications$ = this.ambulatoriaSummaryFacadeService.medications$;
+			this.riskFactors$ = this.ambulatoriaSummaryFacadeService.riskFactors$;
+			this.anthropometricDataList$ = this.ambulatoriaSummaryFacadeService.anthropometricDataList$;
+		}
+	}
+
+	private formatProblemsDates(problemas: HCEPersonalHistoryDto[]) {
+		return problemas.map((problema: HCEPersonalHistoryDto) => {
+			return {
+				...problema,
+				startDate: problema.startDate ? momentFormat(momentParseDate(problema.startDate), DateFormat.VIEW_DATE) : undefined,
+				inactivationDate: problema.inactivationDate ? momentFormat(momentParseDate(problema.inactivationDate), DateFormat.VIEW_DATE) : undefined
+			};
+		});
 	}
 
 	loadExternalTables(fromInit: boolean): void {
-		if (this.externalSummaryIsLoaded()) {
-			this.loadExternal = true;
-			this.healthConditionsTable = this.buildHealthConditionTable(this.patientExternalSummary.conditions);
-			this.allergiesTable = this.buildAllergiesTable(this.patientExternalSummary.allergies);
-			this.medicationsTable = this.buildMedicationsTable(this.patientExternalSummary.medications);
-		} else {
-			this.loadExternal = false;
-			if (!fromInit) {
-				this.snackBarService.showError('ambulatoria.bus-interoperabilidad.PACIENTE-SIN-DATOS');
+		if (!this.canOnlyViewSelfAddedProblems){
+			if (this.externalSummaryIsLoaded()) {
+				this.loadExternal = true;
+				this.healthConditionsTable = this.buildHealthConditionTable(this.patientExternalSummary.conditions);
+				this.allergiesTable = this.buildAllergiesTable(this.patientExternalSummary.allergies);
+				this.medicationsTable = this.buildMedicationsTable(this.patientExternalSummary.medications);
+			} else {
+				this.loadExternal = false;
+				if (!fromInit) {
+					this.snackBarService.showError('ambulatoria.bus-interoperabilidad.PACIENTE-SIN-DATOS');
+				}
 			}
 		}
 	}

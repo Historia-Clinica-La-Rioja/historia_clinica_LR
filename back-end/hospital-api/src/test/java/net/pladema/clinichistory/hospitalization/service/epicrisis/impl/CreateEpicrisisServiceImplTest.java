@@ -367,10 +367,10 @@ class CreateEpicrisisServiceImplTest extends UnitRepository {
 
     private InternmentEpisode newValidInternmentEpisodeToCreateEpicrisis(){
         var internmentEpisode = save(newInternmentEpisodeWithEpicrisis(null));
-        var anamanesis = save(new Document(internmentEpisode.getId(), DocumentStatus.FINAL, DocumentType.ANAMNESIS, SourceType.HOSPITALIZATION));
+        var anamanesis = save(new Document(internmentEpisode.getId(), DocumentStatus.FINAL, DocumentType.ANAMNESIS, SourceType.HOSPITALIZATION, -1, -1));
         internmentEpisode.setAnamnesisDocId(anamanesis.getId());
         save(internmentEpisode);
-        var evolutionNote = save(new Document(internmentEpisode.getId(), DocumentStatus.FINAL, DocumentType.EVALUATION_NOTE, SourceType.HOSPITALIZATION));
+        var evolutionNote = save(new Document(internmentEpisode.getId(), DocumentStatus.FINAL, DocumentType.EVALUATION_NOTE, SourceType.HOSPITALIZATION, -1, -1));
         save(new EvolutionNoteDocument(evolutionNote.getId(), internmentEpisode.getId()));
         return internmentEpisode;
     }

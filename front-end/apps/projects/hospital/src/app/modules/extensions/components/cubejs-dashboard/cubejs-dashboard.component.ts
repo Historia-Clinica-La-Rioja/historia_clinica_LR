@@ -52,8 +52,6 @@ export class CubejsDashboardComponent implements OnInit {
 				...this.filters[key].filter,
 				values,
 			}));
-
 		this.chartDefinitionService.next(filtersToAdd);
 	}
-
 }

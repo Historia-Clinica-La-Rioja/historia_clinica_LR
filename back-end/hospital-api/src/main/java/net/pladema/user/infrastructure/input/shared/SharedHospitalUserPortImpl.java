@@ -36,7 +36,7 @@ public class SharedHospitalUserPortImpl implements SharedHospitalUserPort {
 	}
 
 	private HospitalUserPersonInfoDto toHospitalUserPersonInfoDto(UserPersonInfoBo bo) {
-		return new HospitalUserPersonInfoDto(bo.getId(), bo.getEmail(), bo.getPersonId(), bo.getFirstName(), bo.getLastName(), bo.getNameSelfDetermination());
+		return new HospitalUserPersonInfoDto(bo.getId(), bo.getUsername(), bo.getEmail(), bo.getPersonId(), bo.getFirstName(), bo.getLastName(), bo.getNameSelfDetermination());
 	}
 	@Override
 	public Optional<UserSharedInfoDto> fetchUserInfoFromNormalToken(String token) {

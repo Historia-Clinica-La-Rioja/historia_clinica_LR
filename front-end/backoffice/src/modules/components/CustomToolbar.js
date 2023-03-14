@@ -12,7 +12,7 @@ const useStyles = makeStyles({
     }
 });
 
-const CustomToolbar = ({isEdit, ...props}) => {
+const CustomToolbar = ({isEdit, deleteRedirect, ...props}) => {
     const classes = useStyles();
 
     const goBack = () => {
@@ -20,7 +20,15 @@ const CustomToolbar = ({isEdit, ...props}) => {
     }
 
     const deleteButton = () => {
+        return deleteRedirect ? deleteAndRedirectButton() : deleteDefaultButton();
+    }
+
+    const deleteDefaultButton = () => {
         return <DeleteButton className={classes.deleteButton}/>
+    }
+
+    const deleteAndRedirectButton = () => {
+        return <DeleteButton className={classes.deleteButton} redirect={deleteRedirect}/>
     }
 
     return (

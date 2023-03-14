@@ -34,6 +34,7 @@ export interface Content {
 	extra_info?: ExtraInfo[];
 	createdBy: string;
 	timeElapsed: string;
+	observations?: string;
 }
 
 export interface Status {

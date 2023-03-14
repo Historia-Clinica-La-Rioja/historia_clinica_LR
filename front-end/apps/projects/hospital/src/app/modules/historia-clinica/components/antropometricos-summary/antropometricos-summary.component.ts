@@ -48,7 +48,10 @@ export class AntropometricosSummaryComponent implements OnInit {
 
 		dialogRef.afterClosed().subscribe(fieldsToUpdate => {
 			if (fieldsToUpdate) {
-				this.internmentSummaryFacadeService.setFieldsToUpdate({ heightAndWeight: fieldsToUpdate.heightAndWeight, bloodType: fieldsToUpdate.bloodType });
+				this.internmentSummaryFacadeService.setFieldsToUpdate({ heightAndWeight: fieldsToUpdate.heightAndWeight,
+					bloodType: fieldsToUpdate.bloodType,
+					evolutionClinical: true
+				});
 			}
 		}
 		);

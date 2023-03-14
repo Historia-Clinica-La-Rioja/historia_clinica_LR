@@ -31,7 +31,7 @@ public class AnnexReportRepositoryImpl implements AnnexReportRepository {
     public Optional<AnnexIIAppointmentVo> getAppointmentAnnexInfo(Integer appointmentId) {
         String query = "SELECT NEW net.pladema.reports.repository.entity.AnnexIIAppointmentVo(i.name, pe.firstName, pe.middleNames, " +
                 "           pe.lastName, pe.otherLastNames, g.description, pe.birthDate, it.description, pe.identificationNumber, " +
-                "           aps.description, a.dateTypeId, mc.name, pmca.affiliateNumber, i.sisaCode) " +
+                "           aps.description, a.dateTypeId, mc.name, pmca.affiliateNumber, i.sisaCode, hi.rnos) " +
                 "       FROM Appointment AS a " +
                 "           JOIN AppointmentAssn AS assn ON (a.id = assn.pk.appointmentId) " +
                 "           JOIN Diary AS d ON (assn.pk.diaryId = d.id) " +
@@ -40,6 +40,7 @@ public class AnnexReportRepositoryImpl implements AnnexReportRepository {
                 "           JOIN AppointmentState AS aps ON (a.appointmentStateId = aps.id) " +
                 "           LEFT JOIN PatientMedicalCoverageAssn AS pmca ON (a.patientMedicalCoverageId = pmca.id) " +
                 "           LEFT JOIN MedicalCoverage AS mc ON (pmca.medicalCoverageId = mc.id) " +
+				"			LEFT JOIN HealthInsurance AS hi ON (mc.id = hi.id) " +
                 "           JOIN Patient AS pa ON (a.patientId = pa.id) " +
                 "           LEFT JOIN Person AS pe ON (pe.id = pa.personId) " +
                 "           LEFT JOIN IdentificationType AS it ON (it.id = pe.identificationTypeId) " +

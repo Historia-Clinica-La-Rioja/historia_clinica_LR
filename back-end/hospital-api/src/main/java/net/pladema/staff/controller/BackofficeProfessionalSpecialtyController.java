@@ -1,8 +1,10 @@
 package net.pladema.staff.controller;
 
+import net.pladema.sgx.backoffice.rest.BackofficePermissionValidatorAdapter;
 import net.pladema.sgx.backoffice.rest.BackofficeQueryAdapter;
 import org.springframework.data.domain.Example;
 import org.springframework.data.domain.ExampleMatcher;
+import org.springframework.http.HttpMethod;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -28,7 +30,7 @@ public class BackofficeProfessionalSpecialtyController extends AbstractBackoffic
 						return Example.of(entity, matcher);
 					}
 				}
-				));
+				), new BackofficePermissionValidatorAdapter<>(HttpMethod.GET));
 	}
 
 }

@@ -10,9 +10,11 @@ import net.pladema.snowstorm.controller.dto.SnomedSearchItemDto;
 import net.pladema.snowstorm.controller.dto.SnomedSearchDto;
 import net.pladema.snowstorm.controller.dto.SnomedTemplateDto;
 import net.pladema.snowstorm.controller.dto.UpdateConceptsResultDto;
+import net.pladema.snowstorm.controller.dto.UpdateConceptsSynonymsResultDto;
 import net.pladema.snowstorm.services.SnowstormService;
 import net.pladema.snowstorm.services.domain.SnomedTemplateSearchItemBo;
 import net.pladema.snowstorm.services.loadCsv.UpdateConceptsResultBo;
+import net.pladema.snowstorm.services.loadCsv.UpdateConceptsSynonymsResultBo;
 import net.pladema.snowstorm.services.loadCsv.UpdateSnomedConceptsByCsv;
 import net.pladema.snowstorm.services.domain.FetchAllSnomedEcl;
 import net.pladema.snowstorm.services.domain.SnomedSearchBo;
@@ -20,6 +22,7 @@ import net.pladema.snowstorm.services.domain.SnomedSearchItemBo;
 import net.pladema.snowstorm.services.domain.SnowstormItemResponse;
 import net.pladema.snowstorm.services.domain.SnowstormSearchResponse;
 import net.pladema.snowstorm.services.exceptions.SnowstormApiException;
+import net.pladema.snowstorm.services.loadCsv.UpdateSnomedConceptsSynonymsByCsv;
 import net.pladema.snowstorm.services.searchCachedConcepts.SearchCachedConcepts;
 import net.pladema.snowstorm.services.searchCachedConcepts.SearchCachedConceptsWithResultCount;
 import net.pladema.snowstorm.services.searchTemplates.SearchTemplates;
@@ -60,13 +63,16 @@ public class SnowstormController {
 
 	private final SearchTemplates searchTemplates;
 
+	private final UpdateSnomedConceptsSynonymsByCsv updateSnomedConceptsSynonymsByCsv;
+
     public SnowstormController(SnowstormService snowstormService,
 							   FetchAllSnomedEcl fetchAllSnomedEcl,
 							   SearchCachedConceptsWithResultCount searchCachedConceptsWithResultCount,
 							   SearchCachedConcepts searchCachedConcepts,
 							   UpdateSnomedConceptsByCsv updateSnomedConceptsByCsv,
 							   FeatureFlagsService featureFlagsService,
-							   SearchTemplates searchTemplates) {
+							   SearchTemplates searchTemplates,
+							   UpdateSnomedConceptsSynonymsByCsv updateSnomedConceptsSynonymsByCsv) {
 		this.snowstormService = snowstormService;
         this.fetchAllSnomedEcl = fetchAllSnomedEcl;
         this.searchCachedConceptsWithResultCount = searchCachedConceptsWithResultCount;
@@ -74,6 +80,7 @@ public class SnowstormController {
         this.updateSnomedConceptsByCsv = updateSnomedConceptsByCsv;
 		this.featureFlagsService = featureFlagsService;
 		this.searchTemplates = searchTemplates;
+		this.updateSnomedConceptsSynonymsByCsv = updateSnomedConceptsSynonymsByCsv;
 	}
 
     @GetMapping(value = CONCEPTS)
@@ -198,6 +205,16 @@ public class SnowstormController {
 		return result;
     }
 
+	@PostMapping("/load-concepts-synonyms-csv")
+	@PreAuthorize("hasAnyAuthority('ROOT', 'ADMINISTRADOR')")
+	public UpdateConceptsSynonymsResultDto loadConceptsSynonymsByCsv(@RequestParam("file") MultipartFile file,
+													 @RequestParam(value = "ecl") String eclKey) {
+		LOG.debug("Input parameters -> file {}, eclKey {}", file.getOriginalFilename(), eclKey);
+		UpdateConceptsSynonymsResultDto result = mapToUpdateConceptsSynonymsResultDto(updateSnomedConceptsSynonymsByCsv.run(file, eclKey));
+		LOG.debug("Output -> {}", result);
+		return result;
+	}
+
 	private UpdateConceptsResultDto mapToUpdateConceptsResultDto(UpdateConceptsResultBo updateConceptsResultBo) {
 		return new UpdateConceptsResultDto(
 				updateConceptsResultBo.getEclKey(),
@@ -205,5 +222,15 @@ public class SnowstormController {
 				updateConceptsResultBo.getErroneousConcepts(),
 				updateConceptsResultBo.getErrorMessages());
 	}
+
+	private UpdateConceptsSynonymsResultDto mapToUpdateConceptsSynonymsResultDto(UpdateConceptsSynonymsResultBo updateConceptsSynonymsResultBo) {
+		return new UpdateConceptsSynonymsResultDto(
+				updateConceptsSynonymsResultBo.getEclKey(),
+				updateConceptsSynonymsResultBo.getConceptsLoaded(),
+				updateConceptsSynonymsResultBo.getErroneousConcepts(),
+				updateConceptsSynonymsResultBo.getMissingMainConcepts(),
+				updateConceptsSynonymsResultBo.getErrorMessages());
+	}
+
 
 }

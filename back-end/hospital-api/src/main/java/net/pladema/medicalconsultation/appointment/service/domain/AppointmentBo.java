@@ -56,6 +56,8 @@ public class AppointmentBo {
 
 	private Short appointmentBlockMotiveId;
 
+	private boolean isProtected;
+
 	public static AppointmentBo fromAppointmentDiaryVo(AppointmentDiaryVo appointmentDiaryVo) {
 		return AppointmentBo.builder()
 				.id(appointmentDiaryVo.getId())

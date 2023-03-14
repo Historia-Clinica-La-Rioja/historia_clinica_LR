@@ -4,6 +4,7 @@
 			"TITLE": "Gestión de turnos",
 			"actions": {
 				"CREATE_AGENDA": "Crear agenda",
+				"PROFESSONAL": "Profesionales",
 				"NEW_AGENDA": "Nueva agenda",
 				"SEARCH_APPOINTMENTS": "Buscar turnos"
 			},
@@ -76,7 +77,10 @@
 			"PROTECTED_APPOINTMENT_PERCENTAGE": "Porcentajes de turnos protegidos por día",
 			"PROTECTED_APPOINTMENT_PERCENTAGE_RANGE": "Ingrese un valor entre 0 y 100%. Considere que se redondea hacia abajo.",
 			"PROTECTED_APPOINTMENT_PERCENTAGE_RANGE_EXAMPLE": "Por ej. valores entre 1 y 9% pueden no implicar turnos protegidos en una agenda con menos de 10 turnos totales.",
+			"VALIDATION_PROTECTED_APPOINTMENT_PERCENTAGE_AND_CARELINE": "Ingrese 0 como porcentaje de turnos protegidos o agregue al menos una linea de cuidado.",
 			"MORE": "más",
+			"DURATION_OF_THE_CONSULTATION":"Duración de la consulta",
+			"SECTOR": "Sector",
 			"dialog": {
 				"TITLE": "Nueva atención",
 				"EDIT": "Editar atención",
@@ -105,6 +109,8 @@
 			"BUTTON_SEARCH": "Buscar",
 			"STEP_1": "Búsqueda de paciente",
 			"STEP_2": "Confirmar turno",
+			"STEP_3": "Referencia",
+			"ASSOCIATED_REFERENCE": "Referencia asociada",
 			"TEMPORARY_PATIENT": "Paciente temporal",
 			"PATIENT_ID": "ID del paciente",
 			"PHONE_NUMBER": "Número Telefónico",
@@ -117,7 +123,8 @@
 				"SUCCESS": "Paciente encontrado",
 				"APPOINTMENT_ERROR": "Error al confirmar el turno",
 				"APPOINTMENT_SUCCESS": "Turno confirmado",
-				"NOT_RESPONSIBLE": "Solo el responsable de la agenda puede crear turnos"
+				"NOT_RESPONSIBLE": "Solo el responsable de la agenda puede crear turnos",
+				"COULD_NOT_ASSOCIATE": "No se pudo asociar el turno creado a la referencia seleccionada"
 			},
 			"appointment-exists": {
 				"TITLE": "Otro turno en la misma fecha",
@@ -151,6 +158,7 @@
 			"SAVE": "Guardar",
 			"CANCEL": "Cancelar",
 			"NO-INFO": "Sin información",
+			"PROTECTED": "*solicitado como turno protegido",
 			"date": {
 				"EDIT_DATE_TIME": "Editar fecha y hora del turno",
 				"UPDATE_SUCCESS": "La fecha y hora del turno se actualizaron exitosamente"

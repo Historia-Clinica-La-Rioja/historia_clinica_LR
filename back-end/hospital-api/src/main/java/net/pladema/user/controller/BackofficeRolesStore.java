@@ -1,5 +1,7 @@
 package net.pladema.user.controller;
 
+import ar.lamansys.sgx.shared.featureflags.AppFeature;
+import ar.lamansys.sgx.shared.featureflags.application.FeatureFlagsService;
 import net.pladema.permissions.repository.RoleRepository;
 import net.pladema.permissions.repository.entity.Role;
 import net.pladema.permissions.repository.enums.ERole;
@@ -19,13 +21,18 @@ import java.util.stream.StreamSupport;
 public class BackofficeRolesStore implements BackofficeStore<Role, Short> {
 	private final RoleRepository roleRepository;
 
-	public BackofficeRolesStore(RoleRepository roleRepository) {
+	private final FeatureFlagsService featureFlagsService;
+	public BackofficeRolesStore(RoleRepository roleRepository,FeatureFlagsService featureFlagsService ) {
 		this.roleRepository = roleRepository;
+		this.featureFlagsService = featureFlagsService;
 	}
 
 	@Override
 	public Page<Role> findAll(Role example, Pageable pageable) {
 		List<Role> content = toList(roleRepository.findAll()).stream().filter(this::filterRoles).collect(Collectors.toList());
+		if(!featureFlagsService.isOn(AppFeature.HABILITAR_DESARROLLO_RED_IMAGENES)){
+			content.removeIf(role -> role.getId().equals(ERole.ADMINISTRATIVO_RED_DE_IMAGENES.getId()));
+		}
 		return new PageImpl<>(content, pageable, content.size());
 	}
 

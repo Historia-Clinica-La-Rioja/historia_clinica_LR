@@ -7,11 +7,14 @@ export const VALIDATIONS = {
 	MAX_LENGTH: {
 		identif_number: 11,
 		cuil: 11,
-		gender: 40
+		gender: 40,
+		phonePrefix:10,
+		phone:15,
 	}
 };
 
 export const TIME_PATTERN = '([0-1]{1}[0-9]{1}|20|21|22|23):[0-5]{1}[0-9]{1}';
+export const NUMBER_PATTERN = /^[0-9]\d*$/;
 export const DEFAULT_COUNTRY_ID = 14;
 
 export function hasError(form: AbstractControl, type: string, control: string): boolean {
@@ -140,4 +143,17 @@ export function patternValidator(regex: RegExp, error: ValidationErrors): Valida
 		}
 		return regex.test(control.value) ? null : error;
 	};
+}
+
+export function requiredFileType(type: string): ValidatorFn  {
+    return (control: AbstractControl): ValidationErrors | null => {
+		const file = control.value;
+      	if (file) {
+        	const extension = file.name.split('.')[1].toLowerCase();
+        	if (type.toLowerCase() !== extension.toLowerCase()) {
+          		return {'requiredFileType': true};
+        	}
+      	}
+      return null;
+    };
 }

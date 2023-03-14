@@ -7,15 +7,18 @@ import {
     ReferenceManyField,
     Show,
     SimpleShowLayout,
-    TextField, useRecordContext
+    TextField, useRecordContext,
+    usePermissions
 } from 'react-admin';
 import CreateRelatedButton from '../components/CreateRelatedButton';
 import SectionTitle from '../components/SectionTitle';
 import SgxDateField from "../../dateComponents/sgxDateField";
+import { ROOT, ADMINISTRADOR, ADMINISTRADOR_INSTITUCIONAL_BACKOFFICE} from "../roles";
 
 const AMBULATORIA = 1;
 const INTERNACION = 2;
 const GUARDIA = 3;
+const DIAGNOSTICO_POR_IMAGENES = 4;
 
 const CreateSector = ({ record }) => {
     return (
@@ -37,6 +40,51 @@ const CreateDoctorsOffice = ({ record }) => {
         label="resources.doctorsoffices.createRelated"/>
     ) : null;
 };
+const UserIsAdmin = function () {
+    const { permissions } = usePermissions();
+    const userAdmin= permissions?.roleAssignments?.filter(roleAssignment => (roleAssignment.role === ADMINISTRADOR_INSTITUCIONAL_BACKOFFICE.role ||
+                    roleAssignment.role === ADMINISTRADOR.role )).length > 0;
+ return userAdmin;
+}
+
+const CreateOrchestrator = ({ record }) => {
+    const { permissions } = usePermissions();
+    const userCanView = permissions?.roleAssignments?.filter(roleAssignment => (roleAssignment.role === ADMINISTRADOR_INSTITUCIONAL_BACKOFFICE.role ||
+                roleAssignment.role === ADMINISTRADOR.role || roleAssignment.role === ROOT.role)).length > 0;
+    const customRecord = {sectorId: record.id};
+    let button = null;
+    if (UserIsAdmin()){
+        button= <CreateRelatedButton customRecord={customRecord} reference="orchestrator" refFieldName="sectorId" label="resources.orchestrator.createRelated" />;
+    }
+    return record.sectorTypeId === DIAGNOSTICO_POR_IMAGENES && userCanView?(
+    <>
+    <SectionTitle label="resources.orchestrator.name"/>
+    {button}
+    </>
+    ) : null;
+};
+
+const CreateEquipment = ({ record }) => {
+    const { permissions } = usePermissions();
+    const userCanView = permissions?.roleAssignments?.filter(roleAssignment => (roleAssignment.role === ADMINISTRADOR_INSTITUCIONAL_BACKOFFICE.role ||
+                roleAssignment.role === ADMINISTRADOR.role || roleAssignment.role === ROOT.role)).length > 0;
+    const customRecord = {sectorId: record.id};
+    let button = null;
+    if (UserIsAdmin()){
+        button= <CreateRelatedButton customRecord={customRecord} reference="equipment" refFieldName="sectorId" label="resources.equipment.createRelated" />;
+    }
+    return record.sectorTypeId === DIAGNOSTICO_POR_IMAGENES && userCanView?(
+    <>
+    <SectionTitle label="resources.equipment.name"/>
+    {button}
+    </>
+    ) : null;
+};
+
+const RenderModality = (data ) => {
+    const modality = data.record;
+    return  (<>{modality.acronym} ({modality.description})</>);
+};
 
 const CreateRooms = ({ record }) => {
     const customRecord = {sectorId: record.id, institutionId: record.institutionId};
@@ -49,6 +97,21 @@ const CreateRooms = ({ record }) => {
             label="resources.rooms.createRelated"
         />
     ) : null;
+}
+
+const CreatePacServer = ({ record }) => {
+    const customRecord = {sectorId: record.id};
+    return record.sectorTypeId === DIAGNOSTICO_POR_IMAGENES ? (
+            <>
+                <SectionTitle label="resources.pacserversimagelvl.name"/>
+                <CreateRelatedButton
+                    customRecord={customRecord}
+                    reference="pacserversimagelvl"
+                    refFieldName="sectorId"
+                    label="resources.pacserversimagelvl.createRelated"
+                />
+            </>
+        ) : null;
 }
 
 const SectorTypeField = (props) => {
@@ -175,6 +238,22 @@ const SectorShow = props => (
                 </Datagrid>
             </ReferenceManyField>
 
+            <CreatePacServer />
+            <ReferenceManyField
+                addLabel={false}
+                reference="pacserversimagelvl"
+                target= { "sectorId" }
+                sort={{ field: 'name', order: 'DESC' }}
+            >
+                <Datagrid rowClick="show">
+                    <TextField source="name" />
+                    <TextField source="aetitle" />
+                    <TextField source="domain" />
+                    <TextField source="port" />
+                    <EditButton />
+                </Datagrid>
+            </ReferenceManyField>
+
             <SectionTitle label="resources.clinicalspecialtysectors.fields.doctorsoffices"/>
             <CreateDoctorsOffice />
             <ReferenceManyField
@@ -188,6 +267,47 @@ const SectorShow = props => (
                           empty={<p style={{paddingLeft:10, marginTop:0, color:'#8c8c8c'}} >Sin consultorios definidos</p>}>
                     <TextField source="description"/>
                     <EditButton />
+                </Datagrid>
+            </ReferenceManyField>
+
+            <CreateOrchestrator />
+            <ReferenceManyField
+                id='orchestrator'
+                addLabel={false}
+                reference="orchestrator"
+                target="sectorId"
+                sort={{ field: 'name', order: 'DESC' }}
+                >
+                <Datagrid rowClick={UserIsAdmin()?"show":""}>
+                    <TextField source="name"/>
+                    <TextField source="baseTopic"/>
+                    <EditButton disabled= {!UserIsAdmin()}/>
+                    <DeleteButton disabled= {!UserIsAdmin()}/>
+                </Datagrid>
+            </ReferenceManyField>
+
+            <CreateEquipment />
+            <ReferenceManyField
+                id='equipment'
+                addLabel={false}
+                reference="equipment"
+                target="sectorId"
+                sort={{ field: 'aeTitle', order: 'DESC' }}
+            >
+                <Datagrid rowClick={UserIsAdmin()?"show":""}>
+                    <TextField source="name" />
+                    <TextField source="aeTitle" />
+                    <ReferenceField link={false} source="pacServerId"  reference="pacserversimagelvl">
+                        <TextField  source="name" />
+                    </ReferenceField>
+                    <ReferenceField link={false}source="orchestratorId" reference="orchestrator">
+                        <TextField  source="name" />
+                    </ReferenceField>
+                    <ReferenceField link={false}source="modalityId" reference="modality">
+                        <RenderModality/>
+                    </ReferenceField>
+                        <EditButton disabled= {!UserIsAdmin()}/>
+                        <DeleteButton disabled= {!UserIsAdmin()}/>
                 </Datagrid>
             </ReferenceManyField>
 
@@ -217,4 +337,4 @@ const SectorShow = props => (
 );
 
 export default SectorShow;
-export { CreateSector, CreateDoctorsOffice, CreateRooms, ShowServiceSectorData};
+export { CreateSector, CreateDoctorsOffice, CreateRooms, ShowServiceSectorData, CreateOrchestrator, UserIsAdmin, CreateEquipment, RenderModality};

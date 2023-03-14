@@ -1,11 +1,27 @@
 <app-summary-card [header]="alergiasSummary"
                   [tooltip]="'historia-clinica.summary-card.alergias.TOOLTIP'"
-				  [canEdit]="['ENFERMERO_ADULTO_MAYOR', 'ESPECIALISTA_MEDICO']"
-				  [editable]="editable"
-				  (openInNew)="openDialog()">
-	<app-table [showTableHeader]="true" [model]="tableModel" *ngIf="tableModel?.data?.length > 0 else noInfo"></app-table>
-	<ng-template #noInfo>
-		<app-no-data></app-no-data>
-	</ng-template>
+                  [canEdit]="['ENFERMERO_ADULTO_MAYOR', 'ESPECIALISTA_MEDICO']"
+                  [editable]="editable"
+                  (openInNew)="openDialog()">
+    <mat-list id="allergies-list" *ngIf="allergies.length > 0 else noInfo">
+        <div fxLayout="row" *ngFor="let allergy of allergies; first as first">
+            <mat-list-item>
+                <div fxFlex="75">
+                    <span mat-line class="capitalize-first-letter black">
+                        {{ allergy.data.snomed.pt }}
+                    </span>
+                    <span class="grey">
+                        {{ allergy.categoryName }}
+                    </span>
+                </div>
+                <div fxFlex="25" class="{{ allergy.data.criticalityId ? allergy.color : '' }}">
+                    {{ allergy.criticality }}
+                </div>
+            </mat-list-item>
+            <mat-divider *ngIf="!first"></mat-divider>
+        </div>
+    </mat-list>
+    <ng-template #noInfo>
+        <app-no-data></app-no-data>
+    </ng-template>
 </app-summary-card>
-

@@ -1,6 +1,7 @@
 package net.pladema.patient.controller;
 
 import io.swagger.v3.oas.annotations.tags.Tag;
+import net.pladema.medicalconsultation.appointment.service.AppointmentService;
 import net.pladema.patient.controller.dto.PatientMedicalCoverageDto;
 import net.pladema.patient.controller.mapper.PatientMedicalCoverageMapper;
 import net.pladema.patient.service.PatientMedicalCoverageService;
@@ -34,10 +35,12 @@ public class PatientMedicalCoverageController {
 	private final PatientMedicalCoverageService patientMedicalCoverageService;
 
 	private final PatientMedicalCoverageMapper patientMedicalCoverageMapper;
+	private final AppointmentService appointmentService;
 
-	public PatientMedicalCoverageController(PatientMedicalCoverageService patientMedicalCoverageService, PatientMedicalCoverageMapper patientMedicalCoverageMapper) {
+	public PatientMedicalCoverageController(PatientMedicalCoverageService patientMedicalCoverageService, PatientMedicalCoverageMapper patientMedicalCoverageMapper, AppointmentService appointmentService) {
 		this.patientMedicalCoverageService = patientMedicalCoverageService;
 		this.patientMedicalCoverageMapper = patientMedicalCoverageMapper;
+		this.appointmentService = appointmentService;
 	}
 
 	@GetMapping(value = "/{patientId}/coverages")
@@ -82,11 +85,18 @@ public class PatientMedicalCoverageController {
 	}
 
 	@PostMapping("/{patientId}/coverages")
-	public ResponseEntity<List<Integer>> addPatientMedicalCoverages(
+	@Transactional
+	public ResponseEntity<List<Integer>> modifyPatientMedicalCoverages(
 			@PathVariable(name = "patientId") Integer patientId,
 			@RequestBody List<PatientMedicalCoverageDto> coverages) throws URISyntaxException {
 		LOG.debug("Input data -> coverages {} ", coverages);
-		List<Integer> result = patientMedicalCoverageService.saveCoverages(patientMedicalCoverageMapper.toListPatientMedicalCoverageBo(coverages), patientId);
+
+		List<PatientMedicalCoverageBo> patientMedicalCoverages = patientMedicalCoverageMapper.toListPatientMedicalCoverageBo(coverages);
+		List<Integer> result = patientMedicalCoverageService.saveCoverages(patientMedicalCoverages, patientId);
+
+		List<Integer> patientMedicalCoverageInactives = patientMedicalCoverageService.toModifyAppointmentCoverage(patientMedicalCoverages);
+		appointmentService.setAppointmentPatientMedicalCoverageId(patientId, patientMedicalCoverageInactives, null);
+
 		LOG.debug("Ids results -> {}", result);
 		return ResponseEntity.created(new URI("")).body(result);
 	}

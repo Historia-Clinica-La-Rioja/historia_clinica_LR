@@ -40,4 +40,8 @@ public class ReferenceBo {
 	@NotNull(message = "{value.mandatory}")
     private Integer destinationInstitutionId;
 
+	private String phoneNumber;
+
+	private String phonePrefix;
+
 }

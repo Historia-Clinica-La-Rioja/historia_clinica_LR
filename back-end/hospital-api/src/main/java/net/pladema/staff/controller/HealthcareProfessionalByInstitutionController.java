@@ -1,6 +1,7 @@
 package net.pladema.staff.controller;
 
 import java.util.List;
+import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
@@ -54,7 +55,7 @@ public class HealthcareProfessionalByInstitutionController {
 
 
 	@GetMapping("/doctors")
-    @PreAuthorize("hasPermission(#institutionId, 'ADMINISTRATIVO, ESPECIALISTA_MEDICO, PROFESIONAL_DE_SALUD, ESPECIALISTA_EN_ODONTOLOGIA, ADMINISTRADOR_AGENDA, ENFERMERO')")
+    @PreAuthorize("hasPermission(#institutionId, 'ADMINISTRATIVO, ADMINISTRATIVO_RED_DE_IMAGENES, ESPECIALISTA_MEDICO, PROFESIONAL_DE_SALUD, ESPECIALISTA_EN_ODONTOLOGIA, ADMINISTRADOR_AGENDA, ENFERMERO')")
 	public ResponseEntity<List<HealthcareProfessionalDto>> getAllDoctors(@PathVariable(name = "institutionId")  Integer institutionId){
 		LOG.debug("Input parameters -> institutionId {}", institutionId);
 		boolean isAdministrativeRole = loggedUserExternalService.hasAnyRoleInstitution(institutionId, ERole.ADMINISTRATIVO, ERole.ADMINISTRADOR_AGENDA);
@@ -71,12 +72,13 @@ public class HealthcareProfessionalByInstitutionController {
 	}
 
 	@GetMapping
-	@PreAuthorize("hasPermission(#institutionId, 'ADMINISTRATIVO, ADMINISTRADOR_AGENDA, ESPECIALISTA_MEDICO, PROFESIONAL_DE_SALUD, ESPECIALISTA_EN_ODONTOLOGIA, ENFERMERO, ADMINISTRADOR_INSTITUCIONAL_BACKOFFICE, PERSONAL_DE_ESTADISTICA')")
+	@PreAuthorize("hasPermission(#institutionId, 'ADMINISTRATIVO, ADMINISTRATIVO_RED_DE_IMAGENES, ADMINISTRADOR_AGENDA, ESPECIALISTA_MEDICO, PROFESIONAL_DE_SALUD, ESPECIALISTA_EN_ODONTOLOGIA, ENFERMERO, ADMINISTRADOR_INSTITUCIONAL_BACKOFFICE, PERSONAL_DE_ESTADISTICA, ADMINISTRADOR_INSTITUCIONAL_PRESCRIPTOR')")
 	public ResponseEntity<List<ProfessionalDto>> getAllByInstitution(
 			@PathVariable(name = "institutionId")  Integer institutionId){
 		LOG.debug("Input parameters -> institutionId {}", institutionId);
 		boolean isAdministrativeRole = loggedUserExternalService.hasAnyRoleInstitution(institutionId,
-				ERole.ADMINISTRATIVO, ERole.ADMINISTRADOR_AGENDA, ERole.ADMINISTRADOR_INSTITUCIONAL_BACKOFFICE, ERole.PERSONAL_DE_ESTADISTICA);
+				ERole.ADMINISTRATIVO, ERole.ADMINISTRADOR_AGENDA, ERole.ADMINISTRADOR_INSTITUCIONAL_BACKOFFICE, ERole.PERSONAL_DE_ESTADISTICA,
+				ERole.ADMINISTRADOR_INSTITUCIONAL_PRESCRIPTOR);
 		List<HealthcareProfessionalBo> healthcareProfessionals = healthcareProfessionalService.getAllByInstitution(institutionId);
 		if (!isAdministrativeRole) {
 			Integer healthcareProfessionalId = healthcareProfessionalService.getProfessionalId(UserInfo.getCurrentAuditor());
@@ -90,14 +92,15 @@ public class HealthcareProfessionalByInstitutionController {
 	}
 
 	@GetMapping("/associated-healthcare-professionals")
-	@PreAuthorize("hasPermission(#institutionId, 'ADMINISTRATIVO, ADMINISTRADOR_AGENDA, ESPECIALISTA_MEDICO, PROFESIONAL_DE_SALUD, ESPECIALISTA_EN_ODONTOLOGIA, ENFERMERO, ADMINISTRADOR_INSTITUCIONAL_BACKOFFICE, PERSONAL_DE_ESTADISTICA')")
+	@PreAuthorize("hasPermission(#institutionId, 'ADMINISTRATIVO, ADMINISTRADOR_AGENDA, ESPECIALISTA_MEDICO, PROFESIONAL_DE_SALUD, ESPECIALISTA_EN_ODONTOLOGIA, ENFERMERO, ADMINISTRADOR_INSTITUCIONAL_BACKOFFICE, PERSONAL_DE_ESTADISTICA, ADMINISTRADOR_INSTITUCIONAL_PRESCRIPTOR')")
 	public ResponseEntity<List<ProfessionalDto>> getAllByDiaryAndInstitution(@PathVariable(name = "institutionId") Integer institutionId) {
 		LOG.debug("Input parameters -> institutionId {}", institutionId);
-		boolean isAdministrativeRole = loggedUserExternalService.hasAnyRoleInstitution(institutionId,
-				ERole.ADMINISTRATIVO, ERole.ADMINISTRADOR_AGENDA, ERole.ADMINISTRADOR_INSTITUCIONAL_BACKOFFICE, ERole.PERSONAL_DE_ESTADISTICA);
+		Function<Integer, Boolean> isAdministrativeRole = loggedUserExternalService.hasAnyRoleInstitution(
+				ERole.ADMINISTRATIVO, ERole.ADMINISTRADOR_AGENDA
+		);
 		List<HealthcareProfessionalBo> healthcareProfessionals = healthcareProfessionalService.getAllByInstitution(institutionId);
 		Integer healthcareProfessionalId = healthcareProfessionalService.getProfessionalId(UserInfo.getCurrentAuditor());
-		if (!isAdministrativeRole) {
+		if (!isAdministrativeRole.apply(institutionId)) {
 			List<Integer> associatedHealthcareProfessionals = diaryAssociatedProfessionalService.getAllAssociatedWithProfessionalsByHealthcareProfessionalId(institutionId, healthcareProfessionalId);
 			healthcareProfessionals = healthcareProfessionals.stream().filter(healthcareProfessional ->
 					healthcareProfessional.getId().equals(healthcareProfessionalId) || associatedHealthcareProfessionals.contains(healthcareProfessional.getId())
@@ -109,7 +112,7 @@ public class HealthcareProfessionalByInstitutionController {
 	}
 
 	@GetMapping("/{healthcareProfessionalId}")
-	@PreAuthorize("hasPermission(#institutionId, 'ADMINISTRATIVO, ADMINISTRADOR_AGENDA, ESPECIALISTA_MEDICO, PROFESIONAL_DE_SALUD, ESPECIALISTA_EN_ODONTOLOGIA, ENFERMERO')")
+	@PreAuthorize("hasPermission(#institutionId, 'ADMINISTRATIVO, ADMINISTRATIVO_RED_DE_IMAGENES, ADMINISTRADOR_AGENDA, ESPECIALISTA_MEDICO, PROFESIONAL_DE_SALUD, ESPECIALISTA_EN_ODONTOLOGIA, ENFERMERO')")
 	public ResponseEntity<ProfessionalDto> getOne(@PathVariable(name = "institutionId")  Integer institutionId,
 												  @PathVariable(name = "healthcareProfessionalId") Integer healthcareProfessionalId){
 		LOG.debug("Input parameters -> institutionId {}, healthcareProfessionalId {}", institutionId, healthcareProfessionalId);

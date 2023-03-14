@@ -7,6 +7,11 @@ export const INTERNACION: SummaryHeader = {
 	matIcon: 'single_bed'
 };
 
+export const GUARDIA: SummaryHeader = {
+	title: 'Resumen de guardia',
+	matIcon: 'local_hotel'
+};
+
 export const DIAGNOSTICO_PRINCIPAL: SummaryHeader = {
 	title: 'internaciones.internacion-paciente.main-diagnosis.TITLE',
 	matIcon: 'local_hospital'
@@ -49,7 +54,7 @@ export const MEDICACION_HABITUAL: SummaryHeader = {
 
 export const ALERGIAS: SummaryHeader = {
 	title: 'Alergias',
-	matIcon: 'queue'
+	matIcon: 'cancel'
 };
 
 export const VACUNAS: SummaryHeader = {
@@ -125,4 +130,14 @@ export const INTERNMENT_INDICATIONS: SummaryHeader = {
 export const NURSING_CARE: SummaryHeader = {
 	title: 'indicacion.nursing-care.TITLE_CARD',
 	matIcon: 'event_available',
+}
+
+export enum PatientType {
+	PERMANENT = 1,
+	VALIDATED = 2,
+	TEMPORARY = 3,
+	HISTORICAL = 4,
+	PHONE = 5,
+	REJECTED = 6,
+	PERMANENT_NO_VALIDATED = 7
 }

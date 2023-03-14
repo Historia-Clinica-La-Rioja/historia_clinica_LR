@@ -8,6 +8,7 @@ import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public interface SectorRepository extends JpaRepository<Sector, Integer> {
@@ -17,6 +18,12 @@ public interface SectorRepository extends JpaRepository<Sector, Integer> {
             "FROM Sector AS s " +
             "WHERE s.institutionId = :institutionId ")
     List<Sector> getSectorsByInstitution(@Param("institutionId") Integer institutionId);
+    @Transactional(readOnly = true)
+    @Query("SELECT s "+
+			"FROM Sector AS s " +
+			"WHERE s.institutionId = :institutionId " +
+			"AND s.sectorTypeId = :sectorTypeId")
+    List<Sector> getSectorsOfTypeByInstitution(@Param("institutionId") Integer institutionId, @Param("sectorTypeId") Short sectorTypeId);
 
     @Transactional(readOnly = true)
     @Query("SELECT s.institutionId "+
@@ -34,4 +41,12 @@ public interface SectorRepository extends JpaRepository<Sector, Integer> {
             "FROM Sector AS s " +
             "WHERE s.institutionId IN :institutionsIds ")
     List<Integer> getAllIdsByInstitutionsId(@Param("institutionsIds") List<Integer> institutionsIds);
+
+	@Transactional(readOnly = true)
+	@Query("SELECT s " +
+			"FROM Sector s " +
+			"WHERE s.institutionId = :institutionId " +
+			"AND s.description = :description")
+	Optional<Sector> findByInstitutionIdAndDescription(@Param("institutionId") Integer institutionId, @Param("description") String description);
+
 }

@@ -8,6 +8,7 @@ import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.S
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.masterdata.entity.ConditionClinicalStatus;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.masterdata.entity.ConditionVerificationStatus;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.masterdata.entity.MedicationStatementStatus;
+import ar.lamansys.sgh.clinichistory.mocks.DocumentFileTestMocks;
 import ar.lamansys.sgh.clinichistory.mocks.DocumentsTestMocks;
 import ar.lamansys.sgh.clinichistory.mocks.HealthConditionTestMocks;
 import ar.lamansys.sgh.clinichistory.mocks.MedicationTestMocks;
@@ -267,13 +268,27 @@ class ListMedicationInfoServiceImplTest extends UnitRepository {
 
         Long outpatient_doc_id = save(DocumentsTestMocks.createDocument(1, DocumentType.OUTPATIENT, SourceType.OUTPATIENT, DocumentStatus.FINAL)).getId();
         Long outpatient2_doc_id = save(DocumentsTestMocks.createDocument(2, DocumentType.OUTPATIENT, SourceType.OUTPATIENT, DocumentStatus.FINAL)).getId();
+
+		save(DocumentFileTestMocks.createDocumentFile(outpatient_doc_id, 1, DocumentType.OUTPATIENT, SourceType.OUTPATIENT, "OUT_1", "PATHOUT_1", "1"));
+		save(DocumentFileTestMocks.createDocumentFile(outpatient2_doc_id, 2, DocumentType.OUTPATIENT, SourceType.OUTPATIENT, "OUT_2", "PATHOUT_2", "2"));
+
         Long hospitalization_doc_id = save(DocumentsTestMocks.createDocument(1, DocumentType.EPICRISIS, SourceType.HOSPITALIZATION, DocumentStatus.FINAL)).getId();
         Long hospitalization2_doc_id = save(DocumentsTestMocks.createDocument(2, DocumentType.EPICRISIS, SourceType.HOSPITALIZATION, DocumentStatus.FINAL)).getId();
+
+		save(DocumentFileTestMocks.createDocumentFile(hospitalization_doc_id, 1, DocumentType.EPICRISIS, SourceType.HOSPITALIZATION, "EPI_1", "PATHEPI_1", "3"));
+		save(DocumentFileTestMocks.createDocumentFile(hospitalization2_doc_id, 2, DocumentType.EPICRISIS, SourceType.HOSPITALIZATION, "EPI_2", "PATHEPI_2", "4"));
+
         Long recipe1_doc_id = save(DocumentsTestMocks.createDocument(mr1_id, DocumentType.RECIPE, SourceType.RECIPE, DocumentStatus.FINAL)).getId();
         Long recipe2_doc_id = save(DocumentsTestMocks.createDocument(mr1_id, DocumentType.RECIPE, SourceType.RECIPE, DocumentStatus.FINAL)).getId();
         Long recipe3_doc_id = save(DocumentsTestMocks.createDocument(mr2_id, DocumentType.RECIPE, SourceType.RECIPE, DocumentStatus.FINAL)).getId();
         Long recipe4_doc_id = save(DocumentsTestMocks.createDocument(mr3_id, DocumentType.RECIPE, SourceType.RECIPE, DocumentStatus.FINAL)).getId();
         Long recipe5_doc_id = save(DocumentsTestMocks.createDocument(mr4_id, DocumentType.RECIPE, SourceType.RECIPE, DocumentStatus.FINAL)).getId();
+
+		save(DocumentFileTestMocks.createDocumentFile(recipe1_doc_id, mr1_id, DocumentType.RECIPE, SourceType.RECIPE, "RECIPE_1", "PATH_1", "5"));
+		save(DocumentFileTestMocks.createDocumentFile(recipe2_doc_id, mr1_id, DocumentType.RECIPE, SourceType.RECIPE, "RECIPE_2", "PATH_2", "6"));
+		save(DocumentFileTestMocks.createDocumentFile(recipe3_doc_id, mr2_id, DocumentType.RECIPE, SourceType.RECIPE, "RECIPE_3", "PATH_3", "7"));
+		save(DocumentFileTestMocks.createDocumentFile(recipe4_doc_id, mr3_id, DocumentType.RECIPE, SourceType.RECIPE, "RECIPE_4", "PATH_4", "8"));
+		save(DocumentFileTestMocks.createDocumentFile(recipe5_doc_id, mr4_id, DocumentType.RECIPE, SourceType.RECIPE, "RECIPE_5", "PATH_5", "9"));
 
         Integer angina_id = save(HealthConditionTestMocks.createPersonalHistory(patientId, sctId_anginas, ConditionClinicalStatus.ACTIVE, ConditionVerificationStatus.CONFIRMED)).getId();
         save(HealthConditionTestMocks.createHealthConditionDocument(outpatient_doc_id, angina_id));
@@ -395,6 +410,12 @@ class ListMedicationInfoServiceImplTest extends UnitRepository {
         Long recipe4_doc_id = save(DocumentsTestMocks.createDocument(mr3_id, DocumentType.RECIPE, SourceType.RECIPE, DocumentStatus.FINAL)).getId();
         Long recipe5_doc_id = save(DocumentsTestMocks.createDocument(mr4_id, DocumentType.RECIPE, SourceType.RECIPE, DocumentStatus.FINAL)).getId();
 
+		save(DocumentFileTestMocks.createDocumentFile(recipe1_doc_id, mr1_id, DocumentType.RECIPE, SourceType.RECIPE, "RECIPE_1", "PATH_1", "1"));
+		save(DocumentFileTestMocks.createDocumentFile(recipe2_doc_id, mr1_id, DocumentType.RECIPE, SourceType.RECIPE, "RECIPE_2", "PATH_2", "2"));
+		save(DocumentFileTestMocks.createDocumentFile(recipe3_doc_id, mr2_id, DocumentType.RECIPE, SourceType.RECIPE, "RECIPE_3", "PATH_3", "3"));
+		save(DocumentFileTestMocks.createDocumentFile(recipe4_doc_id, mr3_id, DocumentType.RECIPE, SourceType.RECIPE, "RECIPE_4", "PATH_4", "4"));
+		save(DocumentFileTestMocks.createDocumentFile(recipe5_doc_id, mr4_id, DocumentType.RECIPE, SourceType.RECIPE, "RECIPE_5", "PATH_5", "5"));
+
         Integer angina_id = save(HealthConditionTestMocks.createPersonalHistory(patientId, sctId_anginas, ConditionClinicalStatus.ACTIVE, ConditionVerificationStatus.CONFIRMED)).getId();
         save(HealthConditionTestMocks.createHealthConditionDocument(outpatient_doc_id, angina_id));
 
@@ -514,6 +535,12 @@ class ListMedicationInfoServiceImplTest extends UnitRepository {
         Long recipe3_doc_id = save(DocumentsTestMocks.createDocument(mr2_id, DocumentType.RECIPE, SourceType.RECIPE, DocumentStatus.FINAL)).getId();
         Long recipe4_doc_id = save(DocumentsTestMocks.createDocument(mr3_id, DocumentType.RECIPE, SourceType.RECIPE, DocumentStatus.FINAL)).getId();
         Long recipe5_doc_id = save(DocumentsTestMocks.createDocument(mr4_id, DocumentType.RECIPE, SourceType.RECIPE, DocumentStatus.FINAL)).getId();
+
+		save(DocumentFileTestMocks.createDocumentFile(recipe1_doc_id, mr1_id, DocumentType.RECIPE, SourceType.RECIPE, "RECIPE_1", "PATH_1", "1"));
+		save(DocumentFileTestMocks.createDocumentFile(recipe2_doc_id, mr1_id, DocumentType.RECIPE, SourceType.RECIPE, "RECIPE_2", "PATH_2", "2"));
+		save(DocumentFileTestMocks.createDocumentFile(recipe3_doc_id, mr2_id, DocumentType.RECIPE, SourceType.RECIPE, "RECIPE_3", "PATH_3", "3"));
+		save(DocumentFileTestMocks.createDocumentFile(recipe4_doc_id, mr3_id, DocumentType.RECIPE, SourceType.RECIPE, "RECIPE_4", "PATH_4", "4"));
+		save(DocumentFileTestMocks.createDocumentFile(recipe5_doc_id, mr4_id, DocumentType.RECIPE, SourceType.RECIPE, "RECIPE_5", "PATH_5", "5"));
 
         Integer angina_id = save(HealthConditionTestMocks.createPersonalHistory(patientId, sctId_anginas, ConditionClinicalStatus.ACTIVE, ConditionVerificationStatus.CONFIRMED)).getId();
         save(HealthConditionTestMocks.createHealthConditionDocument(outpatient_doc_id, angina_id));

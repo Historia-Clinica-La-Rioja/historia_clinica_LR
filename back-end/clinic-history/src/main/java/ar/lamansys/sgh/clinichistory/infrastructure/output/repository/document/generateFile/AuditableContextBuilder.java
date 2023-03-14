@@ -1,14 +1,31 @@
 package ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.generateFile;
 
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
+import java.util.Base64;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
+import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.DocumentType;
+import ar.lamansys.sgh.shared.infrastructure.input.service.institution.SharedInstitutionPort;
+
+import ar.lamansys.sgh.shared.infrastructure.input.service.medicalcoverage.PatientMedicalCoverageService;
+import ar.lamansys.sgh.shared.infrastructure.input.service.staff.ProfessionCompleteDto;
+
+import com.google.zxing.BarcodeFormat;
+import com.google.zxing.client.j2se.MatrixToImageConfig;
+import com.google.zxing.client.j2se.MatrixToImageWriter;
+import com.google.zxing.common.BitMatrix;
+import com.google.zxing.oned.Code128Writer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import ar.lamansys.sgh.clinichistory.domain.document.IDocumentBo;
@@ -26,6 +43,8 @@ import ar.lamansys.sgx.shared.dates.configuration.LocalDateMapper;
 import ar.lamansys.sgx.shared.featureflags.AppFeature;
 import ar.lamansys.sgx.shared.featureflags.application.FeatureFlagsService;
 
+import javax.imageio.ImageIO;
+
 @Service
 public class AuditableContextBuilder {
 
@@ -38,6 +57,13 @@ public class AuditableContextBuilder {
 	private final LocalDateMapper localDateMapper;
 	private final FeatureFlagsService featureFlagsService;
 
+	private final SharedInstitutionPort sharedInstitutionPort;
+
+	private final PatientMedicalCoverageService patientMedicalCoverageService;
+
+	@Value("${prescription.domain.number}")
+	private Integer recipeDomain;
+
 	public AuditableContextBuilder(
 			SharedPatientPort sharedPatientPort,
 			DocumentAuthorFinder documentAuthorFinder,
@@ -45,9 +71,11 @@ public class AuditableContextBuilder {
 			SharedImmunizationPort sharedImmunizationPort,
 			RiskFactorMapper riskFactorMapper,
 			LocalDateMapper localDateMapper,
-			FeatureFlagsService featureFlagsService) {
+			FeatureFlagsService featureFlagsService, SharedInstitutionPort sharedInstitutionPort,
+			PatientMedicalCoverageService patientMedicalCoverageService) {
 		this.sharedImmunizationPort = sharedImmunizationPort;
 		this.localDateMapper = localDateMapper;
+		this.sharedInstitutionPort = sharedInstitutionPort;
 		this.logger = LoggerFactory.getLogger(getClass());
 		this.basicDataFromPatientLoader = sharedPatientPort::getBasicDataFromPatient;
 		this.authorFromDocumentFunction = (Long documentId) -> documentAuthorFinder.getAuthor(documentId);
@@ -55,19 +83,33 @@ public class AuditableContextBuilder {
 				clinicalSpecialtyFinder.getClinicalSpecialty(specialtyId);
 		this.riskFactorMapper = riskFactorMapper;
 		this.featureFlagsService = featureFlagsService;
+		this.patientMedicalCoverageService = patientMedicalCoverageService;
 	}
 
 	public <T extends IDocumentBo> Map<String,Object> buildContext(T document, Integer patientId){
 		logger.debug("Input parameters -> document {}", document);
-
 		Map<String,Object> contextMap = new HashMap<>();
 		addPatientInfo(contextMap, patientId);
+		if (document.getDocumentType() == DocumentType.DIGITAL_RECIPE) {
+			addDigitalRecipeContextDocumentData(contextMap, document);
+			logger.debug("Built context for patient {} and document {} is {}", patientId, document.getId(), contextMap);
+			return contextMap;
+		}
+		if (document.getDocumentType() == DocumentType.RECIPE) {
+			addRecipeContextDocumentData(contextMap, document);
+			logger.debug("Built context for patient {} and document {} is {}", patientId, document.getId(), contextMap);
+			return contextMap;
+		}
 		addDocumentInfo(contextMap, document);
 		logger.debug("Built context for patient {} and document {} is {}", patientId, document.getId(), contextMap);
 		return contextMap;
 	}
 	private void addPatientInfo(Map<String,Object> contextMap, Integer patientId) {
-		contextMap.put("patient", basicDataFromPatientLoader.apply(patientId));
+		var patientDto = basicDataFromPatientLoader.apply(patientId);
+		contextMap.put("patient", patientDto);
+
+		var patientIdentificationNumberBarCode = generateDigitalRecipeBarCode(patientDto.getIdentificationNumber());
+		contextMap.put("patientIdentificationNumberBarCode", patientIdentificationNumberBarCode);
 	}
 	private <T extends IDocumentBo> void addDocumentInfo(Map<String,Object> contextMap, T document) {
 		contextMap.put("mainDiagnosis", document.getMainDiagnosis());
@@ -84,7 +126,7 @@ public class AuditableContextBuilder {
 		var immunizations =  mapImmunizations(document.getImmunizations());
 		contextMap.put("billableImmunizations", immunizations.stream().filter(ImmunizationInfoDto::isBillable).collect(Collectors.toList()));
 		contextMap.put("nonBillableImmunizations", immunizations.stream().filter(i -> !i.isBillable()).collect(Collectors.toList()));
-
+		contextMap.put("institutionName",sharedInstitutionPort.fetchInstitutionById(document.getInstitutionId()).getName());
 		contextMap.put("medications", document.getMedications());
 		contextMap.put("anthropometricData", document.getAnthropometricData());
 		contextMap.put("riskFactors", riskFactorMapper.toRiskFactorsReportDto(document.getRiskFactors()));
@@ -93,6 +135,57 @@ public class AuditableContextBuilder {
 		contextMap.put("clinicalSpecialty", clinicalSpecialtyDtoFunction.apply(document.getClinicalSpecialtyId()));
 		contextMap.put("performedDate", document.getPerformedDate().atZone(ZoneId.of("UTC")).withZoneSameInstant(ZoneId.of("UTC-3")));
 		contextMap.put("nameSelfDeterminationFF", featureFlagsService.isOn(AppFeature.HABILITAR_DATOS_AUTOPERCIBIDOS));
+	}
+
+	private <T extends IDocumentBo> void addRecipeContextDocumentData(Map<String, Object> ctx, T document) {
+		ctx.put("recipe", true);
+		ctx.put("order", false);
+		ctx.put("request", document);
+		ctx.put("professional", authorFromDocumentFunction.apply(document.getId()));
+
+		var patientCoverage = patientMedicalCoverageService.getCoverage(document.getMedicalCoverageId());
+		patientCoverage.ifPresent(sharedPatientMedicalCoverageBo -> ctx.put("patientCoverage", sharedPatientMedicalCoverageBo));
+
+		var date = document.getPerformedDate().format(DateTimeFormatter.ofPattern("dd-MM-yyyy"));
+		ctx.put("nameSelfDeterminationFF", featureFlagsService.isOn(AppFeature.HABILITAR_DATOS_AUTOPERCIBIDOS));
+		ctx.put("requestDate", date);
+	}
+
+	private <T extends IDocumentBo> void addDigitalRecipeContextDocumentData(Map<String, Object> ctx, T document) {
+		var date = document.getPerformedDate().format(DateTimeFormatter.ofPattern("dd-MM-yyyy"));
+		var dateUntil = document.getPerformedDate().plusDays(30).format(DateTimeFormatter.ofPattern("dd-MM-yyyy"));
+		ctx.put("requestDate", date);
+		ctx.put("dateUntil", dateUntil);
+
+		var recipeNumberWithDomain = recipeDomain + "-" + document.getEncounterId().toString();
+		var recipeNumberBarCode = generateDigitalRecipeBarCode(recipeNumberWithDomain);
+		ctx.put("recipeNumberBarCode", recipeNumberBarCode);
+		ctx.put("recipeNumber", recipeNumberWithDomain);
+
+		var professionalInformation = authorFromDocumentFunction.apply(document.getId());
+		var professionalRelatedProfession = professionalInformation.getProfessions().stream().filter(profession -> profession.getSpecialties().stream().anyMatch(specialty -> specialty.getSpecialty().getId().equals(document.getClinicalSpecialtyId()))).findFirst();
+
+		var patientCoverage = patientMedicalCoverageService.getCoverage(document.getMedicalCoverageId());
+
+		patientCoverage.ifPresent(sharedPatientMedicalCoverageBo -> ctx.put("patientCoverage", sharedPatientMedicalCoverageBo));
+		ctx.put("professional", professionalInformation);
+		ctx.put("medications", document.getMedications());
+		ctx.put("professionalProfession", professionalRelatedProfession.<Object>map(ProfessionCompleteDto::getDescription).orElse(null));
+
+		if (professionalRelatedProfession.isPresent()) {
+			var clinicalSpecialty = professionalRelatedProfession.get().getSpecialties().stream().filter(specialty -> specialty.getSpecialty().getId().equals(document.getClinicalSpecialtyId())).findFirst();
+			ctx.put("clinicalSpecialty", clinicalSpecialty.<Object>map(professionSpecialtyDto -> professionSpecialtyDto.getSpecialty().getName()).orElse(null));
+
+			var nationalLicenseData = professionalRelatedProfession.get().getAllLicenses().stream().filter(license -> license.getType().equals("MN")).findFirst();
+			nationalLicenseData.ifPresent(licenseNumberDto -> ctx.put("nationalLicense", licenseNumberDto.getNumber()));
+
+			var stateProvinceData = professionalRelatedProfession.get().getAllLicenses().stream().filter(license -> license.getType().equals("MP")).findFirst();
+			stateProvinceData.ifPresent(licenseNumberDto -> ctx.put("stateLicense", licenseNumberDto.getNumber()));
+		}
+
+		ctx.put("logo", generatePdfImage("/assets/webapp/pdf/health_ministry_logo.png"));
+		ctx.put("headerLogos", generatePdfImage("/assets/webapp/pdf/digital_recipe_header_logo.png"));
+		ctx.put("isArchived", document.getIsArchived());
 	}
 
 	private List<ImmunizationInfoDto> mapImmunizations(List<ImmunizationBo> immunizations) {
@@ -116,6 +209,29 @@ public class AuditableContextBuilder {
 		result.setDose(immunizationBo.getDose() != null ?
 						new VaccineDoseInfoDto(immunizationBo.getDose().getDescription(), immunizationBo.getDose().getOrder()) : null);
 		return result;
+	}
+
+	private String generateDigitalRecipeBarCode(String dataToEncode) {
+		Code128Writer writer = new Code128Writer();
+		BitMatrix barCode = writer.encode(dataToEncode, BarcodeFormat.CODE_128, 200, 100);
+		ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+		try {
+			MatrixToImageWriter.writeToStream(barCode, "JPEG" , outputStream, new MatrixToImageConfig());
+			return Base64.getEncoder().encodeToString(outputStream.toByteArray());
+		} catch (IOException e) {
+			throw new RuntimeException(e);
+		}
+	}
+
+	private String generatePdfImage(String path) {
+		try {
+			var image = ImageIO.read(Objects.requireNonNull(getClass().getResource(path)));
+			ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+			ImageIO.write(image, "png", outputStream);
+			return Base64.getEncoder().encodeToString(outputStream.toByteArray());
+		} catch (IOException e) {
+			throw new RuntimeException(e);
+		}
 	}
 
 

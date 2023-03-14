@@ -26,12 +26,12 @@ import passwordReset from './password-reset';
 import careLines from './carelines';
 import clinicalspecialtycarelines from './clinicalspecialtycarelines';
 import documentTypes from './documenttypes';
-import documentFiles from './documentfiles';
 import properties from './properties';
 import restClientMeasures from './rest-client-measures';
 import medicalCoverage from './medicalcoverage';
 import snomedgroups from './snomedgroups';
 import carelineproblems from './carelineproblems';
+import userroles from './userroles';
 
 
 import { ROOT, ADMINISTRADOR } from './roles';
@@ -56,6 +56,14 @@ import carelineinstitutionspecialty from "./carelineinstitutionspecialty";
 import careLineInstitutionPractice from "./carelineinstitutionpractice";
 import institutionpractices from "./institutionpractices";
 import institutionpracticesrelatedgroups from "./institutionpracticesrelatedgroups";
+import files from "./files";
+import documentFiles from "./documentfiles";
+import episodesDocumentTypes from './episode-document-type';
+import globalpacs from "./globalpacservers";
+import imagelvlpacservers from "./imagelvlpacservers";
+import orchestrator from "./orchestrator";
+import equipment from "./equipment";
+import modality from "./modality";
 
 const resourcesAdminInstitucional = (permissions: SGXPermissions) =>
     permissions.isOn('BACKOFFICE_MOSTRAR_ABM_RESERVA_TURNOS') ?
@@ -91,6 +99,7 @@ const resources = (permissions: SGXPermissions) => [
     <Resource name="admin" {...admin(permissions)}/>,
     <Resource name="users" {...users}/>,
     <Resource name="roles" />,
+    <Resource name="userroles" {...userroles}/>,
     <Resource name="password-reset" {...passwordReset(permissions)} />,
     ...resourcesFor(permissions),
     // facilities
@@ -113,9 +122,11 @@ const resources = (permissions: SGXPermissions) => [
     // debug
     <Resource name="snvs"  {...snvs} />,
     <Resource name="documentfiles" {...documentFiles(permissions)} />,
+    <Resource name="files" {...files(permissions)} />,
     <Resource name="rest-client-measures" {...restClientMeasures(permissions)} />,
     <Resource name="properties" {...properties(permissions)} />,
     // masterData
+    <Resource name="episodedocumenttypes" {...episodesDocumentTypes(permissions)} />,
     <Resource name="cities" {...cities(permissions)} />,
     <Resource name="departments" {...departments(permissions)} />,
     <Resource name="addresses" {...addresses} />,
@@ -147,6 +158,13 @@ const resources = (permissions: SGXPermissions) => [
     <Resource name="institutionpractices" {...institutionpractices} />,
     <Resource name="institutionpracticesrelatedgroups" {...institutionpracticesrelatedgroups} />,
     <Resource name="snowstormpractices" />,
+    <Resource name="pacservers" {...globalpacs(permissions)} />,
+    <Resource name="pacservertypes" />,
+    <Resource name="pacserverprotocols" />,
+    <Resource name="pacserversimagelvl" {...imagelvlpacservers} />,
+    <Resource name="orchestrator" {...orchestrator} />,
+    <Resource name="equipment" {...equipment} />,
+    <Resource name="modality" {...modality} />,
 
     <Resource name="snomedgroupconcepts" />,
     <Resource name="snomedrelatedgroups"  {...snomedrelatedgroups} />,

@@ -20,7 +20,6 @@ public class EmptyAppointmentDto {
 	private String doctorsOfficeDescription;
 	private String clinicalSpecialtyName;
 	private String alias;
-	private String doctorFirstName;
-	private String doctorLastName;
+	private String doctorFullName;
 
 }

@@ -2,20 +2,24 @@ package net.pladema.clinichistory.requests.medicationrequests.controller;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 import java.time.format.DateTimeFormatter;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
 import javax.validation.Valid;
 
-import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.generateFile.DocumentAuthorFinder;
-import ar.lamansys.sgh.shared.infrastructure.input.service.staff.ProfessionalCompleteDto;
+import net.pladema.clinichistory.requests.medicationrequests.service.GetMedicationRequestByDocument;
 
+import org.apache.commons.compress.utils.IOUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.io.ByteArrayResource;
 import org.springframework.core.io.InputStreamResource;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -36,13 +40,16 @@ import org.springframework.web.bind.annotation.RestController;
 
 import ar.lamansys.sgh.clinichistory.domain.document.PatientInfoBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.MedicationBo;
+import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.generateFile.DocumentAuthorFinder;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.masterdata.entity.MedicationStatementStatus;
 import ar.lamansys.sgh.shared.infrastructure.input.service.BasicPatientDto;
+import ar.lamansys.sgh.shared.infrastructure.input.service.SharedDocumentPort;
+import ar.lamansys.sgh.shared.infrastructure.input.service.staff.ProfessionalCompleteDto;
 import ar.lamansys.sgx.shared.exceptions.dto.ApiErrorDto;
 import ar.lamansys.sgx.shared.featureflags.AppFeature;
 import ar.lamansys.sgx.shared.featureflags.application.FeatureFlagsService;
-import ar.lamansys.sgx.shared.pdf.PDFDocumentException;
-import ar.lamansys.sgx.shared.pdf.PdfService;
+import ar.lamansys.sgx.shared.files.pdf.PDFDocumentException;
+import ar.lamansys.sgx.shared.files.pdf.PdfService;
 import ar.lamansys.sgx.shared.security.UserInfo;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import net.pladema.clinichistory.requests.controller.dto.PrescriptionDto;
@@ -54,13 +61,17 @@ import net.pladema.clinichistory.requests.medicationrequests.service.ChangeState
 import net.pladema.clinichistory.requests.medicationrequests.service.CreateMedicationRequestService;
 import net.pladema.clinichistory.requests.medicationrequests.service.GetMedicationRequestInfoService;
 import net.pladema.clinichistory.requests.medicationrequests.service.ListMedicationInfoService;
+import net.pladema.clinichistory.requests.medicationrequests.service.NewMedicationRequestNotification;
+import net.pladema.clinichistory.requests.medicationrequests.service.ValidateMedicationRequestGenerationService;
 import net.pladema.clinichistory.requests.medicationrequests.service.domain.ChangeStateMedicationRequestBo;
 import net.pladema.clinichistory.requests.medicationrequests.service.domain.MedicationFilterBo;
 import net.pladema.clinichistory.requests.medicationrequests.service.domain.MedicationRequestBo;
+import net.pladema.clinichistory.requests.medicationrequests.service.impl.notification.NewMedicationRequestNotificationArgs;
 import net.pladema.patient.controller.dto.PatientMedicalCoverageDto;
 import net.pladema.patient.controller.service.PatientExternalMedicalCoverageService;
 import net.pladema.patient.controller.service.PatientExternalService;
 import net.pladema.staff.controller.dto.ProfessionalDto;
+import net.pladema.staff.controller.dto.ProfessionalLicenseNumberValidationResponseDto;
 import net.pladema.staff.controller.service.HealthcareProfessionalExternalService;
 
 @RestController
@@ -71,6 +82,9 @@ public class MedicationRequestController {
 
     private static final Logger LOG = LoggerFactory.getLogger(MedicationRequestController.class);
     public static final String CHANGE_STATE_REQUEST = "change-state -> institutionId {}, patientId {}, changeStateRequest {}";
+
+	@Value("${prescription.domain.number}")
+	private Integer recipeDomain;
 
     private final CreateMedicationRequestService createMedicationRequestService;
 
@@ -94,8 +108,15 @@ public class MedicationRequestController {
 
 	private final FeatureFlagsService featureFlagsService;
 
+	private final ValidateMedicationRequestGenerationService validateMedicationRequestGenerationService;
+
 	private final Function<Long, ProfessionalCompleteDto> authorFromDocumentFunction;
 
+	private final NewMedicationRequestNotification newMedicationRequestNotification;
+
+	private final SharedDocumentPort sharedDocumentPort;
+
+	private final GetMedicationRequestByDocument getMedicationRequestByDocument;
 
 	public MedicationRequestController(CreateMedicationRequestService createMedicationRequestService,
 									   HealthcareProfessionalExternalService healthcareProfessionalExternalService,
@@ -108,7 +129,11 @@ public class MedicationRequestController {
 									   PatientExternalMedicalCoverageService patientExternalMedicalCoverageService,
 									   PdfService pdfService,
 									   FeatureFlagsService featureFlagsService,
-									   DocumentAuthorFinder documentAuthorFinder) {
+									   DocumentAuthorFinder documentAuthorFinder,
+									   ValidateMedicationRequestGenerationService validateMedicationRequestGenerationService,
+									   NewMedicationRequestNotification newMedicationRequestNotification,
+									   SharedDocumentPort sharedDocumentPort,
+									   GetMedicationRequestByDocument getMedicationRequestByDocument) {
         this.createMedicationRequestService = createMedicationRequestService;
         this.healthcareProfessionalExternalService = healthcareProfessionalExternalService;
         this.createMedicationRequestMapper = createMedicationRequestMapper;
@@ -120,15 +145,19 @@ public class MedicationRequestController {
         this.patientExternalMedicalCoverageService = patientExternalMedicalCoverageService;
         this.pdfService = pdfService;
 		this.featureFlagsService = featureFlagsService;
+		this.validateMedicationRequestGenerationService = validateMedicationRequestGenerationService;
 		this.authorFromDocumentFunction = (Long documentId) -> documentAuthorFinder.getAuthor(documentId);
+		this.newMedicationRequestNotification = newMedicationRequestNotification;
+		this.sharedDocumentPort = sharedDocumentPort;
+		this.getMedicationRequestByDocument = getMedicationRequestByDocument;
 	}
 
 
     @PostMapping
     @ResponseStatus(code = HttpStatus.CREATED)
-    @PreAuthorize("hasPermission(#institutionId, 'ESPECIALISTA_MEDICO, ESPECIALISTA_EN_ODONTOLOGIA')")
+    @PreAuthorize("hasPermission(#institutionId, 'ESPECIALISTA_MEDICO, ESPECIALISTA_EN_ODONTOLOGIA, PRESCRIPTOR')")
     public @ResponseBody
-    Integer create(@PathVariable(name = "institutionId") Integer institutionId,
+    Long[] create(@PathVariable(name = "institutionId") Integer institutionId,
                    @PathVariable(name = "patientId") Integer patientId,
                    @RequestBody @Valid PrescriptionDto medicationRequest){
         LOG.debug("create -> institutionId {}, patientId {}, medicationRequest {}", institutionId, patientId, medicationRequest);
@@ -136,7 +165,7 @@ public class MedicationRequestController {
         var patientDto = patientExternalService.getBasicDataFromPatient(patientId);
         MedicationRequestBo medicationRequestBo = createMedicationRequestMapper.parseTo(doctorId, patientDto, medicationRequest);
         medicationRequestBo.setInstitutionId(institutionId);
-        Integer result = createMedicationRequestService.execute(medicationRequestBo);
+        Long[] result = createMedicationRequestService.execute(medicationRequestBo);
         LOG.debug("create result -> {}", result);
         return result;
     }
@@ -145,7 +174,7 @@ public class MedicationRequestController {
 
     @PutMapping(value = "/suspend")
     @ResponseStatus(code = HttpStatus.OK)
-    @PreAuthorize("hasPermission(#institutionId, 'ESPECIALISTA_MEDICO, ESPECIALISTA_EN_ODONTOLOGIA')")
+    @PreAuthorize("hasPermission(#institutionId, 'ESPECIALISTA_MEDICO, ESPECIALISTA_EN_ODONTOLOGIA, PRESCRIPTOR')")
     public void suspendMedication(@PathVariable(name = "institutionId") Integer institutionId,
                                   @PathVariable(name = "patientId") Integer patientId,
                                   @RequestBody ChangeStateMedicationRequestDto changeStateRequest) {
@@ -159,7 +188,7 @@ public class MedicationRequestController {
 
     @PutMapping(value = "/finalize")
     @ResponseStatus(code = HttpStatus.OK)
-    @PreAuthorize("hasPermission(#institutionId, 'ESPECIALISTA_MEDICO, ESPECIALISTA_EN_ODONTOLOGIA')")
+    @PreAuthorize("hasPermission(#institutionId, 'ESPECIALISTA_MEDICO, ESPECIALISTA_EN_ODONTOLOGIA, PRESCRIPTOR')")
     public void finalizeMedication(@PathVariable(name = "institutionId") Integer institutionId,
                         @PathVariable(name = "patientId") Integer patientId,
                         @RequestBody ChangeStateMedicationRequestDto changeStateRequest) {
@@ -184,7 +213,7 @@ public class MedicationRequestController {
     }
 
 
-    @GetMapping
+	@GetMapping("/medicationRequestList")
     @ResponseStatus(code = HttpStatus.OK)
     public @ResponseBody
     @PreAuthorize("hasPermission(#institutionId, 'ESPECIALISTA_MEDICO, PROFESIONAL_DE_SALUD, ESPECIALISTA_EN_ODONTOLOGIA, ENFERMERO, PERSONAL_DE_FARMACIA')")
@@ -205,8 +234,29 @@ public class MedicationRequestController {
         return result;
     }
 
+	@GetMapping("/medicationRequestListByUser")
+	@ResponseStatus(code = HttpStatus.OK)
+	public @ResponseBody
+	@PreAuthorize("hasPermission(#institutionId, 'ESPECIALISTA_MEDICO, PROFESIONAL_DE_SALUD, ESPECIALISTA_EN_ODONTOLOGIA, ENFERMERO, PERSONAL_DE_FARMACIA, PRESCRIPTOR')")
+	List<MedicationInfoDto> medicationRequestListByUser(@PathVariable(name = "institutionId") Integer institutionId,
+												  @PathVariable(name = "patientId") Integer patientId,
+												  @RequestParam(value = "statusId", required = false) String statusId,
+												  @RequestParam(value = "medicationStatement", required = false) String medicationStatement,
+												  @RequestParam(value = "healthCondition", required = false) String healthCondition) {
+		LOG.debug("medicationRequestList -> institutionId {}, patientId {}, statusId {}, medicationStatement {}, healthCondition {}", institutionId, patientId, statusId, medicationStatement, healthCondition);
+		List<MedicationBo> resultService = listMedicationInfoService.execute(new MedicationFilterBo(patientId, statusId, medicationStatement, healthCondition), UserInfo.getCurrentAuditor());
+		List<MedicationInfoDto> result = resultService.stream()
+				.map(mid -> {
+					ProfessionalDto professionalDto = healthcareProfessionalExternalService.findProfessionalByUserId(mid.getUserId());
+					return listMedicationInfoMapper.parseTo(mid, professionalDto);
+				})
+				.collect(Collectors.toList());
+		LOG.debug("medicationRequestList result -> {}", result);
+		return result;
+	}
+
     @GetMapping(value = "/{medicationRequestId}/download")
-    @PreAuthorize("hasPermission(#institutionId, 'ESPECIALISTA_MEDICO, PROFESIONAL_DE_SALUD, ESPECIALISTA_EN_ODONTOLOGIA, ENFERMERO, PERSONAL_DE_FARMACIA')")
+    @PreAuthorize("hasPermission(#institutionId, 'ESPECIALISTA_MEDICO, PROFESIONAL_DE_SALUD, ESPECIALISTA_EN_ODONTOLOGIA, ENFERMERO, PERSONAL_DE_FARMACIA, PRESCRIPTOR')")
     public ResponseEntity<InputStreamResource> download(@PathVariable(name = "institutionId") Integer institutionId,
                                                         @PathVariable(name = "patientId") Integer patientId,
                                                         @PathVariable(name = "medicationRequestId") Integer medicationRequestId) throws PDFDocumentException {
@@ -214,18 +264,43 @@ public class MedicationRequestController {
         var medicationRequestBo = getMedicationRequestInfoService.execute(medicationRequestId);
         var patientDto = patientExternalService.getBasicDataFromPatient(patientId);
         var patientCoverageDto = patientExternalMedicalCoverageService.getCoverage(medicationRequestBo.getMedicalCoverageId());
-        var context = createContext(medicationRequestBo, patientDto, patientCoverageDto);
+		Map<String, Object> context = createContext(medicationRequestBo, patientDto, patientCoverageDto);
+		String template = "recipe_order_table";
 
-        String template = "recipe_order_table";
-
-        ByteArrayOutputStream os = pdfService.writer(template, context);
-        ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(os.toByteArray());
-        InputStreamResource resource = new InputStreamResource(byteArrayInputStream);
-        return ResponseEntity.ok()
-                .contentType(MediaType.APPLICATION_PDF)
-                .contentLength(os.size())
-                .body(resource);
+		ByteArrayOutputStream os = pdfService.writer(template, context);
+		ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(os.toByteArray());
+		InputStreamResource resource = new InputStreamResource(byteArrayInputStream);
+		return ResponseEntity.ok()
+				.contentType(MediaType.APPLICATION_PDF)
+				.contentLength(os.size())
+				.body(resource);
     }
+
+	@GetMapping(value = "/documentId/{documentId}/notify")
+	@PreAuthorize("hasPermission(#institutionId, 'ESPECIALISTA_MEDICO, PROFESIONAL_DE_SALUD, ESPECIALISTA_EN_ODONTOLOGIA, ENFERMERO, PERSONAL_DE_FARMACIA, PRESCRIPTOR')")
+	public void notify(@PathVariable(name = "institutionId") Integer institutionId,
+														@PathVariable(name = "patientId") Integer patientId,
+														@PathVariable(name = "documentId") Long documentId,
+					   									@RequestParam(value = "patientEmail") String patientEmail) throws PDFDocumentException, IOException {
+		LOG.debug("medicationRequestList -> institutionId {}, patientId {}, documentId {}, patientEmail {}", institutionId, patientId, documentId, patientEmail);
+		patientExternalService.setPatientEmail(patientId, patientEmail);
+		var patientDto = patientExternalService.getBasicDataFromPatient(patientId);
+		InputStreamResource resource = sharedDocumentPort.getFileById(documentId);
+		Integer medicationRequestId = getMedicationRequestByDocument.run(documentId);
+		NewMedicationRequestNotificationArgs args = mapToMedicationRequestNotificationBo(medicationRequestId, patientDto, new ByteArrayResource(IOUtils.toByteArray(resource.getInputStream())));
+		newMedicationRequestNotification.run(args);
+	}
+
+	@GetMapping(value = "/validate")
+	public ResponseEntity<ProfessionalLicenseNumberValidationResponseDto> validateMedicationRequestGeneration(@PathVariable(name = "institutionId") Integer institutionId,
+																											  @PathVariable(name = "patientId") Integer patientId) {
+		LOG.debug("medicationRequestList -> institutionId {}, patientId {}", institutionId, patientId);
+		BasicPatientDto patientBasicData = patientExternalService.getBasicDataFromPatient(patientId);
+		Integer healthcareProfessionalUserId = UserInfo.getCurrentAuditor();
+		ProfessionalDto healthcareProfessionalData = healthcareProfessionalExternalService.findProfessionalByUserId(UserInfo.getCurrentAuditor());
+		ProfessionalLicenseNumberValidationResponseDto response = validateMedicationRequestGenerationService.execute(healthcareProfessionalUserId, healthcareProfessionalData, patientBasicData);
+		return ResponseEntity.of(Optional.of(response));
+	}
 
     private Map<String, Object> createContext(MedicationRequestBo medicationRequestBo,
                                               BasicPatientDto patientDto,
@@ -247,9 +322,21 @@ public class MedicationRequestController {
 
 
     @ResponseStatus(HttpStatus.BAD_REQUEST)
-    @ExceptionHandler({ IllegalArgumentException.class })
-    public ApiErrorDto handleValidationExceptions(IllegalArgumentException ex) {
+    @ExceptionHandler({ RuntimeException.class })
+    public ApiErrorDto handleValidationExceptions(RuntimeException ex) {
         LOG.error("Constraint violation -> {}", ex.getMessage());
         return new ApiErrorDto("Constraint violation", ex.getMessage());
     }
+
+	private NewMedicationRequestNotificationArgs mapToMedicationRequestNotificationBo(Integer recipeId, BasicPatientDto patientDto, ByteArrayResource resource) {
+		LOG.debug("Input parameters -> recipeId {}, patientDto {}, resource {}", recipeId, patientDto, resource);
+		NewMedicationRequestNotificationArgs result = new NewMedicationRequestNotificationArgs();
+		String repiceIdWithDomain = recipeDomain + "-" + recipeId;
+		result.setRecipeId(repiceIdWithDomain);
+		result.setPatient(patientDto);
+		HashMap<String, ByteArrayResource> attachments = new HashMap<>();
+		attachments.put("Receta_"+repiceIdWithDomain+".pdf", resource);
+		result.setResources(attachments);
+		return result;
+	}
 }

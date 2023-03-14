@@ -35,7 +35,7 @@ public class HospitalsFeatureStates implements InitialFeatureStates {
 		map.put(AppFeature.HABILITAR_CREACION_USUARIOS, false);
 		map.put(AppFeature.HABILITAR_REPORTE_EPIDEMIOLOGICO, false);
 		map.put(AppFeature.AGREGAR_MEDICOS_ADICIONALES, false);
-		map.put(AppFeature.HABILITAR_DESCARGA_DOCUMENTOS_PDF, false);
+		map.put(AppFeature.HABILITAR_DESCARGA_DOCUMENTOS_PDF, true);
 		map.put(AppFeature.HABILITAR_DATOS_AUTOPERCIBIDOS, false);
 		map.put(AppFeature.HABILITAR_VISUALIZACION_PROPIEDADES_SISTEMA, true);
 		map.put(AppFeature.HABILITAR_GENERACION_ASINCRONICA_DOCUMENTOS_PDF, false);
@@ -49,7 +49,14 @@ public class HospitalsFeatureStates implements InitialFeatureStates {
 		map.put(AppFeature.HABILITAR_EXTENSIONES_WEB_COMPONENTS, false);
 		map.put(AppFeature.HABILITAR_NOTIFICACIONES_TURNOS, false);
 		map.put(AppFeature.HABILITAR_GUARDADO_CON_CONFIRMACION_CONSULTA_AMBULATORIA, true);
-		map.put(AppFeature.HABILITAR_VISUALIZACION_DE_CARDS, false);
+		map.put(AppFeature.HABILITAR_REPORTES_ESTADISTICOS, false);
+		map.put(AppFeature.HABILITAR_VISUALIZACION_DE_CARDS, true);
+		map.put(AppFeature.HABILITAR_RECUPERAR_PASSWORD, true);
+		map.put(AppFeature.HABILITAR_DESARROLLO_RED_IMAGENES, false);
+		map.put(AppFeature.HABILITAR_SIP_PLUS_EN_DESARROLLO, false);
+		map.put(AppFeature.HABILITAR_VALIDACION_MATRICULAS_SISA, false);
+		map.put(AppFeature.HABILITAR_RECETA_DIGITAL, false);
+		map.put(AppFeature.HABILITAR_PRESCRIPCION_RECETA, false);
 	}
 
 	@Override

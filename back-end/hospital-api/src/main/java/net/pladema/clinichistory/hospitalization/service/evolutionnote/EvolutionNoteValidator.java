@@ -22,23 +22,17 @@ public class EvolutionNoteValidator extends InternmentDocumentValidator {
 
 	private final InternmentEpisodeService internmentEpisodeService;
 
-	public void validateNursePermissionToLoadProcedures(EvolutionNoteBo evolutionNote) {
-		var institutionId = evolutionNote.getInstitutionId();
+	public void validateRolePermission(EvolutionNoteBo evolutionNote) {
+		if (evolutionNote.getIsNursingEvolutionNote() && !isNursingProfessional(evolutionNote)
+				|| (!evolutionNote.getIsNursingEvolutionNote() && isNursingProfessional(evolutionNote)))
+			throw new ConstraintViolationException("El usuario no posee el rol correspondiente para modificar la nota de evolución", Collections.emptySet());
+	}
 
-		var roles = fetchLoggedUserRolesExternalService.execute().collect(Collectors.toList());
-		var isNurse = roles.stream().anyMatch(r -> r.institutionId.equals(institutionId)
-				&& (r.role.equals(ERole.ENFERMERO)
-				|| r.role.equals(ERole.ENFERMERO_ADULTO_MAYOR))
-		);
-		var isProfessionalOrSpecialist = roles.stream().anyMatch(r -> r.institutionId.equals(institutionId)
-				&& (r.role.equals(ERole.ESPECIALISTA_MEDICO)
-				|| r.role.equals(ERole.PROFESIONAL_DE_SALUD)
-				|| r.role.equals(ERole.ESPECIALISTA_EN_ODONTOLOGIA))
-		);
+	public void validateNursePermissionToLoadProcedures(EvolutionNoteBo evolutionNote) {
+
 
 		if(evolutionNote.getProcedures() != null && !evolutionNote.getProcedures().isEmpty()
-				&& isNurse
-				&& ! isProfessionalOrSpecialist) {
+				&& this.isNursingProfessional(evolutionNote)) {
 			throw new PermissionDeniedException(
 					String.format("Los usuarios con roles %s y %s no tienen permiso para agregar un procedimiento a una nota de evolución",
 							ERole.ENFERMERO.getValue(), ERole.ENFERMERO_ADULTO_MAYOR.getValue()));
@@ -64,4 +58,20 @@ public class EvolutionNoteValidator extends InternmentDocumentValidator {
 		return evolutionNote;
 	}
 
+	private boolean isNursingProfessional(EvolutionNoteBo evolutionNote) {
+		var institutionId = evolutionNote.getInstitutionId();
+
+		var roles = fetchLoggedUserRolesExternalService.execute().collect(Collectors.toList());
+		var isNurse = roles.stream().anyMatch(r -> r.institutionId.equals(institutionId)
+				&& (r.role.equals(ERole.ENFERMERO)
+				|| r.role.equals(ERole.ENFERMERO_ADULTO_MAYOR))
+		);
+		var isProfessionalOrSpecialist = roles.stream().anyMatch(r -> r.institutionId.equals(institutionId)
+				&& (r.role.equals(ERole.ESPECIALISTA_MEDICO)
+				|| r.role.equals(ERole.PROFESIONAL_DE_SALUD)
+				|| r.role.equals(ERole.ESPECIALISTA_EN_ODONTOLOGIA))
+		);
+
+		return isNurse && ! isProfessionalOrSpecialist;
+	}
 }

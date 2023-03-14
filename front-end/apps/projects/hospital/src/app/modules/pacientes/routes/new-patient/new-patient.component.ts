@@ -3,6 +3,7 @@ import { FormBuilder, Validators, FormGroup, AbstractControl } from '@angular/fo
 import { Router, ActivatedRoute } from '@angular/router';
 import { Moment } from 'moment';
 import * as moment from 'moment';
+import { ERole } from '@api-rest/api-model';
 import {
 	APatientDto,
 	BMPatientDto,
@@ -13,7 +14,8 @@ import {
 	IdentificationTypeDto,
 	PatientMedicalCoverageDto,
 	PersonPhotoDto,
-	SelfPerceivedGenderDto
+	SelfPerceivedGenderDto,
+	BasicPatientDto
 } from '@api-rest/api-model';
 import { PatientService } from '@api-rest/services/patient.service';
 import { scrollIntoError, hasError, VALIDATIONS, DEFAULT_COUNTRY_ID, updateControlValidator } from '@core/utils/form.utils';
@@ -27,6 +29,9 @@ import { MapperService } from '@core/services/mapper.service';
 import { PatientMedicalCoverageService } from '@api-rest/services/patient-medical-coverage.service';
 import { PERSON } from '@core/constants/validation-constants';
 import { NavigationService } from '@pacientes/services/navigation.service';
+import { PermissionsService } from '@core/services/permissions.service';
+import { Observable } from 'rxjs';
+import { PATTERN_INTEGER_NUMBER } from '@core/utils/pattern.utils';
 
 const ROUTE_PROFILE = 'pacientes/profile/';
 const ROUTE_HOME_PATIENT = 'pacientes';
@@ -72,6 +77,10 @@ export class NewPatientComponent implements OnInit {
 	public lastNameDisabled = false;
 	public otherLastNamesDisabled = false;
 	public birthDateDisabled = false;
+	hasInstitutionalAdministrativeRole = false;
+	hasToSaveFiles: boolean = false;
+	patientId: number;
+	personId: number;
 
 	constructor(
 		private formBuilder: FormBuilder,
@@ -86,7 +95,9 @@ export class NewPatientComponent implements OnInit {
 		private dialog: MatDialog,
 		private mapperService: MapperService,
 		private patientMedicalCoverageService: PatientMedicalCoverageService,
-		public navigationService: NavigationService
+		public navigationService: NavigationService,
+		private permissionsService: PermissionsService,
+
 	) {
 		this.routePrefix = 'institucion/' + this.contextService.institutionId + '/';
 	}
@@ -106,7 +117,7 @@ export class NewPatientComponent implements OnInit {
 					birthDate: [params.birthDate ? moment(params.birthDate) : null, [Validators.required]],
 
 					// Person extended
-					cuil: [params.cuil, [Validators.maxLength(VALIDATIONS.MAX_LENGTH.cuil)]],
+					cuil: [params.cuil, [Validators.pattern(PATTERN_INTEGER_NUMBER),Validators.maxLength(VALIDATIONS.MAX_LENGTH.cuil)]],
 					mothersLastName: [],
 					phonePrefix: [],
 					phoneNumber: [],
@@ -231,6 +242,7 @@ export class NewPatientComponent implements OnInit {
 				this.setProvinces();
 			});
 
+		this.permissionsService.hasContextAssignments$([ERole.ADMINISTRADOR_INSTITUCIONAL_BACKOFFICE, ERole.ADMINISTRADOR_INSTITUCIONAL_PRESCRIPTOR]).subscribe(hasInstitutionalAdministrativeRole => this.hasInstitutionalAdministrativeRole = hasInstitutionalAdministrativeRole);
 	}
 
 	private lockFormField(params) {
@@ -271,6 +283,11 @@ export class NewPatientComponent implements OnInit {
 			const personRequest: APatientDto = this.mapToPersonRequest();
 			this.patientService.addPatient(personRequest)
 				.subscribe(patientId => {
+					this.patientId = patientId;
+					this.patientService.getPatientBasicData<BasicPatientDto>(patientId).subscribe((patientBasicData: BasicPatientDto) => {
+						this.personId = patientBasicData.person.id;
+						this.hasToSaveFiles = true;
+					})
 					if (this.personPhoto != null) {
 						this.patientService.addPatientPhoto(patientId, this.personPhoto).subscribe();
 					}
@@ -281,15 +298,30 @@ export class NewPatientComponent implements OnInit {
 						this.patientMedicalCoverageService.addPatientMedicalCoverages
 							(patientId, patientMedicalCoveragesDto).subscribe();
 					}
-					this.router.navigate([this.routePrefix + ROUTE_PROFILE + patientId]);
-					this.snackBarService.showSuccess('pacientes.new.messages.SUCCESS');
 				}, _ => {
 					this.isSubmitButtonDisabled = false;
-					this.snackBarService.showError('pacientes.new.messages.ERROR');
+					this.snackBarService.showError(this.getMessagesError());
 				});
 		} else {
 			scrollIntoError(this.form, this.el);
 		}
+	}
+
+	private getMessagesSuccess(): string {
+		return this.hasInstitutionalAdministrativeRole ? 'pacientes.new.messages.SUCCESS_PERSON' : 'pacientes.new.messages.SUCCESS_PATIENT' ;
+	}
+
+	private getMessagesError(): string {
+		return this.hasInstitutionalAdministrativeRole ? 'pacientes.new.messages.ERROR_PERSON' : 'pacientes.new.messages.ERROR_PATIENT' ;
+	}
+
+	subscribeFinishUploadFiles(filesId$: Observable<number[]>) {
+		filesId$?.subscribe((filesIds: number[]) => {
+			if (filesIds.length) {
+				this.router.navigate([this.routePrefix + ROUTE_PROFILE + this.patientId]);
+				this.snackBarService.showSuccess(this.getMessagesSuccess());
+			}
+		})
 	}
 
 	private mapToPersonRequest(): APatientDto {
@@ -340,7 +372,10 @@ export class NewPatientComponent implements OnInit {
 				phoneNumber: this.form.controls.pamiDoctorPhoneNumber.value,
 				generalPractitioner: false
 
-			}
+			},
+			// Select for an audict
+			toAudit: false,
+			fileIds: []
 		};
 
 		if (patient.genderSelfDeterminationId === this.NONE_SELF_PERCEIVED_GENDER_SELECTED_ID)
@@ -416,10 +451,10 @@ export class NewPatientComponent implements OnInit {
 		control.reset();
 	}
 
-	updatePhoneValidators(){
-		if (this.form.controls.phoneNumber.value||this.form.controls.phonePrefix.value) {
-			updateControlValidator(this.form, 'phoneNumber', [Validators.required]);
-			updateControlValidator(this.form, 'phonePrefix', [Validators.required]);
+	updatePhoneValidators() {
+		if (this.form.controls.phoneNumber.value || this.form.controls.phonePrefix.value) {
+			updateControlValidator(this.form, 'phoneNumber', [Validators.required,Validators.pattern(PATTERN_INTEGER_NUMBER) ,Validators.maxLength(VALIDATIONS.MAX_LENGTH.phone)]);
+			updateControlValidator(this.form, 'phonePrefix', [Validators.required,Validators.pattern(PATTERN_INTEGER_NUMBER) ,Validators.maxLength(VALIDATIONS.MAX_LENGTH.phonePrefix)]);
 		} else {
 			updateControlValidator(this.form, 'phoneNumber', []);
 			updateControlValidator(this.form, 'phonePrefix', []);

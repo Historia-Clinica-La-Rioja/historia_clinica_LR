@@ -14,6 +14,11 @@ const filterRoleAssignment = (institutionId: number) =>
 
 const mapToRole = (assignments: RoleAssignmentDto[]) => assignments.map(assignment => assignment.role);
 
+export const filterItems = <T extends { permissions?: ERole[] }>(items: T[], assignments: ERole[]): T[] =>
+	items.filter(item =>
+		item.permissions ? itemHasAnyRole(item.permissions, assignments) : true
+	);
+
 @Injectable({
 	providedIn: 'root'
 })
@@ -58,7 +63,7 @@ export class PermissionsService {
 	 */
 	public filterItems$<T extends { permissions?: ERole[] }>(items: T[]): Observable<T[]> {
 		return this.contextAssignments$().pipe(
-			map(contextAssignments => items.filter(item => item.permissions ? itemHasAnyRole(item.permissions, contextAssignments) : true)),
+			map(contextAssignments => filterItems(items, contextAssignments)),
 		);
 	}
 

@@ -63,6 +63,10 @@ import { TablasPercentilosComponent } from './routes/ambulatoria-paciente/tablas
 import { ClinicalHistoryActionsComponent } from './components/clinical-history-actions/clinical-history-actions.component';
 import { AmbulatoriaSummaryFacadeService } from './services/ambulatoria-summary-facade.service';
 import { HistoricalProblemsFacadeService } from './services/historical-problems-facade.service';
+import { ClapModule } from './modules/clap/clap.module';
+import { GuardiaComponent } from './components/guardia/guardia.component';
+import { GuardiaModule } from '../guardia/guardia.module';
+import { EnviarRecetaDigitalPorEmailComponent } from './dialogs/enviar-receta-digital-por-email/enviar-receta-digital-por-email.component';
 
 @NgModule({
 	declarations: [
@@ -108,8 +112,10 @@ import { HistoricalProblemsFacadeService } from './services/historical-problems-
 		CreateOutpatientOrderComponent,
 		NewConsultationFamilyHistoryFormComponent,
 		VaccineSearchComponent,
-  		TablasPercentilosComponent,
-  		ClinicalHistoryActionsComponent,
+		TablasPercentilosComponent,
+		ClinicalHistoryActionsComponent,
+		GuardiaComponent,
+    	EnviarRecetaDigitalPorEmailComponent,
 	],
 	imports: [
 		CommonModule,
@@ -126,7 +132,9 @@ import { HistoricalProblemsFacadeService } from './services/historical-problems-
 		IndicacionModule,
 		InternacionesModule,
 		EstudioModule,
-		TurnosModule
+		TurnosModule,
+		ClapModule,
+		GuardiaModule
 	],
 	providers: [
 		AmbulatoriaSummaryFacadeService,

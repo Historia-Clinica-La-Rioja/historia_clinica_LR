@@ -1,5 +1,15 @@
 package ar.lamansys.refcounterref.infraestructure.output.repository.file;
 
+import java.io.IOException;
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
+
+import org.apache.commons.io.FilenameUtils;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
+
 import ar.lamansys.refcounterref.application.port.ReferenceCounterReferenceFileStorage;
 import ar.lamansys.refcounterref.domain.enums.EReferenceCounterReferenceType;
 import ar.lamansys.refcounterref.domain.file.ReferenceCounterReferenceFileBo;
@@ -7,14 +17,6 @@ import ar.lamansys.refcounterref.domain.file.StoredFileBo;
 import ar.lamansys.sgx.shared.files.FileService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.io.FilenameUtils;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.multipart.MultipartFile;
-
-import java.util.List;
-import java.util.Map;
-import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
 @Slf4j
@@ -29,12 +31,12 @@ public class ReferenceCounterReferenceFileStorageImpl implements ReferenceCounte
 
     @Override
 	@Transactional //Transaccion compleja
-    public Integer save(Integer institutionId, Integer patientId, MultipartFile file, Integer type) {
+    public Integer save(Integer institutionId, Integer patientId, MultipartFile file, Integer type) throws IOException {
 
         String newFileName = fileService.createFileName(FilenameUtils.getExtension(file.getOriginalFilename()));
         String partialPath = buildPartialPath(patientId, newFileName);
-        String completePath = buildCompleteFilePath(partialPath);
-        fileService.saveFile(completePath, false, file);
+		String uuid = newFileName.split("\\.")[0];
+        fileService.transferMultipartFile(partialPath, uuid, "REFERENCIA_CONTRAREFERENCIA", file);
 
         Integer result = saveReferenceCounterReferenceFileMetadata(partialPath, file, type);
         log.debug(OUTPUT, result);
@@ -57,7 +59,7 @@ public class ReferenceCounterReferenceFileStorageImpl implements ReferenceCounte
         log.debug("Input parameters -> fileId {}, type {}", fileId, type);
         StoredFileBo result = referenceCounterReferenceFileRepository.findByIdAndType(fileId, type).stream().map(rcrf ->
                 new StoredFileBo(
-                        fileService.loadFile(rcrf.getPath()),
+                        fileService.loadFileRelativePath(rcrf.getPath()),
                         rcrf.getContentType(),
                         rcrf.getSize())).findFirst().orElse(null);
         log.debug(OUTPUT, result);
@@ -103,13 +105,6 @@ public class ReferenceCounterReferenceFileStorageImpl implements ReferenceCounte
                 type
         );
         Integer result = referenceCounterReferenceFileRepository.save(referenceCounterReferenceFile).getId();
-        log.debug(OUTPUT, result);
-        return result;
-    }
-
-    private String buildCompleteFilePath(String partialPath) {
-        log.debug("Input parameters -> partialPath {}", partialPath);
-        String result = fileService.buildRelativePath(partialPath);
         log.debug(OUTPUT, result);
         return result;
     }

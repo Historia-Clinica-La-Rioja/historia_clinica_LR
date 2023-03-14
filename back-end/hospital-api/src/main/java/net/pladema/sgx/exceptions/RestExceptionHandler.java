@@ -1,10 +1,14 @@
 package net.pladema.sgx.exceptions;
 
+import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Objects;
+import java.util.stream.Collectors;
 
 import javax.mail.MessagingException;
 import javax.persistence.EntityNotFoundException;
@@ -12,8 +16,14 @@ import javax.validation.ConstraintViolation;
 import javax.validation.ConstraintViolationException;
 import javax.validation.ValidationException;
 
+import ar.lamansys.sgx.shared.files.exception.FileServiceEnumException;
+import ar.lamansys.sgx.shared.files.exception.FileServiceException;
+
+import net.pladema.user.infrastructure.output.notification.exceptions.RestorePasswordNotificationException;
+
 import org.apache.commons.lang3.StringUtils;
 import org.apache.http.MethodNotSupportedException;
+import org.apache.tomcat.util.http.fileupload.impl.IOFileUploadException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.MessageSource;
@@ -23,6 +33,7 @@ import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.validation.BindException;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -199,5 +210,45 @@ public class RestExceptionHandler {
 		return new ApiErrorMessageDto(ex.getCode().toString(), ex.getMessage());
 	}
 
+	@ResponseStatus(HttpStatus.INSUFFICIENT_STORAGE)
+	@ExceptionHandler({ IOFileUploadException.class })
+	public ApiErrorMessageDto handleIOFileUploadException(IOFileUploadException ex) {
+		LOG.debug("IOFileUploadException exception -> {}", ex.getMessage());
+		return new ApiErrorMessageDto("IOFileUploadException", ex.getMessage());
+	}
+
+	@ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
+	@ExceptionHandler({ IOException.class })
+	public ApiErrorMessageDto handleIOException(IOException ex) {
+		LOG.error("IOException exception -> {}", ex.getMessage());
+		return new ApiErrorMessageDto("IOException", ex.getMessage());
+	}
+
+	@ExceptionHandler({ FileServiceException.class })
+	public ResponseEntity<ApiErrorMessageDto> handleFileServiceException(FileServiceException ex) {
+		LOG.error("FileServiceException exception -> {}", ex.getMessage());
+		var error = new ApiErrorMessageDto(ex.getCodeInfo(), ex.getMessage());
+		return new ResponseEntity<>(error, FileServiceEnumException.INSUFFICIENT_STORAGE.equals(ex.getCode()) ?
+				HttpStatus.INSUFFICIENT_STORAGE : HttpStatus.BAD_REQUEST);
+	}
+	@ResponseStatus(HttpStatus.PRECONDITION_FAILED)
+	@ExceptionHandler({ RestorePasswordNotificationException.class })
+	protected ApiErrorMessageDto handleRestorePasswordNotificationException(RestorePasswordNotificationException ex) {
+		LOG.debug("RestorePasswordNotificationException -> {}", ex.getMessage(), ex);
+		return new ApiErrorMessageDto(ex.getCode().toString(), ex.getMessage());
+	}
+
+	@ResponseStatus(HttpStatus.BAD_REQUEST)
+	@ExceptionHandler(BindException.class)
+	protected ApiErrorMessageDto handleBindException(BindException ex) {
+		LOG.debug(ex.getMessage());
+		LOG.error("BindException -> Error binding request values");
+		String[] fieldsAndValues = ex.getBindingResult()
+				.getAllErrors()
+				.stream()
+				.map(error -> String.format("%s=%s", ((FieldError) error).getField(),((FieldError) error).getRejectedValue()))
+				.toArray(String[]::new);
+		return new ApiErrorMessageDto("BindException", String.format("Error al leer el valor de %s", Arrays.toString(fieldsAndValues)));
+	}
 
 }

@@ -11,7 +11,7 @@ const CustomTopToolbar = () => {
 
 const AdminList = props => (
     <List {...props} filter={{username: "admin@example.com"}} actions={<CustomTopToolbar />} bulkActionButtons={false}>
-        <Datagrid rowClick="edit">
+        <Datagrid rowClick="show">
             <TextField source="username" />
             <BooleanField source="enable" />
             <SgxDateField source="lastLogin" />

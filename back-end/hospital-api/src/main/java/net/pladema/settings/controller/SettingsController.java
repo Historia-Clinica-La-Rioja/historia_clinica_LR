@@ -14,6 +14,8 @@ import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
 
+import java.io.IOException;
+
 @RestController
 @RequestMapping("/settings")
 @Tag(name = "Settings", description = "Settings")
@@ -38,7 +40,7 @@ public class SettingsController {
     @PostMapping(value = "/assets/{fileName:.+}/**", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     @PreAuthorize("hasAnyAuthority('ROOT')")
     public boolean uploadFile(HttpServletRequest request,
-                              @RequestPart("file") MultipartFile file) throws MethodNotSupportedException {
+                              @RequestPart("file") MultipartFile file) throws MethodNotSupportedException, IOException {
         //TODO: en service crear paquete exception con un exception handler en el controller o en otro paquete dentro de la capa de controler. Parserar a apierrordto
         logger.debug("Input parameters -> fileName={}",
                 request.getRequestURL());

@@ -1,5 +1,6 @@
 package net.pladema.address.repository;
 
+import net.pladema.address.controller.service.domain.DepartmentBo;
 import net.pladema.address.repository.entity.Department;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -27,4 +28,8 @@ public interface DepartmentRepository extends JpaRepository<Department, Short> {
 	@Transactional (readOnly = true)
 	@Query(value = "SELECT exists (SELECT 1 FROM Department as d WHERE d.province_id = :provinceId and d.id = :departmentId)", nativeQuery = true)
 	boolean existDepartmentInProvince(@Param("provinceId") Short provinceId, @Param("departmentId") Short departmentId);
+
+	@Transactional(readOnly = true)
+	@Query("SELECT d FROM Department as d WHERE d.id = :departmentId")
+	Department findDepartmentById(@Param("departmentId") Short departmentId);
 }

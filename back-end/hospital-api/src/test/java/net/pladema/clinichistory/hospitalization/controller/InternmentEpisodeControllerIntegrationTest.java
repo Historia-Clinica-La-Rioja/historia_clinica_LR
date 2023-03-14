@@ -5,10 +5,16 @@ import ar.lamansys.sgh.shared.infrastructure.input.service.events.SimplePublishS
 import ar.lamansys.sgx.shared.dates.configuration.LocalDateMapper;
 import ar.lamansys.sgx.shared.featureflags.application.FeatureFlagsService;
 import net.pladema.IntegrationController;
+import net.pladema.clinichistory.hospitalization.application.createEpisodeDocument.CreateEpisodeDocument;
+import net.pladema.clinichistory.hospitalization.application.deleteEpisodeDocument.DeleteEpisodeDocument;
+import net.pladema.clinichistory.hospitalization.application.downloadEpisodeDocument.DownloadEpisodeDocument;
+import net.pladema.clinichistory.hospitalization.application.getDocumentType.FetchDocumentType;
+import net.pladema.clinichistory.hospitalization.application.getEpisodeDocument.FetchEpisodeDocument;
 import net.pladema.clinichistory.hospitalization.controller.mapper.InternmentEpisodeMapper;
 import net.pladema.clinichistory.hospitalization.controller.mapper.PatientDischargeMapper;
 import net.pladema.clinichistory.hospitalization.controller.mapper.ResponsibleContactMapper;
 import net.pladema.clinichistory.hospitalization.controller.mocks.MocksInternmentPatient;
+import net.pladema.clinichistory.hospitalization.infrastructure.input.rest.mapper.EpisodeDocumentDtoMapper;
 import net.pladema.clinichistory.hospitalization.repository.InternmentEpisodeRepository;
 import net.pladema.clinichistory.hospitalization.repository.PatientDischargeRepository;
 import net.pladema.clinichistory.hospitalization.service.InternmentEpisodeService;
@@ -84,6 +90,24 @@ class InternmentEpisodeControllerIntegrationTest extends IntegrationController {
 
 	@MockBean
 	private HospitalApiPublisher hospitalApiPublisher;
+
+	@MockBean
+	private FetchEpisodeDocument fetchEpisodeDocument;
+
+	@MockBean
+	private CreateEpisodeDocument createEpisodeDocument;
+
+	@MockBean
+	private FetchDocumentType fetchDocumentType;
+
+	@MockBean
+	private DeleteEpisodeDocument deleteEpisodeDocument;
+
+	@MockBean
+	private DownloadEpisodeDocument downloadEpisodeDocument;
+
+	@MockBean
+	private EpisodeDocumentDtoMapper episodeDocumentDtoMapper;
 
 	@BeforeEach
 	void setup() {

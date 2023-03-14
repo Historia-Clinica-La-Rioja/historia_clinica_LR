@@ -21,7 +21,7 @@ export class AgendaSearchService {
 		return this.agendaFiltersSource.asObservable();
 	}
 
-	 getAgendas$(): Observable<AgendaOptionsData> {
+	getAgendas$(): Observable<AgendaOptionsData> {
 		return this.agendasSource.asObservable();
 	}
 
@@ -54,7 +54,7 @@ export class AgendaSearchService {
 			this.agendasSource.next({
 				agendas,
 				idAgendaSelected: this.agendaSelected?.id,
-				filteredBy: {idProfesional}
+				filteredBy: { idProfesional }
 			});
 		});
 	}
@@ -73,15 +73,27 @@ export class AgendaSearchService {
 	}
 
 	private updateProfesionalSelected(agendaSelected: CompleteDiaryDto): void {
-		this.agendaFiltersSource.next({idProfesional: agendaSelected.healthcareProfessionalId});
+		this.agendaFiltersSource.next({ idProfesional: agendaSelected.healthcareProfessionalId });
 	}
 
 	private updateSelectAgenda(): void {
-		this.agendasSource.next({
-			agendas: this.agendasSource.getValue()?.agendas,
-			idAgendaSelected: undefined,
-			filteredBy: this.agendasSource.getValue()?.filteredBy
-		});
+		const idProfesional = this.agendaSelected?.healthcareProfessionalId;
+		if (idProfesional) {
+			this.diariesService.getDiaries(idProfesional).subscribe(agendas => {
+				this.agendasSource.next({
+					agendas,
+					idAgendaSelected: undefined,
+					filteredBy: { idProfesional }
+				});
+			});
+		}
+		else {
+			this.agendasSource.next({
+				agendas: this.agendasSource.getValue()?.agendas,
+				idAgendaSelected: undefined,
+				filteredBy: this.agendasSource.getValue()?.filteredBy
+			});
+		}
 	}
 }
 

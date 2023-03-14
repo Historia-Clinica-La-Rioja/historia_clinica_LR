@@ -6,6 +6,7 @@ import java.util.Optional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import ar.lamansys.sgh.clinichistory.application.createDocument.DocumentFactory;
 import ar.lamansys.sgx.shared.dates.configuration.DateTimeProvider;
@@ -13,8 +14,6 @@ import net.pladema.clinichistory.hospitalization.service.InternmentEpisodeServic
 import net.pladema.clinichistory.hospitalization.service.epicrisis.CreateEpicrisisService;
 import net.pladema.clinichistory.hospitalization.service.epicrisis.EpicrisisValidator;
 import net.pladema.clinichistory.hospitalization.service.epicrisis.domain.EpicrisisBo;
-
-import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class CreateEpicrisisServiceImpl implements CreateEpicrisisService {
@@ -61,6 +60,7 @@ public class CreateEpicrisisServiceImpl implements CreateEpicrisisService {
         LocalDateTime now = dateTimeProvider.nowDateTime();
         epicrisis.setPerformedDate(now);
 		epicrisis.setConfirmed(!draft);
+		epicrisis.setPatientInternmentAge(internmentEpisodeService.getEntryDate(epicrisis.getEncounterId()).toLocalDate());
         epicrisis.setId(documentFactory.run(epicrisis, epicrisis.isConfirmed()));
         internmentEpisodeService.updateEpicrisisDocumentId(internmentEpisode.getId(), epicrisis.getId());
 

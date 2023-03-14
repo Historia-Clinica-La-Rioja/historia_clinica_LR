@@ -31,6 +31,16 @@ export class ServiceRequestService {
 		return this.http.get<DiagnosticReportInfoDto[]>(url, { params: queryParams });
 	}
 
+	getListByRoles(patientId: number, statusId: string, study: string, healthCondition: string, categoryId: string): Observable<DiagnosticReportInfoDto[]> {
+		let queryParams: HttpParams = new HttpParams();
+		queryParams = statusId ? queryParams.append('statusId', statusId) : queryParams;
+		queryParams = study ? queryParams.append('study', study) : queryParams;
+		queryParams = categoryId ? queryParams.append('category', categoryId) : queryParams;
+		queryParams = healthCondition ? queryParams.append('healthCondition', healthCondition) : queryParams;
+		const url = `${environment.apiBase}/institutions/${this.contextService.institutionId}/patient/${patientId}/service-requests/`;
+		return this.http.get<DiagnosticReportInfoDto[]>(url, { params: queryParams });
+	}
+
 	create(patientId: number, prescriptionDto: PrescriptionDto): Observable<number[]> {
 		const url = `${environment.apiBase}/institutions/${this.contextService.institutionId}/patient/${patientId}/service-requests`;
 		return this.http.post<number[]>(url, prescriptionDto);

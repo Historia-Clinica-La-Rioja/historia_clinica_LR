@@ -21,8 +21,7 @@
 					</app-medicacion-summary>
 				</div>
 				<div fxLayout="column" fxFlex="50%" fxLayoutGap="0px">
-					<app-alergias-summary [allergies]="allergies$ | async">
-					</app-alergias-summary>
+					<app-alergias-summary [allergiesDto]="allergies$ | async"></app-alergias-summary>
 				</div>
 			</div>
 			<div fxLayout="row" fxLayout.lt-md="column" fxLayoutGap="20px">

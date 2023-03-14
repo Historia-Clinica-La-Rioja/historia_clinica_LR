@@ -49,7 +49,7 @@ class HealthcareProfessionalServiceImplTest {
 	void existProfessional() {
 
 		when(healthcareProfessionalRepository.findActiveProfessionalById(any()))
-				.thenReturn(Optional.of(new HealthcareProfessionalVo(1, "1234/5", "Juan", "Perez", "1234",1, "Calos")));
+				.thenReturn(Optional.of(new HealthcareProfessionalVo(1, "1234/5", "Juan", "Perez", "1234",1, "Calos", "Segundo", "Perez")));
 
 		HealthcareProfessionalBo resultService = healthcareProfessionalService.findActiveProfessionalById(1);
 

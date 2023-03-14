@@ -126,13 +126,12 @@ public class AppointmentValidator implements ConstraintValidator<ValidAppointmen
             boolean hasProfessionalRole = loggedUserExternalService.hasAnyRoleInstitution(institutionId,
                     ERole.ESPECIALISTA_MEDICO, ERole.PROFESIONAL_DE_SALUD, ERole.ESPECIALISTA_EN_ODONTOLOGIA, ERole.ENFERMERO);
 
-            if (hasProfessionalRole && !diary.isProfessionalAssignShift()) {
+			Integer professionalId = healthcareProfessionalExternalService.getProfessionalId(UserInfo.getCurrentAuditor());
+
+            if (hasProfessionalRole &&
+					((diary.getHealthcareProfessionalId().equals(professionalId) || diary.getDiaryAssociatedProfessionalsId().contains(professionalId))
+							&& !diary.isProfessionalAssignShift())) {
                 buildResponse(context, "{appointment.new.professional.assign.not.allowed}");
-                valid = false;
-            }
-            Integer professionalId = healthcareProfessionalExternalService.getProfessionalId(UserInfo.getCurrentAuditor());
-            if (hasProfessionalRole && !diary.getHealthcareProfessionalId().equals(professionalId)) {
-                buildResponse(context, "{appointment.new.professional.id.invalid}");
                 valid = false;
             }
         }

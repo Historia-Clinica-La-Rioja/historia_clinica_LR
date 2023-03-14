@@ -1,11 +1,6 @@
 package net.pladema.hl7.supporting.exchange.services;
 
-import ca.uhn.fhir.rest.server.exceptions.AuthenticationException;
-import net.pladema.federar.configuration.FederarWSConfig;
-import net.pladema.hl7.supporting.conformance.InteroperabilityCondition;
-import net.pladema.hl7.supporting.exchange.services.federar.FederarLoginPayload;
-import net.pladema.hl7.supporting.exchange.services.federar.FederarLoginResponse;
-import net.pladema.hl7.supporting.exchange.services.federar.JWTUtils;
+import static org.springframework.http.MediaType.APPLICATION_JSON;
 
 import org.springframework.context.annotation.Conditional;
 import org.springframework.http.HttpEntity;
@@ -16,7 +11,12 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.RestTemplate;
 
-import static org.springframework.http.MediaType.APPLICATION_JSON;
+import ar.lamansys.sgx.shared.restclient.configuration.JWTUtils;
+import ca.uhn.fhir.rest.server.exceptions.AuthenticationException;
+import net.pladema.federar.configuration.FederarWSConfig;
+import net.pladema.hl7.supporting.conformance.InteroperabilityCondition;
+import net.pladema.hl7.supporting.exchange.services.federar.FederarLoginPayload;
+import net.pladema.hl7.supporting.exchange.services.federar.FederarLoginResponse;
 
 @Service
 @Conditional(InteroperabilityCondition.class)
@@ -54,6 +54,6 @@ public class BusAuthenticationService extends RestTemplate {
     }
 
     private String generateClientAssertion() {
-        return JWTUtils.generateJWT(configuration.getClaims(), configuration.getSignKey(), (int) configuration.getTokenExpiration());
+        return JWTUtils.generateJWT(configuration.getClaims(), configuration.getSignKey(), configuration.getTokenExpiration().toSeconds());
     }
 }

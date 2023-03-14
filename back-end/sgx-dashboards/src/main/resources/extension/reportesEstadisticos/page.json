@@ -1,0 +1,127 @@
+{
+  "layout": "components",
+  "content": [
+    {
+      "type": "tabs",
+      "args": {
+        "tabs": [
+          {
+            "args": {
+              "label": "Consultas",
+              "content": [
+                {
+                  "type": "cubejs-dashboard",
+                  "args": {
+                    "filters": {},
+                    "content": [
+                      {
+                        "type": "cubejs-chart",
+                        "args": {
+                          "query": "cantidadConsultasAmbulatorias"
+                        }
+                      },
+                      {
+                        "type": "cubejs-chart",
+                        "args": {
+                          "query": "cantidadConsultasAmbulatoriasEspecialidadProfesional",
+                          "showLegend": false
+                        }
+                      },
+                      {
+                        "type": "cubejs-dashboard",
+                        "args": {
+                          "filters": {
+                            "fecha": {
+                              "filter": {
+                                "member": "CantidadConsultasAmbulatorias.fecha_consulta",
+                                "operator": "inDateRange"
+                              },
+                              "type": "dateRangeISO",
+                              "label": "Fecha"
+                            }
+                          },
+                          "content": [
+                            {
+                              "type": "cubejs-chart",
+                              "args": {
+                                "query": "cantidadConsultasPorEspecialidad",
+                                "showLegend": false
+                              }
+                            },
+                            {
+                              "type": "cubejs-chart",
+                              "args": {
+                                "query": "cantidadConsultasTotal",
+                                "showLegend": false
+                              }
+                            },
+                            {
+                              "type": "cubejs-chart",
+                              "args": {
+                                "query": "cantidadConsultasTotalSexoF",
+                                "showLegend": false
+                              }
+                            },
+                            {
+                              "type": "cubejs-chart",
+                              "args": {
+                                "query": "cantidadConsultasTotalSexoM",
+                                "showLegend": false
+                              }
+                            },
+                            {
+                              "type": "cubejs-chart",
+                              "args": {
+                                "query": "cantidadConsultasTotalSexoX",
+                                "showLegend": false
+                              }
+                            }
+                          ]
+                        }
+                      }
+                    ]
+                  }
+                }
+              ]
+            }
+          },
+          {
+            "args": {
+              "label": "Turnos",
+              "content": [
+                {
+                  "type": "cubejs-dashboard",
+                  "args": {
+                    "filters": {},
+                    "content": [
+                      {
+                        "type": "cubejs-chart",
+                        "args": {
+                          "query": "cantidadTurnos"
+                        }
+                      },
+                      {
+                        "type": "cubejs-chart",
+                        "args": {
+                          "query": "cantidadTurnosPorEspecialidad",
+                          "showLegend": false
+                        }
+                      },
+                      {
+                        "type": "cubejs-chart",
+                        "args": {
+                          "query": "cantidadTurnosPorProfesional",
+                          "showLegend": false
+                        }
+                      }
+                    ]
+                  }
+                }
+              ]
+            }
+          }
+        ]
+      }
+    }
+  ]
+}

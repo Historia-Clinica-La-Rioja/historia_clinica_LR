@@ -19,8 +19,8 @@ public class HealthcareProfessionalBo {
 
     public HealthcareProfessionalBo(Integer id, String licenceNumber,
                                     Integer personId, String firstName,
-                                    String lastName, String identificationNumber, String nameSelfDetermination) {
-        this.person = new CHPersonBo(personId, firstName, lastName, identificationNumber, nameSelfDetermination);
+                                    String lastName, String identificationNumber, String nameSelfDetermination,String middleNames,String otherLastNames) {
+        this.person = new CHPersonBo(personId, firstName, lastName, identificationNumber, nameSelfDetermination,middleNames,otherLastNames);
         this.id = id;
         this.licenceNumber = licenceNumber;
     }

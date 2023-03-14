@@ -21,4 +21,14 @@ public class ProfessionalPersonBo {
 
 	private String nameSelfDetermination;
 
+	private String middleNames;
+
+	private String otherLastNames;
+
+	public ProfessionalPersonBo(Integer id, String firstName, String lastName, String nameSelfDetermination) {
+		this.id = id;
+		this.firstName = firstName;
+		this.lastName = lastName;
+		this.nameSelfDetermination = nameSelfDetermination;
+	}
 }

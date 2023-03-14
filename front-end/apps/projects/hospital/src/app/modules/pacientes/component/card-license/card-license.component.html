@@ -7,8 +7,8 @@
 					<strong>{{ 'pacientes.card_license.TITLE' | translate }}:</strong>
 				</div>
 
-				<mat-list fxLayoutGap="16px">
-					<div id="professionsWithLicense" *ngFor="let item of professionsWithLicense" fxLayout="row"
+				<mat-list>
+					<div id="professionsWithLicense" class="row" *ngFor="let item of professionsWithLicense" fxLayout="row"
 						fxLayoutGap="16px">
 
 						<div id="licenseNumber" fxLayout="row" >
@@ -30,6 +30,14 @@
 							<div id="nameProfessionAndSpecialty" fxLayout="row">
 								<span>{{ownProfessionsAndSpecialties|viewNameProfessionAndSpecialty:
 									convertToProfessionalLicenseNumberDto(item)}}</span>
+							</div>
+						</div>
+
+						<div>
+							<div id="deleteButton" fxLayout="row">
+								<button id="delete-button" color="warn" matSuffix mat-icon-button (click)="delete(item)">
+									<mat-icon>delete</mat-icon>
+								</button>
 							</div>
 						</div>
 					</div>

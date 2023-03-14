@@ -23,7 +23,7 @@ import net.pladema.user.infrastructure.input.rest.mapper.HospitalUserRoleMapper;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/user-role/institution/{institutionId}/user/{userId}")
-@PreAuthorize("hasPermission(#institutionId, 'ADMINISTRADOR_INSTITUCIONAL_BACKOFFICE')")
+@PreAuthorize("hasPermission(#institutionId, 'ADMINISTRADOR_INSTITUCIONAL_BACKOFFICE, ADMINISTRADOR_INSTITUCIONAL_PRESCRIPTOR')")
 public class UserRoleController {
 
     private final GetRolesByUser getRolesByUser;

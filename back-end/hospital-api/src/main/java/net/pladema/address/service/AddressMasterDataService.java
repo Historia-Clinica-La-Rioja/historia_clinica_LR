@@ -1,5 +1,7 @@
 package net.pladema.address.service;
 
+import net.pladema.address.controller.service.domain.DepartmentBo;
+
 import java.util.Collection;
 
 public interface AddressMasterDataService {
@@ -19,5 +21,7 @@ public interface AddressMasterDataService {
 	boolean existDepartmentInProvince(Short provinceId, Short departmentId);
 
 	boolean existCityInDepartment(Short departmentId, Integer cityId);
+
+	DepartmentBo findDepartmentById(Short departmentId);
 
 }

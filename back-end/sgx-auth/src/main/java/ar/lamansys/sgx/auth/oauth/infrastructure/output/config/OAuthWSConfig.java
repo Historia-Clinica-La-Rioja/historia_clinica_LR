@@ -1,9 +1,12 @@
 package ar.lamansys.sgx.auth.oauth.infrastructure.output.config;
 
-import ar.lamansys.sgx.shared.restclient.configuration.WSConfig;
-import lombok.Getter;
+import java.time.Duration;
+
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
+
+import ar.lamansys.sgx.shared.restclient.configuration.WSConfig;
+import lombok.Getter;
 
 @Component
 @Getter
@@ -11,8 +14,8 @@ public class OAuthWSConfig extends WSConfig {
 
     private static final String REALM_NAME_PLACEHOLDER = "REALM_NAME";
 
-	@Value("${ws.oauth.token-expiration:1800}")
-    private long tokenExpiration;
+	@Value("${ws.oauth.token-expiration:18s}")
+    private Duration tokenExpiration;
 
     @Value("${ws.oauth.enabled:false}")
     private boolean enabled;
