@@ -54,6 +54,7 @@
                                 "title": {
                                   "text": "Consultas por género"
                                 },
+                                "mode": "flat",
                                 "content": [
                                   {
                                     "type": "cubejs-chart",
@@ -163,6 +164,7 @@
                           "title": {
                             "text": "Turnos por estado"
                           },
+                          "mode": "flat",
                           "content": [
                             {
                               "type": "cubejs-chart",

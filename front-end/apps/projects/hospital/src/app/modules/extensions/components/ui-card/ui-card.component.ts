@@ -7,6 +7,7 @@ import { UIComponentDto, UILabelDto } from '@extensions/extensions-model';
 	styleUrls: ['./ui-card.component.scss']
 })
 export class UiCardComponent {
+	@Input() mode = '';
 	@Input() title: UILabelDto;
 	@Input() content: UIComponentDto[];
 

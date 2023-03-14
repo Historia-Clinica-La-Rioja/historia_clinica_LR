@@ -1,16 +1,16 @@
-mat-card {
+mat-card.flat {
 	background: none;
 	box-shadow: none !important;
-}
 
-.title{
-	margin-top: 1em;
-	text-align: center;
-}
+	.title {
+		margin-top: 1em;
+		text-align: center;
+	}
 
-app-ui-component-list {
-	display: flex;
-	flex-direction: row;
-	flex-wrap: wrap;
-	justify-content: space-around;
+	app-ui-component-list {
+		display: flex;
+		flex-direction: row;
+		flex-wrap: wrap;
+		justify-content: space-around;
+	}
 }
