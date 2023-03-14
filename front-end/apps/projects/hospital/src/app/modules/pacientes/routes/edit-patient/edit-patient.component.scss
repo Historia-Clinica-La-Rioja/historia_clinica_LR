@@ -2,20 +2,22 @@
 @import '../../../../../assets/styles/mat-mixins';
 
 .content {
-
 	.mat-radio-button {
 		@include form-radio-button;
 	}
 
-	@include mat-form-field-background-white
+	@include mat-form-field-background-white;
 }
 
 .form-row {
-	@include form-row;
+	display: flex;
+	flex-direction: row;
+	flex-wrap: baseline;
 }
 
 mat-form-field {
 	margin-right: 20px;
+	max-width: 30%;
 }
 
 div.form-buttons {
@@ -56,4 +58,8 @@ button.medical-coverage {
 }
 .mb-2{
 	margin-bottom: 2%;
+}
+
+.matInput{
+	max-width: none;
 }

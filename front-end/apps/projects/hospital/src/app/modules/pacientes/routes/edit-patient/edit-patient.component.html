@@ -18,12 +18,12 @@
 
 		<div class="content">
 			<form [formGroup]="form" (ngSubmit)="save()">
-				<div class="form-row">
-					<div>
+				<div fxLayout="row" fxLayoutGap="15px">
+					<div fxLayout="column">
 						<div>
 							<span [translate]="'pacientes.form.IDENTIFICATION_TYPE'"></span>*
 						</div>
-						<mat-form-field appearance="outline">
+						<mat-form-field appearance="outline" class="matInput">
 							<mat-select id="identificationTypeId" name="identificationTypeId"
 								formControlName="identificationTypeId"
 								placeholder="{{'pacientes.form.SELECT' | translate}}">
@@ -35,12 +35,12 @@
 							<mat-error [translate]="'pacientes.form.REQUIRED'"></mat-error>
 						</mat-form-field>
 					</div>
+					<div fxLayout="column">
 
-					<div>
 						<div>
 							<span [translate]="'pacientes.form.IDENTIFICATION_NUMBER'"></span>*
 						</div>
-						<mat-form-field appearance="outline">
+						<mat-form-field appearance="outline" class="matInput">
 							<input id="identificationNumber" name="identificationNumber"
 								formControlName="identificationNumber"
 								placeholder="{{'pacientes.form.ONLY_NUMBERS' | translate}}" matInput>
@@ -91,12 +91,12 @@
 						</div>
 					</div>
 				</ng-template>
-				<div class="form-row">
+				<div class="form-row" fxLayoutGap="15px">
 					<div>
 						<div>
 							<span [translate]="'pacientes.search_patient.PATIENT_ID'"></span>
 						</div>
-						<mat-form-field appearance="outline">
+						<mat-form-field appearance="outline" class="matInput">
 							<input id="patientId" name="patientId" formControlName="patientId"
 								placeholder="{{'pacientes.form.ONLY_NUMBERS' | translate}}" matInput>
 						</mat-form-field>
@@ -106,7 +106,7 @@
 						<div>
 							<span [translate]="'pacientes.form.STATE'"></span>
 						</div>
-						<mat-form-field appearance="outline">
+						<mat-form-field appearance="outline" class="matInput">
 							<mat-select id="stateId" name="stateId" formControlName="stateId"
 								placeholder="{{'pacientes.form.SELECT' | translate}}">
 								<mat-option *ngFor="let state of typesPatient" [value]="state.id">
@@ -134,15 +134,13 @@
 				<div>
 					<span [translate]="'pacientes.form.FIRST_NAMES_TITLE'"></span>*
 				</div>
-				<div class="form-row">
-					<div>
-						<mat-form-field appearance="outline">
-							<input id="firstName" name="firstName" formControlName="firstName"
-								placeholder="{{'pacientes.form.FIRST_NAME' | translate}}"
-								[maxLength]="PERSON_MAX_LENGTH.firstName" matInput>
-							<mat-error [translate]="'pacientes.form.REQUIRED'"></mat-error>
-						</mat-form-field>
-					</div>
+				<div class="form-row" fxLayaoutGap="15px">
+					<mat-form-field appearance="outline">
+						<input id="firstName" name="firstName" formControlName="firstName"
+							placeholder="{{'pacientes.form.FIRST_NAME' | translate}}"
+							[maxLength]="PERSON_MAX_LENGTH.firstName" matInput>
+						<mat-error [translate]="'pacientes.form.REQUIRED'"></mat-error>
+					</mat-form-field>
 
 					<mat-form-field appearance="outline">
 						<input id="middleNames" name="middleNames" formControlName="middleNames"
@@ -156,17 +154,21 @@
 						<div>
 							<span [translate]="'pacientes.form.LAST_NAME_TITLE'"></span>*
 						</div>
-						<mat-form-field appearance="outline">
-							<input id="lastName" name="lastName" formControlName="lastName"
-								placeholder="{{'pacientes.form.LAST_NAME' | translate}}"
-								[maxLength]="PERSON_MAX_LENGTH.lastName" matInput>
-							<mat-error [translate]="'pacientes.form.REQUIRED'"></mat-error>
-						</mat-form-field>
-						<mat-form-field appearance="outline">
-							<input id="otherLastNames" name="otherLastNames" formControlName="otherLastNames"
-								placeholder="{{'pacientes.form.OTHER_LAST_NAMES' | translate}}"
-								[maxLength]="PERSON_MAX_LENGTH.otherLastNames" matInput>
-						</mat-form-field>
+						<div fxLayout="row">
+							<mat-form-field appearance="outline" class="matInput">
+								<input id="lastName" name="lastName" formControlName="lastName"
+									placeholder="{{'pacientes.form.LAST_NAME' | translate}}"
+									[maxLength]="PERSON_MAX_LENGTH.lastName" matInput>
+								<mat-error [translate]="'pacientes.form.REQUIRED'"></mat-error>
+							</mat-form-field>
+
+							<mat-form-field appearance="outline" class="matInput">
+								<input id="otherLastNames" name="otherLastNames" formControlName="otherLastNames"
+									placeholder="{{'pacientes.form.OTHER_LAST_NAMES' | translate}}"
+									[maxLength]="PERSON_MAX_LENGTH.otherLastNames" matInput>
+							</mat-form-field>
+						</div>
+
 					</div>
 				</div>
 
@@ -256,7 +258,8 @@
 				<div>
 					<span [translate]="'pacientes.form.ADDRESS'"></span>
 				</div>
-				<div class="form-row">
+
+				<div class="form-row adress">
 					<mat-form-field appearance="outline">
 						<mat-select id="addressCountryId" name="addressCountryId" formControlName="addressCountryId"
 							placeholder="{{'pacientes.form.ADDRESS_COUNTRY' | translate}}">
@@ -321,6 +324,8 @@
 							[translate]="'pacientes.form.INVALID'"></mat-error>
 					</mat-form-field>
 
+				</div>
+				<div class="form-row adress">
 					<mat-form-field appearance="outline">
 						<input id="addressStreet" name="addressStreet" formControlName="addressStreet" maxlength="35"
 							maxlength="35" placeholder="{{'pacientes.form.ADDRESS_STREET' | translate}}" matInput>
@@ -346,12 +351,12 @@
 							placeholder="{{'pacientes.form.ADDRESS_QUARTER' | translate}}" matInput>
 					</mat-form-field>
 				</div>
-				<div class="form-row mb-2">
+				<div class="form-row mb-2" fxLayoutGap="15px">
 					<div>
 						<div>
 							<span [translate]="'pacientes.form.PHONE_PREFIX'"></span>
 						</div>
-						<mat-form-field class="prefix-field" appearance="outline">
+						<mat-form-field class="prefix-field" appearance="outline" class="matInput">
 							<input id="phonePrefix" name="phonePrefix" (keyup)="updatePhoneValidators()"
 								formControlName="phonePrefix" maxlength="4" minlength="2"
 								placeholder="{{'pacientes.form.PHONE_PREFIX' | translate}}" matInput>
@@ -370,7 +375,7 @@
 						<div>
 							<span [translate]="'pacientes.form.PHONE_NUMBER'"></span>
 						</div>
-						<mat-form-field appearance="outline">
+						<mat-form-field appearance="outline" class="matInput">
 							<input id="phoneNumber" (keyup)="updatePhoneValidators()" name="phoneNumber"
 								formControlName="phoneNumber" maxlength="15" minlength="15"
 								placeholder="{{'pacientes.form.PHONE_NUMBER' | translate}}" matInput>
