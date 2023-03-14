@@ -37,7 +37,7 @@
 
 		<h2>{{'internaciones.anamnesis.externalCause.HOW_IT_HAPPEND'|translate}}</h2>
 
-		<app-event-serch (eventSelected)="onEventSelected($event)"></app-event-serch>
+		<app-event-serch [searchConceptsLocallyFF]="searchConceptsLocallyFF" (eventSelected)="onEventSelected($event)"></app-event-serch>
 
 		<app-table-event></app-table-event>
 

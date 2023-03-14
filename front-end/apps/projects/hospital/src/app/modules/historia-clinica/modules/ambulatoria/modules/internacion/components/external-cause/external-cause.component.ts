@@ -1,6 +1,6 @@
-import { Component, EventEmitter, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { SnomedDto } from '@api-rest/api-model';
-import { ExternalCauseDto} from '@api-rest/api-model';
+import { ExternalCauseDto } from '@api-rest/api-model';
 import { EEventLocation } from '@api-rest/api-model';
 import { EExternalCauseType } from '@api-rest/api-model';
 import { ExternalCauseService } from '../../services/external-cause.service';
@@ -25,6 +25,7 @@ export class ExternalCauseComponent implements OnInit {
 	selectedOptionEventLocation: EEventLocation;
 	selectedOptionExternalCauseType: EExternalCauseType;
 	idExternalCause = 0;
+	@Input() searchConceptsLocallyFF = false;
 	@Output() event = new EventEmitter<ExternalCauseDto>();
 
 	constructor(
