@@ -211,7 +211,7 @@ public class AppointmentsController {
 
 
 	@GetMapping(value="/list/{healthcareProfessionalId}")
-    @PreAuthorize("hasPermission(#institutionId, 'ADMINISTRATIVO, ESPECIALISTA_MEDICO, PROFESIONAL_DE_SALUD, ESPECIALISTA_EN_ODONTOLOGIA, ADMINISTRADOR_AGENDA, ENFERMERO')")
+    @PreAuthorize("hasPermission(#institutionId, 'ADMINISTRATIVO, ESPECIALISTA_MEDICO, PROFESIONAL_DE_SALUD, ESPECIALISTA_EN_ODONTOLOGIA, ADMINISTRADOR_AGENDA, ENFERMERO, ADMINISTRATIVO_RED_DE_IMAGENES')")
     public ResponseEntity<Collection<AppointmentListDto>> getList(
             @PathVariable(name = "institutionId") Integer institutionId,
 			@PathVariable(name = "healthcareProfessionalId") Integer healthcareProfessionalId,
