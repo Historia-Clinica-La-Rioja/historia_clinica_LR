@@ -45,6 +45,11 @@ const routes: Routes = [
 				data: { featureFlag: AppFeature.HABILITAR_REPORTES }
 			},
 			{ path: 'extension/:menuItemId', component: InstitutionExtensionComponent, data: { enableDownloadCSV: true } },
+			{
+				path: 'auditoria',
+				loadChildren: () => import('../auditoria/auditoria.module').then(m => m.AuditoriaModule),
+
+			},
 		],
 		canActivate: [RoleGuard],
 		data: {

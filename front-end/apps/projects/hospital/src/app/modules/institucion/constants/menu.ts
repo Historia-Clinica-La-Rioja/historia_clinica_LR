@@ -98,5 +98,16 @@ export const SIDEBAR_MENU: MenuItemDef[] = [
 		],
 		featureFlag: AppFeature.HABILITAR_REPORTES
 	},
-
+	{
+		text: 'app.menu.AUDIT',
+		icon: 'groups',
+		id: 'auditoria',
+		url: './auditoria',
+		permissions: [
+			ERole.ADMINISTRATIVO,
+			ERole.ENFERMERO,
+			ERole.ADMINISTRADOR_DE_CAMAS,
+			ERole.ADMINISTRATIVO_RED_DE_IMAGENES
+		],
+	},
 ];

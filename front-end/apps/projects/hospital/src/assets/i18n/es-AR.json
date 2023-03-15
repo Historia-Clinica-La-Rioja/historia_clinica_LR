@@ -15,7 +15,8 @@
 			"PERFIL": "Mi cuenta",
 			"TURNOS": "Gestión de turnos",
 			"REPORTES": "Reportes",
-			"LOGOUT": "Cerrar sesión"
+			"LOGOUT": "Cerrar sesión",
+			"AUDIT": "Auditoria"
 		}
 	},
 	"buttons": {
