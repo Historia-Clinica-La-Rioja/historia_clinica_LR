@@ -45,7 +45,7 @@ export class NewEpisodePediatricTriageComponent {
 			episodeId => {
 				const patientId = body.administrative?.patient?.id ? body.administrative.patient.id : null;
 				if (patientId && this.hasEmergencyCareRelatedRole) {
-					this.router.navigate([this.routePrefix + "/ambulatoria/paciente/" + patientId])
+					this.router.navigate([this.routePrefix + "/ambulatoria/paciente/" + patientId], { state: { toEmergencyCareTab: true } })
 				}
 				else if (patientId) {
 					const url = `${this.routePrefix}/pacientes/profile/${patientId}`;

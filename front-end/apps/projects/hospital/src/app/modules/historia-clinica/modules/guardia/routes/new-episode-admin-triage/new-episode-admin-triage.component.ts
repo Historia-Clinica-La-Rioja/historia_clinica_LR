@@ -46,7 +46,7 @@ export class NewEpisodeAdminTriageComponent {
 				this.emergencyCareEpisodeService.getAdministrative(emergencyCareId).subscribe((dto: ResponseEmergencyCareDto) => {
 					const patientId = dto.patient ? dto.patient.id : null;
 					if (patientId && this.hasEmergencyCareRelatedRole) {
-						this.router.navigate([this.routePrefix + "/ambulatoria/paciente/" + patientId])
+						this.router.navigate([this.routePrefix + "/ambulatoria/paciente/" + patientId], { state: { toEmergencyCareTab: true } })
 					}
 					else if (patientId) {
 						const url = `${this.routePrefix}/pacientes/profile/${patientId}`;
