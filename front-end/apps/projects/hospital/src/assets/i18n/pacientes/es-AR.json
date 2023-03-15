@@ -275,6 +275,11 @@
       "buttons": {
         "VIEW_EPISODE": "VER GUARDIA"
       }
-    }
+    },
+	"audit":{
+		"TITLE":"Auditoria",
+		"TITLE_FUSION_PATIENTS":"Fusión de pacientes",
+		"SUBTITLE_LIST_PATIENTS": "Listado de posibles duplicados"
+	}
   }
 }
