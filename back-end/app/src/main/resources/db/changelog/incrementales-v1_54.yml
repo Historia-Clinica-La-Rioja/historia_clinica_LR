@@ -1,3 +1,51 @@
 databaseChangeLog: 
-    - logicalFilePath: incrementales-v1_54 
+    - logicalFilePath: incrementales-v1_54
+
+    - changeSet:
+        id: snomed_relationship-createTable
+        comment: Create table snomed_relationship
+        author: mvenere
+        changes:
+          - createTable:
+              tableName: snomed_relationship
+              columns:
+                - column:
+                    autoIncrement: true
+                    constraints:
+                      primaryKey: true
+                      primaryKeyName: PK_snomed_relationship
+                    name: id
+                    type: bigint
+                - column:
+                    name: snomed_id
+                    type: varchar(20)
+                - column:
+                    name: effective_time
+                    type: date
+                - column:
+                    name: active
+                    type: smallint
+                - column:
+                    name: module_id
+                    type: varchar(20)
+                - column:
+                    name: source_id
+                    type: varchar(20)
+                - column:
+                    name: destination_id
+                    type: varchar(20)
+                - column:
+                    name: relationship_group
+                    type: varchar(20)
+                - column:
+                    name: type_id
+                    type: varchar(20)
+                - column:
+                    name: characteristic_type_id
+                    type: varchar(20)
+                - column:
+                    name: modifier_id
+                    type: varchar(20)
+
+
 
