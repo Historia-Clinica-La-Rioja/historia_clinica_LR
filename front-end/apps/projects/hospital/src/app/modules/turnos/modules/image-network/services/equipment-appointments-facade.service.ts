@@ -9,7 +9,7 @@ import { ReplaySubject, Observable, forkJoin } from 'rxjs';
 import { first, map } from 'rxjs/operators';
 import { HolidaysService } from '@api-rest/services/holidays.service';
 import { dateDtoToDate } from '@api-rest/mapper/date-dto.mapper';
-import { APPOINTMENT_STATES_ID } from '@turnos/constants/appointment';
+import { APPOINTMENT_STATES_ID, CANCEL_STATE_ID } from '@turnos/constants/appointment';
 
 @Injectable()
 export class EquipmentAppointmentsFacadeService {
@@ -77,6 +77,22 @@ export class EquipmentAppointmentsFacadeService {
 			);
 	}
 
+	cancelAppointment(appointmentId: number, motivo: string): Observable<boolean> {
+		return this.appointmentsService.changeStateAppointmentEquipment(appointmentId, CANCEL_STATE_ID, motivo)
+			.pipe(
+				map((response: boolean) => {
+					if (response) {
+						this.appointments$.pipe(first()).subscribe((events: CalendarEvent[]) => {
+							const validEvents = events.filter(event => event.meta?.appointmentId !== appointmentId);
+							this.appointmenstEmitter.next(validEvents);
+						});
+						return true;
+					}
+					return false;
+				})
+			);
+	}
+
 	updatePhoneNumber(appointmentId: number, phonePrefix: string, phoneNumber: string): Observable<boolean> {
 		return this.appointmentsService.updatePhoneNumber(appointmentId, phonePrefix, phoneNumber)
 			.pipe(
@@ -123,7 +139,7 @@ export class EquipmentAppointmentsFacadeService {
 	}
 
 	updateAppointment(appointment: UpdateAppointmentDto) {
-		return this.appointmentsService.updateAppointmentEquipment(appointment)
+		return this.appointmentsService.updateAppointment(appointment)
 			.pipe(
 				map(() => {
 						this.appointments$.subscribe(

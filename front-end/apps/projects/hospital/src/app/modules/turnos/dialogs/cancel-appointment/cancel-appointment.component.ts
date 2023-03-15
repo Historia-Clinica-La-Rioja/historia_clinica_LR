@@ -3,6 +3,7 @@ import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { SnackBarService } from '@presentation/services/snack-bar.service';
 import { AppointmentsFacadeService } from '../../services/appointments-facade.service';
+import { EquipmentAppointmentsFacadeService } from '@turnos/modules/image-network/services/equipment-appointments-facade.service';
 
 @Component({
   selector: 'app-cancel-appointment',
@@ -15,10 +16,14 @@ export class CancelAppointmentComponent implements OnInit {
 
 	constructor(
 		public dialogRef: MatDialogRef<CancelAppointmentComponent>,
-		@Inject(MAT_DIALOG_DATA) public appointmentId: number,
+		@Inject(MAT_DIALOG_DATA) public data: {
+			appointmentId: number,
+			imageNetworkAppointment: boolean
+		},
 		private readonly formBuilder: FormBuilder,
 		private readonly snackBarService: SnackBarService,
-		private readonly appointmentsFacade: AppointmentsFacadeService
+		private readonly appointmentsFacade: AppointmentsFacadeService,
+		private readonly equipmentAppointmensFacade: EquipmentAppointmentsFacadeService,
 	) {
 	}
 
@@ -30,16 +35,31 @@ export class CancelAppointmentComponent implements OnInit {
 
 	cancel(): void {
 		if (this.formMotivo.controls.motivo.valid) {
-			this.appointmentsFacade.cancelAppointment(this.appointmentId, this.formMotivo.controls.motivo.value).subscribe(() => {
-				this.dialogRef.close(true);
-				this.snackBarService.showSuccess('turnos.cancel.SUCCESS');
-			}, _ => {
-				this.snackBarService.showError(`Error al cancelar turno`);
-			});
+			if (this.data.imageNetworkAppointment){
+				this.callEquimentAppointmentsFacade();
+			} else {
+				this.callAppointmentsFacade();
+			}
 		}
 
 	}
 
+	callEquimentAppointmentsFacade(){
+		this.equipmentAppointmensFacade.cancelAppointment(this.data.appointmentId, this.formMotivo.controls.motivo.value).subscribe(() => {
+			this.dialogRef.close(true);
+			this.snackBarService.showSuccess('turnos.cancel.SUCCESS');
+		}, _ => {
+			this.snackBarService.showError(`Error al cancelar turno`);
+		});
+	}
 
+	callAppointmentsFacade(){
+		this.appointmentsFacade.cancelAppointment(this.data.appointmentId, this.formMotivo.controls.motivo.value).subscribe(() => {
+			this.dialogRef.close(true);
+			this.snackBarService.showSuccess('turnos.cancel.SUCCESS');
+		}, _ => {
+			this.snackBarService.showError(`Error al cancelar turno`);
+		});
+	}
 
 }

@@ -1,0 +1,10 @@
+@mixin app-equipment-appointment($theme) {
+    $palette-primary: map-get($theme, primary);
+
+    app-image-network-appointment {
+        .assigned {
+            background-color: mat-color($palette-primary, A700);
+        }
+    }
+
+}

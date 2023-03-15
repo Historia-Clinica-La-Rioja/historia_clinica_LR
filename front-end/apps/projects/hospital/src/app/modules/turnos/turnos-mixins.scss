@@ -1,10 +1,12 @@
 @import "./routes/agenda/agenda.component.scss-theme.scss";
 @import "./dialogs/appointment/appointment.component.scss-theme.scss";
+@import "./modules/image-network/components/image-network-appointment/image-network-appointment.component.scss-theme.scss";
 @import "./modules/image-network/components/equipment-diary/equipment-diary..component.scss-theme.scss";
 
 @mixin turnos-mixins($theme) {
     @include app-agenda($theme);
     @include app-appointment($theme);
+    @include app-equipment-appointment($theme);
     @include app-equipment-diary($theme);
 }
 

@@ -33,6 +33,7 @@ import { ConfirmPrintAppointmentComponent } from './dialogs/confirm-print-appoin
 import { CustomDateFormatter } from './services/custom-date-formatter.service';
 import { AppointmentResultViewComponent } from './components/appointment-result-view/appointment-result-view.component';
 import { ImageNetworkModule } from "./modules/image-network/image-network.module";
+import { EquipmentAppointmentsFacadeService } from './modules/image-network/services/equipment-appointments-facade.service';
 
 
 @NgModule({
@@ -78,7 +79,8 @@ import { ImageNetworkModule } from "./modules/image-network/image-network.module
 		{
 			provide: CalendarDateFormatter,
 			useClass: CustomDateFormatter,
-		}
+		},
+		EquipmentAppointmentsFacadeService
 	]
 })
 export class TurnosModule {
