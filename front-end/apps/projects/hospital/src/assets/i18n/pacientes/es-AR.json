@@ -279,7 +279,8 @@
 	"audit":{
 		"TITLE":"Auditoria",
 		"TITLE_FUSION_PATIENTS":"Fusión de pacientes",
-		"SUBTITLE_LIST_PATIENTS": "Listado de posibles duplicados"
+		"SUBTITLE_LIST_PATIENTS": "Listado de posibles duplicados",
+		"TITLE_CONTROL_DUPLICATE_PATIENTS":"Control de pacientes duplicados"
 	}
   }
 }
