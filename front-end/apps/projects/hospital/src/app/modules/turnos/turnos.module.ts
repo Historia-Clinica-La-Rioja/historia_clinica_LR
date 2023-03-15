@@ -34,6 +34,7 @@ import { CustomDateFormatter } from './services/custom-date-formatter.service';
 import { AppointmentResultViewComponent } from './components/appointment-result-view/appointment-result-view.component';
 import { ImageNetworkModule } from "./modules/image-network/image-network.module";
 import { EquipmentAppointmentsFacadeService } from './modules/image-network/services/equipment-appointments-facade.service';
+import { WorklistComponent } from './components/worklist/worklist.component';
 
 
 @NgModule({
@@ -61,6 +62,7 @@ import { EquipmentAppointmentsFacadeService } from './modules/image-network/serv
 		NewAppointmentComponent,
 		NewAttentionComponent,
 		ConfirmPrintAppointmentComponent,
+  		WorklistComponent
 	],
 	imports: [
 		CommonModule,
