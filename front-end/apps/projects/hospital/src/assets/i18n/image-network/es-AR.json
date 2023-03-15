@@ -8,7 +8,8 @@
         },
         "equipment-diary-setup": {
             "EQUIPMENT": "Equipo",
-			"NO_EQUIPMENT": "No existen equipos para ese sector"
+			"NO_EQUIPMENT": "No existen equipos para ese sector",
+            "EQUIPMENT_SELECT": "Seleccione equipo"
         },
         "equipment-calendar": {
             "TODAY": "hoy",

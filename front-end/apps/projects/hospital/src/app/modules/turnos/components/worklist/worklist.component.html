@@ -1,3 +1,14 @@
 <section>
-    <h2 class="page-title">Lista de trabajo</h2>
+    <mat-card>
+        <h2 class="page-title">Lista de trabajo</h2>
+
+        <mat-form-field appearance="outline">
+            <mat-label [translate]="'image-network.equipment-diary-setup.EQUIPMENT_SELECT'"></mat-label>
+            <mat-select id="equipment" fxFlex="98%">
+                <mat-option *ngFor="let equipment of equipments" id="equipment.name" [value]="equipment.name">
+                    {{equipment.name}}
+                </mat-option>
+            </mat-select>
+        </mat-form-field>
+    </mat-card>
 </section>
