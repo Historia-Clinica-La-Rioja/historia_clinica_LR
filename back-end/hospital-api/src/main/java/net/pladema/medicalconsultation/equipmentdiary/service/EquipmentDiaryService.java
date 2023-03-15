@@ -1,5 +1,6 @@
 package net.pladema.medicalconsultation.equipmentdiary.service;
 
+import net.pladema.medicalconsultation.diary.service.domain.DiaryBo;
 import net.pladema.medicalconsultation.equipmentdiary.service.domain.CompleteEquipmentDiaryBo;
 import net.pladema.medicalconsultation.equipmentdiary.service.domain.EquipmentDiaryBo;
 
@@ -20,4 +21,6 @@ public interface EquipmentDiaryService {
 	Optional<CompleteEquipmentDiaryBo> getEquipmentDiary(Integer equipmentDiaryId);
 
 	Integer updateDiary(EquipmentDiaryBo equipmentDiaryBo);
+
+    Optional<EquipmentDiaryBo> getEquipmentDiaryByAppointment(Integer appointmentId);
 }

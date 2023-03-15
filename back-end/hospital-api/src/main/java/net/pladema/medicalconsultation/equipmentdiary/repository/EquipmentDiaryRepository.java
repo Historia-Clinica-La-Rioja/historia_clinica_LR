@@ -1,6 +1,7 @@
 package net.pladema.medicalconsultation.equipmentdiary.repository;
 
 import ar.lamansys.sgx.shared.auditable.repository.SGXAuditableEntityJPARepository;
+import net.pladema.medicalconsultation.diary.repository.entity.Diary;
 import net.pladema.medicalconsultation.equipmentdiary.repository.domain.CompleteEquipmentDiaryListVo;
 import net.pladema.medicalconsultation.equipmentdiary.repository.entity.EquipmentDiary;
 
@@ -85,5 +86,11 @@ public interface EquipmentDiaryRepository extends SGXAuditableEntityJPARepositor
 			"WHERE ed.id = :equipmentDiaryId ")
 	Optional<CompleteEquipmentDiaryListVo> getEquipmentDiary(@Param("equipmentDiaryId") Integer equipmentDiaryId);
 
+	@Transactional(readOnly = true)
+	@Query("SELECT d " +
+			"FROM EquipmentDiary d " +
+			"JOIN EquipmentAppointmentAssn aa ON aa.pk.equipmentDiaryId = d.id " +
+			"WHERE aa.pk.appointmentId = :appointmentId ")
+	Optional<EquipmentDiary> getDiaryByAppointment(@Param("appointmentId") Integer appointmentId);
 
 }

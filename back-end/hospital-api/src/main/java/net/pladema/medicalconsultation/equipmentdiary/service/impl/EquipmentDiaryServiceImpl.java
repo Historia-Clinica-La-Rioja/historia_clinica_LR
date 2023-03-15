@@ -1,18 +1,35 @@
 package net.pladema.medicalconsultation.equipmentdiary.service.impl;
 
 
+import static ar.lamansys.sgx.shared.dates.utils.DateUtils.getWeekDay;
+import static ar.lamansys.sgx.shared.dates.utils.DateUtils.isBetween;
+import static java.util.stream.Collectors.counting;
+import static java.util.stream.Collectors.groupingBy;
+import static java.util.stream.Collectors.toList;
+
+import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+import java.util.function.Function;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
+
+import javax.validation.constraints.NotNull;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import lombok.RequiredArgsConstructor;
-
-
-import net.pladema.medicalconsultation.appointment.repository.entity.Appointment;
 import net.pladema.medicalconsultation.appointment.service.AppointmentService;
 import net.pladema.medicalconsultation.appointment.service.UpdateAppointmentOpeningHoursService;
 import net.pladema.medicalconsultation.appointment.service.domain.AppointmentBo;
-import net.pladema.medicalconsultation.diary.service.domain.DiaryBo;
-import net.pladema.medicalconsultation.diary.service.domain.DiaryOpeningHoursBo;
 import net.pladema.medicalconsultation.diary.service.domain.OverturnsLimitException;
-import net.pladema.medicalconsultation.diary.service.exception.DiaryEnumException;
 import net.pladema.medicalconsultation.diary.service.exception.DiaryException;
 import net.pladema.medicalconsultation.equipmentdiary.repository.EquipmentDiaryRepository;
 import net.pladema.medicalconsultation.equipmentdiary.repository.domain.CompleteEquipmentDiaryListVo;
@@ -22,28 +39,7 @@ import net.pladema.medicalconsultation.equipmentdiary.service.EquipmentDiaryOpen
 import net.pladema.medicalconsultation.equipmentdiary.service.EquipmentDiaryService;
 import net.pladema.medicalconsultation.equipmentdiary.service.domain.CompleteEquipmentDiaryBo;
 import net.pladema.medicalconsultation.equipmentdiary.service.domain.EquipmentDiaryBo;
-
-
 import net.pladema.medicalconsultation.equipmentdiary.service.domain.EquipmentDiaryOpeningHoursBo;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-
-import javax.validation.constraints.NotNull;
-
-import java.time.LocalDate;
-import java.util.*;
-import java.util.function.Function;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
-
-import static ar.lamansys.sgx.shared.dates.utils.DateUtils.getWeekDay;
-import static ar.lamansys.sgx.shared.dates.utils.DateUtils.isBetween;
-import static java.util.stream.Collectors.counting;
-import static java.util.stream.Collectors.groupingBy;
-import static java.util.stream.Collectors.toList;
 
 @Service
 @RequiredArgsConstructor
@@ -166,6 +162,28 @@ public class EquipmentDiaryServiceImpl implements EquipmentDiaryService {
 			return equipmentDiaryToUpdate.getId();
 		}).get();
 
+	}
+
+	@Override
+	public Optional<EquipmentDiaryBo> getEquipmentDiaryByAppointment(Integer appointmentId) {
+		LOG.debug("Input parameters -> appointmentId {}", appointmentId);
+		Optional<EquipmentDiaryBo> result = equipmentDiaryRepository.getDiaryByAppointment(appointmentId).map(this::createDiaryBoInstance);
+		LOG.debug(OUTPUT, result);
+		return result;
+	}
+
+	private EquipmentDiaryBo createDiaryBoInstance(EquipmentDiary diary) {
+		LOG.debug("Input parameters -> diary {}", diary);
+		EquipmentDiaryBo result = new EquipmentDiaryBo();
+		result.setId(diary.getId());
+		result.setStartDate(diary.getStartDate());
+		result.setEndDate(diary.getEndDate());
+		result.setAppointmentDuration(diary.getAppointmentDuration());
+		result.setAutomaticRenewal(diary.isAutomaticRenewal());
+		result.setIncludeHoliday(diary.isIncludeHoliday());
+		result.setDeleted(diary.isDeleted());
+		LOG.debug(OUTPUT, result);
+		return result;
 	}
 
 	private void updatedExistingAppointments(EquipmentDiaryBo diaryToUpdate,

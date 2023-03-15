@@ -16,6 +16,7 @@ import ar.lamansys.sgx.shared.dates.configuration.LocalDateMapper;
 import ar.lamansys.sgx.shared.dates.controller.dto.DateTimeDto;
 
 import net.pladema.medicalconsultation.appointment.controller.constraints.ValidEquipmentAppointment;
+import net.pladema.medicalconsultation.appointment.controller.constraints.ValidEquipmentAppointmentDiary;
 import net.pladema.medicalconsultation.appointment.controller.dto.AppointmentEquipmentShortSummaryDto;
 import net.pladema.medicalconsultation.appointment.controller.dto.AppointmentShortSummaryDto;
 import net.pladema.medicalconsultation.appointment.controller.dto.UpdateAppointmentDateDto;
@@ -352,8 +353,23 @@ public class AppointmentsController {
         appointmentValidatorService.validateStateUpdate(institutionId, appointmentId, Short.parseShort(appointmentStateId), reason);
         boolean result = appointmentService.updateState(appointmentId, Short.parseShort(appointmentStateId), UserInfo.getCurrentAuditor(), reason);
         log.debug(OUTPUT, result);
-        return ResponseEntity.ok().body(result);
+		return ResponseEntity.ok().body(result);
     }
+
+	@PutMapping(value = "/{appointmentId}/equipment-change-state")
+	@PreAuthorize("hasPermission(#institutionId, 'ADMINISTRATIVO_RED_DE_IMAGENES')")
+	public ResponseEntity<Boolean> equipmentChangeState(
+			@PathVariable(name = "institutionId") Integer institutionId,
+			@ValidEquipmentAppointmentDiary @PathVariable(name = "appointmentId") Integer appointmentId,
+			@ValidAppointmentState @RequestParam(name = "appointmentStateId") String appointmentStateId,
+			@RequestParam(name = "reason", required = false) String reason
+	) {
+		log.debug("Input parameters -> institutionId {}, appointmentId {}, appointmentStateId {}", institutionId, appointmentId, appointmentStateId);
+		appointmentValidatorService.validateStateUpdate(institutionId, appointmentId, Short.parseShort(appointmentStateId), reason);
+		boolean result = appointmentService.updateState(appointmentId, Short.parseShort(appointmentStateId), UserInfo.getCurrentAuditor(), reason);
+		log.debug(OUTPUT, result);
+		return ResponseEntity.ok().body(result);
+	}
 
 
     @GetMapping("/current-appointment")
