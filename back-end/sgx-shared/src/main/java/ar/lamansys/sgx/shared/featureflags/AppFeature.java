@@ -138,14 +138,11 @@ public enum AppFeature implements Feature {
 	@Label("Indica si esta habilitado el rol prescriptor")
 	HABILITAR_PRESCRIPCION_RECETA,
 
-	@Label("Indica si está habilitada la seccion otras circunstancias en epicrisis")
-	HABILITAR_OTRAS_CIRCUNSTANCIAS_EPICRISIS,
-
 	@Label("Indica si esta habilitada la seccion de auditoria de pacientes")
 	HABILITAR_MODULO_AUDITORIA,
     
-	@Label("Indica si esta habilitada la seccion causa externa de traumatismo en epicrisis")
-	HABILITAR_CAUSA_EXTERNA_EPICRISIS
+	@Label("Indica si están habilitadas las secciones relativas a CIPRES en epicrisis")
+	HABILITAR_CAMPOS_CIPRES_EPICRISIS
 	;
 
     public boolean isActive() {

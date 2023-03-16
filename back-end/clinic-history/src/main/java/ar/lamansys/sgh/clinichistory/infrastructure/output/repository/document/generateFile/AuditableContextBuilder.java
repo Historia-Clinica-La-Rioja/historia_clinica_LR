@@ -86,6 +86,7 @@ public class AuditableContextBuilder {
 		contextMap.put("allergies", document.getAllergies());
 		contextMap.put("dentalDiagnostics", document.getDentalActions().stream().filter(DentalActionBo::isDiagnostic).collect(Collectors.toList()));
 		contextMap.put("dentalProcedures", document.getDentalActions().stream().filter(DentalActionBo::isProcedure).collect(Collectors.toList()));
+		contextMap.put("cipresFieldsFF", featureFlagsService.isOn(AppFeature.HABILITAR_CAMPOS_CIPRES_EPICRISIS));
 		contextMap.put("otherProblems", document.getOtherProblems());
 		contextMap.put("externalCause", document.getExternalCause());
 
