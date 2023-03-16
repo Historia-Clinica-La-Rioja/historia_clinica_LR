@@ -170,7 +170,18 @@
         </div>
         <div th:if="${anthropometricData  != null}">
             - Factor sanguíneo:
-            <strong><label  th:if="${anthropometricData.bloodType  != null}" th:text="${anthropometricData.bloodType.value}"></label></strong>
+            <strong>
+            <label th:if="${anthropometricData.bloodType != null}">
+                <span th:if="${#strings.equals(anthropometricData.bloodType.value, 'A+')}">A+</span>
+                <span th:if="${#strings.equals(anthropometricData.bloodType.value, 'A−')}">A-</span>
+                <span th:if="${#strings.equals(anthropometricData.bloodType.value, 'B+')}">B+</span>
+                <span th:if="${#strings.equals(anthropometricData.bloodType.value, 'B−')}">B-</span>
+                <span th:if="${#strings.equals(anthropometricData.bloodType.value, 'AB+')}">AB+</span>
+                <span th:if="${#strings.equals(anthropometricData.bloodType.value, 'AB−')}">AB-</span>
+                <span th:if="${#strings.equals(anthropometricData.bloodType.value, '0+')}">0+</span>
+                <span th:if="${#strings.equals(anthropometricData.bloodType.value, '0−')}">0-</span>
+            </label>
+            </strong>
             <strong><span  th:if="${anthropometricData.bloodType  == null}">Sin cambios registrados</span></strong><br/>
 
             - Talla:
