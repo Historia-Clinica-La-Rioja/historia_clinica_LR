@@ -315,7 +315,7 @@
 			</div>
 
 
-			<div id="problem" *ngIf="otherCircustancesFF">
+			<div id="problem" *ngIf="cipresEpicrisisFF">
 				<h2 class="mat-h2">{{'internaciones.epicrisis.problems.TITLE' | translate}}</h2>
 				<mat-card>
 					<mat-card-content>
@@ -359,7 +359,7 @@
 					</mat-card-content>
 				</mat-card>
 			</div>
-			<div id="problem-table" *ngIf="otherCircustancesFF">
+			<div id="problem-table" *ngIf="cipresEpicrisisFF">
 				<table mat-table [dataSource]="problemEpicrisisService?.getTable().data"
 					class="secondary diagnosis-table" fxLayoutGap="20px">
 
@@ -386,7 +386,7 @@
 				</app-no-data>
 			</div>
 		</form>
-		<div *ngIf="otherCircustancesFF">
+		<div *ngIf="cipresEpicrisisFF">
 			<app-external-cause [searchConceptsLocallyFF]="searchConceptsLocallyFF" (event)="setExternalCause($event)"></app-external-cause>
 		</div>
 	</div>

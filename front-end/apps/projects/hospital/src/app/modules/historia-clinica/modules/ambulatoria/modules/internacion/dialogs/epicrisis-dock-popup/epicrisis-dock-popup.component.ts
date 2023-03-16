@@ -72,7 +72,7 @@ export class EpicrisisDockPopupComponent implements OnInit {
 	canConfirmedDocument = false;
 	ECL = SnomedECL.DIAGNOSIS;
 	searchConceptsLocallyFF = false;
-	otherCircustancesFF = false;
+	cipresEpicrisisFF = false;
 	externalCauseDto: ExternalCauseDto = {};
 	externalCause: ExternalCauseDto = {};
 	event$: Observable<ExternalCauseDto>;
@@ -152,7 +152,7 @@ export class EpicrisisDockPopupComponent implements OnInit {
 		this.allergies.displayedColumns = this.allergies.columns?.map(c => c.def).concat(['select']);
 		this.immunizations.displayedColumns = this.immunizations.columns?.map(c => c.def).concat(['select']);
 		this.featureFlagService.isActive(AppFeature.HABILITAR_BUSQUEDA_LOCAL_CONCEPTOS).subscribe(isOn => this.searchConceptsLocallyFF = isOn);
-		this.featureFlagService.isActive(AppFeature.HABILITAR_CAMPOS_CIPRES_EPICRISIS).subscribe(isOn => this.otherCircustancesFF = isOn);
+		this.featureFlagService.isActive(AppFeature.HABILITAR_CAMPOS_CIPRES_EPICRISIS).subscribe(isOn => this.cipresEpicrisisFF = isOn);
 	}
 
 	ngOnInit(): void {
