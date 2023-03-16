@@ -12,7 +12,7 @@ export class HomeComponent implements OnInit {
 	private readonly routePrefix;
 
 	constructor(private router: Router,	private contextService: ContextService) {
-		this.routePrefix = 'institucion/' + this.contextService.institutionId + '/';
+		this.routePrefix = `institucion/${this.contextService.institutionId}/`;
 	}
 
 	ngOnInit(): void {
