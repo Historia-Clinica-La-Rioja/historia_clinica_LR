@@ -17,7 +17,7 @@ import net.pladema.person.repository.domain.PersonalInformation;
 import net.pladema.person.repository.entity.Person;
 
 @Repository
-public interface PersonRepository extends JpaRepository<Person, Integer> {
+public interface PersonRepository extends JpaRepository<Person, Integer>, AuditPersonRepositorySearch {
 
     @Transactional(readOnly = true)
     @Query("SELECT pa.id FROM Patient as pa " +
