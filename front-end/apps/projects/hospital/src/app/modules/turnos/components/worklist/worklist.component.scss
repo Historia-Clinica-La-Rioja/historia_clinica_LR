@@ -1,4 +1,4 @@
-section {
+.worklist-section {
     margin: 5%;
 }
 
@@ -21,11 +21,17 @@ section {
 }
 
 .appointment-detail {
-    padding: 1%;
+    display: block;
+    padding: 2%;
+    height: fit-content;
+}
+
+.appointment-container{
+    display: flex;
 }
 
 .page-title {
-    margin: 2.5% 0;
+    margin: 3% 0 2.5% 0 !important;
 }
 
 .patient-information {
@@ -45,20 +51,68 @@ section {
 }
 
 // Colored-label styles
-app-colored-label{
+.personalized-label{
     display: flex;
     margin-right: 8%;
+    align-self: center;
 }
 
 ::ng-deep .appointment-detail span {
     display: flex;
     min-width: 100%;
+    height: fit-content;
     justify-content: center;
 }
 //------------------------//
 
 @media (max-width: 1280px) {
     .dropdown-container {
+        width: 40%;
+    }
+}
+
+@media (max-width: 960px) {
+    .dropdown-container {
         width: 50%;
+    }
+}
+
+@media (max-width: 640px) {
+    .dropdown-container {
+        width: 100%;
+    }
+}
+
+@media (max-width: 960px) {
+    .appointment-container {
+        flex-direction: column !important;
+    }
+
+    .appointment-detail {
+        padding: 3% 1%;
+    }
+
+    .personalized-label {
+        align-self: start;
+    }
+
+    ::ng-deep .appointment-detail span {
+        min-width: 10%;
+        justify-content: start;
+    }
+
+    .patient-information {
+        margin-top: 2%;
+    }
+
+    .appointment-date-information {
+        margin: 2%;
+        align-self: end;
+    }
+}
+
+@media (max-width: 500px) {
+    .worklist-section {
+        width: 90vw;
     }
 }

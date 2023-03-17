@@ -1,6 +1,6 @@
-<section>
+<section class="worklist-section">
     <mat-card class="main-card">
-        <h2 class="page-title">Lista de trabajo</h2>
+        <h2 class="page-title">{{'image-network.appointments.WORKLIST' | translate }}</h2>
 
         <mat-form-field class="dropdown-container" appearance="outline">
             <mat-label [translate]="'image-network.equipment-diary-setup.EQUIPMENT_SELECT'"></mat-label>
@@ -15,20 +15,21 @@
             <mat-list class="mat-form-field-wrapper">
                 <div *ngFor="let appointment of detailedAppointments">
                     <mat-list-item class="appointment-detail">
-                        <app-colored-label class="uppercase" fxFlex.gt-xs="20" fxFlex.gt-sm="10" fxFlex.gt-md="7"
+                        <div class="appointment-container" fxFlex="100">
+                            <app-colored-label class="personalized-label uppercase" fxFlex.lg="10" fxFlex.gt-sm="13"
                             description={{appointment.description}} 
                             color="{{appointment.color}}"></app-colored-label>
-                        
-                        <div class="patient-information" fxFlex="55">
-                            <p class="patient-name">{{appointment.data.patientName}}</p>
-                            <span class="patient-identification grey smaller-font">DNI {{appointment.data.identificationNumber}} - ID {{appointment.data.patientId}}</span>
+                            
+                            <div class="patient-information" fxFlex.gt-sm="55">
+                                <p class="patient-name">{{appointment.data.patientName}}</p>
+                                <span class="patient-identification grey smaller-font">DNI {{appointment.data.identificationNumber}} - ID {{appointment.data.patientId}}</span>
+                            </div>
+                            
+                            <div class="appointment-date-information smaller-font" fxFlex.gt-sm="15">
+                                <span class="grey">{{appointment.data.date.day}}/{{appointment.data.date.month}}/{{appointment.data.date.year}}</span>
+                                <span class="grey">{{appointment.data.hour.hours}}:{{appointment.data.hour.minutes}} hs.</span>
+                            </div>
                         </div>
-
-                        <div class="appointment-date-information smaller-font" fxFlex="15">
-                            <span class="grey">{{appointment.data.date.day}}/{{appointment.data.date.month}}/{{appointment.data.date.year}}</span>
-                            <span class="grey">{{appointment.data.hour.hours}}:{{appointment.data.hour.minutes}} hs.</span>
-                        </div>
-
                     </mat-list-item>
                     <mat-divider></mat-divider>
                 </div>

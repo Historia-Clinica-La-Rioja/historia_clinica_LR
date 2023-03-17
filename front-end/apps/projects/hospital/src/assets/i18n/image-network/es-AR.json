@@ -26,7 +26,8 @@
 			"CONFIRM_NEW_DIARY": "¿Desea confirmar la creación de esta agenda?"
 		},
         "appointments": {
-            "COMPLETE": "Completar"
+            "COMPLETE": "Completar",
+            "WORKLIST": "Lista de trabajo"
         }
 
     }
