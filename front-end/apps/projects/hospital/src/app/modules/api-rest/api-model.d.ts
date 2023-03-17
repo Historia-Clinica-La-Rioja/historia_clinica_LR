@@ -1007,6 +1007,17 @@ export interface DrawingsDto extends Serializable {
     whole?: string;
 }
 
+export interface DuplicatePatientDto {
+    birthdate: Date;
+    firstName: string;
+    identificationNumber: string;
+    identificationTypeId: number;
+    lastName: string;
+    middleNames: string;
+    numberOfCandidates: number;
+    otherLastNames: string;
+}
+
 export interface ECAdministrativeDto extends Serializable {
     administrative: NewEmergencyCareDto;
     triage: TriageAdministrativeDto;

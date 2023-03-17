@@ -6,6 +6,8 @@ import net.pladema.address.controller.service.AddressExternalService;
 import net.pladema.address.repository.CityRepository;
 import net.pladema.address.service.AddressMasterDataService;
 import net.pladema.patient.controller.dto.APatientDto;
+import net.pladema.patient.controller.dto.AuditPatientSearch;
+import net.pladema.patient.controller.dto.DuplicatePatientDto;
 import net.pladema.person.controller.dto.BMPersonDto;
 import net.pladema.person.controller.dto.BasicPersonalDataDto;
 import net.pladema.person.controller.dto.PersonPhotoDto;
@@ -249,6 +251,14 @@ public class PersonExternalServiceImpl implements PersonExternalService {
 	public boolean savePersonPhoto(Integer personId, String imageData) {
 		LOG.debug("Input parameters -> personId {}, imageData {}", personId, imageData);
 		boolean result = personPhotoService.save(personId, imageData);
+		LOG.debug(OUTPUT, result);
+		return result;
+	}
+
+	@Override
+	public List<DuplicatePatientDto> getDuplicatePersonsByFilter(AuditPatientSearch auditPatientSearch) {
+		LOG.debug("Input parameters -> AuditPatientSearch", auditPatientSearch);
+		List<DuplicatePatientDto> result = personService.getDuplicatePersonsByFilter(auditPatientSearch).stream().map(DuplicatePatientDto::new).collect(Collectors.toList());
 		LOG.debug(OUTPUT, result);
 		return result;
 	}

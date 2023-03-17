@@ -5,6 +5,9 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.function.Supplier;
 
+import net.pladema.patient.controller.dto.AuditPatientSearch;
+import net.pladema.person.repository.domain.DuplicatePersonVo;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -111,7 +114,15 @@ public class PersonServiceImpl implements PersonService {
 		return personRepository.getCountryIsoCodeFromPerson(personId);
 	}
 
-    private Supplier<NotFoundException> personNotFound(Integer personId) {
+	@Override
+	public List<DuplicatePersonVo> getDuplicatePersonsByFilter(AuditPatientSearch auditPatientSearch) {
+		LOG.debug("Input parameters -> AuditPatientSearch", auditPatientSearch);
+		List<DuplicatePersonVo> result = personRepository.getAllByFilter(auditPatientSearch);
+		LOG.debug(OUTPUT, result);
+		return result;
+	}
+
+	private Supplier<NotFoundException> personNotFound(Integer personId) {
         return () -> new NotFoundException("person-not-exists", String.format("La persona %s no existe", personId));
     }
 

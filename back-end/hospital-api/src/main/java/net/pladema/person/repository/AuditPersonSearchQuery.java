@@ -20,11 +20,11 @@ public class AuditPersonSearchQuery {
 	private boolean birthdate;
 
 	public AuditPersonSearchQuery(AuditPatientSearch auditPatientSearch) {
-		if (auditPatientSearch.isName())
+		if (auditPatientSearch.getName())
 			this.name = true;
-		if (auditPatientSearch.isIdentify())
+		if (auditPatientSearch.getIdentify())
 			this.identify = true;
-		if (auditPatientSearch.isBirthdate())
+		if (auditPatientSearch.getBirthdate())
 			this.birthdate = true;
 	}
 
