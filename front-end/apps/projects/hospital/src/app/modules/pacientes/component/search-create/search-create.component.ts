@@ -106,7 +106,7 @@ export class SearchCreateComponent implements OnInit {
 					identificationTypeId: this.formSearch.controls.identifType.value,
 					identificationNumber: (this.formSearch.controls.identifType.value === IDENTIFICATION_TYPE_IDS.DNI && !!this.formSearch.controls?.identifNumber.value) ? identificationNumber.replaceAll(/\W/g,'') : identificationNumber,
 					genderId: this.formSearch.controls.gender.value,
-					IdentityVerificationStatus: this.formSearch.controls.IdentityVerificationStatus.value,
+					identityVerificationStatus: this.formSearch.controls.IdentityVerificationStatus.value,
 					comments: this.formSearch.controls.comments.value,
 					noIdentity: this.noIdentity,
 					firstName: this.additionalInfoScanned?.firstName,

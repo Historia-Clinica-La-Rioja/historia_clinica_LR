@@ -315,9 +315,14 @@ export class SearchComponent implements OnInit {
 
 	goToAddPatient(person) {
 		if (this.noIdentity || this.identificationTypeId == IDENTIFICATION_TYPE_IDS.NO_POSEE) {
-			this.router.navigate([this.routePrefix + ROUTE_NEW_TEMPORARY], {
+			this.route.queryParams.subscribe(params => {
+				person.comments = params.comments;
+				person.identityVerificationStatus = params.identityVerificationStatus;
+				this.router.navigate([this.routePrefix + ROUTE_NEW_TEMPORARY], {
 				queryParams: person
-			});
+				});
+			})
+
 		} else {
 			this.router.navigate([this.routePrefix + ROUTE_NEW], {
 				queryParams: person

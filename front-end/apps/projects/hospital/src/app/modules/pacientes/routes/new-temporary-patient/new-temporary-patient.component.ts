@@ -97,7 +97,7 @@ export class NewTemporaryPatientComponent implements OnInit {
 
 		this.route.queryParams
 			.subscribe(params => {
-				this.identityVerificationStatus = Number(params.IdentityVerificationStatus);
+				this.identityVerificationStatus = Number(params.identityVerificationStatus);
 				this.comments = params.comments;
 
 				this.form = this.formBuilder.group({
