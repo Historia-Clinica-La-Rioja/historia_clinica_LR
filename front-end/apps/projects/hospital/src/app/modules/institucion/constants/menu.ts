@@ -108,4 +108,10 @@ export const SIDEBAR_MENU: MenuItemDef[] = [
 		],
 		featureFlag: AppFeature.HABILITAR_MODULO_AUDITORIA
 	},
+	{
+		text: 'app.menu.LISTADO_DE_TRABAJO',
+		icon: 'assignment_ind',
+		id: 'listadoTrabajo',
+		url: './turnos/imagenes/lista-trabajos',
+	},
 ];
