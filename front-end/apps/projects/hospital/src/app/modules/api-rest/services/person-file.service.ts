@@ -21,7 +21,7 @@ export class PersonFileService {
 		this.downloadService.downloadPdf(
 			url,
 			fileName,
-		)
+		).subscribe();
 	}
 
 	saveFiles(personId: number, files: File[]): Observable<number[]> {

@@ -38,6 +38,6 @@ export class ReferenceFileService {
 		this.downloadService.downloadPdf(
 			url,
 			fileName,
-		);
+		).subscribe();
 	}
 }
