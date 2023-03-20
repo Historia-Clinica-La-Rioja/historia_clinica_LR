@@ -113,5 +113,6 @@ export const SIDEBAR_MENU: MenuItemDef[] = [
 		icon: 'assignment_ind',
 		id: 'listadoTrabajo',
 		url: './turnos/imagenes/lista-trabajos',
+		permissions: [ERole.TECNICO]
 	},
 ];

@@ -25,7 +25,7 @@ const routes: Routes = [
 				path: 'imagenes/lista-trabajos',
 				component: WorklistComponent,
 				canActivate: [RoleGuard],
-				data: { allowedRoles: [ERole.ADMINISTRATIVO_RED_DE_IMAGENES]}
+				data: { allowedRoles: [ERole.TECNICO]}
 			}
 		]
 	}
