@@ -47,6 +47,7 @@ public class RoleNameMapperImpl implements RoleNameMapper {
 			case PRESCRIPTOR: return "Prescriptor";
 			case ADMINISTRADOR_INSTITUCIONAL_PRESCRIPTOR: return "Administrador Institucional Prescriptor";
 			case AUDITOR_MPI: return "Auditor MPI";
+			case TECNICO: return "Técnico";
 		}
 		throw new NotFoundException("role-not-exists", String.format("El rol %s no existe", eRole));
 	}
