@@ -47,5 +47,58 @@ databaseChangeLog:
                     name: modifier_id
                     type: varchar(20)
 
+    - changeSet:
+        id: createIndexAppointmentId-appointment_assn
+        author: mvnere
+        dbms: postgresql
+        changes:
+          - sql:
+              sql: |-
+                CREATE INDEX IF NOT EXISTS "IDX_appointment_assn_appointment_id" ON appointment_assn (appointment_id);
+
+    - changeSet:
+        id: createIndexMedicalCoverageId-patient_medical_coverage
+        author: mvenere
+        dbms: postgresql
+        changes:
+          - sql:
+              sql: |-
+                CREATE INDEX IF NOT EXISTS "IDX_patient_medical_coverage_medical_coverage_id" ON patient_medical_coverage (medical_coverage_id);
+
+    - changeSet:
+        id: createIndexChangedStateDate-historic_appointment_state
+        author: mvenere
+        dbms: postgresql
+        changes:
+          - sql:
+              sql: |-
+                CREATE INDEX IF NOT EXISTS "IDX_historic_appointment_state_changed_state_date" ON historic_appointment_state (changed_state_date DESC);
+
+    - changeSet:
+        id: createIndexPatientId-outpatient_consultation
+        author: mvenere
+        dbms: postgresql
+        changes:
+          - sql:
+              sql: |-
+                CREATE INDEX IF NOT EXISTS "IDX_outpatient_consultation_patient_id" ON outpatient_consultation(patient_id);
+
+    - changeSet:
+        id: createIndexDocumentId_document_health_condition
+        author: mvenere
+        dbms: postgresql
+        changes:
+          - sql:
+              sql: |-
+                CREATE INDEX IF NOT EXISTS "IDX_document_health_condition_document_id" ON document_health_condition(document_id);
+
+    - changeSet:
+        id: createIndexHealthConditionId_document_health_condition
+        author: mvenere
+        dbms: postgresql
+        changes:
+          - sql:
+              sql: |-
+                CREATE INDEX IF NOT EXISTS "IDX_document_health_condition_health_condition_id" ON document_health_condition(health_condition_id);
 
 
