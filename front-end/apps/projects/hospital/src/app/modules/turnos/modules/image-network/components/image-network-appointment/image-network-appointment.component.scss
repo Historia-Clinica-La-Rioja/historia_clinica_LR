@@ -1,1 +1,22 @@
 @import "../../../../turnos-mixins.scss";
+
+a {
+	text-decoration: none;
+	color: #2687C5;
+}
+
+mat-divider {
+	width: 95%;
+}
+
+mat-dialog-actions {
+	width: 95%;
+}
+
+mat-icon {
+	font-size: 20px;
+}
+
+mat-form-field {
+	width: 100%;
+}
