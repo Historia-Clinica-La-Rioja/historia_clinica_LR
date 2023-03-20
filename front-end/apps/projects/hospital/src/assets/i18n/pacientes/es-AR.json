@@ -277,10 +277,14 @@
       }
     },
 	"audit":{
-		"TITLE":"Auditoria",
+		"TITLE":"Auditoría",
 		"TITLE_FUSION_PATIENTS":"Fusión de pacientes",
-		"SUBTITLE_LIST_PATIENTS": "Listado de posibles duplicados",
-		"TITLE_CONTROL_DUPLICATE_PATIENTS":"Control de pacientes duplicados"
+		"TITLE_CONTROL_DUPLICATE_PATIENTS":"Control de pacientes duplicados",
+		"SUBTITLE_LIST_AUDIT_BY":"Listar auditoría por",
+		"LABEL_FILTER_1":"Nombre, apellido, tipo y número de documento iguales",
+		"LABEL_FILTER_2":"Nombre, apellido y fecha de nacimiento iguales",
+		"LABEL_FILTER_3":"Nombre, apellido, fecha de nacimiento, tipo y número de documento iguales",
+		"LABEL_FILTER_4":"Tipo y número de documento iguales"
 	}
   }
 }

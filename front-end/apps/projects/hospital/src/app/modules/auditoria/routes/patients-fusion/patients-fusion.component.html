@@ -2,4 +2,13 @@
 	<section>
 		<h2 class="page-title">{{'pacientes.audit.TITLE_CONTROL_DUPLICATE_PATIENTS' | translate}}</h2>
 	</section>
+	<section>
+		<h3>{{'pacientes.audit.SUBTITLE_LIST_AUDIT_BY' | translate}}</h3>
+		<mat-radio-group fxLayout="column" [(ngModel)]="filterSelected" (change)="getListByFilter($event)">
+			<mat-radio-button color="primary"   value="1">{{'pacientes.audit.LABEL_FILTER_1' | translate}}</mat-radio-button>
+			<mat-radio-button color="primary"   value="2">{{'pacientes.audit.LABEL_FILTER_2' | translate}}</mat-radio-button>
+			<mat-radio-button color="primary"   value="3">{{'pacientes.audit.LABEL_FILTER_3' | translate}}</mat-radio-button>
+			<mat-radio-button color="primary"  value="4">{{'pacientes.audit.LABEL_FILTER_4' | translate}}</mat-radio-button>
+		</mat-radio-group>
+	</section>
 </app-content>
