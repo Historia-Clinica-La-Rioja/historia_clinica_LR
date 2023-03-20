@@ -128,7 +128,7 @@ public class InternmentEpisodeController {
 
 	@PostMapping(value = "{internmentEpisodeId}/episodedocuments/{episodeDocumentTypeId}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
 	@Transactional
-	@PreAuthorize("hasPermission(#institutionId, 'ADMINISTRATIVO, ADMINISTRATIVO_RED_DE_IMAGENES')")
+	@PreAuthorize("hasPermission(#institutionId, 'ADMINISTRATIVO, ADMINISTRATIVO_RED_DE_IMAGENES, ESPECIALISTA_MEDICO, PROFESIONAL_DE_SALUD, ENFERMERO')")
 	public ResponseEntity<Integer> createEpisodeDocument(
 			@PathVariable(name = "institutionId") Integer institutionId,
 			@PathVariable(name = "episodeDocumentTypeId") Integer episodeDocumentTypeId,
@@ -142,7 +142,7 @@ public class InternmentEpisodeController {
 	}
 
 	@GetMapping("{internmentEpisodeId}/episodedocuments")
-	@PreAuthorize("hasPermission(#institutionId, 'ADMINISTRATIVO, ADMINISTRATIVO_RED_DE_IMAGENES')")
+	@PreAuthorize("hasPermission(#institutionId, 'ADMINISTRATIVO, ADMINISTRATIVO_RED_DE_IMAGENES, ESPECIALISTA_MEDICO, PROFESIONAL_DE_SALUD, ENFERMERO')")
 	public ResponseEntity<List<EpisodeDocumentResponseDto>> getEpisodeDocuments(@PathVariable(name = "internmentEpisodeId") Integer internmentEpisodeId,
 																				@PathVariable(name = "institutionId") Integer institutionId) {
 		LOG.debug("Input parameters -> internmentEpisodeId {}, institutionId {}", internmentEpisodeId, institutionId);
@@ -155,7 +155,7 @@ public class InternmentEpisodeController {
 	}
 
 	@GetMapping("/documentstypes")
-	@PreAuthorize("hasPermission(#institutionId, 'ADMINISTRATIVO, ADMINISTRATIVO_RED_DE_IMAGENES')")
+	@PreAuthorize("hasPermission(#institutionId, 'ADMINISTRATIVO, ADMINISTRATIVO_RED_DE_IMAGENES, ESPECIALISTA_MEDICO, PROFESIONAL_DE_SALUD, ENFERMERO')")
 	public ResponseEntity<List<DocumentTypeDto>> getDocumentsTypes(@PathVariable(name = "institutionId") Integer institutionId) {
 		LOG.debug("Input parameters -> institutionId {}", institutionId);
 		List<DocumentTypeDto> result = fetchDocumentType.run()
@@ -167,7 +167,7 @@ public class InternmentEpisodeController {
 	}
 
 	@DeleteMapping("/episodedocuments/{episodeDocumentId}")
-	@PreAuthorize("hasPermission(#institutionId, 'ADMINISTRATIVO, ADMINISTRATIVO_RED_DE_IMAGENES')")
+	@PreAuthorize("hasPermission(#institutionId, 'ADMINISTRATIVO, ADMINISTRATIVO_RED_DE_IMAGENES, ESPECIALISTA_MEDICO, PROFESIONAL_DE_SALUD, ENFERMERO')")
 	public ResponseEntity<Boolean> deleteDocument(@PathVariable(name = "episodeDocumentId") Integer episodeDocumentId,
 								  @PathVariable(name = "institutionId") Integer institutionId) {
 		LOG.debug("Input parameters -> episodeDocumentId {}, institutionId {}", episodeDocumentId, institutionId);
