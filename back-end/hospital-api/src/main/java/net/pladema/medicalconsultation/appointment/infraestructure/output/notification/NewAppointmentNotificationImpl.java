@@ -6,6 +6,7 @@ import net.pladema.medicalconsultation.appointment.infraestructure.output.notifi
 import net.pladema.medicalconsultation.appointment.service.booking.BookingPersonService;
 import net.pladema.medicalconsultation.diary.service.DiaryService;
 import net.pladema.medicalconsultation.diary.service.domain.CompleteDiaryBo;
+import net.pladema.medicalconsultation.diary.service.domain.DiaryBo;
 import net.pladema.patient.service.PatientMedicalCoverageService;
 import net.pladema.patient.service.PatientService;
 
@@ -37,8 +38,7 @@ public class NewAppointmentNotificationImpl implements NewAppointmentNotificatio
 
 	@Override
 	public void run(NewAppointmentNotificationBo newAppointmentNotification) {
-		CompleteDiaryBo diaryBo = diaryService.getDiary(newAppointmentNotification.diaryId)
-				.orElseThrow(()-> new NewAppointmentNotificationException(NewAppointmentNotificationEnumException.DIARY_NOT_FOUND, "La agenda solicitada no existe"));
+		DiaryBo diaryBo = diaryService.getDiaryById(newAppointmentNotification.diaryId);
 		String professionalName = bookingPersonService.getProfessionalName(newAppointmentNotification.diaryId)
 				.orElseThrow(()-> new NewAppointmentNotificationException(NewAppointmentNotificationEnumException.PROFESSIONAL_NAME_NOT_FOUND, String.format("No se encontro el profesional de la agenda con id ",newAppointmentNotification.diaryId)));
 		InstitutionBo institutionBo = institutionService.get(diaryService.getInstitution(newAppointmentNotification.diaryId));

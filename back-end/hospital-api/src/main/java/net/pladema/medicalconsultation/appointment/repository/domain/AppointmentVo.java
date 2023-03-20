@@ -43,6 +43,15 @@ public class AppointmentVo {
 		this.observationBy = observationBy;
 	}
 
+	public AppointmentVo(Integer diaryId, Appointment appointment, Short medicalAttentionTypeId, String observation, Integer observationBy) {
+		this.appointment = appointment;
+		this.medicalAttentionTypeId = medicalAttentionTypeId;
+		this.diaryId = diaryId;
+		this.observation = observation;
+		this.observationBy = observationBy;
+		this.stateChangeReason = null;
+	}
+
 	public Integer getId() {
 		return appointment.getId();
 	}

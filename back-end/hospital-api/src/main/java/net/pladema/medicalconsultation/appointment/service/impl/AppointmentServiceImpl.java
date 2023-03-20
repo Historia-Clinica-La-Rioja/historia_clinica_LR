@@ -191,9 +191,9 @@ public class AppointmentServiceImpl implements AppointmentService {
 	}
 
 	@Override
-	public Optional<AppointmentBo> findAppointmentBy(Integer diaryId, LocalDate date, LocalTime hour) {
+	public Optional<AppointmentBo> findBlockedAppointmentBy(Integer diaryId, LocalDate date, LocalTime hour) {
 		log.debug("Input parameters -> diaryId {}, date {}, hour {}", diaryId, date, hour);
-		var res = appointmentRepository.findAppointmentBy(diaryId, date, hour);
+		var res = appointmentRepository.findBlockedAppointmentBy(diaryId, date, hour);
 		log.debug(OUTPUT, res);
 		return res.stream().findFirst().map(AppointmentBo::newFromAppointment);
 	}
@@ -224,6 +224,14 @@ public class AppointmentServiceImpl implements AppointmentService {
 			result = setIsAppointmentProtected(result.stream().collect(Collectors.toList()), diaryIds)
 					.stream().findFirst();
 		}
+		log.debug(OUTPUT, result);
+		return result;
+	}
+
+	@Override
+	public Optional<AppointmentBo> getAppointmentSummary(Integer appointmentId) {
+		log.debug("Input parameters -> appointmentId {}", appointmentId);
+		Optional<AppointmentBo>	result = appointmentRepository.getAppointmentSummary(appointmentId).stream().findFirst().map(AppointmentBo::fromAppointmentVo);
 		log.debug(OUTPUT, result);
 		return result;
 	}
@@ -646,23 +654,12 @@ public class AppointmentServiceImpl implements AppointmentService {
 	}
 
 	private void generateUnblockInterval(DiaryBo diaryBo, List<AppointmentBo> listAppointments, LocalDate blockedDate, BlockBo unblock) {
-		listAppointments.addAll(getSlots(unblock, diaryBo).stream().map(slot -> findAppointment(blockedDate, diaryBo, slot))
+		listAppointments.addAll(getSlots(unblock, diaryBo).stream().map(slot -> findBlockedAppointmentBy(diaryBo.getId(),
+						LocalDate.of(blockedDate.getYear(), blockedDate.getMonth(), blockedDate.getDayOfMonth()),
+						slot))
 				.filter(Optional::isPresent)
 				.map(Optional::get)
-				.filter(this::isBlocked)
 				.collect(Collectors.toList()));
-	}
-
-	private boolean isBlocked(AppointmentBo ap) {
-		return getAppointment(ap.getId())
-				.map(appointmentBo -> appointmentBo.getAppointmentStateId()
-						.equals(AppointmentState.BLOCKED)).orElse(false);
-	}
-
-	private Optional<AppointmentBo> findAppointment(LocalDate date, DiaryBo diaryBo, LocalTime slot) {
-		return findAppointmentBy(diaryBo.getId(),
-				LocalDate.of(date.getYear(), date.getMonth(), date.getDayOfMonth()),
-				slot);
 	}
 
 	private Collection<AppointmentBo> setIsAppointmentProtected(Collection<AppointmentBo> appointments, List<Integer> diaryIds) {

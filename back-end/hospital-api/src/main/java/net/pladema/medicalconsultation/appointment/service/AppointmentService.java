@@ -21,6 +21,8 @@ public interface AppointmentService {
 
 	Optional<AppointmentBo> getAppointment(Integer appointmentId);
 
+	Optional<AppointmentBo> getAppointmentSummary(Integer appointmentId);
+
 	Collection<AppointmentBo> getAppointmentsByDiaries(List<Integer> diaryIds, LocalDate from, LocalDate to);
 
 	Collection<AppointmentBo> getAppointmentsByEquipmentDiary(Integer equipmentDiaryId, LocalDate from, LocalDate to);
@@ -31,7 +33,7 @@ public interface AppointmentService {
 	boolean existAppointment(Integer diaryId, Integer openingHoursId, LocalDate date, LocalTime hour);
 	boolean existAppointment(Integer diaryId, LocalDate date, LocalTime hour);
 
-	Optional<AppointmentBo> findAppointmentBy(Integer diaryId, LocalDate date, LocalTime hour);
+	Optional<AppointmentBo> findBlockedAppointmentBy(Integer diaryId, LocalDate date, LocalTime hour);
 
 	Collection<AppointmentBo> getFutureActiveAppointmentsByDiary(Integer diaryId);
 

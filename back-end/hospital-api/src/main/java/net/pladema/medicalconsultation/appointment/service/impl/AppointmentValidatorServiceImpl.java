@@ -87,7 +87,7 @@ public class AppointmentValidatorServiceImpl implements AppointmentValidatorServ
     public boolean validateStateUpdate(Integer institutionId, Integer appointmentId, short appointmentStateId, String reason) {
         LOG.debug("Input parameters -> appointmentId {}, appointmentStateId {}, reason {}", appointmentId,
                 appointmentStateId, reason);
-        Optional<AppointmentBo> apmtOpt = appointmentService.getAppointment(appointmentId);
+        Optional<AppointmentBo> apmtOpt = appointmentService.getAppointmentSummary(appointmentId);
 
         if (apmtOpt.isPresent() && !validStateTransition(appointmentStateId, apmtOpt.get())) {
             throw new ValidationException("appointment.state.transition.invalid");
@@ -124,7 +124,7 @@ public class AppointmentValidatorServiceImpl implements AppointmentValidatorServ
 	public boolean validateDateUpdate(Integer institutionId, Integer appointmentId, LocalDate date, LocalTime time){
 		LOG.debug("Input parameters -> appointmentId {}, date {}, time {}", appointmentId, date, time);
 		Optional<DiaryBo> diary = diaryService.getDiaryByAppointment(appointmentId);
-		Optional<AppointmentBo> appointmentBo = appointmentService.getAppointment(appointmentId);
+		Optional<AppointmentBo> appointmentBo = appointmentService.getAppointmentSummary(appointmentId);
 		ZoneId institutionZoneId = institutionExternalService.getTimezone(institutionId);
 		LocalDate todayDate = dateTimeProvider.nowDate();
 		LocalTime todayTime = dateTimeProvider.nowDateTimeWithZone(institutionZoneId).toLocalTime();
