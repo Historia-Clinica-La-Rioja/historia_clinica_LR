@@ -19,7 +19,7 @@ export class InternmentSummaryFacadeService {
 	private medicationsSubject: Subject<any> = new BehaviorSubject<any>([]);
 	private riskFactorsSubject: Subject<any> = new BehaviorSubject<any>([]);
 	private heightAndWeightDataListSubject: Subject<AnthropometricDataDto[]> = new BehaviorSubject<AnthropometricDataDto[]>([]);
-	private bloodTypeDataSubject: Subject<string> = new BehaviorSubject<string>(null);
+	private bloodTypeDataSubject: Subject<string | void> = new BehaviorSubject<string | void>(null);
 	private immunizationsSubject: Subject<any> = new BehaviorSubject<any>([]);
 	private mainDiagnosisSubject: Subject<any> = new BehaviorSubject<any>([]);
 	private diagnosisSubject: Subject<any> = new BehaviorSubject<any>([]);

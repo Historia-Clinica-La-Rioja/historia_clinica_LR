@@ -23,11 +23,11 @@ export class DatosAntropometricosNuevaConsultaService {
 
 	private form: FormGroup;
 	private bloodTypes: MasterDataInterface<string>[];
-	private heightErrorSource = new Subject<string>();
+	private heightErrorSource = new Subject<string | void>();
 	private _heightError$ = this.heightErrorSource.asObservable();
-	private weightErrorSource = new Subject<string>();
+	private weightErrorSource = new Subject<string | void>();
 	private _weightError$ = this.weightErrorSource.asObservable();
-	private headCircumferenceErrorSource = new Subject<string>();
+	private headCircumferenceErrorSource = new Subject<string | void>();
 	private _headCircumferenceError$ = this.headCircumferenceErrorSource.asObservable();
 	private notShowPreloadedAnthropometricData = false;
 	private dateList: string[] = [];
@@ -137,15 +137,15 @@ export class DatosAntropometricosNuevaConsultaService {
 		};
 	}
 
-	get heightError$(): Observable<string> {
+	get heightError$(): Observable<string | void> {
 		return this._heightError$;
 	}
 
-	get weightError$(): Observable<string> {
+	get weightError$(): Observable<string | void> {
 		return this._weightError$;
 	}
 
-	get headCircumferenceError$(): Observable<string> {
+	get headCircumferenceError$(): Observable<string | void> {
 		return this._headCircumferenceError$;
 	}
 

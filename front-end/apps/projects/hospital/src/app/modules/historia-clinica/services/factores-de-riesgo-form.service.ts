@@ -24,23 +24,23 @@ export interface FactoresDeRiesgo {
 
 export class FactoresDeRiesgoFormService {
 
-	private heartRateErrorSource = new Subject<string>();
+	private heartRateErrorSource = new Subject<string | void>();
 	private _heartRateError$ = this.heartRateErrorSource.asObservable();
-	private respiratoryRateErrorSource = new Subject<string>();
+	private respiratoryRateErrorSource = new Subject<string | void>();
 	private _respiratoryRateError$ = this.respiratoryRateErrorSource.asObservable();
-	private temperatureErrorSource = new Subject<string>();
+	private temperatureErrorSource = new Subject<string | void>();
 	private _temperatureError$ = this.temperatureErrorSource.asObservable();
-	private bloodOxygenSaturationErrorSource = new Subject<string>();
+	private bloodOxygenSaturationErrorSource = new Subject<string | void>();
 	private _bloodOxygenSaturationError$ = this.bloodOxygenSaturationErrorSource.asObservable();
-	private systolicBloodPressureErrorSource = new Subject<string>();
+	private systolicBloodPressureErrorSource = new Subject<string | void>();
 	private _systolicBloodPressureError$ = this.systolicBloodPressureErrorSource.asObservable();
-	private diastolicBloodPressureErrorSource = new Subject<string>();
+	private diastolicBloodPressureErrorSource = new Subject<string | void>();
 	private _diastolicBloodPressureError$ = this.diastolicBloodPressureErrorSource.asObservable();
-	private bloodGlucoseErrorSource = new Subject<string>();
+	private bloodGlucoseErrorSource = new Subject<string | void>();
 	private _bloodGlucoseError$ = this.bloodGlucoseErrorSource.asObservable();
-	private glycosylatedHemoglobinErrorSource = new Subject<string>();
+	private glycosylatedHemoglobinErrorSource = new Subject<string | void>();
 	private _glycosylatedHemoglobinError$ = this.glycosylatedHemoglobinErrorSource.asObservable();
-	private cardiovascularRiskErrorSource = new Subject<string>();
+	private cardiovascularRiskErrorSource = new Subject<string | void>();
 	private _cardiovascularRiskError$ = this.cardiovascularRiskErrorSource.asObservable();
 	private form: FormGroup;
 	private notShowPreloadedRiskFactorsData = false;
@@ -280,39 +280,39 @@ export class FactoresDeRiesgoFormService {
 			: undefined;
 	}
 
-	get heartRateError$(): Observable<string> {
+	get heartRateError$(): Observable<string | void> {
 		return this._heartRateError$;
 	}
 
-	get respiratoryRateError$(): Observable<string> {
+	get respiratoryRateError$(): Observable<string | void> {
 		return this._respiratoryRateError$;
 	}
 
-	get temperatureError$(): Observable<string> {
+	get temperatureError$(): Observable<string | void> {
 		return this._temperatureError$;
 	}
 
-	get bloodOxygenSaturationError$(): Observable<string> {
+	get bloodOxygenSaturationError$(): Observable<string | void> {
 		return this._bloodOxygenSaturationError$;
 	}
 
-	get diastolicBloodPressureError$(): Observable<string> {
+	get diastolicBloodPressureError$(): Observable<string | void> {
 		return this._diastolicBloodPressureError$;
 	}
 
-	get systolicBloodPressureError$(): Observable<string> {
+	get systolicBloodPressureError$(): Observable<string | void> {
 		return this._systolicBloodPressureError$;
 	}
 
-	get bloodGlucoseError$(): Observable<string> {
+	get bloodGlucoseError$(): Observable<string | void> {
 		return this._bloodGlucoseError$;
 	}
 
-	get glycosylatedHemoglobinError$(): Observable<string> {
+	get glycosylatedHemoglobinError$(): Observable<string | void> {
 		return this._glycosylatedHemoglobinError$;
 	}
 
-	get cardiovascularRiskError$(): Observable<string> {
+	get cardiovascularRiskError$(): Observable<string | void> {
 		return this._cardiovascularRiskError$;
 	}
 
