@@ -71,7 +71,7 @@ export const GENERAL_REPORT_TYPES = [
         id: 6,
     },
     {
-        description: 'Reportes complementarios',
+        description: 'Estudios Complementarios',
         id: 7,
     },
     {
