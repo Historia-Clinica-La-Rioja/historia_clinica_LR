@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { ExternalClinicalHistoryDto } from '@api-rest/api-model';
+import { ExternalClinicalHistorySummaryDto } from '@api-rest/api-model';
 import { dateDtoToDate } from '@api-rest/mapper/date-dto.mapper';
 import { ExternalClinicalHistoryService } from '@api-rest/services/external-clinical-history.service';
 import { dateToMoment } from '@core/utils/moment.utils';
@@ -12,7 +12,7 @@ import { ExternalClinicalHistoryFilter, ExternalClinicalHistoryFiltersOptions } 
 })
 export class ExternalClinicalHistoryFacadeService {
 
-	private externalClinicalHistoryList: ExternalClinicalHistoryDto[] = [];
+	private externalClinicalHistoryList: ExternalClinicalHistorySummaryDto[] = [];
 	private hasInformationSubject: ReplaySubject<boolean> = new ReplaySubject<boolean>(1);
 	private hasInfo$: Observable<boolean>;
 
@@ -21,9 +21,9 @@ export class ExternalClinicalHistoryFacadeService {
 	private filtersOptions$: Observable<ExternalClinicalHistoryFiltersOptions>;
 
 	private filters: ExternalClinicalHistoryFilter = {};
-	private filteredHistories: ExternalClinicalHistoryDto[] = [];
-	private filteredHistoriesSubject: ReplaySubject<ExternalClinicalHistoryDto[]> = new ReplaySubject<ExternalClinicalHistoryDto[]>(1);
-	private filteredHistories$: Observable<ExternalClinicalHistoryDto[]>;
+	private filteredHistories: ExternalClinicalHistorySummaryDto[] = [];
+	private filteredHistoriesSubject: ReplaySubject<ExternalClinicalHistorySummaryDto[]> = new ReplaySubject<ExternalClinicalHistorySummaryDto[]>(1);
+	private filteredHistories$: Observable<ExternalClinicalHistorySummaryDto[]>;
 
 	constructor(private readonly externalClinicalHistoryService: ExternalClinicalHistoryService) {
 		this.filteredHistories$ = this.filteredHistoriesSubject.asObservable();
@@ -34,7 +34,7 @@ export class ExternalClinicalHistoryFacadeService {
 	// It's necessary to invoke this method to bring the information from Backend
 	public loadInformation(patientId: number): void {
 		this.externalClinicalHistoryService.getExternalClinicalHistoryList(patientId).subscribe(
-			(externalClinicalHistories: ExternalClinicalHistoryDto[]) => {
+			(externalClinicalHistories: ExternalClinicalHistorySummaryDto[]) => {
 				this.externalClinicalHistoryList = externalClinicalHistories;
 				this.hasInformationSubject.next(externalClinicalHistories.length > 0);
 				this.filteredHistories = externalClinicalHistories;
@@ -45,7 +45,7 @@ export class ExternalClinicalHistoryFacadeService {
 		);
 	}
 
-	public getFilteredHistories$(): Observable<ExternalClinicalHistoryDto[]> {
+	public getFilteredHistories$(): Observable<ExternalClinicalHistorySummaryDto[]> {
 		return this.filteredHistories$;
 	}
 
@@ -65,7 +65,7 @@ export class ExternalClinicalHistoryFacadeService {
 
 	private applyFilters(): void {
 		this.filteredHistories = this.externalClinicalHistoryList.filter(
-			(history: ExternalClinicalHistoryDto) => {
+			(history: ExternalClinicalHistorySummaryDto) => {
 				let meets: boolean;
 
 				meets = ((this.filters.keyWord && this.keyWordFound(this.filters.keyWord, history.notes)) || !this.filters.keyWord);
@@ -90,7 +90,7 @@ export class ExternalClinicalHistoryFacadeService {
 		}
 
 		this.externalClinicalHistoryList.forEach(
-			(history: ExternalClinicalHistoryDto) => {
+			(history: ExternalClinicalHistorySummaryDto) => {
 				if (history.professionalSpecialty && !options.specialties.find(specialty => specialty == history.professionalSpecialty))
 					options.specialties.push(history.professionalSpecialty);
 

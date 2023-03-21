@@ -21,4 +21,14 @@ public class BasicPersonalDataVo {
 
 	private String nameSelfDetermination;
 
+	private String middleNames;
+
+	private String otherLastNames;
+
+	public BasicPersonalDataVo(String firstName, String lastName, String identificationNumber, String nameSelfDetermination) {
+		this.firstName = firstName;
+		this.lastName = lastName;
+		this.identificationNumber = identificationNumber;
+		this.nameSelfDetermination = nameSelfDetermination;
+	}
 }

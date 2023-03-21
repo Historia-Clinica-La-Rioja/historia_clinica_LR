@@ -23,6 +23,7 @@
 	},
 	"buttons": {
 		"ADD": "Agregar",
+		"NEXT": "Siguiente",
 		"BACK": "Volver",
 		"BACK_AND_COMPLETE": "Regresar y completar",
 		"CANCEL": "Cancelar",
@@ -42,7 +43,9 @@
 		"SELECT": "Seleccionar",
 		"APPLY": "Aplicar",
 		"ACCEPT": "Aceptar",
-		"CSV_DOWNLOAD": "DESCARGAR .CSV"
+		"SAVE": "Guardar",
+		"CSV_DOWNLOAD": "DESCARGAR .CSV",
+		"ELECTRONIC_FIRM": "Firmar electrónicamente"
 	},
 	"forms": {
 		"REQUIRED": "El campo es requerido",

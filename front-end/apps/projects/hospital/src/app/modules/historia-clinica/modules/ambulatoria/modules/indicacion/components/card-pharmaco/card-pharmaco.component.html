@@ -1,0 +1,32 @@
+<div fxLayout="column">
+	<mat-card *ngIf="pharmacos?.length else noInfo">
+		<div *ngFor="let pharmaco of pharmacos;last as isLast">
+
+			<div fxLayoutAlign="space-between center">
+				<div fxFlex="45%">
+					<span class="bold-text">{{pharmaco.snomed.pt | translate | titlecase}}</span>
+				</div>
+
+				<div fxFlex="row" fxLayoutAlign="space-around" fxFlex="35%" class="info">
+					<span fxFlex="50%" color="grey"> {{pharmaco.dosage.quantity.value}}
+						{{pharmaco.dosage.quantity.unit}}</span>
+
+					<span fxFlex="50%"> {{pharmaco.via | translate}}</span>
+
+				</div>
+
+				<div fxFlex="20%" fxLayoutAlign="end">
+					<button mat-flat-button color="primary"
+						(click)=emit(pharmaco)>{{'indicacion.card-pharmaco.SELECTION' | translate | titlecase}}</button>
+				</div>
+			</div>
+
+			<mat-divider *ngIf="!isLast"></mat-divider>
+
+		</div>
+	</mat-card>
+</div>
+
+<ng-template #noInfo>
+	<app-no-data></app-no-data>
+</ng-template>

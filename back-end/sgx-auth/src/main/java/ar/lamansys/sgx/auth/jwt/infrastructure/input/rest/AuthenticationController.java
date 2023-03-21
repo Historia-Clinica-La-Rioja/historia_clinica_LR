@@ -5,6 +5,7 @@ import javax.validation.Valid;
 import ar.lamansys.sgx.auth.jwt.application.logintwofactorauthentication.LoginTwoFactorAuthentication;
 
 import ar.lamansys.sgx.auth.jwt.infrastructure.input.rest.dto.TwoFactorAuthenticationLoginDto;
+
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -45,7 +46,6 @@ public class AuthenticationController {
 	private final RefreshToken refreshToken;
 	private final LoginTwoFactorAuthentication loginTwoFactorAuthentication;
 	private final ICaptchaService captchaService;
-
 	private final CookieService cookieService;
 
 

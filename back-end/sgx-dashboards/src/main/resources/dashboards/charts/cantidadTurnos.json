@@ -1,0 +1,29 @@
+{
+  "cubeQuery": {
+    "measures": [
+      "CantidadTurnos.cantidad_turnos"
+    ],
+    "timeDimensions": [
+      {
+        "dimension": "CantidadTurnos.fecha_consulta",
+        "granularity": "month",
+        "dateRange": "This year"
+      }
+    ],
+    "order": {
+      "CantidadTurnos.fecha_consulta": "asc"
+    },
+    "dimensions": []
+  },
+  "chartType": "line",
+  "pivotConfig": {
+    "x": [
+      "CantidadTurnos.fecha_consulta.month"
+    ],
+    "y": [
+      "measures"
+    ],
+    "fillMissingDates": true,
+    "joinDateRange": false
+  }
+}

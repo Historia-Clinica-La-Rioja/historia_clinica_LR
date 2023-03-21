@@ -28,4 +28,6 @@ public class AppointmentDto extends CreateAppointmentDto {
 
 	@Nullable
 	private String observationBy;
+
+	private boolean isProtected;
 }

@@ -84,10 +84,11 @@ public class AppointmentTicketBo {
 			fullName += " " + patientOtherLastNames;
 		if(includeNameSelfDetermination && !(patientNameSelfDetermination == null || patientNameSelfDetermination.isBlank()))
 			fullName += " " + patientNameSelfDetermination;
-		else
+		else {
 			fullName += " " + patientFirstName;
-		if(!(patientMiddleNames == null || patientMiddleNames.isBlank()))
-			fullName += " " + patientMiddleNames;
+			if (!(patientMiddleNames == null || patientMiddleNames.isBlank()))
+				fullName += " " + patientMiddleNames;
+		}
 		return fullName;
 	}
 
@@ -97,10 +98,11 @@ public class AppointmentTicketBo {
 			fullName += " " + doctorOtherLastNames;
 		if(includeNameSelfDetermination && !(doctorNameSelfDetermination == null || doctorNameSelfDetermination.isBlank()))
 			fullName += " " + doctorNameSelfDetermination;
-		else
+		else {
 			fullName += " " + doctorFirstName;
-		if(!(doctorMiddleNames == null || doctorMiddleNames.isBlank()))
-			fullName += " " + doctorMiddleNames;
+			if (!(doctorMiddleNames == null || doctorMiddleNames.isBlank()))
+				fullName += " " + doctorMiddleNames;
+		}
 		return fullName;
 	}
 

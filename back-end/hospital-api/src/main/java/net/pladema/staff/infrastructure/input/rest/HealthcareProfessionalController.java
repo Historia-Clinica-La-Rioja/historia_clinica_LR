@@ -65,7 +65,7 @@ public class HealthcareProfessionalController {
 	}
 
 	@GetMapping("/institution/{institutionId}/person/{personId}")
-	@PreAuthorize("hasPermission(#institutionId, 'ADMINISTRADOR_INSTITUCIONAL_BACKOFFICE')")
+	@PreAuthorize("hasPermission(#institutionId, 'ADMINISTRADOR_INSTITUCIONAL_BACKOFFICE, ADMINISTRADOR_INSTITUCIONAL_PRESCRIPTOR')")
 	public ResponseEntity<ProfessionalDto> get(@PathVariable(name = "institutionId") Integer institutionId,
 											   @PathVariable(name = "personId") Integer personId) {
 		LOG.debug("Input parameters -> {}", personId);
@@ -83,7 +83,7 @@ public class HealthcareProfessionalController {
 	}
 
 	@PostMapping(value = "/institution/{institutionId}")
-	@PreAuthorize("hasPermission(#institutionId, 'ADMINISTRADOR_INSTITUCIONAL_BACKOFFICE')")
+	@PreAuthorize("hasPermission(#institutionId, 'ADMINISTRADOR_INSTITUCIONAL_BACKOFFICE, ADMINISTRADOR_INSTITUCIONAL_PRESCRIPTOR')")
 	public ResponseEntity<Integer> save(@PathVariable(name = "institutionId") Integer institutionId,
 										  @RequestBody HealthcareProfessionalCompleteDto professionalDto) {
 		LOG.debug("Input parameters -> {}", professionalDto);

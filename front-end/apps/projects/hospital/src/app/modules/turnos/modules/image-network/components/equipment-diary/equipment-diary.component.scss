@@ -1,0 +1,140 @@
+@import "../../../../../../../assets/styles/mixins";
+@import "../../../../turnos-mixins";
+
+$green-month-cell: #009b68;
+$blue-month-cell: #2687c5;
+$orange-month-cell: #ff5c00;
+$border-color-calendar: #e1e1e1;
+$border-color-cell: #888;
+
+.appointments {
+	background-color: white;
+
+	::ng-deep {
+		.cal-week-view .cal-day-columns {
+			.bg-green {
+				background-color: #D6FBD8!important;
+			}
+
+			.bg-yellow {
+				background-color: #FFF5E0 !important;
+			}
+
+			.cursor-pointer {
+				cursor: pointer;
+			}
+
+			.cal-events-container {
+				max-width: 80%;
+			}
+		}
+
+		.cal-event-title {
+			color: black;
+		}
+
+		.today.mat-button-toggle-appearance-standard {
+			background-color: white;
+			color: #747c85;
+		}
+
+		.cal-cell-row.cal-header {
+			border: {
+				left: {
+					width: 1px;
+					style: solid;
+					color: $border-color-calendar;
+				}
+				right: {
+					width: 1px;
+					style: solid;
+					color: $border-color-calendar;
+				}
+				bottom: none;
+			}
+		}
+
+		.cal-week-view {
+			.cal-day-column:last-child {
+				border-right: 1px solid $border-color-cell;
+			}
+	
+			.cal-day-column:first-child {
+				border-left: 1px solid $border-color-cell;
+			}
+		}
+	
+		.cal-week-view .cal-day-column, 
+		.cal-week-view .cal-hour:not(:last-child) .cal-hour-segment, 
+		.cal-week-view .cal-hour:last-child :not(:last-child) .cal-hour-segment {
+			border-color: $border-color-cell;
+		}	
+	}
+}
+
+.header {
+	padding: 15px;
+	border: {
+		width: 1px;
+		style: solid;
+		color: $border-color-calendar;
+		bottom: none;
+	}
+}
+
+.daily-amounts {
+	padding: 5px;
+
+	font-size: 12px;
+	font-weight: 500;
+
+	.count-border {
+		border: 1px solid;
+		box-sizing: border-box;
+		border-radius: 3px;
+
+		max-height: 17px;
+		max-width: 24px;
+		padding: 9px 8px;
+	}
+
+	.spontaneous {
+		color: $blue-month-cell;
+
+		div.count-border {
+			border-color: $blue-month-cell;
+		}
+	}
+
+	.scheduled-assign {
+		color: $green-month-cell;
+	}
+
+	.scheduled-available {
+		div.count-border {
+			background-color: $green-month-cell;
+			border-color: $green-month-cell;
+			color: white;
+		}
+
+		& > span {
+			color: $green-month-cell;
+		}
+	}
+
+	.no-available {
+		color: $orange-month-cell;
+	}
+}
+
+::ng-deep {
+	.cal-month-view .cal-day-number.darker-color {
+		opacity: 1;
+		color: #282828;
+	}
+
+	.cal-month-view .cal-day-cell.cal-out-month .cal-day-number.darker-color {
+		opacity: 1;
+		color: #8c8c8c;
+	}
+}

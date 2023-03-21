@@ -2,9 +2,9 @@
 	<mat-spinner *ngIf="showSpinner()"></mat-spinner>
 
     <section *ngIf="viewSearchComponent() && !showSpinner()">
-		<h2  class="page-title" [translate]="'pacientes.search.TITLE'"></h2>
+		<h2  class="page-title">{{ 'pacientes.search.TITLE' | translate | patientToPerson}}</h2>
 		<p>
-			<span [translate]="'pacientes.search.SUBTITLE'"></span>
+			<span>{{ 'pacientes.search.SUBTITLE' | translate | patientToPerson}}</span>
 			<br>
 			<span [translate]="'pacientes.search.SUBTITLE_TWO'"></span>
 		</p>
@@ -137,7 +137,7 @@
 				</div>
 				<br>
 
-				<mat-action-row *appHasRole="['ADMINISTRATIVO','ADMINISTRADOR_INSTITUCIONAL_BACKOFFICE']">
+				<mat-action-row *appHasRole="['ADMINISTRATIVO','ADMINISTRADOR_INSTITUCIONAL_BACKOFFICE', 'ADMINISTRATIVO_RED_DE_IMAGENES', 'ADMINISTRADOR_INSTITUCIONAL_PRESCRIPTOR']">
 					<button mat-stroked-button type="button" (click)="back()">
 						<span [translate]="'buttons.BACK'"></span>
 					</button>
@@ -150,7 +150,7 @@
 	</section>
 	<div class="table-container" *ngIf="!viewSearchComponent() && !showSpinner()">
 		<section>
-			<h2 class="mat-body-2" [translate]="'pacientes.search.TITLE'"></h2>
+			<h2 class="mat-body-2">{{ 'pacientes.search.TITLE' | translate | patientToPerson}}</h2>
 			<h3 class="mat-body-2" [translate]="'Se encontraron posibles coincidencias.'"></h3>
 
 		<div *ngIf="!ffOfCardsIsOn else patientCard">
@@ -161,9 +161,15 @@
 			<app-card-patient [patientData]="patientData" *ngIf="patientData?.length > 0 else noInfo"></app-card-patient>
 		</ng-template>
 
-			<div class="new-patient-button" align="end">
-				<button *appHasRole="['ADMINISTRATIVO','ADMINISTRADOR_INSTITUCIONAL_BACKOFFICE']" mat-raised-button id="new_patient_button" color="primary" (click)="goToNewPatient()">
-					<span [translate]="'pacientes.search.NEW_PATIENT'"></span>
+			<div class="new-patient-button" fxLayoutAlign="end none" >
+				<button *appHasRole="['ADMINISTRATIVO','ADMINISTRADOR_INSTITUCIONAL_BACKOFFICE', 'ADMINISTRATIVO_RED_DE_IMAGENES', 'ADMINISTRADOR_INSTITUCIONAL_PRESCRIPTOR']" mat-raised-button id="new_patient_button" color="primary" (click)="goToNewPatient()">
+					<div *ngIf="hasInstitutionalAdministratorRole else titleForOtherRoles">
+						<span > {{ 'pacientes.search.NEW_PERSON' | translate }} </span>
+					</div>
+					<ng-template #titleForOtherRoles>
+						<span> {{ 'pacientes.search.NEW_PATIENT' | translate }} </span>
+					</ng-template>
+
 				</button>
 			</div>
 		</section>

@@ -1,5 +1,12 @@
 package net.pladema.clinichistory.hospitalization.service.evolutionnote.impl;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Collectors;
+
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
 import ar.lamansys.sgh.clinichistory.application.createDocument.DocumentFactory;
 import ar.lamansys.sgh.clinichistory.domain.ips.ClinicalTerm;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.DocumentStatus;
@@ -16,19 +23,10 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import net.pladema.clinichistory.hospitalization.service.InternmentDocumentModificationValidator;
 import net.pladema.clinichistory.hospitalization.service.InternmentEpisodeService;
-
 import net.pladema.clinichistory.hospitalization.service.evolutionnote.EvolutionNoteService;
 import net.pladema.clinichistory.hospitalization.service.evolutionnote.EvolutionNoteValidator;
 import net.pladema.clinichistory.hospitalization.service.evolutionnote.UpdateEvolutionNoteService;
-
 import net.pladema.clinichistory.hospitalization.service.evolutionnote.domain.EvolutionNoteBo;
-
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-
-import java.util.ArrayList;
-import java.util.List;
-import java.util.stream.Collectors;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -47,6 +45,7 @@ public class UpdateEvolutionNoteServiceImpl implements UpdateEvolutionNoteServic
 	@Transactional
 	public Long execute(Integer intermentEpisodeId, Long oldEvolutionId, EvolutionNoteBo newEvolution) {
 		log.debug("Input parameters -> intermentEpisodeId {}, oldEvolutionId {}, newEvolution {} ", intermentEpisodeId, oldEvolutionId, newEvolution);
+		evolutionNoteValidator.validateRolePermission(newEvolution);
 		evolutionNoteValidator.assertContextValid(newEvolution);
 		EvolutionNoteBo oldEvolution = evolutionNoteService.getDocument(oldEvolutionId);
 		newEvolution.setInitialDocumentId(oldEvolution.getInitialDocumentId() != null ? oldEvolution.getInitialDocumentId() : oldEvolution.getId());
@@ -78,6 +77,7 @@ public class UpdateEvolutionNoteServiceImpl implements UpdateEvolutionNoteServic
 		sharedDocumentPort.deleteDocument(oldEvolution.getId(), DocumentStatus.ERROR);
 
 		// create new document
+		newEvolution.setPatientInternmentAge(internmentEpisodeService.getEntryDate(newEvolution.getEncounterId()).toLocalDate());
 		newEvolution.setId(documentFactory.run(newEvolution, true));
 		internmentEpisodeService.addEvolutionNote(newEvolution.getEncounterId(), newEvolution.getId());
 		log.debug("Output -> {}", newEvolution.getId());

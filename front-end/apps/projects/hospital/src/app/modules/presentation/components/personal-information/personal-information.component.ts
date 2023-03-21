@@ -1,9 +1,10 @@
 import { Component, EventEmitter, Input, OnChanges, Output } from '@angular/core';
 import { Router } from '@angular/router';
-import { AddressDto, HealthInsuranceDto, IdentificationTypeDto, PatientMedicalCoverageDto } from '@api-rest/api-model';
+import { AddressDto, HealthInsuranceDto, IdentificationTypeDto, PatientMedicalCoverageDto, PersonFileDto } from '@api-rest/api-model';
 import { ContextService } from '@core/services/context.service';
 import { Address } from '@presentation/pipes/fullHouseAddress.pipe';
 import { EMedicalCoverageType } from "@pacientes/dialogs/medical-coverage/medical-coverage.component";
+import { PersonFileService } from '@api-rest/services/person-file.service';
 @Component({
 	selector: 'app-personal-information',
 	templateUrl: './personal-information.component.html',
@@ -20,12 +21,14 @@ export class PersonalInformationComponent implements OnChanges {
 	public addressPresent = false;
 	public address: Address;
 	private readonly routePrefix;
+	files= [];
 
 	constructor(
 		private readonly contextService: ContextService,
-		private readonly router: Router
+		private personFileService: PersonFileService
 
 	) {
+
 		this.routePrefix = `institucion/${this.contextService.institutionId}`;
 	}
 
@@ -65,6 +68,9 @@ export class PersonalInformationComponent implements OnChanges {
 		return [patientMedicalCoverage?.planName?.toLowerCase(), patientMedicalCoverage?.condition?.toLowerCase()].filter(Boolean).join(' | ');
 	}
 
+	downloadFile(fileId: number, fileName: string): void {
+		this.personFileService.downloadFile(fileId, this.personalInformation.personId, fileName);
+	}
 }
 
 export class PersonalInformation {
@@ -78,4 +84,6 @@ export class PersonalInformation {
 	phoneNumber: string;
 	medicalCoverageName: string;
 	medicalCoverageAffiliateNumber: string;
+	files?: PersonFileDto[];
+	personId:number;
 }

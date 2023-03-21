@@ -1,70 +1,75 @@
 # Sistemas de eventos
 
-El sistema de hsi incorporo una arquitectura orientada a eventos para manejar  esta guía se explica cómo poner en funcionamiento un server de Keycloak básico para el uso como servidor de autenticación con OAuth para HSI.
+Se agregó funcionalidad al sistema siguiendo una arquitectura orientada a eventos. Esta funcionalidad tiene como objetivo agregar un nuevo canal de comunicación entre nuestro sistema y otros sistemas externos que puedan tener las distintas jurisdicciones.
 
-1. Instalar Keycloak. Existen varias alternativas para la instalación de Keycloak, las cuales se encuentran en [este link](https://www.keycloak.org/getting-started). 
-Una forma sencilla es usando Docker, que se puede hacer ejecutando el siguiente comando:
-   
-    `docker run -p 8080:8080 -e KEYCLOAK_USER=admin -e KEYCLOAK_PASSWORD=admin quay.io/keycloak/keycloak:16.1.0`
+Cuando hablamos de una arquitectura orientada a eventos estamos estableciendo que el sistema de hospitales van a emitir eventos que informe sucesos importantes en el sistema. Estos eventos se transmitirán en forma de mensajes hacia un broker. Dicho broker es un canal central de comunicación bajo el cuál distintos sistemas se podrán conectar mediante un modelo de publicación/subscripción. La siguiente imagen mostraría la comunicación
 
-El comando configura el usuario administrador con username "_admin_" y password "_admin_". El servidor estará escuchando en `localhost:8080`
+![Arquitectura](images/eventos-1-arquitectura.jpg)
 
-2. Ingresar a la consola de administración de Keycloak. En el browser ir a [http://localhost:8080/auth/admin](http://localhost:8080/auth/admin). Ingresar con las credenciales configuradas en el paso anterior.
-3. En el menú de la izquierda clickear el botón **_Add realm_**. Asignarle un nombre al realm, por ejemplo, "_hsi-test_" como se muestra en la imagen. Clickear en **_Create_**.
+## Implementación
+
+Para implementar el sistema de eventos se usó como broker mosquitto. Mosquitto es un broker de mensajería de código abierto que usa el protocolo mqtt para el envío de mensajes. Algunas de sus características son:
+
+- comunicación mediante mqtt con TLS
+- comunicación mediante websockets con TLS
+- manejos de roles y permisos (plugin de cedalo)
+
+Teniendo en cuenta estas características el sistema de HSI, va a realizar publicaciones de eventos a unos tópicos específicos que se van a ir definiendo en el siguiente [documento del sistema](../../eventos.md), de la siguiente manera:
+
+![Tracking de eventos](images/eventos-2-tracking.jpg)
+
+## Seguridad 
+
+Conociendo los eventos que se publican, un sistema de una jurisdicción se puede conectar al broker para escuchar dichos eventos y hacer algo en consecuencia (estadísticas, cambios en el sistema, etc).
+
+Para poder conectarse al broker, el equipo de HSI tiene que generarle credenciales de conexión (usuario y contraseña) al dicho sistema. Estas credenciales no solo lo identificará, sino también el equipo de HSI puede usar CEDALO para determinar qué eventos puede escuchar y qué eventos puede publicar.
+
+CEDALO es una aplicación web que te permite gestionar mosquitto. Para eso el personal de HSI se puede logear en la aplicación
+
+![Cedalo eventos](images/eventos-3-cedalo-login.jpg)
+
+Una vez dentro la aplicación web se presenta de la siguiente forma:
+
+![Cedalo home](images/eventos-4-cedalo-home.jpg)
+
+De la página principal nos vamos a centrar en los menús: clients y  roles
+
+### Menú Clients
+
+En esta sección se puede  crear clientes que se van a conectar al sistema y establecer que roles tiene.
+
+![Cedalo menu clients](images/eventos-5-cedalo-menu-clients.jpg)
+
+### Menú roles
+En esta sección se puede crear roles y definir en qué tópico puede publicar y a cuál se puede suscribir.
+
+![Cedalo menu clients](images/eventos-6-cedalo-menu-role.jpg)
 
 
-   ![Add Realm](images/keycloak-1-create-realm.jpg) 
+Si accedemos a uno de los roles podemos ver lo siguiente en la pestaña ACLs
 
-4. En las configuraciones del realm, cambiar a la pestaña _**Login**_ y habilitar la opción _**Edit username**_. Configurar las demás opciones según se prefiera y clickear en **_Save_**.
+![Cedalo menu role acl](images/eventos-7-cedalo-menu-role-acl.jpg)
 
+Esta pestaña te permite asociar al rol **R_ALTAMEDICACINTERNACION**,  el permiso de que un cliente puede suscribirse al tópico **HSI/HOSPITAL_API/ALTA_MEDICA**. Si un cliente tiene este rol podrá escuchar eventos que sucedan bajo ese tópico.
 
-   ![Configure login](images/keycloak-2-configure-login.jpg)
+Por otra parte la siguiente imagen, muestra un el rol **PUBLICADORHSI**, que le puede dar a un cliente el permiso de publicar eventos al tópico HSI/#. Como se ve en este tópico se hizo uso de un carácter comodín (#) que indica que la publicación al tópico puede suceder sobre cualquier subtópico de **HSI/**. Por ejemplo, se podría publicar al tópico **HSI/HOSPITAL_ALTA_MEDICA**. 
 
-5. En el menú de la izquierda, ir a _**Clients**_. En la parte superior de la tabla seleccionar **_Create_**. En el campo _Client ID_ ponerle un nombre al cliente, por ejemplo "_hsi-client_". Asegurarse de que el protocolo seleccionado sea "_openid-connect_". Clickear en _**Save**_.
-6. En la configuración del cliente, asegurarse que _Access Type_ sea "_public_". Configurar _Valid Redirect URIs_ y _Web Origins_ según la URL base donde se encuentra el la WebApp y el Backoffice. Por ejemplo, si está corriendo la WebApp de forma local, configurar como en la imagen:
+![Cedalo menu role acl](images/eventos-8-cedalo-menu-role-publicador.jpg)
 
+Hasta ahora, se describió cómo los distintos actores se van a poder conectar y compartir información. Sin embargo, no se detalló qué formato tiene la información del evento/mensaje.  El formato del mensaje que se puede utilizar es JSON, dentro de este se puede adoptar cualquier tipo de contenido a establecer entre las partes. En la siguiente imagen se puede visualizar, utilizando un cliente de MQTTBox, los mensajes recibidos para el evento nueva consulta odontológica que el sistema de HSI genera.
 
-   ![Configure login](images/keycloak-3-configure-client.jpg)
+![Cedalo menu role publicador](images/eventos-9-mqttbox.jpg)
 
-Dejar las demás opciones como están, y clickear en _**Save**_.
+#### Cuerpo del mensaje:
 
-7. En el menú de la izquierda, ir a _**Users**_. Clickear en _**Add user**_. Asignarle un nombre al usuario que tendrá el rol de crear usuarios, por ejemplo "_user-admin_". Clickear en _**Save**_.
+```json
 
-8. En las configuraciones de ese usuario, ir a la pestaña _**Credentials**_. Asignarle un password al usuario, por ejemplo "_admin123_", y deshabilitar la opción _Temporary_. Clickear _**Set Password**_.
-
-9. Cambiar a la pestaña _**Role Mappings**_. En el select _Client Roles_, seleccionar "_realm-management_". En _Available Roles_ buscar "_manage-users_" y clickear _**Add selected**_.
-
-10. Volver a _**Users**_. Clickear en _**Add user**_. Asignarle username "admin@example.com". Clickear en _**Save**_.
-
-11. En las configuraciones de ese usuario, ir a la pestaña _**Credentials**_. Asignarle un password al usuario, por ejemplo "_admin123_", y deshabilitar la opción _Temporary_. Clickear _**Set Password**_.
-
-12. Volver a _**Realm Settings**_ e ir a la pestaña _**Tokens**_. Revisar el valor configurado de _Access Token Lifespan_, ya que servirá para configurar el Back-End (por defecto son 5 minutos).
-
-13. Antes de iniciar el Back End, configurar las siguientes propiedades de OAuth:
-
-```   
-    ws.oauth.enabled = true
-    ws.oauth.realm = <NOMBRE DEL REALM>
-    ws.oauth.client-id = <NOMBRE DEL CLIENTE>
-    ws.oauth.token-expiration = <TIEMPO HASTA LA EXPIRACIÓN DEL ACCESS TOKEN EN SEGUNDOS>
-    ws.oauth.user-admin.username = <NOMBRE DEL USUARIO ADMINISTRADOR DE USUARIOS>
-    ws.oauth.user-admin.password = <CONTRASEÑA DEL USUARIO ADMINISTRADOR DE USUARIOS>
-    ws.oauth.url.base = <URL BASE DONDE CORRE KEYCLOAK>
-    ws.oauth.url.issuer = <URL BASE DONDE CORRE KEYCLOAK>/auth/realms/<NOMBRE DEL REALM>
+{"description":"{\"patientId\":1,\"topic\":\"HSI/INSTITUTION/1/ODONTOLOGY/NUEVA_CONSULTA\"}"}
 ```
 
-Con los valores de ejemplo de esta guía, las propiedades quedan así: 
+#### Topic:
 
-``` 
-    ws.oauth.enabled = true
-    ws.oauth.realm = hsi-test
-    ws.oauth.client-id = hsi-client
-    ws.oauth.token-expiration = 300
-    ws.oauth.user-admin.username = user-admin
-    ws.oauth.user-admin.password = admin123
-    ws.oauth.url.base = http://localhost:8080
-    ws.oauth.url.issuer = http://localhost:8080/auth/realms/hsi-test
-```
+HSI/INSTITUTION/1/ODONTOLOGY/NUEVA_CONSULTA
 
-14. Iniciar el Back End.
-15. De ahora en adelante, los usuarios creados desde la aplicación serán creados también en Keycloak.
+
+En resumen acá está diciendo que el paciente con id 1, tuvo una nueva consulta ambulatoria.

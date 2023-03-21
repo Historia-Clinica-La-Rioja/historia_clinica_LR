@@ -40,4 +40,10 @@ public interface DocumentRepository extends SGXAuditableEntityJPARepository<Docu
 			"FROM Document d " +
 			"WHERE d.id = :documentId ")
 	Short getSourceTypeId(@Param("documentId") Long documentId);
+
+	@Transactional(readOnly = true)
+	@Query(value = "SELECT d.institutionId " +
+			"FROM Document d " +
+			"WHERE d.id = :documentId ")
+	Integer getInstitutionIdFromDocument(@Param("documentId") Long documentId);
 }

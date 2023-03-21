@@ -49,6 +49,7 @@ import { CtrlTemplateDirective } from './directives/ctrl-template.directive';
 // pipes
 import { DayTimeRangePipe } from './pipes/day-time-range.pipe';
 import { FullHouseAddressPipe } from './pipes/fullHouseAddress.pipe';
+import { PatientToPersonPipe } from "./pipes/PatientToPersonPipe";
 import { PersonIdentificationPipe } from './pipes/person-identification.pipe';
 import { ViewDateDtoPipe } from './pipes/view-date-dto.pipe';
 import { ViewDatePipe } from './pipes/view-date.pipe';
@@ -101,6 +102,7 @@ import { ViewHourMinutePipe } from './pipes/view-hour-minute.pipe';
 		// pipes
 		DayTimeRangePipe,
 		FullHouseAddressPipe,
+		PatientToPersonPipe,
 		PersonIdentificationPipe,
 		ViewDateDtoPipe,
 		ViewDatePipe,
@@ -153,12 +155,14 @@ import { ViewHourMinutePipe } from './pipes/view-hour-minute.pipe';
 		TableComponent,
 		TypeaheadComponent,
 		UserBadgeComponent,
+		LogoComponent,
 		// dialogs
 		// directives
 		CtrlTemplateDirective,
 		// pipes
 		DayTimeRangePipe,
 		FullHouseAddressPipe,
+		PatientToPersonPipe,
 		PersonIdentificationPipe,
 		ViewDateDtoPipe,
 		ViewDatePipe,

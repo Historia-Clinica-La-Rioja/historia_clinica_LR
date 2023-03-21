@@ -1,0 +1,25 @@
+@import "../../../../../../../assets/styles/mixins";
+
+.gray-color {
+    color: #DADADA;
+}
+
+.gray-text {
+    color: #9A9A9A;
+}
+
+.content-primary {
+    @include info-primary;
+}
+
+.content-secondary {
+    @include info-secondary;
+}
+
+.bold {
+    font-weight: 500;
+}
+
+.margin-bottom {
+    margin-bottom: 20px;
+}

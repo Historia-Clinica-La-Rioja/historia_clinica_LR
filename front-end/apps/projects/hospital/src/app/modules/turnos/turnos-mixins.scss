@@ -1,9 +1,11 @@
 @import "./routes/agenda/agenda.component.scss-theme.scss";
 @import "./dialogs/appointment/appointment.component.scss-theme.scss";
+@import "./modules/image-network/components/equipment-diary/equipment-diary..component.scss-theme.scss";
 
 @mixin turnos-mixins($theme) {
     @include app-agenda($theme);
     @include app-appointment($theme);
+    @include app-equipment-diary($theme);
 }
 
 .turnos div.calendar-event-white-text .cal-event-title {
@@ -12,6 +14,10 @@
 
 .turnos div.calendar-event-grey-text .cal-event-title {
     color: #7D807D;
+}
+
+.turnos div.calendar-event-purple-text .cal-event-title {
+    color: #AF26C5;
 }
 
 @mixin fixed-header {

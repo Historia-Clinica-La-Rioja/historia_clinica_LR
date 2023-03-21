@@ -44,8 +44,7 @@
 				<div fxLayout="column" fxFlex="50%" fxLayoutGap="0px">
 					<ng-container
 						*appHasRole="['ESPECIALISTA_MEDICO', 'ENFERMERO_ADULTO_MAYOR','ENFERMERO','PROFESIONAL_DE_SALUD', 'ESPECIALISTA_EN_ODONTOLOGIA']">
-						<app-alergias-summary [allergies]="allergies$ | async">
-						</app-alergias-summary>
+						<app-alergias-summary [allergiesDto]="allergies$ | async"></app-alergias-summary>
 						<app-external-summary-card *ngIf="loadExternal"
 							[header]="this.patientExternalSummary.organization.name">
 							<app-table [showTableHeader]="false" [model]="this.allergiesTable"

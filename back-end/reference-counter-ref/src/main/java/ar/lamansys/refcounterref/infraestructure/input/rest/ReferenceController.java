@@ -1,12 +1,16 @@
 package ar.lamansys.refcounterref.infraestructure.input.rest;
 
+import ar.lamansys.refcounterref.application.getreferencesummary.GetReferenceSummary;
 import ar.lamansys.refcounterref.application.getreference.GetReference;
+import ar.lamansys.refcounterref.domain.reference.ReferenceSummaryBo;
 import ar.lamansys.refcounterref.infraestructure.input.rest.dto.reference.ReferenceGetDto;
+import ar.lamansys.refcounterref.infraestructure.input.rest.dto.reference.ReferenceSummaryDto;
 import ar.lamansys.refcounterref.infraestructure.input.rest.mapper.GetReferenceMapper;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -27,11 +31,12 @@ import java.util.List;
 public class ReferenceController {
 
     private final GetReference getReference;
+    private final GetReferenceSummary getReferenceSummary;
     private final GetReferenceMapper getReferenceMapper;
 
     @GetMapping
     @ResponseStatus(code = HttpStatus.OK)
-    @PreAuthorize("hasPermission(#institutionId, 'ESPECIALISTA_MEDICO, ENFERMERO, PROFESIONAL_DE_SALUD, ESPECIALISTA_EN_ODONTOLOGIA')")
+    @PreAuthorize("hasPermission(#institutionId, 'ESPECIALISTA_MEDICO, ENFERMERO, PROFESIONAL_DE_SALUD, ESPECIALISTA_EN_ODONTOLOGIA, PRESCRIPTOR')")
     public List<ReferenceGetDto> getReference(
             @PathVariable(name = "institutionId") Integer institutionId,
             @PathVariable(name = "patientId") Integer patientId,
@@ -41,5 +46,18 @@ public class ReferenceController {
         log.debug("Output -> result {}", result);
         return result;
     }
+
+	@GetMapping("/requested")
+	@PreAuthorize("hasPermission(#institutionId, 'ADMINISTRATIVO, ADMINISTRATIVO_RED_DE_IMAGENES, ESPECIALISTA_MEDICO, PROFESIONAL_DE_SALUD, ESPECIALISTA_EN_ODONTOLOGIA')")
+	public ResponseEntity<List<ReferenceSummaryDto>> getReferencesSummary(@PathVariable(name = "institutionId") Integer institutionId,
+														  @PathVariable(name = "patientId") Integer patientId,
+														  @RequestParam(name = "clinicalSpecialtyId") Integer clinicalSpecialtyId,
+														  @RequestParam(name = "careLineId") Integer careLineId) {
+		log.debug("Input parameters -> institutionId {}, patientId {}, clinicalSpecialtyId {}, careLineId {}", institutionId, patientId, clinicalSpecialtyId, careLineId);
+		List<ReferenceSummaryBo> referenceSummaryBoList = getReferenceSummary.run(patientId, clinicalSpecialtyId, careLineId);
+		List<ReferenceSummaryDto> result = getReferenceMapper.toReferenceSummaryDtoList(referenceSummaryBoList);
+		log.debug("Output -> result {}", result);
+		return ResponseEntity.ok().body(result);
+	}
 
 }

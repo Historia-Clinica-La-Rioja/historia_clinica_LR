@@ -46,6 +46,7 @@ export class InternmentPharmacoCardComponent implements OnChanges {
 				extra_info: loadExtraInfoPharmaco(pharmaco, true),
 				createdBy: pharmaco.createdBy,
 				timeElapsed: showTimeElapsed(pharmaco.createdOn),
+				observations: pharmaco.note ? pharmaco.note.trim() : ''
 			}
 		});
 	}

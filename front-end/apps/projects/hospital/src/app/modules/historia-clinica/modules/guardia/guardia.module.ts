@@ -73,6 +73,10 @@ import { CuadroDeDialogoComponent } from './routes/episode-details/cuadro-de-dia
 		LazyMaterialModule,
 		PresentationModule,
 	],
+	exports: [
+		TriageDetailsComponent,
+		TriageChipComponent
+	],
 	providers: [
 		// services
 		EpisodeStateService,

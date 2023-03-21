@@ -3,6 +3,10 @@ package net.pladema.person.repository;
 import java.util.List;
 import java.util.Optional;
 
+import net.pladema.person.repository.domain.CompletePersonNameBo;
+
+import net.pladema.person.service.domain.PersonInformationBo;
+
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -60,12 +64,13 @@ public interface PersonRepository extends JpaRepository<Person, Integer> {
     Optional<CompletePersonVo> getCompletePerson(@Param("personId") Integer personId);
 
     @Transactional(readOnly = true)
-    @Query("SELECT p " +
+    @Query("SELECT NEW net.pladema.person.repository.domain.CompletePersonNameBo( p, pe.nameSelfDetermination) " +
     "FROM Diary d " +
     "JOIN HealthcareProfessional hp ON d.healthcareProfessionalId = hp.id " +
     "JOIN Person p ON hp.personId = p.id " +
+	"JOIN PersonExtended pe ON (p.id = pe.id) " +
     "WHERE d.id = :diaryId")
-    Optional<Person> findProfessionalNameByDiaryId(@Param("diaryId") Integer diaryId);
+    Optional<CompletePersonNameBo> findProfessionalNameByDiaryId(@Param("diaryId") Integer diaryId);
 
 	@Transactional(readOnly = true)
 	@Query("SELECT NEW net.pladema.person.repository.domain.PersonRecipientVo(" +
@@ -79,5 +84,33 @@ public interface PersonRepository extends JpaRepository<Person, Integer> {
 			"LEFT JOIN PersonExtended as pe ON (pe.id = p.id) " +
 			"WHERE p.id = :personId ")
 	Optional<PersonRecipientVo> getPersonRecipient(@Param("personId") Integer personId);
+
+	@Transactional(readOnly = true)
+	@Query("SELECT NEW net.pladema.person.service.domain.PersonInformationBo(pe.firstName, pe.middleNames, "+
+			"pe.lastName, pe.otherLastNames, pe.identificationNumber, it.description as identificationTypeDescription, " +
+			"pe.birthDate, p.typeId) " +
+			"FROM Person as pe " +
+			"LEFT JOIN PersonExtended as pex ON (pe.id = pex.id) " +
+			"LEFT JOIN Address as a ON (a.id = pex.addressId) " +
+			"LEFT JOIN IdentificationType as it ON (it.id = pe.identificationTypeId) " +
+			"LEFT JOIN City as c ON (c.id = a.cityId) " +
+			"LEFT JOIN Department as d ON (d.id = c.departmentId) " +
+			"LEFT JOIN Province as pr ON (pr.id = d.provinceId) " +
+			"JOIN Patient p ON (pe.id = p.personId) " +
+			"WHERE pe.identificationNumber = :identificationNumber " +
+			"AND it.description = :identificationType " +
+			"AND pe.genderId = :genderId ")
+	List<PersonInformationBo> getPersonInformationByIdentificationData(@Param("identificationType") String identificationType,
+																	   @Param("identificationNumber") String identificationNumber,
+																	   @Param("genderId") Short genderId);
+
+	@Transactional(readOnly = true)
+	@Query("SELECT c.isoCode " +
+			"FROM Person as p " +
+			"LEFT JOIN PersonExtended as pe ON (p.id = pe.id) " +
+			"LEFT JOIN Address as a ON (pe.addressId = a.id) " +
+			"LEFT JOIN Country as c ON (a.countryId = c.id) " +
+			"WHERE p.id = :personId")
+	String getCountryIsoCodeFromPerson(@Param("personId") Integer personId);
 
 }

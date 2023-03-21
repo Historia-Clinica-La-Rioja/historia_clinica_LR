@@ -1,11 +1,12 @@
 import { Component, OnInit } from '@angular/core';
 import { AbstractControl, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
-import { AdministrativeDischargeDto, MasterDataInterface, VMedicalDischargeDto } from '@api-rest/api-model';
+import { AdministrativeDischargeDto, MasterDataInterface, ResponseEmergencyCareDto, VMedicalDischargeDto } from '@api-rest/api-model';
 import { dateTimeDtoToDate } from '@api-rest/mapper/date-dto.mapper';
 import { EmergencyCareEntranceType } from '@api-rest/masterdata';
 import { EmergencyCareEpisodeAdministrativeDischargeService } from '@api-rest/services/emergency-care-episode-administrative-service.service';
 import { EmergencyCareEpisodeMedicalDischargeService } from '@api-rest/services/emergency-care-episode-medical-discharge.service';
+import { EmergencyCareEpisodeService } from '@api-rest/services/emergency-care-episode.service';
 import { EmergencyCareMasterDataService } from '@api-rest/services/emergency-care-master-data.service';
 import { AMBULANCE } from '@core/constants/validation-constants';
 import { ContextService } from '@core/services/context.service';
@@ -37,6 +38,8 @@ export class AdministrativeDischargeComponent implements OnInit {
 	today = new Date();
 
 	private episodeId: number;
+	private patientId: number;
+
 	constructor(
 		private readonly router: Router,
 		private readonly route: ActivatedRoute,
@@ -47,6 +50,7 @@ export class AdministrativeDischargeComponent implements OnInit {
 		private readonly emergencyCareEspisodeMedicalDischargeService: EmergencyCareEpisodeMedicalDischargeService,
 		private readonly guardiaMapperService: GuardiaMapperService,
 		private readonly snackBarService: SnackBarService,
+		private readonly emergencyCareEpisodeService: EmergencyCareEpisodeService,
 	) { }
 
 	ngOnInit(): void {
@@ -70,6 +74,9 @@ export class AdministrativeDischargeComponent implements OnInit {
 				this.medicalDischargeOn = medicalDischargeOn;
 				this.setDateTimeValidation(medicalDischargeOn);
 			});
+			this.emergencyCareEpisodeService.getAdministrative(this.episodeId).subscribe((dto: ResponseEmergencyCareDto) => {
+				this.patientId = dto.patient ? dto.patient.id : null;
+			});
 
 		});
 
@@ -90,7 +97,14 @@ export class AdministrativeDischargeComponent implements OnInit {
 	}
 
 	goToEpisodeDetails(): void {
-		this.router.navigateByUrl(`institucion/${this.contextService.institutionId}/guardia/episodio/${this.episodeId}`);
+		if (this.patientId) {
+			const url = `institucion/${this.contextService.institutionId}/ambulatoria/paciente/${this.patientId}`;
+			this.router.navigateByUrl(url, { state: { toEmergencyCareTab: true } });
+		}
+		else {
+			const url = `institucion/${this.contextService.institutionId}/guardia/episodio/${this.episodeId}`;
+			this.router.navigateByUrl(url);
+		}
 	}
 
 	private setDateTimeValidation(medicalDischargeOn: Moment): void {

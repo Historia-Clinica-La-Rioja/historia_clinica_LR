@@ -140,7 +140,7 @@ export class HistoricalProblemsFacadeService {
 				});
 			}
 
-			this.professionals = pushIfNotExists(this.professionals, { personId: hceEvolutionSummaryDto.professional.person.id, professionalId: hceEvolutionSummaryDto.professional.id, professionalDescription: `${this.patientNameService.getPatientName(hceEvolutionSummaryDto.professional.person.firstName,hceEvolutionSummaryDto.professional.person.nameSelfDetermination)} ${hceEvolutionSummaryDto.professional.person.lastName}` }, this.compareProfessional);
+			this.professionals = pushIfNotExists(this.professionals, { personId: hceEvolutionSummaryDto.professional.person.id, professionalId: hceEvolutionSummaryDto.professional.id, professionalDescription: `${hceEvolutionSummaryDto.professional.person.fullName}` }, this.compareProfessional);
 
 		});
 	}
@@ -175,9 +175,8 @@ export class HistoricalProblems {
 	consultationEvolutionNote: string;
 	consultationProfessionalId: number;
 	consultationProfessionalPersonId: number;
-	professionalFirstName: string;
-	professionalLastName: string;
-	professionalNameSelfDetermination: string;
+	professionalFullName: string;
+	institutionName: string;
 	document:{
 		id: number;
 		filename: string;

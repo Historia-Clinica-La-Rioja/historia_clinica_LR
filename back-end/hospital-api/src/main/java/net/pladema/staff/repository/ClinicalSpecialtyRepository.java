@@ -49,7 +49,7 @@ public interface ClinicalSpecialtyRepository extends JpaRepository<ClinicalSpeci
 			"JOIN HealthcareProfessional hp ON (hp.id = pp.healthcareProfessionalId) " +
 			"JOIN Person p ON (p.id = hp.personId) " +
 			"JOIN UserPerson up ON (p.id = up.pk.personId) " +
-			"JOIN UserRole ur ON (ur.userRolePK.userId = up.pk.userId) " +
+			"JOIN UserRole ur ON (ur.userId = up.pk.userId) " +
 			"JOIN Diary d ON (hp.id = d.healthcareProfessionalId) " +
 			"JOIN DoctorsOffice do ON (do.id = d.doctorsOfficeId) " +
 			"WHERE do.institutionId = :institutionId " +

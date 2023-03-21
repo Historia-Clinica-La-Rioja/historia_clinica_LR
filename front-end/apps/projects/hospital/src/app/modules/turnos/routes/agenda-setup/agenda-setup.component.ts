@@ -32,7 +32,8 @@ import { SpecialtyService } from '@api-rest/services/specialty.service';
 import { CareLineService } from '@api-rest/services/care-line.service';
 
 const ROUTE_APPOINTMENT = 'turnos';
-const MAX_INPUT= 100;
+const ROUTE_AGENDAS = "agenda";
+const MAX_INPUT = 100;
 const PATTERN = /^[0-9]\d*$/;
 
 @Component({
@@ -64,6 +65,8 @@ export class AgendaSetupComponent implements OnInit {
 	sectors;
 	agendaHorarioService: AgendaHorarioService;
 	professionalSpecialties: any[];
+	specialityId: number;
+	alias: string;
 	hasError = hasError;
 	getError = getError;
 	careLines: CareLineDto[] = [];
@@ -71,6 +74,7 @@ export class AgendaSetupComponent implements OnInit {
 	private editingDiaryId = null;
 	private readonly routePrefix;
 	private mappedCurrentWeek = {};
+	lineOfCareAndPercentageOfProtectedAppointmentsValid = true;
 
 	constructor(
 		private readonly el: ElementRef,
@@ -111,7 +115,7 @@ export class AgendaSetupComponent implements OnInit {
 			conjointDiary: new FormControl(false, [Validators.nullValidator]),
 			alias: new FormControl(null, [Validators.nullValidator]),
 			otherProfessionals: new FormArray([], [this.otherPossibleProfessionals()]),
-			protectedAppointmentsPercentage: new FormControl(null, [Validators.pattern(PATTERN), Validators.max(MAX_INPUT)]),
+			protectedAppointmentsPercentage: new FormControl({ value: 0, disabled: true }, [Validators.pattern(PATTERN), Validators.max(MAX_INPUT)]),
 			careLines: new FormControl([null])
 		});
 
@@ -127,6 +131,10 @@ export class AgendaSetupComponent implements OnInit {
 						this.minDate = momentParseDate(diary.startDate).toDate();
 						this.setValuesFromExistingAgenda(diary);
 						this.disableNotEditableControls();
+						this.validateLineOfCareAndPercentageOfProtectedAppointments();
+						if(this.lineOfCareAndPercentageOfProtectedAppointmentsValid){
+							this.form.controls.protectedAppointmentsPercentage.enable();
+						}
 					});
 
 				});
@@ -189,7 +197,7 @@ export class AgendaSetupComponent implements OnInit {
 			this.form.controls.conjointDiary.setValue(true);
 			diary.associatedProfessionalsInfo.forEach(diaryAssociatedProfessional => {
 				professionalsReference.push(this.initializeAnotherProfessional());
-				professionalsReference.controls[professionalsReference.length-1].setValue({ healthcareProfessionalId: diaryAssociatedProfessional.id });
+				professionalsReference.controls[professionalsReference.length - 1].setValue({ healthcareProfessionalId: diaryAssociatedProfessional.id });
 			});
 		}
 
@@ -202,6 +210,17 @@ export class AgendaSetupComponent implements OnInit {
 
 		if (diary.careLinesInfo.length)
 			this.careLinesSelected = diary.careLinesInfo;
+
+		this.setSpecialityId(diary.clinicalSpecialtyId);
+		this.setAlias(diary.alias);
+	}
+
+	private setSpecialityId (healthcareProfesionalId){
+		this.specialityId = healthcareProfesionalId;
+	}
+
+	private setAlias(alias){
+		this.alias = alias;
 	}
 
 	private disableNotEditableControls(): void {
@@ -245,7 +264,7 @@ export class AgendaSetupComponent implements OnInit {
 	}
 
 	save(): void {
-		if (this.form.valid) {
+		if (this.form.valid && this.lineOfCareAndPercentageOfProtectedAppointmentsValid) {
 			this.openDialog();
 		} else {
 			scrollIntoError(this.form, this.el);
@@ -300,13 +319,13 @@ export class AgendaSetupComponent implements OnInit {
 		const ocupations$: Observable<OccupationDto[]> = this.diaryOpeningHoursService
 			.getAllWeeklyDoctorsOfficeOcupation(formValue.doctorOffice.id, this.editingDiaryId, startDate, endDate);
 
-		this.agendaHorarioService.setWeeklyDoctorsOfficeOcupation(ocupations$);
+		this.agendaHorarioService.setWeeklyOcupation(ocupations$);
 	}
 
 	private processSuccess(agendaId: number) {
 		if (agendaId) {
 			this.snackBarService.showSuccess('turnos.agenda-setup.messages.SUCCESS');
-			const url = `${this.routePrefix}${ROUTE_APPOINTMENT}`;
+			const url = `${this.routePrefix}${ROUTE_APPOINTMENT}/${ROUTE_AGENDAS}/${agendaId}`;
 			this.router.navigate([url]);
 		}
 	}
@@ -415,6 +434,20 @@ export class AgendaSetupComponent implements OnInit {
 			this.careLines = careLines;
 			this.checkCareLinesSelected();
 		});
+		if (specialtyId && specialtyId !== this.specialityId){
+			this.form.controls.alias.setValue('');
+		} else {
+			this.form.controls.alias.setValue(this.alias);
+		}
+	}
+
+	validateLineOfCareAndPercentageOfProtectedAppointments() {
+		if (this.form.controls.protectedAppointmentsPercentage.value !== 0 && !this.careLinesSelected.length) {
+			this.lineOfCareAndPercentageOfProtectedAppointmentsValid = false;
+			this.form.controls.protectedAppointmentsPercentage.enable();
+		} else {
+			this.lineOfCareAndPercentageOfProtectedAppointmentsValid = true;
+		}
 	}
 
 	setCareLines(careLines: string[]) {
@@ -422,7 +455,7 @@ export class AgendaSetupComponent implements OnInit {
 			if (!this.form.controls.protectedAppointmentsPercentage.hasValidator(Validators.required)) {
 				this.addValidators();
 			}
-
+			this.form.controls.protectedAppointmentsPercentage.enable();
 			this.careLinesSelected = careLines.map(careLine => ({
 				id: this.careLines.find(c => c.description === careLine).id,
 				description: careLine,
@@ -431,9 +464,12 @@ export class AgendaSetupComponent implements OnInit {
 		}
 		else {
 			this.form.controls.protectedAppointmentsPercentage.removeValidators([Validators.required]);
+			this.form.controls.protectedAppointmentsPercentage.disable();
+			this.form.controls.protectedAppointmentsPercentage.setValue(0);
 			this.careLinesSelected = [];
 		}
 		this.form.controls.protectedAppointmentsPercentage.updateValueAndValidity();
+		this.validateLineOfCareAndPercentageOfProtectedAppointments();
 	}
 
 	private checkCareLinesSelected() {

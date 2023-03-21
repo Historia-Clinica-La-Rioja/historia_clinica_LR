@@ -5,6 +5,7 @@ import ar.lamansys.sgh.clinichistory.application.ports.NursingConsultationSummar
 import ar.lamansys.sgh.clinichistory.application.ports.OdontologyConsultationSummaryStorage;
 import ar.lamansys.sgh.clinichistory.application.ports.HCEReferenceCounterReferenceStorage;
 import ar.lamansys.sgh.clinichistory.domain.hce.summary.CounterReferenceSummaryBo;
+import ar.lamansys.sgh.clinichistory.domain.hce.summary.DocumentDataBo;
 import ar.lamansys.sgh.clinichistory.domain.hce.summary.EvolutionSummaryBo;
 import ar.lamansys.sgh.clinichistory.domain.hce.summary.HealthConditionSummaryBo;
 import ar.lamansys.sgh.clinichistory.domain.hce.summary.NursingEvolutionSummaryBo;
@@ -16,6 +17,8 @@ import ar.lamansys.sgh.clinichistory.domain.hce.summary.ReferenceCounterReferenc
 import ar.lamansys.sgh.clinichistory.domain.hce.summary.ReferenceSummaryBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.ProcedureBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.ReasonBo;
+import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.DocumentRepository;
+import ar.lamansys.sgh.shared.infrastructure.input.service.institution.SharedInstitutionPort;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
@@ -38,14 +41,20 @@ public class FetchSummaryClinicHistory {
 
     private final HCEReferenceCounterReferenceStorage hceReferenceCounterReferenceStorage;
 
+	private final DocumentRepository documentRepository;
+
+	private final SharedInstitutionPort sharedInstitutionPort;
+
     public FetchSummaryClinicHistory(HCEOutpatientConsultationSummaryStorage HCEOutpatientConsultationSummaryStorage,
-                                     OdontologyConsultationSummaryStorage odontologyConsultationSummaryStorage,
-                                     NursingConsultationSummaryStorage nursingConsultationSummaryStorage, HCEReferenceCounterReferenceStorage hceReferenceCounterReferenceStorage) {
+									 OdontologyConsultationSummaryStorage odontologyConsultationSummaryStorage,
+									 NursingConsultationSummaryStorage nursingConsultationSummaryStorage, HCEReferenceCounterReferenceStorage hceReferenceCounterReferenceStorage, DocumentRepository documentRepository, SharedInstitutionPort sharedInstitutionPort) {
         this.HCEOutpatientConsultationSummaryStorage = HCEOutpatientConsultationSummaryStorage;
         this.odontologyConsultationSummaryStorage = odontologyConsultationSummaryStorage;
         this.nursingConsultationSummaryStorage = nursingConsultationSummaryStorage;
         this.hceReferenceCounterReferenceStorage = hceReferenceCounterReferenceStorage;
-    }
+		this.documentRepository = documentRepository;
+		this.sharedInstitutionPort = sharedInstitutionPort;
+	}
 
     public List<EvolutionSummaryBo> run(Integer patientId) {
         log.debug("FetchSummaryClinicHistory from patientId {}", patientId);
@@ -57,6 +66,14 @@ public class FetchSummaryClinicHistory {
         log.debug(OUTPUT, result);
         return result;
     }
+
+	private String getInstitutionFromDocument(DocumentDataBo document) {
+		if (document != null) {
+			return sharedInstitutionPort.fetchInstitutionById(documentRepository.getInstitutionIdFromDocument(document.getId())).getName();
+		} else {
+			return null;
+		}
+	}
 
     private List<EvolutionSummaryBo> getOutpatientEvolutionSummaries(Integer patientId) {
         List<OutpatientEvolutionSummaryBo> queryResult = HCEOutpatientConsultationSummaryStorage.getAllOutpatientEvolutionSummary(patientId);
@@ -74,6 +91,7 @@ public class FetchSummaryClinicHistory {
                     .map(ReasonBo::new).collect(Collectors.toList()));
             oesBo.setProcedures(procedures.stream().filter(p -> p.getConsultationId().equals(oes.getConsultationId()))
                     .map(ProcedureBo::new).collect(Collectors.toList()));
+			oesBo.setInstitutionName(getInstitutionFromDocument(oesBo.getDocument()));
             result.add(oesBo);
         }
         log.trace(OUTPUT, result);
@@ -96,6 +114,7 @@ public class FetchSummaryClinicHistory {
                     .map(ReasonBo::new).collect(Collectors.toList()));
             oesBo.setProcedures(procedures.stream().filter(p -> p.getConsultationId().equals(oes.getConsultationId()))
                     .map(ProcedureBo::new).collect(Collectors.toList()));
+			oesBo.setInstitutionName(getInstitutionFromDocument(oesBo.getDocument()));
             result.add(oesBo);
         }
         log.trace(OUTPUT, result);
@@ -112,7 +131,8 @@ public class FetchSummaryClinicHistory {
             EvolutionSummaryBo nesBo = new EvolutionSummaryBo(nes);
             nesBo.setHealthConditions(healthConditions.stream().filter(h -> h.getConsultationId().equals(nes.getConsultationId())).collect(Collectors.toList()));
             nesBo.setProcedures(procedures.stream().filter(p -> p.getConsultationId().equals(nes.getConsultationId())).map(ProcedureBo::new).collect(Collectors.toList()));
-            result.add(nesBo);
+			nesBo.setInstitutionName(getInstitutionFromDocument(nesBo.getDocument()));
+			result.add(nesBo);
         }
         log.trace(OUTPUT, result);
         return result;

@@ -5,6 +5,7 @@ describe('EpisodeFilterService', () => {
 
 	const episode: Episode = {
 		waitingTime: null,
+		waitingHours: null,
 		creationDate: null,
 		doctorsOffice: null,
 		id: null,

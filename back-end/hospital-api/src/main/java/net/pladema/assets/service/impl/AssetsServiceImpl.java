@@ -65,12 +65,12 @@ public class AssetsServiceImpl implements AssetsService {
 
         Assets newAsset = this.findByName(fileName).get();
         String partialPath = CUSTOM_PATH.concat(newAsset.getNameFile());
-        String completePath = fileService.buildRelativePath(partialPath);
+        String completePath = fileService.buildCompletePath(partialPath);
         
         if (this.streamFile.existFile(completePath)) {
 			log.debug("Using custom {}", fileName);
             return new AssetsFileBo(
-                    this.fileService.loadFile(partialPath),
+                    this.fileService.loadFileRelativePath(partialPath),
                     newAsset.getContentType()
 			);
         }

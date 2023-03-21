@@ -45,7 +45,7 @@ public class RoomController {
 	}
 
 	@GetMapping()
-	@PreAuthorize("hasPermission(#institutionId, 'ADMINISTRATIVO, ADMINISTRADOR_AGENDA, ESPECIALISTA_MEDICO, ENFERMERO, PROFESIONAL_DE_SALUD, ESPECIALISTA_EN_ODONTOLOGIA')")
+	@PreAuthorize("hasPermission(#institutionId, 'ADMINISTRATIVO, ADMINISTRATIVO_RED_DE_IMAGENES, ADMINISTRADOR_AGENDA, ESPECIALISTA_MEDICO, ENFERMERO, PROFESIONAL_DE_SALUD, ESPECIALISTA_EN_ODONTOLOGIA')")
 	public ResponseEntity<List<RoomDto>> getAll(@PathVariable(name = "institutionId") Integer institutionId) {
 		List<Room> rooms = roomRepository.getAllByInstitution(institutionId);
 		LOG.debug("Get all Rooms => {}", rooms);
@@ -53,7 +53,7 @@ public class RoomController {
 	}
 
 	@GetMapping("/{roomId}/beds")
-	@PreAuthorize("hasPermission(#institutionId, 'ADMINISTRATIVO')")
+	@PreAuthorize("hasPermission(#institutionId, 'ADMINISTRATIVO, ADMINISTRATIVO_RED_DE_IMAGENES')")
 	public ResponseEntity<List<BedDto>> getAllBedsByRoom(@PathVariable(name = "institutionId") Integer institutionId,
 			@PathVariable(name = "roomId") Integer roomId) {
 		List<Bed> beds = bedRepository.getAllByRoomAndInstitution(roomId, institutionId);
@@ -62,7 +62,7 @@ public class RoomController {
 	}
 
 	@GetMapping("/{roomId}/freebeds")
-	@PreAuthorize("hasPermission(#institutionId, 'ADMINISTRATIVO')")
+	@PreAuthorize("hasPermission(#institutionId, 'ADMINISTRATIVO, ADMINISTRATIVO_RED_DE_IMAGENES')")
 	public ResponseEntity<List<BedDto>> getAllFreeBedsByRoom(
 			@PathVariable(name = "institutionId") Integer institutionId,
 			@PathVariable(name = "roomId") Integer roomId) {

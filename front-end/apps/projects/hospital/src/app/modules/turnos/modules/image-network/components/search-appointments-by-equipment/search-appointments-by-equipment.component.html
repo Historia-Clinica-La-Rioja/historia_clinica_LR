@@ -1,0 +1,63 @@
+<div id="equipment-search" class="actions" fxLayout="row" fxLayoutGap="15px">
+	<app-typeahead id="modalities" [options]="modalities$ | async"
+		[titleInput]="'turnos.home.SPECIALTY_SEARCH' | translate"
+		(selectionChange)="filterEquipmentsByModality($event)">
+	</app-typeahead>
+	<app-typeahead id="equipments" style="width: 26%;"
+		[titleInput]="'image-network.equipment-diary-setup.EQUIPMENT' | translate" [options]="equipmentsTypeaheadList"
+		(selectionChange)="loadDiaryByEquipment($event)">
+	</app-typeahead>
+</div>
+
+<div *ngIf="equipmentSelected">
+	<div id="select_equipment_diary" *ngIf="diaries?.length else noEquipmentDiaries" fxLayout="row"
+		fxLayoutAlign="space-between center" fxLayout.xs="column" fxLayoutAlign.xs="space-between center">
+		<mat-form-field fxFlex.gt-xs="35%" appearance="outline">
+			<mat-label [translate]="'turnos.home.SELECT_AGENDA'"></mat-label>
+			<mat-select id="equipment_diary_mat_select" [(value)]="diarySelected">
+				<mat-optgroup id="active_equipment_diaries" *ngIf="activeDiaries?.length">
+					<mat-label><strong>{{ 'turnos.home.ACTIVES_AGENDAS_LABEL' | translate }}</strong></mat-label>
+					<mat-option *ngFor="let diary of activeDiaries" [value]="diary"
+						(onSelectionChange)="changeDiarySelected($event, diary)">
+						<span class="mat-body">
+							{{diary.startDate | date:dateFormats.SHORT_DATE }} - {{diary.endDate |
+							date:dateFormats.SHORT_DATE}}
+						</span>
+					</mat-option>
+				</mat-optgroup>
+				<mat-optgroup id="expired_equipment_diaries" *ngIf="expiredDiaries?.length">
+					<mat-label><strong>{{ 'turnos.home.EXPIRED_AGENDAS_LABEL' | translate }}</strong></mat-label>
+					<mat-option *ngFor="let diary of expiredDiaries" [value]="diary"
+						(onSelectionChange)="changeDiarySelected($event, diary)">
+						<span class="mat-body">
+							{{diary.startDate | date:dateFormats.SHORT_DATE }} - {{diary.endDate |
+							date:dateFormats.SHORT_DATE}}
+						</span>
+					</mat-option>
+				</mat-optgroup>
+			</mat-select>
+			<button id="clear_equipment_diary_selected" type="button" mat-button *ngIf="diarySelected" matSuffix
+				color="warn" mat-icon-button (click)="clear(); $event.stopPropagation()">
+				<mat-icon>close</mat-icon>
+			</button>
+		</mat-form-field>
+	</div>
+	<ng-template #noEquipmentDiaries>
+		<div *ngIf="diaries?.length === 0" class="no-diary">
+			<mat-card>
+				<mat-card-header>
+					<mat-card-title [translate]="'image-network.home.NO_EQUIPMENT_MSG_TITLE'"></mat-card-title>
+					<mat-card-subtitle [translate]="'turnos.home.NO_AGENDA_MSG_SUBTITLE'"></mat-card-subtitle>
+				</mat-card-header>
+				<mat-card-content>
+					<button mat-flat-button color="primary" id="goToNewAgendaButton"
+						*appHasRole="['ADMINISTRADOR_AGENDA']" (click)="goToNewAgenda()" fxFlexFill.xs>
+						<span class="uppercase" [translate]="'turnos.home.actions.CREATE_AGENDA'"></span>
+					</button>
+				</mat-card-content>
+			</mat-card>
+		</div>
+	</ng-template>
+</div>
+
+<app-equipment-diary *ngIf="diarySelected" [diaryId]="diarySelected?.id"></app-equipment-diary>

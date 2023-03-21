@@ -19,7 +19,7 @@ const redirect = (personId) => {
 const UserTab = ({ personId, loaded, total, ...props }) => (
     <Fragment>
         {loaded ? total ? 
-                <Datagrid loaded={loaded} total={total} {...props} rowClick="edit">
+                <Datagrid loaded={loaded} total={total} {...props} rowClick="show">
                     <TextField source="username" />
                     <BooleanField source="enable" />
                     <SgxDateField source="lastLogin" />

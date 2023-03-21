@@ -9,117 +9,174 @@
 	</div>
 
         <form [formGroup]="formReference" fxLayout="column" (ngSubmit)="save()">
-            <mat-dialog-content>
+            <mat-dialog-content fxLayout="column" fxLayoutGap="10px">
+                
+                <div fxLayout="row" fxLayout.lt-lg="column"  fxLayoutGap="20px">
+                    <div>
+                        <h2 class="subtitle" [translate]="'ambulatoria.paciente.nueva-consulta.reference-dialog.ORIGIN'"></h2>
+                        <div fxLayout="column">
+                            <div>
+                                <mat-form-field appearance="outline" fxFlex="100%" fxLayoutGap="7px">
+                                    <mat-label [translate]="'ambulatoria.paciente.nueva-consulta.reference-dialog.PROVINCE'"></mat-label>
+                                    <input id="provinceOrigin" formControlName="provinceOrigin" matInput>
+                                </mat-form-field>
+                            </div>
+                            <div>
+                                <mat-form-field appearance="outline" fxFlex="100%" fxLayoutGap="7px">
+                                    <mat-label [translate]="'ambulatoria.paciente.nueva-consulta.reference-dialog.DEPARTMENT'"></mat-label>
+                                    <input id="departmentOrigin" formControlName="departmentOrigin" matInput>
+                                </mat-form-field>
+                            </div>
+                            <div>
+                                <mat-form-field appearance="outline" fxFlex="100%" fxLayoutGap="7px">
+                                    <mat-label [translate]="'ambulatoria.paciente.nueva-consulta.reference-dialog.PLACEHOLDER_INSTITUTION'"></mat-label>
+                                    <input id="institutionOrigin" formControlName="institutionOrigin" matInput>
+                                </mat-form-field>
+                            </div>
+                            <div id="problems">
+                                <mat-form-field appearance="outline" fxFlex="100%">
+                                    <mat-label
+                                        [translate]="'ambulatoria.paciente.nueva-consulta.reference-dialog.PLACEHOLDER_ASSOCIATED_PROBLEM'">
+                                    </mat-label>
+                                    <mat-select name="problems" formControlName="problems" multiple (selectionChange)="setProblemsReference($event.value)">
+                                        <mat-select-trigger>
+                                            {{associatedProblemsControls.value ? associatedProblemsControls.value[0] : ' '}}
+                                            <span *ngIf="associatedProblemsControls.value?.length > 1" class="example-additional-selection">
+                                            (+{{associatedProblemsControls.value.length - 1}} {{'más'}})
+                                            </span>
+                                        </mat-select-trigger>
+                                        <mat-option *ngFor="let problem of problemsList$ | async" [value]="problem.hcePersonalHistoryDto.snomed.pt">
+                                            {{problem.hcePersonalHistoryDto.snomed.pt | translate}}
+                                        </mat-option>
+                                    </mat-select>
+                                    <mat-error [translate]="'forms.REQUIRED'"></mat-error>
+                                </mat-form-field>
+                            </div>
+                        </div>
 
-                <div id="problems">
-                    <mat-form-field appearance="outline" fxFlex="100%">
-                        <mat-label
-                            [translate]="'ambulatoria.paciente.nueva-consulta.reference-dialog.PLACEHOLDER_ASSOCIATED_PROBLEM'">
-                        </mat-label>
-                        <mat-select name="problems" formControlName="problems" multiple (selectionChange)="setProblemsReference($event.value)">
-                            <mat-select-trigger>
-                                {{associatedProblemsControls.value ? associatedProblemsControls.value[0] : ' '}}
-                                <span *ngIf="associatedProblemsControls.value?.length > 1" class="example-additional-selection">
-                                (+{{associatedProblemsControls.value.length - 1}} {{'más'}})
-                                </span>
-                            </mat-select-trigger>
-                            <mat-option *ngFor="let problem of problemsList$ | async" [value]="problem.hcePersonalHistoryDto.snomed.pt">
-                                {{problem.hcePersonalHistoryDto.snomed.pt | translate}}
-                            </mat-option>
-                        </mat-select>
-                        <mat-error [translate]="'forms.REQUIRED'"></mat-error>
-                    </mat-form-field>
-                </div>
+                        <span class="phone-title" [translate]="'ambulatoria.paciente.nueva-consulta.reference-dialog.PATIENT_PHONE'"></span>
+                        <div fxLayout="row" fxLayoutGap="10px">
+                            <mat-form-field fxFlex="30%" appearance="outline">
+                                <mat-label [translate]="'ambulatoria.paciente.nueva-consulta.reference-dialog.PHONE_PREFIX'"></mat-label>
+                                <input matInput type="text" id="phonePrefix" name="phonePrefix"
+                                    formControlName="phonePrefix"
+                                    placeholder="{{'ambulatoria.paciente.nueva-consulta.reference-dialog.PHONE_PREFIX' | translate }}">
+                                <mat-error *ngIf="formReference.hasError('required', 'phonePrefix')">
+                                    <span translate="forms.REQUIRED"></span>
+                                </mat-error>
+                                <mat-error *ngIf="formReference.hasError('maxlength', 'phonePrefix')"
+                                    translate="forms.MAX_LENGTH_ERROR" [translateParams]="{max: 10}">
+                                </mat-error>
+                            </mat-form-field>
+                        
+                            <mat-form-field fxFlex="70%" appearance="outline">
+                                <mat-label [translate]="'ambulatoria.paciente.nueva-consulta.reference-dialog.PHONE_NUMBER'"></mat-label>
+                                <input matInput type="text" id="phoneNumber" name="phoneNumber"
+                                    formControlName="phoneNumber"
+                                    placeholder="{{'ambulatoria.paciente.nueva-consulta.reference-dialog.PHONE_NUMBER' | translate }}">
+                                <mat-error *ngIf="formReference.hasError('required', 'phoneNumber')">
+                                    <span translate="forms.REQUIRED"></span>
+                                </mat-error>
+                                <mat-error *ngIf="formReference.hasError('maxlength', 'phoneNumber')"
+                                    translate="forms.MAX_LENGTH_ERROR" [translateParams]="{max: 20}">
+                                </mat-error>
+                            </mat-form-field>
+                        </div>
+                    </div>
 
-                <div>
-                    <mat-form-field appearance="outline" fxFlex="100%" fxLayoutGap="7px">
-                        <mat-label [translate]="'ambulatoria.paciente.nueva-consulta.reference-dialog.PROVINCE'"></mat-label>
-                        <mat-select id="province" name="provinceId" formControlName="provinceId" (selectionChange)="setDepartmentsByProvince($event.value)">
-                            <mat-option *ngFor="let province of provinces$ | async" [value]="province.id">
-                                {{province.description | translate}}
-                            </mat-option>
-                        </mat-select>
-                        <mat-error [translate]="'forms.REQUIRED'"></mat-error>
-                    </mat-form-field>
-                </div>
+                    <div>
+                        <h2 class="subtitle" [translate]="'ambulatoria.paciente.nueva-consulta.reference-dialog.DESTINATION'"></h2>
+                        <div>
+                            <mat-form-field appearance="outline" fxFlex="100%" fxLayoutGap="7px">
+                                <mat-label [translate]="'ambulatoria.paciente.nueva-consulta.reference-dialog.PROVINCE'"></mat-label>
+                                <mat-select id="provinceDestination" formControlName="provinceId" (selectionChange)="setDepartmentsByProvince($event.value)">
+                                    <mat-option *ngFor="let province of provinces" [value]="province.id">
+                                        {{province.description | translate}}
+                                    </mat-option>
+                                </mat-select>
+                                <mat-error [translate]="'forms.REQUIRED'"></mat-error>
+                            </mat-form-field>
+                        </div>
 
-                <div>
-                    <mat-form-field appearance="outline" fxFlex="100%" fxLayoutGap="7px">
-                        <mat-label [translate]="'ambulatoria.paciente.nueva-consulta.reference-dialog.DEPARTMENT'"></mat-label>
-                        <mat-select id="department" name="departmentId" formControlName="departmentId" (selectionChange)="filterInstitutionsByDepartment($event.value)">
-                            <mat-option *ngFor="let department of departments$ | async" [value]="department.id">
-                                {{department.description | translate}}
-                            </mat-option>
-                        </mat-select>
-                        <mat-error [translate]="'forms.REQUIRED'"></mat-error>
-                    </mat-form-field>
-                </div>
+                        <div>
+                            <mat-form-field appearance="outline" fxFlex="100%" fxLayoutGap="7px">
+                                <mat-label [translate]="'ambulatoria.paciente.nueva-consulta.reference-dialog.DEPARTMENT'"></mat-label>
+                                <mat-select id="departmentDestination" formControlName="departmentId" (selectionChange)="filterInstitutionsByDepartment($event.value)">
+                                    <mat-option *ngFor="let department of departments$ | async" [value]="department.id">
+                                        {{department.description | translate}}
+                                    </mat-option>
+                                </mat-select>
+                                <mat-error [translate]="'forms.REQUIRED'"></mat-error>
+                            </mat-form-field>
+                        </div>
 
-                <div>
-                    <mat-form-field appearance="outline" fxFlex="100%" fxLayoutGap="7px">
-                        <mat-label [translate]="'ambulatoria.paciente.nueva-consulta.reference-dialog.PLACEHOLDER_INSTITUTION'"></mat-label>
-                        <mat-select id="institution" name="destinationInstitutionId" formControlName="destinationInstitutionId" (selectionChange)="setInformation()">
-                            <mat-option *ngFor="let institution of institutions$ | async" [value]="institution.id">
-                                {{institution.name | translate}}
-                            </mat-option>
-                        </mat-select>
-                        <mat-error [translate]="'forms.REQUIRED'"></mat-error>
-                    </mat-form-field>
-                </div>
+                        <div>
+                            <mat-form-field appearance="outline" fxFlex="100%" fxLayoutGap="7px">
+                                <mat-label [translate]="'ambulatoria.paciente.nueva-consulta.reference-dialog.PLACEHOLDER_INSTITUTION'"></mat-label>
+                                <mat-select id="institutionDestination" formControlName="institutionDestinationId" (selectionChange)="setInformation()">
+                                    <mat-option *ngFor="let institution of institutions$ | async" [value]="institution.id">
+                                        {{institution.name | translate}}
+                                    </mat-option>
+                                </mat-select>
+                                <mat-error [translate]="'forms.REQUIRED'"></mat-error>
+                            </mat-form-field>
+                        </div>
 
-                <div class="reference-type" fxLayoutGap="10px">
-                    <mat-label fxLayout="column" [translate]="'ambulatoria.paciente.nueva-consulta.reference-dialog.SEARCH_BY_CARE_LINE'"></mat-label>
-                    <mat-radio-group id="search_by_carelines" formControlName="searchByCareLine" fxLayoutGap="5px">
-                        <mat-radio-button color="primary" [value]="DEFAULT_RADIO_OPTION">
-                            {{'buttons.YES' | translate}}
-                        </mat-radio-button>
-                        <mat-radio-button color="primary" value=1>
-                            {{'buttons.NO' | translate}}
-                        </mat-radio-button>
-                    </mat-radio-group>
-                </div>
+                        <div class="reference-type" fxLayoutGap="10px">
+                            <mat-label fxLayout="column" [translate]="'ambulatoria.paciente.nueva-consulta.reference-dialog.SEARCH_BY_CARE_LINE'"></mat-label>
+                            <mat-radio-group id="search_by_carelines" formControlName="searchByCareLine" fxLayoutGap="5px">
+                                <mat-radio-button color="primary" [value]="DEFAULT_RADIO_OPTION">
+                                    {{'buttons.YES' | translate}}
+                                </mat-radio-button>
+                                <mat-radio-button color="primary" value=1>
+                                    {{'buttons.NO' | translate}}
+                                </mat-radio-button>
+                            </mat-radio-group>
+                        </div>
 
-                <div>
-                    <mat-form-field appearance="outline" fxFlex="100%" fxLayoutGap="7px">
-                        <mat-label [translate]="'ambulatoria.paciente.nueva-consulta.reference-dialog.PLACEHOLDER_CARE_LINE'"></mat-label>
-                        <mat-select id="care_line" name="careLine" formControlName="careLine" (selectionChange)="setSpecialtyCareLine()">
-                            <mat-option *ngFor="let careLine of careLines" [value]="careLine.id">
-                                {{careLine.description | translate}}
-                            </mat-option>
-                        </mat-select>
-                        <mat-error *ngIf="careLines?.length else noCareLines" [translate]="'forms.REQUIRED'"></mat-error>
-                        <ng-template #noCareLines>
-                            <mat-error [translate]="'ambulatoria.paciente.nueva-consulta.reference-dialog.NO_CARE_LINES'"></mat-error>
-                        </ng-template>
-                    </mat-form-field>
-                </div>
+                        <div>
+                            <mat-form-field appearance="outline" fxFlex="100%" fxLayoutGap="7px">
+                                <mat-label [translate]="'ambulatoria.paciente.nueva-consulta.reference-dialog.PLACEHOLDER_CARE_LINE'"></mat-label>
+                                <mat-select id="care_line" name="careLine" formControlName="careLine" (selectionChange)="setSpecialtyCareLine()">
+                                    <mat-option *ngFor="let careLine of careLines" [value]="careLine.id">
+                                        {{careLine.description | translate}}
+                                    </mat-option>
+                                </mat-select>
+                                <mat-error *ngIf="careLines?.length else noCareLines" [translate]="'forms.REQUIRED'"></mat-error>
+                                <ng-template #noCareLines>
+                                    <mat-error [translate]="'ambulatoria.paciente.nueva-consulta.reference-dialog.NO_CARE_LINES'"></mat-error>
+                                </ng-template>
+                            </mat-form-field>
+                        </div>
 
-                <div>
-                    <mat-form-field appearance="outline" fxFlex="100%" fxLayoutGap="7px">
-                        <mat-label [translate]="'ambulatoria.paciente.nueva-consulta.reference-dialog.PLACEHOLDER_SPECIALITY'"></mat-label>
-                        <mat-select id="specialty" name="clinicalSpecialtyId" formControlName="clinicalSpecialtyId">
-                            <mat-option *ngFor="let specialty of specialties$ | async" [value]="specialty.id">
-                                {{specialty.name | translate}}
-                            </mat-option>
-                        </mat-select>
-                        <mat-error [translate]="'forms.REQUIRED'"></mat-error>
-                    </mat-form-field>
-                </div>
+                        <div>
+                            <mat-form-field appearance="outline" fxFlex="100%" fxLayoutGap="7px">
+                                <mat-label [translate]="'ambulatoria.paciente.nueva-consulta.reference-dialog.PLACEHOLDER_SPECIALITY'"></mat-label>
+                                <mat-select id="specialty" name="clinicalSpecialty" formControlName="clinicalSpecialty">
+                                    <mat-option *ngFor="let specialty of specialties$ | async" [value]="specialty">
+                                        {{specialty.name | translate}}
+                                    </mat-option>
+                                </mat-select>
+                                <mat-error [translate]="'forms.REQUIRED'"></mat-error>
+                            </mat-form-field>
+                        </div>
 
-                <div class="reference-type">
-                    <mat-label fxLayout="column"
-                    [translate]="'ambulatoria.paciente.nueva-consulta.reference-dialog.REFERENCE_TYPE'"></mat-label>
-                    <mat-radio-group name="consultation" formControlName="consultation">
-                        <mat-radio-button color="primary" value="true" [checked]="true">
-                            <span class="consultation"
-                                [translate]="'ambulatoria.paciente.nueva-consulta.reference-dialog.CONSULTATION_OPTION'"></span>
-                        </mat-radio-button>
-                    </mat-radio-group>
-                    <mat-radio-group name="procedure" formControlName="procedure"> 
-                        <mat-radio-button color="primary" value="false">
-                            <span [translate]="'ambulatoria.paciente.nueva-consulta.reference-dialog.PROCEDURE_OPTION'"></span>
-                        </mat-radio-button>
-                    </mat-radio-group>
+                        <div class="reference-type">
+                            <mat-label fxLayout="column"
+                            [translate]="'ambulatoria.paciente.nueva-consulta.reference-dialog.REFERENCE_TYPE'"></mat-label>
+                            <mat-radio-group name="consultation" formControlName="consultation">
+                                <mat-radio-button color="primary" value="true" [checked]="true">
+                                    <span class="consultation"
+                                        [translate]="'ambulatoria.paciente.nueva-consulta.reference-dialog.CONSULTATION_OPTION'"></span>
+                                </mat-radio-button>
+                            </mat-radio-group>
+                            <mat-radio-group name="procedure" formControlName="procedure"> 
+                                <mat-radio-button color="primary" value="false">
+                                    <span [translate]="'ambulatoria.paciente.nueva-consulta.reference-dialog.PROCEDURE_OPTION'"></span>
+                                </mat-radio-button>
+                            </mat-radio-group>
+                        </div>
+                    </div>
                 </div>
 
                 <div id="summary">

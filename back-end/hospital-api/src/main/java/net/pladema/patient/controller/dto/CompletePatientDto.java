@@ -25,6 +25,8 @@ public class CompletePatientDto extends BasicPatientDto {
     @Nullable
     private AAdditionalDoctorDto pamiDoctor;
 
+    private AuditablePatientInfoDto auditablePatientInfo;
+
     public CompletePatientDto(Patient patient, PatientType patientType, BasicDataPersonDto personData) {
         super(patient.getId(),personData,patient.getTypeId());
         this.patientType = new PatientType();

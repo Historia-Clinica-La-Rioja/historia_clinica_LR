@@ -1,13 +1,15 @@
 package net.pladema.user.controller.mappers;
 
-import ar.lamansys.sgx.auth.user.infrastructure.input.service.dto.UserInfoDto;
-import ar.lamansys.sgx.auth.user.infrastructure.output.user.User;
-import net.pladema.user.controller.dto.BackofficeUserDto;
-import net.pladema.user.repository.entity.VHospitalUser;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.MappingTarget;
 import org.mapstruct.Named;
+
+import ar.lamansys.sgx.auth.user.infrastructure.input.service.dto.UserInfoDto;
+import ar.lamansys.sgx.auth.user.infrastructure.output.user.User;
+import net.pladema.user.controller.dto.AdminUserDto;
+import net.pladema.user.controller.dto.BackofficeUserDto;
+import net.pladema.user.repository.entity.VHospitalUser;
 
 @Mapper
 public interface UserDtoMapper {
@@ -36,4 +38,7 @@ public interface UserDtoMapper {
 	@Mapping(target = "username", source = "dto.username")
 	@Mapping(target = "enable", source = "dto.enable")
 	User toModel(BackofficeUserDto dto, @MappingTarget User model);
+
+	@Named("toAdminUserDto")
+	AdminUserDto toAdminUserDto(User user);
 }

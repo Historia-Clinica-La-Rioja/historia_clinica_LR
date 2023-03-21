@@ -1,15 +1,19 @@
 package net.pladema.clinichistory.requests.medicationrequests.controller;
 
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.generateFile.DocumentAuthorFinder;
+import ar.lamansys.sgh.shared.infrastructure.input.service.SharedDocumentPort;
 import ar.lamansys.sgx.shared.featureflags.application.FeatureFlagsService;
-import ar.lamansys.sgx.shared.pdf.PdfService;
+import ar.lamansys.sgx.shared.files.pdf.PdfService;
 import net.pladema.IntegrationController;
 import net.pladema.clinichistory.requests.medicationrequests.controller.mapper.CreateMedicationRequestMapper;
 import net.pladema.clinichistory.requests.medicationrequests.controller.mapper.ListMedicationInfoMapper;
 import net.pladema.clinichistory.requests.medicationrequests.service.ChangeStateMedicationService;
 import net.pladema.clinichistory.requests.medicationrequests.service.CreateMedicationRequestService;
+import net.pladema.clinichistory.requests.medicationrequests.service.GetMedicationRequestByDocument;
 import net.pladema.clinichistory.requests.medicationrequests.service.GetMedicationRequestInfoService;
 import net.pladema.clinichistory.requests.medicationrequests.service.ListMedicationInfoService;
+import net.pladema.clinichistory.requests.medicationrequests.service.NewMedicationRequestNotification;
+import net.pladema.clinichistory.requests.medicationrequests.service.ValidateMedicationRequestGenerationService;
 import net.pladema.patient.controller.service.PatientExternalMedicalCoverageService;
 import net.pladema.patient.controller.service.PatientExternalService;
 import net.pladema.staff.controller.service.HealthcareProfessionalExternalService;
@@ -61,9 +65,21 @@ class MedicationRequestControllerIntegrationTest extends IntegrationController {
 
 	@MockBean
 	private FeatureFlagsService featureFlagsService;
+	
+	@MockBean
+	private ValidateMedicationRequestGenerationService validateMedicationRequestGenerationService;
 
 	@MockBean
 	private DocumentAuthorFinder documentAuthorFinder;
+
+	@MockBean
+	private NewMedicationRequestNotification newMedicationRequestNotification;
+
+	@MockBean
+	private SharedDocumentPort sharedDocumentPort;
+
+	@MockBean
+	private GetMedicationRequestByDocument getMedicationRequestByDocument;
 
     @BeforeEach
     void setup() {

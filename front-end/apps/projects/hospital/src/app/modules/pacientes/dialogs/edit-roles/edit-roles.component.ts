@@ -5,7 +5,7 @@ import { RoleDto, UserRoleDto } from '@api-rest/api-model';
 import { ContextService } from '@core/services/context.service';
 import { hasError } from '@core/utils/form.utils';
 
-const ROLES_NOT_NEED_ASSOCIATED_PROFESSION = '12|13|14|15|16|5|9';
+const ROLES_NOT_NEED_ASSOCIATED_PROFESSION = '8|12|13|14|15|16|5|9|22';
 
 @Component({
 	selector: 'app-edit-roles',

@@ -1,5 +1,7 @@
 package net.pladema.clinichistory.external.repository.domain;
 
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -13,8 +15,10 @@ import java.time.LocalDate;
 @Table(name = "external_clinical_history")
 @Getter
 @Setter
+@Builder
 @ToString
 @NoArgsConstructor
+@AllArgsConstructor
 public class ExternalClinicalHistory implements Serializable {
 
     private static final long serialVersionUID = 8293778155416487256L;

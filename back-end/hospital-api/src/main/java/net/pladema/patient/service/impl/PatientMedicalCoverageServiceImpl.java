@@ -2,6 +2,7 @@ package net.pladema.patient.service.impl;
 
 import ar.lamansys.sgx.shared.exceptions.NotFoundException;
 import net.pladema.establishment.repository.MedicalCoveragePlanRepository;
+import net.pladema.medicalconsultation.appointment.service.AppointmentService;
 import net.pladema.patient.repository.PatientMedicalCoverageRepository;
 import net.pladema.patient.repository.domain.PatientMedicalCoverageVo;
 import net.pladema.patient.repository.entity.MedicalCoverage;
@@ -117,6 +118,18 @@ public class PatientMedicalCoverageServiceImpl implements PatientMedicalCoverage
 					.orElseGet(() -> patientMedicalCoverageRepository.save(new PatientMedicalCoverageAssn(coverage, patientId)).getId());
 			result.add(pmcId);
 		});
+		return result;
+	}
+
+	@Override
+	public List<Integer> toModifyAppointmentCoverage(List<PatientMedicalCoverageBo> patientMedicalCoverages) {
+		LOG.debug(INPUT_DATA, patientMedicalCoverages);
+		List<Integer> result = patientMedicalCoverages
+				.stream()
+				.dropWhile(PatientMedicalCoverageBo::getActive)
+				.map(PatientMedicalCoverageBo::getId)
+				.collect(Collectors.toList());
+		LOG.debug(OUTPUT, result);
 		return result;
 	}
 }

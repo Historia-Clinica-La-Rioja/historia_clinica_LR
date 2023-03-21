@@ -1,6 +1,11 @@
 package net.pladema.federar.services;
 
+import org.springframework.context.annotation.Conditional;
+import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Service;
+
 import ar.lamansys.sgx.shared.restclient.configuration.HttpClientConfiguration;
+import ar.lamansys.sgx.shared.restclient.configuration.JWTUtils;
 import ar.lamansys.sgx.shared.restclient.configuration.resttemplate.RestTemplateSSL;
 import ar.lamansys.sgx.shared.restclient.services.AuthService;
 import ar.lamansys.sgx.shared.restclient.services.domain.WSResponseException;
@@ -10,9 +15,6 @@ import net.pladema.federar.services.domain.FederarLoginPayload;
 import net.pladema.federar.services.domain.FederarLoginResponse;
 import net.pladema.federar.services.domain.FederarValidateTokenPayload;
 import net.pladema.federar.services.domain.FederarValidateTokenResponse;
-import org.springframework.context.annotation.Conditional;
-import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Service;
 
 @Service
 @Conditional(FederarCondition.class)
@@ -27,7 +29,7 @@ public class FederarAuthService extends AuthService<FederarLoginResponse> {
 		super(
 				wsConfig.getAuthenticationPath(),
 				new RestTemplateSSL(
-						configuration.withTimeout(wsConfig.getRequestTimeOut())
+						!wsConfig.isSettedTimeout() ? configuration : configuration.withTimeout(wsConfig.getRequestTimeOut())
 				),
 				wsConfig
 		);
@@ -49,7 +51,7 @@ public class FederarAuthService extends AuthService<FederarLoginResponse> {
 	}
 
 	private String generateClientAssertion() {
-		return JWTUtils.generateJWT(federarWSConfig.getClaims(), federarWSConfig.getSignKey(), (int) federarWSConfig.getTokenExpiration());
+		return JWTUtils.generateJWT(federarWSConfig.getClaims(), federarWSConfig.getSignKey(), federarWSConfig.getTokenExpiration().toSeconds());
 	}
 
 	@Override

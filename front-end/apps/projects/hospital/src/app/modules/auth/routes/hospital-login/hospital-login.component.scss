@@ -3,3 +3,12 @@
 mat-card.mat-card {
 	@include card-centered;
 }
+
+.logos {
+	@include space-around;
+
+	app-logo {
+		max-width: 15rem;
+  		height: auto;
+	}
+}

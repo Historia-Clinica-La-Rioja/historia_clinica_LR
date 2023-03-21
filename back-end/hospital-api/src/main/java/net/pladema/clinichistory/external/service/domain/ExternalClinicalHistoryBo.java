@@ -1,37 +1,30 @@
 package net.pladema.clinichistory.external.service.domain;
 
+import lombok.Builder;
 import lombok.Getter;
-import lombok.Setter;
-import net.pladema.clinichistory.external.repository.domain.ExternalClinicalHistoryVo;
+import lombok.ToString;
 
 import java.time.LocalDate;
 
+@ToString
 @Getter
-@Setter
+@Builder
 public class ExternalClinicalHistoryBo {
 
-    private final String EMPTY = "-";
+	private Short patientGender;
 
-    private Integer id;
+	private Short patientDocumentType;
 
-    private String professionalSpecialty;
+	private String patientDocumentNumber;
 
-    private LocalDate consultationDate;
+	private String notes;
 
-    private String professionalName;
+	private LocalDate consultationDate;
 
-    private String notes;
+	private String institution;
 
-    private String institution;
+	private String professionalName;
 
-    public ExternalClinicalHistoryBo(ExternalClinicalHistoryVo externalClinicalHistoryVo){
-        this.id = externalClinicalHistoryVo.getId();
-        this.professionalSpecialty = EMPTY.equals(externalClinicalHistoryVo.getProfessionalSpecialty()) ? null: externalClinicalHistoryVo.getProfessionalSpecialty();
-        this.consultationDate = externalClinicalHistoryVo.getConsultationDate();
-        this.professionalName = EMPTY.equals(externalClinicalHistoryVo.getProfessionalName()) ? null: externalClinicalHistoryVo.getProfessionalName();
-        this.notes = externalClinicalHistoryVo.getNotes();
-        this.institution = EMPTY.equals(externalClinicalHistoryVo.getInstitution()) ? null : externalClinicalHistoryVo.getInstitution();
-    }
+	private String professionalSpecialty;
+
 }
-
-

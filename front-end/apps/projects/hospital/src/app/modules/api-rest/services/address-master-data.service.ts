@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { environment } from '@environments/environment';
 import { Observable } from 'rxjs';
+import { DepartmentDto } from '@api-rest/api-model';
 
 
 @Injectable({
@@ -33,5 +34,9 @@ export class AddressMasterDataService {
 		return this.http.get<any[]>(url);
 	}
 
+	getDepartmentById(departmentId: number): Observable<DepartmentDto> {
+		const url = `${environment.apiBase}/address/masterdata/department/${departmentId}`;
+		return this.http.get<DepartmentDto>(url);
+	}
 
 }

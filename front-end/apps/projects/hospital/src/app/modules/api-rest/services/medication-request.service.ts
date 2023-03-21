@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { environment } from '@environments/environment';
 import { Observable } from 'rxjs';
-import { MedicationInfoDto, PrescriptionDto } from '@api-rest/api-model';
+import { MedicationInfoDto, PrescriptionDto, ProfessionalLicenseNumberValidationResponseDto } from '@api-rest/api-model';
 import { ContextService } from '@core/services/context.service';
 import { of } from 'rxjs';
 
@@ -61,7 +61,21 @@ export class MedicationRequestService {
 
 		queryParams = healthCondition ? queryParams.append('healthCondition', healthCondition) : queryParams;
 
-		const url = `${environment.apiBase}/institutions/${this.contextService.institutionId}/patient/${patientId}/medication-requests`;
+		const url = `${environment.apiBase}/institutions/${this.contextService.institutionId}/patient/${patientId}/medication-requests/medicationRequestList`;
+		return this.http.get<MedicationInfoDto[]>(url, {params : queryParams});
+	}
+
+	medicationRequestListByRoles(patientId: number, statusId: string, medicationStatement: string, healthCondition: string): Observable<MedicationInfoDto[]> {
+		let queryParams: HttpParams = new HttpParams();
+
+		queryParams = statusId ? queryParams.append('statusId', statusId) : queryParams;
+
+		queryParams = medicationStatement ? queryParams.append('medicationStatement', medicationStatement) : queryParams;
+
+		queryParams = healthCondition ? queryParams.append('healthCondition', healthCondition) : queryParams;
+
+		const url = `${environment.apiBase}/institutions/${this.contextService.institutionId}/patient/${patientId}/medication-requests/medicationRequestListByUser`;
+
 		return this.http.get<MedicationInfoDto[]>(url, {params : queryParams});
 	}
 
@@ -71,5 +85,17 @@ export class MedicationRequestService {
 			url,
 			{ responseType: 'blob' }
 		);
+	}
+
+	validateProfessional(patientId: number): Observable<ProfessionalLicenseNumberValidationResponseDto> {
+		const url = `${environment.apiBase}/institutions/${this.contextService.institutionId}/patient/${patientId}/medication-requests/validate`;
+		return this.http.get<ProfessionalLicenseNumberValidationResponseDto>(url);
+	}
+
+	sendEmail(patientId: number, patientEmail: string, documentId: number): Observable<any> {
+		const url = `${environment.apiBase}/institutions/${this.contextService.institutionId}/patient/${patientId}/medication-requests/documentId/${documentId}/notify`;
+		let queryParams: HttpParams = new HttpParams();
+		queryParams = queryParams.append('patientEmail', patientEmail);
+		return this.http.get<any>(url, {params: queryParams});
 	}
 }

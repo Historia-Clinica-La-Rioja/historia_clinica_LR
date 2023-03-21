@@ -1,12 +1,12 @@
-<div
-	*ngIf="!error; else errorChart"
->
+<h2 class="title"> {{title}}</h2>
+<div *ngIf="!error; else errorChart">
 	<app-query-renderer
 		[chartType]="chartType.asObservable()"
 		[cubeQuery]="cubeQuery.asObservable()"
 		[pivotConfig]="pivotConfig.asObservable()"
 		[dateFormat]="dateFormat"
 		[listOnTab]="listOnTab"
+		[showLegend]="showLegend"
 	></app-query-renderer>
 </div>
 <ng-template #errorChart>

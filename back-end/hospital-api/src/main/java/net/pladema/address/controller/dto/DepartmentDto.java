@@ -14,4 +14,6 @@ public class DepartmentDto extends AbstractMasterdataDto<Short> {/**
 	 */
 	private static final long serialVersionUID = 5688877591498034622L;
 
+	private Short provinceId;
+
 }

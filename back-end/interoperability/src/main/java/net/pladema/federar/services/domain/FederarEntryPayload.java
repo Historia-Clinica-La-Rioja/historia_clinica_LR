@@ -17,4 +17,7 @@ public class FederarEntryPayload {
 	
 	private FederarResourcePayload resource;
 
+    public boolean isSamePatient(FederarResourcePayload requestBody) {
+		return resource.isSamePatient(requestBody);
+    }
 }

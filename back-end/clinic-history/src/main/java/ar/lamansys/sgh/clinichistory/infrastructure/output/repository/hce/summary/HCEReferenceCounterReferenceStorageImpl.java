@@ -56,7 +56,9 @@ public class HCEReferenceCounterReferenceStorageImpl implements HCEReferenceCoun
                 counterReferenceSummaryDto.getProfessional() != null ? new CHPersonBo(counterReferenceSummaryDto.getProfessional().getId(),
                         counterReferenceSummaryDto.getProfessional().getFirstName(),
                         counterReferenceSummaryDto.getProfessional().getLastName(), null,
-						counterReferenceSummaryDto.getProfessional().getNameSelfDetermination()) : null,
+						counterReferenceSummaryDto.getProfessional().getNameSelfDetermination(),
+						counterReferenceSummaryDto.getProfessional().getMiddleNames(),
+				counterReferenceSummaryDto.getProfessional().getOtherLastNames()) : null,
                 counterReferenceSummaryDto.getFiles() != null ? counterReferenceSummaryDto.getFiles()
                         .stream()
                         .map(crf -> new ReferenceCounterReferenceFileBo(crf.getFileId(), crf.getFileName()))

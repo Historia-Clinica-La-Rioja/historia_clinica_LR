@@ -1,5 +1,13 @@
 package net.pladema.clinichistory.hospitalization.service.evolutionnote.impl;
 
+import java.time.LocalDateTime;
+import java.util.Optional;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
 import ar.lamansys.sgh.clinichistory.application.createDocument.DocumentFactory;
 import ar.lamansys.sgh.clinichistory.application.fetchHospitalizationState.FetchHospitalizationHealthConditionState;
 import ar.lamansys.sgh.clinichistory.domain.ips.HealthConditionBo;
@@ -8,13 +16,6 @@ import net.pladema.clinichistory.hospitalization.service.InternmentEpisodeServic
 import net.pladema.clinichistory.hospitalization.service.evolutionnote.CreateEvolutionNoteService;
 import net.pladema.clinichistory.hospitalization.service.evolutionnote.EvolutionNoteValidator;
 import net.pladema.clinichistory.hospitalization.service.evolutionnote.domain.EvolutionNoteBo;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-
-import java.time.LocalDateTime;
-import java.util.Optional;
 
 @Service
 public class CreateEvolutionNoteServiceImpl implements CreateEvolutionNoteService {
@@ -71,6 +72,8 @@ public class CreateEvolutionNoteServiceImpl implements CreateEvolutionNoteServic
 			evolutionNoteValidator.assertDiagnosisValid(evolutionNote, mainDiagnosis);
 
 		evolutionNote = evolutionNoteValidator.verifyEvolutionNoteDiagnosis(evolutionNote, mainDiagnosis);
+
+		evolutionNote.setPatientInternmentAge(internmentEpisodeService.getEntryDate(evolutionNote.getEncounterId()).toLocalDate());
 
         evolutionNote.setId(documentFactory.run(evolutionNote, true));
 

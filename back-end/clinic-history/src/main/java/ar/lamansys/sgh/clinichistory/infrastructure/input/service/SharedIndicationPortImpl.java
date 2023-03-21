@@ -15,6 +15,7 @@ import ar.lamansys.sgh.clinichistory.application.indication.getinternmentepisode
 
 import ar.lamansys.sgh.clinichistory.application.indication.getinternmentepisodeparenteralplans.GetInternmentEpisodeParenteralPlans;
 import ar.lamansys.sgh.clinichistory.application.indication.getinternmentepisodepharamacos.GetInternmentEpisodePharmacos;
+import ar.lamansys.sgh.clinichistory.application.indication.getmostfrequentpharmacoindicated.GetMostFrequentPharmacoIndicated;
 import ar.lamansys.sgh.clinichistory.application.indication.updatenursingrecordstatus.UpdateNursingRecordStatus;
 import ar.lamansys.sgh.clinichistory.domain.ips.FrequencyBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.IndicationBo;
@@ -77,6 +78,7 @@ public class SharedIndicationPortImpl implements SharedIndicationPort {
 
 	private final GetInternmentEpisodePharmacos getInternmentEpisodePharmacos;
 	private final GetInternmentEpisodePharmaco getInternmentEpisodePharmaco;
+	private final GetMostFrequentPharmacoIndicated getMostFrequentPharmacos;
 
 	private final CreateDiet createDiet;
 
@@ -147,6 +149,17 @@ public class SharedIndicationPortImpl implements SharedIndicationPort {
 	public PharmacoDto getInternmentEpisodePharmaco(Integer pharmacoId) {
 		log.debug("Input parameter -> pharmacoId {}", pharmacoId);
 		PharmacoDto result = mapToPharmacoDto(getInternmentEpisodePharmaco.run(pharmacoId));
+		log.debug("Output -> {}", result);
+		return result;
+	}
+
+	@Override
+	public List<PharmacoSummaryDto> getMostFrequentPharmacos(Integer professionalId, Integer institutionId, Integer limit) {
+		log.debug("Input parameter -> professionalId {}, institutionId {}", professionalId, institutionId);
+		List<PharmacoSummaryDto> result = getMostFrequentPharmacos.run(professionalId, institutionId, limit)
+				.stream()
+				.map(this::mapToImpersonalPharmacoSummaryDto)
+				.collect(Collectors.toList());
 		log.debug("Output -> {}", result);
 		return result;
 	}
@@ -358,7 +371,18 @@ public class SharedIndicationPortImpl implements SharedIndicationPort {
 				localDateMapper.toDateTimeDto(bo.getCreatedOn()),
 				snomedDto,
 				dosageDto,
-				bo.getVia());
+				bo.getVia(),
+				bo.getNote());
+	}
+
+	private PharmacoSummaryDto mapToImpersonalPharmacoSummaryDto(PharmacoSummaryBo bo) {
+		SharedSnomedDto snomedDto = new SharedSnomedDto(bo.getSnomedSctid(), bo.getSnomedPt());
+		NewDosageDto dosageDto = toDosageDto(bo.getDosage());
+		PharmacoSummaryDto result = new PharmacoSummaryDto();
+		result.setSnomed(snomedDto);
+		result.setDosage(dosageDto);
+		result.setVia(bo.getVia());
+		return result;
 	}
 
 	private NewDosageDto toDosageDto(DosageBo bo) {

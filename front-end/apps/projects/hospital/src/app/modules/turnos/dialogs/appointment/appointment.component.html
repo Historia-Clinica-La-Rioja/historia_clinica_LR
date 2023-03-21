@@ -118,6 +118,10 @@
 							<mat-error *ngIf="hasError(formEdit, 'maxlength', 'phonePrefix')"
 								translate="forms.MAX_LENGTH_ERROR" [translateParams]="{max: 10}">
 							</mat-error>
+							<mat-error
+							*ngIf="hasError(formEdit, 'pattern', 'phonePrefix')"
+							[translate]="'forms.FORMAT_NUMERIC'">
+							</mat-error>
 						</mat-form-field>
 						<mat-form-field fxFlex="70%" appearance="outline">
 							<mat-label [translate]="'turnos.appointment.phoneNumber.PHONE_NUMBER'"></mat-label>
@@ -128,12 +132,16 @@
 								<span translate="forms.REQUIRED"></span>
 							</mat-error>
 							<mat-error *ngIf="hasError(formEdit, 'maxlength', 'phoneNumber')"
-								translate="forms.MAX_LENGTH_ERROR" [translateParams]="{max: 20}">
+								translate="forms.MAX_LENGTH_ERROR" [translateParams]="{max: 15}">
+							</mat-error>
+							<mat-error
+							*ngIf="hasError(formEdit, 'pattern', 'phoneNumber')"
+							[translate]="'forms.FORMAT_NUMERIC'">
 							</mat-error>
 						</mat-form-field>
 					</div>
 					<div class="confirm-buttons" fxLayout="row" fxLayoutAlign="end" fxLayoutGap="15px">
-						<button mat-stroked-button color="primary" btn-block type="button" (click)="hideFilters()">
+						<button mat-stroked-button color="primary" btn-block type="button" (click)="hideFilters(); updatePhoneValidators()">
 							<span>{{'turnos.appointment.CANCEL' | translate}}</span>
 						</button>
 						<button mat-flat-button color="primary" [disabled]="isInvalidFormEdit()">
@@ -167,6 +175,9 @@
 							access_time
 						</mat-icon>
 						<span class="mat-body subtitle-size"> {{selectedDate | date:"H:mm"}} hs</span>
+					</div>
+					<div fxLayout="column" fxLayoutGap="10px" *ngIf="appointment?.protected">
+						<span class="purple">{{'turnos.appointment.PROTECTED' | translate}}</span>
 					</div>
 				</div>
 				<button type="button" mat-icon-button color="primary"

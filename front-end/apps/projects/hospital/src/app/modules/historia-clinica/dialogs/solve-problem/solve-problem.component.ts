@@ -10,11 +10,10 @@ import { HealthConditionService } from '@api-rest/services/healthcondition.servi
 import { OutpatientConsultationService } from '@api-rest/services/outpatient-consultation.service';
 import { InternacionMasterDataService } from '@api-rest/services/internacion-master-data.service';
 import { SnackBarService } from '@presentation/services/snack-bar.service';
-import { ConfirmDialogComponent } from '@presentation/dialogs/confirm-dialog/confirm-dialog.component';
-
 import { ProblemasService } from '../../services/problemas.service';
 import { SnomedService } from '../../services/snomed.service';
 import { HEALTH_CLINICAL_STATUS } from "@historia-clinica/modules/ambulatoria/modules/internacion/constants/ids";
+import { DiscardWarningComponent } from '@presentation/dialogs/discard-warning/discard-warning.component';
 
 @Component({
 	selector: 'app-solve-problem',
@@ -94,12 +93,13 @@ export class SolveProblemComponent implements OnInit {
 
 	solveProblem() {
 		if (this.form.valid) {
-			const dialogRefConfirmation = this.dialog.open(ConfirmDialogComponent,
+			const dialogRefConfirmation = this.dialog.open(DiscardWarningComponent,
 				{
 					data: {
 						title: 'ambulatoria.paciente.problemas.TITLE_POPUP_RESOLVER_PROBLEMA',
 						content: `ambulatoria.paciente.problemas.CONFIRMACION_POPUP`,
-						okButtonLabel: 'ambulatoria.paciente.problemas.BOTON_CONFIRMAR_POPUP'
+						okButtonLabel: 'ambulatoria.paciente.problemas.BOTON_CONFIRMAR_POPUP',
+						cancelButtonLabel: 'ambulatoria.paciente.problemas.BOTON_CANCEL_POPUP'
 					}
 				});
 

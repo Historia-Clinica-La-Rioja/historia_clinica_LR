@@ -35,4 +35,6 @@ public class HCEEvolutionSummaryDto implements Serializable {
     private List<@Valid HCEProcedureDto> procedures = new ArrayList<>();
 
     private String evolutionNote;
+
+	private String institutionName;
 }

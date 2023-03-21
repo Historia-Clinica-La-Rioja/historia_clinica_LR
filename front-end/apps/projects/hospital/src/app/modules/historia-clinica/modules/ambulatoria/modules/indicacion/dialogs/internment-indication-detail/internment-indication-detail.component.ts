@@ -108,7 +108,7 @@ export class InternmentIndicationDetailComponent implements OnInit {
 				content: parenteralPlan.frequency.flowMlHour + ' ml/h | ' + parenteralPlan.frequency.flowDropsHour + ' hp. Gotas'
 			}, {
 				title: 'indicacion.internment-card.sections.indication-extra-description.VOLUMEN_DAY',
-				content: parenteralPlan.frequency.dailyVolume.toString()
+				content: parenteralPlan.frequency?.dailyVolume ?  parenteralPlan.frequency?.dailyVolume.toString() : "-"
 			}])
 		}
 

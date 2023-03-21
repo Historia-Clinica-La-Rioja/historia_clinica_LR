@@ -28,7 +28,7 @@ public class EmergencyCareEpisodeSummaryController {
 	private final EmergencyCareMapper emergencyCareMapper;
 
 	@GetMapping("/in-progress/patient/{patientId}")
-	@PreAuthorize("hasPermission(#institutionId, 'ADMINISTRATIVO, ENFERMERO, ESPECIALISTA_MEDICO, PROFESIONAL_DE_SALUD, ESPECIALISTA_EN_ODONTOLOGIA, PERSONAL_DE_IMAGENES, PERSONAL_DE_LABORATORIO, PERSONAL_DE_FARMACIA')")
+	@PreAuthorize("hasPermission(#institutionId, 'ADMINISTRATIVO, ADMINISTRATIVO_RED_DE_IMAGENES, ENFERMERO, ESPECIALISTA_MEDICO, PROFESIONAL_DE_SALUD, ESPECIALISTA_EN_ODONTOLOGIA, PERSONAL_DE_IMAGENES, PERSONAL_DE_LABORATORIO, PERSONAL_DE_FARMACIA, PRESCRIPTOR')")
 	public ResponseEntity<EmergencyCareEpisodeInProgressDto> emergencyCareEpisodeInProgress(
 			@PathVariable(name = "institutionId") Integer institutionId,
 			@PathVariable(name = "patientId") Integer patientId) {
@@ -40,7 +40,7 @@ public class EmergencyCareEpisodeSummaryController {
 	}
 
 	@GetMapping("/{episodeId}/summary")
-	@PreAuthorize("hasPermission(#institutionId, 'ADMINISTRATIVO, ENFERMERO, ESPECIALISTA_MEDICO, PROFESIONAL_DE_SALUD')")
+	@PreAuthorize("hasPermission(#institutionId, 'ADMINISTRATIVO, ADMINISTRATIVO_RED_DE_IMAGENES, ENFERMERO, ESPECIALISTA_MEDICO, PROFESIONAL_DE_SALUD')")
 	public ResponseEntity<EmergencyCareListDto> getEpisodeSummary(
 			@PathVariable(name = "institutionId") Integer institutionId,
 			@PathVariable(name= "episodeId") Integer episodeId) {

@@ -1,0 +1,32 @@
+<div id="attach_files" fxLayout="column" fxLayoutAlign="space-around end" *appHasRole="['ADMINISTRATIVO']">
+	<div fxLayout="row" class="button-attach">
+		<button mat-stroked-button color="primary" (click)="fileInput.click()">
+			<mat-icon>attachment</mat-icon>
+			<span [translate]="'pacientes.form.UPLOAD_FILES'"></span>
+		</button>
+		<span [hidden]="true">
+			<input type="file" #fileInput multiple (change)="onSelectFileFormData($event)"/>
+		</span>
+	</div>
+
+	<div *ngIf="selectedFilesShow" fxLayout="column" fxLayoutAlign="space-around end">
+		<div *ngFor="let fileName of selectedFilesShow; let index = index">
+			<span class="mat-body element-light-color">
+				{{fileName}}
+			</span>
+			<button mat-icon-button color="warn" (click)="removeSelectedFile(index)"><mat-icon>delete</mat-icon></button>
+		</div>
+		<div *ngFor="let file of personFiles" fxFlex="100%" fxFlexFill>
+			<div fxLayout="column" fxLayoutAlign="space-around start">
+
+				<ng-container *appHasRole="['ADMINISTRATIVO', 'ADMINISTRADOR_INSTITUCIONAL_BACKOFFICE', 'ADMINISTRATIVO_RED_DE_IMAGENES']">
+					<a mat-button color="primary"  (click)="download(file.fileId,file.fileName)">{{file.fileName}}</a>
+				</ng-container>
+				<ng-template>
+					<span *appHasRole="['ADMINISTRADOR_INSTITUCIONAL_BACKOFFICE', 'ADMINISTRADOR_INSTITUCIONAL_PRESCRIPTOR']" class="info-content">{{file.fileName}}</span>
+				</ng-template>
+
+			</div>
+		</div>
+	</div>
+</div>

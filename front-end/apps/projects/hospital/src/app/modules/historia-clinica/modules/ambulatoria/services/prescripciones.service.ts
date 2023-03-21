@@ -1,12 +1,13 @@
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-import { CompleteRequestDto, DiagnosticReportInfoDto, DiagnosticReportInfoWithFilesDto, MedicationInfoDto, PrescriptionDto } from '@api-rest/api-model';
+import { CompleteRequestDto, DiagnosticReportInfoDto, DiagnosticReportInfoWithFilesDto, MedicationInfoDto, PrescriptionDto, ProfessionalLicenseNumberValidationResponseDto } from '@api-rest/api-model';
 import { MedicationRequestService } from '@api-rest/services/medication-request.service';
 import { ServiceRequestService } from '@api-rest/services/service-request.service';
 import { MEDICATION_STATUS, MedicationStatusChange, STUDY_STATUS } from '../constants/prescripciones-masterdata';
 import { NewPrescriptionItem } from '../dialogs/ordenes-prescripciones/agregar-prescripcion-item/agregar-prescripcion-item.component';
 import { SnackBarService } from '@presentation/services/snack-bar.service';
 import { saveAs } from 'file-saver';
+import { DocumentService } from '@api-rest/services/document.service';
 
 @Injectable({
   providedIn: 'root'
@@ -20,6 +21,7 @@ export class PrescripcionesService {
 		private medicationRequestService: MedicationRequestService,
 		private serviceRequestService: ServiceRequestService,
 		private snackBarService: SnackBarService,
+		private readonly documentService: DocumentService
 	) { }
 
 	createPrescription(prescriptionType: PrescriptionTypes, newPrescription: PrescriptionDto, patientId: number): Observable<number | number[]> {
@@ -40,6 +42,10 @@ export class PrescripcionesService {
 		}
 	}
 
+	getPrescriptionByRoles(patientId: number, statusId: string, medicationStatement: string, healthCondition: string): Observable<any> {
+			return this.medicationRequestService.medicationRequestListByRoles(patientId, statusId, medicationStatement, healthCondition);
+	}
+
 	changeMedicationStatus(statusChange: string, patientId: number, medicationsIds: number[], dayQuantity?: number, observations?: string): Observable<void> {
 		switch (statusChange) {
 			case MedicationStatusChange.FINALIZE:
@@ -51,14 +57,14 @@ export class PrescripcionesService {
 		}
 	}
 
-	downloadPrescriptionPdf(patientId: number, prescriptionPdfInfo: number[], prescriptionType: PrescriptionTypes): void {
+	downloadPrescriptionPdf(patientId: number, prescriptionPdfInfo: number[], prescriptionType: PrescriptionTypes, fileName?: string): void {
 		switch (prescriptionType) {
 			case PrescriptionTypes.MEDICATION:
-				const recipeId = prescriptionPdfInfo[0];
-				this.medicationRequestService.download(patientId, recipeId).subscribe((blob) => {
-					saveAs(blob, 'Receta ' + recipeId);
-					this.snackBarService.showSuccess('ambulatoria.paciente.ordenes_prescripciones.toast_messages.DOWNLOAD_RECIPE_SUCCESS');
-				});
+				const documentId = prescriptionPdfInfo[0];
+				if (fileName)
+					this.documentService.downloadFile({ id: documentId, filename: fileName });
+				else
+					this.documentService.downloadUnnamedFile(documentId);
 				break;
 			case PrescriptionTypes.STUDY:
 				prescriptionPdfInfo.forEach(orderId => {
@@ -87,6 +93,10 @@ export class PrescripcionesService {
 		this.serviceRequestService.download(patientId, fileId, fileName);
 	}
 
+	validateProfessional(patientId: number): Observable<ProfessionalLicenseNumberValidationResponseDto> {
+		return this.medicationRequestService.validateProfessional(patientId);
+	}
+
 	toNewPrescriptionItem(prescriptionType: PrescriptionTypes, prescriptionItem: any): NewPrescriptionItem {
 		switch (prescriptionType) {
 			case PrescriptionTypes.MEDICATION:
@@ -112,6 +122,8 @@ export class PrescripcionesService {
 			intervalHours: medicationItem.dosage?.frequency ? String(medicationItem.dosage.frequency) : null,
 			administrationTimeDays: medicationItem.dosage?.duration ? String(medicationItem.dosage.duration) : null,
 			observations: medicationItem.observations,
+			unitDose: null,
+			dayDose: null,
 		};
 	}
 
@@ -127,6 +139,8 @@ export class PrescripcionesService {
 			isDailyInterval: null,
 			isChronicAdministrationTime: null,
 			observations: studyItem.observations,
+			unitDose: null,
+			dayDose: null,
 		};
 	}
 

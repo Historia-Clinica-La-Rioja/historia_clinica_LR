@@ -254,7 +254,12 @@
                     "ADD_REFERENCE": "AGREGAR SOLICITUD",
                     "NO_CARE_LINES": "No existen líneas de cuidado para la solicitud",
                     "PROVINCE": "Provincia",
-                    "DEPARTMENT": "Partido"
+                    "DEPARTMENT": "Partido",
+                    "ORIGIN": "Origen",
+                    "DESTINATION": "Destino",
+                    "PATIENT_PHONE": "Teléfono del paciente",
+                    "PHONE_NUMBER": "Número",
+                    "PHONE_PREFIX": "Prefijo"
                 }
             },
             "reference-notification": {
@@ -268,11 +273,11 @@
             "counterreference": {
                 "TITLE": "Responder referencia",
                 "COUNTERREFERENCE": "Contrarreferencia",
-				"REFERENCE_CLOSURE": "Cierre de la referencia",
-				"CLOSURE_TYPE": "Tipo de cierre",
+                "REFERENCE_CLOSURE": "Cierre de la referencia",
+                "CLOSURE_TYPE": "Tipo de cierre",
                 "PLACEHOLDER_DESCRIPTION": "Descripción",
                 "CONFIRM_COUNTERREFERENCE": "Confirmar contrarreferencia",
-				"CONFIRM_CLOSURE": "Confirmar cierre",
+                "CONFIRM_CLOSURE": "Confirmar cierre",
                 "messages": {
                     "ERROR": "Error al guardar documento de contrarreferencia",
                     "SUCCESS": "El documento de contrarreferencia se guardó exitosamente"
@@ -289,7 +294,8 @@
                 "TITLE_POPUP_RESOLVER_PROBLEMA": "Resolver problema",
                 "CONFIRM_RESOLVER_PROBLEMA": "Resolver",
                 "CONFIRMACION_POPUP": "¿Está seguro de resolver el problema sin generar una nueva consulta ambulatoria?",
-                "BOTON_CONFIRMAR_POPUP": "Confirmar",
+                "BOTON_CONFIRMAR_POPUP": "Si, confirmar",
+				"BOTON_CANCEL_POPUP": "No, cancelar",
                 "SUCCESS_CONFIRMAR_POPUP": "El problema ha sido resuelto exitosamente",
                 "ERROR_CONFIRMAR_POPUP": "Ocurrió un error al resolver el problema",
                 "ACCEDER": "Acceder episodio",
@@ -313,11 +319,12 @@
                     "CONSULTATION_DATE": "Fecha de consulta",
                     "REFERENCE_REQUEST": "referencia solicitada",
                     "CARE_LINE": "Línea de cuidado:",
-					"INSTITUTION": "Institución:",
+                    "INSTITUTION": "Institución:",
                     "SUMMARY_REFERENCE": "Resumen de referencia",
                     "COUNTERREFERENCE": "Contrarreferencia",
                     "PROCEDURE": "Procedimientos:",
-					"REFERENCE_CLOSURE": "Cierre de referencia"
+                    "REFERENCE_CLOSURE": "Cierre de referencia",
+                    "CONSULTATION_INSTITUTION": "Institución"
                 },
                 "historical-problems-filters": {
                     "SPECIALTY": "Especialidad",
@@ -394,7 +401,28 @@
                     "ADMINISTRATION_TIME_DEFAULT_OPTION": "Habitual",
                     "OBSERVATIONS": "Observaciones",
                     "INTERVAL_HOURS_REQUIRED": "Ingrese cantidad de horas válidas",
-                    "ADMINISTRATION_TIME_DAYS_REQUIRED": "Ingrese cantidad de días"
+                    "ADMINISTRATION_TIME_DAYS_REQUIRED": "Ingrese cantidad de días",
+                    "UNIT_DOSE": "Dosis / Unidad",
+                    "DAY_DOSE": "Dosis / Día",
+                    "TREATMENT_DAYS": "Días de tratamiento",
+                    "ADD_CHARACTERS": "Ingrese al menos 3 caracteres",
+                    "ADD_NEW_PROBLEM": "+ Agregar nuevo problema asociado"
+                },
+                "validators_dialog": {
+                    "TITLE": "Sin permiso para recetar",
+                    "SUBTITLE": "Para realizar una receta digital es necesario resolver las siguientes situaciones:",
+                    "2FA_TITLE_DISABLED": "Doble factor de autentificación desactivado",
+                    "2FA_TITLE_ENABLED": "Doble factor de autentificación activado",
+                    "2FA_CFG": "Configurar autenficación por doble factor",
+                    "2FA_DESCRIPTION": "Su doble factor de autentificación se encuentra desactivado, para activarlo dirijase a la pantalla “Mi cuenta” y elija la opción:",
+                    "LICENSE_NUMBER_TITLE_OVERDUE": "Matrícula vencida",
+                    "LICENSE_NUMBER_TITLE_VALID": "Matrícula vigente",
+                    "LICENSE_NUMBER_DESCRIPTION": "Sus matriculas se encuentran vencidas por favor contactarse con 045-8411155 para consultar por el estado de sus matrículas.",
+                    "LICENSE_NUMBER_NOT_LOADED_TITLE": "Matricula inexistente",
+                    "LICENSE_NUMBER_NOT_LOADED_DESCRIPTION": "Sus matriculas no fueron cargadas en el sistema, comuniquese con un administrador institucional para que actualice los mismos.",
+                    "PROFESSIONAL_DATA_TITLE_INCOMPLETE": "Datos de contacto incompletos",
+                    "PROFESSIONAL_DATA_TITLE_COMPLETE": "Datos de contacto completos",
+                    "PROFESSIONAL_DATA_DESCRIPTION": "Para recetar necesita tener su mail y teléfono cargados en el sistema, comuniquese con un administrador insitucional para que actualice los mismos."
                 },
                 "new_prescription_dialog": {
                     "MEDICATION_TITLE": "Nueva medicación",
@@ -403,12 +431,46 @@
                     "ADD_STUDY_LABEL": "Agregar estudio",
                     "SELECT_MEDICAL_COVERAGE": "Seleccione cobertura médica",
                     "WITHOUT_RECIPE": "Sin receta",
-                    "UPDATE_COVERAGE": "Actualizar cobertura"
+                    "UPDATE_COVERAGE": "Actualizar cobertura",
+                    "ADMINISTRATION_TIME_DAYS": "Durante: {{days}} días",
+                    "UNIT_DOSE": "Dosis / Unidad: {{unitDose}}",
+                    "DAY_DOSE": "Dosis / Día: {{dayDose}}",
+                    "TREATMENT_DAYS": "Días de tratamiento: {{treatmentDays}}",
+                    "INTERVAL": "Cada {{interval}} hs.",
+                    "USUAL": "Habitual",
+                    "DAILY": "Diario",
+                    "DIAGNOSIS": "Diagnóstico: {{healthProblem}}",
+                    "PROLONGED_TREATMENT": "Tratamiento prolongado",
+                    "ARCHIVED": "Archivada",
+                    "POSDATADAS_LABEL": "Repeticiones (posdatadas)",
+                    "POSDATADAS_HINT_SINGULAR": "Se generará {{posdatadas}} receta posdatada, adicional a la original",
+                    "POSDATADAS_HINT_PLURAL": "Se generarán {{posdatadas}} recetas posdatadas, adicionales a la original",
+                    "POSDATADAS_ERROR": "Las posdatadas deben ir entre {{min}} y {{max}}",
+                    "SPECIALTY": "Especialidad",
+                    "SPECIALTY_REQUIRED": "El profesional no tiene especialidades asociadas",
+                    "PHONE_PREFIX": "Prefijo",
+                    "PHONE_NUMBER": "Teléfono del paciente",
+                    "COUNTRY": "País",
+					"PROVINCE": "Provincia",
+					"LOCALITY": "Localidad",
+                    "CITY": "Ciudad",
+					"STREET": "Calle",
+                    "STREET_NUMBER": "Número",
+                    "MEDICAL_COVERAGE_SUGGESTION": "Atención: no está cargado el número de afiliado"
+                },
+                "send_digital_recipe_email_dialog": {
+                    "TITLE": "Enviar receta digital por email",
+                    "INPUT_TEXT": "Por favor confirme el mail del paciente:",
+                    "LABEL": "Email del paciente",
+                    "SEND_RECIPE": "Enviar receta",
+                    "REQUIRED_EMAIL": "El email del paciente es obligatorio"
                 },
                 "confirm_prescription_dialog": {
-                    "MEDICATION_TITLE": "Su medicación fue agregada correctamente",
+                    "MEDICATION_TITLE": "Su receta fue realizada correctamente",
                     "STUDY_TITLE": "Su orden fue realizada correctamente",
+                    "TITLE": "Su receta fue realizada correctamente",
                     "DOWNLOAD_BUTTON_MEDICATION": "Descargar receta",
+                    "SEND_EMAIL": "Enviar por email",
                     "DOWNLOAD_BUTTON_STUDY": "Descargar orden"
                 },
                 "suspend_medication_dialog": {
@@ -447,6 +509,7 @@
                 },
                 "menu_items": {
                     "DOWNLOAD": "Descargar receta",
+                    "SEND_EMAIL": "Enviar por email",
                     "DOWNLOAD_STUDY": "Descargar orden",
                     "RE_PRESCRIBE": "Volver a recetar",
                     "SUSPEND": "Suspender",
@@ -494,6 +557,29 @@
             },
             "internacion": {
                 "TAB_LABEL": "Internación"
+            },
+            "guardia": {
+                "TAB_LABEL": "Guardia",
+                "SUMMARY_TOOLTIP": "Resumen de guardia",
+                "ID": "ID",
+                "REASONS": "Motivos de consulta",
+                "ENTRANCE": "Ingreso",
+                "POLICE_INTERVENTION": "Intervención policial",
+                "UBICACION": "Ubicación",
+                "WITHOUT_POLICE_INTERVENTION": "Sin intervención policial",
+                "WITH_POLICE_INTERVENTION": "Con intervención policial",
+                "PLATE_NUMBER": "Placa. Nº",
+                "EDIT_BUTTON": "Editar atención",
+                "CANCEL_BUTTON": "Cancelar atención",
+                "CANCEL_ATTENTION_SUCCESS": "La atención fue cancelada exitosamente",
+                "CANCEL_ATTENTION_ERROR": "Ocurrio un error al cancelar la atención",
+                "PATIENT_REQUIRED": "El episodio de guardia debe tener un paciente asociado",
+                "ADMINISTRATIVE_DISCHARGE_BUTTON": "Alta Administrativa",
+                "MEDICAL_DISCHARGE_BUTTON": "Alta médica",
+                "NOT_ACTIVE": "El episodio de guardia no se encuentra activo",
+                "HISTORIAL_TRIAGE": "Historial de triages",
+                "NUEVO_TRIAGE": "Nuevo triage",
+                "RISK_FACTORS_TOOLTIP": "Factores de riesgo"
             },
             "vacunas": {
                 "TAB_LABEL": "Vacunas",
@@ -585,6 +671,9 @@
             },
             "nursing": {
                 "TAB_LABEL": "enfermería"
+            },
+            "clap": {
+                "TAB_LABEL": "Clap"
             }
         },
         "screen_change_warning_dialog": {
@@ -597,12 +686,12 @@
             "OTHER-INDICATION": "Otra indicación",
             "DIET": "Dieta"
         },
-		"card-patient":{
-			"ID": "ID",
-			"DNI": "DNI",
-			"BIRTHDAY_DATE": "Fecha de Nac.",
-			"COINCIDENCE": "coincidencia",
-			"BUTTON": "Ver"
-		}
+        "card-patient": {
+            "ID": "ID",
+            "DNI": "DNI",
+            "BIRTHDAY_DATE": "Fecha de Nac.",
+            "COINCIDENCE": "coincidencia",
+            "BUTTON": "Ver"
+        }
     }
 }

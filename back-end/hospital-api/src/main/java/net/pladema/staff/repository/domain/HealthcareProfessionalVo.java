@@ -24,4 +24,12 @@ public class HealthcareProfessionalVo extends BasicPersonalDataVo {
         this.licenceNumber = licenceNumber;
         this.personId = personId;
     }
+	public HealthcareProfessionalVo(Integer id, String licenceNumber, String firstName,
+									String lastName, String identificationNumber,Integer personId, String nameSelfDetermination,String middleNames, String otherLastNames){
+		super(firstName, lastName, identificationNumber, nameSelfDetermination,middleNames, otherLastNames);
+		this.id = id;
+		this.licenceNumber = licenceNumber;
+		this.personId = personId;
+	}
+
 }

@@ -591,7 +591,7 @@ export class AgendaComponent implements OnInit, OnDestroy, OnChanges {
 	}
 
 	private getProfessionalFullName(professional: ProfessionalPersonDto | ProfessionalDto): string {
-		return `${this.patientNameService.getPatientName(professional?.firstName, professional?.nameSelfDetermination)} ${professional?.lastName}`;
+		return `${professional?.lastName} ${professional?.otherLastNames?professional?.otherLastNames: ''} ${this.patientNameService.getFullName(professional?.firstName, professional?.nameSelfDetermination, professional?.middleNames)}`;
 	}
 
 	private resetInformation() {

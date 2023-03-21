@@ -1,11 +1,25 @@
 package ar.lamansys.sgh.clinichistory.domain.document;
 
-import ar.lamansys.sgh.clinichistory.domain.ips.*;
-import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.DocumentStatus;
-
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Collections;
 import java.util.List;
+
+import ar.lamansys.sgh.clinichistory.domain.ips.AllergyConditionBo;
+import ar.lamansys.sgh.clinichistory.domain.ips.AnthropometricDataBo;
+import ar.lamansys.sgh.clinichistory.domain.ips.DentalActionBo;
+import ar.lamansys.sgh.clinichistory.domain.ips.DiagnosisBo;
+import ar.lamansys.sgh.clinichistory.domain.ips.DiagnosticReportBo;
+import ar.lamansys.sgh.clinichistory.domain.ips.DocumentObservationsBo;
+import ar.lamansys.sgh.clinichistory.domain.ips.HealthConditionBo;
+import ar.lamansys.sgh.clinichistory.domain.ips.HealthHistoryConditionBo;
+import ar.lamansys.sgh.clinichistory.domain.ips.ImmunizationBo;
+import ar.lamansys.sgh.clinichistory.domain.ips.MedicationBo;
+import ar.lamansys.sgh.clinichistory.domain.ips.ProblemBo;
+import ar.lamansys.sgh.clinichistory.domain.ips.ProcedureBo;
+import ar.lamansys.sgh.clinichistory.domain.ips.ReasonBo;
+import ar.lamansys.sgh.clinichistory.domain.ips.RiskFactorBo;
+import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.DocumentStatus;
 
 public interface IDocumentBo {
 
@@ -89,6 +103,8 @@ public interface IDocumentBo {
 
     Short getDocumentSource();
 
+	default LocalDate getPatientInternmentAge() {return null;}
+
     void setId(Long id);
 
     default String getDocumentStatusId(){
@@ -108,5 +124,7 @@ public interface IDocumentBo {
     default LocalDateTime getPerformedDate() { return null; }
 
 	default Long getInitialDocumentId() { return null; }
+
+	default Boolean getIsArchived() { return null; }
 
 }

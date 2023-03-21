@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { AbstractControl, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
-import { AMedicalDischargeDto, DiagnosisDto, MasterDataInterface } from '@api-rest/api-model';
+import { AMedicalDischargeDto, DiagnosisDto, MasterDataInterface, ResponseEmergencyCareDto } from '@api-rest/api-model';
 import { dateTimeDtoToDate } from '@api-rest/mapper/date-dto.mapper';
 import { DischargeTypes } from '@api-rest/masterdata';
 import { EmergencyCareEpisodeMedicalDischargeService } from '@api-rest/services/emergency-care-episode-medical-discharge.service';
@@ -18,7 +18,7 @@ import { map } from 'rxjs/operators';
 import { SnomedService } from '@historia-clinica/services/snomed.service';
 import { ProblemasService } from '../../../../services/problemas.service';
 import { GuardiaMapperService } from '../../services/guardia-mapper.service';
-import {InternacionMasterDataService} from '@api-rest/services/internacion-master-data.service';
+import { InternacionMasterDataService } from '@api-rest/services/internacion-master-data.service';
 import { MIN_DATE } from "@core/utils/date.utils";
 import * as moment from 'moment';
 
@@ -42,6 +42,7 @@ export class MedicalDischargeComponent implements OnInit {
 	episodeCreatedOn: Moment;
 	formSubmited = false;
 	private episodeId: number;
+	private patientId: number;
 
 	minDate = MIN_DATE;
 
@@ -59,7 +60,7 @@ export class MedicalDischargeComponent implements OnInit {
 		private readonly internacionMasterDataService: InternacionMasterDataService,
 
 	) {
-		this.problemasService = new ProblemasService(formBuilder, this.snomedService,this.snackBarService);
+		this.problemasService = new ProblemasService(formBuilder, this.snomedService, this.snackBarService);
 	}
 
 	ngOnInit(): void {
@@ -80,6 +81,10 @@ export class MedicalDischargeComponent implements OnInit {
 			episodeCreatedOn$.subscribe(episodeCreatedOn => {
 				this.episodeCreatedOn = episodeCreatedOn;
 				this.setDateTimeValidation(episodeCreatedOn);
+			});
+
+			this.emergencyCareEpisodeService.getAdministrative(this.episodeId).subscribe((dto: ResponseEmergencyCareDto) => {
+				this.patientId = dto.patient ? dto.patient.id : null;
 			});
 		});
 		const sortByDescription = sortBy('description');
@@ -112,7 +117,14 @@ export class MedicalDischargeComponent implements OnInit {
 	}
 
 	goToEpisodeDetails(): void {
-		this.router.navigateByUrl(`institucion/${this.contextService.institutionId}/guardia/episodio/${this.episodeId}`);
+		if (this.patientId) {
+			const url = `institucion/${this.contextService.institutionId}/ambulatoria/paciente/${this.patientId}`;
+			this.router.navigateByUrl(url, { state: { toEmergencyCareTab: true } });
+		}
+		else {
+			const url = `institucion/${this.contextService.institutionId}/guardia/episodio/${this.episodeId}`;
+			this.router.navigateByUrl(url);
+		}
 	}
 
 	private setDateTimeValidation(episodeCreatedOn: Moment): void {

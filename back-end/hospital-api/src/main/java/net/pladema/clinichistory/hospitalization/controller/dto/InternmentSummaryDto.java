@@ -11,7 +11,7 @@ import net.pladema.establishment.controller.dto.BedDto;
 
 import javax.annotation.Nullable;
 import javax.validation.constraints.NotNull;
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 @Getter
 @Setter
@@ -25,7 +25,7 @@ public class InternmentSummaryDto {
 
     private ResponsibleDoctorDto doctor;
 
-    private LocalDate entryDate;
+    private LocalDateTime entryDate;
 
     private int totalInternmentDays;
 

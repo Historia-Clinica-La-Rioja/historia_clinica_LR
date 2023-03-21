@@ -1,5 +1,5 @@
 import { HEALTH_CLINICAL_STATUS, HEALTH_VERIFICATIONS } from './../../constants/ids';
-import { Component, Input } from '@angular/core';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { DiagnosisDto } from '@api-rest/api-model';
 import { DiagnosisCreationEditionComponent } from '../../dialogs/diagnosis-creation-edition/diagnosis-creation-edition.component';
@@ -17,6 +17,8 @@ export class ElementoDiagnosticoComponent {
 	@Input()
 	isMain: boolean;
 
+	@Output() removeDiagnosis = new EventEmitter();
+
 	ACTIVE = HEALTH_CLINICAL_STATUS.ACTIVO;
 	REMISSION = HEALTH_CLINICAL_STATUS.REMISION;
 	RESOLVED = HEALTH_CLINICAL_STATUS.RESUELTO;
@@ -33,6 +35,10 @@ export class ElementoDiagnosticoComponent {
 				diagnosis: this.diagnosis
 			}
 		});
+	}
+
+	remove(){
+		this.removeDiagnosis.emit(this.diagnosis)
 	}
 
 }

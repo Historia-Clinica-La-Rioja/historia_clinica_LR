@@ -3,6 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { environment } from '@environments/environment';
 import { ContextService } from '@core/services/context.service';
+import { MasterDataDto, SectorDto } from '@api-rest/api-model';
 
 @Injectable({
 	providedIn: 'root'
@@ -21,4 +22,15 @@ export class SectorService {
 		const url = `${environment.apiBase}/institution/${this.contextService.institutionId}/sector/${sectorId}/specialty/${specialtyId}/rooms`;
 		return this.http.get<any[]>(url);
 	}
+
+	getDiagnosticImagingType(sectorId: number): Observable<SectorDto[]> {
+		const url = `${environment.apiBase}/institution/${this.contextService.institutionId}/sector/sectoroftype/${sectorId}`;
+		return this.http.get<SectorDto[]>(url);
+	}
+
+	getTypes(): Observable<MasterDataDto[]> {
+		const url = `${environment.apiBase}/institution/${this.contextService.institutionId}/sector/sectortype`;
+		return this.http.get<MasterDataDto[]>(url);
+	}
 }
+

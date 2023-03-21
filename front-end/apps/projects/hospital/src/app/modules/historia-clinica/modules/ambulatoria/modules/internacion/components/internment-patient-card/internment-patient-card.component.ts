@@ -12,6 +12,7 @@ import { Sector } from '@institucion/services/bed-management-facade.service';
 import { SectorService } from '@api-rest/services/sector.service';
 import { RoomService } from '@api-rest/services/room.service';
 import { pushIfNotExists } from '@core/utils/array.utils';
+import { REMOVE_SUBSTRING_DNI } from '@core/constants/validation-constants';
 
 const PAGE_SIZE_OPTIONS = [5, 10, 25];
 const PAGE_SIZE_MIN = [5];
@@ -131,7 +132,7 @@ export class InternmentPatientCardComponent {
 	}
 
 	applyFilter($event: any): void {
-		this.applySearchFilter = ($event.target as HTMLInputElement).value;
+		this.applySearchFilter = ($event.target as HTMLInputElement).value?.replace(REMOVE_SUBSTRING_DNI,'');
 		this.upDateFilters();
 	}
 

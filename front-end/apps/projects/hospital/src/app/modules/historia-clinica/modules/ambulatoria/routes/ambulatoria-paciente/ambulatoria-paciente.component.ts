@@ -35,9 +35,15 @@ import { SummaryCoverageInformation } from '../../components/medical-coverage-su
 import { EMedicalCoverageType } from "@pacientes/dialogs/medical-coverage/medical-coverage.component";
 import { InternmentActionsService } from "@historia-clinica/modules/ambulatoria/modules/internacion/services/internment-actions.service";
 import { Slot, SlotedInfo, WCExtensionsService } from '@extensions/services/wc-extensions.service';
+import { EmergencyCareEpisodeStateService } from '@api-rest/services/emergency-care-episode-state.service';
+import { EstadosEpisodio } from '@historia-clinica/modules/guardia/constants/masterdata';
+import { PatientType } from '@historia-clinica/constants/summaries';
 
 const RESUMEN_INDEX = 0;
 const VOLUNTARY_ID = 1;
+const FEMENINO = 'Femenino';
+const EMERGENCY_CARE_INDEX = 0;
+const EMERGENCY_CARE_INDEX_WHEN_INTERNED = 1;
 
 @Component({
 	selector: 'app-ambulatoria-paciente',
@@ -50,6 +56,7 @@ export class AmbulatoriaPacienteComponent implements OnInit, OnDestroy {
 	dialogRef: DockPopupRef;
 	patient: PatientBasicData;
 	patientId: number;
+	personId: number;
 	extensionTabs$: Observable<{ head: MenuItem, body$: Observable<UIPageDto> }[]>;
 	extensionWCTabs$: Observable<SlotedInfo[]>;
 	medicamentStatus$: Observable<any>;
@@ -78,7 +85,18 @@ export class AmbulatoriaPacienteComponent implements OnInit, OnDestroy {
 	hasPicturesStaffRole = false;
 	hasLaboratoryStaffRole = false;
 	hasPharmacyStaffRole = false;
+	hasEmergencyCareRelatedRole = false;
 	showNursingSection = false;
+	femenino = FEMENINO;
+	selectedTab = 0;
+	isNoValidatedOrTemporary: boolean = false;
+	isHabilitarRecetaDigitalEnabled: boolean = false;
+	emergencyCareTabIndex: number;
+	showEmergencyCareTab: boolean;
+	hasEpisodeToShow: boolean;
+	hasPrescriptorRole = false;
+	canOnlyViewSelfAddedProblems = false;
+	rolesThatCanOnlyViewSelfAddedProblems = [ERole.PRESCRIPTOR];
 
 	private timeOut = 15000;
 	private isOpenOdontologyConsultation = false;
@@ -99,6 +117,7 @@ export class AmbulatoriaPacienteComponent implements OnInit, OnDestroy {
 		private readonly contextService: ContextService,
 		private readonly router: Router,
 		private readonly emergencyCareEpisodeSummaryService: EmergencyCareEpisodeSummaryService,
+		private readonly emergencyCareEpisodeStateService: EmergencyCareEpisodeStateService,
 		readonly internmentSummaryFacadeService: InternmentSummaryFacadeService,
 		readonly patientAllergies: PatientAllergiesService,
 		private readonly requestMasterDataService: RequestMasterDataService,
@@ -106,13 +125,24 @@ export class AmbulatoriaPacienteComponent implements OnInit, OnDestroy {
 		private readonly medicalCoverageInfo: MedicalCoverageInfoService,
 		private readonly wcExtensionsService: WCExtensionsService,
 	) {
+		this.featureFlagService.isActive(AppFeature.HABILITAR_RECETA_DIGITAL)
+			.subscribe((result: boolean) => this.isHabilitarRecetaDigitalEnabled = result)
+			
+		const toEmergencyCareTab = this.router.getCurrentNavigation()?.extras?.state?.toEmergencyCareTab;
+		this.setPermissions();
 		this.route.paramMap.subscribe(
 			(params) => {
 				this.patientId = Number(params.get('idPaciente'));
 				this.patientService.getPatientBasicData<BasicPatientDto>(this.patientId).subscribe(
 					patient => {
+						if (this.isHabilitarRecetaDigitalEnabled && (patient.typeId === PatientType.TEMPORARY || patient.typeId === PatientType.PERMANENT_NO_VALIDATED)) {
+							this.isNoValidatedOrTemporary = true
+							this.snackBarService.showError('indicacion.INDICACIONES_DISABLED');
+						}
+						
 						this.personInformation.push({ description: patient.person.identificationType, data: patient.person.identificationNumber });
 						this.patient = this.mapperService.toPatientBasicData(patient);
+						this.personId = patient.person.id;
 					}
 				);
 				this.ambulatoriaSummaryFacadeService.setIdPaciente(this.patientId);
@@ -144,10 +174,38 @@ export class AmbulatoriaPacienteComponent implements OnInit, OnDestroy {
 								});
 						}
 						this.hasInternmentEpisodeInThisInstitution = internmentEpisodeProcess.inProgress && !!internmentEpisodeProcess.id;
-					})
+						this.emergencyCareTabIndex = this.hasInternmentEpisodeInThisInstitution ? EMERGENCY_CARE_INDEX_WHEN_INTERNED : EMERGENCY_CARE_INDEX;
 
-				this.emergencyCareEpisodeSummaryService.getEmergencyCareEpisodeInProgress(this.patientId)
-					.subscribe(emergencyCareEpisodeInProgressDto => this.emergencyCareEpisodeInProgress = emergencyCareEpisodeInProgressDto);
+						this.emergencyCareEpisodeSummaryService.getEmergencyCareEpisodeInProgress(this.patientId).subscribe(
+							emergencyCareEpisodeInProgressDto => {
+								this.emergencyCareEpisodeInProgress = emergencyCareEpisodeInProgressDto;
+								if (emergencyCareEpisodeInProgressDto?.id) {
+									this.emergencyCareEpisodeStateService.getState(emergencyCareEpisodeInProgressDto.id).subscribe(
+										state => {
+											const episodeState = state.id;
+											const emergencyEpisodeWithMedicalDischarge = (EstadosEpisodio.CON_ALTA_MEDICA === episodeState);
+											this.hasEpisodeToShow = (this.emergencyCareEpisodeInProgress?.inProgress && !emergencyEpisodeWithMedicalDischarge);
+											this.featureFlagService.isActive(AppFeature.HABILITAR_MODULO_GUARDIA)
+												.subscribe(isOn => {
+													this.showEmergencyCareTab = this.hasEpisodeToShow && isOn;
+													if (toEmergencyCareTab) {
+														this.selectedTab = this.emergencyCareTabIndex;
+													}
+												}
+												);
+
+										}
+									);
+								}
+								else {
+									this.showEmergencyCareTab = false;
+								}
+							}
+						);
+
+
+					}
+				);
 			}
 		);
 	}
@@ -180,6 +238,11 @@ export class AmbulatoriaPacienteComponent implements OnInit, OnDestroy {
 
 	ngOnDestroy() {
 		this.medicalCoverageInfo.clearAll();
+	}
+
+	private setPermissions(): void {
+		this.permissionsService.contextAssignments$().subscribe((userRoles: ERole[]) => {
+			this.canOnlyViewSelfAddedProblems = anyMatch<ERole>(userRoles, this.rolesThatCanOnlyViewSelfAddedProblems);});
 	}
 
 	loadExternalInstitutions(): void {
@@ -236,6 +299,7 @@ export class AmbulatoriaPacienteComponent implements OnInit, OnDestroy {
 				allergies: false,
 				familyHistories: false,
 				personalHistories: false,
+				personalHistoriesByRole: true,
 				riskFactors: false,
 				medications: true,
 				anthropometricData: false,
@@ -253,11 +317,13 @@ export class AmbulatoriaPacienteComponent implements OnInit, OnDestroy {
 			this.hasMedicalRole = anyMatch<ERole>(userRoles, [ERole.ESPECIALISTA_MEDICO]);
 			this.hasNurseRole = anyMatch<ERole>(userRoles, [ERole.ENFERMERO]);
 			this.hasHealthProfessionalRole = anyMatch<ERole>(userRoles, [ERole.PROFESIONAL_DE_SALUD]);
+			this.hasEmergencyCareRelatedRole = (this.hasMedicalRole || this.hasNurseRole || this.hasHealthProfessionalRole);
 			this.hasOdontologyRole = anyMatch<ERole>(userRoles, [ERole.ESPECIALISTA_EN_ODONTOLOGIA]);
 			this.hasHealthRelatedRole = anyMatch<ERole>(userRoles, [ERole.PROFESIONAL_DE_SALUD, ERole.ESPECIALISTA_MEDICO, ERole.ENFERMERO, ERole.ESPECIALISTA_EN_ODONTOLOGIA, ERole.ENFERMERO_ADULTO_MAYOR]);
 			this.hasPicturesStaffRole = anyMatch<ERole>(userRoles, [ERole.PERSONAL_DE_IMAGENES]);
 			this.hasLaboratoryStaffRole = anyMatch<ERole>(userRoles, [ERole.PERSONAL_DE_LABORATORIO]);
 			this.hasPharmacyStaffRole = anyMatch<ERole>(userRoles, [ERole.PERSONAL_DE_FARMACIA]);
+			this.hasPrescriptorRole = anyMatch<ERole>(userRoles, [ERole.PRESCRIPTOR]);
 		});
 	}
 

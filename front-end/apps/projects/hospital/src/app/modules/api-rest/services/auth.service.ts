@@ -50,4 +50,7 @@ export class AuthService {
 		return this.http.patch<void>(`${environment.apiBase}/passwords`, newPasword);
 	}
 
+	restorePassword(username: string): Observable<any> {
+		return this.http.post<any>(`${environment.apiBase}/auth/public-user/restore-password`,{}, { responseType: 'text' as 'json' , params: { username: username } });
+	}
 }

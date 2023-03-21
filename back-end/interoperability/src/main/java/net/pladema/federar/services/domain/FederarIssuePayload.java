@@ -13,4 +13,8 @@ public class FederarIssuePayload{
 	private String severity;
 	private String code;
 	private String diagnostics;
+
+	public boolean hasDiagnostic(String alreadyExistsdiagnostic) {
+		return alreadyExistsdiagnostic.equals(diagnostics);
+	}
 }

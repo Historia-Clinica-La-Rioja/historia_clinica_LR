@@ -1,0 +1,29 @@
+{
+  "cubeQuery": {
+    "measures": [
+      "CantidadConsultasAmbulatorias.cantidad_turnos_estado"
+    ],
+    "timeDimensions": [
+      {
+        "dimension": "CantidadConsultasAmbulatorias.fecha_consulta"
+      }
+    ],
+    "order": {
+      "CantidadConsultasAmbulatorias.cantidad_turnos_estado": "desc"
+    },
+    "dimensions": [
+      "CantidadConsultasAmbulatorias.especialidad"
+    ]
+  },
+  "chartType": "pie",
+  "pivotConfig": {
+    "x": [
+      "CantidadConsultasAmbulatorias.especialidad"
+    ],
+    "y": [
+      "measures"
+    ],
+    "fillMissingDates": true,
+    "joinDateRange": false
+  }
+}

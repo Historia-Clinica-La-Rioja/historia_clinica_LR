@@ -129,7 +129,7 @@ export class ClinicalHistoryActionsComponent implements OnInit {
 				this.historialProblemsFacadeService.loadEvolutionSummaryList(this.patientId);
 				if (fieldsToUpdate)
 					this.ambulatoriaSummaryFacadeService.setFieldsToUpdate(fieldsToUpdate);
-				if (this.internmentEpisode?.inProgress) {
+				if (this.internmentEpisode?.inProgress && this.internmentEpisode?.id) {	
 					if (fieldsToUpdate?.allergies)
 						this.internmentSummaryFacadeService.unifyAllergies(this.patientId);
 					if (fieldsToUpdate?.familyHistories)

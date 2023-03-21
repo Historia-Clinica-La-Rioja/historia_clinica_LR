@@ -55,6 +55,7 @@ export class InternmentOtherIndicationCardComponent implements OnChanges {
 				createdBy: otherIndication.createdBy,
 				timeElapsed: showTimeElapsed(otherIndication.createdOn),
 				extra_info: otherIndication?.dosage ? showFrequency(otherIndication.dosage) : [],
+				observations: otherIndication.description
 			}
 
 		});

@@ -3,6 +3,7 @@ import {
     Datagrid,
     Edit,
     EditButton,
+    DeleteButton,
     FormDataConsumer, ReferenceField,
     ReferenceInput,
     ReferenceManyField,
@@ -16,7 +17,7 @@ import SectionTitle from '../components/SectionTitle';
 import SgxSelectInput from "../../sgxSelectInput/SgxSelectInput";
 import CustomToolbar from "../components/CustomToolbar";
 import SgxDateField from "../../dateComponents/sgxDateField";
-import { CreateSector, CreateDoctorsOffice, CreateRooms, ShowServiceSectorData } from './SectorShow';
+import { CreateSector, CreateDoctorsOffice, CreateRooms, ShowServiceSectorData, CreateOrchestrator, UserIsAdmin, CreateEquipment, RenderModality} from './SectorShow';
 
 const redirect = (basePath, id, data) => `/sectors/${data.id}/show`;
 
@@ -115,6 +116,46 @@ const SectorEdit = props => (
                           empty={<p style={{paddingLeft:10, marginTop:0, color:'#8c8c8c'}} >Sin consultorios definidos</p>}>
                     <TextField source="description"/>
                     <EditButton />
+                </Datagrid>
+            </ReferenceManyField>
+            <CreateOrchestrator />
+            <ReferenceManyField
+                id='orchestrator'
+                addLabel={false}
+                reference="orchestrator"
+                target="sectorId"
+                sort={{ field: 'name', order: 'DESC' }}
+                >
+                <Datagrid rowClick={UserIsAdmin()?"show":""}>
+                    <TextField source="name"/>
+                    <TextField source="baseTopic"/>
+                    <EditButton disabled= {!UserIsAdmin()}/>
+                    <DeleteButton disabled= {!UserIsAdmin()}/>
+                </Datagrid>
+            </ReferenceManyField>
+
+            <CreateEquipment />
+            <ReferenceManyField
+                id='equipment'
+                addLabel={false}
+                reference="equipment"
+                target="sectorId"
+                sort={{ field: 'aeTitle', order: 'DESC' }}
+            >
+                <Datagrid rowClick={UserIsAdmin()?"show":""}>
+                    <TextField source="name" />
+                    <TextField source="aeTitle" />
+                    <ReferenceField link={false} source="pacServerId"  reference="pacserversimagelvl">
+                        <TextField  source="name" />
+                    </ReferenceField>
+                    <ReferenceField link={false}source="orchestratorId" reference="orchestrator">
+                        <TextField  source="name" />
+                    </ReferenceField>
+                    <ReferenceField link={false}source="modalityId" reference="modality">
+                        <RenderModality/>
+                    </ReferenceField>
+                        <EditButton disabled= {!UserIsAdmin()}/>
+                        <DeleteButton disabled= {!UserIsAdmin()}/>
                 </Datagrid>
             </ReferenceManyField>
 

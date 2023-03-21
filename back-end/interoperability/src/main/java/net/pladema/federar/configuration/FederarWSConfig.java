@@ -1,14 +1,16 @@
 package net.pladema.federar.configuration;
 
-import ar.lamansys.sgx.shared.restclient.configuration.WSConfig;
-import lombok.Getter;
-import lombok.Setter;
+import java.time.Duration;
+import java.util.Map;
+
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Conditional;
 import org.springframework.stereotype.Component;
 
-import java.util.Map;
+import ar.lamansys.sgx.shared.restclient.configuration.WSConfig;
+import lombok.Getter;
+import lombok.Setter;
 
 @Component
 @ConfigurationProperties(prefix="ws.federar")
@@ -31,24 +33,21 @@ public class FederarWSConfig extends WSConfig {
 	//URL
 	private static final String TOKEN_VALID="validateToken";
 	private static final String PATIENT_SERVICE ="/masterfile-federacion-service/fhir/Patient";
-
-	private static final long DEFAULT_TOKEN_EXPIRATION = 180L;
+	private Duration tokenExpiration;
 
 	private Map<String, String> claims;
 	private Map<String, String> auth;
-
-	private long tokenExpiration = DEFAULT_TOKEN_EXPIRATION;
-
 	private static final String AUTHENTICATION = "/bus-auth/auth";
 	private static final String AUTHORIZATION = "/bus-auth/tokeninfo";
-
-	private static final long DEFAULT_REQUEST_TIME_OUT = 5000L;
-
-	private long requestTimeOut = DEFAULT_REQUEST_TIME_OUT;
+	private Integer requestTimeOut;
 
 
-	public FederarWSConfig(@Value("${ws.federar.url.base}") String baseUrl) {
+	public FederarWSConfig(@Value("${ws.federar.url.base}") String baseUrl,
+						   @Value("${ws.federar.token.expiration}") Duration tokenExpiration,
+						   @Value("${ws.federar.request.timeout}") Integer requestTimeOut) {
 		super(baseUrl, false);
+		this.tokenExpiration = tokenExpiration;
+		this.requestTimeOut = requestTimeOut;
 	}
 
 	public String getIss() {
@@ -107,7 +106,11 @@ public class FederarWSConfig extends WSConfig {
 		return PATIENT_SERVICE;
 	}
 
-	public Long getRequestTimeOut() {
+	public Integer getRequestTimeOut() {
 		return requestTimeOut;
+	}
+
+	public boolean isSettedTimeout() {
+		return requestTimeOut != null && requestTimeOut > 0;
 	}
 }

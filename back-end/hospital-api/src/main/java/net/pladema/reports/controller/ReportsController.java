@@ -30,8 +30,8 @@ import ar.lamansys.sgx.shared.dates.configuration.JacksonDateFormatConfig;
 import ar.lamansys.sgx.shared.dates.configuration.LocalDateMapper;
 import ar.lamansys.sgx.shared.featureflags.AppFeature;
 import ar.lamansys.sgx.shared.featureflags.application.FeatureFlagsService;
-import ar.lamansys.sgx.shared.pdf.PDFDocumentException;
-import ar.lamansys.sgx.shared.pdf.PdfService;
+import ar.lamansys.sgx.shared.files.pdf.PDFDocumentException;
+import ar.lamansys.sgx.shared.files.pdf.PdfService;
 import ar.lamansys.sgx.shared.reports.util.struct.IWorkbook;
 import net.pladema.reports.controller.dto.AnnexIIDto;
 import net.pladema.reports.controller.dto.ConsultationsDto;
@@ -126,7 +126,7 @@ public class ReportsController {
     }
 
     @GetMapping(value = "/{institutionId}/summary")
-    @PreAuthorize("hasPermission(#institutionId, 'ADMINISTRADOR_INSTITUCIONAL_BACKOFFICE, PERSONAL_DE_ESTADISTICA')")
+    @PreAuthorize("hasPermission(#institutionId, 'ADMINISTRADOR_INSTITUCIONAL_BACKOFFICE, PERSONAL_DE_ESTADISTICA, ADMINISTRADOR_INSTITUCIONAL_PRESCRIPTOR')")
     public @ResponseBody void fetchConsultationSummaryReport(
             @PathVariable Integer institutionId,
             @RequestParam(value="fromDate") String fromDate,
@@ -154,7 +154,7 @@ public class ReportsController {
     }
 
     @GetMapping("/{institutionId}/appointment-annex")
-    @PreAuthorize("hasPermission(#institutionId, 'ADMINISTRATIVO, ESPECIALISTA_MEDICO, PROFESIONAL_DE_SALUD, ESPECIALISTA_EN_ODONTOLOGIA, ENFERMERO')")
+    @PreAuthorize("hasPermission(#institutionId, 'ADMINISTRATIVO, ADMINISTRATIVO_RED_DE_IMAGENES, ESPECIALISTA_MEDICO, PROFESIONAL_DE_SALUD, ESPECIALISTA_EN_ODONTOLOGIA, ENFERMERO')")
     public ResponseEntity<InputStreamResource> getAppointmentAnnexReport(
             @PathVariable Integer institutionId,
             @RequestParam(name = "appointmentId") Integer appointmentId)
@@ -163,6 +163,7 @@ public class ReportsController {
         ZonedDateTime now = ZonedDateTime.now(ZoneId.of(JacksonDateFormatConfig.ZONE_ID));
         AnnexIIBo reportDataBo = annexReportService.getAppointmentData(appointmentId);
         AnnexIIDto reportDataDto = reportsMapper.toAnexoIIDto(reportDataBo);
+		reportDataDto.setRnos(reportDataBo.getRnos());
         Map<String, Object> context = annexReportService.createAppointmentContext(reportDataDto);
         String outputFileName = annexReportService.createConsultationFileName(appointmentId.longValue(), now);
         ResponseEntity<InputStreamResource> response = generatePdfResponse(context, outputFileName, "annex_report");
@@ -171,7 +172,7 @@ public class ReportsController {
     }
 
     @GetMapping("/{institutionId}/consultations-annex")
-    @PreAuthorize("hasPermission(#institutionId, 'ADMINISTRATIVO')")
+    @PreAuthorize("hasPermission(#institutionId, 'ADMINISTRATIVO, ADMINISTRATIVO_RED_DE_IMAGENES')")
     public ResponseEntity<InputStreamResource> getConsultationAnnexReport(
             @PathVariable Integer institutionId,
             @RequestParam(name = "documentId") Long documentId)
@@ -188,7 +189,7 @@ public class ReportsController {
     }
 
     @GetMapping("/{institutionId}/appointment-formv")
-    @PreAuthorize("hasPermission(#institutionId, 'ADMINISTRATIVO, ESPECIALISTA_MEDICO, PROFESIONAL_DE_SALUD, ESPECIALISTA_EN_ODONTOLOGIA, ENFERMERO')")
+    @PreAuthorize("hasPermission(#institutionId, 'ADMINISTRATIVO, ADMINISTRATIVO_RED_DE_IMAGENES, ESPECIALISTA_MEDICO, PROFESIONAL_DE_SALUD, ESPECIALISTA_EN_ODONTOLOGIA, ENFERMERO')")
     public ResponseEntity<InputStreamResource> getFormVAppointmentReport(
             @PathVariable Integer institutionId,
             @RequestParam(name = "appointmentId") Integer appointmentId)
@@ -205,7 +206,7 @@ public class ReportsController {
     }
 
     @GetMapping("/{institutionId}/consultation-formv")
-    @PreAuthorize("hasPermission(#institutionId, 'ADMINISTRATIVO')")
+    @PreAuthorize("hasPermission(#institutionId, 'ADMINISTRATIVO, ADMINISTRATIVO_RED_DE_IMAGENES')")
     public ResponseEntity<InputStreamResource> getFormVConsultationReport(
             @PathVariable Integer institutionId,
             @RequestParam(name = "documentId") Long documentId)
@@ -235,7 +236,7 @@ public class ReportsController {
 
 
     @GetMapping("/institution/{institutionId}/patient/{patientId}/consultations-list")
-    @PreAuthorize("hasPermission(#institutionId, 'ADMINISTRATIVO, ESPECIALISTA_MEDICO, PROFESIONAL_DE_SALUD, ESPECIALISTA_EN_ODONTOLOGIA, ENFERMERO')")
+    @PreAuthorize("hasPermission(#institutionId, 'ADMINISTRATIVO, ADMINISTRATIVO_RED_DE_IMAGENES, ESPECIALISTA_MEDICO, PROFESIONAL_DE_SALUD, ESPECIALISTA_EN_ODONTOLOGIA, ENFERMERO')")
     public ResponseEntity<List<ConsultationsDto>> getConsultations(
             @PathVariable(name = "institutionId") Integer institutionId,
             @PathVariable(name = "patientId") Integer patientId){

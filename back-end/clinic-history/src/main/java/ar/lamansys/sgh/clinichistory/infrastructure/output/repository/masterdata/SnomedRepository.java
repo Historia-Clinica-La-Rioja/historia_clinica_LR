@@ -26,7 +26,8 @@ public interface SnomedRepository extends JpaRepository<Snomed, Integer> {
     @Transactional(readOnly = true)
     @Query("SELECT MAX(s.id) " +
             "FROM Snomed s " +
-            "WHERE s.sctid = :sctid ")
+            "WHERE s.sctid = :sctid " +
+			"AND s.synonym = false")
     Optional<Integer> findLatestIdBySctid(@Param("sctid") String sctid);
 
 	@Query("SELECT sg.id " +

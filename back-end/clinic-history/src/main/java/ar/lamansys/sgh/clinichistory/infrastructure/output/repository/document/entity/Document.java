@@ -1,14 +1,21 @@
 package ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.entity;
 
+import java.util.Objects;
+
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.EntityListeners;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.Table;
+
+import ar.lamansys.sgx.shared.auditable.entity.SGXAuditableEntity;
 import ar.lamansys.sgx.shared.auditable.listener.SGXAuditListener;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
-import ar.lamansys.sgx.shared.auditable.entity.SGXAuditableEntity;
-
-import javax.persistence.*;
-import java.util.Objects;
 
 @Entity
 @Table(name = "document")
@@ -34,6 +41,15 @@ public class Document extends SGXAuditableEntity<Long> {
 
 	@Column(name = "status_id", length = 20, nullable = false)
 	private String statusId;
+
+	@Column(name = "patient_id", nullable = false)
+	private Integer patientId;
+
+	@Column(name = "institution_id", nullable = false)
+	private Integer institutionId;
+
+	@Column(name = "clinical_specialty_id", length = 20)
+	private Integer clinicalSpecialtyId;
 
 	@Column(name = "other_note_id")
 	private Long otherNoteId;
@@ -68,16 +84,22 @@ public class Document extends SGXAuditableEntity<Long> {
 	@Column(name = "initial_document_id")
 	private Long initialDocumentId;
 
-	public Document(Integer sourceId, String statusId, Short typeId, Short sourceTypeId, Long initialDocumentId) {
+	@Column(name = "patient_age_period")
+	private String patientAgePeriod;
+
+	public Document(Integer sourceId, String statusId, Short typeId, Short sourceTypeId,
+					Integer patientId, Integer institutionId, Long initialDocumentId) {
 		this.sourceId = sourceId;
 		this.statusId = statusId;
+		this.patientId = patientId;
+		this.institutionId = institutionId;
 		this.typeId = typeId;
 		this.sourceTypeId = sourceTypeId;
 		this.initialDocumentId = initialDocumentId;
 	}
 
-	public Document(Integer sourceId, String statusId, Short typeId, Short sourceTypeId) {
-		this(sourceId, statusId, typeId, sourceTypeId, null);
+	public Document(Integer sourceId, String statusId, Short typeId, Short sourceTypeId, Integer patientId, Integer institutionId) {
+		this(sourceId, statusId, typeId, sourceTypeId, patientId, institutionId, null);
 	}
 
 	public boolean isType(short type){

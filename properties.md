@@ -17,7 +17,6 @@ Este documento detalla las propiedades configurables del sistema.
 | Propiedad               | Variable de ambiente       | Valor por defecto       | Necesidad | Descripcion | Desde |
 | ----------------------- | ----------------| ----------------------- | --------- | ----------- | ----- |
 | admin.password | ADMIN_PASS | admin123 | **Obligatorio** | Contraseña del usuario Administrador |  v0.2.0  |
-| internment.document.directory |DOCUMENT_ROOT_DIRECTORY | /temp | **Obligatorio** | Directorio donde se almacenan documentos clínicos y fotos de pacientes | v0.2.0 |
 | spring.profiles.active  |   | default  | **Único**  | Valores posibles: dev, qa, prod   | v0.2.0  |
 | app.env.domain  |  APP_DOMAIN | localhost:4200  | **Opcional**  | Define el dominio. En caso de tener activo el FF HABILITAR_NOTIFICACIONES_TURNOS debe ser **obligatoria**   | v1.42.0  |
 
@@ -117,19 +116,20 @@ Este documento detalla las propiedades configurables del sistema.
 
 
 ### Federar
-| Propiedad | Variable de ambiente | Valor por defecto | Condición | Descripcion | Desde |
-| ---------- | ------ | -------- | -------- | ------------ | ---- |
-| ws.federar.enabled | | - | **Único** | Determina si se utiliza la integracion con Federar (se necesita completar la configuración) | v0.2.0  |
-| ws.federar.url.base | | - | **Único** | URL de autenticación del Federador  | v0.2.0 |
-| ws.federar.sisaCode |	| 10002001110000 | **Obligatorio** |	Código SISA para el dominio | v1.20.0 |
-| ws.federar.claims.iss  |  | http://www.msal.gov.ar | **Obligatorio** | URI del dominio (registrada previamente ante la DNGISS) | v0.2.0  |
-| ws.federar.claims.sub  |  | Ministerio de Salud de la Nación  | **Obligatorio** | Nombre del dominio | v0.2.0  |
-| ws.federar.claims.aud  |  | - | **Único** | URL de autenticación usada en la generación del token JWT **[NO MODIFICAR]** | v0.2.0  |
-| ws.federar.claims.name  |  | Prueba Jose | **Obligatorio** | Apellido y Nombres del Usuario que accede (no es necesario que hayan sido registrados ante la DNGISS) | v0.2.0  |
-| ws.federar.claims.role |  | Project Manager | **Obligatorio** | Especialidad del Usuario (no es necesario que hayan sido registrados ante la DNGISS) | v0.2.0  |
-| ws.federar.claims.ident  |  | 0001 | **Obligatorio** | Un identificador para el usuario (no es necesario que hayan sido registrados ante la DNGISS) | v0.2.0  |
-| ws.federar.auth.signKey |   | federar ***[TESTING]*** | **Obligatorio** | A cada dominio se le asignará una palabra secreta única y cifrada por la DNGISS. | v0.2.0  |
-| ws.federar.requestTimeOut |   | 5000 | Opcional | Determina el tiempo que se esperará la respuesta del lado del servicio al ejecutar un request | v1.33.1  |
+| Propiedad | Variable de ambiente | Valor por defecto                | Condición | Descripcion                                                                                           | Desde   |
+| ---------- | ------ |----------------------------------| -------- |-------------------------------------------------------------------------------------------------------|---------|
+| ws.federar.enabled | | -                                | **Único** | Determina si se utiliza la integracion con Federar (se necesita completar la configuración)           | v0.2.0  |
+| ws.federar.url.base | | -                                | **Único** | URL de autenticación del Federador                                                                    | v0.2.0  |
+| ws.federar.sisaCode |	| 10002001110000                   | **Obligatorio** | 	Código SISA para el dominio                                                                          | v1.20.0 |
+| ws.federar.claims.iss  |  | http://www.msal.gov.ar           | **Obligatorio** | URI del dominio (registrada previamente ante la DNGISS)                                               | v0.2.0  |
+| ws.federar.claims.sub  |  | Ministerio de Salud de la Nación | **Obligatorio** | Nombre del dominio                                                                                    | v0.2.0  |
+| ws.federar.claims.aud  |  | -                                | **Único** | URL de autenticación usada en la generación del token JWT **[NO MODIFICAR]**                          | v0.2.0  |
+| ws.federar.claims.name  |  | Prueba Jose                      | **Obligatorio** | Apellido y Nombres del Usuario que accede (no es necesario que hayan sido registrados ante la DNGISS) | v0.2.0  |
+| ws.federar.claims.role |  | Project Manager                  | **Obligatorio** | Especialidad del Usuario (no es necesario que hayan sido registrados ante la DNGISS)                  | v0.2.0  |
+| ws.federar.claims.ident  |  | 0001                             | **Obligatorio** | Un identificador para el usuario (no es necesario que hayan sido registrados ante la DNGISS)          | v0.2.0  |
+| ws.federar.auth.signKey |   | federar ***[TESTING]***          | **Obligatorio** | A cada dominio se le asignará una palabra secreta única y cifrada por la DNGISS.                      | v0.2.0  |
+| ws.federar.requestTimeOut |   | 5000                             | Opcional | Determina el tiempo que se esperará la respuesta del lado del servicio al ejecutar un request         | v1.33.1 |
+| ws.federar.token.expiration |   | 10s                              | Opcional | Determina el tiempo de vencimiento del token usado en la comunicación (login, federar)                | v1.46.0 |
 
 ### Snowstorm
 | Propiedad | Variable de ambiente | Valor por defecto | Condición | Descripcion | Desde |
@@ -272,3 +272,18 @@ Se crearon las siguientes propiedades para el monitoreo del sistema
 | Propiedad                             | Variable de ambiente | Valor por defecto | Necesidad | Descripcion                                                                                                                                             | Desde   |
 |---------------------------------------|----------------------|-------------------| --------- |---------------------------------------------------------------------------------------------------------------------------------------------------------|---------|
 | monitoring.rest-client.storage.enable | -                    | true              | Opcional  | Activa el almacenamiento de la información medida cuando se realizan request a servicios externos | v1.30.0 |
+
+
+
+
+## Configuración de Tableros
+
+Se crearon las siguientes propiedades para configurar los tableros de la aplicación
+
+| Propiedad | Variable de ambiente          | Valor por defecto       | Necesidad   | Descripcion                                                                                                                                                                                                                                                                                                                                    | Desde   |
+| ----------------------- |-------------------------------|-------------------------|-------------|------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|---------|
+|internment.document.directory | DOCUMENT_ROOT_DIRECTORY       | /temp                   | Obligatorio | Directorio donde se almacenan documentos clínicos, resultados de estudios y fotos de pacientes                                                                                                                                                                                                                                                 | v0.2.0  |
+|app.files.folder.documents.location | DOCUMENT_ROOT_DIRECTORY       | java.io.tmpdir | Obligatorio | Directorio donde se almacenan documentos clínicos, resultados de estudios y fotos de pacientes. Toma el mismo valor que la propiedad internment.document.directory                                                                                                                                                                                               | v1.45.0 |
+|app.files.folder.multipart.location   | MULTIPART_ABSOLUTE_LOCATION, MULTIPART_RELATIVE_LOCATION | /temp/tmp/multipartfiles | Obligatorio | Define donde se van a almancenar los archivos temporales cuando se suben archivos. Con la variable de ambiente MULTIPART_ABSOLUTE_LOCATION se puede definir una ubicación absoluta, mientras que con MULTIPART_RELATIVE_LOCATION se puede definir una ubicación relativa a la ubicación definida en la propiedad internment.document.directory | v1.45.0 |
+|app.files.folder.freespace.minimum   | MULTIPART_ABSOLUTE_LOCATION, MULTIPART_RELATIVE_LOCATION | /temp/tmp/multipartfiles | Obligatorio | Define donde se van a almancenar los archivos temporales cuando se suben archivos. Con la variable de ambiente MULTIPART_ABSOLUTE_LOCATION se puede definir una ubicación absoluta, mientras que con MULTIPART_RELATIVE_LOCATION se puede definir una ubicación relativa a la ubicación definida en la propiedad internment.document.directory | v1.45.0 |
+

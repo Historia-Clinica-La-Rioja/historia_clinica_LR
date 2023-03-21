@@ -8,8 +8,9 @@
 					(click)="goToAnexoReports()">{{ 'guardia.episode.ANEXOS_II' | translate | uppercase }}
 				</button>
 			</div>
-			<button *ngIf="episodeState === STATES.EN_ATENCION || episodeState === STATES.EN_ESPERA" id="edit-episode" mat-raised-button color="primary"
-				(click)="goToEditEpisode()">
+
+			<button *ngIf="episodeState === STATES.EN_ATENCION || episodeState === STATES.EN_ESPERA" id="edit-episode"
+				mat-raised-button color="primary" (click)="goToEditEpisode()">
 				{{ 'guardia.episode.EDIT_EPISODE' | translate | uppercase }}
 			</button>
 			
@@ -23,7 +24,7 @@
 					{{ 'guardia.episode.medical_discharge.TITLE' | translate | uppercase }}
 				</button>
 			</div>
-			<div *appHasRole="['ADMINISTRATIVO']">
+			<div *appHasRole="['ADMINISTRATIVO', 'ADMINISTRATIVO_RED_DE_IMAGENES']">
 				<button *ngIf="episodeState === STATES.CON_ALTA_MEDICA" id="administrative-discharge" mat-raised-button
 					color="primary" (click)="goToAdministrativeDischarge()">
 					{{ 'guardia.episode.administrative_discharge.TITLE' | translate | uppercase }}
@@ -132,7 +133,7 @@
 					</h3>
 					<div *ngIf="triagesHistory?.length else noInfo" style="margin-top: 16px" fxLayout="column"
 						fxLayoutGap="10px">
-						<mat-card class="triage-list-item" *ngFor="let triage of triagesHistory">
+						<mat-card class="triage-list-item" *ngFor="let triage of triagesHistory; index as i">
 							<mat-card-content>
 								<div fxLayout="row" fxLayoutAlign="space-between">
 
@@ -146,7 +147,7 @@
 
 									<div id="right-side">
 										<span>
-											{{getFullName(triage)}}
+											{{ fullNamesHistoryTriage[i] }}
 										</span>
 										<span *ngIf="triage.doctorsOfficeDescription">
 											• {{ triage.doctorsOfficeDescription }}

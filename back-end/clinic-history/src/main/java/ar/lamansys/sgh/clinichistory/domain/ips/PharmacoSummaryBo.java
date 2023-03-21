@@ -4,6 +4,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import javax.annotation.Nullable;
+
 @Getter
 @Setter
 @NoArgsConstructor
@@ -14,5 +16,16 @@ public class PharmacoSummaryBo extends IndicationBo {
 	private DosageBo dosage;
 
 	private String via;
+
+	@Nullable
+	private String note;
+
+	public String getSnomedSctid() {
+		return getSnomed() != null ? this.snomed.getSctid() : null;
+	}
+
+	public String getSnomedPt() {
+		return getSnomed() != null ? this.snomed.getPt() : null;
+	}
 
 }

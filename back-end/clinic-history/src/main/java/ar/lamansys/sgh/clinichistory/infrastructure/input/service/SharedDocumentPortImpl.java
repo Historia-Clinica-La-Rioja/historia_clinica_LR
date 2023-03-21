@@ -1,14 +1,19 @@
 package ar.lamansys.sgh.clinichistory.infrastructure.input.service;
 
+import java.io.ByteArrayInputStream;
+
+import org.springframework.core.io.InputStreamResource;
+import org.springframework.stereotype.Service;
+
 import ar.lamansys.sgh.clinichistory.application.document.DocumentService;
+import ar.lamansys.sgh.clinichistory.application.fetchdocumentfile.FetchDocumentFileById;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.entity.Document;
 import ar.lamansys.sgh.shared.infrastructure.input.service.DocumentReduceInfoDto;
 import ar.lamansys.sgh.shared.infrastructure.input.service.SharedDocumentPort;
 import ar.lamansys.sgx.shared.exceptions.NotFoundException;
+import ar.lamansys.sgx.shared.files.FileService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-
-import org.springframework.stereotype.Service;
 
 @Slf4j
 @Service
@@ -16,6 +21,10 @@ import org.springframework.stereotype.Service;
 public class SharedDocumentPortImpl implements SharedDocumentPort {
 
 	private final DocumentService documentService;
+
+	private final FetchDocumentFileById fetchDocumentFileById;
+
+	private final FileService fileService;
 
 	@Override
 	public void deleteDocument(Long documentId, String newDocumentStatus) {
@@ -40,6 +49,14 @@ public class SharedDocumentPortImpl implements SharedDocumentPort {
 		result.setCreatedOn(document.getCreatedOn());
 		result.setTypeId(document.getTypeId());
 		return result;
+	}
+
+	@Override
+	public InputStreamResource getFileById(Long documentId) {
+		log.debug("Input parameter documentId {}", documentId);
+		var documentFile = fetchDocumentFileById.run(documentId);
+		ByteArrayInputStream pdfFile = fileService.readStreamFromAbsolutePath(documentFile.getFilepath());
+		return new InputStreamResource(pdfFile);
 	}
 
 }

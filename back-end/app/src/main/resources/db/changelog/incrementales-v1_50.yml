@@ -1,0 +1,618 @@
+databaseChangeLog: 
+    - logicalFilePath: incrementales-v1_50
+
+    - changeSet:
+        id: addColumn-name-equipment
+        author: amurrie
+        changes:
+          - addColumn:
+              tableName: equipment
+              columns:
+                - column:
+                    name: name
+                    type: varchar(40)
+
+    - changeSet:
+        id: equipment-diary-createTable
+        comment: Create table equipment_diary
+        author: amurrie
+        changes:
+          - createTable:
+              tableName: equipment_diary
+              columns:
+                - column:
+                    autoIncrement: true
+                    constraints:
+                      primaryKey: true
+                      primaryKeyName: PK_equipment_diary
+                    name: id
+                    type: int
+                - column:
+                    constraints:
+                      nullable: false
+                    name: start_date
+                    type: date
+                - column:
+                    constraints:
+                      nullable: false
+                    name: end_date
+                    type: date
+                - column:
+                    constraints:
+                      nullable: false
+                    name: appointment_duration
+                    type: smallint
+                - column:
+                    constraints:
+                      nullable: false
+                    name: automatic_renewal
+                    type: boolean
+                    defaultValue: ${boolean.false}
+                - column:
+                    constraints:
+                      nullable: false
+                    name: days_before_renew
+                    type: smallint
+                    defaultValue: -1
+                - column:
+                    constraints:
+                      nullable: false
+                    name: include_holiday
+                    type: boolean
+                    defaultValue: ${boolean.false}
+                - column:
+                    constraints:
+                      nullable: false
+                    name: active
+                    type: boolean
+                    defaultValue: ${boolean.true}
+                - column:
+                    constraints:
+                      nullable: false
+                    name: created_by
+                    type: int
+                    defaultValue: -1
+                - column:
+                    constraints:
+                      nullable: false
+                    name: created_on
+                    type: datetime
+                    defaultValueDate: ${date.now}
+                - column:
+                    constraints:
+                      nullable: false
+                    name: updated_by
+                    type: int
+                    defaultValue: -1
+                - column:
+                    constraints:
+                      nullable: false
+                    name: updated_on
+                    type: datetime
+                    defaultValueDate: ${date.now}
+                - column:
+                    constraints:
+                      nullable: false
+                    name: equipment_id
+                    type: int
+                - column:
+                    constraints:
+                      nullable: false
+                    name: deleted
+                    type: boolean
+                    defaultValue: ${boolean.false}
+                - column:
+                    constraints:
+                      nullable: true
+                    name: deleted_by
+                    type: int
+                    defaultValue: -1
+                - column:
+                    constraints:
+                      nullable: true
+                    name: deleted_on
+                    type: datetime
+                    defaultValueDate: ${date.now}
+          - addForeignKeyConstraint:
+              baseColumnNames: equipment_id
+              baseTableName: equipment_diary
+              constraintName: FK_equipment_diary_equipment_id
+              onDelete: NO ACTION
+              onUpdate: NO ACTION
+              referencedColumnNames: id
+              referencedTableName: equipment
+              validate: true
+
+    - changeSet:
+        id: equipment_diary_opening_hours-createTable
+        comment: Create table equipment_diary_opening_hours
+        author: amurrie
+        changes:
+          - createTable:
+              tableName: equipment_diary_opening_hours
+              columns:
+                - column:
+                    constraints:
+                      nullable: false
+                    name: equipment_diary_id
+                    type: int
+                - column:
+                    constraints:
+                      nullable: false
+                    name: opening_hours_id
+                    type: int
+                - column:
+                    constraints:
+                      nullable: false
+                    name: medical_attention_type_id
+                    type: smallint
+                - column:
+                    constraints:
+                      nullable: false
+                    name: overturn_count
+                    type: smallint
+                    defaultValue: 0
+                - column:
+                    name: external_appointments_allowed
+                    type: bool
+          - addPrimaryKey:
+              clustered: true
+              columnNames: equipment_diary_id, opening_hours_id
+              constraintName: PK_equipment_diary_opening_hours
+              tableName: equipment_diary_opening_hours
+              validate: true
+          - addForeignKeyConstraint:
+              baseColumnNames: equipment_diary_id
+              baseTableName: equipment_diary_opening_hours
+              constraintName: FK_equipment_diary_opening_hours_diary_id
+              onDelete: NO ACTION
+              onUpdate: NO ACTION
+              referencedColumnNames: id
+              referencedTableName: equipment_diary
+              validate: true
+          - addForeignKeyConstraint:
+              baseColumnNames: opening_hours_id
+              baseTableName: equipment_diary_opening_hours
+              constraintName: FK_equipment_diary_opening_hours_id
+              onDelete: NO ACTION
+              onUpdate: NO ACTION
+              referencedColumnNames: id
+              referencedTableName: opening_hours
+              validate: true
+          - addForeignKeyConstraint:
+              baseColumnNames: medical_attention_type_id
+              baseTableName: equipment_diary_opening_hours
+              constraintName: FK_equipment_diary_opening_hours_medical_attention_type_id
+              onDelete: NO ACTION
+              onUpdate: NO ACTION
+              referencedColumnNames: id
+              referencedTableName: medical_attention_type
+              validate: true
+
+    - changeSet:
+        id: addColumn-iso_code-country
+        author: bchacon
+        changes:
+          - addColumn:
+              tableName: country
+              columns:
+                - column:
+                    name: iso_code
+                    type: varchar(3)
+
+    - changeSet:
+        id: country-metadata
+        author: bchacon
+        context: "!schema-only"
+        changes:
+          - sql:
+              sql: |-
+                UPDATE country SET iso_code = 'AR' WHERE description = 'Argentina';
+                UPDATE country SET iso_code = 'AF' WHERE description = 'Afganistán';
+                UPDATE country SET iso_code = 'AL' WHERE description = 'Albania';
+                UPDATE country SET iso_code = 'DE' WHERE description = 'Alemania';
+                UPDATE country SET iso_code = 'AD' WHERE description = 'Andorra';
+                UPDATE country SET iso_code = 'AO' WHERE description = 'Angola';
+                UPDATE country SET iso_code = 'AG' WHERE description = 'Antigua y Barbuda';
+                UPDATE country SET iso_code = 'SA' WHERE description = 'Arabia Saudita';
+                UPDATE country SET iso_code = 'DZ' WHERE description = 'Argelia';
+                UPDATE country SET iso_code = 'AM' WHERE description = 'Armenia';
+                UPDATE country SET iso_code = 'AW' WHERE description = 'Aruba';
+                UPDATE country SET iso_code = 'AU' WHERE description = 'Australia';
+                UPDATE country SET iso_code = 'AT' WHERE description = 'Austria';
+                UPDATE country SET iso_code = 'AZ' WHERE description = 'Azerbaiyán';
+                UPDATE country SET iso_code = 'BS' WHERE description = 'Bahamas';
+                UPDATE country SET iso_code = 'BH' WHERE description = 'Bahréin';
+                UPDATE country SET iso_code = 'BD' WHERE description = 'Bangladesh';
+                UPDATE country SET iso_code = 'BB' WHERE description = 'Barbados';
+                UPDATE country SET iso_code = 'BE' WHERE description = 'Bélgica';
+                UPDATE country SET iso_code = 'BZ' WHERE description = 'Belice';
+                UPDATE country SET iso_code = 'BJ' WHERE description = 'Benín';
+                UPDATE country SET iso_code = 'BY' WHERE description = 'Bielorrusia';
+                UPDATE country SET iso_code = 'MM' WHERE description = 'Birmania Myanmar';
+                UPDATE country SET iso_code = 'BO' WHERE description = 'Bolivia';
+                UPDATE country SET iso_code = 'BA' WHERE description = 'Bosnia y Herzegovina';
+                UPDATE country SET iso_code = 'BW' WHERE description = 'Botsuana';
+                UPDATE country SET iso_code = 'BR' WHERE description = 'Brasil';
+                UPDATE country SET iso_code = 'BN' WHERE description = 'Brunéi';
+                UPDATE country SET iso_code = 'BG' WHERE description = 'Bulgaria';
+                UPDATE country SET iso_code = 'BF' WHERE description = 'Burkina Faso';
+                UPDATE country SET iso_code = 'BI' WHERE description = 'Burundi';
+                UPDATE country SET iso_code = 'BT' WHERE description = 'Bután';
+                UPDATE country SET iso_code = 'CV' WHERE description = 'Cabo Verde';
+                UPDATE country SET iso_code = 'KH' WHERE description = 'Camboya';
+                UPDATE country SET iso_code = 'CM' WHERE description = 'Camerún';
+                UPDATE country SET iso_code = 'CA' WHERE description = 'Canadá';
+                UPDATE country SET iso_code = 'TD' WHERE description = 'Chad';
+                UPDATE country SET iso_code = 'CL' WHERE description = 'Chile';
+                UPDATE country SET iso_code = 'CN' WHERE description = 'China';
+                UPDATE country SET iso_code = 'CY' WHERE description = 'Chipre';
+                UPDATE country SET iso_code = 'CO' WHERE description = 'Colombia';
+                UPDATE country SET iso_code = 'KM' WHERE description = 'Comoras';
+                UPDATE country SET iso_code = 'CG' WHERE description = 'Congo';
+                UPDATE country SET iso_code = 'KP' WHERE description = 'Corea del Norte';
+                UPDATE country SET iso_code = 'KR' WHERE description = 'Corea del Sur';
+                UPDATE country SET iso_code = 'CI' WHERE description = 'Costa de Marfil';
+                UPDATE country SET iso_code = 'CR' WHERE description = 'Costa Rica';
+                UPDATE country SET iso_code = 'HR' WHERE description = 'Croacia';
+                UPDATE country SET iso_code = 'CU' WHERE description = 'Cuba';
+                UPDATE country SET iso_code = 'DK' WHERE description = 'Dinamarca';
+                UPDATE country SET iso_code = 'DM' WHERE description = 'Dominica';
+                UPDATE country SET iso_code = 'EC' WHERE description = 'Ecuador';
+                UPDATE country SET iso_code = 'EG' WHERE description = 'Egipto';
+                UPDATE country SET iso_code = 'SV' WHERE description = 'El Salvador';
+                UPDATE country SET iso_code = 'VA' WHERE description = 'El Vaticano';
+                UPDATE country SET iso_code = 'AE' WHERE description = 'Emiratos Árabes Unidos';
+                UPDATE country SET iso_code = 'ER' WHERE description = 'Eritrea';
+                UPDATE country SET iso_code = 'SK' WHERE description = 'Eslovaquia';
+                UPDATE country SET iso_code = 'SI' WHERE description = 'Eslovenia';
+                UPDATE country SET iso_code = 'ES' WHERE description = 'España';
+                UPDATE country SET iso_code = 'US' WHERE description = 'Estados Unidos';
+                UPDATE country SET iso_code = 'EE' WHERE description = 'Estonia';
+                UPDATE country SET iso_code = 'ET' WHERE description = 'Etiopía';
+                UPDATE country SET iso_code = 'PH' WHERE description = 'Filipinas';
+                UPDATE country SET iso_code = 'FI' WHERE description = 'Finlandia';
+                UPDATE country SET iso_code = 'FJ' WHERE description = 'Fiyi';
+                UPDATE country SET iso_code = 'FR' WHERE description = 'Francia';
+                UPDATE country SET iso_code = 'GA' WHERE description = 'Gabón';
+                UPDATE country SET iso_code = 'GM' WHERE description = 'Gambia';
+                UPDATE country SET iso_code = 'GE' WHERE description = 'Georgia';
+                UPDATE country SET iso_code = 'GH' WHERE description = 'Ghana';
+                UPDATE country SET iso_code = 'GD' WHERE description = 'Granada';
+                UPDATE country SET iso_code = 'GR' WHERE description = 'Grecia';
+                UPDATE country SET iso_code = 'GL' WHERE description = 'Groenlandia';
+                UPDATE country SET iso_code = 'GU' WHERE description = 'Guam';
+                UPDATE country SET iso_code = 'GT' WHERE description = 'Guatemala';
+                UPDATE country SET iso_code = 'GN' WHERE description = 'Guinea';
+                UPDATE country SET iso_code = 'GQ' WHERE description = 'Guinea Ecuatorial';
+                UPDATE country SET iso_code = 'GW' WHERE description = 'Guinea-Bissau';
+                UPDATE country SET iso_code = 'GY' WHERE description = 'Guyana';
+                UPDATE country SET iso_code = 'HT' WHERE description = 'Haití';
+                UPDATE country SET iso_code = 'HN' WHERE description = 'Honduras';
+                UPDATE country SET iso_code = 'HK' WHERE description = 'Hong Kong';
+                UPDATE country SET iso_code = 'HU' WHERE description = 'Hungría';
+                UPDATE country SET iso_code = 'IN' WHERE description = 'India';
+                UPDATE country SET iso_code = 'ID' WHERE description = 'Indonesia';
+                UPDATE country SET iso_code = 'IR' WHERE description = 'Irán';
+                UPDATE country SET iso_code = 'IQ' WHERE description = 'Iraq';
+                UPDATE country SET iso_code = 'IE' WHERE description = 'Irlanda';
+                UPDATE country SET iso_code = 'IS' WHERE description = 'Islandia';
+                UPDATE country SET iso_code = 'FO' WHERE description = 'Islas Feroe';
+                UPDATE country SET iso_code = 'MP' WHERE description = 'Islas Marianas del Norte';
+                UPDATE country SET iso_code = 'MH' WHERE description = 'Islas Marshall';
+                UPDATE country SET iso_code = 'PN' WHERE description = 'Islas Pitcairn';
+                UPDATE country SET iso_code = 'SB' WHERE description = 'Islas Salomón';
+                UPDATE country SET iso_code = 'IL' WHERE description = 'Israel';
+                UPDATE country SET iso_code = 'IT' WHERE description = 'Italia';
+                UPDATE country SET iso_code = 'JM' WHERE description = 'Jamaica';
+                UPDATE country SET iso_code = 'JP' WHERE description = 'Japón';
+                UPDATE country SET iso_code = 'JO' WHERE description = 'Jordania';
+                UPDATE country SET iso_code = 'KZ' WHERE description = 'Kazajistán';
+                UPDATE country SET iso_code = 'KE' WHERE description = 'Kenia';
+                UPDATE country SET iso_code = 'KG' WHERE description = 'Kirguizistán';
+                UPDATE country SET iso_code = 'KI' WHERE description = 'Kiribati';
+                UPDATE country SET iso_code = 'KW' WHERE description = 'Kuwait';
+                UPDATE country SET iso_code = 'LA' WHERE description = 'Laos';
+                UPDATE country SET iso_code = 'LS' WHERE description = 'Lesoto';
+                UPDATE country SET iso_code = 'LV' WHERE description = 'Letonia';
+                UPDATE country SET iso_code = 'LB' WHERE description = 'Líbano';
+                UPDATE country SET iso_code = 'LR' WHERE description = 'Liberia';
+                UPDATE country SET iso_code = 'LY' WHERE description = 'Libia';
+                UPDATE country SET iso_code = 'LI' WHERE description = 'Liechtenstein';
+                UPDATE country SET iso_code = 'LT' WHERE description = 'Lituania';
+                UPDATE country SET iso_code = 'LU' WHERE description = 'Luxemburgo';
+                UPDATE country SET iso_code = 'MK' WHERE description = 'Macedonia';
+                UPDATE country SET iso_code = 'MG' WHERE description = 'Madagascar';
+                UPDATE country SET iso_code = 'MY' WHERE description = 'Malasia';
+                UPDATE country SET iso_code = 'MW' WHERE description = 'Malaui';
+                UPDATE country SET iso_code = 'MV' WHERE description = 'Maldivas';
+                UPDATE country SET iso_code = 'ML' WHERE description = 'Malí';
+                UPDATE country SET iso_code = 'MT' WHERE description = 'Malta';
+                UPDATE country SET iso_code = 'MA' WHERE description = 'Marruecos';
+                UPDATE country SET iso_code = 'MU' WHERE description = 'Mauricio';
+                UPDATE country SET iso_code = 'MR' WHERE description = 'Mauritania';
+                UPDATE country SET iso_code = 'MX' WHERE description = 'México';
+                UPDATE country SET iso_code = 'FM' WHERE description = 'Micronesia';
+                UPDATE country SET iso_code = 'MD' WHERE description = 'Moldavia';
+                UPDATE country SET iso_code = 'MC' WHERE description = 'Mónaco';
+                UPDATE country SET iso_code = 'MN' WHERE description = 'Mongolia';
+                UPDATE country SET iso_code = 'MZ' WHERE description = 'Mozambique';
+                UPDATE country SET iso_code = 'NA' WHERE description = 'Namibia';
+                UPDATE country SET iso_code = 'NR' WHERE description = 'Nauru';
+                UPDATE country SET iso_code = 'NP' WHERE description = 'Nepal';
+                UPDATE country SET iso_code = 'NI' WHERE description = 'Nicaragua';
+                UPDATE country SET iso_code = 'NE' WHERE description = 'Níger';
+                UPDATE country SET iso_code = 'NG' WHERE description = 'Nigeria';
+                UPDATE country SET iso_code = 'NU' WHERE description = 'Niue';
+                UPDATE country SET iso_code = 'NO' WHERE description = 'Noruega';
+                UPDATE country SET iso_code = 'NZ' WHERE description = 'Nueva Zelanda';
+                UPDATE country SET iso_code = 'OM' WHERE description = 'Omán';
+                UPDATE country SET iso_code = 'NL' WHERE description = 'Países Bajos';
+                UPDATE country SET iso_code = 'PK' WHERE description = 'Pakistán';
+                UPDATE country SET iso_code = 'PW' WHERE description = 'Palaos';
+                UPDATE country SET iso_code = 'PA' WHERE description = 'Panamá';
+                UPDATE country SET iso_code = 'PG' WHERE description = 'Papúa Nueva Guinea';
+                UPDATE country SET iso_code = 'PY' WHERE description = 'Paraguay';
+                UPDATE country SET iso_code = 'PE' WHERE description = 'Perú';
+                UPDATE country SET iso_code = 'PF' WHERE description = 'Polinesia Francesa';
+                UPDATE country SET iso_code = 'PL' WHERE description = 'Polonia';
+                UPDATE country SET iso_code = 'PT' WHERE description = 'Portugal';
+                UPDATE country SET iso_code = 'PR' WHERE description = 'Puerto Rico';
+                UPDATE country SET iso_code = 'QA' WHERE description = 'Qatar';
+                UPDATE country SET iso_code = 'GB' WHERE description = 'Reino Unido';
+                UPDATE country SET iso_code = 'CF' WHERE description = 'República Centroafricana';
+                UPDATE country SET iso_code = 'CZ' WHERE description = 'República Checa';
+                UPDATE country SET iso_code = 'CD' WHERE description = 'República Democrática del Congo';
+                UPDATE country SET iso_code = 'DO' WHERE description = 'República Dominicana';
+                UPDATE country SET iso_code = 'RW' WHERE description = 'Ruanda';
+                UPDATE country SET iso_code = 'RO' WHERE description = 'Rumania';
+                UPDATE country SET iso_code = 'RU' WHERE description = 'Rusia';
+                UPDATE country SET iso_code = 'WS' WHERE description = 'Samoa';
+                UPDATE country SET iso_code = 'AS' WHERE description = 'Samoa Americana';
+                UPDATE country SET iso_code = 'KN' WHERE description = 'San Cristóbal y Nieves';
+                UPDATE country SET iso_code = 'SM' WHERE description = 'San Marino';
+                UPDATE country SET iso_code = 'VC' WHERE description = 'San Vicente y las Granadinas';
+                UPDATE country SET iso_code = 'LC' WHERE description = 'Santa Lucía';
+                UPDATE country SET iso_code = 'ST' WHERE description = 'Santo Tomé y Príncipe';
+                UPDATE country SET iso_code = 'SC' WHERE description = 'Seychelles';
+                UPDATE country SET iso_code = 'SL' WHERE description = 'Sierra Leona';
+                UPDATE country SET iso_code = 'SG' WHERE description = 'Singapur';
+                UPDATE country SET iso_code = 'SY' WHERE description = 'Siria';
+                UPDATE country SET iso_code = 'SO' WHERE description = 'Somalia';
+                UPDATE country SET iso_code = 'LK' WHERE description = 'Sri Lanka';
+                UPDATE country SET iso_code = 'SZ' WHERE description = 'Suazilandia';
+                UPDATE country SET iso_code = 'ZA' WHERE description = 'Sudáfrica';
+                UPDATE country SET iso_code = 'SD' WHERE description = 'Sudán';
+                UPDATE country SET iso_code = 'SE' WHERE description = 'Suecia';
+                UPDATE country SET iso_code = 'CH' WHERE description = 'Suiza';
+                UPDATE country SET iso_code = 'SR' WHERE description = 'Surinam';
+                UPDATE country SET iso_code = 'TH' WHERE description = 'Tailandia';
+                UPDATE country SET iso_code = 'TW' WHERE description = 'Taiwán';
+                UPDATE country SET iso_code = 'TZ' WHERE description = 'Tanzania';
+                UPDATE country SET iso_code = 'TJ' WHERE description = 'Tayikistán';
+                UPDATE country SET iso_code = 'TL' WHERE description = 'Timor Oriental';
+                UPDATE country SET iso_code = 'TG' WHERE description = 'Togo';
+                UPDATE country SET iso_code = 'TO' WHERE description = 'Tonga';
+                UPDATE country SET iso_code = 'TT' WHERE description = 'Trinidad y Tobago';
+                UPDATE country SET iso_code = 'TN' WHERE description = 'Túnez';
+                UPDATE country SET iso_code = 'TM' WHERE description = 'Turkmenistán';
+                UPDATE country SET iso_code = 'TR' WHERE description = 'Turquía';
+                UPDATE country SET iso_code = 'TV' WHERE description = 'Tuvalu';
+                UPDATE country SET iso_code = 'UA' WHERE description = 'Ucrania';
+                UPDATE country SET iso_code = 'UG' WHERE description = 'Uganda';
+                UPDATE country SET iso_code = 'UY' WHERE description = 'Uruguay';
+                UPDATE country SET iso_code = 'UZ' WHERE description = 'Uzbekistán';
+                UPDATE country SET iso_code = 'VE' WHERE description = 'Venezuela';
+                UPDATE country SET iso_code = 'VN' WHERE description = 'Vietnam';
+                UPDATE country SET iso_code = 'YE' WHERE description = 'Yemen';
+                UPDATE country SET iso_code = 'DJ' WHERE description = 'Yibuti';
+                UPDATE country SET iso_code = 'ZM' WHERE description = 'Zambia';
+                UPDATE country SET iso_code = 'ZW' WHERE description = 'Zimbabue';
+                UPDATE country SET iso_code = 'AI' WHERE description = 'Anguila';
+                UPDATE country SET iso_code = 'PF' WHERE description = 'French Polynesia';
+                UPDATE country SET iso_code = 'GF' WHERE description = 'French Guiana';
+                UPDATE country SET iso_code = 'TF' WHERE description = 'French Southern Territori';
+                UPDATE country SET iso_code = 'GI' WHERE description = 'Gibraltar';
+                UPDATE country SET iso_code = 'GP' WHERE description = 'Guadalupe';
+                UPDATE country SET iso_code = 'NL' WHERE description = 'Holanda';
+                UPDATE country SET iso_code = 'GB' WHERE description = 'Inglaterra';
+                UPDATE country SET iso_code = 'KY' WHERE description = 'Islas Caiman';
+                UPDATE country SET iso_code = 'CK' WHERE description = 'Islas Cook';
+                UPDATE country SET iso_code = 'FO' WHERE description = 'Islas Feroe';
+                UPDATE country SET iso_code = 'WF' WHERE description = 'Islas Wallis y Futuna';
+                UPDATE country SET iso_code = 'TC' WHERE description = 'Islas Turks y Caicos';
+                UPDATE country SET iso_code = 'KZ' WHERE description = 'Kasajstan';
+                UPDATE country SET iso_code = 'KZ' WHERE description = 'Kasakstan';
+                UPDATE country SET iso_code = 'KE' WHERE description = 'KENYA';
+                UPDATE country SET iso_code = 'KG' WHERE description = 'Kirguistan';
+                UPDATE country SET iso_code = 'KG' WHERE description = 'Kurguistan';
+                UPDATE country SET iso_code = 'LS' WHERE description = 'Lesotho';
+                UPDATE country SET iso_code = 'MW' WHERE description = 'Malawi';
+                UPDATE country SET iso_code = 'MA' WHERE description = 'Morocco';
+                UPDATE country SET iso_code = 'MP' WHERE description = 'Northern Mariana Islands';
+                UPDATE country SET iso_code = 'NC' WHERE description = 'Nueva Caledonia';
+                UPDATE country SET iso_code = 'PW' WHERE description = 'Palau';
+                UPDATE country SET iso_code = 'PS' WHERE description = 'Palestina';
+                UPDATE country SET iso_code = 'PG' WHERE description = 'Papua';
+                UPDATE country SET iso_code = 'MH' WHERE description = 'Rep. de las islas marshal';
+                UPDATE country SET iso_code = 'CF' WHERE description = 'Republica centro africana';
+                UPDATE country SET iso_code = 'GE' WHERE description = 'Republica de Georgia';
+                UPDATE country SET iso_code = 'SK' WHERE description = 'Republica Eslovaca';
+                UPDATE country SET iso_code = 'RH' WHERE description = 'Rhodesia';
+                UPDATE country SET iso_code = 'WS' WHERE description = 'Samoa Occidental';
+                UPDATE country SET iso_code = 'KN' WHERE description = 'San cristobal y Nevis';
+                UPDATE country SET iso_code = 'VC' WHERE description = 'San vicente y Granadinas';
+                UPDATE country SET iso_code = 'SN' WHERE description = 'Senegal';
+                UPDATE country SET iso_code = 'RS' WHERE description = 'Serbia';
+                UPDATE country SET iso_code = 'LK' WHERE description = 'Srilanka';
+                UPDATE country SET iso_code = 'SZ' WHERE description = 'Swazilandia';
+                UPDATE country SET iso_code = 'TH' WHERE description = 'Thailandia';
+                UPDATE country SET iso_code = 'UZ' WHERE description = 'Usbekistan';
+                UPDATE country SET iso_code = 'VU' WHERE description = 'Vanatu';
+                UPDATE country SET iso_code = 'VA' WHERE description = 'Vaticano';
+                UPDATE country SET iso_code = 'EH' WHERE description = 'Western Sahara';
+                UPDATE country SET iso_code = 'YE' WHERE description = 'Yemen del norte';
+                UPDATE country SET iso_code = 'YE' WHERE description = 'Yemen del sur';
+                UPDATE country SET iso_code = 'MK' WHERE description = 'Yugoslavia';
+
+    - changeSet:
+        id: addColumns-medication-statement
+        author: lmanterola
+        changes:
+          - addColumn:
+              tableName: medication_statement
+              columns:
+                - column:
+                    name: due_date
+                    type: date
+                - column:
+                    name: prescription_line_number
+                    type: int
+                - column:
+                    name: prescription_line_state
+                    type: smallint
+                - column:
+                    name: is_digital
+                    type: boolean
+                    defaultValue: ${boolean.true}
+                    constraints:
+                      nullable: false
+
+    - changeSet:
+        id: medication_statement_commercial_dispensation-createTable
+        author: lmanterola
+        changes:
+          - createTable:
+              tableName: medication_statement_commercial
+              columns:
+                - column:
+                    autoIncrement: true
+                    constraints:
+                      primaryKey: true
+                      primaryKeyName: PK_medication_statement_commercial
+                    name: id
+                    type: int
+                - column:
+                    constraints:
+                      nullable: false
+                    name: snomed_id
+                    type: int
+                - column:
+                    constraints:
+                      nullable: false
+                    name: commercial_name
+                    type: varchar(512)
+                - column:
+                    constraints:
+                      nullable: false
+                    name: commercial_presentation
+                    type: varchar(128)
+                - column:
+                    name: presentation_quantity
+                    type: int
+                - column:
+                    constraints:
+                      nullable: false
+                    name: brand
+                    type: varchar(256)
+                - column:
+                    constraints:
+                      nullable: false
+                    name: price
+                    type: float
+                - column:
+                    constraints:
+                      nullable: false
+                    name: affiliate_payment
+                    type: float
+                - column:
+                    constraints:
+                      nullable: false
+                    name: medical_coverage_payment
+                    type: float
+                - column:
+                    constraints:
+                      nullable: false
+                    name: created_by
+                    type: int
+                    defaultValue: -1
+                - column:
+                    constraints:
+                      nullable: false
+                    name: created_on
+                    type: datetime
+                    defaultValueDate: ${date.now}
+                - column:
+                    constraints:
+                      nullable: false
+                    name: updated_by
+                    type: int
+                    defaultValue: -1
+                - column:
+                    constraints:
+                      nullable: false
+                    name: updated_on
+                    type: datetime
+                    defaultValueDate: ${date.now}
+                - column:
+                    constraints:
+                      nullable: false
+                    name: deleted
+                    type: BOOLEAN
+                    defaultValue: ${boolean.false}
+                - column:
+                    name: deleted_by
+                    type: int
+                - column:
+                    name: deleted_on
+                    type: datetime
+                - addForeignKeyConstraint:
+                    baseColumnNames: id
+                    baseTableName: medication_statement_commercial
+                    constraintName: FK_medication_statement_commercial_medication_statement
+                    onDelete: NO ACTION
+                    onUpdate: NO ACTION
+                    referencedColumnNames: id
+                    referencedTableName: medication_statement
+                    validate: true
+
+    - changeSet:
+        id: medication_statement_line_state-createTable
+        author: lmanterola
+        changes:
+          - createTable:
+              tableName: medication_statement_line_state
+              columns:
+                - column:
+                    autoIncrement: true
+                    constraints:
+                      primaryKey: true
+                      primaryKeyName: PK_medication_statement_line_state
+                    name: id
+                    type: smallint
+                - column:
+                    constraints:
+                      nullable: false
+                    name: description
+                    type: varchar(64)
+                - addForeignKeyConstraint:
+                    baseColumnNames: id
+                    baseTableName: medication_statement_line_state
+                    constraintName: FK_medication_statement_line_state
+                    referencedColumnNames: prescription_line_state
+                    referencedTableName: medication_statement
+                    validate: true
+
+    - changeSet:
+        id: medication_statement_line_state-metadata
+        author: lmanterola
+        context: "!schema-only"
+        changes:
+          - sql:
+              sql: |-
+                INSERT INTO medication_statement_line_state (id,description) VALUES (1,'Activo'); 
+                INSERT INTO medication_statement_line_state (id,description) VALUES (2,'Dispensado cerrado');
+                INSERT INTO medication_statement_line_state (id,description) VALUES (3,'Dispensado provisorio');
+                INSERT INTO medication_statement_line_state (id,description) VALUES (4,'Vencido');
+                INSERT INTO medication_statement_line_state (id,description) VALUES (5,'Cancelado');
+                

@@ -2,11 +2,13 @@ package ar.lamansys.sgx.shared.emails.application;
 
 import java.io.UnsupportedEncodingException;
 import java.nio.charset.StandardCharsets;
+import java.util.Map;
 
 import javax.mail.MessagingException;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
 
+import org.springframework.core.io.ByteArrayResource;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Service;
@@ -32,7 +34,7 @@ public class EmailNotificationChannel implements NotificationChannel<MailMessage
 		this.emailSender = mailSender;
 	}
 
-	private void sendImpl(EmailMessageBo emailMessage) throws MessagingException, UnsupportedEncodingException {
+	private void sendImpl(EmailMessageBo emailMessage) throws MessagingException, UnsupportedEncodingException{
 		MimeMessage message = emailSender.createMimeMessage();
 		MimeMessageHelper helper = new MimeMessageHelper(
 				message,
@@ -46,7 +48,9 @@ public class EmailNotificationChannel implements NotificationChannel<MailMessage
 
 		helper.setSubject(emailMessage.subject);
 		helper.setText(emailMessage.html, true);
-
+		for (Map.Entry<String, ByteArrayResource> entry : emailMessage.attachments.entrySet()) {
+			helper.addAttachment(entry.getKey(), entry.getValue());
+		}
 		emailSender.send(message);
 	}
 
@@ -58,7 +62,8 @@ public class EmailNotificationChannel implements NotificationChannel<MailMessage
 					recipient.email,
 					fullname(recipient),
 					message.subject,
-					message.body
+					message.body,
+					message.attachments
 			));
 		} catch (MessagingException | UnsupportedEncodingException e) {
 			log.error("Sending email fail: {}", e.getMessage(), e);

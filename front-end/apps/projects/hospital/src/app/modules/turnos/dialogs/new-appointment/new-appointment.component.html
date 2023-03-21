@@ -59,8 +59,8 @@
 						</div>
 						<div fxLayout="row" fxLayoutAlign="end" fxLayoutGap="10px">
 							<ng-container *appHasRole="['ADMINISTRATIVO']">
-								<button mat-flat-button mat-dialog-close color="primary" (click)="goCreatePatient()"
-									*ngIf="showAddPatient">
+								<button mat-flat-button [mat-dialog-close]="-1" color="primary"
+									(click)="goCreatePatient()" *ngIf="showAddPatient">
 									<span [translate]="'turnos.new-appointment.BUTTON_ADD_PATIENT'"></span>
 								</button>
 							</ng-container>
@@ -73,8 +73,7 @@
 			</mat-card>
 		</mat-step>
 
-		<mat-step [stepControl]="appointmentInfoForm" label="{{'turnos.new-appointment.STEP_2' | translate}}"
-			[editable]="false">
+		<mat-step [stepControl]="appointmentInfoForm" label="{{'turnos.new-appointment.STEP_2' | translate}}">
 			<mat-card class="mat-typography">
 				<mat-list class="mat-form-field-wrapper">
 					<mat-list-item id="patient" class="patient-data-list">
@@ -109,7 +108,7 @@
 							</mat-select>
 						</mat-form-field>
 						<div fxLayout="row" fxLayoutGap="10px" fxLayout.xs="column">
-							<mat-form-field fxFlex="30%" appearance="outline">
+							<mat-form-field fxFlex="30%" appearance="outline" class="phonePrefix">
 								<mat-label [translate]="'turnos.new-appointment.PHONE_PREFIX'"></mat-label>
 								<input matInput type="text" id="phonePrefix" name="phonePrefix"
 									formControlName="phonePrefix"
@@ -120,6 +119,10 @@
 								</mat-error>
 								<mat-error *ngIf="hasError(appointmentInfoForm, 'maxlength', 'phonePrefix')"
 									translate="forms.MAX_LENGTH_ERROR" [translateParams]="{max: 10}">
+								</mat-error>
+								<mat-error
+								*ngIf="hasError(appointmentInfoForm, 'pattern', 'phonePrefix')"
+								[translate]="'forms.FORMAT_NUMERIC'">
 								</mat-error>
 							</mat-form-field>
 							<mat-form-field fxFlex="70%" appearance="outline">
@@ -132,14 +135,40 @@
 									<span translate="forms.REQUIRED"></span>
 								</mat-error>
 								<mat-error *ngIf="hasError(appointmentInfoForm, 'maxlength', 'phoneNumber')"
-									translate="forms.MAX_LENGTH_ERROR" [translateParams]="{max: 20}">
+									translate="forms.MAX_LENGTH_ERROR" [translateParams]="{max: 15}">
+								</mat-error>
+								<mat-error
+								*ngIf="hasError(appointmentInfoForm, 'pattern', 'phoneNumber')"
+								[translate]="'forms.FORMAT_NUMERIC'">
 								</mat-error>
 							</mat-form-field>
 						</div>
 					</div>
 				</form>
-				<div fxLayout="row" fxLayoutAlign="end">
-					<button mat-flat-button matStepperPrevious color="primary" (click)="toFirstStep()">
+				<div fxLayout="row">
+					<button mat-stroked-button matStepperPrevious color="primary" [disabled]="preselectedPatient" (click)="toFirstStep()">
+						<span [translate]="'buttons.BACK'"></span>
+					</button>
+				</div>
+			</mat-card>
+		</mat-step>
+
+		<mat-step [stepControl]="associateReferenceForm" label="{{'turnos.new-appointment.STEP_3' | translate }}"
+			*ngIf="data.protectedAppointment">
+			<mat-card>
+				<form [formGroup]="associateReferenceForm">
+					<mat-form-field appearance="outline">
+						<mat-label>{{ 'turnos.new-appointment.ASSOCIATED_REFERENCE' | translate }}</mat-label>
+						<mat-select formControlName="reference" name="reference">
+							<mat-option *ngFor="let reference of referenceList; index as i" [value]="reference">
+								{{ reference.institution.name }}, {{ referenceDateViewList[i] }},
+								{{ reference.professionalFullName }}
+							</mat-option>
+						</mat-select>
+					</mat-form-field>
+				</form>
+				<div fxLayout="row">
+					<button mat-stroked-button matStepperPrevious color="primary">
 						<span [translate]="'buttons.BACK'"></span>
 					</button>
 				</div>
@@ -149,11 +178,19 @@
 </div>
 
 <mat-dialog-actions fxLayout="row" fxLayoutAlign="end" fxLayoutGap="10px">
-	<button mat-stroked-button color="primary" [mat-dialog-close]="-1">
+	<button mat-stroked-button color="primary" (click)="clearQueryParams()" [mat-dialog-close]="-1">
 		<span [translate]="'buttons.CANCEL'"></span>
 	</button>
 	<button mat-raised-button color="primary" *ngIf="showConfirmButton()" (click)="submit()"
 		[disabled]="isSubmitButtonDisabled">
+		<span [translate]="'buttons.CONFIRM'"></span>
+	</button>
+	<button (click)="stepper.next()" mat-raised-button type="button" color="primary"
+		*ngIf="data.protectedAppointment && stepper.selectedIndex === 1" [disabled]="!appointmentInfoForm.valid">
+		<span [translate]="'buttons.NEXT'"></span>
+	</button>
+	<button (click)="submit(true)" mat-raised-button type="button" color="primary"
+		*ngIf="data.protectedAppointment && stepper.selectedIndex === 2" [disabled]="disableConfirmButtonStep3()">
 		<span [translate]="'buttons.CONFIRM'"></span>
 	</button>
 </mat-dialog-actions>

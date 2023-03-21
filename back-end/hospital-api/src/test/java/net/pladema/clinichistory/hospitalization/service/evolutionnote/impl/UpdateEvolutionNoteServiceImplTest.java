@@ -178,7 +178,7 @@ class UpdateEvolutionNoteServiceImplTest extends UnitRepository {
 		evolutionBo.setDiagnosis(Collections.emptyList());
 		evolutionBo.setImmunizations(Collections.emptyList());
 		evolutionBo.setAllergies(Collections.emptyList());
-		evolutionBo.setWasMadeByProfessionalNursing(false);
+		evolutionBo.setIsNursingEvolutionNote(false);
 		return evolutionBo;
 	}
 

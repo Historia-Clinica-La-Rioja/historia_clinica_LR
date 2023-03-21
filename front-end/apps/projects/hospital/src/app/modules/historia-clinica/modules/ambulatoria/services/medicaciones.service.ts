@@ -19,11 +19,32 @@ export class MedicacionesService {
 	constructor(private prescripcionesService: PrescripcionesService) { }
 
 	updateMedicationFilter(patientId: number, statusId: string, medicationStatement: string, healthCondition: string) {
+		this.setInformation(patientId,statusId,medicationStatement,healthCondition);
+		this.updateMedication();
+	}
+
+	updateMedicationFilterByRoles(patientId: number, statusId: string, medicationStatement: string, healthCondition: string) {
+		this.setInformation(patientId,statusId,medicationStatement,healthCondition);
+		this.updateMedicationByRoles();
+	}
+
+	private setInformation(patientId: number, statusId: string, medicationStatement: string, healthCondition: string){
 		this.patientId = patientId;
 		this.statusId = statusId;
 		this.medicationStatement = medicationStatement;
 		this.healthCondition = healthCondition;
-		this.updateMedication();
+	}
+
+	updateMedicationByRoles(){
+		if (this.patientId) {
+			this.prescripcionesService.getPrescriptionByRoles(
+				this.patientId,
+				this.statusId,
+				this.medicationStatement,
+				this.healthCondition).subscribe( (response: MedicationInfoDto[]) => {
+					this.subject.next(response);
+				});
+		}
 	}
 
 	updateMedication() {

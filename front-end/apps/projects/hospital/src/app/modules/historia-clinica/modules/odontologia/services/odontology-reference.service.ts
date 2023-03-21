@@ -1,10 +1,9 @@
 import { Inject, Injectable } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { CareLineDto, ClinicalSpecialtyDto, ReferenceDto } from '@api-rest/api-model';
-import { CareLineService } from '@api-rest/services/care-line.service';
-import { ClinicalSpecialtyCareLineService } from '@api-rest/services/clinical-specialty-care-line.service';
 import { removeFrom } from '@core/utils/array.utils';
-import { HCEPersonalHistory, ReferenceComponent } from '@historia-clinica/modules/ambulatoria/dialogs/reference/reference.component';
+import { Reference, ReferenceComponent } from '@historia-clinica/modules/ambulatoria/dialogs/reference/reference.component';
+import { ReferenceInformation } from '@historia-clinica/modules/ambulatoria/services/ambulatory-consultation-reference.service';
 import { ProblemasService } from '@historia-clinica/services/problemas.service';
 import { OVERLAY_DATA } from '@presentation/presentation-model';
 
@@ -12,33 +11,19 @@ import { OVERLAY_DATA } from '@presentation/presentation-model';
 	providedIn: 'root'
 })
 
-
 export class OdontologyReferenceService {
 
 	specialties: ClinicalSpecialtyDto[] = [];
 	careLines: CareLineDto[];
 	odontologyReferences: ReferenceDto[] = [];
+	referencesInformation: ReferenceInformation[] = [];
 	references: Reference[] = [];
-
 
 	constructor(
 		private readonly dialog: MatDialog,
 		@Inject(OVERLAY_DATA) public data: any,
 		private readonly problemasService: ProblemasService,
-		private readonly clinicalSpecialtyCareLine: ClinicalSpecialtyCareLineService,
-		private readonly careLineService: CareLineService,
-	) {
-		this.careLineService.getCareLines().subscribe(
-			careLines => {
-				this.careLines = careLines;
-				this.careLines.forEach(careLine => {
-					this.clinicalSpecialtyCareLine.getSpecialtyCareLine(careLine.id).subscribe((specialties: ClinicalSpecialtyDto[]) => {
-						specialties.forEach((specialty: ClinicalSpecialtyDto) => this.specialties.push(specialty));
-					});
-				});
-			}
-		);
-	}
+	) { }
 
 	openReferenceDialog(): void {
 		const dialogRef = this.dialog.open(ReferenceComponent, {
@@ -56,8 +41,9 @@ export class OdontologyReferenceService {
 					referenceIds: [],
 					referenceProblems: reference.problems
 				};
-				this.references.push(ref);
-				this.odontologyReferences.push(reference.data);
+				this.referencesInformation.push(ref);
+				this.references.push(reference.data);
+				this.odontologyReferences.push(this.mapToReferenceDto(reference.data));
 			}
 		});
 	}
@@ -65,39 +51,38 @@ export class OdontologyReferenceService {
 	remove(index: number): void {
 		this.odontologyReferences = removeFrom<ReferenceDto>(this.odontologyReferences, index);
 		this.references = removeFrom<Reference>(this.references, index);
+		this.referencesInformation = removeFrom<ReferenceInformation>(this.referencesInformation, index);
 	}
 
 	getData(): any[] {
-		return (this.odontologyReferences.map(
-			(reference: ReferenceDto, index: number) => ({
-				problems: reference.problems,
-				consultation: reference.consultation,
-				procedure: reference.procedure,
-				careLine: this.careLines.find(careLine => careLine.id === reference.careLineId),
-				clinicalSpecialty: this.specialties.find(specialty => specialty.id === reference.clinicalSpecialtyId),
-				note: reference.note,
-				index: index
-			})
-		));
+		return (this.references.map((reference: Reference, index: number) => ({
+			problems: reference.problems,
+			consultation: reference.consultation,
+			procedure: reference.procedure,
+			careLine: reference.careLine ? reference.careLine : null,
+			clinicalSpecialty: reference.clinicalSpecialty ? reference.clinicalSpecialty : null,
+			note: reference.note,
+			index: index
+		})));
 	}
 
 	getOdontologyReferences(): ReferenceDto[] {
 		return this.odontologyReferences;
 	}
 
-	getReferences(): Reference[] {
-		return this.references;
+	getReferences(): ReferenceInformation[] {
+		return this.referencesInformation;
 
 	}
 
 	addFileIdAt(index: number, fileId: number): void {
 		this.odontologyReferences[index].fileIds.push(fileId);
-		this.references[index].referenceIds.push(fileId);
+		this.referencesInformation[index].referenceIds.push(fileId);
 	}
 
 	getReferenceFilesIds(): number[] {
 		let referencesFilesIds: number[] = []
-		this.references.forEach(reference => {
+		this.referencesInformation.forEach(reference => {
 			referencesFilesIds = [...referencesFilesIds, ...reference.referenceIds]
 		});
 
@@ -105,7 +90,7 @@ export class OdontologyReferenceService {
 	}
 
 	deleteReferenceFilesIds() {
-		this.references.forEach(reference => {
+		this.referencesInformation.forEach(reference => {
 			reference.referenceIds = [];
 		});
 	}
@@ -113,10 +98,19 @@ export class OdontologyReferenceService {
 	isEmpty(): boolean {
 		return (!this.odontologyReferences || this.odontologyReferences.length === 0);
 	}
-}
 
-export interface Reference {
-	referenceFiles: File[];
-	referenceIds: number[];
-	referenceProblems: HCEPersonalHistory[];
+	private mapToReferenceDto(reference: Reference): ReferenceDto {
+		return {
+			careLineId: reference.careLine ? reference.careLine.id : null,
+			clinicalSpecialtyId: reference.clinicalSpecialty.id,
+			consultation: reference.consultation,
+			note: reference.note,
+			problems: reference.problems,
+			procedure: reference.procedure,
+			fileIds: reference.fileIds,
+			destinationInstitutionId: reference.destinationInstitutionId,
+			phoneNumber: reference.phoneNumber,
+			phonePrefix: reference.phonePrefix
+		}
+	}
 }

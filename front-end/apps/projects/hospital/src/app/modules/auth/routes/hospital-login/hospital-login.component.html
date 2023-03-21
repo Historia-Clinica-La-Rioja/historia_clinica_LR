@@ -1,6 +1,11 @@
 <app-content>
 	<form [formGroup]="form" (ngSubmit)="submit()">
 		<mat-card>
+			<section class="logos">
+				<app-logo></app-logo>
+				<app-logo [isSecondaryLogo]="true"></app-logo>
+			</section>
+			<mat-divider></mat-divider>
 			<mat-card-header fxLayoutAlign="center center" style="padding: 15px;">
 				<mat-card-title>
 					<span translate="auth.login.form.TITLE"></span>
@@ -19,13 +24,18 @@
 						</mat-error>
 					</mat-form-field>
 				</app-form-input>
-				<app-form-input label="auth.login.form.PASSWORD_LABEL">
+				<div *ngIf="ffRecoverPasswordIsOn" fxLayout="row" fxLayoutAlign="space-between end">
+					<a>{{ 'auth.login.form.PASSWORD_LABEL' | translate}}</a>
+					<a routerLink (click)="goToRecoverPassword()">{{ 'auth.login.PASSWORD_RECOVER' | translate}}</a>
+				</div>
+				<app-form-input>
 					<mat-form-field [floatLabel]="'never'" appearance="outline">
 						<input formControlName="password" autocomplete="current-password"
-							   type="password"
+							   [type]="hidePassword ? 'password' : 'text'"
 							   placeholder="{{'auth.login.form.PASSWORD_PLACEHOLDER' | translate }}"
 							   matInput
 						>
+						<mat-icon matSuffix color="primary" (click)="hidePassword = !hidePassword">{{hidePassword ? 'visibility_off' : 'visibility'}}</mat-icon>
 						<mat-error *ngIf="hasError('required', 'password')">
 							<span translate="auth.login.form.PASSWORD_REQUIRED"></span>
 						</mat-error>

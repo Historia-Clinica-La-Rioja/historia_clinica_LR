@@ -11,7 +11,6 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import lombok.extern.slf4j.Slf4j;
@@ -20,12 +19,11 @@ import lombok.extern.slf4j.Slf4j;
 @Component
 public class StreamFile {
 
-    @Value("${internment.document.directory:temp}")
-    private String rootDirectory;
-
-    public StreamFile(){
+	private final FileConfiguration fileConfiguration;
+    public StreamFile(FileConfiguration fileConfiguration){
         super();
-    }
+		this.fileConfiguration = fileConfiguration;
+	}
 
     public String buildPathAsString(String relativeFilePath) {
         return getRootDirectory() + relativeFilePath;
@@ -89,10 +87,7 @@ public class StreamFile {
     }
 
     private String getRootDirectory() {
-        if (rootDirectory == null || rootDirectory.equals("temp"))
-            rootDirectory = System.getProperty("java.io.tmpdir");
-
-        return Paths.get(rootDirectory).toString();
+        return fileConfiguration.getDocumentsLocation().getPath();
     }
 
     private String dataToString(String data){

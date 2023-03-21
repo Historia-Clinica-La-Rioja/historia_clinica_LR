@@ -42,6 +42,6 @@ public class MailTemplateEngine implements INotificationTemplateEngine<MailMessa
 	public MailMessageBo process(RecipientBo recipient, NotificationTemplateInput<?> message) throws TemplateException {
 		String subject = textTemplateEngine.process(recipient, message.withPrefixId("mail.subject."));
 		String html = htmlTemplateEngine.process(recipient, message);
-		return new MailMessageBo(subject, html);
+		return new MailMessageBo(subject, html, message.attachments);
 	}
 }

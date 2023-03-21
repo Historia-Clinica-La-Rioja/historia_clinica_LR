@@ -6,6 +6,7 @@ import { PresentationModule } from '@presentation/presentation.module';
 import { AuthRoutingModule } from './auth-routing.module';
 import { LoginComponent } from './routes/login/login.component';
 import { PasswordResetComponent } from './routes/password-reset/password-reset.component';
+import { PasswordRecoverComponent } from './routes/password-recover/password-recover.component';
 // components
 import { AuthComponent } from './auth.component';
 import { FormInputComponent } from './components/form-input/form-input.component';
@@ -26,6 +27,7 @@ import { CodeInputModule } from "angular-code-input";
 		LoginComponent,
 		OauthLoginComponent,
 		PasswordResetComponent,
+		PasswordRecoverComponent,
 		// components
 		AuthComponent,
 		FormInputComponent,

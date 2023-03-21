@@ -28,19 +28,19 @@ const routes: Routes = [
 		path: 'internacion/new',
 		component: NewInternmentComponent,
 		canActivate: [RoleGuard],
-		data: { allowedRoles: [ERole.ADMINISTRATIVO] }
+		data: { allowedRoles: [ERole.ADMINISTRATIVO, ERole.ADMINISTRATIVO_RED_DE_IMAGENES] }
 	},
 	{
 		path: 'internacion/:idInternacion/paciente/:idPaciente/alta',
 		canActivate: [RoleGuard],
 		component: PatientDischargeComponent,
-		data: { allowedRoles: [ERole.ADMINISTRATIVO] }
+		data: { allowedRoles: [ERole.ADMINISTRATIVO, ERole.ADMINISTRATIVO_RED_DE_IMAGENES] }
 	},
 	{
 		path: 'internacion/:idInternacion/paciente/:idPaciente/pase-cama',
 		canActivate: [RoleGuard],
 		component: PatientBedRelocationComponent,
-		data: { allowedRoles: [ERole.ADMINISTRATIVO] }
+		data: { allowedRoles: [ERole.ADMINISTRATIVO, ERole.ADMINISTRATIVO_RED_DE_IMAGENES] }
 	}
 ];
 

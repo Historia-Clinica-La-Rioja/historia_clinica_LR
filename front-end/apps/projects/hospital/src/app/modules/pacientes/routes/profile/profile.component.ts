@@ -5,7 +5,6 @@ import {
 	PatientMedicalCoverageDto,
 	PersonPhotoDto,
 	ProfessionalDto,
-	HealthcareProfessionalSpecialtyDto,
 	ClinicalSpecialtyDto,
 	UserDataDto,
 	UserRoleDto,
@@ -55,15 +54,21 @@ import { EmergencyCareEpisodeSummaryService } from "@api-rest/services/emergency
 import { AppRoutes } from "../../../../app-routing.module";
 import { InternmentDocuments, InternmentEpisodeSummary } from "@historia-clinica/modules/ambulatoria/modules/internacion/components/internment-episode-summary/internment-episode-summary.component";
 import { EditPrefessionsSpecialtiesComponent } from '@pacientes/dialogs/edit-prefessions-specialties/edit-prefessions-specialties.component';
-import { Observable } from 'rxjs';
+import { combineLatest, Observable } from 'rxjs';
 import { EditLicenseComponent } from '@pacientes/dialogs/edit-license/edit-license.component';
 import { ProfessionalLicenseService } from '@api-rest/services/professional-license.service';
+import { dateTimeDtotoLocalDate } from '@api-rest/mapper/date-dto.mapper';
+import { DatePipeFormat } from '@core/utils/date.utils';
+import { AuditablePatientInfo } from '../edit-patient/edit-patient.component';
+import { DatePipe } from '@angular/common';
 
 const ROUTE_NEW_INTERNMENT = 'internaciones/internacion/new';
 const ROUTE_EDIT_PATIENT = 'pacientes/edit';
 const ROUTE_EMERGENCY_CARE_EPISODE_PREFIX = 'guardia/episodio/';
-const ROLES_TO_VIEW_USER_DATA: ERole[] = [ERole.ADMINISTRADOR_INSTITUCIONAL_BACKOFFICE];
-const ROLES_TO_VIEW_CLINIC_HISTORY_DATA: ERole[] = [ERole.ADMINISTRATIVO];
+const ROLES_TO_VIEW_USER_DATA: ERole[] = [ERole.ADMINISTRADOR_INSTITUCIONAL_BACKOFFICE, ERole.ADMINISTRADOR_INSTITUCIONAL_PRESCRIPTOR];
+const ROLES_TO_VIEW_CLINIC_HISTORY_DATA: ERole[] = [ERole.ADMINISTRATIVO, ERole.ADMINISTRATIVO_RED_DE_IMAGENES];
+const ROLES_TO_ASSIGN_PERSCRIPTOR_ROLE: ERole[] = [ERole.ADMINISTRADOR_INSTITUCIONAL_PRESCRIPTOR];
+const ROLES_THAT_CAN_ASSIGN_ANY_ROLE_BUT_PRESCRIPTOR: ERole[] = [ERole.ADMINISTRADOR_INSTITUCIONAL_BACKOFFICE];
 const DIALOG_SIZE = '30%';
 const DIALOG_SIZE_HEIGHT = '80%';
 
@@ -87,6 +92,7 @@ export interface ProfessionalSpecialties {
 export class ProfileComponent implements OnInit {
 	userRoles: string[] = [];
 	roles: RoleDto[] = [];
+	assignableRoles: RoleDto[] = [];
 	userId: number = null;
 	rolesByUser: UserRoleDto[] = [];
 	patientId: number;
@@ -115,6 +121,7 @@ export class ProfileComponent implements OnInit {
 	public internacionSummary = INTERNACION;
 	public internmentEpisodeSummary: InternmentEpisodeSummary;
 	private readonly routePrefix;
+	private clinicalHistoryRoute;
 	public internmentEpisode;
 	public userData: UserDataDto;
 	public personId: number;
@@ -130,6 +137,9 @@ export class ProfileComponent implements OnInit {
 	emergencyCareEpisodeSummary: EmergencyCareListDto;
 	readonly triages = Triages;
 	readonly episodeStates = EstadosEpisodio;
+
+	public auditablePatientInfo: AuditablePatientInfo;
+	private auditableFullDate: Date;
 
 	constructor(
 		private patientService: PatientService,
@@ -155,6 +165,7 @@ export class ProfileComponent implements OnInit {
 		private readonly permissionService: PermissionsService,
 		private readonly internmentService: InternacionService,
 		private readonly emergencyCareEpisodeSummaryService: EmergencyCareEpisodeSummaryService,
+		private readonly datePipe: DatePipe,
 	) {
 		this.routePrefix = 'institucion/' + this.contextService.institutionId + '/';
 		this.featureFlagService.isActive(AppFeature.HABILITAR_INFORMES).subscribe(isOn => this.downloadReportIsEnabled = isOn);
@@ -167,8 +178,23 @@ export class ProfileComponent implements OnInit {
 		this.route.paramMap.subscribe(
 			(params) => {
 				this.patientId = Number(params.get('id'));
+				this.clinicalHistoryRoute = 'institucion/' + this.contextService.institutionId + '/ambulatoria/paciente/' + this.patientId;
 				this.patientService.getPatientCompleteData<CompletePatientDto>(this.patientId)
 					.subscribe(completeData => {
+						if (completeData?.auditablePatientInfo) {
+							this.auditableFullDate = dateTimeDtotoLocalDate(
+								{
+									date: completeData.auditablePatientInfo.createdOn.date,
+									time: completeData.auditablePatientInfo.createdOn.time
+								}
+							);
+							this.auditablePatientInfo = {
+								message: completeData.auditablePatientInfo.message,
+								createdBy: completeData.auditablePatientInfo.createdBy,
+								createdOn: this.datePipe.transform(this.auditableFullDate, DatePipeFormat.SHORT),
+								institutionName: completeData.auditablePatientInfo.institutionName
+							};
+						}
 						this.patientTypeData = this.mapperService.toPatientTypeData(completeData.patientType);
 						this.patientBasicData = this.mapperService.toPatientBasicData(completeData);
 						this.personId = completeData.person.id;
@@ -202,6 +228,16 @@ export class ProfileComponent implements OnInit {
 								});
 								this.rolesService.getAllInstitutionalRoles().subscribe((roles: RoleDto[]) => {
 									this.roles = roles;
+									combineLatest([this.permissionService.hasContextAssignments$(ROLES_TO_ASSIGN_PERSCRIPTOR_ROLE),
+									this.permissionService.hasContextAssignments$(ROLES_THAT_CAN_ASSIGN_ANY_ROLE_BUT_PRESCRIPTOR)])
+									.subscribe(([hasRoleToAssignPrescriptorRole, hasRoleThatCanAssignAnyRoleButPrescriptor]) => {
+										if (!hasRoleToAssignPrescriptorRole)
+											this.assignableRoles = this.roles.filter(role => role.id !== 21);
+										if (hasRoleThatCanAssignAnyRoleButPrescriptor && hasRoleToAssignPrescriptorRole)
+											this.assignableRoles = this.roles;
+										if (!hasRoleThatCanAssignAnyRoleButPrescriptor && hasRoleToAssignPrescriptorRole)
+											this.assignableRoles = this.roles.filter(role => role.id === 21);
+									});
 								});
 
 								this.institution.push(this.contextService.institutionId);
@@ -312,6 +348,10 @@ export class ProfileComponent implements OnInit {
 			});
 	}
 
+	goToClinicalHistory(): void {
+		this.router.navigate([this.clinicalHistoryRoute]);
+	}
+
 	goToEditProfile(): void {
 		const person = {
 			id: this.patientBasicData.id,
@@ -332,7 +372,7 @@ export class ProfileComponent implements OnInit {
 			data: {
 				personId: this.personId,
 				isProfessional: this.isProfessional,
-				roles: this.roles,
+				roles: this.assignableRoles,
 				userId: this.userData.id,
 				rolesByUser: this.rolesByUser
 			}
@@ -461,6 +501,14 @@ export class ProfileComponent implements OnInit {
 	newAppointment() {
 		const url = `${AppRoutes.Institucion}/${this.contextService.institutionId}/turnos`;
 		this.router.navigate([url], { queryParams: { idPaciente: this.patientId } });
+	}
+
+	getHealthcareProfessionalId(): number {
+		return this.healthcareProfessionalId;
+	}
+
+	reloadLicenses(removedLicense: ProfessionalLicenseNumberDto) {
+		this.professionsWithLicense$ = this.professionalLicenseService.getLicenseNumberByProfessional(this.healthcareProfessionalId);
 	}
 
 }

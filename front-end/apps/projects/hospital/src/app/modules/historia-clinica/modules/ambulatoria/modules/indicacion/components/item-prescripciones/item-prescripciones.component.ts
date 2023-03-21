@@ -30,4 +30,5 @@ export class PrescriptionItemData {
 	problemPt: string;
 	doctor: DoctorInfoDto;
 	totalDays?: number | string;
+	observation?: string;
 }

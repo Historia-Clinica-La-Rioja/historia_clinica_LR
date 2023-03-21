@@ -34,4 +34,6 @@ public class PrescriptionItemDto implements Serializable {
     @Nullable
     private String categoryId;
 
+	private Integer prescriptionLineNumber;
+
 }

@@ -1,13 +1,15 @@
 package net.pladema.snowstorm.configuration;
 
-import ar.lamansys.sgx.shared.restclient.configuration.WSConfig;
-import lombok.Getter;
-import lombok.Setter;
+import java.time.Duration;
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.stereotype.Component;
 
-import java.util.List;
+import ar.lamansys.sgx.shared.restclient.configuration.WSConfig;
+import lombok.Getter;
+import lombok.Setter;
 
 @Component
 @ConfigurationProperties(prefix="ws.snowstorm")
@@ -17,7 +19,7 @@ public class SnowstormWSConfig extends WSConfig {
 
     private static final String CONCEPTS = "concepts";
 
-    private static final long DEFAULT_TOKEN_EXPIRATION = -1L;
+    private static final Duration DEFAULT_TOKEN_EXPIRATION = Duration.ofSeconds(-1L);
 
     //Params
     @Value("#{'${ws.snowstorm.params.preferredOrAcceptableIn:450828004}'.split(',\\s*')}")
@@ -46,7 +48,7 @@ public class SnowstormWSConfig extends WSConfig {
     @Value("${ws.snowstorm.url.refsetMembers:/MAIN/members}")
     private String refsetMembersUrl;
 
-    private long tokenExpiration = DEFAULT_TOKEN_EXPIRATION;
+    private Duration tokenExpiration = DEFAULT_TOKEN_EXPIRATION;
 
     public SnowstormWSConfig(@Value("${ws.snowstorm.url.base:https://snowstorm.msal.gob.ar}") String baseUrl) {
         super(baseUrl, false);

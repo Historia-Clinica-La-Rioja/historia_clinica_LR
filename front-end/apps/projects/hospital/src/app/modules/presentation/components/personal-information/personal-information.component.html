@@ -2,7 +2,7 @@
 	<span class="noInformation">Sin Información</span>
 </ng-template>
 <div fxLayout="row" class="form-row" *ngIf="showButtonGoToMedicalHistory">
-	<a  *appHasRole="['ESPECIALISTA_MEDICO', 'PROFESIONAL_DE_SALUD', 'ENFERMERO', 'ESPECIALISTA_EN_ODONTOLOGIA', 'PERSONAL_DE_IMAGENES', 'PERSONAL_DE_LABORATORIO', 'PERSONAL_DE_FARMACIA']" mat-raised-button color="primary" (click)="buttonIsPressedGoToMedicalHistory()">
+	<a  *appHasRole="['ESPECIALISTA_MEDICO', 'PROFESIONAL_DE_SALUD', 'ENFERMERO', 'ESPECIALISTA_EN_ODONTOLOGIA', 'PERSONAL_DE_IMAGENES', 'PERSONAL_DE_LABORATORIO', 'PERSONAL_DE_FARMACIA', 'PRESCRIPTOR']" mat-raised-button color="primary" (click)="buttonIsPressedGoToMedicalHistory()">
 		<span class="uppercase" [translate]="'ambulatoria.paciente.profile.BUTTON_HISTORIA_CLINICA'"></span>
 	</a>
 </div>
@@ -88,5 +88,22 @@
 				</mat-expansion-panel>
 			</div>
 		</span>
+	</div>
+</div>
+<div fxLayout="row" fxLayoutGap="15px" fxLayoutAlign="space-between" class="form-row" *appHasRole="['ADMINISTRATIVO','ADMINISTRADOR_INSTITUCIONAL_BACKOFFICE', 'ADMINISTRATIVO_RED_DE_IMAGENES', 'ADMINISTRADOR_INSTITUCIONAL_PRESCRIPTOR']">
+	<div fxFlex="100%" fxLayout="column" fxLayoutAlign="space-around start" fxLayoutGap="10px">
+		<span class="info-title"  [translate]="'pacientes.form.ATTACHED_DOCUMENTS'"></span>
+		<span *ngFor="let file of personalInformation?.files" fxFlex="100%" fxFlexFill>
+			<div fxLayout="column" fxLayoutAlign="space-around start">
+				<ng-container *appHasRole="['ADMINISTRATIVO','ADMINISTRADOR_INSTITUCIONAL_BACKOFFICE', 'ADMINISTRATIVO_RED_DE_IMAGENES', 'ADMINISTRADOR_INSTITUCIONAL_PRESCRIPTOR']">
+					<a mat-button color="primary"  (click)="downloadFile(file.fileId,file.fileName)">{{file.fileName}}</a>
+				</ng-container>
+				<ng-template >
+					<span *appHasRole="['ADMINISTRADOR_INSTITUCIONAL_BACKOFFICE', 'ADMINISTRADOR_INSTITUCIONAL_PRESCRIPTOR']" class="info-content">{{file.fileName}}</span>
+				</ng-template>
+			</div>
+		</span>
+			<span *ngIf="personalInformation?.files?.length; else noInformation" class="info-content"></span>
+
 	</div>
 </div>

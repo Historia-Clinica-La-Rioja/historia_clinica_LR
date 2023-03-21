@@ -1,0 +1,232 @@
+databaseChangeLog: 
+    - logicalFilePath: incrementales-v1_51
+
+    - changeSet:
+        id: modifyPrimaryKey-tooth_indices
+        author: mvalin
+        changes:
+          - dropPrimaryKey:
+              constraintName: PK_tooth_indices
+              dropIndex: true
+              tableName: tooth_indices
+          - addUniqueConstraint:
+              tableName: tooth_indices
+              columnNames: patient_id, tooth_id
+              constraintName: UQ_tooth_indices_p_id_t_id
+          - addColumn:
+              tableName: tooth_indices
+              columns:
+                name: id
+                type: int
+                autoIncrement: true
+                constraints:
+                  primaryKey: true
+                  primaryKeyName: PK_tooth_indices
+
+    - changeSet:
+        id: modifyPrimaryKey-last_odontogram_drawing
+        author: mvalin
+        changes:
+          - dropPrimaryKey:
+              constraintName: PK_last_odontogram_drawing
+              dropIndex: true
+              tableName: last_odontogram_drawing
+          - addUniqueConstraint:
+              tableName: last_odontogram_drawing
+              columnNames: patient_id, tooth_id
+              constraintName: UQ_last_odontogram_drawing_p_id_t_id
+          - addColumn:
+              tableName: last_odontogram_drawing
+              columns:
+                name: id
+                type: int
+                autoIncrement: true
+                constraints:
+                  primaryKey: true
+                  primaryKeyName: PK_last_odontogram_drawing
+
+    - changeSet:
+        id: update-blood_type-observation_lab-data
+        comment: Corregir tipos de sangre O+- a 0+-
+        author: mromero
+        changes:
+          - sql:
+              sql: |-
+                UPDATE blood_type SET description = '0-' WHERE id = 1;
+                UPDATE blood_type SET description = '0+' WHERE id = 2;
+                UPDATE observation_lab SET value = '0-' WHERE value = 'O-';
+                UPDATE observation_lab SET value = '0+' WHERE value = 'O+';
+    
+    - changeSet:
+        id: addColumns-medication-statement_commercial
+        author: lmanterola
+        changes:
+          - addColumn:
+              tableName: medication_statement_commercial
+              columns:
+                - column:
+                    name: pharmacy_name
+                    type: varchar(512)
+                    constraints:
+                      nullable: false
+                - column:
+                    name: pharmacist_name
+                    type: varchar(256)
+                    constraints:
+                      nullable: false
+                - column:
+                    name: observations
+                    type: text
+
+    - changeSet:
+        id: dropTable-medication_statement_commercial
+        author: lmanterola
+        changes:
+          - dropTable:
+              cascadeConstraints: true
+              tableName: medication_statement_commercial
+
+    - changeSet:
+        id: medication_statement_commercial-createTable
+        author: lmanterola
+        changes:
+          - createTable:
+              tableName: medication_statement_commercial
+              columns:
+                - column:
+                    constraints:
+                      primaryKey: true
+                      primaryKeyName: PK_medication_statement_commercial
+                    name: id
+                    type: int
+                - column:
+                    constraints:
+                      nullable: false
+                    name: snomed_id
+                    type: int
+                - column:
+                    constraints:
+                      nullable: false
+                    name: commercial_name
+                    type: varchar(512)
+                - column:
+                    constraints:
+                      nullable: false
+                    name: commercial_presentation
+                    type: varchar(128)
+                - column:
+                    name: presentation_quantity
+                    type: int
+                - column:
+                    constraints:
+                      nullable: false
+                    name: brand
+                    type: varchar(256)
+                - column:
+                    constraints:
+                      nullable: false
+                    name: price
+                    type: float
+                - column:
+                    constraints:
+                      nullable: false
+                    name: affiliate_payment
+                    type: float
+                - column:
+                    constraints:
+                      nullable: false
+                    name: medical_coverage_payment
+                    type: float
+                - column:
+                    name: pharmacy_name
+                    type: varchar(512)
+                    constraints:
+                      nullable: false
+                - column:
+                    name: pharmacist_name
+                    type: varchar(256)
+                    constraints:
+                      nullable: false
+                - column:
+                    name: observations
+                    type: text
+                - column:
+                    constraints:
+                      nullable: false
+                    name: created_by
+                    type: int
+                    defaultValue: -1
+                - column:
+                    constraints:
+                      nullable: false
+                    name: created_on
+                    type: datetime
+                    defaultValueDate: ${date.now}
+                - column:
+                    constraints:
+                      nullable: false
+                    name: updated_by
+                    type: int
+                    defaultValue: -1
+                - column:
+                    constraints:
+                      nullable: false
+                    name: updated_on
+                    type: datetime
+                    defaultValueDate: ${date.now}
+                - column:
+                    constraints:
+                      nullable: false
+                    name: deleted
+                    type: BOOLEAN
+                    defaultValue: ${boolean.false}
+                - column:
+                    name: deleted_by
+                    type: int
+                - column:
+                    name: deleted_on
+                    type: datetime
+                - addForeignKeyConstraint:
+                    baseColumnNames: id
+                    baseTableName: medication_statement_commercial
+                    constraintName: FK_medication_statement_commercial_medication_statement
+                    onDelete: NO ACTION
+                    onUpdate: NO ACTION
+                    referencedColumnNames: id
+                    referencedTableName: medication_statement
+                    validate: true
+
+    - changeSet:
+        id: addColumns_medication_request
+        author: mmalyvarni
+        changes:
+          - addColumn:
+              tableName: medication_request
+              columns:
+                - column:
+                    name: is_post_dated
+                    type: boolean
+                - column:
+                    name: repetitions
+                    type: int
+                - column:
+                    constraints:
+                      foreignKeyName: FK_medication_request_clinical_specialty_id
+                      references: clinical_specialty(id)
+                      nullable: true
+                    name: clinical_specialty_id
+                    type: int
+
+    - changeSet:
+        id: addColumns_dosage
+        author: mmalyvarni
+        changes:
+          - addColumn:
+              tableName: dosage
+              columns:
+                - column:
+                    name: doses_by_day
+                    type: int
+                - column:
+                    name: doses_by_unit
+                    type: int

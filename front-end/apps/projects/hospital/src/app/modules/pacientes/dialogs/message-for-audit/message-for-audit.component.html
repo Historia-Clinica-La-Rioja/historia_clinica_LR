@@ -1,0 +1,33 @@
+<div fxLayout="column" fxLayoutGap="10px">
+
+    <div fxLayout="row" fxLayoutAlign="space-between center">
+        <h1 mat-dialog-title id="title">{{ 'pacientes.message-for-audit.TITLE' | translate }}</h1>
+        <button id="close-button" mat-button mat-icon-button aria-label="close" [mat-dialog-close]="null">
+            <mat-icon>close</mat-icon>
+        </button>
+    </div>
+
+    <div mat-dialog-content fxLayout="column" fxLayoutGap="10px">
+        <span>{{ 'pacientes.message-for-audit.DESCRIPTION' | translate }}</span>
+        <form [formGroup]="form">
+            <mat-form-field appearance="outline">
+                <mat-label>{{ 'pacientes.message-for-audit.MESSAGE_LABEL' | translate }}</mat-label>
+                <textarea matInput type="text" id="audit_message" formControlName="message" rows="4">
+                </textarea>
+                <mat-error [translate]="'forms.REQUIRED'"></mat-error>
+            </mat-form-field>
+        </form>
+    </div>
+
+    <div fxLayout="row" fxLayoutAlign="end">
+        <mat-dialog-actions>
+            <button mat-stroked-button color="primary" fxFlexFill.xs [mat-dialog-close]="null">
+                {{ 'buttons.CANCEL' | translate | uppercase }}
+            </button>
+            <button mat-flat-button color="primary" fxFlexFill.xs (click)="close()">
+                {{ 'buttons.SAVE' | translate | uppercase }}
+            </button>
+        </mat-dialog-actions>
+    </div>
+
+</div>

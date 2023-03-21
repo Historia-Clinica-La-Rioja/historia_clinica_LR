@@ -24,3 +24,5 @@ export const POLICE_OFFICER = {
 export const TEXT_AREA_MAX_LENGTH = 1024;
 
 export const REMOVEATTENTION = 'removeAttention';
+
+export const REMOVE_SUBSTRING_DNI = /[.]/g;

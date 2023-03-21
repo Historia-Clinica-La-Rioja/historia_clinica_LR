@@ -3,7 +3,7 @@
 
 	<div id="content" *ngIf="contents.length; else noData" fxLayout="column" fxLayoutGap="20px">
 		<div *ngFor="let content of contents" fxLayout="row" fxLayoutAlign="space-between center">
-			<app-list-element-item [content]="content" fxFlex="95%"></app-list-element-item>
+			<app-list-element-item [content]="content" [indication]="true" fxFlex="95%"></app-list-element-item>
 			<div fxFlex="5%">
 				<button mat-icon-button [matMenuTriggerFor]="menu">
 					<mat-icon>more_vert</mat-icon>

@@ -1,4 +1,14 @@
-<div *ngIf="isQueryPresent && !loading" style="height: 100%">
+<div *ngIf="isQueryPresent && !loading && !noData" style="height: 100%">
+	<ng-container *ngIf="chartType === 'pie'">
+		<div fxLayout="row" fxLayoutAlign="space-between center" class="toggle">
+			<mat-label>Ver porcentajes</mat-label>
+			<mat-slide-toggle (change)="togglePercentage()"></mat-slide-toggle>
+		</div>
+		<div fxLayout="row" fxLayoutAlign="space-between center" *ngIf="showGroupSmallData" class="toggle">
+			<mat-label>Agrupar datos</mat-label>
+			<mat-slide-toggle (change)="toggleGroupSmallData()" [disabled]="showPercentage"></mat-slide-toggle>
+		</div>
+	</ng-container>
 	<div
 		*ngIf="chartType !== 'table' && chartType !== 'number'"
 		class="chart-container"
@@ -28,8 +38,9 @@
 		<canvas
 			*ngIf="chartType === 'bar'"
 			baseChart
-			legend="true"
+			[legend]="showLegend"
 			chartType="bar"
+			height="450"
 			[datasets]="chartData"
 			[labels]="chartLabels"
 			[options]="chartOptions"
@@ -50,8 +61,9 @@
 		<canvas
 			*ngIf="chartType === 'pie'"
 			baseChart
-			legend="true"
+			[legend]="showLegend"
 			chartType="pie"
+			height="350"
 			[datasets]="chartData"
 			[labels]="chartLabels"
 			[options]="chartOptions"
@@ -80,8 +92,18 @@
 	</table>
 
 	<div class="numeric-container" *ngIf="chartType === 'number'">
-		<h2 *ngFor="let value of numericValues">
-			{{ value | number }}
-		</h2>
+		<ng-container *ngFor="let value of numericValues">
+			<mat-card class="card">
+				<mat-card-header>
+					<mat-card-title>{{ numericTitle }}</mat-card-title>
+				  </mat-card-header>
+				  <mat-card-content>
+					<p>{{ value | number }}</p>
+				  </mat-card-content>
+			</mat-card>
+		</ng-container>
 	</div>
 </div>
+<ng-container *ngIf="noData">
+	<app-no-data></app-no-data>
+</ng-container>

@@ -9,6 +9,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
+
 @Slf4j
 @RequiredArgsConstructor
 @Service
@@ -17,7 +19,7 @@ public class CreateReferenceFile {
     private final ReferenceCounterReferenceFileStorage referenceCounterReferenceFileStorage;
 
 
-    public Integer run(Integer institutionId, Integer patientId, MultipartFile file) {
+    public Integer run(Integer institutionId, Integer patientId, MultipartFile file) throws IOException {
         log.debug("Input parameters -> institutionId {}, patientId {}", institutionId, patientId);
 
         if (file == null)

@@ -1,0 +1,23 @@
+@mixin app-equipment-diary($theme) {
+    $palette-primary: map-get($theme, primary);
+
+    app-equipment-diary {
+        .appointments {
+            .navigation.mat-button-toggle-appearance-standard {
+                background-color: mat-color($palette-primary);
+                color: white;
+            }
+
+            .toggle-view {
+                .mat-button-toggle-checked.mat-button-toggle-appearance-standard {
+                    background-color: mat-color($palette-primary, 700);
+                }
+
+                .mat-button-toggle-appearance-standard {
+                    background-color: mat-color($palette-primary);
+                    color: white;
+                }
+            }
+        }
+    }
+}

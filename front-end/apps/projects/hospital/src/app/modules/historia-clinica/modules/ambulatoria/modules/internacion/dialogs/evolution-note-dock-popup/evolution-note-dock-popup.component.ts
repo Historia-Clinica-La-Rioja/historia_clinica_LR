@@ -49,7 +49,7 @@ export class EvolutionNoteDockPopupComponent implements OnInit {
 	immunizations: ImmunizationDto[] = [];
 	procedimientosService: ProcedimientosService;
 	factoresDeRiesgoFormService: FactoresDeRiesgoFormService;
-	wasMadeByProfessionalNursing: boolean;
+	isNursingEvolutionNote: boolean;
 
 	public readonly TEXT_AREA_MAX_LENGTH = TEXT_AREA_MAX_LENGTH;
 
@@ -74,7 +74,7 @@ export class EvolutionNoteDockPopupComponent implements OnInit {
 		this.procedimientosService = new ProcedimientosService(formBuilder, this.snomedService, this.snackBarService);
 		this.factoresDeRiesgoFormService = new FactoresDeRiesgoFormService(formBuilder, translateService);
 		this.permissionsService.contextAssignments$().subscribe((userRoles: ERole[]) => {
-			this.wasMadeByProfessionalNursing = !anyMatch<ERole>(userRoles, [ERole.ESPECIALISTA_MEDICO, ERole.ESPECIALISTA_EN_ODONTOLOGIA, ERole.PROFESIONAL_DE_SALUD]) && anyMatch<ERole>(userRoles, [ERole.ENFERMERO]);
+			this.isNursingEvolutionNote = !anyMatch<ERole>(userRoles, [ERole.ESPECIALISTA_MEDICO, ERole.ESPECIALISTA_EN_ODONTOLOGIA, ERole.PROFESIONAL_DE_SALUD]) && anyMatch<ERole>(userRoles, [ERole.ENFERMERO]);
 		})
 	}
 
@@ -192,7 +192,7 @@ export class EvolutionNoteDockPopupComponent implements OnInit {
 				cardiovascularRisk: getEffectiveValue(formValues.riskFactors.cardiovascularRisk)
 			},
 			procedures: isNull(this.procedimientosService.getProcedimientos()) ? undefined : this.procedimientosService.getProcedimientos(),
-			wasMadeByProfessionalNursing: (this.data.documentType) ? this.data.documentType === "Nota de evolución de enfermería" : this.wasMadeByProfessionalNursing
+			isNursingEvolutionNote: (this.data.documentType) ? this.data.documentType === "Nota de evolución de enfermería" : this.isNursingEvolutionNote
 		};
 
 		function isNull(formGroupValues: any): boolean {

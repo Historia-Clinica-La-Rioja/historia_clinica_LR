@@ -1,0 +1,62 @@
+databaseChangeLog: 
+    - logicalFilePath: incrementales-v1_52
+
+    - changeSet:
+        id: addColumn_prescription_date
+        author: lmanterola
+        changes:
+          - addColumn:
+              tableName: medication_statement
+              columns:
+                - column:
+                    name: prescription_date
+                    type: date
+                    defaultValueDate: ${date.now}
+                    constraints:
+                      nullable: false
+
+    - changeSet:
+        id: document_type-digital_recipe-data
+        comment: Actualizar datos document_type
+        author: mmalyvarni
+        context: "!schema-only"
+        changes:
+          - sql:
+              sql: |-
+                INSERT INTO document_type VALUES (14, 'Receta Digital');
+
+    - changeSet:
+        id: addColumn_is_archived_medication_request
+        author: mmalyvarni
+        changes:
+          - addColumn:
+              tableName: medication_request
+              columns:
+                - column:
+                    name: is_archived
+                    type: boolean
+                    defaultValueDate: false
+                    constraints:
+                      nullable: false
+
+    - changeSet:                  
+        id: update-type-snomed-concept-id_medication_statement_commercial
+        author: lmanterola
+        changes:
+          - modifyDataType:
+              columnName:  snomed_id
+              newDataType:  varchar(255)
+              tableName:  medication_statement_commercial
+
+    - changeSet:
+        id: update-type-units-dosage
+        author: lmanterola
+        changes:
+          - modifyDataType:
+              columnName: doses_by_day
+              newDataType: float
+              tableName: dosage
+          - modifyDataType:
+              columnName: doses_by_unit
+              newDataType: float
+              tableName: dosage

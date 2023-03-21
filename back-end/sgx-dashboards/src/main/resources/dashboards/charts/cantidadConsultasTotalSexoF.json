@@ -1,0 +1,30 @@
+{
+  "cubeQuery": {
+    "measures": [
+      "CantidadConsultasAmbulatorias.cantidad_turnos_estado"
+    ],
+    "dimensions": [
+      "CantidadConsultasAmbulatorias.gender"
+    ],
+    "filters": [
+      {
+        "member": "CantidadConsultasAmbulatorias.gender",
+        "operator": "contains",
+        "values": [
+          "Femenino"
+        ]
+      }
+    ],
+    "timeDimensions": [],
+    "order": {}
+  },
+  "chartType": "number",
+  "pivotConfig": {
+    "x": [],
+    "y": [
+      "measures"
+    ],
+    "fillMissingDates": true,
+    "joinDateRange": false
+  }
+}

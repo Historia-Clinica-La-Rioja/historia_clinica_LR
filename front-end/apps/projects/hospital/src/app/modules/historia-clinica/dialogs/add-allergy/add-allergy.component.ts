@@ -7,6 +7,7 @@ import { ActionDisplays, TableModel } from '@presentation/components/table/table
 import { SnowstormService } from '@api-rest/services/snowstorm.service';
 import { EvolutionNoteService } from '@api-rest/services/evolution-note.service';
 import { SnackBarService } from '@presentation/services/snack-bar.service';
+import { InternmentSummaryFacadeService } from "@historia-clinica/modules/ambulatoria/modules/internacion/services/internment-summary-facade.service";
 
 @Component({
 	selector: 'app-add-allergy',
@@ -30,7 +31,8 @@ export class AddAllergyComponent implements OnInit {
 		private readonly formBuilder: FormBuilder,
 		private readonly evolutionNoteService: EvolutionNoteService,
 		private readonly snackBarService: SnackBarService,
-		private readonly snowstormService: SnowstormService
+		private readonly snowstormService: SnowstormService,
+		private readonly internmentSummaryFacadeService: InternmentSummaryFacadeService,
 	) {
 	}
 
@@ -99,6 +101,7 @@ export class AddAllergyComponent implements OnInit {
 			this.evolutionNoteService.createDocument(evolutionNote, this.data.internmentEpisodeId).subscribe(_ => {
 					this.snackBarService.showSuccess('internaciones.internacion-paciente.alergias-summary.save.SUCCESS');
 					this.dialogRef.close(true);
+					this.internmentSummaryFacadeService.setFieldsToUpdate({evolutionClinical: true});
 				}, _ => {
 					this.snackBarService.showError('internaciones.internacion-paciente.alergias-summary.save.ERROR');
 					this.loading = false;

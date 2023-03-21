@@ -48,7 +48,7 @@ public class EvolutionNoteDto implements Serializable {
     private RiskFactorDto riskFactors;
 
 	@Nullable
-	private Boolean wasMadeByProfessionalNursing = false;
+	private Boolean isNursingEvolutionNote = false;
 
 	@Nullable
 	private String modificationReason;

@@ -68,7 +68,7 @@
                 <mat-datepicker #inicioDatePicker></mat-datepicker>
             </mat-form-field>
 
-            <mat-form-field appearance="outline">
+            <mat-form-field appearance="outline" *ngIf="! this.data.isFromRecetaDigital">
                 <mat-label [translate]="'ambulatoria.paciente.nueva-consulta.problemas.FECHA_FIN'">
                 </mat-label>
                 <input matInput id="fecha_fin" [matDatepicker]="finDatePicker" formControlName="fechaFin"

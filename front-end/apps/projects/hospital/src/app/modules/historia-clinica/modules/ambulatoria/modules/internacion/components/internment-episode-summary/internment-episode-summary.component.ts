@@ -1,6 +1,6 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { Router } from "@angular/router";
-import { AnamnesisSummaryDto, EpicrisisSummaryDto, EvaluationNoteSummaryDto } from '@api-rest/api-model';
+import { AnamnesisSummaryDto, EpicrisisSummaryDto, EpisodeDocumentResponseDto, EvaluationNoteSummaryDto } from '@api-rest/api-model';
 import { ContextService } from "@core/services/context.service";
 import { FeatureFlagService } from "@core/services/feature-flag.service";
 import { SnackBarService } from "@presentation/services/snack-bar.service";
@@ -11,6 +11,8 @@ import { InternmentEpisodeService } from "@api-rest/services/internment-episode.
 import { anyMatch } from "@core/utils/array.utils";
 import { ERole } from "@api-rest/api-model";
 import { InternmentSummaryFacadeService } from '../../services/internment-summary-facade.service';
+import { InternmentEpisodeDocumentService } from '@api-rest/services/internment-episode-document.service';
+import { ROLES_FOR_ACCESS_EPISODE_DOCUMENTS } from '../../constants/permissions';
 
 const ROUTE_INTERNMENT_EPISODE_PREFIX = 'internaciones/internacion/';
 const ROUTE_RELOCATE_PATIENT_BED_PREFIX = '/pase-cama';
@@ -26,6 +28,7 @@ const ROUTE_ADMINISTRATIVE_DISCHARGE_PREFIX = '/alta';
 export class InternmentEpisodeSummaryComponent implements OnInit {
 
 	currentUserIsAllowToDoAPhysicalDischarge = false;
+	currentUserHasPermissionToAccessDocuments = false;
 	physicalDischargeDate: string;
 	@Input() internmentEpisode: InternmentEpisodeSummary;
 	@Input() canLoadProbableDischargeDate: boolean;
@@ -43,6 +46,9 @@ export class InternmentEpisodeSummaryComponent implements OnInit {
 	hasMedicalDischarge: boolean;
 	hasAdministrativeDischarge = false;
 
+	documents: EpisodeDocumentResponseDto[];
+	ROLES_FOR_ACCESS_EPISODE_DOCUMENTS: ERole[] = ROLES_FOR_ACCESS_EPISODE_DOCUMENTS;
+
 	constructor(
 		private router: Router,
 		private contextService: ContextService,
@@ -50,14 +56,16 @@ export class InternmentEpisodeSummaryComponent implements OnInit {
 		private readonly dialog: MatDialog,
 		private readonly permissionsService: PermissionsService,
 		private readonly internmentService: InternmentEpisodeService,
+		private internmentEpisodeDocumentService: InternmentEpisodeDocumentService,
 		readonly internmentSummaryFacadeService: InternmentSummaryFacadeService,
 	) {
 		this.routePrefix = 'institucion/' + this.contextService.institutionId + '/';
 	}
 	ngOnInit(): void {
 		this.permissionsService.contextAssignments$().subscribe((userRoles: ERole[]) => {
+			this.currentUserHasPermissionToAccessDocuments = anyMatch<ERole>(userRoles, [ERole.ADMINISTRATIVO]);
 			this.currentUserIsAllowToDoAPhysicalDischarge = (anyMatch<ERole>(userRoles, [ERole.ADMINISTRADOR_DE_CAMAS]) &&
-				(anyMatch<ERole>(userRoles, [ERole.ADMINISTRATIVO, ERole.ENFERMERO])));
+				(anyMatch<ERole>(userRoles, [ERole.ADMINISTRATIVO, ERole.ENFERMERO, ERole.ADMINISTRATIVO_RED_DE_IMAGENES])));
 		});
 		this.loadPhysicalDischarge();
 		this.internmentSummaryFacadeService.setInternmentEpisodeId(this.internmentEpisode.id);
@@ -65,6 +73,15 @@ export class InternmentEpisodeSummaryComponent implements OnInit {
 		this.internmentSummaryFacadeService.epicrisis$.subscribe(e => this.epicrisisDoc = e);
 		this.internmentSummaryFacadeService.evolutionNote$.subscribe(evolutionNote => this.lastEvolutionNoteDoc = evolutionNote);
 		this.internmentSummaryFacadeService.hasMedicalDischarge$.subscribe(h => this.hasMedicalDischarge = h);
+		if (this.currentUserHasPermissionToAccessDocuments)
+			this.setDocuments();
+	}
+	setDocuments() {
+		this.internmentEpisodeDocumentService.getInternmentEpisodeDocuments(this.internmentEpisode.id)
+			.subscribe((response: EpisodeDocumentResponseDto[]) => {
+				if (response)
+					this.documents = response
+			});
 	}
 
 	goToPaseCama(): void {

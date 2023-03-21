@@ -6,6 +6,7 @@ import { PasswordResetComponent } from './routes/password-reset/password-reset.c
 import { LoginComponent } from './routes/login/login.component';
 import { OauthLoginComponent } from './routes/chaco-login/oauth-login.component';
 import { AccessDataResetComponent } from "./routes/access-data-reset/access-data-reset.component";
+import { PasswordRecoverComponent } from './routes/password-recover/password-recover.component';
 
 
 const routes: Routes = [
@@ -20,6 +21,7 @@ const routes: Routes = [
 			},
 			{ path: 'password-reset/:token', component: PasswordResetComponent },
 			{ path: 'login', component: LoginComponent },
+			{ path: 'password-recover/:user', component: PasswordRecoverComponent },
 			{ path: 'access-data-reset/:token', component: AccessDataResetComponent },
 		]
 	},

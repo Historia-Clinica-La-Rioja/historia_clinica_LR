@@ -10,6 +10,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
+
 @Slf4j
 @RequiredArgsConstructor
 @Service
@@ -18,7 +20,7 @@ public class CreateCounterReferenceFile {
     private final ReferenceCounterReferenceFileStorage referenceCounterReferenceFileStorage;
 
     @Transactional
-    public Integer run(Integer institutionId, Integer patientId, MultipartFile file) {
+    public Integer run(Integer institutionId, Integer patientId, MultipartFile file) throws IOException {
         log.debug("Input parameters -> institutionId {}, patientId {}", institutionId, patientId);
 
         if (file == null)

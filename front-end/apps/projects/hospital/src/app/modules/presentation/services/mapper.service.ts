@@ -14,7 +14,7 @@ import {
 import { PatientBasicData } from '../components/patient-card/patient-card.component';
 import { PersonalInformation } from '@presentation/components/personal-information/personal-information.component';
 import { PatientTypeData } from '@presentation/components/patient-type-logo/patient-type-logo.component';
-import { DateFormat, momentParseDate, momentParseDateTime } from '@core/utils/moment.utils';
+import { DateFormat, momentParseDate, momentParseDateTime, momentFormat, dateToMoment } from '@core/utils/moment.utils';
 import { BedManagement } from '../../camas/routes/home/home.component';
 import { HistoricalProblems } from '../../historia-clinica/modules/ambulatoria/services/historical-problems-facade.service';
 import { InternmentPatientTableData } from "@historia-clinica/modules/ambulatoria/modules/internacion/components/internment-patient-table/internment-patient-table.component";
@@ -43,7 +43,7 @@ export class MapperService {
 			sectorDescription: internmentSummary.bed.room.sector.description,
 			totalInternmentDays: internmentSummary.totalInternmentDays,
 			doctor: null,
-			admissionDatetime: momentParseDate(String(internmentSummary.entryDate)).format(DateFormat.VIEW_DATE),
+			admissionDatetime: momentFormat(dateToMoment(internmentSummary.entryDate),DateFormat.VIEW_DATE),
 			probableDischargeDate: internmentSummary.probableDischargeDate ? momentParseDateTime(String(internmentSummary.probableDischargeDate)).format(DateFormat.VIEW_DATE) : 'Sin fecha definida',
 			responsibleContact: null
 		};
@@ -89,7 +89,10 @@ export class MapperService {
 			phonePrefix: person.phonePrefix,
 			phoneNumber: person.phoneNumber,
 			medicalCoverageName: patient.medicalCoverageName,
-			medicalCoverageAffiliateNumber: patient.medicalCoverageAffiliateNumber
+			medicalCoverageAffiliateNumber: patient.medicalCoverageAffiliateNumber,
+			files: patient.person.files,
+			personId:patient.person.id,
+
 		};
 		personalInformation.address.id = null;
 		return personalInformation;
@@ -213,12 +216,11 @@ export class MapperService {
 				historicalProblemsList = [...historicalProblemsList, ...currentOutpatientEvolutionSummary.healthConditions.map(problem => ({
 					consultationDate: currentOutpatientEvolutionSummary.startDate,
 					consultationEvolutionNote: currentOutpatientEvolutionSummary.evolutionNote,
-					professionalFirstName: currentOutpatientEvolutionSummary.professional.person.firstName,
-					professionalLastName: currentOutpatientEvolutionSummary.professional.person.lastName,
-					professionalNameSelfDetermination: currentOutpatientEvolutionSummary.professional.person.nameSelfDetermination,
+					professionalFullName: currentOutpatientEvolutionSummary.professional.person.fullName,
 					consultationProfessionalId: currentOutpatientEvolutionSummary.professional.id,
 					consultationProfessionalPersonId: currentOutpatientEvolutionSummary.professional.person.id,
 					document: currentOutpatientEvolutionSummary.document,
+					institutionName: currentOutpatientEvolutionSummary.institutionName,
 					problemId: problem.snomed.sctid,
 					problemPt: problem.snomed.pt,
 					specialtyId: currentOutpatientEvolutionSummary.clinicalSpecialty?.id,
@@ -230,12 +232,11 @@ export class MapperService {
 				}))] : historicalProblemsList = [...historicalProblemsList, {
 					consultationDate: currentOutpatientEvolutionSummary.startDate,
 					consultationEvolutionNote: currentOutpatientEvolutionSummary.evolutionNote,
-					professionalFirstName: currentOutpatientEvolutionSummary.professional.person.firstName,
-					professionalLastName: currentOutpatientEvolutionSummary.professional.person.lastName,
-					professionalNameSelfDetermination: currentOutpatientEvolutionSummary.professional.person.nameSelfDetermination,
+					professionalFullName: currentOutpatientEvolutionSummary.professional.person.fullName,
 					consultationProfessionalId: currentOutpatientEvolutionSummary.professional.id,
 					consultationProfessionalPersonId: currentOutpatientEvolutionSummary.professional.person.id,
 					document: currentOutpatientEvolutionSummary.document,
+					institutionName: currentOutpatientEvolutionSummary.institutionName,
 					problemId: 'Problema no informado',
 					problemPt: 'Problema no informado',
 					specialtyId: currentOutpatientEvolutionSummary.clinicalSpecialty?.id,

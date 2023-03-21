@@ -10,3 +10,27 @@ input[type=number]::-webkit-outer-spin-button {
     margin: 0;
     }
 input[type=number] { -moz-appearance:textfield; }
+
+mat-option button {
+    width: 100%;
+    text-align: left;
+}
+
+.dose-data {
+    @include space-between;
+
+    mat-form-field {
+        max-width: 7rem;
+        min-width: 2rem;
+    }
+}
+
+@media (max-width: 600px) {
+    .dose-data {
+        flex-direction: column;
+
+        mat-form-field {
+            max-width: 10rem;
+        }
+    }
+}

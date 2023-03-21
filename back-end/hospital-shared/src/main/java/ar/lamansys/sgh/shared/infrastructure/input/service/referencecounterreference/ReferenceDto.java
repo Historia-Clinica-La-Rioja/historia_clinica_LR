@@ -45,4 +45,10 @@ public class ReferenceDto implements Serializable {
 	@NotNull(message = "{value.mandatory}")
     private Integer destinationInstitutionId;
 
+	@Nullable
+	private String phoneNumber;
+
+	@Nullable
+	private String phonePrefix;
+
 }

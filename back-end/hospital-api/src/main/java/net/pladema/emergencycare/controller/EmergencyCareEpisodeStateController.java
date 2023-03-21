@@ -31,7 +31,7 @@ public class EmergencyCareEpisodeStateController {
 	}
 
 	@GetMapping
-	@PreAuthorize("hasPermission(#institutionId, 'ADMINISTRATIVO, ENFERMERO, ESPECIALISTA_MEDICO, PROFESIONAL_DE_SALUD')")
+	@PreAuthorize("hasPermission(#institutionId, 'ADMINISTRATIVO, ADMINISTRATIVO_RED_DE_IMAGENES, ENFERMERO, ESPECIALISTA_MEDICO, PROFESIONAL_DE_SALUD')")
 	public ResponseEntity<MasterDataDto> getState(
 			@PathVariable(name = "institutionId") Integer institutionId,
 			@PathVariable(name = "episodeId") Integer episodeId) {
@@ -42,7 +42,7 @@ public class EmergencyCareEpisodeStateController {
 	}
 
 	@PostMapping
-	@PreAuthorize("hasPermission(#institutionId, 'ADMINISTRATIVO, ENFERMERO, ESPECIALISTA_MEDICO, PROFESIONAL_DE_SALUD')")
+	@PreAuthorize("hasPermission(#institutionId, 'ADMINISTRATIVO, ADMINISTRATIVO_RED_DE_IMAGENES, ENFERMERO, ESPECIALISTA_MEDICO, PROFESIONAL_DE_SALUD')")
 	public ResponseEntity<Boolean> changeState(
 			@PathVariable(name = "episodeId") Integer episodeId,
 			@PathVariable(name = "institutionId") Integer institutionId,

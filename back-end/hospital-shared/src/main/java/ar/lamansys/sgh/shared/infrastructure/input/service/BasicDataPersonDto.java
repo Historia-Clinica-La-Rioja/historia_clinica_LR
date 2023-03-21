@@ -8,6 +8,7 @@ import org.slf4j.LoggerFactory;
 
 import java.io.Serializable;
 import java.time.LocalDate;
+import java.util.List;
 
 @Getter
 @Setter
@@ -48,6 +49,8 @@ public class BasicDataPersonDto implements Serializable {
     private LocalDate birthDate;
 
 	private String nameSelfDetermination;
+
+	private List<PersonFileDto> files;
 
     public String completeName(){
         if (lastName == null && firstName == null && middleNames == null && otherLastNames==null) {

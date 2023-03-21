@@ -1,5 +1,6 @@
 package net.pladema.medicalconsultation.diary.service.impl;
 
+import ar.lamansys.sgh.shared.infrastructure.input.service.SharedDiaryCareLinePort;
 import lombok.RequiredArgsConstructor;
 
 import lombok.extern.slf4j.Slf4j;
@@ -19,7 +20,7 @@ import static java.util.stream.Collectors.toList;
 @Slf4j
 @RequiredArgsConstructor
 @Service
-public class DiaryCareLineServiceImpl implements DiaryCareLineService {
+public class DiaryCareLineServiceImpl implements DiaryCareLineService, SharedDiaryCareLinePort {
 
 	private final DiaryCareLineRepository diaryCareLineRepository;
 
@@ -63,5 +64,13 @@ public class DiaryCareLineServiceImpl implements DiaryCareLineService {
 		List<CareLineBo> careLines = careLineService.getCareLinesByClinicalSpecialtyAndInstitutionId(institutionId, clinicalSpecialtyId);
 		log.trace("Output -> {}", careLines);
 		return careLines;
+	}
+
+	@Override
+	public List<Integer> getCareLineIdsByDiaryId(Integer diaryId) {
+		log.debug("Input parameters -> diaryId {}", diaryId);
+		List<Integer> result = diaryCareLineRepository.getCareLineIdsByDiary(diaryId);
+		log.trace("Output -> {}", result);
+		return result;
 	}
 }

@@ -1,9 +1,12 @@
 package net.pladema.address.service.impl;
 
+import net.pladema.address.controller.mapper.DepartmentMapper;
+import net.pladema.address.controller.service.domain.DepartmentBo;
 import net.pladema.address.repository.CityRepository;
 import net.pladema.address.repository.CountryRepository;
 import net.pladema.address.repository.DepartmentRepository;
 import net.pladema.address.repository.ProvinceRepository;
+import net.pladema.address.repository.entity.Department;
 import net.pladema.address.service.AddressMasterDataService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -28,13 +31,16 @@ public class AddressMasterDataServiceImpl implements AddressMasterDataService {
 
 	private final CountryRepository countryRepository;
 
+	private final DepartmentMapper departmentMapper;
+
 	public AddressMasterDataServiceImpl(CityRepository cityRepository, ProvinceRepository provinceRepository,
-										DepartmentRepository departmentRepository, CountryRepository countryRepository) {
+										DepartmentRepository departmentRepository, CountryRepository countryRepository, DepartmentMapper departmentMapper) {
 		super();
 		this.cityRepository = cityRepository;
 		this.provinceRepository = provinceRepository;
 		this.countryRepository = countryRepository;
 		this.departmentRepository = departmentRepository;
+		this.departmentMapper = departmentMapper;
 		LOG.debug("{}", "created service");
 	}
 
@@ -76,6 +82,12 @@ public class AddressMasterDataServiceImpl implements AddressMasterDataService {
 	@Override
 	public boolean existCityInDepartment(Short departmentId, Integer cityId) {
 		return cityRepository.existCityInDepartment(departmentId, cityId);
+	}
+
+	@Override
+	public DepartmentBo findDepartmentById(Short departmentId) {
+		Department result = departmentRepository.findDepartmentById(departmentId);
+		return departmentMapper.fromDepartmentToDepartmentBo(result);
 	}
 
 }

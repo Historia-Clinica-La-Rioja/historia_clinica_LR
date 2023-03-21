@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Digital Recipe Header</title>
+    <style>
+        @page {
+            margin: 0;
+        }
+    </style>
+</head>
+<body th:fragment="header">
+    <div>
+        <img style="width: 100%; height: 10%;" th:src="${'data:image/png;charset=utf-8;base64,' + headerLogos}" alt=""></img>
+    </div>
+</body>
+</html>

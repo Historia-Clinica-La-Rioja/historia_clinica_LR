@@ -9,6 +9,7 @@ import {
 	MasterDataDto, MasterDataInterface,
 	PatientPhotoDto
 } from '@api-rest/api-model';
+import { ERole } from '@api-rest/api-model';
 import { dateTimeDtoToDate } from '@api-rest/mapper/date-dto.mapper';
 import { differenceInMinutes } from 'date-fns';
 import { EstadosEpisodio, Triages } from '../../constants/masterdata';
@@ -29,6 +30,9 @@ import { EmergencyCareMasterDataService } from '@api-rest/services/emergency-car
 import { getError, hasError } from '@core/utils/form.utils';
 import { EmergencyCareEpisodeAdministrativeDischargeService } from '@api-rest/services/emergency-care-episode-administrative-service.service';
 import { PatientNameService } from "@core/services/patient-name.service";
+import { ContextService } from '@core/services/context.service';
+import { anyMatch } from '@core/utils/array.utils';
+import { PermissionsService } from '@core/services/permissions.service';
 
 const TRANSLATE_KEY_PREFIX = 'guardia.home.episodes.episode.actions';
 
@@ -45,23 +49,6 @@ export class HomeComponent implements OnInit {
 	getError = getError;
 	hasError = hasError;
 
-	constructor(
-		private router: Router,
-		private emergencyCareEpisodeService: EmergencyCareEpisodeService,
-		private imageDecoderService: ImageDecoderService,
-		private snackBarService: SnackBarService,
-		private readonly dialog: MatDialog,
-		public readonly episodeStateService: EpisodeStateService,
-		private readonly triageDefinitionsService: TriageDefinitionsService,
-		private readonly patientService: PatientService,
-		public readonly formBuilder: FormBuilder,
-		public readonly triageMasterDataService: TriageMasterDataService,
-		public readonly emergencyCareMasterDataService: EmergencyCareMasterDataService,
-		private readonly emergencyCareEpisodeAdministrativeDischargeService: EmergencyCareEpisodeAdministrativeDischargeService,
-		private readonly patientNameService: PatientNameService) {
-		this.filterService = new EpisodeFilterService(formBuilder, triageMasterDataService, emergencyCareMasterDataService);
-	}
-	
 	filterService: EpisodeFilterService;
 
 	readonly estadosEpisodio = EstadosEpisodio;
@@ -76,16 +63,41 @@ export class HomeComponent implements OnInit {
 	triageCategories$: Observable<TriageCategoryDto[]>;
 	emergencyCareTypes$: Observable<MasterDataInterface<number>[]>;
 
+	hasRoleAdministrative: boolean;
+
 	private static calculateWaitingTime(dateTime: DateTimeDto): number {
 		const creationDate = dateTimeDtoToDate(dateTime);
 		const now = new Date();
 		return differenceInMinutes(now, creationDate);
 	}
 
+	constructor(
+		private router: Router,
+		private emergencyCareEpisodeService: EmergencyCareEpisodeService,
+		private imageDecoderService: ImageDecoderService,
+		private snackBarService: SnackBarService,
+		private readonly dialog: MatDialog,
+		public readonly episodeStateService: EpisodeStateService,
+		private readonly triageDefinitionsService: TriageDefinitionsService,
+		private readonly patientService: PatientService,
+		public readonly formBuilder: FormBuilder,
+		public readonly triageMasterDataService: TriageMasterDataService,
+		public readonly emergencyCareMasterDataService: EmergencyCareMasterDataService,
+		private readonly emergencyCareEpisodeAdministrativeDischargeService: EmergencyCareEpisodeAdministrativeDischargeService,
+		private readonly patientNameService: PatientNameService,
+		private readonly contextService: ContextService,
+		private readonly permissionsService: PermissionsService,
+	) {
+		this.filterService = new EpisodeFilterService(formBuilder, triageMasterDataService, emergencyCareMasterDataService);
+	}
+
 	ngOnInit(): void {
 		this.loadEpisodes();
 		this.triageCategories$ = this.filterService.getTriageCategories();
 		this.emergencyCareTypes$ = this.filterService.getEmergencyCareTypes();
+		this.permissionsService.contextAssignments$().subscribe((userRoles: ERole[]) => {
+			this.hasRoleAdministrative = anyMatch<ERole>(userRoles, [ERole.ADMINISTRATIVO]);
+		});
 	}
 
 	loadEpisodes(): void {
@@ -104,31 +116,37 @@ export class HomeComponent implements OnInit {
 			}, _ => this.loading = false);
 	}
 
-	goToEpisode(id: number) {
-		this.router.navigate([`${this.router.url}/episodio/${id}`]);
+	goToEpisode(episode: Episode, patientId?: number) {
+		if (patientId && (episode.state.id !== EstadosEpisodio.CON_ALTA_MEDICA) && (!this.hasRoleAdministrative)) {
+			const url = `institucion/${this.contextService.institutionId}/ambulatoria/paciente/${patientId}`;
+			this.router.navigateByUrl(url, { state: { toEmergencyCareTab: true } });
+		}
+		else {
+			this.router.navigate([`${this.router.url}/episodio/${episode.id}`]);
+		}
 	}
 
 	goToAdmisionAdministrativa(): void {
 		this.router.navigate([`${this.router.url}/nuevo-episodio/administrativa`]);
 	}
 
-	atender(episodeId: number): void {
+	atender(episode: Episode, patientId: number): void {
 
 		const dialogRef = this.dialog.open(SelectConsultorioComponent, {
 			width: '25%',
-			data: {title : 'guardia.select_consultorio.ATENDER'}
+			data: { title: 'guardia.select_consultorio.ATENDER' }
 		});
 
 		dialogRef.afterClosed().subscribe(consultorio => {
 			if (consultorio) {
-				this.episodeStateService.atender(episodeId, consultorio.id).subscribe(changed => {
-						if (changed) {
-							this.snackBarService.showSuccess(`${TRANSLATE_KEY_PREFIX}.atender.SUCCESS`);
-							this.goToEpisode(episodeId);
-						} else {
-							this.snackBarService.showError(`${TRANSLATE_KEY_PREFIX}.atender.ERROR`);
-						}
-					}, _ => this.snackBarService.showError(`${TRANSLATE_KEY_PREFIX}.atender.ERROR`)
+				this.episodeStateService.atender(episode.id, consultorio.id).subscribe(changed => {
+					if (changed) {
+						this.snackBarService.showSuccess(`${TRANSLATE_KEY_PREFIX}.atender.SUCCESS`);
+						this.goToEpisode(episode, patientId);
+					} else {
+						this.snackBarService.showError(`${TRANSLATE_KEY_PREFIX}.atender.ERROR`);
+					}
+				}, _ => this.snackBarService.showError(`${TRANSLATE_KEY_PREFIX}.atender.ERROR`)
 				);
 			}
 		});
@@ -145,16 +163,16 @@ export class HomeComponent implements OnInit {
 		dialogRef.afterClosed().subscribe(confirmed => {
 			if (confirmed) {
 				this.emergencyCareEpisodeAdministrativeDischargeService.newAdministrativeDischargeByAbsence(episodeId).subscribe(changed => {
-						if (changed) {
-							this.snackBarService
-								.showSuccess(`${TRANSLATE_KEY_PREFIX}.finalizar_ausencia.SUCCESS`);
-							this.loadEpisodes();
-						} else {
-							this.snackBarService
-								.showError(`${TRANSLATE_KEY_PREFIX}.finalizar_ausencia.ERROR`);
-						}
-					}, _ => this.snackBarService
-						.showError(`${TRANSLATE_KEY_PREFIX}.finalizar_ausencia.ERROR`)
+					if (changed) {
+						this.snackBarService
+							.showSuccess(`${TRANSLATE_KEY_PREFIX}.finalizar_ausencia.SUCCESS`);
+						this.loadEpisodes();
+					} else {
+						this.snackBarService
+							.showError(`${TRANSLATE_KEY_PREFIX}.finalizar_ausencia.ERROR`);
+					}
+				}, _ => this.snackBarService
+					.showError(`${TRANSLATE_KEY_PREFIX}.finalizar_ausencia.ERROR`)
 				);
 			}
 		});
@@ -162,8 +180,8 @@ export class HomeComponent implements OnInit {
 
 	nuevoTriage(episode: EmergencyCareListDto): void {
 		this.triageDefinitionsService.getTriagePath(episode.type?.id)
-			.subscribe( ({component}) => {
-				const dialogRef = this.dialog.open(component, {data: episode.id});
+			.subscribe(({ component }) => {
+				const dialogRef = this.dialog.open(component, { data: episode.id });
 				dialogRef.afterClosed().subscribe(idReturned => {
 					if (idReturned) {
 						this.loadEpisodes();
@@ -221,16 +239,18 @@ export class HomeComponent implements OnInit {
 	}
 
 	private setWaitingTime(episode: EmergencyCareListDto): Episode {
+		const minWaitingTime = episode.state.id === this.estadosEpisodio.EN_ESPERA ?
+			HomeComponent.calculateWaitingTime(episode.creationDate) : undefined;
 		return {
 			...episode,
-			waitingTime: episode.state.id === this.estadosEpisodio.EN_ESPERA ?
-				HomeComponent.calculateWaitingTime(episode.creationDate) : undefined
+			waitingTime: minWaitingTime,
+			waitingHours: minWaitingTime ? Math.round(minWaitingTime / 60) : undefined
 		};
 	}
 
-	setPatientNames(episodes: any []) {
+	setPatientNames(episodes: any[]) {
 		return episodes.filter(e => {
-			if(e.patient?.person)
+			if (e.patient?.person)
 				e.patient.person.firstName = this.patientNameService.getPatientName(e.patient.person.firstName, e.patient.person.nameSelfDetermination);
 		})
 	}
@@ -240,6 +260,7 @@ export class HomeComponent implements OnInit {
 
 export interface Episode {
 	waitingTime: number;
+	waitingHours: number;
 	decodedPatientPhoto?: Observable<string>;
 	creationDate: DateTimeDto;
 	doctorsOffice: DoctorsOfficeDto;

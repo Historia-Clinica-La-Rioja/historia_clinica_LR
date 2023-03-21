@@ -3,6 +3,7 @@ package ar.lamansys.sgx.shared.actuator.infrastructure.output.repository;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import lombok.ToString;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -17,6 +18,7 @@ import java.time.LocalDateTime;
 @Getter
 @Setter
 @NoArgsConstructor
+@ToString
 public class SystemProperty {
 
 	@Id
@@ -30,7 +32,7 @@ public class SystemProperty {
 	@Column(name = "node_id", nullable = false)
 	private String nodeId;
 
-	@Column(name = "value")
+	@Column(name = "value", columnDefinition = "TEXT")
 	private String value;
 
 	@Column(name = "description")

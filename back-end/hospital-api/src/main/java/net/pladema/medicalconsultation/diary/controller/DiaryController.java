@@ -23,6 +23,7 @@ import net.pladema.medicalconsultation.diary.controller.constraints.ExistingDiar
 
 import net.pladema.medicalconsultation.appointment.controller.dto.AppointmentSearchDto;
 import net.pladema.medicalconsultation.diary.service.domain.BlockBo;
+import net.pladema.medicalconsultation.diary.service.exception.DiaryException;
 import net.pladema.staff.service.HealthcareProfessionalService;
 
 import org.springframework.http.ResponseEntity;
@@ -120,7 +121,7 @@ public class DiaryController {
     @PreAuthorize("hasPermission(#institutionId, 'ADMINISTRATIVO, ADMINISTRADOR_AGENDA')")
     public ResponseEntity<Integer> addDiary(
             @PathVariable(name = "institutionId") Integer institutionId,
-            @RequestBody @Valid @NewDiaryPeriodValid @DiaryOpeningHoursValid DiaryADto diaryADto) {
+            @RequestBody @Valid @NewDiaryPeriodValid @DiaryOpeningHoursValid DiaryADto diaryADto) throws DiaryException {
         log.debug("Input parameters -> diaryADto {}", diaryADto);
         DiaryBo diaryToSave = diaryMapper.toDiaryBo(diaryADto);
         Integer result = diaryService.addDiary(diaryToSave);
@@ -134,7 +135,7 @@ public class DiaryController {
     public ResponseEntity<Integer> updateDiary(
             @PathVariable(name = "institutionId") Integer institutionId,
             @ValidDiary @PathVariable(name = "diaryId") Integer diaryId,
-            @RequestBody @Valid @ExistingDiaryPeriodValid @EditDiaryOpeningHoursValid @DiaryEmptyAppointmentsValid DiaryDto diaryDto) {
+            @RequestBody @Valid @ExistingDiaryPeriodValid @EditDiaryOpeningHoursValid @DiaryEmptyAppointmentsValid DiaryDto diaryDto) throws DiaryException {
         log.debug("Input parameters -> diaryADto {}", diaryDto);
         DiaryBo diaryToUpdate = diaryMapper.toDiaryBo(diaryDto);
         diaryToUpdate.setId(diaryId);

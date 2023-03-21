@@ -22,6 +22,12 @@ public class CompleteDiaryListVo extends DiaryListVo {
 
 	private final String doctorLastName;
 
+	private String doctorMiddleNames;
+
+	private String doctorOtherLastNames;
+
+	private String doctorNameSelfDetermination;
+
 	public CompleteDiaryListVo(Diary diary, String doctorsOfficeDescription, Integer sectorId,
 							   String sectorDescription, Integer healthcareProfessionalId, String specialtyName) {
 		super(diary, doctorsOfficeDescription, specialtyName);
@@ -33,13 +39,18 @@ public class CompleteDiaryListVo extends DiaryListVo {
 	}
 
 	public CompleteDiaryListVo(Diary diary, String doctorsOfficeDescription, Integer sectorId,
-							   Integer healthcareProfessionalId, String specialtyName, String doctorFirstName, String doctorLastName) {
+							   Integer healthcareProfessionalId, String specialtyName, String doctorFirstName, String doctorLastName,String doctorMiddleNames, String doctorOtherLastNames,String doctorNameSelfDetermination) {
 		super(diary, doctorsOfficeDescription, specialtyName);
 		this.sectorId = sectorId;
 		this.sectorDescription = null;
 		this.healthcareProfessionalId = healthcareProfessionalId;
 		this.doctorFirstName = doctorFirstName;
 		this.doctorLastName = doctorLastName;
+		this.doctorOtherLastNames = doctorOtherLastNames;
+		this.doctorMiddleNames= doctorMiddleNames;
+		this.doctorNameSelfDetermination= doctorNameSelfDetermination;
 	}
+
+
 
 }

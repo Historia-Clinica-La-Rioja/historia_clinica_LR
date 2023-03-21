@@ -9,6 +9,8 @@ import lombok.ToString;
 import ar.lamansys.sgx.shared.auditable.entity.SGXAuditableEntity;
 
 import javax.persistence.*;
+
+import java.time.LocalDate;
 import java.util.Objects;
 
 @Entity
@@ -25,6 +27,12 @@ public class MedicationStatement extends SGXAuditableEntity<Integer> {
 	 */
 	private static final long serialVersionUID = -3053291021636483828L;
 
+	@Transient
+	private final Integer MEDICATION_STATEMENT_DUE_DATE = 30;
+
+	@Transient
+	private final Short MEDICATION_STATEMENT_INITIAL_STATE = 1;
+
 	@Id
 	@Column(name = "id")
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -36,7 +44,7 @@ public class MedicationStatement extends SGXAuditableEntity<Integer> {
 	@Column(name = "snomed_id", nullable = false)
 	private Integer snomedId;
 
-	@Column(name = "cie10_codes", length = 255, nullable = true)
+	@Column(name = "cie10_codes")
 	private String cie10Codes;
 
 	@Column(name = "status_id", length = 20, nullable = false)
@@ -51,6 +59,21 @@ public class MedicationStatement extends SGXAuditableEntity<Integer> {
 	@Column(name = "note_id")
 	private Long noteId;
 
+	@Column(name = "due_date")
+	private LocalDate dueDate;
+
+	@Column(name = "prescription_date")
+	private LocalDate prescriptionDate;
+
+	@Column(name = "is_digital")
+	private Boolean isDigital;
+
+	@Column(name = "prescription_line_number")
+	private Integer prescriptionLineNumber;
+
+	@Column(name = "prescription_line_state")
+	private Short prescriptionLineState;
+
 	public MedicationStatement(Integer patientId, Integer snomedId, String cie10Codes, String statusId, Long noteId,
 							   Integer healthConditionId, Integer dosageId) {
 		super();
@@ -62,6 +85,23 @@ public class MedicationStatement extends SGXAuditableEntity<Integer> {
 		this.noteId = noteId;
 		this.healthConditionId = healthConditionId;
 		this.dosageId = dosageId;
+	}
+
+	public MedicationStatement(Integer patientId, Integer snomedId, String cie10Codes, String statusId, Long noteId,
+							   Integer healthConditionId, Integer dosageId, Integer prescriptionLineNumber, Boolean isDigital, LocalDate prescriptionDate, LocalDate dueDate) {
+		super();
+		this.patientId = patientId;
+		this.snomedId = snomedId;
+		this.cie10Codes = cie10Codes;
+		if (statusId != null)
+			this.statusId = statusId;
+		this.noteId = noteId;
+		this.healthConditionId = healthConditionId;
+		this.dosageId = dosageId;
+		this.prescriptionLineNumber = prescriptionLineNumber;
+		this.isDigital = isDigital;
+		this.prescriptionDate = prescriptionDate;
+		this.dueDate = dueDate;
 	}
 
 	@Override
@@ -77,4 +117,16 @@ public class MedicationStatement extends SGXAuditableEntity<Integer> {
 	public int hashCode() {
 		return Objects.hash(id, patientId);
 	}
+
+	@PrePersist
+	public void setPrecalculatedData() {
+		this.prescriptionLineState = MEDICATION_STATEMENT_INITIAL_STATE;
+		if (this.isDigital == null)
+			this.isDigital = false;
+		if (this.dueDate == null)
+			this.dueDate = LocalDate.now();
+		if (this.prescriptionDate == null)
+			this.prescriptionDate = LocalDate.now();
+	}
+
 }
