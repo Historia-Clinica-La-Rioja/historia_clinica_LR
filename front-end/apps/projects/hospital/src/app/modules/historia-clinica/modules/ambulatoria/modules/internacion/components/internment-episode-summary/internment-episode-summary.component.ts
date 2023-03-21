@@ -63,7 +63,7 @@ export class InternmentEpisodeSummaryComponent implements OnInit {
 	}
 	ngOnInit(): void {
 		this.permissionsService.contextAssignments$().subscribe((userRoles: ERole[]) => {
-			this.currentUserHasPermissionToAccessDocuments = anyMatch<ERole>(userRoles, [ERole.ADMINISTRATIVO]);
+			this.currentUserHasPermissionToAccessDocuments = anyMatch<ERole>(userRoles, [ERole.ADMINISTRATIVO, ERole.PROFESIONAL_DE_SALUD, ERole.ESPECIALISTA_MEDICO, ERole.ENFERMERO]);
 			this.currentUserIsAllowToDoAPhysicalDischarge = (anyMatch<ERole>(userRoles, [ERole.ADMINISTRADOR_DE_CAMAS]) &&
 				(anyMatch<ERole>(userRoles, [ERole.ADMINISTRATIVO, ERole.ENFERMERO, ERole.ADMINISTRATIVO_RED_DE_IMAGENES])));
 		});
@@ -73,6 +73,7 @@ export class InternmentEpisodeSummaryComponent implements OnInit {
 		this.internmentSummaryFacadeService.epicrisis$.subscribe(e => this.epicrisisDoc = e);
 		this.internmentSummaryFacadeService.evolutionNote$.subscribe(evolutionNote => this.lastEvolutionNoteDoc = evolutionNote);
 		this.internmentSummaryFacadeService.hasMedicalDischarge$.subscribe(h => this.hasMedicalDischarge = h);
+
 		if (this.currentUserHasPermissionToAccessDocuments)
 			this.setDocuments();
 	}
