@@ -32,7 +32,7 @@ public class InternmentEpisodeDownloadController {
 	private final DownloadEpisodeDocument downloadEpisodeDocument;
 
 	@GetMapping("/episodedocuments/download/{episodeDocumentId}")
-	@PreAuthorize("hasPermission(#institutionId, 'ADMINISTRATIVO, ADMINISTRATIVO_RED_DE_IMAGENES')")
+	@PreAuthorize("hasPermission(#institutionId, 'ADMINISTRATIVO, ADMINISTRATIVO_RED_DE_IMAGENES, ESPECIALISTA_MEDICO, PROFESIONAL_DE_SALUD, ENFERMERO')")
 	public ResponseEntity<Resource> downloadEpisodeDocument(@PathVariable(name = "episodeDocumentId") Integer episodeDocumentId,
 															@PathVariable(name = "institutionId") Integer institutionId) {
 		log.debug("Input parameters -> episodeDocumentId {}, institutionId {}", episodeDocumentId, institutionId);
