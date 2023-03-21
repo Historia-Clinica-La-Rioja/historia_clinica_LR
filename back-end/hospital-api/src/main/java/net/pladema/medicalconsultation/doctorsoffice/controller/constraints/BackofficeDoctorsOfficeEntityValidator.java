@@ -42,8 +42,6 @@ public class BackofficeDoctorsOfficeEntityValidator extends BackofficeEntityVali
 	private void validateSector(Integer sectorId, String description) {
 		if (sectorId == null)
 			throw new DoctorOfficeSectorIdException(DoctorOfficeEnumException.SECTOR_ID_NULL,"El id del sector no puede ser nulo.");
-		if (sectorId < 0)
-			throw new DoctorOfficeSectorIdException(DoctorOfficeEnumException.NEGATIVE_SECTOR_ID,"El id del sector no puede ser negativo.");
 		if (description == null)
 			throw new DoctorOfficeDescriptionException(DoctorOfficeEnumException.DESCRIPTION_NULL,"La descripción de la oficina del doctor es obligatoria.");
 		if (!sectorRepository.existsById(sectorId))
@@ -53,8 +51,6 @@ public class BackofficeDoctorsOfficeEntityValidator extends BackofficeEntityVali
 	private void validateInstitutionId(Integer institutionId) {
 		if (institutionId == null)
 			throw new DoctorOfficeInstitutionIdException(DoctorOfficeEnumException.INSTITUTION_ID_NULL,"El id del instituto no puede ser nulo.");
-		if (institutionId < 0)
-			throw new DoctorOfficeInstitutionIdException(DoctorOfficeEnumException.NEGATIVE_INSTITUTION_ID,"El id del instituto no puede ser negativo.");
 	}
 
 }
