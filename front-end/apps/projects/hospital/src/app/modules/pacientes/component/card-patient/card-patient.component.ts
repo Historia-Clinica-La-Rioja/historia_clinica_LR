@@ -1,6 +1,6 @@
 import { DatePipe } from '@angular/common';
 import { Component, Input } from '@angular/core';
-import { PatientSearchDto } from '@api-rest/api-model';
+import { MasterDataDto, PatientSearchDto } from '@api-rest/api-model';
 import { ERole } from '@api-rest/api-model';
 import { ContextService } from '@core/services/context.service';
 import { PatientNameService } from "@core/services/patient-name.service";
@@ -8,6 +8,9 @@ import { PermissionsService } from '@core/services/permissions.service';
 import { anyMatch } from '@core/utils/array.utils';
 import { DatePipeFormat } from '@core/utils/date.utils';
 import { CardModel, ValueAction } from '@presentation/components/card/card.component';
+import { ViewPatientDetailComponent } from '../view-patient-detail/view-patient-detail.component';
+import { MatDialog } from "@angular/material/dialog";
+
 const PAGE_SIZE_OPTIONS = [5, 10, 25];
 const PAGE_MIN_SIZE = 5;
 
@@ -22,11 +25,13 @@ export class CardPatientComponent {
 	pageSlice = [];
 	numberOfPatients = 0;
 	@Input() patientData: PatientSearchDto[] = [];
-	@Input() genderTableView: string[] = [];
+	@Input() identificationTypes: MasterDataDto[] = [];
+	@Input() genderTableView: MasterDataDto[] = [];
 
 	private readonly routePrefix;
 
 	constructor(
+		public dialog: MatDialog,
 		private readonly patientNameService: PatientNameService,
 		private readonly datePipe: DatePipe,
 		private readonly contextService: ContextService,
@@ -86,4 +91,28 @@ export class CardPatientComponent {
 				do: `${this.routePrefix}pacientes/profile/${idPatient}`
 			}
 	}
+
+	openDialog(idPatient: number) {
+		const patient = this.patientData.find((p: PatientSearchDto) => p.idPatient === idPatient);
+		this.dialog.open(ViewPatientDetailComponent, {
+			width: '450px',
+			data: {
+				id: idPatient,
+				firstName: this.patientNameService.getFullName(patient.person.firstName, patient.person.nameSelfDetermination, patient.person?.middleNames) + ' ' + this.getLastNames(patient),
+				lastName: '',
+				age: calculateAge(String(patient.person.birthDate)),
+				gender: this.genderTableView.find(p => p.id === patient.person.genderId)?.description,
+				birthDate: patient.person.birthDate ? this.datePipe.transform(patient.person.birthDate, DatePipeFormat.SHORT_DATE) : '',
+				identificationNumber: patient.person.identificationNumber,
+				identificationTypeId: this.identificationTypes.find(i => i.id === patient.person.identificationTypeId)?.description,
+			}
+
+		})
+		function calculateAge(birthDate: string): number {
+			const todayDate: Date = new Date();
+			const birthDateDate: Date = new Date(birthDate);
+			return todayDate.getFullYear() - birthDateDate.getFullYear();
+		}
+	}
+
 }

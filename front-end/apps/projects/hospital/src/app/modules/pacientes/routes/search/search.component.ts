@@ -5,6 +5,7 @@ import { IDENTIFICATION_TYPE_IDS, PATIENT_TYPE } from '@core/utils/patient.utils
 import { ActivatedRoute, Router } from '@angular/router';
 import { Moment } from 'moment';
 import { ERole } from '@api-rest/api-model';
+import { MasterDataDto } from '@api-rest/api-model';
 import { GenderDto, IdentificationTypeDto, PatientSearchDto } from '@api-rest/api-model';
 import { AppFeature } from '@api-rest/api-model';
 import { PatientService } from '@api-rest/services/patient.service';
@@ -41,6 +42,8 @@ export class SearchComponent implements OnInit {
 	patientData: PatientSearchDto[] = [];
 	minDate = MIN_DATE;
 	today: Moment = newMoment();
+	genders: MasterDataDto[] = [];
+	identificationTypes: MasterDataDto[] = [];
 	public formSearchSubmitted = false;
 	public formSearch: FormGroup;
 	public identifyTypeArray: IdentificationTypeDto[];
@@ -78,6 +81,14 @@ export class SearchComponent implements OnInit {
 
 	) {
 		this.routePrefix = 'institucion/' + this.contextService.institutionId + '/';
+		this.personMasterDataService.getGenders()
+			.subscribe(genders => {
+				this.genders = genders;
+			});
+		this.personMasterDataService.getIdentificationTypes()
+		.subscribe(identificationTypes => {
+			this.identificationTypes = identificationTypes;
+		});
 	}
 
 	ngOnInit(): void {
