@@ -8,7 +8,8 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import net.pladema.patient.controller.dto.AuditPatientSearch;
 import net.pladema.patient.controller.dto.DuplicatePatientDto;
-
+import net.pladema.patient.controller.service.exception.AuditPatientException;
+import net.pladema.patient.controller.service.exception.AuditPatientExceptionEnum;
 import net.pladema.person.controller.service.PersonExternalService;
 
 import org.springframework.http.ResponseEntity;
@@ -45,8 +46,15 @@ public class AuditPatientController {
 		} catch (IOException e) {
 			log.error(String.format("Error mappeando filter: %s", searchFilterStr), e);
 		}
+		validateFilter(searchFilter);
 		List<DuplicatePatientDto> result = personExternalService.getDuplicatePersonsByFilter(searchFilter);
 		return ResponseEntity.ok().body(result);
+	}
+
+	private void validateFilter(AuditPatientSearch auditPatientSearch) {
+		if ((auditPatientSearch == null) || (!auditPatientSearch.getName() && !auditPatientSearch.getIdentify() && !auditPatientSearch.getBirthdate())) {
+			throw new AuditPatientException(AuditPatientExceptionEnum.INVALID_FILTER_FOR_SEARCH,String.format("No se esta filtrando por ningún dato personal."));
+		}
 	}
 
 }
