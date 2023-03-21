@@ -19,7 +19,7 @@ export class DeleteDocumentPopupComponent {
     this.internmentEpisodeDocumentService.deleteDocument(this.data.episodeDocumentId)
       .subscribe(response => {
         if (response) {
-          this.snackBarService.showError('internaciones.internacion-paciente.documents.dialogs.delete.SUCCESS');
+          this.snackBarService.showSuccess('internaciones.internacion-paciente.documents.dialogs.delete.SUCCESS');
           this.dialogRef.close();
         }
       })
