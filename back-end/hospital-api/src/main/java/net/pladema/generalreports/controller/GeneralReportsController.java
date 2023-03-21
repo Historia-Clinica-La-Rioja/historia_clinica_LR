@@ -227,7 +227,7 @@ public class GeneralReportsController {
 		LOG.debug("Inputs parameters -> institutionId {}, fromDate{}, toDate{}", institutionId);
 
 		String title = "Reportes de Estudios Complementarios";
-		String[] headers = new String[]{"Institución", "Fecha", "Categoria", "Orden","Tipo de Solicitud", "Origen de Solicitud",
+		String[] headers = new String[]{"Institución", "Fecha", "Categoria", "Estado de la Orden","Tipo de Solicitud", "Origen de Solicitud",
 				"Nombre del Paciente", "Tipo de Documento", "Numero del Documento del Paciente", "Obra Social", "Numero de Afiliado",
 				"Nombre del Profesional", "Tipo de Documento", "Numero de Documento", "Licencia", "Nota", "Fecha de Emisión",
 				"Nombre del Estudio", "Notas Adicionales", "Problema Asociado"};
