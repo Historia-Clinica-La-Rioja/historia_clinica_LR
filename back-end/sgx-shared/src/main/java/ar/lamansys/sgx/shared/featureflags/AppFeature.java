@@ -139,7 +139,10 @@ public enum AppFeature implements Feature {
 	HABILITAR_PRESCRIPCION_RECETA,
 
 	@Label("Indica si está habilitada la seccion otras circunstancias en epicrisis")
-	HABILITAR_OTRAS_CIRCUNSTANCIAS_EPICRISIS
+	HABILITAR_OTRAS_CIRCUNSTANCIAS_EPICRISIS,
+
+	@Label("Indica si esta habilitada la seccion de auditoria de pacientes")
+	HABILITAR_MODULO_AUDITORIA
 	;
 
     public boolean isActive() {
