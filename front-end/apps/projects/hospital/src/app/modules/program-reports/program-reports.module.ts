@@ -5,6 +5,7 @@ import { HomeComponent } from './routes/home/home.component';
 import { PresentationModule } from '@presentation/presentation.module';
 import { OdontoComponent } from './odonto/odonto.component';
 import { GeneralesComponent } from './generales/generales.component';
+import { EnfermeriaComponent } from './enfermeria/enfermeria.component';
 
 
 @NgModule({
@@ -13,6 +14,7 @@ import { GeneralesComponent } from './generales/generales.component';
     HomeComponent,
     OdontoComponent,
     GeneralesComponent,
+    EnfermeriaComponent,
   ],
   imports: [
     CommonModule,
