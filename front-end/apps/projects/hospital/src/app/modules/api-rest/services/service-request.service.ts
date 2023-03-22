@@ -11,6 +11,7 @@ import {
 
 import { switchMap } from 'rxjs/operators';
 import { ViewPdfService } from '@presentation/dialogs/view-pdf/view-pdf.service';
+import {DownloadService} from "@core/services/download.service";
 
 @Injectable({
 	providedIn: 'root'
@@ -21,6 +22,7 @@ export class ServiceRequestService {
 		private readonly http: HttpClient,
 		private readonly contextService: ContextService,
 		private readonly viewPdfService: ViewPdfService,
+		private readonly downloadService: DownloadService,
 	) { }
 
 	getList(patientId: number, statusId: string, study: string, healthCondition: string, categoryId: string): Observable<DiagnosticReportInfoDto[]> {
@@ -77,7 +79,10 @@ export class ServiceRequestService {
 
 	download(patientId: number, fileId: number, fileName: string) {
 		const url = `${environment.apiBase}/institutions/${this.contextService.institutionId}/patient/${patientId}/service-requests/download/${fileId}`;
-		this.viewPdfService.showDialog(url, fileName);
+		this.downloadService.downloadPdf(
+			url,
+			fileName,
+		).subscribe();
 	}
 
 	downloadPdf(patientId: number, serviceRequestId: number) {
