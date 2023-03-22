@@ -5,11 +5,17 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 import ar.lamansys.sgh.clinichistory.domain.ips.ExternalCauseBo;
+import ar.lamansys.sgh.clinichistory.domain.ips.NewbornBo;
+import ar.lamansys.sgh.clinichistory.domain.ips.ObstetricEventBo;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.DocumentExternalCauseRepository;
 
+import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.DocumentObstetricEventRepository;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.entity.DocumentExternalCause;
 
+import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.entity.DocumentObstetricEvent;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.hospitalizationState.entity.ExternalCauseVo;
+
+import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.ips.entity.ObstetricEvent;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -94,6 +100,8 @@ public class  DocumentServiceImpl implements DocumentService {
 
 	private final DocumentExternalCauseRepository documentExternalCauseRepository;
 
+	private final DocumentObstetricEventRepository documentObstetricEventRepository;
+
 	public DocumentServiceImpl(DocumentRepository documentRepository,
                                DocumentHealthConditionRepository documentHealthConditionRepository,
                                DocumentImmunizationRepository documentImmunizationRepository,
@@ -105,7 +113,8 @@ public class  DocumentServiceImpl implements DocumentService {
                                DocumentDiagnosticReportRepository documentDiagnosticReportRepository,
                                DocumentOdontologyProcedureRepository documentOdontologyProcedureRepository,
 							   DocumentOdontologyDiagnosticRepository documentOdontologyDiagnosticRepository,
-							   DocumentExternalCauseRepository documentExternalCauseRepository) {
+							   DocumentExternalCauseRepository documentExternalCauseRepository,
+							   DocumentObstetricEventRepository documentObstetricEventRepository) {
         this.documentRepository = documentRepository;
         this.documentHealthConditionRepository = documentHealthConditionRepository;
         this.documentImmunizationRepository = documentImmunizationRepository;
@@ -118,6 +127,7 @@ public class  DocumentServiceImpl implements DocumentService {
         this.documentOdontologyProcedureRepository = documentOdontologyProcedureRepository;
         this.documentOdontologyDiagnosticRepository = documentOdontologyDiagnosticRepository;
 		this.documentExternalCauseRepository = documentExternalCauseRepository;
+		this.documentObstetricEventRepository = documentObstetricEventRepository;
     }
 
     @Override
@@ -425,6 +435,28 @@ public class  DocumentServiceImpl implements DocumentService {
 		if (externalCauseVo == null)
 			return null;
 		ExternalCauseBo result = new ExternalCauseBo(externalCauseVo);
+		LOG.debug(OUTPUT, result);
+		return result;
+	}
+
+	@Override
+	public DocumentObstetricEvent createDocumentObstetricEvent(Long documentId, Integer obstetricEventId) {
+		LOG.debug("Input parameters -> documentId {}, externalCauseId {}", documentId, obstetricEventId);
+		DocumentObstetricEvent result = new DocumentObstetricEvent(documentId, obstetricEventId);
+		result = documentObstetricEventRepository.save(result);
+		LOG.debug(OUTPUT, result);
+		return result;
+	}
+
+	@Override
+	public ObstetricEventBo getObstetricEventFromDocument(Long documentId){
+		LOG.debug(LOGGING_DOCUMENT_ID, documentId);
+		ObstetricEvent obstetricEvent = documentObstetricEventRepository.getObstetricEventFromDocument(documentId);
+		if (obstetricEvent == null)
+			return null;
+		List<NewbornBo> newborns = documentObstetricEventRepository.getObstetricEventNewbornsFromDocument(documentId).stream().map(NewbornBo::new).collect(Collectors.toList());
+		ObstetricEventBo result = new ObstetricEventBo(obstetricEvent);
+		result.setNewborns(newborns);
 		LOG.debug(OUTPUT, result);
 		return result;
 	}

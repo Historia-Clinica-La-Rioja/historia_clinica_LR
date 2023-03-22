@@ -8,6 +8,7 @@ import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.D
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.DocumentImmunizationRepository;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.DocumentLabRepository;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.DocumentMedicamentionStatementRepository;
+import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.DocumentObstetricEventRepository;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.DocumentOdontologyDiagnosticRepository;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.DocumentOdontologyProcedureRepository;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.DocumentProcedureRepository;
@@ -63,12 +64,16 @@ class DocumentServiceImplTest {
 
 	@MockBean
 	private DocumentExternalCauseRepository documentExternalCauseRepository;
+
+	@MockBean
+	private DocumentObstetricEventRepository documentObstetricEventRepository;
+
 	@BeforeEach
 	void setUp() {
 		documentServiceImpl = new DocumentServiceImpl(documentRepository, documentHealthConditionRepository,
                 documentImmunizationRepository, documentProcedureRepository, documentRiskFactorRepository, documentLabRepository,
 				documentAllergyIntoleranceRepository, documentMedicamentionStatementRepository, documentDiagnosticReportRepository,
-				documentOdontologyProcedureRepository, documentOdontologyDiagnosticRepository, documentExternalCauseRepository);
+				documentOdontologyProcedureRepository, documentOdontologyDiagnosticRepository, documentExternalCauseRepository, documentObstetricEventRepository);
 	}
 
 	@Test

@@ -10,6 +10,7 @@ import ar.lamansys.sgh.clinichistory.domain.ips.ExternalCauseBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.GeneralHealthConditionBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.ImmunizationBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.MedicationBo;
+import ar.lamansys.sgh.clinichistory.domain.ips.ObstetricEventBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.ProcedureBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.RiskFactorBo;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.entity.Document;
@@ -20,6 +21,7 @@ import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.e
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.entity.DocumentInmunization;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.entity.DocumentLab;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.entity.DocumentMedicamentionStatement;
+import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.entity.DocumentObstetricEvent;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.entity.DocumentOdontologyDiagnostic;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.entity.DocumentOdontologyProcedure;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.entity.DocumentProcedure;
@@ -99,6 +101,10 @@ public interface DocumentService {
 	DocumentExternalCause createDocumentExternalCause(Long documentId, Integer externalCauseId);
 
 	ExternalCauseBo getExternalCauseFromDocument(Long documentId);
+
+	DocumentObstetricEvent createDocumentObstetricEvent(Long documentId, Integer obstetricEventId);
+
+	ObstetricEventBo getObstetricEventFromDocument(Long documentId);
 
 }
 
