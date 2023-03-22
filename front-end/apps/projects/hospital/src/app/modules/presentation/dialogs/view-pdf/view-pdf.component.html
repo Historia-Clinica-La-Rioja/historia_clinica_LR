@@ -51,7 +51,7 @@
 		<mat-icon>download</mat-icon>
 		<span>Descargar</span>
 	</button>
-	<button mat-menu-item [disabled]="isLoading || !canShareFile" (click)="share()">
+	<button *ngIf="showShareButton" mat-menu-item [disabled]="isLoading || !canShareFile" (click)="share()">
 		<mat-icon>share</mat-icon>
 		<span>Compartir</span>
 	</button>

@@ -19,6 +19,8 @@ export class ViewPdfComponent {
 	private pdfFile: File;
 	private metadataFilename = '';
 
+	showShareButton = false;
+
 	constructor(
 		private dialogRef: MatDialogRef<ViewPdfComponent>,
 		@Inject(MAT_DIALOG_DATA)
