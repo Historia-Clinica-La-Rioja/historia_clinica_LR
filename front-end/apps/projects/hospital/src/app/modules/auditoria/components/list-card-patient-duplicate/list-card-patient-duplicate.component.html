@@ -1,0 +1,58 @@
+<mat-card *ngIf="pageSlice?.length else noInfo">
+	<div fxLayout="row" fxLayoutAlign="space-between" fxLayoutGap="70px" class="content bold grey">
+		<div fxLayoutAlign="none center" class="content">
+			<span>{{'pacientes.audit.LABEL_NAME' | translate}}</span>
+		</div>
+		<div fxLayoutAlign="none center" class="content">
+			<span>{{'pacientes.audit.LABEL_IDENTIFICATION_NUMBER' | translate}}</span>
+		</div>
+		<div fxLayoutAlign="none center" class="content">
+			<span>{{'pacientes.audit.LABEL_CANDIDATES' | translate}}</span>
+		</div>
+		<div fxLayoutAlign="none center" class="content">
+
+		</div>
+	</div>
+	<mat-divider></mat-divider>
+	<div *ngFor="let patient of pageSlice;last as isLast">
+
+		<div fxLayout="row" fxLayoutAlign="space-between" fxLayoutGap="70px" class="content">
+			<div fxLayoutAlign="none center" class="content bold">
+				<span *ngIf="patient.firstName else noData">{{patient?.firstName}} {{patient?.lastName}}
+					{{patient?.middleNames}} {{patient?.otherLastNames}}</span>
+			</div>
+
+			<div fxLayoutAlign="none center" class="content">
+				<span
+					*ngIf="patient.identificationTypeId else noData">{{getIdentificationType(patient?.identificationTypeId)}}
+					&nbsp;</span>
+				<span *ngIf="patient.identificationNumber else noData">{{patient?.identificationNumber}}</span>
+			</div>
+
+			<div fxLayoutAlign="end center" class="content lowercase">
+				<span class="primary">{{patient?.numberOfCandidates}} {{'pacientes.audit.LABEL_CANDIDATES' |
+					translate}}</span>
+			</div>
+
+			<div fxLayoutAlign="none center" class="content">
+				<button mat-raised-button color="primary">{{'pacientes.audit.LABEL_BUTTON_AUDIT' | translate}}</button>
+			</div>
+		</div>
+
+
+		<mat-divider *ngIf="!isLast" insert class="divider"></mat-divider>
+	</div>
+
+	<mat-divider></mat-divider>
+
+	<mat-paginator *ngIf="(listPatientDuplicate?.length !== 0)" [length]="numberOfPatients"
+		[pageSizeOptions]="pageSizeOptions" (page)="onPageChange($event)" showFirstLastButtons>
+	</mat-paginator>
+
+</mat-card>
+
+<ng-template #noInfo>
+	<app-no-data></app-no-data>
+</ng-template>
+
+<ng-template #noData><span>-</span></ng-template>

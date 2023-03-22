@@ -1018,23 +1018,6 @@ export interface DuplicatePatientDto {
     otherLastNames: string;
 }
 
-export interface DuplicatePatientSearchFilterDto {
-    birthdate: boolean;
-    identify: boolean;
-    name: boolean;
-}
-
-export interface DuplicatePersonDto {
-    birthdate: Date;
-    firstName: string;
-    identificationNumber: string;
-    identificationTypeId: number;
-    lastName: string;
-    middleNames: string;
-    numberOfCandidates: number;
-    otherLastNames: string;
-}
-
 export interface ECAdministrativeDto extends Serializable {
     administrative: NewEmergencyCareDto;
     triage: TriageAdministrativeDto;
