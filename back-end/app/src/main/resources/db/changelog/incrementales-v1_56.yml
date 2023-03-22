@@ -1,2 +1,160 @@
 databaseChangeLog: 
     - logicalFilePath: incrementales-v1_56
+
+    - changeSet:
+        id: obstetric_event-createTable
+        author: fsimaro
+        changes:
+          - createTable:
+              tableName: obstetric_event
+              columns:
+                - column:
+                    autoIncrement: true
+                    constraints:
+                      primaryKey: true
+                      primaryKeyName: PK_obstetric_event
+                    name: id
+                    type: int
+                - column:
+                    name: previous_pregnancies
+                    type: smallint
+                - column:
+                    name: current_pregnancy_end_date
+                    type: date
+                - column:
+                    name: gestational_age
+                    type: smallint
+                - column:
+                    name: pregnancy_termination_type
+                    type: smallint
+                - column:
+                    constraints:
+                      nullable: false
+                    name: created_by
+                    type: int
+                    defaultValue: -1
+                - column:
+                    constraints:
+                      nullable: false
+                    name: updated_by
+                    type: int
+                    defaultValue: -1
+                - column:
+                    constraints:
+                      nullable: false
+                    name: created_on
+                    type: datetime
+                    defaultValueDate: ${date.now}
+                - column:
+                    constraints:
+                      nullable: false
+                    name: updated_on
+                    type: datetime
+                    defaultValueDate: ${date.now}
+                - column:
+                    constraints:
+                      nullable: false
+                    name: deleted
+                    type: BOOLEAN
+                    defaultValue: ${boolean.false}
+                - column:
+                    name: deleted_by
+                    type: int
+                - column:
+                    name: deleted_on
+                    type: datetime
+
+    - changeSet:
+        id: document_obstetric_event_createTable
+        author: fsimaro
+        changes:
+          - createTable:
+              tableName: document_obstetric_event
+              columns:
+                - column:
+                    constraints:
+                      nullable: false
+                    name: obstetric_event_id
+                    type: int
+                - column:
+                    constraints:
+                      nullable: false
+                    name: document_id
+                    type: bigint
+          - addPrimaryKey:
+              clustered: true
+              columnNames: document_id, obstetric_event_id
+              constraintName: PK_document_obstetric_event
+              tableName: document_obstetric_event
+              validate: true
+          - addForeignKeyConstraint:
+              baseColumnNames: document_id
+              baseTableName: document_obstetric_event
+              constraintName: FK_document_obstetric_event_document_id
+              onDelete: NO ACTION
+              onUpdate: NO ACTION
+              referencedColumnNames: id
+              referencedTableName: document
+              validate: true
+          - addForeignKeyConstraint:
+              baseColumnNames: obstetric_event_id
+              baseTableName: document_obstetric_event
+              constraintName: FK_document_obstetric_event_obstetric_event_id
+              onDelete: NO ACTION
+              onUpdate: NO ACTION
+              referencedColumnNames: id
+              referencedTableName: obstetric_event
+              validate: true
+
+    - changeSet:
+        id: newborn-createTable
+        author: fsimaro
+        changes:
+          - createTable:
+              tableName: newborn
+              columns:
+                - column:
+                    autoIncrement: true
+                    constraints:
+                      primaryKey: true
+                      primaryKeyName: PK_newborn
+                    name: id
+                    type: int
+                - column:
+                    constraints:
+                      nullable: false
+                    name: weight
+                    type: smallint
+                - column:
+                    constraints:
+                      nullable: false
+                    name: birth_condition_type
+                    type: smallint
+                - column:
+                    constraints:
+                      nullable: false
+                    name: gender_id
+                    type: smallint
+                - column:
+                    constraints:
+                      nullable: false
+                    name: obstetric_event_id
+                    type: int
+          - addForeignKeyConstraint:
+              baseColumnNames: obstetric_event_id
+              baseTableName: newborn
+              constraintName: FK_newborn_obstetric_event_id
+              onDelete: NO ACTION
+              onUpdate: NO ACTION
+              referencedColumnNames: id
+              referencedTableName: obstetric_event
+              validate: true
+          - addForeignKeyConstraint:
+              baseColumnNames: gender_id
+              baseTableName: newborn
+              constraintName: FK_newborn_gender_id
+              onDelete: NO ACTION
+              onUpdate: NO ACTION
+              referencedColumnNames: id
+              referencedTableName: gender
+              validate: true
