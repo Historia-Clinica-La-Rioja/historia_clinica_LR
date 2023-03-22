@@ -38,26 +38,27 @@ export class TriageDetailsComponent implements OnChanges {
 		const riskFactors = [];
 		const LABELS = this.emergencyCareType === EmergencyCareTypes.PEDIATRIA ?
 			{
-				respiratoryRate: 'Frecuencia respiratoria',
-				bloodOxygenSaturation: 'Saturación de oxígeno',
-				heartRate: 'Frecuencia cardíaca',
+				respiratoryRate: { description: 'Frecuencia respiratoria', id: 'respiratory_rate' },
+				bloodOxygenSaturation: { description: 'Saturación de oxígeno', id: 'blood_oxygen_saturation' },
+				heartRate: { description: 'Frecuencia cardíaca', id: 'heart_rate' },
 			} :
 			{
-				systolicBloodPressure: 'Tensión arterial sistólica',
-				diastolicBloodPressure: 'Tensión arterial diastólica',
-				heartRate: 'Frecuencia cardíaca',
-				respiratoryRate: 'Frecuencia respiratoria',
-				temperature: 'Temperatura',
-				bloodOxygenSaturation: 'Saturación de oxígeno',
-				bloodGlucose: 'Glucemia (mg/dl)',
-				glycosylatedHemoglobin: 'Hemoglobina glicosilada (%)',
-				cardiovascularRisk: 'Riesgo cardiovascular (%)',
+				systolicBloodPressure: { description: 'Tensión arterial sistólica', id: 'systolic_blood_pressure' },
+				diastolicBloodPressure: { description: 'Tensión arterial diastólica', id: 'diastolic_blood_pressure' },
+				heartRate: { description: 'Frecuencia cardíaca', id: 'heart_rate' },
+				respiratoryRate: { description: 'Frecuencia respiratoria', id: 'respiratory_rate' },
+				temperature: { description: 'Temperatura', id: 'temperature' },
+				bloodOxygenSaturation: { description: 'Saturación de oxígeno', id: 'blood_oxygen_saturation' },
+				bloodGlucose: { description: 'Glucemia (mg/dl)', id: 'blood_glucose' },
+				glycosylatedHemoglobin: { description: 'Hemoglobina glicosilada (%)', id: 'glycosylated_hemoglobin' },
+				cardiovascularRisk: { description: 'Riesgo cardiovascular (%)', id: 'cardiovascular_risk' },
 			};
 
 		Object.keys(LABELS).forEach(key => {
 			const riskFactor = getRiskFactor(key);
 			riskFactors.push({
-				description: LABELS[key],
+				description: LABELS[key].description,
+				id: LABELS[key].id,
 				value: {
 					value: Number(riskFactor?.value) || undefined,
 					effectiveTime: riskFactor?.effectiveTime || undefined
@@ -163,6 +164,7 @@ export interface Triage {
 }
 
 export interface RiskFactorFull {
+	id: string,
 	description: string,
 	value: RiskFactor
 }

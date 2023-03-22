@@ -16,7 +16,7 @@
                 <mat-card-content>
                     <div fxLayout="row wrap" *ngIf="riskFactors?.length else noData">
                         <app-factor-de-riesgo *ngFor="let riskFactor of riskFactors" [riskFactor]="riskFactor.value"
-                            [description]="riskFactor.description">
+                            [description]="riskFactor.description" id="{{ riskFactor.id }}">
                         </app-factor-de-riesgo>
                     </div>
                 </mat-card-content>
