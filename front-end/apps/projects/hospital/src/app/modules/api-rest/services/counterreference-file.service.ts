@@ -4,6 +4,7 @@ import { ContextService } from '@core/services/context.service';
 import { environment } from '@environments/environment';
 import { Observable } from 'rxjs';
 import { ViewPdfService } from '@presentation/dialogs/view-pdf/view-pdf.service';
+import {DownloadService} from "@core/services/download.service";
 
 
 
@@ -17,7 +18,7 @@ export class CounterreferenceFileService {
 	constructor(
 		private readonly http: HttpClient,
 		private readonly contextService: ContextService,
-		private viewPdfService: ViewPdfService,
+		private readonly downloadService: DownloadService,
 	) { }
 
 	uploadCounterreferenceFiles(patientId: number, counterreferenceFile: File): Observable<number> {
@@ -35,9 +36,9 @@ export class CounterreferenceFileService {
 
 	downloadCounterreferenceFiles(fileId: number, fileName: string): void {
 		const url = this.URL_PREFIX + `download/${fileId}`;
-		this.viewPdfService.showDialog(
+		this.downloadService.downloadPdf(
 			url,
 			fileName,
-		);
+		).subscribe();
 	}
 }
