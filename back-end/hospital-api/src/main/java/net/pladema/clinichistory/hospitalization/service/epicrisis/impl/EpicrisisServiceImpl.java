@@ -50,7 +50,8 @@ public class EpicrisisServiceImpl implements EpicrisisService {
             result.setNotes(loadNotes(document));
 			result.setOtherProblems(generalHealthConditionBo.getOtherProblems());
 			result.setExternalCause(documentService.getExternalCauseFromDocument(document.getId()));
-        });
+        	result.setObstetricEvent(documentService.getObstetricEventFromDocument(document.getId()));
+		});
         LOG.debug(OUTPUT, result);
         return result;
     }

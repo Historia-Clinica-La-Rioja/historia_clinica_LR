@@ -16,6 +16,7 @@ import ar.lamansys.sgh.clinichistory.domain.ips.HealthConditionBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.HealthHistoryConditionBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.ImmunizationBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.MedicationBo;
+import ar.lamansys.sgh.clinichistory.domain.ips.ObstetricEventBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.ProblemBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.ProcedureBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.ReasonBo;
@@ -129,5 +130,7 @@ public interface IDocumentBo {
 	default List<HealthConditionBo> getOtherProblems() { return Collections.emptyList(); }
     
 	default ExternalCauseBo getExternalCause() { return null; }
+
+	default ObstetricEventBo getObstetricEvent() { return null; }
 
 }

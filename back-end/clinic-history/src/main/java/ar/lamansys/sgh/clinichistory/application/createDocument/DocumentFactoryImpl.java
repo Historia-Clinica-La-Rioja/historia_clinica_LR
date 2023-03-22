@@ -6,6 +6,8 @@ import java.util.Optional;
 
 import ar.lamansys.sgh.clinichistory.domain.ips.services.LoadExternalCause;
 
+import ar.lamansys.sgh.clinichistory.domain.ips.services.LoadObstetricEvent;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -64,6 +66,8 @@ public class DocumentFactoryImpl implements DocumentFactory {
 
 	private final LoadExternalCause loadExternalCause;
 
+	private final LoadObstetricEvent loadObstetricEvent;
+
     public DocumentFactoryImpl(DocumentService documentService,
                                CreateDocumentFile createDocumentFile,
                                NoteService noteService,
@@ -77,7 +81,8 @@ public class DocumentFactoryImpl implements DocumentFactory {
                                LoadDentalActions loadDentalActions,
 							   FeatureFlagsService featureFlagsService,
 							   PatientStorage patientStorage,
-							   LoadExternalCause loadExternalCause) {
+							   LoadExternalCause loadExternalCause,
+							   LoadObstetricEvent loadObstetricEvent) {
         this.documentService = documentService;
         this.createDocumentFile = createDocumentFile;
         this.noteService = noteService;
@@ -92,6 +97,7 @@ public class DocumentFactoryImpl implements DocumentFactory {
 		this.featureFlagsService = featureFlagsService;
 		this.patientStorage = patientStorage;
 		this.loadExternalCause = loadExternalCause;
+		this.loadObstetricEvent = loadObstetricEvent;
     }
 
     @Override
@@ -138,6 +144,7 @@ public class DocumentFactoryImpl implements DocumentFactory {
         loadDiagnosticReports.run(doc.getId(), patientId, documentBo.getDiagnosticReports());
 
 		loadExternalCause.run(doc.getId(), Optional.ofNullable(documentBo.getExternalCause()));
+		loadObstetricEvent.run(doc.getId(), Optional.ofNullable(documentBo.getObstetricEvent()));
 
         if (createFile)
             generateDocument(documentBo);

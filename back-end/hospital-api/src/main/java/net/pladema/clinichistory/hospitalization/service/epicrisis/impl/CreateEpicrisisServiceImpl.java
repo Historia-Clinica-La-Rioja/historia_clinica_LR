@@ -58,6 +58,7 @@ public class CreateEpicrisisServiceImpl implements CreateEpicrisisService {
 		Optional.ofNullable(epicrisis.getImmunizations()).ifPresent(list->list.forEach(d->d.setId(null)));
 		Optional.ofNullable(epicrisis.getOtherProblems()).ifPresent(list->list.forEach(d->d.setId(null)));
 		if (epicrisis.getExternalCause() != null) epicrisis.getExternalCause().setId(null);
+		if (epicrisis.getObstetricEvent() != null) epicrisis.getObstetricEvent().setId(null);
 
         LocalDateTime now = dateTimeProvider.nowDateTime();
         epicrisis.setPerformedDate(now);

@@ -67,6 +67,8 @@ public class EpicrisisBo extends SelfValidating<EpicrisisBo> implements IDocumen
 
 	private ExternalCauseBo externalCause;
 
+	private ObstetricEventBo obstetricEvent;
+
     private LocalDateTime performedDate;
 
 	private Long initialDocumentId;

@@ -53,4 +53,7 @@ public class EpicrisisDto implements Serializable {
 	@Nullable
 	private ExternalCauseDto externalCause;
 
+	@Nullable
+	private ObstetricEventDto obstetricEvent;
+
 }

@@ -383,8 +383,53 @@
 
                     - Como se produjo:
                     <strong><label  th:if="${externalCause.snomed  != null}" th:text="${externalCause.snomed.pt}"></label></strong>
-                    <strong><span  th:if="${externalCause.snomed  == null}">Sin cambios registrados</span></strong><br/>
+                    <strong><span  th:if="${externalCause.snomed  == null}">Sin cambios registrados</span></strong><br/><br/>
                 </div>
+        </div>
+    </div>
+
+    <!-- Datos del evento obstetrico -->
+
+    <div th:fragment="obstetricEvent">
+        <div th:if="${cipresFieldsFF}">
+            <h3> Datos del evento obstétrico </h3>
+            <div th:if="${obstetricEvent == null}">
+                <dl>
+                    <dd><p>Sin cambios registrados</p></dd>
+                </dl>
+            </div>
+            <div th:if="${obstetricEvent  != null}">
+
+                <h4> Gestas anteriores </h4>
+
+                - Total de nacimientos anteriores al presente:
+                <strong><label  th:if="${obstetricEvent.previousPregnancies  != null}" th:text="${obstetricEvent.previousPregnancies}"></label></strong>
+                <strong><span  th:if="${obstetricEvent.previousPregnancies  == null}">Sin cambios registrados</span></strong><br/><br/>
+
+                <h4> Gesta actual </h4>
+
+                - Fecha de terminación del embarazo:
+                <strong><label  th:if="${obstetricEvent.currentPregnancyEndDate  != null}" th:text="${#temporals.format(obstetricEvent.currentPregnancyEndDate, 'dd/MM/yyyy')}"></label></strong>
+                <strong><span  th:if="${obstetricEvent.currentPregnancyEndDate  == null}">Sin cambios registrados</span></strong><br/>
+
+                - Edad gestacional:
+                <strong><label  th:if="${obstetricEvent.gestationalAge  != null}" th:text="${obstetricEvent.gestationalAge}"></label></strong>
+                <strong><span  th:if="${obstetricEvent.gestationalAge  == null}">Sin cambios registrados</span></strong><br/>
+
+                - Terminación:
+                <strong><label  th:if="${obstetricEvent.pregnancyTerminationType  != null}" th:text="${obstetricEvent.pregnancyTerminationType.value}"></label></strong>
+                <strong><span  th:if="${obstetricEvent.pregnancyTerminationType  == null}">Sin cambios registrados</span></strong><br/><br/>
+
+                <div th:if="${not #lists.isEmpty(obstetricEvent.newborns)}">
+                    <dl th:each="newborn,iter: ${obstetricEvent.newborns}">
+                        <dd><strong>Recien nacido <label th:text="${iter.index+1}"></label></strong></strong></p></dd>
+                        <dd><strong>Peso al nacer: </strong><label th:text="${newborn.weight}"></label></dd>
+                        <dd><strong>Condición al nacer: </strong><label th:text="${newborn.birthConditionType.value}"></label></dd>
+                        <dd><strong>Sexo: </strong><label th:text="${newborn.genderId.value}"></label></dd>
+                    </dl>
+                </div>
+
+            </div>
         </div>
     </div>
 
