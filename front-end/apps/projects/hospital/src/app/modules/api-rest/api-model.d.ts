@@ -1985,6 +1985,13 @@ export interface NewServiceRequestListDto extends Serializable {
     studiesDto: StudyDto[];
 }
 
+export interface NewbornDto {
+    birthConditionType: EBirthCondition;
+    genderId: EGender;
+    id?: number;
+    weight: number;
+}
+
 export interface NotifyPatientDto {
     appointmentId: number;
     doctorName: string;
@@ -2069,6 +2076,14 @@ export interface OauthConfigDto {
     enabled: boolean;
     issuerUrl: string;
     logoutUrl: string;
+}
+
+export interface ObstetricEventDto {
+    currentPregnancyEndDate?: DateDto;
+    gestationalAge?: number;
+    newborns: NewbornDto[];
+    pregnancyTerminationType?: EPregnancyTermination;
+    previousPregnancies?: number;
 }
 
 export interface OccupationDto {
@@ -3367,6 +3382,11 @@ export const enum AppFeature {
     HABILITAR_CAMPOS_CIPRES_EPICRISIS = "HABILITAR_CAMPOS_CIPRES_EPICRISIS",
 }
 
+export const enum EBirthCondition {
+    BORN_ALIVE = "BORN_ALIVE",
+    FETAL_DEATH = "FETAL_DEATH",
+}
+
 export const enum EDocumentSearch {
     DIAGNOSIS = "DIAGNOSIS",
     DOCTOR = "DOCTOR",
@@ -3385,6 +3405,12 @@ export const enum EExternalCauseType {
     SELF_INFLICTED_INJURY = "SELF_INFLICTED_INJURY",
     AGRESSION = "AGRESSION",
     IGNORED = "IGNORED",
+}
+
+export const enum EGender {
+    FEMALE = "FEMALE",
+    MALE = "MALE",
+    X = "X",
 }
 
 export const enum EIndicationStatus {
@@ -3421,6 +3447,12 @@ export const enum EOdontologyTopicDto {
 export const enum EPatientMedicalCoverageCondition {
     VOLUNTARIA = "VOLUNTARIA",
     OBLIGATORIA = "OBLIGATORIA",
+}
+
+export const enum EPregnancyTermination {
+    VAGINAL = "VAGINAL",
+    CESAREAN = "CESAREAN",
+    UNDEFINED = "UNDEFINED",
 }
 
 export const enum ERole {
