@@ -83,4 +83,40 @@ public class ConsultationDetail {
 
 	private String ceo;
 
+	public ConsultationDetail(ConsultationDetailWithoutInstitution consultation, InstitutionInfo institutionInfo){
+		this.province = institutionInfo.getProvince();
+		this.department = institutionInfo.getDepartment();
+		this.sisaCode = institutionInfo.getSisaCode();
+		this.institution = institutionInfo.getInstitution();
+		this.patientSurname = consultation.getPatientSurname();
+		this.patientFirstName = consultation.getPatientFirstName();
+		this.selfPerceivedName = consultation.getSelfPerceivedName();
+		this.identificationType = consultation.getIdentificationType();
+		this.identificationNumber = consultation.getIdentificationNumber();
+		this.birthDate = consultation.getBirthDate();
+		this.gender = consultation.getGender();
+		this.address = consultation.getAddress();
+		this.phoneNumber = consultation.getPhoneNumber();
+		this.email = consultation.getEmail();
+		this.coverageName = consultation.getCoverageName();
+		this.affiliateNumber = consultation.getAffiliateNumber();
+		this.startDate = consultation.getStartDate();
+		this.clinicalSpecialtyId = consultation.getClinicalSpecialtyId();
+		this.clinicalSpecialty = consultation.getClinicalSpecialty();
+		this.professionalId = consultation.getProfessionalId();
+		this.professionalName = consultation.getProfessionalName();
+		this.reasons = consultation.getReasons();
+		this.problems = consultation.getProblems();
+		this.procedures = consultation.getProcedures();
+		this.weight = consultation.getWeight();
+		this.height = consultation.getHeight();
+		this.systolicBloodPressure = consultation.getSystolicBloodPressure();
+		this.diastolicBloodPressure = consultation.getDiastolicBloodPressure();
+		this.cardiovascularRisk = consultation.getCardiovascularRisk();
+		this.glycosylatedHemoglobin = consultation.getGlycosylatedHemoglobin();
+		this.bloodGlucose = consultation.getBloodGlucose();
+		this.headCircunference = consultation.getHeadCircunference();
+		this.cpo = consultation.getCpo();
+		this.ceo = consultation.getCeo();
+	}
 }

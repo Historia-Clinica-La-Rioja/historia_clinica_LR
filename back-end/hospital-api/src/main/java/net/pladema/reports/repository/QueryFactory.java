@@ -40,13 +40,13 @@ public class QueryFactory {
         outpatientQuery.setParameter("institutionId", institutionId);
         outpatientQuery.setParameter("startDate", startDate);
         outpatientQuery.setParameter("endDate", endDate);
-        List<ConsultationDetail> data = outpatientQuery.getResultList();
+        List<ConsultationDetailWithoutInstitution> data = outpatientQuery.getResultList();
 
 		Query odontologyQuery = entityManager.createNamedQuery("Reports.OdontologyConsultationDetail");
 		odontologyQuery.setParameter("institutionId", institutionId);
 		odontologyQuery.setParameter("startDate", startDate);
 		odontologyQuery.setParameter("endDate", endDate);
-		List<ConsultationDetail> odontologyData = formatProblemsAndProcedures(odontologyQuery.getResultList());
+		List<ConsultationDetailWithoutInstitution> odontologyData = formatProblemsAndProcedures(odontologyQuery.getResultList());
 
 		Query nursingQuery = entityManager.createNamedQuery("Reports.NursingConsultationDetail");
 		nursingQuery.setParameter("institutionId", institutionId);
@@ -55,17 +55,47 @@ public class QueryFactory {
 
 		data.addAll(odontologyData);
 		data.addAll(nursingQuery.getResultList());
-		data.sort(Comparator.comparing(ConsultationDetail::getPatientSurname));
+		data.sort(Comparator.comparing(ConsultationDetailWithoutInstitution::getPatientSurname));
 
+
+		List<ConsultationDetail> result = mapToConsultationDetail(data, institutionId);
         //Optional filter: by specialty or professional if specified
-        return data.stream()
+        return result.stream()
                 .filter(doctorId != null ? oc -> oc.getProfessionalId().equals(doctorId) : c -> true)
                 .filter(clinicalSpecialtyId != null ? oc -> oc.getClinicalSpecialtyId().equals(clinicalSpecialtyId) : c -> true)
                 .collect(Collectors.toList());
     }
 
-	private List<ConsultationDetail> formatProblemsAndProcedures(List<ConsultationDetail> list){
-		for(ConsultationDetail fila : list){
+	private List<ConsultationDetail> mapToConsultationDetail(List<ConsultationDetailWithoutInstitution> data, Integer institutionId){
+		InstitutionInfo institutionInfo = getInstitutionInfo(institutionId);
+		List<ConsultationDetail> result = new ArrayList<>();
+		for (ConsultationDetailWithoutInstitution row : data) {
+			result.add(new ConsultationDetail(row, institutionInfo));
+		}
+		return result;
+	}
+
+	private InstitutionInfo getInstitutionInfo(Integer institutionId){
+		String sqlString = "SELECT p.description, d.description, i.sisaCode, i.name " +
+				"FROM Institution i " +
+				"JOIN Address a ON (i.addressId = a.id) " +
+				"JOIN City c ON (a.cityId = c.id) " +
+				"JOIN Department d ON (c.departmentId = d.id) " +
+				"JOIN Province p ON (d.provinceId = p.id) " +
+				"WHERE i.id = :institutionId";
+		List queryResult = entityManager.createQuery(sqlString)
+				.setParameter("institutionId", institutionId)
+				.getResultList();
+		Object[] resultSearch = queryResult.size() == 1 ? (Object[]) queryResult.get(0) : null;
+		assert resultSearch != null;
+		return new InstitutionInfo(
+				(resultSearch[0]!=null)? (String) resultSearch[0] : null,
+				(resultSearch[1]!=null)? (String) resultSearch[1] : null,
+				(resultSearch[2]!=null)? (String) resultSearch[2] : null,
+				(resultSearch[3]!=null)? (String) resultSearch[3] : null);
+	}
+	private List<ConsultationDetailWithoutInstitution> formatProblemsAndProcedures(List<ConsultationDetailWithoutInstitution> list){
+		for(ConsultationDetailWithoutInstitution fila : list){
 			if(fila.getProblems() != null) {
 				String problems = StringUtils.stripAccents(fila.getProblems());
 				List withRepeated = List.of(problems.split("/split/"));

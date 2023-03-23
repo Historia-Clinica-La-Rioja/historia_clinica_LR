@@ -117,3 +117,20 @@ databaseChangeLog:
           - sql:
               sql: |-
                 CREATE INDEX IF NOT EXISTS "IDX_medication_statement_dosage_id" ON medication_statement(dosage_id);
+
+    - changeSet:
+        id: createIndexReports
+        author: mvenere
+        dbms: postgresql
+        changes:
+          - sql:
+              sql: |-
+                CREATE INDEX IF NOT EXISTS "IDX_outpatient_consultation_reasons_outpatient_consultation_id" ON outpatient_consultation_reasons(outpatient_consultation_id);
+                CREATE INDEX IF NOT EXISTS "IDX_odontology_consultation_indices_odontology_consultation_id" ON odontology_consultation_indices(odontology_consultation_id);
+                CREATE INDEX IF NOT EXISTS "IDX_nursing_consultation_clinical_specialty_id" ON nursing_consultation(clinical_specialty_id);
+                CREATE INDEX IF NOT EXISTS "IDX_odontology_consultation_institution_id" ON odontology_consultation(institution_id);
+                CREATE INDEX IF NOT EXISTS "IDX_nursing_consultation_institution_id" ON nursing_consultation(institution_id);
+                CREATE INDEX IF NOT EXISTS "IDX_outpatient_consultation_institution_id" ON outpatient_consultation(institution_id);
+                CREATE INDEX IF NOT EXISTS "IDX_document_procedure_document_id" ON document_procedure(document_id);
+                CREATE INDEX IF NOT EXISTS "IDX_document_health_condition_document_id" ON document_health_condition(document_id);
+                CREATE INDEX IF NOT EXISTS "IDX_document_procedure_document_id" ON document_procedure(document_id);
