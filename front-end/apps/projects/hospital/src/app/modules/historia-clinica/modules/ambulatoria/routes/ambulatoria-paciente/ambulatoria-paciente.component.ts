@@ -38,6 +38,9 @@ import { Slot, SlotedInfo, WCExtensionsService } from '@extensions/services/wc-e
 import { EmergencyCareEpisodeStateService } from '@api-rest/services/emergency-care-episode-state.service';
 import { EstadosEpisodio } from '@historia-clinica/modules/guardia/constants/masterdata';
 import { PatientType } from '@historia-clinica/constants/summaries';
+import { HceGeneralStateService } from '@api-rest/services/hce-general-state.service';
+import { DialogoAclaracionComponent } from './dialogo-aclaracion/dialogo-aclaracion.component';
+import { HCEPersonalHistoryDto } from '@api-rest/api-model';
 
 const RESUMEN_INDEX = 0;
 const VOLUNTARY_ID = 1;
@@ -97,7 +100,13 @@ export class AmbulatoriaPacienteComponent implements OnInit, OnDestroy {
 	hasPrescriptorRole = false;
 	canOnlyViewSelfAddedProblems = false;
 	rolesThatCanOnlyViewSelfAddedProblems = [ERole.PRESCRIPTOR];
-
+	defaultProblem: HCEPersonalHistoryDto;
+	activeProblemsList: {
+		id: number;
+		description: string;
+		sctId: string;
+	}[];
+	private _embarazoAdolescente: boolean;
 	private timeOut = 15000;
 	private isOpenOdontologyConsultation = false;
 
@@ -124,6 +133,7 @@ export class AmbulatoriaPacienteComponent implements OnInit, OnDestroy {
 		private readonly internmentActionsService: InternmentActionsService,
 		private readonly medicalCoverageInfo: MedicalCoverageInfoService,
 		private readonly wcExtensionsService: WCExtensionsService,
+		readonly hceGeneralStateService: HceGeneralStateService
 	) {
 		this.featureFlagService.isActive(AppFeature.HABILITAR_RECETA_DIGITAL)
 			.subscribe((result: boolean) => this.isHabilitarRecetaDigitalEnabled = result)
@@ -414,4 +424,31 @@ export class AmbulatoriaPacienteComponent implements OnInit, OnDestroy {
 		return false;
 	}
 
+	embarazoAdolescente(){
+		if (this._embarazoAdolescente === undefined) {
+			this.hceGeneralStateService.getActiveProblems(this.patientId).subscribe((activeProblems: HCEPersonalHistoryDto[]) => {
+			 	this.activeProblemsList = activeProblems.map(problem => ({id: problem.id, description: problem.snomed.pt, sctId: problem.snomed.sctid}));
+			},
+				(error) => {
+					console.error(error);
+				}
+			);
+
+			if (this.patient.age < 15){
+				for (let i = 0; i < this.activeProblemsList.length; i++){
+					if (this.activeProblemsList[i]['id'] == 79 || this.activeProblemsList[i]['id'] == 152 || this.activeProblemsList[i]['id'] == 309 || this.activeProblemsList[i]['id'] == 738 || this.activeProblemsList[i]['id'] == 1215 || this.activeProblemsList[i]['id'] == 1250 || this.activeProblemsList[i]['id'] == 1880 || this.activeProblemsList[i]['id'] == 2232 || this.activeProblemsList[i]['id'] == 2379 || this.activeProblemsList[i]['id'] == 2424 || this.activeProblemsList[i]['id'] == 2527 || this.activeProblemsList[i]['id'] == 2558 || this.activeProblemsList[i]['id'] == 2697 || this.activeProblemsList[i]['id'] == 3295 || this.activeProblemsList[i]['id'] == 3328 || this.activeProblemsList[i]['id'] == 3403 || this.activeProblemsList[i]['id'] == 3665 || this.activeProblemsList[i]['id'] == 3874 || this.activeProblemsList[i]['id'] == 3914 || this.activeProblemsList[i]['id'] == 3956 || this.activeProblemsList[i]['id'] == 4004 || this.activeProblemsList[i]['id'] == 4047 || this.activeProblemsList[i]['id'] == 4069 || this.activeProblemsList[i]['id'] == 4134 || this.activeProblemsList[i]['id'] == 4175 || this.activeProblemsList[i]['id'] == 4176 || this.activeProblemsList[i]['id'] == 4211 || this.activeProblemsList[i]['id'] == 4391 || this.activeProblemsList[i]['id'] == 4410 || this.activeProblemsList[i]['id'] == 4479 || this.activeProblemsList[i]['id'] == 4488 || this.activeProblemsList[i]['id'] == 4648 || this.activeProblemsList[i]['id'] == 4665 || this.activeProblemsList[i]['id'] == 4826 || this.activeProblemsList[i]['id'] == 4932 || this.activeProblemsList[i]['id'] == 4989 || this.activeProblemsList[i]['id'] == 5010 || this.activeProblemsList[i]['id'] == 5011 || this.activeProblemsList[i]['id'] == 5066 || this.activeProblemsList[i]['id'] == 5127 || this.activeProblemsList[i]['id'] == 5245 || this.activeProblemsList[i]['id'] == 5246 || this.activeProblemsList[i]['id'] == 5313 || this.activeProblemsList[i]['id'] == 5316 || this.activeProblemsList[i]['id'] == 5362 || this.activeProblemsList[i]['id'] == 5369 || this.activeProblemsList[i]['id'] == 5378 || this.activeProblemsList[i]['id'] == 5480 || this.activeProblemsList[i]['id'] == 5522 || this.activeProblemsList[i]['id'] == 5596 || this.activeProblemsList[i]['id'] == 5974 || this.activeProblemsList[i]['id'] == 6050 || this.activeProblemsList[i]['id'] == 6322 || this.activeProblemsList[i]['id'] == 6445 || this.activeProblemsList[i]['id'] == 6484 || this.activeProblemsList[i]['id'] == 6529 || this.activeProblemsList[i]['id'] == 6659 || this.activeProblemsList[i]['id'] == 6700 || this.activeProblemsList[i]['id'] == 6790 || this.activeProblemsList[i]['id'] == 6804 || this.activeProblemsList[i]['id'] == 6861 || this.activeProblemsList[i]['id'] == 6895 || this.activeProblemsList[i]['id'] == 6909 || this.activeProblemsList[i]['id'] == 6979 || this.activeProblemsList[i]['id'] == 7382 || this.activeProblemsList[i]['id'] == 7462 || this.activeProblemsList[i]['id'] == 7559 || this.activeProblemsList[i]['id'] == 7638 || this.activeProblemsList[i]['id'] == 7780){
+						this._embarazoAdolescente = true;
+					}
+				}
+			}
+			else{
+			   	this._embarazoAdolescente = false;
+			}
+		}
+		return this._embarazoAdolescente;
+	}
+
+	openDialogAclaracion() {
+		this.dialog.open(DialogoAclaracionComponent);
+	}
 }
