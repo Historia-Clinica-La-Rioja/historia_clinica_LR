@@ -45,6 +45,23 @@
 			</div>
 		</div>
 
+			<div fxLayoutAlign="none center" class="content">
+				<span
+					*ngIf="patient.identificationTypeId else noData">{{getIdentificationType(patient?.identificationTypeId)}}
+					&nbsp;</span>
+				<span *ngIf="patient.identificationNumber else noData">{{patient?.identificationNumber}}</span>
+			</div>
+
+			<div fxLayoutAlign="end center" class="content lowercase">
+				<span class="primary">{{patient?.numberOfCandidates}} {{'pacientes.audit.LABEL_CANDIDATES' |
+					translate}}</span>
+			</div>
+
+			<div fxLayoutAlign="none center" class="content">
+				<button mat-raised-button color="primary">{{'pacientes.audit.LABEL_BUTTON_AUDIT' | translate}}</button>
+			</div>
+		</div>
+
 
 		<mat-divider *ngIf="!isLast" insert class="divider"></mat-divider>
 	</div>
