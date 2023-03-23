@@ -59,33 +59,40 @@ export const GENERAL_REPORT_TYPES = [
         id: 3,
     },
     {
-        description: 'Enfermería - Emergencias',
+        description: 'Estudios Complementarios.',
         id: 4,
     },
     {
-        description: 'Enfermería Ambulatorio',
+        description: 'Consultas ambulatorias del Adulto Mayor',
         id: 5,
     },
     {
-        description: 'Enfermería Internación',
+        description: 'Internaciones del Adulto Mayor',
         id: 6,
     },
+   
+];
+
+export const ENFERMERIA_REPORT_TYPES = [
     {
-        description: 'Estudios Complementarios',
-        id: 7,
+        description: 'Enfermería - Emergencias',
+        id: 1,
+    },
+    {
+        description: 'Enfermería Ambulatorio',
+        id: 2,
+    },
+    {
+        description: 'Enfermería Internación',
+        id: 3,
     },
     {
         description: 'Reporte de procedimientos realizados por Enfermería',
-        id: 8,
-    },
-    {
-        description: 'Consultas ambulatorias del Adulto Mayor',
-        id: 9,
-    },
-    {
-        description: 'Internaciones del Adulto Mayor',
-        id: 10,
+        id: 4,
     },
    
 ]
+
+
+
 

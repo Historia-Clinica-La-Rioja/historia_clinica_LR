@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { hasError } from '@core/utils/form.utils';
 import { GeneralReportService } from '@api-rest/services/general.reports.service';
-import { GENERAL_REPORT_TYPES } from '../constants/report-types';
+import { ENFERMERIA_REPORT_TYPES } from '../constants/report-types';
 import { Moment } from 'moment';
 import { dateToMoment, newMoment } from '@core/utils/moment.utils';
 
@@ -10,18 +10,18 @@ import { MIN_DATE } from '@core/utils/date.utils';
 
 
 @Component({
-  selector: 'app-generales',
-  templateUrl: './generales.component.html',
-  styleUrls: ['./generales.component.scss']
+  selector: 'app-enfermeria',
+  templateUrl: './enfermeria.component.html',
+  styleUrls: ['./enfermeria.component.scss']
 })
-export class GeneralesComponent implements OnInit {
+export class EnfermeriaComponent implements OnInit {
 
   form: FormGroup;
   public submitted = false;
 
   public hasError = hasError;
 
-  GENERAL_REPORT_TYPES = GENERAL_REPORT_TYPES;
+  ENFERMERIA_REPORT_TYPES = ENFERMERIA_REPORT_TYPES;
 
   minDate = MIN_DATE;
 
@@ -93,29 +93,22 @@ export class GeneralesComponent implements OnInit {
 				endDate: this.form.controls.endDate.value,
 
       }
-      const params2={
-
-      }
       const programReportId = this.form.controls.programReportType.value;
       switch (programReportId) {
         case 1:
-          this.generalService.getDaiylyEmergencyReport(params, `${this.GENERAL_REPORT_TYPES[0].description}.xls`).subscribe();
-          break;
+          this.generalService.getPatientEmergenciesReport(params, `${this.ENFERMERIA_REPORT_TYPES[0].description}.xls`).subscribe();
+        break;
         case 2:
-          this.generalService.getDiabeticsReport(params, `${this.GENERAL_REPORT_TYPES[1].description}.xls`).subscribe();
+          this.generalService.getOutpatientNursingReport(params, `${this.ENFERMERIA_REPORT_TYPES[1].description}.xls`).subscribe();
         break;
         case 3:
-          this.generalService.getHypertensiveReport(params, `${this.GENERAL_REPORT_TYPES[2].description}.xls`).subscribe();
+          this.generalService.getNursingInternmentReport(params, `${this.ENFERMERIA_REPORT_TYPES[2].description}.xls`).subscribe();
         break;
         case 4:
-          this.generalService.getComplementaryStudiesReport(params, `${this.GENERAL_REPORT_TYPES[3].description}.xls`).subscribe();
+          this.generalService.getTotalNursingRecoveryReport(params, `${this.ENFERMERIA_REPORT_TYPES[3].description}.xls`).subscribe();
         break;
-        case 5:
-          this.generalService.getOutPatientOlderAdults(params, `${this.GENERAL_REPORT_TYPES[4].description}.xls`).subscribe();
-        break;
-        case 6:
-          this.generalService.getHospitalizationOlderAdults(params, `${this.GENERAL_REPORT_TYPES[5].description}.xls`).subscribe();
-        break;
+        
+        
         default:
       }
     }
