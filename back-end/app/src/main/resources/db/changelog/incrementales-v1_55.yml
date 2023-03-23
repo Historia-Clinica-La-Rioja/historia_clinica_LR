@@ -91,3 +91,12 @@ databaseChangeLog:
                 INNER JOIN person p2 ON hp.person_id = p2.id
                 WHERE a.appointment_state_id = 6)
 
+    - changeSet:
+        id: createIndexPatientId-appointment
+        author: mmalyvarni
+        dbms: postgresql
+        changes:
+          - sql:
+              sql: |-
+                CREATE INDEX IF NOT EXISTS "IDX_appointment_patient_id" ON appointment(patient_id);
+
