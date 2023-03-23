@@ -2,7 +2,6 @@ package net.pladema.clinichistory.requests.medicationrequests.service.impl;
 
 import ar.lamansys.sgh.clinichistory.application.document.DocumentService;
 import ar.lamansys.sgh.clinichistory.application.notes.NoteService;
-import ar.lamansys.sgh.clinichistory.domain.document.PatientInfoBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.services.LoadMedications;
 import ar.lamansys.sgh.clinichistory.domain.ips.services.MedicationCalculateStatus;
 import ar.lamansys.sgh.clinichistory.domain.ips.services.SnomedService;
@@ -62,31 +61,25 @@ class ChangeStateMedicationServiceImplTest extends UnitRepository {
     @Test
     void test_execute_withInvalidPatientInfo(){
         Exception exception = Assertions.assertThrows(IllegalArgumentException.class, () ->
-                changeStateMedicationService.execute(null, new ChangeStateMedicationRequestBo(MedicationStatementStatus.ACTIVE, 2d, null, Collections.emptyList()))
-        );
-        String expectedMessage = "La información del paciente es obligatoria";
+				changeStateMedicationService.execute(null, new ChangeStateMedicationRequestBo(MedicationStatementStatus.ACTIVE, 2d, null, Collections.emptyList()))
+		);
+        String expectedMessage = "El código identificador del paciente es obligatorio";
         String actualMessage = exception.getMessage();
-        Assertions.assertTrue(actualMessage.contains(expectedMessage));
-
-        exception = Assertions.assertThrows(IllegalArgumentException.class, () ->
-                changeStateMedicationService.execute(new PatientInfoBo(null, (short)1, (short)4), new ChangeStateMedicationRequestBo(MedicationStatementStatus.ACTIVE, 2d, null, Collections.emptyList()))
-        );
-        expectedMessage = "El código identificador del paciente es obligatorio";
-        actualMessage = exception.getMessage();
         Assertions.assertTrue(actualMessage.contains(expectedMessage));
     }
 
     @Test
     void test_execute_withInvalidNewStatus() {
+		Integer patientId = 1;
         Exception exception = Assertions.assertThrows(IllegalArgumentException.class, () ->
-                changeStateMedicationService.execute(new PatientInfoBo(1, (short)1, (short)4), new ChangeStateMedicationRequestBo(null, 2d, null, Collections.emptyList()))
+                changeStateMedicationService.execute(patientId, new ChangeStateMedicationRequestBo(null, 2d, null, Collections.emptyList()))
         );
         String expectedMessage = "El estado es obligatorio";
         String actualMessage = exception.getMessage();
         Assertions.assertTrue(actualMessage.contains(expectedMessage));
 
         exception = Assertions.assertThrows(IllegalArgumentException.class, () ->
-                changeStateMedicationService.execute(new PatientInfoBo(1, (short)1, (short)4),  new ChangeStateMedicationRequestBo("ESTADO", 2d, null, Collections.emptyList()))
+                changeStateMedicationService.execute(patientId,  new ChangeStateMedicationRequestBo("ESTADO", 2d, null, Collections.emptyList()))
         );
         expectedMessage = "El estado de la medicación es invalido";
         actualMessage = exception.getMessage();
@@ -103,29 +96,29 @@ class ChangeStateMedicationServiceImplTest extends UnitRepository {
         when(dateTimeProvider.nowDate()).thenReturn(LocalDate.of(2020, 12, 24));
         Integer dosageId = save(MedicationTestMocks.createDosage(7d,"d", 8, "h", false,
 				LocalDateTime.of(2020,12,16,0,0,0), LocalDateTime.of(2020,12,23,0,0,0), null, null, null)).getId();
-        Integer medicationId = save(MedicationTestMocks.createMedicationStatement(patientId, ibuprofenoId, "", MedicationStatementStatus.STOPPED, null, 9, dosageId)).getId();
+        Integer medicationId = save(MedicationTestMocks.createMedicationStatement(patientId, ibuprofenoId, MedicationStatementStatus.STOPPED, null, 9, dosageId)).getId();
 
         Exception exception = Assertions.assertThrows(IllegalArgumentException.class, () ->
-                changeStateMedicationService.execute(new PatientInfoBo(patientId, (short)1, (short)4),  new ChangeStateMedicationRequestBo(MedicationStatementStatus.SUSPENDED, 2d, null, List.of(medicationId)))
+                changeStateMedicationService.execute(patientId,  new ChangeStateMedicationRequestBo(MedicationStatementStatus.SUSPENDED, 2d, null, List.of(medicationId)))
         );
         String expectedMessage = "La medicación con id "+ medicationId + " no se puede suspender porque ya esta finalizada";
         String actualMessage = exception.getMessage();
         Assertions.assertTrue(actualMessage.contains(expectedMessage));
 
 
-        Integer medication2Id = save(MedicationTestMocks.createMedicationStatement(patientId, ibuprofenoId, "", MedicationStatementStatus.STOPPED, null, 9, null)).getId();
+        Integer medication2Id = save(MedicationTestMocks.createMedicationStatement(patientId, ibuprofenoId, MedicationStatementStatus.STOPPED, null, 9, null)).getId();
 
         exception = Assertions.assertThrows(IllegalArgumentException.class, () ->
-                changeStateMedicationService.execute(new PatientInfoBo(patientId, (short)1, (short)4),  new ChangeStateMedicationRequestBo(MedicationStatementStatus.SUSPENDED, 2d, null, List.of(medication2Id)))
+                changeStateMedicationService.execute(patientId,  new ChangeStateMedicationRequestBo(MedicationStatementStatus.SUSPENDED, 2d, null, List.of(medication2Id)))
         );
         expectedMessage = "La medicación con id "+ medication2Id + " no se puede suspender porque ya esta finalizada";
         actualMessage = exception.getMessage();
         Assertions.assertTrue(actualMessage.contains(expectedMessage));
 
-        Integer medication3Id = save(MedicationTestMocks.createMedicationStatement(patientId, ibuprofenoId, "", MedicationStatementStatus.SUSPENDED, null, 9, null)).getId();
+        Integer medication3Id = save(MedicationTestMocks.createMedicationStatement(patientId, ibuprofenoId, MedicationStatementStatus.SUSPENDED, null, 9, null)).getId();
 
         exception = Assertions.assertThrows(IllegalArgumentException.class, () ->
-                changeStateMedicationService.execute(new PatientInfoBo(patientId, (short)1, (short)4), new ChangeStateMedicationRequestBo(MedicationStatementStatus.SUSPENDED, 2d, null, List.of(medication3Id)))
+                changeStateMedicationService.execute(patientId, new ChangeStateMedicationRequestBo(MedicationStatementStatus.SUSPENDED, 2d, null, List.of(medication3Id)))
         );
         expectedMessage = "La medicación con id "+ medication3Id + " no se puede suspender porque ya esta suspendida";
         actualMessage = exception.getMessage();
@@ -135,17 +128,17 @@ class ChangeStateMedicationServiceImplTest extends UnitRepository {
         when(dateTimeProvider.nowDate()).thenReturn(LocalDate.of(2020, 12, 21));
         dosageId = save(MedicationTestMocks.createDosage(7d,"d", 8, "h", false,
 				LocalDateTime.of(2020,12,16,0,0,0), LocalDateTime.of(2020,12,23,0,0,0), LocalDate.of(2020,12,18), LocalDate.of(2020,12,21), null)).getId();
-        Integer medication4Id = save(MedicationTestMocks.createMedicationStatement(patientId, ibuprofenoId, "", MedicationStatementStatus.SUSPENDED, null, 9, dosageId)).getId();
+        Integer medication4Id = save(MedicationTestMocks.createMedicationStatement(patientId, ibuprofenoId, MedicationStatementStatus.SUSPENDED, null, 9, dosageId)).getId();
 
         exception = Assertions.assertThrows(IllegalArgumentException.class, () ->
-                changeStateMedicationService.execute(new PatientInfoBo(patientId, (short)1, (short)4), new ChangeStateMedicationRequestBo(MedicationStatementStatus.SUSPENDED, 2d, null, List.of(medication4Id)))
+                changeStateMedicationService.execute(patientId, new ChangeStateMedicationRequestBo(MedicationStatementStatus.SUSPENDED, 2d, null, List.of(medication4Id)))
         );
         expectedMessage = "La medicación con id "+ medication4Id + " no se puede suspender porque ya esta suspendida";
         actualMessage = exception.getMessage();
         Assertions.assertTrue(actualMessage.contains(expectedMessage));
 
         exception = Assertions.assertThrows(IllegalArgumentException.class, () ->
-                changeStateMedicationService.execute(new PatientInfoBo(patientId, (short)1, (short)4), new ChangeStateMedicationRequestBo(MedicationStatementStatus.SUSPENDED, null, null, List.of(medication4Id)))
+                changeStateMedicationService.execute(patientId, new ChangeStateMedicationRequestBo(MedicationStatementStatus.SUSPENDED, null, null, List.of(medication4Id)))
         );
         expectedMessage = "La cantidad de dias de suspensión es obligatoria";
         actualMessage = exception.getMessage();
@@ -161,29 +154,29 @@ class ChangeStateMedicationServiceImplTest extends UnitRepository {
         when(dateTimeProvider.nowDate()).thenReturn(LocalDate.of(2020, 12, 24));
         Integer dosageId = save(MedicationTestMocks.createDosage(7d, "d", 8, "h", false,
 				LocalDateTime.of(2020, 12, 16,0,0,0), LocalDateTime.of(2020, 12, 23,0,0,0), null, null, null)).getId();
-        Integer medicationId = save(MedicationTestMocks.createMedicationStatement(patientId, ibuprofenoId, "", MedicationStatementStatus.STOPPED, null, 9, dosageId)).getId();
+        Integer medicationId = save(MedicationTestMocks.createMedicationStatement(patientId, ibuprofenoId, MedicationStatementStatus.STOPPED, null, 9, dosageId)).getId();
 
         Exception exception = Assertions.assertThrows(IllegalArgumentException.class, () ->
-                changeStateMedicationService.execute(new PatientInfoBo(patientId, (short) 1, (short) 4), new ChangeStateMedicationRequestBo(MedicationStatementStatus.ACTIVE, 2d, null, List.of(medicationId)))
+                changeStateMedicationService.execute(patientId, new ChangeStateMedicationRequestBo(MedicationStatementStatus.ACTIVE, 2d, null, List.of(medicationId)))
         );
         String expectedMessage = "La medicación con id " + medicationId + " no se puede activar porque ya esta finalizada";
         String actualMessage = exception.getMessage();
         Assertions.assertTrue(actualMessage.contains(expectedMessage));
 
 
-        Integer medication2Id = save(MedicationTestMocks.createMedicationStatement(patientId, ibuprofenoId, "", MedicationStatementStatus.STOPPED, null, 9, null)).getId();
+        Integer medication2Id = save(MedicationTestMocks.createMedicationStatement(patientId, ibuprofenoId, MedicationStatementStatus.STOPPED, null, 9, null)).getId();
 
         exception = Assertions.assertThrows(IllegalArgumentException.class, () ->
-                changeStateMedicationService.execute(new PatientInfoBo(patientId, (short) 1, (short) 4), new ChangeStateMedicationRequestBo(MedicationStatementStatus.ACTIVE, 2d, null, List.of(medication2Id)))
+                changeStateMedicationService.execute(patientId, new ChangeStateMedicationRequestBo(MedicationStatementStatus.ACTIVE, 2d, null, List.of(medication2Id)))
         );
         expectedMessage = "La medicación con id " + medication2Id + " no se puede activar porque ya esta finalizada";
         actualMessage = exception.getMessage();
         Assertions.assertTrue(actualMessage.contains(expectedMessage));
 
-        Integer medication3Id = save(MedicationTestMocks.createMedicationStatement(patientId, ibuprofenoId, "", MedicationStatementStatus.ACTIVE, null, 9, null)).getId();
+        Integer medication3Id = save(MedicationTestMocks.createMedicationStatement(patientId, ibuprofenoId, MedicationStatementStatus.ACTIVE, null, 9, null)).getId();
 
         exception = Assertions.assertThrows(IllegalArgumentException.class, () ->
-                changeStateMedicationService.execute(new PatientInfoBo(patientId, (short) 1, (short) 4), new ChangeStateMedicationRequestBo(MedicationStatementStatus.ACTIVE, 2d, null, List.of(medication3Id)))
+                changeStateMedicationService.execute(patientId, new ChangeStateMedicationRequestBo(MedicationStatementStatus.ACTIVE, 2d, null, List.of(medication3Id)))
         );
         expectedMessage = "La medicación con id " + medication3Id + " no se puede activar porque ya esta activa";
         actualMessage = exception.getMessage();
@@ -193,10 +186,10 @@ class ChangeStateMedicationServiceImplTest extends UnitRepository {
         when(dateTimeProvider.nowDate()).thenReturn(LocalDate.of(2020, 12, 20));
         dosageId = save(MedicationTestMocks.createDosage(7d, "d", 8, "h", false,
 				LocalDateTime.of(2020, 12, 16,0,0,0), LocalDateTime.of(2020, 12, 23,0,0,0), LocalDate.of(2020, 12, 18), LocalDate.of(2020, 12, 19), null)).getId();
-        Integer medication4Id = save(MedicationTestMocks.createMedicationStatement(patientId, ibuprofenoId, "", MedicationStatementStatus.SUSPENDED, null, 9, dosageId)).getId();
+        Integer medication4Id = save(MedicationTestMocks.createMedicationStatement(patientId, ibuprofenoId, MedicationStatementStatus.SUSPENDED, null, 9, dosageId)).getId();
 
         exception = Assertions.assertThrows(IllegalArgumentException.class, () ->
-                changeStateMedicationService.execute(new PatientInfoBo(patientId, (short) 1, (short) 4), new ChangeStateMedicationRequestBo(MedicationStatementStatus.ACTIVE, 2d, null, List.of(medication4Id)))
+                changeStateMedicationService.execute(patientId, new ChangeStateMedicationRequestBo(MedicationStatementStatus.ACTIVE, 2d, null, List.of(medication4Id)))
         );
         expectedMessage = "La medicación con id " + medication4Id + " no se puede activar porque ya esta activa";
         actualMessage = exception.getMessage();
@@ -212,20 +205,20 @@ class ChangeStateMedicationServiceImplTest extends UnitRepository {
         when(dateTimeProvider.nowDate()).thenReturn(LocalDate.of(2020, 12, 24));
         Integer dosageId = save(MedicationTestMocks.createDosage(7d, "d", 8, "h", false,
 				LocalDateTime.of(2020, 12, 16,0,0,0), LocalDateTime.of(2020, 12, 23,0,0,0), null, null, null)).getId();
-        Integer medicationId = save(MedicationTestMocks.createMedicationStatement(patientId, ibuprofenoId, "", MedicationStatementStatus.STOPPED, null, 9, dosageId)).getId();
+        Integer medicationId = save(MedicationTestMocks.createMedicationStatement(patientId, ibuprofenoId, MedicationStatementStatus.STOPPED, null, 9, dosageId)).getId();
 
         Exception exception = Assertions.assertThrows(IllegalArgumentException.class, () ->
-                changeStateMedicationService.execute(new PatientInfoBo(patientId, (short) 1, (short) 4),  new ChangeStateMedicationRequestBo(MedicationStatementStatus.STOPPED, 2d, null, List.of(medicationId)))
+                changeStateMedicationService.execute(patientId,  new ChangeStateMedicationRequestBo(MedicationStatementStatus.STOPPED, 2d, null, List.of(medicationId)))
         );
         String expectedMessage = "La medicación con id " + medicationId + " no se puede finalizar porque ya esta finalizada";
         String actualMessage = exception.getMessage();
         Assertions.assertTrue(actualMessage.contains(expectedMessage));
 
 
-        Integer medication2Id = save(MedicationTestMocks.createMedicationStatement(patientId, ibuprofenoId, "", MedicationStatementStatus.STOPPED, null, 9, null)).getId();
+        Integer medication2Id = save(MedicationTestMocks.createMedicationStatement(patientId, ibuprofenoId, MedicationStatementStatus.STOPPED, null, 9, null)).getId();
 
         exception = Assertions.assertThrows(IllegalArgumentException.class, () ->
-                changeStateMedicationService.execute(new PatientInfoBo(patientId, (short) 1, (short) 4), new ChangeStateMedicationRequestBo(MedicationStatementStatus.STOPPED, 2d, null, List.of(medication2Id)))
+                changeStateMedicationService.execute(patientId, new ChangeStateMedicationRequestBo(MedicationStatementStatus.STOPPED, 2d, null, List.of(medication2Id)))
         );
         expectedMessage = "La medicación con id " + medication2Id + " no se puede finalizar porque ya esta finalizada";
         actualMessage = exception.getMessage();
@@ -235,8 +228,7 @@ class ChangeStateMedicationServiceImplTest extends UnitRepository {
 
     @Test
     void test_execute_success(){
-        PatientInfoBo patient = new PatientInfoBo(1, (short) 1, (short) 18);
-        changeStateMedicationService.execute(patient, new ChangeStateMedicationRequestBo(MedicationStatementStatus.ACTIVE, 2d, null, Collections.emptyList()));
+        changeStateMedicationService.execute(1, new ChangeStateMedicationRequestBo(MedicationStatementStatus.ACTIVE, 2d, null, Collections.emptyList()));
         Assertions.assertTrue(true);
     }
 

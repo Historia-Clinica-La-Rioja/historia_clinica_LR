@@ -7,8 +7,6 @@ import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.ips.entity
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.masterdata.entity.DiagnosticReportStatus;
 import net.pladema.clinichistory.requests.servicerequests.service.DeleteDiagnosticReportService;
 import ar.lamansys.sgh.clinichistory.application.document.DocumentService;
-import ar.lamansys.sgh.clinichistory.domain.document.PatientInfoBo;
-import net.pladema.clinichistory.hospitalization.service.documents.validation.PatientInfoValidator;
 import ar.lamansys.sgh.clinichistory.domain.ips.DiagnosticReportBo;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -39,17 +37,16 @@ public class DeleteDiagnosticReportServiceImpl implements DeleteDiagnosticReport
         this.snomedService = snomedService;
     }
     @Override
-    public Integer execute(PatientInfoBo patient, Integer diagnosticReportId) {
-        LOG.debug("Input: patient: {}, diagnosticReportId: {}", patient, diagnosticReportId);
+    public Integer execute(Integer patientId, Integer diagnosticReportId) {
+        LOG.debug("Input: patientId: {}, diagnosticReportId: {}", patientId, diagnosticReportId);
         Optional<DiagnosticReport> drOpt = diagnosticReportRepository.findById(diagnosticReportId);
         if (drOpt.isPresent()){
             var dr = drOpt.get();
-            assertRequiredFields(patient);
             assertDeleteDiagnosticReport(dr);
-
+			Assert.notNull(patientId, "El código identificador del paciente es obligatorio");
             DiagnosticReportBo diagnosticReportBo = getCancelledDiagnosticReport(dr);
             var documentDiagnosticReport = documentService.getDocumentFromDiagnosticReport(diagnosticReportId);
-            Integer result = loadDiagnosticReports.run(documentDiagnosticReport.getDocumentId(), patient, List.of(diagnosticReportBo)).get(0);
+            Integer result = loadDiagnosticReports.run(documentDiagnosticReport.getDocumentId(), patientId, List.of(diagnosticReportBo)).get(0);
             LOG.trace(OUTPUT, result);
             return result;
         }
@@ -66,12 +63,6 @@ public class DeleteDiagnosticReportServiceImpl implements DeleteDiagnosticReport
         result.setSnomed(snomedService.getSnomed(diagnosticReport.getSnomedId()));
         LOG.debug(OUTPUT, result);
         return result;
-    }
-
-    private void assertRequiredFields(PatientInfoBo patient) {
-        LOG.debug("Input parameters -> patient {}", patient);
-        var patientInfoValidator = new PatientInfoValidator();
-        patientInfoValidator.isValid(patient);
     }
 
     private void assertDeleteDiagnosticReport(DiagnosticReport dr){

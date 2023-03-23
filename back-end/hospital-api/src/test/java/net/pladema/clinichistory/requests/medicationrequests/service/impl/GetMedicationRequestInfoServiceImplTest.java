@@ -74,13 +74,13 @@ class GetMedicationRequestInfoServiceImplTest extends UnitRepository {
         Integer dosageId = save(MedicationTestMocks.createDosage(7d,"d", 8, "h", false,
                 LocalDateTime.of(2020,12,16,0,0,0), LocalDateTime.of(2020,12,23,0,0,0), null, null, null)).getId();
 
-        Integer mIbuprofenoId = save(MedicationTestMocks.createMedicationStatement(patientId, sctId_ibuprofeno, "", MedicationStatementStatus.ACTIVE, null, dolor_id, dosageId)).getId();
+        Integer mIbuprofenoId = save(MedicationTestMocks.createMedicationStatement(patientId, sctId_ibuprofeno, MedicationStatementStatus.ACTIVE, null, dolor_id, dosageId)).getId();
         save(MedicationTestMocks.createDocumentMedicationStatement(recipe1_doc_id, mIbuprofenoId));
 
-        Integer mParacetamolId = save(MedicationTestMocks.createMedicationStatement(patientId, sctId_paracetamol, "", MedicationStatementStatus.ACTIVE, null, angina_id, dosageId)).getId();
+        Integer mParacetamolId = save(MedicationTestMocks.createMedicationStatement(patientId, sctId_paracetamol, MedicationStatementStatus.ACTIVE, null, angina_id, dosageId)).getId();
         save(MedicationTestMocks.createDocumentMedicationStatement(recipe1_doc_id, mParacetamolId));
 
-        Integer mClonacepanId = save(MedicationTestMocks.createMedicationStatement(patientId, sctId_clonacepan, "", MedicationStatementStatus.ACTIVE, null, papera_id, dosageId)).getId();
+        Integer mClonacepanId = save(MedicationTestMocks.createMedicationStatement(patientId, sctId_clonacepan, MedicationStatementStatus.ACTIVE, null, papera_id, dosageId)).getId();
         save(MedicationTestMocks.createDocumentMedicationStatement(recipe2_doc_id, mClonacepanId));
 
         var result = getMedicationRequestInfoService.execute(mr1_id);

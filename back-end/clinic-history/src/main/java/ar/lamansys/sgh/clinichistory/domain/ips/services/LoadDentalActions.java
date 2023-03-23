@@ -52,7 +52,7 @@ public class LoadDentalActions {
                 result.add(odontologyDiagnosticRepository.save(odontologyDiagnostic).getId());
                 documentService.createDocumentOdontologyDiagnostic(documentId, odontologyDiagnostic.getId());
             } else {
-                OdontologyProcedure odontologyProcedure = getNewOdontologyProcedure(patientInfo, dentalAction);
+                OdontologyProcedure odontologyProcedure = getNewOdontologyProcedure(patientInfo.getId(), dentalAction);
                 result.add(odontologyProcedureRepository.save(odontologyProcedure).getId());
                 documentService.createDocumentOdontologyProcedure(documentId, odontologyProcedure.getId());
             }
@@ -61,17 +61,14 @@ public class LoadDentalActions {
         return result;
     }
 
-    private OdontologyProcedure getNewOdontologyProcedure(PatientInfoBo patientInfo, DentalActionBo dentalProcedure) {
+    private OdontologyProcedure getNewOdontologyProcedure(Integer patientId, DentalActionBo dentalProcedure) {
         OdontologyProcedure result = new OdontologyProcedure();
 
         Integer snomedId = snomedService.getSnomedId(dentalProcedure.getSnomed())
                 .orElseGet(() -> snomedService.createSnomedTerm(dentalProcedure.getSnomed()));
-        String cie10Codes = calculateCie10Facade.execute(dentalProcedure.getSnomed().getSctid(),
-                new Cie10FacadeRuleFeature(patientInfo.getGenderId(), patientInfo.getAge()));
 
-        result.setPatientId(patientInfo.getId());
+        result.setPatientId(patientId);
         result.setSnomedId(snomedId);
-        result.setCie10Codes(cie10Codes);
 
         if (dentalProcedure.getTooth() != null) {
             Integer toothId = snomedService.getSnomedId(dentalProcedure.getTooth()).orElse(null);

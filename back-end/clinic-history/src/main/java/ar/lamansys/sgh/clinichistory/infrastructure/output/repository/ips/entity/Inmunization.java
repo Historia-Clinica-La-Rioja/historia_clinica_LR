@@ -81,7 +81,7 @@ public class Inmunization extends SGXAuditableEntity<Integer> {
 
 	public Inmunization(Integer patientId,
 						Integer snomedId,
-						String cie10Codes, String statusId,
+						String statusId,
 						LocalDate administrationDate,
 						Integer institutionId,
 						String institutionInfo,
@@ -96,7 +96,6 @@ public class Inmunization extends SGXAuditableEntity<Integer> {
 		super();
 		this.patientId = patientId;
 		this.snomedId = snomedId;
-		this.cie10Codes = cie10Codes;
 		if (statusId != null)
 			this.statusId = statusId;
 		this.noteId = noteId;

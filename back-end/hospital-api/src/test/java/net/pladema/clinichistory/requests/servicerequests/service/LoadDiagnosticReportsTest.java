@@ -1,9 +1,7 @@
 package net.pladema.clinichistory.requests.servicerequests.service;
 
-import ar.lamansys.sgh.clinichistory.application.calculatecie10.CalculateCie10Facade;
 import ar.lamansys.sgh.clinichistory.application.document.DocumentService;
 import ar.lamansys.sgh.clinichistory.application.notes.NoteService;
-import ar.lamansys.sgh.clinichistory.domain.document.PatientInfoBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.DiagnosticReportBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.SnomedBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.services.LoadDiagnosticReports;
@@ -45,17 +43,13 @@ class LoadDiagnosticReportsTest extends UnitRepository {
     @Mock
     private SnomedService snomedService;
 
-    @Mock
-    private CalculateCie10Facade calculateCie10Facade;
-
     @BeforeEach
     void setUp() {
         loadDiagnosticReports = new LoadDiagnosticReports(
                 diagnosticReportRepository,
                 documentService,
                 noteService,
-                snomedService,
-                calculateCie10Facade
+                snomedService
         );
     }
 
@@ -84,7 +78,7 @@ class LoadDiagnosticReportsTest extends UnitRepository {
 
         Integer drId = loadDiagnosticReports.run(
                 order1_doc_id,
-                new PatientInfoBo(1, (short) 1, (short) 25),
+				patientId,
                 List.of(drDeleteUseCase)
                 ).get(0);
 
@@ -98,7 +92,7 @@ class LoadDiagnosticReportsTest extends UnitRepository {
 
         drId = loadDiagnosticReports.run(
                 order1_doc_id,
-                new PatientInfoBo(1, (short) 1, (short) 25),
+				patientId,
                 List.of(drDeleteUseCaseWithoutNote)
         ).get(0);
 
@@ -130,7 +124,7 @@ class LoadDiagnosticReportsTest extends UnitRepository {
 
         Integer drId = loadDiagnosticReports.run(
                 order1_doc_id,
-                new PatientInfoBo(1, (short) 1, (short) 25),
+				patientId,
                 List.of(drCompleteOrCreateUseCase)
         ).get(0);
 
@@ -143,7 +137,7 @@ class LoadDiagnosticReportsTest extends UnitRepository {
 
         drId = loadDiagnosticReports.run(
                 order1_doc_id,
-                new PatientInfoBo(1, (short) 1, (short) 25),
+				patientId,
                 List.of(drCompleteOrCreateUseCaseWithoutObservations)
         ).get(0);
 
@@ -172,7 +166,7 @@ class LoadDiagnosticReportsTest extends UnitRepository {
 
         Integer drId = loadDiagnosticReports.run(
                 order1_doc_id,
-                new PatientInfoBo(1, (short) 1, (short) 25),
+				patientId,
                 List.of(drBo)
         ).get(0);
 

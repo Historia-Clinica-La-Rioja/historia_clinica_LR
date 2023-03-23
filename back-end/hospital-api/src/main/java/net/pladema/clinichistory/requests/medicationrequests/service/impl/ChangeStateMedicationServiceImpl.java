@@ -10,13 +10,11 @@ import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.masterdata
 import ar.lamansys.sgh.clinichistory.domain.ips.services.MedicationCalculateStatus;
 import ar.lamansys.sgh.clinichistory.application.document.DocumentService;
 import ar.lamansys.sgh.clinichistory.application.notes.NoteService;
-import ar.lamansys.sgh.clinichistory.domain.document.PatientInfoBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.DosageBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.HealthConditionBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.MedicationBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.EUnitsOfTimeBo;
 import net.pladema.clinichistory.hospitalization.service.documents.validation.MedicationStatementValidator;
-import net.pladema.clinichistory.hospitalization.service.documents.validation.PatientInfoValidator;
 import net.pladema.clinichistory.requests.medicationrequests.service.ChangeStateMedicationService;
 import net.pladema.clinichistory.requests.medicationrequests.service.domain.ChangeStateMedicationRequestBo;
 import ar.lamansys.sgx.shared.dates.configuration.DateTimeProvider;
@@ -71,11 +69,11 @@ public class ChangeStateMedicationServiceImpl implements ChangeStateMedicationSe
 
     @Override
     @Transactional
-    public void execute(PatientInfoBo patient, ChangeStateMedicationRequestBo changeStateMedicationRequestBo) {
-        LOG.debug("Input parameters -> patient {}, changeStateMedicationRequestBo {}", patient, changeStateMedicationRequestBo);
+    public void execute(Integer patientId, ChangeStateMedicationRequestBo changeStateMedicationRequestBo) {
+        LOG.debug("Input parameters -> patientId {}, changeStateMedicationRequestBo {}", patientId, changeStateMedicationRequestBo);
         String newStatusId = changeStateMedicationRequestBo.getStatusId();
         Double duration = changeStateMedicationRequestBo.getDayQuantity();
-        assertRequiredFields(patient, newStatusId);
+        assertRequiredFields(patientId, newStatusId);
 
         changeStateMedicationRequestBo.getMedicationsIds().forEach(mid ->
             medicationStatementRepository.findById(mid).ifPresent(medication -> {
@@ -85,15 +83,13 @@ public class ChangeStateMedicationServiceImpl implements ChangeStateMedicationSe
                 MedicationBo newMedication = updateMedication(medication, dosage, newStatusId, duration, changeStateMedicationRequestBo.getObservations());
 
                 var documentMedication = documentService.getDocumentFromMedication(mid);
-                loadMedications.run(patient, documentMedication.getDocumentId(), List.of(newMedication));
+                loadMedications.run(patientId, documentMedication.getDocumentId(), List.of(newMedication));
             })
         );
     }
-    private void assertRequiredFields(PatientInfoBo patient, String newStatusId) {
-        LOG.debug("Input parameters -> patient {}, newStatusId {}", patient, newStatusId);
-        var patientInfoValidator = new PatientInfoValidator();
-        patientInfoValidator.isValid(patient);
-
+    private void assertRequiredFields(Integer patientId, String newStatusId) {
+        LOG.debug("Input parameters -> patientId {}, newStatusId {}", patientId, newStatusId);
+		Assert.notNull(patientId, "El código identificador del paciente es obligatorio");
         var medicationStatusValidator = new MedicationStatementValidator();
         medicationStatusValidator.isValid(newStatusId);
     }

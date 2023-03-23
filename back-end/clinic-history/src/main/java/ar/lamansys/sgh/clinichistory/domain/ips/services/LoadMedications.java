@@ -1,7 +1,5 @@
 package ar.lamansys.sgh.clinichistory.domain.ips.services;
 
-import ar.lamansys.sgh.clinichistory.application.calculatecie10.CalculateCie10Facade;
-import ar.lamansys.sgh.clinichistory.application.calculatecie10.Cie10FacadeRuleFeature;
 import ar.lamansys.sgh.clinichistory.application.document.DocumentService;
 import ar.lamansys.sgh.clinichistory.application.notes.NoteService;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.ips.DosageRepository;
@@ -10,7 +8,6 @@ import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.ips.entity
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.ips.entity.MedicationStatement;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.masterdata.MedicamentStatementStatusRepository;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.masterdata.entity.MedicationStatementStatus;
-import ar.lamansys.sgh.clinichistory.domain.document.PatientInfoBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.DosageBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.MedicationBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.EUnitsOfTimeBo;
@@ -38,9 +35,6 @@ public class LoadMedications {
     private final DocumentService documentService;
 
     private final SnomedService snomedService;
-
-    private final CalculateCie10Facade calculateCie10Facade;
-
     private final NoteService noteService;
 
     public LoadMedications(MedicationStatementRepository medicationStatementRepository,
@@ -48,26 +42,22 @@ public class LoadMedications {
                            MedicamentStatementStatusRepository medicamentStatementStatusRepository,
                            DocumentService documentService,
                            SnomedService snomedService,
-                           CalculateCie10Facade calculateCie10Facade,
                            NoteService noteService){
         this.medicationStatementRepository = medicationStatementRepository;
         this.dosageRepository = dosageRepository;
         this.medicamentStatementStatusRepository = medicamentStatementStatusRepository;
         this.documentService = documentService;
         this.snomedService = snomedService;
-        this.calculateCie10Facade = calculateCie10Facade;
         this.noteService = noteService;
     }
 
-    public List<MedicationBo> run(PatientInfoBo patientInfo, Long documentId, List<MedicationBo> medications) {
-        LOG.debug("Input parameters -> patientInfo {}, documentId {}, medications {}", patientInfo, documentId, medications);
+    public List<MedicationBo> run(Integer patientId, Long documentId, List<MedicationBo> medications) {
+        LOG.debug("Input parameters -> patientId {}, documentId {}, medications {}", patientId, documentId, medications);
         assertRequiredFields(documentId);
         medications.forEach(medication -> {
 			if(medication.getId()==null) {
 				Integer snomedId = snomedService.getSnomedId(medication.getSnomed()).orElseGet(() -> snomedService.createSnomedTerm(medication.getSnomed()));
-				String cie10Codes = calculateCie10Facade.execute(medication.getSnomed().getSctid(), new Cie10FacadeRuleFeature(patientInfo.getGenderId(), patientInfo.getAge()));
-				MedicationStatement medicationStatement = saveMedicationStatement(patientInfo.getId(), medication, snomedId, cie10Codes);
-
+				MedicationStatement medicationStatement = saveMedicationStatement(patientId, medication, snomedId);
 				medication.setId(medicationStatement.getId());
 				medication.setStatusId(medicationStatement.getStatusId());
 				medication.setStatus(getStatus(medication.getStatusId()));
@@ -81,13 +71,12 @@ public class LoadMedications {
 
 
 
-    private MedicationStatement saveMedicationStatement(Integer patientId, MedicationBo medicationBo, Integer snomedId, String cie10Codes) {
-        LOG.debug("Input parameters -> patientId {}, medication {}, snomedId {}, cie10Codes {}", patientId, medicationBo, snomedId, cie10Codes);
-        Dosage newDosage = createDosage(medicationBo.getDosage());
-        MedicationStatement medicationStatement = new MedicationStatement(
+    private MedicationStatement saveMedicationStatement(Integer patientId, MedicationBo medicationBo, Integer snomedId) {
+        LOG.debug("Input parameters -> patientId {}, medication {}, snomedId {}", patientId, medicationBo, snomedId);
+		Dosage newDosage = createDosage(medicationBo.getDosage());
+		MedicationStatement medicationStatement = new MedicationStatement(
                 patientId,
                 snomedId,
-                cie10Codes,
                 medicationBo.getStatusId(),
                 medicationBo.getNoteId() != null ? medicationBo.getNoteId()  : noteService.createNote(medicationBo.getNote()),
                 medicationBo.getHealthCondition() != null ? medicationBo.getHealthCondition().getId() : null,

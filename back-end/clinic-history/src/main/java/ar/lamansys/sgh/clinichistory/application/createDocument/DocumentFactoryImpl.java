@@ -113,6 +113,7 @@ public class DocumentFactoryImpl implements DocumentFactory {
 
         documentBo.setId(doc.getId());
         PatientInfoBo patientInfo = documentBo.getPatientInfo();
+		Integer patientId = patientInfo.getId();
         healthConditionService.loadMainDiagnosis(patientInfo, doc.getId(), Optional.ofNullable(documentBo.getMainDiagnosis()));
         healthConditionService.loadDiagnosis(patientInfo, doc.getId(), documentBo.getDiagnosis());
         healthConditionService.loadPersonalHistories(patientInfo, doc.getId(), documentBo.getPersonalHistories());
@@ -120,15 +121,15 @@ public class DocumentFactoryImpl implements DocumentFactory {
         healthConditionService.loadProblems(patientInfo, doc.getId(), documentBo.getProblems());
         healthConditionService.loadOtherProblems(patientInfo, doc.getId(), documentBo.getOtherProblems());
 		loadAllergies.run(patientInfo, doc.getId(), documentBo.getAllergies());
-        loadImmunizations.run(patientInfo, doc.getId(), documentBo.getImmunizations());
-        loadMedications.run(patientInfo, doc.getId(), documentBo.getMedications());
-        loadProcedures.run(patientInfo, doc.getId(), documentBo.getProcedures());
+        loadImmunizations.run(patientId, doc.getId(), documentBo.getImmunizations());
+        loadMedications.run(patientId, doc.getId(), documentBo.getMedications());
+        loadProcedures.run(patientId, doc.getId(), documentBo.getProcedures());
         loadDentalActions.run(patientInfo, doc.getId(), documentBo.getDentalActions());
 
-        clinicalObservationService.loadRiskFactors(patientInfo, doc.getId(), Optional.ofNullable(documentBo.getRiskFactors()));
-        clinicalObservationService.loadAnthropometricData(patientInfo, doc.getId(), Optional.ofNullable(documentBo.getAnthropometricData()));
+        clinicalObservationService.loadRiskFactors(patientId, doc.getId(), Optional.ofNullable(documentBo.getRiskFactors()));
+        clinicalObservationService.loadAnthropometricData(patientId, doc.getId(), Optional.ofNullable(documentBo.getAnthropometricData()));
 
-        loadDiagnosticReports.run(doc.getId(), patientInfo, documentBo.getDiagnosticReports());
+        loadDiagnosticReports.run(doc.getId(), patientId, documentBo.getDiagnosticReports());
 
         if (createFile)
             generateDocument(documentBo);

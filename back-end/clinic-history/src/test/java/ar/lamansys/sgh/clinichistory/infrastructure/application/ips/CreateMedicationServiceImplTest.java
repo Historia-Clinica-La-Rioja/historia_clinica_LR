@@ -1,10 +1,8 @@
 package ar.lamansys.sgh.clinichistory.infrastructure.application.ips;
 
 import ar.lamansys.sgh.clinichistory.UnitRepository;
-import ar.lamansys.sgh.clinichistory.application.calculatecie10.CalculateCie10Facade;
 import ar.lamansys.sgh.clinichistory.application.document.DocumentService;
 import ar.lamansys.sgh.clinichistory.application.notes.NoteService;
-import ar.lamansys.sgh.clinichistory.domain.document.PatientInfoBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.DosageBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.EUnitsOfTimeBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.HealthConditionBo;
@@ -52,9 +50,6 @@ class CreateMedicationServiceImplTest extends UnitRepository {
     private SnomedService snomedService;
 
     @MockBean
-    private CalculateCie10Facade calculateCie10Facade;
-
-    @MockBean
     private NoteService noteService;
 
 	@MockBean
@@ -68,21 +63,20 @@ class CreateMedicationServiceImplTest extends UnitRepository {
                 medicamentStatementStatusRepository,
                 documentService,
                 snomedService,
-                calculateCie10Facade,
                 noteService
         );
     }
 
     @Test
     void createDocument_withEmptyList() {
-        var result = medicationServiceImpl.run(new PatientInfoBo(1, (short)2, (short)2), 1l, Collections.emptyList());
+        var result = medicationServiceImpl.run(1, 1l, Collections.emptyList());
         Assertions.assertThat(result.isEmpty())
                     .isTrue();
     }
 
     @Test
     void createDocument_complete_success() {
-        PatientInfoBo patientInfo =new PatientInfoBo(1, (short)2, (short)2);
+        Integer patientInfo = 1;
 
         Integer snomedId = 1;
         when(snomedService.createSnomedTerm(new SnomedBo("IBUPROFENO", "IBUPROFENO"))).thenReturn(snomedId);
@@ -142,7 +136,7 @@ class CreateMedicationServiceImplTest extends UnitRepository {
 
     @Test
     void createDocument_chronicMedication_success() {
-        PatientInfoBo patientInfo = new PatientInfoBo(1, (short)2, (short)2);
+        Integer patientInfo = 1;
 
         Integer snomedId = 1;
         when(snomedService.createSnomedTerm(new SnomedBo("IBUPROFENO", "IBUPROFENO"))).thenReturn(snomedId);
@@ -201,7 +195,7 @@ class CreateMedicationServiceImplTest extends UnitRepository {
 
     @Test
     void createDocument_usual_medication_success() {
-        PatientInfoBo patientInfo = new PatientInfoBo(1, (short)2, (short)2);
+        Integer patientInfo = 1;
 
         Integer snomedId = 1;
         when(snomedService.createSnomedTerm(new SnomedBo("IBUPROFENO", "IBUPROFENO"))).thenReturn(snomedId);

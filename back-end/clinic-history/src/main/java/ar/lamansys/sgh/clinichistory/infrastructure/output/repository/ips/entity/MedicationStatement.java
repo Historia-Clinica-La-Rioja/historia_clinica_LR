@@ -71,12 +71,11 @@ public class MedicationStatement extends SGXAuditableEntity<Integer> {
 	@Column(name = "prescription_line_state")
 	private Short prescriptionLineState;
 
-	public MedicationStatement(Integer patientId, Integer snomedId, String cie10Codes, String statusId, Long noteId,
+	public MedicationStatement(Integer patientId, Integer snomedId, String statusId, Long noteId,
 							   Integer healthConditionId, Integer dosageId) {
 		super();
 		this.patientId = patientId;
 		this.snomedId = snomedId;
-		this.cie10Codes = cie10Codes;
 		if (statusId != null)
 			this.statusId = statusId;
 		this.noteId = noteId;
@@ -84,12 +83,11 @@ public class MedicationStatement extends SGXAuditableEntity<Integer> {
 		this.dosageId = dosageId;
 	}
 
-	public MedicationStatement(Integer patientId, Integer snomedId, String cie10Codes, String statusId, Long noteId,
+	public MedicationStatement(Integer patientId, Integer snomedId, String statusId, Long noteId,
 							   Integer healthConditionId, Integer dosageId, Integer prescriptionLineNumber, Boolean isDigital) {
 		super();
 		this.patientId = patientId;
 		this.snomedId = snomedId;
-		this.cie10Codes = cie10Codes;
 		if (statusId != null)
 			this.statusId = statusId;
 		this.noteId = noteId;

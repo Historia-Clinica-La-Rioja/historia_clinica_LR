@@ -1,13 +1,10 @@
 package ar.lamansys.sgh.clinichistory.domain.ips.services;
 
-import ar.lamansys.sgh.clinichistory.application.calculatecie10.CalculateCie10Facade;
-import ar.lamansys.sgh.clinichistory.application.calculatecie10.Cie10FacadeRuleFeature;
 import ar.lamansys.sgh.clinichistory.application.document.DocumentService;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.ips.ProceduresRepository;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.ips.entity.Procedure;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.masterdata.ProceduresStatusRepository;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.masterdata.entity.ProceduresStatus;
-import ar.lamansys.sgh.clinichistory.domain.document.PatientInfoBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.ProcedureBo;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -30,28 +27,22 @@ public class LoadProcedures {
 
     private final SnomedService snomedService;
 
-    private final CalculateCie10Facade calculateCie10Facade;
-
     public LoadProcedures(ProceduresRepository proceduresRepository,
                           ProceduresStatusRepository proceduresStatusRepository,
                           DocumentService documentService,
-                          SnomedService snomedService,
-                          CalculateCie10Facade calculateCie10Facade){
+                          SnomedService snomedService){
         this.proceduresRepository = proceduresRepository;
         this.proceduresStatusRepository = proceduresStatusRepository;
         this.documentService = documentService;
         this.snomedService = snomedService;
-        this.calculateCie10Facade = calculateCie10Facade;
     }
 
-    public List<ProcedureBo> run(PatientInfoBo patientInfo, Long documentId, List<ProcedureBo> procedures) {
-        LOG.debug("Input parameters -> patientInfo {}, documentId {}, procedures {}", patientInfo, documentId, procedures);
+    public List<ProcedureBo> run(Integer patientId, Long documentId, List<ProcedureBo> procedures) {
+        LOG.debug("Input parameters -> patientId {}, documentId {}, procedures {}", patientId, documentId, procedures);
         procedures.forEach(p -> {
 			if(p.getId()==null) {
 				Integer snomedId = snomedService.getSnomedId(p.getSnomed()).orElseGet(() -> snomedService.createSnomedTerm(p.getSnomed()));
-				String cie10Codes = calculateCie10Facade.execute(p.getSnomed().getSctid(), new Cie10FacadeRuleFeature(patientInfo.getGenderId(), patientInfo.getAge()));
-				Procedure procedure = saveProcedure(patientInfo.getId(), p, snomedId, cie10Codes);
-
+				Procedure procedure = saveProcedure(patientId, p, snomedId);
 				p.setId(procedure.getId());
 				p.setStatusId(procedure.getStatusId());
 				p.setStatus(getStatus(p.getStatusId()));
@@ -63,12 +54,11 @@ public class LoadProcedures {
         return result;
     }
 
-    private Procedure saveProcedure(Integer patientId, ProcedureBo procedureBo, Integer snomedId, String cie10Codes) {
+    private Procedure saveProcedure(Integer patientId, ProcedureBo procedureBo, Integer snomedId) {
         LOG.debug("Input parameters -> patientId {}, procedureBo {}, snomedId {}", patientId, procedureBo, snomedId);
         Procedure result = new Procedure(
                 patientId,
                 snomedId,
-                cie10Codes,
                 procedureBo.getStatusId(), procedureBo.getPerformedDate());
 
         result = proceduresRepository.save(result);

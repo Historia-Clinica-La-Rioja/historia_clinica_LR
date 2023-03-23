@@ -6,8 +6,6 @@ import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.ips.Diagno
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.ips.entity.DiagnosticReport;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.masterdata.entity.DiagnosticReportStatus;
 import ar.lamansys.sgh.clinichistory.application.document.DocumentService;
-import ar.lamansys.sgh.clinichistory.domain.document.PatientInfoBo;
-import net.pladema.clinichistory.hospitalization.service.documents.validation.PatientInfoValidator;
 import net.pladema.clinichistory.requests.servicerequests.service.CompleteDiagnosticReportService;
 import net.pladema.clinichistory.requests.servicerequests.service.domain.CompleteDiagnosticReportBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.DiagnosticReportBo;
@@ -39,15 +37,15 @@ public class CompleteDiagnosticReportServiceImpl implements CompleteDiagnosticRe
     }
 
     @Override
-    public Integer run(PatientInfoBo patient, Integer diagnosticReportId, CompleteDiagnosticReportBo completeDiagnosticReportBo) {
-        LOG.debug("input -> patient {}, diagnosticReportId {}, completeDiagnosticReportBo {}", patient, diagnosticReportId, completeDiagnosticReportBo);
+    public Integer run(Integer patientId, Integer diagnosticReportId, CompleteDiagnosticReportBo completeDiagnosticReportBo) {
+        LOG.debug("input -> patientId {}, diagnosticReportId {}, completeDiagnosticReportBo {}", patientId, diagnosticReportId, completeDiagnosticReportBo);
         Integer result = diagnosticReportRepository.findById(diagnosticReportId).stream().mapToInt(dr -> {
-            assertRequiredFields(patient);
+			Assert.notNull(patientId, "El código identificador del paciente es obligatorio");
             assertCompleteDiagnosticReport(dr);
 
             DiagnosticReportBo diagnosticReportBo = getCompletedDiagnosticReport(dr, completeDiagnosticReportBo);
             var documentDiagnosticReport = documentService.getDocumentFromDiagnosticReport(diagnosticReportId);
-            return loadDiagnosticReports.run(documentDiagnosticReport.getDocumentId(), patient, List.of(diagnosticReportBo)).get(0);
+            return loadDiagnosticReports.run(documentDiagnosticReport.getDocumentId(), patientId, List.of(diagnosticReportBo)).get(0);
         }).findFirst().orElse(-1);
         LOG.debug(OUTPUT, result);
         return result;
@@ -63,12 +61,6 @@ public class CompleteDiagnosticReportServiceImpl implements CompleteDiagnosticRe
         result.setLink(completeDiagnosticReportBo.getLink());
         result.setSnomed(snomedService.getSnomed(diagnosticReport.getSnomedId()));
         return result;
-    }
-
-    private void assertRequiredFields(PatientInfoBo patient) {
-        LOG.debug("Input parameters -> patient {}", patient);
-        var patientInfoValidator = new PatientInfoValidator();
-        patientInfoValidator.isValid(patient);
     }
 
     private void assertCompleteDiagnosticReport(DiagnosticReport dr){

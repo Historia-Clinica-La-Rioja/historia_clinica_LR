@@ -176,9 +176,7 @@ public class MedicationRequestController {
                                   @PathVariable(name = "patientId") Integer patientId,
                                   @RequestBody ChangeStateMedicationRequestDto changeStateRequest) {
         LOG.debug(CHANGE_STATE_REQUEST, institutionId, patientId, changeStateRequest);
-        var patientDto = patientExternalService.getBasicDataFromPatient(patientId);
-        PatientInfoBo patientInfoBo = new PatientInfoBo(patientDto.getId(), patientDto.getPerson().getGender().getId(), patientDto.getPerson().getAge());
-        changeStateMedicationService.execute(patientInfoBo, new ChangeStateMedicationRequestBo(MedicationStatementStatus.SUSPENDED, changeStateRequest.getDayQuantity(), changeStateRequest.getObservations(), changeStateRequest.getMedicationsIds()));
+        changeStateMedicationService.execute(patientId, new ChangeStateMedicationRequestBo(MedicationStatementStatus.SUSPENDED, changeStateRequest.getDayQuantity(), changeStateRequest.getObservations(), changeStateRequest.getMedicationsIds()));
         LOG.debug("suspend success");
     }
 
@@ -190,9 +188,7 @@ public class MedicationRequestController {
                         @PathVariable(name = "patientId") Integer patientId,
                         @RequestBody ChangeStateMedicationRequestDto changeStateRequest) {
         LOG.debug(CHANGE_STATE_REQUEST, institutionId, patientId, changeStateRequest);
-        var patientDto = patientExternalService.getBasicDataFromPatient(patientId);
-        PatientInfoBo patientInfoBo = new PatientInfoBo(patientDto.getId(), patientDto.getPerson().getGender().getId(), patientDto.getPerson().getAge());
-        changeStateMedicationService.execute(patientInfoBo, new ChangeStateMedicationRequestBo(MedicationStatementStatus.STOPPED, null, null, changeStateRequest.getMedicationsIds()));
+        changeStateMedicationService.execute(patientId, new ChangeStateMedicationRequestBo(MedicationStatementStatus.STOPPED, null, null, changeStateRequest.getMedicationsIds()));
         LOG.debug("finalize success");
     }
 
@@ -203,9 +199,7 @@ public class MedicationRequestController {
                                      @PathVariable(name = "patientId") Integer patientId,
                                      @RequestBody ChangeStateMedicationRequestDto changeStateRequest) {
         LOG.debug(CHANGE_STATE_REQUEST, institutionId, patientId, changeStateRequest);
-        var patientDto = patientExternalService.getBasicDataFromPatient(patientId);
-        PatientInfoBo patientInfoBo = new PatientInfoBo(patientDto.getId(), patientDto.getPerson().getGender().getId(), patientDto.getPerson().getAge());
-        changeStateMedicationService.execute(patientInfoBo, new ChangeStateMedicationRequestBo(MedicationStatementStatus.ACTIVE, null, null, changeStateRequest.getMedicationsIds()));
+        changeStateMedicationService.execute(patientId, new ChangeStateMedicationRequestBo(MedicationStatementStatus.ACTIVE, null, null, changeStateRequest.getMedicationsIds()));
         LOG.debug("reactivate success");
     }
 

@@ -1,12 +1,9 @@
 package ar.lamansys.sgh.clinichistory.domain.ips.services;
 
-import ar.lamansys.sgh.clinichistory.application.calculatecie10.CalculateCie10Facade;
-import ar.lamansys.sgh.clinichistory.application.calculatecie10.Cie10FacadeRuleFeature;
 import ar.lamansys.sgh.clinichistory.application.document.DocumentService;
 import ar.lamansys.sgh.clinichistory.application.notes.NoteService;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.ips.DiagnosticReportRepository;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.ips.entity.DiagnosticReport;
-import ar.lamansys.sgh.clinichistory.domain.document.PatientInfoBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.DiagnosticReportBo;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -27,26 +24,23 @@ public class LoadDiagnosticReports {
     private final DocumentService documentService;
     private final NoteService noteService;
     private final SnomedService snomedService;
-    private final CalculateCie10Facade calculateCie10Facade;
 
     public LoadDiagnosticReports(DiagnosticReportRepository diagnosticReportRepository,
                                  DocumentService documentService,
                                  NoteService noteService,
-                                 SnomedService snomedService,
-                                 CalculateCie10Facade calculateCie10Facade) {
+                                 SnomedService snomedService) {
         this.diagnosticReportRepository = diagnosticReportRepository;
         this.documentService = documentService;
         this.noteService = noteService;
         this.snomedService = snomedService;
-        this.calculateCie10Facade = calculateCie10Facade;
     }
 
 	@Transactional
-    public List<Integer> run(Long documentId, PatientInfoBo patientInfo, List<DiagnosticReportBo> diagnosticReportBos) {
-        LOG.debug("Input parameters -> documentId {}, patientInfo {}, studyBo {}", documentId, patientInfo, diagnosticReportBos);
+    public List<Integer> run(Long documentId, Integer patientId, List<DiagnosticReportBo> diagnosticReportBos) {
+        LOG.debug("Input parameters -> documentId {}, patientId {}, studyBo {}", documentId, patientId, diagnosticReportBos);
         List<Integer> result = new ArrayList<>();
         diagnosticReportBos.forEach(diagnosticReportBo -> {
-            DiagnosticReport diagnosticReport = getNewDiagnosticReport(patientInfo, diagnosticReportBo);
+            DiagnosticReport diagnosticReport = getNewDiagnosticReport(patientId, diagnosticReportBo);
             result.add(diagnosticReportRepository.save(diagnosticReport).getId());
             diagnosticReportRepository.save(diagnosticReport);
             documentService.createDocumentDiagnosticReport(documentId, diagnosticReport.getId());
@@ -55,18 +49,15 @@ public class LoadDiagnosticReports {
         return result;
     }
 
-    private DiagnosticReport getNewDiagnosticReport(PatientInfoBo patientInfo, DiagnosticReportBo diagnosticReportBo) {
-        DiagnosticReport result = new DiagnosticReport();
+    private DiagnosticReport getNewDiagnosticReport(Integer patientId, DiagnosticReportBo diagnosticReportBo) {
+		LOG.debug("Input parameters -> patientId {}, diagnosticReportBo {}", patientId, diagnosticReportBo);
+		DiagnosticReport result = new DiagnosticReport();
 
         Integer snomedId = snomedService.getSnomedId(diagnosticReportBo.getSnomed())
                 .orElseGet(() -> snomedService.createSnomedTerm(diagnosticReportBo.getSnomed()));
-        String cie10Codes = calculateCie10Facade.execute(diagnosticReportBo.getSnomed().getSctid(),
-                new Cie10FacadeRuleFeature(patientInfo.getGenderId(), patientInfo.getAge()));
-
-        result.setPatientId(patientInfo.getId());
+        result.setPatientId(patientId);
 
         result.setSnomedId(snomedId);
-        result.setCie10Codes(cie10Codes);
         result.setHealthConditionId(diagnosticReportBo.getHealthConditionId());
 
         result.setNoteId(generateNoteId(diagnosticReportBo.getNoteId(), diagnosticReportBo.getObservations()));

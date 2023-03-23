@@ -56,6 +56,16 @@ public abstract class ClinicalObservation extends SGXAuditableEntity<Integer> {
         this.effectiveTime = effectiveTime;
     }
 
+	public ClinicalObservation(Integer patientId, String value, Integer snomedId, String categoryId,
+							   LocalDateTime effectiveTime) {
+		super();
+		this.patientId = patientId;
+		this.categoryId = categoryId;
+		this.value = value;
+		this.snomedId = snomedId;
+		this.effectiveTime = effectiveTime;
+	}
+
     public boolean isDeleted() {
         return this.statusId.equals(ObservationStatus.ERROR);
     }

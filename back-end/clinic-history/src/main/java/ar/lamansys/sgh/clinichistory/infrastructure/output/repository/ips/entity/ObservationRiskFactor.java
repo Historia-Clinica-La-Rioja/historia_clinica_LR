@@ -32,8 +32,8 @@ public class ObservationRiskFactor extends ClinicalObservation {
 	private String loincCode;
 
 	public ObservationRiskFactor(Integer patientId, String value, Integer snomedId,
-								 String cie10Codes, ERiskFactor eRiskFactor, LocalDateTime effectiveTime){
-		super(patientId, value, snomedId, cie10Codes, RISK_FACTOR, effectiveTime);
+								 ERiskFactor eRiskFactor, LocalDateTime effectiveTime){
+		super(patientId, value, snomedId, RISK_FACTOR, effectiveTime);
 		this.loincCode = eRiskFactor.getLoincCode();
 	}
 

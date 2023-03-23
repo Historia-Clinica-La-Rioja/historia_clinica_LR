@@ -31,8 +31,7 @@ public interface HealthcareProfessionalRepository extends SGXAuditableEntityJPAR
 	@Transactional(readOnly = true)
 	@Query(value = " SELECT DISTINCT(hp.id) "
 			+ " FROM  HealthcareProfessional hp "
-			+ " INNER JOIN Person p ON (hp.personId = p.id) "
-			+ " INNER JOIN UserPerson up ON up.pk.personId = p.id"
+			+ " INNER JOIN UserPerson up ON up.pk.personId = hp.personId"
 			+ " WHERE up.pk.userId = :userId "
 			+ " AND hp.deleteable.deleted = false")
     Integer getProfessionalId(@Param("userId") Integer userId);

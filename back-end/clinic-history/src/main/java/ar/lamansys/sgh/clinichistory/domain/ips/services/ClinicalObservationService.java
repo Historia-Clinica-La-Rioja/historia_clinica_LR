@@ -1,7 +1,5 @@
 package ar.lamansys.sgh.clinichistory.domain.ips.services;
 
-import ar.lamansys.sgh.clinichistory.application.calculatecie10.CalculateCie10Facade;
-import ar.lamansys.sgh.clinichistory.application.calculatecie10.Cie10FacadeRuleFeature;
 import ar.lamansys.sgh.clinichistory.application.document.DocumentService;
 import ar.lamansys.sgh.clinichistory.domain.ips.RiskFactorBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.RiskFactorObservationBo;
@@ -9,7 +7,6 @@ import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.ips.Observ
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.ips.ObservationRiskFactorRepository;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.ips.entity.ObservationLab;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.ips.entity.ObservationRiskFactor;
-import ar.lamansys.sgh.clinichistory.domain.document.PatientInfoBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.AnthropometricDataBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.ClinicalObservationBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.EObservationLab;
@@ -36,25 +33,21 @@ public class ClinicalObservationService {
 
     private final SnomedService snomedService;
 
-    private final CalculateCie10Facade calculateCie10Facade;
-
     public ClinicalObservationService(ObservationRiskFactorRepository observationRiskFactorRepository,
 									  ObservationLabRepository observationLabRepository,
 									  DocumentService documentService,
-									  SnomedService snomedService,
-									  CalculateCie10Facade calculateCie10Facade) {
+									  SnomedService snomedService) {
         this.observationRiskFactorRepository = observationRiskFactorRepository;
         this.observationLabRepository = observationLabRepository;
         this.documentService = documentService;
         this.snomedService = snomedService;
-        this.calculateCie10Facade = calculateCie10Facade;
     }
 
-    public RiskFactorBo loadRiskFactors(PatientInfoBo patientInfo, Long documentId, Optional<RiskFactorBo> optRiskFactors) {
-        LOG.debug("Input parameters -> documentId {}, patientInfo {}, optRiskFactors {}", documentId, patientInfo, optRiskFactors);
+    public RiskFactorBo loadRiskFactors(Integer patientId, Long documentId, Optional<RiskFactorBo> optRiskFactors) {
+        LOG.debug("Input parameters -> documentId {}, patientId {}, optRiskFactors {}", documentId, patientId, optRiskFactors);
         optRiskFactors.ifPresent(RiskFactor -> {
             if(mustSaveClinicalObservation(RiskFactor.getSystolicBloodPressure())){
-                ObservationRiskFactor systolicBloodPressure = createObservationRiskFactor(patientInfo,
+                ObservationRiskFactor systolicBloodPressure = createObservationRiskFactor(patientId,
                         RiskFactor.getSystolicBloodPressure(), ERiskFactor.SYSTOLIC_BLOOD_PRESSURE);
                 if (documentId != null)
                     documentService.createDocumentRiskFactor(documentId, systolicBloodPressure.getId());
@@ -62,7 +55,7 @@ public class ClinicalObservationService {
             }
 
             if(mustSaveClinicalObservation(RiskFactor.getDiastolicBloodPressure())) {
-                ObservationRiskFactor diastolicBloodPressure = createObservationRiskFactor(patientInfo,
+                ObservationRiskFactor diastolicBloodPressure = createObservationRiskFactor(patientId,
                         RiskFactor.getDiastolicBloodPressure(), ERiskFactor.DIASTOLIC_BLOOD_PRESSURE);
                 if (documentId != null)
                     documentService.createDocumentRiskFactor(documentId, diastolicBloodPressure.getId());
@@ -70,7 +63,7 @@ public class ClinicalObservationService {
             }
 
             if(mustSaveClinicalObservation(RiskFactor.getMeanPressure())) {
-                ObservationRiskFactor meanPressure = createObservationRiskFactor(patientInfo,
+                ObservationRiskFactor meanPressure = createObservationRiskFactor(patientId,
                         RiskFactor.getMeanPressure(), ERiskFactor.MEAN_PRESSURE);
                 if (documentId != null)
                     documentService.createDocumentRiskFactor(documentId, meanPressure.getId());
@@ -78,7 +71,7 @@ public class ClinicalObservationService {
             }
 
             if(mustSaveClinicalObservation(RiskFactor.getTemperature())) {
-                ObservationRiskFactor temperature = createObservationRiskFactor(patientInfo,
+                ObservationRiskFactor temperature = createObservationRiskFactor(patientId,
                         RiskFactor.getTemperature(), ERiskFactor.TEMPERATURE);
                 if (documentId != null)
                     documentService.createDocumentRiskFactor(documentId, temperature.getId());
@@ -86,7 +79,7 @@ public class ClinicalObservationService {
             }
 
             if(mustSaveClinicalObservation(RiskFactor.getHeartRate())) {
-                ObservationRiskFactor heartRate = createObservationRiskFactor(patientInfo,
+                ObservationRiskFactor heartRate = createObservationRiskFactor(patientId,
                         RiskFactor.getHeartRate(), ERiskFactor.HEART_RATE);
                 if (documentId != null)
                     documentService.createDocumentRiskFactor(documentId, heartRate.getId());
@@ -94,7 +87,7 @@ public class ClinicalObservationService {
             }
 
             if(mustSaveClinicalObservation(RiskFactor.getRespiratoryRate())) {
-                ObservationRiskFactor respiratoryRate = createObservationRiskFactor(patientInfo,
+                ObservationRiskFactor respiratoryRate = createObservationRiskFactor(patientId,
                         RiskFactor.getRespiratoryRate(), ERiskFactor.RESPIRATORY_RATE);
                 if (documentId != null)
                     documentService.createDocumentRiskFactor(documentId, respiratoryRate.getId());
@@ -102,7 +95,7 @@ public class ClinicalObservationService {
             }
 
             if(mustSaveClinicalObservation(RiskFactor.getBloodOxygenSaturation())) {
-                ObservationRiskFactor bloodOxygenSaturation = createObservationRiskFactor(patientInfo,
+                ObservationRiskFactor bloodOxygenSaturation = createObservationRiskFactor(patientId,
                         RiskFactor.getBloodOxygenSaturation(), ERiskFactor.BLOOD_OXYGEN_SATURATION);
                 if (documentId != null)
                     documentService.createDocumentRiskFactor(documentId, bloodOxygenSaturation.getId());
@@ -110,7 +103,7 @@ public class ClinicalObservationService {
             }
 
             if(mustSaveClinicalObservation(RiskFactor.getBloodGlucose())) {
-                ObservationRiskFactor bloodGlucose = createObservationRiskFactor(patientInfo,
+                ObservationRiskFactor bloodGlucose = createObservationRiskFactor(patientId,
                         RiskFactor.getBloodGlucose(), ERiskFactor.BLOOD_GLUCOSE);
                 if (documentId != null)
                     documentService.createDocumentRiskFactor(documentId, bloodGlucose.getId());
@@ -118,7 +111,7 @@ public class ClinicalObservationService {
             }
 
             if(mustSaveClinicalObservation(RiskFactor.getGlycosylatedHemoglobin())) {
-                ObservationRiskFactor glycosylatedHemoglobin = createObservationRiskFactor(patientInfo,
+                ObservationRiskFactor glycosylatedHemoglobin = createObservationRiskFactor(patientId,
                         RiskFactor.getGlycosylatedHemoglobin(), ERiskFactor.GLYCOSYLATED_HEMOGLOBIN);
                 if (documentId != null)
                     documentService.createDocumentRiskFactor(documentId, glycosylatedHemoglobin.getId());
@@ -126,7 +119,7 @@ public class ClinicalObservationService {
             }
 
             if(mustSaveClinicalObservation(RiskFactor.getCardiovascularRisk())) {
-                ObservationRiskFactor cardiovascularRisk = createObservationRiskFactor(patientInfo,
+                ObservationRiskFactor cardiovascularRisk = createObservationRiskFactor(patientId,
                         RiskFactor.getCardiovascularRisk(), ERiskFactor.CARDIOVASCULAR_RISK);
                 if (documentId != null)
                     documentService.createDocumentRiskFactor(documentId, cardiovascularRisk.getId());
@@ -137,13 +130,13 @@ public class ClinicalObservationService {
         return optRiskFactors.orElse(null);
     }
 
-    public AnthropometricDataBo loadAnthropometricData(PatientInfoBo patientInfo, Long documentId, Optional<AnthropometricDataBo> optAnthropometricData) {
-        LOG.debug("Input parameters -> documentId {}, patientInfo {}, optAnthropometricData {}", documentId, patientInfo, optAnthropometricData);
+    public AnthropometricDataBo loadAnthropometricData(Integer patientId, Long documentId, Optional<AnthropometricDataBo> optAnthropometricData) {
+        LOG.debug("Input parameters -> documentId {}, patientId {}, optAnthropometricData {}", documentId, patientId, optAnthropometricData);
         optAnthropometricData.ifPresent(anthropometricData -> {
 			ClinicalObservationBo heightBo = anthropometricData.getHeight();
             if(mustSaveClinicalObservation(heightBo)) {
                 ObservationRiskFactor height = mustSaveNewClinicalObservation(anthropometricData.getHeight())
-						? createObservationRiskFactor(patientInfo, anthropometricData.getHeight(), ERiskFactor.HEIGHT)
+						? createObservationRiskFactor(patientId, anthropometricData.getHeight(), ERiskFactor.HEIGHT)
 						: mapToObservationRiskFactor(heightBo);
                 documentService.createDocumentRiskFactor(documentId, height.getId());
                 anthropometricData.setHeight(createObservationFromRiskFactor(height));
@@ -152,7 +145,7 @@ public class ClinicalObservationService {
 			ClinicalObservationBo weightBo = anthropometricData.getWeight();
             if(mustSaveClinicalObservation(weightBo)) {
                 ObservationRiskFactor weight = mustSaveNewClinicalObservation(weightBo)
-						? createObservationRiskFactor(patientInfo, anthropometricData.getWeight(), ERiskFactor.WEIGHT)
+						? createObservationRiskFactor(patientId, anthropometricData.getWeight(), ERiskFactor.WEIGHT)
 						: mapToObservationRiskFactor(weightBo);
                 documentService.createDocumentRiskFactor(documentId, weight.getId());
                 anthropometricData.setWeight(createObservationFromRiskFactor(weight));
@@ -161,7 +154,7 @@ public class ClinicalObservationService {
 			ClinicalObservationBo headCircumferenceBo = anthropometricData.getHeadCircumference();
 			if(mustSaveClinicalObservation(headCircumferenceBo)) {
                 ObservationRiskFactor headCircumference = mustSaveNewClinicalObservation(headCircumferenceBo)
-						?createObservationRiskFactor(patientInfo, anthropometricData.getHeadCircumference(), ERiskFactor.HEAD_CIRCUMFERENCE)
+						?createObservationRiskFactor(patientId, anthropometricData.getHeadCircumference(), ERiskFactor.HEAD_CIRCUMFERENCE)
 						: mapToObservationRiskFactor(headCircumferenceBo);
                 documentService.createDocumentRiskFactor(documentId, headCircumference.getId());
                 anthropometricData.setHeadCircumference(createObservationFromRiskFactor(headCircumference));
@@ -169,7 +162,7 @@ public class ClinicalObservationService {
 
 			ClinicalObservationBo bloodTypeBo = anthropometricData.getBloodType();
 			if(mustSaveClinicalObservation(bloodTypeBo)) {
-                ObservationLab bloodType =  createObservationLab(patientInfo, anthropometricData.getBloodType(), EObservationLab.BLOOD_TYPE);
+                ObservationLab bloodType =  createObservationLab(patientId, anthropometricData.getBloodType(), EObservationLab.BLOOD_TYPE);
                 documentService.createDocumentLab(documentId, bloodType.getId());
                 anthropometricData.setBloodType(createObservationFromLab(bloodType));
             }
@@ -196,26 +189,22 @@ public class ClinicalObservationService {
 		return co != null && co.getValue() != null && co.getId()==null;
 	}
 
-    private ObservationRiskFactor createObservationRiskFactor(PatientInfoBo patientInfo, ClinicalObservationBo observation, ERiskFactor eRiskFactor) {
-        LOG.debug("Input parameters -> patientInfo {}, ClinicalObservation {}, eRiskFactor {}", patientInfo, observation, eRiskFactor);
+    private ObservationRiskFactor createObservationRiskFactor(Integer patientId, ClinicalObservationBo observation, ERiskFactor eRiskFactor) {
+        LOG.debug("Input parameters -> patientId {}, ClinicalObservation {}, eRiskFactor {}", patientId, observation, eRiskFactor);
         Integer snomedId = snomedService.getLatestIdBySctid(eRiskFactor.getSctidCode())
                 .orElseThrow(() -> new EntityNotFoundException("{snomed.not.found}"));
-        String cie10Codes = calculateCie10Facade.execute(eRiskFactor.getSctidCode(),
-                new Cie10FacadeRuleFeature(patientInfo.getGenderId(), patientInfo.getAge()));
         ObservationRiskFactor observationRiskFactor = observationRiskFactorRepository.save(
-                new ObservationRiskFactor(patientInfo.getId(), observation.getValue(), snomedId, cie10Codes, eRiskFactor, observation.getEffectiveTime()));
+                new ObservationRiskFactor(patientId, observation.getValue(), snomedId, eRiskFactor, observation.getEffectiveTime()));
         LOG.debug(OUTPUT, observationRiskFactor);
         return observationRiskFactor;
     }
 
-    private ObservationLab createObservationLab(PatientInfoBo patientInfo, ClinicalObservationBo observation, EObservationLab eObservationLab) {
-        LOG.debug("Input parameters -> patientInfo {}, ClinicalObservation {}, eLab {}", patientInfo, observation, eObservationLab);
+    private ObservationLab createObservationLab(Integer patientId, ClinicalObservationBo observation, EObservationLab eObservationLab) {
+        LOG.debug("Input parameters -> patientId {}, ClinicalObservation {}, eLab {}", patientId, observation, eObservationLab);
         Integer snomedId = snomedService.getLatestIdBySctid(eObservationLab.getSctidCode())
                 .orElseThrow(() -> new EntityNotFoundException("{snomed.not.found}"));
-        String cie10Codes = calculateCie10Facade.execute(eObservationLab.getSctidCode(),
-                new Cie10FacadeRuleFeature(patientInfo.getGenderId(), patientInfo.getAge()));
         ObservationLab observationLab = observationLabRepository.save(
-                new ObservationLab(patientInfo.getId(), observation.getValue(), snomedId, cie10Codes, observation.getEffectiveTime()));
+                new ObservationLab(patientId, observation.getValue(), snomedId, observation.getEffectiveTime()));
         LOG.debug(OUTPUT, observationLab);
         return observationLab;
     }

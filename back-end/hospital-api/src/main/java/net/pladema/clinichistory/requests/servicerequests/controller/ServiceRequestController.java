@@ -32,7 +32,6 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
-import ar.lamansys.sgh.clinichistory.domain.document.PatientInfoBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.DiagnosticReportBo;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.generateFile.DocumentAuthorFinder;
 import ar.lamansys.sgh.shared.infrastructure.input.service.BasicPatientDto;
@@ -197,9 +196,7 @@ public class ServiceRequestController {
                 patientId,
                 diagnosticReportId,
                 completeRequestDto);
-        var patientDto = patientExternalService.getBasicDataFromPatient(patientId);
-        PatientInfoBo patientInfoBo = new PatientInfoBo(patientDto.getId(), patientDto.getPerson().getGender().getId(), patientDto.getPerson().getAge());
-        Integer result = completeDiagnosticReportService.run(patientInfoBo, diagnosticReportId, completeDiagnosticReportMapper.parseTo(completeRequestDto));
+        Integer result = completeDiagnosticReportService.run(patientId, diagnosticReportId, completeDiagnosticReportMapper.parseTo(completeRequestDto));
         updateDiagnosticReportFileService.run(result, completeRequestDto.getFileIds());
         LOG.debug(OUTPUT, result);
     }
@@ -229,9 +226,7 @@ public class ServiceRequestController {
                        @PathVariable(name = "diagnosticReportId") Integer diagnosticReportId
     ) {
         LOG.debug(COMMON_INPUT, institutionId, patientId, diagnosticReportId);
-        var patientDto = patientExternalService.getBasicDataFromPatient(patientId);
-        PatientInfoBo patientInfoBo = new PatientInfoBo(patientDto.getId(), patientDto.getPerson().getGender().getId(), patientDto.getPerson().getAge());
-        deleteDiagnosticReportService.execute(patientInfoBo, diagnosticReportId);
+        deleteDiagnosticReportService.execute(patientId, diagnosticReportId);
     }
 
     @GetMapping("/{diagnosticReportId}")

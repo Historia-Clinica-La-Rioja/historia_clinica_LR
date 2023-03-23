@@ -1,7 +1,6 @@
 package net.pladema.clinichistory.requests.servicerequests.service;
 
 import ar.lamansys.sgh.clinichistory.application.document.DocumentService;
-import ar.lamansys.sgh.clinichistory.domain.document.PatientInfoBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.services.LoadDiagnosticReports;
 import ar.lamansys.sgh.clinichistory.domain.ips.services.SnomedService;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.ips.DiagnosticReportRepository;
@@ -56,7 +55,7 @@ class CompleteLoadDiagnosticReportsTest extends UnitRepository {
 
         Exception exception = Assertions.assertThrows(IllegalArgumentException.class, () ->
                 completeDiagnosticReportService.run(
-                        new PatientInfoBo(patientId, (short) 1, (short) 24),
+						patientId,
                         diagnosticReportId,
                         completeDiagnosticReportBo));
         String expectedMessage = "El estudio con id "+ diagnosticReportId + " no se puede completar porque ha sido cancelado";
@@ -68,7 +67,7 @@ class CompleteLoadDiagnosticReportsTest extends UnitRepository {
 
         exception = Assertions.assertThrows(IllegalArgumentException.class, () ->
                 completeDiagnosticReportService.run(
-                        new PatientInfoBo(patientId, (short) 1, (short) 24),
+						patientId,
                         diagnosticReportId2,
                         completeDiagnosticReportBo)
         );

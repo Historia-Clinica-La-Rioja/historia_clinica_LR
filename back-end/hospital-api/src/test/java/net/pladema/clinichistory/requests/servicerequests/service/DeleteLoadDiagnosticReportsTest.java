@@ -1,7 +1,6 @@
 package net.pladema.clinichistory.requests.servicerequests.service;
 
 import ar.lamansys.sgh.clinichistory.application.document.DocumentService;
-import ar.lamansys.sgh.clinichistory.domain.document.PatientInfoBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.services.LoadDiagnosticReports;
 import ar.lamansys.sgh.clinichistory.domain.ips.services.SnomedService;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.ips.DiagnosticReportRepository;
@@ -51,7 +50,7 @@ class DeleteLoadDiagnosticReportsTest extends UnitRepository {
         Integer diagnosticReportId = save(new DiagnosticReport(patientId, ibuprofenoId, "", null, 9, DiagnosticReportStatus.CANCELLED)).getId();
 
         Exception exception = Assertions.assertThrows(IllegalArgumentException.class, () ->
-                deleteDiagnosticReportService.execute(new PatientInfoBo(patientId, (short) 1, (short) 24), diagnosticReportId)
+                deleteDiagnosticReportService.execute(patientId, diagnosticReportId)
         );
         String expectedMessage = "El estudio con id "+ diagnosticReportId + " no se puede cancelar debido a que ya está cancelado";
         String actualMessage = exception.getMessage();
@@ -61,7 +60,7 @@ class DeleteLoadDiagnosticReportsTest extends UnitRepository {
         Integer diagnosticReportId2 = save(new DiagnosticReport(patientId, ibuprofenoId, "", null, 9, DiagnosticReportStatus.FINAL)).getId();
 
         exception = Assertions.assertThrows(IllegalArgumentException.class, () ->
-                deleteDiagnosticReportService.execute(new PatientInfoBo(patientId, (short) 1, (short) 24), diagnosticReportId2)
+                deleteDiagnosticReportService.execute(patientId, diagnosticReportId2)
         );
         expectedMessage = "El estudio con id "+ diagnosticReportId2 + " no se puede cancelar debido a que ya ha sido completada";
         actualMessage = exception.getMessage();
