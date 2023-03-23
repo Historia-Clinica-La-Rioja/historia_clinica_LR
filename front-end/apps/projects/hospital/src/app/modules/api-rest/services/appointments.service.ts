@@ -6,6 +6,7 @@ import {
 	AppointmentListDto, AppointmentShortSummaryDto,
 	AssignedAppointmentDto,
 	CreateAppointmentDto,
+	EquipmentAppointmentListDto,
 	ExternalPatientCoverageDto,
 	UpdateAppointmentDateDto,
 	UpdateAppointmentDto,
@@ -109,6 +110,11 @@ export class AppointmentsService {
 	getAppointmentEquipment(appoinmentId: number): Observable<AppointmentDto> {
 		const url = `${this.BASE_URL}/equipmentAppointment/${appoinmentId}`;
 		return this.http.get<AppointmentDto>(url);
+	}
+
+	getAppointmentsByEquipment(equipmentId: number): Observable<EquipmentAppointmentListDto> {
+		const url = `${environment.apiBase}/institutions/${this.contextService.institutionId}/medicalConsultations/appointments/list-appoiments-by-equipment/${equipmentId}`;
+		return this.http.get<EquipmentAppointmentListDto>(url)
 	}
 	
 	hasNewConsultationEnabled(patientId: number): Observable<boolean> {

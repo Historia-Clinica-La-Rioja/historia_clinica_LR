@@ -1,6 +1,11 @@
 import { Component, OnInit } from '@angular/core';
-import { DateDto, EquipmentDto, TimeDto } from '@api-rest/api-model';
+import { MatSelectChange } from '@angular/material/select';
+import { EquipmentAppointmentListDto, EquipmentDto, TimeDto } from '@api-rest/api-model';
+import { AppFeature } from '@api-rest/api-model';
+import { mapDateWithHypenToDateWithSlash, timeToString } from '@api-rest/mapper/date-dto.mapper';
+import { AppointmentsService } from '@api-rest/services/appointments.service';
 import { EquipmentService } from '@api-rest/services/equipment.service';
+import { FeatureFlagService } from '@core/services/feature-flag.service';
 import { Color } from '@presentation/colored-label/colored-label.component';
 import { APPOINTMENT_STATES, APPOINTMENT_STATES_ID } from '@turnos/constants/appointment';
 
@@ -12,58 +17,35 @@ import { APPOINTMENT_STATES, APPOINTMENT_STATES_ID } from '@turnos/constants/app
 export class WorklistComponent implements OnInit {
     equipments: EquipmentDto[] = [];
     detailedAppointments: detailedAppointment[] = [];
-    appointments: mockedAppointment[] = [{
-        'appointmentStateId': 1,
-        'date': { 'day': 1, 'month': 1, 'year': 2023 },
-        'hour': { 'hours': 10, 'minutes': 15 },
-        'patientId': 1000,
-        'patientName': 'Lionel Andres Messi',
-        'identificationNumber': 39555887
-    },
-    {
-        'appointmentStateId': 2,
-        'date': { 'day': 2, 'month': 2, 'year': 2023 },
-        'hour': { 'hours': 10, 'minutes': 30 },
-        'patientId': 2000,
-        'patientName': 'Julian "Araña" Alvarez',
-        'identificationNumber': 38555887
-    },
-    {
-        'appointmentStateId': 3,
-        'date': { 'day': 3, 'month': 3, 'year': 2023 },
-        'hour': { 'hours': 10, 'minutes': 45 },
-        'patientId': 3000,
-        'patientName': 'Enzo Fernandez',
-        'identificationNumber': 37555887
-    },
-    {
-        'appointmentStateId': 4,
-        'date': { 'day': 4, 'month': 4, 'year': 2023 },
-        'hour': { 'hours': 11, 'minutes': 30 },
-        'patientId': 4000,
-        'patientName': 'Cristian "Cuti" Romero',
-        'identificationNumber': 36555887
-    },
-    {
-        'appointmentStateId': 5,
-        'date': { 'day': 5, 'month': 5, 'year': 2023 },
-        'hour': { 'hours': 11, 'minutes': 30 },
-        'patientId': 5000,
-        'patientName': 'Emiliano "Dibu" Martinez',
-        'identificationNumber': 35555887
-    },
-    ]
+    appointments: EquipmentAppointmentListDto[] = [];
+    isFetchingData = false;
+    nameSelfDeterminationFF = false;
 
-    constructor(private readonly equipmentService: EquipmentService) { }
+    constructor(private readonly equipmentService: EquipmentService,
+		private readonly featureFlagService: FeatureFlagService,
+        private readonly appointmentsService: AppointmentsService
+	) {
+		this.featureFlagService.isActive(AppFeature.HABILITAR_DATOS_AUTOPERCIBIDOS).subscribe(isOn => {
+			this.nameSelfDeterminationFF = isOn
+		});
+	}
 
     ngOnInit(): void {
         this.equipmentService.getAll().subscribe((equipments: EquipmentDto[]) => {
             this.equipments = equipments;
         });
-        this.mapAppointmentsToDetailedAppointments()
     }
 
-    private getAppointmentStateColor(appointment: mockedAppointment): string {
+    filterAppointments(equipment: MatSelectChange){
+        this.isFetchingData = true;
+        this.detailedAppointments = [];
+        this.appointmentsService.getAppointmentsByEquipment(equipment.value.id).subscribe(appointments => {
+           this.mapAppointmentsToDetailedAppointments(appointments);
+           this.isFetchingData = false;
+        })
+    }
+
+    private getAppointmentStateColor(appointment: EquipmentAppointmentListDto): string {
         if (appointment.appointmentStateId === APPOINTMENT_STATES_ID.CONFIRMED) {
             return Color.YELLOW;
         }
@@ -83,19 +65,32 @@ export class WorklistComponent implements OnInit {
         return Color.BLUE;
     }
 
-    private getAppointmentDescription(appointment: mockedAppointment): string {
+    private getAppointmentDescription(appointment: EquipmentAppointmentListDto): string {
         return this.mapAppointmentDescription(APPOINTMENT_STATES.filter(a => a.id == appointment.appointmentStateId)[0].description)
     }
 
-    private mapAppointmentsToDetailedAppointments(){
-        this.appointments.map(a => {
+    private mapAppointmentsToDetailedAppointments(appointments){
+        appointments.map(a => {
             this.detailedAppointments.push({
                 data: a, 
                 color: this.getAppointmentStateColor(a),
                 description: this.getAppointmentDescription(a),
+                date: mapDateWithHypenToDateWithSlash(a.date),
+                time: timeToString(a.hour),
+                firstName: this.capitalizeWords(a.patient.person.firstName),
+                lastName: this.capitalizeWords(a.patient.person.lastName),
+                nameSelfDetermination: this.capitalizeWords(a.patient.person.nameSelfDetermination)
             })
         })
     }
+
+    private capitalizeWords(sentence: string) {
+        return sentence ? sentence
+          .toLowerCase()
+          .split(' ')
+          .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
+          .join(' ') : "";
+      }
 
     private mapAppointmentDescription(description: string): string {
         if (description === 'Confirmado') {
@@ -109,16 +104,12 @@ export class WorklistComponent implements OnInit {
 }
 
 export interface detailedAppointment {
-    data: mockedAppointment,
+    data: EquipmentAppointmentListDto,
     color: string,
-    description: string
-}
-
-export interface mockedAppointment {
-    appointmentStateId: number,
-    date: DateDto,
-    hour: TimeDto,
-    patientId: number,
-    patientName: string,
-    identificationNumber: number,
+    description: string,
+    date: string,
+    time: string,
+    firstName: string,
+    lastName: string,
+    nameSelfDetermination: string
 }

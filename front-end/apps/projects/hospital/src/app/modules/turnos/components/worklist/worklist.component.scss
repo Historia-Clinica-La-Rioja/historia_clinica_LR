@@ -12,6 +12,12 @@
     padding-bottom: 3%;
 }
 
+.equipments-loader {
+    margin: 2% 0;
+    display: flex;
+    justify-content: center;
+}
+
 .dropdown-container {
     width: 30%;
 }
@@ -40,6 +46,13 @@
 
 .patient-name {
     margin: 0.5% 0;
+    justify-content: start;
+}
+
+.naming {
+    justify-content: start;
+    min-width: auto;
+    white-space: pre;
 }
 
 .patient-identification {
@@ -114,5 +127,9 @@
 @media (max-width: 500px) {
     .worklist-section {
         width: 90vw;
+    }
+
+    .appointment-detail {
+        padding: 5% 1%;
     }
 }

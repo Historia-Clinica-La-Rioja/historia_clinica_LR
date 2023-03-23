@@ -286,8 +286,8 @@ public class AppointmentsController {
 		return ResponseEntity.ok(result);
 	}
 
-	@GetMapping(value="/list-appoiments-equipment/{equipmentId}")
-	@PreAuthorize("hasPermission(#institutionId, 'ADMINISTRATIVO_RED_DE_IMAGENES, ADMINISTRADOR_AGENDA')")
+	@GetMapping(value="/list-appoiments-by-equipment/{equipmentId}")
+	@PreAuthorize("hasPermission(#institutionId, 'TECNICO')")
 	public ResponseEntity<Collection<EquipmentAppointmentListDto>> getListAppoitmentsEquipment(
 			@PathVariable(name = "institutionId") Integer institutionId,
 			@PathVariable(name = "equipmentId") Integer equipmentId

@@ -78,6 +78,16 @@ export const stringToTimeDto = (date: string): TimeDto => {
 	}
 }
 
+export const timeToString = (time: string): string => {
+	const timeArray = time.split(":");
+	return timeArray[0] + ":" + timeArray[1]
+}
+
+export const mapDateWithHypenToDateWithSlash = (date: string): string => {
+	const dateArray = date.split("-");
+	return dateArray[2] + "/" + dateArray[1] + "/" + dateArray[0]
+}
+
 export const mapToString = (date: DateDto): string => {
 	return date.year.toString() + date.month.toString() + date.day.toString();
 }

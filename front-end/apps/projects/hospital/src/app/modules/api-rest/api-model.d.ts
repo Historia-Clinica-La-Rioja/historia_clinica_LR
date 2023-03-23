@@ -1158,6 +1158,19 @@ export interface EpisodeDocumentResponseDto {
     id: number;
 }
 
+export interface EquipmentAppointmentListDto {
+    appointmentStateId: number;
+    date: string;
+    healthInsuranceId: number;
+    hour: string;
+    id: number;
+    medicalCoverageAffiliateNumber: string;
+    medicalCoverageName: string;
+    overturn: boolean;
+    patient: AppointmentBasicPatientDto;
+    protected: boolean;
+}
+
 export interface EquipmentDiaryADto {
     appointmentDuration: number;
     automaticRenewal?: boolean;
