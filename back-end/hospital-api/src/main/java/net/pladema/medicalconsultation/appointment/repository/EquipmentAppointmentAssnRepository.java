@@ -1,5 +1,6 @@
 package net.pladema.medicalconsultation.appointment.repository;
 
+import net.pladema.medicalconsultation.appointment.repository.domain.EquipmentAppointmentVo;
 import net.pladema.medicalconsultation.appointment.repository.entity.EquipmentAppointmentAssn;
 
 import net.pladema.medicalconsultation.appointment.repository.entity.EquipmentAppointmentAssnPK;
@@ -18,7 +19,7 @@ import net.pladema.medicalconsultation.appointment.repository.entity.EquipmentAp
 
 @Repository
 public interface EquipmentAppointmentAssnRepository extends JpaRepository<EquipmentAppointmentAssn, EquipmentAppointmentAssnPK> {
-	
+
     @Transactional
     @Modifying
     @Query("UPDATE EquipmentAppointmentAssn AS aassn " +
@@ -42,4 +43,18 @@ public interface EquipmentAppointmentAssnRepository extends JpaRepository<Equipm
 			"   ( SELECT MAX (subHas.pk.changedStateDate) FROM HistoricAppointmentState subHas WHERE subHas.pk.appointmentId = a.id) ) " +
 			"ORDER BY has.pk.changedStateDate DESC")
 	List<AppointmentVo> getEquipmentAppointment(@Param("appointmentId") Integer appointmentId);
+
+	@Transactional(readOnly = true)
+	@Query("SELECT NEW net.pladema.medicalconsultation.appointment.repository.domain.EquipmentAppointmentVo(a, pe.identificationTypeId, pe.identificationNumber) " +
+			"FROM Appointment AS a " +
+			"JOIN EquipmentAppointmentAssn AS eaa ON (a.id = eaa.pk.appointmentId) " +
+			"LEFT JOIN AppointmentObservation AS ao ON (a.id = ao.appointmentId) " +
+			"JOIN EquipmentDiary ed ON (ed.id = eaa.pk.equipmentDiaryId) " +
+			"JOIN Equipment AS e ON (ed.equipmentId = e.id) " +
+			"JOIN Patient AS p ON (a.patientId = p.id) " +
+			"JOIN Person AS pe ON (pe.id = p.personId) " +
+			"JOIN PersonExtended AS pex ON (pe.id = pex.id) "+
+			"WHERE e.id = :equipmentId " +
+			"AND a.appointmentStateId IN (1,2,3,4,5)")
+	List<EquipmentAppointmentVo> getAppointmentsByEquipmentId(@Param("equipmentId") Integer equipmentId);
 }

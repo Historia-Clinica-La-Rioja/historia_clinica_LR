@@ -26,6 +26,7 @@ import net.pladema.medicalconsultation.appointment.controller.constraints.ValidE
 import net.pladema.medicalconsultation.appointment.controller.constraints.ValidEquipmentAppointmentDiary;
 import net.pladema.medicalconsultation.appointment.controller.dto.AppointmentEquipmentShortSummaryDto;
 import net.pladema.medicalconsultation.appointment.controller.dto.AppointmentShortSummaryDto;
+import net.pladema.medicalconsultation.appointment.controller.dto.EquipmentAppointmentListDto;
 import net.pladema.medicalconsultation.appointment.controller.dto.UpdateAppointmentDateDto;
 import net.pladema.medicalconsultation.appointment.repository.entity.AppointmentState;
 import net.pladema.medicalconsultation.appointment.service.CreateEquipmentAppointmentService;
@@ -39,6 +40,7 @@ import net.pladema.medicalconsultation.equipmentdiary.service.domain.CompleteEqu
 import net.pladema.modality.service.ModalityService;
 
 import net.pladema.modality.service.domain.ModalityBO;
+import net.pladema.medicalconsultation.appointment.service.domain.EquipmentAppointmentBo;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
@@ -284,6 +286,21 @@ public class AppointmentsController {
 		return ResponseEntity.ok(result);
 	}
 
+	@GetMapping(value="/list-appoiments-equipment/{equipmentId}")
+	@PreAuthorize("hasPermission(#institutionId, 'ADMINISTRATIVO_RED_DE_IMAGENES, ADMINISTRADOR_AGENDA')")
+	public ResponseEntity<Collection<EquipmentAppointmentListDto>> getListAppoitmentsEquipment(
+			@PathVariable(name = "institutionId") Integer institutionId,
+			@PathVariable(name = "equipmentId") Integer equipmentId
+	) {
+		log.debug("Input parameters -> institutionId {}, equipmentDiaryId {}", institutionId, equipmentId);
+		Collection<EquipmentAppointmentBo> resultService = appointmentService.getAppointmentsByEquipmentId(equipmentId, institutionId);
+
+		Collection<EquipmentAppointmentListDto> result= equipmentDataProcess(resultService);
+
+		log.trace(OUTPUT, result);
+		return ResponseEntity.ok(result);
+	}
+
 	private Collection<AppointmentListDto> dataProcess(Collection<AppointmentBo> resultService){
 		log.debug("Input parameters -> AppointmentsBo {}", resultService);
 		Set<Integer> patientsIds = resultService.stream().
@@ -318,6 +335,40 @@ public class AppointmentsController {
 		return result;
 	}
 
+	private Collection<EquipmentAppointmentListDto> equipmentDataProcess(Collection<EquipmentAppointmentBo> resultService){
+		log.debug("Input parameters -> AppointmentsBo {}", resultService);
+		Set<Integer> patientsIds = resultService.stream().
+				filter(equipmentAppointmentBo -> equipmentAppointmentBo.getPatientId() != null).
+				map(EquipmentAppointmentBo::getPatientId).collect(Collectors.toSet());
+		Set<Integer> bookingAppointmentsIds = resultService.stream().
+				filter(appointmentBo -> appointmentBo.getPatientId() == null && !appointmentBo.getAppointmentStateId().equals(AppointmentState.BLOCKED)).
+				map(EquipmentAppointmentBo::getId).collect(Collectors.toSet());
+
+		var bookingPeople = bookingPersonService.getBookingPeople(bookingAppointmentsIds);
+		var basicPatientDtoMap = patientExternalService.getBasicDataFromPatientsId(patientsIds);
+
+		Collection<EquipmentAppointmentListDto> result = resultService.stream()
+				.filter(appointmentDto -> appointmentDto.getPatientId() != null)
+				.parallel()
+				.map(a -> mapEquipmentData(a, basicPatientDtoMap))
+				.collect(Collectors.toList());
+
+		result.addAll(resultService.stream()
+				.filter(appointmentDto -> appointmentDto.getAppointmentStateId().equals(AppointmentState.BLOCKED))
+				.parallel()
+				.map(this::mapToBlockedAppoinments)
+				.collect(Collectors.toList()));
+
+		Collection<EquipmentAppointmentListDto> resultBooking = resultService.stream()
+				.filter(appointmentDto -> appointmentDto.getPatientId() == null && !appointmentDto.getAppointmentStateId().equals(AppointmentState.BLOCKED))
+				.parallel()
+				.map(a -> mapEquipmentDataBooking(a, bookingPeople))
+				.collect(Collectors.toList());
+		log.debug("Result size {}", result.size() + resultBooking.size());
+		result.addAll(resultBooking);
+		return result;
+	}
+
     private AppointmentListDto mapDataBooking(AppointmentBo appointmentBo, Map<Integer, BookingPersonBo> bookingPeople) {
         var bookingPersonBo = bookingPeople.get(appointmentBo.getId());
         return new AppointmentListDto(
@@ -337,6 +388,22 @@ public class AppointmentsController {
 				appointmentBo.isProtected()
         );
     }
+
+	private EquipmentAppointmentListDto mapEquipmentDataBooking(EquipmentAppointmentBo equipmentAppointmentBo, Map<Integer, BookingPersonBo> bookingPeople) {
+		var bookingPersonBo = bookingPeople.get(equipmentAppointmentBo.getId());
+		return new EquipmentAppointmentListDto(
+				equipmentAppointmentBo.getId(),
+				mapTo(bookingPersonBo),
+				equipmentAppointmentBo.getDate().toString(),
+				equipmentAppointmentBo.getHour().toString(),
+				equipmentAppointmentBo.isOverturn(),
+				null,
+				null,
+				null,
+				equipmentAppointmentBo.getAppointmentStateId(),
+				false
+		);
+	}
 
     private AppointmentBasicPatientDto mapTo(BookingPersonBo bookingPersonBo) {
         if (bookingPersonBo == null)
@@ -368,6 +435,14 @@ public class AppointmentsController {
         return result;
     }
 
+	private EquipmentAppointmentListDto mapEquipmentData(EquipmentAppointmentBo equipmentAppointmentBo, Map<Integer, BasicPatientDto> patientData) {
+		AppointmentBasicPatientDto appointmentBasicPatientDto = toAppointmentBasicPatientDto(patientData.get(equipmentAppointmentBo.getPatientId()), null, null);
+		EquipmentAppointmentListDto result = appointmentMapper.toEquipmentAppointmentListDto(equipmentAppointmentBo, appointmentBasicPatientDto);
+		log.debug("AppointmentListDto id result {}", result.getId());
+		log.trace(OUTPUT, result);
+		return result;
+	}
+
 	private AppointmentListDto mapToBlockedAppoinments(AppointmentBo appointmentBo) {
 		AppointmentListDto result = appointmentMapper.toAppointmentListDto(appointmentBo, null);
 		log.debug("AppointmentListDto id result {}", result.getId());
@@ -375,6 +450,12 @@ public class AppointmentsController {
 		return result;
 	}
 
+	private EquipmentAppointmentListDto mapToBlockedAppoinments(EquipmentAppointmentBo equipmentAppointmentBo) {
+		EquipmentAppointmentListDto result = appointmentMapper.toEquipmentAppointmentListDto(equipmentAppointmentBo, null);
+		log.debug("AppointmentListDto id result {}", result.getId());
+		log.trace(OUTPUT, result);
+		return result;
+	}
 
     @PutMapping(value = "/{appointmentId}/change-state")
     @PreAuthorize("hasPermission(#institutionId, 'ADMINISTRATIVO, ESPECIALISTA_MEDICO, PROFESIONAL_DE_SALUD, ESPECIALISTA_EN_ODONTOLOGIA, ENFERMERO')")

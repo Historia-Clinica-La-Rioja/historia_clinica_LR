@@ -4,6 +4,7 @@ import net.pladema.medicalconsultation.appointment.controller.dto.AppointmentEqu
 import net.pladema.medicalconsultation.appointment.controller.dto.AppointmentShortSummaryDto;
 import net.pladema.medicalconsultation.appointment.controller.dto.AssignedAppointmentDto;
 import net.pladema.medicalconsultation.appointment.controller.dto.EmptyAppointmentDto;
+import net.pladema.medicalconsultation.appointment.controller.dto.EquipmentAppointmentListDto;
 import net.pladema.medicalconsultation.appointment.repository.domain.AppointmentEquipmentShortSummaryBo;
 import net.pladema.medicalconsultation.appointment.service.domain.EmptyAppointmentBo;
 import net.pladema.medicalconsultation.appointment.repository.domain.AppointmentShortSummaryBo;
@@ -11,6 +12,7 @@ import net.pladema.medicalconsultation.appointment.service.domain.AppointmentAss
 import net.pladema.medicalconsultation.appointment.service.domain.AppointmentSearchBo;
 import net.pladema.medicalconsultation.appointment.controller.dto.AppointmentSearchDto;
 
+import net.pladema.medicalconsultation.appointment.service.domain.EquipmentAppointmentBo;
 import net.pladema.medicalconsultation.diary.controller.dto.BlockDto;
 import net.pladema.medicalconsultation.diary.service.domain.BlockBo;
 
@@ -42,6 +44,16 @@ public interface AppointmentMapper {
     @Mapping(target = "phoneNumber", source = "appointmentBo.phoneNumber")
 	@Mapping(target = "isProtected", source = "appointmentBo.protected")
     AppointmentListDto toAppointmentListDto(AppointmentBo appointmentBo, AppointmentBasicPatientDto patient);
+
+	@Named("toEquipmentAppointmentListDto")
+	@Mapping(target = "id", source = "equipmentAppointmentBo.id")
+	@Mapping(target = "date", source = "equipmentAppointmentBo.date")
+	@Mapping(target = "hour", source = "equipmentAppointmentBo.hour")
+	@Mapping(target = "overturn", source = "equipmentAppointmentBo.overturn")
+	@Mapping(target = "appointmentStateId", source = "equipmentAppointmentBo.appointmentStateId")
+	@Mapping(target = "patient", source = "patient")
+	@Mapping(target = "isProtected", source = "equipmentAppointmentBo.protected")
+	EquipmentAppointmentListDto toEquipmentAppointmentListDto(EquipmentAppointmentBo equipmentAppointmentBo, AppointmentBasicPatientDto patient);
   
     @Named("toAppointmentDto")
 	@Mapping(target = "protected", source = "appointmentBo.protected")

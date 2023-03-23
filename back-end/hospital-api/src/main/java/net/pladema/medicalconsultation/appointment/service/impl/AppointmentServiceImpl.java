@@ -19,8 +19,10 @@ import ar.lamansys.sgx.shared.dates.configuration.LocalDateMapper;
 import net.pladema.medicalconsultation.appointment.repository.AppointmentAssnRepository;
 import ar.lamansys.sgh.shared.infrastructure.input.service.SharedReferenceCounterReference;
 import net.pladema.medicalconsultation.appointment.repository.AppointmentUpdateRepository;
+import net.pladema.medicalconsultation.appointment.repository.EquipmentAppointmentAssnRepository;
 import net.pladema.medicalconsultation.appointment.repository.domain.AppointmentEquipmentShortSummaryBo;
 import net.pladema.medicalconsultation.appointment.repository.entity.Appointment;
+import net.pladema.medicalconsultation.appointment.service.domain.EquipmentAppointmentBo;
 import net.pladema.medicalconsultation.appointment.service.impl.exceptions.UpdateAppointmentDateException;
 import net.pladema.medicalconsultation.appointment.service.impl.exceptions.UpdateAppointmentDateExceptionEnum;
 import net.pladema.medicalconsultation.diary.service.DiaryOpeningHoursService;
@@ -97,6 +99,7 @@ public class AppointmentServiceImpl implements AppointmentService {
 
 	private final LocalDateMapper localDateMapper;
 
+	private final EquipmentAppointmentAssnRepository equipmentAppointmentAssnRepository;
 
 	public AppointmentServiceImpl(AppointmentRepository appointmentRepository,
 								  AppointmentObservationRepository appointmentObservationRepository,
@@ -111,7 +114,7 @@ public class AppointmentServiceImpl implements AppointmentService {
 								  AppointmentUpdateRepository appointmentUpdateRepository,
 								  AppointmentAssnRepository appointmentAssnRepository,
 								  DiaryOpeningHoursService diaryOpeningHoursService,
-								  SharedReferenceCounterReference sharedReferenceCounterReference, LocalDateMapper localDateMapper) {
+								  SharedReferenceCounterReference sharedReferenceCounterReference, LocalDateMapper localDateMapper, EquipmentAppointmentAssnRepository equipmentAppointmentAssnRepository) {
 		this.appointmentRepository = appointmentRepository;
 		this.appointmentObservationRepository = appointmentObservationRepository;
 		this.historicAppointmentStateRepository = historicAppointmentStateRepository;
@@ -127,6 +130,7 @@ public class AppointmentServiceImpl implements AppointmentService {
 		this.diaryOpeningHoursService = diaryOpeningHoursService;
 		this.sharedReferenceCounterReference = sharedReferenceCounterReference;
 		this.localDateMapper = localDateMapper;
+		this.equipmentAppointmentAssnRepository = equipmentAppointmentAssnRepository;
 	}
 
 	@Override
@@ -148,6 +152,18 @@ public class AppointmentServiceImpl implements AppointmentService {
 		log.debug("Input parameters -> equipmentDiaryId {}", equipmentDiaryId);
 		Collection<AppointmentBo> result = new ArrayList<>();
 		result = appointmentStorage.getAppointmentsByEquipmentDiary(equipmentDiaryId, from, to).stream().distinct()
+				.collect(Collectors.toList());
+
+		log.debug("Result size {}", result.size());
+		log.trace(OUTPUT, result);
+		return result;
+	}
+
+	@Override
+	public Collection<EquipmentAppointmentBo> getAppointmentsByEquipmentId(Integer equipmentId, Integer institutionId) {
+		log.debug("Input parameters -> equipmentDiaryId {}", equipmentId);
+		Collection<EquipmentAppointmentBo> result = new ArrayList<>();
+		result = equipmentAppointmentAssnRepository.getAppointmentsByEquipmentId(equipmentId).stream().distinct().map(EquipmentAppointmentBo::fromEquipmentAppointmentVo)
 				.collect(Collectors.toList());
 
 		log.debug("Result size {}", result.size());
