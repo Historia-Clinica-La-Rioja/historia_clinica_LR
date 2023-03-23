@@ -18,7 +18,7 @@ export class CancelAppointmentComponent implements OnInit {
 		public dialogRef: MatDialogRef<CancelAppointmentComponent>,
 		@Inject(MAT_DIALOG_DATA) public data: {
 			appointmentId: number,
-			imageNetworkAppointment: boolean
+			imageNetworkAppointment?: boolean
 		},
 		private readonly formBuilder: FormBuilder,
 		private readonly snackBarService: SnackBarService,

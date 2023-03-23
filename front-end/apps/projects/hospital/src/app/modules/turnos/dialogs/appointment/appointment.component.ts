@@ -492,7 +492,9 @@ export class AppointmentComponent implements OnInit {
 
 	cancelAppointment(): void {
 		const dialogRefCancelAppointment = this.dialog.open(CancelAppointmentComponent, {
-			data: this.data.appointmentData.appointmentId
+			data: {
+				appointmentId: this.data.appointmentData.appointmentId
+			}
 		});
 		dialogRefCancelAppointment.afterClosed().subscribe(canceledAppointment => {
 			if (canceledAppointment) {
