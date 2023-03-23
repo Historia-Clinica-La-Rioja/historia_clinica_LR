@@ -35,7 +35,7 @@ public class CreateEpisodeDocumentImpl implements CreateEpisodeDocument {
 		Integer result = episodeDocumentStorage.saveEpisodeDocument(
 				path,
 				uuid,
-				new EpisodeDocumentBo(fileInfo.getOriginalPath(), dto.getEpisodeDocumentTypeId(), dto.getInternmentEpisodeId())
+				new EpisodeDocumentBo(dto.getFile().getOriginalFilename(), dto.getEpisodeDocumentTypeId(), dto.getInternmentEpisodeId())
 		);
 		log.debug(OUTPUT, result);
 		return result;
