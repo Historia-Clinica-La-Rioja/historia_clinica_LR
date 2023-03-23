@@ -109,3 +109,11 @@ databaseChangeLog:
               sql: |-
                 CREATE INDEX IF NOT EXISTS "IDX_patient_medical_coverage_patient_id" ON patient_medical_coverage(patient_id);
 
+    - changeSet:
+        id: createIndexDosageId_medication_statement
+        author: mmalyvarni
+        dbms: postgresql
+        changes:
+          - sql:
+              sql: |-
+                CREATE INDEX IF NOT EXISTS "IDX_medication_statement_dosage_id" ON medication_statement(dosage_id);
