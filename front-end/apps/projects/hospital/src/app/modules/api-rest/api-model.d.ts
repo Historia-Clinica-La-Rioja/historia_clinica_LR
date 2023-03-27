@@ -2465,6 +2465,22 @@ export interface PatientMedicalCoverageDto {
     vigencyDate?: string;
 }
 
+export interface PatientPersonalInfoDto {
+    birthdate: Date;
+    firstName: string;
+    genderId: number;
+    identificationNumber: string;
+    identificationTypeId: number;
+    lastName: string;
+    middleNames: string;
+    nameSelfDetermination: string;
+    otherLastNames: string;
+    patientId: number;
+    phoneNumber: string;
+    phonePrefix: string;
+    typeId: number;
+}
+
 export interface PatientPhotoDto {
     imageData: string;
     patientId: number;

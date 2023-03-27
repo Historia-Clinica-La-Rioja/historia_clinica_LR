@@ -8,6 +8,7 @@ import net.pladema.address.service.AddressMasterDataService;
 import net.pladema.patient.controller.dto.APatientDto;
 import net.pladema.patient.controller.dto.AuditPatientSearch;
 import net.pladema.patient.controller.dto.DuplicatePatientDto;
+import net.pladema.patient.controller.dto.PatientPersonalInfoDto;
 import net.pladema.person.controller.dto.BMPersonDto;
 import net.pladema.person.controller.dto.BasicPersonalDataDto;
 import net.pladema.person.controller.dto.PersonPhotoDto;
@@ -15,6 +16,7 @@ import net.pladema.person.controller.dto.PersonalInformationDto;
 import net.pladema.person.controller.mapper.PersonMapper;
 import net.pladema.person.controller.service.exceptions.CreatePersonEnumException;
 import net.pladema.person.controller.service.exceptions.CreatePersonException;
+import net.pladema.person.repository.domain.DuplicatePersonVo;
 import net.pladema.person.repository.domain.PersonalInformation;
 import net.pladema.person.repository.entity.Gender;
 import net.pladema.person.repository.entity.IdentificationType;
@@ -259,6 +261,14 @@ public class PersonExternalServiceImpl implements PersonExternalService {
 	public List<DuplicatePatientDto> getDuplicatePersonsByFilter(AuditPatientSearch auditPatientSearch) {
 		LOG.debug("Input parameters -> AuditPatientSearch", auditPatientSearch);
 		List<DuplicatePatientDto> result = personService.getDuplicatePersonsByFilter(auditPatientSearch).stream().map(DuplicatePatientDto::new).collect(Collectors.toList());
+		LOG.debug(OUTPUT, result);
+		return result;
+	}
+
+	@Override
+	public List<PatientPersonalInfoDto> getPatientsPersonalInfo(DuplicatePatientDto duplicatePatientDto) {
+		LOG.debug("Input parameters -> DuplicatePatientDto", duplicatePatientDto);
+		List<PatientPersonalInfoDto> result = personService.getPatientsPersonalInfo(new DuplicatePersonVo(duplicatePatientDto)).stream().map(PatientPersonalInfoDto::new).collect(Collectors.toList());
 		LOG.debug(OUTPUT, result);
 		return result;
 	}

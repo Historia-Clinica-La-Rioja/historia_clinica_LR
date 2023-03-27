@@ -8,6 +8,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import net.pladema.patient.controller.dto.AuditPatientSearch;
 import net.pladema.patient.controller.dto.DuplicatePatientDto;
+import net.pladema.patient.controller.dto.PatientPersonalInfoDto;
 import net.pladema.patient.controller.service.exception.AuditPatientException;
 import net.pladema.patient.controller.service.exception.AuditPatientExceptionEnum;
 import net.pladema.person.controller.service.PersonExternalService;
@@ -48,6 +49,22 @@ public class AuditPatientController {
 		}
 		validateFilter(searchFilter);
 		List<DuplicatePatientDto> result = personExternalService.getDuplicatePersonsByFilter(searchFilter);
+		return ResponseEntity.ok().body(result);
+	}
+
+	@GetMapping("/patients-personal-info")
+	@PreAuthorize("hasPermission(#institutionId, 'AUDITOR_MPI')")
+	public ResponseEntity<List<PatientPersonalInfoDto>> getPatientPersonalInfo(
+			@PathVariable(name = "institutionId") Integer institutionId,
+			@RequestParam String searchPatientInfoStr) {
+		log.debug("institutionId {}, searchPatientInfoStr {}", institutionId, searchPatientInfoStr);
+		DuplicatePatientDto duplicatePatientDto = null;
+		try {
+			duplicatePatientDto = jackson.readValue(searchPatientInfoStr, DuplicatePatientDto.class);
+		} catch (IOException e) {
+			log.error(String.format("Error mappeando filter: %s", searchPatientInfoStr), e);
+		}
+		List<PatientPersonalInfoDto> result = personExternalService.getPatientsPersonalInfo(duplicatePatientDto);
 		return ResponseEntity.ok().body(result);
 	}
 

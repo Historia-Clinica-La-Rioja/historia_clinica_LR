@@ -4,6 +4,7 @@ import ar.lamansys.sgh.shared.infrastructure.input.service.BasicDataPersonDto;
 import net.pladema.patient.controller.dto.APatientDto;
 import net.pladema.patient.controller.dto.AuditPatientSearch;
 import net.pladema.patient.controller.dto.DuplicatePatientDto;
+import net.pladema.patient.controller.dto.PatientPersonalInfoDto;
 import net.pladema.person.controller.dto.BMPersonDto;
 import net.pladema.person.controller.dto.BasicPersonalDataDto;
 import net.pladema.person.controller.dto.PersonPhotoDto;
@@ -43,5 +44,7 @@ public interface PersonExternalService {
     boolean savePersonPhoto(Integer personId, String imageData);
 	
 	List<DuplicatePatientDto> getDuplicatePersonsByFilter(AuditPatientSearch auditPatientSearch);
+
+	List<PatientPersonalInfoDto> getPatientsPersonalInfo(DuplicatePatientDto duplicatePatientDto);
 
 }

@@ -3,6 +3,7 @@ package net.pladema.person.service;
 import net.pladema.patient.controller.dto.AuditPatientSearch;
 import net.pladema.person.repository.domain.CompletePersonVo;
 import net.pladema.person.repository.domain.DuplicatePersonVo;
+import net.pladema.person.repository.domain.PersonSearchResultVo;
 import net.pladema.person.repository.domain.PersonalInformation;
 import net.pladema.person.repository.entity.Person;
 import net.pladema.person.repository.entity.PersonExtended;
@@ -36,4 +37,6 @@ public interface PersonService {
 	List<DuplicatePersonVo> getDuplicatePersonsByFilter(AuditPatientSearch auditPatientSearch);
     
 	Optional<Person> findByPatientId(Integer patientId);
+    
+	List<PersonSearchResultVo> getPatientsPersonalInfo(DuplicatePersonVo duplicatePersonVo);
 }

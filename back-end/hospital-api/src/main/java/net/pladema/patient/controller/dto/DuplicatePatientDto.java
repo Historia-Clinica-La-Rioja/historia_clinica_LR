@@ -1,7 +1,10 @@
 package net.pladema.patient.controller.dto;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.ToString;
 import net.pladema.person.repository.domain.DuplicatePersonVo;
 
@@ -10,6 +13,7 @@ import java.time.LocalDate;
 @AllArgsConstructor
 @Getter
 @ToString
+@NoArgsConstructor
 public class DuplicatePatientDto {
 
 	private String firstName;
@@ -18,6 +22,7 @@ public class DuplicatePatientDto {
 	private String otherLastNames;
 	private Short identificationTypeId;
 	private String identificationNumber;
+	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
 	private LocalDate birthdate;
 	private Long numberOfCandidates;
 

@@ -8,6 +8,8 @@ import java.util.function.Supplier;
 import net.pladema.patient.controller.dto.AuditPatientSearch;
 import net.pladema.person.repository.domain.DuplicatePersonVo;
 
+import net.pladema.person.repository.domain.PersonSearchResultVo;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -119,6 +121,14 @@ public class PersonServiceImpl implements PersonService {
 	public List<DuplicatePersonVo> getDuplicatePersonsByFilter(AuditPatientSearch auditPatientSearch) {
 		LOG.debug("Input parameters -> AuditPatientSearch", auditPatientSearch);
 		List<DuplicatePersonVo> result = personRepository.getAllByFilter(auditPatientSearch);
+		LOG.debug(OUTPUT, result);
+		return result;
+	}
+
+	@Override
+	public List<PersonSearchResultVo> getPatientsPersonalInfo(DuplicatePersonVo duplicatePersonVo) {
+		LOG.debug("Input parameters -> DuplicatePersonVo", duplicatePersonVo);
+		List<PersonSearchResultVo> result = personRepository.getPersonSearchResultByAttributes(duplicatePersonVo);
 		LOG.debug(OUTPUT, result);
 		return result;
 	}

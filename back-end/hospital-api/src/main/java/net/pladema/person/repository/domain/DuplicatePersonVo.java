@@ -2,6 +2,7 @@ package net.pladema.person.repository.domain;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+import net.pladema.patient.controller.dto.DuplicatePatientDto;
 
 import java.time.LocalDate;
 
@@ -49,5 +50,16 @@ public class DuplicatePersonVo {
 		this.identificationNumber = identificationNumber;
 		this.birthdate = null;
 		this.numberOfCandidates = numberOfCandidates;
+	}
+
+	public DuplicatePersonVo(DuplicatePatientDto duplicatePatientDto) {
+		this.firstName = duplicatePatientDto.getFirstName();
+		this.middleNames = duplicatePatientDto.getMiddleNames();
+		this.lastName = duplicatePatientDto.getLastName();
+		this.otherLastNames = duplicatePatientDto.getOtherLastNames();
+		this.identificationTypeId = duplicatePatientDto.getIdentificationTypeId();
+		this.identificationNumber = duplicatePatientDto.getIdentificationNumber();
+		this.birthdate = duplicatePatientDto.getBirthdate();
+		this.numberOfCandidates = duplicatePatientDto.getNumberOfCandidates();
 	}
 }
