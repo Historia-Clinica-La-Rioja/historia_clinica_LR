@@ -5,6 +5,7 @@ import { FeatureFlagGuard } from '@core/guards/FeatureFlagGuard';
 import { RoleGuard } from '@core/guards/RoleGuard';
 import { ControlPatientDuplicateComponent } from './routes/control-patient-duplicate/control-patient-duplicate.component';
 import { HomeComponent } from './routes/home/home.component';
+import { PatientFusionComponent } from './routes/patient-fusion/patient-fusion.component';
 
 
 const routes: Routes = [{
@@ -17,6 +18,10 @@ const routes: Routes = [{
 		{
 			path:"control-pacientes-duplicados",
 			component: ControlPatientDuplicateComponent
+		},
+		{
+			path:"fusionar-pacientes",
+			component:PatientFusionComponent
 		}
 	],
 	canActivate: [RoleGuard,FeatureFlagGuard],

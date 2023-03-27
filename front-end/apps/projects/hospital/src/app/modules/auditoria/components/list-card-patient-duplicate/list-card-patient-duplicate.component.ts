@@ -1,8 +1,12 @@
 import { Component, Input, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
 import { DuplicatePatientDto, IdentificationTypeDto } from '@api-rest/api-model';
 import { PersonMasterDataService } from '@api-rest/services/person-master-data.service';
+import { ContextService } from '@core/services/context.service';
 import { Observable, of } from 'rxjs';
 
+
+const ROUTE_PATIENTS_FUSION = "auditoria/fusionar-pacientes"
 const PAGE_SIZE_OPTIONS = [5, 10, 25];
 const PAGE_MIN_SIZE = 5;
 
@@ -19,6 +23,7 @@ export class ListCardPatientDuplicateComponent implements OnInit {
 	pageSlice: DuplicatePatientDto[];
 	identificationTypeList: IdentificationTypeDto[];
 	initialSize:Observable<any>;
+	routePrefix:string;
 	@Input() set setPatientDuplicate(listPatientDuplicate: DuplicatePatientDto[]) {
 		this.listPatientDuplicate = listPatientDuplicate;
 		this.pageSlice = this.listPatientDuplicate?.slice(0, PAGE_MIN_SIZE);
@@ -26,7 +31,8 @@ export class ListCardPatientDuplicateComponent implements OnInit {
 		this.initialSize=of(PAGE_MIN_SIZE);
 	}
 
-	constructor(private personMasterDataService: PersonMasterDataService) { }
+	constructor(private personMasterDataService: PersonMasterDataService, private router: Router,private contextService: ContextService)
+		{ this.routePrefix = 'institucion/' + this.contextService.institutionId + '/'}
 
 	ngOnInit(): void {
 		this.personMasterDataService.getIdentificationTypes()
@@ -43,6 +49,10 @@ export class ListCardPatientDuplicateComponent implements OnInit {
 
 	getIdentificationType(value: number) {
 		return this.identificationTypeList?.find(type => type.id === value).description
+	}
+
+	goToPatientFusion(){
+		this.router.navigate([this.routePrefix + ROUTE_PATIENTS_FUSION]);
 	}
 
 }
