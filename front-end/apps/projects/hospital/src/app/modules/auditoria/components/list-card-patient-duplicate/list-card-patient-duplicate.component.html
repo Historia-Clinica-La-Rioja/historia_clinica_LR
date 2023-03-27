@@ -1,6 +1,6 @@
 <mat-card *ngIf="pageSlice?.length else noInfo">
 	<div fxLayout="row" fxLayoutAlign="space-between" fxLayoutGap="50px" class="content bold grey">
-		<div fxLayoutAlign="none center" class="content"  fxFlex="20%">
+		<div fxLayoutAlign="none center" class="content" fxFlex="20%">
 			<span>{{'pacientes.audit.LABEL_NAME' | translate}}</span>
 		</div>
 		<div fxLayoutAlign="none center" class="content" fxFlex="30%">
@@ -33,7 +33,7 @@
 			</div>
 
 			<div fxLayoutAlign="none center" class="content" fxFlex="20%">
-				<span *ngIf="patient.birthdate else noData">{{patient.birthdate  | date: 'dd/MM/yyyy'}}</span>
+				<span *ngIf="patient.birthdate else noData">{{patient.birthdate | date: 'dd/MM/yyyy'}}</span>
 			</div>
 			<div fxLayoutAlign="none center" class="content lowercase" fxFlex="10%">
 				<span class="primary">{{patient?.numberOfCandidates}} {{'pacientes.audit.LABEL_CANDIDATES' |
@@ -44,24 +44,6 @@
 				<button mat-raised-button color="primary" style="display: none;">{{'pacientes.audit.LABEL_BUTTON_AUDIT' | translate}}</button>
 			</div>
 		</div>
-
-			<div fxLayoutAlign="none center" class="content">
-				<span
-					*ngIf="patient.identificationTypeId else noData">{{getIdentificationType(patient?.identificationTypeId)}}
-					&nbsp;</span>
-				<span *ngIf="patient.identificationNumber else noData">{{patient?.identificationNumber}}</span>
-			</div>
-
-			<div fxLayoutAlign="end center" class="content lowercase">
-				<span class="primary">{{patient?.numberOfCandidates}} {{'pacientes.audit.LABEL_CANDIDATES' |
-					translate}}</span>
-			</div>
-
-			<div fxLayoutAlign="none center" class="content">
-				<button mat-raised-button color="primary">{{'pacientes.audit.LABEL_BUTTON_AUDIT' | translate}}</button>
-			</div>
-		</div>
-
 
 		<mat-divider *ngIf="!isLast" insert class="divider"></mat-divider>
 	</div>

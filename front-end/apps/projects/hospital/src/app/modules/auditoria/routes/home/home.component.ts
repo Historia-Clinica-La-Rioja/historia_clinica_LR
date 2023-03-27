@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { ContextService } from '@core/services/context.service';
 
-const ROUTE_PATIENTS_FUSION = "auditoria/fusion-pacientes"
+const ROUTE_CONTROL_PATIENT_DUPLICATE = "auditoria/control-pacientes-duplicados"
 @Component({
 	selector: 'app-home',
 	templateUrl: './home.component.html',
@@ -19,6 +19,6 @@ export class HomeComponent implements OnInit {
 	}
 
 	goToPatientsFusion() {
-		this.router.navigate([this.routePrefix + ROUTE_PATIENTS_FUSION]);
+		this.router.navigate([this.routePrefix + ROUTE_CONTROL_PATIENT_DUPLICATE]);
 	}
 }

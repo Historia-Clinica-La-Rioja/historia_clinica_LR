@@ -3,8 +3,9 @@ import { RouterModule, Routes } from '@angular/router';
 import { AppFeature, ERole } from '@api-rest/api-model';
 import { FeatureFlagGuard } from '@core/guards/FeatureFlagGuard';
 import { RoleGuard } from '@core/guards/RoleGuard';
+import { ControlPatientDuplicateComponent } from './routes/control-patient-duplicate/control-patient-duplicate.component';
 import { HomeComponent } from './routes/home/home.component';
-import { PatientsFusionComponent } from './routes/patients-fusion/patients-fusion.component';
+
 
 const routes: Routes = [{
 	path: '',
@@ -14,8 +15,8 @@ const routes: Routes = [{
 			component: HomeComponent
 		},
 		{
-			path:"fusion-pacientes",
-			component: PatientsFusionComponent
+			path:"control-pacientes-duplicados",
+			component: ControlPatientDuplicateComponent
 		}
 	],
 	canActivate: [RoleGuard,FeatureFlagGuard],

@@ -1,14 +1,13 @@
 import { Component, OnInit } from '@angular/core';
-import { DuplicatePatientDto, MasterDataDto } from '@api-rest/api-model';
+import { MasterDataDto, DuplicatePatientDto } from '@api-rest/api-model';
 import { AuditPatientService } from '@api-rest/services/audit-patient.service';
 
-
 @Component({
-	selector: 'app-patients-fusion',
-	templateUrl: './patients-fusion.component.html',
-	styleUrls: ['./patients-fusion.component.scss']
+  selector: 'app-control-patient-duplicate',
+  templateUrl: './control-patient-duplicate.component.html',
+  styleUrls: ['./control-patient-duplicate.component.scss']
 })
-export class PatientsFusionComponent implements OnInit {
+export class ControlPatientDuplicateComponent implements OnInit {
 	filters=Filters;
 	searchsFilters: MasterDataDto[];
 	filterSelected: Filters;

@@ -4,7 +4,8 @@ import { DuplicatePatientDto } from '@api-rest/api-model';
 import { ContextService } from '@core/services/context.service';
 import { environment } from '@environments/environment';
 import { Observable } from 'rxjs';
-import { AuditPatientSearch } from '../../auditoria/routes/patients-fusion/patients-fusion.component';
+import { AuditPatientSearch } from '../../auditoria/routes/control-patient-duplicate/control-patient-duplicate.component';
+
 
 
 @Injectable({
