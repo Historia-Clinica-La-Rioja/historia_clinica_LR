@@ -6,7 +6,7 @@ import ar.lamansys.sgx.shared.exceptions.NotFoundException;
 public enum EExternalCauseType {
 
 	ACCIDENT("55566008", "Accidente"),
-	SELF_INFLICTED_INJURY ("276853009", "Lesión auto inflingida"),
+	SELF_INFLICTED_INJURY ("276853009", "Lesión autoinfligida"),
 	AGRESSION("61372001", "Agresión"),
 	IGNORED ("00000001", "Se ignora");
 
