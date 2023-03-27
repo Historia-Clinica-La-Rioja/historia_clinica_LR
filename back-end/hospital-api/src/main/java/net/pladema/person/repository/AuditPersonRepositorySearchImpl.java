@@ -3,6 +3,7 @@ package net.pladema.person.repository;
 import ar.lamansys.sgx.shared.repositories.QueryPart;
 import net.pladema.patient.controller.dto.AuditPatientSearch;
 import net.pladema.person.repository.domain.DuplicatePersonVo;
+import net.pladema.person.repository.domain.PersonSearchResultVo;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -30,6 +31,15 @@ public class AuditPersonRepositorySearchImpl implements AuditPersonRepositorySea
 		return auditPersonSearchQuery.construct(query.getResultList());
 	}
 
+	@Override
+	public List<PersonSearchResultVo> getPersonSearchResultByAttributes(DuplicatePersonVo duplicatePersonVo) {
+		PersonSearchQuery personSearchQuery = new PersonSearchQuery(duplicatePersonVo);
+		QueryPart queryPart =buildQueryPersonSearch(personSearchQuery);
+		Query query = entityManager.createNativeQuery(queryPart.toString());
+		queryPart.configParams(query);
+		return personSearchQuery.construct(query.getResultList());
+	}
+
 	private QueryPart buildQuery(AuditPersonSearchQuery auditPersonSearchQuery) {
 		QueryPart queryPart = new QueryPart(
 				"SELECT ")
@@ -44,6 +54,18 @@ public class AuditPersonRepositorySearchImpl implements AuditPersonRepositorySea
 				.concatPart(auditPersonSearchQuery.having())
 				.concat(" ORDER BY ")
 				.concatPart(auditPersonSearchQuery.orderBy())
+				.concat(";");
+		return queryPart;
+	}
+
+	private QueryPart buildQueryPersonSearch(PersonSearchQuery personSearchQuery) {
+		QueryPart queryPart = new QueryPart(
+				"SELECT ")
+				.concatPart(personSearchQuery.select())
+				.concat(" FROM ")
+				.concatPart(personSearchQuery.from())
+				.concat(" WHERE ")
+				.concatPart(personSearchQuery.where())
 				.concat(";");
 		return queryPart;
 	}
