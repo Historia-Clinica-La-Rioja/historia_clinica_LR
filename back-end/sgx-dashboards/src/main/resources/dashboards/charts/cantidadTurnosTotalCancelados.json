@@ -12,6 +12,13 @@
         "values": [
           "4"
         ]
+      },
+      {
+        "dimension": "CantidadTurnosTotal.institucion_id",
+        "operator": "equals",
+        "values": [
+          "[(${institutionId})]"
+        ]
       }
     ],
     "dimensions": []

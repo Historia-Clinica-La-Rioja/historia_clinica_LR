@@ -1,7 +1,8 @@
 cube(`CantidadTurnosTotal`, {
   sql: `SELECT 
           ap.id, ap.appointment_state_id as estado, ap.date_type_id as fecha_consulta, cs.name as especialidad,
-          concat_ws(', ', concat_ws(' ', p.last_name, p.other_last_names), CASE WHEN pex.name_self_determination IS NULL THEN concat_ws(' ', p.first_name, p.middle_names) ELSE pex.name_self_determination END) AS profesional
+          concat_ws(', ', concat_ws(' ', p.last_name, p.other_last_names), CASE WHEN pex.name_self_determination IS NULL THEN concat_ws(' ', p.first_name, p.middle_names) ELSE pex.name_self_determination END) AS profesional,
+          dof.institution_id AS institucion_id
       FROM 
           appointment ap
       JOIN appointment_assn apss ON (apss.appointment_id = ap.id)
@@ -53,6 +54,12 @@ cube(`CantidadTurnosTotal`, {
       sql: `estado`,
       type: `string`,
       title: 'estado',
+    },
+    // Institución
+    institucion_id: {
+      sql: `institucion_id`,
+      type: `number`,
+      title: 'Institución',
     },
   },
   title:` `,

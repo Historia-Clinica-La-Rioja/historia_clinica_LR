@@ -4,6 +4,15 @@
       "CantidadTurnosTotal.cantidad_turnos"
     ],
     "timeDimensions": [],
+    "filters": [
+      {
+        "dimension": "CantidadTurnosTotal.institucion_id",
+        "operator": "equals",
+        "values": [
+          "[(${institutionId})]"
+        ]
+      }
+    ],
     "order": {},
     "dimensions": []
   },
