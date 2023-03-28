@@ -3,6 +3,7 @@ import { SnomedDto } from '@api-rest/api-model';
 import { ExternalCauseDto } from '@api-rest/api-model';
 import { EEventLocation } from '@api-rest/api-model';
 import { EExternalCauseType } from '@api-rest/api-model';
+import { Subscription } from 'rxjs/internal/Subscription';
 import { ExternalCauseService } from '../../services/external-cause.service';
 
 @Component({
@@ -27,16 +28,18 @@ export class ExternalCauseComponent implements OnInit {
 	idExternalCause = 0;
 	@Input() searchConceptsLocallyFF = false;
 	@Output() event = new EventEmitter<ExternalCauseDto>();
+	private externalCauseServise$: Subscription;
 
 	constructor(
 		readonly externalCauseService: ExternalCauseService,
 	) { }
 
 	ngOnInit(): void {
-		this.externalCauseService.getValue().subscribe((externalCause: ExternalCauseDto) => {
+		this.externalCauseServise$ = this.externalCauseService.getValue().subscribe((externalCause: ExternalCauseDto) => {
 			this.selectedOptionExternalCauseType = externalCause?.externalCauseType;
 			this.selectedOptionEventLocation = externalCause?.eventLocation;
 			this.idExternalCause = externalCause?.id;
+			this.snomedConceptEvent = externalCause?.snomed;
 			this.emmitEvent();
 		});
 

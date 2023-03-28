@@ -6,20 +6,18 @@ import { SnomedDto } from '@api-rest/api-model';
 import { ExternalCauseDto } from '@api-rest/api-model';
 import { Injectable } from '@angular/core';
 import { BasicTable } from '@material/model/table.model';
-import { BehaviorSubject, of, Subject } from 'rxjs';
+import { BehaviorSubject, Subject } from 'rxjs';
 import { SnomedService } from '@historia-clinica/services/snomed.service';
 import { SnomedSemanticSearch } from '@historia-clinica/services/snomed.service';
 import { Observable } from 'rxjs';
 
-@Injectable({
-	providedIn: 'root'
-})
+@Injectable()
 
 export class ExternalCauseService {
 	ecl = SnomedECL.EVENT;
 	snomedConceptEvent: SnomedDto;
 	snomedConceptEvent$: Subject<SnomedDto> = new Subject<SnomedDto>();
-	externalCause: Subject<ExternalCauseDto> = new Subject<ExternalCauseDto>();
+	externalCause = new BehaviorSubject<ExternalCauseDto>(null);
 
 	private tableSubject = new BehaviorSubject<BasicTable<SnomedDto>>(null);
 
@@ -47,6 +45,8 @@ export class ExternalCauseService {
 
 	setValue(externalCause: ExternalCauseDto) {
 		this.externalCause.next(externalCause);
+		externalCause?.snomed && this.setConceptEventSnomed(externalCause?.snomed);
+		this.addEvent();
 	}
 
 	getValue(): Observable<ExternalCauseDto> {
@@ -60,6 +60,7 @@ export class ExternalCauseService {
 		this.snomedConceptEvent = null;
 		this.snomedConceptEvent$.next(null);
 		this.getTableInit();
+		this.externalCause.next({ ...this.externalCause.value, snomed: this.snomedConceptEvent });
 	}
 
 	openSearchDialogEvent(searchValue: string) {
@@ -81,11 +82,13 @@ export class ExternalCauseService {
 	}
 
 	addEvent() {
-		this.table.data = pushTo<SnomedDto>(this.table?.data, this.snomedConceptEvent);
-		if (this.formEvent.valid) {
-			this.formEvent.reset();
+		if (this.snomedConceptEvent) {
+			this.table.data = pushTo<SnomedDto>(this.table?.data, this.snomedConceptEvent);
+			if (this.formEvent.valid) {
+				this.formEvent.reset();
+			}
+			this.tableSubject.next(this.getTable());
 		}
-		this.tableSubject.next(this.getTable());
 	}
 
 	resetForm() {

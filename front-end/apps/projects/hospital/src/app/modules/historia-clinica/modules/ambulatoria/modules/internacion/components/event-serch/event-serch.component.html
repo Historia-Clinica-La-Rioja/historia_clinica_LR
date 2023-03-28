@@ -3,7 +3,7 @@
 	<ng-container *ngIf="!searchConceptsLocallyFF else eventTypeaheadSearch">
 		<app-concepts-search *ngIf="!externalCauseServise.snomedConceptEvent else eventForm"
 			[label]="'internaciones.anamnesis.externalCause.EVENT'|translate"
-			(search)="externalCauseServise.openSearchDialogEvent($event)">
+			(search)="openSearchDialogEvent($event)">
 		</app-concepts-search>
 	</ng-container>
 
@@ -13,7 +13,7 @@
 			[placeholder]="'internaciones.anamnesis.externalCause.EVENT'|translate"
 			[enableSubmitButton]="true"
 			[buttonMessage]="'internaciones.anamnesis.externalCause.ADD_EVENT'"
-			(conceptSelected)="externalCauseServise.setConceptEventSnomed($event)">
+			(conceptSelected)="emmitEvent($event)">
 		</app-concept-typeahead-search>
 		</ng-container>
 	</ng-template>

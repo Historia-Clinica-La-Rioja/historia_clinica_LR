@@ -34,17 +34,19 @@ import { SnomedService, SnomedSemanticSearch } from '@historia-clinica/services/
 import { DockPopupRef } from "@presentation/services/dock-popup-ref";
 import { OVERLAY_DATA } from "@presentation/presentation-model";
 import { InternmentFields } from "@historia-clinica/modules/ambulatoria/modules/internacion/services/internment-summary-facade.service";
-import { Observable } from 'rxjs';
+import { Observable, Subscriber, Subscription } from 'rxjs';
 import { DocumentActionReasonComponent } from '../document-action-reason/document-action-reason.component';
 import { MatDialog } from '@angular/material/dialog';
 import { ProblemEpicrisisService } from '../../services/problem-epicrisis.service';
 import { FeatureFlagService } from '@core/services/feature-flag.service';
 import { ExternalCauseService } from '../../services/external-cause.service';
+import { tap } from 'rxjs/operators';
 
 @Component({
 	selector: 'app-epicrisis-dock-popup',
 	templateUrl: './epicrisis-dock-popup.component.html',
-	styleUrls: ['./epicrisis-dock-popup.component.scss']
+	styleUrls: ['./epicrisis-dock-popup.component.scss'],
+	providers: [ExternalCauseService]
 })
 export class EpicrisisDockPopupComponent implements OnInit {
 
@@ -74,8 +76,9 @@ export class EpicrisisDockPopupComponent implements OnInit {
 	searchConceptsLocallyFF = false;
 	cipresEpicrisisFF = false;
 	externalCauseDto: ExternalCauseDto = {};
-	externalCause: ExternalCauseDto = {};
 	event$: Observable<ExternalCauseDto>;
+	private externalCause$: Subscription;
+
 	personalHistories: TableCheckbox<HealthHistoryConditionDto> = {
 		data: [],
 		columns: [
@@ -216,12 +219,14 @@ export class EpicrisisDockPopupComponent implements OnInit {
 			if (sctid1 === sctid2)
 				tableConcept.selection.select(concept)
 		}
-
+		this.externalCause$ = this.externalCauseServise.getValue().subscribe();
 	}
 
 	private setValues(e: ResponseEpicrisisDto): void {
-		if(e?.externalCause)
-		this.externalCauseServise.setValue(e.externalCause);
+		if (e?.externalCause) {
+			this.externalCauseDto = e?.externalCause;
+			this.externalCauseServise.setValue(e.externalCause);
+		}
 		this.personalHistories.data.forEach(ph => {
 			const existEqual = !!e.personalHistories.find((p) => ph.snomed.sctid === p.snomed.sctid);
 			if (existEqual)
@@ -254,6 +259,8 @@ export class EpicrisisDockPopupComponent implements OnInit {
 	save(): void {
 		if (this.form.valid) {
 			const epicrisis: EpicrisisDto = this.getEpicrisis(true);
+			this.ngOnDestroy();
+
 			if (this.data.patientInfo.epicrisisId) {
 				this.openEditReason(epicrisis);
 				return;
@@ -281,6 +288,9 @@ export class EpicrisisDockPopupComponent implements OnInit {
 
 	saveDraft(): void {
 		if (this.form.valid) {
+
+
+
 			const epicrisis = this.getEpicrisis(false);
 			let obs$;
 			if (this.data.patientInfo.epicrisisId) {
@@ -468,6 +478,10 @@ export class EpicrisisDockPopupComponent implements OnInit {
 					});
 			}
 		});
+	}
+
+	ngOnDestroy(): void {
+		this.externalCause$.unsubscribe();
 	}
 
 }

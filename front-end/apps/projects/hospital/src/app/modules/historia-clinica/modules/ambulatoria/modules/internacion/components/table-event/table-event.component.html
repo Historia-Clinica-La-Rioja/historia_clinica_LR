@@ -3,7 +3,7 @@
 
 		<ng-container *ngFor="let column of (table$ | async)?.columns" matColumnDef="pt">
 			<th *matHeaderCellDef>{{ column.header | translate }}</th>
-			<td mat-cell *matCellDef="let element">{{element.pt}}</td>
+			<td mat-cell *matCellDef="let element">{{element?.pt}}</td>
 		</ng-container>
 
 		<ng-container matColumnDef="remove">
