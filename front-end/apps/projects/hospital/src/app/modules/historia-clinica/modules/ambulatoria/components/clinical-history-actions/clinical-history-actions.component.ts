@@ -1,6 +1,6 @@
 import { Component, Input, OnInit, EventEmitter, Output } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
-import { HealthConditionDto, DiagnosisDto, InternmentEpisodeProcessDto, AnamnesisSummaryDto, EpicrisisSummaryDto, EvaluationNoteSummaryDto } from '@api-rest/api-model';
+import { HealthConditionDto, DiagnosisDto, InternmentEpisodeProcessDto, AnamnesisSummaryDto, EpicrisisSummaryDto, EvaluationNoteSummaryDto, DocumentHistoricDto, DocumentSearchDto } from '@api-rest/api-model';
 import { ERole } from '@api-rest/api-model';
 import { ClinicalSpecialtyService } from '@api-rest/services/clinical-specialty.service';
 import { InternmentStateService } from '@api-rest/services/internment-state.service';
@@ -21,11 +21,15 @@ import { AmbulatoriaSummaryFacadeService } from '../../services/ambulatoria-summ
 import { HistoricalProblemsFacadeService } from '../../services/historical-problems-facade.service';
 import { MedicacionesService } from '../../services/medicaciones.service';
 import { PatientAllergiesService } from '../../services/patient-allergies.service';
+import { DocumentActionsService } from '../../modules/internacion/services/document-actions.service';
+import { DeleteDocumentActionService } from '../../modules/internacion/services/delete-document-action.service';
+import { EditDocumentActionService } from '../../modules/internacion/services/edit-document-action.service';
 
 @Component({
 	selector: 'app-clinical-history-actions',
 	templateUrl: './clinical-history-actions.component.html',
-	styleUrls: ['./clinical-history-actions.component.scss']
+	styleUrls: ['./clinical-history-actions.component.scss'],
+	providers: [DocumentActionsService, DeleteDocumentActionService, EditDocumentActionService]
 })
 export class ClinicalHistoryActionsComponent implements OnInit {
 
@@ -44,6 +48,7 @@ export class ClinicalHistoryActionsComponent implements OnInit {
 	hasMedicalRole = false;
 	hasInternmentActionsToDo = true;
 	internmentEpisode: InternmentEpisodeProcessDto;
+	documentEpicrisisDraft: DocumentSearchDto;
 	@Input() patientId: number;
 	@Input()
 	set internmentEpisodeProcess(episode: InternmentEpisodeProcessDto) {
@@ -70,7 +75,8 @@ export class ClinicalHistoryActionsComponent implements OnInit {
 		private readonly permissionsService: PermissionsService,
 		private readonly internmentStateService: InternmentStateService,
 		private readonly historialProblemsFacadeService: HistoricalProblemsFacadeService,
-		readonly internmentActions: InternmentActionsService
+		readonly internmentActions: InternmentActionsService,
+		private readonly documentActions: DocumentActionsService,
 	) { }
 
 	ngOnInit(): void {
@@ -107,6 +113,8 @@ export class ClinicalHistoryActionsComponent implements OnInit {
 				this.epicrisisDoc = documentInformation[2];
 				this.hasMedicalDischarge = documentInformation[3];
 				this.hasToDoInternmentAction();
+				if (this.epicrisisDoc?.confirmed === false)
+					this.getEpicrisisDraft();
 			});
 	}
 
@@ -129,7 +137,7 @@ export class ClinicalHistoryActionsComponent implements OnInit {
 				this.historialProblemsFacadeService.loadEvolutionSummaryList(this.patientId);
 				if (fieldsToUpdate)
 					this.ambulatoriaSummaryFacadeService.setFieldsToUpdate(fieldsToUpdate);
-				if (this.internmentEpisode?.inProgress && this.internmentEpisode?.id) {	
+				if (this.internmentEpisode?.inProgress && this.internmentEpisode?.id) { 
 					if (fieldsToUpdate?.allergies)
 						this.internmentSummaryFacadeService.unifyAllergies(this.patientId);
 					if (fieldsToUpdate?.familyHistories)
@@ -204,6 +212,10 @@ export class ClinicalHistoryActionsComponent implements OnInit {
 		this.internmentActions.openMedicalDischarge();
 	}
 
+	openEpicrisisDraft() {
+		this.documentActions.editEpicrisisDraft(this.documentEpicrisisDraft);
+	}
+
 	private hasToDoInternmentAction() {
 		if (this.hasMedicalDischarge) {
 			this.hasInternmentActionsToDo = false;
@@ -240,5 +252,12 @@ export class ClinicalHistoryActionsComponent implements OnInit {
 			this.internmentSummaryFacadeService.unifyAllergies(this.patientId);
 		}
 		this.internmentSummaryFacadeService.updateInternmentEpisode();
+	}
+
+	private getEpicrisisDraft() {
+		this.internmentSummaryFacadeService.clinicalEvaluation$.subscribe((documentHistoric: DocumentHistoricDto) => {
+			if (documentHistoric?.documents?.length)
+				this.documentEpicrisisDraft = documentHistoric.documents.find(document => document.documentType === "Epicrisis" && !document.confirmed);
+		});
 	}
 }

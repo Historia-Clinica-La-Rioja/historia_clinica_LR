@@ -43,6 +43,12 @@
                     <button mat-menu-item class="actions" (click)="openEvolutionNote()">
                         {{'ambulatoria.paciente.card.buttons.actions.EVOLUTION_NOTE' | translate}}</button>
                 </ng-container>
+                <ng-container *ngIf="this.documentEpicrisisDraft">
+                    <button mat-menu-item *appHasRole="['ESPECIALISTA_MEDICO']" class="actions"
+                        (click)="openEpicrisisDraft()">
+                        {{'ambulatoria.paciente.card.buttons.actions.EPICRISIS_DRAFT' | translate}}
+                    </button> 
+                </ng-container>
             </ng-container>
             <ng-container *ngIf="epicrisisDoc?.confirmed && !hasMedicalDischarge">
                 <button mat-menu-item *appHasRole="['ESPECIALISTA_MEDICO']" class="actions"

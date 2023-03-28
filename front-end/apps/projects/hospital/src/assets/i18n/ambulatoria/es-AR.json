@@ -47,7 +47,8 @@
                         "MEDICAL_DISCHARGE": "Alta médica",
                         "NUEVA_CONSULTA": "Nueva consulta",
                         "AMBULATORY": "Ambulatoria",
-                        "NURSING": "Enfermería"
+                        "NURSING": "Enfermería",
+                        "EPICRISIS_DRAFT": "Continuar epicrisis"
                     }
                 },
                 "GROUP_AND_FACTOR": "Grupo y factor",
