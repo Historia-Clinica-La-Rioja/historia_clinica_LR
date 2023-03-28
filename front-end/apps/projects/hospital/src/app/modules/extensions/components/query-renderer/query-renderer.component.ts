@@ -3,7 +3,7 @@ import { isQueryPresent, ResultSet } from '@cubejs-client/core';
 import { CubejsClient, TChartType } from '@cubejs-client/ngx';
 import { BehaviorSubject, combineLatest, of, merge } from 'rxjs';
 import { catchError, switchMap } from 'rxjs/operators';
-import { ChartDataSets, ChartOptions } from 'chart.js';
+import { ChartOptions } from 'chart.js';
 import { Label } from 'ng2-charts';
 import { getDisplayedColumns, flattenColumns } from './utils';
 import * as moment from "moment";
@@ -26,19 +26,16 @@ const formatColumnDate = (tableData: any[], columns: string[]): any[] => {
 };
 
 const parse = (value: string): string => {
-	let splitedValue = value.split(',')[0];
-	if (isDate(splitedValue)) {
-		const month = splitedValue[5] + splitedValue[6];
-		splitedValue = MONTHS_OF_YEAR[Number(month) - 1];
+	if (isDate(value)) {
+		const month = value[5] + value[6];
+		value = MONTHS_OF_YEAR[Number(month) - 1];
 	}
-	return splitedValue.toString();
+	return value.toString();
 }
 
 const isDate = (value: string): boolean => {
-	if (moment(value, moment.ISO_8601, true).isValid()) {
-		return true;
-	}
-	return false;
+	return moment(value, moment.ISO_8601, true).isValid();
+
 }
 
 @Component({
@@ -238,10 +235,7 @@ export class QueryRendererComponent {
 
 		const i = this.percentageData.findIndex(x => x < 1);
 
-		if (i > 1)
-			this.showGroupSmallData = true;
-		else
-			this.showGroupSmallData = false;
+		this.showGroupSmallData = i > 1;
 
 		this.showPercentage = false;
 		this.groupSmallData = false;
@@ -416,25 +410,25 @@ export class QueryRendererComponent {
 		switch (resultSet.loadResponse.results[0].query.measures[0]){
 			case 'CantidadTurnosTotal.cantidad_turnos': {
 				this.numericTitle = 'TURNOS';
-
-				switch (resultSet.loadResponse.results[0].query.filters[0]?.values[0]) {
-					case '1': {
-						this.numericTitle = "ASIGNADOS";
-						break;
+				if (resultSet.loadResponse.results[0].query.filters[0]?.member === 'CantidadTurnosTotal.estado')
+					switch (resultSet.loadResponse.results[0].query.filters[0]?.values[0]) {
+						case '1': {
+							this.numericTitle = "ASIGNADOS";
+							break;
+						}
+						case '3': {
+							this.numericTitle = "AUSENTES";
+							break;
+						}
+						case '4': {
+							this.numericTitle = "CANCELADOS";
+							break;
+						}
+						case '5': {
+							this.numericTitle = "ATENDIDOS";
+							break;
+						}
 					}
-					case '3': {
-						this.numericTitle = "AUSENTES";
-						break;
-					}
-					case '4': {
-						this.numericTitle = "CANCELADOS";
-						break;
-					}
-					case '5': {
-						this.numericTitle = "ATENDIDOS";
-						break;
-					}
-				}
 				break;
 			}
 
