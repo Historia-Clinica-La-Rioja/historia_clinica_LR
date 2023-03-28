@@ -62,7 +62,7 @@ export class CubejsChartComponent implements OnDestroy {
 	cleanFilters(queryStream) {
 		let filters = [...queryStream.cubeQuery.filters];
 		if (this.disableFilter) {
-			filters = filters.filter((value) => value.dimension.endsWith('.institucion_id'));
+			filters = filters.filter((value) => value.dimension && value.dimension.endsWith('.institucion_id'));
 		} else {
 			for (let i = filters.length - 1; i >= 0; i--) {
 				let splitedQuery = queryStream.cubeQuery.measures[0] ? queryStream.cubeQuery.measures[0].split('.') : queryStream.cubeQuery.dimensions[0].split('.');
