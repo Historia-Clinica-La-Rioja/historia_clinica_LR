@@ -104,10 +104,8 @@ export const SIDEBAR_MENU: MenuItemDef[] = [
 		id: 'auditoria',
 		url: './auditoria',
 		permissions: [
-			ERole.ADMINISTRATIVO,
-			ERole.ENFERMERO,
-			ERole.ADMINISTRADOR_DE_CAMAS,
-			ERole.ADMINISTRATIVO_RED_DE_IMAGENES
+		ERole.AUDITOR_MPI
 		],
+		featureFlag: AppFeature.HABILITAR_MODULO_AUDITORIA
 	},
 ];
