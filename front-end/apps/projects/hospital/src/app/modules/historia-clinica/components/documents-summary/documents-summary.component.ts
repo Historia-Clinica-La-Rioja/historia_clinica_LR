@@ -17,6 +17,7 @@ import { PatientNameService } from "@core/services/patient-name.service";
 import { DeleteDocumentActionService } from '@historia-clinica/modules/ambulatoria/modules/internacion/services/delete-document-action.service';
 import { EditDocumentActionService } from '@historia-clinica/modules/ambulatoria/modules/internacion/services/edit-document-action.service';
 import { fromStringToDate } from "@core/utils/date.utils";
+import { InternmentActionsService } from '@historia-clinica/modules/ambulatoria/modules/internacion/services/internment-actions.service';
 
 @Component({
 	selector: 'app-documents-summary',
@@ -48,6 +49,7 @@ export class DocumentsSummaryComponent implements OnInit, OnChanges {
 		private changeDetectorRef: ChangeDetectorRef,
 		private readonly documentActions: DocumentActionsService,
 		private readonly patientNameService: PatientNameService,
+		readonly internmentActions: InternmentActionsService
 	) {
 		this.form = this.formBuilder.group({
 			text: [''],

@@ -71,7 +71,7 @@
 		</div>
 		<div class="documents" id="documents" fxLayout="row">
 			<mat-selection-list color="accent" [multiple]=false id="selection-documents" class="selection-documents">
-				<mat-list-option (click)="setActive(documentSearch)" *ngFor="let documentSearch of documentsToShow">
+				<mat-list-option (click)="setActive(documentSearch)" *ngFor="let documentSearch of documentsToShow" [disabled]="internmentActions.popUpOpen$ | async">
 					<div fxLayout="row" fxLayoutGap="5px">
 						<ng-container>
 							<mat-icon *ngIf="documentSearch.document.documentType != 'Epicrisis' && documentSearch.document.documentType != 'Anamnesis'"mat-list-icon fontSet="material-icons-outlined" color="primary">assignment</mat-icon>

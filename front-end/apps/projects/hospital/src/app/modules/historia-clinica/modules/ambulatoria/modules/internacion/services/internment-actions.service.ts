@@ -32,6 +32,9 @@ export class InternmentActionsService {
 	medicalDischargeSubject = new Subject<InternmentFields>();
 	medicalDischarge$ = this.medicalDischargeSubject.asObservable();
 
+	popUpOpenSubject = new Subject<boolean>();
+	popUpOpen$ = this.popUpOpenSubject.asObservable();
+
 	constructor(
 		private readonly dockPopupService: DockPopupService,
 		private readonly dialog: MatDialog
@@ -40,6 +43,7 @@ export class InternmentActionsService {
 	setInternmentInformation(patientId: number, internmentEpisodeId: number) {
 		this.patientId = patientId;
 		this.internmentEpisodeId = internmentEpisodeId;
+		this.popUpOpenSubject.next(false)
 		delete this.mainDiagnosis;
 		delete this.diagnosticos;
 	}
@@ -57,9 +61,11 @@ export class InternmentActionsService {
 				mainDiagnosis: this.mainDiagnosis,
 				diagnosticos: this.diagnosticos
 			});
+			this.popUpOpenSubject.next(true);
 			this.dialogRef.afterClosed().subscribe((fieldsToUpdate: InternmentFields) => {
 				delete this.dialogRef;
 				this.anamnesisSubject.next(fieldsToUpdate);
+				this.popUpOpenSubject.next(false);
 			});
 		} else {
 			if (this.dialogRef.isMinimized()) {
@@ -79,9 +85,11 @@ export class InternmentActionsService {
 				evolutionNoteId: documentId,
 				documentType: documentType
 			});
+			this.popUpOpenSubject.next(true);
 			this.dialogRef.afterClosed().subscribe((fieldsToUpdate: InternmentFields) => {
 				delete this.dialogRef;
 				this.evolutionNoteSubject.next(fieldsToUpdate);
+				this.popUpOpenSubject.next(false);
 			});
 		} else {
 			if (this.dialogRef.isMinimized()) {
@@ -102,11 +110,13 @@ export class InternmentActionsService {
 				autoFocus: false,
 				disableClose: true,
 			});
+			this.popUpOpenSubject.next(true);
 			this.dialogRef.afterClosed().subscribe((epicrisisClose: EpicrisisClose) => {
 				delete this.dialogRef;
 				this.epicrisisSubject.next(epicrisisClose?.fieldsToUpdate);
 				if (epicrisisClose?.openMedicalDischarge)
 					this.openMedicalDischarge();
+				this.popUpOpenSubject.next(false);
 			});
 		} else {
 			if (this.dialogRef.isMinimized()) {
@@ -124,9 +134,11 @@ export class InternmentActionsService {
 			autoFocus: false,
 			disableClose: true,
 		});
+		this.popUpOpenSubject.next(true);
 		dialogRef.afterClosed().subscribe(medicalDischarge => {
 			if (medicalDischarge)
 				this.medicalDischargeSubject.next(medicalDischarge);
+			this.popUpOpenSubject.next(false);
 		});
 	}
 }
