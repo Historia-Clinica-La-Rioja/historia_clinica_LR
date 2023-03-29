@@ -71,6 +71,7 @@ export class ConceptTypeaheadSearchComponent {
 	}
 
 	clear() {
+		this.snomedConcept = null;
 		this.myControl.reset();
 	}
 }
