@@ -1,6 +1,7 @@
 package ar.lamansys.online.application.booking;
 
 import ar.lamansys.online.domain.booking.BookingBo;
+import ar.lamansys.sgh.shared.infrastructure.input.service.booking.SavedBookingAppointmentDto;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
@@ -17,14 +18,14 @@ public class BookAppointment {
 		this.bookingConfirmationMailSender = bookingConfirmationMailSender;
 	}
 
-	public String run(BookingBo bookingBo) {
-		var uuid = this.bookingAppointmentStorage.save(bookingBo);
+	public SavedBookingAppointmentDto run(BookingBo bookingBo) {
+		SavedBookingAppointmentDto savedBooking = this.bookingAppointmentStorage.save(bookingBo);
 		try{
-			bookingConfirmationMailSender.sendEmail(bookingBo, uuid);
+			bookingConfirmationMailSender.sendEmail(bookingBo, savedBooking.getUuid());
 		}
 		catch (Exception e){
 			log.error(e.getMessage(), e);
 		}
-		return uuid;
+		return savedBooking;
 	}
 }

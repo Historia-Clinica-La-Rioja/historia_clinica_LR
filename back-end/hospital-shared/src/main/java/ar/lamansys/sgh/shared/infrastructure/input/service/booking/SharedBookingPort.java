@@ -5,7 +5,7 @@ import java.util.List;
 
 public interface SharedBookingPort {
 
-	String makeBooking(BookingDto bookingDto);
+	SavedBookingAppointmentDto makeBooking(BookingDto bookingDto);
 
 	void cancelBooking(String uuid);
 

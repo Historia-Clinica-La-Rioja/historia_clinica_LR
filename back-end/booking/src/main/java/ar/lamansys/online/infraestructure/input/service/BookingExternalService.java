@@ -3,6 +3,8 @@ package ar.lamansys.online.infraestructure.input.service;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import ar.lamansys.sgh.shared.infrastructure.input.service.booking.SavedBookingAppointmentDto;
+
 import org.springframework.stereotype.Service;
 
 import ar.lamansys.online.application.booking.BookAppointment;
@@ -58,7 +60,7 @@ public class BookingExternalService implements SharedBookingPort {
 	private final FetchAvailabilityByPracticeAndProfessional fetchAvailabilityByPracticeAndProfessional;
 	private final FetchAvailabilityByPractice fetchAvailabilityByPractice;
 
-	public String makeBooking(BookingDto bookingDto) {
+	public SavedBookingAppointmentDto makeBooking(BookingDto bookingDto) {
 		BookingBo bookingBo = new BookingBo(
 				bookingDto.getAppointmentDataEmail(),
 				mapToAppointment(bookingDto.getBookingAppointmentDto()),

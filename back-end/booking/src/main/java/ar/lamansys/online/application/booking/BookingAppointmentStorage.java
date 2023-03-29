@@ -3,9 +3,10 @@ package ar.lamansys.online.application.booking;
 import java.util.Optional;
 
 import ar.lamansys.online.domain.booking.BookingBo;
+import ar.lamansys.sgh.shared.infrastructure.input.service.booking.SavedBookingAppointmentDto;
 
 public interface BookingAppointmentStorage {
-    String save(BookingBo bookingBo);
+    SavedBookingAppointmentDto save(BookingBo bookingBo);
     boolean existsEmail(String email);
     void cancelBooking(String email);
     Optional<String> getPatientName(String uuid);

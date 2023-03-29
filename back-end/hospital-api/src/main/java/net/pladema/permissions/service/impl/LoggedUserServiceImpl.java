@@ -25,6 +25,7 @@ public class LoggedUserServiceImpl implements LoggedUserService {
 	@Override
 	public Stream<RoleAssignment> currentAssignments() {
 		return SecurityContextUtils.getAuthentication().getAuthorities().stream()
+				.filter(grantedAuthority -> RoleAssignmentAuthority.class.isAssignableFrom(grantedAuthority.getClass()))
 				.map(grantedAuthority -> (RoleAssignmentAuthority)grantedAuthority)
 				.map(RoleAssignmentAuthority::assignment);
 	}

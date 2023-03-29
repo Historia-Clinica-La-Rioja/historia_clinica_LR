@@ -5,6 +5,7 @@ import java.time.LocalDate;
 import java.util.Collection;
 
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -46,10 +47,11 @@ public class AppointmentByInstitutionPublicController {
 	}
 
 	@PutMapping("/{appointmentId}/cancel")
-	public void cancelAppointment(
+	public ResponseEntity<String> cancelAppointment(
 			@PathVariable(name = "institutionId") Integer institutionId,
 			@PathVariable(name = "appointmentId") Integer appointmentId,
 			@RequestParam(name = "reason") String reason) {
 		appointmentPort.cancelAppointment(institutionId, appointmentId, reason);
+		return ResponseEntity.ok().body(String.format("El turno con id %s fue cancelado con éxito", appointmentId));
 	}
 }

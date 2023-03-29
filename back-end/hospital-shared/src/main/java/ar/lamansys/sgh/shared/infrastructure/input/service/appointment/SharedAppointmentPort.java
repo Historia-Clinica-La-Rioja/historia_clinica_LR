@@ -9,6 +9,7 @@ import ar.lamansys.sgh.shared.infrastructure.input.service.appointment.dto.Docum
 import ar.lamansys.sgh.shared.infrastructure.input.service.appointment.dto.PublicAppointmentListDto;
 import ar.lamansys.sgh.shared.infrastructure.input.service.booking.BookingAppointmentDto;
 import ar.lamansys.sgh.shared.infrastructure.input.service.booking.BookingPersonDto;
+import ar.lamansys.sgh.shared.infrastructure.input.service.booking.SavedBookingAppointmentDto;
 
 public interface SharedAppointmentPort {
 
@@ -22,7 +23,7 @@ public interface SharedAppointmentPort {
 
 	void cancelAppointment(Integer institutionId, Integer appointmentId, String reason);
 
-	String saveBooking(BookingAppointmentDto bookingAppointmentDto, BookingPersonDto bookingPersonDto, String email);
+	SavedBookingAppointmentDto saveBooking(BookingAppointmentDto bookingAppointmentDto, BookingPersonDto bookingPersonDto, String email);
 
 	boolean existsEmail(String email);
 

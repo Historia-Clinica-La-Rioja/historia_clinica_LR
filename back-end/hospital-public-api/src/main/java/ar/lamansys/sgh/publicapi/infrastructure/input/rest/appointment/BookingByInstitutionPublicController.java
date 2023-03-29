@@ -6,6 +6,8 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 
+import ar.lamansys.sgh.shared.infrastructure.input.service.booking.SavedBookingAppointmentDto;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -46,8 +48,8 @@ public class BookingByInstitutionPublicController {
 
 	@PostMapping
 	@ResponseStatus(HttpStatus.CREATED)
-	public Map<String,String> bookPreappointment(@RequestBody BookingDto bookingDto) {
-		return Map.of("uuid", bookAppointmentPort.makeBooking(bookingDto));
+	public SavedBookingAppointmentDto bookPreappointment(@RequestBody BookingDto bookingDto) {
+		return bookAppointmentPort.makeBooking(bookingDto);
 	}
 
 

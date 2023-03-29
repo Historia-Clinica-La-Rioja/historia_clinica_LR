@@ -2897,6 +2897,12 @@ export interface RoomDto extends Serializable {
     type: string;
 }
 
+export interface SavedBookingAppointmentDto {
+    appointmentId: number;
+    bookingPersonId: number;
+    uuid: string;
+}
+
 export interface SavedEpisodeDocumentResponseDto {
     createdOn: DateDto;
     episodeDocumentTypeId: number;

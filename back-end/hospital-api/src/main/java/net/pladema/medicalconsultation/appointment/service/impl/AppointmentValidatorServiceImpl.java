@@ -163,7 +163,7 @@ public class AppointmentValidatorServiceImpl implements AppointmentValidatorServ
                 CONFIRMED, Arrays.asList(ABSENT, CANCELLED, SERVED, ASSIGNED),
                 ABSENT, Arrays.asList(CONFIRMED,ABSENT, ASSIGNED),
                 SERVED, Collections.emptyList(),
-                CANCELLED, Collections.singletonList(CANCELLED),
+                CANCELLED, Collections.emptyList(),
 				OUT_OF_DIARY, Arrays.asList(CANCELLED, ASSIGNED, BOOKED)
         );
     }

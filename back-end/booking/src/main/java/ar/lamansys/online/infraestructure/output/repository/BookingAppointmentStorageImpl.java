@@ -2,6 +2,8 @@ package ar.lamansys.online.infraestructure.output.repository;
 
 import java.util.Optional;
 
+import ar.lamansys.sgh.shared.infrastructure.input.service.booking.SavedBookingAppointmentDto;
+
 import org.springframework.stereotype.Service;
 
 import ar.lamansys.online.application.booking.BookingAppointmentStorage;
@@ -20,7 +22,7 @@ public class BookingAppointmentStorageImpl implements BookingAppointmentStorage 
     }
 
     @Override
-    public String save(BookingBo bookingBo) {
+    public SavedBookingAppointmentDto save(BookingBo bookingBo) {
         return sharedAppointmentPort.saveBooking(
                 mapToAppointment(bookingBo),
                 mapToBookingPerson(bookingBo),

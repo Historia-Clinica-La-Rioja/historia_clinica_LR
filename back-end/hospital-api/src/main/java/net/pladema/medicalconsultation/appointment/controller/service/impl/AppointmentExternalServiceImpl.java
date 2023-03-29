@@ -11,6 +11,8 @@ import java.util.stream.Collectors;
 import javax.validation.ConstraintViolationException;
 import javax.validation.constraints.NotNull;
 
+import ar.lamansys.sgh.shared.infrastructure.input.service.booking.SavedBookingAppointmentDto;
+
 import org.springframework.stereotype.Service;
 
 import ar.lamansys.sgh.shared.infrastructure.input.service.appointment.SharedAppointmentPort;
@@ -126,7 +128,7 @@ public class AppointmentExternalServiceImpl implements AppointmentExternalServic
 	}
 
 	@Override
-	public String saveBooking(
+	public SavedBookingAppointmentDto saveBooking(
 			BookingAppointmentDto bookingAppointmentDto,
 			BookingPersonDto bookingPersonDto,
 			String email
@@ -151,7 +153,10 @@ public class AppointmentExternalServiceImpl implements AppointmentExternalServic
 		createBookingAppointmentService.execute(bookingAppointmentBo);
 
 		log.debug(OUTPUT,bookingAppointmentBo);
-		return bookingAppointmentBo.getUuid();
+		return new SavedBookingAppointmentDto(
+				bookingAppointmentBo.getBookingPersonId(),
+				bookingAppointmentBo.getAppointmentId(),
+				bookingAppointmentBo.getUuid());
 	}
 
 	@Override
