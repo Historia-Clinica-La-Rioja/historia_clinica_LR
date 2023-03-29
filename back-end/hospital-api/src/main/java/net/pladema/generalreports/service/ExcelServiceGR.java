@@ -20,15 +20,7 @@ public interface ExcelServiceGR {
 
 	IWorkbook buildExcelDiabeticosHipertensos(String tittle, String[] headers, List<ConsultationDetailDiabeticosHipertensos> query);
 
-	IWorkbook buildExcelPatientEmergencies(String tittle, String[] headers, List<PatientEmergencies> query);
-
-	IWorkbook buildExcelOutpatientNursing(String tittle, String[] headers, List<OutpatientNursing> query);
-
-	IWorkbook buildExcelNursingInternment(String tittle, String[] headers, List<NursingInternment> query);
-
 	IWorkbook buildExcelComplementaryStudies(String tittle, String[] headers, List<ComplementaryStudies> query);
-
-	IWorkbook buildExcelTotalNursingRecovery(String tittle, String[] headers, List<TotalNursingRecovery> query);
 	
 	IWorkbook buildExcelOutPatientOlderAdults(String tittle, String[] headers, List<OutPatientOlderAdults> query, String startDate, String endDate);
 
