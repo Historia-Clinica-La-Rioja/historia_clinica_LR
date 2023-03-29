@@ -57,7 +57,7 @@ export class VacunasSummaryComponent implements OnChanges {
 				this.evolutionNoteService.createDocument(this.buildEvolutionNote(submitted), this.internmentEpisodeId).subscribe(_ => {
 					this.internmentStateService.getImmunizations(this.internmentEpisodeId).subscribe(data => this.tableModel = this.buildTable(data));
 					this.snackBarService.showSuccess('internaciones.internacion-paciente.vacunas-summary.save.SUCCESS');
-					this.internmentSummaryFacadeService.setFieldsToUpdate({evolutionClinical: true});
+					this.internmentSummaryFacadeService.setFieldsToUpdate({ immunizations: true, evolutionClinical: true });
 				}, _ => {
 					this.snackBarService.showError('internaciones.internacion-paciente.vacunas-summary.save.ERROR');
 				});
