@@ -80,72 +80,6 @@ public class ExcelServiceGRImpl implements ExcelServiceGR {
 	}
 
 	@Override
-	public IWorkbook buildExcelPatientEmergencies(String tittle, String[] headers, List<PatientEmergencies> result) {
-		IWorkbook wb = WorkbookCreator.createExcelWorkbook();
-		createCellStyle(wb);
-
-		ISheet sheet = wb.createSheet(tittle);
-
-		fillRow(sheet, getHeaderData(headers,tittle));
-
-		AtomicInteger rowNumber = new AtomicInteger(sheet.getCantRows());
-
-		ICellStyle styleDataRow = createDataRowStyle(wb);
-
-		result.forEach(resultData -> {
-			IRow newDataRow = sheet.createRow(rowNumber.getAndIncrement());
-			fillRowContent(newDataRow, resultData, styleDataRow);
-		});
-
-		setDimensions(sheet);
-		return wb;
-	}
-
-	@Override
-	public IWorkbook buildExcelOutpatientNursing(String tittle, String[] headers, List<OutpatientNursing> result) {
-		IWorkbook wb = WorkbookCreator.createExcelWorkbook();
-		createCellStyle(wb);
-
-		ISheet sheet = wb.createSheet(tittle);
-
-		fillRow(sheet, getHeaderData(headers, tittle));
-
-		AtomicInteger rowNumber = new AtomicInteger(sheet.getCantRows());
-
-		ICellStyle styleDataRow = createDataRowStyle(wb);
-
-		result.forEach(resultData -> {
-			IRow newDataRow = sheet.createRow(rowNumber.getAndIncrement());
-			fillRowContent(newDataRow, resultData, styleDataRow);
-		});
-
-		setDimensions(sheet);
-		return wb;
-	}
-
-	@Override
-	public IWorkbook buildExcelNursingInternment(String tittle, String[] headers, List<NursingInternment> result) {
-		IWorkbook wb = WorkbookCreator.createExcelWorkbook();
-		createCellStyle(wb);
-
-		ISheet sheet = wb.createSheet(tittle);
-
-		fillRow(sheet, getHeaderData(headers, tittle));
-
-		AtomicInteger rowNumber = new AtomicInteger(sheet.getCantRows());
-
-		ICellStyle styleDataRow = createDataRowStyle(wb);
-
-		result.forEach(resulData -> {
-			IRow newDataRow = sheet.createRow(rowNumber.getAndIncrement());
-			fillRowContent(newDataRow, resulData, styleDataRow);
-		});
-
-		setDimensions(sheet);
-		return wb;
-	}
-
-	@Override
 	public IWorkbook buildExcelComplementaryStudies(String tittle, String[] headers, List<ComplementaryStudies> result) {
 		IWorkbook wb = WorkbookCreator.createExcelWorkbook();
 		createCellStyle(wb);
@@ -161,27 +95,6 @@ public class ExcelServiceGRImpl implements ExcelServiceGR {
 		result.forEach(resultData -> {
 			IRow newDataRow = sheet.createRow(rowNumber.getAndIncrement());
 			fillRowContent(newDataRow, resultData, styleDataRow);
-		});
-		setDimensions(sheet);
-		return wb;
-	}
-
-	@Override
-	public IWorkbook buildExcelTotalNursingRecovery(String tittle, String[] headers, List<TotalNursingRecovery> result) {
-		IWorkbook wb = WorkbookCreator.createExcelWorkbook();
-		createCellStyle(wb);
-
-		ISheet sheet = wb.createSheet(tittle);
-
-		fillRow(sheet, getHeaderData(headers, tittle));
-
-		AtomicInteger rowNumber = new AtomicInteger(sheet.getCantRows());
-
-		ICellStyle styleDatarow = createDataRowStyle(wb);
-
-		result.forEach(resultData -> {
-			IRow newDataRow = sheet.createRow(rowNumber.getAndIncrement());
-			fillRowContent(newDataRow, resultData, styleDatarow);
 		});
 		setDimensions(sheet);
 		return wb;
