@@ -1,40 +1,46 @@
 <mat-card *ngIf="pageSlice?.length else noInfo">
-	<div fxLayout="row" fxLayoutAlign="space-between" fxLayoutGap="70px" class="content bold grey">
+	<div fxLayout="row" fxLayoutAlign="space-between" fxLayoutGap="50px" class="content bold grey">
 		<div fxLayoutAlign="none center" class="content"  fxFlex="20%">
 			<span>{{'pacientes.audit.LABEL_NAME' | translate}}</span>
 		</div>
-		<div fxLayoutAlign="none center" class="content" fxFlex="20%">
+		<div fxLayoutAlign="none center" class="content" fxFlex="30%">
 			<span>{{'pacientes.audit.LABEL_IDENTIFICATION_NUMBER' | translate}}</span>
 		</div>
 		<div fxLayoutAlign="none center" class="content" fxFlex="20%">
+			<span>{{'pacientes.audit.LABEL_BIRTHDATE' | translate}}</span>
+		</div>
+		<div fxLayoutAlign="none center" class="content" fxFlex="10%">
 			<span>{{'pacientes.audit.LABEL_CANDIDATES' | translate}}</span>
 		</div>
-		<div fxLayoutAlign="none center" class="content" fxFlex="20%">
+		<div fxLayoutAlign="none center" class="content" fxFlex="10%">
 
 		</div>
 	</div>
 	<mat-divider></mat-divider>
 	<div *ngFor="let patient of pageSlice;last as isLast">
 
-		<div fxLayout="row" fxLayoutAlign="space-between" fxLayoutGap="70px" class="content">
+		<div fxLayout="row" fxLayoutAlign="space-between" fxLayoutGap="50px" class="content">
 			<div fxLayoutAlign="none center" class="content bold" fxFlex="20%">
 				<span *ngIf="patient.firstName else noData">{{patient?.firstName}} {{patient?.lastName}}
 					{{patient?.middleNames}} {{patient?.otherLastNames}}</span>
 			</div>
 
-			<div fxLayoutAlign="none center" class="content" fxFlex="20%">
+			<div fxLayoutAlign="none center" class="content" fxFlex="30%">
 				<span
 					*ngIf="patient.identificationTypeId else noData">{{getIdentificationType(patient?.identificationTypeId)}}
 					&nbsp;</span>
 				<span *ngIf="patient.identificationNumber else noData">{{patient?.identificationNumber}}</span>
 			</div>
 
-			<div fxLayoutAlign="none center" class="content lowercase" fxFlex="20%">
+			<div fxLayoutAlign="none center" class="content" fxFlex="20%">
+				<span *ngIf="patient.birthdate else noData">{{patient.birthdate  | date: 'dd/MM/yyyy'}}</span>
+			</div>
+			<div fxLayoutAlign="none center" class="content lowercase" fxFlex="10%">
 				<span class="primary">{{patient?.numberOfCandidates}} {{'pacientes.audit.LABEL_CANDIDATES' |
 					translate}}</span>
 			</div>
 
-			<div fxLayoutAlign="none center" class="content" fxFlex="20%">
+			<div fxLayoutAlign="none center" class="content" fxFlex="10%">
 				<button mat-raised-button color="primary">{{'pacientes.audit.LABEL_BUTTON_AUDIT' | translate}}</button>
 			</div>
 		</div>

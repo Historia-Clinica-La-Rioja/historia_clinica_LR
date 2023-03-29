@@ -288,7 +288,8 @@
 		"LABEL_BUTTON_AUDIT":"AUDITAR",
 		"LABEL_NAME":"Nombre y Apellido",
 		"LABEL_IDENTIFICATION_NUMBER":"Tipo y Nro de documento",
-		"LABEL_CANDIDATES":"Candidatos"
+		"LABEL_CANDIDATES":"Candidatos",
+		"LABEL_BIRTHDATE":"Fecha de nacimiento"
 	}
   }
 }
