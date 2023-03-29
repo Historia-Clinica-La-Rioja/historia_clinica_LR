@@ -1,15 +1,15 @@
 <mat-card *ngIf="pageSlice?.length else noInfo">
 	<div fxLayout="row" fxLayoutAlign="space-between" fxLayoutGap="70px" class="content bold grey">
-		<div fxLayoutAlign="none center" class="content">
+		<div fxLayoutAlign="none center" class="content"  fxFlex="20%">
 			<span>{{'pacientes.audit.LABEL_NAME' | translate}}</span>
 		</div>
-		<div fxLayoutAlign="none center" class="content">
+		<div fxLayoutAlign="none center" class="content" fxFlex="20%">
 			<span>{{'pacientes.audit.LABEL_IDENTIFICATION_NUMBER' | translate}}</span>
 		</div>
-		<div fxLayoutAlign="none center" class="content">
+		<div fxLayoutAlign="none center" class="content" fxFlex="20%">
 			<span>{{'pacientes.audit.LABEL_CANDIDATES' | translate}}</span>
 		</div>
-		<div fxLayoutAlign="none center" class="content">
+		<div fxLayoutAlign="none center" class="content" fxFlex="20%">
 
 		</div>
 	</div>
@@ -17,24 +17,24 @@
 	<div *ngFor="let patient of pageSlice;last as isLast">
 
 		<div fxLayout="row" fxLayoutAlign="space-between" fxLayoutGap="70px" class="content">
-			<div fxLayoutAlign="none center" class="content bold">
+			<div fxLayoutAlign="none center" class="content bold" fxFlex="20%">
 				<span *ngIf="patient.firstName else noData">{{patient?.firstName}} {{patient?.lastName}}
 					{{patient?.middleNames}} {{patient?.otherLastNames}}</span>
 			</div>
 
-			<div fxLayoutAlign="none center" class="content">
+			<div fxLayoutAlign="none center" class="content" fxFlex="20%">
 				<span
 					*ngIf="patient.identificationTypeId else noData">{{getIdentificationType(patient?.identificationTypeId)}}
 					&nbsp;</span>
 				<span *ngIf="patient.identificationNumber else noData">{{patient?.identificationNumber}}</span>
 			</div>
 
-			<div fxLayoutAlign="end center" class="content lowercase">
+			<div fxLayoutAlign="none center" class="content lowercase" fxFlex="20%">
 				<span class="primary">{{patient?.numberOfCandidates}} {{'pacientes.audit.LABEL_CANDIDATES' |
 					translate}}</span>
 			</div>
 
-			<div fxLayoutAlign="none center" class="content">
+			<div fxLayoutAlign="none center" class="content" fxFlex="20%">
 				<button mat-raised-button color="primary">{{'pacientes.audit.LABEL_BUTTON_AUDIT' | translate}}</button>
 			</div>
 		</div>
