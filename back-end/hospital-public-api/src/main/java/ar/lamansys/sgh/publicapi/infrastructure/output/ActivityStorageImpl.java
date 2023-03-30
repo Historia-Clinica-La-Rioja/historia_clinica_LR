@@ -127,7 +127,6 @@ public class ActivityStorageImpl implements ActivityStorage {
 					"LEFT JOIN {h-schema} document_odontology_diagnostic dod ON (dod.document_id = va.id) " +
 					"LEFT JOIN {h-schema} odontology_diagnostic od ON od.id = (dod.odontology_diagnostic_id) " +
 					" %s " +
-					"LEFT JOIN {h-schema} patient_medical_coverage pmc ON (pmc.id = event.patient_medical_coverage_id) " +
 					"LEFT JOIN {h-schema} medical_coverage mc ON (pmc.medical_coverage_id = mc.id) " +
 					"LEFT JOIN {h-schema}medical_coverage_plan mcp ON (mc.id = mcp.medical_coverage_id) " +
 					"LEFT JOIN {h-schema} document_health_condition dhc ON (dhc.document_id = va.id) " +
