@@ -25,7 +25,7 @@ public interface SnowstormService {
 
     ResponseEntity<SnowstormSearchResponse> status();
 
-	SnowstormSearchResponse getConcepts(List<Integer> ids) throws SnowstormApiException;
+	SnowstormSearchResponse getConcepts(List<Long> ids) throws SnowstormApiException;
 
 	SnowstormItemResponse getConceptById(String conceptId) throws SnowstormApiException;
 

@@ -13,7 +13,7 @@ public interface SharedSnowstormPort {
 
 	SharedSnowstormSearchDto getConceptsByEcl(String ecl) throws SnowstormPortException;
 
-	SharedSnowstormSearchDto getConcepts(List<Integer> ids) throws SnowstormPortException;
+	SharedSnowstormSearchDto getConcepts(List<Long> ids) throws SnowstormPortException;
 
 	SharedSnowstormSearchItemDto getConceptById(String conceptId) throws SnowstormPortException;
 

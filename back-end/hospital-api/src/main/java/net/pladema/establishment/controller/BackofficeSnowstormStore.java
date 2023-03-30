@@ -28,7 +28,7 @@ import java.util.stream.Collectors;
 @Slf4j
 @RequiredArgsConstructor
 @Service
-public class BackofficeSnowstormStore implements BackofficeStore<BackofficeSnowstormDto, Integer> {
+public class BackofficeSnowstormStore implements BackofficeStore<BackofficeSnowstormDto, Long> {
 
 	private final SnowstormExternalService snowstormExternalService;
 	
@@ -43,7 +43,7 @@ public class BackofficeSnowstormStore implements BackofficeStore<BackofficeSnows
 						.map(this::mapToBackofficeSnowstormDto)
 						.collect(Collectors.toList());
 				int listSize = resultSearch.size();
-				int maxIndex = pageable.getPageSize() < listSize ? (pageable.getPageSize() - 1) : (listSize == 0 ? 0 : listSize - 1);
+				int maxIndex = pageable.getPageSize() < listSize ? (pageable.getPageSize()) : (listSize == 0 ? 0 : listSize);
 				return new PageImpl<>(resultSearch.subList(0, maxIndex), pageable, pageable.getPageSize());
 			} catch (SnowstormPortException e){
 				throw new BackofficeValidationException(SNOWSTORM_EXCEPTION);
@@ -64,7 +64,7 @@ public class BackofficeSnowstormStore implements BackofficeStore<BackofficeSnows
 	}
 
 	@Override
-	public List<BackofficeSnowstormDto> findAllById(List<Integer> ids) {
+	public List<BackofficeSnowstormDto> findAllById(List<Long> ids) {
 		List<BackofficeSnowstormDto> result;
 		try{
 			result = snowstormExternalService.getConcepts(ids).getItems()
@@ -80,7 +80,7 @@ public class BackofficeSnowstormStore implements BackofficeStore<BackofficeSnows
 	}
 
 	@Override
-	public Optional<BackofficeSnowstormDto> findById(Integer id) {
+	public Optional<BackofficeSnowstormDto> findById(Long id) {
 		BackofficeSnowstormDto result;
 		try{
 			result = mapToBackofficeSnowstormDto(snowstormExternalService.getConceptById(id.toString()));
@@ -96,7 +96,7 @@ public class BackofficeSnowstormStore implements BackofficeStore<BackofficeSnows
 	}
 
 	@Override
-	public void deleteById(Integer id) {
+	public void deleteById(Long id) {
 
 	}
 
@@ -107,7 +107,7 @@ public class BackofficeSnowstormStore implements BackofficeStore<BackofficeSnows
 
 	private BackofficeSnowstormDto mapToBackofficeSnowstormDto (SharedSnowstormSearchItemDto item){
 		BackofficeSnowstormDto result = new BackofficeSnowstormDto();
-		result.setId(item.getConceptId());
+		result.setId(Long.parseLong((item.getConceptId())));
 		result.setConceptId(item.getConceptId());
 		result.setTerm(item.getPt());
 		return result;

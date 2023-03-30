@@ -79,7 +79,7 @@ public class SnowstormExternalService implements SharedSnowstormPort {
 	}
 
 	@Override
-	public SharedSnowstormSearchDto getConcepts(List<Integer> ids) throws SnowstormPortException {
+	public SharedSnowstormSearchDto getConcepts(List<Long> ids) throws SnowstormPortException {
 		logger.debug("Input data -> ids: {} ", ids.toString());
 		SharedSnowstormSearchDto result;
 		try {

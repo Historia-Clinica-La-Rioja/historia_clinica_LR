@@ -399,7 +399,7 @@ export interface BackofficeMandatoryProfessionalPracticeFreeDaysDto {
 
 export interface BackofficeSnowstormDto {
     conceptId: string;
-    id: string;
+    id: number;
     term: string;
 }
 

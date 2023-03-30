@@ -695,7 +695,7 @@ const messages = {
         snowstormproblems: {
             name: 'Concepto Snowstorm',
             fields: {
-                conceptId: 'Id Concepto',
+                conceptSctid: 'Id Concepto',
                 term: 'Descripción',
             }
         },

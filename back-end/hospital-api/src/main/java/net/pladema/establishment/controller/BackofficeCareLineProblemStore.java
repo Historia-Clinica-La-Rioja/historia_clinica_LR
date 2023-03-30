@@ -1,8 +1,10 @@
 package net.pladema.establishment.controller;
 
-import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.ips.Snomed;
-import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.masterdata.SnomedRepository;
+import ar.lamansys.sgh.clinichistory.domain.ips.SnomedBo;
+import ar.lamansys.sgh.clinichistory.domain.ips.services.SnomedService;
 import ar.lamansys.sgh.shared.infrastructure.input.service.snowstorm.exceptions.SnowstormPortException;
+import ar.lamansys.sgx.shared.featureflags.AppFeature;
+import ar.lamansys.sgx.shared.featureflags.application.FeatureFlagsService;
 import net.pladema.establishment.controller.dto.CareLineProblemDto;
 import net.pladema.establishment.repository.CareLineProblemRepository;
 import net.pladema.establishment.repository.entity.CareLineProblem;
@@ -11,7 +13,6 @@ import net.pladema.sgx.backoffice.repository.BackofficeStore;
 import net.pladema.sgx.exceptions.BackofficeValidationException;
 import net.pladema.snowstorm.controller.service.SnowstormExternalService;
 
-import net.pladema.snowstorm.repository.SnomedRelatedGroupRepository;
 
 import org.springframework.data.domain.Example;
 import org.springframework.data.domain.Page;
@@ -30,30 +31,30 @@ public class BackofficeCareLineProblemStore implements BackofficeStore<CareLineP
 
 	private final CareLineProblemRepository careLineProblemRepository;
 
-	private final SnomedRelatedGroupRepository snomedRelatedGroupRepository;
-
-	private final SnomedRepository snomedRepository;
+	private final SnomedService snomedService;
 
 	private final SnowstormExternalService snowstormExternalService;
 
+	private final FeatureFlagsService featureFlagsService;
+
 	public BackofficeCareLineProblemStore(CareLineProblemRepository careLineProblemRepository,
-										  SnomedRelatedGroupRepository snomedRelatedGroupRepository,
-										  SnomedRepository snomedRepository,
-										  SnowstormExternalService snowstormExternalService){
+										  SnomedService snomedService,
+										  SnowstormExternalService snowstormExternalService,
+										  FeatureFlagsService featureFlagsService){
 		this.careLineProblemRepository=careLineProblemRepository;
-		this.snomedRelatedGroupRepository=snomedRelatedGroupRepository;
-		this.snomedRepository=snomedRepository;
+		this.snomedService=snomedService;
 		this.snowstormExternalService=snowstormExternalService;
+		this.featureFlagsService=featureFlagsService;
 	}
 
 
 	@Override
 	public Page<CareLineProblemDto> findAll(CareLineProblemDto entity, Pageable pageable) {
-		List<CareLineProblemDto> result = careLineProblemRepository.findByCareLineId(entity.getCareLineId())
+		List<CareLineProblemDto> content = careLineProblemRepository.findByCareLineId(entity.getCareLineId())
 				.stream()
 				.map(this::mapToCareLineProblemDto)
 				.collect(Collectors.toList());
-		return new PageImpl<>(result, pageable, result.size());
+		return new PageImpl<>(content, pageable, content.size());
 	}
 
 	@Override
@@ -66,7 +67,6 @@ public class BackofficeCareLineProblemStore implements BackofficeStore<CareLineP
 
 	@Override
 	public List<CareLineProblemDto> findAllById(List<Integer> ids) {
-
 		return careLineProblemRepository.findAllById(ids)
 				.stream()
 				.map(this::mapToCareLineProblemDto)
@@ -81,35 +81,35 @@ public class BackofficeCareLineProblemStore implements BackofficeStore<CareLineP
 	@Override
 	@PreAuthorize("hasAnyAuthority('ROOT', 'ADMINISTRADOR')")
 	@Transactional
-	public CareLineProblemDto save(CareLineProblemDto entity) {
-		Optional<Integer> snomedId = snomedRepository.findLatestIdBySctid(entity.getConceptSctid())
-				.or(() -> snomedRelatedGroupRepository.getSnomedIdById(Integer.parseInt(entity.getConceptSctid())));
-		/* Check if Snowstorm concept exists in snomed cache */
-		if(snomedId.isPresent()){
-			entity.setSnomedId(snomedId.get());
-			Optional<CareLineProblem> careLineProblem = careLineProblemRepository.findByCareLineIdAndSnomedId(entity.getCareLineId(), entity.getSnomedId());
-			/* Check if problem is associated to a care line already */
-			if(careLineProblem.isPresent()){
-				if (careLineProblem.get().isDeleted()) {
-					careLineProblem.get().setDeleted(false);
-					return mapToCareLineProblemDto(careLineProblemRepository.save(careLineProblem.get()));
-				} else {
-					throw new BackofficeValidationException("care-line.problem.exists");
-				}
-			} else {
-				return mapToCareLineProblemDto(careLineProblemRepository.save(mapToEntity(entity)));
-			}
-		} else {
-		/* If not, save concept in Snomed cache first */
+	public CareLineProblemDto save(CareLineProblemDto dto) {
+		Integer snomedId;
+		/* If cached concepts search is active, the id of Snomed entity will be on conceptSctid field */
+		if (featureFlagsService.isOn(AppFeature.HABILITAR_BUSQUEDA_LOCAL_CONCEPTOS))
+			snomedId = Integer.valueOf(dto.getConceptSctid());
+		/* If not, search the concept term on snowstorm to check if already exists */
+		else {
 			try {
-				var concept = snowstormExternalService.getConceptById(entity.getConceptSctid());
-				Snomed snomed = snomedRepository.save(new Snomed(concept.getConceptId(), concept.getPt(), concept.getConceptId(), concept.getPt()));
-				entity.setSnomedId(snomed.getId());
-				return mapToCareLineProblemDto(careLineProblemRepository.save(mapToEntity(entity)));
-			} catch (SnowstormPortException e){
-				throw new BackofficeValidationException(e.getMessage());
+				String conceptPt = snowstormExternalService.getConceptById(dto.getConceptSctid()).getPt();
+				var snomedBo = new SnomedBo(dto.getConceptSctid(), conceptPt);
+				snomedId = snomedService.getSnomedId(snomedBo).orElseGet(() -> snomedService.createSnomedTerm(snomedBo));
+			} catch (SnowstormPortException e) {
+				throw new RuntimeException(e);
 			}
 		}
+		dto.setSnomedId(snomedId);
+		Optional<CareLineProblem> careLineProblem = careLineProblemRepository.findByCareLineIdAndSnomedId(dto.getCareLineId(), dto.getSnomedId());
+		/* Check if problem is associated to a care line already */
+		if(careLineProblem.isPresent()){
+			if (careLineProblem.get().isDeleted()) {
+				careLineProblem.get().setDeleted(false);
+				dto.setId(careLineProblemRepository.save(careLineProblem.get()).getId());
+			} else {
+				throw new BackofficeValidationException("care-line.problem.exists");
+			}
+		} else {
+			dto.setId(careLineProblemRepository.save(mapToEntity(dto)).getId());
+		}
+		return dto;
 	}
 
 	@Override

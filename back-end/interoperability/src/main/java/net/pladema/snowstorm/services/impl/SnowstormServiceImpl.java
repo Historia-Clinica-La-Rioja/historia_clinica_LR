@@ -191,12 +191,12 @@ public class SnowstormServiceImpl implements SnowstormService {
     }
 
 	@Override
-	public SnowstormSearchResponse getConcepts(List<Integer> ids) throws SnowstormApiException {
+	public SnowstormSearchResponse getConcepts(List<Long> ids) throws SnowstormApiException {
 
 		StringBuilder urlWithParams = new StringBuilder(snowstormWSConfig.getBrowserConceptUrl()).append("?");
 
-		for (Integer id: ids){
-			urlWithParams.append("conceptIds=").append((long) id).append("&");
+		for (Long id: ids){
+			urlWithParams.append("conceptIds=").append(id).append("&");
 		}
         
 		urlWithParams.append("size=").append(snowstormWSConfig.getConceptsLimit());

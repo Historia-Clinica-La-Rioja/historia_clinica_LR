@@ -13,7 +13,7 @@ import lombok.ToString;
 @NoArgsConstructor
 public class BackofficeSnowstormDto {
 
-	private String id;
+	private Long id;
 	private String conceptId;
 	private String term;
 

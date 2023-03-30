@@ -52,7 +52,7 @@ public class BackofficeInstitutionPracticesRelatedGroupController extends Backof
 		if(featureFlagsService.isOn(AppFeature.HABILITAR_BUSQUEDA_LOCAL_CONCEPTOS))
 			return super.create(entity);
 
-		BackofficeSnowstormDto concept = backofficeSnowstormStore.findById(entity.getSnomedId()).orElse(null);
+		BackofficeSnowstormDto concept = backofficeSnowstormStore.findById(entity.getSnomedId().longValue()).orElse(null);
 		if(concept != null) {
 			var snomedBo = new SnomedBo(concept.getConceptId(), concept.getTerm());
 			Integer snomedId = snomedService.getSnomedId(snomedBo).orElse(null);
