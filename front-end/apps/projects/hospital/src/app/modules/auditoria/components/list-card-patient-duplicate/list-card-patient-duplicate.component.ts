@@ -1,7 +1,7 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { DuplicatePatientDto, IdentificationTypeDto } from '@api-rest/api-model';
 import { PersonMasterDataService } from '@api-rest/services/person-master-data.service';
-import { Observable } from 'rxjs';
+import { Observable, of } from 'rxjs';
 
 const PAGE_SIZE_OPTIONS = [5, 10, 25];
 const PAGE_MIN_SIZE = 5;
@@ -12,18 +12,20 @@ const PAGE_MIN_SIZE = 5;
 	styleUrls: ['./list-card-patient-duplicate.component.scss']
 })
 export class ListCardPatientDuplicateComponent implements OnInit {
-	@Input() set setPatientDuplicate(listPatientDuplicate: DuplicatePatientDto[]) {
-		this.listPatientDuplicate = listPatientDuplicate;
-		this.pageSlice = this.listPatientDuplicate?.slice(0, PAGE_MIN_SIZE);
-		this.numberOfPatients = this.listPatientDuplicate?.length || 0;
-
-	}
 	readonly pageSizeOptions: number[] = PAGE_SIZE_OPTIONS;
 	listPatientDuplicate: DuplicatePatientDto[]
 	pageSliceObs$: Observable<DuplicatePatientDto[]>;
 	numberOfPatients = 0;
 	pageSlice: DuplicatePatientDto[];
 	identificationTypeList: IdentificationTypeDto[];
+	initialSize:Observable<any>;
+	@Input() set setPatientDuplicate(listPatientDuplicate: DuplicatePatientDto[]) {
+		this.listPatientDuplicate = listPatientDuplicate;
+		this.pageSlice = this.listPatientDuplicate?.slice(0, PAGE_MIN_SIZE);
+		this.numberOfPatients = this.listPatientDuplicate?.length || 0;
+		this.initialSize=of(PAGE_MIN_SIZE);
+	}
+
 	constructor(private personMasterDataService: PersonMasterDataService) { }
 
 	ngOnInit(): void {
