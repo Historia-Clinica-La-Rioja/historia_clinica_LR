@@ -1,8 +1,8 @@
 <app-content width="full">
 
-
 	<div fxLayout="row" fxLayoutGap="5%">
 		<div fxFlex="50%">
+
 			<mat-card>
 				<mat-card-header>
 					<app-emergency-care-temporary-patient-header (patientSelectedEvent)="patientSelected($event)">
@@ -11,6 +11,7 @@
 			</mat-card>
 		</div>
 
+		<app-resumen-de-guardia *ngIf="episodeId" fxFlex="50%" [episodeId]="episodeId"> </app-resumen-de-guardia>
 	</div>
 
 </app-content>

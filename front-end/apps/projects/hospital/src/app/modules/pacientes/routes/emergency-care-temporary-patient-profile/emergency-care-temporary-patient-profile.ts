@@ -1,4 +1,8 @@
-import { Component, OnInit } from '@angular/core';
+
+import { Component } from '@angular/core';
+import { ActivatedRoute } from '@angular/router';
+import { EmergencyCareEpisodeSummaryService } from '@api-rest/services/emergency-care-episode-summary.service';
+import { map } from 'rxjs/operators';
 
 @Component({
 	selector: 'app-emergency-care-temporary-patient-profile',
@@ -7,11 +11,21 @@ import { Component, OnInit } from '@angular/core';
 })
 export class EmergencyCareTemporaryPatientProfile {
 
-	constructor() { }
 
-	ngOnInit(): void {
+	episodeId: number;
+	constructor(
+		private readonly route: ActivatedRoute,
+		private readonly emergencyCareEpisodeSummaryService: EmergencyCareEpisodeSummaryService,
+	) {
+		this.route.paramMap.subscribe(
+			(params) => {
+				const patientId = Number(params.get('id'));
+				this.emergencyCareEpisodeSummaryService.getEmergencyCareEpisodeInProgress(patientId)
+					.pipe(map(r => r.id)).subscribe(rr => this.episodeId = rr)
+			}
+		)
+
 	}
-
 
 	patientSelected(patient) {
 
