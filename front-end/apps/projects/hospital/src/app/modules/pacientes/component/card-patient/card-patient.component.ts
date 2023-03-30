@@ -63,7 +63,7 @@ export class CardPatientComponent {
 				header: [{ title: " ", value: this.patientNameService.getFullName(patient.person.firstName, patient.person.nameSelfDetermination, patient.person?.middleNames) + ' ' + this.getLastNames(patient) }],
 				id: patient.idPatient,
 				dni: patient.person.identificationNumber || "-",
-				gender: this.genderTableView[patient.person.genderId],
+				gender: this.genderTableView.find(p => p.id === patient.person.genderId)?.description,
 				date: patient.person.birthDate ? this.datePipe.transform(patient.person.birthDate, DatePipeFormat.SHORT_DATE) : '',
 				ranking: patient?.ranking,
 				action: this.setActionByRole(medicalSpecialist, patient.idPatient)
