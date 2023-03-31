@@ -174,7 +174,7 @@ public class AppointmentStorageImpl implements AppointmentStorage {
 	}
 
 	private ClinicalSpecialtyBo buildClinicalSpecialty(ClinicalSpecialtySummary clinicalSpecialty) {
-		return clinicalSpecialty != null ? new ClinicalSpecialtyBo(clinicalSpecialty.getSctid(), clinicalSpecialty.getName()) : null;
+		return clinicalSpecialty != null ? new ClinicalSpecialtyBo(clinicalSpecialty.getSctid(), clinicalSpecialty.getId(), clinicalSpecialty.getName()) : null;
 	}
 
 	private InstitutionBo buildInstitution(InstitutionSummary institution) {

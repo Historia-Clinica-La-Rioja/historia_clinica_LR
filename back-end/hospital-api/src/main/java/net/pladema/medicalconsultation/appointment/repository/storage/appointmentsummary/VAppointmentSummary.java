@@ -80,6 +80,7 @@ public class VAppointmentSummary {
 	@Embedded
 	@AttributeOverrides({
 			@AttributeOverride( name = "sctid", column = @Column(name = "sctid_code")),
+			@AttributeOverride( name = "id", column = @Column(name = "clinical_specialty_id")),
 			@AttributeOverride( name = "name", column = @Column(name = "clinical_specialty_name")),
 	})
 	private ClinicalSpecialtySummary clinicalSpecialty;

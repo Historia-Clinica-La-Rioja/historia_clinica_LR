@@ -235,7 +235,7 @@ public class AppointmentExternalServiceImpl implements AppointmentExternalServic
 		);
 	}
 	private PublicAppointmentClinicalSpecialty buildClinicalSpecialty(ClinicalSpecialtyBo clinicalSpecialty) {
-		return new PublicAppointmentClinicalSpecialty(clinicalSpecialty.getSctid(), clinicalSpecialty.getName());
+		return new PublicAppointmentClinicalSpecialty(clinicalSpecialty.getSctid(), clinicalSpecialty.getId(), clinicalSpecialty.getName());
 	}
 	private PublicAppointmentInstitution buildInstitution(InstitutionBo institution) {
 		return new PublicAppointmentInstitution(institution.getId(), institution.getCuit(), institution.getSisaCode());

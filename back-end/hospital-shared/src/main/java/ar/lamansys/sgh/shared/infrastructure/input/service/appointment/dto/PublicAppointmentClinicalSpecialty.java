@@ -11,10 +11,14 @@ public class PublicAppointmentClinicalSpecialty {
 	private final String sctid;
 
 	@ToString.Include
+	private final Integer id;
+
+	@ToString.Include
 	private final String name;
 
-	public PublicAppointmentClinicalSpecialty(String sctid, String name) {
+	public PublicAppointmentClinicalSpecialty(String sctid, Integer id, String name) {
 		this.sctid = sctid;
+		this.id = id;
 		this.name = name;
 	}
 }

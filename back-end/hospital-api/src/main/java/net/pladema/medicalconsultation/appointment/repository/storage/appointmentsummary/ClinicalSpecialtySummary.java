@@ -21,6 +21,8 @@ public class ClinicalSpecialtySummary implements Serializable {
 
     private String sctid;
 
+	private Integer id;
+
 	private String name;
 
 }

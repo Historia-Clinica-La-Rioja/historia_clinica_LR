@@ -35,7 +35,8 @@ databaseChangeLog:
                       cs.name AS clinical_specialty_name,
                       doff.institution_id,
                       i.cuit                   AS institution_cuit,
-                      i.sisa_code
+                      i.sisa_code,
+                      cs.id as clinical_specialty_id
                 FROM appointment AS a
                 INNER JOIN appointment_state ass on a.appointment_state_id = ass.id
                 INNER JOIN appointment_assn aa on aa.appointment_id = a.id
@@ -75,7 +76,8 @@ databaseChangeLog:
                       cs.name AS clinical_specialty_name,
                       doff.institution_id,
                       i.cuit                   AS institution_cuit,
-                      i.sisa_code
+                      i.sisa_code,
+                      cs.id as clinical_specialty_id
                 FROM appointment AS a
                 INNER JOIN appointment_state ass on a.appointment_state_id = ass.id
                 INNER JOIN appointment_assn aa on aa.appointment_id = a.id
