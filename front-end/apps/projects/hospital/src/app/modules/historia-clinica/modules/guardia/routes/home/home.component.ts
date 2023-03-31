@@ -30,10 +30,9 @@ import { EmergencyCareMasterDataService } from '@api-rest/services/emergency-car
 import { getError, hasError } from '@core/utils/form.utils';
 import { EmergencyCareEpisodeAdministrativeDischargeService } from '@api-rest/services/emergency-care-episode-administrative-service.service';
 import { PatientNameService } from "@core/services/patient-name.service";
-import { ContextService } from '@core/services/context.service';
 import { anyMatch } from '@core/utils/array.utils';
 import { PermissionsService } from '@core/services/permissions.service';
-import { PatientType } from '@historia-clinica/constants/summaries';
+import { GuardiaRouterService } from '../../services/guardia-router.service';
 
 const TRANSLATE_KEY_PREFIX = 'guardia.home.episodes.episode.actions';
 
@@ -49,7 +48,6 @@ export class HomeComponent implements OnInit {
 
 	filterService: EpisodeFilterService;
 
-	private readonly routePrefix = 'institucion/' + this.contextService.institutionId;
 	readonly estadosEpisodio = EstadosEpisodio;
 	readonly triages = Triages;
 	readonly PACIENTE_TEMPORAL = 3;
@@ -84,8 +82,8 @@ export class HomeComponent implements OnInit {
 		public readonly emergencyCareMasterDataService: EmergencyCareMasterDataService,
 		private readonly emergencyCareEpisodeAdministrativeDischargeService: EmergencyCareEpisodeAdministrativeDischargeService,
 		private readonly patientNameService: PatientNameService,
-		private readonly contextService: ContextService,
 		private readonly permissionsService: PermissionsService,
+		private readonly guardiaRouterService: GuardiaRouterService,
 	) {
 		this.filterService = new EpisodeFilterService(formBuilder, triageMasterDataService, emergencyCareMasterDataService);
 	}
@@ -116,14 +114,7 @@ export class HomeComponent implements OnInit {
 	}
 
 	goToEpisode(episode: Episode, patient: any) {
-		const isEmergencyCareTemporalPatient = patient.typeId === PatientType.EMERGENCY_CARE_TEMPORARY
-		if (!isEmergencyCareTemporalPatient /* && episode.state.id !== EstadosEpisodio.CON_ALTA_ADMINISTRATIVA */ && this.hasEmergencyCareRelatedRole) {
-			const url = `${this.routePrefix}/ambulatoria/paciente/${patient.id}`;
-			this.router.navigateByUrl(url, { state: { toEmergencyCareTab: true } });
-			return;
-		}
-		const url = `${this.routePrefix}/pacientes/temporal-guardia/profile/${patient.id}`;
-		this.router.navigateByUrl(url);
+		this.guardiaRouterService.goToEpisode(episode.state.id, patient);
 	}
 
 	goToAdmisionAdministrativa(): void {
