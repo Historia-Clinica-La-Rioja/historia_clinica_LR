@@ -33,6 +33,7 @@ import { PatientNameService } from "@core/services/patient-name.service";
 import { anyMatch } from '@core/utils/array.utils';
 import { PermissionsService } from '@core/services/permissions.service';
 import { GuardiaRouterService } from '../../services/guardia-router.service';
+import { PatientType } from '@historia-clinica/constants/summaries';
 
 const TRANSLATE_KEY_PREFIX = 'guardia.home.episodes.episode.actions';
 
@@ -51,6 +52,7 @@ export class HomeComponent implements OnInit {
 	readonly estadosEpisodio = EstadosEpisodio;
 	readonly triages = Triages;
 	readonly PACIENTE_TEMPORAL = 3;
+	readonly EMERGENCY_CARE_TEMPORARY = PatientType.EMERGENCY_CARE_TEMPORARY;
 
 	loading = true;
 	episodes: Episode[];

@@ -177,7 +177,7 @@
 										<img mat-card-avatar [src]="episode.decodedPatientPhoto | async"
 											onerror="this.src='../../../../../assets/images/empty-profile.png'">
 										<mat-card-title>
-											<span *ngIf="!episode.patient else patientInfo">
+											<span *ngIf="!episode.patient else emergency_care_temporary">
 												{{ 'guardia.home.episodes.episode.patient.NO_INFO'| translate }}
 											</span>
 										</mat-card-title>
@@ -188,6 +188,12 @@
 											</span>
 										</mat-card-subtitle>
 									</mat-card-header>
+									<ng-template #emergency_care_temporary>
+										<span
+											*ngIf="(episode.patient?.typeId == EMERGENCY_CARE_TEMPORARY) else patientInfo">{{
+											'guardia.home.episodes.episode.patient.EMERGENCY_CARE_TEMPORARY'| translate
+											}}</span>
+									</ng-template>
 
 									<ng-template #patientInfo>
 										<span
