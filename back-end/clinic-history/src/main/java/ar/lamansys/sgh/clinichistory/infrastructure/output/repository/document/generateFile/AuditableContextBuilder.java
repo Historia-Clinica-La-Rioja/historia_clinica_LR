@@ -73,6 +73,7 @@ public class AuditableContextBuilder {
 	}
 	private void addPatientInfo(Map<String,Object> contextMap, Integer patientId) {
 		contextMap.put("patient", basicDataFromPatientLoader.apply(patientId));
+		contextMap.put("selfPerceivedFF", featureFlagsService.isOn(AppFeature.HABILITAR_DATOS_AUTOPERCIBIDOS));
 	}
 	private <T extends IDocumentBo> void addDocumentInfo(Map<String,Object> contextMap, T document) {
 		contextMap.put("mainDiagnosis", document.getMainDiagnosis());

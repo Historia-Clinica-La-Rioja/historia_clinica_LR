@@ -130,6 +130,8 @@ public class SharedPatientImpl implements SharedPatientPort {
         result.setGender(mapGender(person.getGender()));
         result.setAge(person.getAge());
         result.setBirthDate(person.getBirthDate());
+		result.setNameSelfDetermination(person.getNameSelfDetermination());
+		result.setSelfPerceivedGender(person.getSelfPerceivedGender());
         return result;
     }
 
