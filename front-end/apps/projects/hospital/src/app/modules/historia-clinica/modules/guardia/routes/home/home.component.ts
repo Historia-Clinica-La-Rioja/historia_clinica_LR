@@ -33,6 +33,7 @@ import { PatientNameService } from "@core/services/patient-name.service";
 import { ContextService } from '@core/services/context.service';
 import { anyMatch } from '@core/utils/array.utils';
 import { PermissionsService } from '@core/services/permissions.service';
+import { PatientType } from '@historia-clinica/constants/summaries';
 
 const TRANSLATE_KEY_PREFIX = 'guardia.home.episodes.episode.actions';
 
@@ -114,20 +115,15 @@ export class HomeComponent implements OnInit {
 			}, _ => this.loading = false);
 	}
 
-	goToEpisode(episode: Episode, patientId?: number) {
-		if (patientId) {
-			if (episode.state.id !== EstadosEpisodio.CON_ALTA_ADMINISTRATIVA && this.hasEmergencyCareRelatedRole) {
-				const url = `${this.routePrefix}/ambulatoria/paciente/${patientId}`;
-				this.router.navigateByUrl(url, { state: { toEmergencyCareTab: true } });
-			}
-			else {
-				const url = `${this.routePrefix}/pacientes/profile/${patientId}`;
-				this.router.navigateByUrl(url);
-			}
+	goToEpisode(episode: Episode, patient: any) {
+		const isEmergencyCareTemporalPatient = patient.typeId === PatientType.EMERGENCY_CARE_TEMPORARY
+		if (!isEmergencyCareTemporalPatient /* && episode.state.id !== EstadosEpisodio.CON_ALTA_ADMINISTRATIVA */ && this.hasEmergencyCareRelatedRole) {
+			const url = `${this.routePrefix}/ambulatoria/paciente/${patient.id}`;
+			this.router.navigateByUrl(url, { state: { toEmergencyCareTab: true } });
+			return;
 		}
-		else {
-			this.router.navigate([`${this.router.url}/episodio/${episode.id}`]);
-		}
+		const url = `${this.routePrefix}/pacientes/temporal-guardia/profile/${patient.id}`;
+		this.router.navigateByUrl(url);
 	}
 
 	goToAdmisionAdministrativa(): void {

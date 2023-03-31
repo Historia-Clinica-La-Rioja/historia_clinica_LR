@@ -168,7 +168,7 @@
 				<ng-template #content>
 					<ng-container *ngIf="episodes?.length else noData">
 						<mat-card [ngClass]="{ 'en-atencion' : episode.state.id === estadosEpisodio.EN_ATENCION }"
-							class="episode-card" (click)="goToEpisode(episode, episode?.patient?.id)"
+							class="episode-card" (click)="goToEpisode(episode, episode?.patient)"
 							*ngFor="let episode of episodes">
 							<div fxLayout="row" fxFlexAlign="center" style="padding: 0 15px">
 
