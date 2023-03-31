@@ -1,7 +1,7 @@
 import { ApplicationRef, Injectable } from '@angular/core';
-import { SwUpdate } from '@angular/service-worker';
+import { SwUpdate, VersionReadyEvent } from '@angular/service-worker';
 import { concat, interval, Observable, ReplaySubject } from 'rxjs';
-import { first } from 'rxjs/operators';
+import { filter, first, map } from 'rxjs/operators';
 import { PWAAction } from '@core/core-model';
 
 @Injectable({
@@ -30,7 +30,14 @@ export class PwaUpdateService {
 			this.checkForUpdate();
 		});
 
-		updates.available.subscribe(event => {
+		updates.versionUpdates.pipe(
+			filter((evt): evt is VersionReadyEvent => evt.type === 'VERSION_READY'),
+			map(evt => ({
+				type: 'UPDATE_AVAILABLE',
+				current: evt.currentVersion,
+				available: evt.latestVersion,
+			}))
+		).subscribe(event => {
 			console.log('New App version available', event);
 			this.updateSubject.next({
 				run: () => {
