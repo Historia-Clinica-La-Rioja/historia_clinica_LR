@@ -12,7 +12,7 @@ import { Episode } from '../routes/home/home.component';
 })
 export class GuardiaRouterService {
 
-	hasEmergencyCareRelatedRole = false;
+	private hasEmergencyCareRelatedRole = false;
 
 	private readonly routePrefix = 'institucion/' + this.contextService.institutionId;
 	constructor(
@@ -40,5 +40,6 @@ export class GuardiaRouterService {
 		}
 		const url = `${this.routePrefix}/pacientes/temporal-guardia/profile/${patient.id}`;
 		this.router.navigateByUrl(url);
+
 	}
 }
