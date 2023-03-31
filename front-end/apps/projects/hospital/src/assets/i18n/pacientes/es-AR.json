@@ -286,10 +286,16 @@
 		"LABEL_FILTER_3":"Nombre, apellido, fecha de nacimiento, tipo y número de documento iguales",
 		"LABEL_FILTER_4":"Tipo y número de documento iguales",
 		"LABEL_BUTTON_AUDIT":"AUDITAR",
-		"LABEL_NAME":"Nombre y Apellido",
+		"LABEL_FULL_NAME":"Nombre y Apellido",
 		"LABEL_IDENTIFICATION_NUMBER":"Tipo y Nro de documento",
 		"LABEL_CANDIDATES":"Candidatos",
-		"LABEL_BIRTHDATE":"Fecha de nacimiento"
+		"LABEL_BIRTHDATE":"Fecha de nacimiento",
+		"LABEL_BUTTON_VIEW":"Ver",
+		"LABEL_NAME":"Nombre",
+		"LABEL_LASTNAME":"Apellido",
+		"LABEL_STATE":"Estado",
+		"LABEL_DOC":"Doc",
+		"LABEL_ID":"ID"
 	}
   }
 }

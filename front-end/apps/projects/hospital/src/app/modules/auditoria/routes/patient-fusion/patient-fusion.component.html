@@ -8,4 +8,79 @@
 			<span>{{'buttons.BACK' | translate}}</span>
 		</button>
 	</section>
+	<section>
+		<mat-card>
+			<div fxLayout="row" fxLayoutAlign="space-between" fxLayoutGap="20px" class="content grey">
+				<div fxLayoutAlign="start center" class="content" fxFlex="10%">
+
+				</div>
+				<div fxLayoutAlign="start center" class="content" fxFlex="10%">
+					<span>{{'pacientes.audit.LABEL_ID' | translate}}</span>
+				</div>
+				<div fxLayoutAlign="start center" class="content" fxFlex="20%">
+					<span>{{'pacientes.audit.LABEL_NAME' | translate}}</span>
+				</div>
+				<div fxLayoutAlign="start center" class="content" fxFlex="20%">
+					<span>{{'pacientes.audit.LABEL_LASTNAME' | translate}}</span>
+				</div>
+				<div fxLayoutAlign="start center" class="content" fxFlex="10%">
+					<span>{{'pacientes.audit.LABEL_BIRTHDATE' | translate}}</span>
+				</div>
+				<div fxLayoutAlign="start center" class="content" fxFlex="10%">
+					<span>{{'pacientes.audit.LABEL_DOC' | translate}}</span>
+				</div>
+				<div fxLayoutAlign="start center" class="content" fxFlex="10%">
+					<span>{{'pacientes.audit.LABEL_STATE' | translate }}</span>
+				</div>
+				<div fxLayoutAlign="start center" class="content" fxFlex="10%">
+
+				</div>
+			</div>
+			<mat-divider></mat-divider>
+			<div *ngFor="let patient of listPatientData;last as isLast">
+
+				<div fxLayout="row" fxLayoutAlign="space-between" fxLayoutGap="20px" class="content">
+					<div fxLayoutAlign="start center" class="content" fxFlex="10%">
+						<mat-checkbox color="primary"></mat-checkbox>
+					</div>
+					<div fxLayoutAlign="start center" class="content" fxFlex="10%">
+						<span class="primary">{{patient?.id}} </span>
+					</div>
+					<div fxLayoutAlign="start center" class="content" fxFlex="20%">
+						<span *ngIf="patient.firstName else noData">{{patient?.firstName}}
+							{{patient?.middleNames}}</span>
+					</div>
+					<div fxLayoutAlign="start center" class="content" fxFlex="20%">
+						<span *ngIf="patient.lastName else noData">{{patient?.lastName}}
+							{{patient?.otherLastNames}}</span>
+					</div>
+					<div fxLayoutAlign="start center" class="content" fxFlex="10%">
+						<span *ngIf="patient.lastName else noData">{{patient?.birthDate}}</span>
+					</div>
+					<div fxLayoutAlign="start center" class="content" fxFlex="10%">
+						<span
+							*ngIf="patient.identificationTypeId else noData">{{getIdentificationType(patient?.identificationTypeId)}}
+							&nbsp;</span>
+						<span *ngIf="patient.identificationNumber else noData">{{patient?.identificationNumber}}</span>
+					</div>
+					<div fxLayoutAlign="start center" class="content" fxFlex="10%">
+						<span *ngIf="patient.lastName else noData">{{patient?.state | uppercase}}</span>
+					</div>
+					<div fxLayoutAlign="start center" class="content" fxFlex="10%">
+						<button mat-stroked-button color="primary">{{'pacientes.audit.LABEL_BUTTON_VIEW' |
+							translate}}</button>
+					</div>
+				</div>
+				<mat-divider *ngIf="!isLast" insert class="divider"></mat-divider>
+			</div>
+
+			<mat-divider></mat-divider>
+		</mat-card>
+
+		<ng-template #noInfo>
+			<app-no-data></app-no-data>
+		</ng-template>
+
+		<ng-template #noData><span>-</span></ng-template>
+	</section>
 </app-content>
