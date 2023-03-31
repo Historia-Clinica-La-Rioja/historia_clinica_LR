@@ -130,6 +130,11 @@ export class AppointmentsService {
 		return this.http.get<boolean>(url);
 	}
 
+	publishWorkList(appoinmentId: number):  Observable<boolean> {
+		const url = `${this.BASE_URL}/publish-work-list/${appoinmentId}`;
+		return this.http.get<boolean>(url);
+	}
+
 	updatePhoneNumber(appointmentId: number, phonePrefix: string, phoneNumber: string): Observable<boolean> {
 		let queryParams: HttpParams = new HttpParams();
 		queryParams = (phoneNumber) ? queryParams.append('phoneNumber', phoneNumber).append('phonePrefix', phonePrefix) : queryParams;

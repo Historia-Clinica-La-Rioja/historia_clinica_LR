@@ -244,8 +244,10 @@ export class ImageNetworkAppointmentComponent implements OnInit {
 				}
 			});
 		dialogRefConfirmation.afterClosed().subscribe((upDateState: boolean) => {
-			if (upDateState)
+			if (upDateState){
 				this.updateState(newStateId);
+				this.appointmentService.publishWorkList(this.data.appointmentData.appointmentId).subscribe();
+			}
 		});
 	}
 
