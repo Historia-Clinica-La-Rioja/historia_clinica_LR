@@ -139,7 +139,7 @@ export class AmbulatoriaPacienteComponent implements OnInit, OnDestroy, Componen
 							? this.isTemporaryPatient = true
 							: this.isTemporaryPatient = false
 
-						this.personInformation.push({ description: patient.person.identificationType, data: patient.person.identificationNumber });
+						this.personInformation.push({ description: patient.person?.identificationType, data: patient.person?.identificationNumber });
 						this.patient = this.mapperService.toPatientBasicData(patient);
 					}
 				);

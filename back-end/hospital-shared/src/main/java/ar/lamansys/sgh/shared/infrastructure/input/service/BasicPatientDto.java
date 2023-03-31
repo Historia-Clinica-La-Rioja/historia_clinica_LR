@@ -22,6 +22,11 @@ public class BasicPatientDto implements Serializable {
 
     private Short typeId;
 
+	public BasicPatientDto(Integer patientId, Short typeId) {
+		this.id = patientId;
+		this.typeId = typeId;
+	}
+
     public String getFirstName() {
         return person != null ? person.getFirstName() : null;
     }

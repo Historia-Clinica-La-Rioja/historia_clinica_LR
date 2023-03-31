@@ -18,6 +18,11 @@ import net.pladema.emergencycare.service.domain.EmergencyCareBo;
 import ar.lamansys.sgx.shared.dates.configuration.LocalDateMapper;
 import ar.lamansys.sgx.shared.dates.controller.dto.DateTimeDto;
 
+import net.pladema.emergencycare.service.domain.PatientECEBo;
+import net.pladema.patient.repository.entity.Patient;
+import net.pladema.patient.service.PatientService;
+import net.pladema.patient.service.domain.enums.EPatientType;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
@@ -54,6 +59,8 @@ public class EmergencyCareEpisodeController {
 
     private final RiskFactorExternalService riskFactorExternalService;
 
+	private final PatientService patientService;
+
     private final SnomedMapper snomedMapper;
 
     private final TriageRiskFactorMapper triageRiskFactorMapper;
@@ -64,6 +71,7 @@ public class EmergencyCareEpisodeController {
 										  EmergencyCareMapper emergencyCareMapper,
 										  ReasonExternalService reasonExternalService,
 										  RiskFactorExternalService riskFactorExternalService,
+										  PatientService patientService,
 										  SnomedMapper snomedMapper,
 										  TriageRiskFactorMapper triageRiskFactorMapper, LocalDateMapper localDateMapper){
         super();
@@ -71,6 +79,7 @@ public class EmergencyCareEpisodeController {
         this.emergencyCareMapper=emergencyCareMapper;
         this.reasonExternalService = reasonExternalService;
         this.riskFactorExternalService = riskFactorExternalService;
+		this.patientService = patientService;
         this.snomedMapper = snomedMapper;
         this.triageRiskFactorMapper = triageRiskFactorMapper;
         this.localDateMapper = localDateMapper;
@@ -98,6 +107,8 @@ public class EmergencyCareEpisodeController {
         newEmergencyCare.setInstitutionId(institutionId);
         List<SnomedDto> reasons = reasonExternalService.addSnomedReasons(body.reasons());
         newEmergencyCare.setReasons(snomedMapper.toListReasonBo(reasons));
+		if (newEmergencyCare.getPatient() == null || newEmergencyCare.getPatient().getId() == null)
+			newEmergencyCare.setPatient(createEmergencyCareEpisodePatient());
         newEmergencyCare = emergencyCareEpisodeService.createAdministrative(newEmergencyCare, institutionId);
         Integer result = newEmergencyCare.getId();
         LOG.debug("Output -> {}", result);
@@ -139,6 +150,9 @@ public class EmergencyCareEpisodeController {
         List<SnomedDto> reasons = reasonExternalService.addSnomedReasons(body.reasons());
         newEmergencyCare.setReasons(snomedMapper.toListReasonBo(reasons));
 
+		if (newEmergencyCare.getPatient() == null || newEmergencyCare.getPatient().getId() == null)
+			newEmergencyCare.setPatient(createEmergencyCareEpisodePatient());
+
         newEmergencyCare = emergencyCareEpisodeService.createAdult(newEmergencyCare, institutionId);
         Integer result = newEmergencyCare.getId();
         LOG.debug("Output -> {}", result);
@@ -160,6 +174,9 @@ public class EmergencyCareEpisodeController {
 
         List<SnomedDto> reasons = reasonExternalService.addSnomedReasons(body.reasons());
         newEmergencyCare.setReasons(snomedMapper.toListReasonBo(reasons));
+
+		if (newEmergencyCare.getPatient() == null || newEmergencyCare.getPatient().getId() == null)
+			newEmergencyCare.setPatient(createEmergencyCareEpisodePatient());
 
         newEmergencyCare = emergencyCareEpisodeService.createPediatric(newEmergencyCare, institutionId);
         Integer result = newEmergencyCare.getId();
@@ -203,4 +220,12 @@ public class EmergencyCareEpisodeController {
         LOG.debug("Output -> {}", result);
         return result;
     }
+
+	private PatientECEBo createEmergencyCareEpisodePatient() {
+		PatientECEBo result = new PatientECEBo();
+		Integer patientId = patientService.addPatient(new Patient(EPatientType.EMERGENCY_CARE_TEMPORARY.getId())).getId();
+		result.setId(patientId);
+		return result;
+	}
+
 }

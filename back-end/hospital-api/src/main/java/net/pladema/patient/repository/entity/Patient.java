@@ -75,6 +75,11 @@ public class Patient extends SGXAuditableEntity<Integer> {
 	public boolean isValidated() {
 		return getTypeId().equals(PatientType.VALIDATED);
 	}
+
+	public Patient(Short typeId) {
+		this.typeId = typeId;
+	}
+    
 }
 
 

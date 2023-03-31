@@ -67,14 +67,14 @@ export class MapperService {
 	private static _toPatientBasicData<T extends BasicPatientDto>(patient: T): PatientBasicData {
 		return {
 			id: patient.id,
-			firstName: patient.person.firstName,
-			middleNames: patient.person.middleNames,
-			lastName: patient.person.lastName,
-			otherLastNames: patient.person.otherLastNames,
-			gender: patient.person.gender.description,
-			age: patient.person.age,
-			nameSelfDetermination: patient.person.nameSelfDetermination,
-			selfPerceivedGender: patient.person.selfPerceivedGender
+			firstName: patient.person?.firstName,
+			middleNames: patient.person?.middleNames,
+			lastName: patient.person?.lastName,
+			otherLastNames: patient.person?.otherLastNames,
+			gender: patient.person?.gender.description,
+			age: patient.person?.age,
+			nameSelfDetermination: patient.person?.nameSelfDetermination,
+			selfPerceivedGender: patient.person?.selfPerceivedGender
 		};
 	}
 
