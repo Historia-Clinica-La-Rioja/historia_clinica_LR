@@ -267,3 +267,12 @@ databaseChangeLog:
               referencedColumnNames: id
               referencedTableName: external_cause
               validate: true
+              
+    - changeSet:    
+        id: add_emergency_care_patient_type
+        author: mmalyvarni
+        context: "!schema-only"
+        changes:
+          - sql:
+              sql: |-
+                INSERT INTO patient_type (id,description,active,audit) VALUES (8,'Temporal de Guardia',${boolean.true},${boolean.false});
