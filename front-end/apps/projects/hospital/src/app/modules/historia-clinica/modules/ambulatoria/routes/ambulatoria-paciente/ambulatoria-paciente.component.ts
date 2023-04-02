@@ -97,6 +97,7 @@ export class AmbulatoriaPacienteComponent implements OnInit, OnDestroy, Componen
 	canOnlyViewSelfAddedProblems = false;
 	rolesThatCanOnlyViewSelfAddedProblems = [ERole.PRESCRIPTOR];
 	isNewConsultationOpen: boolean;
+	isEmergencyCareTemporalPatient = false;
 
 	private timeOut = 15000;
 	private isOpenOdontologyConsultation = false;
@@ -135,6 +136,7 @@ export class AmbulatoriaPacienteComponent implements OnInit, OnDestroy, Componen
 				this.patientId = Number(params.get('idPaciente'));
 				this.patientService.getPatientBasicData<BasicPatientDto>(this.patientId).subscribe(
 					patient => {
+						this.isEmergencyCareTemporalPatient = patient.typeId === PatientType.EMERGENCY_CARE_TEMPORARY;
 						(patient.typeId === PatientType.TEMPORARY)
 							? this.isTemporaryPatient = true
 							: this.isTemporaryPatient = false
@@ -241,6 +243,10 @@ export class AmbulatoriaPacienteComponent implements OnInit, OnDestroy, Componen
 			.subscribe(show => this.showNursingSection = show);
 
 		this.ambulatoriaSummaryFacadeService.setIsNewConsultationOpen(false);
+	}
+
+	patientSelected(patient) {
+		//NoSeQueService.replacePatient(oldId, newId) --> Esto trae como consecuencia que el episodio de guardia se modifique		console.log(patient);
 	}
 
 	ngOnDestroy() {
