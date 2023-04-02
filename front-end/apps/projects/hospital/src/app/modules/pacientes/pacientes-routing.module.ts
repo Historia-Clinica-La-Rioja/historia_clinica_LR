@@ -12,6 +12,7 @@ import { NewPatientComponent } from './routes/new-patient/new-patient.component'
 import { NewTemporaryPatientComponent } from './routes/new-temporary-patient/new-temporary-patient.component';
 import { ProfileComponent } from './routes/profile/profile.component';
 import { SearchComponent } from './routes/search/search.component';
+import { EmergencyCareTemporaryPatientProfile } from './routes/emergency-care-temporary-patient-profile/emergency-care-temporary-patient-profile';
 
 const routes: Routes = [
 	{
@@ -36,6 +37,10 @@ const routes: Routes = [
 			{
 				path: 'profile/:id',
 				component: ProfileComponent
+			},
+			{
+				path: 'temporal-guardia/profile/:id',
+				component: EmergencyCareTemporaryPatientProfile
 			},
 			{
 				path: 'edit',
