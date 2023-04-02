@@ -7,7 +7,7 @@ import { PatientNameService } from '@core/services/patient-name.service';
 import { TriageCategory } from '@historia-clinica/modules/guardia/components/triage-chip/triage-chip.component';
 import { GuardiaMapperService } from '@historia-clinica/modules/guardia/services/guardia-mapper.service';
 import { TriageDefinitionsService } from '@historia-clinica/modules/guardia/services/triage-definitions.service';
-import { GUARDIA } from '@historia-clinica/constants/summaries';
+import { GUARDIA, PatientType } from '@historia-clinica/constants/summaries';
 import { SummaryHeader } from '@presentation/components/summary-card/summary-card.component';
 import { RiskFactorFull, Triage } from '@historia-clinica/modules/guardia/components/triage-details/triage-details.component';
 import { EmergencyCareTypes, EstadosEpisodio } from '@historia-clinica/modules/guardia/constants/masterdata';
@@ -47,6 +47,7 @@ export class ResumenDeGuardiaComponent implements OnInit {
   triagesHistory: TriageReduced[];
   fullNamesHistoryTriage: string[];
   lastTriage: Triage;
+  isEmergencyCareTemporalPatient = false;
 
   private hasEmergencyCareRelatedRole: boolean;
   private hasRoleAdministrative: boolean;
@@ -201,7 +202,7 @@ export class ResumenDeGuardiaComponent implements OnInit {
 
     // Following code within this function must be in this order
 
-    if (this.hasEmergencyCareRelatedRole && this.episodeState === this.STATES.EN_ATENCION) {
+    if (this.hasEmergencyCareRelatedRole && this.episodeState === this.STATES.EN_ATENCION && !this.isEmergencyCareTemporalPatient ) {
       let action: ActionInfo = {
         label: 'ambulatoria.paciente.guardia.MEDICAL_DISCHARGE_BUTTON',
         id: 'medical_discharge',
@@ -275,6 +276,7 @@ export class ResumenDeGuardiaComponent implements OnInit {
         this.responseEmergencyCare = responseEmergencyCare;
         this.emergencyCareType = responseEmergencyCare.emergencyCareType?.id;
         this.doctorsOfficeDescription = responseEmergencyCare.doctorsOffice?.description;
+		this.isEmergencyCareTemporalPatient = responseEmergencyCare.patient.typeId === PatientType.EMERGENCY_CARE_TEMPORARY;
       });
 
     this.loadTriages();

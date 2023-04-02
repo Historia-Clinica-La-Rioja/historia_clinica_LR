@@ -1,0 +1,13 @@
+<div fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="10px">
+	<mat-icon class="warning" style="color: rgb(237, 95, 30);">error_outlined</mat-icon>
+	<div fxLayout="column" fxLayoutGap="10px">
+		<mat-card-title style="color: grey">
+			Paciente sin asignar
+		</mat-card-title>
+		<app-colored-label
+			[description]="'ambulatoria.paciente.card.EMERGENCY_CARE_EPISODE_ACTIVE' | translate | uppercase"
+			[color]="Color.YELLOW">
+		</app-colored-label>
+		<!-- <app-asign-patient-button (onSelectedPatient)="patientSelected($event)"></app-asign-patient-button> -->
+	</div>
+</div>

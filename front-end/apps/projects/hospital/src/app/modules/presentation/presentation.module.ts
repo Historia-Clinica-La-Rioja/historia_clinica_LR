@@ -58,6 +58,9 @@ import { ViewDateDtoPipe } from './pipes/view-date-dto.pipe';
 import { ViewDatePipe } from './pipes/view-date.pipe';
 import { ViewHourMinutePipe } from './pipes/view-hour-minute.pipe';
 import { ViewPdfComponent } from './dialogs/view-pdf/view-pdf.component';
+import { AsignPatientButtonComponent } from './components/asign-patient-button/asign-patient-button.component';
+import { EmergencyCareTemporaryPatientHeader } from './components/emergency-care-temporary-patient-header/emergency-care-temporary-patient-header.component';
+import { PatientCardHeaderComponent } from './components/patient-card-header/patient-card-header.component';
 
 @NgModule({
 	declarations: [
@@ -114,6 +117,9 @@ import { ViewPdfComponent } from './dialogs/view-pdf/view-pdf.component';
 		ViewDateDtoPipe,
 		ViewDatePipe,
 		ViewHourMinutePipe,
+		AsignPatientButtonComponent,
+		EmergencyCareTemporaryPatientHeader,
+		PatientCardHeaderComponent,
 	],
 	imports: [
 		CommonModule,
@@ -176,6 +182,9 @@ import { ViewPdfComponent } from './dialogs/view-pdf/view-pdf.component';
 		ViewDateDtoPipe,
 		ViewDatePipe,
 		ViewHourMinutePipe,
+		AsignPatientButtonComponent,
+		EmergencyCareTemporaryPatientHeader,
+		PatientCardHeaderComponent
 	],
 	entryComponents: [
 		DockPopupComponent

@@ -1,0 +1,59 @@
+.default {
+	mat-card.mat-card {
+		min-height: 120px;
+	}
+}
+
+.mat-card-patient-image {
+	width: 80px;
+	height: 80px;
+}
+
+.card-style-1 {
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+}
+
+.card-style-2 {
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	font-weight: normal;
+	font-size: 14px;
+}
+
+mat-card-header {
+	align-items: center;
+	min-width: 250px;
+
+	.header-image {
+		background-image: url("../../../../../assets/images/empty-profile.png");
+		background-size: cover;
+		width: 100px;
+		height: 100px;
+	}
+
+	.label-episodes {
+		margin-top: 5px;
+		padding: 4px 0px;
+		font-weight: 500;
+		font-size: 14px;
+		line-height: 19px;
+	}
+}
+
+mat-card-subtitle {
+	margin-bottom: 0;
+}
+
+.mat-card-patient-image {
+	width: 80px;
+	height: 80px;
+}
+
+.mat-card-patient-name {
+	text-transform: capitalize;
+	max-width: 180px;
+	line-height: 24px;
+}
