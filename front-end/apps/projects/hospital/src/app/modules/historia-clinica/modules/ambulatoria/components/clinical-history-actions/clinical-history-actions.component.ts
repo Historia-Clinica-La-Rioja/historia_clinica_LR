@@ -128,6 +128,7 @@ export class ClinicalHistoryActionsComponent implements OnInit {
 
 	openNuevaConsulta() {
 		if (!this.dialogRef) {
+			this.ambulatoriaSummaryFacadeService.setIsNewConsultationOpen(true);
 			this.dialogRef = this.dockPopupService.open(NuevaConsultaDockPopupComponent, { idPaciente: this.patientId });
 			this.popUpOpen.next(this.dialogRef);
 			this.dialogRef.afterClosed().subscribe(fieldsToUpdate => {
@@ -137,13 +138,14 @@ export class ClinicalHistoryActionsComponent implements OnInit {
 				this.historialProblemsFacadeService.loadEvolutionSummaryList(this.patientId);
 				if (fieldsToUpdate)
 					this.ambulatoriaSummaryFacadeService.setFieldsToUpdate(fieldsToUpdate);
-				if (this.internmentEpisode?.inProgress && this.internmentEpisode?.id) { 
+				if (this.internmentEpisode?.inProgress && this.internmentEpisode?.id) {
 					if (fieldsToUpdate?.allergies)
 						this.internmentSummaryFacadeService.unifyAllergies(this.patientId);
 					if (fieldsToUpdate?.familyHistories)
 						this.internmentSummaryFacadeService.unifyFamilyHistories(this.patientId);
 				}
 				this.patientAllergies.updateCriticalAllergies(this.patientId);
+				this.ambulatoriaSummaryFacadeService.setIsNewConsultationOpen(false);
 			});
 		} else {
 			if (this.dialogRef.isMinimized())
@@ -153,6 +155,7 @@ export class ClinicalHistoryActionsComponent implements OnInit {
 
 	openNuevaConsultaEnfermeria() {
 		if (!this.dialogRef) {
+			this.ambulatoriaSummaryFacadeService.setIsNewConsultationOpen(true);
 			this.dialogRef = this.dockPopupService.open(NuevaConsultaDockPopupEnfermeriaComponent, { idPaciente: this.patientId });
 			this.popUpOpen.next(this.dialogRef);
 			this.dialogRef.afterClosed().subscribe(fieldsToUpdate => {
@@ -163,6 +166,7 @@ export class ClinicalHistoryActionsComponent implements OnInit {
 				if (fieldsToUpdate)
 					this.ambulatoriaSummaryFacadeService.setFieldsToUpdate(fieldsToUpdate);
 				this.patientAllergies.updateCriticalAllergies(this.patientId);
+				this.ambulatoriaSummaryFacadeService.setIsNewConsultationOpen(false);
 			});
 		} else {
 			if (this.dialogRef.isMinimized())

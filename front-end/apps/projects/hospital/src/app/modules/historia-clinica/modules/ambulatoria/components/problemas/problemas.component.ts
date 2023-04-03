@@ -227,6 +227,7 @@ export class ProblemasComponent implements OnInit, OnDestroy {
 	}
 
 	private openDockPopup(idProblema: number) {
+		this.ambulatoriaSummaryFacadeService.setIsNewConsultationOpen(true);
 		const idPaciente = this.route.snapshot.paramMap.get('idPaciente');
 		this.nuevaConsultaFromProblemaRef =
 			this.dockPopupService.open(NuevaConsultaDockPopupComponent, { idPaciente, idProblema });
@@ -234,6 +235,7 @@ export class ProblemasComponent implements OnInit, OnDestroy {
 			if (fieldsToUpdate) {
 				this.ambulatoriaSummaryFacadeService.setFieldsToUpdate(fieldsToUpdate);
 			}
+			this.ambulatoriaSummaryFacadeService.setIsNewConsultationOpen(false);
 			delete this.nuevaConsultaFromProblemaRef;
 		});
 	}

@@ -21,6 +21,7 @@ export class AmbulatoriaSummaryFacadeService {
 	private chronicProblemsSubject: Subject<any> = new BehaviorSubject<any>([]);
 	private solvedProblemsSubject: Subject<any> = new BehaviorSubject<any>([]);
 	private hasNewConsultationEnabledSubject: Subject<any> = new BehaviorSubject<boolean>(false);
+	private isNewConsultationOpenSubject: Subject<any> = new BehaviorSubject<boolean>(false);
 
 	public readonly allergies$ = this.allergiesSubject.asObservable();
 	public readonly familyHistories$ = this.familyHistoriesSubject.asObservable();
@@ -33,6 +34,7 @@ export class AmbulatoriaSummaryFacadeService {
 	public readonly chronicProblems$ = this.chronicProblemsSubject.asObservable();
 	public readonly solvedProblems$ = this.solvedProblemsSubject.asObservable();
 	public readonly hasNewConsultationEnabled$ = this.hasNewConsultationEnabledSubject.asObservable();
+	public readonly isNewConsultationOpen$ = this.isNewConsultationOpenSubject.asObservable();
 
 
 	constructor(
@@ -98,6 +100,10 @@ export class AmbulatoriaSummaryFacadeService {
 		this.historialProblemsFacadeService.loadEvolutionSummaryList(this.idPaciente);
 		this.appointmentsService.hasNewConsultationEnabled(this.idPaciente)
 			.subscribe(h => this.hasNewConsultationEnabledSubject.next(h));
+	}
+
+	setIsNewConsultationOpen(isNewConsultationOpen: boolean){
+		this.isNewConsultationOpenSubject.next(isNewConsultationOpen);
 	}
 }
 

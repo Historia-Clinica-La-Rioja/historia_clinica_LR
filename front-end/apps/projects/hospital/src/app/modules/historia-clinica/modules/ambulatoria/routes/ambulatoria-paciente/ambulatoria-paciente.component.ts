@@ -1,7 +1,7 @@
 import { MedicalCoverageInfoService } from './../../services/medical-coverage-info.service';
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
-import { Observable } from 'rxjs';
+import { ActivatedRoute, Router, NavigationStart } from '@angular/router';
+import { Observable, Subscription } from 'rxjs';
 import { MatTabChangeEvent } from '@angular/material/tabs';
 import { AppFeature, EMedicalCoverageTypeDto, ERole, EPatientMedicalCoverageCondition } from '@api-rest/api-model';
 import { EpicrisisSummaryDto, BasicPatientDto, OrganizationDto, PatientSummaryDto, PersonPhotoDto, InternmentEpisodeProcessDto, ExternalPatientCoverageDto, EmergencyCareEpisodeInProgressDto } from '@api-rest/api-model';
@@ -24,7 +24,6 @@ import { PermissionsService } from '@core/services/permissions.service';
 import { MatDialog } from '@angular/material/dialog';
 import { InternmentPatientService } from "@api-rest/services/internment-patient.service";
 import { ContextService } from '@core/services/context.service';
-import { DiscardWarningComponent } from '@presentation/dialogs/discard-warning/discard-warning.component';
 import { AppRoutes } from 'projects/hospital/src/app/app-routing.module';
 import { HomeRoutes } from 'projects/hospital/src/app/modules/home/home-routing.module';
 import { EmergencyCareEpisodeSummaryService } from "@api-rest/services/emergency-care-episode-summary.service";
@@ -38,6 +37,7 @@ import { Slot, SlotedInfo, WCExtensionsService } from '@extensions/services/wc-e
 import { EmergencyCareEpisodeStateService } from '@api-rest/services/emergency-care-episode-state.service';
 import { EstadosEpisodio } from '@historia-clinica/modules/guardia/constants/masterdata';
 import { PatientType } from '@historia-clinica/constants/summaries';
+import { ComponentCanDeactivate } from '@core/guards/PendingChangesGuard';
 
 const RESUMEN_INDEX = 0;
 const VOLUNTARY_ID = 1;
@@ -51,7 +51,7 @@ const EMERGENCY_CARE_INDEX_WHEN_INTERNED = 1;
 	styleUrls: ['./ambulatoria-paciente.component.scss'],
 
 })
-export class AmbulatoriaPacienteComponent implements OnInit, OnDestroy {
+export class AmbulatoriaPacienteComponent implements OnInit, OnDestroy, ComponentCanDeactivate {
 
 	dialogRef: DockPopupRef;
 	patient: PatientBasicData;
@@ -96,6 +96,7 @@ export class AmbulatoriaPacienteComponent implements OnInit, OnDestroy {
 	hasPrescriptorRole = false;
 	canOnlyViewSelfAddedProblems = false;
 	rolesThatCanOnlyViewSelfAddedProblems = [ERole.PRESCRIPTOR];
+	isNewConsultationOpen: boolean;
 
 	private timeOut = 15000;
 	private isOpenOdontologyConsultation = false;
@@ -126,7 +127,7 @@ export class AmbulatoriaPacienteComponent implements OnInit, OnDestroy {
 	) {
 		this.featureFlagService.isActive(AppFeature.HABILITAR_RECETA_DIGITAL)
 			.subscribe((result: boolean) => this.isHabilitarRecetaDigitalEnabled = result)
-			
+
 		const toEmergencyCareTab = this.router.getCurrentNavigation()?.extras?.state?.toEmergencyCareTab;
 		this.setPermissions();
 		this.route.paramMap.subscribe(
@@ -205,7 +206,14 @@ export class AmbulatoriaPacienteComponent implements OnInit, OnDestroy {
 				);
 			}
 		);
+		this.ambulatoriaSummaryFacadeService.isNewConsultationOpen$.subscribe((event: boolean) => {
+			this.isNewConsultationOpen = event;
+		});
 	}
+
+	canDeactivate(): Observable<boolean> | boolean {
+		return this.isNewConsultationOpen || this.isOpenOdontologyConsultation || this.odontogramService.existActionedTeeth();
+	};
 
 	ngOnInit(): void {
 		this.setActionsLayout();
@@ -231,6 +239,8 @@ export class AmbulatoriaPacienteComponent implements OnInit, OnDestroy {
 
 		this.featureFlagService.isActive(AppFeature.HABILITAR_MODULO_ENF_EN_DESARROLLO)
 			.subscribe(show => this.showNursingSection = show);
+
+		this.ambulatoriaSummaryFacadeService.setIsNewConsultationOpen(false);
 	}
 
 	ngOnDestroy() {
@@ -239,7 +249,8 @@ export class AmbulatoriaPacienteComponent implements OnInit, OnDestroy {
 
 	private setPermissions(): void {
 		this.permissionsService.contextAssignments$().subscribe((userRoles: ERole[]) => {
-			this.canOnlyViewSelfAddedProblems = anyMatch<ERole>(userRoles, this.rolesThatCanOnlyViewSelfAddedProblems);});
+			this.canOnlyViewSelfAddedProblems = anyMatch<ERole>(userRoles, this.rolesThatCanOnlyViewSelfAddedProblems);
+		});
 	}
 
 	loadExternalInstitutions(): void {
@@ -325,27 +336,7 @@ export class AmbulatoriaPacienteComponent implements OnInit, OnDestroy {
 
 	goToPatient(): void {
 		const url = `${AppRoutes.Institucion}/${this.contextService.institutionId}/ambulatoria/${AppRoutes.PortalPaciente}/${this.patientId}/${HomeRoutes.Profile}`;
-
-		if (this.dialogRef || this.isOpenOdontologyConsultation || this.odontogramService.existActionedTeeth()) {
-			const dialog = this.dialog.open(DiscardWarningComponent,
-				{
-					data: {
-						content: 'ambulatoria.screen_change_warning_dialog.CONTENT',
-						contentBold: `ambulatoria.screen_change_warning_dialog.ANSWER_CONTENT`,
-						okButtonLabel: 'ambulatoria.screen_change_warning_dialog.CONFIRM_BUTTON',
-						cancelButtonLabel: 'ambulatoria.screen_change_warning_dialog.CANCEL_BUTTON',
-					}
-				});
-			dialog.afterClosed().subscribe((result: boolean) => {
-				if (result) {
-					this.dialogRef?.close();
-					this.router.navigate([url]);
-				}
-			});
-		}
-		else {
-			this.router.navigate([url]);
-		}
+		this.router.navigate([url]);
 	}
 
 	setStateConsultationOdontology(isOpenOdontologyConsultation: boolean): void {

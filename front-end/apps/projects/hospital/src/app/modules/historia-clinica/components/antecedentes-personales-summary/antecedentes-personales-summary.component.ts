@@ -111,12 +111,14 @@ export class AntecedentesPersonalesSummaryComponent implements OnInit{
 	}
 
 	private openDockPopup(idProblema: number) {
+		this.ambulatoriaSummaryFacadeService.setIsNewConsultationOpen(true);
 		this.nuevaConsultaFromProblemaRef =
 			this.dockPopupService.open(NuevaConsultaDockPopupComponent, { idPaciente: this.patientId, idProblema });
 		this.nuevaConsultaFromProblemaRef.afterClosed().subscribe(fieldsToUpdate => {
 			if (fieldsToUpdate) {
 				this.ambulatoriaSummaryFacadeService.setFieldsToUpdate(fieldsToUpdate);
 			}
+			this.ambulatoriaSummaryFacadeService.setIsNewConsultationOpen(false);
 			delete this.nuevaConsultaFromProblemaRef;
 		});
 	}

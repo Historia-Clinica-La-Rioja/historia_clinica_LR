@@ -5,6 +5,7 @@ import { RoleGuard } from '@core/guards/RoleGuard';
 import { PatientProfileComponent } from './routes/patient-profile/patient-profile.component';
 import { AmbulatoriaPacienteComponent } from './routes/ambulatoria-paciente/ambulatoria-paciente.component';
 import { ERole } from '@api-rest/api-model';
+import { PendingChangesGuard } from '@core/guards/PendingChangesGuard';
 
 const routes: Routes = [
 	{
@@ -15,11 +16,12 @@ const routes: Routes = [
 			},
 			{
 				path: 'paciente/:idPaciente/profile',
-				component: PatientProfileComponent
+				component: PatientProfileComponent,
 			},
 			{
 				path: 'paciente/:idPaciente',
-				component: AmbulatoriaPacienteComponent
+				component: AmbulatoriaPacienteComponent,
+				canDeactivate: [PendingChangesGuard]
 			}
 		],
 		canActivate: [RoleGuard],

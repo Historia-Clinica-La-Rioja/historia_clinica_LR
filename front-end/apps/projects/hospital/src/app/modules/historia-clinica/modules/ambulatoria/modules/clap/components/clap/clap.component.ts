@@ -11,6 +11,8 @@ import { AmbulatoriaSummaryFacadeService } from '@historia-clinica/modules/ambul
 import { DockPopupService } from '@presentation/services/dock-popup.service';
 import { NewGestationPopupComponent } from '../../dialogs/new-gestation-popup/new-gestation-popup.component';
 import { DockPopupRef } from '@presentation/services/dock-popup-ref';
+import { Subscription } from 'rxjs';
+
 
 const SNOMED_ID_PREGNANCY = '77386006'
 const PREGNANCY_EVOLUTION = 'Esta consulta fue realizada dentro de la pestaña CLAP con el sistema de información perinatal. Ver detalle en la pestaña CLAP.'
@@ -34,6 +36,7 @@ export class ClapComponent implements OnInit {
 	dischargeMother: boolean = false;
 
 	private nuevaConsultaRef: DockPopupRef;
+	private navigationSubscription: Subscription;
 
 	constructor(private contextService: ContextService,
 		private sanitizer: DomSanitizer,
@@ -42,7 +45,7 @@ export class ClapComponent implements OnInit {
 		private sipPlusPregnanciesService: SipPlusPregnanciesService,
 		private sipPlusMotherService: SipPlusMotherService,
 		private dockPopupService: DockPopupService,
-		private ambulatoriaSummaryFacadeService: AmbulatoriaSummaryFacadeService,
+		private ambulatoriaSummaryFacadeService: AmbulatoriaSummaryFacadeService
 	) {
 		this.institucionId = this.contextService.institutionId;
 	}
@@ -54,7 +57,7 @@ export class ClapComponent implements OnInit {
 			this.tokenSIP = sipUrlData.token;
 			this.embedSystem = sipUrlData.embedSystem;
 			this.makeUrlTrusted()
-		})
+		});
 	}
 
 	makeUrlTrusted(gestationId?: number) {
@@ -125,12 +128,14 @@ export class ClapComponent implements OnInit {
 	}
 
 	openNuevaConsulta() {
+		this.ambulatoriaSummaryFacadeService.setIsNewConsultationOpen(true);
 		this.nuevaConsultaRef = this.dockPopupService.open(NuevaConsultaDockPopupComponent, { idPaciente: this.patientId, snomedId: SNOMED_ID_PREGNANCY, evolution: PREGNANCY_EVOLUTION });
 		this.nuevaConsultaRef.minimize();
 		this.nuevaConsultaRef.afterClosed().subscribe(fieldsToUpdate => {
 			if (fieldsToUpdate) {
 				this.ambulatoriaSummaryFacadeService.setFieldsToUpdate(fieldsToUpdate);
 			}
+			this.ambulatoriaSummaryFacadeService.setIsNewConsultationOpen(false);
 			delete this.nuevaConsultaRef;
 		});
 	}
