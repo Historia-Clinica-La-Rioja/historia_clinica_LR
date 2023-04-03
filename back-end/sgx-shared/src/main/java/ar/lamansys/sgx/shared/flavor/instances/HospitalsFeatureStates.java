@@ -52,7 +52,7 @@ public class HospitalsFeatureStates implements InitialFeatureStates {
 		map.put(AppFeature.HABILITAR_VISUALIZACION_DE_CARDS, true);
 		map.put(AppFeature.HABILITAR_RECUPERAR_PASSWORD, true);
 		map.put(AppFeature.HABILITAR_DESARROLLO_RED_IMAGENES, false);
-		map.put(AppFeature.HABILITAR_SIP_PLUS_EN_DESARROLLO, false);
+		map.put(AppFeature.HABILITAR_SIP_PLUS, false);
 		map.put(AppFeature.HABILITAR_VALIDACION_MATRICULAS_SISA, false);
 		map.put(AppFeature.HABILITAR_RECETA_DIGITAL, false);
 		map.put(AppFeature.HABILITAR_PRESCRIPCION_RECETA, false);
