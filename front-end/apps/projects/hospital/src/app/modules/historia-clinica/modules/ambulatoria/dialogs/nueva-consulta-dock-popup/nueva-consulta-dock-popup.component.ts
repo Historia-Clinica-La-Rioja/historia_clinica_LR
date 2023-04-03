@@ -16,7 +16,7 @@ import {
 import { Alergia, AlergiasNuevaConsultaService } from '../../services/alergias-nueva-consulta.service';
 import { dateToMomentTimeZone, momentFormat, newMoment } from '@core/utils/moment.utils';
 import { DateFormat } from '@core/utils/moment.utils';
-import { AppFeature, ClinicalSpecialtyDto, CreateOutpatientDto, HealthConditionNewConsultationDto, OutpatientProblemDto, SnvsToReportDto } from '@api-rest/api-model.d';
+import { AppFeature, ClinicalSpecialtyDto, CreateOutpatientDto, HealthConditionNewConsultationDto, OutpatientProblemDto, SnomedDto, SnomedECL, SnvsToReportDto } from '@api-rest/api-model.d';
 import { InternacionMasterDataService } from '@api-rest/services/internacion-master-data.service';
 import { OutpatientConsultationService } from '@api-rest/services/outpatient-consultation.service';
 import { SnackBarService } from '@presentation/services/snack-bar.service';
@@ -45,6 +45,7 @@ import { NewConsultationFamilyHistoryFormComponent } from '../new-consultation-f
 import { NewConsultationMedicationFormComponent } from '@historia-clinica/dialogs/new-consultation-medication-form/new-consultation-medication-form.component';
 import { NewConsultationProcedureFormComponent } from '@historia-clinica/dialogs/new-consultation-procedure-form/new-consultation-procedure-form.component';
 import { NewConsultationAllergyFormComponent } from '@historia-clinica/dialogs/new-consultation-allergy-form/new-consultation-allergy-form.component';
+import { SnowstormService } from '@api-rest/services/snowstorm.service';
 
 const TIME_OUT = 5000;
 
@@ -81,6 +82,10 @@ export class NuevaConsultaDockPopupComponent implements OnInit {
 	collapsedAnthropometricDataSection = false;
 	collapsedRiskFactorsSection = false;
 	isEnablePopUpConfirm: boolean = true;
+
+	snowstormServiceNotAvailable = false;
+	snowstormServiceErrorMessage: string;
+
 	@ViewChild('apiErrorsView') apiErrorsView: ElementRef;
 
 	constructor(
@@ -101,6 +106,7 @@ export class NuevaConsultaDockPopupComponent implements OnInit {
 		private readonly featureFlagService: FeatureFlagService,
 		private readonly referenceFileService: ReferenceFileService,
 		private readonly el: ElementRef,
+		private readonly snowstormService: SnowstormService,
 	) {
 		this.motivoNuevaConsultaService = new MotivoNuevaConsultaService(formBuilder, this.snomedService, this.snackBarService);
 		this.medicacionesNuevaConsultaService = new MedicacionesNuevaConsultaService(formBuilder, this.snomedService, this.snackBarService);
@@ -143,6 +149,30 @@ export class NuevaConsultaDockPopupComponent implements OnInit {
 			evolucion: [],
 			clinicalSpecialty: [null, [Validators.required]],
 		});
+
+		if (this.data.snomedId) {
+			this.snowstormService.getSNOMEDConcepts({ term: this.data.snomedId, ecl: SnomedECL.DIAGNOSIS }).subscribe(
+				result => {
+					const p = result.items.find(p => p.sctid === this.data.snomedId);
+					const snomed: SnomedDto = {
+						pt: p.pt,
+						sctid: p.sctid
+					}
+					const problem: Problema = {
+						snomed: snomed
+					}
+					this.ambulatoryConsultationProblemsService.addProblemToList(problem);
+				},
+				error => {
+					this.snackBarService.showError('historia-clinica.snowstorm.CONCEPTS_COULD_NOT_BE_OBTAINED');
+					this.snowstormServiceErrorMessage = error.text ? error.text : error.message;
+					this.snowstormServiceNotAvailable = true;
+				}
+			);
+		}
+
+		if (this.data.evolution)
+			this.formEvolucion.controls.evolucion.setValue(this.data.evolution);
 
 		this.datosAntropometricosNuevaConsultaService.setPreviousAnthropometricData();
 
@@ -572,4 +602,6 @@ export class NuevaConsultaDockPopupComponent implements OnInit {
 export interface NuevaConsultaData {
 	idPaciente: number;
 	idProblema?: number;
+	snomedId?: string;
+	evolution?: string;
 }

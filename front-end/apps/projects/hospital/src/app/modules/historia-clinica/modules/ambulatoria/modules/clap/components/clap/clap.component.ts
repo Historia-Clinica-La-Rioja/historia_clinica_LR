@@ -1,18 +1,25 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
-import { SipPlusUrlDataDto } from '@api-rest/api-model';
+import { SipPlusUrlDataDto, SnomedECL } from '@api-rest/api-model';
 import { SipPlusMotherService } from '@api-rest/services/sip-plus-mother.service';
 import { SipPlusPregnanciesService } from '@api-rest/services/sip-plus-pregnancies.service';
 import { SipPlusService } from '@api-rest/services/sip-plus.service';
 import { ContextService } from '@core/services/context.service';
+import { NuevaConsultaDockPopupComponent } from '@historia-clinica/modules/ambulatoria/dialogs/nueva-consulta-dock-popup/nueva-consulta-dock-popup.component';
+import { AmbulatoriaSummaryFacadeService } from '@historia-clinica/modules/ambulatoria/services/ambulatoria-summary-facade.service';
+import { DockPopupService } from '@presentation/services/dock-popup.service';
 import { NewGestationPopupComponent } from '../../dialogs/new-gestation-popup/new-gestation-popup.component';
+import { DockPopupRef } from '@presentation/services/dock-popup-ref';
 
+const SNOMED_ID_PREGNANCY = '77386006'
+const PREGNANCY_EVOLUTION = 'Esta consulta fue realizada dentro de la pestaña CLAP con el sistema de información perinatal. Ver detalle en la pestaña CLAP.'
 @Component({
 	selector: 'app-clap',
 	templateUrl: './clap.component.html',
 	styleUrls: ['./clap.component.scss']
 })
+
 export class ClapComponent implements OnInit {
 	@Input() patientId: number;
 	trustedUrlSIP: SafeResourceUrl;
@@ -20,25 +27,29 @@ export class ClapComponent implements OnInit {
 	tokenSIP: string;
 	urlBaseSip: string;
 	embedSystem: string;
-	viewSip:boolean= false;
+	viewSip: boolean = false;
 	pregnancies: any[];
 	viewError: boolean = false;
 	messageError: String;
 	dischargeMother: boolean = false;
+
+	private nuevaConsultaRef: DockPopupRef;
 
 	constructor(private contextService: ContextService,
 		private sanitizer: DomSanitizer,
 		private sipPlusService: SipPlusService,
 		public dialog: MatDialog,
 		private sipPlusPregnanciesService: SipPlusPregnanciesService,
-		private sipPlusMotherService: SipPlusMotherService
+		private sipPlusMotherService: SipPlusMotherService,
+		private dockPopupService: DockPopupService,
+		private ambulatoriaSummaryFacadeService: AmbulatoriaSummaryFacadeService,
 	) {
 		this.institucionId = this.contextService.institutionId;
 	}
 
 	ngOnInit() {
 		this.getPregnancies();
-		this.sipPlusService.getUrlInfo().subscribe((sipUrlData : SipPlusUrlDataDto) => {
+		this.sipPlusService.getUrlInfo().subscribe((sipUrlData: SipPlusUrlDataDto) => {
 			this.urlBaseSip = sipUrlData.urlBase;
 			this.tokenSIP = sipUrlData.token;
 			this.embedSystem = sipUrlData.embedSystem;
@@ -46,10 +57,9 @@ export class ClapComponent implements OnInit {
 		})
 	}
 
-
-	makeUrlTrusted(gestationId?:number) {
+	makeUrlTrusted(gestationId?: number) {
 		let url = this.urlBaseSip + '?embedSystem=' + `${this.embedSystem}&embedToken=` + `${this.tokenSIP}$` + `${this.institucionId}$` + `${this.patientId}`;
-		if(gestationId){
+		if (gestationId) {
 			url += '$' + gestationId;
 		}
 		this.trustedUrlSIP = this.sanitizer.bypassSecurityTrustResourceUrl(url);
@@ -67,8 +77,8 @@ export class ClapComponent implements OnInit {
 			this.messageError = error.text;
 			if (error.code === 'NOT_FOUND') {
 				this.dischargeMother = true;
-				this.messageError= null;
-				this.viewError=true;
+				this.messageError = null;
+				this.viewError = true;
 			} else {
 				this.dischargeMother = false;
 			}
@@ -77,6 +87,7 @@ export class ClapComponent implements OnInit {
 	viewGestation(gestationId: number) {
 		this.makeUrlTrusted(gestationId);
 		this.viewSip = true;
+		this.openNuevaConsulta();
 	}
 
 	backViewGestations() {
@@ -97,8 +108,8 @@ export class ClapComponent implements OnInit {
 						this.getPregnancies();
 						this.viewGestation(result);
 						this.viewError = false;
-						this.messageError= null;
-						this.dischargeMother=false;
+						this.messageError = null;
+						this.dischargeMother = false;
 
 					})
 				} else {
@@ -108,8 +119,19 @@ export class ClapComponent implements OnInit {
 						this.viewGestation(result);
 					})
 				}
+				this.openNuevaConsulta();
 			}
 		});
+	}
 
+	openNuevaConsulta() {
+		this.nuevaConsultaRef = this.dockPopupService.open(NuevaConsultaDockPopupComponent, { idPaciente: this.patientId, snomedId: SNOMED_ID_PREGNANCY, evolution: PREGNANCY_EVOLUTION });
+		this.nuevaConsultaRef.minimize();
+		this.nuevaConsultaRef.afterClosed().subscribe(fieldsToUpdate => {
+			if (fieldsToUpdate) {
+				this.ambulatoriaSummaryFacadeService.setFieldsToUpdate(fieldsToUpdate);
+			}
+			delete this.nuevaConsultaRef;
+		});
 	}
 }
