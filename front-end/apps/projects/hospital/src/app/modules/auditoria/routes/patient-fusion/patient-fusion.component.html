@@ -37,14 +37,14 @@
 				</div>
 			</div>
 			<mat-divider></mat-divider>
-			<div *ngFor="let patient of listPatientData;last as isLast">
+			<div *ngFor="let patient of listPatientData$ | async;last as isLast">
 
 				<div fxLayout="row" fxLayoutAlign="space-between" fxLayoutGap="20px" class="content">
 					<div fxLayoutAlign="start center" class="content" fxFlex="10%">
 						<mat-checkbox color="primary"></mat-checkbox>
 					</div>
 					<div fxLayoutAlign="start center" class="content" fxFlex="10%">
-						<span class="primary">{{patient?.id}} </span>
+						<span>{{patient?.patientId}} </span>
 					</div>
 					<div fxLayoutAlign="start center" class="content" fxFlex="20%">
 						<span *ngIf="patient.firstName else noData">{{patient?.firstName}}
@@ -55,7 +55,7 @@
 							{{patient?.otherLastNames}}</span>
 					</div>
 					<div fxLayoutAlign="start center" class="content" fxFlex="10%">
-						<span *ngIf="patient.lastName else noData">{{patient?.birthDate}}</span>
+						<span *ngIf="patient.lastName else noData">{{patient?.birthdate | date: 'dd/MM/yyyy' }}</span>
 					</div>
 					<div fxLayoutAlign="start center" class="content" fxFlex="10%">
 						<span
@@ -64,7 +64,7 @@
 						<span *ngIf="patient.identificationNumber else noData">{{patient?.identificationNumber}}</span>
 					</div>
 					<div fxLayoutAlign="start center" class="content" fxFlex="10%">
-						<span *ngIf="patient.lastName else noData">{{patient?.state | uppercase}}</span>
+						<span *ngIf="patient.lastName else noData">{{getPatientType(patient?.typeId) | uppercase}}</span>
 					</div>
 					<div fxLayoutAlign="start center" class="content" fxFlex="10%">
 						<button mat-stroked-button color="primary">{{'pacientes.audit.LABEL_BUTTON_VIEW' |

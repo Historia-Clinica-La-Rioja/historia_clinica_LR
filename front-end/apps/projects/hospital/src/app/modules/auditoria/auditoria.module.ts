@@ -8,6 +8,7 @@ import { LazyMaterialModule } from '../lazy-material/lazy-material.module';
 import { ListCardPatientDuplicateComponent } from './components/list-card-patient-duplicate/list-card-patient-duplicate.component';
 import { ControlPatientDuplicateComponent } from './routes/control-patient-duplicate/control-patient-duplicate.component';
 import { PatientFusionComponent } from './routes/patient-fusion/patient-fusion.component';
+import { PatientAuditService } from './services/patient-audit.service';
 
 
 
@@ -23,6 +24,9 @@ import { PatientFusionComponent } from './routes/patient-fusion/patient-fusion.c
     AuditoriaRoutingModule,
 	LazyMaterialModule,
 	PresentationModule,
+  ],
+  providers:[
+	PatientAuditService
   ]
 })
 export class AuditoriaModule { }

@@ -4,6 +4,7 @@ import { DuplicatePatientDto, IdentificationTypeDto } from '@api-rest/api-model'
 import { PersonMasterDataService } from '@api-rest/services/person-master-data.service';
 import { ContextService } from '@core/services/context.service';
 import { Observable, of } from 'rxjs';
+import { PatientAuditService } from '../../services/patient-audit.service';
 
 
 const ROUTE_PATIENTS_FUSION = "auditoria/fusionar-pacientes"
@@ -31,7 +32,8 @@ export class ListCardPatientDuplicateComponent implements OnInit {
 		this.initialSize=of(PAGE_MIN_SIZE);
 	}
 
-	constructor(private personMasterDataService: PersonMasterDataService, private router: Router,private contextService: ContextService)
+	constructor(private personMasterDataService: PersonMasterDataService, private router: Router,private contextService: ContextService,
+	private patientAuditService:PatientAuditService)
 		{ this.routePrefix = 'institucion/' + this.contextService.institutionId + '/'}
 
 	ngOnInit(): void {
@@ -51,7 +53,8 @@ export class ListCardPatientDuplicateComponent implements OnInit {
 		return this.identificationTypeList?.find(type => type.id === value).description
 	}
 
-	goToPatientFusion(){
+	goToPatientFusion(patientToAudit:DuplicatePatientDto){
+		this.patientAuditService.setPatientToAudit(patientToAudit);
 		this.router.navigate([this.routePrefix + ROUTE_PATIENTS_FUSION]);
 	}
 
