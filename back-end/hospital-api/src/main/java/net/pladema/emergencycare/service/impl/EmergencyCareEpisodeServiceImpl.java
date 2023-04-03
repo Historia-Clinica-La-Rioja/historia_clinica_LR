@@ -169,6 +169,11 @@ public class EmergencyCareEpisodeServiceImpl implements EmergencyCareEpisodeServ
         return createEpisode(newEmergencyCare, institutionId, this::saveTriagePediatric);
     }
 
+	@Override
+	public PatientECEBo getRelatedPatientData(Integer episodeId) {
+		return new PatientECEBo(emergencyCareEpisodeRepository.getPatientDataByEpisodeId(episodeId));
+	}
+
     private void validateUpdate(EmergencyCareEpisode persisted, EmergencyCareBo toUpdate){
         if (persisted.getEmergencyCareEntranceTypeId() != null && toUpdate.getEmergencyCareEntranceId() == null)
             throw new ValidationException("care-episode.entrance.invalid.update");

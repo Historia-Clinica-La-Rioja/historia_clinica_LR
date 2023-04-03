@@ -4,6 +4,7 @@ import ar.lamansys.sgh.clinichistory.domain.document.PatientInfoBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.SnomedBo;
 import ar.lamansys.sgh.shared.infrastructure.input.service.BasicPatientDto;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import net.pladema.emergencycare.service.domain.PatientECEBo;
 import net.pladema.events.EHospitalApiTopicDto;
 import net.pladema.events.HospitalApiPublisher;
 import net.pladema.emergencycare.controller.dto.AMedicalDischargeDto;
@@ -20,6 +21,7 @@ import net.pladema.establishment.controller.service.InstitutionExternalService;
 import net.pladema.patient.controller.service.PatientExternalService;
 import ar.lamansys.sgx.shared.exceptions.NotFoundException;
 import ar.lamansys.sgx.shared.security.UserInfo;
+import net.pladema.patient.service.domain.enums.EPatientType;
 import net.pladema.staff.controller.service.HealthcareProfessionalExternalService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -64,6 +66,10 @@ public class EmergencyCareEpisodeMedicalDischargeController {
             @PathVariable(name = "episodeId") Integer episodeId,
             @RequestBody AMedicalDischargeDto medicalDischargeDto) {
         LOG.debug("New medical discharge -> episodeId {}, institutionId {}, medicalDischargeDto {}", episodeId, institutionId, medicalDischargeDto);
+
+		PatientECEBo patientData = emergencyCareEpisodeService.getRelatedPatientData(episodeId);
+		if (patientData.getTypeId().equals(EPatientType.EMERGENCY_CARE_TEMPORARY.getId()))
+			throw new IllegalStateException("No se puede dar el alta a un paciente temporal de guardia");
 
         Integer medicalDischargeBy = healthcareProfessionalExternalService.getProfessionalId(UserInfo.getCurrentAuditor());
 

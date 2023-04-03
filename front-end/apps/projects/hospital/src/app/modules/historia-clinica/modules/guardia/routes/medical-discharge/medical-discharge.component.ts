@@ -111,7 +111,7 @@ export class MedicalDischargeComponent implements OnInit {
 							this.goToEpisodeDetails();
 							this.snackBarService.showSuccess('guardia.episode.medical_discharge.messages.SUCCESS');
 						}
-					}, _ => this.snackBarService.showError('guardia.episode.medical_discharge.messages.ERROR')
+					}, error => this.snackBarService.showError(error.message ? error.message : 'guardia.episode.medical_discharge.messages.ERROR')
 				);
 		}
 	}

@@ -3,6 +3,7 @@ package net.pladema.emergencycare.repository;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.ips.entity.ObservationRiskFactor;
 import ar.lamansys.sgx.shared.auditable.repository.SGXAuditableEntityJPARepository;
 import net.pladema.emergencycare.repository.domain.EmergencyCareVo;
+import net.pladema.emergencycare.repository.domain.PatientECEVo;
 import net.pladema.emergencycare.repository.entity.EmergencyCareEpisode;
 import net.pladema.emergencycare.repository.entity.EmergencyCareState;
 
@@ -116,4 +117,11 @@ public interface EmergencyCareEpisodeRepository extends SGXAuditableEntityJPARep
 			"AND ece.emergencyCareStateId IN :statusIds " +
 			"AND (ece.deleteable.deleted = false or ece.deleteable.deleted is null)")
 	List<EmergencyCareEpisode> getFromPatientsAndStatus(@Param("patientIds") List<Integer> patientIds, @Param("statusIds") List<Short> statusIds);
+	
+	@Transactional(readOnly = true)
+	@Query( value = "SELECT new net.pladema.emergencycare.repository.domain.PatientECEVo(pa.id, pa.typeId) " +
+			"FROM EmergencyCareEpisode ece " +
+			"JOIN Patient pa ON (ece.patientId = pa.id) " +
+			"WHERE ece.id = :episodeId ")
+	PatientECEVo getPatientDataByEpisodeId(@Param("episodeId") Integer episodeId);
 }

@@ -41,4 +41,9 @@ public class PatientECEVo implements Serializable {
 			this.person = new PersonECEVo(person, nameSelfDetermination);
 
 	}
+
+	public PatientECEVo(Integer id, Short typeId) {
+		this.id = id;
+		this.typeId = typeId;
+	}
 }

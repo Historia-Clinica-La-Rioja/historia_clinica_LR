@@ -2,6 +2,7 @@ package net.pladema.emergencycare.service;
 
 import net.pladema.emergencycare.service.domain.EmergencyCareBo;
 import net.pladema.emergencycare.service.domain.EmergencyCareEpisodeInProgressBo;
+import net.pladema.emergencycare.service.domain.PatientECEBo;
 
 import java.util.List;
 
@@ -26,4 +27,6 @@ public interface  EmergencyCareEpisodeService {
     Boolean validateAndSetPatient(Integer episodeId, Integer patientId, Integer institutionId);
 
 	boolean haveMoreThanOneEmergencyCareEpisodeFromPatients(List<Integer> patients);
+	
+	PatientECEBo getRelatedPatientData(Integer episodeId);
 }
