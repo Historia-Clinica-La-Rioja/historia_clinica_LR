@@ -418,3 +418,50 @@ databaseChangeLog:
                 - column:
                     name: deleted_on
                     type: datetime
+
+    - changeSet:
+        id: update-created-patient-date
+        comment: Update created patient date on patient from hospital_audit
+        author: mvalin
+        dbms: postgresql
+        changes:
+          - sql:
+              sql: |-
+                WITH patient_created_date AS (
+                  SELECT p.id AS patient_id, ha.date AS patient_created_on, ha.user_id as patient_created_by
+                  FROM patient p
+                  JOIN patient_audit pa ON (p.id = pa.patient_id)
+                  JOIN hospital_audit ha ON (pa.hospital_audit_id = ha.id)
+                  WHERE ha.action_type = 1
+                )
+                UPDATE patient p
+                SET created_on = pcd.patient_created_on, created_by = pcd.patient_created_by
+                FROM patient_created_date pcd
+                WHERE pcd.patient_id = p.id
+
+    - changeSet:
+        id: set-update-patient-date
+        comment: Set updated patient date on patient from hospital_audit
+        author: mvalin
+        dbms: postgresql
+        changes:
+          - sql:
+              sql: |-
+                WITH patient_updated_date AS (
+                  SELECT p.id AS patient_id, ha.date AS patient_updated_on, ha.user_id AS patient_updated_by
+                  FROM patient p
+                  JOIN patient_audit pa ON (p.id = pa.patient_id)
+                  JOIN hospital_audit ha ON (pa.hospital_audit_id = ha.id)
+                  WHERE ha.action_type = 2 and ha.id IN (select haaux.id
+                                                          from patient paux
+                                                          join patient_audit paaux on (paux.id = paaux.patient_id)
+                                                          join hospital_audit haaux on (paaux.hospital_audit_id = haaux.id)
+                                                          where paux.id = p.id and haaux.action_type = 2
+                                                          order by haaux."date" desc
+                                                          limit 1
+                                                          )
+                )
+                UPDATE patient p
+                SET updated_on = pud.patient_updated_on, updated_by = pud.patient_updated_by
+                FROM patient_updated_date pud
+                WHERE pud.patient_id = p.id
