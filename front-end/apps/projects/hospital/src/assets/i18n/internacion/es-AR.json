@@ -161,7 +161,49 @@
 					"LUGAR_DE_TRABAJO": "Lugar de trabajo",
 					"OTRO": "Otro"
 				}
+			},
+			"pregnancyForm": {
+				"TITLE": "Gestas anteriores",
+				"TOTAL_BIRTHS": "Número total de nacimientos previos (vaginales y cesáreas), vivos o muertos, antes del presente.",
+				"CURRENT_FEAT": "Gesta actual",
+				"FINISH_DATE": "Fecha de término del embarazo.",
+				"GESTATIONAL_AGE": "Edad gestacional",
+				"ERROR_GESTATIONAL_AGE": "*La edad gestacional debe estar entre 0 y 43 semanas.",
+				"WEEKS": "semanas.",
+				"TERMINATION": "Terminación",
+				"TERMINATION_OPTIONS": {
+					"VAGINAL": "Vaginal",
+					"CESAREAN": "Cesárea",
+					"UNDEFINED": "Sin definir"
+				}
+			},
+			"deliveryType": {
+				"SECTION_TITLE": "Tipo de parto",
+				"SIMPLE": "Simple",
+				"MULTIPLE": "Múltiple",
+				"UNDEFINED": "Sin definir"
+			},
+			"formDynamicNewBornComponent":{
+				"NEWBORN": "Recién nacido {{child}}",
+				"WEIGHT": "Peso al nacer",
+				"CONDITION": "Condición al nacer",
+				"GENDER": "Sexo",
+				"condition":{
+					"BORN_ALIVE": "Vivo",
+					"FETAL_DEATH": "Defunción fetal"
+				},
+				"gender":{
+					"MALE": "Masculino",
+					"FEMALE": "Femenino",
+					"INDETERMINATE": "Indeterminado"
+				},
+				"REQUIRED": "Este campo es obligatorio",
+				"ADD_NEWBORN": "+ Agregar otro recién nacido"
+			},
+			"obstetric":{
+				"TITLE":"Datos del evento obstétrico"
 			}
+
 		},
 		"epicrisis": {
 			"TITLE": "Epicrisis",
