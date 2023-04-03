@@ -2667,6 +2667,7 @@ export interface ProvinceDto extends AbstractMasterdataDto<number> {
 }
 
 export interface PublicAppointmentClinicalSpecialty {
+    id: number;
     name: string;
     sctid: string;
 }
