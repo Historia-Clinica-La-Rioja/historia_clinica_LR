@@ -25,6 +25,10 @@ import { VacunasComponent } from './components/vacunas/vacunas.component';
 import { ElementoDiagnosticoComponent } from './components/elemento-diagnostico/elemento-diagnostico.component';
 import { InternmentPatientCardComponent } from './components/internment-patient-card/internment-patient-card.component';
 import { TableEventComponent } from './components/table-event/table-event.component';
+import { TypeOfPregnancyComponent } from './components/type-of-pregnancy/type-of-pregnancy.component';
+import { PregnancyFormComponent } from './components/pregnancy-form/pregnancy-form.component';
+import { ObstetricComponent } from './components/obstetric/obstetric.component';
+import { FormDynamicNewBornComponent } from './components/form-dynamic-new-born/form-dynamic-new-born.component';
 // dialogs
 import { AnamnesisDockPopupComponent } from "@historia-clinica/modules/ambulatoria/modules/internacion/dialogs/anamnesis-dock-popup/anamnesis-dock-popup.component";
 import { ChangeMainDiagnosisDockPopupComponent } from './dialogs/change-main-diagnosis-dock-popup/change-main-diagnosis-dock-popup.component';
@@ -54,12 +58,16 @@ import { DeleteDocumentPopupComponent } from './dialogs/delete-document-popup/de
 		DiagnosticosComponent,
 		ExternalCauseComponent,
 		EventSerchComponent,
+		FormDynamicNewBornComponent,
 		InternmentPatientTableComponent,
 		InternmentPatientCardComponent,
 		InternmentEpisodeSummaryComponent,
 		MedicacionComponent,
+		ObstetricComponent,
+		PregnancyFormComponent,
 		VacunasComponent,
 		TableEventComponent,
+		TypeOfPregnancyComponent,
 		// dialogs
 		AnamnesisDockPopupComponent,
 		ChangeMainDiagnosisDockPopupComponent,
