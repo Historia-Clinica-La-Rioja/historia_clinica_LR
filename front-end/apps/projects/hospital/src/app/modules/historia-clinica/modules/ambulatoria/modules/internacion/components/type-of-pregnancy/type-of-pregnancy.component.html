@@ -1,0 +1,10 @@
+<section>
+	<h2>{{ 'internaciones.anamnesis.deliveryType.SECTION_TITLE' | translate }}</h2>
+
+	<mat-radio-group aria-label="Select an option" fxLayout="column" fxLayoutGap="10px" [(ngModel)]="selectedOption"
+		(change)="emmitEvent()">
+		<mat-radio-button value="SIMPLE">{{ 'internaciones.anamnesis.deliveryType.SIMPLE' | translate }}</mat-radio-button>
+		<mat-radio-button value="MULTIPLE">{{ 'internaciones.anamnesis.deliveryType.MULTIPLE' | translate }}</mat-radio-button>
+		<mat-radio-button value="UNDEFINED">{{ 'internaciones.anamnesis.deliveryType.UNDEFINED' | translate }}</mat-radio-button>
+	</mat-radio-group>
+</section>
