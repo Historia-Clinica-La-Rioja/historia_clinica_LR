@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { MatSelectChange } from '@angular/material/select';
-import { EquipmentAppointmentListDto, EquipmentDto, TimeDto } from '@api-rest/api-model';
+import { EquipmentAppointmentListDto, EquipmentDto } from '@api-rest/api-model';
 import { AppFeature } from '@api-rest/api-model';
 import { mapDateWithHypenToDateWithSlash, timeToString } from '@api-rest/mapper/date-dto.mapper';
 import { AppointmentsService } from '@api-rest/services/appointments.service';
@@ -20,6 +20,9 @@ export class WorklistComponent implements OnInit {
     appointments: EquipmentAppointmentListDto[] = [];
     isFetchingData = false;
     nameSelfDeterminationFF = false;
+	permission = false;
+
+    readonly mssg = 'image-network.home.NO_PERMISSION';
 
     constructor(private readonly equipmentService: EquipmentService,
 		private readonly featureFlagService: FeatureFlagService,
@@ -28,6 +31,10 @@ export class WorklistComponent implements OnInit {
 		this.featureFlagService.isActive(AppFeature.HABILITAR_DATOS_AUTOPERCIBIDOS).subscribe(isOn => {
 			this.nameSelfDeterminationFF = isOn
 		});
+
+        this.featureFlagService.isActive(AppFeature.HABILITAR_DESARROLLO_RED_IMAGENES).subscribe(isOn => {
+            this.permission = isOn;
+        })
 	}
 
     ngOnInit(): void {
