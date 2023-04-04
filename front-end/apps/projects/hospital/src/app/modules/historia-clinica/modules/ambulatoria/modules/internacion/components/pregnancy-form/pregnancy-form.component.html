@@ -1,0 +1,51 @@
+<form [formGroup]="form" (change)="emmitEvent()" fxLayoutGap="10px">
+	<div id="previousPregnancies">
+		<h2>{{'internaciones.anamnesis.pregnancyForm.TITLE' | translate}}</h2>
+		<p>{{'internaciones.anamnesis.pregnancyForm.TOTAL_BIRTHS' | translate}}</p>
+		<mat-form-field appearance="outline">
+			<input formControlName="previousPregnancies" type="number" id="weight" matInput>
+		</mat-form-field>
+	</div>
+
+	<div id="currentPregnancy">
+		<h2>{{'internaciones.anamnesis.pregnancyForm.CURRENT_FEAT' | translate}}</h2>
+		<p>{{'internaciones.anamnesis.pregnancyForm.FINISH_DATE' | translate}}</p>
+
+		<ng-container *ngIf="currentPregnancyEndDate$ | async as endDate; else newDatepicker">
+
+			<app-datepicker [enableDelete]="enableDelete" [dateToSetInDatepicker]="endDate"
+				(selectDate)="setIndicationDate($event)">
+			</app-datepicker>
+		</ng-container>
+
+		<ng-template #newDatepicker>
+			<app-datepicker [enableDelete]="enableDelete" (selectDate)="setIndicationDate($event)">
+			</app-datepicker>
+		</ng-template>
+	</div>
+
+	<div id="gestationalAge">
+		<h2>{{'internaciones.anamnesis.pregnancyForm.GESTATIONAL_AGE' | translate}}</h2>
+
+		<div fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="10px">
+			<mat-form-field appearance="outline">
+				<input formControlName="gestationalAge" type="number" matInput>
+				<mat-error>{{'internaciones.anamnesis.pregnancyForm.ERROR_GESTATIONAL_AGE' | translate}}</mat-error>
+			</mat-form-field>
+
+			<p> {{'internaciones.anamnesis.pregnancyForm.WEEKS' | translate}} </p>
+		</div>
+	</div>
+
+	<div id="pregnancyTerminationType">
+		<h2>{{'internaciones.anamnesis.pregnancyForm.TERMINATION' | translate}}</h2>
+
+		<mat-radio-group formControlName="pregnancyTerminationType" aria-label="Select an pregnancyTerminationType"
+			fxLayout="column" fxLayoutGap="5px" (change)="emmitEvent()">
+			<mat-radio-button value="VAGINAL">{{'internaciones.anamnesis.pregnancyForm.TERMINATION_OPTIONS.VAGINAL' | translate}}</mat-radio-button>
+			<mat-radio-button value="CESAREAN">{{'internaciones.anamnesis.pregnancyForm.TERMINATION_OPTIONS.CESAREAN' |	translate}}</mat-radio-button>
+			<mat-radio-button value="UNDEFINED">{{'internaciones.anamnesis.pregnancyForm.TERMINATION_OPTIONS.UNDEFINED'	| translate}}</mat-radio-button>
+		</mat-radio-group>
+	</div>
+</form>
+<app-type-of-pregnancy></app-type-of-pregnancy>
