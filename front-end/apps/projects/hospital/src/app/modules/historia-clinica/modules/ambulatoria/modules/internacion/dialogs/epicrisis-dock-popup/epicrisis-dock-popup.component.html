@@ -387,9 +387,15 @@
 				</app-no-data>
 			</div>
 		</form>
-		<div *ngIf="cipresEpicrisisFF">
-			<app-external-cause [searchConceptsLocallyFF]="searchConceptsLocallyFF" (event)="setExternalCause($event)"></app-external-cause>
-		</div>
+		<ng-container *ngIf="cipresEpicrisisFF">
+			<div>
+				<app-external-cause [searchConceptsLocallyFF]="searchConceptsLocallyFF" (event)="setExternalCause($event)"></app-external-cause>
+			</div>
+			<div>
+				<app-obstetric></app-obstetric>
+			</div>
+		</ng-container>
+
 	</div>
 
 	<div actions id="buttons" fxLayoutGap="10px" fxLayoutAlign="end">

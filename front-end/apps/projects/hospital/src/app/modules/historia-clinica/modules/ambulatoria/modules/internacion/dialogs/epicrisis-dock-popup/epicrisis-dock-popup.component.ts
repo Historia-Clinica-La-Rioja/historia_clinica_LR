@@ -15,7 +15,7 @@ import {
 	SnomedDto,
 	ExternalCauseDto
 } from '@api-rest/api-model';
-import { Inject, OnInit } from '@angular/core';
+import { Inject, OnInit, ViewChild } from '@angular/core';
 import { Component } from '@angular/core';
 import { SnomedECL } from '@api-rest/api-model';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
@@ -34,19 +34,21 @@ import { SnomedService, SnomedSemanticSearch } from '@historia-clinica/services/
 import { DockPopupRef } from "@presentation/services/dock-popup-ref";
 import { OVERLAY_DATA } from "@presentation/presentation-model";
 import { InternmentFields } from "@historia-clinica/modules/ambulatoria/modules/internacion/services/internment-summary-facade.service";
-import { Observable, Subscriber, Subscription } from 'rxjs';
+import { Observable, Subscription } from 'rxjs';
 import { DocumentActionReasonComponent } from '../document-action-reason/document-action-reason.component';
 import { MatDialog } from '@angular/material/dialog';
 import { ProblemEpicrisisService } from '../../services/problem-epicrisis.service';
 import { FeatureFlagService } from '@core/services/feature-flag.service';
 import { ExternalCauseService } from '../../services/external-cause.service';
-import { tap } from 'rxjs/operators';
+import { ControlDynamicFormService } from '../../services/control-dynamic-form.service';
+import { ObstetricComponent } from '../../components/obstetric/obstetric.component';
+import { ObstetricFormService } from '../../services/obstetric-form.service';
 
 @Component({
 	selector: 'app-epicrisis-dock-popup',
 	templateUrl: './epicrisis-dock-popup.component.html',
 	styleUrls: ['./epicrisis-dock-popup.component.scss'],
-	providers: [ExternalCauseService]
+	providers: [ExternalCauseService, ControlDynamicFormService, ObstetricFormService]
 })
 export class EpicrisisDockPopupComponent implements OnInit {
 
@@ -134,6 +136,7 @@ export class EpicrisisDockPopupComponent implements OnInit {
 	};
 
 	waitToResponse = false;
+	@ViewChild(ObstetricComponent) formulario!: ObstetricComponent;
 
 	constructor(
 		@Inject(OVERLAY_DATA) public data: any,
@@ -148,7 +151,8 @@ export class EpicrisisDockPopupComponent implements OnInit {
 		private readonly internmentStateService: InternmentStateService,
 		private readonly snomedService: SnomedService,
 		private readonly dialog: MatDialog,
-		private readonly externalCauseServise: ExternalCauseService
+		private readonly externalCauseServise: ExternalCauseService,
+		private readonly obtetricForm: ObstetricFormService,
 	) {
 		this.familyHistories.displayedColumns = this.familyHistories.columns?.map(c => c.def).concat(['select']);
 		this.personalHistories.displayedColumns = this.personalHistories.columns?.map(c => c.def).concat(['select']);
@@ -223,6 +227,9 @@ export class EpicrisisDockPopupComponent implements OnInit {
 	}
 
 	private setValues(e: ResponseEpicrisisDto): void {
+		if (e?.obstetricEvent){
+			this.obtetricForm.setValue(e.obstetricEvent);
+		}
 		if (e?.externalCause) {
 			this.externalCauseDto = e?.externalCause;
 			this.externalCauseServise.setValue(e.externalCause);
@@ -257,7 +264,7 @@ export class EpicrisisDockPopupComponent implements OnInit {
 	}
 
 	save(): void {
-		if (this.form.valid) {
+		if (this.form.valid && this.formulario.isValidForm()) {
 			const epicrisis: EpicrisisDto = this.getEpicrisis(true);
 			this.ngOnDestroy();
 
@@ -287,10 +294,7 @@ export class EpicrisisDockPopupComponent implements OnInit {
 	}
 
 	saveDraft(): void {
-		if (this.form.valid) {
-
-
-
+		if (this.formulario.isValidForm() && this.form.valid) {
 			const epicrisis = this.getEpicrisis(false);
 			let obs$;
 			if (this.data.patientInfo.epicrisisId) {
@@ -331,6 +335,7 @@ export class EpicrisisDockPopupComponent implements OnInit {
 			medications: this.medications,
 			immunizations: this.immunizations.selection.selected,
 			allergies: this.allergies.selection.selected,
+			obstetricEvent: this.formulario?.getForm(),
 			otherProblems: this.problemEpicrisisService.getProblems()
 		}
 	}
