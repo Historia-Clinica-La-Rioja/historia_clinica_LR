@@ -1,0 +1,75 @@
+<form [formGroup]="form" fxLayout="column">
+	<div formArrayName="newBorns">
+		<ng-container *ngFor="let p of getCtrl('newBorns',form)?.controls; let formChild = index">
+
+			<mat-divider class="separation" inset></mat-divider>
+			<div fxLayout="row" fxLayoutAlign="space-between">
+				<div [formGroupName]="formChild" fxLayout="column" fxLayoutGap="10px">
+
+					<h2 class="title" [translate]="'internaciones.anamnesis.formDynamicNewBornComponent.NEWBORN'"
+						[translateParams]="{ child: formChild + 1 }"></h2>
+					<div id="weight">
+						<h2 class="subtitle"> {{'internaciones.anamnesis.formDynamicNewBornComponent.WEIGHT' |
+							translate}} </h2>
+						<mat-form-field appearance="outline">
+							<input formControlName="weight" type="number" matInput placeholder="0 gr">
+							<mat-error *ngIf="formSend && p.get('weight').invalid" class="error">
+								<span> {{'forms.REQUIRED' | translate}} </span>
+							</mat-error>
+						</mat-form-field>
+					</div>
+
+					<div id="birthConditionType">
+						<h2 class="subtitle">{{'internaciones.anamnesis.formDynamicNewBornComponent.CONDITION' |
+							translate}}:</h2>
+						<mat-radio-group formControlName="birthConditionType" aria-label="Select an birthWeight"
+							fxLayout="column" fxLayoutGap="5px" required>
+							<mat-radio-button
+								value="BORN_ALIVE">{{'internaciones.anamnesis.formDynamicNewBornComponent.condition.BORN_ALIVE'
+								| translate}}</mat-radio-button>
+							<mat-radio-button
+								value="FETAL_DEATH">{{'internaciones.anamnesis.formDynamicNewBornComponent.condition.FETAL_DEATH'
+								| translate}}</mat-radio-button>
+						</mat-radio-group>
+						<mat-error *ngIf="formSend && p.get('birthConditionType').invalid" class="error">
+							<span> {{'forms.REQUIRED' | translate}} </span>
+						</mat-error>
+					</div>
+
+					<div id="genderId">
+						<h2 class="subtitle"> {{'internaciones.anamnesis.formDynamicNewBornComponent.GENDER' |
+							translate}} </h2>
+						<mat-radio-group formControlName="genderId" aria-label="Select an gender" fxLayout="column"
+							fxLayoutGap="5px" required>
+							<mat-radio-button
+								value="MALE">{{'internaciones.anamnesis.formDynamicNewBornComponent.gender.MALE' |
+								translate}}</mat-radio-button>
+							<mat-radio-button
+								value="FEMALE">{{'internaciones.anamnesis.formDynamicNewBornComponent.gender.FEMALE' |
+								translate}}</mat-radio-button>
+							<mat-radio-button
+								value="X">{{'internaciones.anamnesis.formDynamicNewBornComponent.gender.INDETERMINATE' |
+								translate}}</mat-radio-button>
+						</mat-radio-group>
+						<mat-error *ngIf="formSend && p.get('genderId').invalid" class="error">
+							<span> {{'forms.REQUIRED' | translate}} </span>
+						</mat-error>
+					</div>
+				</div>
+				<button id="delete" [disabled]="formChild < 2" mat-icon-button type="button" (click)="delete(formChild)"
+					color="warn">
+					<mat-icon>delete</mat-icon>
+				</button>
+
+			</div>
+
+		</ng-container>
+	</div>
+	<div fxLayoutAlign="start">
+		<button id="add" [disabled]="disabledAddNewBorn" mat-button type="button" (click)="addChild()"
+			color="primary" id="add-button" onclick="this.blur()">
+			<span> {{'internaciones.anamnesis.formDynamicNewBornComponent.ADD_NEWBORN' | translate}} </span>
+		</button>
+	</div>
+
+</form>
