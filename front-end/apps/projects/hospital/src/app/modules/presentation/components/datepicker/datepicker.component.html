@@ -8,5 +8,10 @@
 			<mat-datepicker #datepicker>
 			</mat-datepicker>
 		</mat-form-field>
+		<ng-container *ngIf="enableDelete">
+			<button type="button" mat-icon-button (click)="delete()">
+				<mat-icon color="warn">delete_outline</mat-icon>
+			</button>
+		</ng-container>
 	</form>
 </div>

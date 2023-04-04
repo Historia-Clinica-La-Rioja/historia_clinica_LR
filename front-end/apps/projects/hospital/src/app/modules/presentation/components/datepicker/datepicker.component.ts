@@ -12,6 +12,7 @@ import { Moment } from "moment";
 export class DatepickerComponent implements OnInit {
 
 	form: FormGroup;
+	@Input() enableDelete = false;
 	@Input() title: string;
 	@Input() dateToSetInDatepicker: Date;
 	@Input() maxDate: Date;
@@ -40,11 +41,16 @@ export class DatepickerComponent implements OnInit {
 		if (!this.availableDays.length && !this.disableDays.length)
 			return true;
 		if (date != null) {
-			if (this.disableDays.find(x => x.getTime() == date.toDate().getTime())){
+			if (this.disableDays.find(x => x.getTime() == date.toDate().getTime())) {
 				return false;
 			}
 		}
 		const day = (date || moment()).day();
 		return this.availableDays.includes(day);
-	  }
+	}
+
+	delete() {
+		this.form.controls.selectedDate.setValue(null);
+		this.selectDate.next(null);
+	}
 }
