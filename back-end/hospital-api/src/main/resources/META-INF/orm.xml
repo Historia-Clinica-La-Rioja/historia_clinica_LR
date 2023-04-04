@@ -213,8 +213,8 @@
     <named-native-query name="Reports.ConsultationDetail" result-set-mapping="Reports.ConsultationDetailResult">
         <query>
 			WITH consultation AS (SELECT oc.patient_id, oc.patient_medical_coverage_id, oc.clinical_specialty_id,
-			oc.doctor_id, oc.start_date as start_date, STRING_AGG(r.description, ', ') as reasons,
-			STRING_AGG(sno.pt, ', ') as problems, string_agg(snop.pt, ', ') as procedures,
+			oc.doctor_id, oc.start_date as start_date, reasons.description as reasons,
+			problems.description as problems, proced.description as procedures,
 			MAX(CASE WHEN ovs.loinc_code='8480-6' THEN ovs.value END) as systolicBloodPressure,
 			MAX(CASE WHEN ovs.loinc_code='8462-4' THEN ovs.value END) as diastolicBloodPressure,
 			MAX(CASE WHEN ovs.loinc_code='8302-2' THEN ovs.value END) as height,
@@ -225,20 +225,32 @@
 			MAX(CASE WHEN ovs.loinc_code='11947-9' THEN ovs.value END) as headCircunference,
 			'outpatient' as consultation_type
 			FROM outpatient_consultation oc
-			LEFT JOIN outpatient_consultation_reasons ocr ON (ocr.outpatient_consultation_id = oc.id)
-			LEFT JOIN reasons r ON (r.id = ocr.reason_id)
-			LEFT JOIN document_health_condition dhc ON (dhc.document_id = oc.document_id)
-			LEFT JOIN health_condition hc ON (hc.id = dhc.health_condition_id and hc.problem_id != '57177007' )
-			LEFT JOIN snomed sno ON (sno.id = hc.snomed_id)
-			LEFT JOIN document_procedure dp ON (dp.document_id = oc.document_id)
-			LEFT JOIN "procedures" p ON (p.id = dp.procedure_id)
-			LEFT JOIN snomed snop ON (snop.id = p.snomed_id)
+			LEFT JOIN (
+			SELECT ocr.outpatient_consultation_id AS oc_id , STRING_AGG(r.description, ', ') AS description
+			FROM outpatient_consultation_reasons ocr
+			JOIN reasons r ON (r.id = ocr.reason_id)
+			GROUP BY ocr.outpatient_consultation_id
+			) reasons ON (reasons.oc_id = oc.id)
+			LEFT JOIN (
+			SELECT dhc.document_id AS document_id,  STRING_AGG(s.pt, ', ') AS description
+			FROM document_health_condition dhc
+			JOIN health_condition hc ON (hc.id = dhc.health_condition_id AND hc.problem_id != '57177007' )
+			JOIN snomed s ON (s.id = hc.snomed_id)
+			GROUP BY dhc.document_id
+			) problems ON (problems.document_id = oc.document_id)
+			LEFT JOIN (
+			SELECT dp.document_id AS document_id,  STRING_AGG(s.pt, ', ') AS description
+			FROM document_procedure dp
+			JOIN "procedures" p ON (p.id = dp.procedure_id)
+			JOIN snomed s ON (s.id = p.snomed_id)
+			GROUP BY dp.document_id
+			) proced ON (proced.document_id = oc.document_id)
 			LEFT JOIN document_vital_sign dvs ON (dvs.document_id = oc.document_id)
 			LEFT JOIN observation_vital_sign ovs ON (dvs.observation_vital_sign_id = ovs.id)
 			WHERE oc.institution_id = :institutionId
 			AND oc.billable = true
 			AND oc.start_date BETWEEN :startDate AND :endDate
-			GROUP BY oc.id, oc.patient_id , oc.patient_medical_coverage_id , oc.clinical_specialty_id , oc.doctor_id
+			GROUP BY oc.id, oc.patient_id , oc.patient_medical_coverage_id , oc.clinical_specialty_id , oc.doctor_id, oc.doctor_id, reasons.description, problems.description, proced.description
 			UNION ALL
 			SELECT  vc.patient_id, vc.patient_medical_coverage_id, vc.clinical_specialty_id,
 			vc.doctor_id, vc.performed_date as start_date, NULL AS reasons,  NULL AS problems, NULL as procedures,
@@ -278,39 +290,59 @@
 			LEFT JOIN clinical_specialty cs ON (cst.clinical_specialty_id = cs.id)
 			JOIN healthcare_professional hp ON (cst.doctor_id = hp.id)
 			JOIN person p2 ON (hp.person_id = p2.id)
-        </query>
+		</query>
     </named-native-query>
 
 	<named-native-query name="Reports.OdontologyConsultationDetail" result-set-mapping="Reports.ConsultationDetailResult">
 		<query>
 			WITH consultation AS (
 			SELECT oc.patient_id, oc.patient_medical_coverage_id, oc.clinical_specialty_id,
-			oc.doctor_id, oc.created_on as start_date, STRING_AGG(ore.description, ', ') as reasons,  concat_ws('/split/', STRING_AGG(otherprob_sno.pt, '/split/'), STRING_AGG(prob_sno.pt, '/split/')) as problems,
-			concat_ws('/split/', string_agg(procedure_sno.pt, '/split/'), string_agg(o_procedure_sno.pt, '/split/')) as procedures,
+			oc.doctor_id, oc.created_on as start_date, reasons.description as reasons,  concat_ws('/split/', other_problems.description, diagnostics.description) as problems,
+			concat_ws('/split/', procedures.description, odontology_procedures.description) as procedures,
 			null as weight, null as height, null as systolicBloodPressure, null as diastolicBloodPressure,
 			null as cardiovascularRisk, null as glycosylatedHemoglobin, null as bloodGlucose, null as headCircunference, concat_ws('-', oci.permanent_c, oci.permanent_p, oci.permanent_o) as cpo,  concat_ws('-', oci.temporary_c, oci.temporary_e, oci.temporary_o) as ceo,
 			'odontology' as consultation_type
 			FROM odontology_consultation oc
-			LEFT JOIN odontology_consultation_reason ocr ON (ocr.odontology_consultation_id = oc.id)
-			LEFT JOIN odontology_reason ore ON (ocr.reason_id = ore.id)
+			LEFT JOIN (
+			SELECT ocr.odontology_consultation_id AS oc_id , STRING_AGG(r.description, ', ') AS description
+			FROM odontology_consultation_reason ocr
+			JOIN odontology_reason r ON (r.id = ocr.reason_id)
+			GROUP BY ocr.odontology_consultation_id
+			) reasons ON (reasons.oc_id = oc.id)
 			JOIN document d ON (oc.id = d.source_id and d.source_type_id = 6)
-			LEFT JOIN document_health_condition dhc ON (d.id = dhc.document_id)
-			LEFT JOIN health_condition hc ON (dhc.health_condition_id = hc.id)
-			LEFT JOIN snomed otherprob_sno ON (otherprob_sno.id = hc.snomed_id)
-			LEFT JOIN document_odontology_diagnostic dod ON (d.id = dod.document_id)
-			LEFT JOIN odontology_diagnostic od ON (dod.odontology_diagnostic_id = od.id)
-			LEFT JOIN snomed prob_sno ON (od.snomed_id = prob_sno.id)
-			LEFT JOIN document_procedure dp ON (dp.document_id = d.id)
-			LEFT JOIN "procedures" p ON (dp.procedure_id = p.id)
-			LEFT JOIN snomed procedure_sno ON (procedure_sno.id = p.snomed_id)
-			LEFT JOIN document_odontology_procedure dop on (dop.document_id = d.id)
-			LEFT JOIN odontology_procedure op ON (op.id = dop.odontology_procedure_id)
-			LEFT JOIN snomed o_procedure_sno ON (o_procedure_sno.id = op.snomed_id)
+			LEFT JOIN (
+			SELECT dhc.document_id AS document_id,  STRING_AGG(s.pt, ', ') AS description
+			FROM document_health_condition dhc
+			JOIN health_condition hc ON (hc.id = dhc.health_condition_id)
+			JOIN snomed s ON (s.id = hc.snomed_id)
+			GROUP BY dhc.document_id
+			) other_problems ON (other_problems.document_id = d.id)
+			LEFT JOIN (
+			SELECT dod.document_id AS document_id,  STRING_AGG(s.pt, ', ') AS description
+			FROM document_odontology_diagnostic dod
+			JOIN odontology_diagnostic od ON (od.id = dod.odontology_diagnostic_id)
+			JOIN snomed s ON (s.id = od.snomed_id)
+			GROUP BY dod.document_id
+			) diagnostics ON (diagnostics.document_id = d.id)
+			LEFT JOIN (
+			SELECT dp.document_id AS document_id,  STRING_AGG(s.pt, ', ') AS description
+			FROM document_procedure dp
+			JOIN "procedures" p ON (p.id = dp.procedure_id)
+			JOIN snomed s ON (s.id = p.snomed_id)
+			GROUP BY dp.document_id
+			) procedures ON (procedures.document_id = d.id)
+			LEFT JOIN (
+			SELECT dop.document_id AS document_id,  STRING_AGG(s.pt, ', ') AS description
+			FROM document_odontology_procedure dop
+			JOIN odontology_procedure op ON (op.id = dop.odontology_procedure_id)
+			JOIN snomed s ON (s.id = op.snomed_id)
+			GROUP BY dop.document_id
+			) odontology_procedures ON (odontology_procedures.document_id = d.id)
 			LEFT JOIN odontology_consultation_indices oci ON (oc.id = oci.odontology_consultation_id)
 			WHERE oc.institution_id = :institutionId
 			AND oc.billable = true
 			AND oc.created_on BETWEEN :startDate AND :endDate
-			GROUP BY oc.id, oc.patient_id, oc.patient_medical_coverage_id , oc.clinical_specialty_id, oc.doctor_id, oci.permanent_c, oci.permanent_p, oci.permanent_o, oci.temporary_c, oci.temporary_e, oci.temporary_o
+			GROUP BY oc.id, oc.patient_id, oc.patient_medical_coverage_id , oc.clinical_specialty_id, oc.doctor_id, oci.permanent_c, oci.permanent_p, oci.permanent_o, oci.temporary_c, oci.temporary_e, oci.temporary_o, reasons.description, other_problems.description, diagnostics.description, procedures.description, odontology_procedures.description
 			)
 			SELECT CONCAT(pe.last_name, ' ', pe.other_last_names) as patientSurname,
 			CONCAT(pe.first_name, ' ', pe.middle_names) as patientFirstName,
@@ -347,7 +379,7 @@
 		<query>
 			WITH consultation AS (
 			SELECT oc.patient_id, oc.patient_medical_coverage_id, oc.clinical_specialty_id,
-			oc.doctor_id, oc.created_on as start_date, null as reasons,  STRING_AGG(hc_sno.pt, ', ') as problems, string_agg(procedures_sno.pt, ', ') as procedures,
+			oc.doctor_id, oc.created_on as start_date, null as reasons,  problems.description as problems, proced.description as procedures,
 			MAX(CASE WHEN ovs.loinc_code='29463-7' THEN ovs.value END) as weight,
 			MAX(CASE WHEN ovs.loinc_code='8302-2' THEN ovs.value END) as height,
 			MAX(CASE WHEN ovs.loinc_code='8480-6' THEN ovs.value END) as systolicBloodPressure,
@@ -359,17 +391,25 @@
 			'nursing' as consultation_type
 			FROM nursing_consultation oc
 			JOIN document d ON (d.source_id = oc.id and d.source_type_id = 7)
-			LEFT JOIN document_health_condition dhc ON (dhc.document_id = d.id)
-			LEFT JOIN health_condition hc ON (hc.id = dhc.health_condition_id)
-			LEFT JOIN snomed hc_sno ON (hc_sno.id = hc.snomed_id)
+			LEFT JOIN (
+			SELECT dhc.document_id,  STRING_AGG(s.pt, ', ') as description
+			FROM document_health_condition dhc
+			JOIN health_condition hc ON (hc.id = dhc.health_condition_id)
+			JOIN snomed s ON (s.id = hc.snomed_id)
+			GROUP BY dhc.document_id
+			) AS problems on (problems.document_id = d.id)
+			LEFT JOIN (
+			SELECT dp.document_id,  STRING_AGG(s.pt, ', ') as description
+			FROM document_procedure dp
+			JOIN "procedures" p ON (p.id = dp.procedure_id)
+			JOIN snomed s ON (s.id = p.snomed_id)
+			GROUP BY dp.document_id
+			) AS proced on (proced.document_id = d.id)
 			LEFT JOIN document_vital_sign dvs ON (dvs.document_id = d.id)
 			LEFT JOIN observation_vital_sign ovs ON (ovs.id = dvs.observation_vital_sign_id)
-			LEFT JOIN document_procedure dp ON (dp.document_id = d.id)
-			LEFT JOIN "procedures" p ON (p.id = dp.procedure_id)
-			LEFT JOIN snomed procedures_sno ON (procedures_sno.id = p.snomed_id)
 			WHERE oc.institution_id = :institutionId
 			AND oc.created_on BETWEEN :startDate AND :endDate
-			GROUP BY oc.id
+			GROUP BY oc.id, problems.description, proced.description
 			)
 			SELECT CONCAT(pe.last_name, ' ', pe.other_last_names) as patientSurname,
 			CONCAT(pe.first_name, ' ', pe.middle_names) as patientFirstName,
