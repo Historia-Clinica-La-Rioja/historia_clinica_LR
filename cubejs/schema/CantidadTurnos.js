@@ -1,7 +1,7 @@
 cube(`CantidadTurnos`, {
   sql: `SELECT 
           has.appointment_id as id, has.changed_state_date as fecha_consulta, cs.name as especialidad,
-          concat_ws(', ', concat_ws(' ', p.last_name, p.other_last_names), CASE WHEN pex.name_self_determination IS NULL THEN concat_ws(' ', p.first_name, p.middle_names) ELSE pex.name_self_determination END) AS profesional,
+          concat_ws(', ', concat_ws(' ', p.last_name, p.other_last_names), CASE WHEN pex.name_self_determination IS NULL OR pex.name_self_determination LIKE '' OR NOT ${SECURITY_CONTEXT.nameSelfDeterminationFF.unsafeValue()} THEN concat_ws(' ', p.first_name, p.middle_names) ELSE pex.name_self_determination END) AS profesional,
           dof.institution_id AS institucion_id
         FROM 
           historic_appointment_state has

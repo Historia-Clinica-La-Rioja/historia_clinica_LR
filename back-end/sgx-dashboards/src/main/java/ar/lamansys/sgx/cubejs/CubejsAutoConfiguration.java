@@ -49,6 +49,7 @@ public class CubejsAutoConfiguration {
     @Bean
     public DashboardStorage dashboardStorageImpl(
 			UserPermissionStorage userPermissionStorage,
+			FeatureFlagsService featureFlagsService,
 			HttpClientConfiguration httpClientConfiguration,
 			@Value("${app.gateway.cubejs.token.secret}") String secret,
 			@Value("${app.gateway.cubejs.token.header:Authorization}") String cubeTokenHeader,
@@ -61,8 +62,8 @@ public class CubejsAutoConfiguration {
         return new DashboardStorageImpl(
 				this,
 				userPermissionStorage,
-				httpClientConfiguration.withProxy(this.proxy),
-				secret,
+				featureFlagsService,
+				httpClientConfiguration.withProxy(this.proxy), secret,
 				cubeTokenHeader,
 				tokenExpiration
 		);
