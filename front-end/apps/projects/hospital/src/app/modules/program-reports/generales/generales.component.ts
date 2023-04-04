@@ -93,9 +93,6 @@ export class GeneralesComponent implements OnInit {
 				endDate: this.form.controls.endDate.value,
 
       }
-      const params2={
-
-      }
       const programReportId = this.form.controls.programReportType.value;
       switch (programReportId) {
         case 1:
