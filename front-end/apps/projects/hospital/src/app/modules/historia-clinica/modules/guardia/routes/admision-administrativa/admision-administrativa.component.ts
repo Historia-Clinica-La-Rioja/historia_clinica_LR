@@ -201,9 +201,9 @@ export class AdmisionAdministrativaComponent implements OnInit {
 		};
 		this.selectedPatient = {
 			id: basicData.id,
-			genderId: basicData.person.gender.id,
-			identificationNumber: basicData.person.identificationNumber,
-			identificationTypeId: basicData.person.identificationTypeId,
+			genderId: basicData.person?.gender.id,
+			identificationNumber: basicData.person?.identificationNumber,
+			identificationTypeId: basicData.person?.identificationTypeId,
 		};
 		this.patientMedicalCoverageService.getActivePatientMedicalCoverages(basicData.id).subscribe(coverages => {
 			this.patientMedicalCoverages = coverages;
