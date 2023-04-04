@@ -15,3 +15,30 @@
 .indices {
 	margin-top: 3%;
 }
+
+.mat-mdc-form-field + .mat-mdc-form-field {
+	margin-left: 8px;
+  }
+  
+.ref{
+
+align-items: center;
+}
+
+.img{
+
+height: 40px;
+width: 40px;
+//justify-content: center;
+margin:auto;
+padding: auto;
+}
+
+// Cambia el color de fondo solo cuando está cerrado
+//.dark-panel:not(.mat-expanded) {	background-color: rgb(255, 255, 255);  }
+
+
+  
+.close-color {
+	color: grey;
+  }

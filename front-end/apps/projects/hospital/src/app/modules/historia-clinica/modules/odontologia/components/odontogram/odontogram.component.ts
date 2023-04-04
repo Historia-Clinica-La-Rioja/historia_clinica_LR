@@ -21,6 +21,16 @@ import { ReferenceNotificationInfo, ReferenceNotificationService } from '@histor
 import { REFERENCE_CONSULTATION_TYPE } from '@historia-clinica/modules/ambulatoria/constants/reference-masterdata';
 import { DockPopupRef } from '@presentation/services/dock-popup-ref';
 
+const IMAGE_BASE_PATH = '../../../../../assets/images/';
+
+console.log(IMAGE_BASE_PATH);
+
+interface PeriodicElement {
+	name: string;
+	grafic: string;
+	weight: string;
+	symbol: string;
+  }
 
 @Component({
 	selector: 'app-odontogram',
@@ -31,6 +41,35 @@ export class OdontogramComponent implements OnInit {
 
 	@Output() isOpenOdontologyConsultation = new EventEmitter<boolean>();
 	@Output() consultationCompleted = new EventEmitter<FieldsToUpdate>();
+
+	displayedColumns: string[] = ['grafic', 'name', 'weight', 'symbol'];
+	dataSource: PeriodicElement[] = [
+
+ 		{grafic: IMAGE_BASE_PATH + '1.png', name: 'Desobturacion', weight: 'Arreglo Perdido', symbol: 'Extracción/Obturación'},
+		{grafic: IMAGE_BASE_PATH + '2.png', name: 'Sin denominación', weight: 'Arreglo dental que no puede repararse', symbol: 'Extracción/Obturación'},
+		{grafic: IMAGE_BASE_PATH + '3.png', name: 'Caries', weight: 'Caries Dental', symbol: 'Extracción/Obturación'},
+		{grafic: IMAGE_BASE_PATH + '4.png', name: 'Carillas', weight: 'Carillas', symbol: 'Carilla'},
+		{grafic: IMAGE_BASE_PATH + '5.png', name: 'Coronas', weight: 'Coronas', symbol: 'Coronas'},
+		{grafic: IMAGE_BASE_PATH + '6.png', name: 'Corona sobre implante', weight: 'Corona sobre implantes', symbol: 'Corona sobre implantes'},
+		{grafic: IMAGE_BASE_PATH + '7.png', name: 'Endodoncia', weight: 'Endodoncia', symbol: 'Endodoncia'},
+		{grafic: IMAGE_BASE_PATH + '8.png', name: 'Exf. de temporarios Exfol x traumatismo', weight: 'Exfoliacion', symbol: 'Sin denominación'},
+		{grafic: IMAGE_BASE_PATH + '9.png', name: 'Mancha blanca', weight: 'Mancha blanca en sup. dentaria', symbol: 'Topicaciones con fluor'},
+		{grafic: IMAGE_BASE_PATH + '10.png', name: 'Pieza por extraer', weight: 'Caries avanzada', symbol: 'Extraccion simple/Extraccion Retenida'},
+		{grafic: IMAGE_BASE_PATH + '11.png', name: 'Pieza extraida', weight: 'Ausencia adquirida', symbol: 'Sin denominación'},
+		{grafic: IMAGE_BASE_PATH + '12.png', name: 'Restauracion filtrada', weight: 'Filtracion en restauración', symbol: 'Obturación dental'},
+		{grafic: IMAGE_BASE_PATH + '13.png', name: 'Incrustación', weight: 'Caries/Desgaste Dental', symbol: 'Incrustación'},
+		{grafic: IMAGE_BASE_PATH + '14.png', name: 'Obturación Restauracion', weight: 'Caries Dental', symbol: 'Obturación'},
+		{grafic: IMAGE_BASE_PATH + '15.png', name: 'Restauración inadecuada-defectuosa', weight: 'Restauración inadecuada-defectuosa', symbol: 'Obturación/Extraccion Dental'},
+		{grafic: IMAGE_BASE_PATH + '16.png', name: 'Implante', weight: 'Ausencia dental', symbol: 'Implante'},
+		{grafic: IMAGE_BASE_PATH + '17.png', name: 'Implante', weight: 'Ausencia dental', symbol: 'Implante osteointegrado con forma radicular'},
+		{grafic: IMAGE_BASE_PATH + '18.png', name: 'Puente', weight: 'Ausencia dental', symbol: 'Puente'},
+		{grafic: IMAGE_BASE_PATH + '19.png', name: 'Barra metálica', weight: 'Ausencia dental', symbol: 'Barra metálica sobre implante'},
+		{grafic: IMAGE_BASE_PATH + '20.png', name: 'Perno', weight: 'Ausencia dental', symbol: 'Perno pasante/Perno muñon'},
+		{grafic: IMAGE_BASE_PATH + '21.png', name: 'Surco Oclusal', weight: 'Sellador de fosas, surcos y fisuras', symbol: 'Surco oclusal profundo'},
+		{grafic: IMAGE_BASE_PATH + '22.png', name: 'Sellador', weight: 'Surco oclusal', symbol: 'Sellador fosas, surcos y fisura'},
+	];
+
+    panelOpenState = false
 
 	private dialogRef: DockPopupRef;
 
