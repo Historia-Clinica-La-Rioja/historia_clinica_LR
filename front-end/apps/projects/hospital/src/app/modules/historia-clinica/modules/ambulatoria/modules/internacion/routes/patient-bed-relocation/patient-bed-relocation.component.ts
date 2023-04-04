@@ -191,7 +191,9 @@ export class PatientBedRelocationComponent implements OnInit {
 								const url = this.routePrefix + ROUTE_PROFILE + this.patientId;
 								this.router.navigate([url]);
 								this.snackBarService.showSuccess('internaciones.bed-relocation.messages.SUCCESS');
-							}
+							}else{
+                             	this.snackBarService.showError('internaciones.bed-relocation.messages.ERROR_DATE');
+                            }
 						}, _ => this.snackBarService.showError('internaciones.bed-relocation.messages.ERROR'));
 				}
 			});

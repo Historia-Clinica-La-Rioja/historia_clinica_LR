@@ -1,8 +1,14 @@
 package net.pladema.establishment.controller;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.Optional;
 
 import io.swagger.v3.oas.annotations.tags.Tag;
+import net.pladema.clinichistory.hospitalization.service.InternmentEpisodeService;
+
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
@@ -30,9 +36,11 @@ public class PatientBedRelocationController {
 
 	private BedService bedService;
 
-	public PatientBedRelocationController(BedMapper bedMapper, BedService bedService) {
+	private InternmentEpisodeService internmentEpisodeService;
+	public PatientBedRelocationController(BedMapper bedMapper, BedService bedService, InternmentEpisodeService internmentEpisodeService) {
 		this.bedMapper = bedMapper;
 		this.bedService = bedService;
+		this.internmentEpisodeService = internmentEpisodeService;
 	}
 
 
@@ -41,6 +49,16 @@ public class PatientBedRelocationController {
 	public ResponseEntity<PatientBedRelocationDto> addPatientBedRelocation(@PathVariable(name = "institutionId") Integer institutionId,
 			@RequestBody PatientBedRelocationDto patientBedRelocationDto) {
 		LOG.debug("Add bed relocation => {}", patientBedRelocationDto);
+		Optional<HistoricPatientBedRelocation> historic = bedService.getLastPatientBedRelocation(patientBedRelocationDto.getInternmentEpisodeId());
+
+		DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'");
+		LocalDateTime relocationDate = LocalDateTime.parse(patientBedRelocationDto.getRelocationDate(),dateTimeFormatter);
+		LocalDateTime entryDate = historic.map(HistoricPatientBedRelocation::getRelocationDate)
+				.orElse(internmentEpisodeService.getEntryDate(patientBedRelocationDto.getInternmentEpisodeId()));
+		boolean canBeRelocated = entryDate.isBefore(relocationDate);
+		if (!canBeRelocated) {
+			return ResponseEntity.noContent().build();
+		}
 		HistoricPatientBedRelocation result = bedService.addPatientBedRelocation(bedMapper.fromPatientBedRelocationDto(patientBedRelocationDto));
 		LOG.debug("Add bed relocation result => {}", result);
 		return ResponseEntity.ok(bedMapper.toPatientBedRelocationDto(result));
