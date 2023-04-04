@@ -40,10 +40,10 @@
         <h3 th:text="${patientType}"></h3>
         <div th:if="${patient.person != null}">
             <strong>- ID: </strong><label  th:text="${patient.id}"></label><br/>
-            <strong>- Nombre: </strong><label th:if="${!selfPerceivedFF || patient.person.nameSelfDetermination == null}" th:text="${patient.person.firstName + (patient.person.middleNames != null ? ' ' + patient.person.middleNames : '') }"></label><label th:if="${selfPerceivedFF && patient.person.nameSelfDetermination != null}" th:text="${patient.person.nameSelfDetermination}"></label><br/>
+            <strong>- Nombre: </strong><label th:if="${!selfPerceivedFF || patient.person.nameSelfDetermination == null || patient.person.nameSelfDetermination == '' }" th:text="${patient.person.firstName + (patient.person.middleNames != null ? ' ' + patient.person.middleNames : '') }"></label><label th:if="${selfPerceivedFF && patient.person.nameSelfDetermination != null && patient.person.nameSelfDetermination != ''}" th:text="${patient.person.nameSelfDetermination}"></label><br/>
             <strong>- Apellido: </strong><label th:text="${patient.person.lastName + (patient.person.otherLastNames != null ? ' ' + patient.person.otherLastNames : '') }"></label><br/>
             <strong>- Edad: </strong><label th:text="${patient.person.age}"></label><br/>
-            <strong>- Sexo: </strong><label th:if="${!selfPerceivedFF || patient.person.selfPerceivedGender == null || patient.person.selfPerceivedGender == '' }" th:text="${patient.person.gender.description}"></label><label th:if="${selfPerceivedFF && patient.person.selfPerceivedGender != null}" th:text="${patient.person.selfPerceivedGender}"></label><br/>
+            <strong>- Sexo: </strong><label th:if="${!selfPerceivedFF || patient.person.selfPerceivedGender == null || patient.person.selfPerceivedGender == '' }" th:text="${patient.person.gender.description}"></label><label th:if="${selfPerceivedFF && patient.person.selfPerceivedGender != null && patient.person.selfPerceivedGender != '' }" th:text="${patient.person.selfPerceivedGender}"></label><br/>
         </div>
     </div>
 
