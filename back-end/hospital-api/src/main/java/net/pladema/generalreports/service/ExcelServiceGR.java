@@ -5,13 +5,8 @@ import net.pladema.generalreports.repository.ComplementaryStudies;
 import net.pladema.generalreports.repository.ConsultationDetailDiabeticosHipertensos;
 import net.pladema.generalreports.repository.ConsultationDetailEmergencias;
 import net.pladema.generalreports.repository.HospitalizationOlderAdults;
-import net.pladema.generalreports.repository.NursingInternment;
 import net.pladema.generalreports.repository.OutPatientOlderAdults;
-import net.pladema.generalreports.repository.OutpatientNursing;
-import net.pladema.generalreports.repository.PatientEmergencies;
-import net.pladema.generalreports.repository.TotalNursingRecovery;
 
-import java.time.LocalDate;
 import java.util.List;
 
 public interface ExcelServiceGR {
@@ -20,15 +15,7 @@ public interface ExcelServiceGR {
 
 	IWorkbook buildExcelDiabeticosHipertensos(String tittle, String[] headers, List<ConsultationDetailDiabeticosHipertensos> query);
 
-	IWorkbook buildExcelPatientEmergencies(String tittle, String[] headers, List<PatientEmergencies> query);
-
-	IWorkbook buildExcelOutpatientNursing(String tittle, String[] headers, List<OutpatientNursing> query);
-
-	IWorkbook buildExcelNursingInternment(String tittle, String[] headers, List<NursingInternment> query);
-
 	IWorkbook buildExcelComplementaryStudies(String tittle, String[] headers, List<ComplementaryStudies> query);
-
-	IWorkbook buildExcelTotalNursingRecovery(String tittle, String[] headers, List<TotalNursingRecovery> query);
 	
 	IWorkbook buildExcelOutPatientOlderAdults(String tittle, String[] headers, List<OutPatientOlderAdults> query, String startDate, String endDate);
 

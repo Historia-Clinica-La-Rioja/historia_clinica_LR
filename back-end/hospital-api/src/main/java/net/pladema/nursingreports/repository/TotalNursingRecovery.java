@@ -1,4 +1,4 @@
-package net.pladema.generalreports.repository;
+package net.pladema.nursingreports.repository;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -78,6 +78,5 @@ public class TotalNursingRecovery {
 	private String medication;
 
 	private String evolution;
-
 
 }

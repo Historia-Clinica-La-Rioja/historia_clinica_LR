@@ -1,4 +1,4 @@
-package net.pladema.programreports.service.impl;
+package net.pladema.nursingreports.service.impl;
 
 import ar.lamansys.sgx.shared.reports.util.CellContent;
 import ar.lamansys.sgx.shared.reports.util.manager.WorkbookCreator;
@@ -7,11 +7,11 @@ import ar.lamansys.sgx.shared.reports.util.struct.ICellStyle;
 import ar.lamansys.sgx.shared.reports.util.struct.IRow;
 import ar.lamansys.sgx.shared.reports.util.struct.ISheet;
 import ar.lamansys.sgx.shared.reports.util.struct.IWorkbook;
-import net.pladema.programreports.repository.ConsultationDetailEpiI;
-import net.pladema.programreports.repository.ConsultationDetailEpiII;
-import net.pladema.programreports.repository.ConsultationDetailOdontologia;
-import net.pladema.programreports.repository.ConsultationDetailRecupero;
-import net.pladema.programreports.service.ExcelServicePR;
+import net.pladema.nursingreports.repository.HospitalizationNursing;
+import net.pladema.nursingreports.repository.NursingEmergencies;
+import net.pladema.nursingreports.repository.OutpatientNursing;
+import net.pladema.nursingreports.repository.TotalNursingRecovery;
+import net.pladema.nursingreports.service.ExcelServiceNR;
 
 import org.springframework.stereotype.Service;
 
@@ -22,7 +22,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
 
 @Service
-public class ExcelServicePRImpl implements ExcelServicePR {
+public class ExcelServiceNRImpl implements ExcelServiceNR {
 
 	private ICellStyle basicStyle;
 	private ICellStyle titleStyle;
@@ -30,7 +30,7 @@ public class ExcelServicePRImpl implements ExcelServicePR {
 	private ICellStyle subTitleStyle;
 
 	@Override
-	public IWorkbook buildExcelEpidemiologiaI(String tittle, String[] headers, List<ConsultationDetailEpiI> result) {
+	public IWorkbook buildExcelHospitalizationNursing(String tittle, String[] headers, List<HospitalizationNursing> result) {
 		IWorkbook wb = WorkbookCreator.createExcelWorkbook();
 		createCellStyle(wb);
 
@@ -42,19 +42,17 @@ public class ExcelServicePRImpl implements ExcelServicePR {
 
 		ICellStyle styleDataRow = createDataRowStyle(wb);
 
-		result.forEach(
-				resultData -> {
-					IRow newDataRow = sheet.createRow(rowNumber.getAndIncrement());
-					fillRowContent(newDataRow, resultData, styleDataRow);
-				}
-		);
+		result.forEach(resultData -> {
+			IRow newDataRow = sheet.createRow(rowNumber.getAndIncrement());
+			fillRowContent(newDataRow, resultData, styleDataRow);
+		});
 
 		setDimensions(sheet);
 		return wb;
 	}
 
 	@Override
-	public IWorkbook buildExcelEpidemiologiaII(String tittle, String[] headers, List<ConsultationDetailEpiII> result) {
+	public IWorkbook buildExcelOutpatientNursing(String tittle, String[] headers, List<OutpatientNursing> result) {
 		IWorkbook wb = WorkbookCreator.createExcelWorkbook();
 		createCellStyle(wb);
 
@@ -66,19 +64,39 @@ public class ExcelServicePRImpl implements ExcelServicePR {
 
 		ICellStyle styleDataRow = createDataRowStyle(wb);
 
-		result.forEach(
-				resultData -> {
-					IRow newDataRow = sheet.createRow(rowNumber.getAndIncrement());
-					fillRowContent(newDataRow, resultData, styleDataRow);
-				}
-		);
+		result.forEach(resultData -> {
+			IRow newDataRow = sheet.createRow(rowNumber.getAndIncrement());
+			fillRowContent(newDataRow, resultData, styleDataRow);
+		});
 
 		setDimensions(sheet);
 		return wb;
 	}
 
 	@Override
-	public IWorkbook buildExcelRecupero(String tittle, String[] headers, List<ConsultationDetailRecupero> result) {
+	public IWorkbook buildExcelNursingEmergencies(String tittle, String[] headers, List<NursingEmergencies> result) {
+		IWorkbook wb = WorkbookCreator.createExcelWorkbook();
+		createCellStyle(wb);
+
+		ISheet sheet = wb.createSheet(tittle);
+
+		fillRow(sheet, getHeaderData(headers,tittle));
+
+		AtomicInteger rowNumber = new AtomicInteger(sheet.getCantRows());
+
+		ICellStyle styleDataRow = createDataRowStyle(wb);
+
+		result.forEach(resultData -> {
+			IRow newDataRow = sheet.createRow(rowNumber.getAndIncrement());
+			fillRowContent(newDataRow, resultData, styleDataRow);
+		});
+
+		setDimensions(sheet);
+		return wb;
+	}
+
+	@Override
+	public IWorkbook buildExcelTotalNursingRecovery(String tittle, String[] headers, List<TotalNursingRecovery> result) {
 		IWorkbook wb = WorkbookCreator.createExcelWorkbook();
 		createCellStyle(wb);
 
@@ -88,48 +106,19 @@ public class ExcelServicePRImpl implements ExcelServicePR {
 
 		AtomicInteger rowNumber = new AtomicInteger(sheet.getCantRows());
 
-		ICellStyle styleDataRow = createDataRowStyle(wb);
+		ICellStyle styleDatarow = createDataRowStyle(wb);
 
-		result.forEach(
-				resultData -> {
-					IRow newDataRow = sheet.createRow(rowNumber.getAndIncrement());
-					fillRowContent(newDataRow, resultData, styleDataRow);
-				}
-		);
-
+		result.forEach(resultData -> {
+			IRow newDataRow = sheet.createRow(rowNumber.getAndIncrement());
+			fillRowContent(newDataRow, resultData, styleDatarow);
+		});
 		setDimensions(sheet);
 		return wb;
 	}
 
-	@Override
-	public IWorkbook buildExcelOdontologia(String tittle, String[] headers, List<ConsultationDetailOdontologia> result) {
-		IWorkbook wb = WorkbookCreator.createExcelWorkbook();
-		createCellStyle(wb);
-
-		ISheet sheet = wb.createSheet(tittle);
-
-		fillRow(sheet,getHeaderData(headers,tittle));
-
-		AtomicInteger rowNumber = new AtomicInteger(sheet.getCantRows());
-
-		ICellStyle styleDataRow = createDataRowStyle(wb);
-
-		result.forEach(
-				resultData -> {
-					IRow newDataRow = sheet.createRow(rowNumber.getAndIncrement());
-					fillRowContent(newDataRow, resultData, styleDataRow);
-				}
-		);
-
-		setDimensions(sheet);
-		return wb;
-	}
-
-
-
-	private void createCellStyle(IWorkbook workbook){
+	private void createCellStyle(IWorkbook workbook) {
 		basicStyle = workbook.createStyle();
-		basicStyle.setFontSize((short)12);
+		basicStyle.setFontSize((short) 12);
 		basicStyle.setBold(false);
 		basicStyle.setWrap(false);
 		basicStyle.setBorders(true);
@@ -161,7 +150,7 @@ public class ExcelServicePRImpl implements ExcelServicePR {
 		subTitleStyle.setVAlign(ICellStyle.VALIGNMENT.BOTTOM);
 	}
 
-	private List<CellContent> getHeaderData(String[] subtitles, String title){
+	private List<CellContent> getHeaderData(String[] subtitles, String title) {
 		List<CellContent> data = new ArrayList<>();
 
 		int nRow = 0;
@@ -203,35 +192,34 @@ public class ExcelServicePRImpl implements ExcelServicePR {
 		return data;
 	}
 
-	private void setDimensions(ISheet sheet){
+	private void setDimensions(ISheet sheet) {
 		sheet.autoSizeColumns();
 		int nRow = 0;
 		sheet.setRowHeight(nRow++, 50);
 		sheet.setRowHeight(nRow++, 40);
 		sheet.setRowHeight(nRow++, 35);
 
-		while (nRow < sheet.getCantRows())
-			sheet.setRowHeight(nRow++, 21);
+		while (nRow < sheet.getCantRows()) sheet.setRowHeight(nRow++, 21);
 	}
 
-	private ICellStyle createDataRowStyle(IWorkbook workbook){
+	private ICellStyle createDataRowStyle(IWorkbook workbook) {
 		ICellStyle cellStyle = workbook.createStyle();
 		cellStyle.setFontSize((short) 12);
 		cellStyle.setBorders(true);
 		return cellStyle;
 	}
 
-	private void fillRow(ISheet sheet, List<CellContent> data){
+	private void fillRow(ISheet sheet, List<CellContent> data) {
 		Map<Integer, List<CellContent>> cellByRow = data.stream().collect(Collectors.groupingBy(CellContent::getRow));
 
-		for (Map.Entry<Integer, List<CellContent>> entry : cellByRow.entrySet()){
+		for (Map.Entry<Integer, List<CellContent>> entry : cellByRow.entrySet()) {
 			int nRow = entry.getKey();
 			IRow row = sheet.createRow(nRow);
 			entry.getValue().forEach(cell -> createCell(sheet, row, nRow, cell));
 		}
 	}
 
-	private void createCell(ISheet sheet, IRow row, int nRow, CellContent data){
+	private void createCell(ISheet sheet, IRow row, int nRow, CellContent data) {
 
 		int nColumn = data.getColumn();
 
@@ -239,71 +227,10 @@ public class ExcelServicePRImpl implements ExcelServicePR {
 		cell.setCellStyle(data.getStyle());
 		cell.setCellValue(data);
 
-		if (data.isCellRange())
-			sheet.addMergedRegion(nRow, data.lastRow(), nColumn, data.lastCol(), true);
+		if (data.isCellRange()) sheet.addMergedRegion(nRow, data.lastRow(), nColumn, data.lastCol(), true);
 	}
 
-	private void fillRowContent(IRow row, ConsultationDetailEpiI content, ICellStyle style){
-		AtomicInteger rowNumber = new AtomicInteger(0);
-		ICell cell = row.createCell(rowNumber.getAndIncrement());
-		cell.setCellValue(content.getPatientFullName());
-		cell.setCellStyle(style);
-
-		ICell cell2 = row.createCell(rowNumber.getAndIncrement());
-		cell2.setCellValue(content.getCoding());
-		cell2.setCellStyle(style);
-
-		ICell cell3 = row.createCell(rowNumber.getAndIncrement());
-		cell3.setCellValue(content.getBirthDate());
-		cell3.setCellStyle(style);
-
-		ICell cell4 = row.createCell(rowNumber.getAndIncrement());
-		cell4.setCellValue(content.getGender());
-		cell4.setCellStyle(style);
-
-		ICell cell5 = row.createCell(rowNumber.getAndIncrement());
-		cell5.setCellValue(content.getStartDate());
-		cell5.setCellStyle(style);
-
-		ICell cell6 = row.createCell(rowNumber.getAndIncrement());
-		cell6.setCellValue(content.getDepartment());
-		cell6.setCellStyle(style);
-
-		ICell cell7 = row.createCell(rowNumber.getAndIncrement());
-		cell7.setCellValue(content.getAddress());
-		cell7.setCellStyle(style);
-
-		ICell cell8 = row.createCell(rowNumber.getAndIncrement());
-		cell8.setCellValue(content.getCie10Codes());
-		cell8.setCellStyle(style);
-
-		ICell cell9 = row.createCell(rowNumber.getAndIncrement());
-		cell9.setCellValue(content.getIdentificationNumber());
-		cell9.setCellStyle(style);
-
-		ICell cell10 = row.createCell(rowNumber.getAndIncrement());
-		cell10.setCellValue(content.getProblems());
-		cell10.setCellStyle(style);
-	}
-
-	private void fillRowContent(IRow row, ConsultationDetailEpiII content, ICellStyle style){
-		AtomicInteger rowNumber = new AtomicInteger(0);
-
-		ICell cell = row.createCell(rowNumber.getAndIncrement());
-		cell.setCellValue(content.getDiagnostic());
-		cell.setCellStyle(style);
-
-		ICell cell2 = row.createCell(rowNumber.getAndIncrement());
-		cell2.setCellValue(content.getRango());
-		cell2.setCellStyle(style);
-
-		ICell cell3 = row.createCell(rowNumber.getAndIncrement());
-		cell3.setCellValue(content.getContador());
-		cell3.setCellStyle(style);
-	}
-
-
-	private void fillRowContent(IRow row, ConsultationDetailRecupero content, ICellStyle style){
+	private void fillRowContent(IRow row, HospitalizationNursing content, ICellStyle style){
 		AtomicInteger rowNumber = new AtomicInteger(0);
 
 		ICell cell = row.createCell(rowNumber.getAndIncrement());
@@ -311,15 +238,83 @@ public class ExcelServicePRImpl implements ExcelServicePR {
 		cell.setCellStyle(style);
 
 		ICell cell1 = row.createCell(rowNumber.getAndIncrement());
-		cell1.setCellValue(content.getClinicalSpecialty());
+		cell1.setCellValue(content.getLastName());
 		cell1.setCellStyle(style);
 
 		ICell cell2 = row.createCell(rowNumber.getAndIncrement());
-		cell2.setCellValue(content.getProvider());
+		cell2.setCellValue(content.getCompleteName());
 		cell2.setCellStyle(style);
 
 		ICell cell3 = row.createCell(rowNumber.getAndIncrement());
-		cell3.setCellValue(content.getProviderDni());
+		cell3.setCellValue(content.getGender());
+		cell3.setCellStyle(style);
+
+		ICell cell4 = row.createCell(rowNumber.getAndIncrement());
+		cell4.setCellValue(content.getIdentification());
+		cell4.setCellStyle(style);
+
+		ICell cell5 = row.createCell(rowNumber.getAndIncrement());
+		cell5.setCellValue(content.getProfessional());
+		cell5.setCellStyle(style);
+
+		ICell cell6 = row.createCell(rowNumber.getAndIncrement());
+		cell6.setCellValue(content.getLicenseNumber());
+		cell6.setCellStyle(style);
+
+		ICell cell7 = row.createCell(rowNumber.getAndIncrement());
+		cell7.setCellValue(content.getEntryDate());
+		cell7.setCellStyle(style);
+
+		ICell cell8 = row.createCell(rowNumber.getAndIncrement());
+		cell8.setCellValue(content.getProbableDischargeDate());
+		cell8.setCellStyle(style);
+
+		ICell cell9 = row.createCell(rowNumber.getAndIncrement());
+		cell9.setCellValue(content.getBed());
+		cell9.setCellStyle(style);
+
+		ICell cell10 = row.createCell(rowNumber.getAndIncrement());
+		cell10.setCellValue(content.getCategoryBed());
+		cell10.setCellStyle(style);
+
+		ICell cell11 = row.createCell(rowNumber.getAndIncrement());
+		cell11.setCellValue(content.getRoomName());
+		cell11.setCellStyle(style);
+
+		ICell cell12 = row.createCell(rowNumber.getAndIncrement());
+		cell12.setCellValue(content.getSector());
+		cell12.setCellStyle(style);
+
+		ICell cell13 = row.createCell(rowNumber.getAndIncrement());
+		cell13.setCellValue(content.getDischargeDate());
+		cell13.setCellStyle(style);
+
+		ICell cell14 = row.createCell(rowNumber.getAndIncrement());
+		cell14.setCellValue(content.getProcedures());
+		cell14.setCellStyle(style);
+
+		ICell cell15 = row.createCell(rowNumber.getAndIncrement());
+		cell15.setCellValue(content.getVitalSign());
+		cell15.setCellStyle(style);
+	}
+
+	private void fillRowContent(IRow row, OutpatientNursing content, ICellStyle style) {
+		AtomicInteger rowNumber = new AtomicInteger(0);
+
+		ICell cell = row.createCell(rowNumber.getAndIncrement());
+		cell.setCellValue(content.getInstitution());
+		cell.setCellStyle(style);
+
+		ICell cell1 = row.createCell(rowNumber.getAndIncrement());
+		cell1.setCellValue(content.getOperativeUnit());
+		cell1.setCellStyle(style);
+
+		ICell cell2 = row.createCell(rowNumber.getAndIncrement());
+		cell2.setCellValue(content.getPatientProvider());
+		cell2.setCellStyle(style);
+
+		ICell cell3 = row.createCell(rowNumber.getAndIncrement());
+		cell3.setCellValue(content.getPatientDni());
 		cell3.setCellStyle(style);
 
 		ICell cell4 = row.createCell(rowNumber.getAndIncrement());
@@ -347,115 +342,63 @@ public class ExcelServicePRImpl implements ExcelServicePR {
 		cell9.setCellStyle(style);
 
 		ICell cell10 = row.createCell(rowNumber.getAndIncrement());
-		cell10.setCellValue(content.getBirthDate());
+		cell10.setCellValue(content.getSelfPerceivedGender());
 		cell10.setCellStyle(style);
 
 		ICell cell11 = row.createCell(rowNumber.getAndIncrement());
-		cell11.setCellValue(content.getAgeTurn());
+		cell11.setCellValue(content.getSelfPerceivedName());
 		cell11.setCellStyle(style);
 
 		ICell cell12 = row.createCell(rowNumber.getAndIncrement());
-		cell12.setCellValue(content.getAgeToday());
+		cell12.setCellValue(content.getBirthDate());
 		cell12.setCellStyle(style);
 
 		ICell cell13 = row.createCell(rowNumber.getAndIncrement());
-		cell13.setCellValue(content.getMedicalCoverage());
+		cell13.setCellValue(content.getAgeTurn());
 		cell13.setCellStyle(style);
 
 		ICell cell14 = row.createCell(rowNumber.getAndIncrement());
-		cell14.setCellValue(content.getAddress());
+		cell14.setCellValue(content.getAgeToday());
 		cell14.setCellStyle(style);
 
 		ICell cell15 = row.createCell(rowNumber.getAndIncrement());
-		cell15.setCellValue(content.getLocation());
+		cell15.setCellValue(content.getEthnicity());
 		cell15.setCellStyle(style);
 
 		ICell cell16 = row.createCell(rowNumber.getAndIncrement());
-		cell16.setCellValue(content.getBmi());
+		cell16.setCellValue(content.getMedicalCoverage());
 		cell16.setCellStyle(style);
 
 		ICell cell17 = row.createCell(rowNumber.getAndIncrement());
-		cell17.setCellValue(content.getReasons());
+		cell17.setCellValue(content.getPatientAddress());
 		cell17.setCellStyle(style);
 
 		ICell cell18 = row.createCell(rowNumber.getAndIncrement());
-		cell18.setCellValue(content.getProcedures());
+		cell18.setCellValue(content.getPatientLocation());
 		cell18.setCellStyle(style);
 
 		ICell cell19 = row.createCell(rowNumber.getAndIncrement());
-		cell19.setCellValue(content.getProblems());
+		cell19.setCellValue(content.getEducationLevel());
 		cell19.setCellStyle(style);
 
 		ICell cell20 = row.createCell(rowNumber.getAndIncrement());
-		cell20.setCellValue(content.getMedication());
+		cell20.setCellValue(content.getOccupation());
 		cell20.setCellStyle(style);
 
 		ICell cell21 = row.createCell(rowNumber.getAndIncrement());
-		cell21.setCellValue(content.getEvolution());
+		cell21.setCellValue(content.getVitalSign());
 		cell21.setCellStyle(style);
 
 		ICell cell22 = row.createCell(rowNumber.getAndIncrement());
-		cell22.setCellValue(content.getSelfPerceivedGender());
+		cell22.setCellValue(content.getProcedures());
 		cell22.setCellStyle(style);
 
 		ICell cell23 = row.createCell(rowNumber.getAndIncrement());
-		cell23.setCellValue(content.getSelfPerceivedName());
+		cell23.setCellValue(content.getEvolution());
 		cell23.setCellStyle(style);
-
-		ICell cell24 = row.createCell(rowNumber.getAndIncrement());
-		cell24.setCellValue(content.getEthnicity());
-		cell24.setCellStyle(style);
-
-		ICell cell25 = row.createCell(rowNumber.getAndIncrement());
-		cell25.setCellValue(content.getEducationLevel());
-		cell25.setCellStyle(style);
-
-		ICell cell26 = row.createCell(rowNumber.getAndIncrement());
-		cell26.setCellValue(content.getOccupation());
-		cell26.setCellStyle(style);
-
-		ICell cell27 = row.createCell(rowNumber.getAndIncrement());
-		cell27.setCellValue(content.getSystolicBloodPressure());
-		cell27.setCellStyle(style);
-
-		ICell cell28 = row.createCell(rowNumber.getAndIncrement());
-		cell28.setCellValue(content.getDiastolicBloodPressure());
-		cell28.setCellStyle(style);
-
-		ICell cell29 = row.createCell(rowNumber.getAndIncrement());
-		cell29.setCellValue(content.getMeanArterialPressure());
-		cell29.setCellStyle(style);
-
-		ICell cell30 = row.createCell(rowNumber.getAndIncrement());
-		cell30.setCellValue(content.getTemperature());
-		cell30.setCellStyle(style);
-
-		ICell cell31 = row.createCell(rowNumber.getAndIncrement());
-		cell31.setCellValue(content.getHeartRate());
-		cell31.setCellStyle(style);
-
-		ICell cell32 = row.createCell(rowNumber.getAndIncrement());
-		cell32.setCellValue(content.getRespirationRate());
-		cell32.setCellStyle(style);
-
-		ICell cell33 = row.createCell(rowNumber.getAndIncrement());
-		cell33.setCellValue(content.getOxygenSaturationHemoglobin());
-		cell33.setCellStyle(style);
-
-		ICell cell34 = row.createCell(rowNumber.getAndIncrement());
-		cell34.setCellValue(content.getHeight());
-		cell34.setCellStyle(style);
-
-		ICell cell35 = row.createCell(rowNumber.getAndIncrement());
-		cell35.setCellValue(content.getWeight());
-		cell35.setCellStyle(style);
-
-		ICell cell36 = row.createCell(rowNumber.getAndIncrement());
-		cell36.setCellValue(content.getHeadCircunference());
-		cell36.setCellStyle(style);
 	}
 
-	private void fillRowContent(IRow row, ConsultationDetailOdontologia content, ICellStyle style) {
+	private void fillRowContent(IRow row, NursingEmergencies content, ICellStyle style) {
 		AtomicInteger rowNumber = new AtomicInteger(0);
 
 		ICell cell = row.createCell(rowNumber.getAndIncrement());
@@ -463,15 +406,143 @@ public class ExcelServicePRImpl implements ExcelServicePR {
 		cell.setCellStyle(style);
 
 		ICell cell1 = row.createCell(rowNumber.getAndIncrement());
-		cell1.setCellValue(content.getOperativeUnit());
+		cell1.setCellValue(content.getAmbulance());
 		cell1.setCellStyle(style);
 
 		ICell cell2 = row.createCell(rowNumber.getAndIncrement());
-		cell2.setCellValue(content.getProvider());
+		cell2.setCellValue(content.getOffice());
 		cell2.setCellStyle(style);
 
 		ICell cell3 = row.createCell(rowNumber.getAndIncrement());
-		cell3.setCellValue(content.getProviderDni());
+		cell3.setCellValue(content.getSector());
+		cell3.setCellStyle(style);
+
+		ICell cell4 = row.createCell(rowNumber.getAndIncrement());
+		cell4.setCellValue(content.getPoliceIntervention());
+		cell4.setCellStyle(style);
+
+		ICell cell5 = row.createCell(rowNumber.getAndIncrement());
+		cell5.setCellValue(content.getAttentionDate());
+		cell5.setCellStyle(style);
+
+		ICell cell6 = row.createCell(rowNumber.getAndIncrement());
+		cell6.setCellValue(content.getAttentionHour());
+		cell6.setCellStyle(style);
+
+		ICell cell7 = row.createCell(rowNumber.getAndIncrement());
+		cell7.setCellValue(content.getProfessionalRegistering());
+		cell7.setCellStyle(style);
+
+		ICell cell8 = row.createCell(rowNumber.getAndIncrement());
+		cell8.setCellValue(content.getProfessionalAttention());
+		cell8.setCellStyle(style);
+
+		ICell cell9 = row.createCell(rowNumber.getAndIncrement());
+		cell9.setCellValue(content.getIdentification());
+		cell9.setCellStyle(style);
+
+		ICell cell10 = row.createCell(rowNumber.getAndIncrement());
+		cell10.setCellValue(content.getLastName());
+		cell10.setCellStyle(style);
+
+		ICell cell11 = row.createCell(rowNumber.getAndIncrement());
+		cell11.setCellValue(content.getNames());
+		cell11.setCellStyle(style);
+
+		ICell cell12 = row.createCell(rowNumber.getAndIncrement());
+		cell12.setCellValue(content.getGender());
+		cell12.setCellStyle(style);
+
+		ICell cell13 = row.createCell(rowNumber.getAndIncrement());
+		cell13.setCellValue(content.getSelfPerceivedGender());
+		cell13.setCellStyle(style);
+
+		ICell cell14 = row.createCell(rowNumber.getAndIncrement());
+		cell14.setCellValue(content.getSelfPerceivedName());
+		cell14.setCellStyle(style);
+
+		ICell cell15 = row.createCell(rowNumber.getAndIncrement());
+		cell15.setCellValue(content.getBirthDate());
+		cell15.setCellStyle(style);
+
+		ICell cell16 = row.createCell(rowNumber.getAndIncrement());
+		cell16.setCellValue(content.getAgeTurn());
+		cell16.setCellStyle(style);
+
+		ICell cell17 = row.createCell(rowNumber.getAndIncrement());
+		cell17.setCellValue(content.getAgeToday());
+		cell17.setCellStyle(style);
+
+		ICell cell18 = row.createCell(rowNumber.getAndIncrement());
+		cell18.setCellValue(content.getEthnicity());
+		cell18.setCellStyle(style);
+
+		ICell cell19 = row.createCell(rowNumber.getAndIncrement());
+		cell19.setCellValue(content.getAddressPatient());
+		cell19.setCellStyle(style);
+
+		ICell cell20 = row.createCell(rowNumber.getAndIncrement());
+		cell20.setCellValue(content.getLocationPatient());
+		cell20.setCellStyle(style);
+
+		ICell cell21 = row.createCell(rowNumber.getAndIncrement());
+		cell21.setCellValue(content.getMedicalCoverage());
+		cell21.setCellStyle(style);
+
+		ICell cell22 = row.createCell(rowNumber.getAndIncrement());
+		cell22.setCellValue(content.getEmergencyCareEntrance());
+		cell22.setCellStyle(style);
+
+		ICell cell23 = row.createCell(rowNumber.getAndIncrement());
+		cell23.setCellValue(content.getStatePatient());
+		cell23.setCellStyle(style);
+
+		ICell cell24 = row.createCell(rowNumber.getAndIncrement());
+		cell24.setCellValue(content.getAttentionType());
+		cell24.setCellStyle(style);
+
+		ICell cell25 = row.createCell(rowNumber.getAndIncrement());
+		cell25.setCellValue(content.getTriageNote());
+		cell25.setCellStyle(style);
+
+		ICell cell26 = row.createCell(rowNumber.getAndIncrement());
+		cell26.setCellValue(content.getTriageLevel());
+		cell26.setCellStyle(style);
+
+		ICell cell27 = row.createCell(rowNumber.getAndIncrement());
+		cell27.setCellValue(content.getDateDischarge());
+		cell27.setCellStyle(style);
+
+		ICell cell28 = row.createCell(rowNumber.getAndIncrement());
+		cell28.setCellValue(content.getAmbulanceDischarge());
+		cell28.setCellStyle(style);
+
+		ICell cell29 = row.createCell(rowNumber.getAndIncrement());
+		cell29.setCellValue(content.getTypeDischarge());
+		cell29.setCellStyle(style);
+
+		ICell cell30 = row.createCell(rowNumber.getAndIncrement());
+		cell30.setCellValue(content.getPatientExit());
+		cell30.setCellStyle(style);
+	}
+
+	private void fillRowContent(IRow row, TotalNursingRecovery content, ICellStyle style) {
+		AtomicInteger rowNumber = new AtomicInteger(0);
+
+		ICell cell = row.createCell(rowNumber.getAndIncrement());
+		cell.setCellValue(content.getInstitution());
+		cell.setCellStyle(style);
+
+		ICell cell1 = row.createCell(rowNumber.getAndIncrement());
+		cell1.setCellValue(content.getSource());
+		cell1.setCellStyle(style);
+
+		ICell cell2 = row.createCell(rowNumber.getAndIncrement());
+		cell2.setCellValue(content.getLender());
+		cell2.setCellStyle(style);
+
+		ICell cell3 = row.createCell(rowNumber.getAndIncrement());
+		cell3.setCellValue(content.getLenderDni());
 		cell3.setCellStyle(style);
 
 		ICell cell4 = row.createCell(rowNumber.getAndIncrement());
@@ -479,7 +550,7 @@ public class ExcelServicePRImpl implements ExcelServicePR {
 		cell4.setCellStyle(style);
 
 		ICell cell5 = row.createCell(rowNumber.getAndIncrement());
-		cell5.setCellValue(content.getConsultationNumber());
+		cell5.setCellValue(content.getHour());
 		cell5.setCellStyle(style);
 
 		ICell cell6 = row.createCell(rowNumber.getAndIncrement());
@@ -495,15 +566,15 @@ public class ExcelServicePRImpl implements ExcelServicePR {
 		cell8.setCellStyle(style);
 
 		ICell cell9 = row.createCell(rowNumber.getAndIncrement());
-		cell9.setCellValue(content.getSelfPerceivedGender());
+		cell9.setCellValue(content.getSelfPerceivedGener());
 		cell9.setCellStyle(style);
 
 		ICell cell10 = row.createCell(rowNumber.getAndIncrement());
-		cell10.setCellValue(content.getSelfPerceivedName());
+		cell10.setCellValue(content.getSelfPerceiverName());
 		cell10.setCellStyle(style);
 
 		ICell cell11 = row.createCell(rowNumber.getAndIncrement());
-		cell11.setCellValue(content.getBirthDate());
+		cell11.setCellValue(content.getBirthday());
 		cell11.setCellStyle(style);
 
 		ICell cell12 = row.createCell(rowNumber.getAndIncrement());
@@ -523,58 +594,75 @@ public class ExcelServicePRImpl implements ExcelServicePR {
 		cell15.setCellStyle(style);
 
 		ICell cell16 = row.createCell(rowNumber.getAndIncrement());
-		cell16.setCellValue(content.getIndexCpo());
+		cell16.setCellValue(content.getAddress());
 		cell16.setCellStyle(style);
 
 		ICell cell17 = row.createCell(rowNumber.getAndIncrement());
-		cell17.setCellValue(content.getIndexCeo());
+		cell17.setCellValue(content.getLocation());
 		cell17.setCellStyle(style);
 
 		ICell cell18 = row.createCell(rowNumber.getAndIncrement());
-		cell18.setCellValue(content.getPermanentTeethPresent());
+		cell18.setCellValue(content.getEducationLevel());
 		cell18.setCellStyle(style);
 
 		ICell cell19 = row.createCell(rowNumber.getAndIncrement());
-		cell19.setCellValue(content.getTemporaryTeethPresent());
+		cell19.setCellValue(content.getOccupation());
 		cell19.setCellStyle(style);
 
 		ICell cell20 = row.createCell(rowNumber.getAndIncrement());
-		cell20.setCellValue(content.getAddress());
+		cell20.setCellValue(content.getSystolicBloodPressure());
 		cell20.setCellStyle(style);
 
 		ICell cell21 = row.createCell(rowNumber.getAndIncrement());
-		cell21.setCellValue(content.getLocation());
+		cell21.setCellValue(content.getDiastolicBloodPressure());
 		cell21.setCellStyle(style);
 
 		ICell cell22 = row.createCell(rowNumber.getAndIncrement());
-		cell22.setCellValue(content.getEducationLevel());
+		cell22.setCellValue(content.getMeanArterialPressure());
 		cell22.setCellStyle(style);
 
 		ICell cell23 = row.createCell(rowNumber.getAndIncrement());
-		cell23.setCellValue(content.getOccupation());
+		cell23.setCellValue(content.getTemperature());
 		cell23.setCellStyle(style);
 
 		ICell cell24 = row.createCell(rowNumber.getAndIncrement());
-		cell24.setCellValue(content.getReasons());
+		cell24.setCellValue(content.getHeartRate());
 		cell24.setCellStyle(style);
 
 		ICell cell25 = row.createCell(rowNumber.getAndIncrement());
-		cell25.setCellValue(content.getProcedures());
+		cell25.setCellValue(content.getRespirationRate());
 		cell25.setCellStyle(style);
 
 		ICell cell26 = row.createCell(rowNumber.getAndIncrement());
-		cell26.setCellValue(content.getProblems());
+		cell26.setCellValue(content.getOxygenSaturationHemoglobin());
 		cell26.setCellStyle(style);
 
 		ICell cell27 = row.createCell(rowNumber.getAndIncrement());
-		cell27.setCellValue(content.getMedication());
+		cell27.setCellValue(content.getHeight());
 		cell27.setCellStyle(style);
 
 		ICell cell28 = row.createCell(rowNumber.getAndIncrement());
-		cell28.setCellValue(content.getEvolution());
+		cell28.setCellValue(content.getWeight());
 		cell28.setCellStyle(style);
 
+		ICell cell29 = row.createCell(rowNumber.getAndIncrement());
+		cell29.setCellValue(content.getBmi());
+		cell29.setCellStyle(style);
+
+		ICell cell30 = row.createCell(rowNumber.getAndIncrement());
+		cell30.setCellValue(content.getProcedures());
+		cell30.setCellStyle(style);
+
+		ICell cell31 = row.createCell(rowNumber.getAndIncrement());
+		cell31.setCellValue(content.getProblems());
+		cell31.setCellStyle(style);
+
+		ICell cell32 = row.createCell(rowNumber.getAndIncrement());
+		cell32.setCellValue(content.getMedication());
+		cell32.setCellStyle(style);
+
+		ICell cell33 = row.createCell(rowNumber.getAndIncrement());
+		cell33.setCellValue(content.getEvolution());
+		cell33.setCellStyle(style);
 	}
-
-
 }
