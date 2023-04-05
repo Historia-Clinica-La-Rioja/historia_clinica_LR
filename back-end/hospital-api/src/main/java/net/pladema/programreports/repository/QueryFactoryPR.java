@@ -1,7 +1,5 @@
 package net.pladema.programreports.repository;
 
-import net.pladema.generalreports.repository.PatientEmergencies;
-
 import org.springframework.stereotype.Repository;
 
 import javax.persistence.EntityManager;

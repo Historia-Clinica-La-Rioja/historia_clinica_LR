@@ -11,7 +11,6 @@ import net.pladema.programreports.repository.ConsultationDetailEpiI;
 import net.pladema.programreports.repository.ConsultationDetailEpiII;
 import net.pladema.programreports.repository.ConsultationDetailOdontologia;
 import net.pladema.programreports.repository.ConsultationDetailRecupero;
-import net.pladema.generalreports.repository.PatientEmergencies;
 import net.pladema.programreports.service.ExcelServicePR;
 
 import org.springframework.stereotype.Service;
