@@ -11,16 +11,11 @@ import net.pladema.generalreports.repository.ComplementaryStudies;
 import net.pladema.generalreports.repository.ConsultationDetailDiabeticosHipertensos;
 import net.pladema.generalreports.repository.ConsultationDetailEmergencias;
 import net.pladema.generalreports.repository.HospitalizationOlderAdults;
-import net.pladema.generalreports.repository.NursingInternment;
 import net.pladema.generalreports.repository.OutPatientOlderAdults;
-import net.pladema.generalreports.repository.OutpatientNursing;
-import net.pladema.generalreports.repository.PatientEmergencies;
-import net.pladema.generalreports.repository.TotalNursingRecovery;
 import net.pladema.generalreports.service.ExcelServiceGR;
 
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;

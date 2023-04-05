@@ -5,13 +5,8 @@ import net.pladema.generalreports.repository.ComplementaryStudies;
 import net.pladema.generalreports.repository.ConsultationDetailDiabeticosHipertensos;
 import net.pladema.generalreports.repository.ConsultationDetailEmergencias;
 import net.pladema.generalreports.repository.HospitalizationOlderAdults;
-import net.pladema.generalreports.repository.NursingInternment;
 import net.pladema.generalreports.repository.OutPatientOlderAdults;
-import net.pladema.generalreports.repository.OutpatientNursing;
-import net.pladema.generalreports.repository.PatientEmergencies;
-import net.pladema.generalreports.repository.TotalNursingRecovery;
 
-import java.time.LocalDate;
 import java.util.List;
 
 public interface ExcelServiceGR {
