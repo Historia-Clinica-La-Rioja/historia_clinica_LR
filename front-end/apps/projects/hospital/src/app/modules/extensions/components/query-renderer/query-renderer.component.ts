@@ -117,13 +117,13 @@ export class QueryRendererComponent {
 	}
 
 	ngOnInit() {
-		combineLatest([
-			this.cubeQuery$.pipe(
+		combineLatest({
+			isQueryPresent: this.cubeQuery$.pipe(
 				switchMap((cubeQuery) => {
 					return of(isQueryPresent(cubeQuery || {}));
 				})
 			),
-			this.cubeQuery$.pipe(
+			resultSet: this.cubeQuery$.pipe(
 				switchMap((cubeQuery) => {
 					this.error = null;
 					if (!isQueryPresent(cubeQuery || {})) {
@@ -143,15 +143,17 @@ export class QueryRendererComponent {
 					);
 				})
 			),
-			this.pivotConfig$,
-			this.chartType$,
-		]).subscribe(
-			([isQueryPresent, resultSet, pivotConfig, chartType]: [
-				boolean,
-				ResultSet,
-				any,
-				TChartType
-			]) => {
+			pivotConfig: this.pivotConfig$,
+			chartType: this.chartType$,
+		}).subscribe(
+			({ isQueryPresent, resultSet, pivotConfig, chartType }:
+				{
+					isQueryPresent: boolean,
+					resultSet: ResultSet,
+					pivotConfig: any,
+					chartType: TChartType
+				}
+			) => {
 				this.chartType = chartType;
 				this.isQueryPresent = isQueryPresent;
 
