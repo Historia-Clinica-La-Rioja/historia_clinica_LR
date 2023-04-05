@@ -142,7 +142,10 @@ public enum AppFeature implements Feature {
 	HABILITAR_MODULO_AUDITORIA,
     
 	@Label("Indica si están habilitadas las secciones relativas a CIPRES en epicrisis")
-	HABILITAR_CAMPOS_CIPRES_EPICRISIS
+	HABILITAR_CAMPOS_CIPRES_EPICRISIS,
+
+	@Label("Indica si está habilitada la acción de imprimir HC de pacientes")
+	HABILITAR_IMPRESION_HISTORIA_CLINICA_EN_DESARROLLO
 	;
 
     public boolean isActive() {
