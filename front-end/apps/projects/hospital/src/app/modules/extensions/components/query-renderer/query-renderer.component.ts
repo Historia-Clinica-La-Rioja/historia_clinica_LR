@@ -4,7 +4,6 @@ import { CubejsClient, TChartType } from '@cubejs-client/ngx';
 import { BehaviorSubject, combineLatest, of, merge } from 'rxjs';
 import { catchError, switchMap } from 'rxjs/operators';
 import { ChartOptions } from 'chart.js';
-import { Label } from 'ng2-charts';
 import { getDisplayedColumns, flattenColumns } from './utils';
 import * as moment from "moment";
 import { CSVFileDownloadService } from '@extensions/services/csvfile-download.service';
@@ -83,7 +82,7 @@ export class QueryRendererComponent {
 	tableData: any[] = [];
 	columnTitles: string[] = [];
 
-	chartLabels: Label[] = [];
+	chartLabels: string[] = [];
 	chartData: any[] = [];
 	percentageData: any[] = [];
 	others: any[] = [];
@@ -218,10 +217,10 @@ export class QueryRendererComponent {
 
 
 
-		if (this.chartData.length){
+		if (this.chartData.length) {
 			this.noData = false;
 			if (this.chartType === 'bar')
-				this.chartData.forEach( x => x.label = (x.label.charAt(0).toUpperCase() + x.label.slice(1)).slice(0, -5))
+				this.chartData.forEach(x => x.label = (x.label.charAt(0).toUpperCase() + x.label.slice(1)).slice(0, -5))
 
 			if (this.chartType === 'pie')
 				this.loadPieData();
@@ -232,7 +231,7 @@ export class QueryRendererComponent {
 
 	loadPieData() {
 		this.percentageData = [...this.chartData[0].data];
-		this.percentageData.forEach((element, i, array) => array[i] = Math.round((element  * 100 / this.pieSum) * 100) / 100);
+		this.percentageData.forEach((element, i, array) => array[i] = Math.round((element * 100 / this.pieSum) * 100) / 100);
 
 		const i = this.percentageData.findIndex(x => x < 1);
 
@@ -268,10 +267,10 @@ export class QueryRendererComponent {
 		let othersSum = this.others.reduce((partialSum, a) => partialSum + a, 0);
 		data = data.slice(0, i);
 		data.push(othersSum);
-		data = data.sort((a,b) => b-a);
+		data = data.sort((a, b) => b - a);
 		const index = data.indexOf(othersSum);
 		for (let i = this.chartLabels.length; i > index; i--) {
-			this.chartLabels[i] = this.chartLabels[i-1];
+			this.chartLabels[i] = this.chartLabels[i - 1];
 		}
 		this.chartLabels[index] = 'Otros';
 		this.chartData[0].data = data;
@@ -281,8 +280,8 @@ export class QueryRendererComponent {
 		const i = this.chartLabels.indexOf('Otros');
 		this.chartLabels.splice(i, 1);
 		data.splice(i, 1);
-		this.others.forEach( x => data.push(x));
-		data = data.sort((a,b) => b-a);
+		this.others.forEach(x => data.push(x));
+		data = data.sort((a, b) => b - a);
 		this.chartData[0].data = data;
 	}
 

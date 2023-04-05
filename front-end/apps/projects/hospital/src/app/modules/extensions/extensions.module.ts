@@ -1,7 +1,7 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule } from '@angular/forms';
-import { ChartsModule } from 'ng2-charts';
+import { NgChartsModule } from 'ng2-charts';
 import { CubejsClientModule } from '@cubejs-client/ngx';
 // deps
 import { PresentationModule } from '@presentation/presentation.module';
@@ -28,7 +28,7 @@ import { ProfessionalFormInputComponent } from './components/professional-form-i
 @NgModule({
 	imports: [
 		CommonModule,
-		ChartsModule,
+		NgChartsModule,
 		ReactiveFormsModule,
 		CubejsClientModule.forRoot(cubejsOptions),
 		// deps
@@ -50,9 +50,9 @@ import { ProfessionalFormInputComponent } from './components/professional-form-i
 		UiComponentComponent,
 		UiComponentListComponent,
 		UiExternalComponentComponent,
-  RoutedExternalComponent,
-  SpecialtyFormInputComponent,
-  ProfessionalFormInputComponent,
+		RoutedExternalComponent,
+		SpecialtyFormInputComponent,
+		ProfessionalFormInputComponent,
 	],
 	exports: [
 		// components
