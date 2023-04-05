@@ -20,9 +20,13 @@ export class PatientFusionComponent implements OnInit {
 	identificationTypeList: IdentificationTypeDto[];
 	patientToAudit: DuplicatePatientDto;
 	patientsTypes: PatientType[];
+	keyAttributes = KeyAttributes;
+	patientFusion: PatientPersonalInfoDto;
+
 	constructor(private router: Router, private contextService: ContextService, private personMasterDataService: PersonMasterDataService,
-		private patientAuditService: PatientAuditService, private auditPatientService: AuditPatientService, private patientMasterDataService: PatientMasterDataService) {
-		this.routePrefix = 'institucion/' + this.contextService.institutionId + '/';
+		private patientAuditService: PatientAuditService, private auditPatientService: AuditPatientService,
+		private patientMasterDataService: PatientMasterDataService) {
+		this.routePrefix = `institucion/${this.contextService.institutionId}/`;
 		this.personMasterDataService.getIdentificationTypes()
 			.subscribe(identificationTypes => {
 				this.identificationTypeList = identificationTypes;
@@ -31,7 +35,7 @@ export class PatientFusionComponent implements OnInit {
 	}
 
 	ngOnInit(): void {
-		this.patientMasterDataService.getTypesPatient().subscribe((patientsTypes : PatientType[]) => {
+		this.patientMasterDataService.getTypesPatient().subscribe((patientsTypes: PatientType[]) => {
 			this.patientsTypes = patientsTypes;
 		})
 		this.patientAuditService.patientToAudit$.subscribe(patientToAudit => {
@@ -39,8 +43,15 @@ export class PatientFusionComponent implements OnInit {
 		});
 
 		this.auditPatientService.getPatientPersonalInfo(this.patientToAudit).subscribe((patientPersonalData: PatientPersonalInfoDto[]) => {
-			this.listPatientData$ = of(patientPersonalData);
+			this.listPatientData$ = of(this.setListPatientData(patientPersonalData));
 		})
+	}
+
+	setListPatientData(patientPersonalData): PatientPersonalInfoDto[] {
+		patientPersonalData.forEach(data => {
+			data.selected = false;
+		})
+		return patientPersonalData
 	}
 
 	goToBack() {
@@ -51,7 +62,38 @@ export class PatientFusionComponent implements OnInit {
 		return this.identificationTypeList?.find(type => type.id === value).description
 	}
 
-	getPatientType(value:number){
+	getPatientType(value: number) {
 		return this.patientsTypes?.find(type => type.id === value).description
 	}
+
+	setValuesPatientFusion(key: any, value1: any, value2?: any) {
+		switch (key) {
+			case this.keyAttributes.PATIENT_ID:
+				this.patientFusion.patientId = value1;
+				break;
+			case this.keyAttributes.BIRTHDATE:
+				this.patientFusion.birthdate = value1;
+				break;
+			case this.keyAttributes.NAMES:
+				this.patientFusion.firstName = value1;
+				this.patientFusion.middleNames = value2;
+				break;
+			case this.keyAttributes.LASTNAMES:
+				this.patientFusion.lastName = value1;
+				this.patientFusion.otherLastNames = value2;
+				break;
+			case this.keyAttributes.IDENTIFICATION:
+				this.patientFusion.identificationTypeId = value1;
+				this.patientFusion.identificationNumber = value2;
+				break;
+		}
+	}
+
+}
+export enum KeyAttributes {
+	BIRTHDATE,
+	NAMES,
+	LASTNAMES,
+	PATIENT_ID,
+	IDENTIFICATION,
 }
