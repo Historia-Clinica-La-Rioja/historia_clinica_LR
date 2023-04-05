@@ -11,7 +11,7 @@
 		<ng-container  *ngIf="!externalCauseServise.snomedConceptEvent else eventForm">
 			<app-concept-typeahead-search [ecl]="ECL"
 			[placeholder]="'internaciones.anamnesis.externalCause.EVENT'|translate"
-			[enableSubmitButton]="true"
+			[clearButton]="true"
 			[buttonMessage]="'internaciones.anamnesis.externalCause.ADD_EVENT'"
 			(conceptSelected)="emmitEvent($event)">
 		</app-concept-typeahead-search>

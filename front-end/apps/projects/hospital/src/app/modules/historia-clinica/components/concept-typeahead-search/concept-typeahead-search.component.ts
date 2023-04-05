@@ -18,6 +18,7 @@ export class ConceptTypeaheadSearchComponent {
 	@Input() debounceTime = 300;
 	@Input() appearanceOutline = false;
 	@Input() enableSubmitButton = false;
+	@Input() clearButton = false;
 	@Input() buttonMessage = '';
 	@Input() showSearchIcon = false;
 	@Output() conceptSelected = new EventEmitter<SnomedDto>();

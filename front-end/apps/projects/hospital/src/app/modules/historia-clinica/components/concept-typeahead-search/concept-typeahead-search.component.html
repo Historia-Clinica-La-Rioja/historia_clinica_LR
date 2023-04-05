@@ -14,11 +14,10 @@
 		<button type="button" matSuffix mat-icon-button *ngIf="showSearchIcon">
 			<mat-icon>search</mat-icon>
 		</button>
-		<button *ngIf="enableSubmitButton" id="clear" type="button" mat-button matSuffix color="warn" mat-icon-button
+		<button *ngIf="clearButton" id="clear" type="button" mat-button matSuffix color="warn" mat-icon-button
 			(click)="clear()">
 			<mat-icon>close</mat-icon>
-		</button>
-		<button *ngIf="enableSubmitButton" id="submit" mat-flat-button type="submit" color="primary"
+		</button><button *ngIf="enableSubmitButton" id="submit" mat-flat-button type="submit" color="primary"
 			(click)="emitButton()" matSuffix>
 			{{buttonMessage | translate | uppercase}}
 		</button>

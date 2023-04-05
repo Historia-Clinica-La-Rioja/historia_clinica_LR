@@ -36,9 +36,7 @@ export class EventSerchComponent implements OnInit {
 			};
 			this.snomedService.openConceptsSearchDialog(search)
 				.subscribe((selectedConcept: SnomedDto) => {
-
 					this.externalCauseServise.setConceptEventSnomed(selectedConcept); this.eventSelected.emit(selectedConcept);
-					console.log("event serch selectedConcept", selectedConcept);
 				});
 		}
 	}
