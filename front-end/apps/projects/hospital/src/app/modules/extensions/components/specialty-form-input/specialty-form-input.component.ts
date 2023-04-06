@@ -1,5 +1,5 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
-import { FormControl, FormGroup } from '@angular/forms';
+import { AbstractControl, FormControl, FormGroup } from '@angular/forms';
 import { InternacionMasterDataService } from '@api-rest/services/internacion-master-data.service';
 
 @Component({
@@ -23,10 +23,14 @@ export class SpecialtyFormInputComponent implements OnInit {
 
 	ngOnInit(): void {
 		this.internacionMasterDataService.getClinicalSpecialty().subscribe(specialties => this.specialtyList = [...specialties]);
-		this.specialtyForm.valueChanges.subscribe(value => this.emitSpecialtyChane(value));
+		this.specialtyForm.valueChanges.subscribe(value => this.emitSpecialtyChange(value));
 	}
 
-	emitSpecialtyChane(value) {
-		this.specialtyChange.emit([value.specialty]);
+	emitSpecialtyChange(value) {
+		this.specialtyChange.emit(value.specialty ? [value.specialty] : null);
+	}
+
+	clear(control: AbstractControl): void {
+		control.reset();
 	}
 }

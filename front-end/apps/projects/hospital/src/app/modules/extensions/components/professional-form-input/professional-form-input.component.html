@@ -6,4 +6,8 @@
 		</mat-option>
 	</mat-select>
 	<mat-hint>{{hint}}</mat-hint>
+	<button id="clear_professional" type="button" mat-button *ngIf="professionalForm.value.professional" matSuffix
+			color="warn" mat-icon-button (click)="clear(professionalForm.controls.professional); $event.stopPropagation()">
+		<mat-icon>close</mat-icon>
+	</button>
 </mat-form-field>

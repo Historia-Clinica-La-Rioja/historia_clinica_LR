@@ -1,5 +1,5 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
-import { FormControl, FormGroup } from '@angular/forms';
+import { AbstractControl, FormControl, FormGroup } from '@angular/forms';
 import { AppFeature } from '@api-rest/api-model';
 import { HealthcareProfessionalByInstitutionService } from '@api-rest/services/healthcare-professional-by-institution.service';
 import { FeatureFlagService } from '@core/services/feature-flag.service';
@@ -43,10 +43,14 @@ export class ProfessionalFormInputComponent implements OnInit {
 					return fullName;
 				})
 			});
-		this.professionalForm.valueChanges.subscribe(value => this.emitProfessionalChane(value));
+		this.professionalForm.valueChanges.subscribe(value => this.emitProfessionalChange(value));
 	}
 
-	emitProfessionalChane(value) {
-		this.professionalChange.emit([value.professional]);
+	emitProfessionalChange(value) {
+		this.professionalChange.emit(value.professional? [value.professional] : null);
+	}
+
+	clear(control: AbstractControl): void {
+		control.reset();
 	}
 }

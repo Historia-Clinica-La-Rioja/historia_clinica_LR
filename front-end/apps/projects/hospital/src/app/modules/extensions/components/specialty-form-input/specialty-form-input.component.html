@@ -6,4 +6,8 @@
 		</mat-option>
 	</mat-select>
 	<mat-hint>{{hint}}</mat-hint>
+	<button id="clear_specialty" type="button" mat-button *ngIf="specialtyForm.value.specialty" matSuffix
+			color="warn" mat-icon-button (click)="clear(specialtyForm.controls.specialty); $event.stopPropagation()">
+		<mat-icon>close</mat-icon>
+	</button>
 </mat-form-field>
