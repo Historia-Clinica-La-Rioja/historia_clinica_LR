@@ -1,4 +1,4 @@
-import { Component, Input, OnDestroy } from '@angular/core';
+import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { ReplaySubject, Subscription } from 'rxjs';
 import { ChartDefinitionService } from '@extensions/services/chart-definition.service';
 import { ChartDefinitionDto, UIComponentDto } from '@extensions/extensions-model';
@@ -10,81 +10,60 @@ const toUIComponentDto = (error: any): UIComponentDto => ({
 		content: error
 	}
 });
+
 @Component({
 	selector: 'app-cubejs-chart',
 	templateUrl: './cubejs-chart.component.html',
 	styleUrls: ['./cubejs-chart.component.scss']
 })
-export class CubejsChartComponent implements OnDestroy {
+export class CubejsChartComponent implements OnDestroy, OnInit {
 
 	@Input() dateFormat?: string;
 	@Input() showLegend?: true;
+	@Input() chartDefinitionService: ChartDefinitionService;
+	@Input() query: string;
 	error: UIComponentDto = undefined;
 	chartType = new ReplaySubject<any>(1);
 	cubeQuery = new ReplaySubject<any>(1);
 	pivotConfig = new ReplaySubject<any>(1);
-
 	title: string;
-	disableFilter = false;
 
 	@Input() listOnTab: string = null;
 
 	private chartDefinitionSubscription: Subscription;
 
-	constructor(
-		private chartDefinitionService: ChartDefinitionService,
-	) { }
+	constructor() {
+	}
 
-	@Input()
-	set query(queryName: string) {
-		if (!queryName) {
+	ngOnInit(): void {
+		if (!this.query) {
 			console.warn('Chart with undefined queryStream');
 			return;
 		}
-		this.chartDefinitionSubscription = this.chartDefinitionService.queryStream$(queryName).subscribe(
+		this.chartDefinitionSubscription = this.chartDefinitionService.queryStream$(this.query).subscribe(
 			(queryStream: ChartDefinitionDto) => {
 				this.error = undefined;
 				this.chartType.next(queryStream.chartType);
 				this.cubeQuery.next(queryStream.cubeQuery);
 				this.pivotConfig.next(queryStream.pivotConfig);
-				this.setTitle(queryName);
-				this.cleanFilters(queryStream);
+				this.setTitle(this.query);
 			},
 			(error: any) => this.error = toUIComponentDto(error),
 		)
-
 	}
 
 	ngOnDestroy() {
 		this.chartDefinitionSubscription?.unsubscribe();
 	}
 
-	cleanFilters(queryStream) {
-		let filters = [...queryStream.cubeQuery.filters];
-		if (this.disableFilter) {
-			filters = filters.filter((value) => value.dimension && value.dimension.endsWith('.institucion_id'));
-		} else {
-			for (let i = filters.length - 1; i >= 0; i--) {
-				let splitedQuery = queryStream.cubeQuery.measures[0] ? queryStream.cubeQuery.measures[0].split('.') : queryStream.cubeQuery.dimensions[0].split('.');
-				let splitedFilter = filters[i].member ? filters[i].member.split('.') : filters[i].dimension.split('.');
-				if (splitedQuery[0] !== splitedFilter[0]) {
-					filters.splice(i, 1);
-				}
-			}
-		}
-		queryStream.cubeQuery.filters = [...filters];
-	}
-
 	setTitle(queryName: string) {
 		switch (queryName) {
 			case 'cantidadConsultasAmbulatorias': {
 				this.title = 'Evolución de consultas del año actual'
-				this.disableFilter = true;
 				break;
 			}
 			case 'cantidadConsultasAmbulatoriasEspecialidadProfesional': {
 				this.title = 'Consultas por especialidad y profesional del último trimestre'
-				this.disableFilter = true;
 				break;
 			}
 			case 'cantidadConsultasPorEspecialidad': {
@@ -93,17 +72,14 @@ export class CubejsChartComponent implements OnDestroy {
 			}
 			case 'cantidadTurnos': {
 				this.title = 'Evolución de turnos del año actual'
-				this.disableFilter = true;
 				break;
 			}
 			case 'cantidadTurnosPorEspecialidad': {
 				this.title = 'Turnos por especialidad del año actual'
-				this.disableFilter = true;
 				break;
 			}
 			case 'cantidadTurnosPorProfesional': {
 				this.title = 'Turnos por profesional del año actual'
-				this.disableFilter = true;
 				break;
 			}
 		}

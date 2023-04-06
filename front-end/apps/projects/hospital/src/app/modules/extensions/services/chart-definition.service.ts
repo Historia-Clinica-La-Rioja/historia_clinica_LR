@@ -1,4 +1,3 @@
-import { Injectable } from '@angular/core';
 import { Observable, ReplaySubject } from 'rxjs';
 import { map, switchMap } from 'rxjs/operators';
 
@@ -13,9 +12,6 @@ export interface FilterValue {
 	values: string[];
 }
 
-@Injectable({
-	providedIn: 'root'
-})
 export class ChartDefinitionService {
 	private queryForm = new ReplaySubject<FilterValue[]>(1);
 
