@@ -276,3 +276,12 @@ databaseChangeLog:
           - sql:
               sql: |-
                 INSERT INTO patient_type (id,description,active,audit) VALUES (8,'Temporal de Guardia',${boolean.true},${boolean.false});
+    
+    - changeSet:
+        id: document_type-triage
+        context: "!schema-only"
+        author: mmalyvarni
+        changes:
+          - sql:
+              sql: |-
+                INSERT INTO document_type VALUES (15, 'Triage');
