@@ -295,7 +295,8 @@
 		"LABEL_LASTNAME":"Apellido",
 		"LABEL_STATE":"Estado",
 		"LABEL_DOC":"Doc",
-		"LABEL_ID":"ID"
+		"LABEL_ID":"ID",
+		"LABEL_BUTTON_MERGE":"Fusionar"
 	}
   }
 }
