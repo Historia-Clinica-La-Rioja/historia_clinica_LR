@@ -1,6 +1,8 @@
 package net.pladema.emergencycare.controller;
 
+import ar.lamansys.sgh.clinichistory.domain.ips.RiskFactorBo;
 import ar.lamansys.sgh.clinichistory.infrastructure.input.rest.ips.dto.NewRiskFactorsObservationDto;
+import ar.lamansys.sgh.clinichistory.infrastructure.input.rest.ips.mapper.RiskFactorMapper;
 import ar.lamansys.sgh.clinichistory.infrastructure.input.service.ReasonExternalService;
 import ar.lamansys.sgh.clinichistory.infrastructure.input.rest.ips.service.RiskFactorExternalService;
 import ar.lamansys.sgh.clinichistory.infrastructure.input.rest.ips.dto.SnomedDto;
@@ -67,13 +69,16 @@ public class EmergencyCareEpisodeController {
 
     private final LocalDateMapper localDateMapper;
 
+	private final RiskFactorMapper riskFactorMapper;
+
     public EmergencyCareEpisodeController(EmergencyCareEpisodeService emergencyCareEpisodeService,
 										  EmergencyCareMapper emergencyCareMapper,
 										  ReasonExternalService reasonExternalService,
 										  RiskFactorExternalService riskFactorExternalService,
 										  PatientService patientService,
 										  SnomedMapper snomedMapper,
-										  TriageRiskFactorMapper triageRiskFactorMapper, LocalDateMapper localDateMapper){
+										  TriageRiskFactorMapper triageRiskFactorMapper, LocalDateMapper localDateMapper,
+										  RiskFactorMapper riskFactorMapper){
         super();
         this.emergencyCareEpisodeService = emergencyCareEpisodeService;
         this.emergencyCareMapper=emergencyCareMapper;
@@ -83,6 +88,7 @@ public class EmergencyCareEpisodeController {
         this.snomedMapper = snomedMapper;
         this.triageRiskFactorMapper = triageRiskFactorMapper;
         this.localDateMapper = localDateMapper;
+		this.riskFactorMapper = riskFactorMapper;
     }
 
     @GetMapping
@@ -153,7 +159,9 @@ public class EmergencyCareEpisodeController {
 		if (newEmergencyCare.getPatient() == null || newEmergencyCare.getPatient().getId() == null)
 			newEmergencyCare.setPatient(createEmergencyCareEpisodePatient());
 
-        newEmergencyCare = emergencyCareEpisodeService.createAdult(newEmergencyCare, institutionId);
+		RiskFactorBo riskFactors = riskFactorMapper.fromRiskFactorsObservationDto(riskFactorsObservationDto);
+		riskFactorExternalService.formatRiskFactors(riskFactors);
+		newEmergencyCare = emergencyCareEpisodeService.createAdult(newEmergencyCare, institutionId, riskFactors);
         Integer result = newEmergencyCare.getId();
         LOG.debug("Output -> {}", result);
         return ResponseEntity.ok().body(result);
@@ -178,7 +186,9 @@ public class EmergencyCareEpisodeController {
 		if (newEmergencyCare.getPatient() == null || newEmergencyCare.getPatient().getId() == null)
 			newEmergencyCare.setPatient(createEmergencyCareEpisodePatient());
 
-        newEmergencyCare = emergencyCareEpisodeService.createPediatric(newEmergencyCare, institutionId);
+		RiskFactorBo riskFactors = riskFactorMapper.fromRiskFactorsObservationDto(riskFactorsObservationDto);
+		riskFactorExternalService.formatRiskFactors(riskFactors);
+        newEmergencyCare = emergencyCareEpisodeService.createPediatric(newEmergencyCare, institutionId, riskFactors);
         Integer result = newEmergencyCare.getId();
         LOG.debug("Output -> {}", result);
         return ResponseEntity.ok().body(result);

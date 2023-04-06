@@ -1,9 +1,13 @@
 package net.pladema.emergencycare.triage.controller;
 
+import ar.lamansys.sgh.clinichistory.domain.document.PatientInfoBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.ERiskFactor;
+import ar.lamansys.sgh.clinichistory.domain.ips.RiskFactorBo;
 import ar.lamansys.sgh.clinichistory.infrastructure.input.rest.ips.dto.NewRiskFactorsObservationDto;
 import ar.lamansys.sgh.clinichistory.infrastructure.input.rest.ips.dto.RiskFactorObservationDto;
+import ar.lamansys.sgh.clinichistory.infrastructure.input.rest.ips.mapper.RiskFactorMapper;
 import ar.lamansys.sgh.clinichistory.infrastructure.input.rest.ips.service.RiskFactorExternalService;
+import ar.lamansys.sgh.shared.infrastructure.input.service.BasicPatientDto;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import net.pladema.emergencycare.controller.mapper.EmergencyCareMapper;
 import net.pladema.emergencycare.controller.mapper.TriageRiskFactorMapper;
@@ -21,6 +25,7 @@ import net.pladema.emergencycare.triage.service.TriageService;
 import net.pladema.emergencycare.triage.service.domain.TriageBo;
 import net.pladema.emergencycare.triage.service.domain.TriageCategoryBo;
 import net.pladema.medicalconsultation.doctorsoffice.controller.service.DoctorsOfficeExternalService;
+import net.pladema.patient.controller.service.PatientExternalService;
 import net.pladema.user.controller.dto.UserDto;
 import net.pladema.user.controller.service.UserPersonExternalService;
 import org.slf4j.Logger;
@@ -64,7 +69,11 @@ public class TriageController {
 
     private final UserPersonExternalService userPersonExternalService;
 
+	private final PatientExternalService patientExternalService;
+
     private final EmergencyCareMapper emergencyCareMapper;
+
+	private final RiskFactorMapper riskFactorMapper;
 
     public TriageController(TriageService triageService,
 							TriageMapper triageMapper,
@@ -74,7 +83,9 @@ public class TriageController {
 							RiskFactorExternalService riskFactorExternalService,
 							TriageRiskFactorMapper triageRiskFactorMapper, DoctorsOfficeExternalService doctorsOfficeExternalService,
 							UserPersonExternalService userPersonExternalService,
-							EmergencyCareMapper emergencyCareMapper){
+							PatientExternalService patientExternalService,
+							EmergencyCareMapper emergencyCareMapper,
+							RiskFactorMapper riskFactorMapper){
         super();
         this.triageService=triageService;
         this.triageMapper=triageMapper;
@@ -85,7 +96,9 @@ public class TriageController {
         this.triageRiskFactorMapper = triageRiskFactorMapper;
         this.doctorsOfficeExternalService = doctorsOfficeExternalService;
         this.userPersonExternalService = userPersonExternalService;
+		this.patientExternalService = patientExternalService;
         this.emergencyCareMapper = emergencyCareMapper;
+		this.riskFactorMapper = riskFactorMapper;
     }
 
     @GetMapping
@@ -194,7 +207,7 @@ public class TriageController {
         TriageBo triage = triageMapper.toTriageBo(body);
         triage.setEmergencyCareEpisodeId(episodeId);
         triage = triageService.createAdministrative(triage, institutionId);
-        Integer result = triage.getId();
+        Integer result = triage.getTriageId();
         LOG.debug("Output -> {}", result);
         return ResponseEntity.ok().body(result);
     }
@@ -212,8 +225,9 @@ public class TriageController {
         Integer patientId = emergencyCareEpisodeService.get(episodeId, institutionId).getPatient() != null ? emergencyCareEpisodeService.get(episodeId, institutionId).getPatient().getId() : null;
         NewRiskFactorsObservationDto riskFactorsObservationDto = riskFactorExternalService.saveRiskFactors(patientId, body.getRiskFactors());
         triage.setRiskFactorIds(getRiskFactorIds(riskFactorsObservationDto));
+		setRiskFactorsAndPatientInfo(triage, patientId, riskFactorsObservationDto);
         triage = triageService.createAdultGynecological(triage, institutionId);
-        Integer result = triage.getId();
+        Integer result = triage.getTriageId();
         LOG.debug("Output -> {}", result);
         return ResponseEntity.ok().body(result);
     }
@@ -232,8 +246,9 @@ public class TriageController {
         NewRiskFactorsObservationDto riskFactorsObservationDto = triageRiskFactorMapper.fromTriagePediatricDto(body);
         riskFactorsObservationDto = riskFactorExternalService.saveRiskFactors(patientId, riskFactorsObservationDto);
         triage.setRiskFactorIds(getRiskFactorIds(riskFactorsObservationDto));
+		setRiskFactorsAndPatientInfo(triage, patientId, riskFactorsObservationDto);
         triage = triageService.createPediatric(triage, institutionId);
-        Integer result = triage.getId();
+        Integer result = triage.getTriageId();
         LOG.debug("Output -> {}", result);
         return ResponseEntity.ok().body(result);
     }
@@ -262,4 +277,13 @@ public class TriageController {
         LOG.debug("Output -> {}", result);
         return result;
     }
+
+	private void setRiskFactorsAndPatientInfo(TriageBo triage, Integer patientId, NewRiskFactorsObservationDto riskFactorsObservationDto) {
+		RiskFactorBo riskFactors = riskFactorMapper.fromRiskFactorsObservationDto(riskFactorsObservationDto);
+		riskFactorExternalService.formatRiskFactors(riskFactors);
+		triage.setRiskFactors(riskFactors);
+		BasicPatientDto patient = patientExternalService.getBasicDataFromPatient(patientId);
+		triage.setPatientInfo(new PatientInfoBo(patient.getId(), patient.getPerson().getGender().getId(), patient.getPerson().getAge()));
+	}
+
 }

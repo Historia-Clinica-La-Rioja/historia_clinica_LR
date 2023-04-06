@@ -1,5 +1,6 @@
 package net.pladema.emergencycare.service;
 
+import ar.lamansys.sgh.clinichistory.domain.ips.RiskFactorBo;
 import net.pladema.emergencycare.service.domain.EmergencyCareBo;
 import net.pladema.emergencycare.service.domain.EmergencyCareEpisodeInProgressBo;
 import net.pladema.emergencycare.service.domain.PatientECEBo;
@@ -18,9 +19,9 @@ public interface  EmergencyCareEpisodeService {
 
     EmergencyCareBo createAdministrative(EmergencyCareBo newEmergencyCare, Integer institutionId);
 
-    EmergencyCareBo createAdult(EmergencyCareBo newEmergencyCare, Integer institutionId);
+    EmergencyCareBo createAdult(EmergencyCareBo newEmergencyCare, Integer institutionId, RiskFactorBo riskFactors);
 
-    EmergencyCareBo createPediatric(EmergencyCareBo newEmergencyCare, Integer institutionId);
+    EmergencyCareBo createPediatric(EmergencyCareBo newEmergencyCare, Integer institutionId, RiskFactorBo riskFactors);
 
     Integer updateAdministrative(EmergencyCareBo newEmergencyCare, Integer institutionId);
 

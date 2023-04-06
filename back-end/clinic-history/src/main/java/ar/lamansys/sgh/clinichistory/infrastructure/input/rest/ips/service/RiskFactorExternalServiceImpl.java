@@ -46,4 +46,26 @@ public class RiskFactorExternalServiceImpl implements RiskFactorExternalService 
         return result;
     }
 
+	@Override
+	public void formatRiskFactors(RiskFactorBo riskFactors) {
+		if (riskFactors.getSystolicBloodPressure().getId() == null)
+			riskFactors.setSystolicBloodPressure(null);
+		if (riskFactors.getDiastolicBloodPressure().getId() == null)
+			riskFactors.setDiastolicBloodPressure(null);
+		if (riskFactors.getTemperature().getId() == null)
+			riskFactors.setTemperature(null);
+		if (riskFactors.getHeartRate().getId() == null)
+			riskFactors.setHeartRate(null);
+		if (riskFactors.getRespiratoryRate().getId() == null)
+			riskFactors.setRespiratoryRate(null);
+		if (riskFactors.getBloodOxygenSaturation().getId() == null)
+			riskFactors.setBloodOxygenSaturation(null);
+		if (riskFactors.getBloodGlucose().getId() == null)
+			riskFactors.setBloodGlucose(null);
+		if (riskFactors.getGlycosylatedHemoglobin().getId() == null)
+			riskFactors.setGlycosylatedHemoglobin(null);
+		if (riskFactors.getCardiovascularRisk().getId() == null)
+			riskFactors.setCardiovascularRisk(null);
+	}
+
 }

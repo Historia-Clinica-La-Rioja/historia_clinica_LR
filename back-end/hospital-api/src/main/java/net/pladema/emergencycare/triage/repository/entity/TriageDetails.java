@@ -49,7 +49,7 @@ public class TriageDetails implements Serializable {
 	private Short perfusionId;
 
 	public TriageDetails(TriageBo triageBo) {
-		this.triageId = triageBo.getId();
+		this.triageId = triageBo.getTriageId();
 		this.bodyTemperatureId = triageBo.getBodyTemperatureId();
 		this.cryingExcessive = triageBo.getCryingExcessive();
 		this.muscleHypertoniaId = triageBo.getMuscleHypertoniaId();

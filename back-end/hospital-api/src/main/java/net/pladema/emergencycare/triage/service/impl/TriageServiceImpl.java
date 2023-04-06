@@ -1,5 +1,6 @@
 package net.pladema.emergencycare.triage.service.impl;
 
+import ar.lamansys.sgh.clinichistory.application.createDocument.DocumentFactory;
 import io.jsonwebtoken.lang.Assert;
 import net.pladema.emergencycare.repository.EmergencyCareEpisodeRepository;
 import net.pladema.emergencycare.service.EmergencyCareEpisodeStateService;
@@ -47,11 +48,15 @@ public class TriageServiceImpl implements TriageService {
 
     private final EmergencyCareEpisodeStateService emergencyCareEpisodeStateService;
 
+	private final DocumentFactory documentFactory;
+
     public TriageServiceImpl(TriageRepository triageRepository,
                              TriageDetailsRepository triageDetailsRepository,
                              TriageRiskFactorsRepository triageRiskFactorsRepository,
                              InstitutionExternalService institutionExternalService,
-                             EmergencyCareEpisodeRepository emergencyCareEpisodeRepository, EmergencyCareEpisodeStateService emergencyCareEpisodeStateService) {
+                             EmergencyCareEpisodeRepository emergencyCareEpisodeRepository,
+							 EmergencyCareEpisodeStateService emergencyCareEpisodeStateService,
+							 DocumentFactory documentFactory) {
         super();
         this.triageRepository = triageRepository;
         this.triageDetailsRepository = triageDetailsRepository;
@@ -59,6 +64,7 @@ public class TriageServiceImpl implements TriageService {
         this.institutionExternalService = institutionExternalService;
         this.emergencyCareEpisodeRepository = emergencyCareEpisodeRepository;
         this.emergencyCareEpisodeStateService = emergencyCareEpisodeStateService;
+		this.documentFactory = documentFactory;
     }
 
     @Override
@@ -119,13 +125,17 @@ public class TriageServiceImpl implements TriageService {
         LOG.debug("Input parameter -> triageBo {}, institutionId{}", triageBo, institutionId);
         validTriage(triageBo, institutionId);
         Triage triage = triageRepository.save(new Triage(triageBo));
-        triageBo.setId(triage.getId());
+        triageBo.setTriageId(triage.getId());
+		triageBo.setInstitutionId(institutionId);
+		triageBo.setEncounterId(triageBo.getEmergencyCareEpisodeId());
 
         consumer.accept(triageBo);
 
         Integer episodeId = triageBo.getEmergencyCareEpisodeId();
         Short categoryId = triageBo.getCategoryId();
         this.setTriageCategoryId(episodeId, categoryId);
+
+		documentFactory.run(triageBo, true);
 
         LOG.debug("Output -> {}", triageBo);
         return triageBo;
@@ -137,14 +147,14 @@ public class TriageServiceImpl implements TriageService {
     }
 
     private Consumer<TriageBo> getAdultConsumer() {
-        return triageBo -> saveRiskFactors(triageBo.getId(), triageBo.getRiskFactorIds());
+        return triageBo -> saveRiskFactors(triageBo.getTriageId(), triageBo.getRiskFactorIds());
     }
 
     private Consumer<TriageBo> getPediatricConsumer() {
         return triageBo -> {
             if (existDetails(triageBo))
                 triageDetailsRepository.save(new TriageDetails(triageBo));
-            saveRiskFactors(triageBo.getId(), triageBo.getRiskFactorIds());
+			saveRiskFactors(triageBo.getTriageId(), triageBo.getRiskFactorIds());
         };
     }
 

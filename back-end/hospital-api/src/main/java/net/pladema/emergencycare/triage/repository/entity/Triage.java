@@ -43,9 +43,9 @@ public class Triage  extends SGXAuditableEntity<Integer> {
 	private Integer doctorsOfficeId;
 
 	public Triage(TriageBo triageBo) {
-		this.id = triageBo.getId();
+		this.id = triageBo.getTriageId();
 		this.emergencyCareEpisodeId = triageBo.getEmergencyCareEpisodeId();
-		this.notes = triageBo.getNotes();
+		this.notes = triageBo.getNotes() != null ? triageBo.getNotes().getOtherNote() : null;
 		this.triageCategoryId = triageBo.getCategoryId();
 		this.doctorsOfficeId = triageBo.getDoctorsOfficeId();
 	}

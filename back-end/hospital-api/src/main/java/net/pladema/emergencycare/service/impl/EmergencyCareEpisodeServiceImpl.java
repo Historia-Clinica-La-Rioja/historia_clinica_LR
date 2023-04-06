@@ -1,6 +1,9 @@
 package net.pladema.emergencycare.service.impl;
 
+import ar.lamansys.sgh.clinichistory.domain.document.PatientInfoBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.ReasonBo;
+import ar.lamansys.sgh.clinichistory.domain.ips.RiskFactorBo;
+import ar.lamansys.sgh.shared.infrastructure.input.service.BasicPatientDto;
 import net.pladema.emergencycare.repository.EmergencyCareEpisodeReasonRepository;
 import net.pladema.emergencycare.repository.EmergencyCareEpisodeRepository;
 import net.pladema.emergencycare.repository.PoliceInterventionRepository;
@@ -21,6 +24,8 @@ import net.pladema.emergencycare.triage.service.domain.TriageBo;
 import net.pladema.establishment.controller.service.InstitutionExternalService;
 import ar.lamansys.sgx.shared.dates.configuration.JacksonDateFormatConfig;
 import ar.lamansys.sgx.shared.exceptions.NotFoundException;
+import net.pladema.patient.controller.service.PatientExternalService;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -61,12 +66,15 @@ public class EmergencyCareEpisodeServiceImpl implements EmergencyCareEpisodeServ
 
     private final HistoricEmergencyEpisodeService historicEmergencyEpisodeService;
 
+	private final PatientExternalService patientExternalService;
+
     public EmergencyCareEpisodeServiceImpl(TriageService triageService,
                                            PoliceInterventionRepository policeInterventionRepository,
                                            EmergencyCareEpisodeRepository emergencyCareEpisodeRepository,
                                            EmergencyCareEpisodeReasonRepository emergencyCareEpisodeReasonRepository,
                                            InstitutionExternalService institutionExternalService,
-                                           HistoricEmergencyEpisodeService historicEmergencyEpisodeService){
+                                           HistoricEmergencyEpisodeService historicEmergencyEpisodeService,
+										   PatientExternalService patientExternalService){
         super();
         this.triageService = triageService;
         this.policeInterventionRepository = policeInterventionRepository;
@@ -74,6 +82,7 @@ public class EmergencyCareEpisodeServiceImpl implements EmergencyCareEpisodeServ
         this.emergencyCareEpisodeReasonRepository = emergencyCareEpisodeReasonRepository;
         this.institutionExternalService = institutionExternalService;
         this.historicEmergencyEpisodeService = historicEmergencyEpisodeService;
+		this.patientExternalService = patientExternalService;
     }
 
     @Override
@@ -156,17 +165,17 @@ public class EmergencyCareEpisodeServiceImpl implements EmergencyCareEpisodeServ
 
 	@Override
     public EmergencyCareBo createAdministrative(EmergencyCareBo newEmergencyCare, Integer institutionId) {
-        return createEpisode(newEmergencyCare, institutionId, this::saveTriageAdministrative);
+        return createEpisode(newEmergencyCare, institutionId, this::saveTriageAdministrative, null);
     }
 
     @Override
-    public EmergencyCareBo createAdult(EmergencyCareBo newEmergencyCare, Integer institutionId) {
-        return createEpisode(newEmergencyCare, institutionId, this::saveTriageAdult);
+    public EmergencyCareBo createAdult(EmergencyCareBo newEmergencyCare, Integer institutionId, RiskFactorBo riskFactors) {
+        return createEpisode(newEmergencyCare, institutionId, this::saveTriageAdult, riskFactors);
     }
 
     @Override
-    public EmergencyCareBo createPediatric(EmergencyCareBo newEmergencyCare, Integer institutionId) {
-        return createEpisode(newEmergencyCare, institutionId, this::saveTriagePediatric);
+    public EmergencyCareBo createPediatric(EmergencyCareBo newEmergencyCare, Integer institutionId, RiskFactorBo riskFactors) {
+        return createEpisode(newEmergencyCare, institutionId, this::saveTriagePediatric, riskFactors);
     }
 
 	@Override
@@ -258,7 +267,7 @@ public class EmergencyCareEpisodeServiceImpl implements EmergencyCareEpisodeServ
             throw new ValidationException("care-episode.patient.invalid");
     }
 
-    private EmergencyCareBo createEpisode(EmergencyCareBo newEmergencyCare, Integer institutionId, Function<SaveTriageArgs, TriageBo> saveTriage) {
+    private EmergencyCareBo createEpisode(EmergencyCareBo newEmergencyCare, Integer institutionId, Function<SaveTriageArgs, TriageBo> saveTriage, RiskFactorBo riskFactors) {
 
         LOG.debug("Input parameters -> newEmergencyCare {}, institutionId{}", newEmergencyCare, institutionId);
         EmergencyCareBo emergencyCareEpisodeBo = saveEmergencyCareEpisode(newEmergencyCare, newEmergencyCare.getTriage());
@@ -267,6 +276,7 @@ public class EmergencyCareEpisodeServiceImpl implements EmergencyCareEpisodeServ
         policeInterventionDetailsBo = (policeInterventionDetailsBo != null && (emergencyCareEpisodeBo.getHasPoliceIntervention() != null && emergencyCareEpisodeBo.getHasPoliceIntervention())  ) ? savePoliceIntervention(policeInterventionDetailsBo, emergencyCareEpisodeBo.getId()) : new PoliceInterventionDetailsBo();
         saveHistoricEmergencyEpisode(emergencyCareEpisodeBo);
 
+		setTriageDocumentData(newEmergencyCare, riskFactors);
         TriageBo triageBo = saveTriage.apply(new SaveTriageArgs(newEmergencyCare.getTriage(), emergencyCareEpisodeBo.getId(), institutionId));
 
         List<ReasonBo> reasons = saveReasons(newEmergencyCare.getReasons(), emergencyCareEpisodeBo.getId());
@@ -278,6 +288,12 @@ public class EmergencyCareEpisodeServiceImpl implements EmergencyCareEpisodeServ
         LOG.debug(OUTPUT, emergencyCareEpisodeBo);
         return emergencyCareEpisodeBo;
     }
+
+	private void setTriageDocumentData(EmergencyCareBo newEmergencyCare, RiskFactorBo riskFactors) {
+		newEmergencyCare.getTriage().setRiskFactors(riskFactors);
+		BasicPatientDto patient = patientExternalService.getBasicDataFromPatient(newEmergencyCare.getPatient().getId());
+		newEmergencyCare.getTriage().setPatientInfo(new PatientInfoBo(patient.getId(), patient.getPerson().getGender().getId(), patient.getPerson().getAge()));
+	}
 
     private HistoricEmergencyEpisodeBo saveHistoricEmergencyEpisode(EmergencyCareBo emergencyCare) {
         LOG.debug("Input parameter -> emergencyCare {}", emergencyCare);

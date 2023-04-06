@@ -47,83 +47,123 @@ public class ClinicalObservationService {
         LOG.debug("Input parameters -> documentId {}, patientId {}, optRiskFactors {}", documentId, patientId, optRiskFactors);
         optRiskFactors.ifPresent(RiskFactor -> {
             if(mustSaveClinicalObservation(RiskFactor.getSystolicBloodPressure())){
-                ObservationRiskFactor systolicBloodPressure = createObservationRiskFactor(patientId,
-                        RiskFactor.getSystolicBloodPressure(), ERiskFactor.SYSTOLIC_BLOOD_PRESSURE);
-                if (documentId != null)
-                    documentService.createDocumentRiskFactor(documentId, systolicBloodPressure.getId());
-                RiskFactor.setSystolicBloodPressure(createObservationFromRiskFactor(systolicBloodPressure));
+				if (RiskFactor.getSystolicBloodPressure().getId() == null) {
+					ObservationRiskFactor systolicBloodPressure = createObservationRiskFactor(patientId,
+							RiskFactor.getSystolicBloodPressure(), ERiskFactor.SYSTOLIC_BLOOD_PRESSURE);
+					if (documentId != null)
+						documentService.createDocumentRiskFactor(documentId, systolicBloodPressure.getId());
+					RiskFactor.setSystolicBloodPressure(createObservationFromRiskFactor(systolicBloodPressure));
+				}
+				else
+					documentService.createDocumentRiskFactor(documentId, RiskFactor.getSystolicBloodPressure().getId());
             }
 
             if(mustSaveClinicalObservation(RiskFactor.getDiastolicBloodPressure())) {
-                ObservationRiskFactor diastolicBloodPressure = createObservationRiskFactor(patientId,
-                        RiskFactor.getDiastolicBloodPressure(), ERiskFactor.DIASTOLIC_BLOOD_PRESSURE);
-                if (documentId != null)
-                    documentService.createDocumentRiskFactor(documentId, diastolicBloodPressure.getId());
-                RiskFactor.setDiastolicBloodPressure(createObservationFromRiskFactor(diastolicBloodPressure));
+				if (RiskFactor.getDiastolicBloodPressure().getId() == null) {
+					ObservationRiskFactor diastolicBloodPressure = createObservationRiskFactor(patientId,
+							RiskFactor.getDiastolicBloodPressure(), ERiskFactor.DIASTOLIC_BLOOD_PRESSURE);
+					if (documentId != null)
+						documentService.createDocumentRiskFactor(documentId, diastolicBloodPressure.getId());
+					RiskFactor.setDiastolicBloodPressure(createObservationFromRiskFactor(diastolicBloodPressure));
+				}
+				else
+					documentService.createDocumentRiskFactor(documentId, RiskFactor.getDiastolicBloodPressure().getId());
             }
 
             if(mustSaveClinicalObservation(RiskFactor.getMeanPressure())) {
-                ObservationRiskFactor meanPressure = createObservationRiskFactor(patientId,
-                        RiskFactor.getMeanPressure(), ERiskFactor.MEAN_PRESSURE);
-                if (documentId != null)
-                    documentService.createDocumentRiskFactor(documentId, meanPressure.getId());
-                RiskFactor.setMeanPressure(createObservationFromRiskFactor(meanPressure));
+				if (RiskFactor.getMeanPressure().getId() == null) {
+					ObservationRiskFactor meanPressure = createObservationRiskFactor(patientId,
+							RiskFactor.getMeanPressure(), ERiskFactor.MEAN_PRESSURE);
+					if (documentId != null)
+						documentService.createDocumentRiskFactor(documentId, meanPressure.getId());
+					RiskFactor.setMeanPressure(createObservationFromRiskFactor(meanPressure));
+				}
+				else
+					documentService.createDocumentRiskFactor(documentId, RiskFactor.getMeanPressure().getId());
             }
 
             if(mustSaveClinicalObservation(RiskFactor.getTemperature())) {
-                ObservationRiskFactor temperature = createObservationRiskFactor(patientId,
-                        RiskFactor.getTemperature(), ERiskFactor.TEMPERATURE);
-                if (documentId != null)
-                    documentService.createDocumentRiskFactor(documentId, temperature.getId());
-                RiskFactor.setTemperature(createObservationFromRiskFactor(temperature));
+				if (RiskFactor.getTemperature().getId() == null) {
+					ObservationRiskFactor temperature = createObservationRiskFactor(patientId,
+							RiskFactor.getTemperature(), ERiskFactor.TEMPERATURE);
+					if (documentId != null)
+						documentService.createDocumentRiskFactor(documentId, temperature.getId());
+					RiskFactor.setTemperature(createObservationFromRiskFactor(temperature));
+				}
+                else
+					documentService.createDocumentRiskFactor(documentId, RiskFactor.getTemperature().getId());
             }
 
             if(mustSaveClinicalObservation(RiskFactor.getHeartRate())) {
-                ObservationRiskFactor heartRate = createObservationRiskFactor(patientId,
-                        RiskFactor.getHeartRate(), ERiskFactor.HEART_RATE);
-                if (documentId != null)
-                    documentService.createDocumentRiskFactor(documentId, heartRate.getId());
-                RiskFactor.setHeartRate(createObservationFromRiskFactor(heartRate));
+				if (RiskFactor.getHeartRate().getId() == null) {
+					ObservationRiskFactor heartRate = createObservationRiskFactor(patientId,
+							RiskFactor.getHeartRate(), ERiskFactor.HEART_RATE);
+					if (documentId != null)
+						documentService.createDocumentRiskFactor(documentId, heartRate.getId());
+					RiskFactor.setHeartRate(createObservationFromRiskFactor(heartRate));
+				}
+                else
+					documentService.createDocumentRiskFactor(documentId, RiskFactor.getHeartRate().getId());
             }
 
             if(mustSaveClinicalObservation(RiskFactor.getRespiratoryRate())) {
-                ObservationRiskFactor respiratoryRate = createObservationRiskFactor(patientId,
-                        RiskFactor.getRespiratoryRate(), ERiskFactor.RESPIRATORY_RATE);
-                if (documentId != null)
-                    documentService.createDocumentRiskFactor(documentId, respiratoryRate.getId());
-                RiskFactor.setRespiratoryRate(createObservationFromRiskFactor(respiratoryRate));
+				if (RiskFactor.getRespiratoryRate().getId() == null) {
+					ObservationRiskFactor respiratoryRate = createObservationRiskFactor(patientId,
+							RiskFactor.getRespiratoryRate(), ERiskFactor.RESPIRATORY_RATE);
+					if (documentId != null)
+						documentService.createDocumentRiskFactor(documentId, respiratoryRate.getId());
+					RiskFactor.setRespiratoryRate(createObservationFromRiskFactor(respiratoryRate));
+				}
+                else
+					documentService.createDocumentRiskFactor(documentId, RiskFactor.getRespiratoryRate().getId());
             }
 
             if(mustSaveClinicalObservation(RiskFactor.getBloodOxygenSaturation())) {
-                ObservationRiskFactor bloodOxygenSaturation = createObservationRiskFactor(patientId,
-                        RiskFactor.getBloodOxygenSaturation(), ERiskFactor.BLOOD_OXYGEN_SATURATION);
-                if (documentId != null)
-                    documentService.createDocumentRiskFactor(documentId, bloodOxygenSaturation.getId());
-                RiskFactor.setBloodOxygenSaturation(createObservationFromRiskFactor(bloodOxygenSaturation));
+				if (RiskFactor.getBloodOxygenSaturation().getId() == null) {
+					ObservationRiskFactor bloodOxygenSaturation = createObservationRiskFactor(patientId,
+							RiskFactor.getBloodOxygenSaturation(), ERiskFactor.BLOOD_OXYGEN_SATURATION);
+					if (documentId != null)
+						documentService.createDocumentRiskFactor(documentId, bloodOxygenSaturation.getId());
+					RiskFactor.setBloodOxygenSaturation(createObservationFromRiskFactor(bloodOxygenSaturation));
+				}
+                else
+					documentService.createDocumentRiskFactor(documentId, RiskFactor.getBloodOxygenSaturation().getId());
             }
 
             if(mustSaveClinicalObservation(RiskFactor.getBloodGlucose())) {
-                ObservationRiskFactor bloodGlucose = createObservationRiskFactor(patientId,
-                        RiskFactor.getBloodGlucose(), ERiskFactor.BLOOD_GLUCOSE);
-                if (documentId != null)
-                    documentService.createDocumentRiskFactor(documentId, bloodGlucose.getId());
-                RiskFactor.setBloodGlucose(createObservationFromRiskFactor(bloodGlucose));
+				if (RiskFactor.getBloodGlucose().getId() == null) {
+					ObservationRiskFactor bloodGlucose = createObservationRiskFactor(patientId,
+							RiskFactor.getBloodGlucose(), ERiskFactor.BLOOD_GLUCOSE);
+					if (documentId != null)
+						documentService.createDocumentRiskFactor(documentId, bloodGlucose.getId());
+					RiskFactor.setBloodGlucose(createObservationFromRiskFactor(bloodGlucose));
+				}
+				else
+					documentService.createDocumentRiskFactor(documentId, RiskFactor.getBloodGlucose().getId());
             }
 
             if(mustSaveClinicalObservation(RiskFactor.getGlycosylatedHemoglobin())) {
-                ObservationRiskFactor glycosylatedHemoglobin = createObservationRiskFactor(patientId,
-                        RiskFactor.getGlycosylatedHemoglobin(), ERiskFactor.GLYCOSYLATED_HEMOGLOBIN);
-                if (documentId != null)
-                    documentService.createDocumentRiskFactor(documentId, glycosylatedHemoglobin.getId());
-                RiskFactor.setGlycosylatedHemoglobin(createObservationFromRiskFactor(glycosylatedHemoglobin));
+				if (RiskFactor.getGlycosylatedHemoglobin().getId() == null) {
+					ObservationRiskFactor glycosylatedHemoglobin = createObservationRiskFactor(patientId,
+							RiskFactor.getGlycosylatedHemoglobin(), ERiskFactor.GLYCOSYLATED_HEMOGLOBIN);
+					if (documentId != null)
+						documentService.createDocumentRiskFactor(documentId, glycosylatedHemoglobin.getId());
+					RiskFactor.setGlycosylatedHemoglobin(createObservationFromRiskFactor(glycosylatedHemoglobin));
+				}
+                else
+					documentService.createDocumentRiskFactor(documentId, RiskFactor.getGlycosylatedHemoglobin().getId());
             }
 
             if(mustSaveClinicalObservation(RiskFactor.getCardiovascularRisk())) {
-                ObservationRiskFactor cardiovascularRisk = createObservationRiskFactor(patientId,
-                        RiskFactor.getCardiovascularRisk(), ERiskFactor.CARDIOVASCULAR_RISK);
-                if (documentId != null)
-                    documentService.createDocumentRiskFactor(documentId, cardiovascularRisk.getId());
-                RiskFactor.setCardiovascularRisk(createObservationFromRiskFactor(cardiovascularRisk));
+				if (RiskFactor.getCardiovascularRisk().getId() == null) {
+					ObservationRiskFactor cardiovascularRisk = createObservationRiskFactor(patientId,
+							RiskFactor.getCardiovascularRisk(), ERiskFactor.CARDIOVASCULAR_RISK);
+					if (documentId != null)
+						documentService.createDocumentRiskFactor(documentId, cardiovascularRisk.getId());
+					RiskFactor.setCardiovascularRisk(createObservationFromRiskFactor(cardiovascularRisk));
+				}
+                else
+					documentService.createDocumentRiskFactor(documentId, RiskFactor.getCardiovascularRisk().getId());
             }
         });
         LOG.debug(OUTPUT, optRiskFactors);
