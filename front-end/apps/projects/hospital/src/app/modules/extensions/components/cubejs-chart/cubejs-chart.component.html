@@ -1,4 +1,4 @@
-<h2 class="title"> {{title}}</h2>
+<h2 class="title"> {{title?.text}}</h2>
 <div *ngIf="!error; else errorChart">
 	<app-query-renderer
 		[chartType]="chartType.asObservable()"
@@ -7,6 +7,7 @@
 		[dateFormat]="dateFormat"
 		[listOnTab]="listOnTab"
 		[showLegend]="showLegend"
+		[title]="title?.subtitle?.text"
 	></app-query-renderer>
 </div>
 <ng-template #errorChart>

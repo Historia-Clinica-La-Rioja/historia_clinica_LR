@@ -73,6 +73,8 @@ export class QueryRendererComponent {
 
 	@Input() listOnTab: string = null;
 
+	@Input() title: string
+
 	chartType: any = null;
 	isQueryPresent = false;
 	error: string | null = null;
@@ -103,7 +105,6 @@ export class QueryRendererComponent {
 		},
 	};
 	numericValues: number[] = [];
-	numericTitle: string;
 	loading = false;
 
 	constructor(
@@ -406,42 +407,5 @@ export class QueryRendererComponent {
 		this.numericValues = resultSet
 			.seriesNames()
 			.map((s) => resultSet.totalRow()[s.key]);
-
-		switch (resultSet.loadResponse.results[0].query.measures[0]){
-			case 'CantidadTurnosTotal.cantidad_turnos': {
-				this.numericTitle = 'TURNOS';
-				if (resultSet.loadResponse.results[0].query.filters[0]?.member === 'CantidadTurnosTotal.estado')
-					switch (resultSet.loadResponse.results[0].query.filters[0]?.values[0]) {
-						case '1': {
-							this.numericTitle = "ASIGNADOS";
-							break;
-						}
-						case '3': {
-							this.numericTitle = "AUSENTES";
-							break;
-						}
-						case '4': {
-							this.numericTitle = "CANCELADOS";
-							break;
-						}
-						case '5': {
-							this.numericTitle = "ATENDIDOS";
-							break;
-						}
-					}
-				break;
-			}
-
-			case 'CantidadConsultasAmbulatorias.cantidad_turnos_estado': {
-				this.numericTitle = resultSet.totalRow()?.x.toUpperCase();
-
-				if (this.numericTitle === "")
-					this.numericTitle = "CONSULTAS";
-
-				if (this.numericTitle === "MASCULINO" || this.numericTitle === "FEMENINO")
-					this.numericTitle += 'S';
-				break;
-			}
-		}
 	}
 }
