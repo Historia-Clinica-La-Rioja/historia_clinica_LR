@@ -3,6 +3,7 @@ import { TriageService } from '@api-rest/services/triage.service';
 import { SnackBarService } from '@presentation/services/snack-bar.service';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { TriagePediatricDto } from '@api-rest/api-model';
+import { NewTriageService } from '@historia-clinica/services/new-triage.service';
 
 @Component({
 	selector: 'app-pediatric-triage-dialog',
@@ -19,6 +20,7 @@ export class PediatricTriageDialogComponent {
 		private readonly snackBarService: SnackBarService,
 		public readonly dialogRef: MatDialogRef<PediatricTriageDialogComponent>,
 		@Inject(MAT_DIALOG_DATA) public episodeId: number,
+		private readonly newTriageService: NewTriageService
 	) {
 	}
 
@@ -29,6 +31,7 @@ export class PediatricTriageDialogComponent {
 			.subscribe(idReturned => {
 				this.snackBarService.showSuccess('guardia.triage.NEW_TRIAGE_CONFIRMATION_MSG');
 				this.dialogRef.close(idReturned);
+				this.newTriageService.newTriage();
 			}, _ => {
 				this.snackBarService.showError('guardia.triage.NEW_TRIAGE_ERROR_MSG');
 				this.requestPending = false;

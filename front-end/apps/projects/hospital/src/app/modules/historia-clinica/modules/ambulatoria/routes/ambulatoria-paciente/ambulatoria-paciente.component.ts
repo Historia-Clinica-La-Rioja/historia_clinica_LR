@@ -4,7 +4,7 @@ import { ActivatedRoute, Router, NavigationStart } from '@angular/router';
 import { Observable, Subscription } from 'rxjs';
 import { MatTabChangeEvent } from '@angular/material/tabs';
 import { AppFeature, EMedicalCoverageTypeDto, ERole, EPatientMedicalCoverageCondition } from '@api-rest/api-model';
-import { EpicrisisSummaryDto, BasicPatientDto, OrganizationDto, PatientSummaryDto, PersonPhotoDto, InternmentEpisodeProcessDto, ExternalPatientCoverageDto, EmergencyCareEpisodeInProgressDto } from '@api-rest/api-model';
+import { EpicrisisSummaryDto, BasicPatientDto, OrganizationDto, PatientSummaryDto, PersonPhotoDto, InternmentEpisodeProcessDto, ExternalPatientCoverageDto, EmergencyCareEpisodeInProgressDto, ResponseEmergencyCareDto } from '@api-rest/api-model';
 import { PatientService } from '@api-rest/services/patient.service';
 import { InteroperabilityBusService } from '@api-rest/services/interoperability-bus.service';
 import { PatientBasicData } from '@presentation/components/patient-card/patient-card.component';
@@ -38,6 +38,7 @@ import { EmergencyCareEpisodeStateService } from '@api-rest/services/emergency-c
 import { EstadosEpisodio } from '@historia-clinica/modules/guardia/constants/masterdata';
 import { PatientType } from '@historia-clinica/constants/summaries';
 import { ComponentCanDeactivate } from '@core/guards/PendingChangesGuard';
+import { EmergencyCareEpisodeService } from '@api-rest/services/emergency-care-episode.service';
 
 const RESUMEN_INDEX = 0;
 const VOLUNTARY_ID = 1;
@@ -99,6 +100,8 @@ export class AmbulatoriaPacienteComponent implements OnInit, OnDestroy, Componen
 	isNewConsultationOpen: boolean;
 	isEmergencyCareTemporalPatient = false;
 
+	emergencyCareEpisode$: Observable<ResponseEmergencyCareDto>;
+
 	private timeOut = 15000;
 	private isOpenOdontologyConsultation = false;
 
@@ -125,6 +128,7 @@ export class AmbulatoriaPacienteComponent implements OnInit, OnDestroy, Componen
 		private readonly internmentActionsService: InternmentActionsService,
 		private readonly medicalCoverageInfo: MedicalCoverageInfoService,
 		private readonly wcExtensionsService: WCExtensionsService,
+		private readonly emergencyCareEpisodeService: EmergencyCareEpisodeService
 	) {
 		this.featureFlagService.isActive(AppFeature.HABILITAR_RECETA_DIGITAL)
 			.subscribe((result: boolean) => this.isHabilitarRecetaDigitalEnabled = result)
@@ -178,6 +182,9 @@ export class AmbulatoriaPacienteComponent implements OnInit, OnDestroy, Componen
 
 						this.emergencyCareEpisodeSummaryService.getEmergencyCareEpisodeInProgress(this.patientId).subscribe(
 							emergencyCareEpisodeInProgressDto => {
+
+								this.emergencyCareEpisode$ = this.emergencyCareEpisodeService.getAdministrative(emergencyCareEpisodeInProgressDto.id)
+
 								this.emergencyCareEpisodeInProgress = emergencyCareEpisodeInProgressDto;
 								if (emergencyCareEpisodeInProgressDto?.id) {
 									this.emergencyCareEpisodeStateService.getState(emergencyCareEpisodeInProgressDto.id).subscribe(

@@ -110,13 +110,15 @@
 				<div buttons-content fxLayout="column" fxLayoutGap="10px" fxLayout.xs="row"
 					fxLayoutAlign="center center">
 					<app-clinical-history-actions id="actions" [internmentEpisodeProcess]="internmentEpisodeProcess"
-						[patientId]="patientId" (popUpOpen)="dialogRef = $event">
+						[emergencyCareEpisode]="emergencyCareEpisode$ | async" [patientId]="patientId"
+						(popUpOpen)="dialogRef = $event">
 					</app-clinical-history-actions>
 					<button mat-stroked-button color="primary" (click)="goToPatient()" btn-block>
 						{{ 'ambulatoria.paciente.card.buttons.SHOW_PATIENT' | translate | uppercase }}</button>
 				</div>
 			</div>
 		</mat-card>
+
 
 
 		<div class="flex-container" *ngIf="externalInstitutionsEnabled">

@@ -3,7 +3,7 @@
     <ng-container
         *appHasRole="['ESPECIALISTA_MEDICO', 'ENFERMERO_ADULTO_MAYOR', 'PROFESIONAL_DE_SALUD', 'ENFERMERO', 'ESPECIALISTA_EN_ODONTOLOGIA', 'PRESCRIPTOR']">
         <button id="acciones" mat-flat-button color="primary" mat-button [matMenuTriggerFor]="menu"
-            *ngIf="(hasInternmentActionsToDo || currentUserIsAllowedToMakeBothConsultation) else showNewConsultationButton">
+            *ngIf="(hasInternmentActionsToDo || currentUserIsAllowedToMakeBothConsultation || anyEmergencyCareAction) else showNewConsultationButton">
             {{ 'ambulatoria.paciente.card.buttons.actions.ACTIONS' | translate | uppercase }}
         </button>
     </ng-container>
@@ -13,13 +13,25 @@
             <ng-container *appHasRole="['ENFERMERO']">
                 <div *ngTemplateOutlet="nurseConsultation"></div>
             </ng-container>
-            <ng-container *appHasRole="['ESPECIALISTA_MEDICO', 'ENFERMERO_ADULTO_MAYOR', 'PROFESIONAL_DE_SALUD', 'PRESCRIPTOR']">
+            <ng-container
+                *appHasRole="['ESPECIALISTA_MEDICO', 'ENFERMERO_ADULTO_MAYOR', 'PROFESIONAL_DE_SALUD', 'PRESCRIPTOR']">
                 <div *ngTemplateOutlet="ambulatoryConsultation"></div>
             </ng-container>
         </ng-container>
     </ng-template>
 
     <mat-menu #menu="matMenu">
+
+        <div *ngIf="anyEmergencyCareAction" id="emergencyCare">
+            <mat-label class="actions-labels color-grey">
+                GUARDIA
+            </mat-label>
+            <button mat-menu-item id="new_triage" color="primary" (click)="newTriage()" class="actions"
+                >
+                {{ 'ambulatoria.paciente.guardia.NUEVO_TRIAGE' | translate }}
+            </button>
+        </div>
+
         <div id="internacion" *ngIf="hasInternmentActionsToDo">
             <mat-label class="actions-labels color-grey">
                 {{'ambulatoria.paciente.internacion.TAB_LABEL' | translate | uppercase }}
@@ -47,7 +59,7 @@
                     <button mat-menu-item *appHasRole="['ESPECIALISTA_MEDICO']" class="actions"
                         (click)="openEpicrisisDraft()">
                         {{'ambulatoria.paciente.card.buttons.actions.EPICRISIS_DRAFT' | translate}}
-                    </button> 
+                    </button>
                 </ng-container>
             </ng-container>
             <ng-container *ngIf="epicrisisDoc?.confirmed && !hasMedicalDischarge">
@@ -73,7 +85,8 @@
                     </button>
                 </ng-container>
                 <ng-container id="enfermeria" *appHasRole="['ENFERMERO']">
-                    <mat-divider *ngIf="currentUserIsAllowedToMakeBothConsultation || hasInternmentEpisodeInThisInstitution">
+                    <mat-divider
+                        *ngIf="currentUserIsAllowedToMakeBothConsultation || hasInternmentEpisodeInThisInstitution">
                     </mat-divider>
                     <mat-label class="actions-labels color-grey">
                         {{'ambulatoria.paciente.card.buttons.actions.NURSING' | translate | uppercase }}

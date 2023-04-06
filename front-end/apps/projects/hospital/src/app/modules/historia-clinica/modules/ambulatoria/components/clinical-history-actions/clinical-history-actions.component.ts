@@ -1,6 +1,6 @@
 import { Component, Input, OnInit, EventEmitter, Output } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
-import { HealthConditionDto, DiagnosisDto, InternmentEpisodeProcessDto, AnamnesisSummaryDto, EpicrisisSummaryDto, EvaluationNoteSummaryDto, DocumentHistoricDto, DocumentSearchDto } from '@api-rest/api-model';
+import { HealthConditionDto, DiagnosisDto, InternmentEpisodeProcessDto, AnamnesisSummaryDto, EpicrisisSummaryDto, EvaluationNoteSummaryDto, DocumentHistoricDto, DocumentSearchDto, EmergencyCareEpisodeInProgressDto, ResponseEmergencyCareDto } from '@api-rest/api-model';
 import { ERole } from '@api-rest/api-model';
 import { ClinicalSpecialtyService } from '@api-rest/services/clinical-specialty.service';
 import { InternmentStateService } from '@api-rest/services/internment-state.service';
@@ -24,6 +24,8 @@ import { PatientAllergiesService } from '../../services/patient-allergies.servic
 import { DocumentActionsService } from '../../modules/internacion/services/document-actions.service';
 import { DeleteDocumentActionService } from '../../modules/internacion/services/delete-document-action.service';
 import { EditDocumentActionService } from '../../modules/internacion/services/edit-document-action.service';
+import { TriageDefinitionsService } from '@historia-clinica/modules/guardia/services/triage-definitions.service';
+import { EstadosEpisodio } from '@historia-clinica/modules/guardia/constants/masterdata';
 
 @Component({
 	selector: 'app-clinical-history-actions',
@@ -32,6 +34,8 @@ import { EditDocumentActionService } from '../../modules/internacion/services/ed
 	providers: [DocumentActionsService, DeleteDocumentActionService, EditDocumentActionService]
 })
 export class ClinicalHistoryActionsComponent implements OnInit {
+
+	readonly EstadosEpisodio = EstadosEpisodio;
 
 	dialogRef: DockPopupRef;
 	mainDiagnosis: HealthConditionDto;
@@ -61,6 +65,23 @@ export class ClinicalHistoryActionsComponent implements OnInit {
 		else
 			this.hasInternmentActionsToDo = false;
 	}
+	triageComponent;
+	episode: ResponseEmergencyCareDto;
+	anyEmergencyCareAction = false;
+	@Input() set emergencyCareEpisode(emergencyCareEpisode: ResponseEmergencyCareDto) {
+		if (emergencyCareEpisode) {
+			this.episode = emergencyCareEpisode;
+			this.anyEmergencyCareAction = emergencyCareEpisode?.emergencyCareState?.id !== EstadosEpisodio.CON_ALTA_MEDICA;
+			this.triageDefinitionsService.getTriagePath(emergencyCareEpisode.emergencyCareType?.id)
+				.subscribe(
+					({ component }) => {
+						this.triageComponent = component
+					}
+				)
+
+		}
+	}
+
 	@Output() popUpOpen = new EventEmitter<DockPopupRef>();
 
 	constructor(
@@ -77,6 +98,7 @@ export class ClinicalHistoryActionsComponent implements OnInit {
 		private readonly historialProblemsFacadeService: HistoricalProblemsFacadeService,
 		readonly internmentActions: InternmentActionsService,
 		private readonly documentActions: DocumentActionsService,
+		private readonly triageDefinitionsService: TriageDefinitionsService,
 	) { }
 
 	ngOnInit(): void {
@@ -218,6 +240,10 @@ export class ClinicalHistoryActionsComponent implements OnInit {
 
 	openEpicrisisDraft() {
 		this.documentActions.editEpicrisisDraft(this.documentEpicrisisDraft);
+	}
+
+	newTriage() {
+		this.dialog.open(this.triageComponent, { data: this.episode.id })
 	}
 
 	private hasToDoInternmentAction() {

@@ -83,12 +83,7 @@
             <app-triage-details [triage]="lastTriage" [emergencyCareType]="emergencyCareType" [showRiskFactors]="false"
                 (triageRiskFactors)="triageRiskFactors.emit($event)">
             </app-triage-details>
-
-            <div fxLayout="row" fxLayoutAlign="flex-end center" *ngIf="withoutMedicalDischarge">
-                <button id="new_triage" mat-raised-button color="primary" (click)="newTriage()">
-                    {{ 'ambulatoria.paciente.guardia.NUEVO_TRIAGE' | translate | uppercase }}
-                </button>
-            </div>
+>
 
             <div id="history">
                 <h3 class="bold" style="margin-bottom: 0">

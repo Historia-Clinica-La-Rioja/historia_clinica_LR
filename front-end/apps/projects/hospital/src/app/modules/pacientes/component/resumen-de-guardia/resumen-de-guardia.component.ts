@@ -22,6 +22,7 @@ import { ConfirmDialogComponent } from '@presentation/dialogs/confirm-dialog/con
 import { EmergencyCareEpisodeAdministrativeDischargeService } from '@api-rest/services/emergency-care-episode-administrative-service.service';
 import { PermissionsService } from '@core/services/permissions.service';
 import { anyMatch } from '@core/utils/array.utils';
+import { NewTriageService } from '@historia-clinica/services/new-triage.service';
 
 const TRANSLATE_KEY_PREFIX = 'guardia.home.episodes.episode.actions';
 
@@ -32,6 +33,7 @@ const TRANSLATE_KEY_PREFIX = 'guardia.home.episodes.episode.actions';
 })
 export class ResumenDeGuardiaComponent implements OnInit {
 
+	//En lugar de pasar el id puedo pasar el episodio entero porque ya lo voy a estar calculando desde antes en ambulatoria
 	@Input() episodeId: number;
 	@Output() triageRiskFactors = new EventEmitter<RiskFactorFull[]>();
 
@@ -68,9 +70,11 @@ export class ResumenDeGuardiaComponent implements OnInit {
 		private readonly emergencyCareEpisodeStateService: EmergencyCareEpisodeStateService,
 		private readonly emergencyCareEpisodeAdministrativeDischargeService: EmergencyCareEpisodeAdministrativeDischargeService,
 		private readonly permissionsService: PermissionsService,
+		private readonly newTriageService: NewTriageService
 	) {
 
 	}
+
 
 	ngOnInit(): void {
 		this.permissionsService.contextAssignments$().subscribe(
@@ -89,19 +93,12 @@ export class ResumenDeGuardiaComponent implements OnInit {
 			}
 		);
 
-		this.loadEpisode();
-	}
+		this.loadEpisode()
 
-	newTriage() {
-		this.triageDefinitionsService.getTriagePath(this.emergencyCareType)
-			.subscribe(({ component }) => {
-				const dialogRef = this.dialog.open(component, { data: this.episodeId });
-				dialogRef.afterClosed().subscribe(idReturned => {
-					if (idReturned) {
-						this.loadTriages();
-					}
-				});
-			});
+		this.newTriageService.newTriage$.subscribe(
+			_ => this.loadTriages()
+		)
+
 	}
 
 	cancelAttention() {
@@ -202,7 +199,7 @@ export class ResumenDeGuardiaComponent implements OnInit {
 
 		// Following code within this function must be in this order
 
-		if (this.hasEmergencyCareRelatedRole && this.episodeState === this.STATES.EN_ATENCION && !this.isEmergencyCareTemporalPatient) {
+		if (this.hasEmergencyCareRelatedRole && this.episodeState === this.STATES.EN_ATENCION) {
 			let action: ActionInfo = {
 				label: 'ambulatoria.paciente.guardia.MEDICAL_DISCHARGE_BUTTON',
 				id: 'medical_discharge',
@@ -276,7 +273,6 @@ export class ResumenDeGuardiaComponent implements OnInit {
 				this.responseEmergencyCare = responseEmergencyCare;
 				this.emergencyCareType = responseEmergencyCare.emergencyCareType?.id;
 				this.doctorsOfficeDescription = responseEmergencyCare.doctorsOffice?.description;
-				this.isEmergencyCareTemporalPatient = responseEmergencyCare.patient.typeId === PatientType.EMERGENCY_CARE_TEMPORARY;
 			});
 
 		this.loadTriages();
