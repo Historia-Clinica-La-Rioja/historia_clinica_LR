@@ -1,6 +1,7 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { MatOption } from '@angular/material/core';
+import { MatPaginator } from '@angular/material/paginator';
 import { MatSelect, MatSelectChange } from '@angular/material/select';
 import { EquipmentAppointmentListDto, EquipmentDto } from '@api-rest/api-model';
 import { AppFeature } from '@api-rest/api-model';
@@ -12,6 +13,8 @@ import { Color } from '@presentation/colored-label/colored-label.component';
 import { WORKLIST_APPOINTMENT_STATES, APPOINTMENT_STATES_ID, AppointmentState } from '@turnos/constants/appointment';
 import { Observable } from 'rxjs';
 
+const PAGE_SIZE_OPTIONS = [10];
+const PAGE_MIN_SIZE = 10;
 const stateColor = {
     [APPOINTMENT_STATES_ID.CONFIRMED]:  Color.YELLOW,
     [APPOINTMENT_STATES_ID.ABSENT]: Color.GREY,
@@ -27,6 +30,7 @@ const stateColor = {
 })
 export class WorklistComponent implements OnInit {
     @ViewChild('select') select: MatSelect;
+    @ViewChild('paginator') paginator: MatPaginator;
     equipments$: Observable<EquipmentDto[]>;
     detailedAppointments: detailedAppointment[] = [];
     appointments: EquipmentAppointmentListDto[] = [];
@@ -39,7 +43,10 @@ export class WorklistComponent implements OnInit {
     appointmentsStates = WORKLIST_APPOINTMENT_STATES;
     states = new FormControl('');
     selectedStates: string = '';
-    allSelected=false;      
+    allSelected = false;
+
+    pageSizeOptions = PAGE_SIZE_OPTIONS;
+    pageSlice = [];
 
     constructor(private readonly equipmentService: EquipmentService,
 		private readonly featureFlagService: FeatureFlagService,
@@ -70,11 +77,13 @@ export class WorklistComponent implements OnInit {
     private filterAppointments(stateFilters?: AppointmentState[]){
         let filteredAppointments = this.appointments.filter(appointment => stateFilters.find(a => a.id === appointment.appointmentStateId));
         this.detailedAppointments = this.mapAppointmentsToDetailedAppointments(filteredAppointments);
+        this.pageSlice = this.detailedAppointments.slice(0, PAGE_MIN_SIZE);
     }
 
     onStatusChange(states: MatSelectChange){
         this.setSelectionText(states);
         this.filterAppointments(states.value);
+        this.paginator?.firstPage();
     }
 
     private setSelectionText(states: MatSelectChange){
@@ -141,7 +150,13 @@ export class WorklistComponent implements OnInit {
           .split(' ')
           .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
           .join(' ') : "";
-      }
+    }
+
+    onPageChange($event: any) {
+		const page = $event;
+		const startPage = page.pageIndex * page.pageSize;
+		this.pageSlice = this.detailedAppointments.slice(startPage, $event.pageSize + startPage);
+	}
 }
 
 export interface detailedAppointment {
