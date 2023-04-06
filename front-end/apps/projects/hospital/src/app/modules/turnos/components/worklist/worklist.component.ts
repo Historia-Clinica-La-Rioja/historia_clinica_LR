@@ -1,5 +1,7 @@
-import { Component, OnInit } from '@angular/core';
-import { MatSelectChange } from '@angular/material/select';
+import { Component, OnInit, ViewChild } from '@angular/core';
+import { FormControl } from '@angular/forms';
+import { MatOption } from '@angular/material/core';
+import { MatSelect, MatSelectChange } from '@angular/material/select';
 import { EquipmentAppointmentListDto, EquipmentDto } from '@api-rest/api-model';
 import { AppFeature } from '@api-rest/api-model';
 import { mapDateWithHypenToDateWithSlash, timeToString } from '@api-rest/mapper/date-dto.mapper';
@@ -7,7 +9,16 @@ import { AppointmentsService } from '@api-rest/services/appointments.service';
 import { EquipmentService } from '@api-rest/services/equipment.service';
 import { FeatureFlagService } from '@core/services/feature-flag.service';
 import { Color } from '@presentation/colored-label/colored-label.component';
-import { APPOINTMENT_STATES, APPOINTMENT_STATES_ID } from '@turnos/constants/appointment';
+import { WORKLIST_APPOINTMENT_STATES, APPOINTMENT_STATES_ID, AppointmentState } from '@turnos/constants/appointment';
+import { Observable } from 'rxjs';
+
+const stateColor = {
+    [APPOINTMENT_STATES_ID.CONFIRMED]:  Color.YELLOW,
+    [APPOINTMENT_STATES_ID.ABSENT]: Color.GREY,
+    [APPOINTMENT_STATES_ID.SERVED]: Color.GREEN,
+    [APPOINTMENT_STATES_ID.CANCELLED]: Color.RED,
+    [APPOINTMENT_STATES_ID.ASSIGNED]: Color.BLUE
+  }
 
 @Component({
     selector: 'app-worklist',
@@ -15,14 +26,20 @@ import { APPOINTMENT_STATES, APPOINTMENT_STATES_ID } from '@turnos/constants/app
     styleUrls: ['./worklist.component.scss']
 })
 export class WorklistComponent implements OnInit {
-    equipments: EquipmentDto[] = [];
+    @ViewChild('select') select: MatSelect;
+    equipments$: Observable<EquipmentDto[]>;
     detailedAppointments: detailedAppointment[] = [];
     appointments: EquipmentAppointmentListDto[] = [];
-    isFetchingData = false;
+
     nameSelfDeterminationFF = false;
 	permission = false;
 
     readonly mssg = 'image-network.home.NO_PERMISSION';
+
+    appointmentsStates = WORKLIST_APPOINTMENT_STATES;
+    states = new FormControl('');
+    selectedStates: string = '';
+    allSelected=false;      
 
     constructor(private readonly equipmentService: EquipmentService,
 		private readonly featureFlagService: FeatureFlagService,
@@ -38,56 +55,83 @@ export class WorklistComponent implements OnInit {
 	}
 
     ngOnInit(): void {
-        this.equipmentService.getAll().subscribe((equipments: EquipmentDto[]) => {
-            this.equipments = equipments;
+        this.equipments$ = this.equipmentService.getAll();
+    }
+
+    onEquipmentChange(equipment: MatSelectChange){
+        let equipmentId = equipment.value.id;
+        this.appointmentsService.getAppointmentsByEquipment(equipmentId).subscribe(appointments => {
+            this.appointments = appointments;
+            this.setDefaultSelection();
+            this.checkSelection();
+         })
+    }
+
+    private filterAppointments(stateFilters?: AppointmentState[]){
+        let filteredAppointments = this.appointments.filter(appointment => stateFilters.find(a => a.id === appointment.appointmentStateId));
+        this.detailedAppointments = this.mapAppointmentsToDetailedAppointments(filteredAppointments);
+    }
+
+    onStatusChange(states: MatSelectChange){
+        this.setSelectionText(states);
+        this.filterAppointments(states.value);
+    }
+
+    private setSelectionText(states: MatSelectChange){
+        this.selectedStates = '';
+        states.value.map(state => {
+            this.selectedStates = this.selectedStates.concat(state.description.toString(), ", ")
+        })
+        this.selectedStates = this.selectedStates.trim().slice(0, -1);
+    }
+
+    toggleAllSelection() {
+        if (this.allSelected) {
+          this.select.options.forEach((item: MatOption) => item.select());
+        } else {
+          this.select.options.forEach((item: MatOption) => item.deselect());
+        }
+      }
+
+    checkSelection() {
+        let newStatus = true;
+        this.select.options.forEach((item: MatOption) => {
+          if (!item.selected) {
+            newStatus = false;
+          }
+        });
+        this.allSelected = newStatus;
+    }
+
+    private setDefaultSelection(){
+        this.select?.options.forEach((item: MatOption) => {
+            item.deselect();
+            if ((item.value.id === APPOINTMENT_STATES_ID.ASSIGNED || item.value.id === APPOINTMENT_STATES_ID.CONFIRMED) && !item.selected) {
+                item._selectViaInteraction();
+            }
         });
     }
 
-    filterAppointments(equipment: MatSelectChange){
-        this.isFetchingData = true;
-        this.detailedAppointments = [];
-        this.appointmentsService.getAppointmentsByEquipment(equipment.value.id).subscribe(appointments => {
-           this.mapAppointmentsToDetailedAppointments(appointments);
-           this.isFetchingData = false;
-        })
+    private getAppointmentStateColor(appointmentStateId: number): string {
+        return stateColor[appointmentStateId];
     }
 
-    private getAppointmentStateColor(appointment: EquipmentAppointmentListDto): string {
-        if (appointment.appointmentStateId === APPOINTMENT_STATES_ID.CONFIRMED) {
-            return Color.YELLOW;
-        }
-
-        if (appointment.appointmentStateId === APPOINTMENT_STATES_ID.ABSENT) {
-            return Color.GREY;
-        }
-
-        if (appointment.appointmentStateId === APPOINTMENT_STATES_ID.SERVED) {
-            return Color.GREEN;
-        }
-
-        if (appointment.appointmentStateId === APPOINTMENT_STATES_ID.CANCELLED) {
-            return Color.RED;
-        }
-
-        return Color.BLUE;
+    private getAppointmentDescription(appointmentStateId: number): string {
+        return WORKLIST_APPOINTMENT_STATES.find(a => a.id == appointmentStateId).description
     }
 
-    private getAppointmentDescription(appointment: EquipmentAppointmentListDto): string {
-        return this.mapAppointmentDescription(APPOINTMENT_STATES.filter(a => a.id == appointment.appointmentStateId)[0].description)
-    }
-
-    private mapAppointmentsToDetailedAppointments(appointments){
-        appointments.map(a => {
-            this.detailedAppointments.push({
+    private mapAppointmentsToDetailedAppointments(appointments): detailedAppointment[]{
+        return appointments.map(a => {
+            return {
                 data: a, 
-                color: this.getAppointmentStateColor(a),
-                description: this.getAppointmentDescription(a),
+                color: this.getAppointmentStateColor(a.appointmentStateId),
+                description: this.getAppointmentDescription(a.appointmentStateId),
                 date: mapDateWithHypenToDateWithSlash(a.date),
                 time: timeToString(a.hour),
                 firstName: this.capitalizeWords(a.patient.person.firstName),
                 lastName: this.capitalizeWords(a.patient.person.lastName),
                 nameSelfDetermination: this.capitalizeWords(a.patient.person.nameSelfDetermination)
-            })
+            }
         })
     }
 
@@ -98,16 +142,6 @@ export class WorklistComponent implements OnInit {
           .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
           .join(' ') : "";
       }
-
-    private mapAppointmentDescription(description: string): string {
-        if (description === 'Confirmado') {
-            return 'En sala'
-        }
-        if (description === 'Cancelado') {
-            return 'Rechazado'
-        }
-        return description
-    }
 }
 
 export interface detailedAppointment {

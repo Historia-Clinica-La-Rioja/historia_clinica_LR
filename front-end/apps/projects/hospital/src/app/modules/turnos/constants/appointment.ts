@@ -35,36 +35,70 @@ export enum APPOINTMENT_STATES_ID {
 	OUT_OF_DIARY = 8
 }
 
+export enum APPOINTMENT_STATES_DESCRIPTION {
+	ASSIGNED = 'Asignado',
+	CONFIRMED = 'Confirmado',
+	ABSENT = 'Ausente',
+	CANCELLED = 'Cancelado',
+	SERVED = 'Atendido',
+	BOOKED = 'Turno online',
+	OUT_OF_DIARY = 'Fuera de agenda',
+	CONFIRMED_WAITING_ROOM = 'En sala'
+}
+
 export const APPOINTMENT_STATES: AppointmentState[] = [
 	{
 		id: APPOINTMENT_STATES_ID.ASSIGNED,
-		description: 'Asignado'
+		description: APPOINTMENT_STATES_DESCRIPTION.ASSIGNED
 	},
 	{
 		id: APPOINTMENT_STATES_ID.CONFIRMED,
-		description: 'Confirmado'
+		description: APPOINTMENT_STATES_DESCRIPTION.CONFIRMED
 	},
 	{
 		id: APPOINTMENT_STATES_ID.ABSENT,
-		description: 'Ausente'
+		description: APPOINTMENT_STATES_DESCRIPTION.ABSENT
 	},
 	{
 		id: APPOINTMENT_STATES_ID.CANCELLED,
-		description: 'Cancelado'
+		description: APPOINTMENT_STATES_DESCRIPTION.CANCELLED
+	},
+	{
+		id: APPOINTMENT_STATES_ID.SERVED,
+		description: APPOINTMENT_STATES_DESCRIPTION.SERVED
+	},
+	{
+		id: APPOINTMENT_STATES_ID.BOOKED,
+		description: APPOINTMENT_STATES_DESCRIPTION.BOOKED
+	},
+	{
+		id: APPOINTMENT_STATES_ID.OUT_OF_DIARY,
+		description: APPOINTMENT_STATES_DESCRIPTION.OUT_OF_DIARY
+	},
+
+];
+
+export const WORKLIST_APPOINTMENT_STATES: AppointmentState[] = [
+	{
+		id: APPOINTMENT_STATES_ID.ASSIGNED,
+		description: APPOINTMENT_STATES_DESCRIPTION.ASSIGNED
+	},
+	{
+		id: APPOINTMENT_STATES_ID.CONFIRMED,
+		description: APPOINTMENT_STATES_DESCRIPTION.CONFIRMED_WAITING_ROOM
+	},
+	{
+		id: APPOINTMENT_STATES_ID.ABSENT,
+		description: APPOINTMENT_STATES_DESCRIPTION.ABSENT
+	},/* Queda para un futuro sprint
+	{
+		id: APPOINTMENT_STATES_ID.CANCELLED,
+		description: 'Rechazado'
 	},
 	{
 		id: APPOINTMENT_STATES_ID.SERVED,
 		description: 'Atendido'
-	},
-	{
-		id: APPOINTMENT_STATES_ID.BOOKED,
-		description: 'Turno online'
-	},
-	{
-		id: APPOINTMENT_STATES_ID.OUT_OF_DIARY,
-		description: 'Fuera de agenda'
-	},
-
+	}*/
 ];
 
 export interface AppointmentState {

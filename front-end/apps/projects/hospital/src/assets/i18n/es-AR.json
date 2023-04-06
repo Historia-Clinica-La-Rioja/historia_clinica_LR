@@ -44,7 +44,8 @@
 		"ACCEPT": "Aceptar",
 		"SAVE": "Guardar",
 		"CSV_DOWNLOAD": "DESCARGAR .CSV",
-		"ELECTRONIC_FIRM": "Firmar electrónicamente"
+		"ELECTRONIC_FIRM": "Firmar electrónicamente",
+		"ALL": "Todos"
 	},
 	"forms": {
 		"REQUIRED": "El campo es requerido",

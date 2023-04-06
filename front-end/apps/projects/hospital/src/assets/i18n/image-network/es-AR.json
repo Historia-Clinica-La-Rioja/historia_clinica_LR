@@ -27,7 +27,8 @@
 		},
         "appointments": {
             "COMPLETE": "Completar",
-            "WORKLIST": "Lista de trabajo"
+            "WORKLIST": "Lista de trabajo",
+            "FILTER_BY_STATE": "Filtrar por estado"
         }
 
     }

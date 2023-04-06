@@ -112,9 +112,9 @@ export class AppointmentsService {
 		return this.http.get<AppointmentDto>(url);
 	}
 
-	getAppointmentsByEquipment(equipmentId: number): Observable<EquipmentAppointmentListDto> {
+	getAppointmentsByEquipment(equipmentId: number): Observable<EquipmentAppointmentListDto[]> {
 		const url = `${environment.apiBase}/institutions/${this.contextService.institutionId}/medicalConsultations/appointments/list-appoiments-by-equipment/${equipmentId}`;
-		return this.http.get<EquipmentAppointmentListDto>(url)
+		return this.http.get<EquipmentAppointmentListDto[]>(url)
 	}
 	
 	hasNewConsultationEnabled(patientId: number): Observable<boolean> {
