@@ -9,6 +9,7 @@ import { ListCardPatientDuplicateComponent } from './components/list-card-patien
 import { ControlPatientDuplicateComponent } from './routes/control-patient-duplicate/control-patient-duplicate.component';
 import { PatientFusionComponent } from './routes/patient-fusion/patient-fusion.component';
 import { PatientAuditService } from './services/patient-audit.service';
+import { WarningFusionComponent } from './dialogs/warning-fusion/warning-fusion.component';
 
 
 
@@ -17,7 +18,8 @@ import { PatientAuditService } from './services/patient-audit.service';
     HomeComponent,
     ListCardPatientDuplicateComponent,
     ControlPatientDuplicateComponent,
-    PatientFusionComponent
+    PatientFusionComponent,
+    WarningFusionComponent
   ],
   imports: [
     CommonModule,

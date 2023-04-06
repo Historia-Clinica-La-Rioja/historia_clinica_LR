@@ -8,6 +8,8 @@ import { AuditPatientService } from '@api-rest/services/audit-patient.service';
 import { Observable, of } from 'rxjs';
 import { PatientMasterDataService } from '@api-rest/services/patient-master-data.service';
 import { PatientMergeService } from '@api-rest/services/patient-merge.service';
+import { MatDialog } from '@angular/material/dialog';
+import { WarningFusionComponent } from '../../dialogs/warning-fusion/warning-fusion.component';
 
 const ROUTE_CONTROL_PATIENT_DUPLICATE = "auditoria/control-pacientes-duplicados"
 @Component({
@@ -22,18 +24,18 @@ export class PatientFusionComponent implements OnInit {
 	patientToAudit: DuplicatePatientDto;
 	patientsTypes: PatientType[];
 	keyAttributes = KeyAttributes;
-	oldPatientsIds: number[]=[];
+	oldPatientsIds: number[] = [];
 	patientToMerge: PatientToMergeDto = {
 		activePatientId: null,
-		oldPatientsIds:null,
-		registrationDataPerson:  {
+		oldPatientsIds: null,
+		registrationDataPerson: {
 			genderId: null,
 			nameSelfDetermination: null,
 			phonePrefix: null,
 			birthDate: null,
 			firstName: null,
 			identificationNumber: null,
-			identificationTypeId:null,
+			identificationTypeId: null,
 			lastName: null,
 			middleNames: null,
 			otherLastNames: null,
@@ -43,7 +45,7 @@ export class PatientFusionComponent implements OnInit {
 
 	constructor(private router: Router, private contextService: ContextService, private personMasterDataService: PersonMasterDataService,
 		private patientAuditService: PatientAuditService, private auditPatientService: AuditPatientService,
-		private patientMasterDataService: PatientMasterDataService, private patientMergeService: PatientMergeService) {
+		private patientMasterDataService: PatientMasterDataService, private patientMergeService: PatientMergeService, private dialog: MatDialog) {
 		this.routePrefix = `institucion/${this.contextService.institutionId}/`;
 		this.personMasterDataService.getIdentificationTypes()
 			.subscribe(identificationTypes => {
@@ -118,9 +120,27 @@ export class PatientFusionComponent implements OnInit {
 
 	merge() {
 		this.completePatientDataToMerge();
-		this.patientMergeService.merge(this.patientToMerge).subscribe(res => {
+		const dialogRef = this.dialog.open(WarningFusionComponent, {
+			data: {
+				cant: this.oldPatientsIds.length + 1,
+				fullName: '-' + (this.patientToMerge.registrationDataPerson.firstName) + (this.patientToMerge.registrationDataPerson.middleNames ? this.patientToMerge.registrationDataPerson.middleNames : '') + ' ' + (this.patientToMerge.registrationDataPerson.lastName) + (this.patientToMerge.registrationDataPerson.otherLastNames ? this.patientToMerge.registrationDataPerson.otherLastNames : ''),
+				identification: '-' + this.getIdentificationType(this.patientToMerge.registrationDataPerson.identificationTypeId) + ' ' + this.patientToMerge.registrationDataPerson.identificationNumber,
+				birthDate: '- Fecha Nac. ' + this.patientToMerge.registrationDataPerson.birthDate,
+				idPatient: '- ID ' + this.patientToMerge.activePatientId,
 
+			},
+			disableClose: true,
+			width: '35%',
+			autoFocus: false
 		})
+		dialogRef.afterClosed().subscribe(confirmed => {
+			if (confirmed) {
+				this.patientMergeService.merge(this.patientToMerge).subscribe(res => {
+
+				})
+			}
+		});
+
 	}
 
 	completePatientDataToMerge() {
@@ -134,7 +154,7 @@ export class PatientFusionComponent implements OnInit {
 		this.patientToMerge.registrationDataPerson.nameSelfDetermination = auxiliaryPatientList.find(patient => patient.patientId === this.patientToMerge.activePatientId).nameSelfDetermination;
 		this.patientToMerge.oldPatientsIds = this.oldPatientsIds;
 
-		this.oldPatientsIds.splice( this.oldPatientsIds?.indexOf(this.patientToMerge.activePatientId), 1);
+		this.oldPatientsIds.splice(this.oldPatientsIds?.indexOf(this.patientToMerge.activePatientId), 1);
 	}
 
 }

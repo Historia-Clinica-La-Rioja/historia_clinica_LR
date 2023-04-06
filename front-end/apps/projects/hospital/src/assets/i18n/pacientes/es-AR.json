@@ -296,7 +296,13 @@
 		"LABEL_STATE":"Estado",
 		"LABEL_DOC":"Doc",
 		"LABEL_ID":"ID",
-		"LABEL_BUTTON_MERGE":"Fusionar"
+		"LABEL_BUTTON_MERGE":"Fusionar",
+		"TITLE_WARNING":"Van a fusionarse {{cant}} pacientes",
+		"SUBTITLE_WARNING": "Los datos seleccionados que quedarán en el paciente resultante son: ",
+		"LABEL_WARNING":"El resto de los datos personales que quedarán en el paciente resultante serán los datos del paciente: ",
+		"QUESTION_WARNING":"¿Está seguro que desea realizar la fusión?",
+		"BUTTON_CANCEL":"No, cancelar",
+		"BUTTON_CONFIRM":"Si, fusionar"
 	}
   }
 }
