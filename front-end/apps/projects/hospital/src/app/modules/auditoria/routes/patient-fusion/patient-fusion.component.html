@@ -47,7 +47,7 @@
 					<div fxLayoutAlign="start center" class="content" fxFlex="10%">
 						<mat-radio-button color="primary" *ngIf="patient.selected"
 							(change)="setValuesPatientFusion(keyAttributes.PATIENT_ID,patient.patientId)"></mat-radio-button>
-						<span>{{patient?.patientId}} </span>
+						<span matTooltip="{{'pacientes.audit.MESSAGE_TOOLTIP' | translate}}">{{patient?.patientId}} </span>
 					</div>
 					<div fxLayoutAlign="start center" class="content" fxFlex="15%">
 						<mat-radio-button color="primary" name="names" *ngIf="patient.selected"
