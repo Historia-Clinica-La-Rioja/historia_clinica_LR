@@ -1,14 +1,14 @@
 package net.pladema.emergencycare.triage.service.impl;
 
+import ar.lamansys.sgh.shared.infrastructure.input.service.EBodyTemperature;
+import ar.lamansys.sgh.shared.infrastructure.input.service.EMuscleHypertonia;
+import ar.lamansys.sgh.shared.infrastructure.input.service.EPerfusion;
+import ar.lamansys.sgh.shared.infrastructure.input.service.ERespiratoryRetraction;
 import net.pladema.emergencycare.triage.repository.TriageCategoryRepository;
 
 import net.pladema.emergencycare.triage.service.TriageMasterDataService;
 import net.pladema.emergencycare.triage.service.domain.TriageCategoryBo;
 
-import net.pladema.emergencycare.triage.service.domain.enums.EBodyTemperature;
-import net.pladema.emergencycare.triage.service.domain.enums.EMuscleHypertonia;
-import net.pladema.emergencycare.triage.service.domain.enums.EPerfusion;
-import net.pladema.emergencycare.triage.service.domain.enums.ERespiratoryRetraction;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;

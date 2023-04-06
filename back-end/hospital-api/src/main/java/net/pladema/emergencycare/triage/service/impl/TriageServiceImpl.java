@@ -1,6 +1,10 @@
 package net.pladema.emergencycare.triage.service.impl;
 
 import ar.lamansys.sgh.clinichistory.application.createDocument.DocumentFactory;
+import ar.lamansys.sgh.shared.infrastructure.input.service.EBodyTemperature;
+import ar.lamansys.sgh.shared.infrastructure.input.service.EMuscleHypertonia;
+import ar.lamansys.sgh.shared.infrastructure.input.service.EPerfusion;
+import ar.lamansys.sgh.shared.infrastructure.input.service.ERespiratoryRetraction;
 import io.jsonwebtoken.lang.Assert;
 import net.pladema.emergencycare.repository.EmergencyCareEpisodeRepository;
 import net.pladema.emergencycare.service.EmergencyCareEpisodeStateService;
@@ -14,10 +18,6 @@ import net.pladema.emergencycare.triage.repository.entity.TriageDetails;
 import net.pladema.emergencycare.triage.repository.entity.TriageRiskFactors;
 import net.pladema.emergencycare.triage.service.TriageService;
 import net.pladema.emergencycare.triage.service.domain.TriageBo;
-import net.pladema.emergencycare.triage.service.domain.enums.EBodyTemperature;
-import net.pladema.emergencycare.triage.service.domain.enums.EMuscleHypertonia;
-import net.pladema.emergencycare.triage.service.domain.enums.EPerfusion;
-import net.pladema.emergencycare.triage.service.domain.enums.ERespiratoryRetraction;
 import net.pladema.establishment.controller.service.InstitutionExternalService;
 import ar.lamansys.sgx.shared.dates.configuration.JacksonDateFormatConfig;
 import org.slf4j.Logger;
@@ -96,14 +96,14 @@ public class TriageServiceImpl implements TriageService {
 
     private void setDetailsDescriptions(TriageBo triage) {
         LOG.debug("Input parameter -> triage {}", triage);
-        if (triage.getBodyTemperatureId() != null)
-            triage.setBodyTemperatureDescription(EBodyTemperature.getById(triage.getBodyTemperatureId()).getDescription());
-        if (triage.getMuscleHypertoniaId() != null)
-            triage.setMuscleHypertoniaDescription(EMuscleHypertonia.getById(triage.getMuscleHypertoniaId()).getDescription());
-        if (triage.getRespiratoryRetractionId() != null)
-            triage.setRespiratoryRetractionDescription(ERespiratoryRetraction.getById(triage.getRespiratoryRetractionId()).getDescription());
-        if (triage.getPerfusionId() != null)
-            triage.setPerfusionDescription(EPerfusion.getById(triage.getPerfusionId()).getDescription());
+        if (triage.getOtherRiskFactors().getBodyTemperatureId() != null)
+            triage.getOtherRiskFactors().setBodyTemperatureDescription(EBodyTemperature.getById(triage.getOtherRiskFactors().getBodyTemperatureId()).getDescription());
+        if (triage.getOtherRiskFactors().getMuscleHypertoniaId() != null)
+            triage.getOtherRiskFactors().setMuscleHypertoniaDescription(EMuscleHypertonia.getById(triage.getOtherRiskFactors().getMuscleHypertoniaId()).getDescription());
+        if (triage.getOtherRiskFactors().getRespiratoryRetractionId() != null)
+            triage.getOtherRiskFactors().setRespiratoryRetractionDescription(ERespiratoryRetraction.getById(triage.getOtherRiskFactors().getRespiratoryRetractionId()).getDescription());
+        if (triage.getOtherRiskFactors().getPerfusionId() != null)
+            triage.getOtherRiskFactors().setPerfusionDescription(EPerfusion.getById(triage.getOtherRiskFactors().getPerfusionId()).getDescription());
     }
 
     @Override
@@ -152,8 +152,10 @@ public class TriageServiceImpl implements TriageService {
 
     private Consumer<TriageBo> getPediatricConsumer() {
         return triageBo -> {
-            if (existDetails(triageBo))
-                triageDetailsRepository.save(new TriageDetails(triageBo));
+            if (existDetails(triageBo)) {
+				triageDetailsRepository.save(new TriageDetails(triageBo));
+				setDetailsDescriptions(triageBo);
+			}
 			saveRiskFactors(triageBo.getTriageId(), triageBo.getRiskFactorIds());
         };
     }
@@ -165,12 +167,12 @@ public class TriageServiceImpl implements TriageService {
 
     private boolean existDetails(TriageBo triageBo) {
         LOG.debug("Input parameter -> triageBo {}", triageBo);
-        boolean result =  (triageBo.getBodyTemperatureId() != null) ||
-                (triageBo.getCryingExcessive() != null) ||
-                (triageBo.getMuscleHypertoniaId() != null) ||
-                (triageBo.getRespiratoryRetractionId() != null) ||
-                (triageBo.getStridor() != null) ||
-                (triageBo.getPerfusionId() != null);
+        boolean result =  (triageBo.getOtherRiskFactors().getBodyTemperatureId() != null) ||
+                (triageBo.getOtherRiskFactors().getCryingExcessive() != null) ||
+                (triageBo.getOtherRiskFactors().getMuscleHypertoniaId() != null) ||
+                (triageBo.getOtherRiskFactors().getRespiratoryRetractionId() != null) ||
+                (triageBo.getOtherRiskFactors().getStridor() != null) ||
+                (triageBo.getOtherRiskFactors().getPerfusionId() != null);
         LOG.debug("Output -> {}", result);
         return result;
     }

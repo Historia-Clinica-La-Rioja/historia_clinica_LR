@@ -1,12 +1,13 @@
-package net.pladema.emergencycare.triage.service.domain.enums;
-
-import com.fasterxml.jackson.annotation.JsonCreator;
-import com.fasterxml.jackson.annotation.JsonFormat;
-import ar.lamansys.sgx.shared.exceptions.NotFoundException;
+package ar.lamansys.sgh.shared.infrastructure.input.service;
 
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
+
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonFormat;
+
+import ar.lamansys.sgx.shared.exceptions.NotFoundException;
 
 @JsonFormat(shape = JsonFormat.Shape.OBJECT)
 public enum EMuscleHypertonia {

@@ -1,8 +1,9 @@
-package net.pladema.emergencycare.triage.service.domain.enums;
+package ar.lamansys.sgh.shared.infrastructure.input.service;
+
+import ar.lamansys.sgx.shared.exceptions.NotFoundException;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonFormat;
-import ar.lamansys.sgx.shared.exceptions.NotFoundException;
 
 import java.util.List;
 import java.util.stream.Collectors;

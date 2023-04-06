@@ -3,6 +3,7 @@ package net.pladema.emergencycare.triage.service.domain;
 import ar.lamansys.sgh.clinichistory.domain.document.IDocumentBo;
 import ar.lamansys.sgh.clinichistory.domain.document.PatientInfoBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.DocumentObservationsBo;
+import ar.lamansys.sgh.clinichistory.domain.ips.OtherRiskFactorBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.RiskFactorBo;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.DocumentType;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.SourceType;
@@ -52,25 +53,7 @@ public class TriageBo implements IDocumentBo {
 
     private String notes;
 
-    private Short bodyTemperatureId;
-
-    private String bodyTemperatureDescription;
-
-    private Boolean cryingExcessive;
-
-    private Short muscleHypertoniaId;
-
-    private String muscleHypertoniaDescription;
-
-    private Short respiratoryRetractionId;
-
-    private String respiratoryRetractionDescription;
-
-    private Boolean stridor;
-
-    private Short perfusionId;
-
-    private String perfusionDescription;
+	private OtherRiskFactorBo otherRiskFactors;
 
     private LocalDateTime createdOn;
 
@@ -84,12 +67,8 @@ public class TriageBo implements IDocumentBo {
         this.doctorsOfficeId = triageVo.getDoctorsOfficeId();
         this.createdBy = triageVo.getCreatedBy();
         this.notes = triageVo.getNotes();
-        this.bodyTemperatureId = triageVo.getBodyTemperatureId();
-        this.cryingExcessive = triageVo.getCryingExcessive();
-        this.muscleHypertoniaId = triageVo.getMuscleHypertoniaId();
-        this.respiratoryRetractionId = triageVo.getRespiratoryRetractionId();
-        this.stridor = triageVo.getStridor();
-        this.perfusionId = triageVo.getPerfusionId();
+		this.otherRiskFactors = new OtherRiskFactorBo(triageVo.getBodyTemperatureId(), triageVo.getCryingExcessive(), triageVo.getMuscleHypertoniaId(),
+				triageVo.getRespiratoryRetractionId(), triageVo.getStridor(), triageVo.getPerfusionId());
         this.createdOn = triageVo.getCreatedOn();
         this.riskFactorIds = triageVo.getRiskFactorIds();
 		this.encounterId = triageVo.getEmergencyCareEpisodeId();

@@ -50,12 +50,12 @@ public class TriageDetails implements Serializable {
 
 	public TriageDetails(TriageBo triageBo) {
 		this.triageId = triageBo.getTriageId();
-		this.bodyTemperatureId = triageBo.getBodyTemperatureId();
-		this.cryingExcessive = triageBo.getCryingExcessive();
-		this.muscleHypertoniaId = triageBo.getMuscleHypertoniaId();
-		this.respiratoryRetractionId = triageBo.getRespiratoryRetractionId();
-		this.stridor = triageBo.getStridor();
-		this.perfusionId = triageBo.getPerfusionId();
+		this.bodyTemperatureId = triageBo.getOtherRiskFactors().getBodyTemperatureId();
+		this.cryingExcessive = triageBo.getOtherRiskFactors().getCryingExcessive();
+		this.muscleHypertoniaId = triageBo.getOtherRiskFactors().getMuscleHypertoniaId();
+		this.respiratoryRetractionId = triageBo.getOtherRiskFactors().getRespiratoryRetractionId();
+		this.stridor = triageBo.getOtherRiskFactors().getStridor();
+		this.perfusionId = triageBo.getOtherRiskFactors().getPerfusionId();
 	}
 
 }

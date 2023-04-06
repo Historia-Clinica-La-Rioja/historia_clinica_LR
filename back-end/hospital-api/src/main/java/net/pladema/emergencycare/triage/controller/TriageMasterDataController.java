@@ -1,14 +1,14 @@
 package net.pladema.emergencycare.triage.controller;
 
+import ar.lamansys.sgh.shared.infrastructure.input.service.EBodyTemperature;
+import ar.lamansys.sgh.shared.infrastructure.input.service.EMuscleHypertonia;
+import ar.lamansys.sgh.shared.infrastructure.input.service.EPerfusion;
+import ar.lamansys.sgh.shared.infrastructure.input.service.ERespiratoryRetraction;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import net.pladema.emergencycare.triage.controller.dto.TriageCategoryDto;
 import net.pladema.emergencycare.triage.controller.mapper.TriageMasterDataMapper;
 import net.pladema.emergencycare.triage.service.TriageMasterDataService;
 import net.pladema.emergencycare.triage.service.domain.TriageCategoryBo;
-import net.pladema.emergencycare.triage.service.domain.enums.EBodyTemperature;
-import net.pladema.emergencycare.triage.service.domain.enums.EMuscleHypertonia;
-import net.pladema.emergencycare.triage.service.domain.enums.EPerfusion;
-import net.pladema.emergencycare.triage.service.domain.enums.ERespiratoryRetraction;
 import ar.lamansys.sgx.shared.masterdata.infrastructure.input.rest.dto.MasterDataDto;
 import ar.lamansys.sgx.shared.masterdata.domain.EnumWriter;
 import org.slf4j.Logger;
