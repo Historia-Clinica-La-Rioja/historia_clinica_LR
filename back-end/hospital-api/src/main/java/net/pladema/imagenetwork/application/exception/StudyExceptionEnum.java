@@ -4,6 +4,7 @@ import lombok.Getter;
 
 @Getter
 public enum StudyExceptionEnum {
+	PAC_SERVER_NOT_FOUND("El servidor PAC indicado como %s, o no se encuentra registrado o no existe en el sistema. Por favor verifique los datos de su servidor PAC."),
 	STUDYINSTANCEUID_NOT_FOUND("El estudio identificado por %s, no se encuentra registrado en el sistema. Es posible que aún no se haya almacenado en un PAC Global en la nube para que esté disponible.");
 
 	private final String message;

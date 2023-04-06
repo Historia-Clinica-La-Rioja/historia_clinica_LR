@@ -1,6 +1,9 @@
 package net.pladema.imagenetwork.domain;
 
-import org.springframework.web.util.UriComponentsBuilder;
+import java.net.MalformedURLException;
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.net.URL;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -14,18 +17,30 @@ import net.pladema.imagenetwork.infrastructure.output.entity.StudyPacAssociation
 public class StudyInfoBo {
 
 	private String studyInstanceUID;
-	private String pacGlobalURL;
+	private URL pacGlobalURL;
 	private static final String SCHEMA = "https";
 
-	public StudyInfoBo(StudyPacAssociation studyPacAssociation) {
+	public StudyInfoBo(StudyPacAssociation studyPacAssociation) throws MalformedURLException {
 		this.studyInstanceUID = studyPacAssociation.getStudyInstanceUID();
-		this.pacGlobalURL = buildURL(studyPacAssociation.getPacGlobal());
+		this.pacGlobalURL = getURL(studyPacAssociation.getPacGlobal());
 	}
 
-	private static String buildURL(PacServer pacServer) {
-		UriComponentsBuilder builder = UriComponentsBuilder.newInstance()
-				.scheme(SCHEMA)
-				.host(pacServer.getDomain());
-		return builder.toUriString();
+	public StudyInfoBo(String studyInstanceUID, String url) throws MalformedURLException, URISyntaxException {
+		this.studyInstanceUID = studyInstanceUID;
+		this.pacGlobalURL = buildURL(url);
 	}
+
+	private static URL getURL(PacServer pacServer) throws MalformedURLException {
+		return new URL(SCHEMA, pacServer.getDomain(), "");
+	}
+
+	private static URL buildURL(String url) throws MalformedURLException, URISyntaxException {
+		URI uriObj = new URI(url);
+		return new URL(uriObj.getScheme(), uriObj.getHost(), "");
+	}
+
+	public String getDomain() {
+		return this.pacGlobalURL.getHost();
+	}
+
 }
