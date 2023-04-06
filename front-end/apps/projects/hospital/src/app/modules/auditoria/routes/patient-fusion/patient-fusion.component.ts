@@ -10,6 +10,7 @@ import { PatientMasterDataService } from '@api-rest/services/patient-master-data
 import { PatientMergeService } from '@api-rest/services/patient-merge.service';
 import { MatDialog } from '@angular/material/dialog';
 import { WarningFusionComponent } from '../../dialogs/warning-fusion/warning-fusion.component';
+import { ConfirmedFusionComponent } from '../../dialogs/confirmed-fusion/confirmed-fusion.component';
 
 const ROUTE_CONTROL_PATIENT_DUPLICATE = "auditoria/control-pacientes-duplicados"
 @Component({
@@ -136,7 +137,17 @@ export class PatientFusionComponent implements OnInit {
 		dialogRef.afterClosed().subscribe(confirmed => {
 			if (confirmed) {
 				this.patientMergeService.merge(this.patientToMerge).subscribe(res => {
-
+					const dialogRef2 = this.dialog.open(ConfirmedFusionComponent, {
+						data:{
+							idPatient:this.patientToMerge.activePatientId
+						},
+						disableClose: true,
+						width: '35%',
+						autoFocus: false
+					})
+					dialogRef2.afterClosed().subscribe(close=>{
+						this.goToBack();
+					})
 				})
 			}
 		});

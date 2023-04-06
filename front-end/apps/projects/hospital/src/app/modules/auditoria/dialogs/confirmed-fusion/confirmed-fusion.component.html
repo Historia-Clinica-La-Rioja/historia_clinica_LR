@@ -1,0 +1,15 @@
+<div fxLayout="column" fxLayoutAlign="center center" fxLayoutGap="10px" class="content">
+
+	<div fxLayout="row" class="image" fxLayoutAlign="center">
+		<mat-icon class="green">check_circle_outline</mat-icon>
+	</div>
+
+	<h2 mat-dialog-title translate="pacientes.audit.TITLE_CONFIRMED_FUSION" ></h2>
+	<span translate="pacientes.audit.SUBTITLE_CONFIRMED_FUSION" [translateParams]="{id: data.idPatient}" ></span>
+
+	<div mat-dialog-actions fxLayout="row" fxLayoutGap="25px" class="margin-bottom">
+		<button mat-raised-button mat-dialog-close cdkFocusInitial color='primary' class="uppercase">
+			{{'buttons.ACCEPT' | translate}}</button>
+	</div>
+
+</div>

@@ -302,7 +302,9 @@
 		"LABEL_WARNING":"El resto de los datos personales que quedarán en el paciente resultante serán los datos del paciente: ",
 		"QUESTION_WARNING":"¿Está seguro que desea realizar la fusión?",
 		"BUTTON_CANCEL":"No, cancelar",
-		"BUTTON_CONFIRM":"Si, fusionar"
+		"BUTTON_CONFIRM":"Si, fusionar",
+		"TITLE_CONFIRMED_FUSION":"Pacientes fusionados con éxito",
+		"SUBTITLE_CONFIRMED_FUSION":"Ahora el paciente con ID {{id}} contiene la información clínica de los pacientes fusionados.En caso de querer deshacer la fusión deberá dirigirse a la pantalla 'Desfusionar'"
 	}
   }
 }
