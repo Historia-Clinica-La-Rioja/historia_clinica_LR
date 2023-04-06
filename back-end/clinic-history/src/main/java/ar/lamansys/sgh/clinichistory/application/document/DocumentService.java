@@ -11,6 +11,7 @@ import ar.lamansys.sgh.clinichistory.domain.ips.GeneralHealthConditionBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.ImmunizationBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.MedicationBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.ObstetricEventBo;
+import ar.lamansys.sgh.clinichistory.domain.ips.OtherRiskFactorBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.ProcedureBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.RiskFactorBo;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.entity.Document;
@@ -107,5 +108,7 @@ public interface DocumentService {
 	ObstetricEventBo getObstetricEventFromDocument(Long documentId);
 
 	List<Long> getDocumentsIdsFromPatient(Integer patient);
+	
+	OtherRiskFactorBo getOtherRiskFactors(Long id);
 }
 

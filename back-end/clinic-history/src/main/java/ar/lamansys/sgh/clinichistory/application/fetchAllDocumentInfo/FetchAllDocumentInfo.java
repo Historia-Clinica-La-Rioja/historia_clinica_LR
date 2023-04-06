@@ -66,6 +66,7 @@ public class FetchAllDocumentInfo {
 		result.setDentalActions(documentService.getDentalActionsFromDocument(document.getId()));
 		result.setExternalCause(documentService.getExternalCauseFromDocument(document.getId()));
 		result.setObstetricEvent(documentService.getObstetricEventFromDocument(document.getId()));
+		result.setOtherRiskFactors(documentService.getOtherRiskFactors(document.getId()));
 		return result;
 	}
 

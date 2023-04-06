@@ -1,6 +1,7 @@
 package ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document;
 
 import java.util.List;
+import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.ips.entity.OtherRiskFactorVo;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -26,5 +27,16 @@ public interface DocumentRiskFactorRepository extends JpaRepository<DocumentRisk
             "WHERE drf.pk.documentId = :documentId " +
             "AND ovs.statusId NOT IN ('"+ ObservationStatus.ERROR+"')")
     List<ClinicalObservationVo> getRiskFactorStateFromDocument(@Param("documentId") Long documentId);
+
+	@Transactional(readOnly = true)
+	@Query("SELECT DISTINCT NEW ar.lamansys.sgh.clinichistory.infrastructure.output.repository.ips.entity.OtherRiskFactorVo(" +
+			"td.bodyTemperatureId, td.cryingExcessive, td.muscleHypertoniaId, td.respiratoryRetractionId, td.stridor, td.perfusionId) " +
+			"FROM DocumentRiskFactor drf " +
+			"JOIN ObservationRiskFactor ovs ON (drf.pk.observationRiskFactorId = ovs.id)" +
+			"JOIN TriageRiskFactors trf ON (trf.pk.observationRiskFactorId = ovs.id) " +
+			"JOIN TriageDetails td ON (td.triageId = trf.pk.triageId) " +
+			"WHERE drf.pk.documentId = :documentId " +
+			"AND ovs.statusId NOT IN ('"+ ObservationStatus.ERROR+"')")
+	OtherRiskFactorVo getOtherRiskFactorsFromDocument(@Param("documentId") Long documentId);
 
 }

@@ -12,6 +12,7 @@ import ar.lamansys.sgh.clinichistory.domain.ips.HealthHistoryConditionBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.ImmunizationBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.MedicationBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.ObstetricEventBo;
+import ar.lamansys.sgh.clinichistory.domain.ips.OtherRiskFactorBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.ProblemBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.ProcedureBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.ReasonBo;
@@ -85,6 +86,8 @@ public class DocumentBo implements IDocumentBo {
     private LocalDateTime performedDate;
 
 	private ExternalCauseBo externalCause;
+	
+	private OtherRiskFactorBo otherRiskFactors;
 
 	private ObstetricEventBo obstetricEvent;
 

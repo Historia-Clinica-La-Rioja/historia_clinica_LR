@@ -14,6 +14,9 @@ import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.e
 
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.entity.DocumentObstetricEvent;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.hospitalizationState.entity.ExternalCauseVo;
+import ar.lamansys.sgh.clinichistory.domain.ips.OtherRiskFactorBo;
+
+import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.ips.entity.OtherRiskFactorVo;
 
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.ips.entity.ObstetricEvent;
 
@@ -468,6 +471,12 @@ public class  DocumentServiceImpl implements DocumentService {
 		LOG.debug(OUTPUT, result);
 		return result;
 	}
+	
+	@Override
+	public OtherRiskFactorBo getOtherRiskFactors(Long id) {
+		OtherRiskFactorBo result = mapToOtherRiskFactorBo(documentRiskFactorRepository.getOtherRiskFactorsFromDocument(id));
+		return result;
+	}
 
 	private DentalActionBo mapToOdontologyProcedure(Object[] row) {
 		var result = new DentalActionBo();
@@ -485,6 +494,10 @@ public class  DocumentServiceImpl implements DocumentService {
 		result.setTooth(new SnomedBo((Snomed)row[2]));
 		result.setSurface(new SnomedBo((Snomed)row[3]));
 		return result;
+	}
+
+	private OtherRiskFactorBo mapToOtherRiskFactorBo(OtherRiskFactorVo otherRiskFactors) {
+		return new OtherRiskFactorBo(otherRiskFactors);
 	}
 
 }

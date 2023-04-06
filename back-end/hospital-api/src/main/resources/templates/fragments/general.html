@@ -500,6 +500,35 @@
             <strong><span  th:if="${riskFactors.cardiovascularRisk != null}" th:text="${riskFactors.cardiovascularRisk.value+ '%'}"></span></strong>
             &nbsp;<span th:if="${riskFactors.cardiovascularRisk != null}" >Fecha de medición: </span>
             <strong><span  th:if="${(riskFactors.cardiovascularRisk != null) &&  (riskFactors.cardiovascularRisk.effectiveTime != null)}" th:text="${#temporals.format(riskFactors.cardiovascularRisk.effectiveTime, 'dd-MM-yyyy HH:mm') + ' hs'}"></span></strong><br/>
+
+            <div th:if="${otherRiskFactors != null}">
+                <div th:if="${otherRiskFactors.bodyTemperatureId != null}">
+                    - Temperatura:
+                    <strong><span th:text="${otherRiskFactors.bodyTemperatureDescription}"></span></strong>
+                </div>
+                <div th:if="${otherRiskFactors.cryingExcessive != null}">
+                    - Llanto sin consuelo:
+                    <strong><span th:if="${otherRiskFactors.cryingExcessive}" th:text="Si"></span></strong>
+                    <strong><span th:if="${!otherRiskFactors.cryingExcessive}" th:text="No"></span></strong>
+                </div>
+                <div th:if="${otherRiskFactors.muscleHypertoniaId != null}">
+                    - Tono muscular:
+                    <strong><span th:text="${otherRiskFactors.muscleHypertoniaDescription}"></span></strong>
+                </div>
+                <div th:if="${otherRiskFactors.respiratoryRetractionId != null}">
+                    - Respiracion con tiraje:
+                    <strong><span th:text="${otherRiskFactors.respiratoryRetractionDescription}"></span></strong>
+                </div>
+                <div th:if="${otherRiskFactors.stridor != null}">
+                    - Respiración con estridor:
+                    <strong><span th:if="${otherRiskFactors.stridor}" th:text="Si"></span></strong>
+                    <strong><span th:if="${!otherRiskFactors.stridor}" th:text="No"></span></strong>
+                </div>
+                <div th:if="${otherRiskFactors.perfusionId != null}">
+                    - Perfusión:
+                    <strong><span th:text="${otherRiskFactors.perfusionDescription}"></span></strong>
+                </div>
+            </div>
         </div>
     </div>
 

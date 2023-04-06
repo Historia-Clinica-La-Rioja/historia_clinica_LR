@@ -98,6 +98,7 @@ public class AuditableContextBuilder {
 		contextMap.put("medications", document.getMedications());
 		contextMap.put("anthropometricData", document.getAnthropometricData());
 		contextMap.put("riskFactors", riskFactorMapper.toRiskFactorsReportDto(document.getRiskFactors()));
+		contextMap.put("otherRiskFactors", document.getOtherRiskFactors());
 		contextMap.put("notes", document.getNotes());
 		contextMap.put("author", authorFromDocumentFunction.apply(document.getId()));
 		contextMap.put("clinicalSpecialty", clinicalSpecialtyDtoFunction.apply(document.getClinicalSpecialtyId()));

@@ -1,6 +1,5 @@
-package ar.lamansys.sgh.clinichistory.domain.ips;
+package ar.lamansys.sgh.clinichistory.infrastructure.output.repository.ips.entity;
 
-import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.ips.entity.OtherRiskFactorVo;
 import ar.lamansys.sgh.shared.infrastructure.input.service.EBodyTemperature;
 import ar.lamansys.sgh.shared.infrastructure.input.service.EMuscleHypertonia;
 import ar.lamansys.sgh.shared.infrastructure.input.service.EPerfusion;
@@ -12,7 +11,7 @@ import lombok.Setter;
 @Getter
 @Setter
 @NoArgsConstructor
-public class OtherRiskFactorBo {
+public class OtherRiskFactorVo {
 
 	private Short bodyTemperatureId;
 
@@ -34,27 +33,14 @@ public class OtherRiskFactorBo {
 
 	private String perfusionDescription;
 
-	public OtherRiskFactorBo(Short bodyTemperatureId, Boolean cryingExcessive, Short muscleHypertoniaId, Short respiratoryRetractionId, Boolean stridor, Short perfusionId) {
+	public OtherRiskFactorVo(Short bodyTemperatureId, Boolean cryingExcessive, Short muscleHypertoniaId, Short respiratoryRetractionId, Boolean stridor, Short perfusionId) {
 		this.bodyTemperatureId = bodyTemperatureId;
 		this.cryingExcessive = cryingExcessive;
 		this.muscleHypertoniaId = muscleHypertoniaId;
 		this.respiratoryRetractionId = respiratoryRetractionId;
 		this.stridor = stridor;
 		this.perfusionId = perfusionId;
-		initializeDescriptions();
-	}
 
-	public OtherRiskFactorBo(OtherRiskFactorVo otherRiskFactors) {
-		this.bodyTemperatureId = otherRiskFactors.getBodyTemperatureId();
-		this.cryingExcessive = otherRiskFactors.getCryingExcessive();
-		this.muscleHypertoniaId = otherRiskFactors.getMuscleHypertoniaId();
-		this.respiratoryRetractionId = otherRiskFactors.getRespiratoryRetractionId();
-		this.stridor = otherRiskFactors.getStridor();
-		this.perfusionId = otherRiskFactors.getPerfusionId();
-		initializeDescriptions();
-	}
-
-	private void initializeDescriptions() {
 		this.bodyTemperatureDescription = EBodyTemperature.getById(bodyTemperatureId).getDescription();
 		this.muscleHypertoniaDescription = EMuscleHypertonia.getById(muscleHypertoniaId).getDescription();
 		this.respiratoryRetractionDescription = ERespiratoryRetraction.getById(respiratoryRetractionId).getDescription();
