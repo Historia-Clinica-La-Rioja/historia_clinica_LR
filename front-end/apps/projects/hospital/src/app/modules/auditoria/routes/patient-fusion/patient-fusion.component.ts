@@ -11,6 +11,7 @@ import { PatientMergeService } from '@api-rest/services/patient-merge.service';
 import { MatDialog } from '@angular/material/dialog';
 import { WarningFusionComponent } from '../../dialogs/warning-fusion/warning-fusion.component';
 import { ConfirmedFusionComponent } from '../../dialogs/confirmed-fusion/confirmed-fusion.component';
+import { SnackBarService } from '@presentation/services/snack-bar.service';
 
 const ROUTE_CONTROL_PATIENT_DUPLICATE = "auditoria/control-pacientes-duplicados"
 @Component({
@@ -46,7 +47,8 @@ export class PatientFusionComponent implements OnInit {
 
 	constructor(private router: Router, private contextService: ContextService, private personMasterDataService: PersonMasterDataService,
 		private patientAuditService: PatientAuditService, private auditPatientService: AuditPatientService,
-		private patientMasterDataService: PatientMasterDataService, private patientMergeService: PatientMergeService, private dialog: MatDialog) {
+		private patientMasterDataService: PatientMasterDataService, private patientMergeService: PatientMergeService, private dialog: MatDialog,
+		private readonly snackBarService: SnackBarService) {
 		this.routePrefix = `institucion/${this.contextService.institutionId}/`;
 		this.personMasterDataService.getIdentificationTypes()
 			.subscribe(identificationTypes => {
@@ -148,6 +150,8 @@ export class PatientFusionComponent implements OnInit {
 					dialogRef2.afterClosed().subscribe(close=>{
 						this.goToBack();
 					})
+				},error=>{
+					this.snackBarService.showError(error.text);
 				})
 			}
 		});
