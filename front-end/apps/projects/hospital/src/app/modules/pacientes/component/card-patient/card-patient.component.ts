@@ -35,7 +35,7 @@ export class CardPatientComponent {
 		private readonly patientNameService: PatientNameService,
 		private readonly datePipe: DatePipe,
 		private readonly contextService: ContextService,
-		private readonly permissionsService: PermissionsService,
+		private readonly permissionsService: PermissionsService
 	) {
 		this.routePrefix = `institucion/${this.contextService.institutionId}/`;
 	}
@@ -45,18 +45,24 @@ export class CardPatientComponent {
 		this.numberOfPatients = this.patientContent?.length;
 		this.pageSlice = this.patientContent.slice(0, PAGE_MIN_SIZE);
 	}
+
 	private mapToPatientContent(): CardModel[] {
 		let medicalSpecialist = false;
-		this.permissionsService.contextAssignments$().subscribe((userRoles: ERole[]) => medicalSpecialist = anyMatch<ERole>(userRoles,
-			[
-				ERole.ESPECIALISTA_MEDICO,
-				ERole.PROFESIONAL_DE_SALUD,
-				ERole.ENFERMERO,
-				ERole.ESPECIALISTA_EN_ODONTOLOGIA,
-				ERole.PERSONAL_DE_LABORATORIO,
-				ERole.PERSONAL_DE_IMAGENES,
-				ERole.PERSONAL_DE_FARMACIA,
-				ERole.PRESCRIPTOR]));
+		let legalPerson = false;
+		this.permissionsService.contextAssignments$().subscribe((userRoles: ERole[]) => {
+			medicalSpecialist = anyMatch<ERole>(userRoles,
+				[
+					ERole.ESPECIALISTA_MEDICO,
+					ERole.PROFESIONAL_DE_SALUD,
+					ERole.ENFERMERO,
+					ERole.ESPECIALISTA_EN_ODONTOLOGIA,
+					ERole.PERSONAL_DE_LABORATORIO,
+					ERole.PERSONAL_DE_IMAGENES,
+					ERole.PERSONAL_DE_FARMACIA,
+					ERole.PRESCRIPTOR
+				]);
+			legalPerson = anyMatch<ERole>(userRoles, [ERole.PERSONAL_DE_LEGALES]);
+		});
 
 		return this.patientData?.map((patient: PatientSearchDto) => {
 			return {
@@ -66,7 +72,7 @@ export class CardPatientComponent {
 				gender: this.genderTableView[patient.person.genderId]?.description,
 				date: patient.person.birthDate ? this.datePipe.transform(patient.person.birthDate, DatePipeFormat.SHORT_DATE) : '',
 				ranking: patient?.ranking,
-				action: this.setActionByRole(medicalSpecialist, patient.idPatient)
+				action: this.setActionByRole(medicalSpecialist, legalPerson, patient.idPatient)
 			}
 		});
 	}
@@ -79,17 +85,24 @@ export class CardPatientComponent {
 		this.pageSlice = this.patientContent.slice(startPage, $event.pageSize + startPage);
 	}
 
-	private setActionByRole(medicalSpecialist: boolean, idPatient: number): ValueAction {
+	private setActionByRole(medicalSpecialist: boolean, legalPerson: boolean, idPatient: number): ValueAction {
 		if (medicalSpecialist)
 			return {
 				display: 'ambulatoria.card-patient.BUTTON',
 				do: `${this.routePrefix}ambulatoria/paciente/${idPatient}`
 			}
-		else
-			return {
-				display: 'ambulatoria.card-patient.BUTTON',
-				do: `${this.routePrefix}pacientes/profile/${idPatient}`
-			}
+		else{
+			if (legalPerson)
+				return {
+					display: undefined,
+					do: ''
+				}
+			else
+				return {
+					display: 'ambulatoria.card-patient.BUTTON',
+					do: `${this.routePrefix}pacientes/profile/${idPatient}`
+				}
+		}
 	}
 
 	openDialog(idPatient: number) {

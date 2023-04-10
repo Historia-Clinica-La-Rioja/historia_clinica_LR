@@ -105,7 +105,8 @@
 				"ADMINISTRATIVO_RED_DE_IMAGENES": "Administrativo Red de Imágenes",
 				"PRESCRIPTOR": "Prescriptor",
 				"AUDITOR_MPI": "Auditor MPI",
-				"TECNICO": "Tecnico"
+				"TECNICO": "Tecnico",
+				"PERSONAL_DE_LEGALES": "Personal de Legales"
 			}
 		}
 	}

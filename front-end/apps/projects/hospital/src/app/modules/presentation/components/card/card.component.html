@@ -1,6 +1,6 @@
 <div id="content" fxLayoutGap="5px" fxLayout="row" fxLayout.lt-sm="column" class="card">
 
-	<div fxLayout="column" fxLayout.gt-sm="row" fxFlex="94%">
+	<div fxLayout="column" fxLayout.gt-sm="row" fxFlex="90%">
 		<div fxLayoutAlign="start center" fxLayoutGap="15px" fxFlex="40%">
 			<div fxLayoutAlign="center" fxFlex="20%">
 				<img mat-card-avatar [src]="cardContent?.avatar"
@@ -20,7 +20,7 @@
 		</mat-card-content>
 	</div>
 
-	<div id="view" *ngIf="!cardContent?.ranking" fxLayoutAlign="center start" fxLayout.gt-sm="center start" fxLayoutAlign.lt-sm="start start" fxFlex="6%"
+	<div id="view" *ngIf="!cardContent?.ranking && cardContent.action.display" fxLayoutAlign="center start" fxLayout.gt-sm="center start" fxLayoutAlign.lt-sm="start start" fxFlex="10%"
 		class="button">
 		<button id="view-button" mat-flat-button color="primary" (click)="goTo(cardContent.action.do)">
 			<span>{{ cardContent.action.display | translate | uppercase }}</span>
