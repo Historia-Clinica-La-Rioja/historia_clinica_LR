@@ -1,6 +1,7 @@
 import { DatePipe } from '@angular/common';
 import { Component, Input } from '@angular/core';
 import { MasterDataDto, PatientSearchDto } from '@api-rest/api-model';
+import { AppFeature } from '@api-rest/api-model';
 import { ERole } from '@api-rest/api-model';
 import { ContextService } from '@core/services/context.service';
 import { PatientNameService } from "@core/services/patient-name.service";
@@ -10,6 +11,7 @@ import { DatePipeFormat } from '@core/utils/date.utils';
 import { CardModel, ValueAction } from '@presentation/components/card/card.component';
 import { ViewPatientDetailComponent } from '../view-patient-detail/view-patient-detail.component';
 import { MatDialog } from "@angular/material/dialog";
+import { FeatureFlagService } from '@core/services/feature-flag.service';
 
 const PAGE_SIZE_OPTIONS = [5, 10, 25];
 const PAGE_MIN_SIZE = 5;
@@ -24,6 +26,7 @@ export class CardPatientComponent {
 	patientContent = [];
 	pageSlice = [];
 	numberOfPatients = 0;
+	printClinicalHistoryFFIsOn = false;
 	@Input() patientData: PatientSearchDto[] = [];
 	@Input() identificationTypes: MasterDataDto[] = [];
 	@Input() genderTableView: MasterDataDto[] = [];
@@ -35,9 +38,13 @@ export class CardPatientComponent {
 		private readonly patientNameService: PatientNameService,
 		private readonly datePipe: DatePipe,
 		private readonly contextService: ContextService,
-		private readonly permissionsService: PermissionsService
+		private readonly permissionsService: PermissionsService,
+		private readonly featureFlagService: FeatureFlagService
 	) {
 		this.routePrefix = `institucion/${this.contextService.institutionId}/`;
+		this.featureFlagService.isActive(AppFeature.HABILITAR_IMPRESION_HISTORIA_CLINICA_EN_DESARROLLO).subscribe(isOn => {
+			this.printClinicalHistoryFFIsOn = isOn;
+		});
 	}
 
 	ngOnChanges() {
@@ -91,8 +98,8 @@ export class CardPatientComponent {
 				display: 'ambulatoria.card-patient.BUTTON',
 				do: `${this.routePrefix}ambulatoria/paciente/${idPatient}`
 			}
-		else{
-			if (legalPerson)
+		else {
+			if (legalPerson && this.printClinicalHistoryFFIsOn)
 				return {
 					display: undefined,
 					do: ''
@@ -127,5 +134,4 @@ export class CardPatientComponent {
 			return todayDate.getFullYear() - birthDateDate.getFullYear();
 		}
 	}
-
 }
