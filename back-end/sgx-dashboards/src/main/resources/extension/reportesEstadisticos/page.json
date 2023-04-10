@@ -66,6 +66,32 @@
                 {
                   "type" : "cubejs-dashboard",
                   "args" : {
+                    "filters" : {
+                      "specialty" : {
+                        "filter" : {
+                          "member" : "CantidadConsultasAmbulatorias.especialidad",
+                          "operator" : "equals"
+                        },
+                        "type" : "specialty",
+                        "label" : "Especialidad"
+                      },
+                      "professional" : {
+                        "filter" : {
+                          "member" : "CantidadConsultasAmbulatorias.profesional",
+                          "operator" : "equals"
+                        },
+                        "type" : "professional",
+                        "label" : "Profesional"
+                      },
+                      "date" : {
+                        "filter" : {
+                          "member" : "CantidadConsultasAmbulatorias.fecha_consulta",
+                          "operator" : "inDateRange"
+                        },
+                        "type" : "dateRangeISO",
+                        "label" : "Fecha"
+                      }
+                    },
                     "content" : [
                       {
                         "type" : "card",
