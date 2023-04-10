@@ -55,10 +55,14 @@ public class OtherRiskFactorBo {
 	}
 
 	private void initializeDescriptions() {
-		this.bodyTemperatureDescription = EBodyTemperature.getById(bodyTemperatureId).getDescription();
-		this.muscleHypertoniaDescription = EMuscleHypertonia.getById(muscleHypertoniaId).getDescription();
-		this.respiratoryRetractionDescription = ERespiratoryRetraction.getById(respiratoryRetractionId).getDescription();
-		this.perfusionDescription = EPerfusion.getById(perfusionId).getDescription();
+		if (bodyTemperatureId != null)
+			this.bodyTemperatureDescription = EBodyTemperature.getById(bodyTemperatureId).getDescription();
+		if (muscleHypertoniaId != null)
+			this.muscleHypertoniaDescription = EMuscleHypertonia.getById(muscleHypertoniaId).getDescription();
+		if (respiratoryRetractionId != null)
+			this.respiratoryRetractionDescription = ERespiratoryRetraction.getById(respiratoryRetractionId).getDescription();
+		if (perfusionId != null)
+			this.perfusionDescription = EPerfusion.getById(perfusionId).getDescription();
 	}
 
 }

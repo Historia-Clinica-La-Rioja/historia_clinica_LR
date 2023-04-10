@@ -34,8 +34,8 @@ public class HealthcareProfessionalStorageImpl implements HealthcareProfessional
 		String sqlString = "" +
 				"SELECT hp.id, p.id, p.firstName, p.lastName, pe.nameSelfDetermination " +
 				"FROM HealthcareProfessional AS hp " +
-				"JOIN UserPerson AS up ON (up.pk.personId = hp.personId) " +
-				"JOIN Person p ON (hp.personId = p.id) " +
+				"RIGHT JOIN UserPerson AS up ON (up.pk.personId = hp.personId) " +
+				"JOIN Person p ON (up.pk.personId = p.id) " +
 				"LEFT JOIN PersonExtended pe ON (p.id = pe.id) " +
 				"WHERE up.pk.userId = :userId ";
 		Query query = entityManager.createQuery(sqlString);
