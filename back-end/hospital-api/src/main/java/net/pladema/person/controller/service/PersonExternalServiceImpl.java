@@ -9,6 +9,8 @@ import net.pladema.patient.controller.dto.APatientDto;
 import net.pladema.patient.controller.dto.AuditPatientSearch;
 import net.pladema.patient.controller.dto.DuplicatePatientDto;
 import net.pladema.patient.controller.dto.PatientPersonalInfoDto;
+import net.pladema.patient.repository.entity.EducationLevel;
+import net.pladema.patient.repository.entity.Occupation;
 import net.pladema.person.controller.dto.BMPersonDto;
 import net.pladema.person.controller.dto.BasicPersonalDataDto;
 import net.pladema.person.controller.dto.PersonPhotoDto;
@@ -18,6 +20,7 @@ import net.pladema.person.controller.service.exceptions.CreatePersonEnumExceptio
 import net.pladema.person.controller.service.exceptions.CreatePersonException;
 import net.pladema.person.repository.domain.DuplicatePersonVo;
 import net.pladema.person.repository.domain.PersonalInformation;
+import net.pladema.person.repository.entity.Ethnicity;
 import net.pladema.person.repository.entity.Gender;
 import net.pladema.person.repository.entity.IdentificationType;
 import net.pladema.person.repository.entity.Person;
@@ -135,7 +138,11 @@ public class PersonExternalServiceImpl implements PersonExternalService {
 				person,
 				getGender(person.getGenderId()),
 				getSelfPerceivedGender(personExtended.getGenderSelfDeterminationId(), personExtended.getId()),
-				getIdentificationType(person.getIdentificationTypeId())
+				getIdentificationType(person.getIdentificationTypeId()),
+				getOccupation(personExtended.getOccupationId()),
+				getEducationLevel(personExtended.getEducationLevelId()),
+				personExtended.getReligion(),
+				getEthnicity(personExtended.getEthnicityId())
 		);
 		result.setNameSelfDetermination(personExtended.getNameSelfDetermination());
 		if (!personFileDtoList.isEmpty()) {
@@ -143,6 +150,19 @@ public class PersonExternalServiceImpl implements PersonExternalService {
 		}
 		LOG.debug(OUTPUT, result);
 		return result;
+	}
+
+
+	private String getOccupation(Integer occupationId) {
+		return personMasterDataService.getOccupationById(occupationId).orElse(new Occupation()).getDescription();
+	}
+
+	private String getEducationLevel(Integer educationLevelId) {
+		return personMasterDataService.getEducationLevelById(educationLevelId).orElse(new EducationLevel()).getDescription();
+	}
+
+	private String getEthnicity(Integer ethnicityId) {
+		return personMasterDataService.getEthnicityById(ethnicityId).orElse(new Ethnicity()).getPt();
 	}
 
 	@Override
@@ -163,7 +183,6 @@ public class PersonExternalServiceImpl implements PersonExternalService {
 	private IdentificationType getIdentificationType(Short identificationTypeId) {
 		return personMasterDataService.getIdentificationType(identificationTypeId).orElse(new IdentificationType());
 	}
-
 
 	@Override
 	public List<BasicDataPersonDto> getBasicDataPerson(Set<Integer> personIds) {

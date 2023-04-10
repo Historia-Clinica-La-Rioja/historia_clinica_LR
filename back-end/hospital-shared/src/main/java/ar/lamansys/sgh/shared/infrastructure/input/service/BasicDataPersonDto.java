@@ -52,7 +52,32 @@ public class BasicDataPersonDto implements Serializable {
 
 	private List<PersonFileDto> files;
 
-    public String completeName(){
+	private String occupation;
+
+	private String educationLevel;
+
+	private String religion;
+
+	private String ethnicity;
+
+	/*public BasicDataPersonDto(Integer id, String firstName, String middleNames, String lastName, String otherLastNames, Short identificationTypeId, String identificationType, String identificationNumber, GenderDto gender, String selfPerceivedGender, Short age, LocalDate birthDate, String nameSelfDetermination, List<PersonFileDto> files) {
+		this.id = id;
+		this.firstName = firstName;
+		this.middleNames = middleNames;
+		this.lastName = lastName;
+		this.otherLastNames = otherLastNames;
+		this.identificationTypeId = identificationTypeId;
+		this.identificationType = identificationType;
+		this.identificationNumber = identificationNumber;
+		this.gender = gender;
+		this.selfPerceivedGender = selfPerceivedGender;
+		this.age = age;
+		this.birthDate = birthDate;
+		this.nameSelfDetermination = nameSelfDetermination;
+		this.files = files;
+	}*/
+
+	public String completeName(){
         if (lastName == null && firstName == null && middleNames == null && otherLastNames==null) {
             return null;
         }

@@ -1,5 +1,7 @@
 package net.pladema.person.service.impl;
 
+import net.pladema.patient.repository.entity.EducationLevel;
+import net.pladema.patient.repository.entity.Occupation;
 import net.pladema.person.repository.EducationLevelRepository;
 import net.pladema.person.repository.EthnicityRepository;
 import net.pladema.person.repository.GenderRepository;
@@ -109,7 +111,17 @@ public class PersonMasterDataServiceImpl implements PersonMasterDataService {
         return result;
     }
 
-    @Override
+	@Override
+	public Optional<Ethnicity> getEthnicityById(Integer ethnicityId) {
+		LOG.debug("Input parameter -> ethnicityId {}", ethnicityId);
+		if (ethnicityId == null)
+			return Optional.empty();
+		Optional<Ethnicity> result = ethnicityRepository.findById(ethnicityId);
+		LOG.debug("Output > {}", result);
+		return result;
+	}
+
+	@Override
     public List<EducationLevelBo> getActiveEducationLevels() {
         LOG.debug("No input parameters");
         List<EducationLevelBo> result = educationLevelRepository.findAllActive().stream()
@@ -120,7 +132,17 @@ public class PersonMasterDataServiceImpl implements PersonMasterDataService {
         return result;
     }
 
-    @Override
+	@Override
+	public Optional<EducationLevel> getEducationLevelById(Integer educationLevelId) {
+		LOG.debug("Input parameter -> ethnicityId {}", educationLevelId);
+		if (educationLevelId == null)
+			return Optional.empty();
+		Optional<EducationLevel> result = educationLevelRepository.findById(educationLevelId);
+		LOG.debug("Output > {}", result);
+		return result;
+	}
+
+	@Override
     public List<PersonOccupationBo> getActiveOccupations() {
         LOG.debug("No input parameters");
         List<PersonOccupationBo> result = occupationRepository.findAllActive().stream()
@@ -131,7 +153,17 @@ public class PersonMasterDataServiceImpl implements PersonMasterDataService {
         return result;
     }
 
-    @Override
+	@Override
+	public Optional<Occupation> getOccupationById(Integer occupationId) {
+		LOG.debug("Input parameter -> ethnicityId {}", occupationId);
+		if (occupationId == null)
+			return Optional.empty();
+		Optional<Occupation> result = occupationRepository.findById(occupationId);
+		LOG.debug("Output > {}", result);
+		return result;
+	}
+
+	@Override
     public void updateActiveEthnicities(List<EthnicityBo> newActiveEthnicities) {
         LOG.debug("Input parameter -> newActiveEthnicities size = {}", newActiveEthnicities.size());
         LOG.trace("Input parameter -> newActiveEthnicities {}", newActiveEthnicities);

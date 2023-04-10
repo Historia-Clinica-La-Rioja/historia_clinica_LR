@@ -55,8 +55,15 @@ public interface PersonMapper {
     @Mapping(target = "identificationType", source = "identificationType.description")
 	BasicDataPersonDto basicDataFromPerson(Person person, Gender gender, String selfPerceivedGender, IdentificationType identificationType);
 
+	@Named("toBasicDataPersonDto")
+	@Mapping(target = "id", source = "person.id")
+	@Mapping(target = "gender", source = "gender", qualifiedByName = "fromGender")
+	@Mapping(target = "identificationType", source = "identificationType.description")
+	BasicDataPersonDto basicDataFromPerson(Person person, Gender gender, String selfPerceivedGender, IdentificationType identificationType, String occupation, String educationLevel, String religion, String ethnicity);
 
-    @Named("fromPersonalInformation")
+
+
+	@Named("fromPersonalInformation")
     @Mapping(target = "identificationType", source = "identificationType", qualifiedByName = "fromIdentificationType")
     @Mapping(target = "address", source="personalInformation", qualifiedByName = "toAddressComplete")
     PersonalInformationDto fromPersonalInformation(PersonalInformation personalInformation);

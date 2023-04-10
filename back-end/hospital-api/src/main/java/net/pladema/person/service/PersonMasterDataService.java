@@ -1,5 +1,8 @@
 package net.pladema.person.service;
 
+import net.pladema.patient.repository.entity.EducationLevel;
+import net.pladema.patient.repository.entity.Occupation;
+import net.pladema.person.repository.entity.Ethnicity;
 import net.pladema.person.repository.entity.Gender;
 import net.pladema.person.repository.entity.IdentificationType;
 import net.pladema.person.repository.entity.SelfPerceivedGender;
@@ -25,10 +28,13 @@ public interface PersonMasterDataService {
     Optional<IdentificationType> getIdentificationType(Short identificationTypeId);
 
     List<EthnicityBo> getActiveEthnicities();
+	Optional<Ethnicity> getEthnicityById(Integer ethnicityId);
 
     List<EducationLevelBo> getActiveEducationLevels();
+	Optional<EducationLevel> getEducationLevelById(Integer educationLevelId);
 
     List<PersonOccupationBo> getActiveOccupations();
+	Optional<Occupation> getOccupationById(Integer occupationId);
 
     void updateActiveEthnicities(List<EthnicityBo> newActiveEthnicities);
 }
