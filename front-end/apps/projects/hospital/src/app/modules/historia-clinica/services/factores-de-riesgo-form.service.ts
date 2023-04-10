@@ -42,7 +42,7 @@ export class FactoresDeRiesgoFormService {
 	private _glycosylatedHemoglobinError$ = this.glycosylatedHemoglobinErrorSource.asObservable();
 	private cardiovascularRiskErrorSource = new Subject<string | void>();
 	private _cardiovascularRiskError$ = this.cardiovascularRiskErrorSource.asObservable();
-	private form: FormGroup;
+	form: FormGroup;
 	private notShowPreloadedRiskFactorsData = false;
 	private dateList: string[] = [];
 	private riskFactorsSubject = new BehaviorSubject<boolean>(true);
@@ -319,22 +319,24 @@ export class FactoresDeRiesgoFormService {
 	}
 
 	setPreviousRiskFactorsData(): void {
-		this.riskFactorsSubject.next(true);
-		this.hceGeneralStateService.getRiskFactors(this.patientId).subscribe(
-			(riskFactorsData: HCELast2RiskFactorsDto) => {
-				if (riskFactorsData.current === undefined)
-					this.notShowPreloadedRiskFactorsData = false;
-				else {
-					this.notShowPreloadedRiskFactorsData = true;
-					Object.keys(riskFactorsData.current).forEach((key: string) => {
-						if (riskFactorsData.current[key].value != undefined) {
-							this.form.patchValue({ [key]: { value: riskFactorsData.current[key].value } });
-							this.dateList.push(riskFactorsData.current[key].effectiveTime);
-						}
-					});
-					this.form.disable();
-				}
-			});
+		if (this.patientId) {
+			this.riskFactorsSubject.next(true);
+			this.hceGeneralStateService.getRiskFactors(this.patientId).subscribe(
+				(riskFactorsData: HCELast2RiskFactorsDto) => {
+					if (riskFactorsData.current === undefined)
+						this.notShowPreloadedRiskFactorsData = false;
+					else {
+						this.notShowPreloadedRiskFactorsData = true;
+						Object.keys(riskFactorsData.current).forEach((key: string) => {
+							if (riskFactorsData.current[key].value != undefined) {
+								this.form.patchValue({ [key]: { value: riskFactorsData.current[key].value } });
+								this.dateList.push(riskFactorsData.current[key].effectiveTime);
+							}
+						});
+						this.form.disable();
+					}
+				});
+		}
 	}
 
 	discardPreloadedRiskFactorsData() {

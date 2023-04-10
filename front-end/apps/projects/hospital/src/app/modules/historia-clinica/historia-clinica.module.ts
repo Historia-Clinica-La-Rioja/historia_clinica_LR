@@ -55,6 +55,7 @@ import { DatosAntropometricosNuevaConsultaComponent } from './components/datos-a
 import { AntecedentesFamiliaresFormComponent } from './components/antecedentes-familiares-form/antecedentes-familiares-form.component';
 import { MedicacionesFormComponent } from './components/medicaciones-form/medicaciones-form.component';
 import { ProcedimientosFormComponent } from './components/procedimientos-form/procedimientos-form.component';
+import { FactoresDeRiesgoFormV2Component } from './components/factores-de-riesgo-form-v2/factores-de-riesgo-form-v2.component';
 
 @NgModule({
 	declarations: [
@@ -108,6 +109,7 @@ import { ProcedimientosFormComponent } from './components/procedimientos-form/pr
 		AntecedentesFamiliaresFormComponent,
 		MedicacionesFormComponent,
 		ProcedimientosFormComponent,
+		FactoresDeRiesgoFormV2Component
 	],
 	imports: [
 		CommonModule,

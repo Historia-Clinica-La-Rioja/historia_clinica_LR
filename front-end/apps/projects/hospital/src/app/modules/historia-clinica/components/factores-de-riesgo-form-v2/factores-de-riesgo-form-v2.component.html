@@ -1,0 +1,10 @@
+<app-new-consultation-expansion-section id="factores_de_riesgo"
+	[title]="'historia-clinica.factores-de-riesgo-form.TITLE' | translate" icon="favorite_outlined"
+	[fixedExpanded]="factoresDeRiesgoFormService.getShowPreloadedRiskFactorsData()"
+	[isEmpty]="!factoresDeRiesgoFormService.hasAtLeastOneValueLoaded()" [(collapsed)]="collapsedRiskFactorsSection">
+
+	<app-factores-de-riesgo-form [showPreloadData]="factoresDeRiesgoFormService.getShowPreloadedRiskFactorsData()"
+		[showRecomendation]="true" [factoresDeRiesgoFormService]="factoresDeRiesgoFormService" [showTitle]="false">
+	</app-factores-de-riesgo-form>
+
+</app-new-consultation-expansion-section>
