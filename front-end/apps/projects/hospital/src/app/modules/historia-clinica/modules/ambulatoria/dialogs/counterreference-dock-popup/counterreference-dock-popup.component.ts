@@ -62,7 +62,7 @@ export class CounterreferenceDockPopupComponent implements OnInit {
 	) {
 		this.medicacionesNuevaConsultaService = new MedicacionesNuevaConsultaService(formBuilder, this.snomedService, this.snackBarService);
 		this.procedimientoNuevaConsultaService = new ProcedimientosService(formBuilder, this.snomedService, this.snackBarService);
-		this.alergiasNuevaConsultaService = new AlergiasNuevaConsultaService(formBuilder, this.snomedService, this.snackBarService);
+		this.alergiasNuevaConsultaService = new AlergiasNuevaConsultaService(formBuilder, this.snomedService, this.snackBarService, this.internacionMasterDataService);
 	}
 
 	ngOnInit(): void {
@@ -80,7 +80,7 @@ export class CounterreferenceDockPopupComponent implements OnInit {
 			this.searchConceptsLocallyFFIsOn = isOn;
 		});
 
-		this.referenceMasterDataService.getClosureTypes().subscribe( closureTypes => {
+		this.referenceMasterDataService.getClosureTypes().subscribe(closureTypes => {
 			this.closureTypes = closureTypes;
 		})
 

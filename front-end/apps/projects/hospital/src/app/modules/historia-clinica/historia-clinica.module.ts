@@ -56,6 +56,7 @@ import { AntecedentesFamiliaresFormComponent } from './components/antecedentes-f
 import { MedicacionesFormComponent } from './components/medicaciones-form/medicaciones-form.component';
 import { ProcedimientosFormComponent } from './components/procedimientos-form/procedimientos-form.component';
 import { FactoresDeRiesgoFormV2Component } from './components/factores-de-riesgo-form-v2/factores-de-riesgo-form-v2.component';
+import { AlergiasFormComponent } from './components/alergias-form/alergias-form.component';
 
 @NgModule({
 	declarations: [
@@ -109,7 +110,8 @@ import { FactoresDeRiesgoFormV2Component } from './components/factores-de-riesgo
 		AntecedentesFamiliaresFormComponent,
 		MedicacionesFormComponent,
 		ProcedimientosFormComponent,
-		FactoresDeRiesgoFormV2Component
+		FactoresDeRiesgoFormV2Component,
+		AlergiasFormComponent
 	],
 	imports: [
 		CommonModule,

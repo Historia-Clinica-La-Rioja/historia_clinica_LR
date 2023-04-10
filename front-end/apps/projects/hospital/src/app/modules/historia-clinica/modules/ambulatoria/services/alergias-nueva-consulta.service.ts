@@ -3,6 +3,8 @@ import { SnomedSemanticSearch, SnomedService } from '../../../services/snomed.se
 import { SnomedDto, SnomedECL } from '@api-rest/api-model';
 import { pushIfNotExists, removeFrom } from '@core/utils/array.utils';
 import { SnackBarService } from '@presentation/services/snack-bar.service';
+import { Subject } from 'rxjs';
+import { InternacionMasterDataService } from '@api-rest/services/internacion-master-data.service';
 
 export interface Alergia {
 	snomed: SnomedDto;
@@ -17,15 +19,23 @@ export class AlergiasNuevaConsultaService {
 	private criticalityTypes: any[];
 	private readonly ECL = SnomedECL.ALLERGY;
 
+	private readonly emitter = new Subject();
+	alergias$ = this.emitter.asObservable()
+
 	constructor(
 		private readonly formBuilder: FormBuilder,
 		private readonly snomedService: SnomedService,
-		private readonly snackBarService: SnackBarService
+		private readonly snackBarService: SnackBarService,
+		private readonly internacionMasterDataService: InternacionMasterDataService,
 	) {
 
 		this.form = this.formBuilder.group({
 			snomed: [null, Validators.required],
 			criticality: [null, Validators.required],
+		});
+
+		this.internacionMasterDataService.getAllergyCriticality().subscribe(allergyCriticalities => {
+			this.criticalityTypes = allergyCriticalities;
 		});
 
 	}
@@ -59,6 +69,7 @@ export class AlergiasNuevaConsultaService {
 	add(alergia: Alergia): boolean {
 		const currentItems = this.data.length;
 		this.data = pushIfNotExists<Alergia>(this.data, alergia, this.compareSpeciality);
+		this.emitter.next(this.data);
 		return currentItems === this.data.length;
 	}
 
@@ -73,6 +84,7 @@ export class AlergiasNuevaConsultaService {
 
 	removeAlergia(index: number): void {
 		this.data = removeFrom<Alergia>(this.data, index);
+		this.emitter.next(this.data);
 	}
 
 	addToList(): boolean {

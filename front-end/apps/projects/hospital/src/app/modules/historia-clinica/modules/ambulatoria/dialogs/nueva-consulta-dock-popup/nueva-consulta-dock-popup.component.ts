@@ -93,17 +93,17 @@ export class NuevaConsultaDockPopupComponent implements OnInit {
 		public dockPopupRef: DockPopupRef,
 		private readonly formBuilder: FormBuilder,
 		private readonly snomedService: SnomedService,
+		private readonly snackBarService: SnackBarService,
 		private readonly internacionMasterDataService: InternacionMasterDataService,
 		private readonly outpatientConsultationService: OutpatientConsultationService,
-		private readonly snackBarService: SnackBarService,
 		private readonly healthConditionService: HealthConditionService,
 		private readonly clinicalSpecialtyService: ClinicalSpecialtyService,
 		private readonly dialog: MatDialog,
 		private readonly hceGeneralStateService: HceGeneralStateService,
+		private readonly featureFlagService: FeatureFlagService,
 		private readonly translateService: TranslateService,
 		private readonly snvsMasterDataService: SnvsMasterDataService,
 		private readonly datePipe: DatePipe,
-		private readonly featureFlagService: FeatureFlagService,
 		private readonly referenceFileService: ReferenceFileService,
 		private readonly el: ElementRef,
 		private readonly snowstormService: SnowstormService,
@@ -116,7 +116,7 @@ export class NuevaConsultaDockPopupComponent implements OnInit {
 			new DatosAntropometricosNuevaConsultaService(formBuilder, this.hceGeneralStateService, this.data.idPaciente, this.internacionMasterDataService, this.translateService, this.datePipe);
 		this.factoresDeRiesgoFormService = new FactoresDeRiesgoFormService(formBuilder, translateService, this.hceGeneralStateService, this.data.idPaciente, this.datePipe);
 		this.antecedentesFamiliaresNuevaConsultaService = new AntecedentesFamiliaresNuevaConsultaService(formBuilder, this.snomedService, this.snackBarService);
-		this.alergiasNuevaConsultaService = new AlergiasNuevaConsultaService(formBuilder, this.snomedService, this.snackBarService);
+		this.alergiasNuevaConsultaService = new AlergiasNuevaConsultaService(formBuilder, this.snomedService, this.snackBarService, this.internacionMasterDataService);
 		this.ambulatoryConsultationReferenceService = new AmbulatoryConsultationReferenceService(this.dialog, this.data, this.ambulatoryConsultationProblemsService);
 		this.featureFlagService.isActive(AppFeature.HABILITAR_GUARDADO_CON_CONFIRMACION_CONSULTA_AMBULATORIA).subscribe(isEnabled => this.isEnablePopUpConfirm = isEnabled);
 	}
