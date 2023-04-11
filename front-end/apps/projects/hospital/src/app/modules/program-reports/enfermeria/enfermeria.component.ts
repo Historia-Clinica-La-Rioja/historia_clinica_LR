@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { hasError } from '@core/utils/form.utils';
-import { GeneralReportService } from '@api-rest/services/general.reports.service';
+import { EnfermeriaReportService } from '@api-rest/services/enfermeria.reports.services';
 import { ENFERMERIA_REPORT_TYPES } from '../constants/report-types';
 import { Moment } from 'moment';
 import { dateToMoment, newMoment } from '@core/utils/moment.utils';
@@ -28,7 +28,7 @@ export class EnfermeriaComponent implements OnInit {
 
   constructor(
     private readonly formBuilder: FormBuilder,
-    private readonly generalService: GeneralReportService,
+    private readonly enfermeriaService: EnfermeriaReportService,
     
   ) { }
 
@@ -96,16 +96,16 @@ export class EnfermeriaComponent implements OnInit {
       const programReportId = this.form.controls.programReportType.value;
       switch (programReportId) {
         case 1:
-          this.generalService.getPatientEmergenciesReport(params, `${this.ENFERMERIA_REPORT_TYPES[0].description}.xls`).subscribe();
+          this.enfermeriaService.getPatientEmergenciesReport(params, `${this.ENFERMERIA_REPORT_TYPES[0].description}.xls`).subscribe();
         break;
         case 2:
-          this.generalService.getOutpatientNursingReport(params, `${this.ENFERMERIA_REPORT_TYPES[1].description}.xls`).subscribe();
+          this.enfermeriaService.getOutpatientNursingReport(params, `${this.ENFERMERIA_REPORT_TYPES[1].description}.xls`).subscribe();
         break;
         case 3:
-          this.generalService.getNursingInternmentReport(params, `${this.ENFERMERIA_REPORT_TYPES[2].description}.xls`).subscribe();
+          this.enfermeriaService.getNursingInternmentReport(params, `${this.ENFERMERIA_REPORT_TYPES[2].description}.xls`).subscribe();
         break;
         case 4:
-          this.generalService.getTotalNursingRecoveryReport(params, `${this.ENFERMERIA_REPORT_TYPES[3].description}.xls`).subscribe();
+          this.enfermeriaService.getTotalNursingRecoveryReport(params, `${this.ENFERMERIA_REPORT_TYPES[3].description}.xls`).subscribe();
         break;
         
         
