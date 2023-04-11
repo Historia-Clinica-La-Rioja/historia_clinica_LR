@@ -42,4 +42,16 @@ public class BedInfoVo implements Serializable {
 		this.bedNurse = nursePersonId != null ? new BedNurseVo(nurseUserId, nursePersonId, nurseIdentificationNumber) : null;
 	}
 
+	public BedInfoVo(Bed bed, Room room, Sector sector,
+					 Integer patientId, Person person, String identificationType,
+					 LocalDateTime probableDischargeDate, Short genderId, String genderDescription,
+					 Integer nursePersonId, String nurseIdentificationNumber, Integer nurseUserId) {
+		this.bed = new BedVo(bed);
+		this.room = new RoomVo(room);
+		this.sector = new SectorVo(sector);
+		this.patient = Boolean.FALSE.equals(bed.getFree()) ? new PatientVo(patientId, person, identificationType, genderId, genderDescription)
+				: null;
+		this.probableDischargeDate = Boolean.FALSE.equals(bed.getFree()) ? probableDischargeDate : null;
+		this.bedNurse = nursePersonId != null ? new BedNurseVo(nurseUserId, nursePersonId, nurseIdentificationNumber) : null;
+	}
 }

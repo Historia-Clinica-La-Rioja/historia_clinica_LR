@@ -31,6 +31,8 @@ public interface BedMapper {
     @Mapping(target = "bed", source = "bed")
     @Mapping(target = "bed.room", source = "room")
     @Mapping(target = "bed.room.sector", source = "sector")
+	@Mapping(target = "patient.person.gender.id", source = "patient.person.genderId")
+	@Mapping(target = "patient.person.gender.description", source = "patient.person.genderDescription")
     BedInfoDto toBedInfoDto(BedInfoVo bedSummaryVo);
     
     @Named("toBedSummaryDto")
