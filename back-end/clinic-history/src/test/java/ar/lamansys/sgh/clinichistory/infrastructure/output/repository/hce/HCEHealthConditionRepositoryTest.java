@@ -1,6 +1,7 @@
 package ar.lamansys.sgh.clinichistory.infrastructure.output.repository.hce;
 
 import ar.lamansys.sgh.clinichistory.UnitRepository;
+import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.DocumentRiskFactorRepository;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.DocumentStatus;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.SourceType;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.entity.Document;
@@ -35,6 +36,9 @@ class HCEHealthConditionRepositoryTest extends UnitRepository {
 
 	@Autowired
 	private EntityManager entityManager;
+
+	@MockBean
+	private DocumentRiskFactorRepository documentRiskFactorRepository;
 
 	@BeforeEach
 	void setUp() {

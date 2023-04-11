@@ -3,6 +3,7 @@ package ar.lamansys.sgh.clinichistory.infrastructure.application.notes;
 import ar.lamansys.sgh.clinichistory.UnitRepository;
 import ar.lamansys.sgh.clinichistory.application.notes.NoteService;
 import ar.lamansys.sgh.clinichistory.application.notes.NoteServiceImpl;
+import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.DocumentRiskFactorRepository;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.NoteRepository;
 
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.masterdata.SnomedRepository;
@@ -23,6 +24,8 @@ class NoteServiceImplTest extends UnitRepository {
 
     private NoteService noteService;
 
+	@MockBean
+	private DocumentRiskFactorRepository documentRiskFactorRepository;
 
     @BeforeEach
     void setUp(){

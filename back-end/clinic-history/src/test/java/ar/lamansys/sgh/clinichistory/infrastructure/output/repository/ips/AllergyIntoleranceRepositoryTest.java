@@ -1,6 +1,7 @@
 package ar.lamansys.sgh.clinichistory.infrastructure.output.repository.ips;
 
 import ar.lamansys.sgh.clinichistory.UnitRepository;
+import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.DocumentRiskFactorRepository;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.ips.entity.AllergyIntolerance;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.masterdata.SnomedRepository;
 
@@ -18,6 +19,9 @@ class AllergyIntoleranceRepositoryTest extends UnitRepository {
 
 	@MockBean
 	private SnomedRepository snomedRepository;
+
+	@MockBean
+	private DocumentRiskFactorRepository documentRiskFactorRepository;
 
 	@BeforeEach
 	void setUp() throws Exception {

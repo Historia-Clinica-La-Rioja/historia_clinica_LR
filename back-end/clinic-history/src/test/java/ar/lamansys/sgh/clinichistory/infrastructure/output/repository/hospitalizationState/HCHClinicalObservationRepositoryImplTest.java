@@ -3,6 +3,7 @@ package ar.lamansys.sgh.clinichistory.infrastructure.output.repository.hospitali
 
 import ar.lamansys.sgh.clinichistory.UnitRepository;
 import ar.lamansys.sgh.clinichistory.domain.ips.MapClinicalObservationVo;
+import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.DocumentRiskFactorRepository;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.DocumentStatus;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.DocumentType;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.SourceType;
@@ -33,6 +34,9 @@ class HCHClinicalObservationRepositoryImplTest extends UnitRepository {
 
 	@Autowired
 	private EntityManager entityManager;
+
+	@MockBean
+	private DocumentRiskFactorRepository documentRiskFactorRepository;
 
 	@BeforeEach
 	void setUp() {

@@ -10,6 +10,7 @@ import ar.lamansys.sgh.clinichistory.domain.ips.MedicationBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.SnomedBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.services.LoadMedications;
 import ar.lamansys.sgh.clinichistory.domain.ips.services.SnomedService;
+import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.DocumentRiskFactorRepository;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.ips.DosageRepository;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.ips.MedicationStatementRepository;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.ips.entity.Dosage;
@@ -54,6 +55,9 @@ class CreateMedicationServiceImplTest extends UnitRepository {
 
 	@MockBean
 	private SnomedRepository snomedRepository;
+
+	@MockBean
+	private DocumentRiskFactorRepository documentRiskFactorRepository;
 
     @BeforeEach
     void setUp() {
