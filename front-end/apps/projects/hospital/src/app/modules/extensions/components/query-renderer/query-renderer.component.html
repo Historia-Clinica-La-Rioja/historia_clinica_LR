@@ -16,8 +16,8 @@
 		<canvas
 			*ngIf="chartType === 'line'"
 			baseChart
-			legend="true"
-			chartType="line"
+			[legend]="true"
+			[type]="'line'"
 			[datasets]="chartData"
 			[labels]="chartLabels"
 			[options]="noFillChartOptions"

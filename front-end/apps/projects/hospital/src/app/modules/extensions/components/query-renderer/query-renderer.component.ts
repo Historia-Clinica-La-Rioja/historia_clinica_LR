@@ -226,13 +226,21 @@ export class QueryRendererComponent {
 					data: item.series.map(({ value }) => value),
 					type: 'line',
 				};
-			} else {
+			}
+
+			if (this.chartType === 'line') {
 				return {
 					label: item.title,
 					data: item.series.map(({ value }) => value * (this.reverse ? -1 : 1)),
-					stack: 'a',
+					tension: 0.4,
 				};
 			}
+
+			return {
+				label: item.title,
+				data: item.series.map(({ value }) => value * (this.reverse ? -1 : 1)),
+				stack: 'a',
+			};
 		});
 
 		if (this.defaultColor) {
