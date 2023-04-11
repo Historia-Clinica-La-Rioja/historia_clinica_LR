@@ -48,17 +48,6 @@
 		</canvas>
 
 		<canvas
-			*ngIf="chartType === 'horizontalBar'"
-			baseChart
-			legend="true"
-			chartType="horizontalBar"
-			[datasets]="chartData"
-			[labels]="chartLabels"
-			[options]="chartOptions"
-		>
-		</canvas>
-
-		<canvas
 			*ngIf="chartType === 'pie'"
 			baseChart
 			height="350"

@@ -115,7 +115,6 @@ export class QueryRendererComponent {
 
 
 	nameSelfDeterminationFF: boolean;
-	pieSum = 0;
 	showPercentage: boolean;
 	groupSmallData: boolean;
 	showGroupSmallData: boolean;
@@ -214,7 +213,6 @@ export class QueryRendererComponent {
 		this.chartData = resultSet.series(pivotConfig).map((item) => {
 
 			if (this.chartType === 'pie') {
-				this.pieSum = item.series.reduce((partialSum, a) => partialSum + a.value, 0);
 				return {
 					data: item.series.map(({ value }) => value * (this.reverse ? -1 : 1)),
 				};
@@ -236,6 +234,14 @@ export class QueryRendererComponent {
 				};
 			}
 
+			if (this.chartType === 'bar') {
+				return {
+					label: item.title.charAt(0).toUpperCase() + item.title.slice(1, -5),
+					data: item.series.map(({ value }) => value * (this.reverse ? -1 : 1)),
+					stack: 'bar',
+				};
+			}
+
 			return {
 				label: item.title,
 				data: item.series.map(({ value }) => value * (this.reverse ? -1 : 1)),
@@ -243,33 +249,30 @@ export class QueryRendererComponent {
 			};
 		});
 
-		if (this.defaultColor) {
-			this.chartData.forEach(value => {
-				value.backgroundColor = this.defaultColor;
-				value.hoverBackgroundColor = this.defaultColor;
-			});
-		}
-
 		this.chartLabels = resultSet.chartPivot(pivotConfig).map((row) => parse(row.x));
 
-		if (this.chartData.length) {
-			this.noData = false;
-			if (this.chartType === 'bar') {
-				this.chartData.forEach(x => x.label = x.label.charAt(0).toUpperCase() + x.label.slice(1, -5));
-			}
+		if (!this.chartData?.length) {
+			this.noData = true;
+		}
+		else {
 			if (this.chartType === 'pie') {
 				this.loadPieData();
 			}
-		}
-		else {
-			this.noData = true;
+
+			if (this.defaultColor) {
+				this.chartData.forEach(value => {
+					value.backgroundColor = this.defaultColor;
+					value.hoverBackgroundColor = this.defaultColor;
+				});
+			}
 		}
 	}
 
 	loadPieData() {
 		this.originalData = [...this.chartData[0].data];
+		const pieSum = this.originalData.reduce((partialSum, currentValue) => partialSum + currentValue, 0);
 		this.percentageData = [...this.chartData[0].data];
-		this.percentageData.forEach((element, i, array) => array[i] = Math.round((element * 100 / this.pieSum) * 100) / 100);
+		this.percentageData.forEach((element, i, array) => array[i] = Math.round((element * 100 / pieSum) * 100) / 100);
 
 		this.showPercentage = false;
 		this.selectedChartOptions = this.chartOptions;
