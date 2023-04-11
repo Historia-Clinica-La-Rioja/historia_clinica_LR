@@ -1421,6 +1421,50 @@
 			ORDER BY oc.created_on;
 		</query>
 	</named-native-query>
+	
+	<named-native-query name="NursingReports.VaccinesNursing" result-set-mapping="NursingReports.VaccinesNursingResult">
+		<query>
+			SELECT concat(ins.name, '(SISA: ', ins.sisa_code, ' | CUIT: ', ins.cuit, ')') AS institution,
+			cs.name as operativeUnit,
+			concat(p.first_name, ' ', p.middle_names, ' ', p.last_name, ' ', p.other_last_names) as provider,
+			p.identification_number as providerIdentificationNumber,
+			vc.performed_date as attentionDate,
+			pp.identification_number as patientIdentificationNumber,
+			concat(pp.first_name , ' ', pp.last_name) as patientName,
+			g.description as patientGender,
+			pp.birth_date patientBirthDate,
+			case
+			when (EXTRACT(MONTH FROM vc.performed_date) - EXTRACT(MONTH FROM pp.birth_date)) &lt; 0 then
+			concat((EXTRACT(YEAR FROM vc.performed_date) - EXTRACT(YEAR FROM pp.birth_date)) -1, ' Años, ', 12 +(EXTRACT(MONTH FROM vc.performed_date) - EXTRACT(MONTH FROM pp.birth_date)), ' Meses')
+			else concat((EXTRACT(YEAR FROM vc.performed_date) - EXTRACT(YEAR FROM pp.birth_date)), ' Años, ', (EXTRACT(MONTH FROM vc.performed_date) - EXTRACT(MONTH FROM pp.birth_date)), ' Meses')
+			end as ageOnAppointmentDate,
+			sim.pt as vaccine,
+			sim.sctid as sctid,
+			im.cie10_codes as cie10Code,
+			ims.description as status,
+			vd.condition_description as condition,
+			vd.scheme_description as vaccinationSchedule,
+			vd.dose as vaccinationDosage,
+			vd.lot_number as vaccinationLot
+			FROM vaccine_consultation vc
+			INNER JOIN patient pa ON vc.patient_id=pa.id
+			INNER JOIN person pp ON pa.person_id=pp.id
+			INNER JOIN gender g ON pp.gender_id=g.id
+			INNER JOIN institution ins ON vc.institution_id=ins.id
+			INNER JOIN healthcare_professional hcp ON vc.doctor_id=hcp.id
+			INNER JOIN person p ON hcp.person_id=p.id
+			INNER JOIN clinical_specialty cs ON vc.clinical_specialty_id=cs.id
+			INNER JOIN document d ON d.source_id=vc.id AND d.source_type_id=5
+			INNER JOIN document_inmunization di ON di.document_id=d.id
+			INNER JOIN inmunization im ON di.inmunization_id=im.id AND im.patient_id=pa.id
+			INNER JOIN inmunization_status ims ON im.status_id=ims.id INNER JOIN snomed sim ON im.snomed_id=sim.id
+			INNER JOIN v_nomivac_immunization_data vd ON vd.vaccine_sctid=sim.sctid AND im.patient_id=vd.patient_id AND im.administration_date=vd.administration_date and im.institution_id=vd.institution_id
+			WHERE cs.name LIKE 'Enfermería%'
+			AND vc.created_on BETWEEN :startDate AND :endDate
+			AND ins.id= :institutionId
+			<!-- AND (vc.created_on >= date_trunc('month', (now() + (INTERVAL '-1 month'))) AND vc.created_on < date_trunc('month', now())) -->
+		</query>
+	</named-native-query>
 
 	<!-- ========================================== -->
 	<!-- ============== Odontology Reports =============== -->
@@ -2109,6 +2153,28 @@
 			<column name="problems" class="java.lang.String"/>
 			<column name="medication" class="java.lang.String"/>
 			<column name="evolution" class="java.lang.String"/>
+		</constructor-result>
+	</sql-result-set-mapping>
+	<sql-result-set-mapping name="NursingReports.VaccinesNursingResult">
+		<constructor-result target-class="net.pladema.nursingreports.repository.VaccinesNursing">
+			<column name="institution" class="java.lang.String"/>
+			<column name="operativeUnit" class="java.lang.String"/>
+			<column name="provider" class="java.lang.String"/>
+			<column name="providerIdentificationNumber" class="java.lang.String"/>
+			<column name="attentionDate" class="java.lang.String"/>
+			<column name="patientIdentificationNumber" class="java.lang.String"/>
+			<column name="patientName" class="java.lang.String"/>
+			<column name="patientGender" class="java.lang.String"/>
+			<column name="patientBirthDate" class="java.lang.String"/>
+			<column name="ageOnAppointmentDate" class="java.lang.String"/>
+			<column name="vaccine" class="java.lang.String"/>
+			<column name="sctid" class="java.lang.String"/>
+			<column name="cie10Code" class="java.lang.String"/>
+			<column name="status" class="java.lang.String"/>
+			<column name="condition" class="java.lang.String"/>
+			<column name="vaccinationSchedule" class="java.lang.String"/>
+			<column name="vaccinationDosage" class="java.lang.String"/>
+			<column name="vaccinationLot" class="java.lang.String"/>
 		</constructor-result>
 	</sql-result-set-mapping>
 </entity-mappings>
