@@ -38,9 +38,9 @@
 		<canvas
 			*ngIf="chartType === 'bar'"
 			baseChart
-			[legend]="showLegend"
-			chartType="bar"
 			height="450"
+			[type]="'bar'"
+			[legend]="showLegend"
 			[datasets]="chartData"
 			[labels]="chartLabels"
 			[options]="chartOptions"

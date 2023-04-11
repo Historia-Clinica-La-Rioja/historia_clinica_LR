@@ -247,7 +247,7 @@ export class QueryRendererComponent {
 		if (this.chartData.length) {
 			this.noData = false;
 			if (this.chartType === 'bar') {
-				this.chartData.forEach(x => x.label = (x.label.charAt(0).toUpperCase() + x.label.slice(1)).slice(0, -5))
+				this.chartData.forEach(x => x.label = x.label.charAt(0).toUpperCase() + x.label.slice(1, -5));
 			}
 			if (this.chartType === 'pie') {
 				this.loadPieData();
