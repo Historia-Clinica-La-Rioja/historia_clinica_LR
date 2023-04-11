@@ -150,10 +150,10 @@ export class NuevaConsultaDockPopupComponent implements OnInit {
 			clinicalSpecialty: [null, [Validators.required]],
 		});
 
-		if (this.data.snomedId) {
-			this.snowstormService.getSNOMEDConcepts({ term: this.data.snomedId, ecl: SnomedECL.DIAGNOSIS }).subscribe(
+		if (this.data.problem) {
+			this.snowstormService.getSNOMEDConcepts({ term: this.data.problem, ecl: SnomedECL.DIAGNOSIS }).subscribe(
 				result => {
-					const p = result.items.find(p => p.sctid === this.data.snomedId);
+					const p = result.items.find(p => p.pt === this.data.problem);
 					const snomed: SnomedDto = {
 						pt: p.pt,
 						sctid: p.sctid
@@ -602,6 +602,6 @@ export class NuevaConsultaDockPopupComponent implements OnInit {
 export interface NuevaConsultaData {
 	idPaciente: number;
 	idProblema?: number;
-	snomedId?: string;
+	problem?: string;
 	evolution?: string;
 }

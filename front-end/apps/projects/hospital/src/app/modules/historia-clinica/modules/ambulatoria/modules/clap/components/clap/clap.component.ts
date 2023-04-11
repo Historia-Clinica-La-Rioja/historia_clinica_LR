@@ -1,7 +1,7 @@
 import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
-import { SipPlusUrlDataDto, SnomedECL } from '@api-rest/api-model';
+import { SipPlusUrlDataDto, SnomedDto, SnomedECL } from '@api-rest/api-model';
 import { SipPlusMotherService } from '@api-rest/services/sip-plus-mother.service';
 import { SipPlusPregnanciesService } from '@api-rest/services/sip-plus-pregnancies.service';
 import { SipPlusService } from '@api-rest/services/sip-plus.service';
@@ -11,11 +11,8 @@ import { AmbulatoriaSummaryFacadeService } from '@historia-clinica/modules/ambul
 import { DockPopupService } from '@presentation/services/dock-popup.service';
 import { NewGestationPopupComponent } from '../../dialogs/new-gestation-popup/new-gestation-popup.component';
 import { DockPopupRef } from '@presentation/services/dock-popup-ref';
-import { Subscription } from 'rxjs';
+import { PREGNANCY_EVOLUTION, PREGNANCY_PROBLEM } from '../../constants/problem-information';
 
-
-const SNOMED_ID_PREGNANCY = '77386006'
-const PREGNANCY_EVOLUTION = 'Esta consulta fue realizada dentro de la pestaña CLAP con el sistema de información perinatal. Ver detalle en la pestaña CLAP.'
 @Component({
 	selector: 'app-clap',
 	templateUrl: './clap.component.html',
@@ -36,7 +33,6 @@ export class ClapComponent implements OnInit {
 	dischargeMother: boolean = false;
 
 	private nuevaConsultaRef: DockPopupRef;
-	private navigationSubscription: Subscription;
 
 	constructor(private contextService: ContextService,
 		private sanitizer: DomSanitizer,
@@ -122,14 +118,17 @@ export class ClapComponent implements OnInit {
 						this.viewGestation(result);
 					})
 				}
-				this.openNuevaConsulta();
 			}
 		});
 	}
 
 	openNuevaConsulta() {
 		this.ambulatoriaSummaryFacadeService.setIsNewConsultationOpen(true);
-		this.nuevaConsultaRef = this.dockPopupService.open(NuevaConsultaDockPopupComponent, { idPaciente: this.patientId, snomedId: SNOMED_ID_PREGNANCY, evolution: PREGNANCY_EVOLUTION });
+		this.nuevaConsultaRef = this.dockPopupService.open(NuevaConsultaDockPopupComponent, {
+			idPaciente: this.patientId,
+			problem: PREGNANCY_PROBLEM,
+			evolution: PREGNANCY_EVOLUTION
+		});
 		this.nuevaConsultaRef.minimize();
 		this.nuevaConsultaRef.afterClosed().subscribe(fieldsToUpdate => {
 			if (fieldsToUpdate) {
