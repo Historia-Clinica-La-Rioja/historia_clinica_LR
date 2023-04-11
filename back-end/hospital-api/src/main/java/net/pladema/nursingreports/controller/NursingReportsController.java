@@ -173,4 +173,38 @@ public class NursingReportsController {
 		out.flush();
 		response.flushBuffer();
 	}
+
+	@GetMapping(value = "/{institutionId}/vaccinesNursing")
+	@PreAuthorize("hasPermission(#institutionId, 'ADMINISTRADOR_INSTITUCIONAL_BACKOFFICE, PERSONAL_DE_ESTADISTICA')")
+	public @ResponseBody void getVaccinesNursingExcelReport(
+			@PathVariable Integer institutionId,
+			@RequestParam(value = "fromDate", required = true) String fromDate,
+			@RequestParam(value = "toDate", required = true) String toDate,
+			HttpServletResponse response
+	) throws Exception {
+		LOG.debug("Se creará el excel{}", institutionId);
+		LOG.debug("Inputs parameters -> institutionId {}, fromDate{}, toDate{}", institutionId, fromDate, toDate);
+
+		String title = "Reporte de Enfermería - Vacunas";
+		String[] headers = new String[]{"Institución", "Unidad operativa", "Prestador", "DNI Prestador",
+				"Fecha de atención", "DNI Paciente", "Nombre Paciente", "Sexo", "Fecha de nacimiento",
+				"Edad a fecha del turno", "Vacuna", "SCTID", "CIE10", "Estado", "Condición", "Esquema", "Dosis",
+				"Lote"
+		};
+
+		LocalDate startDate = localDateMapper.fromStringToLocalDate(fromDate);
+		LocalDate endDate = localDateMapper.fromStringToLocalDate(toDate);
+
+		IWorkbook wb = this.excelServiceNR.buildExcelVaccinesNursing(title, headers, this.queryFactoryNR.queryVaccinesNursing(institutionId, startDate, endDate));
+
+		String filename = title + "." + wb.getExtension();
+		response.addHeader("Content-disposition", "attachment;filename=" + filename);
+		response.setContentType(wb.getContentType());
+
+		OutputStream out = response.getOutputStream();
+		wb.write(out);
+		out.close();
+		out.flush();
+		response.flushBuffer();
+	}
 }
