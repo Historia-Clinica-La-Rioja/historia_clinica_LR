@@ -2,6 +2,7 @@ package ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document;
 
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.entity.Document;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.searchdocuments.DocumentRepositoryCustom;
+import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.searchdocuments.EmergencyCareEpisodeTriageSearchVo;
 import ar.lamansys.sgx.shared.auditable.entity.Updateable;
 import ar.lamansys.sgx.shared.auditable.repository.SGXAuditableEntityJPARepository;
 
@@ -60,4 +61,20 @@ public interface DocumentRepository extends SGXAuditableEntityJPARepository<Docu
 			"FROM Document d " +
 			"WHERE d.patientId = :patientId")
 	List<Long> getIdsByPatientId(@Param("patientId") Integer patientId);
+	
+	@Transactional(readOnly = true)
+	@Query(value = "SELECT DISTINCT NEW ar.lamansys.sgh.clinichistory.infrastructure.output.repository.searchdocuments.EmergencyCareEpisodeTriageSearchVo(t.id," +
+			"d.id, d.creationable.createdOn, up.pk.userId, p.firstName, p.lastName, pe.nameSelfDetermination, t.notes, dt.description) " +
+			"FROM Document d " +
+			"JOIN UserPerson up ON (up.pk.userId = d.creationable.createdBy) " +
+			"JOIN Person p ON (p.id = up.pk.personId) " +
+			"JOIN PersonExtended pe ON (pe.id = p.id) " +
+			"JOIN DocumentRiskFactor drf ON (drf.pk.documentId = d.id) " +
+			"JOIN ObservationRiskFactor orf ON (orf.id = drf.pk.observationRiskFactorId) " +
+			"JOIN TriageRiskFactors trf ON (trf.pk.observationRiskFactorId = orf.id) " +
+			"JOIN Triage t ON (t.id = trf.pk.triageId) " +
+			"JOIN DocumentType dt ON (dt.id = d.typeId) " +
+			"WHERE dt.id = " + DocumentType.TRIAGE + " " +
+			"AND d.sourceId = :emergencyCareEpisodeId")
+	List<EmergencyCareEpisodeTriageSearchVo> getTriageDocumentData(@Param("emergencyCareEpisodeId") Integer emergencyCareEpisodeId);
 }

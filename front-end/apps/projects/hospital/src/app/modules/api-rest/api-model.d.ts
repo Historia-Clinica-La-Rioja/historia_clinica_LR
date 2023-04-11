@@ -1066,6 +1066,24 @@ export interface EmergencyCareEpisodeListTriageDto {
     name: string;
 }
 
+export interface EmergencyCareEpisodeTriageSearchDto {
+    createdOn: Date;
+    documentId: number;
+    documentTypeDescription: string;
+    notes: string;
+    otherRiskFactors: OtherRiskFactorDto;
+    responsibleFirstName: string;
+    responsibleLastName: string;
+    responsibleSelfDeterminedName: string;
+    riskFactors: RiskFactorDto;
+    triageId: number;
+    userId: number;
+}
+
+export interface EmergencyCareHistoricDocumentDto {
+    triages: EmergencyCareEpisodeTriageSearchDto[];
+}
+
 export interface EmergencyCareListDto extends Serializable {
     creationDate: DateTimeDto;
     doctorsOffice: DoctorsOfficeDto;
@@ -2254,6 +2272,15 @@ export interface OtherIndicationDto extends IndicationDto {
 export interface OtherPharmacoDto {
     dosage: NewDosageDto;
     snomed: SharedSnomedDto;
+}
+
+export interface OtherRiskFactorDto {
+    bodyTemperatureDescription: string;
+    cryingExcessive: boolean;
+    muscleHypertoniaDescription: string;
+    perfusionDescription: string;
+    respiratoryRetractionDescription: string;
+    stridor: boolean;
 }
 
 export interface OutpatientAllergyConditionDto {

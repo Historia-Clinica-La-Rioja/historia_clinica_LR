@@ -1,5 +1,6 @@
 package ar.lamansys.sgh.clinichistory.application.searchDocument;
 
+import ar.lamansys.sgh.clinichistory.application.document.DocumentService;
 import ar.lamansys.sgh.clinichistory.application.searchDocument.domain.DocumentSearchFilterBo;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.DocumentRepository;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.masterdata.entity.ProceduresStatus;
@@ -29,9 +30,12 @@ public class DocumentSearchServiceImpl implements DocumentSearchService {
 
 	private final FeatureFlagsService featureFlagsService;
 
-    public DocumentSearchServiceImpl(DocumentRepository documentRepository, FeatureFlagsService featureFlagsService){
+	private final DocumentService documentService;
+
+    public DocumentSearchServiceImpl(DocumentRepository documentRepository, FeatureFlagsService featureFlagsService, DocumentService documentService){
         this.documentRepository = documentRepository;
 		this.featureFlagsService = featureFlagsService;
+		this.documentService = documentService;
 	}
 
     @Override
@@ -68,6 +72,19 @@ public class DocumentSearchServiceImpl implements DocumentSearchService {
         LOG.debug(OUTPUT, result);
         return result;
     }
+
+	@Override
+	public List<EmergencyCareEpisodeTriageSearchBo> getEmergencyCareTriageHistoricalDocumentList(Integer emergencyCareEpisodeId) {
+		LOG.debug("Input parameters -> emergencyCareEpisodeId {}", emergencyCareEpisodeId);
+		List<EmergencyCareEpisodeTriageSearchBo> triages = documentRepository.getTriageDocumentData(emergencyCareEpisodeId).stream()
+				.map(EmergencyCareEpisodeTriageSearchBo::new).collect(Collectors.toList());
+		triages.forEach(triage -> {
+			triage.setRiskFactors(documentService.getRiskFactorStateFromDocument(triage.getDocumentId()));
+			triage.setOtherRiskFactors(documentService.getOtherRiskFactors(triage.getDocumentId()));
+		});
+		LOG.debug(OUTPUT, triages);
+		return triages;
+	}
 
     private List<DocumentSearchVo> addProcedures(List<DocumentSearchVo> documents){
         for (DocumentSearchVo d : documents){
