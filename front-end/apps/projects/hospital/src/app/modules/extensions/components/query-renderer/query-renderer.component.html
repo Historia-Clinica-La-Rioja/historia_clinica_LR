@@ -6,7 +6,7 @@
 		</div>
 		<div fxLayout="row" fxLayoutAlign="space-between center" *ngIf="showGroupSmallData" class="toggle">
 			<mat-label>Agrupar datos</mat-label>
-			<mat-slide-toggle (change)="toggleGroupSmallData()" [disabled]="showPercentage"></mat-slide-toggle>
+			<mat-slide-toggle (change)="toggleGroupSmallData()"></mat-slide-toggle>
 		</div>
 	</ng-container>
 	<div
@@ -61,12 +61,12 @@
 		<canvas
 			*ngIf="chartType === 'pie'"
 			baseChart
-			[legend]="showLegend"
-			chartType="pie"
 			height="350"
+			[type]="'pie'"
+			[legend]="showLegend"
 			[datasets]="chartData"
-			[labels]="chartLabels"
-			[options]="chartOptions"
+			[labels]="selectedChartLabels"
+			[options]="selectedChartOptions"
 		>
 		</canvas>
 	</div>

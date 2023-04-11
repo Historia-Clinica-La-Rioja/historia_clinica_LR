@@ -84,8 +84,35 @@ export class QueryRendererComponent {
 
 	chartLabels: string[] = [];
 	chartData: any[] = [];
+
+	// attrs only for pie chart
+	originalData: any[] = [];
+	originalGroupData: any[] = [];
 	percentageData: any[] = [];
-	others: any[] = [];
+	percentageGroupData: any[] = [];
+	groupChartLabels: (string[] | string[][]) = [];
+
+	selectedChartLabels: string[] | string[][];
+	selectedChartOptions: ChartOptions;
+	percentageChartOptions: ChartOptions = {
+		responsive: true,
+		maintainAspectRatio: false,
+		plugins: {
+			tooltip: {
+				callbacks: {
+					label: function (context) {
+						let label = context.label || ' ';
+						if (label) {
+							label += ': ';
+						}
+						label += context.formattedValue + '%'
+						return label;
+					}
+				}
+			}
+		}
+	};
+
 
 	nameSelfDeterminationFF: boolean;
 	pieSum = 0;
@@ -171,9 +198,6 @@ export class QueryRendererComponent {
 				}
 
 				if (resultSet) {
-					if (this.reverse) {
-						//resultSet = this.parseReverse(resultSet);
-					}
 					if (this.chartType === 'table') {
 						this.updateTableData(resultSet, pivotConfig);
 					} else if (this.chartType === 'number') {
@@ -189,8 +213,12 @@ export class QueryRendererComponent {
 	updateChartData(resultSet, pivotConfig) {
 		this.chartData = resultSet.series(pivotConfig).map((item) => {
 
-			if (this.chartType === 'pie')
+			if (this.chartType === 'pie') {
 				this.pieSum = item.series.reduce((partialSum, a) => partialSum + a.value, 0);
+				return {
+					data: item.series.map(({ value }) => value * (this.reverse ? -1 : 1)),
+				};
+			}
 
 			if (item.title == '  Promedio Sem.') {
 				return {
@@ -216,75 +244,62 @@ export class QueryRendererComponent {
 
 		this.chartLabels = resultSet.chartPivot(pivotConfig).map((row) => parse(row.x));
 
-
-
-
 		if (this.chartData.length) {
 			this.noData = false;
-			if (this.chartType === 'bar')
+			if (this.chartType === 'bar') {
 				this.chartData.forEach(x => x.label = (x.label.charAt(0).toUpperCase() + x.label.slice(1)).slice(0, -5))
-
-			if (this.chartType === 'pie')
+			}
+			if (this.chartType === 'pie') {
 				this.loadPieData();
+			}
 		}
-		else
+		else {
 			this.noData = true;
+		}
 	}
 
 	loadPieData() {
+		this.originalData = [...this.chartData[0].data];
 		this.percentageData = [...this.chartData[0].data];
 		this.percentageData.forEach((element, i, array) => array[i] = Math.round((element * 100 / this.pieSum) * 100) / 100);
 
-		const i = this.percentageData.findIndex(x => x < 1);
-
-		this.showGroupSmallData = i > 1;
-
 		this.showPercentage = false;
+		this.selectedChartOptions = this.chartOptions;
 		this.groupSmallData = false;
+		this.selectedChartLabels = this.chartLabels;
+
+		const smallDataIndex = this.percentageData.findIndex(x => x < 1);
+		this.showGroupSmallData = smallDataIndex > 1;
+		if (this.showGroupSmallData) {
+			this.percentageGroupData = this.groupedData(this.percentageData, smallDataIndex);
+			this.originalGroupData = this.groupedData(this.originalData, smallDataIndex);
+			this.groupChartLabels = this.chartLabels.slice(0, smallDataIndex);
+			this.groupChartLabels.push('Otros');
+		}
 	}
 
 	togglePercentage() {
 		this.showPercentage = !this.showPercentage;
-		const data = this.chartData[0].data;
-		data.forEach(x => {
-			if (this.showPercentage === true)
-				data[data.indexOf(x)] = (Math.round((x * 100 / this.pieSum) * 100) / 100) + '%';
-			else
-				data[data.indexOf(x)] = (Math.round((x.slice(0, -1) * this.pieSum) / 100));
-		})
+		if (this.showPercentage) {
+			this.selectedChartOptions = this.percentageChartOptions;
+			this.chartData = this.groupSmallData ? [{ data: this.percentageGroupData }] : [{ data: this.percentageData }];
+		}
+		else {
+			this.selectedChartOptions = this.chartOptions;
+			this.chartData = this.groupSmallData ? [{ data: this.originalGroupData }] : [{ data: this.originalData }];
+		}
 	}
 
 	toggleGroupSmallData() {
 		this.groupSmallData = !this.groupSmallData;
-		const data = this.chartData[0].data;
-		if (this.groupSmallData === true)
-			this.groupData(data);
-		if (this.groupSmallData === false)
-			this.unGroupData(data);
-	}
-
-	groupData(data: any[]) {
-		const i = this.percentageData.findIndex(x => x < 1);
-		this.others = data.slice(i);
-		let othersSum = this.others.reduce((partialSum, a) => partialSum + a, 0);
-		data = data.slice(0, i);
-		data.push(othersSum);
-		data = data.sort((a, b) => b - a);
-		const index = data.indexOf(othersSum);
-		for (let i = this.chartLabels.length; i > index; i--) {
-			this.chartLabels[i] = this.chartLabels[i - 1];
+		if (this.groupSmallData) {
+			this.selectedChartLabels = this.groupChartLabels;
+			this.chartData = this.showPercentage ? [{ data: this.percentageGroupData }] : [{ data: this.originalGroupData }];
 		}
-		this.chartLabels[index] = 'Otros';
-		this.chartData[0].data = data;
-	}
-
-	unGroupData(data: any[]) {
-		const i = this.chartLabels.indexOf('Otros');
-		this.chartLabels.splice(i, 1);
-		data.splice(i, 1);
-		this.others.forEach(x => data.push(x));
-		data = data.sort((a, b) => b - a);
-		this.chartData[0].data = data;
+		else {
+			this.selectedChartLabels = this.chartLabels;
+			this.chartData = this.showPercentage ? [{ data: this.percentageData }] : [{ data: this.originalData }];
+		}
 	}
 
 	formatDate(resultSet) {
@@ -408,5 +423,11 @@ export class QueryRendererComponent {
 		this.numericValues = resultSet
 			.seriesNames()
 			.map((s) => resultSet.totalRow()[s.key]);
+	}
+
+	private groupedData(data: number[], index: number): number[] {
+		const others = data.slice(index);
+		let othersSum = others.reduce((partialSum, currentValue) => partialSum + currentValue, 0);
+		return [...data.slice(0, index), othersSum];
 	}
 }
