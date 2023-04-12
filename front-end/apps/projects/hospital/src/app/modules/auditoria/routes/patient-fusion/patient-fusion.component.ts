@@ -12,8 +12,11 @@ import { MatDialog } from '@angular/material/dialog';
 import { WarningFusionComponent } from '../../dialogs/warning-fusion/warning-fusion.component';
 import { ConfirmedFusionComponent } from '../../dialogs/confirmed-fusion/confirmed-fusion.component';
 import { SnackBarService } from '@presentation/services/snack-bar.service';
+import { PAGE_MIN_SIZE } from '@historia-clinica/modules/ambulatoria/modules/indicacion/constants/internment-indications';
+import { PAGE_SIZE_OPTIONS } from '@historia-clinica/modules/ambulatoria/modules/indicacion/constants/internment-indications';
 
 const ROUTE_CONTROL_PATIENT_DUPLICATE = "auditoria/control-pacientes-duplicados"
+
 @Component({
 	selector: 'app-patient-fusion',
 	templateUrl: './patient-fusion.component.html',
@@ -21,12 +24,18 @@ const ROUTE_CONTROL_PATIENT_DUPLICATE = "auditoria/control-pacientes-duplicados"
 })
 export class PatientFusionComponent implements OnInit {
 	private readonly routePrefix;
+	readonly pageSizeOptions: number[] = PAGE_SIZE_OPTIONS;
 	listPatientData$: Observable<PatientPersonalInfoDto[]>;
+	listPatientData:PatientPersonalInfoDto[];
 	identificationTypeList: IdentificationTypeDto[];
 	patientToAudit: DuplicatePatientDto;
 	patientsTypes: PatientType[];
 	keyAttributes = KeyAttributes;
 	oldPatientsIds: number[] = [];
+	pageSliceObs$: Observable<PatientPersonalInfoDto[]>;
+	numberOfPatients = 0;
+	pageSlice: PatientPersonalInfoDto[];
+	initialSize: Observable<any>;
 	patientToMerge: PatientToMergeDto = {
 		activePatientId: null,
 		oldPatientsIds: null,
@@ -65,8 +74,14 @@ export class PatientFusionComponent implements OnInit {
 		});
 
 		this.auditPatientService.getPatientPersonalInfo(this.patientToAudit).subscribe((patientPersonalData: PatientPersonalInfoDto[]) => {
-			this.listPatientData$ = of(this.setListPatientData(patientPersonalData));
+			this.listPatientData = this.setListPatientData(patientPersonalData);
+			this.listPatientData$ = of(this.listPatientData);
+
+			this.pageSlice = this.listPatientData.slice(0, PAGE_MIN_SIZE);
+			this.numberOfPatients = this.listPatientData.length || 0;
+			this.initialSize = of(PAGE_MIN_SIZE);
 		})
+
 	}
 
 	setListPatientData(patientPersonalData): PatientPersonalInfoDto[] {
@@ -140,17 +155,17 @@ export class PatientFusionComponent implements OnInit {
 			if (confirmed) {
 				this.patientMergeService.merge(this.patientToMerge).subscribe(res => {
 					const dialogRef2 = this.dialog.open(ConfirmedFusionComponent, {
-						data:{
-							idPatient:this.patientToMerge.activePatientId
+						data: {
+							idPatient: this.patientToMerge.activePatientId
 						},
 						disableClose: true,
 						width: '35%',
 						autoFocus: false
 					})
-					dialogRef2.afterClosed().subscribe(close=>{
+					dialogRef2.afterClosed().subscribe(close => {
 						this.goToBack();
 					})
-				},error=>{
+				}, error => {
 					this.snackBarService.showError(error.text);
 				})
 			}
@@ -170,6 +185,13 @@ export class PatientFusionComponent implements OnInit {
 		this.patientToMerge.oldPatientsIds = this.oldPatientsIds;
 
 		this.oldPatientsIds.splice(this.oldPatientsIds?.indexOf(this.patientToMerge.activePatientId), 1);
+	}
+
+
+	onPageChange($event: any): void {
+		const page = $event;
+		const startPage = page.pageIndex * page.pageSize;
+		this.pageSlice = this.listPatientData.slice(startPage, $event.pageSize + startPage);
 	}
 
 }

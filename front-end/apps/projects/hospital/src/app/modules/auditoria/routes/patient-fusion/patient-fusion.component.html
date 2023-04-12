@@ -38,7 +38,7 @@
 			</div>
 
 			<mat-divider></mat-divider>
-			<div *ngFor="let patient of listPatientData$ | async;last as isLast">
+			<div *ngFor="let patient of pageSlice;last as isLast">
 				<div fxLayout="row" fxLayoutAlign="space-between" class="content">
 					<div fxLayoutAlign="start center" class="content" fxFlex="5%">
 						<mat-checkbox (change)="setSelectedPatient(patient)" color="primary"></mat-checkbox>
@@ -47,7 +47,8 @@
 					<div fxLayoutAlign="start center" class="content" fxFlex="10%">
 						<mat-radio-button color="primary" *ngIf="patient.selected"
 							(change)="setValuesPatientFusion(keyAttributes.PATIENT_ID,patient.patientId)"></mat-radio-button>
-						<span matTooltip="{{'pacientes.audit.MESSAGE_TOOLTIP' | translate}}">{{patient?.patientId}} </span>
+						<span matTooltip="{{'pacientes.audit.MESSAGE_TOOLTIP' | translate}}">{{patient?.patientId}}
+						</span>
 					</div>
 					<div fxLayoutAlign="start center" class="content" fxFlex="15%">
 						<mat-radio-button color="primary" name="names" *ngIf="patient.selected"
@@ -86,11 +87,15 @@
 				</div>
 				<mat-divider *ngIf="!isLast" insert class="divider"></mat-divider>
 			</div>
-
+			<mat-paginator *ngIf="(listPatientData?.length !== 0)" [length]="numberOfPatients"
+				[pageSizeOptions]="pageSizeOptions" [pageSize]="initialSize" (page)="onPageChange($event)"
+				showFirstLastButtons>
+			</mat-paginator>
 		</mat-card>
 
 		<div fxLayout="row" fxLayoutAlign="end end" id="div-button">
-			<button mat-raised-button color="primary" (click)="merge()">{{'pacientes.audit.LABEL_BUTTON_MERGE' | translate | uppercase}}</button>
+			<button mat-raised-button color="primary" (click)="merge()">{{'pacientes.audit.LABEL_BUTTON_MERGE' |
+				translate | uppercase}}</button>
 		</div>
 		<ng-template #noInfo>
 			<app-no-data></app-no-data>
