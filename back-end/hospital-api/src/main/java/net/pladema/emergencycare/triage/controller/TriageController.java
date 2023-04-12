@@ -206,7 +206,9 @@ public class TriageController {
         LOG.debug("Add triage administrative => {}", body);
         TriageBo triage = triageMapper.toTriageBo(body);
         triage.setEmergencyCareEpisodeId(episodeId);
-        triage = triageService.createAdministrative(triage, institutionId);
+		Integer patientId = emergencyCareEpisodeService.get(episodeId, institutionId).getPatient() != null ? emergencyCareEpisodeService.get(episodeId, institutionId).getPatient().getId() : null;
+		triage.setPatientInfo(new PatientInfoBo(patientId));
+		triage = triageService.createAdministrative(triage, institutionId);
         Integer result = triage.getTriageId();
         LOG.debug("Output -> {}", result);
         return ResponseEntity.ok().body(result);
