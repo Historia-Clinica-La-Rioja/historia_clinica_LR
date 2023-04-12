@@ -108,7 +108,7 @@ export class CardPatientComponent {
 				ranking: patient?.ranking,
 				patientTypeId: patient?.patientTypeId,
 				auditType: patient?.auditType,
-				action: this.setActionByRole(medicalSpecialist, legalPerson, patient.idPatient)
+				actions: this.setActionsByRole(medicalSpecialist, legalPerson, patient.idPatient)
 			}
 		});
 	}
@@ -121,24 +121,25 @@ export class CardPatientComponent {
 		this.pageSlice = this.patientContent.slice(startPage, $event.pageSize + startPage);
 	}
 
-	private setActionByRole(medicalSpecialist: boolean, legalPerson: boolean, idPatient: number): ValueAction {
+	private setActionsByRole(medicalSpecialist: boolean, legalPerson: boolean, idPatient: number): ValueAction[] {
+		const valueActions: ValueAction[] = [];
+		if (legalPerson)
+			valueActions.push({
+				display: 'ambulatoria.card-patient.PRINT_HC_BUTTON',
+				do: `${this.routePrefix}ambulatoria/paciente/${idPatient}/print`
+
+			});
 		if (medicalSpecialist)
-			return {
-				display: 'ambulatoria.card-patient.BUTTON',
+			valueActions.push({
+				display: 'ambulatoria.card-patient.VIEW_BUTTON',
 				do: `${this.routePrefix}ambulatoria/paciente/${idPatient}`
-			}
-		else {
-			if (legalPerson)
-				return {
-					display: undefined,
-					do: ''
-				}
-			else
-				return {
-					display: 'ambulatoria.card-patient.BUTTON',
-					do: `${this.routePrefix}pacientes/profile/${idPatient}`
-				}
-		}
+			});
+		if (!legalPerson && !medicalSpecialist)
+			valueActions.push({
+				display: 'ambulatoria.card-patient.VIEW_BUTTON',
+				do: `${this.routePrefix}paciente/profile/${idPatient}`
+			});
+		return valueActions;
 	}
 
 	openDialog(idPatient: number) {
@@ -158,7 +159,8 @@ export class CardPatientComponent {
 				}
 
 			})
-			function calculateAge(birthDate: string): number {
+
+		function calculateAge(birthDate: string): number {
 				const todayDate: Date = new Date();
 				const birthDateDate: Date = new Date(birthDate);
 				return todayDate.getFullYear() - birthDateDate.getFullYear();

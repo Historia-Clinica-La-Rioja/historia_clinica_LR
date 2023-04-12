@@ -98,15 +98,12 @@ export class InternmentPatientCardComponent {
 				bedNumber: person.bedInfo.bedNumber,
 				sectorDescription: person.bedInfo.sector,
 				lastMissingDocument: person.hasPhysicalDischarge ? this.missingDocument(person.documentsSummary, person.hasMedicalDischarge) : null,
-				action: {
-					display: 'ambulatoria.card-patient.BUTTON',
+				actions: [{
+					display: 'ambulatoria.card-patient.VIEW_BUTTON',
 					do: (redirect === Redirect.patientCard) ? `${this.routePrefix}/pacientes/profile/${person.patientId}` : `${this.routePrefix}/ambulatoria/paciente/${person.patientId}`
-				},
-
+				}],
 			}
-
 		})
-
 	}
 
 	private getName(person: InternmentPatientTableData): string {
@@ -132,7 +129,7 @@ export class InternmentPatientCardComponent {
 	}
 
 	applyFilter($event: any): void {
-		this.applySearchFilter = ($event.target as HTMLInputElement).value?.replace(REMOVE_SUBSTRING_DNI,'');
+		this.applySearchFilter = ($event.target as HTMLInputElement).value?.replace(REMOVE_SUBSTRING_DNI, '');
 		this.upDateFilters();
 	}
 

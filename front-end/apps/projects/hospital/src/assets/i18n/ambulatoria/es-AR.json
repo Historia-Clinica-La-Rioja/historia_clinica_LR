@@ -698,7 +698,8 @@
             "DNI": "DNI",
             "BIRTHDAY_DATE": "Fecha de Nac.",
             "COINCIDENCE": "coincidencia",
-            "BUTTON": "Ver"
+            "VIEW_BUTTON": "Ver",
+            "PRINT_HC_BUTTON": "Imprimir HC"
         }
     }
 }

@@ -1,6 +1,6 @@
 <div id="content" fxLayoutGap="5px" fxLayout="row" fxLayout.lt-sm="column" class="card">
 	<div fxLayout="column" fxLayout.gt-sm="row" [ngClass]="viewCardToAudit ? 'cardToAudit' : 'cardNoAudit'">
-		<div fxLayoutAlign="start center" fxLayoutGap="15px" [ngClass]="viewCardToAudit ? 'headerCardToAudit' : 'headerCard'">
+		<div fxLayoutAlign="start center" fxLayoutGap="15px" [ngClass]="viewCardToAudit ? 'headerCardToAudit' : 'headerCard'" fxFlex="80%">
 			<div fxLayoutAlign="center" fxFlex="20%">
 				<img mat-card-avatar [src]="cardContent?.avatar"
 					onerror="this.src='../../../../../assets/images/empty-profile.png'" alt>
@@ -18,13 +18,14 @@
 			<ng-content></ng-content>
 		</mat-card-content>
 	</div>
-
-	<div id="view" *ngIf="!cardContent?.ranking && cardContent.action.display" fxLayoutAlign="center start" fxLayout.gt-sm="center start" fxLayoutAlign.lt-sm="start start" fxFlex="10%"
-		class="button">
-		<button id="view-button" mat-flat-button color="primary" (click)="goTo(cardContent.action.do)">
-			<span>{{ cardContent.action.display | translate | uppercase }}</span>
-		</button>
+	<div fxLayoutAlign="center start" fxLayout.gt-md="row" fxLayoutAlign.lt-sm="start start" fxFlex="20%"
+		fxLayout="column">
+		<ng-container *ngFor="let action of cardContent.actions">
+			<div id="view" *ngIf="!cardContent?.ranking && action.display" class="button">
+				<button id="view-button" mat-flat-button color="primary" (click)="goTo(action.do)">
+					<span>{{ action.display | translate | uppercase }}</span>
+				</button>
+			</div>
+		</ng-container>
 	</div>
-
 </div>
-

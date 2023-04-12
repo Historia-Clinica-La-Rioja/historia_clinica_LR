@@ -26,7 +26,7 @@ export interface CardModel {
 	header: Value[];
 	headerSimple?: Value[];
 	details?: any[];
-	action: ValueAction;
+	actions: ValueAction[];
 	ranking?: number;
 	hasPhysicalDischarge?: boolean;
 	sectorDescription?: string;
