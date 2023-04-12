@@ -144,7 +144,8 @@ export class ClinicalHistoryActionsComponent implements OnInit {
 					if (fieldsToUpdate?.familyHistories)
 						this.internmentSummaryFacadeService.unifyFamilyHistories(this.patientId);
 				}
-				this.patientAllergies.updateCriticalAllergies(this.patientId);
+				if (fieldsToUpdate?.allergies)
+					this.patientAllergies.updateCriticalAllergies(this.patientId);
 				this.ambulatoriaSummaryFacadeService.setIsNewConsultationOpen(false);
 			});
 		} else {
@@ -165,7 +166,6 @@ export class ClinicalHistoryActionsComponent implements OnInit {
 				this.historialProblemsFacadeService.loadEvolutionSummaryList(this.patientId);
 				if (fieldsToUpdate)
 					this.ambulatoriaSummaryFacadeService.setFieldsToUpdate(fieldsToUpdate);
-				this.patientAllergies.updateCriticalAllergies(this.patientId);
 				this.ambulatoriaSummaryFacadeService.setIsNewConsultationOpen(false);
 			});
 		} else {
