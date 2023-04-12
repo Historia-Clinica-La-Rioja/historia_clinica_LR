@@ -6,6 +6,7 @@ import ar.lamansys.sgh.clinichistory.application.document.DocumentService;
 import ar.lamansys.sgh.clinichistory.application.notes.NoteService;
 import ar.lamansys.sgh.clinichistory.domain.ips.services.HealthConditionService;
 import ar.lamansys.sgh.clinichistory.domain.ips.services.SnomedService;
+import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.DocumentRepository;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.DocumentRiskFactorRepository;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.ips.GetLastHealthConditionRepository;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.ips.HealthConditionRepository;
@@ -65,6 +66,9 @@ class HealthConditionServiceTest extends UnitRepository {
 
 	@MockBean
 	private DocumentRiskFactorRepository documentRiskFactorRepository;
+
+	@MockBean
+	private DocumentRepository documentRepository;
 
     @BeforeEach
     void setUp(){

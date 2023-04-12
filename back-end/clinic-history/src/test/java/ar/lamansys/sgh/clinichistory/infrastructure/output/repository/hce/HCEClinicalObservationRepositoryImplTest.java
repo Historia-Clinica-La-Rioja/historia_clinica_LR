@@ -2,6 +2,7 @@ package ar.lamansys.sgh.clinichistory.infrastructure.output.repository.hce;
 
 
 import ar.lamansys.sgh.clinichistory.UnitRepository;
+import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.DocumentRepository;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.DocumentRiskFactorRepository;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.DocumentStatus;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.DocumentType;
@@ -42,6 +43,9 @@ class HCEClinicalObservationRepositoryImplTest extends UnitRepository {
 
 	@MockBean
 	private DocumentRiskFactorRepository documentRiskFactorRepository;
+
+	@MockBean
+	private DocumentRepository documentRepository;
 
 	@BeforeEach
 	void setUp() {
