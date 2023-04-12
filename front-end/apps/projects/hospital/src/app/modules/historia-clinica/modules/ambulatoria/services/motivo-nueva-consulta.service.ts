@@ -6,6 +6,7 @@ import { pushIfNotExists, removeFrom } from '@core/utils/array.utils';
 import { TableColumnConfig } from "@presentation/components/document-section-table/document-section-table.component";
 import { CellTemplates } from "@presentation/components/cell-templates/cell-templates.component";
 import { SnackBarService } from '@presentation/services/snack-bar.service';
+import { Observable, Subject } from 'rxjs';
 
 export interface MotivoConsulta {
 	snomed: SnomedDto;
@@ -19,6 +20,10 @@ export class MotivoNuevaConsultaService {
 	private readonly tableColumnConfig: TableColumnConfig[];
 	private snomedConcept: SnomedDto;
 	private readonly ECL = SnomedECL.CONSULTATION_REASON;
+
+	private readonly motivosEmitter = new Subject<MotivoConsulta[]>();
+	motivosConsulta$: Observable<MotivoConsulta[]> = this.motivosEmitter.asObservable();
+
 
 	constructor(
 		private readonly formBuilder: FormBuilder,
@@ -97,6 +102,7 @@ export class MotivoNuevaConsultaService {
 	add(motivo: MotivoConsulta): boolean {
 		const currentItems = this.motivoConsulta.length;
 		this.motivoConsulta = pushIfNotExists<MotivoConsulta>(this.motivoConsulta, motivo, this.compareSpeciality);
+		this.motivosEmitter.next(this.motivoConsulta);
 		return currentItems === this.motivoConsulta.length;
 	}
 
@@ -126,6 +132,7 @@ export class MotivoNuevaConsultaService {
 
 	remove(index: number): void {
 		this.motivoConsulta = removeFrom<MotivoConsulta>(this.motivoConsulta, index);
+		this.motivosEmitter.next(this.motivoConsulta);
 	}
 
 	isEmpty(): boolean {

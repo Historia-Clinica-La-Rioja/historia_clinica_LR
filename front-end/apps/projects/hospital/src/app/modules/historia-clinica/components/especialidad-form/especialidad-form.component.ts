@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, OnInit, forwardRef } from '@angular/core';
+import { Component, OnInit, forwardRef } from '@angular/core';
 import { FormBuilder, NG_VALUE_ACCESSOR, Validators } from '@angular/forms';
 import { ClinicalSpecialtyDto } from '@api-rest/api-model';
 import { ClinicalSpecialtyService } from '@api-rest/services/clinical-specialty.service';
@@ -14,8 +14,7 @@ import { Subscription } from 'rxjs';
 			useExisting: forwardRef(() => EspecialidadFormComponent),
 			multi: true,
 		}
-	],
-	changeDetection: ChangeDetectionStrategy.OnPush
+	]
 })
 export class EspecialidadFormComponent implements OnInit {
 

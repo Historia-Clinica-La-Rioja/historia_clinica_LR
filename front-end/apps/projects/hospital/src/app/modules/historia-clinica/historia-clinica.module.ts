@@ -45,6 +45,7 @@ import { ReferenceRequestListComponent } from './components/reference-request-li
 import { InternmentSummaryFacadeService } from './modules/ambulatoria/modules/internacion/services/internment-summary-facade.service';
 import { LazyMaterialModule } from '../lazy-material/lazy-material.module';
 import { EspecialidadFormComponent } from './components/especialidad-form/especialidad-form.component';
+import { MotivoFormComponent } from './components/motivo-form/motivo-form.component';
 
 @NgModule({
 	declarations: [
@@ -88,6 +89,7 @@ import { EspecialidadFormComponent } from './components/especialidad-form/especi
 		NewConsultationAllergyFormComponent,
 		NewConsultationMedicationFormComponent,
 		EspecialidadFormComponent,
+		MotivoFormComponent,
 	],
 	imports: [
 		CommonModule,
