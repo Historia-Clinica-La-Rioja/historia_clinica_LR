@@ -46,7 +46,7 @@ public class PatientPortImpl implements PatientExternalService {
         LOG.debug("Input parameters -> patientId {}", patientId);
         Patient patient = patientService.getPatient(patientId)
                 .orElseThrow(() -> new EntityNotFoundException("patient.invalid"));
-        BasicDataPersonDto personData = personExternalService.getBasicDataPerson(patient.getPersonId());
+		BasicDataPersonDto personData = patient.getPersonId() != null ? personExternalService.getBasicDataPerson(patient.getPersonId()) : null;
         BasicPatientDto result = new BasicPatientDto(patient.getId(), personData,patient.getTypeId());
         LOG.debug(OUTPUT, result);
         return result;

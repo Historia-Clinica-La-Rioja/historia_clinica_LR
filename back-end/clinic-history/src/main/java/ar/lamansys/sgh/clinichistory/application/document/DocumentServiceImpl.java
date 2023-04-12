@@ -497,7 +497,9 @@ public class  DocumentServiceImpl implements DocumentService {
 	}
 
 	private OtherRiskFactorBo mapToOtherRiskFactorBo(OtherRiskFactorVo otherRiskFactors) {
-		return new OtherRiskFactorBo(otherRiskFactors);
+		if (otherRiskFactors != null)
+			return new OtherRiskFactorBo(otherRiskFactors);
+		return new OtherRiskFactorBo();
 	}
 
 }

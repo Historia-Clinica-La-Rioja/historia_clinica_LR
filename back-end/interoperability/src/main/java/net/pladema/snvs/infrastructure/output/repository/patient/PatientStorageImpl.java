@@ -30,13 +30,16 @@ public class PatientStorageImpl implements PatientStorage {
     }
 
     private PersonDataBo mapPatientData(BasicPatientDto basicPatientDto) {
-        return new PersonDataBo(basicPatientDto.getFirstName(), basicPatientDto.getLastName(),
-                basicPatientDto.getPerson().getIdentificationTypeId(), basicPatientDto.getIdentificationNumber(),
-                null,
-                basicPatientDto.getPerson().getBirthDate(),
-                basicPatientDto.getPerson().getGender().getId(),//"M",
-                "011-4224-0099",
-                "mail_mail@dominio.com",
-                null);
+		if (basicPatientDto.getPerson().getId() != null) {
+			return new PersonDataBo(basicPatientDto.getFirstName(), basicPatientDto.getLastName(),
+					basicPatientDto.getPerson().getIdentificationTypeId(), basicPatientDto.getIdentificationNumber(),
+					null,
+					basicPatientDto.getPerson().getBirthDate(),
+					basicPatientDto.getPerson().getGender().getId(),//"M",
+					"011-4224-0099",
+					"mail_mail@dominio.com",
+					null);
+		}
+		return null;
     }
 }

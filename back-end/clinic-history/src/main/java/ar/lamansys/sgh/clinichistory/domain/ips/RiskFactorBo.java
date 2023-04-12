@@ -56,4 +56,9 @@ public class RiskFactorBo extends SelfValidating<RiskFactorBo> {
                 glycosylatedHemoglobin != null ||
                 cardiovascularRisk != null);
     }
+
+	public boolean isEmpty() {
+		return systolicBloodPressure == null && diastolicBloodPressure == null && meanPressure == null && temperature == null && heartRate == null && respiratoryRate == null
+				&& bloodOxygenSaturation == null && bloodGlucose == null && glycosylatedHemoglobin == null & cardiovascularRisk == null;
+	}
 }

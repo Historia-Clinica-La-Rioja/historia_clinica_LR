@@ -15,4 +15,8 @@ public class PatientInfoBo{
 
 	private Short age;
 
+	public PatientInfoBo(Integer id) {
+		this.id = id;
+	}
+
 }

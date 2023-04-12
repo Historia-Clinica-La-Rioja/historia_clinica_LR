@@ -292,7 +292,10 @@ public class EmergencyCareEpisodeServiceImpl implements EmergencyCareEpisodeServ
 	private void setTriageDocumentData(EmergencyCareBo newEmergencyCare, RiskFactorBo riskFactors) {
 		newEmergencyCare.getTriage().setRiskFactors(riskFactors);
 		BasicPatientDto patient = patientExternalService.getBasicDataFromPatient(newEmergencyCare.getPatient().getId());
-		newEmergencyCare.getTriage().setPatientInfo(new PatientInfoBo(patient.getId(), patient.getPerson().getGender().getId(), patient.getPerson().getAge()));
+		if (patient.getPerson() != null)
+			newEmergencyCare.getTriage().setPatientInfo(new PatientInfoBo(patient.getId(), patient.getPerson().getGender().getId(), patient.getPerson().getAge()));
+		else
+			newEmergencyCare.getTriage().setPatientInfo(new PatientInfoBo(patient.getId()));
 	}
 
     private HistoricEmergencyEpisodeBo saveHistoricEmergencyEpisode(EmergencyCareBo emergencyCare) {

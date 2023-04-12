@@ -280,10 +280,14 @@ public class TriageController {
 
 	private void setRiskFactorsAndPatientInfo(TriageBo triage, Integer patientId, NewRiskFactorsObservationDto riskFactorsObservationDto) {
 		RiskFactorBo riskFactors = riskFactorMapper.fromRiskFactorsObservationDto(riskFactorsObservationDto);
-		riskFactorExternalService.formatRiskFactors(riskFactors);
+		if (!riskFactors.isEmpty())
+			riskFactorExternalService.formatRiskFactors(riskFactors);
 		triage.setRiskFactors(riskFactors);
 		BasicPatientDto patient = patientExternalService.getBasicDataFromPatient(patientId);
-		triage.setPatientInfo(new PatientInfoBo(patient.getId(), patient.getPerson().getGender().getId(), patient.getPerson().getAge()));
+		if (patient.getPerson() != null)
+			triage.setPatientInfo(new PatientInfoBo(patient.getId(), patient.getPerson().getGender().getId(), patient.getPerson().getAge()));
+		else
+			triage.setPatientInfo(new PatientInfoBo(patient.getId()));
 	}
 
 }

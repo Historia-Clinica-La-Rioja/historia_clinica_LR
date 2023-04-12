@@ -119,19 +119,21 @@ public class SharedPatientImpl implements SharedPatientPort {
 
     private BasicDataPersonDto mapPersonData(BasicDataPersonDto person) {
         var result = new BasicDataPersonDto();
-        result.setId(person.getId());
-        result.setFirstName(person.getFirstName());
-        result.setMiddleNames(person.getMiddleNames());
-        result.setLastName(person.getLastName());
-        result.setOtherLastNames(person.getOtherLastNames());
-        result.setIdentificationTypeId(person.getIdentificationTypeId());
-        result.setIdentificationType(person.getIdentificationType());
-        result.setIdentificationNumber(person.getIdentificationNumber());
-        result.setGender(mapGender(person.getGender()));
-        result.setAge(person.getAge());
-        result.setBirthDate(person.getBirthDate());
-		result.setNameSelfDetermination(person.getNameSelfDetermination());
-		result.setSelfPerceivedGender(person.getSelfPerceivedGender());
+		if (person != null) {
+			result.setId(person.getId());
+			result.setFirstName(person.getFirstName());
+			result.setMiddleNames(person.getMiddleNames());
+			result.setLastName(person.getLastName());
+			result.setOtherLastNames(person.getOtherLastNames());
+			result.setIdentificationTypeId(person.getIdentificationTypeId());
+			result.setIdentificationType(person.getIdentificationType());
+			result.setIdentificationNumber(person.getIdentificationNumber());
+			result.setGender(mapGender(person.getGender()));
+			result.setAge(person.getAge());
+			result.setBirthDate(person.getBirthDate());
+			result.setNameSelfDetermination(person.getNameSelfDetermination());
+			result.setSelfPerceivedGender(person.getSelfPerceivedGender());
+		}
         return result;
     }
 
