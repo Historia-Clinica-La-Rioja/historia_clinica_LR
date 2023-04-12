@@ -26,7 +26,8 @@
 		<jacoco-plugin.version>0.8.2</jacoco-plugin.version>
 		<maven-surefire-version>2.22.0</maven-surefire-version>
 		<maven-failsafe-version>2.22.0</maven-failsafe-version>
-		<start-class>ar.lamansys.pac.PacReverseProxyApp</start-class>
+		<spring-boot-configuration-processor.version>2.6.2</spring-boot-configuration-processor.version>
+		<start-class>ar.lamansys.ReverseProxyApp</start-class>
 	</properties>
 
 	<dependencies>
@@ -44,6 +45,13 @@
 			<groupId>org.apache.httpcomponents</groupId>
 			<artifactId>httpclient</artifactId>
 		</dependency>
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-configuration-processor</artifactId>
+			<version>${spring-boot-configuration-processor.version}</version>
+			<optional>true</optional>
+		</dependency>
+
 	</dependencies>
 
 	<profiles>
@@ -164,6 +172,11 @@
 							<groupId>org.mapstruct</groupId>
 							<artifactId>mapstruct-processor</artifactId>
 							<version>${mapstruct.version}</version>
+						</path>
+						<path>
+							<groupId>org.springframework.boot</groupId>
+							<artifactId>spring-boot-configuration-processor</artifactId>
+							<version>${spring-boot-configuration-processor.version}</version>
 						</path>
 					</annotationProcessorPaths>
 					<compilerArgs>

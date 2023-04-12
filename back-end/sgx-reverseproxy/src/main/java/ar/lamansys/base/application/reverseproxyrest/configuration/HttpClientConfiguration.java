@@ -1,4 +1,4 @@
-package ar.lamansys.base.configuration;
+package ar.lamansys.base.application.reverseproxyrest.configuration;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -20,26 +20,14 @@ public class HttpClientConfiguration {
 	private boolean trustInvalidCertificate;
 
 	public HttpClientConfiguration with(boolean newTrustInvalidCertificate) {
-		return new HttpClientConfiguration(
-				proxy,
-				timeout,
-				newTrustInvalidCertificate
-		);
+		return new HttpClientConfiguration(proxy, timeout, newTrustInvalidCertificate);
 	}
 
 	public HttpClientConfiguration withTimeout(Number newTimeout) {
-		return new HttpClientConfiguration(
-				proxy,
-				newTimeout.intValue(),
-				trustInvalidCertificate
-		);
+		return new HttpClientConfiguration(proxy, newTimeout.intValue(), trustInvalidCertificate);
 	}
 
 	public HttpClientConfiguration withProxy(String newProxy) {
-		return new HttpClientConfiguration(
-				newProxy,
-				timeout,
-				trustInvalidCertificate
-		);
+		return new HttpClientConfiguration(newProxy, timeout, trustInvalidCertificate);
 	}
 }

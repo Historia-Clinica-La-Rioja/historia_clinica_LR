@@ -1,56 +1,50 @@
 package ar.lamansys.pac;
 
-import java.util.HashMap;
 import java.util.Map;
-
-import lombok.extern.slf4j.Slf4j;
-
-import org.springframework.boot.autoconfigure.domain.EntityScan;
-import org.springframework.boot.context.properties.ConfigurationProperties;
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.ComponentScan;
-import org.springframework.context.annotation.Configuration;
-
-import ar.lamansys.base.configuration.HttpClientConfiguration;
-import ar.lamansys.base.configuration.RestUtils;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.NonNull;
-import lombok.Setter;
 
 import javax.annotation.PostConstruct;
 
-@Configuration
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
+import org.springframework.boot.autoconfigure.domain.EntityScan;
+import org.springframework.boot.context.properties.ConfigurationProperties;
+import org.springframework.context.annotation.ComponentScan;
+import org.springframework.context.annotation.Configuration;
+
+import ar.lamansys.base.ReverseProxyAutoConfiguration;
+import ar.lamansys.base.application.reverseproxyrest.RestReverseProxy;
+import ar.lamansys.base.application.reverseproxyrest.configuration.RestUtils;
+import lombok.Getter;
+import lombok.NonNull;
+import lombok.Setter;
+import lombok.extern.slf4j.Slf4j;
+
+@Configuration(value = "pac")
+@ConditionalOnProperty(prefix = "app.proxy", name = "type", havingValue = "pac")
 @Getter
 @Setter
-@NoArgsConstructor
-@AllArgsConstructor
+@ConfigurationProperties(prefix = "app.proxy.pac")
 @ComponentScan(basePackages = {"ar.lamansys.pac"})
-@ConfigurationProperties(prefix = "app.pac")
 @EntityScan(basePackages = {"ar.lamansys.pac"})
 @Slf4j
 public class PacReverseProxyAutoConfiguration {
 
-	@NonNull
-	private String server;
-	@NonNull
-	private String proxy;
+	private final ReverseProxyAutoConfiguration reverseProxyAutoConfiguration;
+	private final RestReverseProxy restReverseProxy;
+
 	@NonNull
 	private String username;
 	@NonNull
 	private String password;
 
-	private Map<String, String> headers = new HashMap<>();
-
-	@Bean
-	public HttpClientConfiguration configuration() {
-		return new HttpClientConfiguration();
+	public PacReverseProxyAutoConfiguration(ReverseProxyAutoConfiguration reverseProxyAutoConfiguration, RestReverseProxy restReverseProxy) {
+		this.reverseProxyAutoConfiguration = reverseProxyAutoConfiguration;
+		this.restReverseProxy = restReverseProxy;
 	}
 
 	@PostConstruct
-	public void setAuthorizationHeader() {
-		headers.put("Authorization", RestUtils.getBasicAuthenticationHeader(username, password));
+	public void started() {
+		String basicAuthorization = RestUtils.getBasicAuthenticationHeader(username, password);
+		this.restReverseProxy.addHeaders(Map.of("Authorization", basicAuthorization));
+		log.debug("PacReverseProxyAutoConfiguration -> Authorization {}", basicAuthorization);
 	}
-
 }

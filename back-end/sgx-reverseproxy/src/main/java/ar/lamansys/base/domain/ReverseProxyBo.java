@@ -1,4 +1,4 @@
-package ar.lamansys.pac.domain;
+package ar.lamansys.base.domain;
 
 import lombok.Getter;
 
@@ -8,6 +8,6 @@ import org.springframework.http.ResponseEntity;
 
 @Getter
 @RequiredArgsConstructor
-public class PacReverseProxy {
+public class ReverseProxyBo {
 	private final ResponseEntity<?> response;
 }
