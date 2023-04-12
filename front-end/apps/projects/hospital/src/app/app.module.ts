@@ -23,6 +23,7 @@ import { CoreModule } from '@core/core.module';
 //
 import { environment } from '@environments/environment';
 import { OAuthModule } from "angular-oauth2-oidc";
+import { CommonModule } from '@angular/common'
 
 registerLocaleData(localeEsAr, localeEsArExtras);
 
@@ -37,6 +38,7 @@ registerLocaleData(localeEsAr, localeEsArExtras);
 		FormsModule,
 		HttpClientModule,
 		RouterModule,
+		CommonModule,
 		TranslateModule.forRoot({
 			loader: {
 				provide: TranslateLoader,
