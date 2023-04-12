@@ -8,7 +8,7 @@ import { Moment } from 'moment';
 import { TableColumnConfig } from '@presentation/components/document-section-table/document-section-table.component';
 import { CellTemplates } from '@presentation/components/cell-templates/cell-templates.component';
 import { SnackBarService } from '@presentation/services/snack-bar.service';
-import { BehaviorSubject, Observable } from 'rxjs';
+import { BehaviorSubject, Observable, Subject } from 'rxjs';
 
 export interface Procedimiento {
 	snomed: SnomedDto;
@@ -24,6 +24,9 @@ export class ProcedimientosService {
 	private data: any[];
 	private readonly ECL = SnomedECL.PROCEDURE;
 	private hasProcedure = new BehaviorSubject<boolean>(true);
+
+	emitter = new Subject();
+	procedimientos$ = this.emitter.asObservable()
 
 	constructor(
 		private readonly formBuilder: FormBuilder,
@@ -66,7 +69,7 @@ export class ProcedimientosService {
 			{
 				def: 'delete',
 				template: CellTemplates.REMOVE_BUTTON,
-				action: (rowIndex) => this.removeProcedimiento(rowIndex)
+				action: (rowIndex) => this.remove(rowIndex)
 			}
 
 
@@ -86,6 +89,7 @@ export class ProcedimientosService {
 		this.hasProcedure.next(this.isEmpty());
 		const currentItems = this.data.length;
 		this.data = pushIfNotExists<Procedimiento>(this.data, procedimiento, this.compareSpeciality);
+		this.emitter.next(this.data);
 		return currentItems === this.data.length;
 	}
 
@@ -158,6 +162,7 @@ export class ProcedimientosService {
 	remove(index: number): void {
 		this.hasProcedure.next(false);
 		this.data = removeFrom<Procedimiento>(this.data, index);
+		this.emitter.next(this.data)
 	}
 
 	getTableColumnConfig(): TableColumnConfig[] {
