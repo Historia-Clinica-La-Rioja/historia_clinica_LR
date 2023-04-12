@@ -5,6 +5,7 @@ import { pushIfNotExists, removeFrom } from '@core/utils/array.utils';
 import { newMoment } from '@core/utils/moment.utils';
 import { Moment } from 'moment';
 import { SnackBarService } from "@presentation/services/snack-bar.service";
+import { Subject } from 'rxjs';
 
 export interface AntecedenteFamiliar {
 	snomed: SnomedDto;
@@ -17,6 +18,9 @@ export class AntecedentesFamiliaresNuevaConsultaService {
 	private data: AntecedenteFamiliar[];
 	private snomedConcept: SnomedDto;
 	private readonly ECL = SnomedECL.FAMILY_RECORD;
+
+	dataEmitter = new Subject()
+	data$ = this.dataEmitter.asObservable();
 
 	constructor(
 		private readonly formBuilder: FormBuilder,
@@ -48,6 +52,7 @@ export class AntecedentesFamiliaresNuevaConsultaService {
 	add(antecedente: AntecedenteFamiliar): boolean {
 		const currentItems = this.data.length;
 		this.data = pushIfNotExists<any>(this.data, antecedente, this.compareAntecedenteFamiliar);
+		this.dataEmitter.next(this.data);
 		return currentItems === this.data.length;
 	}
 
@@ -71,6 +76,7 @@ export class AntecedentesFamiliaresNuevaConsultaService {
 
 	remove(index: number): void {
 		this.data = removeFrom<AntecedenteFamiliar>(this.data, index);
+		this.dataEmitter.next(this.data)
 	}
 
 
