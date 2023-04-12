@@ -49,6 +49,7 @@ public class RoleNameMapperImpl implements RoleNameMapper {
 			case AUDITOR_MPI: return "Auditor MPI";
 			case TECNICO: return "Técnico";
 			case PERSONAL_DE_LEGALES: return "Personal de legales";
+			case INFORMADOR: return "Informador";
 		}
 		throw new NotFoundException("role-not-exists", String.format("El rol %s no existe", eRole));
 	}

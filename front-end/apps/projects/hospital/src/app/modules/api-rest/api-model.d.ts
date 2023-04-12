@@ -3723,6 +3723,7 @@ export const enum ERole {
     AUDITOR_MPI = "AUDITOR_MPI",
     TECNICO = "TECNICO",
     PERSONAL_DE_LEGALES = "PERSONAL_DE_LEGALES",
+    INFORMADOR = "INFORMADOR",
 }
 
 export const enum ESurfacePositionDto {
