@@ -38,9 +38,7 @@ export class HistoricalProblemsFacadeService {
 	}
 
 	setPatientId(patientId: number): void {
-		if (!this.originalHistoricalProblems?.length) {
-			this.loadEvolutionSummaryList(patientId);
-		}
+		this.loadEvolutionSummaryList(patientId);
 	}
 
 	public loadEvolutionSummaryList(patientId: number) {
