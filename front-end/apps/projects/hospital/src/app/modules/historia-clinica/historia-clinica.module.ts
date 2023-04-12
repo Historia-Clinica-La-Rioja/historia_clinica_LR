@@ -46,6 +46,9 @@ import { InternmentSummaryFacadeService } from './modules/ambulatoria/modules/in
 import { LazyMaterialModule } from '../lazy-material/lazy-material.module';
 import { EspecialidadFormComponent } from './components/especialidad-form/especialidad-form.component';
 import { MotivoFormComponent } from './components/motivo-form/motivo-form.component';
+import { DiagnosticosFormComponent } from './components/diagnosticos-form/diagnosticos-form.component';
+import { DiagnosticosComponent } from './components/diagnosticos/diagnosticos.component';
+import { ElementoDiagnosticoComponent } from './components/elemento-diagnostico/elemento-diagnostico.component';
 
 @NgModule({
 	declarations: [
@@ -90,6 +93,9 @@ import { MotivoFormComponent } from './components/motivo-form/motivo-form.compon
 		NewConsultationMedicationFormComponent,
 		EspecialidadFormComponent,
 		MotivoFormComponent,
+		DiagnosticosFormComponent,
+		DiagnosticosComponent,
+		ElementoDiagnosticoComponent
 	],
 	imports: [
 		CommonModule,
@@ -126,6 +132,7 @@ import { MotivoFormComponent } from './components/motivo-form/motivo-form.compon
 		ConceptsSearchDialogComponent,
 		ConceptsTypeaheadSearchDialogComponent,
 		NewConsultationAddProblemFormComponent,
+		DiagnosticosComponent
 	],
 	providers: [
 		InternmentSummaryFacadeService

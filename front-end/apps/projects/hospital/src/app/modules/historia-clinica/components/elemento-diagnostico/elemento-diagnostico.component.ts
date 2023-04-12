@@ -1,8 +1,8 @@
-import { HEALTH_CLINICAL_STATUS, HEALTH_VERIFICATIONS } from './../../constants/ids';
+import { HEALTH_CLINICAL_STATUS, HEALTH_VERIFICATIONS } from '../../modules/ambulatoria/modules/internacion/constants/ids';
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { DiagnosisDto } from '@api-rest/api-model';
-import { DiagnosisCreationEditionComponent } from '../../dialogs/diagnosis-creation-edition/diagnosis-creation-edition.component';
+import { DiagnosisCreationEditionComponent } from '../../modules/ambulatoria/modules/internacion/dialogs/diagnosis-creation-edition/diagnosis-creation-edition.component';
 
 @Component({
 	selector: 'app-elemento-diagnostico',

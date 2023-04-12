@@ -15,14 +15,12 @@ import { AlergiasComponent } from './components/alergias/alergias.component';
 // components
 import { AntecedentesFamiliaresComponent } from './components/antecedentes-familiares/antecedentes-familiares.component';
 import { AntecedentesPersonalesComponent } from './components/antecedentes-personales/antecedentes-personales.component';
-import { DiagnosticosComponent } from './components/diagnosticos/diagnosticos.component';
 import { EventSerchComponent } from './components/event-serch/event-serch.component';
 import { ExternalCauseComponent } from './components/external-cause/external-cause.component';
 import { InternmentPatientTableComponent } from './components/internment-patient-table/internment-patient-table.component';
 import { InternmentEpisodeSummaryComponent } from "@historia-clinica/modules/ambulatoria/modules/internacion/components/internment-episode-summary/internment-episode-summary.component";
 import { MedicacionComponent } from './components/medicacion/medicacion.component';
 import { VacunasComponent } from './components/vacunas/vacunas.component';
-import { ElementoDiagnosticoComponent } from './components/elemento-diagnostico/elemento-diagnostico.component';
 import { InternmentPatientCardComponent } from './components/internment-patient-card/internment-patient-card.component';
 import { TableEventComponent } from './components/table-event/table-event.component';
 import { TypeOfPregnancyComponent } from './components/type-of-pregnancy/type-of-pregnancy.component';
@@ -55,7 +53,6 @@ import { DeleteDocumentPopupComponent } from './dialogs/delete-document-popup/de
 		AlergiasComponent,
 		AntecedentesFamiliaresComponent,
 		AntecedentesPersonalesComponent,
-		DiagnosticosComponent,
 		ExternalCauseComponent,
 		EventSerchComponent,
 		FormDynamicNewBornComponent,
@@ -75,7 +72,6 @@ import { DeleteDocumentPopupComponent } from './dialogs/delete-document-popup/de
 		EpicrisisDockPopupComponent,
 		EvolutionNoteDockPopupComponent,
 		MedicalDischargeComponent,
-		ElementoDiagnosticoComponent,
 		DiagnosisCreationEditionComponent,
 		SelectMainDiagnosisComponent,
 		DocumentActionReasonComponent,

@@ -3,10 +3,10 @@ import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { DiagnosisDto, HealthConditionDto } from '@api-rest/api-model';
 import { SnackBarService } from '@presentation/services/snack-bar.service';
-import { HEALTH_VERIFICATIONS } from '../../constants/ids';
-import { DiagnosisCreationEditionComponent } from '../../dialogs/diagnosis-creation-edition/diagnosis-creation-edition.component';
-import { SelectMainDiagnosisComponent } from '../../dialogs/select-main-diagnosis/select-main-diagnosis.component';
-import { ComponentEvaluationManagerService } from '../../services/component-evaluation-manager.service';
+import { HEALTH_VERIFICATIONS } from '../../modules/ambulatoria/modules/internacion/constants/ids';
+import { DiagnosisCreationEditionComponent } from '../../modules/ambulatoria/modules/internacion/dialogs/diagnosis-creation-edition/diagnosis-creation-edition.component';
+import { SelectMainDiagnosisComponent } from '../../modules/ambulatoria/modules/internacion/dialogs/select-main-diagnosis/select-main-diagnosis.component';
+import { ComponentEvaluationManagerService } from '@historia-clinica/modules/ambulatoria/modules/internacion/services/component-evaluation-manager.service';
 
 @Component({
 	selector: 'app-diagnosticos',
@@ -19,7 +19,7 @@ export class DiagnosticosComponent {
 	@Output() mainDiagnosisChange = new EventEmitter();
 
 	@Input()
-	diagnosticos: DiagnosisDto[];
+	diagnosticos: DiagnosisDto[] = [];
 	_mainDiagnosis: HealthConditionDto;
 
 	@Input()
