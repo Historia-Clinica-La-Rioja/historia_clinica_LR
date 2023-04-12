@@ -50,6 +50,8 @@ import { DiagnosticosFormComponent } from './components/diagnosticos-form/diagno
 import { DiagnosticosComponent } from './components/diagnosticos/diagnosticos.component';
 import { ElementoDiagnosticoComponent } from './components/elemento-diagnostico/elemento-diagnostico.component';
 import { EvolucionFormComponent } from './components/evolucion-form/evolucion-form.component';
+import { DatosAntropometricosFormComponent } from './components/datos-antropometricos-form/datos-antropometricos-form.component';
+import { DatosAntropometricosNuevaConsultaComponent } from './components/datos-antropometricos-nueva-consulta/datos-antropometricos-nueva-consulta.component';
 
 @NgModule({
 	declarations: [
@@ -97,7 +99,9 @@ import { EvolucionFormComponent } from './components/evolucion-form/evolucion-fo
 		DiagnosticosFormComponent,
 		DiagnosticosComponent,
 		ElementoDiagnosticoComponent,
-		EvolucionFormComponent
+		EvolucionFormComponent,
+		DatosAntropometricosFormComponent,
+		DatosAntropometricosNuevaConsultaComponent
 	],
 	imports: [
 		CommonModule,
@@ -134,7 +138,8 @@ import { EvolucionFormComponent } from './components/evolucion-form/evolucion-fo
 		ConceptsSearchDialogComponent,
 		ConceptsTypeaheadSearchDialogComponent,
 		NewConsultationAddProblemFormComponent,
-		DiagnosticosComponent
+		DiagnosticosComponent,
+		DatosAntropometricosNuevaConsultaComponent
 	],
 	providers: [
 		InternmentSummaryFacadeService

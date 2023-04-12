@@ -1,6 +1,6 @@
 import { Component, Input } from '@angular/core';
 import { isNumberOrDot } from '@core/utils/pattern.utils';
-import { DatosAntropometricosNuevaConsultaService } from '../../services/datos-antropometricos-nueva-consulta.service';
+import { DatosAntropometricosNuevaConsultaService } from '../../modules/ambulatoria/services/datos-antropometricos-nueva-consulta.service';
 
 @Component({
   selector: 'app-datos-antropometricos-nueva-consulta',

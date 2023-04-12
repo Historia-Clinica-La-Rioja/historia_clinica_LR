@@ -21,7 +21,7 @@ export interface DatosAntropometricos {
 
 export class DatosAntropometricosNuevaConsultaService {
 
-	private form: FormGroup;
+	form: FormGroup;
 	private bloodTypes: MasterDataInterface<string>[];
 	private heightErrorSource = new Subject<string | void>();
 	private _heightError$ = this.heightErrorSource.asObservable();
@@ -150,19 +150,21 @@ export class DatosAntropometricosNuevaConsultaService {
 	}
 
 	setPreviousAnthropometricData(): void {
-		this.hceGeneralStateService.getAnthropometricData(this.patientId).subscribe(
-			(anthropometricData: HCEAnthropometricDataDto) => {
-				this.notShowPreloadedAnthropometricData = anthropometricData ? true : false;
-				if (anthropometricData) {
-					this.setAnthropometric(anthropometricData.weight?.value, anthropometricData.height?.value, anthropometricData.bloodType?.value, anthropometricData.headCircumference?.value);
-					Object.keys(anthropometricData).forEach((key: string) => {
-						if (anthropometricData[key].effectiveTime) {
-							this.dateList.push(anthropometricData[key].effectiveTime);
-						}
-					});
+		if (this.patientId) {
+			this.hceGeneralStateService.getAnthropometricData(this.patientId).subscribe(
+				(anthropometricData: HCEAnthropometricDataDto) => {
+					this.notShowPreloadedAnthropometricData = anthropometricData ? true : false;
+					if (anthropometricData) {
+						this.setAnthropometric(anthropometricData.weight?.value, anthropometricData.height?.value, anthropometricData.bloodType?.value, anthropometricData.headCircumference?.value);
+						Object.keys(anthropometricData).forEach((key: string) => {
+							if (anthropometricData[key].effectiveTime) {
+								this.dateList.push(anthropometricData[key].effectiveTime);
+							}
+						});
+					}
 				}
-			}
-		);
+			);
+		}
 	}
 
 	setAnthropometric(weight?: string, height?: string, bloodDescription?: string, headCircumference?: string): void {

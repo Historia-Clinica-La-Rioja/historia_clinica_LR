@@ -43,7 +43,6 @@ import { ReferenceNotificationComponent } from './dialogs/reference-notification
 import { CounterreferenceDockPopupComponent } from './dialogs/counterreference-dock-popup/counterreference-dock-popup.component';
 import { SnvsReportsResultComponent } from './dialogs/snvs-reports-result/snvs-reports-result.component';
 import { ClipboardModule } from "@angular/cdk/clipboard";
-import { DatosAntropometricosNuevaConsultaComponent } from './components/datos-antropometricos-nueva-consulta/datos-antropometricos-nueva-consulta.component';
 import { ShowAllergiesComponent } from './dialogs/show-allergies/show-allergies.component';
 import { InternacionPacienteComponent } from './modules/internacion/routes/internacion-paciente/internacion-paciente.component';
 import { InternmentSummaryComponent } from "@historia-clinica/modules/ambulatoria/modules/internacion/routes/internment-summary/internment-summary.component";
@@ -101,7 +100,6 @@ import { OriginInstitutionReferenceComponent } from './components/origin-institu
 		ReferenceNotificationComponent,
 		CounterreferenceDockPopupComponent,
 		SnvsReportsResultComponent,
-		DatosAntropometricosNuevaConsultaComponent,
 		ShowAllergiesComponent,
 		InternacionPacienteComponent,
 		VacunasSummaryComponent,
