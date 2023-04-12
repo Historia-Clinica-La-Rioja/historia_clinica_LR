@@ -49,6 +49,7 @@ import { MotivoFormComponent } from './components/motivo-form/motivo-form.compon
 import { DiagnosticosFormComponent } from './components/diagnosticos-form/diagnosticos-form.component';
 import { DiagnosticosComponent } from './components/diagnosticos/diagnosticos.component';
 import { ElementoDiagnosticoComponent } from './components/elemento-diagnostico/elemento-diagnostico.component';
+import { EvolucionFormComponent } from './components/evolucion-form/evolucion-form.component';
 
 @NgModule({
 	declarations: [
@@ -95,7 +96,8 @@ import { ElementoDiagnosticoComponent } from './components/elemento-diagnostico/
 		MotivoFormComponent,
 		DiagnosticosFormComponent,
 		DiagnosticosComponent,
-		ElementoDiagnosticoComponent
+		ElementoDiagnosticoComponent,
+		EvolucionFormComponent
 	],
 	imports: [
 		CommonModule,
