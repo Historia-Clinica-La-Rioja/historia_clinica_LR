@@ -22,14 +22,19 @@
 
 	<mat-menu #menu="matMenu">
 
-		<div *ngIf="anyEmergencyCareAction" id="emergencyCare">
-			<mat-label class="actions-labels color-grey">
-				GUARDIA
-			</mat-label>
-			<button mat-menu-item id="new_triage" color="primary" (click)="newTriage()" class="actions">
-				{{ 'ambulatoria.paciente.guardia.NUEVO_TRIAGE' | translate }}
-			</button>
-		</div>
+        <div *ngIf="anyEmergencyCareAction" id="emergencyCare">
+            <mat-label class="actions-labels color-grey">
+                GUARDIA
+            </mat-label>
+            <button mat-menu-item id="new_triage" color="primary" (click)="newTriage()" class="actions"
+                >
+                {{ 'ambulatoria.paciente.guardia.NUEVO_TRIAGE' | translate }}
+            </button>
+
+            <button mat-menu-item id="new_triage" color="primary" (click)="openNotaDeEvolucion()" class="actions">
+                Nota de evolución
+            </button>
+        </div>
 
 		<div id="internacion" *ngIf="hasInternmentActionsToDo">
 			<mat-label class="actions-labels color-grey">

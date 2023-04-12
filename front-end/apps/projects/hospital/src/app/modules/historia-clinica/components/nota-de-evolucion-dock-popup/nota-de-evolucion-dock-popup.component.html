@@ -1,0 +1,37 @@
+<app-dock-popup [dockPopupRef]="dockPopupRef" [header]="header">
+	<div body>
+		<form [formGroup]="form">
+
+			<app-especialidad-form formControlName="specialty"></app-especialidad-form>
+
+			<app-motivo-form formControlName="motivo"></app-motivo-form>
+
+			<app-diagnosticos-form formControlName="diagnoticos"></app-diagnosticos-form>
+
+			<app-evolucion-form formControlName="evolucion"></app-evolucion-form>
+
+			<app-datos-antropometricos-form formControlName="antropometricos"> </app-datos-antropometricos-form>
+
+			<app-antecedentes-familiares-form
+				formControlName="antecedentesFamiliares"></app-antecedentes-familiares-form>
+
+			<app-medicaciones-form formControlName="medicaciones"></app-medicaciones-form>
+
+			<app-procedimientos-form formControlName="procedimientos"></app-procedimientos-form>
+
+			<app-factores-de-riesgo-form-v2 formControlName="factoresDeRiesgo"></app-factores-de-riesgo-form-v2>
+
+			<app-alergias-form formControlName="alergias"></app-alergias-form>
+
+		</form>
+	</div>
+
+	<div actions id="buttons">
+		<div align="end">
+			<button class="uppercase" mat-raised-button color="primary" (click)="save()"
+				[disabled]="disableConfirmButton">
+				<span [translate]="'buttons.CONFIRM'"></span>
+			</button>
+		</div>
+	</div>
+</app-dock-popup>

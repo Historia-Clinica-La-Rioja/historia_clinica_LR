@@ -27,6 +27,7 @@ import { EditDocumentActionService } from '../../modules/internacion/services/ed
 import { TriageDefinitionsService } from '@historia-clinica/modules/guardia/services/triage-definitions.service';
 import { EstadosEpisodio } from '@historia-clinica/modules/guardia/constants/masterdata';
 import { PatientType } from '@historia-clinica/constants/summaries';
+import { NotaDeEvolucionDockPopupComponent } from '@historia-clinica/components/nota-de-evolucion-dock-popup/nota-de-evolucion-dock-popup.component';
 
 @Component({
 	selector: 'app-clinical-history-actions',
@@ -39,6 +40,7 @@ export class ClinicalHistoryActionsComponent implements OnInit {
 	readonly EstadosEpisodio = EstadosEpisodio;
 
 	dialogRef: DockPopupRef;
+	notaDeEvolucionDialogRef: DockPopupRef;
 	mainDiagnosis: HealthConditionDto;
 	diagnosticos: DiagnosisDto[];
 	referenceNotificationService: ReferenceNotificationService;
@@ -150,6 +152,19 @@ export class ClinicalHistoryActionsComponent implements OnInit {
 				(anyMatch<ERole>(userRoles, [ERole.PROFESIONAL_DE_SALUD, ERole.ESPECIALISTA_MEDICO])))
 			this.hasMedicalRole = anyMatch<ERole>(userRoles, [ERole.ESPECIALISTA_MEDICO]);
 		});
+	}
+
+	openNotaDeEvolucion() {
+		if (!this.notaDeEvolucionDialogRef) {
+			this.notaDeEvolucionDialogRef = this.dockPopupService.open(NotaDeEvolucionDockPopupComponent, { idPaciente: this.patientId });
+			this.popUpOpen.next(this.notaDeEvolucionDialogRef);
+			this.notaDeEvolucionDialogRef.afterClosed().subscribe(fieldsToUpdate => {
+				delete this.notaDeEvolucionDialogRef
+			})
+		} else {
+			if (this.notaDeEvolucionDialogRef.isMinimized())
+				this.notaDeEvolucionDialogRef.maximize();
+		}
 	}
 
 	openNuevaConsulta() {

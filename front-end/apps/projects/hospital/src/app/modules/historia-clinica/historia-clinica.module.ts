@@ -44,6 +44,7 @@ import { MedicationListComponent } from './components/medication-list/medication
 import { ReferenceRequestListComponent } from './components/reference-request-list/reference-request-list.component';
 import { InternmentSummaryFacadeService } from './modules/ambulatoria/modules/internacion/services/internment-summary-facade.service';
 import { LazyMaterialModule } from '../lazy-material/lazy-material.module';
+import { NotaDeEvolucionDockPopupComponent } from './components/nota-de-evolucion-dock-popup/nota-de-evolucion-dock-popup.component';
 import { EspecialidadFormComponent } from './components/especialidad-form/especialidad-form.component';
 import { MotivoFormComponent } from './components/motivo-form/motivo-form.component';
 import { DiagnosticosFormComponent } from './components/diagnosticos-form/diagnosticos-form.component';
@@ -99,6 +100,7 @@ import { AlergiasFormComponent } from './components/alergias-form/alergias-form.
 		NewConsultationProcedureFormComponent,
 		NewConsultationAllergyFormComponent,
 		NewConsultationMedicationFormComponent,
+		NotaDeEvolucionDockPopupComponent,
 		EspecialidadFormComponent,
 		MotivoFormComponent,
 		DiagnosticosFormComponent,
