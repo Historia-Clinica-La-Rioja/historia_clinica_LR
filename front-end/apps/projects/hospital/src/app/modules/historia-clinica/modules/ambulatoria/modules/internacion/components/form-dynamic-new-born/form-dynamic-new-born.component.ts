@@ -50,7 +50,6 @@ export class FormDynamicNewBornComponent implements AfterViewInit {
 	ngAfterViewInit(): void {
 		this.controlService.selectedOption$.subscribe((option: TypeOfPregnancy) => {
 			const newBornsFormArray = this.form.get('newBorns') as FormArray;
-			console.log({ option });
 			if (option === TypeOfPregnancy.UNDEFINED) {
 				newBornsFormArray.clear();
 				this.disabledAddNewBorn = true;
