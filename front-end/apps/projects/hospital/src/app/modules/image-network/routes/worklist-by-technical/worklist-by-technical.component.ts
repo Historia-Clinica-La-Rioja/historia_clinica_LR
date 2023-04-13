@@ -24,11 +24,11 @@ const stateColor = {
   }
 
 @Component({
-    selector: 'app-worklist',
-    templateUrl: './worklist.component.html',
-    styleUrls: ['./worklist.component.scss']
+    selector: 'app-worklist-by-technical',
+    templateUrl: './worklist-by-technical.component.html',
+    styleUrls: ['./worklist-by-technical.component.scss']
 })
-export class WorklistComponent implements OnInit {
+export class WorklistByTechnicalComponent implements OnInit {
     @ViewChild('select') select: MatSelect;
     @ViewChild('paginator') paginator: MatPaginator;
     equipments$: Observable<EquipmentDto[]>;

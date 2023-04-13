@@ -2,7 +2,7 @@ import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { RoleGuard } from '@core/guards/RoleGuard';
 import { ERole } from '@api-rest/api-model';
-import { WorklistComponent } from 'projects/hospital/src/app/modules/image-network/routes/worklist/worklist.component';
+import { WorklistByTechnicalComponent } from './routes/worklist-by-technical/worklist-by-technical.component';
 
 const routes: Routes = [
 	{
@@ -10,7 +10,7 @@ const routes: Routes = [
 		children: [
 			{
 				path: 'lista-trabajos',
-				component: WorklistComponent,
+				component: WorklistByTechnicalComponent,
 				canActivate: [RoleGuard],
 				data: { allowedRoles: [ERole.TECNICO]}
 			}
