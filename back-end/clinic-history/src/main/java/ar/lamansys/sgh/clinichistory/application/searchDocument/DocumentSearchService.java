@@ -9,5 +9,4 @@ public interface DocumentSearchService {
 
     DocumentHistoricBo historicalListDocuments(Integer internmentEpisodeId, DocumentSearchFilterBo searchFilter);
 
-	List<EmergencyCareEpisodeTriageSearchBo> getEmergencyCareTriageHistoricalDocumentList(Integer emergencyCareEpisodeId);
 }

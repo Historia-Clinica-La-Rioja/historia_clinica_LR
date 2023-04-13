@@ -110,5 +110,7 @@ public interface DocumentService {
 	List<Long> getDocumentsIdsFromPatient(Integer patient);
 	
 	OtherRiskFactorBo getOtherRiskFactors(Long id);
+
+	Long getDocumentIdByTriage(Integer triageId);
 }
 

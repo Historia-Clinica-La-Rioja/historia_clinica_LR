@@ -2,6 +2,7 @@ package net.pladema.emergencycare.controller.document.documentsearch.dto;
 
 import lombok.Getter;
 import lombok.Setter;
+import net.pladema.emergencycare.triage.controller.dto.TriageDocumentDto;
 
 import java.util.List;
 
@@ -9,9 +10,9 @@ import java.util.List;
 @Setter
 public class EmergencyCareHistoricDocumentDto {
 
-	private List<EmergencyCareEpisodeTriageSearchDto> triages;
+	private List<TriageDocumentDto> triages;
 
-	public EmergencyCareHistoricDocumentDto(List<EmergencyCareEpisodeTriageSearchDto> triages) {
+	public EmergencyCareHistoricDocumentDto(List<TriageDocumentDto> triages) {
 		this.triages = triages;
 	}
 

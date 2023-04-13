@@ -1066,22 +1066,8 @@ export interface EmergencyCareEpisodeListTriageDto {
     name: string;
 }
 
-export interface EmergencyCareEpisodeTriageSearchDto {
-    createdOn: Date;
-    documentId: number;
-    documentTypeDescription: string;
-    notes: string;
-    otherRiskFactors: OtherRiskFactorDto;
-    responsibleFirstName: string;
-    responsibleLastName: string;
-    responsibleSelfDeterminedName: string;
-    riskFactors: RiskFactorDto;
-    triageId: number;
-    userId: number;
-}
-
 export interface EmergencyCareHistoricDocumentDto {
-    triages: EmergencyCareEpisodeTriageSearchDto[];
+    triages: TriageDocumentDto[];
 }
 
 export interface EmergencyCareListDto extends Serializable {
@@ -2274,15 +2260,6 @@ export interface OtherPharmacoDto {
     snomed: SharedSnomedDto;
 }
 
-export interface OtherRiskFactorDto {
-    bodyTemperatureDescription: string;
-    cryingExcessive: boolean;
-    muscleHypertoniaDescription: string;
-    perfusionDescription: string;
-    respiratoryRetractionDescription: string;
-    stridor: boolean;
-}
-
 export interface OutpatientAllergyConditionDto {
     categoryId: string;
     criticalityId: number;
@@ -3247,6 +3224,11 @@ export interface TriageCirculationDto extends Serializable {
 export interface TriageColorDto extends Serializable {
     code: string;
     name: string;
+}
+
+export interface TriageDocumentDto {
+    documentId: number;
+    triage: TriageListDto;
 }
 
 export interface TriageDto extends Serializable {

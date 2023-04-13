@@ -55,6 +55,7 @@ public interface TriageMapper {
     @Mapping(target = "circulation.perfusion.id", source = "otherRiskFactors.perfusionId")
     @Mapping(target = "circulation.perfusion.description", source = "otherRiskFactors.perfusionDescription")
 	@Mapping(target = "notes", source = "notes.otherNote")
+	@Mapping(target = "id", source = "triageId")
     TriageListDto toTriageListDto(TriageBo triage);
 
     @AfterMapping

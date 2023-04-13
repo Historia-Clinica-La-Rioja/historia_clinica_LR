@@ -474,7 +474,17 @@ public class  DocumentServiceImpl implements DocumentService {
 	
 	@Override
 	public OtherRiskFactorBo getOtherRiskFactors(Long id) {
+		LOG.debug("Input parameters -> documentId {}", id);
 		OtherRiskFactorBo result = mapToOtherRiskFactorBo(documentRiskFactorRepository.getOtherRiskFactorsFromDocument(id));
+		LOG.debug("Output -> {}", result);
+		return result;
+	}
+
+	@Override
+	public Long getDocumentIdByTriage(Integer triageId) {
+		LOG.debug("Input parameters -> triageId {}", triageId);
+		Long result = documentRepository.getDocumentIdByTriageId(triageId);
+		LOG.debug("Output -> {}", result);
 		return result;
 	}
 
