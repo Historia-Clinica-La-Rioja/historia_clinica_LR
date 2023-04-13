@@ -50,7 +50,7 @@ const routes: Routes = [
 				loadChildren: () => import('../auditoria/auditoria.module').then(m => m.AuditoriaModule),
 			},
 			{
-				path: 'imagenes',
+				path: 'imagenes/lista-trabajos',
 				loadChildren: () => import('../image-network/image-network.module').then(m => m.ImageNetworkModule),
 				canActivate: [FeatureFlagGuard],
 				data: { featureFlag: AppFeature.HABILITAR_DESARROLLO_RED_IMAGENES }
