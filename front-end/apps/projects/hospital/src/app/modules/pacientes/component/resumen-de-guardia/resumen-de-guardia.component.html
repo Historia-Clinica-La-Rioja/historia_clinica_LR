@@ -80,10 +80,9 @@
 
             <mat-divider inset></mat-divider>
 
-            <app-triage-details [triage]="lastTriage" [emergencyCareType]="emergencyCareType" [showRiskFactors]="false"
+            <app-last-triage [triage]="lastTriage" [emergencyCareType]="emergencyCareType"
                 (triageRiskFactors)="triageRiskFactors.emit($event)">
-            </app-triage-details>
->
+            </app-last-triage>
 
             <div id="history">
                 <h3 class="bold" style="margin-bottom: 0">

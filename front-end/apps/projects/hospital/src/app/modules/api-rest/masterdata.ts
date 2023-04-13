@@ -1,8 +1,3 @@
-export enum  EmergencyCareType {
-	ADULTO = 1,
-	PEDIATRICO = 2,
-	GINECOLOGIA_OBSTETRICIA = 3
-}
 
 export enum EmergencyCareEntranceType {
 	CAMINANDO = 1,

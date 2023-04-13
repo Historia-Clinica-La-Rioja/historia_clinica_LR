@@ -1,32 +1,26 @@
 <div *ngIf="triage" fxLayout="column" fxLayoutGap="15px">
 
-	<section id="basic-triage" fxLayout="column">
-		<div id="header" fxLayout="row" fxLayoutAlign="space-between center">
-			<h3 class="title-weight" style="margin: 0">{{ 'guardia.episode.triage.ultimo.TITLE' | translate }}</h3>
-			<span>{{ triage.creationDate | date: 'dd/MM/yyyy - HH:mm' }} hs</span>
+	<div id="basic-data" fxLayout="row wrap" fxLayoutAlign="space-between" fxLayoutGap="15px">
+		<div class="info" fxLayout="column" fxLayoutGap="3px">
+			<span>{{ 'guardia.episode.triage.ultimo.NIVEL' | translate }}</span>
+			<app-triage-chip [category]="triage.category"></app-triage-chip>
 		</div>
 
-		<div id="basic-data" fxLayout="row wrap" fxLayoutAlign="space-between" fxLayoutGap="15px">
-			<div class="info" fxLayout="column" fxLayoutGap="3px">
-				<span>{{ 'guardia.episode.triage.ultimo.NIVEL' | translate }}</span>
-				<app-triage-chip [category]="triage.category"></app-triage-chip>
-			</div>
-
-			<div class="info" fxLayout="column" fxLayoutGap="3px">
-				<span>{{ 'guardia.episode.triage.ultimo.PROFESIONAL' | translate }}</span>
-				<span *ngIf="triage.createdBy else noInfo" class="padding-to-align-chip">
-					{{getFullName(triage)}}
-				</span>
-			</div>
-
-			<div class="info" fxLayout="column" fxLayoutGap="3px">
-				<span>{{ 'guardia.episode.triage.ultimo.UBICACION' | translate }}</span>
-				<span *ngIf="triage.doctorsOfficeDescription else noInfo" class="padding-to-align-chip">
-					{{ triage.doctorsOfficeDescription }}
-				</span>
-			</div>
+		<div class="info" fxLayout="column" fxLayoutGap="3px">
+			<span>{{ 'guardia.episode.triage.ultimo.PROFESIONAL' | translate }}</span>
+			<span *ngIf="triage.createdBy else noInfo" class="padding-to-align-chip">
+				{{getFullName(triage)}}
+			</span>
 		</div>
-	</section>
+
+		<div class="info" fxLayout="column" fxLayoutGap="3px">
+			<span>{{ 'guardia.episode.triage.ultimo.UBICACION' | translate }}</span>
+			<span *ngIf="triage.doctorsOfficeDescription else noInfo" class="padding-to-align-chip">
+				{{ triage.doctorsOfficeDescription }}
+			</span>
+		</div>
+	</div>
+
 
 	<section
 		*ngIf="emergencyCareType && ( emergencyCareType === emergencyCareTypes.PEDIATRIA || (showRiskFactors && riskFactors?.length))"
@@ -99,10 +93,13 @@
 					emergencyCareType === emergencyCareTypes.GINECOLOGIA" class="subtitle-weight">{{
 				'guardia.episode.triage.ultimo.FACTORES_DE_RIESGO' | translate }}
 			</h3>
-			<div fxLayout="row wrap">
-				<app-factor-de-riesgo *ngFor="let riskFactor of riskFactors" [riskFactor]="riskFactor.value"
-					[description]="riskFactor.description">
-				</app-factor-de-riesgo>
+			<div style="display: grid; grid-template-columns: 1fr 1fr;">
+				<div *ngFor="let riskFactor of riskFactors">
+					<div *ngIf="riskFactor.value.value" fxLayout="column">
+						<span>{{riskFactor.description}}</span>
+						<span>{{riskFactor.value.value}}</span>
+					</div>
+				</div>
 			</div>
 		</div>
 	</section>

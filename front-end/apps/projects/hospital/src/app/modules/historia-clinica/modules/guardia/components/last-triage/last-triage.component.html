@@ -1,0 +1,9 @@
+<div *ngIf="triage" fxLayout="column" fxLayoutGap="15px">
+	<section id="basic-triage" fxLayout="column">
+		<div id="header" fxLayout="row" fxLayoutAlign="space-between center">
+			<h3 class="title-weight" style="margin: 0">{{ 'guardia.episode.triage.ultimo.TITLE' | translate }}</h3>
+			<span>{{ triage.creationDate | date: 'dd/MM/yyyy - HH:mm' }} hs</span>
+		</div>
+	</section>
+	<app-triage-details [triage]="triage" [emergencyCareType]="emergencyCareType" (triageRiskFactors)="emit($event)"> </app-triage-details>
+</div>
