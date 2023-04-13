@@ -5,6 +5,7 @@ import { AgendaSetupComponent } from './routes/agenda-setup/agenda-setup.compone
 import { AppFeature, ERole } from '@api-rest/api-model';
 import { RoleGuard } from '@core/guards/RoleGuard';
 import { AgendaComponent } from './routes/agenda/agenda.component';
+import { EquipmentDiarySetupComponent } from './routes/equipment-diary-setup/equipment-diary-setup.component';
 import { FeatureFlagGuard } from '@core/guards/FeatureFlagGuard';
 
 const routes: Routes = [
@@ -56,6 +57,18 @@ const routes: Routes = [
 				loadChildren: () => import('./modules/image-network/image-network.module').then(m => m.ImageNetworkModule),
 				canActivate: [FeatureFlagGuard],
 				data: { featureFlag: AppFeature.HABILITAR_DESARROLLO_RED_IMAGENES }
+			},
+			{
+				path: 'imagenes/nueva-agenda',
+				component: EquipmentDiarySetupComponent,
+				canActivate: [RoleGuard],
+				data: { allowedRoles: [ERole.ADMINISTRADOR_AGENDA] }
+			},
+			{
+				path: 'imagenes/agenda/:agendaId/editar',
+				component: EquipmentDiarySetupComponent,
+				canActivate: [RoleGuard],
+				data: { allowedRoles: [ERole.ADMINISTRADOR_AGENDA] , editMode: true}
 			},	
 		],
 	}

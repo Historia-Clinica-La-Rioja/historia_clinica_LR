@@ -36,7 +36,7 @@ import { ReferenceService } from '@api-rest/services/reference.service';
 import { ReferenceAppointmentService } from '@turnos/services/reference-appointment.service';
 import { REMOVE_SUBSTRING_DNI } from '@core/constants/validation-constants';
 import { PATTERN_INTEGER_NUMBER } from '@core/utils/pattern.utils';
-import { EquipmentAppointmentsFacadeService } from '@turnos/modules/image-network/services/equipment-appointments-facade.service';
+import { EquipmentAppointmentsFacadeService } from '@turnos/services/equipment-appointments-facade.service';
 import { Observable } from 'rxjs';
 
 const ROUTE_SEARCH = 'pacientes/search';

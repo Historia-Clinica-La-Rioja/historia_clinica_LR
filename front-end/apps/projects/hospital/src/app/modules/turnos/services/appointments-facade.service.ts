@@ -14,7 +14,7 @@ import { PatientNameService } from "@core/services/patient-name.service";
 import { AppointmentBlockMotivesFacadeService } from './appointment-block-motives-facade.service';
 import { HolidaysService } from '@api-rest/services/holidays.service';
 import { dateDtoToDate } from '@api-rest/mapper/date-dto.mapper';
-import { toCalendarEvent } from '@turnos/modules/image-network/utils/appointment.utils';
+import { toCalendarEvent } from '@turnos/utils/appointment.utils';
 
 @Injectable({
 	providedIn: 'root'

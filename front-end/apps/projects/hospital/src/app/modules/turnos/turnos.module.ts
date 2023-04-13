@@ -10,8 +10,10 @@ import { TurnosRoutingModule } from './turnos-routing.module';
 import { AgendaComponent } from './routes/agenda/agenda.component';
 import { AgendaSetupComponent } from './routes/agenda-setup/agenda-setup.component';
 import { HomeComponent } from './routes/home/home.component';
+import { EquipmentDiarySetupComponent } from './routes/equipment-diary-setup/equipment-diary-setup.component';
 // components
 import { CalendarProfessionalViewComponent } from '@turnos/components/calendar-professional-view/calendar-professional-view.component';
+import { EquipmentDiaryComponent } from './components/equipment-diary/equipment-diary.component';
 import { SelectAgendaComponent } from './components/select-agenda/select-agenda.component';
 import { DateRangeTimeFormComponent } from './components/date-range-time-form/date-range-time-form.component';
 import { ProfessionalSelectComponent } from './components/professional-select/professional-select.component';
@@ -19,6 +21,7 @@ import { SeachAppointmentsByProfessionalComponent } from './components/seach-app
 import { SearchAppointmentsBySpecialtyComponent } from './components/search-appointments-by-specialty/search-appointments-by-specialty.component';
 import { AppointmentDetailsComponent } from './components/appointment-details/appointment-details.component';
 import { SearchAppointmentsInCareNetworkComponent } from './components/search-appointments-in-care-network/search-appointments-in-care-network.component';
+import { SearchAppointmentsByEquipmentComponent } from './components/search-appointments-by-equipment/search-appointments-by-equipment.component';
 
 // dialogs
 import { AppointmentComponent } from './dialogs/appointment/appointment.component';
@@ -29,30 +32,32 @@ import { ConfirmBookingComponent } from './dialogs/confirm-booking/confirm-booki
 import { NewAppointmentComponent } from './dialogs/new-appointment/new-appointment.component';
 import { NewAttentionComponent } from './dialogs/new-attention/new-attention.component';
 import { ConfirmPrintAppointmentComponent } from './dialogs/confirm-print-appointment/confirm-print-appointment.component';
+import { ImageNetworkAppointmentComponent } from './components/image-network-appointment/image-network-appointment.component';
 // services
 import { CustomDateFormatter } from './services/custom-date-formatter.service';
 import { AppointmentResultViewComponent } from './components/appointment-result-view/appointment-result-view.component';
-import { ImageNetworkModule } from "./modules/image-network/image-network.module";
-import { EquipmentAppointmentsFacadeService } from './modules/image-network/services/equipment-appointments-facade.service';
+import { EquipmentAppointmentsFacadeService } from './services/equipment-appointments-facade.service';
 import { WorklistComponent } from './components/worklist/worklist.component';
-
 
 @NgModule({
 	declarations: [
 		// routing
 		AgendaComponent,
 		AgendaSetupComponent,
+		EquipmentDiarySetupComponent,
 		HomeComponent,
 		// components
+		AppointmentDetailsComponent,
+		AppointmentResultViewComponent,
 		CalendarProfessionalViewComponent,
-		SelectAgendaComponent,
 		DateRangeTimeFormComponent,
+		EquipmentDiaryComponent,
+		ProfessionalSelectComponent,
+		SelectAgendaComponent,
 		SeachAppointmentsByProfessionalComponent,
 		SearchAppointmentsBySpecialtyComponent,
-		AppointmentDetailsComponent,
-		ProfessionalSelectComponent,
+		SearchAppointmentsByEquipmentComponent,
 		SearchAppointmentsInCareNetworkComponent,
-		AppointmentResultViewComponent,
 		// dialogs
 		AppointmentComponent,
 		BlockAgendaRangeComponent,
@@ -62,7 +67,8 @@ import { WorklistComponent } from './components/worklist/worklist.component';
 		NewAppointmentComponent,
 		NewAttentionComponent,
 		ConfirmPrintAppointmentComponent,
-  		WorklistComponent
+		ImageNetworkAppointmentComponent,
+		WorklistComponent
 	],
 	imports: [
 		CommonModule,
@@ -72,7 +78,6 @@ import { WorklistComponent } from './components/worklist/worklist.component';
 		// deps
 		PresentationModule,
 		LazyMaterialModule,
-		ImageNetworkModule
 	],
 	exports: [
 		CalendarProfessionalViewComponent

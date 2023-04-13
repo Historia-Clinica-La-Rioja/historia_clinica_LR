@@ -37,7 +37,7 @@ import * as moment from 'moment';
 import { isBefore, isEqual } from 'date-fns';
 import { Color } from '@presentation/colored-label/colored-label.component';
 import { PATTERN_INTEGER_NUMBER } from '@core/utils/pattern.utils';
-import { toCalendarEvent } from '@turnos/modules/image-network/utils/appointment.utils';
+import { toCalendarEvent } from '@turnos/utils/appointment.utils';
 
 const TEMPORARY_PATIENT = 3;
 const BELL_LABEL = 'Llamar paciente'

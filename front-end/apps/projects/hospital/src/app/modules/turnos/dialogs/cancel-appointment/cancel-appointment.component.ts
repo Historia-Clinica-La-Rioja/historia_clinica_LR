@@ -3,7 +3,7 @@ import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { SnackBarService } from '@presentation/services/snack-bar.service';
 import { AppointmentsFacadeService } from '../../services/appointments-facade.service';
-import { EquipmentAppointmentsFacadeService } from '@turnos/modules/image-network/services/equipment-appointments-facade.service';
+import { EquipmentAppointmentsFacadeService } from '@turnos/services/equipment-appointments-facade.service';
 
 @Component({
   selector: 'app-cancel-appointment',
