@@ -227,7 +227,7 @@ export class EpicrisisDockPopupComponent implements OnInit {
 	}
 
 	private setValues(e: ResponseEpicrisisDto): void {
-		if (e?.obstetricEvent){
+		if (e?.obstetricEvent) {
 			this.obtetricForm.setValue(e.obstetricEvent);
 		}
 		if (e?.externalCause) {
@@ -264,62 +264,103 @@ export class EpicrisisDockPopupComponent implements OnInit {
 	}
 
 	save(): void {
-		if (this.form.valid && this.formulario.isValidForm()) {
-			const epicrisis: EpicrisisDto = this.getEpicrisis(true);
-			this.ngOnDestroy();
-
-			if (this.data.patientInfo.epicrisisId) {
-				this.openEditReason(epicrisis);
-				return;
+		if (!this.cipresEpicrisisFF) {
+			if (this.form.valid) {
+				this.saveEpicrisis();
+			} else {
+				this.snackBarService.showError('internaciones.epicrisis.messages.ERROR');
+				this.form.markAllAsTouched();
 			}
-			else {
-				this.isDisableConfirmButton = true;
-				this.epicrisisService.createDocument(epicrisis, this.data.patientInfo.internmentEpisodeId)
-					.subscribe((epicrisisResponse: ResponseEpicrisisDto) => {
+		} else if (this.formulario?.isValidForm() && this.form.valid) {
+			this.saveEpicrisis();
+		} else {
+			this.snackBarService.showError('internaciones.epicrisis.messages.ERROR');
+			this.formulario?.isValidForm();
+			this.form.markAllAsTouched();
+		}
+	}
+
+	private saveEpicrisis() {
+		const epicrisis: EpicrisisDto = this.getEpicrisis(true);
+		this.ngOnDestroy();
+
+		if (this.data.patientInfo.epicrisisId) {
+			this.openEditReason(epicrisis);
+		} else {
+			this.isDisableConfirmButton = true;
+			this.epicrisisService.createDocument(epicrisis, this.data.patientInfo.internmentEpisodeId)
+				.subscribe(
+					(epicrisisResponse: ResponseEpicrisisDto) => {
 						this.snackBarService.showSuccess('internaciones.epicrisis.messages.SUCCESS');
 						let fieldsToUpdate = this.fieldsToUpdate(epicrisis);
 						this.dockPopupRef.close({ fieldsToUpdate });
-					}, _ => {
+					},
+					(_) => {
 						this.isDisableConfirmButton = false;
-						this.snackBarService.showError('internaciones.epicrisis.messages.ERROR')
-					});
-			}
-		} else {
-			this.snackBarService.showError('internaciones.epicrisis.messages.ERROR');
-			this.form.markAllAsTouched();
-
+						this.snackBarService.showError('internaciones.epicrisis.messages.ERROR');
+					}
+				);
 		}
-
-
 	}
 
 	saveDraft(): void {
-		if (this.formulario.isValidForm() && this.form.valid) {
-			const epicrisis = this.getEpicrisis(false);
-			let obs$;
-			if (this.data.patientInfo.epicrisisId) {
-				obs$ = this.epicrisisService.
-					updateDraft(epicrisis, this.data.patientInfo.epicrisisId, this.data.patientInfo.internmentEpisodeId)
-			} else
-				obs$ = this.epicrisisService.createDraftDocument(epicrisis, this.data.patientInfo.internmentEpisodeId)
+		if (this.cipresEpicrisisFF) {
+			{
+				if (this.formulario.isValidForm() && this.form.valid) {
+					this.saveEpicrisisDraft();
 
-			this.closeEpicrisis(obs$, epicrisis, false);
-		} else {
-			this.snackBarService.showError('internaciones.epicrisis.messages-draft.ERROR');
-			this.form.markAllAsTouched();
-		}
+				} else {
+					this.snackBarService.showError('internaciones.epicrisis.messages-draft.ERROR');
+					this.form.markAllAsTouched();
+				}
+			}
+		} else
+
+			if (this.form.valid) {
+				this.saveEpicrisisDraft();
+			} else {
+				this.snackBarService.showError('internaciones.epicrisis.messages-draft.ERROR');
+				this.form.markAllAsTouched();
+			}
+
+	}
+
+
+	private saveEpicrisisDraft() {
+		const epicrisis = this.getEpicrisis(false);
+		let obs$;
+		if (this.data.patientInfo.epicrisisId) {
+			obs$ = this.epicrisisService.
+				updateDraft(epicrisis, this.data.patientInfo.epicrisisId, this.data.patientInfo.internmentEpisodeId)
+		} else
+			obs$ = this.epicrisisService.createDraftDocument(epicrisis, this.data.patientInfo.internmentEpisodeId)
+
+		this.closeEpicrisis(obs$, epicrisis, false);
 	}
 
 	saveConfirmedDraft(): void {
-		if (this.form.valid) {
-			const epicrisis = this.getEpicrisis(true);
-			let obs$ = this.epicrisisService.
-				closeDraft(this.data.patientInfo.internmentEpisodeId, this.data.patientInfo.epicrisisId, epicrisis)
-			this.closeEpicrisis(obs$, epicrisis, true);
-		} else {
-			this.snackBarService.showError('internaciones.epicrisis.messages-draft.ERROR');
-			this.form.markAllAsTouched();
+		if (this.cipresEpicrisisFF) {
+			if (this.form.valid && this.formulario.isValidForm()) {
+				this.saveEpicrisisConfirmedDraft();
+			} else {
+				this.snackBarService.showError('internaciones.epicrisis.messages-draft.ERROR');
+				this.form.markAllAsTouched();
+			}
 		}
+		else
+			if (this.form.valid) {
+				this.saveEpicrisisConfirmedDraft();
+			} else {
+				this.snackBarService.showError('internaciones.epicrisis.messages-draft.ERROR');
+				this.form.markAllAsTouched();
+			}
+	}
+
+	private saveEpicrisisConfirmedDraft() {
+		const epicrisis = this.getEpicrisis(true);
+		let obs$ = this.epicrisisService.
+			closeDraft(this.data.patientInfo.internmentEpisodeId, this.data.patientInfo.epicrisisId, epicrisis)
+		this.closeEpicrisis(obs$, epicrisis, true);
 	}
 
 	private getEpicrisis(confirmed?: boolean): EpicrisisDto {
