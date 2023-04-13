@@ -569,6 +569,21 @@ export interface BreathingDto extends Serializable {
     stridor?: boolean;
 }
 
+export interface CHDocumentSummaryDto {
+    encounterType: string;
+    endDate: string;
+    id: number;
+    institution: string;
+    problems: string;
+    professional: string;
+    startDate: string;
+}
+
+export interface CHSearchFilterDto {
+    documentTypeList: ECHDocumentType[];
+    encounterTypeList: ECHEncounterType[];
+}
+
 export interface CareLineDto extends Serializable {
     clinicalSpecialties: ClinicalSpecialtyDto[];
     description: string;
@@ -3693,6 +3708,20 @@ export const enum EAuditType {
 export const enum EBirthCondition {
     BORN_ALIVE = "BORN_ALIVE",
     FETAL_DEATH = "FETAL_DEATH",
+}
+
+export const enum ECHDocumentType {
+    EPICRISIS = "EPICRISIS",
+    REPORTS = "REPORTS",
+    MEDICAL_PRESCRIPTIONS = "MEDICAL_PRESCRIPTIONS",
+    CLINICAL_NOTES = "CLINICAL_NOTES",
+    OTHER = "OTHER",
+}
+
+export const enum ECHEncounterType {
+    HOSPITALIZATION = "HOSPITALIZATION",
+    EMERGENCY_CARE = "EMERGENCY_CARE",
+    OUTPATIENT = "OUTPATIENT",
 }
 
 export const enum EDocumentSearch {
