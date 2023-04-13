@@ -3,7 +3,7 @@
 		<h2>{{'internaciones.anamnesis.pregnancyForm.TITLE' | translate}}</h2>
 		<p>{{'internaciones.anamnesis.pregnancyForm.TOTAL_BIRTHS' | translate}}</p>
 		<mat-form-field appearance="outline">
-			<input formControlName="previousPregnancies" type="number" id="weight" matInput>
+			<input formControlName="previousPregnancies" type="number" placeholder="0" id="weight" matInput>
 		</mat-form-field>
 	</div>
 
@@ -29,7 +29,7 @@
 
 		<div fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="10px">
 			<mat-form-field appearance="outline">
-				<input formControlName="gestationalAge" type="number" matInput>
+				<input formControlName="gestationalAge" placeholder="0" type="number" matInput>
 				<mat-error>{{'internaciones.anamnesis.pregnancyForm.ERROR_GESTATIONAL_AGE' | translate}}</mat-error>
 			</mat-form-field>
 
