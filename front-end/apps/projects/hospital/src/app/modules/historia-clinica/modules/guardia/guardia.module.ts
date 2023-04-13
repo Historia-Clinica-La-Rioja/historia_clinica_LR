@@ -24,6 +24,7 @@ import { PediatricTriageComponent } from './components/pediatric-triage/pediatri
 import { TriageChipComponent } from './components/triage-chip/triage-chip.component';
 import { TriageComponent } from './components/triage/triage.component';
 import { TriageDetailsComponent } from './components/triage-details/triage-details.component';
+import { EmergencyCareEvolutionsComponent } from './components/emergency-care-evolutions/emergency-care-evolutions.component';
 // dialogs
 import { AdministrativeTriageDialogComponent } from './dialogs/administrative-triage-dialog/administrative-triage-dialog.component';
 import { AdultGynecologicalTriageDialogComponent } from './dialogs/adult-gynecological-triage-dialog/adult-gynecological-triage-dialog.component';
@@ -59,6 +60,7 @@ import { LastTriageComponent } from './components/last-triage/last-triage.compon
 		AdultGynecologicalTriageDialogComponent,
 		PediatricTriageDialogComponent,
 		SelectConsultorioComponent,
+		EmergencyCareEvolutionsComponent,
 		LastTriageComponent
 	],
 	imports: [
@@ -74,6 +76,7 @@ import { LastTriageComponent } from './components/last-triage/last-triage.compon
 	exports: [
 		TriageDetailsComponent,
 		TriageChipComponent,
+		EmergencyCareEvolutionsComponent,
 		LastTriageComponent
 	],
 	providers: [

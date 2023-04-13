@@ -36,7 +36,7 @@ export class GuardiaMapperService {
 	constructor() {
 	}
 
-	private static _mapTriageListDtoToTriage(triageListDto: TriageListDto): Triage {
+	public static _mapTriageListDtoToTriage(triageListDto: TriageListDto): Triage {
 		return {
 			creationDate: dateTimeDtoToDate(triageListDto.creationDate),
 			category: {

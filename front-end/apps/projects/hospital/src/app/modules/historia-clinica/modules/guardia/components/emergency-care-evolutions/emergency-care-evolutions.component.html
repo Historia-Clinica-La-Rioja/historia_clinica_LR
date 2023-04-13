@@ -1,0 +1,48 @@
+<app-summary-card [header]="HEADER">
+	<ng-container *ngIf="this.documentHistoric?.length !== 0 || searchTriggered; else noData">
+		<div class="documents" id="documents" fxLayout="row">
+			<mat-selection-list color="accent" [multiple]=false id="selection-documents" class="selection-documents">
+				<mat-list-option (click)="setActive(documentSearch)" *ngFor="let documentSearch of documentHistoric">
+					<div fxLayout="row" fxLayoutGap="5px">
+						<mat-icon mat-list-icon fontSet="material-icons-outlined" color="primary">{{documentSearch.summary.icon}}</mat-icon>
+						<div fxLayout="column" fxLayoutGap="20px">
+							<span id="document-type" class="color-primary uppercase">
+								{{documentSearch.summary.title}}
+							</span>
+							<div *ngIf="documentSearch.summary.subtitle">
+								<span id="main-diagnosis" class="capitalize-first-letter bold-text">
+									<ng-container>
+										<span>{{documentSearch.summary.subtitle}} (Principal)</span>
+									</ng-container>
+								</span>
+							</div>
+							<div fxLayout="column" fxLayoutGap="10px">
+								<span mat-line>{{getFullName(documentSearch.summary.createdBy.firstName,
+									documentSearch.summary.createdBy.nameSelfDetermination)}}
+									{{documentSearch.summary.createdBy.lastName}}</span>
+								<span mat-line>{{documentSearch.summary.createdOn | date : 'short'}}</span>
+							</div>
+							<mat-divider></mat-divider>
+						</div>
+					</div>
+				</mat-list-option>
+			</mat-selection-list>
+
+			<div *ngIf="activeDocument" class="content">
+				<app-triage-details [triage]="activeDocument" [emergencyCareType]="emergencyCareType"
+					showRiskFactors='true'>
+				</app-triage-details>
+			</div>
+
+		</div>
+		<div *ngIf="this.documentHistoric && !this.documentHistoric.length">
+			<div class="no-data-styles">
+				<span [translate]="'internaciones.documents-summary.NO_FILTERED_PROBLEMS'"></span>
+			</div>
+		</div>
+	</ng-container>
+
+	<ng-template #noData>
+		<app-no-data></app-no-data>
+	</ng-template>
+</app-summary-card>

@@ -1,0 +1,48 @@
+mat-selection-list {
+	overflow: auto;
+	width: 45%;
+}
+
+.content {
+	width: 65%;
+	margin: 15px;
+	overflow-x: hidden;
+}
+
+.documents {
+	max-height: 50vh;
+}
+
+.selection-documents {
+	min-width: 30vw;
+}
+
+.selection-documents mat-list-option {
+	height: auto;
+}
+
+.no-notes {
+	display: flex;
+	justify-content: center;
+	flex-direction: column;
+	text-align: center;
+}
+
+.bold-text {
+	font-weight: 500;
+}
+
+#document-type {
+	margin-top: 7px;
+}
+
+.grey {
+	color: #A8A8A8;
+}
+
+.no-data-styles {
+	padding: 20px 5px;
+	text-align: center;
+	font-weight: bold;
+	color: #A8A8A8;
+}
