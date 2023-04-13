@@ -336,7 +336,7 @@ public class ExcelServiceNRImpl implements ExcelServiceNR {
 		cell2.setCellStyle(style);
 
 		ICell cell3 = row.createCell(rowNumber.getAndIncrement());
-		cell3.setCellValue(content.getPatientDni());
+		cell3.setCellValue(content.getProviderDni());
 		cell3.setCellStyle(style);
 
 		ICell cell4 = row.createCell(rowNumber.getAndIncrement());
@@ -408,16 +408,52 @@ public class ExcelServiceNRImpl implements ExcelServiceNR {
 		cell20.setCellStyle(style);
 
 		ICell cell21 = row.createCell(rowNumber.getAndIncrement());
-		cell21.setCellValue(content.getVitalSign());
+		cell21.setCellValue(content.getSystolicPressure());
 		cell21.setCellStyle(style);
 
 		ICell cell22 = row.createCell(rowNumber.getAndIncrement());
-		cell22.setCellValue(content.getProcedures());
+		cell22.setCellValue(content.getDiastolicPressure());
 		cell22.setCellStyle(style);
 
 		ICell cell23 = row.createCell(rowNumber.getAndIncrement());
-		cell23.setCellValue(content.getEvolution());
+		cell23.setCellValue(content.getMeanArterialPressure());
 		cell23.setCellStyle(style);
+
+		ICell cell24 = row.createCell(rowNumber.getAndIncrement());
+		cell24.setCellValue(content.getTemperature());
+		cell24.setCellStyle(style);
+
+		ICell cell25 = row.createCell(rowNumber.getAndIncrement());
+		cell25.setCellValue(content.getHeartRate());
+		cell25.setCellStyle(style);
+
+		ICell cell26 = row.createCell(rowNumber.getAndIncrement());
+		cell26.setCellValue(content.getRespiratoryRate());
+		cell26.setCellStyle(style);
+
+		ICell cell27 = row.createCell(rowNumber.getAndIncrement());
+		cell27.setCellValue(content.getArterialOxygenSaturation());
+		cell27.setCellStyle(style);
+
+		ICell cell28 = row.createCell(rowNumber.getAndIncrement());
+		cell28.setCellValue(content.getHeight());
+		cell28.setCellStyle(style);
+
+		ICell cell29 = row.createCell(rowNumber.getAndIncrement());
+		cell29.setCellValue(content.getWeight());
+		cell29.setCellStyle(style);
+
+		ICell cell30 = row.createCell(rowNumber.getAndIncrement());
+		cell30.setCellValue(content.getBmi());
+		cell30.setCellStyle(style);
+
+		ICell cell31 = row.createCell(rowNumber.getAndIncrement());
+		cell31.setCellValue(content.getProcedures());
+		cell31.setCellStyle(style);
+
+		ICell cell32 = row.createCell(rowNumber.getAndIncrement());
+		cell32.setCellValue(content.getEvolution());
+		cell32.setCellStyle(style);
 	}
 
 	private void fillRowContent(IRow row, NursingEmergencies content, ICellStyle style) {
