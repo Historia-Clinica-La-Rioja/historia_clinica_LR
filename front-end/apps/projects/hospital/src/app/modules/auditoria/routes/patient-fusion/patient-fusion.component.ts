@@ -38,6 +38,8 @@ export class PatientFusionComponent implements OnInit {
 	pageSlice: PatientPersonalInfoDto[];
 	initialSize: Observable<any>;
 	filterBy: Filters;
+	infoPatientToAudit: string;
+	filters = Filters;
 	patientToMerge: PatientToMergeDto = {
 		activePatientId: null,
 		oldPatientsIds: null,
@@ -61,19 +63,24 @@ export class PatientFusionComponent implements OnInit {
 		private patientMasterDataService: PatientMasterDataService, private patientMergeService: PatientMergeService, private dialog: MatDialog,
 		private readonly snackBarService: SnackBarService) {
 		this.routePrefix = `institucion/${this.contextService.institutionId}/`;
-		this.personMasterDataService.getIdentificationTypes()
-			.subscribe(identificationTypes => {
-				this.identificationTypeList = identificationTypes;
-			});
+
 	}
 
 	ngOnInit(): void {
-		this.patientMasterDataService.getTypesPatient().subscribe((patientsTypes: PatientType[]) => {
-			this.patientsTypes = patientsTypes;
-		})
 		this.patientAuditService.patientToAudit$.subscribe(patientToAudit => {
 			this.patientToAudit = patientToAudit
 		});
+
+		this.personMasterDataService.getIdentificationTypes()
+		.subscribe(identificationTypes => {
+			this.identificationTypeList = identificationTypes;
+			this.setInfo();
+		});
+
+		this.patientMasterDataService.getTypesPatient().subscribe((patientsTypes: PatientType[]) => {
+			this.patientsTypes = patientsTypes;
+		})
+
 		this.patientAuditService.filterBySubject$.subscribe(filter => {
 			this.filterBy = filter;
 		})
@@ -87,6 +94,33 @@ export class PatientFusionComponent implements OnInit {
 			this.initialSize = of(PAGE_MIN_SIZE);
 		})
 
+
+	}
+
+	setInfo() {
+		this.infoPatientToAudit = 'Filtrado por ' + this.patientToAudit.firstName +" ";
+		if (this.patientToAudit?.middleNames) {
+			this.infoPatientToAudit += this.patientToAudit.middleNames + " ";
+		}
+		this.infoPatientToAudit += this.patientToAudit.lastName + " ";
+		if (this.patientToAudit?.otherLastNames) {
+			this.infoPatientToAudit += this.patientToAudit.otherLastNames;
+		}
+		switch (this.filterBy) {
+			case this.filters.FILTER_FULLNAME_DNI:
+				this.infoPatientToAudit += " | " + this.getIdentificationType(this.patientToAudit?.identificationTypeId) + " " + this.patientToAudit.identificationNumber;
+				break;
+			case this.filters.FILTER_FULLNAME_BIRTHDATE:
+				this.infoPatientToAudit += " | Fecha Nac. " + this.patientToAudit?.birthdate;
+				break;
+			case this.filters.FILTER_FULLNAME_BIRTHDATE_DNI:
+				this.infoPatientToAudit += " | " + this.getIdentificationType(this.patientToAudit?.identificationTypeId) +" " + this.patientToAudit.identificationNumber + " | Fecha Nac. " + this.patientToAudit?.birthdate;
+				break;
+			case this.filters.FILTER_DNI:
+				this.infoPatientToAudit = " ";
+				this.infoPatientToAudit = this.getIdentificationType(this.patientToAudit?.identificationTypeId) + this.patientToAudit.identificationNumber;
+				break;
+		}
 	}
 
 	setListPatientData(patientPersonalData): PatientPersonalInfoDto[] {
