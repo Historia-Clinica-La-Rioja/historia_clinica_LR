@@ -422,10 +422,12 @@
 
                 <div th:if="${not #lists.isEmpty(obstetricEvent.newborns)}">
                     <dl th:each="newborn,iter: ${obstetricEvent.newborns}">
-                        <dd><strong>Recien nacido <label th:text="${iter.index+1}"></label></strong></strong></p></dd>
-                        <dd><strong>Peso al nacer: </strong><label th:text="${newborn.weight}"></label></dd>
-                        <dd><strong>Condición al nacer: </strong><label th:text="${newborn.birthConditionType.value}"></label></dd>
-                        <dd><strong>Sexo: </strong><label th:text="${newborn.genderId.value}"></label></dd>
+                        <dd><strong>Recien nacido <label th:text="${iter.index+1}"></label></strong></dd>
+                        <dl>
+                            <dd>Peso al nacer: <label th:text="${newborn.weight}"></label></dd>
+                            <dd>Condición al nacer: <label th:text="${newborn.birthConditionType.value}"></label></dd>
+                            <dd>Sexo: <label th:text="${newborn.genderId.value}"></label></dd>
+                        </dl>
                     </dl>
                 </div>
 
