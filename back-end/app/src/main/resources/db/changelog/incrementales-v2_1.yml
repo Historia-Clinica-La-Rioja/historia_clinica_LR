@@ -565,3 +565,175 @@ databaseChangeLog:
             - column:
                 name: deleted_on
                 type: DATETIME
+
+    - changeSet:
+        id: createView-v_clinic_history
+        comment: Create view v_clinic_history
+        author: fsimaro
+        changes:
+          - createView:
+              viewName: v_clinic_history
+              fullDefinition: false
+              replaceIfExists: true
+              selectQuery: |-
+                select d.id as id, 
+                d.source_id as source_id, 
+                d.patient_id as patient_id, 
+                d.source_type_id as source_type_id, 
+                d.created_on, 
+                d.created_by, 
+                d.type_id as document_type_id, 
+                dt.description as document_type, 
+                cs.name as clinical_specialty,
+                i.id as institution_id, 
+                i.name as institution,
+                d.patient_age_period as patient_age_period,
+                (select sr.source_type_id from service_request sr where d.type_id =6 and d.source_id = sr.id) as request_source_type_id,
+                (select sr.source_id from service_request sr where d.type_id = 6 and d.source_id = sr.id) as request_source_id,
+                (select MIN(ie.entry_date) 
+                from internment_episode ie 
+                left join service_request sr on (sr.source_id = ie.id)
+                where (d.source_id = ie.id and d.source_type_id = 0) 
+                or (d.type_id = 6 and sr.source_type_id = 0 and d.source_id = sr.id and sr.source_id = ie.id)) as start_date,
+                (select MAX(pd.medical_discharge_date)
+                from internment_episode ie
+                left join service_request sr on (sr.source_id = ie.id)
+                left join patient_discharge pd on (pd.internment_episode_id = ie.id)
+                where (d.source_id = ie.id and d.source_type_id = 0) 
+                or (d.type_id = 6 and sr.source_type_id = 0 and d.source_id = sr.id and sr.source_id = ie.id)) as end_date,
+                COALESCE(' Problemas: '|| (select string_agg(case when hc.main then 'Principal: ' || s.pt else 'Otro: ' || s.pt END,', ') 
+                from document_health_condition dhc 
+                left outer join health_condition hc on (hc.id=dhc.health_condition_id)
+                left outer join snomed s on (s.id=hc.snomed_id)
+                where dhc.document_id=d.id group by dhc.document_id),' ') as problems,
+                COALESCE(' Observaciones: '|| n.description ,' ') as observations,
+                COALESCE(' Procedimientos: '|| (select string_agg(s.pt,', ') 
+                from document_procedure dp
+                left outer join "procedures" p  on (p.id=dp.procedure_id)
+                left outer join snomed s on (s.id=p.snomed_id)
+                where dp.document_id=d.id group by dp.document_id),' ')as procedures,
+                COALESCE(' Medicamentos: '|| (select string_agg(case when ms.health_condition_id is not null then s.pt || ' (Observaciones: ' || n.description || ')' else s.pt END,', ') 
+                from document_medicamention_statement dms
+                left outer join medication_statement ms  on (ms.id=dms.medication_statement_id)
+                left outer join snomed s on (s.id=ms.snomed_id)
+                left outer join note n on (ms.note_id=n.id)
+                left outer join health_condition hc on (hc.id=ms.health_condition_id)
+                where dms.document_id=d.id group by dms.document_id),' ') as medicines,
+                COALESCE(' Alergias: '|| (select string_agg(s.pt,', ') 
+                from document_allergy_intolerance dai 
+                left outer join allergy_intolerance ai on (ai.id=dai.allergy_intolerance_id)
+                left outer join snomed s on (s.id=ai.snomed_id)
+                where dai.document_id=d.id group by dai.document_id ),' ') as allergies,
+                COALESCE(' Vacunas: ' || (select string_agg(case when i.dose is not null then s.pt || ': ' || i.dose else s.pt END,', ') 
+                from document_inmunization di  
+                left outer join inmunization i on (i.id = di.inmunization_id)
+                left outer join snomed s on (s.id = i.snomed_id)
+                where di.document_id = d.id group by di.document_id ), ' ') as vaccines,
+                COALESCE(' Factores de riesgo y datos antropometricos: '|| (select string_agg(s.pt || ': ' || ovs.value, ' ') 
+                from document_vital_sign dvs   
+                left outer join observation_vital_sign ovs on (ovs.id=dvs.observation_vital_sign_id)
+                left outer join snomed s on (s.id=ovs.snomed_id)
+                where dvs.document_id=d.id group by dvs.document_id ),' ') as risk_factors,
+                COALESCE(' Estudios de laboratorio: '|| (select string_agg(s.pt || ': ' || ol.value,', ') 
+                from document_lab dl  
+                left outer join observation_lab ol on (ol.id=dl.observation_lab_id)
+                left outer join snomed s on (s.id=ol.snomed_id)
+                where dl.document_id=d.id group by dl.document_id ),' ') as observation_lab,
+                COALESCE(' Estudios orden: '||
+                (select string_agg(case when dr.health_condition_id is not null then s.pt || ', problema relacionado: ' || s1.pt else s.pt END,', ' ) 
+                from document_diagnostic_report ddr  
+                left outer join diagnostic_report dr on (dr.id=ddr.diagnostic_report_id)
+                left outer join health_condition hc on (hc.id=dr.health_condition_id)
+                left outer join snomed s on (s.id=dr.snomed_id)
+                left outer join snomed s1 on (s1.id=hc.snomed_id)
+                where ddr.document_id=d.id group by ddr.document_id ),' ') as diagnostic_report,
+                COALESCE(' Motivos de consulta: '|| (select string_agg(r.description,', ' ) 
+                from outpatient_consultation oc  
+                left outer join outpatient_consultation_reasons ocr on (oc.id=ocr.outpatient_consultation_id)
+                left outer join reasons r on (r.id=ocr.reason_id)
+                where oc.document_id=d.id group by oc.document_id ),' ') as outpatient_consultation_reasons,
+                COALESCE(' Procedimientos odontologicos: '|| (select string_agg(s.pt,', ' ) 
+                from document_odontology_procedure dop  
+                left outer join odontology_procedure op on (op.id=dop.odontology_procedure_id)
+                left outer join snomed s on (s.id=op.snomed_id)
+                where dop.document_id=d.id group by dop.document_id ),' ') as odontology_procedure,
+                COALESCE(' Detalles orden: '|| (select string_agg('Categoria: ' || src.description || ', Estado: ' || srs.description,', ' ) 
+                from service_request sr   
+                left outer join service_request_category src  on (sr.category_id=src.id)
+                left outer join service_request_status srs on (sr.status_id=srs.id)
+                where sr.id=d.source_id and d.type_id = 6  ),' ') as service_request,
+                COALESCE(' Procedimientos odontologicos: '|| (select string_agg(s.pt,', ' ) 
+                from document_odontology_diagnostic dod   
+                left outer join odontology_procedure op on (op.id=dod.odontology_diagnostic_id)
+                left outer join snomed s on (s.id=op.snomed_id)
+                where dod.document_id=d.id group by dod.document_id ),' ') as odontology_diagnostic,
+                COALESCE(' Dieta: '|| (select string_agg(die.description,', ' )
+                from document_indication di   
+                join indication i on (i.id=di.indication_id )
+                join diet die on (die.id=i.id)
+                where d.id=di.document_id group by di.document_id ),' ') as diet,
+                COALESCE(' Otra indicacion: '|| (select string_agg	
+                (case when oi.other_type is not null then oit.description || ': ' || oi.other_type else oit.description end || 
+                (case when oi.description is not null then ', notas: ' || oi.description else '' end),', ' ) 
+                from document_indication di   
+                join indication i on (i.id=di.indication_id )
+                join other_indication oi on (oi.id=i.id)
+                join other_indication_type oit on (oi.other_indication_type_id=oit.id)
+                where d.id=di.document_id group by di.document_id ),' ') as other_indication,
+                COALESCE(' Farmaco: '|| (select string_agg(s1.pt || ', Diagnostico asociado: ' || s.pt,', ' ) 
+                from document_indication di   
+                join indication i on (i.id=di.indication_id )
+                join pharmaco ph on (ph.id=i.id)
+                join health_condition hc on (hc.id=ph.health_condition_id)
+                join snomed s on (s.id=hc.snomed_id)
+                join snomed s1 on (s1.id=ph.snomed_id)
+                where d.id=di.document_id group by di.document_id),' ') as pharmaco,
+                COALESCE(' Plan parenteral: '||
+                (select string_agg(s.pt || (case when s1.pt is not null then ', otros farmacos: ' || s1.pt else '' end ),', ' ) 
+                from document_indication di   
+                join indication i on (i.id=di.indication_id )
+                join parenteral_plan pp on (pp.id=i.id)
+                left outer join other_pharmaco op on (op.indication_id=pp.id)
+                join snomed s on (pp.snomed_id=s.id)
+                join snomed s1 on (s1.id=op.snomed_id)
+                where d.id=di.document_id group by di.document_id),' ') as parenteral_plan,
+                COALESCE(' Registros enfermeria: '||
+                (select string_agg('Estado: ' || 
+                (case nr.status_id when 1 then 'Completado' when 2 then 'Rechazado' when 3 then 'Pendiente' else 'Desconocido' end) ||
+                (case when nr.administration_time is not null then ', Fecha administracion: ' || nr.administration_time else ', Fecha de administración estipulada: ' || nr.scheduled_administration_time end) ||
+                (case when nr.observation is not null then ', Observaciones: ' || nr.observation else '' end) ||
+                (case when nr.status_id in (1, 2) then ', Administrador por: ' || pe.first_name || ', ' || pe.last_name else '' end), ', ') 
+                from document_indication di
+                join indication i on (di.indication_id=i.id)
+                join nursing_record nr on (nr.indication_id=i.id)
+                join users u on (nr.created_by=u.id)
+                join user_person up on (up.user_id=u.id)
+                join person pe on (up.person_id=pe.id)
+                where di.document_id=d.id group by di.document_id),' ') as nursing_records,
+                COALESCE(' Enfermedad actual: '|| (select string_agg(n.description,', ' ) 
+                from note n 
+                where n.id=d.current_illness_note_id), ' ') as current_illness_note,
+                COALESCE(' Examen fisico: '|| (select string_agg(n.description,', ' )
+                from note n 
+                where n.id=d.physical_exam_note_id), ' ') as physical_exam_note,
+                COALESCE(' Resumen de estudios y procedimientos realizados: '|| (select string_agg(n.description,', ' ) 
+                from note n 
+                where n.id=d.studies_summary_note_id), ' ') as studies_summary_note,
+                COALESCE(' Evolucion: '|| (select string_agg(n.description,', ' ) 
+                from note n 
+                where n.id=d.evolution_note_id), ' ') as evolution_note,
+                COALESCE(' Impresión clinica y plan: '|| (select string_agg(n.description,', ' ) 
+                from note n 
+                where n.id=d.clinical_impression_note_id), ' ') as clinical_impression_note,
+                COALESCE(' Otras observaciones: '||
+                (select string_agg(n.description,', ' ) 
+                from note n 
+                where n.id=d.other_note_id), ' ') as other_note
+                
+                from
+                document as d
+                left outer join note as n on (d.id=n.id)
+                join document_type dt ON (d.type_id=dt.id)
+                join institution i on (i.id=d.institution_id)
+                left outer join clinical_specialty cs on (d.clinical_specialty_id=cs.id)
+                where d.deleted=false and d.status_id = '445665009';
