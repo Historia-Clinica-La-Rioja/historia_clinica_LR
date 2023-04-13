@@ -14,6 +14,7 @@ import { ConfirmedFusionComponent } from '../../dialogs/confirmed-fusion/confirm
 import { SnackBarService } from '@presentation/services/snack-bar.service';
 import { PAGE_MIN_SIZE } from '@historia-clinica/modules/ambulatoria/modules/indicacion/constants/internment-indications';
 import { PAGE_SIZE_OPTIONS } from '@historia-clinica/modules/ambulatoria/modules/indicacion/constants/internment-indications';
+import { Filters } from '../control-patient-duplicate/control-patient-duplicate.component';
 
 const ROUTE_CONTROL_PATIENT_DUPLICATE = "auditoria/control-pacientes-duplicados"
 
@@ -26,7 +27,7 @@ export class PatientFusionComponent implements OnInit {
 	private readonly routePrefix;
 	readonly pageSizeOptions: number[] = PAGE_SIZE_OPTIONS;
 	listPatientData$: Observable<PatientPersonalInfoDto[]>;
-	listPatientData:PatientPersonalInfoDto[];
+	listPatientData: PatientPersonalInfoDto[];
 	identificationTypeList: IdentificationTypeDto[];
 	patientToAudit: DuplicatePatientDto;
 	patientsTypes: PatientType[];
@@ -36,6 +37,7 @@ export class PatientFusionComponent implements OnInit {
 	numberOfPatients = 0;
 	pageSlice: PatientPersonalInfoDto[];
 	initialSize: Observable<any>;
+	filterBy: Filters;
 	patientToMerge: PatientToMergeDto = {
 		activePatientId: null,
 		oldPatientsIds: null,
@@ -72,6 +74,9 @@ export class PatientFusionComponent implements OnInit {
 		this.patientAuditService.patientToAudit$.subscribe(patientToAudit => {
 			this.patientToAudit = patientToAudit
 		});
+		this.patientAuditService.filterBySubject$.subscribe(filter => {
+			this.filterBy = filter;
+		})
 
 		this.auditPatientService.getPatientPersonalInfo(this.patientToAudit).subscribe((patientPersonalData: PatientPersonalInfoDto[]) => {
 			this.listPatientData = this.setListPatientData(patientPersonalData);

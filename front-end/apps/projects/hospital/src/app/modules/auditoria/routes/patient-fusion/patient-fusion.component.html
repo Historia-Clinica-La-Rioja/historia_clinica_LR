@@ -1,6 +1,8 @@
 <app-content width="full">
 	<section>
 		<h2 class="page-title">{{'pacientes.audit.TITLE_CONTROL_DUPLICATE_PATIENTS' | translate}}</h2>
+		<h3>{{'pacientes.audit.SUBTITLE_INFO_PATIENT_TO_AUDIT' | translate}} {{patientToAudit.firstName | titlecase}} {{patientToAudit.lastName | titlecase}} | {{getIdentificationType(patientToAudit?.identificationTypeId)}} {{patientToAudit.identificationNumber}} </h3>
+		<p>{{'pacientes.audit.LABEL_FILTER' | translate}} {{filterBy | translate}}</p>
 	</section>
 	<section>
 		<button mat-icon-button color="primary" (click)="goToBack()">

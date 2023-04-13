@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { MasterDataDto, DuplicatePatientDto } from '@api-rest/api-model';
 import { AuditPatientService } from '@api-rest/services/audit-patient.service';
+import { PatientAuditService } from '../../services/patient-audit.service';
 
 @Component({
   selector: 'app-control-patient-duplicate',
@@ -12,7 +13,7 @@ export class ControlPatientDuplicateComponent implements OnInit {
 	searchsFilters: MasterDataDto[];
 	filterSelected: Filters;
 	listDuplicatePatient: DuplicatePatientDto[];
-	constructor(private auditPatientService: AuditPatientService) {
+	constructor(private auditPatientService: AuditPatientService,private patientAuditService: PatientAuditService) {
 		this.filterSelected = this.filters.FILTER_FULLNAME_DNI;
 	}
 
@@ -24,6 +25,7 @@ export class ControlPatientDuplicateComponent implements OnInit {
 		let filter = this.prepareCustomFilter(value);
 		this.auditPatientService.getDuplicatePatientSearchFilter(filter).subscribe((listDuplicatePatient: DuplicatePatientDto[]) => {
 			this.listDuplicatePatient = listDuplicatePatient;
+			this.patientAuditService.setFilter(value);
 		})
 	}
 
@@ -68,8 +70,8 @@ export interface AuditPatientSearch {
 	identify: boolean;
 }
 export enum Filters{
-	FILTER_FULLNAME_DNI,
-	FILTER_FULLNAME_BIRTHDATE,
-	FILTER_FULLNAME_BIRTHDATE_DNI,
-	FILTER_DNI,
+	FILTER_FULLNAME_DNI='pacientes.audit.LABEL_FILTER_1',
+	FILTER_FULLNAME_BIRTHDATE= 'pacientes.audit.LABEL_FILTER_2',
+	FILTER_FULLNAME_BIRTHDATE_DNI='pacientes.audit.LABEL_FILTER_3',
+	FILTER_DNI='pacientes.audit.LABEL_FILTER_4',
 }
