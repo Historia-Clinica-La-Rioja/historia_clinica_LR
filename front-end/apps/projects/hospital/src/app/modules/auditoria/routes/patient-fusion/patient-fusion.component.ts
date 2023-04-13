@@ -72,10 +72,10 @@ export class PatientFusionComponent implements OnInit {
 		});
 
 		this.personMasterDataService.getIdentificationTypes()
-		.subscribe(identificationTypes => {
-			this.identificationTypeList = identificationTypes;
-			this.setInfo();
-		});
+			.subscribe(identificationTypes => {
+				this.identificationTypeList = identificationTypes;
+				this.setInfo();
+			});
 
 		this.patientMasterDataService.getTypesPatient().subscribe((patientsTypes: PatientType[]) => {
 			this.patientsTypes = patientsTypes;
@@ -98,7 +98,7 @@ export class PatientFusionComponent implements OnInit {
 	}
 
 	setInfo() {
-		this.infoPatientToAudit = 'Filtrado por ' + this.patientToAudit.firstName +" ";
+		this.infoPatientToAudit = 'Filtrado por ' + this.patientToAudit.firstName + " ";
 		if (this.patientToAudit?.middleNames) {
 			this.infoPatientToAudit += this.patientToAudit.middleNames + " ";
 		}
@@ -114,7 +114,7 @@ export class PatientFusionComponent implements OnInit {
 				this.infoPatientToAudit += " | Fecha Nac. " + this.patientToAudit?.birthdate;
 				break;
 			case this.filters.FILTER_FULLNAME_BIRTHDATE_DNI:
-				this.infoPatientToAudit += " | " + this.getIdentificationType(this.patientToAudit?.identificationTypeId) +" " + this.patientToAudit.identificationNumber + " | Fecha Nac. " + this.patientToAudit?.birthdate;
+				this.infoPatientToAudit += " | " + this.getIdentificationType(this.patientToAudit?.identificationTypeId) + " " + this.patientToAudit.identificationNumber + " | Fecha Nac. " + this.patientToAudit?.birthdate;
 				break;
 			case this.filters.FILTER_DNI:
 				this.infoPatientToAudit = " ";
@@ -180,7 +180,7 @@ export class PatientFusionComponent implements OnInit {
 		const dialogRef = this.dialog.open(WarningFusionComponent, {
 			data: {
 				cant: this.oldPatientsIds.length + 1,
-				fullName: '-' + (this.patientToMerge.registrationDataPerson.firstName) + (this.patientToMerge.registrationDataPerson.middleNames ? this.patientToMerge.registrationDataPerson.middleNames : '') + ' ' + (this.patientToMerge.registrationDataPerson.lastName) + (this.patientToMerge.registrationDataPerson.otherLastNames ? this.patientToMerge.registrationDataPerson.otherLastNames : ''),
+				fullName: '-' + (this.patientToMerge.registrationDataPerson.firstName) + " " + (this.patientToMerge.registrationDataPerson.middleNames ? this.patientToMerge.registrationDataPerson.middleNames : '') + ' ' + (this.patientToMerge.registrationDataPerson.lastName) + " " + (this.patientToMerge.registrationDataPerson.otherLastNames ? this.patientToMerge.registrationDataPerson.otherLastNames : ''),
 				identification: '-' + this.getIdentificationType(this.patientToMerge.registrationDataPerson.identificationTypeId) + ' ' + this.patientToMerge.registrationDataPerson.identificationNumber,
 				birthDate: '- Fecha Nac. ' + this.patientToMerge.registrationDataPerson.birthDate,
 				idPatient: '- ID ' + this.patientToMerge.activePatientId,
