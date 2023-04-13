@@ -2,14 +2,14 @@ import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { RoleGuard } from '@core/guards/RoleGuard';
 import { ERole } from '@api-rest/api-model';
-import { WorklistComponent } from '@turnos/components/worklist/worklist.component';
+import { WorklistComponent } from 'projects/hospital/src/app/modules/image-network/routes/worklist/worklist.component';
 
 const routes: Routes = [
 	{
 		path: '',
 		children: [
 			{
-				path: 'imagenes/lista-trabajos',
+				path: 'lista-trabajos',
 				component: WorklistComponent,
 				canActivate: [RoleGuard],
 				data: { allowedRoles: [ERole.TECNICO]}

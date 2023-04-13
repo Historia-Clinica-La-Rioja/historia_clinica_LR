@@ -2,11 +2,10 @@ import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { HomeComponent } from './routes/home/home.component';
 import { AgendaSetupComponent } from './routes/agenda-setup/agenda-setup.component';
-import { AppFeature, ERole } from '@api-rest/api-model';
+import { ERole } from '@api-rest/api-model';
 import { RoleGuard } from '@core/guards/RoleGuard';
 import { AgendaComponent } from './routes/agenda/agenda.component';
 import { EquipmentDiarySetupComponent } from './routes/equipment-diary-setup/equipment-diary-setup.component';
-import { FeatureFlagGuard } from '@core/guards/FeatureFlagGuard';
 
 const routes: Routes = [
 	{
@@ -51,12 +50,6 @@ const routes: Routes = [
 				component: AgendaSetupComponent,
 				canActivate: [RoleGuard],
 				data: { allowedRoles: [ERole.ADMINISTRADOR_AGENDA] , editMode: true}
-			},
-			{
-				path: 'imagenes',
-				loadChildren: () => import('./modules/image-network/image-network.module').then(m => m.ImageNetworkModule),
-				canActivate: [FeatureFlagGuard],
-				data: { featureFlag: AppFeature.HABILITAR_DESARROLLO_RED_IMAGENES }
 			},
 			{
 				path: 'imagenes/nueva-agenda',

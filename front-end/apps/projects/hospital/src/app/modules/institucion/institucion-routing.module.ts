@@ -48,7 +48,12 @@ const routes: Routes = [
 			{
 				path: 'auditoria',
 				loadChildren: () => import('../auditoria/auditoria.module').then(m => m.AuditoriaModule),
-
+			},
+			{
+				path: 'imagenes',
+				loadChildren: () => import('../image-network/image-network.module').then(m => m.ImageNetworkModule),
+				canActivate: [FeatureFlagGuard],
+				data: { featureFlag: AppFeature.HABILITAR_DESARROLLO_RED_IMAGENES }
 			},
 		],
 		canActivate: [RoleGuard],
@@ -56,7 +61,7 @@ const routes: Routes = [
 			allowedRoles: [ERole.ADMINISTRADOR, ERole.ADMINISTRADOR_AGENDA, ERole.ADMINISTRADOR_INSTITUCIONAL_BACKOFFICE, ERole.ADMINISTRATIVO,
 			ERole.ENFERMERO, ERole.ENFERMERO_ADULTO_MAYOR, ERole.ESPECIALISTA_MEDICO, ERole.PROFESIONAL_DE_SALUD, ERole.ROOT, ERole.ESPECIALISTA_EN_ODONTOLOGIA,
 			ERole.ADMINISTRADOR_DE_CAMAS, ERole.PERSONAL_DE_IMAGENES, ERole.PERSONAL_DE_LABORATORIO, ERole.PERSONAL_DE_FARMACIA, ERole.PERSONAL_DE_ESTADISTICA,
-			ERole.ADMINISTRATIVO_RED_DE_IMAGENES, ERole.ADMINISTRADOR_INSTITUCIONAL_PRESCRIPTOR, ERole.PRESCRIPTOR,ERole.AUDITOR_MPI, ERole.TECNICO]
+			ERole.ADMINISTRATIVO_RED_DE_IMAGENES, ERole.ADMINISTRADOR_INSTITUCIONAL_PRESCRIPTOR, ERole.PRESCRIPTOR, ERole.AUDITOR_MPI, ERole.TECNICO]
 		},
 
 	}
