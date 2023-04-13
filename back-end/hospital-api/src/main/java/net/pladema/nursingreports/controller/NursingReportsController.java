@@ -83,11 +83,13 @@ public class NursingReportsController {
 		LOG.debug("Inputs parameters -> institutionId {}, fromDate{}, toDate{}", institutionId, fromDate, toDate);
 
 		String title = "Reporte Enfemeria - Enfermeria Ambulatorio";
-		String[] headers = new String[]{"Institución", "Unidad Operativa", "Prestador", "DNI", "Fecha de Atención",
-				"Hora", "N° Consulta", "DNI Paciente", "Nombre Paciente", "Sexo", "Género",
+		String[] headers = new String[]{"Institución", "Unidad Operativa", "Prestador", "DNI Prestador",
+				"Fecha de Atención", "Hora", "N° Consulta", "DNI Paciente", "Nombre Paciente", "Sexo", "Género",
 				"Nombre con el que se identifica", "Fecha de Nacimiento", "Edad a fecha del turno", "Edad a Hoy",
 				"Etnia", "Obra/s Social/es", "Domicilio", "Localidad", "Nivel de instrucción", "Situación Laboral",
-				"Signos vitales", "Procedimientos", "Evolución"
+				"Presión Sistólica", "Presión Diastólica", "Presión Arterial Media", "Temperatura",
+				"Frecuencia Cardiaca", "Frecuencia Respiratoria", "Saturación de hemoglobina con oxígeno",
+				"Altura", "Peso", "Índice de Masa Corporal", "Procedimientos", "Evolución"
 		};
 
 		LocalDate startDate = localDateMapper.fromStringToLocalDate(fromDate);

@@ -53,7 +53,25 @@ public class OutpatientNursing {
 
 	private String occupation;
 
-	private String vitalSign;
+	private String systolicPressure;
+
+	private String diastolicPressure;
+
+	private String meanArterialPressure;
+
+	private String temperature;
+
+	private String heartRate;
+
+	private String respiratoryRate;
+
+	private String arterialOxygenSaturation;
+
+	private String height;
+
+	private String weight;
+
+	private String bmi;
 
 	private String procedures;
 
