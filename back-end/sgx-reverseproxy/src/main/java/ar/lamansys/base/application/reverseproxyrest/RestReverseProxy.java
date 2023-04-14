@@ -41,23 +41,21 @@ public class RestReverseProxy {
 	public ResponseEntity<?> run(HttpServletRequest request) {
 		String path = removeContext(request.getRequestURI(), request.getContextPath());
 		log.trace("DoReverseProxy execute params -> path '{}'", path);
-		ResponseEntity<?> response = new ReverseProxyBo(this.getAsString(path, request.getParameterMap())).getResponse();
-		log.trace("Response from server -> {}", response);
-		return response;
-	}
 
-	private ResponseEntity<String> getAsString(String path, Map<String, String[]> parameterMap) {
 		UriComponentsBuilder uriBuilder = UriComponentsBuilder
 				.fromHttpUrl(this.baseUrl)
 				.path(path);
+		request.getParameterMap()
+				.forEach(uriBuilder::queryParam);
 
-		parameterMap.forEach(uriBuilder::queryParam);
-
-		HttpEntity<String> entity = new HttpEntity<>(defaultHeaders);
-
+		HttpHeaders headers = new HttpHeaders(defaultHeaders);
+		headers.set("Accept", request.getHeader("Accept"));
+		HttpEntity<String> entity = new HttpEntity<>(headers);
 		log.trace("Headers to send {}", entity);
 
-		return restTemplate.exchange(uriBuilder.build().toUri(), HttpMethod.GET, entity, String.class);
+		ResponseEntity<?> response = new ReverseProxyBo(restTemplate.exchange(uriBuilder.build().toUri(), HttpMethod.GET, entity, byte[].class)).getResponse();
+		log.trace("Response from server -> {}", response);
+		return response;
 	}
 
 	public void addHeaders(Map<String, String> headersValues) {
