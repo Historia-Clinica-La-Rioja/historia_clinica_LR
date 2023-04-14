@@ -3,6 +3,7 @@ package ar.lamansys.sgh.clinichistory.application.document;
 import java.util.List;
 import java.util.Optional;
 
+import ar.lamansys.sgh.clinichistory.domain.document.DocumentDownloadDataBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.AllergyConditionBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.AnthropometricDataBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.DentalActionBo;
@@ -111,6 +112,6 @@ public interface DocumentService {
 	
 	OtherRiskFactorBo getOtherRiskFactors(Long id);
 
-	Long getDocumentIdByTriage(Integer triageId);
+	DocumentDownloadDataBo getDocumentDownloadDataByTriage(Integer triageId);
 }
 

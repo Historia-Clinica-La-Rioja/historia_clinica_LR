@@ -1,6 +1,7 @@
 package ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document;
 
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.entity.Document;
+import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.entity.DocumentDownloadDataVo;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.searchdocuments.DocumentRepositoryCustom;
 import ar.lamansys.sgx.shared.auditable.entity.Updateable;
 import ar.lamansys.sgx.shared.auditable.repository.SGXAuditableEntityJPARepository;
@@ -62,10 +63,11 @@ public interface DocumentRepository extends SGXAuditableEntityJPARepository<Docu
 	List<Long> getIdsByPatientId(@Param("patientId") Integer patientId);
 	
 	@Transactional(readOnly = true)
-	@Query(value = "SELECT DISTINCT d.id " +
+	@Query(value = "SELECT DISTINCT NEW ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.entity.DocumentDownloadDataVo(d.id, df.filename) " +
 			"FROM Document d " +
+			"JOIN DocumentFile df ON (df.id = d.id) " +
 			"JOIN DocumentRiskFactor drf ON (d.id = drf.pk.documentId) " +
 			"JOIN TriageRiskFactors trf ON (trf.pk.observationRiskFactorId = drf.pk.observationRiskFactorId) " +
 			"WHERE trf.pk.triageId = :triageId")
-	Long getDocumentIdByTriageId(@Param("triageId") Integer triageId);
+	DocumentDownloadDataVo getDocumentIdByTriageId(@Param("triageId") Integer triageId);
 }

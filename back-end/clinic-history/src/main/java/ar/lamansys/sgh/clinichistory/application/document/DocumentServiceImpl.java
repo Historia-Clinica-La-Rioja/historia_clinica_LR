@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+import ar.lamansys.sgh.clinichistory.domain.document.DocumentDownloadDataBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.ExternalCauseBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.NewbornBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.ObstetricEventBo;
@@ -481,9 +482,9 @@ public class  DocumentServiceImpl implements DocumentService {
 	}
 
 	@Override
-	public Long getDocumentIdByTriage(Integer triageId) {
+	public DocumentDownloadDataBo getDocumentDownloadDataByTriage(Integer triageId) {
 		LOG.debug("Input parameters -> triageId {}", triageId);
-		Long result = documentRepository.getDocumentIdByTriageId(triageId);
+		DocumentDownloadDataBo result = new DocumentDownloadDataBo(documentRepository.getDocumentIdByTriageId(triageId));
 		LOG.debug("Output -> {}", result);
 		return result;
 	}

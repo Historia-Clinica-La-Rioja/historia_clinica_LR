@@ -52,7 +52,7 @@ public class EmergencyCareDocumentSearchController {
 		List<TriageListDto> triages = triageHistoric.stream().map(triageListMapper::toTriageListDto).collect(Collectors.toList());
 		List<TriageDocumentDto> triageAndDocument = new ArrayList<>();
 		triages.forEach(triage -> {
-			triageAndDocument.add(new TriageDocumentDto(triage, documentService.getDocumentIdByTriage(triage.getId())));
+			triageAndDocument.add(new TriageDocumentDto(triage, documentService.getDocumentDownloadDataByTriage(triage.getId())));
 		});
 		EmergencyCareHistoricDocumentDto result = new EmergencyCareHistoricDocumentDto(triageAndDocument);
 		LOG.debug(OUTPUT, result);

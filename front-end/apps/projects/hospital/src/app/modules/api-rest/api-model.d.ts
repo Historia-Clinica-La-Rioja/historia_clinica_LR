@@ -3228,6 +3228,7 @@ export interface TriageColorDto extends Serializable {
 
 export interface TriageDocumentDto {
     documentId: number;
+    fileName: string;
     triage: TriageListDto;
 }
 
