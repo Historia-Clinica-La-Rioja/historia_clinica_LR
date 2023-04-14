@@ -66,8 +66,8 @@ public interface DocumentRepository extends SGXAuditableEntityJPARepository<Docu
 	@Query(value = "SELECT DISTINCT NEW ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.entity.DocumentDownloadDataVo(d.id, df.filename) " +
 			"FROM Document d " +
 			"JOIN DocumentFile df ON (df.id = d.id) " +
-			"JOIN DocumentRiskFactor drf ON (d.id = drf.pk.documentId) " +
-			"JOIN TriageRiskFactors trf ON (trf.pk.observationRiskFactorId = drf.pk.observationRiskFactorId) " +
-			"WHERE trf.pk.triageId = :triageId")
+			"JOIN DocumentTriage dt ON (dt.pk.documentId = d.id) " +
+			"JOIN Triage t ON (t.id = dt.pk.triageId) " +
+			"WHERE t.id = :triageId ")
 	DocumentDownloadDataVo getDocumentIdByTriageId(@Param("triageId") Integer triageId);
 }

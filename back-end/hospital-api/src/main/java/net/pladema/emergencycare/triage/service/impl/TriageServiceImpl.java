@@ -1,6 +1,7 @@
 package net.pladema.emergencycare.triage.service.impl;
 
 import ar.lamansys.sgh.clinichistory.application.createDocument.DocumentFactory;
+import ar.lamansys.sgh.clinichistory.application.document.DocumentService;
 import ar.lamansys.sgh.shared.infrastructure.input.service.EBodyTemperature;
 import ar.lamansys.sgh.shared.infrastructure.input.service.EMuscleHypertonia;
 import ar.lamansys.sgh.shared.infrastructure.input.service.EPerfusion;
@@ -50,13 +51,16 @@ public class TriageServiceImpl implements TriageService {
 
 	private final DocumentFactory documentFactory;
 
+	private final DocumentService documentService;
+
     public TriageServiceImpl(TriageRepository triageRepository,
                              TriageDetailsRepository triageDetailsRepository,
                              TriageRiskFactorsRepository triageRiskFactorsRepository,
                              InstitutionExternalService institutionExternalService,
                              EmergencyCareEpisodeRepository emergencyCareEpisodeRepository,
 							 EmergencyCareEpisodeStateService emergencyCareEpisodeStateService,
-							 DocumentFactory documentFactory) {
+							 DocumentFactory documentFactory,
+							 DocumentService documentService) {
         super();
         this.triageRepository = triageRepository;
         this.triageDetailsRepository = triageDetailsRepository;
@@ -65,6 +69,7 @@ public class TriageServiceImpl implements TriageService {
         this.emergencyCareEpisodeRepository = emergencyCareEpisodeRepository;
         this.emergencyCareEpisodeStateService = emergencyCareEpisodeStateService;
 		this.documentFactory = documentFactory;
+		this.documentService = documentService;
     }
 
     @Override
@@ -135,7 +140,8 @@ public class TriageServiceImpl implements TriageService {
         Short categoryId = triageBo.getCategoryId();
         this.setTriageCategoryId(episodeId, categoryId);
 
-		documentFactory.run(triageBo, true);
+		Long documentId = documentFactory.run(triageBo, true);
+		documentService.createDocumentTriage(documentId, triage.getId());
 
         LOG.debug("Output -> {}", triageBo);
         return triageBo;

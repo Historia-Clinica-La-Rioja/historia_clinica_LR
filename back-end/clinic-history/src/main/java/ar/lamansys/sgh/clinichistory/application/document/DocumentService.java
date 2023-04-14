@@ -28,6 +28,7 @@ import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.e
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.entity.DocumentOdontologyProcedure;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.entity.DocumentProcedure;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.entity.DocumentRiskFactor;
+import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.entity.DocumentTriage;
 import ar.lamansys.sgx.shared.auditable.entity.Updateable;
 
 public interface DocumentService {
@@ -113,5 +114,8 @@ public interface DocumentService {
 	OtherRiskFactorBo getOtherRiskFactors(Long id);
 
 	DocumentDownloadDataBo getDocumentDownloadDataByTriage(Integer triageId);
+
+	DocumentTriage createDocumentTriage(Long documentId, Integer triageId);
+
 }
 

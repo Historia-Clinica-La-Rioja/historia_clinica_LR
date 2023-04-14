@@ -18,7 +18,7 @@ public class DocumentDownloadDataBo {
 
 	public DocumentDownloadDataBo(DocumentDownloadDataVo documentDownloadData) {
 		this.id = documentDownloadData.getId();
-		this.fileName = documentDownloadData.getFileName();;
+		this.fileName = documentDownloadData.getFileName();
 	}
 
 }

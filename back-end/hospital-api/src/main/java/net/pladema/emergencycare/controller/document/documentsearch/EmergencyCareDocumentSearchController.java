@@ -1,6 +1,7 @@
 package net.pladema.emergencycare.controller.document.documentsearch;
 
 import ar.lamansys.sgh.clinichistory.application.document.DocumentService;
+import ar.lamansys.sgh.clinichistory.domain.document.DocumentDownloadDataBo;
 import io.swagger.v3.oas.annotations.tags.Tag;
 
 import lombok.AllArgsConstructor;
@@ -52,7 +53,9 @@ public class EmergencyCareDocumentSearchController {
 		List<TriageListDto> triages = triageHistoric.stream().map(triageListMapper::toTriageListDto).collect(Collectors.toList());
 		List<TriageDocumentDto> triageAndDocument = new ArrayList<>();
 		triages.forEach(triage -> {
-			triageAndDocument.add(new TriageDocumentDto(triage, documentService.getDocumentDownloadDataByTriage(triage.getId())));
+			DocumentDownloadDataBo downloadData = documentService.getDocumentDownloadDataByTriage(triage.getId());
+			if (downloadData.getId() != null)
+				triageAndDocument.add(new TriageDocumentDto(triage, downloadData));
 		});
 		EmergencyCareHistoricDocumentDto result = new EmergencyCareHistoricDocumentDto(triageAndDocument);
 		LOG.debug(OUTPUT, result);

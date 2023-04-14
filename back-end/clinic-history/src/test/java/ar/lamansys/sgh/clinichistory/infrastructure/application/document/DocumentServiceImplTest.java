@@ -14,6 +14,8 @@ import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.D
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.DocumentProcedureRepository;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.DocumentRepository;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.DocumentRiskFactorRepository;
+import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.DocumentTriageRepository;
+
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -67,13 +69,16 @@ class DocumentServiceImplTest {
 
 	@MockBean
 	private DocumentObstetricEventRepository documentObstetricEventRepository;
+	
+	@MockBean
+	private DocumentTriageRepository documentTriageRepository;
 
 	@BeforeEach
 	void setUp() {
 		documentServiceImpl = new DocumentServiceImpl(documentRepository, documentHealthConditionRepository,
                 documentImmunizationRepository, documentProcedureRepository, documentRiskFactorRepository, documentLabRepository,
 				documentAllergyIntoleranceRepository, documentMedicamentionStatementRepository, documentDiagnosticReportRepository,
-				documentOdontologyProcedureRepository, documentOdontologyDiagnosticRepository, documentExternalCauseRepository, documentObstetricEventRepository);
+				documentOdontologyProcedureRepository, documentOdontologyDiagnosticRepository, documentExternalCauseRepository, documentObstetricEventRepository, documentTriageRepository);
 	}
 
 	@Test

@@ -14,6 +14,11 @@ import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.D
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.entity.DocumentExternalCause;
 
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.entity.DocumentObstetricEvent;
+import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.DocumentTriageRepository;
+import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.entity.DocumentDownloadDataVo;
+import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.entity.DocumentExternalCause;
+
+import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.entity.DocumentTriage;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.hospitalizationState.entity.ExternalCauseVo;
 import ar.lamansys.sgh.clinichistory.domain.ips.OtherRiskFactorBo;
 
@@ -105,6 +110,8 @@ public class  DocumentServiceImpl implements DocumentService {
 	private final DocumentExternalCauseRepository documentExternalCauseRepository;
 
 	private final DocumentObstetricEventRepository documentObstetricEventRepository;
+	
+	private final DocumentTriageRepository documentTriageRepository;
 
 	public DocumentServiceImpl(DocumentRepository documentRepository,
                                DocumentHealthConditionRepository documentHealthConditionRepository,
@@ -118,7 +125,8 @@ public class  DocumentServiceImpl implements DocumentService {
                                DocumentOdontologyProcedureRepository documentOdontologyProcedureRepository,
 							   DocumentOdontologyDiagnosticRepository documentOdontologyDiagnosticRepository,
 							   DocumentExternalCauseRepository documentExternalCauseRepository,
-							   DocumentObstetricEventRepository documentObstetricEventRepository) {
+							   DocumentObstetricEventRepository documentObstetricEventRepository,
+							   DocumentTriageRepository documentTriageRepository) {
         this.documentRepository = documentRepository;
         this.documentHealthConditionRepository = documentHealthConditionRepository;
         this.documentImmunizationRepository = documentImmunizationRepository;
@@ -132,6 +140,7 @@ public class  DocumentServiceImpl implements DocumentService {
         this.documentOdontologyDiagnosticRepository = documentOdontologyDiagnosticRepository;
 		this.documentExternalCauseRepository = documentExternalCauseRepository;
 		this.documentObstetricEventRepository = documentObstetricEventRepository;
+		this.documentTriageRepository = documentTriageRepository;
     }
 
     @Override
@@ -484,7 +493,24 @@ public class  DocumentServiceImpl implements DocumentService {
 	@Override
 	public DocumentDownloadDataBo getDocumentDownloadDataByTriage(Integer triageId) {
 		LOG.debug("Input parameters -> triageId {}", triageId);
-		DocumentDownloadDataBo result = new DocumentDownloadDataBo(documentRepository.getDocumentIdByTriageId(triageId));
+		DocumentDownloadDataBo result = mapToDocumentDownloadDataBo(documentRepository.getDocumentIdByTriageId(triageId));
+		LOG.debug("Output -> {}", result);
+		return result;
+	}
+
+	private DocumentDownloadDataBo mapToDocumentDownloadDataBo(DocumentDownloadDataVo documentDownloadData) {
+		DocumentDownloadDataBo result = new DocumentDownloadDataBo();
+		if (documentDownloadData != null) {
+			result.setId(documentDownloadData.getId());
+			result.setFileName(documentDownloadData.getFileName());
+		}
+		return result;
+	}
+
+	@Override
+	public DocumentTriage createDocumentTriage(Long documentId, Integer triageId) {
+		LOG.debug("Input parameters -> documentId {}, triageId {}", documentId, triageId);
+		DocumentTriage result = documentTriageRepository.save(new DocumentTriage(documentId, triageId));
 		LOG.debug("Output -> {}", result);
 		return result;
 	}
