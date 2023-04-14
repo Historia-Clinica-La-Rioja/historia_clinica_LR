@@ -2,6 +2,7 @@ package net.pladema.emergencycare.controller;
 
 import io.swagger.v3.oas.annotations.tags.Tag;
 import net.pladema.emergencycare.controller.mapper.DischargeTypeMasterDataMapper;
+import net.pladema.emergencycare.repository.EmergencyEpisodeAttendSectorType;
 import net.pladema.emergencycare.service.DischargeTypeMasterDataService;
 import net.pladema.emergencycare.service.EmergencyCareMasterDataService;
 import ar.lamansys.sgx.shared.masterdata.infrastructure.input.rest.dto.MasterDataDto;
@@ -14,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.Collection;
+import java.util.List;
 
 @RestController
 @RequestMapping("/emergency-care/masterdata")
@@ -55,4 +57,10 @@ public class EmergencyCareMasterDataController {
         return ResponseEntity.ok().body(dischargeTypeMasterDataMapper
                 .fromListDischargeTypeBo(dischargeTypeMasterDataService.getAllEmergencyCareDischargeTypes()));
     }
+
+	@GetMapping(value = "/emergency-episode-sector-type")
+	public ResponseEntity<Collection<MasterDataDto>> getEmergencyEpisodeSectorType() {
+		LOG.debug("{}", "All emergency episode sector types");
+		return ResponseEntity.ok().body(EnumWriter.writeList(emergencyCareMasterDataService.getEmergencyEpisodeSectorType()));
+	}
 }

@@ -1,5 +1,6 @@
 package net.pladema.emergencycare.service.impl;
 
+import net.pladema.emergencycare.repository.EmergencyEpisodeAttendSectorType;
 import net.pladema.emergencycare.service.EmergencyCareMasterDataService;
 import net.pladema.emergencycare.service.domain.enums.EEmergencyCareEntrance;
 import net.pladema.emergencycare.service.domain.enums.EEmergencyCareType;
@@ -8,6 +9,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class EmergencyCareMasterDataServiceImpl implements EmergencyCareMasterDataService {
@@ -33,4 +35,11 @@ public class EmergencyCareMasterDataServiceImpl implements EmergencyCareMasterDa
         LOG.debug(OUTPUT, result);
         return result;
     }
+
+	@Override
+	public List<EmergencyEpisodeAttendSectorType> getEmergencyEpisodeSectorType() {
+		List<EmergencyEpisodeAttendSectorType> result = EmergencyEpisodeAttendSectorType.getAll();
+		LOG.debug(OUTPUT, result);
+		return result;
+	}
 }
