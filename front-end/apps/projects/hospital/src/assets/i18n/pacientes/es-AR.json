@@ -307,7 +307,8 @@
 		"SUBTITLE_CONFIRMED_FUSION":"Ahora el paciente con ID {{id}} contiene la información clínica de los pacientes fusionados.En caso de querer deshacer la fusión deberá dirigirse a la pantalla 'Desfusionar'",
 		"MESSAGE_TOOLTIP":"Los datos personales que permanecerán en el paciente serán los asociados al id seleccionado.",
 		"SUBTITLE_INFO_PATIENT_TO_AUDIT":"Auditoría de ",
-		"LABEL_FILTER":"Filtrado por "
+		"LABEL_FILTER":"Filtrado por ",
+		"MESSAGE_VALIDATION_FUSION": "Seleccione al menos dos pacientes para realizar la fusion"
 	}
   }
 }

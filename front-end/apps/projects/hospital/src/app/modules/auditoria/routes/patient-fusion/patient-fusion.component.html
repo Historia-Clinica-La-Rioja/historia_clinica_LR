@@ -95,7 +95,12 @@
 			</mat-paginator>
 		</mat-card>
 
-		<div fxLayout="row" fxLayoutAlign="end end" id="div-button">
+		<div fxLayout="row" fxLayoutAlign="space-between center" id="div-button">
+			<div>
+				<p class="warn" *ngIf="validationTwoSelectedPatients">{{'pacientes.audit.MESSAGE_VALIDATION_FUSION' |
+					translate}}</p>
+			</div>
+
 			<button mat-raised-button color="primary" (click)="merge()">{{'pacientes.audit.LABEL_BUTTON_MERGE' |
 				translate | uppercase}}</button>
 		</div>

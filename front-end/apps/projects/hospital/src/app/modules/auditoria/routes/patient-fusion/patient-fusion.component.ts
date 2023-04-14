@@ -40,6 +40,7 @@ export class PatientFusionComponent implements OnInit {
 	filterBy: Filters;
 	infoPatientToAudit: string;
 	filters = Filters;
+	validationTwoSelectedPatients: boolean = false;
 	patientToMerge: PatientToMergeDto = {
 		activePatientId: null,
 		oldPatientsIds: null,
@@ -176,40 +177,50 @@ export class PatientFusionComponent implements OnInit {
 	}
 
 	merge() {
-		this.completePatientDataToMerge();
-		const dialogRef = this.dialog.open(WarningFusionComponent, {
-			data: {
-				cant: this.oldPatientsIds.length + 1,
-				fullName: '-' + (this.patientToMerge.registrationDataPerson.firstName) + " " + (this.patientToMerge.registrationDataPerson.middleNames ? this.patientToMerge.registrationDataPerson.middleNames : '') + ' ' + (this.patientToMerge.registrationDataPerson.lastName) + " " + (this.patientToMerge.registrationDataPerson.otherLastNames ? this.patientToMerge.registrationDataPerson.otherLastNames : ''),
-				identification: '-' + this.getIdentificationType(this.patientToMerge.registrationDataPerson.identificationTypeId) + ' ' + this.patientToMerge.registrationDataPerson.identificationNumber,
-				birthDate: '- Fecha Nac. ' + this.patientToMerge.registrationDataPerson.birthDate,
-				idPatient: '- ID ' + this.patientToMerge.activePatientId,
+		this.validateForm();
+		if (!this.validationTwoSelectedPatients) {
+			this.completePatientDataToMerge();
+			const dialogRef = this.dialog.open(WarningFusionComponent, {
+				data: {
+					cant: this.oldPatientsIds.length + 1,
+					fullName: '-' + (this.patientToMerge.registrationDataPerson.firstName) + " " + (this.patientToMerge.registrationDataPerson.middleNames ? this.patientToMerge.registrationDataPerson.middleNames : '') + ' ' + (this.patientToMerge.registrationDataPerson.lastName) + " " + (this.patientToMerge.registrationDataPerson.otherLastNames ? this.patientToMerge.registrationDataPerson.otherLastNames : ''),
+					identification: '-' + this.getIdentificationType(this.patientToMerge.registrationDataPerson.identificationTypeId) + ' ' + this.patientToMerge.registrationDataPerson.identificationNumber,
+					birthDate: '- Fecha Nac. ' + this.patientToMerge.registrationDataPerson.birthDate,
+					idPatient: '- ID ' + this.patientToMerge.activePatientId,
 
-			},
-			disableClose: true,
-			width: '35%',
-			autoFocus: false
-		})
-		dialogRef.afterClosed().subscribe(confirmed => {
-			if (confirmed) {
-				this.patientMergeService.merge(this.patientToMerge).subscribe(res => {
-					const dialogRef2 = this.dialog.open(ConfirmedFusionComponent, {
-						data: {
-							idPatient: this.patientToMerge.activePatientId
-						},
-						disableClose: true,
-						width: '35%',
-						autoFocus: false
+				},
+				disableClose: true,
+				width: '35%',
+				autoFocus: false
+			})
+			dialogRef.afterClosed().subscribe(confirmed => {
+				if (confirmed) {
+					this.patientMergeService.merge(this.patientToMerge).subscribe(res => {
+						const dialogRef2 = this.dialog.open(ConfirmedFusionComponent, {
+							data: {
+								idPatient: this.patientToMerge.activePatientId
+							},
+							disableClose: true,
+							width: '35%',
+							autoFocus: false
+						})
+						dialogRef2.afterClosed().subscribe(close => {
+							this.goToBack();
+						})
+					}, error => {
+						this.snackBarService.showError(error.text);
 					})
-					dialogRef2.afterClosed().subscribe(close => {
-						this.goToBack();
-					})
-				}, error => {
-					this.snackBarService.showError(error.text);
-				})
-			}
-		});
+				}
+			});
+		}
+	}
 
+	validateForm() {
+		if (this.oldPatientsIds.length >= 2) {
+			this.validationTwoSelectedPatients = false;
+		} else {
+			this.validationTwoSelectedPatients = true;
+		}
 	}
 
 	completePatientDataToMerge() {
