@@ -267,3 +267,4 @@ databaseChangeLog:
                   (SELECT *
                    FROM sector AS s
                    WHERE s.sector_id IS NULL)
+
