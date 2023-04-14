@@ -4,7 +4,8 @@
 			<mat-selection-list color="accent" [multiple]=false id="selection-documents" class="selection-documents">
 				<mat-list-option (click)="setActive(documentSearch)" *ngFor="let documentSearch of documentHistoric">
 					<div fxLayout="row" fxLayoutGap="5px">
-						<mat-icon mat-list-icon fontSet="material-icons-outlined" color="primary">{{documentSearch.summary.icon}}</mat-icon>
+						<mat-icon mat-list-icon fontSet="material-icons-outlined"
+							color="primary">{{documentSearch.summary.icon}}</mat-icon>
 						<div fxLayout="column" fxLayoutGap="20px">
 							<span id="document-type" class="color-primary uppercase">
 								{{documentSearch.summary.title}}
@@ -28,10 +29,15 @@
 				</mat-list-option>
 			</mat-selection-list>
 
-			<div *ngIf="activeDocument" class="content">
-				<app-triage-details [triage]="activeDocument" [emergencyCareType]="emergencyCareType"
+			<div *ngIf="activeDocument" class="content" fxLayout="row" fxLayoutAlign="space-between start">
+				<app-triage-details [triage]="activeDocument.content" [emergencyCareType]="emergencyCareType"
 					showRiskFactors='true'>
 				</app-triage-details>
+				<button mat-icon-button color="primary" id="download_document" name="download_document"
+					(click)="downloadDocument()">
+					<mat-icon fontSet="material-icons-outlined">
+						download_icon</mat-icon>
+				</button>
 			</div>
 
 		</div>
