@@ -1,5 +1,5 @@
 import { Component, Input, OnChanges } from "@angular/core";
-import { DIET, IndicationStatus, IndicationStatusScss, showTimeElapsed } from "@historia-clinica/modules/ambulatoria/modules/indicacion/constants/internment-indications";
+import { DIET, IndicationStatus, IndicationStatusScss, INDICATION_TYPE, showTimeElapsed } from "@historia-clinica/modules/ambulatoria/modules/indicacion/constants/internment-indications";
 import { DietDto } from "@api-rest/api-model";
 import { Content } from '@presentation/components/indication/indication.component';
 import { MatDialog } from "@angular/material/dialog";
@@ -15,7 +15,7 @@ const DIALOG_SIZE = '35%';
 	styleUrls: ['./internment-diet-card.component.scss']
 })
 export class InternmentDietCardComponent implements OnChanges {
-
+	INDICATION = INDICATION_TYPE.DIET;
 	DIET = DIET;
 	indicationContent: Content[] = [];
 	@Input() diets: DietDto[];

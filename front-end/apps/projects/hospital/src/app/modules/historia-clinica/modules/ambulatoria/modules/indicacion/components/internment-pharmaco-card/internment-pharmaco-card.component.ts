@@ -3,7 +3,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { MasterDataDto, PharmacoDto } from '@api-rest/api-model';
 import { InternacionMasterDataService } from '@api-rest/services/internacion-master-data.service';
 import { InternmentIndicationService } from '@api-rest/services/internment-indication.service';
-import { IndicationStatus, IndicationStatusScss, PHARMACO, showTimeElapsed } from "@historia-clinica/modules/ambulatoria/modules/indicacion/constants/internment-indications";
+import { IndicationStatus, IndicationStatusScss, INDICATION_TYPE, PHARMACO, showTimeElapsed } from "@historia-clinica/modules/ambulatoria/modules/indicacion/constants/internment-indications";
 import { Content } from "@presentation/components/indication/indication.component";
 import { loadExtraInfoPharmaco } from '../../constants/load-information';
 import { InternmentIndicationDetailComponent } from '../../dialogs/internment-indication-detail/internment-indication-detail.component';
@@ -16,7 +16,7 @@ const DIALOG_SIZE = '35%';
 	styleUrls: ['./internment-pharmaco-card.component.scss']
 })
 export class InternmentPharmacoCardComponent implements OnChanges {
-
+	INDICATION = INDICATION_TYPE.PHARMACO;
 	PHARMACO = PHARMACO;
 	indicationContent: Content[] = [];
 	vias: MasterDataDto[] = [];

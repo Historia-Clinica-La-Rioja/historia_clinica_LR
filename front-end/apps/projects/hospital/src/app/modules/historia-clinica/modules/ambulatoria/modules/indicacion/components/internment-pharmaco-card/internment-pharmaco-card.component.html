@@ -1,9 +1,10 @@
 <app-content width="full">
-	<app-indication 
-		[header]="PHARMACO" 
-		[contents]="indicationContent" 
+	<app-indication
+		[header]="PHARMACO"
+		[buttonIndication]="INDICATION"
+		[canEdit]="['ESPECIALISTA_MEDICO', 'ESPECIALISTA_EN_ODONTOLOGIA']"
+		[contents]="indicationContent"
 		[noInformation]="'indicacion.internment-card.sections.no-data.PHARMACO'"
-		[menuOption]= "'indicacion.internment-card.menu-items.DETAILS'"
-		(onMenuOptionClick)="openDetailDialog($event)">
+		[menuOption]="'indicacion.internment-card.menu-items.DETAILS'" (onMenuOptionClick)="openDetailDialog($event)">
 	</app-indication>
 </app-content>

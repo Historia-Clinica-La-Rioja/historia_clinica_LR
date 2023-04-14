@@ -1,4 +1,4 @@
-import { EIndicationType } from '@api-rest/api-model';
+import { EIndicationType, ERole } from '@api-rest/api-model';
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 
 @Component({
@@ -7,7 +7,8 @@ import { Component, EventEmitter, Input, Output } from '@angular/core';
 	styleUrls: ['./indication.component.scss']
 })
 export class IndicationComponent {
-
+	@Input() buttonIndication: EIndicationType;
+	@Input() canEdit: ERole[] = [];
 	@Input() header: Title;
 	@Input() contents: Content[];
 	@Input() noInformation: string;

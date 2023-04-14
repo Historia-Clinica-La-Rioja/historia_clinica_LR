@@ -1,5 +1,5 @@
 import { Component, Input, OnChanges } from '@angular/core';
-import { IndicationStatus, IndicationStatusScss, OTHER_INDICATION, OTHER_INDICATION_ID, showTimeElapsed } from "@historia-clinica/modules/ambulatoria/modules/indicacion/constants/internment-indications";
+import { IndicationStatus, IndicationStatusScss, INDICATION_TYPE, OTHER_INDICATION, OTHER_INDICATION_ID, showTimeElapsed } from "@historia-clinica/modules/ambulatoria/modules/indicacion/constants/internment-indications";
 import { Content } from '@presentation/components/indication/indication.component';
 import { OtherIndicationDto } from '@api-rest/api-model';
 import { InternmentIndicationService, OtherIndicationTypeDto } from '@api-rest/services/internment-indication.service';
@@ -16,6 +16,7 @@ const DIALOG_SIZE = '35%';
 	styleUrls: ['./internment-other-indication-card.component.scss']
 })
 export class InternmentOtherIndicationCardComponent implements OnChanges {
+	INDICATION = INDICATION_TYPE.OTHER_INDICATION;
 
 	OTHER_INDICATION = OTHER_INDICATION;
 

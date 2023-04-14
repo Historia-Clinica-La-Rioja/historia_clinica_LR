@@ -1,9 +1,9 @@
 <app-content width="full">
-	<app-indication 
-		[header]="PARENTERAL_PLAN" 
-		[contents]="indicationContent" 
+	<app-indication
+		[canEdit]="['ESPECIALISTA_MEDICO', 'ESPECIALISTA_EN_ODONTOLOGIA']"
+		[buttonIndication]="INDICATION"
+		[header]="PARENTERAL_PLAN" [contents]="indicationContent"
 		[noInformation]="'indicacion.internment-card.sections.no-data.PARENTERAL_PLAN'"
-		[menuOption]= "'indicacion.internment-card.menu-items.DETAILS'"
-		(onMenuOptionClick)="openDetailDialog($event)">
+		[menuOption]="'indicacion.internment-card.menu-items.DETAILS'" (onMenuOptionClick)="openDetailDialog($event)">
 	</app-indication>
 </app-content>

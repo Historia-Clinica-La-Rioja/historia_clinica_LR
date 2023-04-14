@@ -1,5 +1,9 @@
 <div fxLayout="column" fxLayoutGap="30px">
-	<app-category-header-divider [header]="header"></app-category-header-divider>
+	<app-category-header-divider
+		[header]="header"
+		[buttonIndication]="buttonIndication"
+		[canEdit]="canEdit">
+	</app-category-header-divider>
 
 	<div id="content" *ngIf="contents.length; else noData" fxLayout="column" fxLayoutGap="20px">
 		<div *ngFor="let content of contents" fxLayout="row" fxLayoutAlign="space-between center">

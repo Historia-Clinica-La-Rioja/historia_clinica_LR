@@ -1,6 +1,6 @@
 import { Component, Input, OnChanges } from '@angular/core';
 import { ParenteralPlanDto } from '@api-rest/api-model';
-import { IndicationStatus, IndicationStatusScss, PARENTERAL_PLAN, showTimeElapsed } from "@historia-clinica/modules/ambulatoria/modules/indicacion/constants/internment-indications";
+import { IndicationStatus, IndicationStatusScss, INDICATION_TYPE, PARENTERAL_PLAN, showTimeElapsed } from "@historia-clinica/modules/ambulatoria/modules/indicacion/constants/internment-indications";
 import { Content, ExtraInfo } from "@presentation/components/indication/indication.component";
 import { InternacionMasterDataService } from "@api-rest/services/internacion-master-data.service";
 import { loadExtraInfoParenteralPlan } from '../../constants/load-information';
@@ -15,7 +15,7 @@ const DIALOG_SIZE = '35%';
 	styleUrls: ['./internment-parenteral-plan-card.component.scss']
 })
 export class InternmentParenteralPlanCardComponent implements OnChanges {
-
+	INDICATION = INDICATION_TYPE.PARENTERAL_PLAN;
 	PARENTERAL_PLAN = PARENTERAL_PLAN;
 	indicationContent: Content[] = [];
 	vias: any[] = [];
