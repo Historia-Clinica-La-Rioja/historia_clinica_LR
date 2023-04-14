@@ -1,10 +1,20 @@
-<div id="title" fxLayoutGap="10px" fxLayoutAlign="start center">
-	<div fxLayout="row" fxFlex="20px">
-		<mat-icon class="color-primary" fontSet="material-icons-outlined" *ngIf="header.matIcon; else svgIcon">
-			{{ header.matIcon }}</mat-icon>
-	</div>
-	<span class="color-primary title">{{ header.title | translate | uppercase }}</span>
+<div fxLayout="column" fxLayoutGap="10px">
 	<mat-divider inset></mat-divider>
+	<div fxLayoutAlign="space-between center">
+		<div id="title" fxLayoutGap="10px" fxLayoutAlign="start center">
+			<div fxLayout="row" fxFlex="20px">
+				<mat-icon class="color-primary" fontSet="material-icons-outlined" *ngIf="header.matIcon; else svgIcon">
+					{{ header.matIcon }}</mat-icon>
+			</div>
+			<span class="color-primary title">{{ header.title | translate | uppercase }}</span>
+		</div>
+		<ng-container *ngIf="!actionsButtonService.epicrisisConfirmed">
+			<button mat-stroked-button color="primary" *appHasRole="canEdit" (click)="openDialog()" btn-block
+				fxLayout="end">
+				+{{ 'presentation.indications.INDICATE' | translate | uppercase }}
+			</button>
+		</ng-container>
+	</div>
 </div>
 
 <ng-template #svgIcon>
