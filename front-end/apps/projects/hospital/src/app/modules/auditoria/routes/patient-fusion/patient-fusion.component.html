@@ -99,11 +99,13 @@
 			<div>
 				<p class="warn" *ngIf="validationTwoSelectedPatients">{{'pacientes.audit.MESSAGE_VALIDATION_FUSION' |
 					translate}}</p>
+				<p class="warn" *ngIf="validationColumns">{{'pacientes.audit.MESSAGE_VALIDATION_COLUMNS' | translate}}</p>
 			</div>
 
 			<button mat-raised-button color="primary" (click)="merge()">{{'pacientes.audit.LABEL_BUTTON_MERGE' |
 				translate | uppercase}}</button>
 		</div>
+
 		<ng-template #noInfo>
 			<app-no-data></app-no-data>
 		</ng-template>

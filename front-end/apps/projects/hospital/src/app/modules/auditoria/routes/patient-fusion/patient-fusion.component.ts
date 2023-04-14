@@ -41,6 +41,7 @@ export class PatientFusionComponent implements OnInit {
 	infoPatientToAudit: string;
 	filters = Filters;
 	validationTwoSelectedPatients: boolean = false;
+	validationColumns: boolean = false;
 	patientToMerge: PatientToMergeDto = {
 		activePatientId: null,
 		oldPatientsIds: null,
@@ -178,7 +179,7 @@ export class PatientFusionComponent implements OnInit {
 
 	merge() {
 		this.validateForm();
-		if (!this.validationTwoSelectedPatients) {
+		if (!this.validationColumns && !this.validationTwoSelectedPatients) {
 			this.completePatientDataToMerge();
 			const dialogRef = this.dialog.open(WarningFusionComponent, {
 				data: {
@@ -221,6 +222,13 @@ export class PatientFusionComponent implements OnInit {
 		} else {
 			this.validationTwoSelectedPatients = true;
 		}
+		if (this.patientToMerge.activePatientId === null || this.patientToMerge.registrationDataPerson.birthDate === null || this.patientToMerge.registrationDataPerson.firstName === null
+			|| this.patientToMerge.registrationDataPerson.identificationNumber === null || this.patientToMerge.registrationDataPerson.lastName === null) {
+			this.validationColumns = true;
+		} else {
+			this.validationColumns = false;
+		}
+
 	}
 
 	completePatientDataToMerge() {
