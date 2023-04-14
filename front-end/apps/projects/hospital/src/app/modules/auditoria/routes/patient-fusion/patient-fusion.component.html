@@ -1,14 +1,26 @@
 <app-content width="full">
 	<section>
 		<h2 class="page-title">{{'pacientes.audit.TITLE_CONTROL_DUPLICATE_PATIENTS' | translate}}</h2>
+		<section>
+			<button mat-icon-button color="primary" (click)="goToBack()">
+				<mat-icon>arrow_back</mat-icon>
+				<span>{{'buttons.BACK' | translate}}</span>
+			</button>
+		</section>
 		<h3>{{infoPatientToAudit}}</h3>
 		<p>{{'pacientes.audit.LABEL_FILTER' | translate}} {{filterBy | translate}}</p>
 	</section>
+
 	<section>
-		<button mat-icon-button color="primary" (click)="goToBack()">
-			<mat-icon>arrow_back</mat-icon>
-			<span>{{'buttons.BACK' | translate}}</span>
-		</button>
+		<mat-card class="primary background-primary"  fxLayout="row" >
+			<mat-icon>error_outline</mat-icon>
+			<div class="clarifications">
+				<p>{{'pacientes.audit.CLARIFICATION_ONE' | translate}}</p>
+				<p>{{'pacientes.audit.CLARIFICATION_TWO' | translate}}</p>
+				<p>{{'pacientes.audit.CLARIFICATION_THREE' | translate}}</p>
+			</div>
+
+		</mat-card>
 	</section>
 	<section>
 		<mat-card>
@@ -49,7 +61,7 @@
 					<div fxLayoutAlign="start center" class="content" fxFlex="10%">
 						<mat-radio-button color="primary" *ngIf="patient.selected"
 							(change)="setValuesPatientFusion(keyAttributes.PATIENT_ID,patient.patientId)"></mat-radio-button>
-						<span matTooltip="{{'pacientes.audit.MESSAGE_TOOLTIP' | translate}}">{{patient?.patientId}}
+						<span>{{patient?.patientId}}
 						</span>
 					</div>
 					<div fxLayoutAlign="start center" class="content" fxFlex="15%">

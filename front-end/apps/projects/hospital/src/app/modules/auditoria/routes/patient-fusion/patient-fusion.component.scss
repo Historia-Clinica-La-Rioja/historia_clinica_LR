@@ -14,3 +14,16 @@ h3{
 .warn{
 	font-weight: 500;
 }
+.clarifications{
+	p{
+		margin: 0 0 0 0 !important;
+	}
+	font-weight: 500;
+}
+@mixin background-primary($theme) {
+    $palette-primary: map-get($theme, primary);
+
+    .background-primary {
+        background-color: mat-color($palette-primary, 50);
+    }
+}
