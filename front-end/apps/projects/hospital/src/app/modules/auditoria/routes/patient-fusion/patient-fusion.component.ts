@@ -145,11 +145,15 @@ export class PatientFusionComponent implements OnInit {
 	}
 
 	setSelectedPatient(patient: any) {
-		patient.selected = !patient.selected;
-		let index = this.oldPatientsIds?.indexOf(patient.patientId)
-		if (index !== -1) {
+		if (patient.selected) {
+			patient.selected = false;
+			if (this.patientToMerge.activePatientId === patient.patientId) {
+				this.patientToMerge.activePatientId = null;
+			}
+			let index = this.oldPatientsIds?.indexOf(patient.patientId)
 			this.oldPatientsIds.splice(index, 1);
 		} else {
+			patient.selected = true;
 			this.oldPatientsIds.push(patient.patientId);
 		}
 	}
@@ -180,10 +184,9 @@ export class PatientFusionComponent implements OnInit {
 	merge() {
 		this.validateForm();
 		if (!this.validationColumns && !this.validationTwoSelectedPatients) {
-			this.completePatientDataToMerge();
 			const dialogRef = this.dialog.open(WarningFusionComponent, {
 				data: {
-					cant: this.oldPatientsIds.length + 1,
+					cant: this.oldPatientsIds.length ,
 					fullName: '-' + (this.patientToMerge.registrationDataPerson.firstName) + " " + (this.patientToMerge.registrationDataPerson.middleNames ? this.patientToMerge.registrationDataPerson.middleNames : '') + ' ' + (this.patientToMerge.registrationDataPerson.lastName) + " " + (this.patientToMerge.registrationDataPerson.otherLastNames ? this.patientToMerge.registrationDataPerson.otherLastNames : ''),
 					identification: '-' + this.getIdentificationType(this.patientToMerge.registrationDataPerson.identificationTypeId) + ' ' + this.patientToMerge.registrationDataPerson.identificationNumber,
 					birthDate: '- Fecha Nac. ' + this.patientToMerge.registrationDataPerson.birthDate,
@@ -196,6 +199,7 @@ export class PatientFusionComponent implements OnInit {
 			})
 			dialogRef.afterClosed().subscribe(confirmed => {
 				if (confirmed) {
+					this.completePatientDataToMerge();
 					this.patientMergeService.merge(this.patientToMerge).subscribe(res => {
 						const dialogRef2 = this.dialog.open(ConfirmedFusionComponent, {
 							data: {
@@ -217,7 +221,7 @@ export class PatientFusionComponent implements OnInit {
 	}
 
 	validateForm() {
-		if (this.oldPatientsIds.length >= 2) {
+		if (this.oldPatientsIds.length  >= 2) {
 			this.validationTwoSelectedPatients = false;
 		} else {
 			this.validationTwoSelectedPatients = true;
@@ -242,7 +246,10 @@ export class PatientFusionComponent implements OnInit {
 		this.patientToMerge.registrationDataPerson.nameSelfDetermination = auxiliaryPatientList.find(patient => patient.patientId === this.patientToMerge.activePatientId).nameSelfDetermination;
 		this.patientToMerge.oldPatientsIds = this.oldPatientsIds;
 
-		this.oldPatientsIds.splice(this.oldPatientsIds?.indexOf(this.patientToMerge.activePatientId), 1);
+		let index = this.oldPatientsIds?.indexOf(this.patientToMerge.activePatientId);
+		if (index !== -1) {
+			this.oldPatientsIds.splice(index, 1);
+		}
 	}
 
 
