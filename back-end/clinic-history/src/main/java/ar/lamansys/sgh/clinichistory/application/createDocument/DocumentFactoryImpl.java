@@ -125,7 +125,7 @@ public class DocumentFactoryImpl implements DocumentFactory {
 
         documentBo.setId(doc.getId());
         PatientInfoBo patientInfo = documentBo.getPatientInfo();
-		Integer patientId = patientInfo.getId();
+		Integer patientId = documentBo.getPatientId();
         healthConditionService.loadMainDiagnosis(patientInfo, doc.getId(), Optional.ofNullable(documentBo.getMainDiagnosis()));
         healthConditionService.loadDiagnosis(patientInfo, doc.getId(), documentBo.getDiagnosis());
         healthConditionService.loadPersonalHistories(patientInfo, doc.getId(), documentBo.getPersonalHistories());
