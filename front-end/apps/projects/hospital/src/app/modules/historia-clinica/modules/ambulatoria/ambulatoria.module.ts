@@ -71,6 +71,7 @@ import { OriginInstitutionReferenceComponent } from './components/origin-institu
 import { EpisodeSummaryComponent } from './routes/episode-summary/episode-summary.component';
 import { EmergencyCareProblemsComponent } from './components/emergency-care-problems/emergency-care-problems.component';
 import { PatientValidatorPopupComponent } from './dialogs/patient-validator-popup/patient-validator-popup.component';
+import { PrintAmbulatoriaComponent } from './routes/print-ambulatoria/print-ambulatoria.component';
 
 @NgModule({
 	declarations: [
@@ -124,6 +125,7 @@ import { PatientValidatorPopupComponent } from './dialogs/patient-validator-popu
 		EpisodeSummaryComponent,
 		EmergencyCareProblemsComponent,
 		PatientValidatorPopupComponent,
+     PrintAmbulatoriaComponent,
 	],
 	imports: [
 		CommonModule,

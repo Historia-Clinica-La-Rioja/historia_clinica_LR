@@ -7,33 +7,57 @@ import { AmbulatoriaPacienteComponent } from './routes/ambulatoria-paciente/ambu
 import { ERole } from '@api-rest/api-model';
 import { PendingChangesGuard } from '@core/guards/PendingChangesGuard';
 import { EpisodeSummaryComponent } from './routes/episode-summary/episode-summary.component';
+import { PrintAmbulatoriaComponent } from './routes/print-ambulatoria/print-ambulatoria.component';
+
+const ALLOWED_ROLES = [
+	ERole.ESPECIALISTA_MEDICO,
+	ERole.PROFESIONAL_DE_SALUD,
+	ERole.ENFERMERO,
+	ERole.ESPECIALISTA_EN_ODONTOLOGIA,
+	ERole.PERSONAL_DE_IMAGENES,
+	ERole.PERSONAL_DE_LABORATORIO,
+	ERole.PERSONAL_DE_FARMACIA,
+	ERole.PRESCRIPTOR
+];
+
+const PRINT_ROLES = [
+	ERole.PERSONAL_DE_LEGALES
+];
 
 const routes: Routes = [
 	{
 		path: '',
 		children: [
-			{	path: '',
+			{
+				path: '',
 				component: HomeComponent
 			},
 			{
-				path: 'paciente/:idPaciente/profile',
-				component: PatientProfileComponent,
+				path: 'paciente/:idPaciente/print',
+				component: PrintAmbulatoriaComponent,
+				canActivate: [RoleGuard],
+				data: { allowedRoles: PRINT_ROLES }
 			},
 			{
 				path: 'paciente/:idPaciente',
 				component: AmbulatoriaPacienteComponent,
-				canDeactivate: [PendingChangesGuard]
+				canDeactivate: [PendingChangesGuard],
+				canActivate: [RoleGuard],
+				data: { allowedRoles: ALLOWED_ROLES }
+			},
+			{
+				path: 'paciente/:idPaciente/profile',
+				component: PatientProfileComponent,
+				canActivate: [RoleGuard],
+				data: { allowedRoles: ALLOWED_ROLES }
 			},
 			{
 				path: 'episodio/:idEpisodio',
 				component: EpisodeSummaryComponent,
 			}
 		],
-		canActivate: [RoleGuard],
-		data: { allowedRoles: [ERole.ESPECIALISTA_MEDICO, ERole.PROFESIONAL_DE_SALUD, ERole.ENFERMERO, ERole.ESPECIALISTA_EN_ODONTOLOGIA,
-			ERole.PERSONAL_DE_IMAGENES, ERole.PERSONAL_DE_LABORATORIO, ERole.PERSONAL_DE_FARMACIA, ERole.PRESCRIPTOR, ERole.PERSONAL_DE_LEGALES] },
-	},
-
+		data: { allowedRoles: [...ALLOWED_ROLES, ...PRINT_ROLES] }
+	}
 ];
 
 @NgModule({
