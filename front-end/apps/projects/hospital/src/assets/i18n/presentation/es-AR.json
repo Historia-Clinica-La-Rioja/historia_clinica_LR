@@ -2,6 +2,10 @@
     "presentation": {
         "detail-box": {
             "PREVIOUS": "Anterior"
-        }
+        },
+		"indications": {
+            "INDICATE": "indicar"
+
+		}
     }
 }
