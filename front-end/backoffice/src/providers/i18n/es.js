@@ -167,6 +167,13 @@ const messages = {
             },
             createRelated: 'Crear Consultorio',
         },
+        shockroom: {
+            name: "Shockrooms",
+            createRelated: 'Crear Shockroom',
+            fields: {
+                description: 'Nombre',
+            }
+        },
         addresses: {
             name: 'Dirección |||| Direcciones',
             fields: {

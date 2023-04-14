@@ -41,6 +41,17 @@ const CreateDoctorsOffice = ({ record }) => {
         label="resources.doctorsoffices.createRelated"/>
     ) : null;
 };
+
+const CreateShockroom = ({ record }) => {
+    const customRecord = {sectorId: record.id, institutionId: record.institutionId};
+    return record.sectorTypeId === GUARDIA ?(<CreateRelatedButton
+        customRecord={customRecord}
+        reference="shockroom"
+        refFieldName="sectorId"
+        label="resources.shockroom.createRelated"/>
+    ) : null;
+};
+
 const UserIsAdmin = function () {
     const { permissions } = usePermissions();
     const userAdmin= permissions?.roleAssignments?.filter(roleAssignment => (roleAssignment.role === ADMINISTRADOR_INSTITUCIONAL_BACKOFFICE.role ||
@@ -350,6 +361,21 @@ const SectorShow = props => (
                 </Datagrid>
             </ReferenceManyField>
             
+            <SectionTitle label="resources.shockroom.name"/>
+            <CreateShockroom/>
+            <ReferenceManyField
+                id='shockroom'
+                addLabel={false}
+                reference="shockroom"
+                target="sectorId"
+                sort={{ field: 'description', order: 'DESC' }}
+            >
+                <Datagrid rowClick="show"
+                          empty={<p style={{paddingLeft:10, marginTop:0, color:'#8c8c8c'}}>Sin Shockrooms definidos</p>}>
+                    <TextField source="description"/>
+                    <EditButton />
+                </Datagrid>
+            </ReferenceManyField>
         </SimpleShowLayout>
     </Show>
 );

@@ -64,6 +64,7 @@ import imagelvlpacservers from "./imagelvlpacservers";
 import orchestrator from "./orchestrator";
 import equipment from "./equipment";
 import modality from "./modality";
+import shockroom from './shockroom';
 
 const resourcesAdminInstitucional = (permissions: SGXPermissions) =>
     permissions.isOn('BACKOFFICE_MOSTRAR_ABM_RESERVA_TURNOS') ?
@@ -110,6 +111,7 @@ const resources = (permissions: SGXPermissions) => [
     <Resource name="doctorsoffices" {...doctorsoffices} />,
     <Resource name="rooms" {...rooms} />,
     <Resource name="beds" {...beds} />,
+    <Resource name="shockroom" {...shockroom}/>,
     <Resource name="clinicalspecialtycarelines" {...clinicalspecialtycarelines} />,
     <Resource name="carelines" {...careLines(permissions)} />,
     <Resource name="carelineproblems" {...carelineproblems} />,
