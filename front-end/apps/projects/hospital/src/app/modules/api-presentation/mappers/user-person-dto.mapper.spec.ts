@@ -1,5 +1,4 @@
 import { mapToFullName } from './user-person-dto.mapper';
-import {unsupported} from "@angular/compiler/src/render3/view/util";
 
 describe('mapToFullName', () => {
 
