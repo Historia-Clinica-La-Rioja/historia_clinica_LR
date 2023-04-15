@@ -1,0 +1,9 @@
+package net.pladema.emergencycare.service;
+
+import net.pladema.emergencycare.service.domain.EmergencyCareEvolutionNoteDocumentBo;
+
+public interface CreateEmergencyCareEvolutionNoteDocumentService {
+
+	EmergencyCareEvolutionNoteDocumentBo execute(EmergencyCareEvolutionNoteDocumentBo emergencyCareEvolutionNoteDocument, Integer emergencyCareEvolutionNoteId);
+
+}

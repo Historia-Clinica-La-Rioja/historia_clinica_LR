@@ -191,7 +191,15 @@ public class EmergencyCareEpisodeServiceImpl implements EmergencyCareEpisodeServ
 		return new PatientECEBo(emergencyCareEpisodeRepository.getPatientDataByEpisodeId(episodeId));
 	}
 
-    private void validateUpdate(EmergencyCareEpisode persisted, EmergencyCareBo toUpdate){
+	@Override
+	public Integer getPatientMedicalCoverageIdByEpisode(Integer emergencyCareEpisodeId) {
+		LOG.debug("Input parameters -> emergencyCareEpisodeId {}", emergencyCareEpisodeId);
+		Integer result = emergencyCareEpisodeRepository.getPatientMedicalCoverageIdByEpisodeId(emergencyCareEpisodeId);
+		LOG.debug(OUTPUT, result);
+		return result;
+	}
+
+	private void validateUpdate(EmergencyCareEpisode persisted, EmergencyCareBo toUpdate){
         if (persisted.getEmergencyCareEntranceTypeId() != null && toUpdate.getEmergencyCareEntranceId() == null)
             throw new ValidationException("care-episode.entrance.invalid.update");
         if (persisted.getEmergencyCareTypeId() != null && toUpdate.getEmergencyCareTypeId() == null)

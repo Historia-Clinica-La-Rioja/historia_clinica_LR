@@ -135,4 +135,11 @@ public interface EmergencyCareEpisodeRepository extends SGXAuditableEntityJPARep
 			"JOIN PersonExtended pe ON (p.id = pe.id) " +
 			"WHERE ece.id = :episodeId")
 	ProfessionalPersonVo getEmergencyCareEpisodeRelatedProfessionalInfo(@Param("episodeId") Integer episodeId);
+	
+	@Transactional(readOnly = true)
+	@Query(value = "SELECT ece.patientMedicalCoverageId " +
+			"FROM EmergencyCareEpisode ece " +
+			"WHERE ece.id = :episodeId")
+	Integer getPatientMedicalCoverageIdByEpisodeId(@Param("episodeId") Integer episodeId);
+	
 }

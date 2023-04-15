@@ -671,3 +671,43 @@ databaseChangeLog:
           - sql:
               sql: |-
                 INSERT INTO document_type VALUES (16, 'Nota de evolución de guardia');
+
+    - changeSet:
+        id: emergency_care_evolution_note_reason table
+        comment: Create table emergency_care_evolution_note_reason
+        author: mmalyvarni
+        dbms: postgresql
+        changes:
+          - createTable:
+              tableName: emergency_care_evolution_note_reason
+              columns:
+                - column:
+                    name: emergency_care_evolution_note_id
+                    type: int
+                - column:
+                    name: reason_id
+                    type: varchar(20)
+          - addPrimaryKey:
+              clustered: true
+              columnNames: emergency_care_evolution_note_id, reason_id
+              constraintName: PK_emergency_care_evolution_note_reason
+              tableName: emergency_care_evolution_note_reason
+              validate: true
+          - addForeignKeyConstraint:
+              baseColumnNames: emergency_care_evolution_note_id
+              baseTableName: emergency_care_evolution_note_reason
+              constraintName: FK_emergency_care_evolution_note_id
+              onDelete: NO ACTION
+              onUpdate: NO ACTION
+              referencedColumnNames: id
+              referencedTableName: emergency_care_evolution_note
+              validate: true
+          - addForeignKeyConstraint:
+              baseColumnNames: reason_id
+              baseTableName: emergency_care_episode_reason
+              constraintName: FK_emergency_care_evolution_note_reason
+              onDelete: NO ACTION
+              onUpdate: NO ACTION
+              referencedColumnNames: id
+              referencedTableName: reasons
+              validate: true

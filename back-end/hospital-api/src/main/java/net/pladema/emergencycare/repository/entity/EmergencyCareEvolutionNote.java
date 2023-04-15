@@ -55,4 +55,17 @@ public class EmergencyCareEvolutionNote extends SGXAuditableEntity<Integer> {
 	@Column(name = "patient_medical_coverage_id")
 	private Integer patientMedicalCoverageId;
 
+	public EmergencyCareEvolutionNote(Integer institutionId,
+									  Integer patientId,
+									  Integer doctorId, Integer clinicalSpecialtyId, Integer patientMedicalCoverageId) {
+		super();
+		this.institutionId = institutionId;
+		this.patientId = patientId;
+		this.doctorId = doctorId;
+		this.clinicalSpecialtyId = clinicalSpecialtyId;
+		this.patientMedicalCoverageId = patientMedicalCoverageId;
+		this.startDate = LocalDate.now();
+		this.billable = false;
+	}
+
 }

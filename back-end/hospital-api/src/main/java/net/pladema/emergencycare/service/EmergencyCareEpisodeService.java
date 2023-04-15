@@ -30,4 +30,7 @@ public interface  EmergencyCareEpisodeService {
 	boolean haveMoreThanOneEmergencyCareEpisodeFromPatients(List<Integer> patients);
 	
 	PatientECEBo getRelatedPatientData(Integer episodeId);
+
+	Integer getPatientMedicalCoverageIdByEpisode(Integer emergencyCareEpisodeId);
+
 }
