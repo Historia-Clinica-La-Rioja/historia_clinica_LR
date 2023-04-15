@@ -18,7 +18,8 @@ public enum EDocumentType {
     COUNTER_REFERENCE(11, "contrarreferencia", "counter_reference"),
     INDICATION(12,"indicación","indication"),
     NURSING_EVOLUTION_NOTE(13, "nursingEvolutionNote", "nursing_evolution_note"),
-	TRIAGE(15, "triage","triage");
+	TRIAGE(15, "triage","triage"),
+	EMERGENCY_CARE_EVOLUTION(16, "emergencyCareEvolutionNote", "emergency_care_evolution_note");
 
     private Short id;
     private String value;

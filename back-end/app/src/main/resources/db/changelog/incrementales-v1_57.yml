@@ -662,3 +662,12 @@ databaseChangeLog:
               referencedColumnNames: id
               referencedTableName: healthcare_professional
               validate: true
+
+    - changeSet:
+        id: document_type-emergency_care_evolution_note
+        context: "!schema-only"
+        author: mmalyvarni
+        changes:
+          - sql:
+              sql: |-
+                INSERT INTO document_type VALUES (16, 'Nota de evolución de guardia');
