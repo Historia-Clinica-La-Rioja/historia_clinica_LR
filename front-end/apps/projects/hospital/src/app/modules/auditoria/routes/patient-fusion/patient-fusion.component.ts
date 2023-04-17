@@ -42,6 +42,12 @@ export class PatientFusionComponent implements OnInit {
 	filters = Filters;
 	validationTwoSelectedPatients: boolean = false;
 	validationColumns: boolean = false;
+	patientToMergeAuxKeyId: any={
+		names:null,
+		identification:null,
+		lastNames:null,
+		birthDate:null,
+	}
 	patientToMerge: PatientToMergeDto = {
 		activePatientId: null,
 		oldPatientsIds: null,
@@ -146,38 +152,62 @@ export class PatientFusionComponent implements OnInit {
 
 	setSelectedPatient(patient: any) {
 		if (patient.selected) {
+			this.deleteDataSelected(patient.patientId);
 			patient.selected = false;
-			if (this.patientToMerge.activePatientId === patient.patientId) {
-				this.patientToMerge.activePatientId = null;
-			}
 			let index = this.oldPatientsIds?.indexOf(patient.patientId)
 			this.oldPatientsIds.splice(index, 1);
 		} else {
 			patient.selected = true;
 			this.oldPatientsIds.push(patient.patientId);
 		}
+
 	}
 
-	setValuesPatientFusion(key: any, value1: any, value2?: any) {
+	setValuesPatientFusion(key: any, value1: any, value2?: any, id?: number) {
 		switch (key) {
 			case this.keyAttributes.PATIENT_ID:
 				this.patientToMerge.activePatientId = value1;
 				break;
 			case this.keyAttributes.BIRTHDATE:
 				this.patientToMerge.registrationDataPerson.birthDate = value1;
+				this.patientToMergeAuxKeyId.birthDate = id;
 				break;
 			case this.keyAttributes.NAMES:
 				this.patientToMerge.registrationDataPerson.firstName = value1;
 				this.patientToMerge.registrationDataPerson.middleNames = value2;
+				this.patientToMergeAuxKeyId.names = id;
 				break;
 			case this.keyAttributes.LASTNAMES:
 				this.patientToMerge.registrationDataPerson.lastName = value1;
 				this.patientToMerge.registrationDataPerson.otherLastNames = value2;
+				this.patientToMergeAuxKeyId.lastNames = id;
 				break;
 			case this.keyAttributes.IDENTIFICATION:
 				this.patientToMerge.registrationDataPerson.identificationTypeId = value1;
 				this.patientToMerge.registrationDataPerson.identificationNumber = value2;
+				this.patientToMergeAuxKeyId.identification = id;
 				break;
+		}
+	}
+
+	deleteDataSelected(id: any) {
+		if (this.patientToMergeAuxKeyId.birthDate === id) {
+			this.patientToMerge.registrationDataPerson.birthDate = null;
+		}
+		if (this.patientToMergeAuxKeyId.names === id) {
+			this.patientToMerge.registrationDataPerson.firstName = null;
+			this.patientToMerge.registrationDataPerson.middleNames = null;
+		}
+		if (this.patientToMergeAuxKeyId.lastNames === id) {
+			this.patientToMerge.registrationDataPerson.lastName = null;
+			this.patientToMerge.registrationDataPerson.otherLastNames = null;
+		}
+		if (this.patientToMergeAuxKeyId.identification === id) {
+			this.patientToMerge.registrationDataPerson.identificationTypeId = null;
+			this.patientToMerge.registrationDataPerson.identificationNumber = null;
+		}
+		if (this.patientToMerge.activePatientId === id) {
+			this.patientToMerge.activePatientId = null;
 		}
 	}
 
@@ -186,7 +216,7 @@ export class PatientFusionComponent implements OnInit {
 		if (!this.validationColumns && !this.validationTwoSelectedPatients) {
 			const dialogRef = this.dialog.open(WarningFusionComponent, {
 				data: {
-					cant: this.oldPatientsIds.length ,
+					cant: this.oldPatientsIds.length,
 					fullName: '-' + (this.patientToMerge.registrationDataPerson.firstName) + " " + (this.patientToMerge.registrationDataPerson.middleNames ? this.patientToMerge.registrationDataPerson.middleNames : '') + ' ' + (this.patientToMerge.registrationDataPerson.lastName) + " " + (this.patientToMerge.registrationDataPerson.otherLastNames ? this.patientToMerge.registrationDataPerson.otherLastNames : ''),
 					identification: '-' + this.getIdentificationType(this.patientToMerge.registrationDataPerson.identificationTypeId) + ' ' + this.patientToMerge.registrationDataPerson.identificationNumber,
 					birthDate: '- Fecha Nac. ' + this.patientToMerge.registrationDataPerson.birthDate,
@@ -221,7 +251,7 @@ export class PatientFusionComponent implements OnInit {
 	}
 
 	validateForm() {
-		if (this.oldPatientsIds.length  >= 2) {
+		if (this.oldPatientsIds.length >= 2) {
 			this.validationTwoSelectedPatients = false;
 		} else {
 			this.validationTwoSelectedPatients = true;

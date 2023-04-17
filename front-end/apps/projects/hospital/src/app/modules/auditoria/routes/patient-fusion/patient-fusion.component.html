@@ -66,25 +66,25 @@
 					</div>
 					<div fxLayoutAlign="start center" class="content" fxFlex="15%">
 						<mat-radio-button color="primary" name="names" *ngIf="patient.selected"
-							(change)="setValuesPatientFusion(keyAttributes.NAMES,patient.firstName,patient.middleNames)"></mat-radio-button>
+							(change)="setValuesPatientFusion(keyAttributes.NAMES,patient.firstName,patient.middleNames,patient.patientId)"></mat-radio-button>
 						<span *ngIf="patient.firstName else noData">{{patient?.firstName}}
 							{{patient?.middleNames}}</span>
 					</div>
 					<div fxLayoutAlign="start center" class="content" fxFlex="15%">
 						<mat-radio-button color="primary" name="lastName" *ngIf="patient.selected"
-							(change)="setValuesPatientFusion(keyAttributes.LASTNAMES,patient.lastName,patient.otherLastNames)"></mat-radio-button>
+							(change)="setValuesPatientFusion(keyAttributes.LASTNAMES,patient.lastName,patient.otherLastNames,patient.patientId)"></mat-radio-button>
 						<span *ngIf="patient.lastName else noData">{{patient?.lastName}}
 							{{patient?.otherLastNames}}</span>
 					</div>
 					<div fxLayoutAlign="start center" class="content" fxFlex="15%">
 						<mat-radio-button color="primary" name="birthdate" *ngIf="patient.selected"
-							(change)="setValuesPatientFusion(keyAttributes.BIRTHDATE,patient.birthdate)"></mat-radio-button>
+							(change)="setValuesPatientFusion(keyAttributes.BIRTHDATE,patient.birthdate,null,patient.patientId)"></mat-radio-button>
 						<span *ngIf="patient.lastName else noData">{{patient?.birthdate | date: 'dd/MM/yyyy'
 							}}</span>
 					</div>
 					<div fxLayoutAlign="start center" class="content" fxFlex="15%">
 						<mat-radio-button color="primary" name="identificationType" *ngIf="patient.selected"
-							(change)="setValuesPatientFusion(keyAttributes.IDENTIFICATION,patient.identificationTypeId,patient.identificationNumber)"></mat-radio-button>
+							(change)="setValuesPatientFusion(keyAttributes.IDENTIFICATION,patient.identificationTypeId,patient.identificationNumber,patient.patientId)"></mat-radio-button>
 						<span
 							*ngIf="patient.identificationTypeId else noData">{{getIdentificationType(patient?.identificationTypeId)}}
 							&nbsp;</span>
