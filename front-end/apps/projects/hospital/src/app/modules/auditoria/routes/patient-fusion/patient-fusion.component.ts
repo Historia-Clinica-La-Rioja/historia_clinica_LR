@@ -3,7 +3,6 @@ import { Router } from '@angular/router';
 import { DuplicatePatientDto, IdentificationTypeDto, PatientPersonalInfoDto, PatientToMergeDto, PatientType } from '@api-rest/api-model';
 import { PersonMasterDataService } from '@api-rest/services/person-master-data.service';
 import { ContextService } from '@core/services/context.service';
-import { PatientAuditService } from '../../services/patient-audit.service';
 import { AuditPatientService } from '@api-rest/services/audit-patient.service';
 import { Observable, of } from 'rxjs';
 import { PatientMasterDataService } from '@api-rest/services/patient-master-data.service';
@@ -42,11 +41,11 @@ export class PatientFusionComponent implements OnInit {
 	filters = Filters;
 	validationTwoSelectedPatients: boolean = false;
 	validationColumns: boolean = false;
-	patientToMergeAuxKeyId: any={
-		names:null,
-		identification:null,
-		lastNames:null,
-		birthDate:null,
+	patientToMergeAuxKeyId: any = {
+		names: null,
+		identification: null,
+		lastNames: null,
+		birthDate: null,
 	}
 	patientToMerge: PatientToMergeDto = {
 		activePatientId: null,
@@ -67,7 +66,7 @@ export class PatientFusionComponent implements OnInit {
 	}
 
 	constructor(private router: Router, private contextService: ContextService, private personMasterDataService: PersonMasterDataService,
-		private patientAuditService: PatientAuditService, private auditPatientService: AuditPatientService,
+		private auditPatientService: AuditPatientService,
 		private patientMasterDataService: PatientMasterDataService, private patientMergeService: PatientMergeService, private dialog: MatDialog,
 		private readonly snackBarService: SnackBarService) {
 		this.routePrefix = `institucion/${this.contextService.institutionId}/`;
@@ -75,9 +74,8 @@ export class PatientFusionComponent implements OnInit {
 	}
 
 	ngOnInit(): void {
-		this.patientAuditService.patientToAudit$.subscribe(patientToAudit => {
-			this.patientToAudit = patientToAudit
-		});
+		this.patientToAudit = JSON.parse(localStorage.getItem('patientToAudit'));
+		this.filterBy = JSON.parse(localStorage.getItem('filter'));
 
 		this.personMasterDataService.getIdentificationTypes()
 			.subscribe(identificationTypes => {
@@ -87,10 +85,6 @@ export class PatientFusionComponent implements OnInit {
 
 		this.patientMasterDataService.getTypesPatient().subscribe((patientsTypes: PatientType[]) => {
 			this.patientsTypes = patientsTypes;
-		})
-
-		this.patientAuditService.filterBySubject$.subscribe(filter => {
-			this.filterBy = filter;
 		})
 
 		this.auditPatientService.getPatientPersonalInfo(this.patientToAudit).subscribe((patientPersonalData: PatientPersonalInfoDto[]) => {
@@ -126,7 +120,7 @@ export class PatientFusionComponent implements OnInit {
 				break;
 			case this.filters.FILTER_DNI:
 				this.infoPatientToAudit = "Auditoría de "
-				this.infoPatientToAudit += this.getIdentificationType(this.patientToAudit?.identificationTypeId) +" "+ this.patientToAudit.identificationNumber;
+				this.infoPatientToAudit += this.getIdentificationType(this.patientToAudit?.identificationTypeId) + " " + this.patientToAudit.identificationNumber;
 				break;
 		}
 	}

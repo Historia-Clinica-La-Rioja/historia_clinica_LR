@@ -1,7 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { MasterDataDto, DuplicatePatientDto } from '@api-rest/api-model';
 import { AuditPatientService } from '@api-rest/services/audit-patient.service';
-import { PatientAuditService } from '../../services/patient-audit.service';
 
 @Component({
   selector: 'app-control-patient-duplicate',
@@ -13,7 +12,7 @@ export class ControlPatientDuplicateComponent implements OnInit {
 	searchsFilters: MasterDataDto[];
 	filterSelected: Filters;
 	listDuplicatePatient: DuplicatePatientDto[];
-	constructor(private auditPatientService: AuditPatientService,private patientAuditService: PatientAuditService) {
+	constructor(private auditPatientService: AuditPatientService) {
 		this.filterSelected = this.filters.FILTER_FULLNAME_DNI;
 	}
 
@@ -25,7 +24,7 @@ export class ControlPatientDuplicateComponent implements OnInit {
 		let filter = this.prepareCustomFilter(value);
 		this.auditPatientService.getDuplicatePatientSearchFilter(filter).subscribe((listDuplicatePatient: DuplicatePatientDto[]) => {
 			this.listDuplicatePatient = listDuplicatePatient;
-			this.patientAuditService.setFilter(value);
+			localStorage.setItem("filter",JSON.stringify(value))
 		})
 	}
 
