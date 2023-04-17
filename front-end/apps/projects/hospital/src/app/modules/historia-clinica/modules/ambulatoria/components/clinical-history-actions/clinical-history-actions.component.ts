@@ -156,7 +156,7 @@ export class ClinicalHistoryActionsComponent implements OnInit {
 
 	openNotaDeEvolucion() {
 		if (!this.notaDeEvolucionDialogRef) {
-			this.notaDeEvolucionDialogRef = this.dockPopupService.open(NotaDeEvolucionDockPopupComponent, { idPaciente: this.patientId });
+			this.notaDeEvolucionDialogRef = this.dockPopupService.open(NotaDeEvolucionDockPopupComponent, {patientId:this.patientId, episodeId: this.episode.id});
 			this.popUpOpen.next(this.notaDeEvolucionDialogRef);
 			this.notaDeEvolucionDialogRef.afterClosed().subscribe(fieldsToUpdate => {
 				delete this.notaDeEvolucionDialogRef
