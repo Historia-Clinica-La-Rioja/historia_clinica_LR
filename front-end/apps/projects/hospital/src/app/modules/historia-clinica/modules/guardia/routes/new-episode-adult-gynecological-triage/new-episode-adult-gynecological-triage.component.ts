@@ -36,7 +36,7 @@ export class NewEpisodeAdultGynecologicalTriageComponent {
 		this.emergencyCareEpisodeService.createAdult(dto)
 			.subscribe((episodeId: number) => {
 				this.emergencyCareEpisodeService.getAdministrative(episodeId).subscribe((dto: ResponseEmergencyCareDto) => {
-					this.guardiaRouterService.goToEpisode(episodeId, dto.patient)
+					this.guardiaRouterService.goToEpisode(episodeId, { typeId: dto.patient.typeId, id: dto.patient.id })
 					this.snackBarService.showSuccess('guardia.new-episode.SUCCESS');
 				})
 			}, error =>

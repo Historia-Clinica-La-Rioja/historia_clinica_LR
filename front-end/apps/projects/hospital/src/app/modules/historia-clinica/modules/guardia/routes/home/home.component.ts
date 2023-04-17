@@ -115,8 +115,8 @@ export class HomeComponent implements OnInit {
 			}, _ => this.loading = false);
 	}
 
-	goToEpisode(episode: Episode, patient: any) {
-		this.guardiaRouterService.goToEpisode(episode.state.id, patient);
+	goToEpisode(episode: Episode, patient: { typeId: number, id: number }) {
+		this.guardiaRouterService.goToEpisode(episode.state.id, { id: patient.id, typeId: patient.typeId });
 	}
 
 	goToAdmisionAdministrativa(): void {
@@ -135,7 +135,7 @@ export class HomeComponent implements OnInit {
 				this.episodeStateService.atender(episode.id, consultorio.id).subscribe(changed => {
 					if (changed) {
 						this.snackBarService.showSuccess(`${TRANSLATE_KEY_PREFIX}.atender.SUCCESS`);
-						this.goToEpisode(episode, patientId);
+						this.goToEpisode(episode, { typeId: episode.patient.typeId, id: episode.patient.id });
 					} else {
 						this.snackBarService.showError(`${TRANSLATE_KEY_PREFIX}.atender.ERROR`);
 					}

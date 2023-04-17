@@ -1,20 +1,17 @@
 import { Component, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute } from '@angular/router';
 import { NewEmergencyCareDto } from '@api-rest/api-model';
-import { ERole } from '@api-rest/api-model';
 import { EmergencyCareEpisodeStateService } from '@api-rest/services/emergency-care-episode-state.service';
 import { EmergencyCareEpisodeService } from '@api-rest/services/emergency-care-episode.service';
 import { ConfirmDialogComponent } from '@presentation/dialogs/confirm-dialog/confirm-dialog.component';
-import { ContextService } from '@core/services/context.service';
 import { SnackBarService } from '@presentation/services/snack-bar.service';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { EstadosEpisodio } from '../../constants/masterdata';
 import { GuardiaMapperService } from '../../services/guardia-mapper.service';
 import { AdministrativeAdmission } from '../../services/new-episode.service';
-import { PermissionsService } from '@core/services/permissions.service';
-import { anyMatch } from '@core/utils/array.utils';
+import { GuardiaRouterService } from '../../services/guardia-router.service';
 
 @Component({
 	selector: 'app-edit-emergency-care-episode',
@@ -23,28 +20,20 @@ import { anyMatch } from '@core/utils/array.utils';
 })
 export class EditEmergencyCareEpisodeComponent implements OnInit {
 
-	private readonly routePrefix = 'institucion/' + this.contextService.institutionId;
-	initData: Observable<AdministrativeAdmission>;
+	initData: AdministrativeAdmission;
 	isDoctorOfficeEditable: boolean;
 	private episodeId: number;
 	private patientId: number;
-	private hasEmergencyCareRelatedRole: boolean;
-
+	private patientTypeId: number;
 
 	constructor(
-		private router: Router,
 		private readonly emergencyCareEpisodeService: EmergencyCareEpisodeService,
-		private readonly contextService: ContextService,
 		private readonly route: ActivatedRoute,
 		private readonly emergencyCareEpisodeStateService: EmergencyCareEpisodeStateService,
 		private readonly dialog: MatDialog,
 		private readonly snackBarService: SnackBarService,
-		private readonly permissionsService: PermissionsService,
-	) {
-		this.permissionsService.contextAssignments$().subscribe((userRoles: ERole[]) => {
-			this.hasEmergencyCareRelatedRole = anyMatch<ERole>(userRoles, [ERole.ESPECIALISTA_MEDICO, ERole.ENFERMERO, ERole.PROFESIONAL_DE_SALUD]);
-		});
-	}
+		private readonly guardiaRouterService: GuardiaRouterService
+	) { }
 
 	ngOnInit(): void {
 
@@ -52,14 +41,12 @@ export class EditEmergencyCareEpisodeComponent implements OnInit {
 			(params) => {
 				this.episodeId = Number(params.get('id'));
 
-				this.initData = this.emergencyCareEpisodeService.getAdministrative(this.episodeId).
-					pipe(
-						map(GuardiaMapperService._toAdministrativeAdmission),
-					);
-
-				this.initData.subscribe(data => {
-					this.patientId = data.patientId;
-				});
+				this.emergencyCareEpisodeService.getAdministrative(this.episodeId).
+					subscribe(r => {
+						this.initData = GuardiaMapperService._toAdministrativeAdmission(r);
+						this.patientId = this.initData.patientId;
+						this.patientTypeId = r.patient.typeId;
+					});
 
 				this.emergencyCareEpisodeStateService.getState(this.episodeId)
 					.subscribe(state => this.isDoctorOfficeEditable = state.id !== EstadosEpisodio.EN_ATENCION
@@ -75,8 +62,7 @@ export class EditEmergencyCareEpisodeComponent implements OnInit {
 			.subscribe(id => {
 				if (id) {
 					this.snackBarService.showSuccess('guardia.episode.edit.messages.SUCCESS');
-					this.goToEpisodeDetails();
-
+					this.guardiaRouterService.goToEpisode(this.episodeId, { typeId: this.patientTypeId, id: administrativeAdmission.patientId })
 				} else {
 					this.snackBarService.showError('guardia.episode.edit.messages.ERROR');
 				}
@@ -95,24 +81,9 @@ export class EditEmergencyCareEpisodeComponent implements OnInit {
 		});
 		dialogRef.afterClosed().subscribe(confirmed => {
 			if (confirmed) {
-				this.goToEpisodeDetails();
+				this.guardiaRouterService.goToEpisode(this.episodeId, { typeId: this.patientTypeId, id: this.patientId })
 			}
 		});
-	}
-
-	private goToEpisodeDetails(): void {
-		if (this.patientId && this.hasEmergencyCareRelatedRole) {
-			const url = `${this.routePrefix}/ambulatoria/paciente/${this.patientId}`;
-			this.router.navigateByUrl(url, { state: { toEmergencyCareTab: true } });
-		}
-		else if (this.patientId) {
-			const url = `${this.routePrefix}/pacientes/profile/${this.patientId}`;
-			this.router.navigateByUrl(url);
-		}
-		else {
-			const url = `${this.routePrefix}/guardia/episodio/${this.episodeId}`;
-			this.router.navigateByUrl(url);
-		}
 	}
 
 }

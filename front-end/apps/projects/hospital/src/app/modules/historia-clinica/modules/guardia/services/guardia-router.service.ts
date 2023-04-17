@@ -26,7 +26,7 @@ export class GuardiaRouterService {
 	}
 
 
-	goToEpisode(episodeId: number, patient: any) {
+	goToEpisode(episodeId: number, patient: { typeId: number, id: number }) {
 		const isEmergencyCareTemporalPatient = patient.typeId === PatientType.EMERGENCY_CARE_TEMPORARY;
 		if (this.hasEmergencyCareRelatedRole  /* && episodeId !== EstadosEpisodio.CON_ALTA_ADMINISTRATIVA */) {
 			const url = `${this.routePrefix}/ambulatoria/paciente/${patient.id}`;

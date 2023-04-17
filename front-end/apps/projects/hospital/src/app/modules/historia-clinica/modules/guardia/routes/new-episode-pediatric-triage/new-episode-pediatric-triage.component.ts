@@ -37,7 +37,7 @@ export class NewEpisodePediatricTriageComponent {
 		this.emergercyCareEpisodeService.createPediatric(body).subscribe(
 			episodeId => {
 				this.emergercyCareEpisodeService.getAdministrative(episodeId).subscribe((dto: ResponseEmergencyCareDto) => {
-					this.guardiaRouterService.goToEpisode(episodeId, dto.patient);
+					this.guardiaRouterService.goToEpisode(episodeId, { typeId: dto.patient.typeId, id: dto.patient.id });
 					this.snackBarService.showSuccess('guardia.new-episode.SUCCESS');
 				})
 			}, error =>
