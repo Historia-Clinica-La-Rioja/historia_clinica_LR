@@ -1,7 +1,5 @@
 package ar.lamansys.pac;
 
-import java.util.Map;
-
 import javax.annotation.PostConstruct;
 
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
@@ -9,10 +7,9 @@ import org.springframework.boot.autoconfigure.domain.EntityScan;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpHeaders;
 
 import ar.lamansys.base.ReverseProxyAutoConfiguration;
-import ar.lamansys.base.application.reverseproxyrest.RestReverseProxy;
-import ar.lamansys.base.application.reverseproxyrest.configuration.RestUtils;
 import lombok.Getter;
 import lombok.NonNull;
 import lombok.Setter;
@@ -29,22 +26,21 @@ import lombok.extern.slf4j.Slf4j;
 public class PacReverseProxyAutoConfiguration {
 
 	private final ReverseProxyAutoConfiguration reverseProxyAutoConfiguration;
-	private final RestReverseProxy restReverseProxy;
+	private final HttpHeaders defaultHeaders;
 
 	@NonNull
 	private String username;
 	@NonNull
 	private String password;
 
-	public PacReverseProxyAutoConfiguration(ReverseProxyAutoConfiguration reverseProxyAutoConfiguration, RestReverseProxy restReverseProxy) {
+	public PacReverseProxyAutoConfiguration(ReverseProxyAutoConfiguration reverseProxyAutoConfiguration, HttpHeaders defaultHeaders) {
 		this.reverseProxyAutoConfiguration = reverseProxyAutoConfiguration;
-		this.restReverseProxy = restReverseProxy;
+		this.defaultHeaders = defaultHeaders;
 	}
 
 	@PostConstruct
 	public void started() {
-		String basicAuthorization = RestUtils.getBasicAuthenticationHeader(username, password);
-		this.restReverseProxy.addHeaders(Map.of("Authorization", basicAuthorization));
-		log.debug("PacReverseProxyAutoConfiguration -> Authorization {}", basicAuthorization);
+		defaultHeaders.setBasicAuth(username, password);
+		log.debug("PacReverseProxyAutoConfiguration -> Authorization {}", defaultHeaders.get(HttpHeaders.AUTHORIZATION));
 	}
 }

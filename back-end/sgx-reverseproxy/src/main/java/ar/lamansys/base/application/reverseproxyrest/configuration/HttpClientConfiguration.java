@@ -19,14 +19,15 @@ public class HttpClientConfiguration {
 	private Integer timeout;
 	private boolean trustInvalidCertificate;
 
+	@SuppressWarnings("unused")
 	public HttpClientConfiguration with(boolean newTrustInvalidCertificate) {
 		return new HttpClientConfiguration(proxy, timeout, newTrustInvalidCertificate);
 	}
-
+	@SuppressWarnings("unused")
 	public HttpClientConfiguration withTimeout(Number newTimeout) {
 		return new HttpClientConfiguration(proxy, newTimeout.intValue(), trustInvalidCertificate);
 	}
-
+	@SuppressWarnings("unused")
 	public HttpClientConfiguration withProxy(String newProxy) {
 		return new HttpClientConfiguration(newProxy, timeout, trustInvalidCertificate);
 	}

@@ -1,7 +1,6 @@
 package ar.lamansys.base;
 
-import java.util.HashMap;
-import java.util.Map;
+import static org.springframework.http.MediaType.APPLICATION_JSON;
 
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.autoconfigure.domain.EntityScan;
@@ -9,17 +8,20 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpHeaders;
+import org.springframework.web.client.RestTemplate;
+import org.springframework.web.servlet.config.annotation.CorsRegistry;
+import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 import ar.lamansys.base.application.reverseproxyrest.configuration.HttpClientConfiguration;
+import ar.lamansys.base.application.reverseproxyrest.configuration.RestTemplateSSL;
+import ar.lamansys.base.application.reverseproxyrest.handler.RestResponseErrorHandler;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.NonNull;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
-
-import org.springframework.web.servlet.config.annotation.CorsRegistry;
-import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 @Configuration(value = "base")
 @Getter
@@ -34,13 +36,18 @@ public class ReverseProxyAutoConfiguration {
 
 	@NonNull
 	private String server;
-	@NonNull
-	private String proxy;
-	private Map<String, String> headers = new HashMap<>();
 
 	@Bean
 	public HttpClientConfiguration configuration() {
 		return new HttpClientConfiguration();
+	}
+
+
+	@Bean
+	public RestTemplate restTemplate(HttpClientConfiguration configuration) throws Exception {
+		RestTemplate restTemplate = new RestTemplateSSL(configuration);
+		restTemplate.setErrorHandler(new RestResponseErrorHandler());
+		return restTemplate;
 	}
 
 	@Bean
@@ -56,6 +63,13 @@ public class ReverseProxyAutoConfiguration {
 						.maxAge(3600L);
 			}
 		};
+	}
+
+	@Bean
+	public HttpHeaders defaultHeaders() {
+		HttpHeaders headers = new HttpHeaders();
+		headers.setContentType(APPLICATION_JSON);
+		return headers;
 	}
 
 }
