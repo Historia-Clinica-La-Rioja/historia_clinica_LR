@@ -1,7 +1,8 @@
 cube(`CantidadConsultasAmbulatorias`, {
   sql: `SELECT 
             oc.id, 'Ambulatoria' as tipo, oc.start_date as fecha_consulta, g.description as gender, pe.birth_date, cs.name as especialidad,
-            concat_ws(', ', concat_ws(' ', doc.last_name, doc.other_last_names), CASE WHEN pex.name_self_determination IS NULL OR pex.name_self_determination LIKE '' OR NOT ${SECURITY_CONTEXT.nameSelfDeterminationFF.unsafeValue()} THEN concat_ws(' ', doc.first_name, doc.middle_names) ELSE pex.name_self_determination END) AS profesional,
+            concat_ws(', ', concat_ws(' ', doc.last_name, doc.other_last_names), CASE WHEN pex.name_self_determination IS NULL OR pex.name_self_determination LIKE '' THEN concat_ws(' ', doc.first_name, doc.middle_names) ELSE pex.name_self_determination END) AS profesional_autopercibido,
+            concat_ws(', ', concat_ws(' ', doc.last_name, doc.other_last_names), concat_ws(' ', doc.first_name, doc.middle_names)) AS profesional,
             oc.institution_id AS institucion_id
         FROM
             outpatient_consultation oc
@@ -23,7 +24,8 @@ cube(`CantidadConsultasAmbulatorias`, {
     UNION ALL
         SELECT 
             oc.id, 'Odontología' as tipo, oc.performed_date as fecha_consulta, g.description as gender, pe.birth_date, cs.name as especialidad,
-            concat_ws(', ', concat_ws(' ', doc.last_name, doc.other_last_names), CASE WHEN pex.name_self_determination IS NULL OR pex.name_self_determination LIKE '' OR NOT ${SECURITY_CONTEXT.nameSelfDeterminationFF.unsafeValue()} THEN concat_ws(' ', doc.first_name, doc.middle_names) ELSE pex.name_self_determination END) AS profesional,
+            concat_ws(', ', concat_ws(' ', doc.last_name, doc.other_last_names), CASE WHEN pex.name_self_determination IS NULL OR pex.name_self_determination LIKE '' THEN concat_ws(' ', doc.first_name, doc.middle_names) ELSE pex.name_self_determination END) AS profesional_autopercibido,
+            concat_ws(', ', concat_ws(' ', doc.last_name, doc.other_last_names), concat_ws(' ', doc.first_name, doc.middle_names)) AS profesional,
             oc.institution_id AS institucion_id
         FROM 
             odontology_consultation oc
@@ -45,7 +47,8 @@ cube(`CantidadConsultasAmbulatorias`, {
       UNION ALL
         SELECT 
             nc.id, 'Enfermería' as tipo, nc.performed_date as fecha_consulta, g.description as gender, pe.birth_date, cs.name as especialidad,
-            concat_ws(', ', concat_ws(' ', doc.last_name, doc.other_last_names), CASE WHEN pex.name_self_determination IS NULL OR pex.name_self_determination LIKE '' OR NOT ${SECURITY_CONTEXT.nameSelfDeterminationFF.unsafeValue()} THEN concat_ws(' ', doc.first_name, doc.middle_names) ELSE pex.name_self_determination END) AS profesional,
+            concat_ws(', ', concat_ws(' ', doc.last_name, doc.other_last_names), CASE WHEN pex.name_self_determination IS NULL OR pex.name_self_determination LIKE '' THEN concat_ws(' ', doc.first_name, doc.middle_names) ELSE pex.name_self_determination END) AS profesional_autopercibido,
+            concat_ws(', ', concat_ws(' ', doc.last_name, doc.other_last_names), concat_ws(' ', doc.first_name, doc.middle_names)) AS profesional,
             nc.institution_id AS institucion_id
         FROM 
             nursing_consultation nc
@@ -101,6 +104,12 @@ cube(`CantidadConsultasAmbulatorias`, {
     // Doctor
     profesional: {
       sql: `profesional`,
+      type: `string`,
+      title: 'Doctor',
+    },
+    // Doctor
+    profesional_autopercibido: {
+      sql: `profesional_autopercibido`,
       type: `string`,
       title: 'Doctor',
     },

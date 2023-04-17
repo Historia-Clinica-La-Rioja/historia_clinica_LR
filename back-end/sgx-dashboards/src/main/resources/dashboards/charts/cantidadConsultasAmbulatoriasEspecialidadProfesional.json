@@ -23,7 +23,7 @@
     },
     "dimensions": [
       "CantidadConsultasAmbulatorias.especialidad",
-      "CantidadConsultasAmbulatorias.profesional"
+      "[(!${nameSelfDeterminationFF=='true'}?'CantidadConsultasAmbulatorias.profesional_autopercibido':'CantidadConsultasAmbulatorias.profesional')]"
     ]
   },
   "chartType": "bar",
@@ -32,7 +32,7 @@
       "CantidadConsultasAmbulatorias.especialidad"
     ],
     "y": [
-      "CantidadConsultasAmbulatorias.profesional",
+      "[(!${nameSelfDeterminationFF=='true'}?'CantidadConsultasAmbulatorias.profesional_autopercibido':'CantidadConsultasAmbulatorias.profesional')]",
       "measures"
     ],
     "fillMissingDates": true,

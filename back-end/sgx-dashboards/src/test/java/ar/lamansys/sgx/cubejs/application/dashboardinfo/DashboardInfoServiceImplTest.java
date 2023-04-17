@@ -9,8 +9,6 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 
-import ar.lamansys.sgx.shared.featureflags.application.FeatureFlagsService;
-
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Disabled;
@@ -39,9 +37,6 @@ class DashboardInfoServiceImplTest {
     @Mock
     private CubejsAutoConfiguration cubejsAutoConfiguration;
 
-	@Mock
-	private FeatureFlagsService featureFlagsService;
-
     @BeforeEach
     public void setUp() {
     }
@@ -56,7 +51,6 @@ class DashboardInfoServiceImplTest {
         when(cubejsAutoConfiguration.getHeaders()).thenReturn(new HashMap<>());
         dashboardInfoService = new DashboardInfoServiceImpl(
 				new DashboardStorageImpl(cubejsAutoConfiguration, new UserPermissionStorageEmptyImpl(),
-						featureFlagsService,
 						newHttpClientConfiguration(), "SECRET", "AUTHORIZATION", Duration.ofDays(2)));
         Map<String, String[]> parameterMap = new HashMap<>();
         parameterMap.put("PRUEBA",new String[]{"Prueba2"});

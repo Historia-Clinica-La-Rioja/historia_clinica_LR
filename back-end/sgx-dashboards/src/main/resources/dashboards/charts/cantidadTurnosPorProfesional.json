@@ -22,13 +22,13 @@
       "CantidadTurnos.cantidad_turnos": "desc"
     },
     "dimensions": [
-      "CantidadTurnos.profesional"
+      "[(!${nameSelfDeterminationFF=='true'}?'CantidadTurnos.profesional_autopercibido':'CantidadTurnos.profesional')]"
     ]
   },
   "chartType": "pie",
   "pivotConfig": {
     "x": [
-      "CantidadTurnos.profesional"
+      "[(!${nameSelfDeterminationFF=='true'}?'CantidadTurnos.profesional_autopercibido':'CantidadTurnos.profesional')]"
     ],
     "y": [
       "measures"

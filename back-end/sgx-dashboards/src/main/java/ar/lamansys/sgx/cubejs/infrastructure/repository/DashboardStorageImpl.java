@@ -8,8 +8,6 @@ import ar.lamansys.sgx.cubejs.domain.DashboardBoInfo;
 import ar.lamansys.sgx.cubejs.domain.DashboardStorage;
 import ar.lamansys.sgx.cubejs.infrastructure.repository.permissions.UserPermissionStorage;
 import ar.lamansys.sgx.shared.auth.user.SecurityContextUtils;
-import ar.lamansys.sgx.shared.featureflags.AppFeature;
-import ar.lamansys.sgx.shared.featureflags.application.FeatureFlagsService;
 import ar.lamansys.sgx.shared.proxy.reverse.ReverseProxy;
 import ar.lamansys.sgx.shared.proxy.reverse.resttemplate.RestTemplateReverseProxy;
 import ar.lamansys.sgx.shared.restclient.configuration.HttpClientConfiguration;
@@ -22,7 +20,6 @@ public class DashboardStorageImpl implements DashboardStorage {
     private final ReverseProxy reverseProxy;
 
 	private final UserPermissionStorage userPermissionStorage;
-	private final FeatureFlagsService featureFlagsService;
 
 	private final String secret;
 
@@ -33,7 +30,6 @@ public class DashboardStorageImpl implements DashboardStorage {
     public DashboardStorageImpl(
 			CubejsAutoConfiguration cubejsAutoConfiguration,
 			UserPermissionStorage userPermissionStorage,
-			FeatureFlagsService featureFlagsService,
 			HttpClientConfiguration configuration,
 			String secret,
 			String cubeTokenHeader,
@@ -45,7 +41,6 @@ public class DashboardStorageImpl implements DashboardStorage {
 				cubejsAutoConfiguration.getHeaders()
 		);
 		this.userPermissionStorage = userPermissionStorage;
-		this.featureFlagsService = featureFlagsService;
 		this.secret = secret;
 		this.tokenExpiration = tokenExpiration;
 		this.cubeTokenHeader = cubeTokenHeader;
@@ -65,8 +60,7 @@ public class DashboardStorageImpl implements DashboardStorage {
 
 		Map<String, Object> claims = Map.of(
 				"userId", user.userId,
-				"roles", permissions,
-				"nameSelfDeterminationFF", featureFlagsService.isOn(AppFeature.HABILITAR_DATOS_AUTOPERCIBIDOS)
+				"roles", permissions
 		);
 		return JWTUtils.generate(claims, user.getUsername(), secret, tokenExpiration);
 	}
