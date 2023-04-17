@@ -24,7 +24,7 @@ export class PublicService {
 
 		localStorageService.getItem<PublicInfoDto>(PUBLIC_INFO_KEY).subscribe(
 			publicInfoFromCache => {
-				if (publicInfoFromCache && publicInfoFromCache.flavor) {
+				if (publicInfoFromCache && publicInfoFromCache.features) {
 					this.publicInfoEmitter.next(publicInfoFromCache);
 				}
 			}

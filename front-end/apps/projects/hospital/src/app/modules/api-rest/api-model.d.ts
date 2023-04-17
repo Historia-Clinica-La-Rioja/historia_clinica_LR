@@ -209,6 +209,8 @@ export interface AppearanceDto extends Serializable {
 }
 
 export interface ApplicationVersionDto {
+    branch: string;
+    commitId: string;
     version: string;
 }
 
@@ -2759,7 +2761,6 @@ export interface PublicAppointmentStatus extends Serializable {
 
 export interface PublicInfoDto {
     features: AppFeature[];
-    flavor: string;
 }
 
 export interface QuantityDto extends Serializable {
