@@ -35,6 +35,7 @@ import { EpisodeStateService } from './services/episode-state.service';
 import { NewEpisodeService } from './services/new-episode.service';
 import { LastTriageComponent } from './components/last-triage/last-triage.component';
 import { EmergencyCareEvolutionNoteComponent } from './components/emergency-care-evolution-note/emergency-care-evolution-note.component';
+import { AttentionPlaceDialogComponent } from './dialogs/attention-place-dialog/attention-place-dialog.component';
 
 @NgModule({
 	declarations: [
@@ -63,7 +64,8 @@ import { EmergencyCareEvolutionNoteComponent } from './components/emergency-care
 		SelectConsultorioComponent,
 		EmergencyCareEvolutionsComponent,
 		LastTriageComponent,
-		EmergencyCareEvolutionNoteComponent
+		EmergencyCareEvolutionNoteComponent,
+ 		 AttentionPlaceDialogComponent
 	],
 	imports: [
 		CommonModule,

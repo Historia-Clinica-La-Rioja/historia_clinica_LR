@@ -30,4 +30,9 @@ export class EmergencyCareMasterDataService {
 		return this.http.get<MasterDataInterface<number>[]>(url);
 	}
 
+	getEmergencyEpisodeSectorType(): Observable<MasterDataInterface<number>[]> {
+		const url = `${environment.apiBase}${PREFIX}/emergency-episode-sector-type`;
+		return this.http.get<MasterDataInterface<number>[]>(url);
+	}
+
 }

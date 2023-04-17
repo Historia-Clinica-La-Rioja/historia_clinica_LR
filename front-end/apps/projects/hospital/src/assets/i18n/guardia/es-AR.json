@@ -226,10 +226,18 @@
 				}
 			}
 		},
-		"select_consultorio": {
-			"ATENDER": "Atender",
-			"CONSULTORIO": "Consultorio",
-			"SUBTITLE": "Consultorio destino para el paciente"
+		"dialog": {
+			"attention_place": {
+				"TITLE": "Atender",
+				"SUBTITLE": "Seleccione el destino donde se atenderá al paciente",
+				"PLACE": "Lugar de atencion",
+				"CONFIRM": "Confirmar",
+				"ERROR": "Debes seleccionar un lugar"
+			},
+			"select_consultorio": {
+				"CONSULTORIO": "Consultorio",
+				"SUBTITLE": "Consultorio destino para el paciente"
+			}
 		},
 		"NO_INFO": "Sin información",
 		"NO": "No",

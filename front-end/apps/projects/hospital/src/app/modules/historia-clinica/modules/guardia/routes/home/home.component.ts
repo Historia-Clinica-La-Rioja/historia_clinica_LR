@@ -18,7 +18,6 @@ import { ImageDecoderService } from '@presentation/services/image-decoder.servic
 import { EpisodeStateService } from '../../services/episode-state.service';
 import { SnackBarService } from '@presentation/services/snack-bar.service';
 import { MatDialog } from '@angular/material/dialog';
-import { SelectConsultorioComponent } from '../../dialogs/select-consultorio/select-consultorio.component';
 import { ConfirmDialogComponent } from '@presentation/dialogs/confirm-dialog/confirm-dialog.component';
 import { TriageDefinitionsService } from '../../services/triage-definitions.service';
 import { PatientService } from '@api-rest/services/patient.service';
@@ -36,6 +35,7 @@ import { PermissionsService } from '@core/services/permissions.service';
 import { GuardiaRouterService } from '../../services/guardia-router.service';
 import { PatientType } from '@historia-clinica/constants/summaries';
 import { EmergencyCareStateChangedService } from '@historia-clinica/modules/ambulatoria/services/emergency-care-state-changed.service';
+import { AttentionPlaceDialogComponent } from '../../dialogs/attention-place-dialog/attention-place-dialog.component';
 
 const TRANSLATE_KEY_PREFIX = 'guardia.home.episodes.episode.actions';
 
@@ -132,9 +132,8 @@ export class HomeComponent implements OnInit {
 
 	atender(episode: Episode, patientId: number): void {
 
-		const dialogRef = this.dialog.open(SelectConsultorioComponent, {
-			width: '25%',
-			data: { title: 'guardia.select_consultorio.ATENDER' }
+		const dialogRef = this.dialog.open(AttentionPlaceDialogComponent, {
+			width: '35%',
 		});
 
 		dialogRef.afterClosed().subscribe(consultorio => {
