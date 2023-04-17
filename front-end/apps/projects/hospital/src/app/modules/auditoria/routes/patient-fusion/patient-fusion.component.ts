@@ -106,7 +106,7 @@ export class PatientFusionComponent implements OnInit {
 	}
 
 	setInfo() {
-		this.infoPatientToAudit = 'Filtrado por ' + this.patientToAudit.firstName + " ";
+		this.infoPatientToAudit = 'Auditoría de ' + this.patientToAudit.firstName + " ";
 		if (this.patientToAudit?.middleNames) {
 			this.infoPatientToAudit += this.patientToAudit.middleNames + " ";
 		}
@@ -125,8 +125,8 @@ export class PatientFusionComponent implements OnInit {
 				this.infoPatientToAudit += " | " + this.getIdentificationType(this.patientToAudit?.identificationTypeId) + " " + this.patientToAudit.identificationNumber + " | Fecha Nac. " + this.patientToAudit?.birthdate;
 				break;
 			case this.filters.FILTER_DNI:
-				this.infoPatientToAudit = " ";
-				this.infoPatientToAudit = this.getIdentificationType(this.patientToAudit?.identificationTypeId) + this.patientToAudit.identificationNumber;
+				this.infoPatientToAudit = "Auditoría de "
+				this.infoPatientToAudit += this.getIdentificationType(this.patientToAudit?.identificationTypeId) +" "+ this.patientToAudit.identificationNumber;
 				break;
 		}
 	}
