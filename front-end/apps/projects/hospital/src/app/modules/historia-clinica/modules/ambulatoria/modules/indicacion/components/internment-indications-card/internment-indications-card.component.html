@@ -1,24 +1,6 @@
 <app-content width="full">
 	<app-summary-card id="internment-indications" [header]="internmentIndication"
-		[editable]="false"
-		[canEdit]="['ESPECIALISTA_MEDICO', 'ESPECIALISTA_EN_ODONTOLOGIA', 'PROFESIONAL_DE_SALUD', 'ENFERMERO']"
-		[menu]="!epicrisisConfirmed" [matMenu]="menu">
-		<mat-menu #menu="matMenu">
-			<button mat-menu-item (click)="openDietDialog()">
-				<span>{{'indicacion.internment-card.menu-items.DIET' | translate }}</span>
-			</button>
-			<button mat-menu-item (click)="openIndicationDialog()">
-				<span>{{'ambulatoria.dialog-title.OTHER-INDICATION' | translate }}</span>
-			</button>
-			<ng-container *appHasRole="['ESPECIALISTA_MEDICO', 'ESPECIALISTA_EN_ODONTOLOGIA']">
-				<button mat-menu-item (click)="openMostFrequentParenteralPlansDialog()">
-					<span>{{'indicacion.internment-card.menu-items.PARENTERAL_PLAN' | translate }}</span>
-				</button>
-				<button mat-menu-item (click)="openPharmacoDialog()">
-					<span>{{'indicacion.internment-card.menu-items.PHARMACO' | translate }}</span>
-				</button>
-			</ng-container>
-		</mat-menu>
+		[editable]="false">
 		<app-day-display [minDate]="entryDate" (actualDateEmmiter)="loadActualDateAndFilter($event)"></app-day-display>
 		<div id="sections">
 			<app-internment-diet-card [diets]="diets" [internmentEpisodeId]="internmentEpisodeId"></app-internment-diet-card>

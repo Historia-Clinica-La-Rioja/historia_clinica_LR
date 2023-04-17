@@ -1,4 +1,4 @@
-<div class="content" fxLayout="row" fxLayoutAlign="left center" fxLayoutGap="10px">
+<div class="content" fxLayout="row" fxLayoutAlign="center center" fxLayoutGap="10px">
     <button mat-icon-button (click)="viewAnotherDay(-1)" [disabled]="sameDay(actualDate,minDate)">
         <mat-icon [ngClass]="{ 'disabled': sameDay(actualDate,minDate), 'color-primary': !sameDay(actualDate,minDate)}">chevron_left</mat-icon>
     </button>
