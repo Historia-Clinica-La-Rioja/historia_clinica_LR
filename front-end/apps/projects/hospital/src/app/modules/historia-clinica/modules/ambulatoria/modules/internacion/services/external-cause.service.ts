@@ -60,7 +60,6 @@ export class ExternalCauseService {
 		this.snomedConceptEvent = null;
 		this.snomedConceptEvent$.next(null);
 		this.getTableInit();
-		this.externalCause.next({ ...this.externalCause.value, snomed: this.snomedConceptEvent });
 	}
 
 	openSearchDialogEvent(searchValue: string) {
