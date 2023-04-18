@@ -31,7 +31,7 @@ import { PatientNameService } from "@core/services/patient-name.service";
 import { IDENTIFICATION_TYPE_IDS } from '@core/utils/patient.utils';
 import { dateDtoToDate, timeDtoToDate } from "@api-rest/mapper/date-dto.mapper";
 import { DatePipeFormat } from "@core/utils/date.utils";
-import { DatePipe } from "@angular/common";
+import { DatePipe, TitleCasePipe } from "@angular/common";
 import { DiscardWarningComponent } from "@presentation/dialogs/discard-warning/discard-warning.component";
 import { ReferenceService } from '@api-rest/services/reference.service';
 import { ReferenceAppointmentService } from '@turnos/services/reference-appointment.service';
@@ -40,6 +40,7 @@ import { PATTERN_INTEGER_NUMBER } from '@core/utils/pattern.utils';
 import { EquipmentAppointmentsFacadeService } from '@turnos/services/equipment-appointments-facade.service';
 import { Observable } from 'rxjs';
 import { PrescripcionesService, PrescriptionTypes } from '@historia-clinica/modules/ambulatoria/services/prescripciones.service';
+import { TranslateService } from '@ngx-translate/core';
 
 const ROUTE_SEARCH = 'pacientes/search';
 const TEMPORARY_PATIENT_ID = 3;
@@ -79,6 +80,7 @@ export class NewAppointmentComponent implements OnInit {
 	referenceDateViewList: string[];
 	lastAppointmentId = -1;
 	readonly dateFormats = DatePipeFormat;
+	patientMedicalOrderTooltipDescription = '';
 	constructor(
 		@Inject(MAT_DIALOG_DATA) public data: {
 			date: string, diaryId: number, hour: string, openingHoursId: number, overturnMode: boolean, patientId?: number,
@@ -99,8 +101,10 @@ export class NewAppointmentComponent implements OnInit {
 		private readonly referenceService: ReferenceService,
 		private readonly referenceAppointmentService: ReferenceAppointmentService,
 		private readonly datePipe: DatePipe,
+		private readonly titleCasePipe: TitleCasePipe,
 		private readonly equipmentAppointmentFacade: EquipmentAppointmentsFacadeService,
-		private prescripcionesService: PrescripcionesService
+		private prescripcionesService: PrescripcionesService,
+		private readonly translateService: TranslateService
 	) {
 		this.routePrefix = `institucion/${this.contextService.institutionId}/`;
 	}
@@ -201,6 +205,15 @@ export class NewAppointmentComponent implements OnInit {
 			updateControlValidator(this.appointmentInfoForm, 'phoneNumber', []);
 			updateControlValidator(this.appointmentInfoForm, 'phonePrefix', []);
 		}
+	}
+
+	generateTooltipOnMedicalOrderChange() {
+		this.translateService.get('image-network.appointments.ORDER').subscribe(translatedText => 
+			this.patientMedicalOrderTooltipDescription = 
+				`${translatedText} # 
+				${this.appointmentInfoForm.controls.appointmentMedicalOrder.value?.serviceRequestId} - 
+				${this.titleCasePipe.transform(this.appointmentInfoForm.controls.appointmentMedicalOrder.value?.snomed?.pt)}`
+		);
 	}
 
 	private patientSearch(patientId: number) {

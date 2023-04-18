@@ -109,11 +109,12 @@
 						</mat-form-field>
 						<mat-form-field *ngIf="data.isEquipmentAppointment" appearance="outline">
 							<mat-label translate="image-network.appointments.NEW_MEDICAL_ORDER"></mat-label>
-							<mat-select formControlName="appointmentMedicalOrder">
+							<mat-select formControlName="appointmentMedicalOrder" (selectionChange)="generateTooltipOnMedicalOrderChange()"
+							matTooltip="{{patientMedicalOrderTooltipDescription}}">
 								<mat-option id="medicalOrder" name="medicalOrder"
 									*ngFor="let patientMedicalOrder of patientMedicalOrders$ | async"
-									[value]="patientMedicalOrder">
-									{{'image-network.appointments.ORDER' | translate}} # {{patientMedicalOrder.serviceRequestId}} - {{patientMedicalOrder.snomed.pt}}
+									[value]="patientMedicalOrder" matTooltip="{{'image-network.appointments.ORDER' | translate}} # {{patientMedicalOrder.serviceRequestId}} - {{patientMedicalOrder.snomed.pt | titlecase}}">
+									{{'image-network.appointments.ORDER' | translate}} # {{patientMedicalOrder.serviceRequestId}} - {{patientMedicalOrder.snomed.pt | titlecase}}
 								</mat-option>
 							</mat-select>
 							<mat-error *ngIf="hasError(appointmentInfoForm, 'required', 'appointmentMedicalOrder')"

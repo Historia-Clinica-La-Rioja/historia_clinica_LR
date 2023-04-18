@@ -7,7 +7,7 @@ import { TranslateLoader, TranslateModule } from '@ngx-translate/core';
 import { MultiTranslateHttpLoader } from 'ngx-translate-multi-http-loader';
 import { HttpClient, HttpClientModule } from '@angular/common/http';
 import { ServiceWorkerModule } from '@angular/service-worker';
-import { DatePipe, registerLocaleData } from '@angular/common';
+import { DatePipe, registerLocaleData, TitleCasePipe } from '@angular/common';
 import localeEsAr from '@angular/common/locales/es-AR';
 import localeEsArExtras from '@angular/common/locales/extra/es-AR';
 // providers
@@ -58,6 +58,7 @@ registerLocaleData(localeEsAr, localeEsArExtras);
 		httpInterceptorProviders,
 		pwaInstallProviders,
 		DatePipe,
+		TitleCasePipe,
 		{ provide: LOCALE_ID, useValue: DEFAULT_LANG }, // Esto lo usa el calendario
 	],
 	bootstrap: [AppComponent]
