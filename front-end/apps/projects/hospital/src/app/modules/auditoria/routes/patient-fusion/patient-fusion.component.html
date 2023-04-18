@@ -94,8 +94,8 @@
 						<span *ngIf="patient.lastName else noData">{{getPatientType(patient?.typeId) |
 							uppercase}}</span>
 					</div>
-					<div fxLayoutAlign="start center" class="content" fxFlex="10%" style="visibility: hidden;">
-						<button mat-stroked-button color="primary">{{'pacientes.audit.LABEL_BUTTON_VIEW' |
+					<div fxLayoutAlign="start center" class="content" fxFlex="10%">
+						<button mat-stroked-button color="primary" (click)="viewPatient(patient)">{{'pacientes.audit.LABEL_BUTTON_VIEW' |
 							translate}}</button>
 					</div>
 				</div>

@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { DuplicatePatientDto, IdentificationTypeDto, PatientPersonalInfoDto, PatientToMergeDto, PatientType } from '@api-rest/api-model';
 import { PersonMasterDataService } from '@api-rest/services/person-master-data.service';
@@ -14,6 +14,7 @@ import { SnackBarService } from '@presentation/services/snack-bar.service';
 import { PAGE_MIN_SIZE } from '@historia-clinica/modules/ambulatoria/modules/indicacion/constants/internment-indications';
 import { PAGE_SIZE_OPTIONS } from '@historia-clinica/modules/ambulatoria/modules/indicacion/constants/internment-indications';
 import { Filters } from '../control-patient-duplicate/control-patient-duplicate.component';
+import { PatientProfileComponent } from '@historia-clinica/modules/ambulatoria/routes/patient-profile/patient-profile.component';
 
 const ROUTE_CONTROL_PATIENT_DUPLICATE = "auditoria/control-pacientes-duplicados"
 
@@ -283,6 +284,15 @@ export class PatientFusionComponent implements OnInit {
 		this.pageSlice = this.listPatientData.slice(startPage, $event.pageSize + startPage);
 	}
 
+	viewPatient(patient:any) {
+		const dialogRef = this.dialog.open(PatientProfileComponent, {
+			data:{
+				patientId : patient.patientId,
+			},
+			disableClose: true,
+			autoFocus: false
+		})
+	}
 }
 export enum KeyAttributes {
 	BIRTHDATE,
