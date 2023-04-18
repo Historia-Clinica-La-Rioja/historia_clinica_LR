@@ -850,3 +850,31 @@ databaseChangeLog:
                   (SELECT *
                    FROM sector AS s
                    WHERE s.sector_id IS NULL)
+
+
+    - changeSet:
+        id: study_pac_association-createTable
+        author: mromero
+        changes:
+          - createTable:
+              tableName: study_pac_association
+              columns:
+                - column:
+                    name: image_id
+                    type: varchar(80)
+                - column:
+                    name: pac_server_id
+                    type: int
+          - addPrimaryKey:
+              columnNames: image_id, pac_server_id
+              tableName: study_pac_association
+              constraintName: PK_study_pac_association
+          - addForeignKeyConstraint:
+              baseColumnNames: pac_server_id
+              baseTableName: study_pac_association
+              constraintName: FK_study_pac_association_pac_server_id
+              onDelete: NO ACTION
+              onUpdate: NO ACTION
+              referencedColumnNames: id
+              referencedTableName: pac_server
+              validate: true

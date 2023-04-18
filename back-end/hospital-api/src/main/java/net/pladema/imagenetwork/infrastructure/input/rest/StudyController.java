@@ -1,7 +1,9 @@
 package net.pladema.imagenetwork.infrastructure.input.rest;
 
 import java.net.MalformedURLException;
+import java.net.URI;
 import java.net.URISyntaxException;
+import java.util.stream.Collectors;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -16,8 +18,9 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import net.pladema.imagenetwork.application.getpacwherestudyishosted.GetPacWhereStudyIsHosted;
 import net.pladema.imagenetwork.application.savepacsherestudyishosted.SavePacWhereStudyIsHosted;
-import net.pladema.imagenetwork.domain.StudyInfoBo;
-import net.pladema.imagenetwork.infrastructure.input.rest.dto.PacUrlDTO;
+import net.pladema.imagenetwork.domain.PacsListBo;
+import net.pladema.imagenetwork.domain.StudyPacBo;
+import net.pladema.imagenetwork.infrastructure.input.rest.dto.PacsUrlDTO;
 import net.pladema.imagenetwork.infrastructure.input.rest.dto.StudyPacAssociationDTO;
 
 @RequestMapping("/imagenetwork")
@@ -31,29 +34,31 @@ public class StudyController {
 	private final SavePacWhereStudyIsHosted savePacWhereStudyIsHosted;
 
 	@GetMapping(value = "/{studyInstanceUID}")
-	public ResponseEntity<PacUrlDTO> getPacGlobalURL(@PathVariable(name = "studyInstanceUID") String studyInstanceUID) throws MalformedURLException {
+	public ResponseEntity<PacsUrlDTO> getPacGlobalURL(@PathVariable(name = "studyInstanceUID") String studyInstanceUID) throws MalformedURLException {
 		log.debug("Input -> studyInstanceUID {}", studyInstanceUID);
-		PacUrlDTO url = mapToDto(getPacWhereStudyIsHosted.run(studyInstanceUID));
+		PacsUrlDTO url = mapToDto(getPacWhereStudyIsHosted.run(studyInstanceUID));
 		log.debug("Output -> {}", url);
 		return ResponseEntity.ok().body(url);
 	}
 
 	@PostMapping(value = "/")
-	public ResponseEntity<String> saveStudyPacGlobalAssociation(@RequestBody StudyPacAssociationDTO studyPacAssociationDTO) throws MalformedURLException, URISyntaxException {
+	public ResponseEntity<String> saveStudyPacGlobalAssociation(@RequestBody StudyPacAssociationDTO studyPacAssociationDTO) throws URISyntaxException {
 		log.debug("Input -> studyPacAssociationDTO {}", studyPacAssociationDTO);
 		String study = savePacWhereStudyIsHosted.run(mapToBo(studyPacAssociationDTO));
 		log.debug("Output -> {}", study);
 		return ResponseEntity.ok().body(study);
 	}
 
-	private static PacUrlDTO mapToDto(StudyInfoBo studyInfoBo) {
-		return PacUrlDTO.builder()
-				.pacGlobalURL(studyInfoBo.getPacGlobalURL().toString())
+	private static PacsUrlDTO mapToDto(PacsListBo pacsListBo) {
+		return PacsUrlDTO.builder().pacs(pacsListBo
+						.getPacs().stream()
+						.map(URI::toString)
+						.collect(Collectors.toList()))
 				.build();
 	}
 
-	private static StudyInfoBo mapToBo(StudyPacAssociationDTO dto) throws MalformedURLException, URISyntaxException {
-		return new StudyInfoBo(dto.getStudyInstanceUID(), dto.getPacGlobalURL());
+	private static StudyPacBo mapToBo(StudyPacAssociationDTO dto) throws URISyntaxException {
+		return new StudyPacBo(dto.getStudyInstanceUID(), dto.getPacGlobalURL());
 	}
 
 }

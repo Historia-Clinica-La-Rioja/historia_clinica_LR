@@ -1,13 +1,13 @@
 package net.pladema.imagenetwork.application.port;
 
-import net.pladema.imagenetwork.domain.StudyInfoBo;
-import net.pladema.imagenetwork.infrastructure.output.entity.StudyPacAssociation;
+import net.pladema.imagenetwork.domain.StudyPacBo;
+import net.pladema.imagenetwork.infrastructure.output.entity.StudyInformation;
 
 import java.util.Optional;
 
 public interface StudyStorage {
 
-	Optional<StudyPacAssociation> getStudyPacAssociation(String studyInstanceUID);
+	Optional<StudyInformation> getStudyPacAssociation(String studyInstanceUID);
 
-	Optional<String> saveStudyPacAssociation(StudyInfoBo studyInfoBo);
+	Optional<String> saveStudyPacAssociation(StudyPacBo studyPacBo);
 }

@@ -7,7 +7,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 
-import java.io.Serializable;
+import java.util.List;
 
 
 @Getter
@@ -16,6 +16,6 @@ import java.io.Serializable;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class PacUrlDTO implements Serializable {
-	private String pacGlobalURL;
+public class PacsUrlDTO {
+	private List<String> pacs;
 }
