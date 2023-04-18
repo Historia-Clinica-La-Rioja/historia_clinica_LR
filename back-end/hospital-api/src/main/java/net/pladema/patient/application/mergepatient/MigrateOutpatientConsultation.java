@@ -22,6 +22,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 @Service
@@ -41,24 +42,16 @@ public class MigrateOutpatientConsultation {
 		List<Integer> vcIds = mergeClinicHistoryStorage.getVaccineConsultationIds(oldPatients);
 		List<Integer> crIds = mergeClinicHistoryStorage.getCounterReferenceIds(oldPatients);
 
-		List<Integer> consultationIds = new ArrayList<>() {{
-			addAll(ocIds);
-			addAll(ncIds);
-			addAll(mrIds);
-			addAll(srIds);
-			addAll(vcIds);
-			addAll(crIds);
-		}};
+		if (!(ocIds.isEmpty() && ncIds.isEmpty() && mrIds.isEmpty() && srIds.isEmpty() && vcIds.isEmpty() && crIds.isEmpty())) {
 
-		if (!consultationIds.isEmpty()) {
-
-			List<Long> documentsIds = mergeClinicHistoryStorage.getDocumentsIds(consultationIds, Arrays.asList(
-					ESourceType.OUTPATIENT,
-					ESourceType.NURSING,
-					ESourceType.RECIPE,
-					ESourceType.ORDER,
-					ESourceType.IMMUNIZATION,
-					ESourceType.COUNTER_REFERENCE));
+			List<Long> documentsIds = new ArrayList<>() {{
+				addAll(mergeClinicHistoryStorage.getDocumentsIds(ocIds, ESourceType.OUTPATIENT));
+				addAll(mergeClinicHistoryStorage.getDocumentsIds(ncIds, ESourceType.NURSING));
+				addAll(mergeClinicHistoryStorage.getDocumentsIds(mrIds, ESourceType.RECIPE));
+				addAll(mergeClinicHistoryStorage.getDocumentsIds(srIds, ESourceType.ORDER));
+				addAll(mergeClinicHistoryStorage.getDocumentsIds(vcIds, ESourceType.IMMUNIZATION));
+				addAll(mergeClinicHistoryStorage.getDocumentsIds(crIds, ESourceType.COUNTER_REFERENCE));
+			}};
 
 			log.debug("Documents to search and modify documentsIds{}", documentsIds);
 			if ((documentsIds != null) && (!documentsIds.isEmpty())) {

@@ -26,8 +26,7 @@ public class MigrateEmergencyCareEpisode {
 
 		if (!eceIds.isEmpty()) {
 
-			List<Long> documentsIds = mergeClinicHistoryStorage.getDocumentsIds(eceIds, Arrays.asList(
-					ESourceType.EMERGENCY_CARE));
+			List<Long> documentsIds = mergeClinicHistoryStorage.getDocumentsIds(eceIds, ESourceType.EMERGENCY_CARE);
 
 			log.debug("Documents to search and modify documentsIds{}", documentsIds);
 			if ((documentsIds != null) && (!documentsIds.isEmpty())) {

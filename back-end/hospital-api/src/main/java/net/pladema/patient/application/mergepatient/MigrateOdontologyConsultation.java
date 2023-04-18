@@ -36,8 +36,7 @@ public class MigrateOdontologyConsultation {
 
 		if (!ocIds.isEmpty()) {
 
-			List<Long> documentsIds = mergeClinicHistoryStorage.getDocumentsIds(ocIds, Arrays.asList(
-					ESourceType.ODONTOLOGY));
+			List<Long> documentsIds = mergeClinicHistoryStorage.getDocumentsIds(ocIds, ESourceType.ODONTOLOGY);
 
 			log.debug("Documents to search and modify documentsIds{}", documentsIds);
 

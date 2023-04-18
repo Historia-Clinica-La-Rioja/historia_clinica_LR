@@ -20,7 +20,7 @@ public interface MergeClinicHistoryStorage {
 	List<Integer> getServiceRequestIdsFromIdSourceType(List<Integer> ids, Short sourceType);
 	List<Integer> getOdontologyConsultationIds(List<Integer> oldPatientsIds);
 	void modifyDocument(List<Long> dIds, Integer newPatientId);
-	List<Long> getDocumentsIds(List<Integer> ids, List<ESourceType> sourceTypes);
+	List<Long> getDocumentsIds(List<Integer> ids, ESourceType sourceType);
 	void modifyInternmentEpisode(List<Integer> ieIds, Integer newPatientId);
 	void modifyOutpatientConsultation(List<Integer> ocIds, Integer newPatientId);
 	void modifyEmergencyCareEpisode(List<Integer> eceIds, Integer newPatientId);

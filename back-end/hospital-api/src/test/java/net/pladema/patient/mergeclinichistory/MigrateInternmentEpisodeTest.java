@@ -18,12 +18,14 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
+import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import static org.mockito.ArgumentMatchers.anyCollection;
+import static org.mockito.Mockito.doCallRealMethod;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -55,17 +57,19 @@ public class MigrateInternmentEpisodeTest {
 		when(mergeClinicHistoryStorage.getServiceRequestIdsFromIdSourceType(ieIds, ESourceType.HOSPITALIZATION.getId()))
 				.thenReturn(srIds);
 
-		List<Integer> consultationIds = new ArrayList<>() {{
-			addAll(ieIds);
-			addAll(srIds);
-		}};
+		List anyList = Mockito.mock(List.class);
+		List<Long> documentInternmentIds = Arrays.asList(30L,31L);
+		List<Long> documentOrderIds = Arrays.asList(32L,33L);
+
+		when(mergeClinicHistoryStorage.getDocumentsIds(ieIds, ESourceType.HOSPITALIZATION))
+				.thenReturn(documentInternmentIds);
+
+		when(mergeClinicHistoryStorage.getDocumentsIds(srIds, ESourceType.ORDER))
+				.thenReturn(documentOrderIds);
+
+		//doCallRealMethod().when(anyList).addAll(anyCollection());
 
 		List<Long> documentIds = Arrays.asList(30L,31L,32L,33L);
-
-		when(mergeClinicHistoryStorage.getDocumentsIds(consultationIds, Arrays.asList(
-				ESourceType.HOSPITALIZATION,
-				ESourceType.ORDER)))
-				.thenReturn(documentIds);
 
 		migrateInternmentEpisode.execute(oldPatientsIds,newPatientId);
 

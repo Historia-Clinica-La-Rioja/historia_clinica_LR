@@ -54,8 +54,7 @@ public class MigrateOdontologyConsultationTest {
 
 		List<Long> documentIds = Arrays.asList(30L,35L);
 
-		when(mergeClinicHistoryStorage.getDocumentsIds(ocIds, Arrays.asList(
-				ESourceType.ODONTOLOGY)))
+		when(mergeClinicHistoryStorage.getDocumentsIds(ocIds, ESourceType.ODONTOLOGY))
 				.thenReturn(documentIds);
 
 		migrateOdontologyConsultation.execute(oldPatientsIds,newPatientId);

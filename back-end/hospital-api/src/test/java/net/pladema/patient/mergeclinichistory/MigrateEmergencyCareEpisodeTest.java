@@ -44,8 +44,7 @@ public class MigrateEmergencyCareEpisodeTest {
 
 		List<Long> documentIds = Arrays.asList(30L,35L);
 
-		when(mergeClinicHistoryStorage.getDocumentsIds(eceIds, Arrays.asList(
-				ESourceType.EMERGENCY_CARE)))
+		when(mergeClinicHistoryStorage.getDocumentsIds(eceIds, ESourceType.EMERGENCY_CARE))
 				.thenReturn(documentIds);
 
 		migrateEmergencyCareEpisode.execute(oldPatientsIds,newPatientId);

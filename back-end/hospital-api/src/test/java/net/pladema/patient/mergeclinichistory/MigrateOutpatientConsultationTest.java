@@ -75,16 +75,32 @@ public class MigrateOutpatientConsultationTest {
 			addAll(crIds);
 		}};
 
+		List<Long> documentOutpatientIds = Arrays.asList(30L);
+		List<Long> documentNursingIds = Arrays.asList(31L);
+		List<Long> documentMedicationIds = Arrays.asList(32L,33L);
+		List<Long> documentOrderIds = Arrays.asList(34L);
+		List<Long> documentVaccineIds = Arrays.asList(35L);
+		List<Long> documentReferenceIds = Arrays.asList(36L,37L,38L,39L);
+
 		List<Long> documentIds = Arrays.asList(30L,31L,32L,33L,34L,35L,36L,37L,38L,39L);
 
-		when(mergeClinicHistoryStorage.getDocumentsIds(consultationIds, Arrays.asList(
-				ESourceType.OUTPATIENT,
-				ESourceType.NURSING,
-				ESourceType.RECIPE,
-				ESourceType.ORDER,
-				ESourceType.IMMUNIZATION,
-				ESourceType.COUNTER_REFERENCE)))
-				.thenReturn(documentIds);
+		when(mergeClinicHistoryStorage.getDocumentsIds(ocIds, ESourceType.OUTPATIENT))
+				.thenReturn(documentOutpatientIds);
+
+		when(mergeClinicHistoryStorage.getDocumentsIds(ncIds, ESourceType.NURSING))
+				.thenReturn(documentNursingIds);
+
+		when(mergeClinicHistoryStorage.getDocumentsIds(mrIds, ESourceType.RECIPE))
+				.thenReturn(documentMedicationIds);
+
+		when(mergeClinicHistoryStorage.getDocumentsIds(srIds, ESourceType.ORDER))
+				.thenReturn(documentOrderIds);
+
+		when(mergeClinicHistoryStorage.getDocumentsIds(vcIds, ESourceType.IMMUNIZATION))
+				.thenReturn(documentVaccineIds);
+
+		when(mergeClinicHistoryStorage.getDocumentsIds(crIds, ESourceType.COUNTER_REFERENCE))
+				.thenReturn(documentReferenceIds);
 
 		migrateOutpatientConsultation.execute(oldPatientsIds,newPatientId);
 

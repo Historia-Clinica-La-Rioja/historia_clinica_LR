@@ -19,6 +19,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 @Service
@@ -34,16 +35,12 @@ public class MigrateInternmentEpisode {
 		List<Integer> ieIds = mergeClinicHistoryStorage.getInternmentEpisodesIds(oldPatients);
 		List<Integer> srIds = mergeClinicHistoryStorage.getServiceRequestIdsFromIdSourceType(ieIds,ESourceType.HOSPITALIZATION.getId());
 
-		List<Integer> consultationIds = new ArrayList<>() {{
-			addAll(ieIds);
-			addAll(srIds);
-		}};
+		if (!(ieIds.isEmpty() && srIds.isEmpty())) {
 
-		if (!consultationIds.isEmpty()) {
-
-			List<Long> documentsIds = mergeClinicHistoryStorage.getDocumentsIds(consultationIds, Arrays.asList(
-					ESourceType.HOSPITALIZATION,
-					ESourceType.ORDER));
+			List<Long> documentsIds = new ArrayList<>() {{
+				addAll(mergeClinicHistoryStorage.getDocumentsIds(ieIds, ESourceType.HOSPITALIZATION));
+				addAll(mergeClinicHistoryStorage.getDocumentsIds(srIds, ESourceType.ORDER));
+			}};
 
 			log.debug("Documents to search and modify documentsIds{}", documentsIds);
 			if ((documentsIds != null) && (!documentsIds.isEmpty())) {

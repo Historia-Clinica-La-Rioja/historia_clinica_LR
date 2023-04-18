@@ -52,8 +52,8 @@ public interface DocumentRepository extends SGXAuditableEntityJPARepository<Docu
 	@Query(value = "SELECT d.id " +
 			"FROM Document d " +
 			"WHERE d.sourceId IN (:sourceIds) " +
-			"AND d.sourceTypeId IN :sourceTypeIds")
-	List<Long> getIdsBySourceIdType(@Param("sourceIds") List<Integer> sourceIds, @Param("sourceTypeIds") List<Short> sourceTypeIds);
+			"AND d.sourceTypeId = :sourceTypeId")
+	List<Long> getIdsBySourceIdType(@Param("sourceIds") List<Integer> sourceIds, @Param("sourceTypeId") Short sourceTypeId);
 
 	@Transactional(readOnly = true)
 	@Query(value = "SELECT d.id " +

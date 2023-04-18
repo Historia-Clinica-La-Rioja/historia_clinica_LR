@@ -124,9 +124,9 @@ public class MergeClinicHistoryStorageImpl implements MergeClinicHistoryStorage 
 	}
 
 	@Override
-	public List<Long> getDocumentsIds(List<Integer> ids, List<ESourceType> sourceTypes) {
+	public List<Long> getDocumentsIds(List<Integer> ids, ESourceType sourceType) {
 		log.debug("Input parameters -> ids{}", ids);
-		return documentRepository.getIdsBySourceIdType(ids, sourceTypes.stream().map(sts -> sts.getId()).collect(Collectors.toList()));
+		return documentRepository.getIdsBySourceIdType(ids, sourceType.getId());
 	}
 
 	@Override
