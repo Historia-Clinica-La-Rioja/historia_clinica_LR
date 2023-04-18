@@ -23,11 +23,11 @@ export class TypeOfPregnancyComponent {
 		});
 	}
 
-	private calculateSelectedOption(newbornsCount: number | undefined): TypeOfPregnancy | null {
+	private calculateSelectedOption(newbornsCount: number | undefined): TypeOfPregnancy {
 		if (newbornsCount !== undefined && newbornsCount !== 0) {
 			return (newbornsCount === 1) ? TypeOfPregnancy.SIMPLE : TypeOfPregnancy.MULTIPLE;
 		}
-		return null;
+		return TypeOfPregnancy.UNDEFINED;
 	}
 
 	emmitEvent() {
