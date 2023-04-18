@@ -142,3 +142,9 @@ export enum PatientType {
 	PERMANENT_NO_VALIDATED = 7,
 	EMERGENCY_CARE_TEMPORARY = 8,
 }
+
+export enum AttentionPlace {
+	CONSULTORIO = 1,
+	SHOCKROOM = 2,
+	HABITACION = 3,
+}

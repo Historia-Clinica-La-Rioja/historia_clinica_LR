@@ -7,17 +7,24 @@
     <h1 translate="guardia.dialog.attention_place.TITLE"></h1>
     <h4 translate="guardia.dialog.attention_place.SUBTITLE"></h4>
     <form [formGroup]="form">
-        <mat-form-field appearance="fill">
+        <mat-form-field appearance="outline">
             <mat-label translate="guardia.dialog.attention_place.PLACE"></mat-label>
-            <mat-select formControlName="place">
-              <mat-option value="{{place.id}}" *ngFor="let place of places$ | async">{{place.description}}</mat-option>
+            <mat-select formControlName="place" (selectionChange)="verifyPlaceType()">
+              <mat-option [value]="place.id" *ngFor="let place of places$ | async">{{place.description}}</mat-option>
             </mat-select>
-            <mat-error *ngIf="hasError(this.form, 'required', 'place')" translate="guardia.dialog.attention_place.ERROR"></mat-error>
+            <mat-error *ngIf="hasError(this.form, 'required', 'place')" translate="guardia.dialog.attention_place.ATTENTION_REQUIRED"></mat-error>
         </mat-form-field>
+
+        <app-typeahead *ngIf="(offices$ | async)"
+            [titleInput]="'guardia.dialog.attention_place.office.SELECT_OFFICE' | translate"
+            [options]="officesTypeaheadOptions$ | async"
+            (selectionChange)="setOffice($event)"
+            [required]="true">
+        </app-typeahead>
     </form>
 </div>
 <mat-dialog-actions align="end">
-    <button mat-flat-button color="primary" (click)="verifyPlaceType()">
+    <button mat-flat-button color="primary" (click)="attend()" [disabled]="this.form.invalid">
         <span translate="guardia.dialog.attention_place.CONFIRM"></span>
     </button>
 </mat-dialog-actions>

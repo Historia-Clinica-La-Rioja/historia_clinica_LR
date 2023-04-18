@@ -232,11 +232,11 @@
 				"SUBTITLE": "Seleccione el destino donde se atenderá al paciente",
 				"PLACE": "Lugar de atencion",
 				"CONFIRM": "Confirmar",
-				"ERROR": "Debes seleccionar un lugar"
-			},
-			"select_consultorio": {
-				"CONSULTORIO": "Consultorio",
-				"SUBTITLE": "Consultorio destino para el paciente"
+				"ATTENTION_REQUIRED": "Debes seleccionar un lugar",
+				"office": {
+					"SELECT_OFFICE": "Seleccione consultorio",
+					"OFFICE_REQUIRED": "Debes seleccionar un consultorio"
+				}
 			}
 		},
 		"NO_INFO": "Sin información",
