@@ -158,3 +158,48 @@ databaseChangeLog:
               referencedColumnNames: id
               referencedTableName: gender
               validate: true
+
+    - changeSet:
+        id: appointment_order_image-createTable
+        comment: Create table appointment_order_image
+        author: amurrie
+        changes:
+          - createTable:
+              tableName: appointment_order_image
+              columns:
+                - column:
+                    constraints:
+                      nullable: false
+                    name: appointment_id
+                    type: int
+                - column:
+                    constraints:
+                      nullable: false
+                    name: order_id
+                    type: int
+                - column:
+                    constraints:
+                      nullable: false
+                    name: image_id
+                    type: varchar(40)
+                - column:
+                    constraints:
+                      nullable: false
+                    name: completed
+                    type: BOOLEAN
+                    defaultValue: ${boolean.false}
+          - addPrimaryKey:
+              clustered: true
+              columnNames: appointment_id, order_id
+              constraintName: PK_appointment_order_image
+              tableName: appointment_order_image
+              validate: true
+          - addForeignKeyConstraint:
+              baseColumnNames: appointment_id
+              baseTableName: appointment_order_image
+              constraintName: FK_document_obstetric_event_document_id
+              onDelete: NO ACTION
+              onUpdate: NO ACTION
+              referencedColumnNames: id
+              referencedTableName: appointment
+              validate: true
