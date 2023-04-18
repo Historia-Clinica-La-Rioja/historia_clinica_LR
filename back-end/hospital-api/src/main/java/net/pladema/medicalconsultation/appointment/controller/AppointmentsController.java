@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
+import java.util.concurrent.ThreadLocalRandom;
 import java.util.stream.Collectors;
 
 import javax.validation.Valid;
@@ -28,11 +29,14 @@ import net.pladema.medicalconsultation.appointment.controller.dto.AppointmentEqu
 import net.pladema.medicalconsultation.appointment.controller.dto.AppointmentShortSummaryDto;
 import net.pladema.medicalconsultation.appointment.controller.dto.EquipmentAppointmentListDto;
 import net.pladema.medicalconsultation.appointment.controller.dto.UpdateAppointmentDateDto;
+import net.pladema.medicalconsultation.appointment.repository.entity.AppointmentOrderImage;
 import net.pladema.medicalconsultation.appointment.repository.entity.AppointmentState;
+import net.pladema.medicalconsultation.appointment.service.AppointmentOrderImageService;
 import net.pladema.medicalconsultation.appointment.service.CreateEquipmentAppointmentService;
 
 import net.pladema.medicalconsultation.appointment.service.EquipmentAppointmentService;
 
+import net.pladema.medicalconsultation.appointment.service.domain.AppointmentOrderImageBo;
 import net.pladema.medicalconsultation.equipmentdiary.service.EquipmentDiaryService;
 
 import net.pladema.medicalconsultation.equipmentdiary.service.domain.CompleteEquipmentDiaryBo;
@@ -105,6 +109,8 @@ public class AppointmentsController {
 
 	private final EquipmentAppointmentService equipmentAppointmentService;
 
+	private final AppointmentOrderImageService appointmentOrderImageService;
+
 	private final EquipmentService equipmentService;
 
 	private final EquipmentDiaryService equipmentDiaryService;
@@ -160,7 +166,8 @@ public class AppointmentsController {
 			EquipmentDiaryService equipmentDiaryService,
 			OrchestratorService orchestratorService,
 			MqttClientService mqttClientService,
-			ModalityService modalityService) {
+			ModalityService modalityService,
+			AppointmentOrderImageService appointmentOrderImageService) {
         this.appointmentDailyAmountService = appointmentDailyAmountService;
         this.appointmentService = appointmentService;
 		this.equipmentAppointmentService = equipmentAppointmentService;
@@ -180,6 +187,7 @@ public class AppointmentsController {
 		this.orchestratorService = orchestratorService;
 		this.mqttClientService = mqttClientService;
 		this.modalityService = modalityService;
+		this.appointmentOrderImageService = appointmentOrderImageService;
 	}
 
 
@@ -554,8 +562,16 @@ public class AppointmentsController {
 		}
 
 
+		String UID= ThreadLocalRandom.current().nextInt(1,10) + "." +
+					ThreadLocalRandom.current().nextInt(1,10) + "." +
+					ThreadLocalRandom.current().nextInt(1,100) + "." +
+					ThreadLocalRandom.current().nextInt(1,100) + "." +
+					ThreadLocalRandom.current().nextInt(1,1000) + "." +
+					ThreadLocalRandom.current().nextInt(1,1000) + "." +
+					basicDataPatient.getIdentificationNumber();
 		String date = appointment.getDate().toString().replace("-","");
 		String time = appointment.getHour().toString().replace(":","") + "00";
+		String studyInstanceUID =   "   \"StudyInstanceUID\": \"" + UID + "\", \n";
 		String aeTitle =   "    \"ScheduledStationAETitle\": \"" + equipmentBO.getAeTitle() + "\",\n";
 		String startDate = "    \"ScheduledProcedureStepStartDate\": \"" + date + "\",\n";
 		String startTime = "    \"ScheduledProcedureStepStartTime\": \"" + time + "\",\n";
@@ -563,6 +579,7 @@ public class AppointmentsController {
 		String patientName = "    \"PatientName\": \"" + basicDataPatient.getFirstName() + " " + basicDataPatient.getLastName() + "\",\n";
 		String modality = "    \"Modality\": \"" + modalityBO.getAcronym() + "\"\n";
 		String json =  "{\n"
+							+ studyInstanceUID
 							+ aeTitle
 							+ startDate
 							+ startTime
@@ -576,6 +593,29 @@ public class AppointmentsController {
 
 		MqttMetadataBo data = new MqttMetadataBo(topic, json,true,1);
 		mqttClientService.publish(data);
+		AppointmentOrderImageBo appointmentOrderImageBO = new AppointmentOrderImageBo(appointmentId,12,false,UID);
+		appointmentOrderImageService.save(appointmentOrderImageBO);
+		return ResponseEntity.ok().body(true);
+	}
+
+	@GetMapping("/get-study-instance-UID/{appointmentId}")
+	@PreAuthorize("hasPermission(#institutionId, 'ADMINISTRATIVO_RED_DE_IMAGENES')")
+	public ResponseEntity<String> getStudyInstanceUID(
+			@PathVariable(name = "institutionId") Integer institutionId,
+			@PathVariable(name = "appointmentId") Integer appointmentId
+	) {
+		String imageId = appointmentOrderImageService.getImageId(appointmentId).orElse("none");
+
+		return ResponseEntity.ok().body(imageId);
+	}
+
+	@GetMapping("/completed-study/{appointmentId}")
+	@PreAuthorize("hasPermission(#institutionId, 'TECNICO')")
+	public ResponseEntity<Boolean> completedStudy(
+			@PathVariable(name = "institutionId") Integer institutionId,
+			@PathVariable(name = "appointmentId") Integer appointmentId
+	){
+		appointmentOrderImageService.updateCompleted(appointmentId, true);
 		return ResponseEntity.ok().body(true);
 	}
 
