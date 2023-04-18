@@ -6,9 +6,9 @@ const shortHash = (fullHash: string) => fullHash ? fullHash.substring(0,8) : ful
 
 const buildCommitHashText = (apiHash: string, appHash: string) => {
 	if (apiHash === appHash) {
-		return `APP/API ${shortHash(apiHash)}`;
+		return `APP/API ${apiHash}`;
 	}
-	return `APP ${shortHash(appHash)} / API ${shortHash(apiHash)}`;
+	return `APP ${appHash} / API ${apiHash}`;
 }
 
 @Component({
@@ -29,7 +29,10 @@ export class FooterComponent implements OnInit {
 	ngOnInit(): void {
 		this.publicService.getApplicationCurrentVersion()
 			.subscribe(versionDto => {
-				this.commitHashText = buildCommitHashText(environment.commitHash, versionDto.commitId);
+				this.commitHashText = buildCommitHashText(
+					shortHash(environment.commitHash),
+					shortHash(versionDto.commitId)
+				);
 				this.applicationVersionNumber = versionDto.version;
 			});
 
