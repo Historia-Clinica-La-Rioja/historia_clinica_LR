@@ -28,7 +28,10 @@
         "appointments": {
             "COMPLETE": "Completar",
             "WORKLIST": "Lista de trabajo",
-            "FILTER_BY_STATE": "Filtrar por estado"
+            "FILTER_BY_STATE": "Filtrar por estado",
+            "MEDICAL_COVERAGE": "Cobertura Médica",
+            "NEW_MEDICAL_ORDER": "Nueva Orden Médica",
+            "ORDER": "Orden"
         }
 
     }

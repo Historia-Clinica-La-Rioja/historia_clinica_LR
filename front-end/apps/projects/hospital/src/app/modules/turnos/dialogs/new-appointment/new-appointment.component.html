@@ -94,7 +94,7 @@
 				<form [formGroup]="appointmentInfoForm">
 					<div fxLayout="column">
 						<mat-form-field appearance="outline">
-							<mat-label>Cobertura Médica </mat-label>
+							<mat-label translate="image-network.appointments.MEDICAL_COVERAGE"></mat-label>
 							<mat-select formControlName="patientMedicalCoverage">
 								<mat-option id="medicalCoverage" name="medicalCoverage"
 									*ngFor="let patientMedicalCoverage of patientMedicalCoverages"
@@ -107,8 +107,21 @@
 								</mat-option>
 							</mat-select>
 						</mat-form-field>
+						<mat-form-field *ngIf="data.isEquipmentAppointment" appearance="outline">
+							<mat-label translate="image-network.appointments.NEW_MEDICAL_ORDER"></mat-label>
+							<mat-select formControlName="appointmentMedicalOrder">
+								<mat-option id="medicalOrder" name="medicalOrder"
+									*ngFor="let patientMedicalOrder of patientMedicalOrders$ | async"
+									[value]="patientMedicalOrder">
+									{{'image-network.appointments.ORDER' | translate}} # {{patientMedicalOrder.serviceRequestId}} - {{patientMedicalOrder.snomed.pt}}
+								</mat-option>
+							</mat-select>
+							<mat-error *ngIf="hasError(appointmentInfoForm, 'required', 'appointmentMedicalOrder')"
+								[translate]="'forms.REQUIRED'">
+				 			</mat-error>
+						</mat-form-field>
 						<div fxLayout="row" fxLayoutGap="10px" fxLayout.xs="column">
-							<mat-form-field fxFlex="30%" appearance="outline" class="phonePrefix">
+							<mat-form-field fxFlex="30%" appearance="outline">
 								<mat-label [translate]="'turnos.new-appointment.PHONE_PREFIX'"></mat-label>
 								<input matInput type="text" id="phonePrefix" name="phonePrefix"
 									formControlName="phonePrefix"
@@ -146,7 +159,7 @@
 					</div>
 				</form>
 				<div fxLayout="row">
-					<button mat-stroked-button matStepperPrevious color="primary" [disabled]="preselectedPatient" (click)="toFirstStep()">
+					<button class="back-btn" mat-stroked-button matStepperPrevious color="primary" [disabled]="preselectedPatient" (click)="toFirstStep()">
 						<span [translate]="'buttons.BACK'"></span>
 					</button>
 				</div>
@@ -194,3 +207,4 @@
 		<span [translate]="'buttons.CONFIRM'"></span>
 	</button>
 </mat-dialog-actions>
+ 

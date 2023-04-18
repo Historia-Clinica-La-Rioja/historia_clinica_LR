@@ -19,6 +19,7 @@ import {
 	DiaryAvailableProtectedAppointmentsDto,
 	ReferenceSummaryDto,
 	AppointmentShortSummaryDto,
+	DiagnosticReportInfoDto,
 } from '@api-rest/api-model';
 import { AppointmentsFacadeService } from '../../services/appointments-facade.service';
 import { PersonIdentification } from '@presentation/pipes/person-identification.pipe';
@@ -38,9 +39,12 @@ import { REMOVE_SUBSTRING_DNI } from '@core/constants/validation-constants';
 import { PATTERN_INTEGER_NUMBER } from '@core/utils/pattern.utils';
 import { EquipmentAppointmentsFacadeService } from '@turnos/services/equipment-appointments-facade.service';
 import { Observable } from 'rxjs';
+import { PrescripcionesService, PrescriptionTypes } from '@historia-clinica/modules/ambulatoria/services/prescripciones.service';
 
 const ROUTE_SEARCH = 'pacientes/search';
 const TEMPORARY_PATIENT_ID = 3;
+const MEDICAL_ORDER_PENDING_STATUS = '1';
+const MEDICAL_ORDER_CATEGORY_ID = '363679005'
 
 @Component({
 	selector: 'app-new-appointment',
@@ -64,6 +68,7 @@ export class NewAppointmentComponent implements OnInit {
 	public showAddPatient = false;
 	public editable = true;
 	patientMedicalCoverages: PatientMedicalCoverage[];
+	patientMedicalOrders$: Observable<DiagnosticReportInfoDto[]>
 	patient: ReducedPatientDto;
 	public readonly hasError = hasError;
 	readonly TEMPORARY_PATIENT_ID = TEMPORARY_PATIENT_ID;
@@ -95,6 +100,7 @@ export class NewAppointmentComponent implements OnInit {
 		private readonly referenceAppointmentService: ReferenceAppointmentService,
 		private readonly datePipe: DatePipe,
 		private readonly equipmentAppointmentFacade: EquipmentAppointmentsFacadeService,
+		private prescripcionesService: PrescripcionesService
 	) {
 		this.routePrefix = `institucion/${this.contextService.institutionId}/`;
 	}
@@ -111,8 +117,9 @@ export class NewAppointmentComponent implements OnInit {
 
 		this.appointmentInfoForm = this.formBuilder.group({
 			patientMedicalCoverage: [null],
-			phonePrefix: [null, [Validators.pattern(PATTERN_INTEGER_NUMBER) ,Validators.maxLength(VALIDATIONS.MAX_LENGTH.phonePrefix)]],
-			phoneNumber: [null, [Validators.pattern(PATTERN_INTEGER_NUMBER) ,Validators.maxLength(VALIDATIONS.MAX_LENGTH.phone)]]
+			phonePrefix: [null, [Validators.pattern(PATTERN_INTEGER_NUMBER), Validators.maxLength(VALIDATIONS.MAX_LENGTH.phonePrefix)]],
+			phoneNumber: [null, [Validators.pattern(PATTERN_INTEGER_NUMBER), Validators.maxLength(VALIDATIONS.MAX_LENGTH.phone)]],
+			appointmentMedicalOrder: [null, Validators.required]
 		});
 
 		this.associateReferenceForm = this.formBuilder.group({
@@ -163,6 +170,7 @@ export class NewAppointmentComponent implements OnInit {
 			if (formSearchValue.patientId) {
 				this.patientSearch(formSearchValue.patientId);
 				this.patientId = formSearchValue.patientId;
+				this.getPatientMedicalOrders();
 				return;
 			}
 
@@ -177,18 +185,18 @@ export class NewAppointmentComponent implements OnInit {
 					if (data.length) {
 						this.patientId = data[0];
 						this.patientSearch(this.patientId);
+						this.getPatientMedicalOrders();
 					} else {
 						this.patientNotFound();
 					}
-				}
-			);
+				});
 		}
 	}
 
 	updatePhoneValidators() {
 		if (this.appointmentInfoForm.controls.phoneNumber.value || this.appointmentInfoForm.controls.phonePrefix.value) {
-			updateControlValidator(this.appointmentInfoForm, 'phoneNumber', [Validators.required, Validators.pattern(PATTERN_INTEGER_NUMBER) ,Validators.maxLength(VALIDATIONS.MAX_LENGTH.phone)]);
-			updateControlValidator(this.appointmentInfoForm, 'phonePrefix', [Validators.required, Validators.pattern(PATTERN_INTEGER_NUMBER) ,Validators.maxLength(VALIDATIONS.MAX_LENGTH.phonePrefix)]);
+			updateControlValidator(this.appointmentInfoForm, 'phoneNumber', [Validators.required, Validators.pattern(PATTERN_INTEGER_NUMBER), Validators.maxLength(VALIDATIONS.MAX_LENGTH.phone)]);
+			updateControlValidator(this.appointmentInfoForm, 'phonePrefix', [Validators.required, Validators.pattern(PATTERN_INTEGER_NUMBER), Validators.maxLength(VALIDATIONS.MAX_LENGTH.phonePrefix)]);
 		} else {
 			updateControlValidator(this.appointmentInfoForm, 'phoneNumber', []);
 			updateControlValidator(this.appointmentInfoForm, 'phonePrefix', []);
@@ -214,8 +222,8 @@ export class NewAppointmentComponent implements OnInit {
 					this.appointmentInfoForm.controls[control].setErrors(null);
 				}
 				if (reducedPatientDto.personalDataDto.phoneNumber) {
-					updateControlValidator(this.appointmentInfoForm, 'phoneNumber', [Validators.required, Validators.pattern(PATTERN_INTEGER_NUMBER) ,Validators.maxLength(VALIDATIONS.MAX_LENGTH.phone)]);
-					updateControlValidator(this.appointmentInfoForm, 'phonePrefix', [Validators.required, Validators.pattern(PATTERN_INTEGER_NUMBER) ,Validators.maxLength(VALIDATIONS.MAX_LENGTH.phonePrefix)]);
+					updateControlValidator(this.appointmentInfoForm, 'phoneNumber', [Validators.required, Validators.pattern(PATTERN_INTEGER_NUMBER), Validators.maxLength(VALIDATIONS.MAX_LENGTH.phone)]);
+					updateControlValidator(this.appointmentInfoForm, 'phonePrefix', [Validators.required, Validators.pattern(PATTERN_INTEGER_NUMBER), Validators.maxLength(VALIDATIONS.MAX_LENGTH.phonePrefix)]);
 				}
 				this.setMedicalCoverages();
 			}, _ => {
@@ -262,40 +270,43 @@ export class NewAppointmentComponent implements OnInit {
 	}
 
 	submit(itComesFromStep3?: boolean): void {
-		this.isSubmitButtonDisabled = true;
-		this.verifyExistingAppointment().subscribe((appointmentShortSummary: AppointmentShortSummaryDto) => {
-			if (appointmentShortSummary) {
-				const date = this.datePipe.transform(dateDtoToDate(appointmentShortSummary.date), DatePipeFormat.SHORT_DATE)
-				const hour = this.datePipe.transform(timeDtoToDate(appointmentShortSummary.hour), DatePipeFormat.SHORT_TIME)
-				const content = `El paciente ya tiene un turno el ${date} a las ${hour} hs para ${appointmentShortSummary.doctorFullName} en ${appointmentShortSummary.institution}`
+		updateControlValidator(this.appointmentInfoForm, 'appointmentMedicalOrder', [Validators.required]);
+		if (this.isAppointmentFormValid()) {
+			this.isSubmitButtonDisabled = true;
+			this.verifyExistingAppointment().subscribe((appointmentShortSummary: AppointmentShortSummaryDto) => {
+				if (appointmentShortSummary) {
+					const date = this.datePipe.transform(dateDtoToDate(appointmentShortSummary.date), DatePipeFormat.SHORT_DATE)
+					const hour = this.datePipe.transform(timeDtoToDate(appointmentShortSummary.hour), DatePipeFormat.SHORT_TIME)
+					const content = `El paciente ya tiene un turno el ${date} a las ${hour} hs para ${appointmentShortSummary.doctorFullName} en ${appointmentShortSummary.institution}`
 
-				const warnignComponent = this.dialog.open(DiscardWarningComponent,
-					{
-						disableClose: true,
-						data: {
-							title: 'turnos.new-appointment.appointment-exists.TITLE',
-							content: content,
-							contentBold: 'turnos.new-appointment.appointment-exists.ASSIGNMENT-QUESTION',
-							okButtonLabel: 'turnos.new-appointment.appointment-exists.buttons.ASSIGN',
-							cancelButtonLabel: 'turnos.new-appointment.appointment-exists.buttons.NOT-ASSIGN'
-						},
-						maxWidth: '500px'
+					const warnignComponent = this.dialog.open(DiscardWarningComponent,
+						{
+							disableClose: true,
+							data: {
+								title: 'turnos.new-appointment.appointment-exists.TITLE',
+								content: content,
+								contentBold: 'turnos.new-appointment.appointment-exists.ASSIGNMENT-QUESTION',
+								okButtonLabel: 'turnos.new-appointment.appointment-exists.buttons.ASSIGN',
+								cancelButtonLabel: 'turnos.new-appointment.appointment-exists.buttons.NOT-ASSIGN'
+							},
+							maxWidth: '500px'
+						});
+					warnignComponent.afterClosed().subscribe(confirmed => {
+						if (confirmed) {
+							this.createAppointment(itComesFromStep3);
+						} else {
+							this.dialogRef.close(-1);
+						}
 					});
-				warnignComponent.afterClosed().subscribe(confirmed => {
-					if (confirmed) {
-						this.createAppointment(itComesFromStep3);
-					} else {
-						this.dialogRef.close(-1);
-					}
-				});
-			} else {
-				this.createAppointment(itComesFromStep3);
-			}
-		}, error => {
-			this.dialogRef.close();
-			this.isSubmitButtonDisabled = false;
-			processErrors(error, (msg) => this.snackBarService.showError(msg));
-		})
+				} else {
+					this.createAppointment(itComesFromStep3);
+				}
+			}, error => {
+				this.dialogRef.close();
+				this.isSubmitButtonDisabled = false;
+				processErrors(error, (msg) => this.snackBarService.showError(msg));
+			})
+		}
 	}
 
 	private createAppointment(itComesFromStep3?: boolean) {
@@ -340,11 +351,11 @@ export class NewAppointmentComponent implements OnInit {
 	}
 
 	showConfirmButton(): boolean {
-		return this.formSearch.controls.completed.value && this.appointmentInfoForm.valid && !this.data.protectedAppointment;
+		return this.formSearch.controls.completed.value && !this.data.protectedAppointment;
 	}
 
 	disableConfirmButtonStep3(): boolean {
-		return !(this.formSearch.controls.completed.value && this.appointmentInfoForm.valid && this.data.protectedAppointment && this.associateReferenceForm.valid);
+		return !(this.formSearch.controls.completed.value && this.isAppointmentFormValid() && this.data.protectedAppointment && this.associateReferenceForm.valid);
 	}
 
 	private assignAppointment(): void {
@@ -373,7 +384,10 @@ export class NewAppointmentComponent implements OnInit {
 			&& this.formSearch.controls.gender.valid) || this.formSearch.controls.patientId.value;
 	}
 
-	
+	private isAppointmentFormValid() {
+		return this.appointmentInfoForm.valid;
+	}
+
 	toFirstStep() {
 		this.formSearch.controls.completed.reset();
 		this.appointmentInfoForm.reset();
@@ -422,6 +436,10 @@ export class NewAppointmentComponent implements OnInit {
 
 	clearQueryParams() {
 		this.router.navigate([]);
+	}
+
+	getPatientMedicalOrders() {
+		this.patientMedicalOrders$ = this.prescripcionesService.getPrescription(PrescriptionTypes.STUDY, this.patientId, MEDICAL_ORDER_PENDING_STATUS, null, null, null, MEDICAL_ORDER_CATEGORY_ID);
 	}
 
 	private setPhonePrefix(itComesFromStep3: boolean): string {
