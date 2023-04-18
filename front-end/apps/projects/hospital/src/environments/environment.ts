@@ -4,7 +4,9 @@
 
 export const environment = {
 	production: false,
-	apiBase: '/api'
+	apiBase: '/api',
+	branchName: 'local-branch',
+	commitHash: 'local-full-commit',
 };
 
 /*

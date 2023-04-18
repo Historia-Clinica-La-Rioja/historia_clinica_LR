@@ -8,7 +8,7 @@ start_apps=$(date +%s)
 echo "Building Webapp: start"
 cd apps
 [ -d "node_modules" ] || npm install --legacy-peer-deps
-npm run build
+npm run build:prod
 cd -
 
 start_backoffice=$(date +%s)

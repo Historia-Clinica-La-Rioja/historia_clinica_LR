@@ -5,7 +5,7 @@
 		<img src="assets/custom/footer/footer_right.png" [alt]="'logos.footer_right' | translate">
 	</div>
 	<div class="footer-version">
-		<span *ngIf="applicationVersionNumber" class="footer-version-text">
+		<span *ngIf="applicationVersionNumber" class="footer-version-text" [matTooltip]="commitHashText">
 			<strong translate="app.SHORT_NAME"></strong>
 			<span [translate]="'version.SHORTENED'"
 				  [translateParams]="{versionNumber: applicationVersionNumber}"></span>
