@@ -45,5 +45,8 @@ export class EnfermeriaReportService {
     return this.getEnfermeriaReport(params, fileName, url);
   }
   
-     
+  getVaccinesNursingExcelReport(params: any, fileName: string): Observable<any> {
+    const url = `${environment.apiBase}/nursingreports/${this.contextService.institutionId}/vaccinesNursing`;
+    return this.getEnfermeriaReport(params, fileName, url);
+  }
 }

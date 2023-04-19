@@ -90,7 +90,10 @@ export const ENFERMERIA_REPORT_TYPES = [
         description: 'Reporte de procedimientos realizados por Enfermería',
         id: 4,
     },
-   
+    {
+        description: 'Reporte de vacunas realizados por Enfermería',
+        id: 5,
+    },
 ]
 
 
