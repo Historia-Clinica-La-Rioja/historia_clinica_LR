@@ -8,6 +8,9 @@ import lombok.AllArgsConstructor;
 
 import net.pladema.emergencycare.controller.document.documentsearch.dto.EmergencyCareHistoricDocumentDto;
 
+import net.pladema.emergencycare.controller.dto.EmergencyCareEvolutionNoteDocumentDto;
+import net.pladema.emergencycare.controller.mapper.EmergencyCareEvolutionNoteMapper;
+import net.pladema.emergencycare.service.EmergencyCareEvolutionNoteDocumentService;
 import net.pladema.emergencycare.triage.controller.dto.TriageDocumentDto;
 import net.pladema.emergencycare.triage.controller.dto.TriageListDto;
 import net.pladema.emergencycare.triage.controller.mapper.TriageListMapper;
@@ -44,6 +47,10 @@ public class EmergencyCareDocumentSearchController {
 
 	private final DocumentService documentService;
 
+	private final EmergencyCareEvolutionNoteDocumentService emergencyCareEvolutionNoteDocumentService;
+
+	private final EmergencyCareEvolutionNoteMapper emergencyCareEvolutionNoteMapper;
+
 	@GetMapping
 	public ResponseEntity<EmergencyCareHistoricDocumentDto> getEmergencyCareHistoricDocumentList(
 			@PathVariable(name = "institutionId") Integer institutionId,
@@ -57,7 +64,8 @@ public class EmergencyCareDocumentSearchController {
 			if (downloadData.getId() != null)
 				triageAndDocument.add(new TriageDocumentDto(triage, downloadData));
 		});
-		EmergencyCareHistoricDocumentDto result = new EmergencyCareHistoricDocumentDto(triageAndDocument);
+		List<EmergencyCareEvolutionNoteDocumentDto> evolutionNotes = emergencyCareEvolutionNoteMapper.toEmergencyCareEvolutionNoteDocumentListDto(emergencyCareEvolutionNoteDocumentService.getAllDocumentsByEpisodeId(emergencyCareEpisodeId));
+		EmergencyCareHistoricDocumentDto result = new EmergencyCareHistoricDocumentDto(triageAndDocument, evolutionNotes);
 		LOG.debug(OUTPUT, result);
 		return ResponseEntity.ok(result);
 	}

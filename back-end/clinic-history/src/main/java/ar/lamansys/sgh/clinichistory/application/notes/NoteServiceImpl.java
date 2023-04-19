@@ -44,4 +44,12 @@ public class NoteServiceImpl implements NoteService {
         LOG.debug(OUTPUT, result);
         return result;
     }
+
+	@Override
+	public String getEvolutionNoteDescriptionByDocumentId(Long id) {
+		LOG.debug("Input parameters -> noteId {}", id);
+		String result = noteRepository.findEvolutionNoteByDocumentId(id);
+		LOG.debug(OUTPUT, result);
+		return result;
+	}
 }

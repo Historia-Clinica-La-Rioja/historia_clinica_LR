@@ -5,4 +5,6 @@ public interface NoteService {
     Long createNote(String note);
 
     String getDescriptionById(Long id);
+
+	String getEvolutionNoteDescriptionByDocumentId(Long id);
 }

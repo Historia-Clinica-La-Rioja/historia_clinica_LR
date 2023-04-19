@@ -1070,6 +1070,28 @@ export interface EmergencyCareEpisodeListTriageDto {
     name: string;
 }
 
+export interface EmergencyCareEvolutionNoteClinicalData {
+    allergies: OutpatientAllergyConditionDto[];
+    anthropometricData: OutpatientAnthropometricDataDto;
+    diagnosis: DiagnosisDto[];
+    evolutionNote: string;
+    familyHistories: OutpatientFamilyHistoryDto[];
+    mainDiagnosis: HealthConditionDto;
+    medications: OutpatientMedicationDto[];
+    procedures: OutpatientProcedureDto[];
+    reasons: OutpatientReasonDto[];
+    riskFactors: OutpatientRiskFactorDto;
+}
+
+export interface EmergencyCareEvolutionNoteDocumentDto {
+    clinicalSpecialtyName: string;
+    documentId: number;
+    emergencyCareEvolutionNoteClinicalData: EmergencyCareEvolutionNoteClinicalData;
+    fileName: string;
+    performedDate: DateTimeDto;
+    professional: HealthcareProfessionalDto;
+}
+
 export interface EmergencyCareEvolutionNoteDto {
     allergies: OutpatientAllergyConditionDto[];
     anthropometricData: OutpatientAnthropometricDataDto;
@@ -1086,6 +1108,7 @@ export interface EmergencyCareEvolutionNoteDto {
 }
 
 export interface EmergencyCareHistoricDocumentDto {
+    evolutionNotes: EmergencyCareEvolutionNoteDocumentDto[];
     triages: TriageDocumentDto[];
 }
 

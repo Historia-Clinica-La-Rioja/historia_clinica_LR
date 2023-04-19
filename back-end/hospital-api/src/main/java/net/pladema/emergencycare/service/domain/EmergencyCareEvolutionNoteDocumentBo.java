@@ -16,6 +16,7 @@ import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.D
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.SourceType;
 import lombok.Getter;
 import lombok.Setter;
+import net.pladema.staff.service.domain.HealthcareProfessionalBo;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -26,9 +27,15 @@ public class EmergencyCareEvolutionNoteDocumentBo implements IDocumentBo {
 
 	private Long id;
 
+	private String fileName;
+
+	private HealthcareProfessionalBo professional;
+
 	private Integer encounterId;
 
 	private Integer clinicalSpecialtyId;
+
+	private String clinicalSpecialtyName;
 
 	private Integer patientId;
 
