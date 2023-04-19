@@ -12,11 +12,13 @@ import { SnackBarService } from '@presentation/services/snack-bar.service';
 import { forkJoin } from 'rxjs';
 import { anyMatch } from "@core/utils/array.utils";
 import { PermissionsService } from "@core/services/permissions.service";
+import { ActionsButtonService } from '../../../indicacion/services/actions-button.service';
 
 @Component({
 	selector: 'app-study',
 	templateUrl: './study.component.html',
-	styleUrls: ['./study.component.scss']
+	styleUrls: ['./study.component.scss'],
+	providers: [ActionsButtonService]
 })
 export class StudyComponent implements OnInit {
 
