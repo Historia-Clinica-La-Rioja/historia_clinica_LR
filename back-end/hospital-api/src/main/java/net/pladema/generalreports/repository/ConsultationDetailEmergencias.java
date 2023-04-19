@@ -11,10 +11,6 @@ import lombok.ToString;
 @AllArgsConstructor
 public class ConsultationDetailEmergencias {
 
-	private String createdOn;
-
-	private String institutionId;
-
 	private String institution;
 
 	private String ambulance;
