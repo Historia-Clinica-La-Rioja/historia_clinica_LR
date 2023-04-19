@@ -100,7 +100,7 @@
         </div>
         <br/>
         <div class="fixed-width">
-            <div th:if="${patient.person.identificationNumber != null}">
+            <div th:if="${patient.person != null && patient.person.identificationNumber != null}">
                 <div th:with="hasIdentificationType = ${patient.person.identificationType != null}">
                     <strong th:if="${hasIdentificationType}" th:text="${patient.person.identificationType}"></strong>
                     <strong th:unless="${hasIdentificationType}"> Nro. Documento </strong>
@@ -108,7 +108,7 @@
                     <label th:text="${patient.person.identificationNumber}"></label>
                 </div>
             </div>
-            <div th:with="nameIsPresent = ${patient.person.completeName() != null}">
+            <div th:with="nameIsPresent = ${patient.person != null && patient.person.completeName() != null}">
                 <strong> Apellido y nombre: </strong>
                 <label th:if="${nameIsPresent}" th:text="${patient.person.completeName()}"></label>
                 <label th:unless="${nameIsPresent}"> Sin información </label>

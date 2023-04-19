@@ -1,4 +1,4 @@
-package net.pladema.patient.service.domain.enums;
+package ar.lamansys.sgh.shared.infrastructure.input.service.patient.enums;
 
 public enum EPatientType {
 

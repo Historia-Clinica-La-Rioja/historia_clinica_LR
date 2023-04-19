@@ -7,6 +7,8 @@ import ar.lamansys.sgh.clinichistory.infrastructure.input.service.dto.DocumentDt
 import ar.lamansys.sgh.clinichistory.infrastructure.input.service.mapper.DocumentMapper;
 import ar.lamansys.sgh.shared.infrastructure.input.service.BasicPatientDto;
 import ar.lamansys.sgh.shared.infrastructure.input.service.SharedPatientPort;
+import ar.lamansys.sgh.shared.infrastructure.input.service.patient.enums.EPatientType;
+
 import org.springframework.stereotype.Service;
 
 @Service
@@ -39,7 +41,9 @@ public class DocumentExternalFactory {
 
     private PatientInfoBo mapToPatient(Integer patientId) {
         BasicPatientDto patientDto = sharedPatientPort.getBasicDataFromPatient(patientId);
-        return new PatientInfoBo(patientDto.getId(), patientDto.getPerson().getGender().getId(), patientDto.getPerson().getAge());
+		if (!patientDto.getTypeId().equals(EPatientType.EMERGENCY_CARE_TEMPORARY.getId()))
+        	return new PatientInfoBo(patientDto.getId(), patientDto.getPerson().getGender().getId(), patientDto.getPerson().getAge());
+		return new PatientInfoBo(patientDto.getId());
     }
 
 }

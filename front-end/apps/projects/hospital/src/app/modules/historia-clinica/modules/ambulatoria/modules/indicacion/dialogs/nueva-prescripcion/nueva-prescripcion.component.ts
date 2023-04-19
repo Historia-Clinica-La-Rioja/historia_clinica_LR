@@ -91,7 +91,7 @@ export class NuevaPrescripcionComponent implements OnInit {
 
 	setProfessionalSpecialties() {
 		this.clinicalSpecialtyService.getLoggedInProfessionalClinicalSpecialties().subscribe(specialties => {
-			this.setSpecialtyFields(specialties);	
+			this.setSpecialtyFields(specialties);
 		});
 	}
 
@@ -99,7 +99,7 @@ export class NuevaPrescripcionComponent implements OnInit {
 		this.specialties = specialtyArray;
 		const clinicalSpecialty = this.prescriptionForm.get('clinicalSpecialty');
 		clinicalSpecialty.setValue(specialtyArray[0]);
-		if (this.specialties.length === 1) 
+		if (this.specialties.length === 1)
 			clinicalSpecialty.disable();
 		this.prescriptionForm.controls['clinicalSpecialty'].markAsTouched();
 	}
@@ -237,9 +237,9 @@ export class NuevaPrescripcionComponent implements OnInit {
 	openMedicalCoverageDialog(): void {
 		const dialogRef = this.dialog.open(MedicalCoverageComponent, {
 			data: {
-				genderId: this.patientData.person.gender.id,
-				identificationNumber: this.patientData.person.identificationNumber,
-				identificationTypeId: this.patientData.person.identificationTypeId,
+				genderId: this.patientData.person?.gender.id,
+				identificationNumber: this.patientData.person?.identificationNumber,
+				identificationTypeId: this.patientData.person?.identificationTypeId,
 				initValues: this.patientMedicalCoverages,
 				patientId: this.patientData.id
 			}

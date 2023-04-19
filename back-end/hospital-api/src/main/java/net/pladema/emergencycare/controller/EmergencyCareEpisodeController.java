@@ -23,7 +23,7 @@ import ar.lamansys.sgx.shared.dates.controller.dto.DateTimeDto;
 import net.pladema.emergencycare.service.domain.PatientECEBo;
 import net.pladema.patient.repository.entity.Patient;
 import net.pladema.patient.service.PatientService;
-import net.pladema.patient.service.domain.enums.EPatientType;
+import ar.lamansys.sgh.shared.infrastructure.input.service.patient.enums.EPatientType;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

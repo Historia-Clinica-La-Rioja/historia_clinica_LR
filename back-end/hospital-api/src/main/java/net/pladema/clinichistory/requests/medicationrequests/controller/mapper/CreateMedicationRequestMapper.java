@@ -37,7 +37,10 @@ public class CreateMedicationRequestMapper {
         LOG.debug("parseTo -> doctorId {}, patientDto {}, medicationRequest {} ", doctorId, patientDto, medicationRequest);
         MedicationRequestBo result = new MedicationRequestBo();
         result.setDoctorId(doctorId);
-        result.setPatientInfo(new PatientInfoBo(patientDto.getId(), patientDto.getPerson().getGender().getId(), patientDto.getPerson().getAge()));
+		if (patientDto.getPerson() != null)
+        	result.setPatientInfo(new PatientInfoBo(patientDto.getId(), patientDto.getPerson().getGender().getId(), patientDto.getPerson().getAge()));
+		else
+			result.setPatientInfo(new PatientInfoBo(patientDto.getId()));
         result.setHasRecipe(medicationRequest.isHasRecipe());
         result.setMedicalCoverageId(medicationRequest.getMedicalCoverageId());
         result.setMedications(medicationRequest.getItems().stream().map(this::parseTo).collect(Collectors.toList()));
