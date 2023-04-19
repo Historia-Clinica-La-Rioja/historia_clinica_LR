@@ -26,6 +26,7 @@ import { DeleteDocumentActionService } from '../../modules/internacion/services/
 import { EditDocumentActionService } from '../../modules/internacion/services/edit-document-action.service';
 import { TriageDefinitionsService } from '@historia-clinica/modules/guardia/services/triage-definitions.service';
 import { EstadosEpisodio } from '@historia-clinica/modules/guardia/constants/masterdata';
+import { PatientType } from '@historia-clinica/constants/summaries';
 
 @Component({
 	selector: 'app-clinical-history-actions',
@@ -53,6 +54,8 @@ export class ClinicalHistoryActionsComponent implements OnInit {
 	hasInternmentActionsToDo = true;
 	internmentEpisode: InternmentEpisodeProcessDto;
 	documentEpicrisisDraft: DocumentSearchDto;
+
+	isEmergencyCareTemporaryPatient = false;
 	@Input() patientId: number;
 	@Input()
 	set internmentEpisodeProcess(episode: InternmentEpisodeProcessDto) {
@@ -71,6 +74,7 @@ export class ClinicalHistoryActionsComponent implements OnInit {
 	@Input() set emergencyCareEpisode(emergencyCareEpisode: ResponseEmergencyCareDto) {
 		if (emergencyCareEpisode) {
 			this.episode = emergencyCareEpisode;
+			this.isEmergencyCareTemporaryPatient = emergencyCareEpisode.patient.typeId === PatientType.EMERGENCY_CARE_TEMPORARY;
 			this.anyEmergencyCareAction = emergencyCareEpisode?.emergencyCareState?.id !== EstadosEpisodio.CON_ALTA_MEDICA;
 			this.triageDefinitionsService.getTriagePath(emergencyCareEpisode.emergencyCareType?.id)
 				.subscribe(
