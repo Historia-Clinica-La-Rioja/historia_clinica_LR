@@ -107,7 +107,9 @@ export class EnfermeriaComponent implements OnInit {
         case 4:
           this.enfermeriaService.getTotalNursingRecoveryReport(params, `${this.ENFERMERIA_REPORT_TYPES[3].description}.xls`).subscribe();
         break;
-        
+        case 5:
+          this.enfermeriaService.getVaccinesNursingExcelReport(params, `${this.ENFERMERIA_REPORT_TYPES[3].description}.xls`).subscribe();
+        break;
         
         default:
       }
