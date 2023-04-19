@@ -3,6 +3,8 @@ package net.pladema.patient.controller;
 import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -11,6 +13,8 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 import javax.persistence.EntityNotFoundException;
+
+import ar.lamansys.sgx.shared.auth.user.SecurityContextUtils;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -323,6 +327,15 @@ public class PatientController {
 		patientToAdd.setIdentityVerificationStatusId(patientHistory.getIdentityVerificationStatusId());
 		patientToAdd.setComments(patientHistory.getComments());
 		patientToAdd.setNationalId(patientHistory.getNationalId());
+		patientToAdd.setCreatedBy(patientHistory.getCreatedBy());
+		patientToAdd.setCreatedOn(patientHistory.getCreatedOn());
+		patientToAdd.setUpdatedBy(SecurityContextUtils.getUserDetails().userId);
+		patientToAdd.setUpdatedOn(LocalDateTime.now().atZone(ZoneId.of("UTC")).withZoneSameInstant(ZoneId.of("UTC-3")).toLocalDateTime());
+		patientToAdd.setDeletedBy(patientHistory.getDeletedBy());
+		patientToAdd.setDeletedOn(patientHistory.getDeletedOn());
+		patientToAdd.setDeleted(patientHistory.getDeleteable().getDeleted());
+
+
 	}
 
 	private List<Integer> getPersonsIds(List<Patient> patients) {
