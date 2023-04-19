@@ -840,8 +840,7 @@
 
 	<named-native-query name="GeneralReports.ConsultationDetailEmergencias" result-set-mapping="GeneralReports.ConsultationDetailEmergenciasResult">
 		<query>
-			SELECT ece.created_on as createdOn,
-			ins.id as institutionId,
+			SELECT <!-- ece.created_on, ins.id as institution_id, -->
 			concat(ins.name, ' ', ins.sisa_code) AS institution,
 			ece.ambulance_company_id as ambulance,
 			d_of.description as office,
@@ -854,7 +853,7 @@
 			concat(EXTRACT(DAY FROM ece.updated_on), '/', EXTRACT(MONTH FROM ece.updated_on), '/', EXTRACT(YEAR FROM ece.updated_on)) as attentionDate,
 			case
 			when (EXTRACT(HOUR FROM ece.updated_on)) &lt; 3 then
-			concat(24-3, ':', EXTRACT(MINUTE FROM ece.updated_on))
+			concat(24-EXTRACT(HOUR FROM ece.updated_on), ':', EXTRACT(MINUTE FROM ece.updated_on))
 			else concat(EXTRACT(HOUR FROM ece.updated_on)-3, ':', EXTRACT(MINUTE FROM ece.updated_on))
 			end as attentionHour,
 			concat(it.description, ' ', pe.identification_number) as identification,
@@ -887,8 +886,9 @@
 			LEFT JOIN doctors_office d_of ON ece.doctors_office_id=d_of.id
 			LEFT JOIN clinical_specialty_sector css ON d_of.sector_id=css.id
 			LEFT JOIN triage_category tr_cat  ON ece.triage_category_id=tr_cat.id
-			WHERE (ece.created_on >= date_trunc('hour', (now() + (INTERVAL '-24 hour')))
-			AND ece.created_on &lt; date_trunc('hour', now()))
+			WHERE ece.created_on BETWEEN :startDate AND :endDate
+			<!-- WHERE (ece.created_on >= date_trunc('hour', (now() + (INTERVAL '-24 hour')))
+			AND ece.created_on &lt; date_trunc('hour', now())) -->
 			AND ins.id = :institutionId
 		</query>
 	</named-native-query>
@@ -1914,8 +1914,6 @@
 	</sql-result-set-mapping>
 	<sql-result-set-mapping name="GeneralReports.ConsultationDetailEmergenciasResult">
 		<constructor-result target-class="net.pladema.generalreports.repository.ConsultationDetailEmergencias">
-			<column name="createdOn" class="java.lang.String"/>
-			<column name="institutionId" class="java.lang.String"/>
 			<column name="institution" class="java.lang.String"/>
 			<column name="ambulance" class="java.lang.String"/>
 			<column name="office" class="java.lang.String"/>
