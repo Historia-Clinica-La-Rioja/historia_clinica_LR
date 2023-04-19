@@ -48,15 +48,23 @@ public class GeneralReportsController {
 	public @ResponseBody
 	void getDailyEmergencyExcelReport(
 			@PathVariable Integer institutionId,
+			@RequestParam(value = "fromDate", required = true) String fromDate,
+			@RequestParam(value = "toDate", required = true) String toDate,
 			HttpServletResponse response
 	) throws Exception{
 		LOG.debug("Se creará el excel {}", institutionId);
 		LOG.debug("Inputs parameters -> institutionId {}, fromDate {}, toDate{}", institutionId);
 
 		String title = "Emergencias";
-		String[] headers = new String[]{"Fecha de creación", "ID", "Institución", "Ambulancia", "Oficina", "Sector", "Intervención Policial", "Fecha de atención", "Hora de atención", "Identificación", "Apellidos", "Nombres", "Obra social", "Medio de Ingreso", "Estado", "Tipo", "Notas del Triage", "Triage", "Fecha de Alta", "Ambulancia de Alta", "Tipo de Alta", "Salida"};
+		String[] headers = new String[]{"Institución", "Ambulancia", "Oficina", "Sector", "Intervención Policial",
+				"Fecha de atención", "Hora de atención", "Identificación", "Apellidos", "Nombres", "Obra social",
+				"Medio de Ingreso", "Estado", "Tipo", "Notas del Triage", "Triage", "Fecha de Alta",
+				"Ambulancia de Alta", "Tipo de Alta", "Salida"};
 
-		IWorkbook wb = this.excelServiceGR.buildExcelEmergencias(title, headers, this.queryFactoryGR.queryEmergencias(institutionId));
+		LocalDate startDate = localDateMapper.fromStringToLocalDate(fromDate);
+		LocalDate endDate = localDateMapper.fromStringToLocalDate(toDate);
+
+		IWorkbook wb = this.excelServiceGR.buildExcelEmergencias(title, headers, this.queryFactoryGR.queryEmergencias(institutionId, startDate, endDate));
 
 		String filename = title + "." + wb.getExtension();
 		response.addHeader("Content-disposition", "attachment;filename=" + filename);
