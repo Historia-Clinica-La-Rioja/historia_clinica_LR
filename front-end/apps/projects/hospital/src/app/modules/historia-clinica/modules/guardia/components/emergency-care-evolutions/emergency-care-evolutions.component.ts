@@ -1,7 +1,7 @@
 import { Component, Input, OnChanges, OnInit } from '@angular/core';
 import { DOCUMENTS, } from '../../../../constants/summaries';
 import { FormGroup, } from '@angular/forms';
-import { TriageListDto, EmergencyCareHistoricDocumentDto, TriageDocumentDto, } from '@api-rest/api-model';
+import { TriageListDto, EmergencyCareHistoricDocumentDto, TriageDocumentDto, EmergencyCareEvolutionNoteDocumentDto, } from '@api-rest/api-model';
 import { hasError } from '@core/utils/form.utils';
 import { DocumentActionsService, DocumentSearch } from "@historia-clinica/modules/ambulatoria/modules/internacion/services/document-actions.service";
 import { PatientNameService } from "@core/services/patient-name.service";
@@ -86,8 +86,28 @@ export class EmergencyCareEvolutionsComponent implements OnInit, OnChanges {
 	private getHistoric() {
 		this.emergencyCareDocumentSearchService.get(this.emergencyCareId)
 			.subscribe((docs: EmergencyCareHistoricDocumentDto) => {
-				this.documentHistoric = docs.triages.map(map)
+				const triages = docs.triages.map(map);
+				const evolutionsNotes = docs.evolutionNotes.map(evolutionNotesMapper)
+				this.documentHistoric = triages.concat(evolutionsNotes).sort((a, b) => a.summary.createdOn.getTime() - b.summary.createdOn.getTime());
 			})
+
+		function evolutionNotesMapper(en: EmergencyCareEvolutionNoteDocumentDto): Item {
+			return {
+				summary: {
+					createdBy: {
+						firstName: en.professional.person.firstName,
+						lastName: en.professional.person.lastName,
+						nameSelfDetermination: en.professional.nameSelfDetermination
+					},
+					icon: 'assignment',
+					createdOn: dateTimeDtoToDate(en.performedDate),
+					title: 'NOTA DE EVOLUCION MEDICA',
+					docId: en.documentId,
+					docFileName: en.fileName
+				},
+				content: en
+			}
+		}
 
 		function map(doc: TriageDocumentDto): Item {
 			return {

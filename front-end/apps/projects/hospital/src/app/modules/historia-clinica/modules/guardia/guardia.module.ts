@@ -34,6 +34,7 @@ import { SelectConsultorioComponent } from './dialogs/select-consultorio/select-
 import { EpisodeStateService } from './services/episode-state.service';
 import { NewEpisodeService } from './services/new-episode.service';
 import { LastTriageComponent } from './components/last-triage/last-triage.component';
+import { EmergencyCareEvolutionNoteComponent } from './components/emergency-care-evolution-note/emergency-care-evolution-note.component';
 
 @NgModule({
 	declarations: [
@@ -61,7 +62,8 @@ import { LastTriageComponent } from './components/last-triage/last-triage.compon
 		PediatricTriageDialogComponent,
 		SelectConsultorioComponent,
 		EmergencyCareEvolutionsComponent,
-		LastTriageComponent
+		LastTriageComponent,
+		EmergencyCareEvolutionNoteComponent
 	],
 	imports: [
 		CommonModule,

@@ -61,6 +61,7 @@ import { ViewPdfComponent } from './dialogs/view-pdf/view-pdf.component';
 import { AsignPatientButtonComponent } from './components/asign-patient-button/asign-patient-button.component';
 import { EmergencyCareTemporaryPatientHeader } from './components/emergency-care-temporary-patient-header/emergency-care-temporary-patient-header.component';
 import { PatientCardHeaderComponent } from './components/patient-card-header/patient-card-header.component';
+import { TitledContentComponent } from './components/titled-content/titled-content.component';
 
 @NgModule({
 	declarations: [
@@ -120,6 +121,7 @@ import { PatientCardHeaderComponent } from './components/patient-card-header/pat
 		AsignPatientButtonComponent,
 		EmergencyCareTemporaryPatientHeader,
 		PatientCardHeaderComponent,
+		TitledContentComponent,
 	],
 	imports: [
 		CommonModule,
@@ -184,7 +186,8 @@ import { PatientCardHeaderComponent } from './components/patient-card-header/pat
 		ViewHourMinutePipe,
 		AsignPatientButtonComponent,
 		EmergencyCareTemporaryPatientHeader,
-		PatientCardHeaderComponent
+		PatientCardHeaderComponent,
+		TitledContentComponent
 	],
 	entryComponents: [
 		DockPopupComponent

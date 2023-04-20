@@ -1,0 +1,11 @@
+<div style="margin-bottom: 1em;">
+	<div fxLayout="row" fxLayoutGap=".25em">
+		<mat-icon fontSet="material-icons-outlined">{{icon}}</mat-icon>
+		<h3>{{title}}</h3>
+	</div>
+	<div style="display: grid; grid-template-columns: 1fr 1fr; grid-column-gap: 3em; row-gap: 1em;">
+		<div *ngFor="let c of content">
+			<span>{{c}}</span>
+		</div>
+	</div>
+</div>
