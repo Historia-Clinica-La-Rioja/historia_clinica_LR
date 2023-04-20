@@ -13,7 +13,7 @@ public interface NoteRepository extends JpaRepository<Note, Long> {
 	@Transactional(readOnly = true)
 	@Query(value = "SELECT n.description " +
 			"FROM Document d " +
-			"JOIN Note n ON (d.evolutionNoteId = n.id) " +
+			"JOIN Note n ON (d.otherNoteId = n.id) " +
 			"WHERE d.id = :id ")
 	String findEvolutionNoteByDocumentId(@Param("id") Long id);
 
