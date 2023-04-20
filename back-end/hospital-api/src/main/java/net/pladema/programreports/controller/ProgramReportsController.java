@@ -210,4 +210,31 @@ public class ProgramReportsController {
 		response.flushBuffer();
 	}
 
+	@GetMapping(value = "/{institutionId}/recuperoOdontology")
+	@PreAuthorize("hasPermission(#institutionId, 'ADMINISTRADOR_INSTITUCIONAL_BACKOFFICE, PERSONAL_DE_ESTADISTICA')")
+	public @ResponseBody
+	void getReportRecuperoOdontology(
+	@PathVariable Integer institutionId,
+	@RequestParam(value="fromDate", required = true) String fromDate,
+	@RequestParam(value="toDate", required = true) String toDate,
+	HttpServletResponse response
+	)throws Exception {
+		String title = "Reporte de recupero odontologico";
+		String[] headers = new String[]{"Institucion", "Unidad Operativa", "Prestador", "DNI", "Fecha de Atencion", "Hora", "DNI paciente", "Nombre Paciente", "Sexo", "Fecha de nacimiento", "Edad a fecha de turno", "Obra social", "Domicilio", "Localidad", "CPO permanentes", "CEO permanentes", "Motivos", "procedimientos", "Procedimientos de odontologia", "Problemas", "Diagnosticos de odontologia"};
+
+		LocalDate startDate = localDateMapper.fromStringToLocalDate(fromDate);
+		LocalDate endDate = localDateMapper.fromStringToLocalDate(toDate);
+
+		IWorkbook wb = this.excelService.buildExcelOdontologiaRecupero(title, headers, this.queryFactoryPR.queryOdontologiaRecupero(institutionId, startDate, endDate));
+
+		String filename = title + "." + wb.getExtension();
+		response.addHeader("Content-disposition", "attachment;filename= " + filename);
+		response.setContentType(wb.getContentType());
+
+		OutputStream out = response.getOutputStream();
+		wb.write(out);
+		out.close();
+		out.flush();
+		response.flushBuffer();
+	}
 }
