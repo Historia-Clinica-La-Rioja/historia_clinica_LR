@@ -833,6 +833,58 @@
 			order by oc.created_on;
 		</query>
 	</named-native-query>
+
+	<named-native-query name="ProgramReports.ConsultationDetailOdontologiaRecupero" result-set-mapping="ProgramReports.ConsultationDetailOdontologiaRecuperoResult">
+		<query>
+			SELECT concat(ins.name, '(SISA: ', ins.sisa_code, ' | CUIT: ', ins.cuit, ')') AS institution, cs.name AS operativeUnit,
+			concat(p.first_name, ' ', p.middle_names, ' ', p.last_name, ' ', p.other_last_names) AS lender, p.identification_number AS identificationNumber,
+			oc.performed_date AS attentionDate,
+			CASE
+			WHEN (EXTRACT(HOUR FROM oc.created_on)) &lt; 3 THEN
+			concat(24-3, ':', EXTRACT(MINUTE FROM oc.created_on))
+			ELSE concat(EXTRACT(HOUR FROM oc.created_on)-3, ':', EXTRACT(MINUTE FROM oc.created_on))
+			END AS hour,
+			pp.identification_number AS patientIdentificationNumber, concat(pp.first_name , ' ', pp.last_name) AS patientName, g.description AS gender, pp.birth_date birthDate,
+			case
+			when (EXTRACT(MONTH FROM oc.performed_date) - EXTRACT(MONTH FROM pp.birth_date)) &lt; 0 then
+			concat((EXTRACT(YEAR FROM oc.performed_date) - EXTRACT(YEAR FROM pp.birth_date)) -1, ' Años, ', 12 +(EXTRACT(MONTH FROM oc.performed_date) - EXTRACT(MONTH FROM pp.birth_date)), ' Meses')
+			else concat((EXTRACT(YEAR FROM oc.performed_date) - EXTRACT(YEAR FROM pp.birth_date)), ' Años, ', (EXTRACT(MONTH FROM oc.performed_date) - EXTRACT(MONTH FROM pp.birth_date)), ' Meses')
+			END AS ageTurn,
+			concat(mc.name, '(RNOS: ', hi.rnos, ')') AS medicalCoverage,
+			concat(a.street, ' N° ', a.number, CASE WHEN a.floor IS NOT NULL THEN concat(' Piso: ', a.floor, 'Departamento: ', a.apartment) END) AS address,
+			c.description AS location,
+			concat(oci.permanent_c, '|', oci.permanent_p, '|', oci.permanent_o) AS cpo, concat(oci.temporary_c, '|', oci.temporary_e, '|', oci.temporary_o) AS ceo,
+			(SELECT string_agg(r.description, ', ') FROM odontology_consultation_reason ocr INNER JOIN odontology_reason r ON ocr.reason_id=r.id WHERE ocr.odontology_consultation_id=oc.id) AS reasons,
+			(SELECT string_agg(concat(s_proc.pt, '(', ps.description, ' | SNOMED: ', s_proc.sctid, ' | CIE10: ', proc.cie10_codes, ')'), ', ') from document_procedure dp INNER JOIN procedures PROC ON dp.procedure_id=proc.id INNER JOIN procedures_status ps ON proc.status_id=ps.id INNER JOIN snomed s_proc ON proc.snomed_id=s_proc.id WHERE dp.document_id=d.id) AS procedures,
+			(SELECT string_agg(concat(s_p.pt, '(SNOMED: ', s_p.sctid, ' | CIE10: ', op.cie10_codes, ')[diente: ', stp.pt, ' | sctid: ', stp.sctid, '][superficie: ', sfp.pt, ' | sctid', sfp.sctid, ']'), ', ') FROM document_odontology_procedure dop INNER JOIN odontology_procedure op ON dop.odontology_procedure_id=op.id INNER JOIN snomed s_p ON op.snomed_id=s_p.id
+			LEFT JOIN snomed stp ON op.tooth_id=stp.id LEFT JOIN snomed sfp ON op.surface_id=sfp.id WHERE dop.document_id=d.id) AS odontologyProcedures,
+			(SELECT string_agg(concat(s_prob.pt,' (',ccs.description,' &amp; ',cvs.description,' - Fecha: ',hc.start_date ,')', '[SNOMED: ', s_prob.sctid, ' | CIE10: ', hc.cie10_codes, ']'), ', ')
+			from document_health_condition dhc INNER JOIN health_condition hc ON dhc.health_condition_id=hc.id INNER JOIN problem_type pt ON hc.problem_id=pt.id INNER JOIN snomed s_prob ON hc.snomed_id=s_prob.id INNER JOIN condition_clinical_status ccs ON hc.status_id=ccs.id INNER JOIN condition_verification_status cvs ON hc.verification_status_id=cvs.id WHERE dhc.document_id=d.id) AS problems,
+			(SELECT string_agg(concat(s_d.pt, '(SNOMED: ', s_d.sctid, ' | CIE10: ', od.cie10_codes, ')[diente: ', std.pt, ' | sctid: ', std.sctid, '][superficie: ', sfd.pt, ' | sctid', sfd.sctid, ']'), ', ')
+			FROM document_odontology_diagnostic dod INNER JOIN odontology_diagnostic od ON dod.odontology_diagnostic_id=od.id INNER JOIN snomed s_d ON od.snomed_id=s_d.id LEFT JOIN snomed std ON od.tooth_id=std.id LEFT JOIN snomed sfd ON od.surface_id=sfd.id WHERE dod.document_id=d.id) AS odontologyDiagnosis
+			FROM odontology_consultation oc
+			LEFT JOIN odontology_consultation_indices oci ON oci.odontology_consultation_id=oc.id
+			LEFT JOIN institution ins ON oc.institution_id=ins.id
+			LEFT JOIN clinical_specialty cs ON oc.clinical_specialty_id=cs.id
+			LEFT JOIN healthcare_professional hp ON oc.doctor_id=hp.id
+			INNER JOIN person p ON hp.person_id=p.id
+			LEFT JOIN patient pa ON oc.patient_id=pa.id
+			INNER JOIN person pp ON pa.person_id=pp.id
+			LEFT JOIN person_extended pe ON pe.person_id=pp.id
+			INNER JOIN gender g ON pp.gender_id=g.id
+			LEFT JOIN gender gg ON pe.gender_self_determination=gg.id
+			LEFT JOIN patient_medical_coverage pmc ON pmc.patient_id=oc.patient_medical_coverage_id
+			LEFT JOIN medical_coverage mc ON pmc.medical_coverage_id=mc.id
+			LEFT JOIN health_insurance hi ON hi.id=mc.id
+			LEFT JOIN address a ON pe.address_id=a.id
+			LEFT JOIN city c ON a.city_id=c.id
+			LEFT JOIN document d ON d.source_id=oc.id AND d.source_type_id=6
+			WHERE oc.created_on BETWEEN :startDate AND :endDate
+			AND (pmc.id is not null AND NOT (lower(mc.name) like '%sumar%'))
+			AND ins.id= :institutionId
+			ORDER BY oc.created_on;
+		</query>
+	</named-native-query>
 	
 	<!-- ========================================== -->
 	<!-- ============== General Reports =============== -->
@@ -2187,6 +2239,31 @@
 			<column name="vaccinationSchedule" class="java.lang.String"/>
 			<column name="vaccinationDosage" class="java.lang.String"/>
 			<column name="vaccinationLot" class="java.lang.String"/>
+		</constructor-result>
+	</sql-result-set-mapping>
+	<sql-result-set-mapping name="ProgramReports.ConsultationDetailOdontologiaRecuperoResult">
+		<constructor-result target-class="net.pladema.programreports.repository.ConsultationDetailRecuperoOdontologia">
+			<column name="institution" class="java.lang.String"/>
+			<column name="operativeUnit" class="java.lang.String"/>
+			<column name="lender" class="java.lang.String"/>
+			<column name="identificationNumber" class="java.lang.String"/>
+			<column name="attentionDate" class="java.lang.String"/>
+			<column name="hour" class="java.lang.String"/>
+			<column name="patientIdentificationNumber" class="java.lang.String"/>
+			<column name="patientName" class="java.lang.String"/>
+			<column name="gender" class="java.lang.String"/>
+			<column name="birthDate" class="java.lang.String"/>
+			<column name="ageTurn" class="java.lang.String"/>
+			<column name="medicalCoverage" class="java.lang.String"/>
+			<column name="address" class="java.lang.String"/>
+			<column name="location" class="java.lang.String"/>
+			<column name="cpo" class="java.lang.String"/>
+			<column name="ceo" class="java.lang.String"/>
+			<column name="reasons" class="java.lang.String"/>
+			<column name="procedures" class="java.lang.String"/>
+			<column name="odontologyProcedures" class="java.lang.String"/>
+			<column name="problems" class="java.lang.String"/>
+			<column name="odontologyDiagnosis" class="java.lang.String"/>
 		</constructor-result>
 	</sql-result-set-mapping>
 </entity-mappings>
