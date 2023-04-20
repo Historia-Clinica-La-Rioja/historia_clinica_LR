@@ -1,6 +1,6 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
-import { DiagnosticReportInfoDto } from '@api-rest/api-model';
 import { ADVICE } from '../../constants/internment-studies';
+import { DiagnosticReportInfoDto } from '@api-rest/api-model';
 
 @Component({
 	selector: 'app-study-advice-card',

@@ -14,6 +14,8 @@ import { anyMatch } from "@core/utils/array.utils";
 import { PermissionsService } from "@core/services/permissions.service";
 import { ActionsButtonService } from '../../../indicacion/services/actions-button.service';
 
+const IMAGE_DIAGNOSIS_ID = '363679005';
+
 @Component({
 	selector: 'app-study',
 	templateUrl: './study.component.html',
@@ -22,15 +24,22 @@ import { ActionsButtonService } from '../../../indicacion/services/actions-butto
 })
 export class StudyComponent implements OnInit {
 
-	@Input() studies: DiagnosticReportInfoDto[];
+	@Input() set studies(studies: DiagnosticReportInfoDto[]){
+		studies.forEach(study => {
+			study.category === IMAGE_DIAGNOSIS_ID ? 
+				this._studies.push(this.mapToStudyInformation(study, false)) :
+				this._studies.push(this.mapToStudyInformation(study,true));
+		})
+	};
 	@Input() studyHeader: Title;
 	@Input() patientId: number;
 	@Output() updateCurrentReportsEventEmitter = new EventEmitter<void>();
 	STUDY_STATUS = STUDY_STATUS;
-	private sameOrderStudies: Map<Number, DiagnosticReportInfoDto[]>;
+	private sameOrderStudies: Map<Number, StudyInformation[]>;
 	hasPicturesStaffRole = false;
 	hasLaboratoryStaffRole = false;
 	hasPharmacyStaffRole = false;
+	_studies: StudyInformation[];
 
 	constructor(
 		private readonly prescripcionesService: PrescripcionesService,
@@ -43,9 +52,16 @@ export class StudyComponent implements OnInit {
 	ngOnInit(): void {
 		this.setActionsLayout();
 		this.sameOrderStudies = new Map();
-		this.studies = this.classifyStudiesWithTheSameOrder(this.studies);
-		this.studies.sort((studyA, studyB) => studyB.creationDate.getTime() - studyA.creationDate.getTime())
+		this._studies = this.classifyStudiesWithTheSameOrder(this._studies);
+		this._studies.sort((studyA, studyB) => studyB.diagnosticInformation.creationDate.getTime() - studyA.diagnosticInformation.creationDate.getTime())
 	}
+
+	private mapToStudyInformation(report: DiagnosticReportInfoDto, canBeDeleted: boolean): StudyInformation {
+        return {
+            'diagnosticInformation': report,
+            canBeDeleted,
+        }
+    }
 
 	contentBuilder(diagnosticReport: DiagnosticReportInfoDto): Content {
 		const prescriptionStatus = this.prescripcionesService.renderStatusDescription(PrescriptionTypes.STUDY, diagnosticReport.statusId);
@@ -113,7 +129,7 @@ export class StudyComponent implements OnInit {
 
 	deleteStudy(studyToDelete: DiagnosticReportInfoDto) {
 		let deleteQuery = this.sameOrderStudies.has(studyToDelete.serviceRequestId) ?
-			this.sameOrderStudies.get(studyToDelete.serviceRequestId).map(report => this.prescripcionesService.deleteStudy(this.patientId, report.id))
+			this.sameOrderStudies.get(studyToDelete.serviceRequestId).map(report => this.prescripcionesService.deleteStudy(this.patientId, report.diagnosticInformation.id))
 			: this.prescripcionesService.deleteStudy(this.patientId, studyToDelete.id);
 		forkJoin(deleteQuery).subscribe(
 			() => {
@@ -130,24 +146,29 @@ export class StudyComponent implements OnInit {
 		return this.translateService.instant('app.menu.INTERNACION') === source;
 	}
 
-	private classifyStudiesWithTheSameOrder(reports: DiagnosticReportInfoDto[]): DiagnosticReportInfoDto[] {
-		let orders = new Set(reports?.map(report => report.serviceRequestId));
+	private classifyStudiesWithTheSameOrder(reports: StudyInformation[]): StudyInformation[] {
+		let orders = new Set(reports?.map(report => report.diagnosticInformation.serviceRequestId));
 		orders.forEach(order => {
-			let currentOrderStudies = reports.filter(report => report.serviceRequestId === order);
+			let currentOrderStudies = reports.filter(report => report.diagnosticInformation.serviceRequestId === order);
 			if (currentOrderStudies.length > 1) {
 				this.sameOrderStudies.set(order, currentOrderStudies);
-				reports = reports.filter(report => report.serviceRequestId !== order);
+				reports = reports.filter(report => report.diagnosticInformation.serviceRequestId !== order);
 				this.formatStudiesWithTheSameOrder(reports, currentOrderStudies);
 			}
 		});
 		return reports;
 	}
 
-	private formatStudiesWithTheSameOrder(reports: DiagnosticReportInfoDto[], studiesToGroup: DiagnosticReportInfoDto[]): DiagnosticReportInfoDto[] {
+	private formatStudiesWithTheSameOrder(reports: StudyInformation[], studiesToGroup: StudyInformation[]): StudyInformation[] {
 		let newStudy = studiesToGroup[0];
-		studiesToGroup.slice(1).forEach(studyToGroup => newStudy.snomed.pt = newStudy.snomed.pt.concat(' | ', studyToGroup.snomed.pt));
+		studiesToGroup.slice(1).forEach(studyToGroup => newStudy.diagnosticInformation.snomed.pt = newStudy.diagnosticInformation.snomed.pt.concat(' | ', studyToGroup.diagnosticInformation.snomed.pt));
 		reports.push(newStudy);
 		return reports;
 	}
 
+}
+
+interface StudyInformation {
+    diagnosticInformation: DiagnosticReportInfoDto;
+    canBeDeleted: boolean;
 }
