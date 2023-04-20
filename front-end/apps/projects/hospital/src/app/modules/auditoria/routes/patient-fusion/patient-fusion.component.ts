@@ -14,7 +14,7 @@ import { SnackBarService } from '@presentation/services/snack-bar.service';
 import { PAGE_MIN_SIZE } from '@historia-clinica/modules/ambulatoria/modules/indicacion/constants/internment-indications';
 import { PAGE_SIZE_OPTIONS } from '@historia-clinica/modules/ambulatoria/modules/indicacion/constants/internment-indications';
 import { Filters } from '../control-patient-duplicate/control-patient-duplicate.component';
-import { PatientProfileComponent } from '@historia-clinica/modules/ambulatoria/routes/patient-profile/patient-profile.component';
+import { PatientProfilePopupComponent } from '../../dialogs/patient-profile-popup/patient-profile-popup.component';
 
 const ROUTE_CONTROL_PATIENT_DUPLICATE = "auditoria/control-pacientes-duplicados"
 
@@ -285,10 +285,11 @@ export class PatientFusionComponent implements OnInit {
 	}
 
 	viewPatient(patient:any) {
-		const dialogRef = this.dialog.open(PatientProfileComponent, {
+		 this.dialog.open(PatientProfilePopupComponent, {
 			data:{
 				patientId : patient.patientId,
 			},
+			width:'30%',
 			disableClose: true,
 			autoFocus: false
 		})

@@ -1,0 +1,20 @@
+<div fxLayout="column" fxFlex="100%">
+		<app-patient-card *ngIf="personPhoto" [patient]="patientBasicData" [personPhoto]="personPhoto"
+						  [internmentEpisodeProcess]="internmentEpisode"
+						  [emergencyCareEpisodeInProgress]="emergencyCareEpisodeInProgress?.inProgress">
+			<div header id="header" fxLayout="row" fxLayoutAlign="space-between center" >
+				<app-patient-type-logo fxFlex="40%" [patientTypeData]="patientTypeData" class="patientTypeData"></app-patient-type-logo>
+				<button mat-icon-button mat-dialog-close>
+					<mat-icon>close</mat-icon>
+				</button>
+			</div>
+			<div content>
+				<app-personal-information [personalInformation]="personalInformation"
+										  [patientMedicalCoverage]="patientMedicalCoverage"
+										  [showButtonGoToMedicalHistory]="showButtonGoToMedicalHistory"
+										  >
+				</app-personal-information>
+			</div>
+		</app-patient-card>
+</div>
+

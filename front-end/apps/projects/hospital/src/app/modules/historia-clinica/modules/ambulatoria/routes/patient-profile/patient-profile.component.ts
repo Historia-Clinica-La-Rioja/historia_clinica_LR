@@ -19,7 +19,6 @@ import { PatientMedicalCoverageService } from '@api-rest/services/patient-medica
 import { AppRoutes } from 'projects/hospital/src/app/app-routing.module';
 import { ContextService } from '@core/services/context.service';
 import { EmergencyCareEpisodeSummaryService } from "@api-rest/services/emergency-care-episode-summary.service";
-import { MAT_DIALOG_DATA } from '@angular/material/dialog';
 
 
 @Component({
@@ -49,16 +48,13 @@ export class PatientProfileComponent implements OnInit {
 		private readonly contextService: ContextService,
 		private readonly router: Router,
 		private readonly patientMedicalCoverageService: PatientMedicalCoverageService,
-		private readonly emergencyCareEpisodeSummaryService: EmergencyCareEpisodeSummaryService,@Inject(MAT_DIALOG_DATA) public data: {patientId:number}) {
+		private readonly emergencyCareEpisodeSummaryService: EmergencyCareEpisodeSummaryService) {
 	}
 
 	ngOnInit(): void {
 		this.route.paramMap.subscribe(
 			(params) => {
 				this.patientId = Number(params.get('idPaciente'));
-				if(!this.patientId){
-					this.patientId = this.data.patientId;
-				}
 				this.patientService.getPatientCompleteData<CompletePatientDto>(this.patientId)
 					.subscribe(completeData => {
 						this.patientTypeData = this.mapperService.toPatientTypeData(completeData.patientType);

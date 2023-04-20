@@ -10,6 +10,7 @@ import { ControlPatientDuplicateComponent } from './routes/control-patient-dupli
 import { PatientFusionComponent } from './routes/patient-fusion/patient-fusion.component';
 import { WarningFusionComponent } from './dialogs/warning-fusion/warning-fusion.component';
 import { ConfirmedFusionComponent } from './dialogs/confirmed-fusion/confirmed-fusion.component';
+import { PatientProfilePopupComponent } from './dialogs/patient-profile-popup/patient-profile-popup.component';
 
 
 
@@ -20,7 +21,8 @@ import { ConfirmedFusionComponent } from './dialogs/confirmed-fusion/confirmed-f
     ControlPatientDuplicateComponent,
     PatientFusionComponent,
     WarningFusionComponent,
-    ConfirmedFusionComponent
+    ConfirmedFusionComponent,
+    PatientProfilePopupComponent
   ],
   imports: [
     CommonModule,
