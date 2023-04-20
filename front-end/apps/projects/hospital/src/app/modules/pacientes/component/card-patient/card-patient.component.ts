@@ -99,7 +99,7 @@ export class CardPatientComponent {
 				do: `${this.routePrefix}ambulatoria/paciente/${idPatient}`
 			}
 		else {
-			if (legalPerson && this.printClinicalHistoryFFIsOn)
+			if (legalPerson)
 				return {
 					display: undefined,
 					do: ''
