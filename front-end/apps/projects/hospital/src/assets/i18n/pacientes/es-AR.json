@@ -186,6 +186,7 @@
       "LICENCE": "Matrícula:",
       "PROFESSION": "Profesión:",
       "SPECIALTY": "Especialidad:",
+	  "NO_DOCUMENTS":"Aun no hay archivos adjuntos cargados",
       "buttons": {
         "CREATE_USER": "CREAR USUARIO",
         "SET_ACCESS_DATA": "ESTABLECER DATOS DE ACCESO",

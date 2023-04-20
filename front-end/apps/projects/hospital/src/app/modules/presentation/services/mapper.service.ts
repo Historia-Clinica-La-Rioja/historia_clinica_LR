@@ -92,7 +92,10 @@ export class MapperService {
 			medicalCoverageAffiliateNumber: patient.medicalCoverageAffiliateNumber,
 			files: patient.person.files,
 			personId:patient.person.id,
-
+			educationLevel: patient.person.educationLevel,
+			ethnicity:patient.person.ethnicity,
+			occupation: patient.person.occupation,
+			religion: patient.person.religion,
 		};
 		personalInformation.address.id = null;
 		return personalInformation;

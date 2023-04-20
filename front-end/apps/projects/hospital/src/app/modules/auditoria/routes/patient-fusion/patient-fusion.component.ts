@@ -289,6 +289,7 @@ export class PatientFusionComponent implements OnInit {
 			data:{
 				patientId : patient.patientId,
 			},
+			maxHeight:"500px",
 			width:'30%',
 			disableClose: true,
 			autoFocus: false

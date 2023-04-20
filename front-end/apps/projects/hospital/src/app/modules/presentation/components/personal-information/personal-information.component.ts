@@ -1,5 +1,4 @@
 import { Component, EventEmitter, Input, OnChanges, Output } from '@angular/core';
-import { Router } from '@angular/router';
 import { AddressDto, HealthInsuranceDto, IdentificationTypeDto, PatientMedicalCoverageDto, PersonFileDto } from '@api-rest/api-model';
 import { ContextService } from '@core/services/context.service';
 import { Address } from '@presentation/pipes/fullHouseAddress.pipe';
@@ -86,4 +85,8 @@ export class PersonalInformation {
 	medicalCoverageAffiliateNumber: string;
 	files?: PersonFileDto[];
 	personId:number;
+	educationLevel: string;
+    ethnicity: string;
+	occupation: string;
+	religion: string;
 }

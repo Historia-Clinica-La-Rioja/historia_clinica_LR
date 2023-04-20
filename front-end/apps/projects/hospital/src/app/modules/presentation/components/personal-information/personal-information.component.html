@@ -1,8 +1,12 @@
 <ng-template #noInformation>
-	<span class="noInformation">Sin Información</span>
+	<span class="noInformation">{{'pacientes.user_data.NO_INFO' | translate}}</span>
+</ng-template>
+<ng-template #noDocuments>
+	<span class="noInformation">{{'pacientes.user_data.NO_DOCUMENTS' | translate}}</span>
 </ng-template>
 <div fxLayout="row" class="form-row" *ngIf="showButtonGoToMedicalHistory">
-	<a  *appHasRole="['ESPECIALISTA_MEDICO', 'PROFESIONAL_DE_SALUD', 'ENFERMERO', 'ESPECIALISTA_EN_ODONTOLOGIA', 'PERSONAL_DE_IMAGENES', 'PERSONAL_DE_LABORATORIO', 'PERSONAL_DE_FARMACIA', 'PRESCRIPTOR']" mat-raised-button color="primary" (click)="buttonIsPressedGoToMedicalHistory()">
+	<a *appHasRole="['ESPECIALISTA_MEDICO', 'PROFESIONAL_DE_SALUD', 'ENFERMERO', 'ESPECIALISTA_EN_ODONTOLOGIA', 'PERSONAL_DE_IMAGENES', 'PERSONAL_DE_LABORATORIO', 'PERSONAL_DE_FARMACIA', 'PRESCRIPTOR']"
+		mat-raised-button color="primary" (click)="buttonIsPressedGoToMedicalHistory()">
 		<span class="uppercase" [translate]="'ambulatoria.paciente.profile.BUTTON_HISTORIA_CLINICA'"></span>
 	</a>
 </div>
@@ -15,12 +19,14 @@
 		<span class="info-title">Documento</span>
 		<span
 			*ngIf="(personalInformation?.identificationType?.length || personalInformation?.identificationNumber?.length); else noInformation"
-			class="info-content">{{personalInformation?.identificationType.description}} {{personalInformation?.identificationNumber}}
+			class="info-content">{{personalInformation?.identificationType.description}}
+			{{personalInformation?.identificationNumber}}
 		</span>
 	</div>
 	<div fxFlex="50%">
 		<span class="info-title">CUIL/CUIT</span>
-		<span class="info-content" *ngIf="personalInformation?.cuil; else noInformation">{{personalInformation?.cuil}}</span>
+		<span class="info-content"
+			*ngIf="personalInformation?.cuil; else noInformation">{{personalInformation?.cuil}}</span>
 	</div>
 </div>
 <mat-divider inset></mat-divider>
@@ -30,24 +36,27 @@
 		<span *ngIf="addressPresent; else noInformation">
 			<span class="info-content">{{address | fullHouseAddress}}</span>
 			<span *ngIf="personalInformation?.address?.city?.description"
-			      class="info-content">{{personalInformation?.address?.city?.description}}
+				class="info-content">{{personalInformation?.address?.city?.description}}
 				, {{personalInformation?.address?.province?.description}}</span>
 		</span>
 	</div>
 	<div fxFlex="50%">
 		<span class="info-title">Fecha de Nacimiento</span>
-		<span *ngIf="personalInformation?.birthDate; else noInformation" class="info-content">{{personalInformation?.birthDate}}</span>
+		<span *ngIf="personalInformation?.birthDate; else noInformation"
+			class="info-content">{{personalInformation?.birthDate}}</span>
 	</div>
 </div>
 <mat-divider inset></mat-divider>
 <div fxLayout="row" fxLayoutGap="15px" fxLayoutAlign="space-between" class="form-row" style="word-break: break-all;">
 	<div fxFlex="50%">
 		<span class="info-title">Email</span>
-		<span *ngIf="personalInformation?.email; else noInformation" class="info-content">{{personalInformation?.email}}</span>
+		<span *ngIf="personalInformation?.email; else noInformation"
+			class="info-content">{{personalInformation?.email}}</span>
 	</div>
 	<div fxFlex="50%">
 		<span class="info-title">Nro de teléfono</span>
-		<span *ngIf="personalInformation?.phoneNumber; else noInformation" class="info-content">{{formatPhonePrefixAndNumber()}}</span>
+		<span *ngIf="personalInformation?.phoneNumber; else noInformation"
+			class="info-content">{{formatPhonePrefixAndNumber()}}</span>
 	</div>
 </div>
 <mat-divider inset></mat-divider>
@@ -60,12 +69,13 @@
 					<mat-expansion-panel-header>
 						<mat-panel-title>
 							<div fxLayout="row">
-								<span class="info-content medical-coverage-acronym-name">{{ patientMC.medicalCoverage?.type==typeObraSocial ?
+								<span class="info-content medical-coverage-acronym-name">{{
+									patientMC.medicalCoverage?.type==typeObraSocial ?
 									getAcronym(patientMC) : patientMC.medicalCoverage?.name }}</span>
 								<span>&nbsp;{{ patientMC.affiliateNumber }}</span>
 							</div>
 						</mat-panel-title>
-                    </mat-expansion-panel-header>
+					</mat-expansion-panel-header>
 					<span>
 						{{ patientMC.medicalCoverage?.name}}
 					</span>
@@ -79,31 +89,64 @@
 						</span>
 					</span>
 					<div *ngIf="patientMC.medicalCoverage.type==typeART">
-					<span fxLayout="row" fxLayoutGap="10px" translate="medical-coverage.ART">
-					</span>
+						<span fxLayout="row" fxLayoutGap="10px" translate="medical-coverage.ART">
+						</span>
 						<span fxLayout="row" fxLayoutGap="10px" translate="medical-coverage.CUIT_VIEW"
-							  [translateParams]="{cuit: patientMC.medicalCoverage.cuit}">
-					</span>
+							[translateParams]="{cuit: patientMC.medicalCoverage.cuit}">
+						</span>
 					</div>
 				</mat-expansion-panel>
 			</div>
 		</span>
 	</div>
 </div>
-<div fxLayout="row" fxLayoutGap="15px" fxLayoutAlign="space-between" class="form-row" *appHasRole="['ADMINISTRATIVO','ADMINISTRADOR_INSTITUCIONAL_BACKOFFICE', 'ADMINISTRATIVO_RED_DE_IMAGENES', 'ADMINISTRADOR_INSTITUCIONAL_PRESCRIPTOR']">
+<mat-divider inset></mat-divider>
+<div fxLayout="row" fxLayoutGap="15px" fxLayoutAlign="space-between" class="form-row">
+	<div fxFlex="50%">
+		<span class="info-title">{{'pacientes.form.OCCUPATION' | translate}}</span>
+		<span *ngIf="personalInformation?.occupation; else noInformation"
+		 class="info-content">{{personalInformation.occupation}}</span>
+	</div>
+	<div fxFlex="50%">
+		<span class="info-title">{{'pacientes.form.EDUCATION_LEVEL' | translate}}</span>
+		<span *ngIf="personalInformation?.educationLevel; else noInformation"
+			class="info-content">{{personalInformation?.educationLevel}}</span>
+	</div>
+</div>
+<mat-divider inset></mat-divider>
+<div fxLayout="row" fxLayoutGap="15px" fxLayoutAlign="space-between" class="form-row">
+	<div fxFlex="50%">
+		<span class="info-title">{{'pacientes.form.RELIGION' | translate}}</span>
+		<span *ngIf="personalInformation?.religion; else noInformation"
+		 class="info-content">{{personalInformation?.religion}}</span>
+	</div>
+	<div fxFlex="50%">
+		<span class="info-title">{{'pacientes.form.ETHNIC' | translate}}</span>
+		<span *ngIf="personalInformation?.ethnicity; else noInformation"
+			class="info-content">{{personalInformation?.ethnicity}}</span>
+	</div>
+</div>
+
+<mat-divider inset></mat-divider>
+<div fxLayout="row" fxLayoutGap="15px" fxLayoutAlign="space-between" class="form-row"
+	*appHasRole="['ADMINISTRATIVO','ADMINISTRADOR_INSTITUCIONAL_BACKOFFICE', 'ADMINISTRATIVO_RED_DE_IMAGENES', 'ADMINISTRADOR_INSTITUCIONAL_PRESCRIPTOR', 'AUDITOR_MPI']">
 	<div fxFlex="100%" fxLayout="column" fxLayoutAlign="space-around start" fxLayoutGap="10px">
-		<span class="info-title"  [translate]="'pacientes.form.ATTACHED_DOCUMENTS'"></span>
+		<span class="info-title" [translate]="'pacientes.form.ATTACHED_DOCUMENTS'"></span>
 		<span *ngFor="let file of personalInformation?.files" fxFlex="100%" fxFlexFill>
 			<div fxLayout="column" fxLayoutAlign="space-around start">
-				<ng-container *appHasRole="['ADMINISTRATIVO','ADMINISTRADOR_INSTITUCIONAL_BACKOFFICE', 'ADMINISTRATIVO_RED_DE_IMAGENES', 'ADMINISTRADOR_INSTITUCIONAL_PRESCRIPTOR']">
-					<a mat-button color="primary"  (click)="downloadFile(file.fileId,file.fileName)">{{file.fileName}}</a>
+				<ng-container
+					*appHasRole="['ADMINISTRATIVO','ADMINISTRADOR_INSTITUCIONAL_BACKOFFICE', 'ADMINISTRATIVO_RED_DE_IMAGENES', 'ADMINISTRADOR_INSTITUCIONAL_PRESCRIPTOR','AUDITOR_MPI']">
+					<a mat-button color="primary"
+						(click)="downloadFile(file.fileId,file.fileName)">{{file.fileName}}</a>
 				</ng-container>
-				<ng-template >
-					<span *appHasRole="['ADMINISTRADOR_INSTITUCIONAL_BACKOFFICE', 'ADMINISTRADOR_INSTITUCIONAL_PRESCRIPTOR']" class="info-content">{{file.fileName}}</span>
+				<ng-template>
+					<span
+						*appHasRole="['ADMINISTRADOR_INSTITUCIONAL_BACKOFFICE', 'ADMINISTRADOR_INSTITUCIONAL_PRESCRIPTOR']"
+						class="info-content">{{file.fileName}}</span>
 				</ng-template>
 			</div>
 		</span>
-			<span *ngIf="personalInformation?.files?.length; else noInformation" class="info-content"></span>
+		<span *ngIf="personalInformation?.files?.length; else noDocuments" class="info-content"></span>
 
 	</div>
 </div>
