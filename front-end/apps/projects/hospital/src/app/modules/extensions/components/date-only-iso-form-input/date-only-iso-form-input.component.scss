@@ -1,0 +1,6 @@
+@import '../../../../../assets/styles/mat-mixins';
+
+.content {
+
+	@include mat-form-field-background-white;
+}

@@ -1,6 +1,8 @@
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
-import { AbstractControl, FormControl, FormGroup } from '@angular/forms';
-import { InternacionMasterDataService } from '@api-rest/services/internacion-master-data.service';
+import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
+import {FormControl, FormGroup} from '@angular/forms';
+import {InternacionMasterDataService} from '@api-rest/services/internacion-master-data.service';
+import {MasterDataInterface} from "@api-rest/api-model";
+import {TypeaheadOption} from "@presentation/components/typeahead/typeahead.component";
 
 @Component({
 	selector: 'app-specialty-form-input',
@@ -10,7 +12,6 @@ import { InternacionMasterDataService } from '@api-rest/services/internacion-mas
 export class SpecialtyFormInputComponent implements OnInit {
 
 	@Input() label: string;
-	@Input() hint: string;
 	@Output() specialtyChange = new EventEmitter<string[]>();
 
 	specialtyForm = new FormGroup({
@@ -19,18 +20,26 @@ export class SpecialtyFormInputComponent implements OnInit {
 
 	specialtyList = [];
 
-	constructor(private readonly internacionMasterDataService: InternacionMasterDataService) { }
+	constructor(private readonly internacionMasterDataService: InternacionMasterDataService) {
+	}
 
 	ngOnInit(): void {
-		this.internacionMasterDataService.getClinicalSpecialty().subscribe(specialties => this.specialtyList = [...specialties]);
+		this.internacionMasterDataService.getClinicalSpecialty().subscribe(specialties => {
+			this.specialtyList = this.toTypeaheadOptionList(specialties)
+		});
 		this.specialtyForm.valueChanges.subscribe(value => this.emitSpecialtyChange(value));
 	}
 
 	emitSpecialtyChange(value) {
-		this.specialtyChange.emit(value.specialty ? [value.specialty] : null);
+		this.specialtyChange.emit(value?.name ? [value.name] : null);
 	}
 
-	clear(control: AbstractControl): void {
-		control.reset();
+	toTypeaheadOptionList(prosBySpecialtyList: any []): TypeaheadOption<MasterDataInterface<string>>[] {
+		return prosBySpecialtyList.map(s => {
+			return {
+				compareValue: s.name,
+				value: s
+			};
+		});
 	}
 }

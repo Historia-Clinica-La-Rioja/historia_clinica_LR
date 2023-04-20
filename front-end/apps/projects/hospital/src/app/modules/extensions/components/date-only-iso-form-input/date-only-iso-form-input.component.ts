@@ -9,7 +9,6 @@ import {FormGroup, FormControl} from '@angular/forms';
 })
 export class DateOnlyIsoFormInputComponent implements OnInit {
 	@Input() label: string;
-	@Input() hint: string;
 	@Output() rangeChange = new EventEmitter<string[]>();
 
 	dateRange = new FormGroup({

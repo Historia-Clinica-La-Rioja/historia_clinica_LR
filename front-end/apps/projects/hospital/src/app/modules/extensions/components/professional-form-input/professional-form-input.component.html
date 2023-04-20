@@ -1,13 +1,6 @@
-<mat-form-field appearance="fill" [formGroup]="professionalForm" >
-	<mat-label>{{label}}</mat-label>
-	<mat-select placeholder={{label}} formControlName="professional">
-		<mat-option *ngFor="let professional of professionalList" [value]="professional">
-			{{professional | translate}}
-		</mat-option>
-	</mat-select>
-	<mat-hint>{{hint}}</mat-hint>
-	<button id="clear_professional" type="button" mat-button *ngIf="professionalForm.value.professional" matSuffix
-			color="warn" mat-icon-button (click)="clear(professionalForm.controls.professional); $event.stopPropagation()">
-		<mat-icon>close</mat-icon>
-	</button>
-</mat-form-field>
+<app-typeahead
+	id="professionals"
+	[titleInput]="'turnos.home.PROFESSIONAL_SEARCH' | translate"
+	[options]="professionalList"
+	(selectionChange)="emitProfessionalChange($event)">
+</app-typeahead>

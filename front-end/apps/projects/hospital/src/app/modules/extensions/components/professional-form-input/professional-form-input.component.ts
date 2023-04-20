@@ -1,8 +1,12 @@
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
-import { AbstractControl, FormControl, FormGroup } from '@angular/forms';
+import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
+import {FormControl, FormGroup} from '@angular/forms';
 import { AppFeature } from '@api-rest/api-model';
-import { HealthcareProfessionalByInstitutionService } from '@api-rest/services/healthcare-professional-by-institution.service';
-import { FeatureFlagService } from '@core/services/feature-flag.service';
+import { ProfessionalDto } from '@api-rest/api-model';
+
+import {
+	HealthcareProfessionalByInstitutionService
+} from '@api-rest/services/healthcare-professional-by-institution.service';
+import {FeatureFlagService} from '@core/services/feature-flag.service';
 
 @Component({
 	selector: 'app-professional-form-input',
@@ -12,7 +16,6 @@ import { FeatureFlagService } from '@core/services/feature-flag.service';
 export class ProfessionalFormInputComponent implements OnInit {
 
 	@Input() label: string;
-	@Input() hint: string;
 	@Output() professionalChange = new EventEmitter<string[]>();
 
 	professionalForm = new FormGroup({
@@ -32,25 +35,28 @@ export class ProfessionalFormInputComponent implements OnInit {
 	}
 
 	ngOnInit(): void {
-		this.healthcareProfessionalByInstitutionService.getAll().subscribe(
-			professionals => {
-				this.professionalList = professionals.map(
-					professional => {
-						const firstName = (professional.middleNames) ? professional.firstName + " " + professional.middleNames : professional.firstName;
-						const nameSelfDetermination = (professional.nameSelfDetermination) ? professional.nameSelfDetermination : firstName;
-						const lastName = (professional.otherLastNames) ? professional.lastName + " " + professional.otherLastNames : professional.lastName;
-						const fullName = (this.nameSelfDeterminationFF) ? lastName + ", " + nameSelfDetermination : lastName + ", " + firstName;
-					return fullName;
-				})
+		this.healthcareProfessionalByInstitutionService.getAll().subscribe(professionals => {
+				this.professionalList = professionals.map( professional => {
+						const professionalName = this.getFullNameByFF(professional);
+						return {
+							compareValue: professionalName,
+							value: professionalName
+						}
+					})
 			});
 		this.professionalForm.valueChanges.subscribe(value => this.emitProfessionalChange(value));
 	}
 
 	emitProfessionalChange(value) {
-		this.professionalChange.emit(value.professional? [value.professional] : null);
+		this.professionalChange.emit(value ? [value] : null);
 	}
 
-	clear(control: AbstractControl): void {
-		control.reset();
+	getFullNameByFF(professional: ProfessionalDto): string {
+		const firstName = (professional.middleNames) ? professional.firstName + " " + professional.middleNames : professional.firstName;
+		const nameSelfDetermination = (professional.nameSelfDetermination) ? professional.nameSelfDetermination : firstName;
+		const lastName = (professional.otherLastNames) ? professional.lastName + " " + professional.otherLastNames : professional.lastName;
+		return (this.nameSelfDeterminationFF) ? lastName + ", " + nameSelfDetermination : lastName + ", " + firstName;
 	}
+
+
 }

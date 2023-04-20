@@ -1,13 +1,6 @@
-<mat-form-field appearance="fill" [formGroup]="specialtyForm" >
-	<mat-label>{{label}}</mat-label>
-	<mat-select placeholder="Especialidad" formControlName="specialty">
-		<mat-option *ngFor="let specialty of specialtyList" [value]="specialty.name">
-			{{specialty.name | translate}}
-		</mat-option>
-	</mat-select>
-	<mat-hint>{{hint}}</mat-hint>
-	<button id="clear_specialty" type="button" mat-button *ngIf="specialtyForm.value.specialty" matSuffix
-			color="warn" mat-icon-button (click)="clear(specialtyForm.controls.specialty); $event.stopPropagation()">
-		<mat-icon>close</mat-icon>
-	</button>
-</mat-form-field>
+<app-typeahead
+	id="specialties"
+	[titleInput]="'turnos.home.SPECIALTY_SEARCH' | translate"
+	[options]="specialtyList"
+	(selectionChange)="emitSpecialtyChange($event)">
+</app-typeahead>
