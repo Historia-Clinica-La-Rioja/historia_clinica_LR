@@ -5,6 +5,7 @@ import ar.lamansys.sgh.clinichistory.application.notes.NoteService;
 import ar.lamansys.sgh.clinichistory.application.reason.ReasonService;
 import ar.lamansys.sgh.clinichistory.domain.ips.GeneralHealthConditionBo;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.DocumentFileRepository;
+import ar.lamansys.sgx.shared.dates.configuration.LocalDateMapper;
 import lombok.AllArgsConstructor;
 import net.pladema.emergencycare.repository.EmergencyCareEvolutionNoteRepository;
 import net.pladema.emergencycare.repository.entity.EmergencyCareEvolutionNote;
@@ -44,6 +45,8 @@ public class EmergencyCareEvolutionNoteDocumentServiceImpl implements EmergencyC
 
 	private final ClinicalSpecialtyService clinicalSpecialtyService;
 
+	private final LocalDateMapper localDateMapper;
+
 	@Override
 	public List<EmergencyCareEvolutionNoteDocumentBo> getAllDocumentsByEpisodeId(Integer episodeId) {
 		LOG.debug("Input parameters -> emergencyCareEpisodeId {}", episodeId);
@@ -62,7 +65,7 @@ public class EmergencyCareEvolutionNoteDocumentServiceImpl implements EmergencyC
 		result.setDocumentId(evolutionNote.getDocumentId());
 		result.setDoctorId(evolutionNote.getDoctorId());
 		result.setClinicalSpecialtyId(evolutionNote.getClinicalSpecialtyId());
-		result.setStartDate(evolutionNote.getStartDate());
+		result.setPerformedDate(evolutionNote.getCreatedOn());
 		return result;
 	}
 
@@ -79,7 +82,7 @@ public class EmergencyCareEvolutionNoteDocumentServiceImpl implements EmergencyC
 		evolutionNoteBo.setMedications(documentService.getMedicationStateFromDocument(evolutionNote.getDocumentId()));
 		evolutionNoteBo.setReasons(reasonService.fetchFromDocumentId(evolutionNote.getDocumentId()));
 		evolutionNoteBo.setEvolutionNote(noteService.getEvolutionNoteDescriptionByDocumentId(evolutionNote.getDocumentId()));
-		evolutionNoteBo.setPerformedDate(evolutionNote.getStartDate().atStartOfDay());
+		evolutionNoteBo.setPerformedDate(localDateMapper.fromLocalDateTimeToZonedDateTime(evolutionNote.getPerformedDate()).toLocalDateTime());
 		evolutionNoteBo.setId(evolutionNote.getDocumentId());
 		evolutionNoteBo.setFileName(documentFileRepository.findById(evolutionNote.getDocumentId()).get().getFilename());
 		evolutionNoteBo.setProfessional(healthcareProfessionalService.findActiveProfessionalById(evolutionNote.getDoctorId()));

@@ -3,7 +3,7 @@ package net.pladema.emergencycare.service.domain;
 import lombok.Getter;
 import lombok.Setter;
 
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 @Getter
 @Setter
@@ -17,7 +17,7 @@ public class EmergencyCareEvolutionNoteBo {
 
 	private Integer institutionId;
 
-	private LocalDate startDate;
+	private LocalDateTime performedDate;
 
 	private Long documentId;
 

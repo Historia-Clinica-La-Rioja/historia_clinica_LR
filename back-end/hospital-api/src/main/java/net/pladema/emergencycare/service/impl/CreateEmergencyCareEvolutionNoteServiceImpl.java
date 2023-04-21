@@ -1,5 +1,6 @@
 package net.pladema.emergencycare.service.impl;
 
+import ar.lamansys.sgx.shared.dates.configuration.LocalDateMapper;
 import lombok.AllArgsConstructor;
 import net.pladema.emergencycare.repository.EmergencyCareEvolutionNoteRepository;
 import net.pladema.emergencycare.repository.entity.EmergencyCareEvolutionNote;
@@ -20,10 +21,12 @@ public class CreateEmergencyCareEvolutionNoteServiceImpl implements CreateEmerge
 
 	private final EmergencyCareEvolutionNoteRepository emergencyCareEvolutionNoteRepository;
 
+	private final LocalDateMapper localDateMapper;
+
 	@Override
 	public EmergencyCareEvolutionNoteBo execute(Integer institutionId,
-																		 Integer patientId,
-																		 Integer doctorId, Integer clinicalSpecialtyId, Integer patientMedicalCoverageId) {
+												Integer patientId,
+												Integer doctorId, Integer clinicalSpecialtyId, Integer patientMedicalCoverageId) {
 		LOG.debug("Input parameters -> institutionId {}, patientId {}, doctorId {} clinicalSpecialtyId {}, patientMedicalCoverageId {}",
 				institutionId, patientId, doctorId, clinicalSpecialtyId, patientMedicalCoverageId);
 		EmergencyCareEvolutionNote emergencyCareEvolutionNote = new EmergencyCareEvolutionNote(institutionId, patientId, doctorId, clinicalSpecialtyId, patientMedicalCoverageId);
@@ -39,7 +42,7 @@ public class CreateEmergencyCareEvolutionNoteServiceImpl implements CreateEmerge
 		result.setPatientId(emergencyCareEvolutionNote.getPatientId());
 		result.setClinicalSpecialtyId(emergencyCareEvolutionNote.getClinicalSpecialtyId());
 		result.setInstitutionId(emergencyCareEvolutionNote.getInstitutionId());
-		result.setStartDate(emergencyCareEvolutionNote.getStartDate());
+		result.setPerformedDate(localDateMapper.fromLocalDateTimeToZonedDateTime(emergencyCareEvolutionNote.getCreatedOn()).toLocalDateTime());
 		result.setDoctorId(emergencyCareEvolutionNote.getDoctorId());
 		result.setPatientMedicalCoverageId(emergencyCareEvolutionNote.getPatientMedicalCoverageId());
 		return result;
