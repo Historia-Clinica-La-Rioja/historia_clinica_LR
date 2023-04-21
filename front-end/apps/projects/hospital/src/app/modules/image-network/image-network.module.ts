@@ -6,13 +6,15 @@ import { WorklistByTechnicalComponent } from './routes/worklist-by-technical/wor
 import { HomeComponent } from './routes/home/home.component';
 import { FinishStudyComponent } from './dialogs/finish-study/finish-study.component';
 import { StudyStatusPopupComponent } from './dialogs/study-status-popup/study-status-popup.component';
+import { WorklistComponent } from './components/worklist/worklist.component';
 
 @NgModule({
 	declarations: [
 		WorklistByTechnicalComponent,
 		HomeComponent,
 		FinishStudyComponent,
-		StudyStatusPopupComponent
+		StudyStatusPopupComponent,
+  		WorklistComponent,
 	],
 	imports: [
 		CommonModule,

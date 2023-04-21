@@ -1,0 +1,9 @@
+.smaller-font {
+    font-size: 0.9rem;
+}
+
+@media (max-width: 960px) {
+    .container {
+        flex-direction: column !important;
+    }
+}
