@@ -106,7 +106,8 @@
 				"PRESCRIPTOR": "Prescriptor",
 				"AUDITOR_MPI": "Auditor MPI",
 				"TECNICO": "Tecnico",
-				"PERSONAL_DE_LEGALES": "Personal de Legales"
+				"PERSONAL_DE_LEGALES": "Personal de Legales",
+				"INFORMADOR": "Informador"
 			}
 		}
 	}
