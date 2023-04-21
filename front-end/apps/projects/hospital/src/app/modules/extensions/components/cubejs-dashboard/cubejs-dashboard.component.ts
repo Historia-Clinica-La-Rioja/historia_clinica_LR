@@ -29,6 +29,7 @@ export interface FilterValues {
 }
 
 const CUBEJS_CHART_COMPONENT = "cubejs-chart";
+const TABS_COMPONENT = "tabs";
 const PROFESSIONAL_FILTER_KEY = "professional";
 const  MEASURE_PROFESSIONAL_SELF_DETERMINATION = "profesional_autopercibido";
 @Component({
@@ -39,6 +40,7 @@ const  MEASURE_PROFESSIONAL_SELF_DETERMINATION = "profesional_autopercibido";
 export class CubejsDashboardComponent implements OnInit {
 
 	@Input() set content(content: UIComponentDto[]) {
+		debugger;
 		this.setChartService(content);
 		this._content = content;
 	}
@@ -80,6 +82,9 @@ export class CubejsDashboardComponent implements OnInit {
 				c.args.service = this.chartDefinitionService;
 			else if (c.args.content)
 				this.setChartService(<UIComponentDto[]>c.args.content)
+			else if (c.type === TABS_COMPONENT){
+				c.args.tabs.forEach(tab=> this.setChartService(<UIComponentDto[]>tab.args.content));
+			}
 		});
 	}
 
