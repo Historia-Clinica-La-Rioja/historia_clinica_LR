@@ -7,6 +7,7 @@ import { MasterDataInterface } from '@api-rest/api-model';
 import { tap } from 'rxjs/operators';
 import { atLeastOneValueInFormGroup } from '@core/utils/form.utils';
 import { PERSON, REMOVE_SUBSTRING_DNI } from '@core/constants/validation-constants';
+import { PatientType } from '@historia-clinica/constants/summaries';
 
 const NO_INFO: MasterDataInterface<number> = {
 	id: -1,
@@ -28,7 +29,7 @@ export class EpisodeFilterService {
 			firstName: [null, Validators.maxLength(PERSON.MAX_LENGTH.firstName)],
 			lastName: [null, Validators.maxLength(PERSON.MAX_LENGTH.lastName)],
 			temporal: [null],
-			noPatient: [null]
+			emergencyCareTemporary: [null]
 		});
 	}
 
@@ -73,12 +74,11 @@ export class EpisodeFilterService {
 	}
 
 	static filterTemporal(episode: Episode, filters: EpisodeFilters): boolean {
-		const PACIENTE_TEMPORAL = 3;
-		return (filters.temporal ? episode.patient?.typeId === PACIENTE_TEMPORAL : true);
+		return (filters.temporal ? episode.patient?.typeId === PatientType.TEMPORARY : true);
 	}
 
 	static filterNoPatient(episode: Episode, filters: EpisodeFilters) {
-		return (filters.noPatient ? !episode.patient : true);
+		return (filters.emergencyCareTemporary ? episode.patient?.typeId === PatientType.EMERGENCY_CARE_TEMPORARY : true);
 	}
 
 	getForm(): FormGroup {
@@ -131,5 +131,5 @@ interface EpisodeFilters {
 	firstName?: string;
 	lastName?: string;
 	temporal?: boolean;
-	noPatient?: boolean;
+	emergencyCareTemporary?: boolean;
 }

@@ -98,7 +98,7 @@
 					"FIRST_NAME": "Nombre",
 					"IDENTIFICATION_NUMBER": "Nro de documento",
 					"LAST_NAME": "Apellido",
-					"NO_PATIENT": "Paciente sin definir",
+					"EMERGENCY_CARE_TEMPORARY": "Paciente temporal de guardia",
 					"PATIENT_ID": "ID de paciente",
 					"RESULTS": "Resultado: {{amount}} episodios",
 					"RESULT_ONE_EPISODE": "Resultado: 1 episodio",
