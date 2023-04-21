@@ -485,7 +485,9 @@ export class NewAppointmentComponent implements OnInit {
 
 	private addAppointment(newAppointment: CreateAppointmentDto): Observable<number> {
 		if (this.data.isEquipmentAppointment) {
-			return this.equipmentAppointmentFacade.addAppointment(newAppointment);
+			let orderId = this.appointmentInfoForm.controls.appointmentMedicalOrder.value.serviceRequestId;
+			let studyId = this.appointmentInfoForm.controls.appointmentMedicalOrder.value.id;
+			return this.equipmentAppointmentFacade.addAppointment(newAppointment, orderId, studyId);
 		}
 		else
 			return this.appointmentFacade.addAppointment(newAppointment);
