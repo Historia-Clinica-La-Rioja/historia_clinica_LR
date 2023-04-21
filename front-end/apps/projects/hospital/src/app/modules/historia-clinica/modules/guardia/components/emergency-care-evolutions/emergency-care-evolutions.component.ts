@@ -15,6 +15,7 @@ import { EmergencyCareDocumentSearchService } from '@api-rest/services/emergency
 import { dateTimeDtoToDate } from '@api-rest/mapper/date-dto.mapper';
 import { NewTriageService } from '@historia-clinica/services/new-triage.service';
 import { DocumentService } from '@api-rest/services/document.service';
+import { NewEmergencyCareEvolutionNoteService } from '../../services/new-emergency-care-evolution-note.service';
 
 @Component({
 	selector: 'app-emergency-care-evolutions',
@@ -47,6 +48,7 @@ export class EmergencyCareEvolutionsComponent implements OnInit, OnChanges {
 		private readonly emergencyCareDocumentSearchService: EmergencyCareDocumentSearchService,
 		private readonly newTriageService: NewTriageService,
 		private readonly documentService: DocumentService,
+		private readonly newEmergencyCareEvolutionNoteService: NewEmergencyCareEvolutionNoteService
 	) {
 	}
 
@@ -57,9 +59,6 @@ export class EmergencyCareEvolutionsComponent implements OnInit, OnChanges {
 		this.activeDocument = undefined;
 	}
 
-	downloadDocument() {
-		this.documentService.downloadFile({ filename: this.activeDocument.summary.docFileName, id: this.activeDocument.summary.docId });
-	}
 
 	ngOnInit(): void {
 		this.emergencyCareEpisodeService.getAdministrative(this.emergencyCareId)
@@ -73,6 +72,12 @@ export class EmergencyCareEvolutionsComponent implements OnInit, OnChanges {
 		this.newTriageService.newTriage$.subscribe(_ => {
 			this.getHistoric();
 		})
+
+		this.newEmergencyCareEvolutionNoteService.new$.subscribe( _ => this.getHistoric())
+	}
+
+	downloadDocument() {
+		this.documentService.downloadFile({ filename: this.activeDocument.summary.docFileName, id: this.activeDocument.summary.docId });
 	}
 
 	setActive(d: Item) {
@@ -87,8 +92,13 @@ export class EmergencyCareEvolutionsComponent implements OnInit, OnChanges {
 		this.emergencyCareDocumentSearchService.get(this.emergencyCareId)
 			.subscribe((docs: EmergencyCareHistoricDocumentDto) => {
 				const triages = docs.triages.map(map);
-				const evolutionsNotes = docs.evolutionNotes.map(evolutionNotesMapper)
-				this.documentHistoric = triages.concat(evolutionsNotes).sort((a, b) => a.summary.createdOn.getTime() - b.summary.createdOn.getTime());
+				const evolutionsNotes = docs.evolutionNotes.map(evolutionNotesMapper);
+				const allDocs = triages.concat(evolutionsNotes);
+				console.log(allDocs);
+
+				this.documentHistoric = allDocs.sort((a, b) => b.summary.createdOn.getTime() - a.summary.createdOn.getTime() );
+				console.log(this.documentHistoric);
+
 			})
 
 		function evolutionNotesMapper(en: EmergencyCareEvolutionNoteDocumentDto): Item {

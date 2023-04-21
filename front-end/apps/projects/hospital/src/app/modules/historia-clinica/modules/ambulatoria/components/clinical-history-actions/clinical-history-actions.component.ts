@@ -28,6 +28,9 @@ import { TriageDefinitionsService } from '@historia-clinica/modules/guardia/serv
 import { EstadosEpisodio } from '@historia-clinica/modules/guardia/constants/masterdata';
 import { PatientType } from '@historia-clinica/constants/summaries';
 import { NotaDeEvolucionDockPopupComponent } from '@historia-clinica/components/nota-de-evolucion-dock-popup/nota-de-evolucion-dock-popup.component';
+import { EmergencyCareEvolutionNoteService } from '@api-rest/services/emergency-care-evolution-note.service';
+import { SnackBarService } from '@presentation/services/snack-bar.service';
+import { NewEmergencyCareEvolutionNoteService } from '@historia-clinica/modules/guardia/services/new-emergency-care-evolution-note.service';
 
 @Component({
 	selector: 'app-clinical-history-actions',
@@ -105,6 +108,9 @@ export class ClinicalHistoryActionsComponent implements OnInit {
 		readonly internmentActions: InternmentActionsService,
 		private readonly documentActions: DocumentActionsService,
 		private readonly triageDefinitionsService: TriageDefinitionsService,
+		private readonly emergencyCareEvolutionNoteService: EmergencyCareEvolutionNoteService,
+		private readonly snackBarService: SnackBarService,
+		private readonly newEmergencyCareEvolutionNoteService: NewEmergencyCareEvolutionNoteService
 	) { }
 
 	ngOnInit(): void {
@@ -156,10 +162,25 @@ export class ClinicalHistoryActionsComponent implements OnInit {
 
 	openNotaDeEvolucion() {
 		if (!this.notaDeEvolucionDialogRef) {
-			this.notaDeEvolucionDialogRef = this.dockPopupService.open(NotaDeEvolucionDockPopupComponent, {patientId:this.patientId, episodeId: this.episode.id});
+			this.notaDeEvolucionDialogRef = this.dockPopupService.open(NotaDeEvolucionDockPopupComponent, { patientId: this.patientId, episodeId: this.episode.id });
 			this.popUpOpen.next(this.notaDeEvolucionDialogRef);
-			this.notaDeEvolucionDialogRef.afterClosed().subscribe(fieldsToUpdate => {
-				delete this.notaDeEvolucionDialogRef
+			this.notaDeEvolucionDialogRef.afterClosed().subscribe(dto => {
+				if (dto) {
+					this.emergencyCareEvolutionNoteService.saveEmergencyCareEvolutionNote(this.episode.id, dto).subscribe(
+						saved => {
+							if (saved) {
+								this.snackBarService.showSuccess('Nota de evolucion guardada correctamente');
+
+								this.newEmergencyCareEvolutionNoteService.newEvolutionNote();
+							} else {
+								this.snackBarService.showError('Ocurrio un error al guardar la nota de evolucion')
+							}
+						}
+					);
+				}
+				delete this.notaDeEvolucionDialogRef;
+				this.popUpOpen.next(this.notaDeEvolucionDialogRef);
+
 			})
 		} else {
 			if (this.notaDeEvolucionDialogRef.isMinimized())

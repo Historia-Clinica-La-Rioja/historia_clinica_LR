@@ -36,7 +36,6 @@ export class NotaDeEvolucionDockPopupComponent {
 	constructor(
 		public dockPopupRef: DockPopupRef,
 		private formBuilder: FormBuilder,
-		private readonly emergencyCareEvolutionNoteService: EmergencyCareEvolutionNoteService,
 		@Inject(OVERLAY_DATA) public data: { patientId: number, episodeId: number },
 	) { }
 
@@ -59,25 +58,28 @@ export class NotaDeEvolucionDockPopupComponent {
 			allergies: value.allergies?.data || [],
 			patientId: this.data.patientId,
 		}
-		this.emergencyCareEvolutionNoteService.saveEmergencyCareEvolutionNote(this.data.episodeId, dto).subscribe();
+		this.dockPopupRef.close(dto);
 	}
 
 	private mapAnthropometricData(anthropometricData): OutpatientAnthropometricDataDto {
-		return {
-			height: {
-				value: anthropometricData.height.toString()
-			},
-			weight: {
-				value: anthropometricData.weight.toString()
-			},
-			bloodType: anthropometricData.bloodType,
-			headCircumference: {
-				value: anthropometricData.headCircumference.toString()
-			},
-			bmi: {
-				value: null
-			},
+		if (anthropometricData) {
+			return {
+				height: {
+					value: anthropometricData.height?.toString()
+				},
+				weight: {
+					value: anthropometricData.weight?.toString()
+				},
+				bloodType: anthropometricData.bloodType,
+				headCircumference: {
+					value: anthropometricData.headCircumference?.toString()
+				},
+				bmi: {
+					value: null
+				},
+			}
 		}
+		return null;
 	}
 
 	private getDiagnosis(diagnosisFormValue): { diagnosis: DiagnosisDto[], mainDiagnosis: HealthConditionDto } {
