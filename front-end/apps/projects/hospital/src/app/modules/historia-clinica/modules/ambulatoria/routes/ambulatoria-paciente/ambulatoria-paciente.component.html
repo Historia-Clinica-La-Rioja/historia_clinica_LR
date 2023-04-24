@@ -47,8 +47,14 @@
 								</div>
 							</div>
 							<div>
-								<span class="allergy-item capitalize-first-letter" *ngIf="embarazoAdolescente()">
+								<button (click)="embarazoAdolescente()">Prueba</button>
+								<!-- <span class="allergy-item capitalize-first-letter" *ngIf="embarazoAdolescente()">
 									<button mat-button (click)="openDialogAclaracion()">Embarazo adolescente</button>
+								</span> -->
+							</div>
+							<div>
+								<span *ngIf="birth_control_pills()">
+									Uso de anticonceptivos
 								</span>
 							</div>
 							<div *ngIf="patientAllergies.criticalAllergies?.length > patientAllergies.limitAllergies">
@@ -75,8 +81,15 @@
 									</div>
 								</div>
 							</div>
+							<div>
+								<span class="allergy-item capitalize-first-letter" *ngIf="embarazoAdolescente()">
+									<button mat-button (click)="openDialogAclaracion()">Embarazo adolescente</button>
+								</span>
+							</div>
 						</div>
+						
 					</div>
+					
 					<mat-divider class="header-divider" [vertical]="true"></mat-divider>
 
 					<ng-container *ngIf="thereIsAppointmentCovarageInformation() else internmentCovarage">
