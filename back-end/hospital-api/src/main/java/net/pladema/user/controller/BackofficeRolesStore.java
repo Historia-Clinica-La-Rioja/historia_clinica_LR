@@ -30,10 +30,6 @@ public class BackofficeRolesStore implements BackofficeStore<Role, Short> {
 	@Override
 	public Page<Role> findAll(Role example, Pageable pageable) {
 		List<Role> content = toList(roleRepository.findAll()).stream().filter(this::filterRoles).collect(Collectors.toList());
-		if(!featureFlagsService.isOn(AppFeature.HABILITAR_DESARROLLO_RED_IMAGENES)){
-			content.removeIf(role -> role.getId().equals(ERole.ADMINISTRATIVO_RED_DE_IMAGENES.getId()));
-			content.removeIf(role -> role.getId().equals(ERole.TECNICO.getId()));
-		}
 		return new PageImpl<>(content, pageable, content.size());
 	}
 

@@ -38,9 +38,6 @@ public class RoleController {
     public ResponseEntity<List<RoleDto>> getAllInstitutionalRoles() {
         log.debug("No input parameters");
         List<RoleDto> result = roleDtoMapper.toListRoleDto(getInstitutionalRoles.execute());
-		if (!featureFlagsService.isOn(AppFeature.HABILITAR_DESARROLLO_RED_IMAGENES)){
-			result.removeIf(roleDto -> roleDto.getId().equals(ERole.ADMINISTRATIVO_RED_DE_IMAGENES.getId()));
-		}
         log.debug("Output -> {}", result);
         return ResponseEntity.ok().body(result);
     }
@@ -49,9 +46,6 @@ public class RoleController {
     public ResponseEntity<List<RoleDto>> getAllProfessionalRoles() {
         log.debug("No input parameters");
         List<RoleDto> result = roleDtoMapper.toListRoleDto(getProfessionalRoles.execute());
-		if (!featureFlagsService.isOn(AppFeature.HABILITAR_DESARROLLO_RED_IMAGENES)){
-			result.removeIf(roleDto -> roleDto.getId() == ERole.ADMINISTRATIVO_RED_DE_IMAGENES.getId());
-		}
         log.debug("Output -> {}", result);
         return ResponseEntity.ok().body(result);
     }
