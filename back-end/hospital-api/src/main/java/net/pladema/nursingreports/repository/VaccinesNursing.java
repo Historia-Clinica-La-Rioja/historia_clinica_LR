@@ -47,4 +47,8 @@ public class VaccinesNursing {
 
 	private String vaccinationLot;
 
+	public VaccinesNursing ( VaccinesNursing institution){
+		this.institution = institution.getInstitution();
+	}
 }
+

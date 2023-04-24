@@ -19,6 +19,6 @@ public interface ExcelServiceNR {
 
 	IWorkbook buildExcelTotalNursingRecovery(String tittle, String[] headers, List<TotalNursingRecovery> query);
 
-	IWorkbook buildExcelVaccinesNursing(String title, String[] headers, List<VaccinesNursing> query);
+	IWorkbook buildExcelVaccinesNursing(String title, String[] headers, List<VaccinesNursing> query, String startDate, String endDate);
 
 }
