@@ -18,8 +18,8 @@
                         "type" : "cubejs-chart",
                         "args" : {
                           "query" : "cantidadConsultasAmbulatorias",
-                          "title": {
-                            "text": "Evolución de consultas del año actual"
+                          "title" : {
+                            "text" : "Evolución de consultas del año actual"
                           }
                         }
                       },
@@ -27,10 +27,36 @@
                         "type" : "cubejs-chart",
                         "args" : {
                           "query" : "cantidadConsultasAmbulatoriasEspecialidadProfesional",
-                          "title": {
-                            "text": "Consultas por especialidad y profesional del último trimestre"
+                          "title" : {
+                            "text" : "Consultas por especialidad y profesional del último trimestre"
                           },
                           "showLegend" : false
+                        }
+                      }
+                    ]
+                  }
+                },
+                {
+                  "type" : "cubejs-dashboard",
+                  "args" : {
+                    "filters" : {
+                      "date" : {
+                        "filter" : {
+                          "member" : "CantidadConsultasAmbulatorias.fecha_consulta",
+                          "operator" : "inDateRange"
+                        },
+                        "type" : "dateRangeISO",
+                        "label" : "Fecha"
+                      }
+                    },
+                    "content" : [
+                      {
+                        "type" : "cubejs-chart",
+                        "args" : {
+                          "query" : "cantidadConsultasAmbulatoriasFecha",
+                          "title" : {
+                            "text" : "Evolución de consultas por fecha"
+                          }
                         }
                       }
                     ]
@@ -54,8 +80,8 @@
                         "type" : "cubejs-chart",
                         "args" : {
                           "query" : "cantidadConsultasPorEspecialidad",
-                          "title": {
-                            "text": "Consultas por especialidad"
+                          "title" : {
+                            "text" : "Consultas por especialidad"
                           },
                           "showLegend" : false
                         }
@@ -106,9 +132,9 @@
                               "args" : {
                                 "query" : "cantidadConsultasTotal",
                                 "showLegend" : false,
-                                "title": {
-                                  "subtitle": {
-                                    "text": "CONSULTAS"
+                                "title" : {
+                                  "subtitle" : {
+                                    "text" : "CONSULTAS"
                                   }
                                 }
                               }
@@ -117,9 +143,9 @@
                               "type" : "cubejs-chart",
                               "args" : {
                                 "query" : "cantidadConsultasTotalSexoF",
-                                "title": {
-                                  "subtitle": {
-                                    "text": "FEMENINO"
+                                "title" : {
+                                  "subtitle" : {
+                                    "text" : "FEMENINO"
                                   }
                                 },
                                 "showLegend" : false
@@ -129,9 +155,9 @@
                               "type" : "cubejs-chart",
                               "args" : {
                                 "query" : "cantidadConsultasTotalSexoM",
-                                "title": {
-                                  "subtitle": {
-                                    "text": "MASCULINO"
+                                "title" : {
+                                  "subtitle" : {
+                                    "text" : "MASCULINO"
                                   }
                                 },
                                 "showLegend" : false
@@ -141,9 +167,9 @@
                               "type" : "cubejs-chart",
                               "args" : {
                                 "query" : "cantidadConsultasTotalSexoX",
-                                "title": {
-                                  "subtitle": {
-                                    "text": "X"
+                                "title" : {
+                                  "subtitle" : {
+                                    "text" : "X"
                                   }
                                 },
                                 "showLegend" : false
@@ -171,8 +197,8 @@
                         "type" : "cubejs-chart",
                         "args" : {
                           "query" : "cantidadTurnos",
-                          "title": {
-                            "text": "Evolución de turnos del año actual"
+                          "title" : {
+                            "text" : "Evolución de turnos del año actual"
                           }
                         }
                       },
@@ -180,8 +206,8 @@
                         "type" : "cubejs-chart",
                         "args" : {
                           "query" : "cantidadTurnosPorEspecialidad",
-                          "title":{
-                            "text":  "Turnos por especialidad del año actual"
+                          "title" : {
+                            "text" : "Turnos por especialidad del año actual"
                           },
                           "showLegend" : false
                         }
@@ -190,8 +216,8 @@
                         "type" : "cubejs-chart",
                         "args" : {
                           "query" : "cantidadTurnosPorProfesional",
-                          "title": {
-                            "text": "Turnos por profesional del año actual"
+                          "title" : {
+                            "text" : "Turnos por profesional del año actual"
                           },
                           "showLegend" : false
                         }
@@ -241,9 +267,9 @@
                               "type" : "cubejs-chart",
                               "args" : {
                                 "query" : "cantidadTurnosTotal",
-                                "title": {
-                                  "subtitle": {
-                                    "text": "TURNOS"
+                                "title" : {
+                                  "subtitle" : {
+                                    "text" : "TURNOS"
                                   }
                                 },
                                 "showLegend" : false
@@ -253,9 +279,9 @@
                               "type" : "cubejs-chart",
                               "args" : {
                                 "query" : "cantidadTurnosTotalAsignados",
-                                "title": {
-                                  "subtitle": {
-                                    "text": "ASIGNADOS"
+                                "title" : {
+                                  "subtitle" : {
+                                    "text" : "ASIGNADOS"
                                   }
                                 },
                                 "showLegend" : false
@@ -265,9 +291,9 @@
                               "type" : "cubejs-chart",
                               "args" : {
                                 "query" : "cantidadTurnosTotalCancelados",
-                                "title": {
-                                  "subtitle": {
-                                    "text": "CANCELADOS"
+                                "title" : {
+                                  "subtitle" : {
+                                    "text" : "CANCELADOS"
                                   }
                                 },
                                 "showLegend" : false
@@ -277,9 +303,9 @@
                               "type" : "cubejs-chart",
                               "args" : {
                                 "query" : "cantidadTurnosTotalAtendidos",
-                                "title": {
-                                  "subtitle": {
-                                    "text": "ATENDIDOS"
+                                "title" : {
+                                  "subtitle" : {
+                                    "text" : "ATENDIDOS"
                                   }
                                 },
                                 "showLegend" : false
@@ -289,9 +315,9 @@
                               "type" : "cubejs-chart",
                               "args" : {
                                 "query" : "cantidadTurnosTotalAusentes",
-                                "title": {
-                                  "subtitle": {
-                                    "text": "AUSENTES"
+                                "title" : {
+                                  "subtitle" : {
+                                    "text" : "AUSENTES"
                                   }
                                 },
                                 "showLegend" : false

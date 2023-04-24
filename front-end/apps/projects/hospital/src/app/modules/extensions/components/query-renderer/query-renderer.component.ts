@@ -129,6 +129,16 @@ export class QueryRendererComponent {
 			},
 		},
 	};
+
+	straightlinesChartOptions: ChartOptions = {
+		responsive: true,
+		maintainAspectRatio: false,
+		elements: {
+			line: {
+				tension: 0,
+			},
+		},
+	};
 	numericValues: number[] = [];
 	loading = false;
 
