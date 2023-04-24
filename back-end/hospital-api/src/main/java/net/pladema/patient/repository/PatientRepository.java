@@ -3,6 +3,7 @@ package net.pladema.patient.repository;
 import ar.lamansys.sgx.shared.auditable.repository.SGXAuditableEntityJPARepository;
 import net.pladema.patient.repository.domain.PatientPersonVo;
 import net.pladema.patient.repository.entity.Patient;
+import net.pladema.patient.service.domain.PatientRegistrationSearch;
 import net.pladema.patient.service.domain.PatientSearch;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -50,5 +51,12 @@ public interface PatientRepository extends SGXAuditableEntityJPARepository<Patie
 			"JOIN Person p ON p.id = pa.personId " +
 			"WHERE pa.id = :patientId")
 	Optional<String> getIdentificationNumber(@Param("patientId") Integer patientId);
+
+	@Query(value = " SELECT new net.pladema.patient.service.domain.PatientRegistrationSearch(pe, p.id, p.typeId, p.toAudit, pee.nameSelfDetermination) " +
+			"FROM Patient p " +
+			"JOIN Person pe ON p.personId = pe.id " +
+			"LEFT JOIN PersonExtended pee ON pee.id = pe.id " +
+			"WHERE p.id = :patientId")
+	Optional<PatientRegistrationSearch> getPatientRegistrationSearchById(@Param("patientId") Integer patientId);
 
 }

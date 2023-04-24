@@ -2,10 +2,12 @@ package net.pladema.patient.service;
 
 import net.pladema.audit.service.domain.enums.EActionType;
 import net.pladema.patient.controller.dto.AuditablePatientInfoDto;
+import net.pladema.patient.controller.dto.PatientRegistrationSearchFilter;
 import net.pladema.patient.controller.dto.PatientSearchFilter;
 import net.pladema.patient.repository.domain.PatientPersonVo;
 import net.pladema.patient.repository.entity.Patient;
 import net.pladema.patient.service.domain.LimitedPatientSearchBo;
+import net.pladema.patient.service.domain.PatientRegistrationSearch;
 import net.pladema.patient.service.domain.PatientSearch;
 
 import java.util.List;
@@ -35,5 +37,9 @@ public interface PatientService {
 	void persistSelectionForAnAudict(Integer patientId, Integer institutionId, String message);
 
 	AuditablePatientInfoDto getAuditablePatientInfo(Integer patientId);
+
+	List<PatientRegistrationSearch> getPatientsRegistrationByFilter(PatientRegistrationSearchFilter searchFilter);
+
+	List<PatientRegistrationSearch> getPatientRegistrationById(Integer patientId);
 
 }

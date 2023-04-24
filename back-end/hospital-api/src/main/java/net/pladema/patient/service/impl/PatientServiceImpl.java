@@ -9,6 +9,7 @@ import net.pladema.audit.repository.entity.HospitalAudit;
 import net.pladema.audit.service.domain.enums.EActionType;
 import net.pladema.federar.services.FederarService;
 import net.pladema.patient.controller.dto.AuditablePatientInfoDto;
+import net.pladema.patient.controller.dto.PatientRegistrationSearchFilter;
 import net.pladema.patient.controller.dto.PatientSearchFilter;
 import net.pladema.patient.repository.AuditablePatientRepository;
 import net.pladema.patient.repository.PatientAuditRepository;
@@ -23,6 +24,7 @@ import net.pladema.patient.repository.entity.PatientType;
 import net.pladema.patient.service.PatientService;
 import net.pladema.patient.service.domain.AuditablePatientInfoBo;
 import net.pladema.patient.service.domain.LimitedPatientSearchBo;
+import net.pladema.patient.service.domain.PatientRegistrationSearch;
 import net.pladema.patient.service.domain.PatientSearch;
 import net.pladema.patient.repository.MedicalCoverageRepository;
 import org.slf4j.Logger;
@@ -31,6 +33,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
+import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
@@ -196,6 +199,33 @@ public class PatientServiceImpl implements PatientService {
 		}
 		LOG.debug("Output -> No existen mensajes de auditoria para el paciente con id {} ", patientId);
 		return null;
+	}
+
+	@Override
+	public List<PatientRegistrationSearch> getPatientsRegistrationByFilter(PatientRegistrationSearchFilter searchFilter) {
+		LOG.debug("Input parameter -> searchFilter {}", searchFilter);
+		List<PatientRegistrationSearch> allPatients = patientRepository.getAllRegistrationByFilter(searchFilter);
+		List<PatientRegistrationSearch> matchedPatients = allPatients.stream()
+				.peek(patient -> patient.setRanking(calculateMatch(searchFilter, patient.getPerson())))
+				.filter(patient -> patient.getRanking() > THRESHOLD)
+				.sorted(Comparator.comparing(PatientRegistrationSearch::getRanking).reversed())
+				.collect(Collectors.toList());
+		LOG.debug(OUTPUT, matchedPatients);
+		return matchedPatients;
+	}
+
+	@Override
+	public List<PatientRegistrationSearch> getPatientRegistrationById(Integer patientId) {
+		LOG.debug("Input parameter -> patientId {}", patientId);
+		Optional<PatientRegistrationSearch> patientRegistration = patientRepository.getPatientRegistrationSearchById(patientId);
+		if (patientRegistration.isPresent()) {
+			PatientRegistrationSearch result = patientRegistration.get();
+			result.setRanking(100.0f);
+			LOG.debug(OUTPUT, result);
+			return List.of(result);
+		}
+		LOG.debug("Output -> No existe paciente con el id {} ", patientId);
+		return Collections.emptyList();
 	}
 
 	private AuditablePatientInfoDto mapToAuditablePatientInfoDto(AuditablePatientInfoBo auditablePatientInfo) {

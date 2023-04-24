@@ -9,8 +9,13 @@ import lombok.extern.slf4j.Slf4j;
 import net.pladema.patient.controller.dto.AuditPatientSearch;
 import net.pladema.patient.controller.dto.DuplicatePatientDto;
 import net.pladema.patient.controller.dto.PatientPersonalInfoDto;
+import net.pladema.patient.controller.dto.PatientRegistrationSearchDto;
+import net.pladema.patient.controller.dto.PatientRegistrationSearchFilter;
+import net.pladema.patient.controller.mapper.PatientMapper;
 import net.pladema.patient.controller.service.exception.AuditPatientException;
 import net.pladema.patient.controller.service.exception.AuditPatientExceptionEnum;
+import net.pladema.patient.service.PatientService;
+import net.pladema.patient.service.domain.PatientRegistrationSearch;
 import net.pladema.person.controller.service.PersonExternalService;
 
 import org.springframework.http.ResponseEntity;
@@ -32,6 +37,11 @@ import java.util.List;
 public class AuditPatientController {
 
 	private final PersonExternalService personExternalService;
+
+	private final PatientService patientService;
+
+	private final PatientMapper patientMapper;
+
 	private final ObjectMapper jackson;
 
 
@@ -66,6 +76,26 @@ public class AuditPatientController {
 		}
 		List<PatientPersonalInfoDto> result = personExternalService.getPatientsPersonalInfo(duplicatePatientDto);
 		return ResponseEntity.ok().body(result);
+	}
+
+	@GetMapping("/search-registration-patients")
+	@PreAuthorize("hasPermission(#institutionId, 'AUDITOR_MPI')")
+	public  ResponseEntity<List<PatientRegistrationSearchDto>> searchRegistrationPatient(
+			@PathVariable(name = "institutionId") Integer institutionId,
+			@RequestParam String searchFilterStr) {
+		log.debug("Input data -> institutionId {}, searchFilterStr {}", institutionId, searchFilterStr);
+		PatientRegistrationSearchFilter searchFilter = null;
+		try {
+			searchFilter = jackson.readValue(searchFilterStr, PatientRegistrationSearchFilter.class);
+		} catch (IOException e) {
+			log.error(String.format("Error mappeando filter: %s", searchFilterStr), e);
+		}
+		List<PatientRegistrationSearch> result;
+		if (searchFilter.getPatientId() != null)
+			result = patientService.getPatientRegistrationById(searchFilter.getPatientId());
+		else
+			result = patientService.getPatientsRegistrationByFilter(searchFilter);
+		return ResponseEntity.ok(patientMapper.fromListPatientRegistrationSearch(result));
 	}
 
 	private void validateFilter(AuditPatientSearch auditPatientSearch) {

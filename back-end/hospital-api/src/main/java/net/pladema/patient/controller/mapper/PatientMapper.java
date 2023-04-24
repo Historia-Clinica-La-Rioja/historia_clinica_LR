@@ -3,9 +3,11 @@ package net.pladema.patient.controller.mapper;
 import net.pladema.address.controller.dto.AddressDto;
 import net.pladema.patient.controller.dto.APatientDto;
 import net.pladema.patient.controller.dto.LimitedPatientSearchDto;
+import net.pladema.patient.controller.dto.PatientRegistrationSearchDto;
 import net.pladema.patient.controller.dto.PatientSearchDto;
 import net.pladema.patient.repository.entity.Patient;
 import net.pladema.patient.service.domain.LimitedPatientSearchBo;
+import net.pladema.patient.service.domain.PatientRegistrationSearch;
 import net.pladema.patient.service.domain.PatientSearch;
 import net.pladema.person.controller.mapper.PersonMapper;
 import ar.lamansys.sgx.shared.dates.configuration.LocalDateMapper;
@@ -20,6 +22,8 @@ public interface PatientMapper {
 	PatientSearchDto fromPatientSearch(PatientSearch patientSearch);
 
 	List<PatientSearchDto> fromListPatientSearch(List<PatientSearch> patientSearch);
+
+	List<PatientRegistrationSearchDto> fromListPatientRegistrationSearch(List<PatientRegistrationSearch> patientRegistrationSearch);
 
 	AddressDto updatePatientAddress(APatientDto patient);
 
