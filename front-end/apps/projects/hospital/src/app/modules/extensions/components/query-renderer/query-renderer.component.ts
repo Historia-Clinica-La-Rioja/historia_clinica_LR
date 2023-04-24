@@ -24,13 +24,23 @@ const formatColumnDate = (tableData: any[], columns: string[]): any[] => {
 	return tableData;
 };
 
-const parse = (value: string): string => {
-	if (isDate(value)) {
-		const month = value[5] + value[6];
-		value = MONTHS_OF_YEAR[Number(month) - 1];
-	}
-	return value.toString();
-}
+const parseDate = (value: string, granularity: string): string => {
+	const year = value.slice(0, 4);
+	const month = value.slice(5, 7);
+	const day = value.slice(8, 10);
+
+	const parseMonth = () => MONTHS_OF_YEAR[Number(month) - 1];
+	const parseMonthYear = () => `${month}/${year}`;
+	const parseDefault = () => `${day}/${month}/${year}`;
+
+	const parseFunctions = {
+		month: parseMonth,
+		'month-year': parseMonthYear,
+		default: parseDefault,
+	};
+	const parseFn = parseFunctions[granularity] || parseFunctions.default;
+	return parseFn();
+};
 
 const isDate = (value: string): boolean => {
 	return moment(value, moment.ISO_8601, true).isValid();
@@ -259,7 +269,8 @@ export class QueryRendererComponent {
 			};
 		});
 
-		this.chartLabels = resultSet.chartPivot(pivotConfig).map((row) => parse(row.x));
+		this.chartLabels = resultSet.chartPivot(pivotConfig).map((row) =>
+			isDate(row.x) ? parseDate(row.x, this.getGranularityDate(pivotConfig.x[0])) : row.x);
 
 		if (!this.chartData?.length) {
 			this.noData = true;
@@ -276,6 +287,13 @@ export class QueryRendererComponent {
 				});
 			}
 		}
+	}
+
+	getGranularityDate(xConfig : string) : string {
+		const x = xConfig.split(".");
+		if(x.length > 2 )
+			return x[2].toString();
+		return null;
 	}
 
 	loadPieData() {
