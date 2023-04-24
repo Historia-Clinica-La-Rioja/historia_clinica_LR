@@ -29,6 +29,7 @@ export class ActionsButtonService {
 	INDICATION_TYPE = INDICATION_TYPE;
 	ACTIVE_STATE = "Activo";
 	patientId: number;
+	actualDate = new Date;
 	private internmentId: number;
 	private entryDate: Date;
 	private professionalId: number;
@@ -40,7 +41,7 @@ export class ActionsButtonService {
 	private diagnostics: DiagnosesGeneralStateDto[] = [];
 	private vias: MasterDataInterface<number>[] = [];
 	private units: MasterDataInterface<number>[] = [];
-	private actualDate = new Date;
+
 	constructor(
 		private readonly dialog: MatDialog,
 		private readonly snackBarService: SnackBarService,

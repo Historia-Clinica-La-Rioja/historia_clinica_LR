@@ -59,6 +59,7 @@ export class InternmentIndicationsCardComponent implements OnInit {
 	}
 
 	loadActualDateAndFilter(actualDate: Date) {
+		this.actionsButtonService.actualDate = actualDate;
 		this.actualDate = actualDate;
 		this.filterIndications();
 	}
