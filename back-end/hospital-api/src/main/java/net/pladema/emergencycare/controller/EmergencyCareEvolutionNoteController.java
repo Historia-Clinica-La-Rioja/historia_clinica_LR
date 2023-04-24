@@ -24,6 +24,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.util.Assert;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -66,6 +67,7 @@ public class EmergencyCareEvolutionNoteController {
 			@RequestBody EmergencyCareEvolutionNoteDto evolutionNote
 	){
 		LOG.debug("Parameters -> institutionId {}, episodeId {}, evolutionNote {}", institutionId, episodeId, evolutionNote);
+		assertValidEmergencyCareEvolutionNote(evolutionNote);
 		Integer doctorId = healthcareProfessionalExternalService.getProfessionalId(UserInfo.getCurrentAuditor());
 		Integer patientMedicalCoverageId = emergencyCareEpisodeService.getPatientMedicalCoverageIdByEpisode(episodeId);
 
@@ -90,6 +92,12 @@ public class EmergencyCareEvolutionNoteController {
 		createEmergencyCareEvolutionNoteDocumentService.execute(emergencyCareEvolutionNoteDocument, emergencyCareEvolutionNoteBo.getId());
 
 		return ResponseEntity.ok().body(true);
+	}
+
+	private void assertValidEmergencyCareEvolutionNote(EmergencyCareEvolutionNoteDto evolutionNote) {
+		Assert.isTrue(evolutionNote.getMainDiagnosis() != null, "La nota de evolución de guardia debe contener un diagnóstico principal");
+		Assert.isTrue(evolutionNote.getEvolutionNote() != null, "La nota de evolución de guardia debe contener una nota de evolución");
+		Assert.isTrue(evolutionNote.getClinicalSpecialtyId() != null, "La nota de evolución de guardia debe tener asociada una especialidad");
 	}
 
 }
