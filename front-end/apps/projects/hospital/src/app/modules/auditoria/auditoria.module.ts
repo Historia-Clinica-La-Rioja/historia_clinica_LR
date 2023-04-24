@@ -11,6 +11,7 @@ import { PatientFusionComponent } from './routes/patient-fusion/patient-fusion.c
 import { WarningFusionComponent } from './dialogs/warning-fusion/warning-fusion.component';
 import { ConfirmedFusionComponent } from './dialogs/confirmed-fusion/confirmed-fusion.component';
 import { PatientProfilePopupComponent } from './dialogs/patient-profile-popup/patient-profile-popup.component';
+import { EmpadronamientoComponent } from './routes/empadronamiento/empadronamiento.component';
 
 
 
@@ -22,7 +23,8 @@ import { PatientProfilePopupComponent } from './dialogs/patient-profile-popup/pa
     PatientFusionComponent,
     WarningFusionComponent,
     ConfirmedFusionComponent,
-    PatientProfilePopupComponent
+    PatientProfilePopupComponent,
+    EmpadronamientoComponent
   ],
   imports: [
     CommonModule,
