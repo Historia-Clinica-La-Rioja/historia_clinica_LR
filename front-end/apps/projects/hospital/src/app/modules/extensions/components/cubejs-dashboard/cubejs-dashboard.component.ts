@@ -40,7 +40,6 @@ const  MEASURE_PROFESSIONAL_SELF_DETERMINATION = "profesional_autopercibido";
 export class CubejsDashboardComponent implements OnInit {
 
 	@Input() set content(content: UIComponentDto[]) {
-		debugger;
 		this.setChartService(content);
 		this._content = content;
 	}
