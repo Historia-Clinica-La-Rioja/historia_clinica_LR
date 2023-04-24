@@ -3,6 +3,7 @@ import { Router } from '@angular/router';
 import { ContextService } from '@core/services/context.service';
 
 const ROUTE_CONTROL_PATIENT_DUPLICATE = "auditoria/control-pacientes-duplicados"
+const ROUTE_EMPADRONAMIENTO = "auditoria/empadronamiento"
 @Component({
 	selector: 'app-home',
 	templateUrl: './home.component.html',
@@ -11,7 +12,7 @@ const ROUTE_CONTROL_PATIENT_DUPLICATE = "auditoria/control-pacientes-duplicados"
 export class HomeComponent implements OnInit {
 	private readonly routePrefix;
 
-	constructor(private router: Router,	private contextService: ContextService) {
+	constructor(private router: Router, private contextService: ContextService) {
 		this.routePrefix = `institucion/${this.contextService.institutionId}/`;
 	}
 
@@ -20,5 +21,9 @@ export class HomeComponent implements OnInit {
 
 	goToPatientsFusion() {
 		this.router.navigate([this.routePrefix + ROUTE_CONTROL_PATIENT_DUPLICATE]);
+	}
+
+	goToEmpadronamiento() {
+		this.router.navigate([this.routePrefix + ROUTE_EMPADRONAMIENTO]);
 	}
 }

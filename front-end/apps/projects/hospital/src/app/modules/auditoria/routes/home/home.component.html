@@ -5,6 +5,18 @@
 	<div fxLayout="column" fxLayoutGap="10px">
 		<mat-card>
 			<mat-card-header>
+				<mat-card-title>{{'pacientes.audit.TITLE_EMPADRONAMIENTO' | translate}}</mat-card-title>
+			</mat-card-header>
+			<mat-card-content>
+				<mat-action-list>
+					<mat-list-item (click)="goToEmpadronamiento()">
+						<span class="primary">{{'pacientes.audit.SUBTITLE_EMPADRONAMIENTO' | translate}}</span>
+					</mat-list-item>
+				</mat-action-list>
+			</mat-card-content>
+		</mat-card>
+		<mat-card>
+			<mat-card-header>
 				<mat-card-title>{{'pacientes.audit.TITLE_FUSION_PATIENTS' | translate}}</mat-card-title>
 			</mat-card-header>
 			<mat-card-content>

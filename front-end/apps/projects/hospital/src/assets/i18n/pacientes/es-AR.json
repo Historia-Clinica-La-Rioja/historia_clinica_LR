@@ -313,6 +313,7 @@
 		"CLARIFICATION_TWO":" Posteriormente, seleccione por cada columna el dato definitivo con el que quedará el paciente fusionado.",
 		"CLARIFICATION_THREE":"El resto de los datos personales que permanecerán en el paciente fusionado serán los del id seleccionado.",
 		"TITLE_EMPADRONAMIENTO":"Empadronamiento",
+		"SUBTITLE_EMPADRONAMIENTO":"Búsqueda y alta de pacientes",
 		"SUBTITLE_PATIENT_SEARCH":"Búsqueda de pacientes",
 		"LABEL_PATIENT_SEARCH":"Ingresé datos del paciente para realizar la búsqueda."
 
