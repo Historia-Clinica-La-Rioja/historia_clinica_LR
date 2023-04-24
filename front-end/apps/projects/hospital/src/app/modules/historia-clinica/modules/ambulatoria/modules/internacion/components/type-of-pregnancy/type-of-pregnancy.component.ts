@@ -19,7 +19,10 @@ export class TypeOfPregnancyComponent {
 		private readonly obstetricFormService: ObstetricFormService,
 	) {
 		this.obstetricFormService.getValue().subscribe((obstetricEvent) => {
-			this.selectedOption = this.calculateSelectedOption(obstetricEvent?.newborns?.length);
+			if (obstetricEvent)
+				this.selectedOption = this.calculateSelectedOption(obstetricEvent?.newborns?.length);
+			else 
+				this.selectedOption = null;
 		});
 	}
 
