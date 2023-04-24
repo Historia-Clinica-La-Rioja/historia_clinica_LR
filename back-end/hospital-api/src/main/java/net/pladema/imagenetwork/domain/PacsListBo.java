@@ -1,15 +1,16 @@
 package net.pladema.imagenetwork.domain;
 
 import java.net.URI;
-import java.net.URISyntaxException;
+import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
+
+import org.springframework.web.util.UriComponentsBuilder;
 
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 import net.pladema.establishment.repository.entity.PacServer;
-import net.pladema.imagenetwork.infrastructure.output.entity.StudyInformation;
 
 @Getter
 @Setter
@@ -19,19 +20,17 @@ public class PacsListBo {
 
 	private static final String SCHEMA = "https";
 
-	public PacsListBo(StudyInformation studyInformation) {
-		this.pacs = getURIs(studyInformation.getPacs());
+	public PacsListBo(List<PacServer> pacServers) {
+		this.pacs = getURIs(pacServers);
 	}
 
-	private static Set<URI> getURIs(Set<PacServer> pacs) {
+	private static Set<URI> getURIs(List<PacServer> pacs) {
 		return pacs.stream()
-				.map(pac -> {
-					try {
-						return new URI(SCHEMA, pac.getDomain(), "");
-					} catch (URISyntaxException e) {
-						throw new RuntimeException(e);
-					}
-				})
+				.map(pacServer -> UriComponentsBuilder.newInstance()
+						.scheme(SCHEMA)
+						.host(pacServer.getDomain())
+						.build()
+						.toUri())
 				.collect(Collectors.toSet());
 	}
 }
