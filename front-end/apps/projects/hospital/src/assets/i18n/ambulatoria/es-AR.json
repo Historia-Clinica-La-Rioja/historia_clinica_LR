@@ -698,6 +698,15 @@
 				"EMERGENCY_CARE": "Ambulatoria",
 				"OUTPATIENT": "Guardia",
 				"ERROR": "Por favor, tildar al menos un tipo de encuentro"
+			},
+			"document-type": {
+				"TITLE": "Tipo de documento",
+				"ALL": "Todos los documentos",
+				"ERROR": "Es necesario seleccionar al menos un tipo de documento",
+				"CLINICAL_NOTES": "Notas clínicas",
+				"EPICRISIS": "Epicrisis",
+				"MEDICAL_PRESCRIPTIONS": "Prescripciones médicas",
+				"REPORTS": "Informes de los resultados de los estudios complementarios"
 			}
 		},
         "screen_change_warning_dialog": {

@@ -34,7 +34,7 @@
 		<h3 class="subtitle">{{'ambulatoria.print.encounter-type.TITLE' | translate}}</h3>
 		<div fxLayout="row" fxLayoutGap="18px" [formGroup]="encounterTypeForm">
 			<ng-container *ngFor="let encounterType of encounterTypes">
-				<mat-checkbox [formControlName]="encounterType.value" [color]="'primary'">
+				<mat-checkbox [formControlName]="encounterType.value" [color]="'primary'" (change)="encounterCheckedChange()">
 					{{ encounterType.label | translate}}
 				</mat-checkbox>
 			</ng-container>
@@ -47,4 +47,28 @@
 	</section>
 
 	<mat-divider></mat-divider>
+
+	<section id="document-type" *ngIf="showDocuments">
+		<h3 class="subtitle">{{'ambulatoria.print.document-type.TITLE' | translate}}</h3>
+		<div [formGroup]="documentTypeForm">
+			<mat-checkbox formControlName="all" [color]="'primary'" class="all-checkbox"
+				(change)="onAllCheckedChange()">
+				{{ 'ambulatoria.print.document-type.ALL' | translate}}
+			</mat-checkbox>
+			<mat-divider></mat-divider>
+			<div fxLayout="row wrap" fxLayoutAlign="start center" fxLayoutGap="10px">
+				<ng-container *ngFor="let documentType of documentTypes">
+					<mat-checkbox [formControlName]="documentType.value" [color]="'primary'" class="checkbox"
+						(change)="onDocumentTypeCheckedChange()">
+						{{ documentType.label | translate}}
+					</mat-checkbox>
+				</ng-container>
+			</div>
+		</div>
+		<div *ngIf="documentTypeForm.invalid && documentTypeForm.touched">
+			<mat-error *ngIf="documentTypeForm.hasError('atLeastOneChecked')">
+				{{ 'ambulatoria.print.document-type.ERROR' | translate }}
+			</mat-error>
+		</div>
+	</section>
 </app-content>

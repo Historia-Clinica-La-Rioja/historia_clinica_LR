@@ -8,7 +8,8 @@ import { MapperService } from '@presentation/services/mapper.service';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { momentToDateDto } from '@core/utils/moment.utils';
 import * as moment from 'moment';
-import { EncounterTypes } from '../../constants/print-ambulatoria-masterdata';
+import { EncounterTypes, DocumentTypes } from '../../constants/print-ambulatoria-masterdata';
+import { ECHEncounterType } from "@api-rest/api-model";
 
 @Component({
 	selector: 'app-print-ambulatoria',
@@ -36,6 +37,11 @@ export class PrintAmbulatoriaComponent implements OnInit {
 
 	encounterTypeForm: FormGroup;
 	encounterTypes = EncounterTypes;
+
+	documentTypeForm: FormGroup;
+	documentTypes = DocumentTypes;
+	allChecked = true;
+	showDocuments = true;
 
 	constructor(
 		private readonly route: ActivatedRoute,
@@ -66,10 +72,18 @@ export class PrintAmbulatoriaComponent implements OnInit {
 
 		const encounterTypeControls = {};
 		this.encounterTypes.forEach(encounterType => {
-		  encounterTypeControls[encounterType.value] = this.formBuilder.control(true);
+			encounterTypeControls[encounterType.value] = this.formBuilder.control(true);
 		});
 
-		this.encounterTypeForm = this.formBuilder.group(encounterTypeControls,{ validators: this.atLeastOneChecked });
+		this.encounterTypeForm = this.formBuilder.group(encounterTypeControls, { validators: this.atLeastOneChecked });
+
+		const documentTypeControls = {};
+		documentTypeControls["all"] = this.formBuilder.control(true);
+		this.documentTypes.forEach(documentType => {
+			documentTypeControls[documentType.value] = this.formBuilder.control(true);
+		});
+
+		this.documentTypeForm = this.formBuilder.group(documentTypeControls, { validators: this.atLeastOneChecked });
 	}
 
 	dateRangeChange(range): void {
@@ -83,5 +97,29 @@ export class PrintAmbulatoriaComponent implements OnInit {
 		const values = Object.values(formGroup.value);
 		const isChecked = values.some((value) => value);
 		return isChecked ? null : { atLeastOneChecked: true };
+	}
+
+	onAllCheckedChange() {
+		const allChecked = this.documentTypeForm.get('all').value;
+		this.documentTypes.forEach(documentType => {
+			this.documentTypeForm.get(documentType.value).setValue(allChecked);
+		});
+	}
+
+	onDocumentTypeCheckedChange() {
+		const allChecked = this.documentTypes.every(documentType => {
+			return this.documentTypeForm.get(documentType.value).value;
+		});
+		this.documentTypeForm.get('all').setValue(allChecked);
+	}
+
+	encounterCheckedChange() {
+		this.documentTypes = [];
+		if (!this.atLeastOneChecked(this.encounterTypeForm)){
+			this.documentTypes = DocumentTypes;
+			this.showDocuments = true;
+		}
+		else
+			this.showDocuments = false;
 	}
 }

@@ -6,3 +6,12 @@
 .patient-card {
 	margin-bottom: 2em;
 }
+
+.checkbox {
+	flex-basis: calc(33.33% - 10px);
+	margin: 0.5em 0;
+}
+
+.all-checkbox {
+	margin-bottom: 0.5em;
+}
