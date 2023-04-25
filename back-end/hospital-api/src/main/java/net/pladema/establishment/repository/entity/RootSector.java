@@ -49,4 +49,8 @@ public class RootSector {
 
 	@Column(name = "hospitalization_type_id")
 	private Short hospitalizationTypeId;
+
+	@Column(name = "deleted")
+	private Boolean deleted;
+
 }

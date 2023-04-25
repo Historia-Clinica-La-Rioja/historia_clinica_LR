@@ -19,7 +19,7 @@ const SectorFilter = props =>(
 
 
 const SectorList = props => (
-    <List {...props} hasCreate={false} filters={<SectorFilter />} >
+    <List {...props} hasCreate={false} filters={<SectorFilter />} filter={{ deleted: false }} >
         <Datagrid rowClick="show">
             <TextField source="description" />
             <ReferenceField source="institutionId" reference="institutions">

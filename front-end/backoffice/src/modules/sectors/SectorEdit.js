@@ -94,6 +94,7 @@ const SectorEdit = props => (
                 reference="sectors"
                 target= { "sectorId" }
                 sort={{ field: 'description', order: 'DESC' }}
+                filter={{ deleted: false }}
             >
                 <Datagrid rowClick="show">
                     <TextField source="description" />
@@ -111,6 +112,7 @@ const SectorEdit = props => (
                 reference="doctorsoffices"
                 target="sectorId"
                 sort={{ field: 'description', order: 'DESC' }}
+                filter={{ deleted: false }}
             >
                 <Datagrid rowClick="show"
                           empty={<p style={{paddingLeft:10, marginTop:0, color:'#8c8c8c'}} >Sin consultorios definidos</p>}>

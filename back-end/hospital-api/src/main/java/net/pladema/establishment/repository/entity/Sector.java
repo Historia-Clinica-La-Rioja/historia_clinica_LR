@@ -2,11 +2,14 @@ package net.pladema.establishment.repository.entity;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EntityListeners;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
+import ar.lamansys.sgx.shared.auditable.entity.SGXAuditableEntity;
+import ar.lamansys.sgx.shared.auditable.listener.SGXAuditListener;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
@@ -18,7 +21,8 @@ import lombok.ToString;
 @Setter
 @ToString
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
-public class Sector {
+@EntityListeners(SGXAuditListener.class)
+public class Sector extends SGXAuditableEntity<Integer> {
 
 	@Id
 	@Column(name = "id")

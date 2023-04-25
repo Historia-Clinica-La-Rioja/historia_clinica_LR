@@ -203,3 +203,67 @@ databaseChangeLog:
               referencedColumnNames: id
               referencedTableName: appointment
               validate: true
+
+    - changeSet:
+        id: add-auditable-columns-sector
+        author: fsimaro
+        changes:
+          - addColumn:
+              tableName: sector
+              columns:
+                - column:
+                    constraints:
+                      nullable: false
+                    name: created_by
+                    type: int
+                    defaultValue: -1
+                - column:
+                    constraints:
+                      nullable: false
+                    name: created_on
+                    type: datetime
+                    defaultValueDate: ${date.now}
+                - column:
+                    constraints:
+                      nullable: false
+                    name: updated_by
+                    type: int
+                    defaultValue: -1
+                - column:
+                    constraints:
+                      nullable: false
+                    name: updated_on
+                    type: datetime
+                    defaultValueDate: ${date.now}
+                - column:
+                    constraints:
+                      nullable: false
+                    name: deleted
+                    type: BOOLEAN
+                    defaultValue: ${boolean.false}
+                - column:
+                    name: deleted_by
+                    type: int
+                - column:
+                    name: deleted_on
+                    type: datetime
+
+    - changeSet:
+        id: dropView-v_root_sector
+        author: fsimaro
+        dbms: "postgresql"
+        changes:
+          - dropView:
+              viewName: v_root_sector
+
+    - changeSet:
+        id: createView-v_root_sector
+        author: fsimaro
+        changes:
+          - createView:
+              - viewName: v_root_sector
+              - fullDefinition: false
+              - selectQuery: |-
+                  (SELECT *
+                   FROM sector AS s
+                   WHERE s.sector_id IS NULL)

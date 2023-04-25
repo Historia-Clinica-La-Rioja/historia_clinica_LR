@@ -69,6 +69,7 @@ const InstitutionEdit = props => {
                     reference="sectors"
                     target="institutionId"
                     sort={{field: 'description', order: 'DESC'}}
+                    filter={{ deleted: false }}
                 >
                     <Datagrid rowClick="show">
                         <TextField source="description"/>

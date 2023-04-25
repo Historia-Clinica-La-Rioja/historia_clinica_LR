@@ -57,6 +57,7 @@ const InstitutionShow = props => (
                 reference="rootsectors"
                 target="institutionId"
                 sort={{ field: 'description', order: 'DESC' }}
+                filter={{ deleted: false }}
             >
                 <Datagrid rowClick="show">
                     <TextField source="description" />
