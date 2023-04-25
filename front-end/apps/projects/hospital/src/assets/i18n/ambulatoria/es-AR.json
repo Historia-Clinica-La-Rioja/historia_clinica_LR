@@ -683,6 +683,10 @@
 				"ERROR_REPEAT_VALUE": "No es posible sobrescribir gestas"
 			}
         },
+		"print":{
+            "TITLE": "Imprimir historia clínica",
+			"SUBTITLE": "Seleccione los criterios para la impresion de historia clínica"
+		},
         "screen_change_warning_dialog": {
             "CONTENT": "Usted ha iniciado una consulta, si cambia de pantalla la información cargada se perderá.",
             "ANSWER_CONTENT": "¿Desea continuar de todos modos?",

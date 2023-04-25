@@ -125,7 +125,7 @@ import { PrintAmbulatoriaComponent } from './routes/print-ambulatoria/print-ambu
 		EpisodeSummaryComponent,
 		EmergencyCareProblemsComponent,
 		PatientValidatorPopupComponent,
-     PrintAmbulatoriaComponent,
+    	PrintAmbulatoriaComponent,
 	],
 	imports: [
 		CommonModule,

@@ -1,1 +1,15 @@
-<p>print-ambulatoria works!</p>
+<app-content width="full">
+	<section id="title" fxLayout="column" fxLayoutAlign="space-between">
+		<h2 class="page-title" [translate]="'ambulatoria.print.TITLE'"></h2>
+		<div id="subtitle" class="subtitle">
+			<span [translate]="'ambulatoria.print.SUBTITLE'"></span>
+		</div>
+	</section>
+
+	<section id="patient-info">
+		<app-patient-card fxFlex="40%" *ngIf="personPhoto" [patient]="patient"
+			[personalAdditionalInformation]="personInformation" [personPhoto]="personPhoto"
+			[showAdditionalInformation]="true">
+		</app-patient-card>
+	</section>
+</app-content>
