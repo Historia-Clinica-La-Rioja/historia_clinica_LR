@@ -2,7 +2,6 @@ import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
 import { ERole } from '@api-rest/api-model';
 import { RoleGuard } from '@core/guards/RoleGuard';
-import { InternacionPacienteComponent } from './routes/internacion-paciente/internacion-paciente.component';
 import { InternacionesHomeComponent } from './routes/home/internaciones-home.component';
 import { NewInternmentComponent } from './routes/new-internment/new-internment.component';
 import { PatientBedRelocationComponent } from './routes/patient-bed-relocation/patient-bed-relocation.component';
