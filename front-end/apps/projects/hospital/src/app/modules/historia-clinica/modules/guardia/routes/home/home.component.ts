@@ -7,7 +7,8 @@ import {
 	EmergencyCareListDto,
 	EmergencyCarePatientDto,
 	MasterDataDto, MasterDataInterface,
-	PatientPhotoDto
+	PatientPhotoDto,
+	ProfessionalPersonDto
 } from '@api-rest/api-model';
 import { ERole } from '@api-rest/api-model';
 import { dateTimeDtoToDate } from '@api-rest/mapper/date-dto.mapper';
@@ -247,6 +248,12 @@ export class HomeComponent implements OnInit {
 				e.patient.person.firstName = this.patientNameService.getPatientName(e.patient.person.firstName, e.patient.person.nameSelfDetermination);
 		})
 	}
+
+	getFullProfessionalName(professional: ProfessionalPersonDto): string {
+		const professionalName = `${this.patientNameService.getPatientName(professional.firstName, professional.nameSelfDetermination)}`
+		return `${professionalName} ${professional.middleNames == null ? "" : professional.middleNames} ${professional.lastName} ${professional.otherLastNames == null ? "" : professional.otherLastNames}`;
+	}
+
 }
 
 export interface Episode {

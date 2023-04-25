@@ -227,6 +227,7 @@
 										</span>
 									</ng-container>
 									<span class="mat-small"> {{ episode.doctorsOffice?.description }} </span>
+									<span *ngIf="episode.relatedProfessional"> {{ getFullProfessionalName(episode.relatedProfessional) }} </span>
 
 									<ng-template #enAtencion>
 										<span id="state">{{ episode.state.description | uppercase }}</span>
