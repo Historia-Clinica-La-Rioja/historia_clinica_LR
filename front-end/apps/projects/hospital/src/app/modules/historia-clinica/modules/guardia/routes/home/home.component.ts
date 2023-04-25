@@ -113,6 +113,10 @@ export class HomeComponent implements OnInit {
 				this.loading = false;
 				this.completePatientPhotos();
 				this.episodes = this.episodesOriginal.filter(episode => this.filterService.filter(episode));
+				this.episodes.forEach(episode => {
+					if (episode.relatedProfessional)
+						this.getFullProfessionalName(episode.relatedProfessional);
+				});
 			}, _ => this.loading = false);
 	}
 
@@ -249,9 +253,9 @@ export class HomeComponent implements OnInit {
 		})
 	}
 
-	getFullProfessionalName(professional: ProfessionalPersonDto): string {
-		const professionalName = `${this.patientNameService.getPatientName(professional.firstName, professional.nameSelfDetermination)}`
-		return `${professionalName} ${professional.middleNames == null ? "" : professional.middleNames} ${professional.lastName} ${professional.otherLastNames == null ? "" : professional.otherLastNames}`;
+	private getFullProfessionalName(professional: ProfessionalPersonDto) {
+		const professionalName = `${this.patientNameService.getPatientName(professional.firstName, professional.nameSelfDetermination)}`;
+		professional.fullName = `${professionalName} ${professional.middleNames == null ? "" : professional.middleNames} ${professional.lastName} ${professional.otherLastNames == null ? "" : professional.otherLastNames}`;
 	}
 
 }
@@ -267,4 +271,5 @@ export interface Episode {
 	state: MasterDataDto;
 	triage: EmergencyCareEpisodeListTriageDto;
 	type: MasterDataDto;
+	relatedProfessional: ProfessionalPersonDto;
 }
