@@ -4,6 +4,7 @@ import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.ips.entity
 import ar.lamansys.sgx.shared.auditable.repository.SGXAuditableEntityJPARepository;
 import net.pladema.emergencycare.repository.domain.EmergencyCareVo;
 import net.pladema.emergencycare.repository.domain.PatientECEVo;
+import net.pladema.emergencycare.repository.domain.ProfessionalPersonVo;
 import net.pladema.emergencycare.repository.entity.EmergencyCareEpisode;
 import net.pladema.emergencycare.repository.entity.EmergencyCareState;
 
@@ -124,4 +125,14 @@ public interface EmergencyCareEpisodeRepository extends SGXAuditableEntityJPARep
 			"JOIN Patient pa ON (ece.patientId = pa.id) " +
 			"WHERE ece.id = :episodeId ")
 	PatientECEVo getPatientDataByEpisodeId(@Param("episodeId") Integer episodeId);
+
+	@Transactional(readOnly = true)
+	@Query("SELECT NEW net.pladema.emergencycare.repository.domain.ProfessionalPersonVo(p.firstName, " +
+			"p.lastName, pe.nameSelfDetermination, p.middleNames, p.otherLastNames) " +
+			"FROM EmergencyCareEpisode AS ece " +
+			"JOIN UserPerson up ON (up.pk.userId = ece.updateable.updatedBy) " +
+			"JOIN Person p ON (up.pk.personId = p.id) " +
+			"JOIN PersonExtended pe ON (p.id = pe.id) " +
+			"WHERE ece.id = :episodeId")
+	ProfessionalPersonVo getEmergencyCareEpisodeRelatedProfessionalInfo(@Param("episodeId") Integer episodeId);
 }

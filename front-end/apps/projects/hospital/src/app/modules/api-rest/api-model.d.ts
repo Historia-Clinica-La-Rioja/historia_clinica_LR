@@ -1075,6 +1075,7 @@ export interface EmergencyCareListDto extends Serializable {
     doctorsOffice: DoctorsOfficeDto;
     id: number;
     patient: EmergencyCarePatientDto;
+    relatedProfessional: ProfessionalPersonDto;
     state: MasterDataDto;
     triage: EmergencyCareEpisodeListTriageDto;
     type: MasterDataDto;

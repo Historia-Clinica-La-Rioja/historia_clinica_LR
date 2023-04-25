@@ -1,5 +1,6 @@
 package net.pladema.emergencycare.controller.dto;
 
+import ar.lamansys.sgh.shared.infrastructure.input.service.ProfessionalPersonDto;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -31,4 +32,6 @@ public class EmergencyCareListDto implements Serializable {
 	MasterDataDto state;
 
 	DoctorsOfficeDto doctorsOffice;
+
+	ProfessionalPersonDto relatedProfessional;
 }

@@ -19,11 +19,13 @@ import net.pladema.emergencycare.service.domain.EmergencyCareEpisodeInProgressBo
 import net.pladema.emergencycare.service.domain.HistoricEmergencyEpisodeBo;
 import net.pladema.emergencycare.service.domain.PatientECEBo;
 import net.pladema.emergencycare.service.domain.PoliceInterventionDetailsBo;
+import net.pladema.emergencycare.service.domain.enums.EEmergencyCareState;
 import net.pladema.emergencycare.triage.service.TriageService;
 import net.pladema.emergencycare.triage.service.domain.TriageBo;
 import net.pladema.establishment.controller.service.InstitutionExternalService;
 import ar.lamansys.sgx.shared.dates.configuration.JacksonDateFormatConfig;
 import ar.lamansys.sgx.shared.exceptions.NotFoundException;
+import net.pladema.medicalconsultation.diary.service.domain.ProfessionalPersonBo;
 import net.pladema.patient.controller.service.PatientExternalService;
 
 import org.slf4j.Logger;
@@ -92,7 +94,13 @@ public class EmergencyCareEpisodeServiceImpl implements EmergencyCareEpisodeServ
         List<EmergencyCareBo> result = resultQuery.stream().map(EmergencyCareBo::new)
                 .sorted(Comparator.comparing(EmergencyCareBo::getEmergencyCareStateId).thenComparing(EmergencyCareBo::getTriageCategoryId).thenComparing(EmergencyCareBo::getCreatedOn))
                         .collect(Collectors.toList());
-        result.forEach(ec -> ec.setCreatedOn(UTCIntoInstitutionLocalDateTime(institutionId, ec.getCreatedOn())));
+        result.forEach(ec -> {
+			ec.setCreatedOn(UTCIntoInstitutionLocalDateTime(institutionId, ec.getCreatedOn()));
+			if (ec.getEmergencyCareStateId().equals(EEmergencyCareState.ATENCION.getId())) {
+				ProfessionalPersonBo professional = new ProfessionalPersonBo(emergencyCareEpisodeRepository.getEmergencyCareEpisodeRelatedProfessionalInfo(ec.getId()));
+				ec.setRelatedProfessional(professional);
+			}
+		});
         LOG.debug(OUTPUT, result);
         return result;
     }

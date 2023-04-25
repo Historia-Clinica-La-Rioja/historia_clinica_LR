@@ -10,6 +10,7 @@ import ar.lamansys.sgh.clinichistory.domain.ips.ReasonBo;
 import net.pladema.emergencycare.repository.domain.EmergencyCareVo;
 import net.pladema.emergencycare.repository.entity.EmergencyCareEpisode;
 import net.pladema.emergencycare.triage.service.domain.TriageBo;
+import net.pladema.medicalconsultation.diary.service.domain.ProfessionalPersonBo;
 import net.pladema.medicalconsultation.doctorsoffice.service.domain.DoctorsOfficeBo;
 
 import java.time.LocalDateTime;
@@ -54,6 +55,8 @@ public class EmergencyCareBo {
     private PoliceInterventionDetailsBo policeInterventionDetails;
 
     private Boolean hasPoliceIntervention;
+
+	private ProfessionalPersonBo relatedProfessional;
 
     public EmergencyCareBo(EmergencyCareVo emergencyCareVo){
         this.id = emergencyCareVo.getId();

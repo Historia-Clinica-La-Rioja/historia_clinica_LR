@@ -5,6 +5,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
+import net.pladema.emergencycare.repository.domain.ProfessionalPersonVo;
 
 @Getter
 @Setter
@@ -30,5 +31,13 @@ public class ProfessionalPersonBo {
 		this.firstName = firstName;
 		this.lastName = lastName;
 		this.nameSelfDetermination = nameSelfDetermination;
+	}
+
+	public ProfessionalPersonBo(ProfessionalPersonVo professionalPerson) {
+		this.firstName = professionalPerson.getFirstName();
+		this.lastName = professionalPerson.getLastName();
+		this.nameSelfDetermination = professionalPerson.getNameSelfDetermination();
+		this.middleNames = professionalPerson.getMiddleNames();
+		this.otherLastNames = professionalPerson.getOtherLastNames();
 	}
 }
