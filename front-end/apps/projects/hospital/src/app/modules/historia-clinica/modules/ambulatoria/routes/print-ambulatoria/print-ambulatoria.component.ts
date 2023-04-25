@@ -131,4 +131,17 @@ export class PrintAmbulatoriaComponent implements OnInit {
 		const url = `${AppRoutes.Institucion}/${this.contextService.institutionId}/${ROUTE_HISTORY_CLINIC}`;
 		this.router.navigate([url]);
 	}
+
+	search() {
+		const selectedEncounterTypes = this.encounterTypes.filter( e => this.encounterTypeForm.get(e.value).value);
+		const selectedDocumentTypes = this.documentTypes.filter( d => this.documentTypeForm.get(d.value).value)
+		const data = {
+			date: {
+				start: this.dateRange.start,
+				end: this.dateRange.end
+			},
+			encounterTypes: selectedEncounterTypes,
+			documentTypes: selectedDocumentTypes
+		}
+	}
 }

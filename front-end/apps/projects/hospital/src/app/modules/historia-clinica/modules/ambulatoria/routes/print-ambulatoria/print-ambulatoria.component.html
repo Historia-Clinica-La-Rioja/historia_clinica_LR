@@ -34,7 +34,8 @@
 		<h3 class="subtitle">{{'ambulatoria.print.encounter-type.TITLE' | translate}}</h3>
 		<div fxLayout="row" fxLayoutGap="18px" [formGroup]="encounterTypeForm">
 			<ng-container *ngFor="let encounterType of encounterTypes">
-				<mat-checkbox [formControlName]="encounterType.value" [color]="'primary'" (change)="encounterCheckedChange()">
+				<mat-checkbox [formControlName]="encounterType.value" [color]="'primary'"
+					(change)="encounterCheckedChange()">
 					{{ encounterType.label | translate}}
 				</mat-checkbox>
 			</ng-container>
@@ -72,9 +73,13 @@
 		</div>
 	</section>
 
-	<section id="buttons">
+	<section id="buttons" fxLayout="row" fxLayoutGap="20px">
 		<button mat-stroked-button type="button" color="primary" (click)="goBack()">
 			{{ 'ambulatoria.print.BACK' | translate }}
+		</button>
+		<button mat-flat-button type="button" color="primary" (click)="search()"
+			[disabled]="dateRangeForm.invalid || encounterTypeForm.invalid || documentTypeForm.invalid">
+			{{ 'ambulatoria.print.SEARCH' | translate }}
 		</button>
 	</section>
 </app-content>

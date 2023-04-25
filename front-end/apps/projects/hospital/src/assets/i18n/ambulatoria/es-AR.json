@@ -687,6 +687,7 @@
             "TITLE": "Imprimir historia clínica",
 			"SUBTITLE": "Seleccione los criterios para la impresion de historia clínica",
 			"BACK": "Volver",
+			"SEARCH": "Buscar",
 			"date-picker": {
 				"TITLE": "Fechas",
 				"LABEL": "Rango de fechas",
