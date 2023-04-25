@@ -1,15 +1,31 @@
 <app-content width="full">
 	<section id="title" fxLayout="column" fxLayoutAlign="space-between">
 		<h2 class="page-title" [translate]="'ambulatoria.print.TITLE'"></h2>
-		<div id="subtitle" class="subtitle">
+		<div id="subtitle">
 			<span [translate]="'ambulatoria.print.SUBTITLE'"></span>
 		</div>
 	</section>
 
 	<section id="patient-info">
-		<app-patient-card fxFlex="40%" *ngIf="personPhoto" [patient]="patient"
+		<app-patient-card class="patient-card" fxFlex="40%" *ngIf="personPhoto" [patient]="patient"
 			[personalAdditionalInformation]="personInformation" [personPhoto]="personPhoto"
 			[showAdditionalInformation]="true">
 		</app-patient-card>
 	</section>
+
+	<section id="date">
+		<h3 class="subtitle">{{'ambulatoria.print.date-picker.TITLE' | translate}}</h3>
+		<mat-form-field appearance="fill">
+			<mat-label>{{'ambulatoria.print.date-picker.LABEL' | translate}}</mat-label>
+			<mat-date-range-input [formGroup]="dateRangeForm" [rangePicker]="dateRangePicker" [max]="maxDate">
+				<input matStartDate placeholder="Inicio" formControlName="start">
+				<input matEndDate placeholder="Fin" formControlName="end">
+			</mat-date-range-input>
+			<mat-hint>{{'ambulatoria.print.date-picker.HINT' | translate}}</mat-hint>
+			<mat-datepicker-toggle matSuffix [for]="dateRangePicker"></mat-datepicker-toggle>
+			<mat-date-range-picker #dateRangePicker></mat-date-range-picker>
+			<mat-error [translate]="'ambulatoria.print.date-picker.REQUIRED'"></mat-error>
+		</mat-form-field>
+	</section>
+
 </app-content>

@@ -1,6 +1,7 @@
 import * as moment from 'moment';
 import { Moment } from 'moment';
 import { DEFAULT_LANG } from '../../../app.component';
+import { DateDto } from '@api-rest/api-model';
 
 moment.locale(DEFAULT_LANG);
 
@@ -87,3 +88,11 @@ export const currentWeek = (): Moment[] => {
 	}
 	return days;
 };
+
+export const momentToDateDto = (momentDate: Moment): DateDto => {
+	return {
+		day: momentDate.date(),
+		month: momentDate.month() + 1,
+		year: momentDate.year(),
+	};
+}

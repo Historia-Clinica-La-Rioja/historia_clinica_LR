@@ -685,7 +685,13 @@
         },
 		"print":{
             "TITLE": "Imprimir historia clínica",
-			"SUBTITLE": "Seleccione los criterios para la impresion de historia clínica"
+			"SUBTITLE": "Seleccione los criterios para la impresion de historia clínica",
+			"date-picker": {
+				"TITLE": "Fechas",
+				"LABEL": "Rango de fechas",
+				"HINT": "DD/MM/AAAA - DD/MM/AAAA",
+				"REQUIRED": "El rango de fechas es un campo requerido"
+			}
 		},
         "screen_change_warning_dialog": {
             "CONTENT": "Usted ha iniciado una consulta, si cambia de pantalla la información cargada se perderá.",
