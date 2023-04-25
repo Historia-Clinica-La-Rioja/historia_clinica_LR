@@ -28,4 +28,23 @@
 		</mat-form-field>
 	</section>
 
+	<mat-divider></mat-divider>
+
+	<section id="encounter-type">
+		<h3 class="subtitle">{{'ambulatoria.print.encounter-type.TITLE' | translate}}</h3>
+		<div fxLayout="row" fxLayoutGap="18px" [formGroup]="encounterTypeForm">
+			<ng-container *ngFor="let encounterType of encounterTypes">
+				<mat-checkbox [formControlName]="encounterType.value" [color]="'primary'">
+					{{ encounterType.label | translate}}
+				</mat-checkbox>
+			</ng-container>
+		</div>
+		<div *ngIf="encounterTypeForm.invalid && encounterTypeForm.touched">
+			<mat-error *ngIf="encounterTypeForm.hasError('atLeastOneChecked')">
+				{{ 'ambulatoria.print.encounter-type.ERROR' | translate }}
+			</mat-error>
+		</div>
+	</section>
+
+	<mat-divider></mat-divider>
 </app-content>

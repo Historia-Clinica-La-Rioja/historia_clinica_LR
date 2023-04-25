@@ -5,9 +5,10 @@ import { PatientService } from '@api-rest/services/patient.service';
 import { AdditionalInfo } from '@pacientes/pacientes.model';
 import { PatientBasicData } from '@presentation/components/patient-card/patient-card.component';
 import { MapperService } from '@presentation/services/mapper.service';
-import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { momentToDateDto } from '@core/utils/moment.utils';
 import * as moment from 'moment';
+import { EncounterTypes } from '../../constants/print-ambulatoria-masterdata';
 
 @Component({
 	selector: 'app-print-ambulatoria',
@@ -33,10 +34,14 @@ export class PrintAmbulatoriaComponent implements OnInit {
 		end: new FormControl(null, Validators.required),
 	});
 
+	encounterTypeForm: FormGroup;
+	encounterTypes = EncounterTypes;
+
 	constructor(
 		private readonly route: ActivatedRoute,
 		private readonly patientService: PatientService,
-		private readonly mapperService: MapperService
+		private readonly mapperService: MapperService,
+		private readonly formBuilder: FormBuilder,
 	) {
 		this.route.paramMap.subscribe(
 			(params) => {
@@ -58,6 +63,13 @@ export class PrintAmbulatoriaComponent implements OnInit {
 			if (range.start <= range.end)
 				this.dateRangeChange(range)
 		});
+
+		const encounterTypeControls = {};
+		this.encounterTypes.forEach(encounterType => {
+		  encounterTypeControls[encounterType.value] = this.formBuilder.control(true);
+		});
+
+		this.encounterTypeForm = this.formBuilder.group(encounterTypeControls,{ validators: this.atLeastOneChecked });
 	}
 
 	dateRangeChange(range): void {
@@ -67,4 +79,9 @@ export class PrintAmbulatoriaComponent implements OnInit {
 		}
 	}
 
+	private atLeastOneChecked(formGroup: FormGroup) {
+		const values = Object.values(formGroup.value);
+		const isChecked = values.some((value) => value);
+		return isChecked ? null : { atLeastOneChecked: true };
+	}
 }

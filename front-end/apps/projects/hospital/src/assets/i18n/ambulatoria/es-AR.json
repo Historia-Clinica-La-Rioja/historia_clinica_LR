@@ -691,6 +691,13 @@
 				"LABEL": "Rango de fechas",
 				"HINT": "DD/MM/AAAA - DD/MM/AAAA",
 				"REQUIRED": "El rango de fechas es un campo requerido"
+			},
+			"encounter-type": {
+				"TITLE": "Tipo de episodio/encuentro",
+				"HOSPITALIZATION": "Internación",
+				"EMERGENCY_CARE": "Ambulatoria",
+				"OUTPATIENT": "Guardia",
+				"ERROR": "Por favor, tildar al menos un tipo de encuentro"
 			}
 		},
         "screen_change_warning_dialog": {
