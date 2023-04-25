@@ -1,5 +1,8 @@
 import { ECHDocumentType, ECHEncounterType } from "@api-rest/api-model";
 
+
+export const ROUTE_HISTORY_CLINIC = 'ambulatoria/';
+
 export const EncounterType = {
 	[ECHEncounterType.HOSPITALIZATION]: 'ambulatoria.print.encounter-type.HOSPITALIZATION',
 	[ECHEncounterType.EMERGENCY_CARE]: 'ambulatoria.print.encounter-type.EMERGENCY_CARE',

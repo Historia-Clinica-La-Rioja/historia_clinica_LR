@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { BasicPatientDto, DateDto, PersonPhotoDto } from '@api-rest/api-model';
 import { PatientService } from '@api-rest/services/patient.service';
 import { AdditionalInfo } from '@pacientes/pacientes.model';
@@ -8,8 +8,10 @@ import { MapperService } from '@presentation/services/mapper.service';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { momentToDateDto } from '@core/utils/moment.utils';
 import * as moment from 'moment';
-import { EncounterTypes, DocumentTypes } from '../../constants/print-ambulatoria-masterdata';
+import { EncounterTypes, DocumentTypes, ROUTE_HISTORY_CLINIC } from '../../constants/print-ambulatoria-masterdata';
 import { ECHEncounterType } from "@api-rest/api-model";
+import { AppRoutes } from 'projects/hospital/src/app/app-routing.module';
+import { ContextService } from '@core/services/context.service';
 
 @Component({
 	selector: 'app-print-ambulatoria',
@@ -48,6 +50,8 @@ export class PrintAmbulatoriaComponent implements OnInit {
 		private readonly patientService: PatientService,
 		private readonly mapperService: MapperService,
 		private readonly formBuilder: FormBuilder,
+		private readonly contextService: ContextService,
+		private readonly router: Router,
 	) {
 		this.route.paramMap.subscribe(
 			(params) => {
@@ -121,5 +125,10 @@ export class PrintAmbulatoriaComponent implements OnInit {
 		}
 		else
 			this.showDocuments = false;
+	}
+
+	goBack() {
+		const url = `${AppRoutes.Institucion}/${this.contextService.institutionId}/${ROUTE_HISTORY_CLINIC}`;
+		this.router.navigate([url]);
 	}
 }
