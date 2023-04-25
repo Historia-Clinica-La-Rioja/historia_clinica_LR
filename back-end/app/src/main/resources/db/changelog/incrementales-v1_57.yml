@@ -561,8 +561,6 @@ databaseChangeLog:
                     name: start_date
                     type: date
                 - column:
-                    constraints:
-                      nullable: false
                     name: document_id
                     type: bigint
                 - column:
