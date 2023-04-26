@@ -94,11 +94,7 @@ export class EmergencyCareEvolutionsComponent implements OnInit, OnChanges {
 				const triages = docs.triages.map(map);
 				const evolutionsNotes = docs.evolutionNotes.map(evolutionNotesMapper);
 				const allDocs = triages.concat(evolutionsNotes);
-				console.log(allDocs);
-
 				this.documentHistoric = allDocs.sort((a, b) => b.summary.createdOn.getTime() - a.summary.createdOn.getTime() );
-				console.log(this.documentHistoric);
-
 			})
 
 		function evolutionNotesMapper(en: EmergencyCareEvolutionNoteDocumentDto): Item {

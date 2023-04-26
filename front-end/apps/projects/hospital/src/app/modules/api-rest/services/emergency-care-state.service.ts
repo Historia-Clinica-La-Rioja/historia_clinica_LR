@@ -20,10 +20,7 @@ export class EmergencyCareStateService {
 
 	getEmergencyCareEpisodeDiagnoses(episodeId: number): Observable<DiagnosesGeneralStateDto[]> {
 		const url = this.URL_PREFIX + episodeId + `/diagnoses`;
-		console.log(episodeId);
-
 		return this.http.get<DiagnosesGeneralStateDto[]>(url);
-
 	}
 
 }

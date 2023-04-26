@@ -2,6 +2,7 @@ import { Component, Inject } from '@angular/core';
 import { FormBuilder } from '@angular/forms';
 import { DiagnosisDto, EmergencyCareEvolutionNoteDto, HealthConditionDto, OutpatientAnthropometricDataDto, OutpatientMedicationDto } from '@api-rest/api-model';
 import { EmergencyCareEvolutionNoteService } from '@api-rest/services/emergency-care-evolution-note.service';
+import { EmergencyCareStateService } from '@api-rest/services/emergency-care-state.service';
 import { DockPopUpHeader } from '@presentation/components/dock-popup/dock-popup.component';
 import { OVERLAY_DATA } from '@presentation/presentation-model';
 import { DockPopupRef } from '@presentation/services/dock-popup-ref';
@@ -32,12 +33,24 @@ export class NotaDeEvolucionDockPopupComponent {
 	});
 
 	disableConfirmButton = false;
-
+	diagnosis;
 	constructor(
 		public dockPopupRef: DockPopupRef,
 		private formBuilder: FormBuilder,
 		@Inject(OVERLAY_DATA) public data: { patientId: number, episodeId: number },
-	) { }
+		private readonly emergencyCareStateService: EmergencyCareStateService
+	) {
+		this.emergencyCareStateService.getEmergencyCareEpisodeDiagnoses(this.data.episodeId).subscribe(
+			diagnoses => {
+				if (diagnoses.length) {
+					this.diagnosis = {
+						mainDiagnosis: diagnoses.find(d => d.main) ,
+						diagnosticos: diagnoses.filter(d => !d.main) || [],
+					}
+				}
+			}
+		)
+	}
 
 	save() {
 		const value = this.form.value;

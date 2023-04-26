@@ -1,5 +1,6 @@
-import { Component, forwardRef } from '@angular/core';
+import { Component, Input, OnChanges, SimpleChanges, forwardRef } from '@angular/core';
 import { FormBuilder, NG_VALUE_ACCESSOR } from '@angular/forms';
+import { DiagnosisDto, HealthConditionDto } from '@api-rest/api-model';
 import { Subscription } from 'rxjs';
 
 @Component({
@@ -14,8 +15,19 @@ import { Subscription } from 'rxjs';
 		}
 	]
 })
-export class DiagnosticosFormComponent {
+export class DiagnosticosFormComponent implements OnChanges {
 
+	@Input() diagnosis: {
+		mainDiagnosis: DiagnosisDto[],
+		diagnosticos: HealthConditionDto
+	}
+
+
+
+	ngOnChanges(changes: SimpleChanges): void {
+		this.formDiagnosticos.controls.otrosDiagnosticos.setValue(this.diagnosis?.diagnosticos || []);
+		this.formDiagnosticos.controls.mainDiagnostico.setValue(this.diagnosis?.mainDiagnosis);
+	}
 
 	formDiagnosticos = this.formBuilder.group({
 		mainDiagnostico: [[]],

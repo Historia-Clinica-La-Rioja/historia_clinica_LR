@@ -70,8 +70,6 @@ export class BlockAgendaRangeComponent implements OnInit {
 
 	private getValues(form) {
 		const value = form.value.control;
-		console.log(form.value.control);
-
 		const initDateDto: DateDto = dateToDateDto(value.initDate.toDate());
 		const endDateDto: DateDto = dateToDateDto(value.endDate.toDate());
 		const init = value.init;

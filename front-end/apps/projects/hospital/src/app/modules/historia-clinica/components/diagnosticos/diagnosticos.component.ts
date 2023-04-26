@@ -1,5 +1,5 @@
 import { HEALTH_CLINICAL_STATUS } from '@historia-clinica/modules/ambulatoria/modules/internacion/constants/ids';
-import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { Component, EventEmitter, Input, OnChanges, Output, SimpleChanges } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { DiagnosisDto, HealthConditionDto } from '@api-rest/api-model';
 import { SnackBarService } from '@presentation/services/snack-bar.service';
@@ -27,7 +27,6 @@ export class DiagnosticosComponent {
 		this._mainDiagnosis = newMainDiagnosis;
 		this.mainDiagnosisChange.emit(this._mainDiagnosis)
 	}
-
 	@Input()
 	type: string;
 

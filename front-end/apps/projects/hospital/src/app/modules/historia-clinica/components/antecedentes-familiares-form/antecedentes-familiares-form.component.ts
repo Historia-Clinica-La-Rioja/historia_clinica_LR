@@ -42,7 +42,7 @@ export class AntecedentesFamiliaresFormComponent {
 			this.searchConceptsLocallyFFIsOn = isOn;
 		});
 
-		this.antecedentesFamiliaresNuevaConsultaService.data$.subscribe(r => { console.log(r); this.writeValue({ data: r }) })
+		this.antecedentesFamiliaresNuevaConsultaService.data$.subscribe(r => { this.writeValue({ data: r }) })
 
 	}
 
