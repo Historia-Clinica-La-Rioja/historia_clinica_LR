@@ -40,4 +40,14 @@ public class ModalityController {
 		List<ModalityDto> modalitiesDto = modalityBOMapper.toListModalityDto(modalitiesBO);
 		return ResponseEntity.ok().body(modalitiesDto);
 	}
+
+	@GetMapping(value = "/modalities-by-studies-completed")
+	@PreAuthorize("hasPermission(#institutionId, 'INFORMADOR')")
+	public ResponseEntity<List<ModalityDto>> getModalitiesByStudiesCompleted(
+			@PathVariable(name = "institutionId") Integer institutionId) {
+		log.debug("Input parameters -> institutionId {}", institutionId);
+		List<ModalityBO> modalitiesBO = modalityService.getModalitiesByStudiesCompleted(institutionId);
+		List<ModalityDto> modalitiesDto = modalityBOMapper.toListModalityDto(modalitiesBO);
+		return ResponseEntity.ok().body(modalitiesDto);
+	}
 }

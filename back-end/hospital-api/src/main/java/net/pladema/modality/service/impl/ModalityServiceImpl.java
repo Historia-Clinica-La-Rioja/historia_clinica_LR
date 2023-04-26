@@ -26,6 +26,15 @@ public class ModalityServiceImpl implements ModalityService {
 		return result;
 	}
 
+	@Override
+	public List<ModalityBO> getModalitiesByStudiesCompleted(Integer institutionId) {
+		log.debug("Get modalities with studies completed, Input parameters -> institutionId {}", institutionId);
+		List<Modality> modalities = modalityRepository.getModalitiesByStudiesCompleted(institutionId);
+		List<ModalityBO> result = modalities.stream().map(this::createModalityBoInstance).collect(Collectors.toList());
+		log.debug("Output -> modalities with studies completed", result);
+		return result;
+	}
+
 	public ModalityBO getModality(Integer modalityId) {
 		Modality modality = modalityRepository.findById(modalityId).orElse(null);
 		if (modality != null){

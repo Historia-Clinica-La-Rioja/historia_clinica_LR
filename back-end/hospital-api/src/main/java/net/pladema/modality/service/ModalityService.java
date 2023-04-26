@@ -8,5 +8,7 @@ public interface ModalityService {
 
 	List<ModalityBO> getAllModality();
 
+	List<ModalityBO> getModalitiesByStudiesCompleted(Integer institutionId);
+
 	ModalityBO getModality(Integer modalityId);
 }
