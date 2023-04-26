@@ -14,6 +14,8 @@ import ar.lamansys.base.ReverseProxyAutoConfiguration;
 import ar.lamansys.base.domain.ReverseProxyBo;
 import lombok.extern.slf4j.Slf4j;
 
+import static ar.lamansys.base.application.reverseproxyrest.configuration.RestUtils.removeContext;
+
 @Service
 @Slf4j
 public class RestReverseProxy {
@@ -47,9 +49,5 @@ public class RestReverseProxy {
 		ResponseEntity<?> response = new ReverseProxyBo(restTemplate.exchange(uriBuilder.build().toUri(), HttpMethod.GET, entity, byte[].class)).getResponse();
 		log.debug("Response from server -> {}", response);
 		return response;
-	}
-
-	private static String removeContext(String fullURI, String prefix) {
-		return fullURI.split(prefix)[1];
 	}
 }

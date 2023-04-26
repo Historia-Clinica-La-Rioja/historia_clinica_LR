@@ -4,7 +4,6 @@ import java.security.KeyManagementException;
 import java.security.KeyStoreException;
 import java.security.NoSuchAlgorithmException;
 import java.security.cert.X509Certificate;
-import java.util.Base64;
 
 import org.apache.http.HttpHost;
 import org.apache.http.client.CredentialsProvider;
@@ -30,8 +29,7 @@ public class RestUtils {
 		return (httpProxy == null || httpProxy.trim().isEmpty()) ? null : HttpHost.create(httpProxy);
 	}
 
-	public static String getBasicAuthenticationHeader(String username, String password) {
-		String valueToEncode = String.join(":", username, password);
-		return "Basic " + Base64.getEncoder().encodeToString(valueToEncode.getBytes());
+	public static String removeContext(String fullURI, String prefix) {
+		return fullURI.split(prefix)[1];
 	}
 }
