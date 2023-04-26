@@ -32,6 +32,7 @@
 										(click)="clear(personalInformationForm.controls.identificationTypeId); $event.stopPropagation()">
 										<mat-icon>close</mat-icon>
 									</button>
+									<mat-error *ngIf="hasError(personalInformationForm, 'required', 'identificationTypeId')" [translate]="'forms.REQUIRED'"></mat-error>
 								</mat-form-field>
 							</div>
 							<div fxFlex="30" fxFlex.lt-md="100">
@@ -61,6 +62,8 @@
 							<mat-radio-group formControlName="genderId">
 								<mat-radio-button *ngFor="let gender of genders"
 									[value]="gender.id">{{gender.description}}</mat-radio-button>
+									<mat-error *ngIf="hasError(personalInformationForm,'required','genderId') && formSubmitted"
+									[translate]="'pacientes.form.REQUIRED'"></mat-error>
 							</mat-radio-group>
 						</div>
 
@@ -127,6 +130,40 @@
 								<mat-datepicker #picker2></mat-datepicker>
 								<mat-error translate="forms.INVALID_DATE"></mat-error>
 							</mat-form-field>
+						</div>
+
+						<h3>{{'pacientes.audit.SUBTITLE_FILTER_BY' | translate}}</h3>
+						<div>
+							<div>
+								<mat-form-field appearance="outline" fxFlex="30" fxFlex.lt-md="100">
+									<mat-label>{{'pacientes.audit.LABEL_STATE'| translate}}</mat-label>
+									<mat-select formControlName="filterState" multiple>
+										<mat-option *ngFor="let state of patientStates"
+											[value]="state">{{state}}</mat-option>
+									</mat-select>
+									<mat-error *ngIf="hasError(personalInformationForm, 'required', 'filterState')" [translate]="'forms.REQUIRED'"></mat-error>
+								</mat-form-field>
+							</div>
+						</div>
+						<div>
+							<div>
+								<span [translate]="'pacientes.audit.TITLE'"></span>
+							</div>
+							<mat-radio-group formControlName="filterAudit">
+								<mat-radio-button value="true">Todos los pacientes</mat-radio-button>
+								<mat-radio-button value="false">Soló los marcados para auditar</mat-radio-button>
+							</mat-radio-group>
+						</div>
+
+						<div style="display: none;">
+							<div>
+								<span [translate]="'pacientes.audit.LABEL_STATE_VALIDATION'"></span>
+							</div>
+							<mat-radio-group formControlName="filterStateValidation">
+								<mat-radio-button value="1">Todas las validaciones</mat-radio-button>
+								<mat-radio-button value="2">Soló validaciones manuales</mat-radio-button>
+								<mat-radio-button value="2">Soló validaciones automáticas</mat-radio-button>
+							</mat-radio-group>
 						</div>
 
 						<div>

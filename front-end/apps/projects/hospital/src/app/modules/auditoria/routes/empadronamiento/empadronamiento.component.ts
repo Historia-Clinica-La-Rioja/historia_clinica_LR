@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-import { AbstractControl, FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
-import { GenderDto, IdentificationTypeDto } from '@api-rest/api-model';
+import { AbstractControl, FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { GenderDto, IdentificationTypeDto, PatientType } from '@api-rest/api-model';
 import { PersonMasterDataService } from '@api-rest/services/person-master-data.service';
 import { PERSON } from '@core/constants/validation-constants';
 import { MIN_DATE } from '@core/utils/date.utils';
@@ -18,14 +18,17 @@ import { Moment } from 'moment';
 export class EmpadronamientoComponent implements OnInit {
 	hasError = hasError;
 	personalInformationForm: FormGroup;
+	patientIdForm: FormGroup;
 	genders: GenderDto[];
 	identificationTypeList: IdentificationTypeDto[];
 	today: Moment = newMoment();
 	minDate = MIN_DATE;
-	patientIdForm:FormGroup;
+	patientStates = ["Temporal", "Permanente no validado", "Validado", "Rechazado"];
+	formSubmitted:boolean=false;
 
 	readonly validations = PERSON;
-	constructor(private readonly formBuilder: FormBuilder,	private readonly personMasterDataService: PersonMasterDataService,) { }
+	constructor(private readonly formBuilder: FormBuilder, private readonly personMasterDataService: PersonMasterDataService,
+	) { }
 
 	ngOnInit(): void {
 		this.setMasterData();
@@ -44,9 +47,10 @@ export class EmpadronamientoComponent implements OnInit {
 				this.identificationTypeList = identificationTypes;
 			});
 	}
+
 	private initForms() {
 		this.patientIdForm = this.formBuilder.group({
-			patientId: [null,[Validators.pattern(PATTERN_INTEGER_NUMBER)]]
+			patientId: [null, [Validators.pattern(PATTERN_INTEGER_NUMBER)]]
 		})
 
 		this.personalInformationForm = this.formBuilder.group({
@@ -55,13 +59,16 @@ export class EmpadronamientoComponent implements OnInit {
 			lastName: [null, [Validators.maxLength(PERSON.MAX_LENGTH.lastName), Validators.pattern(/^\S*$/)]],
 			otherLastNames: [null, [Validators.maxLength(PERSON.MAX_LENGTH.otherLastNames), Validators.pattern(/^\S*$/)]],
 			genderId: [null],
-			identificationNumber: [null, [Validators.maxLength(PERSON.MAX_LENGTH.identificationNumber), Validators.pattern(PATTERN_INTEGER_NUMBER) ,Validators.pattern(/^\S*$/)]],
+			identificationNumber: [null, [Validators.maxLength(PERSON.MAX_LENGTH.identificationNumber), Validators.pattern(PATTERN_INTEGER_NUMBER), Validators.pattern(/^\S*$/)]],
 			identificationTypeId: [IDENTIFICATION_TYPE_IDS.DNI],
-			birthDate: []
+			birthDate: [],
+			filterState: [this.patientStates,[Validators.required]],
+			filterAudit: ['true',],
+			filterStateValidation: ['1']
 		});
 	}
-	save(){
-
+	save() {
+		this.formSubmitted=true;
 	}
 
 	clear(control: AbstractControl): void {

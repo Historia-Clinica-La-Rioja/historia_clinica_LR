@@ -317,7 +317,10 @@
 		"SUBTITLE_PATIENT_SEARCH":"Búsqueda de pacientes",
 		"LABEL_PATIENT_SEARCH":"Ingresé datos del paciente para realizar la búsqueda.",
 		"LABEL_PATIENT_ID":"Id paciente",
-		"LABEL_PERSONAL_INFORMATION":"Datos personales"
+		"LABEL_PERSONAL_INFORMATION":"Datos personales",
+		"SUBTITLE_FILTER_BY":"Filtrar por",
+		"LABEL_STATE_VALIDATION":"Validación del estado"
+
 
 	}
   }
