@@ -30,7 +30,13 @@
                           "title" : {
                             "text" : "Consultas por especialidad y profesional del último trimestre"
                           },
-                          "showLegend" : false
+                          "chartOptions" : {
+                            "plugins" : {
+                              "legend" : {
+                                "display" : false
+                              }
+                            }
+                          }
                         }
                       }
                     ]
@@ -56,6 +62,21 @@
                           "query" : "cantidadConsultasAmbulatoriasFecha",
                           "title" : {
                             "text" : "Evolución de consultas por fecha"
+                          },
+                          "chartOptions" : {
+                            "responsive" : true,
+                            "maintainAspectRatio" : false,
+                            "elements" : {
+                              "line" : {
+                                "tension" : 0,
+                                "fill" : true
+                              }
+                            },
+                            "plugins" : {
+                              "legend" : {
+                                "display" : false
+                              }
+                            }
                           }
                         }
                       }
@@ -83,7 +104,15 @@
                           "title" : {
                             "text" : "Consultas por especialidad"
                           },
-                          "showLegend" : false
+                          "chartOptions" : {
+                            "responsive": true,
+                            "maintainAspectRatio": false,
+                            "plugins" : {
+                              "legend" : {
+                                "display" : false
+                              }
+                            }
+                          }
                         }
                       }
                     ]
@@ -131,7 +160,15 @@
                               "type" : "cubejs-chart",
                               "args" : {
                                 "query" : "cantidadConsultasTotal",
-                                "showLegend" : false,
+                                "chartOptions" : {
+                                  "responsive": true,
+                                  "maintainAspectRatio": false,
+                                  "plugins" : {
+                                    "legend" : {
+                                      "display" : false
+                                    }
+                                  }
+                                },
                                 "title" : {
                                   "subtitle" : {
                                     "text" : "CONSULTAS"
@@ -148,7 +185,15 @@
                                     "text" : "FEMENINO"
                                   }
                                 },
-                                "showLegend" : false
+                                "chartOptions" : {
+                                  "responsive": true,
+                                  "maintainAspectRatio": false,
+                                  "plugins" : {
+                                    "legend" : {
+                                      "display" : false
+                                    }
+                                  }
+                                }
                               }
                             },
                             {
@@ -160,7 +205,15 @@
                                     "text" : "MASCULINO"
                                   }
                                 },
-                                "showLegend" : false
+                                "chartOptions" : {
+                                  "responsive": true,
+                                  "maintainAspectRatio": false,
+                                  "plugins" : {
+                                    "legend" : {
+                                      "display" : false
+                                    }
+                                  }
+                                }
                               }
                             },
                             {
@@ -172,7 +225,15 @@
                                     "text" : "X"
                                   }
                                 },
-                                "showLegend" : false
+                                "chartOptions" : {
+                                  "responsive": true,
+                                  "maintainAspectRatio": false,
+                                  "plugins" : {
+                                    "legend" : {
+                                      "display" : false
+                                    }
+                                  }
+                                }
                               }
                             }
                           ]
@@ -199,6 +260,15 @@
                           "query" : "cantidadTurnos",
                           "title" : {
                             "text" : "Evolución de turnos del año actual"
+                          },
+                          "chartOptions" : {
+                            "responsive" : true,
+                            "maintainAspectRatio" : false,
+                            "elements" : {
+                              "line" : {
+                                "fill" : false
+                              }
+                            }
                           }
                         }
                       },
@@ -209,7 +279,15 @@
                           "title" : {
                             "text" : "Turnos por especialidad del año actual"
                           },
-                          "showLegend" : false
+                          "chartOptions" : {
+                            "responsive": true,
+                            "maintainAspectRatio": false,
+                            "plugins" : {
+                              "legend" : {
+                                "display" : false
+                              }
+                            }
+                          }
                         }
                       },
                       {
@@ -219,7 +297,15 @@
                           "title" : {
                             "text" : "Turnos por profesional del año actual"
                           },
-                          "showLegend" : false
+                          "chartOptions" : {
+                            "responsive": true,
+                            "maintainAspectRatio": false,
+                            "plugins" : {
+                              "legend" : {
+                                "display" : false
+                              }
+                            }
+                          }
                         }
                       }
                     ]
@@ -272,7 +358,15 @@
                                     "text" : "TURNOS"
                                   }
                                 },
-                                "showLegend" : false
+                                "chartOptions" : {
+                                  "responsive": true,
+                                  "maintainAspectRatio": false,
+                                  "plugins" : {
+                                    "legend" : {
+                                      "display" : false
+                                    }
+                                  }
+                                }
                               }
                             },
                             {
@@ -284,7 +378,15 @@
                                     "text" : "ASIGNADOS"
                                   }
                                 },
-                                "showLegend" : false
+                                "chartOptions" : {
+                                  "responsive": true,
+                                  "maintainAspectRatio": false,
+                                  "plugins" : {
+                                    "legend" : {
+                                      "display" : false
+                                    }
+                                  }
+                                }
                               }
                             },
                             {
@@ -296,7 +398,15 @@
                                     "text" : "CANCELADOS"
                                   }
                                 },
-                                "showLegend" : false
+                                "chartOptions" : {
+                                  "responsive": true,
+                                  "maintainAspectRatio": false,
+                                  "plugins" : {
+                                    "legend" : {
+                                      "display" : false
+                                    }
+                                  }
+                                }
                               }
                             },
                             {
@@ -308,7 +418,15 @@
                                     "text" : "ATENDIDOS"
                                   }
                                 },
-                                "showLegend" : false
+                                "chartOptions" : {
+                                  "responsive": true,
+                                  "maintainAspectRatio": false,
+                                  "plugins" : {
+                                    "legend" : {
+                                      "display" : false
+                                    }
+                                  }
+                                }
                               }
                             },
                             {
@@ -320,7 +438,15 @@
                                     "text" : "AUSENTES"
                                   }
                                 },
-                                "showLegend" : false
+                                "chartOptions" : {
+                                  "responsive": true,
+                                  "maintainAspectRatio": false,
+                                  "plugins" : {
+                                    "legend" : {
+                                      "display" : false
+                                    }
+                                  }
+                                }
                               }
                             }
                           ]

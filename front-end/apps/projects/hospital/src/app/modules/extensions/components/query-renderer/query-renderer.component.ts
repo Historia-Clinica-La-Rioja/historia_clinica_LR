@@ -11,6 +11,7 @@ import { FeatureFlagService } from '@core/services/feature-flag.service';
 import { AppFeature } from '@api-rest/api-model';
 import { buildFullDate, DateFormat, momentParse, newMoment, MONTHS_OF_YEAR } from '@core/utils/moment.utils';
 
+
 const formatColumnDate = (tableData: any[], columns: string[]): any[] => {
 	const dateFormatter = (x) => !x ? x : moment(x).format('DD/MM/YYYY');
 	columns.forEach(column => {
@@ -69,21 +70,20 @@ export class QueryRendererComponent {
 	reverse?: boolean = false;
 
 	@Input('chartOptions')
-	chartOptions?: ChartOptions = {
-		responsive: true,
-		maintainAspectRatio: false,
+	set ChartOptions(chartOptions: ChartOptions) {
+		this.chartOptions = chartOptions || {
+			responsive: true,
+			maintainAspectRatio: false,
+		}
 	};
 
 	@Input('defaultColor')
 	defaultColor?: string;
 
-	@Input('showLegend')
-	showLegend?: true;
-
 	@Input() listOnTab: string = null;
 
 	@Input() title: string
-
+	chartOptions: ChartOptions;
 	chartType: any = null;
 	isQueryPresent = false;
 	error: string | null = null;
@@ -103,52 +103,12 @@ export class QueryRendererComponent {
 	groupChartLabels: (string[] | string[][]) = [];
 
 	selectedChartLabels: string[] | string[][];
-	selectedChartOptions: ChartOptions;
-	percentageChartOptions: ChartOptions = {
-		responsive: true,
-		maintainAspectRatio: false,
-		plugins: {
-			tooltip: {
-				callbacks: {
-					label: function (context) {
-						let label = context.label || ' ';
-						if (label) {
-							label += ': ';
-						}
-						label += context.formattedValue + '%'
-						return label;
-					}
-				}
-			}
-		}
-	};
-
-
 	nameSelfDeterminationFF: boolean;
 	showPercentage: boolean;
 	groupSmallData: boolean;
 	showGroupSmallData: boolean;
 	noData = false;
 
-	noFillChartOptions: ChartOptions = {
-		responsive: true,
-		maintainAspectRatio: false,
-		elements: {
-			line: {
-				fill: false,
-			},
-		},
-	};
-
-	straightlinesChartOptions: ChartOptions = {
-		responsive: true,
-		maintainAspectRatio: false,
-		elements: {
-			line: {
-				tension: 0,
-			},
-		},
-	};
 	numericValues: number[] = [];
 	loading = false;
 
@@ -303,7 +263,6 @@ export class QueryRendererComponent {
 		this.percentageData.forEach((element, i, array) => array[i] = Math.round((element * 100 / pieSum) * 100) / 100);
 
 		this.showPercentage = false;
-		this.selectedChartOptions = this.chartOptions;
 		this.groupSmallData = false;
 		this.selectedChartLabels = this.chartLabels;
 
@@ -320,11 +279,22 @@ export class QueryRendererComponent {
 	togglePercentage() {
 		this.showPercentage = !this.showPercentage;
 		if (this.showPercentage) {
-			this.selectedChartOptions = this.percentageChartOptions;
+			this.chartOptions.plugins.tooltip = {
+				callbacks: {
+					label: function (context) {
+						let label = context.label || ' ';
+						if (label) {
+							label += ': ';
+						}
+						label += context.formattedValue + '%'
+						return label;
+					}
+				}
+			}
 			this.chartData = this.groupSmallData ? [{ data: this.percentageGroupData }] : [{ data: this.percentageData }];
 		}
 		else {
-			this.selectedChartOptions = this.chartOptions;
+			this.chartOptions.plugins.tooltip.callbacks.label = undefined;
 			this.chartData = this.groupSmallData ? [{ data: this.originalGroupData }] : [{ data: this.originalData }];
 		}
 	}

@@ -2,6 +2,7 @@ import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { ReplaySubject, Subscription } from 'rxjs';
 import { ChartDefinitionService } from '@extensions/services/chart-definition.service';
 import { ChartDefinitionDto, UIComponentDto } from '@extensions/extensions-model';
+import {ChartOptions} from "chart.js";
 
 export interface TitleDefinition {
 	text: string;
@@ -24,8 +25,8 @@ const toUIComponentDto = (error: any): UIComponentDto => ({
 })
 export class CubejsChartComponent implements OnDestroy, OnInit {
 
+	@Input() chartOptions?: ChartOptions;
 	@Input() dateFormat?: string;
-	@Input() showLegend?: true;
 	@Input() title?: TitleDefinition;
 	@Input() chartDefinitionService: ChartDefinitionService;
 	@Input() query: string;

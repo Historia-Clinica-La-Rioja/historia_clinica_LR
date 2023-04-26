@@ -16,22 +16,20 @@
 		<canvas
 			*ngIf="chartType === 'line'"
 			baseChart
-			[legend]="true"
 			[type]="'line'"
 			[datasets]="chartData"
 			[labels]="chartLabels"
-			[options]="noFillChartOptions"
+			[options]="chartOptions"
 		>
 		</canvas>
 
 		<canvas
 			*ngIf="chartType === 'area'"
 			baseChart
-			legend="true"
-			chartType="line"
+			[type]="'line'"
 			[datasets]="chartData"
 			[labels]="chartLabels"
-			[options]="straightlinesChartOptions"
+			[options]="chartOptions"
 		>
 		</canvas>
 
@@ -40,7 +38,6 @@
 			baseChart
 			height="450"
 			[type]="'bar'"
-			[legend]="showLegend"
 			[datasets]="chartData"
 			[labels]="chartLabels"
 			[options]="chartOptions"
@@ -50,12 +47,10 @@
 		<canvas
 			*ngIf="chartType === 'pie'"
 			baseChart
-			height="350"
 			[type]="'pie'"
-			[legend]="showLegend"
 			[datasets]="chartData"
 			[labels]="selectedChartLabels"
-			[options]="selectedChartOptions"
+			[options]="chartOptions"
 		>
 		</canvas>
 	</div>
