@@ -1,6 +1,6 @@
 cube(`CantidadConsultasAmbulatorias`, {
   sql: `SELECT 
-            oc.id, 'Ambulatoria' as tipo, oc.start_date as fecha_consulta, g.description as gender, pe.birth_date, cs.name as especialidad,
+            oc.id, 'Ambulatoria' as tipo, oc.start_date as fecha_consulta, g.description as gender, spg.description as self_perceived_gender, pe.birth_date, cs.name as especialidad,
             concat_ws(', ', concat_ws(' ', doc.last_name, doc.other_last_names), CASE WHEN pex.name_self_determination IS NULL OR pex.name_self_determination LIKE '' THEN concat_ws(' ', doc.first_name, doc.middle_names) ELSE pex.name_self_determination END) AS profesional_autopercibido,
             concat_ws(', ', concat_ws(' ', doc.last_name, doc.other_last_names), concat_ws(' ', doc.first_name, doc.middle_names)) AS profesional,
             oc.institution_id AS institucion_id
@@ -12,7 +12,9 @@ cube(`CantidadConsultasAmbulatorias`, {
             JOIN person_extended pex ON (pex.person_id = doc.id)
             JOIN patient pa ON (oc.patient_id = pa.id)
             JOIN person pe ON (pa.person_id = pe.id)
+            JOIN person_extended pex_patient ON (pex_patient.person_id = pe.id)
             JOIN gender g ON (pe.gender_id = g.id)
+            LEFT JOIN self_perceived_gender spg ON (pex_patient.gender_self_determination = spg.id)
         ${SECURITY_CONTEXT.userId.unsafeValue() ? '' +  `
           WHERE (oc.institution_id IN (
             SELECT ur.institution_id 
@@ -23,7 +25,7 @@ cube(`CantidadConsultasAmbulatorias`, {
             AND u.id = ${SECURITY_CONTEXT.userId.unsafeValue()}))` : ''}
     UNION ALL
         SELECT 
-            oc.id, 'Odontología' as tipo, oc.performed_date as fecha_consulta, g.description as gender, pe.birth_date, cs.name as especialidad,
+            oc.id, 'Odontología' as tipo, oc.performed_date as fecha_consulta, g.description as gender, spg.description as self_perceived_gender, pe.birth_date, cs.name as especialidad,
             concat_ws(', ', concat_ws(' ', doc.last_name, doc.other_last_names), CASE WHEN pex.name_self_determination IS NULL OR pex.name_self_determination LIKE '' THEN concat_ws(' ', doc.first_name, doc.middle_names) ELSE pex.name_self_determination END) AS profesional_autopercibido,
             concat_ws(', ', concat_ws(' ', doc.last_name, doc.other_last_names), concat_ws(' ', doc.first_name, doc.middle_names)) AS profesional,
             oc.institution_id AS institucion_id
@@ -35,7 +37,9 @@ cube(`CantidadConsultasAmbulatorias`, {
             JOIN person_extended pex ON (pex.person_id = doc.id)
             JOIN patient pa ON (oc.patient_id = pa.id)
             JOIN person pe ON (pa.person_id = pe.id)
+            JOIN person_extended pex_patient ON (pex_patient.person_id = pe.id)
             JOIN gender g ON (pe.gender_id = g.id)
+            LEFT JOIN self_perceived_gender spg ON (pex_patient.gender_self_determination = spg.id)
         ${SECURITY_CONTEXT.userId.unsafeValue() ? '' +  `
           WHERE (oc.institution_id IN (
             SELECT ur.institution_id 
@@ -46,7 +50,7 @@ cube(`CantidadConsultasAmbulatorias`, {
             AND u.id = ${SECURITY_CONTEXT.userId.unsafeValue()}))` : ''}
       UNION ALL
         SELECT 
-            nc.id, 'Enfermería' as tipo, nc.performed_date as fecha_consulta, g.description as gender, pe.birth_date, cs.name as especialidad,
+            nc.id, 'Enfermería' as tipo, nc.performed_date as fecha_consulta, g.description as gender, spg.description as self_perceived_gender, pe.birth_date, cs.name as especialidad,
             concat_ws(', ', concat_ws(' ', doc.last_name, doc.other_last_names), CASE WHEN pex.name_self_determination IS NULL OR pex.name_self_determination LIKE '' THEN concat_ws(' ', doc.first_name, doc.middle_names) ELSE pex.name_self_determination END) AS profesional_autopercibido,
             concat_ws(', ', concat_ws(' ', doc.last_name, doc.other_last_names), concat_ws(' ', doc.first_name, doc.middle_names)) AS profesional,
             nc.institution_id AS institucion_id
@@ -58,7 +62,9 @@ cube(`CantidadConsultasAmbulatorias`, {
             JOIN person_extended pex ON (pex.person_id = doc.id)
             JOIN patient pa ON (nc.patient_id = pa.id)
             JOIN person pe ON (pa.person_id = pe.id)
+            JOIN person_extended pex_patient ON (pex_patient.person_id = pe.id)
             JOIN gender g ON (pe.gender_id = g.id)
+            LEFT JOIN self_perceived_gender spg ON (pex_patient.gender_self_determination = spg.id)
         ${SECURITY_CONTEXT.userId.unsafeValue() ? '' +  `
           WHERE (nc.institution_id IN (
             SELECT ur.institution_id 
@@ -88,6 +94,12 @@ cube(`CantidadConsultasAmbulatorias`, {
       sql: `gender`,
       type: `string`,
       title: 'Género',
+    },
+    // Género autopercibido
+    self_perceived_gender: {
+      sql: `self_perceived_gender`,
+      type: `string`,
+      title: 'Identidad de género'
     },
     // Tipo
     tipo: {

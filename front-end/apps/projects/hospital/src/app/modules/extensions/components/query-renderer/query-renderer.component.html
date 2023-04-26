@@ -1,5 +1,5 @@
 <div *ngIf="isQueryPresent && !loading && !noData" style="height: 100%">
-	<ng-container *ngIf="chartType === 'pie'">
+	<ng-container *ngIf="chartType === 'pie' || chartType === 'doughnut'">
 		<div fxLayout="row" fxLayoutAlign="space-between center" class="toggle">
 			<mat-label>Ver porcentajes</mat-label>
 			<mat-slide-toggle (change)="togglePercentage()"></mat-slide-toggle>
@@ -48,6 +48,16 @@
 			*ngIf="chartType === 'pie'"
 			baseChart
 			[type]="'pie'"
+			[datasets]="chartData"
+			[labels]="selectedChartLabels"
+			[options]="chartOptions"
+		>
+		</canvas>
+
+		<canvas
+			*ngIf="chartType === 'doughnut'"
+			baseChart
+			[type]="'doughnut'"
 			[datasets]="chartData"
 			[labels]="selectedChartLabels"
 			[options]="chartOptions"

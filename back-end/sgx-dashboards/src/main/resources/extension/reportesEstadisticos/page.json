@@ -31,6 +31,8 @@
                             "text" : "Consultas por especialidad y profesional del último trimestre"
                           },
                           "chartOptions" : {
+                            "responsive" : true,
+                            "maintainAspectRatio" : false,
                             "plugins" : {
                               "legend" : {
                                 "display" : false
@@ -103,6 +105,42 @@
                           "query" : "cantidadConsultasPorEspecialidad",
                           "title" : {
                             "text" : "Consultas por especialidad"
+                          },
+                          "chartOptions" : {
+                            "responsive" : true,
+                            "maintainAspectRatio" : false,
+                            "plugins" : {
+                              "legend" : {
+                                "display" : true,
+                                "position" : "right"
+                              }
+                            }
+                          }
+                        }
+                      }
+                    ]
+                  }
+                },
+                {
+                  "type" : "cubejs-dashboard",
+                  "args" : {
+                    "filters" : {
+                      "fecha" : {
+                        "filter" : {
+                          "member" : "CantidadConsultasAmbulatorias.fecha_consulta",
+                          "operator" : "inDateRange"
+                        },
+                        "type" : "dateRangeISO",
+                        "label" : "Fecha"
+                      }
+                    },
+                    "content" : [
+                      {
+                        "type" : "cubejs-chart",
+                        "args" : {
+                          "query" : "cantidadConsultasPorIdentidadGenero",
+                          "title" : {
+                            "text" : "Consultas por identidad de género"
                           },
                           "chartOptions" : {
                             "responsive" : true,

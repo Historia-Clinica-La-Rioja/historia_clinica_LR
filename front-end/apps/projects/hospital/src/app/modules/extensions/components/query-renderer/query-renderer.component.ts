@@ -192,7 +192,7 @@ export class QueryRendererComponent {
 	updateChartData(resultSet, pivotConfig) {
 		this.chartData = resultSet.series(pivotConfig).map((item) => {
 
-			if (this.chartType === 'pie') {
+			if (this.chartType === 'pie' || this.chartType === 'doughnut') {
 				return {
 					data: item.series.map(({ value }) => value * (this.reverse ? -1 : 1)),
 				};
@@ -236,7 +236,7 @@ export class QueryRendererComponent {
 			this.noData = true;
 		}
 		else {
-			if (this.chartType === 'pie') {
+			if (this.chartType === 'pie' || this.chartType === 'doughnut') {
 				this.loadPieData();
 			}
 
@@ -280,22 +280,22 @@ export class QueryRendererComponent {
 		this.showPercentage = !this.showPercentage;
 		if (this.showPercentage) {
 			this.chartOptions.plugins.tooltip = {
-				callbacks: {
-					label: function (context) {
-						let label = context.label || ' ';
-						if (label) {
-							label += ': ';
+
+					callbacks: {
+						label: function (context) {
+							let label = context.label || ' ';
+							if (label) {
+								label += ': ';
+							}
+							label += context.formattedValue + '%'
+							return label;
 						}
-						label += context.formattedValue + '%'
-						return label;
 					}
 				}
-			}
-			this.chartData = this.groupSmallData ? [{ data: this.percentageGroupData }] : [{ data: this.percentageData }];
-		}
-		else {
+			this.chartData = this.groupSmallData ? [{data: this.percentageGroupData}] : [{data: this.percentageData}];
+		} else {
 			this.chartOptions.plugins.tooltip.callbacks.label = undefined;
-			this.chartData = this.groupSmallData ? [{ data: this.originalGroupData }] : [{ data: this.originalData }];
+			this.chartData = this.groupSmallData ? [{data: this.originalGroupData}] : [{data: this.originalData}];
 		}
 	}
 
