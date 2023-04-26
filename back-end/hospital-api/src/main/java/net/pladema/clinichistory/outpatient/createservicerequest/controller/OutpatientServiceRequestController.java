@@ -8,7 +8,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 import net.pladema.clinichistory.outpatient.createservicerequest.service.CreateOutpatientServiceRequestService;
-import net.pladema.clinichistory.outpatient.createservicerequest.service.domain.OutpatientServiceRequestBo;
+import net.pladema.clinichistory.requests.service.domain.ExtendedServiceRequestBo;
 import net.pladema.clinichistory.requests.controller.dto.PrescriptionDto;
 import net.pladema.clinichistory.requests.controller.dto.PrescriptionItemDto;
 import net.pladema.clinichistory.requests.servicerequests.controller.mapper.StudyMapper;
@@ -63,7 +63,7 @@ public class OutpatientServiceRequestController {
 		ArrayList<Integer> result = new ArrayList<>();
 
 		srGroupBy.forEach((categoryId, studyListDto) -> {
-			OutpatientServiceRequestBo serviceRequestBo = this.parseTo(studyMapper, doctorId, patientDto, categoryId, serviceRequestListDto.getMedicalCoverageId(), studyListDto);
+			ExtendedServiceRequestBo serviceRequestBo = this.parseTo(studyMapper, doctorId, patientDto, categoryId, serviceRequestListDto.getMedicalCoverageId(), studyListDto);
 			serviceRequestBo.setInstitutionId(institutionId);
 			Integer srId = createOutpatientServiceRequestService.execute(serviceRequestBo);
 			hospitalApiPublisher.publish(serviceRequestBo.getPatientId(), institutionId, getTopicToPublish(categoryId));
@@ -82,9 +82,9 @@ public class OutpatientServiceRequestController {
 		return EHospitalApiTopicDto.CLINIC_HISTORY__HOSPITALIZATION__SERVICE_RESQUEST;
 	}
 
-	private OutpatientServiceRequestBo parseTo(StudyMapper studyMapper, Integer doctorId, BasicPatientDto patientDto, String categoryId, Integer medicalCoverageId, List<PrescriptionItemDto> studies){
+	private ExtendedServiceRequestBo parseTo(StudyMapper studyMapper, Integer doctorId, BasicPatientDto patientDto, String categoryId, Integer medicalCoverageId, List<PrescriptionItemDto> studies){
 		log.debug("parseTo -> doctorId {}, patientDto {}, medicalCoverageId {}, studies {} ", doctorId, patientDto, medicalCoverageId, studies);
-		OutpatientServiceRequestBo result = new OutpatientServiceRequestBo();
+		ExtendedServiceRequestBo result = new ExtendedServiceRequestBo();
 		result.setCategoryId(categoryId);
 		result.setPatientInfo(new PatientInfoBo(patientDto.getId(), patientDto.getPerson().getGender().getId(), patientDto.getPerson().getAge()));
 		result.setDoctorId(doctorId);

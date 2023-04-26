@@ -5,7 +5,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import net.pladema.clinichistory.hospitalization.service.InternmentPatientService;
 import net.pladema.clinichistory.hospitalization.service.domain.InternmentEpisodeProcessBo;
-import net.pladema.clinichistory.hospitalization.service.domain.InternmentServiceRequestBo;
+import net.pladema.clinichistory.requests.service.domain.GenericServiceRequestBo;
 
 import net.pladema.clinichistory.hospitalization.service.servicerequest.exception.CreateInternmentServiceRequestEnumException;
 import net.pladema.clinichistory.hospitalization.service.servicerequest.exception.CreateInternmentServiceRequestException;
@@ -24,24 +24,24 @@ public class CreateInternmentServiceRequestServiceImpl implements CreateInternme
 	private final InternmentPatientService internmentPatientService;
 
 	@Override
-	public Integer execute(InternmentServiceRequestBo internmentServiceRequestBo) {
-		log.debug("Input parameter -> internmentServiceRequestBo {}", internmentServiceRequestBo);
-		Integer activeEpisodeId = getActiveInternmentEpisodeId(internmentServiceRequestBo.getInstitutionId(), internmentServiceRequestBo.getPatientId());
-		ServiceRequestBo serviceRequestBo = mapToServiceRequestBo(internmentServiceRequestBo, activeEpisodeId);
+	public Integer execute(GenericServiceRequestBo genericServiceRequestBo) {
+		log.debug("Input parameter -> internmentServiceRequestBo {}", genericServiceRequestBo);
+		Integer activeEpisodeId = getActiveInternmentEpisodeId(genericServiceRequestBo.getInstitutionId(), genericServiceRequestBo.getPatientId());
+		ServiceRequestBo serviceRequestBo = mapToServiceRequestBo(genericServiceRequestBo, activeEpisodeId);
 		Integer result = createServiceRequestService.execute(serviceRequestBo);
 		log.debug("Output -> {}", result);
 		return result;
 	}
 
-	private ServiceRequestBo mapToServiceRequestBo(InternmentServiceRequestBo internmentServiceRequestBo, Integer activeEpisodeId) {
+	private ServiceRequestBo mapToServiceRequestBo(GenericServiceRequestBo genericServiceRequestBo, Integer activeEpisodeId) {
 		return ServiceRequestBo.builder()
-				.patientInfo(internmentServiceRequestBo.getPatientInfo())
-				.categoryId(internmentServiceRequestBo.getCategoryId())
-				.institutionId(internmentServiceRequestBo.getInstitutionId())
-				.doctorId(internmentServiceRequestBo.getDoctorId())
-				.diagnosticReports(internmentServiceRequestBo.getDiagnosticReports())
-				.noteId(internmentServiceRequestBo.getNoteId())
-				.requestDate(internmentServiceRequestBo.getRequestDate())
+				.patientInfo(genericServiceRequestBo.getPatientInfo())
+				.categoryId(genericServiceRequestBo.getCategoryId())
+				.institutionId(genericServiceRequestBo.getInstitutionId())
+				.doctorId(genericServiceRequestBo.getDoctorId())
+				.diagnosticReports(genericServiceRequestBo.getDiagnosticReports())
+				.noteId(genericServiceRequestBo.getNoteId())
+				.requestDate(genericServiceRequestBo.getRequestDate())
 				.associatedSourceTypeId(SourceType.HOSPITALIZATION)
 				.associatedSourceId(activeEpisodeId)
 				.build();

@@ -1,4 +1,4 @@
-package net.pladema.clinichistory.hospitalization.service.domain;
+package net.pladema.clinichistory.requests.service.domain;
 
 import ar.lamansys.sgh.clinichistory.domain.document.PatientInfoBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.DiagnosticReportBo;
@@ -16,7 +16,7 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @ToString
-public class InternmentServiceRequestBo {
+public class GenericServiceRequestBo {
 
 	private PatientInfoBo patientInfo;
 

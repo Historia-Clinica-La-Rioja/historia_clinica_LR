@@ -1,9 +1,9 @@
 package net.pladema.clinichistory.hospitalization.service.servicerequest;
 
-import net.pladema.clinichistory.hospitalization.service.domain.InternmentServiceRequestBo;
+import net.pladema.clinichistory.requests.service.domain.GenericServiceRequestBo;
 
 public interface CreateInternmentServiceRequestService {
 
-	Integer execute(InternmentServiceRequestBo internmentServiceRequestBo);
+	Integer execute(GenericServiceRequestBo genericServiceRequestBo);
 
 }

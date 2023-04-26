@@ -6,7 +6,7 @@ import ar.lamansys.sgx.shared.security.UserInfo;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import net.pladema.clinichistory.hospitalization.service.domain.InternmentServiceRequestBo;
+import net.pladema.clinichistory.requests.service.domain.GenericServiceRequestBo;
 import net.pladema.clinichistory.hospitalization.service.servicerequest.CreateInternmentServiceRequestService;
 import net.pladema.clinichistory.requests.controller.dto.PrescriptionDto;
 import net.pladema.clinichistory.requests.controller.dto.PrescriptionItemDto;
@@ -67,7 +67,7 @@ public class InternmentServiceRequestController {
 		ArrayList<Integer> result = new ArrayList<>();
 
 		srGroupBy.forEach((categoryId, studyListDto) -> {
-			InternmentServiceRequestBo serviceRequestBo = parseTo(
+			GenericServiceRequestBo serviceRequestBo = parseTo(
 					studyMapper,
 					doctorId,
 					patientDto,
@@ -92,9 +92,9 @@ public class InternmentServiceRequestController {
 		return EHospitalApiTopicDto.CLINIC_HISTORY__HOSPITALIZATION__SERVICE_RESQUEST;
 	}
 
-	public InternmentServiceRequestBo parseTo(StudyMapper studyMapper, Integer doctorId, BasicPatientDto patientDto, String categoryId, Integer medicalCoverageId, List<PrescriptionItemDto> studies){
+	public GenericServiceRequestBo parseTo(StudyMapper studyMapper, Integer doctorId, BasicPatientDto patientDto, String categoryId, Integer medicalCoverageId, List<PrescriptionItemDto> studies){
 		log.debug("parseTo -> doctorId {}, patientDto {}, medicalCoverageId {}, studies {} ", doctorId, patientDto, medicalCoverageId, studies);
-		InternmentServiceRequestBo result = new InternmentServiceRequestBo();
+		GenericServiceRequestBo result = new GenericServiceRequestBo();
 		result.setCategoryId(categoryId);
 		result.setPatientInfo(new PatientInfoBo(patientDto.getId(), patientDto.getPerson().getGender().getId(), patientDto.getPerson().getAge()));
 		result.setDoctorId(doctorId);
