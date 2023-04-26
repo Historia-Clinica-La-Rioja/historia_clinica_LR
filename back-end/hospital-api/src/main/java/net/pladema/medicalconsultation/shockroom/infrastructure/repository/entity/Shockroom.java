@@ -1,4 +1,4 @@
-package net.pladema.medicalconsultation.shockroom.repository.entity;
+package net.pladema.medicalconsultation.shockroom.infrastructure.repository.entity;
 
 import ar.lamansys.sgx.shared.auditable.entity.SGXAuditableEntity;
 import ar.lamansys.sgx.shared.auditable.listener.SGXAuditListener;
