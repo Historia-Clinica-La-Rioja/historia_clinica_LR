@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="es">
+<head>
+    <th:block th:include="fragments/clinic_history_general.html :: headerfiles"></th:block>
+    <style>
+        .ch_table, .ch_tr th, .ch_tr td{
+              border: 1px solid black;
+              border-collapse: collapse;
+              font-size: 12px;
+              padding: 10px;
+        }
+    </style>
+</head>
+
+<body>
+    <div th:include="fragments/clinic_history_general.html :: header"></div>
+    <div th:include="fragments/clinic_history_general.html :: patientData"></div>
+    <div th:include="fragments/clinic_history_general.html :: encounterData"></div>
+
+    <div>
+        <h2>Registro Clinico</h2>
+
+        <table class="ch_table">
+            <tbody>
+            <tr class="ch_tr" th:each="">
+                <th style="text-align: center" th:text="${}"></th>
+                <td th:text="${}"></td>
+                <td style="text-align: center" th:text="${}"></td>
+                <td style="text-align: center" th:text="${}"></td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <footer>
+        <div th:include="fragments/clinic_history_general :: footer"></div>
+    </footer>
+
+</body>
+</html>

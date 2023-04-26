@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="es">
+<head th:fragment="headerfiles">
+    <title>Report</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <style>
+        .header-div {
+            width: 50%;
+            float: left;
+        }
+        img {
+            float: right;
+            width: 180px;
+        }
+        h2 {
+            margin: 0;
+        }
+        hr {
+            height: 0.5px;
+        }
+        table {
+            border-collapse: collapse;
+            width: 100%;
+            border-spacing: 0;
+        }
+        th, td {
+            text-align: left;
+            padding: 8px;
+            background-color: white;
+            font-size : 10px;
+        }
+        footer {
+          position: fixed;
+          font-size: 8px;
+          bottom: 0;
+          margin-bottom: 10px;
+          width: 100%;
+        }
+        body {
+          font-family: 'Roboto', sans-serif;
+          background-color: white;
+        }
+    </style>
+</head>
+
+<body>
+
+    <header style="margin-top: 0;" th:fragment="header">
+        <div class="header-div">
+            <h2>Historia Clínica</h2>
+        </div>
+        <div class="header-div">
+            <img th:src="@{classpath:static/images/logo_nacion.png}" alt="Logo"></img>
+        </div>
+        <hr style="clear: both;"/>
+    </header>
+
+    <div th:fragment="patientData">
+        <h4>Datos del paciente</h4>
+        <table>
+            <tr>
+                <th>Nombre y apellido:</th>
+                <th>Documento:</th>
+                <th>ID:</th>
+                <th>Edad:</th>
+                <th>Fecha de nacimiento:</th>
+            </tr>
+            <tr>
+                <td th:text="${}"></td>
+                <td th:text="${}"></td>
+                <td th:text="${}"></td>
+                <td th:text="${}"></td>
+                <td th:text="${}"></td>
+            </tr>
+        </table>
+        <hr>
+    </div>
+
+    <div th:fragment="encounterData">
+        <h4>Episodio/Encuentro</h4>
+        <table>
+            <tr>
+                <th>Id del encuentro:</th>
+                <th>Tipo:</th>
+                <th>Fecha inicio: </th>
+                <th>Fecha fin:</th>
+            </tr>
+            <tr>
+                <td th:text="${}"></td>
+                <td th:text="${}"></td>
+                <td th:text="${}"></td>
+                <td th:text="${}"></td>
+            </tr>
+        </table>
+        <br>
+        <table>
+            <tr>
+                <th>Institucion:</th>
+                <th>Sector/Servicio:</th>
+                <th>Lugar: </th>
+            </tr>
+            <tr>
+                <td th:text="${}"></td>
+                <td th:text="${}"></td>
+                <td th:text="${}"></td>
+            </tr>
+        </table>
+        <br>
+        <table>
+            <tr>
+                <th>Cobertura:</th>
+                <th>Nro. de credencial:</th>
+                <th>Plan: </th>
+            </tr>
+            <tr>
+                <td th:text="${}"></td>
+                <td th:text="${}"></td>
+                <td th:text="${}"></td>
+            </tr>
+        </table>
+        <hr>
+    </div>
+
+    <div th:fragment="professionalData">
+        <h4>Profesional atendiente</h4>
+        <table>
+            <tr>
+                <th>Nombre y apellido</th>
+                <th>Profesión</th>
+                <th>Especialidad</th>
+                <th>Matricula</th>
+            </tr>
+            <tr>
+                <td th:text="${}"></td>
+                <td th:text="${}"></td>
+                <td th:text="${}"></td>
+                <td th:text="${}"></td>
+            </tr>
+        </table>
+        <hr>
+    </div>
+
+    <footer th:fragment="footer">
+        <hr>
+        <div>
+            <span th:text="'Historia Clinica impresa el ' + ${} + ' a las ' + ${} + ' por ' + ${} + ' en ' + ${}"></span>
+            <span style="float:right;" th:text="'Página ' + ${} + ' de ' + ${}"></span>
+        </div>
+    </footer>
+
+</body>
+</html>
