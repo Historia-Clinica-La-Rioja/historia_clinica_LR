@@ -3121,6 +3121,11 @@ export interface SharedSnowstormSearchItemDto {
     pt: string;
 }
 
+export interface ShockroomDto {
+    description: string;
+    id: number;
+}
+
 export interface SipPlusUrlDataDto {
     embedSystem: string;
     token: string;

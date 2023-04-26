@@ -21,6 +21,13 @@
             (selectionChange)="setOffice($event)"
             [required]="true">
         </app-typeahead>
+
+        <app-typeahead *ngIf="(shockrooms$ | async)"
+            [titleInput]="'guardia.dialog.attention_place.shockroom.SELECT_SHOCKROOM' | translate"
+            [options]="shockroomsTypeaheadOptions$ | async"
+            (selectionChange)="setShockroom($event)"
+            [required]="true">
+        </app-typeahead>
     </form>
 </div>
 <mat-dialog-actions align="end">

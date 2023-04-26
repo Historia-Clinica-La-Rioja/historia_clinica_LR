@@ -234,8 +234,10 @@
 				"CONFIRM": "Confirmar",
 				"ATTENTION_REQUIRED": "Debes seleccionar un lugar",
 				"office": {
-					"SELECT_OFFICE": "Seleccione consultorio",
-					"OFFICE_REQUIRED": "Debes seleccionar un consultorio"
+					"SELECT_OFFICE": "Seleccione consultorio"
+				},
+				"shockroom": {
+					"SELECT_SHOCKROOM": "Seleccione shockroom"
 				}
 			}
 		},

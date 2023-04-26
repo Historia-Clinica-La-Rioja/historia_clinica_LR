@@ -5,7 +5,7 @@ import {
 	FormGroup,
 	Validators,
 } from '@angular/forms';
-import { DoctorsOfficeDto, MasterDataInterface } from '@api-rest/api-model';
+import { DoctorsOfficeDto, MasterDataInterface, ShockroomDto } from '@api-rest/api-model';
 import { DoctorsOfficeService } from '@api-rest/services/doctors-office.service';
 import { EmergencyCareMasterDataService } from '@api-rest/services/emergency-care-master-data.service';
 import { hasError } from '@core/utils/form.utils';
@@ -15,6 +15,7 @@ import { SECTOR_AMBULATORIO } from '../../constants/masterdata';
 import { TypeaheadOption } from '@presentation/components/typeahead/typeahead.component';
 import { map } from 'rxjs/operators';
 import { MatDialogRef } from '@angular/material/dialog';
+import { ShockroomService } from '@api-rest/services/shockroom.service';
 
 @Component({
 	selector: 'app-attention-place-dialog',
@@ -25,12 +26,15 @@ export class AttentionPlaceDialogComponent {
 	places$: Observable<MasterDataInterface<number>[]>;
 	offices$: Observable<DoctorsOfficeDto[]>;
 	officesTypeaheadOptions$: Observable<TypeaheadOption<DoctorsOfficeDto>[]>;
+	shockrooms$: Observable<ShockroomDto[]>;
+	shockroomsTypeaheadOptions$: Observable<TypeaheadOption<ShockroomDto>[]>
 	form: FormGroup;
 	hasError = hasError;
 
 	constructor(
 		private readonly emergencyCareMasterDataService: EmergencyCareMasterDataService,
 		private readonly doctorsOfficeService: DoctorsOfficeService,
+		private readonly shockroomService: ShockroomService,
 		private readonly formBuilder: FormBuilder,
 		private readonly dialogRef: MatDialogRef<AttentionPlaceDialogComponent>,
 	) {
@@ -41,17 +45,29 @@ export class AttentionPlaceDialogComponent {
 	verifyPlaceType() {
 		this.clearData();
 		const id: number = Number(this.form.get('place').value);
-		const office: AbstractControl = this.form.get('office');
 		if (id === AttentionPlace.CONSULTORIO) {
+			const office: AbstractControl = this.form.get('office');
 			this.offices$ = this.doctorsOfficeService.getBySectorType(SECTOR_AMBULATORIO);
 			this.officesTypeaheadOptions$ = this.getOfficesTypeaheadOptions$();
 			office.addValidators(Validators.required);
 			office.updateValueAndValidity();
 		}
+
+		if (id === AttentionPlace.SHOCKROOM) {
+			const shockroom: AbstractControl = this.form.get('shockroom');
+			this.shockrooms$ = this.shockroomService.getShockrooms();
+			this.shockroomsTypeaheadOptions$ = this.getShockroomsTypeaheadOptions$();
+			shockroom.addValidators(Validators.required);
+			shockroom.updateValueAndValidity();
+		}
 	}
 
 	setOffice(value: Event) {
 		this.form.get('office').setValue(value);
+	}
+
+	setShockroom(value: Event) {
+		this.form.get('shockroom').setValue(value);
 	}
 
 	attend() {
@@ -76,6 +92,20 @@ export class AttentionPlaceDialogComponent {
 		}
 	}
 
+	private getShockroomsTypeaheadOptions$(): Observable<TypeaheadOption<ShockroomDto>[]> {
+		return this.shockrooms$.pipe(map(toTypeaheadOptionList));
+		function toTypeaheadOptionList(prosBySpecialtyList: ShockroomDto[]): TypeaheadOption<ShockroomDto>[] {
+			return prosBySpecialtyList.map(toTypeaheadOption);
+
+			function toTypeaheadOption(s: ShockroomDto): TypeaheadOption<ShockroomDto> {
+				return {
+					compareValue: s.description,
+					value: s,
+				};
+			}
+		}
+	}
+
 	private clearData() {
 		this.offices$ = undefined;
 		const office: AbstractControl = this.form.get('office');
@@ -88,6 +118,7 @@ export class AttentionPlaceDialogComponent {
 		this.form = this.formBuilder.group({
 			place: [null, Validators.required],
 			office: [null],
+			shockroom: [null]
 		});
 	}
 }
