@@ -465,3 +465,63 @@ databaseChangeLog:
                 SET updated_on = pud.patient_updated_on, updated_by = pud.patient_updated_by
                 FROM patient_updated_date pud
                 WHERE pud.patient_id = p.id
+
+    - changeSet:
+        id: add_emergency_care_patient_type
+        author: mmalyvarni
+        context: "!schema-only"
+        changes:
+          - sql:
+              sql: |-
+                INSERT INTO patient_type (id,description,active,audit) VALUES (8,'Temporal de Guardia',${boolean.true},${boolean.false});
+
+    - changeSet:
+        id: document_type-triage
+        context: "!schema-only"
+        author: mmalyvarni
+        changes:
+          - sql:
+              sql: |-
+                INSERT INTO document_type VALUES (15, 'Triage');
+
+    - changeSet:
+        id: document_triage table
+        author: mmalyvarni
+        changes:
+          - createTable:
+              tableName: document_triage
+              columns:
+                - column:
+                    constraints:
+                      nullable: false
+                    name: triage_id
+                    type: int
+                - column:
+                    constraints:
+                      nullable: false
+                    name: document_id
+                    type: bigint
+          - addPrimaryKey:
+              clustered: true
+              columnNames: document_id, triage_id
+              constraintName: PK_document_trige
+              tableName: document_triage
+              validate: true
+          - addForeignKeyConstraint:
+              baseColumnNames: document_id
+              baseTableName: document_triage
+              constraintName: FK_document_triage_document_id
+              onDelete: NO ACTION
+              onUpdate: NO ACTION
+              referencedColumnNames: id
+              referencedTableName: document
+              validate: true
+          - addForeignKeyConstraint:
+              baseColumnNames: triage_id
+              baseTableName: document_triage
+              constraintName: FK_document_triage_triage_id
+              onDelete: NO ACTION
+              onUpdate: NO ACTION
+              referencedColumnNames: id
+              referencedTableName: triage
+              validate: true
