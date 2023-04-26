@@ -1,4 +1,4 @@
-import { Component, OnInit, SimpleChanges } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { AbstractControl, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatTabChangeEvent } from '@angular/material/tabs';
 import { GenderDto, IdentificationTypeDto, PatientRegistrationSearchDto } from '@api-rest/api-model';
