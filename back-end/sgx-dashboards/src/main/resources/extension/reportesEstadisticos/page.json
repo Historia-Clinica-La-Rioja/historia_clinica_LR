@@ -105,11 +105,12 @@
                             "text" : "Consultas por especialidad"
                           },
                           "chartOptions" : {
-                            "responsive": true,
-                            "maintainAspectRatio": false,
+                            "responsive" : true,
+                            "maintainAspectRatio" : false,
                             "plugins" : {
                               "legend" : {
-                                "display" : false
+                                "display" : true,
+                                "position" : "right"
                               }
                             }
                           }
@@ -161,8 +162,8 @@
                               "args" : {
                                 "query" : "cantidadConsultasTotal",
                                 "chartOptions" : {
-                                  "responsive": true,
-                                  "maintainAspectRatio": false,
+                                  "responsive" : true,
+                                  "maintainAspectRatio" : false,
                                   "plugins" : {
                                     "legend" : {
                                       "display" : false
@@ -186,8 +187,8 @@
                                   }
                                 },
                                 "chartOptions" : {
-                                  "responsive": true,
-                                  "maintainAspectRatio": false,
+                                  "responsive" : true,
+                                  "maintainAspectRatio" : false,
                                   "plugins" : {
                                     "legend" : {
                                       "display" : false
@@ -206,8 +207,8 @@
                                   }
                                 },
                                 "chartOptions" : {
-                                  "responsive": true,
-                                  "maintainAspectRatio": false,
+                                  "responsive" : true,
+                                  "maintainAspectRatio" : false,
                                   "plugins" : {
                                     "legend" : {
                                       "display" : false
@@ -226,8 +227,8 @@
                                   }
                                 },
                                 "chartOptions" : {
-                                  "responsive": true,
-                                  "maintainAspectRatio": false,
+                                  "responsive" : true,
+                                  "maintainAspectRatio" : false,
                                   "plugins" : {
                                     "legend" : {
                                       "display" : false
@@ -280,8 +281,8 @@
                             "text" : "Turnos por especialidad del año actual"
                           },
                           "chartOptions" : {
-                            "responsive": true,
-                            "maintainAspectRatio": false,
+                            "responsive" : true,
+                            "maintainAspectRatio" : false,
                             "plugins" : {
                               "legend" : {
                                 "display" : false
@@ -298,8 +299,8 @@
                             "text" : "Turnos por profesional del año actual"
                           },
                           "chartOptions" : {
-                            "responsive": true,
-                            "maintainAspectRatio": false,
+                            "responsive" : true,
+                            "maintainAspectRatio" : false,
                             "plugins" : {
                               "legend" : {
                                 "display" : false
@@ -359,8 +360,8 @@
                                   }
                                 },
                                 "chartOptions" : {
-                                  "responsive": true,
-                                  "maintainAspectRatio": false,
+                                  "responsive" : true,
+                                  "maintainAspectRatio" : false,
                                   "plugins" : {
                                     "legend" : {
                                       "display" : false
@@ -379,8 +380,8 @@
                                   }
                                 },
                                 "chartOptions" : {
-                                  "responsive": true,
-                                  "maintainAspectRatio": false,
+                                  "responsive" : true,
+                                  "maintainAspectRatio" : false,
                                   "plugins" : {
                                     "legend" : {
                                       "display" : false
@@ -399,8 +400,8 @@
                                   }
                                 },
                                 "chartOptions" : {
-                                  "responsive": true,
-                                  "maintainAspectRatio": false,
+                                  "responsive" : true,
+                                  "maintainAspectRatio" : false,
                                   "plugins" : {
                                     "legend" : {
                                       "display" : false
@@ -419,8 +420,8 @@
                                   }
                                 },
                                 "chartOptions" : {
-                                  "responsive": true,
-                                  "maintainAspectRatio": false,
+                                  "responsive" : true,
+                                  "maintainAspectRatio" : false,
                                   "plugins" : {
                                     "legend" : {
                                       "display" : false
@@ -439,8 +440,8 @@
                                   }
                                 },
                                 "chartOptions" : {
-                                  "responsive": true,
-                                  "maintainAspectRatio": false,
+                                  "responsive" : true,
+                                  "maintainAspectRatio" : false,
                                   "plugins" : {
                                     "legend" : {
                                       "display" : false
