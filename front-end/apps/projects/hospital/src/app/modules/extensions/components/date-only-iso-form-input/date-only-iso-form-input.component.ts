@@ -16,6 +16,7 @@ export class DateOnlyIsoFormInputComponent implements OnInit {
 		end: new FormControl(),
 	});
 
+	public today: Date = new Date();
 	constructor() { }
 
 	ngOnInit(): void {
