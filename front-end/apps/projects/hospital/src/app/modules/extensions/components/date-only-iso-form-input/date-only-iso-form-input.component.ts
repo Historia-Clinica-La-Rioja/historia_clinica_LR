@@ -1,6 +1,7 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { formatDateOnlyISO } from '@core/utils/date.utils';
 import {FormGroup, FormControl} from '@angular/forms';
+import * as moment from "moment";
 
 @Component({
 	selector: 'app-date-only-iso-form-input',
@@ -12,14 +13,15 @@ export class DateOnlyIsoFormInputComponent implements OnInit {
 	@Output() rangeChange = new EventEmitter<string[]>();
 
 	dateRange = new FormGroup({
-		start: new FormControl(),
-		end: new FormControl(),
+		start: new FormControl(moment().startOf('year')),
+		end: new FormControl(moment()),
 	});
 
 	public today: Date = new Date();
 	constructor() { }
 
 	ngOnInit(): void {
+		this.emitRangeChane(this.dateRange.value);
 		this.dateRange.valueChanges.subscribe(range => this.emitRangeChane(range));
 	}
 
