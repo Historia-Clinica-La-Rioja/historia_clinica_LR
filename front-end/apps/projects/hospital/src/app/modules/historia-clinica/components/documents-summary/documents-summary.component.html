@@ -71,7 +71,7 @@
 		</div>
 		<div class="documents" id="documents" fxLayout="row">
 			<mat-selection-list color="accent" [multiple]=false id="selection-documents" class="selection-documents">
-				<mat-list-option (click)="setActive(documentSearch)" *ngFor="let documentSearch of documentsToShow" [disabled]="internmentActions.popUpOpen$ | async">
+				<mat-list-option (click)="setActive(documentSearch)" *ngFor="let documentSearch of documentsToShow">
 					<div fxLayout="row" fxLayoutGap="5px">
 						<ng-container>
 							<mat-icon *ngIf="documentSearch.document.documentType != 'Epicrisis' && documentSearch.document.documentType != 'Anamnesis'"mat-list-icon fontSet="material-icons-outlined" color="primary">assignment</mat-icon>
@@ -157,7 +157,7 @@
 								<div class="mat-body" [translate]="'internaciones.anamnesis.observations.OTHERS'"></div>
 								<div class="mat-body-strong">{{activeDocument.document.notes.otherNote}}</div>
 							</section>
-							<button *ngIf="!activeDocument.document.confirmed" id="edit-draft-button" type="button"  class="edit-draft-button" mat-flat-button color="primary" (click)="editDraftEpicrisis(activeDocument.document)">
+							<button *ngIf="!activeDocument.document.confirmed && !isPopUpOpen" id="edit-draft-button" type="button"  class="edit-draft-button" mat-flat-button color="primary" (click)="editDraftEpicrisis(activeDocument.document)">
 								<span [translate]="'internaciones.epicrisis.buttons.EDIT_DRAFT'">
 								</span>
 							</button>
@@ -187,7 +187,7 @@
 					</section>
 				</div>
 
-				<div>
+				<div *ngIf="!isPopUpOpen">
 					<button type="button" mat-button color="primary" *ngIf="activeDocument.canDoAction.edit && activeDocument.document.confirmed" (click)="edit(activeDocument.document)">
 						<mat-icon>edit</mat-icon>
 					</button>
@@ -207,7 +207,7 @@
 						</div>
 					</section>
 				</div>
-				<div>
+				<div *ngIf="!isPopUpOpen">
 					<button type="button" mat-button color="primary" *ngIf="activeDocument.canDoAction.edit" (click)="edit(activeDocument.document)">
 						<mat-icon>edit</mat-icon>
 					</button>

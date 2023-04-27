@@ -18,6 +18,7 @@ import { DeleteDocumentActionService } from '@historia-clinica/modules/ambulator
 import { EditDocumentActionService } from '@historia-clinica/modules/ambulatoria/modules/internacion/services/edit-document-action.service';
 import { fromStringToDate } from "@core/utils/date.utils";
 import { InternmentActionsService } from '@historia-clinica/modules/ambulatoria/modules/internacion/services/internment-actions.service';
+import { AmbulatoriaSummaryFacadeService } from '@historia-clinica/modules/ambulatoria/services/ambulatoria-summary-facade.service';
 
 @Component({
 	selector: 'app-documents-summary',
@@ -42,6 +43,7 @@ export class DocumentsSummaryComponent implements OnInit, OnChanges {
 	public searchTriggered = false;
 	public hasError = hasError;
 	public minDate: Date;
+	isPopUpOpen = false;
 
 	constructor(
 		private formBuilder: FormBuilder,
@@ -49,7 +51,8 @@ export class DocumentsSummaryComponent implements OnInit, OnChanges {
 		private changeDetectorRef: ChangeDetectorRef,
 		private readonly documentActions: DocumentActionsService,
 		private readonly patientNameService: PatientNameService,
-		readonly internmentActions: InternmentActionsService
+		readonly internmentActions: InternmentActionsService,
+		private ambulatoriaSummaryFacadeService: AmbulatoriaSummaryFacadeService
 	) {
 		this.form = this.formBuilder.group({
 			text: [''],
@@ -68,6 +71,8 @@ export class DocumentsSummaryComponent implements OnInit, OnChanges {
 			this.updateDocuments();
 		}
 		this.activeDocument = undefined;
+		this.internmentActions.popUpOpen$.subscribe(isOpened => this.isPopUpOpen = isOpened);
+		this.ambulatoriaSummaryFacadeService.isNewConsultationOpen$.subscribe(isOpened => this.isPopUpOpen = isOpened);
 	}
 
 	ngOnInit(): void {
