@@ -1,9 +1,13 @@
 ::ng-deep .mat-dialog-container {
 	padding: 0px!important;
+	overflow-y: hidden;
 }
 .patientTypeData{
 	width: 30%;
 }
 #header{
 	margin-bottom: 15px;
+}
+mat-dialog-content.mat-dialog-content {
+	max-height: 380px;
 }
