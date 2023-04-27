@@ -1,7 +1,9 @@
-package net.pladema.imagenetwork.infrastructure.output;
+package net.pladema.imagenetwork.infrastructure.output.database;
 
 import java.util.List;
 import java.util.Optional;
+
+import net.pladema.imagenetwork.infrastructure.output.database.repository.StudyPacAssociationRepository;
 
 import org.springframework.data.domain.Example;
 import org.springframework.stereotype.Repository;
@@ -10,16 +12,15 @@ import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import net.pladema.establishment.repository.PacServerRepository;
 import net.pladema.establishment.repository.entity.PacServer;
-import net.pladema.imagenetwork.application.port.StudyStorage;
+import net.pladema.imagenetwork.application.port.StudyPacAssociationStorage;
 import net.pladema.imagenetwork.domain.StudyPacBo;
-import net.pladema.imagenetwork.infrastructure.output.entity.StudyPacAssociation;
-import net.pladema.imagenetwork.infrastructure.output.repository.StudyPacAssociationRepository;
+import net.pladema.imagenetwork.infrastructure.output.database.entity.StudyPacAssociation;
 
 
 @AllArgsConstructor
 @Slf4j
 @Repository
-public class StudyStorageImpl implements StudyStorage {
+public class StudyPacAssociationStorageImpl implements StudyPacAssociationStorage {
 
 	private final StudyPacAssociationRepository studyPacRepository;
 	private final PacServerRepository pacServerRepository;

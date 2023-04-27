@@ -11,14 +11,14 @@ import net.pladema.establishment.repository.entity.PacServer;
 import net.pladema.imagenetwork.application.exception.StudyException;
 import net.pladema.imagenetwork.application.exception.StudyExceptionEnum;
 import net.pladema.imagenetwork.domain.PacsListBo;
-import net.pladema.imagenetwork.infrastructure.output.StudyStorageImpl;
+import net.pladema.imagenetwork.infrastructure.output.database.StudyPacAssociationStorageImpl;
 
 @Service
 @RequiredArgsConstructor
 @Slf4j
 public class GetPacWhereStudyIsHosted {
 
-	private final StudyStorageImpl studyStorage;
+	private final StudyPacAssociationStorageImpl studyStorage;
 
 	public PacsListBo run(String studyInstanceUID) throws MalformedURLException {
 		log.debug("Get PAC URL where the study {} is hosted", studyInstanceUID);

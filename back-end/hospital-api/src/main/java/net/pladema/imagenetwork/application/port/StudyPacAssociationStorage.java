@@ -6,7 +6,7 @@ import java.util.Optional;
 import net.pladema.establishment.repository.entity.PacServer;
 import net.pladema.imagenetwork.domain.StudyPacBo;
 
-public interface StudyStorage {
+public interface StudyPacAssociationStorage {
 
 	List<PacServer> getPacServersBy(String studyInstanceUID);
 

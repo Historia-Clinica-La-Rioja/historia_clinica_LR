@@ -9,14 +9,14 @@ import org.springframework.stereotype.Service;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import net.pladema.imagenetwork.domain.StudyPacBo;
-import net.pladema.imagenetwork.infrastructure.output.StudyStorageImpl;
+import net.pladema.imagenetwork.infrastructure.output.database.StudyPacAssociationStorageImpl;
 
 @Service
 @RequiredArgsConstructor
 @Slf4j
 public class SavePacWhereStudyIsHosted {
 
-	private final StudyStorageImpl studyStorage;
+	private final StudyPacAssociationStorageImpl studyStorage;
 
 	public String run(StudyPacBo studyPacBo) {
 		log.debug("Save PAC URL {} where the study {} is hosted", studyPacBo.getPacGlobalURL(), studyPacBo.getStudyInstanceUID());

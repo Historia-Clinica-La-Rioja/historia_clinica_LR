@@ -1,4 +1,4 @@
-package net.pladema.imagenetwork.infrastructure.output.entity;
+package net.pladema.imagenetwork.infrastructure.output.database.entity;
 
 import javax.persistence.EmbeddedId;
 import javax.persistence.Entity;

@@ -23,12 +23,12 @@ import net.pladema.imagenetwork.domain.StudyPacBo;
 import net.pladema.imagenetwork.infrastructure.input.rest.dto.PacsUrlDTO;
 import net.pladema.imagenetwork.infrastructure.input.rest.dto.StudyPacAssociationDTO;
 
-@RequestMapping("/imagenetwork")
-@Tag(name = "Image Network", description = "Image Network")
+@RequestMapping("/imagenetwork/pacs")
+@Tag(name = "Image Network Pacs", description = "Image Network Pacs")
 @Slf4j
 @RequiredArgsConstructor
 @RestController
-public class StudyController {
+public class StudyPacAssociationController {
 
 	private final GetPacWhereStudyIsHosted getPacWhereStudyIsHosted;
 	private final SavePacWhereStudyIsHosted savePacWhereStudyIsHosted;
