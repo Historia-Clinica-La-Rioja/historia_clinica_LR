@@ -10,7 +10,9 @@ import ar.lamansys.odontology.domain.DiagnosticStorage;
 import ar.lamansys.odontology.domain.OdontologySnomedBo;
 import ar.lamansys.odontology.domain.ProcedureBo;
 import ar.lamansys.odontology.domain.ProcedureStorage;
+import ar.lamansys.odontology.domain.consultation.ConsultationCpoCeoIndicesStorage;
 import ar.lamansys.odontology.domain.consultation.ConsultationDentalActionBo;
+import ar.lamansys.odontology.domain.consultation.OdontologyConsultationStorage;
 import ar.lamansys.odontology.domain.consultation.ToothIndicesStorage;
 import ar.lamansys.sgh.shared.infrastructure.input.service.SharedSnomedPort;
 import ar.lamansys.sgh.shared.infrastructure.input.service.odontology.OdontologyDiagnosticProcedureInfoDto;
@@ -36,6 +38,10 @@ public class ModifyOdontogramAndIndicesImpl implements ModifyOdontogramAndIndice
 	private final DrawOdontogramService drawOdontogramService;
 	private final DiagnosticStorage diagnosticStorage;
 	private final ProcedureStorage procedureStorage;
+
+	private final ConsultationCpoCeoIndicesStorage consultationCpoCeoIndicesStorage;
+
+	private final OdontologyConsultationStorage odontologyConsultationStorage;
 
 	@Override
 	public void run(List<OdontologyDiagnosticProcedureInfoDto> odp, Integer newPatientId) {
@@ -87,6 +93,10 @@ public class ModifyOdontogramAndIndicesImpl implements ModifyOdontogramAndIndice
 		var result = drawOdontogramService.run(newPatientId,cda);
 
 		var indices = toothIndicesStorage.computeIndices(newPatientId,cda);
+
+		var lastOdontologyConsultation = odontologyConsultationStorage.getLastByPatientId(newPatientId);
+		indices.setConsultationDate(lastOdontologyConsultation.getUpdatedOn());
+		consultationCpoCeoIndicesStorage.saveIndices(lastOdontologyConsultation.getId(),indices);
 
 		log.debug("Output -> ToothDrawings{}, CpoCeiIndices{}", result, indices);
 	}

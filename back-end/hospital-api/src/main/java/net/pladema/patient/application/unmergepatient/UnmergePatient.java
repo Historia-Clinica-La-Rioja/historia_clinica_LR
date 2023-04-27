@@ -34,6 +34,7 @@ public class UnmergePatient {
 		mergePatientStorage.updatePersonByPatientId(patientId, patientToUnmerge.getRegistrationDataPerson(), institutionId);
 
 		mergeClinicHistoryStorage.modifyOdontogram(patientId);
+		inactivePatientIds.forEach(mergeClinicHistoryStorage::modifyOdontogram);
 
 		List<Integer> result = new ArrayList<>(inactivePatientIds);
 		result.add(patientId);

@@ -68,4 +68,16 @@ public class OdontologyConsultationIndices {
         this.date = indices.getConsultationDate();
     }
 
+	public void setIndices(CpoCeoIndicesBo indices) {
+		this.permanentC = (indices.getPermanentC() != null) ? indices.getPermanentC() : 0;
+		this.permanentP = (indices.getPermanentP() != null) ? indices.getPermanentP() : 0;
+		this.permanentO = (indices.getPermanentO() != null) ? indices.getPermanentO() : 0;
+		this.temporaryC = (indices.getTemporaryC() != null) ? indices.getTemporaryC() : 0;
+		this.temporaryE = (indices.getTemporaryE() != null) ? indices.getTemporaryE() : 0;
+		this.temporaryO = (indices.getTemporaryO() != null) ? indices.getTemporaryO() : 0;
+		this.permanentTeethPresent = (indices.getPermanentTeethPresent() != null) ? indices.getPermanentTeethPresent() : null;
+		this.temporaryTeethPresent = (indices.getTemporaryTeethPresent() != null) ? indices.getTemporaryTeethPresent() : null;
+		this.date = indices.getConsultationDate();
+	}
+
 }

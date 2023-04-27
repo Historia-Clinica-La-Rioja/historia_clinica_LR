@@ -13,4 +13,6 @@ public interface OdontologyConsultationStorage {
 	List<Integer> getOdontologyConsultationIdsFromPatients(List<Integer> patients);
 	List<OdontologyConsultation> findAllById(List<Integer> ids);
 
+	OdontologyConsultation getLastByPatientId(Integer patientId);
+
 }

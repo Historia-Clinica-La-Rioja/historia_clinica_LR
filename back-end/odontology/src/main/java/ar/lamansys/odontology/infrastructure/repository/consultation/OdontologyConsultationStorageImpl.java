@@ -70,4 +70,13 @@ public class OdontologyConsultationStorageImpl implements OdontologyConsultation
 		return result;
 	}
 
+	@Override
+	public OdontologyConsultation getLastByPatientId(Integer patientId) {
+		LOG.debug("Input parameter -> patientId {}", patientId);
+		List<OdontologyConsultation> partialResult = odontologyConsultationRepository.getLastOdontologyConsultationFromPatient(patientId);
+		OdontologyConsultation result = partialResult.get(partialResult.size()-1);
+		LOG.debug("Output -> {}", result);
+		return result;
+	}
+
 }

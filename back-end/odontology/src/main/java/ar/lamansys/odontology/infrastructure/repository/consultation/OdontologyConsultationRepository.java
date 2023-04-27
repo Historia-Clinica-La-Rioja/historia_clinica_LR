@@ -22,4 +22,11 @@ public interface OdontologyConsultationRepository extends SGXAuditableEntityJPAR
 			"WHERE oc.patientId IN :patientsIds")
 	List<Integer> getOdontologyConsultationIdFromPatients(@Param("patientsIds")List<Integer> patientsIds);
 
+	@Transactional(readOnly = true)
+	@Query("SELECT oc " +
+			"FROM OdontologyConsultation oc " +
+			"WHERE oc.patientId = :patientId " +
+			"ORDER BY oc.updateable.updatedOn ASC")
+	List<OdontologyConsultation> getLastOdontologyConsultationFromPatient(@Param("patientId") Integer patientId);
+
 }

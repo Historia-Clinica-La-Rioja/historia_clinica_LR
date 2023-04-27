@@ -8,6 +8,7 @@ import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -52,7 +53,16 @@ public class ConsultationCpoCeoIndicesStorageImpl implements ConsultationCpoCeoI
     @Override
     public void saveIndices(Integer odontologyConsultationId, CpoCeoIndicesBo indices) {
         LOG.debug("Input parameters - > odontologyConsultationId {}, indices {}", odontologyConsultationId, indices);
-        OdontologyConsultationIndices consultationIndices = new OdontologyConsultationIndices(odontologyConsultationId, indices);
-        this.odontologyConsultationIndicesRepository.save(consultationIndices);
+		Optional<OdontologyConsultationIndices> optinalConsultationIndices = odontologyConsultationIndicesRepository.getByOdontologyConsultationId(odontologyConsultationId);
+		if (optinalConsultationIndices.isPresent()){
+			OdontologyConsultationIndices consultationIndices = optinalConsultationIndices.get();
+			consultationIndices.setIndices(indices);
+			this.odontologyConsultationIndicesRepository.save(consultationIndices);
+			LOG.debug("Output -> {}", consultationIndices);
+		} else {
+			OdontologyConsultationIndices consultationIndices = new OdontologyConsultationIndices(odontologyConsultationId, indices);
+			this.odontologyConsultationIndicesRepository.save(consultationIndices);
+			LOG.debug("Output -> {}", consultationIndices);
+		}
     }
 }
