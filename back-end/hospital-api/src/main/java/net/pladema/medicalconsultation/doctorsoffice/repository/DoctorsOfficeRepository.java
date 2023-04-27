@@ -19,7 +19,7 @@ public interface DoctorsOfficeRepository extends SGXAuditableEntityJPARepository
             "FROM DoctorsOffice do " +
             "WHERE do.institutionId = :institutionId " +
             "AND do.sectorId = :sectorId " +
-			"AND deleted IS FALSE " +
+			"AND do.deleteable.deleted IS FALSE " +
             "ORDER BY do.description ASC ")
     List<DoctorsOfficeVo> findAllBy(@Param("institutionId") Integer institutionId,
                                     @Param("sectorId") Integer sectorId);
@@ -31,7 +31,7 @@ public interface DoctorsOfficeRepository extends SGXAuditableEntityJPARepository
             "JOIN Sector s on (do.sectorId = s.id) " +
             "WHERE do.institutionId = :institutionId " +
             "AND s.sectorTypeId = :sectorTypeId " +
-			"AND deleted IS FALSE " +
+			"AND do.deleteable.deleted IS FALSE " +
             "ORDER BY do.description ASC ")
     List<DoctorsOfficeVo> findAllBySectorType(@Param("institutionId") Integer institutionId,
                                     @Param("sectorTypeId") Short sectorTypeId);
@@ -46,6 +46,6 @@ public interface DoctorsOfficeRepository extends SGXAuditableEntityJPARepository
     @Query("SELECT d.id "+
             "FROM DoctorsOffice AS d " +
             "WHERE d.institutionId IN :institutionsIds " +
-			"AND deleted IS FALSE ")
+			"AND d.deleteable.deleted IS FALSE ")
     List<Integer> getAllIdsByInstitutionsId(@Param("institutionsIds") List<Integer> institutionsIds);
 }
