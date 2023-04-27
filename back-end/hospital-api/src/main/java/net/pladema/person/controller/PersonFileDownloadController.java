@@ -23,7 +23,7 @@ public class PersonFileDownloadController {
 	private final GetPersonFileService getPersonFileService;
 
 	@GetMapping("/download/{fileId}")
-	@PreAuthorize("hasPermission(#institutionId, 'ADMINISTRATIVO, ADMINISTRATIVO_RED_DE_IMAGENES')")
+	@PreAuthorize("hasPermission(#institutionId, 'ADMINISTRATIVO, ADMINISTRATIVO_RED_DE_IMAGENES, AUDITOR_MPI')")
 	public ResponseEntity<Resource> download(@PathVariable(name = "institutionId") Integer institutionId,
 								   @PathVariable(name = "personId") Integer personId,
 								   @PathVariable(name = "fileId") Integer fileId
