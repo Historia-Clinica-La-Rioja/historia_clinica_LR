@@ -52,5 +52,9 @@ public class RootSector {
 
 	@Column(name = "deleted")
 	private Boolean deleted;
+	
+	@Column(name = "informer")
+	private Boolean informer;
+
 
 }

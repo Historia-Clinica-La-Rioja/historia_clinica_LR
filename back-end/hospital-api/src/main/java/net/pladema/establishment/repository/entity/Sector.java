@@ -53,4 +53,7 @@ public class Sector extends SGXAuditableEntity<Integer> {
 
 	@Column(name = "hospitalization_type_id")
 	private Short hospitalizationTypeId;
+
+	@Column(name = "informer")
+	private Boolean informer;
 }
