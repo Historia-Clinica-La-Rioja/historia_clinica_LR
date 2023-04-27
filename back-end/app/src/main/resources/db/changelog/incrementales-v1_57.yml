@@ -766,3 +766,29 @@ databaseChangeLog:
               referencedColumnNames: id
               referencedTableName: institution
               validate: true
+
+    - changeSet:
+        id: addColumn-informer-to-sector
+        author: amurrie
+        changes:
+          - addColumn:
+              tableName: sector
+              columns:
+                name: informer
+                type: BOOLEAN
+                defaultValue: ${boolean.false}
+                constraints:
+                  nullable: true
+    - changeSet:
+        id: update-create-root-sector-view
+        comment: Actualizar la vista con el nuevo campo informer
+        author: amurrie
+        changes:
+          - createView:
+              - viewName: v_root_sector
+              - replaceIfExists:  true
+              - fullDefinition: false
+              - selectQuery: |-
+                  (SELECT *
+                   FROM sector AS s
+                   WHERE s.sector_id IS NULL)
