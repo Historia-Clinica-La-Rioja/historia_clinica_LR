@@ -4,9 +4,11 @@ import { DiagnosisDto, EmergencyCareEvolutionNoteDto, HealthConditionDto, Outpat
 import { EmergencyCareEvolutionNoteService } from '@api-rest/services/emergency-care-evolution-note.service';
 import { EmergencyCareStateService } from '@api-rest/services/emergency-care-state.service';
 import { DateFormat, momentFormat } from '@core/utils/moment.utils';
+import { NewEmergencyCareEvolutionNoteService } from '@historia-clinica/modules/guardia/services/new-emergency-care-evolution-note.service';
 import { DockPopUpHeader } from '@presentation/components/dock-popup/dock-popup.component';
 import { OVERLAY_DATA } from '@presentation/presentation-model';
 import { DockPopupRef } from '@presentation/services/dock-popup-ref';
+import { SnackBarService } from '@presentation/services/snack-bar.service';
 
 @Component({
 	selector: 'app-nota-de-evolucion-dock-popup',
@@ -39,7 +41,10 @@ export class NotaDeEvolucionDockPopupComponent {
 		public dockPopupRef: DockPopupRef,
 		private formBuilder: FormBuilder,
 		@Inject(OVERLAY_DATA) public data: { patientId: number, episodeId: number },
-		private readonly emergencyCareStateService: EmergencyCareStateService
+		private readonly emergencyCareStateService: EmergencyCareStateService,
+		private readonly emergencyCareEvolutionNoteService: EmergencyCareEvolutionNoteService,
+		private readonly snackBarService: SnackBarService,
+		private readonly newEmergencyCareEvolutionNoteService: NewEmergencyCareEvolutionNoteService
 	) {
 		this.emergencyCareStateService.getEmergencyCareEpisodeDiagnoses(this.data.episodeId).subscribe(
 			diagnoses => {
@@ -72,7 +77,20 @@ export class NotaDeEvolucionDockPopupComponent {
 			allergies: value.allergies?.data || [],
 			patientId: this.data.patientId,
 		}
-		this.dockPopupRef.close(dto);
+		this.persist(dto)
+	}
+
+	persist(dto) {
+		this.emergencyCareEvolutionNoteService.saveEmergencyCareEvolutionNote(this.data.episodeId, dto).subscribe(
+			saved => {
+				this.snackBarService.showSuccess('Nota de evolucion guardada correctamente');
+				this.newEmergencyCareEvolutionNoteService.newEvolutionNote();
+				this.dockPopupRef.close(true)
+			},
+			error => {
+				this.snackBarService.showError(error.text)
+			}
+		);
 	}
 
 	private mapFamilyHistories(familyHistories: any[]): OutpatientFamilyHistoryDto[] {
