@@ -70,7 +70,8 @@ public class PatientRepositoryImpl implements PatientRepositoryCustom {
 			queryPart.concat("FROM \n")
 					.concatPart(patientSearchQuery.from())
 					.concat("WHERE \n")
-					.concatPart(patientSearchQuery.whereWithAllAttributesAndNameSelfDetermination(AND_JOINING_OPERATOR, LIKE_COMPARATOR));
+					.concatPart(patientSearchQuery.whereWithAllAttributesAndNameSelfDetermination(AND_JOINING_OPERATOR, LIKE_COMPARATOR))
+					.concat(" AND patient.deleted = false ");
 		}
 
         queryPart.concat(") as result");

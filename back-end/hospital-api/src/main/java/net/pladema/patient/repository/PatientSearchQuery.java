@@ -192,7 +192,8 @@ public class PatientSearchQuery {
 				.concat(" FROM ")
 				.concatPart(this.from())
 				.concat(" WHERE ")
-				.concatPart(whereWithAllAttributesAndNameSelfDetermination(AND_JOINING_OPERATOR, LIKE_COMPARATOR));
+				.concatPart(whereWithAllAttributesAndNameSelfDetermination(AND_JOINING_OPERATOR, LIKE_COMPARATOR))
+				.concat(" AND patient.deleted = false ");
 	}
 
     private String getJoiningOperator(Integer joiningOperator) {
