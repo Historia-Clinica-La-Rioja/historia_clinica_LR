@@ -713,6 +713,7 @@ const messages = {
                 domain: 'Dominio',
                 pacServerType: 'Tipo de Servidor',
                 pacServerProtocol: 'Protocolo imagen',
+                institutionId: 'Institución',
                 username: 'Usuario',
                 password: 'Contraseña',
                 urlStow: 'url_stow',

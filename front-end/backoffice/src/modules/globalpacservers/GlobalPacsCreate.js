@@ -7,11 +7,23 @@ import {
     maxLength,
     FormDataConsumer,
     usePermissions,
-    PasswordInput
+    PasswordInput,
+    ReferenceInput,
+    SelectInput
+
 } from 'react-admin';
 import CustomToolbar from "../components/CustomToolbar";
 import { ROOT } from "../roles";
 import SgxSelectInput from "../../sgxSelectInput/SgxSelectInput";
+
+const CENTRO_DE_DIAGNOSTICO = 2;
+const InstitutionField = ({formData, ...res}) => {
+    return formData.pacServerType === CENTRO_DE_DIAGNOSTICO ? (
+            <ReferenceInput {...res} >
+            <SelectInput optionText="name" optionValue="id" required={true}/>
+         </ReferenceInput>
+    ): null
+}
 
 const GlobalPacsCreate = props => {
     const { permissions } = usePermissions();
@@ -41,6 +53,11 @@ const GlobalPacsCreate = props => {
                 {/* PAC Server Type */}
                 <FormDataConsumer>
                     {formDataProps => ( <SgxSelectInput {...formDataProps} source="pacServerType" element="pacservertypes" optionText="description" allowEmpty={false} required={true} />)}
+                </FormDataConsumer>
+
+                {/* Institutions */}
+                <FormDataConsumer>
+                    {formDataProps => ( <InstitutionField {...formDataProps} reference="institutions" source="institutionId"/>)}
                 </FormDataConsumer>
 
                 {/* PAC Server Protocol */}

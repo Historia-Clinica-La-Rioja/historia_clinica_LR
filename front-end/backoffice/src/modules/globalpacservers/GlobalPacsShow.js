@@ -4,13 +4,17 @@ import {
     SimpleShowLayout,
     ReferenceField,
     TextField,
+    Labeled,
     TopToolbar,
     EditButton,
     Button,
+    useRecordContext,
     useRedirect
 } from 'react-admin';
 import ArrowBackIcon from "@material-ui/icons/ArrowBack";
 import {makeStyles} from "@material-ui/core/styles";
+
+const CENTRO_DE_DIAGNOSTICO = 2;
 
 const PacShowActions = ({ data }) => {
     const useStyles = makeStyles({
@@ -49,7 +53,17 @@ const PacShowActions = ({ data }) => {
             </TopToolbar>
         )
 };
-
+const InstitutionField = ({formData}) => {
+    const record = useRecordContext(formData);
+    const label = "resources.pacservers.fields.institutionId" ;
+    return record.pacServerType === CENTRO_DE_DIAGNOSTICO ? (
+        <Labeled label={label}>
+         <ReferenceField source="institutionId" reference="institutions" link={false}>
+            <TextField source="name" />
+         </ReferenceField>
+         </Labeled>
+    ): null
+}
 const GlobalPacsShow = props => (
     <Show actions={<PacShowActions />} {...props}>
         <SimpleShowLayout>
@@ -60,6 +74,7 @@ const GlobalPacsShow = props => (
             <ReferenceField source="pacServerType" reference="pacservertypes" link={false}>
                 <TextField source="description" />
             </ReferenceField>
+            <InstitutionField {...props}  />)
             <ReferenceField source="pacServerProtocol" reference="pacserverprotocols" link={false}>
                 <TextField source="description" />
             </ReferenceField>
