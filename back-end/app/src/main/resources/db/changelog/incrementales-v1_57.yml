@@ -745,3 +745,24 @@ databaseChangeLog:
                   JOIN emergency_care_evolution_note ecen on (ecenr.emergency_care_evolution_note_id = ecen.id)
                   JOIN reasons r on (ecenr.reason_id = r.id)
                   JOIN "document" d on (d.id = ecen.document_id and d.type_id = 16)
+
+    - changeSet:
+        id: addColumn-institution_id-to-pac_server
+        author: amurrie
+        changes:
+          - addColumn:
+              tableName: pac_server
+              columns:
+                name: institution_id
+                type: int
+                constraints:
+                  nullable: true
+          - addForeignKeyConstraint:
+              baseColumnNames: institution_id
+              baseTableName: pac_server
+              constraintName: FK_pac_server_institution_id
+              onDelete: NO ACTION
+              onUpdate: NO ACTION
+              referencedColumnNames: id
+              referencedTableName: institution
+              validate: true
