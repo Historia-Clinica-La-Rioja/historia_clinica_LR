@@ -1,8 +1,9 @@
 import { Component, Inject } from '@angular/core';
 import { FormBuilder } from '@angular/forms';
-import { DiagnosisDto, EmergencyCareEvolutionNoteDto, HealthConditionDto, OutpatientAnthropometricDataDto, OutpatientMedicationDto } from '@api-rest/api-model';
+import { DiagnosisDto, EmergencyCareEvolutionNoteDto, HealthConditionDto, OutpatientAnthropometricDataDto, OutpatientFamilyHistoryDto, OutpatientMedicationDto } from '@api-rest/api-model';
 import { EmergencyCareEvolutionNoteService } from '@api-rest/services/emergency-care-evolution-note.service';
 import { EmergencyCareStateService } from '@api-rest/services/emergency-care-state.service';
+import { DateFormat, momentFormat } from '@core/utils/moment.utils';
 import { DockPopUpHeader } from '@presentation/components/dock-popup/dock-popup.component';
 import { OVERLAY_DATA } from '@presentation/presentation-model';
 import { DockPopupRef } from '@presentation/services/dock-popup-ref';
@@ -44,7 +45,7 @@ export class NotaDeEvolucionDockPopupComponent {
 			diagnoses => {
 				if (diagnoses.length) {
 					this.diagnosis = {
-						mainDiagnosis: diagnoses.find(d => d.main) ,
+						mainDiagnosis: diagnoses.find(d => d.main),
 						diagnosticos: diagnoses.filter(d => !d.main) || [],
 					}
 				}
@@ -64,7 +65,7 @@ export class NotaDeEvolucionDockPopupComponent {
 			mainDiagnosis: allDiagnosis.mainDiagnosis,
 			evolutionNote: value.evolutionNote?.evolucion,
 			anthropometricData,
-			familyHistories: value.familyHistories?.data || [],
+			familyHistories: this.mapFamilyHistories(value.familyHistories?.data),
 			procedures: value.procedures?.data || [],
 			medications,
 			riskFactors: value.riskFactors,
@@ -72,6 +73,15 @@ export class NotaDeEvolucionDockPopupComponent {
 			patientId: this.data.patientId,
 		}
 		this.dockPopupRef.close(dto);
+	}
+
+	private mapFamilyHistories(familyHistories: any[]): OutpatientFamilyHistoryDto[] {
+		return familyHistories?.map(f => {
+			return {
+				snomed: f.snomed,
+				startDate: momentFormat(f.fecha, DateFormat.API_DATE)
+			}
+		}) || []
 	}
 
 	private mapAnthropometricData(anthropometricData): OutpatientAnthropometricDataDto {

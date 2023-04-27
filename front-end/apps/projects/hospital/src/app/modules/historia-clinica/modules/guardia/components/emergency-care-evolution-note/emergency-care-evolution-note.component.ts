@@ -1,5 +1,5 @@
 import { Component, Input, OnInit } from '@angular/core';
-import { DiagnosisDto, EmergencyCareEvolutionNoteDocumentDto, HealthConditionDto, MasterDataDto, OutpatientAllergyConditionDto, OutpatientAnthropometricDataDto, OutpatientFamilyHistoryDto, OutpatientMedicationDto, OutpatientProcedureDto, OutpatientReasonDto, OutpatientRiskFactorDto } from '@api-rest/api-model';
+import { DiagnosisDto, EmergencyCareEvolutionNoteDocumentDto, OutpatientFamilyHistoryDto, OutpatientMedicationDto, OutpatientProcedureDto } from '@api-rest/api-model';
 import { InternacionMasterDataService } from '@api-rest/services/internacion-master-data.service';
 import { HEALTH_VERIFICATIONS } from '../../../ambulatoria/modules/internacion/constants/ids';
 @Component({
@@ -22,6 +22,8 @@ export class EmergencyCareEvolutionNoteComponent implements OnInit {
 	procedimientosContent;
 	factoresContent;
 	alergiasContent;
+	antecedentesFamiliaresContent;
+
 	constructor(
 		private readonly internacionMasterDataService: InternacionMasterDataService,
 	) { }
@@ -42,6 +44,17 @@ export class EmergencyCareEvolutionNoteComponent implements OnInit {
 		this.medicacionContent = this.toMedications();
 		this.procedimientosContent = this.toProcedimientos();
 		this.factoresContent = this.toRiskFactors();
+		this.antecedentesFamiliaresContent = this.toAntecedentesFamiliares()
+	}
+
+	private toAntecedentesFamiliares(): string[] {
+		this.content.emergencyCareEvolutionNoteClinicalData.familyHistories
+
+		return this.content.emergencyCareEvolutionNoteClinicalData.familyHistories.map(map).reduce((acumulado, actual) => acumulado.concat(actual), []);
+
+		function map(m: OutpatientFamilyHistoryDto): string[] {
+			return [m.snomed.pt, `Desde ${m.startDate}`]
+		}
 	}
 
 	private toAntropometricosContent(): string[] {
@@ -89,15 +102,15 @@ export class EmergencyCareEvolutionNoteComponent implements OnInit {
 		if (heartRate) {
 			result.push(`Frecuencia cardíaca : ${heartRate.value}/min`)
 		}
-		const respiratoryRate = this.content.emergencyCareEvolutionNoteClinicalData.riskFactors.respiratoryRate
+		const respiratoryRate = this.content.emergencyCareEvolutionNoteClinicalData.riskFactors?.respiratoryRate
 		if (respiratoryRate) {
 			result.push(`Frecuencia respiratoria: ${respiratoryRate.value}/min`)
 		}
-		const temperature = this.content.emergencyCareEvolutionNoteClinicalData.riskFactors.temperature
+		const temperature = this.content.emergencyCareEvolutionNoteClinicalData.riskFactors?.temperature
 		if (temperature) {
 			result.push(`Temperatura: ${temperature.value}°`)
 		}
-		const bloodOxygenSaturation = this.content.emergencyCareEvolutionNoteClinicalData.riskFactors.bloodOxygenSaturation
+		const bloodOxygenSaturation = this.content.emergencyCareEvolutionNoteClinicalData.riskFactors?.bloodOxygenSaturation
 		if (bloodOxygenSaturation) {
 			result.push(`Saturación de oxigeno: ${bloodOxygenSaturation.value}%`)
 		}
