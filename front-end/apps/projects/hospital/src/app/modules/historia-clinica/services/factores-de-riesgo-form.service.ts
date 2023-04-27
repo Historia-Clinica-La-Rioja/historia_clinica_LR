@@ -56,27 +56,27 @@ export class FactoresDeRiesgoFormService {
 	) {
 		this.form = this.formBuilder.group({
 			heartRate: this.formBuilder.group({
-				value: [null, [Validators.min(FACTORES_DE_RIESGO.MIN.heartRate), Validators.pattern(PATTERN_NUMBER_WITH_DECIMALS)]],
+				value: [null, [Validators.min(FACTORES_DE_RIESGO.MIN.heartRate), Validators.max(FACTORES_DE_RIESGO.MAX.heartRate), Validators.pattern(PATTERN_NUMBER_WITH_DECIMALS)]],
 				effectiveTime: [newMoment()],
 			}),
 			respiratoryRate: this.formBuilder.group({
-				value: [null, [Validators.min(FACTORES_DE_RIESGO.MIN.respiratoryRate), Validators.pattern(PATTERN_NUMBER_WITH_DECIMALS)]],
+				value: [null, [Validators.min(FACTORES_DE_RIESGO.MIN.respiratoryRate), Validators.max(FACTORES_DE_RIESGO.MAX.respiratoryRate), Validators.pattern(PATTERN_NUMBER_WITH_DECIMALS)]],
 				effectiveTime: [newMoment()],
 			}),
 			temperature: this.formBuilder.group({
-				value: [null, [Validators.min(FACTORES_DE_RIESGO.MIN.temperature), Validators.pattern(PATTERN_NUMBER_WITH_DECIMALS)]],
+				value: [null, [Validators.min(FACTORES_DE_RIESGO.MIN.temperature), Validators.max(FACTORES_DE_RIESGO.MAX.temperature), Validators.pattern(PATTERN_NUMBER_WITH_DECIMALS)]],
 				effectiveTime: [newMoment()],
 			}),
 			bloodOxygenSaturation: this.formBuilder.group({
-				value: [null, [Validators.min(FACTORES_DE_RIESGO.MIN.bloodOxygenSaturation), Validators.pattern(PATTERN_NUMBER_WITH_DECIMALS)]],
+				value: [null, [Validators.min(FACTORES_DE_RIESGO.MIN.bloodOxygenSaturation), Validators.max(FACTORES_DE_RIESGO.MAX.bloodOxygenSaturation), Validators.pattern(PATTERN_NUMBER_WITH_DECIMALS)]],
 				effectiveTime: [newMoment()],
 			}),
 			systolicBloodPressure: this.formBuilder.group({
-				value: [null, [Validators.min(FACTORES_DE_RIESGO.MIN.systolicBloodPressure), Validators.pattern(PATTERN_NUMBER_WITH_DECIMALS)]],
+				value: [null, [Validators.min(FACTORES_DE_RIESGO.MIN.systolicBloodPressure), Validators.max(FACTORES_DE_RIESGO.MAX.systolicBloodPressure), Validators.pattern(PATTERN_NUMBER_WITH_DECIMALS)]],
 				effectiveTime: [newMoment()],
 			}),
 			diastolicBloodPressure: this.formBuilder.group({
-				value: [null, [Validators.min(FACTORES_DE_RIESGO.MIN.diastolicBloodPressure), Validators.pattern(PATTERN_NUMBER_WITH_DECIMALS)]],
+				value: [null, [Validators.min(FACTORES_DE_RIESGO.MIN.diastolicBloodPressure), Validators.max(FACTORES_DE_RIESGO.MAX.diastolicBloodPressure), Validators.pattern(PATTERN_NUMBER_WITH_DECIMALS)]],
 				effectiveTime: [newMoment()],
 			}),
 			bloodGlucose: this.formBuilder.group({
@@ -99,6 +99,11 @@ export class FactoresDeRiesgoFormService {
 					(errorMsg: string) => this.heartRateErrorSource.next(errorMsg)
 				);
 			}
+			else if (this.form.get('heartRate.value').hasError('max')) {
+				this.translateService.get('forms.MAX_ERROR', { max: FACTORES_DE_RIESGO.MAX.heartRate }).subscribe(
+					(errorMsg: string) => this.heartRateErrorSource.next(errorMsg)
+				);
+			}
 			else if (this.form.get('heartRate.value').hasError('pattern')) {
 				this.translateService.get('forms.FORMAT_NUMERIC').subscribe(
 					(errorMsg: string) => this.heartRateErrorSource.next(errorMsg)
@@ -112,6 +117,11 @@ export class FactoresDeRiesgoFormService {
 		this.form.controls.respiratoryRate.valueChanges.subscribe(_ => {
 			if (this.form.get('respiratoryRate.value').hasError('min')) {
 				this.translateService.get('forms.MIN_ERROR', { min: FACTORES_DE_RIESGO.MIN.respiratoryRate }).subscribe(
+					(errorMsg: string) => this.respiratoryRateErrorSource.next(errorMsg)
+				);
+			}
+			else if (this.form.get('respiratoryRate.value').hasError('max')) {
+				this.translateService.get('forms.MAX_ERROR', { max: FACTORES_DE_RIESGO.MAX.respiratoryRate }).subscribe(
 					(errorMsg: string) => this.respiratoryRateErrorSource.next(errorMsg)
 				);
 			}
@@ -131,6 +141,11 @@ export class FactoresDeRiesgoFormService {
 					(errorMsg: string) => this.temperatureErrorSource.next(errorMsg)
 				);
 			}
+			else if (this.form.get('temperature.value').hasError('max')) {
+				this.translateService.get('forms.MAX_ERROR', { max: FACTORES_DE_RIESGO.MAX.temperature }).subscribe(
+					(errorMsg: string) => this.temperatureErrorSource.next(errorMsg)
+				);
+			}
 			else if (this.form.get('temperature.value').hasError('pattern')) {
 				this.translateService.get('forms.FORMAT_NUMERIC').subscribe(
 					(errorMsg: string) => this.temperatureErrorSource.next(errorMsg)
@@ -144,6 +159,11 @@ export class FactoresDeRiesgoFormService {
 		this.form.controls.bloodOxygenSaturation.valueChanges.subscribe(_ => {
 			if (this.form.get('bloodOxygenSaturation.value').hasError('min')) {
 				this.translateService.get('forms.MIN_ERROR', { min: FACTORES_DE_RIESGO.MIN.bloodOxygenSaturation }).subscribe(
+					(errorMsg: string) => this.bloodOxygenSaturationErrorSource.next(errorMsg)
+				);
+			}
+			else if (this.form.get('bloodOxygenSaturation.value').hasError('max')) {
+				this.translateService.get('forms.MAX_ERROR', { max: FACTORES_DE_RIESGO.MAX.bloodOxygenSaturation }).subscribe(
 					(errorMsg: string) => this.bloodOxygenSaturationErrorSource.next(errorMsg)
 				);
 			}
@@ -163,6 +183,11 @@ export class FactoresDeRiesgoFormService {
 					(errorMsg: string) => this.systolicBloodPressureErrorSource.next(errorMsg)
 				);
 			}
+			else if (this.form.get('systolicBloodPressure.value').hasError('max')) {
+				this.translateService.get('forms.MAX_ERROR', { max: FACTORES_DE_RIESGO.MAX.systolicBloodPressure }).subscribe(
+					(errorMsg: string) => this.systolicBloodPressureErrorSource.next(errorMsg)
+				);
+			}
 			else if (this.form.get('systolicBloodPressure.value').hasError('pattern')) {
 				this.translateService.get('forms.FORMAT_NUMERIC').subscribe(
 					(errorMsg: string) => this.systolicBloodPressureErrorSource.next(errorMsg)
@@ -176,6 +201,11 @@ export class FactoresDeRiesgoFormService {
 		this.form.controls.diastolicBloodPressure.valueChanges.subscribe(_ => {
 			if (this.form.get('diastolicBloodPressure.value').hasError('min')) {
 				this.translateService.get('forms.MIN_ERROR', { min: FACTORES_DE_RIESGO.MIN.diastolicBloodPressure }).subscribe(
+					(errorMsg: string) => this.diastolicBloodPressureErrorSource.next(errorMsg)
+				);
+			}
+			else if (this.form.get('diastolicBloodPressure.value').hasError('max')) {
+				this.translateService.get('forms.MAX_ERROR', { max: FACTORES_DE_RIESGO.MAX.diastolicBloodPressure }).subscribe(
 					(errorMsg: string) => this.diastolicBloodPressureErrorSource.next(errorMsg)
 				);
 			}

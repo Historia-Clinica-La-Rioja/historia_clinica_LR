@@ -14,6 +14,12 @@ export const FACTORES_DE_RIESGO = {
         bloodGlucose: 500,
         glycosylatedHemoglobin: 20,
         cardiovascularRisk: 100,
+        heartRate: 999,
+        respiratoryRate: 999,
+        temperature: 99.9,
+        bloodOxygenSaturation: 100,
+        systolicBloodPressure: 999,
+        diastolicBloodPressure: 999,
     },
 }
 
