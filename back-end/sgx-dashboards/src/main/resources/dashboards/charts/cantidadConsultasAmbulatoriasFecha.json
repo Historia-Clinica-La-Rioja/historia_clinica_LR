@@ -23,7 +23,7 @@
     },
     "dimensions": []
   },
-  "chartType": "area",
+  "chartType": "line",
   "pivotConfig": {
     "x": [
       "CantidadConsultasAmbulatorias.fecha_consulta.month-year"

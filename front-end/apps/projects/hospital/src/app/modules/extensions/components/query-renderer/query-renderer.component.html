@@ -14,55 +14,14 @@
 		class="chart-container"
 	>
 		<canvas
-			*ngIf="chartType === 'line'"
 			baseChart
-			[type]="'line'"
+			[type]="chartType"
 			[datasets]="chartData"
 			[labels]="chartLabels"
 			[options]="chartOptions"
 		>
 		</canvas>
 
-		<canvas
-			*ngIf="chartType === 'area'"
-			baseChart
-			[type]="'line'"
-			[datasets]="chartData"
-			[labels]="chartLabels"
-			[options]="chartOptions"
-		>
-		</canvas>
-
-		<canvas
-			*ngIf="chartType === 'bar'"
-			baseChart
-			height="450"
-			[type]="'bar'"
-			[datasets]="chartData"
-			[labels]="chartLabels"
-			[options]="chartOptions"
-		>
-		</canvas>
-
-		<canvas
-			*ngIf="chartType === 'pie'"
-			baseChart
-			[type]="'pie'"
-			[datasets]="chartData"
-			[labels]="selectedChartLabels"
-			[options]="chartOptions"
-		>
-		</canvas>
-
-		<canvas
-			*ngIf="chartType === 'doughnut'"
-			baseChart
-			[type]="'doughnut'"
-			[datasets]="chartData"
-			[labels]="selectedChartLabels"
-			[options]="chartOptions"
-		>
-		</canvas>
 	</div>
 
 	<table

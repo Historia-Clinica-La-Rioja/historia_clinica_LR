@@ -20,6 +20,18 @@
                           "query" : "cantidadConsultasAmbulatorias",
                           "title" : {
                             "text" : "Evolución de consultas del año actual"
+                          },
+                          "chartOptions": {
+                            "responsive": true,
+                            "maintainAspectRatio": false,
+                            "scales":{
+                              "x":{
+                                "stacked": true
+                              },
+                              "y": {
+                                "stacked": true
+                              }
+                            }
                           }
                         }
                       },
@@ -31,8 +43,16 @@
                             "text" : "Consultas por especialidad y profesional del último trimestre"
                           },
                           "chartOptions" : {
-                            "responsive" : true,
-                            "maintainAspectRatio" : false,
+                            "responsive": true,
+                            "maintainAspectRatio": false,
+                            "scales":{
+                              "x":{
+                                "stacked": true
+                              },
+                              "y": {
+                                "stacked": true
+                              }
+                            },
                             "plugins" : {
                               "legend" : {
                                 "display" : false
@@ -305,7 +325,8 @@
                             "maintainAspectRatio" : false,
                             "elements" : {
                               "line" : {
-                                "fill" : false
+                                "fill" : false,
+                                "tension":  0.4
                               }
                             }
                           }

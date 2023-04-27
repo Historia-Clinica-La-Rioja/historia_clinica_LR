@@ -100,9 +100,9 @@ export class QueryRendererComponent {
 	originalGroupData: any[] = [];
 	percentageData: any[] = [];
 	percentageGroupData: any[] = [];
-	groupChartLabels: (string[] | string[][]) = [];
+	groupChartLabels: string[] = [];
 
-	selectedChartLabels: string[] | string[][];
+	originalChartLabels: string[];
 	nameSelfDeterminationFF: boolean;
 	showPercentage: boolean;
 	groupSmallData: boolean;
@@ -209,8 +209,7 @@ export class QueryRendererComponent {
 			if (this.chartType === 'line') {
 				return {
 					label: item.title,
-					data: item.series.map(({ value }) => value * (this.reverse ? -1 : 1)),
-					tension: 0.4,
+					data: item.series.map(({ value }) => value * (this.reverse ? -1 : 1))
 				};
 			}
 
@@ -218,7 +217,6 @@ export class QueryRendererComponent {
 				return {
 					label: item.title.charAt(0).toUpperCase() + item.title.slice(1, -5),
 					data: item.series.map(({ value }) => value * (this.reverse ? -1 : 1)),
-					stack: 'bar',
 				};
 			}
 
@@ -264,7 +262,7 @@ export class QueryRendererComponent {
 
 		this.showPercentage = false;
 		this.groupSmallData = false;
-		this.selectedChartLabels = this.chartLabels;
+		this.originalChartLabels = this.chartLabels;
 
 		const smallDataIndex = this.percentageData.findIndex(x => x < 1);
 		this.showGroupSmallData = smallDataIndex > 1;
@@ -302,11 +300,11 @@ export class QueryRendererComponent {
 	toggleGroupSmallData() {
 		this.groupSmallData = !this.groupSmallData;
 		if (this.groupSmallData) {
-			this.selectedChartLabels = this.groupChartLabels;
+			this.chartLabels = this.groupChartLabels;
 			this.chartData = this.showPercentage ? [{ data: this.percentageGroupData }] : [{ data: this.originalGroupData }];
 		}
 		else {
-			this.selectedChartLabels = this.chartLabels;
+			this.chartLabels = this.originalChartLabels;
 			this.chartData = this.showPercentage ? [{ data: this.percentageData }] : [{ data: this.originalData }];
 		}
 	}
