@@ -54,4 +54,7 @@ public class PacServer {
 	@Column(name = "url_auth", nullable = false)
 	private String urlAuth;
 
+	@Column(name = "institution_id", nullable = true)
+	private Integer institutionId;
+
 }

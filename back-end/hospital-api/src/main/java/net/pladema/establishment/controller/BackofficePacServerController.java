@@ -24,6 +24,9 @@ import net.pladema.sgx.exceptions.BackofficeValidationException;
 @PreAuthorize("hasAnyAuthority('ROOT')")
 public class BackofficePacServerController extends AbstractBackofficeController<PacServer, Integer> {
 
+	private final int SERVIDOR_CENTRAL = 1;
+
+	private final int CENTRO_DE_DIAGNOSTICO = 2;
 	private final Pattern usernamePattern;
 
 	private final TwoWayEncryptionService twoWayEncryptionService;
@@ -48,6 +51,19 @@ public class BackofficePacServerController extends AbstractBackofficeController<
 	@Override
 	public PacServer update(@PathVariable("id") Integer id, @RequestBody PacServer entity) {
 		validations(entity);
+		if (entity.getPacServerType() == SERVIDOR_CENTRAL){
+			entity = new PacServer(entity.getId(),
+						entity.getName(),
+						entity.getAetitle(),
+						entity.getDomain(),
+						entity.getPacServerType(),
+						entity.getPacServerProtocol(),
+						entity.getUsername(),
+						entity.getPassword(),
+						entity.getUrlStow(),
+						entity.getUrlAuth(),
+						null);
+		}
 		try {
 			entity.setPassword(twoWayEncryptionService.encrypt(entity.getPassword()));
 		} catch (Exception e) {
@@ -70,6 +86,8 @@ public class BackofficePacServerController extends AbstractBackofficeController<
 	private void validations(PacServer entity) {
 		if(entity.getPacServerType() == null)
 			throw new BackofficeValidationException("No se definió el tipo de servidor");
+		if(entity.getPacServerType() == CENTRO_DE_DIAGNOSTICO && entity.getInstitutionId() == null)
+			throw new BackofficeValidationException("Un Centro de diagnóstico debe tener asociada una institución");
 		if(entity.getPacServerProtocol() == null)
 			throw new BackofficeValidationException("No se definió el protocolo de imagen");
 		var username = entity.getUsername();
