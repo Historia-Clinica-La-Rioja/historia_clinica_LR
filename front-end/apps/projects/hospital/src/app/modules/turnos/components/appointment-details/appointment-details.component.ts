@@ -5,6 +5,11 @@ import { EmptyAppointmentDto } from '@api-rest/api-model';
 import { DatePipeFormat } from '@core/utils/date.utils';
 import { DatePipe } from '@angular/common';
 import { ConfirmPrintAppointmentComponent } from '@turnos/dialogs/confirm-print-appointment/confirm-print-appointment.component';
+import { HolidaysService } from '@api-rest/services/holidays.service';
+import { DateFormat, momentFormat } from '@core/utils/moment.utils';
+import { DiscardWarningComponent } from '@presentation/dialogs/discard-warning/discard-warning.component';
+import { Moment } from 'moment';
+import { AppointmentsFacadeService } from '@turnos/services/appointments-facade.service';
 
 @Component({
 	selector: 'app-appointment-details',
@@ -15,13 +20,18 @@ export class AppointmentDetailsComponent implements OnInit {
 
 	@Input() emptyAppointment: EmptyAppointmentDto;
 	@Input() patientId: number;
+	@Input() searchInitialDate: Moment;
+	@Input() searchEndingDate: Moment;
 	@Output() resetAppointmentList = new EventEmitter<void>();
 	appointmentTime: Date = new Date();
+	private selectedHolidayDay: Date;
 
 	constructor(
 		private readonly dialog: MatDialog,
-		private readonly datePipe: DatePipe
-	) {}
+		private readonly datePipe: DatePipe,
+		private readonly holidayService: HolidaysService,
+		private readonly appointmentsFacade: AppointmentsFacadeService
+	) { }
 
 	ngOnInit(): void {
 		const timeData = this.emptyAppointment.hour.split(":");
@@ -30,10 +40,39 @@ export class AppointmentDetailsComponent implements OnInit {
 		this.appointmentTime.setSeconds(+timeData[2]);
 	}
 
+	checkAvailability() {
+		const initialDate = momentFormat(this.searchInitialDate, DateFormat.API_DATE);
+		const endingDate = momentFormat(this.searchEndingDate, DateFormat.API_DATE);
+
+		let isHoliday = false;
+		this.holidayService.getHolidays(initialDate, endingDate).subscribe(holidays => {
+			if (holidays.length){
+				this.selectedHolidayDay = this.appointmentsFacade.checkIfHoliday(holidays, this.emptyAppointment.date);
+				isHoliday = this.selectedHolidayDay ? true : false;
+				
+				if (isHoliday) {
+					const dialogRef = this.dialog.open(DiscardWarningComponent, {
+						data: this.appointmentsFacade.getHolidayData(this.selectedHolidayDay)
+					});
+					dialogRef.afterClosed().subscribe((result: boolean) => {
+						if (result || result == undefined) {
+							dialogRef?.close();
+						}
+						else {
+							this.assignAppointment();
+						}
+					});
+				} else {
+					this.assignAppointment();
+				}
+			}
+		})
+	}
+
 	assignAppointment() {
 		const dialogReference = this.dialog.open(NewAppointmentComponent, {
 			width: '35%',
-			disableClose:true,
+			disableClose: true,
 			data: {
 				date: this.emptyAppointment.date,
 				diaryId: this.emptyAppointment.diaryId,
@@ -45,7 +84,7 @@ export class AppointmentDetailsComponent implements OnInit {
 		});
 		dialogReference.afterClosed().subscribe(
 			(result: number) => {
-				if (result!== -1) {
+				if (result !== -1) {
 					this.resetAppointmentList.emit();
 
 					var fullAppointmentDate = this.datePipe.transform(this.emptyAppointment.date, DatePipeFormat.FULL_DATE);
@@ -53,18 +92,18 @@ export class AppointmentDetailsComponent implements OnInit {
 					const timeData = this.emptyAppointment.hour.split(":");
 
 					const specialtyAndAlias = this.emptyAppointment.clinicalSpecialtyName ? this.emptyAppointment.clinicalSpecialtyName :
-					`${this.emptyAppointment.alias} (${this.emptyAppointment.clinicalSpecialtyName})`;
+						`${this.emptyAppointment.alias} (${this.emptyAppointment.clinicalSpecialtyName})`;
 					this.dialog.open(ConfirmPrintAppointmentComponent, {
 						width: '40%',
 						data: {
 							title: 'turnos.new-appointment.ASSIGNED_APPOINTMENT',
-							content: 'Se ha asignado un turno el '+
-							 `<strong>${fullAppointmentDate} ${timeData[0]}:${timeData[1]} hs </strong>`+
-							 ' para '+
-							 `${this.emptyAppointment.doctorFullName}
-							  (${specialtyAndAlias})`+' en ' +
-							 `${this.emptyAppointment.doctorsOfficeDescription}`,
-							 appointmentId:result,
+							content: 'Se ha asignado un turno el ' +
+								`<strong>${fullAppointmentDate} ${timeData[0]}:${timeData[1]} hs </strong>` +
+								' para ' +
+								`${this.emptyAppointment.doctorFullName}
+							  (${specialtyAndAlias})` + ' en ' +
+								`${this.emptyAppointment.doctorsOfficeDescription}`,
+							appointmentId: result,
 						},
 
 					});
