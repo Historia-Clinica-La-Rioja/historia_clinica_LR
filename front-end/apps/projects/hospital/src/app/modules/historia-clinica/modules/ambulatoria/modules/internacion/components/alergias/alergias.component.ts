@@ -4,6 +4,7 @@ import { SnomedECL } from '@api-rest/api-model';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { pushTo, removeFrom } from '@core/utils/array.utils';
 import { SnomedSemanticSearch, SnomedService } from '@historia-clinica/services/snomed.service';
+import { ComponentEvaluationManagerService } from '../../services/component-evaluation-manager.service';
 
 @Component({
 	selector: 'app-alergias',
@@ -15,7 +16,7 @@ export class AlergiasComponent implements OnInit {
 	private allergiesValue: AllergyConditionDto[];
 
 	@Output() allergiesChange = new EventEmitter();
-
+	@Input() showTitle = false;
 	@Input()
 	set allergies(allergies: AllergyConditionDto[]) {
 		this.allergiesValue = allergies;
@@ -41,7 +42,8 @@ export class AlergiasComponent implements OnInit {
 
 	constructor(
 		private formBuilder: FormBuilder,
-		private snomedService: SnomedService
+		private snomedService: SnomedService,
+		private readonly componentEvaluationManagerService: ComponentEvaluationManagerService,
 	) {
 		this.displayedColumns = this.columns?.map(c => c.def).concat(['remove']);
 	}
@@ -81,10 +83,12 @@ export class AlergiasComponent implements OnInit {
 
 	add(a: AllergyConditionDto): void {
 		this.allergies = pushTo<AllergyConditionDto>(this.allergies, a);
+		this.componentEvaluationManagerService.allergies = this.allergies;
 	}
 
 	remove(index: number): void {
 		this.allergies = removeFrom<AllergyConditionDto>(this.allergies, index);
+		this.componentEvaluationManagerService.allergies = this.allergies;
 	}
 
 	openSearchDialog(searchValue: string): void {

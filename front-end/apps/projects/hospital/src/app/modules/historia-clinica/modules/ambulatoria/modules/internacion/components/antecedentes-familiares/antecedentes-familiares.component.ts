@@ -1,9 +1,10 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { HealthHistoryConditionDto, SnomedDto} from '@api-rest/api-model';
+import { HealthHistoryConditionDto, SnomedDto } from '@api-rest/api-model';
 import { SnomedECL } from '@api-rest/api-model';
 import { pushTo, removeFrom } from '@core/utils/array.utils';
 import { SnomedService, SnomedSemanticSearch } from '@historia-clinica/services/snomed.service';
+import { ComponentEvaluationManagerService } from '../../services/component-evaluation-manager.service';
 
 @Component({
 	selector: 'app-antecedentes-familiares',
@@ -21,6 +22,7 @@ export class AntecedentesFamiliaresComponent implements OnInit {
 		this.familyHistoriesValue = familyHistories;
 		this.familyHistoriesChange.emit(this.familyHistoriesValue);
 	}
+	@Input() showTitle = false;
 
 	get familyHistories(): HealthHistoryConditionDto[] {
 		return this.familyHistoriesValue;
@@ -42,7 +44,9 @@ export class AntecedentesFamiliaresComponent implements OnInit {
 
 	constructor(
 		private formBuilder: FormBuilder,
-		private snomedService: SnomedService
+		private snomedService: SnomedService,
+		private readonly componentEvaluationManagerService: ComponentEvaluationManagerService,
+
 	) {
 		this.displayedColumns = this.columns?.map(c => c.def).concat(['remove']);
 	}
@@ -78,10 +82,12 @@ export class AntecedentesFamiliaresComponent implements OnInit {
 
 	add(af: HealthHistoryConditionDto): void {
 		this.familyHistories = pushTo<HealthHistoryConditionDto>(this.familyHistories, af);
+		this.componentEvaluationManagerService.familyHistories = this.familyHistories;
 	}
 
 	remove(index: number): void {
 		this.familyHistories = removeFrom<HealthHistoryConditionDto>(this.familyHistories, index);
+		this.componentEvaluationManagerService.familyHistories = this.familyHistories;
 	}
 
 	openSearchDialog(searchValue: string): void {

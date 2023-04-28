@@ -4,6 +4,7 @@ import { SnomedECL } from '@api-rest/api-model';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { pushTo, removeFrom } from '@core/utils/array.utils';
 import { SnomedService, SnomedSemanticSearch } from '@historia-clinica/services/snomed.service';
+import { ComponentEvaluationManagerService } from '../../services/component-evaluation-manager.service';
 
 @Component({
 	selector: 'app-medicacion',
@@ -28,7 +29,7 @@ export class MedicacionComponent implements OnInit {
 
 	@Input() hideSuspended: boolean;
 	@Input() title = 'internaciones.anamnesis.medicacion.MEDICATION';
-
+	@Input() showTitle = false
 	snomedConcept: SnomedDto;
 
 	form: FormGroup;
@@ -50,7 +51,9 @@ export class MedicacionComponent implements OnInit {
 
 	constructor(
 		private formBuilder: FormBuilder,
-		private snomedService: SnomedService
+		private snomedService: SnomedService,
+		private readonly componentEvaluationManagerService: ComponentEvaluationManagerService,
+
 	) {
 		this.displayedColumns = this.columns?.map(c => c.def).concat(['remove']);
 	}
@@ -89,10 +92,12 @@ export class MedicacionComponent implements OnInit {
 
 	add(medicacion: MedicationDto): void {
 		this.medications = pushTo<MedicationDto>(this.medications, medicacion);
+		this.componentEvaluationManagerService.medications = this.medications;
 	}
 
 	remove(index: number): void {
 		this.medications = removeFrom<MedicationDto>(this.medications, index);
+		this.componentEvaluationManagerService.medications = this.medications;
 	}
 
 	openSearchDialog(searchValue: string): void {

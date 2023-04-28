@@ -19,10 +19,10 @@ export class VacunasComponent implements OnInit {
 	private patientId: number;
 	public readonly vacunasSummary = VACUNAS;
 	public vaccines: HCEImmunizationDto[] = [];
-	@Input() hasNewConsultationEnabled: boolean;
 	public dialogRef: any;
 	Color = Color;
-
+	@Input() hasNewConsultationEnabled: boolean;
+	@Input() showTitle = false;
 	constructor(
 		private readonly hceGeneralStateService: HceGeneralStateService,
 		private readonly route: ActivatedRoute,

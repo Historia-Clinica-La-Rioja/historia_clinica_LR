@@ -8,6 +8,7 @@ import { Moment } from 'moment';
 import { TableColumnConfig } from '@presentation/components/document-section-table/document-section-table.component';
 import { CellTemplates } from '@presentation/components/cell-templates/cell-templates.component';
 import { SnackBarService } from '@presentation/services/snack-bar.service';
+import { BehaviorSubject, Observable } from 'rxjs';
 
 export interface Procedimiento {
 	snomed: SnomedDto;
@@ -22,6 +23,7 @@ export class ProcedimientosService {
 	private readonly tableColumnConfig: TableColumnConfig[];
 	private data: any[];
 	private readonly ECL = SnomedECL.PROCEDURE;
+	private hasProcedure = new BehaviorSubject<boolean>(true);
 
 	constructor(
 		private readonly formBuilder: FormBuilder,
@@ -74,18 +76,21 @@ export class ProcedimientosService {
 
 
 	setConcept(selectedConcept: SnomedDto): void {
+		this.hasProcedure.next(this.isEmpty());
 		this.snomedConcept = selectedConcept;
 		const pt = selectedConcept ? selectedConcept.pt : '';
 		this.form.controls.snomed.setValue(pt);
 	}
 
 	add(procedimiento: Procedimiento): boolean {
+		this.hasProcedure.next(this.isEmpty());
 		const currentItems = this.data.length;
 		this.data = pushIfNotExists<Procedimiento>(this.data, procedimiento, this.compareSpeciality);
 		return currentItems === this.data.length;
 	}
 
 	addControl(procedimiento: Procedimiento): void {
+		this.hasProcedure.next(this.isEmpty());
 		if (this.add(procedimiento)) {
 			this.snackBarService.showError("Procedimiento duplicado");
 		}
@@ -109,10 +114,12 @@ export class ProcedimientosService {
 	}
 
 	removeProcedimiento(index: number): void {
+		this.hasProcedure.next(this.isEmpty());
 		this.data = removeFrom<Procedimiento>(this.data, index);
 	}
 
 	resetForm(): void {
+		this.hasProcedure.next(this.isEmpty());
 		delete this.snomedConcept;
 		this.form.reset();
 	}
@@ -149,6 +156,7 @@ export class ProcedimientosService {
 	}
 
 	remove(index: number): void {
+		this.hasProcedure.next(false);
 		this.data = removeFrom<Procedimiento>(this.data, index);
 	}
 
@@ -163,4 +171,9 @@ export class ProcedimientosService {
 	isEmpty(): boolean {
 		return (!this.data || this.data.length === 0);
 	}
+
+	isEmptyProcedure(): Observable<boolean> {
+		return this.hasProcedure.asObservable();
+	}
+
 }

@@ -2,7 +2,7 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { newMoment } from '@core/utils/moment.utils';
 import { Moment } from 'moment';
 import { EffectiveClinicalObservationDto, HCELast2RiskFactorsDto } from '@api-rest/api-model';
-import { Subject, Observable } from 'rxjs';
+import { Subject, Observable, BehaviorSubject } from 'rxjs';
 import { HceGeneralStateService } from '@api-rest/services/hce-general-state.service';
 import { DatePipeFormat } from '@core/utils/date.utils';
 import { DatePipe } from '@angular/common';
@@ -45,6 +45,7 @@ export class FactoresDeRiesgoFormService {
 	private form: FormGroup;
 	private notShowPreloadedRiskFactorsData = false;
 	private dateList: string[] = [];
+	private riskFactorsSubject = new BehaviorSubject<boolean>(true);
 
 	constructor(
 		private readonly formBuilder: FormBuilder,
@@ -253,6 +254,7 @@ export class FactoresDeRiesgoFormService {
 	}
 
 	setRiskFactorEffectiveTime(newEffectiveTime: Moment, formField: string): void {
+		this.riskFactorsSubject.next(true);
 		(this.form.controls[formField] as FormGroup).controls.effectiveTime.setValue(newEffectiveTime);
 	}
 
@@ -317,6 +319,7 @@ export class FactoresDeRiesgoFormService {
 	}
 
 	setPreviousRiskFactorsData(): void {
+		this.riskFactorsSubject.next(true);
 		this.hceGeneralStateService.getRiskFactors(this.patientId).subscribe(
 			(riskFactorsData: HCELast2RiskFactorsDto) => {
 				if (riskFactorsData.current === undefined)
@@ -360,6 +363,10 @@ export class FactoresDeRiesgoFormService {
 		return !Object.values(this.form.value).every(
 			(riskFactor: FormGroup) => (riskFactor.value === null || riskFactor.value === '')
 		);
+	}
+
+	isEmptyRiskFactors(): Observable<boolean> {
+		return this.riskFactorsSubject.asObservable();
 	}
 
 	getEffectiveObservation(controlValue): EffectiveObservation {

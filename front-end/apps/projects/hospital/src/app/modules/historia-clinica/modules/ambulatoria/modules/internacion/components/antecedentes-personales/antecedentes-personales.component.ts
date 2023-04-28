@@ -4,6 +4,7 @@ import { HealthHistoryConditionDto, SnomedDto } from '@api-rest/api-model';
 import { SnomedECL } from '@api-rest/api-model';
 import { pushTo, removeFrom } from '@core/utils/array.utils';
 import { SnomedService, SnomedSemanticSearch } from '@historia-clinica/services/snomed.service';
+import { ComponentEvaluationManagerService } from '../../services/component-evaluation-manager.service';
 
 @Component({
 	selector: 'app-antecedentes-personales',
@@ -15,6 +16,7 @@ export class AntecedentesPersonalesComponent implements OnInit {
 	private personalHistoriesValue: HealthHistoryConditionDto[];
 
 	@Output() personalHistoriesChange = new EventEmitter();
+	@Input() showTitle = false;
 
 	@Input()
 	set personalHistories(personalHistories: HealthHistoryConditionDto[]) {
@@ -42,7 +44,9 @@ export class AntecedentesPersonalesComponent implements OnInit {
 
 	constructor(
 		private formBuilder: FormBuilder,
-		private snomedService: SnomedService
+		private snomedService: SnomedService,
+		private readonly componentEvaluationManagerService: ComponentEvaluationManagerService,
+
 	) {
 		this.displayedColumns = this.columns?.map(c => c.def).concat(['remove']);
 	}
@@ -78,10 +82,12 @@ export class AntecedentesPersonalesComponent implements OnInit {
 
 	add(ap: HealthHistoryConditionDto): void {
 		this.personalHistories = pushTo<HealthHistoryConditionDto>(this.personalHistories, ap);
+		this.componentEvaluationManagerService.personalHistories = this.personalHistories;
 	}
 
 	remove(index: number): void {
 		this.personalHistories = removeFrom<HealthHistoryConditionDto>(this.personalHistories, index);
+		this.componentEvaluationManagerService.personalHistories = this.personalHistories;
 	}
 
 	openSearchDialog(searchValue: string): void {

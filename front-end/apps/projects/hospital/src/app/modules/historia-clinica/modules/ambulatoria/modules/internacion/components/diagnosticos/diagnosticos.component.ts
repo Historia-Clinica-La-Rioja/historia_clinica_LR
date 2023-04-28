@@ -6,6 +6,7 @@ import { SnackBarService } from '@presentation/services/snack-bar.service';
 import { HEALTH_VERIFICATIONS } from '../../constants/ids';
 import { DiagnosisCreationEditionComponent } from '../../dialogs/diagnosis-creation-edition/diagnosis-creation-edition.component';
 import { SelectMainDiagnosisComponent } from '../../dialogs/select-main-diagnosis/select-main-diagnosis.component';
+import { ComponentEvaluationManagerService } from '../../services/component-evaluation-manager.service';
 
 @Component({
 	selector: 'app-diagnosticos',
@@ -35,7 +36,9 @@ export class DiagnosticosComponent {
 
 	constructor(
 		public dialog: MatDialog,
-		private snackBarService: SnackBarService
+		private snackBarService: SnackBarService,
+		private readonly componentEvaluationManagerService: ComponentEvaluationManagerService,
+
 	) { }
 
 	openCreationDialog(isMainDiagnosis: boolean) {
@@ -49,7 +52,9 @@ export class DiagnosticosComponent {
 
 		dialogRef.afterClosed().subscribe(diagnosis => {
 			if (diagnosis) {
-				if (!this.diagnosticos.find(currentDiagnosis => currentDiagnosis.snomed.pt === diagnosis.snomed.pt) && diagnosis.snomed.pt != this._mainDiagnosis?.snomed.pt)
+				if (!this.diagnosticos.find(currentDiagnosis => currentDiagnosis.snomed.pt === diagnosis.snomed.pt) && diagnosis.snomed.pt != this._mainDiagnosis?.snomed.pt) {
+					this.componentEvaluationManagerService.diagnosticos = diagnosis;
+
 					if (isMainDiagnosis) {
 						diagnosis.presumptive = false;
 						diagnosis.verificationId = this.CONFIRMED;
@@ -60,6 +65,7 @@ export class DiagnosticosComponent {
 						this.diagnosticos.push(diagnosis);
 						this.diagnosisChange.emit(this.diagnosticos);
 					}
+				}
 				else
 					this.snackBarService.showError('internaciones.anamnesis.diagnosticos.messages.ERROR');
 			}
@@ -91,10 +97,11 @@ export class DiagnosticosComponent {
 		});
 	}
 
-	removeDiagnosis(event:any){
-		const index =this.diagnosticos.indexOf(event);
-		if(index !== -1){
-			this.diagnosticos.splice(index,1);
+	removeDiagnosis(event: any) {
+		const index = this.diagnosticos.indexOf(event);
+		if (index !== -1) {
+			this.diagnosticos.splice(index, 1);
+			this.componentEvaluationManagerService.diagnosticos = this.diagnosticos;
 		}
 	}
 }

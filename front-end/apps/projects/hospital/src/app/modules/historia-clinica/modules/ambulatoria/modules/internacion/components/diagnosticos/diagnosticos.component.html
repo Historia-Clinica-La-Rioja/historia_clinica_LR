@@ -1,5 +1,4 @@
 <div>
-	<h2 class="mat-h2" [translate]="'internaciones.epicrisis.diagnosticos.TITLE'"></h2>
 	<span *ngIf="type === 'ANAMNESIS' else evolutionNoteSubtitle" [translate]="'internaciones.anamnesis.diagnosticos.ANAMNESIS_SUBTITLE'"></span>
 	<ng-template #evolutionNoteSubtitle>
 		<span [translate]="'internaciones.anamnesis.diagnosticos.EVOLUTION_NOTE_SUBTITLE'"></span>

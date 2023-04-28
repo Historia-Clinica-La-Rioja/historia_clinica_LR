@@ -1,6 +1,6 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { ImmunizationDto, SnomedDto } from '@api-rest/api-model';
-import { SnomedECL} from '@api-rest/api-model';
+import { SnomedECL } from '@api-rest/api-model';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Moment } from 'moment';
 import { DatePipe } from '@angular/common';
@@ -8,6 +8,7 @@ import { DateFormat, newMoment } from '@core/utils/moment.utils';
 import { pushTo, removeFrom } from '@core/utils/array.utils';
 import { MIN_DATE } from "@core/utils/date.utils";
 import { SnomedService, SnomedSemanticSearch } from '@historia-clinica/services/snomed.service';
+import { ComponentEvaluationManagerService } from '../../services/component-evaluation-manager.service';
 
 @Component({
 	selector: 'app-vacunas',
@@ -19,6 +20,7 @@ export class VacunasComponent implements OnInit {
 	private immunizationsValue: ImmunizationDto[];
 
 	@Output() immunizationsChange = new EventEmitter();
+	@Input() showTitle = false;
 
 	@Input()
 	set immunizations(immunizations: ImmunizationDto[]) {
@@ -55,7 +57,9 @@ export class VacunasComponent implements OnInit {
 	constructor(
 		private formBuilder: FormBuilder,
 		private datePipe: DatePipe,
-		private snomedService: SnomedService
+		private snomedService: SnomedService,
+		private readonly componentEvaluationManagerService: ComponentEvaluationManagerService,
+
 	) {
 		this.displayedColumns = this.columns?.map(c => c.def).concat(['remove']);
 	}
@@ -112,10 +116,12 @@ export class VacunasComponent implements OnInit {
 
 	add(vacuna: ImmunizationDto): void {
 		this.immunizations = pushTo<ImmunizationDto>(this.immunizations, vacuna);
+		this.componentEvaluationManagerService.vaccines = this.immunizations;
 	}
 
 	remove(index: number): void {
 		this.immunizations = removeFrom<ImmunizationDto>(this.immunizations, index);
+		this.componentEvaluationManagerService.vaccines = this.immunizations;
 	}
 
 	openSearchDialog(searchValue: string): void {

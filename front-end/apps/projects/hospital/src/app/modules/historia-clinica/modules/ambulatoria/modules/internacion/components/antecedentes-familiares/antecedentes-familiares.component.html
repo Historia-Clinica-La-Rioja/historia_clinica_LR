@@ -1,4 +1,4 @@
-<h2 class="mat-h2" [translate]="'internaciones.anamnesis.antecedentes-familiares.TITLE'"></h2>
+<h2 *ngIf="showTitle" class="mat-h2" [translate]="'internaciones.anamnesis.antecedentes-familiares.TITLE'"></h2>
 <mat-card>
 	<mat-card-content>
 		<app-concepts-search *ngIf="!snomedConcept else antecedentesFamiliaresForm"
