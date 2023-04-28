@@ -239,6 +239,7 @@ export class PatientFusionComponent implements OnInit {
 						})
 					}, error => {
 						this.snackBarService.showError(error.text);
+						this.oldPatientsIds.push(this.patientToMerge.activePatientId);
 					})
 				}
 			});
