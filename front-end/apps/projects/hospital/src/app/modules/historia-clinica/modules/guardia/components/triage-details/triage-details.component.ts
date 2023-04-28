@@ -84,7 +84,7 @@ export class TriageDetailsComponent implements OnChanges {
 	}
 
 	getFullName(triage: Triage): string {
-		return `${this.patientNameService.getPatientName(triage.createdBy.firstName, triage.createdBy.nameSelfDetermination)}, ${triage.createdBy.lastName}`;
+		return `${this.patientNameService.getPatientName(triage.createdBy.firstName, triage.createdBy.nameSelfDetermination)} ${triage.createdBy.lastName}`;
 	}
 
 }

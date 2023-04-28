@@ -18,13 +18,14 @@ import { Subscription } from 'rxjs';
 export class DiagnosticosFormComponent implements OnChanges {
 
 	@Input() diagnosis: {
-		mainDiagnosis: DiagnosisDto[],
-		diagnosticos: HealthConditionDto
+		mainDiagnosis: HealthConditionDto,
+		diagnosticos: DiagnosisDto[]
 	}
 
-
-
 	ngOnChanges(changes: SimpleChanges): void {
+		if ( this.diagnosis?.mainDiagnosis ) {
+			this.diagnosis.mainDiagnosis.isAdded = this.diagnosis?.mainDiagnosis ? true : false;
+		}
 		this.formDiagnosticos.controls.otrosDiagnosticos.setValue(this.diagnosis?.diagnosticos || []);
 		this.formDiagnosticos.controls.mainDiagnostico.setValue(this.diagnosis?.mainDiagnosis);
 	}

@@ -22,7 +22,6 @@ export class FactoresDeRiesgoFormV2Component implements OnInit {
 
 	onChangeSub: Subscription;
 	searchConceptsLocallyFFIsOn = false;
-	collapsedRiskFactorsSection = false;
 	factoresDeRiesgoFormService = new FactoresDeRiesgoFormService(this.formBuilder, this.translateService, this.hceGeneralStateService, null, this.datePipe);
 
 	formMotivo = this.factoresDeRiesgoFormService.form;

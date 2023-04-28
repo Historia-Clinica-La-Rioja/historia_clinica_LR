@@ -1,6 +1,6 @@
 import { Component, Inject } from '@angular/core';
 import { FormBuilder } from '@angular/forms';
-import { DiagnosisDto, EmergencyCareEvolutionNoteDto, HealthConditionDto, OutpatientAnthropometricDataDto, OutpatientFamilyHistoryDto, OutpatientMedicationDto } from '@api-rest/api-model';
+import { DiagnosisDto, EmergencyCareEvolutionNoteDto, HealthConditionDto, OutpatientAnthropometricDataDto, OutpatientFamilyHistoryDto, OutpatientMedicationDto, OutpatientRiskFactorDto } from '@api-rest/api-model';
 import { EmergencyCareEvolutionNoteService } from '@api-rest/services/emergency-care-evolution-note.service';
 import { EmergencyCareStateService } from '@api-rest/services/emergency-care-state.service';
 import { DateFormat, momentFormat } from '@core/utils/moment.utils';
@@ -73,7 +73,7 @@ export class NotaDeEvolucionDockPopupComponent {
 			familyHistories: this.mapFamilyHistories(value.familyHistories?.data),
 			procedures: value.procedures?.data || [],
 			medications,
-			riskFactors: value.riskFactors,
+			riskFactors: this.toRiskFactors(value.riskFactors),
 			allergies: value.allergies?.data || [],
 			patientId: this.data.patientId,
 		}
@@ -93,11 +93,26 @@ export class NotaDeEvolucionDockPopupComponent {
 		);
 	}
 
+	private toRiskFactors(riskFactors: OutpatientRiskFactorDto): OutpatientRiskFactorDto {
+		if (riskFactors) {
+			let result;
+			Object.keys(riskFactors).forEach(
+				key => {
+					if (riskFactors[key]?.value) {
+						result = { ...result, [key]: riskFactors[key] }
+					}
+				}
+			)
+			return result;
+		}
+		return null;
+	}
+
 	private mapFamilyHistories(familyHistories: any[]): OutpatientFamilyHistoryDto[] {
 		return familyHistories?.map(f => {
 			return {
 				snomed: f.snomed,
-				startDate: momentFormat(f.fecha, DateFormat.API_DATE)
+				startDate: f.fecha ? momentFormat(f.fecha, DateFormat.API_DATE) : null
 			}
 		}) || []
 	}
@@ -125,7 +140,7 @@ export class NotaDeEvolucionDockPopupComponent {
 
 	private getDiagnosis(diagnosisFormValue): { diagnosis: DiagnosisDto[], mainDiagnosis: HealthConditionDto } {
 		return {
-			diagnosis: diagnosisFormValue?.otrosDiagnosticos || [],
+			diagnosis: diagnosisFormValue?.otrosDiagnosticos.filter(d => d.isAdded) || [],
 			mainDiagnosis: diagnosisFormValue?.mainDiagnostico
 		}
 	}

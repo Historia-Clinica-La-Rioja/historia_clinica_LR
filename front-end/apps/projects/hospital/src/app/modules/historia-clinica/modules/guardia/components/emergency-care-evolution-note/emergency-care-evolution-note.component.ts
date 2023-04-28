@@ -49,7 +49,7 @@ export class EmergencyCareEvolutionNoteComponent {
 		return familyHistories.map(map).reduce((acumulado, actual) => acumulado.concat(actual), []);
 
 		function map(m: OutpatientFamilyHistoryDto): string[] {
-			return [m.snomed.pt, `Desde ${m.startDate}`]
+			return [m.snomed.pt, m.startDate ? `Desde ${m.startDate}`: null]
 		}
 	}
 

@@ -1,5 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
+import { EmergencyCareEvolutionNoteDto } from '@api-rest/api-model';
 import { ContextService } from '@core/services/context.service';
 import { environment } from '@environments/environment';
 import { Observable } from 'rxjs';
@@ -14,7 +15,7 @@ export class EmergencyCareEvolutionNoteService {
 		private readonly contextService: ContextService
 	) { }
 
-	saveEmergencyCareEvolutionNote(episodeId, dto): Observable<boolean> {
+	saveEmergencyCareEvolutionNote(episodeId: number, dto: EmergencyCareEvolutionNoteDto): Observable<boolean> {
 		const url = `${environment.apiBase}/institution/${this.contextService.institutionId}/emergency-care/episodes/${episodeId}/create-evolution-note`;
 		return this.http.post<boolean>(url, dto);
 	}

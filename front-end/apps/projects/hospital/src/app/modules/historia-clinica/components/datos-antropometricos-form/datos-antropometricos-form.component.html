@@ -2,7 +2,7 @@
 	[title]="'ambulatoria.paciente.nueva-consulta.datos-antropometricos.TITLE' | translate" icon="accessibility"
 	[fixedExpanded]="datosAntropometricosNuevaConsultaService.getShowPreloadedAnthropometricData()"
 	[isEmpty]="!datosAntropometricosNuevaConsultaService.hasAtLeastOneValueLoaded()"
-	[(collapsed)]="collapsedAnthropometricDataSection">
+	collapsed="true">
 
 	<app-datos-antropometricos-nueva-consulta
 		[showPreloadData]="datosAntropometricosNuevaConsultaService.getShowPreloadedAnthropometricData()"

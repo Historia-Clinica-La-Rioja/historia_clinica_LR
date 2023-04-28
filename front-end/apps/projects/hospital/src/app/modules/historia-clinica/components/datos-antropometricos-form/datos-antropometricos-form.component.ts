@@ -21,14 +21,10 @@ import { Subscription } from 'rxjs';
 })
 export class DatosAntropometricosFormComponent {
 
-
 	datosAntropometricosNuevaConsultaService =
 		new DatosAntropometricosNuevaConsultaService(this.formBuilder, this.hceGeneralStateService,
 			null, this.internacionMasterDataService, this.translateService, this.datePipe); // Quitar el null si vamos a precargar datos
-
 	antropometricos = this.datosAntropometricosNuevaConsultaService.form;
-
-	collapsedAnthropometricDataSection = false;
 	onChangeSub: Subscription;
 
 	constructor(
