@@ -112,8 +112,10 @@ public class OutpatientConsultationController implements OutpatientConsultationA
         LOG.debug("Input parameters -> institutionId {}, patientId {}, createOutpatientDto {}", institutionId, patientId, createOutpatientDto);
         Integer doctorId = healthcareProfessionalExternalService.getProfessionalId(UserInfo.getCurrentAuditor());
 
-        //Find the associated appointments and get the OS
-        Integer patientMedicalCoverageId = appointmentExternalService.getMedicalCoverage(patientId, doctorId);
+		Integer patientMedicalCoverageId = createOutpatientDto.getPatientMedicalCoverageId();
+		//Find the associated appointments and get the OS
+		if (patientMedicalCoverageId == null)
+			patientMedicalCoverageId= appointmentExternalService.getMedicalCoverage(patientId, doctorId);
 
         OutpatientBo newOutPatient = createOutpatientConsultationService.create(institutionId, patientId, doctorId, true,
                 createOutpatientDto.getClinicalSpecialtyId(), patientMedicalCoverageId);

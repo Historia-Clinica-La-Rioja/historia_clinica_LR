@@ -45,6 +45,8 @@ public class CreateOutpatientDto {
     @Nullable
     private Integer clinicalSpecialtyId;
 
-
+	@Valid
+	@Nullable
+	private Integer patientMedicalCoverageId;
 
 }

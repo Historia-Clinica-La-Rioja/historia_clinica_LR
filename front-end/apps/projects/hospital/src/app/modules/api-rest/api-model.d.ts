@@ -740,6 +740,7 @@ export interface CreateOutpatientDto {
     evolutionNote?: string;
     familyHistories: OutpatientFamilyHistoryDto[];
     medications: OutpatientMedicationDto[];
+    patientMedicalCoverageId?: number;
     problems: OutpatientProblemDto[];
     procedures: OutpatientProcedureDto[];
     reasons: OutpatientReasonDto[];
