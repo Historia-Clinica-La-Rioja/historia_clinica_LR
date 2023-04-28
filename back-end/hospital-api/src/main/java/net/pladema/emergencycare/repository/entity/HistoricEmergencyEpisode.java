@@ -40,10 +40,14 @@ public class HistoricEmergencyEpisode extends SGXAuditableEntity<HistoricEmergen
 	@Column(name = "doctors_office_id")
 	private Integer doctorsOfficeId;
 
+	@Column(name = "shockroomId")
+	private Integer shockroomId;
+
 	public HistoricEmergencyEpisode(HistoricEmergencyEpisodeBo historicEmergencyEpisodeBo) {
 		this.pk = new HistoricEmergencyEpisodePK(historicEmergencyEpisodeBo.getEmergencyCareEpisodeId(), LocalDateTime.now());
 		this.emergencyCareStateId = historicEmergencyEpisodeBo.getEmergencyCareStateId();
 		this.doctorsOfficeId = historicEmergencyEpisodeBo.getDoctorsOfficeId();
+		this.shockroomId = historicEmergencyEpisodeBo.getShockroomId();
 	}
 
 	public LocalDateTime getChangeStateDate() {

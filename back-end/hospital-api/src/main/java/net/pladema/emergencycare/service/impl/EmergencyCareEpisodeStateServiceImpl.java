@@ -45,11 +45,19 @@ public class EmergencyCareEpisodeStateServiceImpl implements EmergencyCareEpisod
 
 	@Override
 	@Transactional
-	public Boolean changeState(Integer episodeId, Integer institutionId, Short emergencyCareStateId, Integer doctorsOfficeId) {
-		LOG.debug("Input parameters -> episodeId {}, emergencyCareStateId {}, doctorsOfficeId {}",
-				episodeId, emergencyCareStateId, doctorsOfficeId);
-		HistoricEmergencyEpisodeBo toSave = new HistoricEmergencyEpisodeBo(episodeId, emergencyCareStateId, doctorsOfficeId);
-		emergencyCareEpisodeRepository.updateState(episodeId, institutionId, emergencyCareStateId, doctorsOfficeId);
+	public Boolean changeState(Integer episodeId, Integer institutionId, Short emergencyCareStateId, Integer doctorsOfficeId, Integer shockroomId) {
+		LOG.debug("Input parameters -> episodeId {}, emergencyCareStateId {}, doctorsOfficeId {}, shockroomId {}",
+				episodeId, emergencyCareStateId, doctorsOfficeId, shockroomId);
+		HistoricEmergencyEpisodeBo toSave = new HistoricEmergencyEpisodeBo();
+		if (shockroomId != null) {
+			toSave.setEmergencyCareEpisodeId(episodeId);
+			toSave.setEmergencyCareStateId(emergencyCareStateId);
+			toSave.setShockroomId(shockroomId);
+			emergencyCareEpisodeRepository.updateStateWithShockroom(episodeId, institutionId, emergencyCareStateId, shockroomId);
+		} else {
+			toSave = new HistoricEmergencyEpisodeBo(episodeId, emergencyCareStateId, doctorsOfficeId);
+			emergencyCareEpisodeRepository.updateState(episodeId, institutionId, emergencyCareStateId, doctorsOfficeId);
+		}
 		historicEmergencyEpisodeService.saveChange(toSave);
 		return true;
 	}

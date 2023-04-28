@@ -1,10 +1,4 @@
 import { Component } from '@angular/core';
-import {
-	AbstractControl,
-	FormBuilder,
-	FormGroup,
-	Validators,
-} from '@angular/forms';
 import { DoctorsOfficeDto, MasterDataInterface, ShockroomDto } from '@api-rest/api-model';
 import { DoctorsOfficeService } from '@api-rest/services/doctors-office.service';
 import { EmergencyCareMasterDataService } from '@api-rest/services/emergency-care-master-data.service';
@@ -16,6 +10,8 @@ import { TypeaheadOption } from '@presentation/components/typeahead/typeahead.co
 import { map } from 'rxjs/operators';
 import { MatDialogRef } from '@angular/material/dialog';
 import { ShockroomService } from '@api-rest/services/shockroom.service';
+import { AbstractControl, FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { AttendPlace } from '../../routes/home/home.component';
 
 @Component({
 	selector: 'app-attention-place-dialog',
@@ -74,8 +70,21 @@ export class AttentionPlaceDialogComponent {
 		if (this.form.invalid) return;
 
 		const id: number = Number(this.form.get('place').value);
-		if (id === AttentionPlace.CONSULTORIO)
-			this.dialogRef.close(this.form.get('office').value);
+		if (id === AttentionPlace.CONSULTORIO) {
+			const attendPlace: AttendPlace = {
+				id: this.form.get('office').value.id,
+				attentionPlace: AttentionPlace.CONSULTORIO
+			}
+			this.dialogRef.close(attendPlace);
+		}
+
+		if (id === AttentionPlace.SHOCKROOM) {
+			const attendPlace: AttendPlace = {
+				id: this.form.get('shockroom').value.id,
+				attentionPlace: AttentionPlace.SHOCKROOM
+			}
+			this.dialogRef.close(attendPlace);
+		}
 	}
 
 	private getOfficesTypeaheadOptions$(): Observable<TypeaheadOption<DoctorsOfficeDto>[]> {
@@ -108,10 +117,15 @@ export class AttentionPlaceDialogComponent {
 
 	private clearData() {
 		this.offices$ = undefined;
+		this.shockrooms$ = undefined;
 		const office: AbstractControl = this.form.get('office');
+		const shockroom: AbstractControl = this.form.get('shockroom');
 		office.clearValidators();
 		office.updateValueAndValidity();
 		office.setValue(null);
+		shockroom.clearValidators();
+		shockroom.updateValueAndValidity();
+		shockroom.setValue(null);
 	}
 
 	private setForm() {

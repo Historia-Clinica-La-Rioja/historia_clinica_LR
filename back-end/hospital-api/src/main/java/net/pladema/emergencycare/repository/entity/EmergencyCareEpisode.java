@@ -67,6 +67,9 @@ public class EmergencyCareEpisode extends SGXAuditableEntity<Integer> {
 	@Column(name = "has_police_intervention")
 	private Boolean hasPoliceIntervention;
 
+	@Column(name = "shockroom_id")
+	private Integer shockroomId;
+
 	public EmergencyCareEpisode(EmergencyCareBo emergencyCareBo,
 								TriageBo triageBo) {
 		this.id = emergencyCareBo.getId();

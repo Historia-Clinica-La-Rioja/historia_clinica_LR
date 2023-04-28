@@ -47,10 +47,11 @@ public class EmergencyCareEpisodeStateController {
 			@PathVariable(name = "episodeId") Integer episodeId,
 			@PathVariable(name = "institutionId") Integer institutionId,
 			@RequestParam(name = "emergencyCareStateId") Short emergencyCareStateId,
-			@RequestParam(name = "doctorsOfficeId", required = false) Integer doctorsOfficeId) {
-		LOG.debug("Change emergency care state -> episodeId {}, institutionId {}, emergencyCareStateId {}, doctorsOfficeId {}",
-				episodeId, institutionId, emergencyCareStateId, doctorsOfficeId);
-		Boolean result = emergencyCareEpisodeStateService.changeState(episodeId, institutionId, emergencyCareStateId, doctorsOfficeId);
+			@RequestParam(name = "doctorsOfficeId", required = false) Integer doctorsOfficeId,
+			@RequestParam(name = "shockroomId", required = false) Integer shockroomId) {
+		LOG.debug("Change emergency care state -> episodeId {}, institutionId {}, emergencyCareStateId {}, doctorsOfficeId {}, shockroomId {}",
+				episodeId, institutionId, emergencyCareStateId, doctorsOfficeId, shockroomId);
+		Boolean result = emergencyCareEpisodeStateService.changeState(episodeId, institutionId, emergencyCareStateId, doctorsOfficeId, shockroomId);
 		LOG.debug("Output -> {}", result);
 		return ResponseEntity.ok().body(result);
 	}

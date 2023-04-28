@@ -19,8 +19,8 @@ export class EmergencyCareEpisodeStateService {
 	) {
 	}
 
-	changeState(episodeId: number, emergencyCareEpisodeStateId: number, doctorsOfficeId?: number): Observable<boolean> {
-		const params: HttpParams = this.buildChangeStateParams(emergencyCareEpisodeStateId, doctorsOfficeId);
+	changeState(episodeId: number, emergencyCareEpisodeStateId: number, doctorsOfficeId?: number, shockroomId?: number): Observable<boolean> {
+		const params: HttpParams = this.buildChangeStateParams(emergencyCareEpisodeStateId, doctorsOfficeId, shockroomId);
 
 		const url = `${environment.apiBase + BASIC_URL_PREFIX}/${this.contextService.institutionId +
 		BASIC_URL_SUFIX}/${episodeId}/state`;
@@ -34,12 +34,15 @@ export class EmergencyCareEpisodeStateService {
 		return this.http.get<MasterDataDto>(url);
 	}
 
-	private buildChangeStateParams(emergencyCareEpisodeStateId: number, doctorsOfficeId?: number): HttpParams {
+	private buildChangeStateParams(emergencyCareEpisodeStateId: number, doctorsOfficeId?: number, shockroomId?: number): HttpParams {
 		let params: HttpParams = new HttpParams();
 		params = params.append('emergencyCareStateId', JSON.stringify(emergencyCareEpisodeStateId));
-		if (doctorsOfficeId) {
+		if (doctorsOfficeId) 
 			params = params.append('doctorsOfficeId', JSON.stringify(doctorsOfficeId));
-		}
+	
+		if (shockroomId)
+			params = params.append('shockroomId', JSON.stringify(shockroomId));
+
 		return params;
 	}
 

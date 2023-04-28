@@ -6,5 +6,6 @@ public interface EmergencyCareEpisodeStateService {
 
 	EEmergencyCareState getState(Integer episodeId, Integer institutionId);
 
-	Boolean changeState(Integer episodeId, Integer institutionId, Short emergencyCareStateId, Integer doctorsOfficeId);
+	Boolean changeState(Integer episodeId, Integer institutionId, Short emergencyCareStateId, Integer doctorsOfficeId, Integer shockroomId);
+
 }

@@ -25,7 +25,6 @@ import { map } from 'rxjs/operators';
 import { Observable } from 'rxjs';
 import { EpisodeFilterService } from '../../services/episode-filter.service';
 import { TriageCategoryDto, TriageMasterDataService } from '@api-rest/services/triage-master-data.service';
-import { FormBuilder } from '@angular/forms';
 import { EmergencyCareMasterDataService } from '@api-rest/services/emergency-care-master-data.service';
 import { getError, hasError } from '@core/utils/form.utils';
 import { EmergencyCareEpisodeAdministrativeDischargeService } from '@api-rest/services/emergency-care-episode-administrative-service.service';
@@ -33,9 +32,10 @@ import { PatientNameService } from "@core/services/patient-name.service";
 import { anyMatch } from '@core/utils/array.utils';
 import { PermissionsService } from '@core/services/permissions.service';
 import { GuardiaRouterService } from '../../services/guardia-router.service';
-import { PatientType } from '@historia-clinica/constants/summaries';
 import { EmergencyCareStateChangedService } from '@historia-clinica/modules/ambulatoria/services/emergency-care-state-changed.service';
+import { AttentionPlace, PatientType } from '@historia-clinica/constants/summaries';
 import { AttentionPlaceDialogComponent } from '../../dialogs/attention-place-dialog/attention-place-dialog.component';
+import { FormBuilder } from '@angular/forms';
 
 const TRANSLATE_KEY_PREFIX = 'guardia.home.episodes.episode.actions';
 
@@ -136,9 +136,9 @@ export class HomeComponent implements OnInit {
 			width: '35%',
 		});
 
-		dialogRef.afterClosed().subscribe(consultorio => {
-			if (consultorio) {
-				this.episodeStateService.atender(episode.id, consultorio.id).subscribe(changed => {
+		dialogRef.afterClosed().subscribe((attendPlace: AttendPlace) => {
+			if (attendPlace.attentionPlace === AttentionPlace.CONSULTORIO) {
+				this.episodeStateService.atender(episode.id, attendPlace.id).subscribe(changed => {
 					if (changed) {
 						this.emergencyCareStateChangedService.emergencyCareStateChanged(EstadosEpisodio.EN_ATENCION);
 						this.snackBarService.showSuccess(`${TRANSLATE_KEY_PREFIX}.atender.SUCCESS`);
@@ -149,6 +149,18 @@ export class HomeComponent implements OnInit {
 				}, _ => this.snackBarService.showError(`${TRANSLATE_KEY_PREFIX}.atender.ERROR`)
 				);
 			}
+
+			if (attendPlace.attentionPlace === AttentionPlace.SHOCKROOM) {
+				this.episodeStateService.atender(episode.id, null, attendPlace.id)
+					.subscribe((response: boolean) => {
+						if (!response) this.snackBarService.showError(`${TRANSLATE_KEY_PREFIX}.atender.ERROR`);
+
+						this.snackBarService.showSuccess(`${TRANSLATE_KEY_PREFIX}.atender.SUCCESS`);
+						this.goToEpisode(episode, { typeId: episode.patient.typeId, id: episode.patient.id });
+
+					}, _ => this.snackBarService.showError(`${TRANSLATE_KEY_PREFIX}.atender.ERROR`));
+			}
+
 		});
 	}
 
@@ -274,4 +286,9 @@ export interface Episode {
 	triage: EmergencyCareEpisodeListTriageDto;
 	type: MasterDataDto;
 	relatedProfessional: ProfessionalPersonDto;
+}
+
+export interface AttendPlace {
+	id: number,
+	attentionPlace: AttentionPlace
 }
