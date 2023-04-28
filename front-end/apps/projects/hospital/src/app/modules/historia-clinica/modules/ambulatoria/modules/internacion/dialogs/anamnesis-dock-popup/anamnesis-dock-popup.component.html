@@ -212,7 +212,7 @@
 			<app-alergias [showTitle]="false" [(allergies)]="allergies"></app-alergias>
 		</app-new-consultation-expansion-section>
 
-		<app-new-consultation-expansion-section id="vacunas" [title]="'ambulatoria.paciente.vacunas.TITLE' | translate"
+		<app-new-consultation-expansion-section id="vacunas" [title]="'ambulatoria.paciente.vacunas.VACCINE' | translate"
 			icon="vaccines" [isEmpty]="componentEvaluationManagerService.isEmptyVaccines() | async" [collapsed]="true"
 			[hideBorder]="false">
 			<app-vacunas [showTitle]="false" [(immunizations)]="immunizations"></app-vacunas>
@@ -234,7 +234,7 @@
 		</app-new-consultation-expansion-section>
 
 		<app-new-consultation-expansion-section id="medicacion"
-			[title]="'internaciones.anamnesis.medicacion.MEDICATION' | translate" icon="event_available"
+			[title]="'internaciones.anamnesis.medicacion.TITLE' | translate" icon="event_available"
 			[isEmpty]="componentEvaluationManagerService.isEmptyMedications() | async" [collapsed]="true"
 			[hideBorder]="false">
 			<app-medicacion [showTitle]="false" [(medications)]="medications"></app-medicacion>
