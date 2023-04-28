@@ -7,12 +7,14 @@ import {
     required,
     SelectInput,
     SimpleForm,
-    TextInput
+    TextInput,
+    BooleanInput
 } from 'react-admin';
 import CustomToolbar from "../components/CustomToolbar";
 
 const INTERNACION = 2;
 const SIN_TIPO = 6;
+const DIAGNOSTICO_POR_IMAGENES = 4;
 
 const redirect = (basePath, id, data) => `/institutions/${data.institutionId}/show`;
 
@@ -34,6 +36,13 @@ const HospitalizationField = ({formData, ...rest}) => {
         <ReferenceInput {...rest} sort={{ field: 'description', order: 'ASC' }}>
             <SelectInput optionText="description" optionValue="id" />
         </ReferenceInput>
+    )
+}
+
+const CheckBoxField = ({formData}) => {
+
+    return formData.sectorTypeId !== DIAGNOSTICO_POR_IMAGENES ? null : (
+        <BooleanInput label="resources.sectors.fields.informer" source="informer" />
     )
 }
 
@@ -60,6 +69,11 @@ const SectorCreate = props => (
 
             {/*Sector Type*/}
             <SectorType source="sectorTypeId"/>
+            
+            {/*Informer Sector*/}
+            <FormDataConsumer>
+                {formDataProps => (<CheckBoxField{... formDataProps} />)}
+            </FormDataConsumer>
 
             {/*Age Groups*/}
             <FormDataConsumer>

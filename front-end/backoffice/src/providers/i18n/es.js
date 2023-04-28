@@ -12,7 +12,8 @@ const sectorMessages = {
         sectorOrganizationId: 'Organización',
         careTypeId: 'Tipo de cuidado',
         hospitalizationTypeId: 'Permanencia',
-        sectorId: 'Sector padre'
+        sectorId: 'Sector padre',
+        informer: 'Realiza informes para todo el dominio.'
     },
     createRelated: 'Crear Sector'
 }

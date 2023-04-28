@@ -7,6 +7,7 @@ import {
     ReferenceManyField,
     Show,
     SimpleShowLayout,
+    BooleanField,
     TextField, useRecordContext,
     usePermissions
 } from 'react-admin';
@@ -152,6 +153,18 @@ const HospitalizationField = (props) => {
     )
 }
 
+const CheckBoxField = (props) => {
+    const record = useRecordContext(props);
+    return record.sectorTypeId !== DIAGNOSTICO_POR_IMAGENES ? null : (
+        <Labeled label="resources.sectors.fields.informer">
+                    <ReferenceField link={false}source="id" reference="sectors">
+                        <BooleanField source="informer" />
+                    </ReferenceField>
+        </Labeled>
+    )
+
+}
+
 const ShowServiceSectorData = ({ record }) => {
     if (record?.sectorOrganizationId === 1 && record?.sectorTypeId === 2)
         return (
@@ -211,6 +224,9 @@ const SectorShow = props => (
             </ReferenceField>
             <RootSectorField/>
             <SectorTypeField/>
+
+            <CheckBoxField />
+            
             <HospitalizationField {...props} reference="agegroups" source="ageGroupId"/>
             <HospitalizationField {...props} reference="sectororganizations" source="sectorOrganizationId"/>
             <HospitalizationField {...props} reference="caretypes" source="careTypeId"/>
