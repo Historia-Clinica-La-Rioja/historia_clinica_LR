@@ -19,4 +19,10 @@ export class ModalityService {
 		const url = `${environment.apiBase}/institutions/${this.contextService.institutionId}/modality`;
 		return this.http.get<ModalityDto[]>(url);
 	}
+
+	getModalitiesByStudiesCompleted(): Observable<ModalityDto[]> {
+		const url = `${environment.apiBase}/institutions/${this.contextService.institutionId}/modalities-by-studies-completed`;
+		return this.http.get<ModalityDto[]>(url);
+	}
+
 }
