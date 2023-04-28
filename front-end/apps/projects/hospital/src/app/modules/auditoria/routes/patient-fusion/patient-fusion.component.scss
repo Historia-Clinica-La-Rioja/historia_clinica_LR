@@ -27,3 +27,10 @@ h3{
         background-color: mat-color($palette-primary, 50);
     }
 }
+
+::ng-deep .mat-dialog-container-fusion{
+	mat-dialog-container.mat-dialog-container{
+		padding: 0px!important;
+		overflow-y: hidden;
+	}
+}

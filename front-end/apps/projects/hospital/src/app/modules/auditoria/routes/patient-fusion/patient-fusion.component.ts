@@ -293,7 +293,8 @@ export class PatientFusionComponent implements OnInit {
 			height:"600px",
 			width:'30%',
 			disableClose: true,
-			autoFocus: false
+			autoFocus: false,
+			panelClass: 'mat-dialog-container-fusion'
 		})
 	}
 }
