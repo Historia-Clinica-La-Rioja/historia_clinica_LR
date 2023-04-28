@@ -43,12 +43,13 @@ import { ExternalCauseService } from '../../services/external-cause.service';
 import { ControlDynamicFormService } from '../../services/control-dynamic-form.service';
 import { ObstetricComponent } from '../../components/obstetric/obstetric.component';
 import { ObstetricFormService } from '../../services/obstetric-form.service';
+import { ComponentEvaluationManagerService } from '../../services/component-evaluation-manager.service';
 
 @Component({
 	selector: 'app-epicrisis-dock-popup',
 	templateUrl: './epicrisis-dock-popup.component.html',
 	styleUrls: ['./epicrisis-dock-popup.component.scss'],
-	providers: [ExternalCauseService, ControlDynamicFormService, ObstetricFormService]
+	providers: [ExternalCauseService, ControlDynamicFormService, ObstetricFormService, ComponentEvaluationManagerService]
 })
 export class EpicrisisDockPopupComponent implements OnInit {
 

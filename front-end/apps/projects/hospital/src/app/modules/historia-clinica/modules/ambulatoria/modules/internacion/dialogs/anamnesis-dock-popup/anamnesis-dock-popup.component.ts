@@ -13,7 +13,7 @@ import {
 } from '@api-rest/api-model';
 import { InternacionMasterDataService } from '@api-rest/services/internacion-master-data.service';
 import { AnamnesisService } from '@api-rest/services/anamnesis.service';
-import { forkJoin } from 'rxjs';
+import { BehaviorSubject, forkJoin, Observable } from 'rxjs';
 import { SnackBarService } from '@presentation/services/snack-bar.service';
 import { getError, hasError } from '@core/utils/form.utils';
 import { SnomedService } from '@historia-clinica/services/snomed.service';
@@ -28,11 +28,16 @@ import { dateToMoment } from "@core/utils/moment.utils";
 import { TranslateService } from '@ngx-translate/core';
 import { DocumentActionReasonComponent } from '../document-action-reason/document-action-reason.component';
 import { MatDialog } from '@angular/material/dialog';
+import { map } from 'rxjs/internal/operators/map';
+import { ComponentEvaluationManagerService } from '../../services/component-evaluation-manager.service';
 
 @Component({
 	selector: 'app-anamnesis-dock-popup',
 	templateUrl: './anamnesis-dock-popup.component.html',
-	styleUrls: ['./anamnesis-dock-popup.component.scss']
+	styleUrls: ['./anamnesis-dock-popup.component.scss'],
+	providers: [
+		ComponentEvaluationManagerService,
+	]
 })
 export class AnamnesisDockPopupComponent implements OnInit {
 
@@ -57,12 +62,14 @@ export class AnamnesisDockPopupComponent implements OnInit {
 	procedimientosService: ProcedimientosService;
 	factoresDeRiesgoFormService: FactoresDeRiesgoFormService;
 	isDisableConfirmButton = false;
-
+	anthropometricDataSubject = new BehaviorSubject<boolean>(true);
+	observationsSubject = new BehaviorSubject<boolean>(true);
 	minDate = MIN_DATE;
 	@ViewChild('errorsView') errorsView: ElementRef;
 
 	constructor(
 		@Inject(OVERLAY_DATA) public data: any,
+		readonly componentEvaluationManagerService: ComponentEvaluationManagerService,
 		public dockPopupRef: DockPopupRef,
 		private readonly formBuilder: FormBuilder,
 		private readonly internacionMasterDataService: InternacionMasterDataService,
@@ -107,6 +114,20 @@ export class AnamnesisDockPopupComponent implements OnInit {
 		} else {
 			bloodTypes$.subscribe(bloodTypes => this.bloodTypes = bloodTypes);
 		}
+
+		this.form.get('anthropometricData').valueChanges.pipe(
+			map(formData => Object.values(formData)),
+			map(formValues => formValues.every(value => value === null))
+		).subscribe(allFormValuesAreNull => {
+			this.anthropometricDataSubject.next(allFormValuesAreNull);
+		});
+
+		this.form.get('observations').valueChanges.pipe(
+			map(formData => Object.values(formData)),
+			map(formValues => formValues.every(value => value === null || value === ''))
+		).subscribe(allFormValuesAreNull => {
+			this.observationsSubject.next(allFormValuesAreNull);
+		});
 	}
 
 	save(): void {
@@ -124,7 +145,7 @@ export class AnamnesisDockPopupComponent implements OnInit {
 
 			const anamnesis: AnamnesisDto = this.buildAnamnesisDto();
 			if (this.data.patientInfo.anamnesisId) {
-				this.openEditReason(anamnesis);				
+				this.openEditReason(anamnesis);
 				return;
 			}
 			this.anamnesisService.createAnamnesis(anamnesis, this.data.patientInfo.internmentEpisodeId)
@@ -225,6 +246,7 @@ export class AnamnesisDockPopupComponent implements OnInit {
 	}
 
 	private loadAnamnesisInformation() {
+		this.componentEvaluationManagerService.anamnesis = this.anamnesis;
 		this.allergies = this.anamnesis.allergies;
 		this.diagnosticos = this.anamnesis.diagnosis;
 		this.diagnosticos.forEach(d => d.isAdded = true);
@@ -295,5 +317,13 @@ export class AnamnesisDockPopupComponent implements OnInit {
 				}, responseErrors => this.showError(responseErrors));
 			}
 		});
+	}
+
+	getAnthropometricData(): Observable<boolean> {
+		return this.anthropometricDataSubject.asObservable();
+	}
+
+	getObservations(): Observable<boolean> {
+		return this.observationsSubject.asObservable();
 	}
 }

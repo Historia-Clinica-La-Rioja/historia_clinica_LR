@@ -27,11 +27,15 @@ import { dateToMoment } from "@core/utils/moment.utils";
 import { TranslateService } from '@ngx-translate/core';
 import { DocumentActionReasonComponent } from '../document-action-reason/document-action-reason.component';
 import { MatDialog } from '@angular/material/dialog';
+import { ComponentEvaluationManagerService } from '../../services/component-evaluation-manager.service';
 
 @Component({
 	selector: 'app-evolution-note-dock-popup',
 	templateUrl: './evolution-note-dock-popup.component.html',
-	styleUrls: ['./evolution-note-dock-popup.component.scss']
+	styleUrls: ['./evolution-note-dock-popup.component.scss'],
+	providers: [
+		ComponentEvaluationManagerService,
+	]
 })
 export class EvolutionNoteDockPopupComponent implements OnInit {
 

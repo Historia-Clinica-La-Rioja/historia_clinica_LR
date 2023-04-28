@@ -1,14 +1,87 @@
 <app-dock-popup [dockPopupRef]="dockPopupRef" [header]="{ title:'internaciones.anamnesis.TITLE' }">
-	<form body id="anamnesis-form" (keydown.enter)="false" [formGroup]="form">
-		<div id="diagnosticos">
+
+	<form body id="anamnesis-form" (keydown.enter)="false" [formGroup]="form" fxLayoutGap="20px">
+
+		<app-new-consultation-expansion-section id="diagnosticos"
+			[title]="'internaciones.epicrisis.diagnosticos.TITLE' | translate" icon="error_outlined" [collapsed]="false"
+			[isEmpty]="componentEvaluationManagerService.isEmptyDiagnosticos() | async" [hideBorder]="true">
 			<app-diagnosticos [(mainDiagnosis)]="mainDiagnosis" [(diagnosticos)]="diagnosticos" [type]="'ANAMNESIS'">
 			</app-diagnosticos>
-		</div>
+		</app-new-consultation-expansion-section>
 
-		<div id="procedimientos"
-			*appHasRole="['ESPECIALISTA_MEDICO', 'ENFERMERO_ADULTO_MAYOR','PROFESIONAL_DE_SALUD', 'ESPECIALISTA_EN_ODONTOLOGIA']">
-			<app-document-section [sectionTitle]="'internaciones.anamnesis.procedimientos.TITLE'"
-				[tableTitle]="'internaciones.anamnesis.procedimientos.TABLE_TITLE'"
+		<app-new-consultation-expansion-section id="observations"
+			[title]="'internaciones.anamnesis.observations.TITLE' | translate" icon="chat"
+			[isEmpty]="getObservations() | async" [collapsed]="false" [hideBorder]="false">
+			<mat-card>
+				<mat-card-content formGroupName="observations">
+					<div>
+						<mat-label [translate]="'internaciones.anamnesis.observations.CURRENT_DISEASE'"></mat-label>
+						<mat-form-field [floatLabel]="'never'" appearance="outline">
+							<textarea matInput type="text" id="currentIllnessNote" name="currentIllnessNote"
+								formControlName="currentIllnessNote">
+						</textarea>
+						</mat-form-field>
+					</div>
+					<div>
+						<mat-label [translate]="'internaciones.anamnesis.observations.PHYSICAL_EXAMINATION'">
+						</mat-label>
+						<mat-form-field [floatLabel]="'never'" appearance="outline">
+							<textarea matInput type="text" id="physicalExamNote" name="physicalExamNote"
+								formControlName="physicalExamNote">
+						</textarea>
+						</mat-form-field>
+					</div>
+					<div>
+						<mat-label [translate]="'internaciones.anamnesis.observations.STUDIES_PROCEDURES'"></mat-label>
+						<mat-form-field [floatLabel]="'never'" appearance="outline">
+							<textarea matInput type="text" id="studiesSummaryNote" name="studiesSummaryNote"
+								formControlName="studiesSummaryNote">
+						</textarea>
+						</mat-form-field>
+					</div>
+					<div>
+						<mat-label [translate]="'internaciones.anamnesis.observations.PATIENT_PROGRESS'"></mat-label>
+						<mat-form-field [floatLabel]="'never'" appearance="outline">
+							<textarea matInput type="text" id="evolutionNote" name="evolutionNote"
+								formControlName="evolutionNote">
+						</textarea>
+						</mat-form-field>
+					</div>
+					<div>
+						<mat-label [translate]="'internaciones.anamnesis.observations.CLINICAL_IMPRESSION'"></mat-label>
+						<mat-form-field [floatLabel]="'never'" appearance="outline">
+							<textarea matInput type="text" id="clinicalImpressionNote" name="clinicalImpressionNote"
+								formControlName="clinicalImpressionNote">
+						</textarea>
+						</mat-form-field>
+					</div>
+					<div>
+						<mat-label [translate]="'internaciones.anamnesis.observations.OTHERS'"></mat-label>
+						<mat-form-field [floatLabel]="'never'" appearance="outline">
+							<textarea matInput type="text" id="otherNote" name="otherNote" formControlName="otherNote">
+						</textarea>
+						</mat-form-field>
+					</div>
+
+				</mat-card-content>
+			</mat-card>
+
+			<div #errorsView>
+				<div id="validations" *ngIf="mainDiagnosisError || apiErrors.length > 0">
+					<mat-card>
+						<mat-error class="mat-body-2">{{ mainDiagnosisError }}</mat-error>
+						<mat-error class="mat-body-2" *ngFor="let error of apiErrors">{{ error }}</mat-error>
+					</mat-card>
+				</div>
+			</div>
+		</app-new-consultation-expansion-section>
+
+		<app-new-consultation-expansion-section id="procedimientos"
+			*appHasRole="['ESPECIALISTA_MEDICO', 'ENFERMERO_ADULTO_MAYOR','PROFESIONAL_DE_SALUD', 'ESPECIALISTA_EN_ODONTOLOGIA']"
+			[title]="'internaciones.anamnesis.procedimientos.TITLE' | translate" icon="library_add"
+			[isEmpty]="procedimientosService.isEmpty()" [collapsed]="true" [hideBorder]="false">
+
+			<app-document-section [tableTitle]="'internaciones.anamnesis.procedimientos.TABLE_TITLE'"
 				[columns]="procedimientosService.getColumns()" [data]="procedimientosService.getProcedimientos()"
 				[addRemoveColumn]="true" (removeColumn)="procedimientosService.remove($event)">
 				<ng-container concept-form>
@@ -53,11 +126,13 @@
 					</ng-template>
 				</ng-container>
 			</app-document-section>
-		</div>
+		</app-new-consultation-expansion-section>
 
-		<div id="datos-antropometricos">
+		<app-new-consultation-expansion-section id="datos-antropometricos"
+			[title]="'internaciones.anamnesis.datos-antropometricos.TITLE' | translate" icon="accessibility"
+			[isEmpty]="getAnthropometricData() | async" [collapsed]="true" [hideBorder]="false">
+
 			<div class="datos-antropometricos-card">
-				<h2 [translate]="'internaciones.anamnesis.datos-antropometricos.TITLE'"></h2>
 				<app-document-section>
 					<ng-container concept-form formGroupName="anthropometricData">
 						<div fxLayout="row" fxLayoutAlign="space-between center">
@@ -120,91 +195,51 @@
 					</ng-container>
 				</app-document-section>
 			</div>
+		</app-new-consultation-expansion-section>
 
-		</div>
-		<div id="antecedentes-personales">
-			<app-antecedentes-personales [(personalHistories)]="personalHistories"></app-antecedentes-personales>
-		</div>
-		<div id="antecedentes-familiares">
-			<app-antecedentes-familiares [(familyHistories)]="familyHistories"></app-antecedentes-familiares>
-		</div>
-		<div id="alergias">
-			<app-alergias [(allergies)]="allergies"></app-alergias>
-		</div>
-		<div id="vacunas">
-			<app-vacunas [(immunizations)]="immunizations"></app-vacunas>
-		</div>
-		<div id="medicacion">
-			<app-medicacion [(medications)]="medications"></app-medicacion>
-		</div>
-		<div id="factores-de-riesgo">
-			<app-factores-de-riesgo-form [factoresDeRiesgoFormService]="factoresDeRiesgoFormService">
+		<app-new-consultation-expansion-section id="factores-de-riesgo"
+			[title]="'historia-clinica.factores-de-riesgo-form.TITLE' | translate" icon="favorite_outlined"
+			[isEmpty]="!factoresDeRiesgoFormService.hasAtLeastOneValueLoaded()" [collapsed]="true" [hideBorder]="false">
+			<app-factores-de-riesgo-form [showTitle]="false"
+				[factoresDeRiesgoFormService]="factoresDeRiesgoFormService">
 			</app-factores-de-riesgo-form>
-		</div>
-		<div id="observations">
-			<h2 [translate]="'internaciones.anamnesis.observations.TITLE'"></h2>
-			<mat-card>
-				<mat-card-content formGroupName="observations">
-					<div>
-						<mat-label [translate]="'internaciones.anamnesis.observations.CURRENT_DISEASE'"></mat-label>
-						<mat-form-field [floatLabel]="'never'" appearance="outline">
-							<textarea matInput type="text" id="currentIllnessNote" name="currentIllnessNote"
-								formControlName="currentIllnessNote">
-							</textarea>
-						</mat-form-field>
-					</div>
-					<div>
-						<mat-label [translate]="'internaciones.anamnesis.observations.PHYSICAL_EXAMINATION'">
-						</mat-label>
-						<mat-form-field [floatLabel]="'never'" appearance="outline">
-							<textarea matInput type="text" id="physicalExamNote" name="physicalExamNote"
-								formControlName="physicalExamNote">
-							</textarea>
-						</mat-form-field>
-					</div>
-					<div>
-						<mat-label [translate]="'internaciones.anamnesis.observations.STUDIES_PROCEDURES'"></mat-label>
-						<mat-form-field [floatLabel]="'never'" appearance="outline">
-							<textarea matInput type="text" id="studiesSummaryNote" name="studiesSummaryNote"
-								formControlName="studiesSummaryNote">
-							</textarea>
-						</mat-form-field>
-					</div>
-					<div>
-						<mat-label [translate]="'internaciones.anamnesis.observations.PATIENT_PROGRESS'"></mat-label>
-						<mat-form-field [floatLabel]="'never'" appearance="outline">
-							<textarea matInput type="text" id="evolutionNote" name="evolutionNote"
-								formControlName="evolutionNote">
-							</textarea>
-						</mat-form-field>
-					</div>
-					<div>
-						<mat-label [translate]="'internaciones.anamnesis.observations.CLINICAL_IMPRESSION'"></mat-label>
-						<mat-form-field [floatLabel]="'never'" appearance="outline">
-							<textarea matInput type="text" id="clinicalImpressionNote" name="clinicalImpressionNote"
-								formControlName="clinicalImpressionNote">
-							</textarea>
-						</mat-form-field>
-					</div>
-					<div>
-						<mat-label [translate]="'internaciones.anamnesis.observations.OTHERS'"></mat-label>
-						<mat-form-field [floatLabel]="'never'" appearance="outline">
-							<textarea matInput type="text" id="otherNote" name="otherNote" formControlName="otherNote">
-							</textarea>
-						</mat-form-field>
-					</div>
+		</app-new-consultation-expansion-section>
 
-				</mat-card-content>
-			</mat-card>
-		</div>
-		<div #errorsView>
-			<div id="validations" *ngIf="mainDiagnosisError || apiErrors.length > 0">
-				<mat-card>
-					<mat-error class="mat-body-2">{{ mainDiagnosisError }}</mat-error>
-					<mat-error class="mat-body-2" *ngFor="let error of apiErrors">{{ error }}</mat-error>
-				</mat-card>
-			</div>
-		</div>
+		<app-new-consultation-expansion-section id="alergias"
+			[title]="'internaciones.anamnesis.alergias.TITLE' | translate" icon="cancel"
+			[isEmpty]="componentEvaluationManagerService.isEmptyAllergies() | async" [collapsed]="true"
+			[hideBorder]="false">
+			<app-alergias [showTitle]="false" [(allergies)]="allergies"></app-alergias>
+		</app-new-consultation-expansion-section>
+
+		<app-new-consultation-expansion-section id="vacunas" [title]="'ambulatoria.paciente.vacunas.TITLE' | translate"
+			icon="vaccines" [isEmpty]="componentEvaluationManagerService.isEmptyVaccines() | async" [collapsed]="true"
+			[hideBorder]="false">
+			<app-vacunas [showTitle]="false" [(immunizations)]="immunizations"></app-vacunas>
+		</app-new-consultation-expansion-section>
+
+		<app-new-consultation-expansion-section id="antecedentes-personales"
+			[title]="'internaciones.anamnesis.antecedentes-personales.TITLE' | translate" icon="report_outlined"
+			[isEmpty]="componentEvaluationManagerService.isEmptyPersonalHistories() | async" [collapsed]="true"
+			[hideBorder]="false">
+			<app-antecedentes-personales [(personalHistories)]="personalHistories"></app-antecedentes-personales>
+		</app-new-consultation-expansion-section>
+
+		<app-new-consultation-expansion-section id="antecedentes-familiares"
+			[title]="'internaciones.anamnesis.antecedentes-familiares.TITLE' | translate" icon="report_outlined"
+			[isEmpty]="componentEvaluationManagerService.isEmptyFamilyHistories() | async" [collapsed]="true"
+			[hideBorder]="false">
+			<app-antecedentes-familiares [showTitle]="false" [(familyHistories)]="familyHistories">
+			</app-antecedentes-familiares>
+		</app-new-consultation-expansion-section>
+
+		<app-new-consultation-expansion-section id="medicacion"
+			[title]="'internaciones.anamnesis.medicacion.MEDICATION' | translate" icon="event_available"
+			[isEmpty]="componentEvaluationManagerService.isEmptyMedications() | async" [collapsed]="true"
+			[hideBorder]="false">
+			<app-medicacion [showTitle]="false" [(medications)]="medications"></app-medicacion>
+		</app-new-consultation-expansion-section>
+
 	</form>
 	<div actions id="buttons" align="end">
 		<button id="sign-confirm" mat-raised-button type="submit" color="primary"
