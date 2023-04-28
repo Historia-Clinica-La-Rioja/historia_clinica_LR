@@ -1,15 +1,15 @@
-package ar.lamansys.pac.application.exception;
+package ar.lamansys.pac.infrastructure.input.rest.exceptions;
 
 import lombok.Getter;
 
 @Getter
-public enum PacExceptionEnum {
+public enum StudyAccessExceptionEnum {
 
 	MALFORMED("Asegúrese estar enviando un Bearer token facilitado por el sistema"),
 	UNAUTHORIZED("El token enviado se encuentra malformado o expiró");
 	private final String message;
 
-	PacExceptionEnum(String message) {
+	StudyAccessExceptionEnum(String message) {
 		this.message = message;
 	}
 }

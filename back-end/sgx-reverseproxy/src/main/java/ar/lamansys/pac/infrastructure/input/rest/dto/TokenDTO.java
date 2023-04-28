@@ -1,16 +1,12 @@
 package ar.lamansys.pac.infrastructure.input.rest.dto;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.Setter;
-import lombok.ToString;
-
-import java.io.Serializable;
+import lombok.*;
 
 @Getter
 @Setter
 @ToString
+@NoArgsConstructor
 @AllArgsConstructor
-public class TokenDTO implements Serializable {
+public class TokenDTO {
 	private String token;
 }

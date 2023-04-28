@@ -1,11 +1,9 @@
 package ar.lamansys.pac;
 
-import ar.lamansys.pac.infrastructure.input.rest.interceptors.ApiKeyInterceptor;
-import ar.lamansys.pac.infrastructure.input.rest.interceptors.TokenInterceptor;
 import lombok.AllArgsConstructor;
-
+import lombok.Getter;
 import lombok.NonNull;
-
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.HandlerInterceptor;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
@@ -15,16 +13,15 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 @Configuration
+@Getter
 @AllArgsConstructor
+@Slf4j
 public class PacMvcConfig implements WebMvcConfigurer {
-
-	private final ApiKeyInterceptor apiKeyInterceptor;
-	private final TokenInterceptor tokenInterceptor;
+	private final HandlerInterceptor authChain;
 
 	@Override
 	public void addInterceptors(InterceptorRegistry registry) {
-		registry.addInterceptor(apiKeyInterceptor).addPathPatterns("/token/**");
-		registry.addInterceptor(tokenInterceptor).addPathPatterns("/dicom-web/studies/**", "/wado/**");
+		registry.addInterceptor(authChain).addPathPatterns("/dicom-web/studies/**", "/wado/**");
 		// Interceptor anónimo para denegar cualquier otro request
 		registry.addInterceptor(new HandlerInterceptor() {
 			@Override
