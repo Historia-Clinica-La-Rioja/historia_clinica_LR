@@ -31,10 +31,10 @@ public class InternmentOtherIndicationServiceImpl implements InternmentOtherIndi
 	private final LocalDateMapper localDateMapper;
 
 	@Override
-	public Integer add(InternmentOtherIndicationBo otherIndicationBo) {
-		log.debug("Input parameter -> otherIndicationBo {}", otherIndicationBo);
+	public Integer add(InternmentOtherIndicationBo otherIndicationBo, Short sourceTypeId) {
+		log.debug("Input parameter -> otherIndicationBo {}, sourceTypeId {}", otherIndicationBo, sourceTypeId);
 		assertInternmentEpisodeCanCreateIndication(otherIndicationBo.getEncounterId());
-		Integer result = sharedIndicationPort.addOtherIndication(toOtherIndicationDto(otherIndicationBo));
+		Integer result = sharedIndicationPort.addOtherIndication(toOtherIndicationDto(otherIndicationBo), sourceTypeId);
 		otherIndicationBo.setId(documentFactory.run(otherIndicationBo, false));
 		sharedIndicationPort.saveDocument(otherIndicationBo.getId(), result);
 		log.debug("Output -> {}", result);

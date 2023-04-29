@@ -8,7 +8,7 @@ import java.util.List;
 
 public interface InternmentParenteralPlanService {
 
-	Integer add (InternmentParenteralPlanBo parenteralPlanBo);
+	Integer add (InternmentParenteralPlanBo parenteralPlanBo, Short sourceTypeId);
 
 	List<ParenteralPlanDto> getInternmentEpisodeParenteralPlans(Integer internmentEpisodeId);
 	ParenteralPlanDto getInternmentEpisodeParenteralPlan(Integer parenteralPlanId);

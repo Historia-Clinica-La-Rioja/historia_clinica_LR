@@ -167,33 +167,33 @@ public class SharedIndicationPortImpl implements SharedIndicationPort {
 	}
 
 	@Override
-	public Integer addDiet(DietDto dietDto) {
-		log.debug("Input parameter -> dietDto {}", dietDto);
-		Integer result = createDiet.run(mapToDietBo(dietDto));
+	public Integer addDiet(DietDto dietDto, Short sourceTypeId) {
+		log.debug("Input parameter -> dietDto {}, sourceTypeId {}", dietDto, sourceTypeId);
+		Integer result = createDiet.run(mapToDietBo(dietDto, sourceTypeId));
 		log.debug("Output -> {}", result);
 		return result;
 	}
 
 	@Override
-	public Integer addOtherIndication(OtherIndicationDto otherIndicationDto) {
-		log.debug("Input parameter -> otherIndicationDto {}", otherIndicationDto);
-		Integer result = createOtherIndication.run(mapToOtherIndicationBo(otherIndicationDto));
+	public Integer addOtherIndication(OtherIndicationDto otherIndicationDto, Short sourceTypeId) {
+		log.debug("Input parameter -> otherIndicationDto {}, sourceTypeId {}", otherIndicationDto, sourceTypeId);
+		Integer result = createOtherIndication.run(mapToOtherIndicationBo(otherIndicationDto, sourceTypeId));
 		log.debug("Output -> {}", result);
 		return result;
 	}
 
 	@Override
-	public Integer addPharmaco(PharmacoDto pharmacoDto) {
-		log.debug("Input parameter -> pharmacoDto {}", pharmacoDto);
-		Integer result = createPharmaco.run(mapToPharmacoBo(pharmacoDto));
+	public Integer addPharmaco(PharmacoDto pharmacoDto, Short sourceTypeId) {
+		log.debug("Input parameter -> pharmacoDto {}, sourceTypeId {}", pharmacoDto, sourceTypeId);
+		Integer result = createPharmaco.run(mapToPharmacoBo(pharmacoDto, sourceTypeId));
 		log.debug("Output -> {}", result);
 		return result;
 	}
 
 	@Override
-	public Integer addParenteralPlan(ParenteralPlanDto dto) {
-		log.debug("Input parameter -> parenteralPlanDto {}", dto);
-		Integer result = createParenteralPlan.run(mapToParenteralPlanBo(dto));
+	public Integer addParenteralPlan(ParenteralPlanDto dto, Short sourceTypeId) {
+		log.debug("Input parameter -> parenteralPlanDto {}, sourceTypeId {}", dto, sourceTypeId);
+		Integer result = createParenteralPlan.run(mapToParenteralPlanBo(dto, sourceTypeId));
 		log.debug("Output -> {}", result);
 		return result;
 	}
@@ -247,10 +247,9 @@ public class SharedIndicationPortImpl implements SharedIndicationPort {
 		documentIndicationRepository.save(new DocumentIndication(id,indicationId));
 	}
 
-	private PharmacoBo mapToPharmacoBo(PharmacoDto dto) {
+	private PharmacoBo mapToPharmacoBo(PharmacoDto dto, Short sourceTypeId) {
 		DosageBo dosageBo = toDosageBo(dto.getDosage(), dto.getIndicationDate());
-
-		return new PharmacoBo(dto.getId(),
+		PharmacoBo result = new PharmacoBo(dto.getId(),
 				dto.getPatientId(),
 				dto.getType().getId(),
 				dto.getStatus().getId(),
@@ -266,9 +265,11 @@ public class SharedIndicationPortImpl implements SharedIndicationPort {
 				dto.getPatientProvided(),
 				dto.getViaId(),
 				dto.getNote());
+		result.setSourceTypeId(sourceTypeId);
+		return result;
 	}
 
-	private OtherIndicationBo mapToOtherIndicationBo(OtherIndicationDto dto) {
+	private OtherIndicationBo mapToOtherIndicationBo(OtherIndicationDto dto, Short sourceTypeId) {
 		DosageBo dosageBo = new DosageBo();
 		dosageBo.setFrequency(dto.getDosage().getFrequency());
 		if (dto.getDosage().getPeriodUnit() != null)
@@ -279,7 +280,7 @@ public class SharedIndicationPortImpl implements SharedIndicationPort {
 		dosageBo.setStartDate(startDate);
 		dosageBo.setEndDate(startDate.plusDays(1).toLocalDate().atStartOfDay());
 		dosageBo.setEvent(dto.getDosage().getEvent());
-		return new OtherIndicationBo(dto.getId(),
+		OtherIndicationBo result = new OtherIndicationBo(dto.getId(),
 				dto.getPatientId(),
 				dto.getType().getId(),
 				dto.getStatus().getId(),
@@ -291,10 +292,12 @@ public class SharedIndicationPortImpl implements SharedIndicationPort {
 				dosageBo,
 				dto.getDescription(),
 				dto.getOtherType());
+		result.setSourceTypeId(sourceTypeId);
+		return result;
 	}
 
-	private DietBo mapToDietBo(DietDto dto) {
-		return new DietBo(dto.getId(),
+	private DietBo mapToDietBo(DietDto dto, Short sourceTypeId) {
+		DietBo result = new DietBo(dto.getId(),
 				dto.getPatientId(),
 				dto.getType().getId(),
 				dto.getStatus().getId(),
@@ -303,6 +306,8 @@ public class SharedIndicationPortImpl implements SharedIndicationPort {
 				localDateMapper.fromDateDto(dto.getIndicationDate()),
 				localDateMapper.fromDateTimeDto(dto.getCreatedOn()),
 				dto.getDescription());
+		result.setSourceTypeId(sourceTypeId);
+		return result;
 	}
 
 	private DietDto mapToDietDto(DietBo bo){
@@ -409,13 +414,12 @@ public class SharedIndicationPortImpl implements SharedIndicationPort {
 		return result;
 	}
 
-	private ParenteralPlanBo mapToParenteralPlanBo(ParenteralPlanDto dto) {
+	private ParenteralPlanBo mapToParenteralPlanBo(ParenteralPlanDto dto, Short sourceTypeId) {
 		DosageBo dosage = toDosageBo(dto.getDosage(), dto.getIndicationDate());
 		FrequencyBo frequency = toFrequencyBo(dto.getFrequency());
 		SnomedBo snomed = new SnomedBo(dto.getSnomed().getSctid(), dto.getSnomed().getPt());
 		List<OtherPharmacoBo> pharmacos = dto.getPharmacos().stream().map(p-> toOtherPharmacoBo(p, dto.getIndicationDate())).collect(Collectors.toList());
-
-		return new ParenteralPlanBo(dto.getId(),
+		ParenteralPlanBo result = new ParenteralPlanBo(dto.getId(),
 				dto.getPatientId(),
 				dto.getType().getId(),
 				dto.getStatus().getId(),
@@ -428,6 +432,8 @@ public class SharedIndicationPortImpl implements SharedIndicationPort {
 				frequency,
 				dto.getVia(),
 				pharmacos);
+		result.setSourceTypeId(sourceTypeId);
+		return result;
 	}
 
 	private FrequencyBo toFrequencyBo(FrequencyDto dto){

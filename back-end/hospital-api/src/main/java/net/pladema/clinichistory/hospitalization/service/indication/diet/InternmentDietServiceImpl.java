@@ -46,10 +46,10 @@ public class InternmentDietServiceImpl implements InternmentDietService {
 		return result;
 	}
 	@Override
-	public Integer addDiet(InternmentDietBo dietBo) {
-		log.debug("Input parameter -> dietBo {}", dietBo);
+	public Integer addDiet(InternmentDietBo dietBo, Short sourceTypeId) {
+		log.debug("Input parameter -> dietBo {}, sourceTypeId {}", dietBo, sourceTypeId);
 		assertInternmentEpisodeCanCreateIndication(dietBo.getEncounterId());
-		Integer result = sharedIndicationPort.addDiet(mapToDietDto(dietBo));
+		Integer result = sharedIndicationPort.addDiet(mapToDietDto(dietBo), sourceTypeId);
 		dietBo.setId(documentFactory.run(dietBo, false));
 		sharedIndicationPort.saveDocument(dietBo.getId(),result);
 		log.debug("Output -> {}", result);

@@ -7,7 +7,7 @@ import java.util.List;
 
 public interface InternmentOtherIndicationService {
 
-	Integer add(InternmentOtherIndicationBo otherIndicationBo);
+	Integer add(InternmentOtherIndicationBo otherIndicationBo, Short sourceTypeId);
 
 	List<OtherIndicationDto> getInternmentEpisodeOtherIndications(Integer internmentEpisodeId);
 	OtherIndicationDto getInternmentEpisodeOtherIndication(Integer otherIndicationId);

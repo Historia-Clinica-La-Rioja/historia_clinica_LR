@@ -5,6 +5,8 @@ import java.time.LocalTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.SourceType;
+
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
@@ -88,7 +90,7 @@ public class InternmentIndicationController {
 	@PreAuthorize("hasPermission(#institutionId, 'ESPECIALISTA_MEDICO, PROFESIONAL_DE_SALUD, ESPECIALISTA_EN_ODONTOLOGIA, ENFERMERO')")
 	public ResponseEntity<Integer> addDiet(@PathVariable(name = "institutionId") Integer institutionId, @PathVariable(name = "internmentEpisodeId") Integer internmentEpisodeId, @RequestBody DietDto dietDto) {
 		log.debug("Input parameters -> institutionId {}, internmentEpisodeId {}, dietDto {}", institutionId, internmentEpisodeId, dietDto);
-		Integer result = internmentDietService.addDiet(mapToDietBo(dietDto,institutionId,internmentEpisodeId));
+		Integer result = internmentDietService.addDiet(mapToDietBo(dietDto,institutionId,internmentEpisodeId), SourceType.HOSPITALIZATION);
 		log.debug("Output -> {}", result);
 		return ResponseEntity.ok(result);
 	}
@@ -97,7 +99,7 @@ public class InternmentIndicationController {
 	@PreAuthorize("hasPermission(#institutionId, 'ESPECIALISTA_MEDICO, PROFESIONAL_DE_SALUD, ESPECIALISTA_EN_ODONTOLOGIA, ENFERMERO')")
 	public ResponseEntity<Integer> addOtherIndication(@PathVariable(name = "institutionId") Integer institutionId, @PathVariable(name = "internmentEpisodeId") Integer internmentEpisodeId, @RequestBody OtherIndicationDto otherIndicationDto) {
 		log.debug("Input parameters -> institutionId {}, internmentEpisodeId {}, otherIndicationDto {}", institutionId, internmentEpisodeId, otherIndicationDto);
-		Integer result = otherIndicationService.add(mapToOtherIndicationBo(otherIndicationDto,institutionId,internmentEpisodeId));
+		Integer result = otherIndicationService.add(mapToOtherIndicationBo(otherIndicationDto,institutionId,internmentEpisodeId), SourceType.HOSPITALIZATION);
 		log.debug("Output -> {}", result);
 		return ResponseEntity.ok(result);
 	}
@@ -126,7 +128,7 @@ public class InternmentIndicationController {
 											   @PathVariable(name = "internmentEpisodeId") Integer internmentEpisodeId,
 											   @RequestBody PharmacoDto pharmacoDto) {
 		log.debug("Input parameters -> institutionId {}, internmentEpisodeId {}, pharmacoDto {}", institutionId, internmentEpisodeId, pharmacoDto);
-		Integer result = internmentPharmacoService.add(mapToPharmacoBo(pharmacoDto, institutionId, internmentEpisodeId));
+		Integer result = internmentPharmacoService.add(mapToPharmacoBo(pharmacoDto, institutionId, internmentEpisodeId), SourceType.HOSPITALIZATION);
 		log.debug("Output -> {}", result);
 		return ResponseEntity.ok(result);
 	}
@@ -137,7 +139,7 @@ public class InternmentIndicationController {
 													 @PathVariable(name = "internmentEpisodeId") Integer internmentEpisodeId,
 													 @RequestBody ParenteralPlanDto parenteralPlan) {
 		log.debug("Input parameters -> institutionId {}, internmentEpisodeId {}, parenteralPlanDto {}", institutionId, internmentEpisodeId, parenteralPlan);
-		Integer result = internmentParenteralPlanService.add(mapToInternmentParenteralPlanBo(parenteralPlan, institutionId, internmentEpisodeId));
+		Integer result = internmentParenteralPlanService.add(mapToInternmentParenteralPlanBo(parenteralPlan, institutionId, internmentEpisodeId), SourceType.HOSPITALIZATION);
 		log.debug("Output -> {}", result);
 		return ResponseEntity.ok(result);
 	}

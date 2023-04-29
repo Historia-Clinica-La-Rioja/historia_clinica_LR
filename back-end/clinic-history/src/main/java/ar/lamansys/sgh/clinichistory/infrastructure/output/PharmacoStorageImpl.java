@@ -210,6 +210,7 @@ public class PharmacoStorageImpl implements PharmacoStorage {
 		result.setFoodRelationId(bo.getFoodRelationId().shortValue());
 		result.setPatientProvided(bo.getPatientProvided());
 		result.setViaId(bo.getViaId().shortValue());
+		result.setSourceTypeId(bo.getSourceTypeId());
 		return result;
 	}
 

@@ -10,5 +10,5 @@ public interface InternmentDietService {
 	List<DietDto> getInternmentEpisodeDiets(Integer internmentEpisodeId);
 	DietDto getInternmentEpisodeDiet(Integer dietId);
 
-	Integer addDiet(InternmentDietBo dietBo);
+	Integer addDiet(InternmentDietBo dietBo, Short sourceTypeId);
 }

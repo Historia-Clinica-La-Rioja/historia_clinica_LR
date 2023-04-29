@@ -77,6 +77,7 @@ public class DietStorageImpl implements DietStorage {
 		result.setIndicationDate(bo.getIndicationDate());
 		result.setProfessionalId(bo.getProfessionalId());
 		result.setDescription(bo.getDescription());
+		result.setSourceTypeId(bo.getSourceTypeId());
 		return result;
 	}
 

@@ -197,6 +197,7 @@ public class ParenteralPlanStorageImpl implements ParenteralPlanStorage {
 		result.setStatusId(bo.getStatusId());
 		result.setIndicationDate(bo.getIndicationDate());
 		result.setProfessionalId(bo.getProfessionalId());
+		result.setSourceTypeId(bo.getSourceTypeId());
 		return result;
 	}
 

@@ -39,10 +39,10 @@ public class InternmentPharmacoServiceImpl implements InternmentPharmacoService 
 
 
 	@Override
-	public Integer add(InternmentPharmacoBo pharmacoBo) {
-		log.debug("Input parameter -> pharmacoBo {}", pharmacoBo);
+	public Integer add(InternmentPharmacoBo pharmacoBo, Short sourceTypeId) {
+		log.debug("Input parameter -> pharmacoBo {}, sourceTypeId {}", pharmacoBo, sourceTypeId);
 		assertInternmentEpisodeCanCreateIndication(pharmacoBo.getEncounterId());
-		Integer result = sharedIndicationPort.addPharmaco(toPharmacoDto(pharmacoBo));
+		Integer result = sharedIndicationPort.addPharmaco(toPharmacoDto(pharmacoBo), sourceTypeId);
 		pharmacoBo.setId(documentFactory.run(pharmacoBo, false));
 		sharedIndicationPort.saveDocument(pharmacoBo.getId(), result);
 		log.debug("Output -> {}", result);

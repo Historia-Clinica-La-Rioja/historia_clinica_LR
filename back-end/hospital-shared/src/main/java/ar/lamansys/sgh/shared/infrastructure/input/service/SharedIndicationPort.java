@@ -9,13 +9,13 @@ public interface SharedIndicationPort {
 
 	DietDto getInternmentEpisodeDiet(Integer dietId);
 
-	Integer addDiet(DietDto dietDto);
+	Integer addDiet(DietDto dietDto, Short sourceTypeId);
 
-	Integer addOtherIndication(OtherIndicationDto otherIndicationDto);
+	Integer addOtherIndication(OtherIndicationDto otherIndicationDto, Short sourceTypeId);
 
-	Integer addPharmaco(PharmacoDto pharmacoDto);
+	Integer addPharmaco(PharmacoDto pharmacoDto, Short sourceTypeId);
 
-	Integer addParenteralPlan(ParenteralPlanDto parenteralPlanDto);
+	Integer addParenteralPlan(ParenteralPlanDto parenteralPlanDto, Short sourceTypeId);
 
 	List<OtherIndicationDto> getInternmentEpisodeOtherIndications(Integer internmentEpisodeId);
 	OtherIndicationDto getInternmentEpisodeOtherIndication(Integer otherIndicationId);

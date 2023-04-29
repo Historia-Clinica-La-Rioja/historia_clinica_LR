@@ -119,6 +119,7 @@ public class OtherIndicationStorageImpl implements OtherIndicationStorage {
 		result.setDosageId(bo.getDosage().getId());
 		result.setDescription(bo.getDescription());
 		result.setOtherType(bo.getOtherType());
+		result.setSourceTypeId(bo.getSourceTypeId());
 		return result;
 	}
 

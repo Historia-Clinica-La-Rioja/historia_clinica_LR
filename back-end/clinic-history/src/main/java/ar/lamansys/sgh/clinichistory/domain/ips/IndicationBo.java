@@ -30,6 +30,8 @@ public class IndicationBo {
 
 	private LocalDateTime createdOn;
 
+	private Short sourceTypeId;
+
 	public IndicationBo(Integer id, Integer patientId, Short typeId, Short statusId, Integer createdBy, Integer professionalId, LocalDate indicationDate, LocalDateTime createdOn){
 		this.id = id;
 		this.patientId = patientId;

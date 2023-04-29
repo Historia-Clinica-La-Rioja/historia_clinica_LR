@@ -8,7 +8,7 @@ import java.util.List;
 
 public interface InternmentPharmacoService {
 
-	Integer add(InternmentPharmacoBo pharmacoBo);
+	Integer add(InternmentPharmacoBo pharmacoBo, Short sourceTypeId);
 
 	List<PharmacoSummaryDto> getInternmentEpisodePharmacos(Integer internmentEpisodeId);
 	PharmacoDto getInternmentEpisodePharmaco(Integer pharmacoId);
