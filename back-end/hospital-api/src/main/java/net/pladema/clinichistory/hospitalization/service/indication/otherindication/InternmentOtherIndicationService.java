@@ -9,7 +9,7 @@ public interface InternmentOtherIndicationService {
 
 	Integer add(InternmentOtherIndicationBo otherIndicationBo, Short sourceTypeId);
 
-	List<OtherIndicationDto> getInternmentEpisodeOtherIndications(Integer internmentEpisodeId);
+	List<OtherIndicationDto> getInternmentEpisodeOtherIndications(Integer internmentEpisodeId, Short sourceTypeId);
 	OtherIndicationDto getInternmentEpisodeOtherIndication(Integer otherIndicationId);
 
 }

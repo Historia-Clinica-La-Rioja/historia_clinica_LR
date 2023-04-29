@@ -7,7 +7,7 @@ import ar.lamansys.sgh.clinichistory.domain.ips.OtherIndicationBo;
 
 public interface OtherIndicationStorage {
 
-	List<OtherIndicationBo> getInternmentEpisodeOtherIndications(Integer internmentEpisodeId);
+	List<OtherIndicationBo> getInternmentEpisodeOtherIndications(Integer internmentEpisodeId, Short sourceTypeId);
 
 	Integer createOtherIndication(OtherIndicationBo otherIndicationBo);
 

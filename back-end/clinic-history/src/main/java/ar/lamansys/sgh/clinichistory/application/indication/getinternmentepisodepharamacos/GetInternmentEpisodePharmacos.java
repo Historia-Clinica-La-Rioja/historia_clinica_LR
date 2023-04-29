@@ -16,9 +16,9 @@ public class GetInternmentEpisodePharmacos {
 
 	private final PharmacoStorage storage;
 
-	public List<PharmacoSummaryBo> run(Integer internmentEpisodeId) {
-		log.debug("Input parameter -> internmentEpisodeId {}", internmentEpisodeId);
-		List<PharmacoSummaryBo> result = storage.getInternmentEpisodePharmacos(internmentEpisodeId);
+	public List<PharmacoSummaryBo> run(Integer internmentEpisodeId, Short sourceTypeId) {
+		log.debug("Input parameter -> internmentEpisodeId {}, sourceTypeId {}", internmentEpisodeId, sourceTypeId);
+		List<PharmacoSummaryBo> result = storage.getInternmentEpisodePharmacos(internmentEpisodeId, sourceTypeId);
 		log.debug("Output -> {}", result);
 		return result;
 	}

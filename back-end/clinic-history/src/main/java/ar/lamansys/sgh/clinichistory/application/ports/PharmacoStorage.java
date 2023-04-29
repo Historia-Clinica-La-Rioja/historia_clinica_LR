@@ -10,7 +10,7 @@ public interface PharmacoStorage {
 
 	Integer createPharmaco(PharmacoBo pharmacoBo);
 
-	List<PharmacoSummaryBo> getInternmentEpisodePharmacos(Integer internmentEpisodeId);
+	List<PharmacoSummaryBo> getInternmentEpisodePharmacos(Integer internmentEpisodeId, Short sourceTypeId);
 
 	Optional<PharmacoBo> findById(Integer id);
 

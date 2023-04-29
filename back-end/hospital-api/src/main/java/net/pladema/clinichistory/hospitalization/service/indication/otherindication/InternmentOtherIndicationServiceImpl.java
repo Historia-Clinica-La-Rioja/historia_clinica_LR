@@ -42,9 +42,9 @@ public class InternmentOtherIndicationServiceImpl implements InternmentOtherIndi
 	}
 
 	@Override
-	public List<OtherIndicationDto> getInternmentEpisodeOtherIndications(Integer internmentEpisodeId){
-		log.debug("Input parameter -> internmentEpisodeId {}", internmentEpisodeId);
-		List<OtherIndicationDto> result = sharedIndicationPort.getInternmentEpisodeOtherIndications(internmentEpisodeId);
+	public List<OtherIndicationDto> getInternmentEpisodeOtherIndications(Integer internmentEpisodeId, Short sourceTypeId){
+		log.debug("Input parameter -> internmentEpisodeId {}, sourceTypeId {}", internmentEpisodeId, sourceTypeId);
+		List<OtherIndicationDto> result = sharedIndicationPort.getInternmentEpisodeOtherIndications(internmentEpisodeId, sourceTypeId);
 		log.debug("Output -> {}", result);
 		return result;
 	}

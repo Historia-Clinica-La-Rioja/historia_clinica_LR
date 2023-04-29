@@ -9,7 +9,7 @@ public interface ParenteralPlanStorage {
 
 	Integer createParenteralPlan (ParenteralPlanBo parenteralPlan);
 
-	List<ParenteralPlanBo> getInternmentEpisodeParenteralPlans(Integer internmentEpisodeId);
+	List<ParenteralPlanBo> getInternmentEpisodeParenteralPlans(Integer internmentEpisodeId, Short sourceTypeId);
 
 	Optional<ParenteralPlanBo> findById(Integer id);
 

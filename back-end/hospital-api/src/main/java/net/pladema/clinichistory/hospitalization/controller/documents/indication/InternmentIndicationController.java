@@ -72,7 +72,7 @@ public class InternmentIndicationController {
 	@PreAuthorize("hasPermission(#institutionId, 'ESPECIALISTA_MEDICO, PROFESIONAL_DE_SALUD, ESPECIALISTA_EN_ODONTOLOGIA, ENFERMERO, PERSONAL_DE_FARMACIA')")
 	public ResponseEntity<List<DietDto>> getInternmentEpisodeDiets(@PathVariable(name = "institutionId") Integer institutionId, @PathVariable(name = "internmentEpisodeId") Integer internmentEpisodeId) {
 		log.debug("Input parameters -> institutionId {}, internmentEpisodeId {}", institutionId, internmentEpisodeId);
-		List<DietDto> result = internmentDietService.getInternmentEpisodeDiets(internmentEpisodeId);
+		List<DietDto> result = internmentDietService.getInternmentEpisodeDiets(internmentEpisodeId, SourceType.HOSPITALIZATION);
 		log.debug("Get active internment episode diets => {}", result);
 		return ResponseEntity.ok(result);
 	}
@@ -108,7 +108,7 @@ public class InternmentIndicationController {
 	@PreAuthorize("hasPermission(#institutionId, 'ESPECIALISTA_MEDICO, PROFESIONAL_DE_SALUD, ESPECIALISTA_EN_ODONTOLOGIA, ENFERMERO, PERSONAL_DE_FARMACIA')")
 	public ResponseEntity<List<OtherIndicationDto>> getInternmentEpisodeOtherIndications(@PathVariable(name = "institutionId") Integer institutionId, @PathVariable(name = "internmentEpisodeId") Integer internmentEpisodeId) {
 		log.debug("Input parameters -> institutionId {}, internmentEpisodeId {}", institutionId, internmentEpisodeId);
-		List<OtherIndicationDto> result = otherIndicationService.getInternmentEpisodeOtherIndications(internmentEpisodeId);
+		List<OtherIndicationDto> result = otherIndicationService.getInternmentEpisodeOtherIndications(internmentEpisodeId, SourceType.HOSPITALIZATION);
 		log.debug("Get active internment episode other indications => {}", result);
 		return ResponseEntity.ok(result);
 	}
@@ -149,7 +149,7 @@ public class InternmentIndicationController {
 	public ResponseEntity<List<PharmacoSummaryDto>> getInternmentEpisodePharmacos(@PathVariable(name = "institutionId") Integer institutionId,
 																				  @PathVariable(name = "internmentEpisodeId") Integer internmentEpisodeId) {
 		log.debug("Input parameters -> institutionId {}, internmentEpisodeId {}", institutionId, internmentEpisodeId);
-		List<PharmacoSummaryDto> result = internmentPharmacoService.getInternmentEpisodePharmacos(internmentEpisodeId);
+		List<PharmacoSummaryDto> result = internmentPharmacoService.getInternmentEpisodePharmacos(internmentEpisodeId, SourceType.HOSPITALIZATION);
 		log.debug("Output -> {}", result);
 		return ResponseEntity.ok(result);
 	}
@@ -169,7 +169,7 @@ public class InternmentIndicationController {
 	@PreAuthorize("hasPermission(#institutionId, 'ESPECIALISTA_MEDICO, ESPECIALISTA_EN_ODONTOLOGIA, PROFESIONAL_DE_SALUD, ENFERMERO, PERSONAL_DE_FARMACIA')")
 	public ResponseEntity<List<ParenteralPlanDto>> getInternmentEpisodeParenteralPlans(@PathVariable(name = "institutionId") Integer institutionId, @PathVariable(name = "internmentEpisodeId") Integer internmentEpisodeId) {
 		log.debug("Input parameters -> institutionId {}, internmentEpisodeId {}", institutionId, internmentEpisodeId);
-		List<ParenteralPlanDto> result = internmentParenteralPlanService.getInternmentEpisodeParenteralPlans(internmentEpisodeId);
+		List<ParenteralPlanDto> result = internmentParenteralPlanService.getInternmentEpisodeParenteralPlans(internmentEpisodeId, SourceType.HOSPITALIZATION);
 		log.debug("Output => {}", result.toString());
 		return ResponseEntity.ok(result);
 	}

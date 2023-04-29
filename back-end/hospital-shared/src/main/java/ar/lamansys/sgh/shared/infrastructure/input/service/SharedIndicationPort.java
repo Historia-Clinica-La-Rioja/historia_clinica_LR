@@ -5,7 +5,7 @@ import java.util.List;
 
 public interface SharedIndicationPort {
 
-	List<DietDto> getInternmentEpisodeDiets(Integer internmentEpisodeId);
+	List<DietDto> getInternmentEpisodeDiets(Integer internmentEpisodeId, Short sourceTypeId);
 
 	DietDto getInternmentEpisodeDiet(Integer dietId);
 
@@ -17,14 +17,14 @@ public interface SharedIndicationPort {
 
 	Integer addParenteralPlan(ParenteralPlanDto parenteralPlanDto, Short sourceTypeId);
 
-	List<OtherIndicationDto> getInternmentEpisodeOtherIndications(Integer internmentEpisodeId);
+	List<OtherIndicationDto> getInternmentEpisodeOtherIndications(Integer internmentEpisodeId, Short sourceTypeId);
 	OtherIndicationDto getInternmentEpisodeOtherIndication(Integer otherIndicationId);
 
-	List<PharmacoSummaryDto> getInternmentEpisodePharmacos(Integer internmentEpisodeId);
+	List<PharmacoSummaryDto> getInternmentEpisodePharmacos(Integer internmentEpisodeId, Short sourceTypeId);
 	PharmacoDto getInternmentEpisodePharmaco(Integer pharmacoId);
 	List<PharmacoSummaryDto> getMostFrequentPharmacos(Integer professionalId, Integer institutionId, Integer limit);
 
-	List<ParenteralPlanDto> getInternmentEpisodeParenteralPlans(Integer internmentEpisodeId);
+	List<ParenteralPlanDto> getInternmentEpisodeParenteralPlans(Integer internmentEpisodeId, Short sourceTypeId);
 	ParenteralPlanDto getInternmentEpisodeParenteralPlan(Integer parenteralPlanId);
 	List<ParenteralPlanDto> getMostFrequentParenteralPlans(Integer professionalId, Integer institutionId, Integer limit);
 

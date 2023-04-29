@@ -16,9 +16,9 @@ public class GetInternmentEpisodeOtherIndications {
 
 	private final OtherIndicationStorage storage;
 
-	public List<OtherIndicationBo> run(Integer internmentEpisodeId) {
-		log.debug("Input parameter -> internmentEpisodeId {}", internmentEpisodeId);
-		List<OtherIndicationBo> result = storage.getInternmentEpisodeOtherIndications(internmentEpisodeId);
+	public List<OtherIndicationBo> run(Integer internmentEpisodeId, Short sourceTypeId) {
+		log.debug("Input parameter -> internmentEpisodeId {}, sourceTypeId {}", internmentEpisodeId, sourceTypeId);
+		List<OtherIndicationBo> result = storage.getInternmentEpisodeOtherIndications(internmentEpisodeId, sourceTypeId);
 		log.debug("Output -> {}", result);
 		return result;
 	}

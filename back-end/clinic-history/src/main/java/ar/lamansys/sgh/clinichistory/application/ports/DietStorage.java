@@ -7,7 +7,7 @@ import java.util.Optional;
 
 public interface DietStorage {
 
-	List<DietBo> getInternmentEpisodeDiets(Integer internmentEpisodeId);
+	List<DietBo> getInternmentEpisodeDiets(Integer internmentEpisodeId, Short sourceTypeId);
 
 	Integer createDiet(DietBo dietBo);
 

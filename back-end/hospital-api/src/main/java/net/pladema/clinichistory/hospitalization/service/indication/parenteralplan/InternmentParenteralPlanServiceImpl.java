@@ -54,9 +54,9 @@ public class InternmentParenteralPlanServiceImpl implements InternmentParenteral
 	}
 
 	@Override
-	public List<ParenteralPlanDto> getInternmentEpisodeParenteralPlans(Integer internmentEpisodeId) {
-		log.debug("Input parameter -> internmentEpisodeId {}", internmentEpisodeId);
-		List<ParenteralPlanDto> result = sharedIndicationPort.getInternmentEpisodeParenteralPlans(internmentEpisodeId);
+	public List<ParenteralPlanDto> getInternmentEpisodeParenteralPlans(Integer internmentEpisodeId, Short sourceTypeId) {
+		log.debug("Input parameter -> internmentEpisodeId {}, sourceTypeId {}", internmentEpisodeId, sourceTypeId);
+		List<ParenteralPlanDto> result = sharedIndicationPort.getInternmentEpisodeParenteralPlans(internmentEpisodeId, sourceTypeId);
 		log.debug("Output -> {}", result);
 		return result;
 	}

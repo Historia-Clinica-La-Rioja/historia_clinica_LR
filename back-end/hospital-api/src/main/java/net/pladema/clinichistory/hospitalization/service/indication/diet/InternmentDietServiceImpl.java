@@ -31,9 +31,9 @@ public class InternmentDietServiceImpl implements InternmentDietService {
 	private final LocalDateMapper localDateMapper;
 
 	@Override
-	public List<DietDto> getInternmentEpisodeDiets(Integer internmentEpisodeId) {
-		log.debug("Input parameter -> internmentEpisodeId {}", internmentEpisodeId);
-		List<DietDto> result = sharedIndicationPort.getInternmentEpisodeDiets(internmentEpisodeId);
+	public List<DietDto> getInternmentEpisodeDiets(Integer internmentEpisodeId, Short sourceTypeId) {
+		log.debug("Input parameter -> internmentEpisodeId {}, sourceTypeId {}", internmentEpisodeId, sourceTypeId);
+		List<DietDto> result = sharedIndicationPort.getInternmentEpisodeDiets(internmentEpisodeId, sourceTypeId);
 		log.debug("Output -> {}", result);
 		return result;
 	}

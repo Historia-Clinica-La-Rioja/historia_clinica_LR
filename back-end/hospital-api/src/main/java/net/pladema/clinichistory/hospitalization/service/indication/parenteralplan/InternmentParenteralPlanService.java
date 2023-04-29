@@ -10,7 +10,7 @@ public interface InternmentParenteralPlanService {
 
 	Integer add (InternmentParenteralPlanBo parenteralPlanBo, Short sourceTypeId);
 
-	List<ParenteralPlanDto> getInternmentEpisodeParenteralPlans(Integer internmentEpisodeId);
+	List<ParenteralPlanDto> getInternmentEpisodeParenteralPlans(Integer internmentEpisodeId, Short sourceTypeId);
 	ParenteralPlanDto getInternmentEpisodeParenteralPlan(Integer parenteralPlanId);
 
 }

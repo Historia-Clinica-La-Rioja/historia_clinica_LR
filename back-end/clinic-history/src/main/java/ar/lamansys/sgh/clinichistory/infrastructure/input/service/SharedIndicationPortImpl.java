@@ -102,9 +102,9 @@ public class SharedIndicationPortImpl implements SharedIndicationPort {
 	private final UpdateNursingRecordStatus updateNursingRecordStatus;
 
 	@Override
-	public List<DietDto> getInternmentEpisodeDiets(Integer internmentEpisodeId) {
-		log.debug("Input parameter -> internmentEpisodeId {}", internmentEpisodeId);
-		List<DietDto> result = getInternmentEpisodeDiets.run(internmentEpisodeId)
+	public List<DietDto> getInternmentEpisodeDiets(Integer internmentEpisodeId, Short sourceTypeId) {
+		log.debug("Input parameter -> internmentEpisodeId {}, sourceTypeId {}", internmentEpisodeId, sourceTypeId);
+		List<DietDto> result = getInternmentEpisodeDiets.run(internmentEpisodeId, sourceTypeId)
 				.stream()
 				.map(this::mapToDietDto)
 				.collect(Collectors.toList());
@@ -121,9 +121,9 @@ public class SharedIndicationPortImpl implements SharedIndicationPort {
 	}
 
 	@Override
-	public List<OtherIndicationDto> getInternmentEpisodeOtherIndications(Integer internmentEpisodeId) {
-		log.debug("Input parameter -> internmentEpisodeId {}", internmentEpisodeId);
-		List<OtherIndicationDto> result = getInternmentEpisodeOtherIndications.run(internmentEpisodeId)
+	public List<OtherIndicationDto> getInternmentEpisodeOtherIndications(Integer internmentEpisodeId, Short sourceTypeId) {
+		log.debug("Input parameter -> internmentEpisodeId {}, sourceTypeId {}", internmentEpisodeId, sourceTypeId);
+		List<OtherIndicationDto> result = getInternmentEpisodeOtherIndications.run(internmentEpisodeId, sourceTypeId)
 				.stream()
 				.map(this::mapToOtherIndicationDto)
 				.collect(Collectors.toList());
@@ -140,9 +140,9 @@ public class SharedIndicationPortImpl implements SharedIndicationPort {
 	}
 
 	@Override
-	public List<PharmacoSummaryDto> getInternmentEpisodePharmacos(Integer internmentEpisodeId) {
-		log.debug("Input parameter -> internmentEpisodeId {}", internmentEpisodeId);
-		List<PharmacoSummaryDto> result = getInternmentEpisodePharmacos.run(internmentEpisodeId).stream().map(this::mapToPharmacoSummaryDto).collect(Collectors.toList());
+	public List<PharmacoSummaryDto> getInternmentEpisodePharmacos(Integer internmentEpisodeId, Short sourceTypeId) {
+		log.debug("Input parameter -> internmentEpisodeId {}, sourceTypeId {}", internmentEpisodeId, sourceTypeId);
+		List<PharmacoSummaryDto> result = getInternmentEpisodePharmacos.run(internmentEpisodeId, sourceTypeId).stream().map(this::mapToPharmacoSummaryDto).collect(Collectors.toList());
 		log.debug("Output -> {}", result);
 		return result;
 	}
@@ -199,9 +199,9 @@ public class SharedIndicationPortImpl implements SharedIndicationPort {
 	}
 
 	@Override
-	public List<ParenteralPlanDto> getInternmentEpisodeParenteralPlans(Integer internmentEpisodeId) {
-		log.debug("Input parameter -> internmentEpisodeId {}", internmentEpisodeId);
-		List<ParenteralPlanDto> result = getInternmentEpisodeParenteralPlans.run(internmentEpisodeId).stream().map(this::mapToParenteralPlanDto).collect(Collectors.toList());
+	public List<ParenteralPlanDto> getInternmentEpisodeParenteralPlans(Integer internmentEpisodeId, Short sourceTypeId) {
+		log.debug("Input parameter -> internmentEpisodeId {}, sourceTypeId {}", internmentEpisodeId, sourceTypeId);
+		List<ParenteralPlanDto> result = getInternmentEpisodeParenteralPlans.run(internmentEpisodeId, sourceTypeId).stream().map(this::mapToParenteralPlanDto).collect(Collectors.toList());
 		log.debug("Output -> {}", result);
 		return result;
 	}

@@ -67,9 +67,9 @@ public class ParenteralPlanStorageImpl implements ParenteralPlanStorage {
 	}
 
 	@Override
-	public List<ParenteralPlanBo> getInternmentEpisodeParenteralPlans(Integer internmentEpisodeId) {
-		log.debug("Input parameter -> internmentEpisodeId {}", internmentEpisodeId);
-		List<ParenteralPlanBo> result = parenteralPlanRepository.getByInternmentEpisodeId(internmentEpisodeId, EDocumentType.INDICATION.getId())
+	public List<ParenteralPlanBo> getInternmentEpisodeParenteralPlans(Integer internmentEpisodeId, Short sourceTypeId) {
+		log.debug("Input parameter -> internmentEpisodeId {}, sourceTypeId {}", internmentEpisodeId, sourceTypeId);
+		List<ParenteralPlanBo> result = parenteralPlanRepository.getByInternmentEpisodeId(internmentEpisodeId, EDocumentType.INDICATION.getId(), sourceTypeId)
 				.stream()
 				.map(entity -> {
 					ParenteralPlanBo ppBo = mapToBo(entity);

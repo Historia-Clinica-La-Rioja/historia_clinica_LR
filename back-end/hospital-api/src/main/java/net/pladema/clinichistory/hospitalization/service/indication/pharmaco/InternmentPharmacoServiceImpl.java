@@ -50,9 +50,9 @@ public class InternmentPharmacoServiceImpl implements InternmentPharmacoService 
 	}
 
 	@Override
-	public List<PharmacoSummaryDto> getInternmentEpisodePharmacos(Integer internmentEpisodeId) {
-		log.debug("Input parameter -> internmentEpisodeId {}", internmentEpisodeId);
-		List<PharmacoSummaryDto> result = sharedIndicationPort.getInternmentEpisodePharmacos(internmentEpisodeId);
+	public List<PharmacoSummaryDto> getInternmentEpisodePharmacos(Integer internmentEpisodeId, Short sourceTypeId) {
+		log.debug("Input parameter -> internmentEpisodeId {}, sourceTypeId {}", internmentEpisodeId, sourceTypeId);
+		List<PharmacoSummaryDto> result = sharedIndicationPort.getInternmentEpisodePharmacos(internmentEpisodeId, sourceTypeId);
 		log.debug("Output -> {}", result);
 		return result;
 	}

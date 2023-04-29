@@ -25,9 +25,11 @@ public interface PharmacoRepository extends JpaRepository<Pharmaco, Integer> {
 			+ "JOIN Document doc ON di.pk.documentId = doc.id "
 			+ "WHERE doc.sourceId = :internmentEpisodeId "
 			+ "AND doc.typeId = :documentTypeId "
+			+ "AND i.sourceTypeId = :sourceTypeId "
 			+ "ORDER BY i.creationable.createdOn DESC")
 	List<Pharmaco> getByInternmentEpisodeId(@Param("internmentEpisodeId") Integer internmentEpisodeId,
-												   @Param("documentTypeId") Short documentTypeId);
+											@Param("documentTypeId") Short documentTypeId,
+											@Param("sourceTypeId") Short sourceTypeId);
 
 	@Transactional(readOnly = true)
 	@Query(value = "SELECT NEW ar.lamansys.sgh.clinichistory.domain.ips.IndicationMinimalBo(p.snomedId, q.value, q.unit, p.viaId, count(*) AS total) "

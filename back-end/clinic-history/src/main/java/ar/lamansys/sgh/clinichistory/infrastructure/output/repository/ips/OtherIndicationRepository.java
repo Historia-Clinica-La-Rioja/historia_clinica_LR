@@ -22,8 +22,10 @@ public interface OtherIndicationRepository extends JpaRepository<OtherIndication
 			+ "JOIN Document doc ON di.pk.documentId = doc.id "
 			+ "WHERE doc.sourceId = :internmentEpisodeId "
 			+ "AND doc.typeId = :documentTypeId "
+			+ "AND i.sourceTypeId = :sourceTypeId "
 			+ "ORDER BY i.creationable.createdOn DESC")
 	List<OtherIndication> getByInternmentEpisodeId(@Param("internmentEpisodeId") Integer internmentEpisodeId,
-												   @Param("documentTypeId") Short documentTypeId);
+												   @Param("documentTypeId") Short documentTypeId,
+												   @Param("sourceTypeId") Short sourceTypeId);
 
 }

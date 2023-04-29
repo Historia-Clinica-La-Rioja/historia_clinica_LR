@@ -30,9 +30,9 @@ public class DietStorageImpl implements DietStorage {
 
 
 	@Override
-	public List<DietBo> getInternmentEpisodeDiets(Integer internmentEpisodeId) {
-		log.debug("Input parameter -> internmentEpisodeId {}", internmentEpisodeId);
-		List<DietBo> result = repository.getByInternmentEpisodeId(internmentEpisodeId)
+	public List<DietBo> getInternmentEpisodeDiets(Integer internmentEpisodeId, Short sourceTypeId) {
+		log.debug("Input parameter -> internmentEpisodeId {}, sourceTypeId {}", internmentEpisodeId, sourceTypeId);
+		List<DietBo> result = repository.getByInternmentEpisodeId(internmentEpisodeId, sourceTypeId)
 				.stream()
 				.map(this::mapToBo)
 				.collect(Collectors.toList());

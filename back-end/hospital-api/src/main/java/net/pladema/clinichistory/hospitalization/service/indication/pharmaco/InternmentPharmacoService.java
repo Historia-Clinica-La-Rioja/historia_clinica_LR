@@ -10,7 +10,7 @@ public interface InternmentPharmacoService {
 
 	Integer add(InternmentPharmacoBo pharmacoBo, Short sourceTypeId);
 
-	List<PharmacoSummaryDto> getInternmentEpisodePharmacos(Integer internmentEpisodeId);
+	List<PharmacoSummaryDto> getInternmentEpisodePharmacos(Integer internmentEpisodeId, Short sourceTypeId);
 	PharmacoDto getInternmentEpisodePharmaco(Integer pharmacoId);
 
 }

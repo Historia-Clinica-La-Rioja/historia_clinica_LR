@@ -37,9 +37,9 @@ public class OtherIndicationStorageImpl implements OtherIndicationStorage {
 
 
 	@Override
-	public List<OtherIndicationBo> getInternmentEpisodeOtherIndications(Integer internmentEpisodeId) {
-		log.debug("Input parameter -> internmentEpisodeId {}", internmentEpisodeId);
-		List<OtherIndicationBo> result = otherIndicationRepository.getByInternmentEpisodeId(internmentEpisodeId, EDocumentType.INDICATION.getId())
+	public List<OtherIndicationBo> getInternmentEpisodeOtherIndications(Integer internmentEpisodeId, Short sourceTypeId) {
+		log.debug("Input parameter -> internmentEpisodeId {}, sourceTypeId {}", internmentEpisodeId, sourceTypeId);
+		List<OtherIndicationBo> result = otherIndicationRepository.getByInternmentEpisodeId(internmentEpisodeId, EDocumentType.INDICATION.getId(), sourceTypeId)
 				.stream()
 				.map(entity -> {
 					OtherIndicationBo oiBo = mapToBo(entity);

@@ -68,9 +68,9 @@ public class PharmacoStorageImpl implements PharmacoStorage {
 	}
 
 	@Override
-	public List<PharmacoSummaryBo> getInternmentEpisodePharmacos(Integer internmentEpisodeId) {
-		log.debug("Input parameter -> internmentEpisodeId {}", internmentEpisodeId);
-		List<PharmacoSummaryBo> result = pharmacoRepository.getByInternmentEpisodeId(internmentEpisodeId, EDocumentType.INDICATION.getId())
+	public List<PharmacoSummaryBo> getInternmentEpisodePharmacos(Integer internmentEpisodeId, Short sourceTypeId) {
+		log.debug("Input parameter -> internmentEpisodeId {}, sourceTypeId {}", internmentEpisodeId, sourceTypeId);
+		List<PharmacoSummaryBo> result = pharmacoRepository.getByInternmentEpisodeId(internmentEpisodeId, EDocumentType.INDICATION.getId(), sourceTypeId)
 				.stream()
 				.map(this::mapToPharmacoSummaryBo)
 				.collect(Collectors.toList());

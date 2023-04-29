@@ -2,6 +2,8 @@ package ar.lamansys.sgh.clinichistory.infrastructure.output.repository.ips;
 
 import java.util.List;
 
+import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.DocumentType;
+
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -20,7 +22,8 @@ public interface DietRepository extends JpaRepository<Diet, Integer> {
 			+ "JOIN DocumentIndication di ON di.pk.indicationId = i.id "
 			+ "JOIN Document doc ON di.pk.documentId = doc.id "
 			+ "WHERE doc.sourceId = :internmentEpisodeId "
-			+ "AND doc.typeId = 12 "
+			+ "AND doc.typeId = " + DocumentType.INDICATION + " "
+			+ "AND d.sourceTypeId = :sourceTypeId "
 			+ "ORDER BY i.creationable.createdOn DESC")
-	List<Diet> getByInternmentEpisodeId(@Param("internmentEpisodeId") Integer internmentEpisodeId);
+	List<Diet> getByInternmentEpisodeId(@Param("internmentEpisodeId") Integer internmentEpisodeId, @Param("sourceTypeId") Short sourceTypeId);
 }
