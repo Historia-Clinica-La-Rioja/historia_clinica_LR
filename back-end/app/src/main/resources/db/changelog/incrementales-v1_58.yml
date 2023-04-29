@@ -198,3 +198,26 @@ databaseChangeLog:
               referencedColumnNames: id
               referencedTableName: role
               validate: true
+        
+    - changeSet:    
+        id: add-source-columns-indication
+        author: mmalyvarni
+        changes:
+          - addColumn:
+              tableName: indication
+              columns:
+                - column:
+                    constraints:
+                      nullable: false
+                    name: source_type_id
+                    type: smallint
+                    defaultValue: 0
+          - addForeignKeyConstraint:
+              baseColumnNames: source_type_id
+              baseTableName: indication
+              constraintName: FK_indication_source_type_id
+              onDelete: NO ACTION
+              onUpdate: NO ACTION
+              referencedColumnNames: id
+              referencedTableName: source_type
+              validate: true

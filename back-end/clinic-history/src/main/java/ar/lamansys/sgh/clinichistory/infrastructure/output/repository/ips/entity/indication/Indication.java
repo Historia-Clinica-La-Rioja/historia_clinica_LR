@@ -51,4 +51,7 @@ public class Indication extends SGXAuditableEntity<Integer> implements Serializa
 	@Column(name = "professional_id", nullable = false)
 	private Integer professionalId;
 
+	@Column(name = "source_type_id")
+	private Short sourceTypeId;
+
 }
