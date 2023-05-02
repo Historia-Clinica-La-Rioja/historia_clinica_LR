@@ -47,6 +47,7 @@ export class ResumenDeGuardiaComponent implements OnInit {
 	responseEmergencyCare: ResponseEmergencyCareDto;
 	emergencyCareType: EmergencyCareTypes;
 	doctorsOfficeDescription: string;
+	shockroomDescription: string;
 
 	triagesHistory: TriageReduced[];
 	fullNamesHistoryTriage: string[];
@@ -290,6 +291,7 @@ export class ResumenDeGuardiaComponent implements OnInit {
 				this.responseEmergencyCare = responseEmergencyCare;
 				this.emergencyCareType = responseEmergencyCare.emergencyCareType?.id;
 				this.doctorsOfficeDescription = responseEmergencyCare.doctorsOffice?.description;
+				this.shockroomDescription = responseEmergencyCare.shockroom?.description;
 			});
 
 		this.loadTriages();

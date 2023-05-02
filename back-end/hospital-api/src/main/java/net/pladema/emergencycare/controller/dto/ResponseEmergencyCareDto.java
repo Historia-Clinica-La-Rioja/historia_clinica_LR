@@ -9,6 +9,7 @@ import ar.lamansys.sgh.clinichistory.infrastructure.input.rest.ips.dto.SnomedDto
 import net.pladema.medicalconsultation.doctorsoffice.controller.dto.DoctorsOfficeDto;
 import ar.lamansys.sgx.shared.dates.controller.dto.DateTimeDto;
 import ar.lamansys.sgx.shared.masterdata.infrastructure.input.rest.dto.MasterDataDto;
+import net.pladema.medicalconsultation.shockroom.infrastructure.controller.dto.ShockroomDto;
 
 import java.util.List;
 
@@ -26,6 +27,8 @@ public class ResponseEmergencyCareDto extends EmergencyCareDto {
     DateTimeDto creationDate;
 
     DoctorsOfficeDto doctorsOffice;
+
+	private ShockroomDto shockroom;
 
     public ResponseEmergencyCareDto(Integer id, List<SnomedDto> reasons, MasterDataDto emergencyCareType,
                                     MasterDataDto entranceType, Boolean hasPoliceIntervention, PoliceInterventionDetailsDto policeIntervention,

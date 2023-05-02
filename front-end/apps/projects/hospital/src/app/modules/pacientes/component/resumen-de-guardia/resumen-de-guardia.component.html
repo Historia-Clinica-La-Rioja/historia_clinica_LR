@@ -29,8 +29,9 @@
 
             <div fxLayout="row" fxLayoutGap="10px" fxLayoutAlign="start center">
                 <mat-icon fontSet="material-icons-outlined" class="gray-color">meeting_room</mat-icon>
-                <div *ngIf="doctorsOfficeDescription else noInfo">
+                <div *ngIf="doctorsOfficeDescription || shockroomDescription else noInfo">
                     <strong> {{ doctorsOfficeDescription }} </strong>
+                    <strong> {{ shockroomDescription }} </strong>
                 </div>
             </div>
 

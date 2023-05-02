@@ -9,6 +9,7 @@ import lombok.ToString;
 import net.pladema.medicalconsultation.doctorsoffice.controller.dto.DoctorsOfficeDto;
 import ar.lamansys.sgx.shared.dates.controller.dto.DateTimeDto;
 import ar.lamansys.sgx.shared.masterdata.infrastructure.input.rest.dto.MasterDataDto;
+import net.pladema.medicalconsultation.shockroom.infrastructure.controller.dto.ShockroomDto;
 
 import java.io.Serializable;
 
@@ -34,4 +35,6 @@ public class EmergencyCareListDto implements Serializable {
 	DoctorsOfficeDto doctorsOffice;
 
 	ProfessionalPersonDto relatedProfessional;
+
+	ShockroomDto shockroom;
 }

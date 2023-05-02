@@ -12,6 +12,7 @@ import net.pladema.emergencycare.repository.entity.EmergencyCareEpisode;
 import net.pladema.emergencycare.triage.service.domain.TriageBo;
 import net.pladema.medicalconsultation.diary.service.domain.ProfessionalPersonBo;
 import net.pladema.medicalconsultation.doctorsoffice.service.domain.DoctorsOfficeBo;
+import net.pladema.medicalconsultation.shockroom.domain.ShockRoomBo;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -58,6 +59,8 @@ public class EmergencyCareBo {
 
 	private ProfessionalPersonBo relatedProfessional;
 
+	private ShockRoomBo shockroom;
+
     public EmergencyCareBo(EmergencyCareVo emergencyCareVo){
         this.id = emergencyCareVo.getId();
         this.patient = emergencyCareVo.getPatient() != null ? new PatientECEBo(emergencyCareVo.getPatient()) : null;
@@ -74,6 +77,7 @@ public class EmergencyCareBo {
             this.policeInterventionDetails = new PoliceInterventionDetailsBo(emergencyCareVo.getPoliceInterventionDetails());
         this.createdOn = emergencyCareVo.getCreatedOn();
         this.hasPoliceIntervention = emergencyCareVo.getHasPoliceIntervention();
+		this.shockroom = emergencyCareVo.getShockroom() != null ? new ShockRoomBo(emergencyCareVo.getShockroom().getId(), emergencyCareVo.getShockroom().getDescription()) : null;
     }
 
     public EmergencyCareBo(EmergencyCareEpisode emergencyCareEpisode) {

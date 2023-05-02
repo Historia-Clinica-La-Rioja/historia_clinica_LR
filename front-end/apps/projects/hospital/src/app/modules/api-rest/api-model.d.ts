@@ -1118,6 +1118,7 @@ export interface EmergencyCareListDto extends Serializable {
     id: number;
     patient: EmergencyCarePatientDto;
     relatedProfessional: ProfessionalPersonDto;
+    shockroom: ShockroomDto;
     state: MasterDataDto;
     triage: EmergencyCareEpisodeListTriageDto;
     type: MasterDataDto;
@@ -2975,6 +2976,7 @@ export interface ResponseEmergencyCareDto extends EmergencyCareDto {
     doctorsOffice: DoctorsOfficeDto;
     emergencyCareState: MasterDataDto;
     id: number;
+    shockroom: ShockroomDto;
 }
 
 export interface ResponseEpicrisisDto extends EpicrisisDto {
