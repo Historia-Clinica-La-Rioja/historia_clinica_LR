@@ -156,5 +156,13 @@ public interface EmergencyCareEpisodeRepository extends SGXAuditableEntityJPARep
 			"FROM EmergencyCareEpisode ece " +
 			"WHERE ece.id = :episodeId")
 	Integer getPatientMedicalCoverageIdByEpisodeId(@Param("episodeId") Integer episodeId);
-	
+
+	@Transactional(readOnly = true)
+	@Query(value = "SELECT COUNT (ece.id) " +
+			"FROM EmergencyCareEpisode as ece " +
+			"WHERE (:doctorsOfficeId IS NULL OR ece.doctorsOfficeId = :doctorsOfficeId) " +
+			"AND (:shockroomId IS NULL OR ece.shockroomId = :shockroomId) " +
+			"AND ece.emergencyCareStateId = " + EmergencyCareState.EN_ATENCION)
+	Integer existsEpisodeInOffice(@Param("doctorsOfficeId") Integer doctorsOfficeId,
+								  @Param("shockroomId") Integer shockroomId);
 }

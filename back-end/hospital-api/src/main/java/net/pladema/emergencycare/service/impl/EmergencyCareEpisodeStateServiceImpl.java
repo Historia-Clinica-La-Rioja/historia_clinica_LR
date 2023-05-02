@@ -11,6 +11,10 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.validation.ConstraintViolationException;
+
+import java.util.Collections;
+
 
 @Service
 public class EmergencyCareEpisodeStateServiceImpl implements EmergencyCareEpisodeStateService {
@@ -24,6 +28,10 @@ public class EmergencyCareEpisodeStateServiceImpl implements EmergencyCareEpisod
 	private static final String WRONG_CARE_ID_EPISODE = "wrong-care-id-episode";
 
 	private static final String CARE_EPISODE_NOT_FOUND = "El episodio de guardia no se encontró o no existe";
+
+	private static final String DOCTORS_OFFICE_NOT_AVAILABLE = "El consultorio elegido se encuentra ocupado";
+
+	private static final String SHOCKROOM_NOT_AVAILABLE = "El shockroom elegido se encuentra ocupado";
 
 	private EmergencyCareEpisodeRepository emergencyCareEpisodeRepository;
 
@@ -48,6 +56,9 @@ public class EmergencyCareEpisodeStateServiceImpl implements EmergencyCareEpisod
 	public Boolean changeState(Integer episodeId, Integer institutionId, Short emergencyCareStateId, Integer doctorsOfficeId, Integer shockroomId) {
 		LOG.debug("Input parameters -> episodeId {}, emergencyCareStateId {}, doctorsOfficeId {}, shockroomId {}",
 				episodeId, emergencyCareStateId, doctorsOfficeId, shockroomId);
+
+		assertOffice(doctorsOfficeId, shockroomId);
+
 		HistoricEmergencyEpisodeBo toSave = new HistoricEmergencyEpisodeBo();
 		if (shockroomId != null) {
 			toSave.setEmergencyCareEpisodeId(episodeId);
@@ -60,5 +71,13 @@ public class EmergencyCareEpisodeStateServiceImpl implements EmergencyCareEpisod
 		}
 		historicEmergencyEpisodeService.saveChange(toSave);
 		return true;
+	}
+
+	private void assertOffice(Integer doctorsOfficeId, Integer shockroomId) {
+		LOG.debug("Input parameters -> doctorsOfficeId {}, shockroomId {}", doctorsOfficeId, shockroomId);
+		if (emergencyCareEpisodeRepository.existsEpisodeInOffice(doctorsOfficeId, shockroomId) > 0)
+			throw new ConstraintViolationException(doctorsOfficeId != null
+					? DOCTORS_OFFICE_NOT_AVAILABLE
+					: SHOCKROOM_NOT_AVAILABLE, Collections.emptySet());
 	}
 }

@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { EmergencyCareEpisodeService } from '@api-rest/services/emergency-care-episode.service';
 import {
+	ApiErrorDto,
 	DateTimeDto,
 	DoctorsOfficeDto, EmergencyCareEpisodeListTriageDto,
 	EmergencyCareListDto,
@@ -26,7 +27,7 @@ import { Observable } from 'rxjs';
 import { EpisodeFilterService } from '../../services/episode-filter.service';
 import { TriageCategoryDto, TriageMasterDataService } from '@api-rest/services/triage-master-data.service';
 import { EmergencyCareMasterDataService } from '@api-rest/services/emergency-care-master-data.service';
-import { getError, hasError } from '@core/utils/form.utils';
+import { getError, hasError, processErrors } from '@core/utils/form.utils';
 import { EmergencyCareEpisodeAdministrativeDischargeService } from '@api-rest/services/emergency-care-episode-administrative-service.service';
 import { PatientNameService } from "@core/services/patient-name.service";
 import { anyMatch } from '@core/utils/array.utils';
@@ -146,21 +147,18 @@ export class HomeComponent implements OnInit {
 					} else {
 						this.snackBarService.showError(`${TRANSLATE_KEY_PREFIX}.atender.ERROR`);
 					}
-				}, _ => this.snackBarService.showError(`${TRANSLATE_KEY_PREFIX}.atender.ERROR`)
-				);
+				}, (error: ApiErrorDto) => processErrors(error, (msg) => this.snackBarService.showError(msg)))
 			}
 
 			if (attendPlace.attentionPlace === AttentionPlace.SHOCKROOM) {
-				this.episodeStateService.atender(episode.id, null, attendPlace.id)
-					.subscribe((response: boolean) => {
-						if (!response) this.snackBarService.showError(`${TRANSLATE_KEY_PREFIX}.atender.ERROR`);
+				this.episodeStateService.atender(episode.id, null, attendPlace.id).subscribe((response: boolean) => {
+					if (!response) this.snackBarService.showError(`${TRANSLATE_KEY_PREFIX}.atender.ERROR`);
 
-						this.snackBarService.showSuccess(`${TRANSLATE_KEY_PREFIX}.atender.SUCCESS`);
-						this.goToEpisode(episode, { typeId: episode.patient.typeId, id: episode.patient.id });
+					this.snackBarService.showSuccess(`${TRANSLATE_KEY_PREFIX}.atender.SUCCESS`);
+					this.goToEpisode(episode, { typeId: episode.patient.typeId, id: episode.patient.id });
 
-					}, _ => this.snackBarService.showError(`${TRANSLATE_KEY_PREFIX}.atender.ERROR`));
+				}, (error: ApiErrorDto) => processErrors(error, (msg) => this.snackBarService.showError(msg)))
 			}
-
 		});
 	}
 
