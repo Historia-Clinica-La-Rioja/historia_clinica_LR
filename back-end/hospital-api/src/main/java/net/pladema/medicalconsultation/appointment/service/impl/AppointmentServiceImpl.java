@@ -19,10 +19,10 @@ import java.util.stream.Stream;
 import ar.lamansys.sgx.shared.dates.configuration.LocalDateMapper;
 import net.pladema.medicalconsultation.appointment.repository.AppointmentAssnRepository;
 import ar.lamansys.sgh.shared.infrastructure.input.service.SharedReferenceCounterReference;
+import net.pladema.medicalconsultation.appointment.repository.AppointmentOrderImageRepository;
 import net.pladema.medicalconsultation.appointment.repository.AppointmentUpdateRepository;
 import net.pladema.medicalconsultation.appointment.repository.EquipmentAppointmentAssnRepository;
 import net.pladema.medicalconsultation.appointment.repository.domain.AppointmentEquipmentShortSummaryBo;
-import net.pladema.medicalconsultation.appointment.repository.entity.Appointment;
 import net.pladema.medicalconsultation.appointment.service.domain.EquipmentAppointmentBo;
 import net.pladema.medicalconsultation.appointment.service.impl.exceptions.UpdateAppointmentDateException;
 import net.pladema.medicalconsultation.appointment.service.impl.exceptions.UpdateAppointmentDateExceptionEnum;
@@ -94,6 +94,8 @@ public class AppointmentServiceImpl implements AppointmentService {
 
 	private final AppointmentUpdateRepository appointmentUpdateRepository;
 
+	private final AppointmentOrderImageRepository appointmentOrderImageRepository;
+
 	private final DiaryOpeningHoursService diaryOpeningHoursService;
 
 	private final SharedReferenceCounterReference sharedReferenceCounterReference;
@@ -113,8 +115,7 @@ public class AppointmentServiceImpl implements AppointmentService {
 								  FeatureFlagsService featureFlagsService,
 								  AppointmentStorage appointmentStorage,
 								  AppointmentUpdateRepository appointmentUpdateRepository,
-								  AppointmentAssnRepository appointmentAssnRepository,
-								  DiaryOpeningHoursService diaryOpeningHoursService,
+								  AppointmentAssnRepository appointmentAssnRepository, AppointmentOrderImageRepository appointmentOrderImageRepository, DiaryOpeningHoursService diaryOpeningHoursService,
 								  SharedReferenceCounterReference sharedReferenceCounterReference, LocalDateMapper localDateMapper, EquipmentAppointmentAssnRepository equipmentAppointmentAssnRepository) {
 		this.appointmentRepository = appointmentRepository;
 		this.appointmentObservationRepository = appointmentObservationRepository;
@@ -128,6 +129,7 @@ public class AppointmentServiceImpl implements AppointmentService {
 		this.appointmentStorage = appointmentStorage;
 		this.appointmentUpdateRepository = appointmentUpdateRepository;
 		this.appointmentAssnRepository = appointmentAssnRepository;
+		this.appointmentOrderImageRepository = appointmentOrderImageRepository;
 		this.diaryOpeningHoursService = diaryOpeningHoursService;
 		this.sharedReferenceCounterReference = sharedReferenceCounterReference;
 		this.localDateMapper = localDateMapper;
@@ -229,6 +231,8 @@ public class AppointmentServiceImpl implements AppointmentService {
 	public boolean updateState(Integer appointmentId, short appointmentStateId, Integer userId, String reason) {
 		log.debug("Input parameters -> appointmentId {}, appointmentStateId {}, userId {}, reason {}", appointmentId, appointmentStateId, userId, reason);
 		appointmentRepository.updateState(appointmentId, appointmentStateId, userId);
+		if(appointmentStateId == 4) //si el turno es cancelado, se borra la asociacion turno-orden medica
+			appointmentOrderImageRepository.deleteByAppointment(appointmentId);
 		historicAppointmentStateRepository.save(new HistoricAppointmentState(appointmentId, appointmentStateId, reason));
 		log.debug(OUTPUT, Boolean.TRUE);
 		return Boolean.TRUE;
