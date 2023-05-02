@@ -2,11 +2,11 @@ import { Component, Input, OnChanges } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { MasterDataDto, PharmacoDto } from '@api-rest/api-model';
 import { InternacionMasterDataService } from '@api-rest/services/internacion-master-data.service';
-import { InternmentIndicationService } from '@api-rest/services/internment-indication.service';
 import { IndicationStatus, IndicationStatusScss, INDICATION_TYPE, PHARMACO, showTimeElapsed } from "@historia-clinica/modules/ambulatoria/modules/indicacion/constants/internment-indications";
 import { Content } from "@presentation/components/indication/indication.component";
 import { loadExtraInfoPharmaco } from '../../constants/load-information';
 import { InternmentIndicationDetailComponent } from '../../dialogs/internment-indication-detail/internment-indication-detail.component';
+import { IndicationService } from '@api-rest/services/indication.service';
 
 
 const DIALOG_SIZE = '35%';
@@ -25,7 +25,7 @@ export class InternmentPharmacoCardComponent implements OnChanges {
 	constructor(
 		private readonly internacionMasterdataService: InternacionMasterDataService,
 		private readonly dialog: MatDialog,
-		private readonly internmentIndicationService: InternmentIndicationService,
+		private readonly indicationService: IndicationService
 	) {
 		this.internacionMasterdataService.getViasPharmaco().subscribe(v => this.vias = v);
 	}
@@ -52,7 +52,7 @@ export class InternmentPharmacoCardComponent implements OnChanges {
 	}
 
 	openDetailDialog(content: Content): void{
-		this.internmentIndicationService.getInternmentEpisodePharmaco(this.internmentEpisodeId, content.id)
+		this.indicationService.getPharmaco(content.id)
 		.subscribe(pharmaco => {
 			this.dialog.open(InternmentIndicationDetailComponent, {
 				data: {

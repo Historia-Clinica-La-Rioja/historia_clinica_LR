@@ -1,12 +1,12 @@
 import { Component, Input, OnChanges } from '@angular/core';
 import { ParenteralPlanDto } from '@api-rest/api-model';
 import { IndicationStatus, IndicationStatusScss, INDICATION_TYPE, PARENTERAL_PLAN, showTimeElapsed } from "@historia-clinica/modules/ambulatoria/modules/indicacion/constants/internment-indications";
-import { Content, ExtraInfo } from "@presentation/components/indication/indication.component";
+import { Content } from "@presentation/components/indication/indication.component";
 import { InternacionMasterDataService } from "@api-rest/services/internacion-master-data.service";
 import { loadExtraInfoParenteralPlan } from '../../constants/load-information';
 import { MatDialog } from '@angular/material/dialog';
 import { InternmentIndicationDetailComponent } from '../../dialogs/internment-indication-detail/internment-indication-detail.component';
-import { InternmentIndicationService } from '@api-rest/services/internment-indication.service';
+import { IndicationService } from '@api-rest/services/indication.service';
 
 const DIALOG_SIZE = '35%';
 @Component({
@@ -25,7 +25,7 @@ export class InternmentParenteralPlanCardComponent implements OnChanges {
 	constructor(
 		private readonly internacionMasterdataService: InternacionMasterDataService,
 		private readonly dialog: MatDialog,
-		private readonly internmentIndicationService: InternmentIndicationService,
+		private readonly indicationService: IndicationService
 	) { }
 
 	ngOnChanges(): void {
@@ -53,7 +53,7 @@ export class InternmentParenteralPlanCardComponent implements OnChanges {
 	}
 
 	openDetailDialog(content: Content): void{
-		this.internmentIndicationService.getInternmentEpisodeParenteralPlan(this.internmentEpisodeId, content.id)
+		this.indicationService.getParenteralPlan(content.id)
 		.subscribe(parenteralPlan => {
 			this.dialog.open(InternmentIndicationDetailComponent, {
 				data: {

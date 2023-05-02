@@ -4,7 +4,7 @@ import { DietDto } from "@api-rest/api-model";
 import { Content } from '@presentation/components/indication/indication.component';
 import { MatDialog } from "@angular/material/dialog";
 import { InternmentIndicationDetailComponent } from "../../dialogs/internment-indication-detail/internment-indication-detail.component";
-import { InternmentIndicationService } from "@api-rest/services/internment-indication.service";
+import { IndicationService } from "@api-rest/services/indication.service";
 
 
 const DIALOG_SIZE = '35%';
@@ -23,7 +23,7 @@ export class InternmentDietCardComponent implements OnChanges {
 
 	constructor(
 		private readonly dialog: MatDialog,
-		private readonly internmentIndicationService: InternmentIndicationService,
+		private readonly indicationService: IndicationService
 	) { }
 
 	ngOnChanges() {
@@ -48,7 +48,7 @@ export class InternmentDietCardComponent implements OnChanges {
 	}
 
 	openDetailDialog(content: Content): void{
-		this.internmentIndicationService.getInternmentEpisodeDiet(this.internmentEpisodeId, content.id)
+		this.indicationService.getDiet(content.id)
 		.subscribe(diet => {
 			this.dialog.open(InternmentIndicationDetailComponent, {
 				data: {

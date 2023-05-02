@@ -2,11 +2,12 @@ import { Component, Input, OnChanges } from '@angular/core';
 import { IndicationStatus, IndicationStatusScss, INDICATION_TYPE, OTHER_INDICATION, OTHER_INDICATION_ID, showTimeElapsed } from "@historia-clinica/modules/ambulatoria/modules/indicacion/constants/internment-indications";
 import { Content } from '@presentation/components/indication/indication.component';
 import { OtherIndicationDto } from '@api-rest/api-model';
-import { InternmentIndicationService, OtherIndicationTypeDto } from '@api-rest/services/internment-indication.service';
+import { OtherIndicationTypeDto } from '@api-rest/services/internment-indication.service';
 import { InternacionMasterDataService } from '@api-rest/services/internacion-master-data.service';
 import { showFrequency } from '../../constants/load-information';
 import { MatDialog } from '@angular/material/dialog';
 import { InternmentIndicationDetailComponent } from '../../dialogs/internment-indication-detail/internment-indication-detail.component';
+import { IndicationService } from '@api-rest/services/indication.service';
 
 
 const DIALOG_SIZE = '35%';
@@ -33,7 +34,7 @@ export class InternmentOtherIndicationCardComponent implements OnChanges {
 	constructor(
 		private readonly internacionMasterdataService: InternacionMasterDataService,
 		private readonly dialog: MatDialog,
-		private readonly internmentIndicationService: InternmentIndicationService,
+		private readonly indicationService: IndicationService
 	) { }
 
 	ngOnChanges() {
@@ -69,7 +70,7 @@ export class InternmentOtherIndicationCardComponent implements OnChanges {
 	}
 
 	openDetailDialog(content: Content): void{
-		this.internmentIndicationService.getInternmentEpisodeOtherIndication(this.internmentEpisodeId, content.id)
+		this.indicationService.getOtherIndication(content.id)
 		.subscribe(otherIndication => {
 			this.dialog.open(InternmentIndicationDetailComponent, {
 				data: {

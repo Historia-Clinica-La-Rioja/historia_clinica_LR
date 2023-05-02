@@ -7,7 +7,7 @@ import { DietDto, OtherIndicationDto, ParenteralPlanDto, PharmacoDto } from "@ap
 
 
 const BASIC_URL_PREFIX = '/institutions';
-const BASIC_URL_SUFIX = '/internments';	
+const BASIC_URL_SUFIX = '/internments';
 
 @Injectable({
 	providedIn: 'root'
@@ -51,26 +51,6 @@ export class InternmentIndicationService {
 	getInternmentEpisodePharmacos(internmentEpisodeId: number): Observable<PharmacoDto[]> {
 		const url = `${environment.apiBase}` + BASIC_URL_PREFIX + `/${this.contextService.institutionId}` + BASIC_URL_SUFIX + `/${internmentEpisodeId}/pharmacos`;
 		return this.http.get<PharmacoDto[]>(url);
-	}
-
-	getInternmentEpisodeDiet(internmentEpisodeId: number, dietId: number): Observable<DietDto> {
-		const url = `${environment.apiBase}` + BASIC_URL_PREFIX + `/${this.contextService.institutionId}` + BASIC_URL_SUFIX + `/${internmentEpisodeId}/diets/${dietId}`;
-		return this.http.get<DietDto>(url);
-	}
-	
-	getInternmentEpisodeOtherIndication(internmentEpisodeId: number, otherIndicationId: number): Observable<OtherIndicationDto> {
-		const url = `${environment.apiBase}` + BASIC_URL_PREFIX + `/${this.contextService.institutionId}` + BASIC_URL_SUFIX + `/${internmentEpisodeId}/other-indications/${otherIndicationId}`;
-		return this.http.get<OtherIndicationDto>(url);
-	}
-
-	getInternmentEpisodeParenteralPlan(internmentEpisodeId: number, parenteralPlanid: number): Observable<ParenteralPlanDto> {
-		const url = `${environment.apiBase}` + BASIC_URL_PREFIX + `/${this.contextService.institutionId}` + BASIC_URL_SUFIX + `/${internmentEpisodeId}/parenteral-plans/${parenteralPlanid}`;
-		return this.http.get<ParenteralPlanDto>(url);
-	}
-
-	getInternmentEpisodePharmaco(internmentEpisodeId: number, pharmacoId: number): Observable<PharmacoDto> {
-		const url = `${environment.apiBase}` + BASIC_URL_PREFIX + `/${this.contextService.institutionId}` + BASIC_URL_SUFIX + `/${internmentEpisodeId}/pharmacos/${pharmacoId}`;
-		return this.http.get<PharmacoDto>(url);
 	}
 
 	addParenteralPlan(indication: ParenteralPlanDto, internmentEpisodeId: number): Observable<number> {
