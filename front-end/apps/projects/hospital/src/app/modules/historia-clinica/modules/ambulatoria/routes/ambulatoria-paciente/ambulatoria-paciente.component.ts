@@ -1,10 +1,10 @@
 import { MedicalCoverageInfoService } from './../../services/medical-coverage-info.service';
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { ActivatedRoute, Router, NavigationStart } from '@angular/router';
-import { Observable, Subscription } from 'rxjs';
+import { ActivatedRoute, Router } from '@angular/router';
+import { Observable, } from 'rxjs';
 import { MatTabChangeEvent } from '@angular/material/tabs';
 import { AppFeature, EMedicalCoverageTypeDto, ERole, EPatientMedicalCoverageCondition } from '@api-rest/api-model';
-import { EpicrisisSummaryDto, BasicPatientDto, OrganizationDto, PatientSummaryDto, PersonPhotoDto, InternmentEpisodeProcessDto, ExternalPatientCoverageDto, EmergencyCareEpisodeInProgressDto, ResponseEmergencyCareDto } from '@api-rest/api-model';
+import { EpicrisisSummaryDto, BasicPatientDto, OrganizationDto, PatientSummaryDto, PatientToMergeDto, PersonPhotoDto, InternmentEpisodeProcessDto, ExternalPatientCoverageDto, EmergencyCareEpisodeInProgressDto, ResponseEmergencyCareDto } from '@api-rest/api-model';
 import { PatientService } from '@api-rest/services/patient.service';
 import { InteroperabilityBusService } from '@api-rest/services/interoperability-bus.service';
 import { PatientBasicData } from '@presentation/components/patient-card/patient-card.component';
@@ -39,6 +39,8 @@ import { EstadosEpisodio } from '@historia-clinica/modules/guardia/constants/mas
 import { PatientType } from '@historia-clinica/constants/summaries';
 import { ComponentCanDeactivate } from '@core/guards/PendingChangesGuard';
 import { EmergencyCareEpisodeService } from '@api-rest/services/emergency-care-episode.service';
+import { PatientToMergeService } from '@api-rest/services/patient-to-merge.service';
+import { Patient } from '@pacientes/component/search-patient/search-patient.component';
 
 const RESUMEN_INDEX = 0;
 const VOLUNTARY_ID = 1;
@@ -128,7 +130,8 @@ export class AmbulatoriaPacienteComponent implements OnInit, OnDestroy, Componen
 		private readonly internmentActionsService: InternmentActionsService,
 		private readonly medicalCoverageInfo: MedicalCoverageInfoService,
 		private readonly wcExtensionsService: WCExtensionsService,
-		private readonly emergencyCareEpisodeService: EmergencyCareEpisodeService
+		private readonly emergencyCareEpisodeService: EmergencyCareEpisodeService,
+		private readonly patientToMergeService: PatientToMergeService,
 	) {
 		this.featureFlagService.isActive(AppFeature.HABILITAR_RECETA_DIGITAL)
 			.subscribe((result: boolean) => this.isHabilitarRecetaDigitalEnabled = result)
@@ -253,8 +256,35 @@ export class AmbulatoriaPacienteComponent implements OnInit, OnDestroy, Componen
 		this.ambulatoriaSummaryFacadeService.setIsNewConsultationOpen(false);
 	}
 
-	patientSelected(patient) {
-		//NoSeQueService.replacePatient(oldId, newId) --> Esto trae como consecuencia que el episodio de guardia se modifique		console.log(patient);
+	patientSelected(patient: Patient) {
+
+		const patientToMergeDto: PatientToMergeDto = {
+			activePatientId: patient.basicData.id,
+			oldPatientsIds: [this.patient.id],
+			registrationDataPerson: {
+				middleNames: patient.basicData.middleName,
+				otherLastNames: patient.basicData.person.otherLastNames,
+				birthDate: patient.basicData.person.birthDate,
+				firstName: patient.basicData.firstName,
+				genderId: patient.basicData.person.gender.id,
+				identificationNumber: patient.basicData.identificationNumber,
+				identificationTypeId: patient.basicData.person.identificationTypeId,
+				lastName: patient.basicData.person.lastName,
+				nameSelfDetermination: patient.basicData.person.nameSelfDetermination,
+				phoneNumber: null,
+				phonePrefix: null
+			}
+		}
+
+		this.patientToMergeService.merge(patientToMergeDto).subscribe(
+			_ => {
+				this.snackBarService.showSuccess('Se ha asignado correctamente el paciente');
+				const url = `${AppRoutes.Institucion}/${this.contextService.institutionId}/ambulatoria/paciente/${patient.basicData.id}`;
+				this.router.navigate([url])
+			},
+			error => this.snackBarService.showError(error.text),
+		)
+
 	}
 
 	ngOnDestroy() {
