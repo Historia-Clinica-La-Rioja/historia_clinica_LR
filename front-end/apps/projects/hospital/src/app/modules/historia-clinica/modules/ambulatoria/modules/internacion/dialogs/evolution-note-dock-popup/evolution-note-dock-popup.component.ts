@@ -27,7 +27,7 @@ import { dateToMoment } from "@core/utils/moment.utils";
 import { TranslateService } from '@ngx-translate/core';
 import { DocumentActionReasonComponent } from '../document-action-reason/document-action-reason.component';
 import { MatDialog } from '@angular/material/dialog';
-import { ComponentEvaluationManagerService } from '../../services/component-evaluation-manager.service';
+import { ComponentEvaluationManagerService } from '../../../../services/component-evaluation-manager.service';
 
 @Component({
 	selector: 'app-evolution-note-dock-popup',

@@ -29,7 +29,7 @@ import { TranslateService } from '@ngx-translate/core';
 import { DocumentActionReasonComponent } from '../document-action-reason/document-action-reason.component';
 import { MatDialog } from '@angular/material/dialog';
 import { map } from 'rxjs/internal/operators/map';
-import { ComponentEvaluationManagerService } from '../../services/component-evaluation-manager.service';
+import { ComponentEvaluationManagerService } from '../../../../services/component-evaluation-manager.service';
 
 @Component({
 	selector: 'app-anamnesis-dock-popup',

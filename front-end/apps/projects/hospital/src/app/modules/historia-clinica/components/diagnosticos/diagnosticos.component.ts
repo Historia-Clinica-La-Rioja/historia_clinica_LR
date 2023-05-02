@@ -6,12 +6,13 @@ import { SnackBarService } from '@presentation/services/snack-bar.service';
 import { HEALTH_VERIFICATIONS } from '../../modules/ambulatoria/modules/internacion/constants/ids';
 import { DiagnosisCreationEditionComponent } from '../../modules/ambulatoria/modules/internacion/dialogs/diagnosis-creation-edition/diagnosis-creation-edition.component';
 import { SelectMainDiagnosisComponent } from '../../modules/ambulatoria/modules/internacion/dialogs/select-main-diagnosis/select-main-diagnosis.component';
-import { ComponentEvaluationManagerService } from '@historia-clinica/modules/ambulatoria/modules/internacion/services/component-evaluation-manager.service';
+import { ComponentEvaluationManagerService } from '@historia-clinica/modules/ambulatoria/services/component-evaluation-manager.service';
 
 @Component({
 	selector: 'app-diagnosticos',
 	templateUrl: './diagnosticos.component.html',
-	styleUrls: ['./diagnosticos.component.scss']
+	styleUrls: ['./diagnosticos.component.scss'],
+	providers: [ComponentEvaluationManagerService]
 })
 export class DiagnosticosComponent {
 

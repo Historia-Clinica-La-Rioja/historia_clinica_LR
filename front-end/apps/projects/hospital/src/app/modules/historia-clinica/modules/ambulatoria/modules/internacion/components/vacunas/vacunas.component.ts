@@ -8,7 +8,7 @@ import { DateFormat, newMoment } from '@core/utils/moment.utils';
 import { pushTo, removeFrom } from '@core/utils/array.utils';
 import { MIN_DATE } from "@core/utils/date.utils";
 import { SnomedService, SnomedSemanticSearch } from '@historia-clinica/services/snomed.service';
-import { ComponentEvaluationManagerService } from '../../services/component-evaluation-manager.service';
+import { ComponentEvaluationManagerService } from '../../../../services/component-evaluation-manager.service';
 
 @Component({
 	selector: 'app-vacunas',

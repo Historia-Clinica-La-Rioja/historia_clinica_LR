@@ -4,7 +4,7 @@ import { SnomedECL } from '@api-rest/api-model';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { pushTo, removeFrom } from '@core/utils/array.utils';
 import { SnomedService, SnomedSemanticSearch } from '@historia-clinica/services/snomed.service';
-import { ComponentEvaluationManagerService } from '../../services/component-evaluation-manager.service';
+import { ComponentEvaluationManagerService } from '../../../../services/component-evaluation-manager.service';
 
 @Component({
 	selector: 'app-medicacion',
