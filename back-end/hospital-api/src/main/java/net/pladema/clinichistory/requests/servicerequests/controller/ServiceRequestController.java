@@ -10,6 +10,8 @@ import java.util.stream.Collectors;
 
 import javax.validation.Valid;
 
+import net.pladema.clinichistory.requests.servicerequests.service.ExistCheckDiagnosticReportService;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.core.io.Resource;
@@ -105,26 +107,28 @@ public class ServiceRequestController {
 	private final Function<Long, ProfessionalCompleteDto> authorFromDocumentFunction;
     private final SharedInstitutionPort sharedInstitutionPort;
 
+	private final ExistCheckDiagnosticReportService existCheckDiagnosticReportService;
+
 
 	public ServiceRequestController(HealthcareProfessionalExternalService healthcareProfessionalExternalService,
-                                    CreateServiceRequestService createServiceRequestService,
-                                    CreateServiceRequestMapper createServiceRequestMapper,
-                                    PatientExternalService patientExternalService,
-                                    StudyMapper studyMapper,
-                                    DiagnosticReportInfoMapper diagnosticReportInfoMapper,
-                                    ListDiagnosticReportInfoService listDiagnosticReportInfoService,
-                                    DeleteDiagnosticReportService deleteDiagnosticReportService,
-                                    CompleteDiagnosticReportService completeDiagnosticReportService,
-                                    CompleteDiagnosticReportMapper completeDiagnosticReportMapper,
-                                    UploadDiagnosticReportCompletedFileService uploadDiagnosticReportCompletedFileService,
-                                    UpdateDiagnosticReportFileService updateDiagnosticReportFileService,
-                                    DiagnosticReportInfoService diagnosticReportInfoService,
-                                    FileMapper fileMapper,
-                                    PatientExternalMedicalCoverageService patientExternalMedicalCoverageService,
-                                    PdfService pdfService, GetServiceRequestInfoService getServiceRequestInfoService,
-                                    HospitalApiPublisher hospitalApiPublisher, FeatureFlagsService featureFlagsService,
-                                    DocumentAuthorFinder documentAuthorFinder,
-                                    SharedInstitutionPort sharedInstitutionPort) {
+									CreateServiceRequestService createServiceRequestService,
+									CreateServiceRequestMapper createServiceRequestMapper,
+									PatientExternalService patientExternalService,
+									StudyMapper studyMapper,
+									DiagnosticReportInfoMapper diagnosticReportInfoMapper,
+									ListDiagnosticReportInfoService listDiagnosticReportInfoService,
+									DeleteDiagnosticReportService deleteDiagnosticReportService,
+									CompleteDiagnosticReportService completeDiagnosticReportService,
+									CompleteDiagnosticReportMapper completeDiagnosticReportMapper,
+									UploadDiagnosticReportCompletedFileService uploadDiagnosticReportCompletedFileService,
+									UpdateDiagnosticReportFileService updateDiagnosticReportFileService,
+									DiagnosticReportInfoService diagnosticReportInfoService,
+									FileMapper fileMapper,
+									PatientExternalMedicalCoverageService patientExternalMedicalCoverageService,
+									PdfService pdfService, GetServiceRequestInfoService getServiceRequestInfoService,
+									HospitalApiPublisher hospitalApiPublisher, FeatureFlagsService featureFlagsService,
+									DocumentAuthorFinder documentAuthorFinder,
+									SharedInstitutionPort sharedInstitutionPort, ExistCheckDiagnosticReportService existCheckDiagnosticReportService) {
 		this.healthcareProfessionalExternalService = healthcareProfessionalExternalService;
 		this.createServiceRequestService = createServiceRequestService;
 		this.createServiceRequestMapper = createServiceRequestMapper;
@@ -146,7 +150,8 @@ public class ServiceRequestController {
 		this.featureFlagsService = featureFlagsService;
 		this.authorFromDocumentFunction = (Long documentId) -> documentAuthorFinder.getAuthor(documentId);
         this.sharedInstitutionPort = sharedInstitutionPort;
-    }
+		this.existCheckDiagnosticReportService = existCheckDiagnosticReportService;
+	}
 
     @PostMapping
     @ResponseStatus(code = HttpStatus.CREATED)
@@ -283,6 +288,15 @@ public class ServiceRequestController {
         return result;
     }
 
+	@ResponseStatus(code = HttpStatus.OK)
+	@GetMapping(value = "/{serviceRequestId}/existCheck")
+	@PreAuthorize("hasPermission(#institutionId, 'ESPECIALISTA_MEDICO, PROFESIONAL_DE_SALUD, ESPECIALISTA_EN_ODONTOLOGIA, ENFERMERO, PERSONAL_DE_IMAGENES, PERSONAL_DE_LABORATORIO')")
+	public boolean serviceRequestExistCheck(
+			@PathVariable(name = "institutionId") Integer institutionId,
+			@PathVariable(name = "serviceRequestId") Integer serviceRequestId) {
+		LOG.debug("Input parameters -> orderId {}", serviceRequestId);
+		return existCheckDiagnosticReportService.execute(serviceRequestId);
+	}
 
     @GetMapping(value = "/{serviceRequestId}/download-pdf")
     @PreAuthorize("hasPermission(#institutionId, 'ESPECIALISTA_MEDICO, PROFESIONAL_DE_SALUD, ESPECIALISTA_EN_ODONTOLOGIA, ENFERMERO')")
