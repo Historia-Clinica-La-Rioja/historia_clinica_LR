@@ -23,6 +23,8 @@ public class DoctorsOfficeBo {
 
     private LocalTime closingTime;
 
+	private boolean isAvailable;
+
     public DoctorsOfficeBo(Integer id, String description) {
         this.id = id;
         this.description = description;

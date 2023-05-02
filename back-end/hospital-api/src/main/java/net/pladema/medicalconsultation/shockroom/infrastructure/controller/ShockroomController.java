@@ -32,7 +32,11 @@ public class ShockroomController {
 		log.debug("Input parameters -> institutionId {}", institutionId);
 		List<ShockroomDto> result = fetchShockrooms.execute(institutionId)
 				.stream()
-				.map(bo -> new ShockroomDto(bo.getId(), bo.getDescription()))
+				.map(bo -> {
+					ShockroomDto shockroomDto = new ShockroomDto(bo.getId(), bo.getDescription());
+					shockroomDto.setAvailable(bo.isAvailable());
+					return shockroomDto;
+				})
 				.collect(Collectors.toList());
 		log.debug(OUTPUT, result);
 		return ResponseEntity.ok().body(result);

@@ -888,6 +888,7 @@ export interface DoctorInfoDto {
 }
 
 export interface DoctorsOfficeDto {
+    available: boolean;
     closingTime: string;
     description: string;
     id: number;
@@ -3124,6 +3125,7 @@ export interface SharedSnowstormSearchItemDto {
 }
 
 export interface ShockroomDto {
+    available: boolean;
     description: string;
     id: number;
 }

@@ -112,4 +112,5 @@ export interface TypeaheadOption<T> {
 	value: T;
 	compareValue: string;
 	viewValue?: string;
+	disabled?: boolean;
 }

@@ -44,7 +44,7 @@ export class AttentionPlaceDialogComponent {
 		if (id === AttentionPlace.CONSULTORIO) {
 			const office: AbstractControl = this.form.get('office');
 			this.offices$ = this.doctorsOfficeService.getBySectorType(SECTOR_AMBULATORIO);
-			this.officesTypeaheadOptions$ = this.getOfficesTypeaheadOptions$();
+			this.officesTypeaheadOptions$ = this.getTypeaheadOptions$(this.offices$);
 			office.addValidators(Validators.required);
 			office.updateValueAndValidity();
 		}
@@ -52,7 +52,7 @@ export class AttentionPlaceDialogComponent {
 		if (id === AttentionPlace.SHOCKROOM) {
 			const shockroom: AbstractControl = this.form.get('shockroom');
 			this.shockrooms$ = this.shockroomService.getShockrooms();
-			this.shockroomsTypeaheadOptions$ = this.getShockroomsTypeaheadOptions$();
+			this.shockroomsTypeaheadOptions$ = this.getTypeaheadOptions$(this.shockrooms$);
 			shockroom.addValidators(Validators.required);
 			shockroom.updateValueAndValidity();
 		}
@@ -87,29 +87,16 @@ export class AttentionPlaceDialogComponent {
 		}
 	}
 
-	private getOfficesTypeaheadOptions$(): Observable<TypeaheadOption<DoctorsOfficeDto>[]> {
-		return this.offices$.pipe(map(toTypeaheadOptionList));
-		function toTypeaheadOptionList(prosBySpecialtyList: DoctorsOfficeDto[]): TypeaheadOption<DoctorsOfficeDto>[] {
-			return prosBySpecialtyList.map(toTypeaheadOption);
+	private getTypeaheadOptions$(attentionPlace$): Observable<TypeaheadOption<any>[]> {
+		return attentionPlace$.pipe(map(toTypeaheadOptionList));
+		function toTypeaheadOptionList(list: any[]): TypeaheadOption<any>[] {
+			return list.map(toTypeaheadOption);
 
-			function toTypeaheadOption(s: DoctorsOfficeDto): TypeaheadOption<DoctorsOfficeDto> {
+			function toTypeaheadOption(item: any): TypeaheadOption<DoctorsOfficeDto> {
 				return {
-					compareValue: s.description,
-					value: s,
-				};
-			}
-		}
-	}
-
-	private getShockroomsTypeaheadOptions$(): Observable<TypeaheadOption<ShockroomDto>[]> {
-		return this.shockrooms$.pipe(map(toTypeaheadOptionList));
-		function toTypeaheadOptionList(prosBySpecialtyList: ShockroomDto[]): TypeaheadOption<ShockroomDto>[] {
-			return prosBySpecialtyList.map(toTypeaheadOption);
-
-			function toTypeaheadOption(s: ShockroomDto): TypeaheadOption<ShockroomDto> {
-				return {
-					compareValue: s.description,
-					value: s,
+					compareValue: !item.available ? `${item.description} - OCUPADO` : item.description,
+					value: item,
+					disabled: !item.available
 				};
 			}
 		}

@@ -23,4 +23,6 @@ public class DoctorsOfficeDto {
 
     @JsonFormat(pattern = JacksonDateFormatConfig.TIME_FORMAT)
     private String closingTime;
+
+	private boolean isAvailable;
 }

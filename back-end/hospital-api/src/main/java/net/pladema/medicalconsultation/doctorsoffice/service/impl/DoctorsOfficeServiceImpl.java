@@ -1,5 +1,6 @@
 package net.pladema.medicalconsultation.doctorsoffice.service.impl;
 
+import net.pladema.emergencycare.repository.EmergencyCareEpisodeRepository;
 import net.pladema.medicalconsultation.doctorsoffice.repository.DoctorsOfficeRepository;
 import net.pladema.medicalconsultation.doctorsoffice.repository.domain.DoctorsOfficeVo;
 import net.pladema.medicalconsultation.doctorsoffice.service.DoctorsOfficeService;
@@ -20,10 +21,13 @@ public class DoctorsOfficeServiceImpl implements DoctorsOfficeService {
 
     private final DoctorsOfficeRepository doctorsOfficeRepository;
 
-    public DoctorsOfficeServiceImpl(DoctorsOfficeRepository doctorsOfficeRepository){
+	private final EmergencyCareEpisodeRepository emergencyCareEpisodeRepository;
+
+    public DoctorsOfficeServiceImpl(DoctorsOfficeRepository doctorsOfficeRepository, EmergencyCareEpisodeRepository emergencyCareEpisodeRepository){
         super();
         this.doctorsOfficeRepository = doctorsOfficeRepository;
-    }
+		this.emergencyCareEpisodeRepository = emergencyCareEpisodeRepository;
+	}
 
     @Override
     public List<DoctorsOfficeBo> getAllDoctorsOffice(Integer institutionId, Integer sectorId) {
@@ -41,7 +45,12 @@ public class DoctorsOfficeServiceImpl implements DoctorsOfficeService {
         LOG.debug("Input parameters -> institutionId {}, sectorTypeId {}", institutionId, sectorTypeId);
         List<DoctorsOfficeVo> resultQuery = doctorsOfficeRepository.findAllBySectorType(institutionId, sectorTypeId);
         List<DoctorsOfficeBo> result = new ArrayList<>();
-        resultQuery.forEach(doctorsOfficeVo -> result.add(new DoctorsOfficeBo(doctorsOfficeVo)));
+        resultQuery.forEach(doctorsOfficeVo -> {
+			boolean isAvailable = emergencyCareEpisodeRepository.existsEpisodeInOffice(doctorsOfficeVo.getId(), null) == 0;
+			DoctorsOfficeBo doctorsOfficeBo = new DoctorsOfficeBo(doctorsOfficeVo);
+			doctorsOfficeBo.setAvailable(isAvailable);
+			result.add(doctorsOfficeBo);
+		});
         LOG.debug(LOGGING_OUTPUT, result);
         return result;
     }
