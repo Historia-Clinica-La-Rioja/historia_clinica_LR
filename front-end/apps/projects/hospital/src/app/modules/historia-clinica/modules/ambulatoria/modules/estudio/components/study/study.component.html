@@ -2,7 +2,7 @@
 	<app-category-header-divider [header]="studyHeader"></app-category-header-divider>
 
 	<div id="content" fxLayout="column" fxLayoutGap="50px">
-		<div fxLayout="row" *ngFor="let study of studies">
+		<div fxLayout="row" *ngFor="let study of _studies">
 			<app-study-list-element fxFlex="100" [content]="contentBuilder(study.diagnosticInformation)"
 				[wasCreatedDuringInternment]="wasCreatedDuringSource(study.diagnosticInformation.source)"></app-study-list-element>
 			<div actions *ngIf="study.diagnosticInformation.statusId !== STUDY_STATUS.ERROR.id">

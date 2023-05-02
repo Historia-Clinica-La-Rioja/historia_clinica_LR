@@ -45,6 +45,11 @@ export class ServiceRequestService {
 		return this.http.get<DiagnosticReportInfoDto[]>(url, { params: queryParams });
 	}
 
+	getStudyStatus(patientId: number, serviceRequestId: number): Observable<boolean>{
+		const url = `${environment.apiBase}/institutions/${this.contextService.institutionId}/patient/${patientId}/service-requests/${serviceRequestId}/existCheck`;
+		return this.http.get<boolean>(url);
+	}
+
 	create(patientId: number, prescriptionDto: PrescriptionDto): Observable<number[]> {
 		const url = `${environment.apiBase}/institutions/${this.contextService.institutionId}/patient/${patientId}/service-requests`;
 		return this.http.post<number[]>(url, prescriptionDto);

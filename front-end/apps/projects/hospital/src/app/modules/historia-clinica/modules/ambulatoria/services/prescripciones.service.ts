@@ -46,6 +46,10 @@ export class PrescripcionesService {
 		}
 	}
 
+	getPrescriptionStatus(patientId: number, serviceRequestId: number): Observable<boolean>{
+		return this.serviceRequestService.getStudyStatus(patientId, serviceRequestId);
+	}
+
 	changeMedicationStatus(statusChange: string, patientId: number, medicationsIds: number[], dayQuantity?: number, observations?: string): Observable<void> {
 		switch (statusChange) {
 			case MedicationStatusChange.FINALIZE:

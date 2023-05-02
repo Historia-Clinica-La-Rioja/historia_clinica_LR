@@ -14,7 +14,7 @@ import { anyMatch } from "@core/utils/array.utils";
 import { PermissionsService } from "@core/services/permissions.service";
 import { ActionsButtonService } from '../../../indicacion/services/actions-button.service';
 
-const IMAGE_DIAGNOSIS_ID = '363679005';
+const IMAGE_DIAGNOSIS = 'Diagnóstico por imágenes';
 
 @Component({
 	selector: 'app-study',
@@ -26,9 +26,13 @@ export class StudyComponent implements OnInit {
 
 	@Input() set studies(studies: DiagnosticReportInfoDto[]){
 		studies.forEach(study => {
-			study.category === IMAGE_DIAGNOSIS_ID ? 
-				this._studies.push(this.mapToStudyInformation(study, false)) :
+			if (study.category === IMAGE_DIAGNOSIS) {
+				this.prescripcionesService.getPrescriptionStatus(this.patientId, study.serviceRequestId).subscribe( hasActiveAppointment => {
+					this._studies.push(this.mapToStudyInformation(study, !hasActiveAppointment));
+				})
+			} else {
 				this._studies.push(this.mapToStudyInformation(study,true));
+			}
 		})
 	};
 	@Input() studyHeader: Title;
@@ -39,7 +43,7 @@ export class StudyComponent implements OnInit {
 	hasPicturesStaffRole = false;
 	hasLaboratoryStaffRole = false;
 	hasPharmacyStaffRole = false;
-	_studies: StudyInformation[];
+	_studies: StudyInformation[] = [];
 
 	constructor(
 		private readonly prescripcionesService: PrescripcionesService,
