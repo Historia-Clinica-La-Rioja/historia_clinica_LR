@@ -1,16 +1,16 @@
 package net.pladema.medicalconsultation.appointment.repository.entity;
 
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-import lombok.ToString;
+import java.io.Serializable;
 
 import javax.persistence.Column;
 import javax.persistence.EmbeddedId;
 import javax.persistence.Entity;
 import javax.persistence.Table;
 
-import java.io.Serializable;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.ToString;
 
 @Entity
 @Table(name = "appointment_order_image")
@@ -27,15 +27,23 @@ public class AppointmentOrderImage implements Serializable {
 	@EmbeddedId
     private AppointmentOrderImagePK pk;
 
-	@Column(name = "image_id", nullable = false)
+	@Column(name = "order_id")
+	private Integer orderId;
+
+	@Column(name = "study_id")
+	private Integer studyId;
+
+	@Column(name = "image_id")
 	private String imageId;
 
 	@Column(name = "completed", nullable = false)
 	private Boolean completed;
 
-    public AppointmentOrderImage( Integer appointmentId, Integer orderId, String imageId, Boolean completed){
-        this.pk = new AppointmentOrderImagePK(appointmentId, orderId);
+    public AppointmentOrderImage( Integer appointmentId, Integer orderId, Integer studyId, String imageId, Boolean completed){
+        this.pk = new AppointmentOrderImagePK(appointmentId);
 		this.imageId = imageId;
 		this.completed = completed;
+		this.orderId = orderId;
+		this.studyId = studyId;
     }
 }

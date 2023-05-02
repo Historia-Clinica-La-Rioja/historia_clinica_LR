@@ -19,8 +19,4 @@ public class AppointmentOrderImagePK implements Serializable {
 	@Column(name = "appointment_id", nullable = false)
 	private Integer appointmentId;
 
-	@Column(name = "order_id", nullable = false)
-    private Integer orderId;
-
-
 }

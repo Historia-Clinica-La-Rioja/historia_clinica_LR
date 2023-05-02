@@ -14,6 +14,8 @@ public class AppointmentOrderImageBo {
 
     private Integer orderId;
 
+	private Integer studyId;
+
     private boolean completed;
 
     private String imageId;

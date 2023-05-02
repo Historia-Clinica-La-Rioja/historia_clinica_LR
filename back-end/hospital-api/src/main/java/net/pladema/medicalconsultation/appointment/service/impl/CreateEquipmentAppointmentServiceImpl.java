@@ -5,12 +5,17 @@ import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import net.pladema.medicalconsultation.appointment.application.port.NewAppointmentNotification;
 import net.pladema.medicalconsultation.appointment.domain.NewAppointmentNotificationBo;
+import net.pladema.medicalconsultation.appointment.repository.AppointmentOrderImageRepository;
 import net.pladema.medicalconsultation.appointment.repository.AppointmentRepository;
 import net.pladema.medicalconsultation.appointment.repository.EquipmentAppointmentAssnRepository;
 import net.pladema.medicalconsultation.appointment.repository.entity.Appointment;
+import net.pladema.medicalconsultation.appointment.repository.entity.AppointmentOrderImage;
 import net.pladema.medicalconsultation.appointment.repository.entity.EquipmentAppointmentAssn;
+import net.pladema.medicalconsultation.appointment.service.AppointmentOrderImageService;
 import net.pladema.medicalconsultation.appointment.service.CreateEquipmentAppointmentService;
 import net.pladema.medicalconsultation.appointment.service.domain.AppointmentBo;
+
+import net.pladema.medicalconsultation.appointment.service.domain.AppointmentOrderImageBo;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -24,11 +29,13 @@ public class CreateEquipmentAppointmentServiceImpl implements CreateEquipmentApp
 
 	private final EquipmentAppointmentAssnRepository equipmentAppointmentAssnRepository;
 
+	private final AppointmentOrderImageService appointmentOrderImageService;
+
 	private final NewAppointmentNotification newAppointmentNotification;
 
 	@Override
 	@Transactional
-	public AppointmentBo execute(AppointmentBo appointmentBo) {
+	public AppointmentBo execute(AppointmentBo appointmentBo, Integer order_id, Integer study_id) {
 		log.debug("Input parameters -> appointmentBo {}", appointmentBo);
 		Appointment appointment = Appointment.newFromAppointmentBo(appointmentBo);
 		appointment = appointmentRepository.save(appointment);
@@ -48,6 +55,9 @@ public class CreateEquipmentAppointmentServiceImpl implements CreateEquipmentApp
 				appointment.getHour(),
 				appointmentBo.getDiaryId()
 			));
+
+		AppointmentOrderImageBo appointmentOrderImageBO = new AppointmentOrderImageBo(appointment.getId(),order_id, study_id, false, null);
+		appointmentOrderImageService.save(appointmentOrderImageBO);
 
 		log.debug("Output -> {}", result);
 		return result;

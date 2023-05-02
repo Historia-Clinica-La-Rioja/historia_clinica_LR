@@ -40,7 +40,8 @@ public class AppointmentOrderImageServiceImpl implements AppointmentOrderImageSe
 	@Override
 	public void save(AppointmentOrderImageBo appointmentOrderImageBo) {
 		LOG.debug("Input parameters -> appointmentOrderImageBo {}", appointmentOrderImageBo);
-		AppointmentOrderImage entity =new AppointmentOrderImage(appointmentOrderImageBo.getAppointmentId(),appointmentOrderImageBo.getOrderId(),appointmentOrderImageBo.getImageId(),appointmentOrderImageBo.isCompleted());
+		AppointmentOrderImage entity =new AppointmentOrderImage(appointmentOrderImageBo.getAppointmentId(),appointmentOrderImageBo.getOrderId(),
+				appointmentOrderImageBo.getStudyId(),appointmentOrderImageBo.getImageId(),appointmentOrderImageBo.isCompleted());
 		appointmentOrderImageRepository.save(entity);
 		LOG.debug("Output -> AppointmentOrderImage {}", entity);
 	}

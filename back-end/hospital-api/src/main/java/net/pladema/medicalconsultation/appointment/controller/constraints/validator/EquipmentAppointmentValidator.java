@@ -54,7 +54,7 @@ public class EquipmentAppointmentValidator implements ConstraintValidator<ValidE
 	@Override
 	public boolean isValid(Object[] parameters, ConstraintValidatorContext context) {
 		Integer institutionId = (Integer) parameters[0];
-		CreateAppointmentDto createAppointmentDto = (CreateAppointmentDto) parameters[1];
+		CreateAppointmentDto createAppointmentDto = (CreateAppointmentDto) parameters[3];
 		LOG.debug("Input parameters -> institutionId {}, createAppointmentDto {}", institutionId, createAppointmentDto);
 
 		ZoneId timezone = institutionExternalService.getTimezone(institutionId);

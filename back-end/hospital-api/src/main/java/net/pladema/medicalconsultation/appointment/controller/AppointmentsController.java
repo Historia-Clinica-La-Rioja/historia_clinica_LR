@@ -211,11 +211,13 @@ public class AppointmentsController {
 	@ValidEquipmentAppointment
 	public ResponseEntity<Integer> createEquipmentAppoiment(
 			@PathVariable(name = "institutionId") Integer institutionId,
+			@RequestParam(name = "order_id", required = true) Integer order_id,
+			@RequestParam(name = "study_id", required = true) Integer study_id,
 			@RequestBody @Valid CreateAppointmentDto createAppointmentDto
 	) {
 		log.debug("Input parameters -> institutionId {}, appointmentDto {}", institutionId, createAppointmentDto);
 		AppointmentBo newAppointmentBo = appointmentMapper.toAppointmentBo(createAppointmentDto);
-		newAppointmentBo = createEquipmentAppointmentService.execute(newAppointmentBo);
+		newAppointmentBo = createEquipmentAppointmentService.execute(newAppointmentBo, order_id, study_id);
 		Integer result = newAppointmentBo.getId();
 		log.debug(OUTPUT, result);
 		return ResponseEntity.ok().body(result);
@@ -593,7 +595,7 @@ public class AppointmentsController {
 
 		MqttMetadataBo data = new MqttMetadataBo(topic, json,true,1);
 		mqttClientService.publish(data);
-		AppointmentOrderImageBo appointmentOrderImageBO = new AppointmentOrderImageBo(appointmentId,12,false,UID);
+		AppointmentOrderImageBo appointmentOrderImageBO = new AppointmentOrderImageBo(appointmentId,12, 12, false,UID);
 		appointmentOrderImageService.save(appointmentOrderImageBO);
 		return ResponseEntity.ok().body(true);
 	}
