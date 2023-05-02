@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core';
+import {Component, Input} from '@angular/core';
 import { DomSanitizer } from '@angular/platform-browser';
 import { UIComponentDto } from '@extensions/extensions-model';
 
@@ -20,6 +20,7 @@ export class UiComponentComponent {
 		link: 'link',
 		tabs: 'tabs',
 		typography: 'typography',
+		multiselect_cubejs: 'multiselect-cubejs',
 	};
 	@Input() uiComponent: UIComponentDto;
 	@Input() listOnTab: string = null;

@@ -2,9 +2,9 @@
   "layout" : "components",
   "content" : [
     {
-      "type" : "tabs",
+      "type" : "multiselect-cubejs",
       "args" : {
-        "tabs" : [
+        "options" : [
           {
             "args" : {
               "label" : "Consultas",

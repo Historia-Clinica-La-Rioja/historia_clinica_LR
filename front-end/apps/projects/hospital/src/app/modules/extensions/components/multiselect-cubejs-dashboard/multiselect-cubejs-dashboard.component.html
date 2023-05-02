@@ -1,0 +1,11 @@
+<mat-form-field appearance="outline" >
+	<mat-label>Categoría</mat-label>
+	<mat-select  >
+		<mat-option id="category" name="category" *ngFor="let category of content"
+					[value]="category.args" (click)="onChange(category.args)">
+			{{category.args.label}}
+		</mat-option>
+	</mat-select>
+</mat-form-field>
+<app-ui-component-list [list]="selectedTab"></app-ui-component-list>
+

@@ -64,4 +64,11 @@
 		</span>
 		<div>{{uiComponent | json}}</div>
 	</div>
+
+	<div *ngSwitchCase="TYPE_DEFINITIONS.multiselect_cubejs">
+		<app-multiselect-cubejs-dashboard
+			[content]="uiComponent.args.options"
+		>
+		</app-multiselect-cubejs-dashboard>
+	</div>
 </ng-container>
