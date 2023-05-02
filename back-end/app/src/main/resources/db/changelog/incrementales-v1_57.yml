@@ -1,6 +1,64 @@
 databaseChangeLog: 
     - logicalFilePath: incrementales-v1_57
 
+    - changeSet: 
+        id: changeAppointment_order_image_type-metadata
+        author: lbergottini
+        changes:
+          - modifyDataType:
+              columnName: image_id
+              newDataType: varchar(80)
+              tableName: appointment_order_image
+          - addColumn:
+              tableName: appointment_order_image
+              columns:
+                - column:
+                    name: study_id
+                    type: int
+          - addColumn:
+              tableName: appointment_order_image
+              columns:
+                - column:
+                    autoIncrement: true
+                    name: id
+                    type: smallint
+          - dropNotNullConstraint:
+              columnDataType: varchar(80)
+              columnName: image_id
+              tableName: appointment_order_image
+          - dropPrimaryKey:
+              constraintName: PK_appointment_order_image
+              dropIndex: true
+              tableName: appointment_order_image
+          - dropNotNullConstraint:
+              columnDataType: int
+              columnName: order_id
+              tableName: appointment_order_image
+          - addForeignKeyConstraint:
+              baseColumnNames: order_id
+              baseTableName: appointment_order_image
+              constraintName: FK_appointment_order_image_order_id
+              onDelete: NO ACTION
+              onUpdate: NO ACTION
+              referencedColumnNames: id
+              referencedTableName: service_request
+              validate: true
+          - addForeignKeyConstraint:
+              baseColumnNames: study_id
+              baseTableName: appointment_order_image
+              constraintName: FK_appointment_order_image_study_id
+              onDelete: NO ACTION
+              onUpdate: NO ACTION
+              referencedColumnNames: id
+              referencedTableName: diagnostic_report
+              validate: true
+          - addPrimaryKey:
+              clustered: true
+              columnNames: appointment_id, id
+              constraintName: PK_appointment_order_image
+              tableName: appointment_order_image
+              validate: true
+
     - changeSet:
         id: merged_patient_item-createTable
         comment: Create table merged_patient_item
