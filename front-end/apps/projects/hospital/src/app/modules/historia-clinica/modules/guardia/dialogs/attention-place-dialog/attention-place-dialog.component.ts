@@ -8,10 +8,14 @@ import { Observable } from 'rxjs';
 import { SECTOR_AMBULATORIO } from '../../constants/masterdata';
 import { TypeaheadOption } from '@presentation/components/typeahead/typeahead.component';
 import { map } from 'rxjs/operators';
-import { MatDialogRef } from '@angular/material/dialog';
+import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { ShockroomService } from '@api-rest/services/shockroom.service';
 import { AbstractControl, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { AttendPlace } from '../../routes/home/home.component';
+import { BedAssignmentComponent } from '@historia-clinica/dialogs/bed-assignment/bed-assignment.component';
+
+const CONFIRM: string = 'guardia.dialog.attention_place.CONFIRM';
+const BED_ASSIGN: string = 'guardia.dialog.attention_place.BED_ASSIGN';
 
 @Component({
 	selector: 'app-attention-place-dialog',
@@ -24,6 +28,7 @@ export class AttentionPlaceDialogComponent {
 	officesTypeaheadOptions$: Observable<TypeaheadOption<DoctorsOfficeDto>[]>;
 	shockrooms$: Observable<ShockroomDto[]>;
 	shockroomsTypeaheadOptions$: Observable<TypeaheadOption<ShockroomDto>[]>
+	buttonText: string = CONFIRM;
 	form: FormGroup;
 	hasError = hasError;
 
@@ -33,6 +38,7 @@ export class AttentionPlaceDialogComponent {
 		private readonly shockroomService: ShockroomService,
 		private readonly formBuilder: FormBuilder,
 		private readonly dialogRef: MatDialogRef<AttentionPlaceDialogComponent>,
+		private readonly dialog: MatDialog,
 	) {
 		this.places$ = this.emergencyCareMasterDataService.getEmergencyEpisodeSectorType();
 		this.setForm();
@@ -56,6 +62,9 @@ export class AttentionPlaceDialogComponent {
 			shockroom.addValidators(Validators.required);
 			shockroom.updateValueAndValidity();
 		}
+
+		if (id === AttentionPlace.HABITACION) 
+			this.buttonText = BED_ASSIGN;
 	}
 
 	setOffice(value: Event) {
@@ -85,6 +94,14 @@ export class AttentionPlaceDialogComponent {
 			}
 			this.dialogRef.close(attendPlace);
 		}
+
+		if (id === AttentionPlace.HABITACION) {
+			const attendPlace: AttendPlace = {
+				id: null,
+				attentionPlace: AttentionPlace.HABITACION
+			}
+			this.dialogRef.close(attendPlace);
+		}
 	}
 
 	private getTypeaheadOptions$(attentionPlace$): Observable<TypeaheadOption<any>[]> {
@@ -92,7 +109,7 @@ export class AttentionPlaceDialogComponent {
 		function toTypeaheadOptionList(list: any[]): TypeaheadOption<any>[] {
 			return list.map(toTypeaheadOption);
 
-			function toTypeaheadOption(item: any): TypeaheadOption<DoctorsOfficeDto> {
+			function toTypeaheadOption(item: any): TypeaheadOption<any> {
 				return {
 					compareValue: !item.available ? `${item.description} - OCUPADO` : item.description,
 					value: item,
@@ -113,6 +130,7 @@ export class AttentionPlaceDialogComponent {
 		shockroom.clearValidators();
 		shockroom.updateValueAndValidity();
 		shockroom.setValue(null);
+		this.buttonText = CONFIRM;
 	}
 
 	private setForm() {

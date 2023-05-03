@@ -232,6 +232,7 @@
 				"SUBTITLE": "Seleccione el destino donde se atenderá al paciente",
 				"PLACE": "Lugar de atencion",
 				"CONFIRM": "Confirmar",
+				"BED_ASSIGN": "Asignar cama",
 				"ATTENTION_REQUIRED": "Debes seleccionar un lugar",
 				"office": {
 					"SELECT_OFFICE": "Seleccione consultorio"

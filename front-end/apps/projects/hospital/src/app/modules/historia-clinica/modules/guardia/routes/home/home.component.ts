@@ -3,6 +3,7 @@ import { Router } from '@angular/router';
 import { EmergencyCareEpisodeService } from '@api-rest/services/emergency-care-episode.service';
 import {
 	ApiErrorDto,
+	BedInfoDto,
 	DateTimeDto,
 	DoctorsOfficeDto, EmergencyCareEpisodeListTriageDto,
 	EmergencyCareListDto,
@@ -37,6 +38,7 @@ import { EmergencyCareStateChangedService } from '@historia-clinica/modules/ambu
 import { AttentionPlace, PatientType } from '@historia-clinica/constants/summaries';
 import { AttentionPlaceDialogComponent } from '../../dialogs/attention-place-dialog/attention-place-dialog.component';
 import { FormBuilder } from '@angular/forms';
+import { BedAssignmentComponent } from '@historia-clinica/dialogs/bed-assignment/bed-assignment.component';
 
 const TRANSLATE_KEY_PREFIX = 'guardia.home.episodes.episode.actions';
 
@@ -159,6 +161,13 @@ export class HomeComponent implements OnInit {
 
 				}, (error: ApiErrorDto) => processErrors(error, (msg) => this.snackBarService.showError(msg)))
 			}
+
+			if (attendPlace.attentionPlace === AttentionPlace.HABITACION)
+				this.dialog.open(BedAssignmentComponent)
+					.afterClosed()
+					.subscribe((bed: BedInfoDto) => {
+						
+					});
 		});
 	}
 

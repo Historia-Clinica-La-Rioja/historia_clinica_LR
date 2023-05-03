@@ -146,6 +146,7 @@ import { AlergiasFormComponent } from './components/alergias-form/alergias-form.
 		BackgroundListComponent,
 		MedicationListComponent,
 		ReferenceRequestListComponent,
+		BedAssignmentComponent,
 		// dialogs
 		ConceptsSearchDialogComponent,
 		ConceptsTypeaheadSearchDialogComponent,
