@@ -116,6 +116,10 @@
 									[value]="patientMedicalOrder" matTooltip="{{'image-network.appointments.ORDER' | translate}} # {{patientMedicalOrder.serviceRequestId}} - {{patientMedicalOrder.snomed.pt | titlecase}}">
 									{{'image-network.appointments.ORDER' | translate}} # {{patientMedicalOrder.serviceRequestId}} - {{patientMedicalOrder.snomed.pt | titlecase}}
 								</mat-option>
+								<mat-divider></mat-divider>
+								<mat-option>
+									<span class="color-primary" [translate]="'image-network.appointments.TRANSCRIBE_ORDER'"></span>
+								</mat-option>
 							</mat-select>
 						</mat-form-field>
 						<div fxLayout="row" fxLayoutGap="10px" fxLayout.xs="column">

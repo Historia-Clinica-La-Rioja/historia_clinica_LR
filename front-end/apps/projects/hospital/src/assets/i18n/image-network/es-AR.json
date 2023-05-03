@@ -26,17 +26,18 @@
             "CONFIRM_NEW_DIARY": "¿Desea confirmar la creación de esta agenda?"
         },
         "appointments": {
-            "FINISH": "Finalizar",
-            "FINISH_STUDY": "Finalizar estudio",
-            "CONFIRM": "Completar",
-            "WORKLIST": "Lista de trabajo",
-            "FILTER_BY_STATE": "Filtrar por estado",
-            "MEDICAL_COVERAGE": "Cobertura Médica",
-            "NEW_MEDICAL_ORDER": "Nueva Orden Médica",
-            "ORDER": "Orden",
-            "STUDY_COMPLETED": "El estudio se ha marcado como completado",
-            "STUDY_ERROR": "El estudio no pudo marcarse como completado porque no se encontraron resultados"
-        },
+			"FINISH": "Finalizar",
+			"FINISH_STUDY": "Finalizar estudio",
+			"CONFIRM": "Completar",
+			"WORKLIST": "Lista de trabajo",
+			"FILTER_BY_STATE": "Filtrar por estado",
+			"MEDICAL_COVERAGE": "Cobertura Médica",
+			"NEW_MEDICAL_ORDER": "Nueva Orden Médica",
+			"ORDER": "Orden",
+			"STUDY_COMPLETED": "El estudio se ha marcado como completado",
+			"STUDY_ERROR": "El estudio no pudo marcarse como completado porque no se encontraron resultados",
+			"TRANSCRIBE_ORDER": "Transcribir orden impresa / externa"
+		},
         "worklist": {
             "status": {
                 "PENDING": "pendiente",
