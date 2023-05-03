@@ -8,6 +8,8 @@ import lombok.ToString;
 import net.pladema.emergencycare.repository.entity.EmergencyCareEpisode;
 import net.pladema.emergencycare.repository.entity.PoliceInterventionDetails;
 import net.pladema.emergencycare.triage.repository.entity.TriageCategory;
+import net.pladema.establishment.repository.domain.BedVo;
+import net.pladema.establishment.repository.entity.Bed;
 import net.pladema.medicalconsultation.doctorsoffice.repository.domain.DoctorsOfficeVo;
 import net.pladema.medicalconsultation.shockroom.domain.ShockroomVo;
 import net.pladema.person.repository.entity.Person;
@@ -54,8 +56,11 @@ public class EmergencyCareVo implements Serializable {
 
 	private ShockroomVo shockroom;
 
+	private BedVo bed;
+
 	public EmergencyCareVo(EmergencyCareEpisode emergencyCareEpisode, Person person, Short patientTypeId,
-						   String nameSelfDetermination, String doctorsOfficeDescription, TriageCategory triage, String shockroomDescription){
+						   String nameSelfDetermination, String doctorsOfficeDescription, TriageCategory triage,
+						   String shockroomDescription, Bed bed){
 		this.id = emergencyCareEpisode.getId();
 		this.patient = emergencyCareEpisode.getPatientId() != null ? new PatientECEVo(emergencyCareEpisode.getPatientId(), emergencyCareEpisode.getPatientMedicalCoverageId(), patientTypeId, person, nameSelfDetermination) : null;
 		this.triageCategoryId = triage.getId();
@@ -70,11 +75,13 @@ public class EmergencyCareVo implements Serializable {
 		this.doctorsOffice = emergencyCareEpisode.getDoctorsOfficeId() != null ? new DoctorsOfficeVo(emergencyCareEpisode.getDoctorsOfficeId(), doctorsOfficeDescription) : null;
 		this.hasPoliceIntervention = emergencyCareEpisode.getHasPoliceIntervention();
 		this.shockroom = emergencyCareEpisode.getShockroomId() != null ? new ShockroomVo(emergencyCareEpisode.getShockroomId(), shockroomDescription) : null;
+		this.bed = emergencyCareEpisode.getBedId() != null ? new BedVo(bed) : null;
 	}
 
 	public EmergencyCareVo(EmergencyCareEpisode emergencyCareEpisode, Person person, Short patientTypeId, String nameSalfeDetermination,
-						   String doctorsOfficeDescription, TriageCategory triage, PoliceInterventionDetails policeInterventionDetails, String shockroomDescription){
-		this(emergencyCareEpisode, person, patientTypeId, nameSalfeDetermination, doctorsOfficeDescription, triage, shockroomDescription);
+						   String doctorsOfficeDescription, TriageCategory triage, PoliceInterventionDetails policeInterventionDetails,
+						   String shockroomDescription, Bed bed){
+		this(emergencyCareEpisode, person, patientTypeId, nameSalfeDetermination, doctorsOfficeDescription, triage, shockroomDescription, bed);
 		this.policeInterventionDetails = policeInterventionDetails != null ? new PoliceInterventionDetailsVo(policeInterventionDetails) : null;
 	}
 }

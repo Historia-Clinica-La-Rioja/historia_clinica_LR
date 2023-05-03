@@ -1114,6 +1114,7 @@ export interface EmergencyCareHistoricDocumentDto {
 }
 
 export interface EmergencyCareListDto extends Serializable {
+    bed: BedDto;
     creationDate: DateTimeDto;
     doctorsOffice: DoctorsOfficeDto;
     id: number;
@@ -2973,6 +2974,7 @@ export interface ResponseAnamnesisDto extends AnamnesisDto {
 }
 
 export interface ResponseEmergencyCareDto extends EmergencyCareDto {
+    bed: BedDto;
     creationDate: DateTimeDto;
     doctorsOffice: DoctorsOfficeDto;
     emergencyCareState: MasterDataDto;

@@ -7,7 +7,7 @@ import { PatientNameService } from '@core/services/patient-name.service';
 import { TriageCategory } from '@historia-clinica/modules/guardia/components/triage-chip/triage-chip.component';
 import { GuardiaMapperService } from '@historia-clinica/modules/guardia/services/guardia-mapper.service';
 import { TriageDefinitionsService } from '@historia-clinica/modules/guardia/services/triage-definitions.service';
-import { GUARDIA, PatientType } from '@historia-clinica/constants/summaries';
+import { GUARDIA } from '@historia-clinica/constants/summaries';
 import { SummaryHeader } from '@presentation/components/summary-card/summary-card.component';
 import { RiskFactorFull, Triage } from '@historia-clinica/modules/guardia/components/triage-details/triage-details.component';
 import { EmergencyCareTypes, EstadosEpisodio } from '@historia-clinica/modules/guardia/constants/masterdata';
@@ -48,6 +48,7 @@ export class ResumenDeGuardiaComponent implements OnInit {
 	emergencyCareType: EmergencyCareTypes;
 	doctorsOfficeDescription: string;
 	shockroomDescription: string;
+	bedDescription: string;
 
 	triagesHistory: TriageReduced[];
 	fullNamesHistoryTriage: string[];
@@ -64,7 +65,6 @@ export class ResumenDeGuardiaComponent implements OnInit {
 		private readonly triageService: TriageService,
 		private readonly guardiaMapperService: GuardiaMapperService,
 		private readonly patientNameService: PatientNameService,
-		private readonly triageDefinitionsService: TriageDefinitionsService,
 		private readonly dialog: MatDialog,
 		private readonly episodeStateService: EpisodeStateService,
 		private snackBarService: SnackBarService,
@@ -292,6 +292,7 @@ export class ResumenDeGuardiaComponent implements OnInit {
 				this.emergencyCareType = responseEmergencyCare.emergencyCareType?.id;
 				this.doctorsOfficeDescription = responseEmergencyCare.doctorsOffice?.description;
 				this.shockroomDescription = responseEmergencyCare.shockroom?.description;
+				this.bedDescription = responseEmergencyCare.bed?.bedNumber;
 			});
 
 		this.loadTriages();

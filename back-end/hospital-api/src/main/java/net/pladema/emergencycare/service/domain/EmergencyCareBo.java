@@ -7,6 +7,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 import ar.lamansys.sgh.clinichistory.domain.ips.ReasonBo;
+import net.pladema.clinichistory.hospitalization.service.domain.BedBo;
 import net.pladema.emergencycare.repository.domain.EmergencyCareVo;
 import net.pladema.emergencycare.repository.entity.EmergencyCareEpisode;
 import net.pladema.emergencycare.triage.service.domain.TriageBo;
@@ -61,6 +62,8 @@ public class EmergencyCareBo {
 
 	private ShockRoomBo shockroom;
 
+	private BedBo bed;
+
     public EmergencyCareBo(EmergencyCareVo emergencyCareVo){
         this.id = emergencyCareVo.getId();
         this.patient = emergencyCareVo.getPatient() != null ? new PatientECEBo(emergencyCareVo.getPatient()) : null;
@@ -78,6 +81,7 @@ public class EmergencyCareBo {
         this.createdOn = emergencyCareVo.getCreatedOn();
         this.hasPoliceIntervention = emergencyCareVo.getHasPoliceIntervention();
 		this.shockroom = emergencyCareVo.getShockroom() != null ? new ShockRoomBo(emergencyCareVo.getShockroom().getId(), emergencyCareVo.getShockroom().getDescription()) : null;
+		this.bed = emergencyCareVo.getBed() != null ? new BedBo(emergencyCareVo.getBed().getId(), emergencyCareVo.getBed().getBedNumber(), null) : null;
     }
 
     public EmergencyCareBo(EmergencyCareEpisode emergencyCareEpisode) {

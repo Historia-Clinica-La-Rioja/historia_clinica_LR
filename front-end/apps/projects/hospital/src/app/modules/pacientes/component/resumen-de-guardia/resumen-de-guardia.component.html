@@ -28,10 +28,12 @@
             <mat-divider inset></mat-divider>
 
             <div fxLayout="row" fxLayoutGap="10px" fxLayoutAlign="start center">
-                <mat-icon fontSet="material-icons-outlined" class="gray-color">meeting_room</mat-icon>
-                <div *ngIf="doctorsOfficeDescription || shockroomDescription else noInfo">
+                <mat-icon fontSet="material-icons-outlined" class="gray-color" *ngIf="doctorsOfficeDescription || shockroomDescription">meeting_room</mat-icon>
+                <mat-icon fontSet="material-icons-outlined" class="gray-color" *ngIf="bedDescription">local_hotel</mat-icon>
+                <div *ngIf="doctorsOfficeDescription || shockroomDescription || bedDescription else noInfo">
                     <strong> {{ doctorsOfficeDescription }} </strong>
                     <strong> {{ shockroomDescription }} </strong>
+                    <strong> {{ bedDescription }} </strong>
                 </div>
             </div>
 
