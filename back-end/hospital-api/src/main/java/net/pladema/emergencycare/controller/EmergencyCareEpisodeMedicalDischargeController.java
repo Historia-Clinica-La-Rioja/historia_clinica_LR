@@ -83,7 +83,7 @@ public class EmergencyCareEpisodeMedicalDischargeController {
         ZoneId institutionZoneId = institutionExternalService.getTimezone(institutionId);
         MedicalDischargeBo medicalDischargeBo = emergencyCareDischargeMapper.toMedicalDischargeBo(medicalDischargeDto,medicalDischargeBy,patientInfo, episodeId, institutionId);
         boolean saved = emergencyCareEpisodeDischargeService.newMedicalDischarge(medicalDischargeBo, institutionZoneId, institutionId);
-        emergencyCareEpisodeStateService.changeState(episodeId, institutionId, EmergencyCareState.CON_ALTA_MEDICA, null, null);
+        emergencyCareEpisodeStateService.changeState(episodeId, institutionId, EmergencyCareState.CON_ALTA_MEDICA, null, null, null);
 		hospitalApiPublisher.publish(medicalDischargeBo.getPatientId(), institutionId, EHospitalApiTopicDto.ALTA_MEDICA);
         LOG.debug("Output -> {}", saved);
         return ResponseEntity.ok().body(saved);

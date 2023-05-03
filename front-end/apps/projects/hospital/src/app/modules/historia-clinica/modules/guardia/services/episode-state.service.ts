@@ -11,9 +11,9 @@ export class EpisodeStateService {
 	) {
 	}
 
-	atender(episodeId: number, doctorsOfficeId: number, shockroomId?: number): Observable<boolean> {
+	atender(episodeId: number, doctorsOfficeId: number, shockroomId?: number, bedId?: number): Observable<boolean> {
 		return this.emergencyCareEpisodeStateService
-			.changeState(episodeId, EstadosEpisodio.EN_ATENCION, doctorsOfficeId, shockroomId);
+			.changeState(episodeId, EstadosEpisodio.EN_ATENCION, doctorsOfficeId, shockroomId, bedId);
 	}
 
 	cancelar(episodeId: number, doctorsOfficeId: number): Observable<boolean> {

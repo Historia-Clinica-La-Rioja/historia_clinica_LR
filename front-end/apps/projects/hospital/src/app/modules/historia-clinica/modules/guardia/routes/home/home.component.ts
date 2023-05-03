@@ -166,7 +166,15 @@ export class HomeComponent implements OnInit {
 				this.dialog.open(BedAssignmentComponent)
 					.afterClosed()
 					.subscribe((bed: BedInfoDto) => {
+						if (!bed) return;
 						
+						this.episodeStateService.atender(episode.id, null, null, bed.bed.id).subscribe((response: boolean) => {
+							if (!response) this.snackBarService.showError(`${TRANSLATE_KEY_PREFIX}.atender.ERROR`);
+
+							this.snackBarService.showSuccess(`${TRANSLATE_KEY_PREFIX}.atender.SUCCESS`);
+							this.goToEpisode(episode, { typeId: episode.patient.typeId, id: episode.patient.id });
+
+						}, (error: ApiErrorDto) => processErrors(error, (msg) => this.snackBarService.showError(msg)))
 					});
 		});
 	}

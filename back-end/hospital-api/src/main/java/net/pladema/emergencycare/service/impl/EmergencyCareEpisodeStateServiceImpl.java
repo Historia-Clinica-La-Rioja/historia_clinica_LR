@@ -6,6 +6,8 @@ import net.pladema.emergencycare.service.HistoricEmergencyEpisodeService;
 import net.pladema.emergencycare.service.domain.HistoricEmergencyEpisodeBo;
 import net.pladema.emergencycare.service.domain.enums.EEmergencyCareState;
 import ar.lamansys.sgx.shared.exceptions.NotFoundException;
+import net.pladema.establishment.controller.service.BedExternalService;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -37,10 +39,14 @@ public class EmergencyCareEpisodeStateServiceImpl implements EmergencyCareEpisod
 
 	private final HistoricEmergencyEpisodeService historicEmergencyEpisodeService;
 
+	private final BedExternalService bedExternalService;
+
 	public EmergencyCareEpisodeStateServiceImpl(EmergencyCareEpisodeRepository emergencyCareEpisodeRepository,
-												HistoricEmergencyEpisodeService historicEmergencyEpisodeService){
+												HistoricEmergencyEpisodeService historicEmergencyEpisodeService,
+												BedExternalService bedExternalService){
 		this.emergencyCareEpisodeRepository = emergencyCareEpisodeRepository;
 		this.historicEmergencyEpisodeService = historicEmergencyEpisodeService;
+		this.bedExternalService = bedExternalService;
 	}
 
 	@Override
@@ -53,27 +59,39 @@ public class EmergencyCareEpisodeStateServiceImpl implements EmergencyCareEpisod
 
 	@Override
 	@Transactional
-	public Boolean changeState(Integer episodeId, Integer institutionId, Short emergencyCareStateId, Integer doctorsOfficeId, Integer shockroomId) {
-		LOG.debug("Input parameters -> episodeId {}, emergencyCareStateId {}, doctorsOfficeId {}, shockroomId {}",
-				episodeId, emergencyCareStateId, doctorsOfficeId, shockroomId);
+	public Boolean changeState(Integer episodeId, Integer institutionId, Short emergencyCareStateId, Integer doctorsOfficeId, Integer shockroomId, Integer bedId) {
+		LOG.debug("Input parameters -> episodeId {}, emergencyCareStateId {}, doctorsOfficeId {}, shockroomId {}, bedId {}",
+				episodeId, emergencyCareStateId, doctorsOfficeId, shockroomId, bedId);
 
-		assertOffice(doctorsOfficeId, shockroomId);
+		if (doctorsOfficeId != null || shockroomId != null)
+			assertAttentionPlace(doctorsOfficeId, shockroomId);
 
-		HistoricEmergencyEpisodeBo toSave = new HistoricEmergencyEpisodeBo();
-		if (shockroomId != null) {
-			toSave.setEmergencyCareEpisodeId(episodeId);
-			toSave.setEmergencyCareStateId(emergencyCareStateId);
-			toSave.setShockroomId(shockroomId);
-			emergencyCareEpisodeRepository.updateStateWithShockroom(episodeId, institutionId, emergencyCareStateId, shockroomId);
-		} else {
-			toSave = new HistoricEmergencyEpisodeBo(episodeId, emergencyCareStateId, doctorsOfficeId);
-			emergencyCareEpisodeRepository.updateState(episodeId, institutionId, emergencyCareStateId, doctorsOfficeId);
+		if (bedId != null) {
+			saveHistoricEmergencyEpisode(episodeId, emergencyCareStateId, bedId);
+			emergencyCareEpisodeRepository.updateStateWithBed(episodeId, institutionId, emergencyCareStateId, bedId);
+			bedExternalService.updateBedStatusOccupied(bedId);
 		}
-		historicEmergencyEpisodeService.saveChange(toSave);
+		if (shockroomId != null) {
+			saveHistoricEmergencyEpisode(episodeId, emergencyCareStateId, shockroomId);
+			emergencyCareEpisodeRepository.updateStateWithShockroom(episodeId, institutionId, emergencyCareStateId, shockroomId);
+		}
+		if (doctorsOfficeId != null || (bedId == null && shockroomId == null)) {
+			HistoricEmergencyEpisodeBo toSave = new HistoricEmergencyEpisodeBo(episodeId, emergencyCareStateId, doctorsOfficeId);
+			emergencyCareEpisodeRepository.updateState(episodeId, institutionId, emergencyCareStateId, doctorsOfficeId);
+			historicEmergencyEpisodeService.saveChange(toSave);
+		}
 		return true;
 	}
 
-	private void assertOffice(Integer doctorsOfficeId, Integer shockroomId) {
+	private void saveHistoricEmergencyEpisode(Integer episodeId, Short emergencyCareStateId, Integer placeId) {
+		HistoricEmergencyEpisodeBo toSave = new HistoricEmergencyEpisodeBo();
+		toSave.setEmergencyCareEpisodeId(episodeId);
+		toSave.setEmergencyCareStateId(emergencyCareStateId);
+		toSave.setBedId(placeId);
+		historicEmergencyEpisodeService.saveChange(toSave);
+	}
+
+	private void assertAttentionPlace(Integer doctorsOfficeId, Integer shockroomId) {
 		LOG.debug("Input parameters -> doctorsOfficeId {}, shockroomId {}", doctorsOfficeId, shockroomId);
 		if (emergencyCareEpisodeRepository.existsEpisodeInOffice(doctorsOfficeId, shockroomId) > 0)
 			throw new ConstraintViolationException(doctorsOfficeId != null

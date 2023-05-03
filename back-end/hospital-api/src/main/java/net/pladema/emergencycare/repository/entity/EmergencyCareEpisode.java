@@ -70,6 +70,9 @@ public class EmergencyCareEpisode extends SGXAuditableEntity<Integer> {
 	@Column(name = "shockroom_id")
 	private Integer shockroomId;
 
+	@Column(name = "bed_id")
+	private Integer bedId;
+
 	public EmergencyCareEpisode(EmergencyCareBo emergencyCareBo,
 								TriageBo triageBo) {
 		this.id = emergencyCareBo.getId();

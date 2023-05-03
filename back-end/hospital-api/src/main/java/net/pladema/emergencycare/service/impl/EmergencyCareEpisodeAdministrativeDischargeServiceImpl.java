@@ -48,7 +48,7 @@ public class EmergencyCareEpisodeAdministrativeDischargeServiceImpl implements E
         emergencyCareDischarge.setAmbulanceCompanyId(administrativeDischargeBo.getAmbulanceCompanyId());
         assertValidDischarge(administrativeDischargeBo, emergencyCareDischarge.getMedicalDischargeOn(), institutionZoneId);
         emergencyCareDischarge = emergencyCareEpisodeDischargeRepository.save(emergencyCareDischarge);
-        emergencyCareEpisodeStateService.changeState(emergencyCareDischarge.getEmergencyCareEpisodeId(), institutionId, EmergencyCareState.CON_ALTA_ADMINISTRATIVA, null, null);
+        emergencyCareEpisodeStateService.changeState(emergencyCareDischarge.getEmergencyCareEpisodeId(), institutionId, EmergencyCareState.CON_ALTA_ADMINISTRATIVA, null, null, null);
         return true;
     }
 
@@ -59,7 +59,7 @@ public class EmergencyCareEpisodeAdministrativeDischargeServiceImpl implements E
         LocalDateTime localDateTIme = dateTimeProvider.nowDateTimeWithZone(institutionZoneId);
         EmergencyCareDischarge emergencyCareDischarge = new EmergencyCareDischarge(episodeId,localDateTIme,userId, DischargeType.RETIRO_VOLUNTARIO, WITHOUT_DOCTOR);
         emergencyCareDischarge = emergencyCareEpisodeDischargeRepository.save(emergencyCareDischarge);
-        emergencyCareEpisodeStateService.changeState(emergencyCareDischarge.getEmergencyCareEpisodeId(), institutionId, EmergencyCareState.CON_ALTA_ADMINISTRATIVA, null, null);
+        emergencyCareEpisodeStateService.changeState(emergencyCareDischarge.getEmergencyCareEpisodeId(), institutionId, EmergencyCareState.CON_ALTA_ADMINISTRATIVA, null, null, null);
         return true;
     }
 

@@ -94,6 +94,19 @@ public interface EmergencyCareEpisodeRepository extends SGXAuditableEntityJPARep
 					 @Param("shockroomId") Integer shockroomId);
 
 	@Transactional
+	@Modifying
+	@Query(value = " UPDATE EmergencyCareEpisode AS ece " +
+			" SET ece.emergencyCareStateId = :emergencyCareStateId, " +
+			" ece.bedId = :bedId, " +
+			" ece.updateable.updatedOn = CURRENT_TIMESTAMP " +
+			" WHERE ece.id = :episodeId "+
+			" AND ece.institutionId = :institutionId ")
+	void updateStateWithBed(@Param("episodeId") Integer episodeId,
+							@Param("institutionId") Integer institutionId,
+							@Param("emergencyCareStateId") Short emergencyCareStateId,
+							@Param("bedId") Integer bedId);
+
+	@Transactional
 	@Modifying				 
 	@Query(value = "UPDATE EmergencyCareEpisode AS ece SET ece.patientId = :patientId WHERE ece.id = :episodeId")
 	void updatePatientId(@Param("episodeId") Integer episodeId, @Param("patientId") Integer patientId);

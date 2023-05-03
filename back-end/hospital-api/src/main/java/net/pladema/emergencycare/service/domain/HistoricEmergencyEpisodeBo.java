@@ -23,6 +23,8 @@ public class HistoricEmergencyEpisodeBo {
 
 	private Integer shockroomId;
 
+	private Integer bedId;
+
     public HistoricEmergencyEpisodeBo(EmergencyCareBo emergencyCareBo) {
         this.emergencyCareEpisodeId = emergencyCareBo.getId();
         this.emergencyCareStateId = emergencyCareBo.getEmergencyCareStateId();
