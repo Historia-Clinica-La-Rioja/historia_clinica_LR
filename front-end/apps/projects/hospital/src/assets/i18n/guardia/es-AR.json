@@ -99,6 +99,7 @@
 					"IDENTIFICATION_NUMBER": "Nro de documento",
 					"LAST_NAME": "Apellido",
 					"EMERGENCY_CARE_TEMPORARY": "Paciente temporal de guardia",
+					"EMERGENCY_CARE_ADMINISTRATIVE_DISCHARGE": "Paciente con alta administrativa",
 					"PATIENT_ID": "ID de paciente",
 					"RESULTS": "Resultado: {{amount}} episodios",
 					"RESULT_ONE_EPISODE": "Resultado: 1 episodio",

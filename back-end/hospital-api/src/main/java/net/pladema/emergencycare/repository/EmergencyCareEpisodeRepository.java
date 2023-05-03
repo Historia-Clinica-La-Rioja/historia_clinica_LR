@@ -33,7 +33,8 @@ public interface EmergencyCareEpisodeRepository extends SGXAuditableEntityJPARep
 			" LEFT JOIN Bed b ON (ece.bedId = b.id) " +
 			" WHERE (ece.emergencyCareStateId = " + EmergencyCareState.EN_ATENCION +
 				" OR ece.emergencyCareStateId = " + EmergencyCareState.EN_ESPERA +
-				" OR ece.emergencyCareStateId = " + EmergencyCareState.CON_ALTA_MEDICA + " ) "+
+				" OR ece.emergencyCareStateId = " + EmergencyCareState.CON_ALTA_MEDICA +
+				" OR ece.emergencyCareStateId = " + EmergencyCareState.CON_ALTA_ADMINISTRATIVA + " ) " +
 			" AND ece.institutionId = :institutionId ")
 	List<EmergencyCareVo> getAll(@Param("institutionId") Integer institutionId);
 

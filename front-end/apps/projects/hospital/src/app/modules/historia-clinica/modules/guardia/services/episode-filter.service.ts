@@ -8,6 +8,7 @@ import { tap } from 'rxjs/operators';
 import { atLeastOneValueInFormGroup } from '@core/utils/form.utils';
 import { PERSON, REMOVE_SUBSTRING_DNI } from '@core/constants/validation-constants';
 import { PatientType } from '@historia-clinica/constants/summaries';
+import { EstadosEpisodio } from '../constants/masterdata';
 
 const NO_INFO: MasterDataInterface<number> = {
 	id: -1,
@@ -29,7 +30,8 @@ export class EpisodeFilterService {
 			firstName: [null, Validators.maxLength(PERSON.MAX_LENGTH.firstName)],
 			lastName: [null, Validators.maxLength(PERSON.MAX_LENGTH.lastName)],
 			temporal: [null],
-			emergencyCareTemporary: [null]
+			emergencyCareTemporary: [null],
+			administrativeDischarge: [null]
 		});
 	}
 
@@ -81,6 +83,10 @@ export class EpisodeFilterService {
 		return (filters.emergencyCareTemporary ? episode.patient?.typeId === PatientType.EMERGENCY_CARE_TEMPORARY : true);
 	}
 
+	static filterAdministrativeDischarge(episode: Episode, filters: EpisodeFilters) {
+		return (filters.administrativeDischarge ? episode.state.id === EstadosEpisodio.CON_ALTA_ADMINISTRATIVA : true);
+	}
+
 	getForm(): FormGroup {
 		return this.form;
 	}
@@ -94,7 +100,8 @@ export class EpisodeFilterService {
 				EpisodeFilterService.filterByFirstName(episode, filters) &&
 				EpisodeFilterService.filterByLastName(episode, filters) &&
 				EpisodeFilterService.filterTemporal(episode, filters) &&
-				EpisodeFilterService.filterNoPatient(episode, filters);
+				EpisodeFilterService.filterNoPatient(episode, filters) &&
+				EpisodeFilterService.filterAdministrativeDischarge(episode, filters);
 	}
 
 	clear(control: string): void {
@@ -132,4 +139,5 @@ interface EpisodeFilters {
 	lastName?: string;
 	temporal?: boolean;
 	emergencyCareTemporary?: boolean;
+	administrativeDischarge?: boolean;
 }
