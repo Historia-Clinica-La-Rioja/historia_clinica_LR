@@ -19,7 +19,7 @@ public class GenerateStudyTokenUUID {
 	private final Duration expirationTime;
 
 	public GenerateStudyTokenUUID(StudyPermissionUUIDStorage studyPermissionUUIDStorage,
-								  @Value("${imagenetwork.permission.expiration}") Duration expirationTime) {
+								  @Value("${app.imagenetwork.permission.expiration}") Duration expirationTime) {
 		this.studyPermissionUUIDStorage = studyPermissionUUIDStorage;
 		this.expirationTime = expirationTime;
 	}

@@ -14,7 +14,7 @@ import java.util.Map;
 public class GenerateStudyTokenJWT {
     @Value("${token.secret}")
     private String secret;
-    @Value("${app.imagenetwork.permission.expiration:60m}")
+    @Value("${app.imagenetwork.permission.expiration}")
     private Duration tokenExpiration;
 
     public String run(String studyInstanceUID) {
