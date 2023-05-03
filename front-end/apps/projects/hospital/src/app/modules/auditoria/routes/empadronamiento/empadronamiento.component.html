@@ -5,13 +5,13 @@
 		<p>{{'pacientes.audit.LABEL_PATIENT_SEARCH' | translate}}</p>
 	</section>
 	<section>
-		<mat-tab-group>
+		<mat-tab-group [selectedIndex]="tabActiveIndex">
 			<mat-tab id="tab_datos_personales">
 				<ng-template mat-tab-label>
 					<span>{{ 'pacientes.audit.LABEL_PERSONAL_INFORMATION' | translate | uppercase }}</span>
 				</ng-template>
 				<ng-template matTabContent>
-					<form id="personalInformationForm" [formGroup]="personalInformationForm" (ngSubmit)="save()"
+					<form id="personalInformationForm" [formGroup]="personalInformationForm" (ngSubmit)="search()"
 						fxLayout="column" fxLayoutGap="20px">
 						<div fxLayout="row" fxLayoutGap="10px" fxLayout.lt-sm="column" fxLayoutGap.lt-sm="0">
 							<div fxFlex="30" fxFlex.lt-md="100">
@@ -150,8 +150,8 @@
 								<span [translate]="'pacientes.audit.TITLE'"></span>
 							</div>
 							<mat-radio-group formControlName="filterAudit">
-								<mat-radio-button value="true">Todos los pacientes</mat-radio-button>
-								<mat-radio-button value="false">Soló los marcados para auditar</mat-radio-button>
+								<mat-radio-button value="false">Todos los pacientes</mat-radio-button>
+								<mat-radio-button value="true">Soló los marcados para auditar</mat-radio-button>
 							</mat-radio-group>
 						</div>
 
@@ -160,9 +160,9 @@
 								<span [translate]="'pacientes.audit.LABEL_STATE_VALIDATION'"></span>
 							</div>
 							<mat-radio-group formControlName="filterStateValidation">
-								<mat-radio-button value="1">Todas las validaciones</mat-radio-button>
-								<mat-radio-button value="2">Soló validaciones manuales</mat-radio-button>
-								<mat-radio-button value="2">Soló validaciones automáticas</mat-radio-button>
+								<mat-radio-button [value]="optionsValidations.BothValidations">Todas las validaciones</mat-radio-button>
+								<mat-radio-button [value]="optionsValidations.ManualValidation">Soló validaciones manuales</mat-radio-button>
+								<mat-radio-button [value]="optionsValidations.AutomaticValidation">Soló validaciones automáticas</mat-radio-button>
 							</mat-radio-group>
 						</div>
 
@@ -180,7 +180,7 @@
 					<span>{{ 'pacientes.audit.LABEL_PATIENT_ID' | translate | uppercase }}</span>
 				</ng-template>
 				<ng-template matTabContent>
-					<form id="patientIdForm" [formGroup]="patientIdForm" (ngSubmit)="save()">
+					<form id="patientIdForm" [formGroup]="patientIdForm" (ngSubmit)="search()">
 						<div fxFlex="30" fxFlex.lt-md="100">
 							<span [translate]="'guardia.home.episodes.filters.PATIENT_ID'"></span>
 							<br>

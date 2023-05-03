@@ -1,11 +1,12 @@
 import { Component, OnInit } from '@angular/core';
 import { AbstractControl, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { GenderDto, IdentificationTypeDto, PatientType } from '@api-rest/api-model';
+import { AuditPatientService } from '@api-rest/services/audit-patient.service';
 import { PersonMasterDataService } from '@api-rest/services/person-master-data.service';
 import { PERSON } from '@core/constants/validation-constants';
 import { MIN_DATE } from '@core/utils/date.utils';
 import { hasError } from '@core/utils/form.utils';
-import { newMoment } from '@core/utils/moment.utils';
+import { DateFormat, momentFormat, newMoment } from '@core/utils/moment.utils';
 import { IDENTIFICATION_TYPE_IDS } from '@core/utils/patient.utils';
 import { PATTERN_INTEGER_NUMBER } from '@core/utils/pattern.utils';
 import { Moment } from 'moment';
@@ -23,11 +24,14 @@ export class EmpadronamientoComponent implements OnInit {
 	identificationTypeList: IdentificationTypeDto[];
 	today: Moment = newMoment();
 	minDate = MIN_DATE;
-	patientStates = ["Temporal", "Permanente no validado", "Validado", "Rechazado"];
-	formSubmitted:boolean=false;
+	patientStates = ["Temporal", "Permanente no validado", "Validado", "Permanente"];
+	formSubmitted: boolean = false;
+	optionsValidations = OptionsValidations;
+	tabActiveIndex = 0;
 
 	readonly validations = PERSON;
 	constructor(private readonly formBuilder: FormBuilder, private readonly personMasterDataService: PersonMasterDataService,
+		private auditPatientService: AuditPatientService,
 	) { }
 
 	ngOnInit(): void {
@@ -59,20 +63,84 @@ export class EmpadronamientoComponent implements OnInit {
 			lastName: [null, [Validators.maxLength(PERSON.MAX_LENGTH.lastName), Validators.pattern(/^\S*$/)]],
 			otherLastNames: [null, [Validators.maxLength(PERSON.MAX_LENGTH.otherLastNames), Validators.pattern(/^\S*$/)]],
 			genderId: [null],
-			identificationNumber: [null, [Validators.maxLength(PERSON.MAX_LENGTH.identificationNumber), Validators.pattern(PATTERN_INTEGER_NUMBER), Validators.pattern(/^\S*$/)]],
+			identificationNumber: [, [Validators.maxLength(PERSON.MAX_LENGTH.identificationNumber), Validators.pattern(PATTERN_INTEGER_NUMBER), Validators.pattern(/^\S*$/)]],
 			identificationTypeId: [IDENTIFICATION_TYPE_IDS.DNI],
-			birthDate: [],
-			filterState: [this.patientStates,[Validators.required]],
-			filterAudit: ['true',],
-			filterStateValidation: ['1']
+			birthDate: [null],
+			filterState: [this.patientStates, [Validators.required]],
+			filterAudit: ['false'],
+			filterStateValidation: [this.optionsValidations.BothValidations]
 		});
 	}
-	save() {
-		this.formSubmitted=true;
+	search() {
+		let patientSearchFilter = this.prepareSearchDto();
+		this.formSubmitted = true;
+		if ((this.tabActiveIndex === 0 && this.personalInformationForm.valid) || (this.tabActiveIndex === 1 && this.patientIdForm.valid)) {
+			this.auditPatientService.getSearchRegistrationPatient(patientSearchFilter).subscribe(res => {
+			})
+		}
+
+
+	}
+	prepareSearchDto() {
+		let filterDto: any;
+		if (this.tabActiveIndex === 0) {
+			filterDto = {
+				patientId: this.patientIdForm.controls.patientId.value,
+				lastName: this.personalInformationForm.controls.lastName.value,
+				firstName: this.personalInformationForm.controls.firstName.value,
+				middleNames: this.personalInformationForm.controls.middleNames.value,
+				otherLastNames: this.personalInformationForm.controls.otherLastNames.value,
+				genderId: this.personalInformationForm.controls.genderId.value,
+				identificationTypeId: this.personalInformationForm.controls.identificationTypeId.value,
+				identificationNumber: this.personalInformationForm.controls.identificationNumber.value,
+				birthDate: this.personalInformationForm.controls.birthDate.value !== null ? momentFormat(this.personalInformationForm.controls.birthDate.value, DateFormat.API_DATE) : null,
+				toAudit: this.personalInformationForm.controls.filterAudit.value ? this.personalInformationForm.controls.filterAudit.value === 'true' : true,
+				temporary: this.personalInformationForm.controls.filterState.value.includes("Temporal") ? true : false,
+				permanentNotValidated: this.personalInformationForm.controls.filterState.value.includes("Permanente no validado") ? true : false,
+				validated: this.personalInformationForm.controls.filterState.value.includes("Validado") ? true : false,
+				permanent: this.personalInformationForm.controls.filterState.value.includes("Permanente") ? true : false,
+			}
+		} else {
+			filterDto = {
+				patientId: this.patientIdForm.controls.patientId.value,
+				lastName: null,
+				firstName: null,
+				middleNames: null,
+				otherLastNames: null,
+				genderId: null,
+				identificationTypeId: null,
+				identificationNumber: null,
+				birthDate: null,
+				toAudit: null,
+				temporary: null,
+				permanentNotValidated: null,
+				validated: null,
+				permanent: null,
+			}
+		}
+
+		if (this.personalInformationForm.controls.filterStateValidation.value === OptionsValidations.ManualValidation ) {
+			filterDto.automaticValidation = false;
+			filterDto.manualValidation = true;
+		} else if (this.personalInformationForm.controls.filterStateValidation.value === OptionsValidations.AutomaticValidation) {
+			filterDto.automaticValidation = true;
+			filterDto.manualValidation = false;
+		} else {
+			filterDto.automaticValidation = true;
+			filterDto.manualValidation = true;
+		}
+
+		return filterDto;
+
 	}
 
 	clear(control: AbstractControl): void {
 		control.reset();
 	}
 
+}
+export enum OptionsValidations {
+	AutomaticValidation,
+	ManualValidation,
+	BothValidations,
 }
