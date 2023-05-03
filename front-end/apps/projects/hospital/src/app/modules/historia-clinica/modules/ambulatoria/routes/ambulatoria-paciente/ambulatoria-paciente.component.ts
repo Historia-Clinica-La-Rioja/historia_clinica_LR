@@ -282,7 +282,7 @@ export class AmbulatoriaPacienteComponent implements OnInit, OnDestroy, Componen
 				const url = `${AppRoutes.Institucion}/${this.contextService.institutionId}/ambulatoria/paciente/${patient.basicData.id}`;
 				this.router.navigate([url])
 			},
-			error => this.snackBarService.showError(error.text),
+			error => this.snackBarService.showError(error.text || 'No cuenta con los roles suficientes para realizar esta accion'),
 		)
 
 	}

@@ -201,8 +201,8 @@
 						</app-internment-episode-summary>
 					</mat-card-content>
 				</app-summary-card>
-				
-				<app-resumen-de-guardia *ngIf="showEmergencyCareSummary" [episodeId]="episodeId">
+
+				<app-resumen-de-guardia *ngIf="showEmergencyCareSummary" [episodeId]="episodeId" showNewTriage="true">
 				</app-resumen-de-guardia>
 
 				<app-assigned-appointments *appHasRole="['ADMINISTRATIVO']" [patientId]="patientId" (newAppointmentRequired)="newAppointment()">

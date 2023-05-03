@@ -36,6 +36,7 @@ export class ResumenDeGuardiaComponent implements OnInit {
 	//En lugar de pasar el id puedo pasar el episodio entero porque ya lo voy a estar calculando desde antes en ambulatoria
 	@Input() episodeId: number;
 	@Output() triageRiskFactors = new EventEmitter<RiskFactorFull[]>();
+	@Input() showNewTriage: boolean = false;
 
 	guardiaSummary: SummaryHeader = GUARDIA;
 	readonly STATES = EstadosEpisodio;
@@ -99,6 +100,18 @@ export class ResumenDeGuardiaComponent implements OnInit {
 			_ => this.loadTriages()
 		)
 
+	}
+
+	newTriage() {
+		this.triageDefinitionsService.getTriagePath(this.emergencyCareType)
+			.subscribe(({ component }) => {
+				const dialogRef = this.dialog.open(component, { data: this.episodeId });
+				dialogRef.afterClosed().subscribe(idReturned => {
+					if (idReturned) {
+						this.loadTriages();
+					}
+				});
+			});
 	}
 
 	cancelAttention() {
