@@ -5,6 +5,8 @@ import java.util.List;
 
 import javax.validation.ConstraintViolationException;
 
+import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.SourceType;
+
 import org.springframework.stereotype.Service;
 
 import ar.lamansys.sgh.clinichistory.application.createDocument.DocumentFactory;
@@ -33,7 +35,7 @@ public class InternmentOtherIndicationServiceImpl implements InternmentOtherIndi
 	@Override
 	public Integer add(InternmentOtherIndicationBo otherIndicationBo, Short sourceTypeId) {
 		log.debug("Input parameter -> otherIndicationBo {}, sourceTypeId {}", otherIndicationBo, sourceTypeId);
-		assertInternmentEpisodeCanCreateIndication(otherIndicationBo.getEncounterId());
+		assertInternmentEpisodeCanCreateIndication(otherIndicationBo.getEncounterId(), sourceTypeId);
 		Integer result = sharedIndicationPort.addOtherIndication(toOtherIndicationDto(otherIndicationBo), sourceTypeId);
 		otherIndicationBo.setId(documentFactory.run(otherIndicationBo, false));
 		sharedIndicationPort.saveDocument(otherIndicationBo.getId(), result);
@@ -57,8 +59,8 @@ public class InternmentOtherIndicationServiceImpl implements InternmentOtherIndi
 		return result;
 	}
 
-	private void assertInternmentEpisodeCanCreateIndication(Integer internmentEpisodeId) {
-		if (internmentEpisodeService.haveEpicrisis(internmentEpisodeId)) {
+	private void assertInternmentEpisodeCanCreateIndication(Integer internmentEpisodeId, Short sourceTypeId) {
+		if (internmentEpisodeService.haveEpicrisis(internmentEpisodeId) && sourceTypeId.equals(SourceType.HOSPITALIZATION)) {
 			throw new ConstraintViolationException("No se puede crear una indicación debido a que existe una epicrisis", Collections.emptySet());
 		}
 	}

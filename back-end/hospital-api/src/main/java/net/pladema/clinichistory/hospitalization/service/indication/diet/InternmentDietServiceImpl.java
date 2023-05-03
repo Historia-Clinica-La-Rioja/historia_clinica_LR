@@ -3,6 +3,7 @@ package net.pladema.clinichistory.hospitalization.service.indication.diet;
 import java.util.Collections;
 import java.util.List;
 
+import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.SourceType;
 import net.pladema.clinichistory.hospitalization.service.InternmentEpisodeService;
 import ar.lamansys.sgx.shared.dates.configuration.LocalDateMapper;
 
@@ -48,7 +49,7 @@ public class InternmentDietServiceImpl implements InternmentDietService {
 	@Override
 	public Integer addDiet(InternmentDietBo dietBo, Short sourceTypeId) {
 		log.debug("Input parameter -> dietBo {}, sourceTypeId {}", dietBo, sourceTypeId);
-		assertInternmentEpisodeCanCreateIndication(dietBo.getEncounterId());
+		assertInternmentEpisodeCanCreateIndication(dietBo.getEncounterId(), sourceTypeId);
 		Integer result = sharedIndicationPort.addDiet(mapToDietDto(dietBo), sourceTypeId);
 		dietBo.setId(documentFactory.run(dietBo, false));
 		sharedIndicationPort.saveDocument(dietBo.getId(),result);
@@ -56,8 +57,8 @@ public class InternmentDietServiceImpl implements InternmentDietService {
 		return result;
 	}
 
-	private void assertInternmentEpisodeCanCreateIndication(Integer internmentEpisodeId) {
-		if(internmentEpisodeService.haveEpicrisis(internmentEpisodeId)) {
+	private void assertInternmentEpisodeCanCreateIndication(Integer internmentEpisodeId, Short sourceTypeId) {
+		if(internmentEpisodeService.haveEpicrisis(internmentEpisodeId) && sourceTypeId.equals(SourceType.HOSPITALIZATION)) {
 			throw new ConstraintViolationException("No se puede crear una indicación debido a que existe una epicrisis", Collections.emptySet());
 		}
 	}

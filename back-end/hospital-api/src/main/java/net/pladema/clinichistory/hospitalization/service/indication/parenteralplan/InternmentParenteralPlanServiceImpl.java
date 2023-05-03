@@ -4,6 +4,7 @@ import ar.lamansys.sgh.clinichistory.application.createDocument.DocumentFactory;
 import ar.lamansys.sgh.clinichistory.domain.ips.DosageBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.FrequencyBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.OtherPharmacoBo;
+import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.SourceType;
 import ar.lamansys.sgh.shared.infrastructure.input.service.EIndicationStatus;
 import ar.lamansys.sgh.shared.infrastructure.input.service.EIndicationType;
 import ar.lamansys.sgh.shared.infrastructure.input.service.FrequencyDto;
@@ -45,7 +46,7 @@ public class InternmentParenteralPlanServiceImpl implements InternmentParenteral
 	@Override
 	public Integer add(InternmentParenteralPlanBo parenteralPlanBo, Short sourceTypeId) {
 		log.debug("Input parameter -> parenteralPlanBo {}, sourceTypeId {}", parenteralPlanBo, sourceTypeId);
-		assertInternmentEpisodeCanCreateIndication(parenteralPlanBo.getEncounterId());
+		assertInternmentEpisodeCanCreateIndication(parenteralPlanBo.getEncounterId(), sourceTypeId);
 		Integer result = sharedIndicationPort.addParenteralPlan(toParenteralPlanDto(parenteralPlanBo), sourceTypeId);
 		parenteralPlanBo.setId(documentFactory.run(parenteralPlanBo, false));
 		sharedIndicationPort.saveDocument(parenteralPlanBo.getId(), result);
@@ -69,8 +70,8 @@ public class InternmentParenteralPlanServiceImpl implements InternmentParenteral
 		return result;
 	}
 
-	private void assertInternmentEpisodeCanCreateIndication(Integer internmentEpisodeId) {
-		if (internmentEpisodeService.haveEpicrisis(internmentEpisodeId)) {
+	private void assertInternmentEpisodeCanCreateIndication(Integer internmentEpisodeId, Short sourceTypeId) {
+		if (internmentEpisodeService.haveEpicrisis(internmentEpisodeId) && sourceTypeId.equals(SourceType.HOSPITALIZATION)) {
 			throw new ConstraintViolationException("No se puede crear una indicación debido a que existe una epicrisis", Collections.emptySet());
 		}
 	}

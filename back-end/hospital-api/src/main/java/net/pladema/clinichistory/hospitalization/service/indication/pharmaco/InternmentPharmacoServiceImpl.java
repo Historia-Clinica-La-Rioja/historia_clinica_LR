@@ -3,6 +3,7 @@ package net.pladema.clinichistory.hospitalization.service.indication.pharmaco;
 import ar.lamansys.sgh.clinichistory.application.createDocument.DocumentFactory;
 import ar.lamansys.sgh.clinichistory.domain.ips.DosageBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.OtherPharmacoBo;
+import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.SourceType;
 import ar.lamansys.sgh.shared.infrastructure.input.service.NewDosageDto;
 import ar.lamansys.sgh.shared.infrastructure.input.service.OtherPharmacoDto;
 import ar.lamansys.sgh.shared.infrastructure.input.service.PharmacoDto;
@@ -41,7 +42,7 @@ public class InternmentPharmacoServiceImpl implements InternmentPharmacoService 
 	@Override
 	public Integer add(InternmentPharmacoBo pharmacoBo, Short sourceTypeId) {
 		log.debug("Input parameter -> pharmacoBo {}, sourceTypeId {}", pharmacoBo, sourceTypeId);
-		assertInternmentEpisodeCanCreateIndication(pharmacoBo.getEncounterId());
+		assertInternmentEpisodeCanCreateIndication(pharmacoBo.getEncounterId(), sourceTypeId);
 		Integer result = sharedIndicationPort.addPharmaco(toPharmacoDto(pharmacoBo), sourceTypeId);
 		pharmacoBo.setId(documentFactory.run(pharmacoBo, false));
 		sharedIndicationPort.saveDocument(pharmacoBo.getId(), result);
@@ -65,8 +66,8 @@ public class InternmentPharmacoServiceImpl implements InternmentPharmacoService 
 		return result;
 	}
 
-	private void assertInternmentEpisodeCanCreateIndication(Integer internmentEpisodeId) {
-		if (internmentEpisodeService.haveEpicrisis(internmentEpisodeId)) {
+	private void assertInternmentEpisodeCanCreateIndication(Integer internmentEpisodeId, Short sourceTypeId) {
+		if (internmentEpisodeService.haveEpicrisis(internmentEpisodeId) && sourceTypeId.equals(SourceType.HOSPITALIZATION)) {
 			throw new ConstraintViolationException("No se puede crear una indicación debido a que existe una epicrisis", Collections.emptySet());
 		}
 	}
