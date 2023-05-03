@@ -8,7 +8,6 @@ import { UIComponentDto, UILabelDto } from '@extensions/extensions-model';
 })
 export class UiCardComponent {
 	@Input() mode = '';
-	@Input() title: UILabelDto;
 	@Input() content: UIComponentDto[];
 
 	constructor() { }

@@ -1,15 +1,8 @@
 import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { ReplaySubject, Subscription } from 'rxjs';
 import { ChartDefinitionService } from '@extensions/services/chart-definition.service';
-import { ChartDefinitionDto, UIComponentDto } from '@extensions/extensions-model';
+import {ChartDefinitionDto, UIComponentDto, UILabelDto} from '@extensions/extensions-model';
 import {ChartOptions} from "chart.js";
-
-export interface TitleDefinition {
-	text: string;
-	subtitle: {
-		text: string
-	};
-}
 
 const toUIComponentDto = (error: any): UIComponentDto => ({
 	type: 'json',
@@ -27,7 +20,7 @@ export class CubejsChartComponent implements OnDestroy, OnInit {
 
 	@Input() chartOptions?: ChartOptions;
 	@Input() dateFormat?: string;
-	@Input() title?: TitleDefinition;
+	@Input() title?: UILabelDto;
 	@Input() chartDefinitionService: ChartDefinitionService;
 	@Input() query: string;
 	error: UIComponentDto = undefined;

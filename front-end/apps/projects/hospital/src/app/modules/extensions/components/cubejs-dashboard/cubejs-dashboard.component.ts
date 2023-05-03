@@ -1,5 +1,5 @@
 import {Component, Input, OnInit} from '@angular/core';
-import {UIComponentDto} from '@extensions/extensions-model';
+import {UIComponentDto, UILabelDto} from '@extensions/extensions-model';
 import {
 	ChartDefinitionService,
 	FilterValue,
@@ -45,6 +45,7 @@ export class CubejsDashboardComponent implements OnInit {
 	}
 
 	@Input() filters: QueryFilters;
+	@Input() title?: UILabelDto;
 
 	private params: FilterValues = {};
 	public _content: UIComponentDto[];
