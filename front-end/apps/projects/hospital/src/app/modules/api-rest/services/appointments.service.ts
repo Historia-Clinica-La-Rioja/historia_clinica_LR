@@ -40,12 +40,12 @@ export class AppointmentsService {
 		return this.http.post<number>(this.BASE_URL, appointment);
 	}
 
-	createAppointmentEquipment(appointment: CreateAppointmentDto, orderId: number, studyId: number): Observable<number> {
+	createAppointmentEquipment(appointment: CreateAppointmentDto, orderId?: number, studyId?: number): Observable<number> {
 		const url = `${this.BASE_URL}/equipment`;
 
 		let queryParams: HttpParams = new HttpParams();
-		queryParams = queryParams.append('order_id', JSON.stringify(orderId));
-		queryParams = queryParams.append('study_id', JSON.stringify(studyId));
+		if (orderId) queryParams = queryParams.append('order_id', JSON.stringify(orderId));
+		if (studyId) queryParams = queryParams.append('study_id', JSON.stringify(studyId));
 
 		return this.http.post<number>(url, appointment, { params: queryParams });
 	}

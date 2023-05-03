@@ -65,7 +65,7 @@ export class EquipmentAppointmentsFacadeService {
 		return this.appointments$;
 	}
 
-	addAppointment(newAppointment: CreateAppointmentDto, orderId: number, studyId: number): Observable<number> {
+	addAppointment(newAppointment: CreateAppointmentDto, orderId?: number, studyId?: number): Observable<number> {
 		return this.appointmentsService.createAppointmentEquipment(newAppointment, orderId, studyId)
 			.pipe(
 				map((response: number) => {

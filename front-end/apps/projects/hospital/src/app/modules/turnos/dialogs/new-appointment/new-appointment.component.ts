@@ -286,8 +286,6 @@ export class NewAppointmentComponent implements OnInit {
 	}
 
 	submit(itComesFromStep3?: boolean): void {
-		if (this.data.isEquipmentAppointment)
-			updateControlValidator(this.appointmentInfoForm, 'appointmentMedicalOrder', [Validators.required]);
 		if (this.isAppointmentFormValid()) {
 			this.isSubmitButtonDisabled = true;
 			this.verifyExistingAppointment().subscribe((appointmentShortSummary: AppointmentShortSummaryDto) => {
@@ -489,8 +487,8 @@ export class NewAppointmentComponent implements OnInit {
 
 	private addAppointment(newAppointment: CreateAppointmentDto): Observable<number> {
 		if (this.data.isEquipmentAppointment) {
-			let orderId = this.appointmentInfoForm.controls.appointmentMedicalOrder.value.serviceRequestId;
-			let studyId = this.appointmentInfoForm.controls.appointmentMedicalOrder.value.id;
+			let orderId = this.appointmentInfoForm.controls.appointmentMedicalOrder?.value?.serviceRequestId;
+			let studyId = this.appointmentInfoForm.controls.appointmentMedicalOrder?.value?.id;
 			return this.equipmentAppointmentFacade.addAppointment(newAppointment, orderId, studyId);
 		}
 		else

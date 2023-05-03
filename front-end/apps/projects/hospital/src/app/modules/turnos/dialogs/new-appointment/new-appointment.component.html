@@ -117,9 +117,6 @@
 									{{'image-network.appointments.ORDER' | translate}} # {{patientMedicalOrder.serviceRequestId}} - {{patientMedicalOrder.snomed.pt | titlecase}}
 								</mat-option>
 							</mat-select>
-							<mat-error *ngIf="hasError(appointmentInfoForm, 'required', 'appointmentMedicalOrder')"
-								[translate]="'forms.REQUIRED'">
-				 			</mat-error>
 						</mat-form-field>
 						<div fxLayout="row" fxLayoutGap="10px" fxLayout.xs="column">
 							<mat-form-field fxFlex="30%" appearance="outline">
