@@ -81,7 +81,6 @@ export class EmpadronamientoComponent implements OnInit {
 			filterStateValidation: [this.optionsValidations.BothValidations]
 		});
 	}
-
 	search() {
 		let patientSearchFilter = this.prepareSearchDto();
 		this.formSubmitted = true;
