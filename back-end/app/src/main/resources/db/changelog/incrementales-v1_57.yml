@@ -994,3 +994,18 @@ databaseChangeLog:
                       foreignKeyName: FK_historic_emergency_episode_bed
                     name: bed_id
                     type: int
+
+    - changeSet:
+        id: add-bed_id_emergency_care_episode
+        author: fdemuguruza
+        changes:
+          - addColumn:
+              tableName: emergency_care_episode
+              columns:
+                - column:
+                    constraints:
+                      nullable: true
+                      references: bed(id)
+                      foreignKeyName: FK_emergency_care_episode_bed
+                    name: bed_id
+                    type: int
